@@ -575,7 +575,7 @@ HB_FUNC( QT_QCOMBOBOX_SIZEADJUSTPOLICY )
  */
 HB_FUNC( QT_QCOMBOBOX_VALIDATOR )
 {
-   hb_retptr( ( QValidator* ) hbqt_par_QComboBox( 1 )->validator() );
+   hb_retptrGC( hbqt_gcAllocate_QValidator( ( void * ) hbqt_par_QComboBox( 1 )->validator(), false ) );
 }
 
 /*

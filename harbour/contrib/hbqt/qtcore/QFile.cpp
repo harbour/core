@@ -239,7 +239,7 @@ HB_FUNC( QT_QFILE_LINK )
  */
 HB_FUNC( QT_QFILE_MAP )
 {
-   hb_retptr( ( uchar* ) hbqt_par_QFile( 1 )->map( hb_parnint( 2 ), hb_parnint( 3 ), ( HB_ISNUM( 4 ) ? ( QFile::MemoryMapFlags ) hb_parni( 4 ) : ( QFile::MemoryMapFlags ) QFile::NoOptions ) ) );
+   hb_retc( ( const char * ) hbqt_par_QFile( 1 )->map( hb_parnint( 2 ), hb_parnint( 3 ), ( HB_ISNUM( 4 ) ? ( QFile::MemoryMapFlags ) hb_parni( 4 ) : ( QFile::MemoryMapFlags ) QFile::NoOptions ) ) );
 }
 
 /*

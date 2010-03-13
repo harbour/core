@@ -91,7 +91,9 @@ bool inherits ( const char * className ) const
 void installEventFilter ( QObject * filterObj )
 bool isWidgetType () const
 void killTimer ( int id )
-virtual const QMetaObject * metaObject () const
+#
+//virtual const QMetaObject * metaObject () const
+#
 void moveToThread ( QThread * targetThread )
 QString objectName () const
 QObject * parent () const

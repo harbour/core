@@ -79,7 +79,6 @@ CREATE CLASS QObject INHERIT HbQtObjectHandler
    METHOD  installEventFilter( pFilterObj )
    METHOD  isWidgetType()
    METHOD  killTimer( nId )
-   METHOD  metaObject()
    METHOD  moveToThread( pTargetThread )
    METHOD  objectName()
    METHOD  parent()
@@ -155,10 +154,6 @@ METHOD QObject:isWidgetType()
 
 METHOD QObject:killTimer( nId )
    RETURN Qt_QObject_killTimer( ::pPtr, nId )
-
-
-METHOD QObject:metaObject()
-   RETURN Qt_QObject_metaObject( ::pPtr )
 
 
 METHOD QObject:moveToThread( pTargetThread )

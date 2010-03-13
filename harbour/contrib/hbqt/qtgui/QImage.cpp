@@ -214,7 +214,7 @@ HB_FUNC( QT_QIMAGE_ALPHACHANNEL )
  */
 HB_FUNC( QT_QIMAGE_BITS )
 {
-   hb_retptr( ( uchar* ) hbqt_par_QImage( 1 )->bits() );
+   hb_retc( ( const char * ) hbqt_par_QImage( 1 )->bits() );
 }
 
 /*
@@ -222,7 +222,7 @@ HB_FUNC( QT_QIMAGE_BITS )
  */
 HB_FUNC( QT_QIMAGE_BITS_1 )
 {
-   hb_retptr( ( uchar* ) hbqt_par_QImage( 1 )->bits() );
+   hb_retc( ( const char * ) hbqt_par_QImage( 1 )->bits() );
 }
 
 /*
@@ -534,7 +534,7 @@ HB_FUNC( QT_QIMAGE_SCALEDTOWIDTH )
  */
 HB_FUNC( QT_QIMAGE_SCANLINE )
 {
-   hb_retptr( ( uchar* ) hbqt_par_QImage( 1 )->scanLine( hb_parni( 2 ) ) );
+   hb_retc( ( const char * ) hbqt_par_QImage( 1 )->scanLine( hb_parni( 2 ) ) );
 }
 
 /*
@@ -542,7 +542,7 @@ HB_FUNC( QT_QIMAGE_SCANLINE )
  */
 HB_FUNC( QT_QIMAGE_SCANLINE_1 )
 {
-   hb_retptr( ( uchar* ) hbqt_par_QImage( 1 )->scanLine( hb_parni( 2 ) ) );
+   hb_retc( ( const char * ) hbqt_par_QImage( 1 )->scanLine( hb_parni( 2 ) ) );
 }
 
 /*

@@ -84,6 +84,12 @@ typedef struct
 QT_G_FUNC( hbqt_gcRelease_QDragLeaveEvent )
 {
    HB_SYMBOL_UNUSED( Cargo );
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   if( p && p->bNew )
+   {
+      p->ph = NULL;
+   }
 }
 
 void * hbqt_gcAllocate_QDragLeaveEvent( void * pObj, bool bNew )

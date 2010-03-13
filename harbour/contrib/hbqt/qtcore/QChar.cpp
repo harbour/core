@@ -1,5 +1,5 @@
 /*
- * $Id: hbqtgen.prg 13997 2010-02-26 02:51:07Z vouchcac $
+ * $Id: hbqtgen.prg 14016 2010-02-27 19:53:19Z vouchcac $
  */
 
 /* -------------------------------------------------------------------- */
@@ -113,6 +113,12 @@ typedef struct
 QT_G_FUNC( hbqt_gcRelease_QChar )
 {
    HB_SYMBOL_UNUSED( Cargo );
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   if( p && p->bNew )
+   {
+      p->ph = NULL;
+   }
 }
 
 void * hbqt_gcAllocate_QChar( void * pObj, bool bNew )
@@ -136,7 +142,7 @@ HB_FUNC( QT_QCHAR )
 
    pObj = new QChar() ;
 
-   hb_retptr( pObj );
+   hb_retptrGC( hbqt_gcAllocate_QChar( pObj, true ) );
 }
 
 /*

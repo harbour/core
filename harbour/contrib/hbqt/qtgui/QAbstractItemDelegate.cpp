@@ -89,6 +89,12 @@ typedef struct
 QT_G_FUNC( hbqt_gcRelease_QAbstractItemDelegate )
 {
    HB_SYMBOL_UNUSED( Cargo );
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   if( p && p->bNew )
+   {
+      p->ph = NULL;
+   }
 }
 
 void * hbqt_gcAllocate_QAbstractItemDelegate( void * pObj, bool bNew )

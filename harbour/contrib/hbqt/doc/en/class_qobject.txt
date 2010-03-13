@@ -40,7 +40,6 @@
         :installEventFilter( pFilterObj )                   -> NIL
         :isWidgetType()                                     -> lBool
         :killTimer( nId )                                   -> NIL
-        :metaObject()                                       -> pQMetaObject
         :moveToThread( pTargetThread )                      -> NIL
         :objectName()                                       -> cQString
         :property( pName )                                  -> pQVariant

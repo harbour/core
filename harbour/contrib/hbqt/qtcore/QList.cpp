@@ -66,19 +66,20 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 40/55 [ 72.73% ] ]
+ *  Constructed[ 26/55 [ 47.27% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
  *
  *  void append ( const QList<T> & value )
- *  QList<T> mid ( int pos, int length = -1 ) const
  *  QSet<T> toSet () const
- *  std::list<T> toStdList () const
  *  QVector<T> toVector () const
  *
  *  *** Commented out protos which construct fine but do not compile ***
  *
+ *  // const T & at ( int i ) const
+ *  // T & back ()
+ *  // const T & back () const
  *  //iterator begin ()
  *  //const_iterator begin () const
  *  //const_iterator constBegin () const
@@ -88,7 +89,20 @@
  *  //const_iterator end () const
  *  //iterator erase ( iterator pos )
  *  //iterator erase ( iterator begin, iterator end )
+ *  // T & first ()
+ *  // const T & first () const
+ *  // T & front ()
+ *  // const T & front () const
  *  //iterator insert ( iterator before, const T & value )
+ *  // T & last ()
+ *  // const T & last () const
+ *  // QList<T> mid ( int pos, int length = -1 ) const
+ *  // T takeAt ( int i )
+ *  // T takeFirst ()
+ *  // T takeLast ()
+ *  //std::list<T> toStdList () const
+ *  // T value ( int i ) const
+ *  // T value ( int i, const T & defaultValue ) const
  */
 
 #include <QtCore/QPointer>
@@ -168,30 +182,6 @@ HB_FUNC( QT_QLIST_APPEND )
 }
 
 /*
- * const T & at ( int i ) const
- */
-HB_FUNC( QT_QLIST_AT )
-{
-   hb_retptr( hbqt_par_QList( 1 )->at( hb_parni( 2 ) ) );
-}
-
-/*
- * T & back ()
- */
-HB_FUNC( QT_QLIST_BACK )
-{
-   hb_retptr( hbqt_par_QList( 1 )->back() );
-}
-
-/*
- * const T & back () const
- */
-HB_FUNC( QT_QLIST_BACK_1 )
-{
-   hb_retptr( hbqt_par_QList( 1 )->back() );
-}
-
-/*
  * void clear ()
  */
 HB_FUNC( QT_QLIST_CLEAR )
@@ -232,38 +222,6 @@ HB_FUNC( QT_QLIST_ENDSWITH )
 }
 
 /*
- * T & first ()
- */
-HB_FUNC( QT_QLIST_FIRST )
-{
-   hb_retptr( hbqt_par_QList( 1 )->first() );
-}
-
-/*
- * const T & first () const
- */
-HB_FUNC( QT_QLIST_FIRST_1 )
-{
-   hb_retptr( hbqt_par_QList( 1 )->first() );
-}
-
-/*
- * T & front ()
- */
-HB_FUNC( QT_QLIST_FRONT )
-{
-   hb_retptr( hbqt_par_QList( 1 )->front() );
-}
-
-/*
- * const T & front () const
- */
-HB_FUNC( QT_QLIST_FRONT_1 )
-{
-   hb_retptr( hbqt_par_QList( 1 )->front() );
-}
-
-/*
  * int indexOf ( const T & value, int from = 0 ) const
  */
 HB_FUNC( QT_QLIST_INDEXOF )
@@ -285,22 +243,6 @@ HB_FUNC( QT_QLIST_INSERT )
 HB_FUNC( QT_QLIST_ISEMPTY )
 {
    hb_retl( hbqt_par_QList( 1 )->isEmpty() );
-}
-
-/*
- * T & last ()
- */
-HB_FUNC( QT_QLIST_LAST )
-{
-   hb_retptr( hbqt_par_QList( 1 )->last() );
-}
-
-/*
- * const T & last () const
- */
-HB_FUNC( QT_QLIST_LAST_1 )
-{
-   hb_retptr( hbqt_par_QList( 1 )->last() );
 }
 
 /*
@@ -437,46 +379,6 @@ HB_FUNC( QT_QLIST_STARTSWITH )
 HB_FUNC( QT_QLIST_SWAP )
 {
    hbqt_par_QList( 1 )->swap( hb_parni( 2 ), hb_parni( 3 ) );
-}
-
-/*
- * T takeAt ( int i )
- */
-HB_FUNC( QT_QLIST_TAKEAT )
-{
-   hb_retptr( hbqt_par_QList( 1 )->takeAt( hb_parni( 2 ) ) );
-}
-
-/*
- * T takeFirst ()
- */
-HB_FUNC( QT_QLIST_TAKEFIRST )
-{
-   hb_retptr( hbqt_par_QList( 1 )->takeFirst() );
-}
-
-/*
- * T takeLast ()
- */
-HB_FUNC( QT_QLIST_TAKELAST )
-{
-   hb_retptr( hbqt_par_QList( 1 )->takeLast() );
-}
-
-/*
- * T value ( int i ) const
- */
-HB_FUNC( QT_QLIST_VALUE )
-{
-   hb_retptr( hbqt_par_QList( 1 )->value( hb_parni( 2 ) ) );
-}
-
-/*
- * T value ( int i, const T & defaultValue ) const
- */
-HB_FUNC( QT_QLIST_VALUE_1 )
-{
-   hb_retptr( hbqt_par_QList( 1 )->value( hb_parni( 2 ), hb_param( 3, HB_IT_ANY ) ) );
 }
 
 

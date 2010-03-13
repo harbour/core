@@ -193,7 +193,7 @@ HB_FUNC( QT_QMODELINDEX_ISVALID )
  */
 HB_FUNC( QT_QMODELINDEX_MODEL )
 {
-   hb_retptr( ( QAbstractItemModel* ) hbqt_par_QModelIndex( 1 )->model() );
+   hb_retptrGC( hbqt_gcAllocate_QAbstractItemModel( ( void * ) hbqt_par_QModelIndex( 1 )->model(), false ) );
 }
 
 /*

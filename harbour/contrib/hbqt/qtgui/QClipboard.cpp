@@ -92,6 +92,12 @@ typedef struct
 QT_G_FUNC( hbqt_gcRelease_QClipboard )
 {
    HB_SYMBOL_UNUSED( Cargo );
+   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+
+   if( p && p->bNew )
+   {
+      p->ph = NULL;
+   }
 }
 
 void * hbqt_gcAllocate_QClipboard( void * pObj, bool bNew )
@@ -116,7 +122,7 @@ HB_FUNC( QT_QCLIPBOARD )
 
    pObj = ( QClipboard* ) QApplication::clipboard() ;
 
-   hb_retptr( pObj );
+   hb_retptrGC( hbqt_gcAllocate_QClipboard( pObj, true ) );
 }
 
 /*

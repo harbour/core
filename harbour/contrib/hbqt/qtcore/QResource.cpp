@@ -144,7 +144,7 @@ HB_FUNC( QT_QRESOURCE_ABSOLUTEFILEPATH )
  */
 HB_FUNC( QT_QRESOURCE_DATA )
 {
-   hb_retptr( ( uchar* ) hbqt_par_QResource( 1 )->data() );
+   hb_retc( ( const char * ) hbqt_par_QResource( 1 )->data() );
 }
 
 /*

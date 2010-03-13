@@ -202,7 +202,7 @@ HB_FUNC( QT_QITEMSELECTIONMODEL_ISSELECTED )
  */
 HB_FUNC( QT_QITEMSELECTIONMODEL_MODEL )
 {
-   hb_retptr( ( QAbstractItemModel* ) hbqt_par_QItemSelectionModel( 1 )->model() );
+   hb_retptrGC( hbqt_gcAllocate_QAbstractItemModel( ( void * ) hbqt_par_QItemSelectionModel( 1 )->model(), false ) );
 }
 
 /*

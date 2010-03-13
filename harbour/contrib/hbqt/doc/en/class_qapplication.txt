@@ -1,15 +1,8 @@
 /*
- *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for QT v4.5+
- *
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for Qt v4.5.3+
  *  Please do not modify this document as it is subject to change in future.
- *
  *  Pritpal Bedi <bedipritpal@hotmail.com>
- *
- *  03/12/10 - 14:08:02
- *
  */
-
-
 
 /*  $DOC$
     $TEMPLATE$
@@ -17,9 +10,11 @@
     $NAME$
         QApplication()
     $CATEGORY$
-        Harbour Bindings for Qt 4.5.3+
+        Harbour Bindings for Qt
     $SUBCATEGORY$
         GUI
+    $EXTERNALLINK$
+        http://doc.trolltech.com/4.5/qapplication.html
     $ONELINER$
         Creates a new QApplication object.
     $INHERITS$
@@ -127,6 +122,6 @@
         C++ Wrappers : contrib/hbqt/qtgui/QApplication.cpp
         Library      : hbqtgui
     $SEEALSO$
-        QCoreApplication, http://doc.trolltech.com/4.5/qapplication.html
+        QCoreApplication
     $END$
  */

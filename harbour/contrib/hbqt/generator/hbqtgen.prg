@@ -600,6 +600,12 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
             aadd( cpp_, "   }" )
          ELSE
             aadd( cpp_, "   HB_SYMBOL_UNUSED( Cargo );" )
+            aadd( cpp_, "   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;" )
+            aadd( cpp_, "   " )
+            aadd( cpp_, "   if( p && p->bNew )" )
+            aadd( cpp_, "   {" )
+            aadd( cpp_, "      p->ph = NULL;" )
+            aadd( cpp_, "   }" )
          ENDIF
          aadd( cpp_, "}" )
          aadd( cpp_, "" )
@@ -659,11 +665,14 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
                ENDIF
             NEXT
             aadd( cpp_, " " )
+            aadd( cpp_, "   hb_retptrGC( hbqt_gcAllocate_" + cWidget + "( pObj, true ) );" )
+            #if 0
             IF lDestructor
                aadd( cpp_, "   hb_retptrGC( hbqt_gcAllocate_" + cWidget + "( pObj, true ) );" )
             ELSE
                aadd( cpp_, "   hb_retptr( pObj );" )
             ENDIF
+            #endif
          ENDIF
          aadd( cpp_, new_[ len( new_ ) ] ) // }
          aadd( cpp_, "" )
@@ -1088,34 +1097,37 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
                cPrgRet := 'c' + cDocNM
 
             CASE aA[ PRT_L_FAR ] .AND. ( aA[ PRT_CAST ] $ "uchar" )
-               cCmd := 'hb_retptr( ( ' + aA[ PRT_CAST ] + '* ) ' + cCmn + ' )'
+               //cCmd := 'hb_retptr( ( ' + aA[ PRT_CAST ] + '* ) ' + cCmn + ' )'
+               cCmd := 'hb_retc( ( const char * ) ' + cCmn + ' )'
                cPrgRet := 'p' + cDocNM
 
 //            CASE aA[ PRT_L_FAR ]
             CASE aA[ PRT_L_FAR ] .AND. !( aA[ PRT_L_CONST ] )
                //cCmd := 'hb_retptr( ( ' + aA[ PRT_CAST ] + '* ) ' + cCmn + ' )'
-               IF ( left( aA[ PRT_CAST ], 1 ) == 'Q' )
+               IF ( isAqtObject( aA[ PRT_CAST ] ) )
                   cCmd := Get_Command( aA[ PRT_CAST ], cCmn, .F. )
                ELSE
                   cCmd := 'hb_retptr( ( ' + aA[ PRT_CAST ] + '* ) ' + cCmn + ' )'
                ENDIF
                cPrgRet := 'p' + cDocNM
 
-            CASE ( left( aA[ PRT_CAST ], 1 ) == 'Q' )   .AND. ;
+            CASE ( isAqtObject( aA[ PRT_CAST ] ) )        .AND. ;
                                       aA[ PRT_L_FAR ]   .AND. ;
                                       aA[ PRT_L_CONST ] .AND. ;
                                       ( "Abstract" $ aA[ PRT_CAST ] )
-               cCmd := 'hb_retptr( ( ' + aA[ PRT_CAST ] + '* ) ' + cCmn + ' )'
+               //cCmd := 'hb_retptr( ( ' + aA[ PRT_CAST ] + '* ) ' + cCmn + ' )'
+               cCmd := 'hb_retptrGC( hbqt_gcAllocate_' + aA[ PRT_CAST ] + '( ( void * ) ' + cCmn + ', false ) )'
                cPrgRet := 'p' + cDocNM
 
-            CASE ( left( aA[ PRT_CAST ], 1 ) == 'Q' )   .AND. ;
+            CASE ( isAqtObject( aA[ PRT_CAST ] ) )        .AND. ;
                                       aA[ PRT_L_FAR   ] .AND. ;
                                       aA[ PRT_L_CONST ] .AND. ;
                                       aA[ PRT_L_VIRT  ]
-               cCmd := 'hb_retptr( ( ' + aA[ PRT_CAST ] + '* ) ' + cCmn + ' )'
+               //cCmd := 'hb_retptr( ( ' + aA[ PRT_CAST ] + '* ) ' + cCmn + ' )'
+               cCmd := 'hb_retptrGC( hbqt_gcAllocate_' + aA[ PRT_CAST ] + '( ( void * ) ' + cCmn + ', false ) )'
                cPrgRet := 'p' + cDocNM
 
-            CASE ( left( aA[ PRT_CAST ], 1 ) == 'Q' )   .AND. ;
+            CASE ( isAqtObject( aA[ PRT_CAST ] ) )        .AND. ;
                                       aA[ PRT_L_FAR   ] .AND. ;
                                       aA[ PRT_L_CONST ] .AND. ;
                                       aA[ PRT_L_CONST_LAST ]
@@ -1136,7 +1148,7 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
 
             OTHERWISE
                /* No attribute is attached to return value */
-               IF ( left( aA[ PRT_CAST ], 1 ) == 'Q' )
+               IF ( isAqtObject( aA[ PRT_CAST ] ) )
                   cCmd := Get_Command( aA[ PRT_CAST ], cCmn )
                   cPrgRet := 'p' + cDocNM
 
@@ -1212,6 +1224,11 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_ )
    ENDIF
 
    RETURN lSuccess
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION isAqtObject( cCast )
+   RETURN left( cCast, 1 ) == 'Q' .OR. left( cCast, 3 ) == "HBQ"
 
 /*----------------------------------------------------------------------*/
 

@@ -530,7 +530,7 @@ HB_FUNC( QT_QLINEEDIT_TEXT )
  */
 HB_FUNC( QT_QLINEEDIT_VALIDATOR )
 {
-   hb_retptr( ( QValidator* ) hbqt_par_QLineEdit( 1 )->validator() );
+   hb_retptrGC( hbqt_gcAllocate_QValidator( ( void * ) hbqt_par_QLineEdit( 1 )->validator(), false ) );
 }
 
 /*

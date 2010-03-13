@@ -199,7 +199,7 @@ HB_FUNC( QT_QTEXTBLOCK_CONTAINS )
  */
 HB_FUNC( QT_QTEXTBLOCK_DOCUMENT )
 {
-   hb_retptr( ( QTextDocument* ) hbqt_par_QTextBlock( 1 )->document() );
+   hb_retptrGC( hbqt_gcAllocate_QTextDocument( ( void * ) hbqt_par_QTextBlock( 1 )->document(), false ) );
 }
 
 /*
@@ -343,7 +343,7 @@ HB_FUNC( QT_QTEXTBLOCK_TEXTLIST )
  */
 HB_FUNC( QT_QTEXTBLOCK_USERDATA )
 {
-   hb_retptr( ( HBQTextBlockUserData* ) hbqt_par_QTextBlock( 1 )->userData() );
+   hb_retptrGC( hbqt_gcAllocate_HBQTextBlockUserData( hbqt_par_QTextBlock( 1 )->userData(), false ) );
 }
 
 /*

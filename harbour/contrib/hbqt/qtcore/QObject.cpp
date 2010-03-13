@@ -66,7 +66,7 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 29/35 [ 82.86% ] ]
+ *  Constructed[ 28/35 [ 80.00% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
@@ -80,6 +80,7 @@
  *
  *  // const QObjectList & children () const
  *  //T findChild ( const QString & name = QString() ) const
+ *  //virtual const QMetaObject * metaObject () const
  */
 
 #include <QtCore/QPointer>
@@ -252,14 +253,6 @@ HB_FUNC( QT_QOBJECT_ISWIDGETTYPE )
 HB_FUNC( QT_QOBJECT_KILLTIMER )
 {
    hbqt_par_QObject( 1 )->killTimer( hb_parni( 2 ) );
-}
-
-/*
- * virtual const QMetaObject * metaObject () const
- */
-HB_FUNC( QT_QOBJECT_METAOBJECT )
-{
-   hb_retptr( ( QMetaObject* ) hbqt_par_QObject( 1 )->metaObject() );
 }
 
 /*
