@@ -468,10 +468,6 @@
                      __attribute__ (( format (printf, _nStr, _nParam)))
    #define HB_MALLOC_ATTR \
                      __attribute__ (( malloc ))
-   #define HB_HOT_ATTR \
-                     __attribute__ (( hot ))
-   #define HB_COLD_ATTR \
-                     __attribute__ (( cold ))
    #define HB_PURE_ATTR \
                      __attribute__ (( pure ))
    #define HB_CONST_ATTR \
@@ -494,8 +490,14 @@
       !defined( __ICC ) && !defined( __OPENCC__ )
    #define HB_ALLOC_SIZE_ATTR( _nParam ) \
                      __attribute__ (( alloc_size (_nParam)))
+   #define HB_HOT_ATTR \
+                     __attribute__ (( hot ))
+   #define HB_COLD_ATTR \
+                     __attribute__ (( cold ))
 #  else
    #define HB_ALLOC_SIZE_ATTR( _nParam )
+   #define HB_HOT_ATTR
+   #define HB_COLD_ATTR
 #  endif
    #define HB_RESTRICT  __restrict
 

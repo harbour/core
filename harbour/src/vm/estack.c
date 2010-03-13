@@ -87,14 +87,12 @@
 #  ifdef HB_USE_TLS
 
       /* compiler has native support for TLS */
-#     if defined( HB_STACK_MACROS )
+#     if defined( HB_STACK_MACROS ) && !defined( HB_STACK_LOCAL_MACROS )
 #        if defined( __BORLANDC__ )
             PHB_STACK HB_TLS_ATTR hb_stack_ptr = NULL;
 #        else
             HB_TLS_ATTR PHB_STACK hb_stack_ptr = NULL;
 #        endif
-#     else
-         static HB_TLS_ATTR PHB_STACK hb_stack_ptr = NULL;
 #     endif
 
 #     define hb_stack_alloc()    do { hb_stack_ptr = ( PHB_STACK ) \
@@ -136,8 +134,6 @@
    /* no MT mode */
 #  if defined( HB_STACK_MACROS ) && !defined( HB_STACK_LOCAL_MACROS )
       HB_STACK hb_stack;
-#  elif !defined( __cplusplus )
-      static HB_STACK hb_stack;
 #  endif
 
 #  define hb_stack_alloc()

@@ -194,10 +194,18 @@ typedef struct
 #if defined( HB_STACK_MACROS )
 #  if defined( HB_MT_VM )
 #     if defined( HB_USE_TLS )
-#        if defined( __BORLANDC__ )
-            extern PHB_STACK HB_TLS_ATTR hb_stack_ptr;
+#        if defined( HB_STACK_LOCAL_MACROS )
+#           if defined( __BORLANDC__ )
+               static PHB_STACK HB_TLS_ATTR hb_stack_ptr;
+#           else
+               static HB_TLS_ATTR PHB_STACK hb_stack_ptr;
+#           endif
 #        else
-            extern HB_TLS_ATTR PHB_STACK hb_stack_ptr;
+#           if defined( __BORLANDC__ )
+               extern PHB_STACK HB_TLS_ATTR hb_stack_ptr;
+#           else
+               extern HB_TLS_ATTR PHB_STACK hb_stack_ptr;
+#           endif
 #        endif
 #     else
          extern HB_TLS_KEY hb_stack_key;
