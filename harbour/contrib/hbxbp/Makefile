@@ -42,6 +42,7 @@ PRG_SOURCES := \
    xbptoolbar.prg \
    xbptreeview.prg \
    xbpwindow.prg \
+   xbpclipboard.prg \
 
 PRG_HEADERS := \
    appevent.ch \

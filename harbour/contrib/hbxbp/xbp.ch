@@ -431,6 +431,9 @@
 #define HBPLAYOUT_TYPE_MAX                        4
 
 
+#define XBPCLPBRD_TEXT                            1
+#define XBPCLPBRD_BITMAP                          2
+
 /*----------------------------------------------------------------------*/
 #define _XBP_CH
 #endif
