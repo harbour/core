@@ -75,7 +75,6 @@
    /* For Arc() */
    #include "hbwince.h"
 
-   /* Pelles C requires this */
    #if defined( __POCC__ )
       #ifndef FONTENUMPROC
       #define FONTENUMPROC FONTENUMPROCW
