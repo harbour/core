@@ -74,7 +74,7 @@
 FUNCTION GraArc( oPS, aCenter, nRadius, aEllipse, nStartAngle, nSweepAngle, nFill )
    LOCAL lSuccess := .t.
 
-   HB_SYMBOL_UNUSED( oPS, aCenter, nRadius, aEllipse, nStartAngle, nSweepAngle, nFill )
+   HBXBP_JUST( oPS, aCenter, nRadius, aEllipse, nStartAngle, nSweepAngle, nFill )
 
    RETURN lSuccess
 
@@ -83,7 +83,7 @@ FUNCTION GraArc( oPS, aCenter, nRadius, aEllipse, nStartAngle, nSweepAngle, nFil
 FUNCTION GraBitBlt( oTargetPS, oSourcePS, aTargetRect, aSourceRect, nRasterOP, nCompress  )
    LOCAL lSuccess := .t.
 
-   HB_SYMBOL_UNUSED( oTargetPS, oSourcePS, aTargetRect, aSourceRect, nRasterOP, nCompress  )
+   HBXBP_JUST( oTargetPS, oSourcePS, aTargetRect, aSourceRect, nRasterOP, nCompress  )
 
    RETURN lSuccess
 
@@ -92,7 +92,7 @@ FUNCTION GraBitBlt( oTargetPS, oSourcePS, aTargetRect, aSourceRect, nRasterOP, n
 FUNCTION GraBox( oPS, aLeftBottom, aRightTop, nFill, nHRadius, nVRadius )
    LOCAL lSuccess := .t.
 
-   HB_SYMBOL_UNUSED( oPS, aLeftBottom, aRightTop, nFill, nHRadius, nVRadius )
+   HBXBP_JUST( oPS, aLeftBottom, aRightTop, nFill, nHRadius, nVRadius )
 
    RETURN lSuccess
 
@@ -101,7 +101,7 @@ FUNCTION GraBox( oPS, aLeftBottom, aRightTop, nFill, nHRadius, nVRadius )
 FUNCTION GraCaptionStr( oPS, aStartPoint, aEndPoint, cCaption, nAlign, nTabChars  )
    LOCAL lSuccess := .t.
 
-   HB_SYMBOL_UNUSED( oPS, aStartPoint, aEndPoint, cCaption, nAlign, nTabChars  )
+   HBXBP_JUST( oPS, aStartPoint, aEndPoint, cCaption, nAlign, nTabChars  )
 
    RETURN lSuccess
 
@@ -110,7 +110,7 @@ FUNCTION GraCaptionStr( oPS, aStartPoint, aEndPoint, cCaption, nAlign, nTabChars
 FUNCTION GraError( oPS )
    LOCAL nErrorCode := 0
 
-   HB_SYMBOL_UNUSED( oPS )
+   HBXBP_JUST( oPS )
 
    RETURN nErrorCode
 
@@ -119,7 +119,7 @@ FUNCTION GraError( oPS )
 FUNCTION GraFocusRect( oPS, aStartPoint, aEndPoint )
    LOCAL lSuccess := .t.
 
-   HB_SYMBOL_UNUSED( oPS, aStartPoint, aEndPoint )
+   HBXBP_JUST( oPS, aStartPoint, aEndPoint )
 
    RETURN lSuccess
 
@@ -128,7 +128,7 @@ FUNCTION GraFocusRect( oPS, aStartPoint, aEndPoint )
 FUNCTION GraGetRGBIntensity( nRGBColor )
    LOCAL aRGB := {}
 
-   HB_SYMBOL_UNUSED( nRGBColor )
+   HBXBP_JUST( nRGBColor )
 
    RETURN aRGB
 
@@ -137,7 +137,7 @@ FUNCTION GraGetRGBIntensity( nRGBColor )
 FUNCTION GraIsRGBColor( nColor )
    LOCAL lIsRGBColor := .f.
 
-   HB_SYMBOL_UNUSED( nColor )
+   HBXBP_JUST( nColor )
 
    RETURN lIsRGBColor
 
@@ -146,7 +146,7 @@ FUNCTION GraIsRGBColor( nColor )
 FUNCTION GraLine( oPS, aStartPoint, aEndPoint )
    LOCAL lSuccess := .t.
 
-   HB_SYMBOL_UNUSED( oPS, aStartPoint, aEndPoint )
+   HBXBP_JUST( oPS, aStartPoint, aEndPoint )
 
    RETURN lSuccess
 
@@ -172,7 +172,7 @@ FUNCTION GraMakeRGBColor( aRGB )
 FUNCTION GraMarker( oPS, aPoint )
    LOCAL lSuccess := .t.
 
-   HB_SYMBOL_UNUSED( oPS, aPoint )
+   HBXBP_JUST( oPS, aPoint )
 
    RETURN lSuccess
 
@@ -181,7 +181,7 @@ FUNCTION GraMarker( oPS, aPoint )
 FUNCTION GraPathBegin( oPS )
    LOCAL lSuccess := .t.
 
-   HB_SYMBOL_UNUSED( oPS )
+   HBXBP_JUST( oPS )
 
    RETURN lSuccess
 
@@ -190,7 +190,7 @@ FUNCTION GraPathBegin( oPS )
 FUNCTION GraPathClip( oPS, lClip, nClipMode )
    LOCAL lSuccess := .t.
 
-   HB_SYMBOL_UNUSED( oPS, lClip, nClipMode )
+   HBXBP_JUST( oPS, lClip, nClipMode )
 
    RETURN lSuccess
 
@@ -199,7 +199,7 @@ FUNCTION GraPathClip( oPS, lClip, nClipMode )
 FUNCTION GraPathEnd( oPS, lCloseFigure )
    LOCAL lSuccess := .t.
 
-   HB_SYMBOL_UNUSED( oPS, lCloseFigure )
+   HBXBP_JUST( oPS, lCloseFigure )
 
    RETURN lSuccess
 
@@ -208,7 +208,7 @@ FUNCTION GraPathEnd( oPS, lCloseFigure )
 FUNCTION GraPathFill( oPS, nFillMode )
    LOCAL lSuccess := .t.
 
-   HB_SYMBOL_UNUSED( oPS, nFillMode )
+   HBXBP_JUST( oPS, nFillMode )
 
    RETURN lSuccess
 
@@ -217,7 +217,7 @@ FUNCTION GraPathFill( oPS, nFillMode )
 FUNCTION GraPathOutline( oPS )
    LOCAL lSuccess := .t.
 
-   HB_SYMBOL_UNUSED( oPS )
+   HBXBP_JUST( oPS )
 
    RETURN lSuccess
 
@@ -226,7 +226,7 @@ FUNCTION GraPathOutline( oPS )
 FUNCTION GraPos( oPS, aPoint )
    LOCAL aPenPosition := { 0,0 }
 
-   HB_SYMBOL_UNUSED( oPS, aPoint )
+   HBXBP_JUST( oPS, aPoint )
 
    RETURN aPenPosition
 
@@ -235,7 +235,7 @@ FUNCTION GraPos( oPS, aPoint )
 FUNCTION GraQueryTextBox( oPS, cString )
    LOCAL aPoints := { 0,0 }
 
-   HB_SYMBOL_UNUSED( oPS, cString )
+   HBXBP_JUST( oPS, cString )
 
    RETURN aPoints
 
@@ -244,7 +244,7 @@ FUNCTION GraQueryTextBox( oPS, cString )
 FUNCTION GraRotate( oPS, aMatrix, nAngle, aPoint , nMode )
    LOCAL lSuccess := .t.
 
-   HB_SYMBOL_UNUSED( oPS, aMatrix, nAngle, aPoint , nMode )
+   HBXBP_JUST( oPS, aMatrix, nAngle, aPoint , nMode )
 
    RETURN lSuccess
 
@@ -253,7 +253,7 @@ FUNCTION GraRotate( oPS, aMatrix, nAngle, aPoint , nMode )
 FUNCTION GraScale( oPS, aMatrix, aScale, aPoint , nMode )
    LOCAL lSuccess := .t.
 
-   HB_SYMBOL_UNUSED( oPS, aMatrix, aScale, aPoint , nMode )
+   HBXBP_JUST( oPS, aMatrix, aScale, aPoint , nMode )
 
    RETURN lSuccess
 
@@ -262,7 +262,7 @@ FUNCTION GraScale( oPS, aMatrix, aScale, aPoint , nMode )
 FUNCTION GraSegClose( oPS )
    LOCAL lSuccess := .t.
 
-   HB_SYMBOL_UNUSED( oPS )
+   HBXBP_JUST( oPS )
 
    RETURN lSuccess
 
@@ -271,7 +271,7 @@ FUNCTION GraSegClose( oPS )
 FUNCTION GraSegDestroy( oPS, nSegmentID )
    LOCAL lSuccess := .t.
 
-   HB_SYMBOL_UNUSED( oPS, nSegmentID )
+   HBXBP_JUST( oPS, nSegmentID )
 
    RETURN lSuccess
 
@@ -280,7 +280,7 @@ FUNCTION GraSegDestroy( oPS, nSegmentID )
 FUNCTION GraSegDraw( oPS, nSegmentID, aMatrix, nMode )
    LOCAL lSuccess := .t.
 
-   HB_SYMBOL_UNUSED( oPS, nSegmentID, aMatrix, nMode )
+   HBXBP_JUST( oPS, nSegmentID, aMatrix, nMode )
 
    RETURN lSuccess
 
@@ -289,7 +289,7 @@ FUNCTION GraSegDraw( oPS, nSegmentID, aMatrix, nMode )
 FUNCTION GraSegDrawMode( oPS, nDrawMode )
    LOCAL nOldMode := 0
 
-   HB_SYMBOL_UNUSED( oPS, nDrawMode )
+   HBXBP_JUST( oPS, nDrawMode )
 
    RETURN nOldMode
 
@@ -298,7 +298,7 @@ FUNCTION GraSegDrawMode( oPS, nDrawMode )
 FUNCTION GraSegFind( oPS, aPoint )
    LOCAL aSegmentIDs := {}
 
-   HB_SYMBOL_UNUSED( oPS, aPoint )
+   HBXBP_JUST( oPS, aPoint )
 
    RETURN aSegmentIDs
 
@@ -306,7 +306,7 @@ FUNCTION GraSegFind( oPS, aPoint )
 
 FUNCTION GraSegOpen( oPS, nMode, nSegmentID )
 
-   HB_SYMBOL_UNUSED( oPS, nMode, nSegmentID )
+   HBXBP_JUST( oPS, nMode, nSegmentID )
 
    RETURN nSegmentID
 
@@ -315,7 +315,7 @@ FUNCTION GraSegOpen( oPS, nMode, nSegmentID )
 FUNCTION GraSegPickResolution( oPS, aCenter, aSize )
    LOCAL lSuccess := .t.
 
-   HB_SYMBOL_UNUSED( oPS, aCenter, aSize )
+   HBXBP_JUST( oPS, aCenter, aSize )
 
    RETURN lSuccess
 
@@ -324,7 +324,7 @@ FUNCTION GraSegPickResolution( oPS, aCenter, aSize )
 FUNCTION GraSegPriority( oPS, nSegmentA, nSegmentB, nPriority )
    LOCAL lSuccess := .t.
 
-   HB_SYMBOL_UNUSED( oPS, nSegmentA, nSegmentB, nPriority )
+   HBXBP_JUST( oPS, nSegmentA, nSegmentB, nPriority )
 
    RETURN lSuccess
 
@@ -333,7 +333,7 @@ FUNCTION GraSegPriority( oPS, nSegmentA, nSegmentB, nPriority )
 FUNCTION GraSetAttrArea( oPS, aAttributes )
    LOCAL aOldAttributes := {}
 
-   HB_SYMBOL_UNUSED( oPS, aAttributes )
+   HBXBP_JUST( oPS, aAttributes )
 
    RETURN aOldAttributes
 
@@ -342,7 +342,7 @@ FUNCTION GraSetAttrArea( oPS, aAttributes )
 FUNCTION GraSetAttrLine( oPS, aAttributes )
    LOCAL aOldAttributes := {}
 
-   HB_SYMBOL_UNUSED( oPS, aAttributes )
+   HBXBP_JUST( oPS, aAttributes )
 
    RETURN aOldAttributes
 
@@ -351,7 +351,7 @@ FUNCTION GraSetAttrLine( oPS, aAttributes )
 FUNCTION GraSetAttrMarker( oPS, aAttributes )
    LOCAL aOldAttributes := {}
 
-   HB_SYMBOL_UNUSED( oPS, aAttributes )
+   HBXBP_JUST( oPS, aAttributes )
 
    RETURN aOldAttributes
 
@@ -360,7 +360,7 @@ FUNCTION GraSetAttrMarker( oPS, aAttributes )
 FUNCTION GraSetAttrString( oPS, aAttributes )
    LOCAL aOldAttributes := {}
 
-   HB_SYMBOL_UNUSED( oPS, aAttributes )
+   HBXBP_JUST( oPS, aAttributes )
 
    RETURN aOldAttributes
 
@@ -369,7 +369,7 @@ FUNCTION GraSetAttrString( oPS, aAttributes )
 FUNCTION GraSetColor( oPS, nForeground, nBackground )
    LOCAL aOldColor := {}
 
-   HB_SYMBOL_UNUSED( oPS, nForeground, nBackground )
+   HBXBP_JUST( oPS, nForeground, nBackground )
 
    RETURN aOldColor
 
@@ -378,7 +378,7 @@ FUNCTION GraSetColor( oPS, nForeground, nBackground )
 FUNCTION GraSetFont( oPS, oXbpFont )
    LOCAL oXbpCurrentFont := NIL
 
-   HB_SYMBOL_UNUSED( oPS, oXbpFont )
+   HBXBP_JUST( oPS, oXbpFont )
 
    RETURN oXbpCurrentFont
 
@@ -387,7 +387,7 @@ FUNCTION GraSetFont( oPS, oXbpFont )
 FUNCTION GraSpline( oPS, aPoints, lPenPos )
    LOCAL lSuccess := .t.
 
-   HB_SYMBOL_UNUSED( oPS, aPoints, lPenPos )
+   HBXBP_JUST( oPS, aPoints, lPenPos )
 
    RETURN lSuccess
 
@@ -396,7 +396,7 @@ FUNCTION GraSpline( oPS, aPoints, lPenPos )
 FUNCTION GraStringAt( oPS, aPoint, cString )
    LOCAL lSuccess := .t.
 
-   HB_SYMBOL_UNUSED(  oPS, aPoint, cString )
+   HBXBP_JUST(  oPS, aPoint, cString )
 
    RETURN lSuccess
 
@@ -405,8 +405,13 @@ FUNCTION GraStringAt( oPS, aPoint, cString )
 FUNCTION GraTranslate( oPS, aMatrix, nXDiff, nYDiff, nMode )
    LOCAL lSuccess := .t.
 
-   HB_SYMBOL_UNUSED(  oPS, aMatrix, nXDiff, nYDiff, nMode )
+   HBXBP_JUST(  oPS, aMatrix, nXDiff, nYDiff, nMode )
 
    RETURN lSuccess
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION GraSaveScreen(...)
+   RETURN NIL
 
 /*----------------------------------------------------------------------*/
