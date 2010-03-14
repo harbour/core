@@ -225,7 +225,6 @@ FUNCTION LastAppEvent( mp1, mp2, oXbp, nThreadID )
    DEFAULT nThreadID TO hb_threadID()
 
    IF hb_hHasKey( s_hLastEvent, nThreadID )
-hbide_dbg( "hb_hHasKey( s_hLastEvent, nThreadID )", nThreadID )
       nEvent := s_hLastEvent[ nThreadID ] [ 1 ]
       mp1    := s_hLastEvent[ nThreadID ] [ 2 ]
       mp2    := s_hLastEvent[ nThreadID ] [ 3 ]
@@ -348,23 +347,6 @@ FUNCTION MsgBox( cMsg, cTitle )
    oMB:exec()
 
    RETURN nil
-
-/*----------------------------------------------------------------------*/
-
-FUNCTION GraMakeRGBColor( aRGB )
-   LOCAL nRGB
-
-   IF hb_isArray( aRGB ) .and. len( aRGB ) == 3
-      IF hb_isNumeric( aRGB[ 1 ] ) .and. ( aRGB[ 1 ] >= 0 ) .and. ( aRGB[ 1 ] <= 255 )
-         IF hb_isNumeric( aRGB[ 2 ] ) .and. ( aRGB[ 2 ] >= 0 ) .and. ( aRGB[ 2 ] <= 255 )
-            IF hb_isNumeric( aRGB[ 3 ] ) .and. ( aRGB[ 3 ] >= 0 ) .and. ( aRGB[ 3 ] <= 255 )
-               nRGB := ( aRGB[ 1 ] + ( aRGB[ 2 ] * 256 ) + ( aRGB[ 3 ] * 256 * 256 ) ) + ( 256 * 256 * 256 )
-            ENDIF
-         ENDIF
-      ENDIF
-   ENDIF
-
-   RETURN nRGB
 
 /*----------------------------------------------------------------------*/
 
