@@ -312,7 +312,7 @@
 
 static HB_BOOL s_fUseWaitLocks = HB_TRUE;
 
-#if defined( HB_OS_WIN )
+#if defined( HB_OS_WIN ) && defined( HB_OS_HAS_DRIVE_LETTER )
 
 static int fs_win_get_drive( void )
 {

@@ -367,7 +367,7 @@ static LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExcepti
       if( hToolhelp )
       {
          /* NOTE: Hack to force the ASCII versions of these types. [vszakats] */
-         #if defined( UNICODE )
+         #if ! defined( HB_OS_WIN_CE ) && defined( UNICODE )
             #undef MODULEENTRY32
             #undef LPMODULEENTRY32
          #endif
@@ -407,7 +407,13 @@ static LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExcepti
                      /* TOFIX: me32.szExePath seemed trashed in some (standalone) tests. */
                      hb_snprintf( buf, sizeof( buf ), "0x%016" PFLL "X 0x%016" PFLL "X %s\n", ( HB_PTRDIFF ) me32.modBaseAddr, ( HB_PTRDIFF ) me32.modBaseSize, me32.szExePath );
 #else
-                     hb_snprintf( buf, sizeof( buf ), "0x%08lX 0x%08lX %s\n", ( HB_PTRDIFF ) me32.modBaseAddr, ( HB_PTRDIFF ) me32.modBaseSize, me32.szExePath );
+                     char szBuffer[ MAX_PATH ];
+                     #if defined( HB_OS_WIN_CE )
+                        hb_wctombget( szBuffer, me32.szExePath, HB_SIZEOFARRAY( szBuffer ) );
+                     #else
+                        hb_strncpy( szBuffer, me32.szExePath, HB_SIZEOFARRAY( szBuffer ) - 1 );
+                     #endif
+                     hb_snprintf( buf, sizeof( buf ), "0x%08lX 0x%08lX %s\n", ( HB_PTRDIFF ) me32.modBaseAddr, ( HB_PTRDIFF ) me32.modBaseSize, szBuffer );
 #endif
                      hb_strncat( errmsg, buf, errmsglen );
                   } while( pModule32Next( hModuleSnap, &me32 ) );
