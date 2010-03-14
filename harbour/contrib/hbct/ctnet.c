@@ -94,7 +94,7 @@
    #include <winnetwk.h>
 #endif
 
-#if defined( HB_OS_WIN ) && !( defined( HB_OS_WIN_CE ) && ( defined( _MSC_VER ) && ( _MSC_VER <= 1310 ) ) )
+#if defined( HB_OS_WIN ) && !( defined( HB_OS_WIN_CE ) && ( defined( _MSC_VER ) && ( _MSC_VER <= 1500 ) ) )
 static HB_BOOL hb_IsNetShared( const char * szLocalDevice )
 {
    TCHAR lpRemoteDevice[ 128 ];
@@ -113,7 +113,7 @@ static HB_BOOL hb_IsNetShared( const char * szLocalDevice )
 
 HB_FUNC( NETCANCEL )
 {
-#if defined( HB_OS_WIN ) && !( defined( HB_OS_WIN_CE ) && ( defined( _MSC_VER ) && ( _MSC_VER <= 1310 ) ) )
+#if defined( HB_OS_WIN ) && !( defined( HB_OS_WIN_CE ) && ( defined( _MSC_VER ) && ( _MSC_VER <= 1500 ) ) )
    DWORD dwResult;
    LPTSTR lpDevice = HB_TCHAR_CONVTO( hb_parcx( 1 ) );
 
@@ -132,7 +132,7 @@ HB_FUNC( NETCANCEL )
 
 HB_FUNC( NETPRINTER )
 {
-#if defined( HB_OS_WIN ) && !( defined( HB_OS_WIN_CE ) && ( defined( _MSC_VER ) && ( _MSC_VER <= 1310 ) ) )
+#if defined( HB_OS_WIN ) && !( defined( HB_OS_WIN_CE ) && ( defined( _MSC_VER ) && ( _MSC_VER <= 1500 ) ) )
    const char * cPrn = hb_setGetCPtr( HB_SET_PRINTFILE );   /* query default local printer port. */
 
    if( !cPrn || !*cPrn || hb_stricmp( cPrn, "PRN" ) == 0 )
@@ -146,7 +146,7 @@ HB_FUNC( NETPRINTER )
 
 HB_FUNC( NETDISK )
 {
-#if defined( HB_OS_WIN ) && !( defined( HB_OS_WIN_CE ) && ( defined( _MSC_VER ) && ( _MSC_VER <= 1310 ) ) )
+#if defined( HB_OS_WIN ) && !( defined( HB_OS_WIN_CE ) && ( defined( _MSC_VER ) && ( _MSC_VER <= 1500 ) ) )
    char cDrive[ 3 ];
 
    cDrive[ 0 ] = hb_parcx( 1 )[ 0 ];
@@ -161,7 +161,7 @@ HB_FUNC( NETDISK )
 
 HB_FUNC( NETREDIR )
 {
-#if defined( HB_OS_WIN ) && !( defined( HB_OS_WIN_CE ) && ( defined( _MSC_VER ) && ( _MSC_VER <= 1310 ) ) )
+#if defined( HB_OS_WIN ) && !( defined( HB_OS_WIN_CE ) && ( defined( _MSC_VER ) && ( _MSC_VER <= 1500 ) ) )
    void * hLocalDev;
    void * hSharedRes;
    void * hPassword;
@@ -247,7 +247,7 @@ HB_FUNC( NETREDIR )
 
 HB_FUNC( NETRMTNAME )
 {
-#if defined( HB_OS_WIN ) && !( defined( HB_OS_WIN_CE ) && ( defined( _MSC_VER ) && ( _MSC_VER <= 1310 ) ) )
+#if defined( HB_OS_WIN ) && !( defined( HB_OS_WIN_CE ) && ( defined( _MSC_VER ) && ( _MSC_VER <= 1500 ) ) )
    void * hLocalDev;
 
    TCHAR lpRemoteDevice[ 128 ];
@@ -268,7 +268,7 @@ HB_FUNC( NETRMTNAME )
 
 HB_FUNC( NETWORK )
 {
-#if defined( HB_OS_WIN ) && !( defined( HB_OS_WIN_CE ) && ( defined( _MSC_VER ) && ( _MSC_VER <= 1310 ) ) )
+#if defined( HB_OS_WIN ) && !( defined( HB_OS_WIN_CE ) && ( defined( _MSC_VER ) && ( _MSC_VER <= 1500 ) ) )
    DWORD dwResult;
    TCHAR lpProviderName[ 128 ];
    DWORD dwLen = HB_SIZEOFARRAY( lpProviderName );
@@ -292,7 +292,7 @@ HB_FUNC( NETWORK )
 
 HB_FUNC( NNETWORK )
 {
-#if defined( HB_OS_WIN ) && !( defined( HB_OS_WIN_CE ) && ( defined( _MSC_VER ) && ( _MSC_VER <= 1310 ) ) )
+#if defined( HB_OS_WIN ) && !( defined( HB_OS_WIN_CE ) && ( defined( _MSC_VER ) && ( _MSC_VER <= 1500 ) ) )
    TCHAR lpProviderName[ 128 ];
    DWORD dwLen = HB_SIZEOFARRAY( lpProviderName );
 

@@ -3254,7 +3254,9 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                /* TODO */
             ENDCASE
             AAdd( hbmk[ _HBMK_aOPTL ], "-subsystem:windowsce" )
+            AAdd( hbmk[ _HBMK_aOPTD ], "-subsystem:windowsce" )
             AAdd( hbmk[ _HBMK_aOPTL ], "-nodefaultlib:oldnames.lib" )
+            AAdd( hbmk[ _HBMK_aOPTD ], "-nodefaultlib:oldnames.lib" )
             AAdd( hbmk[ _HBMK_aOPTL ], "-nodefaultlib:kernel32.lib" )
             IF nCCompVer >= 800
                AAdd( hbmk[ _HBMK_aOPTL ], "-manifest:no" )

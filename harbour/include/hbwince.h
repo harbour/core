@@ -122,7 +122,7 @@ HB_EXTERN_BEGIN
    int WINAPI MulDiv( int nNumber, int nNumerator, int nDenominator );
 #endif
 
-#if defined( __POCC__ ) || ( defined( _MSC_VER ) && ( _MSC_VER <= 1310 ) )
+#if defined( __POCC__ ) || ( defined( _MSC_VER ) && ( _MSC_VER <= 1500 ) )
    void abort( void );
 #endif
 

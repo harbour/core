@@ -170,7 +170,7 @@ HB_FUNC( FT_GETE )
       /* return number of strings found */
       hb_retni( x );
    }
-#elif defined( HB_OS_WIN ) && ! ( defined( HB_OS_WIN_CE ) && ( defined( __POCC__ ) || ( defined( _MSC_VER ) && ( _MSC_VER <= 1310 ) ) ) )
+#elif defined( HB_OS_WIN ) && ! ( defined( HB_OS_WIN_CE ) && ( defined( __POCC__ ) || ( defined( _MSC_VER ) && ( _MSC_VER <= 1500 ) ) ) )
    {
       char *buffer = NULL;
       LPTCH lpEnviron = GetEnvironmentStrings();

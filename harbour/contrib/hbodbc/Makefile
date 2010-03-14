@@ -22,9 +22,7 @@ PRG_HEADERS := \
 ifneq ($(filter $(HB_PLATFORM),win wce),)
    HB_INC_ODBC := force
    ifeq ($(HB_COMPILER),msvcarm)
-      ifneq ($(filter $(HB_COMPILER_VER),600 700 710),)
-         HB_INC_ODBC :=
-      endif
+      HB_INC_ODBC :=
    endif
 endif
 

@@ -64,7 +64,7 @@
 
 HB_FUNC( __TP_INITPORTSPEED )
 {
-#if !( defined( HB_OS_WIN_CE ) && ( defined( _MSC_VER ) && ( _MSC_VER <= 1310 ) ) )
+#if !( defined( HB_OS_WIN_CE ) && ( defined( _MSC_VER ) && ( _MSC_VER <= 1500 ) ) )
    DCB dcb;
    char values[ 20 ];
    LPTSTR lpValues;

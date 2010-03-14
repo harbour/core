@@ -90,7 +90,7 @@ AR := lib.exe
 AR_RULE = $(AR) $(ARFLAGS) $(HB_AFLAGS) $(HB_USER_AFLAGS) -nologo -out:$(LIB_DIR)/$@ $(^F) || $(RM) $(LIB_DIR)/$@
 
 DY := $(LD)
-DFLAGS += -nologo -dll -subsystem:windowsce $(LIBPATHS)
+DFLAGS += -nologo -dll -subsystem:windowsce -nodefaultlib:oldnames.lib $(LIBPATHS)
 DY_OUT := $(LD_OUT)
 DLIBS := $(foreach lib,$(HB_USER_LIBS) $(LIBS) $(SYSLIBS),$(lib)$(LIB_EXT))
 

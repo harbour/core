@@ -139,7 +139,7 @@
 #if defined( HB_FM_DL_ALLOC )
 #  if !defined( HB_FM_DLMT_ALLOC ) && !defined( HB_FM_DLMT_ALLOC_OFF ) && \
       defined( HB_MT_VM )
-#     if !( defined( HB_OS_WIN_CE ) && ( defined( _MSC_VER ) && ( _MSC_VER <= 1310 ) ) )
+#     if !( defined( HB_OS_WIN_CE ) && ( defined( _MSC_VER ) && ( _MSC_VER <= 1500 ) ) )
 #        define HB_FM_DLMT_ALLOC
 #     endif
 #  endif
@@ -163,7 +163,7 @@
 #     pragma warn -ngu
 #     pragma warn -prc
 #     pragma warn -rch
-#  elif defined( HB_OS_WIN_CE ) && ( defined( __POCC__ ) || ( defined( _MSC_VER ) && ( _MSC_VER <= 1310 ) ) )
+#  elif defined( HB_OS_WIN_CE ) && defined( __POCC__ )
 #     define ABORT TerminateProcess( GetCurrentProcess(), 0 )
 #  elif defined( __POCC__ ) && !defined( InterlockedCompareExchangePointer )
 #     define InterlockedCompareExchangePointer
@@ -179,6 +179,9 @@
 #  elif defined( _MSC_VER )
 #     if !defined( USE_DL_PREFIX ) && !defined( HB_FM_DLMT_ALLOC )
 #        define USE_DL_PREFIX
+#     endif
+#     if defined( HB_OS_WIN_CE ) && ( _MSC_VER <= 1500 )
+#        define ABORT TerminateProcess( GetCurrentProcess(), 0 )
 #     endif
 #     if defined( HB_OS_WIN_CE )
 #        define LACKS_FCNTL_H

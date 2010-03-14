@@ -76,8 +76,10 @@
    #include "hbwince.h"
 
    /* Pelles C requires this */
-   #ifndef FONTENUMPROC
-   #define FONTENUMPROC FONTENUMPROCW
+   #if defined( __POCC__ )
+      #ifndef FONTENUMPROC
+      #define FONTENUMPROC FONTENUMPROCW
+      #endif
    #endif
 #endif
 
