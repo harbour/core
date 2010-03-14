@@ -22,11 +22,11 @@ CFLAGS += -I. -I$(HB_INC_COMPILE)
 CFLAGS += -nologo
 
 ifeq ($(HB_COMPILER),msvcarm)
-   CFLAGS += -D_M_ARM -DARM
+   CFLAGS += -D_M_ARM -DARM -D_ARM_
 else ifeq ($(HB_COMPILER),msvcsh)
    CFLAGS += -D_M_SH -DSHx
 else ifeq ($(HB_COMPILER),msvcmips)
-   CFLAGS += -D_M_MRX000=4000 -DMIPS
+   CFLAGS += -D_M_MRX000=4000 -DMIPS -D_MIPS_
 else ifeq ($(HB_COMPILER),msvc)
    CFLAGS += -D_M_IX86 -D_X86_
 endif

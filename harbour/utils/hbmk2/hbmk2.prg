@@ -3249,7 +3249,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             AAdd( hbmk[ _HBMK_aOPTRES ], "-DUNDER_CE" )
             DO CASE
             CASE hbmk[ _HBMK_cCOMP ] == "msvcarm"
-               AAdd( hbmk[ _HBMK_aOPTC ], "-D_M_ARM -DARM" )
+               AAdd( hbmk[ _HBMK_aOPTC ], "-D_M_ARM -DARM -D_ARM_" )
             CASE hbmk[ _HBMK_cCOMP ] == "msvc"
                /* TODO */
             ENDCASE
