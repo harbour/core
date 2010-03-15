@@ -7746,7 +7746,7 @@ static HB_ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderI
                                    !pArea->dbfarea.area.lpdbOrdCondInfo->fAdditive ) )
    {
       hb_cdxOrdListClear( pArea, !( DBFAREA_DATA( &pArea->dbfarea )->fStrictStruct ?
-                          pArea->dbfarea.fHasTags : hb_setGetAutOpen() ), NULL );
+                          pArea->dbfarea.fHasTags : hb_setGetAutOpen() ), pIndex );
    }
    hb_cdxIndexUnLockWrite( pIndex );
    /* Update DBF header */
