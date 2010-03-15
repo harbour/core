@@ -34,7 +34,8 @@
 --*/
 #define BZ_LCCWIN32  0
 
-#if defined(_WIN32) && !defined(__CYGWIN__)
+#if ( defined(_WIN32) && !defined(__CYGWIN__) ) || \
+    ( defined(__WATCOMC__) && ( defined(__OS2__) || defined(__DOS__) ) )
 #undef  BZ_LCCWIN32
 #define BZ_LCCWIN32 1
 #undef  BZ_UNIX
