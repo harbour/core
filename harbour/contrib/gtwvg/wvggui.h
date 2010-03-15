@@ -78,6 +78,7 @@
 #include <olectl.h>
 #endif
 #include <commdlg.h>
+#include <shellapi.h>
 #include <shlobj.h>
 
 #include <time.h>

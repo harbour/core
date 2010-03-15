@@ -56,6 +56,10 @@
 #include "hbapifs.h"
 #include "hbapiitm.h"
 
+#if ! defined( HB_OS_WIN_CE )
+   #include <winspool.h>
+#endif
+
 #define _ENUMPRN_FLAGS_             ( PRINTER_ENUM_LOCAL | PRINTER_ENUM_CONNECTIONS )
 
 static HB_BOOL hb_IsLegacyDevice( const char * pszPrinterName )

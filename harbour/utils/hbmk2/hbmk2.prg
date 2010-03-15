@@ -8488,7 +8488,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-comp[iler]=<comp>", I_( "select C compiler.\nSpecial value:\n - bld: use original build settings (default on *nix)" ) },;
       { "-build=<name>"     , I_( "use a specific build name" ) },;
       { "-lang=<lang>"      , I_( "override default language. Similar to HB_LANG envvar." ) },;
-      { "-width=<n>"        , I_( "set output width to <n> character." ) },;
+      { "-width=<n>"        , I_( "set output width to <n> characters." ) },;
       { "--version"         , I_( "display version header only" ) },;
       { "-pause"            , I_( "force waiting for a key on exit in case of failure (with alternate GTs only)" ) },;
       { "-info"             , I_( "turn on informational messages" ) },;

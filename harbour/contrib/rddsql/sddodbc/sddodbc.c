@@ -65,6 +65,10 @@
 /* Required by headers on Windows */
 #if defined( HB_OS_WIN )
 #  include <windows.h>
+   /* Required for WIN32_LEAN_AND_MEAN mode */
+#  if ! defined( WIN32 )
+#     define WIN32
+#  endif
 #endif
 
 #include <sql.h>

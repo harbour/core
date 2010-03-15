@@ -58,7 +58,7 @@
 #include "hbwin.h"
 #include "hbwapi.h"
 
-#if ! defined( HB_OS_WIN_CE )
+#include <commdlg.h>
 
 /* WIN_PRINTDLGDC( [@<cDevice>], [<nFromPage>], [<nToPage>], [<nCopies>] )
  *                -> <hDC>
@@ -69,15 +69,18 @@ HB_FUNC( WIN_PRINTDLGDC )
 
    memset( &pd, 0, sizeof( pd ) );
 
+#if ! defined( HB_OS_WIN_CE )
    pd.lStructSize = sizeof( pd );
    pd.hwndOwner = GetActiveWindow();
    pd.Flags = PD_RETURNDC | PD_USEDEVMODECOPIESANDCOLLATE;
    pd.nFromPage = ( WORD ) hb_parnidef( 2, 1 );
    pd.nToPage = ( WORD ) hb_parnidef( 3, 1 );
    pd.nCopies = ( WORD ) hb_parnidef( 4, 1 );
+#endif
 
    if( PrintDlg( &pd ) )
    {
+#if ! defined( HB_OS_WIN_CE )
       if( pd.hDevNames )
       {
          LPDEVNAMES lpdn = ( LPDEVNAMES ) GlobalLock( pd.hDevNames );
@@ -90,14 +93,19 @@ HB_FUNC( WIN_PRINTDLGDC )
          GlobalFree( pd.hDevMode );
 
       hbwapi_ret_HDC( pd.hDC );
+#else
+      hb_storc( NULL, 1 );
+
+#if defined( __MINGW32__ ) /* NOTE: mingwarm has the struct names/members wrong. */
+      hbwapi_ret_HDC( pd.hDC );
+#else
+      hbwapi_ret_HDC( pd.hdc );
+#endif
+#endif
    }
    else
       hb_retptr( NULL );
 }
-
-#endif
-
-#if !( defined( HB_OS_WIN_CE ) && ( defined( _MSC_VER ) && ( _MSC_VER <= 1500 ) ) )
 
 static LPTSTR s_dialogPairs( int iParam, DWORD * pdwIndex )
 {
@@ -298,5 +306,3 @@ HB_FUNC( WIN_GETSAVEFILENAME )
 {
    s_GetFileName( HB_TRUE );
 }
-
-#endif

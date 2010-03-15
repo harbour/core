@@ -80,6 +80,8 @@
       #define FONTENUMPROC FONTENUMPROCW
       #endif
    #endif
+#else
+   #include <winspool.h>
 #endif
 
 HB_FUNC( WIN_CREATEDC )

@@ -54,6 +54,8 @@
 
 #if ! defined( HB_OS_WIN_CE )
 
+#include <winspool.h>
+
 /* NOTE: Based on hb_strncat() */
 static TCHAR * hb_tstrncat( TCHAR * pDest, const TCHAR * pSource, HB_SIZE nLen )
 {

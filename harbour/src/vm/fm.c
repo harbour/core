@@ -180,10 +180,8 @@
 #     if !defined( USE_DL_PREFIX ) && !defined( HB_FM_DLMT_ALLOC )
 #        define USE_DL_PREFIX
 #     endif
-#     if defined( HB_OS_WIN_CE ) && ( _MSC_VER <= 1500 )
-#        define ABORT TerminateProcess( GetCurrentProcess(), 0 )
-#     endif
 #     if defined( HB_OS_WIN_CE )
+#        define ABORT TerminateProcess( GetCurrentProcess(), 0 )
 #        define LACKS_FCNTL_H
 #     endif
 #  elif defined( __MINGW32__ )
