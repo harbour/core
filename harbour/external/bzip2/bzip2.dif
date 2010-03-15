@@ -1,0 +1,11 @@
+--- ori_src\bzip2.c	Sun Dec 09 04:22:12 2007
++++ bzip2.c	Mon Mar 15 12:37:04 2010
+@@ -128,7 +128,7 @@
+ #if BZ_LCCWIN32
+ #   include <io.h>
+ #   include <fcntl.h>
+-#   include <sys\stat.h>
++#   include <sys/stat.h>
+ 
+ #   define NORETURN       /**/
+ #   define PATH_SEP       '\\'
