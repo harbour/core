@@ -64,9 +64,6 @@ HB_EXTERN_BEGIN
 
 #if defined( HB_MT_VM )
 #  include "hbthread.h"
-#  if !defined( HB_USE_TLS ) && !defined( HB_OS_OS2 ) && 0
-#     undef HB_STACK_MACROS
-#  endif
 #endif
 
 /* thread specific data */
