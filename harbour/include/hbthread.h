@@ -442,7 +442,7 @@ extern HB_BOOL hb_threadMutexSyncWait( PHB_ITEM pItemMtx, HB_ULONG ulMilliSec, P
         ( __GLIBC__ > 2 || ( __GLIBC__ == 2 && __GLIBC_MINOR__ >= 6 ) ) && \
         defined( HB_OS_LINUX ) && \
         ( defined( __i386__ ) || defined( __x86_64__ ) ) && \
-        ( !defined( __OPENCC__ ) || !defined( HB_DYNLIB ) )
+        !defined( __OPENCC__ )
 #     define HB_USE_TLS
 #  endif
 #endif
