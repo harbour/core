@@ -634,7 +634,7 @@ HARBOUR
                                  libraries. Build all if left empty (default).
    - HB_CONTRIB_ADDONS=<list>    Build space separated <list> of additional
                                  libraries stored in the contrib directory.
-   - HB_EXTERNALLIBS=no [<list>] Don't build any (or space separated <list> of)
+   - HB_EXTERNALLIBS=no <list>   Don't build space separated <list> of
                                  external libraries.
    - HB_EXTERNALLIBS=[<list>]    Build space separated <list> of external
                                  libraries. Build all if left empty (default).
