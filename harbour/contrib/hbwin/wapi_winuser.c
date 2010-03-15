@@ -403,3 +403,21 @@ HB_FUNC( WAPI_SETACTIVEWINDOW )
    hbwapi_SetLastError( GetLastError() );
    hb_retptr( hResult );
 }
+/*----------------------------------------------------------------------*/
+/* WAPI_LoadImage( [<hInstance>], <cName>, [<nType>],
+                   [<nWidth>], [<nHeight>], [<nFlags>] ) -> <hImage> */
+HB_FUNC( WAPI_LOADIMAGE )
+{
+   void * hString = NULL;
+   HANDLE hImage;
+
+   hImage = LoadImage( wapi_par_HINSTANCE( 1 ),
+                       HB_ISNUM( 2 ) ? MAKEINTRESOURCE( wapi_par_INT( 2 ) ) :
+                                       HB_PARSTR( 2, &hString, NULL ),
+                       HB_ISNUM( 3 ) ? wapi_par_UINT( 3 ) : IMAGE_BITMAP,
+                       wapi_par_INT( 4 ),       // desired width
+                       wapi_par_INT( 5 ),       // desired height
+                       wapi_par_UINT( 6 ) );    // load flags
+   hb_strfree( hString );
+   wapi_ret_HANDLE( hImage );
+}

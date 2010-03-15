@@ -487,6 +487,15 @@
 #define WIN_OFN_SHARENOWARN               0x00000001
 #define WIN_OFN_SHAREWARN                 0x00000000
 
+/* WAPI_LOADIMAGE() */
+#define WIN_IMAGE_BITMAP            0
+#define WIN_IMAGE_ICON              1
+#define WIN_IMAGE_CURSOR            2
+#define WIN_IMAGE_ENHMETAFILE       3
+
+/* window messages WM_* */
+#define WIN_WM_USER                 1024
+
 /* ------------------------------- */
 /* Deprecated constants and macros */
 /* ------------------------------- */
