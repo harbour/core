@@ -13,7 +13,6 @@ HB_BUILD_MODE := c
 
 C_SOURCES := \
    blocksor.c \
-   bzip2.c \
    bzlib.c \
    compress.c \
    crctable.c \

@@ -298,6 +298,7 @@ HARBOUR
    HB_WITH_ADS=C:\ads\acesdk
    HB_WITH_ALLEGRO=C:\allegro\include
    HB_WITH_BLAT=C:\blat\full\source
+   HB_WITH_BZIP=C:\bzip2 (defaults to locally hosted version if not found)
    HB_WITH_CAIRO=C:\cairo\include\cairo
    HB_WITH_CURL=C:\curl\include
    HB_WITH_CURSES= (on *nix systems and DJGPP, where it's autodetected)
@@ -391,6 +392,7 @@ HARBOUR
 
       Optional, to override locally hosted sources:
 
+      for bzip2 support:         $ sudo apt-get install bzip2
       for zlib support:          $ sudo apt-get install zlib1g-dev
       for pcre (regex) support:  $ sudo apt-get install libpcre3-dev
       for contrib/hbsqlit3 lib:  $ sudo apt-get install libsqlite3-dev
@@ -1322,6 +1324,8 @@ HARBOUR
          http://alleg.sourceforge.net/
       HB_WITH_BLAT - Blat (SMTP client) [win, free, open-source]
          http://www.blat.net/
+      HB_WITH_BZIP2 - libbzip2 [multiplatform, free, open-source]
+         http://www.bzip.org/
       HB_WITH_CAIRO - Cairo [multiplatform, open-source]
          http://www.gtk.org/download-windows.html
          Direct links, look for these components on page above:

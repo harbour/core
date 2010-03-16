@@ -50,6 +50,8 @@
  *
  */
 
+/* NOTE: This file is also used by C code. */
+
 #ifndef HB_BZIP2_CH_
 #define HB_BZIP2_CH_
 
@@ -58,18 +60,18 @@
 #define HB_BZ_FLUSH_OK              2
 #define HB_BZ_FINISH_OK             3
 #define HB_BZ_STREAM_END            4
-#define HB_BZ_SEQUENCE_ERROR        (-1)
-#define HB_BZ_PARAM_ERROR           (-2)
-#define HB_BZ_MEM_ERROR             (-3)
-#define HB_BZ_DATA_ERROR            (-4)
-#define HB_BZ_DATA_ERROR_MAGIC      (-5)
-#define HB_BZ_IO_ERROR              (-6)
-#define HB_BZ_UNEXPECTED_EOF        (-7)
-#define HB_BZ_OUTBUFF_FULL          (-8)
-#define HB_BZ_CONFIG_ERROR          (-9)
+#define HB_BZ_SEQUENCE_ERROR        ( -1 )
+#define HB_BZ_PARAM_ERROR           ( -2 )
+#define HB_BZ_MEM_ERROR             ( -3 )
+#define HB_BZ_DATA_ERROR            ( -4 )
+#define HB_BZ_DATA_ERROR_MAGIC      ( -5 )
+#define HB_BZ_IO_ERROR              ( -6 )
+#define HB_BZ_UNEXPECTED_EOF        ( -7 )
+#define HB_BZ_OUTBUFF_FULL          ( -8 )
+#define HB_BZ_CONFIG_ERROR          ( -9 )
 
-#define HB_BZ_COMPRESSION_SPEED         1
-#define HB_BZ_COMPRESSION_SIZE          9
-#define HB_BZ_COMPRESSION_DEFAULT       9
+#define HB_BZ_COMPRESSION_SPEED     1
+#define HB_BZ_COMPRESSION_SIZE      9
+#define HB_BZ_COMPRESSION_DEFAULT   9
 
 #endif /* HB_BZIP2_CH_ */

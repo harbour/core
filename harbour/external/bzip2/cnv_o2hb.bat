@@ -21,7 +21,6 @@ rem             don't have to mess with this tool.
 
 copy ori_src\LICENCE         LICENCE
 copy ori_src\blocksort.c     blocksor.c
-copy ori_src\bzip2.c         bzip2.c
 copy ori_src\bzlib.c         bzlib.c
 copy ori_src\compress.c      compress.c
 copy ori_src\crctable.c      crctable.c

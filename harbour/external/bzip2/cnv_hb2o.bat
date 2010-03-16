@@ -21,7 +21,6 @@ del ori_dst\*.* /Y
 
 copy LICENCE    ori_src\LICENCE
 copy blocksor.c ori_src\blocksort.c
-copy bzip2.c    ori_src\bzip2.c
 copy bzlib.c    ori_src\bzlib.c
 copy compress.c ori_src\compress.c
 copy crctable.c ori_src\crctable.c
