@@ -298,7 +298,7 @@ HARBOUR
    HB_WITH_ADS=C:\ads\acesdk
    HB_WITH_ALLEGRO=C:\allegro\include
    HB_WITH_BLAT=C:\blat\full\source
-   HB_WITH_BZIP=C:\bzip2 (defaults to locally hosted version if not found)
+   HB_WITH_BZIP2=C:\bzip2 (defaults to locally hosted version if not found)
    HB_WITH_CAIRO=C:\cairo\include\cairo
    HB_WITH_CURL=C:\curl\include
    HB_WITH_CURSES= (on *nix systems and DJGPP, where it's autodetected)
