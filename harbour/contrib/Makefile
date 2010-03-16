@@ -8,6 +8,7 @@ ROOT := ../
 DIRS := \
    gtwvg \
    hbbtree \
+   hbbzip2 \
    hbclipsm \
    hbct \
    hbfoxpro \
