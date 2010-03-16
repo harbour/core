@@ -583,9 +583,8 @@ METHOD IdeThemes:setAttributes()
       ::oUI:qObj[ "checkItalic"    ]:setChecked( aAttr[ THM_ATR_ITALIC ] )
       ::oUI:qObj[ "checkBold"      ]:setChecked( aAttr[ THM_ATR_BOLD   ] )
       ::oUI:qObj[ "checkUnderline" ]:setChecked( aAttr[ THM_ATR_ULINE  ] )
-
-      ::oUI:qObj[ "buttonColor" ]:setStyleSheet( "color: " + Attr2RGBfnRev( aAttr ) + ";" + ;
-                                                 "background-color: " + Attr2RGBfn( aAttr ) + ";" )
+      ::oUI:qObj[ "buttonColor"    ]:setStyleSheet( "color: " + Attr2RGBfnRev( aAttr ) + ";" + ;
+                                                    "background-color: " + Attr2RGBfn( aAttr ) + ";" )
    ENDIF
 
    RETURN Self

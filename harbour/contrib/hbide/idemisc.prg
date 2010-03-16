@@ -669,8 +669,10 @@ FUNCTION hbide_pathStripLastSlash( cPath )
 FUNCTION hbide_pathToOSPath( cPath )
    LOCAL n
 
-   cPath := strtran( cPath, "/" , hb_osPathSeparator() )
-   cPath := strtran( cPath, "\" , hb_osPathSeparator() )
+   cPath := strtran( cPath, "//" , hb_osPathSeparator() )
+   cPath := strtran( cPath, "/"  , hb_osPathSeparator() )
+   cPath := strtran( cPath, "\\" , hb_osPathSeparator() )
+   cPath := strtran( cPath, "\"  , hb_osPathSeparator() )
 
    IF ( n := at( ":", cPath ) ) > 0
       cPath := upper( substr( cPath, 1, n - 1 ) ) + substr( cPath, n )

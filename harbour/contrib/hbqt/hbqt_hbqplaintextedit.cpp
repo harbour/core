@@ -259,25 +259,25 @@ void HBQPlainTextEdit::mouseDoubleClickEvent( QMouseEvent *event )
 
 void HBQPlainTextEdit::paintEvent( QPaintEvent * event )
 {
-   QPainter painter( viewport() );
+   QPainter * painter = new QPainter( viewport() );
 
-   int curBlock     = textCursor().blockNumber();
+   int curBlock      = textCursor().blockNumber();
 
-   QTextBlock block = firstVisibleBlock();
-   int blockNumber  = block.blockNumber();
-   int height       = ( int ) blockBoundingRect( block ).height();
-   int top          = ( int ) blockBoundingGeometry( block ).translated( contentOffset() ).top();
-   int bottom       = top + height;
+   QTextBlock tblock = firstVisibleBlock();
+   int blockNumber   = tblock.blockNumber();
+   int height        = ( int ) blockBoundingRect( tblock ).height();
+   int top           = ( int ) blockBoundingGeometry( tblock ).translated( contentOffset() ).top();
+   int bottom        = top + height;
 
-   while( block.isValid() && top <= event->rect().bottom() )
+   while( tblock.isValid() && top <= event->rect().bottom() )
    {
-      if( block.isVisible() && bottom >= event->rect().top() )
+      if( tblock.isVisible() && bottom >= event->rect().top() )
       {
          int index = bookMarksGoto.indexOf( blockNumber + 1 );
          if( index != -1 )
          {
             QRect r( 0, top, viewport()->width(), height );
-            painter.fillRect( r, brushForBookmark( index ) );
+            painter->fillRect( r, brushForBookmark( index ) );
          }
          else if( curBlock == blockNumber && m_currentLineColor.isValid() )
          {
@@ -286,17 +286,29 @@ void HBQPlainTextEdit::paintEvent( QPaintEvent * event )
                QRect r = HBQPlainTextEdit::cursorRect();
                r.setX( 0 );
                r.setWidth( viewport()->width() );
-               painter.fillRect( r, QBrush( m_currentLineColor ) );
+               painter->fillRect( r, QBrush( m_currentLineColor ) );
             }
          }
       }
-      block  = block.next();
+      tblock = tblock.next();
       top    = bottom;
-      bottom = top + height;//( int ) blockBoundingRect( block ).height();
+      bottom = top + height;
       ++blockNumber;
    }
    this->hbPaintColumnSelection( event );
-   painter.end();
+
+   #if 1  /* A day wasted - I could not find how I can execute paiting from within prg code */
+   if( block )
+   {
+      PHB_ITEM p1 = hb_itemPutNI( NULL, QEvent::Paint );
+      PHB_ITEM p2 = hb_itemPutPtr( NULL, painter );
+      hb_vmEvalBlockV( block, 2, p1, p2 );
+      hb_itemRelease( p1 );
+      hb_itemRelease( p2 );
+   }
+   #endif
+
+   painter->end();
    QPlainTextEdit::paintEvent( event );
 }
 
@@ -331,6 +343,7 @@ void HBQPlainTextEdit::lineNumberAreaPaintEvent( QPaintEvent *event )
    int blockNumber  = block.blockNumber();
    int top          = ( int ) blockBoundingGeometry( block ).translated( contentOffset() ).top();
    int bottom       = top +( int ) blockBoundingRect( block ).height();
+   int off          = fontMetrics().height() / 4;
 
    while( block.isValid() && top <= event->rect().bottom() )
    {
@@ -339,17 +352,12 @@ void HBQPlainTextEdit::lineNumberAreaPaintEvent( QPaintEvent *event )
          QString number = QString::number( blockNumber + 1 );
          painter.setPen( (  blockNumber + 1 ) % 10 == 0 ? Qt::red : Qt::black );
          painter.drawText( 0, top, lineNumberArea->width()-2, fontMetrics().height(), Qt::AlignRight, number );
+
          int index = bookMarksGoto.indexOf( number.toInt() );
          if( index != -1 )
          {
-            //painter.drawText( 0, top, 30, fontMetrics().height(), Qt::AlignCenter, "+" );
-            //painter.setBrush( QBrush( Qt::yellow, Qt::SolidPattern ) );
             painter.setBrush( brushForBookmark( index ) );
-            #if 0
-            painter.drawEllipse( 5, top + ( fontMetrics().height()/4 ),
-                                       fontMetrics().height()/2, fontMetrics().height()/2 );
-            #endif
-            painter.drawRect( 5, top+2, fontMetrics().height()-4, fontMetrics().height()-4 );
+            painter.drawRect( 5, top + off, off * 2, off * 2 );
          }
       }
       block  = block.next();

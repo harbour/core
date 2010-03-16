@@ -151,7 +151,7 @@ CLASS IdeEditsManager INHERIT IdeObject
 
    METHOD getText()
    METHOD getWord( lSelect )
-   METHOD getLine( lSelect )
+   METHOD getLine( nLine, lSelect )
 
    ENDCLASS
 
@@ -640,10 +640,10 @@ METHOD IdeEditsManager:getWord( lSelect )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeEditsManager:getLine( lSelect )
+METHOD IdeEditsManager:getLine( nLine, lSelect )
    LOCAL oEdit, cText := ""
    IF !empty( oEdit := ::getEditObjectCurrent() )
-      cText := oEdit:getLine( lSelect )
+      cText := oEdit:getLine( nLine, lSelect )
    ENDIF
    RETURN cText
 
@@ -886,18 +886,18 @@ METHOD IdeEditsManager:gotoMark( nIndex )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-///////
-METHOD IdeEditsManager:goto()
-   LOCAL qGo, nLine, qCursor, qEdit, nRows
 
-   IF ! empty( qEdit := ::oEM:getEditCurrent() )
-      qCursor := QTextCursor():configure( qEdit:textCursor() )
-      nLine := qCursor:blockNumber()
-      nRows := qEdit:blockCount()
+METHOD IdeEditsManager:goto()
+   LOCAL qGo, nLine, qCursor, nRows, oEdit
+
+   IF ! empty( oEdit := ::oEM:getEditObjectCurrent() )
+      qCursor := QTextCursor():configure( oEdit:qEdit:textCursor() )
+      nLine   := qCursor:blockNumber()
+      nRows   := oEdit:qEdit:blockCount()
 
       qGo := QInputDialog():new( ::oDlg:oWidget )
       qGo:setIntMinimum( 1 )
-      qGo:setIntMaximum( nRows )
+      qGo:setIntMaximum( nRows + 1 )
       qGo:setIntValue( nLine + 1 )
       qGo:setLabelText( "Goto Line Number [1-" + hb_ntos( nRows ) + "]" )
       qGo:setWindowTitle( "Harbour-Qt" )
@@ -906,17 +906,9 @@ METHOD IdeEditsManager:goto()
       qGo:exec()
       ::aIni[ INI_HBIDE, GotoDialogGeometry ] := hbide_posAndSize( qGo )
 
-      nLine := qGo:intValue() -  nLine
-
-      qGo:pPtr := NIL
-
-      IF nLine < 0
-         qCursor:movePosition( QTextCursor_Up, QTextCursor_MoveAnchor, abs( nLine ) + 1 )
-      ELSEIF nLine > 0
-         qCursor:movePosition( QTextCursor_Down, QTextCursor_MoveAnchor, nLine - 1 )
-      ENDIF
-      qEdit:setTextCursor( qCursor )
+      oEdit:goto( qGo:intValue() )
    ENDIF
+
    RETURN nLine
 
 /*----------------------------------------------------------------------*/
@@ -1366,7 +1358,7 @@ CLASS IdeEdit INHERIT IdeObject
    METHOD create( oEditor, nMode )
    METHOD destroy()
    METHOD execEvent( nMode, oEdit, p, p1 )
-   METHOD execKeyEvent( nMode, nEvent, p )
+   METHOD execKeyEvent( nMode, nEvent, p, p1 )
    METHOD connectEditSignals( oEdit )
    METHOD disconnectEditSignals( oEdit )
 
@@ -1390,11 +1382,12 @@ CLASS IdeEdit INHERIT IdeObject
    METHOD handlePreviousWord( lUpdatePrevWord )
    METHOD loadFuncHelp()
    METHOD clickFuncHelp()
+   METHOD goto( nLine )
    METHOD gotoFunction()
    METHOD toggleLineNumbers()
 
    METHOD getWord( lSelect )
-   METHOD getLine( lSelect )
+   METHOD getLine( nLine, lSelect )
    METHOD getText()
    METHOD getSelectedText()
    METHOD getColumnNo()
@@ -1410,9 +1403,14 @@ CLASS IdeEdit INHERIT IdeObject
 
    METHOD setLineNumbersBkColor( nR, nG, nB )
    METHOD setCurrentLineColor( nR, nG, nB )
+   METHOD getCursor()                             INLINE QTextCursor():from( ::qEdit:textCursor() )
    METHOD down()
    METHOD up()
+   METHOD home()
+   METHOD find( cText, nPosFrom )
    METHOD refresh()
+   METHOD isModified()                            INLINE ::oEditor:qDocument:isModified()
+
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
@@ -1463,7 +1461,7 @@ METHOD IdeEdit:create( oEditor, nMode )
    Qt_Events_Connect( ::pEvents, ::qEdit, QEvent_FocusOut           , {| | ::execKeyEvent( 105, QEvent_FocusOut    ) } )
    Qt_Events_Connect( ::pEvents, ::qEdit, QEvent_MouseButtonDblClick, {|p| ::execKeyEvent( 103, QEvent_MouseButtonDblClick, p ) } )
 
-   ::qEdit:hbSetEventBlock( {|p| ::execKeyEvent( 115, 1001, p ) } )
+   ::qEdit:hbSetEventBlock( {|p,p1| ::execKeyEvent( 115, 1001, p, p1 ) } )
 
    ::qTimer := QTimer():new()
    ::qTimer:setInterval( 2000 )
@@ -1652,11 +1650,13 @@ METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeEdit:execKeyEvent( nMode, nEvent, p )
+METHOD IdeEdit:execKeyEvent( nMode, nEvent, p, p1 )
    LOCAL key, kbm, txt, qEvent
    LOCAL lAlt   := .f.
    LOCAL lCtrl  := .f.
    LOCAL lShift := .f.
+
+   p1 := p1
 
    SWITCH nEvent
    CASE QEvent_KeyPress
@@ -1754,6 +1754,9 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p )
             ::gotoFunction()
          ENDIF
          EXIT
+      CASE Qt_Key_F1
+         ::gotoFunction()
+         EXIT
       ENDSWITCH
 
       EXIT
@@ -1773,11 +1776,14 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p )
       ::lCopyWhenDblClicked := .t.
       EXIT
 
-
    CASE 1001
       IF p == QEvent_MouseButtonDblClick
          ::lCopyWhenDblClicked := .f.       /* not intuitive */
          ::clickFuncHelp()
+
+      ELSEIF p == QEvent_Paint
+         // ::oIde:testPainter( p1 )
+
       ENDIF
       EXIT
 
@@ -1834,6 +1840,7 @@ METHOD IdeEdit:toggleLineNumbers()
 METHOD IdeEdit:gotoMark( nIndex )
    IF len( ::aBookMarks ) >= nIndex
       ::qEdit:hbGotoBookmark( ::aBookMarks[ nIndex ] )
+      ::qEdit:centerCursor()
    ENDIF
    RETURN Self
 
@@ -1886,9 +1893,39 @@ METHOD IdeEdit:setCurrentLineColor( nR, nG, nB )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
+/* TO BE EXTENDED */
+METHOD IdeEdit:find( cText, nPosFrom )
+   LOCAL lFound, nPos
+   LOCAL qCursor := ::getCursor()
+
+   nPos := qCursor:position()
+   IF hb_isNumeric( nPosFrom )
+      qCursor:setPosition( nPosFrom )
+   ENDIF
+   ::qEdit:setTextCursor( qCursor )
+   IF ( lFound := ::qEdit:find( cText, QTextDocument_FindCaseSensitively ) )
+      ::qEdit:centerCursor()
+   ELSE
+      qCursor:setPosition( nPos )
+      ::qEdit:setTextCursor( qCursor )
+   ENDIF
+
+   RETURN lFound
+
+/*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:refresh()
    ::qEdit:hbRefresh()
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:home()
+   LOCAL qCursor := ::getCursor()
+
+   qCursor:movePosition( QTextCursor_StartOfBlock )
+   ::qEdit:setTextCursor( qCursor )
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -2019,14 +2056,30 @@ METHOD IdeEdit:getWord( lSelect )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeEdit:getLine( lSelect )
+METHOD IdeEdit:goto( nLine )
+   LOCAL qCursor := QTextCursor():configure( ::qEdit:textCursor() )
+
+   qCursor:movePosition( QTextCursor_Start )
+   qCursor:movePosition( QTextCursor_Down, QTextCursor_MoveAnchor, nLine - 1 )
+   ::qEdit:setTextCursor( qCursor )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:getLine( nLine, lSelect )
    LOCAL cText, qCursor := QTextCursor():configure( ::qEdit:textCursor() )
 
+   DEFAULT nLine   TO qCursor:blockNumber() + 1
    DEFAULT lSelect TO .F.
+
+   IF nLine != qCursor:blockNumber() + 1
+      qCursor:movePosition( QTextCursor_Start )
+      qCursor:movePosition( QTextCursor_Down, QTextCursor_MoveAnchor, nLine - 1 )
+   ENDIF
 
    qCursor:select( QTextCursor_LineUnderCursor )
    cText := qCursor:selectedText()
-
    IF lSelect
       ::qEdit:setTextCursor( qCursor )
    ENDIF

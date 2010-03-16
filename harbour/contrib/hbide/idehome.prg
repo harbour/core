@@ -343,7 +343,7 @@ METHOD IdeHome:addProjectsInfo( aHtm )
          dir_  := directory( a_[ 1 ] )
          cIcon := hbide_imageForProjectType( prp_[ PRJ_PRP_TYPE ] )
 
-         aadd( aHtm, '   <tr>'     )
+         aadd( aHtm, '   <tr height="1">'     )
          aadd( aHtm, '    <td><b>' )
          aadd( aHtm, '   ' + hbide_htmlImgAnchor( 'prj-' + prp_[ PRJ_PRP_TITLE ], 'resources/' + cIcon + '.png' ) + '&nbsp;' )
          aadd( aHtm, '   ' + hbide_htmlAnchor( 'prj-' + prp_[ PRJ_PRP_TITLE ], prp_[ PRJ_PRP_TITLE ], a_[ 1 ] ) )

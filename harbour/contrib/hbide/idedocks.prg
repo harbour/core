@@ -78,6 +78,7 @@
 #define dockProperties_visibilityChanged          304
 #define dockDocViewer_visibilityChanged           305
 #define docFunctions_visibilityChanged            306
+#define dockDocWriter_visibilityChanged           307
 
 /*----------------------------------------------------------------------*/
 
@@ -114,6 +115,7 @@ CLASS IdeDocks INHERIT IdeObject
    METHOD buildPropertiesDock()
    METHOD buildEnvironDock()
    METHOD buildDocViewer()
+   METHOD buildDocWriter()
    METHOD outputDoubleClicked( lSelected )
    METHOD buildStatusBar()
    METHOD setStatusText( nPart, xValue )
@@ -151,6 +153,7 @@ METHOD IdeDocks:destroy()
    ::disconnect( ::oPropertiesDock:oWidget, "visibilityChanged(bool)" )
    ::disconnect( ::oThemesDock:oWidget    , "visibilityChanged(bool)" )
    ::disconnect( ::oDocViewDock:oWidget   , "visibilityChanged(bool)" )
+   ::disconnect( ::oDocWriteDock:oWidget  , "visibilityChanged(bool)" )
    ::disconnect( ::oFindDock:oWidget      , "visibilityChanged(bool)" )
    ::disconnect( ::oFunctionsDock:oWidget , "visibilityChanged(bool)" )
    #if 0  /* Not Implemented */
@@ -267,17 +270,23 @@ METHOD IdeDocks:buildDockWidgets()
    ::buildLinkResults()
    ::buildOutputResults()
    ::buildDocViewer()
+   ::buildDocWriter()
    ::buildFunctionsDock()
 
+   /* Bottom Docks */
    ::oDlg:oWidget:tabifyDockWidget( ::oDockB:oWidget         , ::oDockB1:oWidget         )
    ::oDlg:oWidget:tabifyDockWidget( ::oDockB1:oWidget        , ::oDockB2:oWidget         )
 
-   ::oDlg:oWidget:tabifyDockWidget( ::oHelpDock:oWidget      , ::oSkeltnDock:oWidget     )
-   ::oDlg:oWidget:tabifyDockWidget( ::oSkeltnDock:oWidget    , ::oFindDock:oWidget       )
-   ::oDlg:oWidget:tabifyDockWidget( ::oFindDock:oWidget      , ::oThemesDock:oWidget     )
-   ::oDlg:oWidget:tabifyDockWidget( ::oThemesDock:oWidget    , ::oPropertiesDock:oWidget )
+   /* Right Docks */
+   ::oDlg:oWidget:tabifyDockWidget( ::oHelpDock:oWidget      , ::oDocViewDock:oWidget    )
+   ::oDlg:oWidget:tabifyDockWidget( ::oDocViewDock:oWidget   , ::oFuncDock:oWidget       )
+   ::oDlg:oWidget:tabifyDockWidget( ::oFuncDock:oWidget      , ::oFunctionsDock:oWidget  )
+   ::oDlg:oWidget:tabifyDockWidget( ::oFunctionsDock:oWidget , ::oPropertiesDock:oWidget )
    ::oDlg:oWidget:tabifyDockWidget( ::oPropertiesDock:oWidget, ::oEnvironDock:oWidget    )
-   ::oDlg:oWidget:tabifyDockWidget( ::oEnvironDock:oWidget   , ::oFuncDock:oWidget       )
+   ::oDlg:oWidget:tabifyDockWidget( ::oEnvironDock:oWidget   , ::oSkeltnDock:oWidget     )
+   ::oDlg:oWidget:tabifyDockWidget( ::oSkeltnDock:oWidget    , ::oThemesDock:oWidget     )
+   ::oDlg:oWidget:tabifyDockWidget( ::oThemesDock:oWidget    , ::oFindDock:oWidget       )
+   ::oDlg:oWidget:tabifyDockWidget( ::oFindDock:oWidget      , ::oDocWriteDock:oWidget   )
 
    ::buildToolBarPanels()
 
@@ -316,6 +325,11 @@ METHOD IdeDocks:execEvent( nMode, p )
 
    CASE nMode == 2  /* HelpWidget:contextMenuRequested(qPoint) */
       hbide_popupBrwContextMenu( ::qHelpBrw, p )
+
+   CASE nMode == dockDocWriter_visibilityChanged
+      IF p
+         ::oDW:show()
+      ENDIF
 
    CASE nMode == docFunctions_visibilityChanged
       IF p
@@ -489,13 +503,13 @@ METHOD IdeDocks:buildToolBarPanels()
    ::oDlg:oWidget:addToolBar( Qt_LeftToolBarArea, ::qTBarLines )
 
    aBtns := {}
-   aadd( aBtns, { "movelineup"   , "Move Current Line Up"   , {|| ::oEM:moveLine( -1 )  } } )
-   aadd( aBtns, { "movelinedown" , "Move Current Line Down" , {|| ::oEM:moveLine(  1 )  } } )
-   aadd( aBtns, { "deleteline"   , "Delete Current Line"    , {|| ::oEM:deleteLine()    } } )
-   aadd( aBtns, { "duplicateline", "Duplicate Current Line" , {|| ::oEM:duplicateLine() } } )
+   aadd( aBtns, { "movelineup"      , "Move Current Line Up"   , {|| ::oEM:moveLine( -1 )  } } )
+   aadd( aBtns, { "movelinedown"    , "Move Current Line Down" , {|| ::oEM:moveLine(  1 )  } } )
+   aadd( aBtns, { "deleteline"      , "Delete Current Line"    , {|| ::oEM:deleteLine()    } } )
+   aadd( aBtns, { "duplicateline"   , "Duplicate Current Line" , {|| ::oEM:duplicateLine() } } )
    aadd( aBtns, {} )
-   aadd( aBtns, { "togglelinenumber", "Toggle Line Numbers" , {|| ::oIde:lLineNumbersVisible := ! ::lLineNumbersVisible, ;
-                                                                                          ::oEM:toggleLineNumbers()  } } )
+   aadd( aBtns, { "togglelinenumber", "Toggle Line Numbers"    , ;
+                {|| ::oIde:lLineNumbersVisible := ! ::lLineNumbersVisible, ::oEM:toggleLineNumbers() } } )
    FOR EACH a_ IN aBtns
       IF empty( a_ )
          ::qTBarLines:addSeparator()
@@ -516,18 +530,18 @@ METHOD IdeDocks:buildToolBarPanels()
    ::qTBarLines:addSeparator()
 
    aBtns := {}
-   aadd( aBtns, { "toupper"       , "To Upper"               , {|| ::oEM:convertSelection( "ToUpper" ) } } )
-   aadd( aBtns, { "tolower"       , "To Lower"               , {|| ::oEM:convertSelection( "ToLower" ) } } )
-   aadd( aBtns, { "invertcase"    , "Invert Case"            , {|| ::oEM:convertSelection( "Invert"  ) } } )
+   aadd( aBtns, { "toupper"      , "To Upper"               , {|| ::oEM:convertSelection( "ToUpper" ) } } )
+   aadd( aBtns, { "tolower"      , "To Lower"               , {|| ::oEM:convertSelection( "ToLower" ) } } )
+   aadd( aBtns, { "invertcase"   , "Invert Case"            , {|| ::oEM:convertSelection( "Invert"  ) } } )
    aadd( aBtns, {} )
-   aadd( aBtns, { "blockcomment"  , "Block Comment"          , {|| ::oEM:blockComment()   } } )
-   aadd( aBtns, { "streamcomment" , "Stream Comment"         , {|| ::oEM:streamComment()  } } )
+   aadd( aBtns, { "blockcomment" , "Block Comment"          , {|| ::oEM:blockComment()                } } )
+   aadd( aBtns, { "streamcomment", "Stream Comment"         , {|| ::oEM:streamComment()               } } )
    aadd( aBtns, {} )
-   aadd( aBtns, { "blockindentr"  , "Indent Right"           , {|| ::oEM:indent( 1 )      } } )
-   aadd( aBtns, { "blockindentl"  , "Indent Left"            , {|| ::oEM:indent( -1 )     } } )
+   aadd( aBtns, { "blockindentr" , "Indent Right"           , {|| ::oEM:indent(  1 )                  } } )
+   aadd( aBtns, { "blockindentl" , "Indent Left"            , {|| ::oEM:indent( -1 )                  } } )
    aadd( aBtns, {} )
-   aadd( aBtns, { "sgl2dblquote"  , "Single to Double Quotes", {|| ::oEM:convertDQuotes() } } )
-   aadd( aBtns, { "dbl2sglquote"  , "Double to Single Quotes", {|| ::oEM:convertQuotes()  } } )
+   aadd( aBtns, { "sgl2dblquote" , "Single to Double Quotes", {|| ::oEM:convertDQuotes()              } } )
+   aadd( aBtns, { "dbl2sglquote" , "Double to Single Quotes", {|| ::oEM:convertQuotes()               } } )
    FOR EACH a_ IN aBtns
       IF empty( a_ )
          ::qTBarLines:addSeparator()
@@ -557,11 +571,12 @@ METHOD IdeDocks:buildToolBarPanels()
    ::qTBarDocks:setToolButtonStyle( Qt_ToolButtonIconOnly )
 
    aBtns := {}
-   aadd( aBtns, { ::oDockPT        , "projectstree"  } )
-   aadd( aBtns, { ::oDockED        , "tabs"          } )
+   aadd( aBtns, { ::oDockPT        , "projtree"      } )
+   aadd( aBtns, { ::oDockED        , "editstree"     } )
    aadd( aBtns, {} )
    aadd( aBtns, { ::oHelpDock      , "help"          } )
    aadd( aBtns, { ::oDocViewDock   , "harbourhelp"   } )
+   aadd( aBtns, { ::oDocWriteDock  , "docwriter"     } )
    aadd( aBtns, { ::oFuncDock      , "dc_function"   } )
    aadd( aBtns, { ::oFunctionsDock , "ffn"           } )
    aadd( aBtns, { ::oPropertiesDock, "properties"    } )
@@ -878,6 +893,17 @@ METHOD IdeDocks:buildDocViewer()
    ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oDocViewDock:oWidget, Qt_Horizontal )
 
    ::connect( ::oDocViewDock:oWidget, "visibilityChanged(bool)", {|p| ::execEvent( dockDocViewer_visibilityChanged, p ) } )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeDocks:buildDocWriter()
+
+   ::oIde:oDocWriteDock := ::getADockWidget( Qt_RightDockWidgetArea, "dockDocWriter", "Documentation Writer", QDockWidget_DockWidgetFloatable )
+   ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oDocWriteDock:oWidget, Qt_Horizontal )
+
+   ::connect( ::oDocWriteDock:oWidget, "visibilityChanged(bool)", {|p| ::execEvent( dockDocWriter_visibilityChanged, p ) } )
 
    RETURN Self
 

@@ -230,8 +230,9 @@ static bool connect_signal( QString signal, QObject * object, HBSlots * t_slots 
    /* QCompleter */
    if( signal == ( QString ) "activated(QModelIndex)"                         ) return object->connect( object, SIGNAL( activated( const QModelIndex & )                                  ), t_slots, SLOT( activated( const QModelIndex & )                                   ), Qt::AutoConnection );
    if( signal == ( QString ) "highlighted(QModelIndex)"                       ) return object->connect( object, SIGNAL( highlighted( const QModelIndex & )                                ), t_slots, SLOT( highlighted( const QModelIndex & )                                 ), Qt::AutoConnection );
+   /* QAbstractButton */
+   if( signal == ( QString ) "toggled(bool)"                                  ) return object->connect( object, SIGNAL( toggled( bool )                                                   ), t_slots, SLOT( toggled( bool )                                                    ), Qt::AutoConnection );
    /* New */
-
    return false;
 }
 
@@ -398,7 +399,10 @@ static bool disconnect_signal( QObject * object, const char * signal )
    /* QCompleter */
    if( signal == ( QString ) "activated(QModelIndex)"                         ) return object->disconnect( SIGNAL( activated( const QModelIndex & )                                  ) );
    if( signal == ( QString ) "highlighted(QModelIndex)"                       ) return object->disconnect( SIGNAL( highlighted( const QModelIndex & )                                ) );
+   /* QAbstractButton */
+   if( signal == ( QString ) "toggled(bool)"                                  ) return object->disconnect( SIGNAL( toggled( bool )                                                   ) );
    /* new */
+
    return false;
 }
 
@@ -1017,8 +1021,9 @@ void HBSlots::visibilityChanged( bool visible )                                 
 /* QCompleter */
 void HBSlots::activated( const QModelIndex & index )                                                       { hbqt_SlotsExecModel(          this, qobject_cast<QObject *>( sender() ), "activated(QModelIndex)", index                                   ); }
 void HBSlots::highlighted( const QModelIndex & index )                                                     { hbqt_SlotsExecModel(          this, qobject_cast<QObject *>( sender() ), "highlighted(QModelIndex)", index                                 ); }
+/* QAbstractButton */
+void HBSlots::toggled( bool checked )                                                                      { hbqt_SlotsExecBool(           this, qobject_cast<QObject *>( sender() ), "toggled(bool)", checked                                          ); }
 /* Latest */
-
 
 /*----------------------------------------------------------------------*/
 /*

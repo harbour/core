@@ -26,6 +26,7 @@ ideharbourhelp.prg
 ideenviron.prg
 idehome.prg
 idefunctions.prg
+idedocwriter.prg
 
 ideparseexpr.c
 

@@ -674,10 +674,8 @@ METHOD IdeProjManager:fetchProperties()
 METHOD IdeProjManager:buildInterface()
    LOCAL cLukupPng
 
-   ::oUI := HbQtUI():new( ::resPath + "projectpropertiesex.uic" ):build()
-
+   ::oUI := HbQtUI():new( hbide_uic( "projectpropertiesex" ) ):build()
    ::oPropertiesDock:oWidget:setWidget( ::oUI )
-   //::oPropertiesDock:qtObject := ::oUI
 
    ::oUI:q_comboPrjType:addItem( "Executable" )
    ::oUI:q_comboPrjType:addItem( "Library"    )
@@ -1274,7 +1272,7 @@ METHOD IdeProjManager:showOutput( cOutput, mp2, oProcess )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeProjManager:finished( nExitCode, nExitStatus, oProcess )
-   LOCAL cTmp, n, n1, cTkn, cExe := ""
+   LOCAL cTmp, n, n1, cTkn, cExe
 
    hbide_justACall( oProcess )
 
@@ -1287,21 +1285,34 @@ METHOD IdeProjManager:finished( nExitCode, nExitStatus, oProcess )
 
    ferase( ::cBatch )
 
-   cTmp := ::oOutputResult:oWidget:toPlainText()
-   IF ( n := at( "-out:", cTmp ) ) > 0
-      n1 := hb_at( " ", cTmp, n )
-      cExe := substr( cExe, n + 5, n1 - n - 5 )
-hbide_dbg( cTmp )
-   ELSE
-      cTkn := "hbmk2: Target up to date: "
-      IF ( n := at( cTkn, cTmp ) ) > 0
-         n1   := hb_at( ".exe", cTmp, n + len( cTkn ) )
-         cExe := substr( cTmp, n + len( cTkn ), n1 - n - len( cTkn ) + 4 )
-hbide_dbg( cExe )
-      ENDIF
-   ENDIF
-
    IF ::lLaunch
+      cTmp := ::oOutputResult:oWidget:toPlainText()
+      cExe := ""
+      IF empty( cExe )
+         cTkn := "hbmk2: Linking... "
+         IF ( n := at( cTkn, cTmp ) ) > 0
+            n1   := hb_at( ".exe", cTmp, n + len( cTkn ) )
+            cExe := substr( cTmp, n + len( cTkn ), n1 - n - len( cTkn ) + 4 )
+hbide_dbg( 1, cTkn, cExe )
+         ENDIF
+      ENDIF
+      IF empty( cExe )
+         cTkn := "hbmk2: Target up to date: "
+         IF ( n := at( cTkn, cTmp ) ) > 0
+            n1   := hb_at( ".exe", cTmp, n + len( cTkn ) )
+            cExe := substr( cTmp, n + len( cTkn ), n1 - n - len( cTkn ) + 4 )
+hbide_dbg( 2, cTkn, cExe )
+         ENDIF
+      ENDIF
+      IF empty( cExe )
+         cTkn := "-out:"
+         IF ( n := at( cTkn, cTmp ) ) > 0
+            n1   := hb_at( ".exe", cTmp, n + len( cTkn ) )
+            cExe := substr( cTmp, n + len( cTkn ), n1 - n - len( cTkn ) + 4 )
+hbide_dbg( 3, cTkn, cExe )
+         ENDIF
+      ENDIF
+
       IF nExitCode == 0
          ::launchProject( ::cProjectInProcess, cExe )
       ELSE

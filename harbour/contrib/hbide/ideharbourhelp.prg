@@ -331,10 +331,10 @@ METHOD IdeHarbourHelp:setImages()
 
    oUI:q_buttonInstall:setIcon( hbide_image( "dc_folder" ) )
 
-   oUI:q_buttonArgPlus:setIcon( hbide_image( "dc_plus" ) )
-   oUI:q_buttonArgMinus:setIcon( hbide_image( "dc_delete" ) )
-   oUI:q_buttonArgUp:setIcon( hbide_image( "dc_up" ) )
-   oUI:q_buttonArgDown:setIcon( hbide_image( "dc_down" ) )
+   //oUI:q_buttonArgPlus:setIcon( hbide_image( "dc_plus" ) )
+   //oUI:q_buttonArgMinus:setIcon( hbide_image( "dc_delete" ) )
+   //oUI:q_buttonArgUp:setIcon( hbide_image( "dc_up" ) )
+   //oUI:q_buttonArgDown:setIcon( hbide_image( "dc_down" ) )
 
    RETURN Self
 
@@ -356,11 +356,6 @@ METHOD IdeHarbourHelp:setTooltips()
 
    oUI:q_buttonInstall:setToolTip( "Select Harbour Installation Path" )
 
-   oUI:q_buttonArgPlus:setToolTip( "Add new argument" )
-   oUI:q_buttonArgMinus:setToolTip( "Delete argument" )
-   oUI:q_buttonArgUp:setToolTip( "Up one position" )
-   oUI:q_buttonArgDown:setToolTip( "Down one position" )
-
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -372,6 +367,7 @@ METHOD IdeHarbourHelp:setParameters()
    oUI:q_treeCategory:setHeaderHidden( .t. )
    oUI:q_editInstall:setText( ::cWrkHarbour )
 
+   #if 0
    ::qHiliter := ::oThemes:SetSyntaxHilighting( oUI:q_plainExamples, "Bare Minimum" )
 
    oUI:q_plainExamples:setFont( ::oFont:oWidget )
@@ -382,6 +378,7 @@ METHOD IdeHarbourHelp:setParameters()
 
    oUI:q_plainExamples:setLineWrapMode( QTextEdit_NoWrap )
    oUI:q_plainTests:setLineWrapMode( QTextEdit_NoWrap )
+   #endif
 
    oUI:q_treeDoc:expandsOnDoubleClick( .f. )
 
@@ -403,12 +400,14 @@ METHOD IdeHarbourHelp:installSignals()
    ::oUI:signal( "buttonRefresh" , "clicked()"                 , {| | ::execEvent( buttonRefresh_clicked  )     } )
    ::oUI:signal( "buttonPrint"   , "clicked()"                 , {| | ::execEvent( buttonPrint_clicked    )     } )
    ::oUI:signal( "buttonPdf"     , "clicked()"                 , {| | ::execEvent( buttonPdf_clicked      )     } )
+
+   ::oUI:signal( "browserView"   , "anchorClicked(QUrl)"       , {|p| ::execEvent( browserView_anchorClicked, p ) } )
+   ::oUI:signal( "tabWidgetContents", "currentChanged(int)"    , {|p| ::execEvent( tabWidgetContents_currentChanged, p ) } )
+
    ::oUI:signal( "editInstall"   , "textChanged(QString)"      , {|p| ::execEvent( editInstall_textChanged, p ) } )
    ::oUI:signal( "editIndex"     , "textChanged(QString)"      , {|p| ::execEvent( editIndex_textChanged, p   ) } )
    ::oUI:signal( "editIndex"     , "returnPressed()"           , {| | ::execEvent( editIndex_returnPressed    ) } )
    ::oUI:signal( "listIndex"     , "itemDoubleClicked(QLWItem)", {|p| ::execEvent( listIndex_ItemDoubleClicked, p ) } )
-   ::oUI:signal( "browserView"   , "anchorClicked(QUrl)"       , {|p| ::execEvent( browserView_anchorClicked, p ) } )
-   ::oUI:signal( "tabWidgetContents", "currentChanged(int)"    , {|p| ::execEvent( tabWidgetContents_currentChanged, p ) } )
 
    RETURN Self
 
@@ -1005,26 +1004,6 @@ METHOD IdeHarbourHelp:populateFuncDetails( n )
 
    nIndex := ascan( ::aFunctions, {|e_| e_[ 4 ] == oTWItem } )
    oFunc := ::aFunctions[ nIndex, 3 ]
-
-   ::oUI:q_editTemplate    :setText( iif( empty( oFunc:cTemplate ), "FUNCTION", oFunc:cTemplate ) )
-   ::oUI:q_editName        :setText( oFunc:cName        )
-   ::oUI:q_editCategory    :setText( oFunc:cCategory    )
-   ::oUI:q_editSubCategory :setText( oFunc:cSubCategory )
-   ::oUI:q_editOneLiner    :setText( oFunc:cOneLiner    )
-   ::oUI:q_editSeeAlso     :setText( oFunc:cSeaAlso     )
-   ::oUI:q_editStatus      :setText( oFunc:cStatus      )
-   ::oUI:q_editPlatforms   :setText( oFunc:cPlatforms   )
-
-   ::oUI:q_editReturns     :setText( hbide_arrayToMemoEx( oFunc:aReturns ) )  //TODO : a line
-
-   ::oUI:q_plainSyntax     :setPlainText( hbide_arrayToMemoEx2( oFunc:aSyntax      ) )
-   ::oUI:q_plainFiles      :setPlainText( hbide_arrayToMemoEx2( oFunc:aFiles       ) )
-   ::oUI:q_plainDescription:setPlainText( hbide_arrayToMemoEx2( oFunc:aDescription ) )
-   ::oUI:q_plainExamples   :setPlainText( hbide_arrayToMemoEx2( oFunc:aExamples    ) )
-   ::oUI:q_plainTests      :setPlainText( hbide_arrayToMemoEx2( oFunc:aTests       ) )
-   ::oUI:q_plainArguments  :setPlainText( hbide_arrayToMemoEx2( oFunc:aArguments   ) )
-
-   ::oUI:q_editTextPath    :setText( ::aFunctions[ nIndex, 1 ] )
 
    ::buildView( oFunc )
 

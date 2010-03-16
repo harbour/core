@@ -136,6 +136,7 @@ CLASS HbIde
    DATA   oHL                                              /* Harbour Help Manager           */
    DATA   oHM                                              /* <Stats> panel manager          */
    DATA   oFN                                              /* Functions Tags Manager         */
+   DATA   oDW                                              /* Document Writer Manager        */
    DATA   oThemes
    DATA   oFindInFiles
    DATA   oHelpDock
@@ -221,6 +222,7 @@ CLASS HbIde
    DATA   oSearchReplace
    DATA   oFuncDock
    DATA   oDocViewDock
+   DATA   oDocWriteDock
    DATA   oFunctionsDock
 
    DATA   lProjTreeVisible                        INIT   .t.
@@ -301,6 +303,7 @@ CLASS HbIde
    METHOD evalMacro( cString )
    METHOD fetchAndExecMacro()
    METHOD showApplicationCursor( nCursor )
+   METHOD testPainter( qPainter )
 
    ENDCLASS
 
@@ -404,6 +407,9 @@ METHOD HbIde:create( cProjIni )
    /* Main Menu */
    ::oAC:buildMainMenu()
 
+   /* Initialize Doc Writer Manager */
+   ::oDW := IdeDocWriter():new( Self ):create()
+
    /* Once create Find/Replace dialog */
    ::oFR := IdeFindReplace():new( Self ):create()
    ::oFindInFiles := IdeFindInFiles():new( Self ):create()
@@ -464,6 +470,7 @@ METHOD HbIde:create( cProjIni )
    ::oDockB2:hide()
    ::oDockB:hide()
    ::oDocViewDock:hide()
+   ::oDocWriteDock:hide()
 
    /* Request Main Window to Appear on the Screen */
    ::oHM:refresh()
@@ -474,9 +481,12 @@ METHOD HbIde:create( cProjIni )
    qSplash:close()
    qSplash := NIL
 
+   //::testPainter()
+
    DO WHILE .t.
       ::nEvent := AppEvent( @::mp1, @::mp2, @::oXbp )
 
+//hbide_dbg( "Next", NextAppEvent(), "Last", LastAppEvent(), "Event", ::nEvent )
       IF ::nEvent == xbeP_Quit
          hbide_dbg( "----------------- xbeP_Quit" )
          hbide_saveINI( Self )
@@ -533,6 +543,7 @@ METHOD HbIde:create( cProjIni )
    hbide_dbg( "Before    ::oDlg:destroy()", memory( 1001 ), hbqt_getMemUsed() )
    hbide_dbg( "                                                      " )
 
+   ::oDW:destroy()
    ::oEV:destroy()
    ::oFN:destroy()
    ::oHM:destroy()
@@ -1344,5 +1355,21 @@ hbide_dbg( cBlock )
 
    ErrorBlock( bError )
    RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbIde:testPainter( qPainter )
+   LOCAL qP := QPainter():from( qPainter )
+
+   hbide_dbg( "qPainter:isActive()", qP:isActive() )
+
+   qP:setPen_2( Qt_red )
+   qP:drawEllipse_2( 100,300,100,150 )
+   qP:setFont( ::oFont:oWidget )
+   qP:drawText_4( 100,300,"Harbour" )
+
+   //qPainter:fillRect_8( 100, 100, 500, 500, QColor():new( 175, 175, 255 ) )
+
+   RETURN NIL
 
 /*----------------------------------------------------------------------*/

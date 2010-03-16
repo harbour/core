@@ -280,6 +280,8 @@ public slots:
    /* QCompleter */
    void activated( const QModelIndex & index );
    void highlighted( const QModelIndex & index );
+   /* QAbstractButton */
+   void toggled( bool checked );
    /* Latest */
 };
 

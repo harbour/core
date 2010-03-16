@@ -93,11 +93,13 @@ CLASS IdeObject
    ACCESS oHL                                     INLINE ::oIde:oHL
    ACCESS oHM                                     INLINE ::oIde:oHM
    ACCESS oFN                                     INLINE ::oIde:oFN
+   ACCESS oDW                                     INLINE ::oIde:oDW
 
    ACCESS oFindDock                               INLINE ::oIde:oFindDock
    ACCESS oFindInFiles                            INLINE ::oIde:oFindInFiles
 
    ACCESS aMeta                                   INLINE ::oIde:aMeta
+   ACCESS aTags                                   INLINE ::oIde:aTags
 
    ACCESS oFont                                   INLINE ::oIde:oFont
    ACCESS oThemes                                 INLINE ::oIde:oThemes
@@ -179,6 +181,7 @@ CLASS IdeObject
    ACCESS oEnvironDock                            INLINE ::oIde:oEnvironDock
    ACCESS oSearchReplace                          INLINE ::oIde:oSearchReplace
    ACCESS oDocViewDock                            INLINE ::oIde:oDocViewDock
+   ACCESS oDocWriteDock                           INLINE ::oIde:oDocWriteDock
    ACCESS oFunctionsDock                          INLINE ::oIde:oFunctionsDock
 
    ACCESS lProjTreeVisible                        INLINE ::oIde:lProjTreeVisible
