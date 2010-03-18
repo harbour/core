@@ -236,7 +236,7 @@ METHOD XbpTreeView:ExeBlock( nMsg, p1, p2 )
          eval( ::sl_itemSelected, oItem, {0,0,0,0}, self )
       ENDIF
    CASE nMsg == 7              // "itemEntered(QTWItem)"
-      ::oWidget:setToolTip( oItem:caption )
+      ::oWidget:setToolTip( iif( empty( oItem:tooltipText ), oItem:caption, oItem:tooltipText ) )
 
    CASE nMsg == 8              // "itemExpanded(QTWItem)"
       IF hb_isBlock( ::sl_itemExpanded )
@@ -368,6 +368,7 @@ CLASS XbpTreeViewItem  INHERIT  XbpDataRef
    DATA     oXbpTree
 
    DATA     aChilds                               INIT {}
+   DATA     tooltipText                           INIT ""
 
    METHOD   new()
    METHOD   create()

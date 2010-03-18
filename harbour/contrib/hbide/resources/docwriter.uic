@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading ui file 'docwriter.ui'
 **
-** Created: Mon Mar 15 18:50:32 2010
+** Created: Tue Mar 16 08:41:11 2010
 **      by: Qt User Interface Compiler version 4.5.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!
@@ -99,8 +99,8 @@ public:
     QSpacerItem *horizontalSpacer;
     QToolButton *buttonClear;
     QSpacerItem *horizontalSpacer_2;
-    QToolButton *buttonSaveInFunc;
     QToolButton *buttonSave;
+    QToolButton *buttonSaveInFunc;
 
     void setupUi(QWidget *FormDocWriter)
     {
@@ -445,17 +445,17 @@ public:
 
         horizontalLayout->addItem(horizontalSpacer_2);
 
-        buttonSaveInFunc = new QToolButton(frameButtons);
-        buttonSaveInFunc->setObjectName(QString::fromUtf8("buttonSaveInFunc"));
-        buttonSaveInFunc->setAutoRaise(true);
-
-        horizontalLayout->addWidget(buttonSaveInFunc);
-
         buttonSave = new QToolButton(frameButtons);
         buttonSave->setObjectName(QString::fromUtf8("buttonSave"));
         buttonSave->setAutoRaise(true);
 
         horizontalLayout->addWidget(buttonSave);
+
+        buttonSaveInFunc = new QToolButton(frameButtons);
+        buttonSaveInFunc->setObjectName(QString::fromUtf8("buttonSaveInFunc"));
+        buttonSaveInFunc->setAutoRaise(true);
+
+        horizontalLayout->addWidget(buttonSaveInFunc);
 
 
         gridLayout_5->addWidget(frameButtons, 0, 0, 1, 2);
@@ -568,13 +568,13 @@ public:
 #endif // QT_NO_TOOLTIP
         buttonClear->setText(QApplication::translate("FormDocWriter", "...", 0, QApplication::UnicodeUTF8));
 #ifndef QT_NO_TOOLTIP
-        buttonSaveInFunc->setToolTip(QApplication::translate("FormDocWriter", "Save the documentation with function in source", 0, QApplication::UnicodeUTF8));
-#endif // QT_NO_TOOLTIP
-        buttonSaveInFunc->setText(QApplication::translate("FormDocWriter", "...", 0, QApplication::UnicodeUTF8));
-#ifndef QT_NO_TOOLTIP
         buttonSave->setToolTip(QApplication::translate("FormDocWriter", "Save written/updated documentation", 0, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP
         buttonSave->setText(QApplication::translate("FormDocWriter", "...", 0, QApplication::UnicodeUTF8));
+#ifndef QT_NO_TOOLTIP
+        buttonSaveInFunc->setToolTip(QApplication::translate("FormDocWriter", "Save the documentation with function in source", 0, QApplication::UnicodeUTF8));
+#endif // QT_NO_TOOLTIP
+        buttonSaveInFunc->setText(QApplication::translate("FormDocWriter", "...", 0, QApplication::UnicodeUTF8));
         Q_UNUSED(FormDocWriter);
     } // retranslateUi
 

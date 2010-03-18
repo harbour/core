@@ -101,7 +101,7 @@ CLASS IdeEditsManager INHERIT IdeObject
    METHOD create( oIde )
    METHOD destroy()
    METHOD removeSourceInTree( cSourceFile )
-   METHOD addSourceInTree( cSourceFile )
+   METHOD addSourceInTree( cSourceFile, cView )
    METHOD execEvent( nMode, p )
    METHOD buildEditor( cSourceFile, nPos, nHPos, nVPos, cTheme, cView )
    METHOD getTabBySource( cSource )
@@ -245,16 +245,19 @@ METHOD IdeEditsManager:removeSourceInTree( cSourceFile )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeEditsManager:addSourceInTree( cSourceFile )
-   LOCAL cPath, cPathA, cFile, cExt, n, oParent
-   LOCAL oGrand := ::oOpenedSources
+METHOD IdeEditsManager:addSourceInTree( cSourceFile, cView )
+   LOCAL cPath, cFile, cExt, oItem
+   //LOCAL oGrand := ::oOpenedSources
+   LOCAL oParent := ::oOpenedSources
 
    IF Empty( cSourceFile )
-      RETURN nil
-   End
+      RETURN Self
+   ENDIF
 
    hb_fNameSplit( cSourceFile, @cPath, @cFile, @cExt )
+   #if 0
    cPathA := hbide_pathNormalized( cPath )
+
 
    IF ( n := ascan( ::aEditorPath, {|e_| e_[ 2 ] == cPathA } ) ) == 0
       oParent := oGrand:addItem( cPath )
@@ -266,6 +269,16 @@ METHOD IdeEditsManager:addSourceInTree( cSourceFile )
 
    aadd( ::aProjData, { oParent:addItem( cFile + cExt ), "Opened Source", oParent, ;
                                    cSourceFile, hbide_pathNormalized( cSourceFile ) } )
+   #endif
+
+   oItem := oParent:addItem( cFile + cExt )
+   oItem:tooltipText := cSourceFile
+   oItem:oWidget:setIcon( 0, ::oDK:getPanelIcon( cView ) )
+   aadd( ::aProjData, { oItem, "Opened Source", oParent, ;
+                                   cSourceFile, hbide_pathNormalized( cSourceFile ) } )
+
+   ::oEditTree:oWidget:sortItems( 0 )
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1060,7 +1073,7 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView )
    aadd( ::aTabs, { ::oTab, Self } )
 
    /* Populate right at creation */
-   ::oEM:addSourceInTree( ::sourceFile )
+   ::oEM:addSourceInTree( ::sourceFile, ::cView )
 
    ::qTabWidget:setStyleSheet( GetStyleSheet( "QTabWidget" ) )
    ::setTabImage()

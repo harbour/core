@@ -125,6 +125,7 @@ CLASS IdeDocks INHERIT IdeObject
    METHOD addPanelButton( cPanel )
    METHOD disblePanelButton( qTBtn )
    METHOD getADockWidget( nArea, cObjectName, cWindowTitle, nFlags )
+   METHOD getPanelIcon( cView )
 
    ENDCLASS
 
@@ -616,6 +617,17 @@ METHOD IdeDocks:disblePanelButton( qTBtn )
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeDocks:getPanelIcon( cView )
+   LOCAL n
+
+   IF ( n := ascan( ::aPanels, {|q| q:text() == cView } ) ) > 0
+      RETURN hbide_image( "panel_" + hb_ntos( n ) )
+   ENDIF
+
+   RETURN ""
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeDocks:addPanelButton( cPanel )
    LOCAL qTBtn
 
@@ -625,6 +637,7 @@ METHOD IdeDocks:addPanelButton( cPanel )
    qTBtn := QToolButton():new()
    qTBtn:setMaximumHeight( 20 )
    qTBtn:setMaximumWidth( 20 )
+   qTBtn:setText( cPanel )
    qTBtn:setTooltip( "Panel: " + cPanel )
    qTBtn:setIcon( hbide_image( "panel_" + hb_ntos( nIndex ) ) )
    aadd( ::aPanels, qTBtn )
@@ -642,7 +655,7 @@ METHOD IdeDocks:addPanelButton( cPanel )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeDocks:buildProjectTree()
-   LOCAL i
+   LOCAL i, oItem
 
    ::oIde:oDockPT := ::getADockWidget( Qt_LeftDockWidgetArea, "dockProjectTree", "Projects Tree" )
    ::oDlg:oWidget:addDockWidget_1( Qt_LeftDockWidgetArea, ::oDockPT:oWidget, Qt_Vertical )
@@ -655,6 +668,8 @@ METHOD IdeDocks:buildProjectTree()
    ::oProjTree:setStyleSheet( GetStyleSheet( "QTreeWidgetHB" ) )
    ::oProjTree:oWidget:setMinimumWidth( 100 )
    ::oProjTree:oWidget:setSizePolicy_1( QSizePolicy_MinimumExpanding, QSizePolicy_Preferred )
+   ::oProjTree:oWidget:setIconSize( QSize():new( 12,12 ) )
+   ::oProjTree:oWidget:setIndentation( 12 )
 
  * ::oProjTree:itemMarked    := {|oItem| ::manageItemSelected( 0, oItem ), ::oCurProjItem := oItem }
    ::oProjTree:itemMarked    := {|oItem| ::oIde:oCurProjItem := oItem } //, ::oIde:manageFocusInEditor() }
@@ -663,9 +678,15 @@ METHOD IdeDocks:buildProjectTree()
 
    ::oIde:oProjRoot := ::oProjTree:rootItem:addItem( "Projects" )
 
-   aadd( ::aProjData, { ::oProjRoot:addItem( "Executables" ), "Executables", ::oProjRoot, NIL, NIL } )
-   aadd( ::aProjData, { ::oProjRoot:addItem( "Libs"        ), "Libs"       , ::oProjRoot, NIL, NIL } )
-   aadd( ::aProjData, { ::oProjRoot:addItem( "Dlls"        ), "Dlls"       , ::oProjRoot, NIL, NIL } )
+   oItem := ::oProjRoot:addItem( "Executables" )
+   oItem:oWidget:setIcon( 0, hbide_image( "fl_exe" ) )
+   aadd( ::aProjData, { oItem, "Executables", ::oProjRoot, NIL, NIL } )
+   oItem := ::oProjRoot:addItem( "Libs" )
+   oItem:oWidget:setIcon( 0, hbide_image( "fl_lib" ) )
+   aadd( ::aProjData, { oItem, "Libs"       , ::oProjRoot, NIL, NIL } )
+   oItem := ::oProjRoot:addItem( "Dlls" )
+   oItem:oWidget:setIcon( 0, hbide_image( "fl_dll" ) )
+   aadd( ::aProjData, { oItem, "Dlls"       , ::oProjRoot, NIL, NIL } )
 
    ::oProjRoot:expand( .t. )
    //
@@ -694,14 +715,16 @@ METHOD IdeDocks:buildEditorTree()
 
    ::oEditTree:oWidget:setSizePolicy_1( QSizePolicy_MinimumExpanding, QSizePolicy_Preferred )
    ::oEditTree:oWidget:setMinimumWidth( 100 )
+   ::oEditTree:oWidget:setIconSize( QSize():new( 12,12 ) )
+   ::oEditTree:oWidget:setIndentation( 12 )
+ * ::oEditTree:oWidget:setRootIsDecorated( .f. )
 
-   //::oEditTree:itemMarked    := {|oItem| ::manageItemSelected( 0, oItem ), ::oCurProjItem := oItem }
+ * ::oEditTree:itemMarked    := {|oItem| ::manageItemSelected( 0, oItem ), ::oCurProjItem := oItem }
    ::oEditTree:itemMarked    := {|oItem| ::oIde:oCurProjItem := oItem }
    ::oEditTree:itemSelected  := {|oItem| ::oIde:manageItemSelected( oItem ) }
    ::oEditTree:hbContextMenu := {|mp1, mp2, oXbp| ::oIde:manageProjectContext( mp1, mp2, oXbp ) }
 
-   ::oIde:oOpenedSources := ::oEditTree:rootItem:addItem( "Editor" )
-
+   ::oIde:oOpenedSources     := ::oEditTree:rootItem:addItem( "Editors" )
    ::oOpenedSources:expand( .t. )
 
    /* Insert Project Tree Into Dock Widget */
@@ -815,6 +838,7 @@ METHOD IdeDocks:outputDoubleClicked( lSelected )
          qCursor:setPosition( 0 )
          qCursor:movePosition( QTextCursor_Down, QTextCursor_MoveAnchor, nLine )
          ::oIde:qCurEdit:setTextCursor( qCursor )
+         ::oIde:qCurEdit:centerCursor()
          ::oIde:manageFocusInEditor()
       ENDIF
    ENDIF

@@ -965,7 +965,7 @@ METHOD HbIde:removeProjectTree( aPrj )
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:updateProjectTree( aPrj )
-   LOCAL oProject, n, oSource, oItem, nProjExists, oP, oParent, cPath
+   LOCAL oProject, n, oSource, oItem, nProjExists, oP, oParent
 
    oProject := IdeProject():new( Self, aPrj )
 
@@ -1009,23 +1009,13 @@ METHOD HbIde:updateProjectTree( aPrj )
       oP := oParent:addItem( oProject:title )
       aadd( ::aProjData, { oP, "Project Name", oParent, oProject:title, aPrj, oProject } )
    ENDIF
-   oParent := oP
-   /* Reassign all children nodes */
-   FOR EACH cPath IN oProject:hPaths
-      oItem := oParent:addItem( cPath:__enumKey() )
-      aadd( ::aProjData, { oItem, "Path", oParent, cPath:__enumKey(), oProject:title, oProject } )
-   NEXT
-   /* Souces */
    FOR EACH oSource IN oProject:hSources
-      n := ascan( ::aProjData, {|e_| e_[ TRE_TYPE     ] == "Path"       .AND. ;
-                                     e_[ TRE_ORIGINAL ] == oSource:path .AND. ;
-                                     e_[ TRE_DATA     ] == oProject:title  } )
-      IF n > 0
-         oP := ::aProjData[ n, TRE_OITEM ]
-         oItem := oP:addItem( oSource:file + oSource:ext )
-         aadd( ::aProjData, { oItem, "Source File", oP, oSource:original, oProject:title } )
-      ENDIF
+      oItem := oP:addItem( oSource:file + oSource:ext )
+      oItem:tooltipText := oSource:original
+      oItem:oWidget:setIcon( 0, hbide_image( hbide_imageForFileType( oSource:ext ) ) )
+      aadd( ::aProjData, { oItem, "Source File", oP, oSource:original, oProject:title } )
    NEXT
+   oP:oWidget:sortChildren( 0 )
 
    RETURN Self
 

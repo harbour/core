@@ -258,6 +258,11 @@ CLASS IdeProjManager INHERIT IdeObject
    METHOD pullHbpData( cHbp )
    METHOD synchronizeAlienProject( cProjFileName )
 
+   METHOD harbourFlags()
+   METHOD hbmk2Flags()
+   METHOD xppCompileFlags()
+   METHOD xppLinkFlags()
+
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
@@ -1134,7 +1139,6 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
    LOCAL cHbpPath, oEdit, cHbpFN, cTmp, cExeHbMk2, aHbp, cCmd, cC, cArg
    LOCAL cCmdParams
 
-   //cTargetFN
    aHbp := {}
 
    DEFAULT lLaunch   TO .F.
@@ -1162,11 +1166,7 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
 
    ::oProject := ::getProjectByTitle( cProject )
 
-//   cTargetFN  := hbide_pathFile( ::oProject:destination, iif( empty( ::oProject:outputName ), "_temp", ::oProject:outputName ) )
-//   cTargetFN  := hbide_pathFile( ::oProject:location    , iif( empty( ::oProject:outputName ), "_temp", ::oProject:outputName ) )
-   //cHbpFN     := hbide_pathFile( ::oProject:wrkDirectory, iif( empty( ::oProject:outputName ), "_temp", ::oProject:outputName ) )
    cHbpFN     := hbide_pathFile( ::oProject:location, iif( empty( ::oProject:outputName ), "_temp", ::oProject:outputName ) )
- * cHbpPath   := cHbpFN + iif( ::lPPO, '.' + hb_md5( hb_ntos( seconds() ) ), "" ) + ".hbp"
    cHbpPath   := cHbpFN + iif( ::lPPO, '_tmp', "" ) + ".hbp"
 
    IF !( ::lPPO )
@@ -1177,19 +1177,10 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
       ENDIF
    ENDIF
 
-   #if 0
-   IF !empty( ::oProject:hbpFlags )
-      aeval( ::oProject:hbpFlags, {|e| aadd( aHbp, e ) } )
-   ENDIF
-   #endif
-
-   IF !( ::lPPO )
- *    aadd( aHbp, "-o" + cTargetFN )
- *    aadd( aHbp, "-workdir=" + ::oProject:wrkDirectory + "/${hb_plat}/${hb_comp}" )
-   ENDIF
    aadd( aHbp, "-q"          )
    aadd( aHbp, "-trace"      )
    aadd( aHbp, "-info"       )
+   aadd( aHbp, "-lang=en"    )
    IF lRebuild
       aadd( aHbp, "-rebuild" )
    ENDIF
@@ -1247,7 +1238,7 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
       ::oProcess:finished    := {|nEC , nES, oHbp| ::finished( nEC ,nES,oHbp ) }
       ::oProcess:workingPath := hbide_pathToOSPath( ::oProject:location )
       //
-hbide_dbg( ::oProcess:workingPath )
+
       cCmd := hbide_getShellCommand()
       cC   := iif( hbide_getOS() == "nix", "", "/C " )
       cArg := iif( empty( ::cBatch ), cC, cC + ::cBatch + " && "  )
@@ -1272,7 +1263,7 @@ METHOD IdeProjManager:showOutput( cOutput, mp2, oProcess )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeProjManager:finished( nExitCode, nExitStatus, oProcess )
-   LOCAL cTmp, n, n1, cTkn, cExe
+   LOCAL cTmp, n, n1, cTkn, cExe, cT
 
    hbide_justACall( oProcess )
 
@@ -1291,25 +1282,19 @@ METHOD IdeProjManager:finished( nExitCode, nExitStatus, oProcess )
       IF empty( cExe )
          cTkn := "hbmk2: Linking... "
          IF ( n := at( cTkn, cTmp ) ) > 0
-            n1   := hb_at( ".exe", cTmp, n + len( cTkn ) )
-            cExe := substr( cTmp, n + len( cTkn ), n1 - n - len( cTkn ) + 4 )
+            cT   := ".exe" // Chr( 13 )
+            n1   := hb_at( cT, cTmp, n + len( cTkn ) )
+            cExe := substr( cTmp, n + len( cTkn ), n1 - n - len( cTkn ) + len( cT ) )
 hbide_dbg( 1, cTkn, cExe )
          ENDIF
       ENDIF
       IF empty( cExe )
          cTkn := "hbmk2: Target up to date: "
          IF ( n := at( cTkn, cTmp ) ) > 0
-            n1   := hb_at( ".exe", cTmp, n + len( cTkn ) )
-            cExe := substr( cTmp, n + len( cTkn ), n1 - n - len( cTkn ) + 4 )
+            cT   := ".exe" // Chr( 13 )
+            n1   := hb_at( cT, cTmp, n + len( cTkn ) )
+            cExe := substr( cTmp, n + len( cTkn ), n1 - n - len( cTkn ) + len( cT ) )
 hbide_dbg( 2, cTkn, cExe )
-         ENDIF
-      ENDIF
-      IF empty( cExe )
-         cTkn := "-out:"
-         IF ( n := at( cTkn, cTmp ) ) > 0
-            n1   := hb_at( ".exe", cTmp, n + len( cTkn ) )
-            cExe := substr( cTmp, n + len( cTkn ), n1 - n - len( cTkn ) + 4 )
-hbide_dbg( 3, cTkn, cExe )
          ENDIF
       ENDIF
 
@@ -1393,3 +1378,279 @@ METHOD IdeProjManager:launchProject( cProject, cExe )
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeProjManager:harbourFlags()
+   LOCAL a_:= {}
+
+   aadd( a_, { "/a             ", "automatic memvar declaration                         " } )
+   aadd( a_, { "/b             ", "debug info                                           " } )
+   aadd( a_, { "/build         ", "display detailed version info                        " } )
+   aadd( a_, { "/credits       ", "display credits                                      " } )
+   aadd( a_, { "/d<id>[=<val>] ", "#define <id>                                         " } )
+   aadd( a_, { "/es[<level>]   ", "set exit severity                                    " } )
+   aadd( a_, { "/fn[:[l|u]|-]  ", "set filename casing (l=lower u=upper)                " } )
+   aadd( a_, { "/fd[:[l|u]|-]  ", "set directory casing (l=lower u=upper)               " } )
+   aadd( a_, { "/fp[:<char>]   ", "set path separator                                   " } )
+   aadd( a_, { "/fs[-]         ", "turn filename space trimming on or off (default)     " } )
+   aadd( a_, { "/g<type>       ", "output type generated is <type> (see below)          " } )
+   aadd( a_, { "/gc[<type>]    ", "output type: C source (.c) (default)                 " } )
+   aadd( a_, { "               ", "<type>: 0=compact (default) 1=normal 2=verbose       " } )
+   aadd( a_, { "               ", "        3=generate real C code                       " } )
+   aadd( a_, { "/gh            ", "output type: Harbour Portable Object (.hrb)          " } )
+   aadd( a_, { "/gd[.<destext>]", "generate dependencies list into (.d) file            " } )
+   aadd( a_, { "/ge[<mode>]    ", "error output <mode>: 0=Clipper (default)             " } )
+   aadd( a_, { "               ", "                     1=IDE friendly                  " } )
+   aadd( a_, { "/i<path>       ", "#include file search path                            " } )
+   aadd( a_, { "/i[-|+]        ", "disable/enable support for INCLUDE envvar            " } )
+   aadd( a_, { "/j[<file>]     ", "generate i18n gettext file (.pot)                    " } )
+   aadd( a_, { "/k             ", "compilation mode (type -k? for more data)            " } )
+   aadd( a_, { "/l             ", "suppress line number information                     " } )
+   aadd( a_, { "/m             ", "compile module only                                  " } )
+   aadd( a_, { "/n[<type>]     ", "no implicit starting procedure                       " } )
+   aadd( a_, { "               ", "<type>: 0=no implicit starting procedure             " } )
+   aadd( a_, { "               ", "        1=no starting procedure at all               " } )
+   aadd( a_, { "               ", "        2=add starting procedure if necessary        " } )
+   aadd( a_, { "/o<path>       ", "object file drive and/or path                        " } )
+   aadd( a_, { "/p[<path>]     ", "generate pre-processed output (.ppo) file            " } )
+   aadd( a_, { "/p+            ", "generate pre-processor trace (.ppt) file             " } )
+   aadd( a_, { "/q             ", "quiet                                                " } )
+   aadd( a_, { "/q0            ", "quiet and don't display program header               " } )
+   aadd( a_, { "/q2            ", "disable all output messages                          " } )
+   aadd( a_, { "/r:<max>       ", "set maximum number of preprocessor iterations        " } )
+   aadd( a_, { "/s[m]          ", "syntax check only [minimal for dependencies list]    " } )
+   aadd( a_, { "/u[<file>]     ", "use command def set in <file> (or none)              " } )
+   aadd( a_, { "/u+<file>      ", "add command def set from <file>                      " } )
+   aadd( a_, { "/undef:<id>    ", "#undef <id>                                          " } )
+   aadd( a_, { "/v             ", "variables are assumed M->                            " } )
+   aadd( a_, { "/w[<level>]    ", "set warning level number (0..3, default 1)           " } )
+   aadd( a_, { "/x[<prefix>]   ", "set symbol init function name prefix (for .c only)   " } )
+   aadd( a_, { "/z             ", "suppress shortcutting (.and. & .or.)                 " } )
+
+   RETURN a_
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeProjManager:hbmk2Flags()
+   LOCAL a_:= {}
+
+   aadd( a_, { "-o<outname>       ", "output file name                                                 " } )
+   aadd( a_, { "-l<libname>       ", "link with <libname> library. <libname> should be without         " } )
+   aadd( a_, { "                  ", "path, extension and 'lib' prefix (unless part of libname).       " } )
+   aadd( a_, { "-L<libpath>       ", "additional path to search for libraries                          " } )
+   aadd( a_, { "-i<p>|-incpath=<p>", "additional path to search for headers                            " } )
+   aadd( a_, { "-static|-shared   ", "link with static/shared libs                                     " } )
+   aadd( a_, { "-mt|-st           ", "link with multi/single-thread VM                                 " } )
+   aadd( a_, { "-gt<name>         ", "link with GT<name> GT driver, can be repeated to link with       " } )
+   aadd( a_, { "                  ", "more GTs. First one will be the default at runtime               " } )
+   aadd( a_, { "-hbexe            ", "create executable (default)                                      " } )
+   aadd( a_, { "-hblib            ", "create static library                                            " } )
+   aadd( a_, { "-hbdyn            ", "create dynamic library                                           " } )
+   aadd( a_, { "                  ", "                                                                 " } )
+   aadd( a_, { "-gui|-std         ", "create GUI/console executable                                    " } )
+   aadd( a_, { "-main=<mainfunc>  ", "override the name of starting function/procedure                 " } )
+   aadd( a_, { "-fullstatic       ", "link with all static libs                                        " } )
+   aadd( a_, { "-[full|fix]shared ", "create shared Harbour binaries without/with absolute dir         " } )
+   aadd( a_, { "                  ", "reference to Harbour library (default: 'fullshared' when         " } )
+   aadd( a_, { "                  ", "Harbour is installed on system location, 'fixshared'             " } )
+   aadd( a_, { "                  ", "otherwise) (fix/full option in *nix only)                        " } )
+   aadd( a_, { "-nulrdd[-]        ", "link with nulrdd                                                 " } )
+   aadd( a_, { "-[no]debug        ", "add/exclude C compiler debug info. For Harbour level             " } )
+   aadd( a_, { "                  ", "debug, use Harbour option -b as usual                            " } )
+   aadd( a_, { "-[no]optim        ", "toggle C compiler optimizations (default: on)                    " } )
+   aadd( a_, { "-[no]cpp[=def]    ", "force C/C++ mode or reset to default                             " } )
+   aadd( a_, { "-[no]map          ", "create (or not) a map file                                       " } )
+   aadd( a_, { "-[no]implib       ", "create (or not) an import library (in -hbdyn mode)               " } )
+   aadd( a_, { "-[no]strip        ", "strip (no strip) binaries                                        " } )
+   aadd( a_, { "-[no]trace        ", "show commands executed                                           " } )
+   aadd( a_, { "-[no]beep         ", "enable (or disable) single beep on successful exit, double       " } )
+   aadd( a_, { "                  ", "beep on failure                                                  " } )
+   aadd( a_, { "-[no]ignore       ", "ignore errors when running compiler tools (default: off)         " } )
+   aadd( a_, { "-[no]hbcppmm      ", "forces to override standard C++ memory management                " } )
+   aadd( a_, { "                  ", "functions with Harbour ones                                      " } )
+   aadd( a_, { "-nohblib[-]       ", "do not use static core Harbour libraries when linking            " } )
+   aadd( a_, { "-nolibgrouping[-] ", "disable library grouping on gcc based compilers                  " } )
+   aadd( a_, { "-nomiscsyslib[-]  ", "don't add extra list of system libraries to default              " } )
+   aadd( a_, { "                  ", "library list                                                     " } )
+   aadd( a_, { "-traceonly        ", "show commands to be executed, but don't execute them             " } )
+   aadd( a_, { "-[no]warn[=lev]   ", "set C compiler warning level                                     " } )
+   aadd( a_, { "                  ", "<lev> can be: yes, no, def (default: yes)                        " } )
+   aadd( a_, { "-[no]compr[=lev]  ", "compress executable/dynamic lib (needs UPX)                      " } )
+   aadd( a_, { "                  ", "<lev> can be: min, max, def                                      " } )
+   aadd( a_, { "-[no]run          ", "run/don't run output executable                                  " } )
+   aadd( a_, { "-vcshead=<file>   ", "generate .ch header file with local repository                   " } )
+   aadd( a_, { "                  ", "information. SVN, CVS, Git, Mercurial, Bazaar and Fossil         " } )
+   aadd( a_, { "                  ", "are currently supported. Generated header will define            " } )
+   aadd( a_, { "                  ", "macro _HBMK_VCS_TYPE_ with the name of detected VCS and          " } )
+   aadd( a_, { "                  ", "_HBMK_VCS_ID_ with the unique ID of local repository             " } )
+   aadd( a_, { "-tshead=<file>    ", "generate .ch header file with timestamp information.             " } )
+   aadd( a_, { "                  ", "Generated header will define macros _HBMK_BUILD_DATE_,           " } )
+   aadd( a_, { "                  ", "_HBMK_BUILD_TIME_, _HBMK_BUILD_TIMESTAMP_ with the               " } )
+   aadd( a_, { "                  ", "date/time of build                                               " } )
+   aadd( a_, { "-icon=<file>      ", "set <file> as application icon. <file> should be a               " } )
+   aadd( a_, { "                  ", "supported format on the target platform (experimental)           " } )
+   aadd( a_, { "-instpath=<path>  ", "copy target to <path>. if <path> is a directory, it should       " } )
+   aadd( a_, { "                  ", "end with path separator. can be specified multiple times         " } )
+   aadd( a_, { "-nohbc            ", "do not process .hbc files in current directory                   " } )
+   aadd( a_, { "-stop             ", "stop without doing anything                                      " } )
+   aadd( a_, { "-echo=<text>      ", "echo text on screen                                              " } )
+   aadd( a_, { "                  ", "                                                                 " } )
+   aadd( a_, { "-bldf[-]          ", "inherit all/no (default) flags from Harbour build                " } )
+   aadd( a_, { "-bldf=[p][c][l]   ", "inherit .prg/.c/linker flags (or none) from Harbour build        " } )
+   aadd( a_, { "-inctrypath=<p>   ", "additional path to autodetect .c header locations                " } )
+   aadd( a_, { "-prgflag=<f>      ", "pass flag to Harbour                                             " } )
+   aadd( a_, { "-cflag=<f>        ", "pass flag to C compiler                                          " } )
+   aadd( a_, { "-resflag=<f>      ", "pass flag to resource compiler (Windows only)                    " } )
+   aadd( a_, { "-ldflag=<f>       ", "pass flag to linker (executable)                                 " } )
+   aadd( a_, { "-aflag=<f>        ", "pass flag to linker (static library)                             " } )
+   aadd( a_, { "-dflag=<f>        ", "pass flag to linker (dynamic library)                            " } )
+   aadd( a_, { "-runflag=<f>      ", "pass flag to output executable when -run option is used          " } )
+   aadd( a_, { "-3rd=<f>          ", "options/flags reserved for 3rd party tools, always ignored       " } )
+   aadd( a_, { "                  ", "by hbmk2 itself                                                  " } )
+   aadd( a_, { "-jobs=<n>         ", "start n compilation threads (multiprocess platforms only)        " } )
+   aadd( a_, { "-inc              ", "enable incremental build mode                                    " } )
+   aadd( a_, { "-[no]head[=<m>]   ", "control source header parsing (in incremental build mode)        " } )
+   aadd( a_, { "                  ", "<m> can be: native (uses compiler to extract                     " } )
+   aadd( a_, { "                  ", "dependencies), full (uses simple text parser on the whole        " } )
+   aadd( a_, { "                  ", "file), partial (default, uses simple text parser on 1st          " } )
+   aadd( a_, { "                  ", "16KB chunk of the file), off                                     " } )
+   aadd( a_, { "-rebuild          ", "rebuild all (in incremental build mode)                          " } )
+   aadd( a_, { "-clean            ", "clean (in incremental build mode)                                " } )
+   aadd( a_, { "-workdir=<dir>    ", "working directory                                                " } )
+   aadd( a_, { "                  ", "(default: .hbmk/plat/comp in incremental mode, OS temp           " } )
+   aadd( a_, { "                  ", "directory otherwise)                                             " } )
+   aadd( a_, { "                  ", "                                                                 " } )
+   aadd( a_, { "-hbl[=<output>]   ", "output .hbl filename. %{hb_lng} macro is accepted in             " } )
+   aadd( a_, { "                  ", "filename                                                         " } )
+   aadd( a_, { "-lng=<languages>  ", "list of languages to be replaced in %{hb_lng} macros in          " } )
+   aadd( a_, { "                  ", ".pot/.po filenames and output .hbl/.po filenames. Comma          " } )
+   aadd( a_, { "                  ", "separared list:                                                  " } )
+   aadd( a_, { "                  ", "-lng=en,hu-HU,de                                                 " } )
+   aadd( a_, { "-po=<output>      ", "create/update .po file from source. Merge it with previous       " } )
+   aadd( a_, { "                  ", ".po file of the same name                                        " } )
+   aadd( a_, { "-[no]minipo       ", "don't (or do) add Harbour version number and source file         " } )
+   aadd( a_, { "                  ", "reference to .po (default: add them)                             " } )
+   aadd( a_, { "-rebuildpo        ", "recreate .po file, thus removing all obsolete entries in         " } )
+   aadd( a_, { "                  ", "it                                                               " } )
+   aadd( a_, { "                  ", "                                                                 " } )
+*  aadd( a_, { "Options below are ", "vailable on command line only:                                   " } )
+   aadd( a_, { "                  ", "                                                                 " } )
+   aadd( a_, { "-target=<script>  ", "specify a new build target. <script> can be .prg (or no          " } )
+   aadd( a_, { "                  ", "extension) or .hbm/.hbp file                                     " } )
+   aadd( a_, { "-target           ", "marks beginning of options belonging to a new build target       " } )
+   aadd( a_, { "-alltarget        ", "marks beginning of common options belonging to all targets       " } )
+   aadd( a_, { "                  ", "                                                                 " } )
+   aadd( a_, { "-env:<e>[<o>[<v>]]", "alter local environment. <e> is the name of the                  " } )
+   aadd( a_, { "                  ", "environment variable to alter. <o> can be '=' to                 " } )
+   aadd( a_, { "                  ", "set/override, '-' to delete, '+' to append to the end of         " } )
+   aadd( a_, { "                  ", "existing value, '#' to insert to the beginning of existing       " } )
+   aadd( a_, { "                  ", "value. <v> is the value to set/append/insert. If multiple        " } )
+   aadd( a_, { "                  ", "options are passed, they are processed from left to right.       " } )
+   aadd( a_, { "                  ", "                                                                 " } )
+   aadd( a_, { "-hbrun            ", "run target                                                       " } )
+   aadd( a_, { "-hbraw            ", "stop after running Harbour compiler                              " } )
+   aadd( a_, { "-hbcmp|-clipper   ", "stop after creating the object files                             " } )
+   aadd( a_, { "                  ", "create link/copy hbmk2 to hbcmp/clipper for the same             " } )
+   aadd( a_, { "                  ", "effect                                                           " } )
+   aadd( a_, { "-hbcc             ", "stop after creating the object files and accept raw C            " } )
+   aadd( a_, { "                  ", "flags                                                            " } )
+   aadd( a_, { "                  ", "create link/copy hbmk2 to hbcc for the same effect               " } )
+   aadd( a_, { "-hblnk            ", "accept raw linker flags                                          " } )
+   aadd( a_, { "-hb10             ", "enable Harbour 1.0.x compatibility mode (experimental)           " } )
+   aadd( a_, { "-xhb              ", "enable xhb mode (experimental)                                   " } )
+   aadd( a_, { "-hbc              ", "enable pure C mode (experimental)                                " } )
+   aadd( a_, { "-exospace         ", "emulate Clipper compatible linker behavior                       " } )
+   aadd( a_, { "                  ", "create link/copy hbmk2 to rtlink/blinker/exospace for the        " } )
+   aadd( a_, { "                  ", "same effect                                                      " } )
+   aadd( a_, { "                  ", "                                                                 " } )
+   aadd( a_, { "-hbmake=<file>    ", "convert hbmake project file to .hbp file (experimental)          " } )
+   aadd( a_, { "-xbp=<file>       ", "convert .xbp (xbuild) project file to .hbp file                  " } )
+   aadd( a_, { "                  ", "(experimental)                                                   " } )
+   aadd( a_, { "-xhp=<file>       ", "convert .xhp (xMate) project file to .hbp file                   " } )
+   aadd( a_, { "                  ", "(experimental)                                                   " } )
+   aadd( a_, { "                  ", "                                                                 " } )
+   aadd( a_, { "--hbdirbin        ", "output Harbour binary directory                                  " } )
+   aadd( a_, { "--hbdirdyn        ", "output Harbour dynamic library directory                         " } )
+   aadd( a_, { "--hbdirlib        ", "output Harbour static library directory                          " } )
+   aadd( a_, { "--hbdirinc        ", "output Harbour header directory                                  " } )
+   aadd( a_, { "                  ", "                                                                 " } )
+   aadd( a_, { "-plat[form]=<plat>", "select target platform.                                          " } )
+   aadd( a_, { "-comp[iler]=<comp>", "select C compiler.                                               " } )
+   aadd( a_, { "                  ", "Special value:                                                   " } )
+   aadd( a_, { "                  ", " - bld: use original build settings (default on *nix)            " } )
+   aadd( a_, { "-build=<name>     ", "use a specific build name                                        " } )
+   aadd( a_, { "-lang=<lang>      ", "override default language. Similar to HB_LANG envvar.            " } )
+   aadd( a_, { "-width=<n>        ", "set output width to <n> characters.                              " } )
+   aadd( a_, { "--version         ", "display version header only                                      " } )
+   aadd( a_, { "-pause            ", "force waiting for a key on exit in case of failure (with         " } )
+   aadd( a_, { "                  ", "alternate GTs only)                                              " } )
+   aadd( a_, { "-info             ", "turn on informational messages                                   " } )
+   aadd( a_, { "-quiet            ", "suppress all screen messages                                     " } )
+
+   RETURN a_
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeProjManager:xppCompileFlags()
+   LOCAL a_:= {}
+
+   aadd( a_, { "/a                   ", "automatic MEMVAR declaration                             " } )
+   aadd( a_, { "/b                   ", "include debug information                                " } )
+   aadd( a_, { "/coff                ", "create COFF object file                                  " } )
+   aadd( a_, { "/com                 ", "Compatibility-Mode (max. 10 significant chars for ident.)" } )
+   aadd( a_, { "/d<id>[=<val>]       ", "#define <id>                                             " } )
+   aadd( a_, { "/dll[:DYNAMIC|STATIC]", "create output file that can be used in a                 " } )
+   aadd( a_, { "                     ", "dynamic or static DLL; default: static                   " } )
+   aadd( a_, { "/err:<count>         ", "abort compilation after <count> errors (default: 20)     " } )
+   aadd( a_, { "/es                  ", "compiler returns with error code if warnings are detected" } )
+   aadd( a_, { "/ga                  ", "convert string characters ANSI -> OEM                    " } )
+   aadd( a_, { "/go                  ", "convert string characters OEM -> ANSI                    " } )
+   aadd( a_, { "/i<path>             ", "include file search path                                 " } )
+   aadd( a_, { "/l                   ", "suppress linenumber embedding                            " } )
+   aadd( a_, { '/link[:"<options>"]  ', "invoke linker with <options> to build exe file           " } )
+   aadd( a_, { "/m                   ", "do not process SET PROCEDURE TO (ProcRequest)            " } )
+   aadd( a_, { "/n                   ", "no implicit starting procedure (MAIN)                    " } )
+   aadd( a_, { "/nod                 ", "suppress request for default library in output file      " } )
+   aadd( a_, { "/o<name>             ", "rename output file                                       " } )
+   aadd( a_, { "/omf                 ", "create OMF object file                                   " } )
+   aadd( a_, { "/p                   ", "create pre-processed output file                         " } )
+   aadd( a_, { "/pptrace             ", "trace preprocessor's work                                " } )
+   aadd( a_, { "/profile             ", "generate profiling information                           " } )
+   aadd( a_, { "/q                   ", "quiet mode                                               " } )
+   aadd( a_, { "/r<libname>          ", "add request for library <libname>                        " } )
+   aadd( a_, { "/s                   ", "syntax check only                                        " } )
+   aadd( a_, { "/u[<filename>]       ", "use command definition set in <filename> (or none)       " } )
+   aadd( a_, { "/v                   ", "undeclared variables are assumed to be MEMVARs           " } )
+   aadd( a_, { "/w                   ", "enable standard warnings                                 " } )
+   aadd( a_, { "/wi                  ", "warn about access of uninitialized lex. variables        " } )
+   aadd( a_, { "/wl                  ", "warn about use of dynamic scoped variables               " } )
+   aadd( a_, { "/wn                  ", "warn about suspicious implicitly declared NILs           " } )
+   aadd( a_, { "/wu                  ", "warn about unused lexical variables                      " } )
+   aadd( a_, { "/z                   ", "suppress short-cut optimization                          " } )
+
+   RETURN a_
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeProjManager:xppLinkFlags()
+   LOCAL a_:= {}
+
+ * usage: ALINK [options] [files] [@commandfile
+
+   aadd( a_, { "/BASE:address                         " } )
+   aadd( a_, { "/DE[BUG]                              " } )
+   aadd( a_, { "/DEFAULTLIB:library                   " } )
+   aadd( a_, { "/DLL                                  " } )
+   aadd( a_, { "/FORCE:{MULTIPLE|UNRESOLVED}          " } )
+   aadd( a_, { "/HELP or /?                           " } )
+   aadd( a_, { "/MAP[:filename]                       " } )
+   aadd( a_, { "/NOD[EFAULTLIB][:library]             " } )
+   aadd( a_, { "/NOL[OGO]                             " } )
+   aadd( a_, { "/OUT:filename                         " } )
+   aadd( a_, { "/PM[TYPE]:{PM|VIO}                    " } )
+   aadd( a_, { "/ST[ACK]:max[,min]                    " } )
+   aadd( a_, { "/SUBSYSTEM:{WINDOWS|CONSOLE}[,#[.##]] " } )
+   aadd( a_, { "/VERBOSE                              " } )
+   aadd( a_, { "/VERSION:#[.#]                        " } )
+
+   RETURN a_
+
+/*----------------------------------------------------------------------*/

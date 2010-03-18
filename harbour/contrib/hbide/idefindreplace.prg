@@ -205,6 +205,7 @@ METHOD IdeSearchReplace:find( cText, lBackward )
 
       IF ! lFound
          ::qCurEdit:setTextCursor( qCursor )
+         ::qCurEdit:centerCursor()
          ::oUI:q_checkReplace:setChecked( .f. )
          ::oUI:q_checkReplace:setEnabled( .f. )
       ELSE

@@ -653,9 +653,9 @@
        </spacer>
       </item>
       <item>
-       <widget class="QToolButton" name="buttonSaveInFunc">
+       <widget class="QToolButton" name="buttonSave">
         <property name="toolTip">
-         <string>Save the documentation with function in source</string>
+         <string>Save written/updated documentation</string>
         </property>
         <property name="text">
          <string>...</string>
@@ -666,9 +666,9 @@
        </widget>
       </item>
       <item>
-       <widget class="QToolButton" name="buttonSave">
+       <widget class="QToolButton" name="buttonSaveInFunc">
         <property name="toolTip">
-         <string>Save written/updated documentation</string>
+         <string>Save the documentation with function in source</string>
         </property>
         <property name="text">
          <string>...</string>
