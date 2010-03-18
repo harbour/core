@@ -70,48 +70,59 @@
 
 /*----------------------------------------------------------------------*/
 
+STATIC FUNCTION hbide_saveSettings( oIde )
+
+   hbqt_QMainWindow_saveSettings( oIde:cProjIni, "hbidesettings", oIde:oDlg:oWidget:pPtr )
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION hbide_restSettings( oIde )
+
+   hbqt_QMainWindow_restSettings( oIde:cProjIni, "hbidesettings", oIde:oDlg:oWidget:pPtr )
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+
 FUNCTION hbide_saveINI( oIde )
-   LOCAL j, nTab, pTab, n, txt_, qHScr, qVScr, oEdit, qCursor, nTabs
+   LOCAL j, nTab, pTab, n, txt_, qHScr, qVScr, oEdit, qCursor, nTabs, nn
 
    txt_:= {}
    //    Properties
    aadd( txt_, "[HBIDE]" )
    aadd( txt_, " " )
-   aadd( txt_, "MainWindowGeometry        = " + hbide_posAndSize( oIde:oDlg:oWidget )             )
-   aadd( txt_, "ProjectTreeVisible        = " + IIF( oIde:lProjTreeVisible, "YES", "NO" )         )
- * aadd( txt_, "ProjectTreeGeometry       = " + hbide_posAndSize( oIde:oProjTree:oWidget )        )
-   aadd( txt_, "FunctionListVisible       = " + IIF( oIde:lDockRVisible, "YES", "NO" )            )
- * aadd( txt_, "FunctionListGeometry      = " + hbide_posAndSize( oIde:oFuncList:oWidget )        )
-   aadd( txt_, "RecentTabIndex            = " + hb_ntos( oIde:qTabWidget:currentIndex() )         )
-   aadd( txt_, "CurrentProject            = " + oIde:cWrkProject                                  )
-   aadd( txt_, "GotoDialogGeometry        = " + oIde:aIni[ INI_HBIDE, GotoDialogGeometry        ] )
- * aadd( txt_, "PropsDialogGeometry       = " + oIde:aIni[ INI_HBIDE, PropsDialogGeometry       ] )
-   aadd( txt_, "FindDialogGeometry        = " + oIde:aIni[ INI_HBIDE, FindDialogGeometry        ] )
- * aadd( txt_, "ThemesDialogGeometry      = " + oIde:aIni[ INI_HBIDE, ThemesDialogGeometry      ] )
-   aadd( txt_, "CurrentTheme              = " + oIde:cWrkTheme                                    )
-   aadd( txt_, "CurrentCodec              = " + oIde:cWrkCodec                                    )
-   aadd( txt_, "PathMk2                   = " + oIde:aIni[ INI_HBIDE, PathMk2                   ] )
-   aadd( txt_, "PathEnv                   = " + oIde:aIni[ INI_HBIDE, PathEnv                   ] )
-   aadd( txt_, "CurrentEnvironment        = " + oIde:cWrkEnvironment                              )
- * aadd( txt_, "FindInFilesDialogGeometry = " + oIde:aIni[ INI_HBIDE, FindInFilesDialogGeometry ] )
-   aadd( txt_, "CurrentFind               = " + oIde:cWrkFind                                     )
-   aadd( txt_, "CurrentFolderFind         = " + oIde:cWrkFolderFind                               )
-   aadd( txt_, "CurrentReplace            = " + oIde:cWrkReplace                                  )
-   aadd( txt_, "CurrentView               = " + oIde:cWrkView                                     )
-   aadd( txt_, "CurrentHarbour            = " + oIde:cWrkHarbour                                  )
+   aadd( txt_, "MainWindowGeometry="  + hbide_posAndSize( oIde:oDlg:oWidget )      )
+   aadd( txt_, "ProjectTreeVisible="  + IIF( oIde:lProjTreeVisible, "YES", "NO" )  )
+   aadd( txt_, "FunctionListVisible=" + IIF( oIde:lDockRVisible, "YES", "NO" )     )
+   aadd( txt_, "RecentTabIndex="      + hb_ntos( oIde:qTabWidget:currentIndex() )  )
+   aadd( txt_, "CurrentProject="      + oIde:cWrkProject                           )
+   aadd( txt_, "GotoDialogGeometry="  + oIde:aIni[ INI_HBIDE, GotoDialogGeometry ] )
+   aadd( txt_, "FindDialogGeometry="  + oIde:aIni[ INI_HBIDE, FindDialogGeometry ] )
+   aadd( txt_, "CurrentTheme="        + oIde:cWrkTheme                             )
+   aadd( txt_, "CurrentCodec="        + oIde:cWrkCodec                             )
+   aadd( txt_, "PathMk2="             + oIde:aIni[ INI_HBIDE, PathMk2            ] )
+   aadd( txt_, "PathEnv="             + oIde:aIni[ INI_HBIDE, PathEnv            ] )
+   aadd( txt_, "CurrentEnvironment="  + oIde:cWrkEnvironment                       )
+   aadd( txt_, "CurrentFind="         + oIde:cWrkFind                              )
+   aadd( txt_, "CurrentFolderFind="   + oIde:cWrkFolderFind                        )
+   aadd( txt_, "CurrentReplace="      + oIde:cWrkReplace                           )
+   aadd( txt_, "CurrentView="         + oIde:cWrkView                              )
+   aadd( txt_, "CurrentHarbour="      + oIde:cWrkHarbour                           )
    aadd( txt_, " " )
 
    aadd( txt_, "[PROJECTS]" )
    aadd( txt_, " " )
    FOR n := 1 TO len( oIde:aProjects )
-      aadd( txt_, oIde:aProjects[ n, 2 ] )
+      aadd( txt_, "project_" + hb_ntos( n ) + "=" + hbide_pathNormalized( oIde:aProjects[ n, 2 ] ) )
    NEXT
    aadd( txt_, " " )
 
    /*-------------------   FILES   -------------------*/
    aadd( txt_, "[FILES]" )
    aadd( txt_, " " )
-
+   nn := 0
    FOR j := 2 TO len( oIde:aViews )
       oIde:lClosing := .t.
       oIde:oDK:setView( oIde:aViews[ j ]:oWidget:objectName() )
@@ -120,7 +131,7 @@ FUNCTION hbide_saveINI( oIde )
       FOR n := 1 TO nTabs
          pTab  := oIde:qTabWidget:widget( n - 1 )
          nTab  := ascan( oIde:aTabs, {|e_| hbqt_IsEqualGcQtPointer( e_[ 1 ]:oWidget:pPtr, pTab ) } )
-         oEdit := oIde:aTabs[ nTab, TAB_OEDITOR ]         ////////////////////////////////////////////////////
+         oEdit := oIde:aTabs[ nTab, TAB_OEDITOR ]
 
          IF !Empty( oEdit:sourceFile ) .and. !( ".ppo" == lower( oEdit:cExt ) )
             IF oEdit:lLoaded
@@ -128,14 +139,14 @@ FUNCTION hbide_saveINI( oIde )
                qVScr   := QScrollBar():configure( oEdit:qEdit:verticalScrollBar() )
                qCursor := QTextCursor():configure( oEdit:qEdit:textCursor() )
 
-               aadd( txt_, oEdit:sourceFile + "," + ;
+               aadd( txt_, "file_" + hb_ntos( ++nn ) + "=" + hbide_pathNormalized( oEdit:sourceFile ) + "," + ;
                            hb_ntos( qCursor:position() ) +  ","  + ;
                            hb_ntos( qHScr:value()      ) +  ","  + ;
                            hb_ntos( qVScr:value()      ) +  ","  + ;
                            oEdit:cTheme                  +  ","  + ;
                            oEdit:cView                   +  "," )
             ELSE
-               aadd( txt_, oEdit:sourceFile + "," + ;
+               aadd( txt_, "file_" + hb_ntos( ++nn ) + "=" + hbide_pathNormalized( oEdit:sourceFile ) + "," + ;
                            hb_ntos( oEdit:nPos  ) +  ","  + ;
                            hb_ntos( oEdit:nHPos ) +  ","  + ;
                            hb_ntos( oEdit:nVPos ) +  ","  + ;
@@ -151,43 +162,45 @@ FUNCTION hbide_saveINI( oIde )
    aadd( txt_, "[FIND]" )
    aadd( txt_, " " )
    FOR n := 1 TO len( oIde:aIni[ INI_FIND ] )
-      aadd( txt_, oIde:aIni[ INI_FIND, n ] )
+      aadd( txt_, "find_" + hb_ntos( n ) + "=" + oIde:aIni[ INI_FIND, n ] )
    NEXT
    aadd( txt_, " " )
 
    aadd( txt_, "[REPLACE]" )
    aadd( txt_, " " )
    FOR n := 1 TO len( oIde:aIni[ INI_REPLACE ] )
-      aadd( txt_, oIde:aIni[ INI_REPLACE, n ] )
+      aadd( txt_, "replace_" + hb_ntos( n ) + "=" + oIde:aIni[ INI_REPLACE, n ] )
    NEXT
    aadd( txt_, " " )
 
    aadd( txt_, "[RECENTFILES]" )
    aadd( txt_, " " )
    FOR n := 1 TO len( oIde:aIni[ INI_RECENTFILES ] )
-      aadd( txt_, oIde:aIni[ INI_RECENTFILES, n ] )
+      aadd( txt_, "recentfile_" + hb_ntos( n ) + "=" + hbide_pathNormalized( oIde:aIni[ INI_RECENTFILES, n ] ) )
    NEXT
    aadd( txt_, " " )
 
    aadd( txt_, "[RECENTPROJECTS]" )
    aadd( txt_, " " )
    FOR n := 1 TO len( oIde:aIni[ INI_RECENTPROJECTS ] )
-      aadd( txt_, oIde:aIni[ INI_RECENTPROJECTS, n ] )
+      aadd( txt_, "recentproject_" + hb_ntos( n ) + "=" + hbide_pathNormalized( oIde:aIni[ INI_RECENTPROJECTS, n ] ) )
    NEXT
    aadd( txt_, " " )
 
    aadd( txt_, "[FOLDERS]" )
    aadd( txt_, " " )
    FOR n := 1 TO len( oIde:aIni[ INI_FOLDERS ] )
-      aadd( txt_, oIde:aIni[ INI_FOLDERS, n ] )
+      aadd( txt_, "folder_" + hb_ntos( n ) + "=" + hbide_pathNormalized( oIde:aIni[ INI_FOLDERS, n ] ) )
    NEXT
    aadd( txt_, " " )
 
    aadd( txt_, "[VIEWS]" )
    aadd( txt_, " " )
    FOR n := 1 TO len( oIde:aIni[ INI_VIEWS ] )
-      aadd( txt_, oIde:aIni[ INI_VIEWS, n ] )
+      aadd( txt_, "view_" + hb_ntos( n ) + "=" + oIde:aIni[ INI_VIEWS, n ] )
    NEXT
+   aadd( txt_, " " )
+   aadd( txt_, "[General]" )
    aadd( txt_, " " )
 
    hbide_createTarget( oIde:cProjIni, txt_ )
@@ -240,6 +253,9 @@ FUNCTION hbide_loadINI( oIde, cHbideIni )
              */
             SWITCH Upper( s )
 
+            CASE "[GENERAL]"
+               nPart := INI_GENERAL
+               EXIT
             CASE "[HBIDE]"
                nPart := INI_HBIDE
                EXIT
@@ -277,13 +293,14 @@ FUNCTION hbide_loadINI( oIde, cHbideIni )
                 * 01/01/2010 - 18:09:40 - vailtom
                 */
                DO CASE
-               CASE Left( s, 1 ) == '['
+               CASE Left( s, 1 ) $ '#['
                   * Nothing todo!
 
+               CASE nPart == INI_GENERAL
+                  * Qt Setttings, do nothing.
+
                CASE nPart == INI_HBIDE
-                  IF ( n := at( "=", s ) ) > 0
-                     cKey := alltrim( substr( s, 1, n-1 ) )
-                     cVal := alltrim( substr( s, n+1 ) )
+                  IF hbide_parseKeyValPair( s, @cKey, @cVal )
                      cKey := lower( cKey )
                      IF ( n := ascan( aIdeEle, cKey ) ) > 0
                         oIde:aIni[ nPart, n ] := cVal  /* Further process */
@@ -291,50 +308,65 @@ FUNCTION hbide_loadINI( oIde, cHbideIni )
                   ENDIF
 
                CASE nPart == INI_PROJECTS
-                  aadd( oIde:aIni[ nPart ], s )
+                  IF hbide_parseKeyValPair( s, @cKey, @cVal )
+                     aadd( oIde:aIni[ nPart ], cVal )
+                  ENDIF
 
                CASE nPart == INI_FILES
-                  a_:= hb_atokens( s, "," )
-                  asize( a_, 6 )
-                  DEFAULT a_[ 1 ] TO ""
-                  DEFAULT a_[ 2 ] TO ""
-                  DEFAULT a_[ 3 ] TO ""
-                  DEFAULT a_[ 4 ] TO ""
-                  DEFAULT a_[ 5 ] TO ""
-                  DEFAULT a_[ 6 ] TO "Main"
-                  //
-                  a_[ 2 ] := val( a_[ 2 ] )
-                  a_[ 3 ] := val( a_[ 3 ] )
-                  a_[ 4 ] := val( a_[ 4 ] )
-                  a_[ 5 ] := a_[ 5 ]
-                  a_[ 6 ] := a_[ 6 ]
+                  IF hbide_parseKeyValPair( s, @cKey, @cVal )
+                     a_:= hb_atokens( cVal, "," )
+                     asize( a_, 6 )
+                     DEFAULT a_[ 1 ] TO ""
+                     DEFAULT a_[ 2 ] TO ""
+                     DEFAULT a_[ 3 ] TO ""
+                     DEFAULT a_[ 4 ] TO ""
+                     DEFAULT a_[ 5 ] TO ""
+                     DEFAULT a_[ 6 ] TO "Main"
+                     //
+                     a_[ 1 ] := alltrim( a_[ 1 ] )
+                     a_[ 2 ] := val( alltrim( a_[ 2 ] ) )
+                     a_[ 3 ] := val( alltrim( a_[ 3 ] ) )
+                     a_[ 4 ] := val( alltrim( a_[ 4 ] ) )
+                     a_[ 5 ] := alltrim( a_[ 5 ] )
+                     a_[ 6 ] := alltrim( a_[ 6 ] )
 
-                * Ignores invalid filenames...
-                  IF !Empty( a_[ 1 ] )
-                     aadd( oIde:aIni[ nPart ], a_ )
+                   * Ignores invalid filenames...
+                     IF !Empty( a_[ 1 ] )
+                        aadd( oIde:aIni[ nPart ], a_ )
+                     ENDIF
                   ENDIF
 
                CASE nPart == INI_FIND
-                  aadd( oIde:aIni[ nPart ], s )
+                  IF hbide_parseKeyValPair( s, @cKey, @cVal )
+                     aadd( oIde:aIni[ nPart ], cVal )
+                  ENDIF
 
                CASE nPart == INI_REPLACE
-                  aadd( oIde:aIni[ nPart ], s )
+                  IF hbide_parseKeyValPair( s, @cKey, @cVal )
+                     aadd( oIde:aIni[ nPart ], cVal )
+                  ENDIF
 
-               CASE nPart == INI_RECENTPROJECTS        .OR. ;
+               CASE nPart == INI_RECENTPROJECTS .OR. ;
                     nPart == INI_RECENTFILES
 
-                  IF Len( oIde:aIni[ nPart ] ) < 25
-                     s := hbide_pathNormalized( s, .f. )
-                     IF aScan( oIde:aIni[ nPart ], {|e| hbide_pathNormalized( e, .f. ) == s } ) == 0
-                        AAdd( oIde:aIni[ nPart ], s )
+                  IF hbide_parseKeyValPair( s, @cKey, @cVal )
+                     IF Len( oIde:aIni[ nPart ] ) < 25
+                        cVal := hbide_pathNormalized( cVal, .f. )
+                        IF aScan( oIde:aIni[ nPart ], {|e| hbide_pathNormalized( e, .f. ) == cVal } ) == 0
+                           AAdd( oIde:aIni[ nPart ], cVal )
+                        ENDIF
                      ENDIF
                   ENDIF
 
                CASE nPart == INI_FOLDERS
-                  aadd( oIde:aIni[ nPart ], s )
+                  IF hbide_parseKeyValPair( s, @cKey, @cVal )
+                     aadd( oIde:aIni[ nPart ], cVal )
+                  ENDIF
 
                CASE nPart == INI_VIEWS
-                  aadd( oIde:aIni[ nPart ], s )
+                  IF hbide_parseKeyValPair( s, @cKey, @cVal )
+                     aadd( oIde:aIni[ nPart ], cVal )
+                  ENDIF
 
                ENDCASE
                EXIT
@@ -344,28 +376,6 @@ FUNCTION hbide_loadINI( oIde, cHbideIni )
    ENDIF
 
    RETURN Nil
-
-/*----------------------------------------------------------------------*/
-
-STATIC FUNCTION hbide_saveSettings( oIde )
-   LOCAL cPath
-
-   hb_fNameSplit( oIde:cProjIni, @cPath )
-   hbqt_QMainWindow_saveSettings( cPath + "hbidewnd.ini", "hbIDE", oIde:oDlg:oWidget:pPtr )
-   //hbqt_QMainWindow_saveSettings( cPath + "hbide.ini", "hbIDE", oIde:oDlg:oWidget:pPtr )
-
-   RETURN nil
-
-/*----------------------------------------------------------------------*/
-
-FUNCTION hbide_restSettings( oIde )
-   LOCAL cPath
-
-   hb_fNameSplit( oIde:cProjIni, @cPath )
-   hbqt_QMainWindow_restSettings( cPath + "hbidewnd.ini", "hbIDE", oIde:oDlg:oWidget:pPtr )
-   //hbqt_QMainWindow_restSettings( cPath + "hbide.ini", "hbIDE", oIde:oDlg:oWidget:pPtr )
-
-   RETURN nil
 
 /*----------------------------------------------------------------------*/
 

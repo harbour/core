@@ -341,7 +341,7 @@ METHOD IdeThemes:save( lAsk )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeThemes:getThemeAttribute( cAttr, cTheme )
-   LOCAL nTheme, aAttr
+   LOCAL nTheme, aAttr := {}
 
    IF !empty( cAttr )
       IF !empty( cTheme ) .and. hb_isChar( cTheme ) .and. ( nTheme := ascan( ::aThemes, {|e_| e_[ 1 ] == cTheme } ) ) > 0
@@ -806,7 +806,7 @@ METHOD IdeThemes:parseINI( lAppend )
             nPart := 2
          CASE left( s, 7 ) == "[ Theme"
             IF ( n := at( ":", s ) ) > 0
-               cKey := alltrim( strtran( substr( s, n+1 ), "]" ) )
+               cKey := alltrim( strtran( substr( s, n + 1 ), "]", "" ) )
             ENDIF
             IF !empty( cKey )
                nPart := 3
@@ -837,6 +837,7 @@ METHOD IdeThemes:parseINI( lAppend )
                ENDIF
             CASE nPart == 3 /* Theams  */
                IF hbide_parseKeyValPair( s, @cKey, @cVal )
+
                   aV   := FillAttrbs()
                   aVal := hb_aTokens( cVal, "," )
                   FOR n := 1 TO THM_NUM_ATTRBS
@@ -849,8 +850,10 @@ METHOD IdeThemes:parseINI( lAppend )
                   NEXT
                   IF ( n := ascan( ::aThemes[ nTheme, 2 ], {|e_| e_[ 1 ] == cKey } ) ) > 0
                      ::aThemes[ nTheme, 2, n, 2 ] := aV
+
                   ELSE
                      aadd( ::aThemes[ nTheme, 2 ], { cKey, aV } )
+
                   ENDIF
                ENDIF
             ENDCASE
