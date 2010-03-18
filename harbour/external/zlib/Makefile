@@ -6,6 +6,8 @@ ROOT := ../../
 
 include $(TOP)$(ROOT)config/global.mk
 
+LIBNAME := hbzlib
+
 HB_BUILD_WARN := no
 
 C_SOURCES := \
@@ -21,8 +23,6 @@ C_SOURCES := \
    trees.c \
    uncompr.c \
    zutil.c \
-
-LIBNAME := hbzlib
 
 ifneq ($(HB_HAS_ZLIB_LOCAL),)
    include $(TOP)$(ROOT)config/lib.mk

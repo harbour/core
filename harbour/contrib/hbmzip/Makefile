@@ -23,6 +23,6 @@ ifneq ($(HB_HAS_ZLIB),)
    include $(TOP)$(ROOT)config/header.mk
    include $(TOP)$(ROOT)config/lib.mk
 else
-   HB_SKIP_REASON := $(_DET_RES_TEXT)
+   HB_SKIP_REASON := component not found
    include $(TOP)$(ROOT)config/none.mk
 endif

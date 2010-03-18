@@ -6,7 +6,7 @@ ROOT := ../../
 
 include $(TOP)$(ROOT)config/global.mk
 
-LIBNAME := bzip2
+LIBNAME := bz2
 
 HB_BUILD_WARN := no
 HB_BUILD_MODE := c
