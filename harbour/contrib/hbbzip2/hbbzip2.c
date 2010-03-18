@@ -222,9 +222,9 @@ HB_FUNC( HB_BZ2_UNCOMPRESSLEN )
          nLen = hb_bz2UncompressedSize( szData, nLen, &iResult );
 
       if( iResult == BZ_OK )
-         hb_retni( -1 );
-      else
          hb_retnint( nLen );
+      else
+         hb_retni( -1 );
 
       hb_storni( iResult, 2 );
    }

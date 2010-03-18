@@ -136,9 +136,9 @@ HB_FUNC( HB_ZUNCOMPRESSLEN )
          ulLen = hb_zlibUncompressedSize( szData, ulLen, &iResult );
 
       if( iResult == Z_OK )
-         hb_retni( -1 );
-      else
          hb_retnint( ulLen );
+      else
+         hb_retni( -1 );
 
       hb_storni( iResult, 2 );
    }
