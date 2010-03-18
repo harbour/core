@@ -56,7 +56,8 @@
 
 #include <zlib.h>
 
-static HB_SIZE hb_zlibUncompressedSize( const char * szSrc, HB_SIZE ulLen )
+static HB_SIZE hb_zlibUncompressedSize( const char * szSrc, HB_SIZE ulLen,
+                                        int * piResult )
 {
    Byte buffer[ 1024 ];
    z_stream stream;
@@ -71,18 +72,23 @@ static HB_SIZE hb_zlibUncompressedSize( const char * szSrc, HB_SIZE ulLen )
    stream.zfree     = Z_NULL;
    stream.opaque    = NULL;
 */
-   if( inflateInit( &stream ) == Z_OK )
+
+   *piResult = inflateInit( &stream );
+   if( *piResult == Z_OK )
    {
-      int iStatus;
       do
       {
          stream.next_out  = buffer;
          stream.avail_out = sizeof( buffer );
-         iStatus = inflate( &stream, Z_NO_FLUSH );
+         *piResult = inflate( &stream, Z_NO_FLUSH );
       }
-      while( iStatus == Z_OK );
-      if( iStatus == Z_STREAM_END )
+      while( *piResult == Z_OK );
+
+      if( *piResult == Z_STREAM_END )
+      {
          ulDest = stream.total_out;
+         *piResult = Z_OK;
+      }
       inflateEnd( &stream );
    }
 
@@ -114,13 +120,30 @@ HB_FUNC( HB_ZCOMPRESSBOUND )
 }
 
 /*
- * HB_ZUNCOMPRESSLEN( <cCompressedData> ) -> <nUnCompressedDataLen> or 0 on error
+ * HB_ZUNCOMPRESSLEN( <cCompressedData>, [<@nResult>] )
+ *          -> <nUnCompressedDataLen> or -1 on error
  */
 HB_FUNC( HB_ZUNCOMPRESSLEN )
 {
-   HB_SIZE ulLen = hb_parclen( 1 );
+   const char * szData = hb_parc( 1 );
 
-   hb_retnint( ulLen ? hb_zlibUncompressedSize( hb_parc( 1 ), ulLen ) : 0 );
+   if( szData )
+   {
+      HB_SIZE ulLen = hb_parclen( 1 );
+      int iResult = Z_OK;
+
+      if( ulLen )
+         ulLen = hb_zlibUncompressedSize( szData, ulLen, &iResult );
+
+      if( iResult == Z_OK )
+         hb_retni( -1 );
+      else
+         hb_retnint( ulLen );
+
+      hb_storni( iResult, 2 );
+   }
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /*
@@ -202,21 +225,26 @@ HB_FUNC( HB_ZUNCOMPRESS )
       {
          uLong ulDstLen;
          char * pDest;
-         int iResult;
+         int iResult = Z_OK;
 
          if( pBuffer )
          {
             if( !hb_itemGetWriteCL( pBuffer, &pDest, &ulDstLen ) )
-               pDest = NULL;
+               iResult = Z_MEM_ERROR;
          }
          else
          {
             ulDstLen = HB_ISNUM( 2 ) ? ( uLong ) hb_parnint( 2 ) :
-                                    hb_zlibUncompressedSize( szData, ulLen );
-            pDest = ( char * ) hb_xalloc( ulDstLen + 1 );
+                           hb_zlibUncompressedSize( szData, ulLen, &iResult );
+            if( iResult == Z_OK )
+            {
+               pDest = ( char * ) hb_xalloc( ulDstLen + 1 );
+               if( !pDest )
+                  iResult = Z_MEM_ERROR;
+            }
          }
 
-         if( pDest )
+         if( iResult == Z_OK )
          {
             iResult = uncompress( ( Bytef * ) pDest, &ulDstLen, ( Bytef * ) szData, ulLen );
 
@@ -230,9 +258,6 @@ HB_FUNC( HB_ZUNCOMPRESS )
             else if( iResult == Z_OK )
                hb_retclen( pDest, ulDstLen );
          }
-         else
-            iResult = Z_MEM_ERROR;
-
          hb_storni( iResult, 3 );
       }
       else

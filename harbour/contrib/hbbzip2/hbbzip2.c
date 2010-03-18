@@ -206,16 +206,30 @@ HB_FUNC( HB_BZ2_COMPRESSBOUND )
 }
 
 /*
- * HB_BZ2_UNCOMPRESSLEN( <cCompressedData>, [<@nResult>] ) -> <nUnCompressedDataLen> or 0 on error
+ * HB_BZ2_UNCOMPRESSLEN( <cCompressedData>, [<@nResult>] )
+ *          -> <nUnCompressedDataLen> or -1 on error
  */
 HB_FUNC( HB_BZ2_UNCOMPRESSLEN )
 {
-   HB_SIZE ulLen = hb_parclen( 1 );
-   int iResult = 0;
+   const char * szData = hb_parc( 1 );
 
-   hb_retnint( ulLen ?
-               hb_bz2UncompressedSize( hb_parc( 1 ), ulLen, &iResult ) : 0 );
-   hb_storni( iResult, 2 );
+   if( szData )
+   {
+      HB_SIZE nLen = hb_parclen( 1 );
+      int iResult = BZ_OK;
+
+      if( nLen )
+         nLen = hb_bz2UncompressedSize( szData, nLen, &iResult );
+
+      if( iResult == BZ_OK )
+         hb_retni( -1 );
+      else
+         hb_retnint( nLen );
+
+      hb_storni( iResult, 2 );
+   }
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /*

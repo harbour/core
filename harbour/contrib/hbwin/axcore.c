@@ -51,6 +51,7 @@
  */
 
 #include "hbwinole.h"
+#include "hbapistr.h"
 #if defined( HB_OS_WIN_CE )
    #include "hbwince.h"
 #endif
@@ -426,14 +427,13 @@ HB_FUNC( __AXREGISTERHANDLER )  /* ( pDisp, bHandler [, cID] ) --> pSink */
          IConnectionPoint*          pCP = NULL;
          HRESULT                    lOleError = S_OK;
          IID                        rriid = IID_IDispatch;
-         const char*                cID = hb_parc( 3 );
+         void*                      hCLSID;
+         const wchar_t*             wCLSID;
 
-         if( cID )
-         {
-            wchar_t* wCLSID = hb_mbtowc( cID );
-            lOleError = CLSIDFromString( wCLSID, &rriid );
-            hb_xfree( wCLSID );
-         }
+         wCLSID = hb_parstr_u16( 3, HB_CDP_ENDIAN_NATIVE, &hCLSID, NULL );
+         if( wCLSID )
+            lOleError = CLSIDFromString( ( wchar_t * ) wCLSID, &rriid );
+         hb_strfree( hCLSID );
 
          if( lOleError == S_OK )
          {
