@@ -74,6 +74,7 @@
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 
+#include "hbwinole.h"
 #include "gtwvg.h"
 
 #define __SETGUI__
@@ -173,7 +174,7 @@ IPicture * hb_wvt_gtLoadPictureFromResource( LPCSTR cResource, LPCSTR cSection )
 
       CreateStreamOnHGlobal( hGlobal, TRUE, &iStream );
 
-      OleLoadPicture( iStream, nFileSize, TRUE, HB_ID_REF( REFIID, IID_IPicture ), &iPicture );
+      OleLoadPicture( iStream, nFileSize, TRUE, HB_ID_REF( IID_IPicture ), &iPicture );
 
       FreeResource( mem );
    }
@@ -210,7 +211,7 @@ IPicture * hb_wvt_gtLoadPicture( const char * cImage )
             if( ReadFile( hFile, hGlobal, nFileSize, &nReadByte, NULL ) )
             {
                CreateStreamOnHGlobal( hGlobal, TRUE, &iStream );
-               OleLoadPicture( iStream, nFileSize, TRUE, HB_ID_REF( REFIID, IID_IPicture ), &iPicture );
+               OleLoadPicture( iStream, nFileSize, TRUE, HB_ID_REF( IID_IPicture ), &iPicture );
             }
             GlobalFree( hGlobal );
          }
@@ -243,8 +244,8 @@ HB_BOOL hb_wvt_gtRenderPicture( int x1, int y1, int wd, int ht, IPicture * iPict
 
    if( iPicture )
    {
-      iPicture->lpVtbl->get_Width( iPicture,&lWidth );
-      iPicture->lpVtbl->get_Height( iPicture,&lHeight );
+      HB_VTBL( iPicture )->get_Width( HB_THIS_( iPicture ) &lWidth );
+      HB_VTBL( iPicture )->get_Height( HB_THIS_( iPicture ) &lHeight );
 
       if( dc  == 0 )
       {
@@ -276,7 +277,7 @@ HB_BOOL hb_wvt_gtRenderPicture( int x1, int y1, int wd, int ht, IPicture * iPict
       {
          while( y < ye )
          {
-            iPicture->lpVtbl->Render( iPicture, _s->hdc, x, y, dc, dr, 0, lHeight, lWidth, -lHeight, NULL );
+            HB_VTBL( iPicture )->Render( HB_THIS_( iPicture ) _s->hdc, x, y, dc, dr, 0, lHeight, lWidth, -lHeight, NULL );
             y += dr;
          }
          y =  r;
@@ -302,7 +303,7 @@ HB_BOOL hb_wvt_gtRenderPicture( int x1, int y1, int wd, int ht, IPicture * iPict
          {
             while( y < ye )
             {
-               iPicture->lpVtbl->Render( iPicture, _s->hGuiDC, x, y, dc, dr, 0, lHeight, lWidth, -lHeight, NULL );
+               HB_VTBL( iPicture )->Render( HB_THIS_( iPicture ) _s->hGuiDC, x, y, dc, dr, 0, lHeight, lWidth, -lHeight, NULL );
                y += dr;
             }
             y =  r;
@@ -327,7 +328,7 @@ HB_BOOL hb_wvt_gtDestroyPicture( IPicture * iPicture )
 
    if( iPicture )
    {
-      iPicture->lpVtbl->Release( iPicture );
+      HB_VTBL( iPicture )->Release( HB_THIS( iPicture ) );
       bResult = HB_TRUE;
    }
 
@@ -622,12 +623,12 @@ HB_BOOL hb_wvt_DrawImage( HDC hdc, int x1, int y1, int wd, int ht, const char * 
           IPicture ** iPictureRef = &iPicture;
 
           CreateStreamOnHGlobal( hGlobal, TRUE, &iStream );
-          OleLoadPicture( iStream, nFileSize, TRUE, HB_ID_REF( REFIID, IID_IPicture ), ( LPVOID * ) iPictureRef );
+          OleLoadPicture( iStream, nFileSize, TRUE, HB_ID_REF( IID_IPicture ), ( LPVOID * ) iPictureRef );
 
           if ( iPicture )
           {
-            iPicture->lpVtbl->get_Width( iPicture,&lWidth );
-            iPicture->lpVtbl->get_Height( iPicture,&lHeight );
+            HB_VTBL( iPicture )->get_Width( HB_THIS_( iPicture ) &lWidth );
+            HB_VTBL( iPicture )->get_Height( HB_THIS_( iPicture ) &lHeight );
 
             if ( dc  == 0 )
             {
@@ -659,8 +660,8 @@ HB_BOOL hb_wvt_DrawImage( HDC hdc, int x1, int y1, int wd, int ht, const char * 
             {
               while ( y < ye )
               {
-                iPicture->lpVtbl->Render( iPicture, hdc, x, y, dc, dr, 0,
-                                          lHeight, lWidth, -lHeight, NULL );
+                HB_VTBL( iPicture )->Render( HB_THIS_( iPicture ) hdc, x, y, dc, dr, 0,
+                                             lHeight, lWidth, -lHeight, NULL );
                 y += dr;
               }
               y =  r;
@@ -670,7 +671,7 @@ HB_BOOL hb_wvt_DrawImage( HDC hdc, int x1, int y1, int wd, int ht, const char * 
             SelectClipRgn( hdc, NULL );
             DeleteObject( hrgn1 );
 
-            iPicture->lpVtbl->Release( iPicture );
+            HB_VTBL( iPicture )->Release( HB_THIS( iPicture ) );
             bResult = HB_TRUE ;
           }
         }

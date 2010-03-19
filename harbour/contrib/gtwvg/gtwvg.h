@@ -216,23 +216,15 @@ HB_EXTERN_BEGIN
 
 #endif
 
-#if defined( __cplusplus ) && ( defined( __BORLANDC__ ) || defined( _MSC_VER ) || ( defined( __WATCOMC__ ) && ( __WATCOMC__ >= 1280 ) ) )
-#  define HB_ID_REF( type, id )     id
-#else
-#  define HB_ID_REF( type, id )     ( ( type ) &id )
+#if defined( __BORLANDC__ ) && ( __BORLANDC__ == 0x0550 )
+   #ifdef __cplusplus
+      extern "C" { STDAPI OleLoadPicture(LPSTREAM,LONG,BOOL,REFIID,PVOID*); }
+   #else
+      #if ! defined( HB_OS_WIN_CE )
+         STDAPI OleLoadPicture(LPSTREAM,LONG,BOOL,REFIID,PVOID*);
+      #endif
+   #endif
 #endif
-
-#if defined( __BORLANDC__ )
-#if __BORLANDC__ == 0x0550
-#ifdef __cplusplus
-extern "C" { STDAPI OleLoadPicture(LPSTREAM,LONG,BOOL,REFIID,PVOID*); }
-#else
-#if ! defined( HB_OS_WIN_CE )
-STDAPI OleLoadPicture(LPSTREAM,LONG,BOOL,REFIID,PVOID*);
-#endif
-#endif
-#endif
-#endif /* __BORLANDC__ */
 
 /*----------------------------------------------------------------------*/
 
