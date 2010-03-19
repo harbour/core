@@ -89,6 +89,7 @@ CLASS IdeSkeletons INHERIT IdeObject
    DATA   oTree
    DATA   nPosCursor
    DATA   aItems                                  INIT {}
+   DATA   aMetas                                  INIT { { "", NIL } }
 
    METHOD new( oIde )
    METHOD create( oIde )
@@ -104,7 +105,11 @@ CLASS IdeSkeletons INHERIT IdeObject
    METHOD showTree()
    METHOD clearTree()
    METHOD updateTree()
-   METHOD saveAs( cText, cName )
+   METHOD save( cName, cText )
+   METHOD saveAs( cText )
+   METHOD delete( cName )
+   METHOD rename( cName )
+   METHOD refreshList()
 
    ENDCLASS
 
@@ -166,16 +171,18 @@ METHOD IdeSkeletons:show()
       //::oUI:q_editCode:setFontFamily( "Courier New" )
       //::oUI:q_editCode:setFontPointSize( 10 )
 
-      //::oUI:q_editCode:setFont( ::oFont:oWidget )
-      aeval( ::aSkltns, {|e_| ::oUI:q_listNames:addItem( e_[ 1 ] ) } )
+      ::oUI:q_editCode:setFont( ::oFont:oWidget )
    ENDIF
+
+   ::refreshList()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeSkeletons:execEvent( nMode, p )
-   LOCAL cName, cNewName, qItem, cCode, n
+   LOCAL cName, qItem, cCode, n, cOpt
+   LOCAL aPops := {}
 
    HB_SYMBOL_UNUSED( p )
 
@@ -191,17 +198,12 @@ METHOD IdeSkeletons:execEvent( nMode, p )
 
    CASE buttonRename_clicked
       qItem := QListWidgetItem():configure( ::oUI:q_listNames:currentItem() )
-      cName := qItem:text()
-      IF !empty( cNewName := hbide_fetchAString( ::oUI:q_listNames, cName, "Name", "Change Skeleton's Name" ) )
-         qItem:setText( cNewName )
-         n := ascan( ::aSkltns, {|e_| e_[ 1 ] == cName } )
-         ::aSkltns[ n, 1 ] := cNewName
-      ENDIF
+      qItem:setText( ::rename( qItem:text() ) )
       EXIT
 
    CASE buttonDelete_clicked
-      qItem := QListWidgetItem():configure( ::oUI:q_listNames:currentItem() )
-      ::oUI:q_listNames:removeItemWidget( qItem )
+      qItem := QListWidgetItem():from( ::oUI:q_listNames:currentItem() )
+      ::delete( qItem:text() )
       EXIT
 
    CASE buttonClear_clicked
@@ -211,32 +213,39 @@ METHOD IdeSkeletons:execEvent( nMode, p )
    CASE buttonGetSel_clicked
       IF !empty( cCode := ::oEM:getSelectedText() )
          // TODO: Format cCode
-         cCode := strtran( cCode, chr( 0x2029 ), chr( 10 ) )
          ::oUI:q_editCode:setPlainText( cCode )
       ENDIF
       EXIT
 
    CASE buttonUpdate_clicked
-      // Update the skeleton code and save the skeleton's buffer | file
       qItem := QListWidgetItem():configure( ::oUI:q_listNames:currentItem() )
-      cName := qItem:text()
-      IF !empty( cName )
-         n := ascan( ::aSkltns, {|e_| e_[ 1 ] == cName } )
-         ::aSkltns[ n,2 ] := ::oUI:q_editCode:toPlainText()
-         hbide_saveSkltns( ::oIde )
-         ::updateTree()
-      ENDIF
+      ::save( qItem:text(), ::oUI:q_editCode:toPlainText() )
       EXIT
 
    CASE listNames_itemSelectionChanged
       qItem := QListWidgetItem():configure( ::oUI:q_listNames:currentItem() )
       cName := qItem:text()
-      n := ascan( ::aSkltns, {|e_| e_[ 1 ] == cName } )
-      ::oUI:q_editCode:setPlainText( ::aSkltns[ n,2 ] )
+      IF ( n := ascan( ::aSkltns, {|e_| e_[ 1 ] == cName } ) ) > 0
+         ::oUI:q_editCode:setPlainText( ::aSkltns[ n, 2 ] )
+      ENDIF
       EXIT
 
    CASE oTree_contextMenu
+      IF p[ 3 ]:caption == "Skeletons"
+         // Root node - nothing to do.
+      ELSE
+         aadd( aPops, { 'Delete', {|| NIL } } )
+         aadd( aPops, { ""      , {|| NIL } } )
+         aadd( aPops, { 'Rename', {|| NIL } } )
 
+         IF !empty( cOpt := hbide_ExecPopup( aPops, p[ 1 ], ::oSkltnsTreeDock:oWidget ) )
+            IF     cOpt == "Delete"
+               ::delete( p[ 3 ]:caption )
+            ELSEIF cOpt == "Rename"
+               ::rename( p[ 3 ]:caption )
+            ENDIF
+         ENDIF
+      ENDIF
       EXIT
 
    CASE oTree_itemSelected
@@ -250,21 +259,68 @@ METHOD IdeSkeletons:execEvent( nMode, p )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeSkeletons:saveAs( cText, cName )
+METHOD IdeSkeletons:refreshList()
+
+   ::oUI:q_listNames:clear()
+   aeval( ::aSkltns, {|e_| ::oUI:q_listNames:addItem( e_[ 1 ] ) } )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeSkeletons:rename( cName )
+   LOCAL n, cNewName
+
+   IF ( n := ascan( ::aSkltns, {|e_| e_[ 1 ] == cName } ) ) > 0
+      cNewName := hbide_fetchAString( ::oDlg:oWidget, cName, "Name", "Change Skeleton's Name" )
+      IF !empty( cNewName ) .AND. cNewName != cName
+         ::aSkltns[ n, 1 ] := cNewName
+         ::updateTree()
+         hbide_saveSkltns( ::oIde )
+      ENDIF
+   ENDIF
+   RETURN iif( empty( cNewName ), cName, cNewName )
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeSkeletons:delete( cName )
    LOCAL n
 
-   IF empty( cName )
-      cName := hbide_fetchAString( ::oDlg, "", "Skeleton's Name" )
-   ENDIF
-   IF !empty( cName )
-      n := ascan( ::aSkltns, {|e_| e_[ 1 ] == cName } )
-      IF n > 0
-         ::aSkltns[ n, 2 ] := cText
-      ELSE
-         aadd( ::aSkltns, { cName, cText } )
-         ::updateTree()
-      ENDIF
+   IF ( n := ascan( ::aSkltns, {|e_| e_[ 1 ] == cName } ) ) > 0
+      hb_adel( ::aSkltns, n, .t. )
+      ::updateTree()
       hbide_saveSkltns( ::oIde )
+      IF !empty( ::oUI )
+         ::refreshList()
+      ENDIF
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeSkeletons:save( cName, cText )
+   LOCAL n
+
+   n := ascan( ::aSkltns, {|e_| e_[ 1 ] == cName } )
+   IF n > 0
+      ::aSkltns[ n, 2 ] := cText
+   ELSE
+      aadd( ::aSkltns, { cName, cText } )
+   ENDIF
+   ::updateTree()
+   hbide_saveSkltns( ::oIde )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeSkeletons:saveAs( cText )
+   LOCAL cName
+
+   cName := hbide_fetchAString( ::oDlg, "", "Skeleton's Name" )
+   IF !empty( cName )
+      ::save( cName, cText )
    ENDIF
 
    RETURN Self
@@ -311,14 +367,24 @@ METHOD IdeSkeletons:selectByMenuAndPostText( qEdit )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeSkeletons:parseMeta( cMeta )
-   LOCAL xVal := cMeta, cData, n
+   LOCAL xVal, cData, n, cKey, cVal, nMeta
+
+   IF hbide_parseKeyValPair( cMeta, @cKey, @cVal )
+      cMeta := cVal
+      cKey := upper( cKey )
+      IF ( nMeta := ascan( ::aMetas, {|e_| e_[ 1 ] == cKey } ) ) == 0
+         aadd( ::aMetas, { cKey, "" } )
+         nMeta := len( ::aMetas )
+      ENDIF
+   ENDIF
 
    IF ( n := at( ":", cMeta ) ) > 0
       cMeta := substr( cMeta, 1, n - 1 )
       cData := substr( cMeta, n + 1 )
    ENDIF
+   cMeta := upper( cMeta )
 
-   SWITCH upper( cMeta )
+   SWITCH cMeta
 
    CASE "CUR"
       xVal := 0
@@ -326,8 +392,18 @@ METHOD IdeSkeletons:parseMeta( cMeta )
 
    CASE "PROMPT"
       DEFAULT cData TO "A string value ?"
-      xVal := hbide_fetchAString( ::oDlg, "", cData, "Fetch a skeleton's prompt" )
+      xVal := hbide_fetchAString( ::oDlg:oWidget, "", cData, "Fetch a skeleton request" )
+      IF !empty( xVal ) .AND. !empty( nMeta )
+         ::aMetas[ nMeta, 2 ] := xVal
+      ENDIF
       EXIT
+
+   OTHERWISE
+      IF ( nMeta := ascan( ::aMetas, {|e_| e_[ 1 ] == cMeta } ) ) > 0
+         xVal := ::aMetas[ nMeta, 2 ]
+      ELSE
+         xVal := cMeta
+      ENDIF
 
    ENDSWITCH
 
@@ -381,6 +457,7 @@ METHOD IdeSkeletons:postText( qEdit, cText )
    LOCAL qCursor := QTextCursor():from( qEdit:textCursor() )
 
    ::nPosCursor := NIL
+   ::aMetas     := { { "", "" } }
 
    nPos := qCursor:position()
    nCol := qCursor:columnNumber()
