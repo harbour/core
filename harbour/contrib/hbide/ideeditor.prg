@@ -190,6 +190,7 @@ METHOD IdeEditsManager:create( oIde )
    aadd( ::aActions, { "TB_CompilePPO", ::qContextMenu:addAction_4( ::oAC:getAction( "TB_CompilePPO" ) ) } )
    aadd( ::aActions, { ""             , ::qContextMenu:addSeparator() } )
    aadd( ::aActions, { "Apply Theme"  , ::qContextMenu:addAction( "Apply Theme"                        ) } )
+   aadd( ::aActions, { "Save as Skltn", ::qContextMenu:addAction( "Save as Skeleton..."                ) } )
 
    oSub := QMenu():configure( ::qContextMenu:addMenu_1( "Split" ) )
    //
@@ -1560,6 +1561,8 @@ METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
    SWITCH nMode
 
    CASE customContextMenuRequested
+      QAction():from( ::oEM:aActions[ 17, 2 ] ):setEnabled( !empty( qCursor:selectedText() ) )
+
       pAct := ::oEM:qContextMenu:exec_1( qEdit:mapToGlobal( p ) )
       IF !hbqt_isEmptyQtPointer( pAct )
          qAct := QAction():configure( pAct )
@@ -1578,6 +1581,8 @@ METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
                ::oEditor:qCoEdit := ::oEditor:oEdit
                ::oIde:manageFocusInEditor()
             ENDIF
+         CASE qAct:text() == "Save as Skeleton..."
+            ::oSK:saveAs( ::getSelectedText() )
          CASE qAct:text() == "Apply Theme"
             ::oEditor:applyTheme()
          CASE qAct:text() == "Goto Function"
@@ -1807,36 +1812,8 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p, p1 )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:presentSkeletons()
-   LOCAL qCrs, qMenu, pAct, cAct, n, a_, qAct, nPos, nCol, s, qRc
 
-   IF !empty( ::aSkltns )
-      qCrs := QTextCursor():configure( ::qEdit:textCursor() )
-      qRc := QRect():configure( ::qEdit:cursorRect( qCrs ) )
-
-      qMenu := QMenu():new( ::qEdit )
-      FOR EACH a_ IN ::aSkltns
-         qMenu:addAction( a_[ 1 ] )
-      NEXT
-
-      pAct := qMenu:exec_1( ::qEdit:mapToGlobal( QPoint():new( qRc:x(), qRc:y() ) ) )
-      IF !hbqt_isEmptyQtPointer( pAct )
-         qAct := QAction():configure( pAct )
-         cAct := qAct:text()
-         IF ( n := ascan( ::aSkltns, {|e_| e_[ 1 ] == cAct } ) ) > 0
-            nPos := qCrs:position()
-            nCol := qCrs:columnNumber()
-            a_:= hbide_memoToArray( ::aSkltns[ n,2 ] )
-            FOR EACH s IN a_
-               IF s:__enumIndex() > 1
-                  s := space( nCol ) + s
-               ENDIF
-            NEXT
-            qCrs:insertText( hbide_arrayToMemoEx( a_ ) )
-            qCrs:setPosition( nPos )
-            ::qEdit:setTextCursor( qCrs )
-         ENDIF
-      ENDIF
-   ENDIF
+   ::oSK:selectByMenuAndPostText( ::qEdit )
 
    RETURN Self
 
@@ -2493,6 +2470,7 @@ FUNCTION hbide_isHarbourKeyword( cWord )
                     'switch' => NIL,;
                     'do' => NIL,;
                     'while' => NIL,;
+                    'enddo' => NIL,;
                     'exit' => NIL,;
                     'for' => NIL,;
                     'each' => NIL,;

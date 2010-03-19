@@ -94,6 +94,7 @@ CLASS IdeObject
    ACCESS oHM                                     INLINE ::oIde:oHM
    ACCESS oFN                                     INLINE ::oIde:oFN
    ACCESS oDW                                     INLINE ::oIde:oDW
+   ACCESS oSK                                     INLINE ::oIde:oSK
 
    ACCESS oFindDock                               INLINE ::oIde:oFindDock
    ACCESS oFindInFiles                            INLINE ::oIde:oFindInFiles
@@ -174,7 +175,6 @@ CLASS IdeObject
    ACCESS oFrame                                  INLINE ::oIde:oFrame
    ACCESS oHelpDock                               INLINE ::oIde:oHelpDock
    ACCESS oSkeltnDock                             INLINE ::oIde:oSkeltnDock
-   ACCESS oSkeltnUI                               INLINE ::oIde:oSkeltnUI
    ACCESS oGeneral                                INLINE ::oIde:oGeneral
    ACCESS oThemesDock                             INLINE ::oIde:oThemesDock
    ACCESS oPropertiesDock                         INLINE ::oIde:oPropertiesDock
@@ -183,6 +183,7 @@ CLASS IdeObject
    ACCESS oDocViewDock                            INLINE ::oIde:oDocViewDock
    ACCESS oDocWriteDock                           INLINE ::oIde:oDocWriteDock
    ACCESS oFunctionsDock                          INLINE ::oIde:oFunctionsDock
+   ACCESS oSkltnsTreeDock                         INLINE ::oIde:oSkltnsTreeDock
 
    ACCESS lProjTreeVisible                        INLINE ::oIde:lProjTreeVisible
    ACCESS lDockRVisible                           INLINE ::oIde:lDockRVisible

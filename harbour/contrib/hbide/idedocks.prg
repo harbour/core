@@ -79,6 +79,8 @@
 #define dockDocViewer_visibilityChanged           305
 #define docFunctions_visibilityChanged            306
 #define dockDocWriter_visibilityChanged           307
+#define docSkeletons_visibilityChanged            308
+#define dockSkltnsTree_visibilityChanged          309
 
 /*----------------------------------------------------------------------*/
 
@@ -107,6 +109,7 @@ CLASS IdeDocks INHERIT IdeObject
    METHOD buildEditorTree()
    METHOD buildFuncList()
    METHOD buildFunctionsDock()
+   METHOD buildSkeletonsTree()
    METHOD buildCompileResults()
    METHOD buildLinkResults()
    METHOD buildOutputResults()
@@ -121,7 +124,6 @@ CLASS IdeDocks INHERIT IdeObject
    METHOD setStatusText( nPart, xValue )
    METHOD getMarkWidget( nIndex )
    METHOD dispEnvironment( cEnviron )
-   METHOD execSkeleton( nMode, p )
    METHOD addPanelButton( cPanel )
    METHOD disblePanelButton( qTBtn )
    METHOD getADockWidget( nArea, cObjectName, cWindowTitle, nFlags )
@@ -145,7 +147,6 @@ METHOD IdeDocks:create( oIde )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeDocks:destroy()
-   LOCAL oUI := ::oIde:oSkeltnUI
    LOCAL qTBtn
 
    ::disconnect( ::oOutputResult:oWidget  , "copyAvailable(bool)"     )
@@ -165,17 +166,6 @@ METHOD IdeDocks:destroy()
    ::disconnect( ::oFuncDock:oWidget      , "visibilityChanged(bool)" )
    ::disconnect( ::oSkeltnDock:oWidget    , "visibilityChanged(bool)" )
    #endif
-
-   /* ?? */
-   ::disconnect( oUI:q_buttonNew   , "clicked()" )
-   ::disconnect( oUI:q_buttonRename, "clicked()" )
-   ::disconnect( oUI:q_buttonDelete, "clicked()" )
-   ::disconnect( oUI:q_buttonClear , "clicked()" )
-   ::disconnect( oUI:q_buttonGetSel, "clicked()" )
-   ::disconnect( oUI:q_buttonUpdate, "clicked()" )
-   ::disconnect( oUI:q_listNames   , "itemSelectionChanged()" )
-
-   oUI:destroy()
 
    FOR EACH qTBtn IN ::aPanels
       ::disconnect( qTBtn, "clicked()" )
@@ -259,6 +249,7 @@ METHOD IdeDocks:buildDockWidgets()
    ::buildEditorTree()
 
    ::buildFuncList()
+   ::buildSkeletonsTree()
 
    ::buildHelpWidget()
    ::buildSkeletonWidget()
@@ -327,40 +318,32 @@ METHOD IdeDocks:execEvent( nMode, p )
    CASE nMode == 2  /* HelpWidget:contextMenuRequested(qPoint) */
       hbide_popupBrwContextMenu( ::qHelpBrw, p )
 
+   CASE nMode == dockSkltnsTree_visibilityChanged
+      IF p; ::oSK:showTree(); ENDIF
+
+   CASE nMode == docSkeletons_visibilityChanged
+      IF p; ::oSK:show(); ENDIF
+
    CASE nMode == dockDocWriter_visibilityChanged
-      IF p
-         ::oDW:show()
-      ENDIF
+      IF p; ::oDW:show(); ENDIF
 
    CASE nMode == docFunctions_visibilityChanged
-      IF p
-         ::oFN:show()
-      ENDIF
+      IF p; ::oFN:show(); ENDIF
 
    CASE nMode == dockDocViewer_visibilityChanged
-      IF p
-         ::oHL:show()
-      ENDIF
+      IF p; ::oHL:show(); ENDIF
 
    CASE nMode == dockProperties_visibilityChanged
-      IF p
-         ::oPM:fetchProperties()
-      ENDIF
+      IF p; ::oPM:fetchProperties(); ENDIF
 
    CASE nMode == docEnvironments_visibilityChanged
-      IF p
-         ::oEV:show()
-      ENDIF
+      IF p; ::oEV:show(); ENDIF
 
    CASE nMode == dockFindInFiles_visibilityChanged
-      IF p
-         ::oFindInFiles:show()
-      ENDIF
+      IF p; ::oFindInFiles:show(); ENDIF
 
    CASE nMode == dockThemes_visibilityChanged
-      IF p
-         ::oThemes:show()
-      ENDIF
+      IF p; ::oThemes:show(); ENDIF
 
    ENDCASE
 
@@ -574,6 +557,7 @@ METHOD IdeDocks:buildToolBarPanels()
    aBtns := {}
    aadd( aBtns, { ::oDockPT        , "projtree"      } )
    aadd( aBtns, { ::oDockED        , "editstree"     } )
+   aadd( aBtns, { ::oSkltnsTreeDock, "projtree"      } )
    aadd( aBtns, {} )
    aadd( aBtns, { ::oHelpDock      , "help"          } )
    aadd( aBtns, { ::oDocViewDock   , "harbourhelp"   } )
@@ -657,7 +641,7 @@ METHOD IdeDocks:addPanelButton( cPanel )
 METHOD IdeDocks:buildProjectTree()
    LOCAL i, oItem
 
-   ::oIde:oDockPT := ::getADockWidget( Qt_LeftDockWidgetArea, "dockProjectTree", "Projects Tree" )
+   ::oIde:oDockPT := ::getADockWidget( Qt_LeftDockWidgetArea, "dockProjectTree", "Projects" )
    ::oDlg:oWidget:addDockWidget_1( Qt_LeftDockWidgetArea, ::oDockPT:oWidget, Qt_Vertical )
 
    ::oIde:oProjTree := XbpTreeView():new()
@@ -705,7 +689,7 @@ METHOD IdeDocks:buildProjectTree()
 
 METHOD IdeDocks:buildEditorTree()
 
-   ::oIde:oDockED := ::getADockWidget( Qt_LeftDockWidgetArea, "dockEditorTabs", "Editor Tabs" )
+   ::oIde:oDockED := ::getADockWidget( Qt_LeftDockWidgetArea, "dockEditorTabs", "Editors" )
    ::oDlg:oWidget:addDockWidget_1( Qt_LeftDockWidgetArea, ::oDockED:oWidget, Qt_Vertical )
 
    ::oIde:oEditTree := XbpTreeView():new()
@@ -731,6 +715,17 @@ METHOD IdeDocks:buildEditorTree()
    ::oDockED:oWidget:setWidget( ::oEditTree:oWidget )
 
    ::oDockED:hide()
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeDocks:buildSkeletonsTree()
+
+   ::oIde:oSkltnsTreeDock := ::getADockWidget( Qt_LeftDockWidgetArea, "dockSkltnsTree", "Skeletons" )
+   ::oDlg:oWidget:addDockWidget_1( Qt_LeftDockWidgetArea, ::oSkltnsTreeDock:oWidget, Qt_Vertical )
+
+   ::connect( ::oSkltnsTreeDock:oWidget, "visibilityChanged(bool)", {|p| ::execEvent( dockSkltnsTree_visibilityChanged, p ) } )
 
    RETURN Self
 
@@ -956,92 +951,13 @@ METHOD IdeDocks:buildEnvironDock()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeDocks:buildSkeletonWidget()
-   LOCAL oUI
 
    ::oIde:oSkeltnDock := ::getADockWidget( Qt_RightDockWidgetArea, "dockSkeleton", "Code Skeletons", QDockWidget_DockWidgetFloatable )
    ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oSkeltnDock:oWidget, Qt_Horizontal )
 
-   ::oIde:oSkeltnUI := HbQtUI():new( ::oIde:resPath + "skeletons.uic" ):build()
-
-   ::oSkeltnDock:oWidget:setWidget( ::oIde:oSkeltnUI:oWidget )
-
-   oUI := ::oIde:oSkeltnUI
-
-   ::connect( oUI:q_buttonNew   , "clicked()", {|| ::execSkeleton( 1 ) } )
-   ::connect( oUI:q_buttonRename, "clicked()", {|| ::execSkeleton( 2 ) } )
-   ::connect( oUI:q_buttonDelete, "clicked()", {|| ::execSkeleton( 3 ) } )
-   ::connect( oUI:q_buttonClear , "clicked()", {|| ::execSkeleton( 4 ) } )
-   ::connect( oUI:q_buttonGetSel, "clicked()", {|| ::execSkeleton( 5 ) } )
-   ::connect( oUI:q_buttonUpdate, "clicked()", {|| ::execSkeleton( 6 ) } )
-   ::connect( oUI:q_listNames   , "itemSelectionChanged()", {|| ::execSkeleton( 7 ) } )
-
-   //::oSkeltnUI:q_editCode:setFontFamily( "Courier New" )
-   //::oSkeltnUI:q_editCode:setFontPointSize( 10 )
-
-   //::oSkeltnUI:q_editCode:setFont( ::oFont:oWidget )
-   aeval( ::aSkltns, {|e_| ::oSkeltnUI:q_listNames:addItem( e_[ 1 ] ) } )
+   ::connect( ::oSkeltnDock:oWidget, "visibilityChanged(bool)", {|p| ::execEvent( docSkeletons_visibilityChanged, p ) } )
 
    RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeDocks:execSkeleton( nMode, p )
-   LOCAL cName, cNewName, qItem, cCode, n
-
-   HB_SYMBOL_UNUSED( p )
-
-   SWITCH nMode
-
-   CASE 1
-      IF !empty( cName := hbide_fetchAString( ::oSkeltnUI:q_listNames, "", "Name", "New Skeleton" ) )
-         ::oSkeltnUI:q_listNames:addItem( cName )
-         aadd( ::oIde:aSkltns, { cName, "" } )
-         ::oSkeltnUI:q_listNames:setCurrentRow( len( ::aSkltns ) - 1 )
-      ENDIF
-      EXIT
-   CASE 2
-      qItem := QListWidgetItem():configure( ::oSkeltnUI:q_listNames:currentItem() )
-      cName := qItem:text()
-      IF !empty( cNewName := hbide_fetchAString( ::oSkeltnUI:q_listNames, cName, "Name", "Change Skeleton's Name" ) )
-         qItem:setText( cNewName )
-         n := ascan( ::aSkltns, {|e_| e_[ 1 ] == cName } )
-         ::aSkltns[ n, 1 ] := cNewName
-      ENDIF
-      EXIT
-   CASE 3
-      qItem := QListWidgetItem():configure( ::oSkeltnUI:q_listNames:currentItem() )
-      ::oSkeltnUI:q_listNames:removeItemWidget( qItem )
-      EXIT
-   CASE 4
-      ::oSkeltnUI:q_editCode:clear()
-      EXIT
-   CASE 5
-      IF !empty( cCode := ::oEM:getSelectedText() )
-         // TODO: Format cCode
-         cCode := strtran( cCode, chr( 0x2029 ), chr( 10 ) )
-         ::oSkeltnUI:q_editCode:setPlainText( cCode )
-      ENDIF
-      EXIT
-   CASE 6
-      // Update the skeleton code and save the skeleton's buffer | file
-      qItem := QListWidgetItem():configure( ::oSkeltnUI:q_listNames:currentItem() )
-      cName := qItem:text()
-      IF !empty( cName )
-         n := ascan( ::aSkltns, {|e_| e_[ 1 ] == cName } )
-         ::aSkltns[ n,2 ] := ::oSkeltnUI:q_editCode:toPlainText()
-
-         hbide_saveSkltns( ::oIde )
-      ENDIF
-      EXIT
-   CASE 7
-      qItem := QListWidgetItem():configure( ::oSkeltnUI:q_listNames:currentItem() )
-      cName := qItem:text()
-      n := ascan( ::aSkltns, {|e_| e_[ 1 ] == cName } )
-      ::oSkeltnUI:q_editCode:setPlainText( ::aSkltns[ n,2 ] )
-      EXIT
-   ENDSWITCH
-
-   RETURN NIL
 
 /*----------------------------------------------------------------------*/
 

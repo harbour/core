@@ -126,22 +126,22 @@ CLASS HbIde
    ACCESS pSlots                                  INLINE hbxbp_getSlotsPtr()
    ACCESS pEvents                                 INLINE hbxbp_getEventsPtr()
 
-   DATA   oPM                                              /* Project Manager                */
-   DATA   oDK                                              /* Main Window Components Manager */
-   DATA   oAC                                              /* Actions Manager                */
-   DATA   oEM                                              /* Editor Tabs Manager            */
-   DATA   oSM                                              /* Souces Manager                 */
-   DATA   oFR                                              /* Find Replace Manager           */
-   DATA   oEV                                              /* Available Environments         */
-   DATA   oHL                                              /* Harbour Help Manager           */
-   DATA   oHM                                              /* <Stats> panel manager          */
-   DATA   oFN                                              /* Functions Tags Manager         */
-   DATA   oDW                                              /* Document Writer Manager        */
-   DATA   oThemes
+   DATA   oPM                                            /* Project Manager                */
+   DATA   oDK                                            /* Main Window Components Manager */
+   DATA   oAC                                            /* Actions Manager                */
+   DATA   oEM                                            /* Editor Tabs Manager            */
+   DATA   oSM                                            /* Souces Manager                 */
+   DATA   oFR                                            /* Find Replace Manager           */
+   DATA   oEV                                            /* Available Environments         */
+   DATA   oHL                                            /* Harbour Help Manager           */
+   DATA   oHM                                            /* <Stats> panel manager          */
+   DATA   oFN                                            /* Functions Tags Manager         */
+   DATA   oDW                                            /* Document Writer Manager        */
+   DATA   oSK                                            /* Skeletons Managet              */
+   DATA   oThemes                                        /* Themes Manager                 */
    DATA   oFindInFiles
    DATA   oHelpDock
    DATA   oSkeltnDock
-   DATA   oSkeltnUI
    DATA   oFindDock
 
    DATA   oUI
@@ -224,6 +224,7 @@ CLASS HbIde
    DATA   oDocViewDock
    DATA   oDocWriteDock
    DATA   oFunctionsDock
+   DATA   oSkltnsTreeDock
 
    DATA   lProjTreeVisible                        INIT   .t.
    DATA   lDockRVisible                           INIT   .f.
@@ -367,11 +368,15 @@ METHOD HbIde:create( cProjIni )
    /* Functions Tag Manager */
    ::oFN := IdeFunctions():new():create( Self )
 
+   /* Skeletons Manager     */
+   ::oSK := IdeSkeletons():new( Self ):create()
+
    /* Initialte Project Manager */
    ::oPM := IdeProjManager():new( Self ):create()
 
    /* Load IDE Settings */
    hbide_loadINI( Self, cProjIni )
+
    /* Set variables from last session */
    ::cWrkTheme       := ::aINI[ INI_HBIDE, CurrentTheme       ]
    ::cWrkCodec       := ::aINI[ INI_HBIDE, CurrentCodec       ]
@@ -543,6 +548,7 @@ METHOD HbIde:create( cProjIni )
    hbide_dbg( "Before    ::oDlg:destroy()", memory( 1001 ), hbqt_getMemUsed() )
    hbide_dbg( "                                                      " )
 
+   ::oSK:destroy()
    ::oDW:destroy()
    ::oEV:destroy()
    ::oFN:destroy()
