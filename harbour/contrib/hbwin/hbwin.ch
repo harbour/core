@@ -487,11 +487,37 @@
 #define WIN_OFN_SHARENOWARN               0x00000001
 #define WIN_OFN_SHAREWARN                 0x00000000
 
-/* WAPI_LOADIMAGE() */
+/* WAPI_LOADIMAGE() <nType> values */
 #define WIN_IMAGE_BITMAP            0
 #define WIN_IMAGE_ICON              1
 #define WIN_IMAGE_CURSOR            2
 #define WIN_IMAGE_ENHMETAFILE       3
+
+/* WAPI_LOADIMAGE() <nFlags> values */
+#define WIN_LR_DEFAULTCOLOR         0x0000
+#define WIN_LR_MONOCHROME           0x0001
+#define WIN_LR_COLOR                0x0002
+#define WIN_LR_COPYRETURNORG        0x0004
+#define WIN_LR_COPYDELETEORG        0x0008
+#define WIN_LR_LOADFROMFILE         0x0010
+#define WIN_LR_LOADTRANSPARENT      0x0020
+#define WIN_LR_DEFAULTSIZE          0x0040
+#define WIN_LR_VGACOLOR             0x0080
+#define WIN_LR_LOADMAP3DCOLORS      0x1000
+#define WIN_LR_CREATEDIBSECTION     0x2000
+#define WIN_LR_COPYFROMRESOURCE     0x4000
+#define WIN_LR_SHARED               0x8000
+
+/* WIN_SHELLNOTIFYICON() <nInfoFlags> values */
+#define WIN_NIIF_NONE               0x00000000
+#define WIN_NIIF_INFO               0x00000001
+#define WIN_NIIF_WARNING            0x00000002
+#define WIN_NIIF_ERROR              0x00000003
+#define WIN_NIIF_USER               0x00000004
+#define WIN_NIIF_NOSOUND            0x00000010
+#define WIN_NIIF_LARGE_ICON         0x00000020
+#define WIN_NIIF_RESPECT_QUIET_TIME 0x00000080
+#define WIN_NIIF_ICON_MASK          0x0000000F
 
 /* constants for MENU functions */
 #define WIN_MF_ENABLED              0x0000

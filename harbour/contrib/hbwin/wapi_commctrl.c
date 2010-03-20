@@ -107,16 +107,18 @@ HB_FUNC( WAPI_IMAGELIST_COCREATEINSTANCE )
 /*
 BOOL ImageList_Copy( HIMAGELIST himlDst, int iDst, HIMAGELIST himlSrc, int iSrc, UINT uFlags );
 */
-#if ( _WIN32_IE >= 0x0300 )
 HB_FUNC( WAPI_IMAGELIST_COPY )
 {
+#if ( _WIN32_IE >= 0x0300 )
    wapi_ret_L( ImageList_Copy( wapi_par_HIMAGELIST( 1 ),
                                wapi_par_INT( 2 ),
                                wapi_par_HIMAGELIST( 3 ),
                                wapi_par_INT( 4 ),
                                wapi_par_UINT( 5 ) ) );
-}
+#else
+   wapi_ret_L( FALSE );
 #endif
+}
 /*----------------------------------------------------------------------*/
 /*
 HIMAGELIST ImageList_Create( int cx, int cy, UINT flags, int cInitial, int cGrow );
@@ -215,12 +217,14 @@ HB_FUNC( WAPI_IMAGELIST_DRAWINDIRECT )
 /*
 HIMAGELIST ImageList_Duplicate( HIMAGELIST himl );
 */
-#if ( _WIN32_IE >= 0x0400 )
 HB_FUNC( WAPI_IMAGELIST_DUPLICATE )
 {
+#if ( _WIN32_IE >= 0x0400 )
    wapi_ret_HANDLE( ImageList_Duplicate( wapi_par_HIMAGELIST( 1 ) ) );
-}
+#else
+   wapi_ret_HANDLE( NULL );
 #endif
+}
 /*----------------------------------------------------------------------*/
 /*
 VOID ImageList_EndDrag( VOID );
@@ -429,13 +433,15 @@ HB_FUNC( WAPI_IMAGELIST_SETICONSIZE )
 /*
 BOOL ImageList_SetImageCount( HIMAGELIST himl, UINT uNewCount );
 */
-#if ( _WIN32_IE >= 0x0400 )
 HB_FUNC( WAPI_IMAGELIST_SETIMAGECOUNT )
 {
+#if ( _WIN32_IE >= 0x0400 )
    wapi_ret_L( ImageList_SetImageCount( wapi_par_HIMAGELIST( 1 ),
                                         wapi_par_UINT( 2 ) ) );
-}
+#else
+   wapi_ret_L( FALSE );
 #endif
+}
 /*----------------------------------------------------------------------*/
 /*
 BOOL ImageList_SetOverlayImage( HIMAGELIST himl, int iImage, int iOverlay );
@@ -712,14 +718,16 @@ HB_FUNC( WAPI_TABCTRL_DESELECTALL )
 }
 /*----------------------------------------------------------------------*/
 
-#if ( _WIN32_IE >= 0x0400 )
-
 /* TabCtrl_HighlightItem(hwnd, i, fHighlight) */
 /* (BOOL)SNDMSG((hwnd), TCM_HIGHLIGHTITEM, (WPARAM)(i), (LPARAM)MAKELONG (fHighlight, 0)) */
 
 HB_FUNC( WAPI_TABCTRL_HIGHLIGHTITEM )
 {
+#if ( _WIN32_IE >= 0x0400 )
    wapi_ret_L( TabCtrl_HighlightItem( wapi_par_HWND( 1 ), wapi_par_INT( 2 ), wapi_par_WORD( 3 ) ) );
+#else
+   wapi_ret_L( FALSE );
+#endif
 }
 /*----------------------------------------------------------------------*/
 /* TabCtrl_SetExtendedStyle(hwnd, dw) */
@@ -727,7 +735,11 @@ HB_FUNC( WAPI_TABCTRL_HIGHLIGHTITEM )
 
 HB_FUNC( WAPI_TABCTRL_SETEXTENDEDSTYLE )
 {
+#if ( _WIN32_IE >= 0x0400 )
    wapi_ret_NINT( TabCtrl_SetExtendedStyle( wapi_par_HWND( 1 ), wapi_par_DWORD( 2 ) ) );
+#else
+   wapi_ret_NINT( 0 );
+#endif
 }
 /*----------------------------------------------------------------------*/
 /* TabCtrl_GetExtendedStyle(hwnd) */
@@ -735,7 +747,11 @@ HB_FUNC( WAPI_TABCTRL_SETEXTENDEDSTYLE )
 
 HB_FUNC( WAPI_TABCTRL_GETEXTENDEDSTYLE )
 {
+#if ( _WIN32_IE >= 0x0400 )
    wapi_ret_NINT( TabCtrl_GetExtendedStyle( wapi_par_HWND( 1 ) ) );
+#else
+   wapi_ret_NINT( 0 );
+#endif
 }
 /*----------------------------------------------------------------------*/
 /* TabCtrl_SetUnicodeFormat(hwnd, fUnicode) */
@@ -743,7 +759,7 @@ HB_FUNC( WAPI_TABCTRL_GETEXTENDEDSTYLE )
 
 HB_FUNC( WAPI_TABCTRL_SETUNICODEFORMAT )
 {
-#if ! defined( HB_OS_WIN_CE )
+#if ( _WIN32_IE >= 0x0400 ) && ! defined( HB_OS_WIN_CE )
    wapi_ret_L( TabCtrl_SetUnicodeFormat( wapi_par_HWND( 1 ), wapi_par_BOOL( 2 ) ) );
 #else
    wapi_ret_L( FALSE );
@@ -755,14 +771,12 @@ HB_FUNC( WAPI_TABCTRL_SETUNICODEFORMAT )
 
 HB_FUNC( WAPI_TABCTRL_GETUNICODEFORMAT )
 {
-#if ! defined( HB_OS_WIN_CE )
+#if ( _WIN32_IE >= 0x0400 ) && ! defined( HB_OS_WIN_CE )
    wapi_ret_L( TabCtrl_GetUnicodeFormat( wapi_par_HWND( 1 ) ) );
 #else
    wapi_ret_L( FALSE );
 #endif
 }
-
-#endif
 
 /*----------------------------------------------------------------------*/
 /* not an API */
@@ -861,12 +875,14 @@ HB_FUNC( WAPI_TREEVIEW_GETBKCOLOR )
 /* IE 5.0
 ...UINT TreeView_GetCheckState( HWND hwndTV, HTREEITEM hItem );
 */
-#if ( _WIN32_IE >= 0x0500 )
 HB_FUNC( WAPI_TREEVIEW_GETCHECKSTATE )
 {
+#if ( _WIN32_IE >= 0x0500 )
    wapi_ret_UINT( TreeView_GetCheckState( wapi_par_HWND( 1 ), wapi_par_HANDLE( 2 ) ) );
-}
+#else
+   wapi_ret_UINT( 0 );
 #endif
+}
 /*----------------------------------------------------------------------*/
 /*
 ...HTREEITEM TreeView_GetChild( HWND hwndTV, HTREEITEM hitem );
@@ -937,16 +953,14 @@ HB_FUNC( WAPI_TREEVIEW_GETINDENT )
 /* IE 4.0
 ... COLORREF TreeView_GetInsertMarkColor( HWND hwndTV );
 */
-#if ( _WIN32_IE >= 0x0400 )
 HB_FUNC( WAPI_TREEVIEW_GETINSERTMARKCOLOR )
 {
-#if ! defined( HB_OS_WIN_CE )
+#if ( _WIN32_IE >= 0x0400 ) && ! defined( HB_OS_WIN_CE )
    wapi_ret_COLORREF( TreeView_GetInsertMarkColor( wapi_par_HWND( 1 ) ) );
 #else
    wapi_ret_COLORREF( 0 );
 #endif
 }
-#endif
 /*----------------------------------------------------------------------*/
 /*
 ...BOOL TreeView_GetISearchString( HWND hwndTV, LPTSTR lpsz );
@@ -969,16 +983,14 @@ HB_FUNC( WAPI_TREEVIEW_GETITEM )
 /* IE 4.0
 ...int TreeView_GetItemHeight( HWND hwndTV );
 */
-#if ( _WIN32_IE >= 0x0400 )
 HB_FUNC( WAPI_TREEVIEW_GETITEMHEIGHT )
 {
-#if ! defined( HB_OS_WIN_CE )
+#if ( _WIN32_IE >= 0x0400 ) && ! defined( HB_OS_WIN_CE )
    wapi_ret_NI( TreeView_GetItemHeight( wapi_par_HWND( 1 ) ) );
 #else
    wapi_ret_NI( 0 );
 #endif
 }
-#endif
 /*----------------------------------------------------------------------*/
 #if 0
 /* Vista
@@ -1005,36 +1017,38 @@ HB_FUNC( WAPI_TREEVIEW_GETITEMRECT )
 /* IE 5.0
 ...UINT TreeView_GetItemState( HWND hwndTV, HTREEITEM hItem, UINT stateMask );
 */
-#if ( _WIN32_IE >= 0x0500 )
 HB_FUNC( WAPI_TREEVIEW_GETITEMSTATE )
 {
+#if ( _WIN32_IE >= 0x0500 )
    wapi_ret_UINT( TreeView_GetItemState( wapi_par_HWND( 1 ), ( HTREEITEM ) wapi_par_HANDLE( 2 ), wapi_par_UINT( 3 ) ) );
-}
+#else
+   wapi_ret_UINT( 0 );
 #endif
+}
 /*----------------------------------------------------------------------*/
 /* IE 4.0
 ...HTREEITEM TreeView_GetLastVisible( HWND hwndTV );
 */
-#if ( _WIN32_IE >= 0x0400 )
 HB_FUNC( WAPI_TREEVIEW_GETLASTVISIBLE )
 {
-#if ! defined( HB_OS_WIN_CE )
+#if ( _WIN32_IE >= 0x0400 ) && ! defined( HB_OS_WIN_CE )
    wapi_ret_HANDLE( TreeView_GetLastVisible( wapi_par_HWND( 1 ) ) );
 #else
    wapi_ret_HANDLE( NULL );
 #endif
 }
-#endif
 /*----------------------------------------------------------------------*/
 /*
 ...COLOREF TreeView_GetLineColor( HWND hwndTV );
 */
-#if ( _WIN32_IE >= 0x0500 )
 HB_FUNC( WAPI_TREEVIEW_GETLINECOLOR )
 {
+#if ( _WIN32_IE >= 0x0500 )
    wapi_ret_COLORREF( TreeView_GetLineColor( wapi_par_HWND( 1 ) ) );
-}
+#else
+   wapi_ret_COLORREF( 0 );
 #endif
+}
 /*----------------------------------------------------------------------*/
 /*
 ...HTREEITEM TreeView_GetNextItem( HWND hwndTV, HTREEITEM hitem, UINT flag );
@@ -1126,30 +1140,26 @@ HB_FUNC( WAPI_TREEVIEW_GETSELECTION )
 /*
 ...COLORREF TreeView_GetTextColor( HWND hwndTV );
 */
-#if ( _WIN32_IE >= 0x0400 )
 HB_FUNC( WAPI_TREEVIEW_GETTEXTCOLOR )
 {
-#if ! defined( HB_OS_WIN_CE )
+#if ( _WIN32_IE >= 0x0400 ) && ! defined( HB_OS_WIN_CE )
    wapi_ret_COLORREF( TreeView_GetTextColor( wapi_par_HWND( 1 ) ) );
 #else
    wapi_ret_COLORREF( 0 );
 #endif
 }
-#endif
 /*----------------------------------------------------------------------*/
 /*
 ...HWND TreeView_GetToolTips( HWND hwndTV );
 */
-#if ( _WIN32_IE >= 0x0300 )
 HB_FUNC( WAPI_TREEVIEW_GETTOOLTIPS )
 {
-#if ! defined( HB_OS_WIN_CE )
+#if ( _WIN32_IE >= 0x0300 ) && ! defined( HB_OS_WIN_CE )
    wapi_ret_HANDLE( TreeView_GetToolTips( wapi_par_HWND( 1 ) ) );
 #else
    wapi_ret_HANDLE( NULL );
 #endif
 }
-#endif
 /*----------------------------------------------------------------------*/
 /*
 ...BOOL TreeView_GetUnicodeFormat( HWND hwnd );
@@ -1252,26 +1262,26 @@ HB_FUNC( WAPI_TREEVIEW_SETAUTOSCROLLINFO )
 /*
 ...COLORREF TreeView_SetBkColor( HWND hwndTV, COLORREF clrBk );
 */
-#if ( _WIN32_IE >= 0x0400 )
 HB_FUNC( WAPI_TREEVIEW_SETBKCOLOR )
 {
-#if ! defined( HB_OS_WIN_CE )
+#if ( _WIN32_IE >= 0x0400 ) && ! defined( HB_OS_WIN_CE )
    wapi_ret_COLORREF( TreeView_SetBkColor( wapi_par_HWND( 1 ), wapi_par_COLORREF( 2 ) ) );
 #else
    wapi_ret_COLORREF( 0 );
 #endif
 }
-#endif
 /*----------------------------------------------------------------------*/
 /*
 ...UINT TreeView_SetCheckState( HWND hwndTV, HTREEITEM hItem, BOOL fCheck );
 */
-#if ( _WIN32_IE >= 0x0500 )
 HB_FUNC( WAPI_TREEVIEW_SETCHECKSTATE )
 {
+#if ( _WIN32_IE >= 0x0500 )
    /* wapi_ret_UINT( TreeView_SetCheckState( wapi_par_HWND( 1 ), wapi_par_HANDLE( 2 ), wapi_par_BOOL( 3 ) ) ); */
-}
+#else
+   wapi_ret_UINT( 0 );
 #endif
+}
 /*----------------------------------------------------------------------*/
 #if 0
 /*
@@ -1303,30 +1313,26 @@ HB_FUNC( WAPI_TREEVIEW_SETINDENT )
 ...BOOL TreeView_SetInsertMark( HWND hwndTV, HTREEITEM htiInsert, BOOL fAfter );
 
 */
-#if ( _WIN32_IE >= 0x0400 )
 HB_FUNC( WAPI_TREEVIEW_SETINSERTMARK )
 {
-#if ! defined( HB_OS_WIN_CE )
+#if ( _WIN32_IE >= 0x0400 ) && ! defined( HB_OS_WIN_CE )
    wapi_ret_L( TreeView_SetInsertMark( wapi_par_HWND( 1 ), wapi_par_HANDLE( 2 ), wapi_par_BOOL( 3 ) ) );
 #else
    wapi_ret_L( FALSE );
 #endif
 }
-#endif
 /*----------------------------------------------------------------------*/
 /*
 ...COLORREF TreeView_SetInsertMarkColor( HWND hwndTV, COLORREF clrInsertMark );
 */
-#if ( _WIN32_IE >= 0x0400 )
 HB_FUNC( WAPI_TREEVIEW_SETINSERTMARKCOLOR )
 {
-#if ! defined( HB_OS_WIN_CE )
+#if ( _WIN32_IE >= 0x0400 ) && ! defined( HB_OS_WIN_CE )
    wapi_ret_COLORREF( TreeView_SetInsertMarkColor( wapi_par_HWND( 1 ), wapi_par_COLORREF( 2 ) ) );
 #else
    wapi_ret_COLORREF( 0 );
 #endif
 }
-#endif
 /*----------------------------------------------------------------------*/
 /*
 ...BOOL TreeView_SetItem( HWND hwndTV, LPTVITEM pitem );
@@ -1341,36 +1347,38 @@ HB_FUNC( WAPI_TREEVIEW_SETITEM )
 /*
 ...int TreeView_SetItemHeight( HWND hwndTV, SHORT cyItem );
 */
-#if ( _WIN32_IE >= 0x0400 )
 HB_FUNC( WAPI_TREEVIEW_SETITEMHEIGHT )
 {
-#if ! defined( HB_OS_WIN_CE )
+#if ( _WIN32_IE >= 0x0400 ) && ! defined( HB_OS_WIN_CE )
    wapi_ret_NI( TreeView_SetItemHeight( wapi_par_HWND( 1 ), wapi_par_SHORT( 2 ) ) );
 #else
    wapi_ret_NI( 0 );
 #endif
 }
-#endif
 /*----------------------------------------------------------------------*/
 /*
 ...UINT TreeView_SetItemState( HWND hwndTV, HTREEITEM hItem, UINT state, UINT stateMask );
 */
-#if ( _WIN32_IE >= 0x0500 )
 HB_FUNC( WAPI_TREEVIEW_SETITEMSTATE )
 {
+#if ( _WIN32_IE >= 0x0500 )
    /* wapi_ret_UINT( TreeView_SetItemState( wapi_par_HWND( 1 ), wapi_par_HANDLE( 2 ), wapi_par_UINT( 3 ), wapi_par_UINT( 4 ) ) ); */
-}
+#else
+   wapi_ret_UINT( 0 );
 #endif
+}
 /*----------------------------------------------------------------------*/
 /*
 ...COLORREF TreeView_SetLineColor( HWND hwndTV, COLORREF clrLine );
 */
-#if ( _WIN32_IE >= 0x0500 )
 HB_FUNC( WAPI_TREEVIEW_SETLINECOLOR )
 {
+#if ( _WIN32_IE >= 0x0500 )
    wapi_ret_COLORREF( TreeView_SetLineColor( wapi_par_HWND( 1 ), wapi_par_COLORREF( 2 ) ) );
-}
+#else
+   wapi_ret_COLORREF( 0 );
 #endif
+}
 /*----------------------------------------------------------------------*/
 /*
 ...UINT TreeView_SetScrollTime( HWND hwndTV, UINT uMaxScrollTime );
@@ -1387,30 +1395,26 @@ HB_FUNC( WAPI_TREEVIEW_SETSCROLLTIME )
 /*
 ...COLORREF TreeView_SetTextColor( HWND hwndTV, COLORREF clrText );
 */
-#if ( _WIN32_IE >= 0x0400 )
 HB_FUNC( WAPI_TREEVIEW_SETTEXTCOLOR )
 {
-#if ! defined( HB_OS_WIN_CE )
+#if ( _WIN32_IE >= 0x0400 ) && ! defined( HB_OS_WIN_CE )
    wapi_ret_COLORREF( TreeView_SetTextColor( wapi_par_HWND( 1 ), wapi_par_COLORREF( 2 ) ) );
 #else
    wapi_ret_COLORREF( 0 );
 #endif
 }
-#endif
 /*----------------------------------------------------------------------*/
 /*
 ...HWND TreeView_SetToolTips( HWND hwndTV, HWND hwndTooltip );
 */
-#if ( _WIN32_IE >= 0x0300 )
 HB_FUNC( WAPI_TREEVIEW_SETTOOLTIPS )
 {
-#if ! defined( HB_OS_WIN_CE )
+#if ( _WIN32_IE >= 0x0300 ) && ! defined( HB_OS_WIN_CE )
    wapi_ret_HANDLE( TreeView_SetToolTips( wapi_par_HWND( 1 ), wapi_par_HWND( 2 ) ) );
 #else
    wapi_ret_HANDLE( NULL );
 #endif
 }
-#endif
 /*----------------------------------------------------------------------*/
 /* IE 4.0
 ...BOOL TreeView_SetUnicodeFormat( HWND hwnd, BOOL fUnicode );

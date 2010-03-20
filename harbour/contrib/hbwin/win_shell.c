@@ -50,10 +50,14 @@
  *
  */
 
+#undef _WIN32_IE
+#define _WIN32_IE 0x0500 /* request Windows 2000 features for NOTIFYICONDATA */
+
 #include "hbwapi.h"
 
 /* WIN_ShellNotifyIcon( [<hWnd>], [<nUID>], [<nMessage>], [<hIcon>],
-                        [<cTooltip>], [<lAddDel>] ) -> <lOK> */
+                        [<cTooltip>], [<lAddDel>],
+                        [<cInfo>], [<nInfoTimeOut>], [<cInfoTitle>], [<nInfoFlags>] ) -> <lOK> */
 HB_FUNC( WIN_SHELLNOTIFYICON )
 {
    NOTIFYICONDATA tnid;
@@ -71,6 +75,18 @@ HB_FUNC( WIN_SHELLNOTIFYICON )
    if( HB_ITEMCOPYSTR( hb_param( 5, HB_IT_ANY ),
                        tnid.szTip, HB_SIZEOFARRAY( tnid.szTip ) ) > 0 )
       tnid.uFlags |= NIF_TIP;
+
+   #if defined( NIF_INFO ) /* did the headers provide Windows 2000 features? */
+   if( hb_iswin2k() ) /* are we running on Windows 2000 or above? */
+   {
+      if( HB_ITEMCOPYSTR( hb_param( 7, HB_IT_ANY ), tnid.szInfo, HB_SIZEOFARRAY( tnid.szInfo ) ) > 0 )
+         tnid.uFlags |= NIF_INFO;
+      tnid.uTimeout = ( UINT ) hb_parni( 8 );
+      if( HB_ITEMCOPYSTR( hb_param( 9, HB_IT_ANY ), tnid.szInfoTitle, HB_SIZEOFARRAY( tnid.szInfoTitle ) ) > 0 )
+         tnid.uFlags |= NIF_INFO;
+      tnid.dwInfoFlags = ( DWORD ) hb_parnl( 10 );
+   }
+   #endif
 
    wapi_ret_L( Shell_NotifyIcon( HB_ISLOG( 6 ) ?
                ( hb_parl( 6 ) ? NIM_ADD : NIM_DELETE ) : NIM_MODIFY, &tnid ) );
