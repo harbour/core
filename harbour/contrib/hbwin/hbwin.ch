@@ -493,8 +493,55 @@
 #define WIN_IMAGE_CURSOR            2
 #define WIN_IMAGE_ENHMETAFILE       3
 
+/* constants for MENU functions */
+#define WIN_MF_ENABLED              0x0000
+#define WIN_MF_GRAYED               0x0001
+#define WIN_MF_DISABLED             0x0002
+#define WIN_MF_BITMAP               0x0004
+#define WIN_MF_UNCHECKED            0x0000
+#define WIN_MF_CHECKED              0x0008
+#define WIN_MF_POPUP                0x0010
+#define WIN_MF_MENUBARBREAK         0x0020
+#define WIN_MF_MENUBREAK            0x0040
+#define WIN_MF_OWNERDRAW            0x0100
+#define WIN_MF_SEPARATOR            0x0800
+#define WIN_MF_STRING               0x0000
+#define WIN_MF_DEFAULT              0x1000
+#define WIN_MF_SYSMENU              0x2000
+#define WIN_MF_HELP                 0x4000
+#define WIN_MF_END                  0x0080
+#define WIN_MF_RIGHTJUSTIFY         0x4000
+#define WIN_MF_MOUSESELECT          0x8000
+#define WIN_MF_INSERT               0x0000
+#define WIN_MF_CHANGE               0x0080
+#define WIN_MF_APPEND               0x0100
+#define WIN_MF_DELETE               0x0200
+#define WIN_MF_REMOVE               0x1000
+#define WIN_MF_USECHECKBITMAPS      0x0200
+#define WIN_MF_UNHILITE             0x0000
+#define WIN_MF_HILITE               0x0080
+#define WIN_MF_BYCOMMAND            0x0000
+#define WIN_MF_BYPOSITION           0x0400
+
+/* TrackPopupMenu() */
+#define WIN_TPM_CENTERALIGN         4
+#define WIN_TPM_LEFTALIGN           0
+#define WIN_TPM_RIGHTALIGN          8
+#define WIN_TPM_LEFTBUTTON          0
+#define WIN_TPM_RIGHTBUTTON         2
+#define WIN_TPM_HORIZONTAL          0
+#define WIN_TPM_VERTICAL            64
+#define WIN_TPM_TOPALIGN            0
+#define WIN_TPM_VCENTERALIGN        16
+#define WIN_TPM_BOTTOMALIGN         32
+#define WIN_TPM_NONOTIFY            128
+#define WIN_TPM_RETURNCMD           256
+#define WIN_TPM_RECURSE             1
+
+
 /* window messages WM_* */
 #define WIN_WM_USER                 1024
+
 
 /* ------------------------------- */
 /* Deprecated constants and macros */

@@ -61,28 +61,31 @@
 
 HB_FUNC( WAPI_GETSYSTEMMETRICS )
 {
-   int iResult = GetSystemMetrics( hb_parni( 1 ) );
+   int iResult = GetSystemMetrics( wapi_par_INT( 1 ) );
    hbwapi_SetLastError( GetLastError() );
-   hb_retni( iResult );
+   wapi_ret_NI( iResult );
 }
 
 HB_FUNC( WAPI_GETKEYSTATE )
 {
-   hb_retni( GetKeyState( hb_parni( 1 ) ) );
+   wapi_ret_NI( GetKeyState( wapi_par_INT( 1 ) ) );
 }
 
 HB_FUNC( WAPI_GETDESKTOPWINDOW )
 {
-   hb_retptr( GetDesktopWindow() );
+   wapi_ret_HWND( GetDesktopWindow() );
 }
 
 HB_FUNC( WAPI_MESSAGEBOX )
 {
    void * hStr1;
    void * hStr2;
-   int iResult = MessageBox( ( HWND ) hb_parptr( 1 ), HB_PARSTR( 2, &hStr1, NULL ), HB_PARSTR( 3, &hStr2, NULL ), hb_parni( 4 ) );
+   int iResult = MessageBox( wapi_par_HWND( 1 ),
+                             HB_PARSTR( 2, &hStr1, NULL ),
+                             HB_PARSTR( 3, &hStr2, NULL ),
+                             wapi_par_INT( 4 ) );
    hbwapi_SetLastError( GetLastError() );
-   hb_retni( iResult );
+   wapi_ret_NI( iResult );
    hb_strfree( hStr1 );
    hb_strfree( hStr2 );
 }
@@ -93,21 +96,21 @@ HB_FUNC( WAPI_CREATEWINDOWEX )
    void * hWindowName;
 
    HWND hResult = CreateWindowEx(
-      ( DWORD )     hb_parnl( 1 ) /* dwExStyle */,
+      wapi_par_DWORD( 1 ),          /* dwExStyle */
       HB_PARSTRDEF( 2, &hClassName, NULL ),
       HB_PARSTRDEF( 3, &hWindowName, NULL ),
-      HB_ISNUM( 4 ) ? ( DWORD ) hb_parnl( 4 ) : WS_OVERLAPPEDWINDOW /* dwStyle */,
-      HB_ISNUM( 5 ) ? ( int ) hb_parni( 5 ) : ( int ) CW_USEDEFAULT /* x */,
-      HB_ISNUM( 6 ) ? ( int ) hb_parni( 6 ) : ( int ) CW_USEDEFAULT /* y */,
-      ( int )       hb_parni( 7 ) /* nWidth */,
-      ( int )       hb_parni( 8 ) /* nHeight */,
-      HB_ISPOINTER( 9 ) ? ( HWND ) hb_parptr( 9 ) : HWND_DESKTOP /* hWndParent */,
-      ( HMENU )     hb_parptr( 10 ) /* hMenu */,
-      ( HINSTANCE ) hb_parptr( 11 ) /* hInstance */,
-      ( LPVOID )    hb_parptr( 12 ) /* lpParam */ );
+      HB_ISNUM( 4 ) ? wapi_par_DWORD( 4 ) : WS_OVERLAPPEDWINDOW,  /* dwStyle */
+      HB_ISNUM( 5 ) ? wapi_par_INT( 5 ) : ( int ) CW_USEDEFAULT,  /* x */
+      HB_ISNUM( 6 ) ? wapi_par_INT( 6 ) : ( int ) CW_USEDEFAULT,  /* y */
+      wapi_par_INT( 7 ),            /* nWidth */
+      wapi_par_INT( 8 ),            /* nHeight */
+      wapi_par_HWND( 9 ),           /* hWndParent, default to HWND_DESKTOP */
+      wapi_par_HMENU( 10 ),         /* hMenu */
+      wapi_par_HINSTANCE( 11 ),     /* hInstance */
+      ( LPVOID ) hb_parptr( 12 )    /* lpParam */ );
 
    hbwapi_SetLastError( GetLastError() );
-   hb_retptr( hResult );
+   wapi_ret_HWND( hResult );
 
    hb_strfree( hClassName );
    hb_strfree( hWindowName );
@@ -115,9 +118,9 @@ HB_FUNC( WAPI_CREATEWINDOWEX )
 
 HB_FUNC( WAPI_DESTROYWINDOW )
 {
-   BOOL bResult = DestroyWindow( ( HWND ) hb_parptr( 1 ) );
+   BOOL bResult = DestroyWindow( wapi_par_HWND( 1 ) );
    hbwapi_SetLastError( GetLastError() );
-   hb_retl( bResult );
+   wapi_ret_L( bResult );
 }
 
 HB_FUNC( WAPI_DRAWTEXT )
@@ -131,11 +134,11 @@ HB_FUNC( WAPI_DRAWTEXT )
       HB_SIZE nTextLen;
       LPCTSTR lpText = HB_PARSTR( 2, &hText, &nTextLen );
 
-      hb_retni( DrawText( hDC,
-                          lpText,
-                          nTextLen,
-                          &rect,
-                          ( UINT ) hb_parni( 4 ) ) );
+      wapi_ret_NI( DrawText( hDC,
+                             lpText,
+                             nTextLen,
+                             &rect,
+                             wapi_par_UINT( 4 ) ) );
 
       hb_strfree( hText );
 
@@ -368,14 +371,23 @@ HB_FUNC( WAPI_SHOWSCROLLBAR )
    wapi_ret_L( bResult );
 }
 /*----------------------------------------------------------------------*/
-/*
-HWND SetFocus( HWND hWnd );
-*/
 HB_FUNC( WAPI_SETFOCUS )
 {
-   HWND hResult = SetFocus( wapi_par_HWND( 1 ) );
+   HWND hWnd = SetFocus( wapi_par_HWND( 1 ) );
    hbwapi_SetLastError( GetLastError() );
-   wapi_ret_HANDLE( hResult );
+   wapi_ret_HWND( hWnd );
+}
+/*----------------------------------------------------------------------*/
+HB_FUNC( WAPI_GETACTIVEWINDOW )
+{
+   wapi_ret_HWND( GetActiveWindow() );
+}
+/*----------------------------------------------------------------------*/
+HB_FUNC( WAPI_SETACTIVEWINDOW )
+{
+   HWND hWnd = SetActiveWindow( wapi_par_HWND( 1 ) );
+   hbwapi_SetLastError( GetLastError() );
+   wapi_ret_HWND( hWnd );
 }
 /*----------------------------------------------------------------------*/
 #if 0
@@ -392,18 +404,6 @@ HB_FUNC( WAPI_LOADBITMAP )
 }
 #endif
 /*----------------------------------------------------------------------*/
-HB_FUNC( WAPI_GETACTIVEWINDOW )
-{
-   hb_retptr( GetActiveWindow() );
-}
-/*----------------------------------------------------------------------*/
-HB_FUNC( WAPI_SETACTIVEWINDOW )
-{
-   HWND hResult = SetActiveWindow( wapi_par_HWND( 1 ) );
-   hbwapi_SetLastError( GetLastError() );
-   hb_retptr( hResult );
-}
-/*----------------------------------------------------------------------*/
 /* WAPI_LoadImage( [<hInstance>], <cName>, [<nType>],
                    [<nWidth>], [<nHeight>], [<nFlags>] ) -> <hImage> */
 HB_FUNC( WAPI_LOADIMAGE )
@@ -418,6 +418,375 @@ HB_FUNC( WAPI_LOADIMAGE )
                        wapi_par_INT( 4 ),       // desired width
                        wapi_par_INT( 5 ),       // desired height
                        wapi_par_UINT( 6 ) );    // load flags
+
+   hbwapi_SetLastError( GetLastError() );
+
    hb_strfree( hString );
+
    wapi_ret_HANDLE( hImage );
+}
+
+/*
+ * MENU functions
+ */
+
+HB_FUNC( WAPI_LOADMENU )
+{
+   void * hMenuName = NULL;
+   HMENU hMenu;
+
+   hMenu = LoadMenu( wapi_par_HINSTANCE( 1 ),
+                     HB_ISNUM( 2 ) ?
+                           ( LPTSTR ) MAKEINTRESOURCE( wapi_par_INT( 2 ) ) :
+                           HB_PARSTRDEF( 2, &hMenuName, NULL ) );
+   hbwapi_SetLastError( GetLastError() );
+   hb_strfree( hMenuName );
+   wapi_ret_HMENU( hMenu );
+}
+
+HB_FUNC( WAPI_CREATEMENU )
+{
+   HMENU hMenu = CreateMenu();
+   hbwapi_SetLastError( GetLastError() );
+   wapi_ret_HMENU( hMenu );
+}
+
+HB_FUNC( WAPI_CREATEPOPUPMENU )
+{
+   HMENU hMenu = CreatePopupMenu();
+   hbwapi_SetLastError( GetLastError() );
+   wapi_ret_HMENU( hMenu );
+}
+
+HB_FUNC( WAPI_DESTROYMENU )
+{
+   BOOL fResult = DestroyMenu( wapi_par_HMENU( 1 ) );
+   hbwapi_SetLastError( GetLastError() );
+   wapi_ret_L( fResult );
+}
+
+HB_FUNC( WAPI_GETSYSTEMMENU )
+{
+   HWND hWnd = wapi_par_HWND( 1 );
+   HMENU hMenu = GetSystemMenu( hWnd ? hWnd : GetActiveWindow(),
+                                wapi_par_BOOL( 2 ) );
+   hbwapi_SetLastError( GetLastError() );
+   wapi_ret_HMENU( hMenu );
+}
+
+HB_FUNC( WAPI_GETSUBMENU )
+{
+   HMENU hMenu = GetSubMenu( wapi_par_HMENU( 1 ), wapi_par_INT( 2 ) );
+   hbwapi_SetLastError( GetLastError() );
+   wapi_ret_HMENU( hMenu );
+}
+
+HB_FUNC( WAPI_DRAWMENUBAR )
+{
+   HWND hWnd = wapi_par_HWND( 1 );
+   BOOL fResult = DrawMenuBar( hWnd ? hWnd : GetActiveWindow() );
+   hbwapi_SetLastError( GetLastError() );
+   wapi_ret_L( fResult );
+}
+
+HB_FUNC( WAPI_TRACKPOPUPMENU )
+{
+   HWND hWnd = wapi_par_HWND( 6 );
+   UINT uiResult;
+
+   uiResult = TrackPopupMenu( wapi_par_HMENU( 1 ),    /* hMenu */
+                              wapi_par_UINT( 2 ),     /* uFlags */
+                              wapi_par_INT( 3 ),      /* x */
+                              wapi_par_INT( 4 ),      /* y */
+                              wapi_par_INT( 5 ),      /* nReserved */
+                              hWnd ? hWnd : GetActiveWindow(), /* hWnd */
+                              NULL                    /* prcRect */ );
+   hbwapi_SetLastError( GetLastError() );
+   wapi_ret_UINT( uiResult );
+}
+
+HB_FUNC( WAPI_ENABLEMENUITEM )
+{
+   int iResult;
+
+   iResult = EnableMenuItem( wapi_par_HMENU( 1 ),
+                             wapi_par_UINT( 2 ), wapi_par_UINT( 3 ) );
+   hbwapi_SetLastError( GetLastError() );
+   wapi_ret_NI( iResult );
+}
+
+HB_FUNC( WAPI_CHECKMENUITEM )
+{
+   DWORD dwResult;
+
+   dwResult = CheckMenuItem( wapi_par_HMENU( 1 ),
+                             wapi_par_UINT( 2 ), wapi_par_UINT( 3 ) );
+   hbwapi_SetLastError( GetLastError() );
+   if( dwResult == ( DWORD ) -1 )
+      wapi_ret_NI( -1 );
+   else
+      wapi_ret_DWORD( dwResult );
+}
+
+HB_FUNC( WAPI_CHECKMENURADIOITEM )
+{
+   BOOL fResult;
+
+   fResult = CheckMenuRadioItem( wapi_par_HMENU( 1 ), /* hMenu */
+                                 wapi_par_UINT( 2 ),  /* idFirst */
+                                 wapi_par_UINT( 3 ),  /* idLast */
+                                 wapi_par_UINT( 4 ),  /* idCheck */
+                                 wapi_par_UINT( 5 )   /* uFlags */ );
+   hbwapi_SetLastError( GetLastError() );
+   wapi_ret_L( fResult );
+}
+
+HB_FUNC( WAPI_DELETEMENU )
+{
+   BOOL fResult;
+
+   fResult = DeleteMenu( wapi_par_HMENU( 1 ),
+                         wapi_par_UINT( 2 ), wapi_par_UINT( 3 ) );
+   hbwapi_SetLastError( GetLastError() );
+   wapi_ret_L( fResult );
+}
+
+HB_FUNC( WAPI_REMOVEMENU )
+{
+   BOOL fResult;
+
+   fResult = RemoveMenu( wapi_par_HMENU( 1 ),
+                         wapi_par_UINT( 2 ), wapi_par_UINT( 3 ) );
+   hbwapi_SetLastError( GetLastError() );
+   wapi_ret_L( fResult );
+}
+
+HB_FUNC( WAPI_INSERTMENU )
+{
+   BOOL fResult;
+   HMENU hMenu = wapi_par_HMENU( 1 ),
+         hSubMenu = wapi_par_HMENU( 4 );
+   UINT uPosition = wapi_par_UINT( 2 ),
+        uFlags = wapi_par_UINT( 3 );
+   HB_PTRUINT uIDNewItem;
+   void * hNewItemStr;
+   LPCTSTR lpNewItem = HB_PARSTR( 5, &hNewItemStr, NULL );
+
+   if( hSubMenu )
+   {
+      uFlags |= MF_POPUP;
+      uIDNewItem = ( HB_PTRUINT ) hSubMenu;
+   }
+   else
+      uIDNewItem = HB_ISPOINTER( 4 ) ? ( HB_PTRUINT ) hb_parptr( 4 ) :
+                                       ( HB_PTRUINT ) hb_parnint( 4 );
+   if( lpNewItem )
+      uFlags |= MF_STRING;
+   else
+      lpNewItem = ( LPCTSTR ) hb_parptr( 5 );
+
+   fResult = InsertMenu( hMenu, uPosition, uFlags, uIDNewItem, lpNewItem );
+   hbwapi_SetLastError( GetLastError() );
+   wapi_ret_L( fResult );
+   hb_strfree( hNewItemStr );
+}
+
+HB_FUNC( WAPI_APPENDMENU )
+{
+   BOOL fResult;
+   HMENU hMenu = wapi_par_HMENU( 1 ),
+         hSubMenu = wapi_par_HMENU( 3 );
+   UINT uFlags = wapi_par_UINT( 2 );
+   HB_PTRUINT uIDNewItem;
+   void * hNewItemStr;
+   LPCTSTR lpNewItem = HB_PARSTR( 4, &hNewItemStr, NULL );
+
+   if( hSubMenu )
+   {
+      uFlags |= MF_POPUP;
+      uIDNewItem = ( HB_PTRUINT ) hSubMenu;
+   }
+   else
+      uIDNewItem = HB_ISPOINTER( 3 ) ? ( HB_PTRUINT ) hb_parptr( 3 ) :
+                                       ( HB_PTRUINT ) hb_parnint( 3 );
+   if( lpNewItem )
+      uFlags |= MF_STRING;
+   else
+      lpNewItem = ( LPCTSTR ) hb_parptr( 4 );
+
+   fResult = AppendMenu( hMenu, uFlags, uIDNewItem, lpNewItem );
+   hbwapi_SetLastError( GetLastError() );
+   wapi_ret_L( fResult );
+   hb_strfree( hNewItemStr );
+}
+
+#if 0
+HB_FUNC( WAPI_GETMENUITEMINFO )
+{
+   /* GetMenuItemInfo(); */
+}
+
+HB_FUNC( WAPI_SETMENUITEMINFO )
+{
+   /* SetMenuItemInfo(); */
+}
+#endif
+
+HB_FUNC( WAPI_ISMENU )
+{
+#if defined( HB_OS_WIN_CE )
+   hbwapi_SetLastError( ERROR_INVALID_FUNCTION );
+   wapi_ret_L( FALSE );
+#else
+   wapi_ret_L( IsMenu( wapi_par_HMENU( 1 ) ) );
+#endif
+}
+
+HB_FUNC( WAPI_GETMENU )
+{
+#if defined( HB_OS_WIN_CE )
+   hbwapi_SetLastError( ERROR_INVALID_FUNCTION );
+   wapi_ret_HMENU( NULL );
+#else
+   HWND hWnd = wapi_par_HWND( 1 );
+   HMENU hMenu = GetMenu( hWnd ? hWnd : GetActiveWindow() );
+   hbwapi_SetLastError( GetLastError() );
+   wapi_ret_HMENU( hMenu );
+#endif
+}
+
+HB_FUNC( WAPI_SETMENU )
+{
+#if defined( HB_OS_WIN_CE )
+   hbwapi_SetLastError( ERROR_INVALID_FUNCTION );
+   wapi_ret_L( FALSE );
+#else
+   HWND hWnd = wapi_par_HWND( 1 );
+   BOOL fResult = SetMenu( hWnd ? hWnd : GetActiveWindow(),
+                           wapi_par_HMENU( 2 ) );
+   hbwapi_SetLastError( GetLastError() );
+   wapi_ret_L( fResult );
+#endif
+}
+
+HB_FUNC( WAPI_GETMENUSTATE )
+{
+#if defined( HB_OS_WIN_CE )
+   hbwapi_SetLastError( ERROR_INVALID_FUNCTION );
+   wapi_ret_NI( -1 );
+#else
+   UINT uiResult;
+
+   uiResult = GetMenuState( wapi_par_HMENU( 1 ),
+                            wapi_par_UINT( 2 ),
+                            wapi_par_UINT( 3 ) );
+   hbwapi_SetLastError( GetLastError() );
+   if( uiResult == ( UINT ) -1 )
+      wapi_ret_NI( -1 );
+   else
+      wapi_ret_UINT( uiResult );
+#endif
+}
+
+HB_FUNC( WAPI_GETMENUITEMCOUNT )
+{
+#if defined( HB_OS_WIN_CE )
+   hbwapi_SetLastError( ERROR_INVALID_FUNCTION );
+   wapi_ret_NI( -1 );
+#else
+   int iResult;
+
+   iResult = GetMenuItemCount( wapi_par_HMENU( 1 ) );
+   hbwapi_SetLastError( GetLastError() );
+   wapi_ret_NI( iResult );
+#endif
+}
+
+HB_FUNC( WAPI_GETMENUITEMID )
+{
+#if defined( HB_OS_WIN_CE )
+   hbwapi_SetLastError( ERROR_INVALID_FUNCTION );
+   wapi_ret_NI( -1 );
+#else
+   UINT uiResult;
+
+   uiResult = GetMenuItemID( wapi_par_HMENU( 1 ), wapi_par_UINT( 2 ) );
+   hbwapi_SetLastError( GetLastError() );
+   if( uiResult == ( UINT ) -1 )
+      wapi_ret_NI( -1 );
+   else
+      wapi_ret_UINT( uiResult );
+#endif
+}
+
+HB_FUNC( WAPI_SETMENUDEFAULTITEM )
+{
+#if defined( HB_OS_WIN_CE )
+   hbwapi_SetLastError( ERROR_INVALID_FUNCTION );
+   wapi_ret_L( FALSE );
+#else
+   BOOL fResult;
+
+   fResult = SetMenuDefaultItem( wapi_par_HMENU( 1 ),
+                                 wapi_par_UINT( 2 ),
+                                 HB_ISNUM( 3 ) ? wapi_par_INT( 3 ) :
+                                                 wapi_par_BOOL( 3 ) );
+   hbwapi_SetLastError( GetLastError() );
+   wapi_ret_L( fResult );
+#endif
+}
+
+HB_FUNC( WAPI_GETMENUDEFAULTITEM )
+{
+#if defined( HB_OS_WIN_CE )
+   hbwapi_SetLastError( ERROR_INVALID_FUNCTION );
+   wapi_ret_NI( -1 );
+#else
+   UINT uiResult;
+
+   uiResult = GetMenuDefaultItem( wapi_par_HMENU( 1 ),
+                                  HB_ISNUM( 2 ) ? wapi_par_INT( 2 ) :
+                                                  wapi_par_BOOL( 2 ),
+                                  wapi_par_UINT( 3 ) );
+   hbwapi_SetLastError( GetLastError() );
+   if( uiResult == ( UINT ) -1 )
+      wapi_ret_NI( -1 );
+   else
+      wapi_ret_UINT( uiResult );
+#endif
+}
+
+/* WAPI_CreateAcceleratorTable( <aAccelTable> ) -> <hAccel> */
+HB_FUNC( WAPI_CREATEACCELERATORTABLE )
+{
+   HACCEL hAccel = NULL;
+   PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
+   int iEntries = pArray ? ( int ) hb_arrayLen( pArray ) : 0, i;
+
+   if( iEntries > 0 )
+   {
+      LPACCEL lpAccel = ( LPACCEL ) hb_xgrab( sizeof( ACCEL ) * iEntries );
+
+      for( i = 0; i < iEntries; ++i )
+      {
+         PHB_ITEM pAccItem = hb_arrayGetItemPtr( pArray, i + 1 );
+
+         lpAccel[ i ].fVirt = ( BYTE ) hb_arrayGetNI( pAccItem, 1 );
+         lpAccel[ i ].key   = ( WORD ) hb_arrayGetNI( pAccItem, 2 );
+         lpAccel[ i ].cmd   = ( WORD ) hb_arrayGetNI( pAccItem, 3 );
+      }
+      hAccel = CreateAcceleratorTable( lpAccel, iEntries );
+      hbwapi_SetLastError( GetLastError() );
+      hb_xfree( lpAccel );
+   }
+   else
+      hbwapi_SetLastError( ERROR_INVALID_PARAMETER );
+   wapi_ret_HACCEL( hAccel );
+}
+
+HB_FUNC( WAPI_DESTROYACCELERATORTABLE )
+{
+   BOOL fResult = DestroyAcceleratorTable( wapi_par_HACCEL( 1 ) );
+   hbwapi_SetLastError( GetLastError() );
+   wapi_ret_L( fResult );
 }
