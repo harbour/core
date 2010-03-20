@@ -503,6 +503,9 @@ hbide_dbg( "HbIde:create( cProjIni )", "#Params=" )
    qSplash:close()
    //qSplash := NIL
 
+   /* Load tags last tagged projects */
+   ::oFN:loadTags( ::aINI[ INI_TAGGEDPROJECTS ] )
+
    DO WHILE .t.
       ::nEvent := AppEvent( @::mp1, @::mp2, @::oXbp )
 

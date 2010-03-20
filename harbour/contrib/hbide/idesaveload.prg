@@ -204,6 +204,13 @@ hbide_dbg( "hbide_saveINI( oIde )", 0, oIde:nRunMode, oIde:cProjIni )
    FOR n := 1 TO len( oIde:aIni[ INI_VIEWS ] )
       aadd( txt_, "view_" + hb_ntos( n ) + "=" + oIde:aIni[ INI_VIEWS, n ] )
    NEXT
+
+   aadd( txt_, "[TAGGEDPROJECTS]" )
+   aadd( txt_, " " )
+   FOR n := 1 TO len( oIde:aIni[ INI_TAGGEDPROJECTS ] )
+      aadd( txt_, "taggedproject_" + hb_ntos( n ) + "=" + oIde:aIni[ INI_TAGGEDPROJECTS, n ] )
+   NEXT
+
    aadd( txt_, " " )
    aadd( txt_, "[General]" )
    aadd( txt_, " " )
@@ -277,6 +284,9 @@ FUNCTION hbide_loadINI( oIde, cHbideIni )
             CASE "[FOLDERS]"
                nPart := INI_FOLDERS
                EXIT
+            CASE "[TAGGEDPROJECTS]"
+               nPart := INI_TAGGEDPROJECTS
+               EXIT
             CASE "[VIEWS]"
                nPart := INI_VIEWS
                EXIT
@@ -328,7 +338,7 @@ FUNCTION hbide_loadINI( oIde, cHbideIni )
                   ENDIF
 
                CASE nPart == INI_RECENTPROJECTS .OR. ;
-                  nPart == INI_RECENTFILES
+                    nPart == INI_RECENTFILES
 
                   IF hbide_parseKeyValPair( s, @cKey, @cVal )
                      IF Len( oIde:aIni[ nPart ] ) < 25
@@ -345,6 +355,11 @@ FUNCTION hbide_loadINI( oIde, cHbideIni )
                   ENDIF
 
                CASE nPart == INI_VIEWS
+                  IF hbide_parseKeyValPair( s, @cKey, @cVal )
+                     aadd( oIde:aIni[ nPart ], cVal )
+                  ENDIF
+
+               CASE nPart == INI_TAGGEDPROJECTS
                   IF hbide_parseKeyValPair( s, @cKey, @cVal )
                      aadd( oIde:aIni[ nPart ], cVal )
                   ENDIF

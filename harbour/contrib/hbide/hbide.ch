@@ -71,9 +71,10 @@
 #define INI_RECENTPROJECTS                        7
 #define INI_FOLDERS                               8
 #define INI_VIEWS                                 9
-#define INI_GENERAL                               10
+#define INI_TAGGEDPROJECTS                        10
+#define INI_GENERAL                               11
 
-#define INI_SECTIONS_COUNT                        10
+#define INI_SECTIONS_COUNT                        11
 
 
 /* INI_HBIDE */

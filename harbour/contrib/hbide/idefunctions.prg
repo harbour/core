@@ -120,7 +120,7 @@ CLASS IdeFunctions INHERIT IdeObject
    METHOD jumpToFunction( cWord )
    METHOD positionToFunction( cWord, lShowTip )
    METHOD buildTags()
-   METHOD loadTags()
+   METHOD loadTags( aProjects )
    METHOD listProjects()
    METHOD clearProjects()
    METHOD getMarkedProjects()
@@ -425,20 +425,22 @@ METHOD IdeFunctions:enableControls( lEnable )
 
    ::oUI:q_editFunction:setEnabled( lEnable )
 
-   ::showApplicationCursor( iif( lEnable, NIL, Qt_WaitCursor ) )
+   ::showApplicationCursor( iif( lEnable, NIL, Qt_BusyCursor ) )
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeFunctions:loadTags()
-   LOCAL cProjectTitle, cProjFile, cTagFile, aTags, n
+METHOD IdeFunctions:loadTags( aProjects )
+   LOCAL cProjectTitle, cProjFile, cTagFile, aTags, n, a_
    LOCAL lPopulate := .f.
-   LOCAL a_:= ::getMarkedProjects()
 
-   IF empty( a_ )
+   DEFAULT aProjects TO ::getMarkedProjects()
+
+   IF empty( aProjects )
       RETURN Self
    ENDIF
+   a_:= aProjects
 
    IF !( ::inAction )
       ::enableControls( .f. )
@@ -481,11 +483,13 @@ METHOD IdeFunctions:buildTags()
    LOCAL cProjectTitle
    LOCAL a_:= ::getMarkedProjects()
 
-   FOR EACH cProjectTitle IN a_
-      ::tagProject( cProjectTitle )
-   NEXT
-
-   ::clearProjects()
+   IF !empty( a_ )
+      FOR EACH cProjectTitle IN a_
+         ::tagProject( cProjectTitle )
+      NEXT
+      ::oIde:aINI[ INI_TAGGEDPROJECTS ] := a_
+      ::clearProjects()
+   ENDIF
 
    RETURN Self
 
