@@ -6,13 +6,13 @@ ROOT := ../../
 
 include $(TOP)$(ROOT)config/global.mk
 
-LIBNAME := hbbzip2
+LIBNAME := hbbz2
 
 C_SOURCES := \
-   hbbzip2.c \
+   hbbz2.c \
 
 PRG_HEADERS := \
-   hbbzip2.ch
+   hbbz2.ch
 
 _DET_DSP_NAME := bzip2
 _DET_VAR_INC_ := HB_INC_BZIP2

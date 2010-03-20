@@ -52,8 +52,8 @@
 
 /* NOTE: This file is also used by C code. */
 
-#ifndef HB_BZIP2_CH_
-#define HB_BZIP2_CH_
+#ifndef HB_BZ2_CH_
+#define HB_BZ2_CH_
 
 #define HB_BZ_OK                    0
 #define HB_BZ_RUN_OK                1
@@ -74,4 +74,4 @@
 #define HB_BZ_COMPRESSION_SIZE      9
 #define HB_BZ_COMPRESSION_DEFAULT   9
 
-#endif /* HB_BZIP2_CH_ */
+#endif /* HB_BZ2_CH_ */

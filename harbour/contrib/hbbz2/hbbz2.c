@@ -57,7 +57,7 @@
 
 #include <bzlib.h>
 
-#include "hbbzip2.ch"
+#include "hbbz2.ch"
 
 static HB_SIZE hb_bz2CompressBound( HB_SIZE ulLen )
 {
