@@ -555,8 +555,8 @@ HB_FUNC( SQLITE3_TEMP_DIRECTORY )
 
    #ifdef SQLITE3_LIB
    {
-      HB_BOOL fFree;
-      char *  pszDirName = hb_fsNameConv( hb_parcx( 1 ), &fFree );
+      char *pszFree;
+      const char *pszDirName = hb_fsNameConv( hb_parcx( 1 ), &pszFree );
 
       if( hb_fsIsDirectory(pszDirName) )
       {
@@ -583,12 +583,12 @@ HB_FUNC( SQLITE3_TEMP_DIRECTORY )
 
       if( bResult )
       {
-         sqlite3_temp_directory = hb_strdup( ( const char * ) pszDirName );
+         sqlite3_temp_directory = hb_strdup( pszDirName );
       }
 
-      if( fFree )
+      if( pszFree )
       {
-         hb_xfree( ( void * ) pszDirName );
+         hb_xfree( pszFree );
       }
    }
    #endif /* SQLITE3_LIB */

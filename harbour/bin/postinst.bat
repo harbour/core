@@ -70,7 +70,12 @@ if "%HB_SHELL%" == "nt" goto _SH_NT
 
    rem ; We build this here, because GNU Make wouldn't add the icon.
    echo ! Making hbrun with application icon...
-   "%HB_HOST_BIN_DIR%\hbmk2" -quiet -q0 -lang=en "-o%HB_BIN_INSTALL%\hbrun" "%~dp0..\utils\hbrun\hbrun.hbp"
+   if "%HB_BUILD_DLL%" == "no" (
+      "%HB_HOST_BIN_DIR%\hbmk2" -quiet -q0 -lang=en "-o%HB_BIN_INSTALL%\hbrun" "%~dp0..\utils\hbrun\hbrun.hbp"
+   ) ELSE (
+      if not "%HB_BUILD_SHARED%" == "yes" "%HB_HOST_BIN_DIR%\hbmk2" -quiet -q0 -lang=en "-o%HB_BIN_INSTALL%\hbrun" "%~dp0..\utils\hbrun\hbrun.hbp"
+      rem if "%HB_BUILD_SHARED%" == "yes" "%HB_HOST_BIN_DIR%\hbmk2" -quiet -q0 -lang=en -shared "-o%HB_BIN_INSTALL%\hbrun" "%~dp0..\utils\hbrun\hbrun.hbp"
+   )
 
 :_NO_ICON_BIN
 
