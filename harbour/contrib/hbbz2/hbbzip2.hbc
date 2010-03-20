@@ -4,5 +4,5 @@
 
 incpaths=.
 
-libs=hbbzip2
+libs=hbbz2
 libs=bz2
