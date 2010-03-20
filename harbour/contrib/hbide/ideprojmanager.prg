@@ -1136,8 +1136,7 @@ METHOD IdeProjManager:promptForPath( cObjPathName, cTitle, cObjFileName, cObjPat
 /*----------------------------------------------------------------------*/
 
 METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
-   LOCAL cHbpPath, oEdit, cHbpFN, cTmp, cExeHbMk2, aHbp, cCmd, cC, cArg
-   LOCAL cCmdParams
+   LOCAL cHbpPath, oEdit, cHbpFN, cTmp, cExeHbMk2, aHbp, cCmd, cC, cArg, oSource, cCmdParams
 
    aHbp := {}
 
@@ -1165,6 +1164,10 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
    ENDIF
 
    ::oProject := ::getProjectByTitle( cProject )
+   // attempt to save the sources if are open in editors       should it be controlled by some option ?
+   FOR EACH oSource IN ::oProject:hSources
+      ::oSM:saveNamedSource( oSource:original )
+   NEXT
 
    cHbpFN     := hbide_pathFile( ::oProject:location, iif( empty( ::oProject:outputName ), "_temp", ::oProject:outputName ) )
    cHbpPath   := cHbpFN + iif( ::lPPO, '_tmp', "" ) + ".hbp"

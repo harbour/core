@@ -77,6 +77,7 @@ CLASS IdeSourcesManager INHERIT IdeObject
    METHOD create( oIde )
    METHOD loadSources()
    METHOD saveSource( nTab, lCancel, lAs )
+   METHOD saveNamedSource( cSource )
    METHOD editSource( cSourceFile, nPos, nHPos, nVPos, cTheme, cView, lAlert, lVisible )
    METHOD closeSource( nTab, lCanCancel, lCanceled )
    METHOD closeAllSources()
@@ -122,6 +123,31 @@ METHOD IdeSourcesManager:loadSources()
    ENDIF
 
    RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeSourcesManager:saveNamedSource( cSource )
+   LOCAL lSaved, oEditor, a_
+
+   cSource := hbide_pathNormalized( cSource, .t. )
+
+   FOR EACH a_ IN ::aTabs
+      oEditor := a_[ TAB_OEDITOR ]
+      IF hb_isObject( oEditor )
+         IF hbide_pathNormalized( oEditor:sourceFile, .t. ) == cSource
+            IF oEditor:lLoaded
+               IF oEditor:qDocument:isModified()
+                  IF ( lSaved := hb_memowrit( hbide_pathToOSPath( cSource ), oEditor:qEdit:toPlainText() ) )
+                     oEditor:qDocument:setModified( .f. )
+                     oEditor:setTabImage()
+                  ENDIF
+               ENDIF
+            ENDIF
+         ENDIF
+      ENDIF
+   NEXT
+
+   RETURN lSaved
 
 /*----------------------------------------------------------------------*/
 /*
