@@ -304,9 +304,6 @@ METHOD IdeDocks:getADockWidget( nArea, cObjectName, cWindowTitle, nFlags )
    oDock:oWidget:setStyleSheet( getStyleSheet( "QDockWidget" ) )
    oDock:hide()
 
-   oDock:hbLayout := HBPLAYOUT_TYPE_VERTBOX
-   oDock:qLayout:setContentsMargins( 2, 2, 2, 2 )
-
    RETURN oDock
 
 /*----------------------------------------------------------------------*/

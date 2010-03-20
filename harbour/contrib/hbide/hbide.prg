@@ -501,7 +501,7 @@ hbide_dbg( "HbIde:create( cProjIni )", "#Params=" )
 
    ::showApplicationCursor()
    qSplash:close()
-   qSplash := NIL
+   //qSplash := NIL
 
    DO WHILE .t.
       ::nEvent := AppEvent( @::mp1, @::mp2, @::oXbp )
@@ -831,7 +831,7 @@ METHOD HbIde:execEditorAction( cKey )
       EXIT
    CASE "MatchPairs"
       //
-      ::oSkeltn:show()
+      hbide_startOpenWizard()
       EXIT
    CASE "InsertSeparator"
       ::oEM:insertSeparator()
