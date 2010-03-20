@@ -90,7 +90,7 @@ STATIC s_pathSep
 
 /*----------------------------------------------------------------------*/
 
-PROCEDURE Main( cProjIni )
+PROCEDURE Main( ... )
    LOCAL oIde
 
    #ifdef __HBIDE_DEBUG__
@@ -112,9 +112,7 @@ hbide_dbg( hbmk2_PathMakeRelative( "C:\dev_projects", "C:/dev_sources/vouch/myfi
    s_resPath := hb_DirBase() + "resources" + hb_OsPathSeparator()
    s_pathSep := hb_OsPathSeparator()
 
-   hbide_dbg( cProjIni )
-
-   oIde := HbIde():new( cProjIni ):create()
+   oIde := HbIde():new( hb_aParams() ):create()
    oIde:destroy()
 
    RETURN
@@ -125,6 +123,9 @@ CLASS HbIde
 
    ACCESS pSlots                                  INLINE hbxbp_getSlotsPtr()
    ACCESS pEvents                                 INLINE hbxbp_getEventsPtr()
+
+   DATA   aParams
+   DATA   cProjIni
 
    DATA   oPM                                            /* Project Manager                */
    DATA   oDK                                            /* Main Window Components Manager */
@@ -144,12 +145,13 @@ CLASS HbIde
    DATA   oSkeltnDock
    DATA   oFindDock
 
+   DATA   nRunMode                                INIT   HBIDE_RUN_MODE_INI
+
    DATA   oUI
 
    DATA   aMeta                                   INIT   {}  /* Holds current definition only  */
 
    DATA   mp1, mp2, oXbp, nEvent
-   DATA   cProjIni
 
    DATA   aTabs                                   INIT   {}
    DATA   aINI                                    INIT   {}
@@ -157,6 +159,8 @@ CLASS HbIde
    DATA   aProjData                               INIT   {}
    DATA   aPrpObjs                                INIT   {}
    DATA   aEditorPath                             INIT   {}
+   DATA   aSrcOnCmdLine                           INIT   {}
+   DATA   aHbpOnCmdLine                           INIT   {}
 
    /* HBQT Objects */
    DATA   qLayout
@@ -272,8 +276,8 @@ CLASS HbIde
    DATA   aMarkTBtns                              INIT   array( 6 )
    DATA   lClosing                                INIT   .f.
 
-   METHOD new( cProjIni )
-   METHOD create( cProjIni )
+   METHOD new( aParams )
+   METHOD create( aParams )
    METHOD destroy()
    METHOD setPosAndSizeByIni( qWidget, nPart )
    METHOD setPosByIni( qWidget, nPart )
@@ -306,6 +310,8 @@ CLASS HbIde
    METHOD showApplicationCursor( nCursor )
    METHOD testPainter( qPainter )
 
+   METHOD parseParams()
+
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
@@ -320,31 +326,18 @@ METHOD HbIde:destroy()
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbIde:new( cProjIni )
+METHOD HbIde:new( aParams )
 
-   ::cProjIni := cProjIni
+   ::aParams := aParams
 
    RETURN self
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbIde:showApplicationCursor( nCursor )
+METHOD HbIde:create( aParams )
+   LOCAL qPixmap, qSplash, n
 
-   STATIC qCrs
-
-   IF empty( nCursor )
-      QApplication():restoreOverrideCursor()
-   ELSE
-      qCrs := QCursor():new( nCursor )
-      QApplication():setOverrideCursor( qCrs )
-   ENDIF
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbIde:create( cProjIni )
-   LOCAL qPixmap, qSplash
+hbide_dbg( "HbIde:create( cProjIni )", "#Params=" )
 
    qPixmap := QPixmap():new( hb_dirBase() + "resources" + hb_osPathSeparator() + "hbidesplash.png" )
    qSplash := QSplashScreen():new()
@@ -354,8 +347,17 @@ METHOD HbIde:create( cProjIni )
    ::showApplicationCursor( Qt_BusyCursor )
    QApplication():processEvents()
 
-   DEFAULT cProjIni TO ::cProjIni
-   ::cProjIni := cProjIni
+   /* Initiate the place holders */
+   ::aINI := array( INI_SECTIONS_COUNT )
+   ::aINI[ 1 ] := afill( array( INI_HBIDE_VRBLS ), "" )
+   //
+   FOR n := 2 TO INI_SECTIONS_COUNT
+      ::aIni[ n ] := array( 0 )
+   NEXT
+
+   DEFAULT aParams TO ::aParams
+   ::aParams := aParams
+   ::parseParams()
 
    /* Setup GUI Error Reporting System*/
    hbqt_errorsys()
@@ -375,7 +377,13 @@ METHOD HbIde:create( cProjIni )
    ::oPM := IdeProjManager():new( Self ):create()
 
    /* Load IDE Settings */
-   hbide_loadINI( Self, cProjIni )
+   IF ::nRunMode == HBIDE_RUN_MODE_INI
+      hbide_loadINI( Self, ::cProjIni )
+   ENDIF
+   /* Insert command line projects */
+   aeval( ::aHbpOnCmdLine, {|e| aadd( ::aINI[ INI_PROJECTS ], e ) } )
+   /* Insert command line sources */
+   aeval( ::aSrcOnCmdLine, {|e| aadd( ::aINI[ INI_FILES    ], hbide_parseSourceComponents( e ) ) } )
 
    /* Set variables from last session */
    ::cWrkTheme       := ::aINI[ INI_HBIDE, CurrentTheme       ]
@@ -480,18 +488,24 @@ METHOD HbIde:create( cProjIni )
    /* Request Main Window to Appear on the Screen */
    ::oHM:refresh()
    ::oDlg:Show()
-   ::oDK:setView( "Stats" )
+   IF ::nRunMode == HBIDE_RUN_MODE_PRG
+      ::oDockPT:hide()
+      ::oDockED:hide()
+      ::oDK:setView( "Main" )
+   ELSEIF ::nRunMode == HBIDE_RUN_MODE_HBP
+      ::oDockED:hide()
+      ::oDK:setView( "Stats" )
+   ELSE
+      ::oDK:setView( "Stats" )
+   ENDIF
 
    ::showApplicationCursor()
    qSplash:close()
    qSplash := NIL
 
-   //::testPainter()
-
    DO WHILE .t.
       ::nEvent := AppEvent( @::mp1, @::mp2, @::oXbp )
 
-//hbide_dbg( "Next", NextAppEvent(), "Last", LastAppEvent(), "Event", ::nEvent )
       IF ::nEvent == xbeP_Quit
          hbide_dbg( "----------------- xbeP_Quit" )
          hbide_saveINI( Self )
@@ -565,14 +579,70 @@ METHOD HbIde:create( cProjIni )
    ::oAC:destroy()
 
    ::qCursor := NIL
-   ::oFont := NIL
+   ::oFont   := NIL
 
    hbide_dbg( "                                                      " )
    hbide_dbg( "After     ::oDlg:destroy()", memory( 1001 ), hbqt_getMemUsed() )
    hbide_dbg( "======================================================" )
-   hbide_dbg( "EXITING after destroy ....", memory( 1001 ), hbqt_getMemUsed() )
 
    RETURN self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbIde:parseParams()
+   LOCAL s, cExt
+   LOCAL aIni := {}
+
+   FOR EACH s IN ::aParams
+      s := alltrim( s )
+
+      DO CASE
+      CASE left( s, 1 ) == "-"
+         // Switches, futuristic
+      OTHERWISE
+         hb_fNameSplit( s, , , @cExt )
+         cExt := lower( cExt )
+         DO CASE
+         CASE cExt == ".ini"
+            aadd( aIni, s )
+         CASE cExt == ".hbp"
+            aadd( ::aHbpOnCmdLine, s )
+         CASE cExt $ ".prg.cpp"
+            aadd( ::aSrcOnCmdLine, s )
+         ENDCASE
+      ENDCASE
+   NEXT
+
+   IF !empty( aIni )                       /* Discard aHbp */
+      ::cProjIni := aIni[ 1 ]
+      ::nRunMode := HBIDE_RUN_MODE_INI
+   ELSEIF !empty( ::aHbpOnCmdLine )
+      ::cProjIni := ""
+      ::nRunMode := HBIDE_RUN_MODE_HBP
+   ELSEIF !empty( ::aSrcOnCmdLine )
+      ::cProjIni := ""
+      ::nRunMode := HBIDE_RUN_MODE_PRG
+   ELSE
+      ::cProjIni := ""
+      ::nRunMode := HBIDE_RUN_MODE_INI
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbIde:showApplicationCursor( nCursor )
+
+   STATIC qCrs
+
+   IF empty( nCursor )
+      QApplication():restoreOverrideCursor()
+   ELSE
+      qCrs := QCursor():new( nCursor )
+      QApplication():setOverrideCursor( qCrs )
+   ENDIF
+
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 

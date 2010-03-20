@@ -89,13 +89,18 @@ FUNCTION hbide_restSettings( oIde )
 FUNCTION hbide_saveINI( oIde )
    LOCAL j, nTab, pTab, n, txt_, qHScr, qVScr, oEdit, qCursor, nTabs, nn
 
+hbide_dbg( "hbide_saveINI( oIde )", 0, oIde:nRunMode, oIde:cProjIni )
+   IF oIde:nRunMode != HBIDE_RUN_MODE_INI
+      RETURN Nil
+   ENDIF
+
    txt_:= {}
    //    Properties
    aadd( txt_, "[HBIDE]" )
    aadd( txt_, " " )
    aadd( txt_, "MainWindowGeometry="  + hbide_posAndSize( oIde:oDlg:oWidget )      )
-   aadd( txt_, "ProjectTreeVisible="  + IIF( oIde:lProjTreeVisible, "YES", "NO" )  )
-   aadd( txt_, "FunctionListVisible=" + IIF( oIde:lDockRVisible, "YES", "NO" )     )
+   aadd( txt_, "ProjectTreeVisible="  + iif( oIde:lProjTreeVisible, "YES", "NO" )  )
+   aadd( txt_, "FunctionListVisible=" + iif( oIde:lDockRVisible, "YES", "NO" )     )
    aadd( txt_, "RecentTabIndex="      + hb_ntos( oIde:qTabWidget:currentIndex() )  )
    aadd( txt_, "CurrentProject="      + oIde:cWrkProject                           )
    aadd( txt_, "GotoDialogGeometry="  + oIde:aIni[ INI_HBIDE, GotoDialogGeometry ] )
@@ -133,7 +138,7 @@ FUNCTION hbide_saveINI( oIde )
          nTab  := ascan( oIde:aTabs, {|e_| hbqt_IsEqualGcQtPointer( e_[ 1 ]:oWidget:pPtr, pTab ) } )
          oEdit := oIde:aTabs[ nTab, TAB_OEDITOR ]
 
-         IF !Empty( oEdit:sourceFile ) .and. !( ".ppo" == lower( oEdit:cExt ) )
+         IF !Empty( oEdit:sourceFile ) .AND. !( ".ppo" == lower( oEdit:cExt ) )
             IF oEdit:lLoaded
                qHScr   := QScrollBar():configure( oEdit:qEdit:horizontalScrollBar() )
                qVScr   := QScrollBar():configure( oEdit:qEdit:verticalScrollBar() )
@@ -220,14 +225,6 @@ FUNCTION hbide_loadINI( oIde, cHbideIni )
                       "currentreplace"     , "currentfolderfind"   , "currentview"        , ;
                       "currentharbour"     }
 
-   /* Initiate the place holders */
-   oIde:aIni := Array( INI_SECTIONS_COUNT )
-   oIde:aIni[ 1 ] := afill( array( INI_HBIDE_VRBLS ), "" )
-   //
-   FOR n := 2 TO INI_SECTIONS_COUNT
-      oIde:aIni[ n ] := Array( 0 )
-   NEXT
-
    IF empty( cHbideIni )
       IF hb_fileExists( "hbide.ini" )
          cHbideIni := "hbide.ini"
@@ -284,7 +281,7 @@ FUNCTION hbide_loadINI( oIde, cHbideIni )
                nPart := INI_VIEWS
                EXIT
             OTHERWISE
-               /*
+                /*
                 * If none of the previous sections are valid, do not let it
                 * process. This prevents the HBIDE read a section that is
                 * commented out or is invalid in the file .ini - For example,
@@ -314,23 +311,7 @@ FUNCTION hbide_loadINI( oIde, cHbideIni )
 
                CASE nPart == INI_FILES
                   IF hbide_parseKeyValPair( s, @cKey, @cVal )
-                     a_:= hb_atokens( cVal, "," )
-                     asize( a_, 6 )
-                     DEFAULT a_[ 1 ] TO ""
-                     DEFAULT a_[ 2 ] TO ""
-                     DEFAULT a_[ 3 ] TO ""
-                     DEFAULT a_[ 4 ] TO ""
-                     DEFAULT a_[ 5 ] TO ""
-                     DEFAULT a_[ 6 ] TO "Main"
-                     //
-                     a_[ 1 ] := alltrim( a_[ 1 ] )
-                     a_[ 2 ] := val( alltrim( a_[ 2 ] ) )
-                     a_[ 3 ] := val( alltrim( a_[ 3 ] ) )
-                     a_[ 4 ] := val( alltrim( a_[ 4 ] ) )
-                     a_[ 5 ] := alltrim( a_[ 5 ] )
-                     a_[ 6 ] := alltrim( a_[ 6 ] )
-
-                   * Ignores invalid filenames...
+                     a_:= hbide_parseSourceComponents( cVal )
                      IF !Empty( a_[ 1 ] )
                         aadd( oIde:aIni[ nPart ], a_ )
                      ENDIF
@@ -347,7 +328,7 @@ FUNCTION hbide_loadINI( oIde, cHbideIni )
                   ENDIF
 
                CASE nPart == INI_RECENTPROJECTS .OR. ;
-                    nPart == INI_RECENTFILES
+                  nPart == INI_RECENTFILES
 
                   IF hbide_parseKeyValPair( s, @cKey, @cVal )
                      IF Len( oIde:aIni[ nPart ] ) < 25

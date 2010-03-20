@@ -58,6 +58,10 @@
 
 #define HBIDE_USE_UIC
 
+#define HBIDE_RUN_MODE_INI                        1
+#define HBIDE_RUN_MODE_HBP                        2
+#define HBIDE_RUN_MODE_PRG                        3
+
 #define INI_HBIDE                                 1
 #define INI_PROJECTS                              2
 #define INI_FILES                                 3

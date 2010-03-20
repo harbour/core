@@ -2006,3 +2006,26 @@ FUNCTION FN_DirExtSet( cFileName, cDirNew, cExtNew )
    RETURN hb_FNameMerge( cDir, cName, cExt )
 
 /*----------------------------------------------------------------------*/
+
+FUNCTION hbide_parseSourceComponents( cCompositeSource )
+   LOCAL a_
+
+   a_:= hb_atokens( cCompositeSource, "," )
+   asize( a_, 6 )
+   DEFAULT a_[ 1 ] TO ""
+   DEFAULT a_[ 2 ] TO ""
+   DEFAULT a_[ 3 ] TO ""
+   DEFAULT a_[ 4 ] TO ""
+   DEFAULT a_[ 5 ] TO ""
+   DEFAULT a_[ 6 ] TO "Main"
+   //
+   a_[ 1 ] := alltrim( a_[ 1 ] )
+   a_[ 2 ] := val( alltrim( a_[ 2 ] ) )
+   a_[ 3 ] := val( alltrim( a_[ 3 ] ) )
+   a_[ 4 ] := val( alltrim( a_[ 4 ] ) )
+   a_[ 5 ] := alltrim( a_[ 5 ] )
+   a_[ 6 ] := alltrim( a_[ 6 ] )
+
+   RETURN a_
+
+/*----------------------------------------------------------------------*/
