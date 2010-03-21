@@ -15,7 +15,7 @@
  */
 
 /* TOFIX: Ugly hack to avoid #include "fileio.ch" */
-#define FS_ERROR ( -1 )
+#define F_ERROR ( -1 )
 
 PROCEDURE Main( cCompiler, cLibDir )
    LOCAL aLibs
@@ -53,12 +53,12 @@ PROCEDURE Main( cCompiler, cLibDir )
          { "ace32"     , "HB_WITH_ADS"       , "ace32.dll"                , .F. , "ace32.lib"                ,                        ,                            }, ;
          { "ace32"     , "HB_WITH_ADS"       , "32bit\ace32.dll"          , .F. , "32bit\ace32.lib"          ,                        ,                            }, ;
          { "alleg"     , "HB_WITH_ALLEGRO"   , "..\bin\alleg42.dll"       , .T. , "..\lib\alleg.lib"         ,                        ,                            }, ;
-         { "sde61"     , "HB_WITH_APOLLO"    , "..\sde61.dll"             , .F. , "..\sde61.dll"             ,                        ,                            }, ;
-         { "sde7"      , "HB_WITH_APOLLO"    , "..\sde7.dll"              , .F. , "..\sde7.dll"              ,                        ,                            }, ;
+         { "sde61"     , "HB_WITH_APOLLO"    , "..\sde61.dll"             , .F. ,                            ,                        ,                            }, ;
+         { "sde7"      , "HB_WITH_APOLLO"    , "..\sde7.dll"              , .F. ,                            ,                        ,                            }, ;
          { "blat"      , "HB_WITH_BLAT"      , "..\blat.dll"              , .T. , "..\blat.lib"              ,                        ,                            }, ;
          { "cairo"     , "HB_WITH_CAIRO"     , "..\..\bin\libcairo-2.dll" , .T. , "..\..\lib\cairo.lib"      ,                        , "..\..\lib\libcairo.dll.a" }, ;
-         { "libcurl"   , "HB_WITH_CURL"      , "..\libcurl.dll"           , .T. , "..\libcurl.dll"           ,                        , "..\lib\libcurl.a"         }, ;
-         { "libcurl"   , "HB_WITH_CURL"      , "..\bin\libcurl.dll"       , .T. , "..\bin\libcurl.dll"       ,                        , "..\lib\libcurldll.a"      }, ;
+         { "libcurl"   , "HB_WITH_CURL"      , "..\libcurl.dll"           , .T. ,                            ,                        , "..\lib\libcurl.a"         }, ;
+         { "libcurl"   , "HB_WITH_CURL"      , "..\bin\libcurl.dll"       , .T. ,                            ,                        , "..\lib\libcurldll.a"      }, ;
          { "fbclient"  , "HB_WITH_FIREBIRD"  , "..\bin\fbclient.dll"      , .F. , "..\lib\fbclient_ms.lib"   ,                        ,                            }, ;
          { "FreeImage" , "HB_WITH_FREEIMAGE" , "..\Dist\FreeImage.dll"    , .F. , "..\Dist\FreeImage.lib"    ,                        ,                            }, ;
          { "bgd"       , "HB_WITH_GD"        , "..\bin\bgd.dll"           , .F. , "..\lib\bgd.lib"           ,                        ,                            }, ;
@@ -84,14 +84,17 @@ PROCEDURE Main( cCompiler, cLibDir )
       #define _C_PROC_LIBA    6
 
       hComps := {;
-         "mingw"   => { "lib", ".a"  , {| s, t | hb_FCopy( s, t ) != FS_ERROR }, {| s, t | hb_FCopy( s, t ) != FS_ERROR }, NIL, {| s, t | hb_FCopy( s, t ) != FS_ERROR } }, ;
-         "mingw64" => { "lib", ".a"  , {| s, t | hb_FCopy( s, t ) != FS_ERROR }, NIL, {| s, t | hb_FCopy( s, t ) != FS_ERROR }, {| s, t | hb_FCopy( s, t ) != FS_ERROR } }, ;
-         "msvc"    => { ""   , ".lib", {| s, t | MSVC_implib( s, t, "x86" ) }, {| s, t | hb_FCopy( s, t ) != FS_ERROR }, NIL, NIL }, ;
-         "msvc64"  => { ""   , ".lib", {| s, t | MSVC_implib( s, t, "x64" ) }, NIL, {| s, t | hb_FCopy( s, t ) != FS_ERROR }, NIL }, ;
-         "pocc"    => { ""   , ".lib", {| s, t | hb_processRun( "polib " + FN_Escape( s ) + " /out:" + FN_Escape( t ) ) == 0 }, {| s, t | hb_FCopy( s, t ) != FS_ERROR }, NIL, NIL }, ;
-         "pocc64"  => { ""   , ".lib", {| s, t | hb_processRun( "polib " + FN_Escape( s ) + " /out:" + FN_Escape( t ) ) == 0 }, NIL, {| s, t | hb_FCopy( s, t ) != FS_ERROR }, NIL }, ;
-         "watcom"  => { ""   , ".lib", {| s, t | hb_processRun( "wlib -q -o=" + FN_Escape( t ) + " " + FN_Escape( s ) ) == 0 }, NIL, NIL, NIL }, ;
-         "bcc"     => { ""   , ".lib", {| s, t, lib | hb_processRun( "implib " + iif( lib[ _L_DLLMS ], "-a", "" ) + " " + FN_Escape( t ) + " " + FN_Escape( s ) ) == 0 }, NIL, NIL, NIL } }
+         "mingw"    => { "lib", ".a"  , {| s, t | hb_FCopy( s, t ) != F_ERROR }, {| s, t | hb_FCopy( s, t ) != F_ERROR }, NIL, {| s, t | hb_FCopy( s, t ) != F_ERROR } }, ;
+         "mingw64"  => { "lib", ".a"  , {| s, t | hb_FCopy( s, t ) != F_ERROR }, NIL, {| s, t | hb_FCopy( s, t ) != F_ERROR }, {| s, t | hb_FCopy( s, t ) != F_ERROR } }, ;
+         "msvc"     => { ""   , ".lib", {| s, t | MSVC_implib( s, t, "x86" ) }, {| s, t | hb_FCopy( s, t ) != F_ERROR }, NIL, NIL }, ;
+         "msvc64"   => { ""   , ".lib", {| s, t | MSVC_implib( s, t, "x64" ) }, NIL, {| s, t | hb_FCopy( s, t ) != F_ERROR }, NIL }, ;
+         "msvcia64" => { ""   , ".lib", {| s, t | MSVC_implib( s, t, "ia86" ) }, NIL, NIL, NIL }, ;
+         "msvcarm"  => { ""   , ".lib", {| s, t | MSVC_implib( s, t, "arm" ) }, NIL, NIL, NIL }, ;
+         "xcc"      => { ""   , ".lib", {| s, t | hb_processRun( "xLib " + FN_Escape( s ) + " /out:" + FN_Escape( t ) ) == 0 }, {| s, t | hb_FCopy( s, t ) != F_ERROR }, NIL, NIL }, ;
+         "pocc"     => { ""   , ".lib", {| s, t | hb_processRun( "polib " + FN_Escape( s ) + " /out:" + FN_Escape( t ) ) == 0 }, {| s, t | hb_FCopy( s, t ) != F_ERROR }, NIL, NIL }, ;
+         "pocc64"   => { ""   , ".lib", {| s, t | hb_processRun( "polib " + FN_Escape( s ) + " /out:" + FN_Escape( t ) ) == 0 }, NIL, {| s, t | hb_FCopy( s, t ) != F_ERROR }, NIL }, ;
+         "watcom"   => { ""   , ".lib", {| s, t | hb_processRun( "wlib -q -o=" + FN_Escape( t ) + " " + FN_Escape( s ) ) == 0 }, NIL, NIL, NIL }, ;
+         "bcc"      => { ""   , ".lib", {| s, t, lib | hb_processRun( "implib " + iif( lib[ _L_DLLMS ], "-a", "" ) + " " + FN_Escape( t ) + " " + FN_Escape( s ) ) == 0 }, NIL, NIL, NIL } }
 
       IF Lower( cCompiler ) $ hComps
 
@@ -152,7 +155,7 @@ STATIC FUNCTION MSVC_implib( s, t, cMode )
 
    IF hb_processRun( "dumpbin -exports " + FN_Escape( s ),, @cExports ) == 0
 
-      cFuncList := "LIBRARY " + FN_NameGet( s ) + hb_osNewLine() +;
+      cFuncList := "LIBRARY " + Chr( 34 ) + FN_NameExtGet( s ) + Chr( 34 ) + hb_osNewLine() +;
                    "EXPORTS" + hb_osNewLine()
 
       cExports := StrTran( cExports, Chr( 13 ) + Chr( 10 ), Chr( 10 ) )
@@ -172,13 +175,13 @@ STATIC FUNCTION MSVC_implib( s, t, cMode )
       NEXT
 
       fhnd := hb_FTempCreateEx( @cDef )
-      IF fhnd != FS_ERROR
+      IF fhnd != F_ERROR
          FWrite( fhnd, cFuncList )
          FClose( fhnd )
 
          lSuccess := ( hb_processRun( "lib -nologo -machine:" + cMode + " -def:" + FN_Escape( cDef ) + " -out:" + FN_Escape( t ) ) == 0 )
 
-         FErase( cFuncList )
+         FErase( cDef )
       ENDIF
    ENDIF
 
@@ -187,12 +190,12 @@ STATIC FUNCTION MSVC_implib( s, t, cMode )
 STATIC FUNCTION FN_Escape( cFileName )
    RETURN Chr( 34 ) + cFileName + Chr( 34 )
 
-STATIC FUNCTION FN_NameGet( cFileName )
-   LOCAL cName
+STATIC FUNCTION FN_NameExtGet( cFileName )
+   LOCAL cName, cExt
 
-   hb_FNameSplit( cFileName,, @cName )
+   hb_FNameSplit( cFileName,, @cName, @cExt )
 
-   RETURN cName
+   RETURN hb_FNameMerge( NIL, cName, cExt )
 
 STATIC FUNCTION DirAddPathSep( cDir )
 

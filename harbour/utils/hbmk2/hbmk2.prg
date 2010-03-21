@@ -678,6 +678,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    LOCAL cBin_Res
    LOCAL cBin_Lib
    LOCAL cBin_Dyn
+   LOCAL bBlk_ImpLib
    LOCAL cPath_CompC
    LOCAL nErrorLevel := 0
    LOCAL tmp, tmp1, tmp2, tmp3, array
@@ -698,6 +699,9 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    LOCAL lAcceptLDFlag := .F.
    LOCAL lAcceptLDClipper := .F.
    LOCAL lHarbourInfo := .F.
+   LOCAL lMakeImpLib := .F.
+   LOCAL cMakeImpLibDLL := NIL
+   LOCAL cMakeImpLibLib := NIL
 
    LOCAL cWorkDir := NIL
 
@@ -1740,6 +1744,16 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
          OutStd( l_cHB_INC_INSTALL )
 
+      CASE Left( cParamL, Len( "-mkimplib=" ) ) == "-mkimplib="
+
+         lStopAfterInit := .T.
+         lMakeImpLib := .T.
+         cMakeImpLibLib := SubStr( cParam, Len( "-mkimplib=" ) + 1 )
+
+      CASE lMakeImpLib .AND. Empty( cMakeImpLibDLL )
+
+         cMakeImpLibDLL := PathProc( cParam, aParam[ _PAR_cFileName ] )
+
       CASE Left( cParamL, Len( "-jobs=" ) ) == "-jobs="
 
          cParam := ArchCompFilter( hbmk, SubStr( cParam, Len( "-jobs=" ) + 1 ) )
@@ -2240,7 +2254,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       ENDIF
    ENDIF
 
-   IF ! lStopAfterInit .AND. ! lStopAfterHarbour
+   IF ( ! lStopAfterInit .AND. ! lStopAfterHarbour ) .OR. lMakeImpLib
 
       IF hbmk[ _HBMK_cGT ] != NIL .AND. hbmk[ _HBMK_cGT ] == hbmk[ _HBMK_cGTDEFAULT ]
          hbmk[ _HBMK_cGT ] := NIL
@@ -2611,6 +2625,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          cOpt_Dyn := "-shared -o {OD} {LO} {FD} {DL} {LS}"
          cBin_Link := cBin_CompC
          cOpt_Link := "{LO} {LA} {LS} {FL} {DL}"
+         bBlk_ImpLib := {| s, t | hb_FCopy( s, t ) != F_ERROR }
          cLibPathPrefix := "-L"
          cLibPathSep := " "
          cLibLibExt := ".a"
@@ -2743,6 +2758,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          cOpt_Dyn := "-shared -o {OD} {LO} {LL} {LB} {FD} {DL} {LS}"
          cBin_Link := cBin_CompC
          cOpt_Link := "{LO} {LA} {FL} {DL}"
+         bBlk_ImpLib := {| s, t | hb_FCopy( s, t ) != F_ERROR }
          cLibPathPrefix := "-L"
          cLibPathSep := " "
          IF hbmk[ _HBMK_cCOMP ] == "gccomf"
@@ -2991,6 +3007,9 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          ENDIF
          cBin_Lib := "wlib" + cCCEXT
          cOpt_Lib := "-q {FA} {OL} {LO}{SCRIPT}"
+         IF hbmk[ _HBMK_cPLAT ] $ "win|os2"
+            bBlk_ImpLib := {| s, t | win_implib_command( cBin_Lib + " -q -o={OL} {ID}", nCmd_Esc, s, t ) }
+         ENDIF
          cLibLibExt := cLibExt
          cLibObjPrefix := "-+ "
          IF hbmk[ _HBMK_lMT ] .AND. hbmk[ _HBMK_cPLAT ] $ "win|os2"
@@ -3101,6 +3120,8 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          cBin_Dyn := cBin_Link
          cOpt_Link := '-Gn -Tpe -L{DL} {FL} ' + iif( hbmk[ _HBMK_lGUI ], "c0w32.obj", "c0x32.obj" ) + " {LO}, {OE}, " + iif( hbmk[ _HBMK_lMAP ], "{OM}", "nul" ) + ", {LL} {LB} cw32mt.lib import32.lib,, {LS}{SCRIPT}"
          cOpt_Dyn  := '-Gn -Tpd -L{DL} {FD} ' +                          "c0d32.obj"                + " {LO}, {OD}, " + iif( hbmk[ _HBMK_lMAP ], "{OM}", "nul" ) + ", {LL} {LB} cw32mt.lib import32.lib,, {LS}{SCRIPT}"
+         /* TODO: Add support for idiotic BCC -a option. */
+         bBlk_ImpLib := {| s, t | win_implib_command( "implib {FI} {OL} {ID}", nCmd_Esc, s, t, "" ) }
          cLibPathPrefix := ""
          cLibPathSep := ";"
          IF hbmk[ _HBMK_lMAP ]
@@ -3243,6 +3264,17 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          cOpt_CompC += " {FC} {LC}"
          cOptIncMask := "-I{DI}"
          cOpt_Link := "-nologo -out:{OE} {LO} {DL} {FL} {LL} {LB} {LS}"
+         DO CASE
+         CASE hbmk[ _HBMK_cCOMP ] == "msvc"     ; tmp := "-machine:x86"
+         CASE hbmk[ _HBMK_cCOMP ] == "msvc64"   ; tmp := "-machine:x64"
+         CASE hbmk[ _HBMK_cCOMP ] == "msvcia64" ; tmp := "-machine:ia64"
+         CASE hbmk[ _HBMK_cCOMP ] == "icc"      ; tmp := "-machine:x86"
+         CASE hbmk[ _HBMK_cCOMP ] == "iccia64"  ; tmp := "-machine:ia64"
+         CASE hbmk[ _HBMK_cCOMP ] == "msvcarm"  ; tmp := "-machine:xarm"
+         CASE hbmk[ _HBMK_cCOMP ] == "msvcmips" ; tmp := "-machine:mips"
+         CASE hbmk[ _HBMK_cCOMP ] == "msvcsh"   ; tmp := "-machine:sh5"
+         ENDCASE
+         bBlk_ImpLib := {| s, t | win_implib_command_msvc( cBin_Lib + " -nologo {FI} -def:{ID} -out:{OL}", nCmd_Esc, s, t, tmp ) }
          cLibPathPrefix := "-libpath:"
          cLibPathSep := " "
          IF hbmk[ _HBMK_lMAP ]
@@ -3332,10 +3364,10 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          cObjExt := ".obj"
          cLibLibExt := cLibExt
          IF hbmk[ _HBMK_cCOMP ] == "xcc"
-            cBin_CompC := "xcc.exe"
-            cBin_Lib := "xlib.exe"
-            cBin_Link := "xlink.exe"
-            cBin_Res := "xrc.exe"
+            cBin_CompC := "xCC.exe"
+            cBin_Lib := "xLib.exe"
+            cBin_Link := "xLink.exe"
+            cBin_Res := "xRC.exe"
          ELSE
             cBin_CompC := "pocc.exe"
             cBin_Lib := "polib.exe"
@@ -3358,6 +3390,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          ENDIF
          cOptIncMask := "-I{DI}"
          cOpt_Dyn := "{FD} -dll -out:{OD} {DL} {LO} {LL} {LB} {LS}"
+         bBlk_ImpLib := {| s, t | win_implib_command( cBin_Lib + " {ID} -out:{OL}", nCmd_Esc, s, t ) }
          IF hbmk[ _HBMK_cPLAT ] == "wce"
             AAdd( hbmk[ _HBMK_aOPTC ], "-DUNICODE" )
             AAdd( hbmk[ _HBMK_aOPTC ], "-D_WINCE" ) /* Required by pocc Windows headers */
@@ -3558,6 +3591,21 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          ELSE
             AAdd( hbmk[ _HBMK_aOPTC ], "-DHB_DYNLIB" )
          ENDIF
+      ENDIF
+   ENDIF
+
+   IF lMakeImpLib
+      IF ISBLOCK( bBlk_ImpLib )
+         IF ! Empty( cMakeImpLibDLL ) .AND. ! Empty( cMakeImpLibLib )
+            hbmk_OutStd( hbmk, I_( "Creating import library..." ) )
+            IF ! Eval( bBlk_ImpLib, cMakeImpLibDLL, cMakeImpLibLib )
+               hbmk_OutErr( hbmk, I_( "Error: Creating import libraries failed." ) )
+            ENDIF
+         ELSE
+            hbmk_OutErr( hbmk, I_( "Error: Missing parameter for import library creation." ) )
+         ENDIF
+      ELSE
+         hbmk_OutErr( hbmk, I_( "Error: Creating import libraries is not supported for this platform or compiler." ) )
       ENDIF
    ENDIF
 
@@ -7634,6 +7682,67 @@ STATIC FUNCTION GenHBL( hbmk, aFiles, cFileOut, lEmpty )
 
    RETURN lRetVal
 
+STATIC FUNCTION win_implib_command( cCommand, nCmd_Esc, s, t, f )
+
+   DEFAULT f TO ""
+
+   cCommand := StrTran( cCommand, "{FI}", f )
+   cCommand := StrTran( cCommand, "{ID}", FN_Escape( s, nCmd_Esc ) )
+   cCommand := StrTran( cCommand, "{OL}", FN_Escape( t, nCmd_Esc ) )
+
+   RETURN hb_processRun( cCommand ) == 0
+
+STATIC FUNCTION win_implib_command_msvc( cCommand, nCmd_Esc, s, t, f )
+   LOCAL lSuccess := .F.
+
+   LOCAL cExports
+   LOCAL fhnd
+   LOCAL cDef
+   LOCAL cLine
+   LOCAL tmp
+   LOCAL aCols
+
+   LOCAL cFuncList
+
+   LOCAL cCommandDump
+
+   cCommandDump := "dumpbin -exports {ID}"
+   cCommandDump := StrTran( cCommandDump, "{ID}", FN_Escape( s, nCmd_Esc ) )
+
+   IF hb_processRun( cCommandDump,, @cExports ) == 0
+
+      cFuncList := "LIBRARY " + Chr( 34 ) + FN_NameExtGet( s ) + Chr( 34 ) + hb_osNewLine() +;
+                   "EXPORTS" + hb_osNewLine()
+
+      cExports := StrTran( cExports, Chr( 13 ) + Chr( 10 ), Chr( 10 ) )
+
+      tmp := At( "ordinal hint", cExports )
+      IF tmp > 0
+         cExports := SubStr( cExports, tmp + Len( "ordinal hint" ) )
+      ENDIF
+
+      FOR EACH cLine IN hb_ATokens( cExports, Chr( 10 ) )
+         IF ! Empty( cLine )
+            aCols := hb_ATokens( cLine )
+            IF Len( aCols ) >= 4
+               cFuncList += aCols[ 4 ] + hb_osNewLine()
+            ENDIF
+         ENDIF
+      NEXT
+
+      fhnd := hb_FTempCreateEx( @cDef )
+      IF fhnd != F_ERROR
+         FWrite( fhnd, cFuncList )
+         FClose( fhnd )
+
+         lSuccess := win_implib_command( cCommand, nCmd_Esc, cDef, t, f )
+
+         FErase( cDef )
+      ENDIF
+   ENDIF
+
+   RETURN lSuccess
+
 #define _VCS_UNKNOWN            0
 #define _VCS_SVN                1
 #define _VCS_GIT                2
@@ -8474,6 +8583,8 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-rtlink"           , "" },;
       { "-blinker"          , "" },;
       { "-exospace"         , I_( "emulate Clipper compatible linker behavior\ncreate link/copy hbmk2 to rtlink/blinker/exospace for the same effect" ) },;
+      NIL,;
+      { "-mkimplib=<l> <d>" , I_( "convert <d> .dll into <l> import libaray (experimental)" ) },;
       NIL,;
       { "-hbmake=<file>"    , I_( "convert hbmake project file to .hbp file (experimental)" ) },;
       { "-xbp=<file>"       , I_( "convert .xbp (xbuild) project file to .hbp file (experimental)" ) },;

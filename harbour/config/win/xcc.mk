@@ -10,7 +10,7 @@ LIB_EXT := .lib
 
 HB_DYN_COPT := -DHB_DYNLIB
 
-CC := xcc.exe
+CC := xCC.exe
 CC_IN := -c
 CC_OUT := -Fo
 
@@ -41,7 +41,7 @@ ifeq ($(HB_BUILD_DEBUG),yes)
    CFLAGS += -Zi
 endif
 
-LD := xlink.exe
+LD := xLink.exe
 LD_OUT := -out:
 
 LIBPATHS := -libpath:$(LIB_DIR)
@@ -49,7 +49,7 @@ LDLIBS := $(foreach lib,$(HB_USER_LIBS) $(LIBS) $(SYSLIBS),$(lib)$(LIB_EXT))
 
 LDFLAGS += $(LIBPATHS)
 
-AR := xlib.exe
+AR := xLib.exe
 AR_RULE = $(AR) $(ARFLAGS) $(HB_AFLAGS) $(HB_USER_AFLAGS) -out:$(LIB_DIR)/$@ $(^F)
 
 DY := $(LD)
