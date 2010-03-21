@@ -1019,10 +1019,10 @@ METHOD New( cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabS
    nWndCol     := Max( 0, nWndCol  )
 
    ::nFirstRow := Max( 1, nTextRow - nWndRow )
-   ::nFirstCol := Max( 1, nTextCol - nWndCol )
+   ::nFirstCol := Max( 1, nTextCol - nWndCol + 1 )
 
    ::nRow := Max( 1, Min( nTextRow, ::naTextLen ) )
-   ::nCol := Max( 1, Min( Len( ::aText[ ::nRow ]:cText ), nTextCol + 1 ) )
+   ::nCol := Max( 1, nTextCol + 1 )
 
    // extra sanitization over max bounds
    IF ::nFirstRow >  ::naTextLen
