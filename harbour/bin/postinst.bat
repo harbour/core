@@ -79,7 +79,7 @@ if "%HB_SHELL%" == "nt" goto _SH_NT
 
 :_NO_ICON_BIN
 
-   if "%HB_BUILD_IMPLIB%" == "yes" call "%~dp0hb-mkimp.bat"
+   if "%HB_BUILD_IMPLIB%" == "yes" "%HB_HOST_BIN_DIR%\hbrun" --hb:gtcgi "%~dp0hb-mkimp.prg"
 
 :_NO_IMPLIB
 

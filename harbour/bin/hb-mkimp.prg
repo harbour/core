@@ -1,111 +1,139 @@
-@rem
-@rem $Id$
-@rem
+/*
+ * $Id$
+ */
 
-@echo off
-
-rem ---------------------------------------------------------------
-rem Copyright 2009-2010 Viktor Szakats (harbour.01 syenar.hu)
-rem See COPYING for licensing terms.
-rem
-rem Create import libs for various Windows compilers
-rem
-rem This script requires:
-rem    - C compiler in PATH
-rem    - HB_COMPILER and HB_LIB_INSTALL envvars set
-rem    - HB_WITH_* envvars pointing to installed 3rd party _headers_
-rem ---------------------------------------------------------------
+/*
+ * Copyright 2009-2010 Viktor Szakats (harbour.01 syenar.hu)
+ * See COPYING for licensing terms.
+ *
+ * Create import libs for various Windows compilers
+ *
+ * This script requires:
+ *    - C compiler in PATH
+ *    - HB_COMPILER and HB_LIB_INSTALL envvars set
+ *    - HB_WITH_* envvars pointing to installed 3rd party _headers_
+ */
 
 /* TOFIX: Ugly hack to avoid #include "fileio.ch" */
 #define FS_ERROR ( -1 )
 
-LOCAL cLibDir
+PROCEDURE Main( cCompiler, cLibDir )
+   LOCAL aLibs
+   LOCAL hComps
 
-LOCAL aLibs
-LOCAL aComps
+   LOCAL lib
+   LOCAL comp
 
-IF ! Empty( cLibDir := GetEnv( "HB_LIB_INSTALL" ) )
+   LOCAL cBase
+   LOCAL cSource
+   LOCAL cTarget
+   LOCAL lDone
 
-   OutStd( "! Making import libs...", hb_osNewLine() )
+   IF ! hb_isString( cCompiler )
+      cCompiler := GetEnv( "HB_COMPILER" )
+   ENDIF
+   IF ! hb_isString( cLibDir )
+      cLibDir := GetEnv( "HB_LIB_INSTALL" )
+   ENDIF
 
-   #define _L_NAME     1
-   #define _L_BASE     2
-   #define _L_DLL      3
-   #define _L_DLLMS    4
-   #define _L_LIBMS    5
-   #define _L_LIBMS64  6
-   #define _L_LIBA     7
+   IF ! Empty( cLibDir )
 
-   aLibs := {;
-      { "ace32"     , "HB_WITH_ADS"       , "Redistribute\ace32.dll"   , .F. , "Redistribute\ace32.lib"   ,                        ,                            }, ;
-      { "ace32"     , "HB_WITH_ADS"       , "ace32.dll"                , .F. , "ace32.lib"                ,                        ,                            }, ;
-      { "ace32"     , "HB_WITH_ADS"       , "32bit\ace32.dll"          , .F. , "32bit\ace32.lib"          ,                        ,                            }, ;
-      { "alleg"     , "HB_WITH_ALLEGRO"   , "..\bin\alleg42.dll"       , .T. , "..\lib\alleg.lib"         ,                        ,                            }, ;
-      { "sde61"     , "HB_WITH_APOLLO"    , "..\sde61.dll"             , .F. , "..\sde61.dll"             ,                        ,                            }, ;
-      { "sde7"      , "HB_WITH_APOLLO"    , "..\sde7.dll"              , .F. , "..\sde7.dll"              ,                        ,                            }, ;
-      { "blat"      , "HB_WITH_BLAT"      , "..\blat.dll"              , .T. , "..\blat.lib"              ,                        ,                            }, ;
-      { "cairo"     , "HB_WITH_CAIRO"     , "..\..\bin\libcairo-2.dll" , .T. , "..\..\lib\cairo.lib"      ,                        , "..\..\lib\libcairo.dll.a" }, ;
-      { "libcurl"   , "HB_WITH_CURL"      , "..\libcurl.dll"           , .T. , "..\libcurl.dll"           ,                        , "..\lib\libcurl.a"         }, ;
-      { "libcurl"   , "HB_WITH_CURL"      , "..\bin\libcurl.dll"       , .T. , "..\bin\libcurl.dll"       ,                        , "..\lib\libcurldll.a"      }, ;
-      { "fbclient"  , "HB_WITH_FIREBIRD"  , "..\bin\fbclient.dll"      , .F. , "..\lib\fbclient_ms.lib"   ,                        ,                            }, ;
-      { "FreeImage" , "HB_WITH_FREEIMAGE" , "..\Dist\FreeImage.dll"    , .F. , "..\Dist\FreeImage.lib"    ,                        ,                            }, ;
-      { "bgd"       , "HB_WITH_GD"        , "..\bin\bgd.dll"           , .F. , "..\lib\bgd.lib"           ,                        ,                            }, ;
-      { "libhpdf"   , "HB_WITH_LIBHARU"   , "..\libhpdf.dll"           , .F. , "..\libhpdf.lib"           ,                        ,                            }, ;
-      { "libhpdf"   , "HB_WITH_LIBHARU"   , "..\lib_dll\libhpdf.dll"   , .F. , "..\lib_dll\libhpdf.lib"   ,                        ,                            }, ;
-      { "libmysql"  , "HB_WITH_MYSQL"     , "..\bin\libmySQL.dll"      , .F. , "..\lib\opt\libmySQL.lib"  ,                        ,                            }, ;
-      { "ociliba"   , "HB_WITH_OCILIB"    , "..\lib32\ociliba.dll"     , .F. , "..\lib32\ociliba.lib"     , "..\lib64\ociliba.lib" , "..\lib32\libociliba.a"    }, ;
-      { "ocilibm"   , "HB_WITH_OCILIB"    , "..\lib32\ocilibm.dll"     , .F. , "..\lib32\ocilibm.lib"     , "..\lib64\ocilibm.lib" , "..\lib32\libocilibm.a"    }, ;
-      { "ocilibw"   , "HB_WITH_OCILIB"    , "..\lib32\ocilibw.dll"     , .F. , "..\lib32\ocilibw.lib"     , "..\lib64\ocilibw.lib" , "..\lib32\libocilibw.a"    }, ;
-      { "libeay32"  , "HB_WITH_OPENSSL"   , "..\out32dll\libeay32.dll" , .T. , "..\out32dll\libeay32.lib" ,                        ,                            }, ;
-      { "ssleay32"  , "HB_WITH_OPENSSL"   , "..\out32dll\ssleay32.dll" , .T. , "..\out32dll\ssleay32.lib" ,                        ,                            }, ;
-      { "libeay32"  , "HB_WITH_OPENSSL"   , "..\dll\libeay32.dll"      , .T. , "..\dll\libeay32.lib"      ,                        ,                            }, ;
-      { "ssleay32"  , "HB_WITH_OPENSSL"   , "..\dll\ssleay32.dll"      , .T. , "..\dll\ssleay32.lib"      ,                        ,                            }, ;
-      { "libeay32"  , "HB_WITH_OPENSSL"   , "..\libeay32.dll"          , .T. , "..\libeay32.lib"          ,                        ,                            }, ;
-      { "ssleay32"  , "HB_WITH_OPENSSL"   , "..\ssleay32.dll"          , .T. , "..\ssleay32.lib"          ,                        ,                            }, ;
-      { "libpq"     , "HB_WITH_PGSQL"     , "..\lib\libpq.dll"         , .T. , "..\lib\libpq.lib"         ,                        ,                            } }
+      OutStd( "! Making import libs...", hb_osNewLine() )
 
-   #define _C_LIBPREFIX    1
-   #define _C_LIBEXT       2
-   #define _C_PROC_DLL     3
-   #define _C_PROC_LIBMS   4
-   #define _C_PROC_LIBMS64 5
-   #define _C_PROC_LIBA    6
+      #define _L_NAME     1
+      #define _L_BASE     2
+      #define _L_DLL      3
+      #define _L_DLLMS    4 /* Controls BCC's iditoic -a implib flag. */
+      #define _L_LIBMS    5
+      #define _L_LIBMS64  6
+      #define _L_LIBA     7
 
-   hComps := {;
-      "mingw"   => { "lib", ".a"  , {| s, t | hb_fsCopy( s, t ) != FS_ERROR }, {| s, t | hb_fsCopy( s, t ) != FS_ERROR }, NIL, {| s, t | hb_fsCopy( s, t ) != FS_ERROR } }, ;
-      "mingw64" => { "lib", ".a"  , {| s, t | hb_fsCopy( s, t ) != FS_ERROR }, NIL, {| s, t | hb_fsCopy( s, t ) != FS_ERROR }, {| s, t | hb_fsCopy( s, t ) != FS_ERROR } }, ;
-      "msvc"    => { ""   , ".lib", {| s, t | MSVC_implib( s, t, "x86" ) }, {| s, t | hb_fsCopy( s, t ) != FS_ERROR }, NIL, NIL }, ;
-      "msvc64"  => { ""   , ".lib", {| s, t | MSVC_implib( s, t, "x64" ) }, NIL, {| s, t | hb_fsCopy( s, t ) != FS_ERROR }, NIL }, ;
-      "pocc"    => { ""   , ".lib", {| s, t | hb_processRun( "polib " + FN_Escape( s ) + " /out:" + FN_Escape( t ) ) == 0 }, {| s, t | hb_fsCopy( s, t ) != FS_ERROR }, NIL, NIL }, ;
-      "pocc64"  => { ""   , ".lib", {| s, t | hb_processRun( "polib " + FN_Escape( s ) + " /out:" + FN_Escape( t ) ) == 0 }, NIL, {| s, t | hb_fsCopy( s, t ) != FS_ERROR }, NIL }, ;
-      "watcom"  => { ""   , ".lib", {| s, t | hb_processRun( "wlib -q -o=" + FN_Escape( t ) + " " + FN_Escape( s ) ) == 0 }, NIL, NIL, NIL }, ;
-      "bcc"     => { ""   , ".lib", {| s, t, lib | hb_processRun( "implib " + iif( lib[ _L_DLLMS ], "-a", "" ) + " " + FN_Escape( t ) + " " + FN_Escape( s ) ) == 0 }, NIL, NIL, NIL } }
+      aLibs := {;
+         { "ace32"     , "HB_WITH_ADS"       , "Redistribute\ace32.dll"   , .F. , "Redistribute\ace32.lib"   ,                        ,                            }, ;
+         { "ace32"     , "HB_WITH_ADS"       , "ace32.dll"                , .F. , "ace32.lib"                ,                        ,                            }, ;
+         { "ace32"     , "HB_WITH_ADS"       , "32bit\ace32.dll"          , .F. , "32bit\ace32.lib"          ,                        ,                            }, ;
+         { "alleg"     , "HB_WITH_ALLEGRO"   , "..\bin\alleg42.dll"       , .T. , "..\lib\alleg.lib"         ,                        ,                            }, ;
+         { "sde61"     , "HB_WITH_APOLLO"    , "..\sde61.dll"             , .F. , "..\sde61.dll"             ,                        ,                            }, ;
+         { "sde7"      , "HB_WITH_APOLLO"    , "..\sde7.dll"              , .F. , "..\sde7.dll"              ,                        ,                            }, ;
+         { "blat"      , "HB_WITH_BLAT"      , "..\blat.dll"              , .T. , "..\blat.lib"              ,                        ,                            }, ;
+         { "cairo"     , "HB_WITH_CAIRO"     , "..\..\bin\libcairo-2.dll" , .T. , "..\..\lib\cairo.lib"      ,                        , "..\..\lib\libcairo.dll.a" }, ;
+         { "libcurl"   , "HB_WITH_CURL"      , "..\libcurl.dll"           , .T. , "..\libcurl.dll"           ,                        , "..\lib\libcurl.a"         }, ;
+         { "libcurl"   , "HB_WITH_CURL"      , "..\bin\libcurl.dll"       , .T. , "..\bin\libcurl.dll"       ,                        , "..\lib\libcurldll.a"      }, ;
+         { "fbclient"  , "HB_WITH_FIREBIRD"  , "..\bin\fbclient.dll"      , .F. , "..\lib\fbclient_ms.lib"   ,                        ,                            }, ;
+         { "FreeImage" , "HB_WITH_FREEIMAGE" , "..\Dist\FreeImage.dll"    , .F. , "..\Dist\FreeImage.lib"    ,                        ,                            }, ;
+         { "bgd"       , "HB_WITH_GD"        , "..\bin\bgd.dll"           , .F. , "..\lib\bgd.lib"           ,                        ,                            }, ;
+         { "libhpdf"   , "HB_WITH_LIBHARU"   , "..\libhpdf.dll"           , .F. , "..\libhpdf.lib"           ,                        ,                            }, ;
+         { "libhpdf"   , "HB_WITH_LIBHARU"   , "..\lib_dll\libhpdf.dll"   , .F. , "..\lib_dll\libhpdf.lib"   ,                        ,                            }, ;
+         { "libmysql"  , "HB_WITH_MYSQL"     , "..\bin\libmySQL.dll"      , .F. , "..\lib\opt\libmySQL.lib"  ,                        ,                            }, ;
+         { "ociliba"   , "HB_WITH_OCILIB"    , "..\lib32\ociliba.dll"     , .F. , "..\lib32\ociliba.lib"     , "..\lib64\ociliba.lib" , "..\lib32\libociliba.a"    }, ;
+         { "ocilibm"   , "HB_WITH_OCILIB"    , "..\lib32\ocilibm.dll"     , .F. , "..\lib32\ocilibm.lib"     , "..\lib64\ocilibm.lib" , "..\lib32\libocilibm.a"    }, ;
+         { "ocilibw"   , "HB_WITH_OCILIB"    , "..\lib32\ocilibw.dll"     , .F. , "..\lib32\ocilibw.lib"     , "..\lib64\ocilibw.lib" , "..\lib32\libocilibw.a"    }, ;
+         { "libeay32"  , "HB_WITH_OPENSSL"   , "..\out32dll\libeay32.dll" , .T. , "..\out32dll\libeay32.lib" ,                        ,                            }, ;
+         { "ssleay32"  , "HB_WITH_OPENSSL"   , "..\out32dll\ssleay32.dll" , .T. , "..\out32dll\ssleay32.lib" ,                        ,                            }, ;
+         { "libeay32"  , "HB_WITH_OPENSSL"   , "..\dll\libeay32.dll"      , .T. , "..\dll\libeay32.lib"      ,                        ,                            }, ;
+         { "ssleay32"  , "HB_WITH_OPENSSL"   , "..\dll\ssleay32.dll"      , .T. , "..\dll\ssleay32.lib"      ,                        ,                            }, ;
+         { "libeay32"  , "HB_WITH_OPENSSL"   , "..\libeay32.dll"          , .T. , "..\libeay32.lib"          ,                        ,                            }, ;
+         { "ssleay32"  , "HB_WITH_OPENSSL"   , "..\ssleay32.dll"          , .T. , "..\ssleay32.lib"          ,                        ,                            }, ;
+         { "libpq"     , "HB_WITH_PGSQL"     , "..\lib\libpq.dll"         , .T. , "..\lib\libpq.lib"         ,                        ,                            } }
 
-   IF GetEnv( "HB_COMPILER" ) $ hComps
+      #define _C_LIBPREFIX    1
+      #define _C_LIBEXT       2
+      #define _C_PROC_DLL     3
+      #define _C_PROC_LIBMS   4
+      #define _C_PROC_LIBMS64 5
+      #define _C_PROC_LIBA    6
 
-      comp := hb_HGet( hComps, GetEnv( "HB_COMPILER" ) )
+      hComps := {;
+         "mingw"   => { "lib", ".a"  , {| s, t | hb_FCopy( s, t ) != FS_ERROR }, {| s, t | hb_FCopy( s, t ) != FS_ERROR }, NIL, {| s, t | hb_FCopy( s, t ) != FS_ERROR } }, ;
+         "mingw64" => { "lib", ".a"  , {| s, t | hb_FCopy( s, t ) != FS_ERROR }, NIL, {| s, t | hb_FCopy( s, t ) != FS_ERROR }, {| s, t | hb_FCopy( s, t ) != FS_ERROR } }, ;
+         "msvc"    => { ""   , ".lib", {| s, t | MSVC_implib( s, t, "x86" ) }, {| s, t | hb_FCopy( s, t ) != FS_ERROR }, NIL, NIL }, ;
+         "msvc64"  => { ""   , ".lib", {| s, t | MSVC_implib( s, t, "x64" ) }, NIL, {| s, t | hb_FCopy( s, t ) != FS_ERROR }, NIL }, ;
+         "pocc"    => { ""   , ".lib", {| s, t | hb_processRun( "polib " + FN_Escape( s ) + " /out:" + FN_Escape( t ) ) == 0 }, {| s, t | hb_FCopy( s, t ) != FS_ERROR }, NIL, NIL }, ;
+         "pocc64"  => { ""   , ".lib", {| s, t | hb_processRun( "polib " + FN_Escape( s ) + " /out:" + FN_Escape( t ) ) == 0 }, NIL, {| s, t | hb_FCopy( s, t ) != FS_ERROR }, NIL }, ;
+         "watcom"  => { ""   , ".lib", {| s, t | hb_processRun( "wlib -q -o=" + FN_Escape( t ) + " " + FN_Escape( s ) ) == 0 }, NIL, NIL, NIL }, ;
+         "bcc"     => { ""   , ".lib", {| s, t, lib | hb_processRun( "implib " + iif( lib[ _L_DLLMS ], "-a", "" ) + " " + FN_Escape( t ) + " " + FN_Escape( s ) ) == 0 }, NIL, NIL, NIL } }
 
-      FOR EACH lib IN aLibs
-         lDone := .F.
-         IF ! Empty( cBase := GetEnv( lib[ _L_BASE ] ) )
-            cTarget := DirAddPathSep( cLibDir ) + comp[ _C_LIBPREFIX ] + lib[ _L_NAME ] + comp[ _C_LIBEXT ]
-            IF ! lDone .AND. ! Empty( comp[ _C_PROC_LIBA ] )
-               lDone := Eval( comp[ _C_PROC_LIBA ], DirAddPathSep( cBase ) + lib[ _L_LIBA ], cTarget, lib )
+      IF Lower( cCompiler ) $ hComps
+
+         comp := hb_HGet( hComps, Lower( cCompiler ) )
+
+         FOR EACH lib IN aLibs
+            lDone := .F.
+            cSource := ""
+            IF ! Empty( cBase := GetEnv( lib[ _L_BASE ] ) )
+               cTarget := DirAddPathSep( cLibDir ) + comp[ _C_LIBPREFIX ] + lib[ _L_NAME ] + comp[ _C_LIBEXT ]
+               IF ! lDone .AND. ! Empty( comp[ _C_PROC_LIBA ] ) .AND. ! Empty( lib[ _L_LIBA ] )
+                  cSource := DirAddPathSep( cBase ) + lib[ _L_LIBA ]
+                  IF hb_FileExists( cSource )
+                     lDone := Eval( comp[ _C_PROC_LIBA ], cSource, cTarget, lib )
+                  ENDIF
+               ENDIF
+               IF ! lDone .AND. ! Empty( comp[ _C_PROC_LIBMS64 ] ) .AND. ! Empty( lib[ _L_LIBMS64 ] )
+                  cSource := DirAddPathSep( cBase ) + lib[ _L_LIBMS64 ]
+                  IF hb_FileExists( cSource )
+                     lDone := Eval( comp[ _C_PROC_LIBMS64 ], cSource, cTarget, lib )
+                  ENDIF
+               ENDIF
+               IF ! lDone .AND. ! Empty( comp[ _C_PROC_LIBMS ] ) .AND. ! Empty( lib[ _L_LIBMS ] )
+                  cSource := DirAddPathSep( cBase ) + lib[ _L_LIBMS ]
+                  IF hb_FileExists( cSource )
+                     lDone := Eval( comp[ _C_PROC_LIBMS ], cSource, cTarget, lib )
+                  ENDIF
+               ENDIF
+               IF ! lDone .AND. ! Empty( comp[ _C_PROC_DLL ] ) .AND. ! Empty( lib[ _L_DLL ] )
+                  cSource := DirAddPathSep( cBase ) + lib[ _L_DLL ]
+                  IF hb_FileExists( cSource )
+                     lDone := Eval( comp[ _C_PROC_DLL ], cSource, cTarget, lib )
+                  ENDIF
+               ENDIF
             ENDIF
-            IF ! lDone .AND. ! Empty( comp[ _C_PROC_LIBMS64 ] )
-               lDone := Eval( comp[ _C_PROC_LIBMS64 ], DirAddPathSep( cBase ) + lib[ _L_LIBMS64 ], cTarget, lib )
+            IF lDone
+               OutStd( "! Import library created: " + cTarget )
+               OutStd( " <= " + cSource )
+               OutStd( hb_osNewLine() )
             ENDIF
-            IF ! lDone .AND. ! Empty( comp[ _C_PROC_LIBMS ] )
-               lDone := Eval( comp[ _C_PROC_LIBMS ], DirAddPathSep( cBase ) + lib[ _L_LIBMS ], cTarget, lib )
-            ENDIF
-            IF ! lDone .AND. ! Empty( comp[ _C_PROC_DLL ] )
-               lDone := Eval( comp[ _C_PROC_DLL ], DirAddPathSep( cBase ) + lib[ _L_DLL ], cTarget, lib )
-            ENDIF
-         ENDIF
-         IF lDone
-            OutStd( "! Import library created: " + cTarget, hb_osNewLine() )
-         ENDIF
-      NEXT
+         NEXT
+      ENDIF
    ENDIF
 
    RETURN

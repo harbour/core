@@ -10,7 +10,7 @@
 xcopy /y       RELNOTES                                                            F:\hb\hb20\
 xcopy /y /s    ..\..\examples\*.*                                                  F:\hb\hb20\examples\
 xcopy /y /s    ..\..\tests\*.*                                                     F:\hb\hb20\tests\
-xcopy /y       ..\..\bin\hb-mkimp.bat                                              F:\hb\hb20\bin\
+xcopy /y       ..\..\bin\hb-mkimp.prg                                              F:\hb\hb20\bin\
 xcopy /y       HARBOUR_README_ADDONS                                               F:\hb\hb20\addons\
 xcopy /y       HARBOUR_README_DJGPP                                                F:\hb\hb20\comp\djgpp\
 xcopy /y       HARBOUR_README_MINGW                                                F:\hb\hb20\comp\mingw\

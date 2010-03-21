@@ -610,8 +610,7 @@ HARBOUR
                                  to a *nix system location, otherwise no.
    - HB_BUILD_IMPLIB=yes         Create import libraries for external .dll
                                  dependencies (including contribs). Default: no
-                                 (for Windows targets created from Windows NT
-                                 shells only. Needs GNU Sed.)
+                                 (for Windows targets only.)
    - HB_BUILD_DEBUG=yes          Create a debug build. Default: no
    - HB_BUILD_STRIP=
          [all|bin|lib|no]        Strip symbols and debug information from binaries.
@@ -1261,12 +1260,12 @@ HARBOUR
      Supported shells per host platforms:
 
      win  / NT shell (cmd.exe)
-     win  / POSIX shell (MSYS or Cygwin sh.exe) (* not supported: HB_BUILD_PKG, HB_BUILD_IMPLIB)
-     win  / MS-DOS shell (command.com)          (* not supported: HB_BUILD_PKG, HB_BUILD_IMPLIB)
-     dos  / MS-DOS shell (command.com)          (* not supported: HB_BUILD_PKG, HB_BUILD_IMPLIB)
-     dos  / POSIX shell (bash.exe)              (* not supported: HB_BUILD_PKG, HB_BUILD_IMPLIB)
-     os/2 / OS/2 shell (cmd.exe)                (* not supported: HB_BUILD_PKG, HB_BUILD_IMPLIB)
-     os/2 / POSIX shell (bash.exe)              (* not supported: HB_BUILD_PKG, HB_BUILD_IMPLIB)
+     win  / POSIX shell (MSYS or Cygwin sh.exe) (* not supported: HB_BUILD_PKG)
+     win  / MS-DOS shell (command.com)          (* not supported: HB_BUILD_PKG)
+     dos  / MS-DOS shell (command.com)          (* not supported: HB_BUILD_PKG)
+     dos  / POSIX shell (bash.exe)              (* not supported: HB_BUILD_PKG)
+     os/2 / OS/2 shell (cmd.exe)                (* not supported: HB_BUILD_PKG)
+     os/2 / POSIX shell (bash.exe)              (* not supported: HB_BUILD_PKG)
      *nix / POSIX shell                         (* not supported: HB_BUILD_PKG - implemented as standalone scripts)
 
 
@@ -1394,9 +1393,6 @@ HARBOUR
          Windows binary:
             http://gnuwin32.sourceforge.net/packages/bison.htm
                (not verified with current Harbour version)
-      GNU Sed (stream editor) [multiplatform, free, open-source]
-         Windows binary:
-            http://gnuwin32.sourceforge.net/packages/sed.htm
       Valgrind (dynamic executable analysis tool) [linux, darwin-x86, free, open-source]
          http://valgrind.org/
       UPX (executable compressor) [win, dos, *nix, free, open-source]
