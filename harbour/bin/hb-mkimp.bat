@@ -25,86 +25,6 @@ if not "%HB_LIB_INSTALL%" == "" (
 
    echo ! Making import libs...
 
-   if "%HB_COMPILER%" == "bcc" (
-
-      if exist "%HB_WITH_ADS%\Redistribute\ace32.dll"       implib    "%HB_LIB_INSTALL%\ace32.lib"                      "%HB_WITH_ADS%\Redistribute\ace32.dll"
-      if exist "%HB_WITH_ADS%\ace32.dll"                    implib    "%HB_LIB_INSTALL%\ace32.lib"                      "%HB_WITH_ADS%\ace32.dll"
-      if exist "%HB_WITH_ADS%\32bit\ace32.dll"              implib    "%HB_LIB_INSTALL%\ace32.lib"                      "%HB_WITH_ADS%\32bit\ace32.dll"
-      if exist "%HB_WITH_ALLEGRO%\..\bin\alleg42.dll"       implib -a "%HB_LIB_INSTALL%\alleg.lib"                      "%HB_WITH_ALLEGRO%\..\bin\alleg42.dll"
-      if exist "%HB_WITH_APOLLO%\..\sde61.dll"              implib    "%HB_LIB_INSTALL%\sde61.lib"                      "%HB_WITH_APOLLO%\..\sde61.dll"
-      if exist "%HB_WITH_APOLLO%\..\sde7.dll"               implib    "%HB_LIB_INSTALL%\sde7.lib"                       "%HB_WITH_APOLLO%\..\sde7.dll"
-      if exist "%HB_WITH_BLAT%\..\blat.dll"                 implib -a "%HB_LIB_INSTALL%\blat.lib"                       "%HB_WITH_BLAT%\..\blat.dll"
-      if exist "%HB_WITH_CAIRO%\..\..\bin\libcairo-2.dll"   implib -a "%HB_LIB_INSTALL%\cairo.lib"                      "%HB_WITH_CAIRO%\..\..\bin\libcairo-2.dll"
-      if exist "%HB_WITH_CURL%\..\libcurl.dll"              implib -a "%HB_LIB_INSTALL%\libcurl.lib"                    "%HB_WITH_CURL%\..\libcurl.dll"
-      if exist "%HB_WITH_CURL%\..\bin\libcurl.dll"          implib -a "%HB_LIB_INSTALL%\libcurl.lib"                    "%HB_WITH_CURL%\..\bin\libcurl.dll"
-      if exist "%HB_WITH_FIREBIRD%\..\lib\fbclient_bor.lib" copy /b /y "%HB_WITH_FIREBIRD%\..\lib\fbclient_bor.lib"     "%HB_LIB_INSTALL%\fbclient.lib"
-      if exist "%HB_WITH_FREEIMAGE%\..\Dist\FreeImage.dll"  implib    "%HB_LIB_INSTALL%\FreeImage.lib"                  "%HB_WITH_FREEIMAGE%\..\Dist\FreeImage.dll"
-      if exist "%HB_WITH_GD%\..\bin\bgd.dll"                implib    "%HB_LIB_INSTALL%\bgd.lib"                        "%HB_WITH_GD%\..\bin\bgd.dll"
-      if exist "%HB_WITH_LIBHARU%\..\libhpdf.dll"           implib    "%HB_LIB_INSTALL%\libhpdf.lib"                    "%HB_WITH_LIBHARU%\..\libhpdf.dll"
-      if exist "%HB_WITH_LIBHARU%\..\lib_dll\libhpdf.dll"   implib    "%HB_LIB_INSTALL%\libhpdf.lib"                    "%HB_WITH_LIBHARU%\..\lib_dll\libhpdf.dll"
-      if exist "%HB_WITH_MYSQL%\..\bin\libmySQL.dll"        implib    "%HB_LIB_INSTALL%\libmysql.lib"                   "%HB_WITH_MYSQL%\..\bin\libmySQL.dll"
-      if exist "%HB_WITH_OCILIB%\..\lib32\ociliba.dll"      implib    "%HB_LIB_INSTALL%\ociliba.lib"                    "%HB_WITH_OCILIB%\..\lib32\ociliba.dll"
-      if exist "%HB_WITH_OCILIB%\..\lib32\ocilibm.dll"      implib    "%HB_LIB_INSTALL%\ocilibm.lib"                    "%HB_WITH_OCILIB%\..\lib32\ocilibm.dll"
-      if exist "%HB_WITH_OCILIB%\..\lib32\ocilibw.dll"      implib    "%HB_LIB_INSTALL%\ocilibw.lib"                    "%HB_WITH_OCILIB%\..\lib32\ocilibw.dll"
-      if exist "%HB_WITH_OPENSSL%\..\out32dll\libeay32.dll" implib -a "%HB_LIB_INSTALL%\libeay32.lib"                   "%HB_WITH_OPENSSL%\..\out32dll\libeay32.dll"
-      if exist "%HB_WITH_OPENSSL%\..\out32dll\ssleay32.dll" implib -a "%HB_LIB_INSTALL%\ssleay32.lib"                   "%HB_WITH_OPENSSL%\..\out32dll\ssleay32.dll"
-      if exist "%HB_WITH_OPENSSL%\..\dll\libeay32.dll"      implib -a "%HB_LIB_INSTALL%\libeay32.lib"                   "%HB_WITH_OPENSSL%\..\dll\libeay32.dll"
-      if exist "%HB_WITH_OPENSSL%\..\dll\ssleay32.dll"      implib -a "%HB_LIB_INSTALL%\ssleay32.lib"                   "%HB_WITH_OPENSSL%\..\dll\ssleay32.dll"
-      if exist "%HB_WITH_OPENSSL%\..\libeay32.dll"          implib -a "%HB_LIB_INSTALL%\libeay32.lib"                   "%HB_WITH_OPENSSL%\..\libeay32.dll"
-      if exist "%HB_WITH_OPENSSL%\..\ssleay32.dll"          implib -a "%HB_LIB_INSTALL%\ssleay32.lib"                   "%HB_WITH_OPENSSL%\..\ssleay32.dll"
-      if exist "%HB_WITH_PGSQL%\..\lib\libpq.dll"           implib -a "%HB_LIB_INSTALL%\libpq.lib"                      "%HB_WITH_PGSQL%\..\lib\libpq.dll"
-
-      goto END
-   )
-
-   if "%HB_COMPILER%" == "msvc" (
-
-      if exist "%HB_WITH_ADS%\Redistribute\ace32.lib"       copy /b /y "%HB_WITH_ADS%\Redistribute\ace32.lib"           "%HB_LIB_INSTALL%\ace32.lib"
-      if exist "%HB_WITH_ADS%\ace32.lib"                    copy /b /y "%HB_WITH_ADS%\ace32.lib"                        "%HB_LIB_INSTALL%\ace32.lib"
-      if exist "%HB_WITH_ADS%\32bit\ace32.lib"              copy /b /y "%HB_WITH_ADS%\32bit\ace32.lib"                  "%HB_LIB_INSTALL%\ace32.lib"
-      if exist "%HB_WITH_ALLEGRO%\..\lib\alleg.lib"         copy /b /y "%HB_WITH_ALLEGRO%\..\lib\alleg.lib"             "%HB_LIB_INSTALL%\alleg.lib"
-      if exist "%HB_WITH_APOLLO%\..\sde61.dll"              call :P_MSVC_IMPLIB x86 "%HB_WITH_APOLLO%\..\sde61.dll"     "%HB_LIB_INSTALL%\sde61.lib"
-      if exist "%HB_WITH_APOLLO%\..\sde7.dll"               call :P_MSVC_IMPLIB x86 "%HB_WITH_APOLLO%\..\sde7.dll"      "%HB_LIB_INSTALL%\sde7.lib"
-      if exist "%HB_WITH_BLAT%\..\blat.lib"                 copy /b /y "%HB_WITH_BLAT%\..\blat.lib"                     "%HB_LIB_INSTALL%\blat.lib"
-      if exist "%HB_WITH_CAIRO%\..\..\lib\cairo.lib"        copy /b /y "%HB_WITH_CAIRO%\..\..\lib\cairo.lib"            "%HB_LIB_INSTALL%\cairo.lib"
-      if exist "%HB_WITH_CURL%\..\libcurl.dll"              call :P_MSVC_IMPLIB x86 "%HB_WITH_CURL%\..\libcurl.dll"     "%HB_LIB_INSTALL%\libcurl.lib"
-      if exist "%HB_WITH_CURL%\..\bin\libcurl.dll"          call :P_MSVC_IMPLIB x86 "%HB_WITH_CURL%\..\bin\libcurl.dll" "%HB_LIB_INSTALL%\libcurl.lib"
-      if exist "%HB_WITH_FIREBIRD%\..\lib\fbclient_ms.lib"  copy /b /y "%HB_WITH_FIREBIRD%\..\lib\fbclient_ms.lib"      "%HB_LIB_INSTALL%\fbclient.lib"
-      if exist "%HB_WITH_FREEIMAGE%\..\Dist\FreeImage.lib"  copy /b /y "%HB_WITH_FREEIMAGE%\..\Dist\FreeImage.lib"      "%HB_LIB_INSTALL%\FreeImage.lib"
-      if exist "%HB_WITH_GD%\..\lib\bgd.lib"                copy /b /y "%HB_WITH_GD%\..\lib\bgd.lib"                    "%HB_LIB_INSTALL%\bgd.lib"
-      if exist "%HB_WITH_LIBHARU%\..\libhpdf.lib"           copy /b /y "%HB_WITH_LIBHARU%\..\libhpdf.lib"               "%HB_LIB_INSTALL%\libhpdf.lib"
-      if exist "%HB_WITH_LIBHARU%\..\lib_dll\libhpdf.lib"   copy /b /y "%HB_WITH_LIBHARU%\..\lib_dll\libhpdf.lib"       "%HB_LIB_INSTALL%\libhpdf.lib"
-      if exist "%HB_WITH_MYSQL%\..\lib\opt\libmySQL.lib"    copy /b /y "%HB_WITH_MYSQL%\..\lib\opt\libmySQL.lib"        "%HB_LIB_INSTALL%\libmySQL.lib"
-      if exist "%HB_WITH_OCILIB%\..\lib32\ociliba.lib"      copy /b /y "%HB_WITH_OCILIB%\..\lib32\ociliba.lib"          "%HB_LIB_INSTALL%\ociliba.lib"
-      if exist "%HB_WITH_OCILIB%\..\lib32\ocilibm.lib"      copy /b /y "%HB_WITH_OCILIB%\..\lib32\ocilibm.lib"          "%HB_LIB_INSTALL%\ocilibm.lib"
-      if exist "%HB_WITH_OCILIB%\..\lib32\ocilibw.lib"      copy /b /y "%HB_WITH_OCILIB%\..\lib32\ocilibw.lib"          "%HB_LIB_INSTALL%\ocilibw.lib"
-      if exist "%HB_WITH_OPENSSL%\..\out32dll\libeay32.lib" copy /b /y "%HB_WITH_OPENSSL%\..\out32dll\libeay32.lib"     "%HB_LIB_INSTALL%\libeay32.lib"
-      if exist "%HB_WITH_OPENSSL%\..\out32dll\ssleay32.lib" copy /b /y "%HB_WITH_OPENSSL%\..\out32dll\ssleay32.lib"     "%HB_LIB_INSTALL%\ssleay32.lib"
-      if exist "%HB_WITH_OPENSSL%\..\dll\libeay32.lib"      copy /b /y "%HB_WITH_OPENSSL%\..\dll\libeay32.lib"          "%HB_LIB_INSTALL%\libeay32.lib"
-      if exist "%HB_WITH_OPENSSL%\..\dll\ssleay32.lib"      copy /b /y "%HB_WITH_OPENSSL%\..\dll\ssleay32.lib"          "%HB_LIB_INSTALL%\ssleay32.lib"
-      if exist "%HB_WITH_OPENSSL%\..\lib\libeay32.lib"      copy /b /y "%HB_WITH_OPENSSL%\..\lib\libeay32.lib"          "%HB_LIB_INSTALL%\libeay32.lib"
-      if exist "%HB_WITH_OPENSSL%\..\lib\ssleay32.lib"      copy /b /y "%HB_WITH_OPENSSL%\..\lib\ssleay32.lib"          "%HB_LIB_INSTALL%\ssleay32.lib"
-      if exist "%HB_WITH_OPENSSL%\..\libeay32.lib"          copy /b /y "%HB_WITH_OPENSSL%\..\libeay32.lib"              "%HB_LIB_INSTALL%\libeay32.lib"
-      if exist "%HB_WITH_OPENSSL%\..\ssleay32.lib"          copy /b /y "%HB_WITH_OPENSSL%\..\ssleay32.lib"              "%HB_LIB_INSTALL%\ssleay32.lib"
-      if exist "%HB_WITH_PGSQL%\..\bin\libpq.dll"           call :P_MSVC_IMPLIB x86 "%HB_WITH_PGSQL%\..\bin\libpq.dll"  "%HB_LIB_INSTALL%\libpq.lib"
-      if exist "%HB_WITH_PGSQL%\..\lib\libpq.lib"           copy /b /y "%HB_WITH_PGSQL%\..\lib\libpq.lib"               "%HB_LIB_INSTALL%\libpq.lib"
-
-      goto END
-   )
-
-   if "%HB_COMPILER%" == "msvc64" (
-
-      if exist "%HB_WITH_CURL%\..\libcurl.dll"              call :P_MSVC_IMPLIB x64 "%HB_WITH_CURL%\..\libcurl.dll"     "%HB_LIB_INSTALL%\libcurl.lib"
-      if exist "%HB_WITH_CURL%\..\bin\libcurl.dll"          call :P_MSVC_IMPLIB x64 "%HB_WITH_CURL%\..\bin\libcurl.dll" "%HB_LIB_INSTALL%\libcurl.lib"
-      if exist "%HB_WITH_FIREBIRD%\..\lib\fbclient_ms.lib"  copy /b /y "%HB_WITH_FIREBIRD%\..\lib\fbclient_ms.lib"      "%HB_LIB_INSTALL%\fbclient.lib"
-      if exist "%HB_WITH_MYSQL%\..\lib\opt\libmySQL.lib"    copy /b /y "%HB_WITH_MYSQL%\..\lib\opt\libmySQL.lib"        "%HB_LIB_INSTALL%\libmySQL.lib"
-      if exist "%HB_WITH_OCILIB%\..\lib64\ociliba.lib"      copy /b /y "%HB_WITH_OCILIB%\..\lib64\ociliba.lib"          "%HB_LIB_INSTALL%\ociliba.lib"
-      if exist "%HB_WITH_OCILIB%\..\lib64\ocilibm.lib"      copy /b /y "%HB_WITH_OCILIB%\..\lib64\ocilibm.lib"          "%HB_LIB_INSTALL%\ocilibm.lib"
-      if exist "%HB_WITH_OCILIB%\..\lib64\ocilibw.lib"      copy /b /y "%HB_WITH_OCILIB%\..\lib64\ocilibw.lib"          "%HB_LIB_INSTALL%\ocilibw.lib"
-
-      goto END
-   )
-
    if "%HB_COMPILER%" == "mingw" (
 
       if exist "%HB_WITH_ADS%\Redistribute\ace32.lib"       copy /b /y "%HB_WITH_ADS%\Redistribute\ace32.lib"           "%HB_LIB_INSTALL%\libace32.a"
@@ -150,6 +70,41 @@ if not "%HB_LIB_INSTALL%" == "" (
       goto END
    )
 
+   if "%HB_COMPILER%" == "msvc" (
+
+      if exist "%HB_WITH_ADS%\Redistribute\ace32.lib"       copy /b /y "%HB_WITH_ADS%\Redistribute\ace32.lib"           "%HB_LIB_INSTALL%\ace32.lib"
+      if exist "%HB_WITH_ADS%\ace32.lib"                    copy /b /y "%HB_WITH_ADS%\ace32.lib"                        "%HB_LIB_INSTALL%\ace32.lib"
+      if exist "%HB_WITH_ADS%\32bit\ace32.lib"              copy /b /y "%HB_WITH_ADS%\32bit\ace32.lib"                  "%HB_LIB_INSTALL%\ace32.lib"
+      if exist "%HB_WITH_ALLEGRO%\..\lib\alleg.lib"         copy /b /y "%HB_WITH_ALLEGRO%\..\lib\alleg.lib"             "%HB_LIB_INSTALL%\alleg.lib"
+      if exist "%HB_WITH_APOLLO%\..\sde61.dll"              call :P_MSVC_IMPLIB x86 "%HB_WITH_APOLLO%\..\sde61.dll"     "%HB_LIB_INSTALL%\sde61.lib"
+      if exist "%HB_WITH_APOLLO%\..\sde7.dll"               call :P_MSVC_IMPLIB x86 "%HB_WITH_APOLLO%\..\sde7.dll"      "%HB_LIB_INSTALL%\sde7.lib"
+      if exist "%HB_WITH_BLAT%\..\blat.lib"                 copy /b /y "%HB_WITH_BLAT%\..\blat.lib"                     "%HB_LIB_INSTALL%\blat.lib"
+      if exist "%HB_WITH_CAIRO%\..\..\lib\cairo.lib"        copy /b /y "%HB_WITH_CAIRO%\..\..\lib\cairo.lib"            "%HB_LIB_INSTALL%\cairo.lib"
+      if exist "%HB_WITH_CURL%\..\libcurl.dll"              call :P_MSVC_IMPLIB x86 "%HB_WITH_CURL%\..\libcurl.dll"     "%HB_LIB_INSTALL%\libcurl.lib"
+      if exist "%HB_WITH_CURL%\..\bin\libcurl.dll"          call :P_MSVC_IMPLIB x86 "%HB_WITH_CURL%\..\bin\libcurl.dll" "%HB_LIB_INSTALL%\libcurl.lib"
+      if exist "%HB_WITH_FIREBIRD%\..\lib\fbclient_ms.lib"  copy /b /y "%HB_WITH_FIREBIRD%\..\lib\fbclient_ms.lib"      "%HB_LIB_INSTALL%\fbclient.lib"
+      if exist "%HB_WITH_FREEIMAGE%\..\Dist\FreeImage.lib"  copy /b /y "%HB_WITH_FREEIMAGE%\..\Dist\FreeImage.lib"      "%HB_LIB_INSTALL%\FreeImage.lib"
+      if exist "%HB_WITH_GD%\..\lib\bgd.lib"                copy /b /y "%HB_WITH_GD%\..\lib\bgd.lib"                    "%HB_LIB_INSTALL%\bgd.lib"
+      if exist "%HB_WITH_LIBHARU%\..\libhpdf.lib"           copy /b /y "%HB_WITH_LIBHARU%\..\libhpdf.lib"               "%HB_LIB_INSTALL%\libhpdf.lib"
+      if exist "%HB_WITH_LIBHARU%\..\lib_dll\libhpdf.lib"   copy /b /y "%HB_WITH_LIBHARU%\..\lib_dll\libhpdf.lib"       "%HB_LIB_INSTALL%\libhpdf.lib"
+      if exist "%HB_WITH_MYSQL%\..\lib\opt\libmySQL.lib"    copy /b /y "%HB_WITH_MYSQL%\..\lib\opt\libmySQL.lib"        "%HB_LIB_INSTALL%\libmySQL.lib"
+      if exist "%HB_WITH_OCILIB%\..\lib32\ociliba.lib"      copy /b /y "%HB_WITH_OCILIB%\..\lib32\ociliba.lib"          "%HB_LIB_INSTALL%\ociliba.lib"
+      if exist "%HB_WITH_OCILIB%\..\lib32\ocilibm.lib"      copy /b /y "%HB_WITH_OCILIB%\..\lib32\ocilibm.lib"          "%HB_LIB_INSTALL%\ocilibm.lib"
+      if exist "%HB_WITH_OCILIB%\..\lib32\ocilibw.lib"      copy /b /y "%HB_WITH_OCILIB%\..\lib32\ocilibw.lib"          "%HB_LIB_INSTALL%\ocilibw.lib"
+      if exist "%HB_WITH_OPENSSL%\..\out32dll\libeay32.lib" copy /b /y "%HB_WITH_OPENSSL%\..\out32dll\libeay32.lib"     "%HB_LIB_INSTALL%\libeay32.lib"
+      if exist "%HB_WITH_OPENSSL%\..\out32dll\ssleay32.lib" copy /b /y "%HB_WITH_OPENSSL%\..\out32dll\ssleay32.lib"     "%HB_LIB_INSTALL%\ssleay32.lib"
+      if exist "%HB_WITH_OPENSSL%\..\dll\libeay32.lib"      copy /b /y "%HB_WITH_OPENSSL%\..\dll\libeay32.lib"          "%HB_LIB_INSTALL%\libeay32.lib"
+      if exist "%HB_WITH_OPENSSL%\..\dll\ssleay32.lib"      copy /b /y "%HB_WITH_OPENSSL%\..\dll\ssleay32.lib"          "%HB_LIB_INSTALL%\ssleay32.lib"
+      if exist "%HB_WITH_OPENSSL%\..\lib\libeay32.lib"      copy /b /y "%HB_WITH_OPENSSL%\..\lib\libeay32.lib"          "%HB_LIB_INSTALL%\libeay32.lib"
+      if exist "%HB_WITH_OPENSSL%\..\lib\ssleay32.lib"      copy /b /y "%HB_WITH_OPENSSL%\..\lib\ssleay32.lib"          "%HB_LIB_INSTALL%\ssleay32.lib"
+      if exist "%HB_WITH_OPENSSL%\..\libeay32.lib"          copy /b /y "%HB_WITH_OPENSSL%\..\libeay32.lib"              "%HB_LIB_INSTALL%\libeay32.lib"
+      if exist "%HB_WITH_OPENSSL%\..\ssleay32.lib"          copy /b /y "%HB_WITH_OPENSSL%\..\ssleay32.lib"              "%HB_LIB_INSTALL%\ssleay32.lib"
+      if exist "%HB_WITH_PGSQL%\..\bin\libpq.dll"           call :P_MSVC_IMPLIB x86 "%HB_WITH_PGSQL%\..\bin\libpq.dll"  "%HB_LIB_INSTALL%\libpq.lib"
+      if exist "%HB_WITH_PGSQL%\..\lib\libpq.lib"           copy /b /y "%HB_WITH_PGSQL%\..\lib\libpq.lib"               "%HB_LIB_INSTALL%\libpq.lib"
+
+      goto END
+   )
+
    if "%HB_COMPILER%" == "pocc" (
 
       if exist "%HB_WITH_ADS%\Redistribute\ace32.lib"       copy /b /y "%HB_WITH_ADS%\Redistribute\ace32.lib"           "%HB_LIB_INSTALL%\ace32.lib"
@@ -180,6 +135,51 @@ if not "%HB_LIB_INSTALL%" == "" (
       if exist "%HB_WITH_OPENSSL%\..\libeay32.lib"          copy /b /y "%HB_WITH_OPENSSL%\..\libeay32.lib"              "%HB_LIB_INSTALL%\libeay32.lib"
       if exist "%HB_WITH_OPENSSL%\..\ssleay32.lib"          copy /b /y "%HB_WITH_OPENSSL%\..\ssleay32.lib"              "%HB_LIB_INSTALL%\ssleay32.lib"
       if exist "%HB_WITH_PGSQL%\..\lib\libpq.lib"           copy /b /y "%HB_WITH_PGSQL%\..\lib\libpq.lib"               "%HB_LIB_INSTALL%\libpq.lib"
+
+      goto END
+   )
+
+   if "%HB_COMPILER%" == "msvc64" (
+
+      if exist "%HB_WITH_CURL%\..\libcurl.dll"              call :P_MSVC_IMPLIB x64 "%HB_WITH_CURL%\..\libcurl.dll"     "%HB_LIB_INSTALL%\libcurl.lib"
+      if exist "%HB_WITH_CURL%\..\bin\libcurl.dll"          call :P_MSVC_IMPLIB x64 "%HB_WITH_CURL%\..\bin\libcurl.dll" "%HB_LIB_INSTALL%\libcurl.lib"
+      if exist "%HB_WITH_FIREBIRD%\..\lib\fbclient_ms.lib"  copy /b /y "%HB_WITH_FIREBIRD%\..\lib\fbclient_ms.lib"      "%HB_LIB_INSTALL%\fbclient.lib"
+      if exist "%HB_WITH_MYSQL%\..\lib\opt\libmySQL.lib"    copy /b /y "%HB_WITH_MYSQL%\..\lib\opt\libmySQL.lib"        "%HB_LIB_INSTALL%\libmySQL.lib"
+      if exist "%HB_WITH_OCILIB%\..\lib64\ociliba.lib"      copy /b /y "%HB_WITH_OCILIB%\..\lib64\ociliba.lib"          "%HB_LIB_INSTALL%\ociliba.lib"
+      if exist "%HB_WITH_OCILIB%\..\lib64\ocilibm.lib"      copy /b /y "%HB_WITH_OCILIB%\..\lib64\ocilibm.lib"          "%HB_LIB_INSTALL%\ocilibm.lib"
+      if exist "%HB_WITH_OCILIB%\..\lib64\ocilibw.lib"      copy /b /y "%HB_WITH_OCILIB%\..\lib64\ocilibw.lib"          "%HB_LIB_INSTALL%\ocilibw.lib"
+
+      goto END
+   )
+
+   if "%HB_COMPILER%" == "bcc" (
+
+      if exist "%HB_WITH_ADS%\Redistribute\ace32.dll"       implib    "%HB_LIB_INSTALL%\ace32.lib"                      "%HB_WITH_ADS%\Redistribute\ace32.dll"
+      if exist "%HB_WITH_ADS%\ace32.dll"                    implib    "%HB_LIB_INSTALL%\ace32.lib"                      "%HB_WITH_ADS%\ace32.dll"
+      if exist "%HB_WITH_ADS%\32bit\ace32.dll"              implib    "%HB_LIB_INSTALL%\ace32.lib"                      "%HB_WITH_ADS%\32bit\ace32.dll"
+      if exist "%HB_WITH_ALLEGRO%\..\bin\alleg42.dll"       implib -a "%HB_LIB_INSTALL%\alleg.lib"                      "%HB_WITH_ALLEGRO%\..\bin\alleg42.dll"
+      if exist "%HB_WITH_APOLLO%\..\sde61.dll"              implib    "%HB_LIB_INSTALL%\sde61.lib"                      "%HB_WITH_APOLLO%\..\sde61.dll"
+      if exist "%HB_WITH_APOLLO%\..\sde7.dll"               implib    "%HB_LIB_INSTALL%\sde7.lib"                       "%HB_WITH_APOLLO%\..\sde7.dll"
+      if exist "%HB_WITH_BLAT%\..\blat.dll"                 implib -a "%HB_LIB_INSTALL%\blat.lib"                       "%HB_WITH_BLAT%\..\blat.dll"
+      if exist "%HB_WITH_CAIRO%\..\..\bin\libcairo-2.dll"   implib -a "%HB_LIB_INSTALL%\cairo.lib"                      "%HB_WITH_CAIRO%\..\..\bin\libcairo-2.dll"
+      if exist "%HB_WITH_CURL%\..\libcurl.dll"              implib -a "%HB_LIB_INSTALL%\libcurl.lib"                    "%HB_WITH_CURL%\..\libcurl.dll"
+      if exist "%HB_WITH_CURL%\..\bin\libcurl.dll"          implib -a "%HB_LIB_INSTALL%\libcurl.lib"                    "%HB_WITH_CURL%\..\bin\libcurl.dll"
+      if exist "%HB_WITH_FIREBIRD%\..\bin\fbclient.dll"     implib    "%HB_LIB_INSTALL%\fbclient.lib"                   "%HB_WITH_FIREBIRD%\..\bin\fbclient.dll"
+      if exist "%HB_WITH_FREEIMAGE%\..\Dist\FreeImage.dll"  implib    "%HB_LIB_INSTALL%\FreeImage.lib"                  "%HB_WITH_FREEIMAGE%\..\Dist\FreeImage.dll"
+      if exist "%HB_WITH_GD%\..\bin\bgd.dll"                implib    "%HB_LIB_INSTALL%\bgd.lib"                        "%HB_WITH_GD%\..\bin\bgd.dll"
+      if exist "%HB_WITH_LIBHARU%\..\libhpdf.dll"           implib    "%HB_LIB_INSTALL%\libhpdf.lib"                    "%HB_WITH_LIBHARU%\..\libhpdf.dll"
+      if exist "%HB_WITH_LIBHARU%\..\lib_dll\libhpdf.dll"   implib    "%HB_LIB_INSTALL%\libhpdf.lib"                    "%HB_WITH_LIBHARU%\..\lib_dll\libhpdf.dll"
+      if exist "%HB_WITH_MYSQL%\..\bin\libmySQL.dll"        implib    "%HB_LIB_INSTALL%\libmysql.lib"                   "%HB_WITH_MYSQL%\..\bin\libmySQL.dll"
+      if exist "%HB_WITH_OCILIB%\..\lib32\ociliba.dll"      implib    "%HB_LIB_INSTALL%\ociliba.lib"                    "%HB_WITH_OCILIB%\..\lib32\ociliba.dll"
+      if exist "%HB_WITH_OCILIB%\..\lib32\ocilibm.dll"      implib    "%HB_LIB_INSTALL%\ocilibm.lib"                    "%HB_WITH_OCILIB%\..\lib32\ocilibm.dll"
+      if exist "%HB_WITH_OCILIB%\..\lib32\ocilibw.dll"      implib    "%HB_LIB_INSTALL%\ocilibw.lib"                    "%HB_WITH_OCILIB%\..\lib32\ocilibw.dll"
+      if exist "%HB_WITH_OPENSSL%\..\out32dll\libeay32.dll" implib -a "%HB_LIB_INSTALL%\libeay32.lib"                   "%HB_WITH_OPENSSL%\..\out32dll\libeay32.dll"
+      if exist "%HB_WITH_OPENSSL%\..\out32dll\ssleay32.dll" implib -a "%HB_LIB_INSTALL%\ssleay32.lib"                   "%HB_WITH_OPENSSL%\..\out32dll\ssleay32.dll"
+      if exist "%HB_WITH_OPENSSL%\..\dll\libeay32.dll"      implib -a "%HB_LIB_INSTALL%\libeay32.lib"                   "%HB_WITH_OPENSSL%\..\dll\libeay32.dll"
+      if exist "%HB_WITH_OPENSSL%\..\dll\ssleay32.dll"      implib -a "%HB_LIB_INSTALL%\ssleay32.lib"                   "%HB_WITH_OPENSSL%\..\dll\ssleay32.dll"
+      if exist "%HB_WITH_OPENSSL%\..\libeay32.dll"          implib -a "%HB_LIB_INSTALL%\libeay32.lib"                   "%HB_WITH_OPENSSL%\..\libeay32.dll"
+      if exist "%HB_WITH_OPENSSL%\..\ssleay32.dll"          implib -a "%HB_LIB_INSTALL%\ssleay32.lib"                   "%HB_WITH_OPENSSL%\..\ssleay32.dll"
+      if exist "%HB_WITH_PGSQL%\..\lib\libpq.dll"           implib -a "%HB_LIB_INSTALL%\libpq.lib"                      "%HB_WITH_PGSQL%\..\lib\libpq.dll"
 
       goto END
    )

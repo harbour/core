@@ -230,7 +230,7 @@ REQUEST hbmk_KEYW
 
 #define _BCC_BIN_DETECT()       FindInPath( "bcc32" )
 
-/* Macro to check for uppercase extension on case-sensitive file-systems */
+/* Macro to check for uppercase extension on case-sensitive filesystems */
 #if defined( __PLATFORM__DOS )
    #define _EXT_IS_UPPER( f, e ) ( .F. )
 #else
