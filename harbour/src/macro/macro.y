@@ -393,6 +393,7 @@ FieldVarAlias  : FieldAlias VarAlias            { $$ = $2; }
 
 AliasId     : IDENTIFIER      { $$ = hb_compExprNewVar( $1, HB_COMP_PARAM ); }
             | MacroVar
+            | MacroExpr
             ;
 
 AliasVar   : NumAlias AliasId          { $$ = hb_compExprNewAliasVar( $1, $2, HB_COMP_PARAM ); }
