@@ -329,7 +329,7 @@ HB_BOOL hb_arrayAdd( PHB_ITEM pArray, PHB_ITEM pValue )
    {
       PHB_BASEARRAY pBaseArray = ( PHB_BASEARRAY ) pArray->item.asArray.value;
 
-      if( pBaseArray->ulLen < ULONG_MAX )
+      if( pBaseArray->ulLen < HB_SIZE_MAX )
       {
          hb_arraySize( pArray, pBaseArray->ulLen + 1 );
          pBaseArray = ( PHB_BASEARRAY ) pArray->item.asArray.value;
@@ -350,7 +350,7 @@ HB_BOOL hb_arrayAddForward( PHB_ITEM pArray, PHB_ITEM pValue )
    {
       PHB_BASEARRAY pBaseArray = ( PHB_BASEARRAY ) pArray->item.asArray.value;
 
-      if( pBaseArray->ulLen < ULONG_MAX )
+      if( pBaseArray->ulLen < HB_SIZE_MAX )
       {
          hb_arraySize( pArray, pBaseArray->ulLen + 1 );
          pBaseArray = ( PHB_BASEARRAY ) pArray->item.asArray.value;

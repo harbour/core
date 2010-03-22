@@ -3165,7 +3165,7 @@ static void hb_vmPlus( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pIte
       {
          if( ulLen1 )
          {
-            if( ulLen1 < ULONG_MAX - ulLen2 )
+            if( ulLen1 < HB_SIZE_MAX - ulLen2 )
             {
                if( pResult != pItem1 )
                {
@@ -3317,7 +3317,7 @@ static void hb_vmMinus( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pIt
             hb_itemCopy( pResult, pItem1 );
          pResult->type &= ~( HB_IT_MEMOFLAG | HB_IT_DEFAULT );
       }
-      else if( ulLen1 < ULONG_MAX - ulLen2 )
+      else if( ulLen1 < HB_SIZE_MAX - ulLen2 )
       {
          if( pResult != pItem1 )
          {
