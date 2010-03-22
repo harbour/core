@@ -2633,7 +2633,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          cOpt_Dyn := "-shared -o {OD} {LO} {FD} {DL} {LS}"
          cBin_Link := cBin_CompC
          cOpt_Link := "{LO} {LA} {LS} {FL} {DL}"
-         bBlk_ImpLib := {| s, t | hb_FCopy( s, t ) != F_ERROR }
+         bBlk_ImpLib := {| cSourceDLL, cTargetLib | hb_FCopy( cSourceDLL, cTargetLib ) != F_ERROR }
          cLibPathPrefix := "-L"
          cLibPathSep := " "
          cLibLibExt := ".a"
@@ -2766,7 +2766,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          cOpt_Dyn := "-shared -o {OD} {LO} {LL} {LB} {FD} {DL} {LS}"
          cBin_Link := cBin_CompC
          cOpt_Link := "{LO} {LA} {FL} {DL}"
-         bBlk_ImpLib := {| s, t | hb_FCopy( s, t ) != F_ERROR }
+         bBlk_ImpLib := {| cSourceDLL, cTargetLib | hb_FCopy( cSourceDLL, cTargetLib ) != F_ERROR }
          cLibPathPrefix := "-L"
          cLibPathSep := " "
          IF hbmk[ _HBMK_cCOMP ] == "gccomf"
@@ -3016,7 +3016,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          cBin_Lib := "wlib" + cCCEXT
          cOpt_Lib := "-q {FA} {OL} {LO}{SCRIPT}"
          IF hbmk[ _HBMK_cPLAT ] $ "win|os2"
-            bBlk_ImpLib := {| s, t | win_implib_command( cBin_Lib + " -q -o={OL} {ID}", nCmd_Esc, s, t ) }
+            bBlk_ImpLib := {| cSourceDLL, cTargetLib | win_implib_command( hbmk, cBin_Lib + " -q -o={OL} {ID}", nCmd_Esc, cSourceDLL, cTargetLib ) }
          ENDIF
          cLibLibExt := cLibExt
          cLibObjPrefix := "-+ "
@@ -3128,7 +3128,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          cBin_Dyn := cBin_Link
          cOpt_Link := '-Gn -Tpe -L{DL} {FL} ' + iif( hbmk[ _HBMK_lGUI ], "c0w32.obj", "c0x32.obj" ) + " {LO}, {OE}, " + iif( hbmk[ _HBMK_lMAP ], "{OM}", "nul" ) + ", {LL} {LB} cw32mt.lib import32.lib,, {LS}{SCRIPT}"
          cOpt_Dyn  := '-Gn -Tpd -L{DL} {FD} ' +                          "c0d32.obj"                + " {LO}, {OD}, " + iif( hbmk[ _HBMK_lMAP ], "{OM}", "nul" ) + ", {LL} {LB} cw32mt.lib import32.lib,, {LS}{SCRIPT}"
-         bBlk_ImpLib := {| s, t | win_implib_command( "implib {FI} {OL} {ID}", nCmd_Esc, s, t, iif( lMakeImpLibMS_bcc, "-a", "" ) ) }
+         bBlk_ImpLib := {| cSourceDLL, cTargetLib | win_implib_command( hbmk, "implib {FI} {OL} {ID}", nCmd_Esc, cSourceDLL, cTargetLib, iif( lMakeImpLibMS_bcc, "-a", "" ) ) }
          cLibPathPrefix := ""
          cLibPathSep := ";"
          IF hbmk[ _HBMK_lMAP ]
@@ -3281,7 +3281,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          CASE hbmk[ _HBMK_cCOMP ] == "msvcmips" ; tmp := "-machine:mips"
          CASE hbmk[ _HBMK_cCOMP ] == "msvcsh"   ; tmp := "-machine:sh5"
          ENDCASE
-         bBlk_ImpLib := {| s, t | win_implib_command_msvc( cBin_Lib + " -nologo {FI} -def:{ID} -out:{OL}", nCmd_Esc, s, t, tmp ) }
+         bBlk_ImpLib := {| cSourceDLL, cTargetLib | win_implib_command_msvc( cBin_Lib + " -nologo {FI} -def:{ID} -out:{OL}", nCmd_Esc, cSourceDLL, cTargetLib, tmp ) }
          cLibPathPrefix := "-libpath:"
          cLibPathSep := " "
          IF hbmk[ _HBMK_lMAP ]
@@ -3397,7 +3397,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          ENDIF
          cOptIncMask := "-I{DI}"
          cOpt_Dyn := "{FD} -dll -out:{OD} {DL} {LO} {LL} {LB} {LS}"
-         bBlk_ImpLib := {| s, t | win_implib_command( cBin_Lib + " {ID} -out:{OL}", nCmd_Esc, s, t ) }
+         bBlk_ImpLib := {| cSourceDLL, cTargetLib | win_implib_command( hbmk, cBin_Lib + " {ID} -out:{OL}", nCmd_Esc, cSourceDLL, cTargetLib ) }
          IF hbmk[ _HBMK_cPLAT ] == "wce"
             AAdd( hbmk[ _HBMK_aOPTC ], "-DUNICODE" )
             AAdd( hbmk[ _HBMK_aOPTC ], "-D_WINCE" ) /* Required by pocc Windows headers */
@@ -7727,17 +7727,24 @@ STATIC FUNCTION GenHBL( hbmk, aFiles, cFileOut, lEmpty )
 
    RETURN lRetVal
 
-STATIC FUNCTION win_implib_command( cCommand, nCmd_Esc, s, t, f )
+STATIC FUNCTION win_implib_command( hbmk, cCommand, nCmd_Esc, cSourceDLL, cTargetLib, cFlags )
 
-   DEFAULT f TO ""
+   DEFAULT cFlags TO ""
 
-   cCommand := StrTran( cCommand, "{FI}", f )
-   cCommand := StrTran( cCommand, "{ID}", FN_Escape( s, nCmd_Esc ) )
-   cCommand := StrTran( cCommand, "{OL}", FN_Escape( t, nCmd_Esc ) )
+   cCommand := StrTran( cCommand, "{FI}", cFlags )
+   cCommand := StrTran( cCommand, "{ID}", FN_Escape( cSourceDLL, nCmd_Esc ) )
+   cCommand := StrTran( cCommand, "{OL}", FN_Escape( cTargetLib, nCmd_Esc ) )
+
+   IF hbmk[ _HBMK_lTRACE ]
+      IF ! hbmk[ _HBMK_lQuiet ]
+         hbmk_OutStd( hbmk, I_( "Import library creation command:" ) )
+      ENDIF
+      OutStd( cCommand + _OUT_EOL )
+   ENDIF
 
    RETURN hb_processRun( cCommand ) == 0
 
-STATIC FUNCTION win_implib_command_msvc( cCommand, nCmd_Esc, s, t, f )
+STATIC FUNCTION win_implib_command_msvc( hbmk, cCommand, nCmd_Esc, cSourceDLL, cTargetLib, cFlags )
    LOCAL lSuccess := .F.
 
    LOCAL cExports
@@ -7752,11 +7759,18 @@ STATIC FUNCTION win_implib_command_msvc( cCommand, nCmd_Esc, s, t, f )
    LOCAL cCommandDump
 
    cCommandDump := "dumpbin -exports {ID}"
-   cCommandDump := StrTran( cCommandDump, "{ID}", FN_Escape( s, nCmd_Esc ) )
+   cCommandDump := StrTran( cCommandDump, "{ID}", FN_Escape( cSourceDLL, nCmd_Esc ) )
+
+   IF hbmk[ _HBMK_lTRACE ]
+      IF ! hbmk[ _HBMK_lQuiet ]
+         hbmk_OutStd( hbmk, I_( "Import library creation command:" ) )
+      ENDIF
+      OutStd( cCommandDump + _OUT_EOL )
+   ENDIF
 
    IF hb_processRun( cCommandDump,, @cExports ) == 0
 
-      cFuncList := "LIBRARY " + Chr( 34 ) + FN_NameExtGet( s ) + Chr( 34 ) + hb_osNewLine() +;
+      cFuncList := "LIBRARY " + Chr( 34 ) + FN_NameExtGet( cSourceDLL ) + Chr( 34 ) + hb_osNewLine() +;
                    "EXPORTS" + hb_osNewLine()
 
       cExports := StrTran( cExports, Chr( 13 ) + Chr( 10 ), Chr( 10 ) )
@@ -7780,7 +7794,7 @@ STATIC FUNCTION win_implib_command_msvc( cCommand, nCmd_Esc, s, t, f )
          FWrite( fhnd, cFuncList )
          FClose( fhnd )
 
-         lSuccess := win_implib_command( cCommand, nCmd_Esc, cDef, t, f )
+         lSuccess := win_implib_command( hbmk, cCommand, nCmd_Esc, cDef, cTargetLib, cFlags )
 
          FErase( cDef )
       ENDIF
