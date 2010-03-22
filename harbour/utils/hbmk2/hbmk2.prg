@@ -702,6 +702,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    LOCAL lMakeImpLib := .F.
    LOCAL cMakeImpLibDLL := NIL
    LOCAL cMakeImpLibLib := NIL
+   LOCAL lMakeImpLibMS_bcc := .F.
 
    LOCAL cWorkDir := NIL
 
@@ -1749,6 +1750,13 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          lStopAfterInit := .T.
          lMakeImpLib := .T.
          cMakeImpLibLib := SubStr( cParam, Len( "-mkimplib=" ) + 1 )
+
+      /* NOTE: Undocumented option to enable -a option when calling bcc implib tool.
+               This is needed for some .dlls to make them work with bcc, because
+               bcc chose not to follow name-mangling/callconv standard. */
+      CASE cParamL == "-mkimplibms"
+
+         lMakeImpLibMS_bcc := .T.
 
       CASE lMakeImpLib .AND. Empty( cMakeImpLibDLL )
 
@@ -3120,8 +3128,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          cBin_Dyn := cBin_Link
          cOpt_Link := '-Gn -Tpe -L{DL} {FL} ' + iif( hbmk[ _HBMK_lGUI ], "c0w32.obj", "c0x32.obj" ) + " {LO}, {OE}, " + iif( hbmk[ _HBMK_lMAP ], "{OM}", "nul" ) + ", {LL} {LB} cw32mt.lib import32.lib,, {LS}{SCRIPT}"
          cOpt_Dyn  := '-Gn -Tpd -L{DL} {FD} ' +                          "c0d32.obj"                + " {LO}, {OD}, " + iif( hbmk[ _HBMK_lMAP ], "{OM}", "nul" ) + ", {LL} {LB} cw32mt.lib import32.lib,, {LS}{SCRIPT}"
-         /* TODO: Add support for idiotic BCC -a option. */
-         bBlk_ImpLib := {| s, t | win_implib_command( "implib {FI} {OL} {ID}", nCmd_Esc, s, t, "" ) }
+         bBlk_ImpLib := {| s, t | win_implib_command( "implib {FI} {OL} {ID}", nCmd_Esc, s, t, iif( lMakeImpLibMS_bcc, "-a", "" ) ) }
          cLibPathPrefix := ""
          cLibPathSep := ";"
          IF hbmk[ _HBMK_lMAP ]

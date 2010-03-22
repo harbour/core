@@ -19,7 +19,6 @@ echo "hb20\INSTALL"                               >> _hbfiles
 echo "hb20\COPYING"                               >> _hbfiles
 echo "hb20\TODO"                                  >> _hbfiles
 echo "hb20\ChangeLog*"                            >> _hbfiles
-echo "hb20\bin\hb-mkimp.prg"                      >> _hbfiles
 echo "hb20\bin\harbour-20.dll"                    >> _hbfiles
 echo "hb20\bin\harbourmt-20.dll"                  >> _hbfiles
 echo "hb20\bin\harbour.exe"                       >> _hbfiles

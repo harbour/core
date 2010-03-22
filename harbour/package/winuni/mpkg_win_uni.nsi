@@ -106,7 +106,6 @@ Section "Main components" hb_main
   File "$%HB_ROOT%hb20\bin\hbrun.exe"
   File "$%HB_ROOT%hb20\bin\hbtest.exe"
   File "$%HB_ROOT%hb20\bin\hbformat.exe"
-  File "$%HB_ROOT%hb20\bin\hb-mkimp.prg"
   File "$%HB_ROOT%hb20\bin\hbmk.cfg"
   File "$%HB_ROOT%hb20\bin\upx*.*"
 
