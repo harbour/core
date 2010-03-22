@@ -670,6 +670,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    LOCAL cOpt_Res
    LOCAL cOpt_Lib
    LOCAL cOpt_Dyn
+   LOCAL cOpt_ImpLib
    LOCAL cBin_CompPRG
    LOCAL cBin_CompC
    LOCAL cBin_CompCPP
@@ -1747,9 +1748,11 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
       CASE Left( cParamL, Len( "-mkimplib=" ) ) == "-mkimplib="
 
-         lStopAfterInit := .T.
-         lMakeImpLib := .T.
-         cMakeImpLibLib := SubStr( cParam, Len( "-mkimplib=" ) + 1 )
+         cMakeImpLibLib := PathSepToTarget( hbmk, PathProc( MacroProc( hbmk, ArchCompFilter( hbmk, SubStr( cParam, Len( "-mkimplib=" ) + 1 ) ), aParam[ _PAR_cFileName ] ), aParam[ _PAR_cFileName ] ) )
+         IF ! Empty( cMakeImpLibLib )
+            lStopAfterInit := .T.
+            lMakeImpLib := .T.
+         ENDIF
 
       /* NOTE: Undocumented option to enable -a option when calling bcc implib tool.
                This is needed for some .dlls to make them work with bcc, because
@@ -1760,7 +1763,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
       CASE lMakeImpLib .AND. Empty( cMakeImpLibDLL )
 
-         cMakeImpLibDLL := PathProc( cParam, aParam[ _PAR_cFileName ] )
+         cMakeImpLibDLL := PathSepToTarget( hbmk, PathProc( MacroProc( hbmk, ArchCompFilter( hbmk, cParam ), aParam[ _PAR_cFileName ] ), aParam[ _PAR_cFileName ] ) )
 
       CASE Left( cParamL, Len( "-jobs=" ) ) == "-jobs="
 
@@ -3016,7 +3019,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          cBin_Lib := "wlib" + cCCEXT
          cOpt_Lib := "-q {FA} {OL} {LO}{SCRIPT}"
          IF hbmk[ _HBMK_cPLAT ] $ "win|os2"
-            bBlk_ImpLib := {| cSourceDLL, cTargetLib | win_implib_command( hbmk, cBin_Lib + " -q -o={OL} {ID}", nCmd_Esc, cSourceDLL, cTargetLib ) }
+            bBlk_ImpLib := {| cSourceDLL, cTargetLib, cFlags | win_implib_command( hbmk, cBin_Lib + " -q -o={OL} {ID}", nCmd_Esc, cSourceDLL, cTargetLib, cFlags ) }
          ENDIF
          cLibLibExt := cLibExt
          cLibObjPrefix := "-+ "
@@ -3128,7 +3131,10 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          cBin_Dyn := cBin_Link
          cOpt_Link := '-Gn -Tpe -L{DL} {FL} ' + iif( hbmk[ _HBMK_lGUI ], "c0w32.obj", "c0x32.obj" ) + " {LO}, {OE}, " + iif( hbmk[ _HBMK_lMAP ], "{OM}", "nul" ) + ", {LL} {LB} cw32mt.lib import32.lib,, {LS}{SCRIPT}"
          cOpt_Dyn  := '-Gn -Tpd -L{DL} {FD} ' +                          "c0d32.obj"                + " {LO}, {OD}, " + iif( hbmk[ _HBMK_lMAP ], "{OM}", "nul" ) + ", {LL} {LB} cw32mt.lib import32.lib,, {LS}{SCRIPT}"
-         bBlk_ImpLib := {| cSourceDLL, cTargetLib | win_implib_command( hbmk, "implib {FI} {OL} {ID}", nCmd_Esc, cSourceDLL, cTargetLib, iif( lMakeImpLibMS_bcc, "-a", "" ) ) }
+         IF lMakeImpLibMS_bcc
+            cOpt_ImpLib := "-a"
+         ENDIF
+         bBlk_ImpLib := {| cSourceDLL, cTargetLib, cFlags | win_implib_command( hbmk, "implib {FI} {OL} {ID}", nCmd_Esc, cSourceDLL, cTargetLib, cFlags ) }
          cLibPathPrefix := ""
          cLibPathSep := ";"
          IF hbmk[ _HBMK_lMAP ]
@@ -3272,16 +3278,16 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          cOptIncMask := "-I{DI}"
          cOpt_Link := "-nologo -out:{OE} {LO} {DL} {FL} {LL} {LB} {LS}"
          DO CASE
-         CASE hbmk[ _HBMK_cCOMP ] == "msvc"     ; tmp := "-machine:x86"
-         CASE hbmk[ _HBMK_cCOMP ] == "msvc64"   ; tmp := "-machine:x64"
-         CASE hbmk[ _HBMK_cCOMP ] == "msvcia64" ; tmp := "-machine:ia64"
-         CASE hbmk[ _HBMK_cCOMP ] == "icc"      ; tmp := "-machine:x86"
-         CASE hbmk[ _HBMK_cCOMP ] == "iccia64"  ; tmp := "-machine:ia64"
-         CASE hbmk[ _HBMK_cCOMP ] == "msvcarm"  ; tmp := "-machine:xarm"
-         CASE hbmk[ _HBMK_cCOMP ] == "msvcmips" ; tmp := "-machine:mips"
-         CASE hbmk[ _HBMK_cCOMP ] == "msvcsh"   ; tmp := "-machine:sh5"
+         CASE hbmk[ _HBMK_cCOMP ] == "msvc"     ; cOpt_ImpLib := "-machine:x86"
+         CASE hbmk[ _HBMK_cCOMP ] == "msvc64"   ; cOpt_ImpLib := "-machine:x64"
+         CASE hbmk[ _HBMK_cCOMP ] == "msvcia64" ; cOpt_ImpLib := "-machine:ia64"
+         CASE hbmk[ _HBMK_cCOMP ] == "icc"      ; cOpt_ImpLib := "-machine:x86"
+         CASE hbmk[ _HBMK_cCOMP ] == "iccia64"  ; cOpt_ImpLib := "-machine:ia64"
+         CASE hbmk[ _HBMK_cCOMP ] == "msvcarm"  ; cOpt_ImpLib := "-machine:xarm"
+         CASE hbmk[ _HBMK_cCOMP ] == "msvcmips" ; cOpt_ImpLib := "-machine:mips"
+         CASE hbmk[ _HBMK_cCOMP ] == "msvcsh"   ; cOpt_ImpLib := "-machine:sh5"
          ENDCASE
-         bBlk_ImpLib := {| cSourceDLL, cTargetLib | win_implib_command_msvc( cBin_Lib + " -nologo {FI} -def:{ID} -out:{OL}", nCmd_Esc, cSourceDLL, cTargetLib, tmp ) }
+         bBlk_ImpLib := {| cSourceDLL, cTargetLib, cFlags | win_implib_command_msvc( hbmk, cBin_Lib + " -nologo {FI} -def:{ID} -out:{OL}", nCmd_Esc, cSourceDLL, cTargetLib, cFlags ) }
          cLibPathPrefix := "-libpath:"
          cLibPathSep := " "
          IF hbmk[ _HBMK_lMAP ]
@@ -3397,7 +3403,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          ENDIF
          cOptIncMask := "-I{DI}"
          cOpt_Dyn := "{FD} -dll -out:{OD} {DL} {LO} {LL} {LB} {LS}"
-         bBlk_ImpLib := {| cSourceDLL, cTargetLib | win_implib_command( hbmk, cBin_Lib + " {ID} -out:{OL}", nCmd_Esc, cSourceDLL, cTargetLib ) }
+         bBlk_ImpLib := {| cSourceDLL, cTargetLib, cFlags | win_implib_command( hbmk, cBin_Lib + " {ID} -out:{OL}", nCmd_Esc, cSourceDLL, cTargetLib, cFlags ) }
          IF hbmk[ _HBMK_cPLAT ] == "wce"
             AAdd( hbmk[ _HBMK_aOPTC ], "-DUNICODE" )
             AAdd( hbmk[ _HBMK_aOPTC ], "-D_WINCE" ) /* Required by pocc Windows headers */
@@ -3606,11 +3612,13 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          IF ! Empty( cMakeImpLibDLL ) .AND. ! Empty( cMakeImpLibLib )
             IF hb_FileExists( cMakeImpLibDLL )
                tmp := FN_CookLib( hbmk, cMakeImpLibLib, cLibLibPrefix, cLibLibExt )
-               IF Eval( bBlk_ImpLib, cMakeImpLibDLL, tmp )
+               IF Eval( bBlk_ImpLib, cMakeImpLibDLL, tmp, cOpt_ImpLib )
                   hbmk_OutStd( hbmk, hb_StrFormat( I_( "Created import library: %1$s <= %2$s" ), tmp, cMakeImpLibDLL ) )
                ELSE
                   hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Failed creating import library %1$s from %2$s." ), tmp, cMakeImpLibDLL ) )
                ENDIF
+            ELSE
+               hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Source dynamic library not found: %1$s" ), cMakeImpLibDLL ) )
             ENDIF
          ELSE
             hbmk_OutErr( hbmk, I_( "Error: Missing parameter for import library creation." ) )
@@ -7758,7 +7766,7 @@ STATIC FUNCTION win_implib_command_msvc( hbmk, cCommand, nCmd_Esc, cSourceDLL, c
 
    LOCAL cCommandDump
 
-   cCommandDump := "dumpbin -exports {ID}"
+   cCommandDump := "dumpbin.exe -exports {ID}"
    cCommandDump := StrTran( cCommandDump, "{ID}", FN_Escape( cSourceDLL, nCmd_Esc ) )
 
    IF hbmk[ _HBMK_lTRACE ]
