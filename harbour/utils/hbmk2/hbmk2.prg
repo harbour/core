@@ -3597,9 +3597,13 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    IF lMakeImpLib
       IF ISBLOCK( bBlk_ImpLib )
          IF ! Empty( cMakeImpLibDLL ) .AND. ! Empty( cMakeImpLibLib )
-            hbmk_OutStd( hbmk, I_( "Creating import library..." ) )
-            IF ! Eval( bBlk_ImpLib, cMakeImpLibDLL, cMakeImpLibLib )
-               hbmk_OutErr( hbmk, I_( "Error: Creating import libraries failed." ) )
+            IF hb_FileExists( cMakeImpLibDLL )
+               tmp := FN_CookLib( hbmk, cMakeImpLibLib, cLibLibPrefix, cLibLibExt )
+               IF Eval( bBlk_ImpLib, cMakeImpLibDLL, tmp )
+                  hbmk_OutStd( hbmk, hb_StrFormat( I_( "Created import library: %1$s <= %2$s" ), tmp, cMakeImpLibDLL ) )
+               ELSE
+                  hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Failed creating import library %1$s from %2$s." ), tmp, cMakeImpLibDLL ) )
+               ENDIF
             ENDIF
          ELSE
             hbmk_OutErr( hbmk, I_( "Error: Missing parameter for import library creation." ) )
@@ -5813,6 +5817,40 @@ STATIC FUNCTION ListCookLib( hbmk, aLIB, aLIBA, array, cPrefix, cExtNew )
    ENDIF
 
    RETURN array
+
+STATIC FUNCTION FN_CookLib( hbmk, cLibName, cPrefix, cExtNew )
+   LOCAL cDir
+   LOCAL cLibNameCooked
+
+   IF hbmk[ _HBMK_cCOMP ] $ "gcc|mingw|mingw64|mingwarm|djgpp|cygwin|gccomf|clang|open64"
+      hb_FNameSplit( cLibName, @cDir )
+      IF Empty( cDir )
+         cLibNameCooked := cLibName
+#if 0
+         /* Don't attempt to strip this as it can be valid for libs which have double lib prefixes (f.e. libpng) */
+         IF Left( cLibNameCooked, 3 ) == "lib"
+            cLibNameCooked := SubStr( cLibNameCooked, 4 )
+         ENDIF
+#endif
+         IF cPrefix != NIL
+            cLibNameCooked := cPrefix + cLibNameCooked
+         ENDIF
+         IF cExtNew != NIL
+            cLibNameCooked := FN_ExtSet( cLibNameCooked, cExtNew )
+         ENDIF
+         RETURN cLibNameCooked
+      ELSE
+         RETURN cLibName
+      ENDIF
+   ELSE
+      IF cExtNew != NIL
+         RETURN FN_ExtSet( cLibName, cExtNew )
+      ELSE
+         RETURN cLibName
+      ENDIF
+   ENDIF
+
+   RETURN NIL
 
 /* Append optional prefix and optional extension to all members */
 STATIC FUNCTION ListCook( arraySrc, cExtNew )

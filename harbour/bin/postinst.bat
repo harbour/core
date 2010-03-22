@@ -79,7 +79,36 @@ if "%HB_SHELL%" == "nt" goto _SH_NT
 
 :_NO_ICON_BIN
 
-   if "%HB_BUILD_IMPLIB%" == "yes" "%HB_HOST_BIN_DIR%\hbrun" --hb:gtcgi "%~dp0hb-mkimp.prg"
+   if not "%HB_BUILD_IMPLIB%" == "yes" goto _NO_IMPLIB
+
+   rem "%HB_HOST_BIN_DIR%\hbmk2" -mkimplib=ace32     "%HB_WITH_ADS%\Redistribute\ace32.dll"
+   rem "%HB_HOST_BIN_DIR%\hbmk2" -mkimplib=ace32     "%HB_WITH_ADS%\ace32.dll"
+   rem "%HB_HOST_BIN_DIR%\hbmk2" -mkimplib=ace32     "%HB_WITH_ADS%\32bit\ace32.dll"
+   rem "%HB_HOST_BIN_DIR%\hbmk2" -mkimplib=alleg     "%HB_WITH_ALLEGRO%\..\bin\alleg42.dll"
+   rem "%HB_HOST_BIN_DIR%\hbmk2" -mkimplib=sde61     "%HB_WITH_APOLLO%\..\sde61.dll"
+   rem "%HB_HOST_BIN_DIR%\hbmk2" -mkimplib=sde7      "%HB_WITH_APOLLO%\..\sde7.dll"
+   rem "%HB_HOST_BIN_DIR%\hbmk2" -mkimplib=blat      "%HB_WITH_BLAT%\..\blat.dll"
+   rem "%HB_HOST_BIN_DIR%\hbmk2" -mkimplib=cairo     "%HB_WITH_CAIRO%\..\..\bin\libcairo-2.dll"
+   rem "%HB_HOST_BIN_DIR%\hbmk2" -mkimplib=libcurl   "%HB_WITH_CURL%\..\libcurl.dll"
+   rem "%HB_HOST_BIN_DIR%\hbmk2" -mkimplib=libcurl   "%HB_WITH_CURL%\..\bin\libcurl.dll"
+   rem "%HB_HOST_BIN_DIR%\hbmk2" -mkimplib=fbclient  "%HB_WITH_FIREBIRD%\..\bin\fbclient.dll"
+   rem "%HB_HOST_BIN_DIR%\hbmk2" -mkimplib=FreeImage "%HB_WITH_FREEIMAGE%\..\Dist\FreeImage.dll"
+   rem "%HB_HOST_BIN_DIR%\hbmk2" -mkimplib=bgd       "%HB_WITH_GD%\..\bin\bgd.dll"
+   rem "%HB_HOST_BIN_DIR%\hbmk2" -mkimplib=libhpdf   "%HB_WITH_LIBHARU%\..\libhpdf.dll"
+   rem "%HB_HOST_BIN_DIR%\hbmk2" -mkimplib=libhpdf   "%HB_WITH_LIBHARU%\..\lib_dll\libhpdf.dll"
+   rem "%HB_HOST_BIN_DIR%\hbmk2" -mkimplib=libmysql  "%HB_WITH_MYSQL%\..\bin\libmySQL.dll"
+   rem "%HB_HOST_BIN_DIR%\hbmk2" -mkimplib=ociliba   "%HB_WITH_OCILIB%\..\lib32\ociliba.dll"
+   rem "%HB_HOST_BIN_DIR%\hbmk2" -mkimplib=ocilibm   "%HB_WITH_OCILIB%\..\lib32\ocilibm.dll"
+   rem "%HB_HOST_BIN_DIR%\hbmk2" -mkimplib=ocilibw   "%HB_WITH_OCILIB%\..\lib32\ocilibw.dll"
+   rem "%HB_HOST_BIN_DIR%\hbmk2" -mkimplib=libeay32  "%HB_WITH_OPENSSL%\..\out32dll\libeay32.dll"
+   rem "%HB_HOST_BIN_DIR%\hbmk2" -mkimplib=ssleay32  "%HB_WITH_OPENSSL%\..\out32dll\ssleay32.dll"
+   rem "%HB_HOST_BIN_DIR%\hbmk2" -mkimplib=libeay32  "%HB_WITH_OPENSSL%\..\dll\libeay32.dll"
+   rem "%HB_HOST_BIN_DIR%\hbmk2" -mkimplib=ssleay32  "%HB_WITH_OPENSSL%\..\dll\ssleay32.dll"
+   rem "%HB_HOST_BIN_DIR%\hbmk2" -mkimplib=libeay32  "%HB_WITH_OPENSSL%\..\libeay32.dll"
+   rem "%HB_HOST_BIN_DIR%\hbmk2" -mkimplib=ssleay32  "%HB_WITH_OPENSSL%\..\ssleay32.dll"
+   rem "%HB_HOST_BIN_DIR%\hbmk2" -mkimplib=libpq     "%HB_WITH_PGSQL%..\lib\libpq.dll"
+
+   "%HB_HOST_BIN_DIR%\hbrun" --hb:gtcgi "%~dp0hb-mkimp.prg"
 
 :_NO_IMPLIB
 
