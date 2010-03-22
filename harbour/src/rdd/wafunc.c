@@ -855,11 +855,9 @@ static const char * hb_dbTransFieldPos( PHB_ITEM pFields, HB_USHORT uiField )
    pItem = hb_arrayGetItemPtr( pFields, uiField );
    if( pItem )
    {
-      HB_TYPE type = hb_itemType( pItem );
-
-      if( type & HB_IT_ARRAY )
+      if( HB_IS_ARRAY( pItem ) )
          szField = hb_arrayGetCPtr( pItem, DBS_NAME );
-      else if( type & HB_IT_STRING )
+      else
          szField = hb_itemGetCPtr( pItem );
 
       if( * szField == '\0' )
@@ -870,8 +868,8 @@ static const char * hb_dbTransFieldPos( PHB_ITEM pFields, HB_USHORT uiField )
 }
 
 HB_ERRCODE hb_dbTransStruct( AREAP lpaSource, AREAP lpaDest,
-                          LPDBTRANSINFO lpdbTransInfo,
-                          PHB_ITEM *pStruct, PHB_ITEM pFields )
+                             LPDBTRANSINFO lpdbTransInfo,
+                             PHB_ITEM *pStruct, PHB_ITEM pFields )
 {
    HB_USHORT uiFields, uiSize, uiCount, uiPosSrc, uiPosDst, uiSizeSrc, uiSizeDst;
    HB_ERRCODE errCode;
