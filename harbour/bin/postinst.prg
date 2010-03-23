@@ -56,10 +56,6 @@ PROCEDURE Main()
       hb_FCopy( "COPYING", GetEnv( "HB_INSTALL_PREFIX" ) + hb_osPathSeparator() + "COPYING" )
       hb_FCopy( "INSTALL", GetEnv( "HB_INSTALL_PREFIX" ) + hb_osPathSeparator() + "INSTALL" )
       hb_FCopy( "TODO"   , GetEnv( "HB_INSTALL_PREFIX" ) + hb_osPathSeparator() + "TODO" )
-
-      IF GetEnv( "HB_PLATFORM" ) $ "win|wce"
-         hb_FCopy( "bin" + hb_osNewLine() + "hb-mkimp.bat", GetEnv( "HB_BIN_INSTALL" ) + hb_osPathSeparator() + "hb-mkimp.bat" )
-      ENDIF
    ENDIF
 
    ErrorLevel( nErrorLevel )
