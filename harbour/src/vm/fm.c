@@ -74,13 +74,6 @@
 #  define _GNU_SOURCE
 #endif
 
-/* For Sun C, a more generic solution would be nice */
-#if defined( __SUNPRO_C ) || defined( __SUNPRO_CC )
-#  ifndef __inline
-#     define __inline __inline__
-#  endif
-#endif
-
 /* NOTE: Need to have these before Harbour headers,
          because in MT mode, they will automatically #include <os2.h>. */
 #define INCL_BASE
@@ -345,14 +338,14 @@ typedef void * PHB_MEMINFO;
 #  undef HB_ATOM_INC
 #  undef HB_ATOM_GET
 #  undef HB_ATOM_SET
-   static __inline void hb_counterIncrement( volatile HB_COUNTER * p )
+   static _HB_INLINE_ void hb_counterIncrement( volatile HB_COUNTER * p )
    {
       HB_FM_LOCK
       ++(*p);
       HB_FM_UNLOCK
    }
 #  define HB_ATOM_INC( p )    hb_counterIncrement( p )
-   static __inline int hb_counterDecrement( volatile HB_COUNTER * p )
+   static _HB_INLINE_ int hb_counterDecrement( volatile HB_COUNTER * p )
    {
       int iResult;
       HB_FM_LOCK

@@ -131,6 +131,8 @@ extern HB_EXPORT HB_BOOL hb_xvmPushMemvarByRef( PHB_SYMB pSymbol );
 extern HB_EXPORT HB_BOOL hb_xvmPopMemvar( PHB_SYMB pSymbol );
 extern HB_EXPORT HB_BOOL hb_xvmPushAliasedField( PHB_SYMB pSymbol );
 extern HB_EXPORT HB_BOOL hb_xvmPopAliasedField( PHB_SYMB pSymbol );
+extern HB_EXPORT HB_BOOL hb_xvmPushAliasedFieldExt( PHB_SYMB pAlias, PHB_SYMB pField );
+extern HB_EXPORT HB_BOOL hb_xvmPopAliasedFieldExt( PHB_SYMB pAlias, PHB_SYMB pField );
 extern HB_EXPORT HB_BOOL hb_xvmPushAliasedVar( PHB_SYMB pSymbol );
 extern HB_EXPORT HB_BOOL hb_xvmPopAliasedVar( PHB_SYMB pSymbol );
 extern HB_EXPORT HB_BOOL hb_xvmPushAlias( void );

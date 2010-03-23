@@ -79,7 +79,7 @@ HB_EXTERN_BEGIN
 #  define HB_SCHED_YIELD()    Sleep( 0 )
 #elif defined( HB_OS_OS2 )
 #  define HB_SCHED_YIELD()    DosSleep( 0 )
-#elif defined( __SVR4 )
+#elif defined( HB_OS_SUNOS ) || defined( __SVR4 )
 #  define HB_SCHED_YIELD()    thr_yield()
 #elif defined( HB_OS_UNIX )
 #  define HB_SCHED_YIELD()    sched_yield()
@@ -165,7 +165,6 @@ HB_EXTERN_BEGIN
          {
             if( !hb_spinlock_trylock( l ) )
                return;
-
             #ifdef HB_SPINLOCK_REPEAT
                if( !hb_spinlock_trylock( l ) )
                   return;
@@ -181,8 +180,10 @@ HB_EXTERN_BEGIN
 
 #     define HB_SPINLOCK_T          volatile int
 #     define HB_SPINLOCK_INIT       0
-#     define HB_SPINLOCK_ACQUIRE(l) hb_spinlock_acquire(l)
+#     define HB_SPINLOCK_TRY(l)     (hb_spinlock_trylock(l)==0)
 #     define HB_SPINLOCK_RELEASE(l) hb_spinlock_release(l)
+#     define HB_SPINLOCK_ACQUIRE(l) hb_spinlock_acquire(l)
+
 
 #  elif ( ( __GNUC__ > 4 ) || ( __GNUC__ == 4 && __GNUC_MINOR__ >= 1) ) && \
         !defined( __MINGW32CE__ )
@@ -209,8 +210,9 @@ HB_EXTERN_BEGIN
 
 #     define HB_SPINLOCK_T          int
 #     define HB_SPINLOCK_INIT       0
-#     define HB_SPINLOCK_ACQUIRE(l) hb_spinlock_acquire(l)
+#     define HB_SPINLOCK_TRY(l)     (__sync_lock_test_and_set(l. 1)==0)
 #     define HB_SPINLOCK_RELEASE(l) __sync_lock_release(l)
+#     define HB_SPINLOCK_ACQUIRE(l) hb_spinlock_acquire(l)
 
 #  elif defined( HB_CPU_PPC )
 
@@ -327,7 +329,7 @@ HB_EXTERN_BEGIN
             "xchg eax, dword ptr [edx]" \
             parm [ edx ] value [ eax ] modify exact [ eax ] ;
 
-      static inline void hb_spinlock_acquire( volatile int * l )
+      static __inline void hb_spinlock_acquire( volatile int * l )
       {
          for( ;; )
          {
@@ -342,15 +344,16 @@ HB_EXTERN_BEGIN
          }
       }
 
-      static inline void hb_spinlock_release( volatile int * l )
+      static __inline void hb_spinlock_release( volatile int * l )
       {
          *l = 0;
       }
 
 #     define HB_SPINLOCK_T          volatile int
 #     define HB_SPINLOCK_INIT       0
-#     define HB_SPINLOCK_ACQUIRE(l) hb_spinlock_acquire(l)
+#     define HB_SPINLOCK_TRY(l)     (hb_spinlock_trylock(l)==0)
 #     define HB_SPINLOCK_RELEASE(l) hb_spinlock_release(l)
+#     define HB_SPINLOCK_ACQUIRE(l) hb_spinlock_acquire(l)
 
 #  endif    /* x86 */
 
@@ -382,22 +385,8 @@ HB_EXTERN_BEGIN
 #  if !defined( HB_SPINLOCK_T )
 #     define HB_SPINLOCK_T          volatile LONG
 #     define HB_SPINLOCK_INIT       0
-#     ifdef HB_SPINLOCK_REPEAT
-#        define HB_SPINLOCK_ACQUIRE(l) do { \
-                                          if( !InterlockedExchange( (LONG*)(l), 1 ) ) \
-                                             break; \
-                                          if( !InterlockedExchange( (LONG*)(l), 1 ) ) \
-                                             break; \
-                                          Sleep( 0 ); \
-                                       } while(1)
-#     else
-#        define HB_SPINLOCK_ACQUIRE(l) do { \
-                                          if( !InterlockedExchange( (LONG*)(l), 1 ) ) \
-                                             break; \
-                                          Sleep( 0 ); \
-                                       } while(1)
-#     endif
-#     define HB_SPINLOCK_RELEASE(l) do { *(l) = 0; } while(0)
+#     define HB_SPINLOCK_TRY(l)     (!InterlockedExchange( (LONG*)(l), 1 ))
+#     define HB_SPINLOCK_RELEASE(l) ( *(l) = 0 )
 #  endif
 
 #elif defined( HB_OS_DARWIN )
@@ -425,12 +414,14 @@ HB_EXTERN_BEGIN
 #  if !defined( HB_SPINLOCK_T ) || 1 /* <= force using OSSpinLock */
 #     undef HB_SPINLOCK_T
 #     undef HB_SPINLOCK_INIT
-#     undef HB_SPINLOCK_ACQUIRE
+#     undef HB_SPINLOCK_TRY
 #     undef HB_SPINLOCK_RELEASE
+#     undef HB_SPINLOCK_ACQUIRE
 #     define HB_SPINLOCK_T          OSSpinLock
 #     define HB_SPINLOCK_INIT       OS_SPINLOCK_INIT
-#     define HB_SPINLOCK_ACQUIRE(l) OSSpinLockLock(l)
+#     define HB_SPINLOCK_TRY(l)     OSSpinLockTry(l)
 #     define HB_SPINLOCK_RELEASE(l) OSSpinLockUnlock(l)
+#     define HB_SPINLOCK_ACQUIRE(l) OSSpinLockLock(l)
 #  endif
 
 #elif defined( HB_OS_SUNOS )
@@ -451,25 +442,138 @@ HB_EXTERN_BEGIN
 #  if !defined( HB_SPINLOCK_T )
 #     define HB_SPINLOCK_T          volatile uint_t
 #     define HB_SPINLOCK_INIT       0
-#     ifdef HB_SPINLOCK_REPEAT
-#        define HB_SPINLOCK_ACQUIRE(l) do { \
-                                          if( !atomic_swap_uint( (l), 1 ) ) \
-                                             break; \
-                                          if( !atomic_swap_uint( (l), 1 ) ) \
-                                             break; \
-                                          thr_yield(); \
-                                       } while(1)
-#     else
-#        define HB_SPINLOCK_ACQUIRE(l) do { \
-                                          if( !atomic_swap_uint( (l), 1 ) ) \
-                                             break; \
-                                          thr_yield(); \
-                                       } while(1)
-#     endif
-#     define HB_SPINLOCK_RELEASE(l) do { *(l) = 0; } while(0)
+#     define HB_SPINLOCK_TRY(l)     ( ! atomic_swap_uint( (l), 1 ) )
+#     define HB_SPINLOCK_RELEASE(l) ( *(l) = 0 )
 #  endif
 
 #endif  /* HB_OS_??? */
+
+#if defined( HB_SPINLOCK_T )
+#  if !defined( HB_SPINLOCK_ACQUIRE )
+#     ifdef HB_SPINLOCK_REPEAT
+#        define HB_SPINLOCK_ACQUIRE(l) do { \
+                                          if( HB_SPINLOCK_TRY( l ) ) \
+                                             break; \
+                                          if( HB_SPINLOCK_TRY( l ) ) \
+                                             break; \
+                                          HB_SCHED_YIELD(); \
+                                       } while(1)
+#     else
+#        define HB_SPINLOCK_ACQUIRE(l) do { \
+                                          if( HB_SPINLOCK_TRY( l ) ) \
+                                             break; \
+                                          HB_SCHED_YIELD(); \
+                                       } while(1)
+#     endif
+#  endif
+#  if !defined( HB_SPINLOCK_R )
+      struct hb_spinlock_r
+      {
+         HB_SPINLOCK_T  lock;
+         unsigned int   count;
+         HB_THREAD_ID   thid;
+      };
+
+      static _HB_INLINE_ void hb_spinlock_release_r( struct hb_spinlock_r * sl )
+      {
+         if( --sl->count == 0 )
+         {
+            sl->thid = 0;
+            HB_SPINLOCK_RELEASE( &sl->lock );
+         }
+      }
+
+      static _HB_INLINE_ int hb_spinlock_try_r( struct hb_spinlock_r * sl )
+      {
+         HB_SPINLOCK_T * l = &(sl)->lock;
+         int r = 0;
+         if( *l != HB_SPINLOCK_INIT )
+         {
+            if( (sl)->thid == HB_THREAD_SELF() )
+            {
+               (sl)->count++;
+               r = 1;
+            }
+         }
+         else if( HB_SPINLOCK_TRY( l ) )
+         {
+            (sl)->thid = HB_THREAD_SELF();
+            (sl)->count = 1;
+            r = 1;
+         }
+         return r;
+      }
+
+#     ifndef HB_SPINLOCK_REPEAT
+#        define HB_SPINLOCK_REPEAT     63
+#     endif
+
+/* workaround for borland C/C++ compiler limitation */
+#if defined( __BORLANDC__ )
+#     define hb_spinlock_acquire_r( sl ) \
+      do { \
+         HB_SPINLOCK_T * l = &(sl)->lock; \
+         int count = HB_SPINLOCK_REPEAT; \
+         for( ;; ) \
+         { \
+            if( *l != HB_SPINLOCK_INIT ) \
+            { \
+               if( (sl)->thid == HB_THREAD_SELF() ) \
+               { \
+                  (sl)->count++; \
+                  break; \
+               } \
+            } \
+            else if( HB_SPINLOCK_TRY( l ) ) \
+            { \
+               (sl)->thid = HB_THREAD_SELF(); \
+               (sl)->count = 1; \
+               break; \
+            } \
+            if( --count == 0 ) \
+            { \
+               HB_SCHED_YIELD(); \
+               count = HB_SPINLOCK_REPEAT; \
+            } \
+         } \
+      } while( 0 )
+#else
+      static _HB_INLINE_ void hb_spinlock_acquire_r( struct hb_spinlock_r * sl )
+      {
+         HB_SPINLOCK_T * l = &(sl)->lock;
+         int count = HB_SPINLOCK_REPEAT;
+         for( ;; )
+         {
+            if( *l != HB_SPINLOCK_INIT )
+            {
+               if( (sl)->thid == HB_THREAD_SELF() )
+               {
+                  (sl)->count++;
+                  break;
+               }
+            }
+            else if( HB_SPINLOCK_TRY( l ) )
+            {
+               (sl)->thid = HB_THREAD_SELF();
+               (sl)->count = 1;
+               break;
+            }
+            if( --count == 0 )
+            {
+               HB_SCHED_YIELD();
+               count = HB_SPINLOCK_REPEAT;
+            }
+         }
+      }
+#endif
+
+#     define HB_SPINLOCK_R             struct hb_spinlock_r
+#     define HB_SPINLOCK_INIT_R        { 0, 0, 0 }
+#     define HB_SPINLOCK_TRY_R(l)      hb_spinlock_try_r(l)
+#     define HB_SPINLOCK_RELEASE_R(l)  hb_spinlock_release_r(l)
+#     define HB_SPINLOCK_ACQUIRE_R(l)  hb_spinlock_acquire_r(l)
+#  endif /* !HB_SPINLOCK_R */
+#endif /* HB_SPINLOCK_T */
 
 HB_EXTERN_END
 

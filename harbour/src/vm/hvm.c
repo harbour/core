@@ -9317,6 +9317,21 @@ HB_BOOL hb_xvmPushAliasedField( PHB_SYMB pSymbol )
    HB_XVM_RETURN
 }
 
+HB_BOOL hb_xvmPushAliasedFieldExt( PHB_SYMB pAlias, PHB_SYMB pField )
+{
+   HB_STACK_TLS_PRELOAD
+   int iCurrArea;
+
+   HB_TRACE(HB_TR_INFO, ("hb_xvmPushAliasedFieldExt(%p,%p)", pAlias, pField));
+
+   iCurrArea = hb_rddGetCurrentWorkAreaNumber();
+   if( hb_rddSelectWorkAreaSymbol( pAlias ) == HB_SUCCESS )
+      hb_rddGetFieldValue( hb_stackAllocItem(), pField );
+   hb_rddSelectWorkAreaNumber( iCurrArea );
+
+   HB_XVM_RETURN
+}
+
 HB_BOOL hb_xvmPushAliasedVar( PHB_SYMB pSymbol )
 {
    HB_STACK_TLS_PRELOAD
@@ -9381,6 +9396,24 @@ HB_BOOL hb_xvmPopAliasedField( PHB_SYMB pSymbol )
    HB_TRACE(HB_TR_INFO, ("hb_xvmPopAliasedField(%p)", pSymbol));
 
    hb_vmPopAliasedField( pSymbol );
+
+   HB_XVM_RETURN
+}
+
+HB_BOOL hb_xvmPopAliasedFieldExt( PHB_SYMB pAlias, PHB_SYMB pField )
+{
+   HB_STACK_TLS_PRELOAD
+   int iCurrArea;
+
+   HB_TRACE(HB_TR_INFO, ("hb_xvmPopAliasedFieldExt(%p,%p)", pAlias, pField));
+
+   iCurrArea = hb_rddGetCurrentWorkAreaNumber();
+   if( hb_rddSelectWorkAreaSymbol( pAlias ) == HB_SUCCESS )
+   {
+      hb_rddPutFieldValue( hb_stackItemFromTop( -1 ), pField );
+      hb_stackPop();
+   }
+   hb_rddSelectWorkAreaNumber( iCurrArea );
 
    HB_XVM_RETURN
 }

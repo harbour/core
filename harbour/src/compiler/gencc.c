@@ -1401,12 +1401,39 @@ static HB_GENC_FUNC( hb_p_pushsym )
 {
    HB_GENC_LABEL();
 
-   if( pFunc->pCode[ lPCodePos + 3 ] == HB_P_PUSHNIL &&
-       HB_GENC_GETLABEL( lPCodePos + 3 ) == 0 )
+   if( HB_GENC_GETLABEL( lPCodePos + 3 ) == 0 )
    {
-      fprintf( cargo->yyc, "\thb_xvmPushFuncSymbol( symbols + %hu );\n",
-               HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] ) );
-      return 4;
+      switch( pFunc->pCode[ lPCodePos + 3 ] )
+      {
+         case HB_P_PUSHNIL:
+            fprintf( cargo->yyc, "\thb_xvmPushFuncSymbol( symbols + %hu );\n",
+                     HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] ) );
+            return 4;
+         case HB_P_PUSHALIASEDFIELDNEAR:
+            fprintf( cargo->yyc,
+                     "\thb_xvmPushAliasedFieldExt( symbols + %u, symbols + %u );\n",
+                     HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] ),
+                     pFunc->pCode[ lPCodePos + 4 ] );
+            return 5;
+         case HB_P_PUSHALIASEDFIELD:
+            fprintf( cargo->yyc,
+                     "\thb_xvmPushAliasedFieldExt( symbols + %u, symbols + %u );\n",
+                     HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] ),
+                     HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 4 ] ) );
+            return 6;
+         case HB_P_POPALIASEDFIELDNEAR:
+            fprintf( cargo->yyc,
+                     "\thb_xvmPopAliasedFieldExt( symbols + %u, symbols + %u );\n",
+                     HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] ),
+                     pFunc->pCode[ lPCodePos + 4 ] );
+            return 5;
+         case HB_P_POPALIASEDFIELD:
+            fprintf( cargo->yyc,
+                     "\thb_xvmPopAliasedFieldExt( symbols + %u, symbols + %u );\n",
+                     HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] ),
+                     HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 4 ] ) );
+            return 6;
+      }
    }
 
    fprintf( cargo->yyc, "\thb_xvmPushSymbol( symbols + %hu );\n",
@@ -1418,12 +1445,39 @@ static HB_GENC_FUNC( hb_p_pushsymnear )
 {
    HB_GENC_LABEL();
 
-   if( pFunc->pCode[ lPCodePos + 2 ] == HB_P_PUSHNIL &&
-       HB_GENC_GETLABEL( lPCodePos + 2 ) == 0 )
+   if( HB_GENC_GETLABEL( lPCodePos + 2 ) == 0 )
    {
-      fprintf( cargo->yyc, "\thb_xvmPushFuncSymbol( symbols + %hu );\n",
-               pFunc->pCode[ lPCodePos + 1 ] );
-      return 3;
+      switch( pFunc->pCode[ lPCodePos + 2 ] )
+      {
+         case HB_P_PUSHNIL:
+            fprintf( cargo->yyc, "\thb_xvmPushFuncSymbol( symbols + %u );\n",
+                     pFunc->pCode[ lPCodePos + 1 ] );
+            return 3;
+         case HB_P_PUSHALIASEDFIELDNEAR:
+            fprintf( cargo->yyc,
+                     "\thb_xvmPushAliasedFieldExt( symbols + %u, symbols + %u );\n",
+                     pFunc->pCode[ lPCodePos + 1 ],
+                     pFunc->pCode[ lPCodePos + 3 ] );
+            return 4;
+         case HB_P_PUSHALIASEDFIELD:
+            fprintf( cargo->yyc,
+                     "\thb_xvmPushAliasedFieldExt( symbols + %u, symbols + %u );\n",
+                     pFunc->pCode[ lPCodePos + 1 ],
+                     HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 3 ] ) );
+            return 5;
+         case HB_P_POPALIASEDFIELDNEAR:
+            fprintf( cargo->yyc,
+                     "\thb_xvmPopAliasedFieldExt( symbols + %u, symbols + %u );\n",
+                     pFunc->pCode[ lPCodePos + 1 ],
+                     pFunc->pCode[ lPCodePos + 3 ] );
+            return 4;
+         case HB_P_POPALIASEDFIELD:
+            fprintf( cargo->yyc,
+                     "\thb_xvmPopAliasedFieldExt( symbols + %u, symbols + %u );\n",
+                     pFunc->pCode[ lPCodePos + 1 ],
+                     HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 3 ] ) );
+            return 5;
+      }
    }
 
    fprintf( cargo->yyc, "\thb_xvmPushSymbol( symbols + %d );\n",
