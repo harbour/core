@@ -21,6 +21,7 @@ _DET_INC_HEAD := /mysql.h
 include $(TOP)$(ROOT)config/detfun.mk
 
 ifneq ($(HB_HAS_MYSQL),)
+   HB_INC_DEPEND := -I$(TOP)$(ROOT)contrib/rddsql
    HB_CFLAGS += $(foreach d,$(HB_HAS_MYSQL),-I$(d))
    include $(TOP)$(ROOT)config/lib.mk
 else

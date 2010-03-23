@@ -49,15 +49,11 @@
  *
  */
 
-
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbvm.h"
-#if defined( __XCC__ ) || defined( __LCC__ )
-#  include "hbrddsql.h"
-#else
-#  include "../hbrddsql.h"
-#endif
+
+#include "hbrddsql.h"
 
 #ifndef my_socket_defined
 #define my_socket_defined

@@ -564,6 +564,24 @@
 #define WIN_TPM_RETURNCMD           256
 #define WIN_TPM_RECURSE             1
 
+/* WAPI_PLAYSOUND() flags */
+#define WIN_SND_SYNC                0x00000000
+#define WIN_SND_ASYNC               0x00000001
+#define WIN_SND_NODEFAULT           0x00000002
+#define WIN_SND_MEMORY              0x00000004
+#define WIN_SND_LOOP                0x00000008
+#define WIN_SND_NOSTOP              0x00000010
+#define WIN_SND_NOWAIT              0x00002000
+#define WIN_SND_ALIAS               0x00010000
+#define WIN_SND_ALIAS_ID            0x00110000
+#define WIN_SND_FILENAME            0x00020000
+#define WIN_SND_RESOURCE            0x00040004
+#define WIN_SND_PURGE               0x00000040
+#define WIN_SND_APPLICATION         0x00000080
+#define WIN_SND_SENTRY              0x00080000
+#define WIN_SND_RING                0x00100000
+#define WIN_SND_SYSTEM              0x00200000
+
 
 /* window messages WM_* */
 #define WIN_WM_USER                 1024

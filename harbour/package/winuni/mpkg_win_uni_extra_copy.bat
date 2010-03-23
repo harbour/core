@@ -63,10 +63,4 @@ for /F %%a in ( 'dir /b /ad' ) do (
    xcopy /y /s %%a\utils\*.* F:\hb\hb20\contrib\%%a\utils\
 )
 
-for /F %%a in ( 'dir /b /ad rddsql' ) do (
-   echo %%a
-   xcopy /y /s rddsql\%%a\*.hbc     F:\hb\hb20\contrib\rddsql\%%a\
-   xcopy /y /s rddsql\%%a\tests\*.* F:\hb\hb20\contrib\rddsql\%%a\tests\
-)
-
 popd

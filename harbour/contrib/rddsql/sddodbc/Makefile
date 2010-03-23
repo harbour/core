@@ -28,6 +28,7 @@ _DET_INC_HEAD := /sql.h
 include $(TOP)$(ROOT)config/detfun.mk
 
 ifneq ($(HB_HAS_ODBC),)
+   HB_INC_DEPEND := -I$(TOP)$(ROOT)contrib/rddsql
    HB_CFLAGS += $(foreach d,$(HB_HAS_ODBC),-I$(d))
    include $(TOP)$(ROOT)config/lib.mk
 else

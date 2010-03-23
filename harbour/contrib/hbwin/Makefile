@@ -21,6 +21,7 @@ C_SOURCES := \
    wapi_alloc.c \
    wapi_commctrl.c \
    wapi_err.c \
+   wapi_mmsystem.c \
    wapi_shellapi.c \
    wapi_winbase.c \
    wapi_winbase_mutex.c \

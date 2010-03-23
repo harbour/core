@@ -56,11 +56,7 @@
 #include "hbset.h"
 #include "hbvm.h"
 
-#if defined( __XCC__ ) || defined( __LCC__ )
-#  include "hbrddsql.h"
-#else
-#  include "../hbrddsql.h"
-#endif
+#include "hbrddsql.h"
 
 /* Required by headers on Windows */
 #if defined( HB_OS_WIN )

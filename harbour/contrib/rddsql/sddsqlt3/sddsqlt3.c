@@ -55,11 +55,7 @@
 #include "hbdate.h"
 #include "hbvm.h"
 
-#if defined( __XCC__ ) || defined( __LCC__ )
-#  include "hbrddsql.h"
-#else
-#  include "../hbrddsql.h"
-#endif
+#include "hbrddsql.h"
 
 #include <sqlite3.h>
 

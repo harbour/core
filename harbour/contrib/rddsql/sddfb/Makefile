@@ -21,6 +21,7 @@ _DET_INC_HEAD := /ibase.h
 include $(TOP)$(ROOT)config/detfun.mk
 
 ifneq ($(HB_HAS_FIREBIRD),)
+   HB_INC_DEPEND := -I$(TOP)$(ROOT)contrib/rddsql
    HB_CFLAGS += $(foreach d,$(HB_HAS_FIREBIRD),-I$(d))
    include $(TOP)$(ROOT)config/lib.mk
 else

@@ -21,6 +21,7 @@ _DET_INC_HEAD := /ocilib.h
 include $(TOP)$(ROOT)config/detfun.mk
 
 ifneq ($(HB_HAS_OCILIB),)
+   HB_INC_DEPEND := -I$(TOP)$(ROOT)contrib/rddsql
    HB_CFLAGS += $(foreach d,$(HB_HAS_OCILIB),-I$(d))
    # Using prebuilt static libs with MinGW
    ifeq ($(HB_COMPILER),mingw)

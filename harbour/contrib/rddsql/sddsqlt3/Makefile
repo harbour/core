@@ -22,9 +22,8 @@ _DET_INC_HEAD := /sqlite3.h
 include $(TOP)$(ROOT)config/detfun.mk
 
 ifneq ($(HB_HAS_SQLITE3),)
-
+   HB_INC_DEPEND := -I$(TOP)$(ROOT)contrib/rddsql
    HB_CFLAGS += $(foreach d,$(HB_HAS_SQLITE3),-I$(d))
-
    include $(TOP)$(ROOT)config/header.mk
    include $(TOP)$(ROOT)config/lib.mk
 else
