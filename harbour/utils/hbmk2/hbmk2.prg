@@ -3134,7 +3134,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          IF lMakeImpLibMS_bcc
             cOpt_ImpLib := "-a"
          ENDIF
-         bBlk_ImpLib := {| cSourceDLL, cTargetLib, cFlags | win_implib_command( hbmk, "implib {FI} {OL} {ID}", nCmd_Esc, cSourceDLL, cTargetLib, cFlags ) }
+         bBlk_ImpLib := {| cSourceDLL, cTargetLib, cFlags | win_implib_command( hbmk, "implib.exe {FI} {OL} {ID}", nCmd_Esc, cSourceDLL, cTargetLib, cFlags ) }
          cLibPathPrefix := ""
          cLibPathSep := ";"
          IF hbmk[ _HBMK_lMAP ]
@@ -8651,7 +8651,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-blinker"          , "" },;
       { "-exospace"         , I_( "emulate Clipper compatible linker behavior\ncreate link/copy hbmk2 to rtlink/blinker/exospace for the same effect" ) },;
       NIL,;
-      { "-mkimplib=<l> <d>" , I_( "convert <d> .dll into <l> import libaray (experimental)" ) },;
+      { "-mkimplib=<l> <d>" , I_( "convert <d> .dll into <l> import library (experimental)" ) },;
       NIL,;
       { "-hbmake=<file>"    , I_( "convert hbmake project file to .hbp file (experimental)" ) },;
       { "-xbp=<file>"       , I_( "convert .xbp (xbuild) project file to .hbp file (experimental)" ) },;
