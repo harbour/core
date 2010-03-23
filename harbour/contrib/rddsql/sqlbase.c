@@ -46,7 +46,7 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
+ *                                        
  */
 
 #include "hbapi.h"
@@ -63,7 +63,7 @@
 #define CONNECTION_LIST_EXPAND    4
 
 static HB_USHORT          s_rddidSQLBASE = 0;
-static SQLDDCONNECTION *  s_pConnection = NULL;
+static SQLDDCONNECTION ** s_pConnection = NULL;
 static HB_ULONG           s_ulConnectionCount = 0;
 static HB_ULONG           s_ulConnectionCurrent = 0;
 static char *             s_szError = NULL;
@@ -650,7 +650,7 @@ static HB_ERRCODE sqlbaseCreate( SQLBASEAREAP pArea, LPDBOPENINFO pOpenInfo )
    pArea->ulConnection = pOpenInfo->ulConnection ? pOpenInfo->ulConnection : s_ulConnectionCurrent;
 
    if ( pArea->ulConnection > s_ulConnectionCount ||
-        ( pArea->ulConnection && ! s_pConnection[ pArea->ulConnection - 1 ].hConnection ) )
+        ( pArea->ulConnection && ! s_pConnection[ pArea->ulConnection - 1 ] ) )
    {
       hb_errRT_SQLBASE( EG_OPEN, ESQLDD_NOTCONNECTED, "Not connected", NULL );
       return HB_FAILURE;
@@ -658,7 +658,7 @@ static HB_ERRCODE sqlbaseCreate( SQLBASEAREAP pArea, LPDBOPENINFO pOpenInfo )
 
    if ( pArea->ulConnection )
    {
-      pArea->pConnection = & s_pConnection[ pArea->ulConnection - 1 ];
+      pArea->pConnection = s_pConnection[ pArea->ulConnection - 1 ];
       pArea->pConnection->uiAreaCount++;
       pArea->pSDD = pArea->pConnection->pSDD;
    }
@@ -753,7 +753,7 @@ static HB_ERRCODE sqlbaseCreate( SQLBASEAREAP pArea, LPDBOPENINFO pOpenInfo )
 
    * (pArea->pRow) = pItemEof;
    pArea->pRowFlags[ 0 ] = SQLDD_FLAG_CACHED;
-   pArea->fFetched = 1;
+   pArea->fFetched = HB_TRUE;
 
    if ( SUPER_CREATE( ( AREAP ) pArea, pOpenInfo ) != HB_SUCCESS )
    {
@@ -788,7 +788,7 @@ static HB_ERRCODE sqlbaseOpen( SQLBASEAREAP pArea, LPDBOPENINFO pOpenInfo )
    pArea->ulConnection = pOpenInfo->ulConnection ? pOpenInfo->ulConnection : s_ulConnectionCurrent;
 
    if ( pArea->ulConnection == 0 || pArea->ulConnection > s_ulConnectionCount ||
-        ! s_pConnection[ pArea->ulConnection - 1 ].hConnection )
+        ! s_pConnection[ pArea->ulConnection - 1 ] )
    {
       hb_errRT_SQLBASE( EG_OPEN, ESQLDD_NOTCONNECTED, "Not connected", NULL );
       return HB_FAILURE;
@@ -798,7 +798,7 @@ static HB_ERRCODE sqlbaseOpen( SQLBASEAREAP pArea, LPDBOPENINFO pOpenInfo )
       /* This should not happen (in __dbTrans()), because RDD is registered with RDT_FULL */
       return HB_FAILURE;
 
-   pArea->pConnection = & s_pConnection[ pArea->ulConnection - 1 ];
+   pArea->pConnection = s_pConnection[ pArea->ulConnection - 1 ];
    pArea->pConnection->uiAreaCount++;
    pArea->pSDD = pArea->pConnection->pSDD;
 
@@ -912,9 +912,10 @@ static HB_ERRCODE sqlbaseExit( LPRDDNODE pRDD )
       /* Disconnect all connections */
       for ( ul = 0; ul < s_ulConnectionCount; ul++ )
       {
-         if ( s_pConnection[ ul ].hConnection )
+         if ( s_pConnection[ ul ] )
          {
-            s_pConnection[ ul ].pSDD->Disconnect( & s_pConnection[ ul ] );
+            s_pConnection[ ul ]->pSDD->Disconnect( s_pConnection[ ul ] );
+            hb_xfree( s_pConnection[ ul ] );
          }
       }
       hb_xfree( s_pConnection );
@@ -947,8 +948,8 @@ static HB_ERRCODE sqlbaseRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ul
    HB_SYMBOL_UNUSED( pRDD );
 
    ulConn = ulConnect ? ulConnect : s_ulConnectionCurrent;
-   if ( ulConn > 0 && ulConn < s_ulConnectionCount && s_pConnection[ --ulConn ].hConnection )
-      pConn = & s_pConnection[ ulConn ];
+   if ( ulConn > 0 && ulConn <= s_ulConnectionCount )
+      pConn = s_pConnection[ ulConn - 1 ];
    else
       pConn = NULL;
 
@@ -990,26 +991,6 @@ static HB_ERRCODE sqlbaseRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ul
          HB_ULONG     ul;
          const char * pStr;
 
-         /* Find free connection handle */
-         for ( ul = 0; ul < s_ulConnectionCount; ul++ )
-         {
-            if ( ! s_pConnection[ ul ].hConnection )
-               break;
-         }
-
-         if ( ul >= s_ulConnectionCount )
-         {
-            /* Realloc connection table */
-            if ( s_pConnection )
-               s_pConnection = ( SQLDDCONNECTION * ) hb_xrealloc( s_pConnection, sizeof( SQLDDCONNECTION ) * ( s_ulConnectionCount + CONNECTION_LIST_EXPAND ) );
-            else
-               s_pConnection = ( SQLDDCONNECTION * ) hb_xgrab( sizeof( SQLDDCONNECTION ) * CONNECTION_LIST_EXPAND );
-
-            memset( &s_pConnection[ s_ulConnectionCount ], 0, sizeof( SQLDDCONNECTION ) * CONNECTION_LIST_EXPAND );
-            ul = s_ulConnectionCount;
-            s_ulConnectionCount += CONNECTION_LIST_EXPAND;
-         }
-
          pStr = hb_arrayGetCPtr( pItem, 1 );
          if ( pStr )
          {
@@ -1022,18 +1003,40 @@ static HB_ERRCODE sqlbaseRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ul
             }
          }
 
-         pConn = & s_pConnection[ ul ];
-         ul++;
          hb_rddsqlSetError( 0, NULL, NULL, NULL, 0 );
+         pConn = ( SQLDDCONNECTION * ) hb_xgrab( sizeof( SQLDDCONNECTION ) );
+         memset( pConn,  0, sizeof( SQLDDCONNECTION ) );
          if ( pNode && pNode->Connect( pConn, pItem ) == HB_SUCCESS )
          {
             pConn->pSDD = pNode;
+
+            /* Find free connection handle */
+            for ( ul = 0; ul < s_ulConnectionCount; ul++ )
+            {
+               if ( ! s_pConnection[ ul ] )
+                  break;
+            }
+            if ( ul >= s_ulConnectionCount )
+            {
+               /* Realloc connection table */
+               if ( s_pConnection )
+                  s_pConnection = ( SQLDDCONNECTION ** ) hb_xrealloc( s_pConnection, sizeof( SQLDDCONNECTION * ) * ( s_ulConnectionCount + CONNECTION_LIST_EXPAND ) );
+               else
+                  s_pConnection = ( SQLDDCONNECTION ** ) hb_xgrab( sizeof( SQLDDCONNECTION * ) * CONNECTION_LIST_EXPAND );
+    
+               memset( s_pConnection + s_ulConnectionCount, 0, sizeof( SQLDDCONNECTION * ) * CONNECTION_LIST_EXPAND );
+               ul = s_ulConnectionCount;
+               s_ulConnectionCount += CONNECTION_LIST_EXPAND;
+            }
+            s_pConnection[ ul ] = pConn;
+            ul++;
+            s_ulConnectionCurrent = ul;
          }
          else
+         {
+            hb_xfree( pConn );
             ul = 0;
-
-         if ( ul )
-            s_ulConnectionCurrent = ul;
+         }
 
          hb_itemPutNI( pItem, ul );
          break;
@@ -1044,7 +1047,12 @@ static HB_ERRCODE sqlbaseRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ul
          hb_rddsqlSetError( 0, NULL, NULL, NULL, 0 );
          if ( pConn && ! pConn->uiAreaCount && pConn->pSDD->Disconnect( pConn ) == HB_SUCCESS )
          {
-            pConn->hConnection = 0;
+            hb_xfree( pConn );
+            s_pConnection[ ulConn ] = NULL;
+            if( s_ulConnectionCurrent == ulConn )
+            {
+               s_ulConnectionCurrent = 0;
+            }
             hb_itemPutL( pItem, HB_TRUE );
             return HB_SUCCESS;
          }
@@ -1056,9 +1064,7 @@ static HB_ERRCODE sqlbaseRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ul
       {
          hb_rddsqlSetError( 0, NULL, NULL, NULL, 0 );
          if ( pConn )
-         {
             hb_itemPutL( pItem, pConn->pSDD->Execute( pConn, pItem ) == HB_SUCCESS );
-         }
          else
             hb_itemPutL( pItem, HB_FALSE );
 

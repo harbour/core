@@ -94,6 +94,18 @@
    #define D_HB_CHAR char
 #endif
 
+
+typedef struct
+{
+   OCI_Connection * pConn;
+} SDDCONN;
+
+typedef struct
+{
+   OCI_Statement * pStmt;
+} SDDDATA;
+
+
 static HB_ERRCODE ocilibConnect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem );
 static HB_ERRCODE ocilibDisconnect( SQLDDCONNECTION * pConnection );
 static HB_ERRCODE ocilibExecute( SQLDDCONNECTION * pConnection, PHB_ITEM pItem );
@@ -221,24 +233,27 @@ static HB_ERRCODE ocilibConnect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
 
    if( cn )
    {
-      pConnection->hConnection = ( void * ) cn;
+      pConnection->pSDDConn = hb_xgrab( sizeof( SDDCONN ) );
+      ( ( SDDCONN * ) pConnection->pSDDConn )->pConn = cn;
       return HB_SUCCESS;
    }
-
-   pConnection->hConnection = NULL;
    return HB_FAILURE;
 }
 
 
 static HB_ERRCODE ocilibDisconnect( SQLDDCONNECTION * pConnection )
 {
-   return OCI_ConnectionFree( ( OCI_Connection * ) pConnection->hConnection ) ? HB_SUCCESS : HB_FAILURE;
+   HB_ERRCODE errCode;
+
+   errCode = OCI_ConnectionFree( ( ( SDDCONN * ) pConnection->pSDDConn )->pConn ) ? HB_SUCCESS : HB_FAILURE;
+   hb_xfree( pConnection->pSDDConn );
+   return errCode;
 }
 
 
 static HB_ERRCODE ocilibExecute( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
 {
-   OCI_Statement * st = OCI_StatementCreate( ( OCI_Connection * ) pConnection->hConnection );
+   OCI_Statement * st = OCI_StatementCreate( ( ( SDDCONN * ) pConnection->pSDDConn )->pConn );
    void * hStatement;
    char * szError;
    HB_ERRCODE errCode;
@@ -264,7 +279,7 @@ static HB_ERRCODE ocilibExecute( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
       hb_strfree( hStatement );
 
    szError = ocilibGetError( &errCode );
-   hb_rddsqlSetError( errCode, szError, hb_itemGetCPtr( pItem ), NULL, errCode );
+   hb_rddsqlSetError( errCode, szError, hb_itemGetCPtr( pItem ), NULL, 0 );
    hb_xfree( szError );
    OCI_StatementFree( st );
    return HB_FAILURE;
@@ -273,14 +288,18 @@ static HB_ERRCODE ocilibExecute( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
 
 static HB_ERRCODE ocilibOpen( SQLBASEAREAP pArea )
 {
-   OCI_Statement * st = OCI_StatementCreate( ( OCI_Connection * ) pArea->pConnection->hConnection );
+   OCI_Statement * st = OCI_StatementCreate( ( ( SDDCONN * ) pArea->pConnection->pSDDConn )->pConn );
    OCI_Resultset * rs;
+   SDDDATA * pSDDData;
    void * hQuery;
    HB_USHORT uiFields, uiIndex;
    PHB_ITEM pItemEof, pItem;
    HB_ERRCODE errCode;
    char * szError;
    HB_BOOL bError;
+
+   pArea->pSDDData = memset( hb_xgrab( sizeof( SDDDATA ) ), 0, sizeof( SDDDATA ) );
+   pSDDData = ( SDDDATA * ) pArea->pSDDData;
 
    if( ! st )
    {
@@ -479,25 +498,27 @@ static HB_ERRCODE ocilibOpen( SQLBASEAREAP pArea )
    pArea->pRow[ 0 ] = pItemEof;
    pArea->pRowFlags[ 0 ] = SQLDD_FLAG_CACHED;
 
-   pArea->pStmt = ( void * ) st;
+   pSDDData->pStmt = st;
    return HB_SUCCESS;
 }
 
 
 static HB_ERRCODE ocilibClose( SQLBASEAREAP pArea )
 {
-   if( pArea->pStmt )
+   SDDDATA * pSDDData = ( SDDDATA * ) pArea->pSDDData;
+
+   if( pSDDData->pStmt )
    {
-      OCI_StatementFree( ( OCI_Statement * ) pArea->pStmt );
-      pArea->pStmt = NULL;
+      OCI_StatementFree( pSDDData->pStmt );
    }
+   hb_xfree( pSDDData );
    return HB_SUCCESS;
 }
 
 
 static HB_ERRCODE ocilibGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
 {
-   OCI_Statement * st = ( OCI_Statement * ) pArea->pStmt;
+   OCI_Statement * st = ( ( SDDDATA * ) pArea->pSDDData )->pStmt;
    OCI_Resultset * rs = OCI_GetResultset( st );
 
    while( ulRecNo > pArea->ulRecCount && ! pArea->fFetched )

@@ -64,6 +64,18 @@
 
 #include "ibase.h"
 
+typedef struct
+{
+   isc_db_handle hDb;
+} SDDCONN;
+
+typedef struct
+{
+   isc_tr_handle    hTrans;
+   isc_stmt_handle  hStmt;
+   XSQLDA ISC_FAR * pSqlda;
+} SDDDATA;
+
 static HB_ERRCODE fbConnect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem );
 static HB_ERRCODE fbDisconnect( SQLDDCONNECTION * pConnection );
 static HB_ERRCODE fbExecute( SQLDDCONNECTION * pConnection, PHB_ITEM pItem );
@@ -164,7 +176,9 @@ static HB_ERRCODE fbConnect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
       /* TODO: error code in status[1]; */
       return HB_FAILURE;
    }
-   pConnection->hConnection = ( void * ) ( HB_PTRDIFF ) db;
+   pConnection->pSDDConn = hb_xgrab( sizeof( SDDCONN ) );
+   ( ( SDDCONN * ) pConnection->pSDDConn )->hDb = db;
+/*   HB_TRACE( HB_TR_ALWAYS, ("db=%d", db) ); */
    return HB_SUCCESS;
 }
 
@@ -173,7 +187,8 @@ static HB_ERRCODE fbDisconnect( SQLDDCONNECTION * pConnection )
 {
    ISC_STATUS_ARRAY status;
 
-   isc_detach_database( status, ( isc_db_handle * ) ( void * ) &pConnection->hConnection );
+   isc_detach_database( status, ( ( SDDCONN * ) pConnection->pSDDConn )->hDb );
+   hb_xfree( pConnection->pSDDConn );
    return HB_SUCCESS;
 }
 
@@ -188,9 +203,11 @@ static HB_ERRCODE fbExecute( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
 
 static HB_ERRCODE fbOpen( SQLBASEAREAP pArea )
 {
+   isc_db_handle    hDb = ( ( SDDCONN * ) pArea->pConnection->pSDDConn )->hDb;
+   SDDDATA *        pSDDData;
    ISC_STATUS_ARRAY status;
-   isc_tr_handle    pTrans = ( isc_tr_handle ) 0;
-   isc_stmt_handle  pStmt = ( isc_stmt_handle ) 0;
+   isc_tr_handle    hTrans = ( isc_tr_handle ) 0;
+   isc_stmt_handle  hStmt = ( isc_stmt_handle ) 0;
    XSQLDA ISC_FAR * pSqlda;
    XSQLVAR *        pVar;
    PHB_ITEM         pItemEof, pItem;
@@ -200,16 +217,23 @@ static HB_ERRCODE fbOpen( SQLBASEAREAP pArea )
    HB_USHORT        uiFields, uiCount;
    int              iType;
 
-   if ( isc_start_transaction( status, &pTrans, 1, ( isc_db_handle * ) ( void * ) &pArea->pConnection->hConnection, 0, NULL ) )
+   pArea->pSDDData = memset( hb_xgrab( sizeof( SDDDATA ) ), 0, sizeof( SDDDATA ) );
+   pSDDData = ( SDDDATA * ) pArea->pSDDData;
+
+   memset( &status, 0, sizeof( status ) );
+
+/*   HB_TRACE( HB_TR_ALWAYS, ("db=%d", hDb) ); */
+   if ( isc_start_transaction( status, &hTrans, 1, &hDb, 0, NULL ) )
    {
+/*      HB_TRACE( HB_TR_ALWAYS, ("hTrans=%d status=%ld %ld %ld %ld", ( int ) hTrans, ( long ) status[0], ( long ) status[1], ( long ) status[2], ( long ) status[3] ) ); */
       hb_errRT_FireBirdDD( EG_OPEN, ESQLDD_START, "Start transaction failed", NULL, ( HB_ERRCODE ) isc_sqlcode( status ) );
       return HB_FAILURE;
    }
 
-   if ( isc_dsql_allocate_statement( status, ( isc_db_handle * ) ( void * ) &pArea->pConnection->hConnection, &pStmt ) )
+   if ( isc_dsql_allocate_statement( status, &hDb, &hStmt ) )
    {
       hb_errRT_FireBirdDD( EG_OPEN, ESQLDD_STMTALLOC, "Allocate statement failed", NULL, ( HB_ERRCODE ) isc_sqlcode( status ) );
-      isc_rollback_transaction( status, &pTrans );
+      isc_rollback_transaction( status, &hTrans );
       return HB_FAILURE;
    }
 
@@ -217,15 +241,14 @@ static HB_ERRCODE fbOpen( SQLBASEAREAP pArea )
    pSqlda->sqln = 1;
    pSqlda->version = 1;
 
-   if ( isc_dsql_prepare( status, &pTrans, &pStmt, 0, pArea->szQuery, SQL_DIALECT_V5, pSqlda ) )
+   if ( isc_dsql_prepare( status, &hTrans, &hStmt, 0, pArea->szQuery, SQL_DIALECT_V5, pSqlda ) )
    {
       hb_errRT_FireBirdDD( EG_OPEN, ESQLDD_INVALIDQUERY, "Prepare statement failed", pArea->szQuery, ( HB_ERRCODE ) isc_sqlcode( status ) );
-      isc_dsql_free_statement( status, &pStmt, DSQL_drop );
-      isc_rollback_transaction( status, &pTrans );
+      isc_dsql_free_statement( status, &hStmt, DSQL_drop );
+      isc_rollback_transaction( status, &hTrans );
       hb_xfree( pSqlda );
       return HB_FAILURE;
    }
-
    if ( pSqlda->sqld > pSqlda->sqln )
    {
        uiFields = pSqlda->sqld;
@@ -234,15 +257,19 @@ static HB_ERRCODE fbOpen( SQLBASEAREAP pArea )
        pSqlda->sqln = uiFields;
        pSqlda->version = 1;
 
-      if ( isc_dsql_describe( status, & pStmt, SQL_DIALECT_V5, pSqlda ) )
+      if ( isc_dsql_describe( status, & hStmt, SQL_DIALECT_V5, pSqlda ) )
       {
          hb_errRT_FireBirdDD( EG_OPEN, ESQLDD_STMTDESCR, "Describe statement failed", NULL, ( HB_ERRCODE ) isc_sqlcode( status ) );
-         isc_dsql_free_statement( status, &pStmt, DSQL_drop );
-         isc_rollback_transaction( status, &pTrans );
+         isc_dsql_free_statement( status, &hStmt, DSQL_drop );
+         isc_rollback_transaction( status, &hTrans );
          hb_xfree( pSqlda );
          return HB_FAILURE;
       }
    }
+
+   pSDDData->hTrans = hTrans;
+   pSDDData->hStmt = hStmt;
+   pSDDData->pSqlda = pSqlda;
 
    uiFields = pSqlda->sqld;
    SELF_SETFIELDEXTENT( ( AREAP ) pArea, uiFields );
@@ -378,10 +405,6 @@ static HB_ERRCODE fbOpen( SQLBASEAREAP pArea )
 
    hb_xfree( pBuffer );
 
-   pArea->pResult = pSqlda;
-   pArea->pStmt = ( void * ) ( HB_PTRDIFF ) pStmt;
-   pArea->pTrans = ( void * ) ( HB_PTRDIFF ) pTrans;
-
    if ( bError )
    {
       hb_itemClear( pItemEof );
@@ -406,36 +429,29 @@ static HB_ERRCODE fbOpen( SQLBASEAREAP pArea )
 
 static HB_ERRCODE fbClose( SQLBASEAREAP pArea )
 {
+   SDDDATA *        pSDDData = ( SDDDATA * ) pArea->pSDDData;
    ISC_STATUS_ARRAY status;
 
-   if ( pArea->pResult )
+   if ( pSDDData->pSqlda )
    {
-      hb_xfree( pArea->pResult );
-      pArea->pResult = NULL;
+      hb_xfree( pSDDData->pSqlda );
    }
-   if ( pArea->pStmt )
+   if ( pSDDData->hStmt )
    {
-      isc_stmt_handle  stmt = ( isc_stmt_handle ) ( HB_PTRDIFF ) pArea->pStmt;
-
-      /* We can not pass here ( isc_stmt_handle* ) &pArea->pStmt.
-         It will not work on 64bit big-endian system, since on 64bit
-         handle is unsigned int */
-      isc_dsql_free_statement( status, &stmt, DSQL_drop );
-      pArea->pStmt = NULL;
+      isc_dsql_free_statement( status, & pSDDData->hStmt, DSQL_drop );
    }
-   if ( pArea->pTrans )
+   if ( pSDDData->hTrans )
    {
-      isc_tr_handle   tr = ( isc_tr_handle ) ( HB_PTRDIFF ) pArea->pTrans;
-
-      isc_rollback_transaction( status, &tr );
-      pArea->pTrans = NULL;
+      isc_rollback_transaction( status, & pSDDData->hTrans );
    }
+   hb_xfree( pSDDData );
    return HB_SUCCESS;
 }
 
 
 static HB_ERRCODE fbGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
 {
+   SDDDATA *        pSDDData = ( SDDDATA * ) pArea->pSDDData;
    ISC_STATUS_ARRAY status;
    XSQLVAR *        pVar;
    PHB_ITEM         pItem, pArray;
@@ -445,17 +461,17 @@ static HB_ERRCODE fbGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
 
    while ( ulRecNo > pArea->ulRecCount && ! pArea->fFetched )
    {
-      isc_stmt_handle  stmt = ( isc_stmt_handle ) ( HB_PTRDIFF ) pArea->pStmt;
-      isc_tr_handle  tr = ( isc_tr_handle ) ( HB_PTRDIFF ) pArea->pTrans;
+      isc_stmt_handle  stmt = pSDDData->hStmt;
+      isc_tr_handle  tr = pSDDData->hTrans;
 
-      lErr = isc_dsql_fetch( status, &stmt, SQL_DIALECT_V5, ( XSQLDA * ) pArea->pResult );
+      lErr = isc_dsql_fetch( status, &stmt, SQL_DIALECT_V5, pSDDData->pSqlda );
 
       if ( lErr == 0 )
       {
          pArray = hb_itemArrayNew( pArea->area.uiFieldCount );
          for ( ui = 1; ui <= pArea->area.uiFieldCount; ui++ )
          {
-            pVar = ( XSQLVAR * ) pArea->pResult;
+            pVar = ( XSQLVAR * ) pSDDData->pSqlda;
             pVar += ( ui - 1 );
 
             if ( ( pVar->sqltype & 1 ) && ( * pVar->sqlind < 0 ) )
@@ -478,7 +494,7 @@ static HB_ERRCODE fbGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
 
                case SQL_LONG:
                   pItem = hb_itemPutNL( NULL, * ( long * ) pVar->sqldata );
-                  break;
+                  break; 
 
                case SQL_FLOAT:
                   pItem = hb_itemPutND( NULL, * ( float * ) pVar->sqldata );
@@ -515,17 +531,17 @@ static HB_ERRCODE fbGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
             hb_errRT_FireBirdDD( EG_OPEN, ESQLDD_STMTFREE, "Statement free error", NULL, ( HB_ERRCODE ) isc_sqlcode( status ) );
             return HB_FAILURE;
          }
-         pArea->pStmt = NULL;
+         pSDDData->hStmt = NULL;
 
          if ( isc_commit_transaction( status, &tr ) )
          {
             hb_errRT_FireBirdDD( EG_OPEN, ESQLDD_COMMIT, "Transaction commit error", NULL, ( HB_ERRCODE ) isc_sqlcode( status ) );
             return HB_FAILURE;
          }
-         pArea->pTrans = NULL;
+         pSDDData->hTrans = NULL;
 
-         hb_xfree( pArea->pResult );  /* TODO: free is more complex */
-         pArea->pResult = NULL;
+         hb_xfree( pSDDData->pSqlda );  /* TODO: free is more complex */
+         pSDDData->pSqlda = NULL;
 
       }
       else

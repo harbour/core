@@ -98,29 +98,24 @@ typedef struct _SQLBASEAREA
    void **                    pRow;          /* array of native pointers or cached PHB_ITEM */
    HB_BYTE *                  pRowFlags;
 
-   void *                     pRecord;
+   void *                     pRecord;       /* current record */
    HB_BYTE                    bRecordFlags;
-
-   void *                     pResult;          /* SQL result */
-   void *                     pStmt;            /* SQL statement */
-   void *                     pTrans;           /* SQL transaction */
-
-   void *                     pNatRecord;
-   void *                     pNatLength;
 
    HB_BOOL                    fFetched;
    HB_BOOL                    fPositioned;
    HB_BOOL                    fAppend;
    HB_BOOL                    fRecordChanged;
+
+   void *                     pSDDData;      /* SDD specific data */
 } SQLBASEAREA, * SQLBASEAREAP;
 
 
 typedef struct _SQLDDCONNECTION
 {
    struct _SDDNODE *    pSDD;
-   void *               hConnection;
-   void *               hCargo;
    unsigned int         uiAreaCount;
+
+   void *               pSDDConn;            /* SDD specific data */
 } SQLDDCONNECTION;
 
 
