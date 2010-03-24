@@ -195,9 +195,7 @@ static HB_ERRCODE sqlite3Connect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem 
       ( ( SDDCONN * ) pConnection->pSDDConn )->pDb = db;
    }
    else
-   {
       sqlite3_close( db );
-   }
 
    hb_strfree( hConn );
    return db ? HB_SUCCESS : HB_FAILURE;
@@ -415,9 +413,8 @@ static HB_ERRCODE sqlite3Close( SQLBASEAREAP pArea )
    SDDDATA * pSDDData = ( SDDDATA * ) pArea->pSDDData;
 
    if( pSDDData->pStmt )
-   {
       sqlite3_finalize( pSDDData->pStmt );
-   }
+
    hb_xfree( pSDDData );
    return HB_SUCCESS;
 }

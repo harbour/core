@@ -6,4 +6,4 @@ libs=sddmy
 {unix}libs=mysqlclient
 {!unix}libs=libmysql
 
-libs=../rddsql.hbc
+libs=../rddsql/rddsql.hbc

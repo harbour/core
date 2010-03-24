@@ -5,4 +5,4 @@
 libs=sddfb
 libs=fbclient
 
-libs=../rddsql.hbc
+libs=../rddsql/rddsql.hbc

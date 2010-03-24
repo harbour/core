@@ -45,6 +45,12 @@ DIRS += \
    hbssl \
    rddads \
    rddsql \
+   sddmy \
+   sddpg \
+   sddfb \
+   sddoci \
+   sddodbc \
+   sddsqlt3 \
 
 # contribs dependent on above
 DIRS += \

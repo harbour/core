@@ -158,14 +158,16 @@ static HB_ERRCODE fbConnect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
 
    parambuf[ i++ ] = isc_dpb_user_name;
    ul = hb_arrayGetCLen( pItem, 3 );
-   if ( ul > 255 )  ul = 255;
+   if ( ul > 255 )
+      ul = 255;
    parambuf[ i++ ] = ( char ) ul;
    memcpy( parambuf + i, hb_arrayGetCPtr( pItem, 3 ), ul );
    i += ul;
 
    parambuf[ i++ ] = isc_dpb_password;
    ul = hb_arrayGetCLen( pItem, 4 );
-   if ( ul > 255 )  ul = 255;
+   if ( ul > 255 )
+      ul = 255;
    parambuf[ i++ ] = ( char ) ul;
    memcpy( parambuf + i, hb_arrayGetCPtr( pItem, 4 ), ul );
    i += ul;
@@ -494,7 +496,7 @@ static HB_ERRCODE fbGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
 
                case SQL_LONG:
                   pItem = hb_itemPutNL( NULL, * ( long * ) pVar->sqldata );
-                  break; 
+                  break;
 
                case SQL_FLOAT:
                   pItem = hb_itemPutND( NULL, * ( float * ) pVar->sqldata );

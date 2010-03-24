@@ -5,4 +5,4 @@
 libs=sddsqlt3
 libs=sqlite3
 
-libs=../rddsql.hbc
+libs=../rddsql/rddsql.hbc
