@@ -485,20 +485,20 @@ HB_EXTERN_BEGIN
 
       static _HB_INLINE_ int hb_spinlock_try_r( struct hb_spinlock_r * sl )
       {
-         HB_SPINLOCK_T * l = &(sl)->lock;
+         HB_SPINLOCK_T * l = &sl->lock;
          int r = 0;
          if( *l != HB_SPINLOCK_INIT )
          {
-            if( (sl)->thid == HB_THREAD_SELF() )
+            if( sl->thid == HB_THREAD_SELF() )
             {
-               (sl)->count++;
+               sl->count++;
                r = 1;
             }
          }
          else if( HB_SPINLOCK_TRY( l ) )
          {
-            (sl)->thid = HB_THREAD_SELF();
-            (sl)->count = 1;
+            sl->thid = HB_THREAD_SELF();
+            sl->count = 1;
             r = 1;
          }
          return r;
@@ -540,22 +540,22 @@ HB_EXTERN_BEGIN
 #else
       static _HB_INLINE_ void hb_spinlock_acquire_r( struct hb_spinlock_r * sl )
       {
-         HB_SPINLOCK_T * l = &(sl)->lock;
+         HB_SPINLOCK_T * l = &sl->lock;
          int count = HB_SPINLOCK_REPEAT;
          for( ;; )
          {
             if( *l != HB_SPINLOCK_INIT )
             {
-               if( (sl)->thid == HB_THREAD_SELF() )
+               if( sl->thid == HB_THREAD_SELF() )
                {
-                  (sl)->count++;
+                  sl->count++;
                   break;
                }
             }
             else if( HB_SPINLOCK_TRY( l ) )
             {
-               (sl)->thid = HB_THREAD_SELF();
-               (sl)->count = 1;
+               sl->thid = HB_THREAD_SELF();
+               sl->count = 1;
                break;
             }
             if( --count == 0 )
@@ -568,7 +568,8 @@ HB_EXTERN_BEGIN
 #endif
 
 #     define HB_SPINLOCK_R             struct hb_spinlock_r
-#     define HB_SPINLOCK_INIT_R        { 0, 0, 0 }
+#     define HB_SPINLOCK_INITVAL_R     { 0, 0, 0 }
+#     define HB_SPINLOCK_INIT_R(l)     do { (l)->lock = 0; (l)->count = 0; (l)->thid = 0; } while( 0 )
 #     define HB_SPINLOCK_TRY_R(l)      hb_spinlock_try_r(l)
 #     define HB_SPINLOCK_RELEASE_R(l)  hb_spinlock_release_r(l)
 #     define HB_SPINLOCK_ACQUIRE_R(l)  hb_spinlock_acquire_r(l)

@@ -141,7 +141,11 @@
 /* #  define USE_DL_PREFIX */
 #  define REALLOC_ZERO_BYTES_FREES
 #  if defined( HB_MT_VM )
-#     define USE_LOCKS  1
+#     if defined( HB_SPINLOCK_R )
+#        define USE_LOCKS  2
+#     else
+#        define USE_LOCKS  1
+#     endif
 #     if defined( HB_FM_DLMT_ALLOC )
 #        define ONLY_MSPACES  1
 #        define FOOTERS       1
@@ -156,6 +160,7 @@
 #     pragma warn -ngu
 #     pragma warn -prc
 #     pragma warn -rch
+#     pragma warn -inl
 #  elif defined( HB_OS_WIN_CE ) && defined( __POCC__ )
 #     define ABORT TerminateProcess( GetCurrentProcess(), 0 )
 #  elif defined( __POCC__ ) && !defined( InterlockedCompareExchangePointer )
@@ -193,6 +198,7 @@
 #     pragma warn +ngu
 #     pragma warn +prc
 #     pragma warn +rch
+#     pragma warn +inl
 #  elif defined( __WATCOMC__ )
 #     pragma warning 13 2
 #     pragma warning 367 2
@@ -462,7 +468,7 @@ static void dlmalloc_destroy( void )
          size_t size = sp->size;
          flag_t flag = sp->sflags;
          sp = sp->next;
-         if( (flag & IS_MMAPPED_BIT) && !(flag & EXTERN_BIT) )
+         if( (flag & USE_MMAP_BIT) && !(flag & EXTERN_BIT) )
             CALL_MUNMAP(base, size);
       }
    }
