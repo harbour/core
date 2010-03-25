@@ -128,6 +128,7 @@ CLASS IdeDocks INHERIT IdeObject
    METHOD disblePanelButton( qTBtn )
    METHOD getADockWidget( nArea, cObjectName, cWindowTitle, nFlags )
    METHOD getPanelIcon( cView )
+   METHOD animateComponents( nMode )
 
    ENDCLASS
 
@@ -193,7 +194,7 @@ METHOD IdeDocks:buildDialog()
    ::oDlg:qtObject := HbQtUI():new( ::resPath + "mainwindow.uic" ):build()
    ::oDlg:create( , , , , , .f. )
 
-   ::oDlg:setStyleSheet( GetStyleSheet( "QMainWindow" ) )
+   ::oDlg:setStyleSheet( GetStyleSheet( "QMainWindow", ::nAnimantionMode ) )
 
    ::oDlg:close := {|| hbide_getYesNo( "hbIDE is about to be closed!", "Are you sure?" ) }
    ::oDlg:oWidget:setDockOptions( QMainWindow_AllowTabbedDocks + QMainWindow_ForceTabbedDocks )
@@ -301,7 +302,7 @@ METHOD IdeDocks:getADockWidget( nArea, cObjectName, cWindowTitle, nFlags )
    oDock:oWidget:setAllowedAreas( nArea )
    oDock:oWidget:setWindowTitle( cWindowTitle )
    oDock:oWidget:setFocusPolicy( Qt_NoFocus )
-   oDock:oWidget:setStyleSheet( getStyleSheet( "QDockWidget" ) )
+   oDock:oWidget:setStyleSheet( getStyleSheet( "QDockWidget", ::nAnimantionMode ) )
    oDock:hide()
 
    RETURN oDock
@@ -337,10 +338,10 @@ METHOD IdeDocks:execEvent( nMode, p )
       IF p; ::oEV:show(); ENDIF
 
    CASE nMode == dockFindInFiles_visibilityChanged
-      IF p; ::oFindInFiles:show(); ENDIF
+      IF p; ::oFF:show(); ENDIF
 
    CASE nMode == dockThemes_visibilityChanged
-      IF p; ::oThemes:show(); ENDIF
+      IF p; ::oTH:show(); ENDIF
 
    ENDCASE
 
@@ -360,7 +361,7 @@ METHOD IdeDocks:setView( cView )
             MsgBox( "View: " + cView + ", already exists" )
          ELSE
             aadd( ::aINI[ INI_VIEWS ], cView )
-            ::qViewsCombo:addItem( cView )
+            ::oTM:addPanelsMenu( cView )
             ::buildViewWidget( cView )
             ::addPanelButton( cView )
             ::setView( cView )
@@ -454,6 +455,7 @@ METHOD IdeDocks:buildToolBarPanels()
    /* Toolbar Panels */
 
    ::oIde:qTBarPanels := QToolBar():new()
+   ::qTBarPanels:setStyleSheet( GetStyleSheet( "QToolBarLR5", ::nAnimantionMode ) )
    ::qTBarPanels:setObjectName( "ToolBar_Panels" )
    ::qTBarPanels:setWindowTitle( "ToolBar: Editor Panels" )
    ::qTBarPanels:setAllowedAreas( Qt_LeftToolBarArea )
@@ -461,7 +463,6 @@ METHOD IdeDocks:buildToolBarPanels()
    ::qTBarPanels:setIconSize( qSize )
    ::qTBarPanels:setMovable( .f. )
    ::qTBarPanels:setFloatable( .f. )
-   ::qTBarPanels:setStyleSheet( "QToolBar { spacing: 1px; color: white; margin-top: 2px; }" )
 
    ::oDlg:oWidget:addToolBar( Qt_LeftToolBarArea, ::qTBarPanels )
 
@@ -473,6 +474,7 @@ METHOD IdeDocks:buildToolBarPanels()
    /* Toolbar Line Actions */
 
    ::oIde:qTBarLines := QToolBar():new()
+   ::qTBarLines:setStyleSheet( GetStyleSheet( "QToolBarLR5", ::nAnimantionMode ) )
    ::qTBarLines:setObjectName( "ToolBar_Lines" )
    ::qTBarLines:setWindowTitle( "ToolBar: Lines and Blocks" )
    ::qTBarLines:setAllowedAreas( Qt_LeftToolBarArea )
@@ -541,6 +543,7 @@ METHOD IdeDocks:buildToolBarPanels()
 
    /* Right-hand docks toolbar */
    ::oIde:qTBarDocks := QToolBar():new()
+   ::qTBarDocks:setStyleSheet( GetStyleSheet( "QToolBarLR5", ::nAnimantionMode ) )
    ::qTBarDocks:setObjectName( "ToolBar_Docks" )
    ::qTBarDocks:setWindowTitle( "ToolBar: Dockable Widgets" )
    ::qTBarDocks:setAllowedAreas( Qt_RightToolBarArea )
@@ -548,7 +551,6 @@ METHOD IdeDocks:buildToolBarPanels()
    ::qTBarDocks:setIconSize( QSize():new( 16,16 ) )
    ::qTBarDocks:setMovable( .f. )
    ::qTBarDocks:setFloatable( .f. )
-   ::qTBarDocks:setStyleSheet( "QToolBar { spacing: 1px; color: white; margin-top: 2px; }" )
    ::qTBarDocks:setToolButtonStyle( Qt_ToolButtonIconOnly )
 
    aBtns := {}
@@ -646,7 +648,7 @@ METHOD IdeDocks:buildProjectTree()
    ::oProjTree:hasButtons := .T.
    ::oProjTree:create( ::oDockPT, , { 0,0 }, { 100,10 }, , .t. )
 
-   ::oProjTree:setStyleSheet( GetStyleSheet( "QTreeWidgetHB" ) )
+   ::oProjTree:setStyleSheet( GetStyleSheet( "QTreeWidgetHB", ::nAnimantionMode ) )
    ::oProjTree:oWidget:setMinimumWidth( 100 )
    ::oProjTree:oWidget:setSizePolicy_1( QSizePolicy_MinimumExpanding, QSizePolicy_Preferred )
    ::oProjTree:oWidget:setIconSize( QSize():new( 12,12 ) )
@@ -1033,5 +1035,42 @@ METHOD IdeDocks:getMarkWidget( nIndex )
    ::connect( ::oIde:aMarkTBtns[ nIndex ], "clicked()", {|| ::oEM:gotoMark( nIndex ) } )
 
    RETURN ::oIde:aMarkTBtns[ nIndex ]
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeDocks:animateComponents( nMode )
+   LOCAL cStyle
+
+   ::oDlg:menubar():setStyleSheet( GetStyleSheet( "QMenuBar", nMode ) )
+
+   ::qTBarPanels:setStyleSheet( GetStyleSheet( "QToolBarLR5", nMode ) )
+   ::qTBarLines:setStyleSheet( GetStyleSheet( "QToolBarLR5", nMode ) )
+   ::qTBarDocks:setStyleSheet( GetStyleSheet( "QToolBarLR5", nMode ) )
+
+   ::oMainToolbar:setStyleSheet( GetStyleSheet( "QToolBar", nMode ) )
+
+   cStyle := GetStyleSheet( "QDockWidget", nMode )
+
+   ::oDockPT:oWidget:setStyleSheet( cStyle )
+   ::oDockED:oWidget:setStyleSheet( cStyle )
+   ::oSkltnsTreeDock:oWidget:setStyleSheet( cStyle )
+   ::oHelpDock:oWidget:setStyleSheet( cStyle )
+   ::oDocViewDock:oWidget:setStyleSheet( cStyle )
+   ::oDocWriteDock:oWidget:setStyleSheet( cStyle )
+   ::oFuncDock:oWidget:setStyleSheet( cStyle )
+   ::oFunctionsDock:oWidget:setStyleSheet( cStyle )
+   ::oPropertiesDock:oWidget:setStyleSheet( cStyle )
+   ::oEnvironDock:oWidget:setStyleSheet( cStyle )
+   ::oSkeltnDock:oWidget:setStyleSheet( cStyle )
+   ::oThemesDock:oWidget:setStyleSheet( cStyle )
+   ::oFindDock:oWidget:setStyleSheet( cStyle )
+   ::oDockB2:oWidget:setStyleSheet( cStyle )
+
+   #if 0
+   // should be iteration
+   ::qTabWidget:setStyleSheet( GetStyleSheet( "QTabWidget", nMode ) )
+   #endif
+
+   RETURN Self
 
 /*----------------------------------------------------------------------*/

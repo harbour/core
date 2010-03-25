@@ -1,0 +1,138 @@
+/********************************************************************************
+** Form generated from reading ui file 'toolsutilities.ui'
+**
+** Created: Sun Mar 21 11:24:09 2010
+**      by: Qt User Interface Compiler version 4.5.2
+**
+** WARNING! All changes made in this file will be lost when recompiling ui file!
+********************************************************************************/
+
+#ifndef TOOLSUTILITIES_H
+#define TOOLSUTILITIES_H
+
+#include <QtCore/QVariant>
+#include <QtGui/QAction>
+#include <QtGui/QApplication>
+#include <QtGui/QButtonGroup>
+#include <QtGui/QDialog>
+#include <QtGui/QFrame>
+#include <QtGui/QHeaderView>
+#include <QtGui/QLabel>
+#include <QtGui/QLineEdit>
+#include <QtGui/QListWidget>
+#include <QtGui/QPushButton>
+
+QT_BEGIN_NAMESPACE
+
+class Ui_DialogTools
+{
+public:
+    QLabel *labelCmdLine;
+    QLineEdit *editCmdLine;
+    QLabel *labelName;
+    QPushButton *buttonDown;
+    QPushButton *buttonUpdate;
+    QLabel *labelParams;
+    QPushButton *buttonBrowse;
+    QListWidget *listNames;
+    QPushButton *buttonAdd;
+    QPushButton *buttonDelete;
+    QFrame *line;
+    QLabel *label;
+    QLineEdit *editParams;
+    QPushButton *buttonUp;
+    QPushButton *buttonClose;
+    QLineEdit *editName;
+    QPushButton *buttonExec;
+
+    void setupUi(QDialog *DialogTools)
+    {
+        if (DialogTools->objectName().isEmpty())
+            DialogTools->setObjectName(QString::fromUtf8("DialogTools"));
+        DialogTools->resize(280, 403);
+        labelCmdLine = new QLabel(DialogTools);
+        labelCmdLine->setObjectName(QString::fromUtf8("labelCmdLine"));
+        labelCmdLine->setGeometry(QRect(12, 258, 79, 16));
+        editCmdLine = new QLineEdit(DialogTools);
+        editCmdLine->setObjectName(QString::fromUtf8("editCmdLine"));
+        editCmdLine->setGeometry(QRect(12, 276, 255, 20));
+        labelName = new QLabel(DialogTools);
+        labelName->setObjectName(QString::fromUtf8("labelName"));
+        labelName->setGeometry(QRect(12, 210, 53, 16));
+        buttonDown = new QPushButton(DialogTools);
+        buttonDown->setObjectName(QString::fromUtf8("buttonDown"));
+        buttonDown->setGeometry(QRect(176, 140, 95, 24));
+        buttonUpdate = new QPushButton(DialogTools);
+        buttonUpdate->setObjectName(QString::fromUtf8("buttonUpdate"));
+        buttonUpdate->setGeometry(QRect(12, 368, 149, 24));
+        labelParams = new QLabel(DialogTools);
+        labelParams->setObjectName(QString::fromUtf8("labelParams"));
+        labelParams->setGeometry(QRect(12, 306, 79, 16));
+        buttonBrowse = new QPushButton(DialogTools);
+        buttonBrowse->setObjectName(QString::fromUtf8("buttonBrowse"));
+        buttonBrowse->setGeometry(QRect(176, 226, 95, 24));
+        listNames = new QListWidget(DialogTools);
+        listNames->setObjectName(QString::fromUtf8("listNames"));
+        listNames->setGeometry(QRect(12, 29, 149, 173));
+        buttonAdd = new QPushButton(DialogTools);
+        buttonAdd->setObjectName(QString::fromUtf8("buttonAdd"));
+        buttonAdd->setGeometry(QRect(176, 28, 95, 24));
+        buttonDelete = new QPushButton(DialogTools);
+        buttonDelete->setObjectName(QString::fromUtf8("buttonDelete"));
+        buttonDelete->setGeometry(QRect(176, 66, 95, 24));
+        line = new QFrame(DialogTools);
+        line->setObjectName(QString::fromUtf8("line"));
+        line->setGeometry(QRect(12, 348, 253, 16));
+        line->setFrameShape(QFrame::HLine);
+        line->setFrameShadow(QFrame::Sunken);
+        label = new QLabel(DialogTools);
+        label->setObjectName(QString::fromUtf8("label"));
+        label->setGeometry(QRect(12, 10, 105, 16));
+        editParams = new QLineEdit(DialogTools);
+        editParams->setObjectName(QString::fromUtf8("editParams"));
+        editParams->setGeometry(QRect(12, 324, 253, 20));
+        buttonUp = new QPushButton(DialogTools);
+        buttonUp->setObjectName(QString::fromUtf8("buttonUp"));
+        buttonUp->setGeometry(QRect(176, 102, 95, 24));
+        buttonClose = new QPushButton(DialogTools);
+        buttonClose->setObjectName(QString::fromUtf8("buttonClose"));
+        buttonClose->setGeometry(QRect(172, 368, 95, 24));
+        editName = new QLineEdit(DialogTools);
+        editName->setObjectName(QString::fromUtf8("editName"));
+        editName->setGeometry(QRect(12, 228, 149, 20));
+        buttonExec = new QPushButton(DialogTools);
+        buttonExec->setObjectName(QString::fromUtf8("buttonExec"));
+        buttonExec->setGeometry(QRect(178, 178, 91, 24));
+
+        retranslateUi(DialogTools);
+
+        QMetaObject::connectSlotsByName(DialogTools);
+    } // setupUi
+
+    void retranslateUi(QDialog *DialogTools)
+    {
+        DialogTools->setWindowTitle(QApplication::translate("DialogTools", "Tools & Utilities", 0, QApplication::UnicodeUTF8));
+        labelCmdLine->setText(QApplication::translate("DialogTools", "Command Line:", 0, QApplication::UnicodeUTF8));
+        labelName->setText(QApplication::translate("DialogTools", "Name:", 0, QApplication::UnicodeUTF8));
+        buttonDown->setText(QApplication::translate("DialogTools", "Down", 0, QApplication::UnicodeUTF8));
+        buttonUpdate->setText(QApplication::translate("DialogTools", "Update", 0, QApplication::UnicodeUTF8));
+        labelParams->setText(QApplication::translate("DialogTools", "Parameters:", 0, QApplication::UnicodeUTF8));
+        buttonBrowse->setText(QApplication::translate("DialogTools", "Browse", 0, QApplication::UnicodeUTF8));
+        buttonAdd->setText(QApplication::translate("DialogTools", "Add", 0, QApplication::UnicodeUTF8));
+        buttonDelete->setText(QApplication::translate("DialogTools", "Delete", 0, QApplication::UnicodeUTF8));
+        label->setText(QApplication::translate("DialogTools", "Current Tools:", 0, QApplication::UnicodeUTF8));
+        buttonUp->setText(QApplication::translate("DialogTools", "Up", 0, QApplication::UnicodeUTF8));
+        buttonClose->setText(QApplication::translate("DialogTools", "Close", 0, QApplication::UnicodeUTF8));
+        buttonExec->setText(QApplication::translate("DialogTools", "Execute", 0, QApplication::UnicodeUTF8));
+        Q_UNUSED(DialogTools);
+    } // retranslateUi
+
+};
+
+namespace Ui {
+    class DialogTools: public Ui_DialogTools {};
+} // namespace Ui
+
+QT_END_NAMESPACE
+
+#endif // TOOLSUTILITIES_H

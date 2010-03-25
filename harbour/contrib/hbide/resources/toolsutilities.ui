@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>DialogTools</class>
+ <widget class="QDialog" name="DialogTools">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>280</width>
+    <height>403</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Tools &amp; Utilities</string>
+  </property>
+  <widget class="QLabel" name="labelCmdLine">
+   <property name="geometry">
+    <rect>
+     <x>12</x>
+     <y>258</y>
+     <width>79</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Command Line:</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="editCmdLine">
+   <property name="geometry">
+    <rect>
+     <x>12</x>
+     <y>276</y>
+     <width>255</width>
+     <height>20</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="labelName">
+   <property name="geometry">
+    <rect>
+     <x>12</x>
+     <y>210</y>
+     <width>53</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Name:</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="buttonDown">
+   <property name="geometry">
+    <rect>
+     <x>176</x>
+     <y>140</y>
+     <width>95</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Down</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="buttonUpdate">
+   <property name="geometry">
+    <rect>
+     <x>12</x>
+     <y>368</y>
+     <width>149</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Update</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="labelParams">
+   <property name="geometry">
+    <rect>
+     <x>12</x>
+     <y>306</y>
+     <width>79</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Parameters:</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="buttonBrowse">
+   <property name="geometry">
+    <rect>
+     <x>176</x>
+     <y>226</y>
+     <width>95</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Browse</string>
+   </property>
+  </widget>
+  <widget class="QListWidget" name="listNames">
+   <property name="geometry">
+    <rect>
+     <x>12</x>
+     <y>29</y>
+     <width>149</width>
+     <height>173</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="buttonAdd">
+   <property name="geometry">
+    <rect>
+     <x>176</x>
+     <y>28</y>
+     <width>95</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Add</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="buttonDelete">
+   <property name="geometry">
+    <rect>
+     <x>176</x>
+     <y>66</y>
+     <width>95</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Delete</string>
+   </property>
+  </widget>
+  <widget class="Line" name="line">
+   <property name="geometry">
+    <rect>
+     <x>12</x>
+     <y>348</y>
+     <width>253</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>12</x>
+     <y>10</y>
+     <width>105</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Current Tools:</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="editParams">
+   <property name="geometry">
+    <rect>
+     <x>12</x>
+     <y>324</y>
+     <width>253</width>
+     <height>20</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="buttonUp">
+   <property name="geometry">
+    <rect>
+     <x>176</x>
+     <y>102</y>
+     <width>95</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Up</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="buttonClose">
+   <property name="geometry">
+    <rect>
+     <x>172</x>
+     <y>368</y>
+     <width>95</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Close</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="editName">
+   <property name="geometry">
+    <rect>
+     <x>12</x>
+     <y>228</y>
+     <width>149</width>
+     <height>20</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="buttonExec">
+   <property name="geometry">
+    <rect>
+     <x>178</x>
+     <y>178</y>
+     <width>91</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Execute</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

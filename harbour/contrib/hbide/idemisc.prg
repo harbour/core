@@ -2029,3 +2029,20 @@ FUNCTION hbide_parseSourceComponents( cCompositeSource )
    RETURN a_
 
 /*----------------------------------------------------------------------*/
+
+FUNCTION hbide_parseToolComponents( cCompositeTool )
+   LOCAL a_
+
+   a_:= hb_atokens( cCompositeTool, "," )
+   asize( a_, 3 )
+   DEFAULT a_[ 1 ] TO ""
+   DEFAULT a_[ 2 ] TO ""
+   DEFAULT a_[ 3 ] TO ""
+   a_[ 1 ] := alltrim( a_[ 1 ] )
+   a_[ 2 ] := alltrim( a_[ 2 ] )
+   a_[ 3 ] := alltrim( a_[ 3 ] )
+
+   RETURN a_
+
+/*----------------------------------------------------------------------*/
+

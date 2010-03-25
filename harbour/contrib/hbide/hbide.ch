@@ -58,6 +58,10 @@
 
 #define HBIDE_USE_UIC
 
+#define HBIDE_ANIMATION_NONE                      0
+#define HBIDE_ANIMATION_GRADIENT                  1
+#define HBIDE_ANIMATION_GRADIENT_BLUE             2
+
 #define HBIDE_RUN_MODE_INI                        1
 #define HBIDE_RUN_MODE_HBP                        2
 #define HBIDE_RUN_MODE_PRG                        3
@@ -73,8 +77,9 @@
 #define INI_VIEWS                                 9
 #define INI_TAGGEDPROJECTS                        10
 #define INI_GENERAL                               11
+#define INI_TOOLS                                 12
 
-#define INI_SECTIONS_COUNT                        11
+#define INI_SECTIONS_COUNT                        12
 
 
 /* INI_HBIDE */

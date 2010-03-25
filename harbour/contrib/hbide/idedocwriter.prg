@@ -289,8 +289,8 @@ METHOD IdeDocWriter:setParameters()
    ::oUI:q_comboTemplate:addItem( "Procedure" )
    ::oUI:q_comboTemplate:addItem( "Class"     )
 
-   ::qHiliter  := ::oThemes:SetSyntaxHilighting( ::oUI:q_plainExamples, "Pritpal's Favourite" )
-   ::qHiliter1 := ::oThemes:SetSyntaxHilighting( ::oUI:q_plainTests   , "Evening Glamour"     )
+   ::qHiliter  := ::oTH:SetSyntaxHilighting( ::oUI:q_plainExamples, "Pritpal's Favourite" )
+   ::qHiliter1 := ::oTH:SetSyntaxHilighting( ::oUI:q_plainTests   , "Evening Glamour"     )
 
    ::oUI:q_plainExamples:setFont( ::oFont:oWidget )
    ::oUI:q_plainTests:setFont( ::oFont:oWidget )

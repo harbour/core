@@ -95,15 +95,14 @@ CLASS IdeObject
    ACCESS oFN                                     INLINE ::oIde:oFN
    ACCESS oDW                                     INLINE ::oIde:oDW
    ACCESS oSK                                     INLINE ::oIde:oSK
-
-   ACCESS oFindDock                               INLINE ::oIde:oFindDock
-   ACCESS oFindInFiles                            INLINE ::oIde:oFindInFiles
+   ACCESS oTM                                     INLINE ::oIde:oTM
+   ACCESS oTH                                     INLINE ::oIde:oTH
+   ACCESS oFF                                     INLINE ::oIde:oFF
 
    ACCESS aMeta                                   INLINE ::oIde:aMeta
    ACCESS aTags                                   INLINE ::oIde:aTags
 
    ACCESS oFont                                   INLINE ::oIde:oFont
-   ACCESS oThemes                                 INLINE ::oIde:oThemes
    ACCESS oSBar                                   INLINE ::oIde:oSBar
    ACCESS oDlg                                    INLINE ::oIde:oDlg
    ACCESS qDlg                                    INLINE ::oIde:oDlg:oWidget
@@ -141,6 +140,7 @@ CLASS IdeObject
    ACCESS resPath                                 INLINE ::oIde:resPath
    ACCESS pathSep                                 INLINE ::oIde:pathSep
    ACCESS cLastFileOpenPath                       INLINE ::oIde:cLastFileOpenPath
+   ACCESS nAnimantionMode                         INLINE ::oIde:nAnimantionMode
 
    ACCESS aProjects                               INLINE ::oIde:aProjects
    ACCESS aINI                                    INLINE ::oIde:aINI
@@ -184,6 +184,8 @@ CLASS IdeObject
    ACCESS oDocWriteDock                           INLINE ::oIde:oDocWriteDock
    ACCESS oFunctionsDock                          INLINE ::oIde:oFunctionsDock
    ACCESS oSkltnsTreeDock                         INLINE ::oIde:oSkltnsTreeDock
+   ACCESS oFindDock                               INLINE ::oIde:oFindDock
+   ACCESS oMainToolbar                            INLINE ::oIde:oMainToolbar
 
    ACCESS lProjTreeVisible                        INLINE ::oIde:lProjTreeVisible
    ACCESS lDockRVisible                           INLINE ::oIde:lDockRVisible

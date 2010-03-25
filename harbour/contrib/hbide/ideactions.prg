@@ -203,7 +203,8 @@ METHOD IdeActions:loadActions()
    aadd( aAct, { "TB_ToUpper"           , "To Upper"                     , "toupper"        , ""     , "No", "Yes" } )
    aadd( aAct, { "TB_ToLower"           , "To Lower"                     , "tolower"        , ""     , "No", "Yes" } )
    aadd( aAct, { "TB_Invert"            , "Invert"                       , "invertcase"     , ""     , "No", "Yes" } )
-   aadd( aAct, { "TB_MatchPairs"        , "Match Pairs"                  , "matchobj"       , ""     , "No", "Yes" } )
+ * aadd( aAct, { "TB_MatchPairs"        , "Match Pairs"                  , "matchobj"       , ""     , "No", "Yes" } )
+   aadd( aAct, { "TB_Tools"             , "Tools & Utilities"            , "tools"          , ""     , "No", "Yes" } )
    aadd( aAct, { "TB_ZoomIn"            , "ZoomIn"                       , "zoomin"         , ""     , "No", "Yes" } )
    aadd( aAct, { "TB_ZoomOut"           , "ZoomOut"                      , "zoomout"        , ""     , "No", "Yes" } )
    //
@@ -312,16 +313,18 @@ METHOD IdeActions:loadActions()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeActions:buildToolBar()
-   LOCAL oTBar, s
+   LOCAL oTBar
    LOCAL nSep := XBPTOOLBAR_BUTTON_SEPARATOR
 
    oTBar := XbpToolBar():new( ::oDlg )
    oTBar:imageWidth  := 22
    oTBar:imageHeight := 22
    oTBar:create( , , { 0, ::oDlg:currentSize()[ 2 ]-60 }, { ::oDlg:currentSize()[ 1 ], 60 } )
- * oTBar:setStyleSheet( GetStyleSheet( "QToolBar" ) )
-
+   oTBar:setStyleSheet( GetStyleSheet( "QToolBar", ::nAnimantionMode ) )
    oTBar:oWidget:setMaximumHeight( 28 )
+   oTBar:oWidget:setAllowedAreas( Qt_TopToolBarArea )
+   oTBar:oWidget:setMovable( .f. )
+   oTBar:oWidget:setFloatable( .f. )
 
    oTBar:buttonClick := {|oButton| ::oIde:execAction( oButton:key ) }
 
@@ -341,10 +344,6 @@ METHOD IdeActions:buildToolBar()
    oTBar:addItem( ::getAction( "TB_Rebuild"           ), , , , , , "Rebuild"           )
    oTBar:addItem( ::getAction( "TB_RebuildLaunch"     ), , , , , , "RebuildLaunch"     )
    oTBar:addItem( , , , , , nSep )
- * oTBar:addItem( ::getAction( "TB_ToggleProjectTree" ), , , , , , "ToggleProjectTree" )
- * oTBar:addItem( ::getAction( "TB_ToggleBuildInfo"   ), , , , , , "ToggleBuildInfo"   )
- * oTBar:addItem( ::getAction( "TB_ToggleFuncList"    ), , , , , , "ToggleFuncList"    )
- * oTBar:addItem( , , , , , nSep )
    oTBar:addItem( ::getAction( "TB_Undo"              ), , , , , , "Undo"              )
    oTBar:addItem( ::getAction( "TB_Redo"              ), , , , , , "Redo"              )
    oTBar:addItem( , , , , , nSep )
@@ -355,36 +354,19 @@ METHOD IdeActions:buildToolBar()
    oTBar:addItem( ::getAction( "TB_SelectionMode"     ), , , , , , "SelectionMode"     )
    oTBar:addItem( , , , , , nSep )
    oTBar:addItem( ::getAction( "TB_Find"              ), , , , , , "Find"              )
- * oTBar:addItem( ::getAction( "TB_Search"            ), , , , , , "Search"            )
- * oTBar:addItem( , , , , , nSep )
    oTBar:addItem( ::getAction( "TB_SetMark"           ), , , , , , "SetMark"           )
- * oTBar:addItem( ::getAction( "TB_GotoMark"          ), , , , , , "GotoMark"          )
    oTBar:addItem( ::getAction( "TB_Goto"              ), , , , , , "Goto"              )
- * oTBar:addItem( , , , , , nSep )
- * oTBar:addItem( ::getAction( "TB_ToUpper"           ), , , , , , "ToUpper"           )
- * oTBar:addItem( ::getAction( "TB_ToLower"           ), , , , , , "ToLower"           )
- * oTBar:addItem( ::getAction( "TB_Invert"            ), , , , , , "Invert"            )
-   oTBar:addItem( ::getAction( "TB_MatchPairs"        ), , , , , , "MatchPairs"        )
    oTBar:addItem( , , , , , nSep )
    oTBar:addItem( ::getAction( "ZoomIn"               ), , , , , , "ZoomIn"            )
    oTBar:addItem( ::getAction( "ZoomOut"              ), , , , , , "ZoomOut"           )
    oTBar:addItem( , , , , , nSep )
 
-   oTBar:oWidget:setAllowedAreas( Qt_TopToolBarArea )
-   oTBar:oWidget:setMovable( .f. )
-   oTBar:oWidget:setFloatable( .f. )
+   oTBar:oWidget:addWidget( ::oIde:oTM:buildToolsButton() )
 
-   /* ComboBox to Manage Views */
-   ::oIde:qViewsCombo := QComboBox():new()
-   oTBar:oWidget:addWidget( ::qViewsCombo )
-   ::qViewsCombo:addItem( "New..." )
-   ::qViewsCombo:addItem( " " )
-   ::qViewsCombo:addItem( "Main"   )
-   FOR EACH s IN ::aINI[ INI_VIEWS ]
-      ::qViewsCombo:addItem( s )
-   NEXT
-   ::qViewsCombo:setCurrentIndex( -1 )
-   ::connect( ::qViewsCombo, "currentIndexChanged(QString)", {|p| ::oDK:setView( p ) } )
+   /* Candidate for separate class - though */
+   oTBar:oWidget:addWidget( ::oIde:oTM:buildPanelsButton() )
+
+   ::oIde:oMainToolbar := oTBar
 
    RETURN Self
 
@@ -395,7 +377,7 @@ METHOD IdeActions:buildMainMenu()
    LOCAL oIde := ::oIde
 
    oMenuBar := ::oDlg:MenuBar()
-   oMenuBar:setStyleSheet( GetStyleSheet( "QMenuBar" ) )
+   oMenuBar:setStyleSheet( GetStyleSheet( "QMenuBar", ::nAnimantionMode ) )
 
    /*----------------------------------------------------------------------------*/
    /*                                   File                                     */
@@ -556,21 +538,6 @@ METHOD IdeActions:buildMainMenu()
    oMenuBar:addItem( { oSubMenu, NIL } )
 
    /*----------------------------------------------------------------------------*/
-   /*                                   Tools                                    */
-   /*----------------------------------------------------------------------------*/
-#if 0
-   oSubMenu := XbpMenu():new( oMenuBar ):create()
-   oSubMenu:title := "~Tools"
-   oSubMenu:addItem( { ::getAction( "ConfigureTools"      ), {|| oIde:execAction( "ConfigureTools"     ) } } )
-   hbide_menuAddSep( oSubMenu )
-#ifdef __PLATFORM__WINDOWS
-   oSubMenu:addItem( { ::getAction( "CommandPrompt"       ), {|| oIde:execAction( "CommandPrompt"      ) } } )
-#else
-   oSubMenu:addItem( { ::getAction( "Terminal"            ), {|| oIde:execAction( "Terminal"           ) } } )
-#endif
-   oMenuBar:addItem( { oSubMenu, NIL } )
-#endif
-   /*----------------------------------------------------------------------------*/
    /*                                   Options                                  */
    /*----------------------------------------------------------------------------*/
    oSubMenu := XbpMenu():new( oMenuBar ):create()
@@ -587,6 +554,8 @@ METHOD IdeActions:buildMainMenu()
    oSubMenu:title := "~View"
    oMenuBar:addItem( { oSubMenu, NIL } )
 
+   oSubMenu:addItem( { "Toggle Animation", {|| oIde:execAction( "Animate" ) } } )
+   oSubMenu:oWidget:addSeparator()
    oSubMenu:oWidget:addAction_4( ::qTBarPanels:toggleViewAction()             )
    oSubMenu:oWidget:addAction_4( ::qTBarLines:toggleViewAction()              )
    oSubMenu:oWidget:addAction_4( ::qTBarDocks:toggleViewAction()              )

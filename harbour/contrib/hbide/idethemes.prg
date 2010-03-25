@@ -94,7 +94,7 @@ FUNCTION hbide_loadThemes( oIde )
       oIde:cIniThemes := hb_dirBase() + "hbide.hbt"
    ENDIF
 
-   oIde:oThemes := IdeThemes():new( oIde, oIde:cIniThemes ):create()
+   oIde:oTH := IdeThemes():new( oIde, oIde:cIniThemes ):create()
 
    RETURN nil
 

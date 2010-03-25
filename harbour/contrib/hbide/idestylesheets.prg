@@ -65,12 +65,15 @@
 /*----------------------------------------------------------------------*/
 
 #include "common.ch"
+#include "hbide.ch"
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION GetStyleSheet( cWidget )
+FUNCTION GetStyleSheet( cWidget, nMode )
    LOCAL txt_:= {}
    LOCAL s   := ""
+
+   DEFAULT nMode TO HBIDE_ANIMATION_NONE
 
    DO CASE
 
@@ -134,10 +137,16 @@ FUNCTION GetStyleSheet( cWidget )
 
    CASE cWidget == "QMenuBar"
 
-   *  aadd( txt_, 'QMenuBar {                                                                   ' )
-   *  aadd( txt_, '    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,                ' )
-   *  aadd( txt_, '                                      stop:0 lightgray, stop:1 darkgray);    ' )
-   *  aadd( txt_, '}                                                                            ' )
+      IF nMode == HBIDE_ANIMATION_GRADIENT
+      aadd( txt_, 'QMenuBar {                                                                   ' )
+      aadd( txt_, '    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,                ' )
+      aadd( txt_, '                                      stop:0 lightgray, stop:1 darkgray);    ' )
+      aadd( txt_, '}                                                                            ' )
+      ELSE
+      aadd( txt_, 'QMenuBar {                                                                   ' )
+      aadd( txt_, hbide_cssColorString( "bg-std" )                                                )
+      aadd( txt_, '}                                                                            ' )
+      ENDIF
       aadd( txt_, 'QMenuBar::item {                                                             ' )
       aadd( txt_, '    spacing      : 3px; /* spacing between menu bar items */                 ' )
       aadd( txt_, '    padding      : 1px 4px;                                                  ' )
@@ -153,12 +162,70 @@ FUNCTION GetStyleSheet( cWidget )
       aadd( txt_, '}                                                                            ' )
 
    CASE cWidget == "QToolBar"
-
+      IF nMode == HBIDE_ANIMATION_GRADIENT
       aadd( txt_, 'QToolBar {                                                                   ' )
       aadd( txt_, '    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0,                ' )
       aadd( txt_, '                                      stop:0 lightgray, stop:1 darkgray);    ' )
       aadd( txt_, '     /*spacing: 3px;  spacing between items in the tool bar */               ' )
       aadd( txt_, ' }                                                                           ' )
+      ELSE
+      aadd( txt_, 'QToolBar {                                                                   ' )
+      aadd( txt_, hbide_cssColorString( "bg-std" )                                                )
+      aadd( txt_, ' }                                                                           ' )
+      ENDIF
+
+   CASE cWidget == "QToolBarLR"
+      IF nMode == HBIDE_ANIMATION_GRADIENT
+      aadd( txt_, 'QToolBar {                                                                   ' )
+      aadd( txt_, '    background-color: qlineargradient(x1:1, y1:0, x2:0, y2:0,                ' )
+      aadd( txt_, '                                      stop:0 lightgray, stop:1 darkgray);    ' )
+      aadd( txt_, ' }                                                                           ' )
+      ELSE
+      aadd( txt_, 'QToolBar {                                                                   ' )
+      aadd( txt_, hbide_cssColorString( "bg-std" )                                                )
+      aadd( txt_, ' }                                                                           ' )
+      ENDIF
+
+   CASE cWidget == "QToolBarLR5"
+      IF nMode == HBIDE_ANIMATION_GRADIENT
+      aadd( txt_, 'QToolBar {                                                                   ' )
+      aadd( txt_, '    background-color: qlineargradient(x1:1, y1:0, x2:0, y2:0,                ' )
+      aadd( txt_, '                                      stop:0 lightgray, stop:1 darkgray);    ' )
+*     aadd( txt_, '    spacing: 1px; color: white; margin-top: 2px;                             ' )
+      aadd( txt_, ' }                                                                           ' )
+      ELSE
+      aadd( txt_, 'QToolBar {                                                                   ' )
+      aadd( txt_, hbide_cssColorString( "bg-std" )                                                )
+*     aadd( txt_, '    spacing: 1px; color: white; margin-top: 2px;                             ' )
+      aadd( txt_, ' }                                                                           ' )
+      ENDIF
+
+
+   CASE cWidget == "QToolBarRL"
+      IF nMode == HBIDE_ANIMATION_GRADIENT
+      aadd( txt_, 'QToolBar {                                                                   ' )
+      aadd( txt_, '    background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0,                ' )
+      aadd( txt_, '                                      stop:0 lightgray, stop:1 darkgray);    ' )
+      aadd( txt_, '     /*spacing: 3px;  spacing between items in the tool bar */               ' )
+      aadd( txt_, ' }                                                                           ' )
+      ELSE
+      aadd( txt_, 'QToolBar {                                                                   ' )
+      aadd( txt_, hbide_cssColorString( "bg-std" )                                                )
+      aadd( txt_, ' }                                                                           ' )
+      ENDIF
+
+   CASE cWidget == "QToolBarRL5"
+      IF nMode == HBIDE_ANIMATION_GRADIENT
+      aadd( txt_, 'QToolBar {                                                                   ' )
+      aadd( txt_, '    background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0,                ' )
+      aadd( txt_, '                                      stop:0 lightgray, stop:1 darkgray);    ' )
+      aadd( txt_, '     spacing: 1px; color: white; margin-top: 2px;                            ' )
+      aadd( txt_, ' }                                                                           ' )
+      ELSE
+      aadd( txt_, 'QToolBar {                                                                   ' )
+      aadd( txt_, hbide_cssColorString( "bg-std" )                                                )
+      aadd( txt_, ' }                                                                           ' )
+      ENDIF
 
    CASE cWidget == "QTreeWidgetHB"
 
@@ -233,10 +300,13 @@ FUNCTION GetStyleSheet( cWidget )
       aadd( txt_, '                                 stop: 0 #FAFBFE, stop: 1 #DCDEF1);          ' )
       aadd( txt_, '}                                                                            ' )
       aadd( txt_, ' QListView {                                                                 ' )
+      IF nMode == HBIDE_ANIMATION_GRADIENT
+      aadd( txt_, '   background: qlineargradient(spread:pad, x1:0.755727, y1:0.864, x2:1, y2:0,' )
+      aadd( txt_, '           stop:0 rgba(214, 209, 142, 255), stop:1 rgba(255, 255, 255, 255));' )
+      ELSE
       aadd( txt_, '     background: qlineargradient(x1: 1, y1: 0, x2: 0, y2: 0,                 ' )
       aadd( txt_, '       stop: 0 rgba(173, 173, 173, 255), stop:1 rgba(255, 255, 255, 255));   ' )
- *    aadd( txt_, '   background: qlineargradient(spread:pad, x1:0.755727, y1:0.864, x2:1, y2:0,' )
- *    aadd( txt_, '           stop:0 rgba(214, 209, 142, 255), stop:1 rgba(255, 255, 255, 255));' )
+      ENDIF
       aadd( txt_, '}                                                                            ' )
 
    CASE cWidget == "QMainWindow"
@@ -257,18 +327,28 @@ FUNCTION GetStyleSheet( cWidget )
       aadd( txt_, '    border-top: 2px solid #C2C7CB;                                           ' )
       aadd( txt_, '}                                                                            ' )
       aadd( txt_, 'QTabWidget::tab-bar {                                                        ' )
- *    aadd( txt_, '    background: qlineargradient(x1:0, y1:1, x2:0, y2:0,                      ' )
- *    aadd( txt_, '                                stop:0 lightgray, stop:1 darkgray);          ' )
+      IF nMode == HBIDE_ANIMATION_GRADIENT
+      aadd( txt_, '    background: qlineargradient(x1:0, y1:1, x2:0, y2:0,                      ' )
+      aadd( txt_, '                                stop:0 lightgray, stop:1 darkgray);          ' )
+      ENDIF
       aadd( txt_, '    left: 5px; /* move to the right by 5px */                                ' )
       aadd( txt_, '}                                                                            ' )
       aadd( txt_, 'QTabBar {                                                                    ' )
- *    aadd( txt_, '    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0,                ' )
- *    aadd( txt_, '                                stop:0 lightgray, stop:1 darkgray);          ' )
+      IF nMode == HBIDE_ANIMATION_GRADIENT
+      aadd( txt_, '    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0,                ' )
+      aadd( txt_, '                                stop:0 lightgray, stop:1 darkgray);          ' )
+      ELSE
+      aadd( txt_, hbide_cssColorString( "bg-std" )                                                )
+      ENDIF
       aadd( txt_, '}                                                                            ' )
       aadd( txt_, 'QTabBar::tab {                                                               ' )
- *    aadd( txt_, '    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,                  ' )
- *    aadd( txt_, '                                stop: 0 #E1E1E1, stop: 0.4 #DDDDDD,          ' )
- *    aadd( txt_, '                                stop: 0.5 #D8D8D8, stop: 1.0 #D3D3D3);       ' )
+      IF nMode == HBIDE_ANIMATION_GRADIENT
+      aadd( txt_, '    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,                  ' )
+      aadd( txt_, '                                stop: 0 #E1E1E1, stop: 0.4 #DDDDDD,          ' )
+      aadd( txt_, '                                stop: 0.5 #D8D8D8, stop: 1.0 #D3D3D3);       ' )
+      ELSE
+      aadd( txt_, hbide_cssColorString( "bg-std" )                                                )
+      ENDIF
       aadd( txt_, '    border: 2px solid #94C4C3;                                               ' )
       aadd( txt_, '    border-bottom-color: #C2C7CB; /* same as the pane color */               ' )
       aadd( txt_, '    border-top-left-radius: 6px;                                             ' )
@@ -277,16 +357,22 @@ FUNCTION GetStyleSheet( cWidget )
       aadd( txt_, '    padding: 2px;                                                            ' )
       aadd( txt_, '}                                                                            ' )
       aadd( txt_, ' QTabBar::tab:selected {                                                     ' )
+      IF nMode == HBIDE_ANIMATION_GRADIENT
       aadd( txt_, '     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,                 ' )
       aadd( txt_, '                                 stop: 0 #fafafa, stop: 0.4 #f4f4f4,         ' )
       aadd( txt_, '                                 stop: 0.5 #e7e7e7, stop: 1.0 #fafafa);      ' )
+      ELSE
       aadd( txt_, '     background: white;                                                      ' )
+      ENDIF
       aadd( txt_, ' }                                                                           ' )
       aadd( txt_, ' QTabBar::tab:selected:hover {                                               ' )
+      IF nMode == HBIDE_ANIMATION_GRADIENT
       aadd( txt_, '     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,                 ' )
       aadd( txt_, '                                 stop: 0 #fafafa, stop: 0.4 #f4f4f4,         ' )
       aadd( txt_, '                                 stop: 0.5 #e7e7e7, stop: 1.0 #fafafa);      ' )
+      ELSE
       aadd( txt_, '     background: yellow;                                                     ' )
+      ENDIF
       aadd( txt_, ' }                                                                           ' )
       aadd( txt_, ' QTabBar::tab:hover {                                                        ' )
       aadd( txt_, '     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,                 ' )
@@ -308,12 +394,17 @@ FUNCTION GetStyleSheet( cWidget )
    CASE cWidget == "QDockWidget"
 
       aadd( txt_, 'QDockWidget {                                                                ' )
-      aadd( txt_, '     border: 1px solid darkgray;                                             ' )
+      aadd( txt_, '    border: 1px solid darkgray;                                              ' )
       aadd( txt_, ' }                                                                           ' )
       aadd( txt_, 'QDockWidget::title {                                                         ' )
-      aadd( txt_, '     background-color: rgb(212,208,200);                                     ' )
-      aadd( txt_, '     padding-left: 10px;                                                     ' )
-      aadd( txt_, '     padding-top: 4px;                                                       ' )
+      IF nMode == HBIDE_ANIMATION_GRADIENT
+      aadd( txt_, '    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0,                ' )
+      aadd( txt_, '                                      stop:0 lightgray, stop:1 darkgray);    ' )
+      ELSE
+      aadd( txt_, hbide_cssColorString( "bg-std" ) )
+      ENDIF
+      aadd( txt_, '    padding-left: 10px;                                                      ' )
+      aadd( txt_, '    padding-top: 4px;                                                        ' )
       aadd( txt_, ' }                                                                           ' )
 
    CASE cWidget == "PathIsWrong"
@@ -327,3 +418,15 @@ FUNCTION GetStyleSheet( cWidget )
 
 /*----------------------------------------------------------------------*/
 
+FUNCTION hbide_cssColorString( cPart )
+   LOCAL cStr := ""
+
+   SWITCH lower( cPart )
+   CASE "bg-std"
+      RETURN ' background-color: rgb(212,208,200);'
+
+   ENDSWITCH
+
+   RETURN cStr
+
+/*----------------------------------------------------------------------*/

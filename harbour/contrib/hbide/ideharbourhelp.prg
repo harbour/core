@@ -368,7 +368,7 @@ METHOD IdeHarbourHelp:setParameters()
    oUI:q_editInstall:setText( ::cWrkHarbour )
 
    #if 0
-   ::qHiliter := ::oThemes:SetSyntaxHilighting( oUI:q_plainExamples, "Bare Minimum" )
+   ::qHiliter := ::oTH:SetSyntaxHilighting( oUI:q_plainExamples, "Bare Minimum" )
 
    oUI:q_plainExamples:setFont( ::oFont:oWidget )
    oUI:q_plainDescription:setFont( ::oFont:oWidget )
@@ -469,7 +469,7 @@ METHOD IdeHarbourHelp:execEvent( nMode, p, p1 )
          ::cPathInstall := hbide_pathStripLastSlash( hbide_pathNormalized( p, .f. ) )
          ::oIde:cWrkHarbour := ::cPathInstall
       ELSE
-         ::oUI:q_editInstall:setStyleSheet( getStyleSheet( "PathIsWrong" ) )
+         ::oUI:q_editInstall:setStyleSheet( getStyleSheet( "PathIsWrong", ::nAnimantionMode ) )
       ENDIF
       EXIT
 

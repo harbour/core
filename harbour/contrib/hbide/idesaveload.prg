@@ -87,7 +87,7 @@ FUNCTION hbide_restSettings( oIde )
 /*----------------------------------------------------------------------*/
 
 FUNCTION hbide_saveINI( oIde )
-   LOCAL j, nTab, pTab, n, txt_, qHScr, qVScr, oEdit, qCursor, nTabs, nn
+   LOCAL j, nTab, pTab, n, txt_, qHScr, qVScr, oEdit, qCursor, nTabs, nn, s
 
 hbide_dbg( "hbide_saveINI( oIde )", 0, oIde:nRunMode, oIde:cProjIni )
    IF oIde:nRunMode != HBIDE_RUN_MODE_INI
@@ -211,6 +211,13 @@ hbide_dbg( "hbide_saveINI( oIde )", 0, oIde:nRunMode, oIde:cProjIni )
       aadd( txt_, "taggedproject_" + hb_ntos( n ) + "=" + oIde:aIni[ INI_TAGGEDPROJECTS, n ] )
    NEXT
 
+   aadd( txt_, "[TOOLS]" )
+   aadd( txt_, " " )
+   FOR n := 1 TO len( oIde:aIni[ INI_TOOLS ] )
+      s := oIde:aIni[ INI_TOOLS, n, 1 ] + "," + oIde:aIni[ INI_TOOLS, n, 2 ] + "," + oIde:aIni[ INI_TOOLS, n, 3 ] + ","
+      aadd( txt_, "tool_" + hb_ntos( n ) + "=" + s )
+   NEXT
+
    aadd( txt_, " " )
    aadd( txt_, "[General]" )
    aadd( txt_, " " )
@@ -284,11 +291,14 @@ FUNCTION hbide_loadINI( oIde, cHbideIni )
             CASE "[FOLDERS]"
                nPart := INI_FOLDERS
                EXIT
+            CASE "[VIEWS]"
+               nPart := INI_VIEWS
+               EXIT
             CASE "[TAGGEDPROJECTS]"
                nPart := INI_TAGGEDPROJECTS
                EXIT
-            CASE "[VIEWS]"
-               nPart := INI_VIEWS
+            CASE "[TOOLS]"
+               nPart := INI_TOOLS
                EXIT
             OTHERWISE
                 /*
@@ -362,6 +372,12 @@ FUNCTION hbide_loadINI( oIde, cHbideIni )
                CASE nPart == INI_TAGGEDPROJECTS
                   IF hbide_parseKeyValPair( s, @cKey, @cVal )
                      aadd( oIde:aIni[ nPart ], cVal )
+                  ENDIF
+
+               CASE nPart == INI_TOOLS
+                  IF hbide_parseKeyValPair( s, @cKey, @cVal )
+                     a_:= hbide_parseToolComponents( cVal )
+                     aadd( oIde:aIni[ nPart ], a_ )
                   ENDIF
 
                ENDCASE

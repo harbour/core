@@ -139,13 +139,16 @@ CLASS HbIde
    DATA   oFN                                            /* Functions Tags Manager         */
    DATA   oDW                                            /* Document Writer Manager        */
    DATA   oSK                                            /* Skeletons Managet              */
-   DATA   oThemes                                        /* Themes Manager                 */
-   DATA   oFindInFiles
+   DATA   oTM                                            /* Plugin Tools Manager           */
+   DATA   oTH                                            /* Themes Manager                 */
+   DATA   oFF                                            /* Find in Files Manager          */
    DATA   oHelpDock
    DATA   oSkeltnDock
    DATA   oFindDock
 
    DATA   nRunMode                                INIT   HBIDE_RUN_MODE_INI
+   DATA   nAnimantionMode                         INIT   HBIDE_ANIMATION_NONE
+
 
    DATA   oUI
 
@@ -229,6 +232,7 @@ CLASS HbIde
    DATA   oDocWriteDock
    DATA   oFunctionsDock
    DATA   oSkltnsTreeDock
+   DATA   oMainToolbar
 
    DATA   lProjTreeVisible                        INIT   .t.
    DATA   lDockRVisible                           INIT   .f.
@@ -341,7 +345,7 @@ hbide_dbg( "HbIde:create( cProjIni )", "#Params=" )
 
    qPixmap := QPixmap():new( hb_dirBase() + "resources" + hb_osPathSeparator() + "hbidesplash.png" )
    qSplash := QSplashScreen():new()
-   qSplash:setWindowFlags( hb_bitOr( Qt_WindowStaysOnTopHint, qSplash:windowFlags() ) )
+ * qSplash:setWindowFlags( hb_bitOr( Qt_WindowStaysOnTopHint, qSplash:windowFlags() ) )
    qSplash:setPixmap( qPixmap )
    qSplash:show()
    ::showApplicationCursor( Qt_BusyCursor )
@@ -413,6 +417,9 @@ hbide_dbg( "HbIde:create( cProjIni )", "#Params=" )
    ::oDK:buildDialog()
    /* Actions */
    ::oAC := IdeActions():new():create( Self )
+   /* Tools Manager */
+   ::oTM := IdeToolsManager():new( Self ):create()
+
    /* Docking Widgets */
    ::oDK:buildDockWidgets()
    /* Toolbar */
@@ -425,7 +432,7 @@ hbide_dbg( "HbIde:create( cProjIni )", "#Params=" )
 
    /* Once create Find/Replace dialog */
    ::oFR := IdeFindReplace():new( Self ):create()
-   ::oFindInFiles := IdeFindInFiles():new( Self ):create()
+   ::oFF := IdeFindInFiles():new( Self ):create()
 
    /* Sources Manager */
    ::oSM := IdeSourcesManager():new( Self ):create()
@@ -565,14 +572,15 @@ hbide_dbg( "HbIde:create( cProjIni )", "#Params=" )
    hbide_dbg( "Before    ::oDlg:destroy()", memory( 1001 ), hbqt_getMemUsed() )
    hbide_dbg( "                                                      " )
 
+   ::oTM:destroy()
    ::oSK:destroy()
    ::oDW:destroy()
    ::oEV:destroy()
    ::oFN:destroy()
    ::oHM:destroy()
    ::oHL:destroy()
-   ::oThemes:destroy()
-   ::oFindInFiles:destroy()
+   ::oTH:destroy()
+   ::oFF:destroy()
    ::oFR:destroy()
    ::oPM:destroy()
    ::oEM:destroy()
@@ -659,6 +667,10 @@ METHOD HbIde:execAction( cKey )
       ::oDK:setView( "Stats" )
       //::oHM:refresh()
       EXIT
+   CASE "Animate"
+      ::nAnimantionMode := iif( ::nAnimantionMode == HBIDE_ANIMATION_NONE, HBIDE_ANIMATION_GRADIENT, HBIDE_ANIMATION_NONE )
+      ::oDK:animateComponents( ::nAnimantionMode )
+      EXIT
    CASE "NewProject"
    CASE "LoadProject"
    CASE "LaunchProject"
@@ -713,6 +725,7 @@ METHOD HbIde:execAction( cKey )
    CASE "ToLower"
    CASE "Invert"
    CASE "MatchPairs"
+   CASE "Tools"
    CASE "InsertSeparator"
    CASE "InsertDateTime"
    CASE "InsertRandomName"
@@ -833,8 +846,9 @@ METHOD HbIde:execEditorAction( cKey )
       ::oEM:convertSelection( cKey )
       EXIT
    CASE "MatchPairs"
-      //
-      hbide_startOpenWizard()
+      EXIT
+   CASE "Tools"
+      ::oTM:show()
       EXIT
    CASE "InsertSeparator"
       ::oEM:insertSeparator()

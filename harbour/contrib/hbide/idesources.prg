@@ -154,7 +154,7 @@ METHOD IdeSourcesManager:saveNamedSource( cSource )
  *   Save selected Tab on harddisk and return .T. if successfull!
  */
 METHOD IdeSourcesManager:saveSource( nTab, lCancel, lAs )
-   LOCAL oEdit, lNew, cBuffer, qDocument, nIndex, cSource
+   LOCAL oEdit, lNew, cBuffer, qDocument, nIndex, cSource, cFileTemp
    LOCAL cFileToSave, cFile, cExt, cNewFile, oItem
 
    DEFAULT nTab TO ::EM:getTabCurrent()
@@ -222,6 +222,9 @@ METHOD IdeSourcesManager:saveSource( nTab, lCancel, lAs )
       ::updateFuncList()
       ::qTabWidget:setTabIcon( nIndex, ::resPath + "tabunmodified.png" )
       ::oDK:setStatusText( SB_PNL_MODIFIED, " " )
+
+      cFileTemp := hbide_pathToOSPath( oEdit:cPath + oEdit:cFile + oEdit:cExt + ".tmp" )
+      ferase( cFileTemp )
    ENDIF
 
    RETURN .T.

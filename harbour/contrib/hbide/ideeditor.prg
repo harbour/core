@@ -932,6 +932,8 @@ METHOD IdeEditsManager:goto()
 //
 /*----------------------------------------------------------------------*/
 
+#define qTimeSave_timeout                         101
+
 CLASS IdeEditor INHERIT IdeObject
 
    DATA   oTab
@@ -944,6 +946,7 @@ CLASS IdeEditor INHERIT IdeObject
    DATA   qDocument
    DATA   qDocLayout
    DATA   qHiliter
+   DATA   qTimerSave
    DATA   sourceFile                              INIT   ""
    DATA   pathNormalized
    DATA   qLayout
@@ -980,6 +983,7 @@ CLASS IdeEditor INHERIT IdeObject
    METHOD split( nOrient, oEditP )
    METHOD relay( oEdit )
    METHOD destroy()
+   METHOD execEvent( nMode, p )
    METHOD setDocumentProperties()
    METHOD activateTab( mp1, mp2, oXbp )
    METHOD buildTabPage( cSource )
@@ -1016,6 +1020,7 @@ METHOD IdeEditor:new( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView )
+   LOCAL cFileTemp
 
    ::qSlots := HBSlots():new()
 
@@ -1042,6 +1047,15 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView )
 
    hb_fNameSplit( cSourceFile, @::cPath, @::cFile, @::cExt )
 
+   cFileTemp := hbide_pathToOSPath( ::cPath + ::cFile + ::cExt + ".tmp" )
+   IF hb_fileExists( cFileTemp )
+      IF hbide_getYesNo( "An auto saved version already exists, restore ?", cSourceFile, "Last run crash detected" )
+         hb_memowrit( hbide_pathToOSPath( cSourceFile ), hb_memoread( cFileTemp ) )
+      ELSE
+         ferase( cFileTemp )
+      ENDIF
+   ENDIF
+
    ::cType := upper( strtran( ::cExt, ".", "" ) )
    ::cType := iif( ::cType $ "PRG,C,CPP,H,CH,PPO", ::cType, "U" )
 
@@ -1064,7 +1078,7 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView )
    ::qDocument:setDocumentLayout( ::qDocLayout )
 
    IF ::cType != "U"
-      ::qHiliter := ::oThemes:SetSyntaxHilighting( ::oEdit:qEdit, @::cTheme )
+      ::qHiliter := ::oTH:SetSyntaxHilighting( ::oEdit:qEdit, @::cTheme )
    ENDIF
    ::qCursor := QTextCursor():configure( ::qEdit:textCursor() )
 
@@ -1076,7 +1090,7 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView )
    /* Populate right at creation */
    ::oEM:addSourceInTree( ::sourceFile, ::cView )
 
-   ::qTabWidget:setStyleSheet( GetStyleSheet( "QTabWidget" ) )
+   ::qTabWidget:setStyleSheet( GetStyleSheet( "QTabWidget", ::nAnimantionMode ) )
    ::setTabImage()
 
    RETURN Self
@@ -1086,7 +1100,13 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView )
 METHOD IdeEditor:destroy()
    LOCAL n, oEdit
 
-//hbide_dbg( "IdeEditor:destroy()", 0, ::sourceFile )
+   IF !empty( ::qTimerSave )
+      ::disconnect( ::qTimerSave, "timeout()" )
+      ::qTimerSave:stop()
+      ::qTimerSave := NIL
+   ENDIF
+   /* This code is reached under normal circumstances, so delete auto saved file */
+   ferase( hbide_pathToOSPath( ::cPath + ::cFile + ::cExt + ".tmp" ) )
 
    ::qHiliter := NIL
 
@@ -1151,6 +1171,13 @@ METHOD IdeEditor:setDocumentProperties()
 
       ::qTabWidget:setTabIcon( ::qTabWidget:indexOf( ::oTab:oWidget ), ::resPath + "tabunmodified.png" )
       ::lLoaded := .T.
+
+      IF ::cType $ "PRG,C,CPP,H,CH"
+         ::qTimerSave := QTimer():New()
+         ::qTimerSave:setInterval( 60000 )  // 1 minutes
+         ::connect( ::qTimerSave, "timeout()", {|| ::execEvent( qTimeSave_timeout ) } )
+         ::qTimerSave:start()
+      ENDIF
    ENDIF
 
    ::nBlock  := qCursor:blockNumber()
@@ -1164,6 +1191,24 @@ METHOD IdeEditor:setDocumentProperties()
    ::dispEditInfo( ::qEdit )
 
    ::oIde:manageFocusInEditor()
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditor:execEvent( nMode, p )
+   LOCAL cFileTemp
+
+   p := p
+
+   SWITCH nMode
+   CASE qTimeSave_timeout
+      IF ::qDocument:isModified()
+         cFileTemp := hbide_pathToOSPath( ::cPath + ::cFile + ::cExt + ".tmp" )
+         hb_memowrit( cFileTemp, ::qEdit:toPlainText() )
+      ENDIF
+      EXIT
+   ENDSWITCH
 
    RETURN Self
 
@@ -1311,12 +1356,12 @@ METHOD IdeEditor:applyTheme( cTheme )
 
    IF ::cType != "U"
       IF empty( cTheme )
-         cTheme := ::oThemes:selectTheme()
+         cTheme := ::oTH:selectTheme()
       ENDIF
 
-      IF ::oThemes:contains( cTheme )
+      IF ::oTH:contains( cTheme )
          ::cTheme := cTheme
-         ::qHiliter := ::oIde:oThemes:SetSyntaxHilighting( ::qEdit, @::cTheme )
+         ::qHiliter := ::oTH:SetSyntaxHilighting( ::qEdit, @::cTheme )
       ENDIF
    ENDIF
    RETURN Self

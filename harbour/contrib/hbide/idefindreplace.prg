@@ -255,7 +255,7 @@ METHOD IdeSearchReplace:setFindString( cText )
          ::qCurEdit:setTextCursor( qCursor )
       ENDIF
       ::cFind := ""
-      ::qFindLineEdit:setStyleSheet( getStyleSheet( "PathIsWrong" ) )
+      ::qFindLineEdit:setStyleSheet( getStyleSheet( "PathIsWrong", ::nAnimantionMode ) )
    ELSE
       ::cFind := cText
       ::qFindLineEdit:setStyleSheet( "background-color: white;" )
