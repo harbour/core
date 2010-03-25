@@ -445,8 +445,8 @@ static void hb_compExprReduceTimeStampPut( HB_EXPR_PTR pExpr, long lJulian, long
 
    pExpr->value.asDate.lDate = lJulian;
    pExpr->value.asDate.lTime = lMilliSec;
-   pExpr->ExprType = HB_ET_DATE;
-   pExpr->ValType  = HB_EV_DATE;
+   pExpr->ExprType = HB_ET_TIMESTAMP;
+   pExpr->ValType  = HB_EV_TIMESTAMP;
 }
 
 static void hb_compExprReduceTimeStampAdd( HB_EXPR_PTR pExpr, HB_EXPR_PTR pTimeStamp, double dValue )
