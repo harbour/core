@@ -139,7 +139,9 @@
 /* #  define NO_MALLINFO 1 */
 /* #  define INSECURE */
 /* #  define USE_DL_PREFIX */
-#  define FORCEINLINE HB_FORCEINLINE
+#  if !defined( FORCEINLINE )
+#     define FORCEINLINE HB_FORCEINLINE
+#  endif
 #  define REALLOC_ZERO_BYTES_FREES
 #  if defined( HB_MT_VM )
 #     if defined( HB_SPINLOCK_R )
