@@ -6,12 +6,9 @@
  * Harbour Project source code:
  * CT3 Printer functions:
  *
- * PRINTSTAT(), PRINTREADY()
- * Copyright 2001 Walter Negro - FOEESITRA" <waltern@foeesitra.org.ar>
- *
- * PRINTSEND()
- * Copyright 2004 Phil Krylov <phil@newstar.rinet.ru>
- *
+ * Copyright 2010 Viktor Szakats (harbour.01 syenar.hu) (PRINTREADY())
+ * Copyright 2004 Phil Krylov <phil@newstar.rinet.ru> (PRINTSEND())
+ * Copyright 2001 Walter Negro - FOEESITRA" <waltern@foeesitra.org.ar> (PRINTSTAT())
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -138,34 +135,18 @@ HB_FUNC( PRINTSTAT )
  *  $PLATFORMS$
  *      DOS
  *  $FILES$
- *      Source is print.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *  $END$
  */
 
 HB_FUNC( PRINTREADY )
 {
-   HB_USHORT uiPort = HB_ISNUM( 1 ) ? ( HB_USHORT ) hb_parni( 1 ) : 1;
-   int Status = 0;
+   char szLPT[ 8 ];
 
-#if defined( HB_OS_DOS )
+   hb_snprintf( szLPT, sizeof( szLPT ), "LPT%hu", HB_ISNUM( 1 ) ? ( HB_USHORT ) hb_parni( 1 ) : 1 );
 
-   /* NOTE: DOS specific solution, using BIOS interrupt */
-
-   union REGS regs;
-
-   regs.h.ah = 2;
-   regs.HB_XREGS.dx = uiPort - 1;
-
-   HB_DOS_INT86( 0x17, &regs, &regs );
-
-   Status = regs.h.ah;
-
-#else
-   HB_SYMBOL_UNUSED( uiPort );
-#endif
-
-   hb_retl( Status == 0x90 );
+   hb_retl( hb_printerIsReady( szLPT ) );
 }
 
 

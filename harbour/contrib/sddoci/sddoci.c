@@ -374,7 +374,8 @@ static HB_ERRCODE ocilibOpen( SQLBASEAREAP pArea )
       iDec = OCI_ColumnGetPrecision( col );
       bNullable = ( HB_BOOL ) OCI_ColumnGetNullable( col );
 
-      HB_SYMBOL_UNUSED( bNullable );
+      if( bNullable )
+         pFieldInfo.uiFlags |= HB_FF_NULLABLE;
 
       pFieldInfo.uiLen = ( HB_USHORT ) uiSize;
       pFieldInfo.uiDec = ( HB_USHORT ) iDec;

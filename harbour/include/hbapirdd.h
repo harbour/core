@@ -87,7 +87,7 @@ HB_EXTERN_BEGIN
 
 
 
-/* FIeld types */
+/* Field types */
 
 #define HB_FT_NONE            0
 #define HB_FT_STRING          1     /* "C" */
@@ -113,7 +113,7 @@ HB_EXTERN_BEGIN
 
 
 
-/* FIeld flags */
+/* Field flags */
 
 #define HB_FF_HIDDEN          0x0001 /* System Column (not visible to user) */
 #define HB_FF_NULLABLE        0x0002 /* Column can store null values */
