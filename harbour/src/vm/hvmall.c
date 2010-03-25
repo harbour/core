@@ -59,6 +59,7 @@
 #define HB_NO_FLATTEN
 
 #define HB_STACK_LOCAL_MACROS
+#define HB_STACK_PRELOAD
 
 #define INCL_BASE
 #define INCL_DOSMISC
