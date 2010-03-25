@@ -139,6 +139,7 @@
 /* #  define NO_MALLINFO 1 */
 /* #  define INSECURE */
 /* #  define USE_DL_PREFIX */
+#  define FORCEINLINE HB_FORCEINLINE
 #  define REALLOC_ZERO_BYTES_FREES
 #  if defined( HB_MT_VM )
 #     if defined( HB_SPINLOCK_R )
@@ -344,14 +345,14 @@ typedef void * PHB_MEMINFO;
 #  undef HB_ATOM_INC
 #  undef HB_ATOM_GET
 #  undef HB_ATOM_SET
-   static _HB_INLINE_ void hb_counterIncrement( volatile HB_COUNTER * p )
+   static HB_FORCEINLINE void hb_counterIncrement( volatile HB_COUNTER * p )
    {
       HB_FM_LOCK
       ++(*p);
       HB_FM_UNLOCK
    }
 #  define HB_ATOM_INC( p )    hb_counterIncrement( p )
-   static _HB_INLINE_ int hb_counterDecrement( volatile HB_COUNTER * p )
+   static HB_FORCEINLINE int hb_counterDecrement( volatile HB_COUNTER * p )
    {
       int iResult;
       HB_FM_LOCK

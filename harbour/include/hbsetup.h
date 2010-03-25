@@ -525,5 +525,13 @@
    #define _HB_INLINE_  inline
 #endif
 
+#if defined(__GNUC__) && ((__GNUC__ > 3) || \
+                          ((__GNUC__ == 3) && (__GNUC_MINOR__ >= 2)))
+   #define HB_FORCEINLINE     __inline__ __attribute__((always_inline))
+#elif defined(_MSC_VER) && (_MSC_VER >= 1200)
+   #define HB_FORCEINLINE     __forceinline
+# else
+   #define HB_FORCEINLINE     _HB_INLINE_
+# endif
 
 #endif /* HB_SETUP_H_ */

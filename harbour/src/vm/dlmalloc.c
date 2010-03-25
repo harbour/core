@@ -747,12 +747,8 @@ struct mallinfo {
 
 #ifndef FORCEINLINE
   #if defined(__GNUC__)
-    #if (__GNUC__ > 3 || (__GNUC__ == 3 && __GNUC_MINOR__ > 0 ))
-       #define FORCEINLINE __inline __attribute__ ((always_inline))
-    #else
-       #define FORCEINLINE __inline
-    #endif
-  #elif defined(_MSC_VER) && !defined(__XCC__)
+    #define FORCEINLINE __inline __attribute__ ((always_inline))
+  #elif defined(_MSC_VER)
     #define FORCEINLINE __forceinline
   #endif
 #endif
@@ -770,14 +766,10 @@ struct mallinfo {
 extern "C" {
 #ifndef FORCEINLINE
  #define FORCEINLINE inline
-#endif /* FORCEINLINE */
+#endif
 #endif /* __cplusplus */
 #ifndef FORCEINLINE
-#ifdef _HB_INLINE_
- #define FORCEINLINE _HB_INLINE_
-#else /* _HB_INLINE_ */
  #define FORCEINLINE
-#endif /* _HB_INLINE_ */
 #endif
 
 #if !ONLY_MSPACES
@@ -1962,7 +1954,7 @@ static void init_malloc_global_mutex( void ) {
 /* #define TRY_LOCK(sl) ... */
 /* static MLOCK_T malloc_global_mutex = ... */
 
-static _HB_INLINE_ int user_acquire_lock( HB_SPINLOCK_R * sl )
+static FORCEINLINE int user_acquire_lock( HB_SPINLOCK_R * sl )
 {
    HB_SPINLOCK_ACQUIRE_R( sl );
    return 0;

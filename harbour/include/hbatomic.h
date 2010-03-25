@@ -474,7 +474,7 @@ HB_EXTERN_BEGIN
          HB_THREAD_ID   thid;
       };
 
-      static _HB_INLINE_ void hb_spinlock_release_r( struct hb_spinlock_r * sl )
+      static HB_FORCEINLINE void hb_spinlock_release_r( struct hb_spinlock_r * sl )
       {
          if( --sl->count == 0 )
          {
@@ -483,7 +483,7 @@ HB_EXTERN_BEGIN
          }
       }
 
-      static _HB_INLINE_ int hb_spinlock_try_r( struct hb_spinlock_r * sl )
+      static HB_FORCEINLINE int hb_spinlock_try_r( struct hb_spinlock_r * sl )
       {
          HB_SPINLOCK_T * l = &sl->lock;
          int r = 0;
@@ -538,7 +538,7 @@ HB_EXTERN_BEGIN
          } \
       } while( 0 )
 #else
-      static _HB_INLINE_ void hb_spinlock_acquire_r( struct hb_spinlock_r * sl )
+      static HB_FORCEINLINE void hb_spinlock_acquire_r( struct hb_spinlock_r * sl )
       {
          HB_SPINLOCK_T * l = &sl->lock;
          int count = HB_SPINLOCK_REPEAT;
