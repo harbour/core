@@ -461,6 +461,7 @@ METHOD LineColor( nRow ) CLASS HBEditor
 METHOD MoveCursor( nKey ) CLASS HBEditor
 
    LOCAL lMoveKey := .T.
+   LOCAL nCursor := SetCursor( SC_NONE )
 
    DO CASE
    CASE nKey == K_DOWN
@@ -487,9 +488,10 @@ METHOD MoveCursor( nKey ) CLASS HBEditor
    CASE nKey == K_PGDN
       IF ::nRow + ::nNumRows < ::naTextLen
          ::nRow += ::nNumRows
-         ::nFirstRow += ::nNumRows
          IF ::nFirstRow + ::nNumRows > ::naTextLen
             ::nFirstRow -= ( ( ::nFirstRow + ::nNumRows ) - ::naTextLen ) + 1
+         ELSE
+            ::nFirstRow += ::nNumRows
          ENDIF
       ELSE
          ::nFirstRow := Max( ::naTextLen - ::nNumRows + 1, 1 )
@@ -503,7 +505,7 @@ METHOD MoveCursor( nKey ) CLASS HBEditor
       ::nCol := Max( ::LineLen( ::nRow ), 1 )
       ::nFirstRow := Max( ::naTextLen - ::nNumRows + 1, 1 )
       ::nFirstCol := Max( ::nCol - ::nNumCols + 1, 1 )
-      ::SetPos( Min( ::nTop + ::naTextLen - 1, ::nBottom ), Min( ::nLeft + ::nCol - 1, ::nRight ) )
+      ::SetPos( Min( ::nTop + ::naTextLen - 1, ::nBottom ), Min( ::nLeft + ::nCol, ::nRight ) )
       ::display()
 
    CASE nKey == K_UP
@@ -531,6 +533,8 @@ METHOD MoveCursor( nKey ) CLASS HBEditor
          ::nFirstRow -= ::nNumRows
          IF ::nFirstRow < 1
             ::nFirstRow := 1
+            ::nRow := 1
+            ::SetPos( ::nTop, ::Col() )
          ENDIF
       ELSE
          ::nFirstRow := 1
@@ -615,7 +619,7 @@ METHOD MoveCursor( nKey ) CLASS HBEditor
       IF ::nRow > ::naTextLen
          ::nRow := ::naTextLen
       ENDIF
-      ::nCol := Max( ::LineLen( ::nRow ), 1 )
+      ::nCol := Max( ::LineLen( ::nRow ) + 1, 1 )
       ::nFirstCol := Max( ::nCol - ::nNumCols + 1, 1 )
       ::SetPos( Min( ::nTop + ::naTextLen - 1, ::nBottom ), Min( ::nLeft + ::nCol - 1, ::nRight ) )
       ::display()
@@ -624,6 +628,8 @@ METHOD MoveCursor( nKey ) CLASS HBEditor
       lMoveKey := .F.
 
    ENDCASE
+
+   SetCursor( nCursor )
 
    RETURN lMoveKey
 
@@ -1019,7 +1025,11 @@ METHOD New( cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabS
    nWndCol     := Max( 0, nWndCol  )
 
    ::nFirstRow := Max( 1, nTextRow - nWndRow )
-   ::nFirstCol := Max( 1, nTextCol - nWndCol + 1 )
+   ::nFirstCol := nTextCol - nWndCol + 1
+   IF ::nFirstCol <  1
+      nTextCol -= ::nFirstCol - 1
+      ::nFirstCol := 1
+   ENDIF
 
    ::nRow := Max( 1, Min( nTextRow, ::naTextLen ) )
    ::nCol := Max( 1, nTextCol + 1 )
