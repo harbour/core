@@ -3611,7 +3611,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       IF ISBLOCK( bBlk_ImpLib )
          IF ! Empty( cMakeImpLibDLL ) .AND. ! Empty( cMakeImpLibLib )
             IF hb_FileExists( PathSepToSelf( cMakeImpLibDLL ) )
-               tmp := FN_CookLib( hbmk, cMakeImpLibLib, cLibLibPrefix, cLibLibExt )
+               tmp := FN_CookLib( cMakeImpLibLib, cLibLibPrefix, cLibLibExt )
                IF Eval( bBlk_ImpLib, cMakeImpLibDLL, tmp, cOpt_ImpLib )
                   hbmk_OutStd( hbmk, hb_StrFormat( I_( "Created import library: %1$s <= %2$s" ), tmp, cMakeImpLibDLL ) )
                ELSE
@@ -5833,39 +5833,21 @@ STATIC FUNCTION ListCookLib( hbmk, aLIB, aLIBA, array, cPrefix, cExtNew )
 
    RETURN array
 
-STATIC FUNCTION FN_CookLib( hbmk, cLibName, cPrefix, cExtNew )
+STATIC FUNCTION FN_CookLib( cLibName, cPrefix, cExtNew )
    LOCAL cDir
-   LOCAL cLibNameCooked
+   LOCAL cName
+   LOCAL cExt
 
-   IF hbmk[ _HBMK_cCOMP ] $ "gcc|mingw|mingw64|mingwarm|djgpp|cygwin|gccomf|clang|open64"
-      hb_FNameSplit( cLibName, @cDir )
-      IF Empty( cDir )
-         cLibNameCooked := cLibName
-#if 0
-         /* Don't attempt to strip this as it can be valid for libs which have double lib prefixes (f.e. libpng) */
-         IF Left( cLibNameCooked, 3 ) == "lib"
-            cLibNameCooked := SubStr( cLibNameCooked, 4 )
-         ENDIF
-#endif
-         IF cPrefix != NIL
-            cLibNameCooked := cPrefix + cLibNameCooked
-         ENDIF
-         IF cExtNew != NIL
-            cLibNameCooked := FN_ExtSet( cLibNameCooked, cExtNew )
-         ENDIF
-         RETURN cLibNameCooked
-      ELSE
-         RETURN cLibName
-      ENDIF
-   ELSE
-      IF cExtNew != NIL
-         RETURN FN_ExtSet( cLibName, cExtNew )
-      ELSE
-         RETURN cLibName
-      ENDIF
+   hb_FNameSplit( cLibName, @cDir, @cName, @cExt )
+
+   IF cPrefix != NIL
+      cName := cPrefix + cName
+   ENDIF
+   IF cExtNew != NIL
+      cExt := cExtNew
    ENDIF
 
-   RETURN NIL
+   RETURN hb_FNameMerge( cDir, cName, cExt )
 
 /* Append optional prefix and optional extension to all members */
 STATIC FUNCTION ListCook( arraySrc, cExtNew )
