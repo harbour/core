@@ -55,6 +55,11 @@
 #include "hbapiitm.h"
 #include "hbvm.h"
 
+#if defined( HB_OS_WIN )
+#  include <windows.h>
+#  include <wincrypt.h>
+#endif
+
 #include "hbssl.h"
 
 HB_FUNC( SSL_INIT )
@@ -1368,7 +1373,6 @@ HB_FUNC( SSL_GET_CLIENT_CA_LIST )
 
       if( ssl )
       {
-#if OPENSSL_VERSION_NUMBER < 0x10000000L /* TOFIX: Compilation error when tried with 1.0.0beta5 */
          STACK_OF( X509_NAME ) * stack = SSL_get_client_CA_list( ssl );
          int len = sk_X509_NAME_num( stack );
 
@@ -1383,7 +1387,6 @@ HB_FUNC( SSL_GET_CLIENT_CA_LIST )
             hb_itemReturnRelease( pArray );
          }
          else
-#endif
             hb_reta( 0 );
       }
    }
@@ -1395,7 +1398,6 @@ HB_FUNC( SSL_LOAD_CLIENT_CA_FILE )
 {
    if( HB_ISCHAR( 1 ) )
    {
-#if OPENSSL_VERSION_NUMBER < 0x10000000L /* TOFIX: Compilation error when tried with 1.0.0beta5 */
       STACK_OF( X509_NAME ) * stack = SSL_load_client_CA_file( hb_parc( 1 ) );
       int len = sk_X509_NAME_num( stack );
 
@@ -1410,7 +1412,6 @@ HB_FUNC( SSL_LOAD_CLIENT_CA_FILE )
          hb_itemReturnRelease( pArray );
       }
       else
-#endif
          hb_reta( 0 );
    }
    else

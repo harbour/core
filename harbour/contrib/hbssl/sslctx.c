@@ -54,6 +54,11 @@
 #include "hbapierr.h"
 #include "hbapiitm.h"
 
+#if defined( HB_OS_WIN )
+#  include <windows.h>
+#  include <wincrypt.h>
+#endif
+
 #include "hbssl.h"
 
 static HB_GARBAGE_FUNC( SSL_CTX_release )

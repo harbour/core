@@ -71,8 +71,8 @@ include $(TOP)$(ROOT)config/detfun.mk
 _DET_DSP_NAME := openssl
 _DET_VAR_INC_ := HB_INC_OPENSSL
 _DET_VAR_HAS_ := HB_HAS_OPENSSL
-_DET_FLT_PLAT :=
-_DET_FLT_COMP := !watcom !bcc
+_DET_FLT_PLAT := !wce
+_DET_FLT_COMP :=
 _DET_INC_DEFP := /usr/include /usr/local/include /usr/local/ssl/include /boot/common/include
 _DET_INC_HEAD := /openssl/ssl.h
 
