@@ -2220,6 +2220,10 @@
 #define QCompleter_CaseSensitivelySortedModel     1        // The model is sorted case sensitively.
 #define QCompleter_CaseInsensitivelySortedModel   2        // The model is sorted case insensitively.
 
+#define QToolButton_DelayedPopup                  0        // After pressing and holding the tool button down for a certain amount of time (the timeout is style dependant, see QStyle::SH_ToolButton_PopupDelay), the menu is displayed. A typical application example is the "back" button in some web browsers's tool bars. If the user clicks it, the browser simply browses back to the previous page. If the user presses and holds the button down for a while, the tool button shows a menu containing the current history list
+#define QToolButton_MenuButtonPopup               1        // In this mode the tool button displays a special arrow to indicate that a menu is present. The menu is displayed when the arrow part of the button is pressed.
+#define QToolButton_InstantPopup                  2        // The menu is displayed, without delay, when the tool button is pressed. In this mode, the button's own action is not triggered.
+
 /*----------------------------------------------------------------------*/
 
 #define _HBQT_CH
