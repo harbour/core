@@ -109,9 +109,9 @@ if "%HB_SHELL%" == "nt" goto _SH_NT
    if not "%HB_WITH_PGSQL%"     == "" "%HB_HOST_BIN_DIR%\hbmk2" "-mkimplib=%HB_LIB_INSTALL%\libpq"     "%HB_WITH_PGSQL%\..\lib\libpq.dll"            -mkimplibms
 
    rem ; Exception: We use static libs with mingw.
-   if "%HB_COMPILER%" == "mingw" copy /b /y "%HB_WITH_OCILIB%\..\lib32\libociliba.a" "%HB_LIB_INSTALL%\libociliba.a"
-   if "%HB_COMPILER%" == "mingw" copy /b /y "%HB_WITH_OCILIB%\..\lib32\libocilibm.a" "%HB_LIB_INSTALL%\libocilibm.a"
-   if "%HB_COMPILER%" == "mingw" copy /b /y "%HB_WITH_OCILIB%\..\lib32\libocilibw.a" "%HB_LIB_INSTALL%\libocilibw.a"
+   if "%HB_COMPILER%" == "mingw" if not "%HB_WITH_OCILIB%" == "" copy /b /y "%HB_WITH_OCILIB%\..\lib32\libociliba.a" "%HB_LIB_INSTALL%\libociliba.a"
+   if "%HB_COMPILER%" == "mingw" if not "%HB_WITH_OCILIB%" == "" copy /b /y "%HB_WITH_OCILIB%\..\lib32\libocilibm.a" "%HB_LIB_INSTALL%\libocilibm.a"
+   if "%HB_COMPILER%" == "mingw" if not "%HB_WITH_OCILIB%" == "" copy /b /y "%HB_WITH_OCILIB%\..\lib32\libocilibw.a" "%HB_LIB_INSTALL%\libocilibw.a"
 
 :_NO_IMPLIB
 
