@@ -106,7 +106,7 @@ if "%HB_SHELL%" == "nt" goto _SH_NT
    if not "%HB_WITH_OPENSSL%"   == "" "%HB_HOST_BIN_DIR%\hbmk2" "-mkimplib=%HB_LIB_INSTALL%\ssleay32"  "%HB_WITH_OPENSSL%\..\dll\ssleay32.dll"       -mkimplibms
    if not "%HB_WITH_OPENSSL%"   == "" "%HB_HOST_BIN_DIR%\hbmk2" "-mkimplib=%HB_LIB_INSTALL%\libeay32"  "%HB_WITH_OPENSSL%\..\libeay32.dll"           -mkimplibms
    if not "%HB_WITH_OPENSSL%"   == "" "%HB_HOST_BIN_DIR%\hbmk2" "-mkimplib=%HB_LIB_INSTALL%\ssleay32"  "%HB_WITH_OPENSSL%\..\ssleay32.dll"           -mkimplibms
-   if not "%HB_WITH_PGSQL%"     == "" "%HB_HOST_BIN_DIR%\hbmk2" "-mkimplib=%HB_LIB_INSTALL%\libpq"     "%HB_WITH_PGSQL%..\lib\libpq.dll"             -mkimplibms
+   if not "%HB_WITH_PGSQL%"     == "" "%HB_HOST_BIN_DIR%\hbmk2" "-mkimplib=%HB_LIB_INSTALL%\libpq"     "%HB_WITH_PGSQL%\..\lib\libpq.dll"            -mkimplibms
 
    rem ; Exception: We use static libs with mingw.
    if "%HB_COMPILER%" == "mingw" copy /b /y "%HB_WITH_OCILIB%\..\lib32\libociliba.a" "%HB_LIB_INSTALL%\libociliba.a"

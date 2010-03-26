@@ -3610,7 +3610,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    IF lMakeImpLib
       IF ISBLOCK( bBlk_ImpLib )
          IF ! Empty( cMakeImpLibDLL ) .AND. ! Empty( cMakeImpLibLib )
-            IF hb_FileExists( cMakeImpLibDLL )
+            IF hb_FileExists( PathSepToSelf( cMakeImpLibDLL ) )
                tmp := FN_CookLib( hbmk, cMakeImpLibLib, cLibLibPrefix, cLibLibExt )
                IF Eval( bBlk_ImpLib, cMakeImpLibDLL, tmp, cOpt_ImpLib )
                   hbmk_OutStd( hbmk, hb_StrFormat( I_( "Created import library: %1$s <= %2$s" ), tmp, cMakeImpLibDLL ) )
