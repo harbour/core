@@ -82,6 +82,7 @@
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 
+#include "hbwinole.h"
 #include "gtwvg.h"
 
 /*----------------------------------------------------------------------*/
@@ -156,7 +157,7 @@ HB_FUNC( WVG_CLEARGUIOBJECTS )
 #if ! defined( HB_OS_WIN_CE )
         if( pWVT->gObjs->iPicture )
            if( pWVT->gObjs->bDestroyPicture )
-              pWVT->gObjs->iPicture->lpVtbl->Release( pWVT->gObjs->iPicture );
+              HB_VTBL( pWVT->gObjs->iPicture )->Release( HB_THIS( pWVT->gObjs->iPicture ) );
 #endif
         hb_xfree( pWVT->gObjs );
         pWVT->gObjs = gObj;
@@ -250,7 +251,7 @@ HB_FUNC( WVG_SETGOBJDATA )
                if( iPicture )
                {
                   if( gObj->bDestroyPicture && gObj->iPicture )
-                     gObj->iPicture->lpVtbl->Release( gObj->iPicture );
+                     HB_VTBL( gObj->iPicture )->Release( HB_THIS( gObj->iPicture ) );
                   gObj->iPicture = iPicture;
                   gObj->bDestroyPicture = HB_TRUE;
                }
@@ -1394,8 +1395,8 @@ static void hb_wvg_RenderPicture( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int
 
    if( iPicture )
    {
-      iPicture->lpVtbl->get_Width( iPicture, &lWidth );
-      iPicture->lpVtbl->get_Height( iPicture, &lHeight );
+      HB_VTBL( iPicture )->get_Width( HB_THIS_( iPicture ) &lWidth );
+      HB_VTBL( iPicture )->get_Height( HB_THIS_( iPicture ) &lHeight );
 
       if( dc  == 0 )
          dc = ( int ) ( ( float ) dr * lWidth  / lHeight );
@@ -1420,7 +1421,7 @@ static void hb_wvg_RenderPicture( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int
       {
          while( y < ye )
          {
-            iPicture->lpVtbl->Render( iPicture, hdc, x, y, dc, dr, 0, lHeight, lWidth, -lHeight, NULL );
+            HB_VTBL( iPicture )->Render( HB_THIS_( iPicture ) hdc, x, y, dc, dr, 0, lHeight, lWidth, -lHeight, NULL );
             y += dr;
          }
          y =  r;

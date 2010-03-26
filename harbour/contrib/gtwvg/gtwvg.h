@@ -57,35 +57,22 @@
 
 /*----------------------------------------------------------------------*/
 
-#ifndef CINTERFACE
-   #define CINTERFACE 1
-#endif
-
 #ifndef _WIN32_IE
    #ifndef __MINGW64__
       #define _WIN32_IE 0x0400
    #endif
 #endif
 
-
-/* #define NONAMELESSUNION */
-
 /*----------------------------------------------------------------------*/
 
 #include <windows.h>
 #include <winuser.h>
 #include <commctrl.h>
-#include <ole2.h>
-#include <oleauto.h>
 #if ! defined( HB_OS_WIN_CE )
-#include <ocidl.h>
-#include <olectl.h>
+   #include <olectl.h>
 #endif
 #include <commdlg.h>
 #include <shellapi.h>
-#include <shlobj.h>
-
-#include <time.h>
 
 #include "hbset.h"
 #include "hbgtcore.h"

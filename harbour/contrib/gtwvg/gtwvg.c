@@ -82,6 +82,7 @@
  *
  */
 
+#include "hbwinole.h"
 #include "gtwvg.h"
 
 #ifndef WS_EX_LAYERED
@@ -303,7 +304,7 @@ static void hb_gt_wvt_Free( PHB_GTWVT pWVT )
 #if ! defined( HB_OS_WIN_CE )
         if( pWVT->gObjs->iPicture )
            if( pWVT->gObjs->bDestroyPicture )
-              pWVT->gObjs->iPicture->lpVtbl->Release( pWVT->gObjs->iPicture );
+              HB_VTBL( pWVT->gObjs->iPicture )->Release( HB_THIS( pWVT->gObjs->iPicture ) );
 #endif
         hb_xfree( pWVT->gObjs );
         pWVT->gObjs = gObj;
@@ -4226,7 +4227,7 @@ static void hb_wvt_gtReleaseGuiData( void )
    {
       if( s_guiData->iPicture[ i ] )
       {
-         s_guiData->iPicture[ i ]->lpVtbl->Release( s_guiData->iPicture[ i ] );
+         HB_VTBL( s_guiData->iPicture[ i ] )->Release( HB_THIS( s_guiData->iPicture[ i ] ) );
          s_guiData->iPicture[ i ] = NULL;
       }
    }
