@@ -811,19 +811,29 @@ HB_FUNC( PQESCAPESTRING )
 
 HB_FUNC( PQESCAPEBYTEA ) /* deprecated */
 {
-   HB_SIZE from_length = hb_parclen( 1 );
-   HB_SIZE to_length = from_length * 5 + 1;
-   unsigned char * to = PQescapeBytea( ( const unsigned char * ) hb_parcx( 1 ), ( size_t ) from_length, ( size_t * ) &to_length );
-   hb_retc( ( char * ) to ); /* TOFIX: ? hb_retc( ( char * ) to, to_length ); */
-   PQfreemem( to );
+   if( HB_ISCHAR( 1 ) )
+   {
+      size_t from_length = ( size_t ) hb_parclen( 1 );
+      size_t to_length = from_length * 5 + 1;
+      unsigned char * to = PQescapeBytea( ( const unsigned char * ) hb_parc( 1 ), from_length, &to_length );
+      hb_retclen( ( char * ) to, ( HB_SIZE ) to_length );
+      PQfreemem( to );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( PQUNESCAPEBYTEA )
 {
-   size_t to_length;
-   unsigned char * from = PQunescapeBytea( ( const unsigned char * ) hb_parcx( 1 ), &to_length );
-   hb_retclen( ( char * ) from, ( HB_SIZE ) to_length );
-   PQfreemem( from );
+   if( HB_ISCHAR( 1 ) )
+   {
+      size_t to_length;
+      unsigned char * from = PQunescapeBytea( ( const unsigned char * ) hb_parc( 1 ), &to_length );
+      hb_retclen( ( char * ) from, ( HB_SIZE ) to_length );
+      PQfreemem( from );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( PQOIDVALUE )
@@ -1216,12 +1226,11 @@ HB_FUNC( PQESCAPEBYTEACONN )
 
    if( conn && HB_ISCHAR( 2 ) )
    {
-      const char * from = hb_parc( 2 );
       size_t from_length = hb_parclen( 2 );
       size_t to_length = from_length * 5 + 1;
 
-      unsigned char * to = PQescapeByteaConn( conn, ( unsigned const char * ) from, from_length, &to_length );
-      hb_retc( ( char * ) to );
+      unsigned char * to = PQescapeByteaConn( conn, ( unsigned const char * ) hb_parc( 2 ), from_length, &to_length );
+      hb_retclen( ( char * ) to, ( HB_SIZE ) to_length );
       PQfreemem( to );
    }
    else
