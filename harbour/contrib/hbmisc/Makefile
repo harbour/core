@@ -26,4 +26,8 @@ PRG_SOURCES := \
    stringp.prg \
    twirler.prg \
 
+PRG_HEADERS := \
+   blinker.ch \
+
+include $(TOP)$(ROOT)config/header.mk
 include $(TOP)$(ROOT)config/lib.mk

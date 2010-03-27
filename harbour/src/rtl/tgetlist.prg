@@ -991,7 +991,7 @@ METHOD GUIApplyKey( oGet, oGUI, nKey, oMenu, aMsg ) CLASS HBGetList
             nKey := 0
          ENDIF
 
-      ELSEIF ( nButton := oGUI:FindText( chr(nKey), oGUI:Value + 1, .F., .F. ) ) != 0
+      ELSEIF ( nButton := oGUI:FindText( Chr( nKey ), oGUI:Value + 1, .F., .F. ) ) != 0
          oGUI:Select( nButton )
 
       ENDIF

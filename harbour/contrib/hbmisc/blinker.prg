@@ -55,31 +55,7 @@
 #include "hbhrb.ch"
 #include "hbmemory.ch"
 
-/* BLIMGRSTS() parameters */
-#define BliCacheLoc         1  /* Get location of real mode overlay cache (EMS/XMS) */
-#define BliCacheSize        2  /* Get size of overlay cache */
-#define BliExtMemAvail      3  /* Get bytes extended memory available to the extender */
-#define BliHostMode         4  /* Get DOS extender host mode (DPMI/VCPI/XMS) */
-#define BliMachineMode      5  /* Get current machine mode (real, protected) */
-#define BliOverlayLoc       6  /* Get location of overlay area */
-#define BliOverlaySize      7  /* Get size of overlay area */
-#define BliRealMemAvail     8  /* Get bytes real memory available to the extender */
-#define BliVirMemAvail      9  /* Get bytes virtual memory available to the extender */
-
-/* BLIMGRSTS() BliCacheLoc values */
-#define BliCacheNone        0  /* No overlay cache */
-#define BliCacheEMS         1  /* Overlay cache is in EMS */
-#define BliCacheXMS         2  /* Overlay cache is in XMS */
-
-/* BLIMGRSTS() BliHostMode values */
-#define BliHostNone         0
-#define BliHostDPMI         1
-#define BliHostVCPI         2
-#define BliHostXMS          3
-
-/* BLIMGRSTS() BliMachineMode values */
-#define BliModeReal         0
-#define BliMode286Prot      1
+#include "blinker.ch"
 
 STATIC s_cSerialNum := ""
 STATIC s_cDemoDate := ""
@@ -233,7 +209,7 @@ FUNCTION BLIVERNUM()
    RETURN 700
 
 FUNCTION BLICPUREL()
-   RETURN hb_idleRelease()
+   RETURN hb_releaseCPU()
 
 FUNCTION BLIMGRSTS( nParam )
    SWITCH nParam
