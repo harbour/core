@@ -45,37 +45,20 @@ if "%HB_SHELL%" == "nt" goto _SH_NT
 
 :_SH_NT
 
-   if "%HB_PLATFORM%" == "dos" goto _NO_DLL_BIN
-   if "%HB_PLATFORM%" == "linux" goto _NO_DLL_BIN
-   if "%HB_BUILD_DLL%" == "no" goto _NO_DLL_BIN
-
-   set HBMK_OPTIONS=
-   if "%HB_BUILD_MODE%" == "cpp"  set HBMK_OPTIONS=%HBMK_OPTIONS% -cpp=yes
-   if "%HB_BUILD_MODE%" == "c"    set HBMK_OPTIONS=%HBMK_OPTIONS% -cpp=no
-   if "%HB_BUILD_DEBUG%" == "yes" set HBMK_OPTIONS=%HBMK_OPTIONS% -debug
-
-   if not "%HB_BUILD_SHARED%" == "yes" (
-      echo ! Making shared version of Harbour binaries...
-      "%HB_HOST_BIN_DIR%\hbmk2" -quiet -q0 -lang=en -shared "-o%HB_BIN_INSTALL%\hbrun-dll"    "%~dp0..\utils\hbrun\hbrun.hbp"
-      "%HB_HOST_BIN_DIR%\hbmk2" -quiet -q0 -lang=en -shared "-o%HB_BIN_INSTALL%\hbmk2-dll"    "%~dp0..\utils\hbmk2\hbmk2.hbp"
-      "%HB_HOST_BIN_DIR%\hbmk2" -quiet -q0 -lang=en -shared "-o%HB_BIN_INSTALL%\hbtest-dll"   "%~dp0..\utils\hbtest\hbtest.hbp"
-      "%HB_HOST_BIN_DIR%\hbmk2" -quiet -q0 -lang=en -shared "-o%HB_BIN_INSTALL%\hbi18n-dll"   "%~dp0..\utils\hbi18n\hbi18n.hbp"
-      "%HB_HOST_BIN_DIR%\hbmk2" -quiet -q0 -lang=en -shared "-o%HB_BIN_INSTALL%\hbformat-dll" "%~dp0..\utils\hbformat\hbformat.hbp"
-   )
-
-:_NO_DLL_BIN
-
    if "%HB_PLATFORM%" == "dos" goto _NO_ICON_BIN
    if "%HB_PLATFORM%" == "linux" goto _NO_ICON_BIN
 
    rem ; We build this here, because GNU Make wouldn't add the icon.
    echo ! Making hbrun with application icon...
 
-   set _HB_SHARED_=
-   if "%HB_BUILD_SHARED%" == "yes" set _HB_SHARED_=-shared
-   if "%HB_BUILD_DLL%" == "no" set _HB_SHARED_=
-   "%HB_HOST_BIN_DIR%\hbmk2" -quiet -q0 -lang=en %_HB_SHARED_% "-o%HB_BIN_INSTALL%\hbrun" "%~dp0..\utils\hbrun\hbrun.hbp"
-   set _HB_SHARED_=
+   set _HB_OPTIONS_=
+   if "%HB_BUILD_SHARED%" == "yes" set _HB_OPTIONS_=-shared
+   if "%HB_BUILD_DLL%" == "no"     set _HB_OPTIONS_=
+   if "%HB_BUILD_MODE%" == "cpp"   set _HB_OPTIONS_=%_HB_OPTIONS_% -cpp=yes
+   if "%HB_BUILD_MODE%" == "c"     set _HB_OPTIONS_=%_HB_OPTIONS_% -cpp=no
+   if "%HB_BUILD_DEBUG%" == "yes"  set _HB_OPTIONS_=%_HB_OPTIONS_% -debug
+   "%HB_HOST_BIN_DIR%\hbmk2" -quiet -q0 -lang=en %_HB_OPTIONS_% "-o%HB_BIN_INSTALL%\hbrun" "%~dp0..\utils\hbrun\hbrun.hbp"
+   set _HB_OPTIONS_=
 
 :_NO_ICON_BIN
 

@@ -17,8 +17,9 @@ PROCEDURE Main()
    LOCAL cFile
    LOCAL aFile
 
-   LOCAL aImpLibs
+   LOCAL aArray
    LOCAL tmp
+   LOCAL cOptions
 
    IF Empty( GetEnv( "HB_PLATFORM" ) ) .OR. ;
       Empty( GetEnv( "HB_COMPILER" ) ) .OR. ;
@@ -30,6 +31,8 @@ PROCEDURE Main()
       ErrorLevel( 1 )
       RETURN
    ENDIF
+
+   /* Creating hbmk.cfg */
 
    OutStd( "! Making " + GetEnv( "HB_BIN_INSTALL" ) + _PS_ + "hbmk.cfg..." + hb_osNewLine() )
 
@@ -51,6 +54,8 @@ PROCEDURE Main()
 
    hb_MemoWrit( GetEnv( "HB_BIN_INSTALL" ) + _PS_ + "hbmk.cfg", cFile )
 
+   /* Installing some misc files */
+
    IF GetEnv( "HB_PLATFORM" ) $ "win|wce|os2|dos" .AND. ;
       ! Empty( GetEnv( "HB_INSTALL_PREFIX" ) )
 
@@ -63,11 +68,13 @@ PROCEDURE Main()
       hb_FCopy( "TODO"   , GetEnv( "HB_INSTALL_PREFIX" ) + _PS_ + "TODO" )
    ENDIF
 
+   /* Import library generation */
+
    IF GetEnv( "HB_PLATFORM" ) $ "win|wce|os2" .AND. ;
       GetEnv( "HB_BUILD_IMPLIB" ) == "yes" .AND. ;
       ! Empty( GetEnv( "HB_HOST_BIN_DIR" ) )
 
-      aImpLibs := {;
+      aArray := {;
          { "ace32"    , "HB_WITH_ADS"       , "\Redistribute\ace32.dll"   , .F. },;
          { "ace32"    , "HB_WITH_ADS"       , "\ace32.dll"                , .F. },;
          { "ace32"    , "HB_WITH_ADS"       , "\32bit\ace32.dll"          , .F. },;
@@ -95,7 +102,7 @@ PROCEDURE Main()
          { "ssleay32" , "HB_WITH_OPENSSL"   , "\..\ssleay32.dll"          , .T. },;
          { "libpq"    , "HB_WITH_PGSQL"     , "\..\lib\libpq.dll"         , .T. }}
 
-      FOR EACH tmp IN aImpLibs
+      FOR EACH tmp IN aArray
          IF ! Empty( GetEnv( tmp[ 2 ] ) )
             hb_processRun( GetEnv( "HB_HOST_BIN_DIR" ) + _PS_ + "hbmk2" +;
                            " " + Chr( 34 ) + "-mkimplib=" + GetEnv( "HB_LIB_INSTALL" ) + _PS_ + tmp[ 1 ] + Chr( 34 ) +;
@@ -112,6 +119,40 @@ PROCEDURE Main()
          hb_FCopy( GetEnv( "HB_WITH_OCILIB" ) + StrTran( "\..\lib32\libocilibm.a", "\", _PS_ ), GetEnv( "HB_LIB_INSTALL" ) + _PS_ + "libocilibm.a" )
          hb_FCopy( GetEnv( "HB_WITH_OCILIB" ) + StrTran( "\..\lib32\libocilibw.a", "\", _PS_ ), GetEnv( "HB_LIB_INSTALL" ) + _PS_ + "libocilibw.a" )
       ENDIF
+   ENDIF
+
+   /* Creating shared version of Harbour binaries */
+
+   IF !( GetEnv( "HB_PLATFORM" ) $ "dos|linux" ) .AND. ;
+      !( GetEnv( "HB_BUILD_DLL" ) == "no" ) .AND. ;
+      !( GetEnv( "HB_BUILD_SHARED" ) == "yes" )
+
+      cOptions := ""
+      IF GetEnv( "HB_BUILD_MODE" ) == "cpp"
+         cOptions += " -cpp=yes"
+      ELSEIF GetEnv( "HB_BUILD_MODE" ) == "c"
+         cOptions += " -cpp=no"
+      ENDIF
+      IF GetEnv( "HB_BUILD_DEBUG" ) == "yes"
+         cOptions += " -debug"
+      ENDIF
+
+      OutStd( "! Making shared version of Harbour binaries..." + hb_osNewLine() )
+
+      aArray := {;
+         { "hbrun-dll"    , "utils\hbrun\hbrun.hbp"       },;
+         { "hbmk2-dll"    , "utils\hbmk2\hbmk2.hbp"       },;
+         { "hbtest-dll"   , "utils\hbtest\hbtest.hbp"     },;
+         { "hbi18n-dll"   , "utils\hbi18n\hbi18n.hbp"     },;
+         { "hbformat-dll" , "utils\hbformat\hbformat.hbp" }}
+
+      FOR EACH tmp IN aArray
+         hb_processRun( GetEnv( "HB_HOST_BIN_DIR" ) + _PS_ + "hbmk2" +;
+                        " -quiet -q0 -lang=en -shared" + cOptions +;
+                        " " + Chr( 34 ) + "-o" + GetEnv( "HB_BIN_INSTALL" ) + _PS_ + tmp[ 1 ] + Chr( 34 ) +;
+                        " " + Chr( 34 ) + StrTran( tmp[ 2 ], "\", _PS_ ) + Chr( 34 ) )
+      NEXT
+
    ENDIF
 
    ErrorLevel( nErrorLevel )
