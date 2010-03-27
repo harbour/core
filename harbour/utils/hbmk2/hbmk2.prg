@@ -6346,7 +6346,7 @@ STATIC PROCEDURE HBC_ProcessAll( hbmk, lConfigOnly )
    LOCAL aCFGDirs
 
    #if defined( __PLATFORM__UNIX )
-      aCFGDirs := { GetEnv( "HOME" ) + "/.harbour/",;
+      aCFGDirs := { GetEnv( "HOME" ) + "/.harbour",;
                     "/etc/harbour",;
                     DirAddPathSep( hb_DirBase() ) + "../etc/harbour",;
                     DirAddPathSep( hb_DirBase() ) + "../etc",;
