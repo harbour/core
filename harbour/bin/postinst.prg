@@ -10,10 +10,15 @@
 /* TOFIX: Ugly hack to avoid #include "directry.ch" */
 #define F_NAME          1       /* File name */
 
+#define _PS_            hb_osPathSeparator()
+
 PROCEDURE Main()
    LOCAL nErrorLevel := 0
    LOCAL cFile
    LOCAL aFile
+
+   LOCAL aImpLibs
+   LOCAL tmp
 
    IF Empty( GetEnv( "HB_PLATFORM" ) ) .OR. ;
       Empty( GetEnv( "HB_COMPILER" ) ) .OR. ;
@@ -26,7 +31,7 @@ PROCEDURE Main()
       RETURN
    ENDIF
 
-   OutStd( "! Making " + GetEnv( "HB_BIN_INSTALL" ) + hb_osPathSeparator() + "hbmk.cfg..." + hb_osNewLine() )
+   OutStd( "! Making " + GetEnv( "HB_BIN_INSTALL" ) + _PS_ + "hbmk.cfg..." + hb_osNewLine() )
 
    cFile := ""
    cFile += "# hbmk2 configuration" + hb_osNewLine()
@@ -44,18 +49,69 @@ PROCEDURE Main()
       cFile += "{dos}libpaths=${WATT_ROOT}/lib" + hb_osNewLine()
    ENDIF
 
-   hb_MemoWrit( GetEnv( "HB_BIN_INSTALL" ) + hb_osPathSeparator() + "hbmk.cfg", cFile )
+   hb_MemoWrit( GetEnv( "HB_BIN_INSTALL" ) + _PS_ + "hbmk.cfg", cFile )
 
    IF GetEnv( "HB_PLATFORM" ) $ "win|wce|os2|dos" .AND. ;
       ! Empty( GetEnv( "HB_INSTALL_PREFIX" ) )
 
       FOR EACH aFile IN Directory( "Change*" )
-         hb_FCopy( aFile[ F_NAME ], GetEnv( "HB_INSTALL_PREFIX" ) + hb_osPathSeparator() + iif( GetEnv( "HB_PLATFORM" ) == "dos", "CHANGES", aFile[ F_NAME ] ) )
+         hb_FCopy( aFile[ F_NAME ], GetEnv( "HB_INSTALL_PREFIX" ) + _PS_ + iif( GetEnv( "HB_PLATFORM" ) == "dos", "CHANGES", aFile[ F_NAME ] ) )
       NEXT
 
-      hb_FCopy( "COPYING", GetEnv( "HB_INSTALL_PREFIX" ) + hb_osPathSeparator() + "COPYING" )
-      hb_FCopy( "INSTALL", GetEnv( "HB_INSTALL_PREFIX" ) + hb_osPathSeparator() + "INSTALL" )
-      hb_FCopy( "TODO"   , GetEnv( "HB_INSTALL_PREFIX" ) + hb_osPathSeparator() + "TODO" )
+      hb_FCopy( "COPYING", GetEnv( "HB_INSTALL_PREFIX" ) + _PS_ + "COPYING" )
+      hb_FCopy( "INSTALL", GetEnv( "HB_INSTALL_PREFIX" ) + _PS_ + "INSTALL" )
+      hb_FCopy( "TODO"   , GetEnv( "HB_INSTALL_PREFIX" ) + _PS_ + "TODO" )
+   ENDIF
+
+   IF GetEnv( "HB_PLATFORM" ) $ "win|wce|os2" .AND. ;
+      GetEnv( "HB_BUILD_IMPLIB" ) == "yes" .AND. ;
+      ! Empty( GetEnv( "HB_HOST_BIN_DIR" ) )
+
+      aImpLibs := {;
+         { "ace32"    , "HB_WITH_ADS"       , "\Redistribute\ace32.dll"   , .F. },;
+         { "ace32"    , "HB_WITH_ADS"       , "\ace32.dll"                , .F. },;
+         { "ace32"    , "HB_WITH_ADS"       , "\32bit\ace32.dll"          , .F. },;
+         { "alleg"    , "HB_WITH_ALLEGRO"   , "\..\bin\alleg42.dll"       , .T. },;
+         { "sde61"    , "HB_WITH_APOLLO"    , "\..\sde61.dll"             , .F. },;
+         { "sde7"     , "HB_WITH_APOLLO"    , "\..\sde7.dll"              , .F. },;
+         { "blat"     , "HB_WITH_BLAT"      , "\..\blat.dll"              , .T. },;
+         { "cairo"    , "HB_WITH_CAIRO"     , "\..\..\bin\libcairo-2.dll" , .T. },;
+         { "libcurl"  , "HB_WITH_CURL"      , "\..\libcurl.dll"           , .T. },;
+         { "libcurl"  , "HB_WITH_CURL"      , "\..\bin\libcurl.dll"       , .T. },;
+         { "fbclient" , "HB_WITH_FIREBIRD"  , "\..\bin\fbclient.dll"      , .F. },;
+         { "FreeImage", "HB_WITH_FREEIMAGE" , "\..\Dist\FreeImage.dll"    , .F. },;
+         { "bgd"      , "HB_WITH_GD"        , "\..\bin\bgd.dll"           , .F. },;
+         { "libhpdf"  , "HB_WITH_LIBHARU"   , "\..\libhpdf.dll"           , .F. },;
+         { "libhpdf"  , "HB_WITH_LIBHARU"   , "\..\lib_dll\libhpdf.dll"   , .F. },;
+         { "libmysql" , "HB_WITH_MYSQL"     , "\..\bin\libmySQL.dll"      , .F. },;
+         { "ociliba"  , "HB_WITH_OCILIB"    , "\..\lib32\ociliba.dll"     , .F. },;
+         { "ocilibm"  , "HB_WITH_OCILIB"    , "\..\lib32\ocilibm.dll"     , .F. },;
+         { "ocilibw"  , "HB_WITH_OCILIB"    , "\..\lib32\ocilibw.dll"     , .F. },;
+         { "libeay32" , "HB_WITH_OPENSSL"   , "\..\out32dll\libeay32.dll" , .T. },;
+         { "ssleay32" , "HB_WITH_OPENSSL"   , "\..\out32dll\ssleay32.dll" , .T. },;
+         { "libeay32" , "HB_WITH_OPENSSL"   , "\..\dll\libeay32.dll"      , .T. },;
+         { "ssleay32" , "HB_WITH_OPENSSL"   , "\..\dll\ssleay32.dll"      , .T. },;
+         { "libeay32" , "HB_WITH_OPENSSL"   , "\..\libeay32.dll"          , .T. },;
+         { "ssleay32" , "HB_WITH_OPENSSL"   , "\..\ssleay32.dll"          , .T. },;
+         { "libpq"    , "HB_WITH_PGSQL"     , "\..\lib\libpq.dll"         , .T. }}
+
+      FOR EACH tmp IN aImpLibs
+         IF ! Empty( GetEnv( tmp[ 2 ] ) )
+            hb_processRun( GetEnv( "HB_HOST_BIN_DIR" ) + _PS_ + "hbmk2" +;
+                           " " + Chr( 34 ) + "-mkimplib=" + GetEnv( "HB_LIB_INSTALL" ) + _PS_ + tmp[ 1 ] + Chr( 34 ) +;
+                           " " + Chr( 34 ) + GetEnv( tmp[ 2 ] ) + _PS_ + StrTran( tmp[ 3 ], "\", _PS_ ) + Chr( 34 ) +;
+                           iif( tmp[ 4 ], " -mkimplibms", "" ) )
+         ENDIF
+      NEXT
+
+      /* Exception: We use static libs with mingw */
+      IF GetEnv( "HB_COMPILER" ) == "mingw" .AND. ;
+         ! Empty( GetEnv( "HB_WITH_OCILIB" ) )
+
+         hb_FCopy( GetEnv( "HB_WITH_OCILIB" ) + StrTran( "\..\lib32\libociliba.a", "\", _PS_ ), GetEnv( "HB_LIB_INSTALL" ) + _PS_ + "libociliba.a" )
+         hb_FCopy( GetEnv( "HB_WITH_OCILIB" ) + StrTran( "\..\lib32\libocilibm.a", "\", _PS_ ), GetEnv( "HB_LIB_INSTALL" ) + _PS_ + "libocilibm.a" )
+         hb_FCopy( GetEnv( "HB_WITH_OCILIB" ) + StrTran( "\..\lib32\libocilibw.a", "\", _PS_ ), GetEnv( "HB_LIB_INSTALL" ) + _PS_ + "libocilibw.a" )
+      ENDIF
    ENDIF
 
    ErrorLevel( nErrorLevel )

@@ -79,42 +79,6 @@ if "%HB_SHELL%" == "nt" goto _SH_NT
 
 :_NO_ICON_BIN
 
-   if not "%HB_BUILD_IMPLIB%" == "yes" goto _NO_IMPLIB
-
-   if not "%HB_WITH_ADS%"       == "" "%HB_HOST_BIN_DIR%\hbmk2" "-mkimplib=%HB_LIB_INSTALL%\ace32"     "%HB_WITH_ADS%\Redistribute\ace32.dll"
-   if not "%HB_WITH_ADS%"       == "" "%HB_HOST_BIN_DIR%\hbmk2" "-mkimplib=%HB_LIB_INSTALL%\ace32"     "%HB_WITH_ADS%\ace32.dll"
-   if not "%HB_WITH_ADS%"       == "" "%HB_HOST_BIN_DIR%\hbmk2" "-mkimplib=%HB_LIB_INSTALL%\ace32"     "%HB_WITH_ADS%\32bit\ace32.dll"
-   if not "%HB_WITH_ALLEGRO%"   == "" "%HB_HOST_BIN_DIR%\hbmk2" "-mkimplib=%HB_LIB_INSTALL%\alleg"     "%HB_WITH_ALLEGRO%\..\bin\alleg42.dll"        -mkimplibms
-   if not "%HB_WITH_APOLLO%"    == "" "%HB_HOST_BIN_DIR%\hbmk2" "-mkimplib=%HB_LIB_INSTALL%\sde61"     "%HB_WITH_APOLLO%\..\sde61.dll"
-   if not "%HB_WITH_APOLLO%"    == "" "%HB_HOST_BIN_DIR%\hbmk2" "-mkimplib=%HB_LIB_INSTALL%\sde7"      "%HB_WITH_APOLLO%\..\sde7.dll"
-   if not "%HB_WITH_BLAT%"      == "" "%HB_HOST_BIN_DIR%\hbmk2" "-mkimplib=%HB_LIB_INSTALL%\blat"      "%HB_WITH_BLAT%\..\blat.dll"                  -mkimplibms
-   if not "%HB_WITH_CAIRO%"     == "" "%HB_HOST_BIN_DIR%\hbmk2" "-mkimplib=%HB_LIB_INSTALL%\cairo"     "%HB_WITH_CAIRO%\..\..\bin\libcairo-2.dll"    -mkimplibms
-   if not "%HB_WITH_CURL%"      == "" "%HB_HOST_BIN_DIR%\hbmk2" "-mkimplib=%HB_LIB_INSTALL%\libcurl"   "%HB_WITH_CURL%\..\libcurl.dll"               -mkimplibms
-   if not "%HB_WITH_CURL%"      == "" "%HB_HOST_BIN_DIR%\hbmk2" "-mkimplib=%HB_LIB_INSTALL%\libcurl"   "%HB_WITH_CURL%\..\bin\libcurl.dll"           -mkimplibms
-   if not "%HB_WITH_FIREBIRD%"  == "" "%HB_HOST_BIN_DIR%\hbmk2" "-mkimplib=%HB_LIB_INSTALL%\fbclient"  "%HB_WITH_FIREBIRD%\..\bin\fbclient.dll"
-   if not "%HB_WITH_FREEIMAGE%" == "" "%HB_HOST_BIN_DIR%\hbmk2" "-mkimplib=%HB_LIB_INSTALL%\FreeImage" "%HB_WITH_FREEIMAGE%\..\Dist\FreeImage.dll"
-   if not "%HB_WITH_GD%"        == "" "%HB_HOST_BIN_DIR%\hbmk2" "-mkimplib=%HB_LIB_INSTALL%\bgd"       "%HB_WITH_GD%\..\bin\bgd.dll"
-   if not "%HB_WITH_LIBHARU%"   == "" "%HB_HOST_BIN_DIR%\hbmk2" "-mkimplib=%HB_LIB_INSTALL%\libhpdf"   "%HB_WITH_LIBHARU%\..\libhpdf.dll"
-   if not "%HB_WITH_LIBHARU%"   == "" "%HB_HOST_BIN_DIR%\hbmk2" "-mkimplib=%HB_LIB_INSTALL%\libhpdf"   "%HB_WITH_LIBHARU%\..\lib_dll\libhpdf.dll"
-   if not "%HB_WITH_MYSQL%"     == "" "%HB_HOST_BIN_DIR%\hbmk2" "-mkimplib=%HB_LIB_INSTALL%\libmysql"  "%HB_WITH_MYSQL%\..\bin\libmySQL.dll"
-   if not "%HB_WITH_OCILIB%"    == "" "%HB_HOST_BIN_DIR%\hbmk2" "-mkimplib=%HB_LIB_INSTALL%\ociliba"   "%HB_WITH_OCILIB%\..\lib32\ociliba.dll"
-   if not "%HB_WITH_OCILIB%"    == "" "%HB_HOST_BIN_DIR%\hbmk2" "-mkimplib=%HB_LIB_INSTALL%\ocilibm"   "%HB_WITH_OCILIB%\..\lib32\ocilibm.dll"
-   if not "%HB_WITH_OCILIB%"    == "" "%HB_HOST_BIN_DIR%\hbmk2" "-mkimplib=%HB_LIB_INSTALL%\ocilibw"   "%HB_WITH_OCILIB%\..\lib32\ocilibw.dll"
-   if not "%HB_WITH_OPENSSL%"   == "" "%HB_HOST_BIN_DIR%\hbmk2" "-mkimplib=%HB_LIB_INSTALL%\libeay32"  "%HB_WITH_OPENSSL%\..\out32dll\libeay32.dll"  -mkimplibms
-   if not "%HB_WITH_OPENSSL%"   == "" "%HB_HOST_BIN_DIR%\hbmk2" "-mkimplib=%HB_LIB_INSTALL%\ssleay32"  "%HB_WITH_OPENSSL%\..\out32dll\ssleay32.dll"  -mkimplibms
-   if not "%HB_WITH_OPENSSL%"   == "" "%HB_HOST_BIN_DIR%\hbmk2" "-mkimplib=%HB_LIB_INSTALL%\libeay32"  "%HB_WITH_OPENSSL%\..\dll\libeay32.dll"       -mkimplibms
-   if not "%HB_WITH_OPENSSL%"   == "" "%HB_HOST_BIN_DIR%\hbmk2" "-mkimplib=%HB_LIB_INSTALL%\ssleay32"  "%HB_WITH_OPENSSL%\..\dll\ssleay32.dll"       -mkimplibms
-   if not "%HB_WITH_OPENSSL%"   == "" "%HB_HOST_BIN_DIR%\hbmk2" "-mkimplib=%HB_LIB_INSTALL%\libeay32"  "%HB_WITH_OPENSSL%\..\libeay32.dll"           -mkimplibms
-   if not "%HB_WITH_OPENSSL%"   == "" "%HB_HOST_BIN_DIR%\hbmk2" "-mkimplib=%HB_LIB_INSTALL%\ssleay32"  "%HB_WITH_OPENSSL%\..\ssleay32.dll"           -mkimplibms
-   if not "%HB_WITH_PGSQL%"     == "" "%HB_HOST_BIN_DIR%\hbmk2" "-mkimplib=%HB_LIB_INSTALL%\libpq"     "%HB_WITH_PGSQL%\..\lib\libpq.dll"            -mkimplibms
-
-   rem ; Exception: We use static libs with mingw.
-   if "%HB_COMPILER%" == "mingw" if not "%HB_WITH_OCILIB%" == "" copy /b /y "%HB_WITH_OCILIB%\..\lib32\libociliba.a" "%HB_LIB_INSTALL%\libociliba.a"
-   if "%HB_COMPILER%" == "mingw" if not "%HB_WITH_OCILIB%" == "" copy /b /y "%HB_WITH_OCILIB%\..\lib32\libocilibm.a" "%HB_LIB_INSTALL%\libocilibm.a"
-   if "%HB_COMPILER%" == "mingw" if not "%HB_WITH_OCILIB%" == "" copy /b /y "%HB_WITH_OCILIB%\..\lib32\libocilibw.a" "%HB_LIB_INSTALL%\libocilibw.a"
-
-:_NO_IMPLIB
-
    if "%HB_PLATFORM%" == "linux" goto _NO_PKG
    if not "%HB_BUILD_PKG%" == "yes" goto _NO_PKG
    if "%HB_TOP%" == "" goto _NO_PKG
