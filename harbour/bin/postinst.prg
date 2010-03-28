@@ -107,7 +107,7 @@ PROCEDURE Main()
          IF ! Empty( GetEnv( tmp[ 2 ] ) )
             hb_processRun( GetEnv( "HB_HOST_BIN_DIR" ) + _PS_ + "hbmk2" +;
                            " " + Chr( 34 ) + "-mkimplib=" + GetEnv( "HB_LIB_INSTALL" ) + _PS_ + tmp[ 1 ] + Chr( 34 ) +;
-                           " " + Chr( 34 ) + GetEnv( tmp[ 2 ] ) + _PS_ + StrTran( tmp[ 3 ], "\", _PS_ ) + Chr( 34 ) +;
+                           " " + Chr( 34 ) + GetEnv( tmp[ 2 ] ) + StrTran( tmp[ 3 ], "\", _PS_ ) + Chr( 34 ) +;
                            iif( tmp[ 4 ], " -mkimplibms", "" ) )
          ENDIF
       NEXT
