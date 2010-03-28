@@ -99,9 +99,21 @@ endif
 %$(RES_EXT) : %.rc
 	$(RC_RULE)
 
+_RES := no
+ifneq ($(RES_EXT),)
+   ifneq ($(ALL_RC_OBJS),)
+      _RES := yes
+   endif
+endif
+
 # Rule to generate an executable file from an object file.
+ifeq ($(_RES),yes)
 %$(BIN_EXT) : %$(OBJ_EXT) %$(RES_EXT)
 	$(LD_RULE)
+else
+%$(BIN_EXT) : %$(OBJ_EXT)
+	$(LD_RULE)
+endif
 
 # Rule to generate a C file from a PRG file.
 %.c : $(GRANDP)%.prg
