@@ -9,6 +9,9 @@ include $(TOP)$(ROOT)config/global.mk
 PRG_SOURCES := \
    hbrun.prg \
 
+RC_SOURCES := \
+   hbrun.rc
+
 PRG_MAIN := hbrun.prg
 
 LIBS = hbcplr hbpp hbcommon $(HB_LIBS_ST_RDD)

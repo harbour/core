@@ -33,23 +33,6 @@ if "%HB_SHELL%" == "nt" goto _SH_NT
 
 :_SH_NT
 
-   if "%HB_PLATFORM%" == "dos" goto _NO_ICON_BIN
-   if "%HB_PLATFORM%" == "linux" goto _NO_ICON_BIN
-
-   rem ; We build this here, because GNU Make wouldn't add the icon.
-   echo ! Making hbrun with application icon...
-
-   set _HB_OPTIONS_=
-   if "%HB_BUILD_SHARED%" == "yes" set _HB_OPTIONS_=-shared
-   if "%HB_BUILD_DLL%" == "no"     set _HB_OPTIONS_=
-   if "%HB_BUILD_MODE%" == "cpp"   set _HB_OPTIONS_=%_HB_OPTIONS_% -cpp=yes
-   if "%HB_BUILD_MODE%" == "c"     set _HB_OPTIONS_=%_HB_OPTIONS_% -cpp=no
-   if "%HB_BUILD_DEBUG%" == "yes"  set _HB_OPTIONS_=%_HB_OPTIONS_% -debug
-   "%HB_HOST_BIN_DIR%\hbmk2" -quiet -q0 -lang=en %_HB_OPTIONS_% "-o%HB_BIN_INSTALL%\hbrun" "%~dp0..\utils\hbrun\hbrun.hbp"
-   set _HB_OPTIONS_=
-
-:_NO_ICON_BIN
-
    if "%HB_PLATFORM%" == "linux" goto _NO_PKG
    if not "%HB_BUILD_PKG%" == "yes" goto _NO_PKG
    if "%HB_TOP%" == "" goto _NO_PKG

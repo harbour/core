@@ -39,7 +39,7 @@ ifeq ($(HB_BUILD_DEBUG),yes)
    CFLAGS += -g
 endif
 
-RC := windres
+RC := $(HB_CCPATH)$(HB_CCPREFIX)windres
 RC_OUT := -o$(subst x,x, )
 ifeq ($(HB_COMPILER),gccomf)
    RCFLAGS := -O omf
