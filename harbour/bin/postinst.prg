@@ -20,6 +20,7 @@ PROCEDURE Main()
    LOCAL aArray
    LOCAL tmp
    LOCAL cOptions
+   LOCAL cOldDir
 
    IF Empty( GetEnv( "HB_PLATFORM" ) ) .OR. ;
       Empty( GetEnv( "HB_COMPILER" ) ) .OR. ;
@@ -155,6 +156,50 @@ PROCEDURE Main()
 
    ENDIF
 
+   /* Creating install packages */
+
+   IF GetEnv( "HB_PLATFORM" ) $ "win|wce|os2|dos" .AND. ;
+      GetEnv( "HB_BUILD_PKG" ) == "yes" .AND. ;
+      ! Empty( GetEnv( "HB_TOP" ) )
+
+      tmp := GetEnv( "HB_TOP" ) + _PS_ + GetEnv( "HB_PKGNAME" ) + ".zip"
+
+      OutStd( "! Making Harbour .zip install package: '" + tmp + "'" + hb_osNewLine() )
+
+      FErase( tmp )
+
+      /* NOTE: Believe it or not this is the official method to zip a different dir with subdirs
+               without including the whole root path in filenames; you have to 'cd' into it.
+               Even with zip 3.0. For this reason we need absolute path in HB_TOP. There is also
+               no zip 2.x compatible way to force creation of a new .zip, so we have to delete it
+               first to avoid mixing in an existing .zip file. [vszakats] */
+
+      cOldDir := _PS_ + CurDir()
+      DirChange( GetEnv( "HB_INSTALL_PREFIX" ) + _PS_ + ".." )
+
+      hb_processRun( GetEnv( "HB_DIR_ZIP" ) + "zip" +;
+                     " -q -9 -X -r -o" +;
+                     " " + FN_Escape( tmp ) +;
+                     " . -i " + FN_Escape( GetEnv( "HB_PKGNAME" ) + _PS_ + "*" ) +;
+                     " -x *.tds -x *.exp" )
+
+      DirChange( cOldDir )
+
+      IF GetEnv( "HB_PLATFORM" ) $ "win|wce"
+
+         tmp := GetEnv( "HB_TOP" ) + _PS_ + GetEnv( "HB_PKGNAME" ) + ".exe"
+
+         OutStd( "! Making Harbour .exe install package: '" + tmp + "'" + hb_osNewLine() )
+
+         hb_processRun( GetEnv( "HB_DIR_NSIS" ) + "makensis.exe" +;
+                        " /V2" +;
+                        " " + FN_Escape( "package\mpkg_win.nsi" ) )
+      ENDIF
+   ENDIF
+
    ErrorLevel( nErrorLevel )
 
    RETURN
+
+STATIC FUNCTION FN_Escape( cFN )
+   RETURN Chr( 34 ) + cFN + Chr( 34 )

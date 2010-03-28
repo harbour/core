@@ -1261,13 +1261,13 @@ HARBOUR
      Supported shells per host platforms:
 
      win  / NT shell (cmd.exe)
-     win  / POSIX shell (MSYS or Cygwin sh.exe) (* not supported: HB_BUILD_PKG)
-     win  / MS-DOS shell (command.com)          (* not supported: HB_BUILD_PKG)
-     dos  / MS-DOS shell (command.com)          (* not supported: HB_BUILD_PKG)
-     dos  / POSIX shell (bash.exe)              (* not supported: HB_BUILD_PKG)
-     os/2 / OS/2 shell (cmd.exe)                (* not supported: HB_BUILD_PKG)
-     os/2 / POSIX shell (bash.exe)              (* not supported: HB_BUILD_PKG)
-     *nix / POSIX shell                         (* not supported: HB_BUILD_PKG - implemented as standalone scripts)
+     win  / POSIX shell (MSYS or Cygwin sh.exe)
+     win  / MS-DOS shell (command.com)
+     dos  / MS-DOS shell (command.com)
+     dos  / POSIX shell (bash.exe)
+     os/2 / OS/2 shell (cmd.exe)
+     os/2 / POSIX shell (bash.exe)
+     *nix / POSIX shell (* not supported: HB_BUILD_PKG - implemented as standalone scripts)
 
 
 13. LINKS TO EXTERNAL COMPONENTS
