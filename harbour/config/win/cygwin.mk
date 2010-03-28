@@ -31,6 +31,10 @@ ifeq ($(HB_BUILD_DEBUG),yes)
    CFLAGS += -g
 endif
 
+RC := windres
+RC_OUT := -o$(subst x,x, )
+RCFLAGS := -O coff
+
 ifneq ($(filter $(HB_BUILD_STRIP),all lib),)
    ARSTRIP = && ${HB_CCPATH}${HB_CCPREFIX}strip -S $(LIB_DIR)/$@
 endif

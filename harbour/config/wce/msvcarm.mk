@@ -72,6 +72,13 @@ ifeq ($(HB_BUILD_DEBUG),yes)
    DFLAGS += -debug
 endif
 
+RC := rc.exe
+RC_OUT := -fo$(subst x,x, )
+RCFLAGS :=
+ifeq ($(filter $(HB_COMPILER_VER),600 700 710 800 900),)
+   RCFLAGS += -nologo
+endif
+
 LD := link.exe
 LD_OUT := -out:
 

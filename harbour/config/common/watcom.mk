@@ -24,9 +24,15 @@ AR := wlib
 ARFLAGS += -q -p=72 -c -n
 
 comma := ,
-LDFILES_COMMA = $(subst $(subst x,x, ),$(comma) ,$(^F))
+ifneq ($(RES_EXT),)
+   LDFILES_COMMA = $(subst $(subst x,x, ),$(comma) ,$(filter-out %$(RES_EXT),$(^F)))
+   LDRES_LIST = $(foreach file,$(filter %$(RES_EXT),$(^F)),OPT res=$(file))
+else
+   LDFILES_COMMA = $(subst $(subst x,x, ),$(comma) ,$(^F))
+   LDRES_LIST :=
+endif
 LDLIBS_COMMA := $(subst $(subst x,x, ),$(comma) ,$(strip $(LDLIBS)))
-LD_RULE = $(LD) $(LDFLAGS) $(HB_LDFLAGS) $(HB_USER_LDFLAGS) NAME $(BIN_DIR)/$@ FILE $(LDFILES_COMMA) $(if $(LDLIBS_COMMA), LIB $(LDLIBS_COMMA),)
+LD_RULE = $(LD) $(LDFLAGS) $(HB_LDFLAGS) $(HB_USER_LDFLAGS) NAME $(BIN_DIR)/$@ FILE $(LDFILES_COMMA) $(LDRES_LIST) $(if $(LDLIBS_COMMA), LIB $(LDLIBS_COMMA),)
 AR_RULE = $(AR) $(ARFLAGS) $(HB_AFLAGS) $(HB_USER_AFLAGS) $(LIB_DIR)/$@ $(foreach file,$(^F),-+$(file))
 
 ifeq ($(HB_SHELL),dos)

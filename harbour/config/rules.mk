@@ -62,6 +62,13 @@ ifeq ($(CPP_RULE),)
    CPP_RULE = $(CXX) $(CC_FLAGS) $(HB_USER_CFLAGS) $(CC_OUT)$(<F:.cpp=$(OBJ_EXT)) $(CC_IN) $<
 endif
 
+# The rule to compile resources.
+ifneq ($(RC),)
+   ifeq ($(RC_RULE),)
+      RC_RULE = $(RC) $(RCFLAGS) $(HB_RCFLAGS) $(HB_USER_RESFLAGS) $(RC_OUT)$(<F:.rc=$(RES_EXT)) $<
+   endif
+endif
+
 # The rule to link an executable.
 ifeq ($(LD_RULE),)
    LD_RULE = $(LD) $(LDFLAGS) $(HB_LDFLAGS) $(HB_USER_LDFLAGS) $(LD_OUT)$(subst /,$(DIRSEP),$(BIN_DIR)/$@) $(^F) $(LDLIBS) $(LDSTRIP)
@@ -85,8 +92,15 @@ endif
 %$(OBJ_EXT) : %.cpp
 	$(CPP_RULE)
 
+# Rules for resource files
+%$(RES_EXT) : $(GRANDP)%.rc
+	$(RC_RULE)
+
+%$(RES_EXT) : %.rc
+	$(RC_RULE)
+
 # Rule to generate an executable file from an object file.
-%$(BIN_EXT) : %$(OBJ_EXT)
+%$(BIN_EXT) : %$(OBJ_EXT) %$(RES_EXT)
 	$(LD_RULE)
 
 # Rule to generate a C file from a PRG file.

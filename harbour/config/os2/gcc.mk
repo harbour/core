@@ -39,6 +39,14 @@ ifeq ($(HB_BUILD_DEBUG),yes)
    CFLAGS += -g
 endif
 
+RC := windres
+RC_OUT := -o$(subst x,x, )
+ifeq ($(HB_COMPILER),gccomf)
+   RCFLAGS := -O omf
+else
+   RCFLAGS := -O coff
+endif
+
 ifneq ($(filter $(HB_BUILD_STRIP),all lib),)
    ifeq ($(HB_COMPILER),gccomf)
       ARSTRIP = & ${HB_CCPATH}${HB_CCPREFIX}stripomf -S $(LIB_DIR)/$@

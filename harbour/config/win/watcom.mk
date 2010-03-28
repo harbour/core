@@ -51,6 +51,10 @@ ifeq ($(HB_BUILD_DEBUG),yes)
    CFLAGS += -d2
 endif
 
+RC := wrc
+RC_OUT := -fo=
+RCFLAGS := -q -r -zm -bt=nt
+
 LD := wlink
 ifeq ($(HB_BUILD_DEBUG),yes)
    LDFLAGS += DEBUG ALL

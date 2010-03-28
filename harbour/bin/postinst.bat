@@ -10,18 +10,6 @@ rem See COPYING for licensing terms.
 rem
 rem Script run after Harbour make install to finish install process
 rem (for Windows/DOS)
-rem
-rem Contains: install package creator script, which requires:
-rem
-rem    - Info-ZIP zip.exe in PATH
-rem         or HB_DIR_ZIP envvar set to its dir with an ending backslash.
-rem         https://sourceforge.net/project/showfiles.php?group_id=118012
-rem    - NullSoft Installer installed (NSIS)
-rem         https://sourceforge.net/project/showfiles.php?group_id=22049&package_id=15374
-rem      (only for Windows builds)
-rem    - makensis.exe (part of NSIS) in PATH
-rem         or HB_DIR_NSIS envvar set to its dir with an ending backslash.
-rem      (only for Windows builds)
 rem ---------------------------------------------------------------
 
 if "%HB_BIN_INSTALL%" == "" echo ! HB_BIN_INSTALL needs to be set.

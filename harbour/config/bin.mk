@@ -121,6 +121,7 @@ LIBS := $(HB_USER_LIBS) $(LIBS)
 include $(TOP)$(ROOT)config/$(HB_PLATFORM)/$(HB_COMPILER).mk
 include $(TOP)$(ROOT)config/c.mk
 include $(TOP)$(ROOT)config/prg.mk
+include $(TOP)$(ROOT)config/res.mk
 
 BIN_NAME :=
 
@@ -139,6 +140,9 @@ endif
 BIN_FILE := $(BIN_DIR)/$(BIN_NAME)
 
 ALL_OBJS := $(ALL_C_OBJS) $(ALL_PRG_OBJS)
+ifneq ($(RC),)
+   ALL_OBJS += $(ALL_RC_OBJS)
+endif
 
 first:: dirbase descend
 

@@ -59,6 +59,13 @@ ifneq ($(filter $(HB_COMPILER_VER),600 700 710),)
    endif
 endif
 
+RC := rc.exe
+RC_OUT := -fo$(subst x,x, )
+RCFLAGS :=
+ifeq ($(filter $(HB_COMPILER_VER),600 700 710 800 900),)
+   RCFLAGS += -nologo
+endif
+
 # # NOTE: -GA flag should be disabled when building MT _.dlls_,
 # #       as it creates bad code according to MS docs [vszakats].
 # ifneq ($(filter $(HB_COMPILER_VER),600),)
