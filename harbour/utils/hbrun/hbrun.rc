@@ -2,10 +2,9 @@
  * $Id$
  */
 
-#if defined( OS2 ) || defined( __OS2__ ) || defined( OS_2 )
-ICON 1 DISCARDABLE "..\\..\\..\\..\\..\\package\\harbour.ico"
-#elif defined( __BORLANDC__ )
-ICON1 ICON DISCARDABLE "..\..\..\..\..\package\harbour.ico"
+#if ( defined( OS2 ) || defined( __OS2__ ) || defined( OS_2 ) ) && ! defined( __GNUC__ )
+/* os2/watcom */
+      ICON DISCARDABLE "../../../../../package/harbour.ico"
 #else
-ICON1 ICON DISCARDABLE "..\\..\\..\\..\\..\\package\\harbour.ico"
+ICON1 ICON DISCARDABLE "../../../../../package/harbour.ico"
 #endif

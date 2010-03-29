@@ -2828,7 +2828,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          IF hbmk[ _HBMK_cCOMP ] == "gccomf"
             cOpt_Res := "{FR} {IR} -O omf -o {OS}"
          ELSE
-            cOpt_Res := "{FR} {IR} -O coff -o {OS}"
+            cOpt_Res := "{FR} {IR} -o {OS}"
          ENDIF
 
          IF ! Empty( hbmk[ _HBMK_cCCPATH ] )
