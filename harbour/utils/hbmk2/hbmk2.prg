@@ -4309,9 +4309,9 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                      '/* You can safely delete it. */'                                         + Chr( 10 ) +;
                      ''                                                                        + Chr( 10 )
             IF hbmk[ _HBMK_cPLAT ] == "os2"
-               AEval( hbmk[ _HBMK_aICON ], {| tmp, tmp1 | cFile += 'ICON ' + hb_ntos( tmp1 ) + ' DISCARDABLE "' + FN_Escape( PathSepToTarget( hbmk, tmp ), _ESC_BACKSLASH ) + '"' + Chr( 10 ) } )
+               AEval( hbmk[ _HBMK_aICON ], {| tmp, tmp1 | cFile += 'ICON ' + hb_ntos( tmp1 ) + ' DISCARDABLE "' + PathSepToForward( tmp ) + '"' + Chr( 10 ) } )
             ELSE
-               AEval( hbmk[ _HBMK_aICON ], {| tmp, tmp1 | cFile += 'ICON' + hb_ntos( tmp1 ) + ' ICON DISCARDABLE "' + FN_Escape( PathSepToTarget( hbmk, tmp ), _ESC_BACKSLASH ) + '"' + Chr( 10 ) } )
+               AEval( hbmk[ _HBMK_aICON ], {| tmp, tmp1 | cFile += 'ICON' + hb_ntos( tmp1 ) + ' ICON DISCARDABLE "' +  PathSepToForward( tmp ) + '"' + Chr( 10 ) } )
             ENDIF
 
             IF hbmk[ _HBMK_lINC ]
@@ -6097,6 +6097,9 @@ STATIC FUNCTION FN_FromArray( aPath, nFrom, nTo, cFileName, cDirPrefix )
    NEXT
 
    RETURN hb_FNameMerge( DirDelPathSep( DirAddPathSep( cDirPrefix ) + cDir ), cFileName )
+
+STATIC FUNCTION PathSepToForward( cFileName )
+   RETURN StrTran( cFileName, "\", "/" )
 
 STATIC FUNCTION PathSepToSelf( cFileName )
 #if defined( __PLATFORM__WINDOWS ) .OR. ;
