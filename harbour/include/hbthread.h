@@ -230,7 +230,7 @@ HB_EXTERN_BEGIN
 #  define HB_THREAD_END                   _endthread(); return;
 #  define HB_THREAD_RAWEND                return;
 
-#  if defined( __GNUC__ )
+#  if defined( __GNUC__ ) && 0
 #     define HB_THREAD_SELF()    ( ( TID ) _gettid() )
 #  else
 #     define HB_THREAD_SELF()    ( ( TID ) _hb_gettid() )

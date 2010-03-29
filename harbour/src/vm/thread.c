@@ -441,16 +441,36 @@ static HB_BOOL _hb_thread_cond_wait( HB_COND_T * cond, HB_RAWCRITICAL_T * critic
 #endif
 
 #if defined( HB_OS_OS2 ) && !defined( __GNUC__ )
-ULONG _hb_gettid( void )
-{
-   ULONG tid = 0;
-   PTIB  ptib = NULL;
+#if 0
+   ULONG _hb_gettid( void )
+   {
+      ULONG tid = 0;
+      PTIB  ptib = NULL;
 
-   if( DosGetInfoBlocks( &ptib, NULL ) == NO_ERROR )
-      tid = ptib->tib_ptib2->tib2_ultid;
+      if( DosGetInfoBlocks( &ptib, NULL ) == NO_ERROR )
+         tid = ptib->tib_ptib2->tib2_ultid;
 
-   return tid;
-}
+      return tid;
+   }
+#else
+   ULONG _hb_gettid( void )
+   {
+      static PULONG s_pThID = NULL;
+
+      if( !s_pThID )
+      {
+         DosAllocThreadLocalMemory( 1, &s_pThID );
+         *s_pThID = 0;
+      }
+      if( ! *s_pThID )
+      {
+         PTIB  ptib = NULL;
+         if( DosGetInfoBlocks( &ptib, NULL ) == NO_ERROR )
+            *s_pThID = ptib->tib_ptib2->tib2_ultid;
+      }
+      return *s_pThID;
+   }
+#endif
 #endif
 
 /*

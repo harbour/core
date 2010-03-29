@@ -167,20 +167,23 @@ HB_ITEM_PTR hb_memvarDetachLocal( PHB_ITEM pLocal )
    {
       do
       {
-         if( HB_IS_MEMVAR( pLocal ) )
+         if( HB_IS_MEMVAR( pLocal ) || HB_IS_EXTREF( pLocal ) )
             break;
-         else if( HB_IS_ENUM( pLocal ) && !pLocal->item.asEnum.valuePtr )
+         else if( HB_IS_ENUM( pLocal ) )
          {
-            PHB_ITEM pBase = HB_IS_BYREF( pLocal->item.asEnum.basePtr ) ?
-                            hb_itemUnRef( pLocal->item.asEnum.basePtr ) :
-                                          pLocal->item.asEnum.basePtr;
-            if( HB_IS_ARRAY( pBase ) )
+            if( !pLocal->item.asEnum.valuePtr )
             {
-               PHB_ITEM pItem = hb_itemNew( NULL );
-               hb_arrayGetItemRef( pBase, pLocal->item.asEnum.offset, pItem );
-               pLocal->item.asEnum.valuePtr = pItem;
-               pLocal = pItem;
-               break;
+               PHB_ITEM pBase = HB_IS_BYREF( pLocal->item.asEnum.basePtr ) ?
+                               hb_itemUnRef( pLocal->item.asEnum.basePtr ) :
+                                             pLocal->item.asEnum.basePtr;
+               if( HB_IS_ARRAY( pBase ) )
+               {
+                  PHB_ITEM pItem = hb_itemNew( NULL );
+                  hb_arrayGetItemRef( pBase, pLocal->item.asEnum.offset, pItem );
+                  pLocal->item.asEnum.valuePtr = pItem;
+                  pLocal = pItem;
+                  break;
+               }
             }
          }
          else if( pLocal->item.asRefer.value >= 0 &&

@@ -4535,10 +4535,9 @@ static void hb_vmEnumReference( PHB_ITEM pBase )
    HB_TRACE(HB_TR_DEBUG, ("hb_vmEnumReference(%p)", pBase));
 
    pEnumExtRef = ( PHB_ENUMREF ) hb_xgrab( sizeof( HB_ENUMREF ) );
-   pEnumExtRef->basevalue.type = HB_IT_NIL;
    pEnumExtRef->oldvalue.type = HB_IT_NIL;
    pEnumExtRef->enumref.type = HB_IT_NIL;
-   hb_itemMove( &pEnumExtRef->basevalue, pBase );
+   hb_itemRawCpy( &pEnumExtRef->basevalue, pBase );
    pBase->type = HB_IT_BYREF | HB_IT_EXTREF;
    pBase->item.asExtRef.value = ( void * ) pEnumExtRef;
    pBase->item.asExtRef.func = &s_EnumExtRef;
