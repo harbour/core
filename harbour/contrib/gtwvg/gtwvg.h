@@ -70,6 +70,7 @@
 #include <commctrl.h>
 #if ! defined( HB_OS_WIN_CE )
    #include <olectl.h>
+   #include <ocidl.h>
 #endif
 #include <commdlg.h>
 #include <shellapi.h>
