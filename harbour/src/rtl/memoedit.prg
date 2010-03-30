@@ -160,16 +160,16 @@ METHOD KeyboardHook( nKey ) CLASS HBMemoEditor
    ELSE
       IF nKey == K_ESC
          IF ::lDirty .AND. Set( _SET_SCOREBOARD )
-            cBackScr := SaveScreen( ::nTop, ::nRight - 18, ::nTop, ::nRight )
+            cBackScr := SaveScreen( 0, MaxCol() - 18, 0, MaxCol() )
 
             nRow := Row()
             nCol := Col()
-            hb_dispOutAt( ::nTop, ::nRight - 18, "Abort Edit? (Y/N)" )
-            SetPos( ::nTop, ::nRight - 1 )
+            hb_dispOutAt( 0, MaxCol() - 18, "Abort Edit? (Y/N)" )
+            SetPos( 0, MaxCol() - 1 )
 
             nYesNoKey := Inkey( 0 )
 
-            RestScreen( ::nTop, ::nRight - 18, ::nTop, ::nRight, cBackScr )
+            RestScreen( 0, MaxCol() - 18, 0, MaxCol(), cBackScr )
             SetPos( nRow, nCol )
 
             IF nYesNoKey == Asc( "Y" ) .OR. nYesNoKey == Asc( "y" )
@@ -297,7 +297,7 @@ FUNCTION MemoEdit( cString,;
    DEFAULT nBottom         TO MaxRow()
    DEFAULT nRight          TO MaxCol()
    DEFAULT lEditMode       TO .T.
-   DEFAULT nLineLength     TO nRight - nLeft
+   DEFAULT nLineLength     TO nRight - nLeft + 1
    DEFAULT nTabSize        TO 4
    DEFAULT nTextBuffRow    TO 1
    DEFAULT nTextBuffColumn TO 0

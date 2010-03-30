@@ -461,7 +461,6 @@ METHOD LineColor( nRow ) CLASS HBEditor
 METHOD MoveCursor( nKey ) CLASS HBEditor
 
    LOCAL lMoveKey := .T.
-   LOCAL nCursor := SetCursor( SC_NONE )
 
    DO CASE
    CASE nKey == K_DOWN
@@ -502,10 +501,10 @@ METHOD MoveCursor( nKey ) CLASS HBEditor
 
    CASE nKey == K_CTRL_PGDN
       ::nRow := ::naTextLen
-      ::nCol := Max( ::LineLen( ::nRow ), 1 )
+      ::nCol := Max( ::LineLen( ::nRow ) + 1, 1 )
       ::nFirstRow := Max( ::naTextLen - ::nNumRows + 1, 1 )
       ::nFirstCol := Max( ::nCol - ::nNumCols + 1, 1 )
-      ::SetPos( Min( ::nTop + ::naTextLen - 1, ::nBottom ), Min( ::nLeft + ::nCol, ::nRight ) )
+      ::SetPos( Min( ::nTop + ::naTextLen - 1, ::nBottom ), Min( ::nLeft + ::nCol - 1, ::nRight ) )
       ::display()
 
    CASE nKey == K_UP
@@ -628,8 +627,6 @@ METHOD MoveCursor( nKey ) CLASS HBEditor
       lMoveKey := .F.
 
    ENDCASE
-
-   SetCursor( nCursor )
 
    RETURN lMoveKey
 
@@ -1052,7 +1049,6 @@ METHOD New( cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabS
    hb_scroll( nTop, nLeft, nBottom, nRight )
 
    // Set cursor upper left corner
-   //::SetPos( ::nTop, ::nLeft )
    ::SetPos( ::nTop + nWndRow, ::nLeft + nWndCol )
 
    RETURN Self
