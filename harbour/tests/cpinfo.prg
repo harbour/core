@@ -28,6 +28,7 @@ proc main( cdp, info, unicode )
 #ifdef __HARBOUR__
    /* for test */
    set( _SET_CODEPAGE, iif( empty( cdp ), "PLMAZ", upper( cdp ) ) )
+   hb_setTermCP( set( _SET_CODEPAGE ), set( _SET_CODEPAGE ) )
    lEqual := .t.
 #else
    lEqual := .f.

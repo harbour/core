@@ -223,8 +223,11 @@ static void hb_gt_wvt_Free( PHB_GTWVT pWVT )
 
    HB_WVT_UNLOCK
 
-   if( pWVT->pszSelectCopy )
-      hb_xfree( pWVT->pszSelectCopy );
+   if( pWVT->hSelectCopy )
+      hb_strfree( pWVT->hSelectCopy );
+
+   if( pWVT->hWindowTitle )
+      hb_strfree( pWVT->hWindowTitle );
 
 #if !defined( UNICODE )
    if( pWVT->hFontBox && pWVT->hFontBox != pWVT->hFont )
@@ -324,8 +327,20 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
    pWVT->bBeingMarked      = HB_FALSE;
    pWVT->bBeginMarked      = HB_FALSE;
 
-   pWVT->pszSelectCopy     = hb_strdup( "Mark and Copy" );
+   pWVT->lpSelectCopy      = TEXT( "Mark and Copy" );
+   pWVT->hSelectCopy       = NULL;
    pWVT->bSelectCopy       = HB_TRUE;
+
+   {
+      PHB_FNAME pFileName = hb_fsFNameSplit( hb_cmdargARGV()[ 0 ] );
+      PHB_ITEM  pItem = hb_itemPutC( NULL, pFileName->szName );
+
+      pWVT->lpWindowTitle = HB_ITEMGETSTR( pItem, &pWVT->hWindowTitle, NULL );
+
+      hb_itemRelease( pItem );
+      hb_xfree( pFileName );
+   }
+
    pWVT->bResizable        = HB_TRUE;
    pWVT->bClosable         = HB_TRUE;
 
@@ -334,10 +349,9 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
    pWVT->bResizing         = HB_FALSE;
    pWVT->bAlreadySizing    = HB_FALSE;
 
-   pWVT->hostCDP    = hb_vmCDP();
 #if defined( UNICODE )
-   pWVT->inCDP      = hb_vmCDP();
-   pWVT->boxCDP     = hb_cdpFind( "EN" );
+   /* pWVT->hostCDP = pWVT->inCDP = hb_vmCDP(); */
+   pWVT->boxCDP = hb_cdpFind( "EN" );
 #else
    {
       int i;
@@ -554,6 +568,7 @@ static void hb_gt_wvt_TranslateKey( PHB_GTWVT pWVT, int key, int shiftkey, int a
    }
 }
 
+#if !defined( UNICODE )
 static int hb_gt_wvt_key_ansi_to_oem( int c )
 {
    BYTE pszSrc[ 2 ];
@@ -570,6 +585,7 @@ static int hb_gt_wvt_key_ansi_to_oem( int c )
 
    return pszDst[ 0 ];
 }
+#endif
 
 static void hb_gt_wvt_FitRows( PHB_GTWVT pWVT )
 {
@@ -883,31 +899,6 @@ static void hb_gt_wvt_ResetWindowSize( PHB_GTWVT pWVT, HFONT hFont )
 
    if( pWVT->CaretExist && !pWVT->CaretHidden )
       hb_gt_wvt_UpdateCaret( pWVT );
-}
-
-static void hb_gt_wvt_SetWindowTitle( HWND hWnd, const char * title )
-{
-   LPTSTR text = HB_TCHAR_CONVTO( title );
-   SetWindowText( hWnd, text );
-   HB_TCHAR_FREE( text );
-}
-
-static HB_BOOL hb_gt_wvt_GetWindowTitle( HWND hWnd, char ** title )
-{
-   TCHAR buffer[ WVT_MAX_TITLE_SIZE ];
-   int iResult;
-
-   iResult = GetWindowText( hWnd, buffer, WVT_MAX_TITLE_SIZE );
-   if( iResult > 0 )
-   {
-      *title = ( char * ) hb_xgrab( iResult + 1 );
-      HB_TCHAR_GETFROM( *title, buffer, iResult );
-      ( *title )[ iResult ] = '\0';
-      return HB_TRUE;
-   }
-
-   *title = NULL;
-   return HB_FALSE;
 }
 
 static HB_BOOL hb_gt_wvt_SetWindowSize( PHB_GTWVT pWVT, int iRows, int iCols )
@@ -1370,17 +1361,18 @@ static HB_BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, 
                      hb_gt_wvt_AddCharToInputQueue( pWVT, K_ESC );
                      break;
                   default:
-                     if( pWVT->inCDP )
-                     {
 #if defined( UNICODE )
-                        c = hb_cdpGetChar( pWVT->inCDP, HB_FALSE, ( HB_WCHAR ) c );
+                     c = hb_cdpGetChar( pWVT->inCDP ? pWVT->inCDP : hb_vmCDP(),
+                                        HB_FALSE, ( HB_WCHAR ) c );
 #else
+                     if( pWVT->fKeyTrans )
+                     {
                         if( c > 0 && c <= 255 && pWVT->keyTransTbl[ c ] )
                            c = pWVT->keyTransTbl[ c ];
-#endif
                      }
                      else if( pWVT->CodePage == OEM_CHARSET )
                         c = hb_gt_wvt_key_ansi_to_oem( c );
+#endif
                      hb_gt_wvt_AddCharToInputQueue( pWVT, c );
                      break;
                }
@@ -1555,7 +1547,9 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT, RECT updateRect )
    int         iRow, iCol, startCol, len;
    int         iColor, iOldColor = 0;
    HB_BYTE     bAttr;
-#if ! defined( UNICODE )
+#if defined( UNICODE )
+   PHB_CODEPAGE hostCDP;
+#else
    HFONT       hFont, hOldFont = NULL;
 #endif
    HB_USHORT   usChar;
@@ -1563,6 +1557,7 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT, RECT updateRect )
    hdc = BeginPaint( pWVT->hWnd, &ps );
 #if defined( UNICODE )
    SelectObject( hdc, pWVT->hFont );
+   hostCDP = pWVT->hostCDP ? pWVT->hostCDP : hb_vmCDP();
 #endif
 
    rcRect = hb_gt_wvt_GetColRowFromXYRect( pWVT, updateRect );
@@ -1582,7 +1577,7 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT, RECT updateRect )
           */
          iColor &= 0xff;
 #if defined( UNICODE )
-         usChar = hb_cdpGetU16( bAttr & HB_GT_ATTR_BOX ? pWVT->boxCDP : pWVT->hostCDP, HB_TRUE, ( HB_BYTE ) usChar );
+         usChar = hb_cdpGetU16( bAttr & HB_GT_ATTR_BOX ? pWVT->boxCDP : hostCDP, HB_TRUE, ( HB_BYTE ) usChar );
          if( len == 0 )
          {
             iOldColor = iColor;
@@ -1633,10 +1628,25 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
 {
    PHB_GTWVT pWVT = hb_gt_wvt_Find( hWnd );
 
+   if( !pWVT )
+   {
+      if( message == WM_CREATE )
+      {
+         pWVT = ( PHB_GTWVT ) ( ( LPCREATESTRUCT ) lParam )->lpCreateParams;
+         if( pWVT )
+         {
+            if( s_wvtWindows[ pWVT->iHandle ] == pWVT )
+               pWVT->hWnd = hWnd;
+            else
+               pWVT = NULL;
+         }
+      }
+   }
+
    if( pWVT ) switch( message )
    {
       case WM_CREATE:
-         return hb_gt_wvt_InitWindow( pWVT, pWVT->ROWS, pWVT->COLS, NULL );
+         return hb_gt_wvt_InitWindow( pWVT, pWVT->ROWS, pWVT->COLS, NULL ) ? 0 : -1;
 
       case WM_PAINT:
       {
@@ -1819,38 +1829,32 @@ static HB_BOOL hb_gt_wvt_ValidWindowSize( HWND hWnd, int rows, int cols, HFONT h
    return ( width <= maxWidth ) && ( height <= maxHeight );
 }
 
-static HWND hb_gt_wvt_CreateWindow( HINSTANCE hInstance, HB_BOOL bResizable )
+static void hb_gt_wvt_CreateWindow( PHB_GTWVT pWVT )
 {
-   HWND     hWnd;
-   LPTSTR   szAppName;
+   DWORD dwStyle;
 
    /* InitCommonControls(); */
 
-   szAppName = HB_TCHAR_CONVTO( hb_cmdargARGV()[ 0 ] );
+   dwStyle = pWVT->bResizable ? _WVT_WS_DEF : _WVT_WS_NORESIZE;
 
-   hWnd = CreateWindow(
-               s_szClassName,                               /* classname */
-               szAppName,                                   /* window name */
-               bResizable ? _WVT_WS_DEF : _WVT_WS_NORESIZE, /* style */
-               0,                                           /* x */
-               0,                                           /* y */
-               CW_USEDEFAULT,                               /* width */
-               CW_USEDEFAULT,                               /* height */
-               NULL,                                        /* window parent */
-               NULL,                                        /* menu */
-               hInstance,                                   /* instance */
-               NULL );                                      /* lpParam */
-
-   HB_TCHAR_FREE( szAppName );
-
-   return hWnd;
+   pWVT->hWnd = CreateWindow( s_szClassName,       /* classname */
+                              pWVT->lpWindowTitle, /* window name */
+                              dwStyle,             /* style */
+                              0,                   /* x */
+                              0,                   /* y */
+                              CW_USEDEFAULT,       /* width */
+                              CW_USEDEFAULT,       /* height */
+                              NULL,                /* window parent */
+                              NULL,                /* menu */
+                              pWVT->hInstance,     /* instance */
+                              ( LPVOID ) pWVT );   /* lpParam */
 }
 
 static HB_BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
 {
    if( !pWVT->hWnd )
    {
-      pWVT->hWnd = hb_gt_wvt_CreateWindow( pWVT->hInstance, pWVT->bResizable );
+      hb_gt_wvt_CreateWindow( pWVT );
       if( !pWVT->hWnd )
          hb_errInternal( 10001, "Failed to create WVT window", NULL, NULL );
 
@@ -1872,14 +1876,12 @@ static HB_BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
 #endif
 
             pSetLayeredWindowAttributes( pWVT->hWnd,
-               ( COLORREF ) 0 /* COLORREF crKey */,
-               255 /* BYTE bAlpha */,
-               LWA_ALPHA /* DWORD dwFlags */ );
+                                         ( COLORREF ) 0, /* COLORREF crKey */
+                                         255,            /* BYTE bAlpha */
+                                         LWA_ALPHA       /* DWORD dwFlags */ );
          }
       }
 #endif
-
-      hb_gt_wvt_InitWindow( pWVT, pWVT->ROWS, pWVT->COLS, NULL );
 
       /* Set icon */
       if( pWVT->hIcon )
@@ -1888,22 +1890,13 @@ static HB_BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
          SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_BIG  , ( LPARAM ) pWVT->hIcon ); /* Set Task List Icon */
       }
 
-      /* Set default window title */
-      {
-         PHB_FNAME pFileName = hb_fsFNameSplit( hb_cmdargARGV()[ 0 ] );
-         hb_gt_wvt_SetWindowTitle( pWVT->hWnd, pFileName->szName );
-         hb_xfree( pFileName );
-      }
-
       {
          HMENU hSysMenu = GetSystemMenu( pWVT->hWnd, FALSE );
          if( hSysMenu )
          {
             /* Create "Mark" prompt in SysMenu to allow console type copy operation */
-            LPTSTR buffer = HB_TCHAR_CONVTO( pWVT->pszSelectCopy );
-            AppendMenu( hSysMenu, MF_STRING, SYS_EV_MARK, buffer );
-            HB_TCHAR_FREE( buffer );
-
+            AppendMenu( hSysMenu, MF_STRING, SYS_EV_MARK, pWVT->lpSelectCopy );
+            /* disable [x] button / close menu item */
             if( ! pWVT->bClosable )
                EnableMenuItem( hSysMenu, SC_CLOSE, MF_BYCOMMAND | MF_GRAYED );
          }
@@ -2302,23 +2295,13 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          break;
       }
       case HB_GTI_WINTITLE:
-         if( pWVT->hWnd )
+         pInfo->pResult = HB_ITEMPUTSTR( pInfo->pResult, pWVT->lpWindowTitle );
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
          {
-            char * pszTitle = NULL;
-            if( hb_gt_wvt_GetWindowTitle( pWVT->hWnd, &pszTitle ) )
-               pInfo->pResult = hb_itemPutCPtr( pInfo->pResult, pszTitle );
-            else
-               pInfo->pResult = hb_itemPutC( pInfo->pResult, NULL );
-
-            if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
-            {
-               char * pszFreeTitle = NULL;
-
-               hb_gt_wvt_SetWindowTitle( pWVT->hWnd, hb_osEncodeCP( hb_itemGetCPtr( pInfo->pNewVal ), &pszFreeTitle, NULL ) );
-
-               if( pszFreeTitle )
-                  hb_xfree( pszFreeTitle );
-            }
+            hb_strfree( pWVT->hWindowTitle );
+            pWVT->lpWindowTitle = HB_ITEMGETSTR( pInfo->pNewVal, &pWVT->hWindowTitle, NULL );
+            if( pWVT->hWnd )
+               SetWindowText( pWVT->hWnd, pWVT->lpWindowTitle );
          }
          break;
 
@@ -2413,14 +2396,14 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       {
          if( ( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING ) )
          {
-            HICON hIconToFree = ( pWVT->hIcon && pWVT->bIconToFree ) ? pWVT->hIcon : NULL;
-            LPTSTR lpImage;
+            HICON hIconToFree = pWVT->bIconToFree ? pWVT->hIcon : NULL;
+            void * hImageName;
 
-            lpImage = HB_TCHAR_CONVTO( hb_itemGetCPtr( pInfo->pNewVal ) );
             pWVT->bIconToFree = HB_TRUE;
-            pWVT->hIcon = ( HICON ) LoadImage( ( HINSTANCE ) NULL, lpImage,
+            pWVT->hIcon = ( HICON ) LoadImage( ( HINSTANCE ) NULL,
+                                               HB_ITEMGETSTR( pInfo->pNewVal, &hImageName, NULL ),
                                                IMAGE_ICON, 0, 0, LR_LOADFROMFILE );
-            HB_TCHAR_FREE( lpImage );
+            hb_strfree( hImageName );
             if( pWVT->hWnd )
             {
                SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_SMALL, ( LPARAM ) pWVT->hIcon ); /* Set Title Bar Icon */
@@ -2438,14 +2421,13 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       {
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
          {
-            HICON hIconToFree = ( pWVT->hIcon && pWVT->bIconToFree ) ? pWVT->hIcon : NULL;
-            LPTSTR lpIcon;
+            HICON hIconToFree = pWVT->bIconToFree ? pWVT->hIcon : NULL;
+            void * hIconName;
 
-            lpIcon = HB_TCHAR_CONVTO( hb_itemGetCPtr( pInfo->pNewVal ) );
             pWVT->bIconToFree = HB_FALSE;
-            pWVT->hIcon = LoadIcon( pWVT->hInstance, lpIcon );
-            HB_TCHAR_FREE( lpIcon );
-
+            pWVT->hIcon = LoadIcon( pWVT->hInstance,
+                                    HB_ITEMGETSTR( pInfo->pNewVal, &hIconName, NULL ) );
+            hb_strfree( hIconName );
             if( pWVT->hWnd )
             {
                SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_SMALL, ( LPARAM ) pWVT->hIcon ); /* Set Title Bar Icon */
@@ -2457,7 +2439,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          }
          else if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
          {
-            HICON hIconToFree = ( pWVT->hIcon && pWVT->bIconToFree ) ? pWVT->hIcon : NULL;
+            HICON hIconToFree = pWVT->bIconToFree ? pWVT->hIcon : NULL;
 
             pWVT->bIconToFree = HB_FALSE;
             pWVT->hIcon = LoadIcon( pWVT->hInstance,
@@ -2573,56 +2555,45 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          break;
 
       case HB_GTI_SELECTCOPY:
-         pInfo->pResult = hb_itemPutL( pInfo->pResult, pWVT->bSelectCopy );
-
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
          {
-            pInfo->pResult = hb_itemPutC( pInfo->pResult, pWVT->pszSelectCopy );
+            pInfo->pResult = HB_ITEMPUTSTR( pInfo->pResult, pWVT->lpSelectCopy );
 
             if( hb_itemGetCLen( pInfo->pNewVal ) )
             {
                HMENU hSysMenu = pWVT->hWnd ? GetSystemMenu( pWVT->hWnd, FALSE ) : NULL;
                if( hSysMenu || !pWVT->hWnd )
                {
-                  char * pszFreeTitle = NULL;
-
-                  if( pWVT->pszSelectCopy )
-                     hb_xfree( pWVT->pszSelectCopy );
-
-                  pWVT->pszSelectCopy = hb_strdup( hb_osEncodeCP( hb_itemGetCPtr( pInfo->pNewVal ), &pszFreeTitle, NULL ) );
+                  hb_strfree( pWVT->hSelectCopy );
+                  pWVT->lpSelectCopy = HB_ITEMGETSTR( pInfo->pNewVal, &pWVT->hSelectCopy, NULL );
                   pWVT->bSelectCopy = HB_TRUE;
-
-                  if( pszFreeTitle )
-                     hb_xfree( pszFreeTitle );
-
 #if !defined( HB_OS_WIN_CE )  /* WinCE does not support ModifyMenu */
                   if( hSysMenu )
-                  {
-                     LPTSTR buffer;
-                     buffer = HB_TCHAR_CONVTO( pWVT->pszSelectCopy );
-                     ModifyMenu( hSysMenu, SYS_EV_MARK, MF_BYCOMMAND | MF_STRING | MF_ENABLED, SYS_EV_MARK, buffer );
-                     HB_TCHAR_FREE( buffer );
-                  }
+                     ModifyMenu( hSysMenu, SYS_EV_MARK, MF_BYCOMMAND | MF_STRING | MF_ENABLED, SYS_EV_MARK, pWVT->lpSelectCopy );
 #endif
                }
             }
          }
-         else if( pInfo->pNewVal )
+         else
          {
-            HB_BOOL bNewValue = hb_itemGetL( pInfo->pNewVal );
-            if( bNewValue != pWVT->bSelectCopy )
+            pInfo->pResult = hb_itemPutL( pInfo->pResult, pWVT->bSelectCopy );
+            if( pInfo->pNewVal )
             {
-               if( pWVT->hWnd )
+               HB_BOOL bNewValue = hb_itemGetL( pInfo->pNewVal );
+               if( bNewValue != pWVT->bSelectCopy )
                {
-                  HMENU hSysMenu = GetSystemMenu( pWVT->hWnd, FALSE );
-                  if( hSysMenu )
+                  if( pWVT->hWnd )
                   {
-                     EnableMenuItem( hSysMenu, SYS_EV_MARK, MF_BYCOMMAND | ( bNewValue ? MF_ENABLED : MF_GRAYED ) );
-                     pWVT->bSelectCopy = bNewValue;
+                     HMENU hSysMenu = GetSystemMenu( pWVT->hWnd, FALSE );
+                     if( hSysMenu )
+                     {
+                        EnableMenuItem( hSysMenu, SYS_EV_MARK, MF_BYCOMMAND | ( bNewValue ? MF_ENABLED : MF_GRAYED ) );
+                        pWVT->bSelectCopy = bNewValue;
+                     }
                   }
+                  else
+                     pWVT->bSelectCopy = bNewValue;
                }
-               else
-                  pWVT->bSelectCopy = bNewValue;
             }
          }
          break;
@@ -3025,9 +2996,11 @@ static HB_BOOL hb_gt_wvt_SetKeyCP( PHB_GT pGT, const char * pszTermCDP, const ch
       cdpHost = hb_cdpFind( pszHostCDP );
 
       for( i = 0; i < 256; i++ )
+      {
          pWVT->keyTransTbl[ i ] = ( HB_BYTE )
                            hb_cdpTranslateChar( i, HB_FALSE, cdpTerm, cdpHost );
-      pWVT->inCDP = cdpTerm;
+      }
+      pWVT->fKeyTrans = HB_TRUE;
    }
 #  endif
 

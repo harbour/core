@@ -51,7 +51,7 @@
 #define __GET_NEBID  10
 #define __GET_LFOCUSED  11
 
-REQUEST HB_NOSTARTUPWINDOW
+//REQUEST HB_NOSTARTUPWINDOW
 
 proc main
 local nOpen, nClose

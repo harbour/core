@@ -593,8 +593,17 @@ static BOOL WINAPI hb_gt_win_CtrlHandler( DWORD dwCtrlType )
 static void hb_gt_win_xGetScreenContents( PHB_GT pGT, SMALL_RECT * psrWin )
 {
    int iRow, iCol, i;
+#if defined( UNICODE )
+   PHB_CODEPAGE cdpHost;
+#endif
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_win_xGetScreenContents(%p,%p)", pGT, psrWin));
+
+#if defined( UNICODE )
+   cdpHost = s_cdpHost;
+   if( !cdpHost )
+      cdpHost = hb_vmCDP();
+#endif
 
    for( iRow = psrWin->Top; iRow <= psrWin->Bottom; ++iRow )
    {
@@ -610,8 +619,8 @@ static void hb_gt_win_xGetScreenContents( PHB_GT pGT, SMALL_RECT * psrWin )
           *       very slow in some cases
           */
 
-         uc = hb_cdpGetChar( s_cdpHost, HB_FALSE, wc );
-         if( uc == '?' && wc >= 0x100 && s_cdpHost != s_cdpBox )
+         uc = hb_cdpGetChar( cdpHost, HB_FALSE, wc );
+         if( uc == '?' && wc >= 0x100 && cdpHost != s_cdpBox )
          {
             uc = hb_cdpGetChar( s_cdpBox, HB_FALSE, wc );
             if( uc != '?' )
@@ -827,13 +836,13 @@ static void hb_gt_win_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    s_bAltKeyHandling = HB_TRUE;
 
 #if defined( UNICODE )
-   s_cdpHost = s_cdpIn = hb_vmCDP();
+   /* s_cdpHost = s_cdpIn = hb_vmCDP(); */
    s_cdpBox = hb_cdpFind( "EN" );
-#endif
-
+#else
    /* initialize code page translation */
    HB_GTSELF_SETDISPCP( pGT, NULL, NULL, HB_FALSE );
    HB_GTSELF_SETKEYCP( pGT, NULL, NULL );
+#endif
 
 #ifndef HB_NO_ALLOC_CONSOLE
    /*
@@ -1475,7 +1484,8 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
 
 #if defined( UNICODE )
             ch = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.uChar.UnicodeChar;
-            ch = hb_cdpGetChar( s_cdpIn, HB_FALSE, ( HB_WCHAR ) ch );
+            ch = hb_cdpGetChar( s_cdpIn ? s_cdpIn : hb_vmCDP(), HB_FALSE,
+                                ( HB_WCHAR ) ch );
 #else
             ch = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.uChar.AsciiChar;
 #endif
@@ -2068,25 +2078,36 @@ static void hb_gt_win_Refresh( PHB_GT pGT )
 {
    HB_TRACE( HB_TR_DEBUG, ("hb_gt_win_Refresh(%p)", pGT) );
 
-   HB_GTSUPER_REFRESH( pGT );
-
-   if( s_pCharInfoScreen )
    {
-      int iRow, iCol, iStyle;
+#if defined( UNICODE )
+      PHB_CODEPAGE cdpHost = s_cdpHost;
+      if( !cdpHost )
+         s_cdpHost = hb_vmCDP();
+#endif
 
-      HB_GTSELF_GETSCRCURSOR( pGT, &iRow, &iCol, &iStyle );
+      HB_GTSUPER_REFRESH( pGT );
 
-      s_iCurRow = iRow;
-      s_iCurCol = iCol;
+      if( s_pCharInfoScreen )
+      {
+         int iRow, iCol, iStyle;
 
-      if( iRow < 0 || iCol < 0 ||
-          iRow >= ( int ) _GetScreenHeight() ||
-          iCol >= ( int ) _GetScreenWidth() )
-         s_iCursorStyle = SC_NONE;
-      else
-         s_iCursorStyle = iStyle;
+         HB_GTSELF_GETSCRCURSOR( pGT, &iRow, &iCol, &iStyle );
 
-      hb_gt_win_xScreenUpdate();
+         s_iCurRow = iRow;
+         s_iCurCol = iCol;
+
+         if( iRow < 0 || iCol < 0 ||
+             iRow >= ( int ) _GetScreenHeight() ||
+             iCol >= ( int ) _GetScreenWidth() )
+            s_iCursorStyle = SC_NONE;
+         else
+            s_iCursorStyle = iStyle;
+
+         hb_gt_win_xScreenUpdate();
+      }
+#if defined( UNICODE )
+      s_cdpHost = cdpHost;
+#endif
    }
 }
 

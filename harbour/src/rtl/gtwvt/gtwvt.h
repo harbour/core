@@ -66,6 +66,7 @@
 #include "hbvm.h"
 #include "hbthread.h"
 #include "hbgfxdef.ch"
+#include "hbwinuni.h"
 
 #include <windows.h>
 #if defined( HB_OS_WIN_CE )
@@ -151,10 +152,12 @@ typedef struct
    HWND     hWnd;                         /* the window handle */
    HB_BOOL  fInit;                        /* logical variable indicating that window should be open */
 
-   PHB_CODEPAGE hostCDP;                  /* Host/HVM CodePage for unicode output translations */
-   PHB_CODEPAGE inCDP;                    /* Host/HVM CodePage for unicode input translations */
 #if defined( UNICODE )
+   PHB_CODEPAGE inCDP;                    /* Host/HVM CodePage for unicode input translations */
+   PHB_CODEPAGE hostCDP;                  /* Host/HVM CodePage for unicode output translations */
    PHB_CODEPAGE boxCDP;                   /* CodePage for legacy drawing chars: IBM437 */
+#else
+   HB_BOOL  fKeyTrans;                    /* logical variable indicating that CP key translation is enabled */
 #endif
 
 #if !defined( UNICODE )
@@ -164,6 +167,9 @@ typedef struct
 
    HICON    hIcon;                        /* Title Bar and Task List icon. Can be NULL. */
    HB_BOOL  bIconToFree;                  /* Do we need to free this icon when it's not NULL? */
+
+   void *   hWindowTitle;
+   LPCTSTR  lpWindowTitle;
 
    int      CodePage;                     /* Code page to use for display characters */
 #if ! defined( UNICODE )
@@ -175,18 +181,21 @@ typedef struct
 
    HB_BOOL  IgnoreWM_SYSCHAR;
 
+   HB_BOOL  bResizable;
+   HB_BOOL  bClosable;
+
    HB_BOOL  bMaximized;                   /* Flag is set when window has been maximized */
    HB_BOOL  bBeingMarked;                 /* Flag to control DOS window like copy operation */
    HB_BOOL  bBeginMarked;
 
-   HB_BOOL  bResizable;
    HB_BOOL  bSelectCopy;
-   char *   pszSelectCopy;
-   HB_BOOL  bClosable;
+   void *   hSelectCopy;
+   LPCTSTR  lpSelectCopy;
 
-   int      ResizeMode;                   /* Sets the resizing mode either to FONT or ROWS */
    RECT     sRectNew;
    RECT     sRectOld;
+
+   int      ResizeMode;                   /* Sets the resizing mode either to FONT or ROWS */
 
    HB_BOOL  bResizing;
    HB_BOOL  bAlreadySizing;
