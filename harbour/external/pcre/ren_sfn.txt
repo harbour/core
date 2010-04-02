@@ -1,0 +1,32 @@
+#
+# $Id$
+#
+
+# Use with 'hbrun <root>/config/ren_sfn.prg [F|T]'
+
+LICENCE    LICENCE
+config.h   config.h.generic
+pcre.h     pcre.h.generic
+pcreinal.h pcre_internal.h
+ucp.h      ucp.h
+chartabs.c pcre_chartables.c.dist
+pcrecomp.c pcre_compile.c
+pcreconf.c pcre_config.c
+pcredfa.c  pcre_dfa_exec.c
+pcreexec.c pcre_exec.c
+pcrefinf.c pcre_fullinfo.c
+pcreget.c  pcre_get.c
+pcreglob.c pcre_globals.c
+pcreinfo.c pcre_info.c
+pcremktb.c pcre_maketables.c
+pcrenewl.c pcre_newline.c
+pcreoutf.c pcre_ord2utf8.c
+pcreprni.h pcre_printint.src
+pcrerefc.c pcre_refcount.c
+pcrestud.c pcre_study.c
+pcretabs.c pcre_tables.c
+pcretryf.c pcre_try_flipped.c
+pcreucd.c  pcre_ucd.c
+pcrevutf.c pcre_valid_utf8.c
+pcrever.c  pcre_version.c
+pcrexcls.c pcre_xclass.c

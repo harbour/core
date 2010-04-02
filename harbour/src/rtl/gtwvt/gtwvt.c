@@ -385,7 +385,7 @@ static int hb_gt_wvt_FireEvent( PHB_GTWVT pWVT, int nEvent )
 }
 
 /*
- * use the standard fixed oem font, unless the caller has requested set size fonts
+ * use the standard fixed OEM font, unless the caller has requested set size fonts
  */
 static HFONT hb_gt_wvt_GetFont( const char * pszFace, int iHeight, int iWidth, int iWeight, int iQuality, int iCodePage )
 {

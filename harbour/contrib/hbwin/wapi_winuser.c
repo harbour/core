@@ -59,6 +59,37 @@
 #  define WS_OVERLAPPEDWINDOW ( WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX )
 #endif
 
+HB_FUNC( WAPI_SETWINDOWPOS )
+{
+   BOOL bResult = SetWindowPos( wapi_par_HWND( 1 ),
+                                wapi_par_HWND( 2 ),
+                                hb_parni( 3 ),
+                                hb_parni( 4 ),
+                                hb_parni( 5 ),
+                                hb_parni( 6 ),
+                                ( UINT ) hb_parnl( 7 ) );
+   hbwapi_SetLastError( GetLastError() );
+   wapi_ret_L( bResult );
+}
+
+HB_FUNC( WAPI_ISICONIC )
+{
+#if defined( HB_OS_WIN_CE )
+   wapi_ret_L( FALSE );
+#else
+   wapi_ret_L( IsIconic( wapi_par_HWND( 1 ) ) );
+#endif
+}
+
+HB_FUNC( WAPI_ISZOOMED )
+{
+#if defined( HB_OS_WIN_CE )
+   wapi_ret_L( FALSE );
+#else
+   wapi_ret_L( IsZoomed( wapi_par_HWND( 1 ) ) );
+#endif
+}
+
 HB_FUNC( WAPI_GETSYSTEMMETRICS )
 {
    int iResult = GetSystemMetrics( wapi_par_INT( 1 ) );

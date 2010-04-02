@@ -582,10 +582,60 @@
 #define WIN_SND_RING                0x00100000
 #define WIN_SND_SYSTEM              0x00200000
 
+/* SETWINDOWPOS() flags */
+#define WIN_SWP_NOSIZE              0x0001
+#define WIN_SWP_NOMOVE              0x0002
+#define WIN_SWP_NOZORDER            0x0004
+#define WIN_SWP_NOREDRAW            0x0008
+#define WIN_SWP_NOACTIVATE          0x0010
+#define WIN_SWP_FRAMECHANGED        0x0020
+#define WIN_SWP_SHOWWINDOW          0x0040
+#define WIN_SWP_HIDEWINDOW          0x0080
+#define WIN_SWP_NOCOPYBITS          0x0100
+#define WIN_SWP_NOOWNERZORDER       0x0200
+#define WIN_SWP_NOSENDCHANGING      0x0400
+#define WIN_SWP_DEFERERASE          0x2000
+#define WIN_SWP_ASYNCWINDOWPOS      0x4000
+#define WIN_SWP_DRAWFRAME           WIN_SWP_FRAMECHANGED
+#define WIN_SWP_NOREPOSITION        WIN_SWP_NOOWNERZORDER
 
-/* window messages WM_* */
+/* Predefined window IDs */
+#define WIN_HWND_TOP                win_n2p( 0 )
+#define WIN_HWND_BOTTOM             win_n2p( 1 )
+#define WIN_HWND_TOPMOST            win_n2p( -1 )
+#define WIN_HWND_NOTOPMOST          win_n2p( -2 )
+
+/* window messages */
 #define WIN_WM_USER                 1024
 
+/* window styles */
+#define WIN_WS_OVERLAPPED           0x00000000
+#define WIN_WS_TABSTOP              0x00010000
+#define WIN_WS_MAXIMIZEBOX          0x00010000
+#define WIN_WS_MINIMIZEBOX          0x00020000
+#define WIN_WS_GROUP                0x00020000
+#define WIN_WS_THICKFRAME           0x00040000
+#define WIN_WS_SYSMENU              0x00080000
+#define WIN_WS_HSCROLL              0x00100000
+#define WIN_WS_VSCROLL              0x00200000
+#define WIN_WS_DLGFRAME             0x00400000
+#define WIN_WS_BORDER               0x00800000
+#define WIN_WS_CAPTION              0x00C00000
+#define WIN_WS_MAXIMIZE             0x01000000
+#define WIN_WS_CLIPCHILDREN         0x02000000
+#define WIN_WS_CLIPSIBLINGS         0x04000000
+#define WIN_WS_DISABLED             0x08000000
+#define WIN_WS_VISIBLE              0x10000000
+#define WIN_WS_MINIMIZE             0x20000000
+#define WIN_WS_CHILD                0x40000000
+#define WIN_WS_POPUP                0x80000000
+#define WIN_WS_TILED                WIN_WS_OVERLAPPED
+#define WIN_WS_ICONIC               WIN_WS_MINIMIZE
+#define WIN_WS_SIZEBOX              WIN_WS_THICKFRAME
+#define WIN_WS_TILEDWINDOW          WIN_WS_OVERLAPPEDWINDOW
+#define WIN_WS_OVERLAPPEDWINDOW     hb_bitOr( WIN_WS_OVERLAPPED, WIN_WS_CAPTION, WIN_WS_SYSMENU, WIN_WS_THICKFRAME, WIN_WS_MINIMIZEBOX, WIN_WS_MAXIMIZEBOX )
+#define WIN_WS_POPUPWINDOW          hb_bitOr( WIN_WS_POPUP, WIN_WS_BORDER, WIN_WS_SYSMENU )
+#define WIN_WS_CHILDWINDOW          WIN_WS_CHILD
 
 /* ------------------------------- */
 /* Deprecated constants and macros */

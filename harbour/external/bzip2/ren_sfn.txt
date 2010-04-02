@@ -1,0 +1,16 @@
+#
+# $Id$
+#
+
+# Use with 'hbrun <root>/config/ren_sfn.prg [F|T]'
+
+LICENSE    LICENSE
+blocksor.c blocksort.c
+bzlib.c    bzlib.c
+compress.c compress.c
+crctable.c crctable.c
+decompre.c decompress.c
+huffman.c  huffman.c
+randtabl.c randtable.c
+bzlib.h    bzlib.h
+bzlib_pr.h bzlib_private.h

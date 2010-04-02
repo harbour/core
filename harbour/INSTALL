@@ -604,7 +604,6 @@ HARBOUR
    - HB_BUILD_PKG=yes            Create release package. Default: no
                                  Requires 'clean install' in root source dir.
                                  (currently on Windows/Windows CE/MS-DOS)
-                                 (only when using Windows NT shells)
    - HB_BUILD_DLL=no             Create Harbour dynamic libraries. Default: yes
    - HB_BUILD_SHARED=yes         Create Harbour executables in shared mode.
                                  Default: yes when HB_INSTALL_PREFIX points
