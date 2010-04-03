@@ -595,7 +595,7 @@ AREAP hb_rddRequestArea( const char * szAlias, PHB_ITEM pCargo,
 
    if( szAlias )
    {
-      pSymAlias = hb_dynsymFindName( szAlias );
+      pSymAlias = hb_dynsymGet( szAlias );
 
       /* verify if the alias name is valid symbol */
       if( hb_rddVerifyAliasName( szAlias ) != HB_SUCCESS )
