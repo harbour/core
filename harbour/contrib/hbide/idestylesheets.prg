@@ -362,7 +362,7 @@ FUNCTION GetStyleSheet( cWidget, nMode )
       aadd( txt_, '                                 stop: 0 #fafafa, stop: 0.4 #f4f4f4,         ' )
       aadd( txt_, '                                 stop: 0.5 #e7e7e7, stop: 1.0 #fafafa);      ' )
       ELSE
-      aadd( txt_, '     background: white;                                                      ' )
+      aadd( txt_, '     background: rgb( 230,230,230 );                                         ' )
       ENDIF
       aadd( txt_, ' }                                                                           ' )
       aadd( txt_, ' QTabBar::tab:selected:hover {                                               ' )

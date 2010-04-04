@@ -91,9 +91,7 @@ static HB_ISIZ ide_linearfind( const char ** array, const char * pszText, HB_ISI
          if( hb_strnicmp( pszText, array[ i ], lentext + 1 ) == 0 )
             return i + 1;
       }
-
    }
-
    return 0;
 }
 
@@ -130,7 +128,6 @@ static HB_ISIZ ide_atbuff( const char * pszChars, const char * pszString, HB_ISI
          }
       }
    }
-
    return 0;
 }
 
@@ -279,7 +276,6 @@ HB_FUNC( PARSEXPR ) /* ( c, bHonorSpacing, bInRemark, bUpperKeyWord, bKeepCommen
 
          if( bInRemark )
          {
-
             if( bKeepComments )
             {
                hb_strncat( szNextWord, pszExpr, sizeof( szNextWord ) - 1 );

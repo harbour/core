@@ -421,7 +421,16 @@ METHOD IdeDocks:buildViewWidget( cObjectName )
    oFrame:qLayout:setContentsMargins( 2, 2, 2, 2 )
 
    oFrame:oTabWidget := XbpTabWidget():new():create( oFrame, , {0,0}, {200,200}, , .t. )
-
+   #if 0
+   IF empty( qTBtn )
+      qTBtn := QWidget():new() //QToolButton():new( oFrame:oTabWidget:oWidget )
+      qTBtn:setTooltip( "Close Tab" )
+      qTBtn:setIcon( hbide_image( "closetab" ) )
+      qTBtn:setMaximumWidth( 16 )
+      qTBtn:setMaximumHeight( 16 )
+   ENDIF
+   oFrame:oTabWidget:oWidget:setCornerWidget( qTBtn, Qt_TopLeftCorner )
+   #endif
    oFrame:oTabWidget:oWidget:setUsesScrollButtons( .f. )
    oFrame:oTabWidget:oWidget:setMovable( .t. )
 
@@ -499,7 +508,7 @@ METHOD IdeDocks:buildToolBarPanels()
       ELSE
          qTBtn := QToolButton():new()
          qTBtn:setTooltip( a_[ 2 ] )
-         qTBtn:setIcon( ::resPath + a_[ 1 ] + ".png" )
+         qTBtn:setIcon( hbide_image( a_[ 1 ] ) )
          qTBtn:setMaximumWidth( 20 )
          qTBtn:setMaximumHeight( 20 )
          IF a_[ 1 ] == "togglelinenumber"
