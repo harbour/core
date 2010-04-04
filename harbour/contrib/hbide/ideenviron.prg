@@ -233,10 +233,10 @@ METHOD IdeEnvironments:execEnv( nMode, p )
    DO CASE
    CASE nMode == 1
       cPath := hbide_fetchAFile( ::oDlg, "Select location of hbmk2", ;
-                                   { { "Harbour Projects Builder - hbmk2", "*.exe" } }, ::cWrkPathMK2 )
+                                   { { "Harbour Projects Builder - hbmk2", "*.*" } }, ::cWrkPathMK2 )
       IF !empty( cPath )
          hb_fNameSplit( cPath, @cP )
-         ::cWrkPathMK2 := cP
+         ::oIde:cWrkPathMK2 := cP
          ::oUI:q_editPathMk2:setText( hbide_pathStripLastSlash( cP ) )
       ENDIF
 
