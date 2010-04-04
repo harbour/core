@@ -6,7 +6,7 @@
 -ohbide
 -ldflag={msvc}-nodefaultlib:msvcrt.lib
 -ldflag={msvc}-defaultlib:libcmt.lib
- 
+
 ../hbxbp/hbxbp.hbc
 
 ideparseexpr.c
@@ -34,8 +34,4 @@ ideskeletons.prg
 idewizard.prg
 idetools.prg
 
-{allwin}hbide.rc
-
-
-
- 
+-icon={allwin}hbide.ico
