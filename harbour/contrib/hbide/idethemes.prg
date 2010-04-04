@@ -120,6 +120,9 @@ CLASS IdeThemes INHERIT IdeObject
 
    VAR    lCreating                               INIT .f.
 
+   VAR    oSL
+   VAR    cSelTheme
+
    METHOD new( oIde, cIniFile )
    METHOD create( oIde, cIniFile )
    METHOD destroy()
@@ -144,7 +147,7 @@ CLASS IdeThemes INHERIT IdeObject
    METHOD updateColor()
    METHOD updateAttribute( nAttr, iState )
    METHOD selectTheme()
-   METHOD selectThemeProc( nMode, p, oSL, cTheme )
+   METHOD selectThemeProc( nMode, p )
    METHOD buildINI()
    METHOD parseINI( lAppend )
    METHOD updateLineNumbersBkColor()
@@ -221,6 +224,13 @@ METHOD IdeThemes:create( oIde, cIniFile )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeThemes:destroy()
+
+   IF !empty( ::oSL )
+      ::disConnect( ::oSL:qObj[ "listOptions"  ], "doubleClicked(QModelIndex)" )
+      ::disConnect( ::oSL:qObj[ "buttonOk"     ], "clicked()" )
+      ::disConnect( ::oSL:qObj[ "buttonCancel" ], "clicked()" )
+      ::oSL:destroy()
+   ENDIF
 
    IF !empty( ::oUI )
       ::qHiliter := NIL
@@ -685,13 +695,16 @@ METHOD IdeThemes:updateAttribute( nAttr, iState )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeThemes:selectTheme()
-   LOCAL cTheme := ""
-   LOCAL oSL, oStrList, oStrModel, a_, nDone
-   LOCAL pSlots := Qt_Slots_New()
+   LOCAL oStrList, oStrModel, a_, nDone
 
-   oSL := HbQtUI():new( ::oIde:resPath + "selectionlist.uic", ::oIde:oDlg:oWidget ):build()
+   IF empty( ::oSL )
+      ::oSL := HbQtUI():new( hbide_uic( "selectionlist" ), ::oIde:oDlg:oWidget ):build()
+      ::oSL:setWindowTitle( "Available Themes" )
 
-   oSL:setWindowTitle( "Available Themes" )
+      ::connect( ::oSL:qObj[ "listOptions"  ], "doubleClicked(QModelIndex)", {|p| ::selectThemeProc( 1, p ) } )
+      ::connect( ::oSL:qObj[ "buttonOk"     ], "clicked()"                 , {|p| ::selectThemeProc( 2, p ) } )
+      ::connect( ::oSL:qObj[ "buttonCancel" ], "clicked()"                 , {|p| ::selectThemeProc( 3, p ) } )
+   ENDIF
 
    oStrList := QStringList():new()
    FOR EACH a_ IN ::aThemes
@@ -701,40 +714,30 @@ METHOD IdeThemes:selectTheme()
    oStrModel := QStringListModel():new()
    oStrModel:setStringList( oStrList )
 
-   oSL:qObj[ "listOptions" ]:setModel( oStrModel )
+   ::oSL:qObj[ "listOptions" ]:setModel( oStrModel )
 
-   Qt_Slots_Connect( pSlots, oSL:qObj[ "listOptions"  ], "doubleClicked(QModelIndex)", {|p| ::selectThemeProc( 1, p, oSL, @cTheme ) } )
-   Qt_Slots_Connect( pSlots, oSL:qObj[ "buttonOk"     ], "clicked()"                 , {|p| ::selectThemeProc( 2, p, oSL, @cTheme ) } )
-   Qt_Slots_Connect( pSlots, oSL:qObj[ "buttonCancel" ], "clicked()"                 , {|p| ::selectThemeProc( 3, p, oSL          ) } )
+   nDone := ::oSL:exec()
 
-   nDone := oSL:exec()
-
-   Qt_Slots_disConnect( pSlots, oSL:qObj[ "listOptions"  ], "doubleClicked(QModelIndex)" )
-   Qt_Slots_disConnect( pSlots, oSL:qObj[ "buttonOk"     ], "clicked()" )
-   Qt_Slots_disConnect( pSlots, oSL:qObj[ "buttonCancel" ], "clicked()" )
-
-   oSL:destroy()
-
-   RETURN iif( nDone == 1, cTheme, "" )
+   RETURN iif( nDone == 1, ::cSelTheme, "" )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeThemes:selectThemeProc( nMode, p, oSL, cTheme )
+METHOD IdeThemes:selectThemeProc( nMode, p )
    LOCAL qModalIndex
 
    DO CASE
    CASE nMode == 1
       qModalIndex := QModelIndex():configure( p )
-      cTheme := ::aThemes[ qModalIndex:row() + 1, 1 ]
-      oSL:done( 1 )
+      ::cSelTheme := ::aThemes[ qModalIndex:row() + 1, 1 ]
+      ::oSL:done( 1 )
 
    CASE nMode == 2
-      qModalIndex := QModelIndex():configure( oSL:qObj[ "listOptions" ]:currentIndex() )
-      cTheme := ::aThemes[ qModalIndex:row() + 1, 1 ]
-      oSL:done( 1 )
+      qModalIndex := QModelIndex():configure( ::oSL:qObj[ "listOptions" ]:currentIndex() )
+      ::cSelTheme := ::aThemes[ qModalIndex:row() + 1, 1 ]
+      ::oSL:done( 1 )
 
    CASE nMode == 3
-      oSL:done( 0 )
+      ::oSL:done( 0 )
 
    ENDCASE
 

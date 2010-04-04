@@ -100,14 +100,22 @@ HBQPlainTextEdit::HBQPlainTextEdit( QWidget * parent ) : QPlainTextEdit( parent 
 
 HBQPlainTextEdit::~HBQPlainTextEdit()
 {
-   if( block )
-      hb_itemRelease( block );
+   HB_TRACE( HB_TR_ALWAYS, ( "HBQPlainTextEdit::~HBQPlainTextEdit( 0 )" ) );
 
    disconnect( this, SIGNAL( blockCountChanged( int ) )            );
    disconnect( this, SIGNAL( updateRequest( const QRect &, int ) ) );
    disconnect( this, SIGNAL( cursorPositionChanged() )             );
 
+   HB_TRACE( HB_TR_ALWAYS, ( "HBQPlainTextEdit::~HBQPlainTextEdit( 1 )" ) );
+
    delete lineNumberArea;
+
+   HB_TRACE( HB_TR_ALWAYS, ( "HBQPlainTextEdit::~HBQPlainTextEdit( 2 )" ) );
+
+   if( block )
+      hb_itemRelease( block );
+
+   HB_TRACE( HB_TR_ALWAYS, ( "HBQPlainTextEdit::~HBQPlainTextEdit( 3 )" ) );
 }
 
 void HBQPlainTextEdit::hbSetEventBlock( PHB_ITEM pBlock )
@@ -259,6 +267,48 @@ void HBQPlainTextEdit::mouseDoubleClickEvent( QMouseEvent *event )
 
 void HBQPlainTextEdit::paintEvent( QPaintEvent * event )
 {
+   QPainter painter( viewport() );
+
+   int curBlock      = textCursor().blockNumber();
+
+   QTextBlock tblock = firstVisibleBlock();
+   int blockNumber   = tblock.blockNumber();
+   int height        = ( int ) blockBoundingRect( tblock ).height();
+   int top           = ( int ) blockBoundingGeometry( tblock ).translated( contentOffset() ).top();
+   int bottom        = top + height;
+
+   while( tblock.isValid() && top <= event->rect().bottom() )
+   {
+      if( tblock.isVisible() && bottom >= event->rect().top() )
+      {
+         int index = bookMarksGoto.indexOf( blockNumber + 1 );
+         if( index != -1 )
+         {
+            QRect r( 0, top, viewport()->width(), height );
+            painter.fillRect( r, brushForBookmark( index ) );
+         }
+         else if( curBlock == blockNumber && m_currentLineColor.isValid() )
+         {
+            if( highlightCurLine == true )
+            {
+               QRect r = HBQPlainTextEdit::cursorRect();
+               r.setX( 0 );
+               r.setWidth( viewport()->width() );
+               painter.fillRect( r, QBrush( m_currentLineColor ) );
+            }
+         }
+      }
+      tblock = tblock.next();
+      top    = bottom;
+      bottom = top + height;
+      ++blockNumber;
+   }
+   this->hbPaintColumnSelection( event );
+
+   painter.end();
+   QPlainTextEdit::paintEvent( event );
+
+   #if 0
    QPainter * painter = new QPainter( viewport() );
 
    int curBlock      = textCursor().blockNumber();
@@ -297,7 +347,7 @@ void HBQPlainTextEdit::paintEvent( QPaintEvent * event )
    }
    this->hbPaintColumnSelection( event );
 
-   #if 1  /* A day wasted - I could not find how I can execute paiting from within prg code */
+   #if 0  /* A day wasted - I could not find how I can execute paiting from within prg code */
    if( block )
    {
       PHB_ITEM p1 = hb_itemPutNI( NULL, QEvent::Paint );
@@ -309,7 +359,9 @@ void HBQPlainTextEdit::paintEvent( QPaintEvent * event )
    #endif
 
    painter->end();
+   delete ( ( QPainter * ) painter );
    QPlainTextEdit::paintEvent( event );
+   #endif
 }
 
 QBrush HBQPlainTextEdit::brushForBookmark( int index )
@@ -396,6 +448,8 @@ void HBQPlainTextEdit::hbBookmarks( int block )
    {
       bookMarksGoto.append( block );
    }
+
+   hbUpdateLineNumberAreaWidth( 0 );
    lineNumberArea->repaint();
    update();
 }
@@ -486,7 +540,11 @@ int HBQPlainTextEdit::hbLineNumberAreaWidth()
       max /= 10;
       ++digits;
    }
-   int space = ( 18 + fontMetrics().width( QLatin1Char( '9' ) ) * digits ) + 2;
+   int width  = fontMetrics().width( QLatin1Char( '9' ) );
+   int iM     = fontMetrics().height() / 2;
+   int iMark  = bookMarksGoto.size() > 0 ? ( 5 + iM + 2 ) : 0;
+   int space  = iMark + ( width * digits ) + 2;
+
    return space;
 }
 

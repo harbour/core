@@ -191,12 +191,12 @@ FUNCTION GetStyleSheet( cWidget, nMode )
       aadd( txt_, 'QToolBar {                                                                   ' )
       aadd( txt_, '    background-color: qlineargradient(x1:1, y1:0, x2:0, y2:0,                ' )
       aadd( txt_, '                                      stop:0 lightgray, stop:1 darkgray);    ' )
-*     aadd( txt_, '    spacing: 1px; color: white; margin-top: 2px;                             ' )
+    * aadd( txt_, '    spacing: 1px; color: white; margin-top: 2px;                             ' )
       aadd( txt_, ' }                                                                           ' )
       ELSE
       aadd( txt_, 'QToolBar {                                                                   ' )
       aadd( txt_, hbide_cssColorString( "bg-std" )                                                )
-*     aadd( txt_, '    spacing: 1px; color: white; margin-top: 2px;                             ' )
+    * aadd( txt_, '    spacing: 1px; color: white; margin-top: 2px;                             ' )
       aadd( txt_, ' }                                                                           ' )
       ENDIF
 
@@ -238,9 +238,9 @@ FUNCTION GetStyleSheet( cWidget, nMode )
       aadd( txt_, ' QTreeWidget::item:alternate {                                               ' )
       aadd( txt_, '     background: #EEEEEE;                                                    ' )
       aadd( txt_, ' }                                                                           ' )
-      //aadd( txt_, ' QTreeWidget::item:selected {                                                ' )
-      //aadd( txt_, '     border: 1px solid #6a6ea9;                                              ' )
-      //aadd( txt_, ' }                                                                           ' )
+    * aadd( txt_, ' QTreeWidget::item:selected {                                                ' )
+    * aadd( txt_, '     border: 1px solid #6a6ea9;                                              ' )
+    * aadd( txt_, ' }                                                                           ' )
 
    CASE cWidget == "QTreeWidget"
 

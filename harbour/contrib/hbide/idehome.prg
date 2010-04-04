@@ -104,6 +104,7 @@ CLASS IdeHome INHERIT IdeObject
    DATA   cClickedSource
 
    DATA   qCurBrowser
+   DATA   qPrnDlg
 
    METHOD new( oIde )
    METHOD create( oIde )
@@ -153,6 +154,11 @@ METHOD IdeHome:create( oIde )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeHome:destroy()
+
+   IF !empty( ::qPrnDlg )
+      Qt_Slots_disConnect( ::pSlots, ::qPrnDlg, "paintRequested(QPrinter)" )
+      ::qPrnDlg := NIL
+   ENDIF
 
    ::disconnect( ::qWelcomeBrowser, "anchorClicked(QUrl)"                )
    ::disconnect( ::qWelcomeBrowser, "customContextMenuRequested(QPoint)" )
@@ -228,13 +234,16 @@ METHOD IdeHome:activateTab( mp1, mp2, oTab )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeHome:print()
-   LOCAL qDlg
 
-   qDlg := QPrintPreviewDialog():new( ::aViews[ 1 ]:oTabWidget )
-   qDlg:setWindowTitle( "Wecome::Projects" )
-   Qt_Slots_Connect( ::pSlots, qDlg, "paintRequested(QPrinter)", {|p| ::paintRequested( p ) } )
-   qDlg:exec()
-   Qt_Slots_disConnect( ::pSlots, qDlg, "paintRequested(QPrinter)" )
+   ::qPrnDlg := NIL
+   IF empty( ::qPrnDlg )
+      ::qPrnDlg := QPrintPreviewDialog():new()
+      ::qPrnDlg:setWindowTitle( "Welcome::Projects" )
+      ::qPrnDlg:setWindowIcon( hbide_image( "hbide" ) )
+      Qt_Slots_Connect( ::pSlots, ::qPrnDlg, "paintRequested(QPrinter)", {|p| ::paintRequested( p ) } )
+   ENDIF
+
+   ::qPrnDlg:exec()
 
    RETURN self
 

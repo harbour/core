@@ -1540,6 +1540,8 @@ METHOD IdeEdit:destroy()
 
    Qt_Events_DisConnect( ::pEvents, ::qEdit, QEvent_KeyPress            )
    Qt_Events_DisConnect( ::pEvents, ::qEdit, QEvent_Wheel               )
+   Qt_Events_DisConnect( ::pEvents, ::qEdit, QEvent_FocusIn             )
+   Qt_Events_DisConnect( ::pEvents, ::qEdit, QEvent_FocusOut            )
    Qt_Events_DisConnect( ::pEvents, ::qEdit, QEvent_MouseButtonDblClick )
 
    ::disconnectEditSignals( Self )
@@ -1651,6 +1653,8 @@ METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
       /* Book Marks reach-out buttons */
       ::relayMarkButtons()
       ::toggleLineNumbers()
+
+      ::updateTitleBar()
 
       /* An experimental move but seems a lot is required to achieve column selection */
       qEdit:hbHighlightSelectedColumns( ::isColumnSelectionEnabled )
@@ -2194,13 +2198,15 @@ METHOD IdeEdit:handlePreviousWord( lUpdatePrevWord )
       nL := len( cWord ) + nSpace
       nB := qCursor:position() - nL
 
-      qCursor:beginEditBlock()
-      qCursor:setPosition( nB )
-      qCursor:movePosition( QTextCursor_NextCharacter, QTextCursor_KeepAnchor, nL )
-      qCursor:removeSelectedText()
-      qCursor:insertText( upper( cWord ) + space( nSpace ) )
-      qCursor:endEditBlock()
-      qEdit:setTextCursor( qCursor )
+      IF ::oEditor:cExt $ ".prg"
+         qCursor:beginEditBlock()
+         qCursor:setPosition( nB )
+         qCursor:movePosition( QTextCursor_NextCharacter, QTextCursor_KeepAnchor, nL )
+         qCursor:removeSelectedText()
+         qCursor:insertText( upper( cWord ) + space( nSpace ) )
+         qCursor:endEditBlock()
+         qEdit:setTextCursor( qCursor )
+      ENDIF
 
       IF hbide_isStartingKeyword( cWord )
          IF lPrevOnly

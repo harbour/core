@@ -492,6 +492,16 @@ hbide_dbg( "HbIde:create( cProjIni )", "#Params=" )
    ::oDocViewDock:hide()
    ::oDocWriteDock:hide()
 
+   #if 0 /* for screen capture */
+   n := seconds()
+   DO WHILE .t.
+      IF seconds() > n + 10
+         EXIT
+      ENDIF
+      QApplication():processEvents()
+   ENDDO
+   #endif
+
    /* Request Main Window to Appear on the Screen */
    ::oHM:refresh()
    ::oDlg:Show()
@@ -665,7 +675,6 @@ METHOD HbIde:execAction( cKey )
       EXIT
    CASE "Home"
       ::oDK:setView( "Stats" )
-      //::oHM:refresh()
       EXIT
    CASE "Animate"
       ::nAnimantionMode := iif( ::nAnimantionMode == HBIDE_ANIMATION_NONE, HBIDE_ANIMATION_GRADIENT, HBIDE_ANIMATION_NONE )
@@ -1089,8 +1098,7 @@ METHOD HbIde:updateProjectTree( aPrj )
       ENDIF
       /* Delete Existing Nodes */
       DO WHILE .t.
-         n := ascan( ::aProjData, {|e_| e_[ TRE_OPARENT ] == oP } )
-         IF n == 0
+         IF ( n := ascan( ::aProjData, {|e_| e_[ TRE_OPARENT ] == oP } ) ) == 0
             EXIT
          ENDIF
          oP:delItem( ::aProjData[ n, TRE_OITEM ] )
