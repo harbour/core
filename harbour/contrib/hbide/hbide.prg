@@ -127,28 +127,24 @@ CLASS HbIde
    DATA   aParams
    DATA   cProjIni
 
-   DATA   oPM                                            /* Project Manager                */
-   DATA   oDK                                            /* Main Window Components Manager */
    DATA   oAC                                            /* Actions Manager                */
+   DATA   oDK                                            /* Main Window Components Manager */
+   DATA   oDW                                            /* Document Writer Manager        */
    DATA   oEM                                            /* Editor Tabs Manager            */
-   DATA   oSM                                            /* Souces Manager                 */
-   DATA   oFR                                            /* Find Replace Manager           */
    DATA   oEV                                            /* Available Environments         */
+   DATA   oFF                                            /* Find in Files Manager          */
+   DATA   oFN                                            /* Functions Tags Manager         */
+   DATA   oFR                                            /* Find Replace Manager           */
    DATA   oHL                                            /* Harbour Help Manager           */
    DATA   oHM                                            /* <Stats> panel manager          */
-   DATA   oFN                                            /* Functions Tags Manager         */
-   DATA   oDW                                            /* Document Writer Manager        */
+   DATA   oPM                                            /* Project Manager                */
+   DATA   oSM                                            /* Souces Manager                 */
    DATA   oSK                                            /* Skeletons Managet              */
    DATA   oTM                                            /* Plugin Tools Manager           */
    DATA   oTH                                            /* Themes Manager                 */
-   DATA   oFF                                            /* Find in Files Manager          */
-   DATA   oHelpDock
-   DATA   oSkeltnDock
-   DATA   oFindDock
 
    DATA   nRunMode                                INIT   HBIDE_RUN_MODE_INI
    DATA   nAnimantionMode                         INIT   HBIDE_ANIMATION_NONE
-
 
    DATA   oUI
 
@@ -203,12 +199,6 @@ CLASS HbIde
    DATA   oFont
    DATA   oProjTree
    DATA   oEditTree
-   DATA   oDockR
-   DATA   oDockB
-   DATA   oDockB1
-   DATA   oDockB2
-   DATA   oDockPT
-   DATA   oDockED
    DATA   oFuncList
    DATA   oOutputResult
    DATA   oCompileResult
@@ -223,16 +213,26 @@ CLASS HbIde
    DATA   oDlls
    DATA   oProps
    DATA   oGeneral
+   DATA   oSearchReplace
+   DATA   oMainToolbar
+
+   DATA   oDockR
+   DATA   oDockB
+   DATA   oDockB1
+   DATA   oDockB2
+   DATA   oDockPT
+   DATA   oDockED
    DATA   oThemesDock
    DATA   oPropertiesDock
    DATA   oEnvironDock
-   DATA   oSearchReplace
    DATA   oFuncDock
    DATA   oDocViewDock
    DATA   oDocWriteDock
    DATA   oFunctionsDock
    DATA   oSkltnsTreeDock
-   DATA   oMainToolbar
+   DATA   oHelpDock
+   DATA   oSkeltnDock
+   DATA   oFindDock
 
    DATA   lProjTreeVisible                        INIT   .t.
    DATA   lDockRVisible                           INIT   .f.
@@ -304,13 +304,6 @@ CLASS HbIde
    METHOD execSourceAction( cKey )
    METHOD execEditorAction( cKey )
 
-   /* Methods to be evaluated as macros */
-   METHOD getWord( lSelect )
-   METHOD getLine( lSelect )
-   METHOD getText()
-   //
-   METHOD evalMacro( cString )
-   METHOD fetchAndExecMacro()
    METHOD showApplicationCursor( nCursor )
    METHOD testPainter( qPainter )
 
@@ -753,9 +746,6 @@ METHOD HbIde:execAction( cKey )
       EXIT
    CASE "Help"
       ::oHelpDock:show()
-      EXIT
-   CASE "CommandPrompt"
-      ::fetchAndExecMacro()
       EXIT
    ENDSWITCH
 
@@ -1389,62 +1379,6 @@ METHOD HbIde:setCodec( cCodec )
 
    ::oDK:setStatusText( SB_PNL_CODEC, ::cWrkCodec )
 
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-//                       Macro Compilable Methods
-/*----------------------------------------------------------------------*/
-
-METHOD HbIde:getWord( lSelect )
-   RETURN ::oEM:getWord( lSelect )
-
-METHOD HbIde:getLine( lSelect )
-   RETURN ::oEM:getLine( lSelect )
-
-METHOD HbIde:getText()
-   RETURN ::oEM:getText()
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbIde:fetchAndExecMacro()
-   LOCAL cStr
-
-   cStr := hbide_fetchAString( ::oDlg:oWidget, "", "Macro", "Compilation" )
-   IF !empty( cStr )
-      ::evalMacro( cStr )
-   ENDIF
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbIde:evalMacro( cString )
-   LOCAL bError := ErrorBlock( {|o| break( o ) } )
-   LOCAL oErr, bBlock, n, cBlock, cParam
-
-   IF ( n := at( "|", cString ) ) > 0
-      cString := substr( cString, n + 1 )
-      IF ( n := at( "|", cString ) ) == 0
-         RETURN Self
-      ENDIF
-      cParam := substr( cString, 1, n - 1 )
-      cString := substr( cString, n + 1 )
-      cBlock := "{|o," + cParam + "|" + cString + " }"
-   ELSE
-      cBlock := "{|o| " + cString + " }"
-   ENDIF
-   cBlock := strtran( cBlock, "::", "o:" )
-
-   bBlock := &( cBlock )
-
-hbide_dbg( cBlock )
-   BEGIN SEQUENCE
-      eval( bBlock, self )
-   RECOVER USING oErr
-      MsgBox( "Wrongly defined block. Syntax is |var| method_call( var ) --- " + oErr:description )
-   END SEQUENCE
-
-   ErrorBlock( bError )
    RETURN Self
 
 /*----------------------------------------------------------------------*/

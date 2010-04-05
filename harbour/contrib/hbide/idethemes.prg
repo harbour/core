@@ -225,6 +225,7 @@ METHOD IdeThemes:create( oIde, cIniFile )
 
 METHOD IdeThemes:destroy()
 
+   hbide_dbg( "-------------------------------------- Theme Manager 0 ------------------------------------------" )
    IF !empty( ::oSL )
       ::disConnect( ::oSL:qObj[ "listOptions"  ], "doubleClicked(QModelIndex)" )
       ::disConnect( ::oSL:qObj[ "buttonOk"     ], "clicked()" )
@@ -236,12 +237,12 @@ METHOD IdeThemes:destroy()
       ::qHiliter := NIL
       ::qEdit    := NIL
 
-      ::oThemesDock:oWidget:setWidget( QWidget():new() )
+      //::oThemesDock:oWidget:setWidget( QWidget():new() )
       IF !empty( ::oUI )
          ::oUI:destroy()
       ENDIF
    ENDIF
-
+   hbide_dbg( "-------------------------------------- Theme Manager 1 ------------------------------------------" )
    RETURN Self
 
 /*----------------------------------------------------------------------*/

@@ -91,7 +91,7 @@
 CLASS HbpProcess
 
    DATA   cShellCmd
-   DATA   lDetatched                              INIT   .f.
+   DATA   lDetached                               INIT   .f.
 
    METHOD new( cShellCmd )
    METHOD create( cShellCmd )
@@ -195,32 +195,42 @@ METHOD HbpProcess:start( cShellCmd )
    ::cShellCmd := cShellCmd
 
    ::qProcess := QProcess():new()
-
    ::qProcess:setReadChannel( 1 )
 
    #if 0
-   Qt_Slots_Connect( ::pSlots, ::qProcess, "readyRead()"              , {|i| ::read( CHN_REA, i ) } )
-   Qt_Slots_Connect( ::pSlots, ::qProcess, "readChannelFinished()"    , {|i| ::read( CHN_RCF, i ) } )
-   Qt_Slots_Connect( ::pSlots, ::qProcess, "aboutToClose()"           , {|i| ::read( CHN_CLO, i ) } )
-   Qt_Slots_Connect( ::pSlots, ::qProcess, "bytesWritten(int)"        , {|i| ::read( CHN_BYT, i ) } )
-   Qt_Slots_Connect( ::pSlots, ::qProcess, "stateChanged(int)"        , {|i| ::read( CHN_STT, i ) } )
-   Qt_Slots_Connect( ::pSlots, ::qProcess, "error(int)"               , {|i| ::read( CHN_ERE, i ) } )
+      Qt_Slots_Connect( ::pSlots, ::qProcess, "readyRead()"              , {|i| ::read( CHN_REA, i ) } )
+      Qt_Slots_Connect( ::pSlots, ::qProcess, "readChannelFinished()"    , {|i| ::read( CHN_RCF, i ) } )
+      Qt_Slots_Connect( ::pSlots, ::qProcess, "aboutToClose()"           , {|i| ::read( CHN_CLO, i ) } )
+      Qt_Slots_Connect( ::pSlots, ::qProcess, "bytesWritten(int)"        , {|i| ::read( CHN_BYT, i ) } )
+      Qt_Slots_Connect( ::pSlots, ::qProcess, "stateChanged(int)"        , {|i| ::read( CHN_STT, i ) } )
+      Qt_Slots_Connect( ::pSlots, ::qProcess, "error(int)"               , {|i| ::read( CHN_ERE, i ) } )
+   #else
+   IF !( ::lDetached )
+      Qt_Slots_Connect( ::pSlots, ::qProcess, "started()"                , {|i| ::read( CHN_BGN, i ) } )
+      Qt_Slots_Connect( ::pSlots, ::qProcess, "readyReadStandardOutput()", {|i| ::read( CHN_OUT, i ) } )
+      Qt_Slots_Connect( ::pSlots, ::qProcess, "readyReadStandardError()" , {|i| ::read( CHN_ERR, i ) } )
+      Qt_Slots_Connect( ::pSlots, ::qProcess, "finished(int,int)"        , {|i,ii| ::read( CHN_FIN, i, ii ) } )
+   ENDIF
    #endif
-
-   Qt_Slots_Connect( ::pSlots, ::qProcess, "started()"                , {|i| ::read( CHN_BGN, i ) } )
-   Qt_Slots_Connect( ::pSlots, ::qProcess, "readyReadStandardOutput()", {|i| ::read( CHN_OUT, i ) } )
-   Qt_Slots_Connect( ::pSlots, ::qProcess, "readyReadStandardError()" , {|i| ::read( CHN_ERR, i ) } )
-   Qt_Slots_Connect( ::pSlots, ::qProcess, "finished(int,int)"        , {|i,ii| ::read( CHN_FIN, i, ii ) } )
 
    IF !empty( ::cWrkDirectory )
       ::qProcess:setWorkingDirectory( ::cWrkDirectory )
    ENDIF
    ::nStarted := seconds()
 
-   IF !empty( ::qStrList )
-      ::qProcess:start( ::cShellCmd, ::qStrList )
+   IF ::lDetached
+      IF !empty( ::qStrList )
+         ::qProcess:startDetached_1( ::cShellCmd, ::qStrList )
+      ELSE
+         ::qProcess:startDetached_2( ::cShellCmd )
+      ENDIF
+      ::qProcess:waitForStarted()
    ELSE
-      ::qProcess:start_1( ::cShellCmd )
+      IF !empty( ::qStrList )
+         ::qProcess:start( ::cShellCmd, ::qStrList )
+      ELSE
+         ::qProcess:start_1( ::cShellCmd )
+      ENDIF
    ENDIF
 
    RETURN Self

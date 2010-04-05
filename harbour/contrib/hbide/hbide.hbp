@@ -6,6 +6,7 @@
 -ohbide
 -ldflag={msvc}-nodefaultlib:msvcrt.lib
 -ldflag={msvc}-defaultlib:libcmt.lib
+-icon={allwin}hbide.ico
 
 ../hbxbp/hbxbp.hbc
 
@@ -33,5 +34,6 @@ idedocwriter.prg
 ideskeletons.prg
 idewizard.prg
 idetools.prg
+ideshortcuts.prg
 
--icon={allwin}hbide.ico
+

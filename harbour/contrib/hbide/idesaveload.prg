@@ -214,7 +214,8 @@ hbide_dbg( "hbide_saveINI( oIde )", 0, oIde:nRunMode, oIde:cProjIni )
    aadd( txt_, "[TOOLS]" )
    aadd( txt_, " " )
    FOR n := 1 TO len( oIde:aIni[ INI_TOOLS ] )
-      s := oIde:aIni[ INI_TOOLS, n, 1 ] + "," + oIde:aIni[ INI_TOOLS, n, 2 ] + "," + oIde:aIni[ INI_TOOLS, n, 3 ] + ","
+      s := oIde:aIni[ INI_TOOLS, n, 1 ] + "," + oIde:aIni[ INI_TOOLS, n, 2 ] + "," + oIde:aIni[ INI_TOOLS, n, 3 ] + "," + ;
+           oIde:aIni[ INI_TOOLS, n, 4 ] + "," + oIde:aIni[ INI_TOOLS, n, 5 ] + "," + oIde:aIni[ INI_TOOLS, n, 6 ] + ","
       aadd( txt_, "tool_" + hb_ntos( n ) + "=" + s )
    NEXT
 

@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading ui file 'toolsutilities.ui'
 **
-** Created: Sun Mar 21 11:24:09 2010
+** Created: Sun Apr 4 19:24:53 2010
 **      by: Qt User Interface Compiler version 4.5.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!
@@ -14,6 +14,7 @@
 #include <QtGui/QAction>
 #include <QtGui/QApplication>
 #include <QtGui/QButtonGroup>
+#include <QtGui/QCheckBox>
 #include <QtGui/QDialog>
 #include <QtGui/QFrame>
 #include <QtGui/QHeaderView>
@@ -44,65 +45,81 @@ public:
     QPushButton *buttonClose;
     QLineEdit *editName;
     QPushButton *buttonExec;
+    QLabel *labelStayIn;
+    QLineEdit *editStayIn;
+    QCheckBox *checkCapture;
+    QCheckBox *checkOpenCons;
 
     void setupUi(QDialog *DialogTools)
     {
         if (DialogTools->objectName().isEmpty())
             DialogTools->setObjectName(QString::fromUtf8("DialogTools"));
-        DialogTools->resize(280, 403);
+        DialogTools->resize(280, 425);
         labelCmdLine = new QLabel(DialogTools);
         labelCmdLine->setObjectName(QString::fromUtf8("labelCmdLine"));
-        labelCmdLine->setGeometry(QRect(12, 258, 79, 16));
+        labelCmdLine->setGeometry(QRect(12, 236, 251, 16));
         editCmdLine = new QLineEdit(DialogTools);
         editCmdLine->setObjectName(QString::fromUtf8("editCmdLine"));
-        editCmdLine->setGeometry(QRect(12, 276, 255, 20));
+        editCmdLine->setGeometry(QRect(12, 254, 255, 20));
         labelName = new QLabel(DialogTools);
         labelName->setObjectName(QString::fromUtf8("labelName"));
-        labelName->setGeometry(QRect(12, 210, 53, 16));
+        labelName->setGeometry(QRect(12, 194, 53, 16));
         buttonDown = new QPushButton(DialogTools);
         buttonDown->setObjectName(QString::fromUtf8("buttonDown"));
-        buttonDown->setGeometry(QRect(176, 140, 95, 24));
+        buttonDown->setGeometry(QRect(176, 96, 95, 24));
         buttonUpdate = new QPushButton(DialogTools);
         buttonUpdate->setObjectName(QString::fromUtf8("buttonUpdate"));
-        buttonUpdate->setGeometry(QRect(12, 368, 149, 24));
+        buttonUpdate->setGeometry(QRect(12, 392, 149, 24));
         labelParams = new QLabel(DialogTools);
         labelParams->setObjectName(QString::fromUtf8("labelParams"));
-        labelParams->setGeometry(QRect(12, 306, 79, 16));
+        labelParams->setGeometry(QRect(12, 278, 79, 16));
         buttonBrowse = new QPushButton(DialogTools);
         buttonBrowse->setObjectName(QString::fromUtf8("buttonBrowse"));
-        buttonBrowse->setGeometry(QRect(176, 226, 95, 24));
+        buttonBrowse->setGeometry(QRect(176, 210, 95, 24));
         listNames = new QListWidget(DialogTools);
         listNames->setObjectName(QString::fromUtf8("listNames"));
-        listNames->setGeometry(QRect(12, 29, 149, 173));
+        listNames->setGeometry(QRect(12, 19, 149, 173));
         buttonAdd = new QPushButton(DialogTools);
         buttonAdd->setObjectName(QString::fromUtf8("buttonAdd"));
-        buttonAdd->setGeometry(QRect(176, 28, 95, 24));
+        buttonAdd->setGeometry(QRect(176, 18, 95, 24));
         buttonDelete = new QPushButton(DialogTools);
         buttonDelete->setObjectName(QString::fromUtf8("buttonDelete"));
-        buttonDelete->setGeometry(QRect(176, 66, 95, 24));
+        buttonDelete->setGeometry(QRect(176, 44, 95, 24));
         line = new QFrame(DialogTools);
         line->setObjectName(QString::fromUtf8("line"));
-        line->setGeometry(QRect(12, 348, 253, 16));
+        line->setGeometry(QRect(12, 376, 253, 16));
         line->setFrameShape(QFrame::HLine);
         line->setFrameShadow(QFrame::Sunken);
         label = new QLabel(DialogTools);
         label->setObjectName(QString::fromUtf8("label"));
-        label->setGeometry(QRect(12, 10, 105, 16));
+        label->setGeometry(QRect(12, 4, 105, 16));
         editParams = new QLineEdit(DialogTools);
         editParams->setObjectName(QString::fromUtf8("editParams"));
-        editParams->setGeometry(QRect(12, 324, 253, 20));
+        editParams->setGeometry(QRect(12, 296, 253, 20));
         buttonUp = new QPushButton(DialogTools);
         buttonUp->setObjectName(QString::fromUtf8("buttonUp"));
-        buttonUp->setGeometry(QRect(176, 102, 95, 24));
+        buttonUp->setGeometry(QRect(176, 70, 95, 24));
         buttonClose = new QPushButton(DialogTools);
         buttonClose->setObjectName(QString::fromUtf8("buttonClose"));
-        buttonClose->setGeometry(QRect(172, 368, 95, 24));
+        buttonClose->setGeometry(QRect(172, 392, 95, 24));
         editName = new QLineEdit(DialogTools);
         editName->setObjectName(QString::fromUtf8("editName"));
-        editName->setGeometry(QRect(12, 228, 149, 20));
+        editName->setGeometry(QRect(12, 212, 149, 20));
         buttonExec = new QPushButton(DialogTools);
         buttonExec->setObjectName(QString::fromUtf8("buttonExec"));
-        buttonExec->setGeometry(QRect(178, 178, 91, 24));
+        buttonExec->setGeometry(QRect(176, 168, 95, 24));
+        labelStayIn = new QLabel(DialogTools);
+        labelStayIn->setObjectName(QString::fromUtf8("labelStayIn"));
+        labelStayIn->setGeometry(QRect(14, 320, 95, 16));
+        editStayIn = new QLineEdit(DialogTools);
+        editStayIn->setObjectName(QString::fromUtf8("editStayIn"));
+        editStayIn->setGeometry(QRect(14, 338, 251, 20));
+        checkCapture = new QCheckBox(DialogTools);
+        checkCapture->setObjectName(QString::fromUtf8("checkCapture"));
+        checkCapture->setGeometry(QRect(14, 362, 109, 19));
+        checkOpenCons = new QCheckBox(DialogTools);
+        checkOpenCons->setObjectName(QString::fromUtf8("checkOpenCons"));
+        checkOpenCons->setGeometry(QRect(134, 362, 131, 19));
 
         retranslateUi(DialogTools);
 
@@ -112,7 +129,15 @@ public:
     void retranslateUi(QDialog *DialogTools)
     {
         DialogTools->setWindowTitle(QApplication::translate("DialogTools", "Tools & Utilities", 0, QApplication::UnicodeUTF8));
-        labelCmdLine->setText(QApplication::translate("DialogTools", "Command Line:", 0, QApplication::UnicodeUTF8));
+        labelCmdLine->setText(QApplication::translate("DialogTools", "Command Line ( Keep blank if excuted via terminal )", 0, QApplication::UnicodeUTF8));
+#ifndef QT_NO_TOOLTIP
+        editCmdLine->setToolTip(QApplication::translate("DialogTools", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt;\">Keep this field blank if a command prompt has to be invoked to execute the parameters. </span></p>\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt;\">This is useful for building any type of project hbIDE do not support yet.</span></p></body></html>", 0, QApplication::UnicodeUTF8));
+#endif // QT_NO_TOOLTIP
         labelName->setText(QApplication::translate("DialogTools", "Name:", 0, QApplication::UnicodeUTF8));
         buttonDown->setText(QApplication::translate("DialogTools", "Down", 0, QApplication::UnicodeUTF8));
         buttonUpdate->setText(QApplication::translate("DialogTools", "Update", 0, QApplication::UnicodeUTF8));
@@ -121,9 +146,57 @@ public:
         buttonAdd->setText(QApplication::translate("DialogTools", "Add", 0, QApplication::UnicodeUTF8));
         buttonDelete->setText(QApplication::translate("DialogTools", "Delete", 0, QApplication::UnicodeUTF8));
         label->setText(QApplication::translate("DialogTools", "Current Tools:", 0, QApplication::UnicodeUTF8));
+#ifndef QT_NO_TOOLTIP
+        editParams->setToolTip(QApplication::translate("DialogTools", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt;\">Parameters list may contain batch files, compilers directives, linker commands, if this tool is used to build a project. </span></p>\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt;\">Otherwise it may contain parameters passed to the executable supplied in \"Command line\" field.</span></p>\n"
+"<p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; mar"
+                        "gin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;\"></p>\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt; font-weight:600;\">NOTE</span></p>\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt;\">\"/\" or \"\\\" characters are recognized as path separators and cannot be used as parameter delimiters for contained applications.</span></p></body></html>", 0, QApplication::UnicodeUTF8));
+#endif // QT_NO_TOOLTIP
         buttonUp->setText(QApplication::translate("DialogTools", "Up", 0, QApplication::UnicodeUTF8));
         buttonClose->setText(QApplication::translate("DialogTools", "Close", 0, QApplication::UnicodeUTF8));
         buttonExec->setText(QApplication::translate("DialogTools", "Execute", 0, QApplication::UnicodeUTF8));
+        labelStayIn->setText(QApplication::translate("DialogTools", "Start in:", 0, QApplication::UnicodeUTF8));
+#ifndef QT_NO_TOOLTIP
+        editStayIn->setToolTip(QApplication::translate("DialogTools", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Before executing this utility hbIDE will make this path current and then will run the command lin. </p>\n"
+"<p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"></p>\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">This will specifically help the applications which are expecting a fixed environment for their proper execution.</p></body></"
+                        "html>", 0, QApplication::UnicodeUTF8));
+#endif // QT_NO_TOOLTIP
+#ifndef QT_NO_TOOLTIP
+        checkCapture->setToolTip(QApplication::translate("DialogTools", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">This flag initiates the process in the background and all output from the designated application is displayed in the \"Output Console\" at the bottom of editing area.</p>\n"
+"<p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"></p>\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">This feature is generally suitable for building any projec"
+                        "t.</p>\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">The output recieved as such empowers you the same feature as if Harbour project has been compiled, i.e., double click on an error line will open the source in the editor.</p></body></html>", 0, QApplication::UnicodeUTF8));
+#endif // QT_NO_TOOLTIP
+        checkCapture->setText(QApplication::translate("DialogTools", "Capture Output ?", 0, QApplication::UnicodeUTF8));
+#ifndef QT_NO_TOOLTIP
+        checkOpenCons->setToolTip(QApplication::translate("DialogTools", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">If you check it, \"Ouput Console\" will be made visible the moment you will execute this utility. </p>\n"
+"<p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"></p>\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Alternatively you can open the Output Console anytime by clicking on relevant icon on right-toolbar.</p>\n"
+"<p align=\"center"
+                        "\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"></p>\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">This has the bearing on visiblity of the widget. The output will ever be routed therein no matter this box is checked or not.</p></body></html>", 0, QApplication::UnicodeUTF8));
+#endif // QT_NO_TOOLTIP
+        checkOpenCons->setText(QApplication::translate("DialogTools", "Open Output Console ?", 0, QApplication::UnicodeUTF8));
         Q_UNUSED(DialogTools);
     } // retranslateUi
 

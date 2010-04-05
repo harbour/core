@@ -720,12 +720,25 @@ STATIC FUNCTION hbide_buildRegExpressList( aRegList )
  */
 FUNCTION hbide_parseFNfromStatusMsg( cText, cFileName, nLine, lValidText )
    LOCAL regLineN := hb_RegexComp( ".*(\(([0-9]+)\)|:([0-9]+):|\s([0-9]+):).*" )
-   LOCAL aList, nPos
+   LOCAL aList, nPos, cLine, n
 
    DEFAULT lValidText TO .T.
 
    cFileName := ''
    nLine     := 0
+
+   /* Xbase++ */
+   IF "XBT" $ cText
+      nPos      := at( "(", cText )
+      n         := at( ")", cText )
+      cFileName := substr( cText, 1, nPos - 1 )
+      cLine     := substr( cText, nPos + 1, n - 1 - nPos )
+      n         := at( ":", cLine )
+      cLine     := substr( cLine, 1, n - 1 )
+      nLine     := val( cLine )
+
+      RETURN !empty( cFileName )
+   ENDIF
 
  * Validate if current text is a error/warning/info message.
  * 29/12/2009 - 22:51:39 - vailtom
@@ -770,8 +783,7 @@ FUNCTION hbide_parseFNfromStatusMsg( cText, cFileName, nLine, lValidText )
    cFileName := strtran( cFileName, "(", "" )
    cFileName := strtran( cFileName, ")", "" )
    cFileName := alltrim( cFileName )
-
-   cFileName := strtran( cFileName, "\\", "/" )        && Fix for the BCC
+   cFileName := strtran( cFileName, "\\", "/" )
    cFileName := strtran( cFileName, "\" , "/" )
 
    IF ( nPos := Rat( ' ', cFileName ) ) <> 00
@@ -830,6 +842,8 @@ FUNCTION hbide_convertBuildStatusMsgToHtml( cText, oWidget )
 
       IF !Empty( cLine )
          IF ( nPos := aScan( aRegList, {| reg | !Empty( hb_RegEx( reg[ 2 ], cLine ) ) } ) ) > 0
+            cLine := '<font color=' + aColors[ aRegList[nPos,1] ] + '>' + cLine + '</font>'
+         ELSEIF "XBT" $ cLine
             cLine := '<font color=' + aColors[ aRegList[nPos,1] ] + '>' + cLine + '</font>'
          ELSE
             cLine := "<font color = black>" + cLine + "</font>"
@@ -2034,13 +2048,19 @@ FUNCTION hbide_parseToolComponents( cCompositeTool )
    LOCAL a_
 
    a_:= hb_atokens( cCompositeTool, "," )
-   asize( a_, 3 )
+   asize( a_, 6 )
    DEFAULT a_[ 1 ] TO ""
    DEFAULT a_[ 2 ] TO ""
    DEFAULT a_[ 3 ] TO ""
+   DEFAULT a_[ 4 ] TO ""
+   DEFAULT a_[ 5 ] TO ""
+   DEFAULT a_[ 6 ] TO ""
    a_[ 1 ] := alltrim( a_[ 1 ] )
    a_[ 2 ] := alltrim( a_[ 2 ] )
    a_[ 3 ] := alltrim( a_[ 3 ] )
+   a_[ 4 ] := alltrim( a_[ 4 ] )
+   a_[ 5 ] := alltrim( a_[ 5 ] )
+   a_[ 6 ] := alltrim( a_[ 6 ] )
 
    RETURN a_
 

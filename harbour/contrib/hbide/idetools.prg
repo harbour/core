@@ -92,6 +92,7 @@ CLASS IdeToolsManager INHERIT IdeObject
    DATA   aPanelsAct                              INIT   {}
    DATA   qPanelsButton
    DATA   qPanelsMenu
+   DATA   oProcess
 
    ACCESS aTools                                  INLINE ::aINI[ INI_TOOLS ]
 
@@ -102,10 +103,15 @@ CLASS IdeToolsManager INHERIT IdeObject
    METHOD execEvent( nMode, p )
    METHOD clearList()
    METHOD populateList( aList )
-   METHOD execTool( cName )
+   METHOD execTool( ... )
+   METHOD execToolByParams( cCmd, cParams, cStartIn, lCapture, lOpen )
+   METHOD ini2controls( nIndex )
+   METHOD controls2ini( nIndex )
    METHOD buildToolsButton()
    METHOD buildPanelsButton()
    METHOD addPanelsMenu( cPrompt )
+   METHOD showOutput( cOut, mp2, oHbp )
+   METHOD finished( nEC, nES, oHbp )
 
    ENDCLASS
 
@@ -194,8 +200,47 @@ METHOD IdeToolsManager:show()
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeToolsManager:ini2controls( nIndex )
+
+   IF nIndex > 0
+      ::oUI:q_editName     : setText( ::aTools[ nIndex, 1 ] )
+      ::oUI:q_editCmdLine  : setText( ::aTools[ nIndex, 2 ] )
+      ::oUI:q_editParams   : setText( ::aTools[ nIndex, 3 ] )
+      ::oUI:q_editStayIn   : setText( ::aTools[ nIndex, 4 ] )
+      ::oUI:q_checkCapture : setChecked( !empty( ::aTools[ nIndex, 5 ] ) )
+      ::oUI:q_checkOpenCons: setChecked( !empty( ::aTools[ nIndex, 6 ] ) )
+   ELSE
+      ::oUI:q_editName     : setText( "" )
+      ::oUI:q_editCmdLine  : setText( "" )
+      ::oUI:q_editParams   : setText( "" )
+      ::oUI:q_editStayIn   : setText( "" )
+      ::oUI:q_checkCapture : setChecked( .f. )
+      ::oUI:q_checkOpenCons: setChecked( .f. )
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeToolsManager:controls2ini( nIndex )
+
+   IF empty( nIndex )
+      aadd( ::aINI[ INI_TOOLS ], {} )
+      nIndex := len( ::aINI[ INI_TOOLS ] )
+   ENDIF
+
+   ::aINI[ INI_TOOLS, nIndex ] := { ::oUI:q_editName:text()   , ;
+                                    hbide_pathNormalized( ::oUI:q_editCmdLine:text() ), ;
+                                    hbide_pathNormalized( ::oUI:q_editParams:text()  ), ;
+                                    hbide_pathNormalized( ::oUI:q_editStayIn:text()  ), ;
+                                    iif( ::oUI:q_checkCapture:isChecked(), "YES", "" ), ;
+                                    iif( ::oUI:q_checkOpenCons:isChecked(), "YES", "" ) }
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeToolsManager:execEvent( nMode, p )
-   LOCAL cFile, cFileName, nIndex, qItem, cName
+   LOCAL cFile, cFileName, nIndex, qItem, cName, nRow
    LOCAL aTools := ::aINI[ INI_TOOLS ]
 
    HB_SYMBOL_UNUSED( p )
@@ -205,22 +250,24 @@ METHOD IdeToolsManager:execEvent( nMode, p )
       qItem := QListWidgetItem():from( ::oUI:q_listNames:currentItem() )
       cName := qItem:text()
       IF ( nIndex := ascan( aTools, {|e_| e_[ 1 ] == cName } ) ) > 0
-         ::oUI:q_editName    : setText( aTools[ nIndex, 1 ] )
-         ::oUI:q_editCmdLine : setText( aTools[ nIndex, 2 ] )
-         ::oUI:q_editParams  : setText( aTools[ nIndex, 3 ] )
+         ::ini2Controls( nIndex )
       ENDIF
       EXIT
    CASE buttonAdd_clicked
-      aadd( ::aINI[ INI_TOOLS ], { ::oUI:q_editName:text(), ::oUI:q_editCmdLine:text(), ::oUI:q_editParams:text() } )
-      ::oUI:q_listNames:addItem( ::oUI:q_editName:text() )
+      IF !empty( ::oUI:q_editName:text() )
+         ::controls2ini()
+         ::oUI:q_listNames:addItem( ::oUI:q_editName:text() )
+      ENDIF
       EXIT
    CASE buttonDelete_clicked
-      qItem := QListWidgetItem():from( ::oUI:q_listNames:currentItem() )
-      cName := qItem:text()
-      IF ( nIndex := ascan( aTools, {|e_| e_[ 1 ] == cName } ) ) > 0
-         hb_adel( ::aINI[ INI_TOOLS ], nIndex, .t. )
-         ::clearList()
-         ::populateList()
+      IF ::oUI:q_listNames:currentRow() >= 0
+         qItem := QListWidgetItem():from( ::oUI:q_listNames:currentItem() )
+         cName := qItem:text()
+         IF ( nIndex := ascan( aTools, {|e_| e_[ 1 ] == cName } ) ) > 0
+            hb_adel( ::aINI[ INI_TOOLS ], nIndex, .t. )
+            ::clearList()
+            ::populateList()
+         ENDIF
       ENDIF
       EXIT
    CASE buttonUp_clicked
@@ -228,25 +275,30 @@ METHOD IdeToolsManager:execEvent( nMode, p )
    CASE buttonDown_clicked
       EXIT
    CASE buttonExec_clicked
-      qItem := QListWidgetItem():from( ::oUI:q_listNames:currentItem() )
-      ::execTool( qItem:text() )
+      IF ::oUI:q_listNames:currentRow() >= 0
+         qItem := QListWidgetItem():from( ::oUI:q_listNames:currentItem() )
+         ::execTool( qItem:text() )
+      ENDIF
       EXIT
    CASE buttonBrowse_clicked
       IF !empty( cFile := hbide_fetchAFile( ::oDlg, "Select a Tool" ) )
          hb_fNameSplit( cFile, , @cFileName )
+         ::ini2controls()
          ::oUI:q_editName    : setText( cFileName )
          ::oUI:q_editCmdLine : setText( cFile )
-         ::oUI:q_editParams  : setText( "" )
       ENDIF
       EXIT
    CASE buttonUpdate_clicked
-      qItem := QListWidgetItem():from( ::oUI:q_listNames:currentItem() )
-      cName := qItem:text()
+      IF ( nRow := ::oUI:q_listNames:currentRow() ) >= 0
+         qItem := QListWidgetItem():from( ::oUI:q_listNames:currentItem() )
+         cName := qItem:text()
 
-      IF ( nIndex := ascan( aTools, {|e_| e_[ 1 ] == cName } ) ) > 0
-         ::aINI[ INI_TOOLS, nIndex ] := { ::oUI:q_editName:text(), ::oUI:q_editCmdLine:text(), ::oUI:q_editParams:text() }
-         ::clearList()
-         ::populateList()
+         IF ( nIndex := ascan( aTools, {|e_| e_[ 1 ] == cName } ) ) > 0
+            ::controls2ini( nIndex )
+            ::clearList()
+            ::populateList()
+            ::oUI:q_listNames:setCurrentRow( nRow )
+         ENDIF
       ENDIF
       EXIT
    CASE buttonClose_clicked
@@ -274,30 +326,6 @@ METHOD IdeToolsManager:populateList( aList )
    FOR EACH a_ IN aList
       ::oUI:q_listNames:addItem( a_[ 1 ] )
    NEXT
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeToolsManager:execTool( cName )
-   LOCAL nIndex, cCmd, cParams, qProcess, qStr
-
-   IF ( nIndex := ascan( ::aTools, {|e_| e_[ 1 ] == cName } ) ) > 0
-      cCmd     := ::aTools[ nIndex, 2 ]
-      cParams  := ::aTools[ nIndex, 3 ]
-
-      qProcess := QProcess():new()
-
-      IF !empty( cParams )
-         qStr := QStringList():new()
-         qStr:append( cParams )
-         qProcess:startDetached_1( cCmd, qStr )
-      ELSE
-         qProcess:startDetached_2( cCmd )
-      ENDIF
-      qProcess:waitForStarted()
-      qProcess := NIL
-   ENDIF
 
    RETURN Self
 
@@ -355,3 +383,98 @@ METHOD IdeToolsManager:addPanelsMenu( cPrompt )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
+
+METHOD IdeToolsManager:execToolByParams( cCmd, cParams, cStartIn, lCapture, lOpen )
+   LOCAL cArg
+
+   ::oProcess := HbpProcess():new()
+
+   ::oProcess:output      := {|cOut, mp2, oHbp| ::showOutput( cOut, mp2, oHbp ) }
+   ::oProcess:finished    := {|nEC , nES, oHbp| ::finished( nEC, nES, oHbp ) }
+   ::oProcess:workingPath := cStartIn
+   ::oProcess:lDetached   := !( lCapture )
+
+   IF empty( cCmd )
+      cCmd := hbide_getShellCommand()
+      cArg := iif( hbide_getOS() == "nix", "", "/C " )
+   ELSE
+      cArg := ""
+   ENDIF
+   cArg += cParams
+
+   IF lCapture
+      IF lOpen
+         ::oDockB2:show()
+      ENDIF
+      ::oOutputResult:oWidget:clear()
+      ::oOutputResult:oWidget:append( cCmd )
+      ::oOutputResult:oWidget:append( cArg )
+      ::oOutputResult:oWidget:append( hbide_outputLine() )
+   ENDIF
+   ::oProcess:addArg( cArg )
+   ::oProcess:start( cCmd )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeToolsManager:execTool( ... )
+   LOCAL nIndex, cCmd, cParams, cStayIn, lCapture, lOpen, aParam
+
+   aParam := hb_aParams()
+   IF len( aParam ) == 1
+      IF ( nIndex := ascan( ::aTools, {|e_| e_[ 1 ] == aParam[ 1 ] } ) ) > 0
+         cCmd     := hbide_pathToOSPath( ::aTools[ nIndex, 2 ] )
+         cParams  := ::aTools[ nIndex, 3 ]
+         cParams  := iif( "http://" $ lower( cParams ), cParams, hbide_pathToOSPath( cParams ) )
+         cStayIn  := hbide_pathToOSPath( ::aTools[ nIndex, 4 ] )
+         lCapture := ::aTools[ nIndex, 5 ] == "YES"
+         lOpen    := ::aTools[ nIndex, 6 ] == "YES"
+      ENDIF
+   ELSEIF len( aParam ) > 1
+      asize( aParam, 5 )
+
+      DEFAULT aParam[ 1 ] TO ""
+      DEFAULT aParam[ 2 ] TO ""
+      DEFAULT aParam[ 3 ] TO ""
+      DEFAULT aParam[ 4 ] TO ""
+      DEFAULT aParam[ 5 ] TO ""
+
+      cCmd     := hbide_pathToOSPath( aParam[ 1 ] )
+      cParams  := aParam[ 2 ]
+      cParams  := iif( "http://" $ lower( cParams ), cParams, hbide_pathToOSPath( cParams ) )
+      cStayIn  := hbide_pathToOSPath( aParam[ 3 ] )
+      lCapture := aParam[ 4 ] == "YES"
+      lOpen    := aParam[ 5 ] == "YES"
+   ENDIF
+
+   IF hb_isLogical( lCapture )
+      ::execToolByParams( cCmd, cParams, cStayIn, lCapture, lOpen )
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeToolsManager:showOutput( cOut, mp2, oHbp )
+
+   HB_SYMBOL_UNUSED( mp2 )
+   HB_SYMBOL_UNUSED( oHbp )
+
+   hbide_convertBuildStatusMsgToHtml( cOut, ::oOutputResult:oWidget )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeToolsManager:finished( nEC, nES, oHbp )
+
+   HB_SYMBOL_UNUSED( oHbp )
+
+   ::oOutputResult:oWidget:append( hbide_outputLine() )
+   ::oOutputResult:oWidget:append( "Finished: Exit Code = " + hb_ntos( nEC ) + " Status = " + hb_ntos( nES ) )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+

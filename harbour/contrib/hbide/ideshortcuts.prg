@@ -55,52 +55,41 @@
  *                                EkOnkar
  *                          ( The LORD is ONE )
  *
- *                            Harbour-Qt IDE
+ *                              Harbour IDE
  *
  *                 Pritpal Bedi <bedipritpal@hotmail.com>
- *                               18Mar2010
+ *                               04Apr2010
  */
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 
 #include "hbide.ch"
+#include "hbqt.ch"
 #include "common.ch"
 #include "hbclass.ch"
-#include "hbqt.ch"
 
 /*----------------------------------------------------------------------*/
 
-#define PAGE_INTRO                                1
-#define PAGE_X                                    2
-
-/*----------------------------------------------------------------------*/
-
-FUNCTION hbide_startOpenWizard()
-   STATIC oWz
-
-   oWz := IdeWizard():new():create()
-
-   RETURN NIL
-
-/*----------------------------------------------------------------------*/
-
-CLASS IdeWizard INHERIT IdeObject
-
-   DATA   aPages                                  INIT {}
+CLASS IdeShortcuts INHERIT IdeObject
 
    METHOD new( oIde )
    METHOD create( oIde )
    METHOD destroy()
-   METHOD execEvent( nMode, p )
-   METHOD addIntroPage()
-   METHOD addDescPage()
+
+   METHOD evalMacro( cString )
+   METHOD fetchAndExecMacro()
+
+   METHOD getWord( lSelect )
+   METHOD getLine( lSelect )
+   METHOD getText()
+   METHOD execTool( ... )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeWizard:new( oIde )
+METHOD IdeShortcuts:new( oIde )
 
    ::oIde := oIde
 
@@ -108,75 +97,81 @@ METHOD IdeWizard:new( oIde )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeWizard:create( oIde )
+METHOD IdeShortcuts:create( oIde )
 
    DEFAULT oIde TO ::oIde
    ::oIde := oIde
 
-   ::oUI := QWizard():new()
-   ::oUI:setWindowTitle( "Open" )
-   ::oUI:setWindowIcon( hbide_image( "hbide" ) )
+   RETURN Self
 
-   ::addIntroPage()
-   ::addDescPage()
+/*----------------------------------------------------------------------*/
 
-   ::oUI:show()
+METHOD IdeShortcuts:destroy()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeWizard:destroy()
-   LOCAL a_, obj
+METHOD IdeShortcuts:execTool( ... )
+   RETURN ::oTM:execTool( ... )
 
-   IF !empty( ::oUI )
-      FOR EACH a_ IN ::aPages
-         FOR EACH obj IN a_ DESCEND
-            obj := NIL
-         NEXT
-      NEXT
-      ::oUI := NIL
+/*----------------------------------------------------------------------*/
+
+METHOD IdeShortcuts:getWord( lSelect )
+   RETURN ::oEM:getWord( lSelect )
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeShortcuts:getLine( lSelect )
+   RETURN ::oEM:getLine( lSelect )
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeShortcuts:getText()
+   RETURN ::oEM:getText()
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeShortcuts:evalMacro( cString )
+   LOCAL bError := ErrorBlock( {|o| break( o ) } )
+   LOCAL oErr, bBlock, n, cBlock, cParam
+
+   IF ( n := at( "|", cString ) ) > 0
+      cString := substr( cString, n + 1 )
+      IF ( n := at( "|", cString ) ) == 0
+         RETURN Self
+      ENDIF
+      cParam  := substr( cString, 1, n - 1 )
+      cString := substr( cString, n + 1 )
+      cBlock  := "{|o," + cParam + "|" + cString + " }"
+   ELSE
+      cBlock := "{|o| " + cString + " }"
+   ENDIF
+   cBlock := strtran( cBlock, "::", "o:" )
+
+   bBlock := &( cBlock )
+
+hbide_dbg( cBlock )
+   BEGIN SEQUENCE
+      eval( bBlock, self )
+   RECOVER USING oErr
+      MsgBox( "Wrongly defined block. Syntax is |var| method_call( var ) --- " + oErr:description )
+   END SEQUENCE
+
+   ErrorBlock( bError )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeShortcuts:fetchAndExecMacro()
+   LOCAL cStr
+
+   cStr := hbide_fetchAString( ::oDlg:oWidget, "", "Macro", "Compilation" )
+   IF !empty( cStr )
+      ::evalMacro( cStr )
    ENDIF
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeWizard:execEvent( nMode, p )
-
-   HB_SYMBOL_UNUSED( nMode )
-   HB_SYMBOL_UNUSED( p )
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeWizard:addIntroPage()
-   LOCAL page, label, layout
-
-   page := QWizardPage():new()
-   page:setTitle( "Introduction" )
-
-   label := QLabel():new( "This wizard will help you register your copy " + ;
-                                                   "of Super Product Two." )
-   label:setWordWrap( .t. )
-
-   layout := QVBoxLayout():new()
-   layout:addWidget( label )
-   page:setLayout( layout )
-   page:setTitle( "This is waizard" )
-   page:setSubTitle( "So the ?" )
-
-   aadd( ::aPages, { PAGE_INTRO, page, layout, label } )
-
-   ::oUI:setPage( len( ::aPages ), page )
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeWizard:addDescPage()
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
