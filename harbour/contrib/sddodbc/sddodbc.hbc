@@ -5,4 +5,4 @@
 libs=sddodbc
 {win}libs=odbc32
 
-libs=../rddsql.hbc
+libs=../rddsql/rddsql.hbc

@@ -209,7 +209,6 @@ static MXML_STATUS mxml_attribute_read( MXML_REFIL *ref, PHB_ITEM pDoc, PHB_ITEM
    MXML_SGS *buf_attrib;
    int iStatus = 0;
    int iPosAmper = 0;
-   int iLenName, iLenAttrib;
 
    buf_name = mxml_sgs_new();
    buf_attrib = mxml_sgs_new();
@@ -220,10 +219,12 @@ static MXML_STATUS mxml_attribute_read( MXML_REFIL *ref, PHB_ITEM pDoc, PHB_ITEM
       chr = mxml_refil_getc( ref );
       if ( chr == MXML_EOF ) break;
 
-      switch ( iStatus ) {
+      switch ( iStatus )
+      {
          /* begin */
          case 0:
-            switch ( chr ) {
+            switch ( chr )
+            {
                case MXML_LINE_TERMINATOR: hbxml_doc_new_line( pDoc ); break;
                /* We repeat line terminator here for portability */
                case MXML_SOFT_LINE_TERMINATOR: break;
@@ -241,12 +242,17 @@ static MXML_STATUS mxml_attribute_read( MXML_REFIL *ref, PHB_ITEM pDoc, PHB_ITEM
                      {
                         hbxml_set_doc_status( ref, pDoc, pNode,
                            MXML_STATUS_MALFORMED, MXML_ERROR_NAMETOOLONG );
+                        mxml_sgs_destroy( buf_name );
+                        mxml_sgs_destroy( buf_attrib );
                         return MXML_STATUS_MALFORMED;
                      }
                      iStatus = 1;
                   }
-                  else {
+                  else
+                  {
                      hbxml_set_doc_status( ref, pDoc, pNode, MXML_STATUS_MALFORMED, MXML_ERROR_INVATT );
+                     mxml_sgs_destroy( buf_name );
+                     mxml_sgs_destroy( buf_attrib );
                      return MXML_STATUS_MALFORMED;
                   }
             }
@@ -260,6 +266,8 @@ static MXML_STATUS mxml_attribute_read( MXML_REFIL *ref, PHB_ITEM pDoc, PHB_ITEM
                {
                   hbxml_set_doc_status( ref, pDoc, pNode,
                      MXML_STATUS_MALFORMED, MXML_ERROR_NAMETOOLONG );
+                  mxml_sgs_destroy( buf_name );
+                  mxml_sgs_destroy( buf_attrib );
                   return MXML_STATUS_MALFORMED;
                }
             }
@@ -273,11 +281,15 @@ static MXML_STATUS mxml_attribute_read( MXML_REFIL *ref, PHB_ITEM pDoc, PHB_ITEM
             {
                iStatus = 2;
             }
-            else if ( chr == '=' ) {
+            else if ( chr == '=' )
+            {
                iStatus = 3;
             }
-            else {
+            else
+            {
                hbxml_set_doc_status( ref, pDoc, pNode, MXML_STATUS_MALFORMED, MXML_ERROR_MALFATT );
+               mxml_sgs_destroy( buf_name );
+               mxml_sgs_destroy( buf_attrib );
                return MXML_STATUS_MALFORMED;
             }
          break;
@@ -296,8 +308,11 @@ static MXML_STATUS mxml_attribute_read( MXML_REFIL *ref, PHB_ITEM pDoc, PHB_ITEM
             else if ( chr == ' ' || chr == '\t' || chr == '\n' || chr == '\r' )
             {
             }
-            else {
+            else
+            {
                hbxml_set_doc_status( ref, pDoc, pNode, MXML_STATUS_MALFORMED, MXML_ERROR_MALFATT );
+               mxml_sgs_destroy( buf_name );
+               mxml_sgs_destroy( buf_attrib );
                return MXML_STATUS_MALFORMED;
             }
          break;
@@ -317,8 +332,11 @@ static MXML_STATUS mxml_attribute_read( MXML_REFIL *ref, PHB_ITEM pDoc, PHB_ITEM
             else if ( chr == ' ' || chr == '\t' || chr == '\n' || chr == '\r' )
             {
             }
-            else {
+            else
+            {
                hbxml_set_doc_status( ref, pDoc, pNode, MXML_STATUS_MALFORMED, MXML_ERROR_MALFATT );
+               mxml_sgs_destroy( buf_name );
+               mxml_sgs_destroy( buf_attrib );
                return MXML_STATUS_MALFORMED;
             }
          break;
@@ -342,6 +360,8 @@ static MXML_STATUS mxml_attribute_read( MXML_REFIL *ref, PHB_ITEM pDoc, PHB_ITEM
                {
                   hbxml_set_doc_status( ref, pDoc, pNode,
                      MXML_STATUS_MALFORMED, MXML_ERROR_ATTRIBTOOLONG );
+                  mxml_sgs_destroy( buf_name );
+                  mxml_sgs_destroy( buf_attrib );
                   return MXML_STATUS_MALFORMED;
                }
             }
@@ -351,6 +371,8 @@ static MXML_STATUS mxml_attribute_read( MXML_REFIL *ref, PHB_ITEM pDoc, PHB_ITEM
                if ( mxml_sgs_append_char( buf_attrib, ( char ) chr ) != MXML_STATUS_OK )
                {
                   hbxml_set_doc_status( ref, pDoc, pNode, MXML_STATUS_MALFORMED, MXML_ERROR_ATTRIBTOOLONG );
+                  mxml_sgs_destroy( buf_name );
+                  mxml_sgs_destroy( buf_attrib );
                   return MXML_STATUS_MALFORMED;
                }
             }
@@ -367,6 +389,8 @@ static MXML_STATUS mxml_attribute_read( MXML_REFIL *ref, PHB_ITEM pDoc, PHB_ITEM
                {
                   /* error! - we have "&;" */
                   hbxml_set_doc_status( ref, pDoc, pNode, MXML_STATUS_MALFORMED, MXML_ERROR_WRONGENTITY );
+                  mxml_sgs_destroy( buf_name );
+                  mxml_sgs_destroy( buf_attrib );
                   return MXML_STATUS_MALFORMED;
                }
 
@@ -393,6 +417,8 @@ static MXML_STATUS mxml_attribute_read( MXML_REFIL *ref, PHB_ITEM pDoc, PHB_ITEM
             {
                /* error - we have something like &amp &amp */
                hbxml_set_doc_status( ref, pDoc, pNode, MXML_STATUS_MALFORMED, MXML_ERROR_WRONGENTITY );
+               mxml_sgs_destroy( buf_name );
+               mxml_sgs_destroy( buf_attrib );
                return MXML_STATUS_MALFORMED;
             }
             else
@@ -400,6 +426,8 @@ static MXML_STATUS mxml_attribute_read( MXML_REFIL *ref, PHB_ITEM pDoc, PHB_ITEM
                if ( mxml_sgs_append_char( buf_attrib, ( char ) chr ) != MXML_STATUS_OK )
                {
                   hbxml_set_doc_status( ref, pDoc, pNode, MXML_STATUS_MALFORMED, MXML_ERROR_ATTRIBTOOLONG );
+                  mxml_sgs_destroy( buf_name );
+                  mxml_sgs_destroy( buf_attrib );
                   return MXML_STATUS_MALFORMED;
                }
             }
@@ -422,12 +450,12 @@ static MXML_STATUS mxml_attribute_read( MXML_REFIL *ref, PHB_ITEM pDoc, PHB_ITEM
    }
 
    /* time to create the attribute */
-   iLenName = buf_name->length;
-   iLenAttrib = buf_attrib->length;
 
-   pDest->pName  = hb_itemPutCL( pDest->pName,  mxml_sgs_extract( buf_name ),   iLenName );
-   pDest->pValue = hb_itemPutCL( pDest->pValue, mxml_sgs_extract( buf_attrib ), iLenAttrib );
+   pDest->pName  = hb_itemPutCL( pDest->pName,  mxml_sgs_extract( buf_name ),   buf_name->length );
+   pDest->pValue = hb_itemPutCL( pDest->pValue, mxml_sgs_extract( buf_attrib ), buf_attrib->length );
 
+   mxml_sgs_destroy( buf_name );
+   mxml_sgs_destroy( buf_attrib );
    return MXML_STATUS_OK;
 }
 
@@ -766,19 +794,24 @@ static void mxml_node_read_data( MXML_REFIL *ref, PHB_ITEM pNode, PHB_ITEM doc, 
    int iStatus = 0, iPosAmper = 0;
 
    chr = mxml_refil_getc( ref );
-   while ( chr != MXML_EOF ) {
+   while ( chr != MXML_EOF )
+   {
 
       /* still in a data element */
-      if ( chr != '<' ) {
+      if ( chr != '<' )
+      {
 
          /* verify entity or escape */
-         if ( chr == '&' && ! (iStyle & MXML_STYLE_NOESCAPE)) {
+         if ( chr == '&' && ! (iStyle & MXML_STYLE_NOESCAPE))
+         {
 
-            if ( iStatus == 0 ) {
+            if ( iStatus == 0 )
+            {
                iStatus = 1;
                iPosAmper = iPos;
             }
-            else {
+            else
+            {
                /* error - we have something like &amp &amp */
                MXML_DELETOR( buf );
                hbxml_set_doc_status( ref, doc, pNode,
@@ -788,11 +821,13 @@ static void mxml_node_read_data( MXML_REFIL *ref, PHB_ITEM pNode, PHB_ITEM doc, 
          }
 
          /* rightful closing of an entity */
-         if ( chr == ';' && iStatus == 1 ) {
+         if ( chr == ';' && iStatus == 1 )
+         {
             int iAmpLen = iPos - iPosAmper - 2;
             char *bp = buf + iPosAmper + 1;
 
-            if ( iAmpLen <= 0 ) {
+            if ( iAmpLen <= 0 )
+            {
                /* error! - we have "&;" */
                MXML_DELETOR( buf );
                hbxml_set_doc_status( ref, doc, pNode,
@@ -821,13 +856,15 @@ static void mxml_node_read_data( MXML_REFIL *ref, PHB_ITEM pNode, PHB_ITEM doc, 
 
          buf[ iPos++ ] = ( char ) chr;
 
-         if ( iPos >= iAllocated ) {
+         if ( iPos >= iAllocated )
+         {
             iAllocated += MXML_ALLOC_BLOCK;
             buf = (char *) MXML_REALLOCATOR( buf, iAllocated );
          }
 
       }
-      else {
+      else
+      {
          mxml_refil_ungetc( ref, chr );
          break;
       }
@@ -867,6 +904,7 @@ static void mxml_node_read_data( MXML_REFIL *ref, PHB_ITEM pNode, PHB_ITEM doc, 
 
    hb_itemPutCL( pItem, buf, iPos );
    hb_objSendMsg( pNode,"_CDATA", 1, pItem );
+   MXML_DELETOR( buf );
    hb_itemRelease( pItem );
 }
 
@@ -893,7 +931,8 @@ static MXML_STATUS mxml_node_read_name( MXML_REFIL *ref, PHB_ITEM pNode, PHB_ITE
       switch ( iStatus )
       {
          case 0:
-            if ( HB_ISALPHA( chr ) ) {
+            if ( HB_ISALPHA( chr ) )
+            {
                /* can't cause reallocations */
                buf[ iPos++ ] = ( char ) chr;
                iStatus = 1;
@@ -927,7 +966,8 @@ static MXML_STATUS mxml_node_read_name( MXML_REFIL *ref, PHB_ITEM pNode, PHB_ITE
          break;
       }
 
-      if ( iPos >= iAllocated ) {
+      if ( iPos >= iAllocated )
+      {
          iAllocated += MXML_ALLOC_BLOCK;
          buf = (char *) MXML_REALLOCATOR( buf, iAllocated );
          if (! buf )
@@ -952,6 +992,7 @@ static MXML_STATUS mxml_node_read_name( MXML_REFIL *ref, PHB_ITEM pNode, PHB_ITE
    }
    pItem = hb_itemPutCL( NULL, buf, iPos );
    hb_objSendMsg( pNode,"_CNAME", 1, pItem );
+   MXML_DELETOR( buf );
    hb_itemRelease( pItem );
 
    return MXML_STATUS_OK;
@@ -974,7 +1015,8 @@ static MXML_STATUS mxml_node_read_attributes( MXML_REFIL *ref,
    hbAttr.pValue = hbValue;
 
    ret = mxml_attribute_read( ref, doc, pNode, &hbAttr, style );
-   while ( ret == MXML_STATUS_OK ) {
+   while ( ret == MXML_STATUS_OK )
+   {
       hb_hashAdd( attributes, hbAttr.pName, hbAttr.pValue );
       ret = mxml_attribute_read( ref, doc, pNode, &hbAttr, style );
    }
@@ -1002,11 +1044,13 @@ static void mxml_node_read_directive( MXML_REFIL *ref, PHB_ITEM pNode, PHB_ITEM 
    if ( mxml_node_read_name( ref, pNode, doc ) == MXML_STATUS_OK )
    {
       chr = mxml_refil_getc( ref );
-      while ( chr != MXML_EOF && chr != '>') {
+      while ( chr != MXML_EOF && chr != '>')
+      {
          if ( iPos > 0 || ( chr != ' ' && chr != '\t' && chr != '\r' && chr != '\n' ) )
             buf[ iPos++ ] = ( char ) chr;
 
-         if ( iPos >= iAllocated ) {
+         if ( iPos >= iAllocated )
+         {
             iAllocated += MXML_ALLOC_BLOCK;
             buf = (char *) MXML_REALLOCATOR( buf, iAllocated );
          }
@@ -1019,7 +1063,8 @@ static void mxml_node_read_directive( MXML_REFIL *ref, PHB_ITEM pNode, PHB_ITEM 
          chr = mxml_refil_getc( ref );
       }
 
-      if ( ref->status == MXML_STATUS_OK ) {
+      if ( ref->status == MXML_STATUS_OK )
+      {
          PHB_ITEM pItem = hb_itemPutNI( NULL, MXML_TYPE_DIRECTIVE );
          buf[ iPos ] = 0;
          hb_objSendMsg( pNode,"_NTYPE", 1, pItem );
@@ -1031,7 +1076,8 @@ static void mxml_node_read_directive( MXML_REFIL *ref, PHB_ITEM pNode, PHB_ITEM 
          hb_objSendMsg( pNode,"_CDATA", 1, pItem );
          hb_itemRelease( pItem );
       }
-      else {
+      else
+      {
          MXML_DELETOR( buf );
          hbxml_set_doc_status( ref, doc, pNode, ref->status, ref->error );
          return;
@@ -1061,11 +1107,13 @@ static void mxml_node_read_pi( MXML_REFIL *ref, PHB_ITEM pNode, PHB_ITEM doc )
    buf = (char *) MXML_ALLOCATOR( MXML_ALLOC_BLOCK );
    iAllocated = MXML_ALLOC_BLOCK ;
 
-   while ( iStatus < 2 ) {
+   while ( iStatus < 2 )
+   {
       chr = mxml_refil_getc( ref );
       if ( chr == MXML_EOF ) break;
 
-      switch ( iStatus ) {
+      switch ( iStatus )
+      {
          /* scanning for ?> */
          case 0:
             if ( chr == MXML_LINE_TERMINATOR )
@@ -1075,7 +1123,8 @@ static void mxml_node_read_pi( MXML_REFIL *ref, PHB_ITEM pNode, PHB_ITEM doc )
             }
             else if ( chr == '?' )
                iStatus = 1;
-            else {
+            else
+            {
                if ( iPos > 0 || ( chr != ' ' && chr != '\n' ) )
                   buf[ iPos++ ] = ( char ) chr;
             }
@@ -1084,7 +1133,8 @@ static void mxml_node_read_pi( MXML_REFIL *ref, PHB_ITEM pNode, PHB_ITEM doc )
          case 1:
             if ( chr == '>' )
                iStatus = 2;
-            else {
+            else
+            {
                iStatus = 0;
                buf[ iPos++ ] = '?';
                mxml_refil_ungetc( ref, chr );
@@ -1093,13 +1143,15 @@ static void mxml_node_read_pi( MXML_REFIL *ref, PHB_ITEM pNode, PHB_ITEM doc )
 
       }
 
-      if ( iPos == iAllocated ) {
+      if ( iPos == iAllocated )
+      {
          iAllocated += MXML_ALLOC_BLOCK;
          buf = (char *) MXML_REALLOCATOR( buf, iAllocated );
       }
    }
 
-   if ( ref->status == MXML_STATUS_OK ) {
+   if ( ref->status == MXML_STATUS_OK )
+   {
       PHB_ITEM pItem = hb_itemPutNI( NULL, MXML_TYPE_PI );
       buf[iPos] = 0;
       hb_objSendMsg( pNode,"_NTYPE", 1, pItem );
@@ -1108,10 +1160,12 @@ static void mxml_node_read_pi( MXML_REFIL *ref, PHB_ITEM pNode, PHB_ITEM doc )
          buf = (char *) MXML_REALLOCATOR( buf, iPos + 1 );
       }
       hb_itemPutCL( pItem, buf, iPos );
+      MXML_DELETOR( buf );
       hb_objSendMsg( pNode,"_CDATA", 1, pItem );
       hb_itemRelease( pItem );
    }
-   else {
+   else
+   {
       MXML_DELETOR( buf );
       hbxml_set_doc_status( ref, doc, pNode, ref->status, ref->error );
    }
@@ -1171,11 +1225,13 @@ static void mxml_node_read_comment( MXML_REFIL *ref, PHB_ITEM pNode, PHB_ITEM do
    buf = (char *) MXML_ALLOCATOR( MXML_ALLOC_BLOCK );
    iAllocated = MXML_ALLOC_BLOCK ;
 
-   while ( iStatus < 3 ) {
+   while ( iStatus < 3 )
+   {
       chr = mxml_refil_getc( ref );
       if ( chr == MXML_EOF ) break;
 
-      switch ( iStatus ) {
+      switch ( iStatus )
+      {
          /* scanning for -> */
          case 0:
             if ( chr == MXML_LINE_TERMINATOR )
@@ -1192,7 +1248,8 @@ static void mxml_node_read_comment( MXML_REFIL *ref, PHB_ITEM pNode, PHB_ITEM do
          case 1:
             if ( chr == '-' )
                iStatus = 2;
-            else {
+            else
+            {
                iStatus = 0;
                buf[ iPos++ ] = '-';
                mxml_refil_ungetc( ref, chr );
@@ -1202,7 +1259,8 @@ static void mxml_node_read_comment( MXML_REFIL *ref, PHB_ITEM pNode, PHB_ITEM do
          case 2:
             if ( chr == '>' )
                iStatus = 3;
-            else {
+            else
+            {
                iStatus = 0;
                buf[ iPos++ ] = '-';
                mxml_refil_ungetc( ref, chr );
@@ -1218,7 +1276,8 @@ static void mxml_node_read_comment( MXML_REFIL *ref, PHB_ITEM pNode, PHB_ITEM do
       }
    }
 
-   if ( ref->status == MXML_STATUS_OK ) {
+   if ( ref->status == MXML_STATUS_OK )
+   {
       buf[ iPos ] = 0;
       if ( iAllocated > iPos + 1 )
       {
@@ -1227,7 +1286,8 @@ static void mxml_node_read_comment( MXML_REFIL *ref, PHB_ITEM pNode, PHB_ITEM do
       hb_itemPutCL( pItem, buf, iPos );
       hb_objSendMsg( pNode,"_CDATA", 1, pItem );
    }
-   else {
+   else
+   {
       MXML_DELETOR( buf );
       hbxml_set_doc_status( ref, doc, pNode, ref->status, ref->error );
    }
@@ -1249,7 +1309,8 @@ static void mxml_node_read_cdata( MXML_REFIL *ref, PHB_ITEM pNode, PHB_ITEM pDoc
       however, we are not still sure that this is really a cdata.
       we must finish to read it: */
 
-   while ( iStatus < 6 ) {
+   while ( iStatus < 6 )
+   {
       chr = mxml_refil_getc( ref );
       if ( chr == MXML_EOF ) break;
 
@@ -1260,7 +1321,8 @@ static void mxml_node_read_cdata( MXML_REFIL *ref, PHB_ITEM pNode, PHB_ITEM pDoc
          iStatus = 100;
       }
 
-      switch ( iStatus ) {
+      switch ( iStatus )
+      {
          /* scanning for C */
          case 0:
             if ( chr == 'C' )
@@ -1344,11 +1406,13 @@ static void mxml_node_read_cdata( MXML_REFIL *ref, PHB_ITEM pNode, PHB_ITEM pDoc
       iAllocated = MXML_ALLOC_BLOCK ;
 
       /* now we can read the node */
-      while ( iStatus < 3 ) {
+      while ( iStatus < 3 )
+      {
          chr = mxml_refil_getc( ref );
          if ( chr == MXML_EOF ) break;
 
-         switch ( iStatus ) {
+         switch ( iStatus )
+         {
             /* scanning for -> */
             case 0:
                if ( chr == MXML_LINE_TERMINATOR )
@@ -1365,7 +1429,8 @@ static void mxml_node_read_cdata( MXML_REFIL *ref, PHB_ITEM pNode, PHB_ITEM pDoc
             case 1:
                if ( chr == ']' )
                   iStatus = 2;
-               else {
+               else
+               {
                   iStatus = 0;
                   buf[ iPos++ ] = ']';
                   mxml_refil_ungetc( ref, chr );
@@ -1375,7 +1440,8 @@ static void mxml_node_read_cdata( MXML_REFIL *ref, PHB_ITEM pNode, PHB_ITEM pDoc
             case 2:
                if ( chr == '>' )
                   iStatus = 3;
-               else {
+               else
+               {
                   iStatus = 0;
                   buf[ iPos++ ] = ']';
                   mxml_refil_ungetc( ref, chr );
@@ -1391,7 +1457,8 @@ static void mxml_node_read_cdata( MXML_REFIL *ref, PHB_ITEM pNode, PHB_ITEM pDoc
          }
       }
 
-      if ( ref->status == MXML_STATUS_OK ) {
+      if ( ref->status == MXML_STATUS_OK )
+      {
          buf[ iPos ] = 0;
          if ( iAllocated > iPos + 1 )
          {
@@ -1400,7 +1467,8 @@ static void mxml_node_read_cdata( MXML_REFIL *ref, PHB_ITEM pNode, PHB_ITEM pDoc
          hb_itemPutCL( pItem, buf, iPos );
          hb_objSendMsg( pNode,"_CDATA", 1, pItem );
       }
-      else {
+      else
+      {
          MXML_DELETOR( buf );
          hbxml_set_doc_status( ref, pDoc, pNode, ref->status, ref->error );
       }
@@ -1421,7 +1489,8 @@ static int mxml_node_read_closing( MXML_REFIL *ref, PHB_ITEM pNode, PHB_ITEM doc
    buf = (char *) MXML_ALLOCATOR( iLen );
 
    chr = mxml_refil_getc( ref );
-   while ( chr != MXML_EOF && chr != '>' && iPos < iLen) {
+   while ( chr != MXML_EOF && chr != '>' && iPos < iLen)
+   {
       buf[ iPos++ ] = ( char ) chr;
       chr = mxml_refil_getc( ref );
    }
@@ -1452,7 +1521,8 @@ static MXML_STATUS mxml_node_read( MXML_REFIL *ref, PHB_ITEM pNode,PHB_ITEM doc,
    /* Stateful machine status */
    int iStatus = 0;
 
-   while ( iStatus >= 0 ) {
+   while ( iStatus >= 0 )
+   {
       chr = mxml_refil_getc( ref );
       if ( chr == MXML_EOF )
       {
@@ -1471,7 +1541,8 @@ static MXML_STATUS mxml_node_read( MXML_REFIL *ref, PHB_ITEM pNode,PHB_ITEM doc,
       {
 
          case 0:  /* outside nodes */
-            switch ( chr ) {
+            switch ( chr )
+            {
                case MXML_LINE_TERMINATOR: hbxml_doc_new_line( doc ); break;
                /* We repeat line terminator here for portability */
                case MXML_SOFT_LINE_TERMINATOR: break;
@@ -1523,7 +1594,8 @@ static MXML_STATUS mxml_node_read( MXML_REFIL *ref, PHB_ITEM pNode,PHB_ITEM doc,
                mxml_refil_ungetc( ref, chr );
                mxml_node_read_directive( ref, node, doc );
             }
-            else if ( chr == '[' ) {
+            else if ( chr == '[' )
+            {
                node = mxml_node_new( doc );
                mxml_node_read_cdata( ref, node, doc );
             }
@@ -1540,7 +1612,8 @@ static MXML_STATUS mxml_node_read( MXML_REFIL *ref, PHB_ITEM pNode,PHB_ITEM doc,
                node = mxml_node_new( doc );
                mxml_node_read_comment( ref, node, doc );
             }
-            else {
+            else
+            {
                hbxml_set_doc_status( ref, doc, pNode, MXML_STATUS_MALFORMED, MXML_ERROR_INVNODE );
                return MXML_STATUS_MALFORMED;
             }
@@ -1595,7 +1668,8 @@ static MXML_STATUS mxml_node_read( MXML_REFIL *ref, PHB_ITEM pNode,PHB_ITEM doc,
       hb_objSendMsg( pNode, "OCHILD", 0 );
       child_node = hb_itemNew( hb_param( -1, HB_IT_ANY ) );
 
-      while ( !HB_IS_NIL( child_node ) ) {
+      while ( !HB_IS_NIL( child_node ) )
+      {
          hb_objSendMsg( child_node, "NTYPE", 0 );
          if ( hb_parni( -1 ) == MXML_TYPE_DATA )
          {
@@ -1616,7 +1690,8 @@ static MXML_STATUS mxml_node_read( MXML_REFIL *ref, PHB_ITEM pNode,PHB_ITEM doc,
          hb_itemMove( child_node, hb_param( -1, HB_IT_ANY ) );
       }
 
-      if ( data_node ) {
+      if ( data_node )
+      {
          hb_objSendMsg( data_node, "CDATA", 0 );
          hb_objSendMsg( pNode, "_CDATA", 1, hb_param( -1, HB_IT_ANY ) );
 
@@ -1652,7 +1727,8 @@ static void mxml_node_file_indent( MXML_OUTPUT *out, int depth, int style )
 {
    int i;
 
-   for ( i = 0; i < depth; i++ ) {
+   for ( i = 0; i < depth; i++ )
+   {
       if ( style & MXML_STYLE_TAB )
          mxml_output_char( out, '\t');
       else if (  style & MXML_STYLE_THREESPACES )
@@ -1671,14 +1747,16 @@ static MXML_STATUS mxml_node_write( MXML_OUTPUT *out, PHB_ITEM pNode, int style 
    pChild = hb_itemNew( NULL );
    pItem = hb_itemNew( NULL );
 
-   if ( style & MXML_STYLE_INDENT ) {
+   if ( style & MXML_STYLE_INDENT )
+   {
       hb_objSendMsg( pNode, "DEPTH", 0 );
       depth = hb_parni( -1 ) - 1;
       mxml_node_file_indent( out, depth, style );
    }
 
    hb_objSendMsg( pNode, "NTYPE", 0 );
-   switch( hb_parni( -1 ) ) {
+   switch( hb_parni( -1 ) )
+   {
       case MXML_TYPE_TAG:
 
          mxml_output_char( out, '<' );
@@ -1705,7 +1783,8 @@ static MXML_STATUS mxml_node_write( MXML_OUTPUT *out, PHB_ITEM pNode, int style 
          {
             mxml_output_char( out, '>' );
 
-            if ( !HB_IS_NIL( pChild ) ) {
+            if ( !HB_IS_NIL( pChild ) )
+            {
                mustIndent = 1;
                mxml_output_string( out, hb_conNewLine() );
 
@@ -1783,7 +1862,8 @@ static MXML_STATUS mxml_node_write( MXML_OUTPUT *out, PHB_ITEM pNode, int style 
 
          hb_objSendMsg( pNode, "CDATA", 0 );
 
-         if ( HB_IS_STRING( hb_param( -1, HB_IT_ANY ) ) ) {
+         if ( HB_IS_STRING( hb_param( -1, HB_IT_ANY ) ) )
+         {
             mxml_output_char( out, ' ' );
             mxml_output_string_len( out, hb_parcx( -1 ), hb_parclen( -1 ) );
          }
@@ -1797,7 +1877,8 @@ static MXML_STATUS mxml_node_write( MXML_OUTPUT *out, PHB_ITEM pNode, int style 
          mxml_output_string_len( out, hb_parcx( -1 ), hb_parclen( -1 ) );
          hb_objSendMsg( pNode, "CDATA", 0 );
 
-         if ( HB_IS_STRING( hb_param( -1, HB_IT_ANY ) ) ) {
+         if ( HB_IS_STRING( hb_param( -1, HB_IT_ANY ) ) )
+         {
             mxml_output_char( out, ' ' );
             mxml_output_string_len( out, hb_parcx( -1 ), hb_parclen( -1 ) );
          }
@@ -1823,7 +1904,8 @@ static MXML_STATUS mxml_node_write( MXML_OUTPUT *out, PHB_ITEM pNode, int style 
    hb_itemRelease( pItem );
    hb_itemRelease( pChild );
 
-   if ( out->status != MXML_STATUS_OK ) {
+   if ( out->status != MXML_STATUS_OK )
+   {
       return out->status;
    }
 
@@ -1869,7 +1951,8 @@ static MXML_OUTPUT *mxml_output_new( MXML_OUTPUT_FUNC func, int node_count)
 
 static MXML_STATUS mxml_output_setup( MXML_OUTPUT *out, MXML_OUTPUT_FUNC func, int node_count)
 {
-   if ( func == NULL ) {
+   if ( func == NULL )
+   {
       return MXML_STATUS_ERROR;
    }
 
@@ -1922,8 +2005,10 @@ static MXML_STATUS mxml_output_string( MXML_OUTPUT *out, const char *s)
 static MXML_STATUS mxml_output_string_escape( MXML_OUTPUT *out, const char *s )
 {
 
-   while ( *s ) {
-      switch ( *s ) {
+   while ( *s )
+   {
+      switch ( *s )
+      {
          case '"': mxml_output_string_len( out, "&quot;", 6 ); break;
          case '\'': mxml_output_string_len( out, "&apos;", 6 ); break;
          case '&': mxml_output_string_len( out, "&amp;", 5 ); break;
@@ -1952,7 +2037,8 @@ static void mxml_output_func_to_stream( MXML_OUTPUT *out, const char *s, int len
    else
       fwrite( s, 1, len, fp );
 
-   if ( ferror( fp ) ) {
+   if ( ferror( fp ) )
+   {
       out->status = MXML_STATUS_ERROR;
       out->error = MXML_ERROR_IO;
    }
@@ -2076,7 +2162,8 @@ static MXML_STATUS mxml_refil_setup( MXML_REFIL *ref, MXML_REFIL_FUNC func,
 }
 
 /* Currently not used.
-static void mxml_refil_destroy ( MXML_REFIL *ref ) {
+static void mxml_refil_destroy ( MXML_REFIL *ref )
+{
    MXML_DELETOR( ref );
 }
 */
@@ -2155,10 +2242,13 @@ static MXML_SGS *mxml_sgs_new()
       return NULL;
 
    ret->buffer = (char *) MXML_ALLOCATOR( MXML_ALLOC_BLOCK );
-   if ( ret->buffer == NULL ) {
+   if ( ret->buffer == NULL )
+   {
       MXML_DELETOR( ret );
       return NULL;
    }
+
+   memset( ret->buffer, 0, sizeof( ret->buffer ) );
 
    ret->allocated = MXML_ALLOC_BLOCK;
    ret->length = 0;
@@ -2181,7 +2271,8 @@ static MXML_STATUS mxml_sgs_append_char( MXML_SGS *sgs, char c )
    char *buf;
    sgs->buffer[ sgs->length++ ] = c;
 
-   if ( sgs->length >= sgs->allocated ) {
+   if ( sgs->length >= sgs->allocated )
+   {
       buf = (char *) MXML_REALLOCATOR( sgs->buffer, sgs->allocated + MXML_ALLOC_BLOCK );
       if ( buf == NULL )
       {
@@ -2233,13 +2324,9 @@ static char * mxml_sgs_extract( MXML_SGS *sgs )
    sgs->buffer[ sgs->length ] = 0;
 
    if ( sgs->allocated > sgs->length + 1 )
-   {
       ret = (char *) MXML_REALLOCATOR( sgs->buffer, sgs->length +1 );
-   }
    else
-   {
       ret = sgs->buffer;
-   }
 
    MXML_DELETOR( sgs );
 
