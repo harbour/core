@@ -166,6 +166,7 @@ static HB_BOOL     s_bSpecialKeyHandling;
 static HB_BOOL     s_bAltKeyHandling;
 static DWORD       s_dwAltGrBits;        /* JC: used to verify ALT+GR on different platforms */
 static HB_BOOL     s_bBreak;            /* Used to signal Ctrl+Break to hb_inkeyPoll() */
+static HB_BOOL     s_bClose;            /* Used to signal Ctrl+Break when CTRL_CLOSE_EVENT to hb_inkeyPoll() */
 static int         s_iCursorStyle;
 static int         s_iOldCurStyle;
 static int         s_iCurRow;
@@ -571,6 +572,7 @@ static BOOL WINAPI hb_gt_win_CtrlHandler( DWORD dwCtrlType )
          break;
 
       case CTRL_CLOSE_EVENT:
+         s_bClose = HB_TRUE;
       case CTRL_BREAK_EVENT:
          s_bBreak = HB_TRUE;
          bHandled = TRUE;
@@ -829,6 +831,7 @@ static void hb_gt_win_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    s_hStdErr = hFilenoStderr;
 
    s_bBreak = HB_FALSE;
+   s_bClose = HB_FALSE;
    s_cNumRead = 0;
    s_cNumIndex = 0;
    s_iOldCurStyle = s_iCursorStyle = SC_NORMAL;
@@ -1382,9 +1385,13 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
       /* Reset the global Ctrl+Break flag */
       s_bBreak = HB_FALSE;
       ch = HB_BREAK_FLAG; /* Indicate that Ctrl+Break was pressed */
-      PHB_ITEM pItem = hb_itemPutL( NULL, HB_TRUE );
-      hb_setSetItem( HB_SET_CANCEL, pItem );
-      hb_itemRelease( pItem );
+      if( s_bClose )
+      {
+         s_bClose = HB_FALSE;
+         PHB_ITEM pItem = hb_itemPutL( NULL, HB_TRUE );
+         hb_setSetItem( HB_SET_CANCEL, pItem );
+         hb_itemRelease( pItem );
+      }
    }
    /* Check for events only when the event buffer is exhausted. */
    else if( s_wRepeated == 0 && s_cNumRead <= s_cNumIndex )
