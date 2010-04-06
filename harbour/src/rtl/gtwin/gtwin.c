@@ -1382,6 +1382,9 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
       /* Reset the global Ctrl+Break flag */
       s_bBreak = HB_FALSE;
       ch = HB_BREAK_FLAG; /* Indicate that Ctrl+Break was pressed */
+      PHB_ITEM pItem = hb_itemPutL( NULL, HB_TRUE );
+      hb_setSetItem( HB_SET_CANCEL, pItem );
+      hb_itemRelease( pItem );
    }
    /* Check for events only when the event buffer is exhausted. */
    else if( s_wRepeated == 0 && s_cNumRead <= s_cNumIndex )
