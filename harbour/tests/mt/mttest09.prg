@@ -51,7 +51,7 @@ proc thFunc()
 
    if hb_dbRequest( , , @bQuery, .T. )
       xResult := Eval( bQuery )
-      dbRelease( , {|| xResult } )
+      hb_dbDetach( , {|| xResult } )
    endif
    return
 
