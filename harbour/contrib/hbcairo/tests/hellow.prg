@@ -10,7 +10,7 @@ REQUEST HB_CODEPAGE_LTWIN
 PROC main()
    LOCAL hSurface, hCairo, nI
 
-   HB_SETCODEPAGE("LTWIN")
+   HB_CDPSELECT("LTWIN")
    hSurface := cairo_pdf_surface_create( "hellow.pdf", 566.9, 793.7 )  // 200x280 mm in pt
    hCairo := cairo_create( hSurface )
 

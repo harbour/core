@@ -289,7 +289,7 @@ static HB_ERRCODE odbcExecute( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
    char *       szError;
    HB_ERRCODE   errCode;
 
-   if ( ! SQL_SUCCEEDED( SQLAllocStmt( pSDDConn->hConn, &hStmt ) ) )
+   if ( ! SQL_SUCCEEDED( SQLAllocHandle( SQL_HANDLE_STMT, pSDDConn->hConn, &hStmt ) ) )
    {
       szError = odbcGetError( pSDDConn->hEnv, pSDDConn->hConn, SQL_NULL_HSTMT, &errCode );
       hb_errRT_ODBCDD( EG_OPEN, ESQLDD_STMTALLOC, szError, hb_itemGetCPtr( pItem ), errCode );
@@ -305,7 +305,7 @@ static HB_ERRCODE odbcExecute( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
       {
          /* TODO: new id */
          hb_rddsqlSetError( 0, NULL, hb_itemGetCPtr( pItem ), NULL, ( unsigned long ) iCount );
-         SQLFreeStmt( hStmt, SQL_DROP );
+         SQLFreeHandle( SQL_HANDLE_STMT, hStmt );
          return HB_SUCCESS;
       }
    }
@@ -315,7 +315,7 @@ static HB_ERRCODE odbcExecute( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
    szError = odbcGetError( pSDDConn->hEnv, pSDDConn->hConn, hStmt, &errCode );
    hb_rddsqlSetError( errCode, szError, hb_itemGetCPtr( pItem ), NULL, errCode );
    hb_xfree( szError );
-   SQLFreeStmt( hStmt, SQL_DROP );
+   SQLFreeHandle( SQL_HANDLE_STMT, hStmt );
    return HB_FAILURE;
 }
 
@@ -351,7 +351,7 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
       hb_strfree( hQuery );
       hb_itemRelease( pItem );
       szError = odbcGetError( pSDDConn->hEnv, pSDDConn->hConn, hStmt, &errCode );
-      SQLFreeStmt( hStmt, SQL_DROP );
+      SQLFreeHandle( SQL_HANDLE_STMT, hStmt );
       hb_errRT_ODBCDD( EG_OPEN, ESQLDD_INVALIDQUERY, szError, pArea->szQuery, errCode );
       hb_xfree( szError );
       return HB_FAILURE;
@@ -365,7 +365,7 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
    if ( ! SQL_SUCCEEDED( SQLNumResultCols( hStmt, &iNameLen ) ) )
    {
       szError = odbcGetError( pSDDConn->hEnv, pSDDConn->hConn, hStmt, &errCode );
-      SQLFreeStmt( hStmt, SQL_DROP );
+      SQLFreeHandle( SQL_HANDLE_STMT, hStmt );
       hb_errRT_ODBCDD( EG_OPEN, ESQLDD_STMTDESCR + 1000, szError, pArea->szQuery, errCode );
       hb_xfree( szError );
       return HB_FAILURE;
@@ -395,7 +395,7 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
       {
          hb_itemRelease( pItemEof );
          szError = odbcGetError( pSDDConn->hEnv, pSDDConn->hConn, hStmt, NULL );
-         SQLFreeStmt( hStmt, SQL_DROP );
+         SQLFreeHandle( SQL_HANDLE_STMT, hStmt );
          hb_errRT_ODBCDD( EG_OPEN, ESQLDD_STMTDESCR + 1001, szError, pArea->szQuery, 0 );
          hb_xfree( szError );
          return HB_FAILURE;
@@ -408,6 +408,16 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
          szOurName[ MAX_FIELD_NAME ] = '\0';
       pFieldInfo.atomName = hb_strUpper( szOurName, ( HB_SIZE ) strlen( szOurName ) );
 
+      /* 
+         We do mapping of many SQL types to one Harbour field type here, so, we need store
+         real SQL type in uiTypeExtended. SQL types are signed, so, HB_USHORT type casting 
+         is a little hacky. We need to remember use this casting also in expressions like
+         this:
+            if( pField->uiTypeExtended == ( HB_USHORT ) SQL_BIGINT )
+         or introduce our own unsigned SQL types.
+         [Mindaugas]
+      */
+      pFieldInfo.uiTypeExtended = ( HB_USHORT ) iDataType; 
       pFieldInfo.uiLen = ( HB_USHORT ) uiSize;
       pFieldInfo.uiDec = iDec;
 
@@ -427,6 +437,7 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
          case SQL_TINYINT:
          case SQL_SMALLINT:
          case SQL_INTEGER:
+         case SQL_BIGINT:
            pFieldInfo.uiType = HB_FT_INTEGER;
            break;
 
@@ -541,7 +552,7 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
    if ( bError )
    {
       hb_itemRelease( pItemEof );
-      SQLFreeStmt( hStmt, SQL_DROP );
+      SQLFreeHandle( SQL_HANDLE_STMT, hStmt );
       hb_errRT_ODBCDD( EG_CORRUPTION, ESQLDD_INVALIDFIELD, "Invalid field type", pArea->szQuery, errCode );
       return HB_FAILURE;
    }
@@ -568,7 +579,7 @@ static HB_ERRCODE odbcClose( SQLBASEAREAP pArea )
 
    if ( pSDDData->hStmt )
    {
-      SQLFreeStmt( pSDDData->hStmt, SQL_DROP );
+      SQLFreeHandle( SQL_HANDLE_STMT, pSDDData->hStmt );
    }
    hb_xfree( pSDDData );
    return HB_SUCCESS;
@@ -634,10 +645,21 @@ static HB_ERRCODE odbcGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
 
             case HB_FT_INTEGER:
             {
-               long int val = 0;
-               if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, SQL_C_LONG, &val, sizeof( val ), &iLen ) ) )
+               if( pField->uiTypeExtended == ( HB_USHORT ) SQL_BIGINT )
                {
-                  pItem = hb_itemPutNLLen( NULL, val, pField->uiLen );
+                  HB_I64 val = 0;
+                  if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, SQL_C_SBIGINT, &val, sizeof( val ), &iLen ) ) )
+                  {
+                     pItem = hb_itemPutNIntLen( NULL, val, pField->uiLen );
+                  }
+               }
+               else
+               {
+                  long int val = 0;
+                  if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, SQL_C_LONG, &val, sizeof( val ), &iLen ) ) )
+                  {
+                     pItem = hb_itemPutNLLen( NULL, val, pField->uiLen );
+                  }
                }
                break;
             }
