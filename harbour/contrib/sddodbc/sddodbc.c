@@ -434,6 +434,12 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
            pFieldInfo.uiType = HB_FT_STRING;
            break;
 
+         case SQL_VARBINARY:
+         case SQL_LONGVARBINARY:
+           pFieldInfo.uiType = HB_FT_STRING;
+           pFieldInfo.uiFlags = HB_FF_BINARY;
+           break;
+
          case SQL_TINYINT:
          case SQL_SMALLINT:
          case SQL_INTEGER:
