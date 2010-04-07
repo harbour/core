@@ -5,7 +5,7 @@
 /*
  * Harbour Project source code:
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -1246,7 +1246,10 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
       cC   := iif( hbide_getOS() == "nix", "", "/C " )
       cArg := iif( empty( ::cBatch ), cC, cC + ::cBatch + " && "  )
       //
-hbide_dbg( cArg + cExeHbMk2 + " " + cHbpPath + cCmdParams )
+      ::oOutputResult:oWidget:append( ::cBatch + iif( hb_fileExists( ::cBatch ), " : Exists", " : Do Not Exists" ) )
+      ::oOutputResult:oWidget:append( cArg + cExeHbMk2 + " " + cHbpPath + cCmdParams  )
+      ::oOutputResult:oWidget:append( hbide_outputLine() )
+      //
       ::oProcess:addArg( cArg + cExeHbMk2 + " " + cHbpPath + cCmdParams )
       ::oProcess:start( cCmd )
    ENDIF
