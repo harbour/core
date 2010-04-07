@@ -14,4 +14,4 @@ hbrun.prg
 -lhbpp
 -lhbcommon
 
--icon={allwin|os2}../../package/harbour.ico
+-icon={allwin}../../package/harb_win.ico

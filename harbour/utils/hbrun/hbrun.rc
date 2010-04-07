@@ -3,7 +3,7 @@
  */
 
 #if defined( OS2 ) || defined( __OS2__ ) || defined( OS_2 )
-ICON 1 DISCARDABLE "../../../../../package/harbour.ico"
+ICON 1 DISCARDABLE "../../../../../package/harb_win.ico"
 #else
-ICON1 ICON DISCARDABLE "../../../../../package/harbour.ico"
+ICON1 ICON DISCARDABLE "../../../../../package/harb_win.ico"
 #endif
