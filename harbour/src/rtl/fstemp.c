@@ -357,6 +357,8 @@ HB_ERRCODE hb_fsTempDir( char * pszTempDir )
          else
             nResult = 0;
       }
+      else
+         nResult = 0;
 
       if( pszTempDirEnv )
          hb_xfree( pszTempDirEnv );
