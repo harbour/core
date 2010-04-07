@@ -152,7 +152,7 @@ void hb_mouseGetPos( int * piRow, int * piCol )
 {
    PHB_GT pGT;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_mouseSetPos(%p, %p)", piRow, piCol));
+   HB_TRACE(HB_TR_DEBUG, ("hb_mouseGetPos(%p, %p)", piRow, piCol));
 
    pGT = hb_gt_Base();
    if( pGT )
@@ -194,7 +194,7 @@ void hb_mouseGetBounds( int * piTop, int * piLeft, int * piBottom, int * piRight
 {
    PHB_GT pGT;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_mouseSetBounds(%p, %p, %p, %p)", piTop, piLeft, piBottom, piRight));
+   HB_TRACE(HB_TR_DEBUG, ("hb_mouseGetBounds(%p, %p, %p, %p)", piTop, piLeft, piBottom, piRight));
 
    pGT = hb_gt_Base();
    if( pGT )

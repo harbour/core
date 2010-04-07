@@ -2011,6 +2011,14 @@ static void hb_gt_win_mouse_GetPos( PHB_GT pGT, int * piRow, int * piCol )
    *piCol = s_mouse_iCol;
 }
 
+static void hb_gt_win_mouse_SetPos( PHB_GT pGT, int iRow, int iCol )
+{
+   HB_SYMBOL_UNUSED( pGT );
+
+   s_mouse_iRow = iRow;
+   s_mouse_iCol = iCol;
+}
+
 static HB_BOOL hb_gt_win_mouse_ButtonState( PHB_GT pGT, int iButton )
 {
    HB_BOOL fReturn = HB_FALSE;
@@ -2135,6 +2143,7 @@ static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 
    pFuncTable->MouseIsPresent             = hb_gt_win_mouse_IsPresent;
    pFuncTable->MouseGetPos                = hb_gt_win_mouse_GetPos;
+   pFuncTable->MouseSetPos                = hb_gt_win_mouse_SetPos;
    pFuncTable->MouseButtonState           = hb_gt_win_mouse_ButtonState;
    pFuncTable->MouseCountButton           = hb_gt_win_mouse_CountButton;
 

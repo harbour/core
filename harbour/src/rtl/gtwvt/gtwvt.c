@@ -661,11 +661,11 @@ static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
    }
 
    {
-      HFONT      hOldFont;
-      HFONT      hFont;
-      int        fontHeight;
-      int        fontWidth;
-      int        n;
+      HFONT hOldFont;
+      HFONT hFont;
+      int   fontHeight;
+      int   fontWidth;
+      int   n;
 
       fontHeight = maxHeight / pWVT->ROWS;
       fontWidth  = maxWidth  / pWVT->COLS;
@@ -2063,6 +2063,13 @@ static void hb_gt_wvt_mouse_GetPos( PHB_GT pGT, int * piRow, int * piCol )
    *piCol = pWVT->MousePos.x;
 }
 
+static void hb_gt_wvt_mouse_SetPos( PHB_GT pGT, int iRow, int iCol )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_wvt_mouse_SetPos(%p,%i,%i)", pGT, iRow, iCol));
+
+   hb_gt_wvt_SetMousePos( HB_GTWVT_GET( pGT ), iRow, iCol );
+}
+
 static HB_BOOL hb_gt_wvt_mouse_ButtonState( PHB_GT pGT, int iButton )
 {
    HB_TRACE( HB_TR_DEBUG, ("hb_gt_wvt_mouse_ButtonState(%p,%i)", pGT, iButton) );
@@ -3028,6 +3035,7 @@ static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 
    pFuncTable->MouseIsPresent       = hb_gt_wvt_mouse_IsPresent;
    pFuncTable->MouseGetPos          = hb_gt_wvt_mouse_GetPos;
+   pFuncTable->MouseSetPos          = hb_gt_wvt_mouse_SetPos;
    pFuncTable->MouseButtonState     = hb_gt_wvt_mouse_ButtonState;
    pFuncTable->MouseCountButton     = hb_gt_wvt_mouse_CountButton;
 
