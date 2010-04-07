@@ -922,7 +922,13 @@ STATIC FUNCTION hbq_getConstants()
          "Qt_ScrollBarAlwaysOn"                   => Qt_ScrollBarAlwaysOn                  , ;
          ;
          "Qt_Horizontal"                          => Qt_Horizontal                         , ;
-         "Qt_Vertical"                            => Qt_Vertical                             ;
+         "Qt_Vertical"                            => Qt_Vertical                           , ;
+         ;
+         "Qt_TabFocus"                            => Qt_TabFocus                           , ;
+         "Qt_ClickFocus"                          => Qt_ClickFocus                         , ;
+         "Qt_StrongFocus"                         => Qt_StrongFocus                        , ;
+         "Qt_WheelFocus"                          => Qt_WheelFocus                         , ;
+         "Qt_NoFocus"                             => Qt_NoFocus                              ;
       }
    ENDIF
 

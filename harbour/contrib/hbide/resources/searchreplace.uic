@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading ui file 'searchreplace.ui'
 **
-** Created: Wed Feb 24 16:25:25 2010
+** Created: Tue Apr 6 08:00:29 2010
 **      by: Qt User Interface Compiler version 4.5.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!
@@ -62,6 +62,7 @@ public:
         if (FormSearchReplace1->objectName().isEmpty())
             FormSearchReplace1->setObjectName(QString::fromUtf8("FormSearchReplace1"));
         FormSearchReplace1->resize(817, 75);
+        FormSearchReplace1->setFocusPolicy(Qt::StrongFocus);
         verticalLayout = new QVBoxLayout(FormSearchReplace1);
         verticalLayout->setSpacing(5);
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
@@ -85,6 +86,7 @@ public:
         comboFind->setObjectName(QString::fromUtf8("comboFind"));
         comboFind->setMinimumSize(QSize(250, 0));
         comboFind->setMaximumSize(QSize(250, 16777215));
+        comboFind->setFocusPolicy(Qt::StrongFocus);
         comboFind->setEditable(true);
 
         horizontalLayout->addWidget(comboFind);

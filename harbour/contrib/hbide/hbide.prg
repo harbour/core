@@ -588,7 +588,7 @@ hbide_dbg( "HbIde:create( cProjIni )", "#Params=" )
    ::oPM:destroy()
    ::oEM:destroy()
    ::oDK:destroy()
- * ::oSearchReplace:destroy()
+   ::oSearchReplace:destroy()
    ::oDlg:destroy()
    ::oAC:destroy()
 
@@ -823,7 +823,7 @@ METHOD HbIde:execEditorAction( cKey )
       EXIT
    CASE "FindEx"
       IF !Empty( ::qCurEdit )
- *       ::oSearchReplace:beginFind()
+         ::oSearchReplace:beginFind()
       ENDIF
       EXIT
    CASE "SetMark"

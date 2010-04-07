@@ -105,16 +105,7 @@ METHOD IdeSearchReplace:create( oIde )
 
    ::oIde := oIde
 
-
-   #if 0
-   ::oUI := HbQtUI():new( ::oIde:resPath + "searchreplace.uic", ::oIde:oDlg:oWidget ):build()
-   ::oXbp := XbpWindow():new()
-   ::oXbp:oWidget := ::oUI:oWidget
-   ::oDlg:addChild( ::oXbp )
-   ::oXbp:qtObject := ::oUI
-   #else
-   ::oUI := HbQtUI():new( ::oIde:resPath + "searchreplace.uic" ):build()
-   #endif
+   ::oUI := HbQtUI():new( hbide_uic( "searchreplace" ) ):build()
 
    ::oUI:setFocusPolicy( Qt_StrongFocus )
 
@@ -158,10 +149,11 @@ hbide_dbg("=====================================================================
 
 METHOD IdeSearchReplace:destroy()
 
-   ::disconnect( ::qFindLineEdit, "textChanged(QString)" )
-   ::disconnect( ::qFindLineEdit, "returnPressed()"      )
-
    IF hb_isObject( ::oUI )
+
+      ::disconnect( ::qFindLineEdit, "textChanged(QString)" )
+      ::disconnect( ::qFindLineEdit, "returnPressed()"      )
+
       ::oUI:destroy()
    ENDIF
 
@@ -205,11 +197,11 @@ METHOD IdeSearchReplace:find( cText, lBackward )
 
       IF ! lFound
          ::qCurEdit:setTextCursor( qCursor )
-         ::qCurEdit:centerCursor()
          ::oUI:q_checkReplace:setChecked( .f. )
          ::oUI:q_checkReplace:setEnabled( .f. )
       ELSE
          ::oUI:q_checkReplace:setEnabled( .t. )
+         ::qCurEdit:centerCursor()
       ENDIF
    ENDIF
    RETURN lFound
@@ -224,10 +216,10 @@ METHOD IdeSearchReplace:beginFind()
    ::oUI:q_radioTop:setChecked( .t. )
 
    ::oUI:show()
-
+   ::oUI:oWidget:activateWindow()
    ::cFind := ""
 
-   ::oUI:q_comboFind:setFocus_1()
+   ::oUI:q_comboFind:setFocus( Qt_MouseFocusReason )
    ::qFindLineEdit:setFocus_1()
    ::qFindLineEdit:selectAll()
 

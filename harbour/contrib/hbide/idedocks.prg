@@ -81,6 +81,8 @@
 #define dockDocWriter_visibilityChanged           307
 #define docSkeletons_visibilityChanged            308
 #define dockSkltnsTree_visibilityChanged          309
+#define dockHelpDock_visibilityChanged            310
+#define oFuncDock_visibilityChanged               311
 
 /*----------------------------------------------------------------------*/
 
@@ -159,13 +161,14 @@ METHOD IdeDocks:destroy()
    ::disconnect( ::oDocWriteDock:oWidget  , "visibilityChanged(bool)" )
    ::disconnect( ::oFindDock:oWidget      , "visibilityChanged(bool)" )
    ::disconnect( ::oFunctionsDock:oWidget , "visibilityChanged(bool)" )
-   #if 0  /* Not Implemented */
+   ::disconnect( ::oSkeltnDock:oWidget    , "visibilityChanged(bool)" )
    ::disconnect( ::oHelpDock:oWidget      , "visibilityChanged(bool)" )
+   ::disconnect( ::oFuncDock:oWidget      , "visibilityChanged(bool)" )
+
+   #if 0  /* Not Implemented */
    ::disconnect( ::oDockPT:oWidget        , "visibilityChanged(bool)" )
    ::disconnect( ::oDockED:oWidget        , "visibilityChanged(bool)" )
    ::disconnect( ::oDockB2:oWidget        , "visibilityChanged(bool)" )
-   ::disconnect( ::oFuncDock:oWidget      , "visibilityChanged(bool)" )
-   ::disconnect( ::oSkeltnDock:oWidget    , "visibilityChanged(bool)" )
    #endif
 
    FOR EACH qTBtn IN ::aPanels
@@ -228,8 +231,10 @@ METHOD IdeDocks:buildDialog()
 
    ::buildStackedWidget()
    ::qLayout:addWidget_1( ::oStackedWidget:oWidget, 0, 0, 1, 1 )
-//   ::buildSearchReplaceWidget()      ////////////////////////////////////
-//   ::qLayout:addWidget_1( ::oSearchReplace:oUI, 1, 0, 1, 1 )
+   #if 1
+   ::buildSearchReplaceWidget()
+   ::qLayout:addWidget_1( ::oSearchReplace:oUI, 1, 0, 1, 1 )
+   #endif
 
    /* View Panels */
    ::buildViewWidget( "Stats" )          /* At stayrtup displaying various statistics */
@@ -309,6 +314,7 @@ METHOD IdeDocks:getADockWidget( nArea, cObjectName, cWindowTitle, nFlags )
 
 /*----------------------------------------------------------------------*/
 
+
 METHOD IdeDocks:execEvent( nMode, p )
 
    DO CASE
@@ -316,32 +322,40 @@ METHOD IdeDocks:execEvent( nMode, p )
    CASE nMode == 2  /* HelpWidget:contextMenuRequested(qPoint) */
       hbide_popupBrwContextMenu( ::qHelpBrw, p )
 
+   /* Left Panel Docks */
    CASE nMode == dockSkltnsTree_visibilityChanged
       IF p; ::oSK:showTree(); ENDIF
 
-   CASE nMode == docSkeletons_visibilityChanged
-      IF p; ::oSK:show(); ENDIF
-
-   CASE nMode == dockDocWriter_visibilityChanged
-      IF p; ::oDW:show(); ENDIF
-
-   CASE nMode == docFunctions_visibilityChanged
-      IF p; ::oFN:show(); ENDIF
+   /* Right Panel Docks */
+   CASE nMode == dockHelpDock_visibilityChanged
+      IF p; ::oHelpDock:oWidget:raise(); ENDIF
 
    CASE nMode == dockDocViewer_visibilityChanged
-      IF p; ::oHL:show(); ENDIF
+      IF p; ::oHL:show(); ::oDocViewDock:oWidget:raise(); ENDIF
+
+   CASE nMode == dockDocWriter_visibilityChanged
+      IF p; ::oDW:show(); ::oDocWriteDock:oWidget:raise(); ENDIF
+
+   CASE nMode == oFuncDock_visibilityChanged
+      IF p; ::oFuncDock:oWidget:raise(); ENDIF
+
+   CASE nMode == docFunctions_visibilityChanged
+      IF p; ::oFN:show(); ::oFunctionsDock:oWidget:raise(); ENDIF
 
    CASE nMode == dockProperties_visibilityChanged
-      IF p; ::oPM:fetchProperties(); ENDIF
+      IF p; ::oPM:fetchProperties(); ::oPropertiesDock:oWidget:raise(); ENDIF
 
    CASE nMode == docEnvironments_visibilityChanged
-      IF p; ::oEV:show(); ENDIF
+      IF p; ::oEV:show(); ::oEnvironDock:oWidget:raise(); ENDIF
 
-   CASE nMode == dockFindInFiles_visibilityChanged
-      IF p; ::oFF:show(); ENDIF
+   CASE nMode == docSkeletons_visibilityChanged
+      IF p; ::oSK:show(); ::oSkeltnDock:oWidget:raise(); ENDIF
 
    CASE nMode == dockThemes_visibilityChanged
-      IF p; ::oTH:show(); ENDIF
+      IF p; ::oTH:show(); ::oThemesDock:oWidget:raise(); ENDIF
+
+   CASE nMode == dockFindInFiles_visibilityChanged
+      IF p; ::oFF:show(); ::oFindDock:oWidget:raise(); ENDIF
 
    ENDCASE
 
@@ -744,6 +758,8 @@ METHOD IdeDocks:buildFuncList()
    ::oIde:oFuncDock := ::getADockWidget( Qt_RightDockWidgetArea, "dockFuncList", "Functions List", QDockWidget_DockWidgetFloatable )
    ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oFuncDock:oWidget, Qt_Vertical )
 
+   ::connect( ::oFuncDock:oWidget, "visibilityChanged(bool)", {|p| ::execEvent( oFuncDock_visibilityChanged, p ) } )
+
    ::oIde:oFuncList := XbpListBox():new( ::oFuncDock ):create( , , { 0,0 }, { 100,400 }, , .t. )
    ::oFuncList:oWidget:setEditTriggers( QAbstractItemView_NoEditTriggers )
 
@@ -779,6 +795,8 @@ METHOD IdeDocks:buildHelpWidget()
    ::oHelpDock:oWidget:setWidget( ::oIde:qHelpBrw )
 
    ::oHelpDock:connect( ::qHelpBrw, "customContextMenuRequested(QPoint)", {|p| ::execEvent( 2, p ) } )
+
+   ::connect( ::oHelpDock:oWidget, "visibilityChanged(bool)", {|p| ::execEvent( dockHelpDock_visibilityChanged, p ) } )
 
    RETURN Self
 
