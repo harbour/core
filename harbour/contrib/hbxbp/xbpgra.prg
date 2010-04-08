@@ -72,7 +72,7 @@
 /*----------------------------------------------------------------------*/
 
 FUNCTION GraArc( oPS, aCenter, nRadius, aEllipse, nStartAngle, nSweepAngle, nFill )
-   LOCAL lSuccess := .t.
+   LOCAL lSuccess := .T.
 
    HB_SYMBOL_UNUSED( oPS )
    HB_SYMBOL_UNUSED( aCenter )
@@ -87,7 +87,7 @@ FUNCTION GraArc( oPS, aCenter, nRadius, aEllipse, nStartAngle, nSweepAngle, nFil
 /*----------------------------------------------------------------------*/
 
 FUNCTION GraBitBlt( oTargetPS, oSourcePS, aTargetRect, aSourceRect, nRasterOP, nCompress  )
-   LOCAL lSuccess := .t.
+   LOCAL lSuccess := .T.
 
    HB_SYMBOL_UNUSED( oTargetPS )
    HB_SYMBOL_UNUSED( oSourcePS )
@@ -101,7 +101,7 @@ FUNCTION GraBitBlt( oTargetPS, oSourcePS, aTargetRect, aSourceRect, nRasterOP, n
 /*----------------------------------------------------------------------*/
 
 FUNCTION GraBox( oPS, aLeftBottom, aRightTop, nFill, nHRadius, nVRadius )
-   LOCAL lSuccess := .t.
+   LOCAL lSuccess := .T.
 
    HB_SYMBOL_UNUSED( oPS )
    HB_SYMBOL_UNUSED( aLeftBottom )
@@ -115,7 +115,7 @@ FUNCTION GraBox( oPS, aLeftBottom, aRightTop, nFill, nHRadius, nVRadius )
 /*----------------------------------------------------------------------*/
 
 FUNCTION GraCaptionStr( oPS, aStartPoint, aEndPoint, cCaption, nAlign, nTabChars  )
-   LOCAL lSuccess := .t.
+   LOCAL lSuccess := .T.
 
    HB_SYMBOL_UNUSED( oPS )
    HB_SYMBOL_UNUSED( aStartPoint )
@@ -138,7 +138,7 @@ FUNCTION GraError( oPS )
 /*----------------------------------------------------------------------*/
 
 FUNCTION GraFocusRect( oPS, aStartPoint, aEndPoint )
-   LOCAL lSuccess := .t.
+   LOCAL lSuccess := .T.
 
    HB_SYMBOL_UNUSED( oPS )
    HB_SYMBOL_UNUSED( aStartPoint )
@@ -149,23 +149,20 @@ FUNCTION GraFocusRect( oPS, aStartPoint, aEndPoint )
 /*----------------------------------------------------------------------*/
 
 FUNCTION GraGetRGBIntensity( nRGBColor )
-   LOCAL aRGB, cRGBHex
+   LOCAL cRGBHex
 
-   IF nRGBColor == NIL
-      nRGBColor := 0
-   ENDIF
+   DEFAULT nRGBColor TO 0
 
-   cRGBHex := HB_HexToStr( HB_NumToHex( nRGBColor ) )
-   cRGBHex := PADL( cRGBHex, 6, "0" )
-   aRGB    := { SubStr( cRGBHex, 1, 2 ), SubStr( cRGBHex, 3, 2 ), SubStr( cRGBHex, 5, 2 ) }
-   aRGB    := { HB_HexToNum( aRGB[ 1 ] ), HB_HexToNum( aRGB[ 2 ] ), HB_HexToNum( aRGB[ 3 ] ) }
+   cRGBHex := HB_NumToHex( nRGBColor, 6 )
 
-   RETURN aRGB
+   RETURN { HB_HexToNum( SubStr( cRGBHex, 1, 2 ) ),;
+            HB_HexToNum( SubStr( cRGBHex, 3, 2 ) ),;
+            HB_HexToNum( SubStr( cRGBHex, 5, 2 ) ) }
 
 /*----------------------------------------------------------------------*/
 
 FUNCTION GraIsRGBColor( nColor )
-   LOCAL lIsRGBColor := .f.
+   LOCAL lIsRGBColor := .F.
 
    HB_SYMBOL_UNUSED( nColor )
 
@@ -174,7 +171,7 @@ FUNCTION GraIsRGBColor( nColor )
 /*----------------------------------------------------------------------*/
 
 FUNCTION GraLine( oPS, aStartPoint, aEndPoint )
-   LOCAL lSuccess := .t.
+   LOCAL lSuccess := .T.
 
    HB_SYMBOL_UNUSED( oPS )
    HB_SYMBOL_UNUSED( aStartPoint )
@@ -187,10 +184,10 @@ FUNCTION GraLine( oPS, aStartPoint, aEndPoint )
 FUNCTION GraMakeRGBColor( aRGB )
    LOCAL nRGB
 
-   IF hb_isArray( aRGB ) .and. len( aRGB ) == 3
-      IF hb_isNumeric( aRGB[ 1 ] ) .and. ( aRGB[ 1 ] >= 0 ) .and. ( aRGB[ 1 ] <= 255 )
-         IF hb_isNumeric( aRGB[ 2 ] ) .and. ( aRGB[ 2 ] >= 0 ) .and. ( aRGB[ 2 ] <= 255 )
-            IF hb_isNumeric( aRGB[ 3 ] ) .and. ( aRGB[ 3 ] >= 0 ) .and. ( aRGB[ 3 ] <= 255 )
+   IF hb_isArray( aRGB ) .AND. Len( aRGB ) == 3
+      IF hb_isNumeric( aRGB[ 1 ] ) .AND. ( aRGB[ 1 ] >= 0 ) .AND. ( aRGB[ 1 ] <= 255 )
+         IF hb_isNumeric( aRGB[ 2 ] ) .AND. ( aRGB[ 2 ] >= 0 ) .AND. ( aRGB[ 2 ] <= 255 )
+            IF hb_isNumeric( aRGB[ 3 ] ) .AND. ( aRGB[ 3 ] >= 0 ) .AND. ( aRGB[ 3 ] <= 255 )
                nRGB := ( aRGB[ 1 ] + ( aRGB[ 2 ] * 256 ) + ( aRGB[ 3 ] * 256 * 256 ) ) + ( 256 * 256 * 256 )
             ENDIF
          ENDIF
@@ -202,7 +199,7 @@ FUNCTION GraMakeRGBColor( aRGB )
 /*----------------------------------------------------------------------*/
 
 FUNCTION GraMarker( oPS, aPoint )
-   LOCAL lSuccess := .t.
+   LOCAL lSuccess := .T.
 
    HB_SYMBOL_UNUSED( oPS )
    HB_SYMBOL_UNUSED( aPoint )
@@ -212,7 +209,7 @@ FUNCTION GraMarker( oPS, aPoint )
 /*----------------------------------------------------------------------*/
 
 FUNCTION GraPathBegin( oPS )
-   LOCAL lSuccess := .t.
+   LOCAL lSuccess := .T.
 
    HB_SYMBOL_UNUSED( oPS )
 
@@ -221,7 +218,7 @@ FUNCTION GraPathBegin( oPS )
 /*----------------------------------------------------------------------*/
 
 FUNCTION GraPathClip( oPS, lClip, nClipMode )
-   LOCAL lSuccess := .t.
+   LOCAL lSuccess := .T.
 
    HB_SYMBOL_UNUSED( oPS )
    HB_SYMBOL_UNUSED( lClip )
@@ -232,7 +229,7 @@ FUNCTION GraPathClip( oPS, lClip, nClipMode )
 /*----------------------------------------------------------------------*/
 
 FUNCTION GraPathEnd( oPS, lCloseFigure )
-   LOCAL lSuccess := .t.
+   LOCAL lSuccess := .T.
 
    HB_SYMBOL_UNUSED( oPS )
    HB_SYMBOL_UNUSED( lCloseFigure )
@@ -242,7 +239,7 @@ FUNCTION GraPathEnd( oPS, lCloseFigure )
 /*----------------------------------------------------------------------*/
 
 FUNCTION GraPathFill( oPS, nFillMode )
-   LOCAL lSuccess := .t.
+   LOCAL lSuccess := .T.
 
    HB_SYMBOL_UNUSED( oPS )
    HB_SYMBOL_UNUSED( nFillMode )
@@ -252,7 +249,7 @@ FUNCTION GraPathFill( oPS, nFillMode )
 /*----------------------------------------------------------------------*/
 
 FUNCTION GraPathOutline( oPS )
-   LOCAL lSuccess := .t.
+   LOCAL lSuccess := .T.
 
    HB_SYMBOL_UNUSED( oPS )
 
@@ -261,7 +258,7 @@ FUNCTION GraPathOutline( oPS )
 /*----------------------------------------------------------------------*/
 
 FUNCTION GraPos( oPS, aPoint )
-   LOCAL aPenPosition := { 0,0 }
+   LOCAL aPenPosition := { 0, 0 }
 
    HB_SYMBOL_UNUSED( oPS )
    HB_SYMBOL_UNUSED( aPoint )
@@ -271,7 +268,7 @@ FUNCTION GraPos( oPS, aPoint )
 /*----------------------------------------------------------------------*/
 
 FUNCTION GraQueryTextBox( oPS, cString )
-   LOCAL aPoints := { 0,0 }
+   LOCAL aPoints := { 0, 0 }
 
    HB_SYMBOL_UNUSED( oPS )
    HB_SYMBOL_UNUSED( cString )
@@ -281,7 +278,7 @@ FUNCTION GraQueryTextBox( oPS, cString )
 /*----------------------------------------------------------------------*/
 
 FUNCTION GraRotate( oPS, aMatrix, nAngle, aPoint , nMode )
-   LOCAL lSuccess := .t.
+   LOCAL lSuccess := .T.
 
    HB_SYMBOL_UNUSED( oPS )
    HB_SYMBOL_UNUSED( aMatrix )
@@ -294,7 +291,7 @@ FUNCTION GraRotate( oPS, aMatrix, nAngle, aPoint , nMode )
 /*----------------------------------------------------------------------*/
 
 FUNCTION GraScale( oPS, aMatrix, aScale, aPoint , nMode )
-   LOCAL lSuccess := .t.
+   LOCAL lSuccess := .T.
 
    HB_SYMBOL_UNUSED( oPS )
    HB_SYMBOL_UNUSED( aMatrix )
@@ -307,7 +304,7 @@ FUNCTION GraScale( oPS, aMatrix, aScale, aPoint , nMode )
 /*----------------------------------------------------------------------*/
 
 FUNCTION GraSegClose( oPS )
-   LOCAL lSuccess := .t.
+   LOCAL lSuccess := .T.
 
    HB_SYMBOL_UNUSED( oPS )
 
@@ -316,7 +313,7 @@ FUNCTION GraSegClose( oPS )
 /*----------------------------------------------------------------------*/
 
 FUNCTION GraSegDestroy( oPS, nSegmentID )
-   LOCAL lSuccess := .t.
+   LOCAL lSuccess := .T.
 
    HB_SYMBOL_UNUSED( oPS )
    HB_SYMBOL_UNUSED( nSegmentID )
@@ -326,7 +323,7 @@ FUNCTION GraSegDestroy( oPS, nSegmentID )
 /*----------------------------------------------------------------------*/
 
 FUNCTION GraSegDraw( oPS, nSegmentID, aMatrix, nMode )
-   LOCAL lSuccess := .t.
+   LOCAL lSuccess := .T.
 
    HB_SYMBOL_UNUSED( oPS )
    HB_SYMBOL_UNUSED( nSegmentID )
@@ -368,7 +365,7 @@ FUNCTION GraSegOpen( oPS, nMode, nSegmentID )
 /*----------------------------------------------------------------------*/
 
 FUNCTION GraSegPickResolution( oPS, aCenter, aSize )
-   LOCAL lSuccess := .t.
+   LOCAL lSuccess := .T.
 
    HB_SYMBOL_UNUSED( oPS )
    HB_SYMBOL_UNUSED( aCenter )
@@ -379,7 +376,7 @@ FUNCTION GraSegPickResolution( oPS, aCenter, aSize )
 /*----------------------------------------------------------------------*/
 
 FUNCTION GraSegPriority( oPS, nSegmentA, nSegmentB, nPriority )
-   LOCAL lSuccess := .t.
+   LOCAL lSuccess := .T.
 
    HB_SYMBOL_UNUSED( oPS )
    HB_SYMBOL_UNUSED( nSegmentA )
@@ -452,7 +449,7 @@ FUNCTION GraSetFont( oPS, oXbpFont )
 /*----------------------------------------------------------------------*/
 
 FUNCTION GraSpline( oPS, aPoints, lPenPos )
-   LOCAL lSuccess := .t.
+   LOCAL lSuccess := .T.
 
    HB_SYMBOL_UNUSED( oPS )
    HB_SYMBOL_UNUSED( aPoints )
@@ -463,7 +460,7 @@ FUNCTION GraSpline( oPS, aPoints, lPenPos )
 /*----------------------------------------------------------------------*/
 
 FUNCTION GraStringAt( oPS, aPoint, cString )
-   LOCAL lSuccess := .t.
+   LOCAL lSuccess := .T.
 
    HB_SYMBOL_UNUSED( oPS )
    HB_SYMBOL_UNUSED( aPoint )
@@ -474,7 +471,7 @@ FUNCTION GraStringAt( oPS, aPoint, cString )
 /*----------------------------------------------------------------------*/
 
 FUNCTION GraTranslate( oPS, aMatrix, nXDiff, nYDiff, nMode )
-   LOCAL lSuccess := .t.
+   LOCAL lSuccess := .T.
 
    HB_SYMBOL_UNUSED( oPS )
    HB_SYMBOL_UNUSED( aMatrix )

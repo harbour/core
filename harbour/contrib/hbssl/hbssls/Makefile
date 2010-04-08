@@ -31,6 +31,9 @@ ifneq ($(HB_HAS_OPENSSL),)
 
    HB_CFLAGS += $(foreach d,$(HB_HAS_OPENSSL),-I$(d))
 
+   # Patent will expire in 2010/2011
+   HB_CFLAGS += -DOPENSSL_NO_IDEA
+
    include $(TOP)$(ROOT)config/lib.mk
 else
    include $(TOP)$(ROOT)config/none.mk

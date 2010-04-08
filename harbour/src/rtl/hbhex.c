@@ -223,7 +223,7 @@ HB_FUNC( HB_HEXTOSTR )
 
             if( iVal & 0x100 )
             {
-               szDest[ul++] = ( char ) iVal & 0xff;
+               szDest[ ul++ ] = ( char ) iVal & 0xff;
                iVal = 0x1;
             }
             iVal <<= 4;

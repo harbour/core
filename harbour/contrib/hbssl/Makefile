@@ -37,6 +37,8 @@ ifneq ($(HB_HAS_OPENSSL),)
    ifneq ($(filter $(HB_PLATFORM),win wce),)
       HB_CFLAGS += -DOPENSSL_OPT_WINDLL
    endif
+   # Patent will expire in 2010/2011
+   HB_CFLAGS += -DOPENSSL_NO_IDEA
 
    include $(TOP)$(ROOT)config/header.mk
    include $(TOP)$(ROOT)config/lib.mk
