@@ -1545,12 +1545,12 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                DEFAULT hbmk[ _HBMK_cFIRST ] TO hbmk[ _HBMK_aOBJUSER ][ 1 ]
             ENDIF
          ELSE
-            HBM_Load( hbmk, aParams, cParam, 1 ) /* Load parameters from script file */
+            HBM_Load( hbmk, aParams, PathSepToSelf( cParam ), 1 ) /* Load parameters from script file */
          ENDIF
       CASE !( Left( cParam, 1 ) == "-" ) .AND. ;
            ( Lower( FN_ExtGet( cParam ) ) == ".hbm" .OR. ;
              Lower( FN_ExtGet( cParam ) ) == ".hbp" )
-         HBM_Load( hbmk, aParams, cParam, 1 ) /* Load parameters from script file */
+         HBM_Load( hbmk, aParams, PathSepToSelf( cParam ), 1 ) /* Load parameters from script file */
       OTHERWISE
          AAdd( aParams, { cParam, "", 0 } )
       ENDCASE
@@ -1748,8 +1748,9 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
       CASE Left( cParamL, Len( "-mkimplib=" ) ) == "-mkimplib="
 
-         cMakeImpLibLib := PathSepToTarget( hbmk, PathProc( MacroProc( hbmk, ArchCompFilter( hbmk, SubStr( cParam, Len( "-mkimplib=" ) + 1 ) ), aParam[ _PAR_cFileName ] ), aParam[ _PAR_cFileName ] ) )
+         cMakeImpLibLib := MacroProc( hbmk, ArchCompFilter( hbmk, SubStr( cParam, Len( "-mkimplib=" ) + 1 ) ), aParam[ _PAR_cFileName ] )
          IF ! Empty( cMakeImpLibLib )
+            cMakeImpLibLib := PathSepToTarget( hbmk, PathProc( cMakeImpLibLib, aParam[ _PAR_cFileName ] ) )
             lStopAfterInit := .T.
             lMakeImpLib := .T.
          ENDIF
@@ -1830,9 +1831,9 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
       CASE Left( cParam, 2 ) == "-o" .AND. ! lStopAfterHarbour
 
-         tmp := PathProc( MacroProc( hbmk, ArchCompFilter( hbmk, SubStr( cParam, 3 ) ), aParam[ _PAR_cFileName ] ), aParam[ _PAR_cFileName ] )
+         tmp := MacroProc( hbmk, ArchCompFilter( hbmk, SubStr( cParam, 3 ) ), aParam[ _PAR_cFileName ] )
          IF ! Empty( tmp )
-            tmp := PathSepToSelf( tmp )
+            tmp := PathProc( PathSepToSelf( tmp ), aParam[ _PAR_cFileName ] )
             hb_FNameSplit( tmp, @cDir, @cName, @cExt )
             IF ! Empty( cDir ) .AND. Empty( cName ) .AND. Empty( cExt )
                /* Only a dir was passed, let's store that and pick a default name later. */
@@ -1849,16 +1850,17 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       CASE Left( cParam, 2 ) == "-L" .AND. ;
            Len( cParam ) > 2
 
-         cParam := PathProc( MacroProc( hbmk, ArchCompFilter( hbmk, SubStr( cParam, 3 ) ), aParam[ _PAR_cFileName ] ), aParam[ _PAR_cFileName ] )
+         cParam := MacroProc( hbmk, ArchCompFilter( hbmk, SubStr( cParam, 3 ) ), aParam[ _PAR_cFileName ] )
          IF ! Empty( cParam )
-            AAdd( hbmk[ _HBMK_aLIBPATH ], PathSepToTarget( hbmk, cParam ) )
+            AAdd( hbmk[ _HBMK_aLIBPATH ], PathSepToTarget( hbmk, PathProc( cParam, aParam[ _PAR_cFileName ] ) ) )
          ENDIF
 
       CASE Left( cParamL, Len( "-instpath=" ) ) == "-instpath=" .AND. ;
            Len( cParamL ) > Len( "-instpath=" )
 
-         cParam := PathNormalize( PathSepToSelf( PathProc( MacroProc( hbmk, tmp := ArchCompFilter( hbmk, SubStr( cParam, Len( "-instpath=" ) + 1 ) ), aParam[ _PAR_cFileName ] ), aParam[ _PAR_cFileName ] ) ) )
+         cParam := MacroProc( hbmk, tmp := ArchCompFilter( hbmk, SubStr( cParam, Len( "-instpath=" ) + 1 ) ), aParam[ _PAR_cFileName ] )
          IF ! Empty( cParam )
+            cParam := PathNormalize( PathProc( PathSepToSelf( cParam ), aParam[ _PAR_cFileName ] ) )
             IF AScan( hbmk[ _HBMK_aINSTPATH ], {| tmp | tmp == cParam } ) == 0
                AAdd( hbmk[ _HBMK_aINSTPATH ], PathSepToTarget( hbmk, cParam ) )
             ENDIF
@@ -1867,8 +1869,9 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       CASE Left( cParamL, Len( "-incpath=" ) ) == "-incpath=" .AND. ;
            Len( cParamL ) > Len( "-incpath=" )
 
-         cParam := PathNormalize( PathSepToSelf( PathProc( MacroProc( hbmk, tmp := ArchCompFilter( hbmk, SubStr( cParam, Len( "-incpath=" ) + 1 ) ), aParam[ _PAR_cFileName ] ), aParam[ _PAR_cFileName ] ) ) )
+         cParam := MacroProc( hbmk, tmp := ArchCompFilter( hbmk, SubStr( cParam, Len( "-incpath=" ) + 1 ) ), aParam[ _PAR_cFileName ] )
          IF ! Empty( cParam )
+            cParam := PathNormalize( PathProc( PathSepToSelf( cParam ), aParam[ _PAR_cFileName ] ) )
             IF AScan( hbmk[ _HBMK_aINCPATH ], {| tmp | tmp == cParam } ) == 0
                AAdd( hbmk[ _HBMK_aINCPATH ], PathSepToTarget( hbmk, cParam ) )
             ENDIF
@@ -1877,8 +1880,9 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       CASE Left( cParamL, Len( "-inctrypath=" ) ) == "-inctrypath=" .AND. ;
            Len( cParamL ) > Len( "-inctrypath=" )
 
-         cParam := PathNormalize( PathSepToSelf( PathProc( MacroProc( hbmk, tmp := ArchCompFilter( hbmk, SubStr( cParam, Len( "-inctrypath=" ) + 1 ) ), aParam[ _PAR_cFileName ] ), aParam[ _PAR_cFileName ] ) ) )
+         cParam := MacroProc( hbmk, tmp := ArchCompFilter( hbmk, SubStr( cParam, Len( "-inctrypath=" ) + 1 ) ), aParam[ _PAR_cFileName ] )
          IF ! Empty( cParam )
+            cParam := PathNormalize( PathProc( PathSepToSelf( cParam ), aParam[ _PAR_cFileName ] ) )
             IF AScan( hbmk[ _HBMK_aINCTRYPATH ], {| tmp | tmp == cParam } ) == 0
                AAdd( hbmk[ _HBMK_aINCTRYPATH ], PathSepToTarget( hbmk, cParam ) )
             ENDIF
@@ -1886,16 +1890,17 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
       CASE Left( cParamL, Len( "-icon=" ) ) == "-icon="
 
-         cParam := PathNormalize( PathProc( PathSepToSelf( MacroProc( hbmk, ArchCompFilter( hbmk, SubStr( cParam, Len( "-icon=" ) + 1 ) ), aParam[ _PAR_cFileName ] ) ), aParam[ _PAR_cFileName ] ) )
+         cParam := MacroProc( hbmk, ArchCompFilter( hbmk, SubStr( cParam, Len( "-icon=" ) + 1 ) ), aParam[ _PAR_cFileName ] )
          IF ! Empty( cParam )
-            AAdd( hbmk[ _HBMK_aICON ], cParam )
+            AAdd( hbmk[ _HBMK_aICON ], PathNormalize( PathProc( PathSepToSelf( cParam ), aParam[ _PAR_cFileName ] ) ) )
          ENDIF
 
       CASE Left( cParamL, 2 ) == "-i" .AND. ;
            Len( cParamL ) > 2
 
-         cParam := PathNormalize( PathSepToSelf( PathProc( MacroProc( hbmk, tmp := ArchCompFilter( hbmk, SubStr( cParam, 3 ) ), aParam[ _PAR_cFileName ] ), aParam[ _PAR_cFileName ] ) ) )
+         cParam := MacroProc( hbmk, tmp := ArchCompFilter( hbmk, SubStr( cParam, 3 ) ), aParam[ _PAR_cFileName ] )
          IF ! Empty( cParam )
+            cParam := PathNormalize( PathProc( PathSepToSelf( cParam ), aParam[ _PAR_cFileName ] ) )
             IF AScan( hbmk[ _HBMK_aINCPATH ], {| tmp | tmp == cParam } ) == 0
                AAdd( hbmk[ _HBMK_aINCPATH ], PathSepToTarget( hbmk, cParam ) )
             ENDIF
@@ -2040,9 +2045,10 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
       CASE FN_ExtGet( cParamL ) == ".hbc"
 
-         cParam := PathProc( MacroProc( hbmk, ArchCompFilter( hbmk, cParam ), aParam[ _PAR_cFileName ] ), aParam[ _PAR_cFileName ] )
+         cParam := MacroProc( hbmk, ArchCompFilter( hbmk, cParam ), aParam[ _PAR_cFileName ] )
 
          IF ! Empty( cParam )
+            cParam := PathProc( PathSepToSelf( cParam ), aParam[ _PAR_cFileName ] )
             IF ! hb_FileExists( cParam )
                FOR EACH tmp IN hbmk[ _HBMK_aLIBPATH ]
                   IF hb_FileExists( DirAddPathSep( PathSepToSelf( MacroProc( hbmk, tmp, cParam, _MACRO_LATE_PREFIX ) ) ) + FN_NameExtGet( cParam ) )
@@ -4311,7 +4317,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             IF hbmk[ _HBMK_cPLAT ] == "os2"
                AEval( hbmk[ _HBMK_aICON ], {| tmp, tmp1 | cFile += 'ICON ' + hb_ntos( tmp1 ) + ' DISCARDABLE "' + PathSepToForward( tmp ) + '"' + Chr( 10 ) } )
             ELSE
-               AEval( hbmk[ _HBMK_aICON ], {| tmp, tmp1 | cFile += 'ICON' + hb_ntos( tmp1 ) + ' ICON DISCARDABLE "' +  PathSepToForward( tmp ) + '"' + Chr( 10 ) } )
+               AEval( hbmk[ _HBMK_aICON ], {| tmp, tmp1 | cFile += 'ICON' + hb_ntos( tmp1 ) + ' ICON DISCARDABLE "' + PathSepToForward( tmp ) + '"' + Chr( 10 ) } )
             ENDIF
 
             IF hbmk[ _HBMK_lINC ]
@@ -6422,8 +6428,9 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
       CASE Lower( Left( cLine, Len( "sources="     ) ) ) == "sources="       ; cLine := SubStr( cLine, Len( "sources="      ) + 1 )
 
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
-            cItem := PathNormalize( PathSepToSelf( PathProc( MacroProc( hbmk, StrStripQuote( cItem ), cFileName ), FN_DirGet( cFileName ) ) ) )
+            cItem := MacroProc( hbmk, StrStripQuote( cItem ), cFileName )
             IF ! Empty( cItem )
+               cItem := PathNormalize( PathProc( PathSepToSelf( cItem ), FN_DirGet( cFileName ) ) )
                cItemL := Lower( cItem )
                DO CASE
                CASE FN_ExtGet( cItemL ) == ".o" .OR. ;
@@ -6472,7 +6479,7 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
             cItem := MacroProc( hbmk, StrStripQuote( cItem ), cFileName )
             IF FN_ExtGet( cItem ) == ".hbc"
-               cItem := PathProc( cItem, FN_DirGet( cFileName ) )
+               cItem := PathProc( PathSepToSelf( cItem ), FN_DirGet( cFileName ) )
                IF nNestingLevel < _HBMK_NEST_MAX
                   IF ! hb_FileExists( cItem )
                      FOR EACH tmp IN hbmk[ _HBMK_aLIBPATH ]
@@ -6517,7 +6524,7 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
             IF nNestingLevel < _HBMK_NEST_MAX
 
-               cItem := PathProc( MacroProc( hbmk, StrStripQuote( cItem ), cFileName ), FN_DirGet( cFileName ) )
+               cItem := PathProc( PathSepToSelf( MacroProc( hbmk, StrStripQuote( cItem ), cFileName ) ), FN_DirGet( cFileName ) )
 
                IF Empty( FN_ExtGet( cItem ) )
                   cItem := FN_ExtSet( cItem, ".hbc" )
@@ -6544,8 +6551,9 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
 
       CASE Lower( Left( cLine, Len( "libpaths="     ) ) ) == "libpaths="     ; cLine := SubStr( cLine, Len( "libpaths="     ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
-            cItem := PathNormalize( PathSepToSelf( PathProc( MacroProc( hbmk, StrStripQuote( cItem ), cFileName ), FN_DirGet( cFileName ) ) ) )
+            cItem := MacroProc( hbmk, StrStripQuote( cItem ), cFileName )
             IF ! Empty( cItem )
+               cItem := PathNormalize( PathProc( PathSepToSelf( cItem ), FN_DirGet( cFileName ) ) )
                IF AScan( hbmk[ _HBMK_aLIBPATH ], {| tmp | tmp == cItem } ) == 0
                   AAdd( hbmk[ _HBMK_aLIBPATH ], PathSepToTarget( hbmk, cItem ) )
                ENDIF
@@ -6554,8 +6562,9 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
 
       CASE Lower( Left( cLine, Len( "incpaths="     ) ) ) == "incpaths="     ; cLine := SubStr( cLine, Len( "incpaths="     ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
-            cItem := PathNormalize( PathSepToSelf( PathProc( MacroProc( hbmk, StrStripQuote( cItem ), cFileName ), FN_DirGet( cFileName ) ) ) )
+            cItem := MacroProc( hbmk, StrStripQuote( cItem ), cFileName )
             IF ! Empty( cItem )
+               cItem := PathNormalize( PathProc( PathSepToSelf( cItem ), FN_DirGet( cFileName ) ) )
                IF AScan( hbmk[ _HBMK_aINCPATH ], {| tmp | tmp == cItem } ) == 0
                   AAdd( hbmk[ _HBMK_aINCPATH ], PathSepToTarget( hbmk, cItem ) )
                ENDIF
@@ -6564,8 +6573,9 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
 
       CASE Lower( Left( cLine, Len( "inctrypaths="  ) ) ) == "inctrypaths="  ; cLine := SubStr( cLine, Len( "inctrypaths="  ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
-            cItem := PathNormalize( PathSepToSelf( PathProc( MacroProc( hbmk, StrStripQuote( cItem ), cFileName ), FN_DirGet( cFileName ) ) ) )
+            cItem := MacroProc( hbmk, StrStripQuote( cItem ), cFileName )
             IF ! Empty( cItem )
+               cItem := PathNormalize( PathProc( PathSepToSelf( cItem ), FN_DirGet( cFileName ) ) )
                IF AScan( hbmk[ _HBMK_aINCTRYPATH ], {| tmp | tmp == cItem } ) == 0
                   AAdd( hbmk[ _HBMK_aINCTRYPATH ], PathSepToTarget( hbmk, cItem ) )
                ENDIF
@@ -6574,8 +6584,9 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
 
       CASE Lower( Left( cLine, Len( "instpaths="    ) ) ) == "instpaths="    ; cLine := SubStr( cLine, Len( "instpaths="    ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
-            cItem := PathNormalize( PathSepToSelf( PathProc( MacroProc( hbmk, StrStripQuote( cItem ), cFileName ), FN_DirGet( cFileName ) ) ) )
+            cItem := MacroProc( hbmk, StrStripQuote( cItem ), cFileName )
             IF ! Empty( cItem )
+               cItem := PathNormalize( PathProc( PathSepToSelf( cItem ), FN_DirGet( cFileName ) ) )
                IF AScan( hbmk[ _HBMK_aINSTPATH ], {| tmp | tmp == cItem } ) == 0
                   AAdd( hbmk[ _HBMK_aINSTPATH ], PathSepToTarget( hbmk, cItem ) )
                ENDIF
@@ -6838,7 +6849,7 @@ STATIC PROCEDURE HBM_Load( hbmk, aParams, cFileName, nNestingLevel )
                         IF Empty( FN_ExtGet( cParam ) )
                            cParam := FN_ExtSet( cParam, ".hbm" )
                         ENDIF
-                        HBM_Load( hbmk, aParams, PathProc( cParam, cFileName ), nNestingLevel + 1 ) /* Load parameters from script file */
+                        HBM_Load( hbmk, aParams, PathProc( PathSepToSelf( cParam ), cFileName ), nNestingLevel + 1 ) /* Load parameters from script file */
                      ELSE
                         hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Cannot nest deeper in %1$s" ), cFileName ) )
                      ENDIF
@@ -6846,7 +6857,7 @@ STATIC PROCEDURE HBM_Load( hbmk, aParams, cFileName, nNestingLevel )
                        ( Lower( FN_ExtGet( cParam ) ) == ".hbm" .OR. ;
                          Lower( FN_ExtGet( cParam ) ) == ".hbp" )
                      IF nNestingLevel < _HBMK_NEST_MAX
-                        HBM_Load( hbmk, aParams, PathProc( cParam, cFileName ), nNestingLevel + 1 ) /* Load parameters from script file */
+                        HBM_Load( hbmk, aParams, PathProc( PathSepToSelf( cParam ), cFileName ), nNestingLevel + 1 ) /* Load parameters from script file */
                      ELSE
                         hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Cannot nest deeper in %1$s" ), cFileName ) )
                      ENDIF
