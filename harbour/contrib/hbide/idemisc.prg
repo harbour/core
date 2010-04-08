@@ -657,7 +657,7 @@ FUNCTION hbide_pathNormalized( cPath, lLower )
 
 FUNCTION hbide_pathFile( cPath, cFile )
    cPath := iif( right( cPath, 1 ) $ "\/", substr( cPath, 1, len( cPath ) - 1 ), cPath )
-   RETURN hbide_pathToOSPath( cPath + "\" + cFile )
+   RETURN hbide_pathToOSPath( iif( empty( cPath ), cFile, cPath + "\" + cFile ) )
 
 /*----------------------------------------------------------------------*/
 
