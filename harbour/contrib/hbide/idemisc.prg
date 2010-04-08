@@ -563,7 +563,7 @@ FUNCTION hbide_arrayToMemoHtml( a_ )
 /*----------------------------------------------------------------------*/
 
 FUNCTION hbide_memoToArray( s )
-   LOCAL aLine := hb_ATokens( StrTran( RTrim( s ), CRLF, _EOL ), _EOL )
+   LOCAL aLine := hb_ATokens( StrTran( RTrim( s ), Chr( 13 ) + Chr( 10 ), _EOL ), _EOL )
    LOCAL nNewSize := 0
    LOCAL line
 
@@ -1047,8 +1047,8 @@ function hbide_toString( x, lLineFeed, lInherited, lType, cFile, lForceLineFeed 
 
    CASE ( t == "O" )
       IF lInherited
-         && É necessário linkar \harbour\lib\xhb.lib
-         **s := iif( lType, "[O]=", "" ) + hb_dumpvar( x ) + iif( lLineFeed, CRLF, "" )
+         // É necessário linkar \harbour\lib\xhb.lib
+         // s := iif( lType, "[O]=", "" ) + hb_dumpvar( x ) + iif( lLineFeed, CRLF, "" )
          s := '' + iif( lLineFeed, CRLF, "" )
       ELSE
          s := iif( lType, "[O]=", "" ) + x:ClassName()+'():New()' + iif( lLineFeed, CRLF, "" )
@@ -1204,10 +1204,10 @@ FUNCTION hbide_buildLinesLabel( nFrom, nTo, nW, nMax )
 
    FOR i := 0 TO n
       IF ( ( nFrom + i ) % 10 ) == 0
-         s += "<font color = red>" + padl( hb_ntos( nFrom + i ), nW ) + "</font><br>"
+         s += "<font color = red>" + padl( hb_ntos( nFrom + i ), nW ) + "</font><br />"
       ELSE
          //s += padl( hb_ntos( nFrom + i ), nW ) + CRLF
-         s += padl( hb_ntos( nFrom + i ), nW ) + "<br>"
+         s += padl( hb_ntos( nFrom + i ), nW ) + "<br />"
       ENDIF
    NEXT
 
@@ -2065,4 +2065,3 @@ FUNCTION hbide_parseToolComponents( cCompositeTool )
    RETURN a_
 
 /*----------------------------------------------------------------------*/
-

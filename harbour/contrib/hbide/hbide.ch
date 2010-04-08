@@ -53,8 +53,8 @@
 #ifndef __HBIDE_CH
    #define __HBIDE_CH
 
-#define CRLF                                      chr( 13 )+chr( 10 )
-#define _EOL                                      chr( 10 )
+#define CRLF                                      hb_osNewLine()
+#define _EOL                                      Chr( 10 )
 
 #define HBIDE_USE_UIC
 
@@ -176,4 +176,3 @@
 #define ACT_VISINMENU                             6
 
 #endif
-
