@@ -149,9 +149,16 @@ FUNCTION GraFocusRect( oPS, aStartPoint, aEndPoint )
 /*----------------------------------------------------------------------*/
 
 FUNCTION GraGetRGBIntensity( nRGBColor )
-   LOCAL aRGB := {}
+   LOCAL aRGB, cRGBHex
 
-   HB_SYMBOL_UNUSED( nRGBColor )
+   IF nRGBColor == NIL
+      nRGBColor := 0
+   ENDIF
+
+   cRGBHex := HB_HexToStr( HB_NumToHex( nRGBColor ) )
+   cRGBHex := PADL( cRGBHex, 6, "0" )
+   aRGB    := { SubStr( cRGBHex, 1, 2 ), SubStr( cRGBHex, 3, 2 ), SubStr( cRGBHex, 5, 2 ) }
+   aRGB    := { HB_HexToNum( aRGB[ 1 ] ), HB_HexToNum( aRGB[ 2 ] ), HB_HexToNum( aRGB[ 3 ] ) }
 
    RETURN aRGB
 
