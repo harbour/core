@@ -391,6 +391,7 @@ CLASS XbpDrawingArea  INHERIT  XbpWindow
    DATA     caption                               INIT ""
    DATA     clipParent                            INIT .T.
    DATA     clipSiblings                          INIT .T.
+   DATA     clipChildren                          INIT .F.
 
    METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
