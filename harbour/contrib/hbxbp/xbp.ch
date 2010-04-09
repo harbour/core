@@ -420,6 +420,26 @@
 #define XBPBRW_Pan_LastCol                        4
 #define XBPBRW_Pan_Track                          5
 
+#define XBPDLG_NO_BORDER                          1
+#define XBPDLG_SIZEBORDER                         2
+#define XBPDLG_THINBORDER                         3
+#define XBPDLG_DLGBORDER                          4
+#define XBPDLG_RAISEDBORDERTHICK                  5
+#define XBPDLG_RAISEDBORDERTHIN                   6
+#define XBPDLG_RECESSEDBORDERTHICK                7
+#define XBPDLG_RECESSEDBORDERTHIN                 8
+#define XBPDLG_RAISEDBORDERTHICK_FIXED            9
+#define XBPDLG_RAISEDBORDERTHIN_FIXED             10
+#define XBPDLG_RECESSEDBORDERTHICK_FIXED          11
+#define XBPDLG_RECESSEDBORDERTHIN_FIXED           12
+
+#define XBPDLG_ORIGIN_OWNER                       1
+#define XBPDLG_ORIGIN_SCREEN                      2
+#define XBPDLG_ORIGIN_MOUSE                       3
+
+#define XBP_ORIGIN_TOPLEFT                        1
+#define XBP_ORIGIN_BOTTOMLEFT                     2
+
 /*----------------------------------------------------------------------*/
 /* Harbour Specific Constants */
 

@@ -80,11 +80,17 @@ CLASS XbpDialog FROM XbpWindow
    DATA     oMenu
    DATA     aRect
 
-   DATA     maxbutton                             INIT  .t.
-   DATA     minbutton                             INIT  .t.
+   DATA     maxbutton                             INIT  .T.
+   DATA     minbutton                             INIT  .T.
    DATA     drawingArea
-   DATA     tasklist                              INIT  .t.
+   DATA     tasklist                              INIT  .T.
    DATA     oEventLoop
+
+   DATA     alwaysOnTop                           INIT  .F.
+   DATA     border                                INIT  XBPDLG_RAISEDBORDERTHICK
+   DATA     titleBar                              INIT  .F.
+   DATA     moveWithOwner                         INIT  .T.
+   DATA     origin                                INIT  XBPDLG_ORIGIN_OWNER
 
    METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
