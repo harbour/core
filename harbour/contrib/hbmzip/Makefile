@@ -8,6 +8,9 @@ include $(TOP)$(ROOT)config/global.mk
 
 LIBNAME := hbmzip
 
+# 3rd party code requires this
+HB_BUILD_MODE := c
+
 C_SOURCES := \
    ioapi.c \
    zip.c \

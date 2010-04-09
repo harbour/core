@@ -89,8 +89,11 @@ static void init_keys(const char* passwd,unsigned long* pkeys,const unsigned lon
 #    define ZCR_SEED2 3141592654UL     /* use PI as default pattern */
 #  endif
 
-static int crypthead(const char * passwd, unsigned char * buf, int bufSize,
-                     unsigned long * pkeys, const unsigned long * pcrc_32_tab,
+static int crypthead(const char* passwd,      /* password string */
+                     unsigned char* buf,      /* where to write header */
+                     int bufSize,
+                     unsigned long* pkeys,
+                     const unsigned long* pcrc_32_tab,
                      unsigned long crcForCrypting)
 {
     int n;                       /* index in random header */
@@ -122,8 +125,8 @@ static int crypthead(const char * passwd, unsigned char * buf, int bufSize,
     {
         buf[n] = (unsigned char)zencode(pkeys, pcrc_32_tab, header[n], t);
     }
-    buf[n++] = zencode(pkeys, pcrc_32_tab, (int)(crcForCrypting >> 16) & 0xff, t);
-    buf[n++] = zencode(pkeys, pcrc_32_tab, (int)(crcForCrypting >> 24) & 0xff, t);
+    buf[n++] = (unsigned char)zencode(pkeys, pcrc_32_tab, (int)(crcForCrypting >> 16) & 0xff, t);
+    buf[n++] = (unsigned char)zencode(pkeys, pcrc_32_tab, (int)(crcForCrypting >> 24) & 0xff, t);
     return n;
 }
 
