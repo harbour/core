@@ -249,6 +249,7 @@ REQUEST hbmk_KEYW
    system libs. [vszakats] */
 #define _IS_AUTOLIBSYSPRE( c )  ( "unicows" $ Lower( c ) .AND. hbmk[ _HBMK_cPLAT ] == "win" )
 
+#define _CHR_EOL                Chr( 10 )
 #define _OUT_EOL                Chr( 10 )
 
 #define _CCOMP_PASS_C           1
@@ -6388,8 +6389,6 @@ STATIC PROCEDURE HBC_ProcessAll( hbmk, lConfigOnly )
 
    RETURN
 
-#define _EOL                    Chr( 10 )
-
 STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
    LOCAL cFile
    LOCAL cLine
@@ -6404,14 +6403,14 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
 
    cFile := MemoRead( cFileName ) /* NOTE: Intentionally using MemoRead() which handles EOF char. */
 
-   IF ! hb_osNewLine() == _EOL
-      cFile := StrTran( cFile, hb_osNewLine(), _EOL )
+   IF ! hb_osNewLine() == _CHR_EOL
+      cFile := StrTran( cFile, hb_osNewLine(), _CHR_EOL )
    ENDIF
    IF ! hb_osNewLine() == Chr( 13 ) + Chr( 10 )
-      cFile := StrTran( cFile, Chr( 13 ) + Chr( 10 ), _EOL )
+      cFile := StrTran( cFile, Chr( 13 ) + Chr( 10 ), _CHR_EOL )
    ENDIF
 
-   FOR EACH cLine IN hb_ATokens( cFile, _EOL )
+   FOR EACH cLine IN hb_ATokens( cFile, _CHR_EOL )
 
       cLine := AllTrim( ArchCompFilter( hbmk, AllTrim( cLine ) ) )
 
@@ -6827,14 +6826,14 @@ STATIC PROCEDURE HBM_Load( hbmk, aParams, cFileName, nNestingLevel )
 
       cFile := MemoRead( cFileName ) /* NOTE: Intentionally using MemoRead() which handles EOF char. */
 
-      IF ! hb_osNewLine() == _EOL
-         cFile := StrTran( cFile, hb_osNewLine(), _EOL )
+      IF ! hb_osNewLine() == _CHR_EOL
+         cFile := StrTran( cFile, hb_osNewLine(), _CHR_EOL )
       ENDIF
       IF ! hb_osNewLine() == Chr( 13 ) + Chr( 10 )
-         cFile := StrTran( cFile, Chr( 13 ) + Chr( 10 ), _EOL )
+         cFile := StrTran( cFile, Chr( 13 ) + Chr( 10 ), _CHR_EOL )
       ENDIF
 
-      FOR EACH cLine IN hb_ATokens( cFile, _EOL )
+      FOR EACH cLine IN hb_ATokens( cFile, _CHR_EOL )
          IF !( Left( cLine, 1 ) == "#" )
             FOR EACH cParam IN hb_ATokens( cLine,, .T. )
                cParam := StrStripQuote( cParam )
