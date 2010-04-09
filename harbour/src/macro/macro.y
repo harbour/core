@@ -163,7 +163,7 @@
       long     date;    /* to hold julian date */
       long     time;    /* to hold milliseconds */
    } valTimeStamp;
-};
+}
 
 %{
 /* This must be placed after the above union - the union is

@@ -147,7 +147,7 @@ static void hb_compDebugStart( void ) { }
       int      flags;   /* Flag for early {|| &macro} (1) or late {|| &(macro)} (2) binding */
    } asCodeblock;
    PHB_VARTYPE asVarType;
-};
+}
 
 %{
 /* This must be placed after the above union - the union is
@@ -1063,7 +1063,7 @@ CodeBlock   : BlockHead
 ExpList     : Expression               { $$ = hb_compExprNewList( $1, HB_COMP_PARAM ); }
             | ExpList ',' Expression   { $$ = hb_compExprAddListExpr( $1, $3 ); }
 
-PareExpList : '(' ExpList ')'          { $$ = $2 };
+PareExpList : '(' ExpList ')'          { $$ = $2 }
             ;
 
 PareExpListAlias : PareExpList ALIASOP
