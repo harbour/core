@@ -9,13 +9,17 @@ include $(TOP)$(ROOT)config/global.mk
 LIBNAME := hbzlib
 
 HB_BUILD_WARN := no
+HB_BUILD_MODE := c
 
 C_SOURCES := \
    adler32.c \
    compress.c \
    crc32.c \
    deflate.c \
-   gzio.c \
+   gzclose.c \
+   gzlib.c \
+   gzread.c \
+   gzwrite.c \
    infback.c \
    inffast.c \
    inflate.c \
