@@ -2,6 +2,4 @@
 # $Id$
 #
 
-incpaths=.
-
 libs=hbmisc

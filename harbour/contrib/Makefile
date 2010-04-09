@@ -7,6 +7,7 @@ ROOT := ../
 # contribs _without_ external dependencies
 DIRS := \
    gtwvg \
+   hbblink \
    hbbtree \
    hbbz2 \
    hbclipsm \

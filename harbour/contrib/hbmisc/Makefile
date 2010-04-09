@@ -16,7 +16,6 @@ C_SOURCES := \
    stringsx.c \
 
 PRG_SOURCES := \
-   blinker.prg \
    fcomma.prg \
    fileread.prg \
    hbedit.prg \
@@ -26,8 +25,4 @@ PRG_SOURCES := \
    stringp.prg \
    twirler.prg \
 
-PRG_HEADERS := \
-   blinker.ch \
-
-include $(TOP)$(ROOT)config/header.mk
 include $(TOP)$(ROOT)config/lib.mk
