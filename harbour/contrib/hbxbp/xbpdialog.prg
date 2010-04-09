@@ -129,6 +129,8 @@ METHOD XbpDialog:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::resizeMode  := 0
    ::mouseMode   := 0
 
+   ::drawingArea := XbpDrawingArea():new( self, , {0,0}, ::aSize, , .t. )
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -169,11 +171,10 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ENDIF
 
    IF !empty( ::qtObject )
-      ::drawingArea := XbpDrawingArea():new( self )
       ::drawingArea:qtObject := ::oWidget:centralWidget()
-      ::drawingArea:create( self, , {0,0}, ::aSize, , .t. )
+      ::drawingArea:create()
    ELSE
-      ::drawingArea := XbpDrawingArea():new( self, , {0,0}, ::aSize, , .t. ):create()
+      ::drawingArea:create()
       ::oWidget:setCentralWidget( ::drawingArea:oWidget )
    ENDIF
 
