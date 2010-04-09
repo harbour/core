@@ -95,6 +95,7 @@ CLASS IdeObject
    ACCESS oFN                                     INLINE ::oIde:oFN
    ACCESS oDW                                     INLINE ::oIde:oDW
    ACCESS oSK                                     INLINE ::oIde:oSK
+   ACCESS oSC                                     INLINE ::oIde:oSC
    ACCESS oTM                                     INLINE ::oIde:oTM
    ACCESS oTH                                     INLINE ::oIde:oTH
    ACCESS oFF                                     INLINE ::oIde:oFF

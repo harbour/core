@@ -106,16 +106,10 @@ HBQPlainTextEdit::~HBQPlainTextEdit()
    disconnect( this, SIGNAL( updateRequest( const QRect &, int ) ) );
    disconnect( this, SIGNAL( cursorPositionChanged() )             );
 
-   HB_TRACE( HB_TR_ALWAYS, ( "HBQPlainTextEdit::~HBQPlainTextEdit( 1 )" ) );
-
    delete lineNumberArea;
-
-   HB_TRACE( HB_TR_ALWAYS, ( "HBQPlainTextEdit::~HBQPlainTextEdit( 2 )" ) );
 
    if( block )
       hb_itemRelease( block );
-
-   HB_TRACE( HB_TR_ALWAYS, ( "HBQPlainTextEdit::~HBQPlainTextEdit( 3 )" ) );
 }
 
 void HBQPlainTextEdit::hbSetEventBlock( PHB_ITEM pBlock )

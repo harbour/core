@@ -1072,7 +1072,7 @@ FUNCTION hbide_help( nOption )
       tit_ := 'About hbIde'
       AAdd( txt_, "<b>Harbour IDE ( hbIDE )</b>" )
       AAdd( txt_, "Developed by" )
-      AAdd( txt_, "Pritpal Bedi ( pritpal@vouchcac.com )" )
+      AAdd( txt_, "Pritpal Bedi ( bedipritpal@hotmail.com )" )
       AAdd( txt_, "" )
       AAdd( txt_, "built with:" )
       AAdd( txt_, HB_VERSION() )
@@ -1081,6 +1081,7 @@ FUNCTION hbide_help( nOption )
       AAdd( txt_, "" )
       AAdd( txt_, "Visit the project website at:" )
       AAdd( txt_, "<a href='http://www.harbour-project.org/'>http://www.harbour-project.org/</a>" )
+      AAdd( txt_, "<a href='http://hbide.vouch.info/'>http://hbide.vouch.info/</a>" )
       EXIT
 
    CASE 2

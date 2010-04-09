@@ -1,0 +1,214 @@
+/********************************************************************************
+** Form generated from reading ui file 'shortcuts.ui'
+**
+** Created: Wed Apr 7 12:19:23 2010
+**      by: Qt User Interface Compiler version 4.5.2
+**
+** WARNING! All changes made in this file will be lost when recompiling ui file!
+********************************************************************************/
+
+#ifndef SHORTCUTS_H
+#define SHORTCUTS_H
+
+#include <QtCore/QVariant>
+#include <QtGui/QAction>
+#include <QtGui/QApplication>
+#include <QtGui/QButtonGroup>
+#include <QtGui/QCheckBox>
+#include <QtGui/QComboBox>
+#include <QtGui/QGridLayout>
+#include <QtGui/QHeaderView>
+#include <QtGui/QLabel>
+#include <QtGui/QLineEdit>
+#include <QtGui/QListWidget>
+#include <QtGui/QPlainTextEdit>
+#include <QtGui/QPushButton>
+#include <QtGui/QTableWidget>
+#include <QtGui/QTextEdit>
+#include <QtGui/QWidget>
+
+QT_BEGIN_NAMESPACE
+
+class Ui_FormShortCuts
+{
+public:
+    QGridLayout *gridLayout;
+    QLabel *labelMethods;
+    QLabel *labelSyntax;
+    QListWidget *listMethods;
+    QTextEdit *texteditSyntax;
+    QLabel *labelMacros;
+    QTableWidget *tableMacros;
+    QLabel *labelName;
+    QLineEdit *editName;
+    QLabel *labelKey;
+    QComboBox *comboKey;
+    QCheckBox *checkAlt;
+    QCheckBox *checkCtrl;
+    QCheckBox *checkShift;
+    QLabel *labelMenu;
+    QLineEdit *editMenu;
+    QPlainTextEdit *plainBlock;
+    QPushButton *buttonNew;
+    QPushButton *buttonSet;
+    QPushButton *buttonLoad;
+    QPushButton *buttonSave;
+    QPushButton *buttonSaveAs;
+
+    void setupUi(QWidget *FormShortCuts)
+    {
+        if (FormShortCuts->objectName().isEmpty())
+            FormShortCuts->setObjectName(QString::fromUtf8("FormShortCuts"));
+        FormShortCuts->resize(664, 478);
+        gridLayout = new QGridLayout(FormShortCuts);
+        gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
+        labelMethods = new QLabel(FormShortCuts);
+        labelMethods->setObjectName(QString::fromUtf8("labelMethods"));
+
+        gridLayout->addWidget(labelMethods, 0, 0, 1, 1);
+
+        labelSyntax = new QLabel(FormShortCuts);
+        labelSyntax->setObjectName(QString::fromUtf8("labelSyntax"));
+
+        gridLayout->addWidget(labelSyntax, 0, 1, 1, 6);
+
+        listMethods = new QListWidget(FormShortCuts);
+        listMethods->setObjectName(QString::fromUtf8("listMethods"));
+
+        gridLayout->addWidget(listMethods, 1, 0, 1, 1);
+
+        texteditSyntax = new QTextEdit(FormShortCuts);
+        texteditSyntax->setObjectName(QString::fromUtf8("texteditSyntax"));
+
+        gridLayout->addWidget(texteditSyntax, 1, 1, 1, 6);
+
+        labelMacros = new QLabel(FormShortCuts);
+        labelMacros->setObjectName(QString::fromUtf8("labelMacros"));
+
+        gridLayout->addWidget(labelMacros, 2, 0, 1, 7);
+
+        tableMacros = new QTableWidget(FormShortCuts);
+        tableMacros->setObjectName(QString::fromUtf8("tableMacros"));
+
+        gridLayout->addWidget(tableMacros, 3, 0, 5, 1);
+
+        labelName = new QLabel(FormShortCuts);
+        labelName->setObjectName(QString::fromUtf8("labelName"));
+
+        gridLayout->addWidget(labelName, 3, 1, 1, 1);
+
+        editName = new QLineEdit(FormShortCuts);
+        editName->setObjectName(QString::fromUtf8("editName"));
+
+        gridLayout->addWidget(editName, 3, 2, 1, 5);
+
+        labelKey = new QLabel(FormShortCuts);
+        labelKey->setObjectName(QString::fromUtf8("labelKey"));
+
+        gridLayout->addWidget(labelKey, 4, 1, 1, 1);
+
+        comboKey = new QComboBox(FormShortCuts);
+        comboKey->setObjectName(QString::fromUtf8("comboKey"));
+
+        gridLayout->addWidget(comboKey, 4, 2, 1, 1);
+
+        checkAlt = new QCheckBox(FormShortCuts);
+        checkAlt->setObjectName(QString::fromUtf8("checkAlt"));
+
+        gridLayout->addWidget(checkAlt, 4, 3, 1, 2);
+
+        checkCtrl = new QCheckBox(FormShortCuts);
+        checkCtrl->setObjectName(QString::fromUtf8("checkCtrl"));
+
+        gridLayout->addWidget(checkCtrl, 4, 5, 1, 1);
+
+        checkShift = new QCheckBox(FormShortCuts);
+        checkShift->setObjectName(QString::fromUtf8("checkShift"));
+
+        gridLayout->addWidget(checkShift, 4, 6, 1, 1);
+
+        labelMenu = new QLabel(FormShortCuts);
+        labelMenu->setObjectName(QString::fromUtf8("labelMenu"));
+
+        gridLayout->addWidget(labelMenu, 5, 1, 1, 1);
+
+        editMenu = new QLineEdit(FormShortCuts);
+        editMenu->setObjectName(QString::fromUtf8("editMenu"));
+
+        gridLayout->addWidget(editMenu, 5, 2, 1, 5);
+
+        plainBlock = new QPlainTextEdit(FormShortCuts);
+        plainBlock->setObjectName(QString::fromUtf8("plainBlock"));
+
+        gridLayout->addWidget(plainBlock, 6, 1, 1, 6);
+
+        buttonNew = new QPushButton(FormShortCuts);
+        buttonNew->setObjectName(QString::fromUtf8("buttonNew"));
+        buttonNew->setMinimumSize(QSize(45, 0));
+        buttonNew->setMaximumSize(QSize(45, 16777215));
+
+        gridLayout->addWidget(buttonNew, 7, 1, 1, 1);
+
+        buttonSet = new QPushButton(FormShortCuts);
+        buttonSet->setObjectName(QString::fromUtf8("buttonSet"));
+        buttonSet->setMinimumSize(QSize(45, 0));
+        buttonSet->setMaximumSize(QSize(45, 16777215));
+
+        gridLayout->addWidget(buttonSet, 7, 2, 1, 1);
+
+        buttonLoad = new QPushButton(FormShortCuts);
+        buttonLoad->setObjectName(QString::fromUtf8("buttonLoad"));
+        buttonLoad->setMinimumSize(QSize(45, 0));
+        buttonLoad->setMaximumSize(QSize(45, 16777215));
+
+        gridLayout->addWidget(buttonLoad, 7, 3, 1, 1);
+
+        buttonSave = new QPushButton(FormShortCuts);
+        buttonSave->setObjectName(QString::fromUtf8("buttonSave"));
+        buttonSave->setMinimumSize(QSize(45, 0));
+        buttonSave->setMaximumSize(QSize(45, 16777215));
+
+        gridLayout->addWidget(buttonSave, 7, 4, 1, 2);
+
+        buttonSaveAs = new QPushButton(FormShortCuts);
+        buttonSaveAs->setObjectName(QString::fromUtf8("buttonSaveAs"));
+        buttonSaveAs->setMinimumSize(QSize(45, 0));
+        buttonSaveAs->setMaximumSize(QSize(45, 16777215));
+
+        gridLayout->addWidget(buttonSaveAs, 7, 6, 1, 1);
+
+
+        retranslateUi(FormShortCuts);
+
+        QMetaObject::connectSlotsByName(FormShortCuts);
+    } // setupUi
+
+    void retranslateUi(QWidget *FormShortCuts)
+    {
+        FormShortCuts->setWindowTitle(QApplication::translate("FormShortCuts", "Shortcuts", 0, QApplication::UnicodeUTF8));
+        labelMethods->setText(QApplication::translate("FormShortCuts", "Public Methods", 0, QApplication::UnicodeUTF8));
+        labelSyntax->setText(QApplication::translate("FormShortCuts", "Description", 0, QApplication::UnicodeUTF8));
+        labelMacros->setText(QApplication::translate("FormShortCuts", "Macros", 0, QApplication::UnicodeUTF8));
+        labelName->setText(QApplication::translate("FormShortCuts", "Name", 0, QApplication::UnicodeUTF8));
+        labelKey->setText(QApplication::translate("FormShortCuts", "Key", 0, QApplication::UnicodeUTF8));
+        checkAlt->setText(QApplication::translate("FormShortCuts", "Alt", 0, QApplication::UnicodeUTF8));
+        checkCtrl->setText(QApplication::translate("FormShortCuts", "Ctrl", 0, QApplication::UnicodeUTF8));
+        checkShift->setText(QApplication::translate("FormShortCuts", "Shift", 0, QApplication::UnicodeUTF8));
+        labelMenu->setText(QApplication::translate("FormShortCuts", "Menu", 0, QApplication::UnicodeUTF8));
+        buttonNew->setText(QApplication::translate("FormShortCuts", "New", 0, QApplication::UnicodeUTF8));
+        buttonSet->setText(QApplication::translate("FormShortCuts", "Set", 0, QApplication::UnicodeUTF8));
+        buttonLoad->setText(QApplication::translate("FormShortCuts", "Load", 0, QApplication::UnicodeUTF8));
+        buttonSave->setText(QApplication::translate("FormShortCuts", "Save", 0, QApplication::UnicodeUTF8));
+        buttonSaveAs->setText(QApplication::translate("FormShortCuts", "SaveAs", 0, QApplication::UnicodeUTF8));
+        Q_UNUSED(FormShortCuts);
+    } // retranslateUi
+
+};
+
+namespace Ui {
+    class FormShortCuts: public Ui_FormShortCuts {};
+} // namespace Ui
+
+QT_END_NAMESPACE
+
+#endif // SHORTCUTS_H

@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading ui file 'themesex.ui'
 **
-** Created: Wed Mar 10 22:01:39 2010
+** Created: Tue Apr 6 18:18:36 2010
 **      by: Qt User Interface Compiler version 4.5.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!
@@ -37,50 +37,48 @@ public:
     QCheckBox *checkBold;
     QCheckBox *checkItalic;
     QCheckBox *checkUnderline;
-    QSpacerItem *verticalSpacer_3;
+    QSpacerItem *verticalSpacer;
     QPushButton *buttonColor;
-    QLabel *labelPreview;
+    QLabel *label;
     QPlainTextEdit *plainThemeText;
     QPushButton *buttonSave;
     QPushButton *buttonSaveAs;
     QPushButton *buttonCopy;
-    QSpacerItem *verticalSpacer;
     QPushButton *buttonDefault;
     QPushButton *buttonApply;
     QPushButton *buttonApplyAll;
-    QSpacerItem *verticalSpacer_2;
     QPushButton *buttonClose;
+    QSpacerItem *verticalSpacer_2;
+    QSpacerItem *verticalSpacer_3;
 
     void setupUi(QWidget *FormThemes)
     {
         if (FormThemes->objectName().isEmpty())
             FormThemes->setObjectName(QString::fromUtf8("FormThemes"));
-        FormThemes->resize(423, 507);
+        FormThemes->resize(423, 434);
         gridLayout = new QGridLayout(FormThemes);
         gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
         labelTheme = new QLabel(FormThemes);
         labelTheme->setObjectName(QString::fromUtf8("labelTheme"));
-        labelTheme->setMaximumSize(QSize(40, 16777215));
 
         gridLayout->addWidget(labelTheme, 0, 0, 1, 1);
 
         labelItems = new QLabel(FormThemes);
         labelItems->setObjectName(QString::fromUtf8("labelItems"));
-        labelItems->setMaximumSize(QSize(40, 16777215));
 
-        gridLayout->addWidget(labelItems, 0, 1, 1, 1);
+        gridLayout->addWidget(labelItems, 0, 1, 1, 2);
 
         listThemes = new QListWidget(FormThemes);
         listThemes->setObjectName(QString::fromUtf8("listThemes"));
-        listThemes->setMinimumSize(QSize(150, 170));
-        listThemes->setMaximumSize(QSize(150, 170));
+        listThemes->setMinimumSize(QSize(0, 0));
+        listThemes->setMaximumSize(QSize(16777215, 16777215));
 
         gridLayout->addWidget(listThemes, 1, 0, 5, 1);
 
         listItems = new QListWidget(FormThemes);
         listItems->setObjectName(QString::fromUtf8("listItems"));
-        listItems->setMinimumSize(QSize(0, 170));
-        listItems->setMaximumSize(QSize(16777215, 170));
+        listItems->setMinimumSize(QSize(0, 0));
+        listItems->setMaximumSize(QSize(16777215, 16777215));
 
         gridLayout->addWidget(listItems, 1, 1, 5, 1);
 
@@ -99,9 +97,9 @@ public:
 
         gridLayout->addWidget(checkUnderline, 3, 2, 1, 1);
 
-        verticalSpacer_3 = new QSpacerItem(32, 63, QSizePolicy::Minimum, QSizePolicy::Expanding);
+        verticalSpacer = new QSpacerItem(72, 45, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
-        gridLayout->addItem(verticalSpacer_3, 4, 2, 1, 1);
+        gridLayout->addItem(verticalSpacer, 4, 2, 1, 1);
 
         buttonColor = new QPushButton(FormThemes);
         buttonColor->setObjectName(QString::fromUtf8("buttonColor"));
@@ -109,10 +107,10 @@ public:
 
         gridLayout->addWidget(buttonColor, 5, 2, 1, 1);
 
-        labelPreview = new QLabel(FormThemes);
-        labelPreview->setObjectName(QString::fromUtf8("labelPreview"));
+        label = new QLabel(FormThemes);
+        label->setObjectName(QString::fromUtf8("label"));
 
-        gridLayout->addWidget(labelPreview, 6, 0, 1, 1);
+        gridLayout->addWidget(label, 6, 0, 1, 3);
 
         plainThemeText = new QPlainTextEdit(FormThemes);
         plainThemeText->setObjectName(QString::fromUtf8("plainThemeText"));
@@ -134,10 +132,6 @@ public:
 
         gridLayout->addWidget(buttonCopy, 9, 2, 1, 1);
 
-        verticalSpacer = new QSpacerItem(20, 26, QSizePolicy::Minimum, QSizePolicy::Expanding);
-
-        gridLayout->addItem(verticalSpacer, 10, 2, 1, 1);
-
         buttonDefault = new QPushButton(FormThemes);
         buttonDefault->setObjectName(QString::fromUtf8("buttonDefault"));
 
@@ -153,14 +147,18 @@ public:
 
         gridLayout->addWidget(buttonApplyAll, 13, 2, 1, 1);
 
-        verticalSpacer_2 = new QSpacerItem(20, 24, QSizePolicy::Minimum, QSizePolicy::Expanding);
-
-        gridLayout->addItem(verticalSpacer_2, 14, 2, 1, 1);
-
         buttonClose = new QPushButton(FormThemes);
         buttonClose->setObjectName(QString::fromUtf8("buttonClose"));
 
         gridLayout->addWidget(buttonClose, 15, 2, 1, 1);
+
+        verticalSpacer_2 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+
+        gridLayout->addItem(verticalSpacer_2, 10, 2, 1, 1);
+
+        verticalSpacer_3 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+
+        gridLayout->addItem(verticalSpacer_3, 14, 2, 1, 1);
 
 
         retranslateUi(FormThemes);
@@ -171,13 +169,13 @@ public:
     void retranslateUi(QWidget *FormThemes)
     {
         FormThemes->setWindowTitle(QApplication::translate("FormThemes", "Form", 0, QApplication::UnicodeUTF8));
-        labelTheme->setText(QApplication::translate("FormThemes", "Theme:", 0, QApplication::UnicodeUTF8));
-        labelItems->setText(QApplication::translate("FormThemes", "Items:", 0, QApplication::UnicodeUTF8));
+        labelTheme->setText(QApplication::translate("FormThemes", "Themes", 0, QApplication::UnicodeUTF8));
+        labelItems->setText(QApplication::translate("FormThemes", "Items", 0, QApplication::UnicodeUTF8));
         checkBold->setText(QApplication::translate("FormThemes", "Bold", 0, QApplication::UnicodeUTF8));
         checkItalic->setText(QApplication::translate("FormThemes", "Italic", 0, QApplication::UnicodeUTF8));
         checkUnderline->setText(QApplication::translate("FormThemes", "Underline", 0, QApplication::UnicodeUTF8));
         buttonColor->setText(QApplication::translate("FormThemes", "Color", 0, QApplication::UnicodeUTF8));
-        labelPreview->setText(QApplication::translate("FormThemes", "Preview:", 0, QApplication::UnicodeUTF8));
+        label->setText(QApplication::translate("FormThemes", "Preview", 0, QApplication::UnicodeUTF8));
         buttonSave->setText(QApplication::translate("FormThemes", "Save", 0, QApplication::UnicodeUTF8));
         buttonSaveAs->setText(QApplication::translate("FormThemes", "Save As", 0, QApplication::UnicodeUTF8));
         buttonCopy->setText(QApplication::translate("FormThemes", "Copy", 0, QApplication::UnicodeUTF8));

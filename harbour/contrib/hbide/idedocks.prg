@@ -5,7 +5,7 @@
 /*
  * Harbour Project source code:
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -194,7 +194,7 @@ METHOD IdeDocks:buildDialog()
    ::oIde:oDlg := XbpDialog():new()
    ::oDlg:icon := hbide_image( "hbide" )
    ::oDlg:title := "Harbour IDE"
-   ::oDlg:qtObject := HbQtUI():new( ::resPath + "mainwindow.uic" ):build()
+   ::oDlg:qtObject := HbQtUI():new( hbide_uic( "mainwindow" ) ):build()
    ::oDlg:create( , , , , , .f. )
 
    ::oDlg:setStyleSheet( GetStyleSheet( "QMainWindow", ::nAnimantionMode ) )

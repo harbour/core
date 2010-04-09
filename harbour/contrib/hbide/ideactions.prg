@@ -5,7 +5,7 @@
 /*
  * Harbour Project source code:
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -307,6 +307,7 @@ METHOD IdeActions:loadActions()
 
    aadd( aAct, { "Environments"         , "Environments..."              , "envconfig"      , ""     , "No", "Yes" } )
    aadd( aAct, { "GotoFunc"             , "Goto Function"                , "dc_function"    , ""     , "No", "Yes" } )
+   aadd( aAct, { "Shortcuts"            , "Keyboard Mappings"            , ""               , ""     , "No", "Yes" } )
 
    RETURN aAct
 
@@ -538,10 +539,11 @@ METHOD IdeActions:buildMainMenu()
    oMenuBar:addItem( { oSubMenu, NIL } )
 
    /*----------------------------------------------------------------------------*/
-   /*                                   Options                                  */
+   /*                                   Setup                                    */
    /*----------------------------------------------------------------------------*/
    oSubMenu := XbpMenu():new( oMenuBar ):create()
    oSubMenu:title := "~Setup"
+   oSubMenu:addItem( { ::getAction( "Shortcuts"           ), {|| oIde:execAction( "Shortcuts"          ) } } )
    oSubMenu2 := hbide_buildCodecMenu( oIde, oSubMenu )
    oSubMenu2:title := "~Encoding"
    oSubMenu:addItem( { oSubMenu2, NIL } )

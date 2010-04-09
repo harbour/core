@@ -5,7 +5,7 @@
 /*
  * Harbour Project source code:
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -140,6 +140,7 @@ CLASS HbIde
    DATA   oPM                                            /* Project Manager                */
    DATA   oSM                                            /* Souces Manager                 */
    DATA   oSK                                            /* Skeletons Managet              */
+   DATA   oSC                                            /* Shortcuts Manager              */
    DATA   oTM                                            /* Plugin Tools Manager           */
    DATA   oTH                                            /* Themes Manager                 */
 
@@ -370,6 +371,9 @@ hbide_dbg( "HbIde:create( cProjIni )", "#Params=" )
    /* Skeletons Manager     */
    ::oSK := IdeSkeletons():new( Self ):create()
 
+   /* Shortcuts */
+   ::oSC := IdeShortcuts():new( Self ):create()
+
    /* Initialte Project Manager */
    ::oPM := IdeProjManager():new( Self ):create()
 
@@ -577,6 +581,7 @@ hbide_dbg( "HbIde:create( cProjIni )", "#Params=" )
 
    ::oTM:destroy()
    ::oSK:destroy()
+   ::oSC:destroy()
    ::oDW:destroy()
    ::oEV:destroy()
    ::oFN:destroy()
@@ -672,6 +677,9 @@ METHOD HbIde:execAction( cKey )
    CASE "Animate"
       ::nAnimantionMode := iif( ::nAnimantionMode == HBIDE_ANIMATION_NONE, HBIDE_ANIMATION_GRADIENT, HBIDE_ANIMATION_NONE )
       ::oDK:animateComponents( ::nAnimantionMode )
+      EXIT
+   CASE "Shortcuts"
+      ::oSC:show()
       EXIT
    CASE "NewProject"
    CASE "LoadProject"
