@@ -118,8 +118,9 @@ static const uschar coptable[] = {
   0, 0, 0, 0, 0,                 /* \A, \G, \K, \B, \b                     */
   0, 0, 0, 0, 0, 0,              /* \D, \d, \S, \s, \W, \w                 */
   0, 0, 0,                       /* Any, AllAny, Anybyte                   */
-  0, 0, 0,                       /* NOTPROP, PROP, EXTUNI                  */
+  0, 0,                          /* \P, \p                                 */
   0, 0, 0, 0, 0,                 /* \R, \H, \h, \V, \v                     */
+  0,                             /* \X                                     */
   0, 0, 0, 0, 0,                 /* \Z, \z, Opt, ^, $                      */
   1,                             /* Char                                   */
   1,                             /* Charnc                                 */
@@ -156,8 +157,8 @@ static const uschar coptable[] = {
   0,                             /* Reverse                                */
   0, 0, 0, 0,                    /* ONCE, BRA, CBRA, COND                  */
   0, 0, 0,                       /* SBRA, SCBRA, SCOND                     */
-  0,                             /* CREF                                   */
-  0,                             /* RREF                                   */
+  0, 0,                          /* CREF, NCREF                            */
+  0, 0,                          /* RREF, NRREF                            */
   0,                             /* DEF                                    */
   0, 0,                          /* BRAZERO, BRAMINZERO                    */
   0, 0, 0, 0,                    /* PRUNE, SKIP, THEN, COMMIT              */
@@ -174,8 +175,9 @@ static const uschar poptable[] = {
   0, 0, 0, 1, 1,                 /* \A, \G, \K, \B, \b                     */
   1, 1, 1, 1, 1, 1,              /* \D, \d, \S, \s, \W, \w                 */
   1, 1, 1,                       /* Any, AllAny, Anybyte                   */
-  1, 1, 1,                       /* NOTPROP, PROP, EXTUNI                  */
+  1, 1,                          /* \P, \p                                 */
   1, 1, 1, 1, 1,                 /* \R, \H, \h, \V, \v                     */
+  1,                             /* \X                                     */
   0, 0, 0, 0, 0,                 /* \Z, \z, Opt, ^, $                      */
   1,                             /* Char                                   */
   1,                             /* Charnc                                 */
@@ -212,8 +214,8 @@ static const uschar poptable[] = {
   0,                             /* Reverse                                */
   0, 0, 0, 0,                    /* ONCE, BRA, CBRA, COND                  */
   0, 0, 0,                       /* SBRA, SCBRA, SCOND                     */
-  0,                             /* CREF                                   */
-  0,                             /* RREF                                   */
+  0, 0,                          /* CREF, NCREF                            */
+  0, 0,                          /* RREF, NRREF                            */
   0,                             /* DEF                                    */
   0, 0,                          /* BRAZERO, BRAMINZERO                    */
   0, 0, 0, 0,                    /* PRUNE, SKIP, THEN, COMMIT              */
@@ -706,6 +708,18 @@ for (;;)
 
     switch (codevalue)
       {
+/* ========================================================================== */
+      /* These cases are never obeyed. This is a fudge that causes a compile-
+      time error if the vectors coptable or poptable, which are indexed by
+      opcode, are not the correct length. It seems to be the only way to do
+      such a check at compile time, as the sizeof() operator does not work
+      in the C preprocessor. */
+
+      case OP_TABLE_LENGTH:
+      case OP_TABLE_LENGTH +
+        ((sizeof(coptable) == OP_TABLE_LENGTH) &&
+         (sizeof(poptable) == OP_TABLE_LENGTH)):
+      break;
 
 /* ========================================================================== */
       /* Reached a closing bracket. If not at the end of the pattern, carry
