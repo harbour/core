@@ -239,10 +239,10 @@ METHOD IdeSourcesManager:editSource( cSourceFile, nPos, nHPos, nVPos, cTheme, cV
    IF !Empty( cSourceFile )
       IF !( hbide_isValidText( cSourceFile ) )
          MsgBox( 'File type unknown or unsupported: ' + cSourceFile )
-         RETURN Self
+         RETURN .f.
       ELSEIF !hb_FileExists( cSourceFile )
          MsgBox( 'File not found: ' + cSourceFile )
-         RETURN Self
+         RETURN .f.
       ENDIF
       IF ::oEM:isOpen( cSourceFile )
          IF lAlert
@@ -252,7 +252,7 @@ METHOD IdeSourcesManager:editSource( cSourceFile, nPos, nHPos, nVPos, cTheme, cV
             ENDIF
          ENDIF
          ::oEM:setSourceVisible( cSourceFile )
-         RETURN Self
+         RETURN .t.
       ENDIF
    ENDIF
 
@@ -269,7 +269,7 @@ METHOD IdeSourcesManager:editSource( cSourceFile, nPos, nHPos, nVPos, cTheme, cV
       hbide_mnuAddFileToMRU( Self, cSourceFile, INI_RECENTFILES )
    ENDIF
 
-   RETURN Self
+   RETURN .t.
 
 /*----------------------------------------------------------------------*/
 

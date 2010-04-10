@@ -257,6 +257,7 @@ CLASS IdeProjManager INHERIT IdeObject
    METHOD buildInterface()
    METHOD pullHbpData( cHbp )
    METHOD synchronizeAlienProject( cProjFileName )
+   METHOD outputText( cText )
 
    METHOD harbourFlags()
    METHOD hbmk2Flags()
@@ -1136,7 +1137,8 @@ METHOD IdeProjManager:promptForPath( cObjPathName, cTitle, cObjFileName, cObjPat
 /*----------------------------------------------------------------------*/
 
 METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
-   LOCAL cHbpPath, oEdit, cHbpFN, cTmp, cExeHbMk2, aHbp, cCmd, cC, cArg, oSource, cCmdParams
+   LOCAL cHbpPath, oEdit, cHbpFN, cTmp, cExeHbMk2, aHbp, cCmd, cC, oSource, cCmdParams, cBuf
+   LOCAL cbRed := "<font color=blue>", ceRed := "</font>"
 
    aHbp := {}
 
@@ -1220,13 +1222,13 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
       ::oOutputResult:oWidget:append( 'Error saving: ' + cHbpPath )
 
    ELSE
-      cTmp := hbide_outputLine() + CRLF + ;
-              "Project [ " + cProject                     + " ]    " + ;
+      ::oOutputResult:oWidget:append( hbide_outputLine() )
+      cTmp := "Project [ " + cProject                     + " ]    " + ;
               "Launch [ "  + iif( lLaunch , 'Yes', 'No' ) + " ]    " + ;
               "Rebuild [ " + iif( lRebuild, 'Yes', 'No' ) + " ]    " + ;
-              "Started [ " + time() + " ]" + CRLF + ;
-              hbide_outputLine() + CRLF
+              "Started [ " + time() + " ]"
       ::oOutputResult:oWidget:append( cTmp )
+      ::oOutputResult:oWidget:append( hbide_outputLine() )
 
       ::oIDE:oEV := IdeEnvironments():new():create( ::oIDE, hbide_pathFile( ::aINI[ INI_HBIDE, PathEnv ], "hbide.env" ) )
       ::cBatch   := ::oEV:prepareBatch( ::cWrkEnvironment )
@@ -1241,16 +1243,23 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
       ::oProcess:finished    := {|nEC , nES, oHbp| ::finished( nEC ,nES,oHbp ) }
       ::oProcess:workingPath := hbide_pathToOSPath( ::oProject:location )
       //
-
       cCmd := hbide_getShellCommand()
-      cC   := iif( hbide_getOS() == "nix", "", "/C " )
-      cArg := iif( empty( ::cBatch ), cC, cC + ::cBatch + " && "  )
+      cC   := iif( hbide_getOS() == "nix", "-c ", "/C " )
+
+      IF hb_fileExists( ::cBatch )
+         cBuf := memoread( ::cBatch )
+         cBuf += hb_osNewLine() + cExeHbMk2 + " " + cHbpPath + cCmdParams + hb_osNewLine()
+         hb_memowrit( ::cBatch, cBuf )
+      ENDIF
       //
-      ::oOutputResult:oWidget:append( ::cBatch + iif( hb_fileExists( ::cBatch ), " : Exists", " : Do Not Exists" ) )
-      ::oOutputResult:oWidget:append( cArg + cExeHbMk2 + " " + cHbpPath + cCmdParams  )
-      ::oOutputResult:oWidget:append( hbide_outputLine() )
+      ::outputText( cbRed + "Batch File " + iif( hb_fileExists( ::cBatch ), " Exists", " : doesn't Exist" ) + " => " + ceRed + trim( ::cBatch ) )
+      ::outputText( cbRed + "Batch File Contents => " + ceRed )
+      ::outputText( memoread( ::cBatch ) )
+      ::outputText( cbRed + "Command => " + ceRed + cCmd )
+      ::outputText( cbRed + "Arguments => " + ceRed + cC + ::cBatch )
+      ::outputText( hbide_outputLine() )
       //
-      ::oProcess:addArg( cArg + cExeHbMk2 + " " + cHbpPath + cCmdParams )
+      ::oProcess:addArg( cC + ::cBatch )
       ::oProcess:start( cCmd )
    ENDIF
 
@@ -1273,12 +1282,11 @@ METHOD IdeProjManager:finished( nExitCode, nExitStatus, oProcess )
 
    hbide_justACall( oProcess )
 
-   cTmp := hbide_outputLine() + CRLF
-   cTmp += "Exit Code [ " + hb_ntos( nExitCode ) + " ]    Exit Status [ " + hb_ntos( nExitStatus ) + " ]    " +;
-           "Finished at [ " + time()     + " ]    Done in [ " + hb_ntos( seconds() - oProcess:started ) +" Secs ]" + CRLF
-   cTmp += hbide_outputLine() + CRLF
-
-   ::oOutputResult:oWidget:append( cTmp )
+   ::outputText( hbide_outputLine() )
+   cTmp := "Exit Code [ " + hb_ntos( nExitCode ) + " ]    Exit Status [ " + hb_ntos( nExitStatus ) + " ]    " +;
+           "Finished at [ " + time()     + " ]    Done in [ " + hb_ntos( seconds() - oProcess:started ) +" Secs ]"
+   ::outputText( cTmp )
+   ::outputText( hbide_outputLine() )
 
    ferase( ::cBatch )
 
@@ -1291,7 +1299,6 @@ METHOD IdeProjManager:finished( nExitCode, nExitStatus, oProcess )
             cT   := ".exe" // Chr( 13 )
             n1   := hb_at( cT, cTmp, n + len( cTkn ) )
             cExe := substr( cTmp, n + len( cTkn ), n1 - n - len( cTkn ) + len( cT ) )
-HB_TRACE( HB_TR_ALWAYS, 1, cTkn, cExe )
          ENDIF
       ENDIF
       IF empty( cExe )
@@ -1300,14 +1307,32 @@ HB_TRACE( HB_TR_ALWAYS, 1, cTkn, cExe )
             cT   := ".exe" // Chr( 13 )
             n1   := hb_at( cT, cTmp, n + len( cTkn ) )
             cExe := substr( cTmp, n + len( cTkn ), n1 - n - len( cTkn ) + len( cT ) )
-HB_TRACE( HB_TR_ALWAYS, 2, cTkn, cExe )
          ENDIF
       ENDIF
+      IF empty( cExe )
+         cTkn := "hbmk2: Linker command:"
+         IF ( n := at( cTkn, cTmp ) ) > 0
+            cTmp := alltrim( substr( cTmp, n + len( cTkn ) ) )
+            IF ( n := at( "-o", cTmp ) ) > 0
+               IF ( n1 := hb_at( " ", cTmp, n ) ) > 0
+                  cExe := alltrim( substr( cTmp, n + 2, n1 - n - 2 ) )
+               ENDIF
+            ENDIF
+         ENDIF
+      ENDIF
+
+      ::outputText( " " )
+      IF empty( cExe )
+         ::outputText( "<font color=red>" + "Executable could not been detected from linker output!" + "</font>" )
+      ELSE
+         ::outputText( "<font color=blue>" + "Detected exeutable => " + cExe + "</font>" )
+      ENDIF
+      ::outputText( " " )
 
       IF nExitCode == 0
          ::launchProject( ::cProjectInProcess, cExe )
       ELSE
-         ::oOutputResult:oWidget:append( "Sorry, cannot launch project because of errors..." )
+         ::outputText( "Sorry, cannot launch project because of errors..." )
       ENDIF
    ENDIF
    IF ::lPPO .AND. hb_FileExists( ::cPPO )
@@ -1345,6 +1370,9 @@ METHOD IdeProjManager:launchProject( cProject, cExe )
          cTargetFN += '.exe'
       ENDIF
       #endif
+      IF !hb_FileExists( cTargetFN )
+         cTargetFN := oProject:launchProgram
+      ENDIF
    ENDIF
 
    IF !hb_FileExists( cTargetFN )
@@ -1379,6 +1407,14 @@ METHOD IdeProjManager:launchProject( cProject, cExe )
    ENDIF
 
    ::oOutputResult:oWidget:append( cTmp )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeProjManager:outputText( cText )
+
+   ::oOutputResult:oWidget:append( cText )
 
    RETURN Self
 

@@ -142,7 +142,7 @@ METHOD IdeSearchReplace:create( oIde )
 
    ::oUI:q_checkReplace:setEnabled( .f. )
    ::oUI:q_frameReplace:hide()
-hbide_dbg("========================================================================IdeSearchReplace:create()" )
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/

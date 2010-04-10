@@ -123,11 +123,9 @@ METHOD IdeEnvironments:create( oIDE, cEnvFile )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEnvironments:destroy()
-hbide_dbg("                ,,,,,,          IdeEnvironments:destroy()", 0 )
+
    IF !empty( ::oUI )
-hbide_dbg("IdeEnvironments:destroy()", 1 )
       ::oUI:destroy()
-hbide_dbg("IdeEnvironments:destroy()", 2 )
    ENDIF
    RETURN Self
 
@@ -183,21 +181,18 @@ METHOD IdeEnvironments:parse( cEnvFile )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEnvironments:prepareBatch( cEnvName )
-   LOCAL n, s, a_, aCmd
-   LOCAL cFile := space( 255 )
+   LOCAL n, s, a_, aCmd := {}
 
    IF ( n := ascan( ::aEnvrns, {|e_| e_[ 1 ] == cEnvName } ) ) > 0
-      aCmd := {}
       FOR EACH a_ IN ::aEnvrns[ n, 2 ]
          s := a_[ 1 ]
          IF s == "content"
             aadd( aCmd, a_[ 2 ] )
          ENDIF
       NEXT
-      cFile := hbide_getShellCommandsTempFile( aCmd )
    ENDIF
 
-   RETURN cFile
+   RETURN hbide_getShellCommandsTempFile( aCmd )
 
 /*----------------------------------------------------------------------*/
 

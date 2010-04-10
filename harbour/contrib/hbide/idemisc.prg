@@ -604,7 +604,7 @@ FUNCTION hbide_isValidText( cSourceFile )
    hb_fNameSplit( cSourceFile, , , @cExt )
 
    RETURN ( lower( cExt ) $ ".c,.cpp,.prg,.h,.ch,.txt,.log,.ini,.env,.ppo," + ;
-                                     ".cc,.hbc,.hbp,.hbm,.xml,.bat,.sh,.rc,.ui,.bak" )
+                            ".cc,.hbc,.hbp,.hbm,.xml,.bat,.sh,.rc,.ui,.uic,.bak,.fmg" )
 
 /*----------------------------------------------------------------------*/
 
@@ -1452,7 +1452,7 @@ FUNCTION hbide_outputLine( cLine, nOccur )
    DEFAULT cLine  TO "-"
    DEFAULT nOccur TO 100
 
-   RETURN replicate( cLine, nOccur )
+   RETURN "<font color=lightgreen>" + replicate( cLine, nOccur ) + "</font>"
 
 /*----------------------------------------------------------------------*/
 

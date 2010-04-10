@@ -89,6 +89,14 @@ CLASS IdeShortcuts INHERIT IdeObject
    DATA   aDftSCuts                               INIT {}
    DATA   aDftSCutsItms                           INIT {}
 
+   DATA   cName
+   DATA   cKey
+   DATA   cAlt
+   DATA   cCtrl
+   DATA   cShift
+   DATA   cMenu
+   DATA   cBlock
+
    METHOD new( oIde )
    METHOD create( oIde )
    METHOD destroy()
@@ -113,6 +121,12 @@ CLASS IdeShortcuts INHERIT IdeObject
    METHOD populateDftSCuts()
    METHOD populateKeys()
    METHOD populateMethods()
+   METHOD checkDuplicate( cKey, cAlt, cCtrl, cShift, nRow )
+   METHOD controls2vrbls()
+   METHOD vrbls2controls( nRow )
+   METHOD array2controls( nRow )
+   METHOD array2table( nRow, a_ )
+   METHOD vrbls2array( nRow )
 
    ENDCLASS
 
@@ -183,31 +197,32 @@ METHOD IdeShortcuts:show()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeShortcuts:execEvent( nMode, p )
-   LOCAL nRow, nKey, cKey
+   LOCAL nRow
 
    SWITCH nMode
    CASE buttonNew_clicked
-
+      IF .t.
+         ::controls2vrbls()
+         IF !( ::checkDuplicate( ::cKey, ::cAlt, ::cCtrl, ::cShift ) )
+            aadd( ::aDftSCuts, { ::cName, ::cKey, ::cAlt, ::cCtrl, ::cShift, ::cMenu, ::cBlock } )
+            aadd( ::aDftSCutsItms, array( 5 ) )
+            ::oUI:q_tableMacros:setRowCount( ::oUI:q_tableMacros:rowCount() + 1 )
+            ::array2table( len( ::aDftSCuts ), { ::cName, ::cKey, ::cAlt, ::cCtrl, ::cShift, ::cMenu, ::cBlock } )
+         ELSE
+            MsgBox( "Current shortcut is already defined!" )
+         ENDIF
+      ENDIF
       EXIT
 
    CASE buttonSet_clicked
       nRow := ::oUI:q_tableMacros:currentRow()
       IF nRow >= 0 .AND. nRow < len( ::aDftSCuts )
          nRow++
-         ::aDftSCuts[ nRow, 1 ] := ::oUI:q_editName:text()
-         ::aDftSCuts[ nRow, 2 ] := ::aKeys[ ::oUI:q_comboKey:currentIndex() + 1, 2 ]
-         ::aDftSCuts[ nRow, 3 ] := iif( ::oUI:q_checkAlt  :isChecked(), "YES", "NO" )
-         ::aDftSCuts[ nRow, 4 ] := iif( ::oUI:q_checkCtrl :isChecked(), "YES", "NO" )
-         ::aDftSCuts[ nRow, 5 ] := iif( ::oUI:q_checkShift:isChecked(), "YES", "NO" )
-         ::aDftSCuts[ nRow, 6 ] := ::oUI:q_editMenu:text()
-         ::aDftSCuts[ nRow, 7 ] := ::oUI:q_plainBlock:toPlainText()
-
-         ::aDftSCutsItms[ nRow, 1 ]:setText( ::aDftSCuts[ nRow, 1 ] )
-         ::aDftSCutsItms[ nRow, 2 ]:setText( ::aDftSCuts[ nRow, 2 ] )
-         ::aDftSCutsItms[ nRow, 3 ]:setIcon( hbide_image( iif( ::aDftSCuts[ nRow, 3 ] == "YES", "check", "" ) ) )
-         ::aDftSCutsItms[ nRow, 4 ]:setIcon( hbide_image( iif( ::aDftSCuts[ nRow, 4 ] == "YES", "check", "" ) ) )
-         ::aDftSCutsItms[ nRow, 5 ]:setIcon( hbide_image( iif( ::aDftSCuts[ nRow, 5 ] == "YES", "check", "" ) ) )
-
+         ::controls2vrbls()
+         IF !( ::checkDuplicate( ::cKey, ::cAlt, ::cCtrl, ::cShift, nRow ) )
+            ::vrbls2array( nRow )
+            ::vrbls2controls( nRow )
+         ENDIF
       ENDIF
       EXIT
    CASE tableMacros_itemDoubleClicked
@@ -217,21 +232,7 @@ METHOD IdeShortcuts:execEvent( nMode, p )
       nRow := ::oUI:q_tableMacros:currentRow()
       IF nRow >= 0 .AND. nRow < len( ::aDftSCuts )
          nRow++
-
-         ::oUI:q_editName:setText( ::aDftSCuts[ nRow, 1 ] )
-
-         cKey := ::aDftSCuts[ nRow, 2 ]
-         IF ( nKey := ascan( ::aKeys, {|e_| e_[ 2 ] == cKey } ) ) > 0
-            ::oUI:q_comboKey:setCurrentIndex( nKey - 1 )
-         ENDIF
-
-         ::oUI:q_checkAlt  :setChecked( ::aDftSCuts[ nRow, 3 ] == "YES" )
-         ::oUI:q_checkCtrl :setChecked( ::aDftSCuts[ nRow, 4 ] == "YES" )
-         ::oUI:q_checkShift:setChecked( ::aDftSCuts[ nRow, 5 ] == "YES" )
-
-         ::oUI:q_editMenu:setText( ::aDftSCuts[ nRow, 6 ] )
-
-         ::oUI:q_plainBlock:setPlainText( ::aDftSCuts[ nRow, 7 ] )
+         ::array2controls( nRow )
       ENDIF
       EXIT
    CASE listMethods_itemDoubleClicked
@@ -244,6 +245,132 @@ METHOD IdeShortcuts:execEvent( nMode, p )
    ENDSWITCH
 
    RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeShortcuts:array2controls( nRow )
+   LOCAL cKey, nKey
+
+   ::oUI:q_editName:setText( ::aDftSCuts[ nRow, 1 ] )
+
+   cKey := ::aDftSCuts[ nRow, 2 ]
+   IF ( nKey := ascan( ::aKeys, {|e_| e_[ 2 ] == cKey } ) ) > 0
+      ::oUI:q_comboKey:setCurrentIndex( nKey - 1 )
+   ENDIF
+
+   ::oUI:q_checkAlt  :setChecked( ::aDftSCuts[ nRow, 3 ] == "YES" )
+   ::oUI:q_checkCtrl :setChecked( ::aDftSCuts[ nRow, 4 ] == "YES" )
+   ::oUI:q_checkShift:setChecked( ::aDftSCuts[ nRow, 5 ] == "YES" )
+
+   ::oUI:q_editMenu:setText( ::aDftSCuts[ nRow, 6 ] )
+
+   ::oUI:q_plainBlock:setPlainText( ::aDftSCuts[ nRow, 7 ] )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeShortcuts:vrbls2array( nRow )
+
+   IF nRow == NIL
+      aadd( ::aDftSCuts, array( 7 ) )
+      nRow := len( ::aDftSCuts )
+   ENDIF
+
+   ::aDftSCuts[ nRow, 1 ] := ::cName
+   ::aDftSCuts[ nRow, 2 ] := ::cKey
+   ::aDftSCuts[ nRow, 3 ] := ::cAlt
+   ::aDftSCuts[ nRow, 4 ] := ::cCtrl
+   ::aDftSCuts[ nRow, 5 ] := ::cShift
+   ::aDftSCuts[ nRow, 6 ] := ::cMenu
+   ::aDftSCuts[ nRow, 7 ] := ::cBlock
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeShortcuts:vrbls2controls( nRow )
+
+   ::aDftSCutsItms[ nRow, 1 ]:setText( ::cName )
+   ::aDftSCutsItms[ nRow, 2 ]:setText( ::cKey )
+   ::aDftSCutsItms[ nRow, 3 ]:setIcon( hbide_image( iif( ::cAlt   == "YES", "check", "" ) ) )
+   ::aDftSCutsItms[ nRow, 4 ]:setIcon( hbide_image( iif( ::cCtrl  == "YES", "check", "" ) ) )
+   ::aDftSCutsItms[ nRow, 5 ]:setIcon( hbide_image( iif( ::cShift == "YES", "check", "" ) ) )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeShortcuts:array2table( nRow, a_ )
+   LOCAL q1, q2, q3, q4, q5
+   LOCAL oTbl := ::oUI:q_tableMacros
+   LOCAL n := nRow - 1
+
+   q1 := QTableWidgetItem():new()
+   q1:setText( a_[ 1 ] )
+   oTbl:setItem( n, 0, q1 )
+
+   q2 := QTableWidgetItem():new()
+   q2:setText( a_[ 2 ] )
+   oTbl:setItem( n, 1, q2 )
+
+   q3 := QTableWidgetItem():new()
+   q3:setIcon( iif( a_[ 3 ] == "YES", hbide_image( "check" ), "" ) )
+   oTbl:setItem( n, 2, q3 )
+
+   q4 := QTableWidgetItem():new()
+   q4:setIcon( iif( a_[ 4 ] == "YES", hbide_image( "check" ), "" ) )
+   oTbl:setItem( n, 3, q4 )
+
+   q5 := QTableWidgetItem():new()
+   q5:setIcon( iif( a_[ 5 ] == "YES", hbide_image( "check" ), "" ) )
+   oTbl:setItem( n, 4, q5 )
+
+   oTbl:setRowHeight( n, 16 )
+
+   ::aDftSCutsItms[ nRow, 1 ] := q1
+   ::aDftSCutsItms[ nRow, 2 ] := q2
+   ::aDftSCutsItms[ nRow, 3 ] := q3
+   ::aDftSCutsItms[ nRow, 4 ] := q4
+   ::aDftSCutsItms[ nRow, 5 ] := q5
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeShortcuts:controls2vrbls()
+
+   ::cName  := ::oUI:q_editName:text()
+   ::cKey   := ::aKeys[ ::oUI:q_comboKey:currentIndex() + 1, 2 ]
+   ::cAlt   := iif( ::oUI:q_checkAlt  :isChecked(), "YES", "NO" )
+   ::cCtrl  := iif( ::oUI:q_checkCtrl :isChecked(), "YES", "NO" )
+   ::cShift := iif( ::oUI:q_checkShift:isChecked(), "YES", "NO" )
+   ::cMenu  := ::oUI:q_editMenu:text()
+   ::cBlock := ::oUI:q_plainBlock:toPlainText()
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeShortcuts:checkDuplicate( cKey, cAlt, cCtrl, cShift, nRow )
+   LOCAL lYes, e_
+
+   IF empty( nRow )
+      lYes := ascan( ::aDftSCuts, {|e_| e_[ 2 ] == cKey .AND. e_[ 3 ] == cAlt .AND. ;
+                                                   e_[ 4 ] == cCtrl .AND. e_[ 5 ] == cShift } ) > 0
+   ELSE
+      lYes := .f.
+      FOR EACH e_ IN ::aDftSCuts
+         IF e_:__enumIndex() != nRow
+            IF e_[ 2 ] == cKey .AND. e_[ 3 ] == cAlt .AND. e_[ 4 ] == cCtrl .AND. e_[ 5 ] == cShift
+               lYes := .t.
+               EXIT
+            ENDIF
+         ENDIF
+      NEXT
+   ENDIF
+
+   RETURN lYes
 
 /*----------------------------------------------------------------------*/
 
@@ -306,37 +433,17 @@ METHOD IdeShortcuts:populateData( nMode )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeShortcuts:populateDftSCuts()
-   LOCAL a_, q1,q2,q3,q4,q5, n
+   LOCAL a_, nRow
    LOCAL oTbl := ::oUI:q_tableMacros
 
    oTbl:setRowCount( len( ::aDftSCuts ) )
 
-   n := 0
+   nRow := 0
    FOR EACH a_ IN ::aDftSCuts
-      q1 := QTableWidgetItem():new()
-      q1:setText( a_[ 1 ] )
-      oTbl:setItem( n, 0, q1 )
-
-      q2 := QTableWidgetItem():new()
-      q2:setText( a_[ 2 ] )
-      oTbl:setItem( n, 1, q2 )
-
-      q3 := QTableWidgetItem():new()
-      q3:setIcon( iif( a_[ 3 ] == "YES", hbide_image( "check" ), "" ) )
-      oTbl:setItem( n, 2, q3 )
-
-      q4 := QTableWidgetItem():new()
-      q4:setIcon( iif( a_[ 4 ] == "YES", hbide_image( "check" ), "" ) )
-      oTbl:setItem( n, 3, q4 )
-
-      q5 := QTableWidgetItem():new()
-      q5:setIcon( iif( a_[ 5 ] == "YES", hbide_image( "check" ), "" ) )
-      oTbl:setItem( n, 4, q5 )
-
-      oTbl:setRowHeight( n, 16 )
+      nRow++
+      aadd( ::aDftSCutsItms, array( 5 ) )
+      ::array2table( nRow, a_ )
       QApplication():processEvents()
-      aadd( ::aDftSCutsItms, { q1, q2, q3, q4, q5 } )
-      n++
    NEXT
 
    RETURN Self

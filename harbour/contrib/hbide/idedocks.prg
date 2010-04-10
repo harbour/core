@@ -852,15 +852,16 @@ METHOD IdeDocks:outputDoubleClicked( lSelected )
       cText := QTextBlock():configure( qCursor:block() ):text()
 
       IF hbide_parseFNfromStatusMsg( cText, @cSource, @nLine, .T. )
-         ::oSM:editSource( cSource, 0, 0, 0, NIL, NIL, .f., .t. )
-         qCursor := QTextCursor():configure( ::oIde:qCurEdit:textCursor() )
-         nLine   := iif( nLine < 1, 0, nLine - 1 )
+         IF ::oSM:editSource( cSource, 0, 0, 0, NIL, NIL, .f., .t. )
+            qCursor := QTextCursor():configure( ::oIde:qCurEdit:textCursor() )
+            nLine   := iif( nLine < 1, 0, nLine - 1 )
 
-         qCursor:setPosition( 0 )
-         qCursor:movePosition( QTextCursor_Down, QTextCursor_MoveAnchor, nLine )
-         ::oIde:qCurEdit:setTextCursor( qCursor )
-         ::oIde:qCurEdit:centerCursor()
-         ::oIde:manageFocusInEditor()
+            qCursor:setPosition( 0 )
+            qCursor:movePosition( QTextCursor_Down, QTextCursor_MoveAnchor, nLine )
+            ::oIde:qCurEdit:setTextCursor( qCursor )
+            ::oIde:qCurEdit:centerCursor()
+            ::oIde:manageFocusInEditor()
+         ENDIF
       ENDIF
    ENDIF
 
