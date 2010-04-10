@@ -53,7 +53,16 @@ diff -u ori\deflate.c .\deflate.c
 Only in .: ori
 diff -u ori\zconf.h .\zconf.h
 --- ori\zconf.h	Sun Feb 21 16:38:24 2010
-+++ .\zconf.h	Fri Apr 09 14:34:48 2010
++++ .\zconf.h	Sat Apr 10 10:04:40 2010
+@@ -3,7 +3,7 @@
+  * For conditions of distribution and use, see copyright notice in zlib.h
+  */
+ 
+-/* @(#) $Id$ */
++/* @(#) $Id: zconf.h 14300 2010-04-09 12:44:20Z vszakats $ */
+ 
+ #ifndef ZCONF_H
+ #define ZCONF_H
 @@ -140,7 +140,18 @@
  #if defined(_WINDOWS) && !defined(WINDOWS)
  #  define WINDOWS
@@ -74,6 +83,17 @@ diff -u ori\zconf.h .\zconf.h
  #  ifndef WIN32
  #    define WIN32
  #  endif
+@@ -360,8 +371,10 @@
+    typedef Byte       *voidp;
+ #endif
+ 
++#if 0
+ #ifdef HAVE_UNISTD_H    /* may be set to #if 1 by ./configure */
+ #  define Z_HAVE_UNISTD_H
++#endif
+ #endif
+ 
+ #ifdef Z_HAVE_UNISTD_H
 Only in .: zlib.dif
 diff -u ori\zutil.c .\zutil.c
 --- ori\zutil.c	Sat Jan 09 15:23:48 2010

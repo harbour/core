@@ -48,9 +48,10 @@ ifneq ($(HB_HAS_PCRE_LOCAL),)
       endif
    endif
 
-   # suppress bcc warnings
+   # suppress bcc warnings and tweak to make it build
    ifeq ($(HB_COMPILER),bcc)
       HB_CFLAGS += -w-use -w-csu -w-aus -w-sig
+      HB_CFLAGS += -DHAVE_INTTYPES_H=0
    endif
 
    HB_CFLAGS += -DHAVE_CONFIG_H

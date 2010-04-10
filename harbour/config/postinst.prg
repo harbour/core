@@ -192,7 +192,7 @@ PROCEDURE Main()
          OutStd( "! Making Harbour .exe install package: '" + tmp + "'" + hb_osNewLine() )
 
          hb_processRun( GetEnv( "HB_DIR_NSIS" ) + "makensis.exe" +;
-                        " /V2" +;
+                        " -V2" +;
                         " " + FN_Escape( "package\mpkg_win.nsi" ) )
       ENDIF
    ENDIF
