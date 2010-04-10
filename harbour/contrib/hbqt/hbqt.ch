@@ -71,8 +71,6 @@
 
 #include "hbtrace.ch"
 
-#xtranslate HBQT_DEBUG( [<x,...>] ) => HB_TRACE( HB_TR_DEBUG, <x> )
-
 /*----------------------------------------------------------------------*/
 
 /* Retained for compatibility */

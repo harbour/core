@@ -150,7 +150,7 @@ METHOD HbQtUI:destroy()
 
    FOR EACH a_ IN ::aSignals
       i := Qt_Slots_disConnect( ::pSlots, a_[ 1 ], a_[ 2 ] )
-//hbq_dbg( 300, i, "Qt_Slots_disConnect", a_[ 2 ] )
+//HB_TRACE( HB_TR_ALWAYS, 300, i, "Qt_Slots_disConnect", a_[ 2 ] )
       a_:= NIL
    NEXT
    ::pSlots := NIL
@@ -188,11 +188,11 @@ METHOD HbQtUI:destroy()
       IF ( i := a_:__enumIndex() ) > 1
          IF type( a_[ 3 ] ) == "UI"
             IF !( a_[ 1 ] $ "QHBoxLayout,QVBoxLayout,QGridLayout" )
-//hbq_dbg( 400, i, pad( a_[ 1 ], 20 ), pad( a_[ 2 ], 20 ), iif( i > 1, pad( ::widgets[ i - 1, 1 ],20 ), NIL ), i, len( ::widgets ) )
+//HB_TRACE( HB_TR_ALWAYS, 400, i, pad( a_[ 1 ], 20 ), pad( a_[ 2 ], 20 ), iif( i > 1, pad( ::widgets[ i - 1, 1 ],20 ), NIL ), i, len( ::widgets ) )
                ::qObj[ a_[ 2 ] ] := NIL
             ENDIF
          ELSEIF type( a_[ 3 ] ) != "UI"
-//hbq_dbg( 500, 0, pad( a_[ 1 ], 20 ), pad( a_[ 2 ], 20 ), iif( i > 1, pad( ::widgets[ i - 1, 1 ],20 ), NIL ), i, len( ::widgets ) )
+//HB_TRACE( HB_TR_ALWAYS, 500, 0, pad( a_[ 1 ], 20 ), pad( a_[ 2 ], 20 ), iif( i > 1, pad( ::widgets[ i - 1, 1 ],20 ), NIL ), i, len( ::widgets ) )
          ENDIF
       ENDIF
    NEXT
@@ -202,7 +202,7 @@ METHOD HbQtUI:destroy()
       IF ( i := a_:__enumIndex() ) > 1
          IF type( a_[ 3 ] ) == "UI"  .AND. ( a_[ 1 ] $ "QHBoxLayout,QVBoxLayout,QGridLayout" )
             IF i > 2
-//hbq_dbg( 600, i, pad( a_[ 1 ], 20 ), pad( a_[ 2 ], 20 ), iif( i > 1, pad( ::widgets[ i - 1, 1 ],20 ), NIL ), i, len( ::widgets ) )
+//HB_TRACE( HB_TR_ALWAYS, 600, i, pad( a_[ 1 ], 20 ), pad( a_[ 2 ], 20 ), iif( i > 1, pad( ::widgets[ i - 1, 1 ],20 ), NIL ), i, len( ::widgets ) )
                ::qObj[ a_[ 2 ] ] := NIL
             ENDIF
          ENDIF
@@ -216,11 +216,11 @@ METHOD HbQtUI:destroy()
    ::qObj := NIL
    ::widgets := {}
 
-hbq_dbg( 101 )
+HB_TRACE( HB_TR_ALWAYS, 101 )
    ::oWidget:close()
-hbq_dbg( 102 )
+HB_TRACE( HB_TR_ALWAYS, 102 )
 //   ::oWidget := NIL  /* Variable Destruction GPFs */
-hbq_dbg( 103 )
+HB_TRACE( HB_TR_ALWAYS, 103 )
    hbide_justACall( i )
    RETURN NIL
 
@@ -247,7 +247,7 @@ METHOD HbQtUI:signal( cWidget, cSignal, bBlock )
       IF Qt_Slots_Connect( ::pSlots, ::qObj[ cWidget ], cSignal, bBlock )
          aadd( ::aSignals, { ::qObj[ cWidget ], cSignal } )
       ELSE
-         hbq_dbg( "Failed:", cSignal )
+         HB_TRACE( HB_TR_ALWAYS, "Failed:", cSignal )
       ENDIF
    ENDIF
 
@@ -399,7 +399,7 @@ METHOD HbQtUI:build( cFileOrBuffer, qParent )
    hbq_stripFront( @cMCls, "(" )
    hbq_stripRear( @cMNam, ")" )
    //
-//   hbq_dbg( "Widget   ", pad( cMNam, 20 ), pad( cMCls, 20 ), cMCls+"():new()" )
+//   HB_TRACE( HB_TR_ALWAYS, "Widget   ", pad( cMNam, 20 ), pad( cMCls, 20 ), cMCls+"():new()" )
    //                               Validator   Constructor
    aadd( ::widgets, { cMCls, cMNam, cMCls+"()", cMCls+"():new()" } )
 
@@ -439,12 +439,12 @@ METHOD HbQtUI:build( cFileOrBuffer, qParent )
             cNam := substr( s, 1, n - 1 )
             aadd( ::widgets, { cCls, cNam, cCls+"()", cCls+"():new"+substr( s, n ) } )
             //
-         *  hbq_dbg( "Object   ", pad( cNam, 20 ), pad( cCls, 20 ), cCls+"():new"+substr( s, n ) )
+         *  HB_TRACE( HB_TR_ALWAYS, "Object   ", pad( cNam, 20 ), pad( cCls, 20 ), cCls+"():new"+substr( s, n ) )
          ELSE
             cNam := s
             aadd( ::widgets, { cCls, cNam, cCls+"()", cCls+"():new()" } )
             //
-         *  hbq_dbg( "Object   ", pad( cNam, 20 ), pad( cCls,20 ), cCls+"():new()" )
+         *  HB_TRACE( HB_TR_ALWAYS, "Object   ", pad( cNam, 20 ), pad( cCls,20 ), cCls+"():new()" )
          ENDIF
 
       ELSEIF hbq_isObjectNameSet( s )
@@ -456,7 +456,7 @@ METHOD HbQtUI:build( cFileOrBuffer, qParent )
          cCmd := ::formatCommand( substr( cText, n + 2 ), .t. )
          aadd( aCommands, { cNam, cCmd } )
          //
-      *  hbq_dbg( "Command  ", pad( cNam, 20 ), cCmd )
+      *  HB_TRACE( HB_TR_ALWAYS, "Command  ", pad( cNam, 20 ), cCmd )
 
       ELSEIF !empty( cText := hbq_pullText( ::org, s:__enumIndex() ) )
          n := at( "->", cText )
@@ -464,7 +464,7 @@ METHOD HbQtUI:build( cFileOrBuffer, qParent )
          cCmd := ::formatCommand( substr( cText, n + 2 ), .t. )
          aadd( aCommands, { cNam, cCmd } )
          //
-      *  hbq_dbg( "Command  ", pad( cNam, 20 ), cCmd )
+      *  HB_TRACE( HB_TR_ALWAYS, "Command  ", pad( cNam, 20 ), cCmd )
 
       ELSEIF hbq_isValidCmdLine( s ) .AND. !( "->" $ s ) .AND. ( ( n := at( ".", s ) ) > 0  )  /* Assignment to objects on stack */
          cNam := substr( s, 1, n - 1 )
@@ -474,7 +474,7 @@ METHOD HbQtUI:build( cFileOrBuffer, qParent )
          cCmd := hbq_setObjects( cCmd, ::widgets )
          aadd( aCommands, { cNam, cCmd } )
          //
-      *  hbq_dbg( "Command  ", pad( cNam, 20 ), cCmd )
+      *  HB_TRACE( HB_TR_ALWAYS, "Command  ", pad( cNam, 20 ), cCmd )
 
       ELSEIF !( left( s, 1 ) $ '#/*"' ) .AND. ;          /* Assignment with properties from objects */
                      ( ( n := at( ".", s ) ) > 0  ) .AND. ;
@@ -486,7 +486,7 @@ METHOD HbQtUI:build( cFileOrBuffer, qParent )
          cCmd := hbq_setObjects( cCmd, ::widgets )
          aadd( aCommands, { cNam, cCmd } )
          //
-      *  hbq_dbg( "Command  ", pad( cNam, 20 ), cCmd )
+      *  HB_TRACE( HB_TR_ALWAYS, "Command  ", pad( cNam, 20 ), cCmd )
 
       ELSEIF ( n := at( "->", s ) ) > 0                  /* Assignments or calls to objects on heap */
          cNam := substr( s, 1, n - 1 )
@@ -494,7 +494,7 @@ METHOD HbQtUI:build( cFileOrBuffer, qParent )
          cCmd := hbq_setObjects( cCmd, ::widgets )
          aadd( aCommands, { cNam, cCmd } )
          //
-      *  hbq_dbg( "Command  ", pad( cNam, 20 ), cCmd )
+      *  HB_TRACE( HB_TR_ALWAYS, "Command  ", pad( cNam, 20 ), cCmd )
 
       ELSEIF ( n := at( "= new", s ) ) > 0
          IF ( n1 := at( "*", s ) ) > 0 .AND. n1 < n
@@ -507,7 +507,7 @@ METHOD HbQtUI:build( cFileOrBuffer, qParent )
          n := at( "(", cCmd )
          cCls := substr( cCmd, 1, n - 1 )
          aadd( ::widgets, { cCls, cNam, cCls+"()", cCls+"():new"+substr(cCmd,n) } )
-      *  hbq_dbg( "new      ", pad( cNam, 20 ), cCmd )
+      *  HB_TRACE( HB_TR_ALWAYS, "new      ", pad( cNam, 20 ), cCmd )
 
       ENDIF
    NEXT
@@ -531,12 +531,12 @@ METHOD HbQtUI:build( cFileOrBuffer, qParent )
 
    ::qObj[ cMNam ] := ::oWidget
 
-//hbq_dbg( "------------------------------------------------------------" )
+//HB_TRACE( HB_TR_ALWAYS, "------------------------------------------------------------" )
    FOR EACH a_ IN ::widgets
       IF a_:__enumIndex() > 1
          IF type( a_[ 3 ] ) == "UI"
             cBlock := "{|o| " + a_[ 4 ] + "}"
-//hbq_dbg( "Constr   ", pad( a_[ 2 ], 20 ), cBlock )
+//HB_TRACE( HB_TR_ALWAYS, "Constr   ", pad( a_[ 2 ], 20 ), cBlock )
             bBlock := &( cBlock )
 
             x := eval( bBlock, ::qObj )
@@ -544,11 +544,11 @@ METHOD HbQtUI:build( cFileOrBuffer, qParent )
                ::qObj[ a_[ 2 ] ] := x
             ENDIF
          ELSE
-//hbq_dbg( "----------------------------", a_[ 3 ] )
+//HB_TRACE( HB_TR_ALWAYS, "----------------------------", a_[ 3 ] )
          ENDIF
       ENDIF
    NEXT
-//hbq_dbg( "------------------------------------------------------------" )
+//HB_TRACE( HB_TR_ALWAYS, "------------------------------------------------------------" )
 
    ::aCommands := aCommands
 
@@ -591,7 +591,7 @@ METHOD HbQtUI:build( cFileOrBuffer, qParent )
 
          ELSE
             cBlock := "{|o,v| o[v]:" + cCmd + "}"
-//hbq_dbg( pad( a_[ 1 ], 20 ), cBlock )
+//HB_TRACE( HB_TR_ALWAYS, pad( a_[ 1 ], 20 ), cBlock )
             bBlock := &( cBlock )
             eval( bBlock, ::qObj, cNam )
 
@@ -832,12 +832,6 @@ STATIC FUNCTION hbq_stripRear( s, cTkn )
 
 /*----------------------------------------------------------------------*/
 
-STATIC FUNCTION hbq_dbg( ... )
-
-   RETURN HB_TRACE( HB_TR_ALWAYS, ... )
-
-/*----------------------------------------------------------------------*/
-
 STATIC FUNCTION hbq_getConstants()
    STATIC h_
 
@@ -935,5 +929,3 @@ STATIC FUNCTION hbq_getConstants()
    RETURN h_
 
 /*----------------------------------------------------------------------*/
-
-

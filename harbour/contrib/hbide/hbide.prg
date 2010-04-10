@@ -75,11 +75,11 @@
 #include "inkey.ch"
 #include "gra.ch"
 #include "set.ch"
+
 #include "hbclass.ch"
+#include "hbver.ch"
 
 #define UNU( x ) HB_SYMBOL_UNUSED( x )
-
-#define __HBIDE_DEBUG__
 
 /*----------------------------------------------------------------------*/
 
@@ -92,11 +92,6 @@ STATIC s_pathSep
 
 PROCEDURE Main( ... )
    LOCAL oIde
-
-   #ifdef __HBIDE_DEBUG__
-   hb_setEnv( "HB_TR_DEBUG" , "HB_TR_ALWAYS" )
-   hb_setEnv( "HB_TR_WINOUT", "YES"          )
-   #endif
 
    /* Testing paths */
    #ifdef __TESTING_PATHS__
@@ -1351,7 +1346,7 @@ METHOD HbIde:updateProjectMenu()
  * 02/01/2010 - 16:30:06 - vailtom
  */
 METHOD HbIde:updateTitleBar()
-   LOCAL cTitle := "Harbour IDE " + substr( HB_VERSION(), at( "(Rev.", HB_VERSION() ) )
+   LOCAL cTitle := "Harbour IDE (r" + hb_ntos( hb_version( HB_VERSION_REVISION ) ) + ")"
    LOCAL oEdit
 
    IF Empty( ::oDlg )
@@ -1364,9 +1359,9 @@ METHOD HbIde:updateTitleBar()
 
    IF !empty( oEdit := ::oEM:getEditorCurrent() )
       IF Empty( oEdit:sourceFile )
-         cTitle += "[" + oEdit:oTab:caption + "]"
+         cTitle += " [" + oEdit:oTab:caption + "]"
       ELSE
-         cTitle += "[" + oEdit:sourceFile + "]"
+         cTitle += " [" + oEdit:sourceFile + "]"
       ENDIF
    ENDIF
 
