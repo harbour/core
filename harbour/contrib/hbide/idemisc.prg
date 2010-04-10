@@ -934,12 +934,6 @@ FUNCTION hbide_exchangeMeta( cKey )
    RETURN cKey
 
 /*----------------------------------------------------------------------*/
-
-FUNCTION hbide_dbg( ... )
-   HB_TRACE( HB_TR_ALWAYS, ... )
-   RETURN nil
-
-/*----------------------------------------------------------------------*/
 /*
  * Return the next untitled filename available.
  * 01/01/2010 - 19:40:17 - vailtom
@@ -1711,7 +1705,7 @@ FUNCTION hbide_syncRoot( cRoot, cPath )
 
    hb_fNameSplit( cPath, @cPth, @cFile, @cExt )
 
-//hbide_dbg( "hbide_syncRoot( cRoot, cPath )", cPathProc, hbide_pathToOSpath( cPathProc + "/" + cFile + cExt ) )
+//HB_TRACE( HB_TR_ALWAYS, "hbide_syncRoot( cRoot, cPath )", cPathProc, hbide_pathToOSpath( cPathProc + "/" + cFile + cExt ) )
 
    RETURN hbide_pathToOSpath( cPathProc + "/" + cFile + cExt )
 

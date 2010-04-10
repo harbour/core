@@ -545,7 +545,7 @@ METHOD IdeShortcuts:evalMacro( cString )
 
    bBlock := &( cBlock )
 
-hbide_dbg( cBlock )
+HB_TRACE( HB_TR_ALWAYS, cBlock )
    BEGIN SEQUENCE
       eval( bBlock, self )
    RECOVER USING oErr
@@ -601,4 +601,3 @@ METHOD IdeShortcuts:getText()
    RETURN ::oEM:getText()
 
 /*----------------------------------------------------------------------*/
-

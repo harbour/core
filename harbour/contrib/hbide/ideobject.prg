@@ -230,10 +230,10 @@ CLASS IdeObject
 METHOD IdeObject:connect( qWidget, cSlot, bBlock )
 
    IF !( Qt_Slots_Connect( ::pSlots, qWidget, cSlot, bBlock ) )
-      hbide_dbg( "Connection FAILED:", cSlot )
+      HB_TRACE( HB_TR_ALWAYS, "Connection FAILED:", cSlot )
       RETURN .f.
    ELSE
-//      hbide_dbg( "Connection SUCCEEDED:", cSlot )
+//      HB_TRACE( HB_TR_ALWAYS, "Connection SUCCEEDED:", cSlot )
    ENDIF
 
    RETURN .t.
@@ -243,10 +243,10 @@ METHOD IdeObject:connect( qWidget, cSlot, bBlock )
 METHOD IdeObject:disConnect( qWidget, cSlot )
 
    IF !( Qt_Slots_disConnect( ::pSlots, qWidget, cSlot ) )
-      hbide_dbg( "Dis-Connection FAILED:", cSlot )
+      HB_TRACE( HB_TR_ALWAYS, "Dis-Connection FAILED:", cSlot )
       RETURN .f.
    ELSE
-//      hbide_dbg( "Dis-Connection SUCCEEDED:", cSlot )
+//      HB_TRACE( HB_TR_ALWAYS, "Dis-Connection SUCCEEDED:", cSlot )
    ENDIF
 
    RETURN .t.

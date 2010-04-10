@@ -462,7 +462,7 @@ METHOD IdeProjManager:pullHbpData( cHbp )
 
    /* PRJ_PRP_FLAGS */
    FOR EACH s IN aOptns
-//hbide_dbg( "FLAGS   ", s )
+//HB_TRACE( HB_TR_ALWAYS, "FLAGS   ", s )
       IF !empty( s )
          aadd( a2_0, s )
       ENDIF
@@ -470,7 +470,7 @@ METHOD IdeProjManager:pullHbpData( cHbp )
 
    /* PRJ_PRP_SOURCES */
    FOR EACH s IN aFiles
-//hbide_dbg( "SOURCE  ", s )
+//HB_TRACE( HB_TR_ALWAYS, "SOURCE  ", s )
       aadd( a3_0, s )
    NEXT
 
@@ -1291,7 +1291,7 @@ METHOD IdeProjManager:finished( nExitCode, nExitStatus, oProcess )
             cT   := ".exe" // Chr( 13 )
             n1   := hb_at( cT, cTmp, n + len( cTkn ) )
             cExe := substr( cTmp, n + len( cTkn ), n1 - n - len( cTkn ) + len( cT ) )
-hbide_dbg( 1, cTkn, cExe )
+HB_TRACE( HB_TR_ALWAYS, 1, cTkn, cExe )
          ENDIF
       ENDIF
       IF empty( cExe )
@@ -1300,7 +1300,7 @@ hbide_dbg( 1, cTkn, cExe )
             cT   := ".exe" // Chr( 13 )
             n1   := hb_at( cT, cTmp, n + len( cTkn ) )
             cExe := substr( cTmp, n + len( cTkn ), n1 - n - len( cTkn ) + len( cT ) )
-hbide_dbg( 2, cTkn, cExe )
+HB_TRACE( HB_TR_ALWAYS, 2, cTkn, cExe )
          ENDIF
       ENDIF
 
@@ -1368,8 +1368,8 @@ METHOD IdeProjManager:launchProject( cProject, cExe )
 
       #else
       ::oProcess := HbpProcess():new()
-      ::oProcess:output := {|s| hbide_dbg( s ) }
-      ::oProcess:finished := {|n,nn| hbide_dbg( "Finished", n, nn ) }
+      ::oProcess:output := {|s| HB_TRACE( HB_TR_ALWAYS, s ) }
+      ::oProcess:finished := {|n,nn| HB_TRACE( HB_TR_ALWAYS, "Finished", n, nn ) }
       ::oProcess:start( cTargetFN )
       #endif
 

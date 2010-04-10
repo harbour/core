@@ -704,7 +704,7 @@ METHOD IdeFindInFiles:buildUI()
    ::oUI:signal( "editResults"  , "copyAvailable(bool)"      , {|l| ::execEvent( "editResults", l   ) } )
    ::oUI:signal( "editResults"  , "customContextMenuRequested(QPoint)", {|p| ::execEvent( "editResults-contextMenu", p ) } )
 
-hbide_dbg( "-------------------------", 1 )
+HB_TRACE( HB_TR_ALWAYS, "-------------------------", 1 )
    RETURN Self
 
 /*----------------------------------------------------------------------*/

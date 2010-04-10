@@ -1149,7 +1149,7 @@ METHOD IdeEditor:destroy()
          ::oIde:lDockRVisible := .f.
       ENDIF
    ENDIF
-//hbide_dbg( "IdeEditor:destroy()", 1, "-------------------------------------" )
+//HB_TRACE( HB_TR_ALWAYS, "IdeEditor:destroy()", 1, "-------------------------------------" )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1639,12 +1639,12 @@ METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
       EXIT
 
    CASE textChanged
-      //hbide_dbg( "textChanged()" )
+      //HB_TRACE( HB_TR_ALWAYS, "textChanged()" )
       ::oEditor:setTabImage( qEdit )
       EXIT
 
    CASE selectionChanged
-      //hbide_dbg( "selectionChanged()" )
+      //HB_TRACE( HB_TR_ALWAYS, "selectionChanged()" )
       ::oEditor:qCqEdit := qEdit
       ::oEditor:qCoEdit := oEdit
 
@@ -1663,7 +1663,7 @@ METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
       EXIT
 
    CASE cursorPositionChanged
-      // hbide_dbg( "cursorPositionChanged()", ::nProtoLine, ::nProtoCol, ::isSuspended, ::getLineNo(), ::getColumnNo(), ::cProto )
+      // HB_TRACE( HB_TR_ALWAYS, "cursorPositionChanged()", ::nProtoLine, ::nProtoCol, ::isSuspended, ::getLineNo(), ::getColumnNo(), ::cProto )
       ::oEditor:dispEditInfo( qEdit )
       ::handlePreviousWord( ::lUpdatePrevWord )
       ::handleCurrentIndent()
@@ -1700,13 +1700,13 @@ METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
 
    #if 0
    CASE modificationChanged
-      //hbide_dbg( "modificationChanged(bool)", p )
+      //HB_TRACE( HB_TR_ALWAYS, "modificationChanged(bool)", p )
       EXIT
    CASE redoAvailable
-      //hbide_dbg( "redoAvailable(bool)", p )
+      //HB_TRACE( HB_TR_ALWAYS, "redoAvailable(bool)", p )
       EXIT
    CASE undoAvailable
-      //hbide_dbg( "undoAvailable(bool)", p )
+      //HB_TRACE( HB_TR_ALWAYS, "undoAvailable(bool)", p )
       EXIT
    CASE updateRequest
       EXIT
@@ -2573,4 +2573,3 @@ FUNCTION hbide_formatProto( cProto )
    RETURN cProto
 
 /*----------------------------------------------------------------------*/
-

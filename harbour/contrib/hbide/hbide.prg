@@ -95,10 +95,10 @@ PROCEDURE Main( ... )
 
    /* Testing paths */
    #ifdef __TESTING_PATHS__
-hbide_dbg( hbmk2_PathMakeRelative( "C:\dev_projects", "C:\dev_sources\vouch\myfile.prg", .f. ) )
-hbide_dbg( hbmk2_PathMakeRelative( "C:\dev_projects", "C:\dev_sources\vouch\myfile.prg", .t. ) )
-hbide_dbg( hbmk2_PathMakeRelative( "C:/dev_projects", "C:/dev_sources/vouch/myfile.prg", .t. ) )
-hbide_dbg( hbmk2_PathMakeRelative( "C:\dev_projects", "C:/dev_sources/vouch/myfile.prg", .t. ) )
+HB_TRACE( HB_TR_ALWAYS, hbmk2_PathMakeRelative( "C:\dev_projects", "C:\dev_sources\vouch\myfile.prg", .f. ) )
+HB_TRACE( HB_TR_ALWAYS, hbmk2_PathMakeRelative( "C:\dev_projects", "C:\dev_sources\vouch\myfile.prg", .t. ) )
+HB_TRACE( HB_TR_ALWAYS, hbmk2_PathMakeRelative( "C:/dev_projects", "C:/dev_sources/vouch/myfile.prg", .t. ) )
+HB_TRACE( HB_TR_ALWAYS, hbmk2_PathMakeRelative( "C:\dev_projects", "C:/dev_sources/vouch/myfile.prg", .t. ) )
    #endif
 
    SET CENTURY ON
@@ -330,7 +330,7 @@ METHOD HbIde:new( aParams )
 METHOD HbIde:create( aParams )
    LOCAL qPixmap, qSplash, n
 
-hbide_dbg( "HbIde:create( cProjIni )", "#Params=" )
+HB_TRACE( HB_TR_ALWAYS, "HbIde:create( cProjIni )", "#Params=" )
 
    qPixmap := QPixmap():new( hb_dirBase() + "resources" + hb_osPathSeparator() + "hbidesplash.png" )
    qSplash := QSplashScreen():new()
@@ -519,17 +519,17 @@ hbide_dbg( "HbIde:create( cProjIni )", "#Params=" )
       ::nEvent := AppEvent( @::mp1, @::mp2, @::oXbp )
 
       IF ::nEvent == xbeP_Quit
-         hbide_dbg( "----------------- xbeP_Quit" )
+         HB_TRACE( HB_TR_ALWAYS, "----------------- xbeP_Quit" )
          hbide_saveINI( Self )
          EXIT
       ENDIF
 
       IF ::nEvent == xbeP_Close
-         hbide_dbg( "================ xbeP_Close" )
+         HB_TRACE( HB_TR_ALWAYS, "================ xbeP_Close" )
          hbide_saveINI( Self )
-         hbide_dbg( "================ xbeP_Close", "after: hbide_saveINI( Self )"   )
+         HB_TRACE( HB_TR_ALWAYS, "================ xbeP_Close", "after: hbide_saveINI( Self )"   )
          ::oSM:closeAllSources()
-         hbide_dbg( "================ xbeP_Close", "after: ::oSM:closeAllSources()" )
+         HB_TRACE( HB_TR_ALWAYS, "================ xbeP_Close", "after: ::oSM:closeAllSources()" )
          EXIT
 
       ELSEIF ::nEvent == xbeP_Keyboard
@@ -570,9 +570,9 @@ hbide_dbg( "HbIde:create( cProjIni )", "#Params=" )
    ENDDO
 
    /* Very important - destroy resources */
-   hbide_dbg( "======================================================" )
-   hbide_dbg( "Before    ::oDlg:destroy()", memory( 1001 ), hbqt_getMemUsed() )
-   hbide_dbg( "                                                      " )
+   HB_TRACE( HB_TR_ALWAYS, "======================================================" )
+   HB_TRACE( HB_TR_ALWAYS, "Before    ::oDlg:destroy()", memory( 1001 ), hbqt_getMemUsed() )
+   HB_TRACE( HB_TR_ALWAYS, "                                                      " )
 
    ::oTM:destroy()
    ::oSK:destroy()
@@ -595,9 +595,9 @@ hbide_dbg( "HbIde:create( cProjIni )", "#Params=" )
    ::qCursor := NIL
    ::oFont   := NIL
 
-   hbide_dbg( "                                                      " )
-   hbide_dbg( "After     ::oDlg:destroy()", memory( 1001 ), hbqt_getMemUsed() )
-   hbide_dbg( "======================================================" )
+   HB_TRACE( HB_TR_ALWAYS, "                                                      " )
+   HB_TRACE( HB_TR_ALWAYS, "After     ::oDlg:destroy()", memory( 1001 ), hbqt_getMemUsed() )
+   HB_TRACE( HB_TR_ALWAYS, "======================================================" )
 
    RETURN self
 
@@ -1389,7 +1389,7 @@ METHOD HbIde:setCodec( cCodec )
 METHOD HbIde:testPainter( qPainter )
    LOCAL qP := QPainter():from( qPainter )
 
-   hbide_dbg( "qPainter:isActive()", qP:isActive() )
+   HB_TRACE( HB_TR_ALWAYS, "qPainter:isActive()", qP:isActive() )
 
    qP:setPen_2( Qt_red )
    qP:drawEllipse_2( 100,300,100,150 )

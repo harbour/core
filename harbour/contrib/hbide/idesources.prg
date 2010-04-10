@@ -277,7 +277,7 @@ METHOD IdeSourcesManager:closeSource( nTab, lCanCancel, lCanceled )
    LOCAL lSave, n, oEditor
 
    DEFAULT nTab TO ::oEM:getTabCurrent()
-//hbide_dbg( "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<", 0 )
+//HB_TRACE( HB_TR_ALWAYS, "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<", 0 )
    IF !empty( oEditor := ::oEM:getEditorByTabPosition( nTab ) )
 
       DEFAULT lCanCancel TO .F.
@@ -304,9 +304,9 @@ METHOD IdeSourcesManager:closeSource( nTab, lCanCancel, lCanceled )
             RETURN .F.
          ENDIF
       ENDIF
-//hbide_dbg( "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<", 1, "before: oEditor:destroy()" )
+//HB_TRACE( HB_TR_ALWAYS, "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<", 1, "before: oEditor:destroy()" )
       oEditor:destroy()
-//hbide_dbg( "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<", 2, "after:  oEditor:destroy()" )
+//HB_TRACE( HB_TR_ALWAYS, "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<", 2, "after:  oEditor:destroy()" )
       ::oIde:updateTitleBar()
    ENDIF
 
@@ -496,7 +496,7 @@ METHOD IdeSourcesManager:selectSource( cMode, cFile, cTitle )
       oDlg:quit        := {|| MsgBox( "Quitting the Dialog" ), 1 }
       cFile := oDlg:saveAs( "myfile.dbf" )
       IF !empty( cFile )
-         hbide_dbg( cFile )
+         HB_TRACE( HB_TR_ALWAYS, cFile )
       ENDIF
 
    ENDIF
@@ -504,5 +504,3 @@ METHOD IdeSourcesManager:selectSource( cMode, cFile, cTitle )
    RETURN cFile
 
 /*----------------------------------------------------------------------*/
-
-

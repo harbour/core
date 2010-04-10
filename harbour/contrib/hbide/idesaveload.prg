@@ -89,7 +89,7 @@ FUNCTION hbide_restSettings( oIde )
 FUNCTION hbide_saveINI( oIde )
    LOCAL j, nTab, pTab, n, txt_, qHScr, qVScr, oEdit, qCursor, nTabs, nn, s
 
-hbide_dbg( "hbide_saveINI( oIde )", 0, oIde:nRunMode, oIde:cProjIni )
+HB_TRACE( HB_TR_ALWAYS, "hbide_saveINI( oIde )", 0, oIde:nRunMode, oIde:cProjIni )
    IF oIde:nRunMode != HBIDE_RUN_MODE_INI
       RETURN Nil
    ENDIF
