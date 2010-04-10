@@ -91,6 +91,8 @@ CLASS XbpDialog FROM XbpWindow
    DATA     titleBar                              INIT  .F.
    DATA     moveWithOwner                         INIT  .T.
    DATA     origin                                INIT  XBPDLG_ORIGIN_OWNER
+   DATA     sysMenu                               INIT  .T.
+
 
    METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
