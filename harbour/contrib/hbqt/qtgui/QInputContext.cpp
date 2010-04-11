@@ -115,7 +115,7 @@ void * hbqt_gcAllocate_QInputContext( void * pObj, bool bNew )
    if( bNew )
    {
       new( & p->pq ) QPointer< QInputContext >( ( QInputContext * ) pObj );
-      HB_TRACE( HB_TR_DEBUG, ( "   _new_QInputContext              ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      HB_TRACE( HB_TR_DEBUG, ( "   _new_QInputContext              ph=%p", pObj ) );
    }
    return p;
 }
