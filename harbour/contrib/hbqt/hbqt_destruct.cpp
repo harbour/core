@@ -83,30 +83,52 @@ const HB_GC_FUNCS * hbqt_gcFuncs( void )
 
 void * hbqt_gcpointerFromItem( PHB_ITEM pObj )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_itemGetPtrGC( pObj, hbqt_gcFuncs() );
+   QGC_POINTER * p;
+
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcpointerFromItem( %p )", pObj ) );
+
+   p = ( QGC_POINTER * ) hb_itemGetPtrGC( pObj, hbqt_gcFuncs() );
 
    if( p && p->ph )
       return p->ph;
    else if( hb_itemGetPtr( pObj ) )
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcpointerFromItem(): returns raw pointer: %p", hb_itemGetPtr( pObj ) ) );
       return hb_itemGetPtr( pObj ); /* TOFIX: In what cases is this needed? Reference counting to avoid referring to freed pointers? */
+   }
    else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcpointerFromItem(): returns NULL" ) );
       return NULL; /* TODO: Still better if RTE. */
+   }
 }
 
 void * hbqt_gcpointer( int iParam )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), iParam );
+   QGC_POINTER * p;
+
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcpointer( %d )", iParam ) );
+
+   p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), iParam );
 
    if( p && p->ph )
       return p->ph;
    else if( HB_ISPOINTER( iParam ) )
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcpointer(): returns raw pointer: %p", hb_parptr( iParam ) ) );
       return hb_parptr( iParam ); /* TOFIX: In what cases is this needed? Reference counting to avoid referring to freed pointers? */
+   }
    else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcpointer(): returns NULL" ) );
       return NULL; /* TODO: Still better if RTE. */
+   }
 }
 
 void * hbqt_pPtrFromItem( PHB_ITEM pObj )
 {
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_pPtrFromItem( %p )", pObj ) );
+
    if( hb_itemType( pObj ) == HB_IT_OBJECT )
    {
       hb_vmPushSymbol( hb_dynsymSymbol( hb_dynsymFindName( "PPTR" ) ) );
@@ -118,12 +140,19 @@ void * hbqt_pPtrFromItem( PHB_ITEM pObj )
    else if( hb_itemType( pObj ) == HB_IT_POINTER )
       return hbqt_gcpointerFromItem( pObj );
    else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "hbqt_pPtrFromItem(): returns NULL" ) );
       return NULL; /* TODO: Still better if RTE. */
+   }
 }
 
 void * hbqt_pPtrFromObj( int iParam )
 {
-   PHB_ITEM pObj = hb_param( iParam, HB_IT_ANY );
+   PHB_ITEM pObj;
+
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_pPtrFromObj( %d )", iParam ) );
+
+   pObj = hb_param( iParam, HB_IT_ANY );
 
    if( hb_itemType( pObj ) == HB_IT_OBJECT )
    {
@@ -136,7 +165,10 @@ void * hbqt_pPtrFromObj( int iParam )
    else if( hb_itemType( pObj ) == HB_IT_POINTER )
       return hbqt_gcpointer( iParam );
    else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "hbqt_pPtrFromObj(): returns NULL" ) );
       return NULL; /* TODO: Still better if RTE. */
+   }
 }
 
 HB_FUNC( HBQT_SETCODECFORCSTRINGS )
