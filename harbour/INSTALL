@@ -644,11 +644,10 @@ HARBOUR
    - HB_UTIL_ADDONS=<list>       Build space separated <list> of additional
                                  utilities stored in the utils directory.
    - HB_COMPILER_VER=[<ver>]     Set C compiler version. This is used with msvc
-                                 targets currently, and in the case of this
-                                 compiler, it will be autodetected.
+                                 targets currently.
                                  <ver> format:
-                                     <09><00>[.<00>] = <major><minor>[.<revision>]
-                                 Default: filled by autodetection or empty
+                                     <9><0><0> = <major><minor>[.<revision>]
+                                 Default: filled by compiler autodetection or empty
    - HB_USER_LIBS=[<list>]       Add space separated <list> of libs to link process.
                                  Lib names should be without extension and path.
                                  You only need this in special cases, like CodeGuard
