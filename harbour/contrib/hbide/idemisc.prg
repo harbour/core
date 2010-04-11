@@ -1212,7 +1212,6 @@ FUNCTION hbide_buildLinesLabel( nFrom, nTo, nW, nMax )
 
 FUNCTION hbide_getShellCommandsTempFile( aCmd )
    LOCAL cExt
-   LOCAL cPrefix
    LOCAL fhnd
    LOCAL cCmdFileName
    LOCAL cCmdFile
@@ -1220,18 +1219,15 @@ FUNCTION hbide_getShellCommandsTempFile( aCmd )
 
    #if   defined( __PLATFORM__WINDOWS )
       cExt      := ".bat"
-      cPrefix   := ""
    #elif defined( __PLATFORM__OS2 )
       cExt      := ".cmd"
-      cPrefix   := ""
    #elif defined( __PLATFORM__UNIX )
       cExt      := ".sh"
-      cPrefix   := "#!/bin/sh" + hb_osNewLine()
    #endif
 
    IF ! Empty( cExt )
 
-      cCmdFile := cPrefix
+      cCmdFile := ""
       FOR EACH tmp IN aCmd
          cCmdFile += tmp + hb_osNewLine()
       NEXT
@@ -1471,7 +1467,7 @@ FUNCTION hbmk2_PathMakeRelative( cPathBase, cPathTarget, lForceRelative )
 
    DEFAULT lForceRelative TO .F.
 
-   cPathBase   := PathProc( DirAddPathSep( cPathBase ), hb_dirBase() )
+   cPathBase   := PathProc( hbide_DirAddPathSep( cPathBase ), hb_dirBase() )
    cPathTarget := PathProc( cPathTarget, hb_dirBase() )
 
    /* TODO: Optimize to operate on strings instead of arrays */
@@ -1553,7 +1549,7 @@ STATIC FUNCTION FN_FromArray( aPath, nFrom, nTo, cFileName, cDirPrefix )
       cDir += aPath[ tmp ] + hb_osPathSeparator()
    NEXT
 
-   RETURN hb_FNameMerge( DirDelPathSep( DirAddPathSep( cDirPrefix ) + cDir ), cFileName )
+   RETURN hb_FNameMerge( DirDelPathSep( hbide_DirAddPathSep( cDirPrefix ) + cDir ), cFileName )
 
 
 STATIC FUNCTION PathProc( cPathR, cPathA )
@@ -1579,7 +1575,7 @@ STATIC FUNCTION PathProc( cPathR, cPathA )
    RETURN hb_FNameMerge( cDirA + cDirR, cNameR, cExtR )
 
 
-STATIC FUNCTION DirAddPathSep( cDir )
+FUNCTION hbide_DirAddPathSep( cDir )
 
    IF ! Empty( cDir ) .AND. !( Right( cDir, 1 ) == hb_osPathSeparator() )
       cDir += hb_osPathSeparator()
@@ -1910,7 +1906,7 @@ PROCEDURE convert_xhp_to_hbp( cSrcName, cDstName )
                   EXIT
                CASE "Final Path"
                   IF ! Empty( cValue )
-                     AAdd( aDst, "-o" + DirAddPathSep( StrTran( cValue, "%HOME%\" ) ) )
+                     AAdd( aDst, "-o" + hbide_DirAddPathSep( StrTran( cValue, "%HOME%\" ) ) )
                   ENDIF
                   EXIT
                CASE "Include"

@@ -93,14 +93,6 @@ STATIC s_pathSep
 PROCEDURE Main( ... )
    LOCAL oIde
 
-   /* Testing paths */
-   #ifdef __TESTING_PATHS__
-HB_TRACE( HB_TR_ALWAYS, hbmk2_PathMakeRelative( "C:\dev_projects", "C:\dev_sources\vouch\myfile.prg", .f. ) )
-HB_TRACE( HB_TR_ALWAYS, hbmk2_PathMakeRelative( "C:\dev_projects", "C:\dev_sources\vouch\myfile.prg", .t. ) )
-HB_TRACE( HB_TR_ALWAYS, hbmk2_PathMakeRelative( "C:/dev_projects", "C:/dev_sources/vouch/myfile.prg", .t. ) )
-HB_TRACE( HB_TR_ALWAYS, hbmk2_PathMakeRelative( "C:\dev_projects", "C:/dev_sources/vouch/myfile.prg", .t. ) )
-   #endif
-
    SET CENTURY ON
    SET EPOCH TO 1970
 
