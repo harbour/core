@@ -103,7 +103,11 @@ void * hbqt_gcAllocate_QWheelEvent( void * pObj, bool bNew )
 
    if( bNew )
    {
-      HB_TRACE( HB_TR_DEBUG, ( "   _new_QWheelEvent                ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QWheelEvent", pObj ) );
+   }
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p NOT_new_QWheelEvent", pObj ) );
    }
    return p;
 }

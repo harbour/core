@@ -96,24 +96,26 @@ QT_G_FUNC( hbqt_gcRelease_QLabel )
          const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QLabel   /.\\   ph=%p pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QLabel   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
             delete ( ( QLabel * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QLabel   \\./   ph=%p pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QLabel   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "NO__rel_QLabelph=%p pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QLabel          pq=%p", p->ph, (void *)(p->pq) ) );
+            p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QLabel    :     Object already deleted!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QLabel    :     Object already deleted!", p->ph ) );
+         p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QLabel    :    Object not created with new()" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QLabel    :    Object not created with new=true", p->ph ) );
       p->ph = NULL;
    }
 }
@@ -129,7 +131,11 @@ void * hbqt_gcAllocate_QLabel( void * pObj, bool bNew )
    if( bNew )
    {
       new( & p->pq ) QPointer< QLabel >( ( QLabel * ) pObj );
-      HB_TRACE( HB_TR_DEBUG, ( "   _new_QLabel                     ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QLabel  under p->pq", pObj ) );
+   }
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p NOT_new_QLabel", pObj ) );
    }
    return p;
 }

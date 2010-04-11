@@ -95,19 +95,20 @@ QT_G_FUNC( hbqt_gcRelease_QStyleOptionComboBox )
    {
       if( p->ph )
       {
-         HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QStyleOptionComboBox   /.\\    ph=%p", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _rel_QStyleOptionComboBox   /.\\", p->ph ) );
          delete ( ( QStyleOptionComboBox * ) p->ph );
-         HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QStyleOptionComboBox   \\./    ph=%p", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QStyleOptionComboBox   \\./", p->ph ) );
          p->ph = NULL;
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QStyleOptionComboBox    :     Object already deleted!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QStyleOptionComboBox    :     Object already deleted!", p->ph ) );
+         p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QStyleOptionComboBox    :    Object not created with new()" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QStyleOptionComboBox    :    Object not created with new=true", p->ph ) );
       p->ph = NULL;
    }
 }
@@ -122,7 +123,11 @@ void * hbqt_gcAllocate_QStyleOptionComboBox( void * pObj, bool bNew )
 
    if( bNew )
    {
-      HB_TRACE( HB_TR_DEBUG, ( "   _new_QStyleOptionComboBox       ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QStyleOptionComboBox", pObj ) );
+   }
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p NOT_new_QStyleOptionComboBox", pObj ) );
    }
    return p;
 }

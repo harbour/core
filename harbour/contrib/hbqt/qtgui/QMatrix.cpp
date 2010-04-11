@@ -91,19 +91,20 @@ QT_G_FUNC( hbqt_gcRelease_QMatrix )
    {
       if( p->ph )
       {
-         HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QMatrix   /.\\    ph=%p", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _rel_QMatrix   /.\\", p->ph ) );
          delete ( ( QMatrix * ) p->ph );
-         HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QMatrix   \\./    ph=%p", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QMatrix   \\./", p->ph ) );
          p->ph = NULL;
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QMatrix    :     Object already deleted!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QMatrix    :     Object already deleted!", p->ph ) );
+         p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QMatrix    :    Object not created with new()" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QMatrix    :    Object not created with new=true", p->ph ) );
       p->ph = NULL;
    }
 }
@@ -118,7 +119,11 @@ void * hbqt_gcAllocate_QMatrix( void * pObj, bool bNew )
 
    if( bNew )
    {
-      HB_TRACE( HB_TR_DEBUG, ( "   _new_QMatrix                    ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QMatrix", pObj ) );
+   }
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p NOT_new_QMatrix", pObj ) );
    }
    return p;
 }

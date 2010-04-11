@@ -117,7 +117,11 @@ void * hbqt_gcAllocate_QStyleHintReturnVariant( void * pObj, bool bNew )
 
    if( bNew )
    {
-      HB_TRACE( HB_TR_DEBUG, ( "   _new_QStyleHintReturnVariant    ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QStyleHintReturnVariant", pObj ) );
+   }
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p NOT_new_QStyleHintReturnVariant", pObj ) );
    }
    return p;
 }

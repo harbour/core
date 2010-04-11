@@ -95,24 +95,26 @@ QT_G_FUNC( hbqt_gcRelease_QVBoxLayout )
          const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QVBoxLayout   /.\\   ph=%p pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QVBoxLayout   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
             delete ( ( QVBoxLayout * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QVBoxLayout   \\./   ph=%p pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QVBoxLayout   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "NO__rel_QVBoxLayoutph=%p pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QVBoxLayout          pq=%p", p->ph, (void *)(p->pq) ) );
+            p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QVBoxLayout    :     Object already deleted!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QVBoxLayout    :     Object already deleted!", p->ph ) );
+         p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QVBoxLayout    :    Object not created with new()" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QVBoxLayout    :    Object not created with new=true", p->ph ) );
       p->ph = NULL;
    }
 }
@@ -128,7 +130,11 @@ void * hbqt_gcAllocate_QVBoxLayout( void * pObj, bool bNew )
    if( bNew )
    {
       new( & p->pq ) QPointer< QVBoxLayout >( ( QVBoxLayout * ) pObj );
-      HB_TRACE( HB_TR_DEBUG, ( "   _new_QVBoxLayout                ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QVBoxLayout  under p->pq", pObj ) );
+   }
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p NOT_new_QVBoxLayout", pObj ) );
    }
    return p;
 }

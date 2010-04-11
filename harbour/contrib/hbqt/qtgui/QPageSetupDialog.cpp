@@ -99,24 +99,26 @@ QT_G_FUNC( hbqt_gcRelease_QPageSetupDialog )
          const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QPageSetupDialog   /.\\   ph=%p pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QPageSetupDialog   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
             delete ( ( QPageSetupDialog * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QPageSetupDialog   \\./   ph=%p pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QPageSetupDialog   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "NO__rel_QPageSetupDialogph=%p pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QPageSetupDialog          pq=%p", p->ph, (void *)(p->pq) ) );
+            p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QPageSetupDialog    :     Object already deleted!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QPageSetupDialog    :     Object already deleted!", p->ph ) );
+         p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QPageSetupDialog    :    Object not created with new()" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QPageSetupDialog    :    Object not created with new=true", p->ph ) );
       p->ph = NULL;
    }
 }
@@ -132,7 +134,11 @@ void * hbqt_gcAllocate_QPageSetupDialog( void * pObj, bool bNew )
    if( bNew )
    {
       new( & p->pq ) QPointer< QPageSetupDialog >( ( QPageSetupDialog * ) pObj );
-      HB_TRACE( HB_TR_DEBUG, ( "   _new_QPageSetupDialog           ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QPageSetupDialog  under p->pq", pObj ) );
+   }
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p NOT_new_QPageSetupDialog", pObj ) );
    }
    return p;
 }

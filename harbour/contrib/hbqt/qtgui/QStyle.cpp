@@ -120,7 +120,11 @@ void * hbqt_gcAllocate_QStyle( void * pObj, bool bNew )
    if( bNew )
    {
       new( & p->pq ) QPointer< QStyle >( ( QStyle * ) pObj );
-      HB_TRACE( HB_TR_DEBUG, ( "   _new_QStyle                     ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QStyle  under p->pq", pObj ) );
+   }
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p NOT_new_QStyle", pObj ) );
    }
    return p;
 }

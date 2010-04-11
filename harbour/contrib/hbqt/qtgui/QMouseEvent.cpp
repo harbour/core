@@ -91,19 +91,20 @@ QT_G_FUNC( hbqt_gcRelease_QMouseEvent )
    {
       if( p->ph )
       {
-         HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QMouseEvent   /.\\    ph=%p", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _rel_QMouseEvent   /.\\", p->ph ) );
          delete ( ( QMouseEvent * ) p->ph );
-         HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QMouseEvent   \\./    ph=%p", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QMouseEvent   \\./", p->ph ) );
          p->ph = NULL;
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QMouseEvent    :     Object already deleted!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QMouseEvent    :     Object already deleted!", p->ph ) );
+         p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QMouseEvent    :    Object not created with new()" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QMouseEvent    :    Object not created with new=true", p->ph ) );
       p->ph = NULL;
    }
 }
@@ -118,7 +119,11 @@ void * hbqt_gcAllocate_QMouseEvent( void * pObj, bool bNew )
 
    if( bNew )
    {
-      HB_TRACE( HB_TR_DEBUG, ( "   _new_QMouseEvent                ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QMouseEvent", pObj ) );
+   }
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p NOT_new_QMouseEvent", pObj ) );
    }
    return p;
 }

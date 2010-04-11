@@ -97,19 +97,20 @@ QT_G_FUNC( hbqt_gcRelease_QListWidgetItem )
    {
       if( p->ph )
       {
-         HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QListWidgetItem   /.\\    ph=%p", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _rel_QListWidgetItem   /.\\", p->ph ) );
          delete ( ( QListWidgetItem * ) p->ph );
-         HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QListWidgetItem   \\./    ph=%p", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QListWidgetItem   \\./", p->ph ) );
          p->ph = NULL;
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QListWidgetItem    :     Object already deleted!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QListWidgetItem    :     Object already deleted!", p->ph ) );
+         p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QListWidgetItem    :    Object not created with new()" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QListWidgetItem    :    Object not created with new=true", p->ph ) );
       p->ph = NULL;
    }
 }
@@ -124,7 +125,11 @@ void * hbqt_gcAllocate_QListWidgetItem( void * pObj, bool bNew )
 
    if( bNew )
    {
-      HB_TRACE( HB_TR_DEBUG, ( "   _new_QListWidgetItem            ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QListWidgetItem", pObj ) );
+   }
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p NOT_new_QListWidgetItem", pObj ) );
    }
    return p;
 }

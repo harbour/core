@@ -95,19 +95,20 @@ QT_G_FUNC( hbqt_gcRelease_QStyleOptionFrame )
    {
       if( p->ph )
       {
-         HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QStyleOptionFrame   /.\\    ph=%p", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _rel_QStyleOptionFrame   /.\\", p->ph ) );
          delete ( ( QStyleOptionFrame * ) p->ph );
-         HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QStyleOptionFrame   \\./    ph=%p", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QStyleOptionFrame   \\./", p->ph ) );
          p->ph = NULL;
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QStyleOptionFrame    :     Object already deleted!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QStyleOptionFrame    :     Object already deleted!", p->ph ) );
+         p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QStyleOptionFrame    :    Object not created with new()" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QStyleOptionFrame    :    Object not created with new=true", p->ph ) );
       p->ph = NULL;
    }
 }
@@ -122,7 +123,11 @@ void * hbqt_gcAllocate_QStyleOptionFrame( void * pObj, bool bNew )
 
    if( bNew )
    {
-      HB_TRACE( HB_TR_DEBUG, ( "   _new_QStyleOptionFrame          ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QStyleOptionFrame", pObj ) );
+   }
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p NOT_new_QStyleOptionFrame", pObj ) );
    }
    return p;
 }

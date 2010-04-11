@@ -116,7 +116,11 @@ void * hbqt_gcAllocate_QStyleHintReturnMask( void * pObj, bool bNew )
 
    if( bNew )
    {
-      HB_TRACE( HB_TR_DEBUG, ( "   _new_QStyleHintReturnMask       ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QStyleHintReturnMask", pObj ) );
+   }
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p NOT_new_QStyleHintReturnMask", pObj ) );
    }
    return p;
 }

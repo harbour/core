@@ -115,7 +115,11 @@ void * hbqt_gcAllocate_QAbstractItemView( void * pObj, bool bNew )
    if( bNew )
    {
       new( & p->pq ) QPointer< QAbstractItemView >( ( QAbstractItemView * ) pObj );
-      HB_TRACE( HB_TR_DEBUG, ( "   _new_QAbstractItemView          ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QAbstractItemView  under p->pq", pObj ) );
+   }
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p NOT_new_QAbstractItemView", pObj ) );
    }
    return p;
 }

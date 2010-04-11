@@ -105,7 +105,11 @@ void * hbqt_gcAllocate_QAbstractScrollArea( void * pObj, bool bNew )
    if( bNew )
    {
       new( & p->pq ) QPointer< QAbstractScrollArea >( ( QAbstractScrollArea * ) pObj );
-      HB_TRACE( HB_TR_DEBUG, ( "   _new_QAbstractScrollArea        ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QAbstractScrollArea  under p->pq", pObj ) );
+   }
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p NOT_new_QAbstractScrollArea", pObj ) );
    }
    return p;
 }

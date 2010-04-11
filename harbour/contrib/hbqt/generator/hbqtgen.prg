@@ -71,6 +71,7 @@ STATIC aWebkit  := {}
 STATIC lNewGCtoQT := .T.
 STATIC s_isObject := .F.
 STATIC s_trMode   := "HB_TR_DEBUG"
+//STATIC s_trMode   := "HB_TR_ALWAYS"
 
 /*----------------------------------------------------------------------*/
 
@@ -564,15 +565,15 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
                aadd( cpp_, "         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();" )
                aadd( cpp_, '         if( ( QString ) m->className() != ( QString ) "QObject" )' )
                aadd( cpp_, "         {" )
-               aadd( cpp_, '            HB_TRACE( ' + s_trMode + ', ( "YES_rel_' + cWidget + '   /.\\   ph=%p pq=%p", p->ph, (void *)(p->pq) ) );')
+               aadd( cpp_, '            HB_TRACE( ' + s_trMode + ', ( "ph=%p YES_rel_' + cWidget + '   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );')
                aadd( cpp_, "            delete ( ( " + cWidget + IF( lList, "< void * >", "" ) + " * ) p->ph ); " )
-//               aadd( cpp_, "            hb_xfree( p->ph );" )
-               aadd( cpp_, '            HB_TRACE( ' + s_trMode + ', ( "YES_rel_' + cWidget + '   \\./   ph=%p pq=%p", p->ph, (void *)(p->pq) ) );')
+               aadd( cpp_, '            HB_TRACE( ' + s_trMode + ', ( "ph=%p YES_rel_' + cWidget + '   \\./   pq=%p", p->ph, (void *)(p->pq) ) );')
                aadd( cpp_, "            p->ph = NULL;" )
                aadd( cpp_, "         }" )
                aadd( cpp_, "         else" )
                aadd( cpp_, "         {" )
-               aadd( cpp_, '            HB_TRACE( ' + s_trMode + ', ( "NO__rel_' + cWidget + 'ph=%p pq=%p", p->ph, (void *)(p->pq) ) );')
+               aadd( cpp_, '            HB_TRACE( ' + s_trMode + ', ( "ph=%p NO__rel_' + cWidget + '          pq=%p", p->ph, (void *)(p->pq) ) );')
+               aadd( cpp_, "            p->ph = NULL;" )
                aadd( cpp_, "         }" )
             ELSE
                aadd( cpp_, "   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;" )
@@ -581,21 +582,21 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
                aadd( cpp_, "   {" )
                aadd( cpp_, "      if( p->ph )" )
                aadd( cpp_, "      {" )
-               aadd( cpp_, '         HB_TRACE( ' + s_trMode + ', ( "YES_rel_' + cWidget + '   /.\\    ph=%p", p->ph ) );')
+               aadd( cpp_, '         HB_TRACE( ' + s_trMode + ', ( "ph=%p    _rel_' + cWidget + '   /.\\", p->ph ) );' )
                aadd( cpp_, "         delete ( ( " + cWidget + IF( lList, "< void * >", "" ) + " * ) p->ph ); " )
-//               aadd( cpp_, "         hb_xfree( p->ph );" )
-               aadd( cpp_, '         HB_TRACE( ' + s_trMode + ', ( "YES_rel_' + cWidget + '   \\./    ph=%p", p->ph ) );')
+               aadd( cpp_, '         HB_TRACE( ' + s_trMode + ', ( "ph=%p YES_rel_' + cWidget + '   \\./", p->ph ) );' )
                aadd( cpp_, "         p->ph = NULL;" )
             ENDIF
             aadd( cpp_, "      }" )
             aadd( cpp_, "      else" )
             aadd( cpp_, "      {" )
-            aadd( cpp_, '         HB_TRACE( ' + s_trMode + ', ( "DEL_rel_' + cWidget + '    :     Object already deleted!" ) );' )
+            aadd( cpp_, '         HB_TRACE( ' + s_trMode + ', ( "ph=%p DEL_rel_' + cWidget + '    :     Object already deleted!", p->ph ) );' )
+            aadd( cpp_, "         p->ph = NULL;" )
             aadd( cpp_, "      }" )
             aadd( cpp_, "   }" )
             aadd( cpp_, "   else" )
             aadd( cpp_, "   {" )
-            aadd( cpp_, '      HB_TRACE( ' + s_trMode + ', ( "PTR_rel_' + cWidget + '    :    Object not created with new()" ) );' )
+            aadd( cpp_, '      HB_TRACE( ' + s_trMode + ', ( "ph=%p PTR_rel_' + cWidget + '    :    Object not created with new=true", p->ph ) );' )
             aadd( cpp_, "      p->ph = NULL;" )
             aadd( cpp_, "   }" )
          ELSE
@@ -640,7 +641,11 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
          IF lObject
             aadd( cpp_, "      new( & p->pq ) QPointer< "+ cWidget +" >( ( " + cWidget + " * ) pObj );" )
          ENDIF
-         aadd( cpp_, '      HB_TRACE( ' + s_trMode + ', ( "   _new_' + pad( cWidget, 27 ) + 'ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );')
+         aadd( cpp_, '      HB_TRACE( ' + s_trMode + ', ( "ph=%p    _new_' + cWidget + iif( lObject, '  under p->pq', '' ) + '", pObj ) );' )
+         aadd( cpp_, "   }" )
+         aadd( cpp_, "   else" )
+         aadd( cpp_, "   {" )
+         aadd( cpp_, '      HB_TRACE( ' + s_trMode + ', ( "ph=%p NOT_new_' + cWidget + '", pObj ) );' )
          aadd( cpp_, "   }" )
          aadd( cpp_, "   return p;" )
          aadd( cpp_, "}" )

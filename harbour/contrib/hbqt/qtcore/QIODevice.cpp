@@ -111,7 +111,11 @@ void * hbqt_gcAllocate_QIODevice( void * pObj, bool bNew )
    if( bNew )
    {
       new( & p->pq ) QPointer< QIODevice >( ( QIODevice * ) pObj );
-      HB_TRACE( HB_TR_DEBUG, ( "   _new_QIODevice                  ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QIODevice  under p->pq", pObj ) );
+   }
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p NOT_new_QIODevice", pObj ) );
    }
    return p;
 }

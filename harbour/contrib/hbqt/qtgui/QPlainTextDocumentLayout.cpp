@@ -94,24 +94,26 @@ QT_G_FUNC( hbqt_gcRelease_QPlainTextDocumentLayout )
          const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QPlainTextDocumentLayout   /.\\   ph=%p pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QPlainTextDocumentLayout   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
             delete ( ( QPlainTextDocumentLayout * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QPlainTextDocumentLayout   \\./   ph=%p pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QPlainTextDocumentLayout   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "NO__rel_QPlainTextDocumentLayoutph=%p pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QPlainTextDocumentLayout          pq=%p", p->ph, (void *)(p->pq) ) );
+            p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QPlainTextDocumentLayout    :     Object already deleted!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QPlainTextDocumentLayout    :     Object already deleted!", p->ph ) );
+         p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QPlainTextDocumentLayout    :    Object not created with new()" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QPlainTextDocumentLayout    :    Object not created with new=true", p->ph ) );
       p->ph = NULL;
    }
 }
@@ -127,7 +129,11 @@ void * hbqt_gcAllocate_QPlainTextDocumentLayout( void * pObj, bool bNew )
    if( bNew )
    {
       new( & p->pq ) QPointer< QPlainTextDocumentLayout >( ( QPlainTextDocumentLayout * ) pObj );
-      HB_TRACE( HB_TR_DEBUG, ( "   _new_QPlainTextDocumentLayout   ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QPlainTextDocumentLayout  under p->pq", pObj ) );
+   }
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p NOT_new_QPlainTextDocumentLayout", pObj ) );
    }
    return p;
 }

@@ -92,19 +92,20 @@ QT_G_FUNC( hbqt_gcRelease_QTextDocumentWriter )
    {
       if( p->ph )
       {
-         HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QTextDocumentWriter   /.\\    ph=%p", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _rel_QTextDocumentWriter   /.\\", p->ph ) );
          delete ( ( QTextDocumentWriter * ) p->ph );
-         HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QTextDocumentWriter   \\./    ph=%p", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QTextDocumentWriter   \\./", p->ph ) );
          p->ph = NULL;
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QTextDocumentWriter    :     Object already deleted!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QTextDocumentWriter    :     Object already deleted!", p->ph ) );
+         p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QTextDocumentWriter    :    Object not created with new()" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QTextDocumentWriter    :    Object not created with new=true", p->ph ) );
       p->ph = NULL;
    }
 }
@@ -119,7 +120,11 @@ void * hbqt_gcAllocate_QTextDocumentWriter( void * pObj, bool bNew )
 
    if( bNew )
    {
-      HB_TRACE( HB_TR_DEBUG, ( "   _new_QTextDocumentWriter        ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QTextDocumentWriter", pObj ) );
+   }
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p NOT_new_QTextDocumentWriter", pObj ) );
    }
    return p;
 }

@@ -95,19 +95,20 @@ QT_G_FUNC( hbqt_gcRelease_QStyleOptionTitleBar )
    {
       if( p->ph )
       {
-         HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QStyleOptionTitleBar   /.\\    ph=%p", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _rel_QStyleOptionTitleBar   /.\\", p->ph ) );
          delete ( ( QStyleOptionTitleBar * ) p->ph );
-         HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QStyleOptionTitleBar   \\./    ph=%p", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QStyleOptionTitleBar   \\./", p->ph ) );
          p->ph = NULL;
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QStyleOptionTitleBar    :     Object already deleted!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QStyleOptionTitleBar    :     Object already deleted!", p->ph ) );
+         p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QStyleOptionTitleBar    :    Object not created with new()" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QStyleOptionTitleBar    :    Object not created with new=true", p->ph ) );
       p->ph = NULL;
    }
 }
@@ -122,7 +123,11 @@ void * hbqt_gcAllocate_QStyleOptionTitleBar( void * pObj, bool bNew )
 
    if( bNew )
    {
-      HB_TRACE( HB_TR_DEBUG, ( "   _new_QStyleOptionTitleBar       ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QStyleOptionTitleBar", pObj ) );
+   }
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p NOT_new_QStyleOptionTitleBar", pObj ) );
    }
    return p;
 }

@@ -98,24 +98,26 @@ QT_G_FUNC( hbqt_gcRelease_QHeaderView )
          const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QHeaderView   /.\\   ph=%p pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QHeaderView   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
             delete ( ( QHeaderView * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "YES_rel_QHeaderView   \\./   ph=%p pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QHeaderView   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "NO__rel_QHeaderViewph=%p pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QHeaderView          pq=%p", p->ph, (void *)(p->pq) ) );
+            p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "DEL_rel_QHeaderView    :     Object already deleted!" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QHeaderView    :     Object already deleted!", p->ph ) );
+         p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "PTR_rel_QHeaderView    :    Object not created with new()" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QHeaderView    :    Object not created with new=true", p->ph ) );
       p->ph = NULL;
    }
 }
@@ -131,7 +133,11 @@ void * hbqt_gcAllocate_QHeaderView( void * pObj, bool bNew )
    if( bNew )
    {
       new( & p->pq ) QPointer< QHeaderView >( ( QHeaderView * ) pObj );
-      HB_TRACE( HB_TR_DEBUG, ( "   _new_QHeaderView                ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QHeaderView  under p->pq", pObj ) );
+   }
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p NOT_new_QHeaderView", pObj ) );
    }
    return p;
 }

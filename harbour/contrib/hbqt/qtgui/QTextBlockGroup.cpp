@@ -104,7 +104,11 @@ void * hbqt_gcAllocate_QTextBlockGroup( void * pObj, bool bNew )
    if( bNew )
    {
       new( & p->pq ) QPointer< QTextBlockGroup >( ( QTextBlockGroup * ) pObj );
-      HB_TRACE( HB_TR_DEBUG, ( "   _new_QTextBlockGroup            ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QTextBlockGroup  under p->pq", pObj ) );
+   }
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p NOT_new_QTextBlockGroup", pObj ) );
    }
    return p;
 }

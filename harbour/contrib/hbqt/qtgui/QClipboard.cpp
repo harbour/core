@@ -111,7 +111,11 @@ void * hbqt_gcAllocate_QClipboard( void * pObj, bool bNew )
    if( bNew )
    {
       new( & p->pq ) QPointer< QClipboard >( ( QClipboard * ) pObj );
-      HB_TRACE( HB_TR_DEBUG, ( "   _new_QClipboard                 ph=%p %i B %i KB", pObj, ( int ) hb_xquery( 1001 ), hbqt_getmemused() ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QClipboard  under p->pq", pObj ) );
+   }
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p NOT_new_QClipboard", pObj ) );
    }
    return p;
 }
