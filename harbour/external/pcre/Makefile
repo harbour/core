@@ -37,6 +37,12 @@ ifneq ($(HB_HAS_PCRE_LOCAL),)
 
    HB_CFLAGS += -DPCRE_STATIC -DHAVE_STDINT_H=0
 
+   ifneq ($(filter $(HB_COMPILER),bcc msvc msvc64 msvcia64 icc iccia64),)
+      HB_CFLAGS += -DHAVE_INTTYPES_H=0
+   endif
+
+   HB_CFLAGS += -DHAVE_CONFIG_H
+
    # workaround for problems in sunpro x86 PIC builds exploited by hbpcre library code
    ifeq ($(HB_COMPILER),sunpro)
       ifeq ($(HB_PLATFORM),sunos)
@@ -48,13 +54,10 @@ ifneq ($(HB_HAS_PCRE_LOCAL),)
       endif
    endif
 
-   # suppress bcc warnings and tweak to make it build
+   # suppress bcc warnings
    ifeq ($(HB_COMPILER),bcc)
       HB_CFLAGS += -w-use -w-csu -w-aus -w-sig
-      HB_CFLAGS += -DHAVE_INTTYPES_H=0
    endif
-
-   HB_CFLAGS += -DHAVE_CONFIG_H
 
    include $(TOP)$(ROOT)config/lib.mk
 else

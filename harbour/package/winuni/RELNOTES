@@ -58,12 +58,12 @@ Tool/lib versions used to create this package:
    Allegro 4.2.2
    Blat 2.6.2
    Cairo 1.8.8
-   libcurl 7.19.6
+   libcurl 7.20.0
    Firebird 2.5.0rc1
    FreeImage 3.13.0
    GD 2.0.35
    MySQL 5.1.41
-   OpenSSL 0.9.8k
+   OpenSSL 1.0.0
    PostgreSQL 8.4.2-1
    QT 4.5.3
    WATTCP 2.2.10
