@@ -145,12 +145,14 @@ diff -u ori\ioapi.c .\ioapi.c
      pzlib_filefunc_def->zread_file = fread_file_func;
 diff -u ori\ioapi.h .\ioapi.h
 --- ori\ioapi.h	Mon Feb 15 05:59:40 2010
-+++ .\ioapi.h	Fri Apr 09 20:06:51 2010
-@@ -44,6 +44,10 @@
++++ .\ioapi.h	Sun Apr 11 13:33:50 2010
+@@ -44,6 +44,12 @@
  #include <stdlib.h>
  #include "zlib.h"
  
-+#if defined( __BORLANDC__ ) || defined( __WATCOM__ )
++#if defined( __BORLANDC__ ) || \
++    ( defined( __WATCOMC__ ) && __WATCOMC__ < 1290 ) || \
++    defined( __MINGW32CE__ )
 +#  define USE_FILE32API
 +#endif
 +

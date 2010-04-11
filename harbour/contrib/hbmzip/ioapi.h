@@ -45,7 +45,7 @@
 #include "zlib.h"
 
 #if defined( __BORLANDC__ ) || \
-    defined( __WATCOM__ ) || \
+    ( defined( __WATCOMC__ ) && __WATCOMC__ < 1290 ) || \
     defined( __MINGW32CE__ )
 #  define USE_FILE32API
 #endif
