@@ -53,6 +53,8 @@
 #ifndef __HBIDE_CH
    #define __HBIDE_CH
 
+#include "hbtrace.ch"
+
 #define CRLF                                      hb_osNewLine()
 #define _EOL                                      Chr( 10 )
 

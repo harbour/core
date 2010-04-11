@@ -47,8 +47,8 @@ Tool/lib versions used to create this package:
    MinGW GNU C 4.4.1 TDM-2 (included)
    MinGW w64 GNU C 4.4.4-20100129 (prerelease)
    MinGW CEGCC 4.4.0
-   MSVC 2008 (version bundled with MS Windows SDK 7)
-   Open Watcom C 1.8
+   MSVC 2010 (version bundled with MS Windows SDK 7.1)
+   Open Watcom C 1.9
    Borland C/C++ 5.5.1
 
    External lib dependencies
