@@ -571,7 +571,7 @@ HB_TRACE( HB_TR_ALWAYS, "HbIde:create( cProjIni )", "#Params=" )
 
    /* Very important - destroy resources */
    HB_TRACE( HB_TR_ALWAYS, "======================================================" )
-   HB_TRACE( HB_TR_ALWAYS, "Before    ::oDlg:destroy()", memory( 1001 ), hbqt_getMemUsed() )
+   HB_TRACE( HB_TR_ALWAYS, "Before    ::oDlg:destroy()", memory( 1001 ) )
    HB_TRACE( HB_TR_ALWAYS, "                                                      " )
 
    ::oTM:destroy()
@@ -596,7 +596,7 @@ HB_TRACE( HB_TR_ALWAYS, "HbIde:create( cProjIni )", "#Params=" )
    ::oFont   := NIL
 
    HB_TRACE( HB_TR_ALWAYS, "                                                      " )
-   HB_TRACE( HB_TR_ALWAYS, "After     ::oDlg:destroy()", memory( 1001 ), hbqt_getMemUsed() )
+   HB_TRACE( HB_TR_ALWAYS, "After     ::oDlg:destroy()", memory( 1001 ) )
    HB_TRACE( HB_TR_ALWAYS, "======================================================" )
 
    RETURN self

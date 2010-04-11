@@ -207,14 +207,14 @@ FUNCTION SetAppEvent( nEvent, mp1, mp2, oXbp )
       t_nEventIn := 1
    ENDIF
 
-//HBXBP_DEBUG( 0, "SetAppEvent ... ", hb_threadId(), nEvent, xbeP_Paint )
+//HB_TRACE( HB_TR_DEBUG, 0, "SetAppEvent ... ", hb_threadId(), nEvent, xbeP_Paint )
 
    t_events[ t_nEventIn, 1 ] := nEvent
    t_events[ t_nEventIn, 2 ] := mp1
    t_events[ t_nEventIn, 3 ] := mp2
    t_events[ t_nEventIn, 4 ] := oXbp
 
-//HBXBP_DEBUG( 1, "SetAppEvent ... ", hb_threadId(), nEvent )
+//HB_TRACE( HB_TR_DEBUG, 1, "SetAppEvent ... ", hb_threadId(), nEvent )
    RETURN nil
 
 /*----------------------------------------------------------------------*/
@@ -265,7 +265,7 @@ FUNCTION AppEvent( mp1, mp2, oXbp, nTimeout )
    IF ++t_nEventOut > EVENT_BUFFER
       t_nEventOut := 1
    ENDIF
-//HBXBP_DEBUG( "            AppEvent ... ", nThreadID, t_nEventOut )
+//HB_TRACE( HB_TR_DEBUG, "            AppEvent ... ", nThreadID, t_nEventOut )
    DO WHILE !empty( t_oEventLoop ) //.t.
       t_oEventLoop:processEvents( QEventLoop_AllEvents )
 
@@ -284,7 +284,7 @@ FUNCTION AppEvent( mp1, mp2, oXbp, nTimeout )
 
    s_hLastEvent[ nThreadID ] := { nEvent, mp1, mp2, oXbp }
 
-//HBXBP_DEBUG( "..........................", hb_threadId() )
+//HB_TRACE( HB_TR_DEBUG, "..........................", hb_threadId() )
 
    RETURN nEvent
 
@@ -440,4 +440,3 @@ FUNCTION HbXbp_SetCodecForTr( cCodec )
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
-

@@ -227,7 +227,7 @@ METHOD XbpHTMLViewer:exeBlock( nEvent, p1 )
    CASE nEvent == 7
    CASE nEvent == 8
       ::cSelectedText := ::oWidget:selectedText()
-HBXBP_DEBUG( ::cSelectedText )
+HB_TRACE( HB_TR_DEBUG, ::cSelectedText )
    CASE nEvent == 9
       IF hb_isBlock( ::sl_statusTextChange )
          eval( ::sl_statusTextChange, p1, NIL, Self )

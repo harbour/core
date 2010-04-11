@@ -403,13 +403,13 @@ METHOD XbpWindow:disconnect()
    LOCAL e_
 
    IF len( ::aConnections ) > 0
-//HBXBP_DBG( "                                                            " )
+//HB_TRACE( HB_TR_ALWAYS,  "                                                            " )
       FOR EACH e_ IN ::aConnections
          ::xDummy := Qt_Slots_DisConnect( ::pSlots, e_[ 1 ], e_[ 2 ] )
-//HBXBP_DBG( ::xDummy, "              Qt_Slots_DisConnect()             ", e_[ 2 ] )
+//HB_TRACE( HB_TR_ALWAYS,  ::xDummy, "              Qt_Slots_DisConnect()             ", e_[ 2 ] )
       NEXT
       ::aConnections := {}
-//HBXBP_DBG( "                                                            " )
+//HB_TRACE( HB_TR_ALWAYS,  "                                                            " )
    ENDIF
 
    RETURN Self
@@ -421,9 +421,9 @@ METHOD XbpWindow:connectEvent( pWidget, nEvent, bBlock )
 
    IF ( lSuccess := Qt_Events_Connect( ::pEvents, pWidget, nEvent, bBlock ) )
       aadd( ::aEConnections, { pWidget, nEvent } )
-// HBXBP_DBG( "XbpWindow:connectEvent", nEvent, "Succeeded" )
+// HB_TRACE( HB_TR_ALWAYS,  "XbpWindow:connectEvent", nEvent, "Succeeded" )
    ELSE
-      HBXBP_DBG( "XbpWindow:connectEvent", nEvent, "Failed" )
+      HB_TRACE( HB_TR_ALWAYS,  "XbpWindow:connectEvent", nEvent, "Failed" )
    ENDIF
 
    RETURN lSuccess
@@ -475,14 +475,14 @@ METHOD XbpWindow:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
 METHOD XbpWindow:destroy()
    LOCAL e_
 #if 0
-HBXBP_DBG( ".   " )
-HBXBP_DBG( ".   " )
-HBXBP_DBG( ".   " )
-HBXBP_DBG( hb_threadId(),"Destroy[ B ] "+pad(cCls,12)+ IF(empty(::cargo),'',str(::cargo) ), memory( 1001 ), hbqt_getMemUsed() )
+HB_TRACE( HB_TR_ALWAYS,  ".   " )
+HB_TRACE( HB_TR_ALWAYS,  ".   " )
+HB_TRACE( HB_TR_ALWAYS,  ".   " )
+HB_TRACE( HB_TR_ALWAYS,  hb_threadId(),"Destroy[ B ] "+pad(cCls,12)+ IF(empty(::cargo),'',str(::cargo) ), memory( 1001 ) )
 
    LOCAL cCls := __ObjGetClsName( self ), cMsg
 cMsg := iif( cCls == "XBPWINDOW", ::oWidget:objectName(), IF( empty(::cargo),'',str(::cargo) ) )
-HBXBP_DBG( hb_threadId(),"Destroy[ B ] "+pad(cCls,12)+ cMsg, memory( 1001 ), hbqt_getMemUsed() )
+HB_TRACE( HB_TR_ALWAYS,  hb_threadId(),"Destroy[ B ] "+pad(cCls,12)+ cMsg, memory( 1001 ) )
 #endif
    ::oParent := NIL
    ::oOwner  := NIL
@@ -516,12 +516,12 @@ HBXBP_DBG( hb_threadId(),"Destroy[ B ] "+pad(cCls,12)+ cMsg, memory( 1001 ), hbq
 
    ::oWidget := NIL
 #if 0
-HBXBP_DBG( hb_threadId(),"Destroy[ E ] "+pad(__ObjGetClsName( self ),12)+ IF(empty(::cargo),'',str(::cargo) ), memory( 1001 ), hbqt_getMemUsed() )
+HB_TRACE( HB_TR_ALWAYS,  hb_threadId(),"Destroy[ E ] "+pad(__ObjGetClsName( self ),12)+ IF(empty(::cargo),'',str(::cargo) ), memory( 1001 ) )
 
-HBXBP_DBG( ".   " )
-HBXBP_DBG( ".   " )
-HBXBP_DBG( ".   " )
-HBXBP_DBG( hb_threadId(),"Destroy[ E ] "+pad(__ObjGetClsName( self ),12)+ IF(empty(::cargo),'',str(::cargo) ), memory( 1001 ), hbqt_getMemUsed() )
+HB_TRACE( HB_TR_ALWAYS,  ".   " )
+HB_TRACE( HB_TR_ALWAYS,  ".   " )
+HB_TRACE( HB_TR_ALWAYS,  ".   " )
+HB_TRACE( HB_TR_ALWAYS,  hb_threadId(),"Destroy[ E ] "+pad(__ObjGetClsName( self ),12)+ IF(empty(::cargo),'',str(::cargo) ), memory( 1001 ) )
 #endif
    RETURN NIL
 
@@ -581,7 +581,7 @@ METHOD XbpWindow:grabEvent( nEvent, pEvent )
    LOCAL oEvent, nXbpKey, oP0, oP1, oObj_O, oObj_N
    LOCAL lRet := .t.
 
-//HBXBP_DEBUG(  hb_threadId(), "XbpWindow:grabEvent", nEvent )
+//HB_TRACE( HB_TR_DEBUG, hb_threadId(), "XbpWindow:grabEvent", nEvent )
 
    SWITCH ( nEvent )
 

@@ -147,7 +147,7 @@ METHOD XbpDataRef:setData( xValue, mp2 )
 
    HB_SYMBOL_UNUSED( mp2 )
 
-//HBXBP_DEBUG( cClass +' '+ ::cargo +"..."+ IF(empty(xValue)," empty ",valtype(xValue)) )
+//HB_TRACE( HB_TR_DEBUG, cClass +' '+ ::cargo +"..."+ IF(empty(xValue)," empty ",valtype(xValue)) )
 
    IF hb_isBlock( ::dataLink )
       ::sl_editBuffer := eval( ::dataLink, xValue  )

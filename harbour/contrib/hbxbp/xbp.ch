@@ -6,14 +6,11 @@
 
 /*----------------------------------------------------------------------*/
 
+#include "hbqt.ch"
+
 #include "hbtrace.ch"
 
-#xtranslate HBXBP_DEBUG( [<x,...>] ) => HB_TRACE( HB_TR_DEBUG, <x> )
-#xtranslate HBXBP_DBG( [<x,...>] ) => HB_TRACE( HB_TR_ALWAYS, <x> )
-
 /*----------------------------------------------------------------------*/
-
-#include "hbqt.ch"
 
 #define HBXBP_EVENT_HANDLED                       0
 #define HBXBP_EVENT_UNHANDLED                     1

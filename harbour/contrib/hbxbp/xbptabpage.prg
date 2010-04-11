@@ -315,13 +315,13 @@ METHOD XbpTabWidget:exeBlock( nMode, iIndex )
 
          DO CASE
          CASE nMode == 1
-            //HBXBP_DEBUG( "Tab Index Changed", nIndex )
+            //HB_TRACE( HB_TR_DEBUG, "Tab Index Changed", nIndex )
             IF hb_isBlock( oTab:sl_tabActivate )
                eval( oTab:sl_tabActivate, NIL, NIL, oTab )
             ENDIF
 
          CASE nMode == 2
-            //HBXBP_DEBUG( "Tab Close Requested", nIndex )
+            //HB_TRACE( HB_TR_DEBUG, "Tab Close Requested", nIndex )
             IF hb_isBlock( oTab:sl_closeRequested )
                eval( oTab:sl_closeRequested, NIL, NIL, oTab )
             ENDIF

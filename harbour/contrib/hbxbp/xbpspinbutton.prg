@@ -157,7 +157,7 @@ METHOD XbpSpinButton:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible
    #if 0   ////////////////////////////////////
    ::oWidget:installEventFilter( ::pEvents )
 
-HBXBP_DEBUG( "XbpSpinButton:create  2" )
+HB_TRACE( HB_TR_DEBUG, "XbpSpinButton:create  2" )
    ::connectEvent( ::pWidget, QEvent_FocusIn , {|e| ::exeBlock( 7, e ) } )
    ::connectEvent( ::pWidget, QEvent_FocusOut, {|e| ::exeBlock( 8, e ) } )
    ::connectEvent( ::pWidget, QEvent_KeyPress, {|e| ::exeBlock( 9, e ) } )

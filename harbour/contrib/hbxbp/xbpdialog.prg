@@ -243,10 +243,10 @@ METHOD XbpDialog:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, l
 METHOD XbpDialog:destroy()
    LOCAL qtObj
 
-   HBXBP_DBG( ". " )
-   HBXBP_DBG( ". " )
-   HBXBP_DBG( ". " )
-   HBXBP_DBG( "<<<<<<<<<<                        XbpDialog:destroy    B                      >>>>>>>>>>" )
+   HB_TRACE( HB_TR_ALWAYS,  ". " )
+   HB_TRACE( HB_TR_ALWAYS,  ". " )
+   HB_TRACE( HB_TR_ALWAYS,  ". " )
+   HB_TRACE( HB_TR_ALWAYS,  "<<<<<<<<<<                        XbpDialog:destroy    B                      >>>>>>>>>>" )
 
    hbxbp_SetEventLoop( NIL )
    ::oEventLoop:exit( 0 )
@@ -262,10 +262,10 @@ METHOD XbpDialog:destroy()
       qtObj:destroy()
    ENDIF
 
-   HBXBP_DBG( "<<<<<<<<<<                        XbpDialog:destroy    E                      >>>>>>>>>>" )
-   HBXBP_DBG( ". " )
-   HBXBP_DBG( ". " )
-   HBXBP_DBG( ". " )
+   HB_TRACE( HB_TR_ALWAYS,  "<<<<<<<<<<                        XbpDialog:destroy    E                      >>>>>>>>>>" )
+   HB_TRACE( HB_TR_ALWAYS,  ". " )
+   HB_TRACE( HB_TR_ALWAYS,  ". " )
+   HB_TRACE( HB_TR_ALWAYS,  ". " )
 
    RETURN Self
 

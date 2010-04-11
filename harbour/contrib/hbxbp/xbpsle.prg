@@ -197,7 +197,7 @@ METHOD XbpSLE:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVis
 METHOD XbpSLE:exeBlock( nMsg, p1, p2 )
    LOCAL lRet := .F.
 
-//HBXBP_DEBUG( 'XbpSLE: '+hb_ntos( nMsg ) )
+//HB_TRACE( HB_TR_DEBUG, 'XbpSLE: '+hb_ntos( nMsg ) )
    HB_SYMBOL_UNUSED( p1 )
 
    DO CASE
