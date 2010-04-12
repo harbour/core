@@ -1188,7 +1188,6 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
    IF ::lPPO
       IF !empty( oEdit := ::oEM:getEditorCurrent() )
          IF hbide_isSourcePRG( oEdit:sourceFile )
-            aadd( aHbp, "-hbcmp" )
             aadd( aHbp, "-s"     )
             aadd( aHbp, "-p"     )
             aadd( aHbp, "-hbraw" )

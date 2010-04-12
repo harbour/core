@@ -12,17 +12,16 @@ diff -u ori\crypt.h .\crypt.h
  }
 diff -u ori\ioapi.c .\ioapi.c
 --- ori\ioapi.c	Mon Jan 04 11:31:24 2010
-+++ .\ioapi.c	Fri Apr 09 20:09:02 2010
-@@ -14,6 +14,8 @@
-         #define _CRT_SECURE_NO_WARNINGS
++++ .\ioapi.c	Mon Apr 12 21:33:22 2010
+@@ -15,6 +15,7 @@
  #endif
  
-+#include "hbapifs.h"
-+
  #include "ioapi.h"
++#include "hbapifs.h"
  
  voidpf call_zopen64 (const zlib_filefunc64_32_def* pfilefunc,const void*filename,int mode)
-@@ -84,6 +86,9 @@
+ {
+@@ -84,6 +85,9 @@
  {
      FILE* file = NULL;
      const char* mode_fopen = NULL;
@@ -32,7 +31,7 @@ diff -u ori\ioapi.c .\ioapi.c
      if ((mode & ZLIB_FILEFUNC_MODE_READWRITEFILTER)==ZLIB_FILEFUNC_MODE_READ)
          mode_fopen = "rb";
      else
-@@ -94,7 +99,7 @@
+@@ -94,7 +98,7 @@
          mode_fopen = "wb";
  
      if ((filename!=NULL) && (mode_fopen != NULL))
@@ -41,7 +40,7 @@ diff -u ori\ioapi.c .\ioapi.c
      return file;
  }
  
-@@ -102,6 +107,9 @@
+@@ -102,6 +106,9 @@
  {
      FILE* file = NULL;
      const char* mode_fopen = NULL;
@@ -51,7 +50,7 @@ diff -u ori\ioapi.c .\ioapi.c
      if ((mode & ZLIB_FILEFUNC_MODE_READWRITEFILTER)==ZLIB_FILEFUNC_MODE_READ)
          mode_fopen = "rb";
      else
-@@ -120,6 +128,9 @@
+@@ -120,6 +127,9 @@
  static uLong ZCALLBACK fread_file_func (voidpf opaque, voidpf stream, void* buf, uLong size)
  {
      uLong ret;
@@ -61,7 +60,7 @@ diff -u ori\ioapi.c .\ioapi.c
      ret = (uLong)fread(buf, 1, (size_t)size, (FILE *)stream);
      return ret;
  }
-@@ -127,6 +138,9 @@
+@@ -127,6 +137,9 @@
  static uLong ZCALLBACK fwrite_file_func (voidpf opaque, voidpf stream, const void* buf, uLong size)
  {
      uLong ret;
@@ -71,7 +70,7 @@ diff -u ori\ioapi.c .\ioapi.c
      ret = (uLong)fwrite(buf, 1, (size_t)size, (FILE *)stream);
      return ret;
  }
-@@ -134,6 +148,9 @@
+@@ -134,6 +147,9 @@
  static long ZCALLBACK ftell_file_func (voidpf opaque, voidpf stream)
  {
      long ret;
@@ -81,7 +80,7 @@ diff -u ori\ioapi.c .\ioapi.c
      ret = ftell((FILE *)stream);
      return ret;
  }
-@@ -142,14 +159,20 @@
+@@ -142,14 +158,20 @@
  static ZPOS64_T ZCALLBACK ftell64_file_func (voidpf opaque, voidpf stream)
  {
      ZPOS64_T ret;
@@ -103,7 +102,7 @@ diff -u ori\ioapi.c .\ioapi.c
      switch (origin)
      {
      case ZLIB_FILEFUNC_SEEK_CUR :
-@@ -171,8 +194,11 @@
+@@ -171,8 +193,11 @@
  
  static long ZCALLBACK fseek64_file_func (voidpf  opaque, voidpf stream, ZPOS64_T offset, int origin)
  {
@@ -116,7 +115,7 @@ diff -u ori\ioapi.c .\ioapi.c
      switch (origin)
      {
      case ZLIB_FILEFUNC_SEEK_CUR :
-@@ -198,6 +224,9 @@
+@@ -198,6 +223,9 @@
  static int ZCALLBACK fclose_file_func (voidpf opaque, voidpf stream)
  {
      int ret;
@@ -126,7 +125,7 @@ diff -u ori\ioapi.c .\ioapi.c
      ret = fclose((FILE *)stream);
      return ret;
  }
-@@ -205,12 +234,14 @@
+@@ -205,12 +233,14 @@
  static int ZCALLBACK ferror_file_func (voidpf opaque, voidpf stream)
  {
      int ret;
@@ -145,21 +144,55 @@ diff -u ori\ioapi.c .\ioapi.c
      pzlib_filefunc_def->zread_file = fread_file_func;
 diff -u ori\ioapi.h .\ioapi.h
 --- ori\ioapi.h	Mon Feb 15 05:59:40 2010
-+++ .\ioapi.h	Sun Apr 11 13:49:40 2010
-@@ -44,6 +44,12 @@
++++ .\ioapi.h	Mon Apr 12 21:33:22 2010
+@@ -21,28 +21,31 @@
+ #ifndef _ZLIBIOAPI64_H
+ #define _ZLIBIOAPI64_H
+ 
+-#if (!defined(_WIN32)) && (!defined(WIN32))
++#if !(defined(_WIN32) || defined(WIN32)) && \
++    !(defined(__MSDOS__) || defined(MSDOS)) && \
++    !(defined(OS_2) || defined(__OS2__) || defined(OS2))
+ 
+-  // Linux needs this to support file operation on files larger then 4+GB
+-  // But might need better if/def to select just the platforms that needs them.
+-
+-        #ifndef __USE_FILE_OFFSET64
+-                #define __USE_FILE_OFFSET64
+-        #endif
+-        #ifndef __USE_LARGEFILE64
+-                #define __USE_LARGEFILE64
+-        #endif
+-        #ifndef _LARGEFILE64_SOURCE
+-                #define _LARGEFILE64_SOURCE
+-        #endif
+-        #ifndef _FILE_OFFSET_BIT
+-                #define _FILE_OFFSET_BIT 64
+-        #endif
++  /* Linux needs this to support file operation on files larger then 4+GB
++   * on 32bit platforms
++   * But might need better if/def to select just the platforms that needs them.
++   */
++   #ifndef _LARGEFILE64_SOURCE
++      #define _LARGEFILE64_SOURCE
++   #endif
++   #ifndef _FILE_OFFSET_BIT
++      #define _FILE_OFFSET_BIT 64
++   #endif
+ #endif
+ 
+ #include <stdio.h>
  #include <stdlib.h>
  #include "zlib.h"
- 
++
 +#if defined( __BORLANDC__ ) || \
 +    defined( __WATCOMC__ ) || \
 +    defined( __MINGW32CE__ )
 +#  define USE_FILE32API
 +#endif
-+
+ 
  #if defined(USE_FILE32API)
  #define fopen64 fopen
- #define ftello64 ftell
-Only in .: minizip.dif
 Only in .: ori
 diff -u ori\unzip.c .\unzip.c
 --- ori\unzip.c	Mon Feb 15 05:59:40 2010

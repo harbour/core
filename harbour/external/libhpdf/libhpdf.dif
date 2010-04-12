@@ -1,0 +1,13 @@
+diff -u ori\hpdf_config.h .\hpdf_config.h
+--- ori\hpdf_config.h	Thu Sep 10 10:02:45 2009
++++ .\hpdf_config.h	Mon Apr 12 21:36:13 2010
+@@ -34,7 +34,7 @@
+ #undef HAVE_SYS_TYPES_H
+ 
+ /* Define to 1 if you have the <unistd.h> header file. */
+-#define HAVE_UNISTD_H 1
++#undef HAVE_UNISTD_H
+ 
+ /* define pi */
+ #ifndef M_PI
+Only in .: ori

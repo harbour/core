@@ -1,19 +1,57 @@
-diff -u ori\crc32.c .\crc32.c
---- ori\crc32.c	Sun Apr 22 19:25:32 2007
-+++ .\crc32.c	Fri Apr 09 14:31:57 2010
-@@ -19,6 +19,8 @@
-   one thread to use crc32().
+diff -u ori\adler32.c .\adler32.c
+--- ori\adler32.c	Sun Aug 05 23:16:54 2007
++++ .\adler32.c	Fri Apr 09 14:44:23 2010
+@@ -3,7 +3,7 @@
+  * For conditions of distribution and use, see copyright notice in zlib.h
   */
  
-+#define NOBYFOUR
+-/* @(#) $Id$ */
++/* @(#) $Id: adler32.c 14300 2010-04-09 12:44:20Z vszakats $ */
+ 
+ #include "zutil.h"
+ 
+diff -u ori\compress.c .\compress.c
+--- ori\compress.c	Sun Dec 11 12:27:30 2005
++++ .\compress.c	Fri Apr 09 14:44:23 2010
+@@ -3,7 +3,7 @@
+  * For conditions of distribution and use, see copyright notice in zlib.h
+  */
+ 
+-/* @(#) $Id$ */
++/* @(#) $Id: compress.c 14300 2010-04-09 12:44:20Z vszakats $ */
+ 
+ #define ZLIB_INTERNAL
+ #include "zlib.h"
+diff -u ori\crc32.c .\crc32.c
+--- ori\crc32.c	Sun Apr 22 19:25:32 2007
++++ .\crc32.c	Fri Apr 09 14:44:23 2010
+@@ -9,7 +9,7 @@
+  * factor of two increase in speed on a Power PC G4 (PPC7455) using gcc -O3.
+  */
+ 
+-/* @(#) $Id$ */
++/* @(#) $Id: crc32.c 14300 2010-04-09 12:44:20Z vszakats $ */
+ 
+ /*
+   Note on the use of DYNAMIC_CRC_TABLE: there is no mutex or semaphore
+@@ -18,6 +18,8 @@
+   first call get_crc_table() to initialize the tables before allowing more than
+   one thread to use crc32().
+  */
 +
++#define NOBYFOUR
+ 
  #ifdef MAKECRCH
  #  include <stdio.h>
- #  ifndef DYNAMIC_CRC_TABLE
 diff -u ori\deflate.c .\deflate.c
 --- ori\deflate.c	Sat Feb 27 11:07:24 2010
-+++ .\deflate.c	Fri Apr 09 14:40:46 2010
-@@ -51,6 +51,10 @@
++++ .\deflate.c	Mon Apr 12 21:33:16 2010
+@@ -47,10 +47,14 @@
+  *
+  */
+ 
+-/* @(#) $Id$ */
++/* @(#) $Id: deflate.c 14324 2010-04-12 19:11:35Z druzus $ */
  
  #include "deflate.h"
  
@@ -50,16 +88,116 @@ diff -u ori\deflate.c .\deflate.c
          /* If the window is almost full and there is insufficient lookahead,
           * move the upper half to the lower one to make room in the upper half.
           */
+@@ -1743,7 +1748,7 @@
+     int flush;
+ {
+     int bflush;             /* set if current block must be flushed */
+-    uInt prev;              /* byte at distance one to match */
++    Byte prev;              /* byte at distance one to match */
+     Bytef *scan, *strend;   /* scan goes up to strend for length of run */
+ 
+     for (;;) {
+diff -u ori\deflate.h .\deflate.h
+--- ori\deflate.h	Sat Feb 27 11:06:28 2010
++++ .\deflate.h	Fri Apr 09 14:44:23 2010
+@@ -8,7 +8,7 @@
+    subject to change. Applications should only use zlib.h.
+  */
+ 
+-/* @(#) $Id$ */
++/* @(#) $Id: deflate.h 14300 2010-04-09 12:44:20Z vszakats $ */
+ 
+ #ifndef DEFLATE_H
+ #define DEFLATE_H
+diff -u ori\gzguts.h .\gzguts.h
+--- ori\gzguts.h	Sun Mar 14 10:23:52 2010
++++ .\gzguts.h	Mon Apr 12 21:33:16 2010
+@@ -27,9 +27,15 @@
+ #  define NO_GZCOMPRESS
+ #endif
+ 
+-#ifdef _MSC_VER
+-#  include <io.h>
+-#  define vsnprintf _vsnprintf
++#if defined(MSDOS) || defined(OS2) || defined(WINDOWS) || defined(WIN32)
++#  ifndef _WINCE
++#     include <io.h>
++#     if defined(_MSC_VER) && !defined(__XCC__)
++#        define vsnprintf _vsnprintf
++#     endif
++#  endif
++#else
++#  include <unistd.h>
+ #endif
+ 
+ #ifndef local
+diff -u ori\gzread.c .\gzread.c
+--- ori\gzread.c	Mon Mar 08 13:51:02 2010
++++ .\gzread.c	Mon Apr 12 21:33:16 2010
+@@ -166,12 +166,12 @@
+                 gz_error(state, Z_DATA_ERROR, "unknown header flags set");
+                 return -1;
+             }
+-            NEXT();                 /* modification time */
+-            NEXT();
+-            NEXT();
+-            NEXT();
+-            NEXT();                 /* extra flags */
+-            NEXT();                 /* operating system */
++            (void) NEXT();          /* modification time */
++            (void) NEXT();
++            (void) NEXT();
++            (void) NEXT();
++            (void) NEXT();          /* extra flags */
++            (void) NEXT();          /* operating system */
+             if (flags & 4) {        /* extra field */
+                 len = (unsigned)NEXT();
+                 len += (unsigned)NEXT() << 8;
+@@ -186,8 +186,8 @@
+                 while (NEXT() > 0)
+                     ;
+             if (flags & 2) {        /* header crc */
+-                NEXT();
+-                NEXT();
++                (void) NEXT();
++                (void) NEXT();
+             }
+             /* an unexpected end of file is not checked for here -- it will be
+                noticed on the first request for uncompressed data */
 Only in .: ori
-diff -u ori\zconf.h .\zconf.h
---- ori\zconf.h	Sun Feb 21 16:38:24 2010
-+++ .\zconf.h	Sat Apr 10 10:04:40 2010
+diff -u ori\trees.c .\trees.c
+--- ori\trees.c	Sat Feb 27 11:04:48 2010
++++ .\trees.c	Fri Apr 09 14:44:24 2010
+@@ -30,7 +30,7 @@
+  *          Addison-Wesley, 1983. ISBN 0-201-06672-6.
+  */
+ 
+-/* @(#) $Id$ */
++/* @(#) $Id: trees.c 14300 2010-04-09 12:44:20Z vszakats $ */
+ 
+ /* #define GEN_TREES_H */
+ 
+diff -u ori\uncompr.c .\uncompr.c
+--- ori\uncompr.c	Sun Jan 17 11:34:20 2010
++++ .\uncompr.c	Fri Apr 09 14:44:24 2010
 @@ -3,7 +3,7 @@
   * For conditions of distribution and use, see copyright notice in zlib.h
   */
  
 -/* @(#) $Id$ */
-+/* @(#) $Id: zconf.h 14300 2010-04-09 12:44:20Z vszakats $ */
++/* @(#) $Id: uncompr.c 14300 2010-04-09 12:44:20Z vszakats $ */
+ 
+ #define ZLIB_INTERNAL
+ #include "zlib.h"
+diff -u ori\zconf.h .\zconf.h
+--- ori\zconf.h	Sun Feb 21 16:38:24 2010
++++ .\zconf.h	Mon Apr 12 21:33:16 2010
+@@ -3,7 +3,7 @@
+  * For conditions of distribution and use, see copyright notice in zlib.h
+  */
+ 
+-/* @(#) $Id$ */
++/* @(#) $Id: zconf.h 14324 2010-04-12 19:11:35Z druzus $ */
  
  #ifndef ZCONF_H
  #define ZCONF_H
@@ -83,21 +221,18 @@ diff -u ori\zconf.h .\zconf.h
  #  ifndef WIN32
  #    define WIN32
  #  endif
-@@ -360,8 +371,10 @@
-    typedef Byte       *voidp;
- #endif
- 
-+#if 0
- #ifdef HAVE_UNISTD_H    /* may be set to #if 1 by ./configure */
- #  define Z_HAVE_UNISTD_H
-+#endif
- #endif
- 
- #ifdef Z_HAVE_UNISTD_H
-Only in .: zlib.dif
 diff -u ori\zutil.c .\zutil.c
 --- ori\zutil.c	Sat Jan 09 15:23:48 2010
-+++ .\zutil.c	Fri Apr 09 14:35:47 2010
++++ .\zutil.c	Fri Apr 09 14:44:24 2010
+@@ -3,7 +3,7 @@
+  * For conditions of distribution and use, see copyright notice in zlib.h
+  */
+ 
+-/* @(#) $Id$ */
++/* @(#) $Id: zutil.c 14300 2010-04-09 12:44:20Z vszakats $ */
+ 
+ #include "zutil.h"
+ 
 @@ -136,7 +136,7 @@
      return ERR_MSG(err);
  }
@@ -109,7 +244,16 @@ diff -u ori\zutil.c .\zutil.c
       * Its value is always 0 and should not be used.
 diff -u ori\zutil.h .\zutil.h
 --- ori\zutil.h	Sun Mar 14 10:24:44 2010
-+++ .\zutil.h	Fri Apr 09 14:37:01 2010
++++ .\zutil.h	Mon Apr 12 21:33:16 2010
+@@ -8,7 +8,7 @@
+    subject to change. Applications should only use zlib.h.
+  */
+ 
+-/* @(#) $Id$ */
++/* @(#) $Id: zutil.h 14324 2010-04-12 19:11:35Z druzus $ */
+ 
+ #ifndef ZUTIL_H
+ #define ZUTIL_H
 @@ -17,7 +17,7 @@
  #include "zlib.h"
  
@@ -140,3 +284,13 @@ diff -u ori\zutil.h .\zutil.h
  #  endif
  #endif
  
+@@ -213,7 +217,8 @@
+ #  ifdef WIN32
+      /* In Win32, vsnprintf is available as the "non-ANSI" _vsnprintf. */
+ #    if !defined(vsnprintf) && !defined(NO_vsnprintf)
+-#      if !defined(_MSC_VER) || ( defined(_MSC_VER) && _MSC_VER < 1500 )
++#      if !defined(_MSC_VER) || \
++          ( defined(_MSC_VER) && _MSC_VER < 1500 && !defined(__XCC__) )
+ #         define vsnprintf _vsnprintf
+ #      endif
+ #    endif
