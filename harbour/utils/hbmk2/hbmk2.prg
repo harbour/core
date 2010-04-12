@@ -706,6 +706,11 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    LOCAL cMakeImpLibLib := NIL
    LOCAL lMakeImpLibMS_bcc := .F.
 
+   LOCAL nHarbourPPO := 0
+   LOCAL cHarbourOutputExt
+   LOCAL cHarbourOutputDir
+   LOCAL cHarbourPPODir := ""
+
    LOCAL cWorkDir := NIL
 
    LOCAL aParams
@@ -2028,6 +2033,19 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          OTHERWISE
             IF SubStr( cParamL, 2 ) == "gh"
                lStopAfterHarbour := .T.
+            ENDIF
+            /* Detect if Harbour is only used as preprocessor (-p + -s options) */
+            IF SubStr( cParamL, 2 ) == "p"
+               ++nHarbourPPO
+               tmp := MacroProc( hbmk, ArchCompFilter( hbmk, SubStr( cParam, 3 ) ), aParam[ _PAR_cFileName ] )
+               IF ! Empty( tmp )
+                  tmp := PathProc( PathSepToSelf( tmp ), aParam[ _PAR_cFileName ] )
+                  hb_FNameSplit( tmp, @cDir, @cName, @cExt )
+                  cHarbourPPODir := cDir
+               ENDIF
+            ENDIF
+            IF SubStr( cParamL, 2 ) == "s"
+               ++nHarbourPPO
             ENDIF
             AAddNotEmpty( hbmk[ _HBMK_aOPTPRG ], PathSepToTarget( hbmk, cParam, 2 ) )
          ENDCASE
@@ -3786,11 +3804,19 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
    /* Create incremental file list for .prg files */
 
-   IF ! lSkipBuild .AND. ! lStopAfterInit .AND. ! lStopAfterHarbour .AND. hbmk[ _HBMK_nHBMODE ] != _HBMODE_RAW_C
+   IF ( ! lSkipBuild .AND. ! lStopAfterInit .AND. ! lStopAfterHarbour .AND. hbmk[ _HBMK_nHBMODE ] != _HBMODE_RAW_C ) .OR. ;
+      ( nHarbourPPO >= 2 .AND. lStopAfterHarbour ) /* or in preprocessor mode */
 
       /* Incremental */
 
       IF hbmk[ _HBMK_lINC ] .AND. ! hbmk[ _HBMK_lREBUILD ]
+         IF nHarbourPPO >= 2 .AND. lStopAfterHarbour /* .ppo files are the dependents in preprocessor mode */
+            cHarbourOutputExt := ".ppo"
+            cHarbourOutputDir := cHarbourPPODir
+         ELSE
+            cHarbourOutputExt := ".c"
+            cHarbourOutputDir := cWorkDir
+         ENDIF
          l_aPRG_TODO := {}
          FOR EACH tmp IN hbmk[ _HBMK_aPRG ]
             IF LEFTEQUAL( tmp, "@" ) .AND. Lower( FN_ExtGet( tmp ) ) == ".clp"
@@ -3800,9 +3826,9 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             ENDIF
             IF hbmk[ _HBMK_lDEBUGINC ]
                hbmk_OutStd( hbmk, hb_StrFormat( "debuginc: PRG %1$s %2$s",;
-                  tmp3, FN_DirExtSet( tmp3, cWorkDir, ".c" ) ) )
+                  tmp3, FN_DirExtSet( tmp3, cHarbourOutputDir, cHarbourOutputExt ) ) )
             ENDIF
-            IF ! hb_FGetDateTime( FN_DirExtSet( tmp3, cWorkDir, ".c" ), @tmp2 ) .OR. ;
+            IF ! hb_FGetDateTime( FN_DirExtSet( tmp3, cHarbourOutputDir, cHarbourOutputExt ), @tmp2 ) .OR. ;
                ! hb_FGetDateTime( tmp3, @tmp1 ) .OR. ;
                tmp1 > tmp2 .OR. ;
                ( hbmk[ _HBMK_nHEAD ] != _HEAD_OFF .AND. FindNewerHeaders( hbmk, tmp, NIL, tmp2, .F., .F., cBin_CompC, NIL, @headstate ) )
@@ -8105,6 +8131,9 @@ STATIC FUNCTION MacOSXFiles( hbmk, nType, cPROGNAME )
    cString := StrTran( cString, "%__APPNAME__%", cPROGNAME )
    cString := StrTran( cString, "%__APPTYPE__%", "APPL" )
    cString := StrTran( cString, "%__APPSIGN__%", PadR( cPROGNAME, 4, "?" ) )
+   cString := StrTran( cString, "%__APPID__%" ) /* TODO */
+   cString := StrTran( cString, "%__APPVERSION__%" ) /* TODO */
+   cString := StrTran( cString, "%__APPCOPYRIGHT__%" ) /* TODO */
    IF ! Empty( hbmk[ _HBMK_aICON ] )
       cString := StrTran( cString, "%__APPICON__%", FN_NameExtGet( hbmk[ _HBMK_aICON ][ 1 ] ) )
    ENDIF
