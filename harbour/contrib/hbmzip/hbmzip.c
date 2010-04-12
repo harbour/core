@@ -102,7 +102,7 @@ static const HB_GC_FUNCS s_gcZipFileFuncs =
 };
 
 
-static gzFile hb_zipfileParam( int iParam )
+static zipFile hb_zipfileParam( int iParam )
 {
    zipFile*  phZip = ( zipFile* ) hb_parptrGC( &s_gcZipFileFuncs, iParam );
 
@@ -132,7 +132,7 @@ static const HB_GC_FUNCS s_gcUnZipFileFuncs =
 };
 
 
-static gzFile hb_unzipfileParam( int iParam )
+static unzFile hb_unzipfileParam( int iParam )
 {
    unzFile*  phUnzip = ( unzFile* ) hb_parptrGC( &s_gcUnZipFileFuncs, iParam );
 

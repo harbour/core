@@ -27,9 +27,15 @@
 #  define NO_GZCOMPRESS
 #endif
 
-#ifdef _MSC_VER
-#  include <io.h>
-#  define vsnprintf _vsnprintf
+#if defined(MSDOS) || defined(OS2) || defined(WINDOWS) || defined(WIN32)
+#  ifndef _WINCE
+#     include <io.h>
+#     if defined(_MSC_VER) && !defined(__XCC__)
+#        define vsnprintf _vsnprintf
+#     endif
+#  endif
+#else
+#  include <unistd.h>
 #endif
 
 #ifndef local

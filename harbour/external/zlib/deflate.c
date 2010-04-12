@@ -1748,7 +1748,7 @@ local block_state deflate_rle(s, flush)
     int flush;
 {
     int bflush;             /* set if current block must be flushed */
-    uInt prev;              /* byte at distance one to match */
+    Byte prev;              /* byte at distance one to match */
     Bytef *scan, *strend;   /* scan goes up to strend for length of run */
 
     for (;;) {
