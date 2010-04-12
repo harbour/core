@@ -1,0 +1,10 @@
+#
+# $Id$
+#
+
+QFtp
+QHttp
+QHttpHeader
+QHttpRequestHeader
+QHttpResponseHeader
+QNetworkRequest
