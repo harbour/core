@@ -1,6 +1,7 @@
 /*
  * $Id$
  */
+#include "simpleio.ch"
 
 /*
  * Copyright 2010 Viktor Szakats (harbour.01 syenar.hu)
@@ -31,19 +32,54 @@ PROCEDURE Main()
       cHeaderDir := GetEnv( "HB_WITH_QT" ) + hb_osPathSeparator() + cName
       FOR EACH tmp1 IN hb_ATokens( StrTran( hb_MemoRead( tmp[ F_NAME ] ), Chr( 13 ) ), Chr( 10 ) )
          IF ! Empty( tmp1 ) .AND. ! ( Left( tmp1, 1 ) == "#" )
-            aStuff := {}
-            ProcessHeader( aStuff, cHeaderDir + hb_osPathSeparator() + tmp1 )
-            ASort( aStuff,,, {| x, y | x[ 1 ] < y[ 1 ] } )
-            FOR EACH tmp2 IN aStuff
-               OutStd( aType[ tmp2[ 1 ] ], tmp2[ 2 ], hb_osNewLine() )
-            NEXT
+            aStuff := { { .F., "" }, {} }
+            ProcessHeader( aStuff, cHeaderDir + hb_osPathSeparator() + tmp1, cName, tmp1 )
+//          ASort( aStuff[ 2 ],,, {| x, y | x[ 1 ] < y[ 1 ] } )
+//          FOR EACH tmp2 IN aStuff[ 2 ]
+//             OutStd( aType[ tmp2[ 1 ] ], tmp2[ 2 ], hb_osNewLine() )
+//          NEXT
+            IF Len( aStuff[ 1 ] ) >= 2
+               cFile := ""
+               cFile += hb_osNewLine()
+               cFile += "<CLASS>" + hb_osNewLine()
+               cFile += "QObject = " + iif( aStuff[ 1 ][ 1 ], "yes", "no" ) + hb_osNewLine()
+               cFile += "Inherit = " + aStuff[ 1 ][ 2 ] + hb_osNewLine()
+               cFile += "Type = " + cName + hb_osNewLine()
+               cFile += "New = " + "" + hb_osNewLine()
+               cFile += "</CLASS>" + hb_osNewLine()
+               DumpToQTH( @cFile, aStuff, QM_ENUM   )
+               DumpToQTH( @cFile, aStuff, QM_METHOD )
+               DumpToQTH( @cFile, aStuff, QM_SLOT   )
+               DumpToQTH( @cFile, aStuff, QM_SIGNAL )
+               hb_MemoWrit( tmp1 + ".qth", cFile )
+            ENDIF
          ENDIF
       NEXT
    NEXT
 
    RETURN
 
-STATIC PROCEDURE ProcessHeader( aStuff, cFileName )
+STATIC PROCEDURE DumpToQTH( cFile, aStuff, nType )
+   LOCAL tmp
+
+   LOCAL aType := {;
+      "ENUM"   ,;
+      "METHOD" ,;
+      "SLOT"   ,;
+      "SIGNAL" }
+
+   cFile += hb_osNewLine()
+   cFile += "<" + aType[ nType ] + ">" + hb_osNewLine()
+   FOR EACH tmp IN aStuff[ 2 ]
+      IF tmp[ 1 ] == nType
+         cFile += tmp[ 2 ] + hb_osNewLine()
+      ENDIF
+   NEXT
+   cFile += "</" + aType[ nType ] + ">" + hb_osNewLine()
+
+   RETURN
+
+STATIC PROCEDURE ProcessHeader( aStuff, cFileName, cLib, cOriFileName )
 
    LOCAL cFile := hb_MemoRead( cFileName )
    LOCAL nPos
@@ -63,10 +99,10 @@ STATIC PROCEDURE ProcessHeader( aStuff, cFileName )
 
    IF ! Empty( cHeader )
       hb_FNameSplit( cFileName, @cDir )
-      ProcessHeader( aStuff, DirAddPathSep( cDir ) + cHeader )
+      ProcessHeader( aStuff, DirAddPathSep( cDir ) + cHeader, cLib, cOriFileName )
+   ELSE
+      LoadStuff( aStuff, cOriFileName, cFile, cLib )
    ENDIF
-
-   LoadStuff( aStuff, cFile )
 
    RETURN
 
@@ -78,13 +114,17 @@ STATIC FUNCTION DirAddPathSep( cDir )
 
    RETURN cDir
 
-STATIC PROCEDURE LoadStuff( aStuff, cFile )
+STATIC PROCEDURE LoadStuff( aStuff, cFileName, cFile, cLib )
    LOCAL cLine
    LOCAL tmp, tmp1, tmp2
    LOCAL nMode := 0
    LOCAL nType
    LOCAL cInfo
    LOCAL lAllowBlock
+   LOCAL lQ_OBJECT := .F.
+   LOCAL lClass := .F.
+   LOCAL cInherit := ""
+   LOCAL cInheritT
 
    LOCAL aLine := hb_ATokens( StrTran( cFile, Chr( 13 ) ), Chr( 10 ) )
 
@@ -96,16 +136,36 @@ STATIC PROCEDURE LoadStuff( aStuff, cFile )
       cLine := AllTrim( cLine )
       IF ! Empty( cLine ) .AND. !( Left( cLine, 1 ) == "#" )
          DO CASE
-         CASE cLine == "public:"
+         CASE ! lClass .AND. Left( cLine, Len( "class Q_" + Upper( SubStr( cLib, 3 ) ) + "_EXPORT " ) ) == "class Q_" + Upper( SubStr( cLib, 3 ) ) + "_EXPORT "
+            // class Q_CORE_EXPORT QAbstractItemModel : public QObject
+            cLine := SubStr( cLine, Len( "class Q_" + Upper( SubStr( cLib, 3 ) ) + "_EXPORT " ) + 1 )
+            IF ( tmp1 := At( ":", cLine ) ) > 0
+               cInheritT := StrTran( AllTrim( SubStr( cLine, tmp1 + 1 ) ), "public " )
+               cLine := AllTrim( Left( cLine, tmp1 - 1 ) )
+            ELSE
+               cInheritT := ""
+            ENDIF
+            IF cLine == cFileName
+               lClass := .T.
+               cInherit := cInheritT
+            ENDIF
+            LOOP
+         CASE lClass .AND. Left( cLine, Len( "};" ) ) == "};"
+            lClass := .F.
+            nMode := 0
+         CASE lClass .AND. cLine == "Q_OBJECT"
+            lQ_OBJECT := .T.
+            LOOP
+         CASE lClass .AND. cLine == "public:"
             nMode := QM_METHOD
             LOOP
-         CASE cLine == "public Q_SLOTS:"
+         CASE lClass .AND. cLine == "public Q_SLOTS:"
             nMode := QM_SLOT
             LOOP
-         CASE cLine == "Q_SIGNALS:"
+         CASE lClass .AND. cLine == "Q_SIGNALS:"
             nMode := QM_SIGNAL
             LOOP
-         CASE cLine == "private:"
+         CASE lClass .AND. cLine == "private:"
             nMode := 0
             LOOP
          ENDCASE
@@ -128,19 +188,29 @@ STATIC PROCEDURE LoadStuff( aStuff, cFile )
                   ENDIF
                ENDIF
             CASE nMode == QM_SLOT
-               nType := nMode
+               IF Left( cLine, Len( "inline " ) ) == "inline "
+                  nType := nMode
+                  lAllowBlock := .T.
+               ELSE
+                  nType := nMode
+               ENDIF
             CASE nMode == QM_SIGNAL
                nType := nMode
             ENDCASE
             IF ! Empty( nType )
                cInfo := GetLine( aLine, @tmp, lAllowBlock )
                IF ! Empty( cInfo )
-                  AAdd( aStuff, { nType, cInfo } )
+                  AAdd( aStuff[ 2 ], { nType, cInfo } )
                ENDIF
             ENDIF
          ENDIF
       ENDIF
    NEXT
+
+   aStuff[ 1 ][ 1 ] := lQ_OBJECT
+   IF ! Empty( cInherit )
+      aStuff[ 1 ][ 2 ] := cInherit
+   ENDIF
 
    RETURN
 
