@@ -127,13 +127,13 @@ CLASS IdeEditsManager INHERIT IdeObject
    METHOD switchToReadOnly()
    METHOD convertSelection( cKey )
    METHOD insertText( cKey )
-   METHOD insertSeparator()
+   METHOD insertSeparator( cSep )
    METHOD zoom( nKey )
    METHOD printPreview()
    METHOD paintRequested( pPrinter )
    METHOD setMark()
    METHOD gotoMark( nIndex )
-   METHOD goto()
+   METHOD goto( nLine )
    METHOD formatBraces()
    METHOD removeTabs()
    METHOD RemoveTrailingSpaces()
@@ -682,10 +682,10 @@ METHOD IdeEditsManager:convertSelection( cKey )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeEditsManager:insertSeparator()
+METHOD IdeEditsManager:insertSeparator( cSep )
    LOCAL oEdit
    IF !empty( oEdit := ::getEditObjectCurrent() )
-      oEdit:insertSeparator()
+      oEdit:insertSeparator( cSep )
    ENDIF
    RETURN Self
 
@@ -901,26 +901,32 @@ METHOD IdeEditsManager:gotoMark( nIndex )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeEditsManager:goto()
-   LOCAL qGo, nLine, qCursor, nRows, oEdit
+METHOD IdeEditsManager:goto( nLine )
+   LOCAL qGo, qCursor, nRows, oEdit
 
    IF ! empty( oEdit := ::oEM:getEditObjectCurrent() )
       qCursor := QTextCursor():configure( oEdit:qEdit:textCursor() )
-      nLine   := qCursor:blockNumber()
       nRows   := oEdit:qEdit:blockCount()
 
-      qGo := QInputDialog():new( ::oDlg:oWidget )
-      qGo:setIntMinimum( 1 )
-      qGo:setIntMaximum( nRows + 1 )
-      qGo:setIntValue( nLine + 1 )
-      qGo:setLabelText( "Goto Line Number [1-" + hb_ntos( nRows ) + "]" )
-      qGo:setWindowTitle( "Harbour-Qt" )
+      IF hb_isNumeric( nLine ) .AND. nLine >= 0 .AND. nLine <= nRows
+         //
+      ELSE
+         nLine   := qCursor:blockNumber()
 
-      ::setPosByIni( qGo, GotoDialogGeometry )
-      qGo:exec()
-      ::aIni[ INI_HBIDE, GotoDialogGeometry ] := hbide_posAndSize( qGo )
+         qGo := QInputDialog():new( ::oDlg:oWidget )
+         qGo:setIntMinimum( 1 )
+         qGo:setIntMaximum( nRows + 1 )
+         qGo:setIntValue( nLine + 1 )
+         qGo:setLabelText( "Goto Line Number [1-" + hb_ntos( nRows ) + "]" )
+         qGo:setWindowTitle( "Harbour-Qt" )
 
-      oEdit:goto( qGo:intValue() )
+         ::setPosByIni( qGo, GotoDialogGeometry )
+         qGo:exec()
+         ::aIni[ INI_HBIDE, GotoDialogGeometry ] := hbide_posAndSize( qGo )
+         nLine := qGo:intValue()
+      ENDIF
+
+      oEdit:goto( nLine )
    ENDIF
 
    RETURN nLine
@@ -1451,7 +1457,7 @@ CLASS IdeEdit INHERIT IdeObject
    METHOD getSelectedText()
    METHOD getColumnNo()
    METHOD getLineNo()
-   METHOD insertSeparator()
+   METHOD insertSeparator( cSep )
    METHOD insertText( cText )
 
    METHOD suspendPrototype()
@@ -1742,6 +1748,10 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p, p1 )
       ENDIF
       IF hb_bitAnd( kbm, Qt_ShiftModifier   ) == Qt_ShiftModifier
          lShift := .t.
+      ENDIF
+
+      IF ::oSC:execKey( key, lAlt, lCtrl, lShift )
+         RETURN .f.
       ENDIF
 
       SWITCH ( key )
@@ -2137,14 +2147,16 @@ METHOD IdeEdit:getLineNo()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeEdit:insertSeparator()
+METHOD IdeEdit:insertSeparator( cSep )
    LOCAL qCursor := QTextCursor():configure( ::qEdit:textCursor() )
+
+   DEFAULT cSep TO ::cSeparator
 
    qCursor:beginEditBlock()
    qCursor:movePosition( QTextCursor_StartOfBlock )
    qCursor:insertBlock()
    qCursor:movePosition( QTextCursor_PreviousBlock )
-   qCursor:insertText( ::cSeparator )
+   qCursor:insertText( cSep )
    qCursor:movePosition( QTextCursor_NextBlock )
    qCursor:movePosition( QTextCursor_StartOfBlock )
    qCursor:endEditBlock()

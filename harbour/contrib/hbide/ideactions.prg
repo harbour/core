@@ -134,7 +134,7 @@ METHOD IdeActions:getAction( cKey )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeActions:buildActions()
-   LOCAL qAction, aAct, k, a_
+   LOCAL qAction, aAct, a_
 
    aAct := ::loadActions()
 
@@ -147,6 +147,7 @@ METHOD IdeActions:buildActions()
          IF !empty( a_[ ACT_IMAGE ] )
             qAction:setIcon( ::resPath + a_[ ACT_IMAGE ] + ".png" )
          ENDIF
+         #if 0
          IF !empty( a_[ ACT_SHORTCUT ] )
             k := a_[ ACT_SHORTCUT ]
             k := strtran( k, "Sh+", "Shift+" )
@@ -154,6 +155,7 @@ METHOD IdeActions:buildActions()
             k := strtran( k, "^"  , "Ctrl+"  )
             qAction:setShortcut( QKeySequence():new( k ) )
          ENDIF
+         #endif
          qAction:setTooltip( strtran( a_[ ACT_TEXT ], "~", "" ) )
 
          ::hActions[ a_[ ACT_NAME ] ] := qAction
@@ -255,7 +257,7 @@ METHOD IdeActions:loadActions()
    aadd( aAct, { "InsertDateTime"       , "~Date && Time"                , "insert-datetime", "Sh+F7", "No", "Yes" } )
    aadd( aAct, { "InsertRandomName"     , "~Random Function Name"        , "insert-procname", "Sh+F8", "No", "Yes" } )
    aadd( aAct, { "InsertExternalFile"   , "~External File at Cursor"     , "insert-external-file", "", "No", "Yes" } )
-   aadd( aAct, { "InsertSeparator"      , "~Separator"                   , "insert-separator", "F7"   , "No", "Yes" } )
+   aadd( aAct, { "InsertSeparator"      , "~Separator"                   , "insert-separator", "F7"  , "No", "Yes" } )
    aadd( aAct, { "switchReadOnly"       , "Switch Read~Only Mode"        , "readonly"       , ""     , "No", "Yes" } )
    aadd( aAct, { "Properties"           , "Properties"                   , ""               , ""     , "No", "Yes" } )
    aadd( aAct, { "ProjAddSource"        , "Add Source to Project"        , "projectadd"     , ""     , "No", "Yes" } )
@@ -271,11 +273,6 @@ METHOD IdeActions:loadActions()
    aadd( aAct, { "CompilePPO"           , "Compile Current Source to PPO", "ppo"            , ""     , "No", "Yes" } )
    aadd( aAct, { "LaunchProject"        , "Launch Project"               , ""               , "^F10" , "No", "Yes" } )
    aadd( aAct, { "ConfigureTools"       , "Configure Tools...*"          , ""               , ""     , "No", "Yes" } )
-#ifdef __PLATFORM__WINDOWS
-   aadd( aAct, { "CommandPrompt"        , "Command Prompt...*"           , ""               , ""     , "No", "Yes" } )
-#else
-   aadd( aAct, { "Terminal"             , "Terminal"                     , ""               , ""     , "No", "Yes" } )
-#endif
 
    aadd( aAct, { "ManageThemes"         , "Manage Themes"                , ""               , ""     , "No", "Yes" } )
    aadd( aAct, { "DefaultTheme"         , "Set Default Theme"            , ""               , ""     , "No", "Yes" } )
@@ -293,19 +290,24 @@ METHOD IdeActions:loadActions()
    aadd( aAct, { "RemoveTrailingSpaces" , "Remove Trailing Spaces"       , "removetrailingspaces", "", "No", "Yes" } )
    aadd( aAct, { "FormatBraces"         , "Format Braces"                , "ormatbraces"    , ""     , "No", "Yes" } )
 
-   aadd( aAct, { "StreamComment"        , "Stream Comment"               , "streamcomment"  , "Sh+^Q", "No", "Yes" } )
-   aadd( aAct, { "BlockComment"         , "Block Comment"                , "blockcomment"   , "Sh+^/", "No", "Yes" } )
-   aadd( aAct, { "BlockIndentR"         , "Indent Right"                 , "blockindentr"   , "^Tab" , "No", "Yes" } )
-   aadd( aAct, { "BlockIndentL"         , "Indent Left"                  , "blockindentl"   , "Sh+^Tab", "No", "Yes" } )
+   aadd( aAct, { "StreamComment"        , "Stream Comment"               , "streamcomment"  , ""     , "No", "Yes" } )
+   aadd( aAct, { "BlockComment"         , "Block Comment"                , "blockcomment"   , ""     , "No", "Yes" } )
+   aadd( aAct, { "BlockIndentR"         , "Indent Right"                 , "blockindentr"   , ""     , "No", "Yes" } )
+   aadd( aAct, { "BlockIndentL"         , "Indent Left"                  , "blockindentl"   , ""     , "No", "Yes" } )
    aadd( aAct, { "BlockDbl2Sgl"         , "Double Quotes to Single"      , "dbl2sglquote"   , ""     , "No", "Yes" } )
    aadd( aAct, { "BlockSgl2Dbl"         , "Single Quotes to Double"      , "sgl2dblquote"   , ""     , "No", "Yes" } )
-
+#if 0
    aadd( aAct, { "DuplicateLine"        , "Duplicate Current Line"       , "duplicateline"  , "^D"   , "No", "Yes" } )
    aadd( aAct, { "DeleteLine"           , "Delete Line"                  , "deleteline"     , "^Delete", "No", "Yes" } )
    aadd( aAct, { "MoveLineUp"           , "Move Line Up"                 , "movelineup"     , "Sh+^Up", "No", "Yes" } )
    aadd( aAct, { "MoveLineDown"         , "Move Line Down"               , "movelinedown"   , "Sh+^Down", "No", "Yes" } )
-
+#endif
+   aadd( aAct, { "DuplicateLine"        , "Duplicate Current Line"       , "duplicateline"  , ""     , "No", "Yes" } )
+   aadd( aAct, { "DeleteLine"           , "Delete Line"                  , "deleteline"     , ""     , "No", "Yes" } )
+   aadd( aAct, { "MoveLineUp"           , "Move Line Up"                 , "movelineup"     , ""     , "No", "Yes" } )
+   aadd( aAct, { "MoveLineDown"         , "Move Line Down"               , "movelinedown"   , ""     , "No", "Yes" } )
    aadd( aAct, { "Environments"         , "Environments..."              , "envconfig"      , ""     , "No", "Yes" } )
+
    aadd( aAct, { "GotoFunc"             , "Goto Function"                , "dc_function"    , ""     , "No", "Yes" } )
    aadd( aAct, { "Shortcuts"            , "Keyboard Mappings"            , ""               , ""     , "No", "Yes" } )
 
@@ -464,7 +466,7 @@ METHOD IdeActions:buildMainMenu()
    oSubMenu:addItem( { ::getAction( "SelectAll"           ), {|| oIde:execAction( "SelectAll"      ) } } )
    hbide_menuAddSep( oSubMenu )
    oSubMenu:addItem( { ::getAction( "Find"                ), {|| oIde:execAction( "Find"           ) } } )
-  oSubMenu:addItem( { ::getAction( "FindEx"              ), {|| oIde:execAction( "FindEx"         ) } } )
+   oSubMenu:addItem( { ::getAction( "FindEx"              ), {|| oIde:execAction( "FindEx"         ) } } )
    oSubMenu:addItem( { ::getAction( "Goto"                ), {|| oIde:execAction( "Goto"           ) } } )
    hbide_menuAddSep( oSubMenu )
    //

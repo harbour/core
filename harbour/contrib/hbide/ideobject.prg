@@ -137,6 +137,8 @@ CLASS IdeObject
    ACCESS cWrkReplace                             INLINE ::oIde:cWrkReplace
    ACCESS cWrkView                                INLINE ::oIde:cWrkView
    ACCESS cWrkHarbour                             INLINE ::oIde:cWrkHarbour
+   ACCESS cPathShortcuts                          INLINE ::oIde:cPathShortcuts
+   ACCESS cTextExtensions                         INLINE ::oIde:cTextExtensions
    //
    ACCESS resPath                                 INLINE ::oIde:resPath
    ACCESS pathSep                                 INLINE ::oIde:pathSep

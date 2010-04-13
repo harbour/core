@@ -364,7 +364,11 @@ METHOD IdeHome:addProjectsInfo( aHtm )
          aadd( aHtm, '    ' + hb_ntos( len( src_ ) ) )
          aadd( aHtm, '    </td>' )
          aadd( aHtm, '    <td align=center>'  )
-         aadd( aHtm, '    ' + dtoc( dir_[ 1,3 ] ) + " " + dir_[ 1,4 ] )
+         IF ! empty( dir_ )
+            aadd( aHtm, '    ' + dtoc( dir_[ 1,3 ] ) + " " + dir_[ 1,4 ] )
+         ELSE
+            aadd( aHtm, '    ' )
+         ENDIF
          aadd( aHtm, '    </td>' )
          aadd( aHtm, '    <td align=right>'  )
          aadd( aHtm, '    ' + hbide_pathNormalized( a_[ 1 ] ) )

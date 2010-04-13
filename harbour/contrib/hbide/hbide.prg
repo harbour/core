@@ -240,6 +240,8 @@ CLASS HbIde
    DATA   cWrkReplace                             INIT   ""
    DATA   cWrkView                                INIT   ""
    DATA   cWrkHarbour                             INIT   ""
+   DATA   cPathShortcuts                          INIT   ""
+   DATA   cTextExtensions                         INIT   ""
 
    DATA   oEnvironment
 
@@ -358,9 +360,6 @@ HB_TRACE( HB_TR_ALWAYS, "HbIde:create( cProjIni )", "#Params=" )
    /* Skeletons Manager     */
    ::oSK := IdeSkeletons():new( Self ):create()
 
-   /* Shortcuts */
-   ::oSC := IdeShortcuts():new( Self ):create()
-
    /* Initialte Project Manager */
    ::oPM := IdeProjManager():new( Self ):create()
 
@@ -368,6 +367,10 @@ HB_TRACE( HB_TR_ALWAYS, "HbIde:create( cProjIni )", "#Params=" )
    IF ::nRunMode == HBIDE_RUN_MODE_INI
       hbide_loadINI( Self, ::cProjIni )
    ENDIF
+
+   /* Shortcuts */
+   ::oSC := IdeShortcuts():new( Self ):create()
+
    /* Insert command line projects */
    aeval( ::aHbpOnCmdLine, {|e| aadd( ::aINI[ INI_PROJECTS ], e ) } )
    /* Insert command line sources */
@@ -563,7 +566,7 @@ HB_TRACE( HB_TR_ALWAYS, "HbIde:create( cProjIni )", "#Params=" )
 
    /* Very important - destroy resources */
    HB_TRACE( HB_TR_ALWAYS, "======================================================" )
-   HB_TRACE( HB_TR_ALWAYS, "Before    ::oDlg:destroy()", memory( 1001 ) )
+   HB_TRACE( HB_TR_ALWAYS, "Before    ::oDlg:destroy()", memory( 1001 )             )
    HB_TRACE( HB_TR_ALWAYS, "                                                      " )
 
    ::oTM:destroy()
@@ -588,7 +591,7 @@ HB_TRACE( HB_TR_ALWAYS, "HbIde:create( cProjIni )", "#Params=" )
    ::oFont   := NIL
 
    HB_TRACE( HB_TR_ALWAYS, "                                                      " )
-   HB_TRACE( HB_TR_ALWAYS, "After     ::oDlg:destroy()", memory( 1001 ) )
+   HB_TRACE( HB_TR_ALWAYS, "After     ::oDlg:destroy()", memory( 1001 )             )
    HB_TRACE( HB_TR_ALWAYS, "======================================================" )
 
    RETURN self

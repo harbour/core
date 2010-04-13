@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>664</width>
-    <height>478</height>
+    <width>732</width>
+    <height>438</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Shortcuts</string>
+   <string>Keyboard Macros</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
@@ -21,64 +21,64 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="1" colspan="6">
+   <item row="0" column="1" colspan="10">
     <widget class="QLabel" name="labelSyntax">
      <property name="text">
-      <string>Description</string>
+      <string> Description</string>
      </property>
     </widget>
    </item>
    <item row="1" column="0">
     <widget class="QListWidget" name="listMethods"/>
    </item>
-   <item row="1" column="1" colspan="6">
+   <item row="1" column="1" colspan="10">
     <widget class="QTextEdit" name="texteditSyntax"/>
    </item>
-   <item row="2" column="0" colspan="7">
+   <item row="2" column="0" colspan="11">
     <widget class="QLabel" name="labelMacros">
      <property name="text">
-      <string>Macros</string>
+      <string>Keyboard Shortcuts</string>
      </property>
     </widget>
    </item>
-   <item row="3" column="0" rowspan="5">
+   <item row="3" column="0" rowspan="12">
     <widget class="QTableWidget" name="tableMacros"/>
    </item>
    <item row="3" column="1">
     <widget class="QLabel" name="labelName">
      <property name="text">
-      <string>Name</string>
+      <string> Name</string>
      </property>
     </widget>
    </item>
-   <item row="3" column="2" colspan="5">
+   <item row="3" column="2" colspan="9">
     <widget class="QLineEdit" name="editName"/>
    </item>
    <item row="4" column="1">
     <widget class="QLabel" name="labelKey">
      <property name="text">
-      <string>Key</string>
+      <string> Key</string>
      </property>
     </widget>
    </item>
    <item row="4" column="2">
     <widget class="QComboBox" name="comboKey"/>
    </item>
-   <item row="4" column="3" colspan="2">
+   <item row="4" column="5" colspan="2">
     <widget class="QCheckBox" name="checkAlt">
      <property name="text">
       <string>Alt</string>
      </property>
     </widget>
    </item>
-   <item row="4" column="5">
+   <item row="4" column="7">
     <widget class="QCheckBox" name="checkCtrl">
      <property name="text">
       <string>Ctrl</string>
      </property>
     </widget>
    </item>
-   <item row="4" column="6">
+   <item row="4" column="10">
     <widget class="QCheckBox" name="checkShift">
      <property name="text">
       <string>Shift</string>
@@ -88,110 +88,159 @@
    <item row="5" column="1">
     <widget class="QLabel" name="labelMenu">
      <property name="text">
-      <string>Menu</string>
+      <string> Menu</string>
      </property>
     </widget>
    </item>
-   <item row="5" column="2" colspan="5">
+   <item row="5" column="2" colspan="9">
     <widget class="QLineEdit" name="editMenu"/>
    </item>
-   <item row="6" column="1" colspan="6">
+   <item row="7" column="1" rowspan="5" colspan="10">
     <widget class="QPlainTextEdit" name="plainBlock"/>
    </item>
-   <item row="7" column="1">
-    <widget class="QPushButton" name="buttonNew">
-     <property name="minimumSize">
-      <size>
-       <width>45</width>
-       <height>0</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>45</width>
-       <height>16777215</height>
-      </size>
-     </property>
+   <item row="6" column="1">
+    <widget class="QLabel" name="label">
      <property name="text">
-      <string>New</string>
+      <string> Script:</string>
      </property>
     </widget>
    </item>
-   <item row="7" column="2">
-    <widget class="QPushButton" name="buttonSet">
-     <property name="minimumSize">
-      <size>
-       <width>45</width>
-       <height>0</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>45</width>
-       <height>16777215</height>
-      </size>
-     </property>
-     <property name="text">
-      <string>Set</string>
-     </property>
-    </widget>
-   </item>
-   <item row="7" column="3">
-    <widget class="QPushButton" name="buttonLoad">
-     <property name="minimumSize">
-      <size>
-       <width>45</width>
-       <height>0</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>45</width>
-       <height>16777215</height>
-      </size>
-     </property>
-     <property name="text">
-      <string>Load</string>
-     </property>
-    </widget>
-   </item>
-   <item row="7" column="4" colspan="2">
-    <widget class="QPushButton" name="buttonSave">
-     <property name="minimumSize">
-      <size>
-       <width>45</width>
-       <height>0</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>45</width>
-       <height>16777215</height>
-      </size>
-     </property>
-     <property name="text">
-      <string>Save</string>
-     </property>
-    </widget>
-   </item>
-   <item row="7" column="6">
-    <widget class="QPushButton" name="buttonSaveAs">
-     <property name="minimumSize">
-      <size>
-       <width>45</width>
-       <height>0</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>45</width>
-       <height>16777215</height>
-      </size>
-     </property>
-     <property name="text">
-      <string>SaveAs</string>
-     </property>
-    </widget>
+   <item row="12" column="1" rowspan="3" colspan="10">
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QPushButton" name="buttonNew">
+       <property name="minimumSize">
+        <size>
+         <width>40</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>40</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>New</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="buttonSet">
+       <property name="minimumSize">
+        <size>
+         <width>40</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>40</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Set</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="buttonTest">
+       <property name="minimumSize">
+        <size>
+         <width>40</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>40</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Test</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="buttonDelete">
+       <property name="minimumSize">
+        <size>
+         <width>40</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>40</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Delete</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="buttonLoad">
+       <property name="minimumSize">
+        <size>
+         <width>40</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>40</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Load</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="buttonSave">
+       <property name="minimumSize">
+        <size>
+         <width>40</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>40</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Save</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="buttonSaveAs">
+       <property name="minimumSize">
+        <size>
+         <width>40</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>40</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>SaveAs</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
   </layout>
  </widget>

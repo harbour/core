@@ -1296,7 +1296,8 @@ METHOD IdeProjManager:finished( nExitCode, nExitStatus, oProcess )
          IF ( n := at( cTkn, cTmp ) ) > 0
             cT   := Chr( 10 )
             n1   := hb_at( cT, cTmp, n + len( cTkn ) )
-            cExe := StrTran( substr( cTmp, n + len( cTkn ), n1 - n - len( cTkn ) + len( cT ) ), Chr( 13 ) )
+            cExe := StrTran( substr( cTmp, n + len( cTkn ), n1 - n - len( cTkn ) + len( cT ) ), Chr( 13 ), "" )
+            cExe := StrTran( cExe, Chr( 10 ), "" )
          ENDIF
       ENDIF
       IF empty( cExe )
@@ -1304,7 +1305,8 @@ METHOD IdeProjManager:finished( nExitCode, nExitStatus, oProcess )
          IF ( n := at( cTkn, cTmp ) ) > 0
             cT   := Chr( 10 )
             n1   := hb_at( cT, cTmp, n + len( cTkn ) )
-            cExe := StrTran( substr( cTmp, n + len( cTkn ), n1 - n - len( cTkn ) + len( cT ) ), Chr( 13 ) )
+            cExe := StrTran( substr( cTmp, n + len( cTkn ), n1 - n - len( cTkn ) + len( cT ) ), Chr( 13 ), "" )
+            cExe := StrTran( cExe, Chr( 10 ), "" )
          ENDIF
       ENDIF
 
@@ -1312,7 +1314,8 @@ METHOD IdeProjManager:finished( nExitCode, nExitStatus, oProcess )
       IF empty( cExe )
          ::outputText( "<font color=red>" + "Executable could not been detected from linker output!" + "</font>" )
       ELSE
-         ::outputText( "<font color=blue>" + "Detected exeutable => " + cExe + "</font>" )
+         cExe := alltrim( cExe )
+         ::outputText( "<font color=blue>" + "Detected exeutable => " + cExe + " " + hb_ntos( len( cExe ) ) + "</font>" )
       ENDIF
       ::outputText( " " )
 
@@ -1334,7 +1337,7 @@ METHOD IdeProjManager:finished( nExitCode, nExitStatus, oProcess )
  * 03/01/2010 - 09:24:50
  */
 METHOD IdeProjManager:launchProject( cProject, cExe )
-   LOCAL cTargetFN, cTmp, oProject, qProcess, qStr, cExt
+   LOCAL cTargetFN, cTmp, oProject, qProcess, qStr
 
    IF empty( cProject )
       cProject := ::oPM:getCurrentProject()
@@ -1344,7 +1347,22 @@ METHOD IdeProjManager:launchProject( cProject, cExe )
    ENDIF
 
    oProject  := ::getProjectByTitle( cProject )
+   IF empty( cExe )
+      cTargetFN := hbide_pathFile( oProject:destination, iif( empty( oProject:outputName ), "_temp", oProject:outputName ) )
+      #ifdef __PLATFORM__WINDOWS
+      IF oProject:type == "Executable"
+         cTargetFN += '.exe'
+      ENDIF
+      #endif
+      IF ! hb_FileExists( cTargetFN )
+         cTargetFN := oProject:launchProgram
+      ENDIF
+   ELSE
+      cTargetFN := cExe
+   ENDIF
+   cTargetFN := hbide_pathToOSPath( cTargetFN )
 
+   #if 0
    IF !empty( cExe )
       hb_fNameSplit( cExe, , , @cExt )
    ENDIF
@@ -1361,14 +1379,14 @@ METHOD IdeProjManager:launchProject( cProject, cExe )
          cTargetFN := oProject:launchProgram
       ENDIF
    ENDIF
+   #endif
 
-   IF !hb_FileExists( cTargetFN )
+   IF ! hb_FileExists( cTargetFN )
       cTmp := "Launch error: file not found - " + cTargetFN
 
    ELSEIF oProject:type == "Executable"
       cTmp := "Launching application [ " + cTargetFN + " ]"
 
-      #if 1
       qProcess := QProcess():new()
       qProcess:setWorkingDirectory( hbide_pathToOSPath( oProject:wrkDirectory ) )
       IF !empty( oProject:launchParams )
@@ -1380,13 +1398,6 @@ METHOD IdeProjManager:launchProject( cProject, cExe )
       ENDIF
       qProcess:waitForStarted()
       qProcess := NIL
-
-      #else
-      ::oProcess := HbpProcess():new()
-      ::oProcess:output := {|s| HB_TRACE( HB_TR_ALWAYS, s ) }
-      ::oProcess:finished := {|n,nn| HB_TRACE( HB_TR_ALWAYS, "Finished", n, nn ) }
-      ::oProcess:start( cTargetFN )
-      #endif
 
    ELSE
       cTmp := "Launching application [ " + cTargetFN + " ] ( not applicable )."
@@ -1404,3 +1415,5 @@ METHOD IdeProjManager:outputText( cText )
    ::oOutputResult:oWidget:append( cText )
 
    RETURN Self
+
+/*----------------------------------------------------------------------*/

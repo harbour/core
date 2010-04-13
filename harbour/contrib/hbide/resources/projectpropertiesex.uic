@@ -1,8 +1,8 @@
 /********************************************************************************
 ** Form generated from reading ui file 'projectpropertiesex.ui'
 **
-** Created: Sat Mar 6 14:12:50 2010
-**      by: Qt User Interface Compiler version 4.5.3
+** Created: Mon Apr 12 21:20:46 2010
+**      by: Qt User Interface Compiler version 4.5.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!
 ********************************************************************************/
@@ -432,7 +432,7 @@ public:
 #endif // QT_NO_TOOLTIP
         editHbp->setStyleSheet(QString());
         tabWidget->setTabText(tabWidget->indexOf(tabHbp), QApplication::translate("FormProjectPropEx", "hbp", 0, QApplication::UnicodeUTF8));
-        buttonSaveExit->setText(QApplication::translate("FormProjectPropEx", "Save and Exit", 0, QApplication::UnicodeUTF8));
+        buttonSaveExit->setText(QApplication::translate("FormProjectPropEx", "Save and Close", 0, QApplication::UnicodeUTF8));
         buttonSave->setText(QApplication::translate("FormProjectPropEx", "Save", 0, QApplication::UnicodeUTF8));
         buttonCn->setText(QApplication::translate("FormProjectPropEx", "Cancel", 0, QApplication::UnicodeUTF8));
         Q_UNUSED(FormProjectPropEx);

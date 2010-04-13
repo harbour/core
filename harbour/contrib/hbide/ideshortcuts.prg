@@ -68,6 +68,7 @@
 #include "hbqt.ch"
 #include "common.ch"
 #include "hbclass.ch"
+#include "appevent.ch"
 
 /*----------------------------------------------------------------------*/
 
@@ -77,6 +78,12 @@
 #define tableMacros_itemDoubleClicked             104
 #define buttonSet_clicked                         105
 #define buttonNew_clicked                         106
+#define buttonTest_clicked                        107
+#define buttonLoad_clicked                        108
+#define buttonSave_clicked                        109
+#define buttonSaveAs_clicked                      110
+#define buttonAssign_clicked                      111
+#define buttonDelete_clicked                      112
 
 /*----------------------------------------------------------------------*/
 
@@ -96,6 +103,9 @@ CLASS IdeShortcuts INHERIT IdeObject
    DATA   cShift
    DATA   cMenu
    DATA   cBlock
+   DATA   cIcon
+
+   DATA   qHiliter
 
    METHOD new( oIde )
    METHOD create( oIde )
@@ -105,18 +115,17 @@ CLASS IdeShortcuts INHERIT IdeObject
    METHOD buildUI()
    METHOD buildSignals()
 
+   METHOD buildBlock( cString )
    METHOD evalMacro( cString )
-   METHOD fetchAndExecMacro()
-
-   METHOD getWord( lSelect )
-   METHOD getLine( lSelect )
-   METHOD getText()
-   METHOD execTool( ... )
+   METHOD test( cString, lWarn )
+   METHOD execKey( nKey, lAlt, lCtrl, lShift )
+   METHOD mergeMacros( a_ )
 
    METHOD loadDftSCuts()
    METHOD loadMethods()
    METHOD loadKeys()
 
+   METHOD clearDftSCuts()
    METHOD populateData( nMode )
    METHOD populateDftSCuts()
    METHOD populateKeys()
@@ -127,6 +136,39 @@ CLASS IdeShortcuts INHERIT IdeObject
    METHOD array2controls( nRow )
    METHOD array2table( nRow, a_ )
    METHOD vrbls2array( nRow )
+
+   /* Public API Methods */
+   METHOD getWord( lSelect )
+   METHOD getLine( lSelect )
+   METHOD getText()
+   METHOD execTool( ... )
+
+   /* hbIDE defined Macros as API Methods */
+   METHOD help( cTopic )
+   METHOD exit( lWarn )
+   METHOD newSource( cType )
+   METHOD open()
+   METHOD save()
+   METHOD saveAll()
+   METHOD close()
+   METHOD print()
+   METHOD revertToSaved()
+   METHOD findDlg()
+   METHOD findDlgEx()
+   METHOD gotoLine( nLine )
+   METHOD duplicateLine()
+   METHOD deleteLine()
+   METHOD moveLineUp()
+   METHOD moveLineDown()
+   METHOD indentRight()
+   METHOD indentLeft()
+   METHOD blockComment()
+   METHOD streamComment()
+   METHOD build( cProj )
+   METHOD buildLaunch( cProj )
+   METHOD launch( cProj )
+   METHOD insert( cText )
+   METHOD separator( cSep )
 
    ENDCLASS
 
@@ -157,6 +199,11 @@ METHOD IdeShortcuts:destroy()
    LOCAL a_, qItm
 
    IF !empty( ::oUI )
+      Qt_Events_disConnect( ::pEvents, ::oUI:oWidget, QEvent_Close )
+      ::oUI:oWidget:removeEventFilter( ::pEvents )
+
+      ::qHiliter := NIL
+
       FOR EACH qItm IN ::aHdr
          qItm := NIL
       NEXT
@@ -177,7 +224,6 @@ METHOD IdeShortcuts:destroy()
       ::oUI:destroy()
    ENDIF
 
-
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -187,6 +233,7 @@ METHOD IdeShortcuts:show()
    IF empty( ::oUI )
       ::buildUI()
       ::populateData( 1 )
+      ::oIde:setPosAndSizeByIni( ::oUI:oWidget, FindInFilesDialogGeometry )
    ENDIF
 
    ::oUI:show()
@@ -197,19 +244,66 @@ METHOD IdeShortcuts:show()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeShortcuts:execEvent( nMode, p )
-   LOCAL nRow
+   LOCAL nRow, cMethod, cFile, cPath, cTemp, cExt, a_
 
    SWITCH nMode
+
+   CASE buttonDelete_clicked
+      nRow := ::oUI:q_tableMacros:currentRow()
+      IF nRow >= 0 .AND. nRow < len( ::aDftSCuts )
+         nRow++
+         IF hbide_getYesNo( "Delete", ::aDftSCuts[ nRow, 1 ], "A Delete Operation Requested" )
+            hb_adel( ::aDftSCuts, nRow, .t. )
+            ::clearDftSCuts()
+            ::populateDftSCuts()
+         ENDIF
+      ENDIF
+      EXIT
+   CASE buttonTest_clicked
+      IF .t.
+         ::controls2vrbls()
+         IF !empty( ::cBlock )
+            ::test( ::cBlock, .t. )
+         ENDIF
+      ENDIF
+      EXIT
+   CASE buttonLoad_clicked
+      cTemp := hbide_fetchAFile( ::oDlg, "Select a macro file", { { "hbIDE Script File", "*.scu" } }, ::cPathShortcuts )
+      IF ! Empty( cTemp )
+         hb_fNameSplit( hbide_pathNormalized( cTemp, .f. ), @cPath, @cFile, @cExt )
+         IF lower( cExt ) == ".scu"
+            a_:= hb_deSerialize( hb_memoread( cTemp ) )
+            IF !empty( a_ )
+               ::mergeMacros( a_ )
+               ::clearDftSCuts()
+               ::populateDftSCuts()
+            ENDIF
+         ENDIF
+      ENDIF
+      EXIT
+   CASE buttonSave_clicked
+      hbide_saveShortcuts( ::oIde, ::aDftSCuts )
+      EXIT
+   CASE buttonSaveAs_clicked
+      cTemp := hbide_saveAFile( ::oDlg, "Select a macro file", { { "hbIDE Script File", "*.scu" } }, ::cPathShortcuts, ".scu" )
+      IF ! Empty( cTemp )
+         hb_fNameSplit( hbide_pathNormalized( cTemp, .f. ), @cPath, @cFile, @cExt )
+         cFile := hbide_pathToOSPath( cPath + cFile + "scu" )
+         hbide_saveShortcuts( ::oIde, ::aDftSCuts, cFile )
+      ENDIF
+      EXIT
    CASE buttonNew_clicked
       IF .t.
          ::controls2vrbls()
-         IF !( ::checkDuplicate( ::cKey, ::cAlt, ::cCtrl, ::cShift ) )
-            aadd( ::aDftSCuts, { ::cName, ::cKey, ::cAlt, ::cCtrl, ::cShift, ::cMenu, ::cBlock } )
-            aadd( ::aDftSCutsItms, array( 5 ) )
-            ::oUI:q_tableMacros:setRowCount( ::oUI:q_tableMacros:rowCount() + 1 )
-            ::array2table( len( ::aDftSCuts ), { ::cName, ::cKey, ::cAlt, ::cCtrl, ::cShift, ::cMenu, ::cBlock } )
-         ELSE
-            MsgBox( "Current shortcut is already defined!" )
+         IF !empty( ::cName )
+            IF !( ::checkDuplicate( ::cKey, ::cAlt, ::cCtrl, ::cShift ) )
+               aadd( ::aDftSCuts, { ::cName, ::cKey, ::cAlt, ::cCtrl, ::cShift, ::cMenu, ::cBlock } )
+               aadd( ::aDftSCutsItms, array( 5 ) )
+               ::oUI:q_tableMacros:setRowCount( ::oUI:q_tableMacros:rowCount() + 1 )
+               ::array2table( len( ::aDftSCuts ), { ::cName, ::cKey, ::cAlt, ::cCtrl, ::cShift, ::cMenu, ::cBlock } )
+            ELSE
+               MsgBox( "Current shortcut is already defined!" )
+            ENDIF
          ENDIF
       ENDIF
       EXIT
@@ -219,14 +313,13 @@ METHOD IdeShortcuts:execEvent( nMode, p )
       IF nRow >= 0 .AND. nRow < len( ::aDftSCuts )
          nRow++
          ::controls2vrbls()
-         IF !( ::checkDuplicate( ::cKey, ::cAlt, ::cCtrl, ::cShift, nRow ) )
+         IF !empty( ::cName ) .AND. !( ::checkDuplicate( ::cKey, ::cAlt, ::cCtrl, ::cShift, nRow ) ) .AND. ::test( ::cBlock, .f. )
             ::vrbls2array( nRow )
             ::vrbls2controls( nRow )
          ENDIF
       ENDIF
       EXIT
    CASE tableMacros_itemDoubleClicked
-
       EXIT
    CASE tableMacros_itemSelectionChanged
       nRow := ::oUI:q_tableMacros:currentRow()
@@ -236,10 +329,15 @@ METHOD IdeShortcuts:execEvent( nMode, p )
       ENDIF
       EXIT
    CASE listMethods_itemDoubleClicked
+      IF ( nRow := ::oUI:q_listMethods:currentRow() ) >= 0
+         nRow++
+         cMethod := "::" + ::aMethods[ nRow, 2 ]
+         ::oUI:q_plainBlock:insertPlainText( cMethod )
+      ENDIF
       EXIT
    CASE listMethods_currentRowChanged
       IF p >= 0 .AND. p < len( ::aMethods )
-         ::oUI:q_texteditSyntax:setPlainText( ::aMethods[ p+1, 2 ] )
+         ::oUI:q_texteditSyntax:setPlainText( ::aMethods[ p+1, 3 ] )
       ENDIF
       EXIT
    ENDSWITCH
@@ -284,6 +382,7 @@ METHOD IdeShortcuts:vrbls2array( nRow )
    ::aDftSCuts[ nRow, 5 ] := ::cShift
    ::aDftSCuts[ nRow, 6 ] := ::cMenu
    ::aDftSCuts[ nRow, 7 ] := ::cBlock
+   //::aDftSCuts[ nRow, 8 ] := ::cIcon
 
    RETURN Self
 
@@ -291,63 +390,72 @@ METHOD IdeShortcuts:vrbls2array( nRow )
 
 METHOD IdeShortcuts:vrbls2controls( nRow )
 
-   ::aDftSCutsItms[ nRow, 1 ]:setText( ::cName )
-   ::aDftSCutsItms[ nRow, 2 ]:setText( ::cKey )
-   ::aDftSCutsItms[ nRow, 3 ]:setIcon( hbide_image( iif( ::cAlt   == "YES", "check", "" ) ) )
-   ::aDftSCutsItms[ nRow, 4 ]:setIcon( hbide_image( iif( ::cCtrl  == "YES", "check", "" ) ) )
-   ::aDftSCutsItms[ nRow, 5 ]:setIcon( hbide_image( iif( ::cShift == "YES", "check", "" ) ) )
+   ::aDftSCutsItms[ nRow, 1 ]:setIcon( hbide_image( ::cIcon ) )
+   ::aDftSCutsItms[ nRow, 2 ]:setText( ::cName )
+   ::aDftSCutsItms[ nRow, 3 ]:setText( ::cKey )
+   ::aDftSCutsItms[ nRow, 4 ]:setIcon( hbide_image( iif( ::cAlt   == "YES", "check", "" ) ) )
+   ::aDftSCutsItms[ nRow, 5 ]:setIcon( hbide_image( iif( ::cCtrl  == "YES", "check", "" ) ) )
+   ::aDftSCutsItms[ nRow, 6 ]:setIcon( hbide_image( iif( ::cShift == "YES", "check", "" ) ) )
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeShortcuts:array2table( nRow, a_ )
-   LOCAL q1, q2, q3, q4, q5
+   LOCAL q0, q1, q2, q3, q4, q5
    LOCAL oTbl := ::oUI:q_tableMacros
    LOCAL n := nRow - 1
 
+   q0 := QTableWidgetItem():new()
+   q0:setIcon( hbide_image( a_[ 8 ] ) )
+   oTbl:setItem( n, 0, q0 )
+
    q1 := QTableWidgetItem():new()
    q1:setText( a_[ 1 ] )
-   oTbl:setItem( n, 0, q1 )
+   oTbl:setItem( n, 1, q1 )
 
    q2 := QTableWidgetItem():new()
    q2:setText( a_[ 2 ] )
-   oTbl:setItem( n, 1, q2 )
+   oTbl:setItem( n, 2, q2 )
 
    q3 := QTableWidgetItem():new()
    q3:setIcon( iif( a_[ 3 ] == "YES", hbide_image( "check" ), "" ) )
-   oTbl:setItem( n, 2, q3 )
+   oTbl:setItem( n, 3, q3 )
 
    q4 := QTableWidgetItem():new()
    q4:setIcon( iif( a_[ 4 ] == "YES", hbide_image( "check" ), "" ) )
-   oTbl:setItem( n, 3, q4 )
+   oTbl:setItem( n, 4, q4 )
 
    q5 := QTableWidgetItem():new()
    q5:setIcon( iif( a_[ 5 ] == "YES", hbide_image( "check" ), "" ) )
-   oTbl:setItem( n, 4, q5 )
+   oTbl:setItem( n, 5, q5 )
 
    oTbl:setRowHeight( n, 16 )
 
-   ::aDftSCutsItms[ nRow, 1 ] := q1
-   ::aDftSCutsItms[ nRow, 2 ] := q2
-   ::aDftSCutsItms[ nRow, 3 ] := q3
-   ::aDftSCutsItms[ nRow, 4 ] := q4
-   ::aDftSCutsItms[ nRow, 5 ] := q5
+   ::aDftSCutsItms[ nRow, 1 ] := q0
+   ::aDftSCutsItms[ nRow, 2 ] := q1
+   ::aDftSCutsItms[ nRow, 3 ] := q2
+   ::aDftSCutsItms[ nRow, 4 ] := q3
+   ::aDftSCutsItms[ nRow, 5 ] := q4
+   ::aDftSCutsItms[ nRow, 6 ] := q5
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeShortcuts:controls2vrbls()
+   LOCAL nRow := ::oUI:q_comboKey:currentIndex()
 
-   ::cName  := ::oUI:q_editName:text()
-   ::cKey   := ::aKeys[ ::oUI:q_comboKey:currentIndex() + 1, 2 ]
-   ::cAlt   := iif( ::oUI:q_checkAlt  :isChecked(), "YES", "NO" )
-   ::cCtrl  := iif( ::oUI:q_checkCtrl :isChecked(), "YES", "NO" )
-   ::cShift := iif( ::oUI:q_checkShift:isChecked(), "YES", "NO" )
-   ::cMenu  := ::oUI:q_editMenu:text()
-   ::cBlock := ::oUI:q_plainBlock:toPlainText()
-
+   IF nRow >= 0
+      nRow++
+      ::cName  := ::oUI:q_editName:text()
+      ::cKey   := ::aKeys[ nRow, 2 ]
+      ::cAlt   := iif( ::oUI:q_checkAlt  :isChecked(), "YES", "NO" )
+      ::cCtrl  := iif( ::oUI:q_checkCtrl :isChecked(), "YES", "NO" )
+      ::cShift := iif( ::oUI:q_checkShift:isChecked(), "YES", "NO" )
+      ::cMenu  := ::oUI:q_editMenu:text()
+      ::cBlock := ::oUI:q_plainBlock:toPlainText()
+   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -376,17 +484,23 @@ METHOD IdeShortcuts:checkDuplicate( cKey, cAlt, cCtrl, cShift, nRow )
 
 METHOD IdeShortcuts:buildUI()
    LOCAL oTbl, n, qItm
-   LOCAL hdr_:= { { "Name", 190 }, { "Key", 50 }, { "Alt", 30 }, { "Ctrl", 30 }, { "Shift", 30 } }
+   LOCAL hdr_:= { { "Img", 30 }, { "Name", 190 }, { "Key", 50 }, { "Alt", 30 }, { "Ctrl", 30 }, { "Shift", 30 } }
 
    ::oUI := HbQtUI():new( hbide_uic( "shortcuts" ) ):build()
    ::oUI:setWindowIcon( hbide_image( "hbide" ) )
+   ::oUI:setParent( ::oDlg:oWidget )
+   ::oUI:setWindowFlags( Qt_Sheet )
+
+   ::oUI:oWidget:installEventFilter( ::pEvents )
+
+   Qt_Events_Connect( ::pEvents, ::oUI:oWidget, QEvent_Close, {|| ::oIde:aIni[ INI_HBIDE, FindInFilesDialogGeometry ] := hbide_posAndSize( ::oUI:oWidget ) } )
 
    oTbl := ::oUI:q_tableMacros                              /* Build Table Header */
    QHeaderView():from( oTbl:verticalHeader() ):hide()
    QHeaderView():from( oTbl:horizontalHeader() ):stretchLastSection( .t. )
    oTbl:setAlternatingRowColors( .t. )
    oTbl:setColumnCount( len( hdr_ ) )
-   oTbl:setShowGrid( .f. )
+   oTbl:setShowGrid( .t. )
    oTbl:setSelectionMode( QAbstractItemView_SingleSelection )
    oTbl:setSelectionBehavior( QAbstractItemView_SelectRows )
    FOR n := 1 TO len( hdr_ )
@@ -399,6 +513,8 @@ METHOD IdeShortcuts:buildUI()
 
    ::oUI:q_listMethods:setAlternatingRowColors( .t. )       /* Public Methods List */
 
+   ::qHiliter := ::oTH:SetSyntaxHilighting( ::oUI:q_plainBlock, "Pritpal's Favourite" )
+
    ::buildSignals()
 
    RETURN Self
@@ -407,14 +523,20 @@ METHOD IdeShortcuts:buildUI()
 
 METHOD IdeShortcuts:buildSignals()
 
-   ::oUI:signal( "buttonNew"  , "clicked()"                   , {| | ::execEvent( buttonNew_clicked ) } )
-   ::oUI:signal( "buttonSet"  , "clicked()"                   , {| | ::execEvent( buttonSet_clicked ) } )
+   ::oUI:signal( "buttonNew"   , "clicked()"                   , {| | ::execEvent( buttonNew_clicked    ) } )
+   ::oUI:signal( "buttonSet"   , "clicked()"                   , {| | ::execEvent( buttonSet_clicked    ) } )
+   ::oUI:signal( "buttonTest"  , "clicked()"                   , {| | ::execEvent( buttonTest_clicked   ) } )
+   ::oUI:signal( "buttonLoad"  , "clicked()"                   , {| | ::execEvent( buttonLoad_clicked   ) } )
+   ::oUI:signal( "buttonSave"  , "clicked()"                   , {| | ::execEvent( buttonSave_clicked   ) } )
+   ::oUI:signal( "buttonSaveAs", "clicked()"                   , {| | ::execEvent( buttonSaveAs_clicked ) } )
+   ::oUI:signal( "buttonAssign", "clicked()"                   , {| | ::execEvent( buttonAssign_clicked ) } )
+   ::oUI:signal( "buttonDelete", "clicked()"                   , {| | ::execEvent( buttonDelete_clicked ) } )
 
-   ::oUI:signal( "listMethods", "itemDoubleClicked(QLWItem)"  , {|p| ::execEvent( listMethods_itemDoubleClicked, p ) } )
-   ::oUI:signal( "listMethods", "currentRowChanged(int)"      , {|p| ::execEvent( listMethods_currentRowChanged, p ) } )
+   ::oUI:signal( "listMethods" , "itemDoubleClicked(QLWItem)"  , {|p| ::execEvent( listMethods_itemDoubleClicked, p ) } )
+   ::oUI:signal( "listMethods" , "currentRowChanged(int)"      , {|p| ::execEvent( listMethods_currentRowChanged, p ) } )
 
-   ::oUI:signal( "tableMacros", "itemSelectionChanged()"      , {| | ::execEvent( tableMacros_itemSelectionChanged ) } )
-   ::oUI:signal( "tableMacros", "itemDoubleClicked(QTblWItem)", {|p| ::execEvent( tableMacros_itemDoubleClicked, p ) } )
+   ::oUI:signal( "tableMacros" , "itemSelectionChanged()"      , {| | ::execEvent( tableMacros_itemSelectionChanged ) } )
+   ::oUI:signal( "tableMacros" , "itemDoubleClicked(QTblWItem)", {|p| ::execEvent( tableMacros_itemDoubleClicked, p ) } )
 
    RETURN Self
 
@@ -432,6 +554,23 @@ METHOD IdeShortcuts:populateData( nMode )
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeShortcuts:clearDftSCuts()
+   LOCAL a_, qItm
+   LOCAL oTbl := ::oUI:q_tableMacros
+
+   FOR EACH a_ IN ::aDftSCutsItms
+      FOR EACH qItm IN a_
+         qItm := NIL
+      NEXT
+   NEXT
+   ::aDftSCutsItms := {}
+
+   oTbl:clearContents()
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeShortcuts:populateDftSCuts()
    LOCAL a_, nRow
    LOCAL oTbl := ::oUI:q_tableMacros
@@ -441,10 +580,11 @@ METHOD IdeShortcuts:populateDftSCuts()
    nRow := 0
    FOR EACH a_ IN ::aDftSCuts
       nRow++
-      aadd( ::aDftSCutsItms, array( 5 ) )
+      aadd( ::aDftSCutsItms, array( 6 ) )
       ::array2table( nRow, a_ )
       QApplication():processEvents()
    NEXT
+   oTbl:setCurrentCell( 0,0 )
 
    RETURN Self
 
@@ -483,14 +623,97 @@ METHOD IdeShortcuts:populateKeys()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeShortcuts:loadDftSCuts()
+METHOD IdeShortcuts:buildBlock( cString )
+   LOCAL n, cBlock, cParam, a_
 
-   /*                    Name              Key   Alt   Ctrl   Sh  Menu Expr Icon */
-   //
-   aadd( ::aDftSCuts, { "Duplicate Line" , "D" , "NO", "YES", "NO", "", "", "" } )
-   aadd( ::aDftSCuts, { "Current Line Up", "Up", "NO", "YES", "NO", "", "", "" } )
+   a_:= hbide_memoTOarray( cString )
+   cString := ""
+   aeval( a_, {|e| cString += e } )
 
-   RETURN Self
+   IF ( n := at( "|", cString ) ) > 0
+      cString := substr( cString, n + 1 )
+      IF ( n := at( "|", cString ) ) == 0
+         RETURN Self
+      ENDIF
+      cParam  := substr( cString, 1, n - 1 )
+      cString := substr( cString, n + 1 )
+      cBlock  := "{|o," + cParam + "|" + cString + " }"
+   ELSE
+      cBlock := "{|o| " + cString + " }"
+   ENDIF
+   cBlock := strtran( cBlock, "::", "o:" )
+
+   RETURN cBlock
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeShortcuts:test( cString, lWarn )
+   LOCAL cBlock, oErr, bBlock
+   LOCAL lOk    := .f.
+   LOCAL bError := ErrorBlock( {|o| break( o ) } )
+
+   cBlock := ::buildBlock( cString )
+
+   BEGIN SEQUENCE
+      bBlock := &( cBlock )
+      lOk := .t.
+      IF lWarn
+         MsgBox( "Script compiles fine!", "Syntax checking", , , , bBlock )
+      ENDIF
+   RECOVER USING oErr
+      MsgBox( "Wrongly defined script, syntax is |v| ::method( v )" + oErr:description )
+   ENDSEQUENCE
+
+   ErrorBlock( bError )
+   ::oUI:raise()
+   ::oUI:setFocus_1()
+
+   RETURN lOk
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeShortcuts:evalMacro( cString )
+   LOCAL bError := ErrorBlock( {|o| break( o ) } )
+   LOCAL oErr, bBlock, cBlock
+   LOCAL lEvaluated := .f.
+
+   cBlock := ::buildBlock( cString ) ; HB_TRACE( HB_TR_ALWAYS, cString, cBlock )
+
+   bBlock := &( cBlock )
+
+   BEGIN SEQUENCE
+      eval( bBlock, self )
+      lEvaluated := .t.
+   RECOVER USING oErr
+      HB_TRACE( HB_TR_ALWAYS, valtype( oErr ), oErr:description )
+   END SEQUENCE
+
+   ErrorBlock( bError )
+   RETURN lEvaluated
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeShortcuts:execKey( nKey, lAlt, lCtrl, lShift )
+   LOCAL lExecuted := .f.
+   LOCAL cKey, n
+
+   IF ( n := ascan( ::aKeys, {|e_| e_[ 1 ] == nKey } ) ) > 0
+      cKey := ::aKeys[ n, 2 ]
+
+      n := ascan( ::aDftSCuts, {|e_| e_[ 2 ] == cKey .AND. ;
+                                     e_[ 3 ] == iif( lAlt  , "YES", "NO" ) .AND. ;
+                                     e_[ 4 ] == iif( lCtrl , "YES", "NO" ) .AND. ;
+                                     e_[ 5 ] == iif( lShift, "YES", "NO" )  } )
+      IF n > 0
+         IF ! empty( ::aDftSCuts[ n, 7 ] )
+            HB_TRACE( HB_TR_ALWAYS, nKey, lAlt, lCtrl, lShift, cKey )
+
+            lExecuted := ::evalMacro( ::aDftSCuts[ n, 7 ] )
+         ENDIF
+      ENDIF
+   ENDIF
+
+   RETURN lExecuted
 
 /*----------------------------------------------------------------------*/
 
@@ -633,62 +856,6 @@ METHOD IdeShortcuts:loadKeys()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeShortcuts:evalMacro( cString )
-   LOCAL bError := ErrorBlock( {|o| break( o ) } )
-   LOCAL oErr, bBlock, n, cBlock, cParam
-
-   IF ( n := at( "|", cString ) ) > 0
-      cString := substr( cString, n + 1 )
-      IF ( n := at( "|", cString ) ) == 0
-         RETURN Self
-      ENDIF
-      cParam  := substr( cString, 1, n - 1 )
-      cString := substr( cString, n + 1 )
-      cBlock  := "{|o," + cParam + "|" + cString + " }"
-   ELSE
-      cBlock := "{|o| " + cString + " }"
-   ENDIF
-   cBlock := strtran( cBlock, "::", "o:" )
-
-   bBlock := &( cBlock )
-
-HB_TRACE( HB_TR_ALWAYS, cBlock )
-   BEGIN SEQUENCE
-      eval( bBlock, self )
-   RECOVER USING oErr
-      MsgBox( "Wrongly defined block. Syntax is |var| method_call( var ) --- " + oErr:description )
-   END SEQUENCE
-
-   ErrorBlock( bError )
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeShortcuts:fetchAndExecMacro()
-   LOCAL cStr
-
-   cStr := hbide_fetchAString( ::oDlg:oWidget, "", "Macro", "Compilation" )
-   IF !empty( cStr )
-      ::evalMacro( cStr )
-   ENDIF
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeShortcuts:loadMethods()
-
-   aadd( ::aMethods, { "getWord( lSelect )", "Returns text of the word under cursor. If <lSelect == .T.> text appears as selected." } )
-   aadd( ::aMethods, { "getLine( lSelect )", "Returns text of the current line. If <lSelect == .T.> text appears as selected." } )
-   aadd( ::aMethods, { "getText()"         , "Returns current selected text." } )
-   aadd( ::aMethods, { "execTool( ... )"   , "Executes a 'Tool' under tools menu or without an entry." } )
-   #if 0
-   aadd( ::aMethods, { "", "" } )
-   #endif
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
 METHOD IdeShortcuts:execTool( ... )
    RETURN ::oTM:execTool( ... )
 
@@ -700,7 +867,7 @@ METHOD IdeShortcuts:getWord( lSelect )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeShortcuts:getLine( lSelect )
-   RETURN ::oEM:getLine( lSelect )
+   RETURN ::oEM:getLine( , lSelect )
 
 /*----------------------------------------------------------------------*/
 
@@ -708,3 +875,314 @@ METHOD IdeShortcuts:getText()
    RETURN ::oEM:getText()
 
 /*----------------------------------------------------------------------*/
+
+METHOD IdeShortcuts:duplicateLine()
+   RETURN ::oEM:duplicateLine()
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeShortcuts:deleteLine()
+   RETURN ::oEM:deleteLine()
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeShortcuts:moveLineUp()
+   RETURN ::oEM:moveLine( -1 )
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeShortcuts:moveLineDown()
+   RETURN ::oEM:moveLine( 1 )
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeShortcuts:help( cTopic )
+   HB_SYMBOL_UNUSED( cTopic )
+   RETURN ::oHelpDock:show()
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeShortcuts:exit( lWarn )
+   IF hb_isLogical( lWarn ) .AND. lWarn
+      IF hbide_getYesNo( "Exit hbIDE ?", , "Macro Executed" )
+         PostAppEvent( xbeP_Close, NIL, NIL, ::oDlg )
+      ENDIF
+   ELSE
+      PostAppEvent( xbeP_Close, NIL, NIL, ::oDlg )
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeShortcuts:newSource( cType )
+   HB_SYMBOL_UNUSED( cType )
+   RETURN ::oSM:editSource( '' )
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeShortcuts:open()
+   RETURN ::oSM:openSource()
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeShortcuts:save()
+   RETURN ::oSM:saveSource( ::oEM:getTabCurrent(), .f., .f. )
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeShortcuts:saveAll()
+   RETURN ::oSM:saveAllSources()
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeShortcuts:close()
+   RETURN ::oSM:closeSource()
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeShortcuts:print()
+   RETURN ::oEM:printPreview()
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeShortcuts:revertToSaved()
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeShortcuts:findDlg()
+   IF !Empty( ::qCurEdit )
+      ::oFR:show()
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeShortcuts:findDlgEx()
+   IF !Empty( ::qCurEdit )
+      ::oSearchReplace:beginFind()
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeShortcuts:gotoLine( nLine )
+   RETURN ::oEM:goTo( nLine )
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeShortcuts:indentRight()
+   RETURN ::oEM:indent( 1 )
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeShortcuts:indentLeft()
+   RETURN ::oEM:indent( -1 )
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeShortcuts:blockComment()
+   RETURN ::oEM:blockComment()
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeShortcuts:streamComment()
+   RETURN ::oEM:streamComment()
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeShortcuts:build( cProj )
+   IF ! hb_isChar( cProj )
+      cProj := ""
+   ENDIF
+   RETURN ::oPM:buildProject( cProj, .F., .F. )
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeShortcuts:buildLaunch( cProj )
+   IF ! hb_isChar( cProj )
+      cProj := ""
+   ENDIF
+   RETURN ::oPM:buildProject( cProj, .T., .F. )
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeShortcuts:launch( cProj )
+   IF ! hb_isChar( cProj )
+      cProj := ""
+   ENDIF
+   RETURN ::oPM:launchProject( cProj )
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeShortcuts:insert( cText )
+   LOCAL oEdit
+   IF ! empty( oEdit := ::getEditObjectCurrent() )
+      IF hb_isChar( cText )
+         oEdit:insertText( cText )
+      ENDIF
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeShortcuts:separator( cSep )
+   RETURN ::oEM:insertSeparator( cSep )
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeShortcuts:loadMethods()
+   #if 0
+   aadd( ::aMethods, { '', ;
+                       '', ;
+                       ''  } )
+   #endif
+   aadd( ::aMethods, { 'help( cTopic )', ;
+                       'help( "" )', ;
+                       'Invokes "Help" docking widget in the right docking area. <cTopic> is not active yet.'  } )
+   aadd( ::aMethods, { 'exit( lWarn )', ;
+                       'exit( .f. )', ;
+                       'Exits hbIDE. If <lWarn == TRUE> then confirmation is requested through a popup dialog. All sources are saved if in modified state after confirmation to do so.'  } )
+   aadd( ::aMethods, { 'newSource( cType )', ;
+                       'newSource( "" )', ;
+                       'Initiates a blank source file in an editing instance on the current panel.'  } )
+   aadd( ::aMethods, { 'open()', ;
+                       'open()', ;
+                       'Invokes "Open File" dialog and if a selection is made and such selection is a hbIDE supported valid text file, that is opened in a new editor instance on visible panel.'  } )
+   aadd( ::aMethods, { 'save()', ;
+                       'save()', ;
+                       'Saves the current editing instance if in modified state. Visual artifacts are updated accordingly.'  } )
+   aadd( ::aMethods, { 'saveAll()', ;
+                       'saveAll()', ;
+                       'Saves all opened editing instances on the visible panel, if in modified state. Visual artifacts are updated accordingly.'  } )
+   aadd( ::aMethods, { 'close()', ;
+                       'close()', ;
+                       'Closes the current editing instance.'  } )
+   aadd( ::aMethods, { 'print()', ;
+                       'print()', ;
+                       'Invokes "Print Preview" dialog with current source contents ready to be printed.'  } )
+   aadd( ::aMethods, { 'findDlg()', ;
+                       'findDlg()', ;
+                       'Invokes "Find and Replace" dialog.'  } )
+   aadd( ::aMethods, { 'findDlgEx()', ;
+                       'findDlgEx()', ;
+                       'Invokes extended "Find and Replace" dialog at the bottom of editing area.'  } )
+   aadd( ::aMethods, { 'gotoLine( nLine )', ;
+                       'gotoLine(  )', ;
+                       'Attempt is made to position the cursor at <nLine>. If <nLine> is not supplied, a "Goto" dialog is opened to supply <nLine>.'  } )
+   aadd( ::aMethods, { 'indentRight()', ;
+                       'indentRight()', ;
+                       'Pushes one character right the currently selected text.'  } )
+   aadd( ::aMethods, { 'indentLeft()', ;
+                       'indentLeft()', ;
+                       'Pushes one character left the currently selected text. If there are no columns remains at left nothing happens.'  } )
+   aadd( ::aMethods, { 'blockComment()', ;
+                       'blockComment()', ;
+                       'Encloses currently selected text in line comments where each line is prefixed with //.' } )
+   aadd( ::aMethods, { 'streamComment()', ;
+                       'streamComment()', ;
+                       'Encloses currently selected text in Anci-C like comments /*  */' } )
+   aadd( ::aMethods, { 'build( cProj )', ;
+                       'build( "" )', ;
+                       'Builds <cProj> if it is already loaded. All sources are saved if found in modified state before "build" is initiated.' } )
+   aadd( ::aMethods, { 'buildLaunch( cProj )', ;
+                       'buildLaunch( "" )', ;
+                       'Builds and launches <cProj> if it is already loaded. All sources are saved if found in modified state before "build" is initiated.' } )
+   aadd( ::aMethods, { 'launch( cProj )', ;
+                       'launch( "" )', ;
+                       'Launches <cProj> if it is already loaded.'  } )
+   aadd( ::aMethods, { 'insert( cText )', ;
+                       'insert( "" )', ;
+                       'Insert <cText> at current cursor position.'  } )
+   aadd( ::aMethods, { 'separator( cSep )', ;
+                       'separator( "" )', ;
+                       'Inserts separator line <cSep> immediately before current line. <cSep> defaults to "/*---*/"'  } )
+   aadd( ::aMethods, { 'getWord( lSelect )', ;
+                       'getWord( .f. )'    , ;
+                       'Returns text of the word under cursor. If <lSelect == .T.> text appears as selected.' } )
+   aadd( ::aMethods, { 'getLine( lSelect )', ;
+                       'getLine( .f. )'    , ;
+                       'Returns text of the current line. If <lSelect == .T.> text appears as selected.' } )
+   aadd( ::aMethods, { 'getText()'         , ;
+                       'getText()'         , ;
+                       'Returns current selected text.' } )
+   aadd( ::aMethods, { 'execTool( cName )' , ;
+                       'execTool( "" )'    , ;
+                       'Executes a Tool defined and visible under tools menu.' } )
+   aadd( ::aMethods, { 'execTool( cCmd, cParams, cStartIn, lCapture, lShowOutput )' , ;
+                       'execTool( "", "", "", .f., .f. )', ;
+                       'Executes a program or file with parameters and other attributes.' + CRLF + ;
+                       'http://hbide.vouch.info/ ( Topic: Tools and Utilities )' } )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeShortcuts:loadDftSCuts()
+   LOCAL a_, b_
+
+   IF .t.
+      b_:= {}
+
+      /*          Name                Key        Alt   Ctrl   Sh   Menu  Expr                      Icon */
+      //
+      aadd( b_, { "Help"            , "F1"     , "NO", "NO" , "NO" , "", '::help( "" )'          , "help"            , "", "" } )
+      aadd( b_, { "Exit"            , "W"      , "NO", "YES", "YES", "", '::exit( .f. )'         , "exit"            , "", "" } )
+
+      aadd( b_, { "New Source"      , "N"      , "NO", "YES", "NO" , "", '::newSource( "" )'     , "new"             , "", "" } )
+      aadd( b_, { "Open"            , "O"      , "NO", "YES", "NO" , "", '::open()'              , "open"            , "", "" } )
+      aadd( b_, { "Save"            , "S"      , "NO", "YES", "NO" , "", '::save()'              , "save"            , "", "" } )
+      aadd( b_, { "Save All"        , "S"      , "NO", "YES", "YES", "", '::saveAll()'           , "saveall"         , "", "" } )
+      aadd( b_, { "Close"           , "W"      , "NO", "YES", "NO" , "", '::close()'             , "close"           , "", "" } )
+      aadd( b_, { "Print"           , "P"      , "NO", "YES", "NO" , "", '::print()'             , "print"           , "", "" } )
+   *  aadd( b_, { "Revert to Saved" , "R"      , "NO", "NO" , "YES", "", '::revertToSaved()'     , ""                , "", "" } )
+
+      aadd( b_, { "Find Dialog"     , "F"      , "NO", "YES", "NO" , "", '::findDlg()'           , "find"            , "", "" } )
+      aadd( b_, { "Find Dialog Ex"  , "F"      , "NO", "YES", "YES", "", '::findDlgEx()'         , "find"            , "", "" } )
+
+      aadd( b_, { "Goto Line"       , "G"      , "NO", "YES", "NO" , "", '::gotoLine()'          , "gotoline"        , "", "" } )
+      aadd( b_, { "Duplicate Line"  , "D"      , "NO", "YES", "NO" , "", '::duplicateLine()'     , "duplicateline"   , "", "" } )
+      aadd( b_, { "Delete Line"     , "Delete" , "NO", "YES", "NO" , "", '::deleteLine()'        , "deleteline"      , "", "" } )
+      aadd( b_, { "Line Up"         , "Up"     , "NO", "YES", "YES", "", '::moveLineUp()'        , "movelineup"      , "", "" } )
+      aadd( b_, { "Line Down"       , "Down"   , "NO", "YES", "YES", "", '::moveLineDown()'      , "movelinedown"    , "", "" } )
+
+      aadd( b_, { "Indent Right"    , "Tab"    , "NO", "YES", "NO" , "", '::indentRight()'       , "blockindentr"    , "", "" } )
+      aadd( b_, { "Indent Left"     , "Tab"    , "NO", "YES", "YES", "", '::indentLeft()'        , "blockindentl"    , "", "" } )
+      aadd( b_, { "Block Comment"   , "Slash"  , "NO", "YES", "YES", "", '::blockComment()'      , "blockcomment"    , "", "" } )
+      aadd( b_, { "Stream Comment"  , "Q"      , "NO", "YES", "YES", "", '::streamComment()'     , "streamcomment"   , "", "" } )
+
+      aadd( b_, { "Build Project"   , "F9"     , "NO", "YES", "NO" , "", '::build( "" )'         , "build"           , "", "" } )
+      aadd( b_, { "Build & Launch"  , "F9"     , "NO", "NO" , "NO" , "", '::buildLaunch( "" )'   , "buildlaunch"     , "", "" } )
+      aadd( b_, { "Launch Project"  , "F10"    , "NO", "YES", "NO" , "", '::launch( "" )'        , "launch"          , "", "" } )
+
+      aadd( b_, { "Insert Text"     , "F7"     , "NO", "YES", "NO" , "", '::insert( "" )'        , "insert-external-file", "", "" } )
+      aadd( b_, { "Insert Separator", "F7"     , "NO", "NO" , "NO" , "", '::separator( "" )'     , "insert-separator", "", "" } )
+
+      ::aDftSCuts := b_
+   ENDIF
+
+   IF !empty( a_:= hbide_loadShortcuts( ::oIde ) )
+      ::mergeMacros( a_ )
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeShortcuts:mergeMacros( a_ )
+   LOCAL c_, n
+
+   FOR EACH c_ IN a_
+      IF ( n := ascan( ::aDftSCuts, {|e_| e_[ 2 ] == c_[ 2 ] .AND. e_[ 3 ] == c_[ 3 ] .AND. ;
+                                            e_[ 4 ] == c_[ 4 ] .AND. e_[ 5 ] == c_[ 5 ] } ) ) == 0
+         aadd( ::aDftSCuts, c_ )
+      ELSE
+         ::aDftSCuts[ n ] := c_
+      ENDIF
+   NEXT
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+

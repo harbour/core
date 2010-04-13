@@ -656,8 +656,6 @@ METHOD IdeFindInFiles:buildUI()
    ::oUI:q_checkListOnly:setChecked( .t. )
    ::oUI:q_checkPrg:setChecked( .t. )
 
- * ::oIde:setPosAndSizeByIni( ::oUI:oWidget, FindInFilesDialogGeometry )
-
    qLineEdit := QLineEdit():configure( ::oUI:q_comboExpr:lineEdit() )
    IF !empty( ::oEM )
       IF !empty( cText := ::oEM:getSelectedText() )

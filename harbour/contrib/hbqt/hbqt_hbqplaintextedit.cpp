@@ -100,8 +100,6 @@ HBQPlainTextEdit::HBQPlainTextEdit( QWidget * parent ) : QPlainTextEdit( parent 
 
 HBQPlainTextEdit::~HBQPlainTextEdit()
 {
-   HB_TRACE( HB_TR_ALWAYS, ( "HBQPlainTextEdit::~HBQPlainTextEdit( 0 )" ) );
-
    disconnect( this, SIGNAL( blockCountChanged( int ) )            );
    disconnect( this, SIGNAL( updateRequest( const QRect &, int ) ) );
    disconnect( this, SIGNAL( cursorPositionChanged() )             );
@@ -199,7 +197,7 @@ void HBQPlainTextEdit::keyPressEvent( QKeyEvent * event )
 
    QPlainTextEdit::keyPressEvent( event );
 
-   const bool ctrlOrShift = event->modifiers() & (Qt::ControlModifier | Qt::ShiftModifier);
+   const bool ctrlOrShift = event->modifiers() & ( Qt::ControlModifier | Qt::ShiftModifier );
    if( !c || ( ctrlOrShift && event->text().isEmpty() ) )
        return;
 

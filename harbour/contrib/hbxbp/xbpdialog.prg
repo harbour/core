@@ -248,6 +248,8 @@ METHOD XbpDialog:destroy()
    HB_TRACE( HB_TR_ALWAYS,  ". " )
    HB_TRACE( HB_TR_ALWAYS,  "<<<<<<<<<<                        XbpDialog:destroy    B                      >>>>>>>>>>" )
 
+   ::oWidget:removeEventFilter( ::pEvents )
+
    hbxbp_SetEventLoop( NIL )
    ::oEventLoop:exit( 0 )
    ::oEventLoop:pPtr := NIL

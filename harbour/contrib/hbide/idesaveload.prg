@@ -115,6 +115,9 @@ HB_TRACE( HB_TR_ALWAYS, "hbide_saveINI( oIde )", 0, oIde:nRunMode, oIde:cProjIni
    aadd( txt_, "CurrentReplace="      + oIde:cWrkReplace                           )
    aadd( txt_, "CurrentView="         + oIde:cWrkView                              )
    aadd( txt_, "CurrentHarbour="      + oIde:cWrkHarbour                           )
+   aadd( txt_, "CurrentShortcuts="    + oIde:cPathShortcuts                        )
+   aadd( txt_, "TextFileExtensions="  + oIde:cTextExtensions                       )
+   aadd( txt_, "FindInFilesDialogGeometry=" + oIde:aIni[ INI_HBIDE, FindInFilesDialogGeometry ] )
    aadd( txt_, " " )
 
    aadd( txt_, "[PROJECTS]" )
@@ -238,10 +241,12 @@ FUNCTION hbide_loadINI( oIde, cHbideIni )
                       "currentcodec"       , "pathmk2"             , "pathenv"            , ;
                       "currentenvironment" , "findinfilesdialoggeometry", "currentfind"   , ;
                       "currentreplace"     , "currentfolderfind"   , "currentview"        , ;
-                      "currentharbour"     }
+                      "currentharbour"     , "currentshortcuts"    , "textfileextensions"   }
 
    IF empty( cHbideIni )
       IF hb_fileExists( "hbide.ini" )
+         /* Please Check for *nixes */
+         //cHbideIni := hb_curDrive() + hb_osDriveSeparator() + hb_osPathSeparator() + CurDir() + hb_osPathSeparator() + "hbide.ini"
          cHbideIni := "hbide.ini"
       ELSE
          cHbideIni := hb_dirBase() + "hbide.ini"
@@ -459,5 +464,58 @@ FUNCTION hbide_saveSkltns( oIde )
    NEXT
 
    RETURN hbide_createTarget( oIde:cPathSkltns, txt_ )
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION hbide_loadShortcuts( oIde, cFileShortcuts )
+   LOCAL cPath, a_:= {}
+
+   IF empty( cFileShortcuts )
+      cFileShortcuts := oIde:cPathShortcuts
+      IF empty( cFileShortcuts )
+         cFileShortcuts := oIde:cProjIni
+      ENDIF
+
+      hb_fNameSplit( cFileShortcuts, @cPath )
+      cPath += "hbide.scu"
+
+      IF hb_fileExists( cPath )
+         cFileShortcuts := cPath
+      ELSE
+         cFileShortcuts := hb_dirBase() + "hbide.scu"
+      ENDIF
+   ENDIF
+   oIde:cPathShortcuts := cFileShortcuts
+
+   IF hb_fileExists( cFileShortcuts )
+      a_:= hb_deSerialize( hb_memoread( cFileShortcuts ) )
+   ENDIF
+
+   RETURN a_
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION hbide_saveShortcuts( oIde, a_, cFileShortcuts )
+   LOCAL cPath
+
+   IF empty( cFileShortcuts )
+      cFileShortcuts := oIde:cPathShortcuts
+      IF empty( cFileShortcuts )
+         cFileShortcuts := oIde:cProjIni
+      ENDIF
+
+      hb_fNameSplit( cFileShortcuts, @cPath )
+      cPath += "hbide.scu"
+
+      IF hb_fileExists( cPath )
+         cFileShortcuts := cPath
+      ELSE
+         cFileShortcuts := hb_dirBase() + "hbide.scu"
+      ENDIF
+   ENDIF
+
+   hb_memowrit( cFileShortcuts, hb_serialize( a_ ) )
+
+   RETURN hb_fileExists( cFileShortcuts )
 
 /*----------------------------------------------------------------------*/

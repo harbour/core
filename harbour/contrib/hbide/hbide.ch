@@ -107,8 +107,10 @@
 #define CurrentReplace                            20
 #define CurrentView                               21
 #define CurrentHarbour                            22
+#define CurrentShortcuts                          23
+#define TextFileExtensions                        24
 
-#define INI_HBIDE_VRBLS                           22
+#define INI_HBIDE_VRBLS                           24
 
 /* .hbi structure constants */
 #define PRJ_PRP_PROPERTIES                        1
