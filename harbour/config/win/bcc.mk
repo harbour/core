@@ -20,8 +20,6 @@ CFLAGS += -q -tWM -CP437
 
 ifneq ($(HB_BUILD_WARN),no)
    CFLAGS += -w -w-sig- -Q
-else
-   CFLAGS += -w-
 endif
 
 ifneq ($(HB_BUILD_OPTIM),no)

@@ -25,8 +25,6 @@ CFLAGS += -MT
 
 ifneq ($(HB_BUILD_WARN),no)
    CFLAGS += -W1
-else
-   CFLAGS += -W0
 endif
 
 ifneq ($(HB_BUILD_OPTIM),no)
