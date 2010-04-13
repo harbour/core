@@ -20,6 +20,12 @@ PROCEDURE Main()
    LOCAL tmp, tmp1, tmp2
    LOCAL aStuff
 
+   LOCAL aType := {;
+      "QM_ENUM"   ,;
+      "QM_METHOD" ,;
+      "QM_SLOT"   ,;
+      "QM_SIGNAL" }
+
    FOR EACH tmp IN Directory( "*.txt" )
       hb_FNameSplit( tmp[ F_NAME ],, @cName )
       cHeaderDir := GetEnv( "HB_WITH_QT" ) + hb_osPathSeparator() + cName
@@ -27,10 +33,10 @@ PROCEDURE Main()
          IF ! Empty( tmp1 ) .AND. ! ( Left( tmp1, 1 ) == "#" )
             aStuff := {}
             ProcessHeader( aStuff, cHeaderDir + hb_osPathSeparator() + tmp1 )
+            ASort( aStuff,,, {| x, y | x[ 1 ] < y[ 1 ] } )
             FOR EACH tmp2 IN aStuff
-               ? tmp2[ 1 ], tmp2[ 2 ]
+               OutStd( aType[ tmp2[ 1 ] ], tmp2[ 2 ], hb_osNewLine() )
             NEXT
-            Inkey( 0 )
          ENDIF
       NEXT
    NEXT
@@ -78,12 +84,17 @@ STATIC PROCEDURE LoadStuff( aStuff, cFile )
    LOCAL nMode := 0
    LOCAL nType
    LOCAL cInfo
+   LOCAL lAllowBlock
 
    LOCAL aLine := hb_ATokens( StrTran( cFile, Chr( 13 ) ), Chr( 10 ) )
 
    FOR tmp := 1 TO Len( aLine )
-      cLine := AllTrim( aLine[ tmp ] )
-      IF ! Empty( cLine )
+      cLine := aLine[ tmp ]
+      IF ( tmp1 := At( "//", cLine ) ) > 0
+         cLine := Left( cLine, tmp1 - 1 )
+      ENDIF
+      cLine := AllTrim( cLine )
+      IF ! Empty( cLine ) .AND. !( Left( cLine, 1 ) == "#" )
          DO CASE
          CASE cLine == "public:"
             nMode := QM_METHOD
@@ -100,6 +111,7 @@ STATIC PROCEDURE LoadStuff( aStuff, cFile )
          ENDCASE
          IF ! Empty( nMode )
             nType := 0
+            lAllowBlock := .F.
             DO CASE
             CASE nMode == QM_METHOD
                IF Left( cLine, Len( "enum " ) ) == "enum "
@@ -107,7 +119,12 @@ STATIC PROCEDURE LoadStuff( aStuff, cFile )
                ELSE
                   tmp1 := At( "(", cLine )
                   IF tmp1 > 0 .AND. hb_At( ")", cLine, tmp1 + Len( "(" ) ) > 0
-                     nType := nMode
+                     IF Left( cLine, Len( "inline " ) ) == "inline "
+                        nType := nMode
+                        lAllowBlock := .T.
+                     ELSE
+                        nType := nMode
+                     ENDIF
                   ENDIF
                ENDIF
             CASE nMode == QM_SLOT
@@ -116,7 +133,7 @@ STATIC PROCEDURE LoadStuff( aStuff, cFile )
                nType := nMode
             ENDCASE
             IF ! Empty( nType )
-               cInfo := GetLine( aLine, @tmp )
+               cInfo := GetLine( aLine, @tmp, lAllowBlock )
                IF ! Empty( cInfo )
                   AAdd( aStuff, { nType, cInfo } )
                ENDIF
@@ -127,13 +144,22 @@ STATIC PROCEDURE LoadStuff( aStuff, cFile )
 
    RETURN
 
-STATIC FUNCTION GetLine( aLine, /* @ */ nPos )
-   LOCAL cLine := ""
+STATIC FUNCTION GetLine( aLine, /* @ */ nPos, lAllowBlock )
+   LOCAL cFullLine := ""
+   LOCAL cLine
+   LOCAL tmp
 
    DO WHILE nPos <= Len( aLine )
-      cLine += AllTrim( aLine[ nPos ] )
-      IF Right( cLine, 1 ) == ";"
-         RETURN hb_StrShrink( cLine, 1 )
+      cLine := aLine[ nPos ]
+      IF ( tmp := At( "//", cLine ) ) > 0
+         cLine := Left( cLine, tmp - 1 )
+      ENDIF
+      cLine := AllTrim( cLine )
+      cFullLine += AllTrim( cLine )
+      IF lAllowBlock .AND. ( tmp := At( "{", cFullLine ) ) > 0
+         RETURN Left( cFullLine, tmp - 1 )
+      ELSEIF ( tmp := At( ";", cFullLine ) ) > 0
+         RETURN Left( cFullLine, tmp - 1 )
       ENDIF
       ++nPos
    ENDDO
