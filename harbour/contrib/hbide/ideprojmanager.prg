@@ -1181,6 +1181,7 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
    aadd( aHbp, "-trace"      )
    aadd( aHbp, "-info"       )
    aadd( aHbp, "-lang=en"    )
+   aadd( aHbp, "-width=512"  )
    IF lRebuild
       aadd( aHbp, "-rebuild" )
    ENDIF
@@ -1227,7 +1228,7 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
       ::oIDE:oEV := IdeEnvironments():new():create( ::oIDE, hbide_pathFile( ::aINI[ INI_HBIDE, PathEnv ], "hbide.env" ) )
       ::cBatch   := ::oEV:prepareBatch( ::cWrkEnvironment )
 
-      cExeHbMk2  := "hbmk2"   /* Needs that path is already set before calling hbmk2 */
+      cExeHbMk2  := "hbmk2"
 
       IF ! Empty( ::oProject:cPathMk2 )
          cExeHbMk2 := hbide_DirAddPathSep( ::oProject:cPathMk2 ) + cExeHbMk2
@@ -1276,7 +1277,7 @@ METHOD IdeProjManager:showOutput( cOutput, mp2, oProcess )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeProjManager:finished( nExitCode, nExitStatus, oProcess )
-   LOCAL cTmp, n, n1, cTkn, cExe, cT
+   LOCAL cTmp, n, n1, cTkn, cExe
 
    hbide_justACall( oProcess )
 
@@ -1294,19 +1295,15 @@ METHOD IdeProjManager:finished( nExitCode, nExitStatus, oProcess )
       IF empty( cExe )
          cTkn := "hbmk2: Linking... "
          IF ( n := at( cTkn, cTmp ) ) > 0
-            cT   := Chr( 10 )
-            n1   := hb_at( cT, cTmp, n + len( cTkn ) )
-            cExe := StrTran( substr( cTmp, n + len( cTkn ), n1 - n - len( cTkn ) + len( cT ) ), Chr( 13 ), "" )
-            cExe := StrTran( cExe, Chr( 10 ), "" )
+            n1   := hb_at( Chr( 10 ), cTmp, n + len( cTkn ) )
+            cExe := StrTran( substr( cTmp, n + len( cTkn ), n1 - n - len( cTkn ) ), Chr( 13 ) )
          ENDIF
       ENDIF
       IF empty( cExe )
          cTkn := "hbmk2: Target up to date: "
          IF ( n := at( cTkn, cTmp ) ) > 0
-            cT   := Chr( 10 )
-            n1   := hb_at( cT, cTmp, n + len( cTkn ) )
-            cExe := StrTran( substr( cTmp, n + len( cTkn ), n1 - n - len( cTkn ) + len( cT ) ), Chr( 13 ), "" )
-            cExe := StrTran( cExe, Chr( 10 ), "" )
+            n1   := hb_at( Chr( 10 ), cTmp, n + len( cTkn ) )
+            cExe := StrTran( substr( cTmp, n + len( cTkn ), n1 - n - len( cTkn ) ), Chr( 13 ) )
          ENDIF
       ENDIF
 
