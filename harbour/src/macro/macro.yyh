@@ -157,7 +157,7 @@ typedef union YYSTYPE
       long     time;    /* to hold milliseconds */
    } valTimeStamp;
 }
-/* Line 1495 of yacc.c.  */
+/* Line 1496 of yacc.c.  */
 #line 162 "macroy.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

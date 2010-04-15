@@ -224,7 +224,7 @@ HB_FUNC( HB_ZUNCOMPRESS )
       if( ulLen )
       {
          uLong ulDstLen;
-         char * pDest;
+         char * pDest = NULL;
          int iResult = Z_OK;
 
          if( pBuffer )

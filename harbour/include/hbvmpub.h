@@ -71,12 +71,6 @@ struct _HB_SYMB;
 #  define HB_OBJ_CLASS( p )      ( ( p )->item.asArray.value->uiClass )
 #  define HB_ARRAY_OBJ( p )      ( ( p )->item.asArray.value->uiClass != 0 )
 
-#  if defined( __GNUC__ )
-#     define HB_ITEM_NIL         { HB_IT_NIL, {} }
-#  else
-#     define HB_ITEM_NIL         { HB_IT_NIL, NULL }
-#  endif
-
 #  define HB_ITEM_GET_NUMINTRAW( p )  ( HB_IS_INTEGER( p ) ? \
                                         ( HB_MAXINT ) (p)->item.asInteger.value : \
                                         ( HB_MAXINT ) (p)->item.asLong.value )

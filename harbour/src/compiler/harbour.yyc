@@ -4135,6 +4135,7 @@ int yynerrs;
 
   YYDPRINTF ((stderr, "Starting parse\n"));
 
+  memset(&yylval, 0, sizeof (yylval));
   yystate = 0;
   yyerrstatus = 0;
   yynerrs = 0;
@@ -6873,8 +6874,8 @@ yyreduce:
     break;
 
 
-/* Line 1268 of yacc.c.  */
-#line 6878 "harboury.c"
+/* Line 1269 of yacc.c.  */
+#line 6879 "harboury.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);

@@ -329,7 +329,7 @@ HB_FUNC( HB_BZ2_UNCOMPRESS )
       if( ulLen )
       {
          HB_SIZE ulDstLen;
-         char * pDest;
+         char * pDest = NULL;
          int iResult = BZ_OK;
 
          if( pBuffer )

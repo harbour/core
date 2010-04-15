@@ -664,6 +664,8 @@ static void hb_gt_os2_SetBlink( PHB_GT pGT, HB_BOOL fBlink )
 
 static void hb_gt_os2_Tone( PHB_GT pGT, double dFrequency, double dDuration )
 {
+   ULONG ulDuration;
+
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_Tone(%p,%lf,%lf)", pGT, dFrequency, dDuration));
 
    HB_SYMBOL_UNUSED( pGT );
@@ -671,24 +673,17 @@ static void hb_gt_os2_Tone( PHB_GT pGT, double dFrequency, double dDuration )
    /* The conversion from Clipper timer tick units to
       milliseconds is * 1000.0 / 18.2. */
 
-   dFrequency = HB_MIN( HB_MAX( 0.0, dFrequency ), 32767.0 );
-   dDuration = dDuration * 1000.0 / 18.2; /* milliseconds */
+   if( dFrequency < 0.0 )
+      dFrequency = 0.0;
+   else if( dFrequency > 32767.0 )
+      dFrequency = 32767.0;
+   ulDuration = ( ULONG ) ( dDuration * 1000.0 / 18.2 ); /* milliseconds */
 
-   while( dDuration > 0.0 )
+   while( ulDuration > 0 )
    {
-      USHORT temp = ( USHORT ) HB_MIN( HB_MAX( 0, dDuration ), USHRT_MAX );
-
-      dDuration -= temp;
-      if( temp == 0 )
-      {
-         /* Ensure that the loop gets terminated when
-            only a fraction of the delay time remains. */
-         dDuration = -1.0;
-      }
-      else
-      {
-         DosBeep( ( USHORT ) dFrequency, temp );
-      }
+      USHORT temp = ( USHORT ) HB_MIN( ulDuration, USHRT_MAX );
+      ulDuration -= temp;
+      DosBeep( ( USHORT ) dFrequency, temp );
    }
 }
 
