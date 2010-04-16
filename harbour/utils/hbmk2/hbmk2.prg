@@ -3262,15 +3262,15 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          IF hbmk[ _HBMK_lOPTIM ]
             IF hbmk[ _HBMK_cPLAT ] == "wce"
                IF nCCompVer >= 800
-                  cOpt_CompC += " -Od -Os -Gy -Gm -Zi -GR-"
+                  cOpt_CompC += " -Os -Gy"
                ELSE
-                  cOpt_CompC += " -Oxsb1 -YX -GF"
+                  cOpt_CompC += " -Oxsb1 -GF"
                ENDIF
             ELSE
                IF nCCompVer >= 800
-                  cOpt_CompC += " -Ot2b1"
+                  cOpt_CompC += " -O2"
                ELSE
-                  cOpt_CompC += " -Ogt2yb1p -GX- -G6 -YX"
+                  cOpt_CompC += " -Ogt2yb1p -GX- -G6"
                ENDIF
             ENDIF
          ENDIF

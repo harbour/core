@@ -60,9 +60,9 @@ endif
 
 ifneq ($(HB_BUILD_OPTIM),no)
    ifneq ($(filter $(HB_COMPILER_VER),600 700 710),)
-      CFLAGS += -Oxsb1 -EHsc -GF
+      CFLAGS += -Oxsb1 -GF
    else
-      CFLAGS += -Od -Os -Gy -EHsc-
+      CFLAGS += -Os -Gy
    endif
 endif
 
