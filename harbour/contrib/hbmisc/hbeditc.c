@@ -942,6 +942,7 @@ HB_FUNC( ED_STABILIZE )
                 *          ^-first visible column
                 */
                e = 0;
+               i = 0;
                if( pEd->escape )
                {
                   for( i = 0; i < ( pEd->first_col + e ); i++ )

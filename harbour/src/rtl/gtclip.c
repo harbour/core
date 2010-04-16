@@ -127,7 +127,7 @@ HB_BOOL hb_gt_winapi_setClipboard( HB_UINT uFormat, const char * szClipData, HB_
       EmptyClipboard();
 
       /* Allocate a global memory object for the text. */
-      hglbCopy = GlobalAlloc( GMEM_MOVEABLE, uFormat == CF_UNICODETEXT ? ( ulLen + 1 ) * sizeof( wchar_t ) : ulLen + 1 );
+      hglbCopy = GlobalAlloc( GMEM_MOVEABLE, uFormat == CF_UNICODETEXT ? ( ulLen + 1 ) * sizeof( wchar_t ) : ( ulLen + 1 ) );
       if( hglbCopy )
       {
          /* Lock the handle and copy the text to the buffer. */
