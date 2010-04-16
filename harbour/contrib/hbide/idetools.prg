@@ -146,11 +146,16 @@ METHOD IdeToolsManager:destroy()
          ::disconnect( qAct, "triggered(bool)" )
          qAct := NIL
       NEXT
+      FOR EACH qAct IN ::aPanelsAct
+         ::disconnect( qAct, "triggered(bool)" )
+         qAct := NIL
+      NEXT
       ::disconnect( ::qToolsButton, "clicked()" )
       ::qToolsButton := NIL
-
       ::clearList()
 
+      ::disconnect( ::qPanelsButton, "clicked()" )
+      
       ::disconnect( ::oUI:q_buttonAdd   , "clicked()" )
       ::disconnect( ::oUI:q_buttonDelete, "clicked()" )
       ::disconnect( ::oUI:q_buttonUp    , "clicked()" )

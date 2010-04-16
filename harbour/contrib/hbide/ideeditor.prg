@@ -220,6 +220,8 @@ METHOD IdeEditsManager:destroy()
    LOCAL a_
 
    ::disconnect( ::qCompleter, "activated(QString)" )
+   ::oIde:qCompModel := NIL
+   ::oIde:qProtoList := NIL
    ::oIde:qCompleter := NIL
 
    FOR EACH a_ IN ::aActions
@@ -978,11 +980,9 @@ CLASS IdeEditor INHERIT IdeObject
    DATA   qHLayout
    DATA   qLabel
    DATA   nnRow                                   INIT -99
-   DATA   qPoint                                  INIT QPoint():new()
 
    DATA   qEvents
-   DATA   qSlots
-   DATA   qMarkLayoutOld
+//   DATA   qSlots
 
    METHOD new( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView )
    METHOD create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView )
@@ -1028,7 +1028,7 @@ METHOD IdeEditor:new( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView )
 METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView )
    LOCAL cFileTemp
 
-   ::qSlots := HBSlots():new()
+   //::qSlots := HBSlots():new()
 
    DEFAULT oIde        TO ::oIde
    DEFAULT cSourceFile TO ::sourceFile
@@ -1390,23 +1390,11 @@ CLASS IdeEdit INHERIT IdeObject
    DATA   nMaxDigits                              INIT  5       // Tobe
    DATA   nMaxRows                                INIT  100
    DATA   nLastLine                               INIT  -99
-   DATA   qBlockFormat                            INIT  QTextBlockFormat():new()
    DATA   nCurLineNo                              INIT  0
    DATA   nPrevLineNo                             INIT  -1
 
-   DATA   qPoint                                  INIT  QPoint():new( 0,0 )
-   DATA   qBrushCL                                INIT  QBrush():new( "QColor", QColor():new( 240,240,240 ) )
-   DATA   qBrushNR                                INIT  QBrush():new( "QColor", QColor():new( 255,255,255 ) )
-   DATA   qBrushMark                              INIT  QBrush():new( "QColor", QColor():new(   0,255,255 ) )
-   DATA   qActionTab
-   DATA   qLastCursor                             INIT  QTextCursor():new()
-   DATA   qSelColor                               INIT  QColor():new( 255,0,255 )
-
-   DATA   qCursorMark
-   DATA   qMarkUData                              INIT  HBQTextBlockUserData():new()
    DATA   aBookMarks                              INIT  {}
 
-   DATA   qSlots
    DATA   lModified                               INIT  .F.
    DATA   lIndentIt                               INIT  .f.
    DATA   lUpdatePrevWord                         INIT  .f.

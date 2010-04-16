@@ -896,7 +896,8 @@ METHOD IdeProjManager:setCurrentProject( cProjectName )
       /* Set New Color */
       IF !empty( ::cWrkProject )
          IF !empty( oItem := hbide_findProjTreeItem( ::oIDE, ::cWrkProject, "Project Name" ) )
-            oItem:oWidget:setForeground( 0, ::qBrushWrkProject )
+            //oItem:oWidget:setForeground( 0, ::qBrushWrkProject )
+            oItem:oWidget:setForeground( 0, QBrush():new( "QColor", QColor():new( 255,0,0 ) ) )
             //oItem:oWidget:setBackground( 0, ::qBrushWrkProject )
             //hbide_expandChildren( ::oIDE, oItem )
             ::oProjTree:oWidget:setCurrentItem( oItem:oWidget )
@@ -1312,7 +1313,7 @@ METHOD IdeProjManager:finished( nExitCode, nExitStatus, oProcess )
          ::outputText( "<font color=red>" + "Executable could not been detected from linker output!" + "</font>" )
       ELSE
          cExe := alltrim( cExe )
-         ::outputText( "<font color=blue>" + "Detected exeutable => " + cExe + " " + hb_ntos( len( cExe ) ) + "</font>" )
+         ::outputText( "<font color=blue>" + "Detected exeutable => " + cExe + "</font>" )
       ENDIF
       ::outputText( " " )
 
@@ -1334,7 +1335,8 @@ METHOD IdeProjManager:finished( nExitCode, nExitStatus, oProcess )
  * 03/01/2010 - 09:24:50
  */
 METHOD IdeProjManager:launchProject( cProject, cExe )
-   LOCAL cTargetFN, cTmp, oProject, qProcess, qStr
+   LOCAL cTargetFN, cTmp, oProject
+   LOCAL qProcess, qStr
 
    IF empty( cProject )
       cProject := ::oPM:getCurrentProject()
@@ -1384,18 +1386,23 @@ METHOD IdeProjManager:launchProject( cProject, cExe )
    ELSEIF oProject:type == "Executable"
       cTmp := "Launching application [ " + cTargetFN + " ]"
 
-      qProcess := QProcess():new()
-      qProcess:setWorkingDirectory( hbide_pathToOSPath( oProject:wrkDirectory ) )
-      IF !empty( oProject:launchParams )
-         qStr := QStringList():new()
-         qStr:append( oProject:launchParams )
-         qProcess:startDetached_1( cTargetFN, qStr )
-      ELSE
-         qProcess:startDetached_2( cTargetFN )
-      ENDIF
-      qProcess:waitForStarted()
-      qProcess := NIL
+      if .t.
+         qProcess := QProcess():new()
+         qProcess:setWorkingDirectory( hbide_pathToOSPath( oProject:wrkDirectory ) )
+         IF !empty( oProject:launchParams )
+            qStr := QStringList():new()
+            qStr:append( oProject:launchParams )
+            qProcess:startDetached_1( cTargetFN, qStr )
+         ELSE
+            qProcess:startDetached_2( cTargetFN )
+         ENDIF
+         qProcess:waitForStarted()
+         qProcess := NIL
 
+      else
+         hb_processRun( cTargetFN, , , , .t. )
+
+      endif
    ELSE
       cTmp := "Launching application [ " + cTargetFN + " ] ( not applicable )."
 

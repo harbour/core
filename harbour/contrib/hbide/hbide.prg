@@ -160,7 +160,6 @@ CLASS HbIde
 
    DATA   qFindDlg
 
-   DATA   qCursor
    DATA   qFontWrkProject
    DATA   qBrushWrkProject
    DATA   qProcess
@@ -332,7 +331,7 @@ HB_TRACE( HB_TR_ALWAYS, "HbIde:create( cProjIni )", "#Params=" )
    qSplash:setPixmap( qPixmap )
    qSplash:show()
    ::showApplicationCursor( Qt_BusyCursor )
-   QApplication():processEvents()
+   QApplication():new():processEvents()
 
    /* Initiate the place holders */
    ::aINI := array( INI_SECTIONS_COUNT )
@@ -433,10 +432,6 @@ HB_TRACE( HB_TR_ALWAYS, "HbIde:create( cProjIni )", "#Params=" )
    /* Home Implementation */
    ::oHM := IdeHome():new():create( Self )
 
-   /* Just to spare some GC calls */
-   ::qCursor := QTextCursor():new()
-   ::qBrushWrkProject := QBrush():new( "QColor", QColor():new( 255,0,0 ) )
-
    /* Fill various elements of the IDE */
    ::cWrkProject := ::aINI[ INI_HBIDE, CurrentProject ]
    ::oPM:populate()
@@ -451,10 +446,6 @@ HB_TRACE( HB_TR_ALWAYS, "HbIde:create( cProjIni )", "#Params=" )
    ::updateTitleBar()
    /* Set some last settings */
    ::oPM:setCurrentProject( ::cWrkProject, .f. )
-
-   /* Set components Sizes */
- * ::setSizeByIni( ::oProjTree:oWidget, ProjectTreeGeometry )
- * ::setSizeByIni( ::oEditTree:oWidget, ProjectTreeGeometry )
 
    /* Restore Settings */
    hbide_restSettings( Self )
@@ -485,7 +476,7 @@ HB_TRACE( HB_TR_ALWAYS, "HbIde:create( cProjIni )", "#Params=" )
       IF seconds() > n + 10
          EXIT
       ENDIF
-      QApplication():processEvents()
+      QApplication():new():processEvents()
    ENDDO
    #endif
 
@@ -505,7 +496,6 @@ HB_TRACE( HB_TR_ALWAYS, "HbIde:create( cProjIni )", "#Params=" )
 
    ::showApplicationCursor()
    qSplash:close()
-   //qSplash := NIL
 
    /* Load tags last tagged projects */
    ::oFN:loadTags( ::aINI[ INI_TAGGEDPROJECTS ] )
@@ -587,8 +577,8 @@ HB_TRACE( HB_TR_ALWAYS, "HbIde:create( cProjIni )", "#Params=" )
    ::oDlg:destroy()
    ::oAC:destroy()
 
-   ::qCursor := NIL
-   ::oFont   := NIL
+   ::oFont := NIL
+   qSplash := NIL
 
    HB_TRACE( HB_TR_ALWAYS, "                                                      " )
    HB_TRACE( HB_TR_ALWAYS, "After     ::oDlg:destroy()", memory( 1001 )             )
@@ -642,13 +632,13 @@ METHOD HbIde:parseParams()
 
 METHOD HbIde:showApplicationCursor( nCursor )
 
-   STATIC qCrs
+   LOCAL qCrs
 
    IF empty( nCursor )
-      QApplication():restoreOverrideCursor()
+      QApplication():new():restoreOverrideCursor()
    ELSE
       qCrs := QCursor():new( nCursor )
-      QApplication():setOverrideCursor( qCrs )
+      QApplication():new():setOverrideCursor( qCrs )
    ENDIF
 
    RETURN Self

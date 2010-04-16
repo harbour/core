@@ -257,6 +257,9 @@ METHOD IdeShortcuts:execEvent( nMode, p )
             ::clearDftSCuts()
             ::populateDftSCuts()
          ENDIF
+         IF nRow <= len( ::aDftSCuts )
+            ::oUI:q_tableMacros:setCurrentCell( nRow - 1, 0 )
+         ENDIF
       ENDIF
       EXIT
    CASE buttonTest_clicked
@@ -297,10 +300,10 @@ METHOD IdeShortcuts:execEvent( nMode, p )
          ::controls2vrbls()
          IF !empty( ::cName )
             IF !( ::checkDuplicate( ::cKey, ::cAlt, ::cCtrl, ::cShift ) )
-               aadd( ::aDftSCuts, { ::cName, ::cKey, ::cAlt, ::cCtrl, ::cShift, ::cMenu, ::cBlock } )
-               aadd( ::aDftSCutsItms, array( 5 ) )
+               aadd( ::aDftSCuts, { ::cName, ::cKey, ::cAlt, ::cCtrl, ::cShift, ::cMenu, ::cBlock, ::cIcon } )
+               aadd( ::aDftSCutsItms, array( 6 ) )
                ::oUI:q_tableMacros:setRowCount( ::oUI:q_tableMacros:rowCount() + 1 )
-               ::array2table( len( ::aDftSCuts ), { ::cName, ::cKey, ::cAlt, ::cCtrl, ::cShift, ::cMenu, ::cBlock } )
+               ::array2table( len( ::aDftSCuts ), { ::cName, ::cKey, ::cAlt, ::cCtrl, ::cShift, ::cMenu, ::cBlock, ::cIcon } )
             ELSE
                MsgBox( "Current shortcut is already defined!" )
             ENDIF
@@ -582,7 +585,7 @@ METHOD IdeShortcuts:populateDftSCuts()
       nRow++
       aadd( ::aDftSCutsItms, array( 6 ) )
       ::array2table( nRow, a_ )
-      QApplication():processEvents()
+      QApplication():new():processEvents()
    NEXT
    oTbl:setCurrentCell( 0,0 )
 
@@ -661,7 +664,7 @@ METHOD IdeShortcuts:test( cString, lWarn )
          MsgBox( "Script compiles fine!", "Syntax checking", , , , bBlock )
       ENDIF
    RECOVER USING oErr
-      MsgBox( "Wrongly defined script, syntax is |v| ::method( v )" + oErr:description )
+      MsgBox( "Wrongly defined script, try: |v| ::method( v )", oErr:description )
    ENDSEQUENCE
 
    ErrorBlock( bError )

@@ -97,15 +97,16 @@ HB_FUNC( HB_QT ) {;}
 
 HB_FUNC( QT_QAPPLICATION )
 {
-   hb_retptr( ( QApplication * ) s_app );
+   //hb_retptr( ( QApplication * ) s_app );
+   hb_retptr ( s_app );
 }
 
 static void hbqt_Exit( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
 
-   s_app->quit();
-   s_app = NULL;
+   //s_app->quit();
+   //s_app = NULL;
 }
 
 static void hbqt_Init( void * cargo )

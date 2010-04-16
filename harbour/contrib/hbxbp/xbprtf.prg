@@ -243,6 +243,10 @@ METHOD XbpRtf:destroy()
 
    ::xbpWindow:destroy()
 
+   ::oTextDocument   := NIL
+   ::oTextCursor     := NIL
+   ::oTextCharFormat := NIL
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/

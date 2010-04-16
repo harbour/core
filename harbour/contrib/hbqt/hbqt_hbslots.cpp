@@ -752,6 +752,7 @@ HBSlots::~HBSlots()
    {
       if( listBlock[ i ] != NULL )
       {
+HB_TRACE( HB_TR_ALWAYS, ( "......HBSlots::~HBSlots()...... [ Un-disConnected Slot ]" ) );
          hb_itemRelease( listBlock.at( i ) );
          listBlock[ i ] = NULL;
       }
@@ -1036,6 +1037,7 @@ HB_FUNC( QT_SLOTS_CONNECT )
 
    if( t_slots )
    {
+HB_TRACE( HB_TR_DEBUG, ( "QT_SLOTS_CONNECT( %s )", hb_parcx( 3 ) ) );
       QObject * object = ( QObject * ) hbqt_pPtrFromObj( 2 );               /* get sender    */
       if( object )
       {
@@ -1052,6 +1054,7 @@ HB_FUNC( QT_SLOTS_CONNECT )
                bRet = HB_TRUE;
             }
          }
+HB_TRACE( HB_TR_DEBUG, ( "QT_SLOTS_CONNECT( %s ) %s", hb_parcx( 3 ), bRet ? "Connected" : "not-connected" ) );
       }
    }
    hb_retl( bRet );
@@ -1067,6 +1070,7 @@ HB_FUNC( QT_SLOTS_DISCONNECT )
 
    if( t_slots )
    {
+HB_TRACE( HB_TR_DEBUG, ( "QT_SLOTS_DISCONNECT( %s )", hb_parcx( 3 ) ) );
       QObject * object = ( QObject* ) hbqt_pPtrFromObj( 2 );
       if( object )
       {
@@ -1085,6 +1089,7 @@ HB_FUNC( QT_SLOTS_DISCONNECT )
 
             HB_TRACE( HB_TR_DEBUG, ( "      QT_SLOTS_DISCONNECT: %s    %s", bRet ? "YES" : "NO", slot ) );
          }
+HB_TRACE( HB_TR_DEBUG, ( "QT_SLOTS_DISCONNECT( %s ) %s", hb_parcx( 3 ), bRet ? "disConnected" : "not-disConnected" ) );
       }
    }
    hb_retl( bRet );

@@ -152,6 +152,9 @@ METHOD IdeDocks:create( oIde )
 METHOD IdeDocks:destroy()
    LOCAL qTBtn
 
+   ::oIde:oProjRoot      := NIL
+   ::oIde:oOpenedSources := NIL
+
    ::disconnect( ::oOutputResult:oWidget  , "copyAvailable(bool)"     )
 
    ::disconnect( ::oEnvironDock:oWidget   , "visibilityChanged(bool)" )
@@ -470,10 +473,7 @@ METHOD IdeDocks:buildSearchReplaceWidget()
 
 METHOD IdeDocks:buildToolBarPanels()
    LOCAL s, qTBtn, a_, aBtns, qAct
-
-   STATIC qSize
-
-   qSize := QSize():new( 20,20 )
+   LOCAL qSize := QSize():new( 20,20 )
 
    /* Toolbar Panels */
 

@@ -610,8 +610,6 @@ METHOD IdeFindInFiles:destroy()
    LOCAL qItem
 
    IF !empty( ::oUI )
-      ::disconnect( ::oUI:oWidget, "rejected()" )
-
       FOR EACH qItem IN ::aItems
          qItem := NIL
       NEXT
@@ -1216,7 +1214,7 @@ METHOD IdeFindInFiles:showLog( nType, cMsg, aLines )
    qCursor:movePosition( QTextCursor_Down )
    ::oUI:q_editResults:setTextCursor( qCursor )
 
-   QApplication():processEvents()
+   QApplication():new():processEvents()
    RETURN Self
 
 /*----------------------------------------------------------------------*/

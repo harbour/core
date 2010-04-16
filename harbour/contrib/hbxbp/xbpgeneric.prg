@@ -78,7 +78,6 @@
 /*----------------------------------------------------------------------*/
 
 STATIC s_oDeskTop
-STATIC s_oApp
 STATIC s_hLastEvent := {=>}
 
 THREAD STATIC t_events
@@ -101,8 +100,6 @@ INIT PROCEDURE hbxbp_Start()
 
    hbqt_errorsys()
 
-   s_oApp := QApplication():new()
-
    RETURN
 
 /*----------------------------------------------------------------------*/
@@ -113,12 +110,11 @@ EXIT PROCEDURE hbxbp_End()
    t_oAppWindow := NIL
 
    IF hb_isObject( s_oDeskTop )
-      s_oDeskTop:oWidget:pPtr := NIL
-   endif
+      s_oDeskTop:oWidget := NIL
+   ENDIF
 
-   /* These must never be called from here as QApplication.cpp's EXIT routine does it */
-   //s_oApp:quit()
-   //s_oApp := NIL
+   t_qtEvents := NIL
+   t_qtSlots  := NIL
 
    HB_TRACE( HB_TR_ALWAYS, "................................... EXIT PROCEDURE hbxbp_End()    end   " )
    RETURN
@@ -191,7 +187,8 @@ FUNCTION PostAppEvent( nEvent, mp1, mp2, oXbp )
    IF nEvent == xbeP_Keyboard
       IF mp1 == xbeK_TAB
          qEvent := QEvent():new( QEvent_KeyPress )
-         s_oApp:postEvent( oXbp:oWidget, qEvent )
+         //s_oApp:postEvent( oXbp:oWidget, qEvent )
+         QApplication():new():postEvent( oXbp:oWidget, qEvent )
       ENDIF
    ENDIF
 

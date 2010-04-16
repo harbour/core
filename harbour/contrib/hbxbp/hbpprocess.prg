@@ -245,7 +245,7 @@ METHOD HbpProcess:read( nMode, i, ii )
    DO CASE
    CASE nMode == CHN_BGN
       ::outputMe( "CurDir() => " + CurDir() + "   Starting in => " + ::qProcess:workingDirectory() )
-  
+
    CASE nMode == CHN_OUT
       ::qProcess:setReadChannel( 0 )
       cLine := space( nSize )
@@ -301,8 +301,8 @@ METHOD HbpProcess:finish()
 
    ::qProcess:kill()
    //
-   ::qProcess:pPtr := NIL
    ::qProcess := NIL
+   ::qStrList := NIL
 
    RETURN Self
 

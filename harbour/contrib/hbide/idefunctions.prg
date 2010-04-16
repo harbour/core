@@ -194,8 +194,9 @@ METHOD IdeFunctions:execEvent( nMode, p )
 
    CASE nMode == tableFuncList_itemSelectionChanged
       n := ::oUI:q_tableFuncList:currentRow()
-      ::oUI:q_editSyntax:setText( ::aList[ n + 1, 2 ] )
-
+      IF n >= 0
+         ::oUI:q_editSyntax:setText( ::aList[ n + 1, 2 ] )
+      ENDIF
    ENDCASE
 
    RETURN Self
@@ -462,7 +463,7 @@ METHOD IdeFunctions:loadTags( aProjects )
             ENDIF
          ENDIF
 
-         QApplication():processEvents()
+         QApplication():new():processEvents()
       NEXT
 
       IF lPopulate
@@ -532,7 +533,7 @@ METHOD IdeFunctions:tagProject( cProjectTitle )
             ENDIF
          ENDIF
 
-         QApplication():processEvents()
+         QApplication():new():processEvents()
       NEXT
 
       FOR EACH a_ IN aCTags
@@ -607,7 +608,7 @@ METHOD IdeFunctions:populateTable()
       oTbl:setItem( n, 0, qItm )
       oTbl:setRowHeight( n, 16 )
 
-      QApplication():processEvents()
+      QApplication():new():processEvents()
 
       aadd( ::aItems, qItm )
       n++
