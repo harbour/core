@@ -76,43 +76,44 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QTextBrowser > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QTextBrowser > pq;
 } QGC_POINTER_QTextBrowser;
 
 QT_G_FUNC( hbqt_gcRelease_QTextBrowser )
 {
+   QTextBrowser  * ph = NULL ;
    QGC_POINTER_QTextBrowser * p = ( QGC_POINTER_QTextBrowser * ) Cargo;
 
-   if( p && p->bNew )
+   if( p && p->bNew && p->ph )
    {
-      if( p->ph && p->pq )
+      ph = p->ph;
+      if( ph )
       {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QTextBrowser   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
-            delete ( ( QTextBrowser * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QTextBrowser   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QTextBrowser   /.\\   ", (void*) ph, (void*) p->ph ) );
+            delete ( p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QTextBrowser   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QTextBrowser          pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QTextBrowser          ", ph ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QTextBrowser    :     Object already deleted!", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QTextBrowser    :     Object already deleted!", ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QTextBrowser    :    Object not created with new=true", p->ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QTextBrowser    :    Object not created with new=true", ph ) );
       p->ph = NULL;
    }
 }
@@ -121,13 +122,12 @@ void * hbqt_gcAllocate_QTextBrowser( void * pObj, bool bNew )
 {
    QGC_POINTER_QTextBrowser * p = ( QGC_POINTER_QTextBrowser * ) hb_gcAllocate( sizeof( QGC_POINTER_QTextBrowser ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QTextBrowser >( ( QTextBrowser * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextBrowser;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QTextBrowser >( ( QTextBrowser * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QTextBrowser  under p->pq", pObj ) );
    }
    else
@@ -139,11 +139,11 @@ void * hbqt_gcAllocate_QTextBrowser( void * pObj, bool bNew )
 
 HB_FUNC( QT_QTEXTBROWSER )
 {
-   void * pObj = NULL;
+   QTextBrowser * pObj = NULL;
 
-   pObj = ( QTextBrowser* ) new QTextBrowser( hbqt_par_QWidget( 1 ) ) ;
+   pObj =  new QTextBrowser( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QTextBrowser( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextBrowser( ( void * ) pObj, true ) );
 }
 
 /*
@@ -151,7 +151,13 @@ HB_FUNC( QT_QTEXTBROWSER )
  */
 HB_FUNC( QT_QTEXTBROWSER_BACKWARDHISTORYCOUNT )
 {
-   hb_retni( hbqt_par_QTextBrowser( 1 )->backwardHistoryCount() );
+   QTextBrowser * p = hbqt_par_QTextBrowser( 1 );
+   if( p )
+      hb_retni( ( p )->backwardHistoryCount() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBROWSER_BACKWARDHISTORYCOUNT FP=hb_retni( ( p )->backwardHistoryCount() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -159,7 +165,13 @@ HB_FUNC( QT_QTEXTBROWSER_BACKWARDHISTORYCOUNT )
  */
 HB_FUNC( QT_QTEXTBROWSER_CLEARHISTORY )
 {
-   hbqt_par_QTextBrowser( 1 )->clearHistory();
+   QTextBrowser * p = hbqt_par_QTextBrowser( 1 );
+   if( p )
+      ( p )->clearHistory();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBROWSER_CLEARHISTORY FP=( p )->clearHistory(); p is NULL" ) );
+   }
 }
 
 /*
@@ -167,7 +179,13 @@ HB_FUNC( QT_QTEXTBROWSER_CLEARHISTORY )
  */
 HB_FUNC( QT_QTEXTBROWSER_FORWARDHISTORYCOUNT )
 {
-   hb_retni( hbqt_par_QTextBrowser( 1 )->forwardHistoryCount() );
+   QTextBrowser * p = hbqt_par_QTextBrowser( 1 );
+   if( p )
+      hb_retni( ( p )->forwardHistoryCount() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBROWSER_FORWARDHISTORYCOUNT FP=hb_retni( ( p )->forwardHistoryCount() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -175,7 +193,13 @@ HB_FUNC( QT_QTEXTBROWSER_FORWARDHISTORYCOUNT )
  */
 HB_FUNC( QT_QTEXTBROWSER_HISTORYTITLE )
 {
-   hb_retc( hbqt_par_QTextBrowser( 1 )->historyTitle( hb_parni( 2 ) ).toAscii().data() );
+   QTextBrowser * p = hbqt_par_QTextBrowser( 1 );
+   if( p )
+      hb_retc( ( p )->historyTitle( hb_parni( 2 ) ).toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBROWSER_HISTORYTITLE FP=hb_retc( ( p )->historyTitle( hb_parni( 2 ) ).toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -183,7 +207,13 @@ HB_FUNC( QT_QTEXTBROWSER_HISTORYTITLE )
  */
 HB_FUNC( QT_QTEXTBROWSER_HISTORYURL )
 {
-   hb_retptrGC( hbqt_gcAllocate_QUrl( new QUrl( hbqt_par_QTextBrowser( 1 )->historyUrl( hb_parni( 2 ) ) ), true ) );
+   QTextBrowser * p = hbqt_par_QTextBrowser( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QUrl( new QUrl( ( p )->historyUrl( hb_parni( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBROWSER_HISTORYURL FP=hb_retptrGC( hbqt_gcAllocate_QUrl( new QUrl( ( p )->historyUrl( hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -191,7 +221,13 @@ HB_FUNC( QT_QTEXTBROWSER_HISTORYURL )
  */
 HB_FUNC( QT_QTEXTBROWSER_ISBACKWARDAVAILABLE )
 {
-   hb_retl( hbqt_par_QTextBrowser( 1 )->isBackwardAvailable() );
+   QTextBrowser * p = hbqt_par_QTextBrowser( 1 );
+   if( p )
+      hb_retl( ( p )->isBackwardAvailable() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBROWSER_ISBACKWARDAVAILABLE FP=hb_retl( ( p )->isBackwardAvailable() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -199,7 +235,13 @@ HB_FUNC( QT_QTEXTBROWSER_ISBACKWARDAVAILABLE )
  */
 HB_FUNC( QT_QTEXTBROWSER_ISFORWARDAVAILABLE )
 {
-   hb_retl( hbqt_par_QTextBrowser( 1 )->isForwardAvailable() );
+   QTextBrowser * p = hbqt_par_QTextBrowser( 1 );
+   if( p )
+      hb_retl( ( p )->isForwardAvailable() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBROWSER_ISFORWARDAVAILABLE FP=hb_retl( ( p )->isForwardAvailable() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -207,7 +249,13 @@ HB_FUNC( QT_QTEXTBROWSER_ISFORWARDAVAILABLE )
  */
 HB_FUNC( QT_QTEXTBROWSER_LOADRESOURCE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( hbqt_par_QTextBrowser( 1 )->loadResource( hb_parni( 2 ), *hbqt_par_QUrl( 3 ) ) ), true ) );
+   QTextBrowser * p = hbqt_par_QTextBrowser( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( ( p )->loadResource( hb_parni( 2 ), *hbqt_par_QUrl( 3 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBROWSER_LOADRESOURCE FP=hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( ( p )->loadResource( hb_parni( 2 ), *hbqt_par_QUrl( 3 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -215,7 +263,13 @@ HB_FUNC( QT_QTEXTBROWSER_LOADRESOURCE )
  */
 HB_FUNC( QT_QTEXTBROWSER_OPENEXTERNALLINKS )
 {
-   hb_retl( hbqt_par_QTextBrowser( 1 )->openExternalLinks() );
+   QTextBrowser * p = hbqt_par_QTextBrowser( 1 );
+   if( p )
+      hb_retl( ( p )->openExternalLinks() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBROWSER_OPENEXTERNALLINKS FP=hb_retl( ( p )->openExternalLinks() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -223,7 +277,13 @@ HB_FUNC( QT_QTEXTBROWSER_OPENEXTERNALLINKS )
  */
 HB_FUNC( QT_QTEXTBROWSER_OPENLINKS )
 {
-   hb_retl( hbqt_par_QTextBrowser( 1 )->openLinks() );
+   QTextBrowser * p = hbqt_par_QTextBrowser( 1 );
+   if( p )
+      hb_retl( ( p )->openLinks() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBROWSER_OPENLINKS FP=hb_retl( ( p )->openLinks() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -231,7 +291,13 @@ HB_FUNC( QT_QTEXTBROWSER_OPENLINKS )
  */
 HB_FUNC( QT_QTEXTBROWSER_SEARCHPATHS )
 {
-   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QTextBrowser( 1 )->searchPaths() ), true ) );
+   QTextBrowser * p = hbqt_par_QTextBrowser( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->searchPaths() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBROWSER_SEARCHPATHS FP=hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->searchPaths() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -239,7 +305,13 @@ HB_FUNC( QT_QTEXTBROWSER_SEARCHPATHS )
  */
 HB_FUNC( QT_QTEXTBROWSER_SETOPENEXTERNALLINKS )
 {
-   hbqt_par_QTextBrowser( 1 )->setOpenExternalLinks( hb_parl( 2 ) );
+   QTextBrowser * p = hbqt_par_QTextBrowser( 1 );
+   if( p )
+      ( p )->setOpenExternalLinks( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBROWSER_SETOPENEXTERNALLINKS FP=( p )->setOpenExternalLinks( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -247,7 +319,13 @@ HB_FUNC( QT_QTEXTBROWSER_SETOPENEXTERNALLINKS )
  */
 HB_FUNC( QT_QTEXTBROWSER_SETOPENLINKS )
 {
-   hbqt_par_QTextBrowser( 1 )->setOpenLinks( hb_parl( 2 ) );
+   QTextBrowser * p = hbqt_par_QTextBrowser( 1 );
+   if( p )
+      ( p )->setOpenLinks( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBROWSER_SETOPENLINKS FP=( p )->setOpenLinks( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -255,7 +333,13 @@ HB_FUNC( QT_QTEXTBROWSER_SETOPENLINKS )
  */
 HB_FUNC( QT_QTEXTBROWSER_SETSEARCHPATHS )
 {
-   hbqt_par_QTextBrowser( 1 )->setSearchPaths( *hbqt_par_QStringList( 2 ) );
+   QTextBrowser * p = hbqt_par_QTextBrowser( 1 );
+   if( p )
+      ( p )->setSearchPaths( *hbqt_par_QStringList( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBROWSER_SETSEARCHPATHS FP=( p )->setSearchPaths( *hbqt_par_QStringList( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -263,7 +347,13 @@ HB_FUNC( QT_QTEXTBROWSER_SETSEARCHPATHS )
  */
 HB_FUNC( QT_QTEXTBROWSER_SOURCE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QUrl( new QUrl( hbqt_par_QTextBrowser( 1 )->source() ), true ) );
+   QTextBrowser * p = hbqt_par_QTextBrowser( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QUrl( new QUrl( ( p )->source() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBROWSER_SOURCE FP=hb_retptrGC( hbqt_gcAllocate_QUrl( new QUrl( ( p )->source() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -271,7 +361,13 @@ HB_FUNC( QT_QTEXTBROWSER_SOURCE )
  */
 HB_FUNC( QT_QTEXTBROWSER_BACKWARD )
 {
-   hbqt_par_QTextBrowser( 1 )->backward();
+   QTextBrowser * p = hbqt_par_QTextBrowser( 1 );
+   if( p )
+      ( p )->backward();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBROWSER_BACKWARD FP=( p )->backward(); p is NULL" ) );
+   }
 }
 
 /*
@@ -279,7 +375,13 @@ HB_FUNC( QT_QTEXTBROWSER_BACKWARD )
  */
 HB_FUNC( QT_QTEXTBROWSER_FORWARD )
 {
-   hbqt_par_QTextBrowser( 1 )->forward();
+   QTextBrowser * p = hbqt_par_QTextBrowser( 1 );
+   if( p )
+      ( p )->forward();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBROWSER_FORWARD FP=( p )->forward(); p is NULL" ) );
+   }
 }
 
 /*
@@ -287,7 +389,13 @@ HB_FUNC( QT_QTEXTBROWSER_FORWARD )
  */
 HB_FUNC( QT_QTEXTBROWSER_HOME )
 {
-   hbqt_par_QTextBrowser( 1 )->home();
+   QTextBrowser * p = hbqt_par_QTextBrowser( 1 );
+   if( p )
+      ( p )->home();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBROWSER_HOME FP=( p )->home(); p is NULL" ) );
+   }
 }
 
 /*
@@ -295,7 +403,13 @@ HB_FUNC( QT_QTEXTBROWSER_HOME )
  */
 HB_FUNC( QT_QTEXTBROWSER_RELOAD )
 {
-   hbqt_par_QTextBrowser( 1 )->reload();
+   QTextBrowser * p = hbqt_par_QTextBrowser( 1 );
+   if( p )
+      ( p )->reload();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBROWSER_RELOAD FP=( p )->reload(); p is NULL" ) );
+   }
 }
 
 /*
@@ -303,7 +417,13 @@ HB_FUNC( QT_QTEXTBROWSER_RELOAD )
  */
 HB_FUNC( QT_QTEXTBROWSER_SETSOURCE )
 {
-   hbqt_par_QTextBrowser( 1 )->setSource( *hbqt_par_QUrl( 2 ) );
+   QTextBrowser * p = hbqt_par_QTextBrowser( 1 );
+   if( p )
+      ( p )->setSource( *hbqt_par_QUrl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBROWSER_SETSOURCE FP=( p )->setSource( *hbqt_par_QUrl( 2 ) ); p is NULL" ) );
+   }
 }
 
 

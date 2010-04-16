@@ -83,43 +83,44 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QPrintDialog > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QPrintDialog > pq;
 } QGC_POINTER_QPrintDialog;
 
 QT_G_FUNC( hbqt_gcRelease_QPrintDialog )
 {
+   QPrintDialog  * ph = NULL ;
    QGC_POINTER_QPrintDialog * p = ( QGC_POINTER_QPrintDialog * ) Cargo;
 
-   if( p && p->bNew )
+   if( p && p->bNew && p->ph )
    {
-      if( p->ph && p->pq )
+      ph = p->ph;
+      if( ph )
       {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QPrintDialog   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
-            delete ( ( QPrintDialog * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QPrintDialog   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QPrintDialog   /.\\   ", (void*) ph, (void*) p->ph ) );
+            delete ( p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QPrintDialog   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QPrintDialog          pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QPrintDialog          ", ph ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QPrintDialog    :     Object already deleted!", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QPrintDialog    :     Object already deleted!", ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QPrintDialog    :    Object not created with new=true", p->ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QPrintDialog    :    Object not created with new=true", ph ) );
       p->ph = NULL;
    }
 }
@@ -128,13 +129,12 @@ void * hbqt_gcAllocate_QPrintDialog( void * pObj, bool bNew )
 {
    QGC_POINTER_QPrintDialog * p = ( QGC_POINTER_QPrintDialog * ) hb_gcAllocate( sizeof( QGC_POINTER_QPrintDialog ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QPrintDialog >( ( QPrintDialog * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QPrintDialog;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QPrintDialog >( ( QPrintDialog * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QPrintDialog  under p->pq", pObj ) );
    }
    else
@@ -146,11 +146,11 @@ void * hbqt_gcAllocate_QPrintDialog( void * pObj, bool bNew )
 
 HB_FUNC( QT_QPRINTDIALOG )
 {
-   void * pObj = NULL;
+   QPrintDialog * pObj = NULL;
 
-   pObj = ( QPrintDialog* ) new QPrintDialog ( hbqt_par_QWidget( 1 ) ) ;
+   pObj =  new QPrintDialog ( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QPrintDialog( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QPrintDialog( ( void * ) pObj, true ) );
 }
 
 /*
@@ -158,7 +158,13 @@ HB_FUNC( QT_QPRINTDIALOG )
  */
 HB_FUNC( QT_QPRINTDIALOG_DONE )
 {
-   hbqt_par_QPrintDialog( 1 )->done( hb_parni( 2 ) );
+   QPrintDialog * p = hbqt_par_QPrintDialog( 1 );
+   if( p )
+      ( p )->done( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTDIALOG_DONE FP=( p )->done( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -166,7 +172,13 @@ HB_FUNC( QT_QPRINTDIALOG_DONE )
  */
 HB_FUNC( QT_QPRINTDIALOG_OPEN )
 {
-   hbqt_par_QPrintDialog( 1 )->open( hbqt_par_QObject( 2 ), hbqt_par_char( 3 ) );
+   QPrintDialog * p = hbqt_par_QPrintDialog( 1 );
+   if( p )
+      ( p )->open( hbqt_par_QObject( 2 ), hbqt_par_char( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTDIALOG_OPEN FP=( p )->open( hbqt_par_QObject( 2 ), hbqt_par_char( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -174,7 +186,13 @@ HB_FUNC( QT_QPRINTDIALOG_OPEN )
  */
 HB_FUNC( QT_QPRINTDIALOG_OPTIONS )
 {
-   hb_retni( ( QPrintDialog::PrintDialogOptions ) hbqt_par_QPrintDialog( 1 )->options() );
+   QPrintDialog * p = hbqt_par_QPrintDialog( 1 );
+   if( p )
+      hb_retni( ( QPrintDialog::PrintDialogOptions ) ( p )->options() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTDIALOG_OPTIONS FP=hb_retni( ( QPrintDialog::PrintDialogOptions ) ( p )->options() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -182,7 +200,13 @@ HB_FUNC( QT_QPRINTDIALOG_OPTIONS )
  */
 HB_FUNC( QT_QPRINTDIALOG_PRINTER )
 {
-   hb_retptrGC( hbqt_gcAllocate_QPrinter( hbqt_par_QPrintDialog( 1 )->printer(), false ) );
+   QPrintDialog * p = hbqt_par_QPrintDialog( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QPrinter( ( p )->printer(), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTDIALOG_PRINTER FP=hb_retptrGC( hbqt_gcAllocate_QPrinter( ( p )->printer(), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -190,7 +214,13 @@ HB_FUNC( QT_QPRINTDIALOG_PRINTER )
  */
 HB_FUNC( QT_QPRINTDIALOG_PRINTER_1 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QPrinter( hbqt_par_QPrintDialog( 1 )->printer(), false ) );
+   QPrintDialog * p = hbqt_par_QPrintDialog( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QPrinter( ( p )->printer(), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTDIALOG_PRINTER_1 FP=hb_retptrGC( hbqt_gcAllocate_QPrinter( ( p )->printer(), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -198,7 +228,13 @@ HB_FUNC( QT_QPRINTDIALOG_PRINTER_1 )
  */
 HB_FUNC( QT_QPRINTDIALOG_SETOPTION )
 {
-   hbqt_par_QPrintDialog( 1 )->setOption( ( QPrintDialog::PrintDialogOption ) hb_parni( 2 ), hb_parl( 3 ) );
+   QPrintDialog * p = hbqt_par_QPrintDialog( 1 );
+   if( p )
+      ( p )->setOption( ( QPrintDialog::PrintDialogOption ) hb_parni( 2 ), hb_parl( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTDIALOG_SETOPTION FP=( p )->setOption( ( QPrintDialog::PrintDialogOption ) hb_parni( 2 ), hb_parl( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -206,7 +242,13 @@ HB_FUNC( QT_QPRINTDIALOG_SETOPTION )
  */
 HB_FUNC( QT_QPRINTDIALOG_SETOPTIONS )
 {
-   hbqt_par_QPrintDialog( 1 )->setOptions( ( QPrintDialog::PrintDialogOptions ) hb_parni( 2 ) );
+   QPrintDialog * p = hbqt_par_QPrintDialog( 1 );
+   if( p )
+      ( p )->setOptions( ( QPrintDialog::PrintDialogOptions ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTDIALOG_SETOPTIONS FP=( p )->setOptions( ( QPrintDialog::PrintDialogOptions ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -214,7 +256,13 @@ HB_FUNC( QT_QPRINTDIALOG_SETOPTIONS )
  */
 HB_FUNC( QT_QPRINTDIALOG_SETVISIBLE )
 {
-   hbqt_par_QPrintDialog( 1 )->setVisible( hb_parl( 2 ) );
+   QPrintDialog * p = hbqt_par_QPrintDialog( 1 );
+   if( p )
+      ( p )->setVisible( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTDIALOG_SETVISIBLE FP=( p )->setVisible( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -222,7 +270,13 @@ HB_FUNC( QT_QPRINTDIALOG_SETVISIBLE )
  */
 HB_FUNC( QT_QPRINTDIALOG_TESTOPTION )
 {
-   hb_retl( hbqt_par_QPrintDialog( 1 )->testOption( ( QPrintDialog::PrintDialogOption ) hb_parni( 2 ) ) );
+   QPrintDialog * p = hbqt_par_QPrintDialog( 1 );
+   if( p )
+      hb_retl( ( p )->testOption( ( QPrintDialog::PrintDialogOption ) hb_parni( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTDIALOG_TESTOPTION FP=hb_retl( ( p )->testOption( ( QPrintDialog::PrintDialogOption ) hb_parni( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 

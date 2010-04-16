@@ -82,7 +82,7 @@
 
 typedef struct
 {
-   void * ph;
+   QStyleOptionGroupBox * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QStyleOptionGroupBox;
@@ -117,7 +117,7 @@ void * hbqt_gcAllocate_QStyleOptionGroupBox( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QStyleOptionGroupBox * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyleOptionGroupBox;
 
@@ -134,11 +134,11 @@ void * hbqt_gcAllocate_QStyleOptionGroupBox( void * pObj, bool bNew )
 
 HB_FUNC( QT_QSTYLEOPTIONGROUPBOX )
 {
-   void * pObj = NULL;
+   QStyleOptionGroupBox * pObj = NULL;
 
-   pObj = ( QStyleOptionGroupBox* ) new QStyleOptionGroupBox() ;
+   pObj =  new QStyleOptionGroupBox() ;
 
-   hb_retptrGC( hbqt_gcAllocate_QStyleOptionGroupBox( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QStyleOptionGroupBox( ( void * ) pObj, true ) );
 }
 
 /*

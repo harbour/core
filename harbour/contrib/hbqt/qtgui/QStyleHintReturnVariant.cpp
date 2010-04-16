@@ -91,7 +91,7 @@
 
 typedef struct
 {
-   void * ph;
+   QStyleHintReturnVariant * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QStyleHintReturnVariant;
@@ -111,7 +111,7 @@ void * hbqt_gcAllocate_QStyleHintReturnVariant( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QStyleHintReturnVariant * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyleHintReturnVariant;
 
@@ -128,6 +128,7 @@ void * hbqt_gcAllocate_QStyleHintReturnVariant( void * pObj, bool bNew )
 
 HB_FUNC( QT_QSTYLEHINTRETURNVARIANT )
 {
+
 }
 
 

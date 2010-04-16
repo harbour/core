@@ -76,10 +76,9 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QAbstractProxyModel > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QAbstractProxyModel > pq;
 } QGC_POINTER_QAbstractProxyModel;
 
 QT_G_FUNC( hbqt_gcRelease_QAbstractProxyModel )
@@ -97,13 +96,12 @@ void * hbqt_gcAllocate_QAbstractProxyModel( void * pObj, bool bNew )
 {
    QGC_POINTER_QAbstractProxyModel * p = ( QGC_POINTER_QAbstractProxyModel * ) hb_gcAllocate( sizeof( QGC_POINTER_QAbstractProxyModel ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QAbstractProxyModel >( ( QAbstractProxyModel * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QAbstractProxyModel;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QAbstractProxyModel >( ( QAbstractProxyModel * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QAbstractProxyModel  under p->pq", pObj ) );
    }
    else
@@ -115,6 +113,7 @@ void * hbqt_gcAllocate_QAbstractProxyModel( void * pObj, bool bNew )
 
 HB_FUNC( QT_QABSTRACTPROXYMODEL )
 {
+   // hb_retptr( new QAbstractProxyModel() );
 }
 
 /*
@@ -122,7 +121,13 @@ HB_FUNC( QT_QABSTRACTPROXYMODEL )
  */
 HB_FUNC( QT_QABSTRACTPROXYMODEL_MAPFROMSOURCE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QAbstractProxyModel( 1 )->mapFromSource( *hbqt_par_QModelIndex( 2 ) ) ), true ) );
+   QAbstractProxyModel * p = hbqt_par_QAbstractProxyModel( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( ( p )->mapFromSource( *hbqt_par_QModelIndex( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTPROXYMODEL_MAPFROMSOURCE FP=hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( ( p )->mapFromSource( *hbqt_par_QModelIndex( 2 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -130,7 +135,13 @@ HB_FUNC( QT_QABSTRACTPROXYMODEL_MAPFROMSOURCE )
  */
 HB_FUNC( QT_QABSTRACTPROXYMODEL_MAPSELECTIONFROMSOURCE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QItemSelection( new QItemSelection( hbqt_par_QAbstractProxyModel( 1 )->mapSelectionFromSource( *hbqt_par_QItemSelection( 2 ) ) ), true ) );
+   QAbstractProxyModel * p = hbqt_par_QAbstractProxyModel( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QItemSelection( new QItemSelection( ( p )->mapSelectionFromSource( *hbqt_par_QItemSelection( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTPROXYMODEL_MAPSELECTIONFROMSOURCE FP=hb_retptrGC( hbqt_gcAllocate_QItemSelection( new QItemSelection( ( p )->mapSelectionFromSource( *hbqt_par_QItemSelection( 2 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -138,7 +149,13 @@ HB_FUNC( QT_QABSTRACTPROXYMODEL_MAPSELECTIONFROMSOURCE )
  */
 HB_FUNC( QT_QABSTRACTPROXYMODEL_MAPSELECTIONTOSOURCE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QItemSelection( new QItemSelection( hbqt_par_QAbstractProxyModel( 1 )->mapSelectionToSource( *hbqt_par_QItemSelection( 2 ) ) ), true ) );
+   QAbstractProxyModel * p = hbqt_par_QAbstractProxyModel( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QItemSelection( new QItemSelection( ( p )->mapSelectionToSource( *hbqt_par_QItemSelection( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTPROXYMODEL_MAPSELECTIONTOSOURCE FP=hb_retptrGC( hbqt_gcAllocate_QItemSelection( new QItemSelection( ( p )->mapSelectionToSource( *hbqt_par_QItemSelection( 2 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -146,7 +163,13 @@ HB_FUNC( QT_QABSTRACTPROXYMODEL_MAPSELECTIONTOSOURCE )
  */
 HB_FUNC( QT_QABSTRACTPROXYMODEL_MAPTOSOURCE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QAbstractProxyModel( 1 )->mapToSource( *hbqt_par_QModelIndex( 2 ) ) ), true ) );
+   QAbstractProxyModel * p = hbqt_par_QAbstractProxyModel( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( ( p )->mapToSource( *hbqt_par_QModelIndex( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTPROXYMODEL_MAPTOSOURCE FP=hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( ( p )->mapToSource( *hbqt_par_QModelIndex( 2 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -154,7 +177,13 @@ HB_FUNC( QT_QABSTRACTPROXYMODEL_MAPTOSOURCE )
  */
 HB_FUNC( QT_QABSTRACTPROXYMODEL_SETSOURCEMODEL )
 {
-   hbqt_par_QAbstractProxyModel( 1 )->setSourceModel( hbqt_par_QAbstractItemModel( 2 ) );
+   QAbstractProxyModel * p = hbqt_par_QAbstractProxyModel( 1 );
+   if( p )
+      ( p )->setSourceModel( hbqt_par_QAbstractItemModel( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTPROXYMODEL_SETSOURCEMODEL FP=( p )->setSourceModel( hbqt_par_QAbstractItemModel( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -162,7 +191,13 @@ HB_FUNC( QT_QABSTRACTPROXYMODEL_SETSOURCEMODEL )
  */
 HB_FUNC( QT_QABSTRACTPROXYMODEL_SOURCEMODEL )
 {
-   hb_retptrGC( hbqt_gcAllocate_QAbstractItemModel( hbqt_par_QAbstractProxyModel( 1 )->sourceModel(), false ) );
+   QAbstractProxyModel * p = hbqt_par_QAbstractProxyModel( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QAbstractItemModel( ( p )->sourceModel(), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTPROXYMODEL_SOURCEMODEL FP=hb_retptrGC( hbqt_gcAllocate_QAbstractItemModel( ( p )->sourceModel(), false ) ); p is NULL" ) );
+   }
 }
 
 

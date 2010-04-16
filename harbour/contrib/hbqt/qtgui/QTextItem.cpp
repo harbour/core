@@ -82,7 +82,7 @@
 
 typedef struct
 {
-   void * ph;
+   QTextItem * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QTextItem;
@@ -117,7 +117,7 @@ void * hbqt_gcAllocate_QTextItem( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QTextItem * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextItem;
 
@@ -134,11 +134,11 @@ void * hbqt_gcAllocate_QTextItem( void * pObj, bool bNew )
 
 HB_FUNC( QT_QTEXTITEM )
 {
-   void * pObj = NULL;
+   QTextItem * pObj = NULL;
 
-   pObj = ( QTextItem* ) new QTextItem() ;
+   pObj =  new QTextItem() ;
 
-   hb_retptrGC( hbqt_gcAllocate_QTextItem( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextItem( ( void * ) pObj, true ) );
 }
 
 /*
@@ -146,7 +146,13 @@ HB_FUNC( QT_QTEXTITEM )
  */
 HB_FUNC( QT_QTEXTITEM_ASCENT )
 {
-   hb_retnd( hbqt_par_QTextItem( 1 )->ascent() );
+   QTextItem * p = hbqt_par_QTextItem( 1 );
+   if( p )
+      hb_retnd( ( p )->ascent() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTITEM_ASCENT FP=hb_retnd( ( p )->ascent() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -154,7 +160,13 @@ HB_FUNC( QT_QTEXTITEM_ASCENT )
  */
 HB_FUNC( QT_QTEXTITEM_DESCENT )
 {
-   hb_retnd( hbqt_par_QTextItem( 1 )->descent() );
+   QTextItem * p = hbqt_par_QTextItem( 1 );
+   if( p )
+      hb_retnd( ( p )->descent() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTITEM_DESCENT FP=hb_retnd( ( p )->descent() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -162,7 +174,13 @@ HB_FUNC( QT_QTEXTITEM_DESCENT )
  */
 HB_FUNC( QT_QTEXTITEM_FONT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( hbqt_par_QTextItem( 1 )->font() ), true ) );
+   QTextItem * p = hbqt_par_QTextItem( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( ( p )->font() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTITEM_FONT FP=hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( ( p )->font() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -170,7 +188,13 @@ HB_FUNC( QT_QTEXTITEM_FONT )
  */
 HB_FUNC( QT_QTEXTITEM_RENDERFLAGS )
 {
-   hb_retni( ( QTextItem::RenderFlags ) hbqt_par_QTextItem( 1 )->renderFlags() );
+   QTextItem * p = hbqt_par_QTextItem( 1 );
+   if( p )
+      hb_retni( ( QTextItem::RenderFlags ) ( p )->renderFlags() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTITEM_RENDERFLAGS FP=hb_retni( ( QTextItem::RenderFlags ) ( p )->renderFlags() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -178,7 +202,13 @@ HB_FUNC( QT_QTEXTITEM_RENDERFLAGS )
  */
 HB_FUNC( QT_QTEXTITEM_TEXT )
 {
-   hb_retc( hbqt_par_QTextItem( 1 )->text().toAscii().data() );
+   QTextItem * p = hbqt_par_QTextItem( 1 );
+   if( p )
+      hb_retc( ( p )->text().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTITEM_TEXT FP=hb_retc( ( p )->text().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -186,7 +216,13 @@ HB_FUNC( QT_QTEXTITEM_TEXT )
  */
 HB_FUNC( QT_QTEXTITEM_WIDTH )
 {
-   hb_retnd( hbqt_par_QTextItem( 1 )->width() );
+   QTextItem * p = hbqt_par_QTextItem( 1 );
+   if( p )
+      hb_retnd( ( p )->width() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTITEM_WIDTH FP=hb_retnd( ( p )->width() ); p is NULL" ) );
+   }
 }
 
 

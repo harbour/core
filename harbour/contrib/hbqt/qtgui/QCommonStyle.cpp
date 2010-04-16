@@ -76,43 +76,44 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QCommonStyle > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QCommonStyle > pq;
 } QGC_POINTER_QCommonStyle;
 
 QT_G_FUNC( hbqt_gcRelease_QCommonStyle )
 {
+   QCommonStyle  * ph = NULL ;
    QGC_POINTER_QCommonStyle * p = ( QGC_POINTER_QCommonStyle * ) Cargo;
 
-   if( p && p->bNew )
+   if( p && p->bNew && p->ph )
    {
-      if( p->ph && p->pq )
+      ph = p->ph;
+      if( ph )
       {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QCommonStyle   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
-            delete ( ( QCommonStyle * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QCommonStyle   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QCommonStyle   /.\\   ", (void*) ph, (void*) p->ph ) );
+            delete ( p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QCommonStyle   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QCommonStyle          pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QCommonStyle          ", ph ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QCommonStyle    :     Object already deleted!", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QCommonStyle    :     Object already deleted!", ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QCommonStyle    :    Object not created with new=true", p->ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QCommonStyle    :    Object not created with new=true", ph ) );
       p->ph = NULL;
    }
 }
@@ -121,13 +122,12 @@ void * hbqt_gcAllocate_QCommonStyle( void * pObj, bool bNew )
 {
    QGC_POINTER_QCommonStyle * p = ( QGC_POINTER_QCommonStyle * ) hb_gcAllocate( sizeof( QGC_POINTER_QCommonStyle ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QCommonStyle >( ( QCommonStyle * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QCommonStyle;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QCommonStyle >( ( QCommonStyle * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QCommonStyle  under p->pq", pObj ) );
    }
    else
@@ -139,11 +139,11 @@ void * hbqt_gcAllocate_QCommonStyle( void * pObj, bool bNew )
 
 HB_FUNC( QT_QCOMMONSTYLE )
 {
-   void * pObj = NULL;
+   QCommonStyle * pObj = NULL;
 
-   pObj = ( QCommonStyle* ) new QCommonStyle() ;
+   pObj =  new QCommonStyle() ;
 
-   hb_retptrGC( hbqt_gcAllocate_QCommonStyle( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QCommonStyle( ( void * ) pObj, true ) );
 }
 
 

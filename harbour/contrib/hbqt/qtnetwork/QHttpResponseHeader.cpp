@@ -78,7 +78,7 @@
 
 typedef struct
 {
-   void * ph;
+   QHttpResponseHeader * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QHttpResponseHeader;
@@ -113,7 +113,7 @@ void * hbqt_gcAllocate_QHttpResponseHeader( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QHttpResponseHeader * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QHttpResponseHeader;
 
@@ -130,11 +130,11 @@ void * hbqt_gcAllocate_QHttpResponseHeader( void * pObj, bool bNew )
 
 HB_FUNC( QT_QHTTPRESPONSEHEADER )
 {
-   void * pObj = NULL;
+   QHttpResponseHeader * pObj = NULL;
 
    pObj = new QHttpResponseHeader() ;
 
-   hb_retptrGC( hbqt_gcAllocate_QHttpResponseHeader( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QHttpResponseHeader( ( void * ) pObj, true ) );
 }
 
 /*
@@ -142,7 +142,13 @@ HB_FUNC( QT_QHTTPRESPONSEHEADER )
  */
 HB_FUNC( QT_QHTTPRESPONSEHEADER_MAJORVERSION )
 {
-   hb_retni( hbqt_par_QHttpResponseHeader( 1 )->majorVersion() );
+   QHttpResponseHeader * p = hbqt_par_QHttpResponseHeader( 1 );
+   if( p )
+      hb_retni( ( p )->majorVersion() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHTTPRESPONSEHEADER_MAJORVERSION FP=hb_retni( ( p )->majorVersion() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -150,7 +156,13 @@ HB_FUNC( QT_QHTTPRESPONSEHEADER_MAJORVERSION )
  */
 HB_FUNC( QT_QHTTPRESPONSEHEADER_MINORVERSION )
 {
-   hb_retni( hbqt_par_QHttpResponseHeader( 1 )->minorVersion() );
+   QHttpResponseHeader * p = hbqt_par_QHttpResponseHeader( 1 );
+   if( p )
+      hb_retni( ( p )->minorVersion() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHTTPRESPONSEHEADER_MINORVERSION FP=hb_retni( ( p )->minorVersion() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -158,7 +170,13 @@ HB_FUNC( QT_QHTTPRESPONSEHEADER_MINORVERSION )
  */
 HB_FUNC( QT_QHTTPRESPONSEHEADER_REASONPHRASE )
 {
-   hb_retc( hbqt_par_QHttpResponseHeader( 1 )->reasonPhrase().toAscii().data() );
+   QHttpResponseHeader * p = hbqt_par_QHttpResponseHeader( 1 );
+   if( p )
+      hb_retc( ( p )->reasonPhrase().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHTTPRESPONSEHEADER_REASONPHRASE FP=hb_retc( ( p )->reasonPhrase().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -166,7 +184,13 @@ HB_FUNC( QT_QHTTPRESPONSEHEADER_REASONPHRASE )
  */
 HB_FUNC( QT_QHTTPRESPONSEHEADER_SETSTATUSLINE )
 {
-   hbqt_par_QHttpResponseHeader( 1 )->setStatusLine( hb_parni( 2 ), hbqt_par_QString( 3 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : 1 ), ( HB_ISNUM( 5 ) ? hb_parni( 5 ) : 1 ) );
+   QHttpResponseHeader * p = hbqt_par_QHttpResponseHeader( 1 );
+   if( p )
+      ( p )->setStatusLine( hb_parni( 2 ), hbqt_par_QString( 3 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : 1 ), ( HB_ISNUM( 5 ) ? hb_parni( 5 ) : 1 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHTTPRESPONSEHEADER_SETSTATUSLINE FP=( p )->setStatusLine( hb_parni( 2 ), hbqt_par_QString( 3 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : 1 ), ( HB_ISNUM( 5 ) ? hb_parni( 5 ) : 1 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -174,7 +198,13 @@ HB_FUNC( QT_QHTTPRESPONSEHEADER_SETSTATUSLINE )
  */
 HB_FUNC( QT_QHTTPRESPONSEHEADER_STATUSCODE )
 {
-   hb_retni( hbqt_par_QHttpResponseHeader( 1 )->statusCode() );
+   QHttpResponseHeader * p = hbqt_par_QHttpResponseHeader( 1 );
+   if( p )
+      hb_retni( ( p )->statusCode() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHTTPRESPONSEHEADER_STATUSCODE FP=hb_retni( ( p )->statusCode() ); p is NULL" ) );
+   }
 }
 
 

@@ -82,43 +82,44 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QEventLoop > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QEventLoop > pq;
 } QGC_POINTER_QEventLoop;
 
 QT_G_FUNC( hbqt_gcRelease_QEventLoop )
 {
+   QEventLoop  * ph = NULL ;
    QGC_POINTER_QEventLoop * p = ( QGC_POINTER_QEventLoop * ) Cargo;
 
-   if( p && p->bNew )
+   if( p && p->bNew && p->ph )
    {
-      if( p->ph && p->pq )
+      ph = p->ph;
+      if( ph )
       {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QEventLoop   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
-            delete ( ( QEventLoop * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QEventLoop   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QEventLoop   /.\\   ", (void*) ph, (void*) p->ph ) );
+            delete ( p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QEventLoop   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QEventLoop          pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QEventLoop          ", ph ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QEventLoop    :     Object already deleted!", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QEventLoop    :     Object already deleted!", ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QEventLoop    :    Object not created with new=true", p->ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QEventLoop    :    Object not created with new=true", ph ) );
       p->ph = NULL;
    }
 }
@@ -127,13 +128,12 @@ void * hbqt_gcAllocate_QEventLoop( void * pObj, bool bNew )
 {
    QGC_POINTER_QEventLoop * p = ( QGC_POINTER_QEventLoop * ) hb_gcAllocate( sizeof( QGC_POINTER_QEventLoop ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QEventLoop >( ( QEventLoop * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QEventLoop;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QEventLoop >( ( QEventLoop * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QEventLoop  under p->pq", pObj ) );
    }
    else
@@ -145,11 +145,11 @@ void * hbqt_gcAllocate_QEventLoop( void * pObj, bool bNew )
 
 HB_FUNC( QT_QEVENTLOOP )
 {
-   void * pObj = NULL;
+   QEventLoop * pObj = NULL;
 
    pObj = new QEventLoop( hbqt_par_QObject( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QEventLoop( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QEventLoop( ( void * ) pObj, true ) );
 }
 
 /*
@@ -157,7 +157,13 @@ HB_FUNC( QT_QEVENTLOOP )
  */
 HB_FUNC( QT_QEVENTLOOP_EXEC )
 {
-   hb_retni( hbqt_par_QEventLoop( 1 )->exec( ( HB_ISNUM( 2 ) ? ( QEventLoop::ProcessEventsFlags ) hb_parni( 2 ) : ( QEventLoop::ProcessEventsFlags ) QEventLoop::AllEvents ) ) );
+   QEventLoop * p = hbqt_par_QEventLoop( 1 );
+   if( p )
+      hb_retni( ( p )->exec( ( HB_ISNUM( 2 ) ? ( QEventLoop::ProcessEventsFlags ) hb_parni( 2 ) : ( QEventLoop::ProcessEventsFlags ) QEventLoop::AllEvents ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QEVENTLOOP_EXEC FP=hb_retni( ( p )->exec( ( HB_ISNUM( 2 ) ? ( QEventLoop::ProcessEventsFlags ) hb_parni( 2 ) : ( QEventLoop::ProcessEventsFlags ) QEventLoop::AllEvents ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -165,7 +171,13 @@ HB_FUNC( QT_QEVENTLOOP_EXEC )
  */
 HB_FUNC( QT_QEVENTLOOP_EXIT )
 {
-   hbqt_par_QEventLoop( 1 )->exit( hb_parni( 2 ) );
+   QEventLoop * p = hbqt_par_QEventLoop( 1 );
+   if( p )
+      ( p )->exit( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QEVENTLOOP_EXIT FP=( p )->exit( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -173,7 +185,13 @@ HB_FUNC( QT_QEVENTLOOP_EXIT )
  */
 HB_FUNC( QT_QEVENTLOOP_ISRUNNING )
 {
-   hb_retl( hbqt_par_QEventLoop( 1 )->isRunning() );
+   QEventLoop * p = hbqt_par_QEventLoop( 1 );
+   if( p )
+      hb_retl( ( p )->isRunning() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QEVENTLOOP_ISRUNNING FP=hb_retl( ( p )->isRunning() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -181,7 +199,13 @@ HB_FUNC( QT_QEVENTLOOP_ISRUNNING )
  */
 HB_FUNC( QT_QEVENTLOOP_PROCESSEVENTS )
 {
-   hb_retl( hbqt_par_QEventLoop( 1 )->processEvents( ( HB_ISNUM( 2 ) ? ( QEventLoop::ProcessEventsFlags ) hb_parni( 2 ) : ( QEventLoop::ProcessEventsFlags ) QEventLoop::AllEvents ) ) );
+   QEventLoop * p = hbqt_par_QEventLoop( 1 );
+   if( p )
+      hb_retl( ( p )->processEvents( ( HB_ISNUM( 2 ) ? ( QEventLoop::ProcessEventsFlags ) hb_parni( 2 ) : ( QEventLoop::ProcessEventsFlags ) QEventLoop::AllEvents ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QEVENTLOOP_PROCESSEVENTS FP=hb_retl( ( p )->processEvents( ( HB_ISNUM( 2 ) ? ( QEventLoop::ProcessEventsFlags ) hb_parni( 2 ) : ( QEventLoop::ProcessEventsFlags ) QEventLoop::AllEvents ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -189,7 +213,13 @@ HB_FUNC( QT_QEVENTLOOP_PROCESSEVENTS )
  */
 HB_FUNC( QT_QEVENTLOOP_PROCESSEVENTS_1 )
 {
-   hbqt_par_QEventLoop( 1 )->processEvents( ( QEventLoop::ProcessEventsFlags ) hb_parni( 2 ), hb_parni( 3 ) );
+   QEventLoop * p = hbqt_par_QEventLoop( 1 );
+   if( p )
+      ( p )->processEvents( ( QEventLoop::ProcessEventsFlags ) hb_parni( 2 ), hb_parni( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QEVENTLOOP_PROCESSEVENTS_1 FP=( p )->processEvents( ( QEventLoop::ProcessEventsFlags ) hb_parni( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -197,7 +227,13 @@ HB_FUNC( QT_QEVENTLOOP_PROCESSEVENTS_1 )
  */
 HB_FUNC( QT_QEVENTLOOP_WAKEUP )
 {
-   hbqt_par_QEventLoop( 1 )->wakeUp();
+   QEventLoop * p = hbqt_par_QEventLoop( 1 );
+   if( p )
+      ( p )->wakeUp();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QEVENTLOOP_WAKEUP FP=( p )->wakeUp(); p is NULL" ) );
+   }
 }
 
 

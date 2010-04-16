@@ -91,10 +91,9 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QAbstractPrintDialog > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QAbstractPrintDialog > pq;
 } QGC_POINTER_QAbstractPrintDialog;
 
 QT_G_FUNC( hbqt_gcRelease_QAbstractPrintDialog )
@@ -112,13 +111,12 @@ void * hbqt_gcAllocate_QAbstractPrintDialog( void * pObj, bool bNew )
 {
    QGC_POINTER_QAbstractPrintDialog * p = ( QGC_POINTER_QAbstractPrintDialog * ) hb_gcAllocate( sizeof( QGC_POINTER_QAbstractPrintDialog ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QAbstractPrintDialog >( ( QAbstractPrintDialog * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QAbstractPrintDialog;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QAbstractPrintDialog >( ( QAbstractPrintDialog * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QAbstractPrintDialog  under p->pq", pObj ) );
    }
    else
@@ -130,6 +128,7 @@ void * hbqt_gcAllocate_QAbstractPrintDialog( void * pObj, bool bNew )
 
 HB_FUNC( QT_QABSTRACTPRINTDIALOG )
 {
+
 }
 
 /*
@@ -137,7 +136,13 @@ HB_FUNC( QT_QABSTRACTPRINTDIALOG )
  */
 HB_FUNC( QT_QABSTRACTPRINTDIALOG_EXEC )
 {
-   hb_retni( hbqt_par_QAbstractPrintDialog( 1 )->exec() );
+   QAbstractPrintDialog * p = hbqt_par_QAbstractPrintDialog( 1 );
+   if( p )
+      hb_retni( ( p )->exec() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTPRINTDIALOG_EXEC FP=hb_retni( ( p )->exec() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -145,7 +150,13 @@ HB_FUNC( QT_QABSTRACTPRINTDIALOG_EXEC )
  */
 HB_FUNC( QT_QABSTRACTPRINTDIALOG_FROMPAGE )
 {
-   hb_retni( hbqt_par_QAbstractPrintDialog( 1 )->fromPage() );
+   QAbstractPrintDialog * p = hbqt_par_QAbstractPrintDialog( 1 );
+   if( p )
+      hb_retni( ( p )->fromPage() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTPRINTDIALOG_FROMPAGE FP=hb_retni( ( p )->fromPage() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -153,7 +164,13 @@ HB_FUNC( QT_QABSTRACTPRINTDIALOG_FROMPAGE )
  */
 HB_FUNC( QT_QABSTRACTPRINTDIALOG_MAXPAGE )
 {
-   hb_retni( hbqt_par_QAbstractPrintDialog( 1 )->maxPage() );
+   QAbstractPrintDialog * p = hbqt_par_QAbstractPrintDialog( 1 );
+   if( p )
+      hb_retni( ( p )->maxPage() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTPRINTDIALOG_MAXPAGE FP=hb_retni( ( p )->maxPage() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -161,7 +178,13 @@ HB_FUNC( QT_QABSTRACTPRINTDIALOG_MAXPAGE )
  */
 HB_FUNC( QT_QABSTRACTPRINTDIALOG_MINPAGE )
 {
-   hb_retni( hbqt_par_QAbstractPrintDialog( 1 )->minPage() );
+   QAbstractPrintDialog * p = hbqt_par_QAbstractPrintDialog( 1 );
+   if( p )
+      hb_retni( ( p )->minPage() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTPRINTDIALOG_MINPAGE FP=hb_retni( ( p )->minPage() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -169,7 +192,13 @@ HB_FUNC( QT_QABSTRACTPRINTDIALOG_MINPAGE )
  */
 HB_FUNC( QT_QABSTRACTPRINTDIALOG_PRINTRANGE )
 {
-   hb_retni( ( QAbstractPrintDialog::PrintRange ) hbqt_par_QAbstractPrintDialog( 1 )->printRange() );
+   QAbstractPrintDialog * p = hbqt_par_QAbstractPrintDialog( 1 );
+   if( p )
+      hb_retni( ( QAbstractPrintDialog::PrintRange ) ( p )->printRange() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTPRINTDIALOG_PRINTRANGE FP=hb_retni( ( QAbstractPrintDialog::PrintRange ) ( p )->printRange() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -177,7 +206,13 @@ HB_FUNC( QT_QABSTRACTPRINTDIALOG_PRINTRANGE )
  */
 HB_FUNC( QT_QABSTRACTPRINTDIALOG_PRINTER )
 {
-   hb_retptrGC( hbqt_gcAllocate_QPrinter( hbqt_par_QAbstractPrintDialog( 1 )->printer(), false ) );
+   QAbstractPrintDialog * p = hbqt_par_QAbstractPrintDialog( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QPrinter( ( p )->printer(), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTPRINTDIALOG_PRINTER FP=hb_retptrGC( hbqt_gcAllocate_QPrinter( ( p )->printer(), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -185,7 +220,13 @@ HB_FUNC( QT_QABSTRACTPRINTDIALOG_PRINTER )
  */
 HB_FUNC( QT_QABSTRACTPRINTDIALOG_SETFROMTO )
 {
-   hbqt_par_QAbstractPrintDialog( 1 )->setFromTo( hb_parni( 2 ), hb_parni( 3 ) );
+   QAbstractPrintDialog * p = hbqt_par_QAbstractPrintDialog( 1 );
+   if( p )
+      ( p )->setFromTo( hb_parni( 2 ), hb_parni( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTPRINTDIALOG_SETFROMTO FP=( p )->setFromTo( hb_parni( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -193,7 +234,13 @@ HB_FUNC( QT_QABSTRACTPRINTDIALOG_SETFROMTO )
  */
 HB_FUNC( QT_QABSTRACTPRINTDIALOG_SETMINMAX )
 {
-   hbqt_par_QAbstractPrintDialog( 1 )->setMinMax( hb_parni( 2 ), hb_parni( 3 ) );
+   QAbstractPrintDialog * p = hbqt_par_QAbstractPrintDialog( 1 );
+   if( p )
+      ( p )->setMinMax( hb_parni( 2 ), hb_parni( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTPRINTDIALOG_SETMINMAX FP=( p )->setMinMax( hb_parni( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -201,7 +248,13 @@ HB_FUNC( QT_QABSTRACTPRINTDIALOG_SETMINMAX )
  */
 HB_FUNC( QT_QABSTRACTPRINTDIALOG_SETPRINTRANGE )
 {
-   hbqt_par_QAbstractPrintDialog( 1 )->setPrintRange( ( QAbstractPrintDialog::PrintRange ) hb_parni( 2 ) );
+   QAbstractPrintDialog * p = hbqt_par_QAbstractPrintDialog( 1 );
+   if( p )
+      ( p )->setPrintRange( ( QAbstractPrintDialog::PrintRange ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTPRINTDIALOG_SETPRINTRANGE FP=( p )->setPrintRange( ( QAbstractPrintDialog::PrintRange ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -209,7 +262,13 @@ HB_FUNC( QT_QABSTRACTPRINTDIALOG_SETPRINTRANGE )
  */
 HB_FUNC( QT_QABSTRACTPRINTDIALOG_TOPAGE )
 {
-   hb_retni( hbqt_par_QAbstractPrintDialog( 1 )->toPage() );
+   QAbstractPrintDialog * p = hbqt_par_QAbstractPrintDialog( 1 );
+   if( p )
+      hb_retni( ( p )->toPage() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTPRINTDIALOG_TOPAGE FP=hb_retni( ( p )->toPage() ); p is NULL" ) );
+   }
 }
 
 

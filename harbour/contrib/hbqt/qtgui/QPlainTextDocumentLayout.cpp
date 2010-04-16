@@ -77,43 +77,44 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QPlainTextDocumentLayout > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QPlainTextDocumentLayout > pq;
 } QGC_POINTER_QPlainTextDocumentLayout;
 
 QT_G_FUNC( hbqt_gcRelease_QPlainTextDocumentLayout )
 {
+   QPlainTextDocumentLayout  * ph = NULL ;
    QGC_POINTER_QPlainTextDocumentLayout * p = ( QGC_POINTER_QPlainTextDocumentLayout * ) Cargo;
 
-   if( p && p->bNew )
+   if( p && p->bNew && p->ph )
    {
-      if( p->ph && p->pq )
+      ph = p->ph;
+      if( ph )
       {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QPlainTextDocumentLayout   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
-            delete ( ( QPlainTextDocumentLayout * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QPlainTextDocumentLayout   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QPlainTextDocumentLayout   /.\\   ", (void*) ph, (void*) p->ph ) );
+            delete ( p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QPlainTextDocumentLayout   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QPlainTextDocumentLayout          pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QPlainTextDocumentLayout          ", ph ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QPlainTextDocumentLayout    :     Object already deleted!", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QPlainTextDocumentLayout    :     Object already deleted!", ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QPlainTextDocumentLayout    :    Object not created with new=true", p->ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QPlainTextDocumentLayout    :    Object not created with new=true", ph ) );
       p->ph = NULL;
    }
 }
@@ -122,13 +123,12 @@ void * hbqt_gcAllocate_QPlainTextDocumentLayout( void * pObj, bool bNew )
 {
    QGC_POINTER_QPlainTextDocumentLayout * p = ( QGC_POINTER_QPlainTextDocumentLayout * ) hb_gcAllocate( sizeof( QGC_POINTER_QPlainTextDocumentLayout ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QPlainTextDocumentLayout >( ( QPlainTextDocumentLayout * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QPlainTextDocumentLayout;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QPlainTextDocumentLayout >( ( QPlainTextDocumentLayout * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QPlainTextDocumentLayout  under p->pq", pObj ) );
    }
    else
@@ -140,14 +140,14 @@ void * hbqt_gcAllocate_QPlainTextDocumentLayout( void * pObj, bool bNew )
 
 HB_FUNC( QT_QPLAINTEXTDOCUMENTLAYOUT )
 {
-   void * pObj = NULL;
+   QPlainTextDocumentLayout * pObj = NULL;
 
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
       pObj = new QPlainTextDocumentLayout( hbqt_par_QTextDocument( 1 ) ) ;
    }
 
-   hb_retptrGC( hbqt_gcAllocate_QPlainTextDocumentLayout( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QPlainTextDocumentLayout( ( void * ) pObj, true ) );
 }
 
 /*
@@ -155,7 +155,13 @@ HB_FUNC( QT_QPLAINTEXTDOCUMENTLAYOUT )
  */
 HB_FUNC( QT_QPLAINTEXTDOCUMENTLAYOUT_CURSORWIDTH )
 {
-   hb_retni( hbqt_par_QPlainTextDocumentLayout( 1 )->cursorWidth() );
+   QPlainTextDocumentLayout * p = hbqt_par_QPlainTextDocumentLayout( 1 );
+   if( p )
+      hb_retni( ( p )->cursorWidth() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPLAINTEXTDOCUMENTLAYOUT_CURSORWIDTH FP=hb_retni( ( p )->cursorWidth() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -163,7 +169,13 @@ HB_FUNC( QT_QPLAINTEXTDOCUMENTLAYOUT_CURSORWIDTH )
  */
 HB_FUNC( QT_QPLAINTEXTDOCUMENTLAYOUT_ENSUREBLOCKLAYOUT )
 {
-   hbqt_par_QPlainTextDocumentLayout( 1 )->ensureBlockLayout( *hbqt_par_QTextBlock( 2 ) );
+   QPlainTextDocumentLayout * p = hbqt_par_QPlainTextDocumentLayout( 1 );
+   if( p )
+      ( p )->ensureBlockLayout( *hbqt_par_QTextBlock( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPLAINTEXTDOCUMENTLAYOUT_ENSUREBLOCKLAYOUT FP=( p )->ensureBlockLayout( *hbqt_par_QTextBlock( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -171,7 +183,13 @@ HB_FUNC( QT_QPLAINTEXTDOCUMENTLAYOUT_ENSUREBLOCKLAYOUT )
  */
 HB_FUNC( QT_QPLAINTEXTDOCUMENTLAYOUT_REQUESTUPDATE )
 {
-   hbqt_par_QPlainTextDocumentLayout( 1 )->requestUpdate();
+   QPlainTextDocumentLayout * p = hbqt_par_QPlainTextDocumentLayout( 1 );
+   if( p )
+      ( p )->requestUpdate();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPLAINTEXTDOCUMENTLAYOUT_REQUESTUPDATE FP=( p )->requestUpdate(); p is NULL" ) );
+   }
 }
 
 /*
@@ -179,7 +197,13 @@ HB_FUNC( QT_QPLAINTEXTDOCUMENTLAYOUT_REQUESTUPDATE )
  */
 HB_FUNC( QT_QPLAINTEXTDOCUMENTLAYOUT_SETCURSORWIDTH )
 {
-   hbqt_par_QPlainTextDocumentLayout( 1 )->setCursorWidth( hb_parni( 2 ) );
+   QPlainTextDocumentLayout * p = hbqt_par_QPlainTextDocumentLayout( 1 );
+   if( p )
+      ( p )->setCursorWidth( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPLAINTEXTDOCUMENTLAYOUT_SETCURSORWIDTH FP=( p )->setCursorWidth( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 

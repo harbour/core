@@ -78,43 +78,44 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QCommandLinkButton > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QCommandLinkButton > pq;
 } QGC_POINTER_QCommandLinkButton;
 
 QT_G_FUNC( hbqt_gcRelease_QCommandLinkButton )
 {
+   QCommandLinkButton  * ph = NULL ;
    QGC_POINTER_QCommandLinkButton * p = ( QGC_POINTER_QCommandLinkButton * ) Cargo;
 
-   if( p && p->bNew )
+   if( p && p->bNew && p->ph )
    {
-      if( p->ph && p->pq )
+      ph = p->ph;
+      if( ph )
       {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QCommandLinkButton   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
-            delete ( ( QCommandLinkButton * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QCommandLinkButton   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QCommandLinkButton   /.\\   ", (void*) ph, (void*) p->ph ) );
+            delete ( p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QCommandLinkButton   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QCommandLinkButton          pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QCommandLinkButton          ", ph ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QCommandLinkButton    :     Object already deleted!", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QCommandLinkButton    :     Object already deleted!", ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QCommandLinkButton    :    Object not created with new=true", p->ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QCommandLinkButton    :    Object not created with new=true", ph ) );
       p->ph = NULL;
    }
 }
@@ -123,13 +124,12 @@ void * hbqt_gcAllocate_QCommandLinkButton( void * pObj, bool bNew )
 {
    QGC_POINTER_QCommandLinkButton * p = ( QGC_POINTER_QCommandLinkButton * ) hb_gcAllocate( sizeof( QGC_POINTER_QCommandLinkButton ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QCommandLinkButton >( ( QCommandLinkButton * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QCommandLinkButton;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QCommandLinkButton >( ( QCommandLinkButton * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QCommandLinkButton  under p->pq", pObj ) );
    }
    else
@@ -141,11 +141,11 @@ void * hbqt_gcAllocate_QCommandLinkButton( void * pObj, bool bNew )
 
 HB_FUNC( QT_QCOMMANDLINKBUTTON )
 {
-   void * pObj = NULL;
+   QCommandLinkButton * pObj = NULL;
 
-   pObj = ( QCommandLinkButton* ) new QCommandLinkButton( hbqt_par_QWidget( 1 ) ) ;
+   pObj =  new QCommandLinkButton( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QCommandLinkButton( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QCommandLinkButton( ( void * ) pObj, true ) );
 }
 
 /*
@@ -153,7 +153,13 @@ HB_FUNC( QT_QCOMMANDLINKBUTTON )
  */
 HB_FUNC( QT_QCOMMANDLINKBUTTON_DESCRIPTION )
 {
-   hb_retc( hbqt_par_QCommandLinkButton( 1 )->description().toAscii().data() );
+   QCommandLinkButton * p = hbqt_par_QCommandLinkButton( 1 );
+   if( p )
+      hb_retc( ( p )->description().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOMMANDLINKBUTTON_DESCRIPTION FP=hb_retc( ( p )->description().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -161,7 +167,13 @@ HB_FUNC( QT_QCOMMANDLINKBUTTON_DESCRIPTION )
  */
 HB_FUNC( QT_QCOMMANDLINKBUTTON_SETDESCRIPTION )
 {
-   hbqt_par_QCommandLinkButton( 1 )->setDescription( QCommandLinkButton::tr( hb_parc( 2 ) ) );
+   QCommandLinkButton * p = hbqt_par_QCommandLinkButton( 1 );
+   if( p )
+      ( p )->setDescription( QCommandLinkButton::tr( hb_parc( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOMMANDLINKBUTTON_SETDESCRIPTION FP=( p )->setDescription( QCommandLinkButton::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 

@@ -79,43 +79,44 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< HBEvents > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< HBEvents > pq;
 } QGC_POINTER_HBEvents;
 
 QT_G_FUNC( hbqt_gcRelease_HBEvents )
 {
+   HBEvents  * ph = NULL ;
    QGC_POINTER_HBEvents * p = ( QGC_POINTER_HBEvents * ) Cargo;
 
-   if( p && p->bNew )
+   if( p && p->bNew && p->ph )
    {
-      if( p->ph && p->pq )
+      ph = p->ph;
+      if( ph )
       {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_HBEvents   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
-            delete ( ( HBEvents * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_HBEvents   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_HBEvents   /.\\   ", (void*) ph, (void*) p->ph ) );
+            delete ( p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_HBEvents   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_HBEvents          pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_HBEvents          ", ph ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_HBEvents    :     Object already deleted!", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_HBEvents    :     Object already deleted!", ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_HBEvents    :    Object not created with new=true", p->ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_HBEvents    :    Object not created with new=true", ph ) );
       p->ph = NULL;
    }
 }
@@ -124,13 +125,12 @@ void * hbqt_gcAllocate_HBEvents( void * pObj, bool bNew )
 {
    QGC_POINTER_HBEvents * p = ( QGC_POINTER_HBEvents * ) hb_gcAllocate( sizeof( QGC_POINTER_HBEvents ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< HBEvents >( ( HBEvents * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_HBEvents;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< HBEvents >( ( HBEvents * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_HBEvents  under p->pq", pObj ) );
    }
    else
@@ -142,11 +142,11 @@ void * hbqt_gcAllocate_HBEvents( void * pObj, bool bNew )
 
 HB_FUNC( QT_HBEVENTS )
 {
-   void * pObj = NULL;
+   HBEvents * pObj = NULL;
 
    pObj = new HBEvents() ;
 
-   hb_retptrGC( hbqt_gcAllocate_HBEvents( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_HBEvents( ( void * ) pObj, true ) );
 }
 
 /*
@@ -154,7 +154,13 @@ HB_FUNC( QT_HBEVENTS )
  */
 HB_FUNC( QT_HBEVENTS_HBCONNECT )
 {
-   hb_retl( hbqt_par_HBEvents( 1 )->hbConnect( hb_param( 2, HB_IT_ANY ), hb_parni( 3 ), hb_param( 4, HB_IT_ANY ) ) );
+   HBEvents * p = hbqt_par_HBEvents( 1 );
+   if( p )
+      hb_retl( ( p )->hbConnect( hb_param( 2, HB_IT_ANY ), hb_parni( 3 ), hb_param( 4, HB_IT_ANY ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBEVENTS_HBCONNECT FP=hb_retl( ( p )->hbConnect( hb_param( 2, HB_IT_ANY ), hb_parni( 3 ), hb_param( 4, HB_IT_ANY ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -162,7 +168,13 @@ HB_FUNC( QT_HBEVENTS_HBCONNECT )
  */
 HB_FUNC( QT_HBEVENTS_HBDISCONNECT )
 {
-   hb_retl( hbqt_par_HBEvents( 1 )->hbDisconnect( hb_param( 2, HB_IT_ANY ), hb_parni( 3 ) ) );
+   HBEvents * p = hbqt_par_HBEvents( 1 );
+   if( p )
+      hb_retl( ( p )->hbDisconnect( hb_param( 2, HB_IT_ANY ), hb_parni( 3 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBEVENTS_HBDISCONNECT FP=hb_retl( ( p )->hbDisconnect( hb_param( 2, HB_IT_ANY ), hb_parni( 3 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -170,7 +182,13 @@ HB_FUNC( QT_HBEVENTS_HBDISCONNECT )
  */
 HB_FUNC( QT_HBEVENTS_HBCLEAR )
 {
-   hb_retl( hbqt_par_HBEvents( 1 )->hbClear() );
+   HBEvents * p = hbqt_par_HBEvents( 1 );
+   if( p )
+      hb_retl( ( p )->hbClear() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBEVENTS_HBCLEAR FP=hb_retl( ( p )->hbClear() ); p is NULL" ) );
+   }
 }
 
 

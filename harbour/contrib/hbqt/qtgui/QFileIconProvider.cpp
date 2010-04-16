@@ -80,7 +80,7 @@
 
 typedef struct
 {
-   void * ph;
+   QFileIconProvider * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QFileIconProvider;
@@ -115,7 +115,7 @@ void * hbqt_gcAllocate_QFileIconProvider( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QFileIconProvider * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QFileIconProvider;
 
@@ -132,11 +132,11 @@ void * hbqt_gcAllocate_QFileIconProvider( void * pObj, bool bNew )
 
 HB_FUNC( QT_QFILEICONPROVIDER )
 {
-   void * pObj = NULL;
+   QFileIconProvider * pObj = NULL;
 
    pObj = new QFileIconProvider() ;
 
-   hb_retptrGC( hbqt_gcAllocate_QFileIconProvider( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QFileIconProvider( ( void * ) pObj, true ) );
 }
 
 /*
@@ -144,7 +144,13 @@ HB_FUNC( QT_QFILEICONPROVIDER )
  */
 HB_FUNC( QT_QFILEICONPROVIDER_ICON )
 {
-   hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( hbqt_par_QFileIconProvider( 1 )->icon( ( QFileIconProvider::IconType ) hb_parni( 2 ) ) ), true ) );
+   QFileIconProvider * p = hbqt_par_QFileIconProvider( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( ( p )->icon( ( QFileIconProvider::IconType ) hb_parni( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEICONPROVIDER_ICON FP=hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( ( p )->icon( ( QFileIconProvider::IconType ) hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -152,7 +158,13 @@ HB_FUNC( QT_QFILEICONPROVIDER_ICON )
  */
 HB_FUNC( QT_QFILEICONPROVIDER_ICON_1 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( hbqt_par_QFileIconProvider( 1 )->icon( *hbqt_par_QFileInfo( 2 ) ) ), true ) );
+   QFileIconProvider * p = hbqt_par_QFileIconProvider( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( ( p )->icon( *hbqt_par_QFileInfo( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEICONPROVIDER_ICON_1 FP=hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( ( p )->icon( *hbqt_par_QFileInfo( 2 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -160,7 +172,13 @@ HB_FUNC( QT_QFILEICONPROVIDER_ICON_1 )
  */
 HB_FUNC( QT_QFILEICONPROVIDER_TYPE )
 {
-   hb_retc( hbqt_par_QFileIconProvider( 1 )->type( *hbqt_par_QFileInfo( 2 ) ).toAscii().data() );
+   QFileIconProvider * p = hbqt_par_QFileIconProvider( 1 );
+   if( p )
+      hb_retc( ( p )->type( *hbqt_par_QFileInfo( 2 ) ).toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEICONPROVIDER_TYPE FP=hb_retc( ( p )->type( *hbqt_par_QFileInfo( 2 ) ).toAscii().data() ); p is NULL" ) );
+   }
 }
 
 

@@ -76,7 +76,7 @@
 
 typedef struct
 {
-   void * ph;
+   QDropEvent * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QDropEvent;
@@ -96,7 +96,7 @@ void * hbqt_gcAllocate_QDropEvent( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QDropEvent * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QDropEvent;
 
@@ -113,6 +113,7 @@ void * hbqt_gcAllocate_QDropEvent( void * pObj, bool bNew )
 
 HB_FUNC( QT_QDROPEVENT )
 {
+   // hb_retptr( ( QDropEvent* ) new QDropEvent() );
 }
 
 /*
@@ -120,7 +121,13 @@ HB_FUNC( QT_QDROPEVENT )
  */
 HB_FUNC( QT_QDROPEVENT_ACCEPTPROPOSEDACTION )
 {
-   hbqt_par_QDropEvent( 1 )->acceptProposedAction();
+   QDropEvent * p = hbqt_par_QDropEvent( 1 );
+   if( p )
+      ( p )->acceptProposedAction();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDROPEVENT_ACCEPTPROPOSEDACTION FP=( p )->acceptProposedAction(); p is NULL" ) );
+   }
 }
 
 /*
@@ -128,7 +135,13 @@ HB_FUNC( QT_QDROPEVENT_ACCEPTPROPOSEDACTION )
  */
 HB_FUNC( QT_QDROPEVENT_DROPACTION )
 {
-   hb_retni( ( Qt::DropAction ) hbqt_par_QDropEvent( 1 )->dropAction() );
+   QDropEvent * p = hbqt_par_QDropEvent( 1 );
+   if( p )
+      hb_retni( ( Qt::DropAction ) ( p )->dropAction() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDROPEVENT_DROPACTION FP=hb_retni( ( Qt::DropAction ) ( p )->dropAction() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -136,7 +149,13 @@ HB_FUNC( QT_QDROPEVENT_DROPACTION )
  */
 HB_FUNC( QT_QDROPEVENT_KEYBOARDMODIFIERS )
 {
-   hb_retni( ( Qt::KeyboardModifiers ) hbqt_par_QDropEvent( 1 )->keyboardModifiers() );
+   QDropEvent * p = hbqt_par_QDropEvent( 1 );
+   if( p )
+      hb_retni( ( Qt::KeyboardModifiers ) ( p )->keyboardModifiers() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDROPEVENT_KEYBOARDMODIFIERS FP=hb_retni( ( Qt::KeyboardModifiers ) ( p )->keyboardModifiers() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -144,7 +163,13 @@ HB_FUNC( QT_QDROPEVENT_KEYBOARDMODIFIERS )
  */
 HB_FUNC( QT_QDROPEVENT_MOUSEBUTTONS )
 {
-   hb_retni( ( Qt::MouseButtons ) hbqt_par_QDropEvent( 1 )->mouseButtons() );
+   QDropEvent * p = hbqt_par_QDropEvent( 1 );
+   if( p )
+      hb_retni( ( Qt::MouseButtons ) ( p )->mouseButtons() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDROPEVENT_MOUSEBUTTONS FP=hb_retni( ( Qt::MouseButtons ) ( p )->mouseButtons() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -152,7 +177,13 @@ HB_FUNC( QT_QDROPEVENT_MOUSEBUTTONS )
  */
 HB_FUNC( QT_QDROPEVENT_POS )
 {
-   hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( hbqt_par_QDropEvent( 1 )->pos() ), true ) );
+   QDropEvent * p = hbqt_par_QDropEvent( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->pos() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDROPEVENT_POS FP=hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->pos() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -160,7 +191,13 @@ HB_FUNC( QT_QDROPEVENT_POS )
  */
 HB_FUNC( QT_QDROPEVENT_POSSIBLEACTIONS )
 {
-   hb_retni( ( Qt::DropActions ) hbqt_par_QDropEvent( 1 )->possibleActions() );
+   QDropEvent * p = hbqt_par_QDropEvent( 1 );
+   if( p )
+      hb_retni( ( Qt::DropActions ) ( p )->possibleActions() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDROPEVENT_POSSIBLEACTIONS FP=hb_retni( ( Qt::DropActions ) ( p )->possibleActions() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -168,7 +205,13 @@ HB_FUNC( QT_QDROPEVENT_POSSIBLEACTIONS )
  */
 HB_FUNC( QT_QDROPEVENT_PROPOSEDACTION )
 {
-   hb_retni( ( Qt::DropAction ) hbqt_par_QDropEvent( 1 )->proposedAction() );
+   QDropEvent * p = hbqt_par_QDropEvent( 1 );
+   if( p )
+      hb_retni( ( Qt::DropAction ) ( p )->proposedAction() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDROPEVENT_PROPOSEDACTION FP=hb_retni( ( Qt::DropAction ) ( p )->proposedAction() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -176,7 +219,13 @@ HB_FUNC( QT_QDROPEVENT_PROPOSEDACTION )
  */
 HB_FUNC( QT_QDROPEVENT_SETDROPACTION )
 {
-   hbqt_par_QDropEvent( 1 )->setDropAction( ( Qt::DropAction ) hb_parni( 2 ) );
+   QDropEvent * p = hbqt_par_QDropEvent( 1 );
+   if( p )
+      ( p )->setDropAction( ( Qt::DropAction ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDROPEVENT_SETDROPACTION FP=( p )->setDropAction( ( Qt::DropAction ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -184,7 +233,13 @@ HB_FUNC( QT_QDROPEVENT_SETDROPACTION )
  */
 HB_FUNC( QT_QDROPEVENT_SOURCE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QWidget( hbqt_par_QDropEvent( 1 )->source(), false ) );
+   QDropEvent * p = hbqt_par_QDropEvent( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->source(), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDROPEVENT_SOURCE FP=hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->source(), false ) ); p is NULL" ) );
+   }
 }
 
 

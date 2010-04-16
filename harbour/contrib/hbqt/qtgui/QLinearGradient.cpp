@@ -84,7 +84,7 @@
 
 typedef struct
 {
-   void * ph;
+   QLinearGradient * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QLinearGradient;
@@ -119,7 +119,7 @@ void * hbqt_gcAllocate_QLinearGradient( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QLinearGradient * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QLinearGradient;
 
@@ -136,26 +136,26 @@ void * hbqt_gcAllocate_QLinearGradient( void * pObj, bool bNew )
 
 HB_FUNC( QT_QLINEARGRADIENT )
 {
-   void * pObj = NULL;
+   QLinearGradient * pObj = NULL;
 
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      pObj = ( QLinearGradient* ) new QLinearGradient( *hbqt_par_QLinearGradient( 1 ) ) ;
+      pObj =  new QLinearGradient( *hbqt_par_QLinearGradient( 1 ) ) ;
    }
    else if( hb_pcount() == 2 && HB_ISPOINTER( 1 ) && HB_ISPOINTER( 2 ) )
    {
-      pObj = ( QLinearGradient* ) new QLinearGradient( *hbqt_par_QPoint( 1 ), *hbqt_par_QPoint( 2 ) ) ;
+      pObj =  new QLinearGradient( *hbqt_par_QPoint( 1 ), *hbqt_par_QPoint( 2 ) ) ;
    }
    else if( hb_pcount() == 4 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) && HB_ISNUM( 4 ) )
    {
-      pObj = ( QLinearGradient* ) new QLinearGradient( hb_parnd( 1 ), hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ) ) ;
+      pObj =  new QLinearGradient( hb_parnd( 1 ), hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ) ) ;
    }
    else
    {
-      pObj = ( QLinearGradient* ) new QLinearGradient() ;
+      pObj =  new QLinearGradient() ;
    }
 
-   hb_retptrGC( hbqt_gcAllocate_QLinearGradient( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QLinearGradient( ( void * ) pObj, true ) );
 }
 
 /*
@@ -163,7 +163,13 @@ HB_FUNC( QT_QLINEARGRADIENT )
  */
 HB_FUNC( QT_QLINEARGRADIENT_FINALSTOP )
 {
-   hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( hbqt_par_QLinearGradient( 1 )->finalStop() ), true ) );
+   QLinearGradient * p = hbqt_par_QLinearGradient( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->finalStop() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEARGRADIENT_FINALSTOP FP=hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->finalStop() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -171,7 +177,13 @@ HB_FUNC( QT_QLINEARGRADIENT_FINALSTOP )
  */
 HB_FUNC( QT_QLINEARGRADIENT_SETFINALSTOP )
 {
-   hbqt_par_QLinearGradient( 1 )->setFinalStop( *hbqt_par_QPointF( 2 ) );
+   QLinearGradient * p = hbqt_par_QLinearGradient( 1 );
+   if( p )
+      ( p )->setFinalStop( *hbqt_par_QPointF( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEARGRADIENT_SETFINALSTOP FP=( p )->setFinalStop( *hbqt_par_QPointF( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -179,7 +191,13 @@ HB_FUNC( QT_QLINEARGRADIENT_SETFINALSTOP )
  */
 HB_FUNC( QT_QLINEARGRADIENT_SETFINALSTOP_1 )
 {
-   hbqt_par_QLinearGradient( 1 )->setFinalStop( hb_parnd( 2 ), hb_parnd( 3 ) );
+   QLinearGradient * p = hbqt_par_QLinearGradient( 1 );
+   if( p )
+      ( p )->setFinalStop( hb_parnd( 2 ), hb_parnd( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEARGRADIENT_SETFINALSTOP_1 FP=( p )->setFinalStop( hb_parnd( 2 ), hb_parnd( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -187,7 +205,13 @@ HB_FUNC( QT_QLINEARGRADIENT_SETFINALSTOP_1 )
  */
 HB_FUNC( QT_QLINEARGRADIENT_SETSTART )
 {
-   hbqt_par_QLinearGradient( 1 )->setStart( *hbqt_par_QPointF( 2 ) );
+   QLinearGradient * p = hbqt_par_QLinearGradient( 1 );
+   if( p )
+      ( p )->setStart( *hbqt_par_QPointF( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEARGRADIENT_SETSTART FP=( p )->setStart( *hbqt_par_QPointF( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -195,7 +219,13 @@ HB_FUNC( QT_QLINEARGRADIENT_SETSTART )
  */
 HB_FUNC( QT_QLINEARGRADIENT_SETSTART_1 )
 {
-   hbqt_par_QLinearGradient( 1 )->setStart( hb_parnd( 2 ), hb_parnd( 3 ) );
+   QLinearGradient * p = hbqt_par_QLinearGradient( 1 );
+   if( p )
+      ( p )->setStart( hb_parnd( 2 ), hb_parnd( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEARGRADIENT_SETSTART_1 FP=( p )->setStart( hb_parnd( 2 ), hb_parnd( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -203,7 +233,13 @@ HB_FUNC( QT_QLINEARGRADIENT_SETSTART_1 )
  */
 HB_FUNC( QT_QLINEARGRADIENT_START )
 {
-   hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( hbqt_par_QLinearGradient( 1 )->start() ), true ) );
+   QLinearGradient * p = hbqt_par_QLinearGradient( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->start() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEARGRADIENT_START FP=hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->start() ), true ) ); p is NULL" ) );
+   }
 }
 
 

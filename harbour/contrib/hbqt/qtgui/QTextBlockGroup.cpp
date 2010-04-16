@@ -76,10 +76,9 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QTextBlockGroup > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QTextBlockGroup > pq;
 } QGC_POINTER_QTextBlockGroup;
 
 QT_G_FUNC( hbqt_gcRelease_QTextBlockGroup )
@@ -97,13 +96,12 @@ void * hbqt_gcAllocate_QTextBlockGroup( void * pObj, bool bNew )
 {
    QGC_POINTER_QTextBlockGroup * p = ( QGC_POINTER_QTextBlockGroup * ) hb_gcAllocate( sizeof( QGC_POINTER_QTextBlockGroup ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QTextBlockGroup >( ( QTextBlockGroup * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextBlockGroup;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QTextBlockGroup >( ( QTextBlockGroup * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QTextBlockGroup  under p->pq", pObj ) );
    }
    else
@@ -115,6 +113,7 @@ void * hbqt_gcAllocate_QTextBlockGroup( void * pObj, bool bNew )
 
 HB_FUNC( QT_QTEXTBLOCKGROUP )
 {
+   //hb_retptr( ( QTextBlockGroup* ) new QTextBlockGroup( hbqt_par_QTextDocument( 1 ) ) );
 }
 
 

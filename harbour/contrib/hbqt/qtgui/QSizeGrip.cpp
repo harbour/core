@@ -77,43 +77,44 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QSizeGrip > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QSizeGrip > pq;
 } QGC_POINTER_QSizeGrip;
 
 QT_G_FUNC( hbqt_gcRelease_QSizeGrip )
 {
+   QSizeGrip  * ph = NULL ;
    QGC_POINTER_QSizeGrip * p = ( QGC_POINTER_QSizeGrip * ) Cargo;
 
-   if( p && p->bNew )
+   if( p && p->bNew && p->ph )
    {
-      if( p->ph && p->pq )
+      ph = p->ph;
+      if( ph )
       {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QSizeGrip   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
-            delete ( ( QSizeGrip * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QSizeGrip   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QSizeGrip   /.\\   ", (void*) ph, (void*) p->ph ) );
+            delete ( p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QSizeGrip   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QSizeGrip          pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QSizeGrip          ", ph ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QSizeGrip    :     Object already deleted!", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QSizeGrip    :     Object already deleted!", ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QSizeGrip    :    Object not created with new=true", p->ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QSizeGrip    :    Object not created with new=true", ph ) );
       p->ph = NULL;
    }
 }
@@ -122,13 +123,12 @@ void * hbqt_gcAllocate_QSizeGrip( void * pObj, bool bNew )
 {
    QGC_POINTER_QSizeGrip * p = ( QGC_POINTER_QSizeGrip * ) hb_gcAllocate( sizeof( QGC_POINTER_QSizeGrip ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QSizeGrip >( ( QSizeGrip * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QSizeGrip;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QSizeGrip >( ( QSizeGrip * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QSizeGrip  under p->pq", pObj ) );
    }
    else
@@ -140,11 +140,11 @@ void * hbqt_gcAllocate_QSizeGrip( void * pObj, bool bNew )
 
 HB_FUNC( QT_QSIZEGRIP )
 {
-   void * pObj = NULL;
+   QSizeGrip * pObj = NULL;
 
-   pObj = ( QSizeGrip* ) new QSizeGrip( hbqt_par_QWidget( 1 ) ) ;
+   pObj =  new QSizeGrip( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QSizeGrip( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QSizeGrip( ( void * ) pObj, true ) );
 }
 
 

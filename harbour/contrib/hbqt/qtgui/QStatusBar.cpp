@@ -77,43 +77,44 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QStatusBar > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QStatusBar > pq;
 } QGC_POINTER_QStatusBar;
 
 QT_G_FUNC( hbqt_gcRelease_QStatusBar )
 {
+   QStatusBar  * ph = NULL ;
    QGC_POINTER_QStatusBar * p = ( QGC_POINTER_QStatusBar * ) Cargo;
 
-   if( p && p->bNew )
+   if( p && p->bNew && p->ph )
    {
-      if( p->ph && p->pq )
+      ph = p->ph;
+      if( ph )
       {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QStatusBar   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
-            delete ( ( QStatusBar * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QStatusBar   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QStatusBar   /.\\   ", (void*) ph, (void*) p->ph ) );
+            delete ( p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QStatusBar   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QStatusBar          pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QStatusBar          ", ph ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QStatusBar    :     Object already deleted!", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QStatusBar    :     Object already deleted!", ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QStatusBar    :    Object not created with new=true", p->ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QStatusBar    :    Object not created with new=true", ph ) );
       p->ph = NULL;
    }
 }
@@ -122,13 +123,12 @@ void * hbqt_gcAllocate_QStatusBar( void * pObj, bool bNew )
 {
    QGC_POINTER_QStatusBar * p = ( QGC_POINTER_QStatusBar * ) hb_gcAllocate( sizeof( QGC_POINTER_QStatusBar ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QStatusBar >( ( QStatusBar * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStatusBar;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QStatusBar >( ( QStatusBar * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QStatusBar  under p->pq", pObj ) );
    }
    else
@@ -140,11 +140,11 @@ void * hbqt_gcAllocate_QStatusBar( void * pObj, bool bNew )
 
 HB_FUNC( QT_QSTATUSBAR )
 {
-   void * pObj = NULL;
+   QStatusBar * pObj = NULL;
 
-   pObj = ( QStatusBar* ) new QStatusBar( hbqt_par_QWidget( 1 ) ) ;
+   pObj =  new QStatusBar( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QStatusBar( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QStatusBar( ( void * ) pObj, true ) );
 }
 
 /*
@@ -152,7 +152,13 @@ HB_FUNC( QT_QSTATUSBAR )
  */
 HB_FUNC( QT_QSTATUSBAR_ADDPERMANENTWIDGET )
 {
-   hbqt_par_QStatusBar( 1 )->addPermanentWidget( hbqt_par_QWidget( 2 ), hb_parni( 3 ) );
+   QStatusBar * p = hbqt_par_QStatusBar( 1 );
+   if( p )
+      ( p )->addPermanentWidget( hbqt_par_QWidget( 2 ), hb_parni( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTATUSBAR_ADDPERMANENTWIDGET FP=( p )->addPermanentWidget( hbqt_par_QWidget( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -160,7 +166,13 @@ HB_FUNC( QT_QSTATUSBAR_ADDPERMANENTWIDGET )
  */
 HB_FUNC( QT_QSTATUSBAR_ADDWIDGET )
 {
-   hbqt_par_QStatusBar( 1 )->addWidget( hbqt_par_QWidget( 2 ), hb_parni( 3 ) );
+   QStatusBar * p = hbqt_par_QStatusBar( 1 );
+   if( p )
+      ( p )->addWidget( hbqt_par_QWidget( 2 ), hb_parni( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTATUSBAR_ADDWIDGET FP=( p )->addWidget( hbqt_par_QWidget( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -168,7 +180,13 @@ HB_FUNC( QT_QSTATUSBAR_ADDWIDGET )
  */
 HB_FUNC( QT_QSTATUSBAR_CURRENTMESSAGE )
 {
-   hb_retc( hbqt_par_QStatusBar( 1 )->currentMessage().toAscii().data() );
+   QStatusBar * p = hbqt_par_QStatusBar( 1 );
+   if( p )
+      hb_retc( ( p )->currentMessage().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTATUSBAR_CURRENTMESSAGE FP=hb_retc( ( p )->currentMessage().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -176,7 +194,13 @@ HB_FUNC( QT_QSTATUSBAR_CURRENTMESSAGE )
  */
 HB_FUNC( QT_QSTATUSBAR_INSERTPERMANENTWIDGET )
 {
-   hb_retni( hbqt_par_QStatusBar( 1 )->insertPermanentWidget( hb_parni( 2 ), hbqt_par_QWidget( 3 ), hb_parni( 4 ) ) );
+   QStatusBar * p = hbqt_par_QStatusBar( 1 );
+   if( p )
+      hb_retni( ( p )->insertPermanentWidget( hb_parni( 2 ), hbqt_par_QWidget( 3 ), hb_parni( 4 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTATUSBAR_INSERTPERMANENTWIDGET FP=hb_retni( ( p )->insertPermanentWidget( hb_parni( 2 ), hbqt_par_QWidget( 3 ), hb_parni( 4 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -184,7 +208,13 @@ HB_FUNC( QT_QSTATUSBAR_INSERTPERMANENTWIDGET )
  */
 HB_FUNC( QT_QSTATUSBAR_INSERTWIDGET )
 {
-   hb_retni( hbqt_par_QStatusBar( 1 )->insertWidget( hb_parni( 2 ), hbqt_par_QWidget( 3 ), hb_parni( 4 ) ) );
+   QStatusBar * p = hbqt_par_QStatusBar( 1 );
+   if( p )
+      hb_retni( ( p )->insertWidget( hb_parni( 2 ), hbqt_par_QWidget( 3 ), hb_parni( 4 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTATUSBAR_INSERTWIDGET FP=hb_retni( ( p )->insertWidget( hb_parni( 2 ), hbqt_par_QWidget( 3 ), hb_parni( 4 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -192,7 +222,13 @@ HB_FUNC( QT_QSTATUSBAR_INSERTWIDGET )
  */
 HB_FUNC( QT_QSTATUSBAR_ISSIZEGRIPENABLED )
 {
-   hb_retl( hbqt_par_QStatusBar( 1 )->isSizeGripEnabled() );
+   QStatusBar * p = hbqt_par_QStatusBar( 1 );
+   if( p )
+      hb_retl( ( p )->isSizeGripEnabled() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTATUSBAR_ISSIZEGRIPENABLED FP=hb_retl( ( p )->isSizeGripEnabled() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -200,7 +236,13 @@ HB_FUNC( QT_QSTATUSBAR_ISSIZEGRIPENABLED )
  */
 HB_FUNC( QT_QSTATUSBAR_REMOVEWIDGET )
 {
-   hbqt_par_QStatusBar( 1 )->removeWidget( hbqt_par_QWidget( 2 ) );
+   QStatusBar * p = hbqt_par_QStatusBar( 1 );
+   if( p )
+      ( p )->removeWidget( hbqt_par_QWidget( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTATUSBAR_REMOVEWIDGET FP=( p )->removeWidget( hbqt_par_QWidget( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -208,7 +250,13 @@ HB_FUNC( QT_QSTATUSBAR_REMOVEWIDGET )
  */
 HB_FUNC( QT_QSTATUSBAR_SETSIZEGRIPENABLED )
 {
-   hbqt_par_QStatusBar( 1 )->setSizeGripEnabled( hb_parl( 2 ) );
+   QStatusBar * p = hbqt_par_QStatusBar( 1 );
+   if( p )
+      ( p )->setSizeGripEnabled( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTATUSBAR_SETSIZEGRIPENABLED FP=( p )->setSizeGripEnabled( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -216,7 +264,13 @@ HB_FUNC( QT_QSTATUSBAR_SETSIZEGRIPENABLED )
  */
 HB_FUNC( QT_QSTATUSBAR_CLEARMESSAGE )
 {
-   hbqt_par_QStatusBar( 1 )->clearMessage();
+   QStatusBar * p = hbqt_par_QStatusBar( 1 );
+   if( p )
+      ( p )->clearMessage();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTATUSBAR_CLEARMESSAGE FP=( p )->clearMessage(); p is NULL" ) );
+   }
 }
 
 /*
@@ -224,7 +278,13 @@ HB_FUNC( QT_QSTATUSBAR_CLEARMESSAGE )
  */
 HB_FUNC( QT_QSTATUSBAR_SHOWMESSAGE )
 {
-   hbqt_par_QStatusBar( 1 )->showMessage( QStatusBar::tr( hb_parc( 2 ) ), hb_parni( 3 ) );
+   QStatusBar * p = hbqt_par_QStatusBar( 1 );
+   if( p )
+      ( p )->showMessage( QStatusBar::tr( hb_parc( 2 ) ), hb_parni( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTATUSBAR_SHOWMESSAGE FP=( p )->showMessage( QStatusBar::tr( hb_parc( 2 ) ), hb_parni( 3 ) ); p is NULL" ) );
+   }
 }
 
 

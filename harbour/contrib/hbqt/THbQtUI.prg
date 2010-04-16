@@ -216,13 +216,10 @@ METHOD HbQtUI:destroy()
    ::qObj := NIL
    ::widgets := {}
 
-HB_TRACE( HB_TR_ALWAYS, 101 )
    ::oWidget:close()
-HB_TRACE( HB_TR_ALWAYS, 102 )
-//   ::oWidget := NIL  /* Variable Destruction GPFs */
-HB_TRACE( HB_TR_ALWAYS, 103 )
-   hbide_justACall( i )
-   RETURN NIL
+   ::oWidget := NIL                 /* Variable Destruction GPFs */
+
+   RETURN i
 
 /*----------------------------------------------------------------------*/
 

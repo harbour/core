@@ -76,7 +76,7 @@
 
 typedef struct
 {
-   void * ph;
+   QHelpEvent * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QHelpEvent;
@@ -96,7 +96,7 @@ void * hbqt_gcAllocate_QHelpEvent( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QHelpEvent * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QHelpEvent;
 
@@ -113,6 +113,7 @@ void * hbqt_gcAllocate_QHelpEvent( void * pObj, bool bNew )
 
 HB_FUNC( QT_QHELPEVENT )
 {
+   // hb_retptr( new QHelpEvent() );
 }
 
 /*
@@ -120,7 +121,13 @@ HB_FUNC( QT_QHELPEVENT )
  */
 HB_FUNC( QT_QHELPEVENT_GLOBALPOS )
 {
-   hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( hbqt_par_QHelpEvent( 1 )->globalPos() ), true ) );
+   QHelpEvent * p = hbqt_par_QHelpEvent( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->globalPos() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHELPEVENT_GLOBALPOS FP=hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->globalPos() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -128,7 +135,13 @@ HB_FUNC( QT_QHELPEVENT_GLOBALPOS )
  */
 HB_FUNC( QT_QHELPEVENT_GLOBALX )
 {
-   hb_retni( hbqt_par_QHelpEvent( 1 )->globalX() );
+   QHelpEvent * p = hbqt_par_QHelpEvent( 1 );
+   if( p )
+      hb_retni( ( p )->globalX() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHELPEVENT_GLOBALX FP=hb_retni( ( p )->globalX() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -136,7 +149,13 @@ HB_FUNC( QT_QHELPEVENT_GLOBALX )
  */
 HB_FUNC( QT_QHELPEVENT_GLOBALY )
 {
-   hb_retni( hbqt_par_QHelpEvent( 1 )->globalY() );
+   QHelpEvent * p = hbqt_par_QHelpEvent( 1 );
+   if( p )
+      hb_retni( ( p )->globalY() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHELPEVENT_GLOBALY FP=hb_retni( ( p )->globalY() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -144,7 +163,13 @@ HB_FUNC( QT_QHELPEVENT_GLOBALY )
  */
 HB_FUNC( QT_QHELPEVENT_POS )
 {
-   hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( hbqt_par_QHelpEvent( 1 )->pos() ), true ) );
+   QHelpEvent * p = hbqt_par_QHelpEvent( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->pos() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHELPEVENT_POS FP=hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->pos() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -152,7 +177,13 @@ HB_FUNC( QT_QHELPEVENT_POS )
  */
 HB_FUNC( QT_QHELPEVENT_X )
 {
-   hb_retni( hbqt_par_QHelpEvent( 1 )->x() );
+   QHelpEvent * p = hbqt_par_QHelpEvent( 1 );
+   if( p )
+      hb_retni( ( p )->x() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHELPEVENT_X FP=hb_retni( ( p )->x() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -160,7 +191,13 @@ HB_FUNC( QT_QHELPEVENT_X )
  */
 HB_FUNC( QT_QHELPEVENT_Y )
 {
-   hb_retni( hbqt_par_QHelpEvent( 1 )->y() );
+   QHelpEvent * p = hbqt_par_QHelpEvent( 1 );
+   if( p )
+      hb_retni( ( p )->y() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHELPEVENT_Y FP=hb_retni( ( p )->y() ); p is NULL" ) );
+   }
 }
 
 

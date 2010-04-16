@@ -77,7 +77,7 @@
 
 typedef struct
 {
-   void * ph;
+   QTextDecoder * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QTextDecoder;
@@ -112,7 +112,7 @@ void * hbqt_gcAllocate_QTextDecoder( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QTextDecoder * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextDecoder;
 
@@ -129,11 +129,11 @@ void * hbqt_gcAllocate_QTextDecoder( void * pObj, bool bNew )
 
 HB_FUNC( QT_QTEXTDECODER )
 {
-   void * pObj = NULL;
+   QTextDecoder * pObj = NULL;
 
-   pObj = ( QTextDecoder* ) new QTextDecoder( hbqt_par_QTextCodec( 1 ) ) ;
+   pObj =  new QTextDecoder( hbqt_par_QTextCodec( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QTextDecoder( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextDecoder( ( void * ) pObj, true ) );
 }
 
 /*
@@ -141,7 +141,13 @@ HB_FUNC( QT_QTEXTDECODER )
  */
 HB_FUNC( QT_QTEXTDECODER_TOUNICODE )
 {
-   hb_retc( hbqt_par_QTextDecoder( 1 )->toUnicode( hbqt_par_char( 2 ), hb_parni( 3 ) ).toAscii().data() );
+   QTextDecoder * p = hbqt_par_QTextDecoder( 1 );
+   if( p )
+      hb_retc( ( p )->toUnicode( hbqt_par_char( 2 ), hb_parni( 3 ) ).toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDECODER_TOUNICODE FP=hb_retc( ( p )->toUnicode( hbqt_par_char( 2 ), hb_parni( 3 ) ).toAscii().data() ); p is NULL" ) );
+   }
 }
 
 

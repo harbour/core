@@ -81,7 +81,7 @@
 
 typedef struct
 {
-   void * ph;
+   QContextMenuEvent * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QContextMenuEvent;
@@ -116,7 +116,7 @@ void * hbqt_gcAllocate_QContextMenuEvent( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QContextMenuEvent * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QContextMenuEvent;
 
@@ -133,11 +133,11 @@ void * hbqt_gcAllocate_QContextMenuEvent( void * pObj, bool bNew )
 
 HB_FUNC( QT_QCONTEXTMENUEVENT )
 {
-   void * pObj = NULL;
+   QContextMenuEvent * pObj = NULL;
 
    pObj = new QContextMenuEvent( ( QContextMenuEvent::Reason ) hb_parni( 1 ), *hbqt_par_QPoint( 2 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QContextMenuEvent( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QContextMenuEvent( ( void * ) pObj, true ) );
 }
 
 /*
@@ -145,7 +145,13 @@ HB_FUNC( QT_QCONTEXTMENUEVENT )
  */
 HB_FUNC( QT_QCONTEXTMENUEVENT_GLOBALPOS )
 {
-   hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( hbqt_par_QContextMenuEvent( 1 )->globalPos() ), true ) );
+   QContextMenuEvent * p = hbqt_par_QContextMenuEvent( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->globalPos() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCONTEXTMENUEVENT_GLOBALPOS FP=hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->globalPos() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -153,7 +159,13 @@ HB_FUNC( QT_QCONTEXTMENUEVENT_GLOBALPOS )
  */
 HB_FUNC( QT_QCONTEXTMENUEVENT_GLOBALX )
 {
-   hb_retni( hbqt_par_QContextMenuEvent( 1 )->globalX() );
+   QContextMenuEvent * p = hbqt_par_QContextMenuEvent( 1 );
+   if( p )
+      hb_retni( ( p )->globalX() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCONTEXTMENUEVENT_GLOBALX FP=hb_retni( ( p )->globalX() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -161,7 +173,13 @@ HB_FUNC( QT_QCONTEXTMENUEVENT_GLOBALX )
  */
 HB_FUNC( QT_QCONTEXTMENUEVENT_GLOBALY )
 {
-   hb_retni( hbqt_par_QContextMenuEvent( 1 )->globalY() );
+   QContextMenuEvent * p = hbqt_par_QContextMenuEvent( 1 );
+   if( p )
+      hb_retni( ( p )->globalY() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCONTEXTMENUEVENT_GLOBALY FP=hb_retni( ( p )->globalY() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -169,7 +187,13 @@ HB_FUNC( QT_QCONTEXTMENUEVENT_GLOBALY )
  */
 HB_FUNC( QT_QCONTEXTMENUEVENT_POS )
 {
-   hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( hbqt_par_QContextMenuEvent( 1 )->pos() ), true ) );
+   QContextMenuEvent * p = hbqt_par_QContextMenuEvent( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->pos() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCONTEXTMENUEVENT_POS FP=hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->pos() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -177,7 +201,13 @@ HB_FUNC( QT_QCONTEXTMENUEVENT_POS )
  */
 HB_FUNC( QT_QCONTEXTMENUEVENT_REASON )
 {
-   hb_retni( ( QContextMenuEvent::Reason ) hbqt_par_QContextMenuEvent( 1 )->reason() );
+   QContextMenuEvent * p = hbqt_par_QContextMenuEvent( 1 );
+   if( p )
+      hb_retni( ( QContextMenuEvent::Reason ) ( p )->reason() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCONTEXTMENUEVENT_REASON FP=hb_retni( ( QContextMenuEvent::Reason ) ( p )->reason() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -185,7 +215,13 @@ HB_FUNC( QT_QCONTEXTMENUEVENT_REASON )
  */
 HB_FUNC( QT_QCONTEXTMENUEVENT_X )
 {
-   hb_retni( hbqt_par_QContextMenuEvent( 1 )->x() );
+   QContextMenuEvent * p = hbqt_par_QContextMenuEvent( 1 );
+   if( p )
+      hb_retni( ( p )->x() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCONTEXTMENUEVENT_X FP=hb_retni( ( p )->x() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -193,7 +229,13 @@ HB_FUNC( QT_QCONTEXTMENUEVENT_X )
  */
 HB_FUNC( QT_QCONTEXTMENUEVENT_Y )
 {
-   hb_retni( hbqt_par_QContextMenuEvent( 1 )->y() );
+   QContextMenuEvent * p = hbqt_par_QContextMenuEvent( 1 );
+   if( p )
+      hb_retni( ( p )->y() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCONTEXTMENUEVENT_Y FP=hb_retni( ( p )->y() ); p is NULL" ) );
+   }
 }
 
 

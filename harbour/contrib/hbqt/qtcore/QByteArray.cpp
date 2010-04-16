@@ -95,7 +95,7 @@
 
 typedef struct
 {
-   void * ph;
+   QByteArray * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QByteArray;
@@ -130,7 +130,7 @@ void * hbqt_gcAllocate_QByteArray( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QByteArray * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QByteArray;
 
@@ -147,11 +147,11 @@ void * hbqt_gcAllocate_QByteArray( void * pObj, bool bNew )
 
 HB_FUNC( QT_QBYTEARRAY )
 {
-   void * pObj = NULL;
+   QByteArray * pObj = NULL;
 
    pObj = new QByteArray() ;
 
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QByteArray( ( void * ) pObj, true ) );
 }
 
 /*
@@ -159,7 +159,13 @@ HB_FUNC( QT_QBYTEARRAY )
  */
 HB_FUNC( QT_QBYTEARRAY_APPEND )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->append( *hbqt_par_QByteArray( 2 ) ) ), true ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->append( *hbqt_par_QByteArray( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_APPEND FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->append( *hbqt_par_QByteArray( 2 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -167,7 +173,13 @@ HB_FUNC( QT_QBYTEARRAY_APPEND )
  */
 HB_FUNC( QT_QBYTEARRAY_APPEND_1 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->append( hbqt_par_QString( 2 ) ) ), true ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->append( hbqt_par_QString( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_APPEND_1 FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->append( hbqt_par_QString( 2 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -175,7 +187,13 @@ HB_FUNC( QT_QBYTEARRAY_APPEND_1 )
  */
 HB_FUNC( QT_QBYTEARRAY_APPEND_2 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->append( hbqt_par_char( 2 ) ) ), true ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->append( hbqt_par_char( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_APPEND_2 FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->append( hbqt_par_char( 2 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -183,7 +201,13 @@ HB_FUNC( QT_QBYTEARRAY_APPEND_2 )
  */
 HB_FUNC( QT_QBYTEARRAY_APPEND_3 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->append( hbqt_par_char( 2 ), hb_parni( 3 ) ) ), true ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->append( hbqt_par_char( 2 ), hb_parni( 3 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_APPEND_3 FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->append( hbqt_par_char( 2 ), hb_parni( 3 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -191,7 +215,13 @@ HB_FUNC( QT_QBYTEARRAY_APPEND_3 )
  */
 HB_FUNC( QT_QBYTEARRAY_APPEND_4 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->append( ( char ) hb_parni( 2 ) ) ), true ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->append( ( char ) hb_parni( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_APPEND_4 FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->append( ( char ) hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -199,7 +229,13 @@ HB_FUNC( QT_QBYTEARRAY_APPEND_4 )
  */
 HB_FUNC( QT_QBYTEARRAY_AT )
 {
-   hb_retni( hbqt_par_QByteArray( 1 )->at( hb_parni( 2 ) ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retni( ( p )->at( hb_parni( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_AT FP=hb_retni( ( p )->at( hb_parni( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -207,7 +243,13 @@ HB_FUNC( QT_QBYTEARRAY_AT )
  */
 HB_FUNC( QT_QBYTEARRAY_CAPACITY )
 {
-   hb_retni( hbqt_par_QByteArray( 1 )->capacity() );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retni( ( p )->capacity() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_CAPACITY FP=hb_retni( ( p )->capacity() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -215,7 +257,13 @@ HB_FUNC( QT_QBYTEARRAY_CAPACITY )
  */
 HB_FUNC( QT_QBYTEARRAY_CHOP )
 {
-   hbqt_par_QByteArray( 1 )->chop( hb_parni( 2 ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      ( p )->chop( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_CHOP FP=( p )->chop( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -223,7 +271,13 @@ HB_FUNC( QT_QBYTEARRAY_CHOP )
  */
 HB_FUNC( QT_QBYTEARRAY_CLEAR )
 {
-   hbqt_par_QByteArray( 1 )->clear();
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      ( p )->clear();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_CLEAR FP=( p )->clear(); p is NULL" ) );
+   }
 }
 
 /*
@@ -231,7 +285,13 @@ HB_FUNC( QT_QBYTEARRAY_CLEAR )
  */
 HB_FUNC( QT_QBYTEARRAY_CONSTDATA )
 {
-   hb_retc( hbqt_par_QByteArray( 1 )->constData() );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retc( ( p )->constData() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_CONSTDATA FP=hb_retc( ( p )->constData() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -239,7 +299,13 @@ HB_FUNC( QT_QBYTEARRAY_CONSTDATA )
  */
 HB_FUNC( QT_QBYTEARRAY_COUNT )
 {
-   hb_retni( hbqt_par_QByteArray( 1 )->count( *hbqt_par_QByteArray( 2 ) ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retni( ( p )->count( *hbqt_par_QByteArray( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_COUNT FP=hb_retni( ( p )->count( *hbqt_par_QByteArray( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -247,7 +313,13 @@ HB_FUNC( QT_QBYTEARRAY_COUNT )
  */
 HB_FUNC( QT_QBYTEARRAY_COUNT_1 )
 {
-   hb_retni( hbqt_par_QByteArray( 1 )->count( hbqt_par_char( 2 ) ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retni( ( p )->count( hbqt_par_char( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_COUNT_1 FP=hb_retni( ( p )->count( hbqt_par_char( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -255,7 +327,13 @@ HB_FUNC( QT_QBYTEARRAY_COUNT_1 )
  */
 HB_FUNC( QT_QBYTEARRAY_COUNT_2 )
 {
-   hb_retni( hbqt_par_QByteArray( 1 )->count( ( char ) hb_parni( 2 ) ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retni( ( p )->count( ( char ) hb_parni( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_COUNT_2 FP=hb_retni( ( p )->count( ( char ) hb_parni( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -263,7 +341,13 @@ HB_FUNC( QT_QBYTEARRAY_COUNT_2 )
  */
 HB_FUNC( QT_QBYTEARRAY_COUNT_3 )
 {
-   hb_retni( hbqt_par_QByteArray( 1 )->count() );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retni( ( p )->count() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_COUNT_3 FP=hb_retni( ( p )->count() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -271,7 +355,13 @@ HB_FUNC( QT_QBYTEARRAY_COUNT_3 )
  */
 HB_FUNC( QT_QBYTEARRAY_DATA )
 {
-   hb_retc( hbqt_par_QByteArray( 1 )->data() );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retc( ( p )->data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_DATA FP=hb_retc( ( p )->data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -279,7 +369,13 @@ HB_FUNC( QT_QBYTEARRAY_DATA )
  */
 HB_FUNC( QT_QBYTEARRAY_DATA_1 )
 {
-   hb_retc( hbqt_par_QByteArray( 1 )->data() );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retc( ( p )->data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_DATA_1 FP=hb_retc( ( p )->data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -287,7 +383,13 @@ HB_FUNC( QT_QBYTEARRAY_DATA_1 )
  */
 HB_FUNC( QT_QBYTEARRAY_ENDSWITH )
 {
-   hb_retl( hbqt_par_QByteArray( 1 )->endsWith( *hbqt_par_QByteArray( 2 ) ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retl( ( p )->endsWith( *hbqt_par_QByteArray( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_ENDSWITH FP=hb_retl( ( p )->endsWith( *hbqt_par_QByteArray( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -295,7 +397,13 @@ HB_FUNC( QT_QBYTEARRAY_ENDSWITH )
  */
 HB_FUNC( QT_QBYTEARRAY_ENDSWITH_1 )
 {
-   hb_retl( hbqt_par_QByteArray( 1 )->endsWith( hbqt_par_char( 2 ) ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retl( ( p )->endsWith( hbqt_par_char( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_ENDSWITH_1 FP=hb_retl( ( p )->endsWith( hbqt_par_char( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -303,7 +411,13 @@ HB_FUNC( QT_QBYTEARRAY_ENDSWITH_1 )
  */
 HB_FUNC( QT_QBYTEARRAY_ENDSWITH_2 )
 {
-   hb_retl( hbqt_par_QByteArray( 1 )->endsWith( ( char ) hb_parni( 2 ) ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retl( ( p )->endsWith( ( char ) hb_parni( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_ENDSWITH_2 FP=hb_retl( ( p )->endsWith( ( char ) hb_parni( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -311,7 +425,13 @@ HB_FUNC( QT_QBYTEARRAY_ENDSWITH_2 )
  */
 HB_FUNC( QT_QBYTEARRAY_FILL )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->fill( ( char ) hb_parni( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : -1 ) ) ), true ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->fill( ( char ) hb_parni( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : -1 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_FILL FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->fill( ( char ) hb_parni( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : -1 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -319,7 +439,13 @@ HB_FUNC( QT_QBYTEARRAY_FILL )
  */
 HB_FUNC( QT_QBYTEARRAY_INDEXOF )
 {
-   hb_retni( hbqt_par_QByteArray( 1 )->indexOf( *hbqt_par_QByteArray( 2 ), hb_parni( 3 ) ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retni( ( p )->indexOf( *hbqt_par_QByteArray( 2 ), hb_parni( 3 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_INDEXOF FP=hb_retni( ( p )->indexOf( *hbqt_par_QByteArray( 2 ), hb_parni( 3 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -327,7 +453,13 @@ HB_FUNC( QT_QBYTEARRAY_INDEXOF )
  */
 HB_FUNC( QT_QBYTEARRAY_INDEXOF_1 )
 {
-   hb_retni( hbqt_par_QByteArray( 1 )->indexOf( hbqt_par_QString( 2 ), hb_parni( 3 ) ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retni( ( p )->indexOf( hbqt_par_QString( 2 ), hb_parni( 3 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_INDEXOF_1 FP=hb_retni( ( p )->indexOf( hbqt_par_QString( 2 ), hb_parni( 3 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -335,7 +467,13 @@ HB_FUNC( QT_QBYTEARRAY_INDEXOF_1 )
  */
 HB_FUNC( QT_QBYTEARRAY_INDEXOF_2 )
 {
-   hb_retni( hbqt_par_QByteArray( 1 )->indexOf( hbqt_par_char( 2 ), hb_parni( 3 ) ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retni( ( p )->indexOf( hbqt_par_char( 2 ), hb_parni( 3 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_INDEXOF_2 FP=hb_retni( ( p )->indexOf( hbqt_par_char( 2 ), hb_parni( 3 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -343,7 +481,13 @@ HB_FUNC( QT_QBYTEARRAY_INDEXOF_2 )
  */
 HB_FUNC( QT_QBYTEARRAY_INDEXOF_3 )
 {
-   hb_retni( hbqt_par_QByteArray( 1 )->indexOf( ( char ) hb_parni( 2 ), hb_parni( 3 ) ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retni( ( p )->indexOf( ( char ) hb_parni( 2 ), hb_parni( 3 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_INDEXOF_3 FP=hb_retni( ( p )->indexOf( ( char ) hb_parni( 2 ), hb_parni( 3 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -351,7 +495,13 @@ HB_FUNC( QT_QBYTEARRAY_INDEXOF_3 )
  */
 HB_FUNC( QT_QBYTEARRAY_INSERT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->insert( hb_parni( 2 ), *hbqt_par_QByteArray( 3 ) ) ), true ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->insert( hb_parni( 2 ), *hbqt_par_QByteArray( 3 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_INSERT FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->insert( hb_parni( 2 ), *hbqt_par_QByteArray( 3 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -359,7 +509,13 @@ HB_FUNC( QT_QBYTEARRAY_INSERT )
  */
 HB_FUNC( QT_QBYTEARRAY_INSERT_1 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->insert( hb_parni( 2 ), hbqt_par_QString( 3 ) ) ), true ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->insert( hb_parni( 2 ), hbqt_par_QString( 3 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_INSERT_1 FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->insert( hb_parni( 2 ), hbqt_par_QString( 3 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -367,7 +523,13 @@ HB_FUNC( QT_QBYTEARRAY_INSERT_1 )
  */
 HB_FUNC( QT_QBYTEARRAY_INSERT_2 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->insert( hb_parni( 2 ), hbqt_par_char( 3 ) ) ), true ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->insert( hb_parni( 2 ), hbqt_par_char( 3 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_INSERT_2 FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->insert( hb_parni( 2 ), hbqt_par_char( 3 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -375,7 +537,13 @@ HB_FUNC( QT_QBYTEARRAY_INSERT_2 )
  */
 HB_FUNC( QT_QBYTEARRAY_INSERT_3 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->insert( hb_parni( 2 ), ( char ) hb_parni( 3 ) ) ), true ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->insert( hb_parni( 2 ), ( char ) hb_parni( 3 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_INSERT_3 FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->insert( hb_parni( 2 ), ( char ) hb_parni( 3 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -383,7 +551,13 @@ HB_FUNC( QT_QBYTEARRAY_INSERT_3 )
  */
 HB_FUNC( QT_QBYTEARRAY_ISEMPTY )
 {
-   hb_retl( hbqt_par_QByteArray( 1 )->isEmpty() );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retl( ( p )->isEmpty() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_ISEMPTY FP=hb_retl( ( p )->isEmpty() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -391,7 +565,13 @@ HB_FUNC( QT_QBYTEARRAY_ISEMPTY )
  */
 HB_FUNC( QT_QBYTEARRAY_ISNULL )
 {
-   hb_retl( hbqt_par_QByteArray( 1 )->isNull() );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retl( ( p )->isNull() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_ISNULL FP=hb_retl( ( p )->isNull() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -399,7 +579,13 @@ HB_FUNC( QT_QBYTEARRAY_ISNULL )
  */
 HB_FUNC( QT_QBYTEARRAY_LASTINDEXOF )
 {
-   hb_retni( hbqt_par_QByteArray( 1 )->lastIndexOf( *hbqt_par_QByteArray( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : -1 ) ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retni( ( p )->lastIndexOf( *hbqt_par_QByteArray( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : -1 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_LASTINDEXOF FP=hb_retni( ( p )->lastIndexOf( *hbqt_par_QByteArray( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : -1 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -407,7 +593,13 @@ HB_FUNC( QT_QBYTEARRAY_LASTINDEXOF )
  */
 HB_FUNC( QT_QBYTEARRAY_LASTINDEXOF_1 )
 {
-   hb_retni( hbqt_par_QByteArray( 1 )->lastIndexOf( hbqt_par_QString( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : -1 ) ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retni( ( p )->lastIndexOf( hbqt_par_QString( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : -1 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_LASTINDEXOF_1 FP=hb_retni( ( p )->lastIndexOf( hbqt_par_QString( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : -1 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -415,7 +607,13 @@ HB_FUNC( QT_QBYTEARRAY_LASTINDEXOF_1 )
  */
 HB_FUNC( QT_QBYTEARRAY_LASTINDEXOF_2 )
 {
-   hb_retni( hbqt_par_QByteArray( 1 )->lastIndexOf( hbqt_par_char( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : -1 ) ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retni( ( p )->lastIndexOf( hbqt_par_char( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : -1 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_LASTINDEXOF_2 FP=hb_retni( ( p )->lastIndexOf( hbqt_par_char( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : -1 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -423,7 +621,13 @@ HB_FUNC( QT_QBYTEARRAY_LASTINDEXOF_2 )
  */
 HB_FUNC( QT_QBYTEARRAY_LASTINDEXOF_3 )
 {
-   hb_retni( hbqt_par_QByteArray( 1 )->lastIndexOf( ( char ) hb_parni( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : -1 ) ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retni( ( p )->lastIndexOf( ( char ) hb_parni( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : -1 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_LASTINDEXOF_3 FP=hb_retni( ( p )->lastIndexOf( ( char ) hb_parni( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : -1 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -431,7 +635,13 @@ HB_FUNC( QT_QBYTEARRAY_LASTINDEXOF_3 )
  */
 HB_FUNC( QT_QBYTEARRAY_LEFT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->left( hb_parni( 2 ) ) ), true ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->left( hb_parni( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_LEFT FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->left( hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -439,7 +649,13 @@ HB_FUNC( QT_QBYTEARRAY_LEFT )
  */
 HB_FUNC( QT_QBYTEARRAY_LEFTJUSTIFIED )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->leftJustified( hb_parni( 2 ), ( char ) hb_parni( 3 ), hb_parl( 4 ) ) ), true ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->leftJustified( hb_parni( 2 ), ( char ) hb_parni( 3 ), hb_parl( 4 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_LEFTJUSTIFIED FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->leftJustified( hb_parni( 2 ), ( char ) hb_parni( 3 ), hb_parl( 4 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -447,7 +663,13 @@ HB_FUNC( QT_QBYTEARRAY_LEFTJUSTIFIED )
  */
 HB_FUNC( QT_QBYTEARRAY_LENGTH )
 {
-   hb_retni( hbqt_par_QByteArray( 1 )->length() );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retni( ( p )->length() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_LENGTH FP=hb_retni( ( p )->length() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -455,7 +677,13 @@ HB_FUNC( QT_QBYTEARRAY_LENGTH )
  */
 HB_FUNC( QT_QBYTEARRAY_MID )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->mid( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : -1 ) ) ), true ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->mid( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : -1 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_MID FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->mid( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : -1 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -463,7 +691,13 @@ HB_FUNC( QT_QBYTEARRAY_MID )
  */
 HB_FUNC( QT_QBYTEARRAY_PREPEND )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->prepend( *hbqt_par_QByteArray( 2 ) ) ), true ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->prepend( *hbqt_par_QByteArray( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_PREPEND FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->prepend( *hbqt_par_QByteArray( 2 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -471,7 +705,13 @@ HB_FUNC( QT_QBYTEARRAY_PREPEND )
  */
 HB_FUNC( QT_QBYTEARRAY_PREPEND_1 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->prepend( hbqt_par_char( 2 ) ) ), true ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->prepend( hbqt_par_char( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_PREPEND_1 FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->prepend( hbqt_par_char( 2 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -479,7 +719,13 @@ HB_FUNC( QT_QBYTEARRAY_PREPEND_1 )
  */
 HB_FUNC( QT_QBYTEARRAY_PREPEND_2 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->prepend( ( char ) hb_parni( 2 ) ) ), true ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->prepend( ( char ) hb_parni( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_PREPEND_2 FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->prepend( ( char ) hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -487,7 +733,13 @@ HB_FUNC( QT_QBYTEARRAY_PREPEND_2 )
  */
 HB_FUNC( QT_QBYTEARRAY_PUSH_BACK )
 {
-   hbqt_par_QByteArray( 1 )->push_back( *hbqt_par_QByteArray( 2 ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      ( p )->push_back( *hbqt_par_QByteArray( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_PUSH_BACK FP=( p )->push_back( *hbqt_par_QByteArray( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -495,7 +747,13 @@ HB_FUNC( QT_QBYTEARRAY_PUSH_BACK )
  */
 HB_FUNC( QT_QBYTEARRAY_PUSH_BACK_1 )
 {
-   hbqt_par_QByteArray( 1 )->push_back( hbqt_par_char( 2 ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      ( p )->push_back( hbqt_par_char( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_PUSH_BACK_1 FP=( p )->push_back( hbqt_par_char( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -503,7 +761,13 @@ HB_FUNC( QT_QBYTEARRAY_PUSH_BACK_1 )
  */
 HB_FUNC( QT_QBYTEARRAY_PUSH_BACK_2 )
 {
-   hbqt_par_QByteArray( 1 )->push_back( ( char ) hb_parni( 2 ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      ( p )->push_back( ( char ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_PUSH_BACK_2 FP=( p )->push_back( ( char ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -511,7 +775,13 @@ HB_FUNC( QT_QBYTEARRAY_PUSH_BACK_2 )
  */
 HB_FUNC( QT_QBYTEARRAY_PUSH_FRONT )
 {
-   hbqt_par_QByteArray( 1 )->push_front( *hbqt_par_QByteArray( 2 ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      ( p )->push_front( *hbqt_par_QByteArray( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_PUSH_FRONT FP=( p )->push_front( *hbqt_par_QByteArray( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -519,7 +789,13 @@ HB_FUNC( QT_QBYTEARRAY_PUSH_FRONT )
  */
 HB_FUNC( QT_QBYTEARRAY_PUSH_FRONT_1 )
 {
-   hbqt_par_QByteArray( 1 )->push_front( hbqt_par_char( 2 ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      ( p )->push_front( hbqt_par_char( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_PUSH_FRONT_1 FP=( p )->push_front( hbqt_par_char( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -527,7 +803,13 @@ HB_FUNC( QT_QBYTEARRAY_PUSH_FRONT_1 )
  */
 HB_FUNC( QT_QBYTEARRAY_PUSH_FRONT_2 )
 {
-   hbqt_par_QByteArray( 1 )->push_front( ( char ) hb_parni( 2 ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      ( p )->push_front( ( char ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_PUSH_FRONT_2 FP=( p )->push_front( ( char ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -535,7 +817,13 @@ HB_FUNC( QT_QBYTEARRAY_PUSH_FRONT_2 )
  */
 HB_FUNC( QT_QBYTEARRAY_REMOVE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->remove( hb_parni( 2 ), hb_parni( 3 ) ) ), true ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->remove( hb_parni( 2 ), hb_parni( 3 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_REMOVE FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->remove( hb_parni( 2 ), hb_parni( 3 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -543,7 +831,13 @@ HB_FUNC( QT_QBYTEARRAY_REMOVE )
  */
 HB_FUNC( QT_QBYTEARRAY_REPEATED )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->repeated( hb_parni( 2 ) ) ), true ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->repeated( hb_parni( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_REPEATED FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->repeated( hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -551,7 +845,13 @@ HB_FUNC( QT_QBYTEARRAY_REPEATED )
  */
 HB_FUNC( QT_QBYTEARRAY_REPLACE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->replace( hb_parni( 2 ), hb_parni( 3 ), *hbqt_par_QByteArray( 4 ) ) ), true ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->replace( hb_parni( 2 ), hb_parni( 3 ), *hbqt_par_QByteArray( 4 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_REPLACE FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->replace( hb_parni( 2 ), hb_parni( 3 ), *hbqt_par_QByteArray( 4 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -559,7 +859,13 @@ HB_FUNC( QT_QBYTEARRAY_REPLACE )
  */
 HB_FUNC( QT_QBYTEARRAY_REPLACE_1 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->replace( hb_parni( 2 ), hb_parni( 3 ), hbqt_par_char( 4 ) ) ), true ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->replace( hb_parni( 2 ), hb_parni( 3 ), hbqt_par_char( 4 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_REPLACE_1 FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->replace( hb_parni( 2 ), hb_parni( 3 ), hbqt_par_char( 4 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -567,7 +873,13 @@ HB_FUNC( QT_QBYTEARRAY_REPLACE_1 )
  */
 HB_FUNC( QT_QBYTEARRAY_REPLACE_2 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->replace( *hbqt_par_QByteArray( 2 ), *hbqt_par_QByteArray( 3 ) ) ), true ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->replace( *hbqt_par_QByteArray( 2 ), *hbqt_par_QByteArray( 3 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_REPLACE_2 FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->replace( *hbqt_par_QByteArray( 2 ), *hbqt_par_QByteArray( 3 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -575,7 +887,13 @@ HB_FUNC( QT_QBYTEARRAY_REPLACE_2 )
  */
 HB_FUNC( QT_QBYTEARRAY_REPLACE_3 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->replace( hbqt_par_char( 2 ), *hbqt_par_QByteArray( 3 ) ) ), true ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->replace( hbqt_par_char( 2 ), *hbqt_par_QByteArray( 3 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_REPLACE_3 FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->replace( hbqt_par_char( 2 ), *hbqt_par_QByteArray( 3 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -583,7 +901,13 @@ HB_FUNC( QT_QBYTEARRAY_REPLACE_3 )
  */
 HB_FUNC( QT_QBYTEARRAY_REPLACE_4 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->replace( hbqt_par_char( 2 ), hb_parni( 3 ), hbqt_par_char( 4 ), hb_parni( 5 ) ) ), true ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->replace( hbqt_par_char( 2 ), hb_parni( 3 ), hbqt_par_char( 4 ), hb_parni( 5 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_REPLACE_4 FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->replace( hbqt_par_char( 2 ), hb_parni( 3 ), hbqt_par_char( 4 ), hb_parni( 5 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -591,7 +915,13 @@ HB_FUNC( QT_QBYTEARRAY_REPLACE_4 )
  */
 HB_FUNC( QT_QBYTEARRAY_REPLACE_5 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->replace( *hbqt_par_QByteArray( 2 ), hbqt_par_char( 3 ) ) ), true ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->replace( *hbqt_par_QByteArray( 2 ), hbqt_par_char( 3 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_REPLACE_5 FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->replace( *hbqt_par_QByteArray( 2 ), hbqt_par_char( 3 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -599,7 +929,13 @@ HB_FUNC( QT_QBYTEARRAY_REPLACE_5 )
  */
 HB_FUNC( QT_QBYTEARRAY_REPLACE_6 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->replace( hbqt_par_QString( 2 ), *hbqt_par_QByteArray( 3 ) ) ), true ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->replace( hbqt_par_QString( 2 ), *hbqt_par_QByteArray( 3 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_REPLACE_6 FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->replace( hbqt_par_QString( 2 ), *hbqt_par_QByteArray( 3 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -607,7 +943,13 @@ HB_FUNC( QT_QBYTEARRAY_REPLACE_6 )
  */
 HB_FUNC( QT_QBYTEARRAY_REPLACE_7 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->replace( hbqt_par_QString( 2 ), hbqt_par_char( 3 ) ) ), true ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->replace( hbqt_par_QString( 2 ), hbqt_par_char( 3 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_REPLACE_7 FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->replace( hbqt_par_QString( 2 ), hbqt_par_char( 3 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -615,7 +957,13 @@ HB_FUNC( QT_QBYTEARRAY_REPLACE_7 )
  */
 HB_FUNC( QT_QBYTEARRAY_REPLACE_8 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->replace( hbqt_par_char( 2 ), hbqt_par_char( 3 ) ) ), true ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->replace( hbqt_par_char( 2 ), hbqt_par_char( 3 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_REPLACE_8 FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->replace( hbqt_par_char( 2 ), hbqt_par_char( 3 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -623,7 +971,13 @@ HB_FUNC( QT_QBYTEARRAY_REPLACE_8 )
  */
 HB_FUNC( QT_QBYTEARRAY_REPLACE_9 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->replace( ( char ) hb_parni( 2 ), *hbqt_par_QByteArray( 3 ) ) ), true ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->replace( ( char ) hb_parni( 2 ), *hbqt_par_QByteArray( 3 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_REPLACE_9 FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->replace( ( char ) hb_parni( 2 ), *hbqt_par_QByteArray( 3 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -631,7 +985,13 @@ HB_FUNC( QT_QBYTEARRAY_REPLACE_9 )
  */
 HB_FUNC( QT_QBYTEARRAY_REPLACE_10 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->replace( ( char ) hb_parni( 2 ), hbqt_par_QString( 3 ) ) ), true ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->replace( ( char ) hb_parni( 2 ), hbqt_par_QString( 3 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_REPLACE_10 FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->replace( ( char ) hb_parni( 2 ), hbqt_par_QString( 3 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -639,7 +999,13 @@ HB_FUNC( QT_QBYTEARRAY_REPLACE_10 )
  */
 HB_FUNC( QT_QBYTEARRAY_REPLACE_11 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->replace( ( char ) hb_parni( 2 ), hbqt_par_char( 3 ) ) ), true ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->replace( ( char ) hb_parni( 2 ), hbqt_par_char( 3 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_REPLACE_11 FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->replace( ( char ) hb_parni( 2 ), hbqt_par_char( 3 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -647,7 +1013,13 @@ HB_FUNC( QT_QBYTEARRAY_REPLACE_11 )
  */
 HB_FUNC( QT_QBYTEARRAY_REPLACE_12 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->replace( ( char ) hb_parni( 2 ), ( char ) hb_parni( 3 ) ) ), true ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->replace( ( char ) hb_parni( 2 ), ( char ) hb_parni( 3 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_REPLACE_12 FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->replace( ( char ) hb_parni( 2 ), ( char ) hb_parni( 3 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -655,7 +1027,13 @@ HB_FUNC( QT_QBYTEARRAY_REPLACE_12 )
  */
 HB_FUNC( QT_QBYTEARRAY_RESERVE )
 {
-   hbqt_par_QByteArray( 1 )->reserve( hb_parni( 2 ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      ( p )->reserve( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_RESERVE FP=( p )->reserve( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -663,7 +1041,13 @@ HB_FUNC( QT_QBYTEARRAY_RESERVE )
  */
 HB_FUNC( QT_QBYTEARRAY_RESIZE )
 {
-   hbqt_par_QByteArray( 1 )->resize( hb_parni( 2 ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      ( p )->resize( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_RESIZE FP=( p )->resize( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -671,7 +1055,13 @@ HB_FUNC( QT_QBYTEARRAY_RESIZE )
  */
 HB_FUNC( QT_QBYTEARRAY_RIGHT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->right( hb_parni( 2 ) ) ), true ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->right( hb_parni( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_RIGHT FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->right( hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -679,7 +1069,13 @@ HB_FUNC( QT_QBYTEARRAY_RIGHT )
  */
 HB_FUNC( QT_QBYTEARRAY_RIGHTJUSTIFIED )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->rightJustified( hb_parni( 2 ), ( char ) hb_parni( 3 ), hb_parl( 4 ) ) ), true ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->rightJustified( hb_parni( 2 ), ( char ) hb_parni( 3 ), hb_parl( 4 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_RIGHTJUSTIFIED FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->rightJustified( hb_parni( 2 ), ( char ) hb_parni( 3 ), hb_parl( 4 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -687,7 +1083,13 @@ HB_FUNC( QT_QBYTEARRAY_RIGHTJUSTIFIED )
  */
 HB_FUNC( QT_QBYTEARRAY_SETNUM )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->setNum( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) ), true ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->setNum( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_SETNUM FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->setNum( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -695,7 +1097,13 @@ HB_FUNC( QT_QBYTEARRAY_SETNUM )
  */
 HB_FUNC( QT_QBYTEARRAY_SETNUM_1 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->setNum( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) ), true ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->setNum( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_SETNUM_1 FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->setNum( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -703,7 +1111,13 @@ HB_FUNC( QT_QBYTEARRAY_SETNUM_1 )
  */
 HB_FUNC( QT_QBYTEARRAY_SETNUM_2 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->setNum( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) ), true ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->setNum( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_SETNUM_2 FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->setNum( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -711,7 +1125,13 @@ HB_FUNC( QT_QBYTEARRAY_SETNUM_2 )
  */
 HB_FUNC( QT_QBYTEARRAY_SETNUM_3 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->setNum( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) ), true ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->setNum( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_SETNUM_3 FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->setNum( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -719,7 +1139,13 @@ HB_FUNC( QT_QBYTEARRAY_SETNUM_3 )
  */
 HB_FUNC( QT_QBYTEARRAY_SETNUM_4 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->setNum( ( qlonglong ) hb_parnint( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) ), true ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->setNum( ( qlonglong ) hb_parnint( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_SETNUM_4 FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->setNum( ( qlonglong ) hb_parnint( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -727,7 +1153,13 @@ HB_FUNC( QT_QBYTEARRAY_SETNUM_4 )
  */
 HB_FUNC( QT_QBYTEARRAY_SETNUM_5 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->setNum( ( qulonglong ) hb_parnint( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) ), true ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->setNum( ( qulonglong ) hb_parnint( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_SETNUM_5 FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->setNum( ( qulonglong ) hb_parnint( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -735,7 +1167,13 @@ HB_FUNC( QT_QBYTEARRAY_SETNUM_5 )
  */
 HB_FUNC( QT_QBYTEARRAY_SETNUM_6 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->setNum( hb_parnd( 2 ), ( char ) hb_parni( 3 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : 6 ) ) ), true ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->setNum( hb_parnd( 2 ), ( char ) hb_parni( 3 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : 6 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_SETNUM_6 FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->setNum( hb_parnd( 2 ), ( char ) hb_parni( 3 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : 6 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -743,7 +1181,13 @@ HB_FUNC( QT_QBYTEARRAY_SETNUM_6 )
  */
 HB_FUNC( QT_QBYTEARRAY_SETNUM_7 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->setNum( hb_parnd( 2 ), ( char ) hb_parni( 3 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : 6 ) ) ), true ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->setNum( hb_parnd( 2 ), ( char ) hb_parni( 3 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : 6 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_SETNUM_7 FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->setNum( hb_parnd( 2 ), ( char ) hb_parni( 3 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : 6 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -751,7 +1195,13 @@ HB_FUNC( QT_QBYTEARRAY_SETNUM_7 )
  */
 HB_FUNC( QT_QBYTEARRAY_SIMPLIFIED )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->simplified() ), true ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->simplified() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_SIMPLIFIED FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->simplified() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -759,7 +1209,13 @@ HB_FUNC( QT_QBYTEARRAY_SIMPLIFIED )
  */
 HB_FUNC( QT_QBYTEARRAY_SIZE )
 {
-   hb_retni( hbqt_par_QByteArray( 1 )->size() );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retni( ( p )->size() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_SIZE FP=hb_retni( ( p )->size() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -767,7 +1223,13 @@ HB_FUNC( QT_QBYTEARRAY_SIZE )
  */
 HB_FUNC( QT_QBYTEARRAY_SQUEEZE )
 {
-   hbqt_par_QByteArray( 1 )->squeeze();
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      ( p )->squeeze();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_SQUEEZE FP=( p )->squeeze(); p is NULL" ) );
+   }
 }
 
 /*
@@ -775,7 +1237,13 @@ HB_FUNC( QT_QBYTEARRAY_SQUEEZE )
  */
 HB_FUNC( QT_QBYTEARRAY_STARTSWITH )
 {
-   hb_retl( hbqt_par_QByteArray( 1 )->startsWith( *hbqt_par_QByteArray( 2 ) ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retl( ( p )->startsWith( *hbqt_par_QByteArray( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_STARTSWITH FP=hb_retl( ( p )->startsWith( *hbqt_par_QByteArray( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -783,7 +1251,13 @@ HB_FUNC( QT_QBYTEARRAY_STARTSWITH )
  */
 HB_FUNC( QT_QBYTEARRAY_STARTSWITH_1 )
 {
-   hb_retl( hbqt_par_QByteArray( 1 )->startsWith( hbqt_par_char( 2 ) ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retl( ( p )->startsWith( hbqt_par_char( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_STARTSWITH_1 FP=hb_retl( ( p )->startsWith( hbqt_par_char( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -791,7 +1265,13 @@ HB_FUNC( QT_QBYTEARRAY_STARTSWITH_1 )
  */
 HB_FUNC( QT_QBYTEARRAY_STARTSWITH_2 )
 {
-   hb_retl( hbqt_par_QByteArray( 1 )->startsWith( ( char ) hb_parni( 2 ) ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retl( ( p )->startsWith( ( char ) hb_parni( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_STARTSWITH_2 FP=hb_retl( ( p )->startsWith( ( char ) hb_parni( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -799,7 +1279,13 @@ HB_FUNC( QT_QBYTEARRAY_STARTSWITH_2 )
  */
 HB_FUNC( QT_QBYTEARRAY_TOBASE64 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->toBase64() ), true ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->toBase64() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_TOBASE64 FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->toBase64() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -807,9 +1293,15 @@ HB_FUNC( QT_QBYTEARRAY_TOBASE64 )
  */
 HB_FUNC( QT_QBYTEARRAY_TODOUBLE )
 {
+   QByteArray * p = hbqt_par_QByteArray( 1 );
    bool iOk = 0;
 
-   hb_retnd( hbqt_par_QByteArray( 1 )->toDouble( &iOk ) );
+   if( p )
+      hb_retnd( ( p )->toDouble( &iOk ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_TODOUBLE FP=hb_retnd( ( p )->toDouble( &iOk ) ); p is NULL" ) );
+   }
 
    hb_stornl( iOk, 2 );
 }
@@ -819,9 +1311,15 @@ HB_FUNC( QT_QBYTEARRAY_TODOUBLE )
  */
 HB_FUNC( QT_QBYTEARRAY_TOFLOAT )
 {
+   QByteArray * p = hbqt_par_QByteArray( 1 );
    bool iOk = 0;
 
-   hb_retnd( hbqt_par_QByteArray( 1 )->toFloat( &iOk ) );
+   if( p )
+      hb_retnd( ( p )->toFloat( &iOk ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_TOFLOAT FP=hb_retnd( ( p )->toFloat( &iOk ) ); p is NULL" ) );
+   }
 
    hb_stornl( iOk, 2 );
 }
@@ -831,7 +1329,13 @@ HB_FUNC( QT_QBYTEARRAY_TOFLOAT )
  */
 HB_FUNC( QT_QBYTEARRAY_TOHEX )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->toHex() ), true ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->toHex() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_TOHEX FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->toHex() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -839,9 +1343,15 @@ HB_FUNC( QT_QBYTEARRAY_TOHEX )
  */
 HB_FUNC( QT_QBYTEARRAY_TOINT )
 {
+   QByteArray * p = hbqt_par_QByteArray( 1 );
    bool iOk = 0;
 
-   hb_retni( hbqt_par_QByteArray( 1 )->toInt( &iOk, ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) );
+   if( p )
+      hb_retni( ( p )->toInt( &iOk, ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_TOINT FP=hb_retni( ( p )->toInt( &iOk, ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) ); p is NULL" ) );
+   }
 
    hb_stornl( iOk, 2 );
 }
@@ -851,9 +1361,15 @@ HB_FUNC( QT_QBYTEARRAY_TOINT )
  */
 HB_FUNC( QT_QBYTEARRAY_TOLONG )
 {
+   QByteArray * p = hbqt_par_QByteArray( 1 );
    bool iOk = 0;
 
-   hb_retnint( hbqt_par_QByteArray( 1 )->toLong( &iOk, ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) );
+   if( p )
+      hb_retnint( ( p )->toLong( &iOk, ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_TOLONG FP=hb_retnint( ( p )->toLong( &iOk, ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) ); p is NULL" ) );
+   }
 
    hb_stornl( iOk, 2 );
 }
@@ -863,9 +1379,15 @@ HB_FUNC( QT_QBYTEARRAY_TOLONG )
  */
 HB_FUNC( QT_QBYTEARRAY_TOLONGLONG )
 {
+   QByteArray * p = hbqt_par_QByteArray( 1 );
    bool iOk = 0;
 
-   hb_retnint( hbqt_par_QByteArray( 1 )->toLongLong( &iOk, ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) );
+   if( p )
+      hb_retnint( ( p )->toLongLong( &iOk, ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_TOLONGLONG FP=hb_retnint( ( p )->toLongLong( &iOk, ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) ); p is NULL" ) );
+   }
 
    hb_stornl( iOk, 2 );
 }
@@ -875,7 +1397,13 @@ HB_FUNC( QT_QBYTEARRAY_TOLONGLONG )
  */
 HB_FUNC( QT_QBYTEARRAY_TOLOWER )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->toLower() ), true ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->toLower() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_TOLOWER FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->toLower() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -883,7 +1411,13 @@ HB_FUNC( QT_QBYTEARRAY_TOLOWER )
  */
 HB_FUNC( QT_QBYTEARRAY_TOPERCENTENCODING )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->toPercentEncoding( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QByteArray( 2 ) : QByteArray() ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QByteArray( 3 ) : QByteArray() ), ( char ) hb_parni( 4 ) ) ), true ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->toPercentEncoding( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QByteArray( 2 ) : QByteArray() ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QByteArray( 3 ) : QByteArray() ), ( char ) hb_parni( 4 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_TOPERCENTENCODING FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->toPercentEncoding( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QByteArray( 2 ) : QByteArray() ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QByteArray( 3 ) : QByteArray() ), ( char ) hb_parni( 4 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -891,9 +1425,15 @@ HB_FUNC( QT_QBYTEARRAY_TOPERCENTENCODING )
  */
 HB_FUNC( QT_QBYTEARRAY_TOSHORT )
 {
+   QByteArray * p = hbqt_par_QByteArray( 1 );
    bool iOk = 0;
 
-   hb_retni( hbqt_par_QByteArray( 1 )->toShort( &iOk, ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) );
+   if( p )
+      hb_retni( ( p )->toShort( &iOk, ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_TOSHORT FP=hb_retni( ( p )->toShort( &iOk, ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) ); p is NULL" ) );
+   }
 
    hb_stornl( iOk, 2 );
 }
@@ -903,9 +1443,15 @@ HB_FUNC( QT_QBYTEARRAY_TOSHORT )
  */
 HB_FUNC( QT_QBYTEARRAY_TOUINT )
 {
+   QByteArray * p = hbqt_par_QByteArray( 1 );
    bool iOk = 0;
 
-   hb_retni( hbqt_par_QByteArray( 1 )->toUInt( &iOk, ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) );
+   if( p )
+      hb_retni( ( p )->toUInt( &iOk, ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_TOUINT FP=hb_retni( ( p )->toUInt( &iOk, ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) ); p is NULL" ) );
+   }
 
    hb_stornl( iOk, 2 );
 }
@@ -915,9 +1461,15 @@ HB_FUNC( QT_QBYTEARRAY_TOUINT )
  */
 HB_FUNC( QT_QBYTEARRAY_TOULONG )
 {
+   QByteArray * p = hbqt_par_QByteArray( 1 );
    bool iOk = 0;
 
-   hb_retnint( hbqt_par_QByteArray( 1 )->toULong( &iOk, ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) );
+   if( p )
+      hb_retnint( ( p )->toULong( &iOk, ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_TOULONG FP=hb_retnint( ( p )->toULong( &iOk, ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) ); p is NULL" ) );
+   }
 
    hb_stornl( iOk, 2 );
 }
@@ -927,9 +1479,15 @@ HB_FUNC( QT_QBYTEARRAY_TOULONG )
  */
 HB_FUNC( QT_QBYTEARRAY_TOULONGLONG )
 {
+   QByteArray * p = hbqt_par_QByteArray( 1 );
    bool iOk = 0;
 
-   hb_retnint( hbqt_par_QByteArray( 1 )->toULongLong( &iOk, ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) );
+   if( p )
+      hb_retnint( ( p )->toULongLong( &iOk, ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_TOULONGLONG FP=hb_retnint( ( p )->toULongLong( &iOk, ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) ); p is NULL" ) );
+   }
 
    hb_stornl( iOk, 2 );
 }
@@ -939,9 +1497,15 @@ HB_FUNC( QT_QBYTEARRAY_TOULONGLONG )
  */
 HB_FUNC( QT_QBYTEARRAY_TOUSHORT )
 {
+   QByteArray * p = hbqt_par_QByteArray( 1 );
    bool iOk = 0;
 
-   hb_retni( hbqt_par_QByteArray( 1 )->toUShort( &iOk, ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) );
+   if( p )
+      hb_retni( ( p )->toUShort( &iOk, ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_TOUSHORT FP=hb_retni( ( p )->toUShort( &iOk, ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) ); p is NULL" ) );
+   }
 
    hb_stornl( iOk, 2 );
 }
@@ -951,7 +1515,13 @@ HB_FUNC( QT_QBYTEARRAY_TOUSHORT )
  */
 HB_FUNC( QT_QBYTEARRAY_TOUPPER )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->toUpper() ), true ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->toUpper() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_TOUPPER FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->toUpper() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -959,7 +1529,13 @@ HB_FUNC( QT_QBYTEARRAY_TOUPPER )
  */
 HB_FUNC( QT_QBYTEARRAY_TRIMMED )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QByteArray( 1 )->trimmed() ), true ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->trimmed() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_TRIMMED FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->trimmed() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -967,7 +1543,13 @@ HB_FUNC( QT_QBYTEARRAY_TRIMMED )
  */
 HB_FUNC( QT_QBYTEARRAY_TRUNCATE )
 {
-   hbqt_par_QByteArray( 1 )->truncate( hb_parni( 2 ) );
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      ( p )->truncate( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_TRUNCATE FP=( p )->truncate( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 

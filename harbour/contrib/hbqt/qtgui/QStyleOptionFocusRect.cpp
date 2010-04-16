@@ -82,7 +82,7 @@
 
 typedef struct
 {
-   void * ph;
+   QStyleOptionFocusRect * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QStyleOptionFocusRect;
@@ -117,7 +117,7 @@ void * hbqt_gcAllocate_QStyleOptionFocusRect( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QStyleOptionFocusRect * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyleOptionFocusRect;
 
@@ -134,11 +134,11 @@ void * hbqt_gcAllocate_QStyleOptionFocusRect( void * pObj, bool bNew )
 
 HB_FUNC( QT_QSTYLEOPTIONFOCUSRECT )
 {
-   void * pObj = NULL;
+   QStyleOptionFocusRect * pObj = NULL;
 
-   pObj = ( QStyleOptionFocusRect* ) new QStyleOptionFocusRect() ;
+   pObj =  new QStyleOptionFocusRect() ;
 
-   hb_retptrGC( hbqt_gcAllocate_QStyleOptionFocusRect( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QStyleOptionFocusRect( ( void * ) pObj, true ) );
 }
 
 /*

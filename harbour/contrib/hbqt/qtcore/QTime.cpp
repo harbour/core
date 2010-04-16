@@ -76,7 +76,7 @@
 
 typedef struct
 {
-   void * ph;
+   QTime * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QTime;
@@ -111,7 +111,7 @@ void * hbqt_gcAllocate_QTime( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QTime * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTime;
 
@@ -128,11 +128,11 @@ void * hbqt_gcAllocate_QTime( void * pObj, bool bNew )
 
 HB_FUNC( QT_QTIME )
 {
-   void * pObj = NULL;
+   QTime * pObj = NULL;
 
    pObj = new QTime() ;
 
-   hb_retptrGC( hbqt_gcAllocate_QTime( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QTime( ( void * ) pObj, true ) );
 }
 
 /*
@@ -140,7 +140,13 @@ HB_FUNC( QT_QTIME )
  */
 HB_FUNC( QT_QTIME_ADDMSECS )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTime( new QTime( hbqt_par_QTime( 1 )->addMSecs( hb_parni( 2 ) ) ), true ) );
+   QTime * p = hbqt_par_QTime( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QTime( new QTime( ( p )->addMSecs( hb_parni( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTIME_ADDMSECS FP=hb_retptrGC( hbqt_gcAllocate_QTime( new QTime( ( p )->addMSecs( hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -148,7 +154,13 @@ HB_FUNC( QT_QTIME_ADDMSECS )
  */
 HB_FUNC( QT_QTIME_ADDSECS )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTime( new QTime( hbqt_par_QTime( 1 )->addSecs( hb_parni( 2 ) ) ), true ) );
+   QTime * p = hbqt_par_QTime( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QTime( new QTime( ( p )->addSecs( hb_parni( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTIME_ADDSECS FP=hb_retptrGC( hbqt_gcAllocate_QTime( new QTime( ( p )->addSecs( hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -156,7 +168,13 @@ HB_FUNC( QT_QTIME_ADDSECS )
  */
 HB_FUNC( QT_QTIME_ELAPSED )
 {
-   hb_retni( hbqt_par_QTime( 1 )->elapsed() );
+   QTime * p = hbqt_par_QTime( 1 );
+   if( p )
+      hb_retni( ( p )->elapsed() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTIME_ELAPSED FP=hb_retni( ( p )->elapsed() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -164,7 +182,13 @@ HB_FUNC( QT_QTIME_ELAPSED )
  */
 HB_FUNC( QT_QTIME_HOUR )
 {
-   hb_retni( hbqt_par_QTime( 1 )->hour() );
+   QTime * p = hbqt_par_QTime( 1 );
+   if( p )
+      hb_retni( ( p )->hour() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTIME_HOUR FP=hb_retni( ( p )->hour() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -172,7 +196,13 @@ HB_FUNC( QT_QTIME_HOUR )
  */
 HB_FUNC( QT_QTIME_ISNULL )
 {
-   hb_retl( hbqt_par_QTime( 1 )->isNull() );
+   QTime * p = hbqt_par_QTime( 1 );
+   if( p )
+      hb_retl( ( p )->isNull() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTIME_ISNULL FP=hb_retl( ( p )->isNull() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -180,7 +210,13 @@ HB_FUNC( QT_QTIME_ISNULL )
  */
 HB_FUNC( QT_QTIME_ISVALID )
 {
-   hb_retl( hbqt_par_QTime( 1 )->isValid() );
+   QTime * p = hbqt_par_QTime( 1 );
+   if( p )
+      hb_retl( ( p )->isValid() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTIME_ISVALID FP=hb_retl( ( p )->isValid() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -188,7 +224,13 @@ HB_FUNC( QT_QTIME_ISVALID )
  */
 HB_FUNC( QT_QTIME_MINUTE )
 {
-   hb_retni( hbqt_par_QTime( 1 )->minute() );
+   QTime * p = hbqt_par_QTime( 1 );
+   if( p )
+      hb_retni( ( p )->minute() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTIME_MINUTE FP=hb_retni( ( p )->minute() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -196,7 +238,13 @@ HB_FUNC( QT_QTIME_MINUTE )
  */
 HB_FUNC( QT_QTIME_MSEC )
 {
-   hb_retni( hbqt_par_QTime( 1 )->msec() );
+   QTime * p = hbqt_par_QTime( 1 );
+   if( p )
+      hb_retni( ( p )->msec() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTIME_MSEC FP=hb_retni( ( p )->msec() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -204,7 +252,13 @@ HB_FUNC( QT_QTIME_MSEC )
  */
 HB_FUNC( QT_QTIME_MSECSTO )
 {
-   hb_retni( hbqt_par_QTime( 1 )->msecsTo( *hbqt_par_QTime( 2 ) ) );
+   QTime * p = hbqt_par_QTime( 1 );
+   if( p )
+      hb_retni( ( p )->msecsTo( *hbqt_par_QTime( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTIME_MSECSTO FP=hb_retni( ( p )->msecsTo( *hbqt_par_QTime( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -212,7 +266,13 @@ HB_FUNC( QT_QTIME_MSECSTO )
  */
 HB_FUNC( QT_QTIME_RESTART )
 {
-   hb_retni( hbqt_par_QTime( 1 )->restart() );
+   QTime * p = hbqt_par_QTime( 1 );
+   if( p )
+      hb_retni( ( p )->restart() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTIME_RESTART FP=hb_retni( ( p )->restart() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -220,7 +280,13 @@ HB_FUNC( QT_QTIME_RESTART )
  */
 HB_FUNC( QT_QTIME_SECOND )
 {
-   hb_retni( hbqt_par_QTime( 1 )->second() );
+   QTime * p = hbqt_par_QTime( 1 );
+   if( p )
+      hb_retni( ( p )->second() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTIME_SECOND FP=hb_retni( ( p )->second() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -228,7 +294,13 @@ HB_FUNC( QT_QTIME_SECOND )
  */
 HB_FUNC( QT_QTIME_SECSTO )
 {
-   hb_retni( hbqt_par_QTime( 1 )->secsTo( *hbqt_par_QTime( 2 ) ) );
+   QTime * p = hbqt_par_QTime( 1 );
+   if( p )
+      hb_retni( ( p )->secsTo( *hbqt_par_QTime( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTIME_SECSTO FP=hb_retni( ( p )->secsTo( *hbqt_par_QTime( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -236,7 +308,13 @@ HB_FUNC( QT_QTIME_SECSTO )
  */
 HB_FUNC( QT_QTIME_SETHMS )
 {
-   hb_retl( hbqt_par_QTime( 1 )->setHMS( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) ) );
+   QTime * p = hbqt_par_QTime( 1 );
+   if( p )
+      hb_retl( ( p )->setHMS( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTIME_SETHMS FP=hb_retl( ( p )->setHMS( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -244,7 +322,13 @@ HB_FUNC( QT_QTIME_SETHMS )
  */
 HB_FUNC( QT_QTIME_START )
 {
-   hbqt_par_QTime( 1 )->start();
+   QTime * p = hbqt_par_QTime( 1 );
+   if( p )
+      ( p )->start();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTIME_START FP=( p )->start(); p is NULL" ) );
+   }
 }
 
 /*
@@ -252,7 +336,13 @@ HB_FUNC( QT_QTIME_START )
  */
 HB_FUNC( QT_QTIME_TOSTRING )
 {
-   hb_retc( hbqt_par_QTime( 1 )->toString( hbqt_par_QString( 2 ) ).toAscii().data() );
+   QTime * p = hbqt_par_QTime( 1 );
+   if( p )
+      hb_retc( ( p )->toString( hbqt_par_QString( 2 ) ).toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTIME_TOSTRING FP=hb_retc( ( p )->toString( hbqt_par_QString( 2 ) ).toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -260,7 +350,13 @@ HB_FUNC( QT_QTIME_TOSTRING )
  */
 HB_FUNC( QT_QTIME_TOSTRING_1 )
 {
-   hb_retc( hbqt_par_QTime( 1 )->toString( ( HB_ISNUM( 2 ) ? ( Qt::DateFormat ) hb_parni( 2 ) : ( Qt::DateFormat ) Qt::TextDate ) ).toAscii().data() );
+   QTime * p = hbqt_par_QTime( 1 );
+   if( p )
+      hb_retc( ( p )->toString( ( HB_ISNUM( 2 ) ? ( Qt::DateFormat ) hb_parni( 2 ) : ( Qt::DateFormat ) Qt::TextDate ) ).toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTIME_TOSTRING_1 FP=hb_retc( ( p )->toString( ( HB_ISNUM( 2 ) ? ( Qt::DateFormat ) hb_parni( 2 ) : ( Qt::DateFormat ) Qt::TextDate ) ).toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -268,7 +364,13 @@ HB_FUNC( QT_QTIME_TOSTRING_1 )
  */
 HB_FUNC( QT_QTIME_CURRENTTIME )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTime( new QTime( hbqt_par_QTime( 1 )->currentTime() ), true ) );
+   QTime * p = hbqt_par_QTime( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QTime( new QTime( ( p )->currentTime() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTIME_CURRENTTIME FP=hb_retptrGC( hbqt_gcAllocate_QTime( new QTime( ( p )->currentTime() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -276,7 +378,13 @@ HB_FUNC( QT_QTIME_CURRENTTIME )
  */
 HB_FUNC( QT_QTIME_FROMSTRING )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTime( new QTime( hbqt_par_QTime( 1 )->fromString( hbqt_par_QString( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::DateFormat ) hb_parni( 3 ) : ( Qt::DateFormat ) Qt::TextDate ) ) ), true ) );
+   QTime * p = hbqt_par_QTime( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QTime( new QTime( ( p )->fromString( hbqt_par_QString( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::DateFormat ) hb_parni( 3 ) : ( Qt::DateFormat ) Qt::TextDate ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTIME_FROMSTRING FP=hb_retptrGC( hbqt_gcAllocate_QTime( new QTime( ( p )->fromString( hbqt_par_QString( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::DateFormat ) hb_parni( 3 ) : ( Qt::DateFormat ) Qt::TextDate ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -284,7 +392,13 @@ HB_FUNC( QT_QTIME_FROMSTRING )
  */
 HB_FUNC( QT_QTIME_FROMSTRING_1 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTime( new QTime( hbqt_par_QTime( 1 )->fromString( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ) ), true ) );
+   QTime * p = hbqt_par_QTime( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QTime( new QTime( ( p )->fromString( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTIME_FROMSTRING_1 FP=hb_retptrGC( hbqt_gcAllocate_QTime( new QTime( ( p )->fromString( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -292,7 +406,13 @@ HB_FUNC( QT_QTIME_FROMSTRING_1 )
  */
 HB_FUNC( QT_QTIME_ISVALID_1 )
 {
-   hb_retl( hbqt_par_QTime( 1 )->isValid( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) ) );
+   QTime * p = hbqt_par_QTime( 1 );
+   if( p )
+      hb_retl( ( p )->isValid( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTIME_ISVALID_1 FP=hb_retl( ( p )->isValid( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) ) ); p is NULL" ) );
+   }
 }
 
 

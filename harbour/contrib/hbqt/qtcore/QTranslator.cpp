@@ -76,43 +76,44 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QTranslator > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QTranslator > pq;
 } QGC_POINTER_QTranslator;
 
 QT_G_FUNC( hbqt_gcRelease_QTranslator )
 {
+   QTranslator  * ph = NULL ;
    QGC_POINTER_QTranslator * p = ( QGC_POINTER_QTranslator * ) Cargo;
 
-   if( p && p->bNew )
+   if( p && p->bNew && p->ph )
    {
-      if( p->ph && p->pq )
+      ph = p->ph;
+      if( ph )
       {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QTranslator   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
-            delete ( ( QTranslator * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QTranslator   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QTranslator   /.\\   ", (void*) ph, (void*) p->ph ) );
+            delete ( p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QTranslator   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QTranslator          pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QTranslator          ", ph ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QTranslator    :     Object already deleted!", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QTranslator    :     Object already deleted!", ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QTranslator    :    Object not created with new=true", p->ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QTranslator    :    Object not created with new=true", ph ) );
       p->ph = NULL;
    }
 }
@@ -121,13 +122,12 @@ void * hbqt_gcAllocate_QTranslator( void * pObj, bool bNew )
 {
    QGC_POINTER_QTranslator * p = ( QGC_POINTER_QTranslator * ) hb_gcAllocate( sizeof( QGC_POINTER_QTranslator ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QTranslator >( ( QTranslator * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTranslator;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QTranslator >( ( QTranslator * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QTranslator  under p->pq", pObj ) );
    }
    else
@@ -139,11 +139,11 @@ void * hbqt_gcAllocate_QTranslator( void * pObj, bool bNew )
 
 HB_FUNC( QT_QTRANSLATOR )
 {
-   void * pObj = NULL;
+   QTranslator * pObj = NULL;
 
    pObj = new QTranslator() ;
 
-   hb_retptrGC( hbqt_gcAllocate_QTranslator( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QTranslator( ( void * ) pObj, true ) );
 }
 
 /*
@@ -151,7 +151,13 @@ HB_FUNC( QT_QTRANSLATOR )
  */
 HB_FUNC( QT_QTRANSLATOR_ISEMPTY )
 {
-   hb_retl( hbqt_par_QTranslator( 1 )->isEmpty() );
+   QTranslator * p = hbqt_par_QTranslator( 1 );
+   if( p )
+      hb_retl( ( p )->isEmpty() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTRANSLATOR_ISEMPTY FP=hb_retl( ( p )->isEmpty() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -159,7 +165,13 @@ HB_FUNC( QT_QTRANSLATOR_ISEMPTY )
  */
 HB_FUNC( QT_QTRANSLATOR_LOAD )
 {
-   hb_retl( hbqt_par_QTranslator( 1 )->load( QTranslator::tr( hb_parc( 2 ) ), QTranslator::tr( hb_parc( 3 ) ), QTranslator::tr( hb_parc( 4 ) ), QTranslator::tr( hb_parc( 5 ) ) ) );
+   QTranslator * p = hbqt_par_QTranslator( 1 );
+   if( p )
+      hb_retl( ( p )->load( QTranslator::tr( hb_parc( 2 ) ), QTranslator::tr( hb_parc( 3 ) ), QTranslator::tr( hb_parc( 4 ) ), QTranslator::tr( hb_parc( 5 ) ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTRANSLATOR_LOAD FP=hb_retl( ( p )->load( QTranslator::tr( hb_parc( 2 ) ), QTranslator::tr( hb_parc( 3 ) ), QTranslator::tr( hb_parc( 4 ) ), QTranslator::tr( hb_parc( 5 ) ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -167,7 +179,13 @@ HB_FUNC( QT_QTRANSLATOR_LOAD )
  */
 HB_FUNC( QT_QTRANSLATOR_TRANSLATE )
 {
-   hb_retc( hbqt_par_QTranslator( 1 )->translate( hbqt_par_char( 2 ), hbqt_par_char( 3 ), hbqt_par_char( 4 ) ).toAscii().data() );
+   QTranslator * p = hbqt_par_QTranslator( 1 );
+   if( p )
+      hb_retc( ( p )->translate( hbqt_par_char( 2 ), hbqt_par_char( 3 ), hbqt_par_char( 4 ) ).toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTRANSLATOR_TRANSLATE FP=hb_retc( ( p )->translate( hbqt_par_char( 2 ), hbqt_par_char( 3 ), hbqt_par_char( 4 ) ).toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -175,7 +193,13 @@ HB_FUNC( QT_QTRANSLATOR_TRANSLATE )
  */
 HB_FUNC( QT_QTRANSLATOR_TRANSLATE_1 )
 {
-   hb_retc( hbqt_par_QTranslator( 1 )->translate( hbqt_par_char( 2 ), hbqt_par_char( 3 ), hbqt_par_char( 4 ), hb_parni( 5 ) ).toAscii().data() );
+   QTranslator * p = hbqt_par_QTranslator( 1 );
+   if( p )
+      hb_retc( ( p )->translate( hbqt_par_char( 2 ), hbqt_par_char( 3 ), hbqt_par_char( 4 ), hb_parni( 5 ) ).toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTRANSLATOR_TRANSLATE_1 FP=hb_retc( ( p )->translate( hbqt_par_char( 2 ), hbqt_par_char( 3 ), hbqt_par_char( 4 ), hb_parni( 5 ) ).toAscii().data() ); p is NULL" ) );
+   }
 }
 
 

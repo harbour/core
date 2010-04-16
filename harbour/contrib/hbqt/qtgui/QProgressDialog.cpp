@@ -78,43 +78,44 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QProgressDialog > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QProgressDialog > pq;
 } QGC_POINTER_QProgressDialog;
 
 QT_G_FUNC( hbqt_gcRelease_QProgressDialog )
 {
+   QProgressDialog  * ph = NULL ;
    QGC_POINTER_QProgressDialog * p = ( QGC_POINTER_QProgressDialog * ) Cargo;
 
-   if( p && p->bNew )
+   if( p && p->bNew && p->ph )
    {
-      if( p->ph && p->pq )
+      ph = p->ph;
+      if( ph )
       {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QProgressDialog   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
-            delete ( ( QProgressDialog * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QProgressDialog   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QProgressDialog   /.\\   ", (void*) ph, (void*) p->ph ) );
+            delete ( p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QProgressDialog   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QProgressDialog          pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QProgressDialog          ", ph ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QProgressDialog    :     Object already deleted!", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QProgressDialog    :     Object already deleted!", ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QProgressDialog    :    Object not created with new=true", p->ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QProgressDialog    :    Object not created with new=true", ph ) );
       p->ph = NULL;
    }
 }
@@ -123,13 +124,12 @@ void * hbqt_gcAllocate_QProgressDialog( void * pObj, bool bNew )
 {
    QGC_POINTER_QProgressDialog * p = ( QGC_POINTER_QProgressDialog * ) hb_gcAllocate( sizeof( QGC_POINTER_QProgressDialog ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QProgressDialog >( ( QProgressDialog * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QProgressDialog;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QProgressDialog >( ( QProgressDialog * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QProgressDialog  under p->pq", pObj ) );
    }
    else
@@ -141,11 +141,11 @@ void * hbqt_gcAllocate_QProgressDialog( void * pObj, bool bNew )
 
 HB_FUNC( QT_QPROGRESSDIALOG )
 {
-   void * pObj = NULL;
+   QProgressDialog * pObj = NULL;
 
    pObj = new QProgressDialog( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QProgressDialog( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QProgressDialog( ( void * ) pObj, true ) );
 }
 
 /*
@@ -153,7 +153,13 @@ HB_FUNC( QT_QPROGRESSDIALOG )
  */
 HB_FUNC( QT_QPROGRESSDIALOG_AUTOCLOSE )
 {
-   hb_retl( hbqt_par_QProgressDialog( 1 )->autoClose() );
+   QProgressDialog * p = hbqt_par_QProgressDialog( 1 );
+   if( p )
+      hb_retl( ( p )->autoClose() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPROGRESSDIALOG_AUTOCLOSE FP=hb_retl( ( p )->autoClose() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -161,7 +167,13 @@ HB_FUNC( QT_QPROGRESSDIALOG_AUTOCLOSE )
  */
 HB_FUNC( QT_QPROGRESSDIALOG_AUTORESET )
 {
-   hb_retl( hbqt_par_QProgressDialog( 1 )->autoReset() );
+   QProgressDialog * p = hbqt_par_QProgressDialog( 1 );
+   if( p )
+      hb_retl( ( p )->autoReset() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPROGRESSDIALOG_AUTORESET FP=hb_retl( ( p )->autoReset() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -169,7 +181,13 @@ HB_FUNC( QT_QPROGRESSDIALOG_AUTORESET )
  */
 HB_FUNC( QT_QPROGRESSDIALOG_LABELTEXT )
 {
-   hb_retc( hbqt_par_QProgressDialog( 1 )->labelText().toAscii().data() );
+   QProgressDialog * p = hbqt_par_QProgressDialog( 1 );
+   if( p )
+      hb_retc( ( p )->labelText().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPROGRESSDIALOG_LABELTEXT FP=hb_retc( ( p )->labelText().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -177,7 +195,13 @@ HB_FUNC( QT_QPROGRESSDIALOG_LABELTEXT )
  */
 HB_FUNC( QT_QPROGRESSDIALOG_MAXIMUM )
 {
-   hb_retni( hbqt_par_QProgressDialog( 1 )->maximum() );
+   QProgressDialog * p = hbqt_par_QProgressDialog( 1 );
+   if( p )
+      hb_retni( ( p )->maximum() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPROGRESSDIALOG_MAXIMUM FP=hb_retni( ( p )->maximum() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -185,7 +209,13 @@ HB_FUNC( QT_QPROGRESSDIALOG_MAXIMUM )
  */
 HB_FUNC( QT_QPROGRESSDIALOG_MINIMUM )
 {
-   hb_retni( hbqt_par_QProgressDialog( 1 )->minimum() );
+   QProgressDialog * p = hbqt_par_QProgressDialog( 1 );
+   if( p )
+      hb_retni( ( p )->minimum() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPROGRESSDIALOG_MINIMUM FP=hb_retni( ( p )->minimum() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -193,7 +223,13 @@ HB_FUNC( QT_QPROGRESSDIALOG_MINIMUM )
  */
 HB_FUNC( QT_QPROGRESSDIALOG_MINIMUMDURATION )
 {
-   hb_retni( hbqt_par_QProgressDialog( 1 )->minimumDuration() );
+   QProgressDialog * p = hbqt_par_QProgressDialog( 1 );
+   if( p )
+      hb_retni( ( p )->minimumDuration() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPROGRESSDIALOG_MINIMUMDURATION FP=hb_retni( ( p )->minimumDuration() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -201,7 +237,13 @@ HB_FUNC( QT_QPROGRESSDIALOG_MINIMUMDURATION )
  */
 HB_FUNC( QT_QPROGRESSDIALOG_OPEN )
 {
-   hbqt_par_QProgressDialog( 1 )->open( hbqt_par_QObject( 2 ), hbqt_par_char( 3 ) );
+   QProgressDialog * p = hbqt_par_QProgressDialog( 1 );
+   if( p )
+      ( p )->open( hbqt_par_QObject( 2 ), hbqt_par_char( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPROGRESSDIALOG_OPEN FP=( p )->open( hbqt_par_QObject( 2 ), hbqt_par_char( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -209,7 +251,13 @@ HB_FUNC( QT_QPROGRESSDIALOG_OPEN )
  */
 HB_FUNC( QT_QPROGRESSDIALOG_SETAUTOCLOSE )
 {
-   hbqt_par_QProgressDialog( 1 )->setAutoClose( hb_parl( 2 ) );
+   QProgressDialog * p = hbqt_par_QProgressDialog( 1 );
+   if( p )
+      ( p )->setAutoClose( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPROGRESSDIALOG_SETAUTOCLOSE FP=( p )->setAutoClose( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -217,7 +265,13 @@ HB_FUNC( QT_QPROGRESSDIALOG_SETAUTOCLOSE )
  */
 HB_FUNC( QT_QPROGRESSDIALOG_SETAUTORESET )
 {
-   hbqt_par_QProgressDialog( 1 )->setAutoReset( hb_parl( 2 ) );
+   QProgressDialog * p = hbqt_par_QProgressDialog( 1 );
+   if( p )
+      ( p )->setAutoReset( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPROGRESSDIALOG_SETAUTORESET FP=( p )->setAutoReset( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -225,7 +279,13 @@ HB_FUNC( QT_QPROGRESSDIALOG_SETAUTORESET )
  */
 HB_FUNC( QT_QPROGRESSDIALOG_SETBAR )
 {
-   hbqt_par_QProgressDialog( 1 )->setBar( hbqt_par_QProgressBar( 2 ) );
+   QProgressDialog * p = hbqt_par_QProgressDialog( 1 );
+   if( p )
+      ( p )->setBar( hbqt_par_QProgressBar( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPROGRESSDIALOG_SETBAR FP=( p )->setBar( hbqt_par_QProgressBar( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -233,7 +293,13 @@ HB_FUNC( QT_QPROGRESSDIALOG_SETBAR )
  */
 HB_FUNC( QT_QPROGRESSDIALOG_SETCANCELBUTTON )
 {
-   hbqt_par_QProgressDialog( 1 )->setCancelButton( hbqt_par_QPushButton( 2 ) );
+   QProgressDialog * p = hbqt_par_QProgressDialog( 1 );
+   if( p )
+      ( p )->setCancelButton( hbqt_par_QPushButton( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPROGRESSDIALOG_SETCANCELBUTTON FP=( p )->setCancelButton( hbqt_par_QPushButton( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -241,7 +307,13 @@ HB_FUNC( QT_QPROGRESSDIALOG_SETCANCELBUTTON )
  */
 HB_FUNC( QT_QPROGRESSDIALOG_SETLABEL )
 {
-   hbqt_par_QProgressDialog( 1 )->setLabel( hbqt_par_QLabel( 2 ) );
+   QProgressDialog * p = hbqt_par_QProgressDialog( 1 );
+   if( p )
+      ( p )->setLabel( hbqt_par_QLabel( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPROGRESSDIALOG_SETLABEL FP=( p )->setLabel( hbqt_par_QLabel( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -249,7 +321,13 @@ HB_FUNC( QT_QPROGRESSDIALOG_SETLABEL )
  */
 HB_FUNC( QT_QPROGRESSDIALOG_SIZEHINT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QProgressDialog( 1 )->sizeHint() ), true ) );
+   QProgressDialog * p = hbqt_par_QProgressDialog( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->sizeHint() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPROGRESSDIALOG_SIZEHINT FP=hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->sizeHint() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -257,7 +335,13 @@ HB_FUNC( QT_QPROGRESSDIALOG_SIZEHINT )
  */
 HB_FUNC( QT_QPROGRESSDIALOG_VALUE )
 {
-   hb_retni( hbqt_par_QProgressDialog( 1 )->value() );
+   QProgressDialog * p = hbqt_par_QProgressDialog( 1 );
+   if( p )
+      hb_retni( ( p )->value() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPROGRESSDIALOG_VALUE FP=hb_retni( ( p )->value() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -265,7 +349,13 @@ HB_FUNC( QT_QPROGRESSDIALOG_VALUE )
  */
 HB_FUNC( QT_QPROGRESSDIALOG_WASCANCELED )
 {
-   hb_retl( hbqt_par_QProgressDialog( 1 )->wasCanceled() );
+   QProgressDialog * p = hbqt_par_QProgressDialog( 1 );
+   if( p )
+      hb_retl( ( p )->wasCanceled() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPROGRESSDIALOG_WASCANCELED FP=hb_retl( ( p )->wasCanceled() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -273,7 +363,13 @@ HB_FUNC( QT_QPROGRESSDIALOG_WASCANCELED )
  */
 HB_FUNC( QT_QPROGRESSDIALOG_CANCEL )
 {
-   hbqt_par_QProgressDialog( 1 )->cancel();
+   QProgressDialog * p = hbqt_par_QProgressDialog( 1 );
+   if( p )
+      ( p )->cancel();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPROGRESSDIALOG_CANCEL FP=( p )->cancel(); p is NULL" ) );
+   }
 }
 
 /*
@@ -281,7 +377,13 @@ HB_FUNC( QT_QPROGRESSDIALOG_CANCEL )
  */
 HB_FUNC( QT_QPROGRESSDIALOG_RESET )
 {
-   hbqt_par_QProgressDialog( 1 )->reset();
+   QProgressDialog * p = hbqt_par_QProgressDialog( 1 );
+   if( p )
+      ( p )->reset();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPROGRESSDIALOG_RESET FP=( p )->reset(); p is NULL" ) );
+   }
 }
 
 /*
@@ -289,7 +391,13 @@ HB_FUNC( QT_QPROGRESSDIALOG_RESET )
  */
 HB_FUNC( QT_QPROGRESSDIALOG_SETCANCELBUTTONTEXT )
 {
-   hbqt_par_QProgressDialog( 1 )->setCancelButtonText( QProgressDialog::tr( hb_parc( 2 ) ) );
+   QProgressDialog * p = hbqt_par_QProgressDialog( 1 );
+   if( p )
+      ( p )->setCancelButtonText( QProgressDialog::tr( hb_parc( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPROGRESSDIALOG_SETCANCELBUTTONTEXT FP=( p )->setCancelButtonText( QProgressDialog::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -297,7 +405,13 @@ HB_FUNC( QT_QPROGRESSDIALOG_SETCANCELBUTTONTEXT )
  */
 HB_FUNC( QT_QPROGRESSDIALOG_SETLABELTEXT )
 {
-   hbqt_par_QProgressDialog( 1 )->setLabelText( QProgressDialog::tr( hb_parc( 2 ) ) );
+   QProgressDialog * p = hbqt_par_QProgressDialog( 1 );
+   if( p )
+      ( p )->setLabelText( QProgressDialog::tr( hb_parc( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPROGRESSDIALOG_SETLABELTEXT FP=( p )->setLabelText( QProgressDialog::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -305,7 +419,13 @@ HB_FUNC( QT_QPROGRESSDIALOG_SETLABELTEXT )
  */
 HB_FUNC( QT_QPROGRESSDIALOG_SETMAXIMUM )
 {
-   hbqt_par_QProgressDialog( 1 )->setMaximum( hb_parni( 2 ) );
+   QProgressDialog * p = hbqt_par_QProgressDialog( 1 );
+   if( p )
+      ( p )->setMaximum( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPROGRESSDIALOG_SETMAXIMUM FP=( p )->setMaximum( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -313,7 +433,13 @@ HB_FUNC( QT_QPROGRESSDIALOG_SETMAXIMUM )
  */
 HB_FUNC( QT_QPROGRESSDIALOG_SETMINIMUM )
 {
-   hbqt_par_QProgressDialog( 1 )->setMinimum( hb_parni( 2 ) );
+   QProgressDialog * p = hbqt_par_QProgressDialog( 1 );
+   if( p )
+      ( p )->setMinimum( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPROGRESSDIALOG_SETMINIMUM FP=( p )->setMinimum( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -321,7 +447,13 @@ HB_FUNC( QT_QPROGRESSDIALOG_SETMINIMUM )
  */
 HB_FUNC( QT_QPROGRESSDIALOG_SETMINIMUMDURATION )
 {
-   hbqt_par_QProgressDialog( 1 )->setMinimumDuration( hb_parni( 2 ) );
+   QProgressDialog * p = hbqt_par_QProgressDialog( 1 );
+   if( p )
+      ( p )->setMinimumDuration( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPROGRESSDIALOG_SETMINIMUMDURATION FP=( p )->setMinimumDuration( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -329,7 +461,13 @@ HB_FUNC( QT_QPROGRESSDIALOG_SETMINIMUMDURATION )
  */
 HB_FUNC( QT_QPROGRESSDIALOG_SETRANGE )
 {
-   hbqt_par_QProgressDialog( 1 )->setRange( hb_parni( 2 ), hb_parni( 3 ) );
+   QProgressDialog * p = hbqt_par_QProgressDialog( 1 );
+   if( p )
+      ( p )->setRange( hb_parni( 2 ), hb_parni( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPROGRESSDIALOG_SETRANGE FP=( p )->setRange( hb_parni( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -337,7 +475,13 @@ HB_FUNC( QT_QPROGRESSDIALOG_SETRANGE )
  */
 HB_FUNC( QT_QPROGRESSDIALOG_SETVALUE )
 {
-   hbqt_par_QProgressDialog( 1 )->setValue( hb_parni( 2 ) );
+   QProgressDialog * p = hbqt_par_QProgressDialog( 1 );
+   if( p )
+      ( p )->setValue( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPROGRESSDIALOG_SETVALUE FP=( p )->setValue( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 

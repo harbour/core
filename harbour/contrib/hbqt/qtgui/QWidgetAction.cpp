@@ -77,43 +77,44 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QWidgetAction > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QWidgetAction > pq;
 } QGC_POINTER_QWidgetAction;
 
 QT_G_FUNC( hbqt_gcRelease_QWidgetAction )
 {
+   QWidgetAction  * ph = NULL ;
    QGC_POINTER_QWidgetAction * p = ( QGC_POINTER_QWidgetAction * ) Cargo;
 
-   if( p && p->bNew )
+   if( p && p->bNew && p->ph )
    {
-      if( p->ph && p->pq )
+      ph = p->ph;
+      if( ph )
       {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QWidgetAction   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
-            delete ( ( QWidgetAction * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QWidgetAction   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QWidgetAction   /.\\   ", (void*) ph, (void*) p->ph ) );
+            delete ( p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QWidgetAction   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QWidgetAction          pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QWidgetAction          ", ph ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QWidgetAction    :     Object already deleted!", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QWidgetAction    :     Object already deleted!", ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QWidgetAction    :    Object not created with new=true", p->ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QWidgetAction    :    Object not created with new=true", ph ) );
       p->ph = NULL;
    }
 }
@@ -122,13 +123,12 @@ void * hbqt_gcAllocate_QWidgetAction( void * pObj, bool bNew )
 {
    QGC_POINTER_QWidgetAction * p = ( QGC_POINTER_QWidgetAction * ) hb_gcAllocate( sizeof( QGC_POINTER_QWidgetAction ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QWidgetAction >( ( QWidgetAction * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QWidgetAction;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QWidgetAction >( ( QWidgetAction * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QWidgetAction  under p->pq", pObj ) );
    }
    else
@@ -140,11 +140,11 @@ void * hbqt_gcAllocate_QWidgetAction( void * pObj, bool bNew )
 
 HB_FUNC( QT_QWIDGETACTION )
 {
-   void * pObj = NULL;
+   QWidgetAction * pObj = NULL;
 
-   pObj = ( QWidgetAction* ) new QWidgetAction( hbqt_par_QObject( 1 ) ) ;
+   pObj =  new QWidgetAction( hbqt_par_QObject( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QWidgetAction( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QWidgetAction( ( void * ) pObj, true ) );
 }
 
 /*
@@ -152,7 +152,13 @@ HB_FUNC( QT_QWIDGETACTION )
  */
 HB_FUNC( QT_QWIDGETACTION_DEFAULTWIDGET )
 {
-   hb_retptrGC( hbqt_gcAllocate_QWidget( hbqt_par_QWidgetAction( 1 )->defaultWidget(), false ) );
+   QWidgetAction * p = hbqt_par_QWidgetAction( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->defaultWidget(), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIDGETACTION_DEFAULTWIDGET FP=hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->defaultWidget(), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -160,7 +166,13 @@ HB_FUNC( QT_QWIDGETACTION_DEFAULTWIDGET )
  */
 HB_FUNC( QT_QWIDGETACTION_RELEASEWIDGET )
 {
-   hbqt_par_QWidgetAction( 1 )->releaseWidget( hbqt_par_QWidget( 2 ) );
+   QWidgetAction * p = hbqt_par_QWidgetAction( 1 );
+   if( p )
+      ( p )->releaseWidget( hbqt_par_QWidget( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIDGETACTION_RELEASEWIDGET FP=( p )->releaseWidget( hbqt_par_QWidget( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -168,7 +180,13 @@ HB_FUNC( QT_QWIDGETACTION_RELEASEWIDGET )
  */
 HB_FUNC( QT_QWIDGETACTION_REQUESTWIDGET )
 {
-   hb_retptrGC( hbqt_gcAllocate_QWidget( hbqt_par_QWidgetAction( 1 )->requestWidget( hbqt_par_QWidget( 2 ) ), false ) );
+   QWidgetAction * p = hbqt_par_QWidgetAction( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->requestWidget( hbqt_par_QWidget( 2 ) ), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIDGETACTION_REQUESTWIDGET FP=hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->requestWidget( hbqt_par_QWidget( 2 ) ), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -176,7 +194,13 @@ HB_FUNC( QT_QWIDGETACTION_REQUESTWIDGET )
  */
 HB_FUNC( QT_QWIDGETACTION_SETDEFAULTWIDGET )
 {
-   hbqt_par_QWidgetAction( 1 )->setDefaultWidget( hbqt_par_QWidget( 2 ) );
+   QWidgetAction * p = hbqt_par_QWidgetAction( 1 );
+   if( p )
+      ( p )->setDefaultWidget( hbqt_par_QWidget( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIDGETACTION_SETDEFAULTWIDGET FP=( p )->setDefaultWidget( hbqt_par_QWidget( 2 ) ); p is NULL" ) );
+   }
 }
 
 

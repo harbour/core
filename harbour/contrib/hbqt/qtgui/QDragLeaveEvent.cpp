@@ -76,7 +76,7 @@
 
 typedef struct
 {
-   void * ph;
+   QDragLeaveEvent * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QDragLeaveEvent;
@@ -96,7 +96,7 @@ void * hbqt_gcAllocate_QDragLeaveEvent( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QDragLeaveEvent * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QDragLeaveEvent;
 
@@ -113,6 +113,7 @@ void * hbqt_gcAllocate_QDragLeaveEvent( void * pObj, bool bNew )
 
 HB_FUNC( QT_QDRAGLEAVEEVENT )
 {
+   // hb_retptr( ( * ) new () );
 }
 
 

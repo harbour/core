@@ -82,7 +82,7 @@
 
 typedef struct
 {
-   void * ph;
+   QStyleOptionSpinBox * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QStyleOptionSpinBox;
@@ -117,7 +117,7 @@ void * hbqt_gcAllocate_QStyleOptionSpinBox( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QStyleOptionSpinBox * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyleOptionSpinBox;
 
@@ -134,11 +134,11 @@ void * hbqt_gcAllocate_QStyleOptionSpinBox( void * pObj, bool bNew )
 
 HB_FUNC( QT_QSTYLEOPTIONSPINBOX )
 {
-   void * pObj = NULL;
+   QStyleOptionSpinBox * pObj = NULL;
 
-   pObj = ( QStyleOptionSpinBox* ) new QStyleOptionSpinBox() ;
+   pObj =  new QStyleOptionSpinBox() ;
 
-   hb_retptrGC( hbqt_gcAllocate_QStyleOptionSpinBox( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QStyleOptionSpinBox( ( void * ) pObj, true ) );
 }
 
 /*

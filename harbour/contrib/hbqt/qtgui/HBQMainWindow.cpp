@@ -78,43 +78,44 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< HBQMainWindow > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< HBQMainWindow > pq;
 } QGC_POINTER_HBQMainWindow;
 
 QT_G_FUNC( hbqt_gcRelease_HBQMainWindow )
 {
+   HBQMainWindow  * ph = NULL ;
    QGC_POINTER_HBQMainWindow * p = ( QGC_POINTER_HBQMainWindow * ) Cargo;
 
-   if( p && p->bNew )
+   if( p && p->bNew && p->ph )
    {
-      if( p->ph && p->pq )
+      ph = p->ph;
+      if( ph )
       {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_HBQMainWindow   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
-            delete ( ( HBQMainWindow * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_HBQMainWindow   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_HBQMainWindow   /.\\   ", (void*) ph, (void*) p->ph ) );
+            delete ( p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_HBQMainWindow   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_HBQMainWindow          pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_HBQMainWindow          ", ph ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_HBQMainWindow    :     Object already deleted!", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_HBQMainWindow    :     Object already deleted!", ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_HBQMainWindow    :    Object not created with new=true", p->ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_HBQMainWindow    :    Object not created with new=true", ph ) );
       p->ph = NULL;
    }
 }
@@ -123,13 +124,12 @@ void * hbqt_gcAllocate_HBQMainWindow( void * pObj, bool bNew )
 {
    QGC_POINTER_HBQMainWindow * p = ( QGC_POINTER_HBQMainWindow * ) hb_gcAllocate( sizeof( QGC_POINTER_HBQMainWindow ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< HBQMainWindow >( ( HBQMainWindow * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_HBQMainWindow;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< HBQMainWindow >( ( HBQMainWindow * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_HBQMainWindow  under p->pq", pObj ) );
    }
    else
@@ -141,11 +141,11 @@ void * hbqt_gcAllocate_HBQMainWindow( void * pObj, bool bNew )
 
 HB_FUNC( QT_HBQMAINWINDOW )
 {
-   void * pObj = NULL;
+   HBQMainWindow * pObj = NULL;
 
    pObj = new HBQMainWindow( hb_itemNew( hb_param( 1, HB_IT_BLOCK ) ), hb_parni( 2 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_HBQMainWindow( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_HBQMainWindow( ( void * ) pObj, true ) );
 }
 
 

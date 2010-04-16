@@ -77,7 +77,7 @@
 
 typedef struct
 {
-   void * ph;
+   QTextBlock * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QTextBlock;
@@ -112,7 +112,7 @@ void * hbqt_gcAllocate_QTextBlock( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QTextBlock * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextBlock;
 
@@ -129,7 +129,7 @@ void * hbqt_gcAllocate_QTextBlock( void * pObj, bool bNew )
 
 HB_FUNC( QT_QTEXTBLOCK )
 {
-   void * pObj = NULL;
+   QTextBlock * pObj = NULL;
 
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
@@ -140,7 +140,7 @@ HB_FUNC( QT_QTEXTBLOCK )
       pObj = new QTextBlock() ;
    }
 
-   hb_retptrGC( hbqt_gcAllocate_QTextBlock( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextBlock( ( void * ) pObj, true ) );
 }
 
 /*
@@ -148,7 +148,13 @@ HB_FUNC( QT_QTEXTBLOCK )
  */
 HB_FUNC( QT_QTEXTBLOCK_BLOCKFORMAT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTextBlockFormat( new QTextBlockFormat( hbqt_par_QTextBlock( 1 )->blockFormat() ), true ) );
+   QTextBlock * p = hbqt_par_QTextBlock( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QTextBlockFormat( new QTextBlockFormat( ( p )->blockFormat() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBLOCK_BLOCKFORMAT FP=hb_retptrGC( hbqt_gcAllocate_QTextBlockFormat( new QTextBlockFormat( ( p )->blockFormat() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -156,7 +162,13 @@ HB_FUNC( QT_QTEXTBLOCK_BLOCKFORMAT )
  */
 HB_FUNC( QT_QTEXTBLOCK_BLOCKFORMATINDEX )
 {
-   hb_retni( hbqt_par_QTextBlock( 1 )->blockFormatIndex() );
+   QTextBlock * p = hbqt_par_QTextBlock( 1 );
+   if( p )
+      hb_retni( ( p )->blockFormatIndex() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBLOCK_BLOCKFORMATINDEX FP=hb_retni( ( p )->blockFormatIndex() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -164,7 +176,13 @@ HB_FUNC( QT_QTEXTBLOCK_BLOCKFORMATINDEX )
  */
 HB_FUNC( QT_QTEXTBLOCK_BLOCKNUMBER )
 {
-   hb_retni( hbqt_par_QTextBlock( 1 )->blockNumber() );
+   QTextBlock * p = hbqt_par_QTextBlock( 1 );
+   if( p )
+      hb_retni( ( p )->blockNumber() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBLOCK_BLOCKNUMBER FP=hb_retni( ( p )->blockNumber() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -172,7 +190,13 @@ HB_FUNC( QT_QTEXTBLOCK_BLOCKNUMBER )
  */
 HB_FUNC( QT_QTEXTBLOCK_CHARFORMAT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTextCharFormat( new QTextCharFormat( hbqt_par_QTextBlock( 1 )->charFormat() ), true ) );
+   QTextBlock * p = hbqt_par_QTextBlock( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QTextCharFormat( new QTextCharFormat( ( p )->charFormat() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBLOCK_CHARFORMAT FP=hb_retptrGC( hbqt_gcAllocate_QTextCharFormat( new QTextCharFormat( ( p )->charFormat() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -180,7 +204,13 @@ HB_FUNC( QT_QTEXTBLOCK_CHARFORMAT )
  */
 HB_FUNC( QT_QTEXTBLOCK_CHARFORMATINDEX )
 {
-   hb_retni( hbqt_par_QTextBlock( 1 )->charFormatIndex() );
+   QTextBlock * p = hbqt_par_QTextBlock( 1 );
+   if( p )
+      hb_retni( ( p )->charFormatIndex() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBLOCK_CHARFORMATINDEX FP=hb_retni( ( p )->charFormatIndex() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -188,7 +218,13 @@ HB_FUNC( QT_QTEXTBLOCK_CHARFORMATINDEX )
  */
 HB_FUNC( QT_QTEXTBLOCK_CLEARLAYOUT )
 {
-   hbqt_par_QTextBlock( 1 )->clearLayout();
+   QTextBlock * p = hbqt_par_QTextBlock( 1 );
+   if( p )
+      ( p )->clearLayout();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBLOCK_CLEARLAYOUT FP=( p )->clearLayout(); p is NULL" ) );
+   }
 }
 
 /*
@@ -196,7 +232,13 @@ HB_FUNC( QT_QTEXTBLOCK_CLEARLAYOUT )
  */
 HB_FUNC( QT_QTEXTBLOCK_CONTAINS )
 {
-   hb_retl( hbqt_par_QTextBlock( 1 )->contains( hb_parni( 2 ) ) );
+   QTextBlock * p = hbqt_par_QTextBlock( 1 );
+   if( p )
+      hb_retl( ( p )->contains( hb_parni( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBLOCK_CONTAINS FP=hb_retl( ( p )->contains( hb_parni( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -204,7 +246,13 @@ HB_FUNC( QT_QTEXTBLOCK_CONTAINS )
  */
 HB_FUNC( QT_QTEXTBLOCK_DOCUMENT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTextDocument( ( void * ) hbqt_par_QTextBlock( 1 )->document(), false ) );
+   QTextBlock * p = hbqt_par_QTextBlock( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QTextDocument( ( void * ) ( p )->document(), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBLOCK_DOCUMENT FP=hb_retptrGC( hbqt_gcAllocate_QTextDocument( ( void * ) ( p )->document(), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -212,7 +260,13 @@ HB_FUNC( QT_QTEXTBLOCK_DOCUMENT )
  */
 HB_FUNC( QT_QTEXTBLOCK_FIRSTLINENUMBER )
 {
-   hb_retni( hbqt_par_QTextBlock( 1 )->firstLineNumber() );
+   QTextBlock * p = hbqt_par_QTextBlock( 1 );
+   if( p )
+      hb_retni( ( p )->firstLineNumber() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBLOCK_FIRSTLINENUMBER FP=hb_retni( ( p )->firstLineNumber() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -220,7 +274,13 @@ HB_FUNC( QT_QTEXTBLOCK_FIRSTLINENUMBER )
  */
 HB_FUNC( QT_QTEXTBLOCK_ISVALID )
 {
-   hb_retl( hbqt_par_QTextBlock( 1 )->isValid() );
+   QTextBlock * p = hbqt_par_QTextBlock( 1 );
+   if( p )
+      hb_retl( ( p )->isValid() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBLOCK_ISVALID FP=hb_retl( ( p )->isValid() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -228,7 +288,13 @@ HB_FUNC( QT_QTEXTBLOCK_ISVALID )
  */
 HB_FUNC( QT_QTEXTBLOCK_ISVISIBLE )
 {
-   hb_retl( hbqt_par_QTextBlock( 1 )->isVisible() );
+   QTextBlock * p = hbqt_par_QTextBlock( 1 );
+   if( p )
+      hb_retl( ( p )->isVisible() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBLOCK_ISVISIBLE FP=hb_retl( ( p )->isVisible() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -236,7 +302,13 @@ HB_FUNC( QT_QTEXTBLOCK_ISVISIBLE )
  */
 HB_FUNC( QT_QTEXTBLOCK_LAYOUT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTextLayout( hbqt_par_QTextBlock( 1 )->layout(), false ) );
+   QTextBlock * p = hbqt_par_QTextBlock( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QTextLayout( ( p )->layout(), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBLOCK_LAYOUT FP=hb_retptrGC( hbqt_gcAllocate_QTextLayout( ( p )->layout(), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -244,7 +316,13 @@ HB_FUNC( QT_QTEXTBLOCK_LAYOUT )
  */
 HB_FUNC( QT_QTEXTBLOCK_LENGTH )
 {
-   hb_retni( hbqt_par_QTextBlock( 1 )->length() );
+   QTextBlock * p = hbqt_par_QTextBlock( 1 );
+   if( p )
+      hb_retni( ( p )->length() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBLOCK_LENGTH FP=hb_retni( ( p )->length() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -252,7 +330,13 @@ HB_FUNC( QT_QTEXTBLOCK_LENGTH )
  */
 HB_FUNC( QT_QTEXTBLOCK_LINECOUNT )
 {
-   hb_retni( hbqt_par_QTextBlock( 1 )->lineCount() );
+   QTextBlock * p = hbqt_par_QTextBlock( 1 );
+   if( p )
+      hb_retni( ( p )->lineCount() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBLOCK_LINECOUNT FP=hb_retni( ( p )->lineCount() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -260,7 +344,13 @@ HB_FUNC( QT_QTEXTBLOCK_LINECOUNT )
  */
 HB_FUNC( QT_QTEXTBLOCK_NEXT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTextBlock( new QTextBlock( hbqt_par_QTextBlock( 1 )->next() ), true ) );
+   QTextBlock * p = hbqt_par_QTextBlock( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QTextBlock( new QTextBlock( ( p )->next() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBLOCK_NEXT FP=hb_retptrGC( hbqt_gcAllocate_QTextBlock( new QTextBlock( ( p )->next() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -268,7 +358,13 @@ HB_FUNC( QT_QTEXTBLOCK_NEXT )
  */
 HB_FUNC( QT_QTEXTBLOCK_POSITION )
 {
-   hb_retni( hbqt_par_QTextBlock( 1 )->position() );
+   QTextBlock * p = hbqt_par_QTextBlock( 1 );
+   if( p )
+      hb_retni( ( p )->position() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBLOCK_POSITION FP=hb_retni( ( p )->position() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -276,7 +372,13 @@ HB_FUNC( QT_QTEXTBLOCK_POSITION )
  */
 HB_FUNC( QT_QTEXTBLOCK_PREVIOUS )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTextBlock( new QTextBlock( hbqt_par_QTextBlock( 1 )->previous() ), true ) );
+   QTextBlock * p = hbqt_par_QTextBlock( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QTextBlock( new QTextBlock( ( p )->previous() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBLOCK_PREVIOUS FP=hb_retptrGC( hbqt_gcAllocate_QTextBlock( new QTextBlock( ( p )->previous() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -284,7 +386,13 @@ HB_FUNC( QT_QTEXTBLOCK_PREVIOUS )
  */
 HB_FUNC( QT_QTEXTBLOCK_REVISION )
 {
-   hb_retni( hbqt_par_QTextBlock( 1 )->revision() );
+   QTextBlock * p = hbqt_par_QTextBlock( 1 );
+   if( p )
+      hb_retni( ( p )->revision() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBLOCK_REVISION FP=hb_retni( ( p )->revision() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -292,7 +400,13 @@ HB_FUNC( QT_QTEXTBLOCK_REVISION )
  */
 HB_FUNC( QT_QTEXTBLOCK_SETLINECOUNT )
 {
-   hbqt_par_QTextBlock( 1 )->setLineCount( hb_parni( 2 ) );
+   QTextBlock * p = hbqt_par_QTextBlock( 1 );
+   if( p )
+      ( p )->setLineCount( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBLOCK_SETLINECOUNT FP=( p )->setLineCount( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -300,7 +414,13 @@ HB_FUNC( QT_QTEXTBLOCK_SETLINECOUNT )
  */
 HB_FUNC( QT_QTEXTBLOCK_SETREVISION )
 {
-   hbqt_par_QTextBlock( 1 )->setRevision( hb_parni( 2 ) );
+   QTextBlock * p = hbqt_par_QTextBlock( 1 );
+   if( p )
+      ( p )->setRevision( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBLOCK_SETREVISION FP=( p )->setRevision( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -308,7 +428,13 @@ HB_FUNC( QT_QTEXTBLOCK_SETREVISION )
  */
 HB_FUNC( QT_QTEXTBLOCK_SETUSERDATA )
 {
-   hbqt_par_QTextBlock( 1 )->setUserData( hbqt_par_HBQTextBlockUserData( 2 ) );
+   QTextBlock * p = hbqt_par_QTextBlock( 1 );
+   if( p )
+      ( p )->setUserData( hbqt_par_HBQTextBlockUserData( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBLOCK_SETUSERDATA FP=( p )->setUserData( hbqt_par_HBQTextBlockUserData( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -316,7 +442,13 @@ HB_FUNC( QT_QTEXTBLOCK_SETUSERDATA )
  */
 HB_FUNC( QT_QTEXTBLOCK_SETUSERSTATE )
 {
-   hbqt_par_QTextBlock( 1 )->setUserState( hb_parni( 2 ) );
+   QTextBlock * p = hbqt_par_QTextBlock( 1 );
+   if( p )
+      ( p )->setUserState( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBLOCK_SETUSERSTATE FP=( p )->setUserState( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -324,7 +456,13 @@ HB_FUNC( QT_QTEXTBLOCK_SETUSERSTATE )
  */
 HB_FUNC( QT_QTEXTBLOCK_SETVISIBLE )
 {
-   hbqt_par_QTextBlock( 1 )->setVisible( hb_parl( 2 ) );
+   QTextBlock * p = hbqt_par_QTextBlock( 1 );
+   if( p )
+      ( p )->setVisible( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBLOCK_SETVISIBLE FP=( p )->setVisible( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -332,7 +470,13 @@ HB_FUNC( QT_QTEXTBLOCK_SETVISIBLE )
  */
 HB_FUNC( QT_QTEXTBLOCK_TEXT )
 {
-   hb_retc( hbqt_par_QTextBlock( 1 )->text().toAscii().data() );
+   QTextBlock * p = hbqt_par_QTextBlock( 1 );
+   if( p )
+      hb_retc( ( p )->text().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBLOCK_TEXT FP=hb_retc( ( p )->text().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -340,7 +484,13 @@ HB_FUNC( QT_QTEXTBLOCK_TEXT )
  */
 HB_FUNC( QT_QTEXTBLOCK_TEXTLIST )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTextList( hbqt_par_QTextBlock( 1 )->textList(), false ) );
+   QTextBlock * p = hbqt_par_QTextBlock( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QTextList( ( p )->textList(), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBLOCK_TEXTLIST FP=hb_retptrGC( hbqt_gcAllocate_QTextList( ( p )->textList(), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -348,7 +498,13 @@ HB_FUNC( QT_QTEXTBLOCK_TEXTLIST )
  */
 HB_FUNC( QT_QTEXTBLOCK_USERDATA )
 {
-   hb_retptrGC( hbqt_gcAllocate_HBQTextBlockUserData( hbqt_par_QTextBlock( 1 )->userData(), false ) );
+   QTextBlock * p = hbqt_par_QTextBlock( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_HBQTextBlockUserData( ( p )->userData(), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBLOCK_USERDATA FP=hb_retptrGC( hbqt_gcAllocate_HBQTextBlockUserData( ( p )->userData(), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -356,7 +512,13 @@ HB_FUNC( QT_QTEXTBLOCK_USERDATA )
  */
 HB_FUNC( QT_QTEXTBLOCK_USERSTATE )
 {
-   hb_retni( hbqt_par_QTextBlock( 1 )->userState() );
+   QTextBlock * p = hbqt_par_QTextBlock( 1 );
+   if( p )
+      hb_retni( ( p )->userState() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBLOCK_USERSTATE FP=hb_retni( ( p )->userState() ); p is NULL" ) );
+   }
 }
 
 

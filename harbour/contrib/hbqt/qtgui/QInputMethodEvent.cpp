@@ -90,7 +90,7 @@
 
 typedef struct
 {
-   void * ph;
+   QInputMethodEvent * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QInputMethodEvent;
@@ -125,7 +125,7 @@ void * hbqt_gcAllocate_QInputMethodEvent( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QInputMethodEvent * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QInputMethodEvent;
 
@@ -142,11 +142,11 @@ void * hbqt_gcAllocate_QInputMethodEvent( void * pObj, bool bNew )
 
 HB_FUNC( QT_QINPUTMETHODEVENT )
 {
-   void * pObj = NULL;
+   QInputMethodEvent * pObj = NULL;
 
    pObj = new QInputMethodEvent() ;
 
-   hb_retptrGC( hbqt_gcAllocate_QInputMethodEvent( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QInputMethodEvent( ( void * ) pObj, true ) );
 }
 
 /*
@@ -154,7 +154,13 @@ HB_FUNC( QT_QINPUTMETHODEVENT )
  */
 HB_FUNC( QT_QINPUTMETHODEVENT_COMMITSTRING )
 {
-   hb_retc( hbqt_par_QInputMethodEvent( 1 )->commitString().toAscii().data() );
+   QInputMethodEvent * p = hbqt_par_QInputMethodEvent( 1 );
+   if( p )
+      hb_retc( ( p )->commitString().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINPUTMETHODEVENT_COMMITSTRING FP=hb_retc( ( p )->commitString().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -162,7 +168,13 @@ HB_FUNC( QT_QINPUTMETHODEVENT_COMMITSTRING )
  */
 HB_FUNC( QT_QINPUTMETHODEVENT_PREEDITSTRING )
 {
-   hb_retc( hbqt_par_QInputMethodEvent( 1 )->preeditString().toAscii().data() );
+   QInputMethodEvent * p = hbqt_par_QInputMethodEvent( 1 );
+   if( p )
+      hb_retc( ( p )->preeditString().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINPUTMETHODEVENT_PREEDITSTRING FP=hb_retc( ( p )->preeditString().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -170,7 +182,13 @@ HB_FUNC( QT_QINPUTMETHODEVENT_PREEDITSTRING )
  */
 HB_FUNC( QT_QINPUTMETHODEVENT_REPLACEMENTLENGTH )
 {
-   hb_retni( hbqt_par_QInputMethodEvent( 1 )->replacementLength() );
+   QInputMethodEvent * p = hbqt_par_QInputMethodEvent( 1 );
+   if( p )
+      hb_retni( ( p )->replacementLength() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINPUTMETHODEVENT_REPLACEMENTLENGTH FP=hb_retni( ( p )->replacementLength() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -178,7 +196,13 @@ HB_FUNC( QT_QINPUTMETHODEVENT_REPLACEMENTLENGTH )
  */
 HB_FUNC( QT_QINPUTMETHODEVENT_REPLACEMENTSTART )
 {
-   hb_retni( hbqt_par_QInputMethodEvent( 1 )->replacementStart() );
+   QInputMethodEvent * p = hbqt_par_QInputMethodEvent( 1 );
+   if( p )
+      hb_retni( ( p )->replacementStart() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINPUTMETHODEVENT_REPLACEMENTSTART FP=hb_retni( ( p )->replacementStart() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -186,7 +210,13 @@ HB_FUNC( QT_QINPUTMETHODEVENT_REPLACEMENTSTART )
  */
 HB_FUNC( QT_QINPUTMETHODEVENT_SETCOMMITSTRING )
 {
-   hbqt_par_QInputMethodEvent( 1 )->setCommitString( hbqt_par_QString( 2 ), hb_parni( 3 ), hb_parni( 4 ) );
+   QInputMethodEvent * p = hbqt_par_QInputMethodEvent( 1 );
+   if( p )
+      ( p )->setCommitString( hbqt_par_QString( 2 ), hb_parni( 3 ), hb_parni( 4 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINPUTMETHODEVENT_SETCOMMITSTRING FP=( p )->setCommitString( hbqt_par_QString( 2 ), hb_parni( 3 ), hb_parni( 4 ) ); p is NULL" ) );
+   }
 }
 
 

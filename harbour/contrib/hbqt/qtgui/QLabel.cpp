@@ -79,43 +79,44 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QLabel > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QLabel > pq;
 } QGC_POINTER_QLabel;
 
 QT_G_FUNC( hbqt_gcRelease_QLabel )
 {
+   QLabel  * ph = NULL ;
    QGC_POINTER_QLabel * p = ( QGC_POINTER_QLabel * ) Cargo;
 
-   if( p && p->bNew )
+   if( p && p->bNew && p->ph )
    {
-      if( p->ph && p->pq )
+      ph = p->ph;
+      if( ph )
       {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QLabel   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
-            delete ( ( QLabel * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QLabel   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QLabel   /.\\   ", (void*) ph, (void*) p->ph ) );
+            delete ( p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QLabel   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QLabel          pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QLabel          ", ph ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QLabel    :     Object already deleted!", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QLabel    :     Object already deleted!", ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QLabel    :    Object not created with new=true", p->ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QLabel    :    Object not created with new=true", ph ) );
       p->ph = NULL;
    }
 }
@@ -124,13 +125,12 @@ void * hbqt_gcAllocate_QLabel( void * pObj, bool bNew )
 {
    QGC_POINTER_QLabel * p = ( QGC_POINTER_QLabel * ) hb_gcAllocate( sizeof( QGC_POINTER_QLabel ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QLabel >( ( QLabel * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QLabel;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QLabel >( ( QLabel * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QLabel  under p->pq", pObj ) );
    }
    else
@@ -142,11 +142,11 @@ void * hbqt_gcAllocate_QLabel( void * pObj, bool bNew )
 
 HB_FUNC( QT_QLABEL )
 {
-   void * pObj = NULL;
+   QLabel * pObj = NULL;
 
    pObj = new QLabel( hbqt_par_QWidget( 1 ), HB_ISNUM( 2 ) ? ( Qt::WindowFlags ) hb_parni( 2 ) : ( Qt::WindowFlags ) 0 ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QLabel( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QLabel( ( void * ) pObj, true ) );
 }
 
 /*
@@ -154,7 +154,13 @@ HB_FUNC( QT_QLABEL )
  */
 HB_FUNC( QT_QLABEL_ALIGNMENT )
 {
-   hb_retni( ( Qt::Alignment ) hbqt_par_QLabel( 1 )->alignment() );
+   QLabel * p = hbqt_par_QLabel( 1 );
+   if( p )
+      hb_retni( ( Qt::Alignment ) ( p )->alignment() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLABEL_ALIGNMENT FP=hb_retni( ( Qt::Alignment ) ( p )->alignment() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -162,7 +168,13 @@ HB_FUNC( QT_QLABEL_ALIGNMENT )
  */
 HB_FUNC( QT_QLABEL_BUDDY )
 {
-   hb_retptrGC( hbqt_gcAllocate_QWidget( hbqt_par_QLabel( 1 )->buddy(), false ) );
+   QLabel * p = hbqt_par_QLabel( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->buddy(), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLABEL_BUDDY FP=hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->buddy(), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -170,7 +182,13 @@ HB_FUNC( QT_QLABEL_BUDDY )
  */
 HB_FUNC( QT_QLABEL_HASSCALEDCONTENTS )
 {
-   hb_retl( hbqt_par_QLabel( 1 )->hasScaledContents() );
+   QLabel * p = hbqt_par_QLabel( 1 );
+   if( p )
+      hb_retl( ( p )->hasScaledContents() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLABEL_HASSCALEDCONTENTS FP=hb_retl( ( p )->hasScaledContents() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -178,7 +196,13 @@ HB_FUNC( QT_QLABEL_HASSCALEDCONTENTS )
  */
 HB_FUNC( QT_QLABEL_INDENT )
 {
-   hb_retni( hbqt_par_QLabel( 1 )->indent() );
+   QLabel * p = hbqt_par_QLabel( 1 );
+   if( p )
+      hb_retni( ( p )->indent() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLABEL_INDENT FP=hb_retni( ( p )->indent() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -186,7 +210,13 @@ HB_FUNC( QT_QLABEL_INDENT )
  */
 HB_FUNC( QT_QLABEL_MARGIN )
 {
-   hb_retni( hbqt_par_QLabel( 1 )->margin() );
+   QLabel * p = hbqt_par_QLabel( 1 );
+   if( p )
+      hb_retni( ( p )->margin() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLABEL_MARGIN FP=hb_retni( ( p )->margin() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -194,7 +224,13 @@ HB_FUNC( QT_QLABEL_MARGIN )
  */
 HB_FUNC( QT_QLABEL_MOVIE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QMovie( hbqt_par_QLabel( 1 )->movie(), false ) );
+   QLabel * p = hbqt_par_QLabel( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QMovie( ( p )->movie(), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLABEL_MOVIE FP=hb_retptrGC( hbqt_gcAllocate_QMovie( ( p )->movie(), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -202,7 +238,13 @@ HB_FUNC( QT_QLABEL_MOVIE )
  */
 HB_FUNC( QT_QLABEL_OPENEXTERNALLINKS )
 {
-   hb_retl( hbqt_par_QLabel( 1 )->openExternalLinks() );
+   QLabel * p = hbqt_par_QLabel( 1 );
+   if( p )
+      hb_retl( ( p )->openExternalLinks() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLABEL_OPENEXTERNALLINKS FP=hb_retl( ( p )->openExternalLinks() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -210,7 +252,13 @@ HB_FUNC( QT_QLABEL_OPENEXTERNALLINKS )
  */
 HB_FUNC( QT_QLABEL_PICTURE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QPicture( new QPicture( *( hbqt_par_QLabel( 1 )->picture() ) ), true ) );
+   QLabel * p = hbqt_par_QLabel( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QPicture( new QPicture( *( ( p )->picture() ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLABEL_PICTURE FP=hb_retptrGC( hbqt_gcAllocate_QPicture( new QPicture( *( ( p )->picture() ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -218,7 +266,13 @@ HB_FUNC( QT_QLABEL_PICTURE )
  */
 HB_FUNC( QT_QLABEL_PIXMAP )
 {
-   hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( *( hbqt_par_QLabel( 1 )->pixmap() ) ), true ) );
+   QLabel * p = hbqt_par_QLabel( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( *( ( p )->pixmap() ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLABEL_PIXMAP FP=hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( *( ( p )->pixmap() ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -226,7 +280,13 @@ HB_FUNC( QT_QLABEL_PIXMAP )
  */
 HB_FUNC( QT_QLABEL_SETALIGNMENT )
 {
-   hbqt_par_QLabel( 1 )->setAlignment( ( Qt::Alignment ) hb_parni( 2 ) );
+   QLabel * p = hbqt_par_QLabel( 1 );
+   if( p )
+      ( p )->setAlignment( ( Qt::Alignment ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLABEL_SETALIGNMENT FP=( p )->setAlignment( ( Qt::Alignment ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -234,7 +294,13 @@ HB_FUNC( QT_QLABEL_SETALIGNMENT )
  */
 HB_FUNC( QT_QLABEL_SETBUDDY )
 {
-   hbqt_par_QLabel( 1 )->setBuddy( hbqt_par_QWidget( 2 ) );
+   QLabel * p = hbqt_par_QLabel( 1 );
+   if( p )
+      ( p )->setBuddy( hbqt_par_QWidget( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLABEL_SETBUDDY FP=( p )->setBuddy( hbqt_par_QWidget( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -242,7 +308,13 @@ HB_FUNC( QT_QLABEL_SETBUDDY )
  */
 HB_FUNC( QT_QLABEL_SETINDENT )
 {
-   hbqt_par_QLabel( 1 )->setIndent( hb_parni( 2 ) );
+   QLabel * p = hbqt_par_QLabel( 1 );
+   if( p )
+      ( p )->setIndent( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLABEL_SETINDENT FP=( p )->setIndent( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -250,7 +322,13 @@ HB_FUNC( QT_QLABEL_SETINDENT )
  */
 HB_FUNC( QT_QLABEL_SETMARGIN )
 {
-   hbqt_par_QLabel( 1 )->setMargin( hb_parni( 2 ) );
+   QLabel * p = hbqt_par_QLabel( 1 );
+   if( p )
+      ( p )->setMargin( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLABEL_SETMARGIN FP=( p )->setMargin( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -258,7 +336,13 @@ HB_FUNC( QT_QLABEL_SETMARGIN )
  */
 HB_FUNC( QT_QLABEL_SETOPENEXTERNALLINKS )
 {
-   hbqt_par_QLabel( 1 )->setOpenExternalLinks( hb_parl( 2 ) );
+   QLabel * p = hbqt_par_QLabel( 1 );
+   if( p )
+      ( p )->setOpenExternalLinks( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLABEL_SETOPENEXTERNALLINKS FP=( p )->setOpenExternalLinks( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -266,7 +350,13 @@ HB_FUNC( QT_QLABEL_SETOPENEXTERNALLINKS )
  */
 HB_FUNC( QT_QLABEL_SETSCALEDCONTENTS )
 {
-   hbqt_par_QLabel( 1 )->setScaledContents( hb_parl( 2 ) );
+   QLabel * p = hbqt_par_QLabel( 1 );
+   if( p )
+      ( p )->setScaledContents( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLABEL_SETSCALEDCONTENTS FP=( p )->setScaledContents( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -274,7 +364,13 @@ HB_FUNC( QT_QLABEL_SETSCALEDCONTENTS )
  */
 HB_FUNC( QT_QLABEL_SETTEXTFORMAT )
 {
-   hbqt_par_QLabel( 1 )->setTextFormat( ( Qt::TextFormat ) hb_parni( 2 ) );
+   QLabel * p = hbqt_par_QLabel( 1 );
+   if( p )
+      ( p )->setTextFormat( ( Qt::TextFormat ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLABEL_SETTEXTFORMAT FP=( p )->setTextFormat( ( Qt::TextFormat ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -282,7 +378,13 @@ HB_FUNC( QT_QLABEL_SETTEXTFORMAT )
  */
 HB_FUNC( QT_QLABEL_SETTEXTINTERACTIONFLAGS )
 {
-   hbqt_par_QLabel( 1 )->setTextInteractionFlags( ( Qt::TextInteractionFlags ) hb_parni( 2 ) );
+   QLabel * p = hbqt_par_QLabel( 1 );
+   if( p )
+      ( p )->setTextInteractionFlags( ( Qt::TextInteractionFlags ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLABEL_SETTEXTINTERACTIONFLAGS FP=( p )->setTextInteractionFlags( ( Qt::TextInteractionFlags ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -290,7 +392,13 @@ HB_FUNC( QT_QLABEL_SETTEXTINTERACTIONFLAGS )
  */
 HB_FUNC( QT_QLABEL_SETWORDWRAP )
 {
-   hbqt_par_QLabel( 1 )->setWordWrap( hb_parl( 2 ) );
+   QLabel * p = hbqt_par_QLabel( 1 );
+   if( p )
+      ( p )->setWordWrap( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLABEL_SETWORDWRAP FP=( p )->setWordWrap( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -298,7 +406,13 @@ HB_FUNC( QT_QLABEL_SETWORDWRAP )
  */
 HB_FUNC( QT_QLABEL_TEXT )
 {
-   hb_retc( hbqt_par_QLabel( 1 )->text().toAscii().data() );
+   QLabel * p = hbqt_par_QLabel( 1 );
+   if( p )
+      hb_retc( ( p )->text().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLABEL_TEXT FP=hb_retc( ( p )->text().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -306,7 +420,13 @@ HB_FUNC( QT_QLABEL_TEXT )
  */
 HB_FUNC( QT_QLABEL_TEXTFORMAT )
 {
-   hb_retni( ( Qt::TextFormat ) hbqt_par_QLabel( 1 )->textFormat() );
+   QLabel * p = hbqt_par_QLabel( 1 );
+   if( p )
+      hb_retni( ( Qt::TextFormat ) ( p )->textFormat() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLABEL_TEXTFORMAT FP=hb_retni( ( Qt::TextFormat ) ( p )->textFormat() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -314,7 +434,13 @@ HB_FUNC( QT_QLABEL_TEXTFORMAT )
  */
 HB_FUNC( QT_QLABEL_TEXTINTERACTIONFLAGS )
 {
-   hb_retni( ( Qt::TextInteractionFlags ) hbqt_par_QLabel( 1 )->textInteractionFlags() );
+   QLabel * p = hbqt_par_QLabel( 1 );
+   if( p )
+      hb_retni( ( Qt::TextInteractionFlags ) ( p )->textInteractionFlags() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLABEL_TEXTINTERACTIONFLAGS FP=hb_retni( ( Qt::TextInteractionFlags ) ( p )->textInteractionFlags() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -322,7 +448,13 @@ HB_FUNC( QT_QLABEL_TEXTINTERACTIONFLAGS )
  */
 HB_FUNC( QT_QLABEL_WORDWRAP )
 {
-   hb_retl( hbqt_par_QLabel( 1 )->wordWrap() );
+   QLabel * p = hbqt_par_QLabel( 1 );
+   if( p )
+      hb_retl( ( p )->wordWrap() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLABEL_WORDWRAP FP=hb_retl( ( p )->wordWrap() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -330,7 +462,13 @@ HB_FUNC( QT_QLABEL_WORDWRAP )
  */
 HB_FUNC( QT_QLABEL_CLEAR )
 {
-   hbqt_par_QLabel( 1 )->clear();
+   QLabel * p = hbqt_par_QLabel( 1 );
+   if( p )
+      ( p )->clear();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLABEL_CLEAR FP=( p )->clear(); p is NULL" ) );
+   }
 }
 
 /*
@@ -338,7 +476,13 @@ HB_FUNC( QT_QLABEL_CLEAR )
  */
 HB_FUNC( QT_QLABEL_SETMOVIE )
 {
-   hbqt_par_QLabel( 1 )->setMovie( hbqt_par_QMovie( 2 ) );
+   QLabel * p = hbqt_par_QLabel( 1 );
+   if( p )
+      ( p )->setMovie( hbqt_par_QMovie( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLABEL_SETMOVIE FP=( p )->setMovie( hbqt_par_QMovie( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -346,7 +490,13 @@ HB_FUNC( QT_QLABEL_SETMOVIE )
  */
 HB_FUNC( QT_QLABEL_SETNUM )
 {
-   hbqt_par_QLabel( 1 )->setNum( hb_parni( 2 ) );
+   QLabel * p = hbqt_par_QLabel( 1 );
+   if( p )
+      ( p )->setNum( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLABEL_SETNUM FP=( p )->setNum( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -354,7 +504,13 @@ HB_FUNC( QT_QLABEL_SETNUM )
  */
 HB_FUNC( QT_QLABEL_SETNUM_1 )
 {
-   hbqt_par_QLabel( 1 )->setNum( hb_parnd( 2 ) );
+   QLabel * p = hbqt_par_QLabel( 1 );
+   if( p )
+      ( p )->setNum( hb_parnd( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLABEL_SETNUM_1 FP=( p )->setNum( hb_parnd( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -362,7 +518,13 @@ HB_FUNC( QT_QLABEL_SETNUM_1 )
  */
 HB_FUNC( QT_QLABEL_SETPICTURE )
 {
-   hbqt_par_QLabel( 1 )->setPicture( *hbqt_par_QPicture( 2 ) );
+   QLabel * p = hbqt_par_QLabel( 1 );
+   if( p )
+      ( p )->setPicture( *hbqt_par_QPicture( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLABEL_SETPICTURE FP=( p )->setPicture( *hbqt_par_QPicture( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -370,7 +532,13 @@ HB_FUNC( QT_QLABEL_SETPICTURE )
  */
 HB_FUNC( QT_QLABEL_SETPIXMAP )
 {
-   hbqt_par_QLabel( 1 )->setPixmap( *hbqt_par_QPixmap( 2 ) );
+   QLabel * p = hbqt_par_QLabel( 1 );
+   if( p )
+      ( p )->setPixmap( *hbqt_par_QPixmap( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLABEL_SETPIXMAP FP=( p )->setPixmap( *hbqt_par_QPixmap( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -378,7 +546,13 @@ HB_FUNC( QT_QLABEL_SETPIXMAP )
  */
 HB_FUNC( QT_QLABEL_SETTEXT )
 {
-   hbqt_par_QLabel( 1 )->setText( QLabel::tr( hb_parc( 2 ) ) );
+   QLabel * p = hbqt_par_QLabel( 1 );
+   if( p )
+      ( p )->setText( QLabel::tr( hb_parc( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLABEL_SETTEXT FP=( p )->setText( QLabel::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 

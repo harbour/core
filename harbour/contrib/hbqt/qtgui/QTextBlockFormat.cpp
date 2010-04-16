@@ -95,7 +95,7 @@
 
 typedef struct
 {
-   void * ph;
+   QTextBlockFormat * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QTextBlockFormat;
@@ -130,7 +130,7 @@ void * hbqt_gcAllocate_QTextBlockFormat( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QTextBlockFormat * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextBlockFormat;
 
@@ -147,18 +147,18 @@ void * hbqt_gcAllocate_QTextBlockFormat( void * pObj, bool bNew )
 
 HB_FUNC( QT_QTEXTBLOCKFORMAT )
 {
-   void * pObj = NULL;
+   QTextBlockFormat * pObj = NULL;
 
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      pObj = ( QTextBlockFormat* ) new QTextBlockFormat( *hbqt_par_QTextBlockFormat( 1 ) ) ;
+      pObj =  new QTextBlockFormat( *hbqt_par_QTextBlockFormat( 1 ) ) ;
    }
    else
    {
-      pObj = ( QTextBlockFormat* ) new QTextBlockFormat() ;
+      pObj =  new QTextBlockFormat() ;
    }
 
-   hb_retptrGC( hbqt_gcAllocate_QTextBlockFormat( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextBlockFormat( ( void * ) pObj, true ) );
 }
 
 /*
@@ -166,7 +166,13 @@ HB_FUNC( QT_QTEXTBLOCKFORMAT )
  */
 HB_FUNC( QT_QTEXTBLOCKFORMAT_ALIGNMENT )
 {
-   hb_retni( ( Qt::Alignment ) hbqt_par_QTextBlockFormat( 1 )->alignment() );
+   QTextBlockFormat * p = hbqt_par_QTextBlockFormat( 1 );
+   if( p )
+      hb_retni( ( Qt::Alignment ) ( p )->alignment() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBLOCKFORMAT_ALIGNMENT FP=hb_retni( ( Qt::Alignment ) ( p )->alignment() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -174,7 +180,13 @@ HB_FUNC( QT_QTEXTBLOCKFORMAT_ALIGNMENT )
  */
 HB_FUNC( QT_QTEXTBLOCKFORMAT_BOTTOMMARGIN )
 {
-   hb_retnd( hbqt_par_QTextBlockFormat( 1 )->bottomMargin() );
+   QTextBlockFormat * p = hbqt_par_QTextBlockFormat( 1 );
+   if( p )
+      hb_retnd( ( p )->bottomMargin() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBLOCKFORMAT_BOTTOMMARGIN FP=hb_retnd( ( p )->bottomMargin() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -182,7 +194,13 @@ HB_FUNC( QT_QTEXTBLOCKFORMAT_BOTTOMMARGIN )
  */
 HB_FUNC( QT_QTEXTBLOCKFORMAT_INDENT )
 {
-   hb_retni( hbqt_par_QTextBlockFormat( 1 )->indent() );
+   QTextBlockFormat * p = hbqt_par_QTextBlockFormat( 1 );
+   if( p )
+      hb_retni( ( p )->indent() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBLOCKFORMAT_INDENT FP=hb_retni( ( p )->indent() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -190,7 +208,13 @@ HB_FUNC( QT_QTEXTBLOCKFORMAT_INDENT )
  */
 HB_FUNC( QT_QTEXTBLOCKFORMAT_ISVALID )
 {
-   hb_retl( hbqt_par_QTextBlockFormat( 1 )->isValid() );
+   QTextBlockFormat * p = hbqt_par_QTextBlockFormat( 1 );
+   if( p )
+      hb_retl( ( p )->isValid() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBLOCKFORMAT_ISVALID FP=hb_retl( ( p )->isValid() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -198,7 +222,13 @@ HB_FUNC( QT_QTEXTBLOCKFORMAT_ISVALID )
  */
 HB_FUNC( QT_QTEXTBLOCKFORMAT_LEFTMARGIN )
 {
-   hb_retnd( hbqt_par_QTextBlockFormat( 1 )->leftMargin() );
+   QTextBlockFormat * p = hbqt_par_QTextBlockFormat( 1 );
+   if( p )
+      hb_retnd( ( p )->leftMargin() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBLOCKFORMAT_LEFTMARGIN FP=hb_retnd( ( p )->leftMargin() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -206,7 +236,13 @@ HB_FUNC( QT_QTEXTBLOCKFORMAT_LEFTMARGIN )
  */
 HB_FUNC( QT_QTEXTBLOCKFORMAT_NONBREAKABLELINES )
 {
-   hb_retl( hbqt_par_QTextBlockFormat( 1 )->nonBreakableLines() );
+   QTextBlockFormat * p = hbqt_par_QTextBlockFormat( 1 );
+   if( p )
+      hb_retl( ( p )->nonBreakableLines() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBLOCKFORMAT_NONBREAKABLELINES FP=hb_retl( ( p )->nonBreakableLines() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -214,7 +250,13 @@ HB_FUNC( QT_QTEXTBLOCKFORMAT_NONBREAKABLELINES )
  */
 HB_FUNC( QT_QTEXTBLOCKFORMAT_PAGEBREAKPOLICY )
 {
-   hb_retni( ( QTextBlockFormat::PageBreakFlags ) hbqt_par_QTextBlockFormat( 1 )->pageBreakPolicy() );
+   QTextBlockFormat * p = hbqt_par_QTextBlockFormat( 1 );
+   if( p )
+      hb_retni( ( QTextBlockFormat::PageBreakFlags ) ( p )->pageBreakPolicy() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBLOCKFORMAT_PAGEBREAKPOLICY FP=hb_retni( ( QTextBlockFormat::PageBreakFlags ) ( p )->pageBreakPolicy() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -222,7 +264,13 @@ HB_FUNC( QT_QTEXTBLOCKFORMAT_PAGEBREAKPOLICY )
  */
 HB_FUNC( QT_QTEXTBLOCKFORMAT_RIGHTMARGIN )
 {
-   hb_retnd( hbqt_par_QTextBlockFormat( 1 )->rightMargin() );
+   QTextBlockFormat * p = hbqt_par_QTextBlockFormat( 1 );
+   if( p )
+      hb_retnd( ( p )->rightMargin() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBLOCKFORMAT_RIGHTMARGIN FP=hb_retnd( ( p )->rightMargin() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -230,7 +278,13 @@ HB_FUNC( QT_QTEXTBLOCKFORMAT_RIGHTMARGIN )
  */
 HB_FUNC( QT_QTEXTBLOCKFORMAT_SETALIGNMENT )
 {
-   hbqt_par_QTextBlockFormat( 1 )->setAlignment( ( Qt::Alignment ) hb_parni( 2 ) );
+   QTextBlockFormat * p = hbqt_par_QTextBlockFormat( 1 );
+   if( p )
+      ( p )->setAlignment( ( Qt::Alignment ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBLOCKFORMAT_SETALIGNMENT FP=( p )->setAlignment( ( Qt::Alignment ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -238,7 +292,13 @@ HB_FUNC( QT_QTEXTBLOCKFORMAT_SETALIGNMENT )
  */
 HB_FUNC( QT_QTEXTBLOCKFORMAT_SETBOTTOMMARGIN )
 {
-   hbqt_par_QTextBlockFormat( 1 )->setBottomMargin( hb_parnd( 2 ) );
+   QTextBlockFormat * p = hbqt_par_QTextBlockFormat( 1 );
+   if( p )
+      ( p )->setBottomMargin( hb_parnd( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBLOCKFORMAT_SETBOTTOMMARGIN FP=( p )->setBottomMargin( hb_parnd( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -246,7 +306,13 @@ HB_FUNC( QT_QTEXTBLOCKFORMAT_SETBOTTOMMARGIN )
  */
 HB_FUNC( QT_QTEXTBLOCKFORMAT_SETINDENT )
 {
-   hbqt_par_QTextBlockFormat( 1 )->setIndent( hb_parni( 2 ) );
+   QTextBlockFormat * p = hbqt_par_QTextBlockFormat( 1 );
+   if( p )
+      ( p )->setIndent( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBLOCKFORMAT_SETINDENT FP=( p )->setIndent( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -254,7 +320,13 @@ HB_FUNC( QT_QTEXTBLOCKFORMAT_SETINDENT )
  */
 HB_FUNC( QT_QTEXTBLOCKFORMAT_SETLEFTMARGIN )
 {
-   hbqt_par_QTextBlockFormat( 1 )->setLeftMargin( hb_parnd( 2 ) );
+   QTextBlockFormat * p = hbqt_par_QTextBlockFormat( 1 );
+   if( p )
+      ( p )->setLeftMargin( hb_parnd( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBLOCKFORMAT_SETLEFTMARGIN FP=( p )->setLeftMargin( hb_parnd( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -262,7 +334,13 @@ HB_FUNC( QT_QTEXTBLOCKFORMAT_SETLEFTMARGIN )
  */
 HB_FUNC( QT_QTEXTBLOCKFORMAT_SETNONBREAKABLELINES )
 {
-   hbqt_par_QTextBlockFormat( 1 )->setNonBreakableLines( hb_parl( 2 ) );
+   QTextBlockFormat * p = hbqt_par_QTextBlockFormat( 1 );
+   if( p )
+      ( p )->setNonBreakableLines( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBLOCKFORMAT_SETNONBREAKABLELINES FP=( p )->setNonBreakableLines( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -270,7 +348,13 @@ HB_FUNC( QT_QTEXTBLOCKFORMAT_SETNONBREAKABLELINES )
  */
 HB_FUNC( QT_QTEXTBLOCKFORMAT_SETPAGEBREAKPOLICY )
 {
-   hbqt_par_QTextBlockFormat( 1 )->setPageBreakPolicy( ( QTextBlockFormat::PageBreakFlags ) hb_parni( 2 ) );
+   QTextBlockFormat * p = hbqt_par_QTextBlockFormat( 1 );
+   if( p )
+      ( p )->setPageBreakPolicy( ( QTextBlockFormat::PageBreakFlags ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBLOCKFORMAT_SETPAGEBREAKPOLICY FP=( p )->setPageBreakPolicy( ( QTextBlockFormat::PageBreakFlags ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -278,7 +362,13 @@ HB_FUNC( QT_QTEXTBLOCKFORMAT_SETPAGEBREAKPOLICY )
  */
 HB_FUNC( QT_QTEXTBLOCKFORMAT_SETRIGHTMARGIN )
 {
-   hbqt_par_QTextBlockFormat( 1 )->setRightMargin( hb_parnd( 2 ) );
+   QTextBlockFormat * p = hbqt_par_QTextBlockFormat( 1 );
+   if( p )
+      ( p )->setRightMargin( hb_parnd( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBLOCKFORMAT_SETRIGHTMARGIN FP=( p )->setRightMargin( hb_parnd( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -286,7 +376,13 @@ HB_FUNC( QT_QTEXTBLOCKFORMAT_SETRIGHTMARGIN )
  */
 HB_FUNC( QT_QTEXTBLOCKFORMAT_SETTEXTINDENT )
 {
-   hbqt_par_QTextBlockFormat( 1 )->setTextIndent( hb_parnd( 2 ) );
+   QTextBlockFormat * p = hbqt_par_QTextBlockFormat( 1 );
+   if( p )
+      ( p )->setTextIndent( hb_parnd( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBLOCKFORMAT_SETTEXTINDENT FP=( p )->setTextIndent( hb_parnd( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -294,7 +390,13 @@ HB_FUNC( QT_QTEXTBLOCKFORMAT_SETTEXTINDENT )
  */
 HB_FUNC( QT_QTEXTBLOCKFORMAT_SETTOPMARGIN )
 {
-   hbqt_par_QTextBlockFormat( 1 )->setTopMargin( hb_parnd( 2 ) );
+   QTextBlockFormat * p = hbqt_par_QTextBlockFormat( 1 );
+   if( p )
+      ( p )->setTopMargin( hb_parnd( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBLOCKFORMAT_SETTOPMARGIN FP=( p )->setTopMargin( hb_parnd( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -302,7 +404,13 @@ HB_FUNC( QT_QTEXTBLOCKFORMAT_SETTOPMARGIN )
  */
 HB_FUNC( QT_QTEXTBLOCKFORMAT_TEXTINDENT )
 {
-   hb_retnd( hbqt_par_QTextBlockFormat( 1 )->textIndent() );
+   QTextBlockFormat * p = hbqt_par_QTextBlockFormat( 1 );
+   if( p )
+      hb_retnd( ( p )->textIndent() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBLOCKFORMAT_TEXTINDENT FP=hb_retnd( ( p )->textIndent() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -310,7 +418,13 @@ HB_FUNC( QT_QTEXTBLOCKFORMAT_TEXTINDENT )
  */
 HB_FUNC( QT_QTEXTBLOCKFORMAT_TOPMARGIN )
 {
-   hb_retnd( hbqt_par_QTextBlockFormat( 1 )->topMargin() );
+   QTextBlockFormat * p = hbqt_par_QTextBlockFormat( 1 );
+   if( p )
+      hb_retnd( ( p )->topMargin() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBLOCKFORMAT_TOPMARGIN FP=hb_retnd( ( p )->topMargin() ); p is NULL" ) );
+   }
 }
 
 

@@ -84,7 +84,7 @@
 
 typedef struct
 {
-   void * ph;
+   QStyleOptionToolButton * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QStyleOptionToolButton;
@@ -119,7 +119,7 @@ void * hbqt_gcAllocate_QStyleOptionToolButton( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QStyleOptionToolButton * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyleOptionToolButton;
 
@@ -136,11 +136,11 @@ void * hbqt_gcAllocate_QStyleOptionToolButton( void * pObj, bool bNew )
 
 HB_FUNC( QT_QSTYLEOPTIONTOOLBUTTON )
 {
-   void * pObj = NULL;
+   QStyleOptionToolButton * pObj = NULL;
 
-   pObj = ( QStyleOptionToolButton* ) new QStyleOptionToolButton() ;
+   pObj =  new QStyleOptionToolButton() ;
 
-   hb_retptrGC( hbqt_gcAllocate_QStyleOptionToolButton( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QStyleOptionToolButton( ( void * ) pObj, true ) );
 }
 
 /*

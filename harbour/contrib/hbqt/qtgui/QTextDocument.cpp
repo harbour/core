@@ -96,43 +96,44 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QTextDocument > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QTextDocument > pq;
 } QGC_POINTER_QTextDocument;
 
 QT_G_FUNC( hbqt_gcRelease_QTextDocument )
 {
+   QTextDocument  * ph = NULL ;
    QGC_POINTER_QTextDocument * p = ( QGC_POINTER_QTextDocument * ) Cargo;
 
-   if( p && p->bNew )
+   if( p && p->bNew && p->ph )
    {
-      if( p->ph && p->pq )
+      ph = p->ph;
+      if( ph )
       {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QTextDocument   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
-            delete ( ( QTextDocument * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QTextDocument   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QTextDocument   /.\\   ", (void*) ph, (void*) p->ph ) );
+            delete ( p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QTextDocument   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QTextDocument          pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QTextDocument          ", ph ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QTextDocument    :     Object already deleted!", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QTextDocument    :     Object already deleted!", ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QTextDocument    :    Object not created with new=true", p->ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QTextDocument    :    Object not created with new=true", ph ) );
       p->ph = NULL;
    }
 }
@@ -141,13 +142,12 @@ void * hbqt_gcAllocate_QTextDocument( void * pObj, bool bNew )
 {
    QGC_POINTER_QTextDocument * p = ( QGC_POINTER_QTextDocument * ) hb_gcAllocate( sizeof( QGC_POINTER_QTextDocument ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QTextDocument >( ( QTextDocument * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextDocument;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QTextDocument >( ( QTextDocument * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QTextDocument  under p->pq", pObj ) );
    }
    else
@@ -159,11 +159,11 @@ void * hbqt_gcAllocate_QTextDocument( void * pObj, bool bNew )
 
 HB_FUNC( QT_QTEXTDOCUMENT )
 {
-   void * pObj = NULL;
+   QTextDocument * pObj = NULL;
 
-   pObj = ( QTextDocument* ) new QTextDocument( hbqt_par_QObject( 1 ) ) ;
+   pObj =  new QTextDocument( hbqt_par_QObject( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QTextDocument( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextDocument( ( void * ) pObj, true ) );
 }
 
 /*
@@ -171,7 +171,13 @@ HB_FUNC( QT_QTEXTDOCUMENT )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_ADDRESOURCE )
 {
-   hbqt_par_QTextDocument( 1 )->addResource( hb_parni( 2 ), *hbqt_par_QUrl( 3 ), *hbqt_par_QVariant( 4 ) );
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      ( p )->addResource( hb_parni( 2 ), *hbqt_par_QUrl( 3 ), *hbqt_par_QVariant( 4 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_ADDRESOURCE FP=( p )->addResource( hb_parni( 2 ), *hbqt_par_QUrl( 3 ), *hbqt_par_QVariant( 4 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -179,7 +185,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_ADDRESOURCE )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_ADJUSTSIZE )
 {
-   hbqt_par_QTextDocument( 1 )->adjustSize();
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      ( p )->adjustSize();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_ADJUSTSIZE FP=( p )->adjustSize(); p is NULL" ) );
+   }
 }
 
 /*
@@ -187,7 +199,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_ADJUSTSIZE )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_BEGIN )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTextBlock( new QTextBlock( hbqt_par_QTextDocument( 1 )->begin() ), true ) );
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QTextBlock( new QTextBlock( ( p )->begin() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_BEGIN FP=hb_retptrGC( hbqt_gcAllocate_QTextBlock( new QTextBlock( ( p )->begin() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -195,7 +213,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_BEGIN )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_BLOCKCOUNT )
 {
-   hb_retni( hbqt_par_QTextDocument( 1 )->blockCount() );
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      hb_retni( ( p )->blockCount() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_BLOCKCOUNT FP=hb_retni( ( p )->blockCount() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -203,7 +227,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_BLOCKCOUNT )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_CHARACTERAT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QChar( new QChar( hbqt_par_QTextDocument( 1 )->characterAt( hb_parni( 2 ) ) ), true ) );
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QChar( new QChar( ( p )->characterAt( hb_parni( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_CHARACTERAT FP=hb_retptrGC( hbqt_gcAllocate_QChar( new QChar( ( p )->characterAt( hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -211,7 +241,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_CHARACTERAT )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_CHARACTERCOUNT )
 {
-   hb_retni( hbqt_par_QTextDocument( 1 )->characterCount() );
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      hb_retni( ( p )->characterCount() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_CHARACTERCOUNT FP=hb_retni( ( p )->characterCount() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -219,7 +255,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_CHARACTERCOUNT )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_CLEAR )
 {
-   hbqt_par_QTextDocument( 1 )->clear();
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      ( p )->clear();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_CLEAR FP=( p )->clear(); p is NULL" ) );
+   }
 }
 
 /*
@@ -227,7 +269,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_CLEAR )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_CLONE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTextDocument( hbqt_par_QTextDocument( 1 )->clone( hbqt_par_QObject( 2 ) ), false ) );
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QTextDocument( ( p )->clone( hbqt_par_QObject( 2 ) ), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_CLONE FP=hb_retptrGC( hbqt_gcAllocate_QTextDocument( ( p )->clone( hbqt_par_QObject( 2 ) ), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -235,7 +283,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_CLONE )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_DEFAULTFONT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( hbqt_par_QTextDocument( 1 )->defaultFont() ), true ) );
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( ( p )->defaultFont() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_DEFAULTFONT FP=hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( ( p )->defaultFont() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -243,7 +297,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_DEFAULTFONT )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_DEFAULTSTYLESHEET )
 {
-   hb_retc( hbqt_par_QTextDocument( 1 )->defaultStyleSheet().toAscii().data() );
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      hb_retc( ( p )->defaultStyleSheet().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_DEFAULTSTYLESHEET FP=hb_retc( ( p )->defaultStyleSheet().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -251,7 +311,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_DEFAULTSTYLESHEET )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_DEFAULTTEXTOPTION )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTextOption( new QTextOption( hbqt_par_QTextDocument( 1 )->defaultTextOption() ), true ) );
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QTextOption( new QTextOption( ( p )->defaultTextOption() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_DEFAULTTEXTOPTION FP=hb_retptrGC( hbqt_gcAllocate_QTextOption( new QTextOption( ( p )->defaultTextOption() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -259,7 +325,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_DEFAULTTEXTOPTION )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_DOCUMENTLAYOUT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QAbstractTextDocumentLayout( hbqt_par_QTextDocument( 1 )->documentLayout(), false ) );
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QAbstractTextDocumentLayout( ( p )->documentLayout(), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_DOCUMENTLAYOUT FP=hb_retptrGC( hbqt_gcAllocate_QAbstractTextDocumentLayout( ( p )->documentLayout(), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -267,7 +339,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_DOCUMENTLAYOUT )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_DOCUMENTMARGIN )
 {
-   hb_retnd( hbqt_par_QTextDocument( 1 )->documentMargin() );
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      hb_retnd( ( p )->documentMargin() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_DOCUMENTMARGIN FP=hb_retnd( ( p )->documentMargin() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -275,7 +353,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_DOCUMENTMARGIN )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_DRAWCONTENTS )
 {
-   hbqt_par_QTextDocument( 1 )->drawContents( hbqt_par_QPainter( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QRectF( 3 ) : QRectF() ) );
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      ( p )->drawContents( hbqt_par_QPainter( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QRectF( 3 ) : QRectF() ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_DRAWCONTENTS FP=( p )->drawContents( hbqt_par_QPainter( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QRectF( 3 ) : QRectF() ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -283,7 +367,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_DRAWCONTENTS )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_END )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTextBlock( new QTextBlock( hbqt_par_QTextDocument( 1 )->end() ), true ) );
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QTextBlock( new QTextBlock( ( p )->end() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_END FP=hb_retptrGC( hbqt_gcAllocate_QTextBlock( new QTextBlock( ( p )->end() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -291,7 +381,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_END )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_FIND )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTextCursor( new QTextCursor( hbqt_par_QTextDocument( 1 )->find( QTextDocument::tr( hb_parc( 2 ) ), *hbqt_par_QTextCursor( 3 ), ( QTextDocument::FindFlags ) hb_parni( 4 ) ) ), true ) );
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QTextCursor( new QTextCursor( ( p )->find( QTextDocument::tr( hb_parc( 2 ) ), *hbqt_par_QTextCursor( 3 ), ( QTextDocument::FindFlags ) hb_parni( 4 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_FIND FP=hb_retptrGC( hbqt_gcAllocate_QTextCursor( new QTextCursor( ( p )->find( QTextDocument::tr( hb_parc( 2 ) ), *hbqt_par_QTextCursor( 3 ), ( QTextDocument::FindFlags ) hb_parni( 4 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -299,7 +395,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_FIND )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_FIND_1 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTextCursor( new QTextCursor( hbqt_par_QTextDocument( 1 )->find( *hbqt_par_QRegExp( 2 ), *hbqt_par_QTextCursor( 3 ), ( QTextDocument::FindFlags ) hb_parni( 4 ) ) ), true ) );
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QTextCursor( new QTextCursor( ( p )->find( *hbqt_par_QRegExp( 2 ), *hbqt_par_QTextCursor( 3 ), ( QTextDocument::FindFlags ) hb_parni( 4 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_FIND_1 FP=hb_retptrGC( hbqt_gcAllocate_QTextCursor( new QTextCursor( ( p )->find( *hbqt_par_QRegExp( 2 ), *hbqt_par_QTextCursor( 3 ), ( QTextDocument::FindFlags ) hb_parni( 4 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -307,7 +409,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_FIND_1 )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_FIND_2 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTextCursor( new QTextCursor( hbqt_par_QTextDocument( 1 )->find( QTextDocument::tr( hb_parc( 2 ) ), hb_parni( 3 ), ( QTextDocument::FindFlags ) hb_parni( 4 ) ) ), true ) );
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QTextCursor( new QTextCursor( ( p )->find( QTextDocument::tr( hb_parc( 2 ) ), hb_parni( 3 ), ( QTextDocument::FindFlags ) hb_parni( 4 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_FIND_2 FP=hb_retptrGC( hbqt_gcAllocate_QTextCursor( new QTextCursor( ( p )->find( QTextDocument::tr( hb_parc( 2 ) ), hb_parni( 3 ), ( QTextDocument::FindFlags ) hb_parni( 4 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -315,7 +423,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_FIND_2 )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_FIND_3 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTextCursor( new QTextCursor( hbqt_par_QTextDocument( 1 )->find( *hbqt_par_QRegExp( 2 ), hb_parni( 3 ), ( QTextDocument::FindFlags ) hb_parni( 4 ) ) ), true ) );
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QTextCursor( new QTextCursor( ( p )->find( *hbqt_par_QRegExp( 2 ), hb_parni( 3 ), ( QTextDocument::FindFlags ) hb_parni( 4 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_FIND_3 FP=hb_retptrGC( hbqt_gcAllocate_QTextCursor( new QTextCursor( ( p )->find( *hbqt_par_QRegExp( 2 ), hb_parni( 3 ), ( QTextDocument::FindFlags ) hb_parni( 4 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -323,7 +437,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_FIND_3 )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_FINDBLOCK )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTextBlock( new QTextBlock( hbqt_par_QTextDocument( 1 )->findBlock( hb_parni( 2 ) ) ), true ) );
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QTextBlock( new QTextBlock( ( p )->findBlock( hb_parni( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_FINDBLOCK FP=hb_retptrGC( hbqt_gcAllocate_QTextBlock( new QTextBlock( ( p )->findBlock( hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -331,7 +451,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_FINDBLOCK )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_FINDBLOCKBYLINENUMBER )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTextBlock( new QTextBlock( hbqt_par_QTextDocument( 1 )->findBlockByLineNumber( hb_parni( 2 ) ) ), true ) );
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QTextBlock( new QTextBlock( ( p )->findBlockByLineNumber( hb_parni( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_FINDBLOCKBYLINENUMBER FP=hb_retptrGC( hbqt_gcAllocate_QTextBlock( new QTextBlock( ( p )->findBlockByLineNumber( hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -339,7 +465,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_FINDBLOCKBYLINENUMBER )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_FINDBLOCKBYNUMBER )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTextBlock( new QTextBlock( hbqt_par_QTextDocument( 1 )->findBlockByNumber( hb_parni( 2 ) ) ), true ) );
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QTextBlock( new QTextBlock( ( p )->findBlockByNumber( hb_parni( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_FINDBLOCKBYNUMBER FP=hb_retptrGC( hbqt_gcAllocate_QTextBlock( new QTextBlock( ( p )->findBlockByNumber( hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -347,7 +479,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_FINDBLOCKBYNUMBER )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_FIRSTBLOCK )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTextBlock( new QTextBlock( hbqt_par_QTextDocument( 1 )->firstBlock() ), true ) );
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QTextBlock( new QTextBlock( ( p )->firstBlock() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_FIRSTBLOCK FP=hb_retptrGC( hbqt_gcAllocate_QTextBlock( new QTextBlock( ( p )->firstBlock() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -355,7 +493,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_FIRSTBLOCK )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_IDEALWIDTH )
 {
-   hb_retnd( hbqt_par_QTextDocument( 1 )->idealWidth() );
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      hb_retnd( ( p )->idealWidth() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_IDEALWIDTH FP=hb_retnd( ( p )->idealWidth() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -363,7 +507,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_IDEALWIDTH )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_INDENTWIDTH )
 {
-   hb_retnd( hbqt_par_QTextDocument( 1 )->indentWidth() );
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      hb_retnd( ( p )->indentWidth() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_INDENTWIDTH FP=hb_retnd( ( p )->indentWidth() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -371,7 +521,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_INDENTWIDTH )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_ISEMPTY )
 {
-   hb_retl( hbqt_par_QTextDocument( 1 )->isEmpty() );
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      hb_retl( ( p )->isEmpty() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_ISEMPTY FP=hb_retl( ( p )->isEmpty() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -379,7 +535,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_ISEMPTY )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_ISMODIFIED )
 {
-   hb_retl( hbqt_par_QTextDocument( 1 )->isModified() );
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      hb_retl( ( p )->isModified() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_ISMODIFIED FP=hb_retl( ( p )->isModified() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -387,7 +549,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_ISMODIFIED )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_ISREDOAVAILABLE )
 {
-   hb_retl( hbqt_par_QTextDocument( 1 )->isRedoAvailable() );
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      hb_retl( ( p )->isRedoAvailable() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_ISREDOAVAILABLE FP=hb_retl( ( p )->isRedoAvailable() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -395,7 +563,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_ISREDOAVAILABLE )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_ISUNDOAVAILABLE )
 {
-   hb_retl( hbqt_par_QTextDocument( 1 )->isUndoAvailable() );
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      hb_retl( ( p )->isUndoAvailable() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_ISUNDOAVAILABLE FP=hb_retl( ( p )->isUndoAvailable() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -403,7 +577,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_ISUNDOAVAILABLE )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_ISUNDOREDOENABLED )
 {
-   hb_retl( hbqt_par_QTextDocument( 1 )->isUndoRedoEnabled() );
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      hb_retl( ( p )->isUndoRedoEnabled() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_ISUNDOREDOENABLED FP=hb_retl( ( p )->isUndoRedoEnabled() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -411,7 +591,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_ISUNDOREDOENABLED )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_LASTBLOCK )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTextBlock( new QTextBlock( hbqt_par_QTextDocument( 1 )->lastBlock() ), true ) );
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QTextBlock( new QTextBlock( ( p )->lastBlock() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_LASTBLOCK FP=hb_retptrGC( hbqt_gcAllocate_QTextBlock( new QTextBlock( ( p )->lastBlock() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -419,7 +605,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_LASTBLOCK )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_LINECOUNT )
 {
-   hb_retni( hbqt_par_QTextDocument( 1 )->lineCount() );
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      hb_retni( ( p )->lineCount() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_LINECOUNT FP=hb_retni( ( p )->lineCount() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -427,7 +619,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_LINECOUNT )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_MARKCONTENTSDIRTY )
 {
-   hbqt_par_QTextDocument( 1 )->markContentsDirty( hb_parni( 2 ), hb_parni( 3 ) );
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      ( p )->markContentsDirty( hb_parni( 2 ), hb_parni( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_MARKCONTENTSDIRTY FP=( p )->markContentsDirty( hb_parni( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -435,7 +633,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_MARKCONTENTSDIRTY )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_MAXIMUMBLOCKCOUNT )
 {
-   hb_retni( hbqt_par_QTextDocument( 1 )->maximumBlockCount() );
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      hb_retni( ( p )->maximumBlockCount() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_MAXIMUMBLOCKCOUNT FP=hb_retni( ( p )->maximumBlockCount() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -443,7 +647,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_MAXIMUMBLOCKCOUNT )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_METAINFORMATION )
 {
-   hb_retc( hbqt_par_QTextDocument( 1 )->metaInformation( ( QTextDocument::MetaInformation ) hb_parni( 2 ) ).toAscii().data() );
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      hb_retc( ( p )->metaInformation( ( QTextDocument::MetaInformation ) hb_parni( 2 ) ).toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_METAINFORMATION FP=hb_retc( ( p )->metaInformation( ( QTextDocument::MetaInformation ) hb_parni( 2 ) ).toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -451,7 +661,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_METAINFORMATION )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_OBJECT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTextObject( hbqt_par_QTextDocument( 1 )->object( hb_parni( 2 ) ), false ) );
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QTextObject( ( p )->object( hb_parni( 2 ) ), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_OBJECT FP=hb_retptrGC( hbqt_gcAllocate_QTextObject( ( p )->object( hb_parni( 2 ) ), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -459,7 +675,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_OBJECT )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_OBJECTFORFORMAT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTextObject( hbqt_par_QTextDocument( 1 )->objectForFormat( *hbqt_par_QTextFormat( 2 ) ), false ) );
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QTextObject( ( p )->objectForFormat( *hbqt_par_QTextFormat( 2 ) ), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_OBJECTFORFORMAT FP=hb_retptrGC( hbqt_gcAllocate_QTextObject( ( p )->objectForFormat( *hbqt_par_QTextFormat( 2 ) ), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -467,7 +689,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_OBJECTFORFORMAT )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_PAGECOUNT )
 {
-   hb_retni( hbqt_par_QTextDocument( 1 )->pageCount() );
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      hb_retni( ( p )->pageCount() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_PAGECOUNT FP=hb_retni( ( p )->pageCount() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -475,7 +703,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_PAGECOUNT )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_PAGESIZE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QSizeF( new QSizeF( hbqt_par_QTextDocument( 1 )->pageSize() ), true ) );
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QSizeF( new QSizeF( ( p )->pageSize() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_PAGESIZE FP=hb_retptrGC( hbqt_gcAllocate_QSizeF( new QSizeF( ( p )->pageSize() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -483,7 +717,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_PAGESIZE )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_PRINT )
 {
-   hbqt_par_QTextDocument( 1 )->print( hbqt_par_QPrinter( 2 ) );
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      ( p )->print( hbqt_par_QPrinter( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_PRINT FP=( p )->print( hbqt_par_QPrinter( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -491,7 +731,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_PRINT )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_REDO )
 {
-   hbqt_par_QTextDocument( 1 )->redo( hbqt_par_QTextCursor( 2 ) );
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      ( p )->redo( hbqt_par_QTextCursor( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_REDO FP=( p )->redo( hbqt_par_QTextCursor( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -499,7 +745,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_REDO )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_RESOURCE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( hbqt_par_QTextDocument( 1 )->resource( hb_parni( 2 ), *hbqt_par_QUrl( 3 ) ) ), true ) );
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( ( p )->resource( hb_parni( 2 ), *hbqt_par_QUrl( 3 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_RESOURCE FP=hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( ( p )->resource( hb_parni( 2 ), *hbqt_par_QUrl( 3 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -507,7 +759,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_RESOURCE )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_REVISION )
 {
-   hb_retni( hbqt_par_QTextDocument( 1 )->revision() );
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      hb_retni( ( p )->revision() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_REVISION FP=hb_retni( ( p )->revision() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -515,7 +773,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_REVISION )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_ROOTFRAME )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTextFrame( hbqt_par_QTextDocument( 1 )->rootFrame(), false ) );
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QTextFrame( ( p )->rootFrame(), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_ROOTFRAME FP=hb_retptrGC( hbqt_gcAllocate_QTextFrame( ( p )->rootFrame(), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -523,7 +787,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_ROOTFRAME )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_SETDEFAULTFONT )
 {
-   hbqt_par_QTextDocument( 1 )->setDefaultFont( *hbqt_par_QFont( 2 ) );
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      ( p )->setDefaultFont( *hbqt_par_QFont( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_SETDEFAULTFONT FP=( p )->setDefaultFont( *hbqt_par_QFont( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -531,7 +801,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_SETDEFAULTFONT )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_SETDEFAULTSTYLESHEET )
 {
-   hbqt_par_QTextDocument( 1 )->setDefaultStyleSheet( QTextDocument::tr( hb_parc( 2 ) ) );
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      ( p )->setDefaultStyleSheet( QTextDocument::tr( hb_parc( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_SETDEFAULTSTYLESHEET FP=( p )->setDefaultStyleSheet( QTextDocument::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -539,7 +815,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_SETDEFAULTSTYLESHEET )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_SETDEFAULTTEXTOPTION )
 {
-   hbqt_par_QTextDocument( 1 )->setDefaultTextOption( *hbqt_par_QTextOption( 2 ) );
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      ( p )->setDefaultTextOption( *hbqt_par_QTextOption( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_SETDEFAULTTEXTOPTION FP=( p )->setDefaultTextOption( *hbqt_par_QTextOption( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -547,7 +829,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_SETDEFAULTTEXTOPTION )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_SETDOCUMENTLAYOUT )
 {
-   hbqt_par_QTextDocument( 1 )->setDocumentLayout( hbqt_par_QAbstractTextDocumentLayout( 2 ) );
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      ( p )->setDocumentLayout( hbqt_par_QAbstractTextDocumentLayout( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_SETDOCUMENTLAYOUT FP=( p )->setDocumentLayout( hbqt_par_QAbstractTextDocumentLayout( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -555,7 +843,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_SETDOCUMENTLAYOUT )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_SETDOCUMENTMARGIN )
 {
-   hbqt_par_QTextDocument( 1 )->setDocumentMargin( hb_parnd( 2 ) );
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      ( p )->setDocumentMargin( hb_parnd( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_SETDOCUMENTMARGIN FP=( p )->setDocumentMargin( hb_parnd( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -563,7 +857,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_SETDOCUMENTMARGIN )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_SETHTML )
 {
-   hbqt_par_QTextDocument( 1 )->setHtml( QTextDocument::tr( hb_parc( 2 ) ) );
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      ( p )->setHtml( QTextDocument::tr( hb_parc( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_SETHTML FP=( p )->setHtml( QTextDocument::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -571,7 +871,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_SETHTML )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_SETINDENTWIDTH )
 {
-   hbqt_par_QTextDocument( 1 )->setIndentWidth( hb_parnd( 2 ) );
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      ( p )->setIndentWidth( hb_parnd( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_SETINDENTWIDTH FP=( p )->setIndentWidth( hb_parnd( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -579,7 +885,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_SETINDENTWIDTH )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_SETMAXIMUMBLOCKCOUNT )
 {
-   hbqt_par_QTextDocument( 1 )->setMaximumBlockCount( hb_parni( 2 ) );
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      ( p )->setMaximumBlockCount( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_SETMAXIMUMBLOCKCOUNT FP=( p )->setMaximumBlockCount( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -587,7 +899,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_SETMAXIMUMBLOCKCOUNT )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_SETMETAINFORMATION )
 {
-   hbqt_par_QTextDocument( 1 )->setMetaInformation( ( QTextDocument::MetaInformation ) hb_parni( 2 ), QTextDocument::tr( hb_parc( 3 ) ) );
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      ( p )->setMetaInformation( ( QTextDocument::MetaInformation ) hb_parni( 2 ), QTextDocument::tr( hb_parc( 3 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_SETMETAINFORMATION FP=( p )->setMetaInformation( ( QTextDocument::MetaInformation ) hb_parni( 2 ), QTextDocument::tr( hb_parc( 3 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -595,7 +913,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_SETMETAINFORMATION )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_SETPAGESIZE )
 {
-   hbqt_par_QTextDocument( 1 )->setPageSize( *hbqt_par_QSizeF( 2 ) );
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      ( p )->setPageSize( *hbqt_par_QSizeF( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_SETPAGESIZE FP=( p )->setPageSize( *hbqt_par_QSizeF( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -603,7 +927,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_SETPAGESIZE )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_SETPLAINTEXT )
 {
-   hbqt_par_QTextDocument( 1 )->setPlainText( QTextDocument::tr( hb_parc( 2 ) ) );
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      ( p )->setPlainText( QTextDocument::tr( hb_parc( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_SETPLAINTEXT FP=( p )->setPlainText( QTextDocument::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -611,7 +941,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_SETPLAINTEXT )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_SETTEXTWIDTH )
 {
-   hbqt_par_QTextDocument( 1 )->setTextWidth( hb_parnd( 2 ) );
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      ( p )->setTextWidth( hb_parnd( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_SETTEXTWIDTH FP=( p )->setTextWidth( hb_parnd( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -619,7 +955,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_SETTEXTWIDTH )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_SETUNDOREDOENABLED )
 {
-   hbqt_par_QTextDocument( 1 )->setUndoRedoEnabled( hb_parl( 2 ) );
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      ( p )->setUndoRedoEnabled( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_SETUNDOREDOENABLED FP=( p )->setUndoRedoEnabled( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -627,7 +969,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_SETUNDOREDOENABLED )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_SETUSEDESIGNMETRICS )
 {
-   hbqt_par_QTextDocument( 1 )->setUseDesignMetrics( hb_parl( 2 ) );
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      ( p )->setUseDesignMetrics( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_SETUSEDESIGNMETRICS FP=( p )->setUseDesignMetrics( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -635,7 +983,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_SETUSEDESIGNMETRICS )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_SIZE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QSizeF( new QSizeF( hbqt_par_QTextDocument( 1 )->size() ), true ) );
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QSizeF( new QSizeF( ( p )->size() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_SIZE FP=hb_retptrGC( hbqt_gcAllocate_QSizeF( new QSizeF( ( p )->size() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -643,7 +997,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_SIZE )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_TEXTWIDTH )
 {
-   hb_retnd( hbqt_par_QTextDocument( 1 )->textWidth() );
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      hb_retnd( ( p )->textWidth() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_TEXTWIDTH FP=hb_retnd( ( p )->textWidth() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -651,7 +1011,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_TEXTWIDTH )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_TOHTML )
 {
-   hb_retc( hbqt_par_QTextDocument( 1 )->toHtml( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QByteArray( 2 ) : QByteArray() ) ).toAscii().data() );
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      hb_retc( ( p )->toHtml( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QByteArray( 2 ) : QByteArray() ) ).toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_TOHTML FP=hb_retc( ( p )->toHtml( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QByteArray( 2 ) : QByteArray() ) ).toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -659,7 +1025,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_TOHTML )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_TOPLAINTEXT )
 {
-   hb_retc( hbqt_par_QTextDocument( 1 )->toPlainText().toAscii().data() );
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      hb_retc( ( p )->toPlainText().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_TOPLAINTEXT FP=hb_retc( ( p )->toPlainText().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -667,7 +1039,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_TOPLAINTEXT )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_UNDO )
 {
-   hbqt_par_QTextDocument( 1 )->undo( hbqt_par_QTextCursor( 2 ) );
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      ( p )->undo( hbqt_par_QTextCursor( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_UNDO FP=( p )->undo( hbqt_par_QTextCursor( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -675,7 +1053,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_UNDO )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_USEDESIGNMETRICS )
 {
-   hb_retl( hbqt_par_QTextDocument( 1 )->useDesignMetrics() );
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      hb_retl( ( p )->useDesignMetrics() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_USEDESIGNMETRICS FP=hb_retl( ( p )->useDesignMetrics() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -683,7 +1067,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_USEDESIGNMETRICS )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_REDO_1 )
 {
-   hbqt_par_QTextDocument( 1 )->redo();
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      ( p )->redo();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_REDO_1 FP=( p )->redo(); p is NULL" ) );
+   }
 }
 
 /*
@@ -691,7 +1081,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_REDO_1 )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_SETMODIFIED )
 {
-   hbqt_par_QTextDocument( 1 )->setModified( hb_parl( 2 ) );
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      ( p )->setModified( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_SETMODIFIED FP=( p )->setModified( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -699,7 +1095,13 @@ HB_FUNC( QT_QTEXTDOCUMENT_SETMODIFIED )
  */
 HB_FUNC( QT_QTEXTDOCUMENT_UNDO_1 )
 {
-   hbqt_par_QTextDocument( 1 )->undo();
+   QTextDocument * p = hbqt_par_QTextDocument( 1 );
+   if( p )
+      ( p )->undo();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENT_UNDO_1 FP=( p )->undo(); p is NULL" ) );
+   }
 }
 
 

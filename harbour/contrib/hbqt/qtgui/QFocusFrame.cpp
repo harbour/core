@@ -77,43 +77,44 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QFocusFrame > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QFocusFrame > pq;
 } QGC_POINTER_QFocusFrame;
 
 QT_G_FUNC( hbqt_gcRelease_QFocusFrame )
 {
+   QFocusFrame  * ph = NULL ;
    QGC_POINTER_QFocusFrame * p = ( QGC_POINTER_QFocusFrame * ) Cargo;
 
-   if( p && p->bNew )
+   if( p && p->bNew && p->ph )
    {
-      if( p->ph && p->pq )
+      ph = p->ph;
+      if( ph )
       {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QFocusFrame   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
-            delete ( ( QFocusFrame * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QFocusFrame   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QFocusFrame   /.\\   ", (void*) ph, (void*) p->ph ) );
+            delete ( p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QFocusFrame   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QFocusFrame          pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QFocusFrame          ", ph ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QFocusFrame    :     Object already deleted!", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QFocusFrame    :     Object already deleted!", ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QFocusFrame    :    Object not created with new=true", p->ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QFocusFrame    :    Object not created with new=true", ph ) );
       p->ph = NULL;
    }
 }
@@ -122,13 +123,12 @@ void * hbqt_gcAllocate_QFocusFrame( void * pObj, bool bNew )
 {
    QGC_POINTER_QFocusFrame * p = ( QGC_POINTER_QFocusFrame * ) hb_gcAllocate( sizeof( QGC_POINTER_QFocusFrame ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QFocusFrame >( ( QFocusFrame * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QFocusFrame;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QFocusFrame >( ( QFocusFrame * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QFocusFrame  under p->pq", pObj ) );
    }
    else
@@ -140,11 +140,11 @@ void * hbqt_gcAllocate_QFocusFrame( void * pObj, bool bNew )
 
 HB_FUNC( QT_QFOCUSFRAME )
 {
-   void * pObj = NULL;
+   QFocusFrame * pObj = NULL;
 
-   pObj = ( QFocusFrame* ) new QFocusFrame( hbqt_par_QWidget( 1 ) ) ;
+   pObj =  new QFocusFrame( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QFocusFrame( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QFocusFrame( ( void * ) pObj, true ) );
 }
 
 /*
@@ -152,7 +152,13 @@ HB_FUNC( QT_QFOCUSFRAME )
  */
 HB_FUNC( QT_QFOCUSFRAME_SETWIDGET )
 {
-   hbqt_par_QFocusFrame( 1 )->setWidget( hbqt_par_QWidget( 2 ) );
+   QFocusFrame * p = hbqt_par_QFocusFrame( 1 );
+   if( p )
+      ( p )->setWidget( hbqt_par_QWidget( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFOCUSFRAME_SETWIDGET FP=( p )->setWidget( hbqt_par_QWidget( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -160,7 +166,13 @@ HB_FUNC( QT_QFOCUSFRAME_SETWIDGET )
  */
 HB_FUNC( QT_QFOCUSFRAME_WIDGET )
 {
-   hb_retptrGC( hbqt_gcAllocate_QWidget( hbqt_par_QFocusFrame( 1 )->widget(), false ) );
+   QFocusFrame * p = hbqt_par_QFocusFrame( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->widget(), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFOCUSFRAME_WIDGET FP=hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->widget(), false ) ); p is NULL" ) );
+   }
 }
 
 

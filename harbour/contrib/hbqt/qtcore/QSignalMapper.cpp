@@ -77,43 +77,44 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QSignalMapper > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QSignalMapper > pq;
 } QGC_POINTER_QSignalMapper;
 
 QT_G_FUNC( hbqt_gcRelease_QSignalMapper )
 {
+   QSignalMapper  * ph = NULL ;
    QGC_POINTER_QSignalMapper * p = ( QGC_POINTER_QSignalMapper * ) Cargo;
 
-   if( p && p->bNew )
+   if( p && p->bNew && p->ph )
    {
-      if( p->ph && p->pq )
+      ph = p->ph;
+      if( ph )
       {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QSignalMapper   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
-            delete ( ( QSignalMapper * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QSignalMapper   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QSignalMapper   /.\\   ", (void*) ph, (void*) p->ph ) );
+            delete ( p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QSignalMapper   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QSignalMapper          pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QSignalMapper          ", ph ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QSignalMapper    :     Object already deleted!", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QSignalMapper    :     Object already deleted!", ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QSignalMapper    :    Object not created with new=true", p->ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QSignalMapper    :    Object not created with new=true", ph ) );
       p->ph = NULL;
    }
 }
@@ -122,13 +123,12 @@ void * hbqt_gcAllocate_QSignalMapper( void * pObj, bool bNew )
 {
    QGC_POINTER_QSignalMapper * p = ( QGC_POINTER_QSignalMapper * ) hb_gcAllocate( sizeof( QGC_POINTER_QSignalMapper ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QSignalMapper >( ( QSignalMapper * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QSignalMapper;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QSignalMapper >( ( QSignalMapper * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QSignalMapper  under p->pq", pObj ) );
    }
    else
@@ -140,11 +140,11 @@ void * hbqt_gcAllocate_QSignalMapper( void * pObj, bool bNew )
 
 HB_FUNC( QT_QSIGNALMAPPER )
 {
-   void * pObj = NULL;
+   QSignalMapper * pObj = NULL;
 
    pObj = new QSignalMapper( hbqt_par_QObject( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QSignalMapper( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QSignalMapper( ( void * ) pObj, true ) );
 }
 
 /*
@@ -152,7 +152,13 @@ HB_FUNC( QT_QSIGNALMAPPER )
  */
 HB_FUNC( QT_QSIGNALMAPPER_MAPPING )
 {
-   hb_retptrGC( hbqt_gcAllocate_QObject( hbqt_par_QSignalMapper( 1 )->mapping( hb_parni( 2 ) ), false ) );
+   QSignalMapper * p = hbqt_par_QSignalMapper( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QObject( ( p )->mapping( hb_parni( 2 ) ), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIGNALMAPPER_MAPPING FP=hb_retptrGC( hbqt_gcAllocate_QObject( ( p )->mapping( hb_parni( 2 ) ), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -160,7 +166,13 @@ HB_FUNC( QT_QSIGNALMAPPER_MAPPING )
  */
 HB_FUNC( QT_QSIGNALMAPPER_MAPPING_1 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QObject( hbqt_par_QSignalMapper( 1 )->mapping( QSignalMapper::tr( hb_parc( 2 ) ) ), false ) );
+   QSignalMapper * p = hbqt_par_QSignalMapper( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QObject( ( p )->mapping( QSignalMapper::tr( hb_parc( 2 ) ) ), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIGNALMAPPER_MAPPING_1 FP=hb_retptrGC( hbqt_gcAllocate_QObject( ( p )->mapping( QSignalMapper::tr( hb_parc( 2 ) ) ), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -168,7 +180,13 @@ HB_FUNC( QT_QSIGNALMAPPER_MAPPING_1 )
  */
 HB_FUNC( QT_QSIGNALMAPPER_MAPPING_2 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QObject( hbqt_par_QSignalMapper( 1 )->mapping( hbqt_par_QWidget( 2 ) ), false ) );
+   QSignalMapper * p = hbqt_par_QSignalMapper( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QObject( ( p )->mapping( hbqt_par_QWidget( 2 ) ), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIGNALMAPPER_MAPPING_2 FP=hb_retptrGC( hbqt_gcAllocate_QObject( ( p )->mapping( hbqt_par_QWidget( 2 ) ), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -176,7 +194,13 @@ HB_FUNC( QT_QSIGNALMAPPER_MAPPING_2 )
  */
 HB_FUNC( QT_QSIGNALMAPPER_MAPPING_3 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QObject( hbqt_par_QSignalMapper( 1 )->mapping( hbqt_par_QObject( 2 ) ), false ) );
+   QSignalMapper * p = hbqt_par_QSignalMapper( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QObject( ( p )->mapping( hbqt_par_QObject( 2 ) ), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIGNALMAPPER_MAPPING_3 FP=hb_retptrGC( hbqt_gcAllocate_QObject( ( p )->mapping( hbqt_par_QObject( 2 ) ), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -184,7 +208,13 @@ HB_FUNC( QT_QSIGNALMAPPER_MAPPING_3 )
  */
 HB_FUNC( QT_QSIGNALMAPPER_REMOVEMAPPINGS )
 {
-   hbqt_par_QSignalMapper( 1 )->removeMappings( hbqt_par_QObject( 2 ) );
+   QSignalMapper * p = hbqt_par_QSignalMapper( 1 );
+   if( p )
+      ( p )->removeMappings( hbqt_par_QObject( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIGNALMAPPER_REMOVEMAPPINGS FP=( p )->removeMappings( hbqt_par_QObject( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -192,7 +222,13 @@ HB_FUNC( QT_QSIGNALMAPPER_REMOVEMAPPINGS )
  */
 HB_FUNC( QT_QSIGNALMAPPER_SETMAPPING )
 {
-   hbqt_par_QSignalMapper( 1 )->setMapping( hbqt_par_QObject( 2 ), hb_parni( 3 ) );
+   QSignalMapper * p = hbqt_par_QSignalMapper( 1 );
+   if( p )
+      ( p )->setMapping( hbqt_par_QObject( 2 ), hb_parni( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIGNALMAPPER_SETMAPPING FP=( p )->setMapping( hbqt_par_QObject( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -200,7 +236,13 @@ HB_FUNC( QT_QSIGNALMAPPER_SETMAPPING )
  */
 HB_FUNC( QT_QSIGNALMAPPER_SETMAPPING_1 )
 {
-   hbqt_par_QSignalMapper( 1 )->setMapping( hbqt_par_QObject( 2 ), QSignalMapper::tr( hb_parc( 3 ) ) );
+   QSignalMapper * p = hbqt_par_QSignalMapper( 1 );
+   if( p )
+      ( p )->setMapping( hbqt_par_QObject( 2 ), QSignalMapper::tr( hb_parc( 3 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIGNALMAPPER_SETMAPPING_1 FP=( p )->setMapping( hbqt_par_QObject( 2 ), QSignalMapper::tr( hb_parc( 3 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -208,7 +250,13 @@ HB_FUNC( QT_QSIGNALMAPPER_SETMAPPING_1 )
  */
 HB_FUNC( QT_QSIGNALMAPPER_SETMAPPING_2 )
 {
-   hbqt_par_QSignalMapper( 1 )->setMapping( hbqt_par_QObject( 2 ), hbqt_par_QWidget( 3 ) );
+   QSignalMapper * p = hbqt_par_QSignalMapper( 1 );
+   if( p )
+      ( p )->setMapping( hbqt_par_QObject( 2 ), hbqt_par_QWidget( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIGNALMAPPER_SETMAPPING_2 FP=( p )->setMapping( hbqt_par_QObject( 2 ), hbqt_par_QWidget( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -216,7 +264,13 @@ HB_FUNC( QT_QSIGNALMAPPER_SETMAPPING_2 )
  */
 HB_FUNC( QT_QSIGNALMAPPER_SETMAPPING_3 )
 {
-   hbqt_par_QSignalMapper( 1 )->setMapping( hbqt_par_QObject( 2 ), hbqt_par_QObject( 3 ) );
+   QSignalMapper * p = hbqt_par_QSignalMapper( 1 );
+   if( p )
+      ( p )->setMapping( hbqt_par_QObject( 2 ), hbqt_par_QObject( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIGNALMAPPER_SETMAPPING_3 FP=( p )->setMapping( hbqt_par_QObject( 2 ), hbqt_par_QObject( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -224,7 +278,13 @@ HB_FUNC( QT_QSIGNALMAPPER_SETMAPPING_3 )
  */
 HB_FUNC( QT_QSIGNALMAPPER_MAP )
 {
-   hbqt_par_QSignalMapper( 1 )->map();
+   QSignalMapper * p = hbqt_par_QSignalMapper( 1 );
+   if( p )
+      ( p )->map();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIGNALMAPPER_MAP FP=( p )->map(); p is NULL" ) );
+   }
 }
 
 /*
@@ -232,7 +292,13 @@ HB_FUNC( QT_QSIGNALMAPPER_MAP )
  */
 HB_FUNC( QT_QSIGNALMAPPER_MAP_1 )
 {
-   hbqt_par_QSignalMapper( 1 )->map( hbqt_par_QObject( 2 ) );
+   QSignalMapper * p = hbqt_par_QSignalMapper( 1 );
+   if( p )
+      ( p )->map( hbqt_par_QObject( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIGNALMAPPER_MAP_1 FP=( p )->map( hbqt_par_QObject( 2 ) ); p is NULL" ) );
+   }
 }
 
 

@@ -81,10 +81,9 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QAbstractSlider > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QAbstractSlider > pq;
 } QGC_POINTER_QAbstractSlider;
 
 QT_G_FUNC( hbqt_gcRelease_QAbstractSlider )
@@ -102,13 +101,12 @@ void * hbqt_gcAllocate_QAbstractSlider( void * pObj, bool bNew )
 {
    QGC_POINTER_QAbstractSlider * p = ( QGC_POINTER_QAbstractSlider * ) hb_gcAllocate( sizeof( QGC_POINTER_QAbstractSlider ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QAbstractSlider >( ( QAbstractSlider * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QAbstractSlider;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QAbstractSlider >( ( QAbstractSlider * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QAbstractSlider  under p->pq", pObj ) );
    }
    else
@@ -120,6 +118,7 @@ void * hbqt_gcAllocate_QAbstractSlider( void * pObj, bool bNew )
 
 HB_FUNC( QT_QABSTRACTSLIDER )
 {
+
 }
 
 /*
@@ -127,7 +126,13 @@ HB_FUNC( QT_QABSTRACTSLIDER )
  */
 HB_FUNC( QT_QABSTRACTSLIDER_HASTRACKING )
 {
-   hb_retl( hbqt_par_QAbstractSlider( 1 )->hasTracking() );
+   QAbstractSlider * p = hbqt_par_QAbstractSlider( 1 );
+   if( p )
+      hb_retl( ( p )->hasTracking() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSLIDER_HASTRACKING FP=hb_retl( ( p )->hasTracking() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -135,7 +140,13 @@ HB_FUNC( QT_QABSTRACTSLIDER_HASTRACKING )
  */
 HB_FUNC( QT_QABSTRACTSLIDER_INVERTEDAPPEARANCE )
 {
-   hb_retl( hbqt_par_QAbstractSlider( 1 )->invertedAppearance() );
+   QAbstractSlider * p = hbqt_par_QAbstractSlider( 1 );
+   if( p )
+      hb_retl( ( p )->invertedAppearance() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSLIDER_INVERTEDAPPEARANCE FP=hb_retl( ( p )->invertedAppearance() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -143,7 +154,13 @@ HB_FUNC( QT_QABSTRACTSLIDER_INVERTEDAPPEARANCE )
  */
 HB_FUNC( QT_QABSTRACTSLIDER_INVERTEDCONTROLS )
 {
-   hb_retl( hbqt_par_QAbstractSlider( 1 )->invertedControls() );
+   QAbstractSlider * p = hbqt_par_QAbstractSlider( 1 );
+   if( p )
+      hb_retl( ( p )->invertedControls() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSLIDER_INVERTEDCONTROLS FP=hb_retl( ( p )->invertedControls() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -151,7 +168,13 @@ HB_FUNC( QT_QABSTRACTSLIDER_INVERTEDCONTROLS )
  */
 HB_FUNC( QT_QABSTRACTSLIDER_ISSLIDERDOWN )
 {
-   hb_retl( hbqt_par_QAbstractSlider( 1 )->isSliderDown() );
+   QAbstractSlider * p = hbqt_par_QAbstractSlider( 1 );
+   if( p )
+      hb_retl( ( p )->isSliderDown() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSLIDER_ISSLIDERDOWN FP=hb_retl( ( p )->isSliderDown() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -159,7 +182,13 @@ HB_FUNC( QT_QABSTRACTSLIDER_ISSLIDERDOWN )
  */
 HB_FUNC( QT_QABSTRACTSLIDER_MAXIMUM )
 {
-   hb_retni( hbqt_par_QAbstractSlider( 1 )->maximum() );
+   QAbstractSlider * p = hbqt_par_QAbstractSlider( 1 );
+   if( p )
+      hb_retni( ( p )->maximum() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSLIDER_MAXIMUM FP=hb_retni( ( p )->maximum() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -167,7 +196,13 @@ HB_FUNC( QT_QABSTRACTSLIDER_MAXIMUM )
  */
 HB_FUNC( QT_QABSTRACTSLIDER_MINIMUM )
 {
-   hb_retni( hbqt_par_QAbstractSlider( 1 )->minimum() );
+   QAbstractSlider * p = hbqt_par_QAbstractSlider( 1 );
+   if( p )
+      hb_retni( ( p )->minimum() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSLIDER_MINIMUM FP=hb_retni( ( p )->minimum() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -175,7 +210,13 @@ HB_FUNC( QT_QABSTRACTSLIDER_MINIMUM )
  */
 HB_FUNC( QT_QABSTRACTSLIDER_ORIENTATION )
 {
-   hb_retni( ( Qt::Orientation ) hbqt_par_QAbstractSlider( 1 )->orientation() );
+   QAbstractSlider * p = hbqt_par_QAbstractSlider( 1 );
+   if( p )
+      hb_retni( ( Qt::Orientation ) ( p )->orientation() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSLIDER_ORIENTATION FP=hb_retni( ( Qt::Orientation ) ( p )->orientation() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -183,7 +224,13 @@ HB_FUNC( QT_QABSTRACTSLIDER_ORIENTATION )
  */
 HB_FUNC( QT_QABSTRACTSLIDER_PAGESTEP )
 {
-   hb_retni( hbqt_par_QAbstractSlider( 1 )->pageStep() );
+   QAbstractSlider * p = hbqt_par_QAbstractSlider( 1 );
+   if( p )
+      hb_retni( ( p )->pageStep() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSLIDER_PAGESTEP FP=hb_retni( ( p )->pageStep() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -191,7 +238,13 @@ HB_FUNC( QT_QABSTRACTSLIDER_PAGESTEP )
  */
 HB_FUNC( QT_QABSTRACTSLIDER_SETINVERTEDAPPEARANCE )
 {
-   hbqt_par_QAbstractSlider( 1 )->setInvertedAppearance( hb_parl( 2 ) );
+   QAbstractSlider * p = hbqt_par_QAbstractSlider( 1 );
+   if( p )
+      ( p )->setInvertedAppearance( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSLIDER_SETINVERTEDAPPEARANCE FP=( p )->setInvertedAppearance( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -199,7 +252,13 @@ HB_FUNC( QT_QABSTRACTSLIDER_SETINVERTEDAPPEARANCE )
  */
 HB_FUNC( QT_QABSTRACTSLIDER_SETINVERTEDCONTROLS )
 {
-   hbqt_par_QAbstractSlider( 1 )->setInvertedControls( hb_parl( 2 ) );
+   QAbstractSlider * p = hbqt_par_QAbstractSlider( 1 );
+   if( p )
+      ( p )->setInvertedControls( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSLIDER_SETINVERTEDCONTROLS FP=( p )->setInvertedControls( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -207,7 +266,13 @@ HB_FUNC( QT_QABSTRACTSLIDER_SETINVERTEDCONTROLS )
  */
 HB_FUNC( QT_QABSTRACTSLIDER_SETMAXIMUM )
 {
-   hbqt_par_QAbstractSlider( 1 )->setMaximum( hb_parni( 2 ) );
+   QAbstractSlider * p = hbqt_par_QAbstractSlider( 1 );
+   if( p )
+      ( p )->setMaximum( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSLIDER_SETMAXIMUM FP=( p )->setMaximum( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -215,7 +280,13 @@ HB_FUNC( QT_QABSTRACTSLIDER_SETMAXIMUM )
  */
 HB_FUNC( QT_QABSTRACTSLIDER_SETMINIMUM )
 {
-   hbqt_par_QAbstractSlider( 1 )->setMinimum( hb_parni( 2 ) );
+   QAbstractSlider * p = hbqt_par_QAbstractSlider( 1 );
+   if( p )
+      ( p )->setMinimum( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSLIDER_SETMINIMUM FP=( p )->setMinimum( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -223,7 +294,13 @@ HB_FUNC( QT_QABSTRACTSLIDER_SETMINIMUM )
  */
 HB_FUNC( QT_QABSTRACTSLIDER_SETPAGESTEP )
 {
-   hbqt_par_QAbstractSlider( 1 )->setPageStep( hb_parni( 2 ) );
+   QAbstractSlider * p = hbqt_par_QAbstractSlider( 1 );
+   if( p )
+      ( p )->setPageStep( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSLIDER_SETPAGESTEP FP=( p )->setPageStep( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -231,7 +308,13 @@ HB_FUNC( QT_QABSTRACTSLIDER_SETPAGESTEP )
  */
 HB_FUNC( QT_QABSTRACTSLIDER_SETRANGE )
 {
-   hbqt_par_QAbstractSlider( 1 )->setRange( hb_parni( 2 ), hb_parni( 3 ) );
+   QAbstractSlider * p = hbqt_par_QAbstractSlider( 1 );
+   if( p )
+      ( p )->setRange( hb_parni( 2 ), hb_parni( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSLIDER_SETRANGE FP=( p )->setRange( hb_parni( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -239,7 +322,13 @@ HB_FUNC( QT_QABSTRACTSLIDER_SETRANGE )
  */
 HB_FUNC( QT_QABSTRACTSLIDER_SETSINGLESTEP )
 {
-   hbqt_par_QAbstractSlider( 1 )->setSingleStep( hb_parni( 2 ) );
+   QAbstractSlider * p = hbqt_par_QAbstractSlider( 1 );
+   if( p )
+      ( p )->setSingleStep( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSLIDER_SETSINGLESTEP FP=( p )->setSingleStep( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -247,7 +336,13 @@ HB_FUNC( QT_QABSTRACTSLIDER_SETSINGLESTEP )
  */
 HB_FUNC( QT_QABSTRACTSLIDER_SETSLIDERDOWN )
 {
-   hbqt_par_QAbstractSlider( 1 )->setSliderDown( hb_parl( 2 ) );
+   QAbstractSlider * p = hbqt_par_QAbstractSlider( 1 );
+   if( p )
+      ( p )->setSliderDown( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSLIDER_SETSLIDERDOWN FP=( p )->setSliderDown( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -255,7 +350,13 @@ HB_FUNC( QT_QABSTRACTSLIDER_SETSLIDERDOWN )
  */
 HB_FUNC( QT_QABSTRACTSLIDER_SETSLIDERPOSITION )
 {
-   hbqt_par_QAbstractSlider( 1 )->setSliderPosition( hb_parni( 2 ) );
+   QAbstractSlider * p = hbqt_par_QAbstractSlider( 1 );
+   if( p )
+      ( p )->setSliderPosition( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSLIDER_SETSLIDERPOSITION FP=( p )->setSliderPosition( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -263,7 +364,13 @@ HB_FUNC( QT_QABSTRACTSLIDER_SETSLIDERPOSITION )
  */
 HB_FUNC( QT_QABSTRACTSLIDER_SETTRACKING )
 {
-   hbqt_par_QAbstractSlider( 1 )->setTracking( hb_parl( 2 ) );
+   QAbstractSlider * p = hbqt_par_QAbstractSlider( 1 );
+   if( p )
+      ( p )->setTracking( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSLIDER_SETTRACKING FP=( p )->setTracking( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -271,7 +378,13 @@ HB_FUNC( QT_QABSTRACTSLIDER_SETTRACKING )
  */
 HB_FUNC( QT_QABSTRACTSLIDER_SINGLESTEP )
 {
-   hb_retni( hbqt_par_QAbstractSlider( 1 )->singleStep() );
+   QAbstractSlider * p = hbqt_par_QAbstractSlider( 1 );
+   if( p )
+      hb_retni( ( p )->singleStep() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSLIDER_SINGLESTEP FP=hb_retni( ( p )->singleStep() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -279,7 +392,13 @@ HB_FUNC( QT_QABSTRACTSLIDER_SINGLESTEP )
  */
 HB_FUNC( QT_QABSTRACTSLIDER_SLIDERPOSITION )
 {
-   hb_retni( hbqt_par_QAbstractSlider( 1 )->sliderPosition() );
+   QAbstractSlider * p = hbqt_par_QAbstractSlider( 1 );
+   if( p )
+      hb_retni( ( p )->sliderPosition() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSLIDER_SLIDERPOSITION FP=hb_retni( ( p )->sliderPosition() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -287,7 +406,13 @@ HB_FUNC( QT_QABSTRACTSLIDER_SLIDERPOSITION )
  */
 HB_FUNC( QT_QABSTRACTSLIDER_TRIGGERACTION )
 {
-   hbqt_par_QAbstractSlider( 1 )->triggerAction( ( QAbstractSlider::SliderAction ) hb_parni( 2 ) );
+   QAbstractSlider * p = hbqt_par_QAbstractSlider( 1 );
+   if( p )
+      ( p )->triggerAction( ( QAbstractSlider::SliderAction ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSLIDER_TRIGGERACTION FP=( p )->triggerAction( ( QAbstractSlider::SliderAction ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -295,7 +420,13 @@ HB_FUNC( QT_QABSTRACTSLIDER_TRIGGERACTION )
  */
 HB_FUNC( QT_QABSTRACTSLIDER_VALUE )
 {
-   hb_retni( hbqt_par_QAbstractSlider( 1 )->value() );
+   QAbstractSlider * p = hbqt_par_QAbstractSlider( 1 );
+   if( p )
+      hb_retni( ( p )->value() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSLIDER_VALUE FP=hb_retni( ( p )->value() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -303,7 +434,13 @@ HB_FUNC( QT_QABSTRACTSLIDER_VALUE )
  */
 HB_FUNC( QT_QABSTRACTSLIDER_SETORIENTATION )
 {
-   hbqt_par_QAbstractSlider( 1 )->setOrientation( ( Qt::Orientation ) hb_parni( 2 ) );
+   QAbstractSlider * p = hbqt_par_QAbstractSlider( 1 );
+   if( p )
+      ( p )->setOrientation( ( Qt::Orientation ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSLIDER_SETORIENTATION FP=( p )->setOrientation( ( Qt::Orientation ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -311,7 +448,13 @@ HB_FUNC( QT_QABSTRACTSLIDER_SETORIENTATION )
  */
 HB_FUNC( QT_QABSTRACTSLIDER_SETVALUE )
 {
-   hbqt_par_QAbstractSlider( 1 )->setValue( hb_parni( 2 ) );
+   QAbstractSlider * p = hbqt_par_QAbstractSlider( 1 );
+   if( p )
+      ( p )->setValue( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSLIDER_SETVALUE FP=( p )->setValue( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 

@@ -79,43 +79,44 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QPushButton > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QPushButton > pq;
 } QGC_POINTER_QPushButton;
 
 QT_G_FUNC( hbqt_gcRelease_QPushButton )
 {
+   QPushButton  * ph = NULL ;
    QGC_POINTER_QPushButton * p = ( QGC_POINTER_QPushButton * ) Cargo;
 
-   if( p && p->bNew )
+   if( p && p->bNew && p->ph )
    {
-      if( p->ph && p->pq )
+      ph = p->ph;
+      if( ph )
       {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QPushButton   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
-            delete ( ( QPushButton * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QPushButton   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QPushButton   /.\\   ", (void*) ph, (void*) p->ph ) );
+            delete ( p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QPushButton   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QPushButton          pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QPushButton          ", ph ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QPushButton    :     Object already deleted!", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QPushButton    :     Object already deleted!", ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QPushButton    :    Object not created with new=true", p->ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QPushButton    :    Object not created with new=true", ph ) );
       p->ph = NULL;
    }
 }
@@ -124,13 +125,12 @@ void * hbqt_gcAllocate_QPushButton( void * pObj, bool bNew )
 {
    QGC_POINTER_QPushButton * p = ( QGC_POINTER_QPushButton * ) hb_gcAllocate( sizeof( QGC_POINTER_QPushButton ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QPushButton >( ( QPushButton * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QPushButton;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QPushButton >( ( QPushButton * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QPushButton  under p->pq", pObj ) );
    }
    else
@@ -142,11 +142,11 @@ void * hbqt_gcAllocate_QPushButton( void * pObj, bool bNew )
 
 HB_FUNC( QT_QPUSHBUTTON )
 {
-   void * pObj = NULL;
+   QPushButton * pObj = NULL;
 
-    pObj = ( QPushButton* ) new QPushButton( hbqt_par_QWidget( 1 ) ) ;
+    pObj =  new QPushButton( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QPushButton( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QPushButton( ( void * ) pObj, true ) );
 }
 
 /*
@@ -154,7 +154,13 @@ HB_FUNC( QT_QPUSHBUTTON )
  */
 HB_FUNC( QT_QPUSHBUTTON_AUTODEFAULT )
 {
-   hb_retl( hbqt_par_QPushButton( 1 )->autoDefault() );
+   QPushButton * p = hbqt_par_QPushButton( 1 );
+   if( p )
+      hb_retl( ( p )->autoDefault() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPUSHBUTTON_AUTODEFAULT FP=hb_retl( ( p )->autoDefault() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -162,7 +168,13 @@ HB_FUNC( QT_QPUSHBUTTON_AUTODEFAULT )
  */
 HB_FUNC( QT_QPUSHBUTTON_ISDEFAULT )
 {
-   hb_retl( hbqt_par_QPushButton( 1 )->isDefault() );
+   QPushButton * p = hbqt_par_QPushButton( 1 );
+   if( p )
+      hb_retl( ( p )->isDefault() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPUSHBUTTON_ISDEFAULT FP=hb_retl( ( p )->isDefault() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -170,7 +182,13 @@ HB_FUNC( QT_QPUSHBUTTON_ISDEFAULT )
  */
 HB_FUNC( QT_QPUSHBUTTON_ISFLAT )
 {
-   hb_retl( hbqt_par_QPushButton( 1 )->isFlat() );
+   QPushButton * p = hbqt_par_QPushButton( 1 );
+   if( p )
+      hb_retl( ( p )->isFlat() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPUSHBUTTON_ISFLAT FP=hb_retl( ( p )->isFlat() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -178,7 +196,13 @@ HB_FUNC( QT_QPUSHBUTTON_ISFLAT )
  */
 HB_FUNC( QT_QPUSHBUTTON_MENU )
 {
-   hb_retptrGC( hbqt_gcAllocate_QMenu( hbqt_par_QPushButton( 1 )->menu(), false ) );
+   QPushButton * p = hbqt_par_QPushButton( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QMenu( ( p )->menu(), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPUSHBUTTON_MENU FP=hb_retptrGC( hbqt_gcAllocate_QMenu( ( p )->menu(), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -186,7 +210,13 @@ HB_FUNC( QT_QPUSHBUTTON_MENU )
  */
 HB_FUNC( QT_QPUSHBUTTON_SETAUTODEFAULT )
 {
-   hbqt_par_QPushButton( 1 )->setAutoDefault( hb_parl( 2 ) );
+   QPushButton * p = hbqt_par_QPushButton( 1 );
+   if( p )
+      ( p )->setAutoDefault( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPUSHBUTTON_SETAUTODEFAULT FP=( p )->setAutoDefault( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -194,7 +224,13 @@ HB_FUNC( QT_QPUSHBUTTON_SETAUTODEFAULT )
  */
 HB_FUNC( QT_QPUSHBUTTON_SETDEFAULT )
 {
-   hbqt_par_QPushButton( 1 )->setDefault( hb_parl( 2 ) );
+   QPushButton * p = hbqt_par_QPushButton( 1 );
+   if( p )
+      ( p )->setDefault( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPUSHBUTTON_SETDEFAULT FP=( p )->setDefault( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -202,7 +238,13 @@ HB_FUNC( QT_QPUSHBUTTON_SETDEFAULT )
  */
 HB_FUNC( QT_QPUSHBUTTON_SETFLAT )
 {
-   hbqt_par_QPushButton( 1 )->setFlat( hb_parl( 2 ) );
+   QPushButton * p = hbqt_par_QPushButton( 1 );
+   if( p )
+      ( p )->setFlat( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPUSHBUTTON_SETFLAT FP=( p )->setFlat( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -210,7 +252,13 @@ HB_FUNC( QT_QPUSHBUTTON_SETFLAT )
  */
 HB_FUNC( QT_QPUSHBUTTON_SETMENU )
 {
-   hbqt_par_QPushButton( 1 )->setMenu( hbqt_par_QMenu( 2 ) );
+   QPushButton * p = hbqt_par_QPushButton( 1 );
+   if( p )
+      ( p )->setMenu( hbqt_par_QMenu( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPUSHBUTTON_SETMENU FP=( p )->setMenu( hbqt_par_QMenu( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -218,7 +266,13 @@ HB_FUNC( QT_QPUSHBUTTON_SETMENU )
  */
 HB_FUNC( QT_QPUSHBUTTON_SHOWMENU )
 {
-   hbqt_par_QPushButton( 1 )->showMenu();
+   QPushButton * p = hbqt_par_QPushButton( 1 );
+   if( p )
+      ( p )->showMenu();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPUSHBUTTON_SHOWMENU FP=( p )->showMenu(); p is NULL" ) );
+   }
 }
 
 

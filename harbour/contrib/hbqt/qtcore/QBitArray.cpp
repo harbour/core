@@ -77,7 +77,7 @@
 
 typedef struct
 {
-   void * ph;
+   QBitArray * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QBitArray;
@@ -112,7 +112,7 @@ void * hbqt_gcAllocate_QBitArray( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QBitArray * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QBitArray;
 
@@ -129,11 +129,11 @@ void * hbqt_gcAllocate_QBitArray( void * pObj, bool bNew )
 
 HB_FUNC( QT_QBITARRAY )
 {
-   void * pObj = NULL;
+   QBitArray * pObj = NULL;
 
    pObj = new QBitArray() ;
 
-   hb_retptrGC( hbqt_gcAllocate_QBitArray( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QBitArray( ( void * ) pObj, true ) );
 }
 
 /*
@@ -141,7 +141,13 @@ HB_FUNC( QT_QBITARRAY )
  */
 HB_FUNC( QT_QBITARRAY_AT )
 {
-   hb_retl( hbqt_par_QBitArray( 1 )->at( hb_parni( 2 ) ) );
+   QBitArray * p = hbqt_par_QBitArray( 1 );
+   if( p )
+      hb_retl( ( p )->at( hb_parni( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBITARRAY_AT FP=hb_retl( ( p )->at( hb_parni( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -149,7 +155,13 @@ HB_FUNC( QT_QBITARRAY_AT )
  */
 HB_FUNC( QT_QBITARRAY_CLEAR )
 {
-   hbqt_par_QBitArray( 1 )->clear();
+   QBitArray * p = hbqt_par_QBitArray( 1 );
+   if( p )
+      ( p )->clear();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBITARRAY_CLEAR FP=( p )->clear(); p is NULL" ) );
+   }
 }
 
 /*
@@ -157,7 +169,13 @@ HB_FUNC( QT_QBITARRAY_CLEAR )
  */
 HB_FUNC( QT_QBITARRAY_CLEARBIT )
 {
-   hbqt_par_QBitArray( 1 )->clearBit( hb_parni( 2 ) );
+   QBitArray * p = hbqt_par_QBitArray( 1 );
+   if( p )
+      ( p )->clearBit( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBITARRAY_CLEARBIT FP=( p )->clearBit( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -165,7 +183,13 @@ HB_FUNC( QT_QBITARRAY_CLEARBIT )
  */
 HB_FUNC( QT_QBITARRAY_COUNT )
 {
-   hb_retni( hbqt_par_QBitArray( 1 )->count() );
+   QBitArray * p = hbqt_par_QBitArray( 1 );
+   if( p )
+      hb_retni( ( p )->count() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBITARRAY_COUNT FP=hb_retni( ( p )->count() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -173,7 +197,13 @@ HB_FUNC( QT_QBITARRAY_COUNT )
  */
 HB_FUNC( QT_QBITARRAY_COUNT_1 )
 {
-   hb_retni( hbqt_par_QBitArray( 1 )->count( hb_parl( 2 ) ) );
+   QBitArray * p = hbqt_par_QBitArray( 1 );
+   if( p )
+      hb_retni( ( p )->count( hb_parl( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBITARRAY_COUNT_1 FP=hb_retni( ( p )->count( hb_parl( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -181,7 +211,13 @@ HB_FUNC( QT_QBITARRAY_COUNT_1 )
  */
 HB_FUNC( QT_QBITARRAY_FILL )
 {
-   hb_retl( hbqt_par_QBitArray( 1 )->fill( hb_parl( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : -1 ) ) );
+   QBitArray * p = hbqt_par_QBitArray( 1 );
+   if( p )
+      hb_retl( ( p )->fill( hb_parl( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : -1 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBITARRAY_FILL FP=hb_retl( ( p )->fill( hb_parl( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : -1 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -189,7 +225,13 @@ HB_FUNC( QT_QBITARRAY_FILL )
  */
 HB_FUNC( QT_QBITARRAY_FILL_1 )
 {
-   hbqt_par_QBitArray( 1 )->fill( hb_parl( 2 ), hb_parni( 3 ), hb_parni( 4 ) );
+   QBitArray * p = hbqt_par_QBitArray( 1 );
+   if( p )
+      ( p )->fill( hb_parl( 2 ), hb_parni( 3 ), hb_parni( 4 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBITARRAY_FILL_1 FP=( p )->fill( hb_parl( 2 ), hb_parni( 3 ), hb_parni( 4 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -197,7 +239,13 @@ HB_FUNC( QT_QBITARRAY_FILL_1 )
  */
 HB_FUNC( QT_QBITARRAY_ISEMPTY )
 {
-   hb_retl( hbqt_par_QBitArray( 1 )->isEmpty() );
+   QBitArray * p = hbqt_par_QBitArray( 1 );
+   if( p )
+      hb_retl( ( p )->isEmpty() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBITARRAY_ISEMPTY FP=hb_retl( ( p )->isEmpty() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -205,7 +253,13 @@ HB_FUNC( QT_QBITARRAY_ISEMPTY )
  */
 HB_FUNC( QT_QBITARRAY_ISNULL )
 {
-   hb_retl( hbqt_par_QBitArray( 1 )->isNull() );
+   QBitArray * p = hbqt_par_QBitArray( 1 );
+   if( p )
+      hb_retl( ( p )->isNull() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBITARRAY_ISNULL FP=hb_retl( ( p )->isNull() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -213,7 +267,13 @@ HB_FUNC( QT_QBITARRAY_ISNULL )
  */
 HB_FUNC( QT_QBITARRAY_RESIZE )
 {
-   hbqt_par_QBitArray( 1 )->resize( hb_parni( 2 ) );
+   QBitArray * p = hbqt_par_QBitArray( 1 );
+   if( p )
+      ( p )->resize( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBITARRAY_RESIZE FP=( p )->resize( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -221,7 +281,13 @@ HB_FUNC( QT_QBITARRAY_RESIZE )
  */
 HB_FUNC( QT_QBITARRAY_SETBIT )
 {
-   hbqt_par_QBitArray( 1 )->setBit( hb_parni( 2 ) );
+   QBitArray * p = hbqt_par_QBitArray( 1 );
+   if( p )
+      ( p )->setBit( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBITARRAY_SETBIT FP=( p )->setBit( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -229,7 +295,13 @@ HB_FUNC( QT_QBITARRAY_SETBIT )
  */
 HB_FUNC( QT_QBITARRAY_SETBIT_1 )
 {
-   hbqt_par_QBitArray( 1 )->setBit( hb_parni( 2 ), hb_parl( 3 ) );
+   QBitArray * p = hbqt_par_QBitArray( 1 );
+   if( p )
+      ( p )->setBit( hb_parni( 2 ), hb_parl( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBITARRAY_SETBIT_1 FP=( p )->setBit( hb_parni( 2 ), hb_parl( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -237,7 +309,13 @@ HB_FUNC( QT_QBITARRAY_SETBIT_1 )
  */
 HB_FUNC( QT_QBITARRAY_SIZE )
 {
-   hb_retni( hbqt_par_QBitArray( 1 )->size() );
+   QBitArray * p = hbqt_par_QBitArray( 1 );
+   if( p )
+      hb_retni( ( p )->size() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBITARRAY_SIZE FP=hb_retni( ( p )->size() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -245,7 +323,13 @@ HB_FUNC( QT_QBITARRAY_SIZE )
  */
 HB_FUNC( QT_QBITARRAY_TESTBIT )
 {
-   hb_retl( hbqt_par_QBitArray( 1 )->testBit( hb_parni( 2 ) ) );
+   QBitArray * p = hbqt_par_QBitArray( 1 );
+   if( p )
+      hb_retl( ( p )->testBit( hb_parni( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBITARRAY_TESTBIT FP=hb_retl( ( p )->testBit( hb_parni( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -253,7 +337,13 @@ HB_FUNC( QT_QBITARRAY_TESTBIT )
  */
 HB_FUNC( QT_QBITARRAY_TOGGLEBIT )
 {
-   hb_retl( hbqt_par_QBitArray( 1 )->toggleBit( hb_parni( 2 ) ) );
+   QBitArray * p = hbqt_par_QBitArray( 1 );
+   if( p )
+      hb_retl( ( p )->toggleBit( hb_parni( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBITARRAY_TOGGLEBIT FP=hb_retl( ( p )->toggleBit( hb_parni( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -261,7 +351,13 @@ HB_FUNC( QT_QBITARRAY_TOGGLEBIT )
  */
 HB_FUNC( QT_QBITARRAY_TRUNCATE )
 {
-   hbqt_par_QBitArray( 1 )->truncate( hb_parni( 2 ) );
+   QBitArray * p = hbqt_par_QBitArray( 1 );
+   if( p )
+      ( p )->truncate( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBITARRAY_TRUNCATE FP=( p )->truncate( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 

@@ -76,7 +76,7 @@
 
 typedef struct
 {
-   void * ph;
+   QStyleFactory * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QStyleFactory;
@@ -111,7 +111,7 @@ void * hbqt_gcAllocate_QStyleFactory( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QStyleFactory * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyleFactory;
 
@@ -128,11 +128,11 @@ void * hbqt_gcAllocate_QStyleFactory( void * pObj, bool bNew )
 
 HB_FUNC( QT_QSTYLEFACTORY )
 {
-   void * pObj = NULL;
+   QStyleFactory * pObj = NULL;
 
    pObj = new QStyleFactory() ;
 
-   hb_retptrGC( hbqt_gcAllocate_QStyleFactory( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QStyleFactory( ( void * ) pObj, true ) );
 }
 
 /*
@@ -140,7 +140,13 @@ HB_FUNC( QT_QSTYLEFACTORY )
  */
 HB_FUNC( QT_QSTYLEFACTORY_CREATE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QStyle( hbqt_par_QStyleFactory( 1 )->create( hbqt_par_QString( 2 ) ), false ) );
+   QStyleFactory * p = hbqt_par_QStyleFactory( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QStyle( ( p )->create( hbqt_par_QString( 2 ) ), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTYLEFACTORY_CREATE FP=hb_retptrGC( hbqt_gcAllocate_QStyle( ( p )->create( hbqt_par_QString( 2 ) ), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -148,7 +154,13 @@ HB_FUNC( QT_QSTYLEFACTORY_CREATE )
  */
 HB_FUNC( QT_QSTYLEFACTORY_KEYS )
 {
-   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QStyleFactory( 1 )->keys() ), true ) );
+   QStyleFactory * p = hbqt_par_QStyleFactory( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->keys() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTYLEFACTORY_KEYS FP=hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->keys() ), true ) ); p is NULL" ) );
+   }
 }
 
 

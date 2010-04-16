@@ -95,43 +95,44 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QObject > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QObject > pq;
 } QGC_POINTER_QObject;
 
 QT_G_FUNC( hbqt_gcRelease_QObject )
 {
+   QObject  * ph = NULL ;
    QGC_POINTER_QObject * p = ( QGC_POINTER_QObject * ) Cargo;
 
-   if( p && p->bNew )
+   if( p && p->bNew && p->ph )
    {
-      if( p->ph && p->pq )
+      ph = p->ph;
+      if( ph )
       {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QObject   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
-            delete ( ( QObject * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QObject   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QObject   /.\\   ", (void*) ph, (void*) p->ph ) );
+            delete ( p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QObject   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QObject          pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QObject          ", ph ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QObject    :     Object already deleted!", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QObject    :     Object already deleted!", ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QObject    :    Object not created with new=true", p->ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QObject    :    Object not created with new=true", ph ) );
       p->ph = NULL;
    }
 }
@@ -140,13 +141,12 @@ void * hbqt_gcAllocate_QObject( void * pObj, bool bNew )
 {
    QGC_POINTER_QObject * p = ( QGC_POINTER_QObject * ) hb_gcAllocate( sizeof( QGC_POINTER_QObject ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QObject >( ( QObject * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QObject;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QObject >( ( QObject * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QObject  under p->pq", pObj ) );
    }
    else
@@ -158,11 +158,11 @@ void * hbqt_gcAllocate_QObject( void * pObj, bool bNew )
 
 HB_FUNC( QT_QOBJECT )
 {
-   void * pObj = NULL;
+   QObject * pObj = NULL;
 
-   pObj = ( QObject* ) new QObject( hbqt_par_QObject( 1 ) ) ;
+   pObj =  new QObject( hbqt_par_QObject( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QObject( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QObject( ( void * ) pObj, true ) );
 }
 
 /*
@@ -170,7 +170,13 @@ HB_FUNC( QT_QOBJECT )
  */
 HB_FUNC( QT_QOBJECT_BLOCKSIGNALS )
 {
-   hb_retl( hbqt_par_QObject( 1 )->blockSignals( hb_parl( 2 ) ) );
+   QObject * p = hbqt_par_QObject( 1 );
+   if( p )
+      hb_retl( ( p )->blockSignals( hb_parl( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QOBJECT_BLOCKSIGNALS FP=hb_retl( ( p )->blockSignals( hb_parl( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -178,7 +184,13 @@ HB_FUNC( QT_QOBJECT_BLOCKSIGNALS )
  */
 HB_FUNC( QT_QOBJECT_CONNECT )
 {
-   hb_retl( hbqt_par_QObject( 1 )->connect( hbqt_par_QObject( 2 ), hbqt_par_char( 3 ), hbqt_par_char( 4 ), ( HB_ISNUM( 5 ) ? ( Qt::ConnectionType ) hb_parni( 5 ) : ( Qt::ConnectionType ) Qt::AutoConnection ) ) );
+   QObject * p = hbqt_par_QObject( 1 );
+   if( p )
+      hb_retl( ( p )->connect( hbqt_par_QObject( 2 ), hbqt_par_char( 3 ), hbqt_par_char( 4 ), ( HB_ISNUM( 5 ) ? ( Qt::ConnectionType ) hb_parni( 5 ) : ( Qt::ConnectionType ) Qt::AutoConnection ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QOBJECT_CONNECT FP=hb_retl( ( p )->connect( hbqt_par_QObject( 2 ), hbqt_par_char( 3 ), hbqt_par_char( 4 ), ( HB_ISNUM( 5 ) ? ( Qt::ConnectionType ) hb_parni( 5 ) : ( Qt::ConnectionType ) Qt::AutoConnection ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -186,7 +198,13 @@ HB_FUNC( QT_QOBJECT_CONNECT )
  */
 HB_FUNC( QT_QOBJECT_DISCONNECT )
 {
-   hb_retl( hbqt_par_QObject( 1 )->disconnect( hbqt_par_char( 2 ), hbqt_par_QObject( 3 ), hbqt_par_char( 4 ) ) );
+   QObject * p = hbqt_par_QObject( 1 );
+   if( p )
+      hb_retl( ( p )->disconnect( hbqt_par_char( 2 ), hbqt_par_QObject( 3 ), hbqt_par_char( 4 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QOBJECT_DISCONNECT FP=hb_retl( ( p )->disconnect( hbqt_par_char( 2 ), hbqt_par_QObject( 3 ), hbqt_par_char( 4 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -194,7 +212,13 @@ HB_FUNC( QT_QOBJECT_DISCONNECT )
  */
 HB_FUNC( QT_QOBJECT_DISCONNECT_1 )
 {
-   hb_retl( hbqt_par_QObject( 1 )->disconnect( hbqt_par_QObject( 2 ), hbqt_par_char( 3 ) ) );
+   QObject * p = hbqt_par_QObject( 1 );
+   if( p )
+      hb_retl( ( p )->disconnect( hbqt_par_QObject( 2 ), hbqt_par_char( 3 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QOBJECT_DISCONNECT_1 FP=hb_retl( ( p )->disconnect( hbqt_par_QObject( 2 ), hbqt_par_char( 3 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -202,7 +226,13 @@ HB_FUNC( QT_QOBJECT_DISCONNECT_1 )
  */
 HB_FUNC( QT_QOBJECT_DUMPOBJECTINFO )
 {
-   hbqt_par_QObject( 1 )->dumpObjectInfo();
+   QObject * p = hbqt_par_QObject( 1 );
+   if( p )
+      ( p )->dumpObjectInfo();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QOBJECT_DUMPOBJECTINFO FP=( p )->dumpObjectInfo(); p is NULL" ) );
+   }
 }
 
 /*
@@ -210,7 +240,13 @@ HB_FUNC( QT_QOBJECT_DUMPOBJECTINFO )
  */
 HB_FUNC( QT_QOBJECT_DUMPOBJECTTREE )
 {
-   hbqt_par_QObject( 1 )->dumpObjectTree();
+   QObject * p = hbqt_par_QObject( 1 );
+   if( p )
+      ( p )->dumpObjectTree();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QOBJECT_DUMPOBJECTTREE FP=( p )->dumpObjectTree(); p is NULL" ) );
+   }
 }
 
 /*
@@ -218,7 +254,13 @@ HB_FUNC( QT_QOBJECT_DUMPOBJECTTREE )
  */
 HB_FUNC( QT_QOBJECT_EVENT )
 {
-   hb_retl( hbqt_par_QObject( 1 )->event( hbqt_par_QEvent( 2 ) ) );
+   QObject * p = hbqt_par_QObject( 1 );
+   if( p )
+      hb_retl( ( p )->event( hbqt_par_QEvent( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QOBJECT_EVENT FP=hb_retl( ( p )->event( hbqt_par_QEvent( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -226,7 +268,13 @@ HB_FUNC( QT_QOBJECT_EVENT )
  */
 HB_FUNC( QT_QOBJECT_EVENTFILTER )
 {
-   hb_retl( hbqt_par_QObject( 1 )->eventFilter( hbqt_par_QObject( 2 ), hbqt_par_QEvent( 3 ) ) );
+   QObject * p = hbqt_par_QObject( 1 );
+   if( p )
+      hb_retl( ( p )->eventFilter( hbqt_par_QObject( 2 ), hbqt_par_QEvent( 3 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QOBJECT_EVENTFILTER FP=hb_retl( ( p )->eventFilter( hbqt_par_QObject( 2 ), hbqt_par_QEvent( 3 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -234,7 +282,13 @@ HB_FUNC( QT_QOBJECT_EVENTFILTER )
  */
 HB_FUNC( QT_QOBJECT_INHERITS )
 {
-   hb_retl( hbqt_par_QObject( 1 )->inherits( hbqt_par_char( 2 ) ) );
+   QObject * p = hbqt_par_QObject( 1 );
+   if( p )
+      hb_retl( ( p )->inherits( hbqt_par_char( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QOBJECT_INHERITS FP=hb_retl( ( p )->inherits( hbqt_par_char( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -242,7 +296,13 @@ HB_FUNC( QT_QOBJECT_INHERITS )
  */
 HB_FUNC( QT_QOBJECT_INSTALLEVENTFILTER )
 {
-   hbqt_par_QObject( 1 )->installEventFilter( hbqt_par_QObject( 2 ) );
+   QObject * p = hbqt_par_QObject( 1 );
+   if( p )
+      ( p )->installEventFilter( hbqt_par_QObject( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QOBJECT_INSTALLEVENTFILTER FP=( p )->installEventFilter( hbqt_par_QObject( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -250,7 +310,13 @@ HB_FUNC( QT_QOBJECT_INSTALLEVENTFILTER )
  */
 HB_FUNC( QT_QOBJECT_ISWIDGETTYPE )
 {
-   hb_retl( hbqt_par_QObject( 1 )->isWidgetType() );
+   QObject * p = hbqt_par_QObject( 1 );
+   if( p )
+      hb_retl( ( p )->isWidgetType() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QOBJECT_ISWIDGETTYPE FP=hb_retl( ( p )->isWidgetType() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -258,7 +324,13 @@ HB_FUNC( QT_QOBJECT_ISWIDGETTYPE )
  */
 HB_FUNC( QT_QOBJECT_KILLTIMER )
 {
-   hbqt_par_QObject( 1 )->killTimer( hb_parni( 2 ) );
+   QObject * p = hbqt_par_QObject( 1 );
+   if( p )
+      ( p )->killTimer( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QOBJECT_KILLTIMER FP=( p )->killTimer( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -266,7 +338,13 @@ HB_FUNC( QT_QOBJECT_KILLTIMER )
  */
 HB_FUNC( QT_QOBJECT_MOVETOTHREAD )
 {
-   hbqt_par_QObject( 1 )->moveToThread( hbqt_par_QThread( 2 ) );
+   QObject * p = hbqt_par_QObject( 1 );
+   if( p )
+      ( p )->moveToThread( hbqt_par_QThread( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QOBJECT_MOVETOTHREAD FP=( p )->moveToThread( hbqt_par_QThread( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -274,7 +352,13 @@ HB_FUNC( QT_QOBJECT_MOVETOTHREAD )
  */
 HB_FUNC( QT_QOBJECT_OBJECTNAME )
 {
-   hb_retc( hbqt_par_QObject( 1 )->objectName().toAscii().data() );
+   QObject * p = hbqt_par_QObject( 1 );
+   if( p )
+      hb_retc( ( p )->objectName().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QOBJECT_OBJECTNAME FP=hb_retc( ( p )->objectName().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -282,7 +366,13 @@ HB_FUNC( QT_QOBJECT_OBJECTNAME )
  */
 HB_FUNC( QT_QOBJECT_PARENT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QObject( hbqt_par_QObject( 1 )->parent(), false ) );
+   QObject * p = hbqt_par_QObject( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QObject( ( p )->parent(), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QOBJECT_PARENT FP=hb_retptrGC( hbqt_gcAllocate_QObject( ( p )->parent(), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -290,7 +380,13 @@ HB_FUNC( QT_QOBJECT_PARENT )
  */
 HB_FUNC( QT_QOBJECT_PROPERTY )
 {
-   hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( hbqt_par_QObject( 1 )->property( hbqt_par_char( 2 ) ) ), true ) );
+   QObject * p = hbqt_par_QObject( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( ( p )->property( hbqt_par_char( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QOBJECT_PROPERTY FP=hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( ( p )->property( hbqt_par_char( 2 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -298,7 +394,13 @@ HB_FUNC( QT_QOBJECT_PROPERTY )
  */
 HB_FUNC( QT_QOBJECT_REMOVEEVENTFILTER )
 {
-   hbqt_par_QObject( 1 )->removeEventFilter( hbqt_par_QObject( 2 ) );
+   QObject * p = hbqt_par_QObject( 1 );
+   if( p )
+      ( p )->removeEventFilter( hbqt_par_QObject( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QOBJECT_REMOVEEVENTFILTER FP=( p )->removeEventFilter( hbqt_par_QObject( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -306,7 +408,13 @@ HB_FUNC( QT_QOBJECT_REMOVEEVENTFILTER )
  */
 HB_FUNC( QT_QOBJECT_SETOBJECTNAME )
 {
-   hbqt_par_QObject( 1 )->setObjectName( QObject::tr( hb_parc( 2 ) ) );
+   QObject * p = hbqt_par_QObject( 1 );
+   if( p )
+      ( p )->setObjectName( QObject::tr( hb_parc( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QOBJECT_SETOBJECTNAME FP=( p )->setObjectName( QObject::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -314,7 +422,13 @@ HB_FUNC( QT_QOBJECT_SETOBJECTNAME )
  */
 HB_FUNC( QT_QOBJECT_SETPARENT )
 {
-   hbqt_par_QObject( 1 )->setParent( hbqt_par_QObject( 2 ) );
+   QObject * p = hbqt_par_QObject( 1 );
+   if( p )
+      ( p )->setParent( hbqt_par_QObject( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QOBJECT_SETPARENT FP=( p )->setParent( hbqt_par_QObject( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -322,7 +436,13 @@ HB_FUNC( QT_QOBJECT_SETPARENT )
  */
 HB_FUNC( QT_QOBJECT_SETPROPERTY )
 {
-   hb_retl( hbqt_par_QObject( 1 )->setProperty( hbqt_par_char( 2 ), *hbqt_par_QVariant( 3 ) ) );
+   QObject * p = hbqt_par_QObject( 1 );
+   if( p )
+      hb_retl( ( p )->setProperty( hbqt_par_char( 2 ), *hbqt_par_QVariant( 3 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QOBJECT_SETPROPERTY FP=hb_retl( ( p )->setProperty( hbqt_par_char( 2 ), *hbqt_par_QVariant( 3 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -330,7 +450,13 @@ HB_FUNC( QT_QOBJECT_SETPROPERTY )
  */
 HB_FUNC( QT_QOBJECT_SIGNALSBLOCKED )
 {
-   hb_retl( hbqt_par_QObject( 1 )->signalsBlocked() );
+   QObject * p = hbqt_par_QObject( 1 );
+   if( p )
+      hb_retl( ( p )->signalsBlocked() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QOBJECT_SIGNALSBLOCKED FP=hb_retl( ( p )->signalsBlocked() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -338,7 +464,13 @@ HB_FUNC( QT_QOBJECT_SIGNALSBLOCKED )
  */
 HB_FUNC( QT_QOBJECT_STARTTIMER )
 {
-   hb_retni( hbqt_par_QObject( 1 )->startTimer( hb_parni( 2 ) ) );
+   QObject * p = hbqt_par_QObject( 1 );
+   if( p )
+      hb_retni( ( p )->startTimer( hb_parni( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QOBJECT_STARTTIMER FP=hb_retni( ( p )->startTimer( hb_parni( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -346,7 +478,13 @@ HB_FUNC( QT_QOBJECT_STARTTIMER )
  */
 HB_FUNC( QT_QOBJECT_THREAD )
 {
-   hb_retptrGC( hbqt_gcAllocate_QThread( hbqt_par_QObject( 1 )->thread(), false ) );
+   QObject * p = hbqt_par_QObject( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QThread( ( p )->thread(), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QOBJECT_THREAD FP=hb_retptrGC( hbqt_gcAllocate_QThread( ( p )->thread(), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -354,7 +492,13 @@ HB_FUNC( QT_QOBJECT_THREAD )
  */
 HB_FUNC( QT_QOBJECT_CONNECT_1 )
 {
-   hb_retl( hbqt_par_QObject( 1 )->connect( hbqt_par_QObject( 2 ), hbqt_par_char( 3 ), hbqt_par_QObject( 4 ), hbqt_par_char( 5 ), ( HB_ISNUM( 6 ) ? ( Qt::ConnectionType ) hb_parni( 6 ) : ( Qt::ConnectionType ) Qt::AutoConnection ) ) );
+   QObject * p = hbqt_par_QObject( 1 );
+   if( p )
+      hb_retl( ( p )->connect( hbqt_par_QObject( 2 ), hbqt_par_char( 3 ), hbqt_par_QObject( 4 ), hbqt_par_char( 5 ), ( HB_ISNUM( 6 ) ? ( Qt::ConnectionType ) hb_parni( 6 ) : ( Qt::ConnectionType ) Qt::AutoConnection ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QOBJECT_CONNECT_1 FP=hb_retl( ( p )->connect( hbqt_par_QObject( 2 ), hbqt_par_char( 3 ), hbqt_par_QObject( 4 ), hbqt_par_char( 5 ), ( HB_ISNUM( 6 ) ? ( Qt::ConnectionType ) hb_parni( 6 ) : ( Qt::ConnectionType ) Qt::AutoConnection ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -362,7 +506,13 @@ HB_FUNC( QT_QOBJECT_CONNECT_1 )
  */
 HB_FUNC( QT_QOBJECT_DISCONNECT_2 )
 {
-   hb_retl( hbqt_par_QObject( 1 )->disconnect( hbqt_par_QObject( 2 ), hbqt_par_char( 3 ), hbqt_par_QObject( 4 ), hbqt_par_char( 5 ) ) );
+   QObject * p = hbqt_par_QObject( 1 );
+   if( p )
+      hb_retl( ( p )->disconnect( hbqt_par_QObject( 2 ), hbqt_par_char( 3 ), hbqt_par_QObject( 4 ), hbqt_par_char( 5 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QOBJECT_DISCONNECT_2 FP=hb_retl( ( p )->disconnect( hbqt_par_QObject( 2 ), hbqt_par_char( 3 ), hbqt_par_QObject( 4 ), hbqt_par_char( 5 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -370,7 +520,13 @@ HB_FUNC( QT_QOBJECT_DISCONNECT_2 )
  */
 HB_FUNC( QT_QOBJECT_TR )
 {
-   hb_retc( hbqt_par_QObject( 1 )->tr( hbqt_par_char( 2 ), hbqt_par_char( 3 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : -1 ) ).toAscii().data() );
+   QObject * p = hbqt_par_QObject( 1 );
+   if( p )
+      hb_retc( ( p )->tr( hbqt_par_char( 2 ), hbqt_par_char( 3 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : -1 ) ).toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QOBJECT_TR FP=hb_retc( ( p )->tr( hbqt_par_char( 2 ), hbqt_par_char( 3 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : -1 ) ).toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -378,7 +534,13 @@ HB_FUNC( QT_QOBJECT_TR )
  */
 HB_FUNC( QT_QOBJECT_TRUTF8 )
 {
-   hb_retc( hbqt_par_QObject( 1 )->trUtf8( hbqt_par_char( 2 ), hbqt_par_char( 3 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : -1 ) ).toAscii().data() );
+   QObject * p = hbqt_par_QObject( 1 );
+   if( p )
+      hb_retc( ( p )->trUtf8( hbqt_par_char( 2 ), hbqt_par_char( 3 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : -1 ) ).toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QOBJECT_TRUTF8 FP=hb_retc( ( p )->trUtf8( hbqt_par_char( 2 ), hbqt_par_char( 3 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : -1 ) ).toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -386,7 +548,13 @@ HB_FUNC( QT_QOBJECT_TRUTF8 )
  */
 HB_FUNC( QT_QOBJECT_DELETELATER )
 {
-   hbqt_par_QObject( 1 )->deleteLater();
+   QObject * p = hbqt_par_QObject( 1 );
+   if( p )
+      ( p )->deleteLater();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QOBJECT_DELETELATER FP=( p )->deleteLater(); p is NULL" ) );
+   }
 }
 
 

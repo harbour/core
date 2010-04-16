@@ -82,7 +82,7 @@
 
 typedef struct
 {
-   void * ph;
+   QStyleOptionTabBarBase * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QStyleOptionTabBarBase;
@@ -117,7 +117,7 @@ void * hbqt_gcAllocate_QStyleOptionTabBarBase( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QStyleOptionTabBarBase * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyleOptionTabBarBase;
 
@@ -134,11 +134,11 @@ void * hbqt_gcAllocate_QStyleOptionTabBarBase( void * pObj, bool bNew )
 
 HB_FUNC( QT_QSTYLEOPTIONTABBARBASE )
 {
-   void * pObj = NULL;
+   QStyleOptionTabBarBase * pObj = NULL;
 
-   pObj = ( QStyleOptionTabBarBase* ) new QStyleOptionTabBarBase() ;
+   pObj =  new QStyleOptionTabBarBase() ;
 
-   hb_retptrGC( hbqt_gcAllocate_QStyleOptionTabBarBase( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QStyleOptionTabBarBase( ( void * ) pObj, true ) );
 }
 
 /*

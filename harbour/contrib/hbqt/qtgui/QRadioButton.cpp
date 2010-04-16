@@ -77,43 +77,44 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QRadioButton > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QRadioButton > pq;
 } QGC_POINTER_QRadioButton;
 
 QT_G_FUNC( hbqt_gcRelease_QRadioButton )
 {
+   QRadioButton  * ph = NULL ;
    QGC_POINTER_QRadioButton * p = ( QGC_POINTER_QRadioButton * ) Cargo;
 
-   if( p && p->bNew )
+   if( p && p->bNew && p->ph )
    {
-      if( p->ph && p->pq )
+      ph = p->ph;
+      if( ph )
       {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QRadioButton   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
-            delete ( ( QRadioButton * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QRadioButton   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QRadioButton   /.\\   ", (void*) ph, (void*) p->ph ) );
+            delete ( p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QRadioButton   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QRadioButton          pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QRadioButton          ", ph ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QRadioButton    :     Object already deleted!", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QRadioButton    :     Object already deleted!", ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QRadioButton    :    Object not created with new=true", p->ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QRadioButton    :    Object not created with new=true", ph ) );
       p->ph = NULL;
    }
 }
@@ -122,13 +123,12 @@ void * hbqt_gcAllocate_QRadioButton( void * pObj, bool bNew )
 {
    QGC_POINTER_QRadioButton * p = ( QGC_POINTER_QRadioButton * ) hb_gcAllocate( sizeof( QGC_POINTER_QRadioButton ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QRadioButton >( ( QRadioButton * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QRadioButton;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QRadioButton >( ( QRadioButton * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QRadioButton  under p->pq", pObj ) );
    }
    else
@@ -140,14 +140,14 @@ void * hbqt_gcAllocate_QRadioButton( void * pObj, bool bNew )
 
 HB_FUNC( QT_QRADIOBUTTON )
 {
-   void * pObj = NULL;
+   QRadioButton * pObj = NULL;
 
    if( HB_ISCHAR( 1 ) )
-      pObj = ( QRadioButton* ) new QRadioButton( hbqt_par_QString( 1 ), hbqt_par_QWidget( 2 ) ) ;
+      pObj =  new QRadioButton( hbqt_par_QString( 1 ), hbqt_par_QWidget( 2 ) ) ;
    else
-      pObj = ( QRadioButton* ) new QRadioButton( hbqt_par_QWidget( 1 ) ) ;
+      pObj =  new QRadioButton( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QRadioButton( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QRadioButton( ( void * ) pObj, true ) );
 }
 
 

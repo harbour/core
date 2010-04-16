@@ -82,7 +82,7 @@
 
 typedef struct
 {
-   void * ph;
+   QStyleOptionComboBox * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QStyleOptionComboBox;
@@ -117,7 +117,7 @@ void * hbqt_gcAllocate_QStyleOptionComboBox( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QStyleOptionComboBox * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyleOptionComboBox;
 
@@ -134,11 +134,11 @@ void * hbqt_gcAllocate_QStyleOptionComboBox( void * pObj, bool bNew )
 
 HB_FUNC( QT_QSTYLEOPTIONCOMBOBOX )
 {
-   void * pObj = NULL;
+   QStyleOptionComboBox * pObj = NULL;
 
-   pObj = ( QStyleOptionComboBox* ) new QStyleOptionComboBox() ;
+   pObj =  new QStyleOptionComboBox() ;
 
-   hb_retptrGC( hbqt_gcAllocate_QStyleOptionComboBox( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QStyleOptionComboBox( ( void * ) pObj, true ) );
 }
 
 /*

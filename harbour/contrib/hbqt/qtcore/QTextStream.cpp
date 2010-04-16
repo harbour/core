@@ -90,7 +90,7 @@
 
 typedef struct
 {
-   void * ph;
+   QTextStream * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QTextStream;
@@ -125,7 +125,7 @@ void * hbqt_gcAllocate_QTextStream( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QTextStream * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextStream;
 
@@ -142,11 +142,11 @@ void * hbqt_gcAllocate_QTextStream( void * pObj, bool bNew )
 
 HB_FUNC( QT_QTEXTSTREAM )
 {
-   void * pObj = NULL;
+   QTextStream * pObj = NULL;
 
    pObj = new QTextStream( hb_parcx( 1 ), ( QIODevice::OpenMode ) ( HB_ISNUM( 2 ) ?  hb_parni( 2 ) : QIODevice::ReadWrite ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QTextStream( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextStream( ( void * ) pObj, true ) );
 }
 
 /*
@@ -154,7 +154,13 @@ HB_FUNC( QT_QTEXTSTREAM )
  */
 HB_FUNC( QT_QTEXTSTREAM_PADCHAR )
 {
-   hb_retptrGC( hbqt_gcAllocate_QChar( new QChar( hbqt_par_QTextStream( 1 )->padChar() ), true ) );
+   QTextStream * p = hbqt_par_QTextStream( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QChar( new QChar( ( p )->padChar() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTSTREAM_PADCHAR FP=hb_retptrGC( hbqt_gcAllocate_QChar( new QChar( ( p )->padChar() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -162,7 +168,13 @@ HB_FUNC( QT_QTEXTSTREAM_PADCHAR )
  */
 HB_FUNC( QT_QTEXTSTREAM_ATEND )
 {
-   hb_retl( hbqt_par_QTextStream( 1 )->atEnd() );
+   QTextStream * p = hbqt_par_QTextStream( 1 );
+   if( p )
+      hb_retl( ( p )->atEnd() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTSTREAM_ATEND FP=hb_retl( ( p )->atEnd() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -170,7 +182,13 @@ HB_FUNC( QT_QTEXTSTREAM_ATEND )
  */
 HB_FUNC( QT_QTEXTSTREAM_AUTODETECTUNICODE )
 {
-   hb_retl( hbqt_par_QTextStream( 1 )->autoDetectUnicode() );
+   QTextStream * p = hbqt_par_QTextStream( 1 );
+   if( p )
+      hb_retl( ( p )->autoDetectUnicode() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTSTREAM_AUTODETECTUNICODE FP=hb_retl( ( p )->autoDetectUnicode() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -178,7 +196,13 @@ HB_FUNC( QT_QTEXTSTREAM_AUTODETECTUNICODE )
  */
 HB_FUNC( QT_QTEXTSTREAM_CODEC )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTextCodec( hbqt_par_QTextStream( 1 )->codec(), false ) );
+   QTextStream * p = hbqt_par_QTextStream( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QTextCodec( ( p )->codec(), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTSTREAM_CODEC FP=hb_retptrGC( hbqt_gcAllocate_QTextCodec( ( p )->codec(), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -186,7 +210,13 @@ HB_FUNC( QT_QTEXTSTREAM_CODEC )
  */
 HB_FUNC( QT_QTEXTSTREAM_DEVICE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QIODevice( hbqt_par_QTextStream( 1 )->device(), false ) );
+   QTextStream * p = hbqt_par_QTextStream( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QIODevice( ( p )->device(), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTSTREAM_DEVICE FP=hb_retptrGC( hbqt_gcAllocate_QIODevice( ( p )->device(), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -194,7 +224,13 @@ HB_FUNC( QT_QTEXTSTREAM_DEVICE )
  */
 HB_FUNC( QT_QTEXTSTREAM_FIELDALIGNMENT )
 {
-   hb_retni( ( QTextStream::FieldAlignment ) hbqt_par_QTextStream( 1 )->fieldAlignment() );
+   QTextStream * p = hbqt_par_QTextStream( 1 );
+   if( p )
+      hb_retni( ( QTextStream::FieldAlignment ) ( p )->fieldAlignment() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTSTREAM_FIELDALIGNMENT FP=hb_retni( ( QTextStream::FieldAlignment ) ( p )->fieldAlignment() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -202,7 +238,13 @@ HB_FUNC( QT_QTEXTSTREAM_FIELDALIGNMENT )
  */
 HB_FUNC( QT_QTEXTSTREAM_FIELDWIDTH )
 {
-   hb_retni( hbqt_par_QTextStream( 1 )->fieldWidth() );
+   QTextStream * p = hbqt_par_QTextStream( 1 );
+   if( p )
+      hb_retni( ( p )->fieldWidth() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTSTREAM_FIELDWIDTH FP=hb_retni( ( p )->fieldWidth() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -210,7 +252,13 @@ HB_FUNC( QT_QTEXTSTREAM_FIELDWIDTH )
  */
 HB_FUNC( QT_QTEXTSTREAM_FLUSH )
 {
-   hbqt_par_QTextStream( 1 )->flush();
+   QTextStream * p = hbqt_par_QTextStream( 1 );
+   if( p )
+      ( p )->flush();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTSTREAM_FLUSH FP=( p )->flush(); p is NULL" ) );
+   }
 }
 
 /*
@@ -218,7 +266,13 @@ HB_FUNC( QT_QTEXTSTREAM_FLUSH )
  */
 HB_FUNC( QT_QTEXTSTREAM_GENERATEBYTEORDERMARK )
 {
-   hb_retl( hbqt_par_QTextStream( 1 )->generateByteOrderMark() );
+   QTextStream * p = hbqt_par_QTextStream( 1 );
+   if( p )
+      hb_retl( ( p )->generateByteOrderMark() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTSTREAM_GENERATEBYTEORDERMARK FP=hb_retl( ( p )->generateByteOrderMark() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -226,7 +280,13 @@ HB_FUNC( QT_QTEXTSTREAM_GENERATEBYTEORDERMARK )
  */
 HB_FUNC( QT_QTEXTSTREAM_INTEGERBASE )
 {
-   hb_retni( hbqt_par_QTextStream( 1 )->integerBase() );
+   QTextStream * p = hbqt_par_QTextStream( 1 );
+   if( p )
+      hb_retni( ( p )->integerBase() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTSTREAM_INTEGERBASE FP=hb_retni( ( p )->integerBase() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -234,7 +294,13 @@ HB_FUNC( QT_QTEXTSTREAM_INTEGERBASE )
  */
 HB_FUNC( QT_QTEXTSTREAM_LOCALE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QLocale( new QLocale( hbqt_par_QTextStream( 1 )->locale() ), true ) );
+   QTextStream * p = hbqt_par_QTextStream( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QLocale( new QLocale( ( p )->locale() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTSTREAM_LOCALE FP=hb_retptrGC( hbqt_gcAllocate_QLocale( new QLocale( ( p )->locale() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -242,7 +308,13 @@ HB_FUNC( QT_QTEXTSTREAM_LOCALE )
  */
 HB_FUNC( QT_QTEXTSTREAM_NUMBERFLAGS )
 {
-   hb_retni( ( QTextStream::NumberFlags ) hbqt_par_QTextStream( 1 )->numberFlags() );
+   QTextStream * p = hbqt_par_QTextStream( 1 );
+   if( p )
+      hb_retni( ( QTextStream::NumberFlags ) ( p )->numberFlags() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTSTREAM_NUMBERFLAGS FP=hb_retni( ( QTextStream::NumberFlags ) ( p )->numberFlags() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -250,7 +322,13 @@ HB_FUNC( QT_QTEXTSTREAM_NUMBERFLAGS )
  */
 HB_FUNC( QT_QTEXTSTREAM_POS )
 {
-   hb_retnint( hbqt_par_QTextStream( 1 )->pos() );
+   QTextStream * p = hbqt_par_QTextStream( 1 );
+   if( p )
+      hb_retnint( ( p )->pos() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTSTREAM_POS FP=hb_retnint( ( p )->pos() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -258,7 +336,13 @@ HB_FUNC( QT_QTEXTSTREAM_POS )
  */
 HB_FUNC( QT_QTEXTSTREAM_READ )
 {
-   hb_retc( hbqt_par_QTextStream( 1 )->read( hb_parnint( 2 ) ).toAscii().data() );
+   QTextStream * p = hbqt_par_QTextStream( 1 );
+   if( p )
+      hb_retc( ( p )->read( hb_parnint( 2 ) ).toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTSTREAM_READ FP=hb_retc( ( p )->read( hb_parnint( 2 ) ).toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -266,7 +350,13 @@ HB_FUNC( QT_QTEXTSTREAM_READ )
  */
 HB_FUNC( QT_QTEXTSTREAM_READALL )
 {
-   hb_retc( hbqt_par_QTextStream( 1 )->readAll().toAscii().data() );
+   QTextStream * p = hbqt_par_QTextStream( 1 );
+   if( p )
+      hb_retc( ( p )->readAll().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTSTREAM_READALL FP=hb_retc( ( p )->readAll().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -274,7 +364,13 @@ HB_FUNC( QT_QTEXTSTREAM_READALL )
  */
 HB_FUNC( QT_QTEXTSTREAM_READLINE )
 {
-   hb_retc( hbqt_par_QTextStream( 1 )->readLine( hb_parnint( 2 ) ).toAscii().data() );
+   QTextStream * p = hbqt_par_QTextStream( 1 );
+   if( p )
+      hb_retc( ( p )->readLine( hb_parnint( 2 ) ).toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTSTREAM_READLINE FP=hb_retc( ( p )->readLine( hb_parnint( 2 ) ).toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -282,7 +378,13 @@ HB_FUNC( QT_QTEXTSTREAM_READLINE )
  */
 HB_FUNC( QT_QTEXTSTREAM_REALNUMBERNOTATION )
 {
-   hb_retni( ( QTextStream::RealNumberNotation ) hbqt_par_QTextStream( 1 )->realNumberNotation() );
+   QTextStream * p = hbqt_par_QTextStream( 1 );
+   if( p )
+      hb_retni( ( QTextStream::RealNumberNotation ) ( p )->realNumberNotation() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTSTREAM_REALNUMBERNOTATION FP=hb_retni( ( QTextStream::RealNumberNotation ) ( p )->realNumberNotation() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -290,7 +392,13 @@ HB_FUNC( QT_QTEXTSTREAM_REALNUMBERNOTATION )
  */
 HB_FUNC( QT_QTEXTSTREAM_REALNUMBERPRECISION )
 {
-   hb_retni( hbqt_par_QTextStream( 1 )->realNumberPrecision() );
+   QTextStream * p = hbqt_par_QTextStream( 1 );
+   if( p )
+      hb_retni( ( p )->realNumberPrecision() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTSTREAM_REALNUMBERPRECISION FP=hb_retni( ( p )->realNumberPrecision() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -298,7 +406,13 @@ HB_FUNC( QT_QTEXTSTREAM_REALNUMBERPRECISION )
  */
 HB_FUNC( QT_QTEXTSTREAM_RESET )
 {
-   hbqt_par_QTextStream( 1 )->reset();
+   QTextStream * p = hbqt_par_QTextStream( 1 );
+   if( p )
+      ( p )->reset();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTSTREAM_RESET FP=( p )->reset(); p is NULL" ) );
+   }
 }
 
 /*
@@ -306,7 +420,13 @@ HB_FUNC( QT_QTEXTSTREAM_RESET )
  */
 HB_FUNC( QT_QTEXTSTREAM_RESETSTATUS )
 {
-   hbqt_par_QTextStream( 1 )->resetStatus();
+   QTextStream * p = hbqt_par_QTextStream( 1 );
+   if( p )
+      ( p )->resetStatus();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTSTREAM_RESETSTATUS FP=( p )->resetStatus(); p is NULL" ) );
+   }
 }
 
 /*
@@ -314,7 +434,13 @@ HB_FUNC( QT_QTEXTSTREAM_RESETSTATUS )
  */
 HB_FUNC( QT_QTEXTSTREAM_SEEK )
 {
-   hb_retl( hbqt_par_QTextStream( 1 )->seek( hb_parnint( 2 ) ) );
+   QTextStream * p = hbqt_par_QTextStream( 1 );
+   if( p )
+      hb_retl( ( p )->seek( hb_parnint( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTSTREAM_SEEK FP=hb_retl( ( p )->seek( hb_parnint( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -322,7 +448,13 @@ HB_FUNC( QT_QTEXTSTREAM_SEEK )
  */
 HB_FUNC( QT_QTEXTSTREAM_SETAUTODETECTUNICODE )
 {
-   hbqt_par_QTextStream( 1 )->setAutoDetectUnicode( hb_parl( 2 ) );
+   QTextStream * p = hbqt_par_QTextStream( 1 );
+   if( p )
+      ( p )->setAutoDetectUnicode( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTSTREAM_SETAUTODETECTUNICODE FP=( p )->setAutoDetectUnicode( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -330,7 +462,13 @@ HB_FUNC( QT_QTEXTSTREAM_SETAUTODETECTUNICODE )
  */
 HB_FUNC( QT_QTEXTSTREAM_SETCODEC )
 {
-   hbqt_par_QTextStream( 1 )->setCodec( hbqt_par_QTextCodec( 2 ) );
+   QTextStream * p = hbqt_par_QTextStream( 1 );
+   if( p )
+      ( p )->setCodec( hbqt_par_QTextCodec( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTSTREAM_SETCODEC FP=( p )->setCodec( hbqt_par_QTextCodec( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -338,7 +476,13 @@ HB_FUNC( QT_QTEXTSTREAM_SETCODEC )
  */
 HB_FUNC( QT_QTEXTSTREAM_SETCODEC_1 )
 {
-   hbqt_par_QTextStream( 1 )->setCodec( hbqt_par_char( 2 ) );
+   QTextStream * p = hbqt_par_QTextStream( 1 );
+   if( p )
+      ( p )->setCodec( hbqt_par_char( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTSTREAM_SETCODEC_1 FP=( p )->setCodec( hbqt_par_char( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -346,7 +490,13 @@ HB_FUNC( QT_QTEXTSTREAM_SETCODEC_1 )
  */
 HB_FUNC( QT_QTEXTSTREAM_SETDEVICE )
 {
-   hbqt_par_QTextStream( 1 )->setDevice( hbqt_par_QIODevice( 2 ) );
+   QTextStream * p = hbqt_par_QTextStream( 1 );
+   if( p )
+      ( p )->setDevice( hbqt_par_QIODevice( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTSTREAM_SETDEVICE FP=( p )->setDevice( hbqt_par_QIODevice( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -354,7 +504,13 @@ HB_FUNC( QT_QTEXTSTREAM_SETDEVICE )
  */
 HB_FUNC( QT_QTEXTSTREAM_SETFIELDALIGNMENT )
 {
-   hbqt_par_QTextStream( 1 )->setFieldAlignment( ( QTextStream::FieldAlignment ) hb_parni( 2 ) );
+   QTextStream * p = hbqt_par_QTextStream( 1 );
+   if( p )
+      ( p )->setFieldAlignment( ( QTextStream::FieldAlignment ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTSTREAM_SETFIELDALIGNMENT FP=( p )->setFieldAlignment( ( QTextStream::FieldAlignment ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -362,7 +518,13 @@ HB_FUNC( QT_QTEXTSTREAM_SETFIELDALIGNMENT )
  */
 HB_FUNC( QT_QTEXTSTREAM_SETFIELDWIDTH )
 {
-   hbqt_par_QTextStream( 1 )->setFieldWidth( hb_parni( 2 ) );
+   QTextStream * p = hbqt_par_QTextStream( 1 );
+   if( p )
+      ( p )->setFieldWidth( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTSTREAM_SETFIELDWIDTH FP=( p )->setFieldWidth( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -370,7 +532,13 @@ HB_FUNC( QT_QTEXTSTREAM_SETFIELDWIDTH )
  */
 HB_FUNC( QT_QTEXTSTREAM_SETGENERATEBYTEORDERMARK )
 {
-   hbqt_par_QTextStream( 1 )->setGenerateByteOrderMark( hb_parl( 2 ) );
+   QTextStream * p = hbqt_par_QTextStream( 1 );
+   if( p )
+      ( p )->setGenerateByteOrderMark( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTSTREAM_SETGENERATEBYTEORDERMARK FP=( p )->setGenerateByteOrderMark( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -378,7 +546,13 @@ HB_FUNC( QT_QTEXTSTREAM_SETGENERATEBYTEORDERMARK )
  */
 HB_FUNC( QT_QTEXTSTREAM_SETINTEGERBASE )
 {
-   hbqt_par_QTextStream( 1 )->setIntegerBase( hb_parni( 2 ) );
+   QTextStream * p = hbqt_par_QTextStream( 1 );
+   if( p )
+      ( p )->setIntegerBase( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTSTREAM_SETINTEGERBASE FP=( p )->setIntegerBase( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -386,7 +560,13 @@ HB_FUNC( QT_QTEXTSTREAM_SETINTEGERBASE )
  */
 HB_FUNC( QT_QTEXTSTREAM_SETLOCALE )
 {
-   hbqt_par_QTextStream( 1 )->setLocale( *hbqt_par_QLocale( 2 ) );
+   QTextStream * p = hbqt_par_QTextStream( 1 );
+   if( p )
+      ( p )->setLocale( *hbqt_par_QLocale( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTSTREAM_SETLOCALE FP=( p )->setLocale( *hbqt_par_QLocale( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -394,7 +574,13 @@ HB_FUNC( QT_QTEXTSTREAM_SETLOCALE )
  */
 HB_FUNC( QT_QTEXTSTREAM_SETNUMBERFLAGS )
 {
-   hbqt_par_QTextStream( 1 )->setNumberFlags( ( QTextStream::NumberFlags ) hb_parni( 2 ) );
+   QTextStream * p = hbqt_par_QTextStream( 1 );
+   if( p )
+      ( p )->setNumberFlags( ( QTextStream::NumberFlags ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTSTREAM_SETNUMBERFLAGS FP=( p )->setNumberFlags( ( QTextStream::NumberFlags ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -402,7 +588,13 @@ HB_FUNC( QT_QTEXTSTREAM_SETNUMBERFLAGS )
  */
 HB_FUNC( QT_QTEXTSTREAM_SETPADCHAR )
 {
-   hbqt_par_QTextStream( 1 )->setPadChar( *hbqt_par_QChar( 2 ) );
+   QTextStream * p = hbqt_par_QTextStream( 1 );
+   if( p )
+      ( p )->setPadChar( *hbqt_par_QChar( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTSTREAM_SETPADCHAR FP=( p )->setPadChar( *hbqt_par_QChar( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -410,7 +602,13 @@ HB_FUNC( QT_QTEXTSTREAM_SETPADCHAR )
  */
 HB_FUNC( QT_QTEXTSTREAM_SETREALNUMBERNOTATION )
 {
-   hbqt_par_QTextStream( 1 )->setRealNumberNotation( ( QTextStream::RealNumberNotation ) hb_parni( 2 ) );
+   QTextStream * p = hbqt_par_QTextStream( 1 );
+   if( p )
+      ( p )->setRealNumberNotation( ( QTextStream::RealNumberNotation ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTSTREAM_SETREALNUMBERNOTATION FP=( p )->setRealNumberNotation( ( QTextStream::RealNumberNotation ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -418,7 +616,13 @@ HB_FUNC( QT_QTEXTSTREAM_SETREALNUMBERNOTATION )
  */
 HB_FUNC( QT_QTEXTSTREAM_SETREALNUMBERPRECISION )
 {
-   hbqt_par_QTextStream( 1 )->setRealNumberPrecision( hb_parni( 2 ) );
+   QTextStream * p = hbqt_par_QTextStream( 1 );
+   if( p )
+      ( p )->setRealNumberPrecision( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTSTREAM_SETREALNUMBERPRECISION FP=( p )->setRealNumberPrecision( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -426,7 +630,13 @@ HB_FUNC( QT_QTEXTSTREAM_SETREALNUMBERPRECISION )
  */
 HB_FUNC( QT_QTEXTSTREAM_SETSTATUS )
 {
-   hbqt_par_QTextStream( 1 )->setStatus( ( QTextStream::Status ) hb_parni( 2 ) );
+   QTextStream * p = hbqt_par_QTextStream( 1 );
+   if( p )
+      ( p )->setStatus( ( QTextStream::Status ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTSTREAM_SETSTATUS FP=( p )->setStatus( ( QTextStream::Status ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -434,7 +644,13 @@ HB_FUNC( QT_QTEXTSTREAM_SETSTATUS )
  */
 HB_FUNC( QT_QTEXTSTREAM_SKIPWHITESPACE )
 {
-   hbqt_par_QTextStream( 1 )->skipWhiteSpace();
+   QTextStream * p = hbqt_par_QTextStream( 1 );
+   if( p )
+      ( p )->skipWhiteSpace();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTSTREAM_SKIPWHITESPACE FP=( p )->skipWhiteSpace(); p is NULL" ) );
+   }
 }
 
 /*
@@ -442,7 +658,13 @@ HB_FUNC( QT_QTEXTSTREAM_SKIPWHITESPACE )
  */
 HB_FUNC( QT_QTEXTSTREAM_STATUS )
 {
-   hb_retni( ( QTextStream::Status ) hbqt_par_QTextStream( 1 )->status() );
+   QTextStream * p = hbqt_par_QTextStream( 1 );
+   if( p )
+      hb_retni( ( QTextStream::Status ) ( p )->status() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTSTREAM_STATUS FP=hb_retni( ( QTextStream::Status ) ( p )->status() ); p is NULL" ) );
+   }
 }
 
 

@@ -77,43 +77,44 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QTableView > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QTableView > pq;
 } QGC_POINTER_QTableView;
 
 QT_G_FUNC( hbqt_gcRelease_QTableView )
 {
+   QTableView  * ph = NULL ;
    QGC_POINTER_QTableView * p = ( QGC_POINTER_QTableView * ) Cargo;
 
-   if( p && p->bNew )
+   if( p && p->bNew && p->ph )
    {
-      if( p->ph && p->pq )
+      ph = p->ph;
+      if( ph )
       {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QTableView   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
-            delete ( ( QTableView * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QTableView   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QTableView   /.\\   ", (void*) ph, (void*) p->ph ) );
+            delete ( p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QTableView   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QTableView          pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QTableView          ", ph ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QTableView    :     Object already deleted!", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QTableView    :     Object already deleted!", ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QTableView    :    Object not created with new=true", p->ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QTableView    :    Object not created with new=true", ph ) );
       p->ph = NULL;
    }
 }
@@ -122,13 +123,12 @@ void * hbqt_gcAllocate_QTableView( void * pObj, bool bNew )
 {
    QGC_POINTER_QTableView * p = ( QGC_POINTER_QTableView * ) hb_gcAllocate( sizeof( QGC_POINTER_QTableView ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QTableView >( ( QTableView * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTableView;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QTableView >( ( QTableView * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QTableView  under p->pq", pObj ) );
    }
    else
@@ -140,11 +140,11 @@ void * hbqt_gcAllocate_QTableView( void * pObj, bool bNew )
 
 HB_FUNC( QT_QTABLEVIEW )
 {
-   void * pObj = NULL;
+   QTableView * pObj = NULL;
 
-   pObj = ( QTableView* ) new QTableView( hbqt_par_QWidget( 1 ) ) ;
+   pObj =  new QTableView( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QTableView( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QTableView( ( void * ) pObj, true ) );
 }
 
 /*
@@ -152,7 +152,13 @@ HB_FUNC( QT_QTABLEVIEW )
  */
 HB_FUNC( QT_QTABLEVIEW_CLEARSPANS )
 {
-   hbqt_par_QTableView( 1 )->clearSpans();
+   QTableView * p = hbqt_par_QTableView( 1 );
+   if( p )
+      ( p )->clearSpans();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEVIEW_CLEARSPANS FP=( p )->clearSpans(); p is NULL" ) );
+   }
 }
 
 /*
@@ -160,7 +166,13 @@ HB_FUNC( QT_QTABLEVIEW_CLEARSPANS )
  */
 HB_FUNC( QT_QTABLEVIEW_COLUMNAT )
 {
-   hb_retni( hbqt_par_QTableView( 1 )->columnAt( hb_parni( 2 ) ) );
+   QTableView * p = hbqt_par_QTableView( 1 );
+   if( p )
+      hb_retni( ( p )->columnAt( hb_parni( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEVIEW_COLUMNAT FP=hb_retni( ( p )->columnAt( hb_parni( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -168,7 +180,13 @@ HB_FUNC( QT_QTABLEVIEW_COLUMNAT )
  */
 HB_FUNC( QT_QTABLEVIEW_COLUMNSPAN )
 {
-   hb_retni( hbqt_par_QTableView( 1 )->columnSpan( hb_parni( 2 ), hb_parni( 3 ) ) );
+   QTableView * p = hbqt_par_QTableView( 1 );
+   if( p )
+      hb_retni( ( p )->columnSpan( hb_parni( 2 ), hb_parni( 3 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEVIEW_COLUMNSPAN FP=hb_retni( ( p )->columnSpan( hb_parni( 2 ), hb_parni( 3 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -176,7 +194,13 @@ HB_FUNC( QT_QTABLEVIEW_COLUMNSPAN )
  */
 HB_FUNC( QT_QTABLEVIEW_COLUMNVIEWPORTPOSITION )
 {
-   hb_retni( hbqt_par_QTableView( 1 )->columnViewportPosition( hb_parni( 2 ) ) );
+   QTableView * p = hbqt_par_QTableView( 1 );
+   if( p )
+      hb_retni( ( p )->columnViewportPosition( hb_parni( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEVIEW_COLUMNVIEWPORTPOSITION FP=hb_retni( ( p )->columnViewportPosition( hb_parni( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -184,7 +208,13 @@ HB_FUNC( QT_QTABLEVIEW_COLUMNVIEWPORTPOSITION )
  */
 HB_FUNC( QT_QTABLEVIEW_COLUMNWIDTH )
 {
-   hb_retni( hbqt_par_QTableView( 1 )->columnWidth( hb_parni( 2 ) ) );
+   QTableView * p = hbqt_par_QTableView( 1 );
+   if( p )
+      hb_retni( ( p )->columnWidth( hb_parni( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEVIEW_COLUMNWIDTH FP=hb_retni( ( p )->columnWidth( hb_parni( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -192,7 +222,13 @@ HB_FUNC( QT_QTABLEVIEW_COLUMNWIDTH )
  */
 HB_FUNC( QT_QTABLEVIEW_GRIDSTYLE )
 {
-   hb_retni( ( Qt::PenStyle ) hbqt_par_QTableView( 1 )->gridStyle() );
+   QTableView * p = hbqt_par_QTableView( 1 );
+   if( p )
+      hb_retni( ( Qt::PenStyle ) ( p )->gridStyle() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEVIEW_GRIDSTYLE FP=hb_retni( ( Qt::PenStyle ) ( p )->gridStyle() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -200,7 +236,13 @@ HB_FUNC( QT_QTABLEVIEW_GRIDSTYLE )
  */
 HB_FUNC( QT_QTABLEVIEW_HORIZONTALHEADER )
 {
-   hb_retptrGC( hbqt_gcAllocate_QHeaderView( hbqt_par_QTableView( 1 )->horizontalHeader(), false ) );
+   QTableView * p = hbqt_par_QTableView( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QHeaderView( ( p )->horizontalHeader(), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEVIEW_HORIZONTALHEADER FP=hb_retptrGC( hbqt_gcAllocate_QHeaderView( ( p )->horizontalHeader(), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -208,7 +250,13 @@ HB_FUNC( QT_QTABLEVIEW_HORIZONTALHEADER )
  */
 HB_FUNC( QT_QTABLEVIEW_INDEXAT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QTableView( 1 )->indexAt( *hbqt_par_QPoint( 2 ) ) ), true ) );
+   QTableView * p = hbqt_par_QTableView( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( ( p )->indexAt( *hbqt_par_QPoint( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEVIEW_INDEXAT FP=hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( ( p )->indexAt( *hbqt_par_QPoint( 2 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -216,7 +264,13 @@ HB_FUNC( QT_QTABLEVIEW_INDEXAT )
  */
 HB_FUNC( QT_QTABLEVIEW_ISCOLUMNHIDDEN )
 {
-   hb_retl( hbqt_par_QTableView( 1 )->isColumnHidden( hb_parni( 2 ) ) );
+   QTableView * p = hbqt_par_QTableView( 1 );
+   if( p )
+      hb_retl( ( p )->isColumnHidden( hb_parni( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEVIEW_ISCOLUMNHIDDEN FP=hb_retl( ( p )->isColumnHidden( hb_parni( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -224,7 +278,13 @@ HB_FUNC( QT_QTABLEVIEW_ISCOLUMNHIDDEN )
  */
 HB_FUNC( QT_QTABLEVIEW_ISCORNERBUTTONENABLED )
 {
-   hb_retl( hbqt_par_QTableView( 1 )->isCornerButtonEnabled() );
+   QTableView * p = hbqt_par_QTableView( 1 );
+   if( p )
+      hb_retl( ( p )->isCornerButtonEnabled() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEVIEW_ISCORNERBUTTONENABLED FP=hb_retl( ( p )->isCornerButtonEnabled() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -232,7 +292,13 @@ HB_FUNC( QT_QTABLEVIEW_ISCORNERBUTTONENABLED )
  */
 HB_FUNC( QT_QTABLEVIEW_ISROWHIDDEN )
 {
-   hb_retl( hbqt_par_QTableView( 1 )->isRowHidden( hb_parni( 2 ) ) );
+   QTableView * p = hbqt_par_QTableView( 1 );
+   if( p )
+      hb_retl( ( p )->isRowHidden( hb_parni( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEVIEW_ISROWHIDDEN FP=hb_retl( ( p )->isRowHidden( hb_parni( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -240,7 +306,13 @@ HB_FUNC( QT_QTABLEVIEW_ISROWHIDDEN )
  */
 HB_FUNC( QT_QTABLEVIEW_ISSORTINGENABLED )
 {
-   hb_retl( hbqt_par_QTableView( 1 )->isSortingEnabled() );
+   QTableView * p = hbqt_par_QTableView( 1 );
+   if( p )
+      hb_retl( ( p )->isSortingEnabled() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEVIEW_ISSORTINGENABLED FP=hb_retl( ( p )->isSortingEnabled() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -248,7 +320,13 @@ HB_FUNC( QT_QTABLEVIEW_ISSORTINGENABLED )
  */
 HB_FUNC( QT_QTABLEVIEW_ROWAT )
 {
-   hb_retni( hbqt_par_QTableView( 1 )->rowAt( hb_parni( 2 ) ) );
+   QTableView * p = hbqt_par_QTableView( 1 );
+   if( p )
+      hb_retni( ( p )->rowAt( hb_parni( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEVIEW_ROWAT FP=hb_retni( ( p )->rowAt( hb_parni( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -256,7 +334,13 @@ HB_FUNC( QT_QTABLEVIEW_ROWAT )
  */
 HB_FUNC( QT_QTABLEVIEW_ROWHEIGHT )
 {
-   hb_retni( hbqt_par_QTableView( 1 )->rowHeight( hb_parni( 2 ) ) );
+   QTableView * p = hbqt_par_QTableView( 1 );
+   if( p )
+      hb_retni( ( p )->rowHeight( hb_parni( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEVIEW_ROWHEIGHT FP=hb_retni( ( p )->rowHeight( hb_parni( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -264,7 +348,13 @@ HB_FUNC( QT_QTABLEVIEW_ROWHEIGHT )
  */
 HB_FUNC( QT_QTABLEVIEW_ROWSPAN )
 {
-   hb_retni( hbqt_par_QTableView( 1 )->rowSpan( hb_parni( 2 ), hb_parni( 3 ) ) );
+   QTableView * p = hbqt_par_QTableView( 1 );
+   if( p )
+      hb_retni( ( p )->rowSpan( hb_parni( 2 ), hb_parni( 3 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEVIEW_ROWSPAN FP=hb_retni( ( p )->rowSpan( hb_parni( 2 ), hb_parni( 3 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -272,7 +362,13 @@ HB_FUNC( QT_QTABLEVIEW_ROWSPAN )
  */
 HB_FUNC( QT_QTABLEVIEW_ROWVIEWPORTPOSITION )
 {
-   hb_retni( hbqt_par_QTableView( 1 )->rowViewportPosition( hb_parni( 2 ) ) );
+   QTableView * p = hbqt_par_QTableView( 1 );
+   if( p )
+      hb_retni( ( p )->rowViewportPosition( hb_parni( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEVIEW_ROWVIEWPORTPOSITION FP=hb_retni( ( p )->rowViewportPosition( hb_parni( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -280,7 +376,13 @@ HB_FUNC( QT_QTABLEVIEW_ROWVIEWPORTPOSITION )
  */
 HB_FUNC( QT_QTABLEVIEW_SETCOLUMNHIDDEN )
 {
-   hbqt_par_QTableView( 1 )->setColumnHidden( hb_parni( 2 ), hb_parl( 3 ) );
+   QTableView * p = hbqt_par_QTableView( 1 );
+   if( p )
+      ( p )->setColumnHidden( hb_parni( 2 ), hb_parl( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEVIEW_SETCOLUMNHIDDEN FP=( p )->setColumnHidden( hb_parni( 2 ), hb_parl( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -288,7 +390,13 @@ HB_FUNC( QT_QTABLEVIEW_SETCOLUMNHIDDEN )
  */
 HB_FUNC( QT_QTABLEVIEW_SETCOLUMNWIDTH )
 {
-   hbqt_par_QTableView( 1 )->setColumnWidth( hb_parni( 2 ), hb_parni( 3 ) );
+   QTableView * p = hbqt_par_QTableView( 1 );
+   if( p )
+      ( p )->setColumnWidth( hb_parni( 2 ), hb_parni( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEVIEW_SETCOLUMNWIDTH FP=( p )->setColumnWidth( hb_parni( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -296,7 +404,13 @@ HB_FUNC( QT_QTABLEVIEW_SETCOLUMNWIDTH )
  */
 HB_FUNC( QT_QTABLEVIEW_SETCORNERBUTTONENABLED )
 {
-   hbqt_par_QTableView( 1 )->setCornerButtonEnabled( hb_parl( 2 ) );
+   QTableView * p = hbqt_par_QTableView( 1 );
+   if( p )
+      ( p )->setCornerButtonEnabled( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEVIEW_SETCORNERBUTTONENABLED FP=( p )->setCornerButtonEnabled( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -304,7 +418,13 @@ HB_FUNC( QT_QTABLEVIEW_SETCORNERBUTTONENABLED )
  */
 HB_FUNC( QT_QTABLEVIEW_SETGRIDSTYLE )
 {
-   hbqt_par_QTableView( 1 )->setGridStyle( ( Qt::PenStyle ) hb_parni( 2 ) );
+   QTableView * p = hbqt_par_QTableView( 1 );
+   if( p )
+      ( p )->setGridStyle( ( Qt::PenStyle ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEVIEW_SETGRIDSTYLE FP=( p )->setGridStyle( ( Qt::PenStyle ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -312,7 +432,13 @@ HB_FUNC( QT_QTABLEVIEW_SETGRIDSTYLE )
  */
 HB_FUNC( QT_QTABLEVIEW_SETHORIZONTALHEADER )
 {
-   hbqt_par_QTableView( 1 )->setHorizontalHeader( hbqt_par_QHeaderView( 2 ) );
+   QTableView * p = hbqt_par_QTableView( 1 );
+   if( p )
+      ( p )->setHorizontalHeader( hbqt_par_QHeaderView( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEVIEW_SETHORIZONTALHEADER FP=( p )->setHorizontalHeader( hbqt_par_QHeaderView( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -320,7 +446,13 @@ HB_FUNC( QT_QTABLEVIEW_SETHORIZONTALHEADER )
  */
 HB_FUNC( QT_QTABLEVIEW_SETROWHEIGHT )
 {
-   hbqt_par_QTableView( 1 )->setRowHeight( hb_parni( 2 ), hb_parni( 3 ) );
+   QTableView * p = hbqt_par_QTableView( 1 );
+   if( p )
+      ( p )->setRowHeight( hb_parni( 2 ), hb_parni( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEVIEW_SETROWHEIGHT FP=( p )->setRowHeight( hb_parni( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -328,7 +460,13 @@ HB_FUNC( QT_QTABLEVIEW_SETROWHEIGHT )
  */
 HB_FUNC( QT_QTABLEVIEW_SETROWHIDDEN )
 {
-   hbqt_par_QTableView( 1 )->setRowHidden( hb_parni( 2 ), hb_parl( 3 ) );
+   QTableView * p = hbqt_par_QTableView( 1 );
+   if( p )
+      ( p )->setRowHidden( hb_parni( 2 ), hb_parl( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEVIEW_SETROWHIDDEN FP=( p )->setRowHidden( hb_parni( 2 ), hb_parl( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -336,7 +474,13 @@ HB_FUNC( QT_QTABLEVIEW_SETROWHIDDEN )
  */
 HB_FUNC( QT_QTABLEVIEW_SETSORTINGENABLED )
 {
-   hbqt_par_QTableView( 1 )->setSortingEnabled( hb_parl( 2 ) );
+   QTableView * p = hbqt_par_QTableView( 1 );
+   if( p )
+      ( p )->setSortingEnabled( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEVIEW_SETSORTINGENABLED FP=( p )->setSortingEnabled( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -344,7 +488,13 @@ HB_FUNC( QT_QTABLEVIEW_SETSORTINGENABLED )
  */
 HB_FUNC( QT_QTABLEVIEW_SETSPAN )
 {
-   hbqt_par_QTableView( 1 )->setSpan( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) );
+   QTableView * p = hbqt_par_QTableView( 1 );
+   if( p )
+      ( p )->setSpan( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEVIEW_SETSPAN FP=( p )->setSpan( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -352,7 +502,13 @@ HB_FUNC( QT_QTABLEVIEW_SETSPAN )
  */
 HB_FUNC( QT_QTABLEVIEW_SETVERTICALHEADER )
 {
-   hbqt_par_QTableView( 1 )->setVerticalHeader( hbqt_par_QHeaderView( 2 ) );
+   QTableView * p = hbqt_par_QTableView( 1 );
+   if( p )
+      ( p )->setVerticalHeader( hbqt_par_QHeaderView( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEVIEW_SETVERTICALHEADER FP=( p )->setVerticalHeader( hbqt_par_QHeaderView( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -360,7 +516,13 @@ HB_FUNC( QT_QTABLEVIEW_SETVERTICALHEADER )
  */
 HB_FUNC( QT_QTABLEVIEW_SETWORDWRAP )
 {
-   hbqt_par_QTableView( 1 )->setWordWrap( hb_parl( 2 ) );
+   QTableView * p = hbqt_par_QTableView( 1 );
+   if( p )
+      ( p )->setWordWrap( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEVIEW_SETWORDWRAP FP=( p )->setWordWrap( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -368,7 +530,13 @@ HB_FUNC( QT_QTABLEVIEW_SETWORDWRAP )
  */
 HB_FUNC( QT_QTABLEVIEW_SHOWGRID )
 {
-   hb_retl( hbqt_par_QTableView( 1 )->showGrid() );
+   QTableView * p = hbqt_par_QTableView( 1 );
+   if( p )
+      hb_retl( ( p )->showGrid() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEVIEW_SHOWGRID FP=hb_retl( ( p )->showGrid() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -376,7 +544,13 @@ HB_FUNC( QT_QTABLEVIEW_SHOWGRID )
  */
 HB_FUNC( QT_QTABLEVIEW_SORTBYCOLUMN )
 {
-   hbqt_par_QTableView( 1 )->sortByColumn( hb_parni( 2 ), ( Qt::SortOrder ) hb_parni( 3 ) );
+   QTableView * p = hbqt_par_QTableView( 1 );
+   if( p )
+      ( p )->sortByColumn( hb_parni( 2 ), ( Qt::SortOrder ) hb_parni( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEVIEW_SORTBYCOLUMN FP=( p )->sortByColumn( hb_parni( 2 ), ( Qt::SortOrder ) hb_parni( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -384,7 +558,13 @@ HB_FUNC( QT_QTABLEVIEW_SORTBYCOLUMN )
  */
 HB_FUNC( QT_QTABLEVIEW_VERTICALHEADER )
 {
-   hb_retptrGC( hbqt_gcAllocate_QHeaderView( hbqt_par_QTableView( 1 )->verticalHeader(), false ) );
+   QTableView * p = hbqt_par_QTableView( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QHeaderView( ( p )->verticalHeader(), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEVIEW_VERTICALHEADER FP=hb_retptrGC( hbqt_gcAllocate_QHeaderView( ( p )->verticalHeader(), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -392,7 +572,13 @@ HB_FUNC( QT_QTABLEVIEW_VERTICALHEADER )
  */
 HB_FUNC( QT_QTABLEVIEW_WORDWRAP )
 {
-   hb_retl( hbqt_par_QTableView( 1 )->wordWrap() );
+   QTableView * p = hbqt_par_QTableView( 1 );
+   if( p )
+      hb_retl( ( p )->wordWrap() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEVIEW_WORDWRAP FP=hb_retl( ( p )->wordWrap() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -400,7 +586,13 @@ HB_FUNC( QT_QTABLEVIEW_WORDWRAP )
  */
 HB_FUNC( QT_QTABLEVIEW_HIDECOLUMN )
 {
-   hbqt_par_QTableView( 1 )->hideColumn( hb_parni( 2 ) );
+   QTableView * p = hbqt_par_QTableView( 1 );
+   if( p )
+      ( p )->hideColumn( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEVIEW_HIDECOLUMN FP=( p )->hideColumn( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -408,7 +600,13 @@ HB_FUNC( QT_QTABLEVIEW_HIDECOLUMN )
  */
 HB_FUNC( QT_QTABLEVIEW_HIDEROW )
 {
-   hbqt_par_QTableView( 1 )->hideRow( hb_parni( 2 ) );
+   QTableView * p = hbqt_par_QTableView( 1 );
+   if( p )
+      ( p )->hideRow( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEVIEW_HIDEROW FP=( p )->hideRow( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -416,7 +614,13 @@ HB_FUNC( QT_QTABLEVIEW_HIDEROW )
  */
 HB_FUNC( QT_QTABLEVIEW_RESIZECOLUMNTOCONTENTS )
 {
-   hbqt_par_QTableView( 1 )->resizeColumnToContents( hb_parni( 2 ) );
+   QTableView * p = hbqt_par_QTableView( 1 );
+   if( p )
+      ( p )->resizeColumnToContents( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEVIEW_RESIZECOLUMNTOCONTENTS FP=( p )->resizeColumnToContents( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -424,7 +628,13 @@ HB_FUNC( QT_QTABLEVIEW_RESIZECOLUMNTOCONTENTS )
  */
 HB_FUNC( QT_QTABLEVIEW_RESIZECOLUMNSTOCONTENTS )
 {
-   hbqt_par_QTableView( 1 )->resizeColumnsToContents();
+   QTableView * p = hbqt_par_QTableView( 1 );
+   if( p )
+      ( p )->resizeColumnsToContents();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEVIEW_RESIZECOLUMNSTOCONTENTS FP=( p )->resizeColumnsToContents(); p is NULL" ) );
+   }
 }
 
 /*
@@ -432,7 +642,13 @@ HB_FUNC( QT_QTABLEVIEW_RESIZECOLUMNSTOCONTENTS )
  */
 HB_FUNC( QT_QTABLEVIEW_RESIZEROWTOCONTENTS )
 {
-   hbqt_par_QTableView( 1 )->resizeRowToContents( hb_parni( 2 ) );
+   QTableView * p = hbqt_par_QTableView( 1 );
+   if( p )
+      ( p )->resizeRowToContents( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEVIEW_RESIZEROWTOCONTENTS FP=( p )->resizeRowToContents( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -440,7 +656,13 @@ HB_FUNC( QT_QTABLEVIEW_RESIZEROWTOCONTENTS )
  */
 HB_FUNC( QT_QTABLEVIEW_RESIZEROWSTOCONTENTS )
 {
-   hbqt_par_QTableView( 1 )->resizeRowsToContents();
+   QTableView * p = hbqt_par_QTableView( 1 );
+   if( p )
+      ( p )->resizeRowsToContents();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEVIEW_RESIZEROWSTOCONTENTS FP=( p )->resizeRowsToContents(); p is NULL" ) );
+   }
 }
 
 /*
@@ -448,7 +670,13 @@ HB_FUNC( QT_QTABLEVIEW_RESIZEROWSTOCONTENTS )
  */
 HB_FUNC( QT_QTABLEVIEW_SELECTCOLUMN )
 {
-   hbqt_par_QTableView( 1 )->selectColumn( hb_parni( 2 ) );
+   QTableView * p = hbqt_par_QTableView( 1 );
+   if( p )
+      ( p )->selectColumn( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEVIEW_SELECTCOLUMN FP=( p )->selectColumn( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -456,7 +684,13 @@ HB_FUNC( QT_QTABLEVIEW_SELECTCOLUMN )
  */
 HB_FUNC( QT_QTABLEVIEW_SELECTROW )
 {
-   hbqt_par_QTableView( 1 )->selectRow( hb_parni( 2 ) );
+   QTableView * p = hbqt_par_QTableView( 1 );
+   if( p )
+      ( p )->selectRow( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEVIEW_SELECTROW FP=( p )->selectRow( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -464,7 +698,13 @@ HB_FUNC( QT_QTABLEVIEW_SELECTROW )
  */
 HB_FUNC( QT_QTABLEVIEW_SETSHOWGRID )
 {
-   hbqt_par_QTableView( 1 )->setShowGrid( hb_parl( 2 ) );
+   QTableView * p = hbqt_par_QTableView( 1 );
+   if( p )
+      ( p )->setShowGrid( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEVIEW_SETSHOWGRID FP=( p )->setShowGrid( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -472,7 +712,13 @@ HB_FUNC( QT_QTABLEVIEW_SETSHOWGRID )
  */
 HB_FUNC( QT_QTABLEVIEW_SHOWCOLUMN )
 {
-   hbqt_par_QTableView( 1 )->showColumn( hb_parni( 2 ) );
+   QTableView * p = hbqt_par_QTableView( 1 );
+   if( p )
+      ( p )->showColumn( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEVIEW_SHOWCOLUMN FP=( p )->showColumn( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -480,7 +726,13 @@ HB_FUNC( QT_QTABLEVIEW_SHOWCOLUMN )
  */
 HB_FUNC( QT_QTABLEVIEW_SHOWROW )
 {
-   hbqt_par_QTableView( 1 )->showRow( hb_parni( 2 ) );
+   QTableView * p = hbqt_par_QTableView( 1 );
+   if( p )
+      ( p )->showRow( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEVIEW_SHOWROW FP=( p )->showRow( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 

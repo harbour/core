@@ -81,43 +81,44 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QHeaderView > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QHeaderView > pq;
 } QGC_POINTER_QHeaderView;
 
 QT_G_FUNC( hbqt_gcRelease_QHeaderView )
 {
+   QHeaderView  * ph = NULL ;
    QGC_POINTER_QHeaderView * p = ( QGC_POINTER_QHeaderView * ) Cargo;
 
-   if( p && p->bNew )
+   if( p && p->bNew && p->ph )
    {
-      if( p->ph && p->pq )
+      ph = p->ph;
+      if( ph )
       {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QHeaderView   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
-            delete ( ( QHeaderView * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QHeaderView   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QHeaderView   /.\\   ", (void*) ph, (void*) p->ph ) );
+            delete ( p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QHeaderView   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QHeaderView          pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QHeaderView          ", ph ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QHeaderView    :     Object already deleted!", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QHeaderView    :     Object already deleted!", ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QHeaderView    :    Object not created with new=true", p->ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QHeaderView    :    Object not created with new=true", ph ) );
       p->ph = NULL;
    }
 }
@@ -126,13 +127,12 @@ void * hbqt_gcAllocate_QHeaderView( void * pObj, bool bNew )
 {
    QGC_POINTER_QHeaderView * p = ( QGC_POINTER_QHeaderView * ) hb_gcAllocate( sizeof( QGC_POINTER_QHeaderView ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QHeaderView >( ( QHeaderView * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QHeaderView;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QHeaderView >( ( QHeaderView * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QHeaderView  under p->pq", pObj ) );
    }
    else
@@ -144,11 +144,11 @@ void * hbqt_gcAllocate_QHeaderView( void * pObj, bool bNew )
 
 HB_FUNC( QT_QHEADERVIEW )
 {
-   void * pObj = NULL;
+   QHeaderView * pObj = NULL;
 
    pObj = new QHeaderView( ( Qt::Orientation ) hb_parni( 1 ), hbqt_par_QWidget( 2 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QHeaderView( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QHeaderView( ( void * ) pObj, true ) );
 }
 
 /*
@@ -156,7 +156,13 @@ HB_FUNC( QT_QHEADERVIEW )
  */
 HB_FUNC( QT_QHEADERVIEW_CASCADINGSECTIONRESIZES )
 {
-   hb_retl( hbqt_par_QHeaderView( 1 )->cascadingSectionResizes() );
+   QHeaderView * p = hbqt_par_QHeaderView( 1 );
+   if( p )
+      hb_retl( ( p )->cascadingSectionResizes() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHEADERVIEW_CASCADINGSECTIONRESIZES FP=hb_retl( ( p )->cascadingSectionResizes() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -164,7 +170,13 @@ HB_FUNC( QT_QHEADERVIEW_CASCADINGSECTIONRESIZES )
  */
 HB_FUNC( QT_QHEADERVIEW_COUNT )
 {
-   hb_retni( hbqt_par_QHeaderView( 1 )->count() );
+   QHeaderView * p = hbqt_par_QHeaderView( 1 );
+   if( p )
+      hb_retni( ( p )->count() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHEADERVIEW_COUNT FP=hb_retni( ( p )->count() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -172,7 +184,13 @@ HB_FUNC( QT_QHEADERVIEW_COUNT )
  */
 HB_FUNC( QT_QHEADERVIEW_DEFAULTALIGNMENT )
 {
-   hb_retni( ( Qt::Alignment ) hbqt_par_QHeaderView( 1 )->defaultAlignment() );
+   QHeaderView * p = hbqt_par_QHeaderView( 1 );
+   if( p )
+      hb_retni( ( Qt::Alignment ) ( p )->defaultAlignment() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHEADERVIEW_DEFAULTALIGNMENT FP=hb_retni( ( Qt::Alignment ) ( p )->defaultAlignment() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -180,7 +198,13 @@ HB_FUNC( QT_QHEADERVIEW_DEFAULTALIGNMENT )
  */
 HB_FUNC( QT_QHEADERVIEW_DEFAULTSECTIONSIZE )
 {
-   hb_retni( hbqt_par_QHeaderView( 1 )->defaultSectionSize() );
+   QHeaderView * p = hbqt_par_QHeaderView( 1 );
+   if( p )
+      hb_retni( ( p )->defaultSectionSize() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHEADERVIEW_DEFAULTSECTIONSIZE FP=hb_retni( ( p )->defaultSectionSize() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -188,7 +212,13 @@ HB_FUNC( QT_QHEADERVIEW_DEFAULTSECTIONSIZE )
  */
 HB_FUNC( QT_QHEADERVIEW_HIDDENSECTIONCOUNT )
 {
-   hb_retni( hbqt_par_QHeaderView( 1 )->hiddenSectionCount() );
+   QHeaderView * p = hbqt_par_QHeaderView( 1 );
+   if( p )
+      hb_retni( ( p )->hiddenSectionCount() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHEADERVIEW_HIDDENSECTIONCOUNT FP=hb_retni( ( p )->hiddenSectionCount() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -196,7 +226,13 @@ HB_FUNC( QT_QHEADERVIEW_HIDDENSECTIONCOUNT )
  */
 HB_FUNC( QT_QHEADERVIEW_HIDESECTION )
 {
-   hbqt_par_QHeaderView( 1 )->hideSection( hb_parni( 2 ) );
+   QHeaderView * p = hbqt_par_QHeaderView( 1 );
+   if( p )
+      ( p )->hideSection( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHEADERVIEW_HIDESECTION FP=( p )->hideSection( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -204,7 +240,13 @@ HB_FUNC( QT_QHEADERVIEW_HIDESECTION )
  */
 HB_FUNC( QT_QHEADERVIEW_HIGHLIGHTSECTIONS )
 {
-   hb_retl( hbqt_par_QHeaderView( 1 )->highlightSections() );
+   QHeaderView * p = hbqt_par_QHeaderView( 1 );
+   if( p )
+      hb_retl( ( p )->highlightSections() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHEADERVIEW_HIGHLIGHTSECTIONS FP=hb_retl( ( p )->highlightSections() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -212,7 +254,13 @@ HB_FUNC( QT_QHEADERVIEW_HIGHLIGHTSECTIONS )
  */
 HB_FUNC( QT_QHEADERVIEW_ISCLICKABLE )
 {
-   hb_retl( hbqt_par_QHeaderView( 1 )->isClickable() );
+   QHeaderView * p = hbqt_par_QHeaderView( 1 );
+   if( p )
+      hb_retl( ( p )->isClickable() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHEADERVIEW_ISCLICKABLE FP=hb_retl( ( p )->isClickable() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -220,7 +268,13 @@ HB_FUNC( QT_QHEADERVIEW_ISCLICKABLE )
  */
 HB_FUNC( QT_QHEADERVIEW_ISMOVABLE )
 {
-   hb_retl( hbqt_par_QHeaderView( 1 )->isMovable() );
+   QHeaderView * p = hbqt_par_QHeaderView( 1 );
+   if( p )
+      hb_retl( ( p )->isMovable() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHEADERVIEW_ISMOVABLE FP=hb_retl( ( p )->isMovable() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -228,7 +282,13 @@ HB_FUNC( QT_QHEADERVIEW_ISMOVABLE )
  */
 HB_FUNC( QT_QHEADERVIEW_ISSECTIONHIDDEN )
 {
-   hb_retl( hbqt_par_QHeaderView( 1 )->isSectionHidden( hb_parni( 2 ) ) );
+   QHeaderView * p = hbqt_par_QHeaderView( 1 );
+   if( p )
+      hb_retl( ( p )->isSectionHidden( hb_parni( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHEADERVIEW_ISSECTIONHIDDEN FP=hb_retl( ( p )->isSectionHidden( hb_parni( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -236,7 +296,13 @@ HB_FUNC( QT_QHEADERVIEW_ISSECTIONHIDDEN )
  */
 HB_FUNC( QT_QHEADERVIEW_ISSORTINDICATORSHOWN )
 {
-   hb_retl( hbqt_par_QHeaderView( 1 )->isSortIndicatorShown() );
+   QHeaderView * p = hbqt_par_QHeaderView( 1 );
+   if( p )
+      hb_retl( ( p )->isSortIndicatorShown() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHEADERVIEW_ISSORTINDICATORSHOWN FP=hb_retl( ( p )->isSortIndicatorShown() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -244,7 +310,13 @@ HB_FUNC( QT_QHEADERVIEW_ISSORTINDICATORSHOWN )
  */
 HB_FUNC( QT_QHEADERVIEW_LENGTH )
 {
-   hb_retni( hbqt_par_QHeaderView( 1 )->length() );
+   QHeaderView * p = hbqt_par_QHeaderView( 1 );
+   if( p )
+      hb_retni( ( p )->length() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHEADERVIEW_LENGTH FP=hb_retni( ( p )->length() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -252,7 +324,13 @@ HB_FUNC( QT_QHEADERVIEW_LENGTH )
  */
 HB_FUNC( QT_QHEADERVIEW_LOGICALINDEX )
 {
-   hb_retni( hbqt_par_QHeaderView( 1 )->logicalIndex( hb_parni( 2 ) ) );
+   QHeaderView * p = hbqt_par_QHeaderView( 1 );
+   if( p )
+      hb_retni( ( p )->logicalIndex( hb_parni( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHEADERVIEW_LOGICALINDEX FP=hb_retni( ( p )->logicalIndex( hb_parni( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -260,7 +338,13 @@ HB_FUNC( QT_QHEADERVIEW_LOGICALINDEX )
  */
 HB_FUNC( QT_QHEADERVIEW_LOGICALINDEXAT )
 {
-   hb_retni( hbqt_par_QHeaderView( 1 )->logicalIndexAt( hb_parni( 2 ) ) );
+   QHeaderView * p = hbqt_par_QHeaderView( 1 );
+   if( p )
+      hb_retni( ( p )->logicalIndexAt( hb_parni( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHEADERVIEW_LOGICALINDEXAT FP=hb_retni( ( p )->logicalIndexAt( hb_parni( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -268,7 +352,13 @@ HB_FUNC( QT_QHEADERVIEW_LOGICALINDEXAT )
  */
 HB_FUNC( QT_QHEADERVIEW_LOGICALINDEXAT_1 )
 {
-   hb_retni( hbqt_par_QHeaderView( 1 )->logicalIndexAt( hb_parni( 2 ), hb_parni( 3 ) ) );
+   QHeaderView * p = hbqt_par_QHeaderView( 1 );
+   if( p )
+      hb_retni( ( p )->logicalIndexAt( hb_parni( 2 ), hb_parni( 3 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHEADERVIEW_LOGICALINDEXAT_1 FP=hb_retni( ( p )->logicalIndexAt( hb_parni( 2 ), hb_parni( 3 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -276,7 +366,13 @@ HB_FUNC( QT_QHEADERVIEW_LOGICALINDEXAT_1 )
  */
 HB_FUNC( QT_QHEADERVIEW_LOGICALINDEXAT_2 )
 {
-   hb_retni( hbqt_par_QHeaderView( 1 )->logicalIndexAt( *hbqt_par_QPoint( 2 ) ) );
+   QHeaderView * p = hbqt_par_QHeaderView( 1 );
+   if( p )
+      hb_retni( ( p )->logicalIndexAt( *hbqt_par_QPoint( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHEADERVIEW_LOGICALINDEXAT_2 FP=hb_retni( ( p )->logicalIndexAt( *hbqt_par_QPoint( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -284,7 +380,13 @@ HB_FUNC( QT_QHEADERVIEW_LOGICALINDEXAT_2 )
  */
 HB_FUNC( QT_QHEADERVIEW_MINIMUMSECTIONSIZE )
 {
-   hb_retni( hbqt_par_QHeaderView( 1 )->minimumSectionSize() );
+   QHeaderView * p = hbqt_par_QHeaderView( 1 );
+   if( p )
+      hb_retni( ( p )->minimumSectionSize() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHEADERVIEW_MINIMUMSECTIONSIZE FP=hb_retni( ( p )->minimumSectionSize() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -292,7 +394,13 @@ HB_FUNC( QT_QHEADERVIEW_MINIMUMSECTIONSIZE )
  */
 HB_FUNC( QT_QHEADERVIEW_MOVESECTION )
 {
-   hbqt_par_QHeaderView( 1 )->moveSection( hb_parni( 2 ), hb_parni( 3 ) );
+   QHeaderView * p = hbqt_par_QHeaderView( 1 );
+   if( p )
+      ( p )->moveSection( hb_parni( 2 ), hb_parni( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHEADERVIEW_MOVESECTION FP=( p )->moveSection( hb_parni( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -300,7 +408,13 @@ HB_FUNC( QT_QHEADERVIEW_MOVESECTION )
  */
 HB_FUNC( QT_QHEADERVIEW_OFFSET )
 {
-   hb_retni( hbqt_par_QHeaderView( 1 )->offset() );
+   QHeaderView * p = hbqt_par_QHeaderView( 1 );
+   if( p )
+      hb_retni( ( p )->offset() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHEADERVIEW_OFFSET FP=hb_retni( ( p )->offset() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -308,7 +422,13 @@ HB_FUNC( QT_QHEADERVIEW_OFFSET )
  */
 HB_FUNC( QT_QHEADERVIEW_ORIENTATION )
 {
-   hb_retni( ( Qt::Orientation ) hbqt_par_QHeaderView( 1 )->orientation() );
+   QHeaderView * p = hbqt_par_QHeaderView( 1 );
+   if( p )
+      hb_retni( ( Qt::Orientation ) ( p )->orientation() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHEADERVIEW_ORIENTATION FP=hb_retni( ( Qt::Orientation ) ( p )->orientation() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -316,7 +436,13 @@ HB_FUNC( QT_QHEADERVIEW_ORIENTATION )
  */
 HB_FUNC( QT_QHEADERVIEW_RESIZEMODE )
 {
-   hb_retni( ( QHeaderView::ResizeMode ) hbqt_par_QHeaderView( 1 )->resizeMode( hb_parni( 2 ) ) );
+   QHeaderView * p = hbqt_par_QHeaderView( 1 );
+   if( p )
+      hb_retni( ( QHeaderView::ResizeMode ) ( p )->resizeMode( hb_parni( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHEADERVIEW_RESIZEMODE FP=hb_retni( ( QHeaderView::ResizeMode ) ( p )->resizeMode( hb_parni( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -324,7 +450,13 @@ HB_FUNC( QT_QHEADERVIEW_RESIZEMODE )
  */
 HB_FUNC( QT_QHEADERVIEW_RESIZESECTION )
 {
-   hbqt_par_QHeaderView( 1 )->resizeSection( hb_parni( 2 ), hb_parni( 3 ) );
+   QHeaderView * p = hbqt_par_QHeaderView( 1 );
+   if( p )
+      ( p )->resizeSection( hb_parni( 2 ), hb_parni( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHEADERVIEW_RESIZESECTION FP=( p )->resizeSection( hb_parni( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -332,7 +464,13 @@ HB_FUNC( QT_QHEADERVIEW_RESIZESECTION )
  */
 HB_FUNC( QT_QHEADERVIEW_RESIZESECTIONS )
 {
-   hbqt_par_QHeaderView( 1 )->resizeSections( ( QHeaderView::ResizeMode ) hb_parni( 2 ) );
+   QHeaderView * p = hbqt_par_QHeaderView( 1 );
+   if( p )
+      ( p )->resizeSections( ( QHeaderView::ResizeMode ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHEADERVIEW_RESIZESECTIONS FP=( p )->resizeSections( ( QHeaderView::ResizeMode ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -340,7 +478,13 @@ HB_FUNC( QT_QHEADERVIEW_RESIZESECTIONS )
  */
 HB_FUNC( QT_QHEADERVIEW_RESTORESTATE )
 {
-   hb_retl( hbqt_par_QHeaderView( 1 )->restoreState( *hbqt_par_QByteArray( 2 ) ) );
+   QHeaderView * p = hbqt_par_QHeaderView( 1 );
+   if( p )
+      hb_retl( ( p )->restoreState( *hbqt_par_QByteArray( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHEADERVIEW_RESTORESTATE FP=hb_retl( ( p )->restoreState( *hbqt_par_QByteArray( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -348,7 +492,13 @@ HB_FUNC( QT_QHEADERVIEW_RESTORESTATE )
  */
 HB_FUNC( QT_QHEADERVIEW_SAVESTATE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QHeaderView( 1 )->saveState() ), true ) );
+   QHeaderView * p = hbqt_par_QHeaderView( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->saveState() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHEADERVIEW_SAVESTATE FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->saveState() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -356,7 +506,13 @@ HB_FUNC( QT_QHEADERVIEW_SAVESTATE )
  */
 HB_FUNC( QT_QHEADERVIEW_SECTIONPOSITION )
 {
-   hb_retni( hbqt_par_QHeaderView( 1 )->sectionPosition( hb_parni( 2 ) ) );
+   QHeaderView * p = hbqt_par_QHeaderView( 1 );
+   if( p )
+      hb_retni( ( p )->sectionPosition( hb_parni( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHEADERVIEW_SECTIONPOSITION FP=hb_retni( ( p )->sectionPosition( hb_parni( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -364,7 +520,13 @@ HB_FUNC( QT_QHEADERVIEW_SECTIONPOSITION )
  */
 HB_FUNC( QT_QHEADERVIEW_SECTIONSIZE )
 {
-   hb_retni( hbqt_par_QHeaderView( 1 )->sectionSize( hb_parni( 2 ) ) );
+   QHeaderView * p = hbqt_par_QHeaderView( 1 );
+   if( p )
+      hb_retni( ( p )->sectionSize( hb_parni( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHEADERVIEW_SECTIONSIZE FP=hb_retni( ( p )->sectionSize( hb_parni( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -372,7 +534,13 @@ HB_FUNC( QT_QHEADERVIEW_SECTIONSIZE )
  */
 HB_FUNC( QT_QHEADERVIEW_SECTIONSIZEHINT )
 {
-   hb_retni( hbqt_par_QHeaderView( 1 )->sectionSizeHint( hb_parni( 2 ) ) );
+   QHeaderView * p = hbqt_par_QHeaderView( 1 );
+   if( p )
+      hb_retni( ( p )->sectionSizeHint( hb_parni( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHEADERVIEW_SECTIONSIZEHINT FP=hb_retni( ( p )->sectionSizeHint( hb_parni( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -380,7 +548,13 @@ HB_FUNC( QT_QHEADERVIEW_SECTIONSIZEHINT )
  */
 HB_FUNC( QT_QHEADERVIEW_SECTIONVIEWPORTPOSITION )
 {
-   hb_retni( hbqt_par_QHeaderView( 1 )->sectionViewportPosition( hb_parni( 2 ) ) );
+   QHeaderView * p = hbqt_par_QHeaderView( 1 );
+   if( p )
+      hb_retni( ( p )->sectionViewportPosition( hb_parni( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHEADERVIEW_SECTIONVIEWPORTPOSITION FP=hb_retni( ( p )->sectionViewportPosition( hb_parni( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -388,7 +562,13 @@ HB_FUNC( QT_QHEADERVIEW_SECTIONVIEWPORTPOSITION )
  */
 HB_FUNC( QT_QHEADERVIEW_SECTIONSHIDDEN )
 {
-   hb_retl( hbqt_par_QHeaderView( 1 )->sectionsHidden() );
+   QHeaderView * p = hbqt_par_QHeaderView( 1 );
+   if( p )
+      hb_retl( ( p )->sectionsHidden() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHEADERVIEW_SECTIONSHIDDEN FP=hb_retl( ( p )->sectionsHidden() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -396,7 +576,13 @@ HB_FUNC( QT_QHEADERVIEW_SECTIONSHIDDEN )
  */
 HB_FUNC( QT_QHEADERVIEW_SECTIONSMOVED )
 {
-   hb_retl( hbqt_par_QHeaderView( 1 )->sectionsMoved() );
+   QHeaderView * p = hbqt_par_QHeaderView( 1 );
+   if( p )
+      hb_retl( ( p )->sectionsMoved() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHEADERVIEW_SECTIONSMOVED FP=hb_retl( ( p )->sectionsMoved() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -404,7 +590,13 @@ HB_FUNC( QT_QHEADERVIEW_SECTIONSMOVED )
  */
 HB_FUNC( QT_QHEADERVIEW_SETCASCADINGSECTIONRESIZES )
 {
-   hbqt_par_QHeaderView( 1 )->setCascadingSectionResizes( hb_parl( 2 ) );
+   QHeaderView * p = hbqt_par_QHeaderView( 1 );
+   if( p )
+      ( p )->setCascadingSectionResizes( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHEADERVIEW_SETCASCADINGSECTIONRESIZES FP=( p )->setCascadingSectionResizes( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -412,7 +604,13 @@ HB_FUNC( QT_QHEADERVIEW_SETCASCADINGSECTIONRESIZES )
  */
 HB_FUNC( QT_QHEADERVIEW_SETCLICKABLE )
 {
-   hbqt_par_QHeaderView( 1 )->setClickable( hb_parl( 2 ) );
+   QHeaderView * p = hbqt_par_QHeaderView( 1 );
+   if( p )
+      ( p )->setClickable( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHEADERVIEW_SETCLICKABLE FP=( p )->setClickable( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -420,7 +618,13 @@ HB_FUNC( QT_QHEADERVIEW_SETCLICKABLE )
  */
 HB_FUNC( QT_QHEADERVIEW_SETDEFAULTALIGNMENT )
 {
-   hbqt_par_QHeaderView( 1 )->setDefaultAlignment( ( Qt::Alignment ) hb_parni( 2 ) );
+   QHeaderView * p = hbqt_par_QHeaderView( 1 );
+   if( p )
+      ( p )->setDefaultAlignment( ( Qt::Alignment ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHEADERVIEW_SETDEFAULTALIGNMENT FP=( p )->setDefaultAlignment( ( Qt::Alignment ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -428,7 +632,13 @@ HB_FUNC( QT_QHEADERVIEW_SETDEFAULTALIGNMENT )
  */
 HB_FUNC( QT_QHEADERVIEW_SETDEFAULTSECTIONSIZE )
 {
-   hbqt_par_QHeaderView( 1 )->setDefaultSectionSize( hb_parni( 2 ) );
+   QHeaderView * p = hbqt_par_QHeaderView( 1 );
+   if( p )
+      ( p )->setDefaultSectionSize( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHEADERVIEW_SETDEFAULTSECTIONSIZE FP=( p )->setDefaultSectionSize( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -436,7 +646,13 @@ HB_FUNC( QT_QHEADERVIEW_SETDEFAULTSECTIONSIZE )
  */
 HB_FUNC( QT_QHEADERVIEW_SETHIGHLIGHTSECTIONS )
 {
-   hbqt_par_QHeaderView( 1 )->setHighlightSections( hb_parl( 2 ) );
+   QHeaderView * p = hbqt_par_QHeaderView( 1 );
+   if( p )
+      ( p )->setHighlightSections( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHEADERVIEW_SETHIGHLIGHTSECTIONS FP=( p )->setHighlightSections( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -444,7 +660,13 @@ HB_FUNC( QT_QHEADERVIEW_SETHIGHLIGHTSECTIONS )
  */
 HB_FUNC( QT_QHEADERVIEW_SETMINIMUMSECTIONSIZE )
 {
-   hbqt_par_QHeaderView( 1 )->setMinimumSectionSize( hb_parni( 2 ) );
+   QHeaderView * p = hbqt_par_QHeaderView( 1 );
+   if( p )
+      ( p )->setMinimumSectionSize( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHEADERVIEW_SETMINIMUMSECTIONSIZE FP=( p )->setMinimumSectionSize( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -452,7 +674,13 @@ HB_FUNC( QT_QHEADERVIEW_SETMINIMUMSECTIONSIZE )
  */
 HB_FUNC( QT_QHEADERVIEW_SETMOVABLE )
 {
-   hbqt_par_QHeaderView( 1 )->setMovable( hb_parl( 2 ) );
+   QHeaderView * p = hbqt_par_QHeaderView( 1 );
+   if( p )
+      ( p )->setMovable( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHEADERVIEW_SETMOVABLE FP=( p )->setMovable( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -460,7 +688,13 @@ HB_FUNC( QT_QHEADERVIEW_SETMOVABLE )
  */
 HB_FUNC( QT_QHEADERVIEW_SETRESIZEMODE )
 {
-   hbqt_par_QHeaderView( 1 )->setResizeMode( ( QHeaderView::ResizeMode ) hb_parni( 2 ) );
+   QHeaderView * p = hbqt_par_QHeaderView( 1 );
+   if( p )
+      ( p )->setResizeMode( ( QHeaderView::ResizeMode ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHEADERVIEW_SETRESIZEMODE FP=( p )->setResizeMode( ( QHeaderView::ResizeMode ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -468,7 +702,13 @@ HB_FUNC( QT_QHEADERVIEW_SETRESIZEMODE )
  */
 HB_FUNC( QT_QHEADERVIEW_SETRESIZEMODE_1 )
 {
-   hbqt_par_QHeaderView( 1 )->setResizeMode( hb_parni( 2 ), ( QHeaderView::ResizeMode ) hb_parni( 3 ) );
+   QHeaderView * p = hbqt_par_QHeaderView( 1 );
+   if( p )
+      ( p )->setResizeMode( hb_parni( 2 ), ( QHeaderView::ResizeMode ) hb_parni( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHEADERVIEW_SETRESIZEMODE_1 FP=( p )->setResizeMode( hb_parni( 2 ), ( QHeaderView::ResizeMode ) hb_parni( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -476,7 +716,13 @@ HB_FUNC( QT_QHEADERVIEW_SETRESIZEMODE_1 )
  */
 HB_FUNC( QT_QHEADERVIEW_SETSECTIONHIDDEN )
 {
-   hbqt_par_QHeaderView( 1 )->setSectionHidden( hb_parni( 2 ), hb_parl( 3 ) );
+   QHeaderView * p = hbqt_par_QHeaderView( 1 );
+   if( p )
+      ( p )->setSectionHidden( hb_parni( 2 ), hb_parl( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHEADERVIEW_SETSECTIONHIDDEN FP=( p )->setSectionHidden( hb_parni( 2 ), hb_parl( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -484,7 +730,13 @@ HB_FUNC( QT_QHEADERVIEW_SETSECTIONHIDDEN )
  */
 HB_FUNC( QT_QHEADERVIEW_SETSORTINDICATOR )
 {
-   hbqt_par_QHeaderView( 1 )->setSortIndicator( hb_parni( 2 ), ( Qt::SortOrder ) hb_parni( 3 ) );
+   QHeaderView * p = hbqt_par_QHeaderView( 1 );
+   if( p )
+      ( p )->setSortIndicator( hb_parni( 2 ), ( Qt::SortOrder ) hb_parni( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHEADERVIEW_SETSORTINDICATOR FP=( p )->setSortIndicator( hb_parni( 2 ), ( Qt::SortOrder ) hb_parni( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -492,7 +744,13 @@ HB_FUNC( QT_QHEADERVIEW_SETSORTINDICATOR )
  */
 HB_FUNC( QT_QHEADERVIEW_SETSORTINDICATORSHOWN )
 {
-   hbqt_par_QHeaderView( 1 )->setSortIndicatorShown( hb_parl( 2 ) );
+   QHeaderView * p = hbqt_par_QHeaderView( 1 );
+   if( p )
+      ( p )->setSortIndicatorShown( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHEADERVIEW_SETSORTINDICATORSHOWN FP=( p )->setSortIndicatorShown( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -500,7 +758,13 @@ HB_FUNC( QT_QHEADERVIEW_SETSORTINDICATORSHOWN )
  */
 HB_FUNC( QT_QHEADERVIEW_SETSTRETCHLASTSECTION )
 {
-   hbqt_par_QHeaderView( 1 )->setStretchLastSection( hb_parl( 2 ) );
+   QHeaderView * p = hbqt_par_QHeaderView( 1 );
+   if( p )
+      ( p )->setStretchLastSection( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHEADERVIEW_SETSTRETCHLASTSECTION FP=( p )->setStretchLastSection( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -508,7 +772,13 @@ HB_FUNC( QT_QHEADERVIEW_SETSTRETCHLASTSECTION )
  */
 HB_FUNC( QT_QHEADERVIEW_SHOWSECTION )
 {
-   hbqt_par_QHeaderView( 1 )->showSection( hb_parni( 2 ) );
+   QHeaderView * p = hbqt_par_QHeaderView( 1 );
+   if( p )
+      ( p )->showSection( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHEADERVIEW_SHOWSECTION FP=( p )->showSection( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -516,7 +786,13 @@ HB_FUNC( QT_QHEADERVIEW_SHOWSECTION )
  */
 HB_FUNC( QT_QHEADERVIEW_SIZEHINT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QHeaderView( 1 )->sizeHint() ), true ) );
+   QHeaderView * p = hbqt_par_QHeaderView( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->sizeHint() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHEADERVIEW_SIZEHINT FP=hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->sizeHint() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -524,7 +800,13 @@ HB_FUNC( QT_QHEADERVIEW_SIZEHINT )
  */
 HB_FUNC( QT_QHEADERVIEW_SORTINDICATORORDER )
 {
-   hb_retni( ( Qt::SortOrder ) hbqt_par_QHeaderView( 1 )->sortIndicatorOrder() );
+   QHeaderView * p = hbqt_par_QHeaderView( 1 );
+   if( p )
+      hb_retni( ( Qt::SortOrder ) ( p )->sortIndicatorOrder() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHEADERVIEW_SORTINDICATORORDER FP=hb_retni( ( Qt::SortOrder ) ( p )->sortIndicatorOrder() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -532,7 +814,13 @@ HB_FUNC( QT_QHEADERVIEW_SORTINDICATORORDER )
  */
 HB_FUNC( QT_QHEADERVIEW_SORTINDICATORSECTION )
 {
-   hb_retni( hbqt_par_QHeaderView( 1 )->sortIndicatorSection() );
+   QHeaderView * p = hbqt_par_QHeaderView( 1 );
+   if( p )
+      hb_retni( ( p )->sortIndicatorSection() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHEADERVIEW_SORTINDICATORSECTION FP=hb_retni( ( p )->sortIndicatorSection() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -540,7 +828,13 @@ HB_FUNC( QT_QHEADERVIEW_SORTINDICATORSECTION )
  */
 HB_FUNC( QT_QHEADERVIEW_STRETCHLASTSECTION )
 {
-   hb_retl( hbqt_par_QHeaderView( 1 )->stretchLastSection() );
+   QHeaderView * p = hbqt_par_QHeaderView( 1 );
+   if( p )
+      hb_retl( ( p )->stretchLastSection() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHEADERVIEW_STRETCHLASTSECTION FP=hb_retl( ( p )->stretchLastSection() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -548,7 +842,13 @@ HB_FUNC( QT_QHEADERVIEW_STRETCHLASTSECTION )
  */
 HB_FUNC( QT_QHEADERVIEW_STRETCHSECTIONCOUNT )
 {
-   hb_retni( hbqt_par_QHeaderView( 1 )->stretchSectionCount() );
+   QHeaderView * p = hbqt_par_QHeaderView( 1 );
+   if( p )
+      hb_retni( ( p )->stretchSectionCount() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHEADERVIEW_STRETCHSECTIONCOUNT FP=hb_retni( ( p )->stretchSectionCount() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -556,7 +856,13 @@ HB_FUNC( QT_QHEADERVIEW_STRETCHSECTIONCOUNT )
  */
 HB_FUNC( QT_QHEADERVIEW_SWAPSECTIONS )
 {
-   hbqt_par_QHeaderView( 1 )->swapSections( hb_parni( 2 ), hb_parni( 3 ) );
+   QHeaderView * p = hbqt_par_QHeaderView( 1 );
+   if( p )
+      ( p )->swapSections( hb_parni( 2 ), hb_parni( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHEADERVIEW_SWAPSECTIONS FP=( p )->swapSections( hb_parni( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -564,7 +870,13 @@ HB_FUNC( QT_QHEADERVIEW_SWAPSECTIONS )
  */
 HB_FUNC( QT_QHEADERVIEW_VISUALINDEX )
 {
-   hb_retni( hbqt_par_QHeaderView( 1 )->visualIndex( hb_parni( 2 ) ) );
+   QHeaderView * p = hbqt_par_QHeaderView( 1 );
+   if( p )
+      hb_retni( ( p )->visualIndex( hb_parni( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHEADERVIEW_VISUALINDEX FP=hb_retni( ( p )->visualIndex( hb_parni( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -572,7 +884,13 @@ HB_FUNC( QT_QHEADERVIEW_VISUALINDEX )
  */
 HB_FUNC( QT_QHEADERVIEW_VISUALINDEXAT )
 {
-   hb_retni( hbqt_par_QHeaderView( 1 )->visualIndexAt( hb_parni( 2 ) ) );
+   QHeaderView * p = hbqt_par_QHeaderView( 1 );
+   if( p )
+      hb_retni( ( p )->visualIndexAt( hb_parni( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHEADERVIEW_VISUALINDEXAT FP=hb_retni( ( p )->visualIndexAt( hb_parni( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -580,7 +898,13 @@ HB_FUNC( QT_QHEADERVIEW_VISUALINDEXAT )
  */
 HB_FUNC( QT_QHEADERVIEW_HEADERDATACHANGED )
 {
-   hbqt_par_QHeaderView( 1 )->headerDataChanged( ( Qt::Orientation ) hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ) );
+   QHeaderView * p = hbqt_par_QHeaderView( 1 );
+   if( p )
+      ( p )->headerDataChanged( ( Qt::Orientation ) hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHEADERVIEW_HEADERDATACHANGED FP=( p )->headerDataChanged( ( Qt::Orientation ) hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -588,7 +912,13 @@ HB_FUNC( QT_QHEADERVIEW_HEADERDATACHANGED )
  */
 HB_FUNC( QT_QHEADERVIEW_SETOFFSET )
 {
-   hbqt_par_QHeaderView( 1 )->setOffset( hb_parni( 2 ) );
+   QHeaderView * p = hbqt_par_QHeaderView( 1 );
+   if( p )
+      ( p )->setOffset( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHEADERVIEW_SETOFFSET FP=( p )->setOffset( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -596,7 +926,13 @@ HB_FUNC( QT_QHEADERVIEW_SETOFFSET )
  */
 HB_FUNC( QT_QHEADERVIEW_SETOFFSETTOLASTSECTION )
 {
-   hbqt_par_QHeaderView( 1 )->setOffsetToLastSection();
+   QHeaderView * p = hbqt_par_QHeaderView( 1 );
+   if( p )
+      ( p )->setOffsetToLastSection();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHEADERVIEW_SETOFFSETTOLASTSECTION FP=( p )->setOffsetToLastSection(); p is NULL" ) );
+   }
 }
 
 /*
@@ -604,7 +940,13 @@ HB_FUNC( QT_QHEADERVIEW_SETOFFSETTOLASTSECTION )
  */
 HB_FUNC( QT_QHEADERVIEW_SETOFFSETTOSECTIONPOSITION )
 {
-   hbqt_par_QHeaderView( 1 )->setOffsetToSectionPosition( hb_parni( 2 ) );
+   QHeaderView * p = hbqt_par_QHeaderView( 1 );
+   if( p )
+      ( p )->setOffsetToSectionPosition( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHEADERVIEW_SETOFFSETTOSECTIONPOSITION FP=( p )->setOffsetToSectionPosition( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 

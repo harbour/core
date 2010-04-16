@@ -87,43 +87,44 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QSettings > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QSettings > pq;
 } QGC_POINTER_QSettings;
 
 QT_G_FUNC( hbqt_gcRelease_QSettings )
 {
+   QSettings  * ph = NULL ;
    QGC_POINTER_QSettings * p = ( QGC_POINTER_QSettings * ) Cargo;
 
-   if( p && p->bNew )
+   if( p && p->bNew && p->ph )
    {
-      if( p->ph && p->pq )
+      ph = p->ph;
+      if( ph )
       {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QSettings   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
-            delete ( ( QSettings * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QSettings   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QSettings   /.\\   ", (void*) ph, (void*) p->ph ) );
+            delete ( p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QSettings   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QSettings          pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QSettings          ", ph ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QSettings    :     Object already deleted!", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QSettings    :     Object already deleted!", ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QSettings    :    Object not created with new=true", p->ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QSettings    :    Object not created with new=true", ph ) );
       p->ph = NULL;
    }
 }
@@ -132,13 +133,12 @@ void * hbqt_gcAllocate_QSettings( void * pObj, bool bNew )
 {
    QGC_POINTER_QSettings * p = ( QGC_POINTER_QSettings * ) hb_gcAllocate( sizeof( QGC_POINTER_QSettings ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QSettings >( ( QSettings * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QSettings;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QSettings >( ( QSettings * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QSettings  under p->pq", pObj ) );
    }
    else
@@ -150,7 +150,7 @@ void * hbqt_gcAllocate_QSettings( void * pObj, bool bNew )
 
 HB_FUNC( QT_QSETTINGS )
 {
-   void * pObj = NULL;
+   QSettings * pObj = NULL;
 
    if( hb_pcount() >= 2 && HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) )
    {
@@ -165,7 +165,7 @@ HB_FUNC( QT_QSETTINGS )
       pObj = new QSettings() ;
    }
 
-   hb_retptrGC( hbqt_gcAllocate_QSettings( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QSettings( ( void * ) pObj, true ) );
 }
 
 /*
@@ -173,7 +173,13 @@ HB_FUNC( QT_QSETTINGS )
  */
 HB_FUNC( QT_QSETTINGS_ALLKEYS )
 {
-   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QSettings( 1 )->allKeys() ), true ) );
+   QSettings * p = hbqt_par_QSettings( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->allKeys() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSETTINGS_ALLKEYS FP=hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->allKeys() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -181,7 +187,13 @@ HB_FUNC( QT_QSETTINGS_ALLKEYS )
  */
 HB_FUNC( QT_QSETTINGS_APPLICATIONNAME )
 {
-   hb_retc( hbqt_par_QSettings( 1 )->applicationName().toAscii().data() );
+   QSettings * p = hbqt_par_QSettings( 1 );
+   if( p )
+      hb_retc( ( p )->applicationName().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSETTINGS_APPLICATIONNAME FP=hb_retc( ( p )->applicationName().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -189,7 +201,13 @@ HB_FUNC( QT_QSETTINGS_APPLICATIONNAME )
  */
 HB_FUNC( QT_QSETTINGS_BEGINGROUP )
 {
-   hbqt_par_QSettings( 1 )->beginGroup( QSettings::tr( hb_parc( 2 ) ) );
+   QSettings * p = hbqt_par_QSettings( 1 );
+   if( p )
+      ( p )->beginGroup( QSettings::tr( hb_parc( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSETTINGS_BEGINGROUP FP=( p )->beginGroup( QSettings::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -197,7 +215,13 @@ HB_FUNC( QT_QSETTINGS_BEGINGROUP )
  */
 HB_FUNC( QT_QSETTINGS_BEGINREADARRAY )
 {
-   hb_retni( hbqt_par_QSettings( 1 )->beginReadArray( QSettings::tr( hb_parc( 2 ) ) ) );
+   QSettings * p = hbqt_par_QSettings( 1 );
+   if( p )
+      hb_retni( ( p )->beginReadArray( QSettings::tr( hb_parc( 2 ) ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSETTINGS_BEGINREADARRAY FP=hb_retni( ( p )->beginReadArray( QSettings::tr( hb_parc( 2 ) ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -205,7 +229,13 @@ HB_FUNC( QT_QSETTINGS_BEGINREADARRAY )
  */
 HB_FUNC( QT_QSETTINGS_BEGINWRITEARRAY )
 {
-   hbqt_par_QSettings( 1 )->beginWriteArray( QSettings::tr( hb_parc( 2 ) ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : -1 ) );
+   QSettings * p = hbqt_par_QSettings( 1 );
+   if( p )
+      ( p )->beginWriteArray( QSettings::tr( hb_parc( 2 ) ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : -1 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSETTINGS_BEGINWRITEARRAY FP=( p )->beginWriteArray( QSettings::tr( hb_parc( 2 ) ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : -1 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -213,7 +243,13 @@ HB_FUNC( QT_QSETTINGS_BEGINWRITEARRAY )
  */
 HB_FUNC( QT_QSETTINGS_CHILDGROUPS )
 {
-   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QSettings( 1 )->childGroups() ), true ) );
+   QSettings * p = hbqt_par_QSettings( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->childGroups() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSETTINGS_CHILDGROUPS FP=hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->childGroups() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -221,7 +257,13 @@ HB_FUNC( QT_QSETTINGS_CHILDGROUPS )
  */
 HB_FUNC( QT_QSETTINGS_CHILDKEYS )
 {
-   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QSettings( 1 )->childKeys() ), true ) );
+   QSettings * p = hbqt_par_QSettings( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->childKeys() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSETTINGS_CHILDKEYS FP=hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->childKeys() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -229,7 +271,13 @@ HB_FUNC( QT_QSETTINGS_CHILDKEYS )
  */
 HB_FUNC( QT_QSETTINGS_CLEAR )
 {
-   hbqt_par_QSettings( 1 )->clear();
+   QSettings * p = hbqt_par_QSettings( 1 );
+   if( p )
+      ( p )->clear();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSETTINGS_CLEAR FP=( p )->clear(); p is NULL" ) );
+   }
 }
 
 /*
@@ -237,7 +285,13 @@ HB_FUNC( QT_QSETTINGS_CLEAR )
  */
 HB_FUNC( QT_QSETTINGS_CONTAINS )
 {
-   hb_retl( hbqt_par_QSettings( 1 )->contains( QSettings::tr( hb_parc( 2 ) ) ) );
+   QSettings * p = hbqt_par_QSettings( 1 );
+   if( p )
+      hb_retl( ( p )->contains( QSettings::tr( hb_parc( 2 ) ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSETTINGS_CONTAINS FP=hb_retl( ( p )->contains( QSettings::tr( hb_parc( 2 ) ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -245,7 +299,13 @@ HB_FUNC( QT_QSETTINGS_CONTAINS )
  */
 HB_FUNC( QT_QSETTINGS_ENDARRAY )
 {
-   hbqt_par_QSettings( 1 )->endArray();
+   QSettings * p = hbqt_par_QSettings( 1 );
+   if( p )
+      ( p )->endArray();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSETTINGS_ENDARRAY FP=( p )->endArray(); p is NULL" ) );
+   }
 }
 
 /*
@@ -253,7 +313,13 @@ HB_FUNC( QT_QSETTINGS_ENDARRAY )
  */
 HB_FUNC( QT_QSETTINGS_ENDGROUP )
 {
-   hbqt_par_QSettings( 1 )->endGroup();
+   QSettings * p = hbqt_par_QSettings( 1 );
+   if( p )
+      ( p )->endGroup();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSETTINGS_ENDGROUP FP=( p )->endGroup(); p is NULL" ) );
+   }
 }
 
 /*
@@ -261,7 +327,13 @@ HB_FUNC( QT_QSETTINGS_ENDGROUP )
  */
 HB_FUNC( QT_QSETTINGS_FALLBACKSENABLED )
 {
-   hb_retl( hbqt_par_QSettings( 1 )->fallbacksEnabled() );
+   QSettings * p = hbqt_par_QSettings( 1 );
+   if( p )
+      hb_retl( ( p )->fallbacksEnabled() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSETTINGS_FALLBACKSENABLED FP=hb_retl( ( p )->fallbacksEnabled() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -269,7 +341,13 @@ HB_FUNC( QT_QSETTINGS_FALLBACKSENABLED )
  */
 HB_FUNC( QT_QSETTINGS_FILENAME )
 {
-   hb_retc( hbqt_par_QSettings( 1 )->fileName().toAscii().data() );
+   QSettings * p = hbqt_par_QSettings( 1 );
+   if( p )
+      hb_retc( ( p )->fileName().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSETTINGS_FILENAME FP=hb_retc( ( p )->fileName().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -277,7 +355,13 @@ HB_FUNC( QT_QSETTINGS_FILENAME )
  */
 HB_FUNC( QT_QSETTINGS_FORMAT )
 {
-   hb_retni( ( QSettings::Format ) hbqt_par_QSettings( 1 )->format() );
+   QSettings * p = hbqt_par_QSettings( 1 );
+   if( p )
+      hb_retni( ( QSettings::Format ) ( p )->format() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSETTINGS_FORMAT FP=hb_retni( ( QSettings::Format ) ( p )->format() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -285,7 +369,13 @@ HB_FUNC( QT_QSETTINGS_FORMAT )
  */
 HB_FUNC( QT_QSETTINGS_GROUP )
 {
-   hb_retc( hbqt_par_QSettings( 1 )->group().toAscii().data() );
+   QSettings * p = hbqt_par_QSettings( 1 );
+   if( p )
+      hb_retc( ( p )->group().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSETTINGS_GROUP FP=hb_retc( ( p )->group().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -293,7 +383,13 @@ HB_FUNC( QT_QSETTINGS_GROUP )
  */
 HB_FUNC( QT_QSETTINGS_INICODEC )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTextCodec( hbqt_par_QSettings( 1 )->iniCodec(), false ) );
+   QSettings * p = hbqt_par_QSettings( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QTextCodec( ( p )->iniCodec(), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSETTINGS_INICODEC FP=hb_retptrGC( hbqt_gcAllocate_QTextCodec( ( p )->iniCodec(), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -301,7 +397,13 @@ HB_FUNC( QT_QSETTINGS_INICODEC )
  */
 HB_FUNC( QT_QSETTINGS_ISWRITABLE )
 {
-   hb_retl( hbqt_par_QSettings( 1 )->isWritable() );
+   QSettings * p = hbqt_par_QSettings( 1 );
+   if( p )
+      hb_retl( ( p )->isWritable() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSETTINGS_ISWRITABLE FP=hb_retl( ( p )->isWritable() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -309,7 +411,13 @@ HB_FUNC( QT_QSETTINGS_ISWRITABLE )
  */
 HB_FUNC( QT_QSETTINGS_ORGANIZATIONNAME )
 {
-   hb_retc( hbqt_par_QSettings( 1 )->organizationName().toAscii().data() );
+   QSettings * p = hbqt_par_QSettings( 1 );
+   if( p )
+      hb_retc( ( p )->organizationName().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSETTINGS_ORGANIZATIONNAME FP=hb_retc( ( p )->organizationName().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -317,7 +425,13 @@ HB_FUNC( QT_QSETTINGS_ORGANIZATIONNAME )
  */
 HB_FUNC( QT_QSETTINGS_REMOVE )
 {
-   hbqt_par_QSettings( 1 )->remove( QSettings::tr( hb_parc( 2 ) ) );
+   QSettings * p = hbqt_par_QSettings( 1 );
+   if( p )
+      ( p )->remove( QSettings::tr( hb_parc( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSETTINGS_REMOVE FP=( p )->remove( QSettings::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -325,7 +439,13 @@ HB_FUNC( QT_QSETTINGS_REMOVE )
  */
 HB_FUNC( QT_QSETTINGS_SCOPE )
 {
-   hb_retni( ( QSettings::Scope ) hbqt_par_QSettings( 1 )->scope() );
+   QSettings * p = hbqt_par_QSettings( 1 );
+   if( p )
+      hb_retni( ( QSettings::Scope ) ( p )->scope() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSETTINGS_SCOPE FP=hb_retni( ( QSettings::Scope ) ( p )->scope() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -333,7 +453,13 @@ HB_FUNC( QT_QSETTINGS_SCOPE )
  */
 HB_FUNC( QT_QSETTINGS_SETARRAYINDEX )
 {
-   hbqt_par_QSettings( 1 )->setArrayIndex( hb_parni( 2 ) );
+   QSettings * p = hbqt_par_QSettings( 1 );
+   if( p )
+      ( p )->setArrayIndex( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSETTINGS_SETARRAYINDEX FP=( p )->setArrayIndex( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -341,7 +467,13 @@ HB_FUNC( QT_QSETTINGS_SETARRAYINDEX )
  */
 HB_FUNC( QT_QSETTINGS_SETFALLBACKSENABLED )
 {
-   hbqt_par_QSettings( 1 )->setFallbacksEnabled( hb_parl( 2 ) );
+   QSettings * p = hbqt_par_QSettings( 1 );
+   if( p )
+      ( p )->setFallbacksEnabled( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSETTINGS_SETFALLBACKSENABLED FP=( p )->setFallbacksEnabled( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -349,7 +481,13 @@ HB_FUNC( QT_QSETTINGS_SETFALLBACKSENABLED )
  */
 HB_FUNC( QT_QSETTINGS_SETINICODEC )
 {
-   hbqt_par_QSettings( 1 )->setIniCodec( hbqt_par_QTextCodec( 2 ) );
+   QSettings * p = hbqt_par_QSettings( 1 );
+   if( p )
+      ( p )->setIniCodec( hbqt_par_QTextCodec( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSETTINGS_SETINICODEC FP=( p )->setIniCodec( hbqt_par_QTextCodec( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -357,7 +495,13 @@ HB_FUNC( QT_QSETTINGS_SETINICODEC )
  */
 HB_FUNC( QT_QSETTINGS_SETINICODEC_1 )
 {
-   hbqt_par_QSettings( 1 )->setIniCodec( hbqt_par_char( 2 ) );
+   QSettings * p = hbqt_par_QSettings( 1 );
+   if( p )
+      ( p )->setIniCodec( hbqt_par_char( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSETTINGS_SETINICODEC_1 FP=( p )->setIniCodec( hbqt_par_char( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -365,7 +509,13 @@ HB_FUNC( QT_QSETTINGS_SETINICODEC_1 )
  */
 HB_FUNC( QT_QSETTINGS_SETVALUE )
 {
-   hbqt_par_QSettings( 1 )->setValue( QSettings::tr( hb_parc( 2 ) ), *hbqt_par_QVariant( 3 ) );
+   QSettings * p = hbqt_par_QSettings( 1 );
+   if( p )
+      ( p )->setValue( QSettings::tr( hb_parc( 2 ) ), *hbqt_par_QVariant( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSETTINGS_SETVALUE FP=( p )->setValue( QSettings::tr( hb_parc( 2 ) ), *hbqt_par_QVariant( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -373,7 +523,13 @@ HB_FUNC( QT_QSETTINGS_SETVALUE )
  */
 HB_FUNC( QT_QSETTINGS_STATUS )
 {
-   hb_retni( ( QSettings::Status ) hbqt_par_QSettings( 1 )->status() );
+   QSettings * p = hbqt_par_QSettings( 1 );
+   if( p )
+      hb_retni( ( QSettings::Status ) ( p )->status() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSETTINGS_STATUS FP=hb_retni( ( QSettings::Status ) ( p )->status() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -381,7 +537,13 @@ HB_FUNC( QT_QSETTINGS_STATUS )
  */
 HB_FUNC( QT_QSETTINGS_SYNC )
 {
-   hbqt_par_QSettings( 1 )->sync();
+   QSettings * p = hbqt_par_QSettings( 1 );
+   if( p )
+      ( p )->sync();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSETTINGS_SYNC FP=( p )->sync(); p is NULL" ) );
+   }
 }
 
 /*
@@ -389,7 +551,13 @@ HB_FUNC( QT_QSETTINGS_SYNC )
  */
 HB_FUNC( QT_QSETTINGS_VALUE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( hbqt_par_QSettings( 1 )->value( QSettings::tr( hb_parc( 2 ) ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QVariant( 3 ) : QVariant() ) ) ), true ) );
+   QSettings * p = hbqt_par_QSettings( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( ( p )->value( QSettings::tr( hb_parc( 2 ) ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QVariant( 3 ) : QVariant() ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSETTINGS_VALUE FP=hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( ( p )->value( QSettings::tr( hb_parc( 2 ) ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QVariant( 3 ) : QVariant() ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -397,7 +565,13 @@ HB_FUNC( QT_QSETTINGS_VALUE )
  */
 HB_FUNC( QT_QSETTINGS_DEFAULTFORMAT )
 {
-   hb_retni( ( QSettings::Format ) hbqt_par_QSettings( 1 )->defaultFormat() );
+   QSettings * p = hbqt_par_QSettings( 1 );
+   if( p )
+      hb_retni( ( QSettings::Format ) ( p )->defaultFormat() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSETTINGS_DEFAULTFORMAT FP=hb_retni( ( QSettings::Format ) ( p )->defaultFormat() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -405,7 +579,13 @@ HB_FUNC( QT_QSETTINGS_DEFAULTFORMAT )
  */
 HB_FUNC( QT_QSETTINGS_SETDEFAULTFORMAT )
 {
-   hbqt_par_QSettings( 1 )->setDefaultFormat( ( QSettings::Format ) hb_parni( 2 ) );
+   QSettings * p = hbqt_par_QSettings( 1 );
+   if( p )
+      ( p )->setDefaultFormat( ( QSettings::Format ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSETTINGS_SETDEFAULTFORMAT FP=( p )->setDefaultFormat( ( QSettings::Format ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -413,7 +593,13 @@ HB_FUNC( QT_QSETTINGS_SETDEFAULTFORMAT )
  */
 HB_FUNC( QT_QSETTINGS_SETPATH )
 {
-   hbqt_par_QSettings( 1 )->setPath( ( QSettings::Format ) hb_parni( 2 ), ( QSettings::Scope ) hb_parni( 3 ), QSettings::tr( hb_parc( 4 ) ) );
+   QSettings * p = hbqt_par_QSettings( 1 );
+   if( p )
+      ( p )->setPath( ( QSettings::Format ) hb_parni( 2 ), ( QSettings::Scope ) hb_parni( 3 ), QSettings::tr( hb_parc( 4 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSETTINGS_SETPATH FP=( p )->setPath( ( QSettings::Format ) hb_parni( 2 ), ( QSettings::Scope ) hb_parni( 3 ), QSettings::tr( hb_parc( 4 ) ) ); p is NULL" ) );
+   }
 }
 
 

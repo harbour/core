@@ -78,7 +78,7 @@
 
 typedef struct
 {
-   void * ph;
+   QTableWidgetSelectionRange * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QTableWidgetSelectionRange;
@@ -113,7 +113,7 @@ void * hbqt_gcAllocate_QTableWidgetSelectionRange( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QTableWidgetSelectionRange * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTableWidgetSelectionRange;
 
@@ -130,11 +130,11 @@ void * hbqt_gcAllocate_QTableWidgetSelectionRange( void * pObj, bool bNew )
 
 HB_FUNC( QT_QTABLEWIDGETSELECTIONRANGE )
 {
-   void * pObj = NULL;
+   QTableWidgetSelectionRange * pObj = NULL;
 
    pObj = new QTableWidgetSelectionRange() ;
 
-   hb_retptrGC( hbqt_gcAllocate_QTableWidgetSelectionRange( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QTableWidgetSelectionRange( ( void * ) pObj, true ) );
 }
 
 /*
@@ -142,7 +142,13 @@ HB_FUNC( QT_QTABLEWIDGETSELECTIONRANGE )
  */
 HB_FUNC( QT_QTABLEWIDGETSELECTIONRANGE_BOTTOMROW )
 {
-   hb_retni( hbqt_par_QTableWidgetSelectionRange( 1 )->bottomRow() );
+   QTableWidgetSelectionRange * p = hbqt_par_QTableWidgetSelectionRange( 1 );
+   if( p )
+      hb_retni( ( p )->bottomRow() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGETSELECTIONRANGE_BOTTOMROW FP=hb_retni( ( p )->bottomRow() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -150,7 +156,13 @@ HB_FUNC( QT_QTABLEWIDGETSELECTIONRANGE_BOTTOMROW )
  */
 HB_FUNC( QT_QTABLEWIDGETSELECTIONRANGE_COLUMNCOUNT )
 {
-   hb_retni( hbqt_par_QTableWidgetSelectionRange( 1 )->columnCount() );
+   QTableWidgetSelectionRange * p = hbqt_par_QTableWidgetSelectionRange( 1 );
+   if( p )
+      hb_retni( ( p )->columnCount() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGETSELECTIONRANGE_COLUMNCOUNT FP=hb_retni( ( p )->columnCount() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -158,7 +170,13 @@ HB_FUNC( QT_QTABLEWIDGETSELECTIONRANGE_COLUMNCOUNT )
  */
 HB_FUNC( QT_QTABLEWIDGETSELECTIONRANGE_LEFTCOLUMN )
 {
-   hb_retni( hbqt_par_QTableWidgetSelectionRange( 1 )->leftColumn() );
+   QTableWidgetSelectionRange * p = hbqt_par_QTableWidgetSelectionRange( 1 );
+   if( p )
+      hb_retni( ( p )->leftColumn() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGETSELECTIONRANGE_LEFTCOLUMN FP=hb_retni( ( p )->leftColumn() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -166,7 +184,13 @@ HB_FUNC( QT_QTABLEWIDGETSELECTIONRANGE_LEFTCOLUMN )
  */
 HB_FUNC( QT_QTABLEWIDGETSELECTIONRANGE_RIGHTCOLUMN )
 {
-   hb_retni( hbqt_par_QTableWidgetSelectionRange( 1 )->rightColumn() );
+   QTableWidgetSelectionRange * p = hbqt_par_QTableWidgetSelectionRange( 1 );
+   if( p )
+      hb_retni( ( p )->rightColumn() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGETSELECTIONRANGE_RIGHTCOLUMN FP=hb_retni( ( p )->rightColumn() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -174,7 +198,13 @@ HB_FUNC( QT_QTABLEWIDGETSELECTIONRANGE_RIGHTCOLUMN )
  */
 HB_FUNC( QT_QTABLEWIDGETSELECTIONRANGE_ROWCOUNT )
 {
-   hb_retni( hbqt_par_QTableWidgetSelectionRange( 1 )->rowCount() );
+   QTableWidgetSelectionRange * p = hbqt_par_QTableWidgetSelectionRange( 1 );
+   if( p )
+      hb_retni( ( p )->rowCount() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGETSELECTIONRANGE_ROWCOUNT FP=hb_retni( ( p )->rowCount() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -182,7 +212,13 @@ HB_FUNC( QT_QTABLEWIDGETSELECTIONRANGE_ROWCOUNT )
  */
 HB_FUNC( QT_QTABLEWIDGETSELECTIONRANGE_TOPROW )
 {
-   hb_retni( hbqt_par_QTableWidgetSelectionRange( 1 )->topRow() );
+   QTableWidgetSelectionRange * p = hbqt_par_QTableWidgetSelectionRange( 1 );
+   if( p )
+      hb_retni( ( p )->topRow() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGETSELECTIONRANGE_TOPROW FP=hb_retni( ( p )->topRow() ); p is NULL" ) );
+   }
 }
 
 

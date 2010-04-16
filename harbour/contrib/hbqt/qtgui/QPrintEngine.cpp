@@ -80,7 +80,7 @@
 
 typedef struct
 {
-   void * ph;
+   QPrintEngine * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QPrintEngine;
@@ -100,7 +100,7 @@ void * hbqt_gcAllocate_QPrintEngine( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QPrintEngine * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QPrintEngine;
 
@@ -117,6 +117,7 @@ void * hbqt_gcAllocate_QPrintEngine( void * pObj, bool bNew )
 
 HB_FUNC( QT_QPRINTENGINE )
 {
+
 }
 
 /*
@@ -124,7 +125,13 @@ HB_FUNC( QT_QPRINTENGINE )
  */
 HB_FUNC( QT_QPRINTENGINE_ABORT )
 {
-   hb_retl( hbqt_par_QPrintEngine( 1 )->abort() );
+   QPrintEngine * p = hbqt_par_QPrintEngine( 1 );
+   if( p )
+      hb_retl( ( p )->abort() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTENGINE_ABORT FP=hb_retl( ( p )->abort() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -132,7 +139,13 @@ HB_FUNC( QT_QPRINTENGINE_ABORT )
  */
 HB_FUNC( QT_QPRINTENGINE_METRIC )
 {
-   hb_retni( hbqt_par_QPrintEngine( 1 )->metric( ( QPaintDevice::PaintDeviceMetric ) hb_parni( 2 ) ) );
+   QPrintEngine * p = hbqt_par_QPrintEngine( 1 );
+   if( p )
+      hb_retni( ( p )->metric( ( QPaintDevice::PaintDeviceMetric ) hb_parni( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTENGINE_METRIC FP=hb_retni( ( p )->metric( ( QPaintDevice::PaintDeviceMetric ) hb_parni( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -140,7 +153,13 @@ HB_FUNC( QT_QPRINTENGINE_METRIC )
  */
 HB_FUNC( QT_QPRINTENGINE_NEWPAGE )
 {
-   hb_retl( hbqt_par_QPrintEngine( 1 )->newPage() );
+   QPrintEngine * p = hbqt_par_QPrintEngine( 1 );
+   if( p )
+      hb_retl( ( p )->newPage() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTENGINE_NEWPAGE FP=hb_retl( ( p )->newPage() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -148,7 +167,13 @@ HB_FUNC( QT_QPRINTENGINE_NEWPAGE )
  */
 HB_FUNC( QT_QPRINTENGINE_PRINTERSTATE )
 {
-   hb_retni( ( QPrinter::PrinterState ) hbqt_par_QPrintEngine( 1 )->printerState() );
+   QPrintEngine * p = hbqt_par_QPrintEngine( 1 );
+   if( p )
+      hb_retni( ( QPrinter::PrinterState ) ( p )->printerState() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTENGINE_PRINTERSTATE FP=hb_retni( ( QPrinter::PrinterState ) ( p )->printerState() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -156,7 +181,13 @@ HB_FUNC( QT_QPRINTENGINE_PRINTERSTATE )
  */
 HB_FUNC( QT_QPRINTENGINE_PROPERTY )
 {
-   hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( hbqt_par_QPrintEngine( 1 )->property( ( QPrintEngine::PrintEnginePropertyKey ) hb_parni( 2 ) ) ), true ) );
+   QPrintEngine * p = hbqt_par_QPrintEngine( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( ( p )->property( ( QPrintEngine::PrintEnginePropertyKey ) hb_parni( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTENGINE_PROPERTY FP=hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( ( p )->property( ( QPrintEngine::PrintEnginePropertyKey ) hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -164,7 +195,13 @@ HB_FUNC( QT_QPRINTENGINE_PROPERTY )
  */
 HB_FUNC( QT_QPRINTENGINE_SETPROPERTY )
 {
-   hbqt_par_QPrintEngine( 1 )->setProperty( ( QPrintEngine::PrintEnginePropertyKey ) hb_parni( 2 ), *hbqt_par_QVariant( 3 ) );
+   QPrintEngine * p = hbqt_par_QPrintEngine( 1 );
+   if( p )
+      ( p )->setProperty( ( QPrintEngine::PrintEnginePropertyKey ) hb_parni( 2 ), *hbqt_par_QVariant( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTENGINE_SETPROPERTY FP=( p )->setProperty( ( QPrintEngine::PrintEnginePropertyKey ) hb_parni( 2 ), *hbqt_par_QVariant( 3 ) ); p is NULL" ) );
+   }
 }
 
 

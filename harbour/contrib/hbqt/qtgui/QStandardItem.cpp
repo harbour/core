@@ -100,7 +100,7 @@
 
 typedef struct
 {
-   void * ph;
+   QStandardItem * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QStandardItem;
@@ -135,7 +135,7 @@ void * hbqt_gcAllocate_QStandardItem( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QStandardItem * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStandardItem;
 
@@ -152,11 +152,11 @@ void * hbqt_gcAllocate_QStandardItem( void * pObj, bool bNew )
 
 HB_FUNC( QT_QSTANDARDITEM )
 {
-   void * pObj = NULL;
+   QStandardItem * pObj = NULL;
 
-   pObj = ( QStandardItem* ) new QStandardItem() ;
+   pObj =  new QStandardItem() ;
 
-   hb_retptrGC( hbqt_gcAllocate_QStandardItem( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QStandardItem( ( void * ) pObj, true ) );
 }
 
 /*
@@ -164,7 +164,13 @@ HB_FUNC( QT_QSTANDARDITEM )
  */
 HB_FUNC( QT_QSTANDARDITEM_ACCESSIBLEDESCRIPTION )
 {
-   hb_retc( hbqt_par_QStandardItem( 1 )->accessibleDescription().toAscii().data() );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      hb_retc( ( p )->accessibleDescription().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_ACCESSIBLEDESCRIPTION FP=hb_retc( ( p )->accessibleDescription().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -172,7 +178,13 @@ HB_FUNC( QT_QSTANDARDITEM_ACCESSIBLEDESCRIPTION )
  */
 HB_FUNC( QT_QSTANDARDITEM_ACCESSIBLETEXT )
 {
-   hb_retc( hbqt_par_QStandardItem( 1 )->accessibleText().toAscii().data() );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      hb_retc( ( p )->accessibleText().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_ACCESSIBLETEXT FP=hb_retc( ( p )->accessibleText().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -180,7 +192,13 @@ HB_FUNC( QT_QSTANDARDITEM_ACCESSIBLETEXT )
  */
 HB_FUNC( QT_QSTANDARDITEM_APPENDROW )
 {
-   hbqt_par_QStandardItem( 1 )->appendRow( hbqt_par_QStandardItem( 2 ) );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      ( p )->appendRow( hbqt_par_QStandardItem( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_APPENDROW FP=( p )->appendRow( hbqt_par_QStandardItem( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -188,7 +206,13 @@ HB_FUNC( QT_QSTANDARDITEM_APPENDROW )
  */
 HB_FUNC( QT_QSTANDARDITEM_BACKGROUND )
 {
-   hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( hbqt_par_QStandardItem( 1 )->background() ), true ) );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->background() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_BACKGROUND FP=hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->background() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -196,7 +220,13 @@ HB_FUNC( QT_QSTANDARDITEM_BACKGROUND )
  */
 HB_FUNC( QT_QSTANDARDITEM_CHECKSTATE )
 {
-   hb_retni( ( Qt::CheckState ) hbqt_par_QStandardItem( 1 )->checkState() );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      hb_retni( ( Qt::CheckState ) ( p )->checkState() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_CHECKSTATE FP=hb_retni( ( Qt::CheckState ) ( p )->checkState() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -204,7 +234,13 @@ HB_FUNC( QT_QSTANDARDITEM_CHECKSTATE )
  */
 HB_FUNC( QT_QSTANDARDITEM_CHILD )
 {
-   hb_retptrGC( hbqt_gcAllocate_QStandardItem( hbqt_par_QStandardItem( 1 )->child( hb_parni( 2 ), hb_parni( 3 ) ), false ) );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QStandardItem( ( p )->child( hb_parni( 2 ), hb_parni( 3 ) ), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_CHILD FP=hb_retptrGC( hbqt_gcAllocate_QStandardItem( ( p )->child( hb_parni( 2 ), hb_parni( 3 ) ), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -212,7 +248,13 @@ HB_FUNC( QT_QSTANDARDITEM_CHILD )
  */
 HB_FUNC( QT_QSTANDARDITEM_CLONE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QStandardItem( hbqt_par_QStandardItem( 1 )->clone(), false ) );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QStandardItem( ( p )->clone(), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_CLONE FP=hb_retptrGC( hbqt_gcAllocate_QStandardItem( ( p )->clone(), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -220,7 +262,13 @@ HB_FUNC( QT_QSTANDARDITEM_CLONE )
  */
 HB_FUNC( QT_QSTANDARDITEM_COLUMN )
 {
-   hb_retni( hbqt_par_QStandardItem( 1 )->column() );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      hb_retni( ( p )->column() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_COLUMN FP=hb_retni( ( p )->column() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -228,7 +276,13 @@ HB_FUNC( QT_QSTANDARDITEM_COLUMN )
  */
 HB_FUNC( QT_QSTANDARDITEM_COLUMNCOUNT )
 {
-   hb_retni( hbqt_par_QStandardItem( 1 )->columnCount() );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      hb_retni( ( p )->columnCount() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_COLUMNCOUNT FP=hb_retni( ( p )->columnCount() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -236,7 +290,13 @@ HB_FUNC( QT_QSTANDARDITEM_COLUMNCOUNT )
  */
 HB_FUNC( QT_QSTANDARDITEM_DATA )
 {
-   hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( hbqt_par_QStandardItem( 1 )->data( ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : Qt::UserRole + 1 ) ) ), true ) );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( ( p )->data( ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : Qt::UserRole + 1 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_DATA FP=hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( ( p )->data( ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : Qt::UserRole + 1 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -244,7 +304,13 @@ HB_FUNC( QT_QSTANDARDITEM_DATA )
  */
 HB_FUNC( QT_QSTANDARDITEM_FLAGS )
 {
-   hb_retni( ( Qt::ItemFlags ) hbqt_par_QStandardItem( 1 )->flags() );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      hb_retni( ( Qt::ItemFlags ) ( p )->flags() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_FLAGS FP=hb_retni( ( Qt::ItemFlags ) ( p )->flags() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -252,7 +318,13 @@ HB_FUNC( QT_QSTANDARDITEM_FLAGS )
  */
 HB_FUNC( QT_QSTANDARDITEM_FONT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( hbqt_par_QStandardItem( 1 )->font() ), true ) );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( ( p )->font() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_FONT FP=hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( ( p )->font() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -260,7 +332,13 @@ HB_FUNC( QT_QSTANDARDITEM_FONT )
  */
 HB_FUNC( QT_QSTANDARDITEM_FOREGROUND )
 {
-   hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( hbqt_par_QStandardItem( 1 )->foreground() ), true ) );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->foreground() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_FOREGROUND FP=hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->foreground() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -268,7 +346,13 @@ HB_FUNC( QT_QSTANDARDITEM_FOREGROUND )
  */
 HB_FUNC( QT_QSTANDARDITEM_HASCHILDREN )
 {
-   hb_retl( hbqt_par_QStandardItem( 1 )->hasChildren() );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      hb_retl( ( p )->hasChildren() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_HASCHILDREN FP=hb_retl( ( p )->hasChildren() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -276,7 +360,13 @@ HB_FUNC( QT_QSTANDARDITEM_HASCHILDREN )
  */
 HB_FUNC( QT_QSTANDARDITEM_ICON )
 {
-   hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( hbqt_par_QStandardItem( 1 )->icon() ), true ) );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( ( p )->icon() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_ICON FP=hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( ( p )->icon() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -284,7 +374,13 @@ HB_FUNC( QT_QSTANDARDITEM_ICON )
  */
 HB_FUNC( QT_QSTANDARDITEM_INDEX )
 {
-   hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QStandardItem( 1 )->index() ), true ) );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( ( p )->index() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_INDEX FP=hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( ( p )->index() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -292,7 +388,13 @@ HB_FUNC( QT_QSTANDARDITEM_INDEX )
  */
 HB_FUNC( QT_QSTANDARDITEM_INSERTCOLUMNS )
 {
-   hbqt_par_QStandardItem( 1 )->insertColumns( hb_parni( 2 ), hb_parni( 3 ) );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      ( p )->insertColumns( hb_parni( 2 ), hb_parni( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_INSERTCOLUMNS FP=( p )->insertColumns( hb_parni( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -300,7 +402,13 @@ HB_FUNC( QT_QSTANDARDITEM_INSERTCOLUMNS )
  */
 HB_FUNC( QT_QSTANDARDITEM_INSERTROW )
 {
-   hbqt_par_QStandardItem( 1 )->insertRow( hb_parni( 2 ), hbqt_par_QStandardItem( 3 ) );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      ( p )->insertRow( hb_parni( 2 ), hbqt_par_QStandardItem( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_INSERTROW FP=( p )->insertRow( hb_parni( 2 ), hbqt_par_QStandardItem( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -308,7 +416,13 @@ HB_FUNC( QT_QSTANDARDITEM_INSERTROW )
  */
 HB_FUNC( QT_QSTANDARDITEM_INSERTROWS )
 {
-   hbqt_par_QStandardItem( 1 )->insertRows( hb_parni( 2 ), hb_parni( 3 ) );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      ( p )->insertRows( hb_parni( 2 ), hb_parni( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_INSERTROWS FP=( p )->insertRows( hb_parni( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -316,7 +430,13 @@ HB_FUNC( QT_QSTANDARDITEM_INSERTROWS )
  */
 HB_FUNC( QT_QSTANDARDITEM_ISCHECKABLE )
 {
-   hb_retl( hbqt_par_QStandardItem( 1 )->isCheckable() );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      hb_retl( ( p )->isCheckable() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_ISCHECKABLE FP=hb_retl( ( p )->isCheckable() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -324,7 +444,13 @@ HB_FUNC( QT_QSTANDARDITEM_ISCHECKABLE )
  */
 HB_FUNC( QT_QSTANDARDITEM_ISDRAGENABLED )
 {
-   hb_retl( hbqt_par_QStandardItem( 1 )->isDragEnabled() );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      hb_retl( ( p )->isDragEnabled() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_ISDRAGENABLED FP=hb_retl( ( p )->isDragEnabled() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -332,7 +458,13 @@ HB_FUNC( QT_QSTANDARDITEM_ISDRAGENABLED )
  */
 HB_FUNC( QT_QSTANDARDITEM_ISDROPENABLED )
 {
-   hb_retl( hbqt_par_QStandardItem( 1 )->isDropEnabled() );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      hb_retl( ( p )->isDropEnabled() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_ISDROPENABLED FP=hb_retl( ( p )->isDropEnabled() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -340,7 +472,13 @@ HB_FUNC( QT_QSTANDARDITEM_ISDROPENABLED )
  */
 HB_FUNC( QT_QSTANDARDITEM_ISEDITABLE )
 {
-   hb_retl( hbqt_par_QStandardItem( 1 )->isEditable() );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      hb_retl( ( p )->isEditable() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_ISEDITABLE FP=hb_retl( ( p )->isEditable() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -348,7 +486,13 @@ HB_FUNC( QT_QSTANDARDITEM_ISEDITABLE )
  */
 HB_FUNC( QT_QSTANDARDITEM_ISENABLED )
 {
-   hb_retl( hbqt_par_QStandardItem( 1 )->isEnabled() );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      hb_retl( ( p )->isEnabled() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_ISENABLED FP=hb_retl( ( p )->isEnabled() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -356,7 +500,13 @@ HB_FUNC( QT_QSTANDARDITEM_ISENABLED )
  */
 HB_FUNC( QT_QSTANDARDITEM_ISSELECTABLE )
 {
-   hb_retl( hbqt_par_QStandardItem( 1 )->isSelectable() );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      hb_retl( ( p )->isSelectable() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_ISSELECTABLE FP=hb_retl( ( p )->isSelectable() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -364,7 +514,13 @@ HB_FUNC( QT_QSTANDARDITEM_ISSELECTABLE )
  */
 HB_FUNC( QT_QSTANDARDITEM_ISTRISTATE )
 {
-   hb_retl( hbqt_par_QStandardItem( 1 )->isTristate() );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      hb_retl( ( p )->isTristate() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_ISTRISTATE FP=hb_retl( ( p )->isTristate() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -372,7 +528,13 @@ HB_FUNC( QT_QSTANDARDITEM_ISTRISTATE )
  */
 HB_FUNC( QT_QSTANDARDITEM_MODEL )
 {
-   hb_retptrGC( hbqt_gcAllocate_QStandardItemModel( hbqt_par_QStandardItem( 1 )->model(), false ) );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QStandardItemModel( ( p )->model(), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_MODEL FP=hb_retptrGC( hbqt_gcAllocate_QStandardItemModel( ( p )->model(), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -380,7 +542,13 @@ HB_FUNC( QT_QSTANDARDITEM_MODEL )
  */
 HB_FUNC( QT_QSTANDARDITEM_PARENT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QStandardItem( hbqt_par_QStandardItem( 1 )->parent(), false ) );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QStandardItem( ( p )->parent(), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_PARENT FP=hb_retptrGC( hbqt_gcAllocate_QStandardItem( ( p )->parent(), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -388,7 +556,13 @@ HB_FUNC( QT_QSTANDARDITEM_PARENT )
  */
 HB_FUNC( QT_QSTANDARDITEM_READ )
 {
-   hbqt_par_QStandardItem( 1 )->read( *hbqt_par_QDataStream( 2 ) );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      ( p )->read( *hbqt_par_QDataStream( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_READ FP=( p )->read( *hbqt_par_QDataStream( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -396,7 +570,13 @@ HB_FUNC( QT_QSTANDARDITEM_READ )
  */
 HB_FUNC( QT_QSTANDARDITEM_REMOVECOLUMN )
 {
-   hbqt_par_QStandardItem( 1 )->removeColumn( hb_parni( 2 ) );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      ( p )->removeColumn( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_REMOVECOLUMN FP=( p )->removeColumn( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -404,7 +584,13 @@ HB_FUNC( QT_QSTANDARDITEM_REMOVECOLUMN )
  */
 HB_FUNC( QT_QSTANDARDITEM_REMOVECOLUMNS )
 {
-   hbqt_par_QStandardItem( 1 )->removeColumns( hb_parni( 2 ), hb_parni( 3 ) );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      ( p )->removeColumns( hb_parni( 2 ), hb_parni( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_REMOVECOLUMNS FP=( p )->removeColumns( hb_parni( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -412,7 +598,13 @@ HB_FUNC( QT_QSTANDARDITEM_REMOVECOLUMNS )
  */
 HB_FUNC( QT_QSTANDARDITEM_REMOVEROW )
 {
-   hbqt_par_QStandardItem( 1 )->removeRow( hb_parni( 2 ) );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      ( p )->removeRow( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_REMOVEROW FP=( p )->removeRow( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -420,7 +612,13 @@ HB_FUNC( QT_QSTANDARDITEM_REMOVEROW )
  */
 HB_FUNC( QT_QSTANDARDITEM_REMOVEROWS )
 {
-   hbqt_par_QStandardItem( 1 )->removeRows( hb_parni( 2 ), hb_parni( 3 ) );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      ( p )->removeRows( hb_parni( 2 ), hb_parni( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_REMOVEROWS FP=( p )->removeRows( hb_parni( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -428,7 +626,13 @@ HB_FUNC( QT_QSTANDARDITEM_REMOVEROWS )
  */
 HB_FUNC( QT_QSTANDARDITEM_ROW )
 {
-   hb_retni( hbqt_par_QStandardItem( 1 )->row() );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      hb_retni( ( p )->row() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_ROW FP=hb_retni( ( p )->row() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -436,7 +640,13 @@ HB_FUNC( QT_QSTANDARDITEM_ROW )
  */
 HB_FUNC( QT_QSTANDARDITEM_ROWCOUNT )
 {
-   hb_retni( hbqt_par_QStandardItem( 1 )->rowCount() );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      hb_retni( ( p )->rowCount() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_ROWCOUNT FP=hb_retni( ( p )->rowCount() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -444,7 +654,13 @@ HB_FUNC( QT_QSTANDARDITEM_ROWCOUNT )
  */
 HB_FUNC( QT_QSTANDARDITEM_SETACCESSIBLEDESCRIPTION )
 {
-   hbqt_par_QStandardItem( 1 )->setAccessibleDescription( hbqt_par_QString( 2 ) );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      ( p )->setAccessibleDescription( hbqt_par_QString( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_SETACCESSIBLEDESCRIPTION FP=( p )->setAccessibleDescription( hbqt_par_QString( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -452,7 +668,13 @@ HB_FUNC( QT_QSTANDARDITEM_SETACCESSIBLEDESCRIPTION )
  */
 HB_FUNC( QT_QSTANDARDITEM_SETACCESSIBLETEXT )
 {
-   hbqt_par_QStandardItem( 1 )->setAccessibleText( hbqt_par_QString( 2 ) );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      ( p )->setAccessibleText( hbqt_par_QString( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_SETACCESSIBLETEXT FP=( p )->setAccessibleText( hbqt_par_QString( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -460,7 +682,13 @@ HB_FUNC( QT_QSTANDARDITEM_SETACCESSIBLETEXT )
  */
 HB_FUNC( QT_QSTANDARDITEM_SETBACKGROUND )
 {
-   hbqt_par_QStandardItem( 1 )->setBackground( *hbqt_par_QBrush( 2 ) );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      ( p )->setBackground( *hbqt_par_QBrush( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_SETBACKGROUND FP=( p )->setBackground( *hbqt_par_QBrush( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -468,7 +696,13 @@ HB_FUNC( QT_QSTANDARDITEM_SETBACKGROUND )
  */
 HB_FUNC( QT_QSTANDARDITEM_SETCHECKSTATE )
 {
-   hbqt_par_QStandardItem( 1 )->setCheckState( ( Qt::CheckState ) hb_parni( 2 ) );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      ( p )->setCheckState( ( Qt::CheckState ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_SETCHECKSTATE FP=( p )->setCheckState( ( Qt::CheckState ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -476,7 +710,13 @@ HB_FUNC( QT_QSTANDARDITEM_SETCHECKSTATE )
  */
 HB_FUNC( QT_QSTANDARDITEM_SETCHECKABLE )
 {
-   hbqt_par_QStandardItem( 1 )->setCheckable( hb_parl( 2 ) );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      ( p )->setCheckable( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_SETCHECKABLE FP=( p )->setCheckable( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -484,7 +724,13 @@ HB_FUNC( QT_QSTANDARDITEM_SETCHECKABLE )
  */
 HB_FUNC( QT_QSTANDARDITEM_SETCHILD )
 {
-   hbqt_par_QStandardItem( 1 )->setChild( hb_parni( 2 ), hb_parni( 3 ), hbqt_par_QStandardItem( 4 ) );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      ( p )->setChild( hb_parni( 2 ), hb_parni( 3 ), hbqt_par_QStandardItem( 4 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_SETCHILD FP=( p )->setChild( hb_parni( 2 ), hb_parni( 3 ), hbqt_par_QStandardItem( 4 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -492,7 +738,13 @@ HB_FUNC( QT_QSTANDARDITEM_SETCHILD )
  */
 HB_FUNC( QT_QSTANDARDITEM_SETCHILD_1 )
 {
-   hbqt_par_QStandardItem( 1 )->setChild( hb_parni( 2 ), hbqt_par_QStandardItem( 3 ) );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      ( p )->setChild( hb_parni( 2 ), hbqt_par_QStandardItem( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_SETCHILD_1 FP=( p )->setChild( hb_parni( 2 ), hbqt_par_QStandardItem( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -500,7 +752,13 @@ HB_FUNC( QT_QSTANDARDITEM_SETCHILD_1 )
  */
 HB_FUNC( QT_QSTANDARDITEM_SETCOLUMNCOUNT )
 {
-   hbqt_par_QStandardItem( 1 )->setColumnCount( hb_parni( 2 ) );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      ( p )->setColumnCount( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_SETCOLUMNCOUNT FP=( p )->setColumnCount( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -508,7 +766,13 @@ HB_FUNC( QT_QSTANDARDITEM_SETCOLUMNCOUNT )
  */
 HB_FUNC( QT_QSTANDARDITEM_SETDATA )
 {
-   hbqt_par_QStandardItem( 1 )->setData( *hbqt_par_QVariant( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : Qt::UserRole + 1 ) );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      ( p )->setData( *hbqt_par_QVariant( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : Qt::UserRole + 1 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_SETDATA FP=( p )->setData( *hbqt_par_QVariant( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : Qt::UserRole + 1 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -516,7 +780,13 @@ HB_FUNC( QT_QSTANDARDITEM_SETDATA )
  */
 HB_FUNC( QT_QSTANDARDITEM_SETDRAGENABLED )
 {
-   hbqt_par_QStandardItem( 1 )->setDragEnabled( hb_parl( 2 ) );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      ( p )->setDragEnabled( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_SETDRAGENABLED FP=( p )->setDragEnabled( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -524,7 +794,13 @@ HB_FUNC( QT_QSTANDARDITEM_SETDRAGENABLED )
  */
 HB_FUNC( QT_QSTANDARDITEM_SETDROPENABLED )
 {
-   hbqt_par_QStandardItem( 1 )->setDropEnabled( hb_parl( 2 ) );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      ( p )->setDropEnabled( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_SETDROPENABLED FP=( p )->setDropEnabled( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -532,7 +808,13 @@ HB_FUNC( QT_QSTANDARDITEM_SETDROPENABLED )
  */
 HB_FUNC( QT_QSTANDARDITEM_SETEDITABLE )
 {
-   hbqt_par_QStandardItem( 1 )->setEditable( hb_parl( 2 ) );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      ( p )->setEditable( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_SETEDITABLE FP=( p )->setEditable( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -540,7 +822,13 @@ HB_FUNC( QT_QSTANDARDITEM_SETEDITABLE )
  */
 HB_FUNC( QT_QSTANDARDITEM_SETENABLED )
 {
-   hbqt_par_QStandardItem( 1 )->setEnabled( hb_parl( 2 ) );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      ( p )->setEnabled( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_SETENABLED FP=( p )->setEnabled( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -548,7 +836,13 @@ HB_FUNC( QT_QSTANDARDITEM_SETENABLED )
  */
 HB_FUNC( QT_QSTANDARDITEM_SETFLAGS )
 {
-   hbqt_par_QStandardItem( 1 )->setFlags( ( Qt::ItemFlags ) hb_parni( 2 ) );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      ( p )->setFlags( ( Qt::ItemFlags ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_SETFLAGS FP=( p )->setFlags( ( Qt::ItemFlags ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -556,7 +850,13 @@ HB_FUNC( QT_QSTANDARDITEM_SETFLAGS )
  */
 HB_FUNC( QT_QSTANDARDITEM_SETFONT )
 {
-   hbqt_par_QStandardItem( 1 )->setFont( *hbqt_par_QFont( 2 ) );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      ( p )->setFont( *hbqt_par_QFont( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_SETFONT FP=( p )->setFont( *hbqt_par_QFont( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -564,7 +864,13 @@ HB_FUNC( QT_QSTANDARDITEM_SETFONT )
  */
 HB_FUNC( QT_QSTANDARDITEM_SETFOREGROUND )
 {
-   hbqt_par_QStandardItem( 1 )->setForeground( *hbqt_par_QBrush( 2 ) );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      ( p )->setForeground( *hbqt_par_QBrush( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_SETFOREGROUND FP=( p )->setForeground( *hbqt_par_QBrush( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -572,7 +878,13 @@ HB_FUNC( QT_QSTANDARDITEM_SETFOREGROUND )
  */
 HB_FUNC( QT_QSTANDARDITEM_SETICON )
 {
-   hbqt_par_QStandardItem( 1 )->setIcon( QIcon( hbqt_par_QString( 2 ) ) );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      ( p )->setIcon( QIcon( hbqt_par_QString( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_SETICON FP=( p )->setIcon( QIcon( hbqt_par_QString( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -580,7 +892,13 @@ HB_FUNC( QT_QSTANDARDITEM_SETICON )
  */
 HB_FUNC( QT_QSTANDARDITEM_SETROWCOUNT )
 {
-   hbqt_par_QStandardItem( 1 )->setRowCount( hb_parni( 2 ) );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      ( p )->setRowCount( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_SETROWCOUNT FP=( p )->setRowCount( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -588,7 +906,13 @@ HB_FUNC( QT_QSTANDARDITEM_SETROWCOUNT )
  */
 HB_FUNC( QT_QSTANDARDITEM_SETSELECTABLE )
 {
-   hbqt_par_QStandardItem( 1 )->setSelectable( hb_parl( 2 ) );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      ( p )->setSelectable( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_SETSELECTABLE FP=( p )->setSelectable( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -596,7 +920,13 @@ HB_FUNC( QT_QSTANDARDITEM_SETSELECTABLE )
  */
 HB_FUNC( QT_QSTANDARDITEM_SETSIZEHINT )
 {
-   hbqt_par_QStandardItem( 1 )->setSizeHint( *hbqt_par_QSize( 2 ) );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      ( p )->setSizeHint( *hbqt_par_QSize( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_SETSIZEHINT FP=( p )->setSizeHint( *hbqt_par_QSize( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -604,7 +934,13 @@ HB_FUNC( QT_QSTANDARDITEM_SETSIZEHINT )
  */
 HB_FUNC( QT_QSTANDARDITEM_SETSTATUSTIP )
 {
-   hbqt_par_QStandardItem( 1 )->setStatusTip( hbqt_par_QString( 2 ) );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      ( p )->setStatusTip( hbqt_par_QString( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_SETSTATUSTIP FP=( p )->setStatusTip( hbqt_par_QString( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -612,7 +948,13 @@ HB_FUNC( QT_QSTANDARDITEM_SETSTATUSTIP )
  */
 HB_FUNC( QT_QSTANDARDITEM_SETTEXT )
 {
-   hbqt_par_QStandardItem( 1 )->setText( hbqt_par_QString( 2 ) );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      ( p )->setText( hbqt_par_QString( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_SETTEXT FP=( p )->setText( hbqt_par_QString( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -620,7 +962,13 @@ HB_FUNC( QT_QSTANDARDITEM_SETTEXT )
  */
 HB_FUNC( QT_QSTANDARDITEM_SETTEXTALIGNMENT )
 {
-   hbqt_par_QStandardItem( 1 )->setTextAlignment( ( Qt::Alignment ) hb_parni( 2 ) );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      ( p )->setTextAlignment( ( Qt::Alignment ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_SETTEXTALIGNMENT FP=( p )->setTextAlignment( ( Qt::Alignment ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -628,7 +976,13 @@ HB_FUNC( QT_QSTANDARDITEM_SETTEXTALIGNMENT )
  */
 HB_FUNC( QT_QSTANDARDITEM_SETTOOLTIP )
 {
-   hbqt_par_QStandardItem( 1 )->setToolTip( hbqt_par_QString( 2 ) );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      ( p )->setToolTip( hbqt_par_QString( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_SETTOOLTIP FP=( p )->setToolTip( hbqt_par_QString( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -636,7 +990,13 @@ HB_FUNC( QT_QSTANDARDITEM_SETTOOLTIP )
  */
 HB_FUNC( QT_QSTANDARDITEM_SETTRISTATE )
 {
-   hbqt_par_QStandardItem( 1 )->setTristate( hb_parl( 2 ) );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      ( p )->setTristate( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_SETTRISTATE FP=( p )->setTristate( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -644,7 +1004,13 @@ HB_FUNC( QT_QSTANDARDITEM_SETTRISTATE )
  */
 HB_FUNC( QT_QSTANDARDITEM_SETWHATSTHIS )
 {
-   hbqt_par_QStandardItem( 1 )->setWhatsThis( hbqt_par_QString( 2 ) );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      ( p )->setWhatsThis( hbqt_par_QString( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_SETWHATSTHIS FP=( p )->setWhatsThis( hbqt_par_QString( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -652,7 +1018,13 @@ HB_FUNC( QT_QSTANDARDITEM_SETWHATSTHIS )
  */
 HB_FUNC( QT_QSTANDARDITEM_SIZEHINT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QStandardItem( 1 )->sizeHint() ), true ) );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->sizeHint() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_SIZEHINT FP=hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->sizeHint() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -660,7 +1032,13 @@ HB_FUNC( QT_QSTANDARDITEM_SIZEHINT )
  */
 HB_FUNC( QT_QSTANDARDITEM_SORTCHILDREN )
 {
-   hbqt_par_QStandardItem( 1 )->sortChildren( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::SortOrder ) hb_parni( 3 ) : ( Qt::SortOrder ) Qt::AscendingOrder ) );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      ( p )->sortChildren( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::SortOrder ) hb_parni( 3 ) : ( Qt::SortOrder ) Qt::AscendingOrder ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_SORTCHILDREN FP=( p )->sortChildren( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::SortOrder ) hb_parni( 3 ) : ( Qt::SortOrder ) Qt::AscendingOrder ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -668,7 +1046,13 @@ HB_FUNC( QT_QSTANDARDITEM_SORTCHILDREN )
  */
 HB_FUNC( QT_QSTANDARDITEM_STATUSTIP )
 {
-   hb_retc( hbqt_par_QStandardItem( 1 )->statusTip().toAscii().data() );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      hb_retc( ( p )->statusTip().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_STATUSTIP FP=hb_retc( ( p )->statusTip().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -676,7 +1060,13 @@ HB_FUNC( QT_QSTANDARDITEM_STATUSTIP )
  */
 HB_FUNC( QT_QSTANDARDITEM_TAKECHILD )
 {
-   hb_retptrGC( hbqt_gcAllocate_QStandardItem( hbqt_par_QStandardItem( 1 )->takeChild( hb_parni( 2 ), hb_parni( 3 ) ), false ) );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QStandardItem( ( p )->takeChild( hb_parni( 2 ), hb_parni( 3 ) ), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_TAKECHILD FP=hb_retptrGC( hbqt_gcAllocate_QStandardItem( ( p )->takeChild( hb_parni( 2 ), hb_parni( 3 ) ), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -684,7 +1074,13 @@ HB_FUNC( QT_QSTANDARDITEM_TAKECHILD )
  */
 HB_FUNC( QT_QSTANDARDITEM_TEXT )
 {
-   hb_retc( hbqt_par_QStandardItem( 1 )->text().toAscii().data() );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      hb_retc( ( p )->text().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_TEXT FP=hb_retc( ( p )->text().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -692,7 +1088,13 @@ HB_FUNC( QT_QSTANDARDITEM_TEXT )
  */
 HB_FUNC( QT_QSTANDARDITEM_TEXTALIGNMENT )
 {
-   hb_retni( ( Qt::Alignment ) hbqt_par_QStandardItem( 1 )->textAlignment() );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      hb_retni( ( Qt::Alignment ) ( p )->textAlignment() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_TEXTALIGNMENT FP=hb_retni( ( Qt::Alignment ) ( p )->textAlignment() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -700,7 +1102,13 @@ HB_FUNC( QT_QSTANDARDITEM_TEXTALIGNMENT )
  */
 HB_FUNC( QT_QSTANDARDITEM_TOOLTIP )
 {
-   hb_retc( hbqt_par_QStandardItem( 1 )->toolTip().toAscii().data() );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      hb_retc( ( p )->toolTip().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_TOOLTIP FP=hb_retc( ( p )->toolTip().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -708,7 +1116,13 @@ HB_FUNC( QT_QSTANDARDITEM_TOOLTIP )
  */
 HB_FUNC( QT_QSTANDARDITEM_TYPE )
 {
-   hb_retni( hbqt_par_QStandardItem( 1 )->type() );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      hb_retni( ( p )->type() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_TYPE FP=hb_retni( ( p )->type() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -716,7 +1130,13 @@ HB_FUNC( QT_QSTANDARDITEM_TYPE )
  */
 HB_FUNC( QT_QSTANDARDITEM_WHATSTHIS )
 {
-   hb_retc( hbqt_par_QStandardItem( 1 )->whatsThis().toAscii().data() );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      hb_retc( ( p )->whatsThis().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_WHATSTHIS FP=hb_retc( ( p )->whatsThis().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -724,7 +1144,13 @@ HB_FUNC( QT_QSTANDARDITEM_WHATSTHIS )
  */
 HB_FUNC( QT_QSTANDARDITEM_WRITE )
 {
-   hbqt_par_QStandardItem( 1 )->write( *hbqt_par_QDataStream( 2 ) );
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      ( p )->write( *hbqt_par_QDataStream( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_WRITE FP=( p )->write( *hbqt_par_QDataStream( 2 ) ); p is NULL" ) );
+   }
 }
 
 

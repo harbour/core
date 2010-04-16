@@ -78,43 +78,44 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QWindowsStyle > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QWindowsStyle > pq;
 } QGC_POINTER_QWindowsStyle;
 
 QT_G_FUNC( hbqt_gcRelease_QWindowsStyle )
 {
+   QWindowsStyle  * ph = NULL ;
    QGC_POINTER_QWindowsStyle * p = ( QGC_POINTER_QWindowsStyle * ) Cargo;
 
-   if( p && p->bNew )
+   if( p && p->bNew && p->ph )
    {
-      if( p->ph && p->pq )
+      ph = p->ph;
+      if( ph )
       {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QWindowsStyle   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
-            delete ( ( QWindowsStyle * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QWindowsStyle   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QWindowsStyle   /.\\   ", (void*) ph, (void*) p->ph ) );
+            delete ( p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QWindowsStyle   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QWindowsStyle          pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QWindowsStyle          ", ph ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QWindowsStyle    :     Object already deleted!", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QWindowsStyle    :     Object already deleted!", ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QWindowsStyle    :    Object not created with new=true", p->ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QWindowsStyle    :    Object not created with new=true", ph ) );
       p->ph = NULL;
    }
 }
@@ -123,13 +124,12 @@ void * hbqt_gcAllocate_QWindowsStyle( void * pObj, bool bNew )
 {
    QGC_POINTER_QWindowsStyle * p = ( QGC_POINTER_QWindowsStyle * ) hb_gcAllocate( sizeof( QGC_POINTER_QWindowsStyle ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QWindowsStyle >( ( QWindowsStyle * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QWindowsStyle;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QWindowsStyle >( ( QWindowsStyle * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QWindowsStyle  under p->pq", pObj ) );
    }
    else
@@ -141,11 +141,11 @@ void * hbqt_gcAllocate_QWindowsStyle( void * pObj, bool bNew )
 
 HB_FUNC( QT_QWINDOWSSTYLE )
 {
-   void * pObj = NULL;
+   QWindowsStyle * pObj = NULL;
 
-   pObj = ( QWindowsStyle* ) new QWindowsStyle() ;
+   pObj =  new QWindowsStyle() ;
 
-   hb_retptrGC( hbqt_gcAllocate_QWindowsStyle( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QWindowsStyle( ( void * ) pObj, true ) );
 }
 
 

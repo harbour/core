@@ -82,7 +82,7 @@
 
 typedef struct
 {
-   void * ph;
+   QStyleOptionFrame * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QStyleOptionFrame;
@@ -117,7 +117,7 @@ void * hbqt_gcAllocate_QStyleOptionFrame( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QStyleOptionFrame * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyleOptionFrame;
 
@@ -134,11 +134,11 @@ void * hbqt_gcAllocate_QStyleOptionFrame( void * pObj, bool bNew )
 
 HB_FUNC( QT_QSTYLEOPTIONFRAME )
 {
-   void * pObj = NULL;
+   QStyleOptionFrame * pObj = NULL;
 
-   pObj = ( QStyleOptionFrame* ) new QStyleOptionFrame() ;
+   pObj =  new QStyleOptionFrame() ;
 
-   hb_retptrGC( hbqt_gcAllocate_QStyleOptionFrame( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QStyleOptionFrame( ( void * ) pObj, true ) );
 }
 
 /*

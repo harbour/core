@@ -82,7 +82,7 @@
 
 typedef struct
 {
-   void * ph;
+   QStyleOptionSizeGrip * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QStyleOptionSizeGrip;
@@ -117,7 +117,7 @@ void * hbqt_gcAllocate_QStyleOptionSizeGrip( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QStyleOptionSizeGrip * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyleOptionSizeGrip;
 
@@ -134,11 +134,11 @@ void * hbqt_gcAllocate_QStyleOptionSizeGrip( void * pObj, bool bNew )
 
 HB_FUNC( QT_QSTYLEOPTIONSIZEGRIP )
 {
-   void * pObj = NULL;
+   QStyleOptionSizeGrip * pObj = NULL;
 
-   pObj = ( QStyleOptionSizeGrip* ) new QStyleOptionSizeGrip() ;
+   pObj =  new QStyleOptionSizeGrip() ;
 
-   hb_retptrGC( hbqt_gcAllocate_QStyleOptionSizeGrip( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QStyleOptionSizeGrip( ( void * ) pObj, true ) );
 }
 
 /*

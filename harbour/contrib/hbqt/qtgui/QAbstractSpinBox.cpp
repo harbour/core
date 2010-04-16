@@ -84,10 +84,9 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QAbstractSpinBox > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QAbstractSpinBox > pq;
 } QGC_POINTER_QAbstractSpinBox;
 
 QT_G_FUNC( hbqt_gcRelease_QAbstractSpinBox )
@@ -105,13 +104,12 @@ void * hbqt_gcAllocate_QAbstractSpinBox( void * pObj, bool bNew )
 {
    QGC_POINTER_QAbstractSpinBox * p = ( QGC_POINTER_QAbstractSpinBox * ) hb_gcAllocate( sizeof( QGC_POINTER_QAbstractSpinBox ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QAbstractSpinBox >( ( QAbstractSpinBox * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QAbstractSpinBox;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QAbstractSpinBox >( ( QAbstractSpinBox * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QAbstractSpinBox  under p->pq", pObj ) );
    }
    else
@@ -123,6 +121,7 @@ void * hbqt_gcAllocate_QAbstractSpinBox( void * pObj, bool bNew )
 
 HB_FUNC( QT_QABSTRACTSPINBOX )
 {
+
 }
 
 /*
@@ -130,7 +129,13 @@ HB_FUNC( QT_QABSTRACTSPINBOX )
  */
 HB_FUNC( QT_QABSTRACTSPINBOX_ALIGNMENT )
 {
-   hb_retni( ( Qt::Alignment ) hbqt_par_QAbstractSpinBox( 1 )->alignment() );
+   QAbstractSpinBox * p = hbqt_par_QAbstractSpinBox( 1 );
+   if( p )
+      hb_retni( ( Qt::Alignment ) ( p )->alignment() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSPINBOX_ALIGNMENT FP=hb_retni( ( Qt::Alignment ) ( p )->alignment() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -138,7 +143,13 @@ HB_FUNC( QT_QABSTRACTSPINBOX_ALIGNMENT )
  */
 HB_FUNC( QT_QABSTRACTSPINBOX_BUTTONSYMBOLS )
 {
-   hb_retni( ( QAbstractSpinBox::ButtonSymbols ) hbqt_par_QAbstractSpinBox( 1 )->buttonSymbols() );
+   QAbstractSpinBox * p = hbqt_par_QAbstractSpinBox( 1 );
+   if( p )
+      hb_retni( ( QAbstractSpinBox::ButtonSymbols ) ( p )->buttonSymbols() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSPINBOX_BUTTONSYMBOLS FP=hb_retni( ( QAbstractSpinBox::ButtonSymbols ) ( p )->buttonSymbols() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -146,7 +157,13 @@ HB_FUNC( QT_QABSTRACTSPINBOX_BUTTONSYMBOLS )
  */
 HB_FUNC( QT_QABSTRACTSPINBOX_CORRECTIONMODE )
 {
-   hb_retni( ( QAbstractSpinBox::CorrectionMode ) hbqt_par_QAbstractSpinBox( 1 )->correctionMode() );
+   QAbstractSpinBox * p = hbqt_par_QAbstractSpinBox( 1 );
+   if( p )
+      hb_retni( ( QAbstractSpinBox::CorrectionMode ) ( p )->correctionMode() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSPINBOX_CORRECTIONMODE FP=hb_retni( ( QAbstractSpinBox::CorrectionMode ) ( p )->correctionMode() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -154,7 +171,13 @@ HB_FUNC( QT_QABSTRACTSPINBOX_CORRECTIONMODE )
  */
 HB_FUNC( QT_QABSTRACTSPINBOX_HASACCEPTABLEINPUT )
 {
-   hb_retl( hbqt_par_QAbstractSpinBox( 1 )->hasAcceptableInput() );
+   QAbstractSpinBox * p = hbqt_par_QAbstractSpinBox( 1 );
+   if( p )
+      hb_retl( ( p )->hasAcceptableInput() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSPINBOX_HASACCEPTABLEINPUT FP=hb_retl( ( p )->hasAcceptableInput() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -162,7 +185,13 @@ HB_FUNC( QT_QABSTRACTSPINBOX_HASACCEPTABLEINPUT )
  */
 HB_FUNC( QT_QABSTRACTSPINBOX_HASFRAME )
 {
-   hb_retl( hbqt_par_QAbstractSpinBox( 1 )->hasFrame() );
+   QAbstractSpinBox * p = hbqt_par_QAbstractSpinBox( 1 );
+   if( p )
+      hb_retl( ( p )->hasFrame() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSPINBOX_HASFRAME FP=hb_retl( ( p )->hasFrame() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -170,7 +199,13 @@ HB_FUNC( QT_QABSTRACTSPINBOX_HASFRAME )
  */
 HB_FUNC( QT_QABSTRACTSPINBOX_INTERPRETTEXT )
 {
-   hbqt_par_QAbstractSpinBox( 1 )->interpretText();
+   QAbstractSpinBox * p = hbqt_par_QAbstractSpinBox( 1 );
+   if( p )
+      ( p )->interpretText();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSPINBOX_INTERPRETTEXT FP=( p )->interpretText(); p is NULL" ) );
+   }
 }
 
 /*
@@ -178,7 +213,13 @@ HB_FUNC( QT_QABSTRACTSPINBOX_INTERPRETTEXT )
  */
 HB_FUNC( QT_QABSTRACTSPINBOX_ISACCELERATED )
 {
-   hb_retl( hbqt_par_QAbstractSpinBox( 1 )->isAccelerated() );
+   QAbstractSpinBox * p = hbqt_par_QAbstractSpinBox( 1 );
+   if( p )
+      hb_retl( ( p )->isAccelerated() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSPINBOX_ISACCELERATED FP=hb_retl( ( p )->isAccelerated() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -186,7 +227,13 @@ HB_FUNC( QT_QABSTRACTSPINBOX_ISACCELERATED )
  */
 HB_FUNC( QT_QABSTRACTSPINBOX_ISREADONLY )
 {
-   hb_retl( hbqt_par_QAbstractSpinBox( 1 )->isReadOnly() );
+   QAbstractSpinBox * p = hbqt_par_QAbstractSpinBox( 1 );
+   if( p )
+      hb_retl( ( p )->isReadOnly() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSPINBOX_ISREADONLY FP=hb_retl( ( p )->isReadOnly() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -194,7 +241,13 @@ HB_FUNC( QT_QABSTRACTSPINBOX_ISREADONLY )
  */
 HB_FUNC( QT_QABSTRACTSPINBOX_KEYBOARDTRACKING )
 {
-   hb_retl( hbqt_par_QAbstractSpinBox( 1 )->keyboardTracking() );
+   QAbstractSpinBox * p = hbqt_par_QAbstractSpinBox( 1 );
+   if( p )
+      hb_retl( ( p )->keyboardTracking() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSPINBOX_KEYBOARDTRACKING FP=hb_retl( ( p )->keyboardTracking() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -202,7 +255,13 @@ HB_FUNC( QT_QABSTRACTSPINBOX_KEYBOARDTRACKING )
  */
 HB_FUNC( QT_QABSTRACTSPINBOX_SETACCELERATED )
 {
-   hbqt_par_QAbstractSpinBox( 1 )->setAccelerated( hb_parl( 2 ) );
+   QAbstractSpinBox * p = hbqt_par_QAbstractSpinBox( 1 );
+   if( p )
+      ( p )->setAccelerated( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSPINBOX_SETACCELERATED FP=( p )->setAccelerated( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -210,7 +269,13 @@ HB_FUNC( QT_QABSTRACTSPINBOX_SETACCELERATED )
  */
 HB_FUNC( QT_QABSTRACTSPINBOX_SETALIGNMENT )
 {
-   hbqt_par_QAbstractSpinBox( 1 )->setAlignment( ( Qt::Alignment ) hb_parni( 2 ) );
+   QAbstractSpinBox * p = hbqt_par_QAbstractSpinBox( 1 );
+   if( p )
+      ( p )->setAlignment( ( Qt::Alignment ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSPINBOX_SETALIGNMENT FP=( p )->setAlignment( ( Qt::Alignment ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -218,7 +283,13 @@ HB_FUNC( QT_QABSTRACTSPINBOX_SETALIGNMENT )
  */
 HB_FUNC( QT_QABSTRACTSPINBOX_SETBUTTONSYMBOLS )
 {
-   hbqt_par_QAbstractSpinBox( 1 )->setButtonSymbols( ( QAbstractSpinBox::ButtonSymbols ) hb_parni( 2 ) );
+   QAbstractSpinBox * p = hbqt_par_QAbstractSpinBox( 1 );
+   if( p )
+      ( p )->setButtonSymbols( ( QAbstractSpinBox::ButtonSymbols ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSPINBOX_SETBUTTONSYMBOLS FP=( p )->setButtonSymbols( ( QAbstractSpinBox::ButtonSymbols ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -226,7 +297,13 @@ HB_FUNC( QT_QABSTRACTSPINBOX_SETBUTTONSYMBOLS )
  */
 HB_FUNC( QT_QABSTRACTSPINBOX_SETCORRECTIONMODE )
 {
-   hbqt_par_QAbstractSpinBox( 1 )->setCorrectionMode( ( QAbstractSpinBox::CorrectionMode ) hb_parni( 2 ) );
+   QAbstractSpinBox * p = hbqt_par_QAbstractSpinBox( 1 );
+   if( p )
+      ( p )->setCorrectionMode( ( QAbstractSpinBox::CorrectionMode ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSPINBOX_SETCORRECTIONMODE FP=( p )->setCorrectionMode( ( QAbstractSpinBox::CorrectionMode ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -234,7 +311,13 @@ HB_FUNC( QT_QABSTRACTSPINBOX_SETCORRECTIONMODE )
  */
 HB_FUNC( QT_QABSTRACTSPINBOX_SETFRAME )
 {
-   hbqt_par_QAbstractSpinBox( 1 )->setFrame( hb_parl( 2 ) );
+   QAbstractSpinBox * p = hbqt_par_QAbstractSpinBox( 1 );
+   if( p )
+      ( p )->setFrame( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSPINBOX_SETFRAME FP=( p )->setFrame( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -242,7 +325,13 @@ HB_FUNC( QT_QABSTRACTSPINBOX_SETFRAME )
  */
 HB_FUNC( QT_QABSTRACTSPINBOX_SETKEYBOARDTRACKING )
 {
-   hbqt_par_QAbstractSpinBox( 1 )->setKeyboardTracking( hb_parl( 2 ) );
+   QAbstractSpinBox * p = hbqt_par_QAbstractSpinBox( 1 );
+   if( p )
+      ( p )->setKeyboardTracking( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSPINBOX_SETKEYBOARDTRACKING FP=( p )->setKeyboardTracking( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -250,7 +339,13 @@ HB_FUNC( QT_QABSTRACTSPINBOX_SETKEYBOARDTRACKING )
  */
 HB_FUNC( QT_QABSTRACTSPINBOX_SETREADONLY )
 {
-   hbqt_par_QAbstractSpinBox( 1 )->setReadOnly( hb_parl( 2 ) );
+   QAbstractSpinBox * p = hbqt_par_QAbstractSpinBox( 1 );
+   if( p )
+      ( p )->setReadOnly( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSPINBOX_SETREADONLY FP=( p )->setReadOnly( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -258,7 +353,13 @@ HB_FUNC( QT_QABSTRACTSPINBOX_SETREADONLY )
  */
 HB_FUNC( QT_QABSTRACTSPINBOX_SETSPECIALVALUETEXT )
 {
-   hbqt_par_QAbstractSpinBox( 1 )->setSpecialValueText( QAbstractSpinBox::tr( hb_parc( 2 ) ) );
+   QAbstractSpinBox * p = hbqt_par_QAbstractSpinBox( 1 );
+   if( p )
+      ( p )->setSpecialValueText( QAbstractSpinBox::tr( hb_parc( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSPINBOX_SETSPECIALVALUETEXT FP=( p )->setSpecialValueText( QAbstractSpinBox::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -266,7 +367,13 @@ HB_FUNC( QT_QABSTRACTSPINBOX_SETSPECIALVALUETEXT )
  */
 HB_FUNC( QT_QABSTRACTSPINBOX_SETWRAPPING )
 {
-   hbqt_par_QAbstractSpinBox( 1 )->setWrapping( hb_parl( 2 ) );
+   QAbstractSpinBox * p = hbqt_par_QAbstractSpinBox( 1 );
+   if( p )
+      ( p )->setWrapping( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSPINBOX_SETWRAPPING FP=( p )->setWrapping( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -274,7 +381,13 @@ HB_FUNC( QT_QABSTRACTSPINBOX_SETWRAPPING )
  */
 HB_FUNC( QT_QABSTRACTSPINBOX_SPECIALVALUETEXT )
 {
-   hb_retc( hbqt_par_QAbstractSpinBox( 1 )->specialValueText().toAscii().data() );
+   QAbstractSpinBox * p = hbqt_par_QAbstractSpinBox( 1 );
+   if( p )
+      hb_retc( ( p )->specialValueText().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSPINBOX_SPECIALVALUETEXT FP=hb_retc( ( p )->specialValueText().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -282,7 +395,13 @@ HB_FUNC( QT_QABSTRACTSPINBOX_SPECIALVALUETEXT )
  */
 HB_FUNC( QT_QABSTRACTSPINBOX_STEPBY )
 {
-   hbqt_par_QAbstractSpinBox( 1 )->stepBy( hb_parni( 2 ) );
+   QAbstractSpinBox * p = hbqt_par_QAbstractSpinBox( 1 );
+   if( p )
+      ( p )->stepBy( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSPINBOX_STEPBY FP=( p )->stepBy( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -290,7 +409,13 @@ HB_FUNC( QT_QABSTRACTSPINBOX_STEPBY )
  */
 HB_FUNC( QT_QABSTRACTSPINBOX_TEXT )
 {
-   hb_retc( hbqt_par_QAbstractSpinBox( 1 )->text().toAscii().data() );
+   QAbstractSpinBox * p = hbqt_par_QAbstractSpinBox( 1 );
+   if( p )
+      hb_retc( ( p )->text().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSPINBOX_TEXT FP=hb_retc( ( p )->text().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -298,7 +423,13 @@ HB_FUNC( QT_QABSTRACTSPINBOX_TEXT )
  */
 HB_FUNC( QT_QABSTRACTSPINBOX_WRAPPING )
 {
-   hb_retl( hbqt_par_QAbstractSpinBox( 1 )->wrapping() );
+   QAbstractSpinBox * p = hbqt_par_QAbstractSpinBox( 1 );
+   if( p )
+      hb_retl( ( p )->wrapping() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSPINBOX_WRAPPING FP=hb_retl( ( p )->wrapping() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -306,7 +437,13 @@ HB_FUNC( QT_QABSTRACTSPINBOX_WRAPPING )
  */
 HB_FUNC( QT_QABSTRACTSPINBOX_CLEAR )
 {
-   hbqt_par_QAbstractSpinBox( 1 )->clear();
+   QAbstractSpinBox * p = hbqt_par_QAbstractSpinBox( 1 );
+   if( p )
+      ( p )->clear();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSPINBOX_CLEAR FP=( p )->clear(); p is NULL" ) );
+   }
 }
 
 /*
@@ -314,7 +451,13 @@ HB_FUNC( QT_QABSTRACTSPINBOX_CLEAR )
  */
 HB_FUNC( QT_QABSTRACTSPINBOX_SELECTALL )
 {
-   hbqt_par_QAbstractSpinBox( 1 )->selectAll();
+   QAbstractSpinBox * p = hbqt_par_QAbstractSpinBox( 1 );
+   if( p )
+      ( p )->selectAll();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSPINBOX_SELECTALL FP=( p )->selectAll(); p is NULL" ) );
+   }
 }
 
 /*
@@ -322,7 +465,13 @@ HB_FUNC( QT_QABSTRACTSPINBOX_SELECTALL )
  */
 HB_FUNC( QT_QABSTRACTSPINBOX_STEPDOWN )
 {
-   hbqt_par_QAbstractSpinBox( 1 )->stepDown();
+   QAbstractSpinBox * p = hbqt_par_QAbstractSpinBox( 1 );
+   if( p )
+      ( p )->stepDown();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSPINBOX_STEPDOWN FP=( p )->stepDown(); p is NULL" ) );
+   }
 }
 
 /*
@@ -330,7 +479,13 @@ HB_FUNC( QT_QABSTRACTSPINBOX_STEPDOWN )
  */
 HB_FUNC( QT_QABSTRACTSPINBOX_STEPUP )
 {
-   hbqt_par_QAbstractSpinBox( 1 )->stepUp();
+   QAbstractSpinBox * p = hbqt_par_QAbstractSpinBox( 1 );
+   if( p )
+      ( p )->stepUp();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSPINBOX_STEPUP FP=( p )->stepUp(); p is NULL" ) );
+   }
 }
 
 

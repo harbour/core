@@ -81,43 +81,44 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QFileSystemModel > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QFileSystemModel > pq;
 } QGC_POINTER_QFileSystemModel;
 
 QT_G_FUNC( hbqt_gcRelease_QFileSystemModel )
 {
+   QFileSystemModel  * ph = NULL ;
    QGC_POINTER_QFileSystemModel * p = ( QGC_POINTER_QFileSystemModel * ) Cargo;
 
-   if( p && p->bNew )
+   if( p && p->bNew && p->ph )
    {
-      if( p->ph && p->pq )
+      ph = p->ph;
+      if( ph )
       {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QFileSystemModel   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
-            delete ( ( QFileSystemModel * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QFileSystemModel   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QFileSystemModel   /.\\   ", (void*) ph, (void*) p->ph ) );
+            delete ( p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QFileSystemModel   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QFileSystemModel          pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QFileSystemModel          ", ph ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QFileSystemModel    :     Object already deleted!", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QFileSystemModel    :     Object already deleted!", ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QFileSystemModel    :    Object not created with new=true", p->ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QFileSystemModel    :    Object not created with new=true", ph ) );
       p->ph = NULL;
    }
 }
@@ -126,13 +127,12 @@ void * hbqt_gcAllocate_QFileSystemModel( void * pObj, bool bNew )
 {
    QGC_POINTER_QFileSystemModel * p = ( QGC_POINTER_QFileSystemModel * ) hb_gcAllocate( sizeof( QGC_POINTER_QFileSystemModel ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QFileSystemModel >( ( QFileSystemModel * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QFileSystemModel;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QFileSystemModel >( ( QFileSystemModel * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QFileSystemModel  under p->pq", pObj ) );
    }
    else
@@ -144,11 +144,11 @@ void * hbqt_gcAllocate_QFileSystemModel( void * pObj, bool bNew )
 
 HB_FUNC( QT_QFILESYSTEMMODEL )
 {
-   void * pObj = NULL;
+   QFileSystemModel * pObj = NULL;
 
    pObj = ( QFileSystemModel * ) new QFileSystemModel() ;
 
-   hb_retptrGC( hbqt_gcAllocate_QFileSystemModel( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QFileSystemModel( ( void * ) pObj, true ) );
 }
 
 /*
@@ -156,7 +156,13 @@ HB_FUNC( QT_QFILESYSTEMMODEL )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_DROPMIMEDATA )
 {
-   hb_retl( hbqt_par_QFileSystemModel( 1 )->dropMimeData( hbqt_par_QMimeData( 2 ), ( Qt::DropAction ) hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), *hbqt_par_QModelIndex( 6 ) ) );
+   QFileSystemModel * p = hbqt_par_QFileSystemModel( 1 );
+   if( p )
+      hb_retl( ( p )->dropMimeData( hbqt_par_QMimeData( 2 ), ( Qt::DropAction ) hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), *hbqt_par_QModelIndex( 6 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILESYSTEMMODEL_DROPMIMEDATA FP=hb_retl( ( p )->dropMimeData( hbqt_par_QMimeData( 2 ), ( Qt::DropAction ) hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), *hbqt_par_QModelIndex( 6 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -164,7 +170,13 @@ HB_FUNC( QT_QFILESYSTEMMODEL_DROPMIMEDATA )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_FILEICON )
 {
-   hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( hbqt_par_QFileSystemModel( 1 )->fileIcon( *hbqt_par_QModelIndex( 2 ) ) ), true ) );
+   QFileSystemModel * p = hbqt_par_QFileSystemModel( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( ( p )->fileIcon( *hbqt_par_QModelIndex( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILESYSTEMMODEL_FILEICON FP=hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( ( p )->fileIcon( *hbqt_par_QModelIndex( 2 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -172,7 +184,13 @@ HB_FUNC( QT_QFILESYSTEMMODEL_FILEICON )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_FILEINFO )
 {
-   hb_retptrGC( hbqt_gcAllocate_QFileInfo( new QFileInfo( hbqt_par_QFileSystemModel( 1 )->fileInfo( *hbqt_par_QModelIndex( 2 ) ) ), true ) );
+   QFileSystemModel * p = hbqt_par_QFileSystemModel( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QFileInfo( new QFileInfo( ( p )->fileInfo( *hbqt_par_QModelIndex( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILESYSTEMMODEL_FILEINFO FP=hb_retptrGC( hbqt_gcAllocate_QFileInfo( new QFileInfo( ( p )->fileInfo( *hbqt_par_QModelIndex( 2 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -180,7 +198,13 @@ HB_FUNC( QT_QFILESYSTEMMODEL_FILEINFO )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_FILENAME )
 {
-   hb_retc( hbqt_par_QFileSystemModel( 1 )->fileName( *hbqt_par_QModelIndex( 2 ) ).toAscii().data() );
+   QFileSystemModel * p = hbqt_par_QFileSystemModel( 1 );
+   if( p )
+      hb_retc( ( p )->fileName( *hbqt_par_QModelIndex( 2 ) ).toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILESYSTEMMODEL_FILENAME FP=hb_retc( ( p )->fileName( *hbqt_par_QModelIndex( 2 ) ).toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -188,7 +212,13 @@ HB_FUNC( QT_QFILESYSTEMMODEL_FILENAME )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_FILEPATH )
 {
-   hb_retc( hbqt_par_QFileSystemModel( 1 )->filePath( *hbqt_par_QModelIndex( 2 ) ).toAscii().data() );
+   QFileSystemModel * p = hbqt_par_QFileSystemModel( 1 );
+   if( p )
+      hb_retc( ( p )->filePath( *hbqt_par_QModelIndex( 2 ) ).toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILESYSTEMMODEL_FILEPATH FP=hb_retc( ( p )->filePath( *hbqt_par_QModelIndex( 2 ) ).toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -196,7 +226,13 @@ HB_FUNC( QT_QFILESYSTEMMODEL_FILEPATH )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_FILTER )
 {
-   hb_retni( ( QDir::Filters ) hbqt_par_QFileSystemModel( 1 )->filter() );
+   QFileSystemModel * p = hbqt_par_QFileSystemModel( 1 );
+   if( p )
+      hb_retni( ( QDir::Filters ) ( p )->filter() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILESYSTEMMODEL_FILTER FP=hb_retni( ( QDir::Filters ) ( p )->filter() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -204,7 +240,13 @@ HB_FUNC( QT_QFILESYSTEMMODEL_FILTER )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_INDEX )
 {
-   hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QFileSystemModel( 1 )->index( QFileSystemModel::tr( hb_parc( 2 ) ), hb_parni( 3 ) ) ), true ) );
+   QFileSystemModel * p = hbqt_par_QFileSystemModel( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( ( p )->index( QFileSystemModel::tr( hb_parc( 2 ) ), hb_parni( 3 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILESYSTEMMODEL_INDEX FP=hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( ( p )->index( QFileSystemModel::tr( hb_parc( 2 ) ), hb_parni( 3 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -212,7 +254,13 @@ HB_FUNC( QT_QFILESYSTEMMODEL_INDEX )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_ISDIR )
 {
-   hb_retl( hbqt_par_QFileSystemModel( 1 )->isDir( *hbqt_par_QModelIndex( 2 ) ) );
+   QFileSystemModel * p = hbqt_par_QFileSystemModel( 1 );
+   if( p )
+      hb_retl( ( p )->isDir( *hbqt_par_QModelIndex( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILESYSTEMMODEL_ISDIR FP=hb_retl( ( p )->isDir( *hbqt_par_QModelIndex( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -220,7 +268,13 @@ HB_FUNC( QT_QFILESYSTEMMODEL_ISDIR )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_ISREADONLY )
 {
-   hb_retl( hbqt_par_QFileSystemModel( 1 )->isReadOnly() );
+   QFileSystemModel * p = hbqt_par_QFileSystemModel( 1 );
+   if( p )
+      hb_retl( ( p )->isReadOnly() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILESYSTEMMODEL_ISREADONLY FP=hb_retl( ( p )->isReadOnly() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -228,7 +282,13 @@ HB_FUNC( QT_QFILESYSTEMMODEL_ISREADONLY )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_LASTMODIFIED )
 {
-   hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( hbqt_par_QFileSystemModel( 1 )->lastModified( *hbqt_par_QModelIndex( 2 ) ) ), true ) );
+   QFileSystemModel * p = hbqt_par_QFileSystemModel( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( ( p )->lastModified( *hbqt_par_QModelIndex( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILESYSTEMMODEL_LASTMODIFIED FP=hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( ( p )->lastModified( *hbqt_par_QModelIndex( 2 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -236,7 +296,13 @@ HB_FUNC( QT_QFILESYSTEMMODEL_LASTMODIFIED )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_MIMETYPES )
 {
-   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QFileSystemModel( 1 )->mimeTypes() ), true ) );
+   QFileSystemModel * p = hbqt_par_QFileSystemModel( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->mimeTypes() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILESYSTEMMODEL_MIMETYPES FP=hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->mimeTypes() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -244,7 +310,13 @@ HB_FUNC( QT_QFILESYSTEMMODEL_MIMETYPES )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_MKDIR )
 {
-   hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QFileSystemModel( 1 )->mkdir( *hbqt_par_QModelIndex( 2 ), QFileSystemModel::tr( hb_parc( 3 ) ) ) ), true ) );
+   QFileSystemModel * p = hbqt_par_QFileSystemModel( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( ( p )->mkdir( *hbqt_par_QModelIndex( 2 ), QFileSystemModel::tr( hb_parc( 3 ) ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILESYSTEMMODEL_MKDIR FP=hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( ( p )->mkdir( *hbqt_par_QModelIndex( 2 ), QFileSystemModel::tr( hb_parc( 3 ) ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -252,7 +324,13 @@ HB_FUNC( QT_QFILESYSTEMMODEL_MKDIR )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_MYCOMPUTER )
 {
-   hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( hbqt_par_QFileSystemModel( 1 )->myComputer( ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : Qt::DisplayRole ) ) ), true ) );
+   QFileSystemModel * p = hbqt_par_QFileSystemModel( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( ( p )->myComputer( ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : Qt::DisplayRole ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILESYSTEMMODEL_MYCOMPUTER FP=hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( ( p )->myComputer( ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : Qt::DisplayRole ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -260,7 +338,13 @@ HB_FUNC( QT_QFILESYSTEMMODEL_MYCOMPUTER )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_NAMEFILTERDISABLES )
 {
-   hb_retl( hbqt_par_QFileSystemModel( 1 )->nameFilterDisables() );
+   QFileSystemModel * p = hbqt_par_QFileSystemModel( 1 );
+   if( p )
+      hb_retl( ( p )->nameFilterDisables() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILESYSTEMMODEL_NAMEFILTERDISABLES FP=hb_retl( ( p )->nameFilterDisables() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -268,7 +352,13 @@ HB_FUNC( QT_QFILESYSTEMMODEL_NAMEFILTERDISABLES )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_NAMEFILTERS )
 {
-   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QFileSystemModel( 1 )->nameFilters() ), true ) );
+   QFileSystemModel * p = hbqt_par_QFileSystemModel( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->nameFilters() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILESYSTEMMODEL_NAMEFILTERS FP=hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->nameFilters() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -276,7 +366,13 @@ HB_FUNC( QT_QFILESYSTEMMODEL_NAMEFILTERS )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_PERMISSIONS )
 {
-   hb_retni( ( QFile::Permissions ) hbqt_par_QFileSystemModel( 1 )->permissions( *hbqt_par_QModelIndex( 2 ) ) );
+   QFileSystemModel * p = hbqt_par_QFileSystemModel( 1 );
+   if( p )
+      hb_retni( ( QFile::Permissions ) ( p )->permissions( *hbqt_par_QModelIndex( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILESYSTEMMODEL_PERMISSIONS FP=hb_retni( ( QFile::Permissions ) ( p )->permissions( *hbqt_par_QModelIndex( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -284,7 +380,13 @@ HB_FUNC( QT_QFILESYSTEMMODEL_PERMISSIONS )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_REMOVE )
 {
-   hb_retl( hbqt_par_QFileSystemModel( 1 )->remove( *hbqt_par_QModelIndex( 2 ) ) );
+   QFileSystemModel * p = hbqt_par_QFileSystemModel( 1 );
+   if( p )
+      hb_retl( ( p )->remove( *hbqt_par_QModelIndex( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILESYSTEMMODEL_REMOVE FP=hb_retl( ( p )->remove( *hbqt_par_QModelIndex( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -292,7 +394,13 @@ HB_FUNC( QT_QFILESYSTEMMODEL_REMOVE )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_RESOLVESYMLINKS )
 {
-   hb_retl( hbqt_par_QFileSystemModel( 1 )->resolveSymlinks() );
+   QFileSystemModel * p = hbqt_par_QFileSystemModel( 1 );
+   if( p )
+      hb_retl( ( p )->resolveSymlinks() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILESYSTEMMODEL_RESOLVESYMLINKS FP=hb_retl( ( p )->resolveSymlinks() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -300,7 +408,13 @@ HB_FUNC( QT_QFILESYSTEMMODEL_RESOLVESYMLINKS )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_RMDIR )
 {
-   hb_retl( hbqt_par_QFileSystemModel( 1 )->rmdir( *hbqt_par_QModelIndex( 2 ) ) );
+   QFileSystemModel * p = hbqt_par_QFileSystemModel( 1 );
+   if( p )
+      hb_retl( ( p )->rmdir( *hbqt_par_QModelIndex( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILESYSTEMMODEL_RMDIR FP=hb_retl( ( p )->rmdir( *hbqt_par_QModelIndex( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -308,7 +422,13 @@ HB_FUNC( QT_QFILESYSTEMMODEL_RMDIR )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_ROOTDIRECTORY )
 {
-   hb_retptrGC( hbqt_gcAllocate_QDir( new QDir( hbqt_par_QFileSystemModel( 1 )->rootDirectory() ), true ) );
+   QFileSystemModel * p = hbqt_par_QFileSystemModel( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QDir( new QDir( ( p )->rootDirectory() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILESYSTEMMODEL_ROOTDIRECTORY FP=hb_retptrGC( hbqt_gcAllocate_QDir( new QDir( ( p )->rootDirectory() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -316,7 +436,13 @@ HB_FUNC( QT_QFILESYSTEMMODEL_ROOTDIRECTORY )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_ROOTPATH )
 {
-   hb_retc( hbqt_par_QFileSystemModel( 1 )->rootPath().toAscii().data() );
+   QFileSystemModel * p = hbqt_par_QFileSystemModel( 1 );
+   if( p )
+      hb_retc( ( p )->rootPath().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILESYSTEMMODEL_ROOTPATH FP=hb_retc( ( p )->rootPath().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -324,7 +450,13 @@ HB_FUNC( QT_QFILESYSTEMMODEL_ROOTPATH )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_SETFILTER )
 {
-   hbqt_par_QFileSystemModel( 1 )->setFilter( ( QDir::Filters ) hb_parni( 2 ) );
+   QFileSystemModel * p = hbqt_par_QFileSystemModel( 1 );
+   if( p )
+      ( p )->setFilter( ( QDir::Filters ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILESYSTEMMODEL_SETFILTER FP=( p )->setFilter( ( QDir::Filters ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -332,7 +464,13 @@ HB_FUNC( QT_QFILESYSTEMMODEL_SETFILTER )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_SETNAMEFILTERDISABLES )
 {
-   hbqt_par_QFileSystemModel( 1 )->setNameFilterDisables( hb_parl( 2 ) );
+   QFileSystemModel * p = hbqt_par_QFileSystemModel( 1 );
+   if( p )
+      ( p )->setNameFilterDisables( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILESYSTEMMODEL_SETNAMEFILTERDISABLES FP=( p )->setNameFilterDisables( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -340,7 +478,13 @@ HB_FUNC( QT_QFILESYSTEMMODEL_SETNAMEFILTERDISABLES )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_SETNAMEFILTERS )
 {
-   hbqt_par_QFileSystemModel( 1 )->setNameFilters( *hbqt_par_QStringList( 2 ) );
+   QFileSystemModel * p = hbqt_par_QFileSystemModel( 1 );
+   if( p )
+      ( p )->setNameFilters( *hbqt_par_QStringList( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILESYSTEMMODEL_SETNAMEFILTERS FP=( p )->setNameFilters( *hbqt_par_QStringList( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -348,7 +492,13 @@ HB_FUNC( QT_QFILESYSTEMMODEL_SETNAMEFILTERS )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_SETREADONLY )
 {
-   hbqt_par_QFileSystemModel( 1 )->setReadOnly( hb_parl( 2 ) );
+   QFileSystemModel * p = hbqt_par_QFileSystemModel( 1 );
+   if( p )
+      ( p )->setReadOnly( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILESYSTEMMODEL_SETREADONLY FP=( p )->setReadOnly( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -356,7 +506,13 @@ HB_FUNC( QT_QFILESYSTEMMODEL_SETREADONLY )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_SETRESOLVESYMLINKS )
 {
-   hbqt_par_QFileSystemModel( 1 )->setResolveSymlinks( hb_parl( 2 ) );
+   QFileSystemModel * p = hbqt_par_QFileSystemModel( 1 );
+   if( p )
+      ( p )->setResolveSymlinks( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILESYSTEMMODEL_SETRESOLVESYMLINKS FP=( p )->setResolveSymlinks( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -364,7 +520,13 @@ HB_FUNC( QT_QFILESYSTEMMODEL_SETRESOLVESYMLINKS )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_SETROOTPATH )
 {
-   hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QFileSystemModel( 1 )->setRootPath( QFileSystemModel::tr( hb_parc( 2 ) ) ) ), true ) );
+   QFileSystemModel * p = hbqt_par_QFileSystemModel( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( ( p )->setRootPath( QFileSystemModel::tr( hb_parc( 2 ) ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILESYSTEMMODEL_SETROOTPATH FP=hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( ( p )->setRootPath( QFileSystemModel::tr( hb_parc( 2 ) ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -372,7 +534,13 @@ HB_FUNC( QT_QFILESYSTEMMODEL_SETROOTPATH )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_SIZE )
 {
-   hb_retnint( hbqt_par_QFileSystemModel( 1 )->size( *hbqt_par_QModelIndex( 2 ) ) );
+   QFileSystemModel * p = hbqt_par_QFileSystemModel( 1 );
+   if( p )
+      hb_retnint( ( p )->size( *hbqt_par_QModelIndex( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILESYSTEMMODEL_SIZE FP=hb_retnint( ( p )->size( *hbqt_par_QModelIndex( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -380,7 +548,13 @@ HB_FUNC( QT_QFILESYSTEMMODEL_SIZE )
  */
 HB_FUNC( QT_QFILESYSTEMMODEL_TYPE )
 {
-   hb_retc( hbqt_par_QFileSystemModel( 1 )->type( *hbqt_par_QModelIndex( 2 ) ).toAscii().data() );
+   QFileSystemModel * p = hbqt_par_QFileSystemModel( 1 );
+   if( p )
+      hb_retc( ( p )->type( *hbqt_par_QModelIndex( 2 ) ).toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILESYSTEMMODEL_TYPE FP=hb_retc( ( p )->type( *hbqt_par_QModelIndex( 2 ) ).toAscii().data() ); p is NULL" ) );
+   }
 }
 
 

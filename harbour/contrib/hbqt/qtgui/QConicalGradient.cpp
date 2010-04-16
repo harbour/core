@@ -84,7 +84,7 @@
 
 typedef struct
 {
-   void * ph;
+   QConicalGradient * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QConicalGradient;
@@ -119,7 +119,7 @@ void * hbqt_gcAllocate_QConicalGradient( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QConicalGradient * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QConicalGradient;
 
@@ -136,11 +136,11 @@ void * hbqt_gcAllocate_QConicalGradient( void * pObj, bool bNew )
 
 HB_FUNC( QT_QCONICALGRADIENT )
 {
-   void * pObj = NULL;
+   QConicalGradient * pObj = NULL;
 
-   pObj = ( QConicalGradient* ) new QConicalGradient() ;
+   pObj =  new QConicalGradient() ;
 
-   hb_retptrGC( hbqt_gcAllocate_QConicalGradient( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QConicalGradient( ( void * ) pObj, true ) );
 }
 
 /*
@@ -148,7 +148,13 @@ HB_FUNC( QT_QCONICALGRADIENT )
  */
 HB_FUNC( QT_QCONICALGRADIENT_ANGLE )
 {
-   hb_retnd( hbqt_par_QConicalGradient( 1 )->angle() );
+   QConicalGradient * p = hbqt_par_QConicalGradient( 1 );
+   if( p )
+      hb_retnd( ( p )->angle() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCONICALGRADIENT_ANGLE FP=hb_retnd( ( p )->angle() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -156,7 +162,13 @@ HB_FUNC( QT_QCONICALGRADIENT_ANGLE )
  */
 HB_FUNC( QT_QCONICALGRADIENT_CENTER )
 {
-   hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( hbqt_par_QConicalGradient( 1 )->center() ), true ) );
+   QConicalGradient * p = hbqt_par_QConicalGradient( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->center() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCONICALGRADIENT_CENTER FP=hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->center() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -164,7 +176,13 @@ HB_FUNC( QT_QCONICALGRADIENT_CENTER )
  */
 HB_FUNC( QT_QCONICALGRADIENT_SETANGLE )
 {
-   hbqt_par_QConicalGradient( 1 )->setAngle( hb_parnd( 2 ) );
+   QConicalGradient * p = hbqt_par_QConicalGradient( 1 );
+   if( p )
+      ( p )->setAngle( hb_parnd( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCONICALGRADIENT_SETANGLE FP=( p )->setAngle( hb_parnd( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -172,7 +190,13 @@ HB_FUNC( QT_QCONICALGRADIENT_SETANGLE )
  */
 HB_FUNC( QT_QCONICALGRADIENT_SETCENTER )
 {
-   hbqt_par_QConicalGradient( 1 )->setCenter( *hbqt_par_QPointF( 2 ) );
+   QConicalGradient * p = hbqt_par_QConicalGradient( 1 );
+   if( p )
+      ( p )->setCenter( *hbqt_par_QPointF( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCONICALGRADIENT_SETCENTER FP=( p )->setCenter( *hbqt_par_QPointF( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -180,7 +204,13 @@ HB_FUNC( QT_QCONICALGRADIENT_SETCENTER )
  */
 HB_FUNC( QT_QCONICALGRADIENT_SETCENTER_1 )
 {
-   hbqt_par_QConicalGradient( 1 )->setCenter( hb_parnd( 2 ), hb_parnd( 3 ) );
+   QConicalGradient * p = hbqt_par_QConicalGradient( 1 );
+   if( p )
+      ( p )->setCenter( hb_parnd( 2 ), hb_parnd( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCONICALGRADIENT_SETCENTER_1 FP=( p )->setCenter( hb_parnd( 2 ), hb_parnd( 3 ) ); p is NULL" ) );
+   }
 }
 
 

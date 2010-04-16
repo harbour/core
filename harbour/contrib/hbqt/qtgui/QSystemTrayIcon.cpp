@@ -83,43 +83,44 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QSystemTrayIcon > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QSystemTrayIcon > pq;
 } QGC_POINTER_QSystemTrayIcon;
 
 QT_G_FUNC( hbqt_gcRelease_QSystemTrayIcon )
 {
+   QSystemTrayIcon  * ph = NULL ;
    QGC_POINTER_QSystemTrayIcon * p = ( QGC_POINTER_QSystemTrayIcon * ) Cargo;
 
-   if( p && p->bNew )
+   if( p && p->bNew && p->ph )
    {
-      if( p->ph && p->pq )
+      ph = p->ph;
+      if( ph )
       {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QSystemTrayIcon   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
-            delete ( ( QSystemTrayIcon * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QSystemTrayIcon   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QSystemTrayIcon   /.\\   ", (void*) ph, (void*) p->ph ) );
+            delete ( p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QSystemTrayIcon   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QSystemTrayIcon          pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QSystemTrayIcon          ", ph ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QSystemTrayIcon    :     Object already deleted!", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QSystemTrayIcon    :     Object already deleted!", ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QSystemTrayIcon    :    Object not created with new=true", p->ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QSystemTrayIcon    :    Object not created with new=true", ph ) );
       p->ph = NULL;
    }
 }
@@ -128,13 +129,12 @@ void * hbqt_gcAllocate_QSystemTrayIcon( void * pObj, bool bNew )
 {
    QGC_POINTER_QSystemTrayIcon * p = ( QGC_POINTER_QSystemTrayIcon * ) hb_gcAllocate( sizeof( QGC_POINTER_QSystemTrayIcon ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QSystemTrayIcon >( ( QSystemTrayIcon * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QSystemTrayIcon;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QSystemTrayIcon >( ( QSystemTrayIcon * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QSystemTrayIcon  under p->pq", pObj ) );
    }
    else
@@ -146,11 +146,11 @@ void * hbqt_gcAllocate_QSystemTrayIcon( void * pObj, bool bNew )
 
 HB_FUNC( QT_QSYSTEMTRAYICON )
 {
-   void * pObj = NULL;
+   QSystemTrayIcon * pObj = NULL;
 
-   pObj = ( QSystemTrayIcon* ) new QSystemTrayIcon( hbqt_par_QObject( 1 ) ) ;
+   pObj =  new QSystemTrayIcon( hbqt_par_QObject( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QSystemTrayIcon( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QSystemTrayIcon( ( void * ) pObj, true ) );
 }
 
 /*
@@ -158,7 +158,13 @@ HB_FUNC( QT_QSYSTEMTRAYICON )
  */
 HB_FUNC( QT_QSYSTEMTRAYICON_CONTEXTMENU )
 {
-   hb_retptrGC( hbqt_gcAllocate_QMenu( hbqt_par_QSystemTrayIcon( 1 )->contextMenu(), false ) );
+   QSystemTrayIcon * p = hbqt_par_QSystemTrayIcon( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QMenu( ( p )->contextMenu(), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSYSTEMTRAYICON_CONTEXTMENU FP=hb_retptrGC( hbqt_gcAllocate_QMenu( ( p )->contextMenu(), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -166,7 +172,13 @@ HB_FUNC( QT_QSYSTEMTRAYICON_CONTEXTMENU )
  */
 HB_FUNC( QT_QSYSTEMTRAYICON_GEOMETRY )
 {
-   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QSystemTrayIcon( 1 )->geometry() ), true ) );
+   QSystemTrayIcon * p = hbqt_par_QSystemTrayIcon( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->geometry() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSYSTEMTRAYICON_GEOMETRY FP=hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->geometry() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -174,7 +186,13 @@ HB_FUNC( QT_QSYSTEMTRAYICON_GEOMETRY )
  */
 HB_FUNC( QT_QSYSTEMTRAYICON_ICON )
 {
-   hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( hbqt_par_QSystemTrayIcon( 1 )->icon() ), true ) );
+   QSystemTrayIcon * p = hbqt_par_QSystemTrayIcon( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( ( p )->icon() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSYSTEMTRAYICON_ICON FP=hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( ( p )->icon() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -182,7 +200,13 @@ HB_FUNC( QT_QSYSTEMTRAYICON_ICON )
  */
 HB_FUNC( QT_QSYSTEMTRAYICON_ISVISIBLE )
 {
-   hb_retl( hbqt_par_QSystemTrayIcon( 1 )->isVisible() );
+   QSystemTrayIcon * p = hbqt_par_QSystemTrayIcon( 1 );
+   if( p )
+      hb_retl( ( p )->isVisible() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSYSTEMTRAYICON_ISVISIBLE FP=hb_retl( ( p )->isVisible() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -190,7 +214,13 @@ HB_FUNC( QT_QSYSTEMTRAYICON_ISVISIBLE )
  */
 HB_FUNC( QT_QSYSTEMTRAYICON_SETCONTEXTMENU )
 {
-   hbqt_par_QSystemTrayIcon( 1 )->setContextMenu( hbqt_par_QMenu( 2 ) );
+   QSystemTrayIcon * p = hbqt_par_QSystemTrayIcon( 1 );
+   if( p )
+      ( p )->setContextMenu( hbqt_par_QMenu( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSYSTEMTRAYICON_SETCONTEXTMENU FP=( p )->setContextMenu( hbqt_par_QMenu( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -198,7 +228,13 @@ HB_FUNC( QT_QSYSTEMTRAYICON_SETCONTEXTMENU )
  */
 HB_FUNC( QT_QSYSTEMTRAYICON_SETICON )
 {
-   hbqt_par_QSystemTrayIcon( 1 )->setIcon( QIcon( hbqt_par_QString( 2 ) ) );
+   QSystemTrayIcon * p = hbqt_par_QSystemTrayIcon( 1 );
+   if( p )
+      ( p )->setIcon( QIcon( hbqt_par_QString( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSYSTEMTRAYICON_SETICON FP=( p )->setIcon( QIcon( hbqt_par_QString( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -206,7 +242,13 @@ HB_FUNC( QT_QSYSTEMTRAYICON_SETICON )
  */
 HB_FUNC( QT_QSYSTEMTRAYICON_SETTOOLTIP )
 {
-   hbqt_par_QSystemTrayIcon( 1 )->setToolTip( QSystemTrayIcon::tr( hb_parc( 2 ) ) );
+   QSystemTrayIcon * p = hbqt_par_QSystemTrayIcon( 1 );
+   if( p )
+      ( p )->setToolTip( QSystemTrayIcon::tr( hb_parc( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSYSTEMTRAYICON_SETTOOLTIP FP=( p )->setToolTip( QSystemTrayIcon::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -214,7 +256,13 @@ HB_FUNC( QT_QSYSTEMTRAYICON_SETTOOLTIP )
  */
 HB_FUNC( QT_QSYSTEMTRAYICON_SHOWMESSAGE )
 {
-   hbqt_par_QSystemTrayIcon( 1 )->showMessage( QSystemTrayIcon::tr( hb_parc( 2 ) ), QSystemTrayIcon::tr( hb_parc( 3 ) ), ( HB_ISNUM( 4 ) ? ( QSystemTrayIcon::MessageIcon ) hb_parni( 4 ) : ( QSystemTrayIcon::MessageIcon ) QSystemTrayIcon::Information ), ( HB_ISNUM( 5 ) ? hb_parni( 5 ) : 10000 ) );
+   QSystemTrayIcon * p = hbqt_par_QSystemTrayIcon( 1 );
+   if( p )
+      ( p )->showMessage( QSystemTrayIcon::tr( hb_parc( 2 ) ), QSystemTrayIcon::tr( hb_parc( 3 ) ), ( HB_ISNUM( 4 ) ? ( QSystemTrayIcon::MessageIcon ) hb_parni( 4 ) : ( QSystemTrayIcon::MessageIcon ) QSystemTrayIcon::Information ), ( HB_ISNUM( 5 ) ? hb_parni( 5 ) : 10000 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSYSTEMTRAYICON_SHOWMESSAGE FP=( p )->showMessage( QSystemTrayIcon::tr( hb_parc( 2 ) ), QSystemTrayIcon::tr( hb_parc( 3 ) ), ( HB_ISNUM( 4 ) ? ( QSystemTrayIcon::MessageIcon ) hb_parni( 4 ) : ( QSystemTrayIcon::MessageIcon ) QSystemTrayIcon::Information ), ( HB_ISNUM( 5 ) ? hb_parni( 5 ) : 10000 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -222,7 +270,13 @@ HB_FUNC( QT_QSYSTEMTRAYICON_SHOWMESSAGE )
  */
 HB_FUNC( QT_QSYSTEMTRAYICON_TOOLTIP )
 {
-   hb_retc( hbqt_par_QSystemTrayIcon( 1 )->toolTip().toAscii().data() );
+   QSystemTrayIcon * p = hbqt_par_QSystemTrayIcon( 1 );
+   if( p )
+      hb_retc( ( p )->toolTip().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSYSTEMTRAYICON_TOOLTIP FP=hb_retc( ( p )->toolTip().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -230,7 +284,13 @@ HB_FUNC( QT_QSYSTEMTRAYICON_TOOLTIP )
  */
 HB_FUNC( QT_QSYSTEMTRAYICON_ISSYSTEMTRAYAVAILABLE )
 {
-   hb_retl( hbqt_par_QSystemTrayIcon( 1 )->isSystemTrayAvailable() );
+   QSystemTrayIcon * p = hbqt_par_QSystemTrayIcon( 1 );
+   if( p )
+      hb_retl( ( p )->isSystemTrayAvailable() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSYSTEMTRAYICON_ISSYSTEMTRAYAVAILABLE FP=hb_retl( ( p )->isSystemTrayAvailable() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -238,7 +298,13 @@ HB_FUNC( QT_QSYSTEMTRAYICON_ISSYSTEMTRAYAVAILABLE )
  */
 HB_FUNC( QT_QSYSTEMTRAYICON_SUPPORTSMESSAGES )
 {
-   hb_retl( hbqt_par_QSystemTrayIcon( 1 )->supportsMessages() );
+   QSystemTrayIcon * p = hbqt_par_QSystemTrayIcon( 1 );
+   if( p )
+      hb_retl( ( p )->supportsMessages() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSYSTEMTRAYICON_SUPPORTSMESSAGES FP=hb_retl( ( p )->supportsMessages() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -246,7 +312,13 @@ HB_FUNC( QT_QSYSTEMTRAYICON_SUPPORTSMESSAGES )
  */
 HB_FUNC( QT_QSYSTEMTRAYICON_HIDE )
 {
-   hbqt_par_QSystemTrayIcon( 1 )->hide();
+   QSystemTrayIcon * p = hbqt_par_QSystemTrayIcon( 1 );
+   if( p )
+      ( p )->hide();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSYSTEMTRAYICON_HIDE FP=( p )->hide(); p is NULL" ) );
+   }
 }
 
 /*
@@ -254,7 +326,13 @@ HB_FUNC( QT_QSYSTEMTRAYICON_HIDE )
  */
 HB_FUNC( QT_QSYSTEMTRAYICON_SETVISIBLE )
 {
-   hbqt_par_QSystemTrayIcon( 1 )->setVisible( hb_parl( 2 ) );
+   QSystemTrayIcon * p = hbqt_par_QSystemTrayIcon( 1 );
+   if( p )
+      ( p )->setVisible( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSYSTEMTRAYICON_SETVISIBLE FP=( p )->setVisible( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -262,7 +340,13 @@ HB_FUNC( QT_QSYSTEMTRAYICON_SETVISIBLE )
  */
 HB_FUNC( QT_QSYSTEMTRAYICON_SHOW )
 {
-   hbqt_par_QSystemTrayIcon( 1 )->show();
+   QSystemTrayIcon * p = hbqt_par_QSystemTrayIcon( 1 );
+   if( p )
+      ( p )->show();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSYSTEMTRAYICON_SHOW FP=( p )->show(); p is NULL" ) );
+   }
 }
 
 

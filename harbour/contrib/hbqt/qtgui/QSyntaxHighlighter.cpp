@@ -79,10 +79,9 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QSyntaxHighlighter > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QSyntaxHighlighter > pq;
 } QGC_POINTER_QSyntaxHighlighter;
 
 QT_G_FUNC( hbqt_gcRelease_QSyntaxHighlighter )
@@ -100,13 +99,12 @@ void * hbqt_gcAllocate_QSyntaxHighlighter( void * pObj, bool bNew )
 {
    QGC_POINTER_QSyntaxHighlighter * p = ( QGC_POINTER_QSyntaxHighlighter * ) hb_gcAllocate( sizeof( QGC_POINTER_QSyntaxHighlighter ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QSyntaxHighlighter >( ( QSyntaxHighlighter * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QSyntaxHighlighter;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QSyntaxHighlighter >( ( QSyntaxHighlighter * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QSyntaxHighlighter  under p->pq", pObj ) );
    }
    else
@@ -118,6 +116,7 @@ void * hbqt_gcAllocate_QSyntaxHighlighter( void * pObj, bool bNew )
 
 HB_FUNC( QT_QSYNTAXHIGHLIGHTER )
 {
+
 }
 
 /*
@@ -125,7 +124,13 @@ HB_FUNC( QT_QSYNTAXHIGHLIGHTER )
  */
 HB_FUNC( QT_QSYNTAXHIGHLIGHTER_DOCUMENT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTextDocument( hbqt_par_QSyntaxHighlighter( 1 )->document(), false ) );
+   QSyntaxHighlighter * p = hbqt_par_QSyntaxHighlighter( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QTextDocument( ( p )->document(), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSYNTAXHIGHLIGHTER_DOCUMENT FP=hb_retptrGC( hbqt_gcAllocate_QTextDocument( ( p )->document(), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -133,7 +138,13 @@ HB_FUNC( QT_QSYNTAXHIGHLIGHTER_DOCUMENT )
  */
 HB_FUNC( QT_QSYNTAXHIGHLIGHTER_SETDOCUMENT )
 {
-   hbqt_par_QSyntaxHighlighter( 1 )->setDocument( hbqt_par_QTextDocument( 2 ) );
+   QSyntaxHighlighter * p = hbqt_par_QSyntaxHighlighter( 1 );
+   if( p )
+      ( p )->setDocument( hbqt_par_QTextDocument( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSYNTAXHIGHLIGHTER_SETDOCUMENT FP=( p )->setDocument( hbqt_par_QTextDocument( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -141,7 +152,13 @@ HB_FUNC( QT_QSYNTAXHIGHLIGHTER_SETDOCUMENT )
  */
 HB_FUNC( QT_QSYNTAXHIGHLIGHTER_REHIGHLIGHT )
 {
-   hbqt_par_QSyntaxHighlighter( 1 )->rehighlight();
+   QSyntaxHighlighter * p = hbqt_par_QSyntaxHighlighter( 1 );
+   if( p )
+      ( p )->rehighlight();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSYNTAXHIGHLIGHTER_REHIGHLIGHT FP=( p )->rehighlight(); p is NULL" ) );
+   }
 }
 
 

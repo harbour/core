@@ -78,43 +78,44 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QBuffer > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QBuffer > pq;
 } QGC_POINTER_QBuffer;
 
 QT_G_FUNC( hbqt_gcRelease_QBuffer )
 {
+   QBuffer  * ph = NULL ;
    QGC_POINTER_QBuffer * p = ( QGC_POINTER_QBuffer * ) Cargo;
 
-   if( p && p->bNew )
+   if( p && p->bNew && p->ph )
    {
-      if( p->ph && p->pq )
+      ph = p->ph;
+      if( ph )
       {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QBuffer   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
-            delete ( ( QBuffer * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QBuffer   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QBuffer   /.\\   ", (void*) ph, (void*) p->ph ) );
+            delete ( p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QBuffer   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QBuffer          pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QBuffer          ", ph ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QBuffer    :     Object already deleted!", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QBuffer    :     Object already deleted!", ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QBuffer    :    Object not created with new=true", p->ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QBuffer    :    Object not created with new=true", ph ) );
       p->ph = NULL;
    }
 }
@@ -123,13 +124,12 @@ void * hbqt_gcAllocate_QBuffer( void * pObj, bool bNew )
 {
    QGC_POINTER_QBuffer * p = ( QGC_POINTER_QBuffer * ) hb_gcAllocate( sizeof( QGC_POINTER_QBuffer ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QBuffer >( ( QBuffer * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QBuffer;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QBuffer >( ( QBuffer * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QBuffer  under p->pq", pObj ) );
    }
    else
@@ -141,11 +141,11 @@ void * hbqt_gcAllocate_QBuffer( void * pObj, bool bNew )
 
 HB_FUNC( QT_QBUFFER )
 {
-   void * pObj = NULL;
+   QBuffer * pObj = NULL;
 
    pObj = new QBuffer() ;
 
-   hb_retptrGC( hbqt_gcAllocate_QBuffer( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QBuffer( ( void * ) pObj, true ) );
 }
 
 /*
@@ -153,7 +153,13 @@ HB_FUNC( QT_QBUFFER )
  */
 HB_FUNC( QT_QBUFFER_BUFFER )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QBuffer( 1 )->buffer() ), true ) );
+   QBuffer * p = hbqt_par_QBuffer( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->buffer() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBUFFER_BUFFER FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->buffer() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -161,7 +167,13 @@ HB_FUNC( QT_QBUFFER_BUFFER )
  */
 HB_FUNC( QT_QBUFFER_BUFFER_1 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QBuffer( 1 )->buffer() ), true ) );
+   QBuffer * p = hbqt_par_QBuffer( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->buffer() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBUFFER_BUFFER_1 FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->buffer() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -169,7 +181,13 @@ HB_FUNC( QT_QBUFFER_BUFFER_1 )
  */
 HB_FUNC( QT_QBUFFER_DATA )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QBuffer( 1 )->data() ), true ) );
+   QBuffer * p = hbqt_par_QBuffer( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->data() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBUFFER_DATA FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->data() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -177,7 +195,13 @@ HB_FUNC( QT_QBUFFER_DATA )
  */
 HB_FUNC( QT_QBUFFER_SETBUFFER )
 {
-   hbqt_par_QBuffer( 1 )->setBuffer( hbqt_par_QByteArray( 2 ) );
+   QBuffer * p = hbqt_par_QBuffer( 1 );
+   if( p )
+      ( p )->setBuffer( hbqt_par_QByteArray( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBUFFER_SETBUFFER FP=( p )->setBuffer( hbqt_par_QByteArray( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -185,7 +209,13 @@ HB_FUNC( QT_QBUFFER_SETBUFFER )
  */
 HB_FUNC( QT_QBUFFER_SETDATA )
 {
-   hbqt_par_QBuffer( 1 )->setData( hbqt_par_char( 2 ), hb_parni( 3 ) );
+   QBuffer * p = hbqt_par_QBuffer( 1 );
+   if( p )
+      ( p )->setData( hbqt_par_char( 2 ), hb_parni( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBUFFER_SETDATA FP=( p )->setData( hbqt_par_char( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -193,7 +223,13 @@ HB_FUNC( QT_QBUFFER_SETDATA )
  */
 HB_FUNC( QT_QBUFFER_SETDATA_1 )
 {
-   hbqt_par_QBuffer( 1 )->setData( *hbqt_par_QByteArray( 2 ) );
+   QBuffer * p = hbqt_par_QBuffer( 1 );
+   if( p )
+      ( p )->setData( *hbqt_par_QByteArray( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBUFFER_SETDATA_1 FP=( p )->setData( *hbqt_par_QByteArray( 2 ) ); p is NULL" ) );
+   }
 }
 
 

@@ -97,43 +97,44 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QStandardItemModel > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QStandardItemModel > pq;
 } QGC_POINTER_QStandardItemModel;
 
 QT_G_FUNC( hbqt_gcRelease_QStandardItemModel )
 {
+   QStandardItemModel  * ph = NULL ;
    QGC_POINTER_QStandardItemModel * p = ( QGC_POINTER_QStandardItemModel * ) Cargo;
 
-   if( p && p->bNew )
+   if( p && p->bNew && p->ph )
    {
-      if( p->ph && p->pq )
+      ph = p->ph;
+      if( ph )
       {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QStandardItemModel   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
-            delete ( ( QStandardItemModel * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QStandardItemModel   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QStandardItemModel   /.\\   ", (void*) ph, (void*) p->ph ) );
+            delete ( p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QStandardItemModel   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QStandardItemModel          pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QStandardItemModel          ", ph ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QStandardItemModel    :     Object already deleted!", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QStandardItemModel    :     Object already deleted!", ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QStandardItemModel    :    Object not created with new=true", p->ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QStandardItemModel    :    Object not created with new=true", ph ) );
       p->ph = NULL;
    }
 }
@@ -142,13 +143,12 @@ void * hbqt_gcAllocate_QStandardItemModel( void * pObj, bool bNew )
 {
    QGC_POINTER_QStandardItemModel * p = ( QGC_POINTER_QStandardItemModel * ) hb_gcAllocate( sizeof( QGC_POINTER_QStandardItemModel ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QStandardItemModel >( ( QStandardItemModel * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStandardItemModel;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QStandardItemModel >( ( QStandardItemModel * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QStandardItemModel  under p->pq", pObj ) );
    }
    else
@@ -160,11 +160,11 @@ void * hbqt_gcAllocate_QStandardItemModel( void * pObj, bool bNew )
 
 HB_FUNC( QT_QSTANDARDITEMMODEL )
 {
-   void * pObj = NULL;
+   QStandardItemModel * pObj = NULL;
 
-   pObj = ( QStandardItemModel* ) new QStandardItemModel( hbqt_par_QObject( 1 ) ) ;
+   pObj =  new QStandardItemModel( hbqt_par_QObject( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QStandardItemModel( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QStandardItemModel( ( void * ) pObj, true ) );
 }
 
 /*
@@ -172,7 +172,13 @@ HB_FUNC( QT_QSTANDARDITEMMODEL )
  */
 HB_FUNC( QT_QSTANDARDITEMMODEL_APPENDROW )
 {
-   hbqt_par_QStandardItemModel( 1 )->appendRow( hbqt_par_QStandardItem( 2 ) );
+   QStandardItemModel * p = hbqt_par_QStandardItemModel( 1 );
+   if( p )
+      ( p )->appendRow( hbqt_par_QStandardItem( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEMMODEL_APPENDROW FP=( p )->appendRow( hbqt_par_QStandardItem( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -180,7 +186,13 @@ HB_FUNC( QT_QSTANDARDITEMMODEL_APPENDROW )
  */
 HB_FUNC( QT_QSTANDARDITEMMODEL_CLEAR )
 {
-   hbqt_par_QStandardItemModel( 1 )->clear();
+   QStandardItemModel * p = hbqt_par_QStandardItemModel( 1 );
+   if( p )
+      ( p )->clear();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEMMODEL_CLEAR FP=( p )->clear(); p is NULL" ) );
+   }
 }
 
 /*
@@ -188,7 +200,13 @@ HB_FUNC( QT_QSTANDARDITEMMODEL_CLEAR )
  */
 HB_FUNC( QT_QSTANDARDITEMMODEL_HORIZONTALHEADERITEM )
 {
-   hb_retptrGC( hbqt_gcAllocate_QStandardItem( hbqt_par_QStandardItemModel( 1 )->horizontalHeaderItem( hb_parni( 2 ) ), false ) );
+   QStandardItemModel * p = hbqt_par_QStandardItemModel( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QStandardItem( ( p )->horizontalHeaderItem( hb_parni( 2 ) ), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEMMODEL_HORIZONTALHEADERITEM FP=hb_retptrGC( hbqt_gcAllocate_QStandardItem( ( p )->horizontalHeaderItem( hb_parni( 2 ) ), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -196,7 +214,13 @@ HB_FUNC( QT_QSTANDARDITEMMODEL_HORIZONTALHEADERITEM )
  */
 HB_FUNC( QT_QSTANDARDITEMMODEL_INDEXFROMITEM )
 {
-   hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QStandardItemModel( 1 )->indexFromItem( hbqt_par_QStandardItem( 2 ) ) ), true ) );
+   QStandardItemModel * p = hbqt_par_QStandardItemModel( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( ( p )->indexFromItem( hbqt_par_QStandardItem( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEMMODEL_INDEXFROMITEM FP=hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( ( p )->indexFromItem( hbqt_par_QStandardItem( 2 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -204,7 +228,13 @@ HB_FUNC( QT_QSTANDARDITEMMODEL_INDEXFROMITEM )
  */
 HB_FUNC( QT_QSTANDARDITEMMODEL_INSERTCOLUMN )
 {
-   hb_retl( hbqt_par_QStandardItemModel( 1 )->insertColumn( hb_parni( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QModelIndex( 3 ) : QModelIndex() ) ) );
+   QStandardItemModel * p = hbqt_par_QStandardItemModel( 1 );
+   if( p )
+      hb_retl( ( p )->insertColumn( hb_parni( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QModelIndex( 3 ) : QModelIndex() ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEMMODEL_INSERTCOLUMN FP=hb_retl( ( p )->insertColumn( hb_parni( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QModelIndex( 3 ) : QModelIndex() ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -212,7 +242,13 @@ HB_FUNC( QT_QSTANDARDITEMMODEL_INSERTCOLUMN )
  */
 HB_FUNC( QT_QSTANDARDITEMMODEL_INSERTROW )
 {
-   hb_retl( hbqt_par_QStandardItemModel( 1 )->insertRow( hb_parni( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QModelIndex( 3 ) : QModelIndex() ) ) );
+   QStandardItemModel * p = hbqt_par_QStandardItemModel( 1 );
+   if( p )
+      hb_retl( ( p )->insertRow( hb_parni( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QModelIndex( 3 ) : QModelIndex() ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEMMODEL_INSERTROW FP=hb_retl( ( p )->insertRow( hb_parni( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QModelIndex( 3 ) : QModelIndex() ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -220,7 +256,13 @@ HB_FUNC( QT_QSTANDARDITEMMODEL_INSERTROW )
  */
 HB_FUNC( QT_QSTANDARDITEMMODEL_INSERTROW_1 )
 {
-   hbqt_par_QStandardItemModel( 1 )->insertRow( hb_parni( 2 ), hbqt_par_QStandardItem( 3 ) );
+   QStandardItemModel * p = hbqt_par_QStandardItemModel( 1 );
+   if( p )
+      ( p )->insertRow( hb_parni( 2 ), hbqt_par_QStandardItem( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEMMODEL_INSERTROW_1 FP=( p )->insertRow( hb_parni( 2 ), hbqt_par_QStandardItem( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -228,7 +270,13 @@ HB_FUNC( QT_QSTANDARDITEMMODEL_INSERTROW_1 )
  */
 HB_FUNC( QT_QSTANDARDITEMMODEL_INVISIBLEROOTITEM )
 {
-   hb_retptrGC( hbqt_gcAllocate_QStandardItem( hbqt_par_QStandardItemModel( 1 )->invisibleRootItem(), false ) );
+   QStandardItemModel * p = hbqt_par_QStandardItemModel( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QStandardItem( ( p )->invisibleRootItem(), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEMMODEL_INVISIBLEROOTITEM FP=hb_retptrGC( hbqt_gcAllocate_QStandardItem( ( p )->invisibleRootItem(), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -236,7 +284,13 @@ HB_FUNC( QT_QSTANDARDITEMMODEL_INVISIBLEROOTITEM )
  */
 HB_FUNC( QT_QSTANDARDITEMMODEL_ITEM )
 {
-   hb_retptrGC( hbqt_gcAllocate_QStandardItem( hbqt_par_QStandardItemModel( 1 )->item( hb_parni( 2 ), hb_parni( 3 ) ), false ) );
+   QStandardItemModel * p = hbqt_par_QStandardItemModel( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QStandardItem( ( p )->item( hb_parni( 2 ), hb_parni( 3 ) ), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEMMODEL_ITEM FP=hb_retptrGC( hbqt_gcAllocate_QStandardItem( ( p )->item( hb_parni( 2 ), hb_parni( 3 ) ), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -244,7 +298,13 @@ HB_FUNC( QT_QSTANDARDITEMMODEL_ITEM )
  */
 HB_FUNC( QT_QSTANDARDITEMMODEL_ITEMFROMINDEX )
 {
-   hb_retptrGC( hbqt_gcAllocate_QStandardItem( hbqt_par_QStandardItemModel( 1 )->itemFromIndex( *hbqt_par_QModelIndex( 2 ) ), false ) );
+   QStandardItemModel * p = hbqt_par_QStandardItemModel( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QStandardItem( ( p )->itemFromIndex( *hbqt_par_QModelIndex( 2 ) ), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEMMODEL_ITEMFROMINDEX FP=hb_retptrGC( hbqt_gcAllocate_QStandardItem( ( p )->itemFromIndex( *hbqt_par_QModelIndex( 2 ) ), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -252,7 +312,13 @@ HB_FUNC( QT_QSTANDARDITEMMODEL_ITEMFROMINDEX )
  */
 HB_FUNC( QT_QSTANDARDITEMMODEL_SETCOLUMNCOUNT )
 {
-   hbqt_par_QStandardItemModel( 1 )->setColumnCount( hb_parni( 2 ) );
+   QStandardItemModel * p = hbqt_par_QStandardItemModel( 1 );
+   if( p )
+      ( p )->setColumnCount( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEMMODEL_SETCOLUMNCOUNT FP=( p )->setColumnCount( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -260,7 +326,13 @@ HB_FUNC( QT_QSTANDARDITEMMODEL_SETCOLUMNCOUNT )
  */
 HB_FUNC( QT_QSTANDARDITEMMODEL_SETHORIZONTALHEADERITEM )
 {
-   hbqt_par_QStandardItemModel( 1 )->setHorizontalHeaderItem( hb_parni( 2 ), hbqt_par_QStandardItem( 3 ) );
+   QStandardItemModel * p = hbqt_par_QStandardItemModel( 1 );
+   if( p )
+      ( p )->setHorizontalHeaderItem( hb_parni( 2 ), hbqt_par_QStandardItem( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEMMODEL_SETHORIZONTALHEADERITEM FP=( p )->setHorizontalHeaderItem( hb_parni( 2 ), hbqt_par_QStandardItem( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -268,7 +340,13 @@ HB_FUNC( QT_QSTANDARDITEMMODEL_SETHORIZONTALHEADERITEM )
  */
 HB_FUNC( QT_QSTANDARDITEMMODEL_SETHORIZONTALHEADERLABELS )
 {
-   hbqt_par_QStandardItemModel( 1 )->setHorizontalHeaderLabels( *hbqt_par_QStringList( 2 ) );
+   QStandardItemModel * p = hbqt_par_QStandardItemModel( 1 );
+   if( p )
+      ( p )->setHorizontalHeaderLabels( *hbqt_par_QStringList( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEMMODEL_SETHORIZONTALHEADERLABELS FP=( p )->setHorizontalHeaderLabels( *hbqt_par_QStringList( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -276,7 +354,13 @@ HB_FUNC( QT_QSTANDARDITEMMODEL_SETHORIZONTALHEADERLABELS )
  */
 HB_FUNC( QT_QSTANDARDITEMMODEL_SETITEM )
 {
-   hbqt_par_QStandardItemModel( 1 )->setItem( hb_parni( 2 ), hb_parni( 3 ), hbqt_par_QStandardItem( 4 ) );
+   QStandardItemModel * p = hbqt_par_QStandardItemModel( 1 );
+   if( p )
+      ( p )->setItem( hb_parni( 2 ), hb_parni( 3 ), hbqt_par_QStandardItem( 4 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEMMODEL_SETITEM FP=( p )->setItem( hb_parni( 2 ), hb_parni( 3 ), hbqt_par_QStandardItem( 4 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -284,7 +368,13 @@ HB_FUNC( QT_QSTANDARDITEMMODEL_SETITEM )
  */
 HB_FUNC( QT_QSTANDARDITEMMODEL_SETITEM_1 )
 {
-   hbqt_par_QStandardItemModel( 1 )->setItem( hb_parni( 2 ), hbqt_par_QStandardItem( 3 ) );
+   QStandardItemModel * p = hbqt_par_QStandardItemModel( 1 );
+   if( p )
+      ( p )->setItem( hb_parni( 2 ), hbqt_par_QStandardItem( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEMMODEL_SETITEM_1 FP=( p )->setItem( hb_parni( 2 ), hbqt_par_QStandardItem( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -292,7 +382,13 @@ HB_FUNC( QT_QSTANDARDITEMMODEL_SETITEM_1 )
  */
 HB_FUNC( QT_QSTANDARDITEMMODEL_SETITEMPROTOTYPE )
 {
-   hbqt_par_QStandardItemModel( 1 )->setItemPrototype( hbqt_par_QStandardItem( 2 ) );
+   QStandardItemModel * p = hbqt_par_QStandardItemModel( 1 );
+   if( p )
+      ( p )->setItemPrototype( hbqt_par_QStandardItem( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEMMODEL_SETITEMPROTOTYPE FP=( p )->setItemPrototype( hbqt_par_QStandardItem( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -300,7 +396,13 @@ HB_FUNC( QT_QSTANDARDITEMMODEL_SETITEMPROTOTYPE )
  */
 HB_FUNC( QT_QSTANDARDITEMMODEL_SETROWCOUNT )
 {
-   hbqt_par_QStandardItemModel( 1 )->setRowCount( hb_parni( 2 ) );
+   QStandardItemModel * p = hbqt_par_QStandardItemModel( 1 );
+   if( p )
+      ( p )->setRowCount( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEMMODEL_SETROWCOUNT FP=( p )->setRowCount( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -308,7 +410,13 @@ HB_FUNC( QT_QSTANDARDITEMMODEL_SETROWCOUNT )
  */
 HB_FUNC( QT_QSTANDARDITEMMODEL_SETSORTROLE )
 {
-   hbqt_par_QStandardItemModel( 1 )->setSortRole( hb_parni( 2 ) );
+   QStandardItemModel * p = hbqt_par_QStandardItemModel( 1 );
+   if( p )
+      ( p )->setSortRole( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEMMODEL_SETSORTROLE FP=( p )->setSortRole( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -316,7 +424,13 @@ HB_FUNC( QT_QSTANDARDITEMMODEL_SETSORTROLE )
  */
 HB_FUNC( QT_QSTANDARDITEMMODEL_SETVERTICALHEADERITEM )
 {
-   hbqt_par_QStandardItemModel( 1 )->setVerticalHeaderItem( hb_parni( 2 ), hbqt_par_QStandardItem( 3 ) );
+   QStandardItemModel * p = hbqt_par_QStandardItemModel( 1 );
+   if( p )
+      ( p )->setVerticalHeaderItem( hb_parni( 2 ), hbqt_par_QStandardItem( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEMMODEL_SETVERTICALHEADERITEM FP=( p )->setVerticalHeaderItem( hb_parni( 2 ), hbqt_par_QStandardItem( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -324,7 +438,13 @@ HB_FUNC( QT_QSTANDARDITEMMODEL_SETVERTICALHEADERITEM )
  */
 HB_FUNC( QT_QSTANDARDITEMMODEL_SETVERTICALHEADERLABELS )
 {
-   hbqt_par_QStandardItemModel( 1 )->setVerticalHeaderLabels( *hbqt_par_QStringList( 2 ) );
+   QStandardItemModel * p = hbqt_par_QStandardItemModel( 1 );
+   if( p )
+      ( p )->setVerticalHeaderLabels( *hbqt_par_QStringList( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEMMODEL_SETVERTICALHEADERLABELS FP=( p )->setVerticalHeaderLabels( *hbqt_par_QStringList( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -332,7 +452,13 @@ HB_FUNC( QT_QSTANDARDITEMMODEL_SETVERTICALHEADERLABELS )
  */
 HB_FUNC( QT_QSTANDARDITEMMODEL_SORTROLE )
 {
-   hb_retni( hbqt_par_QStandardItemModel( 1 )->sortRole() );
+   QStandardItemModel * p = hbqt_par_QStandardItemModel( 1 );
+   if( p )
+      hb_retni( ( p )->sortRole() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEMMODEL_SORTROLE FP=hb_retni( ( p )->sortRole() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -340,7 +466,13 @@ HB_FUNC( QT_QSTANDARDITEMMODEL_SORTROLE )
  */
 HB_FUNC( QT_QSTANDARDITEMMODEL_TAKEHORIZONTALHEADERITEM )
 {
-   hb_retptrGC( hbqt_gcAllocate_QStandardItem( hbqt_par_QStandardItemModel( 1 )->takeHorizontalHeaderItem( hb_parni( 2 ) ), false ) );
+   QStandardItemModel * p = hbqt_par_QStandardItemModel( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QStandardItem( ( p )->takeHorizontalHeaderItem( hb_parni( 2 ) ), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEMMODEL_TAKEHORIZONTALHEADERITEM FP=hb_retptrGC( hbqt_gcAllocate_QStandardItem( ( p )->takeHorizontalHeaderItem( hb_parni( 2 ) ), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -348,7 +480,13 @@ HB_FUNC( QT_QSTANDARDITEMMODEL_TAKEHORIZONTALHEADERITEM )
  */
 HB_FUNC( QT_QSTANDARDITEMMODEL_TAKEITEM )
 {
-   hb_retptrGC( hbqt_gcAllocate_QStandardItem( hbqt_par_QStandardItemModel( 1 )->takeItem( hb_parni( 2 ), hb_parni( 3 ) ), false ) );
+   QStandardItemModel * p = hbqt_par_QStandardItemModel( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QStandardItem( ( p )->takeItem( hb_parni( 2 ), hb_parni( 3 ) ), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEMMODEL_TAKEITEM FP=hb_retptrGC( hbqt_gcAllocate_QStandardItem( ( p )->takeItem( hb_parni( 2 ), hb_parni( 3 ) ), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -356,7 +494,13 @@ HB_FUNC( QT_QSTANDARDITEMMODEL_TAKEITEM )
  */
 HB_FUNC( QT_QSTANDARDITEMMODEL_TAKEVERTICALHEADERITEM )
 {
-   hb_retptrGC( hbqt_gcAllocate_QStandardItem( hbqt_par_QStandardItemModel( 1 )->takeVerticalHeaderItem( hb_parni( 2 ) ), false ) );
+   QStandardItemModel * p = hbqt_par_QStandardItemModel( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QStandardItem( ( p )->takeVerticalHeaderItem( hb_parni( 2 ) ), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEMMODEL_TAKEVERTICALHEADERITEM FP=hb_retptrGC( hbqt_gcAllocate_QStandardItem( ( p )->takeVerticalHeaderItem( hb_parni( 2 ) ), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -364,7 +508,13 @@ HB_FUNC( QT_QSTANDARDITEMMODEL_TAKEVERTICALHEADERITEM )
  */
 HB_FUNC( QT_QSTANDARDITEMMODEL_VERTICALHEADERITEM )
 {
-   hb_retptrGC( hbqt_gcAllocate_QStandardItem( hbqt_par_QStandardItemModel( 1 )->verticalHeaderItem( hb_parni( 2 ) ), false ) );
+   QStandardItemModel * p = hbqt_par_QStandardItemModel( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QStandardItem( ( p )->verticalHeaderItem( hb_parni( 2 ) ), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEMMODEL_VERTICALHEADERITEM FP=hb_retptrGC( hbqt_gcAllocate_QStandardItem( ( p )->verticalHeaderItem( hb_parni( 2 ) ), false ) ); p is NULL" ) );
+   }
 }
 
 

@@ -80,10 +80,9 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QValidator > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QValidator > pq;
 } QGC_POINTER_QValidator;
 
 QT_G_FUNC( hbqt_gcRelease_QValidator )
@@ -101,13 +100,12 @@ void * hbqt_gcAllocate_QValidator( void * pObj, bool bNew )
 {
    QGC_POINTER_QValidator * p = ( QGC_POINTER_QValidator * ) hb_gcAllocate( sizeof( QGC_POINTER_QValidator ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QValidator >( ( QValidator * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QValidator;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QValidator >( ( QValidator * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QValidator  under p->pq", pObj ) );
    }
    else
@@ -119,6 +117,7 @@ void * hbqt_gcAllocate_QValidator( void * pObj, bool bNew )
 
 HB_FUNC( QT_QVALIDATOR )
 {
+   // hb_retptr( new QValidator() );
 }
 
 /*
@@ -126,7 +125,13 @@ HB_FUNC( QT_QVALIDATOR )
  */
 HB_FUNC( QT_QVALIDATOR_LOCALE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QLocale( new QLocale( hbqt_par_QValidator( 1 )->locale() ), true ) );
+   QValidator * p = hbqt_par_QValidator( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QLocale( new QLocale( ( p )->locale() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QVALIDATOR_LOCALE FP=hb_retptrGC( hbqt_gcAllocate_QLocale( new QLocale( ( p )->locale() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -134,7 +139,13 @@ HB_FUNC( QT_QVALIDATOR_LOCALE )
  */
 HB_FUNC( QT_QVALIDATOR_SETLOCALE )
 {
-   hbqt_par_QValidator( 1 )->setLocale( *hbqt_par_QLocale( 2 ) );
+   QValidator * p = hbqt_par_QValidator( 1 );
+   if( p )
+      ( p )->setLocale( *hbqt_par_QLocale( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QVALIDATOR_SETLOCALE FP=( p )->setLocale( *hbqt_par_QLocale( 2 ) ); p is NULL" ) );
+   }
 }
 
 

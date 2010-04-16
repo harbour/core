@@ -76,7 +76,7 @@
 
 typedef struct
 {
-   void * ph;
+   QItemSelection * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QItemSelection;
@@ -111,7 +111,7 @@ void * hbqt_gcAllocate_QItemSelection( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QItemSelection * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QItemSelection;
 
@@ -128,11 +128,11 @@ void * hbqt_gcAllocate_QItemSelection( void * pObj, bool bNew )
 
 HB_FUNC( QT_QITEMSELECTION )
 {
-   void * pObj = NULL;
+   QItemSelection * pObj = NULL;
 
    pObj = new QItemSelection() ;
 
-   hb_retptrGC( hbqt_gcAllocate_QItemSelection( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QItemSelection( ( void * ) pObj, true ) );
 }
 
 /*
@@ -140,7 +140,13 @@ HB_FUNC( QT_QITEMSELECTION )
  */
 HB_FUNC( QT_QITEMSELECTION_CONTAINS )
 {
-   hb_retl( hbqt_par_QItemSelection( 1 )->contains( *hbqt_par_QModelIndex( 2 ) ) );
+   QItemSelection * p = hbqt_par_QItemSelection( 1 );
+   if( p )
+      hb_retl( ( p )->contains( *hbqt_par_QModelIndex( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QITEMSELECTION_CONTAINS FP=hb_retl( ( p )->contains( *hbqt_par_QModelIndex( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -148,7 +154,13 @@ HB_FUNC( QT_QITEMSELECTION_CONTAINS )
  */
 HB_FUNC( QT_QITEMSELECTION_MERGE )
 {
-   hbqt_par_QItemSelection( 1 )->merge( *hbqt_par_QItemSelection( 2 ), ( QItemSelectionModel::SelectionFlags ) hb_parni( 3 ) );
+   QItemSelection * p = hbqt_par_QItemSelection( 1 );
+   if( p )
+      ( p )->merge( *hbqt_par_QItemSelection( 2 ), ( QItemSelectionModel::SelectionFlags ) hb_parni( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QITEMSELECTION_MERGE FP=( p )->merge( *hbqt_par_QItemSelection( 2 ), ( QItemSelectionModel::SelectionFlags ) hb_parni( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -156,7 +168,13 @@ HB_FUNC( QT_QITEMSELECTION_MERGE )
  */
 HB_FUNC( QT_QITEMSELECTION_SELECT )
 {
-   hbqt_par_QItemSelection( 1 )->select( *hbqt_par_QModelIndex( 2 ), *hbqt_par_QModelIndex( 3 ) );
+   QItemSelection * p = hbqt_par_QItemSelection( 1 );
+   if( p )
+      ( p )->select( *hbqt_par_QModelIndex( 2 ), *hbqt_par_QModelIndex( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QITEMSELECTION_SELECT FP=( p )->select( *hbqt_par_QModelIndex( 2 ), *hbqt_par_QModelIndex( 3 ) ); p is NULL" ) );
+   }
 }
 
 

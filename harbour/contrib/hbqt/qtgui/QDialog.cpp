@@ -81,43 +81,44 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QDialog > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QDialog > pq;
 } QGC_POINTER_QDialog;
 
 QT_G_FUNC( hbqt_gcRelease_QDialog )
 {
+   QDialog  * ph = NULL ;
    QGC_POINTER_QDialog * p = ( QGC_POINTER_QDialog * ) Cargo;
 
-   if( p && p->bNew )
+   if( p && p->bNew && p->ph )
    {
-      if( p->ph && p->pq )
+      ph = p->ph;
+      if( ph )
       {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QDialog   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
-            delete ( ( QDialog * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QDialog   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QDialog   /.\\   ", (void*) ph, (void*) p->ph ) );
+            delete ( p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QDialog   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QDialog          pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QDialog          ", ph ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QDialog    :     Object already deleted!", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QDialog    :     Object already deleted!", ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QDialog    :    Object not created with new=true", p->ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QDialog    :    Object not created with new=true", ph ) );
       p->ph = NULL;
    }
 }
@@ -126,13 +127,12 @@ void * hbqt_gcAllocate_QDialog( void * pObj, bool bNew )
 {
    QGC_POINTER_QDialog * p = ( QGC_POINTER_QDialog * ) hb_gcAllocate( sizeof( QGC_POINTER_QDialog ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QDialog >( ( QDialog * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QDialog;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QDialog >( ( QDialog * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QDialog  under p->pq", pObj ) );
    }
    else
@@ -144,11 +144,11 @@ void * hbqt_gcAllocate_QDialog( void * pObj, bool bNew )
 
 HB_FUNC( QT_QDIALOG )
 {
-   void * pObj = NULL;
+   QDialog * pObj = NULL;
 
    pObj = new QDialog( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QDialog( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QDialog( ( void * ) pObj, true ) );
 }
 
 /*
@@ -156,7 +156,13 @@ HB_FUNC( QT_QDIALOG )
  */
 HB_FUNC( QT_QDIALOG_ISSIZEGRIPENABLED )
 {
-   hb_retl( hbqt_par_QDialog( 1 )->isSizeGripEnabled() );
+   QDialog * p = hbqt_par_QDialog( 1 );
+   if( p )
+      hb_retl( ( p )->isSizeGripEnabled() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIALOG_ISSIZEGRIPENABLED FP=hb_retl( ( p )->isSizeGripEnabled() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -164,7 +170,13 @@ HB_FUNC( QT_QDIALOG_ISSIZEGRIPENABLED )
  */
 HB_FUNC( QT_QDIALOG_RESULT )
 {
-   hb_retni( hbqt_par_QDialog( 1 )->result() );
+   QDialog * p = hbqt_par_QDialog( 1 );
+   if( p )
+      hb_retni( ( p )->result() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIALOG_RESULT FP=hb_retni( ( p )->result() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -172,7 +184,13 @@ HB_FUNC( QT_QDIALOG_RESULT )
  */
 HB_FUNC( QT_QDIALOG_SETMODAL )
 {
-   hbqt_par_QDialog( 1 )->setModal( hb_parl( 2 ) );
+   QDialog * p = hbqt_par_QDialog( 1 );
+   if( p )
+      ( p )->setModal( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIALOG_SETMODAL FP=( p )->setModal( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -180,7 +198,13 @@ HB_FUNC( QT_QDIALOG_SETMODAL )
  */
 HB_FUNC( QT_QDIALOG_SETRESULT )
 {
-   hbqt_par_QDialog( 1 )->setResult( hb_parni( 2 ) );
+   QDialog * p = hbqt_par_QDialog( 1 );
+   if( p )
+      ( p )->setResult( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIALOG_SETRESULT FP=( p )->setResult( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -188,7 +212,13 @@ HB_FUNC( QT_QDIALOG_SETRESULT )
  */
 HB_FUNC( QT_QDIALOG_SETSIZEGRIPENABLED )
 {
-   hbqt_par_QDialog( 1 )->setSizeGripEnabled( hb_parl( 2 ) );
+   QDialog * p = hbqt_par_QDialog( 1 );
+   if( p )
+      ( p )->setSizeGripEnabled( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIALOG_SETSIZEGRIPENABLED FP=( p )->setSizeGripEnabled( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -196,7 +226,13 @@ HB_FUNC( QT_QDIALOG_SETSIZEGRIPENABLED )
  */
 HB_FUNC( QT_QDIALOG_ACCEPT )
 {
-   hbqt_par_QDialog( 1 )->accept();
+   QDialog * p = hbqt_par_QDialog( 1 );
+   if( p )
+      ( p )->accept();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIALOG_ACCEPT FP=( p )->accept(); p is NULL" ) );
+   }
 }
 
 /*
@@ -204,7 +240,13 @@ HB_FUNC( QT_QDIALOG_ACCEPT )
  */
 HB_FUNC( QT_QDIALOG_DONE )
 {
-   hbqt_par_QDialog( 1 )->done( hb_parni( 2 ) );
+   QDialog * p = hbqt_par_QDialog( 1 );
+   if( p )
+      ( p )->done( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIALOG_DONE FP=( p )->done( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -212,7 +254,13 @@ HB_FUNC( QT_QDIALOG_DONE )
  */
 HB_FUNC( QT_QDIALOG_EXEC )
 {
-   hb_retni( hbqt_par_QDialog( 1 )->exec() );
+   QDialog * p = hbqt_par_QDialog( 1 );
+   if( p )
+      hb_retni( ( p )->exec() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIALOG_EXEC FP=hb_retni( ( p )->exec() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -220,7 +268,13 @@ HB_FUNC( QT_QDIALOG_EXEC )
  */
 HB_FUNC( QT_QDIALOG_OPEN )
 {
-   hbqt_par_QDialog( 1 )->open();
+   QDialog * p = hbqt_par_QDialog( 1 );
+   if( p )
+      ( p )->open();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIALOG_OPEN FP=( p )->open(); p is NULL" ) );
+   }
 }
 
 /*
@@ -228,7 +282,13 @@ HB_FUNC( QT_QDIALOG_OPEN )
  */
 HB_FUNC( QT_QDIALOG_REJECT )
 {
-   hbqt_par_QDialog( 1 )->reject();
+   QDialog * p = hbqt_par_QDialog( 1 );
+   if( p )
+      ( p )->reject();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIALOG_REJECT FP=( p )->reject(); p is NULL" ) );
+   }
 }
 
 

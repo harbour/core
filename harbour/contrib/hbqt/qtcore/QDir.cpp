@@ -86,7 +86,7 @@
 
 typedef struct
 {
-   void * ph;
+   QDir * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QDir;
@@ -121,7 +121,7 @@ void * hbqt_gcAllocate_QDir( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QDir * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QDir;
 
@@ -138,11 +138,11 @@ void * hbqt_gcAllocate_QDir( void * pObj, bool bNew )
 
 HB_FUNC( QT_QDIR )
 {
-   void * pObj = NULL;
+   QDir * pObj = NULL;
 
    pObj = new QDir( hbqt_par_QString( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QDir( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QDir( ( void * ) pObj, true ) );
 }
 
 /*
@@ -150,7 +150,13 @@ HB_FUNC( QT_QDIR )
  */
 HB_FUNC( QT_QDIR_ABSOLUTEFILEPATH )
 {
-   hb_retc( hbqt_par_QDir( 1 )->absoluteFilePath( hbqt_par_QString( 2 ) ).toAscii().data() );
+   QDir * p = hbqt_par_QDir( 1 );
+   if( p )
+      hb_retc( ( p )->absoluteFilePath( hbqt_par_QString( 2 ) ).toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIR_ABSOLUTEFILEPATH FP=hb_retc( ( p )->absoluteFilePath( hbqt_par_QString( 2 ) ).toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -158,7 +164,13 @@ HB_FUNC( QT_QDIR_ABSOLUTEFILEPATH )
  */
 HB_FUNC( QT_QDIR_ABSOLUTEPATH )
 {
-   hb_retc( hbqt_par_QDir( 1 )->absolutePath().toAscii().data() );
+   QDir * p = hbqt_par_QDir( 1 );
+   if( p )
+      hb_retc( ( p )->absolutePath().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIR_ABSOLUTEPATH FP=hb_retc( ( p )->absolutePath().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -166,7 +178,13 @@ HB_FUNC( QT_QDIR_ABSOLUTEPATH )
  */
 HB_FUNC( QT_QDIR_CANONICALPATH )
 {
-   hb_retc( hbqt_par_QDir( 1 )->canonicalPath().toAscii().data() );
+   QDir * p = hbqt_par_QDir( 1 );
+   if( p )
+      hb_retc( ( p )->canonicalPath().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIR_CANONICALPATH FP=hb_retc( ( p )->canonicalPath().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -174,7 +192,13 @@ HB_FUNC( QT_QDIR_CANONICALPATH )
  */
 HB_FUNC( QT_QDIR_CD )
 {
-   hb_retl( hbqt_par_QDir( 1 )->cd( hbqt_par_QString( 2 ) ) );
+   QDir * p = hbqt_par_QDir( 1 );
+   if( p )
+      hb_retl( ( p )->cd( hbqt_par_QString( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIR_CD FP=hb_retl( ( p )->cd( hbqt_par_QString( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -182,7 +206,13 @@ HB_FUNC( QT_QDIR_CD )
  */
 HB_FUNC( QT_QDIR_CDUP )
 {
-   hb_retl( hbqt_par_QDir( 1 )->cdUp() );
+   QDir * p = hbqt_par_QDir( 1 );
+   if( p )
+      hb_retl( ( p )->cdUp() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIR_CDUP FP=hb_retl( ( p )->cdUp() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -190,7 +220,13 @@ HB_FUNC( QT_QDIR_CDUP )
  */
 HB_FUNC( QT_QDIR_COUNT )
 {
-   hb_retni( hbqt_par_QDir( 1 )->count() );
+   QDir * p = hbqt_par_QDir( 1 );
+   if( p )
+      hb_retni( ( p )->count() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIR_COUNT FP=hb_retni( ( p )->count() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -198,7 +234,13 @@ HB_FUNC( QT_QDIR_COUNT )
  */
 HB_FUNC( QT_QDIR_DIRNAME )
 {
-   hb_retc( hbqt_par_QDir( 1 )->dirName().toAscii().data() );
+   QDir * p = hbqt_par_QDir( 1 );
+   if( p )
+      hb_retc( ( p )->dirName().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIR_DIRNAME FP=hb_retc( ( p )->dirName().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -206,7 +248,13 @@ HB_FUNC( QT_QDIR_DIRNAME )
  */
 HB_FUNC( QT_QDIR_ENTRYLIST )
 {
-   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QDir( 1 )->entryList( *hbqt_par_QStringList( 2 ), ( HB_ISNUM( 3 ) ? ( QDir::Filters ) hb_parni( 3 ) : ( QDir::Filters ) QDir::NoFilter ), ( HB_ISNUM( 4 ) ? ( QDir::SortFlags ) hb_parni( 4 ) : ( QDir::SortFlags ) QDir::NoSort ) ) ), true ) );
+   QDir * p = hbqt_par_QDir( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->entryList( *hbqt_par_QStringList( 2 ), ( HB_ISNUM( 3 ) ? ( QDir::Filters ) hb_parni( 3 ) : ( QDir::Filters ) QDir::NoFilter ), ( HB_ISNUM( 4 ) ? ( QDir::SortFlags ) hb_parni( 4 ) : ( QDir::SortFlags ) QDir::NoSort ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIR_ENTRYLIST FP=hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->entryList( *hbqt_par_QStringList( 2 ), ( HB_ISNUM( 3 ) ? ( QDir::Filters ) hb_parni( 3 ) : ( QDir::Filters ) QDir::NoFilter ), ( HB_ISNUM( 4 ) ? ( QDir::SortFlags ) hb_parni( 4 ) : ( QDir::SortFlags ) QDir::NoSort ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -214,7 +262,13 @@ HB_FUNC( QT_QDIR_ENTRYLIST )
  */
 HB_FUNC( QT_QDIR_ENTRYLIST_1 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QDir( 1 )->entryList( ( HB_ISNUM( 2 ) ? ( QDir::Filters ) hb_parni( 2 ) : ( QDir::Filters ) QDir::NoFilter ), ( HB_ISNUM( 3 ) ? ( QDir::SortFlags ) hb_parni( 3 ) : ( QDir::SortFlags ) QDir::NoSort ) ) ), true ) );
+   QDir * p = hbqt_par_QDir( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->entryList( ( HB_ISNUM( 2 ) ? ( QDir::Filters ) hb_parni( 2 ) : ( QDir::Filters ) QDir::NoFilter ), ( HB_ISNUM( 3 ) ? ( QDir::SortFlags ) hb_parni( 3 ) : ( QDir::SortFlags ) QDir::NoSort ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIR_ENTRYLIST_1 FP=hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->entryList( ( HB_ISNUM( 2 ) ? ( QDir::Filters ) hb_parni( 2 ) : ( QDir::Filters ) QDir::NoFilter ), ( HB_ISNUM( 3 ) ? ( QDir::SortFlags ) hb_parni( 3 ) : ( QDir::SortFlags ) QDir::NoSort ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -222,7 +276,13 @@ HB_FUNC( QT_QDIR_ENTRYLIST_1 )
  */
 HB_FUNC( QT_QDIR_EXISTS )
 {
-   hb_retl( hbqt_par_QDir( 1 )->exists( hbqt_par_QString( 2 ) ) );
+   QDir * p = hbqt_par_QDir( 1 );
+   if( p )
+      hb_retl( ( p )->exists( hbqt_par_QString( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIR_EXISTS FP=hb_retl( ( p )->exists( hbqt_par_QString( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -230,7 +290,13 @@ HB_FUNC( QT_QDIR_EXISTS )
  */
 HB_FUNC( QT_QDIR_EXISTS_1 )
 {
-   hb_retl( hbqt_par_QDir( 1 )->exists() );
+   QDir * p = hbqt_par_QDir( 1 );
+   if( p )
+      hb_retl( ( p )->exists() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIR_EXISTS_1 FP=hb_retl( ( p )->exists() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -238,7 +304,13 @@ HB_FUNC( QT_QDIR_EXISTS_1 )
  */
 HB_FUNC( QT_QDIR_FILEPATH )
 {
-   hb_retc( hbqt_par_QDir( 1 )->filePath( hbqt_par_QString( 2 ) ).toAscii().data() );
+   QDir * p = hbqt_par_QDir( 1 );
+   if( p )
+      hb_retc( ( p )->filePath( hbqt_par_QString( 2 ) ).toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIR_FILEPATH FP=hb_retc( ( p )->filePath( hbqt_par_QString( 2 ) ).toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -246,7 +318,13 @@ HB_FUNC( QT_QDIR_FILEPATH )
  */
 HB_FUNC( QT_QDIR_FILTER )
 {
-   hb_retni( ( QDir::Filters ) hbqt_par_QDir( 1 )->filter() );
+   QDir * p = hbqt_par_QDir( 1 );
+   if( p )
+      hb_retni( ( QDir::Filters ) ( p )->filter() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIR_FILTER FP=hb_retni( ( QDir::Filters ) ( p )->filter() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -254,7 +332,13 @@ HB_FUNC( QT_QDIR_FILTER )
  */
 HB_FUNC( QT_QDIR_ISABSOLUTE )
 {
-   hb_retl( hbqt_par_QDir( 1 )->isAbsolute() );
+   QDir * p = hbqt_par_QDir( 1 );
+   if( p )
+      hb_retl( ( p )->isAbsolute() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIR_ISABSOLUTE FP=hb_retl( ( p )->isAbsolute() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -262,7 +346,13 @@ HB_FUNC( QT_QDIR_ISABSOLUTE )
  */
 HB_FUNC( QT_QDIR_ISREADABLE )
 {
-   hb_retl( hbqt_par_QDir( 1 )->isReadable() );
+   QDir * p = hbqt_par_QDir( 1 );
+   if( p )
+      hb_retl( ( p )->isReadable() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIR_ISREADABLE FP=hb_retl( ( p )->isReadable() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -270,7 +360,13 @@ HB_FUNC( QT_QDIR_ISREADABLE )
  */
 HB_FUNC( QT_QDIR_ISRELATIVE )
 {
-   hb_retl( hbqt_par_QDir( 1 )->isRelative() );
+   QDir * p = hbqt_par_QDir( 1 );
+   if( p )
+      hb_retl( ( p )->isRelative() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIR_ISRELATIVE FP=hb_retl( ( p )->isRelative() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -278,7 +374,13 @@ HB_FUNC( QT_QDIR_ISRELATIVE )
  */
 HB_FUNC( QT_QDIR_ISROOT )
 {
-   hb_retl( hbqt_par_QDir( 1 )->isRoot() );
+   QDir * p = hbqt_par_QDir( 1 );
+   if( p )
+      hb_retl( ( p )->isRoot() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIR_ISROOT FP=hb_retl( ( p )->isRoot() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -286,7 +388,13 @@ HB_FUNC( QT_QDIR_ISROOT )
  */
 HB_FUNC( QT_QDIR_MAKEABSOLUTE )
 {
-   hb_retl( hbqt_par_QDir( 1 )->makeAbsolute() );
+   QDir * p = hbqt_par_QDir( 1 );
+   if( p )
+      hb_retl( ( p )->makeAbsolute() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIR_MAKEABSOLUTE FP=hb_retl( ( p )->makeAbsolute() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -294,7 +402,13 @@ HB_FUNC( QT_QDIR_MAKEABSOLUTE )
  */
 HB_FUNC( QT_QDIR_MKDIR )
 {
-   hb_retl( hbqt_par_QDir( 1 )->mkdir( hbqt_par_QString( 2 ) ) );
+   QDir * p = hbqt_par_QDir( 1 );
+   if( p )
+      hb_retl( ( p )->mkdir( hbqt_par_QString( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIR_MKDIR FP=hb_retl( ( p )->mkdir( hbqt_par_QString( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -302,7 +416,13 @@ HB_FUNC( QT_QDIR_MKDIR )
  */
 HB_FUNC( QT_QDIR_MKPATH )
 {
-   hb_retl( hbqt_par_QDir( 1 )->mkpath( hbqt_par_QString( 2 ) ) );
+   QDir * p = hbqt_par_QDir( 1 );
+   if( p )
+      hb_retl( ( p )->mkpath( hbqt_par_QString( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIR_MKPATH FP=hb_retl( ( p )->mkpath( hbqt_par_QString( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -310,7 +430,13 @@ HB_FUNC( QT_QDIR_MKPATH )
  */
 HB_FUNC( QT_QDIR_NAMEFILTERS )
 {
-   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QDir( 1 )->nameFilters() ), true ) );
+   QDir * p = hbqt_par_QDir( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->nameFilters() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIR_NAMEFILTERS FP=hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->nameFilters() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -318,7 +444,13 @@ HB_FUNC( QT_QDIR_NAMEFILTERS )
  */
 HB_FUNC( QT_QDIR_PATH )
 {
-   hb_retc( hbqt_par_QDir( 1 )->path().toAscii().data() );
+   QDir * p = hbqt_par_QDir( 1 );
+   if( p )
+      hb_retc( ( p )->path().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIR_PATH FP=hb_retc( ( p )->path().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -326,7 +458,13 @@ HB_FUNC( QT_QDIR_PATH )
  */
 HB_FUNC( QT_QDIR_REFRESH )
 {
-   hbqt_par_QDir( 1 )->refresh();
+   QDir * p = hbqt_par_QDir( 1 );
+   if( p )
+      ( p )->refresh();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIR_REFRESH FP=( p )->refresh(); p is NULL" ) );
+   }
 }
 
 /*
@@ -334,7 +472,13 @@ HB_FUNC( QT_QDIR_REFRESH )
  */
 HB_FUNC( QT_QDIR_RELATIVEFILEPATH )
 {
-   hb_retc( hbqt_par_QDir( 1 )->relativeFilePath( hbqt_par_QString( 2 ) ).toAscii().data() );
+   QDir * p = hbqt_par_QDir( 1 );
+   if( p )
+      hb_retc( ( p )->relativeFilePath( hbqt_par_QString( 2 ) ).toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIR_RELATIVEFILEPATH FP=hb_retc( ( p )->relativeFilePath( hbqt_par_QString( 2 ) ).toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -342,7 +486,13 @@ HB_FUNC( QT_QDIR_RELATIVEFILEPATH )
  */
 HB_FUNC( QT_QDIR_REMOVE )
 {
-   hb_retl( hbqt_par_QDir( 1 )->remove( hbqt_par_QString( 2 ) ) );
+   QDir * p = hbqt_par_QDir( 1 );
+   if( p )
+      hb_retl( ( p )->remove( hbqt_par_QString( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIR_REMOVE FP=hb_retl( ( p )->remove( hbqt_par_QString( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -350,7 +500,13 @@ HB_FUNC( QT_QDIR_REMOVE )
  */
 HB_FUNC( QT_QDIR_RENAME )
 {
-   hb_retl( hbqt_par_QDir( 1 )->rename( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ) );
+   QDir * p = hbqt_par_QDir( 1 );
+   if( p )
+      hb_retl( ( p )->rename( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIR_RENAME FP=hb_retl( ( p )->rename( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -358,7 +514,13 @@ HB_FUNC( QT_QDIR_RENAME )
  */
 HB_FUNC( QT_QDIR_RMDIR )
 {
-   hb_retl( hbqt_par_QDir( 1 )->rmdir( hbqt_par_QString( 2 ) ) );
+   QDir * p = hbqt_par_QDir( 1 );
+   if( p )
+      hb_retl( ( p )->rmdir( hbqt_par_QString( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIR_RMDIR FP=hb_retl( ( p )->rmdir( hbqt_par_QString( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -366,7 +528,13 @@ HB_FUNC( QT_QDIR_RMDIR )
  */
 HB_FUNC( QT_QDIR_RMPATH )
 {
-   hb_retl( hbqt_par_QDir( 1 )->rmpath( hbqt_par_QString( 2 ) ) );
+   QDir * p = hbqt_par_QDir( 1 );
+   if( p )
+      hb_retl( ( p )->rmpath( hbqt_par_QString( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIR_RMPATH FP=hb_retl( ( p )->rmpath( hbqt_par_QString( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -374,7 +542,13 @@ HB_FUNC( QT_QDIR_RMPATH )
  */
 HB_FUNC( QT_QDIR_SETFILTER )
 {
-   hbqt_par_QDir( 1 )->setFilter( ( QDir::Filters ) hb_parni( 2 ) );
+   QDir * p = hbqt_par_QDir( 1 );
+   if( p )
+      ( p )->setFilter( ( QDir::Filters ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIR_SETFILTER FP=( p )->setFilter( ( QDir::Filters ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -382,7 +556,13 @@ HB_FUNC( QT_QDIR_SETFILTER )
  */
 HB_FUNC( QT_QDIR_SETNAMEFILTERS )
 {
-   hbqt_par_QDir( 1 )->setNameFilters( *hbqt_par_QStringList( 2 ) );
+   QDir * p = hbqt_par_QDir( 1 );
+   if( p )
+      ( p )->setNameFilters( *hbqt_par_QStringList( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIR_SETNAMEFILTERS FP=( p )->setNameFilters( *hbqt_par_QStringList( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -390,7 +570,13 @@ HB_FUNC( QT_QDIR_SETNAMEFILTERS )
  */
 HB_FUNC( QT_QDIR_SETPATH )
 {
-   hbqt_par_QDir( 1 )->setPath( hbqt_par_QString( 2 ) );
+   QDir * p = hbqt_par_QDir( 1 );
+   if( p )
+      ( p )->setPath( hbqt_par_QString( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIR_SETPATH FP=( p )->setPath( hbqt_par_QString( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -398,7 +584,13 @@ HB_FUNC( QT_QDIR_SETPATH )
  */
 HB_FUNC( QT_QDIR_SETSORTING )
 {
-   hbqt_par_QDir( 1 )->setSorting( ( QDir::SortFlags ) hb_parni( 2 ) );
+   QDir * p = hbqt_par_QDir( 1 );
+   if( p )
+      ( p )->setSorting( ( QDir::SortFlags ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIR_SETSORTING FP=( p )->setSorting( ( QDir::SortFlags ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -406,7 +598,13 @@ HB_FUNC( QT_QDIR_SETSORTING )
  */
 HB_FUNC( QT_QDIR_SORTING )
 {
-   hb_retni( ( QDir::SortFlags ) hbqt_par_QDir( 1 )->sorting() );
+   QDir * p = hbqt_par_QDir( 1 );
+   if( p )
+      hb_retni( ( QDir::SortFlags ) ( p )->sorting() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIR_SORTING FP=hb_retni( ( QDir::SortFlags ) ( p )->sorting() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -414,7 +612,13 @@ HB_FUNC( QT_QDIR_SORTING )
  */
 HB_FUNC( QT_QDIR_ADDSEARCHPATH )
 {
-   hbqt_par_QDir( 1 )->addSearchPath( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) );
+   QDir * p = hbqt_par_QDir( 1 );
+   if( p )
+      ( p )->addSearchPath( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIR_ADDSEARCHPATH FP=( p )->addSearchPath( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -422,7 +626,13 @@ HB_FUNC( QT_QDIR_ADDSEARCHPATH )
  */
 HB_FUNC( QT_QDIR_CLEANPATH )
 {
-   hb_retc( hbqt_par_QDir( 1 )->cleanPath( hbqt_par_QString( 2 ) ).toAscii().data() );
+   QDir * p = hbqt_par_QDir( 1 );
+   if( p )
+      hb_retc( ( p )->cleanPath( hbqt_par_QString( 2 ) ).toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIR_CLEANPATH FP=hb_retc( ( p )->cleanPath( hbqt_par_QString( 2 ) ).toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -430,7 +640,13 @@ HB_FUNC( QT_QDIR_CLEANPATH )
  */
 HB_FUNC( QT_QDIR_CURRENT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QDir( new QDir( hbqt_par_QDir( 1 )->current() ), true ) );
+   QDir * p = hbqt_par_QDir( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QDir( new QDir( ( p )->current() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIR_CURRENT FP=hb_retptrGC( hbqt_gcAllocate_QDir( new QDir( ( p )->current() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -438,7 +654,13 @@ HB_FUNC( QT_QDIR_CURRENT )
  */
 HB_FUNC( QT_QDIR_CURRENTPATH )
 {
-   hb_retc( hbqt_par_QDir( 1 )->currentPath().toAscii().data() );
+   QDir * p = hbqt_par_QDir( 1 );
+   if( p )
+      hb_retc( ( p )->currentPath().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIR_CURRENTPATH FP=hb_retc( ( p )->currentPath().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -446,7 +668,13 @@ HB_FUNC( QT_QDIR_CURRENTPATH )
  */
 HB_FUNC( QT_QDIR_FROMNATIVESEPARATORS )
 {
-   hb_retc( hbqt_par_QDir( 1 )->fromNativeSeparators( hbqt_par_QString( 2 ) ).toAscii().data() );
+   QDir * p = hbqt_par_QDir( 1 );
+   if( p )
+      hb_retc( ( p )->fromNativeSeparators( hbqt_par_QString( 2 ) ).toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIR_FROMNATIVESEPARATORS FP=hb_retc( ( p )->fromNativeSeparators( hbqt_par_QString( 2 ) ).toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -454,7 +682,13 @@ HB_FUNC( QT_QDIR_FROMNATIVESEPARATORS )
  */
 HB_FUNC( QT_QDIR_HOME )
 {
-   hb_retptrGC( hbqt_gcAllocate_QDir( new QDir( hbqt_par_QDir( 1 )->home() ), true ) );
+   QDir * p = hbqt_par_QDir( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QDir( new QDir( ( p )->home() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIR_HOME FP=hb_retptrGC( hbqt_gcAllocate_QDir( new QDir( ( p )->home() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -462,7 +696,13 @@ HB_FUNC( QT_QDIR_HOME )
  */
 HB_FUNC( QT_QDIR_HOMEPATH )
 {
-   hb_retc( hbqt_par_QDir( 1 )->homePath().toAscii().data() );
+   QDir * p = hbqt_par_QDir( 1 );
+   if( p )
+      hb_retc( ( p )->homePath().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIR_HOMEPATH FP=hb_retc( ( p )->homePath().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -470,7 +710,13 @@ HB_FUNC( QT_QDIR_HOMEPATH )
  */
 HB_FUNC( QT_QDIR_ISABSOLUTEPATH )
 {
-   hb_retl( hbqt_par_QDir( 1 )->isAbsolutePath( hbqt_par_QString( 2 ) ) );
+   QDir * p = hbqt_par_QDir( 1 );
+   if( p )
+      hb_retl( ( p )->isAbsolutePath( hbqt_par_QString( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIR_ISABSOLUTEPATH FP=hb_retl( ( p )->isAbsolutePath( hbqt_par_QString( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -478,7 +724,13 @@ HB_FUNC( QT_QDIR_ISABSOLUTEPATH )
  */
 HB_FUNC( QT_QDIR_ISRELATIVEPATH )
 {
-   hb_retl( hbqt_par_QDir( 1 )->isRelativePath( hbqt_par_QString( 2 ) ) );
+   QDir * p = hbqt_par_QDir( 1 );
+   if( p )
+      hb_retl( ( p )->isRelativePath( hbqt_par_QString( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIR_ISRELATIVEPATH FP=hb_retl( ( p )->isRelativePath( hbqt_par_QString( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -486,7 +738,13 @@ HB_FUNC( QT_QDIR_ISRELATIVEPATH )
  */
 HB_FUNC( QT_QDIR_MATCH )
 {
-   hb_retl( hbqt_par_QDir( 1 )->match( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ) );
+   QDir * p = hbqt_par_QDir( 1 );
+   if( p )
+      hb_retl( ( p )->match( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIR_MATCH FP=hb_retl( ( p )->match( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -494,7 +752,13 @@ HB_FUNC( QT_QDIR_MATCH )
  */
 HB_FUNC( QT_QDIR_MATCH_1 )
 {
-   hb_retl( hbqt_par_QDir( 1 )->match( *hbqt_par_QStringList( 2 ), hbqt_par_QString( 3 ) ) );
+   QDir * p = hbqt_par_QDir( 1 );
+   if( p )
+      hb_retl( ( p )->match( *hbqt_par_QStringList( 2 ), hbqt_par_QString( 3 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIR_MATCH_1 FP=hb_retl( ( p )->match( *hbqt_par_QStringList( 2 ), hbqt_par_QString( 3 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -502,7 +766,13 @@ HB_FUNC( QT_QDIR_MATCH_1 )
  */
 HB_FUNC( QT_QDIR_ROOT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QDir( new QDir( hbqt_par_QDir( 1 )->root() ), true ) );
+   QDir * p = hbqt_par_QDir( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QDir( new QDir( ( p )->root() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIR_ROOT FP=hb_retptrGC( hbqt_gcAllocate_QDir( new QDir( ( p )->root() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -510,7 +780,13 @@ HB_FUNC( QT_QDIR_ROOT )
  */
 HB_FUNC( QT_QDIR_ROOTPATH )
 {
-   hb_retc( hbqt_par_QDir( 1 )->rootPath().toAscii().data() );
+   QDir * p = hbqt_par_QDir( 1 );
+   if( p )
+      hb_retc( ( p )->rootPath().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIR_ROOTPATH FP=hb_retc( ( p )->rootPath().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -518,7 +794,13 @@ HB_FUNC( QT_QDIR_ROOTPATH )
  */
 HB_FUNC( QT_QDIR_SEARCHPATHS )
 {
-   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QDir( 1 )->searchPaths( hbqt_par_QString( 2 ) ) ), true ) );
+   QDir * p = hbqt_par_QDir( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->searchPaths( hbqt_par_QString( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIR_SEARCHPATHS FP=hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->searchPaths( hbqt_par_QString( 2 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -526,7 +808,13 @@ HB_FUNC( QT_QDIR_SEARCHPATHS )
  */
 HB_FUNC( QT_QDIR_SEPARATOR )
 {
-   hb_retptrGC( hbqt_gcAllocate_QChar( new QChar( hbqt_par_QDir( 1 )->separator() ), true ) );
+   QDir * p = hbqt_par_QDir( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QChar( new QChar( ( p )->separator() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIR_SEPARATOR FP=hb_retptrGC( hbqt_gcAllocate_QChar( new QChar( ( p )->separator() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -534,7 +822,13 @@ HB_FUNC( QT_QDIR_SEPARATOR )
  */
 HB_FUNC( QT_QDIR_SETCURRENT )
 {
-   hb_retl( hbqt_par_QDir( 1 )->setCurrent( hbqt_par_QString( 2 ) ) );
+   QDir * p = hbqt_par_QDir( 1 );
+   if( p )
+      hb_retl( ( p )->setCurrent( hbqt_par_QString( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIR_SETCURRENT FP=hb_retl( ( p )->setCurrent( hbqt_par_QString( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -542,7 +836,13 @@ HB_FUNC( QT_QDIR_SETCURRENT )
  */
 HB_FUNC( QT_QDIR_SETSEARCHPATHS )
 {
-   hbqt_par_QDir( 1 )->setSearchPaths( hbqt_par_QString( 2 ), *hbqt_par_QStringList( 3 ) );
+   QDir * p = hbqt_par_QDir( 1 );
+   if( p )
+      ( p )->setSearchPaths( hbqt_par_QString( 2 ), *hbqt_par_QStringList( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIR_SETSEARCHPATHS FP=( p )->setSearchPaths( hbqt_par_QString( 2 ), *hbqt_par_QStringList( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -550,7 +850,13 @@ HB_FUNC( QT_QDIR_SETSEARCHPATHS )
  */
 HB_FUNC( QT_QDIR_TEMP )
 {
-   hb_retptrGC( hbqt_gcAllocate_QDir( new QDir( hbqt_par_QDir( 1 )->temp() ), true ) );
+   QDir * p = hbqt_par_QDir( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QDir( new QDir( ( p )->temp() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIR_TEMP FP=hb_retptrGC( hbqt_gcAllocate_QDir( new QDir( ( p )->temp() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -558,7 +864,13 @@ HB_FUNC( QT_QDIR_TEMP )
  */
 HB_FUNC( QT_QDIR_TEMPPATH )
 {
-   hb_retc( hbqt_par_QDir( 1 )->tempPath().toAscii().data() );
+   QDir * p = hbqt_par_QDir( 1 );
+   if( p )
+      hb_retc( ( p )->tempPath().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIR_TEMPPATH FP=hb_retc( ( p )->tempPath().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -566,7 +878,13 @@ HB_FUNC( QT_QDIR_TEMPPATH )
  */
 HB_FUNC( QT_QDIR_TONATIVESEPARATORS )
 {
-   hb_retc( hbqt_par_QDir( 1 )->toNativeSeparators( hbqt_par_QString( 2 ) ).toAscii().data() );
+   QDir * p = hbqt_par_QDir( 1 );
+   if( p )
+      hb_retc( ( p )->toNativeSeparators( hbqt_par_QString( 2 ) ).toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIR_TONATIVESEPARATORS FP=hb_retc( ( p )->toNativeSeparators( hbqt_par_QString( 2 ) ).toAscii().data() ); p is NULL" ) );
+   }
 }
 
 

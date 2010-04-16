@@ -77,43 +77,44 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< HBQSyntaxHighlighter > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< HBQSyntaxHighlighter > pq;
 } QGC_POINTER_HBQSyntaxHighlighter;
 
 QT_G_FUNC( hbqt_gcRelease_HBQSyntaxHighlighter )
 {
+   HBQSyntaxHighlighter  * ph = NULL ;
    QGC_POINTER_HBQSyntaxHighlighter * p = ( QGC_POINTER_HBQSyntaxHighlighter * ) Cargo;
 
-   if( p && p->bNew )
+   if( p && p->bNew && p->ph )
    {
-      if( p->ph && p->pq )
+      ph = p->ph;
+      if( ph )
       {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_HBQSyntaxHighlighter   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
-            delete ( ( HBQSyntaxHighlighter * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_HBQSyntaxHighlighter   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_HBQSyntaxHighlighter   /.\\   ", (void*) ph, (void*) p->ph ) );
+            delete ( p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_HBQSyntaxHighlighter   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_HBQSyntaxHighlighter          pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_HBQSyntaxHighlighter          ", ph ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_HBQSyntaxHighlighter    :     Object already deleted!", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_HBQSyntaxHighlighter    :     Object already deleted!", ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_HBQSyntaxHighlighter    :    Object not created with new=true", p->ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_HBQSyntaxHighlighter    :    Object not created with new=true", ph ) );
       p->ph = NULL;
    }
 }
@@ -122,13 +123,12 @@ void * hbqt_gcAllocate_HBQSyntaxHighlighter( void * pObj, bool bNew )
 {
    QGC_POINTER_HBQSyntaxHighlighter * p = ( QGC_POINTER_HBQSyntaxHighlighter * ) hb_gcAllocate( sizeof( QGC_POINTER_HBQSyntaxHighlighter ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< HBQSyntaxHighlighter >( ( HBQSyntaxHighlighter * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_HBQSyntaxHighlighter;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< HBQSyntaxHighlighter >( ( HBQSyntaxHighlighter * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_HBQSyntaxHighlighter  under p->pq", pObj ) );
    }
    else
@@ -140,11 +140,11 @@ void * hbqt_gcAllocate_HBQSyntaxHighlighter( void * pObj, bool bNew )
 
 HB_FUNC( QT_HBQSYNTAXHIGHLIGHTER )
 {
-   void * pObj = NULL;
+   HBQSyntaxHighlighter * pObj = NULL;
 
    pObj = new HBQSyntaxHighlighter( hbqt_par_QTextDocument( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_HBQSyntaxHighlighter( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_HBQSyntaxHighlighter( ( void * ) pObj, true ) );
 }
 
 /*
@@ -152,7 +152,13 @@ HB_FUNC( QT_HBQSYNTAXHIGHLIGHTER )
  */
 HB_FUNC( QT_HBQSYNTAXHIGHLIGHTER_HBSETMULTILINECOMMENTFORMAT )
 {
-   hbqt_par_HBQSyntaxHighlighter( 1 )->hbSetMultiLineCommentFormat( *hbqt_par_QTextCharFormat( 2 ) );
+   HBQSyntaxHighlighter * p = hbqt_par_HBQSyntaxHighlighter( 1 );
+   if( p )
+      ( p )->hbSetMultiLineCommentFormat( *hbqt_par_QTextCharFormat( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQSYNTAXHIGHLIGHTER_HBSETMULTILINECOMMENTFORMAT FP=( p )->hbSetMultiLineCommentFormat( *hbqt_par_QTextCharFormat( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -160,7 +166,13 @@ HB_FUNC( QT_HBQSYNTAXHIGHLIGHTER_HBSETMULTILINECOMMENTFORMAT )
  */
 HB_FUNC( QT_HBQSYNTAXHIGHLIGHTER_HBSETSINGLELINECOMMENTFORMAT )
 {
-   hbqt_par_HBQSyntaxHighlighter( 1 )->hbSetSingleLineCommentFormat( *hbqt_par_QTextCharFormat( 2 ) );
+   HBQSyntaxHighlighter * p = hbqt_par_HBQSyntaxHighlighter( 1 );
+   if( p )
+      ( p )->hbSetSingleLineCommentFormat( *hbqt_par_QTextCharFormat( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQSYNTAXHIGHLIGHTER_HBSETSINGLELINECOMMENTFORMAT FP=( p )->hbSetSingleLineCommentFormat( *hbqt_par_QTextCharFormat( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -168,7 +180,13 @@ HB_FUNC( QT_HBQSYNTAXHIGHLIGHTER_HBSETSINGLELINECOMMENTFORMAT )
  */
 HB_FUNC( QT_HBQSYNTAXHIGHLIGHTER_HBSETRULE )
 {
-   hbqt_par_HBQSyntaxHighlighter( 1 )->hbSetRule( HBQSyntaxHighlighter::tr( hb_parc( 2 ) ), HBQSyntaxHighlighter::tr( hb_parc( 3 ) ), *hbqt_par_QTextCharFormat( 4 ) );
+   HBQSyntaxHighlighter * p = hbqt_par_HBQSyntaxHighlighter( 1 );
+   if( p )
+      ( p )->hbSetRule( HBQSyntaxHighlighter::tr( hb_parc( 2 ) ), HBQSyntaxHighlighter::tr( hb_parc( 3 ) ), *hbqt_par_QTextCharFormat( 4 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQSYNTAXHIGHLIGHTER_HBSETRULE FP=( p )->hbSetRule( HBQSyntaxHighlighter::tr( hb_parc( 2 ) ), HBQSyntaxHighlighter::tr( hb_parc( 3 ) ), *hbqt_par_QTextCharFormat( 4 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -176,7 +194,13 @@ HB_FUNC( QT_HBQSYNTAXHIGHLIGHTER_HBSETRULE )
  */
 HB_FUNC( QT_HBQSYNTAXHIGHLIGHTER_HBSETFORMAT )
 {
-   hbqt_par_HBQSyntaxHighlighter( 1 )->hbSetFormat( HBQSyntaxHighlighter::tr( hb_parc( 2 ) ), *hbqt_par_QTextCharFormat( 3 ) );
+   HBQSyntaxHighlighter * p = hbqt_par_HBQSyntaxHighlighter( 1 );
+   if( p )
+      ( p )->hbSetFormat( HBQSyntaxHighlighter::tr( hb_parc( 2 ) ), *hbqt_par_QTextCharFormat( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQSYNTAXHIGHLIGHTER_HBSETFORMAT FP=( p )->hbSetFormat( HBQSyntaxHighlighter::tr( hb_parc( 2 ) ), *hbqt_par_QTextCharFormat( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -184,7 +208,13 @@ HB_FUNC( QT_HBQSYNTAXHIGHLIGHTER_HBSETFORMAT )
  */
 HB_FUNC( QT_HBQSYNTAXHIGHLIGHTER_HBSETFORMATCOLUMNSELECTION )
 {
-   hbqt_par_HBQSyntaxHighlighter( 1 )->hbSetFormatColumnSelection( hb_parni( 2 ), hb_parni( 3 ), *hbqt_par_QColor( 4 ) );
+   HBQSyntaxHighlighter * p = hbqt_par_HBQSyntaxHighlighter( 1 );
+   if( p )
+      ( p )->hbSetFormatColumnSelection( hb_parni( 2 ), hb_parni( 3 ), *hbqt_par_QColor( 4 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQSYNTAXHIGHLIGHTER_HBSETFORMATCOLUMNSELECTION FP=( p )->hbSetFormatColumnSelection( hb_parni( 2 ), hb_parni( 3 ), *hbqt_par_QColor( 4 ) ); p is NULL" ) );
+   }
 }
 
 

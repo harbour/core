@@ -77,7 +77,7 @@
 
 typedef struct
 {
-   void * ph;
+   QMoveEvent * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QMoveEvent;
@@ -97,7 +97,7 @@ void * hbqt_gcAllocate_QMoveEvent( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QMoveEvent * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QMoveEvent;
 
@@ -114,6 +114,7 @@ void * hbqt_gcAllocate_QMoveEvent( void * pObj, bool bNew )
 
 HB_FUNC( QT_QMOVEEVENT )
 {
+   // hb_retptr( ( QMoveEvent* ) new QMoveEvent() );
 }
 
 /*
@@ -121,7 +122,13 @@ HB_FUNC( QT_QMOVEEVENT )
  */
 HB_FUNC( QT_QMOVEEVENT_OLDPOS )
 {
-   hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( hbqt_par_QMoveEvent( 1 )->oldPos() ), true ) );
+   QMoveEvent * p = hbqt_par_QMoveEvent( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->oldPos() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMOVEEVENT_OLDPOS FP=hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->oldPos() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -129,7 +136,13 @@ HB_FUNC( QT_QMOVEEVENT_OLDPOS )
  */
 HB_FUNC( QT_QMOVEEVENT_POS )
 {
-   hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( hbqt_par_QMoveEvent( 1 )->pos() ), true ) );
+   QMoveEvent * p = hbqt_par_QMoveEvent( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->pos() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMOVEEVENT_POS FP=hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->pos() ), true ) ); p is NULL" ) );
+   }
 }
 
 

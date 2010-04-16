@@ -78,7 +78,7 @@
 
 typedef struct
 {
-   void * ph;
+   QMouseEvent * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QMouseEvent;
@@ -113,7 +113,7 @@ void * hbqt_gcAllocate_QMouseEvent( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QMouseEvent * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QMouseEvent;
 
@@ -130,14 +130,14 @@ void * hbqt_gcAllocate_QMouseEvent( void * pObj, bool bNew )
 
 HB_FUNC( QT_QMOUSEEVENT )
 {
-   void * pObj = NULL;
+   QMouseEvent * pObj = NULL;
 
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
       pObj = new QMouseEvent( *hbqt_par_QMouseEvent( 1 ) ) ;
    }
 
-   hb_retptrGC( hbqt_gcAllocate_QMouseEvent( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QMouseEvent( ( void * ) pObj, true ) );
 }
 
 /*
@@ -145,7 +145,13 @@ HB_FUNC( QT_QMOUSEEVENT )
  */
 HB_FUNC( QT_QMOUSEEVENT_BUTTON )
 {
-   hb_retni( ( Qt::MouseButton ) hbqt_par_QMouseEvent( 1 )->button() );
+   QMouseEvent * p = hbqt_par_QMouseEvent( 1 );
+   if( p )
+      hb_retni( ( Qt::MouseButton ) ( p )->button() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMOUSEEVENT_BUTTON FP=hb_retni( ( Qt::MouseButton ) ( p )->button() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -153,7 +159,13 @@ HB_FUNC( QT_QMOUSEEVENT_BUTTON )
  */
 HB_FUNC( QT_QMOUSEEVENT_BUTTONS )
 {
-   hb_retni( ( Qt::MouseButtons ) hbqt_par_QMouseEvent( 1 )->buttons() );
+   QMouseEvent * p = hbqt_par_QMouseEvent( 1 );
+   if( p )
+      hb_retni( ( Qt::MouseButtons ) ( p )->buttons() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMOUSEEVENT_BUTTONS FP=hb_retni( ( Qt::MouseButtons ) ( p )->buttons() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -161,7 +173,13 @@ HB_FUNC( QT_QMOUSEEVENT_BUTTONS )
  */
 HB_FUNC( QT_QMOUSEEVENT_GLOBALPOS )
 {
-   hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( hbqt_par_QMouseEvent( 1 )->globalPos() ), true ) );
+   QMouseEvent * p = hbqt_par_QMouseEvent( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->globalPos() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMOUSEEVENT_GLOBALPOS FP=hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->globalPos() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -169,7 +187,13 @@ HB_FUNC( QT_QMOUSEEVENT_GLOBALPOS )
  */
 HB_FUNC( QT_QMOUSEEVENT_GLOBALX )
 {
-   hb_retni( hbqt_par_QMouseEvent( 1 )->globalX() );
+   QMouseEvent * p = hbqt_par_QMouseEvent( 1 );
+   if( p )
+      hb_retni( ( p )->globalX() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMOUSEEVENT_GLOBALX FP=hb_retni( ( p )->globalX() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -177,7 +201,13 @@ HB_FUNC( QT_QMOUSEEVENT_GLOBALX )
  */
 HB_FUNC( QT_QMOUSEEVENT_GLOBALY )
 {
-   hb_retni( hbqt_par_QMouseEvent( 1 )->globalY() );
+   QMouseEvent * p = hbqt_par_QMouseEvent( 1 );
+   if( p )
+      hb_retni( ( p )->globalY() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMOUSEEVENT_GLOBALY FP=hb_retni( ( p )->globalY() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -185,7 +215,13 @@ HB_FUNC( QT_QMOUSEEVENT_GLOBALY )
  */
 HB_FUNC( QT_QMOUSEEVENT_POS )
 {
-   hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( hbqt_par_QMouseEvent( 1 )->pos() ), true ) );
+   QMouseEvent * p = hbqt_par_QMouseEvent( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->pos() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMOUSEEVENT_POS FP=hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->pos() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -193,7 +229,13 @@ HB_FUNC( QT_QMOUSEEVENT_POS )
  */
 HB_FUNC( QT_QMOUSEEVENT_POSF )
 {
-   hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( hbqt_par_QMouseEvent( 1 )->posF() ), true ) );
+   QMouseEvent * p = hbqt_par_QMouseEvent( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->posF() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMOUSEEVENT_POSF FP=hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->posF() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -201,7 +243,13 @@ HB_FUNC( QT_QMOUSEEVENT_POSF )
  */
 HB_FUNC( QT_QMOUSEEVENT_X )
 {
-   hb_retni( hbqt_par_QMouseEvent( 1 )->x() );
+   QMouseEvent * p = hbqt_par_QMouseEvent( 1 );
+   if( p )
+      hb_retni( ( p )->x() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMOUSEEVENT_X FP=hb_retni( ( p )->x() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -209,7 +257,13 @@ HB_FUNC( QT_QMOUSEEVENT_X )
  */
 HB_FUNC( QT_QMOUSEEVENT_Y )
 {
-   hb_retni( hbqt_par_QMouseEvent( 1 )->y() );
+   QMouseEvent * p = hbqt_par_QMouseEvent( 1 );
+   if( p )
+      hb_retni( ( p )->y() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMOUSEEVENT_Y FP=hb_retni( ( p )->y() ); p is NULL" ) );
+   }
 }
 
 

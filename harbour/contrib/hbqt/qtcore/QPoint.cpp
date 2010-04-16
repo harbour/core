@@ -78,7 +78,7 @@
 
 typedef struct
 {
-   void * ph;
+   QPoint * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QPoint;
@@ -113,7 +113,7 @@ void * hbqt_gcAllocate_QPoint( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QPoint * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QPoint;
 
@@ -130,22 +130,22 @@ void * hbqt_gcAllocate_QPoint( void * pObj, bool bNew )
 
 HB_FUNC( QT_QPOINT )
 {
-   void * pObj = NULL;
+   QPoint * pObj = NULL;
 
    if( hb_pcount() == 2 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
    {
-      pObj = ( QPoint* ) new QPoint( hb_parni( 1 ), hb_parni( 2 ) ) ;
+      pObj =  new QPoint( hb_parni( 1 ), hb_parni( 2 ) ) ;
    }
    else if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      pObj = ( QPoint* ) new QPoint( *hbqt_par_QPoint( 1 ) ) ;
+      pObj =  new QPoint( *hbqt_par_QPoint( 1 ) ) ;
    }
    else
    {
-      pObj = ( QPoint* ) new QPoint() ;
+      pObj =  new QPoint() ;
    }
 
-   hb_retptrGC( hbqt_gcAllocate_QPoint( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QPoint( ( void * ) pObj, true ) );
 }
 
 /*
@@ -153,7 +153,13 @@ HB_FUNC( QT_QPOINT )
  */
 HB_FUNC( QT_QPOINT_ISNULL )
 {
-   hb_retl( hbqt_par_QPoint( 1 )->isNull() );
+   QPoint * p = hbqt_par_QPoint( 1 );
+   if( p )
+      hb_retl( ( p )->isNull() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPOINT_ISNULL FP=hb_retl( ( p )->isNull() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -161,7 +167,13 @@ HB_FUNC( QT_QPOINT_ISNULL )
  */
 HB_FUNC( QT_QPOINT_MANHATTANLENGTH )
 {
-   hb_retni( hbqt_par_QPoint( 1 )->manhattanLength() );
+   QPoint * p = hbqt_par_QPoint( 1 );
+   if( p )
+      hb_retni( ( p )->manhattanLength() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPOINT_MANHATTANLENGTH FP=hb_retni( ( p )->manhattanLength() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -169,7 +181,13 @@ HB_FUNC( QT_QPOINT_MANHATTANLENGTH )
  */
 HB_FUNC( QT_QPOINT_RX )
 {
-   hb_retni( hbqt_par_QPoint( 1 )->rx() );
+   QPoint * p = hbqt_par_QPoint( 1 );
+   if( p )
+      hb_retni( ( p )->rx() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPOINT_RX FP=hb_retni( ( p )->rx() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -177,7 +195,13 @@ HB_FUNC( QT_QPOINT_RX )
  */
 HB_FUNC( QT_QPOINT_RY )
 {
-   hb_retni( hbqt_par_QPoint( 1 )->ry() );
+   QPoint * p = hbqt_par_QPoint( 1 );
+   if( p )
+      hb_retni( ( p )->ry() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPOINT_RY FP=hb_retni( ( p )->ry() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -185,7 +209,13 @@ HB_FUNC( QT_QPOINT_RY )
  */
 HB_FUNC( QT_QPOINT_SETX )
 {
-   hbqt_par_QPoint( 1 )->setX( hb_parni( 2 ) );
+   QPoint * p = hbqt_par_QPoint( 1 );
+   if( p )
+      ( p )->setX( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPOINT_SETX FP=( p )->setX( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -193,7 +223,13 @@ HB_FUNC( QT_QPOINT_SETX )
  */
 HB_FUNC( QT_QPOINT_SETY )
 {
-   hbqt_par_QPoint( 1 )->setY( hb_parni( 2 ) );
+   QPoint * p = hbqt_par_QPoint( 1 );
+   if( p )
+      ( p )->setY( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPOINT_SETY FP=( p )->setY( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -201,7 +237,13 @@ HB_FUNC( QT_QPOINT_SETY )
  */
 HB_FUNC( QT_QPOINT_X )
 {
-   hb_retni( hbqt_par_QPoint( 1 )->x() );
+   QPoint * p = hbqt_par_QPoint( 1 );
+   if( p )
+      hb_retni( ( p )->x() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPOINT_X FP=hb_retni( ( p )->x() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -209,7 +251,13 @@ HB_FUNC( QT_QPOINT_X )
  */
 HB_FUNC( QT_QPOINT_Y )
 {
-   hb_retni( hbqt_par_QPoint( 1 )->y() );
+   QPoint * p = hbqt_par_QPoint( 1 );
+   if( p )
+      hb_retni( ( p )->y() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPOINT_Y FP=hb_retni( ( p )->y() ); p is NULL" ) );
+   }
 }
 
 

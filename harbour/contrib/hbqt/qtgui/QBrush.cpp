@@ -86,7 +86,7 @@
 
 typedef struct
 {
-   void * ph;
+   QBrush * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QBrush;
@@ -121,7 +121,7 @@ void * hbqt_gcAllocate_QBrush( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QBrush * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QBrush;
 
@@ -138,31 +138,31 @@ void * hbqt_gcAllocate_QBrush( void * pObj, bool bNew )
 
 HB_FUNC( QT_QBRUSH )
 {
-   void * pObj = NULL;
+   QBrush * pObj = NULL;
 
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      pObj = ( QBrush* ) new QBrush( *hbqt_par_QBrush( 1 ) ) ;
+      pObj =  new QBrush( *hbqt_par_QBrush( 1 ) ) ;
    }
    else if( hb_pcount() == 1 && HB_ISNUM( 1 ) )
    {
-      pObj = ( QBrush* ) new QBrush( ( Qt::GlobalColor ) hb_parni( 1 ), Qt::SolidPattern ) ;
+      pObj =  new QBrush( ( Qt::GlobalColor ) hb_parni( 1 ), Qt::SolidPattern ) ;
    }
    else if( hb_pcount() == 2 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
    {
-      pObj = ( QBrush* ) new QBrush( ( Qt::GlobalColor ) hb_parni( 1 ), ( Qt::BrushStyle ) hb_parni( 2 ) ) ;
+      pObj =  new QBrush( ( Qt::GlobalColor ) hb_parni( 1 ), ( Qt::BrushStyle ) hb_parni( 2 ) ) ;
    }
    else if( hb_pcount() == 2 && HB_ISPOINTER( 1 ) && HB_ISNUM( 2 ) )
    {
-      pObj = ( QBrush* ) new QBrush( *hbqt_par_QColor( 1 ), ( Qt::BrushStyle ) hb_parni( 2 ) ) ;
+      pObj =  new QBrush( *hbqt_par_QColor( 1 ), ( Qt::BrushStyle ) hb_parni( 2 ) ) ;
    }
    else if( hb_pcount() == 2 && HB_ISPOINTER( 1 ) && HB_ISPOINTER( 2 ) )
    {
-      pObj = ( QBrush* ) new QBrush( *hbqt_par_QColor( 1 ), *hbqt_par_QPixmap( 2 ) ) ;
+      pObj =  new QBrush( *hbqt_par_QColor( 1 ), *hbqt_par_QPixmap( 2 ) ) ;
    }
    else if( hb_pcount() == 2 && HB_ISNUM( 1 ) && HB_ISPOINTER( 2 ) )
    {
-      pObj = ( QBrush* ) new QBrush( ( Qt::GlobalColor ) hb_parni( 1 ), *hbqt_par_QPixmap( 2 ) ) ;
+      pObj =  new QBrush( ( Qt::GlobalColor ) hb_parni( 1 ), *hbqt_par_QPixmap( 2 ) ) ;
    }
    else if( hb_pcount() >= 2 && HB_ISCHAR( 1 ) && HB_ISPOINTER( 2 ) )
    {
@@ -170,31 +170,31 @@ HB_FUNC( QT_QBRUSH )
 
       if(      objName == ( QString ) "QPixmap" )
       {
-         pObj = ( QBrush* ) new QBrush( *hbqt_par_QPixmap( 2 ) ) ;
+         pObj =  new QBrush( *hbqt_par_QPixmap( 2 ) ) ;
       }
       else if( objName == ( QString ) "QImage" )
       {
-         pObj = ( QBrush* ) new QBrush( *hbqt_par_QImage( 2 ) ) ;
+         pObj =  new QBrush( *hbqt_par_QImage( 2 ) ) ;
       }
       else if( objName == ( QString ) "QGradient" )
       {
-         pObj = ( QBrush* ) new QBrush( *hbqt_par_QGradient( 2 ) ) ;
+         pObj =  new QBrush( *hbqt_par_QGradient( 2 ) ) ;
       }
       else if( objName == ( QString ) "QColor" )
       {
-         pObj = ( QBrush* ) new QBrush( *hbqt_par_QColor( 2 ), HB_ISNUM( 3 ) ? ( Qt::BrushStyle ) hb_parni( 3 ) : Qt::SolidPattern ) ;
+         pObj =  new QBrush( *hbqt_par_QColor( 2 ), HB_ISNUM( 3 ) ? ( Qt::BrushStyle ) hb_parni( 3 ) : Qt::SolidPattern ) ;
       }
       else
       {
-         pObj = ( QBrush* ) new QBrush() ;
+         pObj =  new QBrush() ;
       }
    }
    else
    {
-      pObj = ( QBrush* ) new QBrush() ;
+      pObj =  new QBrush() ;
    }
 
-   hb_retptrGC( hbqt_gcAllocate_QBrush( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QBrush( ( void * ) pObj, true ) );
 }
 
 /*
@@ -202,7 +202,13 @@ HB_FUNC( QT_QBRUSH )
  */
 HB_FUNC( QT_QBRUSH_COLOR )
 {
-   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QBrush( 1 )->color() ), true ) );
+   QBrush * p = hbqt_par_QBrush( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->color() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBRUSH_COLOR FP=hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->color() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -210,7 +216,13 @@ HB_FUNC( QT_QBRUSH_COLOR )
  */
 HB_FUNC( QT_QBRUSH_ISOPAQUE )
 {
-   hb_retl( hbqt_par_QBrush( 1 )->isOpaque() );
+   QBrush * p = hbqt_par_QBrush( 1 );
+   if( p )
+      hb_retl( ( p )->isOpaque() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBRUSH_ISOPAQUE FP=hb_retl( ( p )->isOpaque() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -218,7 +230,13 @@ HB_FUNC( QT_QBRUSH_ISOPAQUE )
  */
 HB_FUNC( QT_QBRUSH_MATRIX )
 {
-   hb_retptrGC( hbqt_gcAllocate_QMatrix( new QMatrix( hbqt_par_QBrush( 1 )->matrix() ), true ) );
+   QBrush * p = hbqt_par_QBrush( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QMatrix( new QMatrix( ( p )->matrix() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBRUSH_MATRIX FP=hb_retptrGC( hbqt_gcAllocate_QMatrix( new QMatrix( ( p )->matrix() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -226,7 +244,13 @@ HB_FUNC( QT_QBRUSH_MATRIX )
  */
 HB_FUNC( QT_QBRUSH_SETCOLOR )
 {
-   hbqt_par_QBrush( 1 )->setColor( *hbqt_par_QColor( 2 ) );
+   QBrush * p = hbqt_par_QBrush( 1 );
+   if( p )
+      ( p )->setColor( *hbqt_par_QColor( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBRUSH_SETCOLOR FP=( p )->setColor( *hbqt_par_QColor( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -234,7 +258,13 @@ HB_FUNC( QT_QBRUSH_SETCOLOR )
  */
 HB_FUNC( QT_QBRUSH_SETCOLOR_1 )
 {
-   hbqt_par_QBrush( 1 )->setColor( ( Qt::GlobalColor ) hb_parni( 2 ) );
+   QBrush * p = hbqt_par_QBrush( 1 );
+   if( p )
+      ( p )->setColor( ( Qt::GlobalColor ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBRUSH_SETCOLOR_1 FP=( p )->setColor( ( Qt::GlobalColor ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -242,7 +272,13 @@ HB_FUNC( QT_QBRUSH_SETCOLOR_1 )
  */
 HB_FUNC( QT_QBRUSH_SETMATRIX )
 {
-   hbqt_par_QBrush( 1 )->setMatrix( *hbqt_par_QMatrix( 2 ) );
+   QBrush * p = hbqt_par_QBrush( 1 );
+   if( p )
+      ( p )->setMatrix( *hbqt_par_QMatrix( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBRUSH_SETMATRIX FP=( p )->setMatrix( *hbqt_par_QMatrix( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -250,7 +286,13 @@ HB_FUNC( QT_QBRUSH_SETMATRIX )
  */
 HB_FUNC( QT_QBRUSH_SETSTYLE )
 {
-   hbqt_par_QBrush( 1 )->setStyle( ( Qt::BrushStyle ) hb_parni( 2 ) );
+   QBrush * p = hbqt_par_QBrush( 1 );
+   if( p )
+      ( p )->setStyle( ( Qt::BrushStyle ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBRUSH_SETSTYLE FP=( p )->setStyle( ( Qt::BrushStyle ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -258,7 +300,13 @@ HB_FUNC( QT_QBRUSH_SETSTYLE )
  */
 HB_FUNC( QT_QBRUSH_SETTEXTURE )
 {
-   hbqt_par_QBrush( 1 )->setTexture( *hbqt_par_QPixmap( 2 ) );
+   QBrush * p = hbqt_par_QBrush( 1 );
+   if( p )
+      ( p )->setTexture( *hbqt_par_QPixmap( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBRUSH_SETTEXTURE FP=( p )->setTexture( *hbqt_par_QPixmap( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -266,7 +314,13 @@ HB_FUNC( QT_QBRUSH_SETTEXTURE )
  */
 HB_FUNC( QT_QBRUSH_SETTEXTUREIMAGE )
 {
-   hbqt_par_QBrush( 1 )->setTextureImage( *hbqt_par_QImage( 2 ) );
+   QBrush * p = hbqt_par_QBrush( 1 );
+   if( p )
+      ( p )->setTextureImage( *hbqt_par_QImage( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBRUSH_SETTEXTUREIMAGE FP=( p )->setTextureImage( *hbqt_par_QImage( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -274,7 +328,13 @@ HB_FUNC( QT_QBRUSH_SETTEXTUREIMAGE )
  */
 HB_FUNC( QT_QBRUSH_SETTRANSFORM )
 {
-   hbqt_par_QBrush( 1 )->setTransform( *hbqt_par_QTransform( 2 ) );
+   QBrush * p = hbqt_par_QBrush( 1 );
+   if( p )
+      ( p )->setTransform( *hbqt_par_QTransform( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBRUSH_SETTRANSFORM FP=( p )->setTransform( *hbqt_par_QTransform( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -282,7 +342,13 @@ HB_FUNC( QT_QBRUSH_SETTRANSFORM )
  */
 HB_FUNC( QT_QBRUSH_STYLE )
 {
-   hb_retni( ( Qt::BrushStyle ) hbqt_par_QBrush( 1 )->style() );
+   QBrush * p = hbqt_par_QBrush( 1 );
+   if( p )
+      hb_retni( ( Qt::BrushStyle ) ( p )->style() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBRUSH_STYLE FP=hb_retni( ( Qt::BrushStyle ) ( p )->style() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -290,7 +356,13 @@ HB_FUNC( QT_QBRUSH_STYLE )
  */
 HB_FUNC( QT_QBRUSH_TEXTURE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( hbqt_par_QBrush( 1 )->texture() ), true ) );
+   QBrush * p = hbqt_par_QBrush( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->texture() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBRUSH_TEXTURE FP=hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->texture() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -298,7 +370,13 @@ HB_FUNC( QT_QBRUSH_TEXTURE )
  */
 HB_FUNC( QT_QBRUSH_TEXTUREIMAGE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QImage( new QImage( hbqt_par_QBrush( 1 )->textureImage() ), true ) );
+   QBrush * p = hbqt_par_QBrush( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QImage( new QImage( ( p )->textureImage() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBRUSH_TEXTUREIMAGE FP=hb_retptrGC( hbqt_gcAllocate_QImage( new QImage( ( p )->textureImage() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -306,7 +384,13 @@ HB_FUNC( QT_QBRUSH_TEXTUREIMAGE )
  */
 HB_FUNC( QT_QBRUSH_TRANSFORM )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTransform( new QTransform( hbqt_par_QBrush( 1 )->transform() ), true ) );
+   QBrush * p = hbqt_par_QBrush( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QTransform( new QTransform( ( p )->transform() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBRUSH_TRANSFORM FP=hb_retptrGC( hbqt_gcAllocate_QTransform( new QTransform( ( p )->transform() ), true ) ); p is NULL" ) );
+   }
 }
 
 

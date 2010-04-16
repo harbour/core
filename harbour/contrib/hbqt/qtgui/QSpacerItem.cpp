@@ -76,7 +76,7 @@
 
 typedef struct
 {
-   void * ph;
+   QSpacerItem * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QSpacerItem;
@@ -111,7 +111,7 @@ void * hbqt_gcAllocate_QSpacerItem( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QSpacerItem * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QSpacerItem;
 
@@ -128,7 +128,7 @@ void * hbqt_gcAllocate_QSpacerItem( void * pObj, bool bNew )
 
 HB_FUNC( QT_QSPACERITEM )
 {
-   void * pObj = NULL;
+   QSpacerItem * pObj = NULL;
 
    if( hb_pcount() >= 2 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
    {
@@ -141,7 +141,7 @@ HB_FUNC( QT_QSPACERITEM )
       pObj = new QSpacerItem( *hbqt_par_QSpacerItem( 1 ) ) ;
    }
 
-   hb_retptrGC( hbqt_gcAllocate_QSpacerItem( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QSpacerItem( ( void * ) pObj, true ) );
 }
 
 /*
@@ -149,7 +149,13 @@ HB_FUNC( QT_QSPACERITEM )
  */
 HB_FUNC( QT_QSPACERITEM_CHANGESIZE )
 {
-   hbqt_par_QSpacerItem( 1 )->changeSize( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISNUM( 4 ) ? ( QSizePolicy::Policy ) hb_parni( 4 ) : ( QSizePolicy::Policy ) QSizePolicy::Minimum ), ( HB_ISNUM( 5 ) ? ( QSizePolicy::Policy ) hb_parni( 5 ) : ( QSizePolicy::Policy ) QSizePolicy::Minimum ) );
+   QSpacerItem * p = hbqt_par_QSpacerItem( 1 );
+   if( p )
+      ( p )->changeSize( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISNUM( 4 ) ? ( QSizePolicy::Policy ) hb_parni( 4 ) : ( QSizePolicy::Policy ) QSizePolicy::Minimum ), ( HB_ISNUM( 5 ) ? ( QSizePolicy::Policy ) hb_parni( 5 ) : ( QSizePolicy::Policy ) QSizePolicy::Minimum ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSPACERITEM_CHANGESIZE FP=( p )->changeSize( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISNUM( 4 ) ? ( QSizePolicy::Policy ) hb_parni( 4 ) : ( QSizePolicy::Policy ) QSizePolicy::Minimum ), ( HB_ISNUM( 5 ) ? ( QSizePolicy::Policy ) hb_parni( 5 ) : ( QSizePolicy::Policy ) QSizePolicy::Minimum ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -157,7 +163,13 @@ HB_FUNC( QT_QSPACERITEM_CHANGESIZE )
  */
 HB_FUNC( QT_QSPACERITEM_ISEMPTY )
 {
-   hb_retl( hbqt_par_QSpacerItem( 1 )->isEmpty() );
+   QSpacerItem * p = hbqt_par_QSpacerItem( 1 );
+   if( p )
+      hb_retl( ( p )->isEmpty() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSPACERITEM_ISEMPTY FP=hb_retl( ( p )->isEmpty() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -165,7 +177,13 @@ HB_FUNC( QT_QSPACERITEM_ISEMPTY )
  */
 HB_FUNC( QT_QSPACERITEM_SPACERITEM )
 {
-   hb_retptrGC( hbqt_gcAllocate_QSpacerItem( hbqt_par_QSpacerItem( 1 )->spacerItem(), false ) );
+   QSpacerItem * p = hbqt_par_QSpacerItem( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QSpacerItem( ( p )->spacerItem(), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSPACERITEM_SPACERITEM FP=hb_retptrGC( hbqt_gcAllocate_QSpacerItem( ( p )->spacerItem(), false ) ); p is NULL" ) );
+   }
 }
 
 

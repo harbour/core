@@ -81,43 +81,44 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QToolButton > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QToolButton > pq;
 } QGC_POINTER_QToolButton;
 
 QT_G_FUNC( hbqt_gcRelease_QToolButton )
 {
+   QToolButton  * ph = NULL ;
    QGC_POINTER_QToolButton * p = ( QGC_POINTER_QToolButton * ) Cargo;
 
-   if( p && p->bNew )
+   if( p && p->bNew && p->ph )
    {
-      if( p->ph && p->pq )
+      ph = p->ph;
+      if( ph )
       {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QToolButton   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
-            delete ( ( QToolButton * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QToolButton   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QToolButton   /.\\   ", (void*) ph, (void*) p->ph ) );
+            delete ( p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QToolButton   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QToolButton          pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QToolButton          ", ph ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QToolButton    :     Object already deleted!", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QToolButton    :     Object already deleted!", ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QToolButton    :    Object not created with new=true", p->ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QToolButton    :    Object not created with new=true", ph ) );
       p->ph = NULL;
    }
 }
@@ -126,13 +127,12 @@ void * hbqt_gcAllocate_QToolButton( void * pObj, bool bNew )
 {
    QGC_POINTER_QToolButton * p = ( QGC_POINTER_QToolButton * ) hb_gcAllocate( sizeof( QGC_POINTER_QToolButton ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QToolButton >( ( QToolButton * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QToolButton;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QToolButton >( ( QToolButton * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QToolButton  under p->pq", pObj ) );
    }
    else
@@ -144,11 +144,11 @@ void * hbqt_gcAllocate_QToolButton( void * pObj, bool bNew )
 
 HB_FUNC( QT_QTOOLBUTTON )
 {
-   void * pObj = NULL;
+   QToolButton * pObj = NULL;
 
-   pObj = ( QToolButton* ) new QToolButton( hbqt_par_QWidget( 1 ) ) ;
+   pObj =  new QToolButton( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QToolButton( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QToolButton( ( void * ) pObj, true ) );
 }
 
 /*
@@ -156,7 +156,13 @@ HB_FUNC( QT_QTOOLBUTTON )
  */
 HB_FUNC( QT_QTOOLBUTTON_ARROWTYPE )
 {
-   hb_retni( ( Qt::ArrowType ) hbqt_par_QToolButton( 1 )->arrowType() );
+   QToolButton * p = hbqt_par_QToolButton( 1 );
+   if( p )
+      hb_retni( ( Qt::ArrowType ) ( p )->arrowType() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTOOLBUTTON_ARROWTYPE FP=hb_retni( ( Qt::ArrowType ) ( p )->arrowType() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -164,7 +170,13 @@ HB_FUNC( QT_QTOOLBUTTON_ARROWTYPE )
  */
 HB_FUNC( QT_QTOOLBUTTON_AUTORAISE )
 {
-   hb_retl( hbqt_par_QToolButton( 1 )->autoRaise() );
+   QToolButton * p = hbqt_par_QToolButton( 1 );
+   if( p )
+      hb_retl( ( p )->autoRaise() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTOOLBUTTON_AUTORAISE FP=hb_retl( ( p )->autoRaise() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -172,7 +184,13 @@ HB_FUNC( QT_QTOOLBUTTON_AUTORAISE )
  */
 HB_FUNC( QT_QTOOLBUTTON_DEFAULTACTION )
 {
-   hb_retptrGC( hbqt_gcAllocate_QAction( hbqt_par_QToolButton( 1 )->defaultAction(), false ) );
+   QToolButton * p = hbqt_par_QToolButton( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->defaultAction(), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTOOLBUTTON_DEFAULTACTION FP=hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->defaultAction(), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -180,7 +198,13 @@ HB_FUNC( QT_QTOOLBUTTON_DEFAULTACTION )
  */
 HB_FUNC( QT_QTOOLBUTTON_MENU )
 {
-   hb_retptrGC( hbqt_gcAllocate_QMenu( hbqt_par_QToolButton( 1 )->menu(), false ) );
+   QToolButton * p = hbqt_par_QToolButton( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QMenu( ( p )->menu(), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTOOLBUTTON_MENU FP=hb_retptrGC( hbqt_gcAllocate_QMenu( ( p )->menu(), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -188,7 +212,13 @@ HB_FUNC( QT_QTOOLBUTTON_MENU )
  */
 HB_FUNC( QT_QTOOLBUTTON_POPUPMODE )
 {
-   hb_retni( ( QToolButton::ToolButtonPopupMode ) hbqt_par_QToolButton( 1 )->popupMode() );
+   QToolButton * p = hbqt_par_QToolButton( 1 );
+   if( p )
+      hb_retni( ( QToolButton::ToolButtonPopupMode ) ( p )->popupMode() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTOOLBUTTON_POPUPMODE FP=hb_retni( ( QToolButton::ToolButtonPopupMode ) ( p )->popupMode() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -196,7 +226,13 @@ HB_FUNC( QT_QTOOLBUTTON_POPUPMODE )
  */
 HB_FUNC( QT_QTOOLBUTTON_SETARROWTYPE )
 {
-   hbqt_par_QToolButton( 1 )->setArrowType( ( Qt::ArrowType ) hb_parni( 2 ) );
+   QToolButton * p = hbqt_par_QToolButton( 1 );
+   if( p )
+      ( p )->setArrowType( ( Qt::ArrowType ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTOOLBUTTON_SETARROWTYPE FP=( p )->setArrowType( ( Qt::ArrowType ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -204,7 +240,13 @@ HB_FUNC( QT_QTOOLBUTTON_SETARROWTYPE )
  */
 HB_FUNC( QT_QTOOLBUTTON_SETAUTORAISE )
 {
-   hbqt_par_QToolButton( 1 )->setAutoRaise( hb_parl( 2 ) );
+   QToolButton * p = hbqt_par_QToolButton( 1 );
+   if( p )
+      ( p )->setAutoRaise( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTOOLBUTTON_SETAUTORAISE FP=( p )->setAutoRaise( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -212,7 +254,13 @@ HB_FUNC( QT_QTOOLBUTTON_SETAUTORAISE )
  */
 HB_FUNC( QT_QTOOLBUTTON_SETMENU )
 {
-   hbqt_par_QToolButton( 1 )->setMenu( hbqt_par_QMenu( 2 ) );
+   QToolButton * p = hbqt_par_QToolButton( 1 );
+   if( p )
+      ( p )->setMenu( hbqt_par_QMenu( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTOOLBUTTON_SETMENU FP=( p )->setMenu( hbqt_par_QMenu( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -220,7 +268,13 @@ HB_FUNC( QT_QTOOLBUTTON_SETMENU )
  */
 HB_FUNC( QT_QTOOLBUTTON_SETPOPUPMODE )
 {
-   hbqt_par_QToolButton( 1 )->setPopupMode( ( QToolButton::ToolButtonPopupMode ) hb_parni( 2 ) );
+   QToolButton * p = hbqt_par_QToolButton( 1 );
+   if( p )
+      ( p )->setPopupMode( ( QToolButton::ToolButtonPopupMode ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTOOLBUTTON_SETPOPUPMODE FP=( p )->setPopupMode( ( QToolButton::ToolButtonPopupMode ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -228,7 +282,13 @@ HB_FUNC( QT_QTOOLBUTTON_SETPOPUPMODE )
  */
 HB_FUNC( QT_QTOOLBUTTON_TOOLBUTTONSTYLE )
 {
-   hb_retni( ( Qt::ToolButtonStyle ) hbqt_par_QToolButton( 1 )->toolButtonStyle() );
+   QToolButton * p = hbqt_par_QToolButton( 1 );
+   if( p )
+      hb_retni( ( Qt::ToolButtonStyle ) ( p )->toolButtonStyle() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTOOLBUTTON_TOOLBUTTONSTYLE FP=hb_retni( ( Qt::ToolButtonStyle ) ( p )->toolButtonStyle() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -236,7 +296,13 @@ HB_FUNC( QT_QTOOLBUTTON_TOOLBUTTONSTYLE )
  */
 HB_FUNC( QT_QTOOLBUTTON_SETDEFAULTACTION )
 {
-   hbqt_par_QToolButton( 1 )->setDefaultAction( hbqt_par_QAction( 2 ) );
+   QToolButton * p = hbqt_par_QToolButton( 1 );
+   if( p )
+      ( p )->setDefaultAction( hbqt_par_QAction( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTOOLBUTTON_SETDEFAULTACTION FP=( p )->setDefaultAction( hbqt_par_QAction( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -244,7 +310,13 @@ HB_FUNC( QT_QTOOLBUTTON_SETDEFAULTACTION )
  */
 HB_FUNC( QT_QTOOLBUTTON_SETTOOLBUTTONSTYLE )
 {
-   hbqt_par_QToolButton( 1 )->setToolButtonStyle( ( Qt::ToolButtonStyle ) hb_parni( 2 ) );
+   QToolButton * p = hbqt_par_QToolButton( 1 );
+   if( p )
+      ( p )->setToolButtonStyle( ( Qt::ToolButtonStyle ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTOOLBUTTON_SETTOOLBUTTONSTYLE FP=( p )->setToolButtonStyle( ( Qt::ToolButtonStyle ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -252,7 +324,13 @@ HB_FUNC( QT_QTOOLBUTTON_SETTOOLBUTTONSTYLE )
  */
 HB_FUNC( QT_QTOOLBUTTON_SHOWMENU )
 {
-   hbqt_par_QToolButton( 1 )->showMenu();
+   QToolButton * p = hbqt_par_QToolButton( 1 );
+   if( p )
+      ( p )->showMenu();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTOOLBUTTON_SHOWMENU FP=( p )->showMenu(); p is NULL" ) );
+   }
 }
 
 

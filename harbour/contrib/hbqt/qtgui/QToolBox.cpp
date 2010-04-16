@@ -77,43 +77,44 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QToolBox > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QToolBox > pq;
 } QGC_POINTER_QToolBox;
 
 QT_G_FUNC( hbqt_gcRelease_QToolBox )
 {
+   QToolBox  * ph = NULL ;
    QGC_POINTER_QToolBox * p = ( QGC_POINTER_QToolBox * ) Cargo;
 
-   if( p && p->bNew )
+   if( p && p->bNew && p->ph )
    {
-      if( p->ph && p->pq )
+      ph = p->ph;
+      if( ph )
       {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QToolBox   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
-            delete ( ( QToolBox * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QToolBox   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QToolBox   /.\\   ", (void*) ph, (void*) p->ph ) );
+            delete ( p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QToolBox   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QToolBox          pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QToolBox          ", ph ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QToolBox    :     Object already deleted!", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QToolBox    :     Object already deleted!", ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QToolBox    :    Object not created with new=true", p->ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QToolBox    :    Object not created with new=true", ph ) );
       p->ph = NULL;
    }
 }
@@ -122,13 +123,12 @@ void * hbqt_gcAllocate_QToolBox( void * pObj, bool bNew )
 {
    QGC_POINTER_QToolBox * p = ( QGC_POINTER_QToolBox * ) hb_gcAllocate( sizeof( QGC_POINTER_QToolBox ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QToolBox >( ( QToolBox * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QToolBox;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QToolBox >( ( QToolBox * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QToolBox  under p->pq", pObj ) );
    }
    else
@@ -140,11 +140,11 @@ void * hbqt_gcAllocate_QToolBox( void * pObj, bool bNew )
 
 HB_FUNC( QT_QTOOLBOX )
 {
-   void * pObj = NULL;
+   QToolBox * pObj = NULL;
 
-   pObj = ( QToolBox* ) new QToolBox( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) ;
+   pObj =  new QToolBox( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QToolBox( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QToolBox( ( void * ) pObj, true ) );
 }
 
 /*
@@ -152,7 +152,13 @@ HB_FUNC( QT_QTOOLBOX )
  */
 HB_FUNC( QT_QTOOLBOX_ADDITEM )
 {
-   hb_retni( hbqt_par_QToolBox( 1 )->addItem( hbqt_par_QWidget( 2 ), QIcon( hbqt_par_QString( 3 ) ), QToolBox::tr( hb_parc( 4 ) ) ) );
+   QToolBox * p = hbqt_par_QToolBox( 1 );
+   if( p )
+      hb_retni( ( p )->addItem( hbqt_par_QWidget( 2 ), QIcon( hbqt_par_QString( 3 ) ), QToolBox::tr( hb_parc( 4 ) ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTOOLBOX_ADDITEM FP=hb_retni( ( p )->addItem( hbqt_par_QWidget( 2 ), QIcon( hbqt_par_QString( 3 ) ), QToolBox::tr( hb_parc( 4 ) ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -160,7 +166,13 @@ HB_FUNC( QT_QTOOLBOX_ADDITEM )
  */
 HB_FUNC( QT_QTOOLBOX_ADDITEM_1 )
 {
-   hb_retni( hbqt_par_QToolBox( 1 )->addItem( hbqt_par_QWidget( 2 ), QToolBox::tr( hb_parc( 3 ) ) ) );
+   QToolBox * p = hbqt_par_QToolBox( 1 );
+   if( p )
+      hb_retni( ( p )->addItem( hbqt_par_QWidget( 2 ), QToolBox::tr( hb_parc( 3 ) ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTOOLBOX_ADDITEM_1 FP=hb_retni( ( p )->addItem( hbqt_par_QWidget( 2 ), QToolBox::tr( hb_parc( 3 ) ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -168,7 +180,13 @@ HB_FUNC( QT_QTOOLBOX_ADDITEM_1 )
  */
 HB_FUNC( QT_QTOOLBOX_COUNT )
 {
-   hb_retni( hbqt_par_QToolBox( 1 )->count() );
+   QToolBox * p = hbqt_par_QToolBox( 1 );
+   if( p )
+      hb_retni( ( p )->count() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTOOLBOX_COUNT FP=hb_retni( ( p )->count() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -176,7 +194,13 @@ HB_FUNC( QT_QTOOLBOX_COUNT )
  */
 HB_FUNC( QT_QTOOLBOX_CURRENTINDEX )
 {
-   hb_retni( hbqt_par_QToolBox( 1 )->currentIndex() );
+   QToolBox * p = hbqt_par_QToolBox( 1 );
+   if( p )
+      hb_retni( ( p )->currentIndex() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTOOLBOX_CURRENTINDEX FP=hb_retni( ( p )->currentIndex() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -184,7 +208,13 @@ HB_FUNC( QT_QTOOLBOX_CURRENTINDEX )
  */
 HB_FUNC( QT_QTOOLBOX_CURRENTWIDGET )
 {
-   hb_retptrGC( hbqt_gcAllocate_QWidget( hbqt_par_QToolBox( 1 )->currentWidget(), false ) );
+   QToolBox * p = hbqt_par_QToolBox( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->currentWidget(), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTOOLBOX_CURRENTWIDGET FP=hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->currentWidget(), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -192,7 +222,13 @@ HB_FUNC( QT_QTOOLBOX_CURRENTWIDGET )
  */
 HB_FUNC( QT_QTOOLBOX_INDEXOF )
 {
-   hb_retni( hbqt_par_QToolBox( 1 )->indexOf( hbqt_par_QWidget( 2 ) ) );
+   QToolBox * p = hbqt_par_QToolBox( 1 );
+   if( p )
+      hb_retni( ( p )->indexOf( hbqt_par_QWidget( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTOOLBOX_INDEXOF FP=hb_retni( ( p )->indexOf( hbqt_par_QWidget( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -200,7 +236,13 @@ HB_FUNC( QT_QTOOLBOX_INDEXOF )
  */
 HB_FUNC( QT_QTOOLBOX_INSERTITEM )
 {
-   hb_retni( hbqt_par_QToolBox( 1 )->insertItem( hb_parni( 2 ), hbqt_par_QWidget( 3 ), QIcon( hbqt_par_QString( 4 ) ), QToolBox::tr( hb_parc( 5 ) ) ) );
+   QToolBox * p = hbqt_par_QToolBox( 1 );
+   if( p )
+      hb_retni( ( p )->insertItem( hb_parni( 2 ), hbqt_par_QWidget( 3 ), QIcon( hbqt_par_QString( 4 ) ), QToolBox::tr( hb_parc( 5 ) ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTOOLBOX_INSERTITEM FP=hb_retni( ( p )->insertItem( hb_parni( 2 ), hbqt_par_QWidget( 3 ), QIcon( hbqt_par_QString( 4 ) ), QToolBox::tr( hb_parc( 5 ) ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -208,7 +250,13 @@ HB_FUNC( QT_QTOOLBOX_INSERTITEM )
  */
 HB_FUNC( QT_QTOOLBOX_INSERTITEM_1 )
 {
-   hb_retni( hbqt_par_QToolBox( 1 )->insertItem( hb_parni( 2 ), hbqt_par_QWidget( 3 ), QToolBox::tr( hb_parc( 4 ) ) ) );
+   QToolBox * p = hbqt_par_QToolBox( 1 );
+   if( p )
+      hb_retni( ( p )->insertItem( hb_parni( 2 ), hbqt_par_QWidget( 3 ), QToolBox::tr( hb_parc( 4 ) ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTOOLBOX_INSERTITEM_1 FP=hb_retni( ( p )->insertItem( hb_parni( 2 ), hbqt_par_QWidget( 3 ), QToolBox::tr( hb_parc( 4 ) ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -216,7 +264,13 @@ HB_FUNC( QT_QTOOLBOX_INSERTITEM_1 )
  */
 HB_FUNC( QT_QTOOLBOX_ISITEMENABLED )
 {
-   hb_retl( hbqt_par_QToolBox( 1 )->isItemEnabled( hb_parni( 2 ) ) );
+   QToolBox * p = hbqt_par_QToolBox( 1 );
+   if( p )
+      hb_retl( ( p )->isItemEnabled( hb_parni( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTOOLBOX_ISITEMENABLED FP=hb_retl( ( p )->isItemEnabled( hb_parni( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -224,7 +278,13 @@ HB_FUNC( QT_QTOOLBOX_ISITEMENABLED )
  */
 HB_FUNC( QT_QTOOLBOX_ITEMICON )
 {
-   hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( hbqt_par_QToolBox( 1 )->itemIcon( hb_parni( 2 ) ) ), true ) );
+   QToolBox * p = hbqt_par_QToolBox( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( ( p )->itemIcon( hb_parni( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTOOLBOX_ITEMICON FP=hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( ( p )->itemIcon( hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -232,7 +292,13 @@ HB_FUNC( QT_QTOOLBOX_ITEMICON )
  */
 HB_FUNC( QT_QTOOLBOX_ITEMTEXT )
 {
-   hb_retc( hbqt_par_QToolBox( 1 )->itemText( hb_parni( 2 ) ).toAscii().data() );
+   QToolBox * p = hbqt_par_QToolBox( 1 );
+   if( p )
+      hb_retc( ( p )->itemText( hb_parni( 2 ) ).toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTOOLBOX_ITEMTEXT FP=hb_retc( ( p )->itemText( hb_parni( 2 ) ).toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -240,7 +306,13 @@ HB_FUNC( QT_QTOOLBOX_ITEMTEXT )
  */
 HB_FUNC( QT_QTOOLBOX_ITEMTOOLTIP )
 {
-   hb_retc( hbqt_par_QToolBox( 1 )->itemToolTip( hb_parni( 2 ) ).toAscii().data() );
+   QToolBox * p = hbqt_par_QToolBox( 1 );
+   if( p )
+      hb_retc( ( p )->itemToolTip( hb_parni( 2 ) ).toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTOOLBOX_ITEMTOOLTIP FP=hb_retc( ( p )->itemToolTip( hb_parni( 2 ) ).toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -248,7 +320,13 @@ HB_FUNC( QT_QTOOLBOX_ITEMTOOLTIP )
  */
 HB_FUNC( QT_QTOOLBOX_REMOVEITEM )
 {
-   hbqt_par_QToolBox( 1 )->removeItem( hb_parni( 2 ) );
+   QToolBox * p = hbqt_par_QToolBox( 1 );
+   if( p )
+      ( p )->removeItem( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTOOLBOX_REMOVEITEM FP=( p )->removeItem( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -256,7 +334,13 @@ HB_FUNC( QT_QTOOLBOX_REMOVEITEM )
  */
 HB_FUNC( QT_QTOOLBOX_SETITEMENABLED )
 {
-   hbqt_par_QToolBox( 1 )->setItemEnabled( hb_parni( 2 ), hb_parl( 3 ) );
+   QToolBox * p = hbqt_par_QToolBox( 1 );
+   if( p )
+      ( p )->setItemEnabled( hb_parni( 2 ), hb_parl( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTOOLBOX_SETITEMENABLED FP=( p )->setItemEnabled( hb_parni( 2 ), hb_parl( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -264,7 +348,13 @@ HB_FUNC( QT_QTOOLBOX_SETITEMENABLED )
  */
 HB_FUNC( QT_QTOOLBOX_SETITEMICON )
 {
-   hbqt_par_QToolBox( 1 )->setItemIcon( hb_parni( 2 ), QIcon( hbqt_par_QString( 3 ) ) );
+   QToolBox * p = hbqt_par_QToolBox( 1 );
+   if( p )
+      ( p )->setItemIcon( hb_parni( 2 ), QIcon( hbqt_par_QString( 3 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTOOLBOX_SETITEMICON FP=( p )->setItemIcon( hb_parni( 2 ), QIcon( hbqt_par_QString( 3 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -272,7 +362,13 @@ HB_FUNC( QT_QTOOLBOX_SETITEMICON )
  */
 HB_FUNC( QT_QTOOLBOX_SETITEMTEXT )
 {
-   hbqt_par_QToolBox( 1 )->setItemText( hb_parni( 2 ), QToolBox::tr( hb_parc( 3 ) ) );
+   QToolBox * p = hbqt_par_QToolBox( 1 );
+   if( p )
+      ( p )->setItemText( hb_parni( 2 ), QToolBox::tr( hb_parc( 3 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTOOLBOX_SETITEMTEXT FP=( p )->setItemText( hb_parni( 2 ), QToolBox::tr( hb_parc( 3 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -280,7 +376,13 @@ HB_FUNC( QT_QTOOLBOX_SETITEMTEXT )
  */
 HB_FUNC( QT_QTOOLBOX_SETITEMTOOLTIP )
 {
-   hbqt_par_QToolBox( 1 )->setItemToolTip( hb_parni( 2 ), QToolBox::tr( hb_parc( 3 ) ) );
+   QToolBox * p = hbqt_par_QToolBox( 1 );
+   if( p )
+      ( p )->setItemToolTip( hb_parni( 2 ), QToolBox::tr( hb_parc( 3 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTOOLBOX_SETITEMTOOLTIP FP=( p )->setItemToolTip( hb_parni( 2 ), QToolBox::tr( hb_parc( 3 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -288,7 +390,13 @@ HB_FUNC( QT_QTOOLBOX_SETITEMTOOLTIP )
  */
 HB_FUNC( QT_QTOOLBOX_WIDGET )
 {
-   hb_retptrGC( hbqt_gcAllocate_QWidget( hbqt_par_QToolBox( 1 )->widget( hb_parni( 2 ) ), false ) );
+   QToolBox * p = hbqt_par_QToolBox( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->widget( hb_parni( 2 ) ), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTOOLBOX_WIDGET FP=hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->widget( hb_parni( 2 ) ), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -296,7 +404,13 @@ HB_FUNC( QT_QTOOLBOX_WIDGET )
  */
 HB_FUNC( QT_QTOOLBOX_SETCURRENTINDEX )
 {
-   hbqt_par_QToolBox( 1 )->setCurrentIndex( hb_parni( 2 ) );
+   QToolBox * p = hbqt_par_QToolBox( 1 );
+   if( p )
+      ( p )->setCurrentIndex( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTOOLBOX_SETCURRENTINDEX FP=( p )->setCurrentIndex( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -304,7 +418,13 @@ HB_FUNC( QT_QTOOLBOX_SETCURRENTINDEX )
  */
 HB_FUNC( QT_QTOOLBOX_SETCURRENTWIDGET )
 {
-   hbqt_par_QToolBox( 1 )->setCurrentWidget( hbqt_par_QWidget( 2 ) );
+   QToolBox * p = hbqt_par_QToolBox( 1 );
+   if( p )
+      ( p )->setCurrentWidget( hbqt_par_QWidget( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTOOLBOX_SETCURRENTWIDGET FP=( p )->setCurrentWidget( hbqt_par_QWidget( 2 ) ); p is NULL" ) );
+   }
 }
 
 

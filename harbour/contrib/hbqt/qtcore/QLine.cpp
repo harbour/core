@@ -78,7 +78,7 @@
 
 typedef struct
 {
-   void * ph;
+   QLine * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QLine;
@@ -113,7 +113,7 @@ void * hbqt_gcAllocate_QLine( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QLine * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QLine;
 
@@ -130,26 +130,26 @@ void * hbqt_gcAllocate_QLine( void * pObj, bool bNew )
 
 HB_FUNC( QT_QLINE )
 {
-   void * pObj = NULL;
+   QLine * pObj = NULL;
 
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      pObj = ( QLine* ) new QLine( *hbqt_par_QLine( 1 ) ) ;
+      pObj =  new QLine( *hbqt_par_QLine( 1 ) ) ;
    }
    else if( hb_pcount() == 2 && HB_ISPOINTER( 1 ) && HB_ISPOINTER( 2 ) )
    {
-      pObj = ( QLine* ) new QLine( *hbqt_par_QPoint( 1 ), *hbqt_par_QPoint( 2 ) ) ;
+      pObj =  new QLine( *hbqt_par_QPoint( 1 ), *hbqt_par_QPoint( 2 ) ) ;
    }
    else if( hb_pcount() == 4 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) && HB_ISNUM( 4 ) )
    {
-      pObj = ( QLine* ) new QLine( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ) ) ;
+      pObj =  new QLine( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ) ) ;
    }
    else
    {
-      pObj = ( QLine* ) new QLine() ;
+      pObj =  new QLine() ;
    }
 
-   hb_retptrGC( hbqt_gcAllocate_QLine( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QLine( ( void * ) pObj, true ) );
 }
 
 /*
@@ -157,7 +157,13 @@ HB_FUNC( QT_QLINE )
  */
 HB_FUNC( QT_QLINE_P1 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( hbqt_par_QLine( 1 )->p1() ), true ) );
+   QLine * p = hbqt_par_QLine( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->p1() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINE_P1 FP=hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->p1() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -165,7 +171,13 @@ HB_FUNC( QT_QLINE_P1 )
  */
 HB_FUNC( QT_QLINE_P2 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( hbqt_par_QLine( 1 )->p2() ), true ) );
+   QLine * p = hbqt_par_QLine( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->p2() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINE_P2 FP=hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->p2() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -173,7 +185,13 @@ HB_FUNC( QT_QLINE_P2 )
  */
 HB_FUNC( QT_QLINE_X1 )
 {
-   hb_retni( hbqt_par_QLine( 1 )->x1() );
+   QLine * p = hbqt_par_QLine( 1 );
+   if( p )
+      hb_retni( ( p )->x1() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINE_X1 FP=hb_retni( ( p )->x1() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -181,7 +199,13 @@ HB_FUNC( QT_QLINE_X1 )
  */
 HB_FUNC( QT_QLINE_X2 )
 {
-   hb_retni( hbqt_par_QLine( 1 )->x2() );
+   QLine * p = hbqt_par_QLine( 1 );
+   if( p )
+      hb_retni( ( p )->x2() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINE_X2 FP=hb_retni( ( p )->x2() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -189,7 +213,13 @@ HB_FUNC( QT_QLINE_X2 )
  */
 HB_FUNC( QT_QLINE_Y1 )
 {
-   hb_retni( hbqt_par_QLine( 1 )->y1() );
+   QLine * p = hbqt_par_QLine( 1 );
+   if( p )
+      hb_retni( ( p )->y1() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINE_Y1 FP=hb_retni( ( p )->y1() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -197,7 +227,13 @@ HB_FUNC( QT_QLINE_Y1 )
  */
 HB_FUNC( QT_QLINE_Y2 )
 {
-   hb_retni( hbqt_par_QLine( 1 )->y2() );
+   QLine * p = hbqt_par_QLine( 1 );
+   if( p )
+      hb_retni( ( p )->y2() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINE_Y2 FP=hb_retni( ( p )->y2() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -205,7 +241,13 @@ HB_FUNC( QT_QLINE_Y2 )
  */
 HB_FUNC( QT_QLINE_DX )
 {
-   hb_retni( hbqt_par_QLine( 1 )->dx() );
+   QLine * p = hbqt_par_QLine( 1 );
+   if( p )
+      hb_retni( ( p )->dx() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINE_DX FP=hb_retni( ( p )->dx() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -213,7 +255,13 @@ HB_FUNC( QT_QLINE_DX )
  */
 HB_FUNC( QT_QLINE_DY )
 {
-   hb_retni( hbqt_par_QLine( 1 )->dy() );
+   QLine * p = hbqt_par_QLine( 1 );
+   if( p )
+      hb_retni( ( p )->dy() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINE_DY FP=hb_retni( ( p )->dy() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -221,7 +269,13 @@ HB_FUNC( QT_QLINE_DY )
  */
 HB_FUNC( QT_QLINE_ISNULL )
 {
-   hb_retl( hbqt_par_QLine( 1 )->isNull() );
+   QLine * p = hbqt_par_QLine( 1 );
+   if( p )
+      hb_retl( ( p )->isNull() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINE_ISNULL FP=hb_retl( ( p )->isNull() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -229,7 +283,13 @@ HB_FUNC( QT_QLINE_ISNULL )
  */
 HB_FUNC( QT_QLINE_SETP1 )
 {
-   hbqt_par_QLine( 1 )->setP1( *hbqt_par_QPoint( 2 ) );
+   QLine * p = hbqt_par_QLine( 1 );
+   if( p )
+      ( p )->setP1( *hbqt_par_QPoint( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINE_SETP1 FP=( p )->setP1( *hbqt_par_QPoint( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -237,7 +297,13 @@ HB_FUNC( QT_QLINE_SETP1 )
  */
 HB_FUNC( QT_QLINE_SETP2 )
 {
-   hbqt_par_QLine( 1 )->setP2( *hbqt_par_QPoint( 2 ) );
+   QLine * p = hbqt_par_QLine( 1 );
+   if( p )
+      ( p )->setP2( *hbqt_par_QPoint( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINE_SETP2 FP=( p )->setP2( *hbqt_par_QPoint( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -245,7 +311,13 @@ HB_FUNC( QT_QLINE_SETP2 )
  */
 HB_FUNC( QT_QLINE_SETLINE )
 {
-   hbqt_par_QLine( 1 )->setLine( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) );
+   QLine * p = hbqt_par_QLine( 1 );
+   if( p )
+      ( p )->setLine( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINE_SETLINE FP=( p )->setLine( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -253,7 +325,13 @@ HB_FUNC( QT_QLINE_SETLINE )
  */
 HB_FUNC( QT_QLINE_SETPOINTS )
 {
-   hbqt_par_QLine( 1 )->setPoints( *hbqt_par_QPoint( 2 ), *hbqt_par_QPoint( 3 ) );
+   QLine * p = hbqt_par_QLine( 1 );
+   if( p )
+      ( p )->setPoints( *hbqt_par_QPoint( 2 ), *hbqt_par_QPoint( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINE_SETPOINTS FP=( p )->setPoints( *hbqt_par_QPoint( 2 ), *hbqt_par_QPoint( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -261,7 +339,13 @@ HB_FUNC( QT_QLINE_SETPOINTS )
  */
 HB_FUNC( QT_QLINE_TRANSLATE )
 {
-   hbqt_par_QLine( 1 )->translate( *hbqt_par_QPoint( 2 ) );
+   QLine * p = hbqt_par_QLine( 1 );
+   if( p )
+      ( p )->translate( *hbqt_par_QPoint( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINE_TRANSLATE FP=( p )->translate( *hbqt_par_QPoint( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -269,7 +353,13 @@ HB_FUNC( QT_QLINE_TRANSLATE )
  */
 HB_FUNC( QT_QLINE_TRANSLATE_1 )
 {
-   hbqt_par_QLine( 1 )->translate( hb_parni( 2 ), hb_parni( 3 ) );
+   QLine * p = hbqt_par_QLine( 1 );
+   if( p )
+      ( p )->translate( hb_parni( 2 ), hb_parni( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINE_TRANSLATE_1 FP=( p )->translate( hb_parni( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -277,7 +367,13 @@ HB_FUNC( QT_QLINE_TRANSLATE_1 )
  */
 HB_FUNC( QT_QLINE_TRANSLATED )
 {
-   hb_retptrGC( hbqt_gcAllocate_QLine( new QLine( hbqt_par_QLine( 1 )->translated( *hbqt_par_QPoint( 2 ) ) ), true ) );
+   QLine * p = hbqt_par_QLine( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QLine( new QLine( ( p )->translated( *hbqt_par_QPoint( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINE_TRANSLATED FP=hb_retptrGC( hbqt_gcAllocate_QLine( new QLine( ( p )->translated( *hbqt_par_QPoint( 2 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -285,7 +381,13 @@ HB_FUNC( QT_QLINE_TRANSLATED )
  */
 HB_FUNC( QT_QLINE_TRANSLATED_1 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QLine( new QLine( hbqt_par_QLine( 1 )->translated( hb_parni( 2 ), hb_parni( 3 ) ) ), true ) );
+   QLine * p = hbqt_par_QLine( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QLine( new QLine( ( p )->translated( hb_parni( 2 ), hb_parni( 3 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINE_TRANSLATED_1 FP=hb_retptrGC( hbqt_gcAllocate_QLine( new QLine( ( p )->translated( hb_parni( 2 ), hb_parni( 3 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 

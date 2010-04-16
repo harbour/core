@@ -96,7 +96,7 @@
 
 typedef struct
 {
-   void * ph;
+   QKeySequence * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QKeySequence;
@@ -131,7 +131,7 @@ void * hbqt_gcAllocate_QKeySequence( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QKeySequence * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QKeySequence;
 
@@ -148,7 +148,7 @@ void * hbqt_gcAllocate_QKeySequence( void * pObj, bool bNew )
 
 HB_FUNC( QT_QKEYSEQUENCE )
 {
-   void * pObj = NULL;
+   QKeySequence * pObj = NULL;
 
    if( HB_ISPOINTER( 1 ) )
       pObj = ( QKeySequence * ) new QKeySequence( *hbqt_par_QKeySequence( 1 ) ) ;
@@ -159,7 +159,7 @@ HB_FUNC( QT_QKEYSEQUENCE )
    else
       pObj = ( QKeySequence * ) new QKeySequence() ;
 
-   hb_retptrGC( hbqt_gcAllocate_QKeySequence( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QKeySequence( ( void * ) pObj, true ) );
 }
 
 /*
@@ -167,7 +167,13 @@ HB_FUNC( QT_QKEYSEQUENCE )
  */
 HB_FUNC( QT_QKEYSEQUENCE_COUNT )
 {
-   hb_retni( hbqt_par_QKeySequence( 1 )->count() );
+   QKeySequence * p = hbqt_par_QKeySequence( 1 );
+   if( p )
+      hb_retni( ( p )->count() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QKEYSEQUENCE_COUNT FP=hb_retni( ( p )->count() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -175,7 +181,13 @@ HB_FUNC( QT_QKEYSEQUENCE_COUNT )
  */
 HB_FUNC( QT_QKEYSEQUENCE_ISEMPTY )
 {
-   hb_retl( hbqt_par_QKeySequence( 1 )->isEmpty() );
+   QKeySequence * p = hbqt_par_QKeySequence( 1 );
+   if( p )
+      hb_retl( ( p )->isEmpty() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QKEYSEQUENCE_ISEMPTY FP=hb_retl( ( p )->isEmpty() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -183,7 +195,13 @@ HB_FUNC( QT_QKEYSEQUENCE_ISEMPTY )
  */
 HB_FUNC( QT_QKEYSEQUENCE_MATCHES )
 {
-   hb_retni( ( QKeySequence::SequenceMatch ) hbqt_par_QKeySequence( 1 )->matches( *hbqt_par_QKeySequence( 2 ) ) );
+   QKeySequence * p = hbqt_par_QKeySequence( 1 );
+   if( p )
+      hb_retni( ( QKeySequence::SequenceMatch ) ( p )->matches( *hbqt_par_QKeySequence( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QKEYSEQUENCE_MATCHES FP=hb_retni( ( QKeySequence::SequenceMatch ) ( p )->matches( *hbqt_par_QKeySequence( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -191,7 +209,13 @@ HB_FUNC( QT_QKEYSEQUENCE_MATCHES )
  */
 HB_FUNC( QT_QKEYSEQUENCE_TOSTRING )
 {
-   hb_retc( hbqt_par_QKeySequence( 1 )->toString( ( HB_ISNUM( 2 ) ? ( QKeySequence::SequenceFormat ) hb_parni( 2 ) : ( QKeySequence::SequenceFormat ) QKeySequence::PortableText ) ).toAscii().data() );
+   QKeySequence * p = hbqt_par_QKeySequence( 1 );
+   if( p )
+      hb_retc( ( p )->toString( ( HB_ISNUM( 2 ) ? ( QKeySequence::SequenceFormat ) hb_parni( 2 ) : ( QKeySequence::SequenceFormat ) QKeySequence::PortableText ) ).toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QKEYSEQUENCE_TOSTRING FP=hb_retc( ( p )->toString( ( HB_ISNUM( 2 ) ? ( QKeySequence::SequenceFormat ) hb_parni( 2 ) : ( QKeySequence::SequenceFormat ) QKeySequence::PortableText ) ).toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -199,7 +223,13 @@ HB_FUNC( QT_QKEYSEQUENCE_TOSTRING )
  */
 HB_FUNC( QT_QKEYSEQUENCE_FROMSTRING )
 {
-   hb_retptrGC( hbqt_gcAllocate_QKeySequence( new QKeySequence( hbqt_par_QKeySequence( 1 )->fromString( hbqt_par_QString( 2 ), ( HB_ISNUM( 3 ) ? ( QKeySequence::SequenceFormat ) hb_parni( 3 ) : ( QKeySequence::SequenceFormat ) QKeySequence::PortableText ) ) ), true ) );
+   QKeySequence * p = hbqt_par_QKeySequence( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QKeySequence( new QKeySequence( ( p )->fromString( hbqt_par_QString( 2 ), ( HB_ISNUM( 3 ) ? ( QKeySequence::SequenceFormat ) hb_parni( 3 ) : ( QKeySequence::SequenceFormat ) QKeySequence::PortableText ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QKEYSEQUENCE_FROMSTRING FP=hb_retptrGC( hbqt_gcAllocate_QKeySequence( new QKeySequence( ( p )->fromString( hbqt_par_QString( 2 ), ( HB_ISNUM( 3 ) ? ( QKeySequence::SequenceFormat ) hb_parni( 3 ) : ( QKeySequence::SequenceFormat ) QKeySequence::PortableText ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -207,7 +237,13 @@ HB_FUNC( QT_QKEYSEQUENCE_FROMSTRING )
  */
 HB_FUNC( QT_QKEYSEQUENCE_MNEMONIC )
 {
-   hb_retptrGC( hbqt_gcAllocate_QKeySequence( new QKeySequence( hbqt_par_QKeySequence( 1 )->mnemonic( hbqt_par_QString( 2 ) ) ), true ) );
+   QKeySequence * p = hbqt_par_QKeySequence( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QKeySequence( new QKeySequence( ( p )->mnemonic( hbqt_par_QString( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QKEYSEQUENCE_MNEMONIC FP=hb_retptrGC( hbqt_gcAllocate_QKeySequence( new QKeySequence( ( p )->mnemonic( hbqt_par_QString( 2 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 

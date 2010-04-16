@@ -77,7 +77,7 @@
 
 typedef struct
 {
-   void * ph;
+   QTextInlineObject * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QTextInlineObject;
@@ -97,7 +97,7 @@ void * hbqt_gcAllocate_QTextInlineObject( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QTextInlineObject * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextInlineObject;
 
@@ -114,6 +114,7 @@ void * hbqt_gcAllocate_QTextInlineObject( void * pObj, bool bNew )
 
 HB_FUNC( QT_QTEXTINLINEOBJECT )
 {
+   // hb_retptr( new QTextInlineObject( hb_parni( 1 ), hbqt_par_QTextEngine( 2 ) ) );
 }
 
 /*
@@ -121,7 +122,13 @@ HB_FUNC( QT_QTEXTINLINEOBJECT )
  */
 HB_FUNC( QT_QTEXTINLINEOBJECT_ASCENT )
 {
-   hb_retnd( hbqt_par_QTextInlineObject( 1 )->ascent() );
+   QTextInlineObject * p = hbqt_par_QTextInlineObject( 1 );
+   if( p )
+      hb_retnd( ( p )->ascent() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTINLINEOBJECT_ASCENT FP=hb_retnd( ( p )->ascent() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -129,7 +136,13 @@ HB_FUNC( QT_QTEXTINLINEOBJECT_ASCENT )
  */
 HB_FUNC( QT_QTEXTINLINEOBJECT_DESCENT )
 {
-   hb_retnd( hbqt_par_QTextInlineObject( 1 )->descent() );
+   QTextInlineObject * p = hbqt_par_QTextInlineObject( 1 );
+   if( p )
+      hb_retnd( ( p )->descent() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTINLINEOBJECT_DESCENT FP=hb_retnd( ( p )->descent() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -137,7 +150,13 @@ HB_FUNC( QT_QTEXTINLINEOBJECT_DESCENT )
  */
 HB_FUNC( QT_QTEXTINLINEOBJECT_FORMAT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTextFormat( new QTextFormat( hbqt_par_QTextInlineObject( 1 )->format() ), true ) );
+   QTextInlineObject * p = hbqt_par_QTextInlineObject( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QTextFormat( new QTextFormat( ( p )->format() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTINLINEOBJECT_FORMAT FP=hb_retptrGC( hbqt_gcAllocate_QTextFormat( new QTextFormat( ( p )->format() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -145,7 +164,13 @@ HB_FUNC( QT_QTEXTINLINEOBJECT_FORMAT )
  */
 HB_FUNC( QT_QTEXTINLINEOBJECT_FORMATINDEX )
 {
-   hb_retni( hbqt_par_QTextInlineObject( 1 )->formatIndex() );
+   QTextInlineObject * p = hbqt_par_QTextInlineObject( 1 );
+   if( p )
+      hb_retni( ( p )->formatIndex() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTINLINEOBJECT_FORMATINDEX FP=hb_retni( ( p )->formatIndex() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -153,7 +178,13 @@ HB_FUNC( QT_QTEXTINLINEOBJECT_FORMATINDEX )
  */
 HB_FUNC( QT_QTEXTINLINEOBJECT_HEIGHT )
 {
-   hb_retnd( hbqt_par_QTextInlineObject( 1 )->height() );
+   QTextInlineObject * p = hbqt_par_QTextInlineObject( 1 );
+   if( p )
+      hb_retnd( ( p )->height() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTINLINEOBJECT_HEIGHT FP=hb_retnd( ( p )->height() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -161,7 +192,13 @@ HB_FUNC( QT_QTEXTINLINEOBJECT_HEIGHT )
  */
 HB_FUNC( QT_QTEXTINLINEOBJECT_ISVALID )
 {
-   hb_retl( hbqt_par_QTextInlineObject( 1 )->isValid() );
+   QTextInlineObject * p = hbqt_par_QTextInlineObject( 1 );
+   if( p )
+      hb_retl( ( p )->isValid() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTINLINEOBJECT_ISVALID FP=hb_retl( ( p )->isValid() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -169,7 +206,13 @@ HB_FUNC( QT_QTEXTINLINEOBJECT_ISVALID )
  */
 HB_FUNC( QT_QTEXTINLINEOBJECT_RECT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( hbqt_par_QTextInlineObject( 1 )->rect() ), true ) );
+   QTextInlineObject * p = hbqt_par_QTextInlineObject( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( ( p )->rect() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTINLINEOBJECT_RECT FP=hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( ( p )->rect() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -177,7 +220,13 @@ HB_FUNC( QT_QTEXTINLINEOBJECT_RECT )
  */
 HB_FUNC( QT_QTEXTINLINEOBJECT_SETASCENT )
 {
-   hbqt_par_QTextInlineObject( 1 )->setAscent( hb_parnd( 2 ) );
+   QTextInlineObject * p = hbqt_par_QTextInlineObject( 1 );
+   if( p )
+      ( p )->setAscent( hb_parnd( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTINLINEOBJECT_SETASCENT FP=( p )->setAscent( hb_parnd( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -185,7 +234,13 @@ HB_FUNC( QT_QTEXTINLINEOBJECT_SETASCENT )
  */
 HB_FUNC( QT_QTEXTINLINEOBJECT_SETDESCENT )
 {
-   hbqt_par_QTextInlineObject( 1 )->setDescent( hb_parnd( 2 ) );
+   QTextInlineObject * p = hbqt_par_QTextInlineObject( 1 );
+   if( p )
+      ( p )->setDescent( hb_parnd( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTINLINEOBJECT_SETDESCENT FP=( p )->setDescent( hb_parnd( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -193,7 +248,13 @@ HB_FUNC( QT_QTEXTINLINEOBJECT_SETDESCENT )
  */
 HB_FUNC( QT_QTEXTINLINEOBJECT_SETWIDTH )
 {
-   hbqt_par_QTextInlineObject( 1 )->setWidth( hb_parnd( 2 ) );
+   QTextInlineObject * p = hbqt_par_QTextInlineObject( 1 );
+   if( p )
+      ( p )->setWidth( hb_parnd( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTINLINEOBJECT_SETWIDTH FP=( p )->setWidth( hb_parnd( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -201,7 +262,13 @@ HB_FUNC( QT_QTEXTINLINEOBJECT_SETWIDTH )
  */
 HB_FUNC( QT_QTEXTINLINEOBJECT_TEXTDIRECTION )
 {
-   hb_retni( ( Qt::LayoutDirection ) hbqt_par_QTextInlineObject( 1 )->textDirection() );
+   QTextInlineObject * p = hbqt_par_QTextInlineObject( 1 );
+   if( p )
+      hb_retni( ( Qt::LayoutDirection ) ( p )->textDirection() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTINLINEOBJECT_TEXTDIRECTION FP=hb_retni( ( Qt::LayoutDirection ) ( p )->textDirection() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -209,7 +276,13 @@ HB_FUNC( QT_QTEXTINLINEOBJECT_TEXTDIRECTION )
  */
 HB_FUNC( QT_QTEXTINLINEOBJECT_TEXTPOSITION )
 {
-   hb_retni( hbqt_par_QTextInlineObject( 1 )->textPosition() );
+   QTextInlineObject * p = hbqt_par_QTextInlineObject( 1 );
+   if( p )
+      hb_retni( ( p )->textPosition() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTINLINEOBJECT_TEXTPOSITION FP=hb_retni( ( p )->textPosition() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -217,7 +290,13 @@ HB_FUNC( QT_QTEXTINLINEOBJECT_TEXTPOSITION )
  */
 HB_FUNC( QT_QTEXTINLINEOBJECT_WIDTH )
 {
-   hb_retnd( hbqt_par_QTextInlineObject( 1 )->width() );
+   QTextInlineObject * p = hbqt_par_QTextInlineObject( 1 );
+   if( p )
+      hb_retnd( ( p )->width() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTINLINEOBJECT_WIDTH FP=hb_retnd( ( p )->width() ); p is NULL" ) );
+   }
 }
 
 

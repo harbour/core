@@ -77,7 +77,7 @@
 
 typedef struct
 {
-   void * ph;
+   QTextEncoder * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QTextEncoder;
@@ -112,7 +112,7 @@ void * hbqt_gcAllocate_QTextEncoder( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QTextEncoder * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextEncoder;
 
@@ -129,11 +129,11 @@ void * hbqt_gcAllocate_QTextEncoder( void * pObj, bool bNew )
 
 HB_FUNC( QT_QTEXTENCODER )
 {
-   void * pObj = NULL;
+   QTextEncoder * pObj = NULL;
 
-   pObj = ( QTextEncoder* ) new QTextEncoder( hbqt_par_QTextCodec( 1 ) ) ;
+   pObj =  new QTextEncoder( hbqt_par_QTextCodec( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QTextEncoder( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextEncoder( ( void * ) pObj, true ) );
 }
 
 /*
@@ -141,7 +141,13 @@ HB_FUNC( QT_QTEXTENCODER )
  */
 HB_FUNC( QT_QTEXTENCODER_FROMUNICODE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QTextEncoder( 1 )->fromUnicode( hbqt_par_QString( 2 ) ) ), true ) );
+   QTextEncoder * p = hbqt_par_QTextEncoder( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->fromUnicode( hbqt_par_QString( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTENCODER_FROMUNICODE FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->fromUnicode( hbqt_par_QString( 2 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -149,7 +155,13 @@ HB_FUNC( QT_QTEXTENCODER_FROMUNICODE )
  */
 HB_FUNC( QT_QTEXTENCODER_FROMUNICODE_1 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QTextEncoder( 1 )->fromUnicode( hbqt_par_QChar( 2 ), hb_parni( 3 ) ) ), true ) );
+   QTextEncoder * p = hbqt_par_QTextEncoder( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->fromUnicode( hbqt_par_QChar( 2 ), hb_parni( 3 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTENCODER_FROMUNICODE_1 FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->fromUnicode( hbqt_par_QChar( 2 ), hb_parni( 3 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 

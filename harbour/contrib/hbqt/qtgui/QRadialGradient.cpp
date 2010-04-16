@@ -86,7 +86,7 @@
 
 typedef struct
 {
-   void * ph;
+   QRadialGradient * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QRadialGradient;
@@ -121,7 +121,7 @@ void * hbqt_gcAllocate_QRadialGradient( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QRadialGradient * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QRadialGradient;
 
@@ -138,30 +138,30 @@ void * hbqt_gcAllocate_QRadialGradient( void * pObj, bool bNew )
 
 HB_FUNC( QT_QRADIALGRADIENT )
 {
-   void * pObj = NULL;
+   QRadialGradient * pObj = NULL;
 
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      pObj = ( QRadialGradient* ) new QRadialGradient( *hbqt_par_QRadialGradient( 1 ) ) ;
+      pObj =  new QRadialGradient( *hbqt_par_QRadialGradient( 1 ) ) ;
    }
    else if( hb_pcount() == 2 && HB_ISPOINTER( 1 ) && HB_ISNUM( 2 ) )
    {
-      pObj = ( QRadialGradient* ) new QRadialGradient( *hbqt_par_QPointF( 1 ), hb_parnd( 2 ) ) ;
+      pObj =  new QRadialGradient( *hbqt_par_QPointF( 1 ), hb_parnd( 2 ) ) ;
    }
    else if( hb_pcount() == 3 && HB_ISPOINTER( 1 ) && HB_ISNUM( 2 ) && HB_ISPOINTER( 3 ) )
    {
-      pObj = ( QRadialGradient* ) new QRadialGradient( *hbqt_par_QPointF( 1 ), hb_parnd( 2 ), *hbqt_par_QPointF( 3 ) ) ;
+      pObj =  new QRadialGradient( *hbqt_par_QPointF( 1 ), hb_parnd( 2 ), *hbqt_par_QPointF( 3 ) ) ;
    }
    else if( hb_pcount() == 5 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) && HB_ISNUM( 4 ) && HB_ISNUM( 5 ) )
    {
-      pObj = ( QRadialGradient* ) new QRadialGradient( hb_parnd( 1 ), hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ) ) ;
+      pObj =  new QRadialGradient( hb_parnd( 1 ), hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ) ) ;
    }
    else
    {
-      pObj = ( QRadialGradient* ) new QRadialGradient() ;
+      pObj =  new QRadialGradient() ;
    }
 
-   hb_retptrGC( hbqt_gcAllocate_QRadialGradient( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QRadialGradient( ( void * ) pObj, true ) );
 }
 
 /*
@@ -169,7 +169,13 @@ HB_FUNC( QT_QRADIALGRADIENT )
  */
 HB_FUNC( QT_QRADIALGRADIENT_CENTER )
 {
-   hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( hbqt_par_QRadialGradient( 1 )->center() ), true ) );
+   QRadialGradient * p = hbqt_par_QRadialGradient( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->center() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRADIALGRADIENT_CENTER FP=hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->center() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -177,7 +183,13 @@ HB_FUNC( QT_QRADIALGRADIENT_CENTER )
  */
 HB_FUNC( QT_QRADIALGRADIENT_FOCALPOINT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( hbqt_par_QRadialGradient( 1 )->focalPoint() ), true ) );
+   QRadialGradient * p = hbqt_par_QRadialGradient( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->focalPoint() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRADIALGRADIENT_FOCALPOINT FP=hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->focalPoint() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -185,7 +197,13 @@ HB_FUNC( QT_QRADIALGRADIENT_FOCALPOINT )
  */
 HB_FUNC( QT_QRADIALGRADIENT_RADIUS )
 {
-   hb_retnd( hbqt_par_QRadialGradient( 1 )->radius() );
+   QRadialGradient * p = hbqt_par_QRadialGradient( 1 );
+   if( p )
+      hb_retnd( ( p )->radius() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRADIALGRADIENT_RADIUS FP=hb_retnd( ( p )->radius() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -193,7 +211,13 @@ HB_FUNC( QT_QRADIALGRADIENT_RADIUS )
  */
 HB_FUNC( QT_QRADIALGRADIENT_SETCENTER )
 {
-   hbqt_par_QRadialGradient( 1 )->setCenter( *hbqt_par_QPointF( 2 ) );
+   QRadialGradient * p = hbqt_par_QRadialGradient( 1 );
+   if( p )
+      ( p )->setCenter( *hbqt_par_QPointF( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRADIALGRADIENT_SETCENTER FP=( p )->setCenter( *hbqt_par_QPointF( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -201,7 +225,13 @@ HB_FUNC( QT_QRADIALGRADIENT_SETCENTER )
  */
 HB_FUNC( QT_QRADIALGRADIENT_SETCENTER_1 )
 {
-   hbqt_par_QRadialGradient( 1 )->setCenter( hb_parnd( 2 ), hb_parnd( 3 ) );
+   QRadialGradient * p = hbqt_par_QRadialGradient( 1 );
+   if( p )
+      ( p )->setCenter( hb_parnd( 2 ), hb_parnd( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRADIALGRADIENT_SETCENTER_1 FP=( p )->setCenter( hb_parnd( 2 ), hb_parnd( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -209,7 +239,13 @@ HB_FUNC( QT_QRADIALGRADIENT_SETCENTER_1 )
  */
 HB_FUNC( QT_QRADIALGRADIENT_SETFOCALPOINT )
 {
-   hbqt_par_QRadialGradient( 1 )->setFocalPoint( *hbqt_par_QPointF( 2 ) );
+   QRadialGradient * p = hbqt_par_QRadialGradient( 1 );
+   if( p )
+      ( p )->setFocalPoint( *hbqt_par_QPointF( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRADIALGRADIENT_SETFOCALPOINT FP=( p )->setFocalPoint( *hbqt_par_QPointF( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -217,7 +253,13 @@ HB_FUNC( QT_QRADIALGRADIENT_SETFOCALPOINT )
  */
 HB_FUNC( QT_QRADIALGRADIENT_SETFOCALPOINT_1 )
 {
-   hbqt_par_QRadialGradient( 1 )->setFocalPoint( hb_parnd( 2 ), hb_parnd( 3 ) );
+   QRadialGradient * p = hbqt_par_QRadialGradient( 1 );
+   if( p )
+      ( p )->setFocalPoint( hb_parnd( 2 ), hb_parnd( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRADIALGRADIENT_SETFOCALPOINT_1 FP=( p )->setFocalPoint( hb_parnd( 2 ), hb_parnd( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -225,7 +267,13 @@ HB_FUNC( QT_QRADIALGRADIENT_SETFOCALPOINT_1 )
  */
 HB_FUNC( QT_QRADIALGRADIENT_SETRADIUS )
 {
-   hbqt_par_QRadialGradient( 1 )->setRadius( hb_parnd( 2 ) );
+   QRadialGradient * p = hbqt_par_QRadialGradient( 1 );
+   if( p )
+      ( p )->setRadius( hb_parnd( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRADIALGRADIENT_SETRADIUS FP=( p )->setRadius( hb_parnd( 2 ) ); p is NULL" ) );
+   }
 }
 
 

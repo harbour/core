@@ -87,7 +87,7 @@
 
 typedef struct
 {
-   void * ph;
+   QPalette * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QPalette;
@@ -122,7 +122,7 @@ void * hbqt_gcAllocate_QPalette( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QPalette * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QPalette;
 
@@ -139,26 +139,26 @@ void * hbqt_gcAllocate_QPalette( void * pObj, bool bNew )
 
 HB_FUNC( QT_QPALETTE )
 {
-   void * pObj = NULL;
+   QPalette * pObj = NULL;
 
    if( hb_pcount() == 1 && HB_ISNUM( 1 ) )
    {
-      pObj = ( QPalette* ) new QPalette( ( Qt::GlobalColor ) hb_parni( 1 ) ) ;
+      pObj =  new QPalette( ( Qt::GlobalColor ) hb_parni( 1 ) ) ;
    }
    else if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      pObj = ( QPalette* ) new QPalette( *hbqt_par_QPalette( 1 ) ) ;
+      pObj =  new QPalette( *hbqt_par_QPalette( 1 ) ) ;
    }
    else if( hb_pcount() == 2 && HB_ISPOINTER( 1 ) && HB_ISPOINTER( 2 ) )
    {
-      pObj = ( QPalette* ) new QPalette( *hbqt_par_QColor( 1 ), *hbqt_par_QColor( 2 ) ) ;
+      pObj =  new QPalette( *hbqt_par_QColor( 1 ), *hbqt_par_QColor( 2 ) ) ;
    }
    else
    {
-      pObj = ( QPalette* ) new QPalette() ;
+      pObj =  new QPalette() ;
    }
 
-   hb_retptrGC( hbqt_gcAllocate_QPalette( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QPalette( ( void * ) pObj, true ) );
 }
 
 /*
@@ -166,7 +166,13 @@ HB_FUNC( QT_QPALETTE )
  */
 HB_FUNC( QT_QPALETTE_ALTERNATEBASE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( hbqt_par_QPalette( 1 )->alternateBase() ), true ) );
+   QPalette * p = hbqt_par_QPalette( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->alternateBase() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPALETTE_ALTERNATEBASE FP=hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->alternateBase() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -174,7 +180,13 @@ HB_FUNC( QT_QPALETTE_ALTERNATEBASE )
  */
 HB_FUNC( QT_QPALETTE_BASE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( hbqt_par_QPalette( 1 )->base() ), true ) );
+   QPalette * p = hbqt_par_QPalette( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->base() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPALETTE_BASE FP=hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->base() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -182,7 +194,13 @@ HB_FUNC( QT_QPALETTE_BASE )
  */
 HB_FUNC( QT_QPALETTE_BRIGHTTEXT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( hbqt_par_QPalette( 1 )->brightText() ), true ) );
+   QPalette * p = hbqt_par_QPalette( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->brightText() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPALETTE_BRIGHTTEXT FP=hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->brightText() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -190,7 +208,13 @@ HB_FUNC( QT_QPALETTE_BRIGHTTEXT )
  */
 HB_FUNC( QT_QPALETTE_BRUSH )
 {
-   hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( hbqt_par_QPalette( 1 )->brush( ( QPalette::ColorGroup ) hb_parni( 2 ), ( QPalette::ColorRole ) hb_parni( 3 ) ) ), true ) );
+   QPalette * p = hbqt_par_QPalette( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->brush( ( QPalette::ColorGroup ) hb_parni( 2 ), ( QPalette::ColorRole ) hb_parni( 3 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPALETTE_BRUSH FP=hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->brush( ( QPalette::ColorGroup ) hb_parni( 2 ), ( QPalette::ColorRole ) hb_parni( 3 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -198,7 +222,13 @@ HB_FUNC( QT_QPALETTE_BRUSH )
  */
 HB_FUNC( QT_QPALETTE_BRUSH_1 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( hbqt_par_QPalette( 1 )->brush( ( QPalette::ColorRole ) hb_parni( 2 ) ) ), true ) );
+   QPalette * p = hbqt_par_QPalette( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->brush( ( QPalette::ColorRole ) hb_parni( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPALETTE_BRUSH_1 FP=hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->brush( ( QPalette::ColorRole ) hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -206,7 +236,13 @@ HB_FUNC( QT_QPALETTE_BRUSH_1 )
  */
 HB_FUNC( QT_QPALETTE_BUTTON )
 {
-   hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( hbqt_par_QPalette( 1 )->button() ), true ) );
+   QPalette * p = hbqt_par_QPalette( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->button() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPALETTE_BUTTON FP=hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->button() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -214,7 +250,13 @@ HB_FUNC( QT_QPALETTE_BUTTON )
  */
 HB_FUNC( QT_QPALETTE_BUTTONTEXT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( hbqt_par_QPalette( 1 )->buttonText() ), true ) );
+   QPalette * p = hbqt_par_QPalette( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->buttonText() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPALETTE_BUTTONTEXT FP=hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->buttonText() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -222,7 +264,13 @@ HB_FUNC( QT_QPALETTE_BUTTONTEXT )
  */
 HB_FUNC( QT_QPALETTE_CACHEKEY )
 {
-   hb_retnint( hbqt_par_QPalette( 1 )->cacheKey() );
+   QPalette * p = hbqt_par_QPalette( 1 );
+   if( p )
+      hb_retnint( ( p )->cacheKey() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPALETTE_CACHEKEY FP=hb_retnint( ( p )->cacheKey() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -230,7 +278,13 @@ HB_FUNC( QT_QPALETTE_CACHEKEY )
  */
 HB_FUNC( QT_QPALETTE_COLOR )
 {
-   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QPalette( 1 )->color( ( QPalette::ColorGroup ) hb_parni( 2 ), ( QPalette::ColorRole ) hb_parni( 3 ) ) ), true ) );
+   QPalette * p = hbqt_par_QPalette( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->color( ( QPalette::ColorGroup ) hb_parni( 2 ), ( QPalette::ColorRole ) hb_parni( 3 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPALETTE_COLOR FP=hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->color( ( QPalette::ColorGroup ) hb_parni( 2 ), ( QPalette::ColorRole ) hb_parni( 3 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -238,7 +292,13 @@ HB_FUNC( QT_QPALETTE_COLOR )
  */
 HB_FUNC( QT_QPALETTE_COLOR_1 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QPalette( 1 )->color( ( QPalette::ColorRole ) hb_parni( 2 ) ) ), true ) );
+   QPalette * p = hbqt_par_QPalette( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->color( ( QPalette::ColorRole ) hb_parni( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPALETTE_COLOR_1 FP=hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->color( ( QPalette::ColorRole ) hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -246,7 +306,13 @@ HB_FUNC( QT_QPALETTE_COLOR_1 )
  */
 HB_FUNC( QT_QPALETTE_CURRENTCOLORGROUP )
 {
-   hb_retni( ( QPalette::ColorGroup ) hbqt_par_QPalette( 1 )->currentColorGroup() );
+   QPalette * p = hbqt_par_QPalette( 1 );
+   if( p )
+      hb_retni( ( QPalette::ColorGroup ) ( p )->currentColorGroup() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPALETTE_CURRENTCOLORGROUP FP=hb_retni( ( QPalette::ColorGroup ) ( p )->currentColorGroup() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -254,7 +320,13 @@ HB_FUNC( QT_QPALETTE_CURRENTCOLORGROUP )
  */
 HB_FUNC( QT_QPALETTE_DARK )
 {
-   hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( hbqt_par_QPalette( 1 )->dark() ), true ) );
+   QPalette * p = hbqt_par_QPalette( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->dark() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPALETTE_DARK FP=hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->dark() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -262,7 +334,13 @@ HB_FUNC( QT_QPALETTE_DARK )
  */
 HB_FUNC( QT_QPALETTE_HIGHLIGHT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( hbqt_par_QPalette( 1 )->highlight() ), true ) );
+   QPalette * p = hbqt_par_QPalette( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->highlight() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPALETTE_HIGHLIGHT FP=hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->highlight() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -270,7 +348,13 @@ HB_FUNC( QT_QPALETTE_HIGHLIGHT )
  */
 HB_FUNC( QT_QPALETTE_HIGHLIGHTEDTEXT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( hbqt_par_QPalette( 1 )->highlightedText() ), true ) );
+   QPalette * p = hbqt_par_QPalette( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->highlightedText() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPALETTE_HIGHLIGHTEDTEXT FP=hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->highlightedText() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -278,7 +362,13 @@ HB_FUNC( QT_QPALETTE_HIGHLIGHTEDTEXT )
  */
 HB_FUNC( QT_QPALETTE_ISBRUSHSET )
 {
-   hb_retl( hbqt_par_QPalette( 1 )->isBrushSet( ( QPalette::ColorGroup ) hb_parni( 2 ), ( QPalette::ColorRole ) hb_parni( 3 ) ) );
+   QPalette * p = hbqt_par_QPalette( 1 );
+   if( p )
+      hb_retl( ( p )->isBrushSet( ( QPalette::ColorGroup ) hb_parni( 2 ), ( QPalette::ColorRole ) hb_parni( 3 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPALETTE_ISBRUSHSET FP=hb_retl( ( p )->isBrushSet( ( QPalette::ColorGroup ) hb_parni( 2 ), ( QPalette::ColorRole ) hb_parni( 3 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -286,7 +376,13 @@ HB_FUNC( QT_QPALETTE_ISBRUSHSET )
  */
 HB_FUNC( QT_QPALETTE_ISCOPYOF )
 {
-   hb_retl( hbqt_par_QPalette( 1 )->isCopyOf( *hbqt_par_QPalette( 2 ) ) );
+   QPalette * p = hbqt_par_QPalette( 1 );
+   if( p )
+      hb_retl( ( p )->isCopyOf( *hbqt_par_QPalette( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPALETTE_ISCOPYOF FP=hb_retl( ( p )->isCopyOf( *hbqt_par_QPalette( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -294,7 +390,13 @@ HB_FUNC( QT_QPALETTE_ISCOPYOF )
  */
 HB_FUNC( QT_QPALETTE_ISEQUAL )
 {
-   hb_retl( hbqt_par_QPalette( 1 )->isEqual( ( QPalette::ColorGroup ) hb_parni( 2 ), ( QPalette::ColorGroup ) hb_parni( 3 ) ) );
+   QPalette * p = hbqt_par_QPalette( 1 );
+   if( p )
+      hb_retl( ( p )->isEqual( ( QPalette::ColorGroup ) hb_parni( 2 ), ( QPalette::ColorGroup ) hb_parni( 3 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPALETTE_ISEQUAL FP=hb_retl( ( p )->isEqual( ( QPalette::ColorGroup ) hb_parni( 2 ), ( QPalette::ColorGroup ) hb_parni( 3 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -302,7 +404,13 @@ HB_FUNC( QT_QPALETTE_ISEQUAL )
  */
 HB_FUNC( QT_QPALETTE_LIGHT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( hbqt_par_QPalette( 1 )->light() ), true ) );
+   QPalette * p = hbqt_par_QPalette( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->light() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPALETTE_LIGHT FP=hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->light() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -310,7 +418,13 @@ HB_FUNC( QT_QPALETTE_LIGHT )
  */
 HB_FUNC( QT_QPALETTE_LINK )
 {
-   hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( hbqt_par_QPalette( 1 )->link() ), true ) );
+   QPalette * p = hbqt_par_QPalette( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->link() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPALETTE_LINK FP=hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->link() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -318,7 +432,13 @@ HB_FUNC( QT_QPALETTE_LINK )
  */
 HB_FUNC( QT_QPALETTE_LINKVISITED )
 {
-   hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( hbqt_par_QPalette( 1 )->linkVisited() ), true ) );
+   QPalette * p = hbqt_par_QPalette( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->linkVisited() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPALETTE_LINKVISITED FP=hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->linkVisited() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -326,7 +446,13 @@ HB_FUNC( QT_QPALETTE_LINKVISITED )
  */
 HB_FUNC( QT_QPALETTE_MID )
 {
-   hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( hbqt_par_QPalette( 1 )->mid() ), true ) );
+   QPalette * p = hbqt_par_QPalette( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->mid() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPALETTE_MID FP=hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->mid() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -334,7 +460,13 @@ HB_FUNC( QT_QPALETTE_MID )
  */
 HB_FUNC( QT_QPALETTE_MIDLIGHT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( hbqt_par_QPalette( 1 )->midlight() ), true ) );
+   QPalette * p = hbqt_par_QPalette( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->midlight() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPALETTE_MIDLIGHT FP=hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->midlight() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -342,7 +474,13 @@ HB_FUNC( QT_QPALETTE_MIDLIGHT )
  */
 HB_FUNC( QT_QPALETTE_RESOLVE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QPalette( new QPalette( hbqt_par_QPalette( 1 )->resolve( *hbqt_par_QPalette( 2 ) ) ), true ) );
+   QPalette * p = hbqt_par_QPalette( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QPalette( new QPalette( ( p )->resolve( *hbqt_par_QPalette( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPALETTE_RESOLVE FP=hb_retptrGC( hbqt_gcAllocate_QPalette( new QPalette( ( p )->resolve( *hbqt_par_QPalette( 2 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -350,7 +488,13 @@ HB_FUNC( QT_QPALETTE_RESOLVE )
  */
 HB_FUNC( QT_QPALETTE_SETBRUSH )
 {
-   hbqt_par_QPalette( 1 )->setBrush( ( QPalette::ColorRole ) hb_parni( 2 ), *hbqt_par_QBrush( 3 ) );
+   QPalette * p = hbqt_par_QPalette( 1 );
+   if( p )
+      ( p )->setBrush( ( QPalette::ColorRole ) hb_parni( 2 ), *hbqt_par_QBrush( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPALETTE_SETBRUSH FP=( p )->setBrush( ( QPalette::ColorRole ) hb_parni( 2 ), *hbqt_par_QBrush( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -358,7 +502,13 @@ HB_FUNC( QT_QPALETTE_SETBRUSH )
  */
 HB_FUNC( QT_QPALETTE_SETBRUSH_1 )
 {
-   hbqt_par_QPalette( 1 )->setBrush( ( QPalette::ColorGroup ) hb_parni( 2 ), ( QPalette::ColorRole ) hb_parni( 3 ), *hbqt_par_QBrush( 4 ) );
+   QPalette * p = hbqt_par_QPalette( 1 );
+   if( p )
+      ( p )->setBrush( ( QPalette::ColorGroup ) hb_parni( 2 ), ( QPalette::ColorRole ) hb_parni( 3 ), *hbqt_par_QBrush( 4 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPALETTE_SETBRUSH_1 FP=( p )->setBrush( ( QPalette::ColorGroup ) hb_parni( 2 ), ( QPalette::ColorRole ) hb_parni( 3 ), *hbqt_par_QBrush( 4 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -366,7 +516,13 @@ HB_FUNC( QT_QPALETTE_SETBRUSH_1 )
  */
 HB_FUNC( QT_QPALETTE_SETCOLOR )
 {
-   hbqt_par_QPalette( 1 )->setColor( ( QPalette::ColorRole ) hb_parni( 2 ), *hbqt_par_QColor( 3 ) );
+   QPalette * p = hbqt_par_QPalette( 1 );
+   if( p )
+      ( p )->setColor( ( QPalette::ColorRole ) hb_parni( 2 ), *hbqt_par_QColor( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPALETTE_SETCOLOR FP=( p )->setColor( ( QPalette::ColorRole ) hb_parni( 2 ), *hbqt_par_QColor( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -374,7 +530,13 @@ HB_FUNC( QT_QPALETTE_SETCOLOR )
  */
 HB_FUNC( QT_QPALETTE_SETCOLOR_1 )
 {
-   hbqt_par_QPalette( 1 )->setColor( ( QPalette::ColorGroup ) hb_parni( 2 ), ( QPalette::ColorRole ) hb_parni( 3 ), *hbqt_par_QColor( 4 ) );
+   QPalette * p = hbqt_par_QPalette( 1 );
+   if( p )
+      ( p )->setColor( ( QPalette::ColorGroup ) hb_parni( 2 ), ( QPalette::ColorRole ) hb_parni( 3 ), *hbqt_par_QColor( 4 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPALETTE_SETCOLOR_1 FP=( p )->setColor( ( QPalette::ColorGroup ) hb_parni( 2 ), ( QPalette::ColorRole ) hb_parni( 3 ), *hbqt_par_QColor( 4 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -382,7 +544,13 @@ HB_FUNC( QT_QPALETTE_SETCOLOR_1 )
  */
 HB_FUNC( QT_QPALETTE_SETCOLORGROUP )
 {
-   hbqt_par_QPalette( 1 )->setColorGroup( ( QPalette::ColorGroup ) hb_parni( 2 ), *hbqt_par_QBrush( 3 ), *hbqt_par_QBrush( 4 ), *hbqt_par_QBrush( 5 ), *hbqt_par_QBrush( 6 ), *hbqt_par_QBrush( 7 ), *hbqt_par_QBrush( 8 ), *hbqt_par_QBrush( 9 ), *hbqt_par_QBrush( 10 ), *hbqt_par_QBrush( 11 ) );
+   QPalette * p = hbqt_par_QPalette( 1 );
+   if( p )
+      ( p )->setColorGroup( ( QPalette::ColorGroup ) hb_parni( 2 ), *hbqt_par_QBrush( 3 ), *hbqt_par_QBrush( 4 ), *hbqt_par_QBrush( 5 ), *hbqt_par_QBrush( 6 ), *hbqt_par_QBrush( 7 ), *hbqt_par_QBrush( 8 ), *hbqt_par_QBrush( 9 ), *hbqt_par_QBrush( 10 ), *hbqt_par_QBrush( 11 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPALETTE_SETCOLORGROUP FP=( p )->setColorGroup( ( QPalette::ColorGroup ) hb_parni( 2 ), *hbqt_par_QBrush( 3 ), *hbqt_par_QBrush( 4 ), *hbqt_par_QBrush( 5 ), *hbqt_par_QBrush( 6 ), *hbqt_par_QBrush( 7 ), *hbqt_par_QBrush( 8 ), *hbqt_par_QBrush( 9 ), *hbqt_par_QBrush( 10 ), *hbqt_par_QBrush( 11 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -390,7 +558,13 @@ HB_FUNC( QT_QPALETTE_SETCOLORGROUP )
  */
 HB_FUNC( QT_QPALETTE_SETCURRENTCOLORGROUP )
 {
-   hbqt_par_QPalette( 1 )->setCurrentColorGroup( ( QPalette::ColorGroup ) hb_parni( 2 ) );
+   QPalette * p = hbqt_par_QPalette( 1 );
+   if( p )
+      ( p )->setCurrentColorGroup( ( QPalette::ColorGroup ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPALETTE_SETCURRENTCOLORGROUP FP=( p )->setCurrentColorGroup( ( QPalette::ColorGroup ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -398,7 +572,13 @@ HB_FUNC( QT_QPALETTE_SETCURRENTCOLORGROUP )
  */
 HB_FUNC( QT_QPALETTE_SHADOW )
 {
-   hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( hbqt_par_QPalette( 1 )->shadow() ), true ) );
+   QPalette * p = hbqt_par_QPalette( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->shadow() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPALETTE_SHADOW FP=hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->shadow() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -406,7 +586,13 @@ HB_FUNC( QT_QPALETTE_SHADOW )
  */
 HB_FUNC( QT_QPALETTE_TEXT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( hbqt_par_QPalette( 1 )->text() ), true ) );
+   QPalette * p = hbqt_par_QPalette( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->text() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPALETTE_TEXT FP=hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->text() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -414,7 +600,13 @@ HB_FUNC( QT_QPALETTE_TEXT )
  */
 HB_FUNC( QT_QPALETTE_TOOLTIPBASE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( hbqt_par_QPalette( 1 )->toolTipBase() ), true ) );
+   QPalette * p = hbqt_par_QPalette( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->toolTipBase() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPALETTE_TOOLTIPBASE FP=hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->toolTipBase() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -422,7 +614,13 @@ HB_FUNC( QT_QPALETTE_TOOLTIPBASE )
  */
 HB_FUNC( QT_QPALETTE_TOOLTIPTEXT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( hbqt_par_QPalette( 1 )->toolTipText() ), true ) );
+   QPalette * p = hbqt_par_QPalette( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->toolTipText() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPALETTE_TOOLTIPTEXT FP=hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->toolTipText() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -430,7 +628,13 @@ HB_FUNC( QT_QPALETTE_TOOLTIPTEXT )
  */
 HB_FUNC( QT_QPALETTE_WINDOW )
 {
-   hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( hbqt_par_QPalette( 1 )->window() ), true ) );
+   QPalette * p = hbqt_par_QPalette( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->window() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPALETTE_WINDOW FP=hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->window() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -438,7 +642,13 @@ HB_FUNC( QT_QPALETTE_WINDOW )
  */
 HB_FUNC( QT_QPALETTE_WINDOWTEXT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( hbqt_par_QPalette( 1 )->windowText() ), true ) );
+   QPalette * p = hbqt_par_QPalette( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->windowText() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPALETTE_WINDOWTEXT FP=hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->windowText() ), true ) ); p is NULL" ) );
+   }
 }
 
 

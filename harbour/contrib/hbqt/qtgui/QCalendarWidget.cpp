@@ -92,43 +92,44 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QCalendarWidget > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QCalendarWidget > pq;
 } QGC_POINTER_QCalendarWidget;
 
 QT_G_FUNC( hbqt_gcRelease_QCalendarWidget )
 {
+   QCalendarWidget  * ph = NULL ;
    QGC_POINTER_QCalendarWidget * p = ( QGC_POINTER_QCalendarWidget * ) Cargo;
 
-   if( p && p->bNew )
+   if( p && p->bNew && p->ph )
    {
-      if( p->ph && p->pq )
+      ph = p->ph;
+      if( ph )
       {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QCalendarWidget   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
-            delete ( ( QCalendarWidget * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QCalendarWidget   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QCalendarWidget   /.\\   ", (void*) ph, (void*) p->ph ) );
+            delete ( p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QCalendarWidget   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QCalendarWidget          pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QCalendarWidget          ", ph ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QCalendarWidget    :     Object already deleted!", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QCalendarWidget    :     Object already deleted!", ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QCalendarWidget    :    Object not created with new=true", p->ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QCalendarWidget    :    Object not created with new=true", ph ) );
       p->ph = NULL;
    }
 }
@@ -137,13 +138,12 @@ void * hbqt_gcAllocate_QCalendarWidget( void * pObj, bool bNew )
 {
    QGC_POINTER_QCalendarWidget * p = ( QGC_POINTER_QCalendarWidget * ) hb_gcAllocate( sizeof( QGC_POINTER_QCalendarWidget ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QCalendarWidget >( ( QCalendarWidget * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QCalendarWidget;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QCalendarWidget >( ( QCalendarWidget * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QCalendarWidget  under p->pq", pObj ) );
    }
    else
@@ -155,11 +155,11 @@ void * hbqt_gcAllocate_QCalendarWidget( void * pObj, bool bNew )
 
 HB_FUNC( QT_QCALENDARWIDGET )
 {
-   void * pObj = NULL;
+   QCalendarWidget * pObj = NULL;
 
-   pObj = ( QCalendarWidget* ) new QCalendarWidget( hbqt_par_QWidget( 1 ) ) ;
+   pObj =  new QCalendarWidget( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QCalendarWidget( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QCalendarWidget( ( void * ) pObj, true ) );
 }
 
 /*
@@ -167,7 +167,13 @@ HB_FUNC( QT_QCALENDARWIDGET )
  */
 HB_FUNC( QT_QCALENDARWIDGET_DATEEDITACCEPTDELAY )
 {
-   hb_retni( hbqt_par_QCalendarWidget( 1 )->dateEditAcceptDelay() );
+   QCalendarWidget * p = hbqt_par_QCalendarWidget( 1 );
+   if( p )
+      hb_retni( ( p )->dateEditAcceptDelay() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCALENDARWIDGET_DATEEDITACCEPTDELAY FP=hb_retni( ( p )->dateEditAcceptDelay() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -175,7 +181,13 @@ HB_FUNC( QT_QCALENDARWIDGET_DATEEDITACCEPTDELAY )
  */
 HB_FUNC( QT_QCALENDARWIDGET_DATETEXTFORMAT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTextCharFormat( new QTextCharFormat( hbqt_par_QCalendarWidget( 1 )->dateTextFormat( *hbqt_par_QDate( 2 ) ) ), true ) );
+   QCalendarWidget * p = hbqt_par_QCalendarWidget( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QTextCharFormat( new QTextCharFormat( ( p )->dateTextFormat( *hbqt_par_QDate( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCALENDARWIDGET_DATETEXTFORMAT FP=hb_retptrGC( hbqt_gcAllocate_QTextCharFormat( new QTextCharFormat( ( p )->dateTextFormat( *hbqt_par_QDate( 2 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -183,7 +195,13 @@ HB_FUNC( QT_QCALENDARWIDGET_DATETEXTFORMAT )
  */
 HB_FUNC( QT_QCALENDARWIDGET_FIRSTDAYOFWEEK )
 {
-   hb_retni( ( Qt::DayOfWeek ) hbqt_par_QCalendarWidget( 1 )->firstDayOfWeek() );
+   QCalendarWidget * p = hbqt_par_QCalendarWidget( 1 );
+   if( p )
+      hb_retni( ( Qt::DayOfWeek ) ( p )->firstDayOfWeek() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCALENDARWIDGET_FIRSTDAYOFWEEK FP=hb_retni( ( Qt::DayOfWeek ) ( p )->firstDayOfWeek() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -191,7 +209,13 @@ HB_FUNC( QT_QCALENDARWIDGET_FIRSTDAYOFWEEK )
  */
 HB_FUNC( QT_QCALENDARWIDGET_HEADERTEXTFORMAT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTextCharFormat( new QTextCharFormat( hbqt_par_QCalendarWidget( 1 )->headerTextFormat() ), true ) );
+   QCalendarWidget * p = hbqt_par_QCalendarWidget( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QTextCharFormat( new QTextCharFormat( ( p )->headerTextFormat() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCALENDARWIDGET_HEADERTEXTFORMAT FP=hb_retptrGC( hbqt_gcAllocate_QTextCharFormat( new QTextCharFormat( ( p )->headerTextFormat() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -199,7 +223,13 @@ HB_FUNC( QT_QCALENDARWIDGET_HEADERTEXTFORMAT )
  */
 HB_FUNC( QT_QCALENDARWIDGET_HORIZONTALHEADERFORMAT )
 {
-   hb_retni( ( QCalendarWidget::HorizontalHeaderFormat ) hbqt_par_QCalendarWidget( 1 )->horizontalHeaderFormat() );
+   QCalendarWidget * p = hbqt_par_QCalendarWidget( 1 );
+   if( p )
+      hb_retni( ( QCalendarWidget::HorizontalHeaderFormat ) ( p )->horizontalHeaderFormat() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCALENDARWIDGET_HORIZONTALHEADERFORMAT FP=hb_retni( ( QCalendarWidget::HorizontalHeaderFormat ) ( p )->horizontalHeaderFormat() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -207,7 +237,13 @@ HB_FUNC( QT_QCALENDARWIDGET_HORIZONTALHEADERFORMAT )
  */
 HB_FUNC( QT_QCALENDARWIDGET_ISDATEEDITENABLED )
 {
-   hb_retl( hbqt_par_QCalendarWidget( 1 )->isDateEditEnabled() );
+   QCalendarWidget * p = hbqt_par_QCalendarWidget( 1 );
+   if( p )
+      hb_retl( ( p )->isDateEditEnabled() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCALENDARWIDGET_ISDATEEDITENABLED FP=hb_retl( ( p )->isDateEditEnabled() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -215,7 +251,13 @@ HB_FUNC( QT_QCALENDARWIDGET_ISDATEEDITENABLED )
  */
 HB_FUNC( QT_QCALENDARWIDGET_ISGRIDVISIBLE )
 {
-   hb_retl( hbqt_par_QCalendarWidget( 1 )->isGridVisible() );
+   QCalendarWidget * p = hbqt_par_QCalendarWidget( 1 );
+   if( p )
+      hb_retl( ( p )->isGridVisible() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCALENDARWIDGET_ISGRIDVISIBLE FP=hb_retl( ( p )->isGridVisible() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -223,7 +265,13 @@ HB_FUNC( QT_QCALENDARWIDGET_ISGRIDVISIBLE )
  */
 HB_FUNC( QT_QCALENDARWIDGET_ISNAVIGATIONBARVISIBLE )
 {
-   hb_retl( hbqt_par_QCalendarWidget( 1 )->isNavigationBarVisible() );
+   QCalendarWidget * p = hbqt_par_QCalendarWidget( 1 );
+   if( p )
+      hb_retl( ( p )->isNavigationBarVisible() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCALENDARWIDGET_ISNAVIGATIONBARVISIBLE FP=hb_retl( ( p )->isNavigationBarVisible() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -231,7 +279,13 @@ HB_FUNC( QT_QCALENDARWIDGET_ISNAVIGATIONBARVISIBLE )
  */
 HB_FUNC( QT_QCALENDARWIDGET_MAXIMUMDATE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QDate( new QDate( hbqt_par_QCalendarWidget( 1 )->maximumDate() ), true ) );
+   QCalendarWidget * p = hbqt_par_QCalendarWidget( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QDate( new QDate( ( p )->maximumDate() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCALENDARWIDGET_MAXIMUMDATE FP=hb_retptrGC( hbqt_gcAllocate_QDate( new QDate( ( p )->maximumDate() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -239,7 +293,13 @@ HB_FUNC( QT_QCALENDARWIDGET_MAXIMUMDATE )
  */
 HB_FUNC( QT_QCALENDARWIDGET_MINIMUMDATE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QDate( new QDate( hbqt_par_QCalendarWidget( 1 )->minimumDate() ), true ) );
+   QCalendarWidget * p = hbqt_par_QCalendarWidget( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QDate( new QDate( ( p )->minimumDate() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCALENDARWIDGET_MINIMUMDATE FP=hb_retptrGC( hbqt_gcAllocate_QDate( new QDate( ( p )->minimumDate() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -247,7 +307,13 @@ HB_FUNC( QT_QCALENDARWIDGET_MINIMUMDATE )
  */
 HB_FUNC( QT_QCALENDARWIDGET_MONTHSHOWN )
 {
-   hb_retni( hbqt_par_QCalendarWidget( 1 )->monthShown() );
+   QCalendarWidget * p = hbqt_par_QCalendarWidget( 1 );
+   if( p )
+      hb_retni( ( p )->monthShown() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCALENDARWIDGET_MONTHSHOWN FP=hb_retni( ( p )->monthShown() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -255,7 +321,13 @@ HB_FUNC( QT_QCALENDARWIDGET_MONTHSHOWN )
  */
 HB_FUNC( QT_QCALENDARWIDGET_SELECTEDDATE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QDate( new QDate( hbqt_par_QCalendarWidget( 1 )->selectedDate() ), true ) );
+   QCalendarWidget * p = hbqt_par_QCalendarWidget( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QDate( new QDate( ( p )->selectedDate() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCALENDARWIDGET_SELECTEDDATE FP=hb_retptrGC( hbqt_gcAllocate_QDate( new QDate( ( p )->selectedDate() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -263,7 +335,13 @@ HB_FUNC( QT_QCALENDARWIDGET_SELECTEDDATE )
  */
 HB_FUNC( QT_QCALENDARWIDGET_SELECTIONMODE )
 {
-   hb_retni( ( QCalendarWidget::SelectionMode ) hbqt_par_QCalendarWidget( 1 )->selectionMode() );
+   QCalendarWidget * p = hbqt_par_QCalendarWidget( 1 );
+   if( p )
+      hb_retni( ( QCalendarWidget::SelectionMode ) ( p )->selectionMode() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCALENDARWIDGET_SELECTIONMODE FP=hb_retni( ( QCalendarWidget::SelectionMode ) ( p )->selectionMode() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -271,7 +349,13 @@ HB_FUNC( QT_QCALENDARWIDGET_SELECTIONMODE )
  */
 HB_FUNC( QT_QCALENDARWIDGET_SETDATEEDITACCEPTDELAY )
 {
-   hbqt_par_QCalendarWidget( 1 )->setDateEditAcceptDelay( hb_parni( 2 ) );
+   QCalendarWidget * p = hbqt_par_QCalendarWidget( 1 );
+   if( p )
+      ( p )->setDateEditAcceptDelay( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCALENDARWIDGET_SETDATEEDITACCEPTDELAY FP=( p )->setDateEditAcceptDelay( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -279,7 +363,13 @@ HB_FUNC( QT_QCALENDARWIDGET_SETDATEEDITACCEPTDELAY )
  */
 HB_FUNC( QT_QCALENDARWIDGET_SETDATEEDITENABLED )
 {
-   hbqt_par_QCalendarWidget( 1 )->setDateEditEnabled( hb_parl( 2 ) );
+   QCalendarWidget * p = hbqt_par_QCalendarWidget( 1 );
+   if( p )
+      ( p )->setDateEditEnabled( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCALENDARWIDGET_SETDATEEDITENABLED FP=( p )->setDateEditEnabled( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -287,7 +377,13 @@ HB_FUNC( QT_QCALENDARWIDGET_SETDATEEDITENABLED )
  */
 HB_FUNC( QT_QCALENDARWIDGET_SETDATETEXTFORMAT )
 {
-   hbqt_par_QCalendarWidget( 1 )->setDateTextFormat( *hbqt_par_QDate( 2 ), *hbqt_par_QTextCharFormat( 3 ) );
+   QCalendarWidget * p = hbqt_par_QCalendarWidget( 1 );
+   if( p )
+      ( p )->setDateTextFormat( *hbqt_par_QDate( 2 ), *hbqt_par_QTextCharFormat( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCALENDARWIDGET_SETDATETEXTFORMAT FP=( p )->setDateTextFormat( *hbqt_par_QDate( 2 ), *hbqt_par_QTextCharFormat( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -295,7 +391,13 @@ HB_FUNC( QT_QCALENDARWIDGET_SETDATETEXTFORMAT )
  */
 HB_FUNC( QT_QCALENDARWIDGET_SETFIRSTDAYOFWEEK )
 {
-   hbqt_par_QCalendarWidget( 1 )->setFirstDayOfWeek( ( Qt::DayOfWeek ) hb_parni( 2 ) );
+   QCalendarWidget * p = hbqt_par_QCalendarWidget( 1 );
+   if( p )
+      ( p )->setFirstDayOfWeek( ( Qt::DayOfWeek ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCALENDARWIDGET_SETFIRSTDAYOFWEEK FP=( p )->setFirstDayOfWeek( ( Qt::DayOfWeek ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -303,7 +405,13 @@ HB_FUNC( QT_QCALENDARWIDGET_SETFIRSTDAYOFWEEK )
  */
 HB_FUNC( QT_QCALENDARWIDGET_SETHEADERTEXTFORMAT )
 {
-   hbqt_par_QCalendarWidget( 1 )->setHeaderTextFormat( *hbqt_par_QTextCharFormat( 2 ) );
+   QCalendarWidget * p = hbqt_par_QCalendarWidget( 1 );
+   if( p )
+      ( p )->setHeaderTextFormat( *hbqt_par_QTextCharFormat( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCALENDARWIDGET_SETHEADERTEXTFORMAT FP=( p )->setHeaderTextFormat( *hbqt_par_QTextCharFormat( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -311,7 +419,13 @@ HB_FUNC( QT_QCALENDARWIDGET_SETHEADERTEXTFORMAT )
  */
 HB_FUNC( QT_QCALENDARWIDGET_SETHORIZONTALHEADERFORMAT )
 {
-   hbqt_par_QCalendarWidget( 1 )->setHorizontalHeaderFormat( ( QCalendarWidget::HorizontalHeaderFormat ) hb_parni( 2 ) );
+   QCalendarWidget * p = hbqt_par_QCalendarWidget( 1 );
+   if( p )
+      ( p )->setHorizontalHeaderFormat( ( QCalendarWidget::HorizontalHeaderFormat ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCALENDARWIDGET_SETHORIZONTALHEADERFORMAT FP=( p )->setHorizontalHeaderFormat( ( QCalendarWidget::HorizontalHeaderFormat ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -319,7 +433,13 @@ HB_FUNC( QT_QCALENDARWIDGET_SETHORIZONTALHEADERFORMAT )
  */
 HB_FUNC( QT_QCALENDARWIDGET_SETMAXIMUMDATE )
 {
-   hbqt_par_QCalendarWidget( 1 )->setMaximumDate( *hbqt_par_QDate( 2 ) );
+   QCalendarWidget * p = hbqt_par_QCalendarWidget( 1 );
+   if( p )
+      ( p )->setMaximumDate( *hbqt_par_QDate( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCALENDARWIDGET_SETMAXIMUMDATE FP=( p )->setMaximumDate( *hbqt_par_QDate( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -327,7 +447,13 @@ HB_FUNC( QT_QCALENDARWIDGET_SETMAXIMUMDATE )
  */
 HB_FUNC( QT_QCALENDARWIDGET_SETMINIMUMDATE )
 {
-   hbqt_par_QCalendarWidget( 1 )->setMinimumDate( *hbqt_par_QDate( 2 ) );
+   QCalendarWidget * p = hbqt_par_QCalendarWidget( 1 );
+   if( p )
+      ( p )->setMinimumDate( *hbqt_par_QDate( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCALENDARWIDGET_SETMINIMUMDATE FP=( p )->setMinimumDate( *hbqt_par_QDate( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -335,7 +461,13 @@ HB_FUNC( QT_QCALENDARWIDGET_SETMINIMUMDATE )
  */
 HB_FUNC( QT_QCALENDARWIDGET_SETSELECTIONMODE )
 {
-   hbqt_par_QCalendarWidget( 1 )->setSelectionMode( ( QCalendarWidget::SelectionMode ) hb_parni( 2 ) );
+   QCalendarWidget * p = hbqt_par_QCalendarWidget( 1 );
+   if( p )
+      ( p )->setSelectionMode( ( QCalendarWidget::SelectionMode ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCALENDARWIDGET_SETSELECTIONMODE FP=( p )->setSelectionMode( ( QCalendarWidget::SelectionMode ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -343,7 +475,13 @@ HB_FUNC( QT_QCALENDARWIDGET_SETSELECTIONMODE )
  */
 HB_FUNC( QT_QCALENDARWIDGET_SETVERTICALHEADERFORMAT )
 {
-   hbqt_par_QCalendarWidget( 1 )->setVerticalHeaderFormat( ( QCalendarWidget::VerticalHeaderFormat ) hb_parni( 2 ) );
+   QCalendarWidget * p = hbqt_par_QCalendarWidget( 1 );
+   if( p )
+      ( p )->setVerticalHeaderFormat( ( QCalendarWidget::VerticalHeaderFormat ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCALENDARWIDGET_SETVERTICALHEADERFORMAT FP=( p )->setVerticalHeaderFormat( ( QCalendarWidget::VerticalHeaderFormat ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -351,7 +489,13 @@ HB_FUNC( QT_QCALENDARWIDGET_SETVERTICALHEADERFORMAT )
  */
 HB_FUNC( QT_QCALENDARWIDGET_SETWEEKDAYTEXTFORMAT )
 {
-   hbqt_par_QCalendarWidget( 1 )->setWeekdayTextFormat( ( Qt::DayOfWeek ) hb_parni( 2 ), *hbqt_par_QTextCharFormat( 3 ) );
+   QCalendarWidget * p = hbqt_par_QCalendarWidget( 1 );
+   if( p )
+      ( p )->setWeekdayTextFormat( ( Qt::DayOfWeek ) hb_parni( 2 ), *hbqt_par_QTextCharFormat( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCALENDARWIDGET_SETWEEKDAYTEXTFORMAT FP=( p )->setWeekdayTextFormat( ( Qt::DayOfWeek ) hb_parni( 2 ), *hbqt_par_QTextCharFormat( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -359,7 +503,13 @@ HB_FUNC( QT_QCALENDARWIDGET_SETWEEKDAYTEXTFORMAT )
  */
 HB_FUNC( QT_QCALENDARWIDGET_VERTICALHEADERFORMAT )
 {
-   hb_retni( ( QCalendarWidget::VerticalHeaderFormat ) hbqt_par_QCalendarWidget( 1 )->verticalHeaderFormat() );
+   QCalendarWidget * p = hbqt_par_QCalendarWidget( 1 );
+   if( p )
+      hb_retni( ( QCalendarWidget::VerticalHeaderFormat ) ( p )->verticalHeaderFormat() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCALENDARWIDGET_VERTICALHEADERFORMAT FP=hb_retni( ( QCalendarWidget::VerticalHeaderFormat ) ( p )->verticalHeaderFormat() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -367,7 +517,13 @@ HB_FUNC( QT_QCALENDARWIDGET_VERTICALHEADERFORMAT )
  */
 HB_FUNC( QT_QCALENDARWIDGET_WEEKDAYTEXTFORMAT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTextCharFormat( new QTextCharFormat( hbqt_par_QCalendarWidget( 1 )->weekdayTextFormat( ( Qt::DayOfWeek ) hb_parni( 2 ) ) ), true ) );
+   QCalendarWidget * p = hbqt_par_QCalendarWidget( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QTextCharFormat( new QTextCharFormat( ( p )->weekdayTextFormat( ( Qt::DayOfWeek ) hb_parni( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCALENDARWIDGET_WEEKDAYTEXTFORMAT FP=hb_retptrGC( hbqt_gcAllocate_QTextCharFormat( new QTextCharFormat( ( p )->weekdayTextFormat( ( Qt::DayOfWeek ) hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -375,7 +531,13 @@ HB_FUNC( QT_QCALENDARWIDGET_WEEKDAYTEXTFORMAT )
  */
 HB_FUNC( QT_QCALENDARWIDGET_YEARSHOWN )
 {
-   hb_retni( hbqt_par_QCalendarWidget( 1 )->yearShown() );
+   QCalendarWidget * p = hbqt_par_QCalendarWidget( 1 );
+   if( p )
+      hb_retni( ( p )->yearShown() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCALENDARWIDGET_YEARSHOWN FP=hb_retni( ( p )->yearShown() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -383,7 +545,13 @@ HB_FUNC( QT_QCALENDARWIDGET_YEARSHOWN )
  */
 HB_FUNC( QT_QCALENDARWIDGET_SETCURRENTPAGE )
 {
-   hbqt_par_QCalendarWidget( 1 )->setCurrentPage( hb_parni( 2 ), hb_parni( 3 ) );
+   QCalendarWidget * p = hbqt_par_QCalendarWidget( 1 );
+   if( p )
+      ( p )->setCurrentPage( hb_parni( 2 ), hb_parni( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCALENDARWIDGET_SETCURRENTPAGE FP=( p )->setCurrentPage( hb_parni( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -391,7 +559,13 @@ HB_FUNC( QT_QCALENDARWIDGET_SETCURRENTPAGE )
  */
 HB_FUNC( QT_QCALENDARWIDGET_SETDATERANGE )
 {
-   hbqt_par_QCalendarWidget( 1 )->setDateRange( *hbqt_par_QDate( 2 ), *hbqt_par_QDate( 3 ) );
+   QCalendarWidget * p = hbqt_par_QCalendarWidget( 1 );
+   if( p )
+      ( p )->setDateRange( *hbqt_par_QDate( 2 ), *hbqt_par_QDate( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCALENDARWIDGET_SETDATERANGE FP=( p )->setDateRange( *hbqt_par_QDate( 2 ), *hbqt_par_QDate( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -399,7 +573,13 @@ HB_FUNC( QT_QCALENDARWIDGET_SETDATERANGE )
  */
 HB_FUNC( QT_QCALENDARWIDGET_SETGRIDVISIBLE )
 {
-   hbqt_par_QCalendarWidget( 1 )->setGridVisible( hb_parl( 2 ) );
+   QCalendarWidget * p = hbqt_par_QCalendarWidget( 1 );
+   if( p )
+      ( p )->setGridVisible( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCALENDARWIDGET_SETGRIDVISIBLE FP=( p )->setGridVisible( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -407,7 +587,13 @@ HB_FUNC( QT_QCALENDARWIDGET_SETGRIDVISIBLE )
  */
 HB_FUNC( QT_QCALENDARWIDGET_SETNAVIGATIONBARVISIBLE )
 {
-   hbqt_par_QCalendarWidget( 1 )->setNavigationBarVisible( hb_parl( 2 ) );
+   QCalendarWidget * p = hbqt_par_QCalendarWidget( 1 );
+   if( p )
+      ( p )->setNavigationBarVisible( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCALENDARWIDGET_SETNAVIGATIONBARVISIBLE FP=( p )->setNavigationBarVisible( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -415,7 +601,13 @@ HB_FUNC( QT_QCALENDARWIDGET_SETNAVIGATIONBARVISIBLE )
  */
 HB_FUNC( QT_QCALENDARWIDGET_SETSELECTEDDATE )
 {
-   hbqt_par_QCalendarWidget( 1 )->setSelectedDate( *hbqt_par_QDate( 2 ) );
+   QCalendarWidget * p = hbqt_par_QCalendarWidget( 1 );
+   if( p )
+      ( p )->setSelectedDate( *hbqt_par_QDate( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCALENDARWIDGET_SETSELECTEDDATE FP=( p )->setSelectedDate( *hbqt_par_QDate( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -423,7 +615,13 @@ HB_FUNC( QT_QCALENDARWIDGET_SETSELECTEDDATE )
  */
 HB_FUNC( QT_QCALENDARWIDGET_SHOWNEXTMONTH )
 {
-   hbqt_par_QCalendarWidget( 1 )->showNextMonth();
+   QCalendarWidget * p = hbqt_par_QCalendarWidget( 1 );
+   if( p )
+      ( p )->showNextMonth();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCALENDARWIDGET_SHOWNEXTMONTH FP=( p )->showNextMonth(); p is NULL" ) );
+   }
 }
 
 /*
@@ -431,7 +629,13 @@ HB_FUNC( QT_QCALENDARWIDGET_SHOWNEXTMONTH )
  */
 HB_FUNC( QT_QCALENDARWIDGET_SHOWNEXTYEAR )
 {
-   hbqt_par_QCalendarWidget( 1 )->showNextYear();
+   QCalendarWidget * p = hbqt_par_QCalendarWidget( 1 );
+   if( p )
+      ( p )->showNextYear();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCALENDARWIDGET_SHOWNEXTYEAR FP=( p )->showNextYear(); p is NULL" ) );
+   }
 }
 
 /*
@@ -439,7 +643,13 @@ HB_FUNC( QT_QCALENDARWIDGET_SHOWNEXTYEAR )
  */
 HB_FUNC( QT_QCALENDARWIDGET_SHOWPREVIOUSMONTH )
 {
-   hbqt_par_QCalendarWidget( 1 )->showPreviousMonth();
+   QCalendarWidget * p = hbqt_par_QCalendarWidget( 1 );
+   if( p )
+      ( p )->showPreviousMonth();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCALENDARWIDGET_SHOWPREVIOUSMONTH FP=( p )->showPreviousMonth(); p is NULL" ) );
+   }
 }
 
 /*
@@ -447,7 +657,13 @@ HB_FUNC( QT_QCALENDARWIDGET_SHOWPREVIOUSMONTH )
  */
 HB_FUNC( QT_QCALENDARWIDGET_SHOWPREVIOUSYEAR )
 {
-   hbqt_par_QCalendarWidget( 1 )->showPreviousYear();
+   QCalendarWidget * p = hbqt_par_QCalendarWidget( 1 );
+   if( p )
+      ( p )->showPreviousYear();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCALENDARWIDGET_SHOWPREVIOUSYEAR FP=( p )->showPreviousYear(); p is NULL" ) );
+   }
 }
 
 /*
@@ -455,7 +671,13 @@ HB_FUNC( QT_QCALENDARWIDGET_SHOWPREVIOUSYEAR )
  */
 HB_FUNC( QT_QCALENDARWIDGET_SHOWSELECTEDDATE )
 {
-   hbqt_par_QCalendarWidget( 1 )->showSelectedDate();
+   QCalendarWidget * p = hbqt_par_QCalendarWidget( 1 );
+   if( p )
+      ( p )->showSelectedDate();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCALENDARWIDGET_SHOWSELECTEDDATE FP=( p )->showSelectedDate(); p is NULL" ) );
+   }
 }
 
 /*
@@ -463,7 +685,13 @@ HB_FUNC( QT_QCALENDARWIDGET_SHOWSELECTEDDATE )
  */
 HB_FUNC( QT_QCALENDARWIDGET_SHOWTODAY )
 {
-   hbqt_par_QCalendarWidget( 1 )->showToday();
+   QCalendarWidget * p = hbqt_par_QCalendarWidget( 1 );
+   if( p )
+      ( p )->showToday();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCALENDARWIDGET_SHOWTODAY FP=( p )->showToday(); p is NULL" ) );
+   }
 }
 
 

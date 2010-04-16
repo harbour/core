@@ -77,43 +77,44 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QCheckBox > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QCheckBox > pq;
 } QGC_POINTER_QCheckBox;
 
 QT_G_FUNC( hbqt_gcRelease_QCheckBox )
 {
+   QCheckBox  * ph = NULL ;
    QGC_POINTER_QCheckBox * p = ( QGC_POINTER_QCheckBox * ) Cargo;
 
-   if( p && p->bNew )
+   if( p && p->bNew && p->ph )
    {
-      if( p->ph && p->pq )
+      ph = p->ph;
+      if( ph )
       {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QCheckBox   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
-            delete ( ( QCheckBox * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QCheckBox   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QCheckBox   /.\\   ", (void*) ph, (void*) p->ph ) );
+            delete ( p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QCheckBox   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QCheckBox          pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QCheckBox          ", ph ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QCheckBox    :     Object already deleted!", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QCheckBox    :     Object already deleted!", ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QCheckBox    :    Object not created with new=true", p->ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QCheckBox    :    Object not created with new=true", ph ) );
       p->ph = NULL;
    }
 }
@@ -122,13 +123,12 @@ void * hbqt_gcAllocate_QCheckBox( void * pObj, bool bNew )
 {
    QGC_POINTER_QCheckBox * p = ( QGC_POINTER_QCheckBox * ) hb_gcAllocate( sizeof( QGC_POINTER_QCheckBox ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QCheckBox >( ( QCheckBox * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QCheckBox;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QCheckBox >( ( QCheckBox * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QCheckBox  under p->pq", pObj ) );
    }
    else
@@ -140,18 +140,18 @@ void * hbqt_gcAllocate_QCheckBox( void * pObj, bool bNew )
 
 HB_FUNC( QT_QCHECKBOX )
 {
-   void * pObj = NULL;
+   QCheckBox * pObj = NULL;
 
    if( hb_pcount() >= 1 && HB_ISCHAR( 1 ) )
    {
-      pObj = ( QCheckBox* ) new QCheckBox( hbqt_par_QString( 1 ), hbqt_par_QWidget( 2 ) ) ;
+      pObj =  new QCheckBox( hbqt_par_QString( 1 ), hbqt_par_QWidget( 2 ) ) ;
    }
    else
    {
-      pObj = ( QCheckBox* ) new QCheckBox( hbqt_par_QWidget( 1 ) ) ;
+      pObj =  new QCheckBox( hbqt_par_QWidget( 1 ) ) ;
    }
 
-   hb_retptrGC( hbqt_gcAllocate_QCheckBox( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QCheckBox( ( void * ) pObj, true ) );
 }
 
 /*
@@ -159,7 +159,13 @@ HB_FUNC( QT_QCHECKBOX )
  */
 HB_FUNC( QT_QCHECKBOX_CHECKSTATE )
 {
-   hb_retni( ( Qt::CheckState ) hbqt_par_QCheckBox( 1 )->checkState() );
+   QCheckBox * p = hbqt_par_QCheckBox( 1 );
+   if( p )
+      hb_retni( ( Qt::CheckState ) ( p )->checkState() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCHECKBOX_CHECKSTATE FP=hb_retni( ( Qt::CheckState ) ( p )->checkState() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -167,7 +173,13 @@ HB_FUNC( QT_QCHECKBOX_CHECKSTATE )
  */
 HB_FUNC( QT_QCHECKBOX_ISTRISTATE )
 {
-   hb_retl( hbqt_par_QCheckBox( 1 )->isTristate() );
+   QCheckBox * p = hbqt_par_QCheckBox( 1 );
+   if( p )
+      hb_retl( ( p )->isTristate() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCHECKBOX_ISTRISTATE FP=hb_retl( ( p )->isTristate() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -175,7 +187,13 @@ HB_FUNC( QT_QCHECKBOX_ISTRISTATE )
  */
 HB_FUNC( QT_QCHECKBOX_SETCHECKSTATE )
 {
-   hbqt_par_QCheckBox( 1 )->setCheckState( ( Qt::CheckState ) hb_parni( 2 ) );
+   QCheckBox * p = hbqt_par_QCheckBox( 1 );
+   if( p )
+      ( p )->setCheckState( ( Qt::CheckState ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCHECKBOX_SETCHECKSTATE FP=( p )->setCheckState( ( Qt::CheckState ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -183,7 +201,13 @@ HB_FUNC( QT_QCHECKBOX_SETCHECKSTATE )
  */
 HB_FUNC( QT_QCHECKBOX_SETTRISTATE )
 {
-   hbqt_par_QCheckBox( 1 )->setTristate( hb_parl( 2 ) );
+   QCheckBox * p = hbqt_par_QCheckBox( 1 );
+   if( p )
+      ( p )->setTristate( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCHECKBOX_SETTRISTATE FP=( p )->setTristate( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 

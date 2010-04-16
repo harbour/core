@@ -78,43 +78,44 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QScrollBar > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QScrollBar > pq;
 } QGC_POINTER_QScrollBar;
 
 QT_G_FUNC( hbqt_gcRelease_QScrollBar )
 {
+   QScrollBar  * ph = NULL ;
    QGC_POINTER_QScrollBar * p = ( QGC_POINTER_QScrollBar * ) Cargo;
 
-   if( p && p->bNew )
+   if( p && p->bNew && p->ph )
    {
-      if( p->ph && p->pq )
+      ph = p->ph;
+      if( ph )
       {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QScrollBar   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
-            delete ( ( QScrollBar * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QScrollBar   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QScrollBar   /.\\   ", (void*) ph, (void*) p->ph ) );
+            delete ( p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QScrollBar   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QScrollBar          pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QScrollBar          ", ph ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QScrollBar    :     Object already deleted!", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QScrollBar    :     Object already deleted!", ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QScrollBar    :    Object not created with new=true", p->ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QScrollBar    :    Object not created with new=true", ph ) );
       p->ph = NULL;
    }
 }
@@ -123,13 +124,12 @@ void * hbqt_gcAllocate_QScrollBar( void * pObj, bool bNew )
 {
    QGC_POINTER_QScrollBar * p = ( QGC_POINTER_QScrollBar * ) hb_gcAllocate( sizeof( QGC_POINTER_QScrollBar ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QScrollBar >( ( QScrollBar * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QScrollBar;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QScrollBar >( ( QScrollBar * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QScrollBar  under p->pq", pObj ) );
    }
    else
@@ -141,11 +141,11 @@ void * hbqt_gcAllocate_QScrollBar( void * pObj, bool bNew )
 
 HB_FUNC( QT_QSCROLLBAR )
 {
-   void * pObj = NULL;
+   QScrollBar * pObj = NULL;
 
-   pObj = ( QScrollBar* ) new QScrollBar( hbqt_par_QWidget( 1 ) ) ;
+   pObj =  new QScrollBar( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QScrollBar( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QScrollBar( ( void * ) pObj, true ) );
 }
 
 

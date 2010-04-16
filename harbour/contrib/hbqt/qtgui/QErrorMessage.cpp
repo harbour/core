@@ -77,43 +77,44 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QErrorMessage > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QErrorMessage > pq;
 } QGC_POINTER_QErrorMessage;
 
 QT_G_FUNC( hbqt_gcRelease_QErrorMessage )
 {
+   QErrorMessage  * ph = NULL ;
    QGC_POINTER_QErrorMessage * p = ( QGC_POINTER_QErrorMessage * ) Cargo;
 
-   if( p && p->bNew )
+   if( p && p->bNew && p->ph )
    {
-      if( p->ph && p->pq )
+      ph = p->ph;
+      if( ph )
       {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QErrorMessage   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
-            delete ( ( QErrorMessage * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QErrorMessage   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QErrorMessage   /.\\   ", (void*) ph, (void*) p->ph ) );
+            delete ( p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QErrorMessage   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QErrorMessage          pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QErrorMessage          ", ph ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QErrorMessage    :     Object already deleted!", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QErrorMessage    :     Object already deleted!", ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QErrorMessage    :    Object not created with new=true", p->ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QErrorMessage    :    Object not created with new=true", ph ) );
       p->ph = NULL;
    }
 }
@@ -122,13 +123,12 @@ void * hbqt_gcAllocate_QErrorMessage( void * pObj, bool bNew )
 {
    QGC_POINTER_QErrorMessage * p = ( QGC_POINTER_QErrorMessage * ) hb_gcAllocate( sizeof( QGC_POINTER_QErrorMessage ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QErrorMessage >( ( QErrorMessage * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QErrorMessage;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QErrorMessage >( ( QErrorMessage * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QErrorMessage  under p->pq", pObj ) );
    }
    else
@@ -140,11 +140,11 @@ void * hbqt_gcAllocate_QErrorMessage( void * pObj, bool bNew )
 
 HB_FUNC( QT_QERRORMESSAGE )
 {
-   void * pObj = NULL;
+   QErrorMessage * pObj = NULL;
 
-   pObj = ( QErrorMessage* ) new QErrorMessage( hbqt_par_QWidget( 1 ) ) ;
+   pObj =  new QErrorMessage( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QErrorMessage( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QErrorMessage( ( void * ) pObj, true ) );
 }
 
 /*
@@ -152,7 +152,13 @@ HB_FUNC( QT_QERRORMESSAGE )
  */
 HB_FUNC( QT_QERRORMESSAGE_SHOWMESSAGE )
 {
-   hbqt_par_QErrorMessage( 1 )->showMessage( QErrorMessage::tr( hb_parc( 2 ) ) );
+   QErrorMessage * p = hbqt_par_QErrorMessage( 1 );
+   if( p )
+      ( p )->showMessage( QErrorMessage::tr( hb_parc( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QERRORMESSAGE_SHOWMESSAGE FP=( p )->showMessage( QErrorMessage::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -160,7 +166,13 @@ HB_FUNC( QT_QERRORMESSAGE_SHOWMESSAGE )
  */
 HB_FUNC( QT_QERRORMESSAGE_SHOWMESSAGE_1 )
 {
-   hbqt_par_QErrorMessage( 1 )->showMessage( QErrorMessage::tr( hb_parc( 2 ) ), QErrorMessage::tr( hb_parc( 3 ) ) );
+   QErrorMessage * p = hbqt_par_QErrorMessage( 1 );
+   if( p )
+      ( p )->showMessage( QErrorMessage::tr( hb_parc( 2 ) ), QErrorMessage::tr( hb_parc( 3 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QERRORMESSAGE_SHOWMESSAGE_1 FP=( p )->showMessage( QErrorMessage::tr( hb_parc( 2 ) ), QErrorMessage::tr( hb_parc( 3 ) ) ); p is NULL" ) );
+   }
 }
 
 

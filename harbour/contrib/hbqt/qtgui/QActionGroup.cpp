@@ -85,43 +85,44 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QActionGroup > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QActionGroup > pq;
 } QGC_POINTER_QActionGroup;
 
 QT_G_FUNC( hbqt_gcRelease_QActionGroup )
 {
+   QActionGroup  * ph = NULL ;
    QGC_POINTER_QActionGroup * p = ( QGC_POINTER_QActionGroup * ) Cargo;
 
-   if( p && p->bNew )
+   if( p && p->bNew && p->ph )
    {
-      if( p->ph && p->pq )
+      ph = p->ph;
+      if( ph )
       {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QActionGroup   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
-            delete ( ( QActionGroup * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QActionGroup   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QActionGroup   /.\\   ", (void*) ph, (void*) p->ph ) );
+            delete ( p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QActionGroup   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QActionGroup          pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QActionGroup          ", ph ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QActionGroup    :     Object already deleted!", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QActionGroup    :     Object already deleted!", ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QActionGroup    :    Object not created with new=true", p->ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QActionGroup    :    Object not created with new=true", ph ) );
       p->ph = NULL;
    }
 }
@@ -130,13 +131,12 @@ void * hbqt_gcAllocate_QActionGroup( void * pObj, bool bNew )
 {
    QGC_POINTER_QActionGroup * p = ( QGC_POINTER_QActionGroup * ) hb_gcAllocate( sizeof( QGC_POINTER_QActionGroup ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QActionGroup >( ( QActionGroup * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QActionGroup;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QActionGroup >( ( QActionGroup * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QActionGroup  under p->pq", pObj ) );
    }
    else
@@ -148,14 +148,14 @@ void * hbqt_gcAllocate_QActionGroup( void * pObj, bool bNew )
 
 HB_FUNC( QT_QACTIONGROUP )
 {
-   void * pObj = NULL;
+   QActionGroup * pObj = NULL;
 
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
       pObj = new QActionGroup( hbqt_par_QObject( 1 ) ) ;
    }
 
-   hb_retptrGC( hbqt_gcAllocate_QActionGroup( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QActionGroup( ( void * ) pObj, true ) );
 }
 
 /*
@@ -163,7 +163,13 @@ HB_FUNC( QT_QACTIONGROUP )
  */
 HB_FUNC( QT_QACTIONGROUP_ADDACTION )
 {
-   hb_retptrGC( hbqt_gcAllocate_QAction( hbqt_par_QActionGroup( 1 )->addAction( hbqt_par_QAction( 2 ) ), false ) );
+   QActionGroup * p = hbqt_par_QActionGroup( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->addAction( hbqt_par_QAction( 2 ) ), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QACTIONGROUP_ADDACTION FP=hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->addAction( hbqt_par_QAction( 2 ) ), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -171,7 +177,13 @@ HB_FUNC( QT_QACTIONGROUP_ADDACTION )
  */
 HB_FUNC( QT_QACTIONGROUP_ADDACTION_1 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QAction( hbqt_par_QActionGroup( 1 )->addAction( QActionGroup::tr( hb_parc( 2 ) ) ), false ) );
+   QActionGroup * p = hbqt_par_QActionGroup( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->addAction( QActionGroup::tr( hb_parc( 2 ) ) ), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QACTIONGROUP_ADDACTION_1 FP=hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->addAction( QActionGroup::tr( hb_parc( 2 ) ) ), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -179,7 +191,13 @@ HB_FUNC( QT_QACTIONGROUP_ADDACTION_1 )
  */
 HB_FUNC( QT_QACTIONGROUP_ADDACTION_2 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QAction( hbqt_par_QActionGroup( 1 )->addAction( QIcon( hbqt_par_QString( 2 ) ), QActionGroup::tr( hb_parc( 3 ) ) ), false ) );
+   QActionGroup * p = hbqt_par_QActionGroup( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->addAction( QIcon( hbqt_par_QString( 2 ) ), QActionGroup::tr( hb_parc( 3 ) ) ), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QACTIONGROUP_ADDACTION_2 FP=hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->addAction( QIcon( hbqt_par_QString( 2 ) ), QActionGroup::tr( hb_parc( 3 ) ) ), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -187,7 +205,13 @@ HB_FUNC( QT_QACTIONGROUP_ADDACTION_2 )
  */
 HB_FUNC( QT_QACTIONGROUP_CHECKEDACTION )
 {
-   hb_retptrGC( hbqt_gcAllocate_QAction( hbqt_par_QActionGroup( 1 )->checkedAction(), false ) );
+   QActionGroup * p = hbqt_par_QActionGroup( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->checkedAction(), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QACTIONGROUP_CHECKEDACTION FP=hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->checkedAction(), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -195,7 +219,13 @@ HB_FUNC( QT_QACTIONGROUP_CHECKEDACTION )
  */
 HB_FUNC( QT_QACTIONGROUP_ISENABLED )
 {
-   hb_retl( hbqt_par_QActionGroup( 1 )->isEnabled() );
+   QActionGroup * p = hbqt_par_QActionGroup( 1 );
+   if( p )
+      hb_retl( ( p )->isEnabled() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QACTIONGROUP_ISENABLED FP=hb_retl( ( p )->isEnabled() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -203,7 +233,13 @@ HB_FUNC( QT_QACTIONGROUP_ISENABLED )
  */
 HB_FUNC( QT_QACTIONGROUP_ISEXCLUSIVE )
 {
-   hb_retl( hbqt_par_QActionGroup( 1 )->isExclusive() );
+   QActionGroup * p = hbqt_par_QActionGroup( 1 );
+   if( p )
+      hb_retl( ( p )->isExclusive() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QACTIONGROUP_ISEXCLUSIVE FP=hb_retl( ( p )->isExclusive() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -211,7 +247,13 @@ HB_FUNC( QT_QACTIONGROUP_ISEXCLUSIVE )
  */
 HB_FUNC( QT_QACTIONGROUP_ISVISIBLE )
 {
-   hb_retl( hbqt_par_QActionGroup( 1 )->isVisible() );
+   QActionGroup * p = hbqt_par_QActionGroup( 1 );
+   if( p )
+      hb_retl( ( p )->isVisible() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QACTIONGROUP_ISVISIBLE FP=hb_retl( ( p )->isVisible() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -219,7 +261,13 @@ HB_FUNC( QT_QACTIONGROUP_ISVISIBLE )
  */
 HB_FUNC( QT_QACTIONGROUP_REMOVEACTION )
 {
-   hbqt_par_QActionGroup( 1 )->removeAction( hbqt_par_QAction( 2 ) );
+   QActionGroup * p = hbqt_par_QActionGroup( 1 );
+   if( p )
+      ( p )->removeAction( hbqt_par_QAction( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QACTIONGROUP_REMOVEACTION FP=( p )->removeAction( hbqt_par_QAction( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -227,7 +275,13 @@ HB_FUNC( QT_QACTIONGROUP_REMOVEACTION )
  */
 HB_FUNC( QT_QACTIONGROUP_SETDISABLED )
 {
-   hbqt_par_QActionGroup( 1 )->setDisabled( hb_parl( 2 ) );
+   QActionGroup * p = hbqt_par_QActionGroup( 1 );
+   if( p )
+      ( p )->setDisabled( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QACTIONGROUP_SETDISABLED FP=( p )->setDisabled( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -235,7 +289,13 @@ HB_FUNC( QT_QACTIONGROUP_SETDISABLED )
  */
 HB_FUNC( QT_QACTIONGROUP_SETENABLED )
 {
-   hbqt_par_QActionGroup( 1 )->setEnabled( hb_parl( 2 ) );
+   QActionGroup * p = hbqt_par_QActionGroup( 1 );
+   if( p )
+      ( p )->setEnabled( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QACTIONGROUP_SETENABLED FP=( p )->setEnabled( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -243,7 +303,13 @@ HB_FUNC( QT_QACTIONGROUP_SETENABLED )
  */
 HB_FUNC( QT_QACTIONGROUP_SETEXCLUSIVE )
 {
-   hbqt_par_QActionGroup( 1 )->setExclusive( hb_parl( 2 ) );
+   QActionGroup * p = hbqt_par_QActionGroup( 1 );
+   if( p )
+      ( p )->setExclusive( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QACTIONGROUP_SETEXCLUSIVE FP=( p )->setExclusive( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -251,7 +317,13 @@ HB_FUNC( QT_QACTIONGROUP_SETEXCLUSIVE )
  */
 HB_FUNC( QT_QACTIONGROUP_SETVISIBLE )
 {
-   hbqt_par_QActionGroup( 1 )->setVisible( hb_parl( 2 ) );
+   QActionGroup * p = hbqt_par_QActionGroup( 1 );
+   if( p )
+      ( p )->setVisible( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QACTIONGROUP_SETVISIBLE FP=( p )->setVisible( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 

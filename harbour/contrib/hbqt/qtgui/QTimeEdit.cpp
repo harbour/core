@@ -77,43 +77,44 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QTimeEdit > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QTimeEdit > pq;
 } QGC_POINTER_QTimeEdit;
 
 QT_G_FUNC( hbqt_gcRelease_QTimeEdit )
 {
+   QTimeEdit  * ph = NULL ;
    QGC_POINTER_QTimeEdit * p = ( QGC_POINTER_QTimeEdit * ) Cargo;
 
-   if( p && p->bNew )
+   if( p && p->bNew && p->ph )
    {
-      if( p->ph && p->pq )
+      ph = p->ph;
+      if( ph )
       {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QTimeEdit   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
-            delete ( ( QTimeEdit * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QTimeEdit   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QTimeEdit   /.\\   ", (void*) ph, (void*) p->ph ) );
+            delete ( p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QTimeEdit   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QTimeEdit          pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QTimeEdit          ", ph ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QTimeEdit    :     Object already deleted!", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QTimeEdit    :     Object already deleted!", ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QTimeEdit    :    Object not created with new=true", p->ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QTimeEdit    :    Object not created with new=true", ph ) );
       p->ph = NULL;
    }
 }
@@ -122,13 +123,12 @@ void * hbqt_gcAllocate_QTimeEdit( void * pObj, bool bNew )
 {
    QGC_POINTER_QTimeEdit * p = ( QGC_POINTER_QTimeEdit * ) hb_gcAllocate( sizeof( QGC_POINTER_QTimeEdit ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QTimeEdit >( ( QTimeEdit * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTimeEdit;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QTimeEdit >( ( QTimeEdit * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QTimeEdit  under p->pq", pObj ) );
    }
    else
@@ -140,14 +140,14 @@ void * hbqt_gcAllocate_QTimeEdit( void * pObj, bool bNew )
 
 HB_FUNC( QT_QTIMEEDIT )
 {
-   void * pObj = NULL;
+   QTimeEdit * pObj = NULL;
 
-   pObj = ( QTimeEdit* ) new QTimeEdit( hbqt_par_QWidget( 1 ) ) ;
+   pObj =  new QTimeEdit( hbqt_par_QWidget( 1 ) ) ;
    #if 0
    pObj = (QTimeEdit *) new QTimeEdit( QTime( hbqt_par_QString( 1 ) ), hbqt_par_QWidget( 2 ) ) ;
    #endif
 
-   hb_retptrGC( hbqt_gcAllocate_QTimeEdit( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QTimeEdit( ( void * ) pObj, true ) );
 }
 
 

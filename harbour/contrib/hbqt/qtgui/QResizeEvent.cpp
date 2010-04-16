@@ -76,7 +76,7 @@
 
 typedef struct
 {
-   void * ph;
+   QResizeEvent * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QResizeEvent;
@@ -96,7 +96,7 @@ void * hbqt_gcAllocate_QResizeEvent( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QResizeEvent * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QResizeEvent;
 
@@ -113,6 +113,7 @@ void * hbqt_gcAllocate_QResizeEvent( void * pObj, bool bNew )
 
 HB_FUNC( QT_QRESIZEEVENT )
 {
+   // hb_retptr( ( QResizeEvent* ) new QResizeEvent() );
 }
 
 /*
@@ -120,7 +121,13 @@ HB_FUNC( QT_QRESIZEEVENT )
  */
 HB_FUNC( QT_QRESIZEEVENT_OLDSIZE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QResizeEvent( 1 )->oldSize() ), true ) );
+   QResizeEvent * p = hbqt_par_QResizeEvent( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->oldSize() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRESIZEEVENT_OLDSIZE FP=hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->oldSize() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -128,7 +135,13 @@ HB_FUNC( QT_QRESIZEEVENT_OLDSIZE )
  */
 HB_FUNC( QT_QRESIZEEVENT_SIZE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QResizeEvent( 1 )->size() ), true ) );
+   QResizeEvent * p = hbqt_par_QResizeEvent( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->size() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRESIZEEVENT_SIZE FP=hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->size() ), true ) ); p is NULL" ) );
+   }
 }
 
 

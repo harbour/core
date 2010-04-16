@@ -83,43 +83,44 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QDockWidget > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QDockWidget > pq;
 } QGC_POINTER_QDockWidget;
 
 QT_G_FUNC( hbqt_gcRelease_QDockWidget )
 {
+   QDockWidget  * ph = NULL ;
    QGC_POINTER_QDockWidget * p = ( QGC_POINTER_QDockWidget * ) Cargo;
 
-   if( p && p->bNew )
+   if( p && p->bNew && p->ph )
    {
-      if( p->ph && p->pq )
+      ph = p->ph;
+      if( ph )
       {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QDockWidget   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
-            delete ( ( QDockWidget * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QDockWidget   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QDockWidget   /.\\   ", (void*) ph, (void*) p->ph ) );
+            delete ( p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QDockWidget   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QDockWidget          pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QDockWidget          ", ph ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QDockWidget    :     Object already deleted!", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QDockWidget    :     Object already deleted!", ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QDockWidget    :    Object not created with new=true", p->ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QDockWidget    :    Object not created with new=true", ph ) );
       p->ph = NULL;
    }
 }
@@ -128,13 +129,12 @@ void * hbqt_gcAllocate_QDockWidget( void * pObj, bool bNew )
 {
    QGC_POINTER_QDockWidget * p = ( QGC_POINTER_QDockWidget * ) hb_gcAllocate( sizeof( QGC_POINTER_QDockWidget ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QDockWidget >( ( QDockWidget * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QDockWidget;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QDockWidget >( ( QDockWidget * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QDockWidget  under p->pq", pObj ) );
    }
    else
@@ -146,11 +146,11 @@ void * hbqt_gcAllocate_QDockWidget( void * pObj, bool bNew )
 
 HB_FUNC( QT_QDOCKWIDGET )
 {
-   void * pObj = NULL;
+   QDockWidget * pObj = NULL;
 
    pObj = new QDockWidget( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QDockWidget( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QDockWidget( ( void * ) pObj, true ) );
 }
 
 /*
@@ -158,7 +158,13 @@ HB_FUNC( QT_QDOCKWIDGET )
  */
 HB_FUNC( QT_QDOCKWIDGET_ALLOWEDAREAS )
 {
-   hb_retni( ( Qt::DockWidgetAreas ) hbqt_par_QDockWidget( 1 )->allowedAreas() );
+   QDockWidget * p = hbqt_par_QDockWidget( 1 );
+   if( p )
+      hb_retni( ( Qt::DockWidgetAreas ) ( p )->allowedAreas() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDOCKWIDGET_ALLOWEDAREAS FP=hb_retni( ( Qt::DockWidgetAreas ) ( p )->allowedAreas() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -166,7 +172,13 @@ HB_FUNC( QT_QDOCKWIDGET_ALLOWEDAREAS )
  */
 HB_FUNC( QT_QDOCKWIDGET_FEATURES )
 {
-   hb_retni( ( QDockWidget::DockWidgetFeatures ) hbqt_par_QDockWidget( 1 )->features() );
+   QDockWidget * p = hbqt_par_QDockWidget( 1 );
+   if( p )
+      hb_retni( ( QDockWidget::DockWidgetFeatures ) ( p )->features() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDOCKWIDGET_FEATURES FP=hb_retni( ( QDockWidget::DockWidgetFeatures ) ( p )->features() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -174,7 +186,13 @@ HB_FUNC( QT_QDOCKWIDGET_FEATURES )
  */
 HB_FUNC( QT_QDOCKWIDGET_ISAREAALLOWED )
 {
-   hb_retl( hbqt_par_QDockWidget( 1 )->isAreaAllowed( ( Qt::DockWidgetArea ) hb_parni( 2 ) ) );
+   QDockWidget * p = hbqt_par_QDockWidget( 1 );
+   if( p )
+      hb_retl( ( p )->isAreaAllowed( ( Qt::DockWidgetArea ) hb_parni( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDOCKWIDGET_ISAREAALLOWED FP=hb_retl( ( p )->isAreaAllowed( ( Qt::DockWidgetArea ) hb_parni( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -182,7 +200,13 @@ HB_FUNC( QT_QDOCKWIDGET_ISAREAALLOWED )
  */
 HB_FUNC( QT_QDOCKWIDGET_ISFLOATING )
 {
-   hb_retl( hbqt_par_QDockWidget( 1 )->isFloating() );
+   QDockWidget * p = hbqt_par_QDockWidget( 1 );
+   if( p )
+      hb_retl( ( p )->isFloating() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDOCKWIDGET_ISFLOATING FP=hb_retl( ( p )->isFloating() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -190,7 +214,13 @@ HB_FUNC( QT_QDOCKWIDGET_ISFLOATING )
  */
 HB_FUNC( QT_QDOCKWIDGET_SETALLOWEDAREAS )
 {
-   hbqt_par_QDockWidget( 1 )->setAllowedAreas( ( Qt::DockWidgetAreas ) hb_parni( 2 ) );
+   QDockWidget * p = hbqt_par_QDockWidget( 1 );
+   if( p )
+      ( p )->setAllowedAreas( ( Qt::DockWidgetAreas ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDOCKWIDGET_SETALLOWEDAREAS FP=( p )->setAllowedAreas( ( Qt::DockWidgetAreas ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -198,7 +228,13 @@ HB_FUNC( QT_QDOCKWIDGET_SETALLOWEDAREAS )
  */
 HB_FUNC( QT_QDOCKWIDGET_SETFEATURES )
 {
-   hbqt_par_QDockWidget( 1 )->setFeatures( ( QDockWidget::DockWidgetFeatures ) hb_parni( 2 ) );
+   QDockWidget * p = hbqt_par_QDockWidget( 1 );
+   if( p )
+      ( p )->setFeatures( ( QDockWidget::DockWidgetFeatures ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDOCKWIDGET_SETFEATURES FP=( p )->setFeatures( ( QDockWidget::DockWidgetFeatures ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -206,7 +242,13 @@ HB_FUNC( QT_QDOCKWIDGET_SETFEATURES )
  */
 HB_FUNC( QT_QDOCKWIDGET_SETFLOATING )
 {
-   hbqt_par_QDockWidget( 1 )->setFloating( hb_parl( 2 ) );
+   QDockWidget * p = hbqt_par_QDockWidget( 1 );
+   if( p )
+      ( p )->setFloating( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDOCKWIDGET_SETFLOATING FP=( p )->setFloating( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -214,7 +256,13 @@ HB_FUNC( QT_QDOCKWIDGET_SETFLOATING )
  */
 HB_FUNC( QT_QDOCKWIDGET_SETTITLEBARWIDGET )
 {
-   hbqt_par_QDockWidget( 1 )->setTitleBarWidget( hbqt_par_QWidget( 2 ) );
+   QDockWidget * p = hbqt_par_QDockWidget( 1 );
+   if( p )
+      ( p )->setTitleBarWidget( hbqt_par_QWidget( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDOCKWIDGET_SETTITLEBARWIDGET FP=( p )->setTitleBarWidget( hbqt_par_QWidget( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -222,7 +270,13 @@ HB_FUNC( QT_QDOCKWIDGET_SETTITLEBARWIDGET )
  */
 HB_FUNC( QT_QDOCKWIDGET_SETWIDGET )
 {
-   hbqt_par_QDockWidget( 1 )->setWidget( hbqt_par_QWidget( 2 ) );
+   QDockWidget * p = hbqt_par_QDockWidget( 1 );
+   if( p )
+      ( p )->setWidget( hbqt_par_QWidget( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDOCKWIDGET_SETWIDGET FP=( p )->setWidget( hbqt_par_QWidget( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -230,7 +284,13 @@ HB_FUNC( QT_QDOCKWIDGET_SETWIDGET )
  */
 HB_FUNC( QT_QDOCKWIDGET_TITLEBARWIDGET )
 {
-   hb_retptrGC( hbqt_gcAllocate_QWidget( hbqt_par_QDockWidget( 1 )->titleBarWidget(), false ) );
+   QDockWidget * p = hbqt_par_QDockWidget( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->titleBarWidget(), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDOCKWIDGET_TITLEBARWIDGET FP=hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->titleBarWidget(), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -238,7 +298,13 @@ HB_FUNC( QT_QDOCKWIDGET_TITLEBARWIDGET )
  */
 HB_FUNC( QT_QDOCKWIDGET_TOGGLEVIEWACTION )
 {
-   hb_retptrGC( hbqt_gcAllocate_QAction( hbqt_par_QDockWidget( 1 )->toggleViewAction(), false ) );
+   QDockWidget * p = hbqt_par_QDockWidget( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->toggleViewAction(), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDOCKWIDGET_TOGGLEVIEWACTION FP=hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->toggleViewAction(), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -246,7 +312,13 @@ HB_FUNC( QT_QDOCKWIDGET_TOGGLEVIEWACTION )
  */
 HB_FUNC( QT_QDOCKWIDGET_WIDGET )
 {
-   hb_retptrGC( hbqt_gcAllocate_QWidget( hbqt_par_QDockWidget( 1 )->widget(), false ) );
+   QDockWidget * p = hbqt_par_QDockWidget( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->widget(), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDOCKWIDGET_WIDGET FP=hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->widget(), false ) ); p is NULL" ) );
+   }
 }
 
 

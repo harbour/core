@@ -77,43 +77,44 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QScrollArea > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QScrollArea > pq;
 } QGC_POINTER_QScrollArea;
 
 QT_G_FUNC( hbqt_gcRelease_QScrollArea )
 {
+   QScrollArea  * ph = NULL ;
    QGC_POINTER_QScrollArea * p = ( QGC_POINTER_QScrollArea * ) Cargo;
 
-   if( p && p->bNew )
+   if( p && p->bNew && p->ph )
    {
-      if( p->ph && p->pq )
+      ph = p->ph;
+      if( ph )
       {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QScrollArea   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
-            delete ( ( QScrollArea * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QScrollArea   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QScrollArea   /.\\   ", (void*) ph, (void*) p->ph ) );
+            delete ( p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QScrollArea   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QScrollArea          pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QScrollArea          ", ph ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QScrollArea    :     Object already deleted!", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QScrollArea    :     Object already deleted!", ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QScrollArea    :    Object not created with new=true", p->ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QScrollArea    :    Object not created with new=true", ph ) );
       p->ph = NULL;
    }
 }
@@ -122,13 +123,12 @@ void * hbqt_gcAllocate_QScrollArea( void * pObj, bool bNew )
 {
    QGC_POINTER_QScrollArea * p = ( QGC_POINTER_QScrollArea * ) hb_gcAllocate( sizeof( QGC_POINTER_QScrollArea ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QScrollArea >( ( QScrollArea * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QScrollArea;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QScrollArea >( ( QScrollArea * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QScrollArea  under p->pq", pObj ) );
    }
    else
@@ -140,11 +140,11 @@ void * hbqt_gcAllocate_QScrollArea( void * pObj, bool bNew )
 
 HB_FUNC( QT_QSCROLLAREA )
 {
-   void * pObj = NULL;
+   QScrollArea * pObj = NULL;
 
-   pObj = ( QScrollArea* ) new QScrollArea( hbqt_par_QWidget( 1 ) ) ;
+   pObj =  new QScrollArea( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QScrollArea( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QScrollArea( ( void * ) pObj, true ) );
 }
 
 /*
@@ -152,7 +152,13 @@ HB_FUNC( QT_QSCROLLAREA )
  */
 HB_FUNC( QT_QSCROLLAREA_ALIGNMENT )
 {
-   hb_retni( ( Qt::Alignment ) hbqt_par_QScrollArea( 1 )->alignment() );
+   QScrollArea * p = hbqt_par_QScrollArea( 1 );
+   if( p )
+      hb_retni( ( Qt::Alignment ) ( p )->alignment() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCROLLAREA_ALIGNMENT FP=hb_retni( ( Qt::Alignment ) ( p )->alignment() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -160,7 +166,13 @@ HB_FUNC( QT_QSCROLLAREA_ALIGNMENT )
  */
 HB_FUNC( QT_QSCROLLAREA_ENSUREVISIBLE )
 {
-   hbqt_par_QScrollArea( 1 )->ensureVisible( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : 50 ), ( HB_ISNUM( 5 ) ? hb_parni( 5 ) : 50 ) );
+   QScrollArea * p = hbqt_par_QScrollArea( 1 );
+   if( p )
+      ( p )->ensureVisible( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : 50 ), ( HB_ISNUM( 5 ) ? hb_parni( 5 ) : 50 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCROLLAREA_ENSUREVISIBLE FP=( p )->ensureVisible( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : 50 ), ( HB_ISNUM( 5 ) ? hb_parni( 5 ) : 50 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -168,7 +180,13 @@ HB_FUNC( QT_QSCROLLAREA_ENSUREVISIBLE )
  */
 HB_FUNC( QT_QSCROLLAREA_ENSUREWIDGETVISIBLE )
 {
-   hbqt_par_QScrollArea( 1 )->ensureWidgetVisible( hbqt_par_QWidget( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 50 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : 50 ) );
+   QScrollArea * p = hbqt_par_QScrollArea( 1 );
+   if( p )
+      ( p )->ensureWidgetVisible( hbqt_par_QWidget( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 50 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : 50 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCROLLAREA_ENSUREWIDGETVISIBLE FP=( p )->ensureWidgetVisible( hbqt_par_QWidget( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 50 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : 50 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -176,7 +194,13 @@ HB_FUNC( QT_QSCROLLAREA_ENSUREWIDGETVISIBLE )
  */
 HB_FUNC( QT_QSCROLLAREA_SETALIGNMENT )
 {
-   hbqt_par_QScrollArea( 1 )->setAlignment( ( Qt::Alignment ) hb_parni( 2 ) );
+   QScrollArea * p = hbqt_par_QScrollArea( 1 );
+   if( p )
+      ( p )->setAlignment( ( Qt::Alignment ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCROLLAREA_SETALIGNMENT FP=( p )->setAlignment( ( Qt::Alignment ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -184,7 +208,13 @@ HB_FUNC( QT_QSCROLLAREA_SETALIGNMENT )
  */
 HB_FUNC( QT_QSCROLLAREA_SETWIDGET )
 {
-   hbqt_par_QScrollArea( 1 )->setWidget( hbqt_par_QWidget( 2 ) );
+   QScrollArea * p = hbqt_par_QScrollArea( 1 );
+   if( p )
+      ( p )->setWidget( hbqt_par_QWidget( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCROLLAREA_SETWIDGET FP=( p )->setWidget( hbqt_par_QWidget( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -192,7 +222,13 @@ HB_FUNC( QT_QSCROLLAREA_SETWIDGET )
  */
 HB_FUNC( QT_QSCROLLAREA_SETWIDGETRESIZABLE )
 {
-   hbqt_par_QScrollArea( 1 )->setWidgetResizable( hb_parl( 2 ) );
+   QScrollArea * p = hbqt_par_QScrollArea( 1 );
+   if( p )
+      ( p )->setWidgetResizable( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCROLLAREA_SETWIDGETRESIZABLE FP=( p )->setWidgetResizable( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -200,7 +236,13 @@ HB_FUNC( QT_QSCROLLAREA_SETWIDGETRESIZABLE )
  */
 HB_FUNC( QT_QSCROLLAREA_TAKEWIDGET )
 {
-   hb_retptrGC( hbqt_gcAllocate_QWidget( hbqt_par_QScrollArea( 1 )->takeWidget(), false ) );
+   QScrollArea * p = hbqt_par_QScrollArea( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->takeWidget(), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCROLLAREA_TAKEWIDGET FP=hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->takeWidget(), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -208,7 +250,13 @@ HB_FUNC( QT_QSCROLLAREA_TAKEWIDGET )
  */
 HB_FUNC( QT_QSCROLLAREA_WIDGET )
 {
-   hb_retptrGC( hbqt_gcAllocate_QWidget( hbqt_par_QScrollArea( 1 )->widget(), false ) );
+   QScrollArea * p = hbqt_par_QScrollArea( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->widget(), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCROLLAREA_WIDGET FP=hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->widget(), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -216,7 +264,13 @@ HB_FUNC( QT_QSCROLLAREA_WIDGET )
  */
 HB_FUNC( QT_QSCROLLAREA_WIDGETRESIZABLE )
 {
-   hb_retl( hbqt_par_QScrollArea( 1 )->widgetResizable() );
+   QScrollArea * p = hbqt_par_QScrollArea( 1 );
+   if( p )
+      hb_retl( ( p )->widgetResizable() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCROLLAREA_WIDGETRESIZABLE FP=hb_retl( ( p )->widgetResizable() ); p is NULL" ) );
+   }
 }
 
 

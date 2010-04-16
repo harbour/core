@@ -94,43 +94,44 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QMessageBox > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QMessageBox > pq;
 } QGC_POINTER_QMessageBox;
 
 QT_G_FUNC( hbqt_gcRelease_QMessageBox )
 {
+   QMessageBox  * ph = NULL ;
    QGC_POINTER_QMessageBox * p = ( QGC_POINTER_QMessageBox * ) Cargo;
 
-   if( p && p->bNew )
+   if( p && p->bNew && p->ph )
    {
-      if( p->ph && p->pq )
+      ph = p->ph;
+      if( ph )
       {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QMessageBox   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
-            delete ( ( QMessageBox * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QMessageBox   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QMessageBox   /.\\   ", (void*) ph, (void*) p->ph ) );
+            delete ( p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QMessageBox   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QMessageBox          pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QMessageBox          ", ph ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QMessageBox    :     Object already deleted!", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QMessageBox    :     Object already deleted!", ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QMessageBox    :    Object not created with new=true", p->ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QMessageBox    :    Object not created with new=true", ph ) );
       p->ph = NULL;
    }
 }
@@ -139,13 +140,12 @@ void * hbqt_gcAllocate_QMessageBox( void * pObj, bool bNew )
 {
    QGC_POINTER_QMessageBox * p = ( QGC_POINTER_QMessageBox * ) hb_gcAllocate( sizeof( QGC_POINTER_QMessageBox ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QMessageBox >( ( QMessageBox * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QMessageBox;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QMessageBox >( ( QMessageBox * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QMessageBox  under p->pq", pObj ) );
    }
    else
@@ -157,11 +157,11 @@ void * hbqt_gcAllocate_QMessageBox( void * pObj, bool bNew )
 
 HB_FUNC( QT_QMESSAGEBOX )
 {
-   void * pObj = NULL;
+   QMessageBox * pObj = NULL;
 
-   pObj = ( QMessageBox* ) new QMessageBox() ;
+   pObj =  new QMessageBox() ;
 
-   hb_retptrGC( hbqt_gcAllocate_QMessageBox( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QMessageBox( ( void * ) pObj, true ) );
 }
 
 /*
@@ -169,7 +169,13 @@ HB_FUNC( QT_QMESSAGEBOX )
  */
 HB_FUNC( QT_QMESSAGEBOX_ADDBUTTON )
 {
-   hbqt_par_QMessageBox( 1 )->addButton( hbqt_par_QAbstractButton( 2 ), ( QMessageBox::ButtonRole ) hb_parni( 3 ) );
+   QMessageBox * p = hbqt_par_QMessageBox( 1 );
+   if( p )
+      ( p )->addButton( hbqt_par_QAbstractButton( 2 ), ( QMessageBox::ButtonRole ) hb_parni( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMESSAGEBOX_ADDBUTTON FP=( p )->addButton( hbqt_par_QAbstractButton( 2 ), ( QMessageBox::ButtonRole ) hb_parni( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -177,7 +183,13 @@ HB_FUNC( QT_QMESSAGEBOX_ADDBUTTON )
  */
 HB_FUNC( QT_QMESSAGEBOX_ADDBUTTON_1 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QPushButton( hbqt_par_QMessageBox( 1 )->addButton( QMessageBox::tr( hb_parc( 2 ) ), ( QMessageBox::ButtonRole ) hb_parni( 3 ) ), false ) );
+   QMessageBox * p = hbqt_par_QMessageBox( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QPushButton( ( p )->addButton( QMessageBox::tr( hb_parc( 2 ) ), ( QMessageBox::ButtonRole ) hb_parni( 3 ) ), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMESSAGEBOX_ADDBUTTON_1 FP=hb_retptrGC( hbqt_gcAllocate_QPushButton( ( p )->addButton( QMessageBox::tr( hb_parc( 2 ) ), ( QMessageBox::ButtonRole ) hb_parni( 3 ) ), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -185,7 +197,13 @@ HB_FUNC( QT_QMESSAGEBOX_ADDBUTTON_1 )
  */
 HB_FUNC( QT_QMESSAGEBOX_ADDBUTTON_2 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QPushButton( hbqt_par_QMessageBox( 1 )->addButton( ( QMessageBox::StandardButton ) hb_parni( 2 ) ), false ) );
+   QMessageBox * p = hbqt_par_QMessageBox( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QPushButton( ( p )->addButton( ( QMessageBox::StandardButton ) hb_parni( 2 ) ), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMESSAGEBOX_ADDBUTTON_2 FP=hb_retptrGC( hbqt_gcAllocate_QPushButton( ( p )->addButton( ( QMessageBox::StandardButton ) hb_parni( 2 ) ), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -193,7 +211,13 @@ HB_FUNC( QT_QMESSAGEBOX_ADDBUTTON_2 )
  */
 HB_FUNC( QT_QMESSAGEBOX_BUTTON )
 {
-   hb_retptrGC( hbqt_gcAllocate_QAbstractButton( hbqt_par_QMessageBox( 1 )->button( ( QMessageBox::StandardButton ) hb_parni( 2 ) ), false ) );
+   QMessageBox * p = hbqt_par_QMessageBox( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QAbstractButton( ( p )->button( ( QMessageBox::StandardButton ) hb_parni( 2 ) ), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMESSAGEBOX_BUTTON FP=hb_retptrGC( hbqt_gcAllocate_QAbstractButton( ( p )->button( ( QMessageBox::StandardButton ) hb_parni( 2 ) ), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -201,7 +225,13 @@ HB_FUNC( QT_QMESSAGEBOX_BUTTON )
  */
 HB_FUNC( QT_QMESSAGEBOX_BUTTONROLE )
 {
-   hb_retni( ( QMessageBox::ButtonRole ) hbqt_par_QMessageBox( 1 )->buttonRole( hbqt_par_QAbstractButton( 2 ) ) );
+   QMessageBox * p = hbqt_par_QMessageBox( 1 );
+   if( p )
+      hb_retni( ( QMessageBox::ButtonRole ) ( p )->buttonRole( hbqt_par_QAbstractButton( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMESSAGEBOX_BUTTONROLE FP=hb_retni( ( QMessageBox::ButtonRole ) ( p )->buttonRole( hbqt_par_QAbstractButton( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -209,7 +239,13 @@ HB_FUNC( QT_QMESSAGEBOX_BUTTONROLE )
  */
 HB_FUNC( QT_QMESSAGEBOX_CLICKEDBUTTON )
 {
-   hb_retptrGC( hbqt_gcAllocate_QAbstractButton( hbqt_par_QMessageBox( 1 )->clickedButton(), false ) );
+   QMessageBox * p = hbqt_par_QMessageBox( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QAbstractButton( ( p )->clickedButton(), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMESSAGEBOX_CLICKEDBUTTON FP=hb_retptrGC( hbqt_gcAllocate_QAbstractButton( ( p )->clickedButton(), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -217,7 +253,13 @@ HB_FUNC( QT_QMESSAGEBOX_CLICKEDBUTTON )
  */
 HB_FUNC( QT_QMESSAGEBOX_DEFAULTBUTTON )
 {
-   hb_retptrGC( hbqt_gcAllocate_QPushButton( hbqt_par_QMessageBox( 1 )->defaultButton(), false ) );
+   QMessageBox * p = hbqt_par_QMessageBox( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QPushButton( ( p )->defaultButton(), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMESSAGEBOX_DEFAULTBUTTON FP=hb_retptrGC( hbqt_gcAllocate_QPushButton( ( p )->defaultButton(), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -225,7 +267,13 @@ HB_FUNC( QT_QMESSAGEBOX_DEFAULTBUTTON )
  */
 HB_FUNC( QT_QMESSAGEBOX_DETAILEDTEXT )
 {
-   hb_retc( hbqt_par_QMessageBox( 1 )->detailedText().toAscii().data() );
+   QMessageBox * p = hbqt_par_QMessageBox( 1 );
+   if( p )
+      hb_retc( ( p )->detailedText().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMESSAGEBOX_DETAILEDTEXT FP=hb_retc( ( p )->detailedText().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -233,7 +281,13 @@ HB_FUNC( QT_QMESSAGEBOX_DETAILEDTEXT )
  */
 HB_FUNC( QT_QMESSAGEBOX_ESCAPEBUTTON )
 {
-   hb_retptrGC( hbqt_gcAllocate_QAbstractButton( hbqt_par_QMessageBox( 1 )->escapeButton(), false ) );
+   QMessageBox * p = hbqt_par_QMessageBox( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QAbstractButton( ( p )->escapeButton(), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMESSAGEBOX_ESCAPEBUTTON FP=hb_retptrGC( hbqt_gcAllocate_QAbstractButton( ( p )->escapeButton(), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -241,7 +295,13 @@ HB_FUNC( QT_QMESSAGEBOX_ESCAPEBUTTON )
  */
 HB_FUNC( QT_QMESSAGEBOX_ICON )
 {
-   hb_retni( ( QMessageBox::Icon ) hbqt_par_QMessageBox( 1 )->icon() );
+   QMessageBox * p = hbqt_par_QMessageBox( 1 );
+   if( p )
+      hb_retni( ( QMessageBox::Icon ) ( p )->icon() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMESSAGEBOX_ICON FP=hb_retni( ( QMessageBox::Icon ) ( p )->icon() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -249,7 +309,13 @@ HB_FUNC( QT_QMESSAGEBOX_ICON )
  */
 HB_FUNC( QT_QMESSAGEBOX_ICONPIXMAP )
 {
-   hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( hbqt_par_QMessageBox( 1 )->iconPixmap() ), true ) );
+   QMessageBox * p = hbqt_par_QMessageBox( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->iconPixmap() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMESSAGEBOX_ICONPIXMAP FP=hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->iconPixmap() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -257,7 +323,13 @@ HB_FUNC( QT_QMESSAGEBOX_ICONPIXMAP )
  */
 HB_FUNC( QT_QMESSAGEBOX_INFORMATIVETEXT )
 {
-   hb_retc( hbqt_par_QMessageBox( 1 )->informativeText().toAscii().data() );
+   QMessageBox * p = hbqt_par_QMessageBox( 1 );
+   if( p )
+      hb_retc( ( p )->informativeText().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMESSAGEBOX_INFORMATIVETEXT FP=hb_retc( ( p )->informativeText().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -265,7 +337,13 @@ HB_FUNC( QT_QMESSAGEBOX_INFORMATIVETEXT )
  */
 HB_FUNC( QT_QMESSAGEBOX_OPEN )
 {
-   hbqt_par_QMessageBox( 1 )->open( hbqt_par_QObject( 2 ), hbqt_par_char( 3 ) );
+   QMessageBox * p = hbqt_par_QMessageBox( 1 );
+   if( p )
+      ( p )->open( hbqt_par_QObject( 2 ), hbqt_par_char( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMESSAGEBOX_OPEN FP=( p )->open( hbqt_par_QObject( 2 ), hbqt_par_char( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -273,7 +351,13 @@ HB_FUNC( QT_QMESSAGEBOX_OPEN )
  */
 HB_FUNC( QT_QMESSAGEBOX_REMOVEBUTTON )
 {
-   hbqt_par_QMessageBox( 1 )->removeButton( hbqt_par_QAbstractButton( 2 ) );
+   QMessageBox * p = hbqt_par_QMessageBox( 1 );
+   if( p )
+      ( p )->removeButton( hbqt_par_QAbstractButton( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMESSAGEBOX_REMOVEBUTTON FP=( p )->removeButton( hbqt_par_QAbstractButton( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -281,7 +365,13 @@ HB_FUNC( QT_QMESSAGEBOX_REMOVEBUTTON )
  */
 HB_FUNC( QT_QMESSAGEBOX_SETDEFAULTBUTTON )
 {
-   hbqt_par_QMessageBox( 1 )->setDefaultButton( hbqt_par_QPushButton( 2 ) );
+   QMessageBox * p = hbqt_par_QMessageBox( 1 );
+   if( p )
+      ( p )->setDefaultButton( hbqt_par_QPushButton( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMESSAGEBOX_SETDEFAULTBUTTON FP=( p )->setDefaultButton( hbqt_par_QPushButton( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -289,7 +379,13 @@ HB_FUNC( QT_QMESSAGEBOX_SETDEFAULTBUTTON )
  */
 HB_FUNC( QT_QMESSAGEBOX_SETDEFAULTBUTTON_1 )
 {
-   hbqt_par_QMessageBox( 1 )->setDefaultButton( ( QMessageBox::StandardButton ) hb_parni( 2 ) );
+   QMessageBox * p = hbqt_par_QMessageBox( 1 );
+   if( p )
+      ( p )->setDefaultButton( ( QMessageBox::StandardButton ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMESSAGEBOX_SETDEFAULTBUTTON_1 FP=( p )->setDefaultButton( ( QMessageBox::StandardButton ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -297,7 +393,13 @@ HB_FUNC( QT_QMESSAGEBOX_SETDEFAULTBUTTON_1 )
  */
 HB_FUNC( QT_QMESSAGEBOX_SETDETAILEDTEXT )
 {
-   hbqt_par_QMessageBox( 1 )->setDetailedText( QMessageBox::tr( hb_parc( 2 ) ) );
+   QMessageBox * p = hbqt_par_QMessageBox( 1 );
+   if( p )
+      ( p )->setDetailedText( QMessageBox::tr( hb_parc( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMESSAGEBOX_SETDETAILEDTEXT FP=( p )->setDetailedText( QMessageBox::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -305,7 +407,13 @@ HB_FUNC( QT_QMESSAGEBOX_SETDETAILEDTEXT )
  */
 HB_FUNC( QT_QMESSAGEBOX_SETESCAPEBUTTON )
 {
-   hbqt_par_QMessageBox( 1 )->setEscapeButton( hbqt_par_QAbstractButton( 2 ) );
+   QMessageBox * p = hbqt_par_QMessageBox( 1 );
+   if( p )
+      ( p )->setEscapeButton( hbqt_par_QAbstractButton( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMESSAGEBOX_SETESCAPEBUTTON FP=( p )->setEscapeButton( hbqt_par_QAbstractButton( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -313,7 +421,13 @@ HB_FUNC( QT_QMESSAGEBOX_SETESCAPEBUTTON )
  */
 HB_FUNC( QT_QMESSAGEBOX_SETESCAPEBUTTON_1 )
 {
-   hbqt_par_QMessageBox( 1 )->setEscapeButton( ( QMessageBox::StandardButton ) hb_parni( 2 ) );
+   QMessageBox * p = hbqt_par_QMessageBox( 1 );
+   if( p )
+      ( p )->setEscapeButton( ( QMessageBox::StandardButton ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMESSAGEBOX_SETESCAPEBUTTON_1 FP=( p )->setEscapeButton( ( QMessageBox::StandardButton ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -321,7 +435,13 @@ HB_FUNC( QT_QMESSAGEBOX_SETESCAPEBUTTON_1 )
  */
 HB_FUNC( QT_QMESSAGEBOX_SETICON )
 {
-   hbqt_par_QMessageBox( 1 )->setIcon( ( QMessageBox::Icon ) hb_parni( 2 ) );
+   QMessageBox * p = hbqt_par_QMessageBox( 1 );
+   if( p )
+      ( p )->setIcon( ( QMessageBox::Icon ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMESSAGEBOX_SETICON FP=( p )->setIcon( ( QMessageBox::Icon ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -329,7 +449,13 @@ HB_FUNC( QT_QMESSAGEBOX_SETICON )
  */
 HB_FUNC( QT_QMESSAGEBOX_SETICONPIXMAP )
 {
-   hbqt_par_QMessageBox( 1 )->setIconPixmap( *hbqt_par_QPixmap( 2 ) );
+   QMessageBox * p = hbqt_par_QMessageBox( 1 );
+   if( p )
+      ( p )->setIconPixmap( *hbqt_par_QPixmap( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMESSAGEBOX_SETICONPIXMAP FP=( p )->setIconPixmap( *hbqt_par_QPixmap( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -337,7 +463,13 @@ HB_FUNC( QT_QMESSAGEBOX_SETICONPIXMAP )
  */
 HB_FUNC( QT_QMESSAGEBOX_SETINFORMATIVETEXT )
 {
-   hbqt_par_QMessageBox( 1 )->setInformativeText( QMessageBox::tr( hb_parc( 2 ) ) );
+   QMessageBox * p = hbqt_par_QMessageBox( 1 );
+   if( p )
+      ( p )->setInformativeText( QMessageBox::tr( hb_parc( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMESSAGEBOX_SETINFORMATIVETEXT FP=( p )->setInformativeText( QMessageBox::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -345,7 +477,13 @@ HB_FUNC( QT_QMESSAGEBOX_SETINFORMATIVETEXT )
  */
 HB_FUNC( QT_QMESSAGEBOX_SETSTANDARDBUTTONS )
 {
-   hbqt_par_QMessageBox( 1 )->setStandardButtons( ( QMessageBox::StandardButtons ) hb_parni( 2 ) );
+   QMessageBox * p = hbqt_par_QMessageBox( 1 );
+   if( p )
+      ( p )->setStandardButtons( ( QMessageBox::StandardButtons ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMESSAGEBOX_SETSTANDARDBUTTONS FP=( p )->setStandardButtons( ( QMessageBox::StandardButtons ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -353,7 +491,13 @@ HB_FUNC( QT_QMESSAGEBOX_SETSTANDARDBUTTONS )
  */
 HB_FUNC( QT_QMESSAGEBOX_SETTEXT )
 {
-   hbqt_par_QMessageBox( 1 )->setText( QMessageBox::tr( hb_parc( 2 ) ) );
+   QMessageBox * p = hbqt_par_QMessageBox( 1 );
+   if( p )
+      ( p )->setText( QMessageBox::tr( hb_parc( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMESSAGEBOX_SETTEXT FP=( p )->setText( QMessageBox::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -361,7 +505,13 @@ HB_FUNC( QT_QMESSAGEBOX_SETTEXT )
  */
 HB_FUNC( QT_QMESSAGEBOX_SETTEXTFORMAT )
 {
-   hbqt_par_QMessageBox( 1 )->setTextFormat( ( Qt::TextFormat ) hb_parni( 2 ) );
+   QMessageBox * p = hbqt_par_QMessageBox( 1 );
+   if( p )
+      ( p )->setTextFormat( ( Qt::TextFormat ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMESSAGEBOX_SETTEXTFORMAT FP=( p )->setTextFormat( ( Qt::TextFormat ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -369,7 +519,13 @@ HB_FUNC( QT_QMESSAGEBOX_SETTEXTFORMAT )
  */
 HB_FUNC( QT_QMESSAGEBOX_SETWINDOWMODALITY )
 {
-   hbqt_par_QMessageBox( 1 )->setWindowModality( ( Qt::WindowModality ) hb_parni( 2 ) );
+   QMessageBox * p = hbqt_par_QMessageBox( 1 );
+   if( p )
+      ( p )->setWindowModality( ( Qt::WindowModality ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMESSAGEBOX_SETWINDOWMODALITY FP=( p )->setWindowModality( ( Qt::WindowModality ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -377,7 +533,13 @@ HB_FUNC( QT_QMESSAGEBOX_SETWINDOWMODALITY )
  */
 HB_FUNC( QT_QMESSAGEBOX_SETWINDOWTITLE )
 {
-   hbqt_par_QMessageBox( 1 )->setWindowTitle( QMessageBox::tr( hb_parc( 2 ) ) );
+   QMessageBox * p = hbqt_par_QMessageBox( 1 );
+   if( p )
+      ( p )->setWindowTitle( QMessageBox::tr( hb_parc( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMESSAGEBOX_SETWINDOWTITLE FP=( p )->setWindowTitle( QMessageBox::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -385,7 +547,13 @@ HB_FUNC( QT_QMESSAGEBOX_SETWINDOWTITLE )
  */
 HB_FUNC( QT_QMESSAGEBOX_STANDARDBUTTON )
 {
-   hb_retni( ( QMessageBox::StandardButton ) hbqt_par_QMessageBox( 1 )->standardButton( hbqt_par_QAbstractButton( 2 ) ) );
+   QMessageBox * p = hbqt_par_QMessageBox( 1 );
+   if( p )
+      hb_retni( ( QMessageBox::StandardButton ) ( p )->standardButton( hbqt_par_QAbstractButton( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMESSAGEBOX_STANDARDBUTTON FP=hb_retni( ( QMessageBox::StandardButton ) ( p )->standardButton( hbqt_par_QAbstractButton( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -393,7 +561,13 @@ HB_FUNC( QT_QMESSAGEBOX_STANDARDBUTTON )
  */
 HB_FUNC( QT_QMESSAGEBOX_STANDARDBUTTONS )
 {
-   hb_retni( ( QMessageBox::StandardButtons ) hbqt_par_QMessageBox( 1 )->standardButtons() );
+   QMessageBox * p = hbqt_par_QMessageBox( 1 );
+   if( p )
+      hb_retni( ( QMessageBox::StandardButtons ) ( p )->standardButtons() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMESSAGEBOX_STANDARDBUTTONS FP=hb_retni( ( QMessageBox::StandardButtons ) ( p )->standardButtons() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -401,7 +575,13 @@ HB_FUNC( QT_QMESSAGEBOX_STANDARDBUTTONS )
  */
 HB_FUNC( QT_QMESSAGEBOX_TEXT )
 {
-   hb_retc( hbqt_par_QMessageBox( 1 )->text().toAscii().data() );
+   QMessageBox * p = hbqt_par_QMessageBox( 1 );
+   if( p )
+      hb_retc( ( p )->text().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMESSAGEBOX_TEXT FP=hb_retc( ( p )->text().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -409,7 +589,13 @@ HB_FUNC( QT_QMESSAGEBOX_TEXT )
  */
 HB_FUNC( QT_QMESSAGEBOX_TEXTFORMAT )
 {
-   hb_retni( ( Qt::TextFormat ) hbqt_par_QMessageBox( 1 )->textFormat() );
+   QMessageBox * p = hbqt_par_QMessageBox( 1 );
+   if( p )
+      hb_retni( ( Qt::TextFormat ) ( p )->textFormat() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMESSAGEBOX_TEXTFORMAT FP=hb_retni( ( Qt::TextFormat ) ( p )->textFormat() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -417,7 +603,13 @@ HB_FUNC( QT_QMESSAGEBOX_TEXTFORMAT )
  */
 HB_FUNC( QT_QMESSAGEBOX_ABOUT )
 {
-   hbqt_par_QMessageBox( 1 )->about( hbqt_par_QWidget( 2 ), QMessageBox::tr( hb_parc( 3 ) ), QMessageBox::tr( hb_parc( 4 ) ) );
+   QMessageBox * p = hbqt_par_QMessageBox( 1 );
+   if( p )
+      ( p )->about( hbqt_par_QWidget( 2 ), QMessageBox::tr( hb_parc( 3 ) ), QMessageBox::tr( hb_parc( 4 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMESSAGEBOX_ABOUT FP=( p )->about( hbqt_par_QWidget( 2 ), QMessageBox::tr( hb_parc( 3 ) ), QMessageBox::tr( hb_parc( 4 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -425,7 +617,13 @@ HB_FUNC( QT_QMESSAGEBOX_ABOUT )
  */
 HB_FUNC( QT_QMESSAGEBOX_ABOUTQT )
 {
-   hbqt_par_QMessageBox( 1 )->aboutQt( hbqt_par_QWidget( 2 ), QMessageBox::tr( hb_parc( 3 ) ) );
+   QMessageBox * p = hbqt_par_QMessageBox( 1 );
+   if( p )
+      ( p )->aboutQt( hbqt_par_QWidget( 2 ), QMessageBox::tr( hb_parc( 3 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMESSAGEBOX_ABOUTQT FP=( p )->aboutQt( hbqt_par_QWidget( 2 ), QMessageBox::tr( hb_parc( 3 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -433,7 +631,13 @@ HB_FUNC( QT_QMESSAGEBOX_ABOUTQT )
  */
 HB_FUNC( QT_QMESSAGEBOX_CRITICAL )
 {
-   hb_retni( ( QMessageBox::StandardButton ) hbqt_par_QMessageBox( 1 )->critical( hbqt_par_QWidget( 2 ), QMessageBox::tr( hb_parc( 3 ) ), QMessageBox::tr( hb_parc( 4 ) ), ( HB_ISNUM( 5 ) ? ( QMessageBox::StandardButtons ) hb_parni( 5 ) : ( QMessageBox::StandardButtons ) QMessageBox::Ok ), ( HB_ISNUM( 6 ) ? ( QMessageBox::StandardButton ) hb_parni( 6 ) : ( QMessageBox::StandardButton ) QMessageBox::NoButton ) ) );
+   QMessageBox * p = hbqt_par_QMessageBox( 1 );
+   if( p )
+      hb_retni( ( QMessageBox::StandardButton ) ( p )->critical( hbqt_par_QWidget( 2 ), QMessageBox::tr( hb_parc( 3 ) ), QMessageBox::tr( hb_parc( 4 ) ), ( HB_ISNUM( 5 ) ? ( QMessageBox::StandardButtons ) hb_parni( 5 ) : ( QMessageBox::StandardButtons ) QMessageBox::Ok ), ( HB_ISNUM( 6 ) ? ( QMessageBox::StandardButton ) hb_parni( 6 ) : ( QMessageBox::StandardButton ) QMessageBox::NoButton ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMESSAGEBOX_CRITICAL FP=hb_retni( ( QMessageBox::StandardButton ) ( p )->critical( hbqt_par_QWidget( 2 ), QMessageBox::tr( hb_parc( 3 ) ), QMessageBox::tr( hb_parc( 4 ) ), ( HB_ISNUM( 5 ) ? ( QMessageBox::StandardButtons ) hb_parni( 5 ) : ( QMessageBox::StandardButtons ) QMessageBox::Ok ), ( HB_ISNUM( 6 ) ? ( QMessageBox::StandardButton ) hb_parni( 6 ) : ( QMessageBox::StandardButton ) QMessageBox::NoButton ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -441,7 +645,13 @@ HB_FUNC( QT_QMESSAGEBOX_CRITICAL )
  */
 HB_FUNC( QT_QMESSAGEBOX_INFORMATION )
 {
-   hb_retni( ( QMessageBox::StandardButton ) hbqt_par_QMessageBox( 1 )->information( hbqt_par_QWidget( 2 ), QMessageBox::tr( hb_parc( 3 ) ), QMessageBox::tr( hb_parc( 4 ) ), ( HB_ISNUM( 5 ) ? ( QMessageBox::StandardButtons ) hb_parni( 5 ) : ( QMessageBox::StandardButtons ) QMessageBox::Ok ), ( HB_ISNUM( 6 ) ? ( QMessageBox::StandardButton ) hb_parni( 6 ) : ( QMessageBox::StandardButton ) QMessageBox::NoButton ) ) );
+   QMessageBox * p = hbqt_par_QMessageBox( 1 );
+   if( p )
+      hb_retni( ( QMessageBox::StandardButton ) ( p )->information( hbqt_par_QWidget( 2 ), QMessageBox::tr( hb_parc( 3 ) ), QMessageBox::tr( hb_parc( 4 ) ), ( HB_ISNUM( 5 ) ? ( QMessageBox::StandardButtons ) hb_parni( 5 ) : ( QMessageBox::StandardButtons ) QMessageBox::Ok ), ( HB_ISNUM( 6 ) ? ( QMessageBox::StandardButton ) hb_parni( 6 ) : ( QMessageBox::StandardButton ) QMessageBox::NoButton ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMESSAGEBOX_INFORMATION FP=hb_retni( ( QMessageBox::StandardButton ) ( p )->information( hbqt_par_QWidget( 2 ), QMessageBox::tr( hb_parc( 3 ) ), QMessageBox::tr( hb_parc( 4 ) ), ( HB_ISNUM( 5 ) ? ( QMessageBox::StandardButtons ) hb_parni( 5 ) : ( QMessageBox::StandardButtons ) QMessageBox::Ok ), ( HB_ISNUM( 6 ) ? ( QMessageBox::StandardButton ) hb_parni( 6 ) : ( QMessageBox::StandardButton ) QMessageBox::NoButton ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -449,7 +659,13 @@ HB_FUNC( QT_QMESSAGEBOX_INFORMATION )
  */
 HB_FUNC( QT_QMESSAGEBOX_QUESTION )
 {
-   hb_retni( ( QMessageBox::StandardButton ) hbqt_par_QMessageBox( 1 )->question( hbqt_par_QWidget( 2 ), QMessageBox::tr( hb_parc( 3 ) ), QMessageBox::tr( hb_parc( 4 ) ), ( HB_ISNUM( 5 ) ? ( QMessageBox::StandardButtons ) hb_parni( 5 ) : ( QMessageBox::StandardButtons ) QMessageBox::Ok ), ( HB_ISNUM( 6 ) ? ( QMessageBox::StandardButton ) hb_parni( 6 ) : ( QMessageBox::StandardButton ) QMessageBox::NoButton ) ) );
+   QMessageBox * p = hbqt_par_QMessageBox( 1 );
+   if( p )
+      hb_retni( ( QMessageBox::StandardButton ) ( p )->question( hbqt_par_QWidget( 2 ), QMessageBox::tr( hb_parc( 3 ) ), QMessageBox::tr( hb_parc( 4 ) ), ( HB_ISNUM( 5 ) ? ( QMessageBox::StandardButtons ) hb_parni( 5 ) : ( QMessageBox::StandardButtons ) QMessageBox::Ok ), ( HB_ISNUM( 6 ) ? ( QMessageBox::StandardButton ) hb_parni( 6 ) : ( QMessageBox::StandardButton ) QMessageBox::NoButton ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMESSAGEBOX_QUESTION FP=hb_retni( ( QMessageBox::StandardButton ) ( p )->question( hbqt_par_QWidget( 2 ), QMessageBox::tr( hb_parc( 3 ) ), QMessageBox::tr( hb_parc( 4 ) ), ( HB_ISNUM( 5 ) ? ( QMessageBox::StandardButtons ) hb_parni( 5 ) : ( QMessageBox::StandardButtons ) QMessageBox::Ok ), ( HB_ISNUM( 6 ) ? ( QMessageBox::StandardButton ) hb_parni( 6 ) : ( QMessageBox::StandardButton ) QMessageBox::NoButton ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -457,7 +673,13 @@ HB_FUNC( QT_QMESSAGEBOX_QUESTION )
  */
 HB_FUNC( QT_QMESSAGEBOX_WARNING )
 {
-   hb_retni( ( QMessageBox::StandardButton ) hbqt_par_QMessageBox( 1 )->warning( hbqt_par_QWidget( 2 ), QMessageBox::tr( hb_parc( 3 ) ), QMessageBox::tr( hb_parc( 4 ) ), ( HB_ISNUM( 5 ) ? ( QMessageBox::StandardButtons ) hb_parni( 5 ) : ( QMessageBox::StandardButtons ) QMessageBox::Ok ), ( HB_ISNUM( 6 ) ? ( QMessageBox::StandardButton ) hb_parni( 6 ) : ( QMessageBox::StandardButton ) QMessageBox::NoButton ) ) );
+   QMessageBox * p = hbqt_par_QMessageBox( 1 );
+   if( p )
+      hb_retni( ( QMessageBox::StandardButton ) ( p )->warning( hbqt_par_QWidget( 2 ), QMessageBox::tr( hb_parc( 3 ) ), QMessageBox::tr( hb_parc( 4 ) ), ( HB_ISNUM( 5 ) ? ( QMessageBox::StandardButtons ) hb_parni( 5 ) : ( QMessageBox::StandardButtons ) QMessageBox::Ok ), ( HB_ISNUM( 6 ) ? ( QMessageBox::StandardButton ) hb_parni( 6 ) : ( QMessageBox::StandardButton ) QMessageBox::NoButton ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMESSAGEBOX_WARNING FP=hb_retni( ( QMessageBox::StandardButton ) ( p )->warning( hbqt_par_QWidget( 2 ), QMessageBox::tr( hb_parc( 3 ) ), QMessageBox::tr( hb_parc( 4 ) ), ( HB_ISNUM( 5 ) ? ( QMessageBox::StandardButtons ) hb_parni( 5 ) : ( QMessageBox::StandardButtons ) QMessageBox::Ok ), ( HB_ISNUM( 6 ) ? ( QMessageBox::StandardButton ) hb_parni( 6 ) : ( QMessageBox::StandardButton ) QMessageBox::NoButton ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -465,7 +687,13 @@ HB_FUNC( QT_QMESSAGEBOX_WARNING )
  */
 HB_FUNC( QT_QMESSAGEBOX_EXEC )
 {
-   hb_retni( hbqt_par_QMessageBox( 1 )->exec() );
+   QMessageBox * p = hbqt_par_QMessageBox( 1 );
+   if( p )
+      hb_retni( ( p )->exec() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMESSAGEBOX_EXEC FP=hb_retni( ( p )->exec() ); p is NULL" ) );
+   }
 }
 
 

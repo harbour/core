@@ -77,7 +77,7 @@
 
 typedef struct
 {
-   void * ph;
+   QInputEvent * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QInputEvent;
@@ -112,7 +112,7 @@ void * hbqt_gcAllocate_QInputEvent( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QInputEvent * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QInputEvent;
 
@@ -129,11 +129,11 @@ void * hbqt_gcAllocate_QInputEvent( void * pObj, bool bNew )
 
 HB_FUNC( QT_QINPUTEVENT )
 {
-   void * pObj = NULL;
+   QInputEvent * pObj = NULL;
 
-   pObj = ( QInputEvent* ) new QInputEvent( ( QEvent::Type ) hb_parni( 1 ), ( Qt::KeyboardModifiers ) hb_parni( 2 ) ) ;
+   pObj =  new QInputEvent( ( QEvent::Type ) hb_parni( 1 ), ( Qt::KeyboardModifiers ) hb_parni( 2 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QInputEvent( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QInputEvent( ( void * ) pObj, true ) );
 }
 
 /*
@@ -141,7 +141,13 @@ HB_FUNC( QT_QINPUTEVENT )
  */
 HB_FUNC( QT_QINPUTEVENT_MODIFIERS )
 {
-   hb_retni( ( Qt::KeyboardModifiers ) hbqt_par_QInputEvent( 1 )->modifiers() );
+   QInputEvent * p = hbqt_par_QInputEvent( 1 );
+   if( p )
+      hb_retni( ( Qt::KeyboardModifiers ) ( p )->modifiers() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINPUTEVENT_MODIFIERS FP=hb_retni( ( Qt::KeyboardModifiers ) ( p )->modifiers() ); p is NULL" ) );
+   }
 }
 
 

@@ -84,7 +84,7 @@
 
 typedef struct
 {
-   void * ph;
+   QStyleOptionMenuItem * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QStyleOptionMenuItem;
@@ -119,7 +119,7 @@ void * hbqt_gcAllocate_QStyleOptionMenuItem( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QStyleOptionMenuItem * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyleOptionMenuItem;
 
@@ -136,11 +136,11 @@ void * hbqt_gcAllocate_QStyleOptionMenuItem( void * pObj, bool bNew )
 
 HB_FUNC( QT_QSTYLEOPTIONMENUITEM )
 {
-   void * pObj = NULL;
+   QStyleOptionMenuItem * pObj = NULL;
 
-   pObj = ( QStyleOptionMenuItem* ) new QStyleOptionMenuItem() ;
+   pObj =  new QStyleOptionMenuItem() ;
 
-   hb_retptrGC( hbqt_gcAllocate_QStyleOptionMenuItem( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QStyleOptionMenuItem( ( void * ) pObj, true ) );
 }
 
 /*

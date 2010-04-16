@@ -82,43 +82,44 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QFontComboBox > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QFontComboBox > pq;
 } QGC_POINTER_QFontComboBox;
 
 QT_G_FUNC( hbqt_gcRelease_QFontComboBox )
 {
+   QFontComboBox  * ph = NULL ;
    QGC_POINTER_QFontComboBox * p = ( QGC_POINTER_QFontComboBox * ) Cargo;
 
-   if( p && p->bNew )
+   if( p && p->bNew && p->ph )
    {
-      if( p->ph && p->pq )
+      ph = p->ph;
+      if( ph )
       {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QFontComboBox   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
-            delete ( ( QFontComboBox * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QFontComboBox   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QFontComboBox   /.\\   ", (void*) ph, (void*) p->ph ) );
+            delete ( p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QFontComboBox   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QFontComboBox          pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QFontComboBox          ", ph ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QFontComboBox    :     Object already deleted!", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QFontComboBox    :     Object already deleted!", ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QFontComboBox    :    Object not created with new=true", p->ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QFontComboBox    :    Object not created with new=true", ph ) );
       p->ph = NULL;
    }
 }
@@ -127,13 +128,12 @@ void * hbqt_gcAllocate_QFontComboBox( void * pObj, bool bNew )
 {
    QGC_POINTER_QFontComboBox * p = ( QGC_POINTER_QFontComboBox * ) hb_gcAllocate( sizeof( QGC_POINTER_QFontComboBox ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QFontComboBox >( ( QFontComboBox * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QFontComboBox;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QFontComboBox >( ( QFontComboBox * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QFontComboBox  under p->pq", pObj ) );
    }
    else
@@ -145,11 +145,11 @@ void * hbqt_gcAllocate_QFontComboBox( void * pObj, bool bNew )
 
 HB_FUNC( QT_QFONTCOMBOBOX )
 {
-   void * pObj = NULL;
+   QFontComboBox * pObj = NULL;
 
    pObj = ( QFontComboBox * ) new QFontComboBox( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QFontComboBox( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QFontComboBox( ( void * ) pObj, true ) );
 }
 
 /*
@@ -157,7 +157,13 @@ HB_FUNC( QT_QFONTCOMBOBOX )
  */
 HB_FUNC( QT_QFONTCOMBOBOX_CURRENTFONT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( hbqt_par_QFontComboBox( 1 )->currentFont() ), true ) );
+   QFontComboBox * p = hbqt_par_QFontComboBox( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( ( p )->currentFont() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONTCOMBOBOX_CURRENTFONT FP=hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( ( p )->currentFont() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -165,7 +171,13 @@ HB_FUNC( QT_QFONTCOMBOBOX_CURRENTFONT )
  */
 HB_FUNC( QT_QFONTCOMBOBOX_FONTFILTERS )
 {
-   hb_retni( ( QFontComboBox::FontFilters ) hbqt_par_QFontComboBox( 1 )->fontFilters() );
+   QFontComboBox * p = hbqt_par_QFontComboBox( 1 );
+   if( p )
+      hb_retni( ( QFontComboBox::FontFilters ) ( p )->fontFilters() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONTCOMBOBOX_FONTFILTERS FP=hb_retni( ( QFontComboBox::FontFilters ) ( p )->fontFilters() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -173,7 +185,13 @@ HB_FUNC( QT_QFONTCOMBOBOX_FONTFILTERS )
  */
 HB_FUNC( QT_QFONTCOMBOBOX_SETFONTFILTERS )
 {
-   hbqt_par_QFontComboBox( 1 )->setFontFilters( ( QFontComboBox::FontFilters ) hb_parni( 2 ) );
+   QFontComboBox * p = hbqt_par_QFontComboBox( 1 );
+   if( p )
+      ( p )->setFontFilters( ( QFontComboBox::FontFilters ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONTCOMBOBOX_SETFONTFILTERS FP=( p )->setFontFilters( ( QFontComboBox::FontFilters ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -181,7 +199,13 @@ HB_FUNC( QT_QFONTCOMBOBOX_SETFONTFILTERS )
  */
 HB_FUNC( QT_QFONTCOMBOBOX_SETWRITINGSYSTEM )
 {
-   hbqt_par_QFontComboBox( 1 )->setWritingSystem( ( QFontDatabase::WritingSystem ) hb_parni( 2 ) );
+   QFontComboBox * p = hbqt_par_QFontComboBox( 1 );
+   if( p )
+      ( p )->setWritingSystem( ( QFontDatabase::WritingSystem ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONTCOMBOBOX_SETWRITINGSYSTEM FP=( p )->setWritingSystem( ( QFontDatabase::WritingSystem ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -189,7 +213,13 @@ HB_FUNC( QT_QFONTCOMBOBOX_SETWRITINGSYSTEM )
  */
 HB_FUNC( QT_QFONTCOMBOBOX_WRITINGSYSTEM )
 {
-   hb_retni( ( QFontDatabase::WritingSystem ) hbqt_par_QFontComboBox( 1 )->writingSystem() );
+   QFontComboBox * p = hbqt_par_QFontComboBox( 1 );
+   if( p )
+      hb_retni( ( QFontDatabase::WritingSystem ) ( p )->writingSystem() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONTCOMBOBOX_WRITINGSYSTEM FP=hb_retni( ( QFontDatabase::WritingSystem ) ( p )->writingSystem() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -197,7 +227,13 @@ HB_FUNC( QT_QFONTCOMBOBOX_WRITINGSYSTEM )
  */
 HB_FUNC( QT_QFONTCOMBOBOX_SETCURRENTFONT )
 {
-   hbqt_par_QFontComboBox( 1 )->setCurrentFont( *hbqt_par_QFont( 2 ) );
+   QFontComboBox * p = hbqt_par_QFontComboBox( 1 );
+   if( p )
+      ( p )->setCurrentFont( *hbqt_par_QFont( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONTCOMBOBOX_SETCURRENTFONT FP=( p )->setCurrentFont( *hbqt_par_QFont( 2 ) ); p is NULL" ) );
+   }
 }
 
 

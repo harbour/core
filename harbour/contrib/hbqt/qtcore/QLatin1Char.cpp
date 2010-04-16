@@ -76,7 +76,7 @@
 
 typedef struct
 {
-   void * ph;
+   QLatin1Char * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QLatin1Char;
@@ -111,7 +111,7 @@ void * hbqt_gcAllocate_QLatin1Char( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QLatin1Char * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QLatin1Char;
 
@@ -128,11 +128,11 @@ void * hbqt_gcAllocate_QLatin1Char( void * pObj, bool bNew )
 
 HB_FUNC( QT_QLATIN1CHAR )
 {
-   void * pObj = NULL;
+   QLatin1Char * pObj = NULL;
 
-   pObj = ( QLatin1Char* ) new QLatin1Char( *hb_parcx( 1 ) ) ;
+   pObj =  new QLatin1Char( *hb_parcx( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QLatin1Char( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QLatin1Char( ( void * ) pObj, true ) );
 }
 
 /*
@@ -140,7 +140,13 @@ HB_FUNC( QT_QLATIN1CHAR )
  */
 HB_FUNC( QT_QLATIN1CHAR_TOLATIN1 )
 {
-   hb_retni( hbqt_par_QLatin1Char( 1 )->toLatin1() );
+   QLatin1Char * p = hbqt_par_QLatin1Char( 1 );
+   if( p )
+      hb_retni( ( p )->toLatin1() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLATIN1CHAR_TOLATIN1 FP=hb_retni( ( p )->toLatin1() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -148,7 +154,13 @@ HB_FUNC( QT_QLATIN1CHAR_TOLATIN1 )
  */
 HB_FUNC( QT_QLATIN1CHAR_UNICODE )
 {
-   hb_retni( hbqt_par_QLatin1Char( 1 )->unicode() );
+   QLatin1Char * p = hbqt_par_QLatin1Char( 1 );
+   if( p )
+      hb_retni( ( p )->unicode() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLATIN1CHAR_UNICODE FP=hb_retni( ( p )->unicode() ); p is NULL" ) );
+   }
 }
 
 

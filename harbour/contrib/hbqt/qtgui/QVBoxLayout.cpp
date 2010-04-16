@@ -78,43 +78,44 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QVBoxLayout > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QVBoxLayout > pq;
 } QGC_POINTER_QVBoxLayout;
 
 QT_G_FUNC( hbqt_gcRelease_QVBoxLayout )
 {
+   QVBoxLayout  * ph = NULL ;
    QGC_POINTER_QVBoxLayout * p = ( QGC_POINTER_QVBoxLayout * ) Cargo;
 
-   if( p && p->bNew )
+   if( p && p->bNew && p->ph )
    {
-      if( p->ph && p->pq )
+      ph = p->ph;
+      if( ph )
       {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QVBoxLayout   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
-            delete ( ( QVBoxLayout * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QVBoxLayout   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QVBoxLayout   /.\\   ", (void*) ph, (void*) p->ph ) );
+            delete ( p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QVBoxLayout   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QVBoxLayout          pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QVBoxLayout          ", ph ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QVBoxLayout    :     Object already deleted!", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QVBoxLayout    :     Object already deleted!", ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QVBoxLayout    :    Object not created with new=true", p->ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QVBoxLayout    :    Object not created with new=true", ph ) );
       p->ph = NULL;
    }
 }
@@ -123,13 +124,12 @@ void * hbqt_gcAllocate_QVBoxLayout( void * pObj, bool bNew )
 {
    QGC_POINTER_QVBoxLayout * p = ( QGC_POINTER_QVBoxLayout * ) hb_gcAllocate( sizeof( QGC_POINTER_QVBoxLayout ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QVBoxLayout >( ( QVBoxLayout * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QVBoxLayout;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QVBoxLayout >( ( QVBoxLayout * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QVBoxLayout  under p->pq", pObj ) );
    }
    else
@@ -141,11 +141,11 @@ void * hbqt_gcAllocate_QVBoxLayout( void * pObj, bool bNew )
 
 HB_FUNC( QT_QVBOXLAYOUT )
 {
-   void * pObj = NULL;
+   QVBoxLayout * pObj = NULL;
 
-   pObj = ( QVBoxLayout* ) new QVBoxLayout( hbqt_par_QWidget( 1 ) ) ;
+   pObj =  new QVBoxLayout( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QVBoxLayout( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QVBoxLayout( ( void * ) pObj, true ) );
 }
 
 

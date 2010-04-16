@@ -76,7 +76,7 @@
 
 typedef struct
 {
-   void * ph;
+   QWidgetItem * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QWidgetItem;
@@ -111,7 +111,7 @@ void * hbqt_gcAllocate_QWidgetItem( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QWidgetItem * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QWidgetItem;
 
@@ -128,11 +128,11 @@ void * hbqt_gcAllocate_QWidgetItem( void * pObj, bool bNew )
 
 HB_FUNC( QT_QWIDGETITEM )
 {
-   void * pObj = NULL;
+   QWidgetItem * pObj = NULL;
 
-   pObj = ( QWidgetItem* ) new QWidgetItem( hbqt_par_QWidget( 1 ) ) ;
+   pObj =  new QWidgetItem( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QWidgetItem( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QWidgetItem( ( void * ) pObj, true ) );
 }
 
 /*
@@ -140,7 +140,13 @@ HB_FUNC( QT_QWIDGETITEM )
  */
 HB_FUNC( QT_QWIDGETITEM_ISEMPTY )
 {
-   hb_retl( hbqt_par_QWidgetItem( 1 )->isEmpty() );
+   QWidgetItem * p = hbqt_par_QWidgetItem( 1 );
+   if( p )
+      hb_retl( ( p )->isEmpty() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIDGETITEM_ISEMPTY FP=hb_retl( ( p )->isEmpty() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -148,7 +154,13 @@ HB_FUNC( QT_QWIDGETITEM_ISEMPTY )
  */
 HB_FUNC( QT_QWIDGETITEM_WIDGET )
 {
-   hb_retptrGC( hbqt_gcAllocate_QWidget( hbqt_par_QWidgetItem( 1 )->widget(), false ) );
+   QWidgetItem * p = hbqt_par_QWidgetItem( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->widget(), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIDGETITEM_WIDGET FP=hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->widget(), false ) ); p is NULL" ) );
+   }
 }
 
 

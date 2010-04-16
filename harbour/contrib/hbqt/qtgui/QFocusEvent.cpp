@@ -76,7 +76,7 @@
 
 typedef struct
 {
-   void * ph;
+   QFocusEvent * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QFocusEvent;
@@ -96,7 +96,7 @@ void * hbqt_gcAllocate_QFocusEvent( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QFocusEvent * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QFocusEvent;
 
@@ -113,6 +113,7 @@ void * hbqt_gcAllocate_QFocusEvent( void * pObj, bool bNew )
 
 HB_FUNC( QT_QFOCUSEVENT )
 {
+   // hb_retptr( ( QFocusEvent* ) new QFocusEvent() );
 }
 
 /*
@@ -120,7 +121,13 @@ HB_FUNC( QT_QFOCUSEVENT )
  */
 HB_FUNC( QT_QFOCUSEVENT_GOTFOCUS )
 {
-   hb_retl( hbqt_par_QFocusEvent( 1 )->gotFocus() );
+   QFocusEvent * p = hbqt_par_QFocusEvent( 1 );
+   if( p )
+      hb_retl( ( p )->gotFocus() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFOCUSEVENT_GOTFOCUS FP=hb_retl( ( p )->gotFocus() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -128,7 +135,13 @@ HB_FUNC( QT_QFOCUSEVENT_GOTFOCUS )
  */
 HB_FUNC( QT_QFOCUSEVENT_LOSTFOCUS )
 {
-   hb_retl( hbqt_par_QFocusEvent( 1 )->lostFocus() );
+   QFocusEvent * p = hbqt_par_QFocusEvent( 1 );
+   if( p )
+      hb_retl( ( p )->lostFocus() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFOCUSEVENT_LOSTFOCUS FP=hb_retl( ( p )->lostFocus() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -136,7 +149,13 @@ HB_FUNC( QT_QFOCUSEVENT_LOSTFOCUS )
  */
 HB_FUNC( QT_QFOCUSEVENT_REASON )
 {
-   hb_retni( ( Qt::FocusReason ) hbqt_par_QFocusEvent( 1 )->reason() );
+   QFocusEvent * p = hbqt_par_QFocusEvent( 1 );
+   if( p )
+      hb_retni( ( Qt::FocusReason ) ( p )->reason() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFOCUSEVENT_REASON FP=hb_retni( ( Qt::FocusReason ) ( p )->reason() ); p is NULL" ) );
+   }
 }
 
 

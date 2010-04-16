@@ -76,43 +76,44 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QDoubleSpinBox > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QDoubleSpinBox > pq;
 } QGC_POINTER_QDoubleSpinBox;
 
 QT_G_FUNC( hbqt_gcRelease_QDoubleSpinBox )
 {
+   QDoubleSpinBox  * ph = NULL ;
    QGC_POINTER_QDoubleSpinBox * p = ( QGC_POINTER_QDoubleSpinBox * ) Cargo;
 
-   if( p && p->bNew )
+   if( p && p->bNew && p->ph )
    {
-      if( p->ph && p->pq )
+      ph = p->ph;
+      if( ph )
       {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QDoubleSpinBox   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
-            delete ( ( QDoubleSpinBox * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QDoubleSpinBox   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QDoubleSpinBox   /.\\   ", (void*) ph, (void*) p->ph ) );
+            delete ( p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QDoubleSpinBox   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QDoubleSpinBox          pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QDoubleSpinBox          ", ph ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QDoubleSpinBox    :     Object already deleted!", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QDoubleSpinBox    :     Object already deleted!", ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QDoubleSpinBox    :    Object not created with new=true", p->ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QDoubleSpinBox    :    Object not created with new=true", ph ) );
       p->ph = NULL;
    }
 }
@@ -121,13 +122,12 @@ void * hbqt_gcAllocate_QDoubleSpinBox( void * pObj, bool bNew )
 {
    QGC_POINTER_QDoubleSpinBox * p = ( QGC_POINTER_QDoubleSpinBox * ) hb_gcAllocate( sizeof( QGC_POINTER_QDoubleSpinBox ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QDoubleSpinBox >( ( QDoubleSpinBox * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QDoubleSpinBox;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QDoubleSpinBox >( ( QDoubleSpinBox * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QDoubleSpinBox  under p->pq", pObj ) );
    }
    else
@@ -139,11 +139,11 @@ void * hbqt_gcAllocate_QDoubleSpinBox( void * pObj, bool bNew )
 
 HB_FUNC( QT_QDOUBLESPINBOX )
 {
-   void * pObj = NULL;
+   QDoubleSpinBox * pObj = NULL;
 
-   pObj = ( QDoubleSpinBox* ) new QDoubleSpinBox( hbqt_par_QWidget( 1 ) ) ;
+   pObj =  new QDoubleSpinBox( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QDoubleSpinBox( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QDoubleSpinBox( ( void * ) pObj, true ) );
 }
 
 /*
@@ -151,7 +151,13 @@ HB_FUNC( QT_QDOUBLESPINBOX )
  */
 HB_FUNC( QT_QDOUBLESPINBOX_CLEANTEXT )
 {
-   hb_retc( hbqt_par_QDoubleSpinBox( 1 )->cleanText().toAscii().data() );
+   QDoubleSpinBox * p = hbqt_par_QDoubleSpinBox( 1 );
+   if( p )
+      hb_retc( ( p )->cleanText().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDOUBLESPINBOX_CLEANTEXT FP=hb_retc( ( p )->cleanText().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -159,7 +165,13 @@ HB_FUNC( QT_QDOUBLESPINBOX_CLEANTEXT )
  */
 HB_FUNC( QT_QDOUBLESPINBOX_DECIMALS )
 {
-   hb_retni( hbqt_par_QDoubleSpinBox( 1 )->decimals() );
+   QDoubleSpinBox * p = hbqt_par_QDoubleSpinBox( 1 );
+   if( p )
+      hb_retni( ( p )->decimals() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDOUBLESPINBOX_DECIMALS FP=hb_retni( ( p )->decimals() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -167,7 +179,13 @@ HB_FUNC( QT_QDOUBLESPINBOX_DECIMALS )
  */
 HB_FUNC( QT_QDOUBLESPINBOX_MAXIMUM )
 {
-   hb_retnd( hbqt_par_QDoubleSpinBox( 1 )->maximum() );
+   QDoubleSpinBox * p = hbqt_par_QDoubleSpinBox( 1 );
+   if( p )
+      hb_retnd( ( p )->maximum() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDOUBLESPINBOX_MAXIMUM FP=hb_retnd( ( p )->maximum() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -175,7 +193,13 @@ HB_FUNC( QT_QDOUBLESPINBOX_MAXIMUM )
  */
 HB_FUNC( QT_QDOUBLESPINBOX_MINIMUM )
 {
-   hb_retnd( hbqt_par_QDoubleSpinBox( 1 )->minimum() );
+   QDoubleSpinBox * p = hbqt_par_QDoubleSpinBox( 1 );
+   if( p )
+      hb_retnd( ( p )->minimum() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDOUBLESPINBOX_MINIMUM FP=hb_retnd( ( p )->minimum() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -183,7 +207,13 @@ HB_FUNC( QT_QDOUBLESPINBOX_MINIMUM )
  */
 HB_FUNC( QT_QDOUBLESPINBOX_PREFIX )
 {
-   hb_retc( hbqt_par_QDoubleSpinBox( 1 )->prefix().toAscii().data() );
+   QDoubleSpinBox * p = hbqt_par_QDoubleSpinBox( 1 );
+   if( p )
+      hb_retc( ( p )->prefix().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDOUBLESPINBOX_PREFIX FP=hb_retc( ( p )->prefix().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -191,7 +221,13 @@ HB_FUNC( QT_QDOUBLESPINBOX_PREFIX )
  */
 HB_FUNC( QT_QDOUBLESPINBOX_SETDECIMALS )
 {
-   hbqt_par_QDoubleSpinBox( 1 )->setDecimals( hb_parni( 2 ) );
+   QDoubleSpinBox * p = hbqt_par_QDoubleSpinBox( 1 );
+   if( p )
+      ( p )->setDecimals( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDOUBLESPINBOX_SETDECIMALS FP=( p )->setDecimals( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -199,7 +235,13 @@ HB_FUNC( QT_QDOUBLESPINBOX_SETDECIMALS )
  */
 HB_FUNC( QT_QDOUBLESPINBOX_SETMAXIMUM )
 {
-   hbqt_par_QDoubleSpinBox( 1 )->setMaximum( hb_parnd( 2 ) );
+   QDoubleSpinBox * p = hbqt_par_QDoubleSpinBox( 1 );
+   if( p )
+      ( p )->setMaximum( hb_parnd( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDOUBLESPINBOX_SETMAXIMUM FP=( p )->setMaximum( hb_parnd( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -207,7 +249,13 @@ HB_FUNC( QT_QDOUBLESPINBOX_SETMAXIMUM )
  */
 HB_FUNC( QT_QDOUBLESPINBOX_SETMINIMUM )
 {
-   hbqt_par_QDoubleSpinBox( 1 )->setMinimum( hb_parnd( 2 ) );
+   QDoubleSpinBox * p = hbqt_par_QDoubleSpinBox( 1 );
+   if( p )
+      ( p )->setMinimum( hb_parnd( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDOUBLESPINBOX_SETMINIMUM FP=( p )->setMinimum( hb_parnd( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -215,7 +263,13 @@ HB_FUNC( QT_QDOUBLESPINBOX_SETMINIMUM )
  */
 HB_FUNC( QT_QDOUBLESPINBOX_SETPREFIX )
 {
-   hbqt_par_QDoubleSpinBox( 1 )->setPrefix( QDoubleSpinBox::tr( hb_parc( 2 ) ) );
+   QDoubleSpinBox * p = hbqt_par_QDoubleSpinBox( 1 );
+   if( p )
+      ( p )->setPrefix( QDoubleSpinBox::tr( hb_parc( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDOUBLESPINBOX_SETPREFIX FP=( p )->setPrefix( QDoubleSpinBox::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -223,7 +277,13 @@ HB_FUNC( QT_QDOUBLESPINBOX_SETPREFIX )
  */
 HB_FUNC( QT_QDOUBLESPINBOX_SETRANGE )
 {
-   hbqt_par_QDoubleSpinBox( 1 )->setRange( hb_parnd( 2 ), hb_parnd( 3 ) );
+   QDoubleSpinBox * p = hbqt_par_QDoubleSpinBox( 1 );
+   if( p )
+      ( p )->setRange( hb_parnd( 2 ), hb_parnd( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDOUBLESPINBOX_SETRANGE FP=( p )->setRange( hb_parnd( 2 ), hb_parnd( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -231,7 +291,13 @@ HB_FUNC( QT_QDOUBLESPINBOX_SETRANGE )
  */
 HB_FUNC( QT_QDOUBLESPINBOX_SETSINGLESTEP )
 {
-   hbqt_par_QDoubleSpinBox( 1 )->setSingleStep( hb_parnd( 2 ) );
+   QDoubleSpinBox * p = hbqt_par_QDoubleSpinBox( 1 );
+   if( p )
+      ( p )->setSingleStep( hb_parnd( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDOUBLESPINBOX_SETSINGLESTEP FP=( p )->setSingleStep( hb_parnd( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -239,7 +305,13 @@ HB_FUNC( QT_QDOUBLESPINBOX_SETSINGLESTEP )
  */
 HB_FUNC( QT_QDOUBLESPINBOX_SETSUFFIX )
 {
-   hbqt_par_QDoubleSpinBox( 1 )->setSuffix( QDoubleSpinBox::tr( hb_parc( 2 ) ) );
+   QDoubleSpinBox * p = hbqt_par_QDoubleSpinBox( 1 );
+   if( p )
+      ( p )->setSuffix( QDoubleSpinBox::tr( hb_parc( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDOUBLESPINBOX_SETSUFFIX FP=( p )->setSuffix( QDoubleSpinBox::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -247,7 +319,13 @@ HB_FUNC( QT_QDOUBLESPINBOX_SETSUFFIX )
  */
 HB_FUNC( QT_QDOUBLESPINBOX_SINGLESTEP )
 {
-   hb_retnd( hbqt_par_QDoubleSpinBox( 1 )->singleStep() );
+   QDoubleSpinBox * p = hbqt_par_QDoubleSpinBox( 1 );
+   if( p )
+      hb_retnd( ( p )->singleStep() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDOUBLESPINBOX_SINGLESTEP FP=hb_retnd( ( p )->singleStep() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -255,7 +333,13 @@ HB_FUNC( QT_QDOUBLESPINBOX_SINGLESTEP )
  */
 HB_FUNC( QT_QDOUBLESPINBOX_SUFFIX )
 {
-   hb_retc( hbqt_par_QDoubleSpinBox( 1 )->suffix().toAscii().data() );
+   QDoubleSpinBox * p = hbqt_par_QDoubleSpinBox( 1 );
+   if( p )
+      hb_retc( ( p )->suffix().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDOUBLESPINBOX_SUFFIX FP=hb_retc( ( p )->suffix().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -263,7 +347,13 @@ HB_FUNC( QT_QDOUBLESPINBOX_SUFFIX )
  */
 HB_FUNC( QT_QDOUBLESPINBOX_TEXTFROMVALUE )
 {
-   hb_retc( hbqt_par_QDoubleSpinBox( 1 )->textFromValue( hb_parnd( 2 ) ).toAscii().data() );
+   QDoubleSpinBox * p = hbqt_par_QDoubleSpinBox( 1 );
+   if( p )
+      hb_retc( ( p )->textFromValue( hb_parnd( 2 ) ).toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDOUBLESPINBOX_TEXTFROMVALUE FP=hb_retc( ( p )->textFromValue( hb_parnd( 2 ) ).toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -271,7 +361,13 @@ HB_FUNC( QT_QDOUBLESPINBOX_TEXTFROMVALUE )
  */
 HB_FUNC( QT_QDOUBLESPINBOX_VALUE )
 {
-   hb_retnd( hbqt_par_QDoubleSpinBox( 1 )->value() );
+   QDoubleSpinBox * p = hbqt_par_QDoubleSpinBox( 1 );
+   if( p )
+      hb_retnd( ( p )->value() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDOUBLESPINBOX_VALUE FP=hb_retnd( ( p )->value() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -279,7 +375,13 @@ HB_FUNC( QT_QDOUBLESPINBOX_VALUE )
  */
 HB_FUNC( QT_QDOUBLESPINBOX_VALUEFROMTEXT )
 {
-   hb_retnd( hbqt_par_QDoubleSpinBox( 1 )->valueFromText( QDoubleSpinBox::tr( hb_parc( 2 ) ) ) );
+   QDoubleSpinBox * p = hbqt_par_QDoubleSpinBox( 1 );
+   if( p )
+      hb_retnd( ( p )->valueFromText( QDoubleSpinBox::tr( hb_parc( 2 ) ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDOUBLESPINBOX_VALUEFROMTEXT FP=hb_retnd( ( p )->valueFromText( QDoubleSpinBox::tr( hb_parc( 2 ) ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -287,7 +389,13 @@ HB_FUNC( QT_QDOUBLESPINBOX_VALUEFROMTEXT )
  */
 HB_FUNC( QT_QDOUBLESPINBOX_SETVALUE )
 {
-   hbqt_par_QDoubleSpinBox( 1 )->setValue( hb_parnd( 2 ) );
+   QDoubleSpinBox * p = hbqt_par_QDoubleSpinBox( 1 );
+   if( p )
+      ( p )->setValue( hb_parnd( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDOUBLESPINBOX_SETVALUE FP=( p )->setValue( hb_parnd( 2 ) ); p is NULL" ) );
+   }
 }
 
 

@@ -78,43 +78,44 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QSplashScreen > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QSplashScreen > pq;
 } QGC_POINTER_QSplashScreen;
 
 QT_G_FUNC( hbqt_gcRelease_QSplashScreen )
 {
+   QSplashScreen  * ph = NULL ;
    QGC_POINTER_QSplashScreen * p = ( QGC_POINTER_QSplashScreen * ) Cargo;
 
-   if( p && p->bNew )
+   if( p && p->bNew && p->ph )
    {
-      if( p->ph && p->pq )
+      ph = p->ph;
+      if( ph )
       {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QSplashScreen   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
-            delete ( ( QSplashScreen * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QSplashScreen   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QSplashScreen   /.\\   ", (void*) ph, (void*) p->ph ) );
+            delete ( p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QSplashScreen   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QSplashScreen          pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QSplashScreen          ", ph ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QSplashScreen    :     Object already deleted!", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QSplashScreen    :     Object already deleted!", ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QSplashScreen    :    Object not created with new=true", p->ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QSplashScreen    :    Object not created with new=true", ph ) );
       p->ph = NULL;
    }
 }
@@ -123,13 +124,12 @@ void * hbqt_gcAllocate_QSplashScreen( void * pObj, bool bNew )
 {
    QGC_POINTER_QSplashScreen * p = ( QGC_POINTER_QSplashScreen * ) hb_gcAllocate( sizeof( QGC_POINTER_QSplashScreen ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QSplashScreen >( ( QSplashScreen * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QSplashScreen;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QSplashScreen >( ( QSplashScreen * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QSplashScreen  under p->pq", pObj ) );
    }
    else
@@ -141,11 +141,11 @@ void * hbqt_gcAllocate_QSplashScreen( void * pObj, bool bNew )
 
 HB_FUNC( QT_QSPLASHSCREEN )
 {
-   void * pObj = NULL;
+   QSplashScreen * pObj = NULL;
 
    pObj = new QSplashScreen( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QSplashScreen( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QSplashScreen( ( void * ) pObj, true ) );
 }
 
 /*
@@ -153,7 +153,13 @@ HB_FUNC( QT_QSPLASHSCREEN )
  */
 HB_FUNC( QT_QSPLASHSCREEN_FINISH )
 {
-   hbqt_par_QSplashScreen( 1 )->finish( hbqt_par_QWidget( 2 ) );
+   QSplashScreen * p = hbqt_par_QSplashScreen( 1 );
+   if( p )
+      ( p )->finish( hbqt_par_QWidget( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSPLASHSCREEN_FINISH FP=( p )->finish( hbqt_par_QWidget( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -161,7 +167,13 @@ HB_FUNC( QT_QSPLASHSCREEN_FINISH )
  */
 HB_FUNC( QT_QSPLASHSCREEN_PIXMAP )
 {
-   hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( hbqt_par_QSplashScreen( 1 )->pixmap() ), true ) );
+   QSplashScreen * p = hbqt_par_QSplashScreen( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->pixmap() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSPLASHSCREEN_PIXMAP FP=hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->pixmap() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -169,7 +181,13 @@ HB_FUNC( QT_QSPLASHSCREEN_PIXMAP )
  */
 HB_FUNC( QT_QSPLASHSCREEN_REPAINT )
 {
-   hbqt_par_QSplashScreen( 1 )->repaint();
+   QSplashScreen * p = hbqt_par_QSplashScreen( 1 );
+   if( p )
+      ( p )->repaint();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSPLASHSCREEN_REPAINT FP=( p )->repaint(); p is NULL" ) );
+   }
 }
 
 /*
@@ -177,7 +195,13 @@ HB_FUNC( QT_QSPLASHSCREEN_REPAINT )
  */
 HB_FUNC( QT_QSPLASHSCREEN_SETPIXMAP )
 {
-   hbqt_par_QSplashScreen( 1 )->setPixmap( *hbqt_par_QPixmap( 2 ) );
+   QSplashScreen * p = hbqt_par_QSplashScreen( 1 );
+   if( p )
+      ( p )->setPixmap( *hbqt_par_QPixmap( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSPLASHSCREEN_SETPIXMAP FP=( p )->setPixmap( *hbqt_par_QPixmap( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -185,7 +209,13 @@ HB_FUNC( QT_QSPLASHSCREEN_SETPIXMAP )
  */
 HB_FUNC( QT_QSPLASHSCREEN_CLEARMESSAGE )
 {
-   hbqt_par_QSplashScreen( 1 )->clearMessage();
+   QSplashScreen * p = hbqt_par_QSplashScreen( 1 );
+   if( p )
+      ( p )->clearMessage();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSPLASHSCREEN_CLEARMESSAGE FP=( p )->clearMessage(); p is NULL" ) );
+   }
 }
 
 /*
@@ -193,7 +223,13 @@ HB_FUNC( QT_QSPLASHSCREEN_CLEARMESSAGE )
  */
 HB_FUNC( QT_QSPLASHSCREEN_SHOWMESSAGE )
 {
-   hbqt_par_QSplashScreen( 1 )->showMessage( QSplashScreen::tr( hb_parc( 2 ) ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : Qt::AlignLeft ), *hbqt_par_QColor( 4 ) );
+   QSplashScreen * p = hbqt_par_QSplashScreen( 1 );
+   if( p )
+      ( p )->showMessage( QSplashScreen::tr( hb_parc( 2 ) ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : Qt::AlignLeft ), *hbqt_par_QColor( 4 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSPLASHSCREEN_SHOWMESSAGE FP=( p )->showMessage( QSplashScreen::tr( hb_parc( 2 ) ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : Qt::AlignLeft ), *hbqt_par_QColor( 4 ) ); p is NULL" ) );
+   }
 }
 
 

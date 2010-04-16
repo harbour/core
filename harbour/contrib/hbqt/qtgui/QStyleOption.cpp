@@ -84,7 +84,7 @@
 
 typedef struct
 {
-   void * ph;
+   QStyleOption * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QStyleOption;
@@ -119,7 +119,7 @@ void * hbqt_gcAllocate_QStyleOption( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QStyleOption * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyleOption;
 
@@ -136,11 +136,11 @@ void * hbqt_gcAllocate_QStyleOption( void * pObj, bool bNew )
 
 HB_FUNC( QT_QSTYLEOPTION )
 {
-   void * pObj = NULL;
+   QStyleOption * pObj = NULL;
 
-   pObj = ( QStyleOption* ) new QStyleOption() ;
+   pObj =  new QStyleOption() ;
 
-   hb_retptrGC( hbqt_gcAllocate_QStyleOption( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QStyleOption( ( void * ) pObj, true ) );
 }
 
 /*
@@ -148,7 +148,13 @@ HB_FUNC( QT_QSTYLEOPTION )
  */
 HB_FUNC( QT_QSTYLEOPTION_INITFROM )
 {
-   hbqt_par_QStyleOption( 1 )->initFrom( hbqt_par_QWidget( 2 ) );
+   QStyleOption * p = hbqt_par_QStyleOption( 1 );
+   if( p )
+      ( p )->initFrom( hbqt_par_QWidget( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTYLEOPTION_INITFROM FP=( p )->initFrom( hbqt_par_QWidget( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*

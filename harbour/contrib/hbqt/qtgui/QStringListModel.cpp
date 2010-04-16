@@ -77,43 +77,44 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QStringListModel > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QStringListModel > pq;
 } QGC_POINTER_QStringListModel;
 
 QT_G_FUNC( hbqt_gcRelease_QStringListModel )
 {
+   QStringListModel  * ph = NULL ;
    QGC_POINTER_QStringListModel * p = ( QGC_POINTER_QStringListModel * ) Cargo;
 
-   if( p && p->bNew )
+   if( p && p->bNew && p->ph )
    {
-      if( p->ph && p->pq )
+      ph = p->ph;
+      if( ph )
       {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QStringListModel   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
-            delete ( ( QStringListModel * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QStringListModel   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QStringListModel   /.\\   ", (void*) ph, (void*) p->ph ) );
+            delete ( p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QStringListModel   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QStringListModel          pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QStringListModel          ", ph ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QStringListModel    :     Object already deleted!", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QStringListModel    :     Object already deleted!", ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QStringListModel    :    Object not created with new=true", p->ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QStringListModel    :    Object not created with new=true", ph ) );
       p->ph = NULL;
    }
 }
@@ -122,13 +123,12 @@ void * hbqt_gcAllocate_QStringListModel( void * pObj, bool bNew )
 {
    QGC_POINTER_QStringListModel * p = ( QGC_POINTER_QStringListModel * ) hb_gcAllocate( sizeof( QGC_POINTER_QStringListModel ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QStringListModel >( ( QStringListModel * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStringListModel;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QStringListModel >( ( QStringListModel * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QStringListModel  under p->pq", pObj ) );
    }
    else
@@ -140,11 +140,11 @@ void * hbqt_gcAllocate_QStringListModel( void * pObj, bool bNew )
 
 HB_FUNC( QT_QSTRINGLISTMODEL )
 {
-   void * pObj = NULL;
+   QStringListModel * pObj = NULL;
 
-   pObj = ( QStringListModel* ) new QStringListModel() ;
+   pObj =  new QStringListModel() ;
 
-   hb_retptrGC( hbqt_gcAllocate_QStringListModel( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QStringListModel( ( void * ) pObj, true ) );
 }
 
 /*
@@ -152,7 +152,13 @@ HB_FUNC( QT_QSTRINGLISTMODEL )
  */
 HB_FUNC( QT_QSTRINGLISTMODEL_DATA )
 {
-   hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( hbqt_par_QStringListModel( 1 )->data( *hbqt_par_QModelIndex( 2 ), hb_parni( 3 ) ) ), true ) );
+   QStringListModel * p = hbqt_par_QStringListModel( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( ( p )->data( *hbqt_par_QModelIndex( 2 ), hb_parni( 3 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGLISTMODEL_DATA FP=hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( ( p )->data( *hbqt_par_QModelIndex( 2 ), hb_parni( 3 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -160,7 +166,13 @@ HB_FUNC( QT_QSTRINGLISTMODEL_DATA )
  */
 HB_FUNC( QT_QSTRINGLISTMODEL_FLAGS )
 {
-   hb_retni( ( Qt::ItemFlags ) hbqt_par_QStringListModel( 1 )->flags( *hbqt_par_QModelIndex( 2 ) ) );
+   QStringListModel * p = hbqt_par_QStringListModel( 1 );
+   if( p )
+      hb_retni( ( Qt::ItemFlags ) ( p )->flags( *hbqt_par_QModelIndex( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGLISTMODEL_FLAGS FP=hb_retni( ( Qt::ItemFlags ) ( p )->flags( *hbqt_par_QModelIndex( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -168,7 +180,13 @@ HB_FUNC( QT_QSTRINGLISTMODEL_FLAGS )
  */
 HB_FUNC( QT_QSTRINGLISTMODEL_INSERTROWS )
 {
-   hb_retl( hbqt_par_QStringListModel( 1 )->insertRows( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QModelIndex( 4 ) : QModelIndex() ) ) );
+   QStringListModel * p = hbqt_par_QStringListModel( 1 );
+   if( p )
+      hb_retl( ( p )->insertRows( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QModelIndex( 4 ) : QModelIndex() ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGLISTMODEL_INSERTROWS FP=hb_retl( ( p )->insertRows( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QModelIndex( 4 ) : QModelIndex() ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -176,7 +194,13 @@ HB_FUNC( QT_QSTRINGLISTMODEL_INSERTROWS )
  */
 HB_FUNC( QT_QSTRINGLISTMODEL_REMOVEROWS )
 {
-   hb_retl( hbqt_par_QStringListModel( 1 )->removeRows( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QModelIndex( 4 ) : QModelIndex() ) ) );
+   QStringListModel * p = hbqt_par_QStringListModel( 1 );
+   if( p )
+      hb_retl( ( p )->removeRows( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QModelIndex( 4 ) : QModelIndex() ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGLISTMODEL_REMOVEROWS FP=hb_retl( ( p )->removeRows( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QModelIndex( 4 ) : QModelIndex() ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -184,7 +208,13 @@ HB_FUNC( QT_QSTRINGLISTMODEL_REMOVEROWS )
  */
 HB_FUNC( QT_QSTRINGLISTMODEL_ROWCOUNT )
 {
-   hb_retni( hbqt_par_QStringListModel( 1 )->rowCount( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QModelIndex( 2 ) : QModelIndex() ) ) );
+   QStringListModel * p = hbqt_par_QStringListModel( 1 );
+   if( p )
+      hb_retni( ( p )->rowCount( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QModelIndex( 2 ) : QModelIndex() ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGLISTMODEL_ROWCOUNT FP=hb_retni( ( p )->rowCount( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QModelIndex( 2 ) : QModelIndex() ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -192,7 +222,13 @@ HB_FUNC( QT_QSTRINGLISTMODEL_ROWCOUNT )
  */
 HB_FUNC( QT_QSTRINGLISTMODEL_SETDATA )
 {
-   hb_retl( hbqt_par_QStringListModel( 1 )->setData( *hbqt_par_QModelIndex( 2 ), *hbqt_par_QVariant( 3 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : Qt::EditRole ) ) );
+   QStringListModel * p = hbqt_par_QStringListModel( 1 );
+   if( p )
+      hb_retl( ( p )->setData( *hbqt_par_QModelIndex( 2 ), *hbqt_par_QVariant( 3 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : Qt::EditRole ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGLISTMODEL_SETDATA FP=hb_retl( ( p )->setData( *hbqt_par_QModelIndex( 2 ), *hbqt_par_QVariant( 3 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : Qt::EditRole ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -200,7 +236,13 @@ HB_FUNC( QT_QSTRINGLISTMODEL_SETDATA )
  */
 HB_FUNC( QT_QSTRINGLISTMODEL_SETSTRINGLIST )
 {
-   hbqt_par_QStringListModel( 1 )->setStringList( *hbqt_par_QStringList( 2 ) );
+   QStringListModel * p = hbqt_par_QStringListModel( 1 );
+   if( p )
+      ( p )->setStringList( *hbqt_par_QStringList( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGLISTMODEL_SETSTRINGLIST FP=( p )->setStringList( *hbqt_par_QStringList( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -208,7 +250,13 @@ HB_FUNC( QT_QSTRINGLISTMODEL_SETSTRINGLIST )
  */
 HB_FUNC( QT_QSTRINGLISTMODEL_STRINGLIST )
 {
-   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QStringListModel( 1 )->stringList() ), true ) );
+   QStringListModel * p = hbqt_par_QStringListModel( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->stringList() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGLISTMODEL_STRINGLIST FP=hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->stringList() ), true ) ); p is NULL" ) );
+   }
 }
 
 

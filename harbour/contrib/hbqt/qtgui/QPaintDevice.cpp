@@ -79,7 +79,7 @@
 
 typedef struct
 {
-   void * ph;
+   QPaintDevice * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QPaintDevice;
@@ -99,7 +99,7 @@ void * hbqt_gcAllocate_QPaintDevice( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QPaintDevice * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QPaintDevice;
 
@@ -116,6 +116,7 @@ void * hbqt_gcAllocate_QPaintDevice( void * pObj, bool bNew )
 
 HB_FUNC( QT_QPAINTDEVICE )
 {
+
 }
 
 /*
@@ -123,7 +124,13 @@ HB_FUNC( QT_QPAINTDEVICE )
  */
 HB_FUNC( QT_QPAINTDEVICE_DEPTH )
 {
-   hb_retni( hbqt_par_QPaintDevice( 1 )->depth() );
+   QPaintDevice * p = hbqt_par_QPaintDevice( 1 );
+   if( p )
+      hb_retni( ( p )->depth() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPAINTDEVICE_DEPTH FP=hb_retni( ( p )->depth() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -131,7 +138,13 @@ HB_FUNC( QT_QPAINTDEVICE_DEPTH )
  */
 HB_FUNC( QT_QPAINTDEVICE_HEIGHT )
 {
-   hb_retni( hbqt_par_QPaintDevice( 1 )->height() );
+   QPaintDevice * p = hbqt_par_QPaintDevice( 1 );
+   if( p )
+      hb_retni( ( p )->height() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPAINTDEVICE_HEIGHT FP=hb_retni( ( p )->height() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -139,7 +152,13 @@ HB_FUNC( QT_QPAINTDEVICE_HEIGHT )
  */
 HB_FUNC( QT_QPAINTDEVICE_HEIGHTMM )
 {
-   hb_retni( hbqt_par_QPaintDevice( 1 )->heightMM() );
+   QPaintDevice * p = hbqt_par_QPaintDevice( 1 );
+   if( p )
+      hb_retni( ( p )->heightMM() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPAINTDEVICE_HEIGHTMM FP=hb_retni( ( p )->heightMM() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -147,7 +166,13 @@ HB_FUNC( QT_QPAINTDEVICE_HEIGHTMM )
  */
 HB_FUNC( QT_QPAINTDEVICE_LOGICALDPIX )
 {
-   hb_retni( hbqt_par_QPaintDevice( 1 )->logicalDpiX() );
+   QPaintDevice * p = hbqt_par_QPaintDevice( 1 );
+   if( p )
+      hb_retni( ( p )->logicalDpiX() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPAINTDEVICE_LOGICALDPIX FP=hb_retni( ( p )->logicalDpiX() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -155,7 +180,13 @@ HB_FUNC( QT_QPAINTDEVICE_LOGICALDPIX )
  */
 HB_FUNC( QT_QPAINTDEVICE_LOGICALDPIY )
 {
-   hb_retni( hbqt_par_QPaintDevice( 1 )->logicalDpiY() );
+   QPaintDevice * p = hbqt_par_QPaintDevice( 1 );
+   if( p )
+      hb_retni( ( p )->logicalDpiY() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPAINTDEVICE_LOGICALDPIY FP=hb_retni( ( p )->logicalDpiY() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -163,7 +194,13 @@ HB_FUNC( QT_QPAINTDEVICE_LOGICALDPIY )
  */
 HB_FUNC( QT_QPAINTDEVICE_NUMCOLORS )
 {
-   hb_retni( hbqt_par_QPaintDevice( 1 )->numColors() );
+   QPaintDevice * p = hbqt_par_QPaintDevice( 1 );
+   if( p )
+      hb_retni( ( p )->numColors() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPAINTDEVICE_NUMCOLORS FP=hb_retni( ( p )->numColors() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -171,7 +208,13 @@ HB_FUNC( QT_QPAINTDEVICE_NUMCOLORS )
  */
 HB_FUNC( QT_QPAINTDEVICE_PAINTENGINE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QPaintEngine( hbqt_par_QPaintDevice( 1 )->paintEngine(), false ) );
+   QPaintDevice * p = hbqt_par_QPaintDevice( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QPaintEngine( ( p )->paintEngine(), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPAINTDEVICE_PAINTENGINE FP=hb_retptrGC( hbqt_gcAllocate_QPaintEngine( ( p )->paintEngine(), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -179,7 +222,13 @@ HB_FUNC( QT_QPAINTDEVICE_PAINTENGINE )
  */
 HB_FUNC( QT_QPAINTDEVICE_PAINTINGACTIVE )
 {
-   hb_retl( hbqt_par_QPaintDevice( 1 )->paintingActive() );
+   QPaintDevice * p = hbqt_par_QPaintDevice( 1 );
+   if( p )
+      hb_retl( ( p )->paintingActive() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPAINTDEVICE_PAINTINGACTIVE FP=hb_retl( ( p )->paintingActive() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -187,7 +236,13 @@ HB_FUNC( QT_QPAINTDEVICE_PAINTINGACTIVE )
  */
 HB_FUNC( QT_QPAINTDEVICE_PHYSICALDPIX )
 {
-   hb_retni( hbqt_par_QPaintDevice( 1 )->physicalDpiX() );
+   QPaintDevice * p = hbqt_par_QPaintDevice( 1 );
+   if( p )
+      hb_retni( ( p )->physicalDpiX() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPAINTDEVICE_PHYSICALDPIX FP=hb_retni( ( p )->physicalDpiX() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -195,7 +250,13 @@ HB_FUNC( QT_QPAINTDEVICE_PHYSICALDPIX )
  */
 HB_FUNC( QT_QPAINTDEVICE_PHYSICALDPIY )
 {
-   hb_retni( hbqt_par_QPaintDevice( 1 )->physicalDpiY() );
+   QPaintDevice * p = hbqt_par_QPaintDevice( 1 );
+   if( p )
+      hb_retni( ( p )->physicalDpiY() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPAINTDEVICE_PHYSICALDPIY FP=hb_retni( ( p )->physicalDpiY() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -203,7 +264,13 @@ HB_FUNC( QT_QPAINTDEVICE_PHYSICALDPIY )
  */
 HB_FUNC( QT_QPAINTDEVICE_WIDTH )
 {
-   hb_retni( hbqt_par_QPaintDevice( 1 )->width() );
+   QPaintDevice * p = hbqt_par_QPaintDevice( 1 );
+   if( p )
+      hb_retni( ( p )->width() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPAINTDEVICE_WIDTH FP=hb_retni( ( p )->width() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -211,7 +278,13 @@ HB_FUNC( QT_QPAINTDEVICE_WIDTH )
  */
 HB_FUNC( QT_QPAINTDEVICE_WIDTHMM )
 {
-   hb_retni( hbqt_par_QPaintDevice( 1 )->widthMM() );
+   QPaintDevice * p = hbqt_par_QPaintDevice( 1 );
+   if( p )
+      hb_retni( ( p )->widthMM() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPAINTDEVICE_WIDTHMM FP=hb_retni( ( p )->widthMM() ); p is NULL" ) );
+   }
 }
 
 

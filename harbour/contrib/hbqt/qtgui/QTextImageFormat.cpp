@@ -77,7 +77,7 @@
 
 typedef struct
 {
-   void * ph;
+   QTextImageFormat * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QTextImageFormat;
@@ -112,7 +112,7 @@ void * hbqt_gcAllocate_QTextImageFormat( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QTextImageFormat * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextImageFormat;
 
@@ -129,11 +129,11 @@ void * hbqt_gcAllocate_QTextImageFormat( void * pObj, bool bNew )
 
 HB_FUNC( QT_QTEXTIMAGEFORMAT )
 {
-   void * pObj = NULL;
+   QTextImageFormat * pObj = NULL;
 
-   pObj = ( QTextImageFormat* ) new QTextImageFormat() ;
+   pObj =  new QTextImageFormat() ;
 
-   hb_retptrGC( hbqt_gcAllocate_QTextImageFormat( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextImageFormat( ( void * ) pObj, true ) );
 }
 
 /*
@@ -141,7 +141,13 @@ HB_FUNC( QT_QTEXTIMAGEFORMAT )
  */
 HB_FUNC( QT_QTEXTIMAGEFORMAT_HEIGHT )
 {
-   hb_retnd( hbqt_par_QTextImageFormat( 1 )->height() );
+   QTextImageFormat * p = hbqt_par_QTextImageFormat( 1 );
+   if( p )
+      hb_retnd( ( p )->height() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTIMAGEFORMAT_HEIGHT FP=hb_retnd( ( p )->height() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -149,7 +155,13 @@ HB_FUNC( QT_QTEXTIMAGEFORMAT_HEIGHT )
  */
 HB_FUNC( QT_QTEXTIMAGEFORMAT_ISVALID )
 {
-   hb_retl( hbqt_par_QTextImageFormat( 1 )->isValid() );
+   QTextImageFormat * p = hbqt_par_QTextImageFormat( 1 );
+   if( p )
+      hb_retl( ( p )->isValid() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTIMAGEFORMAT_ISVALID FP=hb_retl( ( p )->isValid() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -157,7 +169,13 @@ HB_FUNC( QT_QTEXTIMAGEFORMAT_ISVALID )
  */
 HB_FUNC( QT_QTEXTIMAGEFORMAT_NAME )
 {
-   hb_retc( hbqt_par_QTextImageFormat( 1 )->name().toAscii().data() );
+   QTextImageFormat * p = hbqt_par_QTextImageFormat( 1 );
+   if( p )
+      hb_retc( ( p )->name().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTIMAGEFORMAT_NAME FP=hb_retc( ( p )->name().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -165,7 +183,13 @@ HB_FUNC( QT_QTEXTIMAGEFORMAT_NAME )
  */
 HB_FUNC( QT_QTEXTIMAGEFORMAT_SETHEIGHT )
 {
-   hbqt_par_QTextImageFormat( 1 )->setHeight( hb_parnd( 2 ) );
+   QTextImageFormat * p = hbqt_par_QTextImageFormat( 1 );
+   if( p )
+      ( p )->setHeight( hb_parnd( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTIMAGEFORMAT_SETHEIGHT FP=( p )->setHeight( hb_parnd( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -173,7 +197,13 @@ HB_FUNC( QT_QTEXTIMAGEFORMAT_SETHEIGHT )
  */
 HB_FUNC( QT_QTEXTIMAGEFORMAT_SETNAME )
 {
-   hbqt_par_QTextImageFormat( 1 )->setName( hbqt_par_QString( 2 ) );
+   QTextImageFormat * p = hbqt_par_QTextImageFormat( 1 );
+   if( p )
+      ( p )->setName( hbqt_par_QString( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTIMAGEFORMAT_SETNAME FP=( p )->setName( hbqt_par_QString( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -181,7 +211,13 @@ HB_FUNC( QT_QTEXTIMAGEFORMAT_SETNAME )
  */
 HB_FUNC( QT_QTEXTIMAGEFORMAT_SETWIDTH )
 {
-   hbqt_par_QTextImageFormat( 1 )->setWidth( hb_parnd( 2 ) );
+   QTextImageFormat * p = hbqt_par_QTextImageFormat( 1 );
+   if( p )
+      ( p )->setWidth( hb_parnd( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTIMAGEFORMAT_SETWIDTH FP=( p )->setWidth( hb_parnd( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -189,7 +225,13 @@ HB_FUNC( QT_QTEXTIMAGEFORMAT_SETWIDTH )
  */
 HB_FUNC( QT_QTEXTIMAGEFORMAT_WIDTH )
 {
-   hb_retnd( hbqt_par_QTextImageFormat( 1 )->width() );
+   QTextImageFormat * p = hbqt_par_QTextImageFormat( 1 );
+   if( p )
+      hb_retnd( ( p )->width() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTIMAGEFORMAT_WIDTH FP=hb_retnd( ( p )->width() ); p is NULL" ) );
+   }
 }
 
 

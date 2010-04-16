@@ -83,7 +83,7 @@
 
 typedef struct
 {
-   void * ph;
+   QStyleOptionProgressBar * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QStyleOptionProgressBar;
@@ -118,7 +118,7 @@ void * hbqt_gcAllocate_QStyleOptionProgressBar( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QStyleOptionProgressBar * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyleOptionProgressBar;
 
@@ -135,11 +135,11 @@ void * hbqt_gcAllocate_QStyleOptionProgressBar( void * pObj, bool bNew )
 
 HB_FUNC( QT_QSTYLEOPTIONPROGRESSBAR )
 {
-   void * pObj = NULL;
+   QStyleOptionProgressBar * pObj = NULL;
 
-   pObj = ( QStyleOptionProgressBar* ) new QStyleOptionProgressBar() ;
+   pObj =  new QStyleOptionProgressBar() ;
 
-   hb_retptrGC( hbqt_gcAllocate_QStyleOptionProgressBar( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QStyleOptionProgressBar( ( void * ) pObj, true ) );
 }
 
 /*

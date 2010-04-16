@@ -81,7 +81,7 @@
 
 typedef struct
 {
-   void * ph;
+   QTextLength * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QTextLength;
@@ -116,7 +116,7 @@ void * hbqt_gcAllocate_QTextLength( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QTextLength * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextLength;
 
@@ -133,11 +133,11 @@ void * hbqt_gcAllocate_QTextLength( void * pObj, bool bNew )
 
 HB_FUNC( QT_QTEXTLENGTH )
 {
-   void * pObj = NULL;
+   QTextLength * pObj = NULL;
 
-   pObj = ( QTextLength* ) new QTextLength() ;
+   pObj =  new QTextLength() ;
 
-   hb_retptrGC( hbqt_gcAllocate_QTextLength( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextLength( ( void * ) pObj, true ) );
 }
 
 /*
@@ -145,7 +145,13 @@ HB_FUNC( QT_QTEXTLENGTH )
  */
 HB_FUNC( QT_QTEXTLENGTH_RAWVALUE )
 {
-   hb_retnd( hbqt_par_QTextLength( 1 )->rawValue() );
+   QTextLength * p = hbqt_par_QTextLength( 1 );
+   if( p )
+      hb_retnd( ( p )->rawValue() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTLENGTH_RAWVALUE FP=hb_retnd( ( p )->rawValue() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -153,7 +159,13 @@ HB_FUNC( QT_QTEXTLENGTH_RAWVALUE )
  */
 HB_FUNC( QT_QTEXTLENGTH_TYPE )
 {
-   hb_retni( ( QTextLength::Type ) hbqt_par_QTextLength( 1 )->type() );
+   QTextLength * p = hbqt_par_QTextLength( 1 );
+   if( p )
+      hb_retni( ( QTextLength::Type ) ( p )->type() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTLENGTH_TYPE FP=hb_retni( ( QTextLength::Type ) ( p )->type() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -161,7 +173,13 @@ HB_FUNC( QT_QTEXTLENGTH_TYPE )
  */
 HB_FUNC( QT_QTEXTLENGTH_VALUE )
 {
-   hb_retnd( hbqt_par_QTextLength( 1 )->value( hb_parnd( 2 ) ) );
+   QTextLength * p = hbqt_par_QTextLength( 1 );
+   if( p )
+      hb_retnd( ( p )->value( hb_parnd( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTLENGTH_VALUE FP=hb_retnd( ( p )->value( hb_parnd( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 

@@ -86,7 +86,7 @@
 
 typedef struct
 {
-   void * ph;
+   QFileInfo * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QFileInfo;
@@ -121,7 +121,7 @@ void * hbqt_gcAllocate_QFileInfo( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QFileInfo * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QFileInfo;
 
@@ -138,11 +138,11 @@ void * hbqt_gcAllocate_QFileInfo( void * pObj, bool bNew )
 
 HB_FUNC( QT_QFILEINFO )
 {
-   void * pObj = NULL;
+   QFileInfo * pObj = NULL;
 
    pObj = new QFileInfo() ;
 
-   hb_retptrGC( hbqt_gcAllocate_QFileInfo( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QFileInfo( ( void * ) pObj, true ) );
 }
 
 /*
@@ -150,7 +150,13 @@ HB_FUNC( QT_QFILEINFO )
  */
 HB_FUNC( QT_QFILEINFO_ABSOLUTEDIR )
 {
-   hb_retptrGC( hbqt_gcAllocate_QDir( new QDir( hbqt_par_QFileInfo( 1 )->absoluteDir() ), true ) );
+   QFileInfo * p = hbqt_par_QFileInfo( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QDir( new QDir( ( p )->absoluteDir() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEINFO_ABSOLUTEDIR FP=hb_retptrGC( hbqt_gcAllocate_QDir( new QDir( ( p )->absoluteDir() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -158,7 +164,13 @@ HB_FUNC( QT_QFILEINFO_ABSOLUTEDIR )
  */
 HB_FUNC( QT_QFILEINFO_ABSOLUTEFILEPATH )
 {
-   hb_retc( hbqt_par_QFileInfo( 1 )->absoluteFilePath().toAscii().data() );
+   QFileInfo * p = hbqt_par_QFileInfo( 1 );
+   if( p )
+      hb_retc( ( p )->absoluteFilePath().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEINFO_ABSOLUTEFILEPATH FP=hb_retc( ( p )->absoluteFilePath().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -166,7 +178,13 @@ HB_FUNC( QT_QFILEINFO_ABSOLUTEFILEPATH )
  */
 HB_FUNC( QT_QFILEINFO_ABSOLUTEPATH )
 {
-   hb_retc( hbqt_par_QFileInfo( 1 )->absolutePath().toAscii().data() );
+   QFileInfo * p = hbqt_par_QFileInfo( 1 );
+   if( p )
+      hb_retc( ( p )->absolutePath().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEINFO_ABSOLUTEPATH FP=hb_retc( ( p )->absolutePath().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -174,7 +192,13 @@ HB_FUNC( QT_QFILEINFO_ABSOLUTEPATH )
  */
 HB_FUNC( QT_QFILEINFO_BASENAME )
 {
-   hb_retc( hbqt_par_QFileInfo( 1 )->baseName().toAscii().data() );
+   QFileInfo * p = hbqt_par_QFileInfo( 1 );
+   if( p )
+      hb_retc( ( p )->baseName().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEINFO_BASENAME FP=hb_retc( ( p )->baseName().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -182,7 +206,13 @@ HB_FUNC( QT_QFILEINFO_BASENAME )
  */
 HB_FUNC( QT_QFILEINFO_BUNDLENAME )
 {
-   hb_retc( hbqt_par_QFileInfo( 1 )->bundleName().toAscii().data() );
+   QFileInfo * p = hbqt_par_QFileInfo( 1 );
+   if( p )
+      hb_retc( ( p )->bundleName().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEINFO_BUNDLENAME FP=hb_retc( ( p )->bundleName().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -190,7 +220,13 @@ HB_FUNC( QT_QFILEINFO_BUNDLENAME )
  */
 HB_FUNC( QT_QFILEINFO_CACHING )
 {
-   hb_retl( hbqt_par_QFileInfo( 1 )->caching() );
+   QFileInfo * p = hbqt_par_QFileInfo( 1 );
+   if( p )
+      hb_retl( ( p )->caching() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEINFO_CACHING FP=hb_retl( ( p )->caching() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -198,7 +234,13 @@ HB_FUNC( QT_QFILEINFO_CACHING )
  */
 HB_FUNC( QT_QFILEINFO_CANONICALFILEPATH )
 {
-   hb_retc( hbqt_par_QFileInfo( 1 )->canonicalFilePath().toAscii().data() );
+   QFileInfo * p = hbqt_par_QFileInfo( 1 );
+   if( p )
+      hb_retc( ( p )->canonicalFilePath().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEINFO_CANONICALFILEPATH FP=hb_retc( ( p )->canonicalFilePath().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -206,7 +248,13 @@ HB_FUNC( QT_QFILEINFO_CANONICALFILEPATH )
  */
 HB_FUNC( QT_QFILEINFO_CANONICALPATH )
 {
-   hb_retc( hbqt_par_QFileInfo( 1 )->canonicalPath().toAscii().data() );
+   QFileInfo * p = hbqt_par_QFileInfo( 1 );
+   if( p )
+      hb_retc( ( p )->canonicalPath().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEINFO_CANONICALPATH FP=hb_retc( ( p )->canonicalPath().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -214,7 +262,13 @@ HB_FUNC( QT_QFILEINFO_CANONICALPATH )
  */
 HB_FUNC( QT_QFILEINFO_COMPLETEBASENAME )
 {
-   hb_retc( hbqt_par_QFileInfo( 1 )->completeBaseName().toAscii().data() );
+   QFileInfo * p = hbqt_par_QFileInfo( 1 );
+   if( p )
+      hb_retc( ( p )->completeBaseName().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEINFO_COMPLETEBASENAME FP=hb_retc( ( p )->completeBaseName().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -222,7 +276,13 @@ HB_FUNC( QT_QFILEINFO_COMPLETEBASENAME )
  */
 HB_FUNC( QT_QFILEINFO_COMPLETESUFFIX )
 {
-   hb_retc( hbqt_par_QFileInfo( 1 )->completeSuffix().toAscii().data() );
+   QFileInfo * p = hbqt_par_QFileInfo( 1 );
+   if( p )
+      hb_retc( ( p )->completeSuffix().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEINFO_COMPLETESUFFIX FP=hb_retc( ( p )->completeSuffix().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -230,7 +290,13 @@ HB_FUNC( QT_QFILEINFO_COMPLETESUFFIX )
  */
 HB_FUNC( QT_QFILEINFO_CREATED )
 {
-   hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( hbqt_par_QFileInfo( 1 )->created() ), true ) );
+   QFileInfo * p = hbqt_par_QFileInfo( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( ( p )->created() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEINFO_CREATED FP=hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( ( p )->created() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -238,7 +304,13 @@ HB_FUNC( QT_QFILEINFO_CREATED )
  */
 HB_FUNC( QT_QFILEINFO_DIR )
 {
-   hb_retptrGC( hbqt_gcAllocate_QDir( new QDir( hbqt_par_QFileInfo( 1 )->dir() ), true ) );
+   QFileInfo * p = hbqt_par_QFileInfo( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QDir( new QDir( ( p )->dir() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEINFO_DIR FP=hb_retptrGC( hbqt_gcAllocate_QDir( new QDir( ( p )->dir() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -246,7 +318,13 @@ HB_FUNC( QT_QFILEINFO_DIR )
  */
 HB_FUNC( QT_QFILEINFO_EXISTS )
 {
-   hb_retl( hbqt_par_QFileInfo( 1 )->exists() );
+   QFileInfo * p = hbqt_par_QFileInfo( 1 );
+   if( p )
+      hb_retl( ( p )->exists() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEINFO_EXISTS FP=hb_retl( ( p )->exists() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -254,7 +332,13 @@ HB_FUNC( QT_QFILEINFO_EXISTS )
  */
 HB_FUNC( QT_QFILEINFO_FILENAME )
 {
-   hb_retc( hbqt_par_QFileInfo( 1 )->fileName().toAscii().data() );
+   QFileInfo * p = hbqt_par_QFileInfo( 1 );
+   if( p )
+      hb_retc( ( p )->fileName().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEINFO_FILENAME FP=hb_retc( ( p )->fileName().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -262,7 +346,13 @@ HB_FUNC( QT_QFILEINFO_FILENAME )
  */
 HB_FUNC( QT_QFILEINFO_FILEPATH )
 {
-   hb_retc( hbqt_par_QFileInfo( 1 )->filePath().toAscii().data() );
+   QFileInfo * p = hbqt_par_QFileInfo( 1 );
+   if( p )
+      hb_retc( ( p )->filePath().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEINFO_FILEPATH FP=hb_retc( ( p )->filePath().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -270,7 +360,13 @@ HB_FUNC( QT_QFILEINFO_FILEPATH )
  */
 HB_FUNC( QT_QFILEINFO_GROUP )
 {
-   hb_retc( hbqt_par_QFileInfo( 1 )->group().toAscii().data() );
+   QFileInfo * p = hbqt_par_QFileInfo( 1 );
+   if( p )
+      hb_retc( ( p )->group().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEINFO_GROUP FP=hb_retc( ( p )->group().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -278,7 +374,13 @@ HB_FUNC( QT_QFILEINFO_GROUP )
  */
 HB_FUNC( QT_QFILEINFO_GROUPID )
 {
-   hb_retni( hbqt_par_QFileInfo( 1 )->groupId() );
+   QFileInfo * p = hbqt_par_QFileInfo( 1 );
+   if( p )
+      hb_retni( ( p )->groupId() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEINFO_GROUPID FP=hb_retni( ( p )->groupId() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -286,7 +388,13 @@ HB_FUNC( QT_QFILEINFO_GROUPID )
  */
 HB_FUNC( QT_QFILEINFO_ISABSOLUTE )
 {
-   hb_retl( hbqt_par_QFileInfo( 1 )->isAbsolute() );
+   QFileInfo * p = hbqt_par_QFileInfo( 1 );
+   if( p )
+      hb_retl( ( p )->isAbsolute() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEINFO_ISABSOLUTE FP=hb_retl( ( p )->isAbsolute() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -294,7 +402,13 @@ HB_FUNC( QT_QFILEINFO_ISABSOLUTE )
  */
 HB_FUNC( QT_QFILEINFO_ISBUNDLE )
 {
-   hb_retl( hbqt_par_QFileInfo( 1 )->isBundle() );
+   QFileInfo * p = hbqt_par_QFileInfo( 1 );
+   if( p )
+      hb_retl( ( p )->isBundle() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEINFO_ISBUNDLE FP=hb_retl( ( p )->isBundle() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -302,7 +416,13 @@ HB_FUNC( QT_QFILEINFO_ISBUNDLE )
  */
 HB_FUNC( QT_QFILEINFO_ISDIR )
 {
-   hb_retl( hbqt_par_QFileInfo( 1 )->isDir() );
+   QFileInfo * p = hbqt_par_QFileInfo( 1 );
+   if( p )
+      hb_retl( ( p )->isDir() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEINFO_ISDIR FP=hb_retl( ( p )->isDir() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -310,7 +430,13 @@ HB_FUNC( QT_QFILEINFO_ISDIR )
  */
 HB_FUNC( QT_QFILEINFO_ISEXECUTABLE )
 {
-   hb_retl( hbqt_par_QFileInfo( 1 )->isExecutable() );
+   QFileInfo * p = hbqt_par_QFileInfo( 1 );
+   if( p )
+      hb_retl( ( p )->isExecutable() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEINFO_ISEXECUTABLE FP=hb_retl( ( p )->isExecutable() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -318,7 +444,13 @@ HB_FUNC( QT_QFILEINFO_ISEXECUTABLE )
  */
 HB_FUNC( QT_QFILEINFO_ISFILE )
 {
-   hb_retl( hbqt_par_QFileInfo( 1 )->isFile() );
+   QFileInfo * p = hbqt_par_QFileInfo( 1 );
+   if( p )
+      hb_retl( ( p )->isFile() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEINFO_ISFILE FP=hb_retl( ( p )->isFile() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -326,7 +458,13 @@ HB_FUNC( QT_QFILEINFO_ISFILE )
  */
 HB_FUNC( QT_QFILEINFO_ISHIDDEN )
 {
-   hb_retl( hbqt_par_QFileInfo( 1 )->isHidden() );
+   QFileInfo * p = hbqt_par_QFileInfo( 1 );
+   if( p )
+      hb_retl( ( p )->isHidden() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEINFO_ISHIDDEN FP=hb_retl( ( p )->isHidden() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -334,7 +472,13 @@ HB_FUNC( QT_QFILEINFO_ISHIDDEN )
  */
 HB_FUNC( QT_QFILEINFO_ISREADABLE )
 {
-   hb_retl( hbqt_par_QFileInfo( 1 )->isReadable() );
+   QFileInfo * p = hbqt_par_QFileInfo( 1 );
+   if( p )
+      hb_retl( ( p )->isReadable() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEINFO_ISREADABLE FP=hb_retl( ( p )->isReadable() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -342,7 +486,13 @@ HB_FUNC( QT_QFILEINFO_ISREADABLE )
  */
 HB_FUNC( QT_QFILEINFO_ISRELATIVE )
 {
-   hb_retl( hbqt_par_QFileInfo( 1 )->isRelative() );
+   QFileInfo * p = hbqt_par_QFileInfo( 1 );
+   if( p )
+      hb_retl( ( p )->isRelative() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEINFO_ISRELATIVE FP=hb_retl( ( p )->isRelative() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -350,7 +500,13 @@ HB_FUNC( QT_QFILEINFO_ISRELATIVE )
  */
 HB_FUNC( QT_QFILEINFO_ISROOT )
 {
-   hb_retl( hbqt_par_QFileInfo( 1 )->isRoot() );
+   QFileInfo * p = hbqt_par_QFileInfo( 1 );
+   if( p )
+      hb_retl( ( p )->isRoot() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEINFO_ISROOT FP=hb_retl( ( p )->isRoot() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -358,7 +514,13 @@ HB_FUNC( QT_QFILEINFO_ISROOT )
  */
 HB_FUNC( QT_QFILEINFO_ISSYMLINK )
 {
-   hb_retl( hbqt_par_QFileInfo( 1 )->isSymLink() );
+   QFileInfo * p = hbqt_par_QFileInfo( 1 );
+   if( p )
+      hb_retl( ( p )->isSymLink() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEINFO_ISSYMLINK FP=hb_retl( ( p )->isSymLink() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -366,7 +528,13 @@ HB_FUNC( QT_QFILEINFO_ISSYMLINK )
  */
 HB_FUNC( QT_QFILEINFO_ISWRITABLE )
 {
-   hb_retl( hbqt_par_QFileInfo( 1 )->isWritable() );
+   QFileInfo * p = hbqt_par_QFileInfo( 1 );
+   if( p )
+      hb_retl( ( p )->isWritable() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEINFO_ISWRITABLE FP=hb_retl( ( p )->isWritable() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -374,7 +542,13 @@ HB_FUNC( QT_QFILEINFO_ISWRITABLE )
  */
 HB_FUNC( QT_QFILEINFO_LASTMODIFIED )
 {
-   hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( hbqt_par_QFileInfo( 1 )->lastModified() ), true ) );
+   QFileInfo * p = hbqt_par_QFileInfo( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( ( p )->lastModified() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEINFO_LASTMODIFIED FP=hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( ( p )->lastModified() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -382,7 +556,13 @@ HB_FUNC( QT_QFILEINFO_LASTMODIFIED )
  */
 HB_FUNC( QT_QFILEINFO_LASTREAD )
 {
-   hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( hbqt_par_QFileInfo( 1 )->lastRead() ), true ) );
+   QFileInfo * p = hbqt_par_QFileInfo( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( ( p )->lastRead() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEINFO_LASTREAD FP=hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( ( p )->lastRead() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -390,7 +570,13 @@ HB_FUNC( QT_QFILEINFO_LASTREAD )
  */
 HB_FUNC( QT_QFILEINFO_MAKEABSOLUTE )
 {
-   hb_retl( hbqt_par_QFileInfo( 1 )->makeAbsolute() );
+   QFileInfo * p = hbqt_par_QFileInfo( 1 );
+   if( p )
+      hb_retl( ( p )->makeAbsolute() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEINFO_MAKEABSOLUTE FP=hb_retl( ( p )->makeAbsolute() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -398,7 +584,13 @@ HB_FUNC( QT_QFILEINFO_MAKEABSOLUTE )
  */
 HB_FUNC( QT_QFILEINFO_OWNER )
 {
-   hb_retc( hbqt_par_QFileInfo( 1 )->owner().toAscii().data() );
+   QFileInfo * p = hbqt_par_QFileInfo( 1 );
+   if( p )
+      hb_retc( ( p )->owner().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEINFO_OWNER FP=hb_retc( ( p )->owner().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -406,7 +598,13 @@ HB_FUNC( QT_QFILEINFO_OWNER )
  */
 HB_FUNC( QT_QFILEINFO_OWNERID )
 {
-   hb_retni( hbqt_par_QFileInfo( 1 )->ownerId() );
+   QFileInfo * p = hbqt_par_QFileInfo( 1 );
+   if( p )
+      hb_retni( ( p )->ownerId() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEINFO_OWNERID FP=hb_retni( ( p )->ownerId() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -414,7 +612,13 @@ HB_FUNC( QT_QFILEINFO_OWNERID )
  */
 HB_FUNC( QT_QFILEINFO_PATH )
 {
-   hb_retc( hbqt_par_QFileInfo( 1 )->path().toAscii().data() );
+   QFileInfo * p = hbqt_par_QFileInfo( 1 );
+   if( p )
+      hb_retc( ( p )->path().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEINFO_PATH FP=hb_retc( ( p )->path().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -422,7 +626,13 @@ HB_FUNC( QT_QFILEINFO_PATH )
  */
 HB_FUNC( QT_QFILEINFO_PERMISSION )
 {
-   hb_retl( hbqt_par_QFileInfo( 1 )->permission( ( QFile::Permissions ) hb_parni( 2 ) ) );
+   QFileInfo * p = hbqt_par_QFileInfo( 1 );
+   if( p )
+      hb_retl( ( p )->permission( ( QFile::Permissions ) hb_parni( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEINFO_PERMISSION FP=hb_retl( ( p )->permission( ( QFile::Permissions ) hb_parni( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -430,7 +640,13 @@ HB_FUNC( QT_QFILEINFO_PERMISSION )
  */
 HB_FUNC( QT_QFILEINFO_PERMISSIONS )
 {
-   hb_retni( ( QFile::Permissions ) hbqt_par_QFileInfo( 1 )->permissions() );
+   QFileInfo * p = hbqt_par_QFileInfo( 1 );
+   if( p )
+      hb_retni( ( QFile::Permissions ) ( p )->permissions() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEINFO_PERMISSIONS FP=hb_retni( ( QFile::Permissions ) ( p )->permissions() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -438,7 +654,13 @@ HB_FUNC( QT_QFILEINFO_PERMISSIONS )
  */
 HB_FUNC( QT_QFILEINFO_REFRESH )
 {
-   hbqt_par_QFileInfo( 1 )->refresh();
+   QFileInfo * p = hbqt_par_QFileInfo( 1 );
+   if( p )
+      ( p )->refresh();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEINFO_REFRESH FP=( p )->refresh(); p is NULL" ) );
+   }
 }
 
 /*
@@ -446,7 +668,13 @@ HB_FUNC( QT_QFILEINFO_REFRESH )
  */
 HB_FUNC( QT_QFILEINFO_SETCACHING )
 {
-   hbqt_par_QFileInfo( 1 )->setCaching( hb_parl( 2 ) );
+   QFileInfo * p = hbqt_par_QFileInfo( 1 );
+   if( p )
+      ( p )->setCaching( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEINFO_SETCACHING FP=( p )->setCaching( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -454,7 +682,13 @@ HB_FUNC( QT_QFILEINFO_SETCACHING )
  */
 HB_FUNC( QT_QFILEINFO_SETFILE )
 {
-   hbqt_par_QFileInfo( 1 )->setFile( hbqt_par_QString( 2 ) );
+   QFileInfo * p = hbqt_par_QFileInfo( 1 );
+   if( p )
+      ( p )->setFile( hbqt_par_QString( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEINFO_SETFILE FP=( p )->setFile( hbqt_par_QString( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -462,7 +696,13 @@ HB_FUNC( QT_QFILEINFO_SETFILE )
  */
 HB_FUNC( QT_QFILEINFO_SETFILE_1 )
 {
-   hbqt_par_QFileInfo( 1 )->setFile( *hbqt_par_QFile( 2 ) );
+   QFileInfo * p = hbqt_par_QFileInfo( 1 );
+   if( p )
+      ( p )->setFile( *hbqt_par_QFile( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEINFO_SETFILE_1 FP=( p )->setFile( *hbqt_par_QFile( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -470,7 +710,13 @@ HB_FUNC( QT_QFILEINFO_SETFILE_1 )
  */
 HB_FUNC( QT_QFILEINFO_SETFILE_2 )
 {
-   hbqt_par_QFileInfo( 1 )->setFile( *hbqt_par_QDir( 2 ), hbqt_par_QString( 3 ) );
+   QFileInfo * p = hbqt_par_QFileInfo( 1 );
+   if( p )
+      ( p )->setFile( *hbqt_par_QDir( 2 ), hbqt_par_QString( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEINFO_SETFILE_2 FP=( p )->setFile( *hbqt_par_QDir( 2 ), hbqt_par_QString( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -478,7 +724,13 @@ HB_FUNC( QT_QFILEINFO_SETFILE_2 )
  */
 HB_FUNC( QT_QFILEINFO_SIZE )
 {
-   hb_retnint( hbqt_par_QFileInfo( 1 )->size() );
+   QFileInfo * p = hbqt_par_QFileInfo( 1 );
+   if( p )
+      hb_retnint( ( p )->size() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEINFO_SIZE FP=hb_retnint( ( p )->size() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -486,7 +738,13 @@ HB_FUNC( QT_QFILEINFO_SIZE )
  */
 HB_FUNC( QT_QFILEINFO_SUFFIX )
 {
-   hb_retc( hbqt_par_QFileInfo( 1 )->suffix().toAscii().data() );
+   QFileInfo * p = hbqt_par_QFileInfo( 1 );
+   if( p )
+      hb_retc( ( p )->suffix().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEINFO_SUFFIX FP=hb_retc( ( p )->suffix().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -494,7 +752,13 @@ HB_FUNC( QT_QFILEINFO_SUFFIX )
  */
 HB_FUNC( QT_QFILEINFO_SYMLINKTARGET )
 {
-   hb_retc( hbqt_par_QFileInfo( 1 )->symLinkTarget().toAscii().data() );
+   QFileInfo * p = hbqt_par_QFileInfo( 1 );
+   if( p )
+      hb_retc( ( p )->symLinkTarget().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEINFO_SYMLINKTARGET FP=hb_retc( ( p )->symLinkTarget().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 

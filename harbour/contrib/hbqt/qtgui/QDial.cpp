@@ -77,43 +77,44 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QDial > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QDial > pq;
 } QGC_POINTER_QDial;
 
 QT_G_FUNC( hbqt_gcRelease_QDial )
 {
+   QDial  * ph = NULL ;
    QGC_POINTER_QDial * p = ( QGC_POINTER_QDial * ) Cargo;
 
-   if( p && p->bNew )
+   if( p && p->bNew && p->ph )
    {
-      if( p->ph && p->pq )
+      ph = p->ph;
+      if( ph )
       {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QDial   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
-            delete ( ( QDial * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QDial   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QDial   /.\\   ", (void*) ph, (void*) p->ph ) );
+            delete ( p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QDial   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QDial          pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QDial          ", ph ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QDial    :     Object already deleted!", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QDial    :     Object already deleted!", ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QDial    :    Object not created with new=true", p->ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QDial    :    Object not created with new=true", ph ) );
       p->ph = NULL;
    }
 }
@@ -122,13 +123,12 @@ void * hbqt_gcAllocate_QDial( void * pObj, bool bNew )
 {
    QGC_POINTER_QDial * p = ( QGC_POINTER_QDial * ) hb_gcAllocate( sizeof( QGC_POINTER_QDial ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QDial >( ( QDial * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QDial;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QDial >( ( QDial * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QDial  under p->pq", pObj ) );
    }
    else
@@ -140,11 +140,11 @@ void * hbqt_gcAllocate_QDial( void * pObj, bool bNew )
 
 HB_FUNC( QT_QDIAL )
 {
-   void * pObj = NULL;
+   QDial * pObj = NULL;
 
-   pObj = ( QDial* ) new QDial( hbqt_par_QWidget( 1 ) ) ;
+   pObj =  new QDial( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QDial( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QDial( ( void * ) pObj, true ) );
 }
 
 /*
@@ -152,7 +152,13 @@ HB_FUNC( QT_QDIAL )
  */
 HB_FUNC( QT_QDIAL_NOTCHSIZE )
 {
-   hb_retni( hbqt_par_QDial( 1 )->notchSize() );
+   QDial * p = hbqt_par_QDial( 1 );
+   if( p )
+      hb_retni( ( p )->notchSize() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIAL_NOTCHSIZE FP=hb_retni( ( p )->notchSize() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -160,7 +166,13 @@ HB_FUNC( QT_QDIAL_NOTCHSIZE )
  */
 HB_FUNC( QT_QDIAL_NOTCHTARGET )
 {
-   hb_retnd( hbqt_par_QDial( 1 )->notchTarget() );
+   QDial * p = hbqt_par_QDial( 1 );
+   if( p )
+      hb_retnd( ( p )->notchTarget() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIAL_NOTCHTARGET FP=hb_retnd( ( p )->notchTarget() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -168,7 +180,13 @@ HB_FUNC( QT_QDIAL_NOTCHTARGET )
  */
 HB_FUNC( QT_QDIAL_NOTCHESVISIBLE )
 {
-   hb_retl( hbqt_par_QDial( 1 )->notchesVisible() );
+   QDial * p = hbqt_par_QDial( 1 );
+   if( p )
+      hb_retl( ( p )->notchesVisible() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIAL_NOTCHESVISIBLE FP=hb_retl( ( p )->notchesVisible() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -176,7 +194,13 @@ HB_FUNC( QT_QDIAL_NOTCHESVISIBLE )
  */
 HB_FUNC( QT_QDIAL_SETNOTCHTARGET )
 {
-   hbqt_par_QDial( 1 )->setNotchTarget( hb_parnd( 2 ) );
+   QDial * p = hbqt_par_QDial( 1 );
+   if( p )
+      ( p )->setNotchTarget( hb_parnd( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIAL_SETNOTCHTARGET FP=( p )->setNotchTarget( hb_parnd( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -184,7 +208,13 @@ HB_FUNC( QT_QDIAL_SETNOTCHTARGET )
  */
 HB_FUNC( QT_QDIAL_WRAPPING )
 {
-   hb_retl( hbqt_par_QDial( 1 )->wrapping() );
+   QDial * p = hbqt_par_QDial( 1 );
+   if( p )
+      hb_retl( ( p )->wrapping() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIAL_WRAPPING FP=hb_retl( ( p )->wrapping() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -192,7 +222,13 @@ HB_FUNC( QT_QDIAL_WRAPPING )
  */
 HB_FUNC( QT_QDIAL_SETNOTCHESVISIBLE )
 {
-   hbqt_par_QDial( 1 )->setNotchesVisible( hb_parl( 2 ) );
+   QDial * p = hbqt_par_QDial( 1 );
+   if( p )
+      ( p )->setNotchesVisible( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIAL_SETNOTCHESVISIBLE FP=( p )->setNotchesVisible( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -200,7 +236,13 @@ HB_FUNC( QT_QDIAL_SETNOTCHESVISIBLE )
  */
 HB_FUNC( QT_QDIAL_SETWRAPPING )
 {
-   hbqt_par_QDial( 1 )->setWrapping( hb_parl( 2 ) );
+   QDial * p = hbqt_par_QDial( 1 );
+   if( p )
+      ( p )->setWrapping( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIAL_SETWRAPPING FP=( p )->setWrapping( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 

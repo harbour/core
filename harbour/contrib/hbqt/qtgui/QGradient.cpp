@@ -82,7 +82,7 @@
 
 typedef struct
 {
-   void * ph;
+   QGradient * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QGradient;
@@ -102,7 +102,7 @@ void * hbqt_gcAllocate_QGradient( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QGradient * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QGradient;
 
@@ -119,6 +119,7 @@ void * hbqt_gcAllocate_QGradient( void * pObj, bool bNew )
 
 HB_FUNC( QT_QGRADIENT )
 {
+
 }
 
 /*
@@ -126,7 +127,13 @@ HB_FUNC( QT_QGRADIENT )
  */
 HB_FUNC( QT_QGRADIENT_COORDINATEMODE )
 {
-   hb_retni( ( QGradient::CoordinateMode ) hbqt_par_QGradient( 1 )->coordinateMode() );
+   QGradient * p = hbqt_par_QGradient( 1 );
+   if( p )
+      hb_retni( ( QGradient::CoordinateMode ) ( p )->coordinateMode() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRADIENT_COORDINATEMODE FP=hb_retni( ( QGradient::CoordinateMode ) ( p )->coordinateMode() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -134,7 +141,13 @@ HB_FUNC( QT_QGRADIENT_COORDINATEMODE )
  */
 HB_FUNC( QT_QGRADIENT_SETCOLORAT )
 {
-   hbqt_par_QGradient( 1 )->setColorAt( hb_parnd( 2 ), *hbqt_par_QColor( 3 ) );
+   QGradient * p = hbqt_par_QGradient( 1 );
+   if( p )
+      ( p )->setColorAt( hb_parnd( 2 ), *hbqt_par_QColor( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRADIENT_SETCOLORAT FP=( p )->setColorAt( hb_parnd( 2 ), *hbqt_par_QColor( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -142,7 +155,13 @@ HB_FUNC( QT_QGRADIENT_SETCOLORAT )
  */
 HB_FUNC( QT_QGRADIENT_SETCOORDINATEMODE )
 {
-   hbqt_par_QGradient( 1 )->setCoordinateMode( ( QGradient::CoordinateMode ) hb_parni( 2 ) );
+   QGradient * p = hbqt_par_QGradient( 1 );
+   if( p )
+      ( p )->setCoordinateMode( ( QGradient::CoordinateMode ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRADIENT_SETCOORDINATEMODE FP=( p )->setCoordinateMode( ( QGradient::CoordinateMode ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -150,7 +169,13 @@ HB_FUNC( QT_QGRADIENT_SETCOORDINATEMODE )
  */
 HB_FUNC( QT_QGRADIENT_SETSPREAD )
 {
-   hbqt_par_QGradient( 1 )->setSpread( ( QGradient::Spread ) hb_parni( 2 ) );
+   QGradient * p = hbqt_par_QGradient( 1 );
+   if( p )
+      ( p )->setSpread( ( QGradient::Spread ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRADIENT_SETSPREAD FP=( p )->setSpread( ( QGradient::Spread ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -158,7 +183,13 @@ HB_FUNC( QT_QGRADIENT_SETSPREAD )
  */
 HB_FUNC( QT_QGRADIENT_SPREAD )
 {
-   hb_retni( ( QGradient::Spread ) hbqt_par_QGradient( 1 )->spread() );
+   QGradient * p = hbqt_par_QGradient( 1 );
+   if( p )
+      hb_retni( ( QGradient::Spread ) ( p )->spread() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRADIENT_SPREAD FP=hb_retni( ( QGradient::Spread ) ( p )->spread() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -166,7 +197,13 @@ HB_FUNC( QT_QGRADIENT_SPREAD )
  */
 HB_FUNC( QT_QGRADIENT_TYPE )
 {
-   hb_retni( ( QGradient::Type ) hbqt_par_QGradient( 1 )->type() );
+   QGradient * p = hbqt_par_QGradient( 1 );
+   if( p )
+      hb_retni( ( QGradient::Type ) ( p )->type() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRADIENT_TYPE FP=hb_retni( ( QGradient::Type ) ( p )->type() ); p is NULL" ) );
+   }
 }
 
 

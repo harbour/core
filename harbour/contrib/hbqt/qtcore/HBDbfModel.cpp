@@ -78,43 +78,44 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< HBDbfModel > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< HBDbfModel > pq;
 } QGC_POINTER_HBDbfModel;
 
 QT_G_FUNC( hbqt_gcRelease_HBDbfModel )
 {
+   HBDbfModel  * ph = NULL ;
    QGC_POINTER_HBDbfModel * p = ( QGC_POINTER_HBDbfModel * ) Cargo;
 
-   if( p && p->bNew )
+   if( p && p->bNew && p->ph )
    {
-      if( p->ph && p->pq )
+      ph = p->ph;
+      if( ph )
       {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_HBDbfModel   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
-            delete ( ( HBDbfModel * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_HBDbfModel   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_HBDbfModel   /.\\   ", (void*) ph, (void*) p->ph ) );
+            delete ( p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_HBDbfModel   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_HBDbfModel          pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_HBDbfModel          ", ph ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_HBDbfModel    :     Object already deleted!", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_HBDbfModel    :     Object already deleted!", ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_HBDbfModel    :    Object not created with new=true", p->ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_HBDbfModel    :    Object not created with new=true", ph ) );
       p->ph = NULL;
    }
 }
@@ -123,13 +124,12 @@ void * hbqt_gcAllocate_HBDbfModel( void * pObj, bool bNew )
 {
    QGC_POINTER_HBDbfModel * p = ( QGC_POINTER_HBDbfModel * ) hb_gcAllocate( sizeof( QGC_POINTER_HBDbfModel ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< HBDbfModel >( ( HBDbfModel * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_HBDbfModel;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< HBDbfModel >( ( HBDbfModel * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_HBDbfModel  under p->pq", pObj ) );
    }
    else
@@ -141,11 +141,11 @@ void * hbqt_gcAllocate_HBDbfModel( void * pObj, bool bNew )
 
 HB_FUNC( QT_HBDBFMODEL )
 {
-   void * pObj = NULL;
+   HBDbfModel * pObj = NULL;
 
    pObj = new HBDbfModel( ( PHB_ITEM ) hb_param( 1, HB_IT_BLOCK ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_HBDbfModel( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_HBDbfModel( ( void * ) pObj, true ) );
 }
 
 /*
@@ -153,7 +153,13 @@ HB_FUNC( QT_HBDBFMODEL )
  */
 HB_FUNC( QT_HBDBFMODEL_HBSETROWCOLUMNS )
 {
-   hbqt_par_HBDbfModel( 1 )->hbSetRowColumns( hb_parni( 2 ), hb_parni( 3 ) );
+   HBDbfModel * p = hbqt_par_HBDbfModel( 1 );
+   if( p )
+      ( p )->hbSetRowColumns( hb_parni( 2 ), hb_parni( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBDBFMODEL_HBSETROWCOLUMNS FP=( p )->hbSetRowColumns( hb_parni( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -161,7 +167,13 @@ HB_FUNC( QT_HBDBFMODEL_HBSETROWCOLUMNS )
  */
 HB_FUNC( QT_HBDBFMODEL_RESET )
 {
-   hbqt_par_HBDbfModel( 1 )->reset();
+   HBDbfModel * p = hbqt_par_HBDbfModel( 1 );
+   if( p )
+      ( p )->reset();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBDBFMODEL_RESET FP=( p )->reset(); p is NULL" ) );
+   }
 }
 
 /*
@@ -169,7 +181,13 @@ HB_FUNC( QT_HBDBFMODEL_RESET )
  */
 HB_FUNC( QT_HBDBFMODEL_INDEX )
 {
-   hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( hbqt_par_HBDbfModel( 1 )->index( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QModelIndex( 4 ) : QModelIndex() ) ) ), true ) );
+   HBDbfModel * p = hbqt_par_HBDbfModel( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( ( p )->index( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QModelIndex( 4 ) : QModelIndex() ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBDBFMODEL_INDEX FP=hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( ( p )->index( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QModelIndex( 4 ) : QModelIndex() ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 

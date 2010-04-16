@@ -83,43 +83,44 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QFrame > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QFrame > pq;
 } QGC_POINTER_QFrame;
 
 QT_G_FUNC( hbqt_gcRelease_QFrame )
 {
+   QFrame  * ph = NULL ;
    QGC_POINTER_QFrame * p = ( QGC_POINTER_QFrame * ) Cargo;
 
-   if( p && p->bNew )
+   if( p && p->bNew && p->ph )
    {
-      if( p->ph && p->pq )
+      ph = p->ph;
+      if( ph )
       {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QFrame   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
-            delete ( ( QFrame * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QFrame   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QFrame   /.\\   ", (void*) ph, (void*) p->ph ) );
+            delete ( p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QFrame   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QFrame          pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QFrame          ", ph ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QFrame    :     Object already deleted!", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QFrame    :     Object already deleted!", ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QFrame    :    Object not created with new=true", p->ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QFrame    :    Object not created with new=true", ph ) );
       p->ph = NULL;
    }
 }
@@ -128,13 +129,12 @@ void * hbqt_gcAllocate_QFrame( void * pObj, bool bNew )
 {
    QGC_POINTER_QFrame * p = ( QGC_POINTER_QFrame * ) hb_gcAllocate( sizeof( QGC_POINTER_QFrame ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QFrame >( ( QFrame * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QFrame;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QFrame >( ( QFrame * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QFrame  under p->pq", pObj ) );
    }
    else
@@ -146,11 +146,11 @@ void * hbqt_gcAllocate_QFrame( void * pObj, bool bNew )
 
 HB_FUNC( QT_QFRAME )
 {
-   void * pObj = NULL;
+   QFrame * pObj = NULL;
 
    pObj = new QFrame( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QFrame( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QFrame( ( void * ) pObj, true ) );
 }
 
 /*
@@ -158,7 +158,13 @@ HB_FUNC( QT_QFRAME )
  */
 HB_FUNC( QT_QFRAME_FRAMERECT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QFrame( 1 )->frameRect() ), true ) );
+   QFrame * p = hbqt_par_QFrame( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->frameRect() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFRAME_FRAMERECT FP=hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->frameRect() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -166,7 +172,13 @@ HB_FUNC( QT_QFRAME_FRAMERECT )
  */
 HB_FUNC( QT_QFRAME_FRAMESHADOW )
 {
-   hb_retni( ( QFrame::Shadow ) hbqt_par_QFrame( 1 )->frameShadow() );
+   QFrame * p = hbqt_par_QFrame( 1 );
+   if( p )
+      hb_retni( ( QFrame::Shadow ) ( p )->frameShadow() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFRAME_FRAMESHADOW FP=hb_retni( ( QFrame::Shadow ) ( p )->frameShadow() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -174,7 +186,13 @@ HB_FUNC( QT_QFRAME_FRAMESHADOW )
  */
 HB_FUNC( QT_QFRAME_FRAMESHAPE )
 {
-   hb_retni( ( QFrame::Shape ) hbqt_par_QFrame( 1 )->frameShape() );
+   QFrame * p = hbqt_par_QFrame( 1 );
+   if( p )
+      hb_retni( ( QFrame::Shape ) ( p )->frameShape() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFRAME_FRAMESHAPE FP=hb_retni( ( QFrame::Shape ) ( p )->frameShape() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -182,7 +200,13 @@ HB_FUNC( QT_QFRAME_FRAMESHAPE )
  */
 HB_FUNC( QT_QFRAME_FRAMESTYLE )
 {
-   hb_retni( hbqt_par_QFrame( 1 )->frameStyle() );
+   QFrame * p = hbqt_par_QFrame( 1 );
+   if( p )
+      hb_retni( ( p )->frameStyle() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFRAME_FRAMESTYLE FP=hb_retni( ( p )->frameStyle() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -190,7 +214,13 @@ HB_FUNC( QT_QFRAME_FRAMESTYLE )
  */
 HB_FUNC( QT_QFRAME_FRAMEWIDTH )
 {
-   hb_retni( hbqt_par_QFrame( 1 )->frameWidth() );
+   QFrame * p = hbqt_par_QFrame( 1 );
+   if( p )
+      hb_retni( ( p )->frameWidth() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFRAME_FRAMEWIDTH FP=hb_retni( ( p )->frameWidth() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -198,7 +228,13 @@ HB_FUNC( QT_QFRAME_FRAMEWIDTH )
  */
 HB_FUNC( QT_QFRAME_LINEWIDTH )
 {
-   hb_retni( hbqt_par_QFrame( 1 )->lineWidth() );
+   QFrame * p = hbqt_par_QFrame( 1 );
+   if( p )
+      hb_retni( ( p )->lineWidth() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFRAME_LINEWIDTH FP=hb_retni( ( p )->lineWidth() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -206,7 +242,13 @@ HB_FUNC( QT_QFRAME_LINEWIDTH )
  */
 HB_FUNC( QT_QFRAME_MIDLINEWIDTH )
 {
-   hb_retni( hbqt_par_QFrame( 1 )->midLineWidth() );
+   QFrame * p = hbqt_par_QFrame( 1 );
+   if( p )
+      hb_retni( ( p )->midLineWidth() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFRAME_MIDLINEWIDTH FP=hb_retni( ( p )->midLineWidth() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -214,7 +256,13 @@ HB_FUNC( QT_QFRAME_MIDLINEWIDTH )
  */
 HB_FUNC( QT_QFRAME_SETFRAMERECT )
 {
-   hbqt_par_QFrame( 1 )->setFrameRect( *hbqt_par_QRect( 2 ) );
+   QFrame * p = hbqt_par_QFrame( 1 );
+   if( p )
+      ( p )->setFrameRect( *hbqt_par_QRect( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFRAME_SETFRAMERECT FP=( p )->setFrameRect( *hbqt_par_QRect( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -222,7 +270,13 @@ HB_FUNC( QT_QFRAME_SETFRAMERECT )
  */
 HB_FUNC( QT_QFRAME_SETFRAMESHADOW )
 {
-   hbqt_par_QFrame( 1 )->setFrameShadow( ( QFrame::Shadow ) hb_parni( 2 ) );
+   QFrame * p = hbqt_par_QFrame( 1 );
+   if( p )
+      ( p )->setFrameShadow( ( QFrame::Shadow ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFRAME_SETFRAMESHADOW FP=( p )->setFrameShadow( ( QFrame::Shadow ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -230,7 +284,13 @@ HB_FUNC( QT_QFRAME_SETFRAMESHADOW )
  */
 HB_FUNC( QT_QFRAME_SETFRAMESHAPE )
 {
-   hbqt_par_QFrame( 1 )->setFrameShape( ( QFrame::Shape ) hb_parni( 2 ) );
+   QFrame * p = hbqt_par_QFrame( 1 );
+   if( p )
+      ( p )->setFrameShape( ( QFrame::Shape ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFRAME_SETFRAMESHAPE FP=( p )->setFrameShape( ( QFrame::Shape ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -238,7 +298,13 @@ HB_FUNC( QT_QFRAME_SETFRAMESHAPE )
  */
 HB_FUNC( QT_QFRAME_SETFRAMESTYLE )
 {
-   hbqt_par_QFrame( 1 )->setFrameStyle( hb_parni( 2 ) );
+   QFrame * p = hbqt_par_QFrame( 1 );
+   if( p )
+      ( p )->setFrameStyle( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFRAME_SETFRAMESTYLE FP=( p )->setFrameStyle( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -246,7 +312,13 @@ HB_FUNC( QT_QFRAME_SETFRAMESTYLE )
  */
 HB_FUNC( QT_QFRAME_SETLINEWIDTH )
 {
-   hbqt_par_QFrame( 1 )->setLineWidth( hb_parni( 2 ) );
+   QFrame * p = hbqt_par_QFrame( 1 );
+   if( p )
+      ( p )->setLineWidth( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFRAME_SETLINEWIDTH FP=( p )->setLineWidth( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -254,7 +326,13 @@ HB_FUNC( QT_QFRAME_SETLINEWIDTH )
  */
 HB_FUNC( QT_QFRAME_SETMIDLINEWIDTH )
 {
-   hbqt_par_QFrame( 1 )->setMidLineWidth( hb_parni( 2 ) );
+   QFrame * p = hbqt_par_QFrame( 1 );
+   if( p )
+      ( p )->setMidLineWidth( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFRAME_SETMIDLINEWIDTH FP=( p )->setMidLineWidth( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 

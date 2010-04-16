@@ -83,43 +83,44 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QLCDNumber > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QLCDNumber > pq;
 } QGC_POINTER_QLCDNumber;
 
 QT_G_FUNC( hbqt_gcRelease_QLCDNumber )
 {
+   QLCDNumber  * ph = NULL ;
    QGC_POINTER_QLCDNumber * p = ( QGC_POINTER_QLCDNumber * ) Cargo;
 
-   if( p && p->bNew )
+   if( p && p->bNew && p->ph )
    {
-      if( p->ph && p->pq )
+      ph = p->ph;
+      if( ph )
       {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QLCDNumber   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
-            delete ( ( QLCDNumber * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QLCDNumber   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QLCDNumber   /.\\   ", (void*) ph, (void*) p->ph ) );
+            delete ( p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QLCDNumber   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QLCDNumber          pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QLCDNumber          ", ph ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QLCDNumber    :     Object already deleted!", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QLCDNumber    :     Object already deleted!", ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QLCDNumber    :    Object not created with new=true", p->ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QLCDNumber    :    Object not created with new=true", ph ) );
       p->ph = NULL;
    }
 }
@@ -128,13 +129,12 @@ void * hbqt_gcAllocate_QLCDNumber( void * pObj, bool bNew )
 {
    QGC_POINTER_QLCDNumber * p = ( QGC_POINTER_QLCDNumber * ) hb_gcAllocate( sizeof( QGC_POINTER_QLCDNumber ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QLCDNumber >( ( QLCDNumber * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QLCDNumber;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QLCDNumber >( ( QLCDNumber * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QLCDNumber  under p->pq", pObj ) );
    }
    else
@@ -146,11 +146,11 @@ void * hbqt_gcAllocate_QLCDNumber( void * pObj, bool bNew )
 
 HB_FUNC( QT_QLCDNUMBER )
 {
-   void * pObj = NULL;
+   QLCDNumber * pObj = NULL;
 
    pObj = ( QLCDNumber * ) new QLCDNumber( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QLCDNumber( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QLCDNumber( ( void * ) pObj, true ) );
 }
 
 /*
@@ -158,7 +158,13 @@ HB_FUNC( QT_QLCDNUMBER )
  */
 HB_FUNC( QT_QLCDNUMBER_CHECKOVERFLOW )
 {
-   hb_retl( hbqt_par_QLCDNumber( 1 )->checkOverflow( hb_parnd( 2 ) ) );
+   QLCDNumber * p = hbqt_par_QLCDNumber( 1 );
+   if( p )
+      hb_retl( ( p )->checkOverflow( hb_parnd( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLCDNUMBER_CHECKOVERFLOW FP=hb_retl( ( p )->checkOverflow( hb_parnd( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -166,7 +172,13 @@ HB_FUNC( QT_QLCDNUMBER_CHECKOVERFLOW )
  */
 HB_FUNC( QT_QLCDNUMBER_CHECKOVERFLOW_1 )
 {
-   hb_retl( hbqt_par_QLCDNumber( 1 )->checkOverflow( hb_parni( 2 ) ) );
+   QLCDNumber * p = hbqt_par_QLCDNumber( 1 );
+   if( p )
+      hb_retl( ( p )->checkOverflow( hb_parni( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLCDNUMBER_CHECKOVERFLOW_1 FP=hb_retl( ( p )->checkOverflow( hb_parni( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -174,7 +186,13 @@ HB_FUNC( QT_QLCDNUMBER_CHECKOVERFLOW_1 )
  */
 HB_FUNC( QT_QLCDNUMBER_INTVALUE )
 {
-   hb_retni( hbqt_par_QLCDNumber( 1 )->intValue() );
+   QLCDNumber * p = hbqt_par_QLCDNumber( 1 );
+   if( p )
+      hb_retni( ( p )->intValue() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLCDNUMBER_INTVALUE FP=hb_retni( ( p )->intValue() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -182,7 +200,13 @@ HB_FUNC( QT_QLCDNUMBER_INTVALUE )
  */
 HB_FUNC( QT_QLCDNUMBER_MODE )
 {
-   hb_retni( ( QLCDNumber::Mode ) hbqt_par_QLCDNumber( 1 )->mode() );
+   QLCDNumber * p = hbqt_par_QLCDNumber( 1 );
+   if( p )
+      hb_retni( ( QLCDNumber::Mode ) ( p )->mode() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLCDNUMBER_MODE FP=hb_retni( ( QLCDNumber::Mode ) ( p )->mode() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -190,7 +214,13 @@ HB_FUNC( QT_QLCDNUMBER_MODE )
  */
 HB_FUNC( QT_QLCDNUMBER_NUMDIGITS )
 {
-   hb_retni( hbqt_par_QLCDNumber( 1 )->numDigits() );
+   QLCDNumber * p = hbqt_par_QLCDNumber( 1 );
+   if( p )
+      hb_retni( ( p )->numDigits() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLCDNUMBER_NUMDIGITS FP=hb_retni( ( p )->numDigits() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -198,7 +228,13 @@ HB_FUNC( QT_QLCDNUMBER_NUMDIGITS )
  */
 HB_FUNC( QT_QLCDNUMBER_SEGMENTSTYLE )
 {
-   hb_retni( ( QLCDNumber::SegmentStyle ) hbqt_par_QLCDNumber( 1 )->segmentStyle() );
+   QLCDNumber * p = hbqt_par_QLCDNumber( 1 );
+   if( p )
+      hb_retni( ( QLCDNumber::SegmentStyle ) ( p )->segmentStyle() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLCDNUMBER_SEGMENTSTYLE FP=hb_retni( ( QLCDNumber::SegmentStyle ) ( p )->segmentStyle() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -206,7 +242,13 @@ HB_FUNC( QT_QLCDNUMBER_SEGMENTSTYLE )
  */
 HB_FUNC( QT_QLCDNUMBER_SETMODE )
 {
-   hbqt_par_QLCDNumber( 1 )->setMode( ( QLCDNumber::Mode ) hb_parni( 2 ) );
+   QLCDNumber * p = hbqt_par_QLCDNumber( 1 );
+   if( p )
+      ( p )->setMode( ( QLCDNumber::Mode ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLCDNUMBER_SETMODE FP=( p )->setMode( ( QLCDNumber::Mode ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -214,7 +256,13 @@ HB_FUNC( QT_QLCDNUMBER_SETMODE )
  */
 HB_FUNC( QT_QLCDNUMBER_SETNUMDIGITS )
 {
-   hbqt_par_QLCDNumber( 1 )->setNumDigits( hb_parni( 2 ) );
+   QLCDNumber * p = hbqt_par_QLCDNumber( 1 );
+   if( p )
+      ( p )->setNumDigits( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLCDNUMBER_SETNUMDIGITS FP=( p )->setNumDigits( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -222,7 +270,13 @@ HB_FUNC( QT_QLCDNUMBER_SETNUMDIGITS )
  */
 HB_FUNC( QT_QLCDNUMBER_SETSEGMENTSTYLE )
 {
-   hbqt_par_QLCDNumber( 1 )->setSegmentStyle( ( QLCDNumber::SegmentStyle ) hb_parni( 2 ) );
+   QLCDNumber * p = hbqt_par_QLCDNumber( 1 );
+   if( p )
+      ( p )->setSegmentStyle( ( QLCDNumber::SegmentStyle ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLCDNUMBER_SETSEGMENTSTYLE FP=( p )->setSegmentStyle( ( QLCDNumber::SegmentStyle ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -230,7 +284,13 @@ HB_FUNC( QT_QLCDNUMBER_SETSEGMENTSTYLE )
  */
 HB_FUNC( QT_QLCDNUMBER_SMALLDECIMALPOINT )
 {
-   hb_retl( hbqt_par_QLCDNumber( 1 )->smallDecimalPoint() );
+   QLCDNumber * p = hbqt_par_QLCDNumber( 1 );
+   if( p )
+      hb_retl( ( p )->smallDecimalPoint() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLCDNUMBER_SMALLDECIMALPOINT FP=hb_retl( ( p )->smallDecimalPoint() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -238,7 +298,13 @@ HB_FUNC( QT_QLCDNUMBER_SMALLDECIMALPOINT )
  */
 HB_FUNC( QT_QLCDNUMBER_VALUE )
 {
-   hb_retnd( hbqt_par_QLCDNumber( 1 )->value() );
+   QLCDNumber * p = hbqt_par_QLCDNumber( 1 );
+   if( p )
+      hb_retnd( ( p )->value() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLCDNUMBER_VALUE FP=hb_retnd( ( p )->value() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -246,7 +312,13 @@ HB_FUNC( QT_QLCDNUMBER_VALUE )
  */
 HB_FUNC( QT_QLCDNUMBER_DISPLAY )
 {
-   hbqt_par_QLCDNumber( 1 )->display( QLCDNumber::tr( hb_parc( 2 ) ) );
+   QLCDNumber * p = hbqt_par_QLCDNumber( 1 );
+   if( p )
+      ( p )->display( QLCDNumber::tr( hb_parc( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLCDNUMBER_DISPLAY FP=( p )->display( QLCDNumber::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -254,7 +326,13 @@ HB_FUNC( QT_QLCDNUMBER_DISPLAY )
  */
 HB_FUNC( QT_QLCDNUMBER_DISPLAY_1 )
 {
-   hbqt_par_QLCDNumber( 1 )->display( hb_parnd( 2 ) );
+   QLCDNumber * p = hbqt_par_QLCDNumber( 1 );
+   if( p )
+      ( p )->display( hb_parnd( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLCDNUMBER_DISPLAY_1 FP=( p )->display( hb_parnd( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -262,7 +340,13 @@ HB_FUNC( QT_QLCDNUMBER_DISPLAY_1 )
  */
 HB_FUNC( QT_QLCDNUMBER_DISPLAY_2 )
 {
-   hbqt_par_QLCDNumber( 1 )->display( hb_parni( 2 ) );
+   QLCDNumber * p = hbqt_par_QLCDNumber( 1 );
+   if( p )
+      ( p )->display( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLCDNUMBER_DISPLAY_2 FP=( p )->display( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -270,7 +354,13 @@ HB_FUNC( QT_QLCDNUMBER_DISPLAY_2 )
  */
 HB_FUNC( QT_QLCDNUMBER_SETBINMODE )
 {
-   hbqt_par_QLCDNumber( 1 )->setBinMode();
+   QLCDNumber * p = hbqt_par_QLCDNumber( 1 );
+   if( p )
+      ( p )->setBinMode();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLCDNUMBER_SETBINMODE FP=( p )->setBinMode(); p is NULL" ) );
+   }
 }
 
 /*
@@ -278,7 +368,13 @@ HB_FUNC( QT_QLCDNUMBER_SETBINMODE )
  */
 HB_FUNC( QT_QLCDNUMBER_SETDECMODE )
 {
-   hbqt_par_QLCDNumber( 1 )->setDecMode();
+   QLCDNumber * p = hbqt_par_QLCDNumber( 1 );
+   if( p )
+      ( p )->setDecMode();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLCDNUMBER_SETDECMODE FP=( p )->setDecMode(); p is NULL" ) );
+   }
 }
 
 /*
@@ -286,7 +382,13 @@ HB_FUNC( QT_QLCDNUMBER_SETDECMODE )
  */
 HB_FUNC( QT_QLCDNUMBER_SETHEXMODE )
 {
-   hbqt_par_QLCDNumber( 1 )->setHexMode();
+   QLCDNumber * p = hbqt_par_QLCDNumber( 1 );
+   if( p )
+      ( p )->setHexMode();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLCDNUMBER_SETHEXMODE FP=( p )->setHexMode(); p is NULL" ) );
+   }
 }
 
 /*
@@ -294,7 +396,13 @@ HB_FUNC( QT_QLCDNUMBER_SETHEXMODE )
  */
 HB_FUNC( QT_QLCDNUMBER_SETOCTMODE )
 {
-   hbqt_par_QLCDNumber( 1 )->setOctMode();
+   QLCDNumber * p = hbqt_par_QLCDNumber( 1 );
+   if( p )
+      ( p )->setOctMode();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLCDNUMBER_SETOCTMODE FP=( p )->setOctMode(); p is NULL" ) );
+   }
 }
 
 /*
@@ -302,7 +410,13 @@ HB_FUNC( QT_QLCDNUMBER_SETOCTMODE )
  */
 HB_FUNC( QT_QLCDNUMBER_SETSMALLDECIMALPOINT )
 {
-   hbqt_par_QLCDNumber( 1 )->setSmallDecimalPoint( hb_parl( 2 ) );
+   QLCDNumber * p = hbqt_par_QLCDNumber( 1 );
+   if( p )
+      ( p )->setSmallDecimalPoint( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLCDNUMBER_SETSMALLDECIMALPOINT FP=( p )->setSmallDecimalPoint( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 

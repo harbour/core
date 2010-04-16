@@ -77,43 +77,44 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QSound > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QSound > pq;
 } QGC_POINTER_QSound;
 
 QT_G_FUNC( hbqt_gcRelease_QSound )
 {
+   QSound  * ph = NULL ;
    QGC_POINTER_QSound * p = ( QGC_POINTER_QSound * ) Cargo;
 
-   if( p && p->bNew )
+   if( p && p->bNew && p->ph )
    {
-      if( p->ph && p->pq )
+      ph = p->ph;
+      if( ph )
       {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QSound   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
-            delete ( ( QSound * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QSound   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QSound   /.\\   ", (void*) ph, (void*) p->ph ) );
+            delete ( p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QSound   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QSound          pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QSound          ", ph ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QSound    :     Object already deleted!", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QSound    :     Object already deleted!", ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QSound    :    Object not created with new=true", p->ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QSound    :    Object not created with new=true", ph ) );
       p->ph = NULL;
    }
 }
@@ -122,13 +123,12 @@ void * hbqt_gcAllocate_QSound( void * pObj, bool bNew )
 {
    QGC_POINTER_QSound * p = ( QGC_POINTER_QSound * ) hb_gcAllocate( sizeof( QGC_POINTER_QSound ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QSound >( ( QSound * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QSound;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QSound >( ( QSound * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QSound  under p->pq", pObj ) );
    }
    else
@@ -140,11 +140,11 @@ void * hbqt_gcAllocate_QSound( void * pObj, bool bNew )
 
 HB_FUNC( QT_QSOUND )
 {
-   void * pObj = NULL;
+   QSound * pObj = NULL;
 
-   pObj = ( QSound* ) new QSound( hbqt_par_QString( 1 ) ) ;
+   pObj =  new QSound( hbqt_par_QString( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QSound( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QSound( ( void * ) pObj, true ) );
 }
 
 /*
@@ -152,7 +152,13 @@ HB_FUNC( QT_QSOUND )
  */
 HB_FUNC( QT_QSOUND_FILENAME )
 {
-   hb_retc( hbqt_par_QSound( 1 )->fileName().toAscii().data() );
+   QSound * p = hbqt_par_QSound( 1 );
+   if( p )
+      hb_retc( ( p )->fileName().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSOUND_FILENAME FP=hb_retc( ( p )->fileName().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -160,7 +166,13 @@ HB_FUNC( QT_QSOUND_FILENAME )
  */
 HB_FUNC( QT_QSOUND_ISFINISHED )
 {
-   hb_retl( hbqt_par_QSound( 1 )->isFinished() );
+   QSound * p = hbqt_par_QSound( 1 );
+   if( p )
+      hb_retl( ( p )->isFinished() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSOUND_ISFINISHED FP=hb_retl( ( p )->isFinished() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -168,7 +180,13 @@ HB_FUNC( QT_QSOUND_ISFINISHED )
  */
 HB_FUNC( QT_QSOUND_LOOPS )
 {
-   hb_retni( hbqt_par_QSound( 1 )->loops() );
+   QSound * p = hbqt_par_QSound( 1 );
+   if( p )
+      hb_retni( ( p )->loops() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSOUND_LOOPS FP=hb_retni( ( p )->loops() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -176,7 +194,13 @@ HB_FUNC( QT_QSOUND_LOOPS )
  */
 HB_FUNC( QT_QSOUND_LOOPSREMAINING )
 {
-   hb_retni( hbqt_par_QSound( 1 )->loopsRemaining() );
+   QSound * p = hbqt_par_QSound( 1 );
+   if( p )
+      hb_retni( ( p )->loopsRemaining() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSOUND_LOOPSREMAINING FP=hb_retni( ( p )->loopsRemaining() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -184,7 +208,13 @@ HB_FUNC( QT_QSOUND_LOOPSREMAINING )
  */
 HB_FUNC( QT_QSOUND_SETLOOPS )
 {
-   hbqt_par_QSound( 1 )->setLoops( hb_parni( 2 ) );
+   QSound * p = hbqt_par_QSound( 1 );
+   if( p )
+      ( p )->setLoops( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSOUND_SETLOOPS FP=( p )->setLoops( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -192,7 +222,13 @@ HB_FUNC( QT_QSOUND_SETLOOPS )
  */
 HB_FUNC( QT_QSOUND_ISAVAILABLE )
 {
-   hb_retl( hbqt_par_QSound( 1 )->isAvailable() );
+   QSound * p = hbqt_par_QSound( 1 );
+   if( p )
+      hb_retl( ( p )->isAvailable() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSOUND_ISAVAILABLE FP=hb_retl( ( p )->isAvailable() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -200,7 +236,13 @@ HB_FUNC( QT_QSOUND_ISAVAILABLE )
  */
 HB_FUNC( QT_QSOUND_PLAY )
 {
-   hbqt_par_QSound( 1 )->play( QSound::tr( hb_parc( 2 ) ) );
+   QSound * p = hbqt_par_QSound( 1 );
+   if( p )
+      ( p )->play( QSound::tr( hb_parc( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSOUND_PLAY FP=( p )->play( QSound::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 

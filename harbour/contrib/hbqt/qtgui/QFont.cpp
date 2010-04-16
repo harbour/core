@@ -90,7 +90,7 @@
 
 typedef struct
 {
-   void * ph;
+   QFont * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QFont;
@@ -125,7 +125,7 @@ void * hbqt_gcAllocate_QFont( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QFont * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QFont;
 
@@ -142,38 +142,38 @@ void * hbqt_gcAllocate_QFont( void * pObj, bool bNew )
 
 HB_FUNC( QT_QFONT )
 {
-   void * pObj = NULL;
+   QFont * pObj = NULL;
 
    if(      hb_pcount() == 1 && HB_ISCHAR( 1 ) )
    {
-      pObj = ( QFont* ) new QFont( hbqt_par_QString( 1 ), -1, -1, false ) ;
+      pObj =  new QFont( hbqt_par_QString( 1 ), -1, -1, false ) ;
    }
    else if( hb_pcount() == 2 && HB_ISCHAR( 1 ) && HB_ISNUM( 2 ) )
    {
-      pObj = ( QFont* ) new QFont( hbqt_par_QString( 1 ), hb_parni( 2 ), -1, false ) ;
+      pObj =  new QFont( hbqt_par_QString( 1 ), hb_parni( 2 ), -1, false ) ;
    }
    else if( hb_pcount() == 3 && HB_ISCHAR( 1 ) && HB_ISNUM( 2 )  && HB_ISNUM( 3 ) )
    {
-      pObj = ( QFont* ) new QFont( hbqt_par_QString( 1 ), hb_parni( 2 ), hb_parni( 3 ), false ) ;
+      pObj =  new QFont( hbqt_par_QString( 1 ), hb_parni( 2 ), hb_parni( 3 ), false ) ;
    }
    else if( hb_pcount() == 4 && HB_ISCHAR( 1 ) && HB_ISNUM( 2 )  && HB_ISNUM( 3 ) && HB_ISLOG( 4 ) )
    {
-      pObj = ( QFont* ) new QFont( hbqt_par_QString( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parl( 4 ) ) ;
+      pObj =  new QFont( hbqt_par_QString( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parl( 4 ) ) ;
    }
    else if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      pObj = ( QFont* ) new QFont( *hbqt_par_QFont( 1 ) ) ;
+      pObj =  new QFont( *hbqt_par_QFont( 1 ) ) ;
    }
    else if( hb_pcount() == 2 && HB_ISPOINTER( 1 ) && HB_ISPOINTER( 2 ) )
    {
-      pObj = ( QFont* ) new QFont( *hbqt_par_QFont( 1 ), hbqt_par_QPaintDevice( 2 ) ) ;
+      pObj =  new QFont( *hbqt_par_QFont( 1 ), hbqt_par_QPaintDevice( 2 ) ) ;
    }
    else
    {
-      pObj = ( QFont* ) new QFont() ;
+      pObj =  new QFont() ;
    }
 
-   hb_retptrGC( hbqt_gcAllocate_QFont( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QFont( ( void * ) pObj, true ) );
 }
 
 /*
@@ -181,7 +181,13 @@ HB_FUNC( QT_QFONT )
  */
 HB_FUNC( QT_QFONT_BOLD )
 {
-   hb_retl( hbqt_par_QFont( 1 )->bold() );
+   QFont * p = hbqt_par_QFont( 1 );
+   if( p )
+      hb_retl( ( p )->bold() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONT_BOLD FP=hb_retl( ( p )->bold() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -189,7 +195,13 @@ HB_FUNC( QT_QFONT_BOLD )
  */
 HB_FUNC( QT_QFONT_CAPITALIZATION )
 {
-   hb_retni( ( QFont::Capitalization ) hbqt_par_QFont( 1 )->capitalization() );
+   QFont * p = hbqt_par_QFont( 1 );
+   if( p )
+      hb_retni( ( QFont::Capitalization ) ( p )->capitalization() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONT_CAPITALIZATION FP=hb_retni( ( QFont::Capitalization ) ( p )->capitalization() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -197,7 +209,13 @@ HB_FUNC( QT_QFONT_CAPITALIZATION )
  */
 HB_FUNC( QT_QFONT_DEFAULTFAMILY )
 {
-   hb_retc( hbqt_par_QFont( 1 )->defaultFamily().toAscii().data() );
+   QFont * p = hbqt_par_QFont( 1 );
+   if( p )
+      hb_retc( ( p )->defaultFamily().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONT_DEFAULTFAMILY FP=hb_retc( ( p )->defaultFamily().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -205,7 +223,13 @@ HB_FUNC( QT_QFONT_DEFAULTFAMILY )
  */
 HB_FUNC( QT_QFONT_EXACTMATCH )
 {
-   hb_retl( hbqt_par_QFont( 1 )->exactMatch() );
+   QFont * p = hbqt_par_QFont( 1 );
+   if( p )
+      hb_retl( ( p )->exactMatch() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONT_EXACTMATCH FP=hb_retl( ( p )->exactMatch() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -213,7 +237,13 @@ HB_FUNC( QT_QFONT_EXACTMATCH )
  */
 HB_FUNC( QT_QFONT_FAMILY )
 {
-   hb_retc( hbqt_par_QFont( 1 )->family().toAscii().data() );
+   QFont * p = hbqt_par_QFont( 1 );
+   if( p )
+      hb_retc( ( p )->family().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONT_FAMILY FP=hb_retc( ( p )->family().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -221,7 +251,13 @@ HB_FUNC( QT_QFONT_FAMILY )
  */
 HB_FUNC( QT_QFONT_FIXEDPITCH )
 {
-   hb_retl( hbqt_par_QFont( 1 )->fixedPitch() );
+   QFont * p = hbqt_par_QFont( 1 );
+   if( p )
+      hb_retl( ( p )->fixedPitch() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONT_FIXEDPITCH FP=hb_retl( ( p )->fixedPitch() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -229,7 +265,13 @@ HB_FUNC( QT_QFONT_FIXEDPITCH )
  */
 HB_FUNC( QT_QFONT_FROMSTRING )
 {
-   hb_retl( hbqt_par_QFont( 1 )->fromString( hbqt_par_QString( 2 ) ) );
+   QFont * p = hbqt_par_QFont( 1 );
+   if( p )
+      hb_retl( ( p )->fromString( hbqt_par_QString( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONT_FROMSTRING FP=hb_retl( ( p )->fromString( hbqt_par_QString( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -237,7 +279,13 @@ HB_FUNC( QT_QFONT_FROMSTRING )
  */
 HB_FUNC( QT_QFONT_ITALIC )
 {
-   hb_retl( hbqt_par_QFont( 1 )->italic() );
+   QFont * p = hbqt_par_QFont( 1 );
+   if( p )
+      hb_retl( ( p )->italic() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONT_ITALIC FP=hb_retl( ( p )->italic() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -245,7 +293,13 @@ HB_FUNC( QT_QFONT_ITALIC )
  */
 HB_FUNC( QT_QFONT_KERNING )
 {
-   hb_retl( hbqt_par_QFont( 1 )->kerning() );
+   QFont * p = hbqt_par_QFont( 1 );
+   if( p )
+      hb_retl( ( p )->kerning() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONT_KERNING FP=hb_retl( ( p )->kerning() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -253,7 +307,13 @@ HB_FUNC( QT_QFONT_KERNING )
  */
 HB_FUNC( QT_QFONT_KEY )
 {
-   hb_retc( hbqt_par_QFont( 1 )->key().toAscii().data() );
+   QFont * p = hbqt_par_QFont( 1 );
+   if( p )
+      hb_retc( ( p )->key().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONT_KEY FP=hb_retc( ( p )->key().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -261,7 +321,13 @@ HB_FUNC( QT_QFONT_KEY )
  */
 HB_FUNC( QT_QFONT_LASTRESORTFAMILY )
 {
-   hb_retc( hbqt_par_QFont( 1 )->lastResortFamily().toAscii().data() );
+   QFont * p = hbqt_par_QFont( 1 );
+   if( p )
+      hb_retc( ( p )->lastResortFamily().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONT_LASTRESORTFAMILY FP=hb_retc( ( p )->lastResortFamily().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -269,7 +335,13 @@ HB_FUNC( QT_QFONT_LASTRESORTFAMILY )
  */
 HB_FUNC( QT_QFONT_LASTRESORTFONT )
 {
-   hb_retc( hbqt_par_QFont( 1 )->lastResortFont().toAscii().data() );
+   QFont * p = hbqt_par_QFont( 1 );
+   if( p )
+      hb_retc( ( p )->lastResortFont().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONT_LASTRESORTFONT FP=hb_retc( ( p )->lastResortFont().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -277,7 +349,13 @@ HB_FUNC( QT_QFONT_LASTRESORTFONT )
  */
 HB_FUNC( QT_QFONT_LETTERSPACING )
 {
-   hb_retnd( hbqt_par_QFont( 1 )->letterSpacing() );
+   QFont * p = hbqt_par_QFont( 1 );
+   if( p )
+      hb_retnd( ( p )->letterSpacing() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONT_LETTERSPACING FP=hb_retnd( ( p )->letterSpacing() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -285,7 +363,13 @@ HB_FUNC( QT_QFONT_LETTERSPACING )
  */
 HB_FUNC( QT_QFONT_LETTERSPACINGTYPE )
 {
-   hb_retni( ( QFont::SpacingType ) hbqt_par_QFont( 1 )->letterSpacingType() );
+   QFont * p = hbqt_par_QFont( 1 );
+   if( p )
+      hb_retni( ( QFont::SpacingType ) ( p )->letterSpacingType() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONT_LETTERSPACINGTYPE FP=hb_retni( ( QFont::SpacingType ) ( p )->letterSpacingType() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -293,7 +377,13 @@ HB_FUNC( QT_QFONT_LETTERSPACINGTYPE )
  */
 HB_FUNC( QT_QFONT_OVERLINE )
 {
-   hb_retl( hbqt_par_QFont( 1 )->overline() );
+   QFont * p = hbqt_par_QFont( 1 );
+   if( p )
+      hb_retl( ( p )->overline() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONT_OVERLINE FP=hb_retl( ( p )->overline() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -301,7 +391,13 @@ HB_FUNC( QT_QFONT_OVERLINE )
  */
 HB_FUNC( QT_QFONT_PIXELSIZE )
 {
-   hb_retni( hbqt_par_QFont( 1 )->pixelSize() );
+   QFont * p = hbqt_par_QFont( 1 );
+   if( p )
+      hb_retni( ( p )->pixelSize() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONT_PIXELSIZE FP=hb_retni( ( p )->pixelSize() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -309,7 +405,13 @@ HB_FUNC( QT_QFONT_PIXELSIZE )
  */
 HB_FUNC( QT_QFONT_POINTSIZE )
 {
-   hb_retni( hbqt_par_QFont( 1 )->pointSize() );
+   QFont * p = hbqt_par_QFont( 1 );
+   if( p )
+      hb_retni( ( p )->pointSize() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONT_POINTSIZE FP=hb_retni( ( p )->pointSize() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -317,7 +419,13 @@ HB_FUNC( QT_QFONT_POINTSIZE )
  */
 HB_FUNC( QT_QFONT_POINTSIZEF )
 {
-   hb_retnd( hbqt_par_QFont( 1 )->pointSizeF() );
+   QFont * p = hbqt_par_QFont( 1 );
+   if( p )
+      hb_retnd( ( p )->pointSizeF() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONT_POINTSIZEF FP=hb_retnd( ( p )->pointSizeF() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -325,7 +433,13 @@ HB_FUNC( QT_QFONT_POINTSIZEF )
  */
 HB_FUNC( QT_QFONT_RAWMODE )
 {
-   hb_retl( hbqt_par_QFont( 1 )->rawMode() );
+   QFont * p = hbqt_par_QFont( 1 );
+   if( p )
+      hb_retl( ( p )->rawMode() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONT_RAWMODE FP=hb_retl( ( p )->rawMode() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -333,7 +447,13 @@ HB_FUNC( QT_QFONT_RAWMODE )
  */
 HB_FUNC( QT_QFONT_RAWNAME )
 {
-   hb_retc( hbqt_par_QFont( 1 )->rawName().toAscii().data() );
+   QFont * p = hbqt_par_QFont( 1 );
+   if( p )
+      hb_retc( ( p )->rawName().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONT_RAWNAME FP=hb_retc( ( p )->rawName().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -341,7 +461,13 @@ HB_FUNC( QT_QFONT_RAWNAME )
  */
 HB_FUNC( QT_QFONT_SETBOLD )
 {
-   hbqt_par_QFont( 1 )->setBold( hb_parl( 2 ) );
+   QFont * p = hbqt_par_QFont( 1 );
+   if( p )
+      ( p )->setBold( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONT_SETBOLD FP=( p )->setBold( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -349,7 +475,13 @@ HB_FUNC( QT_QFONT_SETBOLD )
  */
 HB_FUNC( QT_QFONT_SETCAPITALIZATION )
 {
-   hbqt_par_QFont( 1 )->setCapitalization( ( QFont::Capitalization ) hb_parni( 2 ) );
+   QFont * p = hbqt_par_QFont( 1 );
+   if( p )
+      ( p )->setCapitalization( ( QFont::Capitalization ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONT_SETCAPITALIZATION FP=( p )->setCapitalization( ( QFont::Capitalization ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -357,7 +489,13 @@ HB_FUNC( QT_QFONT_SETCAPITALIZATION )
  */
 HB_FUNC( QT_QFONT_SETFAMILY )
 {
-   hbqt_par_QFont( 1 )->setFamily( hbqt_par_QString( 2 ) );
+   QFont * p = hbqt_par_QFont( 1 );
+   if( p )
+      ( p )->setFamily( hbqt_par_QString( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONT_SETFAMILY FP=( p )->setFamily( hbqt_par_QString( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -365,7 +503,13 @@ HB_FUNC( QT_QFONT_SETFAMILY )
  */
 HB_FUNC( QT_QFONT_SETFIXEDPITCH )
 {
-   hbqt_par_QFont( 1 )->setFixedPitch( hb_parl( 2 ) );
+   QFont * p = hbqt_par_QFont( 1 );
+   if( p )
+      ( p )->setFixedPitch( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONT_SETFIXEDPITCH FP=( p )->setFixedPitch( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -373,7 +517,13 @@ HB_FUNC( QT_QFONT_SETFIXEDPITCH )
  */
 HB_FUNC( QT_QFONT_SETITALIC )
 {
-   hbqt_par_QFont( 1 )->setItalic( hb_parl( 2 ) );
+   QFont * p = hbqt_par_QFont( 1 );
+   if( p )
+      ( p )->setItalic( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONT_SETITALIC FP=( p )->setItalic( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -381,7 +531,13 @@ HB_FUNC( QT_QFONT_SETITALIC )
  */
 HB_FUNC( QT_QFONT_SETKERNING )
 {
-   hbqt_par_QFont( 1 )->setKerning( hb_parl( 2 ) );
+   QFont * p = hbqt_par_QFont( 1 );
+   if( p )
+      ( p )->setKerning( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONT_SETKERNING FP=( p )->setKerning( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -389,7 +545,13 @@ HB_FUNC( QT_QFONT_SETKERNING )
  */
 HB_FUNC( QT_QFONT_SETLETTERSPACING )
 {
-   hbqt_par_QFont( 1 )->setLetterSpacing( ( QFont::SpacingType ) hb_parni( 2 ), hb_parnd( 3 ) );
+   QFont * p = hbqt_par_QFont( 1 );
+   if( p )
+      ( p )->setLetterSpacing( ( QFont::SpacingType ) hb_parni( 2 ), hb_parnd( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONT_SETLETTERSPACING FP=( p )->setLetterSpacing( ( QFont::SpacingType ) hb_parni( 2 ), hb_parnd( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -397,7 +559,13 @@ HB_FUNC( QT_QFONT_SETLETTERSPACING )
  */
 HB_FUNC( QT_QFONT_SETOVERLINE )
 {
-   hbqt_par_QFont( 1 )->setOverline( hb_parl( 2 ) );
+   QFont * p = hbqt_par_QFont( 1 );
+   if( p )
+      ( p )->setOverline( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONT_SETOVERLINE FP=( p )->setOverline( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -405,7 +573,13 @@ HB_FUNC( QT_QFONT_SETOVERLINE )
  */
 HB_FUNC( QT_QFONT_SETPIXELSIZE )
 {
-   hbqt_par_QFont( 1 )->setPixelSize( hb_parni( 2 ) );
+   QFont * p = hbqt_par_QFont( 1 );
+   if( p )
+      ( p )->setPixelSize( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONT_SETPIXELSIZE FP=( p )->setPixelSize( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -413,7 +587,13 @@ HB_FUNC( QT_QFONT_SETPIXELSIZE )
  */
 HB_FUNC( QT_QFONT_SETPOINTSIZE )
 {
-   hbqt_par_QFont( 1 )->setPointSize( hb_parni( 2 ) );
+   QFont * p = hbqt_par_QFont( 1 );
+   if( p )
+      ( p )->setPointSize( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONT_SETPOINTSIZE FP=( p )->setPointSize( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -421,7 +601,13 @@ HB_FUNC( QT_QFONT_SETPOINTSIZE )
  */
 HB_FUNC( QT_QFONT_SETPOINTSIZEF )
 {
-   hbqt_par_QFont( 1 )->setPointSizeF( hb_parnd( 2 ) );
+   QFont * p = hbqt_par_QFont( 1 );
+   if( p )
+      ( p )->setPointSizeF( hb_parnd( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONT_SETPOINTSIZEF FP=( p )->setPointSizeF( hb_parnd( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -429,7 +615,13 @@ HB_FUNC( QT_QFONT_SETPOINTSIZEF )
  */
 HB_FUNC( QT_QFONT_SETRAWMODE )
 {
-   hbqt_par_QFont( 1 )->setRawMode( hb_parl( 2 ) );
+   QFont * p = hbqt_par_QFont( 1 );
+   if( p )
+      ( p )->setRawMode( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONT_SETRAWMODE FP=( p )->setRawMode( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -437,7 +629,13 @@ HB_FUNC( QT_QFONT_SETRAWMODE )
  */
 HB_FUNC( QT_QFONT_SETRAWNAME )
 {
-   hbqt_par_QFont( 1 )->setRawName( hbqt_par_QString( 2 ) );
+   QFont * p = hbqt_par_QFont( 1 );
+   if( p )
+      ( p )->setRawName( hbqt_par_QString( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONT_SETRAWNAME FP=( p )->setRawName( hbqt_par_QString( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -445,7 +643,13 @@ HB_FUNC( QT_QFONT_SETRAWNAME )
  */
 HB_FUNC( QT_QFONT_SETSTRETCH )
 {
-   hbqt_par_QFont( 1 )->setStretch( hb_parni( 2 ) );
+   QFont * p = hbqt_par_QFont( 1 );
+   if( p )
+      ( p )->setStretch( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONT_SETSTRETCH FP=( p )->setStretch( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -453,7 +657,13 @@ HB_FUNC( QT_QFONT_SETSTRETCH )
  */
 HB_FUNC( QT_QFONT_SETSTRIKEOUT )
 {
-   hbqt_par_QFont( 1 )->setStrikeOut( hb_parl( 2 ) );
+   QFont * p = hbqt_par_QFont( 1 );
+   if( p )
+      ( p )->setStrikeOut( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONT_SETSTRIKEOUT FP=( p )->setStrikeOut( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -461,7 +671,13 @@ HB_FUNC( QT_QFONT_SETSTRIKEOUT )
  */
 HB_FUNC( QT_QFONT_SETSTYLE )
 {
-   hbqt_par_QFont( 1 )->setStyle( ( QFont::Style ) hb_parni( 2 ) );
+   QFont * p = hbqt_par_QFont( 1 );
+   if( p )
+      ( p )->setStyle( ( QFont::Style ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONT_SETSTYLE FP=( p )->setStyle( ( QFont::Style ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -469,7 +685,13 @@ HB_FUNC( QT_QFONT_SETSTYLE )
  */
 HB_FUNC( QT_QFONT_SETSTYLEHINT )
 {
-   hbqt_par_QFont( 1 )->setStyleHint( ( QFont::StyleHint ) hb_parni( 2 ), ( HB_ISNUM( 3 ) ? ( QFont::StyleStrategy ) hb_parni( 3 ) : ( QFont::StyleStrategy ) QFont::PreferDefault ) );
+   QFont * p = hbqt_par_QFont( 1 );
+   if( p )
+      ( p )->setStyleHint( ( QFont::StyleHint ) hb_parni( 2 ), ( HB_ISNUM( 3 ) ? ( QFont::StyleStrategy ) hb_parni( 3 ) : ( QFont::StyleStrategy ) QFont::PreferDefault ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONT_SETSTYLEHINT FP=( p )->setStyleHint( ( QFont::StyleHint ) hb_parni( 2 ), ( HB_ISNUM( 3 ) ? ( QFont::StyleStrategy ) hb_parni( 3 ) : ( QFont::StyleStrategy ) QFont::PreferDefault ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -477,7 +699,13 @@ HB_FUNC( QT_QFONT_SETSTYLEHINT )
  */
 HB_FUNC( QT_QFONT_SETSTYLESTRATEGY )
 {
-   hbqt_par_QFont( 1 )->setStyleStrategy( ( QFont::StyleStrategy ) hb_parni( 2 ) );
+   QFont * p = hbqt_par_QFont( 1 );
+   if( p )
+      ( p )->setStyleStrategy( ( QFont::StyleStrategy ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONT_SETSTYLESTRATEGY FP=( p )->setStyleStrategy( ( QFont::StyleStrategy ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -485,7 +713,13 @@ HB_FUNC( QT_QFONT_SETSTYLESTRATEGY )
  */
 HB_FUNC( QT_QFONT_SETUNDERLINE )
 {
-   hbqt_par_QFont( 1 )->setUnderline( hb_parl( 2 ) );
+   QFont * p = hbqt_par_QFont( 1 );
+   if( p )
+      ( p )->setUnderline( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONT_SETUNDERLINE FP=( p )->setUnderline( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -493,7 +727,13 @@ HB_FUNC( QT_QFONT_SETUNDERLINE )
  */
 HB_FUNC( QT_QFONT_SETWEIGHT )
 {
-   hbqt_par_QFont( 1 )->setWeight( hb_parni( 2 ) );
+   QFont * p = hbqt_par_QFont( 1 );
+   if( p )
+      ( p )->setWeight( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONT_SETWEIGHT FP=( p )->setWeight( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -501,7 +741,13 @@ HB_FUNC( QT_QFONT_SETWEIGHT )
  */
 HB_FUNC( QT_QFONT_SETWORDSPACING )
 {
-   hbqt_par_QFont( 1 )->setWordSpacing( hb_parnd( 2 ) );
+   QFont * p = hbqt_par_QFont( 1 );
+   if( p )
+      ( p )->setWordSpacing( hb_parnd( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONT_SETWORDSPACING FP=( p )->setWordSpacing( hb_parnd( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -509,7 +755,13 @@ HB_FUNC( QT_QFONT_SETWORDSPACING )
  */
 HB_FUNC( QT_QFONT_STRETCH )
 {
-   hb_retni( hbqt_par_QFont( 1 )->stretch() );
+   QFont * p = hbqt_par_QFont( 1 );
+   if( p )
+      hb_retni( ( p )->stretch() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONT_STRETCH FP=hb_retni( ( p )->stretch() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -517,7 +769,13 @@ HB_FUNC( QT_QFONT_STRETCH )
  */
 HB_FUNC( QT_QFONT_STRIKEOUT )
 {
-   hb_retl( hbqt_par_QFont( 1 )->strikeOut() );
+   QFont * p = hbqt_par_QFont( 1 );
+   if( p )
+      hb_retl( ( p )->strikeOut() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONT_STRIKEOUT FP=hb_retl( ( p )->strikeOut() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -525,7 +783,13 @@ HB_FUNC( QT_QFONT_STRIKEOUT )
  */
 HB_FUNC( QT_QFONT_STYLE )
 {
-   hb_retni( ( QFont::Style ) hbqt_par_QFont( 1 )->style() );
+   QFont * p = hbqt_par_QFont( 1 );
+   if( p )
+      hb_retni( ( QFont::Style ) ( p )->style() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONT_STYLE FP=hb_retni( ( QFont::Style ) ( p )->style() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -533,7 +797,13 @@ HB_FUNC( QT_QFONT_STYLE )
  */
 HB_FUNC( QT_QFONT_STYLEHINT )
 {
-   hb_retni( ( QFont::StyleHint ) hbqt_par_QFont( 1 )->styleHint() );
+   QFont * p = hbqt_par_QFont( 1 );
+   if( p )
+      hb_retni( ( QFont::StyleHint ) ( p )->styleHint() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONT_STYLEHINT FP=hb_retni( ( QFont::StyleHint ) ( p )->styleHint() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -541,7 +811,13 @@ HB_FUNC( QT_QFONT_STYLEHINT )
  */
 HB_FUNC( QT_QFONT_STYLESTRATEGY )
 {
-   hb_retni( ( QFont::StyleStrategy ) hbqt_par_QFont( 1 )->styleStrategy() );
+   QFont * p = hbqt_par_QFont( 1 );
+   if( p )
+      hb_retni( ( QFont::StyleStrategy ) ( p )->styleStrategy() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONT_STYLESTRATEGY FP=hb_retni( ( QFont::StyleStrategy ) ( p )->styleStrategy() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -549,7 +825,13 @@ HB_FUNC( QT_QFONT_STYLESTRATEGY )
  */
 HB_FUNC( QT_QFONT_TOSTRING )
 {
-   hb_retc( hbqt_par_QFont( 1 )->toString().toAscii().data() );
+   QFont * p = hbqt_par_QFont( 1 );
+   if( p )
+      hb_retc( ( p )->toString().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONT_TOSTRING FP=hb_retc( ( p )->toString().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -557,7 +839,13 @@ HB_FUNC( QT_QFONT_TOSTRING )
  */
 HB_FUNC( QT_QFONT_UNDERLINE )
 {
-   hb_retl( hbqt_par_QFont( 1 )->underline() );
+   QFont * p = hbqt_par_QFont( 1 );
+   if( p )
+      hb_retl( ( p )->underline() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONT_UNDERLINE FP=hb_retl( ( p )->underline() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -565,7 +853,13 @@ HB_FUNC( QT_QFONT_UNDERLINE )
  */
 HB_FUNC( QT_QFONT_WEIGHT )
 {
-   hb_retni( hbqt_par_QFont( 1 )->weight() );
+   QFont * p = hbqt_par_QFont( 1 );
+   if( p )
+      hb_retni( ( p )->weight() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONT_WEIGHT FP=hb_retni( ( p )->weight() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -573,7 +867,13 @@ HB_FUNC( QT_QFONT_WEIGHT )
  */
 HB_FUNC( QT_QFONT_WORDSPACING )
 {
-   hb_retnd( hbqt_par_QFont( 1 )->wordSpacing() );
+   QFont * p = hbqt_par_QFont( 1 );
+   if( p )
+      hb_retnd( ( p )->wordSpacing() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONT_WORDSPACING FP=hb_retnd( ( p )->wordSpacing() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -581,7 +881,13 @@ HB_FUNC( QT_QFONT_WORDSPACING )
  */
 HB_FUNC( QT_QFONT_CLEANUP )
 {
-   hbqt_par_QFont( 1 )->cleanup();
+   QFont * p = hbqt_par_QFont( 1 );
+   if( p )
+      ( p )->cleanup();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONT_CLEANUP FP=( p )->cleanup(); p is NULL" ) );
+   }
 }
 
 /*
@@ -589,7 +895,13 @@ HB_FUNC( QT_QFONT_CLEANUP )
  */
 HB_FUNC( QT_QFONT_INITIALIZE )
 {
-   hbqt_par_QFont( 1 )->initialize();
+   QFont * p = hbqt_par_QFont( 1 );
+   if( p )
+      ( p )->initialize();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONT_INITIALIZE FP=( p )->initialize(); p is NULL" ) );
+   }
 }
 
 /*
@@ -597,7 +909,13 @@ HB_FUNC( QT_QFONT_INITIALIZE )
  */
 HB_FUNC( QT_QFONT_INSERTSUBSTITUTION )
 {
-   hbqt_par_QFont( 1 )->insertSubstitution( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) );
+   QFont * p = hbqt_par_QFont( 1 );
+   if( p )
+      ( p )->insertSubstitution( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONT_INSERTSUBSTITUTION FP=( p )->insertSubstitution( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -605,7 +923,13 @@ HB_FUNC( QT_QFONT_INSERTSUBSTITUTION )
  */
 HB_FUNC( QT_QFONT_INSERTSUBSTITUTIONS )
 {
-   hbqt_par_QFont( 1 )->insertSubstitutions( hbqt_par_QString( 2 ), *hbqt_par_QStringList( 3 ) );
+   QFont * p = hbqt_par_QFont( 1 );
+   if( p )
+      ( p )->insertSubstitutions( hbqt_par_QString( 2 ), *hbqt_par_QStringList( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONT_INSERTSUBSTITUTIONS FP=( p )->insertSubstitutions( hbqt_par_QString( 2 ), *hbqt_par_QStringList( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -613,7 +937,13 @@ HB_FUNC( QT_QFONT_INSERTSUBSTITUTIONS )
  */
 HB_FUNC( QT_QFONT_REMOVESUBSTITUTION )
 {
-   hbqt_par_QFont( 1 )->removeSubstitution( hbqt_par_QString( 2 ) );
+   QFont * p = hbqt_par_QFont( 1 );
+   if( p )
+      ( p )->removeSubstitution( hbqt_par_QString( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONT_REMOVESUBSTITUTION FP=( p )->removeSubstitution( hbqt_par_QString( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -621,7 +951,13 @@ HB_FUNC( QT_QFONT_REMOVESUBSTITUTION )
  */
 HB_FUNC( QT_QFONT_SUBSTITUTE )
 {
-   hb_retc( hbqt_par_QFont( 1 )->substitute( hbqt_par_QString( 2 ) ).toAscii().data() );
+   QFont * p = hbqt_par_QFont( 1 );
+   if( p )
+      hb_retc( ( p )->substitute( hbqt_par_QString( 2 ) ).toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONT_SUBSTITUTE FP=hb_retc( ( p )->substitute( hbqt_par_QString( 2 ) ).toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -629,7 +965,13 @@ HB_FUNC( QT_QFONT_SUBSTITUTE )
  */
 HB_FUNC( QT_QFONT_SUBSTITUTES )
 {
-   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QFont( 1 )->substitutes( hbqt_par_QString( 2 ) ) ), true ) );
+   QFont * p = hbqt_par_QFont( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->substitutes( hbqt_par_QString( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONT_SUBSTITUTES FP=hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->substitutes( hbqt_par_QString( 2 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -637,7 +979,13 @@ HB_FUNC( QT_QFONT_SUBSTITUTES )
  */
 HB_FUNC( QT_QFONT_SUBSTITUTIONS )
 {
-   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QFont( 1 )->substitutions() ), true ) );
+   QFont * p = hbqt_par_QFont( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->substitutions() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONT_SUBSTITUTIONS FP=hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->substitutions() ), true ) ); p is NULL" ) );
+   }
 }
 
 

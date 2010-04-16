@@ -80,10 +80,9 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QAbstractItemDelegate > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QAbstractItemDelegate > pq;
 } QGC_POINTER_QAbstractItemDelegate;
 
 QT_G_FUNC( hbqt_gcRelease_QAbstractItemDelegate )
@@ -101,13 +100,12 @@ void * hbqt_gcAllocate_QAbstractItemDelegate( void * pObj, bool bNew )
 {
    QGC_POINTER_QAbstractItemDelegate * p = ( QGC_POINTER_QAbstractItemDelegate * ) hb_gcAllocate( sizeof( QGC_POINTER_QAbstractItemDelegate ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QAbstractItemDelegate >( ( QAbstractItemDelegate * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QAbstractItemDelegate;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QAbstractItemDelegate >( ( QAbstractItemDelegate * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QAbstractItemDelegate  under p->pq", pObj ) );
    }
    else
@@ -119,6 +117,7 @@ void * hbqt_gcAllocate_QAbstractItemDelegate( void * pObj, bool bNew )
 
 HB_FUNC( QT_QABSTRACTITEMDELEGATE )
 {
+   // hb_retptr( new QAbstractItemDelegate( 0 ) );
 }
 
 /*
@@ -126,7 +125,13 @@ HB_FUNC( QT_QABSTRACTITEMDELEGATE )
  */
 HB_FUNC( QT_QABSTRACTITEMDELEGATE_CREATEEDITOR )
 {
-   hb_retptrGC( hbqt_gcAllocate_QWidget( hbqt_par_QAbstractItemDelegate( 1 )->createEditor( hbqt_par_QWidget( 2 ), *hbqt_par_QStyleOptionViewItem( 3 ), *hbqt_par_QModelIndex( 4 ) ), false ) );
+   QAbstractItemDelegate * p = hbqt_par_QAbstractItemDelegate( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->createEditor( hbqt_par_QWidget( 2 ), *hbqt_par_QStyleOptionViewItem( 3 ), *hbqt_par_QModelIndex( 4 ) ), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMDELEGATE_CREATEEDITOR FP=hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->createEditor( hbqt_par_QWidget( 2 ), *hbqt_par_QStyleOptionViewItem( 3 ), *hbqt_par_QModelIndex( 4 ) ), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -134,7 +139,13 @@ HB_FUNC( QT_QABSTRACTITEMDELEGATE_CREATEEDITOR )
  */
 HB_FUNC( QT_QABSTRACTITEMDELEGATE_EDITOREVENT )
 {
-   hb_retl( hbqt_par_QAbstractItemDelegate( 1 )->editorEvent( hbqt_par_QEvent( 2 ), hbqt_par_QAbstractItemModel( 3 ), *hbqt_par_QStyleOptionViewItem( 4 ), *hbqt_par_QModelIndex( 5 ) ) );
+   QAbstractItemDelegate * p = hbqt_par_QAbstractItemDelegate( 1 );
+   if( p )
+      hb_retl( ( p )->editorEvent( hbqt_par_QEvent( 2 ), hbqt_par_QAbstractItemModel( 3 ), *hbqt_par_QStyleOptionViewItem( 4 ), *hbqt_par_QModelIndex( 5 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMDELEGATE_EDITOREVENT FP=hb_retl( ( p )->editorEvent( hbqt_par_QEvent( 2 ), hbqt_par_QAbstractItemModel( 3 ), *hbqt_par_QStyleOptionViewItem( 4 ), *hbqt_par_QModelIndex( 5 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -142,7 +153,13 @@ HB_FUNC( QT_QABSTRACTITEMDELEGATE_EDITOREVENT )
  */
 HB_FUNC( QT_QABSTRACTITEMDELEGATE_PAINT )
 {
-   hbqt_par_QAbstractItemDelegate( 1 )->paint( hbqt_par_QPainter( 2 ), *hbqt_par_QStyleOptionViewItem( 3 ), *hbqt_par_QModelIndex( 4 ) );
+   QAbstractItemDelegate * p = hbqt_par_QAbstractItemDelegate( 1 );
+   if( p )
+      ( p )->paint( hbqt_par_QPainter( 2 ), *hbqt_par_QStyleOptionViewItem( 3 ), *hbqt_par_QModelIndex( 4 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMDELEGATE_PAINT FP=( p )->paint( hbqt_par_QPainter( 2 ), *hbqt_par_QStyleOptionViewItem( 3 ), *hbqt_par_QModelIndex( 4 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -150,7 +167,13 @@ HB_FUNC( QT_QABSTRACTITEMDELEGATE_PAINT )
  */
 HB_FUNC( QT_QABSTRACTITEMDELEGATE_SETEDITORDATA )
 {
-   hbqt_par_QAbstractItemDelegate( 1 )->setEditorData( hbqt_par_QWidget( 2 ), *hbqt_par_QModelIndex( 3 ) );
+   QAbstractItemDelegate * p = hbqt_par_QAbstractItemDelegate( 1 );
+   if( p )
+      ( p )->setEditorData( hbqt_par_QWidget( 2 ), *hbqt_par_QModelIndex( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMDELEGATE_SETEDITORDATA FP=( p )->setEditorData( hbqt_par_QWidget( 2 ), *hbqt_par_QModelIndex( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -158,7 +181,13 @@ HB_FUNC( QT_QABSTRACTITEMDELEGATE_SETEDITORDATA )
  */
 HB_FUNC( QT_QABSTRACTITEMDELEGATE_SETMODELDATA )
 {
-   hbqt_par_QAbstractItemDelegate( 1 )->setModelData( hbqt_par_QWidget( 2 ), hbqt_par_QAbstractItemModel( 3 ), *hbqt_par_QModelIndex( 4 ) );
+   QAbstractItemDelegate * p = hbqt_par_QAbstractItemDelegate( 1 );
+   if( p )
+      ( p )->setModelData( hbqt_par_QWidget( 2 ), hbqt_par_QAbstractItemModel( 3 ), *hbqt_par_QModelIndex( 4 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMDELEGATE_SETMODELDATA FP=( p )->setModelData( hbqt_par_QWidget( 2 ), hbqt_par_QAbstractItemModel( 3 ), *hbqt_par_QModelIndex( 4 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -166,7 +195,13 @@ HB_FUNC( QT_QABSTRACTITEMDELEGATE_SETMODELDATA )
  */
 HB_FUNC( QT_QABSTRACTITEMDELEGATE_SIZEHINT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QAbstractItemDelegate( 1 )->sizeHint( *hbqt_par_QStyleOptionViewItem( 2 ), *hbqt_par_QModelIndex( 3 ) ) ), true ) );
+   QAbstractItemDelegate * p = hbqt_par_QAbstractItemDelegate( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->sizeHint( *hbqt_par_QStyleOptionViewItem( 2 ), *hbqt_par_QModelIndex( 3 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMDELEGATE_SIZEHINT FP=hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->sizeHint( *hbqt_par_QStyleOptionViewItem( 2 ), *hbqt_par_QModelIndex( 3 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -174,7 +209,13 @@ HB_FUNC( QT_QABSTRACTITEMDELEGATE_SIZEHINT )
  */
 HB_FUNC( QT_QABSTRACTITEMDELEGATE_UPDATEEDITORGEOMETRY )
 {
-   hbqt_par_QAbstractItemDelegate( 1 )->updateEditorGeometry( hbqt_par_QWidget( 2 ), *hbqt_par_QStyleOptionViewItem( 3 ), *hbqt_par_QModelIndex( 4 ) );
+   QAbstractItemDelegate * p = hbqt_par_QAbstractItemDelegate( 1 );
+   if( p )
+      ( p )->updateEditorGeometry( hbqt_par_QWidget( 2 ), *hbqt_par_QStyleOptionViewItem( 3 ), *hbqt_par_QModelIndex( 4 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMDELEGATE_UPDATEEDITORGEOMETRY FP=( p )->updateEditorGeometry( hbqt_par_QWidget( 2 ), *hbqt_par_QStyleOptionViewItem( 3 ), *hbqt_par_QModelIndex( 4 ) ); p is NULL" ) );
+   }
 }
 
 

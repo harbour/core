@@ -77,43 +77,44 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QDateEdit > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QDateEdit > pq;
 } QGC_POINTER_QDateEdit;
 
 QT_G_FUNC( hbqt_gcRelease_QDateEdit )
 {
+   QDateEdit  * ph = NULL ;
    QGC_POINTER_QDateEdit * p = ( QGC_POINTER_QDateEdit * ) Cargo;
 
-   if( p && p->bNew )
+   if( p && p->bNew && p->ph )
    {
-      if( p->ph && p->pq )
+      ph = p->ph;
+      if( ph )
       {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QDateEdit   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
-            delete ( ( QDateEdit * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QDateEdit   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QDateEdit   /.\\   ", (void*) ph, (void*) p->ph ) );
+            delete ( p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QDateEdit   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QDateEdit          pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QDateEdit          ", ph ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QDateEdit    :     Object already deleted!", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QDateEdit    :     Object already deleted!", ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QDateEdit    :    Object not created with new=true", p->ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QDateEdit    :    Object not created with new=true", ph ) );
       p->ph = NULL;
    }
 }
@@ -122,13 +123,12 @@ void * hbqt_gcAllocate_QDateEdit( void * pObj, bool bNew )
 {
    QGC_POINTER_QDateEdit * p = ( QGC_POINTER_QDateEdit * ) hb_gcAllocate( sizeof( QGC_POINTER_QDateEdit ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QDateEdit >( ( QDateEdit * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QDateEdit;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QDateEdit >( ( QDateEdit * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QDateEdit  under p->pq", pObj ) );
    }
    else
@@ -140,11 +140,11 @@ void * hbqt_gcAllocate_QDateEdit( void * pObj, bool bNew )
 
 HB_FUNC( QT_QDATEEDIT )
 {
-   void * pObj = NULL;
+   QDateEdit * pObj = NULL;
 
-   pObj = ( QDateEdit* ) new QDateEdit( hbqt_par_QWidget( 1 ) ) ;
+   pObj =  new QDateEdit( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QDateEdit( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QDateEdit( ( void * ) pObj, true ) );
 }
 
 

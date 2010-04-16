@@ -85,7 +85,7 @@
 
 typedef struct
 {
-   void * ph;
+   QDataStream * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QDataStream;
@@ -120,7 +120,7 @@ void * hbqt_gcAllocate_QDataStream( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QDataStream * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QDataStream;
 
@@ -137,11 +137,11 @@ void * hbqt_gcAllocate_QDataStream( void * pObj, bool bNew )
 
 HB_FUNC( QT_QDATASTREAM )
 {
-   void * pObj = NULL;
+   QDataStream * pObj = NULL;
 
    pObj = new QDataStream() ;
 
-   hb_retptrGC( hbqt_gcAllocate_QDataStream( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QDataStream( ( void * ) pObj, true ) );
 }
 
 /*
@@ -149,7 +149,13 @@ HB_FUNC( QT_QDATASTREAM )
  */
 HB_FUNC( QT_QDATASTREAM_ATEND )
 {
-   hb_retl( hbqt_par_QDataStream( 1 )->atEnd() );
+   QDataStream * p = hbqt_par_QDataStream( 1 );
+   if( p )
+      hb_retl( ( p )->atEnd() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATASTREAM_ATEND FP=hb_retl( ( p )->atEnd() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -157,7 +163,13 @@ HB_FUNC( QT_QDATASTREAM_ATEND )
  */
 HB_FUNC( QT_QDATASTREAM_BYTEORDER )
 {
-   hb_retni( ( QDataStream::ByteOrder ) hbqt_par_QDataStream( 1 )->byteOrder() );
+   QDataStream * p = hbqt_par_QDataStream( 1 );
+   if( p )
+      hb_retni( ( QDataStream::ByteOrder ) ( p )->byteOrder() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATASTREAM_BYTEORDER FP=hb_retni( ( QDataStream::ByteOrder ) ( p )->byteOrder() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -165,7 +177,13 @@ HB_FUNC( QT_QDATASTREAM_BYTEORDER )
  */
 HB_FUNC( QT_QDATASTREAM_DEVICE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QIODevice( hbqt_par_QDataStream( 1 )->device(), false ) );
+   QDataStream * p = hbqt_par_QDataStream( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QIODevice( ( p )->device(), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATASTREAM_DEVICE FP=hb_retptrGC( hbqt_gcAllocate_QIODevice( ( p )->device(), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -173,7 +191,13 @@ HB_FUNC( QT_QDATASTREAM_DEVICE )
  */
 HB_FUNC( QT_QDATASTREAM_READRAWDATA )
 {
-   hb_retni( hbqt_par_QDataStream( 1 )->readRawData( ( char * ) hb_parc( 2 ), hb_parni( 3 ) ) );
+   QDataStream * p = hbqt_par_QDataStream( 1 );
+   if( p )
+      hb_retni( ( p )->readRawData( ( char * ) hb_parc( 2 ), hb_parni( 3 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATASTREAM_READRAWDATA FP=hb_retni( ( p )->readRawData( ( char * ) hb_parc( 2 ), hb_parni( 3 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -181,7 +205,13 @@ HB_FUNC( QT_QDATASTREAM_READRAWDATA )
  */
 HB_FUNC( QT_QDATASTREAM_RESETSTATUS )
 {
-   hbqt_par_QDataStream( 1 )->resetStatus();
+   QDataStream * p = hbqt_par_QDataStream( 1 );
+   if( p )
+      ( p )->resetStatus();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATASTREAM_RESETSTATUS FP=( p )->resetStatus(); p is NULL" ) );
+   }
 }
 
 /*
@@ -189,7 +219,13 @@ HB_FUNC( QT_QDATASTREAM_RESETSTATUS )
  */
 HB_FUNC( QT_QDATASTREAM_SETBYTEORDER )
 {
-   hbqt_par_QDataStream( 1 )->setByteOrder( ( QDataStream::ByteOrder ) hb_parni( 2 ) );
+   QDataStream * p = hbqt_par_QDataStream( 1 );
+   if( p )
+      ( p )->setByteOrder( ( QDataStream::ByteOrder ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATASTREAM_SETBYTEORDER FP=( p )->setByteOrder( ( QDataStream::ByteOrder ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -197,7 +233,13 @@ HB_FUNC( QT_QDATASTREAM_SETBYTEORDER )
  */
 HB_FUNC( QT_QDATASTREAM_SETDEVICE )
 {
-   hbqt_par_QDataStream( 1 )->setDevice( hbqt_par_QIODevice( 2 ) );
+   QDataStream * p = hbqt_par_QDataStream( 1 );
+   if( p )
+      ( p )->setDevice( hbqt_par_QIODevice( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATASTREAM_SETDEVICE FP=( p )->setDevice( hbqt_par_QIODevice( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -205,7 +247,13 @@ HB_FUNC( QT_QDATASTREAM_SETDEVICE )
  */
 HB_FUNC( QT_QDATASTREAM_SETSTATUS )
 {
-   hbqt_par_QDataStream( 1 )->setStatus( ( QDataStream::Status ) hb_parni( 2 ) );
+   QDataStream * p = hbqt_par_QDataStream( 1 );
+   if( p )
+      ( p )->setStatus( ( QDataStream::Status ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATASTREAM_SETSTATUS FP=( p )->setStatus( ( QDataStream::Status ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -213,7 +261,13 @@ HB_FUNC( QT_QDATASTREAM_SETSTATUS )
  */
 HB_FUNC( QT_QDATASTREAM_SETVERSION )
 {
-   hbqt_par_QDataStream( 1 )->setVersion( hb_parni( 2 ) );
+   QDataStream * p = hbqt_par_QDataStream( 1 );
+   if( p )
+      ( p )->setVersion( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATASTREAM_SETVERSION FP=( p )->setVersion( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -221,7 +275,13 @@ HB_FUNC( QT_QDATASTREAM_SETVERSION )
  */
 HB_FUNC( QT_QDATASTREAM_SKIPRAWDATA )
 {
-   hb_retni( hbqt_par_QDataStream( 1 )->skipRawData( hb_parni( 2 ) ) );
+   QDataStream * p = hbqt_par_QDataStream( 1 );
+   if( p )
+      hb_retni( ( p )->skipRawData( hb_parni( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATASTREAM_SKIPRAWDATA FP=hb_retni( ( p )->skipRawData( hb_parni( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -229,7 +289,13 @@ HB_FUNC( QT_QDATASTREAM_SKIPRAWDATA )
  */
 HB_FUNC( QT_QDATASTREAM_STATUS )
 {
-   hb_retni( ( QDataStream::Status ) hbqt_par_QDataStream( 1 )->status() );
+   QDataStream * p = hbqt_par_QDataStream( 1 );
+   if( p )
+      hb_retni( ( QDataStream::Status ) ( p )->status() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATASTREAM_STATUS FP=hb_retni( ( QDataStream::Status ) ( p )->status() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -237,7 +303,13 @@ HB_FUNC( QT_QDATASTREAM_STATUS )
  */
 HB_FUNC( QT_QDATASTREAM_VERSION )
 {
-   hb_retni( hbqt_par_QDataStream( 1 )->version() );
+   QDataStream * p = hbqt_par_QDataStream( 1 );
+   if( p )
+      hb_retni( ( p )->version() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATASTREAM_VERSION FP=hb_retni( ( p )->version() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -245,7 +317,13 @@ HB_FUNC( QT_QDATASTREAM_VERSION )
  */
 HB_FUNC( QT_QDATASTREAM_WRITERAWDATA )
 {
-   hb_retni( hbqt_par_QDataStream( 1 )->writeRawData( hbqt_par_char( 2 ), hb_parni( 3 ) ) );
+   QDataStream * p = hbqt_par_QDataStream( 1 );
+   if( p )
+      hb_retni( ( p )->writeRawData( hbqt_par_char( 2 ), hb_parni( 3 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATASTREAM_WRITERAWDATA FP=hb_retni( ( p )->writeRawData( hbqt_par_char( 2 ), hb_parni( 3 ) ) ); p is NULL" ) );
+   }
 }
 
 

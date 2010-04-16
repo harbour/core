@@ -77,10 +77,9 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QAbstractTableModel > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QAbstractTableModel > pq;
 } QGC_POINTER_QAbstractTableModel;
 
 QT_G_FUNC( hbqt_gcRelease_QAbstractTableModel )
@@ -98,13 +97,12 @@ void * hbqt_gcAllocate_QAbstractTableModel( void * pObj, bool bNew )
 {
    QGC_POINTER_QAbstractTableModel * p = ( QGC_POINTER_QAbstractTableModel * ) hb_gcAllocate( sizeof( QGC_POINTER_QAbstractTableModel ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QAbstractTableModel >( ( QAbstractTableModel * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QAbstractTableModel;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QAbstractTableModel >( ( QAbstractTableModel * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QAbstractTableModel  under p->pq", pObj ) );
    }
    else
@@ -116,6 +114,7 @@ void * hbqt_gcAllocate_QAbstractTableModel( void * pObj, bool bNew )
 
 HB_FUNC( QT_QABSTRACTTABLEMODEL )
 {
+   // hb_retptr( ( QAbstractTableModel * ) new QAbstractTableModel() );
 }
 
 /*
@@ -123,7 +122,13 @@ HB_FUNC( QT_QABSTRACTTABLEMODEL )
  */
 HB_FUNC( QT_QABSTRACTTABLEMODEL_INDEX )
 {
-   hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QAbstractTableModel( 1 )->index( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QModelIndex( 4 ) : QModelIndex() ) ) ), true ) );
+   QAbstractTableModel * p = hbqt_par_QAbstractTableModel( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( ( p )->index( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QModelIndex( 4 ) : QModelIndex() ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTTABLEMODEL_INDEX FP=hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( ( p )->index( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QModelIndex( 4 ) : QModelIndex() ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 

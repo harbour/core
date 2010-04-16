@@ -82,43 +82,44 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QSlider > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QSlider > pq;
 } QGC_POINTER_QSlider;
 
 QT_G_FUNC( hbqt_gcRelease_QSlider )
 {
+   QSlider  * ph = NULL ;
    QGC_POINTER_QSlider * p = ( QGC_POINTER_QSlider * ) Cargo;
 
-   if( p && p->bNew )
+   if( p && p->bNew && p->ph )
    {
-      if( p->ph && p->pq )
+      ph = p->ph;
+      if( ph )
       {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QSlider   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
-            delete ( ( QSlider * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QSlider   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QSlider   /.\\   ", (void*) ph, (void*) p->ph ) );
+            delete ( p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QSlider   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QSlider          pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QSlider          ", ph ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QSlider    :     Object already deleted!", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QSlider    :     Object already deleted!", ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QSlider    :    Object not created with new=true", p->ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QSlider    :    Object not created with new=true", ph ) );
       p->ph = NULL;
    }
 }
@@ -127,13 +128,12 @@ void * hbqt_gcAllocate_QSlider( void * pObj, bool bNew )
 {
    QGC_POINTER_QSlider * p = ( QGC_POINTER_QSlider * ) hb_gcAllocate( sizeof( QGC_POINTER_QSlider ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QSlider >( ( QSlider * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QSlider;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QSlider >( ( QSlider * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QSlider  under p->pq", pObj ) );
    }
    else
@@ -145,14 +145,14 @@ void * hbqt_gcAllocate_QSlider( void * pObj, bool bNew )
 
 HB_FUNC( QT_QSLIDER )
 {
-   void * pObj = NULL;
+   QSlider * pObj = NULL;
 
    if( hb_pcount() >= 1 && HB_ISNUM( 1 ) )
-      pObj = ( QSlider* ) new QSlider( ( Qt::Orientation ) hb_parni( 1 ), hbqt_par_QWidget( 2 ) ) ;
+      pObj =  new QSlider( ( Qt::Orientation ) hb_parni( 1 ), hbqt_par_QWidget( 2 ) ) ;
    else
-      pObj = ( QSlider* ) new QSlider( hbqt_par_QWidget( 1 ) ) ;
+      pObj =  new QSlider( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QSlider( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QSlider( ( void * ) pObj, true ) );
 }
 
 /*
@@ -160,7 +160,13 @@ HB_FUNC( QT_QSLIDER )
  */
 HB_FUNC( QT_QSLIDER_SETTICKINTERVAL )
 {
-   hbqt_par_QSlider( 1 )->setTickInterval( hb_parni( 2 ) );
+   QSlider * p = hbqt_par_QSlider( 1 );
+   if( p )
+      ( p )->setTickInterval( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSLIDER_SETTICKINTERVAL FP=( p )->setTickInterval( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -168,7 +174,13 @@ HB_FUNC( QT_QSLIDER_SETTICKINTERVAL )
  */
 HB_FUNC( QT_QSLIDER_SETTICKPOSITION )
 {
-   hbqt_par_QSlider( 1 )->setTickPosition( ( QSlider::TickPosition ) hb_parni( 2 ) );
+   QSlider * p = hbqt_par_QSlider( 1 );
+   if( p )
+      ( p )->setTickPosition( ( QSlider::TickPosition ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSLIDER_SETTICKPOSITION FP=( p )->setTickPosition( ( QSlider::TickPosition ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -176,7 +188,13 @@ HB_FUNC( QT_QSLIDER_SETTICKPOSITION )
  */
 HB_FUNC( QT_QSLIDER_TICKINTERVAL )
 {
-   hb_retni( hbqt_par_QSlider( 1 )->tickInterval() );
+   QSlider * p = hbqt_par_QSlider( 1 );
+   if( p )
+      hb_retni( ( p )->tickInterval() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSLIDER_TICKINTERVAL FP=hb_retni( ( p )->tickInterval() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -184,7 +202,13 @@ HB_FUNC( QT_QSLIDER_TICKINTERVAL )
  */
 HB_FUNC( QT_QSLIDER_TICKPOSITION )
 {
-   hb_retni( ( QSlider::TickPosition ) hbqt_par_QSlider( 1 )->tickPosition() );
+   QSlider * p = hbqt_par_QSlider( 1 );
+   if( p )
+      hb_retni( ( QSlider::TickPosition ) ( p )->tickPosition() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSLIDER_TICKPOSITION FP=hb_retni( ( QSlider::TickPosition ) ( p )->tickPosition() ); p is NULL" ) );
+   }
 }
 
 

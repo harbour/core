@@ -94,7 +94,7 @@
 
 typedef struct
 {
-   void * ph;
+   QFontDatabase * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QFontDatabase;
@@ -129,7 +129,7 @@ void * hbqt_gcAllocate_QFontDatabase( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QFontDatabase * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QFontDatabase;
 
@@ -146,11 +146,11 @@ void * hbqt_gcAllocate_QFontDatabase( void * pObj, bool bNew )
 
 HB_FUNC( QT_QFONTDATABASE )
 {
-   void * pObj = NULL;
+   QFontDatabase * pObj = NULL;
 
    pObj = new QFontDatabase() ;
 
-   hb_retptrGC( hbqt_gcAllocate_QFontDatabase( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QFontDatabase( ( void * ) pObj, true ) );
 }
 
 /*
@@ -158,7 +158,13 @@ HB_FUNC( QT_QFONTDATABASE )
  */
 HB_FUNC( QT_QFONTDATABASE_BOLD )
 {
-   hb_retl( hbqt_par_QFontDatabase( 1 )->bold( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ) );
+   QFontDatabase * p = hbqt_par_QFontDatabase( 1 );
+   if( p )
+      hb_retl( ( p )->bold( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONTDATABASE_BOLD FP=hb_retl( ( p )->bold( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -166,7 +172,13 @@ HB_FUNC( QT_QFONTDATABASE_BOLD )
  */
 HB_FUNC( QT_QFONTDATABASE_FAMILIES )
 {
-   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QFontDatabase( 1 )->families( ( HB_ISNUM( 2 ) ? ( QFontDatabase::WritingSystem ) hb_parni( 2 ) : ( QFontDatabase::WritingSystem ) QFontDatabase::Any ) ) ), true ) );
+   QFontDatabase * p = hbqt_par_QFontDatabase( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->families( ( HB_ISNUM( 2 ) ? ( QFontDatabase::WritingSystem ) hb_parni( 2 ) : ( QFontDatabase::WritingSystem ) QFontDatabase::Any ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONTDATABASE_FAMILIES FP=hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->families( ( HB_ISNUM( 2 ) ? ( QFontDatabase::WritingSystem ) hb_parni( 2 ) : ( QFontDatabase::WritingSystem ) QFontDatabase::Any ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -174,7 +186,13 @@ HB_FUNC( QT_QFONTDATABASE_FAMILIES )
  */
 HB_FUNC( QT_QFONTDATABASE_FONT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( hbqt_par_QFontDatabase( 1 )->font( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ), hb_parni( 4 ) ) ), true ) );
+   QFontDatabase * p = hbqt_par_QFontDatabase( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( ( p )->font( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ), hb_parni( 4 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONTDATABASE_FONT FP=hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( ( p )->font( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ), hb_parni( 4 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -182,7 +200,13 @@ HB_FUNC( QT_QFONTDATABASE_FONT )
  */
 HB_FUNC( QT_QFONTDATABASE_ISBITMAPSCALABLE )
 {
-   hb_retl( hbqt_par_QFontDatabase( 1 )->isBitmapScalable( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ) );
+   QFontDatabase * p = hbqt_par_QFontDatabase( 1 );
+   if( p )
+      hb_retl( ( p )->isBitmapScalable( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONTDATABASE_ISBITMAPSCALABLE FP=hb_retl( ( p )->isBitmapScalable( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -190,7 +214,13 @@ HB_FUNC( QT_QFONTDATABASE_ISBITMAPSCALABLE )
  */
 HB_FUNC( QT_QFONTDATABASE_ISFIXEDPITCH )
 {
-   hb_retl( hbqt_par_QFontDatabase( 1 )->isFixedPitch( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ) );
+   QFontDatabase * p = hbqt_par_QFontDatabase( 1 );
+   if( p )
+      hb_retl( ( p )->isFixedPitch( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONTDATABASE_ISFIXEDPITCH FP=hb_retl( ( p )->isFixedPitch( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -198,7 +228,13 @@ HB_FUNC( QT_QFONTDATABASE_ISFIXEDPITCH )
  */
 HB_FUNC( QT_QFONTDATABASE_ISSCALABLE )
 {
-   hb_retl( hbqt_par_QFontDatabase( 1 )->isScalable( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ) );
+   QFontDatabase * p = hbqt_par_QFontDatabase( 1 );
+   if( p )
+      hb_retl( ( p )->isScalable( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONTDATABASE_ISSCALABLE FP=hb_retl( ( p )->isScalable( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -206,7 +242,13 @@ HB_FUNC( QT_QFONTDATABASE_ISSCALABLE )
  */
 HB_FUNC( QT_QFONTDATABASE_ISSMOOTHLYSCALABLE )
 {
-   hb_retl( hbqt_par_QFontDatabase( 1 )->isSmoothlyScalable( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ) );
+   QFontDatabase * p = hbqt_par_QFontDatabase( 1 );
+   if( p )
+      hb_retl( ( p )->isSmoothlyScalable( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONTDATABASE_ISSMOOTHLYSCALABLE FP=hb_retl( ( p )->isSmoothlyScalable( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -214,7 +256,13 @@ HB_FUNC( QT_QFONTDATABASE_ISSMOOTHLYSCALABLE )
  */
 HB_FUNC( QT_QFONTDATABASE_ITALIC )
 {
-   hb_retl( hbqt_par_QFontDatabase( 1 )->italic( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ) );
+   QFontDatabase * p = hbqt_par_QFontDatabase( 1 );
+   if( p )
+      hb_retl( ( p )->italic( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONTDATABASE_ITALIC FP=hb_retl( ( p )->italic( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -222,7 +270,13 @@ HB_FUNC( QT_QFONTDATABASE_ITALIC )
  */
 HB_FUNC( QT_QFONTDATABASE_STYLESTRING )
 {
-   hb_retc( hbqt_par_QFontDatabase( 1 )->styleString( *hbqt_par_QFont( 2 ) ).toAscii().data() );
+   QFontDatabase * p = hbqt_par_QFontDatabase( 1 );
+   if( p )
+      hb_retc( ( p )->styleString( *hbqt_par_QFont( 2 ) ).toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONTDATABASE_STYLESTRING FP=hb_retc( ( p )->styleString( *hbqt_par_QFont( 2 ) ).toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -230,7 +284,13 @@ HB_FUNC( QT_QFONTDATABASE_STYLESTRING )
  */
 HB_FUNC( QT_QFONTDATABASE_STYLESTRING_1 )
 {
-   hb_retc( hbqt_par_QFontDatabase( 1 )->styleString( *hbqt_par_QFontInfo( 2 ) ).toAscii().data() );
+   QFontDatabase * p = hbqt_par_QFontDatabase( 1 );
+   if( p )
+      hb_retc( ( p )->styleString( *hbqt_par_QFontInfo( 2 ) ).toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONTDATABASE_STYLESTRING_1 FP=hb_retc( ( p )->styleString( *hbqt_par_QFontInfo( 2 ) ).toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -238,7 +298,13 @@ HB_FUNC( QT_QFONTDATABASE_STYLESTRING_1 )
  */
 HB_FUNC( QT_QFONTDATABASE_STYLES )
 {
-   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QFontDatabase( 1 )->styles( hbqt_par_QString( 2 ) ) ), true ) );
+   QFontDatabase * p = hbqt_par_QFontDatabase( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->styles( hbqt_par_QString( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONTDATABASE_STYLES FP=hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->styles( hbqt_par_QString( 2 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -246,7 +312,13 @@ HB_FUNC( QT_QFONTDATABASE_STYLES )
  */
 HB_FUNC( QT_QFONTDATABASE_WEIGHT )
 {
-   hb_retni( hbqt_par_QFontDatabase( 1 )->weight( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ) );
+   QFontDatabase * p = hbqt_par_QFontDatabase( 1 );
+   if( p )
+      hb_retni( ( p )->weight( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONTDATABASE_WEIGHT FP=hb_retni( ( p )->weight( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -254,7 +326,13 @@ HB_FUNC( QT_QFONTDATABASE_WEIGHT )
  */
 HB_FUNC( QT_QFONTDATABASE_ADDAPPLICATIONFONT )
 {
-   hb_retni( hbqt_par_QFontDatabase( 1 )->addApplicationFont( hbqt_par_QString( 2 ) ) );
+   QFontDatabase * p = hbqt_par_QFontDatabase( 1 );
+   if( p )
+      hb_retni( ( p )->addApplicationFont( hbqt_par_QString( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONTDATABASE_ADDAPPLICATIONFONT FP=hb_retni( ( p )->addApplicationFont( hbqt_par_QString( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -262,7 +340,13 @@ HB_FUNC( QT_QFONTDATABASE_ADDAPPLICATIONFONT )
  */
 HB_FUNC( QT_QFONTDATABASE_ADDAPPLICATIONFONTFROMDATA )
 {
-   hb_retni( hbqt_par_QFontDatabase( 1 )->addApplicationFontFromData( *hbqt_par_QByteArray( 2 ) ) );
+   QFontDatabase * p = hbqt_par_QFontDatabase( 1 );
+   if( p )
+      hb_retni( ( p )->addApplicationFontFromData( *hbqt_par_QByteArray( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONTDATABASE_ADDAPPLICATIONFONTFROMDATA FP=hb_retni( ( p )->addApplicationFontFromData( *hbqt_par_QByteArray( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -270,7 +354,13 @@ HB_FUNC( QT_QFONTDATABASE_ADDAPPLICATIONFONTFROMDATA )
  */
 HB_FUNC( QT_QFONTDATABASE_APPLICATIONFONTFAMILIES )
 {
-   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QFontDatabase( 1 )->applicationFontFamilies( hb_parni( 2 ) ) ), true ) );
+   QFontDatabase * p = hbqt_par_QFontDatabase( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->applicationFontFamilies( hb_parni( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONTDATABASE_APPLICATIONFONTFAMILIES FP=hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->applicationFontFamilies( hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -278,7 +368,13 @@ HB_FUNC( QT_QFONTDATABASE_APPLICATIONFONTFAMILIES )
  */
 HB_FUNC( QT_QFONTDATABASE_REMOVEALLAPPLICATIONFONTS )
 {
-   hb_retl( hbqt_par_QFontDatabase( 1 )->removeAllApplicationFonts() );
+   QFontDatabase * p = hbqt_par_QFontDatabase( 1 );
+   if( p )
+      hb_retl( ( p )->removeAllApplicationFonts() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONTDATABASE_REMOVEALLAPPLICATIONFONTS FP=hb_retl( ( p )->removeAllApplicationFonts() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -286,7 +382,13 @@ HB_FUNC( QT_QFONTDATABASE_REMOVEALLAPPLICATIONFONTS )
  */
 HB_FUNC( QT_QFONTDATABASE_REMOVEAPPLICATIONFONT )
 {
-   hb_retl( hbqt_par_QFontDatabase( 1 )->removeApplicationFont( hb_parni( 2 ) ) );
+   QFontDatabase * p = hbqt_par_QFontDatabase( 1 );
+   if( p )
+      hb_retl( ( p )->removeApplicationFont( hb_parni( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONTDATABASE_REMOVEAPPLICATIONFONT FP=hb_retl( ( p )->removeApplicationFont( hb_parni( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -294,7 +396,13 @@ HB_FUNC( QT_QFONTDATABASE_REMOVEAPPLICATIONFONT )
  */
 HB_FUNC( QT_QFONTDATABASE_SUPPORTSTHREADEDFONTRENDERING )
 {
-   hb_retl( hbqt_par_QFontDatabase( 1 )->supportsThreadedFontRendering() );
+   QFontDatabase * p = hbqt_par_QFontDatabase( 1 );
+   if( p )
+      hb_retl( ( p )->supportsThreadedFontRendering() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONTDATABASE_SUPPORTSTHREADEDFONTRENDERING FP=hb_retl( ( p )->supportsThreadedFontRendering() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -302,7 +410,13 @@ HB_FUNC( QT_QFONTDATABASE_SUPPORTSTHREADEDFONTRENDERING )
  */
 HB_FUNC( QT_QFONTDATABASE_WRITINGSYSTEMNAME )
 {
-   hb_retc( hbqt_par_QFontDatabase( 1 )->writingSystemName( ( QFontDatabase::WritingSystem ) hb_parni( 2 ) ).toAscii().data() );
+   QFontDatabase * p = hbqt_par_QFontDatabase( 1 );
+   if( p )
+      hb_retc( ( p )->writingSystemName( ( QFontDatabase::WritingSystem ) hb_parni( 2 ) ).toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONTDATABASE_WRITINGSYSTEMNAME FP=hb_retc( ( p )->writingSystemName( ( QFontDatabase::WritingSystem ) hb_parni( 2 ) ).toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -310,7 +424,13 @@ HB_FUNC( QT_QFONTDATABASE_WRITINGSYSTEMNAME )
  */
 HB_FUNC( QT_QFONTDATABASE_WRITINGSYSTEMSAMPLE )
 {
-   hb_retc( hbqt_par_QFontDatabase( 1 )->writingSystemSample( ( QFontDatabase::WritingSystem ) hb_parni( 2 ) ).toAscii().data() );
+   QFontDatabase * p = hbqt_par_QFontDatabase( 1 );
+   if( p )
+      hb_retc( ( p )->writingSystemSample( ( QFontDatabase::WritingSystem ) hb_parni( 2 ) ).toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONTDATABASE_WRITINGSYSTEMSAMPLE FP=hb_retc( ( p )->writingSystemSample( ( QFontDatabase::WritingSystem ) hb_parni( 2 ) ).toAscii().data() ); p is NULL" ) );
+   }
 }
 
 

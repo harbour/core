@@ -77,7 +77,7 @@
 
 typedef struct
 {
-   void * ph;
+   QDragMoveEvent * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QDragMoveEvent;
@@ -97,7 +97,7 @@ void * hbqt_gcAllocate_QDragMoveEvent( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QDragMoveEvent * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QDragMoveEvent;
 
@@ -114,6 +114,7 @@ void * hbqt_gcAllocate_QDragMoveEvent( void * pObj, bool bNew )
 
 HB_FUNC( QT_QDRAGMOVEEVENT )
 {
+   // hb_retptr( ( * ) new () );
 }
 
 /*
@@ -121,7 +122,13 @@ HB_FUNC( QT_QDRAGMOVEEVENT )
  */
 HB_FUNC( QT_QDRAGMOVEEVENT_ACCEPT )
 {
-   hbqt_par_QDragMoveEvent( 1 )->accept( *hbqt_par_QRect( 2 ) );
+   QDragMoveEvent * p = hbqt_par_QDragMoveEvent( 1 );
+   if( p )
+      ( p )->accept( *hbqt_par_QRect( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDRAGMOVEEVENT_ACCEPT FP=( p )->accept( *hbqt_par_QRect( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -129,7 +136,13 @@ HB_FUNC( QT_QDRAGMOVEEVENT_ACCEPT )
  */
 HB_FUNC( QT_QDRAGMOVEEVENT_ACCEPT_1 )
 {
-   hbqt_par_QDragMoveEvent( 1 )->accept();
+   QDragMoveEvent * p = hbqt_par_QDragMoveEvent( 1 );
+   if( p )
+      ( p )->accept();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDRAGMOVEEVENT_ACCEPT_1 FP=( p )->accept(); p is NULL" ) );
+   }
 }
 
 /*
@@ -137,7 +150,13 @@ HB_FUNC( QT_QDRAGMOVEEVENT_ACCEPT_1 )
  */
 HB_FUNC( QT_QDRAGMOVEEVENT_ANSWERRECT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QDragMoveEvent( 1 )->answerRect() ), true ) );
+   QDragMoveEvent * p = hbqt_par_QDragMoveEvent( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->answerRect() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDRAGMOVEEVENT_ANSWERRECT FP=hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->answerRect() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -145,7 +164,13 @@ HB_FUNC( QT_QDRAGMOVEEVENT_ANSWERRECT )
  */
 HB_FUNC( QT_QDRAGMOVEEVENT_IGNORE )
 {
-   hbqt_par_QDragMoveEvent( 1 )->ignore( *hbqt_par_QRect( 2 ) );
+   QDragMoveEvent * p = hbqt_par_QDragMoveEvent( 1 );
+   if( p )
+      ( p )->ignore( *hbqt_par_QRect( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDRAGMOVEEVENT_IGNORE FP=( p )->ignore( *hbqt_par_QRect( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -153,7 +178,13 @@ HB_FUNC( QT_QDRAGMOVEEVENT_IGNORE )
  */
 HB_FUNC( QT_QDRAGMOVEEVENT_IGNORE_1 )
 {
-   hbqt_par_QDragMoveEvent( 1 )->ignore();
+   QDragMoveEvent * p = hbqt_par_QDragMoveEvent( 1 );
+   if( p )
+      ( p )->ignore();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDRAGMOVEEVENT_IGNORE_1 FP=( p )->ignore(); p is NULL" ) );
+   }
 }
 
 

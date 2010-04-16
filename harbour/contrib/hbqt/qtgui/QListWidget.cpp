@@ -87,43 +87,44 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QListWidget > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QListWidget > pq;
 } QGC_POINTER_QListWidget;
 
 QT_G_FUNC( hbqt_gcRelease_QListWidget )
 {
+   QListWidget  * ph = NULL ;
    QGC_POINTER_QListWidget * p = ( QGC_POINTER_QListWidget * ) Cargo;
 
-   if( p && p->bNew )
+   if( p && p->bNew && p->ph )
    {
-      if( p->ph && p->pq )
+      ph = p->ph;
+      if( ph )
       {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QListWidget   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
-            delete ( ( QListWidget * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QListWidget   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QListWidget   /.\\   ", (void*) ph, (void*) p->ph ) );
+            delete ( p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QListWidget   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QListWidget          pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QListWidget          ", ph ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QListWidget    :     Object already deleted!", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QListWidget    :     Object already deleted!", ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QListWidget    :    Object not created with new=true", p->ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QListWidget    :    Object not created with new=true", ph ) );
       p->ph = NULL;
    }
 }
@@ -132,13 +133,12 @@ void * hbqt_gcAllocate_QListWidget( void * pObj, bool bNew )
 {
    QGC_POINTER_QListWidget * p = ( QGC_POINTER_QListWidget * ) hb_gcAllocate( sizeof( QGC_POINTER_QListWidget ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QListWidget >( ( QListWidget * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QListWidget;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QListWidget >( ( QListWidget * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QListWidget  under p->pq", pObj ) );
    }
    else
@@ -150,11 +150,11 @@ void * hbqt_gcAllocate_QListWidget( void * pObj, bool bNew )
 
 HB_FUNC( QT_QLISTWIDGET )
 {
-   void * pObj = NULL;
+   QListWidget * pObj = NULL;
 
    pObj = new QListWidget( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QListWidget( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QListWidget( ( void * ) pObj, true ) );
 }
 
 /*
@@ -162,7 +162,13 @@ HB_FUNC( QT_QLISTWIDGET )
  */
 HB_FUNC( QT_QLISTWIDGET_ADDITEM )
 {
-   hbqt_par_QListWidget( 1 )->addItem( QListWidget::tr( hb_parc( 2 ) ) );
+   QListWidget * p = hbqt_par_QListWidget( 1 );
+   if( p )
+      ( p )->addItem( QListWidget::tr( hb_parc( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTWIDGET_ADDITEM FP=( p )->addItem( QListWidget::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -170,7 +176,13 @@ HB_FUNC( QT_QLISTWIDGET_ADDITEM )
  */
 HB_FUNC( QT_QLISTWIDGET_ADDITEM_1 )
 {
-   hbqt_par_QListWidget( 1 )->addItem( hbqt_par_QListWidgetItem( 2 ) );
+   QListWidget * p = hbqt_par_QListWidget( 1 );
+   if( p )
+      ( p )->addItem( hbqt_par_QListWidgetItem( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTWIDGET_ADDITEM_1 FP=( p )->addItem( hbqt_par_QListWidgetItem( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -178,7 +190,13 @@ HB_FUNC( QT_QLISTWIDGET_ADDITEM_1 )
  */
 HB_FUNC( QT_QLISTWIDGET_ADDITEMS )
 {
-   hbqt_par_QListWidget( 1 )->addItems( *hbqt_par_QStringList( 2 ) );
+   QListWidget * p = hbqt_par_QListWidget( 1 );
+   if( p )
+      ( p )->addItems( *hbqt_par_QStringList( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTWIDGET_ADDITEMS FP=( p )->addItems( *hbqt_par_QStringList( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -186,7 +204,13 @@ HB_FUNC( QT_QLISTWIDGET_ADDITEMS )
  */
 HB_FUNC( QT_QLISTWIDGET_CLOSEPERSISTENTEDITOR )
 {
-   hbqt_par_QListWidget( 1 )->closePersistentEditor( hbqt_par_QListWidgetItem( 2 ) );
+   QListWidget * p = hbqt_par_QListWidget( 1 );
+   if( p )
+      ( p )->closePersistentEditor( hbqt_par_QListWidgetItem( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTWIDGET_CLOSEPERSISTENTEDITOR FP=( p )->closePersistentEditor( hbqt_par_QListWidgetItem( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -194,7 +218,13 @@ HB_FUNC( QT_QLISTWIDGET_CLOSEPERSISTENTEDITOR )
  */
 HB_FUNC( QT_QLISTWIDGET_COUNT )
 {
-   hb_retni( hbqt_par_QListWidget( 1 )->count() );
+   QListWidget * p = hbqt_par_QListWidget( 1 );
+   if( p )
+      hb_retni( ( p )->count() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTWIDGET_COUNT FP=hb_retni( ( p )->count() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -202,7 +232,13 @@ HB_FUNC( QT_QLISTWIDGET_COUNT )
  */
 HB_FUNC( QT_QLISTWIDGET_CURRENTITEM )
 {
-   hb_retptrGC( hbqt_gcAllocate_QListWidgetItem( hbqt_par_QListWidget( 1 )->currentItem(), false ) );
+   QListWidget * p = hbqt_par_QListWidget( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QListWidgetItem( ( p )->currentItem(), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTWIDGET_CURRENTITEM FP=hb_retptrGC( hbqt_gcAllocate_QListWidgetItem( ( p )->currentItem(), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -210,7 +246,13 @@ HB_FUNC( QT_QLISTWIDGET_CURRENTITEM )
  */
 HB_FUNC( QT_QLISTWIDGET_CURRENTROW )
 {
-   hb_retni( hbqt_par_QListWidget( 1 )->currentRow() );
+   QListWidget * p = hbqt_par_QListWidget( 1 );
+   if( p )
+      hb_retni( ( p )->currentRow() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTWIDGET_CURRENTROW FP=hb_retni( ( p )->currentRow() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -218,7 +260,13 @@ HB_FUNC( QT_QLISTWIDGET_CURRENTROW )
  */
 HB_FUNC( QT_QLISTWIDGET_EDITITEM )
 {
-   hbqt_par_QListWidget( 1 )->editItem( hbqt_par_QListWidgetItem( 2 ) );
+   QListWidget * p = hbqt_par_QListWidget( 1 );
+   if( p )
+      ( p )->editItem( hbqt_par_QListWidgetItem( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTWIDGET_EDITITEM FP=( p )->editItem( hbqt_par_QListWidgetItem( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -226,7 +274,13 @@ HB_FUNC( QT_QLISTWIDGET_EDITITEM )
  */
 HB_FUNC( QT_QLISTWIDGET_INSERTITEM )
 {
-   hbqt_par_QListWidget( 1 )->insertItem( hb_parni( 2 ), hbqt_par_QListWidgetItem( 3 ) );
+   QListWidget * p = hbqt_par_QListWidget( 1 );
+   if( p )
+      ( p )->insertItem( hb_parni( 2 ), hbqt_par_QListWidgetItem( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTWIDGET_INSERTITEM FP=( p )->insertItem( hb_parni( 2 ), hbqt_par_QListWidgetItem( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -234,7 +288,13 @@ HB_FUNC( QT_QLISTWIDGET_INSERTITEM )
  */
 HB_FUNC( QT_QLISTWIDGET_INSERTITEM_1 )
 {
-   hbqt_par_QListWidget( 1 )->insertItem( hb_parni( 2 ), QListWidget::tr( hb_parc( 3 ) ) );
+   QListWidget * p = hbqt_par_QListWidget( 1 );
+   if( p )
+      ( p )->insertItem( hb_parni( 2 ), QListWidget::tr( hb_parc( 3 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTWIDGET_INSERTITEM_1 FP=( p )->insertItem( hb_parni( 2 ), QListWidget::tr( hb_parc( 3 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -242,7 +302,13 @@ HB_FUNC( QT_QLISTWIDGET_INSERTITEM_1 )
  */
 HB_FUNC( QT_QLISTWIDGET_INSERTITEMS )
 {
-   hbqt_par_QListWidget( 1 )->insertItems( hb_parni( 2 ), *hbqt_par_QStringList( 3 ) );
+   QListWidget * p = hbqt_par_QListWidget( 1 );
+   if( p )
+      ( p )->insertItems( hb_parni( 2 ), *hbqt_par_QStringList( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTWIDGET_INSERTITEMS FP=( p )->insertItems( hb_parni( 2 ), *hbqt_par_QStringList( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -250,7 +316,13 @@ HB_FUNC( QT_QLISTWIDGET_INSERTITEMS )
  */
 HB_FUNC( QT_QLISTWIDGET_ISSORTINGENABLED )
 {
-   hb_retl( hbqt_par_QListWidget( 1 )->isSortingEnabled() );
+   QListWidget * p = hbqt_par_QListWidget( 1 );
+   if( p )
+      hb_retl( ( p )->isSortingEnabled() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTWIDGET_ISSORTINGENABLED FP=hb_retl( ( p )->isSortingEnabled() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -258,7 +330,13 @@ HB_FUNC( QT_QLISTWIDGET_ISSORTINGENABLED )
  */
 HB_FUNC( QT_QLISTWIDGET_ITEM )
 {
-   hb_retptrGC( hbqt_gcAllocate_QListWidgetItem( hbqt_par_QListWidget( 1 )->item( hb_parni( 2 ) ), false ) );
+   QListWidget * p = hbqt_par_QListWidget( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QListWidgetItem( ( p )->item( hb_parni( 2 ) ), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTWIDGET_ITEM FP=hb_retptrGC( hbqt_gcAllocate_QListWidgetItem( ( p )->item( hb_parni( 2 ) ), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -266,7 +344,13 @@ HB_FUNC( QT_QLISTWIDGET_ITEM )
  */
 HB_FUNC( QT_QLISTWIDGET_ITEMAT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QListWidgetItem( hbqt_par_QListWidget( 1 )->itemAt( *hbqt_par_QPoint( 2 ) ), false ) );
+   QListWidget * p = hbqt_par_QListWidget( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QListWidgetItem( ( p )->itemAt( *hbqt_par_QPoint( 2 ) ), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTWIDGET_ITEMAT FP=hb_retptrGC( hbqt_gcAllocate_QListWidgetItem( ( p )->itemAt( *hbqt_par_QPoint( 2 ) ), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -274,7 +358,13 @@ HB_FUNC( QT_QLISTWIDGET_ITEMAT )
  */
 HB_FUNC( QT_QLISTWIDGET_ITEMAT_1 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QListWidgetItem( hbqt_par_QListWidget( 1 )->itemAt( hb_parni( 2 ), hb_parni( 3 ) ), false ) );
+   QListWidget * p = hbqt_par_QListWidget( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QListWidgetItem( ( p )->itemAt( hb_parni( 2 ), hb_parni( 3 ) ), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTWIDGET_ITEMAT_1 FP=hb_retptrGC( hbqt_gcAllocate_QListWidgetItem( ( p )->itemAt( hb_parni( 2 ), hb_parni( 3 ) ), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -282,7 +372,13 @@ HB_FUNC( QT_QLISTWIDGET_ITEMAT_1 )
  */
 HB_FUNC( QT_QLISTWIDGET_ITEMWIDGET )
 {
-   hb_retptrGC( hbqt_gcAllocate_QWidget( hbqt_par_QListWidget( 1 )->itemWidget( hbqt_par_QListWidgetItem( 2 ) ), false ) );
+   QListWidget * p = hbqt_par_QListWidget( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->itemWidget( hbqt_par_QListWidgetItem( 2 ) ), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTWIDGET_ITEMWIDGET FP=hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->itemWidget( hbqt_par_QListWidgetItem( 2 ) ), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -290,7 +386,13 @@ HB_FUNC( QT_QLISTWIDGET_ITEMWIDGET )
  */
 HB_FUNC( QT_QLISTWIDGET_OPENPERSISTENTEDITOR )
 {
-   hbqt_par_QListWidget( 1 )->openPersistentEditor( hbqt_par_QListWidgetItem( 2 ) );
+   QListWidget * p = hbqt_par_QListWidget( 1 );
+   if( p )
+      ( p )->openPersistentEditor( hbqt_par_QListWidgetItem( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTWIDGET_OPENPERSISTENTEDITOR FP=( p )->openPersistentEditor( hbqt_par_QListWidgetItem( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -298,7 +400,13 @@ HB_FUNC( QT_QLISTWIDGET_OPENPERSISTENTEDITOR )
  */
 HB_FUNC( QT_QLISTWIDGET_REMOVEITEMWIDGET )
 {
-   hbqt_par_QListWidget( 1 )->removeItemWidget( hbqt_par_QListWidgetItem( 2 ) );
+   QListWidget * p = hbqt_par_QListWidget( 1 );
+   if( p )
+      ( p )->removeItemWidget( hbqt_par_QListWidgetItem( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTWIDGET_REMOVEITEMWIDGET FP=( p )->removeItemWidget( hbqt_par_QListWidgetItem( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -306,7 +414,13 @@ HB_FUNC( QT_QLISTWIDGET_REMOVEITEMWIDGET )
  */
 HB_FUNC( QT_QLISTWIDGET_ROW )
 {
-   hb_retni( hbqt_par_QListWidget( 1 )->row( hbqt_par_QListWidgetItem( 2 ) ) );
+   QListWidget * p = hbqt_par_QListWidget( 1 );
+   if( p )
+      hb_retni( ( p )->row( hbqt_par_QListWidgetItem( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTWIDGET_ROW FP=hb_retni( ( p )->row( hbqt_par_QListWidgetItem( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -314,7 +428,13 @@ HB_FUNC( QT_QLISTWIDGET_ROW )
  */
 HB_FUNC( QT_QLISTWIDGET_SETCURRENTITEM )
 {
-   hbqt_par_QListWidget( 1 )->setCurrentItem( hbqt_par_QListWidgetItem( 2 ) );
+   QListWidget * p = hbqt_par_QListWidget( 1 );
+   if( p )
+      ( p )->setCurrentItem( hbqt_par_QListWidgetItem( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTWIDGET_SETCURRENTITEM FP=( p )->setCurrentItem( hbqt_par_QListWidgetItem( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -322,7 +442,13 @@ HB_FUNC( QT_QLISTWIDGET_SETCURRENTITEM )
  */
 HB_FUNC( QT_QLISTWIDGET_SETCURRENTITEM_1 )
 {
-   hbqt_par_QListWidget( 1 )->setCurrentItem( hbqt_par_QListWidgetItem( 2 ), ( QItemSelectionModel::SelectionFlags ) hb_parni( 3 ) );
+   QListWidget * p = hbqt_par_QListWidget( 1 );
+   if( p )
+      ( p )->setCurrentItem( hbqt_par_QListWidgetItem( 2 ), ( QItemSelectionModel::SelectionFlags ) hb_parni( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTWIDGET_SETCURRENTITEM_1 FP=( p )->setCurrentItem( hbqt_par_QListWidgetItem( 2 ), ( QItemSelectionModel::SelectionFlags ) hb_parni( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -330,7 +456,13 @@ HB_FUNC( QT_QLISTWIDGET_SETCURRENTITEM_1 )
  */
 HB_FUNC( QT_QLISTWIDGET_SETCURRENTROW )
 {
-   hbqt_par_QListWidget( 1 )->setCurrentRow( hb_parni( 2 ) );
+   QListWidget * p = hbqt_par_QListWidget( 1 );
+   if( p )
+      ( p )->setCurrentRow( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTWIDGET_SETCURRENTROW FP=( p )->setCurrentRow( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -338,7 +470,13 @@ HB_FUNC( QT_QLISTWIDGET_SETCURRENTROW )
  */
 HB_FUNC( QT_QLISTWIDGET_SETCURRENTROW_1 )
 {
-   hbqt_par_QListWidget( 1 )->setCurrentRow( hb_parni( 2 ), ( QItemSelectionModel::SelectionFlags ) hb_parni( 3 ) );
+   QListWidget * p = hbqt_par_QListWidget( 1 );
+   if( p )
+      ( p )->setCurrentRow( hb_parni( 2 ), ( QItemSelectionModel::SelectionFlags ) hb_parni( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTWIDGET_SETCURRENTROW_1 FP=( p )->setCurrentRow( hb_parni( 2 ), ( QItemSelectionModel::SelectionFlags ) hb_parni( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -346,7 +484,13 @@ HB_FUNC( QT_QLISTWIDGET_SETCURRENTROW_1 )
  */
 HB_FUNC( QT_QLISTWIDGET_SETITEMWIDGET )
 {
-   hbqt_par_QListWidget( 1 )->setItemWidget( hbqt_par_QListWidgetItem( 2 ), hbqt_par_QWidget( 3 ) );
+   QListWidget * p = hbqt_par_QListWidget( 1 );
+   if( p )
+      ( p )->setItemWidget( hbqt_par_QListWidgetItem( 2 ), hbqt_par_QWidget( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTWIDGET_SETITEMWIDGET FP=( p )->setItemWidget( hbqt_par_QListWidgetItem( 2 ), hbqt_par_QWidget( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -354,7 +498,13 @@ HB_FUNC( QT_QLISTWIDGET_SETITEMWIDGET )
  */
 HB_FUNC( QT_QLISTWIDGET_SETSORTINGENABLED )
 {
-   hbqt_par_QListWidget( 1 )->setSortingEnabled( hb_parl( 2 ) );
+   QListWidget * p = hbqt_par_QListWidget( 1 );
+   if( p )
+      ( p )->setSortingEnabled( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTWIDGET_SETSORTINGENABLED FP=( p )->setSortingEnabled( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -362,7 +512,13 @@ HB_FUNC( QT_QLISTWIDGET_SETSORTINGENABLED )
  */
 HB_FUNC( QT_QLISTWIDGET_SORTITEMS )
 {
-   hbqt_par_QListWidget( 1 )->sortItems( ( HB_ISNUM( 2 ) ? ( Qt::SortOrder ) hb_parni( 2 ) : ( Qt::SortOrder ) Qt::AscendingOrder ) );
+   QListWidget * p = hbqt_par_QListWidget( 1 );
+   if( p )
+      ( p )->sortItems( ( HB_ISNUM( 2 ) ? ( Qt::SortOrder ) hb_parni( 2 ) : ( Qt::SortOrder ) Qt::AscendingOrder ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTWIDGET_SORTITEMS FP=( p )->sortItems( ( HB_ISNUM( 2 ) ? ( Qt::SortOrder ) hb_parni( 2 ) : ( Qt::SortOrder ) Qt::AscendingOrder ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -370,7 +526,13 @@ HB_FUNC( QT_QLISTWIDGET_SORTITEMS )
  */
 HB_FUNC( QT_QLISTWIDGET_TAKEITEM )
 {
-   hb_retptrGC( hbqt_gcAllocate_QListWidgetItem( hbqt_par_QListWidget( 1 )->takeItem( hb_parni( 2 ) ), false ) );
+   QListWidget * p = hbqt_par_QListWidget( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QListWidgetItem( ( p )->takeItem( hb_parni( 2 ) ), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTWIDGET_TAKEITEM FP=hb_retptrGC( hbqt_gcAllocate_QListWidgetItem( ( p )->takeItem( hb_parni( 2 ) ), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -378,7 +540,13 @@ HB_FUNC( QT_QLISTWIDGET_TAKEITEM )
  */
 HB_FUNC( QT_QLISTWIDGET_VISUALITEMRECT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QListWidget( 1 )->visualItemRect( hbqt_par_QListWidgetItem( 2 ) ) ), true ) );
+   QListWidget * p = hbqt_par_QListWidget( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->visualItemRect( hbqt_par_QListWidgetItem( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTWIDGET_VISUALITEMRECT FP=hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->visualItemRect( hbqt_par_QListWidgetItem( 2 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -386,7 +554,13 @@ HB_FUNC( QT_QLISTWIDGET_VISUALITEMRECT )
  */
 HB_FUNC( QT_QLISTWIDGET_CLEAR )
 {
-   hbqt_par_QListWidget( 1 )->clear();
+   QListWidget * p = hbqt_par_QListWidget( 1 );
+   if( p )
+      ( p )->clear();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTWIDGET_CLEAR FP=( p )->clear(); p is NULL" ) );
+   }
 }
 
 /*
@@ -394,7 +568,13 @@ HB_FUNC( QT_QLISTWIDGET_CLEAR )
  */
 HB_FUNC( QT_QLISTWIDGET_SCROLLTOITEM )
 {
-   hbqt_par_QListWidget( 1 )->scrollToItem( hbqt_par_QListWidgetItem( 2 ), ( HB_ISNUM( 3 ) ? ( QAbstractItemView::ScrollHint ) hb_parni( 3 ) : ( QAbstractItemView::ScrollHint ) QListWidget::EnsureVisible ) );
+   QListWidget * p = hbqt_par_QListWidget( 1 );
+   if( p )
+      ( p )->scrollToItem( hbqt_par_QListWidgetItem( 2 ), ( HB_ISNUM( 3 ) ? ( QAbstractItemView::ScrollHint ) hb_parni( 3 ) : ( QAbstractItemView::ScrollHint ) QListWidget::EnsureVisible ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTWIDGET_SCROLLTOITEM FP=( p )->scrollToItem( hbqt_par_QListWidgetItem( 2 ), ( HB_ISNUM( 3 ) ? ( QAbstractItemView::ScrollHint ) hb_parni( 3 ) : ( QAbstractItemView::ScrollHint ) QListWidget::EnsureVisible ) ); p is NULL" ) );
+   }
 }
 
 

@@ -88,7 +88,7 @@
 
 typedef struct
 {
-   void * ph;
+   QHttpHeader * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QHttpHeader;
@@ -108,7 +108,7 @@ void * hbqt_gcAllocate_QHttpHeader( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QHttpHeader * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QHttpHeader;
 
@@ -125,6 +125,7 @@ void * hbqt_gcAllocate_QHttpHeader( void * pObj, bool bNew )
 
 HB_FUNC( QT_QHTTPHEADER )
 {
+
 }
 
 /*
@@ -132,7 +133,13 @@ HB_FUNC( QT_QHTTPHEADER )
  */
 HB_FUNC( QT_QHTTPHEADER_ADDVALUE )
 {
-   hbqt_par_QHttpHeader( 1 )->addValue( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) );
+   QHttpHeader * p = hbqt_par_QHttpHeader( 1 );
+   if( p )
+      ( p )->addValue( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHTTPHEADER_ADDVALUE FP=( p )->addValue( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -140,7 +147,13 @@ HB_FUNC( QT_QHTTPHEADER_ADDVALUE )
  */
 HB_FUNC( QT_QHTTPHEADER_ALLVALUES )
 {
-   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QHttpHeader( 1 )->allValues( hbqt_par_QString( 2 ) ) ), true ) );
+   QHttpHeader * p = hbqt_par_QHttpHeader( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->allValues( hbqt_par_QString( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHTTPHEADER_ALLVALUES FP=hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->allValues( hbqt_par_QString( 2 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -148,7 +161,13 @@ HB_FUNC( QT_QHTTPHEADER_ALLVALUES )
  */
 HB_FUNC( QT_QHTTPHEADER_CONTENTLENGTH )
 {
-   hb_retni( hbqt_par_QHttpHeader( 1 )->contentLength() );
+   QHttpHeader * p = hbqt_par_QHttpHeader( 1 );
+   if( p )
+      hb_retni( ( p )->contentLength() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHTTPHEADER_CONTENTLENGTH FP=hb_retni( ( p )->contentLength() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -156,7 +175,13 @@ HB_FUNC( QT_QHTTPHEADER_CONTENTLENGTH )
  */
 HB_FUNC( QT_QHTTPHEADER_CONTENTTYPE )
 {
-   hb_retc( hbqt_par_QHttpHeader( 1 )->contentType().toAscii().data() );
+   QHttpHeader * p = hbqt_par_QHttpHeader( 1 );
+   if( p )
+      hb_retc( ( p )->contentType().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHTTPHEADER_CONTENTTYPE FP=hb_retc( ( p )->contentType().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -164,7 +189,13 @@ HB_FUNC( QT_QHTTPHEADER_CONTENTTYPE )
  */
 HB_FUNC( QT_QHTTPHEADER_HASCONTENTLENGTH )
 {
-   hb_retl( hbqt_par_QHttpHeader( 1 )->hasContentLength() );
+   QHttpHeader * p = hbqt_par_QHttpHeader( 1 );
+   if( p )
+      hb_retl( ( p )->hasContentLength() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHTTPHEADER_HASCONTENTLENGTH FP=hb_retl( ( p )->hasContentLength() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -172,7 +203,13 @@ HB_FUNC( QT_QHTTPHEADER_HASCONTENTLENGTH )
  */
 HB_FUNC( QT_QHTTPHEADER_HASCONTENTTYPE )
 {
-   hb_retl( hbqt_par_QHttpHeader( 1 )->hasContentType() );
+   QHttpHeader * p = hbqt_par_QHttpHeader( 1 );
+   if( p )
+      hb_retl( ( p )->hasContentType() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHTTPHEADER_HASCONTENTTYPE FP=hb_retl( ( p )->hasContentType() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -180,7 +217,13 @@ HB_FUNC( QT_QHTTPHEADER_HASCONTENTTYPE )
  */
 HB_FUNC( QT_QHTTPHEADER_HASKEY )
 {
-   hb_retl( hbqt_par_QHttpHeader( 1 )->hasKey( hbqt_par_QString( 2 ) ) );
+   QHttpHeader * p = hbqt_par_QHttpHeader( 1 );
+   if( p )
+      hb_retl( ( p )->hasKey( hbqt_par_QString( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHTTPHEADER_HASKEY FP=hb_retl( ( p )->hasKey( hbqt_par_QString( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -188,7 +231,13 @@ HB_FUNC( QT_QHTTPHEADER_HASKEY )
  */
 HB_FUNC( QT_QHTTPHEADER_ISVALID )
 {
-   hb_retl( hbqt_par_QHttpHeader( 1 )->isValid() );
+   QHttpHeader * p = hbqt_par_QHttpHeader( 1 );
+   if( p )
+      hb_retl( ( p )->isValid() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHTTPHEADER_ISVALID FP=hb_retl( ( p )->isValid() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -196,7 +245,13 @@ HB_FUNC( QT_QHTTPHEADER_ISVALID )
  */
 HB_FUNC( QT_QHTTPHEADER_KEYS )
 {
-   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QHttpHeader( 1 )->keys() ), true ) );
+   QHttpHeader * p = hbqt_par_QHttpHeader( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->keys() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHTTPHEADER_KEYS FP=hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->keys() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -204,7 +259,13 @@ HB_FUNC( QT_QHTTPHEADER_KEYS )
  */
 HB_FUNC( QT_QHTTPHEADER_MAJORVERSION )
 {
-   hb_retni( hbqt_par_QHttpHeader( 1 )->majorVersion() );
+   QHttpHeader * p = hbqt_par_QHttpHeader( 1 );
+   if( p )
+      hb_retni( ( p )->majorVersion() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHTTPHEADER_MAJORVERSION FP=hb_retni( ( p )->majorVersion() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -212,7 +273,13 @@ HB_FUNC( QT_QHTTPHEADER_MAJORVERSION )
  */
 HB_FUNC( QT_QHTTPHEADER_MINORVERSION )
 {
-   hb_retni( hbqt_par_QHttpHeader( 1 )->minorVersion() );
+   QHttpHeader * p = hbqt_par_QHttpHeader( 1 );
+   if( p )
+      hb_retni( ( p )->minorVersion() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHTTPHEADER_MINORVERSION FP=hb_retni( ( p )->minorVersion() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -220,7 +287,13 @@ HB_FUNC( QT_QHTTPHEADER_MINORVERSION )
  */
 HB_FUNC( QT_QHTTPHEADER_REMOVEALLVALUES )
 {
-   hbqt_par_QHttpHeader( 1 )->removeAllValues( hbqt_par_QString( 2 ) );
+   QHttpHeader * p = hbqt_par_QHttpHeader( 1 );
+   if( p )
+      ( p )->removeAllValues( hbqt_par_QString( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHTTPHEADER_REMOVEALLVALUES FP=( p )->removeAllValues( hbqt_par_QString( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -228,7 +301,13 @@ HB_FUNC( QT_QHTTPHEADER_REMOVEALLVALUES )
  */
 HB_FUNC( QT_QHTTPHEADER_REMOVEVALUE )
 {
-   hbqt_par_QHttpHeader( 1 )->removeValue( hbqt_par_QString( 2 ) );
+   QHttpHeader * p = hbqt_par_QHttpHeader( 1 );
+   if( p )
+      ( p )->removeValue( hbqt_par_QString( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHTTPHEADER_REMOVEVALUE FP=( p )->removeValue( hbqt_par_QString( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -236,7 +315,13 @@ HB_FUNC( QT_QHTTPHEADER_REMOVEVALUE )
  */
 HB_FUNC( QT_QHTTPHEADER_SETCONTENTLENGTH )
 {
-   hbqt_par_QHttpHeader( 1 )->setContentLength( hb_parni( 2 ) );
+   QHttpHeader * p = hbqt_par_QHttpHeader( 1 );
+   if( p )
+      ( p )->setContentLength( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHTTPHEADER_SETCONTENTLENGTH FP=( p )->setContentLength( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -244,7 +329,13 @@ HB_FUNC( QT_QHTTPHEADER_SETCONTENTLENGTH )
  */
 HB_FUNC( QT_QHTTPHEADER_SETCONTENTTYPE )
 {
-   hbqt_par_QHttpHeader( 1 )->setContentType( hbqt_par_QString( 2 ) );
+   QHttpHeader * p = hbqt_par_QHttpHeader( 1 );
+   if( p )
+      ( p )->setContentType( hbqt_par_QString( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHTTPHEADER_SETCONTENTTYPE FP=( p )->setContentType( hbqt_par_QString( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -252,7 +343,13 @@ HB_FUNC( QT_QHTTPHEADER_SETCONTENTTYPE )
  */
 HB_FUNC( QT_QHTTPHEADER_SETVALUE )
 {
-   hbqt_par_QHttpHeader( 1 )->setValue( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) );
+   QHttpHeader * p = hbqt_par_QHttpHeader( 1 );
+   if( p )
+      ( p )->setValue( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHTTPHEADER_SETVALUE FP=( p )->setValue( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -260,7 +357,13 @@ HB_FUNC( QT_QHTTPHEADER_SETVALUE )
  */
 HB_FUNC( QT_QHTTPHEADER_TOSTRING )
 {
-   hb_retc( hbqt_par_QHttpHeader( 1 )->toString().toAscii().data() );
+   QHttpHeader * p = hbqt_par_QHttpHeader( 1 );
+   if( p )
+      hb_retc( ( p )->toString().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHTTPHEADER_TOSTRING FP=hb_retc( ( p )->toString().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -268,7 +371,13 @@ HB_FUNC( QT_QHTTPHEADER_TOSTRING )
  */
 HB_FUNC( QT_QHTTPHEADER_VALUE )
 {
-   hb_retc( hbqt_par_QHttpHeader( 1 )->value( hbqt_par_QString( 2 ) ).toAscii().data() );
+   QHttpHeader * p = hbqt_par_QHttpHeader( 1 );
+   if( p )
+      hb_retc( ( p )->value( hbqt_par_QString( 2 ) ).toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHTTPHEADER_VALUE FP=hb_retc( ( p )->value( hbqt_par_QString( 2 ) ).toAscii().data() ); p is NULL" ) );
+   }
 }
 
 

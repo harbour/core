@@ -77,7 +77,7 @@
 
 typedef struct
 {
-   void * ph;
+   QTextFragment * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QTextFragment;
@@ -112,7 +112,7 @@ void * hbqt_gcAllocate_QTextFragment( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QTextFragment * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextFragment;
 
@@ -129,11 +129,11 @@ void * hbqt_gcAllocate_QTextFragment( void * pObj, bool bNew )
 
 HB_FUNC( QT_QTEXTFRAGMENT )
 {
-   void * pObj = NULL;
+   QTextFragment * pObj = NULL;
 
-   pObj = ( QTextFragment* ) new QTextFragment() ;
+   pObj =  new QTextFragment() ;
 
-   hb_retptrGC( hbqt_gcAllocate_QTextFragment( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QTextFragment( ( void * ) pObj, true ) );
 }
 
 /*
@@ -141,7 +141,13 @@ HB_FUNC( QT_QTEXTFRAGMENT )
  */
 HB_FUNC( QT_QTEXTFRAGMENT_CHARFORMAT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTextCharFormat( new QTextCharFormat( hbqt_par_QTextFragment( 1 )->charFormat() ), true ) );
+   QTextFragment * p = hbqt_par_QTextFragment( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QTextCharFormat( new QTextCharFormat( ( p )->charFormat() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTFRAGMENT_CHARFORMAT FP=hb_retptrGC( hbqt_gcAllocate_QTextCharFormat( new QTextCharFormat( ( p )->charFormat() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -149,7 +155,13 @@ HB_FUNC( QT_QTEXTFRAGMENT_CHARFORMAT )
  */
 HB_FUNC( QT_QTEXTFRAGMENT_CHARFORMATINDEX )
 {
-   hb_retni( hbqt_par_QTextFragment( 1 )->charFormatIndex() );
+   QTextFragment * p = hbqt_par_QTextFragment( 1 );
+   if( p )
+      hb_retni( ( p )->charFormatIndex() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTFRAGMENT_CHARFORMATINDEX FP=hb_retni( ( p )->charFormatIndex() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -157,7 +169,13 @@ HB_FUNC( QT_QTEXTFRAGMENT_CHARFORMATINDEX )
  */
 HB_FUNC( QT_QTEXTFRAGMENT_CONTAINS )
 {
-   hb_retl( hbqt_par_QTextFragment( 1 )->contains( hb_parni( 2 ) ) );
+   QTextFragment * p = hbqt_par_QTextFragment( 1 );
+   if( p )
+      hb_retl( ( p )->contains( hb_parni( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTFRAGMENT_CONTAINS FP=hb_retl( ( p )->contains( hb_parni( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -165,7 +183,13 @@ HB_FUNC( QT_QTEXTFRAGMENT_CONTAINS )
  */
 HB_FUNC( QT_QTEXTFRAGMENT_ISVALID )
 {
-   hb_retl( hbqt_par_QTextFragment( 1 )->isValid() );
+   QTextFragment * p = hbqt_par_QTextFragment( 1 );
+   if( p )
+      hb_retl( ( p )->isValid() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTFRAGMENT_ISVALID FP=hb_retl( ( p )->isValid() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -173,7 +197,13 @@ HB_FUNC( QT_QTEXTFRAGMENT_ISVALID )
  */
 HB_FUNC( QT_QTEXTFRAGMENT_LENGTH )
 {
-   hb_retni( hbqt_par_QTextFragment( 1 )->length() );
+   QTextFragment * p = hbqt_par_QTextFragment( 1 );
+   if( p )
+      hb_retni( ( p )->length() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTFRAGMENT_LENGTH FP=hb_retni( ( p )->length() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -181,7 +211,13 @@ HB_FUNC( QT_QTEXTFRAGMENT_LENGTH )
  */
 HB_FUNC( QT_QTEXTFRAGMENT_POSITION )
 {
-   hb_retni( hbqt_par_QTextFragment( 1 )->position() );
+   QTextFragment * p = hbqt_par_QTextFragment( 1 );
+   if( p )
+      hb_retni( ( p )->position() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTFRAGMENT_POSITION FP=hb_retni( ( p )->position() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -189,7 +225,13 @@ HB_FUNC( QT_QTEXTFRAGMENT_POSITION )
  */
 HB_FUNC( QT_QTEXTFRAGMENT_TEXT )
 {
-   hb_retc( hbqt_par_QTextFragment( 1 )->text().toAscii().data() );
+   QTextFragment * p = hbqt_par_QTextFragment( 1 );
+   if( p )
+      hb_retc( ( p )->text().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTFRAGMENT_TEXT FP=hb_retc( ( p )->text().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 

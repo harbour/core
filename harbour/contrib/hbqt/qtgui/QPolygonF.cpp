@@ -81,7 +81,7 @@
 
 typedef struct
 {
-   void * ph;
+   QPolygonF * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QPolygonF;
@@ -116,7 +116,7 @@ void * hbqt_gcAllocate_QPolygonF( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QPolygonF * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QPolygonF;
 
@@ -133,11 +133,11 @@ void * hbqt_gcAllocate_QPolygonF( void * pObj, bool bNew )
 
 HB_FUNC( QT_QPOLYGONF )
 {
-   void * pObj = NULL;
+   QPolygonF * pObj = NULL;
 
    pObj = new QPolygonF() ;
 
-   hb_retptrGC( hbqt_gcAllocate_QPolygonF( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QPolygonF( ( void * ) pObj, true ) );
 }
 
 /*
@@ -145,7 +145,13 @@ HB_FUNC( QT_QPOLYGONF )
  */
 HB_FUNC( QT_QPOLYGONF_BOUNDINGRECT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( hbqt_par_QPolygonF( 1 )->boundingRect() ), true ) );
+   QPolygonF * p = hbqt_par_QPolygonF( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( ( p )->boundingRect() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPOLYGONF_BOUNDINGRECT FP=hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( ( p )->boundingRect() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -153,7 +159,13 @@ HB_FUNC( QT_QPOLYGONF_BOUNDINGRECT )
  */
 HB_FUNC( QT_QPOLYGONF_CONTAINSPOINT )
 {
-   hb_retl( hbqt_par_QPolygonF( 1 )->containsPoint( *hbqt_par_QPointF( 2 ), ( Qt::FillRule ) hb_parni( 3 ) ) );
+   QPolygonF * p = hbqt_par_QPolygonF( 1 );
+   if( p )
+      hb_retl( ( p )->containsPoint( *hbqt_par_QPointF( 2 ), ( Qt::FillRule ) hb_parni( 3 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPOLYGONF_CONTAINSPOINT FP=hb_retl( ( p )->containsPoint( *hbqt_par_QPointF( 2 ), ( Qt::FillRule ) hb_parni( 3 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -161,7 +173,13 @@ HB_FUNC( QT_QPOLYGONF_CONTAINSPOINT )
  */
 HB_FUNC( QT_QPOLYGONF_INTERSECTED )
 {
-   hb_retptrGC( hbqt_gcAllocate_QPolygonF( new QPolygonF( hbqt_par_QPolygonF( 1 )->intersected( *hbqt_par_QPolygonF( 2 ) ) ), true ) );
+   QPolygonF * p = hbqt_par_QPolygonF( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QPolygonF( new QPolygonF( ( p )->intersected( *hbqt_par_QPolygonF( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPOLYGONF_INTERSECTED FP=hb_retptrGC( hbqt_gcAllocate_QPolygonF( new QPolygonF( ( p )->intersected( *hbqt_par_QPolygonF( 2 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -169,7 +187,13 @@ HB_FUNC( QT_QPOLYGONF_INTERSECTED )
  */
 HB_FUNC( QT_QPOLYGONF_ISCLOSED )
 {
-   hb_retl( hbqt_par_QPolygonF( 1 )->isClosed() );
+   QPolygonF * p = hbqt_par_QPolygonF( 1 );
+   if( p )
+      hb_retl( ( p )->isClosed() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPOLYGONF_ISCLOSED FP=hb_retl( ( p )->isClosed() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -177,7 +201,13 @@ HB_FUNC( QT_QPOLYGONF_ISCLOSED )
  */
 HB_FUNC( QT_QPOLYGONF_SUBTRACTED )
 {
-   hb_retptrGC( hbqt_gcAllocate_QPolygonF( new QPolygonF( hbqt_par_QPolygonF( 1 )->subtracted( *hbqt_par_QPolygonF( 2 ) ) ), true ) );
+   QPolygonF * p = hbqt_par_QPolygonF( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QPolygonF( new QPolygonF( ( p )->subtracted( *hbqt_par_QPolygonF( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPOLYGONF_SUBTRACTED FP=hb_retptrGC( hbqt_gcAllocate_QPolygonF( new QPolygonF( ( p )->subtracted( *hbqt_par_QPolygonF( 2 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -185,7 +215,13 @@ HB_FUNC( QT_QPOLYGONF_SUBTRACTED )
  */
 HB_FUNC( QT_QPOLYGONF_TOPOLYGON )
 {
-   hb_retptrGC( hbqt_gcAllocate_QPolygon( new QPolygon( hbqt_par_QPolygonF( 1 )->toPolygon() ), true ) );
+   QPolygonF * p = hbqt_par_QPolygonF( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QPolygon( new QPolygon( ( p )->toPolygon() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPOLYGONF_TOPOLYGON FP=hb_retptrGC( hbqt_gcAllocate_QPolygon( new QPolygon( ( p )->toPolygon() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -193,7 +229,13 @@ HB_FUNC( QT_QPOLYGONF_TOPOLYGON )
  */
 HB_FUNC( QT_QPOLYGONF_TRANSLATE )
 {
-   hbqt_par_QPolygonF( 1 )->translate( *hbqt_par_QPointF( 2 ) );
+   QPolygonF * p = hbqt_par_QPolygonF( 1 );
+   if( p )
+      ( p )->translate( *hbqt_par_QPointF( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPOLYGONF_TRANSLATE FP=( p )->translate( *hbqt_par_QPointF( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -201,7 +243,13 @@ HB_FUNC( QT_QPOLYGONF_TRANSLATE )
  */
 HB_FUNC( QT_QPOLYGONF_TRANSLATE_1 )
 {
-   hbqt_par_QPolygonF( 1 )->translate( hb_parnd( 2 ), hb_parnd( 3 ) );
+   QPolygonF * p = hbqt_par_QPolygonF( 1 );
+   if( p )
+      ( p )->translate( hb_parnd( 2 ), hb_parnd( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPOLYGONF_TRANSLATE_1 FP=( p )->translate( hb_parnd( 2 ), hb_parnd( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -209,7 +257,13 @@ HB_FUNC( QT_QPOLYGONF_TRANSLATE_1 )
  */
 HB_FUNC( QT_QPOLYGONF_UNITED )
 {
-   hb_retptrGC( hbqt_gcAllocate_QPolygonF( new QPolygonF( hbqt_par_QPolygonF( 1 )->united( *hbqt_par_QPolygonF( 2 ) ) ), true ) );
+   QPolygonF * p = hbqt_par_QPolygonF( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QPolygonF( new QPolygonF( ( p )->united( *hbqt_par_QPolygonF( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPOLYGONF_UNITED FP=hb_retptrGC( hbqt_gcAllocate_QPolygonF( new QPolygonF( ( p )->united( *hbqt_par_QPolygonF( 2 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 

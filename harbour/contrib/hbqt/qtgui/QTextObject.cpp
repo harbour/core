@@ -76,10 +76,9 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QTextObject > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QTextObject > pq;
 } QGC_POINTER_QTextObject;
 
 QT_G_FUNC( hbqt_gcRelease_QTextObject )
@@ -97,13 +96,12 @@ void * hbqt_gcAllocate_QTextObject( void * pObj, bool bNew )
 {
    QGC_POINTER_QTextObject * p = ( QGC_POINTER_QTextObject * ) hb_gcAllocate( sizeof( QGC_POINTER_QTextObject ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QTextObject >( ( QTextObject * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextObject;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QTextObject >( ( QTextObject * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QTextObject  under p->pq", pObj ) );
    }
    else
@@ -115,6 +113,7 @@ void * hbqt_gcAllocate_QTextObject( void * pObj, bool bNew )
 
 HB_FUNC( QT_QTEXTOBJECT )
 {
+
 }
 
 /*
@@ -122,7 +121,13 @@ HB_FUNC( QT_QTEXTOBJECT )
  */
 HB_FUNC( QT_QTEXTOBJECT_DOCUMENT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTextDocument( hbqt_par_QTextObject( 1 )->document(), false ) );
+   QTextObject * p = hbqt_par_QTextObject( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QTextDocument( ( p )->document(), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTOBJECT_DOCUMENT FP=hb_retptrGC( hbqt_gcAllocate_QTextDocument( ( p )->document(), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -130,7 +135,13 @@ HB_FUNC( QT_QTEXTOBJECT_DOCUMENT )
  */
 HB_FUNC( QT_QTEXTOBJECT_FORMAT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTextFormat( new QTextFormat( hbqt_par_QTextObject( 1 )->format() ), true ) );
+   QTextObject * p = hbqt_par_QTextObject( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QTextFormat( new QTextFormat( ( p )->format() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTOBJECT_FORMAT FP=hb_retptrGC( hbqt_gcAllocate_QTextFormat( new QTextFormat( ( p )->format() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -138,7 +149,13 @@ HB_FUNC( QT_QTEXTOBJECT_FORMAT )
  */
 HB_FUNC( QT_QTEXTOBJECT_FORMATINDEX )
 {
-   hb_retni( hbqt_par_QTextObject( 1 )->formatIndex() );
+   QTextObject * p = hbqt_par_QTextObject( 1 );
+   if( p )
+      hb_retni( ( p )->formatIndex() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTOBJECT_FORMATINDEX FP=hb_retni( ( p )->formatIndex() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -146,7 +163,13 @@ HB_FUNC( QT_QTEXTOBJECT_FORMATINDEX )
  */
 HB_FUNC( QT_QTEXTOBJECT_OBJECTINDEX )
 {
-   hb_retni( hbqt_par_QTextObject( 1 )->objectIndex() );
+   QTextObject * p = hbqt_par_QTextObject( 1 );
+   if( p )
+      hb_retni( ( p )->objectIndex() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTOBJECT_OBJECTINDEX FP=hb_retni( ( p )->objectIndex() ); p is NULL" ) );
+   }
 }
 
 

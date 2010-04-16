@@ -75,43 +75,44 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QWizardPage > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QWizardPage > pq;
 } QGC_POINTER_QWizardPage;
 
 QT_G_FUNC( hbqt_gcRelease_QWizardPage )
 {
+   QWizardPage  * ph = NULL ;
    QGC_POINTER_QWizardPage * p = ( QGC_POINTER_QWizardPage * ) Cargo;
 
-   if( p && p->bNew )
+   if( p && p->bNew && p->ph )
    {
-      if( p->ph && p->pq )
+      ph = p->ph;
+      if( ph )
       {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QWizardPage   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
-            delete ( ( QWizardPage * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QWizardPage   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QWizardPage   /.\\   ", (void*) ph, (void*) p->ph ) );
+            delete ( p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QWizardPage   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QWizardPage          pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QWizardPage          ", ph ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QWizardPage    :     Object already deleted!", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QWizardPage    :     Object already deleted!", ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QWizardPage    :    Object not created with new=true", p->ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QWizardPage    :    Object not created with new=true", ph ) );
       p->ph = NULL;
    }
 }
@@ -120,13 +121,12 @@ void * hbqt_gcAllocate_QWizardPage( void * pObj, bool bNew )
 {
    QGC_POINTER_QWizardPage * p = ( QGC_POINTER_QWizardPage * ) hb_gcAllocate( sizeof( QGC_POINTER_QWizardPage ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QWizardPage >( ( QWizardPage * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QWizardPage;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QWizardPage >( ( QWizardPage * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QWizardPage  under p->pq", pObj ) );
    }
    else
@@ -138,11 +138,11 @@ void * hbqt_gcAllocate_QWizardPage( void * pObj, bool bNew )
 
 HB_FUNC( QT_QWIZARDPAGE )
 {
-   void * pObj = NULL;
+   QWizardPage * pObj = NULL;
 
    pObj = new QWizardPage() ;
 
-   hb_retptrGC( hbqt_gcAllocate_QWizardPage( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QWizardPage( ( void * ) pObj, true ) );
 }
 
 /*
@@ -150,7 +150,13 @@ HB_FUNC( QT_QWIZARDPAGE )
  */
 HB_FUNC( QT_QWIZARDPAGE_BUTTONTEXT )
 {
-   hb_retc( hbqt_par_QWizardPage( 1 )->buttonText( ( QWizard::WizardButton ) hb_parni( 2 ) ).toAscii().data() );
+   QWizardPage * p = hbqt_par_QWizardPage( 1 );
+   if( p )
+      hb_retc( ( p )->buttonText( ( QWizard::WizardButton ) hb_parni( 2 ) ).toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIZARDPAGE_BUTTONTEXT FP=hb_retc( ( p )->buttonText( ( QWizard::WizardButton ) hb_parni( 2 ) ).toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -158,7 +164,13 @@ HB_FUNC( QT_QWIZARDPAGE_BUTTONTEXT )
  */
 HB_FUNC( QT_QWIZARDPAGE_CLEANUPPAGE )
 {
-   hbqt_par_QWizardPage( 1 )->cleanupPage();
+   QWizardPage * p = hbqt_par_QWizardPage( 1 );
+   if( p )
+      ( p )->cleanupPage();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIZARDPAGE_CLEANUPPAGE FP=( p )->cleanupPage(); p is NULL" ) );
+   }
 }
 
 /*
@@ -166,7 +178,13 @@ HB_FUNC( QT_QWIZARDPAGE_CLEANUPPAGE )
  */
 HB_FUNC( QT_QWIZARDPAGE_INITIALIZEPAGE )
 {
-   hbqt_par_QWizardPage( 1 )->initializePage();
+   QWizardPage * p = hbqt_par_QWizardPage( 1 );
+   if( p )
+      ( p )->initializePage();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIZARDPAGE_INITIALIZEPAGE FP=( p )->initializePage(); p is NULL" ) );
+   }
 }
 
 /*
@@ -174,7 +192,13 @@ HB_FUNC( QT_QWIZARDPAGE_INITIALIZEPAGE )
  */
 HB_FUNC( QT_QWIZARDPAGE_ISCOMMITPAGE )
 {
-   hb_retl( hbqt_par_QWizardPage( 1 )->isCommitPage() );
+   QWizardPage * p = hbqt_par_QWizardPage( 1 );
+   if( p )
+      hb_retl( ( p )->isCommitPage() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIZARDPAGE_ISCOMMITPAGE FP=hb_retl( ( p )->isCommitPage() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -182,7 +206,13 @@ HB_FUNC( QT_QWIZARDPAGE_ISCOMMITPAGE )
  */
 HB_FUNC( QT_QWIZARDPAGE_ISCOMPLETE )
 {
-   hb_retl( hbqt_par_QWizardPage( 1 )->isComplete() );
+   QWizardPage * p = hbqt_par_QWizardPage( 1 );
+   if( p )
+      hb_retl( ( p )->isComplete() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIZARDPAGE_ISCOMPLETE FP=hb_retl( ( p )->isComplete() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -190,7 +220,13 @@ HB_FUNC( QT_QWIZARDPAGE_ISCOMPLETE )
  */
 HB_FUNC( QT_QWIZARDPAGE_ISFINALPAGE )
 {
-   hb_retl( hbqt_par_QWizardPage( 1 )->isFinalPage() );
+   QWizardPage * p = hbqt_par_QWizardPage( 1 );
+   if( p )
+      hb_retl( ( p )->isFinalPage() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIZARDPAGE_ISFINALPAGE FP=hb_retl( ( p )->isFinalPage() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -198,7 +234,13 @@ HB_FUNC( QT_QWIZARDPAGE_ISFINALPAGE )
  */
 HB_FUNC( QT_QWIZARDPAGE_NEXTID )
 {
-   hb_retni( hbqt_par_QWizardPage( 1 )->nextId() );
+   QWizardPage * p = hbqt_par_QWizardPage( 1 );
+   if( p )
+      hb_retni( ( p )->nextId() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIZARDPAGE_NEXTID FP=hb_retni( ( p )->nextId() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -206,7 +248,13 @@ HB_FUNC( QT_QWIZARDPAGE_NEXTID )
  */
 HB_FUNC( QT_QWIZARDPAGE_PIXMAP )
 {
-   hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( hbqt_par_QWizardPage( 1 )->pixmap( ( QWizard::WizardPixmap ) hb_parni( 2 ) ) ), true ) );
+   QWizardPage * p = hbqt_par_QWizardPage( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->pixmap( ( QWizard::WizardPixmap ) hb_parni( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIZARDPAGE_PIXMAP FP=hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->pixmap( ( QWizard::WizardPixmap ) hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -214,7 +262,13 @@ HB_FUNC( QT_QWIZARDPAGE_PIXMAP )
  */
 HB_FUNC( QT_QWIZARDPAGE_SETBUTTONTEXT )
 {
-   hbqt_par_QWizardPage( 1 )->setButtonText( ( QWizard::WizardButton ) hb_parni( 2 ), QWizardPage::tr( hb_parc( 3 ) ) );
+   QWizardPage * p = hbqt_par_QWizardPage( 1 );
+   if( p )
+      ( p )->setButtonText( ( QWizard::WizardButton ) hb_parni( 2 ), QWizardPage::tr( hb_parc( 3 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIZARDPAGE_SETBUTTONTEXT FP=( p )->setButtonText( ( QWizard::WizardButton ) hb_parni( 2 ), QWizardPage::tr( hb_parc( 3 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -222,7 +276,13 @@ HB_FUNC( QT_QWIZARDPAGE_SETBUTTONTEXT )
  */
 HB_FUNC( QT_QWIZARDPAGE_SETCOMMITPAGE )
 {
-   hbqt_par_QWizardPage( 1 )->setCommitPage( hb_parl( 2 ) );
+   QWizardPage * p = hbqt_par_QWizardPage( 1 );
+   if( p )
+      ( p )->setCommitPage( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIZARDPAGE_SETCOMMITPAGE FP=( p )->setCommitPage( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -230,7 +290,13 @@ HB_FUNC( QT_QWIZARDPAGE_SETCOMMITPAGE )
  */
 HB_FUNC( QT_QWIZARDPAGE_SETFINALPAGE )
 {
-   hbqt_par_QWizardPage( 1 )->setFinalPage( hb_parl( 2 ) );
+   QWizardPage * p = hbqt_par_QWizardPage( 1 );
+   if( p )
+      ( p )->setFinalPage( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIZARDPAGE_SETFINALPAGE FP=( p )->setFinalPage( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -238,7 +304,13 @@ HB_FUNC( QT_QWIZARDPAGE_SETFINALPAGE )
  */
 HB_FUNC( QT_QWIZARDPAGE_SETPIXMAP )
 {
-   hbqt_par_QWizardPage( 1 )->setPixmap( ( QWizard::WizardPixmap ) hb_parni( 2 ), *hbqt_par_QPixmap( 3 ) );
+   QWizardPage * p = hbqt_par_QWizardPage( 1 );
+   if( p )
+      ( p )->setPixmap( ( QWizard::WizardPixmap ) hb_parni( 2 ), *hbqt_par_QPixmap( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIZARDPAGE_SETPIXMAP FP=( p )->setPixmap( ( QWizard::WizardPixmap ) hb_parni( 2 ), *hbqt_par_QPixmap( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -246,7 +318,13 @@ HB_FUNC( QT_QWIZARDPAGE_SETPIXMAP )
  */
 HB_FUNC( QT_QWIZARDPAGE_SETSUBTITLE )
 {
-   hbqt_par_QWizardPage( 1 )->setSubTitle( QWizardPage::tr( hb_parc( 2 ) ) );
+   QWizardPage * p = hbqt_par_QWizardPage( 1 );
+   if( p )
+      ( p )->setSubTitle( QWizardPage::tr( hb_parc( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIZARDPAGE_SETSUBTITLE FP=( p )->setSubTitle( QWizardPage::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -254,7 +332,13 @@ HB_FUNC( QT_QWIZARDPAGE_SETSUBTITLE )
  */
 HB_FUNC( QT_QWIZARDPAGE_SETTITLE )
 {
-   hbqt_par_QWizardPage( 1 )->setTitle( QWizardPage::tr( hb_parc( 2 ) ) );
+   QWizardPage * p = hbqt_par_QWizardPage( 1 );
+   if( p )
+      ( p )->setTitle( QWizardPage::tr( hb_parc( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIZARDPAGE_SETTITLE FP=( p )->setTitle( QWizardPage::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -262,7 +346,13 @@ HB_FUNC( QT_QWIZARDPAGE_SETTITLE )
  */
 HB_FUNC( QT_QWIZARDPAGE_SUBTITLE )
 {
-   hb_retc( hbqt_par_QWizardPage( 1 )->subTitle().toAscii().data() );
+   QWizardPage * p = hbqt_par_QWizardPage( 1 );
+   if( p )
+      hb_retc( ( p )->subTitle().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIZARDPAGE_SUBTITLE FP=hb_retc( ( p )->subTitle().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -270,7 +360,13 @@ HB_FUNC( QT_QWIZARDPAGE_SUBTITLE )
  */
 HB_FUNC( QT_QWIZARDPAGE_TITLE )
 {
-   hb_retc( hbqt_par_QWizardPage( 1 )->title().toAscii().data() );
+   QWizardPage * p = hbqt_par_QWizardPage( 1 );
+   if( p )
+      hb_retc( ( p )->title().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIZARDPAGE_TITLE FP=hb_retc( ( p )->title().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -278,7 +374,13 @@ HB_FUNC( QT_QWIZARDPAGE_TITLE )
  */
 HB_FUNC( QT_QWIZARDPAGE_VALIDATEPAGE )
 {
-   hb_retl( hbqt_par_QWizardPage( 1 )->validatePage() );
+   QWizardPage * p = hbqt_par_QWizardPage( 1 );
+   if( p )
+      hb_retl( ( p )->validatePage() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIZARDPAGE_VALIDATEPAGE FP=hb_retl( ( p )->validatePage() ); p is NULL" ) );
+   }
 }
 
 

@@ -99,7 +99,7 @@
 
 typedef struct
 {
-   void * ph;
+   QRegion * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QRegion;
@@ -134,7 +134,7 @@ void * hbqt_gcAllocate_QRegion( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QRegion * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QRegion;
 
@@ -151,45 +151,45 @@ void * hbqt_gcAllocate_QRegion( void * pObj, bool bNew )
 
 HB_FUNC( QT_QREGION )
 {
-   void * pObj = NULL;
+   QRegion * pObj = NULL;
 
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      pObj = ( QRegion* ) new QRegion( *hbqt_par_QRegion( 1 ) ) ;
+      pObj =  new QRegion( *hbqt_par_QRegion( 1 ) ) ;
    }
    else if( hb_pcount() >= 4 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) && HB_ISNUM( 4 ) )
    {
-      pObj = ( QRegion* ) new QRegion( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), HB_ISNUM( 5 ) ? ( QRegion::RegionType ) hb_parni( 5 ) : QRegion::Rectangle ) ;
+      pObj =  new QRegion( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), HB_ISNUM( 5 ) ? ( QRegion::RegionType ) hb_parni( 5 ) : QRegion::Rectangle ) ;
    }
    else if( hb_pcount() >= 2 && HB_ISCHAR( 1 ) && HB_ISPOINTER( 2 ) )
    {
       if(      ( QString ) "QPolygon" == hbqt_par_QString( 1 ) )
       {
-         pObj = ( QRegion* ) new QRegion( *hbqt_par_QPolygon( 2 ), HB_ISNUM( 3 ) ? ( Qt::FillRule ) hb_parni( 3 ) : Qt::OddEvenFill ) ;
+         pObj =  new QRegion( *hbqt_par_QPolygon( 2 ), HB_ISNUM( 3 ) ? ( Qt::FillRule ) hb_parni( 3 ) : Qt::OddEvenFill ) ;
       }
       else if( ( QString ) "QBitmap"  == hbqt_par_QString( 1 ) )
       {
-         pObj = ( QRegion* ) new QRegion( *hbqt_par_QBitmap( 2 ) ) ;
+         pObj =  new QRegion( *hbqt_par_QBitmap( 2 ) ) ;
       }
       else if( ( QString ) "QRect"    == hbqt_par_QString( 1 ) )
       {
-         pObj = ( QRegion* ) new QRegion( *hbqt_par_QRect( 2 ), HB_ISNUM( 3 ) ? ( QRegion::RegionType ) hb_parni( 3 ) : QRegion::Rectangle ) ;
+         pObj =  new QRegion( *hbqt_par_QRect( 2 ), HB_ISNUM( 3 ) ? ( QRegion::RegionType ) hb_parni( 3 ) : QRegion::Rectangle ) ;
       }
       else
       {
-         pObj = ( QRegion* ) new QRegion() ;
+         pObj =  new QRegion() ;
       }
    }
    else if( hb_pcount() == 2 && HB_ISPOINTER( 1 ) && HB_ISNUM( 2 ) )
    {
-      pObj = ( QRegion* ) new QRegion( *hbqt_par_QRect( 1 ), ( QRegion::RegionType ) hb_parni( 2 ) ) ;
+      pObj =  new QRegion( *hbqt_par_QRect( 1 ), ( QRegion::RegionType ) hb_parni( 2 ) ) ;
    }
    else
    {
-      pObj = ( QRegion* ) new QRegion() ;
+      pObj =  new QRegion() ;
    }
 
-   hb_retptrGC( hbqt_gcAllocate_QRegion( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QRegion( ( void * ) pObj, true ) );
 }
 
 /*
@@ -197,7 +197,13 @@ HB_FUNC( QT_QREGION )
  */
 HB_FUNC( QT_QREGION_BOUNDINGRECT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QRegion( 1 )->boundingRect() ), true ) );
+   QRegion * p = hbqt_par_QRegion( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->boundingRect() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QREGION_BOUNDINGRECT FP=hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->boundingRect() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -205,7 +211,13 @@ HB_FUNC( QT_QREGION_BOUNDINGRECT )
  */
 HB_FUNC( QT_QREGION_CONTAINS )
 {
-   hb_retl( hbqt_par_QRegion( 1 )->contains( *hbqt_par_QPoint( 2 ) ) );
+   QRegion * p = hbqt_par_QRegion( 1 );
+   if( p )
+      hb_retl( ( p )->contains( *hbqt_par_QPoint( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QREGION_CONTAINS FP=hb_retl( ( p )->contains( *hbqt_par_QPoint( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -213,7 +225,13 @@ HB_FUNC( QT_QREGION_CONTAINS )
  */
 HB_FUNC( QT_QREGION_CONTAINS_1 )
 {
-   hb_retl( hbqt_par_QRegion( 1 )->contains( *hbqt_par_QRect( 2 ) ) );
+   QRegion * p = hbqt_par_QRegion( 1 );
+   if( p )
+      hb_retl( ( p )->contains( *hbqt_par_QRect( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QREGION_CONTAINS_1 FP=hb_retl( ( p )->contains( *hbqt_par_QRect( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -221,7 +239,13 @@ HB_FUNC( QT_QREGION_CONTAINS_1 )
  */
 HB_FUNC( QT_QREGION_INTERSECTED )
 {
-   hb_retptrGC( hbqt_gcAllocate_QRegion( new QRegion( hbqt_par_QRegion( 1 )->intersected( *hbqt_par_QRegion( 2 ) ) ), true ) );
+   QRegion * p = hbqt_par_QRegion( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QRegion( new QRegion( ( p )->intersected( *hbqt_par_QRegion( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QREGION_INTERSECTED FP=hb_retptrGC( hbqt_gcAllocate_QRegion( new QRegion( ( p )->intersected( *hbqt_par_QRegion( 2 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -229,7 +253,13 @@ HB_FUNC( QT_QREGION_INTERSECTED )
  */
 HB_FUNC( QT_QREGION_INTERSECTED_1 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QRegion( new QRegion( hbqt_par_QRegion( 1 )->intersected( *hbqt_par_QRect( 2 ) ) ), true ) );
+   QRegion * p = hbqt_par_QRegion( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QRegion( new QRegion( ( p )->intersected( *hbqt_par_QRect( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QREGION_INTERSECTED_1 FP=hb_retptrGC( hbqt_gcAllocate_QRegion( new QRegion( ( p )->intersected( *hbqt_par_QRect( 2 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -237,7 +267,13 @@ HB_FUNC( QT_QREGION_INTERSECTED_1 )
  */
 HB_FUNC( QT_QREGION_INTERSECTS )
 {
-   hb_retl( hbqt_par_QRegion( 1 )->intersects( *hbqt_par_QRegion( 2 ) ) );
+   QRegion * p = hbqt_par_QRegion( 1 );
+   if( p )
+      hb_retl( ( p )->intersects( *hbqt_par_QRegion( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QREGION_INTERSECTS FP=hb_retl( ( p )->intersects( *hbqt_par_QRegion( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -245,7 +281,13 @@ HB_FUNC( QT_QREGION_INTERSECTS )
  */
 HB_FUNC( QT_QREGION_INTERSECTS_1 )
 {
-   hb_retl( hbqt_par_QRegion( 1 )->intersects( *hbqt_par_QRect( 2 ) ) );
+   QRegion * p = hbqt_par_QRegion( 1 );
+   if( p )
+      hb_retl( ( p )->intersects( *hbqt_par_QRect( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QREGION_INTERSECTS_1 FP=hb_retl( ( p )->intersects( *hbqt_par_QRect( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -253,7 +295,13 @@ HB_FUNC( QT_QREGION_INTERSECTS_1 )
  */
 HB_FUNC( QT_QREGION_ISEMPTY )
 {
-   hb_retl( hbqt_par_QRegion( 1 )->isEmpty() );
+   QRegion * p = hbqt_par_QRegion( 1 );
+   if( p )
+      hb_retl( ( p )->isEmpty() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QREGION_ISEMPTY FP=hb_retl( ( p )->isEmpty() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -261,7 +309,13 @@ HB_FUNC( QT_QREGION_ISEMPTY )
  */
 HB_FUNC( QT_QREGION_NUMRECTS )
 {
-   hb_retni( hbqt_par_QRegion( 1 )->numRects() );
+   QRegion * p = hbqt_par_QRegion( 1 );
+   if( p )
+      hb_retni( ( p )->numRects() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QREGION_NUMRECTS FP=hb_retni( ( p )->numRects() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -269,7 +323,13 @@ HB_FUNC( QT_QREGION_NUMRECTS )
  */
 HB_FUNC( QT_QREGION_SETRECTS )
 {
-   hbqt_par_QRegion( 1 )->setRects( hbqt_par_QRect( 2 ), hb_parni( 3 ) );
+   QRegion * p = hbqt_par_QRegion( 1 );
+   if( p )
+      ( p )->setRects( hbqt_par_QRect( 2 ), hb_parni( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QREGION_SETRECTS FP=( p )->setRects( hbqt_par_QRect( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -277,7 +337,13 @@ HB_FUNC( QT_QREGION_SETRECTS )
  */
 HB_FUNC( QT_QREGION_SUBTRACTED )
 {
-   hb_retptrGC( hbqt_gcAllocate_QRegion( new QRegion( hbqt_par_QRegion( 1 )->subtracted( *hbqt_par_QRegion( 2 ) ) ), true ) );
+   QRegion * p = hbqt_par_QRegion( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QRegion( new QRegion( ( p )->subtracted( *hbqt_par_QRegion( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QREGION_SUBTRACTED FP=hb_retptrGC( hbqt_gcAllocate_QRegion( new QRegion( ( p )->subtracted( *hbqt_par_QRegion( 2 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -285,7 +351,13 @@ HB_FUNC( QT_QREGION_SUBTRACTED )
  */
 HB_FUNC( QT_QREGION_TRANSLATE )
 {
-   hbqt_par_QRegion( 1 )->translate( hb_parni( 2 ), hb_parni( 3 ) );
+   QRegion * p = hbqt_par_QRegion( 1 );
+   if( p )
+      ( p )->translate( hb_parni( 2 ), hb_parni( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QREGION_TRANSLATE FP=( p )->translate( hb_parni( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -293,7 +365,13 @@ HB_FUNC( QT_QREGION_TRANSLATE )
  */
 HB_FUNC( QT_QREGION_TRANSLATE_1 )
 {
-   hbqt_par_QRegion( 1 )->translate( *hbqt_par_QPoint( 2 ) );
+   QRegion * p = hbqt_par_QRegion( 1 );
+   if( p )
+      ( p )->translate( *hbqt_par_QPoint( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QREGION_TRANSLATE_1 FP=( p )->translate( *hbqt_par_QPoint( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -301,7 +379,13 @@ HB_FUNC( QT_QREGION_TRANSLATE_1 )
  */
 HB_FUNC( QT_QREGION_TRANSLATED )
 {
-   hb_retptrGC( hbqt_gcAllocate_QRegion( new QRegion( hbqt_par_QRegion( 1 )->translated( hb_parni( 2 ), hb_parni( 3 ) ) ), true ) );
+   QRegion * p = hbqt_par_QRegion( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QRegion( new QRegion( ( p )->translated( hb_parni( 2 ), hb_parni( 3 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QREGION_TRANSLATED FP=hb_retptrGC( hbqt_gcAllocate_QRegion( new QRegion( ( p )->translated( hb_parni( 2 ), hb_parni( 3 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -309,7 +393,13 @@ HB_FUNC( QT_QREGION_TRANSLATED )
  */
 HB_FUNC( QT_QREGION_TRANSLATED_1 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QRegion( new QRegion( hbqt_par_QRegion( 1 )->translated( *hbqt_par_QPoint( 2 ) ) ), true ) );
+   QRegion * p = hbqt_par_QRegion( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QRegion( new QRegion( ( p )->translated( *hbqt_par_QPoint( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QREGION_TRANSLATED_1 FP=hb_retptrGC( hbqt_gcAllocate_QRegion( new QRegion( ( p )->translated( *hbqt_par_QPoint( 2 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -317,7 +407,13 @@ HB_FUNC( QT_QREGION_TRANSLATED_1 )
  */
 HB_FUNC( QT_QREGION_UNITED )
 {
-   hb_retptrGC( hbqt_gcAllocate_QRegion( new QRegion( hbqt_par_QRegion( 1 )->united( *hbqt_par_QRegion( 2 ) ) ), true ) );
+   QRegion * p = hbqt_par_QRegion( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QRegion( new QRegion( ( p )->united( *hbqt_par_QRegion( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QREGION_UNITED FP=hb_retptrGC( hbqt_gcAllocate_QRegion( new QRegion( ( p )->united( *hbqt_par_QRegion( 2 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -325,7 +421,13 @@ HB_FUNC( QT_QREGION_UNITED )
  */
 HB_FUNC( QT_QREGION_UNITED_1 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QRegion( new QRegion( hbqt_par_QRegion( 1 )->united( *hbqt_par_QRect( 2 ) ) ), true ) );
+   QRegion * p = hbqt_par_QRegion( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QRegion( new QRegion( ( p )->united( *hbqt_par_QRect( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QREGION_UNITED_1 FP=hb_retptrGC( hbqt_gcAllocate_QRegion( new QRegion( ( p )->united( *hbqt_par_QRect( 2 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -333,7 +435,13 @@ HB_FUNC( QT_QREGION_UNITED_1 )
  */
 HB_FUNC( QT_QREGION_XORED )
 {
-   hb_retptrGC( hbqt_gcAllocate_QRegion( new QRegion( hbqt_par_QRegion( 1 )->xored( *hbqt_par_QRegion( 2 ) ) ), true ) );
+   QRegion * p = hbqt_par_QRegion( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QRegion( new QRegion( ( p )->xored( *hbqt_par_QRegion( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QREGION_XORED FP=hb_retptrGC( hbqt_gcAllocate_QRegion( new QRegion( ( p )->xored( *hbqt_par_QRegion( 2 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 

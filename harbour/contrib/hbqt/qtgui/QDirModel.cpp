@@ -82,43 +82,44 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QDirModel > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QDirModel > pq;
 } QGC_POINTER_QDirModel;
 
 QT_G_FUNC( hbqt_gcRelease_QDirModel )
 {
+   QDirModel  * ph = NULL ;
    QGC_POINTER_QDirModel * p = ( QGC_POINTER_QDirModel * ) Cargo;
 
-   if( p && p->bNew )
+   if( p && p->bNew && p->ph )
    {
-      if( p->ph && p->pq )
+      ph = p->ph;
+      if( ph )
       {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QDirModel   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
-            delete ( ( QDirModel * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QDirModel   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QDirModel   /.\\   ", (void*) ph, (void*) p->ph ) );
+            delete ( p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QDirModel   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QDirModel          pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QDirModel          ", ph ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QDirModel    :     Object already deleted!", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QDirModel    :     Object already deleted!", ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QDirModel    :    Object not created with new=true", p->ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QDirModel    :    Object not created with new=true", ph ) );
       p->ph = NULL;
    }
 }
@@ -127,13 +128,12 @@ void * hbqt_gcAllocate_QDirModel( void * pObj, bool bNew )
 {
    QGC_POINTER_QDirModel * p = ( QGC_POINTER_QDirModel * ) hb_gcAllocate( sizeof( QGC_POINTER_QDirModel ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QDirModel >( ( QDirModel * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QDirModel;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QDirModel >( ( QDirModel * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QDirModel  under p->pq", pObj ) );
    }
    else
@@ -145,11 +145,11 @@ void * hbqt_gcAllocate_QDirModel( void * pObj, bool bNew )
 
 HB_FUNC( QT_QDIRMODEL )
 {
-   void * pObj = NULL;
+   QDirModel * pObj = NULL;
 
-   pObj = ( QDirModel* ) new QDirModel( hbqt_par_QObject( 1 ) ) ;
+   pObj =  new QDirModel( hbqt_par_QObject( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QDirModel( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QDirModel( ( void * ) pObj, true ) );
 }
 
 /*
@@ -157,7 +157,13 @@ HB_FUNC( QT_QDIRMODEL )
  */
 HB_FUNC( QT_QDIRMODEL_COLUMNCOUNT )
 {
-   hb_retni( hbqt_par_QDirModel( 1 )->columnCount( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QModelIndex( 2 ) : QModelIndex() ) ) );
+   QDirModel * p = hbqt_par_QDirModel( 1 );
+   if( p )
+      hb_retni( ( p )->columnCount( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QModelIndex( 2 ) : QModelIndex() ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIRMODEL_COLUMNCOUNT FP=hb_retni( ( p )->columnCount( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QModelIndex( 2 ) : QModelIndex() ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -165,7 +171,13 @@ HB_FUNC( QT_QDIRMODEL_COLUMNCOUNT )
  */
 HB_FUNC( QT_QDIRMODEL_DATA )
 {
-   hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( hbqt_par_QDirModel( 1 )->data( *hbqt_par_QModelIndex( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : Qt::DisplayRole ) ) ), true ) );
+   QDirModel * p = hbqt_par_QDirModel( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( ( p )->data( *hbqt_par_QModelIndex( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : Qt::DisplayRole ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIRMODEL_DATA FP=hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( ( p )->data( *hbqt_par_QModelIndex( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : Qt::DisplayRole ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -173,7 +185,13 @@ HB_FUNC( QT_QDIRMODEL_DATA )
  */
 HB_FUNC( QT_QDIRMODEL_DROPMIMEDATA )
 {
-   hb_retl( hbqt_par_QDirModel( 1 )->dropMimeData( hbqt_par_QMimeData( 2 ), ( Qt::DropAction ) hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), *hbqt_par_QModelIndex( 6 ) ) );
+   QDirModel * p = hbqt_par_QDirModel( 1 );
+   if( p )
+      hb_retl( ( p )->dropMimeData( hbqt_par_QMimeData( 2 ), ( Qt::DropAction ) hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), *hbqt_par_QModelIndex( 6 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIRMODEL_DROPMIMEDATA FP=hb_retl( ( p )->dropMimeData( hbqt_par_QMimeData( 2 ), ( Qt::DropAction ) hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), *hbqt_par_QModelIndex( 6 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -181,7 +199,13 @@ HB_FUNC( QT_QDIRMODEL_DROPMIMEDATA )
  */
 HB_FUNC( QT_QDIRMODEL_FILEICON )
 {
-   hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( hbqt_par_QDirModel( 1 )->fileIcon( *hbqt_par_QModelIndex( 2 ) ) ), true ) );
+   QDirModel * p = hbqt_par_QDirModel( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( ( p )->fileIcon( *hbqt_par_QModelIndex( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIRMODEL_FILEICON FP=hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( ( p )->fileIcon( *hbqt_par_QModelIndex( 2 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -189,7 +213,13 @@ HB_FUNC( QT_QDIRMODEL_FILEICON )
  */
 HB_FUNC( QT_QDIRMODEL_FILEINFO )
 {
-   hb_retptrGC( hbqt_gcAllocate_QFileInfo( new QFileInfo( hbqt_par_QDirModel( 1 )->fileInfo( *hbqt_par_QModelIndex( 2 ) ) ), true ) );
+   QDirModel * p = hbqt_par_QDirModel( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QFileInfo( new QFileInfo( ( p )->fileInfo( *hbqt_par_QModelIndex( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIRMODEL_FILEINFO FP=hb_retptrGC( hbqt_gcAllocate_QFileInfo( new QFileInfo( ( p )->fileInfo( *hbqt_par_QModelIndex( 2 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -197,7 +227,13 @@ HB_FUNC( QT_QDIRMODEL_FILEINFO )
  */
 HB_FUNC( QT_QDIRMODEL_FILENAME )
 {
-   hb_retc( hbqt_par_QDirModel( 1 )->fileName( *hbqt_par_QModelIndex( 2 ) ).toAscii().data() );
+   QDirModel * p = hbqt_par_QDirModel( 1 );
+   if( p )
+      hb_retc( ( p )->fileName( *hbqt_par_QModelIndex( 2 ) ).toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIRMODEL_FILENAME FP=hb_retc( ( p )->fileName( *hbqt_par_QModelIndex( 2 ) ).toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -205,7 +241,13 @@ HB_FUNC( QT_QDIRMODEL_FILENAME )
  */
 HB_FUNC( QT_QDIRMODEL_FILEPATH )
 {
-   hb_retc( hbqt_par_QDirModel( 1 )->filePath( *hbqt_par_QModelIndex( 2 ) ).toAscii().data() );
+   QDirModel * p = hbqt_par_QDirModel( 1 );
+   if( p )
+      hb_retc( ( p )->filePath( *hbqt_par_QModelIndex( 2 ) ).toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIRMODEL_FILEPATH FP=hb_retc( ( p )->filePath( *hbqt_par_QModelIndex( 2 ) ).toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -213,7 +255,13 @@ HB_FUNC( QT_QDIRMODEL_FILEPATH )
  */
 HB_FUNC( QT_QDIRMODEL_FILTER )
 {
-   hb_retni( ( QDir::Filters ) hbqt_par_QDirModel( 1 )->filter() );
+   QDirModel * p = hbqt_par_QDirModel( 1 );
+   if( p )
+      hb_retni( ( QDir::Filters ) ( p )->filter() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIRMODEL_FILTER FP=hb_retni( ( QDir::Filters ) ( p )->filter() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -221,7 +269,13 @@ HB_FUNC( QT_QDIRMODEL_FILTER )
  */
 HB_FUNC( QT_QDIRMODEL_FLAGS )
 {
-   hb_retni( ( Qt::ItemFlags ) hbqt_par_QDirModel( 1 )->flags( *hbqt_par_QModelIndex( 2 ) ) );
+   QDirModel * p = hbqt_par_QDirModel( 1 );
+   if( p )
+      hb_retni( ( Qt::ItemFlags ) ( p )->flags( *hbqt_par_QModelIndex( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIRMODEL_FLAGS FP=hb_retni( ( Qt::ItemFlags ) ( p )->flags( *hbqt_par_QModelIndex( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -229,7 +283,13 @@ HB_FUNC( QT_QDIRMODEL_FLAGS )
  */
 HB_FUNC( QT_QDIRMODEL_HASCHILDREN )
 {
-   hb_retl( hbqt_par_QDirModel( 1 )->hasChildren( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QModelIndex( 2 ) : QModelIndex() ) ) );
+   QDirModel * p = hbqt_par_QDirModel( 1 );
+   if( p )
+      hb_retl( ( p )->hasChildren( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QModelIndex( 2 ) : QModelIndex() ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIRMODEL_HASCHILDREN FP=hb_retl( ( p )->hasChildren( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QModelIndex( 2 ) : QModelIndex() ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -237,7 +297,13 @@ HB_FUNC( QT_QDIRMODEL_HASCHILDREN )
  */
 HB_FUNC( QT_QDIRMODEL_HEADERDATA )
 {
-   hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( hbqt_par_QDirModel( 1 )->headerData( hb_parni( 2 ), ( Qt::Orientation ) hb_parni( 3 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : Qt::DisplayRole ) ) ), true ) );
+   QDirModel * p = hbqt_par_QDirModel( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( ( p )->headerData( hb_parni( 2 ), ( Qt::Orientation ) hb_parni( 3 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : Qt::DisplayRole ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIRMODEL_HEADERDATA FP=hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( ( p )->headerData( hb_parni( 2 ), ( Qt::Orientation ) hb_parni( 3 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : Qt::DisplayRole ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -245,7 +311,13 @@ HB_FUNC( QT_QDIRMODEL_HEADERDATA )
  */
 HB_FUNC( QT_QDIRMODEL_ICONPROVIDER )
 {
-   hb_retptrGC( hbqt_gcAllocate_QFileIconProvider( hbqt_par_QDirModel( 1 )->iconProvider(), false ) );
+   QDirModel * p = hbqt_par_QDirModel( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QFileIconProvider( ( p )->iconProvider(), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIRMODEL_ICONPROVIDER FP=hb_retptrGC( hbqt_gcAllocate_QFileIconProvider( ( p )->iconProvider(), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -253,7 +325,13 @@ HB_FUNC( QT_QDIRMODEL_ICONPROVIDER )
  */
 HB_FUNC( QT_QDIRMODEL_INDEX )
 {
-   hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QDirModel( 1 )->index( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QModelIndex( 4 ) : QModelIndex() ) ) ), true ) );
+   QDirModel * p = hbqt_par_QDirModel( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( ( p )->index( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QModelIndex( 4 ) : QModelIndex() ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIRMODEL_INDEX FP=hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( ( p )->index( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QModelIndex( 4 ) : QModelIndex() ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -261,7 +339,13 @@ HB_FUNC( QT_QDIRMODEL_INDEX )
  */
 HB_FUNC( QT_QDIRMODEL_INDEX_1 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QDirModel( 1 )->index( QDirModel::tr( hb_parc( 2 ) ), hb_parni( 3 ) ) ), true ) );
+   QDirModel * p = hbqt_par_QDirModel( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( ( p )->index( QDirModel::tr( hb_parc( 2 ) ), hb_parni( 3 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIRMODEL_INDEX_1 FP=hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( ( p )->index( QDirModel::tr( hb_parc( 2 ) ), hb_parni( 3 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -269,7 +353,13 @@ HB_FUNC( QT_QDIRMODEL_INDEX_1 )
  */
 HB_FUNC( QT_QDIRMODEL_ISDIR )
 {
-   hb_retl( hbqt_par_QDirModel( 1 )->isDir( *hbqt_par_QModelIndex( 2 ) ) );
+   QDirModel * p = hbqt_par_QDirModel( 1 );
+   if( p )
+      hb_retl( ( p )->isDir( *hbqt_par_QModelIndex( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIRMODEL_ISDIR FP=hb_retl( ( p )->isDir( *hbqt_par_QModelIndex( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -277,7 +367,13 @@ HB_FUNC( QT_QDIRMODEL_ISDIR )
  */
 HB_FUNC( QT_QDIRMODEL_ISREADONLY )
 {
-   hb_retl( hbqt_par_QDirModel( 1 )->isReadOnly() );
+   QDirModel * p = hbqt_par_QDirModel( 1 );
+   if( p )
+      hb_retl( ( p )->isReadOnly() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIRMODEL_ISREADONLY FP=hb_retl( ( p )->isReadOnly() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -285,7 +381,13 @@ HB_FUNC( QT_QDIRMODEL_ISREADONLY )
  */
 HB_FUNC( QT_QDIRMODEL_LAZYCHILDCOUNT )
 {
-   hb_retl( hbqt_par_QDirModel( 1 )->lazyChildCount() );
+   QDirModel * p = hbqt_par_QDirModel( 1 );
+   if( p )
+      hb_retl( ( p )->lazyChildCount() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIRMODEL_LAZYCHILDCOUNT FP=hb_retl( ( p )->lazyChildCount() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -293,7 +395,13 @@ HB_FUNC( QT_QDIRMODEL_LAZYCHILDCOUNT )
  */
 HB_FUNC( QT_QDIRMODEL_MIMETYPES )
 {
-   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QDirModel( 1 )->mimeTypes() ), true ) );
+   QDirModel * p = hbqt_par_QDirModel( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->mimeTypes() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIRMODEL_MIMETYPES FP=hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->mimeTypes() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -301,7 +409,13 @@ HB_FUNC( QT_QDIRMODEL_MIMETYPES )
  */
 HB_FUNC( QT_QDIRMODEL_MKDIR )
 {
-   hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QDirModel( 1 )->mkdir( *hbqt_par_QModelIndex( 2 ), QDirModel::tr( hb_parc( 3 ) ) ) ), true ) );
+   QDirModel * p = hbqt_par_QDirModel( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( ( p )->mkdir( *hbqt_par_QModelIndex( 2 ), QDirModel::tr( hb_parc( 3 ) ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIRMODEL_MKDIR FP=hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( ( p )->mkdir( *hbqt_par_QModelIndex( 2 ), QDirModel::tr( hb_parc( 3 ) ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -309,7 +423,13 @@ HB_FUNC( QT_QDIRMODEL_MKDIR )
  */
 HB_FUNC( QT_QDIRMODEL_NAMEFILTERS )
 {
-   hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( hbqt_par_QDirModel( 1 )->nameFilters() ), true ) );
+   QDirModel * p = hbqt_par_QDirModel( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->nameFilters() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIRMODEL_NAMEFILTERS FP=hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->nameFilters() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -317,7 +437,13 @@ HB_FUNC( QT_QDIRMODEL_NAMEFILTERS )
  */
 HB_FUNC( QT_QDIRMODEL_PARENT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( hbqt_par_QDirModel( 1 )->parent( *hbqt_par_QModelIndex( 2 ) ) ), true ) );
+   QDirModel * p = hbqt_par_QDirModel( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( ( p )->parent( *hbqt_par_QModelIndex( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIRMODEL_PARENT FP=hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( ( p )->parent( *hbqt_par_QModelIndex( 2 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -325,7 +451,13 @@ HB_FUNC( QT_QDIRMODEL_PARENT )
  */
 HB_FUNC( QT_QDIRMODEL_REMOVE )
 {
-   hb_retl( hbqt_par_QDirModel( 1 )->remove( *hbqt_par_QModelIndex( 2 ) ) );
+   QDirModel * p = hbqt_par_QDirModel( 1 );
+   if( p )
+      hb_retl( ( p )->remove( *hbqt_par_QModelIndex( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIRMODEL_REMOVE FP=hb_retl( ( p )->remove( *hbqt_par_QModelIndex( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -333,7 +465,13 @@ HB_FUNC( QT_QDIRMODEL_REMOVE )
  */
 HB_FUNC( QT_QDIRMODEL_RESOLVESYMLINKS )
 {
-   hb_retl( hbqt_par_QDirModel( 1 )->resolveSymlinks() );
+   QDirModel * p = hbqt_par_QDirModel( 1 );
+   if( p )
+      hb_retl( ( p )->resolveSymlinks() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIRMODEL_RESOLVESYMLINKS FP=hb_retl( ( p )->resolveSymlinks() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -341,7 +479,13 @@ HB_FUNC( QT_QDIRMODEL_RESOLVESYMLINKS )
  */
 HB_FUNC( QT_QDIRMODEL_RMDIR )
 {
-   hb_retl( hbqt_par_QDirModel( 1 )->rmdir( *hbqt_par_QModelIndex( 2 ) ) );
+   QDirModel * p = hbqt_par_QDirModel( 1 );
+   if( p )
+      hb_retl( ( p )->rmdir( *hbqt_par_QModelIndex( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIRMODEL_RMDIR FP=hb_retl( ( p )->rmdir( *hbqt_par_QModelIndex( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -349,7 +493,13 @@ HB_FUNC( QT_QDIRMODEL_RMDIR )
  */
 HB_FUNC( QT_QDIRMODEL_ROWCOUNT )
 {
-   hb_retni( hbqt_par_QDirModel( 1 )->rowCount( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QModelIndex( 2 ) : QModelIndex() ) ) );
+   QDirModel * p = hbqt_par_QDirModel( 1 );
+   if( p )
+      hb_retni( ( p )->rowCount( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QModelIndex( 2 ) : QModelIndex() ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIRMODEL_ROWCOUNT FP=hb_retni( ( p )->rowCount( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QModelIndex( 2 ) : QModelIndex() ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -357,7 +507,13 @@ HB_FUNC( QT_QDIRMODEL_ROWCOUNT )
  */
 HB_FUNC( QT_QDIRMODEL_SETDATA )
 {
-   hb_retl( hbqt_par_QDirModel( 1 )->setData( *hbqt_par_QModelIndex( 2 ), *hbqt_par_QVariant( 3 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : Qt::EditRole ) ) );
+   QDirModel * p = hbqt_par_QDirModel( 1 );
+   if( p )
+      hb_retl( ( p )->setData( *hbqt_par_QModelIndex( 2 ), *hbqt_par_QVariant( 3 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : Qt::EditRole ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIRMODEL_SETDATA FP=hb_retl( ( p )->setData( *hbqt_par_QModelIndex( 2 ), *hbqt_par_QVariant( 3 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : Qt::EditRole ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -365,7 +521,13 @@ HB_FUNC( QT_QDIRMODEL_SETDATA )
  */
 HB_FUNC( QT_QDIRMODEL_SETFILTER )
 {
-   hbqt_par_QDirModel( 1 )->setFilter( ( QDir::Filters ) hb_parni( 2 ) );
+   QDirModel * p = hbqt_par_QDirModel( 1 );
+   if( p )
+      ( p )->setFilter( ( QDir::Filters ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIRMODEL_SETFILTER FP=( p )->setFilter( ( QDir::Filters ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -373,7 +535,13 @@ HB_FUNC( QT_QDIRMODEL_SETFILTER )
  */
 HB_FUNC( QT_QDIRMODEL_SETICONPROVIDER )
 {
-   hbqt_par_QDirModel( 1 )->setIconProvider( hbqt_par_QFileIconProvider( 2 ) );
+   QDirModel * p = hbqt_par_QDirModel( 1 );
+   if( p )
+      ( p )->setIconProvider( hbqt_par_QFileIconProvider( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIRMODEL_SETICONPROVIDER FP=( p )->setIconProvider( hbqt_par_QFileIconProvider( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -381,7 +549,13 @@ HB_FUNC( QT_QDIRMODEL_SETICONPROVIDER )
  */
 HB_FUNC( QT_QDIRMODEL_SETLAZYCHILDCOUNT )
 {
-   hbqt_par_QDirModel( 1 )->setLazyChildCount( hb_parl( 2 ) );
+   QDirModel * p = hbqt_par_QDirModel( 1 );
+   if( p )
+      ( p )->setLazyChildCount( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIRMODEL_SETLAZYCHILDCOUNT FP=( p )->setLazyChildCount( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -389,7 +563,13 @@ HB_FUNC( QT_QDIRMODEL_SETLAZYCHILDCOUNT )
  */
 HB_FUNC( QT_QDIRMODEL_SETNAMEFILTERS )
 {
-   hbqt_par_QDirModel( 1 )->setNameFilters( *hbqt_par_QStringList( 2 ) );
+   QDirModel * p = hbqt_par_QDirModel( 1 );
+   if( p )
+      ( p )->setNameFilters( *hbqt_par_QStringList( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIRMODEL_SETNAMEFILTERS FP=( p )->setNameFilters( *hbqt_par_QStringList( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -397,7 +577,13 @@ HB_FUNC( QT_QDIRMODEL_SETNAMEFILTERS )
  */
 HB_FUNC( QT_QDIRMODEL_SETREADONLY )
 {
-   hbqt_par_QDirModel( 1 )->setReadOnly( hb_parl( 2 ) );
+   QDirModel * p = hbqt_par_QDirModel( 1 );
+   if( p )
+      ( p )->setReadOnly( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIRMODEL_SETREADONLY FP=( p )->setReadOnly( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -405,7 +591,13 @@ HB_FUNC( QT_QDIRMODEL_SETREADONLY )
  */
 HB_FUNC( QT_QDIRMODEL_SETRESOLVESYMLINKS )
 {
-   hbqt_par_QDirModel( 1 )->setResolveSymlinks( hb_parl( 2 ) );
+   QDirModel * p = hbqt_par_QDirModel( 1 );
+   if( p )
+      ( p )->setResolveSymlinks( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIRMODEL_SETRESOLVESYMLINKS FP=( p )->setResolveSymlinks( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -413,7 +605,13 @@ HB_FUNC( QT_QDIRMODEL_SETRESOLVESYMLINKS )
  */
 HB_FUNC( QT_QDIRMODEL_SETSORTING )
 {
-   hbqt_par_QDirModel( 1 )->setSorting( ( QDir::SortFlags ) hb_parni( 2 ) );
+   QDirModel * p = hbqt_par_QDirModel( 1 );
+   if( p )
+      ( p )->setSorting( ( QDir::SortFlags ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIRMODEL_SETSORTING FP=( p )->setSorting( ( QDir::SortFlags ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -421,7 +619,13 @@ HB_FUNC( QT_QDIRMODEL_SETSORTING )
  */
 HB_FUNC( QT_QDIRMODEL_SORT )
 {
-   hbqt_par_QDirModel( 1 )->sort( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::SortOrder ) hb_parni( 3 ) : ( Qt::SortOrder ) Qt::AscendingOrder ) );
+   QDirModel * p = hbqt_par_QDirModel( 1 );
+   if( p )
+      ( p )->sort( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::SortOrder ) hb_parni( 3 ) : ( Qt::SortOrder ) Qt::AscendingOrder ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIRMODEL_SORT FP=( p )->sort( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::SortOrder ) hb_parni( 3 ) : ( Qt::SortOrder ) Qt::AscendingOrder ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -429,7 +633,13 @@ HB_FUNC( QT_QDIRMODEL_SORT )
  */
 HB_FUNC( QT_QDIRMODEL_SORTING )
 {
-   hb_retni( ( QDir::SortFlags ) hbqt_par_QDirModel( 1 )->sorting() );
+   QDirModel * p = hbqt_par_QDirModel( 1 );
+   if( p )
+      hb_retni( ( QDir::SortFlags ) ( p )->sorting() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIRMODEL_SORTING FP=hb_retni( ( QDir::SortFlags ) ( p )->sorting() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -437,7 +647,13 @@ HB_FUNC( QT_QDIRMODEL_SORTING )
  */
 HB_FUNC( QT_QDIRMODEL_SUPPORTEDDROPACTIONS )
 {
-   hb_retni( ( Qt::DropActions ) hbqt_par_QDirModel( 1 )->supportedDropActions() );
+   QDirModel * p = hbqt_par_QDirModel( 1 );
+   if( p )
+      hb_retni( ( Qt::DropActions ) ( p )->supportedDropActions() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIRMODEL_SUPPORTEDDROPACTIONS FP=hb_retni( ( Qt::DropActions ) ( p )->supportedDropActions() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -445,7 +661,13 @@ HB_FUNC( QT_QDIRMODEL_SUPPORTEDDROPACTIONS )
  */
 HB_FUNC( QT_QDIRMODEL_REFRESH )
 {
-   hbqt_par_QDirModel( 1 )->refresh( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QModelIndex( 2 ) : QModelIndex() ) );
+   QDirModel * p = hbqt_par_QDirModel( 1 );
+   if( p )
+      ( p )->refresh( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QModelIndex( 2 ) : QModelIndex() ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIRMODEL_REFRESH FP=( p )->refresh( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QModelIndex( 2 ) : QModelIndex() ) ); p is NULL" ) );
+   }
 }
 
 

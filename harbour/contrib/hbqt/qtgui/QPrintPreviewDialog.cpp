@@ -78,43 +78,44 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QPrintPreviewDialog > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QPrintPreviewDialog > pq;
 } QGC_POINTER_QPrintPreviewDialog;
 
 QT_G_FUNC( hbqt_gcRelease_QPrintPreviewDialog )
 {
+   QPrintPreviewDialog  * ph = NULL ;
    QGC_POINTER_QPrintPreviewDialog * p = ( QGC_POINTER_QPrintPreviewDialog * ) Cargo;
 
-   if( p && p->bNew )
+   if( p && p->bNew && p->ph )
    {
-      if( p->ph && p->pq )
+      ph = p->ph;
+      if( ph )
       {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QPrintPreviewDialog   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
-            delete ( ( QPrintPreviewDialog * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QPrintPreviewDialog   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QPrintPreviewDialog   /.\\   ", (void*) ph, (void*) p->ph ) );
+            delete ( p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QPrintPreviewDialog   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QPrintPreviewDialog          pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QPrintPreviewDialog          ", ph ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QPrintPreviewDialog    :     Object already deleted!", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QPrintPreviewDialog    :     Object already deleted!", ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QPrintPreviewDialog    :    Object not created with new=true", p->ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QPrintPreviewDialog    :    Object not created with new=true", ph ) );
       p->ph = NULL;
    }
 }
@@ -123,13 +124,12 @@ void * hbqt_gcAllocate_QPrintPreviewDialog( void * pObj, bool bNew )
 {
    QGC_POINTER_QPrintPreviewDialog * p = ( QGC_POINTER_QPrintPreviewDialog * ) hb_gcAllocate( sizeof( QGC_POINTER_QPrintPreviewDialog ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QPrintPreviewDialog >( ( QPrintPreviewDialog * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QPrintPreviewDialog;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QPrintPreviewDialog >( ( QPrintPreviewDialog * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QPrintPreviewDialog  under p->pq", pObj ) );
    }
    else
@@ -141,14 +141,14 @@ void * hbqt_gcAllocate_QPrintPreviewDialog( void * pObj, bool bNew )
 
 HB_FUNC( QT_QPRINTPREVIEWDIALOG )
 {
-   void * pObj = NULL;
+   QPrintPreviewDialog * pObj = NULL;
 
    if( hb_pcount() >= 2 && HB_ISPOINTER( 2 ) )
       pObj = new QPrintPreviewDialog( hbqt_par_QPrinter( 1 ), hbqt_par_QWidget( 2 ), ( Qt::WindowFlags ) hb_parni( 3 ) ) ;
    else
       pObj = new QPrintPreviewDialog( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QPrintPreviewDialog( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QPrintPreviewDialog( ( void * ) pObj, true ) );
 }
 
 /*
@@ -156,7 +156,13 @@ HB_FUNC( QT_QPRINTPREVIEWDIALOG )
  */
 HB_FUNC( QT_QPRINTPREVIEWDIALOG_OPEN )
 {
-   hbqt_par_QPrintPreviewDialog( 1 )->open( hbqt_par_QObject( 2 ), hbqt_par_char( 3 ) );
+   QPrintPreviewDialog * p = hbqt_par_QPrintPreviewDialog( 1 );
+   if( p )
+      ( p )->open( hbqt_par_QObject( 2 ), hbqt_par_char( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTPREVIEWDIALOG_OPEN FP=( p )->open( hbqt_par_QObject( 2 ), hbqt_par_char( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -164,7 +170,13 @@ HB_FUNC( QT_QPRINTPREVIEWDIALOG_OPEN )
  */
 HB_FUNC( QT_QPRINTPREVIEWDIALOG_PRINTER )
 {
-   hb_retptrGC( hbqt_gcAllocate_QPrinter( hbqt_par_QPrintPreviewDialog( 1 )->printer(), false ) );
+   QPrintPreviewDialog * p = hbqt_par_QPrintPreviewDialog( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QPrinter( ( p )->printer(), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTPREVIEWDIALOG_PRINTER FP=hb_retptrGC( hbqt_gcAllocate_QPrinter( ( p )->printer(), false ) ); p is NULL" ) );
+   }
 }
 
 

@@ -80,43 +80,44 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QThread > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QThread > pq;
 } QGC_POINTER_QThread;
 
 QT_G_FUNC( hbqt_gcRelease_QThread )
 {
+   QThread  * ph = NULL ;
    QGC_POINTER_QThread * p = ( QGC_POINTER_QThread * ) Cargo;
 
-   if( p && p->bNew )
+   if( p && p->bNew && p->ph )
    {
-      if( p->ph && p->pq )
+      ph = p->ph;
+      if( ph )
       {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QThread   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
-            delete ( ( QThread * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QThread   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QThread   /.\\   ", (void*) ph, (void*) p->ph ) );
+            delete ( p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QThread   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QThread          pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QThread          ", ph ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QThread    :     Object already deleted!", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QThread    :     Object already deleted!", ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QThread    :    Object not created with new=true", p->ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QThread    :    Object not created with new=true", ph ) );
       p->ph = NULL;
    }
 }
@@ -125,13 +126,12 @@ void * hbqt_gcAllocate_QThread( void * pObj, bool bNew )
 {
    QGC_POINTER_QThread * p = ( QGC_POINTER_QThread * ) hb_gcAllocate( sizeof( QGC_POINTER_QThread ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QThread >( ( QThread * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QThread;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QThread >( ( QThread * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QThread  under p->pq", pObj ) );
    }
    else
@@ -143,11 +143,11 @@ void * hbqt_gcAllocate_QThread( void * pObj, bool bNew )
 
 HB_FUNC( QT_QTHREAD )
 {
-   void * pObj = NULL;
+   QThread * pObj = NULL;
 
    pObj = new QThread() ;
 
-   hb_retptrGC( hbqt_gcAllocate_QThread( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QThread( ( void * ) pObj, true ) );
 }
 
 /*
@@ -155,7 +155,13 @@ HB_FUNC( QT_QTHREAD )
  */
 HB_FUNC( QT_QTHREAD_EXIT )
 {
-   hbqt_par_QThread( 1 )->exit( hb_parni( 2 ) );
+   QThread * p = hbqt_par_QThread( 1 );
+   if( p )
+      ( p )->exit( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTHREAD_EXIT FP=( p )->exit( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -163,7 +169,13 @@ HB_FUNC( QT_QTHREAD_EXIT )
  */
 HB_FUNC( QT_QTHREAD_ISFINISHED )
 {
-   hb_retl( hbqt_par_QThread( 1 )->isFinished() );
+   QThread * p = hbqt_par_QThread( 1 );
+   if( p )
+      hb_retl( ( p )->isFinished() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTHREAD_ISFINISHED FP=hb_retl( ( p )->isFinished() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -171,7 +183,13 @@ HB_FUNC( QT_QTHREAD_ISFINISHED )
  */
 HB_FUNC( QT_QTHREAD_ISRUNNING )
 {
-   hb_retl( hbqt_par_QThread( 1 )->isRunning() );
+   QThread * p = hbqt_par_QThread( 1 );
+   if( p )
+      hb_retl( ( p )->isRunning() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTHREAD_ISRUNNING FP=hb_retl( ( p )->isRunning() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -179,7 +197,13 @@ HB_FUNC( QT_QTHREAD_ISRUNNING )
  */
 HB_FUNC( QT_QTHREAD_PRIORITY )
 {
-   hb_retni( ( QThread::Priority ) hbqt_par_QThread( 1 )->priority() );
+   QThread * p = hbqt_par_QThread( 1 );
+   if( p )
+      hb_retni( ( QThread::Priority ) ( p )->priority() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTHREAD_PRIORITY FP=hb_retni( ( QThread::Priority ) ( p )->priority() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -187,7 +211,13 @@ HB_FUNC( QT_QTHREAD_PRIORITY )
  */
 HB_FUNC( QT_QTHREAD_SETPRIORITY )
 {
-   hbqt_par_QThread( 1 )->setPriority( ( QThread::Priority ) hb_parni( 2 ) );
+   QThread * p = hbqt_par_QThread( 1 );
+   if( p )
+      ( p )->setPriority( ( QThread::Priority ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTHREAD_SETPRIORITY FP=( p )->setPriority( ( QThread::Priority ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -195,7 +225,13 @@ HB_FUNC( QT_QTHREAD_SETPRIORITY )
  */
 HB_FUNC( QT_QTHREAD_SETSTACKSIZE )
 {
-   hbqt_par_QThread( 1 )->setStackSize( hb_parni( 2 ) );
+   QThread * p = hbqt_par_QThread( 1 );
+   if( p )
+      ( p )->setStackSize( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTHREAD_SETSTACKSIZE FP=( p )->setStackSize( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -203,7 +239,13 @@ HB_FUNC( QT_QTHREAD_SETSTACKSIZE )
  */
 HB_FUNC( QT_QTHREAD_STACKSIZE )
 {
-   hb_retni( hbqt_par_QThread( 1 )->stackSize() );
+   QThread * p = hbqt_par_QThread( 1 );
+   if( p )
+      hb_retni( ( p )->stackSize() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTHREAD_STACKSIZE FP=hb_retni( ( p )->stackSize() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -211,7 +253,13 @@ HB_FUNC( QT_QTHREAD_STACKSIZE )
  */
 HB_FUNC( QT_QTHREAD_WAIT )
 {
-   hb_retl( hbqt_par_QThread( 1 )->wait() );
+   QThread * p = hbqt_par_QThread( 1 );
+   if( p )
+      hb_retl( ( p )->wait() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTHREAD_WAIT FP=hb_retl( ( p )->wait() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -219,7 +267,13 @@ HB_FUNC( QT_QTHREAD_WAIT )
  */
 HB_FUNC( QT_QTHREAD_CURRENTTHREAD )
 {
-   hb_retptrGC( hbqt_gcAllocate_QThread( hbqt_par_QThread( 1 )->currentThread(), false ) );
+   QThread * p = hbqt_par_QThread( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QThread( ( p )->currentThread(), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTHREAD_CURRENTTHREAD FP=hb_retptrGC( hbqt_gcAllocate_QThread( ( p )->currentThread(), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -227,7 +281,13 @@ HB_FUNC( QT_QTHREAD_CURRENTTHREAD )
  */
 HB_FUNC( QT_QTHREAD_IDEALTHREADCOUNT )
 {
-   hb_retni( hbqt_par_QThread( 1 )->idealThreadCount() );
+   QThread * p = hbqt_par_QThread( 1 );
+   if( p )
+      hb_retni( ( p )->idealThreadCount() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTHREAD_IDEALTHREADCOUNT FP=hb_retni( ( p )->idealThreadCount() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -235,7 +295,13 @@ HB_FUNC( QT_QTHREAD_IDEALTHREADCOUNT )
  */
 HB_FUNC( QT_QTHREAD_YIELDCURRENTTHREAD )
 {
-   hbqt_par_QThread( 1 )->yieldCurrentThread();
+   QThread * p = hbqt_par_QThread( 1 );
+   if( p )
+      ( p )->yieldCurrentThread();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTHREAD_YIELDCURRENTTHREAD FP=( p )->yieldCurrentThread(); p is NULL" ) );
+   }
 }
 
 /*
@@ -243,7 +309,13 @@ HB_FUNC( QT_QTHREAD_YIELDCURRENTTHREAD )
  */
 HB_FUNC( QT_QTHREAD_QUIT )
 {
-   hbqt_par_QThread( 1 )->quit();
+   QThread * p = hbqt_par_QThread( 1 );
+   if( p )
+      ( p )->quit();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTHREAD_QUIT FP=( p )->quit(); p is NULL" ) );
+   }
 }
 
 /*
@@ -251,7 +323,13 @@ HB_FUNC( QT_QTHREAD_QUIT )
  */
 HB_FUNC( QT_QTHREAD_START )
 {
-   hbqt_par_QThread( 1 )->start( ( HB_ISNUM( 2 ) ? ( QThread::Priority ) hb_parni( 2 ) : ( QThread::Priority ) QThread::InheritPriority ) );
+   QThread * p = hbqt_par_QThread( 1 );
+   if( p )
+      ( p )->start( ( HB_ISNUM( 2 ) ? ( QThread::Priority ) hb_parni( 2 ) : ( QThread::Priority ) QThread::InheritPriority ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTHREAD_START FP=( p )->start( ( HB_ISNUM( 2 ) ? ( QThread::Priority ) hb_parni( 2 ) : ( QThread::Priority ) QThread::InheritPriority ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -259,7 +337,13 @@ HB_FUNC( QT_QTHREAD_START )
  */
 HB_FUNC( QT_QTHREAD_TERMINATE )
 {
-   hbqt_par_QThread( 1 )->terminate();
+   QThread * p = hbqt_par_QThread( 1 );
+   if( p )
+      ( p )->terminate();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTHREAD_TERMINATE FP=( p )->terminate(); p is NULL" ) );
+   }
 }
 
 

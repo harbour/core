@@ -77,7 +77,7 @@
 
 typedef struct
 {
-   void * ph;
+   HBQTextBlockUserData * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_HBQTextBlockUserData;
@@ -112,7 +112,7 @@ void * hbqt_gcAllocate_HBQTextBlockUserData( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( HBQTextBlockUserData * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_HBQTextBlockUserData;
 
@@ -129,11 +129,11 @@ void * hbqt_gcAllocate_HBQTextBlockUserData( void * pObj, bool bNew )
 
 HB_FUNC( QT_HBQTEXTBLOCKUSERDATA )
 {
-   void * pObj = NULL;
+   HBQTextBlockUserData * pObj = NULL;
 
    pObj = new HBQTextBlockUserData() ;
 
-   hb_retptrGC( hbqt_gcAllocate_HBQTextBlockUserData( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_HBQTextBlockUserData( ( void * ) pObj, true ) );
 }
 
 /*
@@ -141,7 +141,13 @@ HB_FUNC( QT_HBQTEXTBLOCKUSERDATA )
  */
 HB_FUNC( QT_HBQTEXTBLOCKUSERDATA_HBSETSTATE )
 {
-   hb_retni( hbqt_par_HBQTextBlockUserData( 1 )->hbSetState( hb_parni( 2 ) ) );
+   HBQTextBlockUserData * p = hbqt_par_HBQTextBlockUserData( 1 );
+   if( p )
+      hb_retni( ( p )->hbSetState( hb_parni( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQTEXTBLOCKUSERDATA_HBSETSTATE FP=hb_retni( ( p )->hbSetState( hb_parni( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -149,7 +155,13 @@ HB_FUNC( QT_HBQTEXTBLOCKUSERDATA_HBSETSTATE )
  */
 HB_FUNC( QT_HBQTEXTBLOCKUSERDATA_HBSTATE )
 {
-   hb_retni( hbqt_par_HBQTextBlockUserData( 1 )->hbState() );
+   HBQTextBlockUserData * p = hbqt_par_HBQTextBlockUserData( 1 );
+   if( p )
+      hb_retni( ( p )->hbState() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQTEXTBLOCKUSERDATA_HBSTATE FP=hb_retni( ( p )->hbState() ); p is NULL" ) );
+   }
 }
 
 

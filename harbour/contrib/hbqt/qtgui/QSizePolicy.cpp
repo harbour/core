@@ -85,7 +85,7 @@
 
 typedef struct
 {
-   void * ph;
+   QSizePolicy * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QSizePolicy;
@@ -120,7 +120,7 @@ void * hbqt_gcAllocate_QSizePolicy( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QSizePolicy * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QSizePolicy;
 
@@ -137,7 +137,7 @@ void * hbqt_gcAllocate_QSizePolicy( void * pObj, bool bNew )
 
 HB_FUNC( QT_QSIZEPOLICY )
 {
-   void * pObj = NULL;
+   QSizePolicy * pObj = NULL;
 
    if( hb_pcount() >= 2 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
    {
@@ -152,7 +152,7 @@ HB_FUNC( QT_QSIZEPOLICY )
       pObj = new QSizePolicy() ;
    }
 
-   hb_retptrGC( hbqt_gcAllocate_QSizePolicy( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QSizePolicy( ( void * ) pObj, true ) );
 }
 
 /*
@@ -160,7 +160,13 @@ HB_FUNC( QT_QSIZEPOLICY )
  */
 HB_FUNC( QT_QSIZEPOLICY_CONTROLTYPE )
 {
-   hb_retni( ( QSizePolicy::ControlType ) hbqt_par_QSizePolicy( 1 )->controlType() );
+   QSizePolicy * p = hbqt_par_QSizePolicy( 1 );
+   if( p )
+      hb_retni( ( QSizePolicy::ControlType ) ( p )->controlType() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIZEPOLICY_CONTROLTYPE FP=hb_retni( ( QSizePolicy::ControlType ) ( p )->controlType() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -168,7 +174,13 @@ HB_FUNC( QT_QSIZEPOLICY_CONTROLTYPE )
  */
 HB_FUNC( QT_QSIZEPOLICY_EXPANDINGDIRECTIONS )
 {
-   hb_retni( ( Qt::Orientations ) hbqt_par_QSizePolicy( 1 )->expandingDirections() );
+   QSizePolicy * p = hbqt_par_QSizePolicy( 1 );
+   if( p )
+      hb_retni( ( Qt::Orientations ) ( p )->expandingDirections() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIZEPOLICY_EXPANDINGDIRECTIONS FP=hb_retni( ( Qt::Orientations ) ( p )->expandingDirections() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -176,7 +188,13 @@ HB_FUNC( QT_QSIZEPOLICY_EXPANDINGDIRECTIONS )
  */
 HB_FUNC( QT_QSIZEPOLICY_HASHEIGHTFORWIDTH )
 {
-   hb_retl( hbqt_par_QSizePolicy( 1 )->hasHeightForWidth() );
+   QSizePolicy * p = hbqt_par_QSizePolicy( 1 );
+   if( p )
+      hb_retl( ( p )->hasHeightForWidth() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIZEPOLICY_HASHEIGHTFORWIDTH FP=hb_retl( ( p )->hasHeightForWidth() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -184,7 +202,13 @@ HB_FUNC( QT_QSIZEPOLICY_HASHEIGHTFORWIDTH )
  */
 HB_FUNC( QT_QSIZEPOLICY_HORIZONTALPOLICY )
 {
-   hb_retni( ( QSizePolicy::Policy ) hbqt_par_QSizePolicy( 1 )->horizontalPolicy() );
+   QSizePolicy * p = hbqt_par_QSizePolicy( 1 );
+   if( p )
+      hb_retni( ( QSizePolicy::Policy ) ( p )->horizontalPolicy() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIZEPOLICY_HORIZONTALPOLICY FP=hb_retni( ( QSizePolicy::Policy ) ( p )->horizontalPolicy() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -192,7 +216,13 @@ HB_FUNC( QT_QSIZEPOLICY_HORIZONTALPOLICY )
  */
 HB_FUNC( QT_QSIZEPOLICY_HORIZONTALSTRETCH )
 {
-   hb_retni( hbqt_par_QSizePolicy( 1 )->horizontalStretch() );
+   QSizePolicy * p = hbqt_par_QSizePolicy( 1 );
+   if( p )
+      hb_retni( ( p )->horizontalStretch() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIZEPOLICY_HORIZONTALSTRETCH FP=hb_retni( ( p )->horizontalStretch() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -200,7 +230,13 @@ HB_FUNC( QT_QSIZEPOLICY_HORIZONTALSTRETCH )
  */
 HB_FUNC( QT_QSIZEPOLICY_SETCONTROLTYPE )
 {
-   hbqt_par_QSizePolicy( 1 )->setControlType( ( QSizePolicy::ControlType ) hb_parni( 2 ) );
+   QSizePolicy * p = hbqt_par_QSizePolicy( 1 );
+   if( p )
+      ( p )->setControlType( ( QSizePolicy::ControlType ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIZEPOLICY_SETCONTROLTYPE FP=( p )->setControlType( ( QSizePolicy::ControlType ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -208,7 +244,13 @@ HB_FUNC( QT_QSIZEPOLICY_SETCONTROLTYPE )
  */
 HB_FUNC( QT_QSIZEPOLICY_SETHEIGHTFORWIDTH )
 {
-   hbqt_par_QSizePolicy( 1 )->setHeightForWidth( hb_parl( 2 ) );
+   QSizePolicy * p = hbqt_par_QSizePolicy( 1 );
+   if( p )
+      ( p )->setHeightForWidth( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIZEPOLICY_SETHEIGHTFORWIDTH FP=( p )->setHeightForWidth( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -216,7 +258,13 @@ HB_FUNC( QT_QSIZEPOLICY_SETHEIGHTFORWIDTH )
  */
 HB_FUNC( QT_QSIZEPOLICY_SETHORIZONTALPOLICY )
 {
-   hbqt_par_QSizePolicy( 1 )->setHorizontalPolicy( ( QSizePolicy::Policy ) hb_parni( 2 ) );
+   QSizePolicy * p = hbqt_par_QSizePolicy( 1 );
+   if( p )
+      ( p )->setHorizontalPolicy( ( QSizePolicy::Policy ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIZEPOLICY_SETHORIZONTALPOLICY FP=( p )->setHorizontalPolicy( ( QSizePolicy::Policy ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -224,7 +272,13 @@ HB_FUNC( QT_QSIZEPOLICY_SETHORIZONTALPOLICY )
  */
 HB_FUNC( QT_QSIZEPOLICY_SETHORIZONTALSTRETCH )
 {
-   hbqt_par_QSizePolicy( 1 )->setHorizontalStretch( ( char ) hb_parni( 2 ) );
+   QSizePolicy * p = hbqt_par_QSizePolicy( 1 );
+   if( p )
+      ( p )->setHorizontalStretch( ( char ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIZEPOLICY_SETHORIZONTALSTRETCH FP=( p )->setHorizontalStretch( ( char ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -232,7 +286,13 @@ HB_FUNC( QT_QSIZEPOLICY_SETHORIZONTALSTRETCH )
  */
 HB_FUNC( QT_QSIZEPOLICY_SETVERTICALPOLICY )
 {
-   hbqt_par_QSizePolicy( 1 )->setVerticalPolicy( ( QSizePolicy::Policy ) hb_parni( 2 ) );
+   QSizePolicy * p = hbqt_par_QSizePolicy( 1 );
+   if( p )
+      ( p )->setVerticalPolicy( ( QSizePolicy::Policy ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIZEPOLICY_SETVERTICALPOLICY FP=( p )->setVerticalPolicy( ( QSizePolicy::Policy ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -240,7 +300,13 @@ HB_FUNC( QT_QSIZEPOLICY_SETVERTICALPOLICY )
  */
 HB_FUNC( QT_QSIZEPOLICY_SETVERTICALSTRETCH )
 {
-   hbqt_par_QSizePolicy( 1 )->setVerticalStretch( ( char ) hb_parni( 2 ) );
+   QSizePolicy * p = hbqt_par_QSizePolicy( 1 );
+   if( p )
+      ( p )->setVerticalStretch( ( char ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIZEPOLICY_SETVERTICALSTRETCH FP=( p )->setVerticalStretch( ( char ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -248,7 +314,13 @@ HB_FUNC( QT_QSIZEPOLICY_SETVERTICALSTRETCH )
  */
 HB_FUNC( QT_QSIZEPOLICY_TRANSPOSE )
 {
-   hbqt_par_QSizePolicy( 1 )->transpose();
+   QSizePolicy * p = hbqt_par_QSizePolicy( 1 );
+   if( p )
+      ( p )->transpose();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIZEPOLICY_TRANSPOSE FP=( p )->transpose(); p is NULL" ) );
+   }
 }
 
 /*
@@ -256,7 +328,13 @@ HB_FUNC( QT_QSIZEPOLICY_TRANSPOSE )
  */
 HB_FUNC( QT_QSIZEPOLICY_VERTICALPOLICY )
 {
-   hb_retni( ( QSizePolicy::Policy ) hbqt_par_QSizePolicy( 1 )->verticalPolicy() );
+   QSizePolicy * p = hbqt_par_QSizePolicy( 1 );
+   if( p )
+      hb_retni( ( QSizePolicy::Policy ) ( p )->verticalPolicy() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIZEPOLICY_VERTICALPOLICY FP=hb_retni( ( QSizePolicy::Policy ) ( p )->verticalPolicy() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -264,7 +342,13 @@ HB_FUNC( QT_QSIZEPOLICY_VERTICALPOLICY )
  */
 HB_FUNC( QT_QSIZEPOLICY_VERTICALSTRETCH )
 {
-   hb_retni( hbqt_par_QSizePolicy( 1 )->verticalStretch() );
+   QSizePolicy * p = hbqt_par_QSizePolicy( 1 );
+   if( p )
+      hb_retni( ( p )->verticalStretch() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIZEPOLICY_VERTICALSTRETCH FP=hb_retni( ( p )->verticalStretch() ); p is NULL" ) );
+   }
 }
 
 

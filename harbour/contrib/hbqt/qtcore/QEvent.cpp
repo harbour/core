@@ -81,7 +81,7 @@
 
 typedef struct
 {
-   void * ph;
+   QEvent * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QEvent;
@@ -116,7 +116,7 @@ void * hbqt_gcAllocate_QEvent( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QEvent * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QEvent;
 
@@ -133,11 +133,11 @@ void * hbqt_gcAllocate_QEvent( void * pObj, bool bNew )
 
 HB_FUNC( QT_QEVENT )
 {
-   void * pObj = NULL;
+   QEvent * pObj = NULL;
 
-   pObj = ( QEvent* ) new QEvent( ( QEvent::Type ) hb_parni( 1 ) ) ;
+   pObj =  new QEvent( ( QEvent::Type ) hb_parni( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QEvent( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QEvent( ( void * ) pObj, true ) );
 }
 
 /*
@@ -145,7 +145,13 @@ HB_FUNC( QT_QEVENT )
  */
 HB_FUNC( QT_QEVENT_ACCEPT )
 {
-   hbqt_par_QEvent( 1 )->accept();
+   QEvent * p = hbqt_par_QEvent( 1 );
+   if( p )
+      ( p )->accept();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QEVENT_ACCEPT FP=( p )->accept(); p is NULL" ) );
+   }
 }
 
 /*
@@ -153,7 +159,13 @@ HB_FUNC( QT_QEVENT_ACCEPT )
  */
 HB_FUNC( QT_QEVENT_IGNORE )
 {
-   hbqt_par_QEvent( 1 )->ignore();
+   QEvent * p = hbqt_par_QEvent( 1 );
+   if( p )
+      ( p )->ignore();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QEVENT_IGNORE FP=( p )->ignore(); p is NULL" ) );
+   }
 }
 
 /*
@@ -161,7 +173,13 @@ HB_FUNC( QT_QEVENT_IGNORE )
  */
 HB_FUNC( QT_QEVENT_ISACCEPTED )
 {
-   hb_retl( hbqt_par_QEvent( 1 )->isAccepted() );
+   QEvent * p = hbqt_par_QEvent( 1 );
+   if( p )
+      hb_retl( ( p )->isAccepted() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QEVENT_ISACCEPTED FP=hb_retl( ( p )->isAccepted() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -169,7 +187,13 @@ HB_FUNC( QT_QEVENT_ISACCEPTED )
  */
 HB_FUNC( QT_QEVENT_SETACCEPTED )
 {
-   hbqt_par_QEvent( 1 )->setAccepted( hb_parl( 2 ) );
+   QEvent * p = hbqt_par_QEvent( 1 );
+   if( p )
+      ( p )->setAccepted( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QEVENT_SETACCEPTED FP=( p )->setAccepted( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -177,7 +201,13 @@ HB_FUNC( QT_QEVENT_SETACCEPTED )
  */
 HB_FUNC( QT_QEVENT_SPONTANEOUS )
 {
-   hb_retl( hbqt_par_QEvent( 1 )->spontaneous() );
+   QEvent * p = hbqt_par_QEvent( 1 );
+   if( p )
+      hb_retl( ( p )->spontaneous() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QEVENT_SPONTANEOUS FP=hb_retl( ( p )->spontaneous() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -185,7 +215,13 @@ HB_FUNC( QT_QEVENT_SPONTANEOUS )
  */
 HB_FUNC( QT_QEVENT_TYPE )
 {
-   hb_retni( ( QEvent::Type ) hbqt_par_QEvent( 1 )->type() );
+   QEvent * p = hbqt_par_QEvent( 1 );
+   if( p )
+      hb_retni( ( QEvent::Type ) ( p )->type() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QEVENT_TYPE FP=hb_retni( ( QEvent::Type ) ( p )->type() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -193,7 +229,13 @@ HB_FUNC( QT_QEVENT_TYPE )
  */
 HB_FUNC( QT_QEVENT_REGISTEREVENTTYPE )
 {
-   hb_retni( hbqt_par_QEvent( 1 )->registerEventType( ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : -1 ) ) );
+   QEvent * p = hbqt_par_QEvent( 1 );
+   if( p )
+      hb_retni( ( p )->registerEventType( ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : -1 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QEVENT_REGISTEREVENTTYPE FP=hb_retni( ( p )->registerEventType( ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : -1 ) ) ); p is NULL" ) );
+   }
 }
 
 

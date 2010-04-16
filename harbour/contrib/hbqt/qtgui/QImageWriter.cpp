@@ -92,7 +92,7 @@
 
 typedef struct
 {
-   void * ph;
+   QImageWriter * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
 } QGC_POINTER_QImageWriter;
@@ -127,7 +127,7 @@ void * hbqt_gcAllocate_QImageWriter( void * pObj, bool bNew )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   p->ph = ( QImageWriter * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QImageWriter;
 
@@ -144,11 +144,11 @@ void * hbqt_gcAllocate_QImageWriter( void * pObj, bool bNew )
 
 HB_FUNC( QT_QIMAGEWRITER )
 {
-   void * pObj = NULL;
+   QImageWriter * pObj = NULL;
 
-   pObj = ( QImageWriter* ) new QImageWriter() ;
+   pObj =  new QImageWriter() ;
 
-   hb_retptrGC( hbqt_gcAllocate_QImageWriter( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QImageWriter( ( void * ) pObj, true ) );
 }
 
 /*
@@ -156,7 +156,13 @@ HB_FUNC( QT_QIMAGEWRITER )
  */
 HB_FUNC( QT_QIMAGEWRITER_CANWRITE )
 {
-   hb_retl( hbqt_par_QImageWriter( 1 )->canWrite() );
+   QImageWriter * p = hbqt_par_QImageWriter( 1 );
+   if( p )
+      hb_retl( ( p )->canWrite() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QIMAGEWRITER_CANWRITE FP=hb_retl( ( p )->canWrite() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -164,7 +170,13 @@ HB_FUNC( QT_QIMAGEWRITER_CANWRITE )
  */
 HB_FUNC( QT_QIMAGEWRITER_COMPRESSION )
 {
-   hb_retni( hbqt_par_QImageWriter( 1 )->compression() );
+   QImageWriter * p = hbqt_par_QImageWriter( 1 );
+   if( p )
+      hb_retni( ( p )->compression() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QIMAGEWRITER_COMPRESSION FP=hb_retni( ( p )->compression() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -172,7 +184,13 @@ HB_FUNC( QT_QIMAGEWRITER_COMPRESSION )
  */
 HB_FUNC( QT_QIMAGEWRITER_DEVICE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QIODevice( hbqt_par_QImageWriter( 1 )->device(), false ) );
+   QImageWriter * p = hbqt_par_QImageWriter( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QIODevice( ( p )->device(), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QIMAGEWRITER_DEVICE FP=hb_retptrGC( hbqt_gcAllocate_QIODevice( ( p )->device(), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -180,7 +198,13 @@ HB_FUNC( QT_QIMAGEWRITER_DEVICE )
  */
 HB_FUNC( QT_QIMAGEWRITER_ERROR )
 {
-   hb_retni( ( QImageWriter::ImageWriterError ) hbqt_par_QImageWriter( 1 )->error() );
+   QImageWriter * p = hbqt_par_QImageWriter( 1 );
+   if( p )
+      hb_retni( ( QImageWriter::ImageWriterError ) ( p )->error() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QIMAGEWRITER_ERROR FP=hb_retni( ( QImageWriter::ImageWriterError ) ( p )->error() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -188,7 +212,13 @@ HB_FUNC( QT_QIMAGEWRITER_ERROR )
  */
 HB_FUNC( QT_QIMAGEWRITER_ERRORSTRING )
 {
-   hb_retc( hbqt_par_QImageWriter( 1 )->errorString().toAscii().data() );
+   QImageWriter * p = hbqt_par_QImageWriter( 1 );
+   if( p )
+      hb_retc( ( p )->errorString().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QIMAGEWRITER_ERRORSTRING FP=hb_retc( ( p )->errorString().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -196,7 +226,13 @@ HB_FUNC( QT_QIMAGEWRITER_ERRORSTRING )
  */
 HB_FUNC( QT_QIMAGEWRITER_FILENAME )
 {
-   hb_retc( hbqt_par_QImageWriter( 1 )->fileName().toAscii().data() );
+   QImageWriter * p = hbqt_par_QImageWriter( 1 );
+   if( p )
+      hb_retc( ( p )->fileName().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QIMAGEWRITER_FILENAME FP=hb_retc( ( p )->fileName().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -204,7 +240,13 @@ HB_FUNC( QT_QIMAGEWRITER_FILENAME )
  */
 HB_FUNC( QT_QIMAGEWRITER_FORMAT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( hbqt_par_QImageWriter( 1 )->format() ), true ) );
+   QImageWriter * p = hbqt_par_QImageWriter( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->format() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QIMAGEWRITER_FORMAT FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->format() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -212,7 +254,13 @@ HB_FUNC( QT_QIMAGEWRITER_FORMAT )
  */
 HB_FUNC( QT_QIMAGEWRITER_GAMMA )
 {
-   hb_retnd( hbqt_par_QImageWriter( 1 )->gamma() );
+   QImageWriter * p = hbqt_par_QImageWriter( 1 );
+   if( p )
+      hb_retnd( ( p )->gamma() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QIMAGEWRITER_GAMMA FP=hb_retnd( ( p )->gamma() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -220,7 +268,13 @@ HB_FUNC( QT_QIMAGEWRITER_GAMMA )
  */
 HB_FUNC( QT_QIMAGEWRITER_QUALITY )
 {
-   hb_retni( hbqt_par_QImageWriter( 1 )->quality() );
+   QImageWriter * p = hbqt_par_QImageWriter( 1 );
+   if( p )
+      hb_retni( ( p )->quality() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QIMAGEWRITER_QUALITY FP=hb_retni( ( p )->quality() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -228,7 +282,13 @@ HB_FUNC( QT_QIMAGEWRITER_QUALITY )
  */
 HB_FUNC( QT_QIMAGEWRITER_SETCOMPRESSION )
 {
-   hbqt_par_QImageWriter( 1 )->setCompression( hb_parni( 2 ) );
+   QImageWriter * p = hbqt_par_QImageWriter( 1 );
+   if( p )
+      ( p )->setCompression( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QIMAGEWRITER_SETCOMPRESSION FP=( p )->setCompression( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -236,7 +296,13 @@ HB_FUNC( QT_QIMAGEWRITER_SETCOMPRESSION )
  */
 HB_FUNC( QT_QIMAGEWRITER_SETDEVICE )
 {
-   hbqt_par_QImageWriter( 1 )->setDevice( hbqt_par_QIODevice( 2 ) );
+   QImageWriter * p = hbqt_par_QImageWriter( 1 );
+   if( p )
+      ( p )->setDevice( hbqt_par_QIODevice( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QIMAGEWRITER_SETDEVICE FP=( p )->setDevice( hbqt_par_QIODevice( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -244,7 +310,13 @@ HB_FUNC( QT_QIMAGEWRITER_SETDEVICE )
  */
 HB_FUNC( QT_QIMAGEWRITER_SETFILENAME )
 {
-   hbqt_par_QImageWriter( 1 )->setFileName( hbqt_par_QString( 2 ) );
+   QImageWriter * p = hbqt_par_QImageWriter( 1 );
+   if( p )
+      ( p )->setFileName( hbqt_par_QString( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QIMAGEWRITER_SETFILENAME FP=( p )->setFileName( hbqt_par_QString( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -252,7 +324,13 @@ HB_FUNC( QT_QIMAGEWRITER_SETFILENAME )
  */
 HB_FUNC( QT_QIMAGEWRITER_SETFORMAT )
 {
-   hbqt_par_QImageWriter( 1 )->setFormat( *hbqt_par_QByteArray( 2 ) );
+   QImageWriter * p = hbqt_par_QImageWriter( 1 );
+   if( p )
+      ( p )->setFormat( *hbqt_par_QByteArray( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QIMAGEWRITER_SETFORMAT FP=( p )->setFormat( *hbqt_par_QByteArray( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -260,7 +338,13 @@ HB_FUNC( QT_QIMAGEWRITER_SETFORMAT )
  */
 HB_FUNC( QT_QIMAGEWRITER_SETGAMMA )
 {
-   hbqt_par_QImageWriter( 1 )->setGamma( hb_parnd( 2 ) );
+   QImageWriter * p = hbqt_par_QImageWriter( 1 );
+   if( p )
+      ( p )->setGamma( hb_parnd( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QIMAGEWRITER_SETGAMMA FP=( p )->setGamma( hb_parnd( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -268,7 +352,13 @@ HB_FUNC( QT_QIMAGEWRITER_SETGAMMA )
  */
 HB_FUNC( QT_QIMAGEWRITER_SETQUALITY )
 {
-   hbqt_par_QImageWriter( 1 )->setQuality( hb_parni( 2 ) );
+   QImageWriter * p = hbqt_par_QImageWriter( 1 );
+   if( p )
+      ( p )->setQuality( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QIMAGEWRITER_SETQUALITY FP=( p )->setQuality( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -276,7 +366,13 @@ HB_FUNC( QT_QIMAGEWRITER_SETQUALITY )
  */
 HB_FUNC( QT_QIMAGEWRITER_SETTEXT )
 {
-   hbqt_par_QImageWriter( 1 )->setText( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) );
+   QImageWriter * p = hbqt_par_QImageWriter( 1 );
+   if( p )
+      ( p )->setText( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QIMAGEWRITER_SETTEXT FP=( p )->setText( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -284,7 +380,13 @@ HB_FUNC( QT_QIMAGEWRITER_SETTEXT )
  */
 HB_FUNC( QT_QIMAGEWRITER_SUPPORTSOPTION )
 {
-   hb_retl( hbqt_par_QImageWriter( 1 )->supportsOption( ( QImageIOHandler::ImageOption ) hb_parni( 2 ) ) );
+   QImageWriter * p = hbqt_par_QImageWriter( 1 );
+   if( p )
+      hb_retl( ( p )->supportsOption( ( QImageIOHandler::ImageOption ) hb_parni( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QIMAGEWRITER_SUPPORTSOPTION FP=hb_retl( ( p )->supportsOption( ( QImageIOHandler::ImageOption ) hb_parni( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -292,7 +394,13 @@ HB_FUNC( QT_QIMAGEWRITER_SUPPORTSOPTION )
  */
 HB_FUNC( QT_QIMAGEWRITER_WRITE )
 {
-   hb_retl( hbqt_par_QImageWriter( 1 )->write( *hbqt_par_QImage( 2 ) ) );
+   QImageWriter * p = hbqt_par_QImageWriter( 1 );
+   if( p )
+      hb_retl( ( p )->write( *hbqt_par_QImage( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QIMAGEWRITER_WRITE FP=hb_retl( ( p )->write( *hbqt_par_QImage( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 

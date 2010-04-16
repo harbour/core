@@ -78,43 +78,44 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QGroupBox > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QGroupBox > pq;
 } QGC_POINTER_QGroupBox;
 
 QT_G_FUNC( hbqt_gcRelease_QGroupBox )
 {
+   QGroupBox  * ph = NULL ;
    QGC_POINTER_QGroupBox * p = ( QGC_POINTER_QGroupBox * ) Cargo;
 
-   if( p && p->bNew )
+   if( p && p->bNew && p->ph )
    {
-      if( p->ph && p->pq )
+      ph = p->ph;
+      if( ph )
       {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QGroupBox   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
-            delete ( ( QGroupBox * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QGroupBox   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QGroupBox   /.\\   ", (void*) ph, (void*) p->ph ) );
+            delete ( p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QGroupBox   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QGroupBox          pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QGroupBox          ", ph ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QGroupBox    :     Object already deleted!", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QGroupBox    :     Object already deleted!", ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QGroupBox    :    Object not created with new=true", p->ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QGroupBox    :    Object not created with new=true", ph ) );
       p->ph = NULL;
    }
 }
@@ -123,13 +124,12 @@ void * hbqt_gcAllocate_QGroupBox( void * pObj, bool bNew )
 {
    QGC_POINTER_QGroupBox * p = ( QGC_POINTER_QGroupBox * ) hb_gcAllocate( sizeof( QGC_POINTER_QGroupBox ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QGroupBox >( ( QGroupBox * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QGroupBox;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QGroupBox >( ( QGroupBox * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QGroupBox  under p->pq", pObj ) );
    }
    else
@@ -141,11 +141,11 @@ void * hbqt_gcAllocate_QGroupBox( void * pObj, bool bNew )
 
 HB_FUNC( QT_QGROUPBOX )
 {
-   void * pObj = NULL;
+   QGroupBox * pObj = NULL;
 
    pObj = ( QGroupBox * ) new QGroupBox( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QGroupBox( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QGroupBox( ( void * ) pObj, true ) );
 }
 
 /*
@@ -153,7 +153,13 @@ HB_FUNC( QT_QGROUPBOX )
  */
 HB_FUNC( QT_QGROUPBOX_ALIGNMENT )
 {
-   hb_retni( ( Qt::Alignment ) hbqt_par_QGroupBox( 1 )->alignment() );
+   QGroupBox * p = hbqt_par_QGroupBox( 1 );
+   if( p )
+      hb_retni( ( Qt::Alignment ) ( p )->alignment() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGROUPBOX_ALIGNMENT FP=hb_retni( ( Qt::Alignment ) ( p )->alignment() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -161,7 +167,13 @@ HB_FUNC( QT_QGROUPBOX_ALIGNMENT )
  */
 HB_FUNC( QT_QGROUPBOX_ISCHECKABLE )
 {
-   hb_retl( hbqt_par_QGroupBox( 1 )->isCheckable() );
+   QGroupBox * p = hbqt_par_QGroupBox( 1 );
+   if( p )
+      hb_retl( ( p )->isCheckable() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGROUPBOX_ISCHECKABLE FP=hb_retl( ( p )->isCheckable() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -169,7 +181,13 @@ HB_FUNC( QT_QGROUPBOX_ISCHECKABLE )
  */
 HB_FUNC( QT_QGROUPBOX_ISCHECKED )
 {
-   hb_retl( hbqt_par_QGroupBox( 1 )->isChecked() );
+   QGroupBox * p = hbqt_par_QGroupBox( 1 );
+   if( p )
+      hb_retl( ( p )->isChecked() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGROUPBOX_ISCHECKED FP=hb_retl( ( p )->isChecked() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -177,7 +195,13 @@ HB_FUNC( QT_QGROUPBOX_ISCHECKED )
  */
 HB_FUNC( QT_QGROUPBOX_ISFLAT )
 {
-   hb_retl( hbqt_par_QGroupBox( 1 )->isFlat() );
+   QGroupBox * p = hbqt_par_QGroupBox( 1 );
+   if( p )
+      hb_retl( ( p )->isFlat() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGROUPBOX_ISFLAT FP=hb_retl( ( p )->isFlat() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -185,7 +209,13 @@ HB_FUNC( QT_QGROUPBOX_ISFLAT )
  */
 HB_FUNC( QT_QGROUPBOX_SETALIGNMENT )
 {
-   hbqt_par_QGroupBox( 1 )->setAlignment( hb_parni( 2 ) );
+   QGroupBox * p = hbqt_par_QGroupBox( 1 );
+   if( p )
+      ( p )->setAlignment( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGROUPBOX_SETALIGNMENT FP=( p )->setAlignment( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -193,7 +223,13 @@ HB_FUNC( QT_QGROUPBOX_SETALIGNMENT )
  */
 HB_FUNC( QT_QGROUPBOX_SETCHECKABLE )
 {
-   hbqt_par_QGroupBox( 1 )->setCheckable( hb_parl( 2 ) );
+   QGroupBox * p = hbqt_par_QGroupBox( 1 );
+   if( p )
+      ( p )->setCheckable( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGROUPBOX_SETCHECKABLE FP=( p )->setCheckable( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -201,7 +237,13 @@ HB_FUNC( QT_QGROUPBOX_SETCHECKABLE )
  */
 HB_FUNC( QT_QGROUPBOX_SETFLAT )
 {
-   hbqt_par_QGroupBox( 1 )->setFlat( hb_parl( 2 ) );
+   QGroupBox * p = hbqt_par_QGroupBox( 1 );
+   if( p )
+      ( p )->setFlat( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGROUPBOX_SETFLAT FP=( p )->setFlat( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -209,7 +251,13 @@ HB_FUNC( QT_QGROUPBOX_SETFLAT )
  */
 HB_FUNC( QT_QGROUPBOX_SETTITLE )
 {
-   hbqt_par_QGroupBox( 1 )->setTitle( QGroupBox::tr( hb_parc( 2 ) ) );
+   QGroupBox * p = hbqt_par_QGroupBox( 1 );
+   if( p )
+      ( p )->setTitle( QGroupBox::tr( hb_parc( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGROUPBOX_SETTITLE FP=( p )->setTitle( QGroupBox::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -217,7 +265,13 @@ HB_FUNC( QT_QGROUPBOX_SETTITLE )
  */
 HB_FUNC( QT_QGROUPBOX_TITLE )
 {
-   hb_retc( hbqt_par_QGroupBox( 1 )->title().toAscii().data() );
+   QGroupBox * p = hbqt_par_QGroupBox( 1 );
+   if( p )
+      hb_retc( ( p )->title().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGROUPBOX_TITLE FP=hb_retc( ( p )->title().toAscii().data() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -225,7 +279,13 @@ HB_FUNC( QT_QGROUPBOX_TITLE )
  */
 HB_FUNC( QT_QGROUPBOX_SETCHECKED )
 {
-   hbqt_par_QGroupBox( 1 )->setChecked( hb_parl( 2 ) );
+   QGroupBox * p = hbqt_par_QGroupBox( 1 );
+   if( p )
+      ( p )->setChecked( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGROUPBOX_SETCHECKED FP=( p )->setChecked( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 

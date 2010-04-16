@@ -78,43 +78,44 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QStackedWidget > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QStackedWidget > pq;
 } QGC_POINTER_QStackedWidget;
 
 QT_G_FUNC( hbqt_gcRelease_QStackedWidget )
 {
+   QStackedWidget  * ph = NULL ;
    QGC_POINTER_QStackedWidget * p = ( QGC_POINTER_QStackedWidget * ) Cargo;
 
-   if( p && p->bNew )
+   if( p && p->bNew && p->ph )
    {
-      if( p->ph && p->pq )
+      ph = p->ph;
+      if( ph )
       {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QStackedWidget   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
-            delete ( ( QStackedWidget * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QStackedWidget   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QStackedWidget   /.\\   ", (void*) ph, (void*) p->ph ) );
+            delete ( p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QStackedWidget   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QStackedWidget          pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QStackedWidget          ", ph ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QStackedWidget    :     Object already deleted!", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QStackedWidget    :     Object already deleted!", ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QStackedWidget    :    Object not created with new=true", p->ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QStackedWidget    :    Object not created with new=true", ph ) );
       p->ph = NULL;
    }
 }
@@ -123,13 +124,12 @@ void * hbqt_gcAllocate_QStackedWidget( void * pObj, bool bNew )
 {
    QGC_POINTER_QStackedWidget * p = ( QGC_POINTER_QStackedWidget * ) hb_gcAllocate( sizeof( QGC_POINTER_QStackedWidget ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QStackedWidget >( ( QStackedWidget * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStackedWidget;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QStackedWidget >( ( QStackedWidget * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QStackedWidget  under p->pq", pObj ) );
    }
    else
@@ -141,11 +141,11 @@ void * hbqt_gcAllocate_QStackedWidget( void * pObj, bool bNew )
 
 HB_FUNC( QT_QSTACKEDWIDGET )
 {
-   void * pObj = NULL;
+   QStackedWidget * pObj = NULL;
 
    pObj = new QStackedWidget( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QStackedWidget( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QStackedWidget( ( void * ) pObj, true ) );
 }
 
 /*
@@ -153,7 +153,13 @@ HB_FUNC( QT_QSTACKEDWIDGET )
  */
 HB_FUNC( QT_QSTACKEDWIDGET_ADDWIDGET )
 {
-   hb_retni( hbqt_par_QStackedWidget( 1 )->addWidget( hbqt_par_QWidget( 2 ) ) );
+   QStackedWidget * p = hbqt_par_QStackedWidget( 1 );
+   if( p )
+      hb_retni( ( p )->addWidget( hbqt_par_QWidget( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTACKEDWIDGET_ADDWIDGET FP=hb_retni( ( p )->addWidget( hbqt_par_QWidget( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -161,7 +167,13 @@ HB_FUNC( QT_QSTACKEDWIDGET_ADDWIDGET )
  */
 HB_FUNC( QT_QSTACKEDWIDGET_COUNT )
 {
-   hb_retni( hbqt_par_QStackedWidget( 1 )->count() );
+   QStackedWidget * p = hbqt_par_QStackedWidget( 1 );
+   if( p )
+      hb_retni( ( p )->count() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTACKEDWIDGET_COUNT FP=hb_retni( ( p )->count() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -169,7 +181,13 @@ HB_FUNC( QT_QSTACKEDWIDGET_COUNT )
  */
 HB_FUNC( QT_QSTACKEDWIDGET_CURRENTINDEX )
 {
-   hb_retni( hbqt_par_QStackedWidget( 1 )->currentIndex() );
+   QStackedWidget * p = hbqt_par_QStackedWidget( 1 );
+   if( p )
+      hb_retni( ( p )->currentIndex() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTACKEDWIDGET_CURRENTINDEX FP=hb_retni( ( p )->currentIndex() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -177,7 +195,13 @@ HB_FUNC( QT_QSTACKEDWIDGET_CURRENTINDEX )
  */
 HB_FUNC( QT_QSTACKEDWIDGET_CURRENTWIDGET )
 {
-   hb_retptrGC( hbqt_gcAllocate_QWidget( hbqt_par_QStackedWidget( 1 )->currentWidget(), false ) );
+   QStackedWidget * p = hbqt_par_QStackedWidget( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->currentWidget(), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTACKEDWIDGET_CURRENTWIDGET FP=hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->currentWidget(), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -185,7 +209,13 @@ HB_FUNC( QT_QSTACKEDWIDGET_CURRENTWIDGET )
  */
 HB_FUNC( QT_QSTACKEDWIDGET_INDEXOF )
 {
-   hb_retni( hbqt_par_QStackedWidget( 1 )->indexOf( hbqt_par_QWidget( 2 ) ) );
+   QStackedWidget * p = hbqt_par_QStackedWidget( 1 );
+   if( p )
+      hb_retni( ( p )->indexOf( hbqt_par_QWidget( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTACKEDWIDGET_INDEXOF FP=hb_retni( ( p )->indexOf( hbqt_par_QWidget( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -193,7 +223,13 @@ HB_FUNC( QT_QSTACKEDWIDGET_INDEXOF )
  */
 HB_FUNC( QT_QSTACKEDWIDGET_INSERTWIDGET )
 {
-   hb_retni( hbqt_par_QStackedWidget( 1 )->insertWidget( hb_parni( 2 ), hbqt_par_QWidget( 3 ) ) );
+   QStackedWidget * p = hbqt_par_QStackedWidget( 1 );
+   if( p )
+      hb_retni( ( p )->insertWidget( hb_parni( 2 ), hbqt_par_QWidget( 3 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTACKEDWIDGET_INSERTWIDGET FP=hb_retni( ( p )->insertWidget( hb_parni( 2 ), hbqt_par_QWidget( 3 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -201,7 +237,13 @@ HB_FUNC( QT_QSTACKEDWIDGET_INSERTWIDGET )
  */
 HB_FUNC( QT_QSTACKEDWIDGET_REMOVEWIDGET )
 {
-   hbqt_par_QStackedWidget( 1 )->removeWidget( hbqt_par_QWidget( 2 ) );
+   QStackedWidget * p = hbqt_par_QStackedWidget( 1 );
+   if( p )
+      ( p )->removeWidget( hbqt_par_QWidget( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTACKEDWIDGET_REMOVEWIDGET FP=( p )->removeWidget( hbqt_par_QWidget( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -209,7 +251,13 @@ HB_FUNC( QT_QSTACKEDWIDGET_REMOVEWIDGET )
  */
 HB_FUNC( QT_QSTACKEDWIDGET_WIDGET )
 {
-   hb_retptrGC( hbqt_gcAllocate_QWidget( hbqt_par_QStackedWidget( 1 )->widget( hb_parni( 2 ) ), false ) );
+   QStackedWidget * p = hbqt_par_QStackedWidget( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->widget( hb_parni( 2 ) ), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTACKEDWIDGET_WIDGET FP=hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->widget( hb_parni( 2 ) ), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -217,7 +265,13 @@ HB_FUNC( QT_QSTACKEDWIDGET_WIDGET )
  */
 HB_FUNC( QT_QSTACKEDWIDGET_SETCURRENTINDEX )
 {
-   hbqt_par_QStackedWidget( 1 )->setCurrentIndex( hb_parni( 2 ) );
+   QStackedWidget * p = hbqt_par_QStackedWidget( 1 );
+   if( p )
+      ( p )->setCurrentIndex( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTACKEDWIDGET_SETCURRENTINDEX FP=( p )->setCurrentIndex( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -225,7 +279,13 @@ HB_FUNC( QT_QSTACKEDWIDGET_SETCURRENTINDEX )
  */
 HB_FUNC( QT_QSTACKEDWIDGET_SETCURRENTWIDGET )
 {
-   hbqt_par_QStackedWidget( 1 )->setCurrentWidget( hbqt_par_QWidget( 2 ) );
+   QStackedWidget * p = hbqt_par_QStackedWidget( 1 );
+   if( p )
+      ( p )->setCurrentWidget( hbqt_par_QWidget( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTACKEDWIDGET_SETCURRENTWIDGET FP=( p )->setCurrentWidget( hbqt_par_QWidget( 2 ) ); p is NULL" ) );
+   }
 }
 
 

@@ -89,43 +89,44 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QTableWidget > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QTableWidget > pq;
 } QGC_POINTER_QTableWidget;
 
 QT_G_FUNC( hbqt_gcRelease_QTableWidget )
 {
+   QTableWidget  * ph = NULL ;
    QGC_POINTER_QTableWidget * p = ( QGC_POINTER_QTableWidget * ) Cargo;
 
-   if( p && p->bNew )
+   if( p && p->bNew && p->ph )
    {
-      if( p->ph && p->pq )
+      ph = p->ph;
+      if( ph )
       {
-         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
+         const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QTableWidget   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
-            delete ( ( QTableWidget * ) p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QTableWidget   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QTableWidget   /.\\   ", (void*) ph, (void*) p->ph ) );
+            delete ( p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QTableWidget   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QTableWidget          pq=%p", p->ph, (void *)(p->pq) ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QTableWidget          ", ph ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QTableWidget    :     Object already deleted!", p->ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QTableWidget    :     Object already deleted!", ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QTableWidget    :    Object not created with new=true", p->ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QTableWidget    :    Object not created with new=true", ph ) );
       p->ph = NULL;
    }
 }
@@ -134,13 +135,12 @@ void * hbqt_gcAllocate_QTableWidget( void * pObj, bool bNew )
 {
    QGC_POINTER_QTableWidget * p = ( QGC_POINTER_QTableWidget * ) hb_gcAllocate( sizeof( QGC_POINTER_QTableWidget ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QTableWidget >( ( QTableWidget * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTableWidget;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QTableWidget >( ( QTableWidget * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QTableWidget  under p->pq", pObj ) );
    }
    else
@@ -152,14 +152,14 @@ void * hbqt_gcAllocate_QTableWidget( void * pObj, bool bNew )
 
 HB_FUNC( QT_QTABLEWIDGET )
 {
-   void * pObj = NULL;
+   QTableWidget * pObj = NULL;
 
    if( hb_pcount() >= 2 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
-      pObj = ( QTableWidget* ) new QTableWidget( hb_parni( 1 ), hb_parni( 2 ), hbqt_par_QWidget( 3 ) ) ;
+      pObj =  new QTableWidget( hb_parni( 1 ), hb_parni( 2 ), hbqt_par_QWidget( 3 ) ) ;
    else
-      pObj = ( QTableWidget* ) new QTableWidget( hbqt_par_QWidget( 1 ) ) ;
+      pObj =  new QTableWidget( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QTableWidget( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QTableWidget( ( void * ) pObj, true ) );
 }
 
 /*
@@ -167,7 +167,13 @@ HB_FUNC( QT_QTABLEWIDGET )
  */
 HB_FUNC( QT_QTABLEWIDGET_CELLWIDGET )
 {
-   hb_retptrGC( hbqt_gcAllocate_QWidget( hbqt_par_QTableWidget( 1 )->cellWidget( hb_parni( 2 ), hb_parni( 3 ) ), false ) );
+   QTableWidget * p = hbqt_par_QTableWidget( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->cellWidget( hb_parni( 2 ), hb_parni( 3 ) ), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_CELLWIDGET FP=hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->cellWidget( hb_parni( 2 ), hb_parni( 3 ) ), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -175,7 +181,13 @@ HB_FUNC( QT_QTABLEWIDGET_CELLWIDGET )
  */
 HB_FUNC( QT_QTABLEWIDGET_CLOSEPERSISTENTEDITOR )
 {
-   hbqt_par_QTableWidget( 1 )->closePersistentEditor( hbqt_par_QTableWidgetItem( 2 ) );
+   QTableWidget * p = hbqt_par_QTableWidget( 1 );
+   if( p )
+      ( p )->closePersistentEditor( hbqt_par_QTableWidgetItem( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_CLOSEPERSISTENTEDITOR FP=( p )->closePersistentEditor( hbqt_par_QTableWidgetItem( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -183,7 +195,13 @@ HB_FUNC( QT_QTABLEWIDGET_CLOSEPERSISTENTEDITOR )
  */
 HB_FUNC( QT_QTABLEWIDGET_COLUMN )
 {
-   hb_retni( hbqt_par_QTableWidget( 1 )->column( hbqt_par_QTableWidgetItem( 2 ) ) );
+   QTableWidget * p = hbqt_par_QTableWidget( 1 );
+   if( p )
+      hb_retni( ( p )->column( hbqt_par_QTableWidgetItem( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_COLUMN FP=hb_retni( ( p )->column( hbqt_par_QTableWidgetItem( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -191,7 +209,13 @@ HB_FUNC( QT_QTABLEWIDGET_COLUMN )
  */
 HB_FUNC( QT_QTABLEWIDGET_COLUMNCOUNT )
 {
-   hb_retni( hbqt_par_QTableWidget( 1 )->columnCount() );
+   QTableWidget * p = hbqt_par_QTableWidget( 1 );
+   if( p )
+      hb_retni( ( p )->columnCount() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_COLUMNCOUNT FP=hb_retni( ( p )->columnCount() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -199,7 +223,13 @@ HB_FUNC( QT_QTABLEWIDGET_COLUMNCOUNT )
  */
 HB_FUNC( QT_QTABLEWIDGET_CURRENTCOLUMN )
 {
-   hb_retni( hbqt_par_QTableWidget( 1 )->currentColumn() );
+   QTableWidget * p = hbqt_par_QTableWidget( 1 );
+   if( p )
+      hb_retni( ( p )->currentColumn() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_CURRENTCOLUMN FP=hb_retni( ( p )->currentColumn() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -207,7 +237,13 @@ HB_FUNC( QT_QTABLEWIDGET_CURRENTCOLUMN )
  */
 HB_FUNC( QT_QTABLEWIDGET_CURRENTITEM )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( hbqt_par_QTableWidget( 1 )->currentItem(), false ) );
+   QTableWidget * p = hbqt_par_QTableWidget( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( ( p )->currentItem(), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_CURRENTITEM FP=hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( ( p )->currentItem(), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -215,7 +251,13 @@ HB_FUNC( QT_QTABLEWIDGET_CURRENTITEM )
  */
 HB_FUNC( QT_QTABLEWIDGET_CURRENTROW )
 {
-   hb_retni( hbqt_par_QTableWidget( 1 )->currentRow() );
+   QTableWidget * p = hbqt_par_QTableWidget( 1 );
+   if( p )
+      hb_retni( ( p )->currentRow() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_CURRENTROW FP=hb_retni( ( p )->currentRow() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -223,7 +265,13 @@ HB_FUNC( QT_QTABLEWIDGET_CURRENTROW )
  */
 HB_FUNC( QT_QTABLEWIDGET_EDITITEM )
 {
-   hbqt_par_QTableWidget( 1 )->editItem( hbqt_par_QTableWidgetItem( 2 ) );
+   QTableWidget * p = hbqt_par_QTableWidget( 1 );
+   if( p )
+      ( p )->editItem( hbqt_par_QTableWidgetItem( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_EDITITEM FP=( p )->editItem( hbqt_par_QTableWidgetItem( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -231,7 +279,13 @@ HB_FUNC( QT_QTABLEWIDGET_EDITITEM )
  */
 HB_FUNC( QT_QTABLEWIDGET_HORIZONTALHEADERITEM )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( hbqt_par_QTableWidget( 1 )->horizontalHeaderItem( hb_parni( 2 ) ), false ) );
+   QTableWidget * p = hbqt_par_QTableWidget( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( ( p )->horizontalHeaderItem( hb_parni( 2 ) ), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_HORIZONTALHEADERITEM FP=hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( ( p )->horizontalHeaderItem( hb_parni( 2 ) ), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -239,7 +293,13 @@ HB_FUNC( QT_QTABLEWIDGET_HORIZONTALHEADERITEM )
  */
 HB_FUNC( QT_QTABLEWIDGET_ITEM )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( hbqt_par_QTableWidget( 1 )->item( hb_parni( 2 ), hb_parni( 3 ) ), false ) );
+   QTableWidget * p = hbqt_par_QTableWidget( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( ( p )->item( hb_parni( 2 ), hb_parni( 3 ) ), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_ITEM FP=hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( ( p )->item( hb_parni( 2 ), hb_parni( 3 ) ), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -247,7 +307,13 @@ HB_FUNC( QT_QTABLEWIDGET_ITEM )
  */
 HB_FUNC( QT_QTABLEWIDGET_ITEMAT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( hbqt_par_QTableWidget( 1 )->itemAt( *hbqt_par_QPoint( 2 ) ), false ) );
+   QTableWidget * p = hbqt_par_QTableWidget( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( ( p )->itemAt( *hbqt_par_QPoint( 2 ) ), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_ITEMAT FP=hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( ( p )->itemAt( *hbqt_par_QPoint( 2 ) ), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -255,7 +321,13 @@ HB_FUNC( QT_QTABLEWIDGET_ITEMAT )
  */
 HB_FUNC( QT_QTABLEWIDGET_ITEMAT_1 )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( hbqt_par_QTableWidget( 1 )->itemAt( hb_parni( 2 ), hb_parni( 3 ) ), false ) );
+   QTableWidget * p = hbqt_par_QTableWidget( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( ( p )->itemAt( hb_parni( 2 ), hb_parni( 3 ) ), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_ITEMAT_1 FP=hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( ( p )->itemAt( hb_parni( 2 ), hb_parni( 3 ) ), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -263,7 +335,13 @@ HB_FUNC( QT_QTABLEWIDGET_ITEMAT_1 )
  */
 HB_FUNC( QT_QTABLEWIDGET_ITEMPROTOTYPE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( new QTableWidgetItem( *( hbqt_par_QTableWidget( 1 )->itemPrototype() ) ), true ) );
+   QTableWidget * p = hbqt_par_QTableWidget( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( new QTableWidgetItem( *( ( p )->itemPrototype() ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_ITEMPROTOTYPE FP=hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( new QTableWidgetItem( *( ( p )->itemPrototype() ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -271,7 +349,13 @@ HB_FUNC( QT_QTABLEWIDGET_ITEMPROTOTYPE )
  */
 HB_FUNC( QT_QTABLEWIDGET_OPENPERSISTENTEDITOR )
 {
-   hbqt_par_QTableWidget( 1 )->openPersistentEditor( hbqt_par_QTableWidgetItem( 2 ) );
+   QTableWidget * p = hbqt_par_QTableWidget( 1 );
+   if( p )
+      ( p )->openPersistentEditor( hbqt_par_QTableWidgetItem( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_OPENPERSISTENTEDITOR FP=( p )->openPersistentEditor( hbqt_par_QTableWidgetItem( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -279,7 +363,13 @@ HB_FUNC( QT_QTABLEWIDGET_OPENPERSISTENTEDITOR )
  */
 HB_FUNC( QT_QTABLEWIDGET_REMOVECELLWIDGET )
 {
-   hbqt_par_QTableWidget( 1 )->removeCellWidget( hb_parni( 2 ), hb_parni( 3 ) );
+   QTableWidget * p = hbqt_par_QTableWidget( 1 );
+   if( p )
+      ( p )->removeCellWidget( hb_parni( 2 ), hb_parni( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_REMOVECELLWIDGET FP=( p )->removeCellWidget( hb_parni( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -287,7 +377,13 @@ HB_FUNC( QT_QTABLEWIDGET_REMOVECELLWIDGET )
  */
 HB_FUNC( QT_QTABLEWIDGET_ROW )
 {
-   hb_retni( hbqt_par_QTableWidget( 1 )->row( hbqt_par_QTableWidgetItem( 2 ) ) );
+   QTableWidget * p = hbqt_par_QTableWidget( 1 );
+   if( p )
+      hb_retni( ( p )->row( hbqt_par_QTableWidgetItem( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_ROW FP=hb_retni( ( p )->row( hbqt_par_QTableWidgetItem( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -295,7 +391,13 @@ HB_FUNC( QT_QTABLEWIDGET_ROW )
  */
 HB_FUNC( QT_QTABLEWIDGET_ROWCOUNT )
 {
-   hb_retni( hbqt_par_QTableWidget( 1 )->rowCount() );
+   QTableWidget * p = hbqt_par_QTableWidget( 1 );
+   if( p )
+      hb_retni( ( p )->rowCount() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_ROWCOUNT FP=hb_retni( ( p )->rowCount() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -303,7 +405,13 @@ HB_FUNC( QT_QTABLEWIDGET_ROWCOUNT )
  */
 HB_FUNC( QT_QTABLEWIDGET_SETCELLWIDGET )
 {
-   hbqt_par_QTableWidget( 1 )->setCellWidget( hb_parni( 2 ), hb_parni( 3 ), hbqt_par_QWidget( 4 ) );
+   QTableWidget * p = hbqt_par_QTableWidget( 1 );
+   if( p )
+      ( p )->setCellWidget( hb_parni( 2 ), hb_parni( 3 ), hbqt_par_QWidget( 4 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_SETCELLWIDGET FP=( p )->setCellWidget( hb_parni( 2 ), hb_parni( 3 ), hbqt_par_QWidget( 4 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -311,7 +419,13 @@ HB_FUNC( QT_QTABLEWIDGET_SETCELLWIDGET )
  */
 HB_FUNC( QT_QTABLEWIDGET_SETCOLUMNCOUNT )
 {
-   hbqt_par_QTableWidget( 1 )->setColumnCount( hb_parni( 2 ) );
+   QTableWidget * p = hbqt_par_QTableWidget( 1 );
+   if( p )
+      ( p )->setColumnCount( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_SETCOLUMNCOUNT FP=( p )->setColumnCount( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -319,7 +433,13 @@ HB_FUNC( QT_QTABLEWIDGET_SETCOLUMNCOUNT )
  */
 HB_FUNC( QT_QTABLEWIDGET_SETCURRENTCELL )
 {
-   hbqt_par_QTableWidget( 1 )->setCurrentCell( hb_parni( 2 ), hb_parni( 3 ) );
+   QTableWidget * p = hbqt_par_QTableWidget( 1 );
+   if( p )
+      ( p )->setCurrentCell( hb_parni( 2 ), hb_parni( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_SETCURRENTCELL FP=( p )->setCurrentCell( hb_parni( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -327,7 +447,13 @@ HB_FUNC( QT_QTABLEWIDGET_SETCURRENTCELL )
  */
 HB_FUNC( QT_QTABLEWIDGET_SETCURRENTCELL_1 )
 {
-   hbqt_par_QTableWidget( 1 )->setCurrentCell( hb_parni( 2 ), hb_parni( 3 ), ( QItemSelectionModel::SelectionFlags ) hb_parni( 4 ) );
+   QTableWidget * p = hbqt_par_QTableWidget( 1 );
+   if( p )
+      ( p )->setCurrentCell( hb_parni( 2 ), hb_parni( 3 ), ( QItemSelectionModel::SelectionFlags ) hb_parni( 4 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_SETCURRENTCELL_1 FP=( p )->setCurrentCell( hb_parni( 2 ), hb_parni( 3 ), ( QItemSelectionModel::SelectionFlags ) hb_parni( 4 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -335,7 +461,13 @@ HB_FUNC( QT_QTABLEWIDGET_SETCURRENTCELL_1 )
  */
 HB_FUNC( QT_QTABLEWIDGET_SETCURRENTITEM )
 {
-   hbqt_par_QTableWidget( 1 )->setCurrentItem( hbqt_par_QTableWidgetItem( 2 ) );
+   QTableWidget * p = hbqt_par_QTableWidget( 1 );
+   if( p )
+      ( p )->setCurrentItem( hbqt_par_QTableWidgetItem( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_SETCURRENTITEM FP=( p )->setCurrentItem( hbqt_par_QTableWidgetItem( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -343,7 +475,13 @@ HB_FUNC( QT_QTABLEWIDGET_SETCURRENTITEM )
  */
 HB_FUNC( QT_QTABLEWIDGET_SETCURRENTITEM_1 )
 {
-   hbqt_par_QTableWidget( 1 )->setCurrentItem( hbqt_par_QTableWidgetItem( 2 ), ( QItemSelectionModel::SelectionFlags ) hb_parni( 3 ) );
+   QTableWidget * p = hbqt_par_QTableWidget( 1 );
+   if( p )
+      ( p )->setCurrentItem( hbqt_par_QTableWidgetItem( 2 ), ( QItemSelectionModel::SelectionFlags ) hb_parni( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_SETCURRENTITEM_1 FP=( p )->setCurrentItem( hbqt_par_QTableWidgetItem( 2 ), ( QItemSelectionModel::SelectionFlags ) hb_parni( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -351,7 +489,13 @@ HB_FUNC( QT_QTABLEWIDGET_SETCURRENTITEM_1 )
  */
 HB_FUNC( QT_QTABLEWIDGET_SETHORIZONTALHEADERITEM )
 {
-   hbqt_par_QTableWidget( 1 )->setHorizontalHeaderItem( hb_parni( 2 ), hbqt_par_QTableWidgetItem( 3 ) );
+   QTableWidget * p = hbqt_par_QTableWidget( 1 );
+   if( p )
+      ( p )->setHorizontalHeaderItem( hb_parni( 2 ), hbqt_par_QTableWidgetItem( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_SETHORIZONTALHEADERITEM FP=( p )->setHorizontalHeaderItem( hb_parni( 2 ), hbqt_par_QTableWidgetItem( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -359,7 +503,13 @@ HB_FUNC( QT_QTABLEWIDGET_SETHORIZONTALHEADERITEM )
  */
 HB_FUNC( QT_QTABLEWIDGET_SETHORIZONTALHEADERLABELS )
 {
-   hbqt_par_QTableWidget( 1 )->setHorizontalHeaderLabels( *hbqt_par_QStringList( 2 ) );
+   QTableWidget * p = hbqt_par_QTableWidget( 1 );
+   if( p )
+      ( p )->setHorizontalHeaderLabels( *hbqt_par_QStringList( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_SETHORIZONTALHEADERLABELS FP=( p )->setHorizontalHeaderLabels( *hbqt_par_QStringList( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -367,7 +517,13 @@ HB_FUNC( QT_QTABLEWIDGET_SETHORIZONTALHEADERLABELS )
  */
 HB_FUNC( QT_QTABLEWIDGET_SETITEM )
 {
-   hbqt_par_QTableWidget( 1 )->setItem( hb_parni( 2 ), hb_parni( 3 ), hbqt_par_QTableWidgetItem( 4 ) );
+   QTableWidget * p = hbqt_par_QTableWidget( 1 );
+   if( p )
+      ( p )->setItem( hb_parni( 2 ), hb_parni( 3 ), hbqt_par_QTableWidgetItem( 4 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_SETITEM FP=( p )->setItem( hb_parni( 2 ), hb_parni( 3 ), hbqt_par_QTableWidgetItem( 4 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -375,7 +531,13 @@ HB_FUNC( QT_QTABLEWIDGET_SETITEM )
  */
 HB_FUNC( QT_QTABLEWIDGET_SETITEMPROTOTYPE )
 {
-   hbqt_par_QTableWidget( 1 )->setItemPrototype( hbqt_par_QTableWidgetItem( 2 ) );
+   QTableWidget * p = hbqt_par_QTableWidget( 1 );
+   if( p )
+      ( p )->setItemPrototype( hbqt_par_QTableWidgetItem( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_SETITEMPROTOTYPE FP=( p )->setItemPrototype( hbqt_par_QTableWidgetItem( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -383,7 +545,13 @@ HB_FUNC( QT_QTABLEWIDGET_SETITEMPROTOTYPE )
  */
 HB_FUNC( QT_QTABLEWIDGET_SETRANGESELECTED )
 {
-   hbqt_par_QTableWidget( 1 )->setRangeSelected( *hbqt_par_QTableWidgetSelectionRange( 2 ), hb_parl( 3 ) );
+   QTableWidget * p = hbqt_par_QTableWidget( 1 );
+   if( p )
+      ( p )->setRangeSelected( *hbqt_par_QTableWidgetSelectionRange( 2 ), hb_parl( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_SETRANGESELECTED FP=( p )->setRangeSelected( *hbqt_par_QTableWidgetSelectionRange( 2 ), hb_parl( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -391,7 +559,13 @@ HB_FUNC( QT_QTABLEWIDGET_SETRANGESELECTED )
  */
 HB_FUNC( QT_QTABLEWIDGET_SETROWCOUNT )
 {
-   hbqt_par_QTableWidget( 1 )->setRowCount( hb_parni( 2 ) );
+   QTableWidget * p = hbqt_par_QTableWidget( 1 );
+   if( p )
+      ( p )->setRowCount( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_SETROWCOUNT FP=( p )->setRowCount( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -399,7 +573,13 @@ HB_FUNC( QT_QTABLEWIDGET_SETROWCOUNT )
  */
 HB_FUNC( QT_QTABLEWIDGET_SETVERTICALHEADERITEM )
 {
-   hbqt_par_QTableWidget( 1 )->setVerticalHeaderItem( hb_parni( 2 ), hbqt_par_QTableWidgetItem( 3 ) );
+   QTableWidget * p = hbqt_par_QTableWidget( 1 );
+   if( p )
+      ( p )->setVerticalHeaderItem( hb_parni( 2 ), hbqt_par_QTableWidgetItem( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_SETVERTICALHEADERITEM FP=( p )->setVerticalHeaderItem( hb_parni( 2 ), hbqt_par_QTableWidgetItem( 3 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -407,7 +587,13 @@ HB_FUNC( QT_QTABLEWIDGET_SETVERTICALHEADERITEM )
  */
 HB_FUNC( QT_QTABLEWIDGET_SETVERTICALHEADERLABELS )
 {
-   hbqt_par_QTableWidget( 1 )->setVerticalHeaderLabels( *hbqt_par_QStringList( 2 ) );
+   QTableWidget * p = hbqt_par_QTableWidget( 1 );
+   if( p )
+      ( p )->setVerticalHeaderLabels( *hbqt_par_QStringList( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_SETVERTICALHEADERLABELS FP=( p )->setVerticalHeaderLabels( *hbqt_par_QStringList( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -415,7 +601,13 @@ HB_FUNC( QT_QTABLEWIDGET_SETVERTICALHEADERLABELS )
  */
 HB_FUNC( QT_QTABLEWIDGET_SORTITEMS )
 {
-   hbqt_par_QTableWidget( 1 )->sortItems( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::SortOrder ) hb_parni( 3 ) : ( Qt::SortOrder ) Qt::AscendingOrder ) );
+   QTableWidget * p = hbqt_par_QTableWidget( 1 );
+   if( p )
+      ( p )->sortItems( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::SortOrder ) hb_parni( 3 ) : ( Qt::SortOrder ) Qt::AscendingOrder ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_SORTITEMS FP=( p )->sortItems( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::SortOrder ) hb_parni( 3 ) : ( Qt::SortOrder ) Qt::AscendingOrder ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -423,7 +615,13 @@ HB_FUNC( QT_QTABLEWIDGET_SORTITEMS )
  */
 HB_FUNC( QT_QTABLEWIDGET_TAKEHORIZONTALHEADERITEM )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( hbqt_par_QTableWidget( 1 )->takeHorizontalHeaderItem( hb_parni( 2 ) ), false ) );
+   QTableWidget * p = hbqt_par_QTableWidget( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( ( p )->takeHorizontalHeaderItem( hb_parni( 2 ) ), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_TAKEHORIZONTALHEADERITEM FP=hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( ( p )->takeHorizontalHeaderItem( hb_parni( 2 ) ), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -431,7 +629,13 @@ HB_FUNC( QT_QTABLEWIDGET_TAKEHORIZONTALHEADERITEM )
  */
 HB_FUNC( QT_QTABLEWIDGET_TAKEITEM )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( hbqt_par_QTableWidget( 1 )->takeItem( hb_parni( 2 ), hb_parni( 3 ) ), false ) );
+   QTableWidget * p = hbqt_par_QTableWidget( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( ( p )->takeItem( hb_parni( 2 ), hb_parni( 3 ) ), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_TAKEITEM FP=hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( ( p )->takeItem( hb_parni( 2 ), hb_parni( 3 ) ), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -439,7 +643,13 @@ HB_FUNC( QT_QTABLEWIDGET_TAKEITEM )
  */
 HB_FUNC( QT_QTABLEWIDGET_TAKEVERTICALHEADERITEM )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( hbqt_par_QTableWidget( 1 )->takeVerticalHeaderItem( hb_parni( 2 ) ), false ) );
+   QTableWidget * p = hbqt_par_QTableWidget( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( ( p )->takeVerticalHeaderItem( hb_parni( 2 ) ), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_TAKEVERTICALHEADERITEM FP=hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( ( p )->takeVerticalHeaderItem( hb_parni( 2 ) ), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -447,7 +657,13 @@ HB_FUNC( QT_QTABLEWIDGET_TAKEVERTICALHEADERITEM )
  */
 HB_FUNC( QT_QTABLEWIDGET_VERTICALHEADERITEM )
 {
-   hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( hbqt_par_QTableWidget( 1 )->verticalHeaderItem( hb_parni( 2 ) ), false ) );
+   QTableWidget * p = hbqt_par_QTableWidget( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( ( p )->verticalHeaderItem( hb_parni( 2 ) ), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_VERTICALHEADERITEM FP=hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( ( p )->verticalHeaderItem( hb_parni( 2 ) ), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -455,7 +671,13 @@ HB_FUNC( QT_QTABLEWIDGET_VERTICALHEADERITEM )
  */
 HB_FUNC( QT_QTABLEWIDGET_VISUALCOLUMN )
 {
-   hb_retni( hbqt_par_QTableWidget( 1 )->visualColumn( hb_parni( 2 ) ) );
+   QTableWidget * p = hbqt_par_QTableWidget( 1 );
+   if( p )
+      hb_retni( ( p )->visualColumn( hb_parni( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_VISUALCOLUMN FP=hb_retni( ( p )->visualColumn( hb_parni( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -463,7 +685,13 @@ HB_FUNC( QT_QTABLEWIDGET_VISUALCOLUMN )
  */
 HB_FUNC( QT_QTABLEWIDGET_VISUALITEMRECT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QTableWidget( 1 )->visualItemRect( hbqt_par_QTableWidgetItem( 2 ) ) ), true ) );
+   QTableWidget * p = hbqt_par_QTableWidget( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->visualItemRect( hbqt_par_QTableWidgetItem( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_VISUALITEMRECT FP=hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->visualItemRect( hbqt_par_QTableWidgetItem( 2 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -471,7 +699,13 @@ HB_FUNC( QT_QTABLEWIDGET_VISUALITEMRECT )
  */
 HB_FUNC( QT_QTABLEWIDGET_VISUALROW )
 {
-   hb_retni( hbqt_par_QTableWidget( 1 )->visualRow( hb_parni( 2 ) ) );
+   QTableWidget * p = hbqt_par_QTableWidget( 1 );
+   if( p )
+      hb_retni( ( p )->visualRow( hb_parni( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_VISUALROW FP=hb_retni( ( p )->visualRow( hb_parni( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -479,7 +713,13 @@ HB_FUNC( QT_QTABLEWIDGET_VISUALROW )
  */
 HB_FUNC( QT_QTABLEWIDGET_CLEAR )
 {
-   hbqt_par_QTableWidget( 1 )->clear();
+   QTableWidget * p = hbqt_par_QTableWidget( 1 );
+   if( p )
+      ( p )->clear();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_CLEAR FP=( p )->clear(); p is NULL" ) );
+   }
 }
 
 /*
@@ -487,7 +727,13 @@ HB_FUNC( QT_QTABLEWIDGET_CLEAR )
  */
 HB_FUNC( QT_QTABLEWIDGET_CLEARCONTENTS )
 {
-   hbqt_par_QTableWidget( 1 )->clearContents();
+   QTableWidget * p = hbqt_par_QTableWidget( 1 );
+   if( p )
+      ( p )->clearContents();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_CLEARCONTENTS FP=( p )->clearContents(); p is NULL" ) );
+   }
 }
 
 /*
@@ -495,7 +741,13 @@ HB_FUNC( QT_QTABLEWIDGET_CLEARCONTENTS )
  */
 HB_FUNC( QT_QTABLEWIDGET_INSERTCOLUMN )
 {
-   hbqt_par_QTableWidget( 1 )->insertColumn( hb_parni( 2 ) );
+   QTableWidget * p = hbqt_par_QTableWidget( 1 );
+   if( p )
+      ( p )->insertColumn( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_INSERTCOLUMN FP=( p )->insertColumn( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -503,7 +755,13 @@ HB_FUNC( QT_QTABLEWIDGET_INSERTCOLUMN )
  */
 HB_FUNC( QT_QTABLEWIDGET_INSERTROW )
 {
-   hbqt_par_QTableWidget( 1 )->insertRow( hb_parni( 2 ) );
+   QTableWidget * p = hbqt_par_QTableWidget( 1 );
+   if( p )
+      ( p )->insertRow( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_INSERTROW FP=( p )->insertRow( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -511,7 +769,13 @@ HB_FUNC( QT_QTABLEWIDGET_INSERTROW )
  */
 HB_FUNC( QT_QTABLEWIDGET_REMOVECOLUMN )
 {
-   hbqt_par_QTableWidget( 1 )->removeColumn( hb_parni( 2 ) );
+   QTableWidget * p = hbqt_par_QTableWidget( 1 );
+   if( p )
+      ( p )->removeColumn( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_REMOVECOLUMN FP=( p )->removeColumn( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -519,7 +783,13 @@ HB_FUNC( QT_QTABLEWIDGET_REMOVECOLUMN )
  */
 HB_FUNC( QT_QTABLEWIDGET_REMOVEROW )
 {
-   hbqt_par_QTableWidget( 1 )->removeRow( hb_parni( 2 ) );
+   QTableWidget * p = hbqt_par_QTableWidget( 1 );
+   if( p )
+      ( p )->removeRow( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_REMOVEROW FP=( p )->removeRow( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -527,7 +797,13 @@ HB_FUNC( QT_QTABLEWIDGET_REMOVEROW )
  */
 HB_FUNC( QT_QTABLEWIDGET_SCROLLTOITEM )
 {
-   hbqt_par_QTableWidget( 1 )->scrollToItem( hbqt_par_QTableWidgetItem( 2 ), ( HB_ISNUM( 3 ) ? ( QAbstractItemView::ScrollHint ) hb_parni( 3 ) : ( QAbstractItemView::ScrollHint ) QTableWidget::EnsureVisible ) );
+   QTableWidget * p = hbqt_par_QTableWidget( 1 );
+   if( p )
+      ( p )->scrollToItem( hbqt_par_QTableWidgetItem( 2 ), ( HB_ISNUM( 3 ) ? ( QAbstractItemView::ScrollHint ) hb_parni( 3 ) : ( QAbstractItemView::ScrollHint ) QTableWidget::EnsureVisible ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_SCROLLTOITEM FP=( p )->scrollToItem( hbqt_par_QTableWidgetItem( 2 ), ( HB_ISNUM( 3 ) ? ( QAbstractItemView::ScrollHint ) hb_parni( 3 ) : ( QAbstractItemView::ScrollHint ) QTableWidget::EnsureVisible ) ); p is NULL" ) );
+   }
 }
 
 
