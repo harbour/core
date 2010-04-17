@@ -71,13 +71,15 @@ HB_FUNC( QT_QLAYOUT )
 {
 
 }
+</CODE>
 
-/*
- * virtual void addItem ( QLayoutItem * item ) = 0
- */
-/*
-HB_FUNC( QT_QLAYOUT_ADDITEM )
-{
+<ENUMS>
+enum SizeConstraint { SetDefaultConstraint, SetFixedSize, SetMinimumSize, SetMaximumSize, SetMinAndMaxSize, SetNoConstraint }
+</ENUMS>
+
+<PROTOS>
+bool activate ()
+virtual void addItem ( QLayoutItem * item ){
    QGC_POINTER * p;
    QGC_POINTER * q;
 
@@ -94,16 +96,6 @@ HB_FUNC( QT_QLAYOUT_ADDITEM )
 
    hbqt_par_QLayout( 1 )->addItem( hbqt_par_QLayoutItem( 2 ) );
 }
-*/
-</CODE>
-
-<ENUMS>
-enum SizeConstraint { SetDefaultConstraint, SetFixedSize, SetMinimumSize, SetMaximumSize, SetMinAndMaxSize, SetNoConstraint }
-</ENUMS>
-
-<PROTOS>
-bool activate ()
-virtual void addItem ( QLayoutItem * item ) = 0
 void addWidget ( QWidget * w )
 QRect contentsRect () const
 virtual int count () const = 0
