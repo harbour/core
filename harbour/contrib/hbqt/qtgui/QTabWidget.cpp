@@ -70,6 +70,15 @@
  *  enum TabShape { Rounded, Triangular }
  */
 
+/*
+ *  Constructed[ 41/42 [ 97.62% ] ]
+ *
+ *  *** Unconvered Prototypes ***
+ *  -----------------------------
+ *
+ *  }
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QTabWidget>
@@ -82,44 +91,43 @@
 
 typedef struct
 {
-   QPointer< QTabWidget > ph;
+   void * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   QPointer< QTabWidget > pq;
 } QGC_POINTER_QTabWidget;
 
 QT_G_FUNC( hbqt_gcRelease_QTabWidget )
 {
-   QTabWidget  * ph = NULL ;
    QGC_POINTER_QTabWidget * p = ( QGC_POINTER_QTabWidget * ) Cargo;
 
-   if( p && p->bNew && p->ph )
+   if( p && p->bNew )
    {
-      ph = p->ph;
-      if( ph )
+      if( p->ph && p->pq )
       {
-         const QMetaObject * m = ( ph )->metaObject();
+         const QMetaObject * m = ( ( QObject * ) p->ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QTabWidget   /.\\   ", (void*) ph, (void*) p->ph ) );
-            delete ( p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QTabWidget   \\./   ", (void*) ph, (void*) p->ph ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QTabWidget   /.\\   pq=%p", p->ph, (void *)(p->pq) ) );
+            delete ( ( QTabWidget * ) p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p YES_rel_QTabWidget   \\./   pq=%p", p->ph, (void *)(p->pq) ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QTabWidget          ", ph ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QTabWidget          pq=%p", p->ph, (void *)(p->pq) ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QTabWidget    :     Object already deleted!", ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QTabWidget    :     Object already deleted!", p->ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QTabWidget    :    Object not created with new=true", ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QTabWidget    :    Object not created with new=true", p->ph ) );
       p->ph = NULL;
    }
 }
@@ -128,12 +136,13 @@ void * hbqt_gcAllocate_QTabWidget( void * pObj, bool bNew )
 {
    QGC_POINTER_QTabWidget * p = ( QGC_POINTER_QTabWidget * ) hb_gcAllocate( sizeof( QGC_POINTER_QTabWidget ), hbqt_gcFuncs() );
 
-   new( & p->ph ) QPointer< QTabWidget >( ( QTabWidget * ) pObj );
+   p->ph = pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTabWidget;
 
    if( bNew )
    {
+      new( & p->pq ) QPointer< QTabWidget >( ( QTabWidget * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QTabWidget  under p->pq", pObj ) );
    }
    else
@@ -145,11 +154,11 @@ void * hbqt_gcAllocate_QTabWidget( void * pObj, bool bNew )
 
 HB_FUNC( QT_QTABWIDGET )
 {
-   QTabWidget * pObj = NULL;
+   void * pObj = NULL;
 
-   pObj =  new QTabWidget( hbqt_par_QWidget( 1 ) ) ;
+   pObj = ( QTabWidget* ) new QTabWidget( hbqt_par_QWidget( 1 ) ) ;
 
-   hb_retptrGC( hbqt_gcAllocate_QTabWidget( ( void * ) pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_QTabWidget( pObj, true ) );
 }
 
 /*
@@ -157,13 +166,14 @@ HB_FUNC( QT_QTABWIDGET )
  */
 HB_FUNC( QT_QTABWIDGET_ADDTAB )
 {
-   QTabWidget * p = hbqt_par_QTabWidget( 1 );
-   if( p )
-      hb_retni( ( p )->addTab( hbqt_par_QWidget( 2 ), QTabWidget::tr( hb_parc( 3 ) ) ) );
-   else
+   QGC_POINTER * q = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+
+   if( p && p->ph && q && q->ph )
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABWIDGET_ADDTAB FP=hb_retni( ( p )->addTab( hbqt_par_QWidget( 2 ), QTabWidget::tr( hb_parc( 3 ) ) ) ); p is NULL" ) );
+      p->bNew = HB_FALSE;
    }
+   hbqt_par_QTabWidget( 1 )->addTab( hbqt_par_QWidget( 2 ), hbqt_par_QString( 3 ) );
 }
 
 /*
@@ -171,13 +181,7 @@ HB_FUNC( QT_QTABWIDGET_ADDTAB )
  */
 HB_FUNC( QT_QTABWIDGET_ADDTAB_1 )
 {
-   QTabWidget * p = hbqt_par_QTabWidget( 1 );
-   if( p )
-      hb_retni( ( p )->addTab( hbqt_par_QWidget( 2 ), QIcon( hbqt_par_QString( 3 ) ), QTabWidget::tr( hb_parc( 4 ) ) ) );
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABWIDGET_ADDTAB_1 FP=hb_retni( ( p )->addTab( hbqt_par_QWidget( 2 ), QIcon( hbqt_par_QString( 3 ) ), QTabWidget::tr( hb_parc( 4 ) ) ) ); p is NULL" ) );
-   }
+   hb_retni( hbqt_par_QTabWidget( 1 )->addTab( hbqt_par_QWidget( 2 ), QIcon( hbqt_par_QString( 3 ) ), QTabWidget::tr( hb_parc( 4 ) ) ) );
 }
 
 /*
@@ -185,13 +189,7 @@ HB_FUNC( QT_QTABWIDGET_ADDTAB_1 )
  */
 HB_FUNC( QT_QTABWIDGET_CLEAR )
 {
-   QTabWidget * p = hbqt_par_QTabWidget( 1 );
-   if( p )
-      ( p )->clear();
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABWIDGET_CLEAR FP=( p )->clear(); p is NULL" ) );
-   }
+   hbqt_par_QTabWidget( 1 )->clear();
 }
 
 /*
@@ -199,13 +197,7 @@ HB_FUNC( QT_QTABWIDGET_CLEAR )
  */
 HB_FUNC( QT_QTABWIDGET_CORNERWIDGET )
 {
-   QTabWidget * p = hbqt_par_QTabWidget( 1 );
-   if( p )
-      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->cornerWidget( ( HB_ISNUM( 2 ) ? ( Qt::Corner ) hb_parni( 2 ) : ( Qt::Corner ) Qt::TopRightCorner ) ), false ) );
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABWIDGET_CORNERWIDGET FP=hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->cornerWidget( ( HB_ISNUM( 2 ) ? ( Qt::Corner ) hb_parni( 2 ) : ( Qt::Corner ) Qt::TopRightCorner ) ), false ) ); p is NULL" ) );
-   }
+   hb_retptrGC( hbqt_gcAllocate_QWidget( hbqt_par_QTabWidget( 1 )->cornerWidget( ( HB_ISNUM( 2 ) ? ( Qt::Corner ) hb_parni( 2 ) : ( Qt::Corner ) Qt::TopRightCorner ) ), false ) );
 }
 
 /*
@@ -213,13 +205,7 @@ HB_FUNC( QT_QTABWIDGET_CORNERWIDGET )
  */
 HB_FUNC( QT_QTABWIDGET_COUNT )
 {
-   QTabWidget * p = hbqt_par_QTabWidget( 1 );
-   if( p )
-      hb_retni( ( p )->count() );
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABWIDGET_COUNT FP=hb_retni( ( p )->count() ); p is NULL" ) );
-   }
+   hb_retni( hbqt_par_QTabWidget( 1 )->count() );
 }
 
 /*
@@ -227,13 +213,7 @@ HB_FUNC( QT_QTABWIDGET_COUNT )
  */
 HB_FUNC( QT_QTABWIDGET_CURRENTINDEX )
 {
-   QTabWidget * p = hbqt_par_QTabWidget( 1 );
-   if( p )
-      hb_retni( ( p )->currentIndex() );
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABWIDGET_CURRENTINDEX FP=hb_retni( ( p )->currentIndex() ); p is NULL" ) );
-   }
+   hb_retni( hbqt_par_QTabWidget( 1 )->currentIndex() );
 }
 
 /*
@@ -241,13 +221,7 @@ HB_FUNC( QT_QTABWIDGET_CURRENTINDEX )
  */
 HB_FUNC( QT_QTABWIDGET_CURRENTWIDGET )
 {
-   QTabWidget * p = hbqt_par_QTabWidget( 1 );
-   if( p )
-      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->currentWidget(), false ) );
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABWIDGET_CURRENTWIDGET FP=hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->currentWidget(), false ) ); p is NULL" ) );
-   }
+   hb_retptrGC( hbqt_gcAllocate_QWidget( hbqt_par_QTabWidget( 1 )->currentWidget(), false ) );
 }
 
 /*
@@ -255,13 +229,7 @@ HB_FUNC( QT_QTABWIDGET_CURRENTWIDGET )
  */
 HB_FUNC( QT_QTABWIDGET_DOCUMENTMODE )
 {
-   QTabWidget * p = hbqt_par_QTabWidget( 1 );
-   if( p )
-      hb_retl( ( p )->documentMode() );
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABWIDGET_DOCUMENTMODE FP=hb_retl( ( p )->documentMode() ); p is NULL" ) );
-   }
+   hb_retl( hbqt_par_QTabWidget( 1 )->documentMode() );
 }
 
 /*
@@ -269,13 +237,7 @@ HB_FUNC( QT_QTABWIDGET_DOCUMENTMODE )
  */
 HB_FUNC( QT_QTABWIDGET_ELIDEMODE )
 {
-   QTabWidget * p = hbqt_par_QTabWidget( 1 );
-   if( p )
-      hb_retni( ( Qt::TextElideMode ) ( p )->elideMode() );
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABWIDGET_ELIDEMODE FP=hb_retni( ( Qt::TextElideMode ) ( p )->elideMode() ); p is NULL" ) );
-   }
+   hb_retni( ( Qt::TextElideMode ) hbqt_par_QTabWidget( 1 )->elideMode() );
 }
 
 /*
@@ -283,13 +245,7 @@ HB_FUNC( QT_QTABWIDGET_ELIDEMODE )
  */
 HB_FUNC( QT_QTABWIDGET_ICONSIZE )
 {
-   QTabWidget * p = hbqt_par_QTabWidget( 1 );
-   if( p )
-      hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->iconSize() ), true ) );
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABWIDGET_ICONSIZE FP=hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->iconSize() ), true ) ); p is NULL" ) );
-   }
+   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QTabWidget( 1 )->iconSize() ), true ) );
 }
 
 /*
@@ -297,13 +253,7 @@ HB_FUNC( QT_QTABWIDGET_ICONSIZE )
  */
 HB_FUNC( QT_QTABWIDGET_INDEXOF )
 {
-   QTabWidget * p = hbqt_par_QTabWidget( 1 );
-   if( p )
-      hb_retni( ( p )->indexOf( hbqt_par_QWidget( 2 ) ) );
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABWIDGET_INDEXOF FP=hb_retni( ( p )->indexOf( hbqt_par_QWidget( 2 ) ) ); p is NULL" ) );
-   }
+   hb_retni( hbqt_par_QTabWidget( 1 )->indexOf( hbqt_par_QWidget( 2 ) ) );
 }
 
 /*
@@ -311,13 +261,7 @@ HB_FUNC( QT_QTABWIDGET_INDEXOF )
  */
 HB_FUNC( QT_QTABWIDGET_INSERTTAB )
 {
-   QTabWidget * p = hbqt_par_QTabWidget( 1 );
-   if( p )
-      hb_retni( ( p )->insertTab( hb_parni( 2 ), hbqt_par_QWidget( 3 ), QTabWidget::tr( hb_parc( 4 ) ) ) );
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABWIDGET_INSERTTAB FP=hb_retni( ( p )->insertTab( hb_parni( 2 ), hbqt_par_QWidget( 3 ), QTabWidget::tr( hb_parc( 4 ) ) ) ); p is NULL" ) );
-   }
+   hb_retni( hbqt_par_QTabWidget( 1 )->insertTab( hb_parni( 2 ), hbqt_par_QWidget( 3 ), QTabWidget::tr( hb_parc( 4 ) ) ) );
 }
 
 /*
@@ -325,13 +269,7 @@ HB_FUNC( QT_QTABWIDGET_INSERTTAB )
  */
 HB_FUNC( QT_QTABWIDGET_INSERTTAB_1 )
 {
-   QTabWidget * p = hbqt_par_QTabWidget( 1 );
-   if( p )
-      hb_retni( ( p )->insertTab( hb_parni( 2 ), hbqt_par_QWidget( 3 ), QIcon( hbqt_par_QString( 4 ) ), QTabWidget::tr( hb_parc( 5 ) ) ) );
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABWIDGET_INSERTTAB_1 FP=hb_retni( ( p )->insertTab( hb_parni( 2 ), hbqt_par_QWidget( 3 ), QIcon( hbqt_par_QString( 4 ) ), QTabWidget::tr( hb_parc( 5 ) ) ) ); p is NULL" ) );
-   }
+   hb_retni( hbqt_par_QTabWidget( 1 )->insertTab( hb_parni( 2 ), hbqt_par_QWidget( 3 ), QIcon( hbqt_par_QString( 4 ) ), QTabWidget::tr( hb_parc( 5 ) ) ) );
 }
 
 /*
@@ -339,13 +277,7 @@ HB_FUNC( QT_QTABWIDGET_INSERTTAB_1 )
  */
 HB_FUNC( QT_QTABWIDGET_ISMOVABLE )
 {
-   QTabWidget * p = hbqt_par_QTabWidget( 1 );
-   if( p )
-      hb_retl( ( p )->isMovable() );
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABWIDGET_ISMOVABLE FP=hb_retl( ( p )->isMovable() ); p is NULL" ) );
-   }
+   hb_retl( hbqt_par_QTabWidget( 1 )->isMovable() );
 }
 
 /*
@@ -353,13 +285,7 @@ HB_FUNC( QT_QTABWIDGET_ISMOVABLE )
  */
 HB_FUNC( QT_QTABWIDGET_ISTABENABLED )
 {
-   QTabWidget * p = hbqt_par_QTabWidget( 1 );
-   if( p )
-      hb_retl( ( p )->isTabEnabled( hb_parni( 2 ) ) );
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABWIDGET_ISTABENABLED FP=hb_retl( ( p )->isTabEnabled( hb_parni( 2 ) ) ); p is NULL" ) );
-   }
+   hb_retl( hbqt_par_QTabWidget( 1 )->isTabEnabled( hb_parni( 2 ) ) );
 }
 
 /*
@@ -367,13 +293,7 @@ HB_FUNC( QT_QTABWIDGET_ISTABENABLED )
  */
 HB_FUNC( QT_QTABWIDGET_REMOVETAB )
 {
-   QTabWidget * p = hbqt_par_QTabWidget( 1 );
-   if( p )
-      ( p )->removeTab( hb_parni( 2 ) );
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABWIDGET_REMOVETAB FP=( p )->removeTab( hb_parni( 2 ) ); p is NULL" ) );
-   }
+   hbqt_par_QTabWidget( 1 )->removeTab( hb_parni( 2 ) );
 }
 
 /*
@@ -381,13 +301,7 @@ HB_FUNC( QT_QTABWIDGET_REMOVETAB )
  */
 HB_FUNC( QT_QTABWIDGET_SETCORNERWIDGET )
 {
-   QTabWidget * p = hbqt_par_QTabWidget( 1 );
-   if( p )
-      ( p )->setCornerWidget( hbqt_par_QWidget( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::Corner ) hb_parni( 3 ) : ( Qt::Corner ) Qt::TopRightCorner ) );
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABWIDGET_SETCORNERWIDGET FP=( p )->setCornerWidget( hbqt_par_QWidget( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::Corner ) hb_parni( 3 ) : ( Qt::Corner ) Qt::TopRightCorner ) ); p is NULL" ) );
-   }
+   hbqt_par_QTabWidget( 1 )->setCornerWidget( hbqt_par_QWidget( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::Corner ) hb_parni( 3 ) : ( Qt::Corner ) Qt::TopRightCorner ) );
 }
 
 /*
@@ -395,13 +309,7 @@ HB_FUNC( QT_QTABWIDGET_SETCORNERWIDGET )
  */
 HB_FUNC( QT_QTABWIDGET_SETDOCUMENTMODE )
 {
-   QTabWidget * p = hbqt_par_QTabWidget( 1 );
-   if( p )
-      ( p )->setDocumentMode( hb_parl( 2 ) );
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABWIDGET_SETDOCUMENTMODE FP=( p )->setDocumentMode( hb_parl( 2 ) ); p is NULL" ) );
-   }
+   hbqt_par_QTabWidget( 1 )->setDocumentMode( hb_parl( 2 ) );
 }
 
 /*
@@ -409,13 +317,7 @@ HB_FUNC( QT_QTABWIDGET_SETDOCUMENTMODE )
  */
 HB_FUNC( QT_QTABWIDGET_SETELIDEMODE )
 {
-   QTabWidget * p = hbqt_par_QTabWidget( 1 );
-   if( p )
-      ( p )->setElideMode( ( Qt::TextElideMode ) hb_parni( 2 ) );
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABWIDGET_SETELIDEMODE FP=( p )->setElideMode( ( Qt::TextElideMode ) hb_parni( 2 ) ); p is NULL" ) );
-   }
+   hbqt_par_QTabWidget( 1 )->setElideMode( ( Qt::TextElideMode ) hb_parni( 2 ) );
 }
 
 /*
@@ -423,13 +325,7 @@ HB_FUNC( QT_QTABWIDGET_SETELIDEMODE )
  */
 HB_FUNC( QT_QTABWIDGET_SETICONSIZE )
 {
-   QTabWidget * p = hbqt_par_QTabWidget( 1 );
-   if( p )
-      ( p )->setIconSize( *hbqt_par_QSize( 2 ) );
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABWIDGET_SETICONSIZE FP=( p )->setIconSize( *hbqt_par_QSize( 2 ) ); p is NULL" ) );
-   }
+   hbqt_par_QTabWidget( 1 )->setIconSize( *hbqt_par_QSize( 2 ) );
 }
 
 /*
@@ -437,13 +333,7 @@ HB_FUNC( QT_QTABWIDGET_SETICONSIZE )
  */
 HB_FUNC( QT_QTABWIDGET_SETMOVABLE )
 {
-   QTabWidget * p = hbqt_par_QTabWidget( 1 );
-   if( p )
-      ( p )->setMovable( hb_parl( 2 ) );
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABWIDGET_SETMOVABLE FP=( p )->setMovable( hb_parl( 2 ) ); p is NULL" ) );
-   }
+   hbqt_par_QTabWidget( 1 )->setMovable( hb_parl( 2 ) );
 }
 
 /*
@@ -451,13 +341,7 @@ HB_FUNC( QT_QTABWIDGET_SETMOVABLE )
  */
 HB_FUNC( QT_QTABWIDGET_SETTABENABLED )
 {
-   QTabWidget * p = hbqt_par_QTabWidget( 1 );
-   if( p )
-      ( p )->setTabEnabled( hb_parni( 2 ), hb_parl( 3 ) );
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABWIDGET_SETTABENABLED FP=( p )->setTabEnabled( hb_parni( 2 ), hb_parl( 3 ) ); p is NULL" ) );
-   }
+   hbqt_par_QTabWidget( 1 )->setTabEnabled( hb_parni( 2 ), hb_parl( 3 ) );
 }
 
 /*
@@ -465,13 +349,7 @@ HB_FUNC( QT_QTABWIDGET_SETTABENABLED )
  */
 HB_FUNC( QT_QTABWIDGET_SETTABICON )
 {
-   QTabWidget * p = hbqt_par_QTabWidget( 1 );
-   if( p )
-      ( p )->setTabIcon( hb_parni( 2 ), QIcon( hbqt_par_QString( 3 ) ) );
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABWIDGET_SETTABICON FP=( p )->setTabIcon( hb_parni( 2 ), QIcon( hbqt_par_QString( 3 ) ) ); p is NULL" ) );
-   }
+   hbqt_par_QTabWidget( 1 )->setTabIcon( hb_parni( 2 ), QIcon( hbqt_par_QString( 3 ) ) );
 }
 
 /*
@@ -479,13 +357,7 @@ HB_FUNC( QT_QTABWIDGET_SETTABICON )
  */
 HB_FUNC( QT_QTABWIDGET_SETTABPOSITION )
 {
-   QTabWidget * p = hbqt_par_QTabWidget( 1 );
-   if( p )
-      ( p )->setTabPosition( ( QTabWidget::TabPosition ) hb_parni( 2 ) );
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABWIDGET_SETTABPOSITION FP=( p )->setTabPosition( ( QTabWidget::TabPosition ) hb_parni( 2 ) ); p is NULL" ) );
-   }
+   hbqt_par_QTabWidget( 1 )->setTabPosition( ( QTabWidget::TabPosition ) hb_parni( 2 ) );
 }
 
 /*
@@ -493,13 +365,7 @@ HB_FUNC( QT_QTABWIDGET_SETTABPOSITION )
  */
 HB_FUNC( QT_QTABWIDGET_SETTABSHAPE )
 {
-   QTabWidget * p = hbqt_par_QTabWidget( 1 );
-   if( p )
-      ( p )->setTabShape( ( QTabWidget::TabShape ) hb_parni( 2 ) );
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABWIDGET_SETTABSHAPE FP=( p )->setTabShape( ( QTabWidget::TabShape ) hb_parni( 2 ) ); p is NULL" ) );
-   }
+   hbqt_par_QTabWidget( 1 )->setTabShape( ( QTabWidget::TabShape ) hb_parni( 2 ) );
 }
 
 /*
@@ -507,13 +373,7 @@ HB_FUNC( QT_QTABWIDGET_SETTABSHAPE )
  */
 HB_FUNC( QT_QTABWIDGET_SETTABTEXT )
 {
-   QTabWidget * p = hbqt_par_QTabWidget( 1 );
-   if( p )
-      ( p )->setTabText( hb_parni( 2 ), QTabWidget::tr( hb_parc( 3 ) ) );
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABWIDGET_SETTABTEXT FP=( p )->setTabText( hb_parni( 2 ), QTabWidget::tr( hb_parc( 3 ) ) ); p is NULL" ) );
-   }
+   hbqt_par_QTabWidget( 1 )->setTabText( hb_parni( 2 ), QTabWidget::tr( hb_parc( 3 ) ) );
 }
 
 /*
@@ -521,13 +381,7 @@ HB_FUNC( QT_QTABWIDGET_SETTABTEXT )
  */
 HB_FUNC( QT_QTABWIDGET_SETTABTOOLTIP )
 {
-   QTabWidget * p = hbqt_par_QTabWidget( 1 );
-   if( p )
-      ( p )->setTabToolTip( hb_parni( 2 ), QTabWidget::tr( hb_parc( 3 ) ) );
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABWIDGET_SETTABTOOLTIP FP=( p )->setTabToolTip( hb_parni( 2 ), QTabWidget::tr( hb_parc( 3 ) ) ); p is NULL" ) );
-   }
+   hbqt_par_QTabWidget( 1 )->setTabToolTip( hb_parni( 2 ), QTabWidget::tr( hb_parc( 3 ) ) );
 }
 
 /*
@@ -535,13 +389,7 @@ HB_FUNC( QT_QTABWIDGET_SETTABTOOLTIP )
  */
 HB_FUNC( QT_QTABWIDGET_SETTABWHATSTHIS )
 {
-   QTabWidget * p = hbqt_par_QTabWidget( 1 );
-   if( p )
-      ( p )->setTabWhatsThis( hb_parni( 2 ), QTabWidget::tr( hb_parc( 3 ) ) );
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABWIDGET_SETTABWHATSTHIS FP=( p )->setTabWhatsThis( hb_parni( 2 ), QTabWidget::tr( hb_parc( 3 ) ) ); p is NULL" ) );
-   }
+   hbqt_par_QTabWidget( 1 )->setTabWhatsThis( hb_parni( 2 ), QTabWidget::tr( hb_parc( 3 ) ) );
 }
 
 /*
@@ -549,13 +397,7 @@ HB_FUNC( QT_QTABWIDGET_SETTABWHATSTHIS )
  */
 HB_FUNC( QT_QTABWIDGET_SETTABSCLOSABLE )
 {
-   QTabWidget * p = hbqt_par_QTabWidget( 1 );
-   if( p )
-      ( p )->setTabsClosable( hb_parl( 2 ) );
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABWIDGET_SETTABSCLOSABLE FP=( p )->setTabsClosable( hb_parl( 2 ) ); p is NULL" ) );
-   }
+   hbqt_par_QTabWidget( 1 )->setTabsClosable( hb_parl( 2 ) );
 }
 
 /*
@@ -563,13 +405,7 @@ HB_FUNC( QT_QTABWIDGET_SETTABSCLOSABLE )
  */
 HB_FUNC( QT_QTABWIDGET_SETUSESSCROLLBUTTONS )
 {
-   QTabWidget * p = hbqt_par_QTabWidget( 1 );
-   if( p )
-      ( p )->setUsesScrollButtons( hb_parl( 2 ) );
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABWIDGET_SETUSESSCROLLBUTTONS FP=( p )->setUsesScrollButtons( hb_parl( 2 ) ); p is NULL" ) );
-   }
+   hbqt_par_QTabWidget( 1 )->setUsesScrollButtons( hb_parl( 2 ) );
 }
 
 /*
@@ -577,13 +413,7 @@ HB_FUNC( QT_QTABWIDGET_SETUSESSCROLLBUTTONS )
  */
 HB_FUNC( QT_QTABWIDGET_TABICON )
 {
-   QTabWidget * p = hbqt_par_QTabWidget( 1 );
-   if( p )
-      hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( ( p )->tabIcon( hb_parni( 2 ) ) ), true ) );
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABWIDGET_TABICON FP=hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( ( p )->tabIcon( hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
-   }
+   hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( hbqt_par_QTabWidget( 1 )->tabIcon( hb_parni( 2 ) ) ), true ) );
 }
 
 /*
@@ -591,13 +421,7 @@ HB_FUNC( QT_QTABWIDGET_TABICON )
  */
 HB_FUNC( QT_QTABWIDGET_TABPOSITION )
 {
-   QTabWidget * p = hbqt_par_QTabWidget( 1 );
-   if( p )
-      hb_retni( ( QTabWidget::TabPosition ) ( p )->tabPosition() );
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABWIDGET_TABPOSITION FP=hb_retni( ( QTabWidget::TabPosition ) ( p )->tabPosition() ); p is NULL" ) );
-   }
+   hb_retni( ( QTabWidget::TabPosition ) hbqt_par_QTabWidget( 1 )->tabPosition() );
 }
 
 /*
@@ -605,13 +429,7 @@ HB_FUNC( QT_QTABWIDGET_TABPOSITION )
  */
 HB_FUNC( QT_QTABWIDGET_TABSHAPE )
 {
-   QTabWidget * p = hbqt_par_QTabWidget( 1 );
-   if( p )
-      hb_retni( ( QTabWidget::TabShape ) ( p )->tabShape() );
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABWIDGET_TABSHAPE FP=hb_retni( ( QTabWidget::TabShape ) ( p )->tabShape() ); p is NULL" ) );
-   }
+   hb_retni( ( QTabWidget::TabShape ) hbqt_par_QTabWidget( 1 )->tabShape() );
 }
 
 /*
@@ -619,13 +437,7 @@ HB_FUNC( QT_QTABWIDGET_TABSHAPE )
  */
 HB_FUNC( QT_QTABWIDGET_TABTEXT )
 {
-   QTabWidget * p = hbqt_par_QTabWidget( 1 );
-   if( p )
-      hb_retc( ( p )->tabText( hb_parni( 2 ) ).toAscii().data() );
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABWIDGET_TABTEXT FP=hb_retc( ( p )->tabText( hb_parni( 2 ) ).toAscii().data() ); p is NULL" ) );
-   }
+   hb_retc( hbqt_par_QTabWidget( 1 )->tabText( hb_parni( 2 ) ).toAscii().data() );
 }
 
 /*
@@ -633,13 +445,7 @@ HB_FUNC( QT_QTABWIDGET_TABTEXT )
  */
 HB_FUNC( QT_QTABWIDGET_TABTOOLTIP )
 {
-   QTabWidget * p = hbqt_par_QTabWidget( 1 );
-   if( p )
-      hb_retc( ( p )->tabToolTip( hb_parni( 2 ) ).toAscii().data() );
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABWIDGET_TABTOOLTIP FP=hb_retc( ( p )->tabToolTip( hb_parni( 2 ) ).toAscii().data() ); p is NULL" ) );
-   }
+   hb_retc( hbqt_par_QTabWidget( 1 )->tabToolTip( hb_parni( 2 ) ).toAscii().data() );
 }
 
 /*
@@ -647,13 +453,7 @@ HB_FUNC( QT_QTABWIDGET_TABTOOLTIP )
  */
 HB_FUNC( QT_QTABWIDGET_TABWHATSTHIS )
 {
-   QTabWidget * p = hbqt_par_QTabWidget( 1 );
-   if( p )
-      hb_retc( ( p )->tabWhatsThis( hb_parni( 2 ) ).toAscii().data() );
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABWIDGET_TABWHATSTHIS FP=hb_retc( ( p )->tabWhatsThis( hb_parni( 2 ) ).toAscii().data() ); p is NULL" ) );
-   }
+   hb_retc( hbqt_par_QTabWidget( 1 )->tabWhatsThis( hb_parni( 2 ) ).toAscii().data() );
 }
 
 /*
@@ -661,13 +461,7 @@ HB_FUNC( QT_QTABWIDGET_TABWHATSTHIS )
  */
 HB_FUNC( QT_QTABWIDGET_TABSCLOSABLE )
 {
-   QTabWidget * p = hbqt_par_QTabWidget( 1 );
-   if( p )
-      hb_retl( ( p )->tabsClosable() );
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABWIDGET_TABSCLOSABLE FP=hb_retl( ( p )->tabsClosable() ); p is NULL" ) );
-   }
+   hb_retl( hbqt_par_QTabWidget( 1 )->tabsClosable() );
 }
 
 /*
@@ -675,13 +469,7 @@ HB_FUNC( QT_QTABWIDGET_TABSCLOSABLE )
  */
 HB_FUNC( QT_QTABWIDGET_USESSCROLLBUTTONS )
 {
-   QTabWidget * p = hbqt_par_QTabWidget( 1 );
-   if( p )
-      hb_retl( ( p )->usesScrollButtons() );
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABWIDGET_USESSCROLLBUTTONS FP=hb_retl( ( p )->usesScrollButtons() ); p is NULL" ) );
-   }
+   hb_retl( hbqt_par_QTabWidget( 1 )->usesScrollButtons() );
 }
 
 /*
@@ -689,13 +477,7 @@ HB_FUNC( QT_QTABWIDGET_USESSCROLLBUTTONS )
  */
 HB_FUNC( QT_QTABWIDGET_WIDGET )
 {
-   QTabWidget * p = hbqt_par_QTabWidget( 1 );
-   if( p )
-      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->widget( hb_parni( 2 ) ), false ) );
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABWIDGET_WIDGET FP=hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->widget( hb_parni( 2 ) ), false ) ); p is NULL" ) );
-   }
+   hb_retptrGC( hbqt_gcAllocate_QWidget( hbqt_par_QTabWidget( 1 )->widget( hb_parni( 2 ) ), false ) );
 }
 
 /*
@@ -703,13 +485,7 @@ HB_FUNC( QT_QTABWIDGET_WIDGET )
  */
 HB_FUNC( QT_QTABWIDGET_SETCURRENTINDEX )
 {
-   QTabWidget * p = hbqt_par_QTabWidget( 1 );
-   if( p )
-      ( p )->setCurrentIndex( hb_parni( 2 ) );
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABWIDGET_SETCURRENTINDEX FP=( p )->setCurrentIndex( hb_parni( 2 ) ); p is NULL" ) );
-   }
+   hbqt_par_QTabWidget( 1 )->setCurrentIndex( hb_parni( 2 ) );
 }
 
 /*
@@ -717,13 +493,7 @@ HB_FUNC( QT_QTABWIDGET_SETCURRENTINDEX )
  */
 HB_FUNC( QT_QTABWIDGET_SETCURRENTWIDGET )
 {
-   QTabWidget * p = hbqt_par_QTabWidget( 1 );
-   if( p )
-      ( p )->setCurrentWidget( hbqt_par_QWidget( 2 ) );
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABWIDGET_SETCURRENTWIDGET FP=( p )->setCurrentWidget( hbqt_par_QWidget( 2 ) ); p is NULL" ) );
-   }
+   hbqt_par_QTabWidget( 1 )->setCurrentWidget( hbqt_par_QWidget( 2 ) );
 }
 
 
