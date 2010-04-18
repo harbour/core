@@ -65,6 +65,19 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+/*
+ *  Constructed[ 26/31 [ 83.87% ] ]
+ *
+ *  *** Unconvered Prototypes ***
+ *  -----------------------------
+ *
+ *  }
+ *  }
+ *  }
+ *  }
+ *  }
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QGridLayout>
@@ -153,12 +166,14 @@ HB_FUNC( QT_QGRIDLAYOUT )
  */
 HB_FUNC( QT_QGRIDLAYOUT_ADDITEM )
 {
-   QGridLayout * p = hbqt_par_QGridLayout( 1 );
-   if( p )
-      ( p )->addItem( hbqt_par_QLayoutItem( 2 ), hb_parni( 3 ), hb_parni( 4 ), ( HB_ISNUM( 5 ) ? hb_parni( 5 ) : 1 ), ( HB_ISNUM( 6 ) ? hb_parni( 6 ) : 1 ), ( Qt::Alignment ) hb_parni( 7 ) );
-   else
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   QGC_POINTER * q = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+   HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QGRIDLAYOUT_ADDITEM()" ) );
+   if( p && p->ph && q && q->ph )
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRIDLAYOUT_ADDITEM FP=( p )->addItem( hbqt_par_QLayoutItem( 2 ), hb_parni( 3 ), hb_parni( 4 ), ( HB_ISNUM( 5 ) ? hb_parni( 5 ) : 1 ), ( HB_ISNUM( 6 ) ? hb_parni( 6 ) : 1 ), ( Qt::Alignment ) hb_parni( 7 ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "QT_QGRIDLAYOUT_ADDITEM() Qt object: %p is attached to: %p", p->ph, q->ph ) );
+      q->bNew = HB_FALSE;
+      hbqt_par_QGridLayout( 1 )->addItem( hbqt_par_QLayoutItem( 2 ), hb_parni( 3 ), hb_parni( 4 ), ( HB_ISNUM( 5 ) ? hb_parni( 5 ) : 1 ), ( HB_ISNUM( 6 ) ? hb_parni( 6 ) : 1 ), ( Qt::Alignment ) hb_parni( 7 ) );
    }
 }
 
@@ -167,12 +182,14 @@ HB_FUNC( QT_QGRIDLAYOUT_ADDITEM )
  */
 HB_FUNC( QT_QGRIDLAYOUT_ADDLAYOUT )
 {
-   QGridLayout * p = hbqt_par_QGridLayout( 1 );
-   if( p )
-      ( p )->addLayout( hbqt_par_QLayout( 2 ), hb_parni( 3 ), hb_parni( 4 ), ( Qt::Alignment ) hb_parni( 5 ) );
-   else
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   QGC_POINTER * q = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+   HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QGRIDLAYOUT_ADDLAYOUT()" ) );
+   if( p && p->ph && q && q->ph )
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRIDLAYOUT_ADDLAYOUT FP=( p )->addLayout( hbqt_par_QLayout( 2 ), hb_parni( 3 ), hb_parni( 4 ), ( Qt::Alignment ) hb_parni( 5 ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "QT_QGRIDLAYOUT_ADDLAYOUT() Qt object: %p is attached to: %p", p->ph, q->ph ) );
+      q->bNew = HB_FALSE;
+      hbqt_par_QGridLayout( 1 )->addLayout( hbqt_par_QLayout( 2 ), hb_parni( 3 ), hb_parni( 4 ), ( Qt::Alignment ) hb_parni( 5 ) );
    }
 }
 
@@ -181,12 +198,14 @@ HB_FUNC( QT_QGRIDLAYOUT_ADDLAYOUT )
  */
 HB_FUNC( QT_QGRIDLAYOUT_ADDLAYOUT_1 )
 {
-   QGridLayout * p = hbqt_par_QGridLayout( 1 );
-   if( p )
-      ( p )->addLayout( hbqt_par_QLayout( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), hb_parni( 6 ), ( Qt::Alignment ) hb_parni( 7 ) );
-   else
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   QGC_POINTER * q = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+   HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QGRIDLAYOUT_ADDLAYOUT_1()" ) );
+   if( p && p->ph && q && q->ph )
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRIDLAYOUT_ADDLAYOUT_1 FP=( p )->addLayout( hbqt_par_QLayout( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), hb_parni( 6 ), ( Qt::Alignment ) hb_parni( 7 ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "QT_QGRIDLAYOUT_ADDLAYOUT_1() Qt object: %p is attached to: %p", p->ph, q->ph ) );
+      q->bNew = HB_FALSE;
+      hbqt_par_QGridLayout( 1 )->addLayout( hbqt_par_QLayout( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), hb_parni( 6 ), ( Qt::Alignment ) hb_parni( 7 ) );
    }
 }
 
@@ -195,12 +214,14 @@ HB_FUNC( QT_QGRIDLAYOUT_ADDLAYOUT_1 )
  */
 HB_FUNC( QT_QGRIDLAYOUT_ADDWIDGET )
 {
-   QGridLayout * p = hbqt_par_QGridLayout( 1 );
-   if( p )
-      ( p )->addWidget( hbqt_par_QWidget( 2 ), hb_parni( 3 ), hb_parni( 4 ), ( Qt::Alignment ) hb_parni( 5 ) );
-   else
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   QGC_POINTER * q = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+   HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_GRIDQLAYOUT_ADDWIDGET()" ) );
+   if( p && p->ph && q && q->ph )
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRIDLAYOUT_ADDWIDGET FP=( p )->addWidget( hbqt_par_QWidget( 2 ), hb_parni( 3 ), hb_parni( 4 ), ( Qt::Alignment ) hb_parni( 5 ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "QT_QGRIDLAYOUT_ADDWIDGET() Qt object: %p is attached to: %p", p->ph, q->ph ) );
+      q->bNew = HB_FALSE;
+      hbqt_par_QGridLayout( 1 )->addWidget( hbqt_par_QWidget( 2 ), hb_parni( 3 ),  hb_parni( 4 ), ( Qt::Alignment ) hb_parni( 5 ) );
    }
 }
 
@@ -209,12 +230,14 @@ HB_FUNC( QT_QGRIDLAYOUT_ADDWIDGET )
  */
 HB_FUNC( QT_QGRIDLAYOUT_ADDWIDGET_1 )
 {
-   QGridLayout * p = hbqt_par_QGridLayout( 1 );
-   if( p )
-      ( p )->addWidget( hbqt_par_QWidget( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), hb_parni( 6 ), ( Qt::Alignment ) hb_parni( 7 ) );
-   else
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   QGC_POINTER * q = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+   HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_GRIDQLAYOUT_ADDWIDGET_1()" ) );
+   if( p && p->ph && q && q->ph )
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRIDLAYOUT_ADDWIDGET_1 FP=( p )->addWidget( hbqt_par_QWidget( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), hb_parni( 6 ), ( Qt::Alignment ) hb_parni( 7 ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "QT_QGRIDLAYOUT_ADDWIDGET_1() Qt object: %p is attached to: %p", p->ph, q->ph ) );
+      q->bNew = HB_FALSE;
+      hbqt_par_QGridLayout( 1 )->addWidget( hbqt_par_QWidget( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), hb_parni( 6 ), ( Qt::Alignment ) hb_parni( 7 ) );
    }
 }
 

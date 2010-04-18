@@ -144,13 +144,11 @@ METHOD HbQtUI:create( cFile, qParent )
 
 METHOD HbQtUI:destroy()
    LOCAL a_, i
-   //LOCAL cNam, cCmd, cWdg, n
 
    ::oWidget:hide()
 
    FOR EACH a_ IN ::aSignals
       i := Qt_Slots_disConnect( ::pSlots, a_[ 1 ], a_[ 2 ] )
-//HB_TRACE( HB_TR_ALWAYS, 300, i, "Qt_Slots_disConnect", a_[ 2 ] )
       a_:= NIL
    NEXT
    ::pSlots := NIL
@@ -159,65 +157,24 @@ METHOD HbQtUI:destroy()
    NEXT
    ::pEvents := NIL
 
-#if 0
-   FOR EACH a_ IN ::aCommands
-      IF a_[ 1 ] $ ::qObj
-         IF ! "splitter" $ lower( a_[ 1 ] )
-            cNam := a_[ 1 ] ; cCmd := a_[ 2 ]
-            IF ( "addWidget" $ cCmd ) .OR. ( "addWidget" $ cCmd )
-               IF ( n := at( "(o[ ", cCmd ) ) > 0
-                  cWdg := substr( cCmd, n + 5 )
-                  IF ( n := at( '"', cWdg ) ) > 0
-                     cWdg := substr( cWdg, 1, n - 1 )
-                     IF     "addWidget" $ cCmd
-   hbide_dbg( 200, cNam, cWdg )
-                        ::qObj[ cNam ]:removeWidget( ::qObj[ cWdg ] )
-                     ELSEIF "addLayout" $ cCmd
-   hbide_dbg( 205, cNam, cWdg )
-                        ::qObj[ cNam ]:removeLayout( ::qObj[ cWdg ] )
-                     ENDIF
-                  ENDIF
-               ENDIF
-            ENDIF
-         ENDIF
-      ENDIF
-   NEXT
-#endif
-
    FOR EACH a_ IN ::widgets DESCEND
-      IF ( i := a_:__enumIndex() ) > 1
+      i := a_:__enumIndex()
+      IF i > 0
          IF type( a_[ 3 ] ) == "UI"
-            IF !( a_[ 1 ] $ "QHBoxLayout,QVBoxLayout,QGridLayout" )
 //HB_TRACE( HB_TR_ALWAYS, 400, i, pad( a_[ 1 ], 20 ), pad( a_[ 2 ], 20 ), iif( i > 1, pad( ::widgets[ i - 1, 1 ],20 ), NIL ), i, len( ::widgets ) )
-               ::qObj[ a_[ 2 ] ] := NIL
-            ENDIF
-         ELSEIF type( a_[ 3 ] ) != "UI"
-//HB_TRACE( HB_TR_ALWAYS, 500, 0, pad( a_[ 1 ], 20 ), pad( a_[ 2 ], 20 ), iif( i > 1, pad( ::widgets[ i - 1, 1 ],20 ), NIL ), i, len( ::widgets ) )
+            ::qObj[ a_[ 2 ] ] := NIL
          ENDIF
       ENDIF
    NEXT
-
-   #if 1
-   FOR EACH a_ IN ::widgets DESCEND
-      IF ( i := a_:__enumIndex() ) > 1
-         IF type( a_[ 3 ] ) == "UI"  .AND. ( a_[ 1 ] $ "QHBoxLayout,QVBoxLayout,QGridLayout" )
-            IF i > 2
-//HB_TRACE( HB_TR_ALWAYS, 600, i, pad( a_[ 1 ], 20 ), pad( a_[ 2 ], 20 ), iif( i > 1, pad( ::widgets[ i - 1, 1 ],20 ), NIL ), i, len( ::widgets ) )
-               ::qObj[ a_[ 2 ] ] := NIL
-            ENDIF
-         ENDIF
-      ENDIF
-   NEXT
-   #endif
-
+   #if 0
    ::qObj[ ::cMainWidgetName ] := NIL
    ::widgets[ 1, 2 ] := NIL
    ::aEvents  := NIL
-   ::qObj := NIL
-   ::widgets := {}
-
+   ::qObj     := NIL
+   ::widgets  := {}
+   #endif
    ::oWidget:close()
-   ::oWidget := NIL                 /* Variable Destruction GPFs */
+   ::oWidget  := NIL
 
    RETURN i
 

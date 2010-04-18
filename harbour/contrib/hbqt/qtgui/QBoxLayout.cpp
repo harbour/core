@@ -69,6 +69,17 @@
  *  enum Direction { LeftToRight, RightToLeft, TopToBottom, BottomToTop }
  */
 
+/*
+ *  Constructed[ 20/23 [ 86.96% ] ]
+ *
+ *  *** Unconvered Prototypes ***
+ *  -----------------------------
+ *
+ *  }
+ *  }
+ *  }
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QBoxLayout>
@@ -156,12 +167,14 @@ HB_FUNC( QT_QBOXLAYOUT )
  */
 HB_FUNC( QT_QBOXLAYOUT_ADDLAYOUT )
 {
-   QBoxLayout * p = hbqt_par_QBoxLayout( 1 );
-   if( p )
-      ( p )->addLayout( hbqt_par_QLayout( 2 ), hb_parni( 3 ) );
-   else
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   QGC_POINTER * q = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+   HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QBOXLAYOUT_ADDLAYOUT()" ) );
+   if( p && p->ph && q && q->ph )
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBOXLAYOUT_ADDLAYOUT FP=( p )->addLayout( hbqt_par_QLayout( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "QT_QBOXLAYOUT_ADDLAYOUT() Qt object: %p is attached to: %p", p->ph, q->ph ) );
+      q->bNew = HB_FALSE;
+      hbqt_par_QBoxLayout( 1 )->addLayout( hbqt_par_QLayout( 2 ), hb_parni( 3 ) );
    }
 }
 
@@ -170,12 +183,14 @@ HB_FUNC( QT_QBOXLAYOUT_ADDLAYOUT )
  */
 HB_FUNC( QT_QBOXLAYOUT_ADDSPACERITEM )
 {
-   QBoxLayout * p = hbqt_par_QBoxLayout( 1 );
-   if( p )
-      ( p )->addSpacerItem( hbqt_par_QSpacerItem( 2 ) );
-   else
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   QGC_POINTER * q = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+   HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QBOXLAYOUT_ADDSPACERITEM()" ) );
+   if( p && p->ph && q && q->ph )
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBOXLAYOUT_ADDSPACERITEM FP=( p )->addSpacerItem( hbqt_par_QSpacerItem( 2 ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "QT_QBOXLAYOUT_ADDSPACERITEM() Qt object: %p is attached to: %p", p->ph, q->ph ) );
+      q->bNew = HB_FALSE;
+      hbqt_par_QBoxLayout( 1 )->addSpacerItem( hbqt_par_QSpacerItem( 2 ) );
    }
 }
 
@@ -226,12 +241,14 @@ HB_FUNC( QT_QBOXLAYOUT_ADDSTRUT )
  */
 HB_FUNC( QT_QBOXLAYOUT_ADDWIDGET )
 {
-   QBoxLayout * p = hbqt_par_QBoxLayout( 1 );
-   if( p )
-      ( p )->addWidget( hbqt_par_QWidget( 2 ), hb_parni( 3 ), ( Qt::Alignment ) hb_parni( 4 ) );
-   else
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   QGC_POINTER * q = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+   HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QBOXLAYOUT_ADDWIDGET()" ) );
+   if( p && p->ph && q && q->ph )
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBOXLAYOUT_ADDWIDGET FP=( p )->addWidget( hbqt_par_QWidget( 2 ), hb_parni( 3 ), ( Qt::Alignment ) hb_parni( 4 ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "QT_QBOXLAYOUT_ADDWIDGET() Qt object: %p is attached to: %p", p->ph, q->ph ) );
+      q->bNew = HB_FALSE;
+      hbqt_par_QBoxLayout( 1 )->addWidget( hbqt_par_QWidget( 2 ), hb_parni( 3 ), ( Qt::Alignment ) hb_parni( 4 ) );
    }
 }
 

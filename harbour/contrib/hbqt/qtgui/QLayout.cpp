@@ -70,11 +70,12 @@
  */
 
 /*
- *  Constructed[ 29/30 [ 96.67% ] ]
+ *  Constructed[ 29/31 [ 93.55% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
  *
+ *  }
  *  }
  */
 
@@ -151,14 +152,11 @@ HB_FUNC( QT_QLAYOUT_ADDITEM )
 {
    QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
    QGC_POINTER * q = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
-
    HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QLAYOUT_ADDITEM()" ) );
-
    if( p && p->ph && q && q->ph )
    {
       HB_TRACE( HB_TR_DEBUG, ( "QT_QLAYOUT_ADDITEM() Qt object: %p is attached to: %p", p->ph, q->ph ) );
       q->bNew = HB_FALSE;
-
       hbqt_par_QLayout( 1 )->addItem( hbqt_par_QLayoutItem( 2 ) );
    }
 }
@@ -168,12 +166,14 @@ HB_FUNC( QT_QLAYOUT_ADDITEM )
  */
 HB_FUNC( QT_QLAYOUT_ADDWIDGET )
 {
-   QLayout * p = hbqt_par_QLayout( 1 );
-   if( p )
-      ( p )->addWidget( hbqt_par_QWidget( 2 ) );
-   else
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   QGC_POINTER * q = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+   HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QLAYOUT_ADDWIDGET()" ) );
+   if( p && p->ph && q && q->ph )
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLAYOUT_ADDWIDGET FP=( p )->addWidget( hbqt_par_QWidget( 2 ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "QT_QLAYOUT_ADDWIDGET() Qt object: %p is attached to: %p", p->ph, q->ph ) );
+      q->bNew = HB_FALSE;
+      hbqt_par_QLayout( 1 )->addWidget( hbqt_par_QWidget( 2 ) );
    }
 }
 

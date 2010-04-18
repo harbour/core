@@ -225,7 +225,6 @@ METHOD IdeThemes:create( oIde, cIniFile )
 
 METHOD IdeThemes:destroy()
 
-   HB_TRACE( HB_TR_ALWAYS, "-------------------------------------- Theme Manager 0 ------------------------------------------" )
    IF !empty( ::oSL )
       ::disConnect( ::oSL:qObj[ "listOptions"  ], "doubleClicked(QModelIndex)" )
       ::disConnect( ::oSL:qObj[ "buttonOk"     ], "clicked()" )
@@ -242,7 +241,7 @@ METHOD IdeThemes:destroy()
          ::oUI:destroy()
       ENDIF
    ENDIF
-   HB_TRACE( HB_TR_ALWAYS, "-------------------------------------- Theme Manager 1 ------------------------------------------" )
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/

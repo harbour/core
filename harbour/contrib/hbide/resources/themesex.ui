@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>423</width>
-    <height>434</height>
+    <height>451</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,19 +16,31 @@
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
     <widget class="QLabel" name="labelTheme">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="text">
       <string>Themes</string>
      </property>
     </widget>
    </item>
-   <item row="0" column="1" colspan="2">
+   <item row="0" column="1">
     <widget class="QLabel" name="labelItems">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="text">
       <string>Items</string>
      </property>
     </widget>
    </item>
-   <item row="1" column="0" rowspan="5">
+   <item row="1" column="0" rowspan="4">
     <widget class="QListWidget" name="listThemes">
      <property name="minimumSize">
       <size>
@@ -44,7 +56,7 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="1" rowspan="5">
+   <item row="1" column="1" rowspan="4">
     <widget class="QListWidget" name="listItems">
      <property name="minimumSize">
       <size>
@@ -82,19 +94,6 @@
     </widget>
    </item>
    <item row="4" column="2">
-    <spacer name="verticalSpacer">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>72</width>
-       <height>45</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="5" column="2">
     <widget class="QPushButton" name="buttonColor">
      <property name="maximumSize">
       <size>
@@ -107,90 +106,70 @@
      </property>
     </widget>
    </item>
-   <item row="6" column="0" colspan="3">
+   <item row="5" column="0">
     <widget class="QLabel" name="label">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="text">
       <string>Preview</string>
      </property>
     </widget>
    </item>
-   <item row="7" column="0" rowspan="9" colspan="2">
+   <item row="6" column="0" rowspan="7" colspan="2">
     <widget class="QPlainTextEdit" name="plainThemeText"/>
    </item>
-   <item row="7" column="2">
+   <item row="6" column="2">
     <widget class="QPushButton" name="buttonSave">
      <property name="text">
       <string>Save</string>
      </property>
     </widget>
    </item>
-   <item row="8" column="2">
+   <item row="7" column="2">
     <widget class="QPushButton" name="buttonSaveAs">
      <property name="text">
       <string>Save As</string>
      </property>
     </widget>
    </item>
-   <item row="9" column="2">
+   <item row="8" column="2">
     <widget class="QPushButton" name="buttonCopy">
      <property name="text">
       <string>Copy</string>
      </property>
     </widget>
    </item>
-   <item row="11" column="2">
+   <item row="9" column="2">
     <widget class="QPushButton" name="buttonDefault">
      <property name="text">
       <string>SetAsDefault</string>
      </property>
     </widget>
    </item>
-   <item row="12" column="2">
+   <item row="10" column="2">
     <widget class="QPushButton" name="buttonApply">
      <property name="text">
       <string>ApplyCurrent</string>
      </property>
     </widget>
    </item>
-   <item row="13" column="2">
+   <item row="11" column="2">
     <widget class="QPushButton" name="buttonApplyAll">
      <property name="text">
       <string>ApplyAll</string>
      </property>
     </widget>
    </item>
-   <item row="15" column="2">
+   <item row="12" column="2">
     <widget class="QPushButton" name="buttonClose">
      <property name="text">
       <string>Close</string>
      </property>
     </widget>
-   </item>
-   <item row="10" column="2">
-    <spacer name="verticalSpacer_2">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>40</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="14" column="2">
-    <spacer name="verticalSpacer_3">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>40</height>
-      </size>
-     </property>
-    </spacer>
    </item>
   </layout>
  </widget>
