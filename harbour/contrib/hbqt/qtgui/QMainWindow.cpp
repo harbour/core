@@ -71,11 +71,12 @@
  */
 
 /*
- *  Constructed[ 48/49 [ 97.96% ] ]
+ *  Constructed[ 48/50 [ 96.00% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
  *
+ *  }
  *  QList<QDockWidget *> tabifiedDockWidgets ( QDockWidget * dockwidget ) const
  */
 
@@ -209,12 +210,23 @@ HB_FUNC( QT_QMAINWINDOW_ADDDOCKWIDGET_1 )
  */
 HB_FUNC( QT_QMAINWINDOW_ADDTOOLBAR )
 {
-   QMainWindow * p = hbqt_par_QMainWindow( 1 );
-   if( p )
-      ( p )->addToolBar( ( Qt::ToolBarArea ) hb_parni( 2 ), hbqt_par_QToolBar( 3 ) );
-   else
+   QGC_POINTER_QMainWindow * q = ( QGC_POINTER_QMainWindow * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 3 );
+
+   HB_TRACE( HB_TR_DEBUG, ("QMAINWINDOW_ADDTOOLBAR" ) );
+   HB_TRACE( HB_TR_DEBUG, ( "QT_QMAINWINDOW_ADDTOOLBAR() Qt object: %p  to: %p", (void *) p, (void *) q) );
+   HB_TRACE( HB_TR_DEBUG, ( "QT_QMAINWINDOW_ADDTOOLBAR() Qt object: %p  to: %p", (void *) p->ph, (void *) q->ph) );
+
+   if ( p && p->ph && q && q->ph )
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMAINWINDOW_ADDTOOLBAR FP=( p )->addToolBar( ( Qt::ToolBarArea ) hb_parni( 2 ), hbqt_par_QToolBar( 3 ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "QT_QMAINWINDOW_ADDTOOLBAR() Qt object: %p is attached to: %p", (void *) p->ph, (void *) q->ph) );
+      p->bNew = HB_FALSE;
+      if ( q && q->ph )
+         ( q->ph )->addToolBar( ( Qt::ToolBarArea ) hb_parni( 2 ), ( ( QToolBar *) p->ph ));
+      else
+      {
+         HB_TRACE( HB_TR_DEBUG, ( "F=QT_QTOOLBAR_ADDACTION FP=( p )->addAction( hbqt_par_QAction( 2 ) ); p is NULL" ));
+      }
    }
 }
 

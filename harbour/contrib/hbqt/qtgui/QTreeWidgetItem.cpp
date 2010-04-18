@@ -71,11 +71,12 @@
  */
 
 /*
- *  Constructed[ 52/55 [ 94.55% ] ]
+ *  Constructed[ 52/56 [ 92.86% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
  *
+ *  }
  *  void addChildren ( const QList<QTreeWidgetItem *> & children )
  *  void insertChildren ( int index, const QList<QTreeWidgetItem *> & children )
  *  QList<QTreeWidgetItem *> takeChildren ()
@@ -172,12 +173,15 @@ HB_FUNC( QT_QTREEWIDGETITEM )
  */
 HB_FUNC( QT_QTREEWIDGETITEM_ADDCHILD )
 {
-   QTreeWidgetItem * p = hbqt_par_QTreeWidgetItem( 1 );
-   if( p )
-      ( p )->addChild( hbqt_par_QTreeWidgetItem( 2 ) );
-   else
+   QGC_POINTER_QTreeWidgetItem * q = ( QGC_POINTER_QTreeWidgetItem * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+
+   HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QTREEWIDGETITEM_ADDCHILD()" ) );
+   if( p && p->ph && q && q->ph )
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGETITEM_ADDCHILD FP=( p )->addChild( hbqt_par_QTreeWidgetItem( 2 ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "QT_QTOOLBAR_ADDACTION() Qt oject: %p is attached to: %p", ( void * ) p->ph, ( void * ) q->ph ) );
+      p->bNew = HB_FALSE;
+      ( q->ph )->addChild( ( QTreeWidgetItem * ) p->ph );
    }
 }
 

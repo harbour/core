@@ -65,6 +65,16 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+/*
+ *  Constructed[ 28/30 [ 93.33% ] ]
+ *
+ *  *** Unconvered Prototypes ***
+ *  -----------------------------
+ *
+ *  }
+ *  }
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QToolBar>
@@ -184,12 +194,15 @@ HB_FUNC( QT_QTOOLBAR_ACTIONAT_1 )
  */
 HB_FUNC( QT_QTOOLBAR_ADDACTION )
 {
-   QToolBar * p = hbqt_par_QToolBar( 1 );
-   if( p )
-      ( p )->addAction( hbqt_par_QAction( 2 ) );
-   else
+   QGC_POINTER_QToolBar * q = ( QGC_POINTER_QToolBar * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+
+   HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QTOOLBAR_ADDACTION()" ) );
+   if( p && p->ph && q && q->ph )
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTOOLBAR_ADDACTION FP=( p )->addAction( hbqt_par_QAction( 2 ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "QT_QTOOLBAR_ADDACTION() Qt oject: %p is attached to: %p", ( void * ) p->ph, ( void * ) q->ph ) );
+      p->bNew = HB_FALSE;
+      ( q->ph )->addAction( ( QAction * ) p->ph );
    }
 }
 
@@ -240,12 +253,20 @@ HB_FUNC( QT_QTOOLBAR_ADDACTION_3 )
  */
 HB_FUNC( QT_QTOOLBAR_ADDACTION_4 )
 {
-   QToolBar * p = hbqt_par_QToolBar( 1 );
-   if( p )
-      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->addAction( QIcon( hbqt_par_QString( 2 ) ), QToolBar::tr( hb_parc( 3 ) ), hbqt_par_QObject( 4 ), hbqt_par_char( 5 ) ), false ) );
-   else
+   QGC_POINTER_QToolBar * q = ( QGC_POINTER_QToolBar * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 4 );
+
+   HB_TRACE( HB_TR_DEBUG, ("QTOOLBAR_ADDACTION_4" ) );
+   if ( p && p->ph && q && q->ph )
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTOOLBAR_ADDACTION_4 FP=hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->addAction( QIcon( hbqt_par_QString( 2 ) ), QToolBar::tr( hb_parc( 3 ) ), hbqt_par_QObject( 4 ), hbqt_par_char( 5 ) ), false ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "QT_QTOOLBAR_ADDITEM_4: %p is attached to: %p", (void *) p->ph, (void *) q->ph ) ) ;
+      p->bNew = HB_FALSE;
+      if ( q && q->ph )
+         hb_retptrGC( hbqt_gcAllocate_QAction( ( q->ph )->addAction( QIcon( hbqt_par_QString( 2 ) ), QToolBar::tr( hb_parc( 3 ) ), (QObject *) ( p->ph), hbqt_par_char( 5 ) ), false ) );
+      else
+      {
+         HB_TRACE( HB_TR_DEBUG, ( "F=QT_QTOOLBAR_ADDACTION_4 FP=hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->addAction( QIcon( hbqt_par_QString( 2 ) ), QToolBar::tr( hb_parc( 3 ) ), hbqt_par_QObject( 4 ), hbqt_par_char( 5 ) ), false ) ); p is NULL" ) );
+      }
    }
 }
 

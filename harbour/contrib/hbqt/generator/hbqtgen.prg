@@ -297,6 +297,7 @@ STATIC FUNCTION PullOutFuncBody( protos_, nFrom )
       IF s:__enumIndex() > nFrom
          IF left( s, 1 ) == "}"
             nTo := s:__enumIndex()
+            EXIT
          ENDIF
       ENDIF
    NEXT

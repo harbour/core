@@ -72,12 +72,13 @@
  */
 
 /*
- *  Constructed[ 205/229 [ 89.52% ] ]
+ *  Constructed[ 205/230 [ 89.13% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
  *
  *  QList<QAction *> actions () const
+ *  }
  *  void addActions ( QList<QAction *> actions )
  *  void insertActions ( QAction * before, QList<QAction *> actions )
  *
@@ -224,12 +225,15 @@ HB_FUNC( QT_QWIDGET_ACTIVATEWINDOW )
  */
 HB_FUNC( QT_QWIDGET_ADDACTION )
 {
-   QWidget * p = hbqt_par_QWidget( 1 );
-   if( p )
-      ( p )->addAction( hbqt_par_QAction( 2 ) );
-   else
+   QGC_POINTER_QWidget * q =  (QGC_POINTER_QWidget *)hb_parptrGC( hbqt_gcFuncs(), 1 );
+   QGC_POINTER * p =  (QGC_POINTER *)hb_parptrGC( hbqt_gcFuncs(), 2 );
+
+   HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QWIDGET_ADDACTION()" ) );
+   if( p && p->ph && q && q->ph )
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIDGET_ADDACTION FP=( p )->addAction( hbqt_par_QAction( 2 ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "QT_QWIDGET_ADDACTION() Qt object: %p is attached to: %p", (void * )p->ph, (void *)q->ph ) );
+      // p->bNew = HB_FALSE;  // The ownership of action is not transferred to this QWidget.
+      ( q->ph )->addAction( ( QAction * ) p->ph );
    }
 }
 

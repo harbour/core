@@ -65,6 +65,20 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+/*
+ *  Constructed[ 33/36 [ 91.67% ] ]
+ *
+ *  *** Unconvered Prototypes ***
+ *  -----------------------------
+ *
+ *  }
+ *
+ *  *** Commented out protos which construct fine but do not compile ***
+ *
+ *  // OSMenuRef macMenu ( OSMenuRef merge = 0 )
+ *  // HMENU wceMenu ( bool create = false )
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QMenu>
@@ -258,13 +272,16 @@ HB_FUNC( QT_QMENU_ADDACTION_3 )
  */
 HB_FUNC( QT_QMENU_ADDACTION_4 )
 {
-   QMenu * p = hbqt_par_QMenu( 1 );
-   if( p )
-      ( p )->addAction( hbqt_par_QAction( 2 ) );
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMENU_ADDACTION_4 FP=( p )->addAction( hbqt_par_QAction( 2 ) ); p is NULL" ) );
-   }
+  QGC_POINTER_QMenu * q = ( QGC_POINTER_QMenu * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+  QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+
+  HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QMENU_ADDACTION()" ) );
+  if( p && p->ph && q && q->ph )
+  {
+     HB_TRACE( HB_TR_DEBUG, ( "QT_QMENU_ADDACTION() Qt oject: %p is attached to: %p", ( void * ) p->ph, ( void * ) q->ph ) );
+     p->bNew = HB_FALSE;
+     ( q->ph )->addAction( ( QAction * ) p->ph );
+  }
 }
 
 /*

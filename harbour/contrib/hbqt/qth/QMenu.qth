@@ -89,7 +89,18 @@ QAction * addAction ( const QString & text )
 QAction * addAction ( const QIcon & icon, const QString & text )
 QAction * addAction ( const QString & text, const QObject * receiver, const char * member, const QKeySequence & shortcut = 0 )
 QAction * addAction ( const QIcon & icon, const QString & text, const QObject * receiver, const char * member, const QKeySequence & shortcut = 0 )
-void addAction ( QAction * action )
+void addAction ( QAction * action ){
+  QGC_POINTER_QMenu * q = ( QGC_POINTER_QMenu * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+  QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+
+  HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QMENU_ADDACTION()" ) );
+  if( p && p->ph && q && q->ph )
+  {
+     HB_TRACE( HB_TR_DEBUG, ( "QT_QMENU_ADDACTION() Qt oject: %p is attached to: %p", ( void * ) p->ph, ( void * ) q->ph ) );
+     p->bNew = HB_FALSE;
+     ( q->ph )->addAction( ( QAction * ) p->ph );
+  }
+}
 QAction * addMenu ( QMenu * menu )
 QMenu * addMenu ( const QString & title )
 QMenu * addMenu ( const QIcon & icon, const QString & title )
