@@ -166,15 +166,9 @@ METHOD HbQtUI:destroy()
          ENDIF
       ENDIF
    NEXT
-   #if 0
-   ::qObj[ ::cMainWidgetName ] := NIL
-   ::widgets[ 1, 2 ] := NIL
-   ::aEvents  := NIL
-   ::qObj     := NIL
-   ::widgets  := {}
-   #endif
+
    ::oWidget:close()
-   ::oWidget  := NIL
+   ::oWidget := NIL
 
    RETURN i
 

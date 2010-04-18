@@ -147,14 +147,14 @@ HB_TRACE( HB_TR_ALWAYS, "hbide_saveINI( oIde )", 0, oIde:nRunMode, oIde:cProjIni
                qVScr   := QScrollBar():configure( oEdit:qEdit:verticalScrollBar() )
                qCursor := QTextCursor():configure( oEdit:qEdit:textCursor() )
 
-               aadd( txt_, "file_" + hb_ntos( ++nn ) + "=" + hbide_pathNormalized( oEdit:sourceFile ) + "," + ;
+               aadd( txt_, "file_" + hb_ntos( ++nn ) + "=" + hbide_pathNormalized( oEdit:sourceFile, .f. ) + "," + ;
                            hb_ntos( qCursor:position() ) +  ","  + ;
                            hb_ntos( qHScr:value()      ) +  ","  + ;
                            hb_ntos( qVScr:value()      ) +  ","  + ;
                            oEdit:cTheme                  +  ","  + ;
                            oEdit:cView                   +  "," )
             ELSE
-               aadd( txt_, "file_" + hb_ntos( ++nn ) + "=" + hbide_pathNormalized( oEdit:sourceFile ) + "," + ;
+               aadd( txt_, "file_" + hb_ntos( ++nn ) + "=" + hbide_pathNormalized( oEdit:sourceFile, .f. ) + "," + ;
                            hb_ntos( oEdit:nPos  ) +  ","  + ;
                            hb_ntos( oEdit:nHPos ) +  ","  + ;
                            hb_ntos( oEdit:nVPos ) +  ","  + ;
@@ -184,21 +184,21 @@ HB_TRACE( HB_TR_ALWAYS, "hbide_saveINI( oIde )", 0, oIde:nRunMode, oIde:cProjIni
    aadd( txt_, "[RECENTFILES]" )
    aadd( txt_, " " )
    FOR n := 1 TO len( oIde:aIni[ INI_RECENTFILES ] )
-      aadd( txt_, "recentfile_" + hb_ntos( n ) + "=" + hbide_pathNormalized( oIde:aIni[ INI_RECENTFILES, n ] ) )
+      aadd( txt_, "recentfile_" + hb_ntos( n ) + "=" + hbide_pathNormalized( oIde:aIni[ INI_RECENTFILES, n ], .f. ) )
    NEXT
    aadd( txt_, " " )
 
    aadd( txt_, "[RECENTPROJECTS]" )
    aadd( txt_, " " )
    FOR n := 1 TO len( oIde:aIni[ INI_RECENTPROJECTS ] )
-      aadd( txt_, "recentproject_" + hb_ntos( n ) + "=" + hbide_pathNormalized( oIde:aIni[ INI_RECENTPROJECTS, n ] ) )
+      aadd( txt_, "recentproject_" + hb_ntos( n ) + "=" + hbide_pathNormalized( oIde:aIni[ INI_RECENTPROJECTS, n ], .f. ) )
    NEXT
    aadd( txt_, " " )
 
    aadd( txt_, "[FOLDERS]" )
    aadd( txt_, " " )
    FOR n := 1 TO len( oIde:aIni[ INI_FOLDERS ] )
-      aadd( txt_, "folder_" + hb_ntos( n ) + "=" + hbide_pathNormalized( oIde:aIni[ INI_FOLDERS, n ] ) )
+      aadd( txt_, "folder_" + hb_ntos( n ) + "=" + hbide_pathNormalized( oIde:aIni[ INI_FOLDERS, n ], .f. ) )
    NEXT
    aadd( txt_, " " )
 

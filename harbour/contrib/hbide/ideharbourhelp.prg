@@ -252,9 +252,6 @@ METHOD IdeHarbourHelp:destroy()
 METHOD IdeHarbourHelp:clear()
    LOCAL a_
 
-   ::disconnect( ::oUI:q_treeDoc     , "itemSelectionChanged()" )
-   ::disconnect( ::oUI:q_treeCategory, "itemSelectionChanged()" )
-
    ::aHistory    := {}
    ::aFuncByFile := {}
 
@@ -408,6 +405,9 @@ METHOD IdeHarbourHelp:installSignals()
    ::oUI:signal( "editIndex"     , "textChanged(QString)"      , {|p| ::execEvent( editIndex_textChanged, p   ) } )
    ::oUI:signal( "editIndex"     , "returnPressed()"           , {| | ::execEvent( editIndex_returnPressed    ) } )
    ::oUI:signal( "listIndex"     , "itemDoubleClicked(QLWItem)", {|p| ::execEvent( listIndex_ItemDoubleClicked, p ) } )
+
+   ::oUI:signal( "treeDoc"       , "itemSelectionChanged()"    , {| | ::execEvent( treeDoc_itemSelectionChanged ) } )
+   ::oUI:signal( "treeCategory"  , "itemSelectionChanged()"    , {| | ::execEvent( treeCategory_itemSelectionChanged ) } )
 
    RETURN Self
 
@@ -595,10 +595,7 @@ METHOD IdeHarbourHelp:refreshDocTree()
 
    /* Clean Environment */
    ::clear()
-   //
-   ::connect( ::oUI:q_treeDoc     , "itemSelectionChanged()" , {| | ::execEvent( treeDoc_itemSelectionChanged ) } )
-   ::connect( ::oUI:q_treeCategory, "itemSelectionChanged()" , {| | ::execEvent( treeCategory_itemSelectionChanged ) } )
-   //
+
    ::aNodes      := {}
    ::aFuncByFile := {}
    ::aHistory    := {}

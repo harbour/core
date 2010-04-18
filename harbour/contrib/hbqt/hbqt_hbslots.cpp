@@ -281,12 +281,12 @@ static bool disconnect_signal( QObject * object, const char * signal )
    if( signal == ( QString ) "itemSelectionChanged()"                         ) return object->disconnect( SIGNAL( itemSelectionChanged()                                            ) );
    /* QTableWidget */
    if( signal == ( QString ) "currentItemChanged(QTblWItem)"                  ) return object->disconnect( SIGNAL( currentItemChanged( QTableWidgetItem *, QTableWidgetItem * )      ) );
-   if( signal == ( QString ) "itemActivated(QTblWItem)"                       ) return object->disconnect( SIGNAL( itemActivated( QTableWidgetItem *, int )                          ) );
-   if( signal == ( QString ) "itemChanged(QTblWItem)"                         ) return object->disconnect( SIGNAL( itemChanged( QTableWidgetItem *, int )                            ) );
-   if( signal == ( QString ) "itemClicked(QTblWItem)"                         ) return object->disconnect( SIGNAL( itemClicked( QTableWidgetItem *, int )                            ) );
-   if( signal == ( QString ) "itemDoubleClicked(QTblWItem)"                   ) return object->disconnect( SIGNAL( itemDoubleClicked( QTableWidgetItem *, int )                      ) );
-   if( signal == ( QString ) "itemEntered(QTblWItem)"                         ) return object->disconnect( SIGNAL( itemEntered( QTableWidgetItem *, int )                            ) );
-   if( signal == ( QString ) "itemPressed(QTblWItem)"                         ) return object->disconnect( SIGNAL( itemPressed( QTableWidgetItem *, int )                            ) );
+   if( signal == ( QString ) "itemActivated(QTblWItem)"                       ) return object->disconnect( SIGNAL( itemActivated( QTableWidgetItem * )                               ) );
+   if( signal == ( QString ) "itemChanged(QTblWItem)"                         ) return object->disconnect( SIGNAL( itemChanged( QTableWidgetItem * )                                 ) );
+   if( signal == ( QString ) "itemClicked(QTblWItem)"                         ) return object->disconnect( SIGNAL( itemClicked( QTableWidgetItem * )                                 ) );
+   if( signal == ( QString ) "itemDoubleClicked(QTblWItem)"                   ) return object->disconnect( SIGNAL( itemDoubleClicked( QTableWidgetItem * )                           ) );
+   if( signal == ( QString ) "itemEntered(QTblWItem)"                         ) return object->disconnect( SIGNAL( itemEntered( QTableWidgetItem * )                                 ) );
+   if( signal == ( QString ) "itemPressed(QTblWItem)"                         ) return object->disconnect( SIGNAL( itemPressed( QTableWidgetItem * )                                 ) );
    /* */
    if( signal == ( QString ) "iconChanged()"                                  ) return object->disconnect( SIGNAL( iconChanged()                                                     ) );
    if( signal == ( QString ) "titleChanged(QString)"                          ) return object->disconnect( SIGNAL( titleChanged( const QString & )                                   ) );

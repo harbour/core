@@ -604,7 +604,7 @@ FUNCTION hbide_isValidText( cSourceFile )
    hb_fNameSplit( cSourceFile, , , @cExt )
 
    RETURN ( lower( cExt ) $ ".c,.cpp,.prg,.h,.ch,.txt,.log,.ini,.env,.ppo," + ;
-                            ".cc,.hbc,.hbp,.hbm,.xml,.bat,.sh,.rc,.ui,.uic,.bak,.fmg" )
+                            ".cc,.hbc,.hbp,.hbm,.xml,.bat,.sh,.rc,.ui,.uic,.bak,.fmg,.qth,.qtp" )
 
 /*----------------------------------------------------------------------*/
 

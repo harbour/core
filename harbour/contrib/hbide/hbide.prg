@@ -558,7 +558,7 @@ HB_TRACE( HB_TR_ALWAYS, "HbIde:create( cProjIni )", "#Params=" )
    HB_TRACE( HB_TR_ALWAYS, "======================================================" )
    HB_TRACE( HB_TR_ALWAYS, "Before    ::oDlg:destroy()", memory( 1001 )             )
    HB_TRACE( HB_TR_ALWAYS, "                                                      " )
-
+#if 1
    ::oTM:destroy()
    ::oSK:destroy()
    ::oSC:destroy()
@@ -579,7 +579,7 @@ HB_TRACE( HB_TR_ALWAYS, "HbIde:create( cProjIni )", "#Params=" )
 
    ::oFont := NIL
    qSplash := NIL
-
+#endif
    HB_TRACE( HB_TR_ALWAYS, "                                                      " )
    HB_TRACE( HB_TR_ALWAYS, "After     ::oDlg:destroy()", memory( 1001 )             )
    HB_TRACE( HB_TR_ALWAYS, "======================================================" )

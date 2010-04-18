@@ -744,15 +744,15 @@ STATIC FUNCTION mnuNormalizeItem( cCaption )
  * 02/01/2010 - 23:23:22 - vailtom
  */
 FUNCTION hbide_mnuAddFileToMRU( oIde, cFileName, nType )
-   LOCAL nPos
+   LOCAL nPos, cFileNormal
 
    IF nType != INI_RECENTPROJECTS .AND. nType != INI_RECENTFILES
       RETURN nil
    ENDIF
 
-   cFileName := hbide_pathNormalized( cFileName )
+   cFileNormal := hbide_pathNormalized( cFileName )
 
-   IF ( nPos := aScan( oIde:aIni[ nType ], {|f| hbide_pathNormalized( f ) == cFileName } ) ) > 0
+   IF ( nPos := aScan( oIde:aIni[ nType ], {|f| hbide_pathNormalized( f ) == cFileNormal } ) ) > 0
       hb_aDel( oIde:aIni[ nType ], nPos, .T. )
    ENDIF
 
