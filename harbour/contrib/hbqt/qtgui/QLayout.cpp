@@ -90,10 +90,9 @@
 
 typedef struct
 {
-   void * ph;
+   QPointer< QLayout > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
-   QPointer< QLayout > pq;
 } QGC_POINTER_QLayout;
 
 QT_G_FUNC( hbqt_gcRelease_QLayout )
@@ -111,13 +110,12 @@ void * hbqt_gcAllocate_QLayout( void * pObj, bool bNew )
 {
    QGC_POINTER_QLayout * p = ( QGC_POINTER_QLayout * ) hb_gcAllocate( sizeof( QGC_POINTER_QLayout ), hbqt_gcFuncs() );
 
-   p->ph = pObj;
+   new( & p->ph ) QPointer< QLayout >( ( QLayout * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QLayout;
 
    if( bNew )
    {
-      new( & p->pq ) QPointer< QLayout >( ( QLayout * ) pObj );
       HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QLayout  under p->pq", pObj ) );
    }
    else
@@ -129,6 +127,7 @@ void * hbqt_gcAllocate_QLayout( void * pObj, bool bNew )
 
 HB_FUNC( QT_QLAYOUT )
 {
+
 }
 
 /*
@@ -136,7 +135,13 @@ HB_FUNC( QT_QLAYOUT )
  */
 HB_FUNC( QT_QLAYOUT_ACTIVATE )
 {
-   hb_retl( hbqt_par_QLayout( 1 )->activate() );
+   QLayout * p = hbqt_par_QLayout( 1 );
+   if( p )
+      hb_retl( ( p )->activate() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLAYOUT_ACTIVATE FP=hb_retl( ( p )->activate() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -144,21 +149,18 @@ HB_FUNC( QT_QLAYOUT_ACTIVATE )
  */
 HB_FUNC( QT_QLAYOUT_ADDITEM )
 {
-   QGC_POINTER * p;
-   QGC_POINTER * q;
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   QGC_POINTER * q = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
 
    HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QLAYOUT_ADDITEM()" ) );
 
-   q = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
-   p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
-
    if( p && p->ph && q && q->ph )
    {
-      HB_TRACE( HB_TR_DEBUG, ( "QT_QLAYOUT_ADDITEM() Qt oject: %p is attached to: %p", p->ph, q->ph ) );
-      p->bNew = HB_FALSE;
-   }
+      HB_TRACE( HB_TR_DEBUG, ( "QT_QLAYOUT_ADDITEM() Qt object: %p is attached to: %p", p->ph, q->ph ) );
+      q->bNew = HB_FALSE;
 
-   hbqt_par_QLayout( 1 )->addItem( hbqt_par_QLayoutItem( 2 ) );
+      hbqt_par_QLayout( 1 )->addItem( hbqt_par_QLayoutItem( 2 ) );
+   }
 }
 
 /*
@@ -166,7 +168,13 @@ HB_FUNC( QT_QLAYOUT_ADDITEM )
  */
 HB_FUNC( QT_QLAYOUT_ADDWIDGET )
 {
-   hbqt_par_QLayout( 1 )->addWidget( hbqt_par_QWidget( 2 ) );
+   QLayout * p = hbqt_par_QLayout( 1 );
+   if( p )
+      ( p )->addWidget( hbqt_par_QWidget( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLAYOUT_ADDWIDGET FP=( p )->addWidget( hbqt_par_QWidget( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -174,7 +182,13 @@ HB_FUNC( QT_QLAYOUT_ADDWIDGET )
  */
 HB_FUNC( QT_QLAYOUT_CONTENTSRECT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QLayout( 1 )->contentsRect() ), true ) );
+   QLayout * p = hbqt_par_QLayout( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->contentsRect() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLAYOUT_CONTENTSRECT FP=hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->contentsRect() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -182,7 +196,13 @@ HB_FUNC( QT_QLAYOUT_CONTENTSRECT )
  */
 HB_FUNC( QT_QLAYOUT_COUNT )
 {
-   hb_retni( hbqt_par_QLayout( 1 )->count() );
+   QLayout * p = hbqt_par_QLayout( 1 );
+   if( p )
+      hb_retni( ( p )->count() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLAYOUT_COUNT FP=hb_retni( ( p )->count() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -190,7 +210,13 @@ HB_FUNC( QT_QLAYOUT_COUNT )
  */
 HB_FUNC( QT_QLAYOUT_EXPANDINGDIRECTIONS )
 {
-   hb_retni( ( Qt::Orientations ) hbqt_par_QLayout( 1 )->expandingDirections() );
+   QLayout * p = hbqt_par_QLayout( 1 );
+   if( p )
+      hb_retni( ( Qt::Orientations ) ( p )->expandingDirections() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLAYOUT_EXPANDINGDIRECTIONS FP=hb_retni( ( Qt::Orientations ) ( p )->expandingDirections() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -198,12 +224,18 @@ HB_FUNC( QT_QLAYOUT_EXPANDINGDIRECTIONS )
  */
 HB_FUNC( QT_QLAYOUT_GETCONTENTSMARGINS )
 {
+   QLayout * p = hbqt_par_QLayout( 1 );
    int iLeft = 0;
    int iTop = 0;
    int iRight = 0;
    int iBottom = 0;
 
-   hbqt_par_QLayout( 1 )->getContentsMargins( &iLeft, &iTop, &iRight, &iBottom );
+   if( p )
+      ( p )->getContentsMargins( &iLeft, &iTop, &iRight, &iBottom );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLAYOUT_GETCONTENTSMARGINS FP=( p )->getContentsMargins( &iLeft, &iTop, &iRight, &iBottom ); p is NULL" ) );
+   }
 
    hb_storni( iLeft, 2 );
    hb_storni( iTop, 3 );
@@ -216,7 +248,13 @@ HB_FUNC( QT_QLAYOUT_GETCONTENTSMARGINS )
  */
 HB_FUNC( QT_QLAYOUT_INDEXOF )
 {
-   hb_retni( hbqt_par_QLayout( 1 )->indexOf( hbqt_par_QWidget( 2 ) ) );
+   QLayout * p = hbqt_par_QLayout( 1 );
+   if( p )
+      hb_retni( ( p )->indexOf( hbqt_par_QWidget( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLAYOUT_INDEXOF FP=hb_retni( ( p )->indexOf( hbqt_par_QWidget( 2 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -224,7 +262,13 @@ HB_FUNC( QT_QLAYOUT_INDEXOF )
  */
 HB_FUNC( QT_QLAYOUT_ISENABLED )
 {
-   hb_retl( hbqt_par_QLayout( 1 )->isEnabled() );
+   QLayout * p = hbqt_par_QLayout( 1 );
+   if( p )
+      hb_retl( ( p )->isEnabled() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLAYOUT_ISENABLED FP=hb_retl( ( p )->isEnabled() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -232,7 +276,13 @@ HB_FUNC( QT_QLAYOUT_ISENABLED )
  */
 HB_FUNC( QT_QLAYOUT_ITEMAT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QLayoutItem( hbqt_par_QLayout( 1 )->itemAt( hb_parni( 2 ) ), false ) );
+   QLayout * p = hbqt_par_QLayout( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QLayoutItem( ( p )->itemAt( hb_parni( 2 ) ), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLAYOUT_ITEMAT FP=hb_retptrGC( hbqt_gcAllocate_QLayoutItem( ( p )->itemAt( hb_parni( 2 ) ), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -240,7 +290,13 @@ HB_FUNC( QT_QLAYOUT_ITEMAT )
  */
 HB_FUNC( QT_QLAYOUT_MAXIMUMSIZE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QLayout( 1 )->maximumSize() ), true ) );
+   QLayout * p = hbqt_par_QLayout( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->maximumSize() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLAYOUT_MAXIMUMSIZE FP=hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->maximumSize() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -248,7 +304,13 @@ HB_FUNC( QT_QLAYOUT_MAXIMUMSIZE )
  */
 HB_FUNC( QT_QLAYOUT_MENUBAR )
 {
-   hb_retptrGC( hbqt_gcAllocate_QWidget( hbqt_par_QLayout( 1 )->menuBar(), false ) );
+   QLayout * p = hbqt_par_QLayout( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->menuBar(), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLAYOUT_MENUBAR FP=hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->menuBar(), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -256,7 +318,13 @@ HB_FUNC( QT_QLAYOUT_MENUBAR )
  */
 HB_FUNC( QT_QLAYOUT_MINIMUMSIZE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QLayout( 1 )->minimumSize() ), true ) );
+   QLayout * p = hbqt_par_QLayout( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->minimumSize() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLAYOUT_MINIMUMSIZE FP=hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->minimumSize() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -264,7 +332,13 @@ HB_FUNC( QT_QLAYOUT_MINIMUMSIZE )
  */
 HB_FUNC( QT_QLAYOUT_PARENTWIDGET )
 {
-   hb_retptrGC( hbqt_gcAllocate_QWidget( hbqt_par_QLayout( 1 )->parentWidget(), false ) );
+   QLayout * p = hbqt_par_QLayout( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->parentWidget(), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLAYOUT_PARENTWIDGET FP=hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->parentWidget(), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -272,7 +346,13 @@ HB_FUNC( QT_QLAYOUT_PARENTWIDGET )
  */
 HB_FUNC( QT_QLAYOUT_REMOVEITEM )
 {
-   hbqt_par_QLayout( 1 )->removeItem( hbqt_par_QLayoutItem( 2 ) );
+   QLayout * p = hbqt_par_QLayout( 1 );
+   if( p )
+      ( p )->removeItem( hbqt_par_QLayoutItem( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLAYOUT_REMOVEITEM FP=( p )->removeItem( hbqt_par_QLayoutItem( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -280,7 +360,13 @@ HB_FUNC( QT_QLAYOUT_REMOVEITEM )
  */
 HB_FUNC( QT_QLAYOUT_REMOVEWIDGET )
 {
-   hbqt_par_QLayout( 1 )->removeWidget( hbqt_par_QWidget( 2 ) );
+   QLayout * p = hbqt_par_QLayout( 1 );
+   if( p )
+      ( p )->removeWidget( hbqt_par_QWidget( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLAYOUT_REMOVEWIDGET FP=( p )->removeWidget( hbqt_par_QWidget( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -288,7 +374,13 @@ HB_FUNC( QT_QLAYOUT_REMOVEWIDGET )
  */
 HB_FUNC( QT_QLAYOUT_SETALIGNMENT )
 {
-   hb_retl( hbqt_par_QLayout( 1 )->setAlignment( hbqt_par_QWidget( 2 ), ( Qt::Alignment ) hb_parni( 3 ) ) );
+   QLayout * p = hbqt_par_QLayout( 1 );
+   if( p )
+      hb_retl( ( p )->setAlignment( hbqt_par_QWidget( 2 ), ( Qt::Alignment ) hb_parni( 3 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLAYOUT_SETALIGNMENT FP=hb_retl( ( p )->setAlignment( hbqt_par_QWidget( 2 ), ( Qt::Alignment ) hb_parni( 3 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -296,7 +388,13 @@ HB_FUNC( QT_QLAYOUT_SETALIGNMENT )
  */
 HB_FUNC( QT_QLAYOUT_SETALIGNMENT_1 )
 {
-   hbqt_par_QLayout( 1 )->setAlignment( ( Qt::Alignment ) hb_parni( 2 ) );
+   QLayout * p = hbqt_par_QLayout( 1 );
+   if( p )
+      ( p )->setAlignment( ( Qt::Alignment ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLAYOUT_SETALIGNMENT_1 FP=( p )->setAlignment( ( Qt::Alignment ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -304,7 +402,13 @@ HB_FUNC( QT_QLAYOUT_SETALIGNMENT_1 )
  */
 HB_FUNC( QT_QLAYOUT_SETALIGNMENT_2 )
 {
-   hb_retl( hbqt_par_QLayout( 1 )->setAlignment( hbqt_par_QLayout( 2 ), ( Qt::Alignment ) hb_parni( 3 ) ) );
+   QLayout * p = hbqt_par_QLayout( 1 );
+   if( p )
+      hb_retl( ( p )->setAlignment( hbqt_par_QLayout( 2 ), ( Qt::Alignment ) hb_parni( 3 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLAYOUT_SETALIGNMENT_2 FP=hb_retl( ( p )->setAlignment( hbqt_par_QLayout( 2 ), ( Qt::Alignment ) hb_parni( 3 ) ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -312,7 +416,13 @@ HB_FUNC( QT_QLAYOUT_SETALIGNMENT_2 )
  */
 HB_FUNC( QT_QLAYOUT_SETCONTENTSMARGINS )
 {
-   hbqt_par_QLayout( 1 )->setContentsMargins( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) );
+   QLayout * p = hbqt_par_QLayout( 1 );
+   if( p )
+      ( p )->setContentsMargins( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLAYOUT_SETCONTENTSMARGINS FP=( p )->setContentsMargins( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -320,7 +430,13 @@ HB_FUNC( QT_QLAYOUT_SETCONTENTSMARGINS )
  */
 HB_FUNC( QT_QLAYOUT_SETENABLED )
 {
-   hbqt_par_QLayout( 1 )->setEnabled( hb_parl( 2 ) );
+   QLayout * p = hbqt_par_QLayout( 1 );
+   if( p )
+      ( p )->setEnabled( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLAYOUT_SETENABLED FP=( p )->setEnabled( hb_parl( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -328,7 +444,13 @@ HB_FUNC( QT_QLAYOUT_SETENABLED )
  */
 HB_FUNC( QT_QLAYOUT_SETMENUBAR )
 {
-   hbqt_par_QLayout( 1 )->setMenuBar( hbqt_par_QWidget( 2 ) );
+   QLayout * p = hbqt_par_QLayout( 1 );
+   if( p )
+      ( p )->setMenuBar( hbqt_par_QWidget( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLAYOUT_SETMENUBAR FP=( p )->setMenuBar( hbqt_par_QWidget( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -336,7 +458,13 @@ HB_FUNC( QT_QLAYOUT_SETMENUBAR )
  */
 HB_FUNC( QT_QLAYOUT_SETSIZECONSTRAINT )
 {
-   hbqt_par_QLayout( 1 )->setSizeConstraint( ( QLayout::SizeConstraint ) hb_parni( 2 ) );
+   QLayout * p = hbqt_par_QLayout( 1 );
+   if( p )
+      ( p )->setSizeConstraint( ( QLayout::SizeConstraint ) hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLAYOUT_SETSIZECONSTRAINT FP=( p )->setSizeConstraint( ( QLayout::SizeConstraint ) hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -344,7 +472,13 @@ HB_FUNC( QT_QLAYOUT_SETSIZECONSTRAINT )
  */
 HB_FUNC( QT_QLAYOUT_SETSPACING )
 {
-   hbqt_par_QLayout( 1 )->setSpacing( hb_parni( 2 ) );
+   QLayout * p = hbqt_par_QLayout( 1 );
+   if( p )
+      ( p )->setSpacing( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLAYOUT_SETSPACING FP=( p )->setSpacing( hb_parni( 2 ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -352,7 +486,13 @@ HB_FUNC( QT_QLAYOUT_SETSPACING )
  */
 HB_FUNC( QT_QLAYOUT_SIZECONSTRAINT )
 {
-   hb_retni( ( QLayout::SizeConstraint ) hbqt_par_QLayout( 1 )->sizeConstraint() );
+   QLayout * p = hbqt_par_QLayout( 1 );
+   if( p )
+      hb_retni( ( QLayout::SizeConstraint ) ( p )->sizeConstraint() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLAYOUT_SIZECONSTRAINT FP=hb_retni( ( QLayout::SizeConstraint ) ( p )->sizeConstraint() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -360,7 +500,13 @@ HB_FUNC( QT_QLAYOUT_SIZECONSTRAINT )
  */
 HB_FUNC( QT_QLAYOUT_SPACING )
 {
-   hb_retni( hbqt_par_QLayout( 1 )->spacing() );
+   QLayout * p = hbqt_par_QLayout( 1 );
+   if( p )
+      hb_retni( ( p )->spacing() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLAYOUT_SPACING FP=hb_retni( ( p )->spacing() ); p is NULL" ) );
+   }
 }
 
 /*
@@ -368,7 +514,13 @@ HB_FUNC( QT_QLAYOUT_SPACING )
  */
 HB_FUNC( QT_QLAYOUT_TAKEAT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QLayoutItem( hbqt_par_QLayout( 1 )->takeAt( hb_parni( 2 ) ), false ) );
+   QLayout * p = hbqt_par_QLayout( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QLayoutItem( ( p )->takeAt( hb_parni( 2 ) ), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLAYOUT_TAKEAT FP=hb_retptrGC( hbqt_gcAllocate_QLayoutItem( ( p )->takeAt( hb_parni( 2 ) ), false ) ); p is NULL" ) );
+   }
 }
 
 /*
@@ -376,7 +528,13 @@ HB_FUNC( QT_QLAYOUT_TAKEAT )
  */
 HB_FUNC( QT_QLAYOUT_UPDATE )
 {
-   hbqt_par_QLayout( 1 )->update();
+   QLayout * p = hbqt_par_QLayout( 1 );
+   if( p )
+      ( p )->update();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLAYOUT_UPDATE FP=( p )->update(); p is NULL" ) );
+   }
 }
 
 /*
@@ -384,7 +542,13 @@ HB_FUNC( QT_QLAYOUT_UPDATE )
  */
 HB_FUNC( QT_QLAYOUT_CLOSESTACCEPTABLESIZE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QLayout( 1 )->closestAcceptableSize( hbqt_par_QWidget( 2 ), *hbqt_par_QSize( 3 ) ) ), true ) );
+   QLayout * p = hbqt_par_QLayout( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->closestAcceptableSize( hbqt_par_QWidget( 2 ), *hbqt_par_QSize( 3 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLAYOUT_CLOSESTACCEPTABLESIZE FP=hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->closestAcceptableSize( hbqt_par_QWidget( 2 ), *hbqt_par_QSize( 3 ) ) ), true ) ); p is NULL" ) );
+   }
 }
 
 
