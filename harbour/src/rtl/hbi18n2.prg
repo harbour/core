@@ -301,8 +301,12 @@ FUNCTION __I18N_POTARRAYSAVE( cFile, aTrans, cErrorMsg, lVersionNo, lSourceRef )
    LOCAL cEol, cPOT, cFlg
    LOCAL msg
 
-   DEFAULT lVersionNo TO .T.
-   DEFAULT lSourceRef TO .T.
+   IF ! ISLOGICAL( lVersionNo )
+      lVersionNo := .T.
+   ENDIF
+   IF ! ISLOGICAL( lSourceRef )
+      lSourceRef := .T.
+   ENDIF
 
    lRet := .F.
    cEol := hb_osNewLine()

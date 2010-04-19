@@ -84,13 +84,22 @@ STATIC s_cHalfLineComment := "#"
 
 PROCEDURE hb_IniSetComment( cLc, cHlc )
 
-   s_cLineComment := cLc
-   s_cHalfLineComment := cHlc
+   IF ISCHARACTER( cLc )
+      s_cLineComment := cLc
+   ENDIF
+
+   IF ISCHARACTER( cHlc )
+      s_cHalfLineComment := cHlc
+   ENDIF
 
    RETURN
 
 FUNCTION HB_IniNew( lAutoMain )
    LOCAL hIni := hb_Hash()
+
+   IF ! ISLOGICAL( lAutoMain )
+      lAutoMain := .T.
+   ENDIF
 
    IF lAutoMain
       hIni[ "MAIN" ] := hb_Hash()
@@ -98,22 +107,25 @@ FUNCTION HB_IniNew( lAutoMain )
 
    RETURN hIni
 
-
 FUNCTION hb_IniRead( cFileSpec, lKeyCaseSens, cSplitters, lAutoMain )
-   LOCAL cData
-
-   cData := hb_IniFileLow( cFileSpec )
-
-   RETURN hb_IniReadStr( cData, lKeyCaseSens, cSplitters, lAutoMain )
+   RETURN hb_IniReadStr( iif( ISCHARACTER( cFileSpec ), hb_IniFileLow( cFileSpec ), "" ), lKeyCaseSens, cSplitters, lAutoMain )
 
 FUNCTION hb_IniReadStr( cData, lKeyCaseSens, cSplitters, lAutoMain )
    LOCAL hIni := hb_Hash()
 
    /* Default case sensitiveness for keys */
-   DEFAULT lKeyCaseSens TO .T.
-   DEFAULT cSplitters   TO "="
-   DEFAULT lAutoMain    TO .T.
-   DEFAULT cData        TO ""
+   IF ! ISLOGICAL( lKeyCaseSens )
+      lKeyCaseSens := .T.
+   ENDIF
+   IF ! ISCHARACTER( cSplitters )
+      cSplitters := "="
+   ENDIF
+   IF ! ISLOGICAL( lAutoMain )
+      lAutoMain := .T.
+   ENDIF
+   IF ! ISCHARACTER( cData )
+      cData := ""
+   ENDIF
 
    hb_HCaseMatch( hIni, lKeyCaseSens )
 
@@ -161,8 +173,6 @@ STATIC FUNCTION hb_IniStringLow( hIni, cData, lKeyCaseSens, cSplitters, lAutoMai
    LOCAL nLineEnd
    LOCAL cLine
    LOCAL reComment, reInclude, reSection, reSplitters
-
-   DEFAULT cData TO ""
 
    reComment := hb_RegexComp( s_cHalfLineComment + "|^[ \t]*" + s_cLineComment )
    reInclude := hb_RegexComp( "include (.*)" )
@@ -318,15 +328,17 @@ FUNCTION hb_IniWriteStr( hIni, cCommentBegin, cCommentEnd, lAutoMain )
    LOCAL cSection
    LOCAL cBuffer := ""
 
-   IF !HB_ISHASH( hIni )
+   IF ! HB_ISHASH( hIni )
       RETURN NIL
    ENDIF
 
-   IF ! Empty( cCommentBegin )
+   IF ISCHARACTER( cCommentBegin ) .AND. ! Empty( cCommentBegin )
       cBuffer += cCommentBegin + cNewLine
    ENDIF
 
-   DEFAULT lAutoMain TO .T.
+   IF ! ISLOGICAL( lAutoMain )
+      lAutoMain := .T.
+   ENDIF
 
    // Fix if lAutoMain is .T. but I haven't a MAIN section
    IF lAutoMain .AND. !hb_HHasKey( hIni, "MAIN" )
@@ -369,8 +381,8 @@ FUNCTION hb_IniWriteStr( hIni, cCommentBegin, cCommentEnd, lAutoMain )
                                           hb_CStr( xVal ) + cNewLine } )
    NEXT
 
-   IF ! Empty( cCommentEnd )
+   IF ISCHARACTER( cCommentEnd ) .AND. ! Empty( cCommentEnd )
       cBuffer += cCommentEnd + cNewLine
    ENDIF
 
-   RETURN IIF( !Empty( cBuffer ), cBuffer, NIL )
+   RETURN iif( ! Empty( cBuffer ), cBuffer, NIL )

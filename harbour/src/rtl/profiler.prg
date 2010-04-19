@@ -607,7 +607,9 @@ METHOD emitLine( oEntity ) CLASS HBProfileReport
 METHOD generate( bFilter ) CLASS HBProfileReport
    LOCAL lProfile := __setProfiler( .F. )
 
-   DEFAULT bFilter TO {|| .T. }
+   IF ! ISBLOCK( bFilter )
+      bFilter := {|| .T. }
+   ENDIF
 
    ::emitHeader():oProfile:forEach( {| o | iif( Eval( bFilter, o ), ::emitLine( o ), NIL ) } )
 
@@ -645,7 +647,9 @@ METHOD writeLines( aLines ) CLASS HBProfileReportToFile
 METHOD generate( bFilter, cFile ) CLASS HBProfileReportToFile
    LOCAL lProfile := __setProfiler( .F. )
 
-   DEFAULT cFile TO "hbprof.txt"
+   IF ! ISCHARACTER( cFile )
+      cFile := "hbprof.txt"
+   ENDIF
 
    IF ( ::hFile := fcreate( cFile ) ) != F_ERROR
       ::super:generate( bFilter )
