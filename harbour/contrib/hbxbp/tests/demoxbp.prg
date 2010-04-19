@@ -113,7 +113,6 @@ FUNCTION _BuildADialog()
 PROCEDURE DispMem( cMessage )
 
    HB_SYMBOL_UNUSED( cMessage )
-   HBXBP_DEBUG( hb_threadId(), padc( cMessage, 40 ), memory( 1001 ), hbqt_getMemUsed() )
 
    RETURN
 
@@ -124,11 +123,6 @@ PROCEDURE BuildADialog()
    LOCAL nThread := hb_threadId()
    //LOCAL oStat, aMenu, aTool, aBrow, aChek, a3Sta
 
-HBXBP_DEBUG( "  .   " )
-HBXBP_DEBUG( "  .   " )
-HBXBP_DEBUG( "  .   " )
-HBXBP_DEBUG( "  .   " )
-
 DispMem( "At Startup of Thread" )
 
    /* Create Application Window */
@@ -137,7 +131,6 @@ DispMem( "At Startup of Thread" )
 DispMem( "oDlg := GuiStdDialog" )
 
    oDlg:close := {|| MsgBox( "You can also close me by pressing [ESC]" ), .T. }
-   // oDlg:killDisplayFocus := {|| HBXBP_DEBUG( "Loosing Display Focus" ) }
    SetAppWindow( oDlg )
    oDlg:Show()
 
@@ -148,9 +141,6 @@ DispMem( "oDlg := GuiStdDialog" )
    /* Place on the center of desktop */
    oDlg:setPos( { ( aSize[ 1 ] - oDlg:currentSize()[ 1 ] ) / 2, ;
                   ( aSize[ 2 ] - oDlg:currentSize()[ 2 ] ) / 2 } )
-
-   /* Callback to report the mouse moves */
-   // oDa:motion := {|| HBXBP_DEBUG( "MouseMove: "+cThread ) }
 
    /* Make background color of :drawingArea different */
    oDa:setColorBG( GraMakeRGBColor( { 134,128,200 } ) )
@@ -226,8 +216,6 @@ DispMem( "Build_Statics" )
       nEvent := AppEvent( @mp1, @mp2, @oXbp )
 
       IF ( nEvent == xbeP_Close ) .OR. ( nEvent == xbeP_Keyboard .and. mp1 == xbeK_ESC )
-HBXBP_DEBUG( ".  " )
-HBXBP_DEBUG( ".............................. WOW ................................." )
          EXIT
       ELSEIF nEvent == xbeP_Keyboard .and. mp1 == xbeK_F1
          #if 0
@@ -239,19 +227,8 @@ HBXBP_DEBUG( ".............................. WOW ...............................
       oXbp:handleEvent( nEvent, mp1, mp2 )
    ENDDO
 
-   /* Very important - destroy resources */
-   HBXBP_DEBUG( "----------------------------------------------" )
-   HBXBP_DEBUG( "Before    ::oDlg:destroy()", memory( 1001 ), hbqt_getMemUsed() )
-   HBXBP_DEBUG( "----------------------------------------------" )
-
    oDlg:destroy()
    oHTM := NIL
-
-   HBXBP_DEBUG( "----------------------------------------------" )
-   HBXBP_DEBUG( "After     ::oDlg:destroy()", memory( 1001 ), hbqt_getMemUsed() )
-   HBXBP_DEBUG( "----------------------------------------------" )
-
-HBXBP_DEBUG( "------------------------------ WOW ---------------------------------" )
 
    RETURN
 
@@ -763,13 +740,13 @@ STATIC FUNCTION Build_ComboBox( oWnd )
    // Code block for selection:
    //  - assign to LOCAL variable using :getData()
    //  - display LOCAL variable using DispoutAt()
-   bAction := {|mp1, mp2, obj| UNU( mp1 ), UNU( mp2 ), obj:XbpSLE:getData(), HBXBP_DEBUG( "Highlighted: "+cDay ) }
+   bAction := {|mp1, mp2, obj| UNU( mp1 ), UNU( mp2 ), obj:XbpSLE:getData() }
 
    // Assign code block for selection with Up and Down keys
    oCombo:ItemMarked := bAction
 
    // Assign code block for selection by left mouse click in list box
-   oCombo:ItemSelected := {|mp1, mp2, obj| UNU( mp1 ), UNU( mp2 ), obj:XbpSLE:getData(), HBXBP_DEBUG( "Selected: "+cDay ) }
+   oCombo:ItemSelected := {|mp1, mp2, obj| UNU( mp1 ), UNU( mp2 ), obj:XbpSLE:getData() }
 
    // Copy data from array to combo box, then discard array
    FOR i := 1 TO 7
@@ -832,7 +809,7 @@ FUNCTION Build_SLEs( oWnd )
    oXbp:setData()
    // Assign the value of the edit buffer to a LOCAL variable
    // when the input focus is lost
-   oXbp:killInputFocus := { |mp1,mp2,oSLE| UNU( mp1 ), UNU( mp2 ),  oSLE:getData(), HBXBP_DEBUG( "Var B =" + cVarB ) }
+   oXbp:killInputFocus := { |mp1,mp2,oSLE| UNU( mp1 ), UNU( mp2 ),  oSLE:getData() }
 
    oXbp:setColorBG( GraMakeRGBColor( { 190,190,190 } ) )
 
@@ -1311,15 +1288,14 @@ FUNCTION Build_HTMLViewer( oWnd )
    oHtm := XbpHTMLViewer():new( oFrm, , {10,10}, {sz_[1]-10-10,sz_[2]-10-10} )
    oHtm:create()
    oHtm:navigate( "http://www.harbour-project.org" )
-   oHtm:titleChange := {|e| UNU( e ), HBXBP_DEBUG( e ) }
-   // oHtm:progressChange := {|nProg,nMax| HBXBP_DEBUG( "Downloaded: "+str( nProg*100/nMax,10,0 ) ) }
+   oHtm:titleChange := {|e| UNU( e ) }
 
    RETURN oHtm
 
 /*----------------------------------------------------------------------*/
 
 FUNCTION Build_FileDialog( oWnd, cMode )
-   LOCAL oDlg, cFile, aFiles
+   LOCAL oDlg, aFiles
 
    oDlg := XbpFileDialog():new():create( oWnd, , { 10,10 } )
    IF cMode == "open"
@@ -1329,16 +1305,13 @@ FUNCTION Build_FileDialog( oWnd, cMode )
       //oDlg:setColorBG( GraMakeRGBColor( { 170,170,170 } ) )
       aFiles := oDlg:open( "c:\temp", , .t. )
       IF !empty( aFiles )
-         aeval( aFiles, {|e| UNU( e ), HBXBP_DEBUG( e ) } )
+         aeval( aFiles, {|e| UNU( e ) } )
       ENDIF
    ELSE
       oDlg:title       := "Save this Database"
       oDlg:fileFilters := { { "Database Files", "*.dbf" } }
       oDlg:quit        := {|| MsgBox( "Quitting the Dialog" ), 1 }
-      cFile := oDlg:saveAs( "c:\temp\myfile.dbf" )
-      IF !empty( cFile )
-         HBXBP_DEBUG( cFile )
-      ENDIF
+      oDlg:saveAs( "c:\temp\myfile.dbf" )
    ENDIF
 
    RETURN nil
@@ -1550,8 +1523,6 @@ FUNCTION Build_Rtf( oWnd )
 
    oRTF:setFontCompoundName( "12.Times" )
 
-   //oRTF:change := {|| /*HBXBP_DEBUG( "change"*/ NIL ) }
-
    // Assign text to the RTF object's text buffer
    oRTF:text := "Text with varying " + Chr(10) +;
                 "text attributes. Made possible by the " + Chr(10) +;
@@ -1702,8 +1673,7 @@ FUNCTION Build_Browse( oWnd )
       oXbpBrowse:phyPosBlock   := {| | OrdKeyNo()       }
    ENDIF
 
-   oXbpBrowse:headerRbDown  := {|mp1, mp2, o| HB_SYMBOL_UNUSED( mp1 ), HB_SYMBOL_UNUSED( mp2 ), HB_SYMBOL_UNUSED( o ), HBXBP_DEBUG( o:getColumn( mp2 ):heading ) }
-   oXbpBrowse:itemSelected  := {|| HBXBP_DEBUG( 'itemSelected' ) }
+   oXbpBrowse:headerRbDown  := {|mp1, mp2, o| HB_SYMBOL_UNUSED( mp1 ), HB_SYMBOL_UNUSED( mp2 ), HB_SYMBOL_UNUSED( o ) }
 
    #ifdef __HARBOUR__
    s := "selection-background-color: qlineargradient(x1: 0, y1: 0, x2: 0.5, y2: 0.5, stop: 0 #FF92BB, stop: 1 gray); "
