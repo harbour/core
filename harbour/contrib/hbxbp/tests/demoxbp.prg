@@ -1344,6 +1344,7 @@ FUNCTION Build_Bitmap( oWnd )
          oDlg:title := "Specify how to save it !"
          oDlg:fileFilters := aFltr
          cFile := oDlg:saveAs()
+         oDlg:destroy()
 
          IF !empty( cFile )
             cExt := upper( substr( cFile, at( ".", cFile )+1 ) )
