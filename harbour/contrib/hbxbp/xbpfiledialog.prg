@@ -125,7 +125,6 @@ METHOD XbpFileDialog:create( oParent, oOwner, aPos )
    ::connect( ::pWidget, "filesSelected(QStringList)", {|p| ::exeBlock( 7, p ) } )
    ::connect( ::pWidget, "filterSelected(QString)"   , {|p| ::exeBlock( 8, p ) } )
 
-   ::oParent:addChild( Self )
    RETURN Self
 
 /*----------------------------------------------------------------------*/

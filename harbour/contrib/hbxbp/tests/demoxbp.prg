@@ -1361,7 +1361,7 @@ FUNCTION Build_Bitmap( oWnd )
 /*----------------------------------------------------------------------*/
 
 FUNCTION GetAnImageFile( oWnd, cTitle )
-   LOCAL oDlg, aFltr := {}
+   LOCAL oDlg, aFltr := {}, xRet
 
    DEFAULT cTitle TO "Select an Image"
 
@@ -1380,7 +1380,11 @@ FUNCTION GetAnImageFile( oWnd, cTitle )
    oDlg:fileFilters := aFltr
    oDlg:create()
 
-   RETURN oDlg:open( hb_DirBase(), , .f. )
+   xRet := oDlg:open( hb_DirBase(), , .f. )
+
+   oDlg:destroy()
+
+   RETURN xRet
 
 /*----------------------------------------------------------------------*/
 
