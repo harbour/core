@@ -308,6 +308,7 @@ HARBOUR
    HB_WITH_GPM= (on Linux only)
    HB_WITH_JPEG=C:\jpeglib (defaults to locally hosted version if not found)
    HB_WITH_LIBHARU=C:\libharu\include (defaults to locally hosted version)
+   HB_WITH_MINIZIP=C:\zlib\contrib\minizip (defaults to locally hosted version if not found)
    HB_WITH_MYSQL=C:\mysql\include
    HB_WITH_OCILIB=C:\ocilib\include
    HB_WITH_ODBC= (may only be needed on non-Windows systems)
@@ -1294,13 +1295,11 @@ HARBOUR
    C/C++ Compilers/Shells:
 
       MinGW [win, *nix, free, open-soource]
-         http://www.tdragon.net/recentgcc/ (unofficial, recommended)
-         http://www.mingw.org/ (official, rarely updated, MSYS home)
+         http://www.tdragon.net/recentgcc/, http://sourceforge.net/projects/tdm-gcc/ (unofficial, recommended)
+         http://www.mingw.org/, http://sourceforge.net/projects/mingw/ (official, rarely updated, MSYS home)
          http://www.equation.com/servlet/equation.cmd?fa=fortran (unofficial)
       MinGW x64 [win, *nix, free, open-source]
-         http://mingw-w64.org/
-         http://mingw-w64.sourceforge.net/
-         http://sourceforge.net/projects/mingw-w64/
+         http://mingw-w64.sourceforge.net/, http://sourceforge.net/projects/mingw-w64/
          http://www.cadforte.com/
       MinGW CEGCC [win, *nix, free, open-source]
          http://cegcc.sourceforge.net/
@@ -1320,13 +1319,13 @@ HARBOUR
          http://developer.apple.com/TOOLS/Xcode/
       MS Windows SDK [win, free, closed-source]
          http://msdn.microsoft.com/en-us/windowsserver/bb980924.aspx
-         (7.0 contains compilers for x86, x86_64 and IA-64)
+         (7.0 and above contains compilers for x86, x86_64 and IA-64)
+      MS Windows Mobile SDK [wce, free]
+         http://www.microsoft.com/downloads/details.aspx?familyid=83A52AF2-F524-4EC5-9155-717CBE5D25ED
       MS Visual Studio Express [win, free, closed-source]
          http://www.microsoft.com/express/
       MS Visual Studio [win, commercial, closed-source]
          http://www.microsoft.com/visualstudio/
-      MS Windows Mobile SDK [wce, free]
-         http://www.microsoft.com/downloads/details.aspx?familyid=83A52AF2-F524-4EC5-9155-717CBE5D25ED
       Pelles C [win, wce, free, closed-source]
          http://www.smorgasbordet.com/pellesc/
       Borland/CodeGear/Embarcadero Compiler [win, free, closed-source]
@@ -1362,6 +1361,8 @@ HARBOUR
          http://www.ijg.org/
       HB_WITH_LIBHARU - libharu (PDF creation) [multiplatform, free, open-source]
          http://libharu.org/
+      HB_WITH_MINIZIP - minizip library [multiplatform, free, open-source]
+         http://www.winimage.com/zLibDll/minizip.html
       HB_WITH_MYSQL - MySQL [multiplatform, free, open-source]
          http://dev.mysql.com/downloads/
       HB_WITH_OCILIB - OCILIB (C Driver for Oracle) [multiplatform, free, open-source]
@@ -1461,7 +1462,7 @@ HARBOUR
 
       Netiquette Guidelines
          http://tools.ietf.org/html/rfc1855
-      Subversion book (free)
+      Subversion book [free]
          http://svnbook.red-bean.com/
 
 

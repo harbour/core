@@ -5,3 +5,4 @@
 incpaths=.
 
 libs=hbmzip
+libs=minizip

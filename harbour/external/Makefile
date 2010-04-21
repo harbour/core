@@ -13,6 +13,7 @@ DIRS := \
    jpeg \
    pcre \
    zlib \
+   minizip \
 
 ifeq ($(firstword $(HB_EXTERNALLIBS)),no)
    DIRS := $(filter-out $(HB_EXTERNALLIBS),$(DIRS))
