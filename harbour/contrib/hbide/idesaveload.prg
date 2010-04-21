@@ -245,7 +245,7 @@ FUNCTION hbide_getIniPath( cHbideIni )
       IF ! hb_FileExists( cIni := hb_dirBase() + "hbide.ini" )
       #if defined( __PLATFORM__WINDOWS )
          cPath := hbide_DirAddPathSep( GetEnv( "APPDATA" ) ) + "hbide\"
-      #elif defined( __PLATFORM_UNIX )
+      #elif defined( __PLATFORM__UNIX )
          cPath := hbide_DirAddPathSep( GetEnv( "HOME" ) ) + ".hbide/"
       #endif
          IF ! hb_dirExists( cPath )
