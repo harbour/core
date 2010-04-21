@@ -86,8 +86,22 @@ FUNCTION hbide_restSettings( oIde )
 
 /*----------------------------------------------------------------------*/
 
+FUNCTION hbide_getEditInfoAsString( oEdit )
+   LOCAL qHScr   := QScrollBar():configure( oEdit:qEdit:horizontalScrollBar() )
+   LOCAL qVScr   := QScrollBar():configure( oEdit:qEdit:verticalScrollBar() )
+   LOCAL qCursor := QTextCursor():configure( oEdit:qEdit:textCursor() )
+
+   RETURN hbide_pathNormalized( oEdit:sourceFile, .f. ) +  ","  + ;
+                          hb_ntos( qCursor:position() ) +  ","  + ;
+                          hb_ntos( qHScr:value()      ) +  ","  + ;
+                          hb_ntos( qVScr:value()      ) +  ","  + ;
+                          oEdit:cTheme                  +  ","  + ;
+                          oEdit:cView                   +  ","
+
+/*----------------------------------------------------------------------*/
+
 FUNCTION hbide_saveINI( oIde )
-   LOCAL j, nTab, pTab, n, txt_, qHScr, qVScr, oEdit, qCursor, nTabs, nn, s
+   LOCAL j, nTab, pTab, n, txt_, oEdit, nTabs, nn, s
 
 HB_TRACE( HB_TR_ALWAYS, "hbide_saveINI( oIde )", 0, oIde:nRunMode, oIde:cProjIni )
    IF oIde:nRunMode != HBIDE_RUN_MODE_INI
@@ -98,25 +112,25 @@ HB_TRACE( HB_TR_ALWAYS, "hbide_saveINI( oIde )", 0, oIde:nRunMode, oIde:cProjIni
    //    Properties
    aadd( txt_, "[HBIDE]" )
    aadd( txt_, " " )
-   aadd( txt_, "MainWindowGeometry="  + hbide_posAndSize( oIde:oDlg:oWidget )      )
-   aadd( txt_, "ProjectTreeVisible="  + iif( oIde:lProjTreeVisible, "YES", "NO" )  )
-   aadd( txt_, "FunctionListVisible=" + iif( oIde:lDockRVisible, "YES", "NO" )     )
-   aadd( txt_, "RecentTabIndex="      + hb_ntos( oIde:qTabWidget:currentIndex() )  )
-   aadd( txt_, "CurrentProject="      + oIde:cWrkProject                           )
-   aadd( txt_, "GotoDialogGeometry="  + oIde:aIni[ INI_HBIDE, GotoDialogGeometry ] )
-   aadd( txt_, "FindDialogGeometry="  + oIde:aIni[ INI_HBIDE, FindDialogGeometry ] )
-   aadd( txt_, "CurrentTheme="        + oIde:cWrkTheme                             )
-   aadd( txt_, "CurrentCodec="        + oIde:cWrkCodec                             )
-   aadd( txt_, "PathMk2="             + oIde:aIni[ INI_HBIDE, PathMk2            ] )
-   aadd( txt_, "PathEnv="             + oIde:aIni[ INI_HBIDE, PathEnv            ] )
-   aadd( txt_, "CurrentEnvironment="  + oIde:cWrkEnvironment                       )
-   aadd( txt_, "CurrentFind="         + oIde:cWrkFind                              )
-   aadd( txt_, "CurrentFolderFind="   + oIde:cWrkFolderFind                        )
-   aadd( txt_, "CurrentReplace="      + oIde:cWrkReplace                           )
-   aadd( txt_, "CurrentView="         + oIde:cWrkView                              )
-   aadd( txt_, "CurrentHarbour="      + oIde:cWrkHarbour                           )
-   aadd( txt_, "CurrentShortcuts="    + oIde:cPathShortcuts                        )
-   aadd( txt_, "TextFileExtensions="  + oIde:cTextExtensions                       )
+   aadd( txt_, "MainWindowGeometry="        + hbide_posAndSize( oIde:oDlg:oWidget )             )
+   aadd( txt_, "ProjectTreeVisible="        + iif( oIde:lProjTreeVisible, "YES", "NO" )         )
+   aadd( txt_, "FunctionListVisible="       + iif( oIde:lDockRVisible, "YES", "NO" )            )
+   aadd( txt_, "RecentTabIndex="            + hb_ntos( oIde:qTabWidget:currentIndex() )         )
+   aadd( txt_, "CurrentProject="            + oIde:cWrkProject                                  )
+   aadd( txt_, "GotoDialogGeometry="        + oIde:aIni[ INI_HBIDE, GotoDialogGeometry ]        )
+   aadd( txt_, "FindDialogGeometry="        + oIde:aIni[ INI_HBIDE, FindDialogGeometry ]        )
+   aadd( txt_, "CurrentTheme="              + oIde:cWrkTheme                                    )
+   aadd( txt_, "CurrentCodec="              + oIde:cWrkCodec                                    )
+   aadd( txt_, "PathMk2="                   + oIde:aIni[ INI_HBIDE, PathMk2            ]        )
+   aadd( txt_, "PathEnv="                   + oIde:aIni[ INI_HBIDE, PathEnv            ]        )
+   aadd( txt_, "CurrentEnvironment="        + oIde:cWrkEnvironment                              )
+   aadd( txt_, "CurrentFind="               + oIde:cWrkFind                                     )
+   aadd( txt_, "CurrentFolderFind="         + oIde:cWrkFolderFind                               )
+   aadd( txt_, "CurrentReplace="            + oIde:cWrkReplace                                  )
+   aadd( txt_, "CurrentView="               + oIde:cWrkView                                     )
+   aadd( txt_, "CurrentHarbour="            + oIde:cWrkHarbour                                  )
+   aadd( txt_, "CurrentShortcuts="          + oIde:cPathShortcuts                               )
+   aadd( txt_, "TextFileExtensions="        + oIde:cTextExtensions                              )
    aadd( txt_, "FindInFilesDialogGeometry=" + oIde:aIni[ INI_HBIDE, FindInFilesDialogGeometry ] )
    aadd( txt_, " " )
 
@@ -143,16 +157,8 @@ HB_TRACE( HB_TR_ALWAYS, "hbide_saveINI( oIde )", 0, oIde:nRunMode, oIde:cProjIni
 
          IF !Empty( oEdit:sourceFile ) .AND. !( ".ppo" == lower( oEdit:cExt ) )
             IF oEdit:lLoaded
-               qHScr   := QScrollBar():configure( oEdit:qEdit:horizontalScrollBar() )
-               qVScr   := QScrollBar():configure( oEdit:qEdit:verticalScrollBar() )
-               qCursor := QTextCursor():configure( oEdit:qEdit:textCursor() )
+               aadd( txt_, "file_" + hb_ntos( ++nn ) + "=" + hbide_getEditInfoAsString( oEdit ) )
 
-               aadd( txt_, "file_" + hb_ntos( ++nn ) + "=" + hbide_pathNormalized( oEdit:sourceFile, .f. ) + "," + ;
-                           hb_ntos( qCursor:position() ) +  ","  + ;
-                           hb_ntos( qHScr:value()      ) +  ","  + ;
-                           hb_ntos( qVScr:value()      ) +  ","  + ;
-                           oEdit:cTheme                  +  ","  + ;
-                           oEdit:cView                   +  "," )
             ELSE
                aadd( txt_, "file_" + hb_ntos( ++nn ) + "=" + hbide_pathNormalized( oEdit:sourceFile, .f. ) + "," + ;
                            hb_ntos( oEdit:nPos  ) +  ","  + ;
@@ -232,6 +238,29 @@ HB_TRACE( HB_TR_ALWAYS, "hbide_saveINI( oIde )", 0, oIde:nRunMode, oIde:cProjIni
 
 /*----------------------------------------------------------------------*/
 
+FUNCTION hbide_getIniPath( cHbideIni )
+   LOCAL cPath, cIni
+
+   IF empty( cHbideIni )
+      IF ! hb_FileExists( cIni := hb_dirBase() + "hbide.ini" )
+      #if defined( __PLATFORM__WINDOWS )
+         cPath := hbide_DirAddPathSep( GetEnv( "APPDATA" ) ) + "hbide\"
+      #elif defined( __PLATFORM_UNIX )
+         cPath := hbide_DirAddPathSep( GetEnv( "HOME" ) ) + ".hbide/"
+      #endif
+         IF ! hb_dirExists( cPath )
+            MakeDir( cPath )
+         ENDIF
+         cIni := cPath + "hbide.ini"
+      ENDIF
+   ELSE
+      cIni := cHbideIni
+   ENDIF
+
+   RETURN cIni
+
+/*----------------------------------------------------------------------*/
+
 FUNCTION hbide_loadINI( oIde, cHbideIni )
    LOCAL aElem, s, n, nPart, cKey, cVal, a_
    LOCAL aIdeEle := { "mainwindowgeometry" , "projecttreevisible"  , "projecttreegeometry", ;
@@ -242,7 +271,7 @@ FUNCTION hbide_loadINI( oIde, cHbideIni )
                       "currentenvironment" , "findinfilesdialoggeometry", "currentfind"   , ;
                       "currentreplace"     , "currentfolderfind"   , "currentview"        , ;
                       "currentharbour"     , "currentshortcuts"    , "textfileextensions"   }
-
+   #if 0
    IF empty( cHbideIni )
       IF hb_fileExists( "hbide.ini" )
          /* Please Check for *nixes */
@@ -253,6 +282,8 @@ FUNCTION hbide_loadINI( oIde, cHbideIni )
       ENDIF
    ENDIF
    oIde:cProjIni := cHbideIni
+   #endif
+   oIde:cProjIni := hbide_getIniPath( cHbideIni )
 
    IF hb_FileExists( oIde:cProjIni )
       aElem := hbide_readSource( oIde:cProjIni )
