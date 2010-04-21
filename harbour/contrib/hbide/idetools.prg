@@ -155,7 +155,7 @@ METHOD IdeToolsManager:destroy()
       ::clearList()
 
       ::disconnect( ::qPanelsButton, "clicked()" )
-      
+
       ::disconnect( ::oUI:q_buttonAdd   , "clicked()" )
       ::disconnect( ::oUI:q_buttonDelete, "clicked()" )
       ::disconnect( ::oUI:q_buttonUp    , "clicked()" )
@@ -449,8 +449,8 @@ METHOD IdeToolsManager:execTool( ... )
       cParams  := aParam[ 2 ]
       cParams  := iif( "http://" $ lower( cParams ), cParams, hbide_pathToOSPath( cParams ) )
       cStayIn  := hbide_pathToOSPath( aParam[ 3 ] )
-      lCapture := aParam[ 4 ] == "YES"
-      lOpen    := aParam[ 5 ] == "YES"
+      lCapture := iif( hb_isLogical( aParam[ 4 ] ), aParam[ 4 ], aParam[ 4 ] == "YES" )
+      lOpen    := iif( hb_isLogical( aParam[ 5 ] ), aParam[ 5 ], aParam[ 5 ] == "YES" )
    ENDIF
 
    IF hb_isLogical( lCapture )

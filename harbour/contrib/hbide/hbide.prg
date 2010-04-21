@@ -321,7 +321,7 @@ METHOD HbIde:new( aParams )
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:create( aParams )
-   LOCAL qPixmap, qSplash, n
+   LOCAL qPixmap, qSplash, n, cView
 
 HB_TRACE( HB_TR_ALWAYS, "HbIde:create( cProjIni )", "#Params=" )
 
@@ -384,6 +384,9 @@ HB_TRACE( HB_TR_ALWAYS, "HbIde:create( cProjIni )", "#Params=" )
    ::cWrkReplace     := ::aINI[ INI_HBIDE, CurrentReplace     ]
    ::cWrkView        := ::aINI[ INI_HBIDE, CurrentView        ]
    ::cWrkHarbour     := ::aINI[ INI_HBIDE, CurrentHarbour     ]
+
+   /* Store to restore when all preliminary operations are completed */
+   cView := ::cWrkView
 
    /* Load Code Skeletons */
    hbide_loadSkltns( Self )
@@ -492,6 +495,7 @@ HB_TRACE( HB_TR_ALWAYS, "HbIde:create( cProjIni )", "#Params=" )
       ::oDK:setView( "Stats" )
    ELSE
       ::oDK:setView( "Stats" )
+      ::oDK:setView( cView )
    ENDIF
 
    ::showApplicationCursor()
@@ -504,7 +508,7 @@ HB_TRACE( HB_TR_ALWAYS, "HbIde:create( cProjIni )", "#Params=" )
       ::nEvent := AppEvent( @::mp1, @::mp2, @::oXbp )
 
       IF ::nEvent == xbeP_Quit
-         HB_TRACE( HB_TR_ALWAYS, "----------------- xbeP_Quit" )
+         HB_TRACE( HB_TR_ALWAYS, "---------------- xbeP_Quit" )
          hbide_saveINI( Self )
          EXIT
       ENDIF
