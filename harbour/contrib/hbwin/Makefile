@@ -83,6 +83,9 @@ ifneq ($(filter $(HB_PLATFORM),win wce),)
       endif
    endif
 
+   # Optimize build time and make sure we build even with this option
+   HB_CFLAGS += -DWIN32_LEAN_AND_MEAN
+
    include $(TOP)$(ROOT)config/header.mk
    include $(TOP)$(ROOT)config/lib.mk
 else

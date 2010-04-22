@@ -63,6 +63,8 @@
    #include "hbwince.h"
 #endif
 
+#include <winspool.h>
+
 static void s_hb_hashSetCItemNL( PHB_ITEM pHash, const char * pszKey, long v )
 {
    PHB_ITEM pKey = hb_itemPutC( NULL, pszKey );

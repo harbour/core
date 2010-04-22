@@ -55,6 +55,8 @@
    #include "hbwince.h"
 #endif
 
+#include <shellapi.h>
+
 HB_FUNC( WAPI_SHELLEXECUTE )
 {
 #if defined( HB_OS_WIN_CE )
