@@ -35,6 +35,7 @@ DIRS += \
    gtalleg \
    hbblat \
    hbcairo \
+   hbcups \
    hbcurl \
    hbfbird \
    hbfimage \
