@@ -28,7 +28,7 @@ CFLAGS += -I. -I$(HB_INC_COMPILE)
 #    peflags --tsaware=true
 
 ifneq ($(HB_BUILD_WARN),no)
-   CFLAGS += -Wall -W
+   CFLAGS += -W -Wall
 endif
 
 ifneq ($(HB_BUILD_OPTIM),no)

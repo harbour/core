@@ -28,7 +28,7 @@ ifeq ($(HB_COMPILER),gccomf)
 endif
 
 ifneq ($(HB_BUILD_WARN),no)
-   CFLAGS += -Wall -W
+   CFLAGS += -W -Wall
 endif
 
 ifneq ($(HB_BUILD_OPTIM),no)

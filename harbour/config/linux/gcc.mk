@@ -23,7 +23,7 @@ CC_OUT := -o
 CFLAGS += -I. -I$(HB_INC_COMPILE)
 
 ifneq ($(HB_BUILD_WARN),no)
-   CFLAGS += -Wall -W
+   CFLAGS += -W -Wall
 endif
 
 ifneq ($(HB_BUILD_OPTIM),no)
