@@ -182,7 +182,7 @@ static void hb_tracelog_( int level, const char * file, int line, const char * p
 {
    const char * pszLevel;
 
-#if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
+#if defined( HB_OS_UNIX ) && ! defined( __WATCOMC__ )
    va_list ap_bak;
    va_copy( ap_bak, ap );
 #endif
@@ -292,7 +292,6 @@ static void hb_tracelog_( int level, const char * file, int line, const char * p
       }
 
       syslog( slevel, psz );
-
 #endif
    }
 }
