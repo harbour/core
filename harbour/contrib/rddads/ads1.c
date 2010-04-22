@@ -2585,8 +2585,15 @@ static HB_ERRCODE adsPutValue( ADSAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem
       case HB_FT_DATE:
          if( HB_IS_DATETIME( pItem ) )
          {
+            long lDate = hb_itemGetDL( pItem );
+
+            /* ADS does not support dates before 0001-01-01. It generates corructed 
+               DBF records and fires ADS error 5095 on FIELDGET() later. [Mindaugas] */
+            if( pArea->iFileType != ADS_ADT && lDate < 1721426 )  /* 1721426 ~= 0001-01-01 */
+               lDate = 0;
+
             bTypeError = HB_FALSE;
-            u32RetVal = AdsSetJulian( pArea->hTable, ADSFIELD( uiIndex ), hb_itemGetDL( pItem ) );
+            u32RetVal = AdsSetJulian( pArea->hTable, ADSFIELD( uiIndex ), lDate );
          }
          break;
 
