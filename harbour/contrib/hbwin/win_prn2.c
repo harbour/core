@@ -62,6 +62,7 @@
 
 #define _ENUMPRN_FLAGS_             ( PRINTER_ENUM_LOCAL | PRINTER_ENUM_CONNECTIONS )
 
+#if ! defined( HB_OS_WIN_CE )
 static HB_BOOL hb_IsLegacyDevice( const char * pszPrinterName )
 {
    static const char * s_pszPrnDev[] = { "lpt1", "lpt2", "lpt3", "lpt4", "lpt5", "lpt6", "com1", "com2", "com3", "com4", NULL };
@@ -75,6 +76,7 @@ static HB_BOOL hb_IsLegacyDevice( const char * pszPrinterName )
 
    return HB_FALSE;
 }
+#endif
 
 HB_FUNC( WIN_PRINTEREXISTS )
 {

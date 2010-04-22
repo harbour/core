@@ -1,0 +1,20 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Harbour Project source code:
+ *
+ * Copyright 2010 Viktor Szakats (harbour.01 syenar.hu)
+ * www - http://www.harbour-project.org
+ *
+ */
+
+#include "hbwin.ch"
+
+PROCEDURE Main()
+
+   ? WIN_REPORTEVENT( NIL, "Application", WIN_EVENTLOG_SUCCESS, 0, 0, "hello" )
+   ? WIN_REPORTEVENT( NIL, "Application", WIN_EVENTLOG_SUCCESS, 0, 0, { "hello", "world" } )
+
+   RETURN

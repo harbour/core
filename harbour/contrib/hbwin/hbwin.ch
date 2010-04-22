@@ -637,6 +637,14 @@
 #define WIN_WS_POPUPWINDOW          hb_bitOr( WIN_WS_POPUP, WIN_WS_BORDER, WIN_WS_SYSMENU )
 #define WIN_WS_CHILDWINDOW          WIN_WS_CHILD
 
+/* WIN_REPORTEVENT() event types */
+#define WIN_EVENTLOG_SUCCESS              0x0000
+#define WIN_EVENTLOG_ERROR_TYPE           0x0001
+#define WIN_EVENTLOG_WARNING_TYPE         0x0002
+#define WIN_EVENTLOG_INFORMATION_TYPE     0x0004
+#define WIN_EVENTLOG_AUDIT_SUCCESS        0x0008
+#define WIN_EVENTLOG_AUDIT_FAILURE        0x0010
+
 /* ------------------------------- */
 /* Deprecated constants and macros */
 /* ------------------------------- */

@@ -35,6 +35,7 @@ C_SOURCES := \
    win_bmpd.c \
    win_com.c \
    win_dlg.c \
+   win_evnt.c \
    win_misc.c \
    win_osc.c \
    win_prn1.c \

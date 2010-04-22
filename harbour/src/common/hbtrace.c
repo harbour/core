@@ -63,14 +63,14 @@
 
 #if defined( HB_OS_WIN )
    #include <windows.h>
+#elif defined( HB_OS_UNIX ) && ! defined( __WATCOMC__ )
+   #include <syslog.h>
 #endif
 
 static int s_enabled = 1;
 static int s_level   = -1;
 static int s_flush   = 0;
-#if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
-static int s_winout  = 0;
-#endif
+static int s_sysout  = 0;
 
 static FILE * s_fp = NULL;
 
@@ -153,18 +153,14 @@ int hb_tr_level( void )
 
       /* ; */
 
-#if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
-
-      env = hb_getenv( "HB_TR_WINOUT" );
+      env = hb_getenv( "HB_TR_SYSOUT" );
       if( env != NULL && env[ 0 ] != '\0' )
-         s_winout = 1;
+         s_sysout = 1;
       else
-         s_winout = 0;
+         s_sysout = 0;
 
       if( env )
          hb_xfree( ( void * ) env );
-
-#endif
 
       /* ; */
 
@@ -185,6 +181,9 @@ static void hb_tracelog_( int level, const char * file, int line, const char * p
                           const char * fmt, va_list ap )
 {
    const char * pszLevel;
+   va_list ap_bak;
+
+   va_copy( ap_bak, ap );
 
    /*
     * Clean up the file, so that instead of showing
@@ -227,10 +226,10 @@ static void hb_tracelog_( int level, const char * file, int line, const char * p
    if( s_flush )
       fflush( s_fp );
 
+   if( s_sysout )
+   {
 #if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
 
-   if( s_winout )
-   {
       char message[ 1024 ];
       union
       {
@@ -243,7 +242,7 @@ static void hb_tracelog_( int level, const char * file, int line, const char * p
       if( hb_xtraced() && hb_printf_params( fmt ) > 16 )
          hb_snprintf( message, sizeof( message ), "more then 16 parameters in message '%s'", fmt );
       else
-         hb_vsnprintf( message, sizeof( message ), fmt, ap );
+         hb_vsnprintf( message, sizeof( message ), fmt, ap_bak );
 
       /* We add \n at the end of the buffer to make WinDbg display look readable. */
       if( proc )
@@ -258,9 +257,42 @@ static void hb_tracelog_( int level, const char * file, int line, const char * p
                               buf.lp, HB_SIZEOFARRAY( buf.lp ) );
       #endif
       OutputDebugString( buf.lp );
-   }
+
+#elif defined( HB_OS_UNIX ) && ! defined( __WATCOMC__ )
+
+      char message[ 1024 ];
+      char psz[ 1024 ];
+      int slevel;
+
+      /* NOTE: This is protection against recursive call to trace engine when
+               there is more than 16 parameters in format string */
+      if( hb_xtraced() && hb_printf_params( fmt ) > 16 )
+         hb_snprintf( message, sizeof( message ), "more then 16 parameters in message '%s'", fmt );
+      else
+         hb_vsnprintf( message, sizeof( message ), fmt, ap_bak );
+
+      if( proc )
+         hb_snprintf( psz, sizeof( psz ), "%s:%d:%s() %s %s",
+                      file, line, proc, pszLevel, message );
+      else
+         hb_snprintf( psz, sizeof( psz ), "%s:%d: %s %s",
+                      file, line, pszLevel, message );
+
+      switch( level )
+      {
+         case HB_TR_ALWAYS:  slevel = LOG_ALERT; break;
+         case HB_TR_FATAL:   slevel = LOG_CRIT; break;
+         case HB_TR_ERROR:   slevel = LOG_ERR; break;
+         case HB_TR_WARNING: slevel = LOG_WARNING; break;
+         case HB_TR_INFO:    slevel = LOG_INFO; break;
+         case HB_TR_DEBUG:   slevel = LOG_DEBUG; break;
+         default:            slevel = LOG_DEBUG;
+      }
+
+      syslog( slevel, psz );
 
 #endif
+   }
 }
 
 void hb_tracelog( int level, const char * file, int line, const char * proc,
