@@ -41,9 +41,12 @@
 #include <stdlib.h>
 #include "zlib.h"
 
+#include "hbsetup.h"
+
 #if defined( __BORLANDC__ ) || \
     defined( __WATCOMC__ ) || \
-    defined( __MINGW32CE__ )
+    defined( __MINGW32CE__ ) || \
+    defined( HB_OS_DARWIN )
 #  define USE_FILE32API
 #endif
 
