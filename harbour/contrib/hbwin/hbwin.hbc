@@ -7,5 +7,5 @@
 incpaths=.
 
 libs=hbwin
-libs=libpng
+libs=png
 {wce}libs=sms CellCore

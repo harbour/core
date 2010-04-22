@@ -6,5 +6,4 @@ incpaths=.
 
 libs=hbhpdf
 libs=libhpdf
-{!unix}libs=libpng
-{unix}libs=png
+libs=png

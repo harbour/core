@@ -9,7 +9,7 @@ DIRS := \
    sqlite3 \
    bzip2 \
    libhpdf \
-   libpng \
+   png \
    jpeg \
    pcre \
    zlib \

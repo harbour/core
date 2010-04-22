@@ -10,7 +10,7 @@ This folder contains compression related files including:
 Some small changes (to fix compile time warning and errors) are applied to original
 source of minizip 1.1:
 
-  * harbour/contrib/hbzlib/zip.c
+  * zip.c
     * added forward definitions of allocate_new_datablock(),
       free_datablock(), init_linkedlist(), add_data_in_datablock(),
       ziplocal_TmzDateToDosDate()
@@ -26,12 +26,12 @@ source of minizip 1.1:
            {
       I expected this code be equivavlent! ??? :/
 
-  * harbour/contrib/hbzlib/unzip.c
+  * unzip.c
     * added forward definitions of strcmpcasenosensitive_internal(),
       unzlocal_DosDateToTmuDate(), unzlocal_CheckCurrentFileCoherencyHeader()
     * fixed 8 warnings: assigned value is not used. See, TOFIX
       comment for one of the fixes
 
-  * harbour/contrib/hbzlib/ioapi.c
+  * ioapi.c
     * pacified 7 warnings: unused args opaque
     * fixed warning: assigned value is not used

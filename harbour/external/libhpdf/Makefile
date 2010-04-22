@@ -100,7 +100,7 @@ ifeq ($(HB_SUPPORTED),yes)
       _DET_FLT_PLAT :=
       _DET_FLT_COMP :=
       _DET_INC_DEFP := /usr/include /opt/local/include
-      _DET_INC_LOCL := $(realpath $(TOP)$(ROOT)external/libpng)
+      _DET_INC_LOCL := $(realpath $(TOP)$(ROOT)external/png)
       _DET_INC_HEAD := /png.h
       include $(TOP)$(ROOT)config/detfun.mk
 

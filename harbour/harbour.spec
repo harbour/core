@@ -405,7 +405,7 @@ make install %{?_smp_mflags}
 [ "%{?_without_slang:1}" ] && rm -f $HB_INST_PKGPREF$HB_LIB_INSTALL/libgtsln.a
 rm -f $HB_INST_PKGPREF$HB_LIB_INSTALL/libjpeg.a
 rm -f $HB_INST_PKGPREF$HB_LIB_INSTALL/liblibhpdf.a
-rm -f $HB_INST_PKGPREF$HB_LIB_INSTALL/liblibpng.a
+rm -f $HB_INST_PKGPREF$HB_LIB_INSTALL/libpng.a
 rm -f $HB_INST_PKGPREF$HB_LIB_INSTALL/libsqlite3.a
 
 mkdir -p $HB_INST_PKGPREF%{_mandir}/man1
