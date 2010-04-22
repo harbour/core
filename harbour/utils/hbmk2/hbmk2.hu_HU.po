@@ -614,7 +614,7 @@ msgstr "Figyelem: Statikus függvénykönyvtár létrehozás parancsállománya nem hozh
 
 #: hbmk2.prg:7941
 #, c-format
-msgid "set C compiler warning level\\n<lev> can be: yes, no, def (default: yes)"
+msgid "set C compiler warning level\\n<lev> can be: max, yes, low, no, def (default: yes)"
 msgstr ""
 
 #: hbmk2.prg:7941
@@ -1019,5 +1019,5 @@ msgstr "cél futtatása"
 
 #: hbmk2.prg:7959
 #, c-format
-msgid ".hbc options (they should come in separate lines): libs=[<libname[s]>], hbcs=[<.hbc file[s]>], gt=[gtname], syslibs=[<libname[s]>], prgflags=[Harbour flags], cflags=[C compiler flags], resflags=[resource compiler flags], ldflags=[linker flags], libpaths=[paths], sources=[source files], incpaths=[paths], inctrypaths=[paths], instpaths=[paths], gui|mt|shared|nulrdd|debug|opt|hbcppmm|map|implib|strip|run|inc=[yes|no], cpp=[yes|no|def], warn=[yes|no|def], compr=[yes|no|def|min|max], head=[off|partial|full|native], skip=[yes|no], echo=<text>\\nLines starting with '#' char are ignored"
-msgstr ".hbc opciók (külön sorokba írandók): libs=[<libnevek>], hbcs=[<.hbc nevek>], gt=[gtnév], syslibs=[<libnevek>], prgflags=[Harbour opciók], cflags=[C fordító opciók], resflags=[erõforrás fordító kapcsolók], ldflags=[szerkesztõ kapcsolók], libpaths=[útvonalak], sources=[forrás fájlok], incpaths=[útvonalak], inctrypaths=[útvonalak], instpaths=[útvonalak], gui|mt|shared|nulrdd|debug|opt|hbcppmm|map|implib|strip|run|inc=[yes|no], cpp=[yes|no|def], warn=[yes|no|def], compr=[yes|no|def|min|max], head=[off|partial|full|native], skip=[yes|no], echo=<szöveg>\\n'#' karakterrel kezdõdõ sorokat figyelmen kívül hagyja"
+msgid ".hbc options (they should come in separate lines): libs=[<libname[s]>], hbcs=[<.hbc file[s]>], gt=[gtname], syslibs=[<libname[s]>], prgflags=[Harbour flags], cflags=[C compiler flags], resflags=[resource compiler flags], ldflags=[linker flags], libpaths=[paths], sources=[source files], incpaths=[paths], inctrypaths=[paths], instpaths=[paths], gui|mt|shared|nulrdd|debug|opt|hbcppmm|map|implib|strip|run|inc=[yes|no], cpp=[yes|no|def], warn=[max|yes|low|no|def], compr=[yes|no|def|min|max], head=[off|partial|full|native], skip=[yes|no], echo=<text>\\nLines starting with '#' char are ignored"
+msgstr ".hbc opciók (külön sorokba írandók): libs=[<libnevek>], hbcs=[<.hbc nevek>], gt=[gtnév], syslibs=[<libnevek>], prgflags=[Harbour opciók], cflags=[C fordító opciók], resflags=[erõforrás fordító kapcsolók], ldflags=[szerkesztõ kapcsolók], libpaths=[útvonalak], sources=[forrás fájlok], incpaths=[útvonalak], inctrypaths=[útvonalak], instpaths=[útvonalak], gui|mt|shared|nulrdd|debug|opt|hbcppmm|map|implib|strip|run|inc=[yes|no], cpp=[yes|no|def], warn=[max|yes|low|no|def], compr=[yes|no|def|min|max], head=[off|partial|full|native], skip=[yes|no], echo=<szöveg>\\n'#' karakterrel kezdõdõ sorokat figyelmen kívül hagyja"

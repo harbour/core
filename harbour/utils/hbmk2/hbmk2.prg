@@ -157,9 +157,11 @@ REQUEST hbmk_KEYW
 #define _PAR_cFileName          2
 #define _PAR_nLine              3
 
-#define _WARN_DEF               0
-#define _WARN_YES               1
-#define _WARN_NO                2
+#define _WARN_DEF               0 /* Don't set any explicit warning level */
+#define _WARN_MAX               1
+#define _WARN_YES               2 /* Default level in Harbour build */
+#define _WARN_LOW               3 /* Low level, used for external code in Harbour build */
+#define _WARN_NO                4 /* Explicitly disable warnings */
 
 #define _COMPR_OFF              0
 #define _COMPR_DEF              1
@@ -1685,6 +1687,8 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
            DO CASE
            CASE SubStr( cParamL, 7 ) == "def" ; hbmk[ _HBMK_nWARN ] := _WARN_DEF
            CASE SubStr( cParamL, 7 ) == "no"  ; hbmk[ _HBMK_nWARN ] := _WARN_NO
+           CASE SubStr( cParamL, 7 ) == "low" ; hbmk[ _HBMK_nWARN ] := _WARN_LOW
+           CASE SubStr( cParamL, 7 ) == "max" ; hbmk[ _HBMK_nWARN ] := _WARN_MAX
            OTHERWISE                          ; hbmk[ _HBMK_nWARN ] := _WARN_YES
            ENDCASE
 
@@ -2449,13 +2453,19 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             cOpt_CompC += " -O3"
          ENDIF
          IF hbmk[ _HBMK_cCOMP ] == "icc"
-            IF hbmk[ _HBMK_nWARN ] == _WARN_YES
-               /* AAdd( hbmk[ _HBMK_aOPTC ], "-w2 -Wall" ) */
-            ENDIF
+            SWITCH hbmk[ _HBMK_nWARN ]
+            CASE _WARN_MAX
+            CASE _WARN_YES /* AAdd( hbmk[ _HBMK_aOPTC ], "-w2 -Wall" ); EXIT */
+            CASE _WARN_LOW
+            CASE _WARN_NO
+            ENDSWITCH
          ELSE
-            IF hbmk[ _HBMK_nWARN ] == _WARN_YES
-               AAdd( hbmk[ _HBMK_aOPTC ], "-Wall -W" )
-            ENDIF
+            SWITCH hbmk[ _HBMK_nWARN ]
+            CASE _WARN_MAX ; AAdd( hbmk[ _HBMK_aOPTC ], "-W -Wall -pedantic" ) ; EXIT
+            CASE _WARN_YES ; AAdd( hbmk[ _HBMK_aOPTC ], "-W -Wall" )           ; EXIT
+            CASE _WARN_LOW ; AAdd( hbmk[ _HBMK_aOPTC ], "-W" )                 ; EXIT
+            CASE _WARN_NO  ; AAdd( hbmk[ _HBMK_aOPTC ], "-w" )                 ; EXIT
+            ENDSWITCH
          ENDIF
          cOpt_CompC += " {FC}"
          IF ! Empty( cWorkDir )
@@ -2646,9 +2656,12 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                cOpt_CompC += " -fomit-frame-pointer"
             ENDIF
          ENDIF
-         IF hbmk[ _HBMK_nWARN ] == _WARN_YES
-            AAdd( hbmk[ _HBMK_aOPTC ], "-Wall -W" )
-         ENDIF
+         SWITCH hbmk[ _HBMK_nWARN ]
+         CASE _WARN_MAX ; AAdd( hbmk[ _HBMK_aOPTC ], "-W -Wall -pedantic" ) ; EXIT
+         CASE _WARN_YES ; AAdd( hbmk[ _HBMK_aOPTC ], "-W -Wall" )           ; EXIT
+         CASE _WARN_LOW ; AAdd( hbmk[ _HBMK_aOPTC ], "-W" )                 ; EXIT
+         CASE _WARN_NO  ; AAdd( hbmk[ _HBMK_aOPTC ], "-w" )                 ; EXIT
+         ENDSWITCH
          cOpt_CompC += " {FC}"
          cOptIncMask := "-I{DI}"
          IF ! Empty( cWorkDir )
@@ -2780,9 +2793,12 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          IF hbmk[ _HBMK_lOPTIM ]
             cOpt_CompC += " -O3"
          ENDIF
-         IF hbmk[ _HBMK_nWARN ] == _WARN_YES
-            AAdd( hbmk[ _HBMK_aOPTC ], "-Wall -W" )
-         ENDIF
+         SWITCH hbmk[ _HBMK_nWARN ]
+         CASE _WARN_MAX ; AAdd( hbmk[ _HBMK_aOPTC ], "-W -Wall -pedantic" ) ; EXIT
+         CASE _WARN_YES ; AAdd( hbmk[ _HBMK_aOPTC ], "-W -Wall" )           ; EXIT
+         CASE _WARN_LOW ; AAdd( hbmk[ _HBMK_aOPTC ], "-W" )                 ; EXIT
+         CASE _WARN_NO  ; AAdd( hbmk[ _HBMK_aOPTC ], "-w" )                 ; EXIT
+         ENDSWITCH
          cOpt_CompC += " {FC}"
          IF ! Empty( cWorkDir )
             cOpt_CompC += " {IC} -o {OO}"
@@ -2879,9 +2895,12 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          IF hbmk[ _HBMK_lOPTIM ]
             cOpt_CompC += " -O3"
          ENDIF
-         IF hbmk[ _HBMK_nWARN ] == _WARN_YES
-            AAdd( hbmk[ _HBMK_aOPTC ], "-Wall -W" )
-         ENDIF
+         SWITCH hbmk[ _HBMK_nWARN ]
+         CASE _WARN_MAX ; AAdd( hbmk[ _HBMK_aOPTC ], "-W -Wall -pedantic" ) ; EXIT
+         CASE _WARN_YES ; AAdd( hbmk[ _HBMK_aOPTC ], "-W -Wall" )           ; EXIT
+         CASE _WARN_LOW ; AAdd( hbmk[ _HBMK_aOPTC ], "-W" )                 ; EXIT
+         CASE _WARN_NO  ; AAdd( hbmk[ _HBMK_aOPTC ], "-w" )                 ; EXIT
+         ENDSWITCH
          cOpt_CompC += " {FC}"
          IF ! Empty( cWorkDir )
             cOpt_CompC += " {IC} -o {OO}"
@@ -2993,12 +3012,12 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                cOpt_CompC += " -3s"
             ENDIF
          ENDIF
-         DO CASE
-         CASE hbmk[ _HBMK_nWARN ] == _WARN_YES
-            AAdd( hbmk[ _HBMK_aOPTC ], "-w3" )
-         CASE hbmk[ _HBMK_nWARN ] == _WARN_NO
-            AAdd( hbmk[ _HBMK_aOPTC ], "-w0" )
-         ENDCASE
+         SWITCH hbmk[ _HBMK_nWARN ]
+         CASE _WARN_MAX ; AAdd( hbmk[ _HBMK_aOPTC ], "-w3" ) ; EXIT
+         CASE _WARN_YES ; AAdd( hbmk[ _HBMK_aOPTC ], "-w3" ) ; EXIT
+         CASE _WARN_LOW ; AAdd( hbmk[ _HBMK_aOPTC ], "-w1" ) ; EXIT
+         CASE _WARN_NO  ; AAdd( hbmk[ _HBMK_aOPTC ], "-w0" ) ; EXIT
+         ENDSWITCH
          DO CASE
          CASE hbmk[ _HBMK_cPLAT ] == "linux" ; cOpt_CompC += " -zq -bt=linux {FC}"
          CASE hbmk[ _HBMK_cPLAT ] == "win"   ; cOpt_CompC += " -zq -bt=nt {FC}"
@@ -3142,12 +3161,12 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          IF hbmk[ _HBMK_lOPTIM ]
             cOpt_CompC += " -d -6 -O2 -OS -Ov -Oi -Oc"
          ENDIF
-         DO CASE
-         CASE hbmk[ _HBMK_nWARN ] == _WARN_YES
-            AAdd( hbmk[ _HBMK_aOPTC ], "-w -w-sig- -Q" )
-         CASE hbmk[ _HBMK_nWARN ] == _WARN_NO
-            AAdd( hbmk[ _HBMK_aOPTC ], "-w-" )
-         ENDCASE
+         SWITCH hbmk[ _HBMK_nWARN ]
+         CASE _WARN_MAX ; AAdd( hbmk[ _HBMK_aOPTC ], "-w -Q" )      ; EXIT
+         CASE _WARN_YES ; AAdd( hbmk[ _HBMK_aOPTC ], "-w -Q" )      ; EXIT
+         CASE _WARN_LOW ; AAdd( hbmk[ _HBMK_aOPTC ], "-w -w-sig-" ) ; EXIT
+         CASE _WARN_NO  ; AAdd( hbmk[ _HBMK_aOPTC ], "-w-" )        ; EXIT
+         ENDSWITCH
          cOpt_CompC += " {FC} {LC}"
          cBin_Res := "brcc32.exe"
          cOpt_Res := "{FR} {IR} -fo{OS}"
@@ -3284,12 +3303,16 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             ENDIF
          ENDIF
          IF hbmk[ _HBMK_cCOMP ] $ "icc|iccia64"
-            IF hbmk[ _HBMK_nWARN ] == _WARN_YES
-               /* -W4 is deadly on icc */
-               AAdd( hbmk[ _HBMK_aOPTC ], "-W3" )
-            ENDIF
+            SWITCH hbmk[ _HBMK_nWARN ]
+            CASE _WARN_MAX ; AAdd( hbmk[ _HBMK_aOPTC ], "-W4" ) ; EXIT
+            CASE _WARN_YES ; AAdd( hbmk[ _HBMK_aOPTC ], "-W3" ) ; EXIT /* -W4 is deadly on icc */
+            CASE _WARN_LOW ; AAdd( hbmk[ _HBMK_aOPTC ], "-W1" ) ; EXIT
+            CASE _WARN_NO  ; AAdd( hbmk[ _HBMK_aOPTC ], "-W0" ) ; EXIT
+            ENDSWITCH
          ELSE
-            IF hbmk[ _HBMK_nWARN ] == _WARN_YES
+            SWITCH hbmk[ _HBMK_nWARN ]
+            CASE _WARN_MAX ; AAdd( hbmk[ _HBMK_aOPTC ], "-W4" ) ; EXIT
+            CASE _WARN_YES
                IF hbmk[ _HBMK_cCOMP ] == "msvcarm" .AND. nCCompVer < 800
                   /* Lowered warning level to avoid large amount of warnings in system headers.
                      Maybe this is related to the msvc2003 kit I was using. [vszakats] */
@@ -3297,7 +3320,10 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                ELSE
                   AAdd( hbmk[ _HBMK_aOPTC ], "-W4 -wd4127" )
                ENDIF
-            ENDIF
+               EXIT
+            CASE _WARN_LOW ; AAdd( hbmk[ _HBMK_aOPTC ], "-W1" ) ; EXIT
+            CASE _WARN_NO  ; AAdd( hbmk[ _HBMK_aOPTC ], "-W0" ) ; EXIT
+            ENDSWITCH
          ENDIF
          cOpt_CompC += " {FC} {LC}"
          cOptIncMask := "-I{DI}"
@@ -3447,13 +3473,12 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             AAdd( hbmk[ _HBMK_aOPTC ], "-Tarm-coff" )
             AAdd( hbmk[ _HBMK_aOPTC ], "-D_M_ARM -DARM" )
          ENDCASE
-         DO CASE
-         CASE hbmk[ _HBMK_nWARN ] == _WARN_YES
-            /* -W2 is the max, but it contains too many meaningless warnings. */
-            AAdd( hbmk[ _HBMK_aOPTC ], "-W1" )
-         CASE hbmk[ _HBMK_nWARN ] == _WARN_NO
-            AAdd( hbmk[ _HBMK_aOPTC ], "-W0" )
-         ENDCASE
+         SWITCH hbmk[ _HBMK_nWARN ]
+         CASE _WARN_MAX ; AAdd( hbmk[ _HBMK_aOPTC ], "-W2" ) ; EXIT
+         CASE _WARN_YES ; AAdd( hbmk[ _HBMK_aOPTC ], "-W1" ) ; EXIT
+         CASE _WARN_LOW ; AAdd( hbmk[ _HBMK_aOPTC ], "-W1" ) ; EXIT
+         CASE _WARN_NO  ; AAdd( hbmk[ _HBMK_aOPTC ], "-W0" ) ; EXIT
+         ENDSWITCH
          cOpt_Res := "{FR} -Fo{OS} {IR}"
          cResExt := ".res"
          cOpt_Lib := "{FA} -out:{OL} {LO}"
@@ -3515,12 +3540,12 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             AAdd( hbmk[ _HBMK_aOPTD ], "-fast" )
             AAdd( hbmk[ _HBMK_aOPTD ], "-xnolibmopt" )
          ENDIF
-         DO CASE
-         CASE hbmk[ _HBMK_nWARN ] == _WARN_YES
-            AAdd( hbmk[ _HBMK_aOPTC ], "-erroff=%all" )
-         CASE hbmk[ _HBMK_nWARN ] == _WARN_NO
-            AAdd( hbmk[ _HBMK_aOPTC ], "-erroff=%none" )
-         ENDCASE
+         SWITCH hbmk[ _HBMK_nWARN ]
+         CASE _WARN_MAX
+         CASE _WARN_YES
+         CASE _WARN_LOW ; AAdd( hbmk[ _HBMK_aOPTC ], "-erroff=%all" )  ; EXIT
+         CASE _WARN_NO  ; AAdd( hbmk[ _HBMK_aOPTC ], "-erroff=%none" ) ; EXIT
+         ENDSWITCH
          IF ! Empty( cWorkDir )
             cOpt_CompC += " {IC} -o {OO}"
          ELSE
@@ -6739,9 +6764,11 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
 
       CASE Lower( Left( cLine, Len( "warn="         ) ) ) == "warn="         ; cLine := SubStr( cLine, Len( "warn="         ) + 1 )
          DO CASE
-         CASE ValueIsT( cLine )       ; hbmk[ _HBMK_nWARN ] := _WARN_YES
-         CASE ValueIsF( cLine )       ; hbmk[ _HBMK_nWARN ] := _WARN_NO
-         CASE Lower( cLine ) == "def" ; hbmk[ _HBMK_nWARN ] := _WARN_DEF
+         CASE ValueIsT( cLine )        ; hbmk[ _HBMK_nWARN ] := _WARN_YES
+         CASE ValueIsF( cLine )        ; hbmk[ _HBMK_nWARN ] := _WARN_NO
+         CASE Lower( cLine ) == "low"  ; hbmk[ _HBMK_nWARN ] := _WARN_LOW
+         CASE Lower( cLine ) == "max"  ; hbmk[ _HBMK_nWARN ] := _WARN_MAX
+         CASE Lower( cLine ) == "def"  ; hbmk[ _HBMK_nWARN ] := _WARN_DEF
          ENDCASE
 
       CASE Lower( Left( cLine, Len( "compr="        ) ) ) == "compr="        ; cLine := SubStr( cLine, Len( "compr="        ) + 1 )
@@ -8620,7 +8647,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-nolibgrouping[-]" , I_( "disable library grouping on gcc based compilers" ) },;
       { "-nomiscsyslib[-]"  , I_( "don't add extra list of system libraries to default library list" ) },;
       { "-traceonly"        , I_( "show commands to be executed, but don't execute them" ) },;
-      { "-[no]warn[=lev]"   , I_( "set C compiler warning level\n<lev> can be: yes, no, def (default: yes)" ) },;
+      { "-[no]warn[=lev]"   , I_( "set C compiler warning level\n<lev> can be: max, yes, low, no, def (default: yes)" ) },;
       { "-[no]compr[=lev]"  , I_( "compress executable/dynamic lib (needs UPX)\n<lev> can be: min, max, def" ) },;
       { "-[no]run"          , I_( "run/don't run output executable" ) },;
       { "-vcshead=<file>"   , I_( "generate .ch header file with local repository information. SVN, CVS, Git, Mercurial, Bazaar and Fossil are currently supported. Generated header will define macro _HBMK_VCS_TYPE_ with the name of detected VCS and _HBMK_VCS_ID_ with the unique ID of local repository" ) },;
@@ -8707,7 +8734,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       hb_StrFormat( I_( "%1$s option file in hbmk2 directory is always processed if it exists. On *nix platforms ~/.harbour, /etc/harbour, <base>/etc/harbour, <base>/etc are checked (in that order) before the hbmk2 directory. The file format is the same as .hbc." ), _HBMK_CFG_NAME ),;
       hb_StrFormat( I_( "%1$s make script in current directory is always processed if it exists." ), _HBMK_AUTOHBM_NAME ),;
       I_( ".hbc config files in current dir are automatically processed." ),;
-      I_( ".hbc options (they should come in separate lines): libs=[<libname[s]>], hbcs=[<.hbc file[s]>], gt=[gtname], syslibs=[<libname[s]>], prgflags=[Harbour flags], cflags=[C compiler flags], resflags=[resource compiler flags], ldflags=[linker flags], libpaths=[paths], sources=[source files], incpaths=[paths], inctrypaths=[paths], instpaths=[paths], gui|mt|shared|nulrdd|debug|opt|map|implib|hbcppmm|strip|run|inc=[yes|no], cpp=[yes|no|def], warn=[yes|no|def], compr=[yes|no|def|min|max], head=[off|partial|full|native], skip=[yes|no], echo=<text>\nLines starting with '#' char are ignored" ),;
+      I_( ".hbc options (they should come in separate lines): libs=[<libname[s]>], hbcs=[<.hbc file[s]>], gt=[gtname], syslibs=[<libname[s]>], prgflags=[Harbour flags], cflags=[C compiler flags], resflags=[resource compiler flags], ldflags=[linker flags], libpaths=[paths], sources=[source files], incpaths=[paths], inctrypaths=[paths], instpaths=[paths], gui|mt|shared|nulrdd|debug|opt|map|implib|hbcppmm|strip|run|inc=[yes|no], cpp=[yes|no|def], warn=[max|yes|low|no|def], compr=[yes|no|def|min|max], head=[off|partial|full|native], skip=[yes|no], echo=<text>\nLines starting with '#' char are ignored" ),;
       I_( "Platform filters are accepted in each .hbc line and with several options.\nFilter format: {[!][<plat>|<comp>|<cpu>|<keyword>]}. Filters can be combined using '&', '|' operators and grouped by parantheses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}, {allwin|allmsvc|allgcc|allmingw|allicc|allpocc|unix}, {x86|x86_64|ia64|arm|mips|sh}, {debug|nodebug|gui|std|mt|st|shared|static|unicode|ascii|xhb}" ),;
       I_( "Certain .hbc lines (libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, inctrypaths=, instpaths=, echo=) and corresponding command line parameters will accept macros: ${hb_root}, ${hb_dir}, ${hb_name}, ${hb_plat}, ${hb_comp}, ${hb_build}, ${hb_cpu}, ${hb_bin}, ${hb_lib}, ${hb_dyn}, ${hb_inc}, ${<envvar>}. libpaths= also accepts %{hb_name} which translates to the name of the .hbc file under search." ),;
       I_( 'Options accepting macros also support command substitution. Enclose command inside ``, and, if the command contains space, also enclose in double quotes. F.e. "-cflag=`wx-config --cflags`", or ldflags={unix&gcc}"`wx-config --libs`".' ),;

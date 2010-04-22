@@ -326,10 +326,10 @@ msgstr "Linkando... %1$s"
 #, c-format
 msgid ""
 "set C compiler warning level\\n"
-"<lev> can be: yes, no, def (default: yes)"
+"<lev> can be: max, yes, low, no, def (default: yes)"
 msgstr ""
 "define o nível de avisos (warnings) do compilador C\\n"
-"<lev> pode ser: yes, no, def (padrão: yes)"
+"<lev> pode ser: max, yes, low, no, def (padrão: yes)"
 
 #: hbmk2.prg:7942
 #, c-format
@@ -521,10 +521,10 @@ msgstr "arquivos .hbc na pasta corrente serão automaticamente processados."
 #: hbmk2.prg:7960
 #, c-format
 msgid ""
-".hbc options (they should come in separate lines): libs=[<libname[s]>], hbcs=[<.hbc file[s]>], gt=[gtname], syslibs=[<libname[s]>], prgflags=[Harbour flags], cflags=[C compiler flags], resflags=[resource compiler flags], ldflags=[linker flags], libpaths=[paths], sources=[source files], incpaths=[paths], inctrypaths=[paths], instpaths=[paths], gui|mt|shared|nulrdd|debug|opt|hbcppmm|map|implib|strip|run|inc=[yes|no], cpp=[yes|no|def], warn=[yes|no|def], compr=[yes|no|def|min|max], head=[off|partial|full|native], skip=[yes|no], echo=<text>\\n"
+".hbc options (they should come in separate lines): libs=[<libname[s]>], hbcs=[<.hbc file[s]>], gt=[gtname], syslibs=[<libname[s]>], prgflags=[Harbour flags], cflags=[C compiler flags], resflags=[resource compiler flags], ldflags=[linker flags], libpaths=[paths], sources=[source files], incpaths=[paths], inctrypaths=[paths], instpaths=[paths], gui|mt|shared|nulrdd|debug|opt|hbcppmm|map|implib|strip|run|inc=[yes|no], cpp=[yes|no|def], warn=[max|yes|low|no|def], compr=[yes|no|def|min|max], head=[off|partial|full|native], skip=[yes|no], echo=<text>\\n"
 "Lines starting with '#' char are ignored"
 msgstr ""
-"As opções em um arquivo .hbc devem estar em linhas separadas e são: libs=[<libname[s]>], hbcs=[<.hbc file[s]>], gt=[gtname], syslibs=[<libname[s]>], prgflags=[flags do Harbour], cflags=[flags do compilador C], resflags=[flags do compilador de recursos], ldflags=[flags do linkeditor], libpaths=[paths], sources=[módulos fontes], incpaths=[paths], inctrypaths=[paths], instpaths=[paths], gui|mt|shared|nulrdd|debug|opt|hbcppmm|map|implib|strip|run|inc=[yes|no], cpp=[yes|no|def], warn=[yes|no|def], compr=[yes|no|def|min|max], head=[off|partial|full|native], skip=[yes|no], echo=<text>\\n"
+"As opções em um arquivo .hbc devem estar em linhas separadas e são: libs=[<libname[s]>], hbcs=[<.hbc file[s]>], gt=[gtname], syslibs=[<libname[s]>], prgflags=[flags do Harbour], cflags=[flags do compilador C], resflags=[flags do compilador de recursos], ldflags=[flags do linkeditor], libpaths=[paths], sources=[módulos fontes], incpaths=[paths], inctrypaths=[paths], instpaths=[paths], gui|mt|shared|nulrdd|debug|opt|hbcppmm|map|implib|strip|run|inc=[yes|no], cpp=[yes|no|def], warn=[max|yes|low|no|def], compr=[yes|no|def|min|max], head=[off|partial|full|native], skip=[yes|no], echo=<text>\\n"
 "Linhas iniciadas com '#' são interpretadas como comentários e serão ignoradas"
 
 #: hbmk2.prg:7942
