@@ -69,7 +69,7 @@
 %define hb_ldir   export HB_LIB_INSTALL=%{_libdir}/%{name}
 %define hb_edir   export HB_ETC_INSTALL=%{hb_etcdir}
 %define hb_cmrc   export HB_BUILD_NOGPLLIB=%{?_without_gpllib:yes}
-%define hb_ctrb   export HB_CONTRIBLIBS="hbblink hbbtree hbclipsm hbct hbgt hbmisc hbmzip hbnetio hbtip hbtpathy hbhpdf hbziparc hbfoxpro hbfship hbxpp xhb rddbmcdx rddsql sddsqlt3 hbnf %{?_with_allegro:gtalleg} %{?_with_cairo:hbcairo} %{?_with_curl:hbcurl} %{?_with_firebird:hbfbird sddfb} %{?_with_freeimage:hbfimage} %{?_with_gd:hbgd} %{?_with_mysql:hbmysql sddmy} %{?_with_odbc:hbodbc sddodbc} %{?_with_pgsql:hbpgsql sddpg} %{?_with_qt:hbqt hbxbp} %{?_with_ads:rddads}"
+%define hb_ctrb   export HB_CONTRIBLIBS="hbblink hbbtree hbclipsm hbct hbgt hbmisc hbmzip hbnetio hbtip hbtpathy hbhpdf hbziparc hbfoxpro hbfship hbxpp xhb rddbmcdx rddsql sddsqlt3 hbnf %{?_with_allegro:gtalleg} %{?_with_cairo:hbcairo} %{?_with_cups:hbcups} %{?_with_curl:hbcurl} %{?_with_firebird:hbfbird sddfb} %{?_with_freeimage:hbfimage} %{?_with_gd:hbgd} %{?_with_mysql:hbmysql sddmy} %{?_with_odbc:hbodbc sddodbc} %{?_with_pgsql:hbpgsql sddpg} %{?_with_qt:hbqt hbxbp} %{?_with_ads:rddads}"
 %define hb_env    %{hb_plat} ; %{hb_cc} ; %{hb_cflag} ; %{hb_lflag} ; %{hb_dflag} ; %{hb_gpm} ; %{hb_crs} ; %{hb_sln} ; %{hb_x11} ; %{hb_local} ; %{hb_bdir} ; %{hb_idir} ; %{hb_ldir} ; %{hb_edir} ; %{hb_ctrb} ; %{hb_cmrc}
 %define hb_host   www.harbour-project.org
 %define readme    README.RPM
@@ -246,6 +246,21 @@ statikus szerkesztéshez.
 %{?_with_cairo:%description -l pl cairo}
 %{?_with_cairo:%{dname} to kompatybilny z jêzykiem CA-Cl*pper kompilator.}
 %{?_with_cairo:Ten pakiet udostêpnia statyczn+ biliotekê Cairo dla kompilatora %{dname}.}
+
+## cups library
+%{?_with_cups:%package cups}
+%{?_with_cups:Summary:        CUPS library bindings for %{dname} compiler}
+%{?_with_cups:Summary(pl):    Bilioteka CUPS dla kompilatora %{dname}}
+%{?_with_cups:Group:          Development/Languages}
+%{?_with_cups:Requires:       %{name} = %{?epoch:%{epoch}:}%{version}-%{release}}
+
+%{?_with_cups:%description cups}
+%{?_with_cups:%{dname} is a Clipper compatible compiler.}
+%{?_with_cups:This package provides %{dname} CUPS library for program linking.}
+
+%{?_with_cups:%description -l pl cups}
+%{?_with_cups:%{dname} to kompatybilny z jêzykiem CA-Cl*pper kompilator.}
+%{?_with_cups:Ten pakiet udostêpnia statyczn+ biliotekê CUPS dla kompilatora %{dname}.}
 
 ## curl library
 %{?_with_curl:%package curl}
@@ -655,6 +670,11 @@ rm -rf $RPM_BUILD_ROOT
 %{?_with_cairo:%defattr(644,root,root,755)}
 %{?_with_cairo:%dir %{_libdir}/%{name}}
 %{?_with_cairo:%{_libdir}/%{name}/libhbcairo.a}
+
+%{?_with_cups:%files cups}
+%{?_with_cups:%defattr(644,root,root,755)}
+%{?_with_cups:%dir %{_libdir}/%{name}}
+%{?_with_cups:%{_libdir}/%{name}/libhbcups.a}
 
 %{?_with_curl:%files curl}
 %{?_with_curl:%defattr(644,root,root,755)}

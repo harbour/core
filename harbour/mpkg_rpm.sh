@@ -86,6 +86,10 @@ if test_reqrpm "cairo-devel"
 then
     INST_PARAM="${INST_PARAM} --with cairo"
 fi
+if test_reqrpm "libcups2-devel"
+then
+    INST_PARAM="${INST_PARAM} --with cups"
+fi
 if test_reqrpm "curl-devel"
 then
     INST_PARAM="${INST_PARAM} --with curl"
