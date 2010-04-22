@@ -113,10 +113,14 @@ PROCEDURE Main()
          ENDIF
       NEXT
 
+      /* HACK: Copying .dll to .a doesn't work in case of mysql, so we copy over the supplied import lib. [vszakats] */
+      IF GetEnv( "HB_COMPILER" ) $ "mingw|mingw64"
+         hb_FCopy( GetEnv( "HB_WITH_MYSQL" ) + _PS_ + StrTran( "..\lib\opt\libmySQL.lib", "\", _PS_ ), GetEnv( "HB_LIB_INSTALL" ) + _PS_ + "liblibmysql.a" )
+      ENDIF
+
       /* Exception: We use static libs with mingw */
       IF GetEnv( "HB_COMPILER" ) == "mingw" .AND. ;
          ! Empty( GetEnv( "HB_WITH_OCILIB" ) )
-
          hb_FCopy( GetEnv( "HB_WITH_OCILIB" ) + _PS_ + StrTran( "..\lib32\libociliba.a", "\", _PS_ ), GetEnv( "HB_LIB_INSTALL" ) + _PS_ + "libociliba.a" )
          hb_FCopy( GetEnv( "HB_WITH_OCILIB" ) + _PS_ + StrTran( "..\lib32\libocilibm.a", "\", _PS_ ), GetEnv( "HB_LIB_INSTALL" ) + _PS_ + "libocilibm.a" )
          hb_FCopy( GetEnv( "HB_WITH_OCILIB" ) + _PS_ + StrTran( "..\lib32\libocilibw.a", "\", _PS_ ), GetEnv( "HB_LIB_INSTALL" ) + _PS_ + "libocilibw.a" )
