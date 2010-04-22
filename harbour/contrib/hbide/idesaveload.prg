@@ -90,13 +90,15 @@ FUNCTION hbide_getEditInfoAsString( oEdit )
    LOCAL qHScr   := QScrollBar():configure( oEdit:qEdit:horizontalScrollBar() )
    LOCAL qVScr   := QScrollBar():configure( oEdit:qEdit:verticalScrollBar() )
    LOCAL qCursor := QTextCursor():configure( oEdit:qEdit:textCursor() )
+   LOCAL cBMarks := hbide_nArray2string( oEdit:oEdit:aBookMarks )
 
    RETURN hbide_pathNormalized( oEdit:sourceFile, .f. ) +  ","  + ;
                           hb_ntos( qCursor:position() ) +  ","  + ;
                           hb_ntos( qHScr:value()      ) +  ","  + ;
                           hb_ntos( qVScr:value()      ) +  ","  + ;
                           oEdit:cTheme                  +  ","  + ;
-                          oEdit:cView                   +  ","
+                          oEdit:cView                   +  ","  + ;
+                          cBMarks                       +  ","
 
 /*----------------------------------------------------------------------*/
 
@@ -165,7 +167,8 @@ HB_TRACE( HB_TR_ALWAYS, "hbide_saveINI( oIde )", 0, oIde:nRunMode, oIde:cProjIni
                            hb_ntos( oEdit:nHPos ) +  ","  + ;
                            hb_ntos( oEdit:nVPos ) +  ","  + ;
                            oEdit:cTheme           +  ","  + ;
-                           oEdit:cView            +  "," )
+                           oEdit:cView            +  ","  + ;
+                           hbide_nArray2string( oEdit:oEdit:aBookMarks ) +  ","  )
             ENDIF
          ENDIF
       NEXT

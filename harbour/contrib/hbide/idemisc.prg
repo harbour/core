@@ -2014,17 +2014,47 @@ FUNCTION FN_DirExtSet( cFileName, cDirNew, cExtNew )
 
 /*----------------------------------------------------------------------*/
 
+FUNCTION hbide_nArray2string( a_ )
+   LOCAL cString := ""
+   LOCAL n
+
+   FOR EACH n IN a_
+      cString += hb_ntos( n )
+      cString += " "
+   NEXT
+
+   RETURN cString
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION hbide_string2nArray( s )
+   LOCAL b_, a_:= {}
+
+   b_:= hb_atokens( s, " " )
+   FOR EACH s IN b_
+      s := alltrim( s )
+      IF val( s ) > 0
+         aadd( a_, val( s ) )
+      ENDIF
+   NEXT
+
+   RETURN a_
+
+/*----------------------------------------------------------------------*/
+
 FUNCTION hbide_parseSourceComponents( cCompositeSource )
    LOCAL a_
 
    a_:= hb_atokens( cCompositeSource, "," )
-   asize( a_, 6 )
+   asize( a_, 7 )
    DEFAULT a_[ 1 ] TO ""
    DEFAULT a_[ 2 ] TO ""
    DEFAULT a_[ 3 ] TO ""
    DEFAULT a_[ 4 ] TO ""
    DEFAULT a_[ 5 ] TO ""
    DEFAULT a_[ 6 ] TO "Main"
+   DEFAULT a_[ 7 ] TO ""
+
    //
    a_[ 1 ] := alltrim( a_[ 1 ] )
    a_[ 2 ] := val( alltrim( a_[ 2 ] ) )
@@ -2032,6 +2062,7 @@ FUNCTION hbide_parseSourceComponents( cCompositeSource )
    a_[ 4 ] := val( alltrim( a_[ 4 ] ) )
    a_[ 5 ] := alltrim( a_[ 5 ] )
    a_[ 6 ] := alltrim( a_[ 6 ] )
+   a_[ 7 ] := hbide_string2nArray( a_[ 7 ] )
 
    RETURN a_
 

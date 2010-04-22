@@ -103,7 +103,7 @@ CLASS IdeEditsManager INHERIT IdeObject
    METHOD removeSourceInTree( cSourceFile )
    METHOD addSourceInTree( cSourceFile, cView )
    METHOD execEvent( nMode, p )
-   METHOD buildEditor( cSourceFile, nPos, nHPos, nVPos, cTheme, cView )
+   METHOD buildEditor( cSourceFile, nPos, nHPos, nVPos, cTheme, cView, aBookMarks )
    METHOD getTabBySource( cSource )
    METHOD getTabCurrent()
    METHOD getDocumentCurrent()
@@ -301,9 +301,9 @@ METHOD IdeEditsManager:execEvent( nMode, p )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeEditsManager:buildEditor( cSourceFile, nPos, nHPos, nVPos, cTheme, cView )
+METHOD IdeEditsManager:buildEditor( cSourceFile, nPos, nHPos, nVPos, cTheme, cView, aBookMarks )
 
-   IdeEditor():new():create( ::oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView )
+   IdeEditor():new():create( ::oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView, aBookMarks )
 
    RETURN Self
 
@@ -982,10 +982,9 @@ CLASS IdeEditor INHERIT IdeObject
    DATA   nnRow                                   INIT -99
 
    DATA   qEvents
-//   DATA   qSlots
 
    METHOD new( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView )
-   METHOD create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView )
+   METHOD create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView, aBookMarks )
    METHOD split( nOrient, oEditP )
    METHOD relay( oEdit )
    METHOD destroy()
@@ -1025,7 +1024,7 @@ METHOD IdeEditor:new( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView )
+METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView, aBookMarks )
    LOCAL cFileTemp
 
    //::qSlots := HBSlots():new()
@@ -1037,6 +1036,7 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView )
    DEFAULT nVPos       TO ::nVPos
    DEFAULT cTheme      TO ::cTheme
    DEFAULT cView       TO ::cView
+   DEFAULT aBookMarks  TO {}
 
    ::oIde           := oIde
    ::SourceFile     := hbide_pathNormalized( cSourceFile, .F. )
@@ -1074,12 +1074,14 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView )
    //
    ::oTab:oWidget:setLayout( ::qLayout )
 
-   ::oEdit   := IdeEdit():new( Self, 0 ):create()
+   ::oEdit   := IdeEdit():new( Self, 0 )
+   ::oEdit:aBookMarks := aBookMarks
+   ::oEdit:create()
    ::qEdit   := ::oEdit:qEdit
    ::qCqEdit := ::oEdit:qEdit
    ::qCoEdit := ::oEdit
 
-   ::qDocument := QTextDocument():configure( ::qEdit:document() )
+   ::qDocument  := QTextDocument():configure( ::qEdit:document() )
    ::qDocLayout := QPlainTextDocumentLayout():new( ::qDocument )
    ::qDocument:setDocumentLayout( ::qDocLayout )
 
@@ -1478,6 +1480,7 @@ METHOD IdeEdit:new( oEditor, nMode )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:create( oEditor, nMode )
+   LOCAL nBlock
 
    DEFAULT oEditor TO ::oEditor
    DEFAULT nMode   TO ::nMode
@@ -1500,6 +1503,10 @@ METHOD IdeEdit:create( oEditor, nMode )
    ::qEdit:hbSetCompleter( ::qCompleter )
 
    ::toggleLineNumbers()
+
+   FOR EACH nBlock IN ::aBookMarks
+      ::qEdit:hbBookMarks( nBlock )
+   NEXT
 
    ::qHLayout := QHBoxLayout():new()
    ::qHLayout:setSpacing( 0 )

@@ -78,7 +78,7 @@ CLASS IdeSourcesManager INHERIT IdeObject
    METHOD loadSources()
    METHOD saveSource( nTab, lCancel, lAs )
    METHOD saveNamedSource( cSource )
-   METHOD editSource( cSourceFile, nPos, nHPos, nVPos, cTheme, cView, lAlert, lVisible )
+   METHOD editSource( cSourceFile, nPos, nHPos, nVPos, cTheme, cView, lAlert, lVisible, aBookMarks )
    METHOD closeSource( nTab, lCanCancel, lCanceled )
    METHOD closeAllSources()
    METHOD closeAllOthers( nTab )
@@ -115,8 +115,8 @@ METHOD IdeSourcesManager:loadSources()
 
    IF !empty( ::aIni[ INI_FILES ] )
       FOR EACH a_ IN ::aIni[ INI_FILES ]
-         /*            File     nPos     nVPos    nHPos    cTheme  cView lAlert lVisible */
-         ::editSource( a_[ 1 ], a_[ 2 ], a_[ 3 ], a_[ 4 ], a_[ 5 ], a_[ 6 ], .t., .f. )
+         /*            File     nPos     nVPos    nHPos    cTheme  cView lAlert lVisible, aBookMarks */
+         ::editSource( a_[ 1 ], a_[ 2 ], a_[ 3 ], a_[ 4 ], a_[ 5 ], a_[ 6 ], .t., .f., a_[ 7 ] )
       NEXT
       ::oDK:setView( ::cWrkView )
       ::oEM:setSourceVisibleByIndex( max( 0, val( ::aIni[ INI_HBIDE, RecentTabIndex ] ) ) )
@@ -231,7 +231,7 @@ METHOD IdeSourcesManager:saveSource( nTab, lCancel, lAs )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeSourcesManager:editSource( cSourceFile, nPos, nHPos, nVPos, cTheme, cView, lAlert, lVisible )
+METHOD IdeSourcesManager:editSource( cSourceFile, nPos, nHPos, nVPos, cTheme, cView, lAlert, lVisible, aBookMarks )
 
    DEFAULT lAlert   TO .T.
    DEFAULT lVisible TO .T.
@@ -260,7 +260,7 @@ METHOD IdeSourcesManager:editSource( cSourceFile, nPos, nHPos, nVPos, cTheme, cV
    DEFAULT nHPos TO 0
    DEFAULT nVPos TO 0
 
-   ::oEM:buildEditor( cSourceFile, nPos, nHPos, nVPos, cTheme, cView )
+   ::oEM:buildEditor( cSourceFile, nPos, nHPos, nVPos, cTheme, cView, aBookMarks )
    IF lVisible
       ::oEM:setSourceVisible( cSourceFile )
    ENDIF
