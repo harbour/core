@@ -181,9 +181,11 @@ static void hb_tracelog_( int level, const char * file, int line, const char * p
                           const char * fmt, va_list ap )
 {
    const char * pszLevel;
-   va_list ap_bak;
 
+#if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
+   va_list ap_bak;
    va_copy( ap_bak, ap );
+#endif
 
    /*
     * Clean up the file, so that instead of showing
@@ -242,7 +244,7 @@ static void hb_tracelog_( int level, const char * file, int line, const char * p
       if( hb_xtraced() && hb_printf_params( fmt ) > 16 )
          hb_snprintf( message, sizeof( message ), "more then 16 parameters in message '%s'", fmt );
       else
-         hb_vsnprintf( message, sizeof( message ), fmt, ap_bak );
+         hb_vsnprintf( message, sizeof( message ), fmt, ap );
 
       /* We add \n at the end of the buffer to make WinDbg display look readable. */
       if( proc )
