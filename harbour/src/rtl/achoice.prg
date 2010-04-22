@@ -36,13 +36,41 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
                                            // Block used to search for items
    LOCAL lUserFunc                         // Is a user function to be used?
    LOCAL nUserFunc                         // Return value from user function
-   LOCAL nSaveCsr  := SetCursor( SC_NONE )
+   LOCAL nSaveCsr
    LOCAL nFrstItem := 0
    LOCAL nLastItem := 0
 
    LOCAL bAction
    LOCAL cKey
    LOCAL nAux
+
+   IF ! ISNUMBER( nTop )
+      nTop := 0
+   ENDIF
+   IF ! ISNUMBER( nLeft )
+      nLeft := 0
+   ENDIF
+   IF ! ISNUMBER( nBottom )
+      nBottom := 0
+   ENDIF
+   IF ! ISNUMBER( nRight )
+      nRight := 0
+   ENDIF
+
+   IF nRight > MaxCol()
+      nRight := MaxCol()
+   ENDIF
+
+   IF nBottom > MaxRow()
+      nBottom := MaxRow()
+   ENDIF
+
+   IF ! ISARRAY( acItems ) .OR. Len( acItems ) == 0
+      SetPos( nTop, nRight + 1 )
+      RETURN 0
+   ENDIF
+
+   nSaveCsr := SetCursor( SC_NONE )
 
    ColorSelect( CLR_STANDARD )
 
@@ -58,26 +86,17 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
 
    lUserFunc := !Empty( xUserFunc ) .AND. ValType( xUserFunc ) $ "CB"
 
-
-   DEFAULT nTop       TO 0                 // The topmost row of the window
-   DEFAULT nLeft      TO 0                 // The leftmost column of the window
-   DEFAULT nBottom    TO MaxRow()          // The bottommost row of the window
-   DEFAULT nRight     TO MaxCol()          // The rightmost column of the window
-
-   DEFAULT acItems    TO {}                // The items from which to choose
-   DEFAULT xSelect    TO .T.               // Array or logical, what is selectable
-   DEFAULT nPos       TO 1                 // The number of the selected item
-   DEFAULT nHiLiteRow TO 0                 // The row to be highlighted
+   IF ! ISARRAY( xSelect ) .AND. ! ISLOGICAL( xSelect )
+      xSelect := .T.               // Array or logical, what is selectable
+   ENDIF
+   IF ! ISNUMBER( nPos )
+      nPos := 1                    // The number of the selected item
+   ENDIF
+   IF ! ISNUMBER( nHiLiteRow )
+      nHiLiteRow := 0              // The row to be highlighted
+   ENDIF
 
    nNumCols := nRight - nLeft + 1
-   IF nRight > MaxCol()
-      nRight := MaxCol()
-   ENDIF
-
-   IF nBottom > MaxRow()
-      nBottom := MaxRow()
-   ENDIF
-
    nNumRows := nBottom - nTop + 1
 
 
@@ -111,7 +130,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
    DispPage( acItems, alSelect, nTop, nLeft, nRight, nNumRows, nPos, nAtTop, nItems, nItems )
 
 
-   lFinished := nMode == AC_NOITEM
+   lFinished := ( nMode == AC_NOITEM )
    DO WHILE !lFinished
 
       IF nMode != AC_GOTO .AND. nMode != AC_NOITEM
@@ -207,7 +226,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
                DispLine( acItems[ nPos ], nTop + ( nPos - nAtTop ), nLeft, Ach_Select( alSelect, nPos ), .F., nNumCols )
                hb_scroll( nTop, nLeft, nBottom, nRight, ( nNewPos - ( nAtTop + nNumRows - 1 ) ) )
                nAtTop := nNewPos
-               nPos   := Max( nPos, nAtTop + nNumRows - 1 )
+               nPos   := Min( nPos, nAtTop + nNumRows - 1 )
                DO WHILE nPos > nNewPos
                   DispLine( acItems[ nPos ], nTop + ( nPos - nAtTop ), nLeft, Ach_Select( alSelect, nPos ), .F., nNumCols )
                   nPos--

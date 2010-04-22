@@ -100,8 +100,6 @@ FUNCTION hb_Alert( xMessage, aOptions, cColorNorm, nDelay )
    LOCAL cColorHigh
    LOCAL aOptionsOK
    LOCAL nEval
-   LOCAL lFirst
-   LOCAL cLine
 
 #ifdef HB_CLP_UNDOC
 
@@ -118,15 +116,9 @@ FUNCTION hb_Alert( xMessage, aOptions, cColorNorm, nDelay )
    ENDIF
 
    IF ISARRAY( xMessage )
-
       cMessage := ""
-
-      lFirst := .T.
       FOR nEval := 1 TO Len( xMessage )
-         IF ISCHARACTER( cLine := xMessage[ nEval ] )
-            cMessage += iif( lFirst, "", Chr( 10 ) ) + cLine
-            lFirst := .F.
-         ENDIF
+         cMessage += iif( nEval == 1, "", Chr( 10 ) ) + hb_CStr( xMessage[ nEval ] )
       NEXT
    ELSEIF ISCHARACTER( xMessage )
       cMessage := StrTran( xMessage, ";", Chr( 10 ) )
