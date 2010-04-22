@@ -67,6 +67,14 @@
    #include <syslog.h>
 #endif
 
+#ifndef va_copy
+#  ifdef __va_copy
+#     define va_copy( dst, src )    __va_copy( dst, src )
+#  else
+#     define va_copy( dst, src )    ( (dst) = (src) )
+#  endif
+#endif
+
 static int s_enabled = 1;
 static int s_level   = -1;
 static int s_flush   = 0;
@@ -182,11 +190,6 @@ static void hb_tracelog_( int level, const char * file, int line, const char * p
 {
    const char * pszLevel;
 
-#if defined( HB_OS_UNIX ) && ! defined( __WATCOMC__ )
-   va_list ap_bak;
-   va_copy( ap_bak, ap );
-#endif
-
    /*
     * Clean up the file, so that instead of showing
     *
@@ -206,6 +209,77 @@ static void hb_tracelog_( int level, const char * file, int line, const char * p
 
    pszLevel = ( level >= HB_TR_ALWAYS && level <= HB_TR_LAST ) ?
               s_slevel[ level ] : "(\?\?\?)";
+
+   if( s_sysout )
+   {
+#if ( defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE ) ) || \
+    ( defined( HB_OS_UNIX ) && ! defined( __WATCOMC__ ) )
+
+      char message[ 1024 ];
+
+      va_list vargs;
+      va_copy( vargs, ap );
+
+      /* NOTE: This is protection against recursive call to trace engine when
+               there is more than 16 parameters in format string */
+      if( hb_xtraced() && hb_printf_params( fmt ) > 16 )
+         hb_snprintf( message, sizeof( message ), "more then 16 parameters in message '%s'", fmt );
+      else
+         hb_vsnprintf( message, sizeof( message ), fmt, vargs );
+
+      va_end( vargs );
+
+#  if defined( HB_OS_WIN )
+      {
+         union
+         {
+            char  psz[ 1024 ];
+            TCHAR lp[ 1024 ];
+         } buf;
+
+
+         /* We add \n at the end of the buffer to make WinDbg display look readable. */
+         if( proc )
+            hb_snprintf( buf.psz, sizeof( buf.psz ), "%s:%d:%s() %s %s\n",
+                         file, line, proc, pszLevel, message );
+         else
+            hb_snprintf( buf.psz, sizeof( buf.psz ), "%s:%d: %s %s\n",
+                         file, line, pszLevel, message );
+
+         #if defined( UNICODE )
+            MultiByteToWideChar( CP_ACP, 0, ( LPCSTR ) memcpy( message, buf.psz, sizeof( message ) ), -1,
+                                 buf.lp, HB_SIZEOFARRAY( buf.lp ) );
+         #endif
+         OutputDebugString( buf.lp );
+      }
+#  else
+      {
+         char psz[ 1024 ];
+         int slevel;
+
+         if( proc )
+            hb_snprintf( psz, sizeof( psz ), "%s:%d:%s() %s %s",
+                         file, line, proc, pszLevel, message );
+         else
+            hb_snprintf( psz, sizeof( psz ), "%s:%d: %s %s",
+                         file, line, pszLevel, message );
+
+         switch( level )
+         {
+            case HB_TR_ALWAYS:  slevel = LOG_ALERT;   break;
+            case HB_TR_FATAL:   slevel = LOG_CRIT;    break;
+            case HB_TR_ERROR:   slevel = LOG_ERR;     break;
+            case HB_TR_WARNING: slevel = LOG_WARNING; break;
+            case HB_TR_INFO:    slevel = LOG_INFO;    break;
+            case HB_TR_DEBUG:   slevel = LOG_DEBUG;   break;
+            default:            slevel = LOG_DEBUG;
+         }
+
+         syslog( slevel, psz );
+      }
+#  endif
+#endif
+   }
 
    /*
     * Print file and line.
@@ -227,73 +301,6 @@ static void hb_tracelog_( int level, const char * file, int line, const char * p
 
    if( s_flush )
       fflush( s_fp );
-
-   if( s_sysout )
-   {
-#if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
-
-      char message[ 1024 ];
-      union
-      {
-         char  psz[ 1024 ];
-         TCHAR lp[ 1024 ];
-      } buf;
-
-      /* NOTE: This is protection against recursive call to trace engine when
-               there is more than 16 parameters in format string */
-      if( hb_xtraced() && hb_printf_params( fmt ) > 16 )
-         hb_snprintf( message, sizeof( message ), "more then 16 parameters in message '%s'", fmt );
-      else
-         hb_vsnprintf( message, sizeof( message ), fmt, ap );
-
-      /* We add \n at the end of the buffer to make WinDbg display look readable. */
-      if( proc )
-         hb_snprintf( buf.psz, sizeof( buf.psz ), "%s:%d:%s() %s %s\n",
-                      file, line, proc, pszLevel, message );
-      else
-         hb_snprintf( buf.psz, sizeof( buf.psz ), "%s:%d: %s %s\n",
-                      file, line, pszLevel, message );
-
-      #if defined( UNICODE )
-         MultiByteToWideChar( CP_ACP, 0, ( LPCSTR ) memcpy( message, buf.psz, sizeof( message ) ), -1,
-                              buf.lp, HB_SIZEOFARRAY( buf.lp ) );
-      #endif
-      OutputDebugString( buf.lp );
-
-#elif defined( HB_OS_UNIX ) && ! defined( __WATCOMC__ )
-
-      char message[ 1024 ];
-      char psz[ 1024 ];
-      int slevel;
-
-      /* NOTE: This is protection against recursive call to trace engine when
-               there is more than 16 parameters in format string */
-      if( hb_xtraced() && hb_printf_params( fmt ) > 16 )
-         hb_snprintf( message, sizeof( message ), "more then 16 parameters in message '%s'", fmt );
-      else
-         hb_vsnprintf( message, sizeof( message ), fmt, ap_bak );
-
-      if( proc )
-         hb_snprintf( psz, sizeof( psz ), "%s:%d:%s() %s %s",
-                      file, line, proc, pszLevel, message );
-      else
-         hb_snprintf( psz, sizeof( psz ), "%s:%d: %s %s",
-                      file, line, pszLevel, message );
-
-      switch( level )
-      {
-         case HB_TR_ALWAYS:  slevel = LOG_ALERT; break;
-         case HB_TR_FATAL:   slevel = LOG_CRIT; break;
-         case HB_TR_ERROR:   slevel = LOG_ERR; break;
-         case HB_TR_WARNING: slevel = LOG_WARNING; break;
-         case HB_TR_INFO:    slevel = LOG_INFO; break;
-         case HB_TR_DEBUG:   slevel = LOG_DEBUG; break;
-         default:            slevel = LOG_DEBUG;
-      }
-
-      syslog( slevel, psz );
-#endif
-   }
 }
 
 void hb_tracelog( int level, const char * file, int line, const char * proc,

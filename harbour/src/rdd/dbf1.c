@@ -1560,7 +1560,10 @@ static HB_ERRCODE hb_dbfAddField( DBFAREAP pArea, LPDBFIELDINFO pFieldInfo )
    /* Update field offset */
    pArea->pFieldOffset[ pArea->area.uiFieldCount ] = pArea->uiRecordLen;
    pArea->uiRecordLen += pFieldInfo->uiLen;
-   return SUPER_ADDFIELD( ( AREAP ) pArea, pFieldInfo );
+   if( pArea->pFieldOffset[ pArea->area.uiFieldCount ] > pArea->uiRecordLen )
+      return HB_FAILURE;
+   else
+      return SUPER_ADDFIELD( ( AREAP ) pArea, pFieldInfo );
 }
 
 /*
@@ -3047,11 +3050,13 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
          default:
             fError = HB_TRUE;
       }
-      if( fError )
+
+      if( fError || pArea->pFieldOffset[ uiCount ] > pArea->uiRecordLen )
       {
          hb_xfree( pBuffer );
          SELF_CLOSE( ( AREAP ) pArea );
-         hb_dbfErrorRT( pArea, EG_CREATE, EDBF_DATATYPE, pCreateInfo->abName, 0, 0, NULL );
+         hb_dbfErrorRT( pArea, EG_CREATE, fError ? EDBF_DATATYPE : EDBF_DATAWIDTH,
+                        pCreateInfo->abName, 0, 0, NULL );
          pArea->lpdbOpenInfo = NULL;
          return HB_FAILURE;
       }
@@ -4026,7 +4031,8 @@ static HB_ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
                if( memcmp( dbFieldInfo.atomName, "_NullFlags", 10 ) == 0 )
                   pArea->uiNullOffset = pArea->uiRecordLen;
                pArea->uiRecordLen += dbFieldInfo.uiLen;
-               continue;
+               if( pArea->uiRecordLen >= dbFieldInfo.uiLen )
+                  continue;
             }
 
          default:
