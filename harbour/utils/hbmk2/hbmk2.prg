@@ -3162,10 +3162,10 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             cOpt_CompC += " -d -6 -O2 -OS -Ov -Oi -Oc"
          ENDIF
          SWITCH hbmk[ _HBMK_nWARN ]
-         CASE _WARN_MAX ; AAdd( hbmk[ _HBMK_aOPTC ], "-w -Q" )      ; EXIT
-         CASE _WARN_YES ; AAdd( hbmk[ _HBMK_aOPTC ], "-w -Q" )      ; EXIT
-         CASE _WARN_LOW ; AAdd( hbmk[ _HBMK_aOPTC ], "-w -w-sig-" ) ; EXIT
-         CASE _WARN_NO  ; AAdd( hbmk[ _HBMK_aOPTC ], "-w-" )        ; EXIT
+         CASE _WARN_MAX ; AAdd( hbmk[ _HBMK_aOPTC ], "-w -Q" )         ; EXIT
+         CASE _WARN_YES ; AAdd( hbmk[ _HBMK_aOPTC ], "-w -Q -w-sig-" ) ; EXIT
+         CASE _WARN_LOW ; EXIT
+         CASE _WARN_NO  ; AAdd( hbmk[ _HBMK_aOPTC ], "-w-" )           ; EXIT
          ENDSWITCH
          cOpt_CompC += " {FC} {LC}"
          cBin_Res := "brcc32.exe"
@@ -3543,8 +3543,8 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          SWITCH hbmk[ _HBMK_nWARN ]
          CASE _WARN_MAX
          CASE _WARN_YES
-         CASE _WARN_LOW ; AAdd( hbmk[ _HBMK_aOPTC ], "-erroff=%all" )  ; EXIT
-         CASE _WARN_NO  ; AAdd( hbmk[ _HBMK_aOPTC ], "-erroff=%none" ) ; EXIT
+         CASE _WARN_LOW ; AAdd( hbmk[ _HBMK_aOPTC ], "-erroff=%none" ) ; EXIT
+         CASE _WARN_NO  ; AAdd( hbmk[ _HBMK_aOPTC ], "-erroff=%all" ) ; EXIT
          ENDSWITCH
          IF ! Empty( cWorkDir )
             cOpt_CompC += " {IC} -o {OO}"

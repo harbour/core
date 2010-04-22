@@ -29,6 +29,8 @@ endif
 
 ifneq ($(HB_BUILD_WARN),no)
    CFLAGS += -W -Wall
+else
+   CFLAGS += -W
 endif
 
 ifneq ($(HB_BUILD_OPTIM),no)

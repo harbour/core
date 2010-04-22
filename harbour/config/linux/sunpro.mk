@@ -44,8 +44,6 @@ LDFLAGS += $(HB_ISAOPT)
 
 ifneq ($(HB_BUILD_WARN),no)
    CFLAGS += -erroff=%none
-else
-   CFLAGS += -erroff=%all
 endif
 
 ifeq ($(HB_BUILD_DEBUG),yes)
