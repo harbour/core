@@ -35,18 +35,18 @@ RequestExecutionLevel user
    ; The name of the installer
    Name "Harbour Project 2.0 (full)"
    ; The file to write
-   OutFile "harbour-2.0.0-win-full.exe"
+   OutFile "harbour-2.1.0-win-full.exe"
 !else
    !ifdef PKG_MINI
       Name "Harbour Project 2.0 (minimal)"
-      OutFile "harbour-2.0.0-win-mini.exe"
+      OutFile "harbour-2.1.0-win-mini.exe"
    !else
       Name "Harbour Project 2.0"
-      OutFile "harbour-2.0.0-win.exe"
+      OutFile "harbour-2.1.0-win.exe"
    !endif
 !endif
 
-InstallDir C:\hb20
+InstallDir C:\hb21
 
 ;--------------------------------
 ; Interface Settings
@@ -76,7 +76,7 @@ InstallDir C:\hb20
 ;--------------------------------
 ; License Language String
 
-LicenseLangString MUILicense ${LANG_ENGLISH} "$%HB_ROOT%hb20\COPYING"
+LicenseLangString MUILicense ${LANG_ENGLISH} "$%HB_ROOT%hb21\COPYING"
 
 ;--------------------------------
 ; The stuff to install
@@ -88,35 +88,35 @@ Section "Main components" hb_main
   ; Set output path to the installation directory.
   SetOutPath $INSTDIR
 
-  File /nonfatal "$%HB_ROOT%hb20\RELNOTES"
+  File /nonfatal "$%HB_ROOT%hb21\RELNOTES"
 
-  File /nonfatal "$%HB_ROOT%hb20\INSTALL"
-  File /nonfatal "$%HB_ROOT%hb20\COPYING"
-  File /nonfatal "$%HB_ROOT%hb20\TODO"
-  File /nonfatal "$%HB_ROOT%hb20\ChangeLog*"
+  File /nonfatal "$%HB_ROOT%hb21\INSTALL"
+  File /nonfatal "$%HB_ROOT%hb21\COPYING"
+  File /nonfatal "$%HB_ROOT%hb21\TODO"
+  File /nonfatal "$%HB_ROOT%hb21\ChangeLog*"
 
   SetOutPath $INSTDIR\bin
-  File "$%HB_ROOT%hb20\bin\harbour-20.dll"
-  File "$%HB_ROOT%hb20\bin\harbourmt-20.dll"
-  File "$%HB_ROOT%hb20\bin\harbour.exe"
-  File "$%HB_ROOT%hb20\bin\hbi18n.exe"
-  File "$%HB_ROOT%hb20\bin\hbmk2.exe"
-  File "$%HB_ROOT%hb20\bin\hbmk2.*.hbl"
-  File "$%HB_ROOT%hb20\bin\hbpp.exe"
-  File "$%HB_ROOT%hb20\bin\hbrun.exe"
-  File "$%HB_ROOT%hb20\bin\hbtest.exe"
-  File "$%HB_ROOT%hb20\bin\hbformat.exe"
-  File "$%HB_ROOT%hb20\bin\hbmk.cfg"
-  File "$%HB_ROOT%hb20\bin\upx*.*"
+  File "$%HB_ROOT%hb21\bin\harbour-20.dll"
+  File "$%HB_ROOT%hb21\bin\harbourmt-20.dll"
+  File "$%HB_ROOT%hb21\bin\harbour.exe"
+  File "$%HB_ROOT%hb21\bin\hbi18n.exe"
+  File "$%HB_ROOT%hb21\bin\hbmk2.exe"
+  File "$%HB_ROOT%hb21\bin\hbmk2.*.hbl"
+  File "$%HB_ROOT%hb21\bin\hbpp.exe"
+  File "$%HB_ROOT%hb21\bin\hbrun.exe"
+  File "$%HB_ROOT%hb21\bin\hbtest.exe"
+  File "$%HB_ROOT%hb21\bin\hbformat.exe"
+  File "$%HB_ROOT%hb21\bin\hbmk.cfg"
+  File "$%HB_ROOT%hb21\bin\upx*.*"
 
   SetOutPath $INSTDIR\include
-  File "$%HB_ROOT%hb20\include\*.*"
+  File "$%HB_ROOT%hb21\include\*.*"
 
   SetOutPath $INSTDIR\doc
-  File /r "$%HB_ROOT%hb20\doc\*.*"
+  File /r "$%HB_ROOT%hb21\doc\*.*"
 
   SetOutPath $INSTDIR\addons
-  File "$%HB_ROOT%hb20\addons\HARBOUR_README_ADDONS"
+  File "$%HB_ROOT%hb21\addons\HARBOUR_README_ADDONS"
 
   ; Write the installation path into the registry
 ; WriteRegStr HKLM "Software\Harbour" "Install_Dir" "$INSTDIR"
@@ -132,155 +132,155 @@ SectionEnd
 
 Section /o "Shared tools" hb_main_dll
   SetOutPath $INSTDIR\bin
-  File "$%HB_ROOT%hb20\bin\hbi18n-dll.exe"
-  File "$%HB_ROOT%hb20\bin\hbmk2-dll.exe"
-  File "$%HB_ROOT%hb20\bin\hbrun-dll.exe"
-  File "$%HB_ROOT%hb20\bin\hbtest-dll.exe"
-  File "$%HB_ROOT%hb20\bin\hbformat-dll.exe"
+  File "$%HB_ROOT%hb21\bin\hbi18n-dll.exe"
+  File "$%HB_ROOT%hb21\bin\hbmk2-dll.exe"
+  File "$%HB_ROOT%hb21\bin\hbrun-dll.exe"
+  File "$%HB_ROOT%hb21\bin\hbtest-dll.exe"
+  File "$%HB_ROOT%hb21\bin\hbformat-dll.exe"
 SectionEnd
 
 Section /o "Shared x64 tools" hb_main_x64
   SetOutPath $INSTDIR\bin
-  File "$%HB_ROOT%hb20\bin\harbour-x64.exe"
-  File "$%HB_ROOT%hb20\bin\hbi18n-x64.exe"
-  File "$%HB_ROOT%hb20\bin\hbmk2-x64.exe"
-  File "$%HB_ROOT%hb20\bin\hbpp-x64.exe"
-  File "$%HB_ROOT%hb20\bin\hbrun-x64.exe"
-  File "$%HB_ROOT%hb20\bin\hbtest-x64.exe"
-  File "$%HB_ROOT%hb20\bin\hbformat-x64.exe"
+  File "$%HB_ROOT%hb21\bin\harbour-x64.exe"
+  File "$%HB_ROOT%hb21\bin\hbi18n-x64.exe"
+  File "$%HB_ROOT%hb21\bin\hbmk2-x64.exe"
+  File "$%HB_ROOT%hb21\bin\hbpp-x64.exe"
+  File "$%HB_ROOT%hb21\bin\hbrun-x64.exe"
+  File "$%HB_ROOT%hb21\bin\hbtest-x64.exe"
+  File "$%HB_ROOT%hb21\bin\hbformat-x64.exe"
 SectionEnd
 
 !ifndef PKG_NO_MINGW
 Section "MinGW compiler" hb_mingw
   SetOutPath $INSTDIR\comp\mingw
-  File /r "$%HB_ROOT%hb20\comp\mingw\*.*"
+  File /r "$%HB_ROOT%hb21\comp\mingw\*.*"
 SectionEnd
 !endif
 
 !ifdef PKG_FULL
 Section "MinGW x64 compiler" hb_mingw64
   SetOutPath $INSTDIR\comp\mingw64
-  File /r "$%HB_ROOT%hb20\comp\mingw64\*.*"
+  File /r "$%HB_ROOT%hb21\comp\mingw64\*.*"
 SectionEnd
 
 Section "MinGW WinCE/ARM compiler" hb_mingwarm
   SetOutPath $INSTDIR\comp\mingwarm
-  File /r "$%HB_ROOT%hb20\comp\mingwarm\*.*"
+  File /r "$%HB_ROOT%hb21\comp\mingwarm\*.*"
 SectionEnd
 !endif
 
 Section "Libs for MinGW" hb_lib_mingw
   SectionIn RO
   SetOutPath $INSTDIR\lib\win\mingw
-  File "$%HB_ROOT%hb20\lib\win\mingw\*.*"
+  File "$%HB_ROOT%hb21\lib\win\mingw\*.*"
   SetOutPath $INSTDIR\comp\mingw
-  File "$%HB_ROOT%hb20\comp\mingw\HARBOUR_README_MINGW"
+  File "$%HB_ROOT%hb21\comp\mingw\HARBOUR_README_MINGW"
 SectionEnd
 
 Section /o "Libs for MinGW x64" hb_lib_mingw64
   SetOutPath $INSTDIR\lib\win\mingw64
-  File "$%HB_ROOT%hb20\lib\win\mingw64\*.*"
+  File "$%HB_ROOT%hb21\lib\win\mingw64\*.*"
   SetOutPath $INSTDIR\comp\mingw64
-  File "$%HB_ROOT%hb20\comp\mingw64\HARBOUR_README_MINGW64"
+  File "$%HB_ROOT%hb21\comp\mingw64\HARBOUR_README_MINGW64"
 SectionEnd
 
 Section /o "Libs for MinGW WinCE/ARM" hb_lib_mingwarm
   SetOutPath $INSTDIR\lib\wce\mingwarm
-  File "$%HB_ROOT%hb20\lib\wce\mingwarm\*.*"
+  File "$%HB_ROOT%hb21\lib\wce\mingwarm\*.*"
   SetOutPath $INSTDIR\comp\mingwarm
-  File "$%HB_ROOT%hb20\comp\mingwarm\HARBOUR_README_MINGWARM"
+  File "$%HB_ROOT%hb21\comp\mingwarm\HARBOUR_README_MINGWARM"
 SectionEnd
 
 Section "Libs for MSVC 2008" hb_lib_msvc
   SetOutPath $INSTDIR\lib\win\msvc
-  File "$%HB_ROOT%hb20\lib\win\msvc\*.*"
+  File "$%HB_ROOT%hb21\lib\win\msvc\*.*"
 SectionEnd
 
 Section /o "Libs for MSVC 2008 x64" hb_lib_msvc64
   SetOutPath $INSTDIR\lib\win\msvc64
-  File "$%HB_ROOT%hb20\lib\win\msvc64\*.*"
+  File "$%HB_ROOT%hb21\lib\win\msvc64\*.*"
 SectionEnd
 
 Section "Libs for Borland C" hb_lib_bcc
   SetOutPath $INSTDIR\bin
-  File "$%HB_ROOT%hb20\bin\harbour-20-bcc.dll"
-  File "$%HB_ROOT%hb20\bin\harbourmt-20-bcc.dll"
+  File "$%HB_ROOT%hb21\bin\harbour-20-bcc.dll"
+  File "$%HB_ROOT%hb21\bin\harbourmt-20-bcc.dll"
   SetOutPath $INSTDIR\lib\win\bcc
-  File "$%HB_ROOT%hb20\lib\win\bcc\*.*"
+  File "$%HB_ROOT%hb21\lib\win\bcc\*.*"
 SectionEnd
 
 Section /o "Libs for Open Watcom" hb_lib_watcom
   SetOutPath $INSTDIR\lib\win\watcom
-  File "$%HB_ROOT%hb20\lib\win\watcom\*.*"
+  File "$%HB_ROOT%hb21\lib\win\watcom\*.*"
   SetOutPath $INSTDIR\comp\watcom
-  File "$%HB_ROOT%hb20\comp\watcom\HARBOUR_README_WATCOM"
+  File "$%HB_ROOT%hb21\comp\watcom\HARBOUR_README_WATCOM"
 SectionEnd
 
 !ifdef PKG_ADDPOCC
 Section /o "Libs for Pelles C" hb_lib_pocc
   SetOutPath $INSTDIR\lib\win\pocc
-  File "$%HB_ROOT%hb20\lib\win\pocc\*.*"
+  File "$%HB_ROOT%hb21\lib\win\pocc\*.*"
   SetOutPath $INSTDIR\comp\pocc
-  File "$%HB_ROOT%hb20\comp\pocc\HARBOUR_README_POCC"
+  File "$%HB_ROOT%hb21\comp\pocc\HARBOUR_README_POCC"
 SectionEnd
 
 Section /o "Libs for Pelles C x64" hb_lib_pocc64
   SetOutPath $INSTDIR\lib\win\pocc64
-  File "$%HB_ROOT%hb20\lib\win\pocc64\*.*"
+  File "$%HB_ROOT%hb21\lib\win\pocc64\*.*"
 SectionEnd
 
 Section /o "Libs for Pelles C WinCE/ARM" hb_lib_poccarm
   SetOutPath $INSTDIR\lib\wce\poccarm
-  File "$%HB_ROOT%hb20\lib\wce\poccarm\*.*"
+  File "$%HB_ROOT%hb21\lib\wce\poccarm\*.*"
 SectionEnd
 !endif
 
 !ifndef PKG_NOLINUX
 Section /o "Libs for Open Watcom Linux" hb_lib_linux
   SetOutPath $INSTDIR\lib\linux\watcom
-  File "$%HB_ROOT%hb20\lib\linux\watcom\*.*"
+  File "$%HB_ROOT%hb21\lib\linux\watcom\*.*"
   SetOutPath $INSTDIR\comp\watcom
-  File "$%HB_ROOT%hb20\comp\watcom\HARBOUR_README_WATCOM"
+  File "$%HB_ROOT%hb21\comp\watcom\HARBOUR_README_WATCOM"
 SectionEnd
 !endif
 
 !ifndef PKG_NOOS2
 Section /o "Libs for Open Watcom OS/2" hb_lib_os2
   SetOutPath $INSTDIR\lib\os2\watcom
-  File "$%HB_ROOT%hb20\lib\os2\watcom\*.*"
+  File "$%HB_ROOT%hb21\lib\os2\watcom\*.*"
   SetOutPath $INSTDIR\comp\watcom
-  File "$%HB_ROOT%hb20\comp\watcom\HARBOUR_README_WATCOM"
+  File "$%HB_ROOT%hb21\comp\watcom\HARBOUR_README_WATCOM"
 SectionEnd
 !endif
 
 !ifndef PKG_NODOS
 Section /o "Libs for Open Watcom MS-DOS" hb_lib_dos
   SetOutPath $INSTDIR\lib\dos\watcom
-  File "$%HB_ROOT%hb20\lib\dos\watcom\*.*"
+  File "$%HB_ROOT%hb21\lib\dos\watcom\*.*"
   SetOutPath $INSTDIR\comp\watcom
-  File "$%HB_ROOT%hb20\comp\watcom\HARBOUR_README_WATCOM"
+  File "$%HB_ROOT%hb21\comp\watcom\HARBOUR_README_WATCOM"
 SectionEnd
 !endif
 
 !ifndef PKG_NODJGPP
 Section /o "Libs for DJGPP MS-DOS" hb_lib_djgpp
   SetOutPath $INSTDIR\lib\dos\djgpp
-  File "$%HB_ROOT%hb20\lib\dos\djgpp\*.*"
+  File "$%HB_ROOT%hb21\lib\dos\djgpp\*.*"
   SetOutPath $INSTDIR\comp\djgpp
-  File "$%HB_ROOT%hb20\comp\djgpp\HARBOUR_README_DJGPP"
+  File "$%HB_ROOT%hb21\comp\djgpp\HARBOUR_README_DJGPP"
 SectionEnd
 !endif
 
 Section /o "Dlls for x64" hb_dlls_x64
   SetOutPath $INSTDIR\bin
-  File "$%HB_ROOT%hb20\bin\harbour-20-x64.dll"
-  File "$%HB_ROOT%hb20\bin\harbourmt-20-x64.dll"
+  File "$%HB_ROOT%hb21\bin\harbour-20-x64.dll"
+  File "$%HB_ROOT%hb21\bin\harbourmt-20-x64.dll"
 SectionEnd
 
 Section /o "Dlls for WinCE/ARM" hb_dlls_arm
   SetOutPath $INSTDIR\bin
-  File "$%HB_ROOT%hb20\bin\harbour-20-wce-arm.dll"
-  File "$%HB_ROOT%hb20\bin\harbourmt-20-wce-arm.dll"
+  File "$%HB_ROOT%hb21\bin\harbour-20-wce-arm.dll"
+  File "$%HB_ROOT%hb21\bin\harbourmt-20-wce-arm.dll"
 SectionEnd
 
 !ifdef _NEVER_
@@ -288,8 +288,8 @@ SectionEnd
 Section /o "Dlls for OS/2" hb_dlls_os2
   SetOutPath $INSTDIR\bin
   ; TOFIX: .dll name collision with MS-DOS
-  File "$%HB_ROOT%hb20\bin\harbour.dll"
-  File "$%HB_ROOT%hb20\bin\harbourm.dll"
+  File "$%HB_ROOT%hb21\bin\harbour.dll"
+  File "$%HB_ROOT%hb21\bin\harbourm.dll"
 SectionEnd
 !endif
 
@@ -297,8 +297,8 @@ SectionEnd
 Section /o "Dlls for MS-DOS" hb_dlls_dos
   SetOutPath $INSTDIR\bin
   ; TOFIX: .dll name collision with OS/2
-  File "$%HB_ROOT%hb20\bin\harbour.dll"
-  File "$%HB_ROOT%hb20\bin\harbourm.dll"
+  File "$%HB_ROOT%hb21\bin\harbour.dll"
+  File "$%HB_ROOT%hb21\bin\harbourm.dll"
 SectionEnd
 !endif
 !endif
@@ -306,11 +306,11 @@ SectionEnd
 ; The stuff to install
 Section "Examples" hb_examples
   SetOutPath $INSTDIR\examples
-  File /r "$%HB_ROOT%hb20\examples\*.*"
+  File /r "$%HB_ROOT%hb21\examples\*.*"
   SetOutPath $INSTDIR\tests
-  File /r "$%HB_ROOT%hb20\tests\*.*"
+  File /r "$%HB_ROOT%hb21\tests\*.*"
   SetOutPath $INSTDIR\contrib
-  File /r "$%HB_ROOT%hb20\contrib\*.*"
+  File /r "$%HB_ROOT%hb21\contrib\*.*"
 SectionEnd
 
 ; Optional section (can be disabled by the user)

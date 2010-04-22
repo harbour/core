@@ -36,10 +36,10 @@ HB_VER_MAJOR     := 2
 HB_VER_MINOR     := 1
 HB_VER_RELEASE   := 0
 # Status (dev, alpha1, alpha2, beta1, beta2, rc1, rc2, empty for final)
-HB_VER_STATUS    := dev
+HB_VER_STATUS    := beta1
 # Short status (d, a1, a2, b1, b2, r1, r2, MINOR+RELEASE for final)
 # HB_VER_STATUS_SH := $(HB_VER_MINOR)$(HB_VER_RELEASE)
-HB_VER_STATUS_SH := d
+HB_VER_STATUS_SH := b1
 
 # Arbitrary pattern which we do not expect to occur in real-world path names
 substpat := !@!@

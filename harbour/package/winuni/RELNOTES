@@ -1,6 +1,6 @@
 Hi All,
 
-Harbour 2.x (r?????) source archives and Windows binary
+Harbour 2.1.0 (r?????) source archives and Windows binary
 releases are available for download on sourceforge.net:
 
    http://sourceforge.net/projects/harbour-project/files/
@@ -26,7 +26,7 @@ shared x64/WinCE-ARM libs, MS-DOS (watcom) libs, OS/2 (watcom)
 libs, Linux (watcom) libs.
 
 Usage:
-1) install/unpack to any directory (C:\hb20)
+1) install/unpack to any directory (C:\hb21)
 2) go to bin dir (optional if you specify path for hbmk2)
 3) For x86 executable, type: 'hbmk2 ../tests/hello.prg'
 4) For x64 executable, type: 'hbmk2 ../tests/hello.prg -compiler=mingw64'

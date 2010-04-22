@@ -15,7 +15,7 @@
 
 %define name      harbour-win
 %define version   2.1.0
-%define releasen  dev
+%define releasen  beta1
 %define hb_pref   hbw
 %define hb_host   www.harbour-project.org
 %define readme    README.RPM
