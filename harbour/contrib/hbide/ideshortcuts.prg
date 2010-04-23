@@ -1098,7 +1098,7 @@ METHOD IdeShortcuts:loadMethods()
                        'insert( "" )', ;
                        'Insert <cText> at current cursor position.'  } )
    aadd( ::aMethods, { 'separator( cSep )', ;
-                       'separator( "" )', ;
+                       'separator( ' + '/*' + replicate( "-", 68 ) + '*/' + ' )', ;
                        'Inserts separator line <cSep> immediately before current line. <cSep> defaults to "/*---*/"'  } )
    aadd( ::aMethods, { 'getWord( lSelect )', ;
                        'getWord( .f. )'    , ;

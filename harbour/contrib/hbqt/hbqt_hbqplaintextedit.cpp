@@ -197,16 +197,27 @@ void HBQPlainTextEdit::keyPressEvent( QKeyEvent * event )
 
    QPlainTextEdit::keyPressEvent( event );
 
+   if( ! c )
+      return;
+
+   if( ( event->modifiers() & ( Qt::ControlModifier | Qt::AltModifier ) ) )
+   {
+      c->popup()->hide();
+      return;
+   }
+
    const bool ctrlOrShift = event->modifiers() & ( Qt::ControlModifier | Qt::ShiftModifier );
-   if( !c || ( ctrlOrShift && event->text().isEmpty() ) )
+   if( ( ctrlOrShift && event->text().isEmpty() ) )
        return;
 
    static  QString            eow( "~!@#$%^&*()+{}|:\"<>?,./;'[]\\-=" );               /* end of word */
    bool    hasModifier      = ( event->modifiers() != Qt::NoModifier ) && !ctrlOrShift;
    QString completionPrefix = hbTextUnderCursor();
 
-   if( ( hasModifier || event->text().isEmpty() || completionPrefix.length() < 3
-                                                || eow.contains( event->text().right( 1 ) ) ) )
+   if( ( hasModifier ||
+         event->text().isEmpty() ||
+         completionPrefix.length() < 3 ||
+         eow.contains( event->text().right( 1 ) ) ) )
    {
       c->popup()->hide();
       return;
@@ -221,7 +232,14 @@ void HBQPlainTextEdit::keyPressEvent( QKeyEvent * event )
    cr.setWidth( c->popup()->sizeHintForColumn( 0 ) + c->popup()->verticalScrollBar()->sizeHint().width() );
    c->complete( cr ); // popup it up!
 }
-
+#if 0
+QString HBQPlainTextEdit::hbTextForPrefix()
+{
+   QTextCursor tc = textCursor();
+   tc.select( QTextCursor::WordUnderCursor );
+   return tc.selectedText();
+}
+#endif
 QString HBQPlainTextEdit::hbTextUnderCursor()
 {
    QTextCursor tc = textCursor();

@@ -261,7 +261,7 @@ METHOD IdeEditsManager:addSourceInTree( cSourceFile, cView )
    #if 0
    cPathA := hbide_pathNormalized( cPath )
 
-
+array2table(
    IF ( n := ascan( ::aEditorPath, {|e_| e_[ 2 ] == cPathA } ) ) == 0
       oParent := oGrand:addItem( cPath )
       aadd( ::aProjData, { oParent, "Editor Path", oGrand, cPathA, cSourceFile } )
@@ -1806,11 +1806,13 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p, p1 )
             ::moveLine( -1 )
             RETURN .t.
          ENDIF
+         EXIT 
       CASE Qt_Key_Down
          IF lCtrl .AND. lShift
             ::moveLine( 1 )
             RETURN .t.
          ENDIF
+         EXIT
       CASE Qt_Key_ParenLeft
          IF ! lCtrl .AND. ! lAlt
             ::loadFuncHelp()     // Also invokes prototype display
@@ -1833,10 +1835,12 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p, p1 )
 
       EXIT
 
+   CASE QEvent_Enter
    CASE QEvent_FocusIn
       ::resumePrototype()
       EXIT
 
+   CASE QEvent_Leave
    CASE QEvent_FocusOut
       ::suspendPrototype()
       EXIT
@@ -2145,8 +2149,9 @@ METHOD IdeEdit:getLineNo()
 METHOD IdeEdit:insertSeparator( cSep )
    LOCAL qCursor := QTextCursor():configure( ::qEdit:textCursor() )
 
-   DEFAULT cSep TO ::cSeparator
-
+   IF empty( cSep )
+      cSep := ::cSeparator
+   ENDIF
    qCursor:beginEditBlock()
    qCursor:movePosition( QTextCursor_StartOfBlock )
    qCursor:insertBlock()
@@ -2327,11 +2332,37 @@ METHOD IdeEdit:clickFuncHelp()
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeEdit:loadFuncHelp()
+   LOCAL qEdit, qCursor, qTextBlock, cText, cWord, nCol, cPro
+
+   qEdit := ::qEdit
+   qCursor    := QTextCursor():configure( qEdit:textCursor() )
+   qTextBlock := QTextBlock():configure( qCursor:block() )
+   cText      := qTextBlock:text()
+   nCol       := qCursor:columnNumber()
+   cWord      := hbide_getPreviousWord( cText, nCol )
+
+   IF !empty( cWord )
+      IF ! empty( ::oHL )
+         ::oHL:jumpToFunction( cWord )
+      ENDIF
+      IF !empty( cPro := ::oFN:positionToFunction( cWord, .t. ) )
+         IF empty( ::cProto )
+            ::showPrototype( ::cProto := hbide_formatProto( cPro ) )
+         ENDIF
+      ENDIF
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeEdit:resumePrototype()
 
    ::isSuspended := .f.
    IF !empty( ::qEdit )
-      ::qEdit:hbShowPrototype( ::cProto )
+      IF ::getLineNo() == ::nProtoLine .AND. ::getColumnNo() >= ::nProtoCol
+         ::qEdit:hbShowPrototype( ::cProto )
+      ENDIF    
    ENDIF
 
    RETURN Self
@@ -2390,30 +2421,6 @@ METHOD IdeEdit:completeCode( p )
 
    ::qEdit:setTextCursor( qCursor )
 
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeEdit:loadFuncHelp()
-   LOCAL qEdit, qCursor, qTextBlock, cText, cWord, nCol, cPro
-
-   qEdit := ::qEdit
-
-   qCursor    := QTextCursor():configure( qEdit:textCursor() )
-   qTextBlock := QTextBlock():configure( qCursor:block() )
-   cText      := qTextBlock:text()
-   nCol       := qCursor:columnNumber()
-   cWord      := hbide_getPreviousWord( cText, nCol )
-   IF !empty( cWord )
-      IF ! empty( ::oHL )
-         ::oHL:jumpToFunction( cWord )
-      ENDIF
-      IF !empty( cPro := ::oFN:positionToFunction( cWord, .t. ) )
-         IF empty( ::cProto )
-            ::showPrototype( ::cProto := hbide_formatProto( cPro ) )
-         ENDIF
-      ENDIF
-   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -2542,6 +2549,7 @@ FUNCTION hbide_isHarbourKeyword( cWord )
                     'var' => NIL,;
                     'destructor' => NIL,;
                     'inline' => NIL,;
+                    'setget' => NIL,;
                     'assign' => NIL,;
                     'access' => NIL,;
                     'inherit' => NIL,;
