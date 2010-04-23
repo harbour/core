@@ -11,6 +11,7 @@ PROCEDURE Main()
       ? i:__enumIndex(), i
    NEXT
 
-   ? "Printing... Job ID:", cupsPrintFile( cupsGetDefault(), "test.prg", "Harbour CUPS Printing" )
+   ? "Printing... Job ID:", cupsPrintFile( cupsGetDefault(), "test.prg", "Harbour CUPS Printing", { "sides=one-sided" } )
+/* ? "Printing... Job ID:", cupsPrintFile( cupsGetDefault(), "test.prg", "Harbour CUPS Printing", { "sides" => "one-sided" } ) */
 
    RETURN

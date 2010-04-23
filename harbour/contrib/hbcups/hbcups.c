@@ -82,7 +82,44 @@ HB_FUNC( CUPSGETDESTS )
 
 HB_FUNC( CUPSPRINTFILE )
 {
+   PHB_ITEM pOptions = hb_param( 4, HB_IT_HASH | HB_IT_ARRAY );
+
+   int num_options = 0;
+   cups_option_t * options = NULL;
+
+   if( pOptions )
+   {
+      int tmp;
+
+      if( HB_IS_HASH( pOptions ) )
+      {
+         for( tmp = 0; tmp < hb_hashLen( pOptions ); ++tmp )
+         {
+            PHB_ITEM pKey = hb_hashGetKeyAt( pOptions, tmp + 1 );
+            PHB_ITEM pVal = hb_hashGetValueAt( pOptions, tmp + 1 );
+
+            if( pKey && HB_IS_STRING( pKey ) &&
+                pVal && HB_IS_STRING( pVal ) )
+               num_options = cupsAddOption( hb_itemGetCPtr( pKey ), hb_itemGetCPtr( pVal ), num_options, &options );
+         }
+      }
+      else if( HB_IS_ARRAY( pOptions ) )
+      {
+         for( tmp = 0; tmp < hb_arrayLen( pOptions ); ++tmp )
+         {
+            const char * pszOption = hb_arrayGetCPtr( pOptions, tmp + 1 );
+
+            if( pszOption )
+               num_options = cupsParseOptions( pszOption, num_options, &options );
+         }
+      }
+   }
+
    hb_retni( cupsPrintFile( hb_parcx( 1 ) /* printername */,
                             hb_parcx( 2 ) /* filename */,
-                            hb_parcx( 3 ) /* title */, 0, NULL ) );
+                            hb_parcx( 3 ) /* title */,
+                            num_options,
+                            options ) );
+
+   cupsFreeOptions( num_options, options );
 }
