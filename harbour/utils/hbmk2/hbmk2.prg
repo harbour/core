@@ -3752,15 +3752,17 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
    IF ! lSkipBuild .AND. ! lStopAfterInit
       FOR EACH tmp IN hbmk[ _HBMK_aINCPATH ]
-         /* Different escaping for internal and external compiler. */
-         IF hbmk[ _HBMK_nHBMODE ] == _HBMODE_NATIVE
-            AAdd( hbmk[ _HBMK_aOPTPRG ], "-i" + tmp )
-         ELSE
-            AAdd( hbmk[ _HBMK_aOPTPRG ], "-i" + FN_Escape( tmp, nCmd_Esc ) )
-         ENDIF
-         IF ! lStopAfterHarbour
-            AAdd( hbmk[ _HBMK_aOPTC ], StrTran( cOptIncMask, "{DI}", FN_Escape( tmp, nCmd_Esc ) ) )
-            AAdd( hbmk[ _HBMK_aOPTRES ], StrTran( cOptIncMask, "{DI}", FN_Escape( tmp, nCmd_Esc ) ) )
+         IF ! Empty( tmp )
+            /* Different escaping for internal and external compiler. */
+            IF hbmk[ _HBMK_nHBMODE ] == _HBMODE_NATIVE
+               AAdd( hbmk[ _HBMK_aOPTPRG ], "-i" + tmp )
+            ELSE
+               AAdd( hbmk[ _HBMK_aOPTPRG ], "-i" + FN_Escape( tmp, nCmd_Esc ) )
+            ENDIF
+            IF ! lStopAfterHarbour
+               AAdd( hbmk[ _HBMK_aOPTC ], StrTran( cOptIncMask, "{DI}", FN_Escape( tmp, nCmd_Esc ) ) )
+               AAdd( hbmk[ _HBMK_aOPTRES ], StrTran( cOptIncMask, "{DI}", FN_Escape( tmp, nCmd_Esc ) ) )
+            ENDIF
          ENDIF
       NEXT
    ENDIF
@@ -6032,6 +6034,10 @@ STATIC FUNCTION PathNormalize( cPath, lNormalize )
                cPath += hb_osPathSeparator()
             ENDIF
          NEXT
+      ENDIF
+
+      IF Empty( cPath )
+         cPath := "."
       ENDIF
    ENDIF
 
