@@ -71,8 +71,8 @@ HB_FUNC( CUPSGETDESTS )
       cups_dest_t * desk_list_bak = dest_list;
       int i;
 
-      for( i = 0; i < num_dests; ++i, ++dest_list )
-         hb_arraySetC( pArray, i + 1, dest_list->name );
+      for( i = 1; i <= num_dests; ++i, ++dest_list )
+         hb_arraySetC( pArray, i, dest_list->name );
 
       cupsFreeDests( num_dests, desk_list_bak );
    }
@@ -93,21 +93,20 @@ HB_FUNC( CUPSPRINTFILE )
 
       if( HB_IS_HASH( pOptions ) )
       {
-         for( tmp = 0; tmp < hb_hashLen( pOptions ); ++tmp )
+         for( tmp = 1; tmp <= hb_hashLen( pOptions ); ++tmp )
          {
-            PHB_ITEM pKey = hb_hashGetKeyAt( pOptions, tmp + 1 );
-            PHB_ITEM pVal = hb_hashGetValueAt( pOptions, tmp + 1 );
+            PHB_ITEM pKey = hb_hashGetKeyAt( pOptions, tmp );
+            PHB_ITEM pVal = hb_hashGetValueAt( pOptions, tmp );
 
-            if( pKey && HB_IS_STRING( pKey ) &&
-                pVal && HB_IS_STRING( pVal ) )
+            if( pKey && HB_IS_STRING( pKey ) && pVal )
                num_options = cupsAddOption( hb_itemGetCPtr( pKey ), hb_itemGetCPtr( pVal ), num_options, &options );
          }
       }
       else if( HB_IS_ARRAY( pOptions ) )
       {
-         for( tmp = 0; tmp < hb_arrayLen( pOptions ); ++tmp )
+         for( tmp = 1; tmp <= hb_arrayLen( pOptions ); ++tmp )
          {
-            const char * pszOption = hb_arrayGetCPtr( pOptions, tmp + 1 );
+            const char * pszOption = hb_arrayGetCPtr( pOptions, tmp );
 
             if( pszOption )
                num_options = cupsParseOptions( pszOption, num_options, &options );
