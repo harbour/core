@@ -35,6 +35,8 @@ endif
 
 ifneq ($(HB_BUILD_WARN),no)
    CFLAGS += -W4 -wd4127
+else
+   CFLAGS += -W2
 endif
 
 ifneq ($(HB_BUILD_OPTIM),no)

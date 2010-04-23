@@ -22,6 +22,8 @@ LDFLAGS += OP quiet
 
 ifneq ($(HB_BUILD_WARN),no)
    CFLAGS += -w3
+else
+   CFLAGS += -w1
 endif
 
 ifneq ($(HB_BUILD_OPTIM),no)
