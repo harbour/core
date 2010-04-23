@@ -19,28 +19,13 @@ tmysql.prg  :  MySQL access classes
 test.prg    :  a little test program which wont work for you :-) since it uses a .dbf file not
                provided. Use it as a small tutorial of tmysql.prg provided functions.
 
-You will also need all .h files from include subdir of your installed MySQL server, at a bare minimum
-they are:
 
-      mysql.h, mysql_com.h, mysql_version.h
+1) See INSTALL on how to obtain/install and configure Harbour build
+   system for mysql.
 
-(under OS/2 with OS/2 port of MySql you need to use the ones from 3.21.33b build which is the only one with
-a single threaded libmysqlclient.a client library and works ok even with latest MySQL/2 availble).
-
-To build this library on Windows (using freely available Borland C++ compiler) you
-need to follow these steps:
-
-1) go to www.mysql.com and download any version you like of mysql.
-   So far I've tested only 3.x versions of MySQL. Install it.
-   Now you have an include subdir with .h files with the same version
-   number as your libmysql.dll.
-
-   This is very important. You need to use .h files from the package you
-   install.
-
-2) Link hbmysql.lib and libmysql.lib to your harbour program (you can try to
-   recompile dbf2mysql inside \contrib\hbmysql just to test everything) and
-   be sure to have libmysql.dll on your path.
+2) Add hbmysql.hbc to your hbmk2 command line (you can also try to
+   recompile programs in utils and tests subdirs just to test everything)
+   and be sure to have libmysql.dll in your PATH.
 
 
                               +---------------------+
@@ -69,24 +54,9 @@ TMySQLRow:     Every row returned by a SELECT is converted to a TMySQLRow object
 I'm aware that this brief document doesn't explain a lot about MySQL access classes and I'm sorry for that
 (please read the souce code, it has quite a few comments which can help you understand what's going on)
 
-I'll try to update it as work on these classes goes by and I'll like to receive feedbak and suggestions
+I'll try to update it as work on these classes goes by and I'll like to receive feedback and suggestions
 from users (if any :-))
 
 Excuse my poor english and happy selecting :-)
 
 Maurilio Longo - <maurilio.longo@libero.it>
-
-New Enhacemets
-
-Added support to mediumint and mediumblob type on the follow classes
-TMySqlRow:FieldType() will Return an "B" for mediumblob and an "I" Mediumint field
-TMySQLServer:CreateTable(cTable, aStruct,cPrimaryKey,cUniqueKey,cAuto) Added tree new parameters
-     Cprimarykey tell to use the field defined as an primaty key.
-     CUniqueKey  tell that this field has unique values
-     cAuto       Tell that this field should be auto_increment
-     Also to create an Table with mediumint and mediumblob field types use
-     {{"Data","B",1,0},{"Ammount","I",9,0}} in the astructure array
-     To save an File to an mediumblob field use
-     cBuffer:=FILETOSQLBINARY(cFile) . this will read up the file and return an string formated to mysql requeriments
-
-Luiz Rafael Culik - <culik@sl.conex.net>
