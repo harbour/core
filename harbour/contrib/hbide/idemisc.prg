@@ -1571,8 +1571,8 @@ FUNCTION hbide_stripRoot( cRoot, cPath )
    ENDIF
 
    cLRoot := hbide_pathNormalized( cRoot, .t. )
-   cLPath := hbide_pathNormalized( cPath, .t. )
-   IF left( cLPath, len( cLRoot ) ) == cLRoot
+   cLPath := hbide_pathNormalized( cPath, .f. )
+   IF left( lower( cLPath ), len( cLRoot ) ) == cLRoot
       cP := substr( cLPath, len( cRoot ) + 1 )
       RETURN cP
    ENDIF
