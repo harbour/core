@@ -58,8 +58,11 @@
  *
  */
 
+#include "error.ch"
+
 FUNCTION NETIO_MTSERVER( nPort, cIfAddr, cRootDir, xRPC, ... )
    LOCAL pListenSocket, lRPC
+   LOCAL oError
 
    IF hb_mtvm()
       SWITCH ValType( xRPC )
@@ -76,6 +79,20 @@ FUNCTION NETIO_MTSERVER( nPort, cIfAddr, cRootDir, xRPC, ... )
       IF !Empty( pListenSocket )
          hb_threadDetach( hb_threadStart( @netio_srvloop(), pListenSocket, xRPC, ... ) )
       ENDIF
+   ELSE
+      oError := ErrorNew()
+
+      oError:severity    := ES_ERROR
+      oError:genCode     := EG_UNSUPPORTED
+      oError:subSystem   := "HBNETIO"
+      oError:subCode     := 0
+      oError:description := hb_LangErrMsg( EG_UNSUPPORTED )
+      oError:canRetry    := .F.
+      oError:canDefault  := .F.
+      oError:fileName    := ""
+      oError:osCode      := 0
+
+      Eval( ErrorBlock(), oError )
    ENDIF
    RETURN pListenSocket
 
