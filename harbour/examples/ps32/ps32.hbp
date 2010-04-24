@@ -1,0 +1,9 @@
+#
+# $Id$
+#
+
+-hblib
+-olib/${hb_plat}/${hb_comp}/ps32
+-inc
+
+tpscript.prg
