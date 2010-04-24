@@ -100,13 +100,14 @@ CLASS WvgPushButton  INHERIT  WvgWindow
    METHOD   handleEvent( nMessage, aNM )
 
    METHOD   setCaption( xCaption, cDll )
-   METHOD   activate( xParam )
-   METHOD   draw( xParam )
+   METHOD   activate( xParam )                    SETGET
+   METHOD   draw( xParam )                        SETGET
 
    METHOD   setColorFG()                          INLINE NIL
    METHOD   setColorBG()                          INLINE NIL
 
    ENDCLASS
+
 /*----------------------------------------------------------------------*/
 
 METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgPushButton
@@ -209,7 +210,7 @@ METHOD setCaption( xCaption, cDll ) CLASS WvgPushButton
 
 METHOD activate( xParam ) CLASS WvgPushButton
 
-   IF hb_isBlock( xParam ) .or. ( xParam == NIL )
+   IF hb_isBlock( xParam ) .OR. ( xParam == NIL )
       ::sl_lbClick := xParam
    ENDIF
 
