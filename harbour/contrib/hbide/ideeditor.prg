@@ -1664,7 +1664,7 @@ METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
       EXIT
 
    CASE cursorPositionChanged
-      // HB_TRACE( HB_TR_ALWAYS, "cursorPositionChanged()", ::nProtoLine, ::nProtoCol, ::isSuspended, ::getLineNo(), ::getColumnNo(), ::cProto )
+      //HB_TRACE( HB_TR_ALWAYS, "cursorPositionChanged()", ::nProtoLine, ::nProtoCol, ::isSuspended, ::getLineNo(), ::getColumnNo(), ::cProto )
       ::oEditor:dispEditInfo( qEdit )
       ::handlePreviousWord( ::lUpdatePrevWord )
       ::handleCurrentIndent()
@@ -1806,7 +1806,7 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p, p1 )
             ::moveLine( -1 )
             RETURN .t.
          ENDIF
-         EXIT 
+         EXIT
       CASE Qt_Key_Down
          IF lCtrl .AND. lShift
             ::moveLine( 1 )
@@ -1856,6 +1856,9 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p, p1 )
       IF p == QEvent_MouseButtonDblClick
          ::lCopyWhenDblClicked := .f.       /* not intuitive */
          ::clickFuncHelp()
+
+      ELSEIF p == 21001
+         ::handlePreviousWord( .t. )
 
       ELSEIF p == QEvent_Paint
          // ::oIde:testPainter( p1 )
@@ -2187,6 +2190,8 @@ METHOD IdeEdit:insertText( cText )
 METHOD IdeEdit:handlePreviousWord( lUpdatePrevWord )
    LOCAL qCursor, qTextBlock, cText, cWord, nB, nL, qEdit, lPrevOnly, nCol, nSpace, nSpaces, nOff
 
+ * HB_TRACE( HB_TR_ALWAYS, "IdeEdit:handlePreviousWord( lUpdatePrevWord )", lUpdatePrevWord )
+
    IF ! lUpdatePrevWord
       RETURN Self
    ENDIF
@@ -2362,7 +2367,7 @@ METHOD IdeEdit:resumePrototype()
    IF !empty( ::qEdit )
       IF ::getLineNo() == ::nProtoLine .AND. ::getColumnNo() >= ::nProtoCol
          ::qEdit:hbShowPrototype( ::cProto )
-      ENDIF    
+      ENDIF
    ENDIF
 
    RETURN Self
@@ -2565,7 +2570,9 @@ FUNCTION hbide_isHarbourKeyword( cWord )
                     'recover' => NIL,;
                     'hb_symbol_unused' => NIL,;
                     'error' => NIL,;
-                    'handler' => NIL }
+                    'handler' => NIL,;
+                    '.or.' => NIL,;
+                    '.and.' => NIL }
 
    RETURN Lower( cWord ) $ s_b_
 

@@ -190,6 +190,14 @@ void HBQPlainTextEdit::keyPressEvent( QKeyEvent * event )
       case Qt::Key_Backtab:
          event->ignore();
          return;                                    // let the completer do default behavior
+      case Qt::Key_Space:
+         if( block )
+         {
+            PHB_ITEM p1 = hb_itemPutNI( NULL, 21001 );
+            hb_vmEvalBlockV( block, 1, p1 );
+            hb_itemRelease( p1 );
+         }
+         break;
       default:
          break;
       }
@@ -210,7 +218,7 @@ void HBQPlainTextEdit::keyPressEvent( QKeyEvent * event )
    if( ( ctrlOrShift && event->text().isEmpty() ) )
        return;
 
-   static  QString            eow( "~!@#$%^&*()+{}|:\"<>?,./;'[]\\-=" );               /* end of word */
+   static  QString            eow( " ~!@#$%^&*()+{}|:\"<>?,./;'[]\\-=" );               /* end of word */
    bool    hasModifier      = ( event->modifiers() != Qt::NoModifier ) && !ctrlOrShift;
    QString completionPrefix = hbTextUnderCursor();
 
