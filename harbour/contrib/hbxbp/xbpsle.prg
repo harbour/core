@@ -92,7 +92,7 @@ CLASS XbpSLE INHERIT XbpWindow, XbpDataRef
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) VIRTUAL
    METHOD   destroy()
    METHOD   handleEvent( nEvent, mp1, mp2 )
-   METHOD   exeBlock( nMsg, p1, p2 )
+   METHOD   execSlot( cSlot, p, p2 )
 
    METHOD   clear()                               INLINE  ::oWidget:clear()
    METHOD   copyMarked()                          INLINE  ::oWidget:copy()
@@ -107,18 +107,13 @@ CLASS XbpSLE INHERIT XbpWindow, XbpDataRef
 
    METHOD   setInsertMode( lInsertMode )          VIRTUAL
 
-   DATA     sl_hScroll
-   ACCESS   hScroll                               INLINE  ::sl_hScroll
-   ASSIGN   hScroll( bBlock )                     INLINE  ::sl_hScroll := bBlock
-
    DATA     sl_typeOut
-   ACCESS   typeOut                               INLINE  ::sl_typeOut
-   ASSIGN   typeOut( bBlock )                     INLINE  ::sl_typeOut := bBlock
-
-   /* Harbour Extension */
+   DATA     sl_hScroll
    DATA     sl_returnPressed
-   ACCESS   returnPressed                          INLINE  ::sl_returnPressed
-   ASSIGN   returnPressed( bBlock )                INLINE  ::sl_returnPressed := bBlock
+      
+   METHOD   typeOut( ... )                        SETGET
+   METHOD   hScroll( ... )                        SETGET
+   METHOD   returnPressed( ... )                  SETGET
 
    ENDCLASS
 
@@ -127,6 +122,19 @@ CLASS XbpSLE INHERIT XbpWindow, XbpDataRef
 METHOD XbpSLE:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::xbpWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpSLE:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
+
+   ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+
+   IF hb_isPointer( pQtObject )
+      ::oWidget := QLineEdit()
+      ::oWidget:pPtr := pQtObject
+   ENDIF
 
    RETURN Self
 
@@ -155,16 +163,16 @@ METHOD XbpSLE:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    #if 0
    ::oWidget:installEventFilter( ::pEvents )
 
-   ::connectEvent( ::pWidget, QEvent_FocusIn , {|e| ::exeBlock( 7, e ) } )
-   ::connectEvent( ::pWidget, QEvent_FocusOut, {|e| ::exeBlock( 8, e ) } )
+   ::connectEvent( ::pWidget, QEvent_FocusIn , {|e| ::execSlot( "QEvent_FocusIn" , e ) } )
+   ::connectEvent( ::pWidget, QEvent_FocusOut, {|e| ::execSlot( "QEvent_FocusOut", e ) } )
    #endif
 
-   ::connect( ::pWidget, "cursorPositionChanged(int,int)" , {|i,ii| ::exeBlock( 1, i, ii ) } )
-*  ::connect( ::pWidget, "editingFinished()"              , {|    | ::exeBlock( 2 ) } )
-   ::connect( ::pWidget, "returnPressed()"                , {|    | ::exeBlock( 3 ) } )
-*  ::connect( ::pWidget, "selectionChanged()"             , {|    | ::exeBlock( 4 ) } )
-   ::connect( ::pWidget, "textChanged(QString)"           , {|s   | ::exeBlock( 5, s ) } )
-   ::connect( ::pWidget, "textEdited(QString)"            , {|s   | ::exeBlock( 6, s ) } )
+   ::connect( ::oWidget, "cursorPositionChanged(int,int)" , {|i,ii| ::execSlot( "cursorPositionChanged(int,int)", i, ii ) } )
+*  ::connect( ::oWidget, "editingFinished()"              , {|    | ::execSlot( "editingFinished()"       ) } )
+   ::connect( ::oWidget, "returnPressed()"                , {|    | ::execSlot( "returnPressed()"         ) } )
+*  ::connect( ::oWidget, "selectionChanged()"             , {|    | ::execSlot( "selectionChanged()"      ) } )
+   ::connect( ::oWidget, "textChanged(QString)"           , {|s   | ::execSlot( "textChanged(QString)", s ) } )
+   ::connect( ::oWidget, "textEdited(QString)"            , {|s   | ::execSlot( "textEdited(QString)" , s ) } )
 
    ::setPosAndSize()
    IF ::visible
@@ -180,71 +188,40 @@ METHOD XbpSLE:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpSLE:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
+METHOD XbpSLE:execSlot( cSlot, p, p2 )
 
-   ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-
-   IF hb_isPointer( pQtObject )
-      ::oWidget := QLineEdit()
-      ::oWidget:pPtr := pQtObject
-
-   ENDIF
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD XbpSLE:exeBlock( nMsg, p1, p2 )
-   LOCAL lRet := .F.
-
-//HB_TRACE( HB_TR_DEBUG, 'XbpSLE: '+hb_ntos( nMsg ) )
-   HB_SYMBOL_UNUSED( p1 )
+   HB_SYMBOL_UNUSED( p )
 
    DO CASE
-   CASE nMsg == 1    // "cursorPositionChanged(int,int)"
-      IF hb_isBlock( ::sl_hScroll )
-         eval( ::sl_hScroll, NIL, NIL, self )
-      ENDIF
+   CASE cSlot == "cursorPositionChanged(int,int)"
+      ::hScroll()
       IF p2 == ::bufferLength
-         IF hb_isBlock( ::sl_typeOut )
-            eval( ::sl_typeOut, NIL, NIL, Self )
-         ENDIF
+         ::typeOut()
       ENDIF
 
-   CASE nMsg == 2    // "editingFinished()"
+   CASE cSlot == "editingFinished()"
 
-   CASE nMsg == 3    // "returnPressed()"
+   CASE cSlot == "returnPressed()"
       ::sl_editBuffer := ::oWidget:text()
-      #if 0
-      PostAppEvent( xbeP_Keyboard, xbeK_TAB, , Self )
-      #else
-      IF hb_isBlock( ::sl_returnPressed )
-         eval( ::sl_returnPressed, NIL, NIL, Self )
-      ENDIF
-      #endif
+      ::returnPressed()
 
-   CASE nMsg == 4    // "selectionChanged()"
+   CASE cSlot == "selectionChanged()"
 
-   CASE nMsg == 5    // "textEdited(QString)"
+   CASE cSlot == "textChanged(QString)"
       ::changed := .t.
 
-   CASE nMsg == 6    // "textEdited(QString)"
+   CASE cSlot == "textEdited(QString)"
       ::changed := .t.
 
-   CASE nMsg == 7    // QEvent_FocusIn
-      IF hb_isBlock( ::sl_setInputFocus )
-         eval( ::sl_setInputFocus, NIL, NIL, Self )
-         RETURN .T.
-      ENDIF
+   CASE cSlot == "QEvent_FocusIn"
+      ::setInputFocus()
 
-   CASE nMsg == 8    // QEvent_FocusOut
-      IF hb_isBlock( ::sl_killInputFocus )
-         eval( ::sl_killInputFocus, NIL, NIL, Self )
-      ENDIF
+   CASE cSlot == "QEvent_FocusOut"
+      ::killInputFocus()
 
    ENDCASE
 
-   RETURN lRet
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
@@ -264,4 +241,37 @@ METHOD XbpSLE:destroy()
 
    RETURN NIL
 
+/*----------------------------------------------------------------------*/
+
+METHOD XbpSLE:returnPressed( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_returnPressed := a_[ 1 ]
+   ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_returnPressed )
+      eval( ::sl_returnPressed, NIL, NIL, Self )
+   ENDIF 
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpSLE:hScroll( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_hScroll := a_[ 1 ]
+   ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_hScroll )
+      eval( ::sl_hScroll, NIL, NIL, Self )
+   ENDIF 
+   RETURN Self
+   
+/*----------------------------------------------------------------------*/
+
+METHOD XbpSLE:typeOut( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_typeOut := a_[ 1 ]
+   ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_typeOut )
+      eval( ::sl_typeOut, NIL, NIL, Self )
+   ENDIF 
+   RETURN Self
+   
 /*----------------------------------------------------------------------*/

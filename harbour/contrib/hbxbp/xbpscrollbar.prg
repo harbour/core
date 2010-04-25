@@ -89,10 +89,10 @@ CLASS XbpScrollBar  INHERIT  XbpWindow, XbpDataRef
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )  VIRTUAL
    METHOD   destroy()
 
-   METHOD   scroll( xParam )                      SETGET
+   METHOD   scroll( ... )                         SETGET
 
    METHOD   handleEvent( nEvent, mp1, mp2 )
-   METHOD   exeBlock( nAction )
+   METHOD   execSlot( cSlot, p )
 
    METHOD   setRange( aRange )
    METHOD   setScrollBoxSize( nUnits )
@@ -117,7 +117,7 @@ METHOD XbpScrollBar:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
    ::oWidget:setOrientation( IF( ::type == XBPSCROLL_VERTICAL, 2, 1 ) )
    ::oWidget:setTracking( ::autoTrack )
 
-   ::connect( ::pWidget, "actionTriggered(int)", {|i| ::exeBlock( i ) } )
+   ::connect( ::pWidget, "actionTriggered(int)", {|i| ::execSlot( "actionTriggered(int)", i ) } )
 
    ::setPosAndSize()
    ::setRange( ::range )
@@ -145,14 +145,16 @@ METHOD XbpScrollBar:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpScrollBar:exeBlock( nAction )
+METHOD XbpScrollBar:execSlot( cSlot, p )
    LOCAL nCommand
 
+   HB_SYMBOL_UNUSED( cSlot )
+   
    IF !hb_isBlock( ::sl_xbeSB_Scroll )
       RETURN NIL
    ENDIF
 
-   SWITCH nAction
+   SWITCH p
    CASE QAbstractSlider_SliderNoAction
       RETURN NIL
    CASE QAbstractSlider_SliderSingleStepAdd
@@ -179,8 +181,7 @@ METHOD XbpScrollBar:exeBlock( nAction )
    ENDSWITCH
 
    ::sl_editBuffer := ::oWidget:value()
-
-   eval( ::sl_xbeSB_Scroll, { ::sl_editBuffer, nCommand }, NIL, self )
+   ::scroll( { ::sl_editBuffer, nCommand } )
 
    RETURN NIL
 
@@ -204,12 +205,13 @@ METHOD XbpScrollBar:destroy()
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpScrollBar:scroll( xParam )
-
-   IF hb_isBlock( xParam )
-      ::sl_xbeSB_Scroll := xParam
-   ENDIF
-
+METHOD XbpScrollBar:scroll( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_xbeSB_Scroll := a_[ 1 ]
+   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_xbeSB_Scroll )
+      eval( ::sl_xbeSB_Scroll, a_[ 1 ], NIL, Self )
+   ENDIF 
    RETURN self
 
 /*----------------------------------------------------------------------*/

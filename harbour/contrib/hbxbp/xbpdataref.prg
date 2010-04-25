@@ -81,19 +81,14 @@ CLASS XbpDataRef
    DATA     sl_undo                               INIT NIL
    DATA     undoBuffer                            INIT NIL
    DATA     sl_validate                           INIT NIL
-
-   METHOD   new()
-
    DATA     sl_editBuffer
    DATA     sl_buffer
 
-   ACCESS   editBuffer                            INLINE ::sl_editBuffer
-   ASSIGN   editBuffer( xData )                   INLINE ::sl_editBuffer := xData
-
+   METHOD   new()
    METHOD   getData()
    METHOD   setData( xValue, mp2 )
    METHOD   undo()
-
+   METHOD   editBuffer( xData )                   SETGET
    METHOD   validate( xParam )                    SETGET
 
    ENDCLASS
@@ -211,7 +206,7 @@ METHOD XbpDataRef:undo()
 
 METHOD XbpDataRef:validate( xParam )
 
-   IF PCount() == 0 .and. hb_isBlock( ::sl_validate )
+   IF PCount() == 0 .AND. hb_isBlock( ::sl_validate )
       RETURN eval( ::sl_validate, self )
    ELSEIF hb_isBlock( xParam )
       ::sl_validate := xParam
@@ -220,3 +215,14 @@ METHOD XbpDataRef:validate( xParam )
    RETURN .t.
 
 /*----------------------------------------------------------------------*/
+
+METHOD XbpDataRef:editBuffer( xData )
+
+   IF !( xData == NIL )
+      ::sl_editBuffer := xData
+   ENDIF 
+   
+   RETURN ::sl_editBuffer
+   
+/*----------------------------------------------------------------------*/
+        

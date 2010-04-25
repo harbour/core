@@ -90,16 +90,16 @@ CLASS XbpTabPage  INHERIT  XbpWindow
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   destroy()
    METHOD   handleEvent( nEvent, mp1, mp2 )
-   METHOD   exeBlock( iIndex )
+   METHOD   execSlot( cSlot, p )
 
    METHOD   Minimize()
    METHOD   Maximize()
 
    DATA     sl_tabActivate
-   METHOD   tabActivate( xParam )                 SETGET
+   METHOD   tabActivate( ... )                    SETGET
    /* Harbour extension */
    DATA     sl_closeRequested
-   METHOD   closeRequested( xParam )              SETGET
+   METHOD   closeRequested( ... )                 SETGET
 
    ENDCLASS
 
@@ -185,8 +185,11 @@ METHOD XbpTabPage:destroy()
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpTabPage:exeBlock( iIndex )
+METHOD XbpTabPage:execSlot( cSlot, p )
+   LOCAL iIndex := p
 
+   HB_SYMBOL_UNUSED( cSlot )
+   
    IF iIndex >= 0  .and. len( ::oParent:aTabs ) > 0
       IF hb_isBlock( ::oParent:aTabs[ iIndex+1 ]:sl_tabActivate )
          eval( ::oParent:aTabs[ iIndex+1 ]:sl_tabActivate, NIL, NIL, ::oParent:aTabs[ iIndex+1 ] )
@@ -206,22 +209,24 @@ METHOD XbpTabPage:handleEvent( nEvent, mp1, mp2 )
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpTabPage:tabActivate( xParam )
-
-   IF hb_isBlock( xParam )
-      ::sl_tabActivate := xParam
-   ENDIF
-
+METHOD XbpTabPage:tabActivate( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_tabActivate := a_[ 1 ]
+   ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_tabActivate )
+      eval( ::sl_tabActivate, NIL, NIL, Self )
+   ENDIF 
    RETURN self
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpTabPage:closeRequested( xParam )
-
-   IF hb_isBlock( xParam )
-      ::sl_closeRequested := xParam
-   ENDIF
-
+METHOD XbpTabPage:closeRequested( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_closeRequested := a_[ 1 ]
+   ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_closeRequested )
+      eval( ::sl_closeRequested, NIL, NIL, Self )
+   ENDIF 
    RETURN self
 
 /*----------------------------------------------------------------------*/
@@ -255,7 +260,7 @@ CLASS XbpTabWidget  INHERIT  XbpWindow
    METHOD   hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject ) VIRTUAL
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   destroy()
-   METHOD   exeBlock( nMode, iIndex )
+   METHOD   execSlot( cSlot, p )
 
    ENDCLASS
 
@@ -275,8 +280,8 @@ METHOD XbpTabWidget:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
 
    ::oWidget := QTabWidget():new( ::pParent )
 
-   ::Connect( ::pWidget, "currentChanged(int)"    , {|i| ::exeBlock( 1, i ) } )
-   ::Connect( ::pWidget, "tabCloseRequested(int)" , {|i| ::exeBlock( 2, i ) } )
+   ::Connect( ::pWidget, "currentChanged(int)"    , {|i| ::execSlot( "currentChanged(int)"   , i ) } )
+   ::Connect( ::pWidget, "tabCloseRequested(int)" , {|i| ::execSlot( "tabCloseRequested(int)", i ) } )
 
    ::setPosAndSize()
    IF ::visible
@@ -304,8 +309,9 @@ METHOD XbpTabWidget:destroy()
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpTabWidget:exeBlock( nMode, iIndex )
+METHOD XbpTabWidget:execSlot( cSlot, p )
    LOCAL qTab, nIndex, oTab
+   LOCAL iIndex := p
 
    IF !empty( ::aChildren ) .and. iIndex >= 0 .and. iIndex < len( ::aChildren )
       qTab := ::oWidget:widget( iIndex )
@@ -314,17 +320,11 @@ METHOD XbpTabWidget:exeBlock( nMode, iIndex )
          oTab := ::aChildren[ nIndex ]
 
          DO CASE
-         CASE nMode == 1
-            //HB_TRACE( HB_TR_DEBUG, "Tab Index Changed", nIndex )
-            IF hb_isBlock( oTab:sl_tabActivate )
-               eval( oTab:sl_tabActivate, NIL, NIL, oTab )
-            ENDIF
+         CASE cSlot == "currentChanged(int)" 
+            oTab:tabActivate()
 
-         CASE nMode == 2
-            //HB_TRACE( HB_TR_DEBUG, "Tab Close Requested", nIndex )
-            IF hb_isBlock( oTab:sl_closeRequested )
-               eval( oTab:sl_closeRequested, NIL, NIL, oTab )
-            ENDIF
+         CASE cSlot == "tabCloseRequested(int)"
+            oTab:closeRequested()
 
          ENDCASE
       ENDIF

@@ -119,32 +119,25 @@ CLASS XbpFontDialog INHERIT XbpWindow
 
    METHOD   new( oParent, oOwner, oScreenPS, oPrinterPS, aPos )
    METHOD   create( oParent, oOwner, oScreenPS, oPrinterPS, aPos )
-   METHOD   exeBlock( nEvent, p1 )
+   METHOD   execSlot( cSlot, p )
    METHOD   display( nMode )
    METHOD   destroy()
    METHOD   XbpFontObject()
 
    DATA     sl_activateApply
-   ACCESS   activateApply                         INLINE ::sl_activateApply
-   ASSIGN   activateApply( bBlock )               INLINE ::sl_activateApply := bBlock
-
    DATA     sl_activateCancel
-   ACCESS   activateCancel                        INLINE ::sl_activateCancel
-   ASSIGN   activateCancel( bBlock )              INLINE ::sl_activateCancel := bBlock
-
    DATA     sl_activateOk
-   ACCESS   activateOk                            INLINE ::sl_activateOk
-   ASSIGN   activateOk( bBlock )                  INLINE ::sl_activateOk := bBlock
-
    DATA     sl_activateReset
-   ACCESS   activateReset                         INLINE ::sl_activateReset
-   ASSIGN   activateReset( bBlock )               INLINE ::sl_activateReset := bBlock
+
+   METHOD   activateApply( ... )                  SETGET 
+   METHOD   activateCancel( ... )                 SETGET 
+   METHOD   activateOk( ... )                     SETGET 
+   METHOD   activateReset( ... )                  SETGET 
 
    DATA     oScreenPS
    DATA     oPrinterPS
    DATA     aPos                                  INIT   { 0, 0 }
    DATA     ok                                    INIT   .f.
-
    DATA     oFont
 
    ENDCLASS
@@ -200,28 +193,26 @@ METHOD XbpFontDialog:create( oParent, oOwner, oScreenPS, oPrinterPS, aPos )
       ::oWidget:setWindowTitle( ::title )
    ENDIF
 
-   ::connect( ::pwidget, "accepted()"               , {|p| ::exeBlock( 1, p ) } )
-   ::connect( ::pwidget, "finished(int)"            , {|p| ::exeBlock( 2, p ) } )
-   ::connect( ::pwidget, "rejected()"               , {|p| ::exeBlock( 3, p ) } )
-   ::connect( ::pwidget, "currentFontChanged(QFont)", {|p| ::exeBlock( 4, p ) } )
-   ::connect( ::pwidget, "fontSelected(QFont)"      , {|p| ::exeBlock( 5, p ) } )
+   ::connect( ::pwidget, "accepted()"               , {|p| ::execSlot( "accepted()"               , p ) } )
+   ::connect( ::pwidget, "finished(int)"            , {|p| ::execSlot( "finished(int)"            , p ) } )
+   ::connect( ::pwidget, "rejected()"               , {|p| ::execSlot( "rejected()"               , p ) } )
+   ::connect( ::pwidget, "currentFontChanged(QFont)", {|p| ::execSlot( "currentFontChanged(QFont)", p ) } )
+   ::connect( ::pwidget, "fontSelected(QFont)"      , {|p| ::execSlot( "fontSelected(QFont)"      , p ) } )
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpFontDialog:exeBlock( nEvent, p1 )
+METHOD XbpFontDialog:execSlot( cSlot, p )
    LOCAL nRet := XBP_ALLOW
 
-   HB_SYMBOL_UNUSED( p1 )
-
+   HB_SYMBOL_UNUSED( p )
+   
    DO CASE
-   CASE nEvent == 1
-      IF hb_isBlock( ::sl_activateOk )
-         eval( ::sl_activateOk, ::XbpFontObject(), NIL, Self )
-      ENDIF
+   CASE cSlot == "accepted()" 
+      ::activateOk( ::XbpFontObject() )
 
-   CASE nEvent == 3
+   CASE cSlot == "rejected()" 
       IF hb_isBlock( ::sl_quit )
          nRet := eval( ::sl_quit, 0, 0, Self )
       ENDIF
@@ -231,10 +222,9 @@ METHOD XbpFontDialog:exeBlock( nEvent, p1 )
          ::oWidget:accept()
       ENDIF
 
-   CASE nEvent == 4                            /* SIMULATE  sl_activateApply for timebeing */
-      IF hb_isBlock( ::sl_activateApply )
-         eval( ::sl_activateApply, ::XbpFontObject(), NIL, self )
-      ENDIF
+   CASE cSlot == "currentFontChanged(QFont)"    /* SIMULATE  sl_activateApply for timebeing */
+      ::activateApply( ::XbpFontObject() )
+
    ENDCASE
 
    RETURN nRet
@@ -280,6 +270,50 @@ METHOD XbpFontDialog:destroy()
 
 /*----------------------------------------------------------------------*/
 
+METHOD XbpFontDialog:activateApply( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_activateApply := a_[ 1 ]
+   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_activateApply )
+      eval( ::sl_activateApply, a_[ 1 ], NIL, Self )
+   ENDIF 
+   RETURN Self
+   
+/*----------------------------------------------------------------------*/
+   
+METHOD XbpFontDialog:activateCancel( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_activateCancel := a_[ 1 ]
+   ELSEIF len( a_ ) >= 2 .AND. hb_isBlock( ::sl_activateCancel )
+      eval( ::sl_activateCancel, a_[ 1 ], a_[ 2 ], Self )
+   ENDIF 
+   RETURN Self
+   
+/*----------------------------------------------------------------------*/
+   
+METHOD XbpFontDialog:activateOk( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_activateOk := a_[ 1 ]
+   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_activateOk )
+      eval( ::sl_activateOk, a_[ 1 ], NIL, Self )
+   ENDIF 
+   RETURN Self
+   
+/*----------------------------------------------------------------------*/
+   
+METHOD XbpFontDialog:activateReset( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_activateReset := a_[ 1 ]
+   ELSEIF len( a_ ) >= 2 .AND. hb_isBlock( ::sl_activateReset )
+      eval( ::sl_activateReset, a_[ 1 ], a_[ 2 ], Self )
+   ENDIF 
+   RETURN Self
+   
+/*----------------------------------------------------------------------*/
+   
 METHOD XbpFontDialog:XbpFontObject()
    LOCAL oXbp
 

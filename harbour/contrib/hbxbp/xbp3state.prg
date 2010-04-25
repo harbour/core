@@ -86,13 +86,10 @@ CLASS Xbp3State  INHERIT  XbpWindow, XbpDataRef
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   destroy()
    METHOD   handleEvent( nEvent, mp1, mp2 )
-
    METHOD   setCaption( xCaption )
 
-   ACCESS   selected                              INLINE ::sl_lbClick
-   ASSIGN   selected( bBlock )                    INLINE ::sl_lbClick := bBlock
-
-   METHOD   exeBlock( iState )
+   METHOD   selected( ... )                       SETGET 
+   METHOD   execSlot( cSlot, p )
 
    ENDCLASS
 
@@ -112,7 +109,7 @@ METHOD Xbp3State:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::oWidget := QCheckBox():New( ::oParent:oWidget )
 
-   ::Connect( ::pWidget, "stateChanged(int)", {|i| ::exeBlock( i ) } )
+   ::Connect( ::pWidget, "stateChanged(int)", {|i| ::execSlot( "stateChanged(int)", i ) } )
 
    ::oWidget:setTriState( .t. )
 
@@ -152,14 +149,15 @@ METHOD Xbp3State:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, l
 
 /*----------------------------------------------------------------------*/
 
-METHOD Xbp3State:exeBlock( iState )
+METHOD Xbp3State:execSlot( cSlot, p )
 
-   ::sl_editBuffer := IF( iState == 2, 1, IF( iState == 1, 2, iState ) )
-
-   IF hb_isBlock( ::sl_lbClick )
-      eval( ::sl_lbClick, ::sl_editBuffer, NIL, self )
-   ENDIF
-
+   SWITCH cSlot
+   CASE "stateChanged(int)"  
+      ::sl_editBuffer := iif( p == 2, 1, iif( p == 1, 2, p ) )
+      ::selected( ::sl_editBuffer )
+      EXIT
+   ENDSWITCH   
+    
    RETURN nil
 
 /*----------------------------------------------------------------------*/
@@ -200,3 +198,15 @@ METHOD Xbp3State:setCaption( xCaption )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
+
+METHOD Xbp3State:selected( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_lbClick := a_[ 1 ]
+   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_lbClick )
+      eval( ::sl_lbClick, a_[ 1 ], NIL, Self )
+   ENDIF 
+   RETURN Self
+   
+/*----------------------------------------------------------------------*/
+     

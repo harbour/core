@@ -82,7 +82,7 @@ CLASS XbpRtf INHERIT XbpWindow
    METHOD   configure()
    METHOD   destroy()
    METHOD   handleEvent( nEvent, mp1, mp2 )       VIRTUAL
-   METHOD   exeBlock( nEvent, p1 )
+   METHOD   execSlot( cSlot, p )
    METHOD   setStyle()                            VIRTUAL
 
    DATA     appearance                            INIT      XBP_APPEARANCE_3D
@@ -171,13 +171,13 @@ METHOD XbpRtf:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::oWidget := QTextEdit():new( ::pParent )
 
-*  ::connect( ::pWidget, "copyAvailable(bool)"                      , {|p| ::exeBlock( 1, p ) } )
-   ::connect( ::pWidget, "currentCharFormatChanged(QTextCharFormat)", {|p| ::exeBlock( 2, p ) } )
-   ::connect( ::pWidget, "cursorPositionChanged()"                  , {|p| ::exeBlock( 3, p ) } )
-   ::connect( ::pWidget, "redoAvailable(bool)"                      , {|p| ::exeBlock( 4, p ) } )
-   ::connect( ::pWidget, "undoAvailable(bool)"                      , {|p| ::exeBlock( 5, p ) } )
-   ::connect( ::pWidget, "textChanged()"                            , {|p| ::exeBlock( 6, p ) } )
-   ::connect( ::pWidget, "selectionChanged()"                       , {|p| ::exeBlock( 7, p ) } )
+*  ::connect( ::oWidget, "copyAvailable(bool)"                      , {|p| ::execSlot( "copyAvailable(bool)"    , p ) } )
+   ::connect( ::oWidget, "currentCharFormatChanged(QTextCharFormat)", {|p| ::execSlot( "currentCharFormatChanged(QTextCharFormat)", p ) } )
+   ::connect( ::oWidget, "cursorPositionChanged()"                  , {|p| ::execSlot( "cursorPositionChanged()", p ) } )
+   ::connect( ::oWidget, "redoAvailable(bool)"                      , {|p| ::execSlot( "redoAvailable(bool)"    , p ) } )
+   ::connect( ::oWidget, "undoAvailable(bool)"                      , {|p| ::execSlot( "undoAvailable(bool)"    , p ) } )
+   ::connect( ::oWidget, "textChanged()"                            , {|p| ::execSlot( "textChanged()"          , p ) } )
+   ::connect( ::oWidget, "selectionChanged()"                       , {|p| ::execSlot( "selectionChanged()"     , p ) } )
 
    ::setPosAndSize()
    IF ::visible
@@ -188,7 +188,6 @@ METHOD XbpRtf:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::oTextDocument:pPtr   := ::oWidget:document()
    ::oTextCursor:pPtr     := ::oWidget:textCursor()
    ::oTextCharFormat:pPtr := ::oTextCursor:charFormat()
-
 
    RETURN Self
 
@@ -208,23 +207,23 @@ METHOD XbpRtf:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVis
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpRtf:exeBlock( nEvent, p1 )
+METHOD XbpRtf:execSlot( cSlot, p )
 
-   HB_SYMBOL_UNUSED( p1 )
+   HB_SYMBOL_UNUSED( p )
 
    DO CASE
-   CASE nEvent == 1
-   CASE nEvent == 2
+   CASE cSlot == "copyAvailable(bool)"
+   CASE cSlot == "currentCharFormatChanged(QTextCharFormat)"
 
-   CASE nEvent == 3
+   CASE cSlot == "cursorPositionChanged()" 
       ::oTextCursor:configure( ::oWidget:textCursor() )
       ::oCurCursor := ::oTextCursor
-   CASE nEvent == 4
-   CASE nEvent == 5
-   CASE nEvent == 6    /* Xbase++ Implements */
-      ::changed := .t.                                  // .f. only at save
+   CASE cSlot == "redoAvailable(bool)"
+   CASE cSlot == "undoAvailable(bool)"
+   CASE cSlot == "textChanged()"          /* Xbase++ Implements */
+      ::changed := .t.                    /* .f. only at save */
       ::change()
-   CASE nEvent == 7    /* Xbase++ Implements */
+   CASE cSlot == "selectionChanged()"     /* Xbase++ Implements */
       ::oTextCursor:configure( ::oWidget:textCursor() )
       ::oCurCursor := ::oTextCursor
       ::selChange()

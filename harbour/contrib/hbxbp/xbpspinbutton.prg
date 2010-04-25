@@ -78,7 +78,6 @@ CLASS XbpSpinButton INHERIT XbpWindow, XbpDataRef
    DATA     fastSpin                              INIT    .f.
    DATA     master
    DATA     padWithZero                           INIT    .f.
-
    DATA     align                                 INIT    XBPSLE_LEFT
    DATA     autoKeyboard                          INIT    .T.
    DATA     autoSize                              INIT    .F.
@@ -87,16 +86,17 @@ CLASS XbpSpinButton INHERIT XbpWindow, XbpDataRef
    DATA     bufferLength                          INIT    32
    DATA     editable                              INIT    .T.
    DATA     unReadable                            INIT    .F.
-
    DATA     changed                               INIT    .F.
 
+   DATA     nOldValue                             INIT    0
+   
    METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) VIRTUAL
    METHOD   destroy()
    METHOD   handleEvent( nEvent, mp1, mp2 )
-   METHOD   exeBlock( nMsg, p1, p2 )
+   METHOD   execSlot( cSlot, p )
 
    METHOD   clear()                               INLINE  ::oWidget:clear()
    METHOD   copyMarked()                          INLINE  ::oWidget:copy()
@@ -114,16 +114,12 @@ CLASS XbpSpinButton INHERIT XbpWindow, XbpDataRef
    METHOD   setNumLimits( nMin, nMax )            INLINE  ::oWidget:setRange( nMin, nMax )
 
    DATA     sl_xbeSpinDown
-   ACCESS   down                                  INLINE  ::sl_hScroll
-   ASSIGN   down( bBlock )                        INLINE  ::sl_hScroll := bBlock
-
    DATA     sl_xbeSpinUp
-   ACCESS   up                                    INLINE  ::sl_xbeSpinUp
-   ASSIGN   up( bBlock )                          INLINE  ::sl_xbeSpinUp := bBlock
-
    DATA     sl_xbeSpinEndSpin
-   ACCESS   endSpin                               INLINE  ::sl_xbeSpinEndSpin
-   ASSIGN   endSpin( bBlock )                     INLINE  ::sl_xbeSpinEndSpin := bBlock
+   
+   METHOD   down( ... )                           SETGET 
+   METHOD   up( ... )                             SETGET 
+   METHOD   endSpin( ... )                        SETGET 
 
    ENDCLASS
 
@@ -144,26 +140,21 @@ METHOD XbpSpinButton:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible
 
    ::oWidget := QSpinBox():new( ::pParent )
    ::oWidget:setKeyboardTracking( .t. )
-
    IF ::fastSpin
       ::oWidget:setAccelerated( .t. )
    ENDIF
    ::oWidget:setReadOnly( ! ::editable )
-
    ::oWidget:setFrame( ::border )
-
    ::oWidget:setAlignment( es_[ ::align ] )
 
-   #if 0   ////////////////////////////////////
+   #if 0  
    ::oWidget:installEventFilter( ::pEvents )
-
-HB_TRACE( HB_TR_DEBUG, "XbpSpinButton:create  2" )
-   ::connectEvent( ::pWidget, QEvent_FocusIn , {|e| ::exeBlock( 7, e ) } )
-   ::connectEvent( ::pWidget, QEvent_FocusOut, {|e| ::exeBlock( 8, e ) } )
-   ::connectEvent( ::pWidget, QEvent_KeyPress, {|e| ::exeBlock( 9, e ) } )
+   ::connectEvent( ::oWidget, QEvent_FocusIn , {|| ::execSlot( "QEvent_FocusIn"  ) } )
+   ::connectEvent( ::oWidget, QEvent_FocusOut, {|| ::execSlot( "QEvent_FocusOut" ) } )
+   ::connectEvent( ::oWidget, QEvent_KeyPress, {|| ::execSlot( "QEvent_KeyPress" ) } )
    #endif
 
-   ::connect( ::pWidget, "valueChanged(int)" , {|| ::sl_editBuffer := ::oWidget:value() } )
+   ::connect( ::oWidget, "valueChanged(int)" , {|i| ::execSlot( "valueChanged(int)", i ) } )
 
    ::setPosAndSize()
    IF ::visible
@@ -171,11 +162,7 @@ HB_TRACE( HB_TR_DEBUG, "XbpSpinButton:create  2" )
    ENDIF
 
    ::setData()
-   #if 0
-   IF hb_isBlock( ::datalink )
-      eval( ::datalink )
-   ENDIF
-   #endif
+
    ::oParent:addChild( Self )
    RETURN Self
 
@@ -188,35 +175,34 @@ METHOD XbpSpinButton:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParam
    IF hb_isPointer( pQtObject )
       ::oWidget := QSpinBox()
       ::oWidget:pPtr := pQtObject
-
    ENDIF
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpSpinButton:exeBlock( nMsg, p1, p2 )
+METHOD XbpSpinButton:execSlot( cSlot, p )
 
-   HB_SYMBOL_UNUSED( p1 )
-   HB_SYMBOL_UNUSED( p2 )
-
-   ::sl_editBuffer := ::oWidget:value()
+   HB_SYMBOL_UNUSED( p )
 
    DO CASE
-   CASE nMsg == 9    // valueChanged
-      IF hb_isBlock( ::sl_keyboard )
-         eval( ::sl_keyboard, NIL, NIL, self )
-      ENDIF
+   CASE cSlot == "valueChanged(int)"
+      ::sl_editBuffer := ::oWidget:value()
+      IF p < ::nOldValue
+         ::down()
+      ELSEIF p > ::nOldValue
+         ::up()
+      ENDIF 
+      ::nOldValue := ::sl_editBuffer 
+            
+   CASE cSlot == "QEvent_KeyPress"
+      ::keyboard()
 
-   CASE nMsg == 7    // QEvent_FocusIn
-      IF hb_isBlock( ::sl_setInputFocus )
-         eval( ::sl_setInputFocus, NIL, NIL, Self )
-      ENDIF
+   CASE cSlot == "QEvent_FocusIn"
+      ::setInputFocus()
 
-   CASE nMsg == 8    // QEvent_FocusOut
-      IF hb_isBlock( ::sl_killInputFocus )
-         eval( ::sl_killInputFocus, NIL, NIL, Self )
-      ENDIF
+   CASE cSlot == "QEvent_FocusOut"
+      ::killInputFocus()
 
    ENDCASE
 
@@ -241,3 +227,37 @@ METHOD XbpSpinButton:destroy()
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
+
+METHOD XbpSpinButton:down( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_xbeSpinDown := a_[ 1 ]
+   ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_xbeSpinDown )
+      eval( ::sl_xbeSpinDown, NIL, NIL, Self )
+   ENDIF 
+   RETURN Self
+   
+/*----------------------------------------------------------------------*/
+
+METHOD XbpSpinButton:up( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_xbeSpinUp := a_[ 1 ]
+   ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_xbeSpinUp )
+      eval( ::sl_xbeSpinUp, NIL, NIL, Self )
+   ENDIF 
+   RETURN Self
+   
+/*----------------------------------------------------------------------*/
+
+METHOD XbpSpinButton:endSpin( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_xbeSpinEndSpin := a_[ 1 ]
+   ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_xbeSpinEndSpin )
+      eval( ::sl_xbeSpinEndSpin, NIL, NIL, Self )
+   ENDIF 
+   RETURN Self
+   
+/*----------------------------------------------------------------------*/
+   

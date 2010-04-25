@@ -90,7 +90,7 @@ CLASS XbpMLE INHERIT XbpWindow, XbpDataRef
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) VIRTUAL
    METHOD   destroy()
    METHOD   handleEvent( nEvent, mp1, mp2 )
-   METHOD   exeBlock()
+   METHOD   execSlot( cSlot, p )
    METHOD   setStyle()
 
    METHOD   clear()                               VIRTUAL
@@ -109,23 +109,16 @@ CLASS XbpMLE INHERIT XbpWindow, XbpDataRef
    METHOD   pos()                                 VIRTUAL
 
    DATA     sl_undo                               INIT    .T.
-   ACCESS   undo                                  INLINE  IF( ::sl_undo, NIL, NIL )
-   ASSIGN   undo()                                INLINE  ::sl_undo := .t.
-
-   METHOD   setEditable( lYes )                   INLINE  ::xDummy := ::oWidget:readOnly(), ;
-                                                          ::oWidget:setReadOnly( !lYes ), ::xDummy
-   METHOD   setWrap( lWrap )                      INLINE  ::xDummy := ::oWidget:lineWrapMode(),;
-                                                          ::oWidget:setLineWrapMode( IF( lWrap,1,0 ) ),;
-                                                          ::xDummy == 1
-
    DATA     sl_hScroll
-   ACCESS   hScroll                               INLINE  ::sl_hScroll
-   ASSIGN   hScroll( bBlock )                     INLINE  ::sl_hScroll := bBlock
-
    DATA     sl_vScroll
-   ACCESS   vScroll                               INLINE  ::sl_vScroll
-   ASSIGN   vScroll( bBlock )                     INLINE  ::sl_vScroll := bBlock
 
+   METHOD   undo( ... )                           SETGET 
+   METHOD   hScroll( ... )                        SETGET 
+   METHOD   vScroll( ... )                        SETGET 
+
+   METHOD   setEditable( lYes )                   
+   METHOD   setWrap( lWrap )      
+   
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
@@ -206,12 +199,62 @@ METHOD XbpMLE:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVis
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpMLE:exeBlock()
+METHOD XbpMLE:execSlot( cSlot, p )
 
+   HB_SYMBOL_UNUSED( cSlot )
+   HB_SYMBOL_UNUSED( p )
+   
    RETURN .t.
 
 /*----------------------------------------------------------------------*/
 
+METHOD XbpMLE:hScroll( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_hScroll := a_[ 1 ]
+   ELSEIF len( a_ ) >= 2 .AND. hb_isBlock( ::sl_hScroll )
+      eval( ::sl_hScroll, NIL, NIL, Self )
+   ENDIF 
+   RETURN Self
+   
+/*----------------------------------------------------------------------*/
+
+METHOD XbpMLE:vScroll( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_vScroll := a_[ 1 ]
+   ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_vScroll )
+      eval( ::sl_vScroll, NIL, NIL, Self )
+   ENDIF 
+   RETURN Self
+   
+/*----------------------------------------------------------------------*/
+
+METHOD XbpMLE:undo( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_undo := a_[ 1 ]
+   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_undo )
+      eval( ::sl_undo, a_[ 1 ], NIL, Self )
+   ENDIF 
+   RETURN Self
+   
+/*----------------------------------------------------------------------*/
+
+METHOD XbpMLE:setWrap( lWrap )
+   ::xDummy := ::oWidget:lineWrapMode()
+   ::oWidget:setLineWrapMode( iif( lWrap, 1, 0 ) )
+   RETURN ::xDummy == 1
+
+/*----------------------------------------------------------------------*/
+   
+METHOD XbpMLE:setEditable( lYes )
+   ::xDummy := ::oWidget:readOnly()
+   ::oWidget:setReadOnly( !lYes )
+   RETURN ! ::xDummy
+   
+/*----------------------------------------------------------------------*/
+   
 METHOD XbpMLE:handleEvent( nEvent, mp1, mp2 )
 
    HB_SYMBOL_UNUSED( nEvent )
@@ -235,9 +278,6 @@ METHOD XbpMLE:setStyle()
 
    aadd( txt_, ' ' )
    aadd( txt_, ' QTextEdit {                                               ' )
-   //aadd( txt_, '     background-color: white;                              ' )
-   //aadd( txt_, '     background-image: url(new.png);                       ' )
-   //aadd( txt_, '     background-attachment: scroll;                        ' )
    aadd( txt_, '   background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, ' )
    aadd( txt_, '                      stop:0 white, stop:1 darkgray);  ' )
    aadd( txt_, ' }                                                         ' )

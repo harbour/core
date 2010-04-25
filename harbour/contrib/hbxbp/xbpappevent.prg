@@ -445,23 +445,23 @@ FUNCTION XbpQKeyEventToAppEvent( pEvent )
       c := hbqt_QTranslateKey( kbm, Qt_Key_QuoteDbl, Qt_Key_QuoteDbl, xbeK_ALT_QUOTE, Qt_Key_QuoteDbl )
       EXIT
    CASE Qt_Key_Space
-      c := ' '                ; EXIT
+      c := ' '                   ; EXIT
    CASE Qt_Key_Exclam
-      c := '!'                ; EXIT
+      c := '!'                   ; EXIT
    CASE Qt_Key_NumberSign
-      c := '#'                ; EXIT
+      c := '#'                   ; EXIT
    CASE Qt_Key_Dollar
-      c := '$'                ; EXIT
+      c := '$'                   ; EXIT
    CASE Qt_Key_Percent
-      c := '%'                ; EXIT
+      c := '%'                   ; EXIT
    CASE Qt_Key_Ampersand
-      c := '&'                ; EXIT
+      c := '&'                   ; EXIT
    CASE Qt_Key_Apostrophe
-      c := Qt_Key_Apostrophe  ; EXIT
+      c := Qt_Key_Apostrophe     ; EXIT
    CASE Qt_Key_ParenLeft
-      c := '('                ; EXIT
+      c := '('                   ; EXIT
    CASE Qt_Key_ParenRight
-      c := ')'                ; EXIT
+      c := ')'                   ; EXIT
    CASE Qt_Key_Comma
       c := hbqt_QTranslateKey( kbm, ',', ',', xbeK_ALT_COMMA, ',' )
       EXIT
@@ -469,18 +469,18 @@ FUNCTION XbpQKeyEventToAppEvent( pEvent )
       c := hbqt_QTranslateKey( kbm, '.', '.', xbeK_ALT_PERIOD, '.' )
       EXIT
    CASE Qt_Key_Colon
-      c := ''                ; EXIT
+      c := ''                    ; EXIT
    CASE Qt_Key_Semicolon
-      c := ';'                ; EXIT
+      c := ';'                   ; EXIT
    CASE Qt_Key_Less
-      c := '<'                ; EXIT
+      c := '<'                   ; EXIT
    CASE Qt_Key_Greater
-      c := '>'                ; EXIT
+      c := '>'                   ; EXIT
    CASE Qt_Key_Question
       c := hbqt_QTranslateKey( kbm, '?', '?', '?', xbeK_CTRL_QUESTION )
       EXIT
    CASE Qt_Key_At
-      c := '@'                ; EXIT
+      c := '@'                   ; EXIT
 
    CASE Qt_Key_Meta             /* On Mac OS X, this corresponds to the Control keys. On Windows keyboards, this key is mapped to the Windows key. */
       c := xbeK_                 ; EXIT

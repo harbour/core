@@ -86,14 +86,15 @@ CLASS XbpStatusBar  INHERIT  XbpWindow
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   destroy()
    METHOD   handleEvent( nEvent, mp1, mp2 )
-   METHOD   exeBlock()
+   METHOD   execSlot( cSlot, p )
 
    METHOD   addItem( cCaption, xImage, cDLL, nStyle, cKey, nMode )
    METHOD   delItem( nItemORcKey )
    METHOD   getItem( nItemORcKey )
    METHOD   clear()
-   METHOD   panelClick( xParam )                  SETGET
-   METHOD   panelDblClick( xParam )               SETGET
+   
+   METHOD   panelClick( ... )                     SETGET
+   METHOD   panelDblClick( ... )                  SETGET
 
    METHOD   numItems()                            INLINE Len( ::aItems )
 
@@ -152,9 +153,12 @@ METHOD XbpStatusBar:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpStatusBar:exeBlock()
+METHOD XbpStatusBar:execSlot( cSlot, p )
 
-   RETURN nil
+   HB_SYMBOL_UNUSED( cSlot )
+   HB_SYMBOL_UNUSED( p )
+
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
@@ -273,22 +277,24 @@ METHOD XbpStatusBar:clear()
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpStatusBar:panelClick( xParam )
-
-   IF hb_isBlock( xParam ) .or. hb_isNil( xParam )
-      ::sl_lbClick := xParam
-   ENDIF
-
+METHOD XbpStatusBar:panelClick( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_lbClick := a_[ 1 ]
+   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_lbClick )
+      eval( ::sl_lbClick, a_[ 1 ], NIL, Self )
+   ENDIF 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpStatusBar:panelDblClick( xParam )
-
-   IF hb_isBlock( xParam ) .or. hb_isNil( xParam )
-      ::sl_lbDblClick := xParam
-   ENDIF
-
+METHOD XbpStatusBar:panelDblClick( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_lbDblClick := a_[ 1 ]
+   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_lbDblClick )
+      eval( ::sl_lbDblClick, a_[ 1 ], NIL, Self )
+   ENDIF 
    RETURN Self
 
 /*----------------------------------------------------------------------*/

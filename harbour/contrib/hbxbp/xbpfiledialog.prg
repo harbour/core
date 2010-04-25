@@ -87,7 +87,7 @@ CLASS XbpFileDialog INHERIT XbpWindow
 
    METHOD   new( oParent, oOwner, aPos )
    METHOD   create( oParent, oOwner, aPos )
-   METHOD   exeBlock( nEvent, p1 )
+   METHOD   execSlot( cSlot, p )
    METHOD   destroy()
    METHOD   open( cDefaultFile, lCenter, lAllowMultiple, lCreateNewFiles )
    METHOD   saveAs( cDefaultFile, lFileList, lCenter )
@@ -112,30 +112,30 @@ METHOD XbpFileDialog:create( oParent, oOwner, aPos )
 
    ::oWidget := QFileDialog():new( ::pParent )
    //::oWidget:setStyle( AppDesktop():style() )
-   ::setStyle()
+   //::setStyle()
    //::setColorBG( GraMakeRGBColor( { 255,255,255 } ) )
    //::setColorFG( GraMakeRGBColor( { 0,0,0 } ) )
 
-   ::connect( ::pWidget, "accepted()"                , {|p| ::exeBlock( 1, p ) } )
-   ::connect( ::pWidget, "finished(int)"             , {|p| ::exeBlock( 2, p ) } )
-   ::connect( ::pWidget, "rejected()"                , {|p| ::exeBlock( 3, p ) } )
-   ::connect( ::pWidget, "currentChanged(QString)"   , {|p| ::exeBlock( 4, p ) } )
-   ::connect( ::pWidget, "directoryEntered(QString)" , {|p| ::exeBlock( 5, p ) } )
-   ::connect( ::pWidget, "fileSelected(QString)"     , {|p| ::exeBlock( 6, p ) } )
-   ::connect( ::pWidget, "filesSelected(QStringList)", {|p| ::exeBlock( 7, p ) } )
-   ::connect( ::pWidget, "filterSelected(QString)"   , {|p| ::exeBlock( 8, p ) } )
+   ::connect( ::oWidget, "accepted()"                , {|p| ::execSlot( "accepted()"                , p ) } )
+   ::connect( ::oWidget, "finished(int)"             , {|p| ::execSlot( "finished(int)"             , p ) } )
+   ::connect( ::oWidget, "rejected()"                , {|p| ::execSlot( "rejected()"                , p ) } )
+   ::connect( ::oWidget, "currentChanged(QString)"   , {|p| ::execSlot( "currentChanged(QString)"   , p ) } )
+   ::connect( ::oWidget, "directoryEntered(QString)" , {|p| ::execSlot( "directoryEntered(QString)" , p ) } )
+   ::connect( ::oWidget, "fileSelected(QString)"     , {|p| ::execSlot( "fileSelected(QString)"     , p ) } )
+   ::connect( ::oWidget, "filesSelected(QStringList)", {|p| ::execSlot( "filesSelected(QStringList)", p ) } )
+   ::connect( ::oWidget, "filterSelected(QString)"   , {|p| ::execSlot( "filterSelected(QString)"   , p ) } )
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpFileDialog:exeBlock( nEvent, p1 )
+METHOD XbpFileDialog:execSlot( cSlot, p )
    LOCAL nRet := XBP_ALLOW
 
-   HB_SYMBOL_UNUSED( p1 )
+   HB_SYMBOL_UNUSED( p )
 
    DO CASE
-   CASE nEvent == 3
+   CASE cSlot == "rejected()" 
       IF hb_isBlock( ::sl_quit )
          nRet := eval( ::sl_quit, 0, 0, Self )
       ENDIF

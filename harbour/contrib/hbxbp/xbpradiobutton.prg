@@ -86,12 +86,11 @@ CLASS XbpRadioButton  INHERIT  XbpWindow, XbpDataRef
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   destroy()
    METHOD   handleEvent( nEvent, mp1, mp2 )
-   METHOD   exeBlock()
+   METHOD   execSlot( cSlot, p )
 
    METHOD   setCaption( xCaption )
 
-   ACCESS   selected                              INLINE ::sl_lbClick
-   ASSIGN   selected( bBlock )                    INLINE ::sl_lbClick := bBlock
+   METHOD   selected( ... )                       SETGET 
 
    ENDCLASS
 /*----------------------------------------------------------------------*/
@@ -110,7 +109,7 @@ METHOD XbpRadioButton:create( oParent, oOwner, aPos, aSize, aPresParams, lVisibl
 
    ::oWidget := QRadioButton():New( ::oParent:oWidget )
 
-   ::connect( ::pWidget, "clicked()", {|| ::exeBlock() } )
+   ::connect( ::pWidget, "clicked()", {|| ::execSlot( "clicked()" ) } )
 
    ::setPosAndSize()
    IF ::visible
@@ -134,20 +133,21 @@ METHOD XbpRadioButton:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresPara
    IF hb_isPointer( pQtObject )
       ::oWidget := QRadioButton()
       ::oWidget:pPtr := pQtObject
-
    ENDIF
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpRadioButton:exeBlock()
+METHOD XbpRadioButton:execSlot( cSlot, p )
 
-   ::sl_editBuffer := .t.
-   IF hb_isBlock( ::sl_lbClick )
-      eval( ::sl_lbClick, ::sl_editBuffer, NIL, self )
-   ENDIF
+   HB_SYMBOL_UNUSED( p )
 
+   IF cSlot == "clicked()"
+      ::sl_editBuffer := .t.
+      ::selected( ::sl_editBuffer )
+   ENDIF 
+   
    RETURN nil
 
 /*----------------------------------------------------------------------*/
@@ -187,4 +187,15 @@ METHOD XbpRadioButton:setCaption( xCaption )
 
    RETURN Self
 
+/*----------------------------------------------------------------------*/
+
+METHOD XbpRadioButton:selected( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_lbClick := a_[ 1 ]
+   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_lbClick )
+      eval( ::sl_lbClick, a_[ 1 ], NIL, Self )
+   ENDIF 
+   RETURN Self
+   
 /*----------------------------------------------------------------------*/

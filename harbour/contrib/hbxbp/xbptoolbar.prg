@@ -106,7 +106,7 @@ CLASS XbpToolBar  INHERIT  XbpWindow
    METHOD   hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   destroy()
-   METHOD   exeBlock( oBtn )
+   METHOD   execSlot( cSlot, p )
 
    METHOD   addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nStyle, cKey, nMapRGB )
    METHOD   delItem()
@@ -119,10 +119,10 @@ CLASS XbpToolBar  INHERIT  XbpWindow
    METHOD   setPosAndSize()
    METHOD   setSize()
 
-   METHOD   buttonClick( xParam )                 SETGET
-   METHOD   change( xParam )                      SETGET
-   METHOD   buttonMenuClick( xParam )             SETGET
-   METHOD   buttonDropDown( xParam )              SETGET
+   METHOD   buttonClick( ... )                    SETGET
+   METHOD   change( ... )                         SETGET
+   METHOD   buttonMenuClick( ... )                SETGET
+   METHOD   buttonDropDown( ... )                 SETGET
 
    METHOD   sendToolbarMessage()
    METHOD   setStyle()
@@ -278,7 +278,7 @@ METHOD XbpToolbar:addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nS
       ENDIF
 
       /* Attach codeblock to be triggered */
-      ::Connect( oBtn:oAction, "triggered(bool)", {|| ::exeBlock( oBtn ) } )
+      ::Connect( oBtn:oAction, "triggered(bool)", {|| ::execSlot( "triggered(bool)", oBtn ) } )
 
       /* Attach Action with Toolbar */
       ::oWidget:addAction( oBtn:oAction )
@@ -291,12 +291,12 @@ METHOD XbpToolbar:addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nS
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpToolbar:exeBlock( oBtn )
+METHOD XbpToolbar:execSlot( cSlot, p )
 
-   IF hb_isBlock( ::sl_lbClick )
-      eval( ::sl_lbClick, oBtn, NIL, self )
-   ENDIF
-
+   IF cSlot == "triggered(bool)"
+      ::buttonClick( p )
+   ENDIF 
+   
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
@@ -357,42 +357,46 @@ METHOD XbpToolbar:setSize()
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpToolbar:buttonClick( xParam )
-
-   IF hb_isBlock( xParam ) .or. hb_isNil( xParam )
-      ::sl_lbClick := xParam
-   ENDIF
-
+METHOD XbpToolbar:buttonClick( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_lbClick := a_[ 1 ]
+   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_lbClick )
+      eval( ::sl_lbClick, a_[ 1 ], NIL, Self )
+   ENDIF 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpToolbar:change( xParam )
-
-   IF hb_isBlock( xParam ) .or. hb_isNil( xParam )
-      ::sl_change := xParam
-   ENDIF
-
+METHOD XbpToolbar:change( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_change := a_[ 1 ]
+   ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_change )
+      eval( ::sl_change, NIL, NIL, Self )
+   ENDIF 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpToolbar:buttonMenuClick( xParam )
-
-   IF hb_isBlock( xParam ) .or. hb_isNil( xParam )
-      ::sl_buttonMenuClick := xParam
-   ENDIF
-
+METHOD XbpToolbar:buttonMenuClick( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_buttonMenuClick := a_[ 1 ]
+   ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_buttonMenuClick )
+      eval( ::sl_buttonMenuClick, NIL, NIL, Self )
+   ENDIF 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpToolbar:buttonDropDown( xParam )
-
-   IF hb_isBlock( xParam ) .or. hb_isNil( xParam )
-      ::sl_buttonDropDown := xParam
-   ENDIF
-
+METHOD XbpToolbar:buttonDropDown( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_buttonDropDown := a_[ 1 ]
+   ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_buttonDropDown )
+      eval( ::sl_buttonDropDown, NIL, NIL, Self )
+   ENDIF 
    RETURN Self
 
 /*----------------------------------------------------------------------*/

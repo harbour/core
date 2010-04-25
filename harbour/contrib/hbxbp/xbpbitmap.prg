@@ -76,17 +76,18 @@
 
 CLASS XbpBitmap
 
-   ACCESS   bits                                  INLINE  ::oWidget:depth()
    DATA     bufferOffset                          INIT    0
-   ACCESS   planes                                INLINE  0
    DATA     transparentColor                      INIT    GRA_CLR_INVALID
-   ACCESS   xSize                                 INLINE  ::oWidget:width()
-   ACCESS   ySize                                 INLINE  ::oWidget:height()
 
    DATA     oWidget
    DATA     oPS
    DATA     cImageFileName
 
+   ACCESS   bits                                  INLINE  ::oWidget:depth()
+   ACCESS   planes                                INLINE  0
+   ACCESS   xSize                                 INLINE  ::oWidget:width()
+   ACCESS   ySize                                 INLINE  ::oWidget:height()
+   
    METHOD   new()                                 INLINE  Self
    METHOD   create( oPS )
    METHOD   configure()                           VIRTUAL

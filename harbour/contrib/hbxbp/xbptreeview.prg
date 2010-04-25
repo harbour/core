@@ -78,7 +78,6 @@ CLASS XbpTreeView  INHERIT  XbpWindow, XbpDataRef
    DATA     alwaysShowSelection                   INIT .F.
    DATA     hasButtons                            INIT .F.
    DATA     hasLines                              INIT .F.
-
    DATA     aItems                                INIT {}
 
    DATA     oRootItem
@@ -90,40 +89,32 @@ CLASS XbpTreeView  INHERIT  XbpWindow, XbpDataRef
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   destroy()
    METHOD   handleEvent( nEvent, mp1, mp2 )
-   METHOD   ExeBlock( nMsg, p1, p2 )
-
+   METHOD   execSlot( cSlot, p )
    METHOD   setStyle()
 
    METHOD   itemFromPos( aPos )
 
    DATA     sl_itemCollapsed
-   ACCESS   itemCollapsed                         INLINE ::sl_itemCollapsed
-   ASSIGN   itemCollapsed( bBlock )               INLINE ::sl_itemCollapsed := bBlock
-
    DATA     sl_itemExpanded
-   ACCESS   itemExpanded                          INLINE ::sl_itemExpanded
-   ASSIGN   itemExpanded( bBlock )                INLINE ::sl_itemExpanded := bBlock
-
    DATA     sl_itemMarked
-   ACCESS   itemMarked                            INLINE ::sl_itemMarked
-   ASSIGN   itemMarked( bBlock )                  INLINE ::sl_itemMarked := bBlock
+   DATA     sl_itemSelected
 
    DATA     oItemSelected
-   DATA     sl_itemSelected
-   ACCESS   itemSelected                          INLINE ::sl_itemSelected
-   ASSIGN   itemSelected( bBlock )                INLINE ::sl_itemSelected := bBlock
+   
+   METHOD   itemCollapsed( ... )                  SETGET 
+   METHOD   itemExpanded( ... )                   SETGET 
+   METHOD   itemMarked( ... )                     SETGET 
+   METHOD   itemSelected( ... )                   SETGET 
 
    DATA     hParentSelected
    DATA     hItemSelected
-   DATA     textParentSelected                    INIT ""
-   DATA     textItemSelected                      INIT ""
+   DATA     textParentSelected                    INIT   ""
+   DATA     textItemSelected                      INIT   ""
 
    #if 0
    METHOD   setColorFG( nRGB )                    INLINE WVG_TreeView_SetTextColor( ::hWnd, nRGB )
    METHOD   setColorBG( nRGB )                    INLINE WVG_TreeView_SetBkColor( ::hWnd, nRGB )
    METHOD   setColorLines( nRGB )                 INLINE WVG_TreeView_SetLineColor( ::hWnd, nRGB )
-
-
    METHOD   showExpanded( lExpanded, nLevels )    INLINE Wvg_TreeView_ShowExpanded( ::hWnd, ;
                                                          IF( hb_isNil( lExpanded ), .f., lExpanded ), nLevels )
    #endif
@@ -171,17 +162,17 @@ METHOD XbpTreeView:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    oW:pPtr              := ::oWidget:invisibleRootItem()
    ::oRootItem:oWidget  := oW
 
-*  ::connect( ::pWidget, "currentItemChanged(QTWItem)"       , {|p1,p2| ::exeBlock(  1, p1, p2 ) } )
-*  ::connect( ::pWidget, "itemActivated(QTWItem)"            , {|p1,p2| ::exeBlock(  2, p1, p2 ) } )
-*  ::connect( ::pWidget, "itemChanged(QTWItem)"              , {|p1,p2| ::exeBlock(  3, p1, p2 ) } )
-   ::connect( ::pWidget, "itemClicked(QTWItem)"              , {|p1,p2| ::exeBlock(  4, p1, p2 ) } )
-   ::connect( ::pWidget, "itemCollapsed(QTWItem)"            , {|p1,p2| ::exeBlock(  5, p1, p2 ) } )
-   ::connect( ::pWidget, "itemDoubleClicked(QTWItem)"        , {|p1,p2| ::exeBlock(  6, p1, p2 ) } )
-   ::connect( ::pWidget, "itemEntered(QTWItem)"              , {|p1,p2| ::exeBlock(  7, p1, p2 ) } )
-   ::connect( ::pWidget, "itemExpanded(QTWItem)"             , {|p1,p2| ::exeBlock(  8, p1, p2 ) } )
-*  ::connect( ::pWidget, "itemPressed(QTWItem)"              , {|p1,p2| ::exeBlock(  9, p1, p2 ) } )
-*  ::connect( ::pWidget, "itemSelectionChanged()"            , {|p1,p2| ::exeBlock( 10, p1, p2 ) } )
-   ::connect( ::pWidget, "customContextMenuRequested(QPoint)", {|p1   | ::exeBlock( 21, p1     ) } )
+*  ::connect( ::pWidget, "currentItemChanged(QTWItem)"       , {|p1| ::execSlot( "currentItemChanged(QTWItem)", p1 ) } )
+*  ::connect( ::pWidget, "itemActivated(QTWItem)"            , {|p1| ::execSlot( "itemActivated(QTWItem)"     , p1 ) } )
+*  ::connect( ::pWidget, "itemChanged(QTWItem)"              , {|p1| ::execSlot( "itemChanged(QTWItem)"       , p1 ) } )
+   ::connect( ::pWidget, "itemClicked(QTWItem)"              , {|p1| ::execSlot( "itemClicked(QTWItem)"       , p1 ) } )
+   ::connect( ::pWidget, "itemCollapsed(QTWItem)"            , {|p1| ::execSlot( "itemCollapsed(QTWItem)"     , p1 ) } )
+   ::connect( ::pWidget, "itemDoubleClicked(QTWItem)"        , {|p1| ::execSlot( "itemDoubleClicked(QTWItem)" , p1 ) } )
+   ::connect( ::pWidget, "itemEntered(QTWItem)"              , {|p1| ::execSlot( "itemEntered(QTWItem)"       , p1 ) } )
+   ::connect( ::pWidget, "itemExpanded(QTWItem)"             , {|p1| ::execSlot( "itemExpanded(QTWItem)"      , p1 ) } )
+*  ::connect( ::pWidget, "itemPressed(QTWItem)"              , {|p1| ::execSlot( "itemPressed(QTWItem)"       , p1 ) } )
+*  ::connect( ::pWidget, "itemSelectionChanged()"            , {|p1| ::execSlot( "itemSelectionChanged()"     , p1 ) } )
+   ::connect( ::pWidget, "customContextMenuRequested(QPoint)", {|p1| ::execSlot( "customContextMenuRequested(QPoint)", p1     ) } )
 
    ::setPosAndSize()
    IF ::visible
@@ -206,49 +197,34 @@ METHOD XbpTreeView:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams,
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpTreeView:ExeBlock( nMsg, p1, p2 )
+METHOD XbpTreeView:execSlot( cSlot, p )
    LOCAL oItem, n, qPt
 
-   HB_SYMBOL_UNUSED( nMsg )
-   HB_SYMBOL_UNUSED( p1   )
-   HB_SYMBOL_UNUSED( p2   )
-
-   IF hb_isPointer( p1 )
-      IF ( n := ascan( ::aItems, {|o| hbqt_IsEqualGcQtPointer( o:oWidget:pPtr, p1 ) } ) ) > 0
+   IF hb_isPointer( p )
+      IF ( n := ascan( ::aItems, {|o| hbqt_IsEqualGcQtPointer( o:oWidget:pPtr, p ) } ) ) > 0
          oItem := ::aItems[ n ]
       ENDIF
    ENDIF
 
    DO CASE
-   CASE nMsg == 1              // "currentItemChanged(QTWItem)"
-   CASE nMsg == 2              // "itemActivated(QTWItem)"
-   CASE nMsg == 3              // "itemChanged(QTWItem)"
-   CASE nMsg == 4              // "itemClicked(QTWItem)"
-      IF hb_isBlock( ::sl_itemMarked )
-         eval( ::sl_itemMarked, oItem, {0,0,0,0}, self )
-      ENDIF
-   CASE nMsg == 5              // "itemCollapsed(QTWItem)"
-      IF hb_isBlock( ::sl_itemCollapsed )
-         eval( ::sl_itemCollapsed, oItem, {0,0,0,0}, self )
-      ENDIF
-   CASE nMsg == 6              // "itemDoubleClicked(QTWItem)"
-      IF hb_isBlock( ::sl_itemSelected )
-         eval( ::sl_itemSelected, oItem, {0,0,0,0}, self )
-      ENDIF
-   CASE nMsg == 7              // "itemEntered(QTWItem)"
+   CASE cSlot == "itemClicked(QTWItem)"
+      ::itemMarked( oItem, {0,0,0,0} )
+   CASE cSlot == "itemCollapsed(QTWItem)"
+      ::itemCollapsed( oItem, {0,0,0,0} )
+   CASE cSlot == "itemDoubleClicked(QTWItem)"
+      ::itemSelected( oItem, {0,0,0,0} )
+   CASE cSlot == "itemExpanded(QTWItem)"
+      ::itemExpanded( oItem, {0,0,0,0} )
+   CASE cSlot == "itemEntered(QTWItem)"
       ::oWidget:setToolTip( iif( empty( oItem:tooltipText ), oItem:caption, oItem:tooltipText ) )
-
-   CASE nMsg == 8              // "itemExpanded(QTWItem)"
-      IF hb_isBlock( ::sl_itemExpanded )
-         eval( ::sl_itemExpanded, oItem, {0,0,0,0}, self )
-      ENDIF
-   CASE nMsg == 9              // "itemPressed(QTWItem)"
-   CASE nMsg == 10             // "itemSelectionChanged()"
-
-   CASE nMsg == 21             // "contextmenu"
-      qPt := QPoint():from( ::oWidget:mapToGlobal( p1 ) )
+   CASE cSlot == "customContextMenuRequested(QPoint)"
+      qPt := QPoint():from( ::oWidget:mapToGlobal( p ) )
       ::hbContextMenu( { qPt:x(), qPt:y() } )
-
+   CASE cSlot == "itemPressed(QTWItem)"
+   CASE cSlot == "itemSelectionChanged()"
+   CASE cSlot == "currentItemChanged(QTWItem)"
+   CASE cSlot == "itemActivated(QTWItem)"
+   CASE cSlot == "itemChanged(QTWItem)"
    ENDCASE
 
    RETURN .f.
@@ -306,45 +282,49 @@ METHOD XbpTreeView:itemFromPos( aPos )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-#if 0
-METHOD XbpTreeView:itemCollapsed( xParam )
 
-   IF hb_isBlock( xParam ) .or. ( xParam == NIL )
-      ::sl_paint := xParam
-   ENDIF
-
+METHOD XbpTreeView:itemCollapsed( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_itemCollapsed := a_[ 1 ]
+   ELSEIF len( a_ ) >= 2 .AND. hb_isBlock( ::sl_itemCollapsed )
+      eval( ::sl_itemCollapsed, a_[ 1 ], a_[ 2 ], Self )
+   ENDIF 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpTreeView:itemExpanded( xParam )
-
-   IF hb_isBlock( xParam ) .or. ( xParam == NIL )
-      ::sl_itemExpanded := xParam
-   ENDIF
-
+METHOD XbpTreeView:itemExpanded( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_itemExpanded := a_[ 1 ]
+   ELSEIF len( a_ ) >= 2 .AND. hb_isBlock( ::sl_itemExpanded )
+      eval( ::sl_itemExpanded, a_[ 1 ], a_[ 2 ], Self )
+   ENDIF 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpTreeView:itemMarked( xParam )
-
-   IF hb_isBlock( xParam ) .or. ( xParam == NIL )
-      ::sl_itemMarked := xParam
-   ENDIF
-
+METHOD XbpTreeView:itemMarked( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_itemMarked := a_[ 1 ]
+   ELSEIF len( a_ ) >= 2 .AND. hb_isBlock( ::sl_itemMarked )
+      eval( ::sl_itemMarked, a_[ 1 ], a_[ 2 ], Self )
+   ENDIF 
    RETURN Self
-#endif
+
 /*----------------------------------------------------------------------*/
-#if 0
-METHOD XbpTreeView:itemSelected( xParam )
 
-   IF hb_isBlock( xParam ) .or. ( xParam == NIL )
-      ::sl_itemSelected := xParam
-   ENDIF
-
+METHOD XbpTreeView:itemSelected( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_itemSelected := a_[ 1 ]
+   ELSEIF len( a_ ) >= 2 .AND. hb_isBlock( ::sl_itemSelected )
+      eval( ::sl_itemSelected, a_[ 1 ], a_[ 2 ], Self )
+   ENDIF 
    RETURN Self
-#endif
+
 /*----------------------------------------------------------------------*/
 /*                      Class XbpTreeViewItem                           */
 /*----------------------------------------------------------------------*/

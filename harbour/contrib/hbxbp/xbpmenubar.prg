@@ -97,6 +97,7 @@
 
 CLASS xbpMenuBar INHERIT xbpWindow
 
+   CLASSVAR nMenuItemID                            INIT 0
    DATA     hMenu
 
    DATA     sl_beginMenu
@@ -109,14 +110,10 @@ CLASS xbpMenuBar INHERIT xbpWindow
 
    DATA     aMenuItems                             INIT {}
    DATA     aOrgItems                              INIT {}
-
-   CLASSVAR nMenuItemID                            INIT 0
    DATA     nPass                                  INIT 0
-
    DATA     caption                                INIT ""
    DATA     nItemID                                INIT 0
    DATA     aIds                                   INIT {}
-
    DATA     className                              INIT "XbpMenuBar"
 
    METHOD   new( oParent, aPresParams, lVisible )
@@ -124,7 +121,7 @@ CLASS xbpMenuBar INHERIT xbpWindow
    METHOD   hbCreateFromQtPtr( oParent, aPresParams, lVisible, pQtObject )
    METHOD   configure( oParent, aPresParams, lVisible )
    METHOD   destroy()
-   METHOD   exeBlock( nMenuItemID )
+   METHOD   execSlot( cSlot, p )
 
    METHOD   delAllItems()
    METHOD   delItem( aItem )
@@ -132,7 +129,6 @@ CLASS xbpMenuBar INHERIT xbpWindow
    METHOD   addItem( aItem )
    METHOD   insItem( nItemIndex, aItem )
    METHOD   setItem( nItemIndex, aItem )
-   METHOD   exeHovered( nMenuItemID )
    METHOD   checkItem( nItemIndex, lCheck )
    METHOD   enableItem( nItemIndex )
    METHOD   disableItem( nItemIndex )
@@ -141,13 +137,13 @@ CLASS xbpMenuBar INHERIT xbpWindow
    METHOD   isItemEnabled( nItemIndex )
    METHOD   selectItem( nItemIndex )
 
-   METHOD   beginMenu( xParam )                   SETGET
-   METHOD   endMenu( xParam )                     SETGET
-   METHOD   itemMarked( xParam )                  SETGET
-   METHOD   itemSelected( xParam )                SETGET
-   METHOD   drawItem( xParam )                    SETGET
-   METHOD   measureItem( xParam )                 SETGET
-   METHOD   onMenuKey( xParam )                   SETGET
+   METHOD   beginMenu( ... )                      SETGET
+   METHOD   endMenu( ... )                        SETGET
+   METHOD   itemMarked( ... )                     SETGET
+   METHOD   itemSelected( ... )                   SETGET
+   METHOD   drawItem( ... )                       SETGET
+   METHOD   measureItem( ... )                    SETGET
+   METHOD   onMenuKey( ... )                      SETGET
 
    METHOD   setStyle()
    METHOD   numItems()                            INLINE len( ::aMenuItems )
@@ -307,8 +303,8 @@ METHOD xbpMenuBar:placeItem( xCaption, bAction, nStyle, nAttrb, nMode, nPos )
          oAction:setShortcut( oKey )
       ENDIF
 
-      ::Connect( oAction, "triggered(bool)", {|| ::exeBlock( nMenuItemID ) } )
-      ::Connect( oAction, "hovered()"      , {|| ::exeHovered( nMenuItemID ) } )
+      ::Connect( oAction, "triggered(bool)", {|| ::execSlot( "triggered(bool)", nMenuItemID ) } )
+      ::Connect( oAction, "hovered()"      , {|| ::execSlot( "hovered()"      , nMenuItemID ) } )
 
       DO CASE
       CASE nAttrb == XBPMENUBAR_MIA_CHECKED
@@ -341,8 +337,8 @@ METHOD xbpMenuBar:placeItem( xCaption, bAction, nStyle, nAttrb, nMode, nPos )
 
       oAction := xCaption
 
-      ::Connect( oAction, "triggered(bool)", {|| ::exeBlock( nMenuItemID ) } )
-      ::Connect( oAction, "hovered()"      , {|| ::exeHovered( nMenuItemID ) } )
+      ::Connect( oAction, "triggered(bool)", {|| ::execSlot( "triggered(bool)", nMenuItemID ) } )
+      ::Connect( oAction, "hovered()"      , {|| ::execSlot( "hovered()"      , nMenuItemID ) } )
 
       DO CASE
       CASE nAttrb == XBPMENUBAR_MIA_CHECKED
@@ -454,39 +450,6 @@ METHOD xbpMenuBar:setItem( nItemIndex, aItem )
 
 /*----------------------------------------------------------------------*/
 
-METHOD xbpMenuBar:exeBlock( nMenuItemID )
-   LOCAL nIndex := ascan( ::aMenuItems, {|e_| e_[ 2 ] == nMenuItemID } )
-
-   IF nIndex > 0
-      IF hb_isBlock( ::aMenuItems[ nIndex,4 ] )
-         eval( ::aMenuItems[ nIndex,4 ] )
-      ELSE
-         IF hb_isBlock( ::sl_itemSelected )
-            eval( ::sl_itemSelected, nIndex, NIL, Self )
-         ENDIF
-      ENDIF
-   ENDIF
-
-   RETURN nil
-
-/*----------------------------------------------------------------------*/
-
-METHOD xbpMenuBar:exeHovered( nMenuItemID )
-   LOCAL nIndex
-
-   IF !empty( nMenuItemID )
-      nIndex := ascan( ::aMenuItems, {|e_| iif( hb_isNumeric( e_[ 2 ] ), e_[ 2 ] == nMenuItemID, .f. ) } )
-
-      IF nIndex > 0
-         IF hb_isBlock( ::sl_itemMarked )
-            eval( ::sl_itemMarked, nIndex, NIL, Self )
-         ENDIF
-      ENDIF
-   ENDIF
-   RETURN nil
-
-/*----------------------------------------------------------------------*/
-
 METHOD xbpMenuBar:checkItem( nItemIndex, lCheck )
    LOCAL lChecked
 
@@ -568,79 +531,104 @@ METHOD xbpMenuBar:selectItem( nItemIndex )
 /*                         Callback Methods                             */
 /*----------------------------------------------------------------------*/
 
-METHOD xbpMenuBar:beginMenu( xParam )
+METHOD xbpMenuBar:execSlot( cSlot, p )
+   LOCAL nIndex
 
-   if hb_isBlock( xParam ) .or. hb_isNil( xParam )
-      ::sl_beginMenu := xParam
-      RETURN NIL
-   endif
+   IF cSlot == "triggered(bool)"
+      if ( nIndex := ascan( ::aMenuItems, {|e_| e_[ 2 ] == p } ) ) > 0
+         IF hb_isBlock( ::aMenuItems[ nIndex,4 ] )
+            eval( ::aMenuItems[ nIndex,4 ] )
+         ELSE
+            ::itemSelected( nIndex )
+         ENDIF
+      ENDIF 
+         
+   ELSEIF cSlot == "hovered()" 
+      IF !empty( p ) 
+         IF ( nIndex := ascan( ::aMenuItems, {|e_| iif( hb_isNumeric( e_[ 2 ] ), e_[ 2 ] == p, .f. ) } ) ) > 0
+            ::itemMarked( nIndex )            
+         ENDIF
+      ENDIF  
+             
+   ENDIF
 
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+
+METHOD xbpMenuBar:beginMenu( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_beginMenu := a_[ 1 ]
+   ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_beginMenu )
+      eval( ::sl_beginMenu, NIL, NIL, Self )
+   ENDIF 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD xbpMenuBar:endMenu( xParam )
-
-   if hb_isBlock( xParam ) .or. hb_isNil( xParam )
-      ::sl_endMenu := xParam
-      RETURN NIL
-   endif
-
+METHOD XbpMenuBar:endMenu( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_endMenu := a_[ 1 ]
+   ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_endMenu )
+      eval( ::sl_endMenu, NIL, NIL, Self )
+   ENDIF 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD xbpMenuBar:itemMarked( xParam )
-
-   if hb_isBlock( xParam ) .or. hb_isNil( xParam )
-      ::sl_itemMarked := xParam
-      RETURN NIL
-   endif
-
+METHOD XbpMenuBar:itemMarked( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_itemMarked := a_[ 1 ]
+   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_itemMarked )
+      eval( ::sl_itemMarked, a_[ 1 ], NIL, Self )
+   ENDIF 
    RETURN Self
-
+   
+/*----------------------------------------------------------------------*/
+   
+METHOD XbpMenuBar:itemSelected( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_itemSelected := a_[ 1 ]
+   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_itemSelected )
+      eval( ::sl_itemSelected, a_[ 1 ], NIL, Self )
+   ENDIF 
+   RETURN Self
+   
+/*----------------------------------------------------------------------*/
+   
+METHOD XbpMenuBar:drawItem( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_drawItem := a_[ 1 ]
+   ELSEIF len( a_ ) >= 2 .AND. hb_isBlock( ::sl_drawItem )
+      eval( ::sl_drawItem, a_[ 1 ], a_[ 2 ], Self )
+   ENDIF 
+   RETURN Self
+   
 /*----------------------------------------------------------------------*/
 
-METHOD xbpMenuBar:itemSelected( xParam )
-
-   if hb_isBlock( xParam ) .or. hb_isNil( xParam )
-      ::sl_itemSelected := xParam
-      RETURN NIL
-   endif
-
+METHOD XbpMenuBar:measureItem( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_measureItem := a_[ 1 ]
+   ELSEIF len( a_ ) >= 2 .AND. hb_isBlock( ::sl_measureItem )
+      eval( ::sl_measureItem, a_[ 1 ], a_[ 2 ], Self )
+   ENDIF 
    RETURN Self
-
+   
 /*----------------------------------------------------------------------*/
 
-METHOD xbpMenuBar:drawItem( xParam )
-
-   if hb_isBlock( xParam ) .or. hb_isNil( xParam )
-      ::sl_drawItem := xParam
-      RETURN NIL
-   endif
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD xbpMenuBar:measureItem( xParam )
-
-   if hb_isBlock( xParam ) .or. hb_isNil( xParam )
-      ::sl_measureItem := xParam
-      RETURN NIL
-   endif
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD xbpMenuBar:onMenuKey( xParam )
-
-   if hb_isBlock( xParam ) .or. hb_isNil( xParam )
-      ::sl_onMenuKey := xParam
-      RETURN NIL
-   endif
-
+METHOD XbpMenuBar:onMenuKey( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_onMenuKey := a_[ 1 ]
+   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_onMenuKey )
+      eval( ::sl_onMenuKey, a_[ 1 ], NIL, Self )
+   ENDIF 
    RETURN Self
 
 /*----------------------------------------------------------------------*/

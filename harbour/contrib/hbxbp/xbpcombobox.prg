@@ -73,7 +73,6 @@
 
 /*----------------------------------------------------------------------*/
 
-//CLASS XbpComboBox  INHERIT  XbpSLE, XbpListBox
 CLASS XbpComboBox  INHERIT  XbpWindow
 
    DATA     type                                  INIT    XBPCOMBO_DROPDOWN
@@ -85,7 +84,7 @@ CLASS XbpComboBox  INHERIT  XbpWindow
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) VIRTUAL
    METHOD   destroy()
    METHOD   handleEvent( nEvent, mp1, mp2 )       VIRTUAL
-   METHOD   exeBlock( nMsg, p1 )
+   METHOD   execSlot( cSlot, p )
 
    METHOD   listBoxFocus( lFocus )                VIRTUAL      // -> lOldFocus
    METHOD   sleSize()                             VIRTUAL      // -> aOldSize
@@ -107,21 +106,17 @@ CLASS XbpComboBox  INHERIT  XbpWindow
 
 
    DATA     oSLE
-   ACCESS   XbpSLE                                INLINE  ::oSLE
    DATA     oLB
+   ACCESS   XbpSLE                                INLINE  ::oSLE
    ACCESS   XbpListBox                            INLINE  ::oLB
 
    DATA     sl_itemMarked
-   ACCESS   itemMarked                            INLINE ::sl_itemMarked
-   ASSIGN   itemMarked( bBlock )                  INLINE ::sl_itemMarked := bBlock
-
    DATA     sl_itemSelected
-   ACCESS   itemSelected                          INLINE ::sl_itemSelected
-   ASSIGN   itemSelected( bBlock )                INLINE ::sl_itemSelected := bBlock
-
-   DATA     sl_xbePDrawItem
-   ACCESS   drawItem                              INLINE  ::sl_xbePDrawItem
-   ASSIGN   drawItem( bBlock )                    INLINE  ::sl_xbePDrawItem := bBlock
+   DATA     sl_drawItem
+   
+   METHOD   itemMarked( ... )                     SETGET    
+   METHOD   itemSelected( ... )                   SETGET    
+   METHOD   drawItem( ... )                       SETGET    
 
    ENDCLASS
 
@@ -140,20 +135,17 @@ METHOD XbpComboBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::oSLE := XbpSLE():new():create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-
    ::oLB  := XbpListBox():new():create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::oWidget := QComboBox():New( ::pParent )
 
    ::oWidget:setLineEdit( ::XbpSLE:oWidget:pPtr )
-
    ::oWidget:setEditable( ::XbpSLE:editable )
-
    ::oWidget:setFrame( ::XbpSLE:border )
 
-   ::connect( ::pWidget, "highlighted(int)"        , {|i| ::exeBlock( 1, i ) } )
-*  ::connect( ::pWidget, "currentIndexChanged(int)", {|i| ::exeBlock( 2, i ) } )
-   ::connect( ::pWidget, "activated(int)"          , {|i| ::exeBlock( 2, i ) } )
+   ::connect( ::pWidget, "highlighted(int)"        , {|i| ::execSlot( "highlighted(int)"        , i ) } )
+   ::connect( ::pWidget, "activated(int)"          , {|i| ::execSlot( "activated(int)"          , i ) } )
+*  ::connect( ::pWidget, "currentIndexChanged(int)", {|i| ::execSlot( "currentIndexChanged(int)", i ) } )
 
    ::setPosAndSize()
    IF ::visible
@@ -181,15 +173,15 @@ METHOD XbpComboBox:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams,
       IF ::visible
          ::show()
       ENDIF
-      ::oWidget:setLineEdit( ::XbpSLE:oWidget:pPtr )
+      ::oWidget:setLineEdit( ::XbpSLE:oWidget )
       ::oWidget:setEditable( ::XbpSLE:editable )
       ::oWidget:setFrame( ::XbpSLE:border )
 
    ENDIF
 
-   ::connect( ::pWidget, "highlighted(int)"        , {|i| ::exeBlock( 1, i ) } )
-   ::connect( ::pWidget, "activated(int)"          , {|i| ::exeBlock( 2, i ) } )
-*  ::connect( ::pWidget, "currentIndexChanged(int)", {|i| ::exeBlock( 2, i ) } )
+   ::connect( ::oWidget, "highlighted(int)"        , {|i| ::execSlot( "highlighted(int)"        , i ) } )
+   ::connect( ::oWidget, "activated(int)"          , {|i| ::execSlot( "activated(int)"          , i ) } )
+*  ::connect( ::oWidget, "currentIndexChanged(int)", {|i| ::execSlot( "currentIndexChanged(int)", i ) } )
 
    ::AddAsChild( SELF )
    RETURN Self
@@ -204,21 +196,51 @@ METHOD XbpComboBox:destroy()
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpComboBox:exeBlock( nMsg, p1 )
+METHOD XbpComboBox:execSlot( cSlot, p )
 
-   HB_SYMBOL_UNUSED( p1 )
+   HB_SYMBOL_UNUSED( p )
 
    DO CASE
-   CASE nMsg == 1
-      IF hb_isBlock( ::sl_itemMarked )
-         eval( ::sl_itemMarked, NIL, NIL, self )
-      ENDIF
-   CASE nMsg == 2
-      IF hb_isBlock( ::sl_itemSelected )
-         eval( ::sl_itemSelected, NIL, NIL, self )
-      ENDIF
+   CASE cSlot == "highlighted(int)"
+      ::itemMarked()
+   CASE cSlot == "activated(int)" 
+      ::itemSelected()
+   CASE cSlot == "currentIndexChanged(int)"
    ENDCASE
 
    RETURN .t.
 
+/*----------------------------------------------------------------------*/
+
+METHOD XbpComboBox:itemMarked( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_itemMarked := a_[ 1 ]
+   ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_itemMarked )
+      eval( ::sl_itemMarked, NIL, NIL, Self )
+   ENDIF 
+   RETURN Self
+   
+/*----------------------------------------------------------------------*/
+   
+METHOD XbpComboBox:itemSelected( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_itemSelected := a_[ 1 ]
+   ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_itemSelected )
+      eval( ::sl_itemSelected, NIL, NIL, Self )
+   ENDIF 
+   RETURN Self
+   
+/*----------------------------------------------------------------------*/
+   
+METHOD XbpComboBox:drawItem( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_xbePDrawItem := a_[ 1 ]
+   ELSEIF len( a_ ) >= 2 .AND. hb_isBlock( ::sl_xbePDrawItem )
+      eval( ::sl_xbePDrawItem, a_[ 1 ], a_[ 2 ], Self )
+   ENDIF 
+   RETURN Self
+   
 /*----------------------------------------------------------------------*/

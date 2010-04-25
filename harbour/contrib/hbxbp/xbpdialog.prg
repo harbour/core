@@ -93,13 +93,12 @@ CLASS XbpDialog FROM XbpWindow
    DATA     origin                                INIT  XBPDLG_ORIGIN_OWNER
    DATA     sysMenu                               INIT  .T.
 
-
    METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   handleEvent( nEvent, mp1, mp2 )       VIRTUAL
-   METHOD   exeBlock( nEvent, pEvent )
+   METHOD   execEvent( nEvent, pEvent )
 
    METHOD   close()                               INLINE NIL
    METHOD   destroy()
@@ -114,7 +113,6 @@ CLASS XbpDialog FROM XbpWindow
    METHOD   calcClientRect()                      INLINE { 0, 0, ::oWidget:width(), ::oWidget:height() }
    METHOD   calcFrameRect()                       INLINE { ::oWidget:x(), ::oWidget:y(), ;
                                                            ::oWidget:x()+::oWidget:width(), ::oWidget:y()+::oWidget:height() }
-
    DATA     aMaxSize
    METHOD   maxSize( aSize )                      SETGET
    DATA     aMinSize
@@ -211,8 +209,6 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       ::show()
    ENDIF
 
-   //SetAppWindow( Self )  /* This should never be done here, it is programmers responsibility */
-
    /* Install Event Loop per Dialog Basis */
    ::oEventLoop := QEventLoop():new( ::pWidget )
    hbxbp_SetEventLoop( ::oEventLoop )
@@ -222,9 +218,9 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::connectWindowEvents()
    //
-   ::connectEvent( ::pWidget, QEvent_Close           , {|e| ::exeBlock( QEvent_Close           , e ) } )
-   ::connectEvent( ::pWidget, QEvent_WindowActivate  , {|e| ::exeBlock( QEvent_WindowActivate  , e ) } )
-   ::connectEvent( ::pWidget, QEvent_WindowDeactivate, {|e| ::exeBlock( QEvent_WindowDeactivate, e ) } )
+   ::connectEvent( ::pWidget, QEvent_Close           , {|e| ::execEvent( QEvent_Close           , e ) } )
+   ::connectEvent( ::pWidget, QEvent_WindowActivate  , {|e| ::execEvent( QEvent_WindowActivate  , e ) } )
+   ::connectEvent( ::pWidget, QEvent_WindowDeactivate, {|e| ::execEvent( QEvent_WindowDeactivate, e ) } )
 
    RETURN Self
 
@@ -243,8 +239,6 @@ METHOD XbpDialog:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, l
 METHOD XbpDialog:destroy()
    LOCAL qtObj
 
-   HB_TRACE( HB_TR_ALWAYS,  ". " )
-   HB_TRACE( HB_TR_ALWAYS,  ". " )
    HB_TRACE( HB_TR_ALWAYS,  ". " )
    HB_TRACE( HB_TR_ALWAYS,  "<<<<<<<<<<                        XbpDialog:destroy    B                      >>>>>>>>>>" )
 
@@ -266,14 +260,12 @@ METHOD XbpDialog:destroy()
 
    HB_TRACE( HB_TR_ALWAYS,  "<<<<<<<<<<                        XbpDialog:destroy    E                      >>>>>>>>>>" )
    HB_TRACE( HB_TR_ALWAYS,  ". " )
-   HB_TRACE( HB_TR_ALWAYS,  ". " )
-   HB_TRACE( HB_TR_ALWAYS,  ". " )
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpDialog:exeBlock( nEvent, pEvent )
+METHOD XbpDialog:execEvent( nEvent, pEvent )
 
    HB_SYMBOL_UNUSED( pEvent )
 

@@ -98,7 +98,7 @@ CLASS XbpHTMLViewer INHERIT XbpWindow
    METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   destroy()
-   METHOD   exeBlock( nEvent, p1 )
+   METHOD   execSlot( cSlot, p )
 
    METHOD   setHTML( cHTML )                      INLINE  ::oWidget:setHTML( cHTML )
 
@@ -157,15 +157,15 @@ METHOD XbpHTMLViewer:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible
    #if 0  /* Discontinued till QWebKit is integrated separately - Pritpal */
    ::oWidget := QWebView():new( ::pParent )
 
-   ::Connect( ::oWidget, "iconChanged()"            , {|p| ::exeBlock( 1, p ) } )
-   ::Connect( ::oWidget, "linkClicked(QUrl)"        , {|p| ::exeBlock( 2, p ) } )
-   ::Connect( ::oWidget, "loadFinished(bool)"       , {|p| ::exeBlock( 3, p ) } )
-   ::Connect( ::oWidget, "loadProgress(int)"        , {|p| ::exeBlock( 4, p ) } )
-   ::Connect( ::oWidget, "loadStarted()"            , {|p| ::exeBlock( 5, p ) } )
-   ::Connect( ::oWidget, "titleChanged(QString)"    , {|p| ::exeBlock( 6, p ) } )
-   ::Connect( ::oWidget, "urlChanged(QUrl)"         , {|p| ::exeBlock( 7, p ) } )
-   ::Connect( ::oWidget, "selectionChanged()"       , {|p| ::exeBlock( 8, p ) } )
-   ::Connect( ::oWidget, "statusBarMessage(QString)", {|p| ::exeBlock( 9, p ) } )
+   ::Connect( ::oWidget, "iconChanged()"            , {|p| ::execSlot( "iconChanged()"            , p ) } )
+   ::Connect( ::oWidget, "linkClicked(QUrl)"        , {|p| ::execSlot( "linkClicked(QUrl)"        , p ) } )
+   ::Connect( ::oWidget, "loadFinished(bool)"       , {|p| ::execSlot( "loadFinished(bool)"       , p ) } )
+   ::Connect( ::oWidget, "loadProgress(int)"        , {|p| ::execSlot( "loadProgress(int)"        , p ) } )
+   ::Connect( ::oWidget, "loadStarted()"            , {|p| ::execSlot( "loadStarted()"            , p ) } )
+   ::Connect( ::oWidget, "titleChanged(QString)"    , {|p| ::execSlot( "titleChanged(QString)"    , p ) } )
+   ::Connect( ::oWidget, "urlChanged(QUrl)"         , {|p| ::execSlot( "urlChanged(QUrl)"         , p ) } )
+   ::Connect( ::oWidget, "selectionChanged()"       , {|p| ::execSlot( "selectionChanged()"       , p ) } )
+   ::Connect( ::oWidget, "statusBarMessage(QString)", {|p| ::execSlot( "statusBarMessage(QString)", p ) } )
    #if 0
    ::mapEvent( evNavigateComplete, {| cURL | ::xNavigateComplete( cURL ) } )
    #endif
@@ -203,39 +203,39 @@ METHOD XbpHTMLViewer:destroy()
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpHTMLViewer:exeBlock( nEvent, p1 )
+METHOD XbpHTMLViewer:execSlot( cSlot, p )
 
    DO CASE
-   CASE nEvent == 1
+   CASE cSlot == "iconChanged()" 
       IF hb_isBlock( ::sl_beforeNavigate )
          eval( ::sl_beforeNavigate, /*cURL*/, NIL, Self )
       ENDIF
-   CASE nEvent == 2
-   CASE nEvent == 3
+   CASE cSlot == "linkClicked(QUrl)"
+   CASE cSlot == "loadFinished(bool)" 
       IF hb_isBlock( ::sl_documentComplete )
-         eval( ::sl_documentComplete, /*cURI*/, p1, Self )
+         eval( ::sl_documentComplete, /*cURI*/, p, Self )
       ENDIF
-   CASE nEvent == 4
+   CASE cSlot == "loadProgress(int)"
       IF hb_isBlock( ::sl_progressChange )
-         eval( ::sl_progressChange, p1, 100, Self )
+         eval( ::sl_progressChange, p, 100, Self )
       ENDIF
-   CASE nEvent == 5
-   CASE nEvent == 6
+   CASE cSlot == "loadStarted()" 
+   CASE cSlot == "titleChanged(QString)"
       IF hb_isBlock( ::sl_titleChange )
-         eval( ::sl_titleChange, p1, NIL, Self )
+         eval( ::sl_titleChange, p, NIL, Self )
       ENDIF
-   CASE nEvent == 7
-   CASE nEvent == 8
+   CASE cSlot == "urlChanged(QUrl)" 
+   CASE cSlot == "selectionChanged()"
       ::cSelectedText := ::oWidget:selectedText()
 HB_TRACE( HB_TR_DEBUG, ::cSelectedText )
-   CASE nEvent == 9
+   CASE cSlot == "statusBarMessage(QString)"
       IF hb_isBlock( ::sl_statusTextChange )
-         eval( ::sl_statusTextChange, p1, NIL, Self )
+         eval( ::sl_statusTextChange, p, NIL, Self )
       ENDIF
    ENDCASE
 
-   RETURN nil
-
+   RETURN Self
+   
 /*----------------------------------------------------------------------*/
 
 METHOD XbpHTMLViewer:navigate( cURL )

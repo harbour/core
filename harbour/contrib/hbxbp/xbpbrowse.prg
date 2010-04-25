@@ -59,7 +59,7 @@
  *                                EkOnkar
  *                          ( The LORD is ONE )
  *
- *                    Xbase++ Compatible XbpRtf Class
+ *                  Xbase++ Compatible XbpBrowse Class
  *
  *                  Pritpal Bedi <pritpal@vouchcac.com>
  *                              10Jul2009
@@ -75,6 +75,13 @@
 #include "xbp.ch"
 #include "gra.ch"
 #include "appevent.ch"
+
+#include "button.ch"
+#include "color.ch"
+#include "error.ch"
+#include "inkey.ch"
+#include "setcurs.ch"
+#include "tbrowse.ch"
 
 /*----------------------------------------------------------------------*/
 
@@ -94,42 +101,24 @@
 #define HBQT_BRW_CELLDECORATION                   1014
 
 /*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
-//
-//                              XbpBrowse
-//
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
 
 #define HB_CLS_NOTOBJECT
 
-#include "hbclass.ch"
-
-#include "button.ch"
-#include "color.ch"
-#include "common.ch"
-#include "error.ch"
-#include "inkey.ch"
-#include "setcurs.ch"
-#include "tbrowse.ch"
-
-#define _TBCI_COLOBJECT       1   // column object
-#define _TBCI_COLWIDTH        2   // width of the column
-#define _TBCI_COLPOS          3   // column position on screen
-#define _TBCI_CELLWIDTH       4   // width of the cell
-#define _TBCI_CELLPOS         5   // cell position in column
-#define _TBCI_COLSEP          6   // column separator
-#define _TBCI_SEPWIDTH        7   // width of the separator
-#define _TBCI_HEADING         8   // column heading
-#define _TBCI_FOOTING         9   // column footing
-#define _TBCI_HEADSEP        10   // heading separator
-#define _TBCI_FOOTSEP        11   // footing separator
-#define _TBCI_DEFCOLOR       12   // default color
-#define _TBCI_FROZENSPACE    13   // space after frozen columns
-#define _TBCI_LASTSPACE      14   // space after last visible column
-#define _TBCI_SIZE           14   // size of array with TBrowse column data
+#define _TBCI_COLOBJECT       1    // column object
+#define _TBCI_COLWIDTH        2    // width of the column
+#define _TBCI_COLPOS          3    // column position on screen
+#define _TBCI_CELLWIDTH       4    // width of the cell
+#define _TBCI_CELLPOS         5    // cell position in column
+#define _TBCI_COLSEP          6    // column separator
+#define _TBCI_SEPWIDTH        7    // width of the separator
+#define _TBCI_HEADING         8    // column heading
+#define _TBCI_FOOTING         9    // column footing
+#define _TBCI_HEADSEP         10   // heading separator
+#define _TBCI_FOOTSEP         11   // footing separator
+#define _TBCI_DEFCOLOR        12   // default color
+#define _TBCI_FROZENSPACE     13   // space after frozen columns
+#define _TBCI_LASTSPACE       14   // space after last visible column
+#define _TBCI_SIZE            14   // size of array with TBrowse column data
 
 #define _TBC_SETKEY_KEY       1
 #define _TBC_SETKEY_BLOCK     2
@@ -307,7 +296,7 @@ EXPORTED:
 
    METHOD new( nTop, nLeft, nBottom, nRight )               // constructor, NOTE: This method is a Harbour extension [vszakats]
    METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )   // constructor, NOTE: This method is a Harbour extension [vszakats]
-   METHOD exeBlock( nEvent, p1, p2, p3 )                    // executes view events
+   METHOD execSlot( nEvent, p1, p2, p3 )                    // executes view events
    METHOD supplyInfo( nMode, nInfo, p2, p3 )                // supplies cell parameters to Qt engine
    METHOD configure( nMode )                                // mark that the internal settings of the TBrowse object should be reconfigured
    METHOD handleEvent( nEvent, mp1, mp2 )
@@ -512,9 +501,9 @@ METHOD XbpBrowse:buildLeftFreeze()
    //
    //::oLeftFooterView:hide()
 
-   ::connect( ::oLeftView      , "mousePressEvent()"  , {|p| ::exeBlock( 31, p ) } )
-   ::connect( ::oLeftHeaderView, "sectionPressed(int)", {|i| ::exeBlock( 31, i ) } )
-   ::connect( ::oLeftFooterView, "sectionPressed(int)", {|i| ::exeBlock( 31, i ) } )
+   ::connect( ::oLeftView      , "mousePressEvent()"  , {|p| ::execSlot( 31, p ) } )
+   ::connect( ::oLeftHeaderView, "sectionPressed(int)", {|i| ::execSlot( 31, i ) } )
+   ::connect( ::oLeftFooterView, "sectionPressed(int)", {|i| ::execSlot( 31, i ) } )
 
    RETURN Self
 
@@ -558,9 +547,9 @@ METHOD XbpBrowse:buildRightFreeze()
    ::oRightFooterModel := HBDbfModel():new( {|p1,p2,p3,p4| ::supplyInfo( 162, p1, p2, p3, p4 ) } )
    ::oRightFooterView:setModel( ::oRightFooterModel )
 
-   ::connect( ::oRightView      , "mousePressEvent()"  , {|p| ::exeBlock( 31, p ) } )
-   ::connect( ::oRightHeaderView, "sectionPressed(int)", {|i| ::exeBlock( 31, i ) } )
-   ::connect( ::oRightFooterView, "sectionPressed(int)", {|i| ::exeBlock( 31, i ) } )
+   ::connect( ::oRightView      , "mousePressEvent()"  , {|p| ::execSlot( 31, p ) } )
+   ::connect( ::oRightHeaderView, "sectionPressed(int)", {|i| ::execSlot( 31, i ) } )
+   ::connect( ::oRightFooterView, "sectionPressed(int)", {|i| ::execSlot( 31, i ) } )
 
    RETURN Self
 
@@ -587,27 +576,27 @@ METHOD XbpBrowse:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::oTableView:setSelectionBehavior( IF( ::cursorMode == XBPBRW_CURSOR_ROW, QAbstractItemView_SelectRows, QAbstractItemView_SelectItems ) )
 
    /* Connect Keyboard Events */
-   ::connect( ::oTableView, "keyPressEvent()"           , {|p   | ::exeBlock( 1, p ) } )
-   ::connect( ::oTableView, "mousePressEvent()"         , {|p   | ::exeBlock( 2, p ) } )
-   ::connect( ::oTableView, "mouseDoubleClickEvent()"   , {|p   | ::exeBlock( 3, p ) } )
-   ::connect( ::oTableView, "wheelEvent()"              , {|p   | ::exeBlock( 4, p ) } )
-   ::connect( ::oTableView, "scrollContentsBy(int,int)" , {|p,p1| ::exeBlock(11, p, p1 ) } )
+   ::connect( ::oTableView, "keyPressEvent()"           , {|p   | ::execSlot( 1, p ) } )
+   ::connect( ::oTableView, "mousePressEvent()"         , {|p   | ::execSlot( 2, p ) } )
+   ::connect( ::oTableView, "mouseDoubleClickEvent()"   , {|p   | ::execSlot( 3, p ) } )
+   ::connect( ::oTableView, "wheelEvent()"              , {|p   | ::execSlot( 4, p ) } )
+   ::connect( ::oTableView, "scrollContentsBy(int,int)" , {|p,p1| ::execSlot(11, p, p1 ) } )
 
    /* Finetune Horizontal Scrollbar */
    ::oTableView:setHorizontalScrollBarPolicy( Qt_ScrollBarAlwaysOff )
    //
    ::oHScrollBar := QScrollBar():new()
    ::oHScrollBar:setOrientation( Qt_Horizontal )
-   ::connect( ::oHScrollBar, "actionTriggered(int)"     , {|i| ::exeBlock( 103, i ) } )
-   ::connect( ::oHScrollBar, "sliderReleased()"         , {|i| ::exeBlock( 104, i ) } )
+   ::connect( ::oHScrollBar, "actionTriggered(int)"     , {|i| ::execSlot( 103, i ) } )
+   ::connect( ::oHScrollBar, "sliderReleased()"         , {|i| ::execSlot( 104, i ) } )
 
    /*  Replace Vertical Scrollbar with our own */
    ::oTableView:setVerticalScrollBarPolicy( Qt_ScrollBarAlwaysOff )
    //
    ::oVScrollBar := QScrollBar():new()
    ::oVScrollBar:setOrientation( Qt_Vertical )
-   ::connect( ::oVScrollBar, "actionTriggered(int)"     , {|i| ::exeBlock( 101, i ) } )
-   ::connect( ::oVScrollBar, "sliderReleased()"         , {|i| ::exeBlock( 102, i ) } )
+   ::connect( ::oVScrollBar, "actionTriggered(int)"     , {|i| ::execSlot( 101, i ) } )
+   ::connect( ::oVScrollBar, "sliderReleased()"         , {|i| ::execSlot( 102, i ) } )
 
    /*  Veritical Header because of Performance boost */
    ::oVHeaderView := QHeaderView()
@@ -619,8 +608,8 @@ METHOD XbpBrowse:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::oHeaderView:configure( ::oTableView:horizontalHeader() )
    ::oHeaderView:setHighlightSections( .F. )
    //
-   ::connect( ::oHeaderView, "sectionPressed(int)"        , {|i      | ::exeBlock( 111, i ) } )
-   ::connect( ::oHeaderView, "sectionResized(int,int,int)", {|i,i1,i2| ::exeBlock( 121, i, i1, i2 ) } )
+   ::connect( ::oHeaderView, "sectionPressed(int)"        , {|i      | ::execSlot( 111, i ) } )
+   ::connect( ::oHeaderView, "sectionResized(int,int,int)", {|i,i1,i2| ::execSlot( 121, i, i1, i2 ) } )
 
    /* .DBF Manipulation Model */
    ::oDbfModel := HBDbfModel():new( {|p1,p2,p3,p4| ::supplyInfo( 141, p1, p2, p3, p4 ) } )
@@ -748,11 +737,11 @@ METHOD XbpBrowse:destroy()
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpBrowse:exeBlock( nEvent, p1, p2, p3 )
+METHOD XbpBrowse:execSlot( nEvent, p1, p2, p3 )
    LOCAL oWheelEvent, oMouseEvent, i, nRow, nRowPos, nCol, nColPos, oPoint
 
    HB_SYMBOL_UNUSED( p2 )
-//HB_TRACE( HB_TR_DEBUG, "   XbpBrowse:exeblock:", nEvent, 0, memory( 1001 ) )
+//HB_TRACE( HB_TR_DEBUG, "   XbpBrowse:execSlot:", nEvent, 0, memory( 1001 ) )
    DO CASE
    CASE nEvent == 1                   /* Keypress Event */
       SetAppEvent( xbeP_Keyboard, XbpQKeyEventToAppEvent( p1 ), NIL, self )

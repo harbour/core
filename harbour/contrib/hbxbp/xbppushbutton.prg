@@ -85,6 +85,8 @@ CLASS XbpPushButton  INHERIT  XbpWindow
    DATA     drawMode                              INIT XBP_DRAW_NORMAL
    DATA     default                               INIT .F.
    DATA     cancel                                INIT .F.
+   
+   DATA     sl_draw
 
    METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
@@ -92,15 +94,14 @@ CLASS XbpPushButton  INHERIT  XbpWindow
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   destroy()
    METHOD   handleEvent( nEvent, mp1, mp2 )
-   METHOD   exeBlock( nMode, p )
+   METHOD   execSlot( cSlot, p )
    METHOD   setStyle()                            VIRTUAL
 
    METHOD   setFocus()
-
    METHOD   setCaption( xCaption, cDll )
-
-   METHOD   activate( xParam )                    SETGET
-   METHOD   draw( xParam )                        SETGET
+   
+   METHOD   activate( ... )                       SETGET
+   METHOD   draw( ... )                           SETGET
 
    ENDCLASS
 
@@ -132,8 +133,8 @@ METHOD XbpPushButton:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible
       ::oWidget:setDefault( .t. )
    ENDIF
 
-   ::Connect( ::pWidget, "clicked()", {|| ::exeBlock( 1 ) } )
-   ::Connect( ::pWidget, "pressed()", {|| ::exeBlock( 1 ) } )
+   ::Connect( ::pWidget, "clicked()", {|| ::execSlot( "clicked()" ) } )
+   ::Connect( ::pWidget, "pressed()", {|| ::execSlot( "pressed()" ) } )
 
    ::oParent:AddChild( SELF )
    RETURN Self
@@ -163,21 +164,19 @@ METHOD XbpPushButton:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParam
 
    ENDIF
 
-   ::Connect( ::pWidget, "clicked()", {|| ::exeBlock() } )
+   ::Connect( ::pWidget, "clicked()", {|| ::execSlot( "clicked()" ) } )
 
    ::addAsChild()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpPushButton:exeBlock( nMode, p )
+METHOD XbpPushButton:execSlot( cSlot, p )
 
    DO CASE
-   CASE nMode == 1
-      IF hb_isBlock( ::sl_lbClick )
-         eval( ::sl_lbClick, NIL, NIL, self )
-      ENDIF
-   CASE nMode == 201 /* QEvent_KeyPressed */
+   CASE cSlot == "clicked()" .OR. cSlot == "pressed()" 
+      ::activate()
+   CASE cSlot == "keyPressed()" 
       IF XbpQKeyEventToAppEvent( p ) == xbeK_ENTER
          ::oWidget:click()
       ENDIF
@@ -242,22 +241,24 @@ METHOD XbpPushButton:setCaption( xCaption, cDll )
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpPushButton:activate( xParam )
-
-   IF hb_isBlock( xParam ) .or. ( xParam == NIL )
-      ::sl_lbClick := xParam
-   ENDIF
-
+METHOD XbpPushButton:activate( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_lbClick := a_[ 1 ]
+   ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_lbClick )
+      eval( ::sl_lbClick, NIL, NIL, Self )
+   ENDIF 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpPushButton:draw( xParam )
-
-   IF hb_isBlock( xParam ) .or. ( xParam == NIL )
-      ::sl_paint := xParam
-   ENDIF
-
+METHOD XbpPushButton:draw( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_draw := a_[ 1 ]
+   ELSEIF len( a_ ) >= 2 .AND. hb_isBlock( ::sl_draw )
+      eval( ::sl_draw, a_[ 1 ], a_[ 2 ], Self )
+   ENDIF 
    RETURN Self
 
 /*----------------------------------------------------------------------*/

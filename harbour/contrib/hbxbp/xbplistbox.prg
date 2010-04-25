@@ -91,7 +91,7 @@ CLASS XbpListBox  INHERIT  XbpWindow, XbpDataRef
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   destroy()
    METHOD   handleEvent( nEvent, mp1, mp2 )
-   METHOD   exeBlock( nMode, pModel )
+   METHOD   execSlot( cSlot, p )
 
    METHOD   setStyle()
 
@@ -120,32 +120,22 @@ CLASS XbpListBox  INHERIT  XbpWindow, XbpDataRef
 
 
    DATA     sl_hScroll
-   ACCESS   hScroll                               INLINE ::sl_hScroll
-   ASSIGN   hScroll( bBlock )                     INLINE ::sl_hScroll := bBlock
-
    DATA     sl_vScroll
-   ACCESS   vScroll                               INLINE ::sl_vScroll
-   ASSIGN   vScroll( bBlock )                     INLINE ::sl_vScroll := bBlock
-
    DATA     sl_itemMarked
-   ACCESS   itemMarked                            INLINE ::sl_itemMarked
-   ASSIGN   itemMarked( bBlock )                  INLINE ::sl_itemMarked := bBlock
-
    DATA     sl_itemSelected
-   ACCESS   itemSelected                          INLINE ::sl_itemSelected
-   ASSIGN   itemSelected( bBlock )                INLINE ::sl_itemSelected := bBlock
-
    DATA     sl_drawItem
-   ACCESS   drawItem                              INLINE ::sl_drawItem
-   ASSIGN   drawItem( bBlock )                    INLINE ::sl_drawItem := bBlock
-
    DATA     sl_measureItem
-   ACCESS   measureItem                           INLINE ::sl_measureItem
-   ASSIGN   measureItem( bBlock )                 INLINE ::sl_measureItem := bBlock
-
    DATA     nCurSelected                          INIT   0
-   METHOD   getCurItem()                          INLINE ::getItem( ::nCurSelected )
 
+   METHOD   getCurItem()                          INLINE ::getItem( ::nCurSelected )
+   
+   METHOD   itemMarked( ... )                     SETGET    
+   METHOD   itemSelected( ... )                   SETGET    
+   METHOD   drawItem( ... )                       SETGET    
+   METHOD   measureItem( ... )                    SETGET    
+   METHOD   hScroll( ... )                        SETGET    
+   METHOD   vScroll( ... )                        SETGET    
+   
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
@@ -183,9 +173,9 @@ METHOD XbpListBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::connectEvent( ::pWidget, QEvent_ContextMenu, {|e| ::grabEvent( QEvent_ContextMenu, e ) } )
 
    /* Signal-slots */
-   ::Connect( ::pWidget, "clicked(QModelIndex)"      , {|i| ::exeBlock( 1, i ) } )
-   ::Connect( ::pWidget, "doubleClicked(QModelIndex)", {|i| ::exeBlock( 2, i ) } )
-   ::Connect( ::pWidget, "entered(QModelIndex)"      , {|i| ::exeBlock( 3, i ) } )
+   ::Connect( ::pWidget, "clicked(QModelIndex)"      , {|p| ::execSlot( "clicked(QModelIndex)"      , p ) } )
+   ::Connect( ::pWidget, "doubleClicked(QModelIndex)", {|p| ::execSlot( "doubleClicked(QModelIndex)", p ) } )
+   ::Connect( ::pWidget, "entered(QModelIndex)"      , {|p| ::execSlot( "entered(QModelIndex)"      , p ) } )
 
    ::oStrList  := QStringList():new( ::pWidget )
    ::oStrModel := QStringListModel():new( ::pWidget )
@@ -208,31 +198,26 @@ METHOD XbpListBox:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, 
    IF hb_isPointer( pQtObject )
       ::oWidget := QListView()
       ::oWidget:pPtr := pQtObject
-
    ENDIF
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpListBox:exeBlock( nMode, pModel )
+METHOD XbpListBox:execSlot( cSlot, p )
    LOCAL oModel
 
-   IF hb_isPointer( pModel )
-      oModel := QModelIndex():configure( pModel )
+   IF hb_isPointer( p )
+      oModel := QModelIndex():configure( p )
       ::nCurSelected := oModel:row()+1
       ::sl_editBuffer := oModel:row()+1
    ENDIF
-   IF nMode == 1
-      IF hb_isBlock( ::sl_itemMarked )
-         eval( ::sl_itemMarked, NIL, NIL, self )
-      ENDIF
-   ELSEIF nMode == 2
-      IF hb_isBlock( ::sl_itemSelected )
-         eval( ::sl_itemSelected, NIL, NIL, self )
-      ENDIF
-   ELSEIF nMode == 3  // mouse cursor is on
-      // set the tooltip
+   
+   IF     cSlot == "clicked(QModelIndex)" 
+      ::itemMarked()
+   ELSEIF cSlot == "doubleClicked(QModelIndex)"
+      ::itemSelected()
+   ELSEIF cSlot == "entered(QModelIndex)" 
       ::oWidget:setToolTip( ::oStrList:at( ::nCurSelected - 1 ) )
    ENDIF
 
@@ -269,6 +254,72 @@ METHOD XbpListBox:destroy()
 
    RETURN NIL
 
+/*----------------------------------------------------------------------*/
+
+METHOD XbpListBox:itemMarked( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_itemMarked := a_[ 1 ]
+   ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_itemMarked )
+      eval( ::sl_itemMarked, NIL, NIL, Self )
+   ENDIF 
+   RETURN Self
+   
+/*----------------------------------------------------------------------*/
+   
+METHOD XbpListBox:itemSelected( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_itemSelected := a_[ 1 ]
+   ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_itemSelected )
+      eval( ::sl_itemSelected, NIL, NIL, Self )
+   ENDIF 
+   RETURN Self
+   
+/*----------------------------------------------------------------------*/
+   
+METHOD XbpListBox:drawItem( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_xbePDrawItem := a_[ 1 ]
+   ELSEIF len( a_ ) >= 2 .AND. hb_isBlock( ::sl_xbePDrawItem )
+      eval( ::sl_xbePDrawItem, a_[ 1 ], a_[ 2 ], Self )
+   ENDIF 
+   RETURN Self
+   
+/*----------------------------------------------------------------------*/
+
+METHOD XbpListBox:measureItem( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_measureItem := a_[ 1 ]
+   ELSEIF len( a_ ) >= 2 .AND. hb_isBlock( ::sl_measureItem )
+      eval( ::sl_measureItem, a_[ 1 ], a_[ 2 ], Self )
+   ENDIF 
+   RETURN Self
+   
+/*----------------------------------------------------------------------*/
+
+METHOD XbpListBox:hScroll( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_hScroll := a_[ 1 ]
+   ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_hScroll )
+      eval( ::sl_hScroll, NIL, NIL, Self )
+   ENDIF 
+   RETURN Self
+   
+/*----------------------------------------------------------------------*/
+
+METHOD XbpListBox:vScroll( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_vScroll := a_[ 1 ]
+   ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_vScroll )
+      eval( ::sl_vScroll, NIL, NIL, Self )
+   ENDIF 
+   RETURN Self
+   
 /*----------------------------------------------------------------------*/
 
 METHOD XbpListBox:setStyle()

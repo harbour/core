@@ -86,12 +86,10 @@ CLASS XbpCheckBox  INHERIT  XbpWindow, XbpDataRef
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   destroy()
    METHOD   handleEvent( nEvent, mp1, mp2 )
-   METHOD   exeBlock( iState )
-
+   METHOD   execSlot( cSlot, p )
    METHOD   setCaption( xCaption )
-
-   ACCESS   selected                              INLINE ::sl_lbClick
-   ASSIGN   selected( bBlock )                    INLINE ::sl_lbClick := bBlock
+   
+   METHOD   selected( ... )                       SETGET 
 
    ENDCLASS
 
@@ -110,7 +108,7 @@ METHOD XbpCheckBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::oWidget := QCheckBox():New( ::oParent:oWidget )
-   ::Connect( ::pWidget, "stateChanged(int)", {|i| ::exeBlock( i ) } )
+   ::Connect( ::pWidget, "stateChanged(int)", {|i| ::execSlot( "stateChanged(int)", i ) } )
 
    ::setPosAndSize()
    IF ::visible
@@ -142,12 +140,14 @@ METHOD XbpCheckBox:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams,
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpCheckBox:exeBlock( iState )
+METHOD XbpCheckBox:execSlot( cSlot, p )
 
-   ::sl_editBuffer := iState <> 0
-   IF hb_isBlock( ::sl_lbClick )
-      eval( ::sl_lbClick, iState <> 0, NIL, self )
-   ENDIF
+   SWITCH cSlot
+   CASE "stateChanged(int)"  
+      ::sl_editBuffer := p <> 0
+      ::selected( ::sl_editBuffer )
+      EXIT
+   ENDSWITCH   
 
    RETURN nil
 
@@ -188,4 +188,15 @@ METHOD XbpCheckBox:setCaption( xCaption )
 
    RETURN Self
 
+/*----------------------------------------------------------------------*/
+
+METHOD XbpCheckBox:selected( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_lbClick := a_[ 1 ]
+   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_lbClick )
+      eval( ::sl_lbClick, a_[ 1 ], NIL, Self )
+   ENDIF 
+   RETURN Self
+   
 /*----------------------------------------------------------------------*/

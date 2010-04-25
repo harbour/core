@@ -76,121 +76,26 @@
 
 CLASS XbpWindow  INHERIT  XbpPartHandler
 
-
-   METHOD   init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-   METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-   METHOD   setQtProperty( cProperty )
-   METHOD   connect( pWidget, cSignal, bBlock )
-   METHOD   connectEvent( pWidget, nEvent, bBlock )
-   METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-   METHOD   grabEvent( nEvent, pEvent )
-   METHOD   handleEvent( nEvent, mp1, mp2 )
-   METHOD   captureMouse( lCapture )
-   METHOD   invalidateRect( aRect )
-   METHOD   setStyleSheet( cNewSheet )
-   METHOD   setFont( oFont )
-   METHOD   setFontCompoundName( xFont )
-   METHOD   setModalState( nState )
-   METHOD   setPointer( cDllName, xResID, nType )
-   METHOD   setTrackPointer( lTrack )
-   METHOD   setPos( aPos, lPaint )
-   METHOD   setPosAndSize( aPos, aSize, lPaint )
-   METHOD   setSize( aSize, lPaint )
-   METHOD   isDerivedFrom( cClassORoObject )
-   METHOD   setPresParam( aPPNew )
-
-   METHOD   enter( xParam )                       SETGET
-   METHOD   leave( xParam )                       SETGET
-   METHOD   lbClick( xParam )                     SETGET
-   METHOD   lbDblClick( xParam )                  SETGET
-   METHOD   lbDown( xParam )                      SETGET
-   METHOD   lbUp( xParam )                        SETGET
-   METHOD   mbClick( xParam )                     SETGET
-   METHOD   mbDblClick( xParam )                  SETGET
-   METHOD   mbDown( xParam )                      SETGET
-   METHOD   mbUp( xParam )                        SETGET
-   METHOD   motion( xParam )                      SETGET
-   METHOD   rbClick( xParam )                     SETGET
-   METHOD   rbDblClick( xParam )                  SETGET
-   METHOD   rbDown( xParam )                      SETGET
-   METHOD   rbUp( xParam )                        SETGET
-   METHOD   wheel( xParam )                       SETGET
-   METHOD   close( xParam )                       SETGET
-   METHOD   helpRequest( xParam )                 SETGET
-   METHOD   keyboard( xParam )                    SETGET
-   METHOD   killDisplayFocus( xParam )            SETGET
-   METHOD   killInputFocus( xParam )              SETGET
-   METHOD   move( xParam )                        SETGET
-   METHOD   paint( xParam )                       SETGET
-   METHOD   quit( xParam, xParam1 )               SETGET
-   METHOD   resize( xParam, xParam1 )             SETGET
-   METHOD   setDisplayFocus( xParam )             SETGET
-   METHOD   setInputFocus( xParam )               SETGET
-   METHOD   dragEnter( xParam, xParam1 )          SETGET
-   METHOD   dragMotion( xParam )                  SETGET
-   METHOD   dragLeave( xParam )                   SETGET
-   METHOD   dragDrop( xParam, xParam1 )           SETGET
-   METHOD   hbContextMenu( xParam )               SETGET
-
-   METHOD   Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-
-   METHOD   isEnabled()                           INLINE ::is_enabled
-   METHOD   isVisible()                           INLINE !( ::is_hidden )
-
-   METHOD   hbCreateFromQtPtr()                   VIRTUAL
-   METHOD   destroy()
-   METHOD   disable()
-   METHOD   enable()
-   METHOD   hide()
-   METHOD   lockPS()
-   METHOD   lockUpdate()
-   METHOD   show()
-   METHOD   toBack()
-   METHOD   toFront()
-   METHOD   unlockPS()
-   METHOD   winDevice()
-   METHOD   setColorBG( nRGB )
-   METHOD   setColorFG( nRGB )
-   METHOD   currentPos()
-   METHOD   currentSize()
-   METHOD   getHWND()
-   METHOD   getModalState()
-   METHOD   hasInputFocus()
-
-   METHOD   setFocus()
-   METHOD   sendMessage()
-   METHOD   connectWindowEvents()
-   METHOD   disConnect()
-   METHOD   clearSlots()
-
    CLASSDATA nProperty                            INIT  0
+   
    DATA     qtProperty                            INIT  ""
    DATA     qtObject
    DATA     isViaQtObject                         INIT  .f.
 
-   /* Called in the initializer - Unique in the application */
-   METHOD   getProperty()                         INLINE  "PROP" + hb_ntos( ++::nProperty )
-   /* After object is physically created, set unique property to 1 */
-*  METHOD   setQtProperty()
-
-   DATA     cargo                                 INIT  ""
-   DATA     styleSheet                            INIT  ""
-*  METHOD   setStyleSheet()
-
    /*  CONFIGURATION */
-   DATA     animate                               INIT  .F.
-   DATA     clipChildren                          INIT  .F.
-   DATA     clipParent                            INIT  .F.
-   DATA     clipSiblings                          INIT  .T.
-   DATA     group                                 INIT  0    /* XBP_NO_GROUP */
-   DATA     sizeRedraw                            INIT  .F.
-   DATA     tabStop                               INIT  .F.
-   DATA     visible                               INIT  .T.
+   DATA     animate                               INIT   .F.
+   DATA     clipChildren                          INIT   .F.
+   DATA     clipParent                            INIT   .F.
+   DATA     clipSiblings                          INIT   .T.
+   DATA     group                                 INIT   0    /* XBP_NO_GROUP */
+   DATA     sizeRedraw                            INIT   .F.
+   DATA     tabStop                               INIT   .F.
+   DATA     visible                               INIT   .T.
 
    /*  RUNTIME DATA */
-   DATA     dropZone                              INIT  .F.
+   DATA     dropZone                              INIT   .F.
    DATA     helpLink
-   DATA     tooltipText                           INIT  ""
+   DATA     tooltipText                           INIT   ""
 
    /*  CALLBACK SLOTS */
    DATA     sl_enter
@@ -249,28 +154,119 @@ CLASS XbpWindow  INHERIT  XbpPartHandler
    DATA     nOldProc                              INIT   0
    DATA     nWndProc
    DATA     oMenu
-
    DATA     oWidget
-   ACCESS   pWidget                               INLINE  IF( empty( ::oWidget ), NIL, ::oWidget:pPtr )
-   ACCESS   pParent                               INLINE  IF( empty( ::oParent ), NIL, ::oParent:oWidget:pPtr )
+   DATA     cargo                                 INIT   ""
+   DATA     styleSheet                            INIT   ""
    DATA     oTabWidget
-   DATA     aTabs                                 INIT  {}
+   DATA     aTabs                                 INIT   {}
    DATA     oPalette
    DATA     xDummy
-   DATA     aConnections                          INIT  {}
-   DATA     aEConnections                         INIT  {}
-   DATA     lTrack                                INIT  .f.
+   DATA     aConnections                          INIT   {}
+   DATA     aEConnections                         INIT   {}
+   DATA     lTrack                                INIT   .f.
    DATA     aPP
-   METHOD   setStyle()                            INLINE NIL
-   ACCESS   pSlots                                INLINE hbxbp_getSlotsPtr()
-   ACCESS   pEvents                               INLINE hbxbp_GetEventsPtr()
+   DATA     qLayout
+   DATA     nLayout
+   
+   METHOD   init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   setQtProperty( cProperty )
+   METHOD   connect( pWidget, cSignal, bBlock )
+   METHOD   connectEvent( pWidget, nEvent, bBlock )
+   METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   grabEvent( nEvent, pEvent )
+   METHOD   handleEvent( nEvent, mp1, mp2 )
+   METHOD   captureMouse( lCapture )
+   METHOD   invalidateRect( aRect )
+   METHOD   setStyleSheet( cNewSheet )
+   METHOD   setFont( oFont )
+   METHOD   setFontCompoundName( xFont )
+   METHOD   setModalState( nState )
+   METHOD   setPointer( cDllName, xResID, nType )
+   METHOD   setTrackPointer( lTrack )
+   METHOD   setPos( aPos, lPaint )
+   METHOD   setPosAndSize( aPos, aSize, lPaint )
+   METHOD   setSize( aSize, lPaint )
+   METHOD   isDerivedFrom( cClassORoObject )
+   METHOD   setPresParam( aPPNew )
 
+   METHOD   enter( xParam )                       SETGET
+   METHOD   leave( xParam )                       SETGET
+   METHOD   lbClick( xParam )                     SETGET
+   METHOD   lbDblClick( xParam )                  SETGET
+   METHOD   lbDown( xParam )                      SETGET
+   METHOD   lbUp( xParam )                        SETGET
+   METHOD   mbClick( xParam )                     SETGET
+   METHOD   mbDblClick( xParam )                  SETGET
+   METHOD   mbDown( xParam )                      SETGET
+   METHOD   mbUp( xParam )                        SETGET
+   METHOD   motion( xParam )                      SETGET
+   METHOD   rbClick( xParam )                     SETGET
+   METHOD   rbDblClick( xParam )                  SETGET
+   METHOD   rbDown( xParam )                      SETGET
+   METHOD   rbUp( xParam )                        SETGET
+   METHOD   wheel( xParam )                       SETGET
+   METHOD   close( xParam )                       SETGET
+   METHOD   helpRequest( xParam )                 SETGET
+   METHOD   keyboard( xParam )                    SETGET
+   METHOD   killDisplayFocus( xParam )            SETGET
+   METHOD   killInputFocus( xParam )              SETGET
+   METHOD   move( xParam )                        SETGET
+   METHOD   paint( xParam )                       SETGET
+   METHOD   quit( xParam, xParam1 )               SETGET
+   METHOD   resize( xParam, xParam1 )             SETGET
+   METHOD   setDisplayFocus( xParam )             SETGET
+   METHOD   setInputFocus( xParam )               SETGET
+   METHOD   dragEnter( xParam, xParam1 )          SETGET
+   METHOD   dragMotion( xParam )                  SETGET
+   METHOD   dragLeave( xParam )                   SETGET
+   METHOD   dragDrop( xParam, xParam1 )           SETGET
+   METHOD   hbContextMenu( xParam )               SETGET
+
+   METHOD   Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD   isEnabled()                           INLINE ::is_enabled
+   METHOD   isVisible()                           INLINE !( ::is_hidden )
+   METHOD   hbCreateFromQtPtr()                   VIRTUAL
+   METHOD   destroy()
+   METHOD   disable()
+   METHOD   enable()
+   METHOD   hide()
+   METHOD   lockPS()
+   METHOD   lockUpdate()
+   METHOD   show()
+   METHOD   toBack()
+   METHOD   toFront()
+   METHOD   unlockPS()
+   METHOD   winDevice()
+   METHOD   setColorBG( nRGB )
+   METHOD   setColorFG( nRGB )
+   METHOD   currentPos()
+   METHOD   currentSize()
+   METHOD   getHWND()
+   METHOD   getModalState()
+   METHOD   hasInputFocus()
+   METHOD   setFocus()
+   METHOD   sendMessage()
+   METHOD   connectWindowEvents()
+   METHOD   disConnect()
+   METHOD   clearSlots()
+
+   /* Called in the initializer - Unique in the application */
+   METHOD   getProperty()                         INLINE "PROP" + hb_ntos( ++::nProperty )
+   /* After object is physically created, set unique property to 1 */
+*  METHOD   setQtProperty()
+
+*  METHOD   setStyleSheet()
+   METHOD   setStyle()                            INLINE NIL
    METHOD   className()                           INLINE __objGetClsName( Self )
 
    /* Harbour Extension */
-   DATA     qLayout
-   DATA     nLayout
    METHOD   hbLayout( nTypeLayout )               SETGET
+
+   ACCESS   pWidget                               INLINE iif( empty( ::oWidget ), NIL, ::oWidget:pPtr )
+   ACCESS   pParent                               INLINE iif( empty( ::oParent ), NIL, ::oParent:oWidget:pPtr )
+   ACCESS   pSlots                                INLINE hbxbp_getSlotsPtr()
+   ACCESS   pEvents                               INLINE hbxbp_GetEventsPtr()
 
    ENDCLASS
 
@@ -403,13 +399,10 @@ METHOD XbpWindow:disconnect()
    LOCAL e_
 
    IF len( ::aConnections ) > 0
-//HB_TRACE( HB_TR_ALWAYS,  "                                                            " )
       FOR EACH e_ IN ::aConnections
          ::xDummy := Qt_Slots_DisConnect( ::pSlots, e_[ 1 ], e_[ 2 ] )
-//HB_TRACE( HB_TR_ALWAYS,  ::xDummy, "              Qt_Slots_DisConnect()             ", e_[ 2 ] )
       NEXT
       ::aConnections := {}
-//HB_TRACE( HB_TR_ALWAYS,  "                                                            " )
    ENDIF
 
    RETURN Self
@@ -421,7 +414,6 @@ METHOD XbpWindow:connectEvent( pWidget, nEvent, bBlock )
 
    IF ( lSuccess := Qt_Events_Connect( ::pEvents, pWidget, nEvent, bBlock ) )
       aadd( ::aEConnections, { pWidget, nEvent } )
-// HB_TRACE( HB_TR_ALWAYS,  "XbpWindow:connectEvent", nEvent, "Succeeded" )
    ELSE
       HB_TRACE( HB_TR_ALWAYS,  "XbpWindow:connectEvent", nEvent, "Failed" )
    ENDIF
@@ -440,10 +432,6 @@ METHOD XbpWindow:connectWindowEvents()
    ::connectEvent( ::pWidget, QEvent_Leave              , {|e| ::grabEvent( QEvent_Leave              , e ) } )
    ::connectEvent( ::pWidget, QEvent_Wheel              , {|e| ::grabEvent( QEvent_Wheel              , e ) } )
    //
-   ::connectEvent( ::pWidget, QEvent_Move               , {|e| ::grabEvent( QEvent_Move               , e ) } )
-*  ::connectEvent( ::pWidget, QEvent_Paint              , {|e| ::grabEvent( QEvent_Paint              , e ) } )
-*  ::connectEvent( ::pWidget, QEvent_Resize             , {|e| ::grabEvent( QEvent_Resize             , e ) } )
-   //
    ::connectEvent( ::pWidget, QEvent_FocusIn            , {|e| ::grabEvent( QEvent_FocusIn            , e ) } )
    ::connectEvent( ::pWidget, QEvent_FocusOut           , {|e| ::grabEvent( QEvent_FocusOut           , e ) } )
    ::connectEvent( ::pWidget, QEvent_DragEnter          , {|e| ::grabEvent( QEvent_DragEnter          , e ) } )
@@ -452,10 +440,14 @@ METHOD XbpWindow:connectWindowEvents()
    ::connectEvent( ::pWidget, QEvent_Drop               , {|e| ::grabEvent( QEvent_Drop               , e ) } )
    ::connectEvent( ::pWidget, QEvent_WhatsThis          , {|e| ::grabEvent( QEvent_WhatsThis          , e ) } )
    ::connectEvent( ::pWidget, QEvent_KeyPress           , {|e| ::grabEvent( QEvent_KeyPress           , e ) } )
-
+   //
    ::connectEvent( ::pWidget, QEvent_ContextMenu        , {|e| ::grabEvent( QEvent_ContextMenu        , e ) } )
+   //
+   ::connectEvent( ::pWidget, QEvent_Move               , {|e| ::grabEvent( QEvent_Move               , e ) } )
+*  ::connectEvent( ::pWidget, QEvent_Paint              , {|e| ::grabEvent( QEvent_Paint              , e ) } )
+*  ::connectEvent( ::pWidget, QEvent_Resize             , {|e| ::grabEvent( QEvent_Resize             , e ) } )
 
-   RETURN Self
+      RETURN Self
 
 /*----------------------------------------------------------------------*/
 
@@ -476,10 +468,7 @@ METHOD XbpWindow:destroy()
    LOCAL e_
 #if 0
 HB_TRACE( HB_TR_ALWAYS,  ".   " )
-HB_TRACE( HB_TR_ALWAYS,  ".   " )
-HB_TRACE( HB_TR_ALWAYS,  ".   " )
 HB_TRACE( HB_TR_ALWAYS,  hb_threadId(),"Destroy[ B ] "+pad(cCls,12)+ IF(empty(::cargo),'',str(::cargo) ), memory( 1001 ) )
-
    LOCAL cCls := __ObjGetClsName( self ), cMsg
 cMsg := iif( cCls == "XBPWINDOW", ::oWidget:objectName(), IF( empty(::cargo),'',str(::cargo) ) )
 HB_TRACE( HB_TR_ALWAYS,  hb_threadId(),"Destroy[ B ] "+pad(cCls,12)+ cMsg, memory( 1001 ) )
@@ -517,9 +506,6 @@ HB_TRACE( HB_TR_ALWAYS,  hb_threadId(),"Destroy[ B ] "+pad(cCls,12)+ cMsg, memor
    ::oWidget := NIL
 #if 0
 HB_TRACE( HB_TR_ALWAYS,  hb_threadId(),"Destroy[ E ] "+pad(__ObjGetClsName( self ),12)+ IF(empty(::cargo),'',str(::cargo) ), memory( 1001 ) )
-
-HB_TRACE( HB_TR_ALWAYS,  ".   " )
-HB_TRACE( HB_TR_ALWAYS,  ".   " )
 HB_TRACE( HB_TR_ALWAYS,  ".   " )
 HB_TRACE( HB_TR_ALWAYS,  hb_threadId(),"Destroy[ E ] "+pad(__ObjGetClsName( self ),12)+ IF(empty(::cargo),'',str(::cargo) ), memory( 1001 ) )
 #endif
@@ -962,7 +948,6 @@ METHOD XbpWindow:setColorBG( nRGB )
          ::setStyleSheet( "background-color: "+ cName +";" )
       ELSE
          ::setStyleSheet( "background-color: "+ cName +";" )
-//         ::setStyleSheet( cQTName +'['+ ::qtProperty +'="YES"] '+ "{ background-color: "+ cName +" ; }" )
       ENDIF
    ELSE
       oldRGB := Xbp_SetPresParam( ::aPresParams, XBP_PP_BGCLR )
