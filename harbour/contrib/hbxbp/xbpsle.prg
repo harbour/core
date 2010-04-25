@@ -103,7 +103,7 @@ CLASS XbpSLE INHERIT XbpWindow, XbpDataRef
    METHOD   queryFirstChar()                      VIRTUAL
    METHOD   queryMarked()                         INLINE  { ::oWidget:selectionStart(), ::oWidget:selectionEnd() }
    METHOD   setFirstChar( nPos )                  VIRTUAL
-   METHOD   setMarked( aStartEnd )                INLINE  ::setSelection( aStartEnd[ 1 ], aStartEnd[ 2 ] )
+   METHOD   setMarked( aStartEnd )                INLINE  ::oWidget:setSelection( aStartEnd[ 1 ], aStartEnd[ 2 ] )
 
    METHOD   setInsertMode( lInsertMode )          VIRTUAL
 
