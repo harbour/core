@@ -190,38 +190,38 @@ CLASS XbpWindow  INHERIT  XbpPartHandler
    METHOD   isDerivedFrom( cClassORoObject )
    METHOD   setPresParam( aPPNew )
 
-   METHOD   enter( xParam )                       SETGET
-   METHOD   leave( xParam )                       SETGET
-   METHOD   lbClick( xParam )                     SETGET
-   METHOD   lbDblClick( xParam )                  SETGET
-   METHOD   lbDown( xParam )                      SETGET
-   METHOD   lbUp( xParam )                        SETGET
-   METHOD   mbClick( xParam )                     SETGET
-   METHOD   mbDblClick( xParam )                  SETGET
-   METHOD   mbDown( xParam )                      SETGET
-   METHOD   mbUp( xParam )                        SETGET
-   METHOD   motion( xParam )                      SETGET
-   METHOD   rbClick( xParam )                     SETGET
-   METHOD   rbDblClick( xParam )                  SETGET
-   METHOD   rbDown( xParam )                      SETGET
-   METHOD   rbUp( xParam )                        SETGET
-   METHOD   wheel( xParam )                       SETGET
-   METHOD   close( xParam )                       SETGET
-   METHOD   helpRequest( xParam )                 SETGET
-   METHOD   keyboard( xParam )                    SETGET
-   METHOD   killDisplayFocus( xParam )            SETGET
-   METHOD   killInputFocus( xParam )              SETGET
-   METHOD   move( xParam )                        SETGET
-   METHOD   paint( xParam )                       SETGET
-   METHOD   quit( xParam, xParam1 )               SETGET
-   METHOD   resize( xParam, xParam1 )             SETGET
-   METHOD   setDisplayFocus( xParam )             SETGET
-   METHOD   setInputFocus( xParam )               SETGET
-   METHOD   dragEnter( xParam, xParam1 )          SETGET
-   METHOD   dragMotion( xParam )                  SETGET
-   METHOD   dragLeave( xParam )                   SETGET
-   METHOD   dragDrop( xParam, xParam1 )           SETGET
-   METHOD   hbContextMenu( xParam )               SETGET
+   METHOD   enter( ... )                          SETGET
+   METHOD   leave( ... )                          SETGET
+   METHOD   lbClick( ... )                        SETGET
+   METHOD   lbDblClick( ... )                     SETGET
+   METHOD   lbDown( ... )                         SETGET
+   METHOD   lbUp( ... )                           SETGET
+   METHOD   mbClick( ... )                        SETGET
+   METHOD   mbDblClick( ... )                     SETGET
+   METHOD   mbDown( ... )                         SETGET
+   METHOD   mbUp( ... )                           SETGET
+   METHOD   motion( ... )                         SETGET
+   METHOD   rbClick( ... )                        SETGET
+   METHOD   rbDblClick( ... )                     SETGET
+   METHOD   rbDown( ... )                         SETGET
+   METHOD   rbUp( ... )                           SETGET
+   METHOD   wheel( ... )                          SETGET
+   METHOD   close( ... )                          SETGET
+   METHOD   helpRequest( ... )                    SETGET
+   METHOD   keyboard( ... )                       SETGET
+   METHOD   killDisplayFocus( ... )               SETGET
+   METHOD   killInputFocus( ... )                 SETGET
+   METHOD   move( ... )                           SETGET
+   METHOD   paint( ... )                          SETGET
+   METHOD   quit( ... )                           SETGET
+   METHOD   resize( ... )                         SETGET
+   METHOD   setDisplayFocus( ... )                SETGET
+   METHOD   setInputFocus( ... )                  SETGET
+   METHOD   dragEnter( ... )                      SETGET
+   METHOD   dragMotion( ... )                     SETGET
+   METHOD   dragLeave( ... )                      SETGET
+   METHOD   dragDrop( ... )                       SETGET
+   METHOD   hbContextMenu( ... )                  SETGET
 
    METHOD   Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   isEnabled()                           INLINE ::is_enabled
@@ -1357,484 +1357,357 @@ METHOD XbpWindow:hasInputFocus()
  *                           Callback Methods
 /*----------------------------------------------------------------------*/
 
-METHOD XbpWindow:enter( xParam )
+METHOD XbpWindow:enter( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_enter := a_[ 1 ]
+   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_enter )
+      eval( ::sl_enter, a_[ 1 ], NIL, Self )
+   ENDIF 
+   RETURN Self
+   
+/*----------------------------------------------------------------------*/
+   
+METHOD XbpWindow:leave( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_leave := a_[ 1 ]
+   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_leave )
+      eval( ::sl_leave, a_[ 1 ], NIL, Self )
+   ENDIF 
+   RETURN Self
+   
+/*----------------------------------------------------------------------*/
 
-   if hb_isArray( xParam ) .and. hb_isBlock( ::sl_enter )
-      eval( ::sl_enter, xParam, NIL, Self )
-      RETURN NIL
-   endif
-
-   if hb_isBlock( xParam )
-      ::sl_enter := xParam
-   endif
-
-   RETURN ::sl_enter
+METHOD XbpWindow:lbClick( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_lbClick := a_[ 1 ]
+   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_lbClick )
+      eval( ::sl_lbClick, a_[ 1 ], NIL, Self )
+   ENDIF 
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpWindow:leave( xParam )
-
-   if hb_isArray( xParam ) .and. hb_isBlock( ::sl_leave )
-      eval( ::sl_leave, NIL, NIL, Self )
-      RETURN NIL
-   endif
-
-   if hb_isBlock( xParam )
-      ::sl_leave := xParam
-   endif
-
-   RETURN ::sl_leave
+METHOD XbpWindow:lbDblClick( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_lbDblClick := a_[ 1 ]
+   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_lbDblClick )
+      eval( ::sl_lbDblClick, a_[ 1 ], NIL, Self )
+   ENDIF 
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpWindow:lbClick( xParam )
-
-   if hb_isArray( xParam ) .and. hb_isBlock( ::sl_lbClick )
-      eval( ::sl_lbClick, xParam, NIL, Self )
-      RETURN NIL
-   endif
-
-   if hb_isBlock( xParam )
-      ::sl_lbClick := xParam
-   endif
-
-   RETURN ::sl_lbClick
+METHOD XbpWindow:lbDown( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_lbDown := a_[ 1 ]
+   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_lbDown )
+      eval( ::sl_lbDown, a_[ 1 ], NIL, Self )
+   ENDIF 
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpWindow:lbDblClick( xParam )
-
-   IF hb_isArray( xParam ) .and. hb_isBlock( ::sl_lbDblClick )
-      eval( ::sl_lbDblClick, xParam, NIL, Self )
-      RETURN NIL
-   ENDIF
-
-   IF hb_isBlock( xParam )
-      ::sl_lbDblClick := xParam
-   ENDIF
-
-   RETURN ::sl_lbDblClick
+METHOD XbpWindow:lbUp( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_lbUp := a_[ 1 ]
+   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_lbUp )
+      eval( ::sl_lbUp, a_[ 1 ], NIL, Self )
+   ENDIF 
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpWindow:lbDown( xParam )
-
-   if hb_isArray( xParam ) .and. hb_isBlock( ::sl_lbDown )
-      eval( ::sl_lbDown, xParam, NIL, Self )
-      RETURN NIL
-   endif
-
-   if hb_isBlock( xParam )
-      ::sl_lbDown := xParam
-   endif
-
-   RETURN ::sl_lbDown
+METHOD XbpWindow:mbClick( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_mbClick := a_[ 1 ]
+   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_mbClick )
+      eval( ::sl_mbClick, a_[ 1 ], NIL, Self )
+   ENDIF 
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpWindow:lbUp( xParam )
-
-   if hb_isArray( xParam ) .and. hb_isBlock( ::sl_lbUp )
-      eval( ::sl_lbUp, xParam, NIL, Self )
-      RETURN NIL
-   endif
-
-   if hb_isBlock( xParam ) .or. hb_isNil( xParam )
-      ::sl_lbUp := xParam
-   endif
-
-   RETURN ::sl_lbUp
+METHOD XbpWindow:mbDblClick( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_mbDblClick := a_[ 1 ]
+   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_mbDblClick )
+      eval( ::sl_mbDblClick, a_[ 1 ], NIL, Self )
+   ENDIF 
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpWindow:mbClick( xParam )
-
-   if hb_isArray( xParam ) .and. hb_isBlock( ::sl_mbClick )
-      eval( ::sl_mbClick, xParam, NIL, Self )
-      RETURN NIL
-   endif
-
-   if hb_isBlock( xParam )
-      ::sl_mbClick := xParam
-   endif
-
-   RETURN ::sl_mbClick
+METHOD XbpWindow:mbDown( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_mbDown := a_[ 1 ]
+   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_mbDown )
+      eval( ::sl_mbDown, a_[ 1 ], NIL, Self )
+   ENDIF 
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpWindow:mbDblClick( xParam )
-
-   if hb_isArray( xParam ) .and. hb_isBlock( ::sl_mbDblClick )
-      eval( ::sl_mbDblClick, xParam, NIL, Self )
-      RETURN NIL
-   endif
-
-   if hb_isBlock( xParam )
-      ::sl_mbDblClick := xParam
-   endif
-
-   RETURN ::sl_mbDblClick
+METHOD XbpWindow:mbUp( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_mbUp := a_[ 1 ]
+   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_mbUp )
+      eval( ::sl_mbUp, a_[ 1 ], NIL, Self )
+   ENDIF 
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpWindow:mbDown( xParam )
-
-   if hb_isArray( xParam ) .and. hb_isBlock( ::sl_mbDown )
-      eval( ::sl_mbDown, xParam, NIL, Self )
-      RETURN NIL
-   endif
-
-   if hb_isBlock( xParam )
-      ::sl_mbDown := xParam
-   endif
-
-   RETURN ::sl_mbDown
+METHOD XbpWindow:motion( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_motion := a_[ 1 ]
+   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_motion )
+      eval( ::sl_motion, a_[ 1 ], NIL, Self )
+   ENDIF 
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpWindow:mbUp( xParam )
-
-   if hb_isArray( xParam ) .and. hb_isBlock( ::sl_mbUp )
-      eval( ::sl_mbUp, xParam, NIL, Self )
-      RETURN NIL
-   endif
-
-   if hb_isBlock( xParam )
-      ::sl_mbUp := xParam
-   endif
-
-   RETURN ::sl_mbUp
+METHOD XbpWindow:rbClick( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_rbClick := a_[ 1 ]
+   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_rbClick )
+      eval( ::sl_rbClick, a_[ 1 ], NIL, Self )
+   ENDIF 
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpWindow:motion( xParam )
-
-   if hb_isArray( xParam ) .and. hb_isBlock( ::sl_motion )
-      eval( ::sl_motion, xParam, NIL, Self )
-      RETURN NIL
-   endif
-
-   if hb_isBlock( xParam )
-      ::sl_motion := xParam
-   endif
-
-   RETURN ::sl_motion
+METHOD XbpWindow:rbDblClick( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_rbDblClick := a_[ 1 ]
+   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_rbDblClick )
+      eval( ::sl_rbDblClick, a_[ 1 ], NIL, Self )
+   ENDIF 
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpWindow:rbClick( xParam )
-
-   if hb_isArray( xParam ) .and. hb_isBlock( ::sl_rbClick )
-      eval( ::sl_rbClick, xParam, NIL, Self )
-      RETURN NIL
-   endif
-
-   if hb_isBlock( xParam )
-      ::sl_rbClick := xParam
-   endif
-
-   RETURN ::sl_rbClick
+METHOD XbpWindow:rbDown( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_rbDown := a_[ 1 ]
+   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_rbDown )
+      eval( ::sl_rbDown, a_[ 1 ], NIL, Self )
+   ENDIF 
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpWindow:rbDblClick( xParam )
-
-   if hb_isArray( xParam ) .and. hb_isBlock( ::sl_rbDblClick )
-      eval( ::sl_rbDblClick, xParam, NIL, Self )
-      RETURN NIL
-   endif
-
-   if hb_isBlock( xParam ) .or. hb_isNil( xParam )
-      ::sl_rbDblClick := xParam
-   endif
-
-   RETURN ::sl_rbDblClick
+METHOD XbpWindow:rbUp( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_rbUp := a_[ 1 ]
+   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_rbUp )
+      eval( ::sl_rbUp, a_[ 1 ], NIL, Self )
+   ENDIF 
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpWindow:rbDown( xParam )
-
-   if hb_isArray( xParam ) .and. hb_isBlock( ::sl_rbDown )
-      eval( ::sl_rbDown, xParam, NIL, Self )
-      RETURN NIL
-   endif
-
-   if hb_isBlock( xParam )
-      ::sl_rbDown := xParam
-   endif
-
-   RETURN ::sl_rbDown
-
-/*----------------------------------------------------------------------*/
-
-METHOD XbpWindow:rbUp( xParam )
-
-   if hb_isArray( xParam ) .and. hb_isBlock( ::sl_rbUp )
-      eval( ::sl_rbUp, xParam, NIL, Self )
-      RETURN NIL
-   endif
-
-   if hb_isBlock( xParam )
-      ::sl_rbUp := xParam
-   endif
-
-   RETURN ::sl_rbUp
-
-/*----------------------------------------------------------------------*/
-
-METHOD XbpWindow:wheel( xParam )
-
-   if hb_isArray( xParam ) .and. hb_isBlock( ::sl_wheel )
-      eval( ::sl_wheel, xParam, NIL, Self )
-      RETURN NIL
-   endif
-
-   if hb_isBlock( xParam )
-      ::sl_wheel := xParam
-   endif
-
-   RETURN ::sl_wheel
+METHOD XbpWindow:wheel( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_wheel := a_[ 1 ]
+   ELSEIF len( a_ ) >= 2 .AND. hb_isBlock( ::sl_wheel )
+      eval( ::sl_wheel, a_[ 1 ], a_[ 2 ], Self )
+   ENDIF 
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
  *                           Other Messages
 /*----------------------------------------------------------------------*/
 
-METHOD XbpWindow:close( xParam )
-
-   if hb_isNil( xParam ) .and. hb_isBlock( ::sl_close )
-      RETURN eval( ::sl_close, NIL, NIL, Self )               /* NOTE: */
-   endif
-
-   if hb_isBlock( xParam )
-      ::sl_close := xParam
-   endif
-
-   RETURN ::sl_close
+METHOD XbpWindow:close( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_close := a_[ 1 ]
+   ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_close )
+      eval( ::sl_close, NIL, NIL, Self )
+   ENDIF 
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpWindow:helpRequest( xParam )
-
-   if hb_isNil( xParam ) .and. hb_isBlock( ::sl_helpRequest )
+METHOD XbpWindow:helpRequest( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_helpRequest := a_[ 1 ]
+   ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_helpRequest )
       eval( ::sl_helpRequest, NIL, NIL, Self )
-      RETURN NIL
-   endif
-
-   if hb_isBlock( xParam )
-      ::sl_helpRequest := xParam
-   endif
-
-   RETURN ::sl_helpRequest
+   ENDIF 
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpWindow:keyboard( xParam )
-
-   if hb_isNumeric( xParam ) .and. hb_isBlock( ::sl_keyboard )
-      eval( ::sl_keyboard, xParam, NIL, Self )
-      RETURN NIL
-   endif
-
-   if hb_isBlock( xParam )
-      ::sl_keyboard := xParam
-   endif
-
-   RETURN ::sl_keyboard
+METHOD XbpWindow:keyboard( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_keyboard := a_[ 1 ]
+   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_keyboard )
+      eval( ::sl_keyboard, a_[ 1 ], NIL, Self )
+   ENDIF 
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpWindow:killDisplayFocus( xParam )
-
-   if hb_isNil( xParam ) .and. hb_isBlock( ::sl_killDisplayFocus )
+METHOD XbpWindow:killDisplayFocus( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_killDisplayFocus := a_[ 1 ]
+   ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_killDisplayFocus )
       eval( ::sl_killDisplayFocus, NIL, NIL, Self )
-      RETURN NIL
-   endif
-
-   if hb_isBlock( xParam )
-      ::sl_killDisplayFocus := xParam
-   endif
-
-   RETURN ::sl_killDisplayFocus
+   ENDIF 
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpWindow:killInputFocus( xParam )
-
-   if hb_isNil( xParam ) .and. hb_isBlock( ::sl_killInputFocus )
+METHOD XbpWindow:killInputFocus( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_killInputFocus := a_[ 1 ]
+   ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_killInputFocus )
       eval( ::sl_killInputFocus, NIL, NIL, Self )
-      RETURN NIL
-   endif
-
-   if hb_isBlock( xParam )
-      ::sl_killInputFocus := xParam
-   endif
-
-   RETURN ::sl_killInputFocus
+   ENDIF 
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpWindow:move( xParam )
-
-   if hb_isArray( xParam ) .and. hb_isBlock( ::sl_move )
-      eval( ::sl_move, xParam, NIL, Self )
-      RETURN NIL
-   endif
-
-   if hb_isBlock( xParam )
-      ::sl_move := xParam
-   endif
-
-   RETURN ::sl_move
+METHOD XbpWindow:move( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_move := a_[ 1 ]
+   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_move )
+      eval( ::sl_move, a_[ 1 ], NIL, Self )
+   ENDIF 
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpWindow:paint( xParam )
-
-   if hb_isArray( xParam ) .and. hb_isBlock( ::sl_paint )
-      eval( ::sl_paint, xParam, NIL, Self )
-      RETURN NIL
-   endif
-
-   if hb_isBlock( xParam )
-      ::sl_paint := xParam
-   endif
-
-   RETURN ::sl_paint
+METHOD XbpWindow:paint( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_paint := a_[ 1 ]
+   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_paint )
+      eval( ::sl_paint, a_[ 1 ], NIL, Self )
+   ENDIF 
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpWindow:quit( xParam, xParam1 )
-
-   if hb_isNumeric( xParam ) .and. hb_isBlock( ::sl_quit )
-      eval( ::sl_quit, xParam, xParam1, Self )
-      RETURN NIL
-   endif
-
-   if hb_isBlock( xParam )
-      ::sl_quit := xParam
-   endif
-
-   RETURN ::sl_quit
+METHOD XbpWindow:quit( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_quit := a_[ 1 ]
+   ELSEIF len( a_ ) >= 2 .AND. hb_isBlock( ::sl_quit )
+      eval( ::sl_quit, a_[ 1 ], a_[ 2 ], Self )
+   ENDIF 
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpWindow:resize( xParam, xParam1 )
-
-   if hb_isArray( xParam ) .and. hb_isArray( xParam1 ) .and. hb_isBlock( ::sl_resize )
-      eval( ::sl_resize, xParam, xParam1, Self )
-      RETURN NIL
-   endif
-
-   if hb_isBlock( xParam )
-      ::sl_resize := xParam
-   endif
-
-   RETURN ::sl_resize
+METHOD XbpWindow:resize( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_resize := a_[ 1 ]
+   ELSEIF len( a_ ) >= 2 .AND. hb_isBlock( ::sl_resize )
+      eval( ::sl_resize, a_[ 1 ], a_[ 2 ], Self )
+   ENDIF 
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpWindow:setDisplayFocus( xParam )
-
-   if hb_isNil( xParam ) .and. hb_isBlock( ::sl_setDisplayFocus )
+METHOD XbpWindow:setDisplayFocus( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_setDisplayFocus := a_[ 1 ]
+   ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_setDisplayFocus )
       eval( ::sl_setDisplayFocus, NIL, NIL, Self )
-      RETURN NIL
-   endif
-
-   if hb_isBlock( xParam )
-      ::sl_setDisplayFocus := xParam
-   endif
-
-   RETURN ::sl_setDisplayFocus
+   ENDIF 
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpWindow:setInputFocus( xParam )
-
-   if hb_isNil( xParam ) .and. hb_isBlock( ::sl_setInputFocus )
+METHOD XbpWindow:setInputFocus( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_setInputFocus := a_[ 1 ]
+   ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_setInputFocus )
       eval( ::sl_setInputFocus, NIL, NIL, Self )
-      RETURN NIL
-   endif
-
-   if hb_isBlock( xParam )
-      ::sl_setInputFocus := xParam
-   endif
-
-   RETURN ::sl_setInputFocus
+   ENDIF 
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpWindow:dragEnter( xParam, xParam1 )
-
-   if hb_isArray( xParam ) .and. hb_isBlock( ::sl_dragEnter )
-      eval( ::sl_dragEnter, xParam, xParam1, Self )
-      RETURN NIL
-   endif
-
-   if hb_isBlock( xParam )
-      ::sl_dragEnter := xParam
-   endif
-
-   RETURN ::sl_dragEnter
+METHOD XbpWindow:dragEnter( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_dragEnter := a_[ 1 ]
+   ELSEIF len( a_ ) >= 2 .AND. hb_isBlock( ::sl_dragEnter )
+      eval( ::sl_dragEnter, a_[ 1 ], a_[ 2 ], Self )
+   ENDIF 
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpWindow:dragMotion( xParam )
-
-   if hb_isArray( xParam ) .and. hb_isBlock( ::sl_dragMotion )
-      eval( ::sl_dragMotion, xParam, NIL, Self )
-      RETURN NIL
-   endif
-
-   if hb_isBlock( xParam )
-      ::sl_dragMotion := xParam
-   endif
-
-   RETURN ::sl_dragMotion
+METHOD XbpWindow:dragMotion( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_dragMotion := a_[ 1 ]
+   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_dragMotion )
+      eval( ::sl_dragMotion, a_[ 1 ], NIL, Self )
+   ENDIF 
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpWindow:dragLeave( xParam )
-
-   if hb_isNil( xParam ) .and. hb_isBlock( ::sl_dragLeave )
+METHOD XbpWindow:dragLeave( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_dragLeave := a_[ 1 ]
+   ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_dragLeave )
       eval( ::sl_dragLeave, NIL, NIL, Self )
-      RETURN NIL
-   endif
-
-   if hb_isBlock( xParam )
-      ::sl_dragLeave := xParam
-   endif
-
-   RETURN ::sl_dragLeave
+   ENDIF 
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpWindow:dragDrop( xParam, xParam1 )
-
-   if hb_isArray( xParam ) .and. hb_isBlock( ::sl_dragDrop )
-      eval( ::sl_dragDrop, xParam, xParam1, Self )
-      RETURN NIL
-   endif
-
-   if hb_isBlock( xParam )
-      ::sl_dragDrop := xParam
-   endif
-
-   RETURN ::sl_dragDrop
+METHOD XbpWindow:dragDrop( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::sl_dragDrop := a_[ 1 ]
+   ELSEIF len( a_ ) >= 2 .AND. hb_isBlock( ::sl_dragDrop )
+      eval( ::sl_dragDrop, a_[ 1 ], a_[ 2 ], Self )
+   ENDIF 
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpWindow:hbContextMenu( xParam )
-
-   if hb_isBlock( ::hb_contextMenu )
-      eval( ::hb_contextMenu, xParam, NIL, Self )
-      RETURN NIL
-   endif
-
-   if hb_isBlock( xParam )
-      ::hb_contextMenu := xParam
-   endif
-
-   RETURN ::hb_contextMenu
+METHOD XbpWindow:hbContextMenu( ... )
+   LOCAL a_:= hb_aParams()
+   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+      ::hb_contextMenu := a_[ 1 ]
+   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::hb_contextMenu )
+      eval( ::hb_contextMenu, a_[ 1 ], NIL, Self )
+   ENDIF 
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
