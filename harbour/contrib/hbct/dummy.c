@@ -190,6 +190,7 @@ HB_FUNC( SAVEFSEEK )  {;}
 HB_FUNC( SETSHARE )   {;}
 /* Introduction Printer Functions */
 HB_FUNC( NUMPRINTER ) {;}
+HB_FUNC( FILEPRINT )  {;}
 HB_FUNC( PRINTFILE )  {;}
 HB_FUNC( PRINTINIT )  {;}
 HB_FUNC( PRINTSCR )   {;}
