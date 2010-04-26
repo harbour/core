@@ -188,7 +188,6 @@ HB_FUNC( NUMDISKH )   {;}
 HB_FUNC( RESTFSEEK )  {;}
 HB_FUNC( SAVEFSEEK )  {;}
 HB_FUNC( SETSHARE )   {;}
-HB_FUNC( TEMPFILE )   {;}
 /* Introduction Printer Functions */
 HB_FUNC( NUMPRINTER ) {;}
 HB_FUNC( PRINTFILE )  {;}

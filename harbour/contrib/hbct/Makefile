@@ -111,6 +111,7 @@ PRG_SOURCES := \
    screen3.prg \
    scrmark.prg \
    showtime.prg \
+   tempfile.prg \
 
 PRG_HEADERS := \
    ct.ch \
