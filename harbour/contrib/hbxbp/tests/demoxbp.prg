@@ -702,15 +702,16 @@ FUNCTION Build_ListBox( oWnd )
    // Create list box that allows multiple selections
 
    oListBox := XbpListBox():new()
-   //oListBox:markMode := XBPLISTBOX_MM_MULTIPLE
+   oListBox:markMode := XBPLISTBOX_MM_MULTIPLE
    oListBox:create( oWnd, , {10,10}, {150,320} )
 
    // Copy field names from the DbStruct() array to the list box
    aeval( aItems, {|e| oListBox:addItem( e ) } )
 
    // Code block for list box selection:
-   oListBox:ItemSelected := {|mp1, mp2, obj| UNU( obj ), mp1:=oListBox:getData(), ;
-                              mp2:=oListBox:getItem( mp1 ), MsgBox( "itemSelected: "+mp2 ) }
+   oListBox:ItemSelected := {|mp1, mp2, obj| UNU( obj ), mp1 := oListBox:getData(), ;
+                               iif( !empty( mp1 ), mp2 := oListBox:getItem( mp1[ 1 ] ), mp2 := "Nothing" ), ;
+                                   MsgBox( "itemSelected: " + mp2 ) }
    oListBox:setColorFG( GraMakeRGBColor( {227,12,110} ) )
    oListBox:setColorBG( GraMakeRGBColor( {50,45,170} ) )
 

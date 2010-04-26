@@ -84,6 +84,7 @@ CLASS XbpListBox  INHERIT  XbpWindow, XbpDataRef
 
    DATA     oStrList
    DATA     oStrModel
+   DATA     aItems                                INIT {}
 
    METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
@@ -99,24 +100,22 @@ CLASS XbpListBox  INHERIT  XbpWindow, XbpDataRef
    METHOD   getItemHeight()                       VIRTUAL
    METHOD   getTopItem()                          VIRTUAL
    METHOD   getVisibleItems()                     VIRTUAL
-   METHOD   numItems()                            INLINE  ::oStrList:size()
    METHOD   setTopItem( nIndex )                  VIRTUAL
 
-   METHOD   addItem( cItem )                      INLINE  ::oStrList:append( cItem ),;
-                                                          ::oStrModel:setStringList( ::oStrList )
-   METHOD   clear()                               INLINE  ::oStrList:clear(),;
-                                                          ::oStrModel:setStringList( ::oStrList )
-   METHOD   delItem( nIndex )                     INLINE  ::oStrList:removeAt( nIndex-1 ),;
-                                                          ::oStrModel:setStringList( ::oStrList )
-   METHOD   getItem( nIndex )                     INLINE  ::oStrList:at( nIndex-1 )
-   METHOD   insItem( nIndex, cItem )              INLINE  ::oStrList:insert( nIndex-1, cItem ),;
-                                                          ::oStrModel:setStringList( ::oStrList )
-   METHOD   setItem( nIndex, cItem )              INLINE  ::oStrModel:replace( nIndex-1, cItem ),;
-                                                          ::oStrModel:setStringList( ::oStrList )
+   METHOD   numItems()                            INLINE  len( ::aItems )
+   METHOD   addItem( cItem )
+   METHOD   clear()
+   METHOD   delItem( nIndex )
+   METHOD   getItem( nIndex )
+   METHOD   insItem( nIndex, cItem )
+   METHOD   setItem( nIndex, cItem )
 
    METHOD   getTabstops()                         VIRTUAL
    METHOD   setColumnWidth()                      VIRTUAL
    METHOD   setTabstops()                         VIRTUAL
+
+   METHOD   getItemIndex( pItm )
+   METHOD   toggleSelected( nIndex )
 
 
    DATA     sl_hScroll
@@ -128,14 +127,14 @@ CLASS XbpListBox  INHERIT  XbpWindow, XbpDataRef
    DATA     nCurSelected                          INIT   0
 
    METHOD   getCurItem()                          INLINE ::getItem( ::nCurSelected )
-   
-   METHOD   itemMarked( ... )                     SETGET    
-   METHOD   itemSelected( ... )                   SETGET    
-   METHOD   drawItem( ... )                       SETGET    
-   METHOD   measureItem( ... )                    SETGET    
-   METHOD   hScroll( ... )                        SETGET    
-   METHOD   vScroll( ... )                        SETGET    
-   
+
+   METHOD   itemMarked( ... )                     SETGET
+   METHOD   itemSelected( ... )                   SETGET
+   METHOD   drawItem( ... )                       SETGET
+   METHOD   measureItem( ... )                    SETGET
+   METHOD   hScroll( ... )                        SETGET
+   METHOD   vScroll( ... )                        SETGET
+
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
@@ -153,34 +152,42 @@ METHOD XbpListBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    #if 0
-   IF ::horizScroll
-      ::style += WS_HSCROLL
-   ENDIF
-   IF ::vertScroll
-      ::style += WS_VSCROLL
-   ENDIF
    IF ::multiColumn
       ::style += LBS_MULTICOLUMN
    ENDIF
    #endif
 
-
-   ::oWidget  := QListView():New( ::pParent )
+   ::oWidget  := QListWidget():New( ::pParent )
    ::oWidget:setMouseTracking( .t. )
+   IF ::markMode == XBPLISTBOX_MM_MULTIPLE
+      ::oWidget:setSelectionMode( QAbstractItemView_MultiSelection )
+   ENDIF
+
+   ::oWidget:setEditTriggers( QAbstractItemView_NoEditTriggers )
+
+   IF ! ::horizScroll
+      ::oWidget:setHorizontalScrollBarPolicy( Qt_ScrollBarAlwaysOff )
+   ENDIF
+   IF ! ::vertScroll
+      ::oWidget:setVerticalScrollBarPolicy( Qt_ScrollBarAlwaysOff )
+   ENDIF
+
+   ::sl_editBuffer := {}
 
    /* Window Events */
    ::oWidget:installEventFilter( ::pEvents )
    ::connectEvent( ::pWidget, QEvent_ContextMenu, {|e| ::grabEvent( QEvent_ContextMenu, e ) } )
 
-   /* Signal-slots */
-   ::Connect( ::pWidget, "clicked(QModelIndex)"      , {|p| ::execSlot( "clicked(QModelIndex)"      , p ) } )
-   ::Connect( ::pWidget, "doubleClicked(QModelIndex)", {|p| ::execSlot( "doubleClicked(QModelIndex)", p ) } )
-   ::Connect( ::pWidget, "entered(QModelIndex)"      , {|p| ::execSlot( "entered(QModelIndex)"      , p ) } )
-
-   ::oStrList  := QStringList():new( ::pWidget )
-   ::oStrModel := QStringListModel():new( ::pWidget )
-   ::oStrModel:setStringList( ::oStrList )
-   ::oWidget:setModel( ::oStrModel )
+   ::connect( ::oWidget, "currentItemChanged(QLWItem,QLWItem)", {|p,p1| ::execSlot( "currentItemChanged(QLWItem,QLWItem)", p, p1 ) } )
+   ::connect( ::oWidget, "currentRowChanged(int)"             , {|p,p1| ::execSlot( "currentRowChanged(int)"             , p, p1 ) } )
+   ::connect( ::oWidget, "currentTextChanged(QString)"        , {|p,p1| ::execSlot( "currentTextChanged(QString)"        , p, p1 ) } )
+   ::connect( ::oWidget, "itemActivated(QLWItem)"             , {|p,p1| ::execSlot( "itemActivated(QLWItem)"             , p, p1 ) } )
+   ::connect( ::oWidget, "itemChanged(QLWItem)"               , {|p,p1| ::execSlot( "itemChanged(QLWItem)"               , p, p1 ) } )
+   ::connect( ::oWidget, "itemClicked(QLWItem)"               , {|p,p1| ::execSlot( "itemClicked(QLWItem)"               , p, p1 ) } )
+   ::connect( ::oWidget, "itemDoubleClicked(QLWItem)"         , {|p,p1| ::execSlot( "itemDoubleClicked(QLWItem)"         , p, p1 ) } )
+   ::connect( ::oWidget, "itemEntered(QLWItem)"               , {|p,p1| ::execSlot( "itemEntered(QLWItem)"               , p, p1 ) } )
+   ::connect( ::oWidget, "itemPressed(QLWItem)"               , {|p,p1| ::execSlot( "itemPressed(QLWItem)"               , p, p1 ) } )
+   ::connect( ::oWidget, "itemSelectionChanged()"             , {|p,p1| ::execSlot( "itemSelectionChanged()"             , p, p1 ) } )
 
    ::setPosAndSize()
    IF ::visible
@@ -204,24 +211,70 @@ METHOD XbpListBox:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, 
 
 /*----------------------------------------------------------------------*/
 
+METHOD XbpListBox:toggleSelected( nIndex )
+   LOCAL n
+
+   IF ::markMode == XBPLISTBOX_MM_MULTIPLE
+      IF ( n := ascan( ::sl_editBuffer, nIndex ) ) > 0
+         hb_adel( ::sl_editBuffer, n, .t. )
+      ELSE
+         aadd( ::sl_editBuffer, nIndex )
+      ENDIF
+   ELSE
+      ::sl_editBuffer := { nIndex }
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpListBox:getItemIndex( pItm )
+
+   RETURN  ascan( ::aItems, {|o| hbqt_IsEqualGcQtPointer( o:pPtr, pItm ) } )
+
+/*----------------------------------------------------------------------*/
+
 METHOD XbpListBox:execSlot( cSlot, p )
-   LOCAL oModel
+   LOCAL qItm, nIndex
 
    IF hb_isPointer( p )
-      oModel := QModelIndex():configure( p )
-      ::nCurSelected := oModel:row()+1
-      ::sl_editBuffer := oModel:row()+1
-   ENDIF
-   
-   IF     cSlot == "clicked(QModelIndex)" 
-      ::itemMarked()
-   ELSEIF cSlot == "doubleClicked(QModelIndex)"
-      ::itemSelected()
-   ELSEIF cSlot == "entered(QModelIndex)" 
-      ::oWidget:setToolTip( ::oStrList:at( ::nCurSelected - 1 ) )
+      IF ( nIndex := ::getItemIndex( p ) ) > 0
+         qItm := ::aItems[ nIndex ]
+      ENDIF
+      IF empty( qItm )
+         RETURN Self
+      ENDIF
    ENDIF
 
-   RETURN nil
+   SWITCH cSlot
+   CASE "currentItemChanged(QLWItem,QLWItem)"
+      EXIT
+   CASE "currentRowChanged(int)"
+      ::nCurSelected := p + 1
+      EXIT
+   CASE "currentTextChanged(QString)"
+      EXIT
+   CASE "itemActivated(QLWItem)"
+      EXIT
+   CASE "itemChanged(QLWItem)"
+      EXIT
+   CASE "itemPressed(QLWItem)"
+      EXIT
+   CASE "itemClicked(QLWItem)"
+      ::toggleSelected( nIndex )
+      ::itemMarked()
+      EXIT
+   CASE "itemDoubleClicked(QLWItem)"
+      ::itemSelected()
+      EXIT
+   CASE "itemEntered(QLWItem)"
+      ::oWidget:setToolTip( qItm:text() )
+      EXIT
+   CASE "itemSelectionChanged()"
+      EXIT
+   ENDSWITCH
+
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
@@ -244,15 +297,84 @@ METHOD XbpListBox:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible
 METHOD XbpListBox:destroy()
 
    ::disconnect()
-   ::oStrList:pPtr := NIL
-   ::oStrModel:pPtr := NIL
-
-   ::oStrList := NIL
-   ::oStrModel := NIL
+   ::clear()
 
    ::xbpWindow:destroy()
 
    RETURN NIL
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpListBox:addItem( cItem )
+   LOCAL qItm := QListWidgetItem():new()
+
+   qItm:setText( cItem ) ; ::oWidget:addItem_1( qItm )
+   aadd( ::aItems, qItm )
+
+   RETURN len( ::aItems )
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpListBox:clear()
+   LOCAL qItm
+
+   FOR EACH qItm IN ::aItems
+      qItm := NIL
+   NEXT
+   ::aItems := {}
+   ::oWidget:clear()
+
+   RETURN .t.
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpListBox:delItem( nIndex )
+
+   IF hb_isNumeric( nIndex ) .AND. nIndex > 0 .AND. nIndex <= len( ::aItems )
+      ::aItems[ nIndex ] := NIL
+      hb_adel( ::aItems, nIndex, .t. )
+   ENDIF
+
+   RETURN len( ::aItems )
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpListBox:getItem( nIndex )
+
+   IF hb_isNumeric( nIndex ) .AND. nIndex > 0 .AND. nIndex <= len( ::aItems )
+      RETURN ::aItems[ nIndex ]:text()
+   ENDIF
+
+   RETURN ""
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpListBox:insItem( nIndex, cItem )
+   LOCAL qItm := QListWidgetItem():new()
+
+   qItm:setText( cItem )
+
+   IF hb_isNumeric( nIndex ) .AND. nIndex > 0 .AND. nIndex <= len( ::aItems )
+      ::oWidget:insertItem( nIndex - 1, qItm )
+      hb_aIns( ::aItems, qItm, .t. )
+   ELSE
+      ::oWidget:insertItem( len( ::aItems ) - 1, qItm )
+      aadd( ::aItems, qItm )
+   ENDIF
+
+   RETURN len( ::aItems )
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpListBox:setItem( nIndex, cItem )
+   LOCAL cText := ""
+
+   IF hb_isNumeric( nIndex ) .AND. nIndex > 0 .AND. nIndex <= len( ::aItems )
+      cText := ::aItems[ nIndex ]:text()
+      ::aItems[ nIndex ]:setText( cItem )
+   ENDIF
+
+   RETURN cText
 
 /*----------------------------------------------------------------------*/
 
@@ -262,31 +384,31 @@ METHOD XbpListBox:itemMarked( ... )
       ::sl_itemMarked := a_[ 1 ]
    ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_itemMarked )
       eval( ::sl_itemMarked, NIL, NIL, Self )
-   ENDIF 
+   ENDIF
    RETURN Self
-   
+
 /*----------------------------------------------------------------------*/
-   
+
 METHOD XbpListBox:itemSelected( ... )
    LOCAL a_:= hb_aParams()
    IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
       ::sl_itemSelected := a_[ 1 ]
    ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_itemSelected )
       eval( ::sl_itemSelected, NIL, NIL, Self )
-   ENDIF 
+   ENDIF
    RETURN Self
-   
+
 /*----------------------------------------------------------------------*/
-   
+
 METHOD XbpListBox:drawItem( ... )
    LOCAL a_:= hb_aParams()
    IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
       ::sl_xbePDrawItem := a_[ 1 ]
    ELSEIF len( a_ ) >= 2 .AND. hb_isBlock( ::sl_xbePDrawItem )
       eval( ::sl_xbePDrawItem, a_[ 1 ], a_[ 2 ], Self )
-   ENDIF 
+   ENDIF
    RETURN Self
-   
+
 /*----------------------------------------------------------------------*/
 
 METHOD XbpListBox:measureItem( ... )
@@ -295,9 +417,9 @@ METHOD XbpListBox:measureItem( ... )
       ::sl_measureItem := a_[ 1 ]
    ELSEIF len( a_ ) >= 2 .AND. hb_isBlock( ::sl_measureItem )
       eval( ::sl_measureItem, a_[ 1 ], a_[ 2 ], Self )
-   ENDIF 
+   ENDIF
    RETURN Self
-   
+
 /*----------------------------------------------------------------------*/
 
 METHOD XbpListBox:hScroll( ... )
@@ -306,9 +428,9 @@ METHOD XbpListBox:hScroll( ... )
       ::sl_hScroll := a_[ 1 ]
    ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_hScroll )
       eval( ::sl_hScroll, NIL, NIL, Self )
-   ENDIF 
+   ENDIF
    RETURN Self
-   
+
 /*----------------------------------------------------------------------*/
 
 METHOD XbpListBox:vScroll( ... )
@@ -317,9 +439,9 @@ METHOD XbpListBox:vScroll( ... )
       ::sl_vScroll := a_[ 1 ]
    ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_vScroll )
       eval( ::sl_vScroll, NIL, NIL, Self )
-   ENDIF 
+   ENDIF
    RETURN Self
-   
+
 /*----------------------------------------------------------------------*/
 
 METHOD XbpListBox:setStyle()

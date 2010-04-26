@@ -108,24 +108,22 @@ METHOD XbpDataRef:getData()
    CASE ::isDerivedFrom( "XBPMLE" )
       ::sl_editBuffer := ::oWidget:toPlainText()
 
-
    CASE ::isDerivedFrom( "XBPSLE" )
       ::sl_editBuffer := ::oWidget:text()
 
-   // CASE cClass $ "XBPCOMBOBOX"
+   CASE cClass $ "XBPCOMBOBOX"
       //::sl_editBuffer := ::oWidget:itemText()
 
    CASE cClass == "XBPRADIOBUTTON"
       ::sl_editBuffer := ::oWidget:isChecked()
-
-   // CASE cClass == "XBPLISTBOX"
-   //    RETURN ::nCurSelected
 
    CASE cClass == "XBPSCROLLBAR"
       ::sl_editBuffer := ::oWidget:value()
 
    CASE cClass == "XBPSPINBUTTON"
       ::sl_editBuffer := ::oWidget:value()
+
+   CASE cClass == "XBPLISTBOX"
 
    ENDCASE
 
@@ -220,9 +218,9 @@ METHOD XbpDataRef:editBuffer( xData )
 
    IF !( xData == NIL )
       ::sl_editBuffer := xData
-   ENDIF 
-   
+   ENDIF
+
    RETURN ::sl_editBuffer
-   
+
 /*----------------------------------------------------------------------*/
-        
+

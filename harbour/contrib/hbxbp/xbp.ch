@@ -99,6 +99,8 @@
 #define XBP_DRAW_NORMAL                           0
 
 #define XBPLISTBOX_MM_SINGLE                      1
+#define XBPLISTBOX_MM_MULTIPLE                    2
+#define XBPLISTBOX_MM_EXTENDED                    3
 
 #define XBP_PP_FGCLR                              2
 #define XBP_PP_BGCLR                              4
