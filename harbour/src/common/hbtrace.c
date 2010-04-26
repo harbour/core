@@ -254,15 +254,7 @@ static void hb_tracelog_( int level, const char * file, int line, const char * p
       }
 #  else
       {
-         char psz[ 1024 ];
          int slevel;
-
-         if( proc )
-            hb_snprintf( psz, sizeof( psz ), "%s:%d:%s() %s %s",
-                         file, line, proc, pszLevel, message );
-         else
-            hb_snprintf( psz, sizeof( psz ), "%s:%d: %s %s",
-                         file, line, pszLevel, message );
 
          switch( level )
          {
@@ -275,7 +267,11 @@ static void hb_tracelog_( int level, const char * file, int line, const char * p
             default:            slevel = LOG_DEBUG;
          }
 
-         syslog( slevel, psz );
+         if( proc )
+            syslog( slevel, "%s:%d:%s() %s %s", file, line, proc,
+                    pszLevel, message );
+         else
+            syslog( slevel, "%s:%d: %s %s", file, line, pszLevel, message );
       }
 #  endif
 #endif
