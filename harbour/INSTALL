@@ -1119,6 +1119,7 @@ HARBOUR
         set HRB_DIR=<Some Harbour dir>
         set INCLUDE=<Harbour include dir>
         set LIB=<Harbour lib dir>
+        set HB_GT_LIB=
         set HB_INC_*=
         set HB_DIR_*=
    - Try to do no or only small modifications at once to command examples
