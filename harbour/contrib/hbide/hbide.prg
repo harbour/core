@@ -652,6 +652,9 @@ METHOD HbIde:showApplicationCursor( nCursor )
 METHOD HbIde:execAction( cKey )
 
    SWITCH cKey
+   CASE "Environments"
+      ::oEV:fetchNew()
+      EXIT
    CASE "Exit"
       PostAppEvent( xbeP_Close, NIL, NIL, ::oDlg )
       EXIT

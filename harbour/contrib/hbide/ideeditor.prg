@@ -1496,6 +1496,7 @@ METHOD IdeEdit:create( oEditor, nMode )
    ::qEdit:ensureCursorVisible()
    ::qEdit:setContextMenuPolicy( Qt_CustomContextMenu )
    ::qEdit:installEventFilter( ::pEvents )
+   ::qEdit:setTabChangesFocus( .f. )
 
    ::qEdit:hbHighlightCurrentLine( .t. )              /* Via user-setup */
    ::qEdit:hbSetSpaces( ::nTabSpaces )

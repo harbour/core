@@ -82,6 +82,7 @@ CLASS IdeEnvironments INHERIT IdeObject
    DATA   aEnvrns                                 INIT {}
    DATA   aShellContents                          INIT {}
    DATA   aCommons                                INIT {}
+   DATA   oUI_1
 
    METHOD new( oIDE, cEnvFile )
    METHOD create( oIDE, cEnvFile )
@@ -92,6 +93,7 @@ CLASS IdeEnvironments INHERIT IdeObject
    METHOD saveEnv()
    METHOD show()
    METHOD execEnv( nMode, p )
+   METHOD fetchNew()
 
    ENDCLASS
 
@@ -127,6 +129,10 @@ METHOD IdeEnvironments:destroy()
    IF !empty( ::oUI )
       ::oUI:destroy()
    ENDIF
+   IF !empty( ::oUI_1 )
+      ::oUI_1:destroy()
+   ENDIF
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -272,6 +278,18 @@ METHOD IdeEnvironments:saveEnv()
 
       ::parse( cEnvFile )
    ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEnvironments:fetchNew()
+
+   IF empty( ::oUI_1 )
+      ::oUI_1 := HbQtUI():new( hbide_uic( "environ" ) ):build()
+      ::oUI_1:setWindowFlags( Qt_Sheet )
+   ENDIF
+   ::oUI_1:show()
 
    RETURN Self
 

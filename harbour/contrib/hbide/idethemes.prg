@@ -198,7 +198,7 @@ METHOD IdeThemes:create( oIde, cIniFile )
           'class','endclass','method','data','var','destructor','inline','assign','access',;
           'inherit','init','create','virtual','message',;
           'begin','sequence','try','catch','always','recover','hb_symbol_unused', ;
-          'error','handler','setget','.and.' }
+          'error','handler','setget' }
    s := ""; aeval( b_, {|e| s += iif( empty( s ), "", "|" ) + "\b" + upper( e ) + "\b|\b" + e + "\b" } )
    aadd( ::aPatterns, { "HarbourKeywords"   , s } )
 
