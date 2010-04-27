@@ -663,7 +663,7 @@ METHOD IdeDocks:addPanelButton( cPanel )
 METHOD IdeDocks:buildProjectTree()
    LOCAL i, oItem
 
-   ::oIde:oDockPT := ::getADockWidget( Qt_LeftDockWidgetArea, "dockProjectTree", "Projects" )
+   ::oIde:oDockPT := ::getADockWidget( Qt_LeftDockWidgetArea, "dockProjectTree", "Projects", QDockWidget_DockWidgetFloatable )
    ::oDlg:oWidget:addDockWidget_1( Qt_LeftDockWidgetArea, ::oDockPT:oWidget, Qt_Vertical )
 
    ::oIde:oProjTree := XbpTreeView():new()
@@ -711,7 +711,7 @@ METHOD IdeDocks:buildProjectTree()
 
 METHOD IdeDocks:buildEditorTree()
 
-   ::oIde:oDockED := ::getADockWidget( Qt_LeftDockWidgetArea, "dockEditorTabs", "Editors" )
+   ::oIde:oDockED := ::getADockWidget( Qt_LeftDockWidgetArea, "dockEditorTabs", "Editors", QDockWidget_DockWidgetFloatable )
    ::oDlg:oWidget:addDockWidget_1( Qt_LeftDockWidgetArea, ::oDockED:oWidget, Qt_Vertical )
 
    ::oIde:oEditTree := XbpTreeView():new()
@@ -744,7 +744,7 @@ METHOD IdeDocks:buildEditorTree()
 
 METHOD IdeDocks:buildSkeletonsTree()
 
-   ::oIde:oSkltnsTreeDock := ::getADockWidget( Qt_LeftDockWidgetArea, "dockSkltnsTree", "Skeletons" )
+   ::oIde:oSkltnsTreeDock := ::getADockWidget( Qt_LeftDockWidgetArea, "dockSkltnsTree", "Skeletons", QDockWidget_DockWidgetFloatable )
    ::oDlg:oWidget:addDockWidget_1( Qt_LeftDockWidgetArea, ::oSkltnsTreeDock:oWidget, Qt_Vertical )
 
    ::connect( ::oSkltnsTreeDock:oWidget, "visibilityChanged(bool)", {|p| ::execEvent( dockSkltnsTree_visibilityChanged, p ) } )

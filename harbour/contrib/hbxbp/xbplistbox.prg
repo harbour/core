@@ -116,6 +116,8 @@ CLASS XbpListBox  INHERIT  XbpWindow, XbpDataRef
 
    METHOD   getItemIndex( pItm )
    METHOD   toggleSelected( nIndex )
+   METHOD   connectAll()
+   METHOD   disConnectAll()
 
 
    DATA     sl_hScroll
@@ -178,6 +180,19 @@ METHOD XbpListBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::oWidget:installEventFilter( ::pEvents )
    ::connectEvent( ::pWidget, QEvent_ContextMenu, {|e| ::grabEvent( QEvent_ContextMenu, e ) } )
 
+   ::connectAll()
+
+   ::setPosAndSize()
+   IF ::visible
+      ::show()
+   ENDIF
+   ::oParent:AddChild( SELF )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpListBox:connectAll()
+
    ::connect( ::oWidget, "currentItemChanged(QLWItem,QLWItem)", {|p,p1| ::execSlot( "currentItemChanged(QLWItem,QLWItem)", p, p1 ) } )
    ::connect( ::oWidget, "currentRowChanged(int)"             , {|p,p1| ::execSlot( "currentRowChanged(int)"             , p, p1 ) } )
    ::connect( ::oWidget, "currentTextChanged(QString)"        , {|p,p1| ::execSlot( "currentTextChanged(QString)"        , p, p1 ) } )
@@ -189,11 +204,23 @@ METHOD XbpListBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::connect( ::oWidget, "itemPressed(QLWItem)"               , {|p,p1| ::execSlot( "itemPressed(QLWItem)"               , p, p1 ) } )
    ::connect( ::oWidget, "itemSelectionChanged()"             , {|p,p1| ::execSlot( "itemSelectionChanged()"             , p, p1 ) } )
 
-   ::setPosAndSize()
-   IF ::visible
-      ::show()
-   ENDIF
-   ::oParent:AddChild( SELF )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpListBox:disConnectAll()
+
+   ::disConnect( ::oWidget, "currentItemChanged(QLWItem,QLWItem)" )
+   ::disConnect( ::oWidget, "currentRowChanged(int)"              )
+   ::disConnect( ::oWidget, "currentTextChanged(QString)"         )
+   ::disConnect( ::oWidget, "itemActivated(QLWItem)"              )
+   ::disConnect( ::oWidget, "itemChanged(QLWItem)"                )
+   ::disConnect( ::oWidget, "itemClicked(QLWItem)"                )
+   ::disConnect( ::oWidget, "itemDoubleClicked(QLWItem)"          )
+   ::disConnect( ::oWidget, "itemEntered(QLWItem)"                )
+   ::disConnect( ::oWidget, "itemPressed(QLWItem)"                )
+   ::disConnect( ::oWidget, "itemSelectionChanged()"              )
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -221,7 +248,7 @@ METHOD XbpListBox:toggleSelected( nIndex )
          aadd( ::sl_editBuffer, nIndex )
       ENDIF
    ELSE
-      ::sl_editBuffer := { nIndex }
+      ::sl_editBuffer := nIndex
    ENDIF
 
    RETURN Self
@@ -296,7 +323,6 @@ METHOD XbpListBox:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible
 
 METHOD XbpListBox:destroy()
 
-   ::disconnect()
    ::clear()
 
    ::xbpWindow:destroy()
@@ -318,11 +344,15 @@ METHOD XbpListBox:addItem( cItem )
 METHOD XbpListBox:clear()
    LOCAL qItm
 
+   ::disConnectAll()
+
    FOR EACH qItm IN ::aItems
       qItm := NIL
    NEXT
    ::aItems := {}
    ::oWidget:clear()
+
+   ::connectAll()
 
    RETURN .t.
 

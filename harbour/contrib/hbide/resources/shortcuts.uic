@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading ui file 'shortcuts.ui'
 **
-** Created: Mon Apr 12 21:22:31 2010
+** Created: Tue Apr 27 00:36:36 2010
 **      by: Qt User Interface Compiler version 4.5.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!
@@ -156,50 +156,50 @@ public:
         horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
         buttonNew = new QPushButton(FormShortCuts);
         buttonNew->setObjectName(QString::fromUtf8("buttonNew"));
-        buttonNew->setMinimumSize(QSize(40, 0));
-        buttonNew->setMaximumSize(QSize(40, 16777215));
+        buttonNew->setMinimumSize(QSize(50, 0));
+        buttonNew->setMaximumSize(QSize(50, 16777215));
 
         horizontalLayout->addWidget(buttonNew);
 
         buttonSet = new QPushButton(FormShortCuts);
         buttonSet->setObjectName(QString::fromUtf8("buttonSet"));
-        buttonSet->setMinimumSize(QSize(40, 0));
-        buttonSet->setMaximumSize(QSize(40, 16777215));
+        buttonSet->setMinimumSize(QSize(50, 0));
+        buttonSet->setMaximumSize(QSize(50, 16777215));
 
         horizontalLayout->addWidget(buttonSet);
 
         buttonTest = new QPushButton(FormShortCuts);
         buttonTest->setObjectName(QString::fromUtf8("buttonTest"));
-        buttonTest->setMinimumSize(QSize(40, 0));
-        buttonTest->setMaximumSize(QSize(40, 16777215));
+        buttonTest->setMinimumSize(QSize(50, 0));
+        buttonTest->setMaximumSize(QSize(50, 16777215));
 
         horizontalLayout->addWidget(buttonTest);
 
         buttonDelete = new QPushButton(FormShortCuts);
         buttonDelete->setObjectName(QString::fromUtf8("buttonDelete"));
-        buttonDelete->setMinimumSize(QSize(40, 0));
-        buttonDelete->setMaximumSize(QSize(40, 16777215));
+        buttonDelete->setMinimumSize(QSize(50, 0));
+        buttonDelete->setMaximumSize(QSize(50, 16777215));
 
         horizontalLayout->addWidget(buttonDelete);
 
         buttonLoad = new QPushButton(FormShortCuts);
         buttonLoad->setObjectName(QString::fromUtf8("buttonLoad"));
-        buttonLoad->setMinimumSize(QSize(40, 0));
-        buttonLoad->setMaximumSize(QSize(40, 16777215));
+        buttonLoad->setMinimumSize(QSize(50, 0));
+        buttonLoad->setMaximumSize(QSize(50, 16777215));
 
         horizontalLayout->addWidget(buttonLoad);
 
         buttonSave = new QPushButton(FormShortCuts);
         buttonSave->setObjectName(QString::fromUtf8("buttonSave"));
-        buttonSave->setMinimumSize(QSize(40, 0));
-        buttonSave->setMaximumSize(QSize(40, 16777215));
+        buttonSave->setMinimumSize(QSize(50, 0));
+        buttonSave->setMaximumSize(QSize(50, 16777215));
 
         horizontalLayout->addWidget(buttonSave);
 
         buttonSaveAs = new QPushButton(FormShortCuts);
         buttonSaveAs->setObjectName(QString::fromUtf8("buttonSaveAs"));
-        buttonSaveAs->setMinimumSize(QSize(40, 0));
-        buttonSaveAs->setMaximumSize(QSize(40, 16777215));
+        buttonSaveAs->setMinimumSize(QSize(50, 0));
+        buttonSaveAs->setMaximumSize(QSize(50, 16777215));
 
         horizontalLayout->addWidget(buttonSaveAs);
 

@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading ui file 'environ.ui'
 **
-** Created: Mon Apr 26 18:48:03 2010
+** Created: Tue Apr 27 00:33:12 2010
 **      by: Qt User Interface Compiler version 4.5.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!
@@ -144,13 +144,13 @@ public:
         lineEdit->setGeometry(QRect(38, 10, 119, 20));
         label_5 = new QLabel(tab);
         label_5->setObjectName(QString::fromUtf8("label_5"));
-        label_5->setGeometry(QRect(170, 14, 67, 16));
+        label_5->setGeometry(QRect(170, 12, 67, 16));
         lineEdit_2 = new QLineEdit(tab);
         lineEdit_2->setObjectName(QString::fromUtf8("lineEdit_2"));
-        lineEdit_2->setGeometry(QRect(234, 12, 239, 20));
+        lineEdit_2->setGeometry(QRect(234, 10, 239, 20));
         toolButton = new QToolButton(tab);
         toolButton->setObjectName(QString::fromUtf8("toolButton"));
-        toolButton->setGeometry(QRect(492, 12, 25, 20));
+        toolButton->setGeometry(QRect(492, 10, 25, 20));
         checkBox = new QCheckBox(tab);
         checkBox->setObjectName(QString::fromUtf8("checkBox"));
         checkBox->setGeometry(QRect(10, 38, 191, 19));
@@ -165,7 +165,7 @@ public:
         checkBox_4->setGeometry(QRect(10, 110, 175, 19));
         checkBox_5 = new QCheckBox(tab);
         checkBox_5->setObjectName(QString::fromUtf8("checkBox_5"));
-        checkBox_5->setGeometry(QRect(10, 134, 183, 19));
+        checkBox_5->setGeometry(QRect(10, 134, 193, 19));
         plainTextEdit_2 = new QPlainTextEdit(tab);
         plainTextEdit_2->setObjectName(QString::fromUtf8("plainTextEdit_2"));
         plainTextEdit_2->setGeometry(QRect(10, 174, 465, 93));

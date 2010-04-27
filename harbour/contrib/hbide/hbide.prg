@@ -652,6 +652,9 @@ METHOD HbIde:showApplicationCursor( nCursor )
 METHOD HbIde:execAction( cKey )
 
    SWITCH cKey
+   CASE "Tools"
+      ::oTM:show()
+      EXIT
    CASE "Environments"
       ::oEV:fetchNew()
       EXIT

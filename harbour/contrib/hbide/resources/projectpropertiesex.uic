@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading ui file 'projectpropertiesex.ui'
 **
-** Created: Mon Apr 12 21:20:46 2010
+** Created: Tue Apr 27 00:23:23 2010
 **      by: Qt User Interface Compiler version 4.5.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!
@@ -61,7 +61,6 @@ public:
     QLabel *labelInitFolder;
     QToolButton *buttonChooseWd;
     QSpacerItem *verticalSpacer_2;
-    QSpacerItem *verticalSpacer_3;
     QWidget *tabFiles;
     QGridLayout *gridLayout_2;
     QPlainTextEdit *editSources;
@@ -224,10 +223,6 @@ public:
         verticalSpacer_2 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
         gridLayout->addItem(verticalSpacer_2, 4, 1, 1, 1);
-
-        verticalSpacer_3 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
-
-        gridLayout->addItem(verticalSpacer_3, 12, 1, 1, 1);
 
         tabWidget->addTab(tabGeneral, QString());
         tabFiles = new QWidget();
