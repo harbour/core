@@ -510,6 +510,38 @@ METHOD IdeActions:buildMainMenu()
    oMenuBar:addItem( { oSubMenu, NIL } )
 
    /*----------------------------------------------------------------------------*/
+   /*                                   View                                     */
+   /*----------------------------------------------------------------------------*/
+   oSubMenu := XbpMenu():new( oMenuBar ):create()
+   oSubMenu:title := "~View"
+   oMenuBar:addItem( { oSubMenu, NIL } )
+
+   oSubMenu:addItem( { "Toggle Animation", {|| oIde:execAction( "Animate" ) } } )
+   oSubMenu:oWidget:addSeparator()
+   oSubMenu:oWidget:addAction_4( ::qTBarPanels:toggleViewAction()             )
+   oSubMenu:oWidget:addAction_4( ::qTBarLines:toggleViewAction()              )
+   oSubMenu:oWidget:addAction_4( ::qTBarDocks:toggleViewAction()              )
+   oSubMenu:oWidget:addSeparator()
+   oSubMenu:oWidget:addAction_4( ::oDockPT:oWidget:toggleViewAction()         )
+   oSubMenu:oWidget:addAction_4( ::oDockED:oWidget:toggleViewAction()         )
+   oSubMenu:oWidget:addAction_4( ::oSkltnsTreeDock:oWidget:toggleViewAction() )
+   oSubMenu:oWidget:addSeparator()
+   oSubMenu:oWidget:addAction_4( ::oHelpDock:oWidget:toggleViewAction()       )
+   oSubMenu:oWidget:addAction_4( ::oDocViewDock:oWidget:toggleViewAction()    )
+   oSubMenu:oWidget:addAction_4( ::oDocWriteDock:oWidget:toggleViewAction()   )
+   oSubMenu:oWidget:addAction_4( ::oFuncDock:oWidget:toggleViewAction()       )
+   oSubMenu:oWidget:addAction_4( ::oFunctionsDock:oWidget:toggleViewAction()  )
+   oSubMenu:oWidget:addAction_4( ::oPropertiesDock:oWidget:toggleViewAction() )
+   oSubMenu:oWidget:addAction_4( ::oEnvironDock:oWidget:toggleViewAction()    )
+   oSubMenu:oWidget:addAction_4( ::oSkeltnDock:oWidget:toggleViewAction()     )
+   oSubMenu:oWidget:addAction_4( ::oThemesDock:oWidget:toggleViewAction()     )
+   oSubMenu:oWidget:addAction_4( ::oFindDock:oWidget:toggleViewAction()       )
+   oSubMenu:oWidget:addSeparator()
+   oSubMenu:oWidget:addAction_4( ::oDockB2:oWidget:toggleViewAction()         )
+ * oSubMenu:oWidget:addAction_4( ::oDockB1:oWidget:toggleViewAction()         )
+ * oSubMenu:oWidget:addAction_4( ::oDockB:oWidget:toggleViewAction()          )
+
+   /*----------------------------------------------------------------------------*/
    /*                                   Project                                  */
    /*----------------------------------------------------------------------------*/
    oSubMenu := XbpMenu():new( oMenuBar ):create()
@@ -556,38 +588,6 @@ METHOD IdeActions:buildMainMenu()
    oSubMenu2:title := "~Encoding"
    oSubMenu:addItem( { oSubMenu2, NIL } )
    oMenuBar:addItem( { oSubMenu, NIL } )
-
-   /*----------------------------------------------------------------------------*/
-   /*                                   View                                     */
-   /*----------------------------------------------------------------------------*/
-   oSubMenu := XbpMenu():new( oMenuBar ):create()
-   oSubMenu:title := "~View"
-   oMenuBar:addItem( { oSubMenu, NIL } )
-
-   oSubMenu:addItem( { "Toggle Animation", {|| oIde:execAction( "Animate" ) } } )
-   oSubMenu:oWidget:addSeparator()
-   oSubMenu:oWidget:addAction_4( ::qTBarPanels:toggleViewAction()             )
-   oSubMenu:oWidget:addAction_4( ::qTBarLines:toggleViewAction()              )
-   oSubMenu:oWidget:addAction_4( ::qTBarDocks:toggleViewAction()              )
-   oSubMenu:oWidget:addSeparator()
-   oSubMenu:oWidget:addAction_4( ::oDockPT:oWidget:toggleViewAction()         )
-   oSubMenu:oWidget:addAction_4( ::oDockED:oWidget:toggleViewAction()         )
-   oSubMenu:oWidget:addAction_4( ::oSkltnsTreeDock:oWidget:toggleViewAction() )
-   oSubMenu:oWidget:addSeparator()
-   oSubMenu:oWidget:addAction_4( ::oHelpDock:oWidget:toggleViewAction()       )
-   oSubMenu:oWidget:addAction_4( ::oDocViewDock:oWidget:toggleViewAction()    )
-   oSubMenu:oWidget:addAction_4( ::oDocWriteDock:oWidget:toggleViewAction()   )
-   oSubMenu:oWidget:addAction_4( ::oFuncDock:oWidget:toggleViewAction()       )
-   oSubMenu:oWidget:addAction_4( ::oFunctionsDock:oWidget:toggleViewAction()  )
-   oSubMenu:oWidget:addAction_4( ::oPropertiesDock:oWidget:toggleViewAction() )
-   oSubMenu:oWidget:addAction_4( ::oEnvironDock:oWidget:toggleViewAction()    )
-   oSubMenu:oWidget:addAction_4( ::oSkeltnDock:oWidget:toggleViewAction()     )
-   oSubMenu:oWidget:addAction_4( ::oThemesDock:oWidget:toggleViewAction()     )
-   oSubMenu:oWidget:addAction_4( ::oFindDock:oWidget:toggleViewAction()       )
-   oSubMenu:oWidget:addSeparator()
-   oSubMenu:oWidget:addAction_4( ::oDockB2:oWidget:toggleViewAction()         )
- * oSubMenu:oWidget:addAction_4( ::oDockB1:oWidget:toggleViewAction()         )
- * oSubMenu:oWidget:addAction_4( ::oDockB:oWidget:toggleViewAction()          )
 
    /*----------------------------------------------------------------------------*/
    /*                                   Help                                     */
@@ -677,15 +677,15 @@ STATIC FUNCTION hbide_buildCodecMenu( oIde, oMenu )
 
    oSub1 := XbpMenu():new( oSubMenu ):create()
    oSub1:title := "Windows-1250 to 1258"
-   oSub1:addItem( { "-1250"                   , {|| oIde:setCodec( "Windows-1250"        ) } } )
-   oSub1:addItem( { "-1251"                   , {|| oIde:setCodec( "Windows-1251"        ) } } )
-   oSub1:addItem( { "-1252"                   , {|| oIde:setCodec( "Windows-1252"        ) } } )
-   oSub1:addItem( { "-1253"                   , {|| oIde:setCodec( "Windows-1253"        ) } } )
-   oSub1:addItem( { "-1254"                   , {|| oIde:setCodec( "Windows-1254"        ) } } )
-   oSub1:addItem( { "-1255"                   , {|| oIde:setCodec( "Windows-1255"        ) } } )
-   oSub1:addItem( { "-1256"                   , {|| oIde:setCodec( "Windows-1256"        ) } } )
-   oSub1:addItem( { "-1257"                   , {|| oIde:setCodec( "Windows-1257"        ) } } )
-   oSub1:addItem( { "-1258"                   , {|| oIde:setCodec( "Windows-1258"        ) } } )
+   oSub1:addItem( { "Windows-1250"            , {|| oIde:setCodec( "Windows-1250"        ) } } )
+   oSub1:addItem( { "Windows-1251"            , {|| oIde:setCodec( "Windows-1251"        ) } } )
+   oSub1:addItem( { "Windows-1252"            , {|| oIde:setCodec( "Windows-1252"        ) } } )
+   oSub1:addItem( { "Windows-1253"            , {|| oIde:setCodec( "Windows-1253"        ) } } )
+   oSub1:addItem( { "Windows-1254"            , {|| oIde:setCodec( "Windows-1254"        ) } } )
+   oSub1:addItem( { "Windows-1255"            , {|| oIde:setCodec( "Windows-1255"        ) } } )
+   oSub1:addItem( { "Windows-1256"            , {|| oIde:setCodec( "Windows-1256"        ) } } )
+   oSub1:addItem( { "Windows-1257"            , {|| oIde:setCodec( "Windows-1257"        ) } } )
+   oSub1:addItem( { "Windows-1258"            , {|| oIde:setCodec( "Windows-1258"        ) } } )
    oSubMenu:addItem( { oSub1, NIL } )
 
    oSubMenu:addItem( { "WINSAMI2    "         , {|| oIde:setCodec( "WINSAMI2"            ) } } )
