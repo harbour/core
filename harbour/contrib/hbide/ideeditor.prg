@@ -1409,6 +1409,8 @@ CLASS IdeEdit INHERIT IdeObject
    DATA   nProtoCol                               INIT -1
    DATA   isSuspended                             INIT .f.
 
+   DATA   qFont
+
    METHOD new( oEditor, nMode )
    METHOD create( oEditor, nMode )
    METHOD destroy()
@@ -1465,6 +1467,7 @@ CLASS IdeEdit INHERIT IdeObject
    METHOD find( cText, nPosFrom )
    METHOD refresh()
    METHOD isModified()                            INLINE ::oEditor:qDocument:isModified()
+   METHOD setFont()
 
    ENDCLASS
 
@@ -1492,11 +1495,12 @@ METHOD IdeEdit:create( oEditor, nMode )
    ::qEdit   := HBQPlainTextEdit():new()
    //
    ::qEdit:setLineWrapMode( QTextEdit_NoWrap )
-   ::qEdit:setFont( ::oFont:oWidget )
    ::qEdit:ensureCursorVisible()
    ::qEdit:setContextMenuPolicy( Qt_CustomContextMenu )
    ::qEdit:installEventFilter( ::pEvents )
    ::qEdit:setTabChangesFocus( .f. )
+
+   ::setFont()
 
    ::qEdit:hbHighlightCurrentLine( .t. )              /* Via user-setup */
    ::qEdit:hbSetSpaces( ::nTabSpaces )
@@ -1532,6 +1536,19 @@ METHOD IdeEdit:create( oEditor, nMode )
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeEdit:setFont()
+
+   ::qFont := QFont():new()
+   ::qFont:setFamily( "Courier New" )
+   ::qFont:setFixedPitch( .t. )
+   ::qFont:setPointSize( 10 )
+
+   ::qEdit:setFont( ::qFont )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeEdit:destroy()
 
    ::disconnect( ::qTimer, "timeout()" )
@@ -1553,6 +1570,7 @@ METHOD IdeEdit:destroy()
    ::qHLayout:removeWidget( ::qEdit )
    ::qEdit    := NIL
    ::qHLayout := NIL
+   ::qFont    := NIL
 
    RETURN Self
 
