@@ -831,7 +831,7 @@ METHOD IdeDocks:buildLinkResults()
 
 METHOD IdeDocks:buildOutputResults()
 
-   ::oIde:oDockB2 := ::getADockWidget( Qt_BottomDockWidgetArea, "dockOutputResults", "Output Console" )
+   ::oIde:oDockB2 := ::getADockWidget( Qt_BottomDockWidgetArea, "dockOutputResults", "Output Console", QDockWidget_DockWidgetFloatable )
    ::oDlg:oWidget:addDockWidget_1( Qt_BottomDockWidgetArea, ::oDockB2:oWidget, Qt_Horizontal )
 
    ::oIde:oOutputResult := XbpRtf():new( ::oDockB2 ):create( , , { 0,0 }, { 100, 400 }, , .T. )

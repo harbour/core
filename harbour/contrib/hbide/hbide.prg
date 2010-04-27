@@ -461,6 +461,7 @@ HB_TRACE( HB_TR_ALWAYS, "HbIde:create( cProjIni )", "#Params=" )
    ::oDK:dispEnvironment( ::cWrkEnvironment )
 
    /* These docks must not be visible even IDE exits them open */
+   #if 0
    ::oPropertiesDock:hide()
    ::oEnvironDock:hide()
    ::oThemesDock:hide()
@@ -472,6 +473,7 @@ HB_TRACE( HB_TR_ALWAYS, "HbIde:create( cProjIni )", "#Params=" )
    ::oDockB:hide()
    ::oDocViewDock:hide()
    ::oDocWriteDock:hide()
+   #endif
 
    #if 0 /* for screen capture */
    n := seconds()

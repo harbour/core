@@ -999,9 +999,9 @@ METHOD IdeHarbourHelp:populateFuncDetails( n )
    LOCAL oTWItem := ::aNodes[ n, 1 ]
    LOCAL nIndex, oFunc
 
-   nIndex := ascan( ::aFunctions, {|e_| e_[ 4 ] == oTWItem } )
-   oFunc := ::aFunctions[ nIndex, 3 ]
-
+   IF ( nIndex := ascan( ::aFunctions, {|e_| e_[ 4 ] == oTWItem } ) ) > 0
+      oFunc := ::aFunctions[ nIndex, 3 ]
+   ENDIF
    ::buildView( oFunc )
 
    RETURN Self
