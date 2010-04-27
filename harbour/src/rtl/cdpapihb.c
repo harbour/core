@@ -111,7 +111,7 @@ HB_FUNC( HB_CDPUNIID )
 HB_FUNC( HB_CDPINFO )
 {
    const char * id = hb_parc( 1 );
-   PHB_CODEPAGE cdp = id ? hb_cdpFind( id ) : hb_vmCDP();
+   PHB_CODEPAGE cdp = id ? hb_cdpFindExt( id ) : hb_vmCDP();
 
    hb_retc( cdp ? cdp->info : NULL );
 }
@@ -196,7 +196,7 @@ HB_FUNC( HB_STRTOUTF8 )
 
    if( nLen )
    {
-      PHB_CODEPAGE cdp = HB_ISCHAR( 2 ) ? hb_cdpFind( hb_parc( 2 ) ) : hb_vmCDP();
+      PHB_CODEPAGE cdp = HB_ISCHAR( 2 ) ? hb_cdpFindExt( hb_parc( 2 ) ) : hb_vmCDP();
 
       if( cdp )
       {
@@ -223,7 +223,7 @@ HB_FUNC( HB_UTF8TOSTR )
 
       if( nLen )
       {
-         PHB_CODEPAGE cdp = HB_ISCHAR( 2 ) ? hb_cdpFind( hb_parc( 2 ) ) : hb_vmCDP();
+         PHB_CODEPAGE cdp = HB_ISCHAR( 2 ) ? hb_cdpFindExt( hb_parc( 2 ) ) : hb_vmCDP();
 
          if( cdp )
          {
