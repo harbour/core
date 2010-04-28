@@ -14,19 +14,19 @@ PROCEDURE Main()
 
    IF Empty( cString )
       WAIT "xml file unavailable"
-      RETURN NIL
+      RETURN
    ENDIF
 
    oDoc := TXmlDocument():New( cString, HBXML_STYLE_NOESCAPE )
    IF oDoc:nError != HBXML_ERROR_NONE
       WAIT "xml file parsing error " + str(oDoc:nError)
-      RETURN NIL
+      RETURN
    ENDIF
 
    oBook := oDoc:findfirst( "book" )
    IF oBook == NIL
       WAIT "no books found"
-      RETURN NIL
+      RETURN
    ENDIF
 
    DO WHILE .T.
