@@ -328,15 +328,3 @@ FUNCTION RangeCheck( oGet, xDummy, xLow, xHigh )
    ENDIF
 
    RETURN .F.
-
-FUNCTION hb_GetReadVar( oGet )
-   LOCAL cName := Upper( oGet:name )
-   LOCAL n
-
-   IF oGet:subScript != NIL
-      FOR n := 1 TO Len( oGet:subScript )
-         cName += "[" + hb_NToS( oGet:subScript[ n ] ) + "]"
-      NEXT
-   ENDIF
-
-   RETURN cName

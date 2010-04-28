@@ -746,18 +746,7 @@ METHOD PostActiveGet() CLASS HBGetList
    RETURN Self
 
 METHOD GetReadVar() CLASS HBGetList
-
-   LOCAL oGet := ::oGet
-   LOCAL cName := hb_asciiUpper( oGet:Name )
-   LOCAL n
-
-   IF oGet:Subscript != NIL
-      FOR n := 1 TO Len( oGet:Subscript )
-         cName += "[" + hb_NToS( oGet:Subscript[ n ] ) + "]"
-      NEXT
-   ENDIF
-
-   RETURN cName
+   RETURN hb_GetReadVar( ::oGet )
 
 METHOD SetFormat( bFormat ) CLASS HBGetList
 

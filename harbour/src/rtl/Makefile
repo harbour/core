@@ -214,6 +214,7 @@ PRG_SOURCES := \
    getlist.prg \
    getsys.prg \
    getsys53.prg \
+   getsyshb.prg \
    gui.prg \
    hbi18n2.prg \
    hbini.prg \
