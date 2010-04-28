@@ -86,6 +86,8 @@ CLASS XbpListBox  INHERIT  XbpWindow, XbpDataRef
    DATA     oStrModel
    DATA     aItems                                INIT {}
 
+   DATA     nOldIndex                             INIT 0
+
    METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
@@ -118,6 +120,7 @@ CLASS XbpListBox  INHERIT  XbpWindow, XbpDataRef
    METHOD   toggleSelected( nIndex )
    METHOD   connectAll()
    METHOD   disConnectAll()
+   METHOD   setItemColorFG( nIndex, aRGB )
 
 
    DATA     sl_hScroll
@@ -405,6 +408,19 @@ METHOD XbpListBox:setItem( nIndex, cItem )
    ENDIF
 
    RETURN cText
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpListBox:setItemColorFG( nIndex, aRGB )
+
+   IF hb_isNumeric( nIndex ) .AND. nIndex > 0 .AND. nIndex <= len( ::aItems )
+      IF ::nOldIndex > 0  .AND. nIndex <= len( ::aItems )
+         ::aItems[ ::nOldIndex ]:setForeGround( QBrush():new( "QColor", QColor():new( 0,0,0 ) ) )
+      ENDIF
+      ::aItems[ nIndex ]:setForeGround( QBrush():new( "QColor", QColor():new( aRGB[ 1 ], aRGB[ 2 ], aRGB[ 3 ] ) ) )
+      ::nOldIndex := nIndex
+   ENDIF
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 

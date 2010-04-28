@@ -1394,6 +1394,7 @@ CLASS IdeEdit INHERIT IdeObject
    DATA   nLastLine                               INIT  -99
    DATA   nCurLineNo                              INIT  0
    DATA   nPrevLineNo                             INIT  -1
+   DATA   nPrevLineNo1                            INIT  -1
 
    DATA   aBookMarks                              INIT  {}
 
@@ -1468,6 +1469,7 @@ CLASS IdeEdit INHERIT IdeObject
    METHOD refresh()
    METHOD isModified()                            INLINE ::oEditor:qDocument:isModified()
    METHOD setFont()
+   METHOD markCurrentFunction()
 
    ENDCLASS
 
@@ -1688,6 +1690,8 @@ METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
       ::handlePreviousWord( ::lUpdatePrevWord )
       ::handleCurrentIndent()
 
+      ::markCurrentFunction()
+
       IF ::nProtoLine != -1
          nLine := ::getLineNo()
          IF ! ::isSuspended
@@ -1888,6 +1892,30 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p, p1 )
    ENDSWITCH
 
    RETURN .F.  /* Important */
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:markCurrentFunction()
+   LOCAL n, nCurLine
+
+   IF ::nPrevLineNo1 != ::getLineNo()
+      ::nPrevLineNo1 := ::getLineNo()
+
+      IF !empty( ::aTags )
+         nCurLine := ::getLineNo()
+         IF len( ::aTags ) == 1
+            n := 1
+         ELSEIF ( n := ascan( ::aTags, {|e_| e_[ 3 ] >= nCurLine } ) ) == 0
+            n := len( ::aTags )
+         ELSEIF n > 0
+            n--
+         ENDIF
+         IF n > 0
+            ::oIde:oFuncList:setItemColorFG( n, { 255,0,0 } )
+         ENDIF
+      ENDIF
+   ENDIF
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
