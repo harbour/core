@@ -424,8 +424,12 @@ void HBQPlainTextEdit::horzRulerPaintEvent( QPaintEvent *event )
    int fontWidth = fontMetrics().averageCharWidth();
    int fontHeight = fontMetrics().height();
    int left = cr.left() + ( fontWidth / 2 ) + ( lineNumberArea->isVisible() ? lineNumberArea->width() : 0 );
+
+   QRect rc( cursorRect( textCursor() ) );
+   QTextCursor cursor( cursorForPosition( QPoint( 1, rc.top() + 1 ) ) );
+
    int i;
-   for( i = 0; left < cr.width(); i++ )
+   for( i = cursor.columnNumber(); left < cr.width(); i++ )
    {
       if( i % 10 == 0 )
       {
@@ -443,7 +447,7 @@ void HBQPlainTextEdit::horzRulerPaintEvent( QPaintEvent *event )
       }
       if( i == textCursor().columnNumber() )
       {
-         painter.fillRect( QRect( left, cr.top() + 2, fontWidth, fontHeight - 6 ), QColor( 198,198,198 ) );
+         painter.fillRect( QRect( left, cr.top() + 2, fontWidth, fontHeight - 6 ), QColor( 100,100,100 ) );
       }
       left += fontWidth;
    }
