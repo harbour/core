@@ -290,11 +290,14 @@ char * hb_verPlatform( void )
 
             case VER_PLATFORM_WIN32_NT:
 
+               #ifndef VER_NT_WORKSTATION
+               #define VER_NT_WORKSTATION 0x0000001
+               #endif
+
                if( osVer.dwMajorVersion == 6 )
                {
 #if !defined( HB_OS_WIN_CE ) && !defined( __DMC__ ) && \
-    ( !defined( _MSC_VER ) || _MSC_VER >= 1400 ) && \
-    defined( VER_NT_WORKSTATION )
+    ( !defined( _MSC_VER ) || _MSC_VER >= 1400 )
                   OSVERSIONINFOEX osVerEx;
 
                   osVerEx.dwOSVersionInfoSize = sizeof( osVerEx );
@@ -323,7 +326,35 @@ char * hb_verPlatform( void )
                      pszName = "";
                }
                else if( osVer.dwMajorVersion == 5 && osVer.dwMinorVersion >= 2 )
+               {
+#if !defined( HB_OS_WIN_CE ) && !defined( __DMC__ ) && \
+    ( !defined( _MSC_VER ) || _MSC_VER >= 1400 )
+                  OSVERSIONINFOEX osVerEx;
+
+                  osVerEx.dwOSVersionInfoSize = sizeof( osVerEx );
+
+                  if( GetVersionEx( ( OSVERSIONINFO * ) &osVerEx ) )
+                  {
+                     if( osVerEx.wProductType == VER_NT_WORKSTATION )
+                        pszName = " XP x64";
+                     else
+                     {
+                        #ifndef SM_SERVERR2
+                        #define SM_SERVERR2 89
+                        #endif
+
+                        if( GetSystemMetrics( SM_SERVERR2 ) != 0 )
+                           pszName = " Server 2003 R2";
+                        else
+                           pszName = " Server 2003";
+                     }
+                  }
+                  else
+                     pszName = "";
+#else
                   pszName = " Server 2003 / XP x64";
+#endif
+               }
                else if( osVer.dwMajorVersion == 5 && osVer.dwMinorVersion == 1 )
                   pszName = " XP";
                else if( osVer.dwMajorVersion == 5 )
