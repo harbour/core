@@ -153,7 +153,7 @@ void hb_cmdargUpdate( void )
                at all. [vszakats] */
       if( GetModuleFileName( NULL, s_lpAppName, HB_SIZEOFARRAY( s_lpAppName ) ) != 0 )
       {
-         HB_TCHAR_GETFROM( s_szAppName, s_lpAppName, HB_SIZEOFARRAY( s_lpAppName ) );
+         HB_TCHAR_COPYFROM( s_szAppName, s_lpAppName, HB_SIZEOFARRAY( s_szAppName ) - 1 );
          s_argv[ 0 ] = s_szAppName;
       }
 

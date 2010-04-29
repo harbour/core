@@ -1571,33 +1571,24 @@ typedef HB_U32 HB_FATTR;
       extern HB_EXPORT char *    hb_wctomb( const wchar_t * srcW );
       extern HB_EXPORT wchar_t * hb_mbntowc( const char * srcA, HB_SIZE ulLen );
       extern HB_EXPORT char *    hb_wcntomb( const wchar_t * srcW, HB_SIZE ulLen );
-      extern HB_EXPORT void      hb_mbtowccpy( wchar_t * dstW, const char * srcA, HB_SIZE ulLen );
-      extern HB_EXPORT void      hb_mbtowcset( wchar_t * dstW, const char * srcA, HB_SIZE ulLen );
-      extern HB_EXPORT void      hb_wctombget( char * dstA, const wchar_t * srcW, HB_SIZE ulLen );
+      extern HB_EXPORT void      hb_wcntombcpy( char * dstA, const wchar_t * srcW, HB_SIZE ulLen );
+      extern HB_EXPORT void      hb_mbntowccpy( wchar_t * dstW, const char * srcA, HB_SIZE ulLen );
    HB_EXTERN_END
 
 #endif
 
 #if defined( HB_OS_WIN )
    #if defined( UNICODE )
-      #define HB_TCHAR_CPTO(d,s,l)         hb_mbtowccpy(d,s,l)
-      #define HB_TCHAR_GETFROM(d,s,l)      hb_wctombget(d,s,l)
-      #define HB_TCHAR_SETTO(d,s,l)        hb_mbtowcset(d,s,l)
+      #define HB_TCHAR_COPYTO(d,s,l)       hb_mbntowccpy(d,s,l)
+      #define HB_TCHAR_COPYFROM(d,s,l)     hb_wcntombcpy(d,s,l)
       #define HB_TCHAR_CONVTO(s)           hb_mbtowc(s)
       #define HB_TCHAR_CONVFROM(s)         hb_wctomb(s)
-      #define HB_TCHAR_CONVNTO(s,l)        hb_mbntowc(s,l)
-      #define HB_TCHAR_CONVNFROM(s,l)      hb_wcntomb(s,l)
-      #define HB_TCHAR_CONVNREV(d,s,l)     do { hb_wctombget(d,s,l); hb_xfree(s); } while( 0 )
       #define HB_TCHAR_FREE(s)             hb_xfree(s)
    #else
-      #define HB_TCHAR_CPTO(d,s,l)         hb_strncpy(d,s,l)
-      #define HB_TCHAR_SETTO(d,s,l)        memcpy(d,s,l)
-      #define HB_TCHAR_GETFROM(d,s,l)      memcpy(d,s,l)
+      #define HB_TCHAR_COPYTO(d,s,l)       hb_strncpy(d,s,l)
+      #define HB_TCHAR_COPYFROM(d,s,l)     hb_strncpy(d,s,l)
       #define HB_TCHAR_CONVTO(s)           ((char *)(s))
       #define HB_TCHAR_CONVFROM(s)         ((char *)(s))
-      #define HB_TCHAR_CONVNTO(s,l)        ((char *)(s))
-      #define HB_TCHAR_CONVNFROM(s,l)      ((char *)(s))
-      #define HB_TCHAR_CONVNREV(d,s,l)     do { ; } while( 0 )
       #define HB_TCHAR_FREE(s)             HB_SYMBOL_UNUSED(s)
    #endif
 #endif

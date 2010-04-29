@@ -2040,28 +2040,14 @@ static BOOL hb_gt_wvw_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
       case HB_GTI_CLIPBOARDDATA:
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
-         {
             hb_gt_winapi_setClipboard( pWindowData->CodePage == OEM_CHARSET ?
-                                    CF_OEMTEXT : CF_TEXT,
-                                    hb_itemGetCPtr( pInfo->pNewVal ),
-                                    hb_itemGetCLen( pInfo->pNewVal ) );
-         }
+                                       CF_OEMTEXT : CF_TEXT, pInfo->pNewVal );
          else
          {
-            char * szClipboardData;
-            ULONG ulLen;
-            if( hb_gt_winapi_getClipboard( pWindowData->CodePage == OEM_CHARSET ?
-                                        CF_OEMTEXT : CF_TEXT,
-                                        &szClipboardData, &ulLen ) )
-            {
-               pInfo->pResult = hb_itemPutCLPtr( pInfo->pResult,
-                                                 szClipboardData,
-                                                 ulLen );
-            }
-            else
-            {
-               pInfo->pResult = hb_itemPutC( pInfo->pResult, NULL );
-            }
+            if( pInfo->pResult == NULL )
+               pInfo->pResult = hb_itemNew( NULL );
+            hb_gt_winapi_getClipboard( pWindowData->CodePage == OEM_CHARSET ?
+                                       CF_OEMTEXT : CF_TEXT, pInfo->pResult );
          }
          break;
 
@@ -7175,9 +7161,11 @@ static BOOL hb_gt_wvw_GetWindowTitle( UINT usWinNum, char ** title )
    iResult = GetWindowText( s_pWvwData->s_pWindows[usWinNum]->hWnd, buffer, WVW_MAX_TITLE_SIZE );
    if( iResult > 0 )
    {
-      *title = ( char * ) hb_xgrab( iResult + 1 );
-      HB_TCHAR_GETFROM( *title, buffer, iResult );
-      ( *title )[ iResult ] = '\0';
+#ifdef UNICODE
+      *title = hb_wcntomb( buffer, iResult );
+#else
+      *title = hb_strndup( buffer, iResult );
+#endif
       return TRUE;
    }
 

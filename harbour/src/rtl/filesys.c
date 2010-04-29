@@ -324,7 +324,8 @@ static int fs_win_get_drive( void )
    {
       TCHAR lpBuffer[ HB_PATH_MAX ];
       hb_fsSetIOError( ( GetCurrentDirectory( HB_SIZEOFARRAY( lpBuffer ), lpBuffer ) != 0 ), 0 );
-      hb_wctombget( szBuffer, lpBuffer, HB_SIZEOFARRAY( lpBuffer ) );
+      lpBuffer[ HB_SIZEOFARRAY( lpBuffer ) - 1 ] = L'\0';
+      hb_wcntombcpy( szBuffer, lpBuffer, HB_SIZEOFARRAY( lpBuffer ) - 1 );
    }
 #else
    hb_fsSetIOError( ( GetCurrentDirectory( HB_SIZEOFARRAY( szBuffer ), szBuffer ) != 0 ), 0 );
@@ -2806,8 +2807,9 @@ HB_ERRCODE hb_fsCurDirBuff( int iDrive, char * pszBuffer, HB_SIZE ulSize )
       LPTSTR lpBuffer = ( LPTSTR ) hb_xgrab( ulSize * sizeof( TCHAR ) );
       hb_vmUnlock();
       hb_fsSetIOError( ( GetCurrentDirectory( ulSize, lpBuffer ) != 0 ), 0 );
+      lpBuffer[ ulSize - 1 ] = L'\0';
       hb_vmLock();
-      hb_wctombget( pszBuffer, lpBuffer, ulSize );
+      hb_wcntombcpy( pszBuffer, lpBuffer, ulSize - 1 );
       hb_xfree( lpBuffer );
 #else
       hb_vmUnlock();

@@ -59,6 +59,7 @@
 HB_EXTERN_BEGIN
 
 extern HB_EXPORT HB_SIZE hb_wstrlen( const HB_WCHAR * szText );
+extern HB_EXPORT HB_SIZE hb_wstrnlen( const HB_WCHAR * szText, HB_SIZE count );
 extern HB_EXPORT int hb_wstrcmp( const HB_WCHAR * s1, const HB_WCHAR * s2 );
 extern HB_EXPORT int hb_wstrncmp( const HB_WCHAR * s1, const HB_WCHAR * s2, HB_SIZE count );
 extern HB_EXPORT HB_WCHAR * hb_wstrdup( const HB_WCHAR * szText );

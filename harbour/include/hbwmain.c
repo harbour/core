@@ -72,10 +72,13 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
                     HB_LPSTR  lpCmdLine,      /* pointer to command line */
                     int iCmdShow )            /* show state of window */
 {
-   LPSTR pArgs, pArg, pDst, pSrc, pFree;
+   LPSTR pArgs, pArg, pDst, pSrc;
    HB_BOOL fQuoted;
    int iErrorCode;
    HANDLE hHeap;
+#if defined( HB_OS_WIN_CE )
+   LPSTR pFree;
+#endif
 
    /* HB_TRACE(HB_TR_DEBUG, ("WinMain(%p, %p, %s, %d)", hInstance, hPrevInstance, lpCmdLine, iCmdShow)); */
 
@@ -86,10 +89,10 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
 #if defined( HB_OS_WIN_CE )
    pSrc = pFree = hb_wctomb( lpCmdLine );
 #else
-   pSrc = pFree = lpCmdLine;
+   pSrc = lpCmdLine;
 #endif
    hHeap = GetProcessHeap();
-   pDst = pArgs = ( LPSTR ) HeapAlloc( hHeap, 0, strlen( pFree ) + 1 );
+   pDst = pArgs = ( LPSTR ) HeapAlloc( hHeap, 0, strlen( pSrc ) + 1 );
    fQuoted = HB_FALSE;
 
    while( *pSrc != 0 && s_argc < HB_MAX_ARGS )
@@ -124,7 +127,7 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
    }
 
 #if defined( HB_OS_WIN_CE )
-   HB_TCHAR_FREE( pFree );
+   hb_xfree( pFree );
 #endif
 
 #if defined( HB_VM_STARTUP )

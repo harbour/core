@@ -242,7 +242,7 @@ static HB_BOOL hb_fsTempName( char * pszBuffer, const char * pszDir, const char 
       TCHAR lpTempDir[ HB_PATH_MAX ];
 
       if( pszDir && pszDir[ 0 ] != '\0' )
-         HB_TCHAR_SETTO( lpTempDir, pszDir, HB_PATH_MAX );
+         HB_TCHAR_COPYTO( lpTempDir, pszDir, HB_PATH_MAX - 1 );
       else
       {
          if( ! GetTempPath( HB_PATH_MAX, lpTempDir ) )
@@ -255,7 +255,8 @@ static HB_BOOL hb_fsTempName( char * pszBuffer, const char * pszDir, const char 
 
       fResult = GetTempFileName( lpTempDir, lpPrefix ? lpPrefix : TEXT( "hb" ), 0, lpBuffer );
 
-      HB_TCHAR_GETFROM( pszBuffer, lpBuffer, HB_PATH_MAX );
+      if( fResult )
+         HB_TCHAR_COPYFROM( pszBuffer, lpBuffer, HB_PATH_MAX - 1 );
 
       if( lpPrefix )
          HB_TCHAR_FREE( lpPrefix );
@@ -381,7 +382,7 @@ HB_ERRCODE hb_fsTempDir( char * pszTempDir )
       {
          nResult = 0;
          lpDir[ HB_PATH_MAX - 1 ] = TEXT( '\0' );
-         HB_TCHAR_GETFROM( pszTempDir, lpDir, HB_PATH_MAX );
+         HB_TCHAR_COPYFROM( pszTempDir, lpDir, HB_PATH_MAX - 1 );
       }
    }
 

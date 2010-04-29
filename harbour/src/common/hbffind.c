@@ -581,8 +581,7 @@ static HB_BOOL hb_fsFindNextLow( PHB_FFIND ffind )
                                         NULL, NULL, NULL, NULL, 0 );
          if( bFound )
          {
-            HB_TCHAR_GETFROM( ffind->szName, szName, sizeof( ffind->szName ) );
-            ffind->szName[ sizeof( ffind->szName ) - 1 ] = '\0';
+            HB_TCHAR_COPYFROM( ffind->szName, szName, sizeof( ffind->szName ) - 1 );
             if( mask && *mask && ! hb_strMatchFile( ffind->szName, mask ) )
             {
                ffind->szName[ 0 ] = '\0';
@@ -625,7 +624,7 @@ static HB_BOOL hb_fsFindNextLow( PHB_FFIND ffind )
 
          if( bFound )
          {
-            HB_TCHAR_GETFROM( ffind->szName, info->pFindFileData.cFileName, sizeof( ffind->szName ) - 1 );
+            HB_TCHAR_COPYFROM( ffind->szName, info->pFindFileData.cFileName, sizeof( ffind->szName ) - 1 );
 
             if( info->pFindFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY )
                ffind->size = 0;

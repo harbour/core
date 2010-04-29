@@ -409,7 +409,7 @@ static LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExcepti
 #else
                      char szBuffer[ MAX_PATH ];
                      #if defined( HB_OS_WIN_CE )
-                        hb_wctombget( szBuffer, me32.szExePath, HB_SIZEOFARRAY( szBuffer ) );
+                        hb_wcntombcpy( szBuffer, me32.szExePath, HB_SIZEOFARRAY( szBuffer ) - 1 );
                      #else
                         hb_strncpy( szBuffer, me32.szExePath, HB_SIZEOFARRAY( szBuffer ) - 1 );
                      #endif

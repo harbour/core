@@ -151,7 +151,7 @@ HB_FUNC( WVT_CHOOSEFONT )
    lf.lfPitchAndFamily = FF_DONTCARE;
    if ( HB_ISCHAR( 1 ) )
    {
-      HB_TCHAR_CPTO( lf.lfFaceName, hb_parc( 1 ), sizeof( lf.lfFaceName ) - 1 );
+      HB_TCHAR_COPYTO( lf.lfFaceName, hb_parc( 1 ), HB_SIZEOFARRAY( lf.lfFaceName ) - 1 );
    }
 
    cf.lStructSize      = sizeof( CHOOSEFONT );
@@ -1491,7 +1491,7 @@ HB_FUNC( WVT__GETOPENFILENAME )
 
    size += size ? 1 : 1024;
    lpFileName = ( LPTSTR ) hb_xgrab( size * sizeof( TCHAR ) );
-   HB_TCHAR_CPTO( lpFileName, hb_parcx( 2 ), size - 1 );
+   HB_TCHAR_COPYTO( lpFileName, hb_parcx( 2 ), size - 1 );
    lpstrTitle      = HB_PARTSTR( 3 );
    lpstrFilter     = HB_PARTSTR( 4 );
    lpstrInitialDir = HB_PARTSTR( 6 );
@@ -1538,7 +1538,7 @@ HB_FUNC( WVT__GETSAVEFILENAME )
    LPTSTR lpstrTitle, lpstrFilter, lpstrInitialDir, lpstrDefExt;
    TCHAR lpFileName[MAX_PATH + 1];
 
-   HB_TCHAR_CPTO( lpFileName, hb_parcx( 2 ), MAX_PATH );
+   HB_TCHAR_COPYTO( lpFileName, hb_parcx( 2 ), MAX_PATH );
    lpstrTitle      = HB_PARTSTR( 3 );
    lpstrFilter     = HB_PARTSTR( 4 );
    lpstrInitialDir = HB_PARTSTR( 6 );

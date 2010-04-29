@@ -598,8 +598,8 @@ extern int  hb_gt_chrmapinit( int * piTransTbl, const char * pszTerm, HB_BOOL fS
 extern HB_BOOL hb_gt_setClipboard( const char * szClipData, HB_SIZE ulLen );
 extern HB_BOOL hb_gt_getClipboard( char ** pszClipData, HB_SIZE * pulLen );
 #if defined( HB_OS_WIN )
-extern HB_BOOL hb_gt_winapi_setClipboard( HB_UINT uFormat, const char * szClipData, HB_SIZE ulLen );
-extern HB_BOOL hb_gt_winapi_getClipboard( HB_UINT uFormat, char ** pszClipData, HB_SIZE * pulLen );
+extern HB_BOOL hb_gt_winapi_setClipboard( HB_UINT uFormat, PHB_ITEM pItem );
+extern HB_BOOL hb_gt_winapi_getClipboard( HB_UINT uFormat, PHB_ITEM pItem );
 extern int     hb_gt_winapi_getKbdState( void );
 extern void    hb_gt_winapi_setKbdState( int kbdShifts );
 extern void    hb_gt_winapi_tone( double dFrequency, double dDuration );

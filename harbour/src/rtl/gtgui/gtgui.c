@@ -110,25 +110,12 @@ static HB_BOOL hb_gt_gui_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 #if defined( HB_OS_WIN )
       case HB_GTI_CLIPBOARDDATA:
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
-         {
-            hb_gt_winapi_setClipboard( CF_TEXT,
-                                       hb_itemGetCPtr( pInfo->pNewVal ),
-                                       hb_itemGetCLen( pInfo->pNewVal ) );
-         }
+            hb_gt_winapi_setClipboard( CF_TEXT, pInfo->pNewVal );
          else
          {
-            char * szClipboardData;
-            HB_SIZE ulLen;
-
-            if( hb_gt_winapi_getClipboard( CF_TEXT, &szClipboardData, &ulLen ) )
-            {
-               pInfo->pResult = hb_itemPutCLPtr( pInfo->pResult,
-                                                 szClipboardData, ulLen );
-            }
-            else
-            {
-               pInfo->pResult = hb_itemPutC( pInfo->pResult, NULL );
-            }
+            if( pInfo->pResult == NULL )
+               pInfo->pResult = hb_itemNew( NULL );
+            hb_gt_winapi_getClipboard( CF_TEXT, pInfo->pResult );
          }
          break;
 

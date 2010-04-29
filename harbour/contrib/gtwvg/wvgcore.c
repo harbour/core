@@ -1230,7 +1230,7 @@ HB_FUNC( WVT_DRAWLABEL )
    logfont.lfWidth          = ( !HB_ISNUM( 10 ) ? (_s->fontWidth < 0 ? -_s->fontWidth : _s->fontWidth ) : hb_parni( 10 ) );
 
 
-   HB_TCHAR_CPTO( logfont.lfFaceName, ( !HB_ISCHAR( 8 ) ? _s->fontFace : hb_parcx( 8 ) ), sizeof( logfont.lfFaceName )-1 );
+   HB_TCHAR_COPYTO( logfont.lfFaceName, ( !HB_ISCHAR( 8 ) ? _s->fontFace : hb_parcx( 8 ) ), HB_SIZEOFARRAY( logfont.lfFaceName ) - 1 );
 
    hFont = CreateFontIndirect( &logfont );
    if ( hFont )
@@ -2963,7 +2963,7 @@ HB_FUNC( WVT_CREATEFONT )
    logfont.lfHeight         = ( !HB_ISNUM(  2 ) ? _s->fontHeight : hb_parni( 2 ) );
    logfont.lfWidth          = ( !HB_ISNUM(  3 ) ? ( _s->fontWidth < 0 ? -_s->fontWidth : _s->fontWidth ) : hb_parni( 3 ) );
 
-   HB_TCHAR_CPTO( logfont.lfFaceName, ( !HB_ISCHAR( 1 ) ? _s->fontFace : hb_parcx( 1 ) ), sizeof( logfont.lfFaceName )-1 );
+   HB_TCHAR_COPYTO( logfont.lfFaceName, ( !HB_ISCHAR( 1 ) ? _s->fontFace : hb_parcx( 1 ) ), HB_SIZEOFARRAY( logfont.lfFaceName ) - 1 );
 
    hb_retnint( ( HB_PTRDIFF ) CreateFontIndirect( &logfont ) );
 }
@@ -3047,7 +3047,7 @@ HB_FUNC( WVT_LOADFONT )
    logfont.lfHeight         = ( !HB_ISNUM(  3 ) ? _s->fontHeight : hb_parni( 3 ) );
    logfont.lfWidth          = ( !HB_ISNUM(  4 ) ? ( _s->fontWidth < 0 ? -_s->fontWidth : _s->fontWidth ) : hb_parni( 4 ) );
 
-   HB_TCHAR_CPTO( logfont.lfFaceName, ( !HB_ISCHAR( 2 ) ? _s->fontFace : hb_parcx( 2 ) ), sizeof( logfont.lfFaceName )-1 );
+   HB_TCHAR_COPYTO( logfont.lfFaceName, ( !HB_ISCHAR( 2 ) ? _s->fontFace : hb_parcx( 2 ) ), HB_SIZEOFARRAY( logfont.lfFaceName ) - 1 );
 
    hFont = CreateFontIndirect( &logfont );
    if ( hFont )

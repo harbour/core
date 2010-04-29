@@ -492,7 +492,7 @@ static HFONT hb_gt_wvt_GetFont( const char * pszFace, int iHeight, int iWidth, i
       logfont.lfHeight         = iHeight;
       logfont.lfWidth          = iWidth < 0 ? -iWidth : iWidth;
 
-      HB_TCHAR_CPTO( logfont.lfFaceName, pszFace, sizeof( logfont.lfFaceName ) - 1 );
+      HB_TCHAR_COPYTO( logfont.lfFaceName, pszFace, HB_SIZEOFARRAY( logfont.lfFaceName ) - 1 );
 
       return CreateFontIndirect( &logfont );
    }
@@ -1079,9 +1079,11 @@ static HB_BOOL hb_gt_wvt_GetWindowTitle( HWND hWnd, char ** title )
    iResult = GetWindowText( hWnd, buffer, WVT_MAX_TITLE_SIZE );
    if( iResult > 0 )
    {
-      *title = ( char * ) hb_xgrab( iResult + 1 );
-      HB_TCHAR_GETFROM( *title, buffer, iResult );
-      ( *title )[ iResult ] = '\0';
+#ifdef UNICODE
+      *title = hb_wcntomb( buffer, iResult );
+#else
+      *title = hb_strndup( buffer, iResult );
+#endif
       return HB_TRUE;
    }
 
@@ -1255,13 +1257,13 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
 
                if( j > 0 )
                {
+                  PHB_ITEM pItem = hb_itemPutCLPtr( NULL, sBuffer, j );
                   hb_gt_winapi_setClipboard( pWVT->CodePage == OEM_CHARSET ?
-                                             CF_OEMTEXT : CF_TEXT,
-                                             sBuffer,
-                                             j );
+                                             CF_OEMTEXT : CF_TEXT, pItem );
+                  hb_itemRelease( pItem );
                }
-
-               hb_xfree( sBuffer );
+               else
+                  hb_xfree( sBuffer );
             }
             return;
          }
@@ -3197,28 +3199,14 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
       case HB_GTI_CLIPBOARDDATA:
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
-         {
             hb_gt_winapi_setClipboard( pWVT->CodePage == OEM_CHARSET ?
-                                       CF_OEMTEXT : CF_TEXT,
-                                       hb_itemGetCPtr( pInfo->pNewVal ),
-                                       hb_itemGetCLen( pInfo->pNewVal ) );
-         }
+                                       CF_OEMTEXT : CF_TEXT, pInfo->pNewVal );
          else
          {
-            char * szClipboardData;
-            HB_SIZE ulLen;
-            if( hb_gt_winapi_getClipboard( pWVT->CodePage == OEM_CHARSET ?
-                                           CF_OEMTEXT : CF_TEXT,
-                                           &szClipboardData, &ulLen ) )
-            {
-               pInfo->pResult = hb_itemPutCLPtr( pInfo->pResult,
-                                                 szClipboardData,
-                                                 ulLen );
-            }
-            else
-            {
-               pInfo->pResult = hb_itemPutC( pInfo->pResult, NULL );
-            }
+            if( pInfo->pResult == NULL )
+               pInfo->pResult = hb_itemNew( NULL );
+            hb_gt_winapi_getClipboard( pWVT->CodePage == OEM_CHARSET ?
+                                       CF_OEMTEXT : CF_TEXT, pInfo->pResult );
          }
          break;
 
@@ -3567,7 +3555,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                   tnid.uCallbackMessage = HB_MSG_NOTIFYICON;
                   tnid.hIcon            = hIcon ;
 
-                  HB_TCHAR_CPTO( tnid.szTip, hb_arrayGetCPtr( pInfo->pNewVal2, 4 ), sizeof( tnid.szTip ) - 1 );
+                  HB_TCHAR_COPYTO( tnid.szTip, hb_arrayGetCPtr( pInfo->pNewVal2, 4 ), HB_SIZEOFARRAY( tnid.szTip ) - 1 );
 
                   Shell_NotifyIcon( mode, &tnid ) ;
 

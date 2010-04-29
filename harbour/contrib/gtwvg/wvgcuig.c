@@ -599,7 +599,7 @@ HB_FUNC( WVG_LABEL )
    lf.lfHeight            = ( !HB_ISNUM( 10 ) ? pWVT->fontHeight : hb_parni( 10 ) );
    lf.lfWidth             = ( !HB_ISNUM( 11 ) ? (pWVT->fontWidth < 0 ? -pWVT->fontWidth : pWVT->fontWidth ) : hb_parni( 11 ) );
 
-   HB_TCHAR_CPTO( lf.lfFaceName, ( !HB_ISCHAR( 9 ) ? pWVT->fontFace : hb_parc( 9 ) ), sizeof( lf.lfFaceName )-1 );
+   HB_TCHAR_COPYTO( lf.lfFaceName, ( !HB_ISCHAR( 9 ) ? pWVT->fontFace : hb_parc( 9 ) ), HB_SIZEOFARRAY( lf.lfFaceName ) - 1 );
 
    hFont = CreateFontIndirect( &lf );
    if( hFont )
@@ -619,10 +619,9 @@ HB_FUNC( WVG_LABEL )
       gObj->aOffset.iRight   = hb_parvni( 3,4 );
 
 #if defined( UNICODE )
-      gObj->lpText           = HB_TCHAR_CONVTO( hb_parc( 4 ) );
+      gObj->lpText           = hb_mbtowc( hb_parcx( 4 ) );
 #else
-      gObj->lpText = ( char * ) hb_xgrab( hb_parclen( 4 ) + 1 );
-      HB_TCHAR_CPTO( gObj->lpText, hb_parc( 4 ), hb_parclen( 4 ) );
+      gObj->lpText           = hb_strdup( hb_parcx( 4 ) );
 #endif
 
       gObj->iAlign           = HB_ISNUM( 5 ) ? hb_parni( 5 ) : TA_LEFT;
@@ -657,10 +656,9 @@ HB_FUNC( WVG_LABELEX )
    gObj->aOffset.iRight   = hb_parvni( 3,4 );
 
 #if defined( UNICODE )
-   gObj->lpText           = HB_TCHAR_CONVTO( hb_parc( 4 ) );
+   gObj->lpText           = hb_mbtowc( hb_parcx( 4 ) );
 #else
-   gObj->lpText = ( char * ) hb_xgrab( hb_parclen( 4 ) + 1 );
-   HB_TCHAR_CPTO( gObj->lpText, hb_parc( 4 ), hb_parclen( 4 ) );
+   gObj->lpText           = hb_strdup( hb_parcx( 4 ) );
 #endif
 
    gObj->iAlign           = HB_ISNUM( 5 ) ? hb_parni( 5 ) : TA_LEFT;

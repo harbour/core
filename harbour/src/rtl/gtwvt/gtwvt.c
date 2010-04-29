@@ -298,7 +298,7 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
    pWVT->fontHeight        = WVT_DEFAULT_FONT_HEIGHT;
    pWVT->fontWeight        = FW_NORMAL;
    pWVT->fontQuality       = DEFAULT_QUALITY;
-   hb_strncpy( pWVT->fontFace, WVT_DEFAULT_FONT_NAME, sizeof( pWVT->fontFace ) - 1 );
+   hb_strncpy( pWVT->fontFace, WVT_DEFAULT_FONT_NAME, HB_SIZEOFARRAY( pWVT->fontFace ) - 1 );
 
    pWVT->CaretExist        = HB_FALSE;
    pWVT->CaretHidden       = HB_TRUE;
@@ -408,7 +408,7 @@ static HFONT hb_gt_wvt_GetFont( const char * pszFace, int iHeight, int iWidth, i
       logfont.lfHeight         = iHeight;
       logfont.lfWidth          = iWidth < 0 ? -iWidth : iWidth;
 
-      HB_TCHAR_CPTO( logfont.lfFaceName, pszFace, sizeof( logfont.lfFaceName ) - 1 );
+      HB_TCHAR_COPYTO( logfont.lfFaceName, pszFace, HB_SIZEOFARRAY( logfont.lfFaceName ) - 1 );
 
       return CreateFontIndirect( &logfont );
    }
@@ -1069,17 +1069,16 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
                   sBuffer[ j++ ] = '\r';
                   sBuffer[ j++ ] = '\n';
                }
-               sBuffer[ j ] = '\0';
 
                if( j > 0 )
                {
+                  PHB_ITEM pItem = hb_itemPutCLPtr( NULL, sBuffer, j );
                   hb_gt_winapi_setClipboard( pWVT->CodePage == OEM_CHARSET ?
-                                             CF_OEMTEXT : CF_TEXT,
-                                             sBuffer,
-                                             j );
+                                             CF_OEMTEXT : CF_TEXT, pItem );
+                  hb_itemRelease( pItem );
                }
-
-               hb_xfree( sBuffer );
+               else
+                  hb_xfree( sBuffer );
             }
             return;
          }
@@ -2169,7 +2168,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       case HB_GTI_FONTNAME:
          pInfo->pResult = hb_itemPutC( pInfo->pResult, pWVT->fontFace );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING ) /* TODO */
-            hb_strncpy( pWVT->fontFace, hb_itemGetCPtr( pInfo->pNewVal ), sizeof( pWVT->fontFace ) - 1 );
+            hb_strncpy( pWVT->fontFace, hb_itemGetCPtr( pInfo->pNewVal ), HB_SIZEOFARRAY( pWVT->fontFace ) - 1 );
          break;
 
       case HB_GTI_FONTWEIGHT:
@@ -2482,26 +2481,14 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
       case HB_GTI_CLIPBOARDDATA:
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
-         {
             hb_gt_winapi_setClipboard( pWVT->CodePage == OEM_CHARSET ?
-                                       CF_OEMTEXT : CF_TEXT,
-                                       hb_itemGetCPtr( pInfo->pNewVal ),
-                                       hb_itemGetCLen( pInfo->pNewVal ) );
-         }
+                                       CF_OEMTEXT : CF_TEXT, pInfo->pNewVal );
          else
          {
-            char * szClipboardData;
-            HB_SIZE ulLen;
-            if( hb_gt_winapi_getClipboard( pWVT->CodePage == OEM_CHARSET ?
-                                           CF_OEMTEXT : CF_TEXT,
-                                           &szClipboardData, &ulLen ) )
-            {
-               pInfo->pResult = hb_itemPutCLPtr( pInfo->pResult,
-                                                 szClipboardData,
-                                                 ulLen );
-            }
-            else
-               pInfo->pResult = hb_itemPutC( pInfo->pResult, NULL );
+            if( pInfo->pResult == NULL )
+               pInfo->pResult = hb_itemNew( NULL );
+            hb_gt_winapi_getClipboard( pWVT->CodePage == OEM_CHARSET ?
+                                       CF_OEMTEXT : CF_TEXT, pInfo->pResult );
          }
          break;
 

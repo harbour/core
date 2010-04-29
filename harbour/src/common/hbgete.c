@@ -131,22 +131,24 @@ HB_BOOL hb_getenv_buffer( const char * szName, char * szBuffer, int nSize )
       LPTSTR lpName, lpBuffer;
       HB_SIZE nLen = ( HB_SIZE ) strlen( szName ) + 1;
 
-      if( nLen * sizeof( TCHAR ) <= sizeof( name ) )
+      if( nLen <= HB_SIZEOFARRAY( name ) )
          lpName = name;
       else
          lpName = ( LPTSTR ) hb_xgrab( nLen * sizeof( TCHAR ) );
-      hb_mbtowcset( lpName, szName, nLen );
+
+      hb_mbntowccpy( lpName, szName, nLen - 1 );
 
       if( szBuffer == NULL )
          lpBuffer = NULL;
-      else if( nSize * sizeof( TCHAR ) <= sizeof( buffer ) )
+      else if( nSize <= ( int ) HB_SIZEOFARRAY( buffer ) )
          lpBuffer = buffer;
       else
          lpBuffer = ( LPTSTR ) hb_xgrab( nSize * sizeof( TCHAR ) );
 
       fRetVal = GetEnvironmentVariable( lpName, lpBuffer, nSize ) != 0;
+      lpBuffer[ nSize - 1 ] = L'\0';
 
-      hb_wctombget( szBuffer, lpBuffer, nSize );
+      hb_wcntombcpy( szBuffer, lpBuffer, nSize - 1 );
 
       if( lpName != name )
          hb_xfree( lpName );

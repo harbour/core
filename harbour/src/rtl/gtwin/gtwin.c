@@ -1967,23 +1967,12 @@ static HB_BOOL hb_gt_win_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
       case HB_GTI_CLIPBOARDDATA:
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
-         {
-            hb_gt_winapi_setClipboard( CF_OEMTEXT,
-                                       hb_itemGetCPtr( pInfo->pNewVal ),
-                                       hb_itemGetCLen( pInfo->pNewVal ) );
-         }
+            hb_gt_winapi_setClipboard( CF_OEMTEXT, pInfo->pNewVal );
          else
          {
-            char * szClipboardData;
-            HB_SIZE ulLen;
-            if( hb_gt_winapi_getClipboard( CF_OEMTEXT, &szClipboardData, &ulLen ) )
-            {
-               pInfo->pResult = hb_itemPutCLPtr( pInfo->pResult,
-                                                szClipboardData,
-                                                ulLen );
-            }
-            else
-               pInfo->pResult = hb_itemPutC( pInfo->pResult, NULL );
+            if( pInfo->pResult == NULL )
+               pInfo->pResult = hb_itemNew( NULL );
+            hb_gt_winapi_getClipboard( CF_OEMTEXT, pInfo->pResult );
          }
          break;
 

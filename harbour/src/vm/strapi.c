@@ -73,6 +73,21 @@ HB_SIZE hb_wstrlen( const HB_WCHAR * szText )
    return ulLen;
 }
 
+HB_SIZE hb_wstrnlen( const HB_WCHAR * szText, HB_SIZE count )
+{
+   HB_SIZE ulLen = 0;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_wstrnlen(%p,%lu)", szText, count));
+
+   if( szText )
+   {
+      while( count-- && szText[ ulLen ] )
+         ++ulLen;
+   }
+
+   return ulLen;
+}
+
 int hb_wstrcmp( const HB_WCHAR * s1, const HB_WCHAR * s2 )
 {
    int rc = 0;

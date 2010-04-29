@@ -873,7 +873,7 @@ HB_FUNC( WVG_CHOOSEFONT )
 
    if( HB_ISCHAR( 3 ) )
    {
-      HB_TCHAR_CPTO( lf.lfFaceName, hb_parcx( 3 ), sizeof( lf.lfFaceName ) - 1 );
+      HB_TCHAR_COPYTO( lf.lfFaceName, hb_parcx( 3 ), HB_SIZEOFARRAY( lf.lfFaceName ) - 1 );
    }
    if( HB_ISNUM( 4 ) && hb_parnl( 4 ) )
    {
@@ -974,7 +974,7 @@ HB_FUNC( WVG_FONTCREATE )
 
    memset( &lf, 0, sizeof( lf ) );
 
-   HB_TCHAR_CPTO( lf.lfFaceName,  hb_parvcx( 1, 1 ), sizeof( lf.lfFaceName ) - 1 );
+   HB_TCHAR_COPYTO( lf.lfFaceName,  hb_parvcx( 1, 1 ), HB_SIZEOFARRAY( lf.lfFaceName ) - 1 );
    lf.lfHeight         = ( LONG ) hb_parvnl( 1, 2 );
    lf.lfWidth          = ( LONG ) hb_parvnl( 1, 3 );
    lf.lfWeight         = ( LONG ) hb_parvnl( 1, 4 );
