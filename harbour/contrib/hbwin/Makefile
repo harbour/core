@@ -13,8 +13,6 @@ C_SOURCES := \
    legacycd.c \
    legacyco.c \
    legacycp.c \
-   legacycr.c \
-   legacycv.c \
    mapi.c \
    olecore.c \
    oleinit.c \

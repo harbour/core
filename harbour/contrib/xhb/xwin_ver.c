@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Compatibility calls (Printer support).
+ * Compatibility calls (OS version support).
  *
  * Copyright 2009 Viktor Szakats (harbour.01 syenar.hu)
  * www - http://www.harbour-project.org
@@ -52,18 +52,16 @@
 
 #include "hbapi.h"
 
-#if ! defined( HB_LEGACY_LEVEL3 ) && ! defined( HB_WIN_LEGACY_LEVEL_OFF )
-   #define HB_WIN_LEGACY_LEVEL_OFF
-#endif
+#if defined( HB_OS_WIN )
 
-#if ! defined( HB_WIN_LEGACY_LEVEL_OFF )
-
+HB_FUNC_EXTERN( WIN_OSVERSIONINFO    ) ; HB_FUNC( OS_VERSIONINFO         ) { HB_FUNC_EXEC( WIN_OSVERSIONINFO    ); }
 HB_FUNC_EXTERN( WIN_OSISNT           ) ; HB_FUNC( OS_ISWINNT             ) { HB_FUNC_EXEC( WIN_OSISNT           ); }
 HB_FUNC_EXTERN( WIN_OSISNT351        ) ; HB_FUNC( OS_ISWINNT351          ) { HB_FUNC_EXEC( WIN_OSISNT351        ); }
 HB_FUNC_EXTERN( WIN_OSISNT4          ) ; HB_FUNC( OS_ISWINNT4            ) { HB_FUNC_EXEC( WIN_OSISNT4          ); }
 HB_FUNC_EXTERN( WIN_OSIS2000ORUPPER  ) ; HB_FUNC( OS_ISWIN2000_OR_LATER  ) { HB_FUNC_EXEC( WIN_OSIS2000ORUPPER  ); }
 HB_FUNC_EXTERN( WIN_OSIS2000         ) ; HB_FUNC( OS_ISWIN2000           ) { HB_FUNC_EXEC( WIN_OSIS2000         ); }
 HB_FUNC_EXTERN( WIN_OSISXP           ) ; HB_FUNC( OS_ISWINXP             ) { HB_FUNC_EXEC( WIN_OSISXP           ); }
+HB_FUNC_EXTERN( WIN_OSISWINXPORUPPER ) ; HB_FUNC( OS_ISWINXP_OR_LATER    ) { HB_FUNC_EXEC( WIN_OSISWINXPORUPPER ); }
 HB_FUNC_EXTERN( WIN_OSIS2003         ) ; HB_FUNC( OS_ISWIN2003           ) { HB_FUNC_EXEC( WIN_OSIS2003         ); }
 HB_FUNC_EXTERN( WIN_OSISVISTA        ) ; HB_FUNC( OS_ISWINVISTA          ) { HB_FUNC_EXEC( WIN_OSISVISTA        ); }
 HB_FUNC_EXTERN( WIN_OSISVISTAORUPPER ) ; HB_FUNC( OS_ISWINVISTA_OR_LATER ) { HB_FUNC_EXEC( WIN_OSISVISTAORUPPER ); }
@@ -73,8 +71,29 @@ HB_FUNC_EXTERN( WIN_OSIS95           ) ; HB_FUNC( OS_ISWIN95             ) { HB_
 HB_FUNC_EXTERN( WIN_OSIS98           ) ; HB_FUNC( OS_ISWIN98             ) { HB_FUNC_EXEC( WIN_OSIS98           ); }
 HB_FUNC_EXTERN( WIN_OSISME           ) ; HB_FUNC( OS_ISWINME             ) { HB_FUNC_EXEC( WIN_OSISME           ); }
 HB_FUNC_EXTERN( WIN_OSISTSCLIENT     ) ; HB_FUNC( OS_ISWTSCLIENT         ) { HB_FUNC_EXEC( WIN_OSISTSCLIENT     ); }
-HB_FUNC_EXTERN( WIN_OSVERSIONINFO    ) ; HB_FUNC( OS_VERSIONINFO         ) { HB_FUNC_EXEC( WIN_OSVERSIONINFO    ); }
 HB_FUNC_EXTERN( WIN_OSNETREGOK       ) ; HB_FUNC( OS_NETREGOK            ) { HB_FUNC_EXEC( WIN_OSNETREGOK       ); }
 HB_FUNC_EXTERN( WIN_OSNETVREDIROK    ) ; HB_FUNC( OS_NETVREDIROK         ) { HB_FUNC_EXEC( WIN_OSNETVREDIROK    ); }
+
+#else
+
+HB_FUNC( OS_VERSIONINFO         ) {}
+HB_FUNC( OS_ISWINNT             ) { hb_retl( HB_FALSE ); }
+HB_FUNC( OS_ISWINNT351          ) { hb_retl( HB_FALSE ); }
+HB_FUNC( OS_ISWINNT4            ) { hb_retl( HB_FALSE ); }
+HB_FUNC( OS_ISWIN2000_OR_LATER  ) { hb_retl( HB_FALSE ); }
+HB_FUNC( OS_ISWIN2000           ) { hb_retl( HB_FALSE ); }
+HB_FUNC( OS_ISWINXP             ) { hb_retl( HB_FALSE ); }
+HB_FUNC( OS_ISWINXP_OR_LATER    ) { hb_retl( HB_FALSE ); }
+HB_FUNC( OS_ISWIN2003           ) { hb_retl( HB_FALSE ); }
+HB_FUNC( OS_ISWINVISTA          ) { hb_retl( HB_FALSE ); }
+HB_FUNC( OS_ISWINVISTA_OR_LATER ) { hb_retl( HB_FALSE ); }
+HB_FUNC( OS_ISWIN7              ) { hb_retl( HB_FALSE ); }
+HB_FUNC( OS_ISWIN9X             ) { hb_retl( HB_FALSE ); }
+HB_FUNC( OS_ISWIN95             ) { hb_retl( HB_FALSE ); }
+HB_FUNC( OS_ISWIN98             ) { hb_retl( HB_FALSE ); }
+HB_FUNC( OS_ISWINME             ) { hb_retl( HB_FALSE ); }
+HB_FUNC( OS_ISWTSCLIENT         ) { hb_retl( HB_FALSE ); }
+HB_FUNC( OS_NETREGOK            ) { hb_retl( HB_FALSE ); }
+HB_FUNC( OS_NETVREDIROK         ) { hb_retl( HB_FALSE ); }
 
 #endif

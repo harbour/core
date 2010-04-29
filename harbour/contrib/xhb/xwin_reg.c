@@ -52,14 +52,16 @@
 
 #include "hbapi.h"
 
-#if ! defined( HB_LEGACY_LEVEL3 ) && ! defined( HB_WIN_LEGACY_LEVEL_OFF )
-   #define HB_WIN_LEGACY_LEVEL_OFF
-#endif
-
-#if ! defined( HB_WIN_LEGACY_LEVEL_OFF )
+#if defined( HB_OS_WIN )
 
 HB_FUNC_EXTERN( WIN_REGQUERY ) ; HB_FUNC( QUERYREGISTRY ) { HB_FUNC_EXEC( WIN_REGQUERY ); }
 HB_FUNC_EXTERN( WIN_REGGET   ) ; HB_FUNC( GETREGISTRY   ) { HB_FUNC_EXEC( WIN_REGGET   ); }
 HB_FUNC_EXTERN( WIN_REGSET   ) ; HB_FUNC( SETREGISTRY   ) { HB_FUNC_EXEC( WIN_REGSET   ); }
+
+#else
+
+HB_FUNC( QUERYREGISTRY ) { hb_retl( HB_FALSE ); }
+HB_FUNC( GETREGISTRY   ) { hb_ret(); }
+HB_FUNC( SETREGISTRY   ) { hb_retl( HB_FALSE ); }
 
 #endif

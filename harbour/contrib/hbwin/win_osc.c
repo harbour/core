@@ -103,6 +103,13 @@ HB_FUNC( WIN_OSISXP )
    hb_retl( osvi.dwMajorVersion == 5 && osvi.dwMinorVersion == 1 );
 }
 
+HB_FUNC( WIN_OSISWINXPORUPPER )
+{
+   OSVERSIONINFO osvi;
+   getwinver( &osvi );
+   hb_retl( osvi.dwMajorVersion > 5 || ( osvi.dwMajorVersion == 5 && osvi.dwMinorVersion >= 1 ) );
+}
+
 HB_FUNC( WIN_OSIS2003 )
 {
    OSVERSIONINFO osvi;

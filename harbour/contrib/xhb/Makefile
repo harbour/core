@@ -38,6 +38,8 @@ C_SOURCES := \
    xhbtrim.c \
    xhbwith.c \
    xstrdel.c \
+   xwin_reg.c \
+   xwin_ver.c \
 
 C_HEADERS := \
    hbcompat.h \
