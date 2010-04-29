@@ -19,7 +19,7 @@ PROCEDURE Main()
 
    oDoc := TXmlDocument():New( cString, HBXML_STYLE_NOESCAPE )
    IF oDoc:nError != HBXML_ERROR_NONE
-      WAIT "xml file parsing error " + str(oDoc:nError)
+      WAIT "xml file parsing error " + Str( oDoc:nError )
       RETURN
    ENDIF
 
@@ -31,21 +31,21 @@ PROCEDURE Main()
 
    DO WHILE .T.
 
-      IF HHasKey( oBook:aAttributes, "id" )
+      IF "id" $ oBook:aAttributes
          ? "book ID : " + oBook:aAttributes[ "id" ]
       ELSE
          ? "no attribute book ID"
       ENDIF
 
-      cNote:=""
-      cDiscount:=""
-      oIterator:=TXmlIterator():New( oBook )
+      cNote := ""
+      cDiscount := ""
+      oIterator := TXmlIterator():New( oBook )
 
       DO WHILE .T.
          oCurrent := oIterator:Next()
          IF oCurrent == NIL
             ? "end branch"
-            WAIT "values : "+cNote+" "+cDiscount
+            WAIT "values : " + cNote + " " + cDiscount
             EXIT
          ELSE
             ? "current tag : " + oCurrent:cName
