@@ -70,7 +70,10 @@
 
 #include "hbqt_hbqsyntaxhighlighter.h"
 
+#define HORZRULER_HEIGHT 20
+
 class LineNumberArea;
+class HorzRuler;
 
 class HBQPlainTextEdit : public QPlainTextEdit
 {
@@ -83,11 +86,13 @@ public:
    PHB_ITEM       block;
    QColor         m_currentLineColor;
    QColor         m_lineAreaBkColor;
+   QColor         m_horzRulerBkColor;
    long           m_matchingBegin;
    long           m_matchingEnd;
 
    void           paintEvent( QPaintEvent * event );
    void           lineNumberAreaPaintEvent( QPaintEvent * event );
+   void           horzRulerPaintEvent( QPaintEvent * event );
 
    HBQSyntaxHighlighter * highlighter;
 
@@ -113,6 +118,7 @@ private:
    QVector<int>   bookMark;
    QList<int>     bookMarksGoto;
    QWidget      * lineNumberArea;
+   QFrame       * horzRuler;
    int            spaces;
    bool           numberBlock;
    bool           highlightCurLine;
@@ -168,6 +174,7 @@ public slots:
 private slots:
    void           hbSlotCursorPositionChanged();
    void           hbUpdateLineNumberArea( const QRect &, int );
+   void           hbUpdateHorzRuler();
    void           hbPaintColumnSelection( QPaintEvent * );
 };
 
@@ -190,6 +197,31 @@ private:
    void paintEvent( QPaintEvent *event )
    {
        codeEditor->lineNumberAreaPaintEvent( event );
+   }
+
+   HBQPlainTextEdit *codeEditor;
+};
+
+
+
+class HorzRuler : public QFrame
+{
+public:
+   HorzRuler( HBQPlainTextEdit * editor = 0 ) : QFrame( editor )
+   {
+       codeEditor = editor;
+   }
+
+protected:
+   QSize sizeHint() const
+   {
+       return QSize( codeEditor->viewport()->width(), HORZRULER_HEIGHT );
+   }
+
+private:
+   void paintEvent( QPaintEvent *event )
+   {
+       codeEditor->horzRulerPaintEvent( event );
    }
 
    HBQPlainTextEdit *codeEditor;

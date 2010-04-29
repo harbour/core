@@ -414,7 +414,7 @@ METHOD XbpListBox:setItem( nIndex, cItem )
 METHOD XbpListBox:setItemColorFG( nIndex, aRGB )
 
    IF hb_isNumeric( nIndex ) .AND. nIndex > 0 .AND. nIndex <= len( ::aItems )
-      IF ::nOldIndex > 0  .AND. nIndex <= len( ::aItems )
+      IF ::nOldIndex > 0  .AND. ::nOldIndex <= len( ::aItems )
          ::aItems[ ::nOldIndex ]:setForeGround( QBrush():new( "QColor", QColor():new( 0,0,0 ) ) )
       ENDIF
       ::aItems[ nIndex ]:setForeGround( QBrush():new( "QColor", QColor():new( aRGB[ 1 ], aRGB[ 2 ], aRGB[ 3 ] ) ) )

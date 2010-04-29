@@ -77,6 +77,10 @@
 
 HBQPlainTextEdit::HBQPlainTextEdit( QWidget * parent ) : QPlainTextEdit( parent )
 {
+   m_currentLineColor.setNamedColor( "#e8e8ff" );
+   m_lineAreaBkColor.setNamedColor( "#e4e4e4" );
+   m_horzRulerBkColor.setNamedColor( "whitesmoke" );
+
    spaces                   = 3;
    spacesTab                = "";
    styleHightlighter        = "prg";
@@ -86,6 +90,7 @@ HBQPlainTextEdit::HBQPlainTextEdit( QWidget * parent ) : QPlainTextEdit( parent 
    columnBegins             = -1;
    columnEnds               = -1;
    isColumnSelectionEnabled = false;
+   horzRuler                = new HorzRuler( this );
 
    connect( this, SIGNAL( blockCountChanged( int ) )           , this, SLOT( hbUpdateLineNumberAreaWidth( int ) ) );
    connect( this, SIGNAL( updateRequest( const QRect &, int ) ), this, SLOT( hbUpdateLineNumberArea( const QRect &, int ) ) );
@@ -93,9 +98,10 @@ HBQPlainTextEdit::HBQPlainTextEdit( QWidget * parent ) : QPlainTextEdit( parent 
    hbUpdateLineNumberAreaWidth( 0 );
 
    connect( this, SIGNAL( cursorPositionChanged() )            , this, SLOT( hbSlotCursorPositionChanged() ) );
+   connect( this, SIGNAL( cursorPositionChanged() )            , this, SLOT( hbUpdateHorzRuler() ) );
 
-   m_currentLineColor.setNamedColor( "#e8e8ff" );
-   m_lineAreaBkColor.setNamedColor( "#e4e4e4" );
+   horzRuler->setFrameShape( QFrame::Panel );
+   horzRuler->setFrameShadow( QFrame::Sunken );
 }
 
 HBQPlainTextEdit::~HBQPlainTextEdit()
@@ -260,7 +266,9 @@ void HBQPlainTextEdit::resizeEvent( QResizeEvent *e )
    QPlainTextEdit::resizeEvent( e );
 
    QRect cr = contentsRect();
-   lineNumberArea->setGeometry( QRect( cr.left(), cr.top(), hbLineNumberAreaWidth(), cr.height() ) );
+   lineNumberArea->setGeometry( QRect( cr.left(), cr.top() + HORZRULER_HEIGHT, hbLineNumberAreaWidth(), cr.height() ) );
+
+   horzRuler->setGeometry( QRect( cr.left(), cr.top(), cr.width(), HORZRULER_HEIGHT ) );
 }
 
 void HBQPlainTextEdit::focusInEvent( QFocusEvent * event )
@@ -402,6 +410,43 @@ QBrush HBQPlainTextEdit::brushForBookmark( int index )
       br = QBrush( m_currentLineColor );
 
    return br;
+}
+
+void HBQPlainTextEdit::horzRulerPaintEvent( QPaintEvent *event )
+{
+   QRect cr = event->rect();
+   QPainter painter( horzRuler );
+
+   painter.fillRect( cr, m_horzRulerBkColor );
+   painter.setPen( Qt::gray );
+   painter.drawLine( cr.left(), cr.bottom(), cr.width(), cr.bottom() );
+   painter.setPen( Qt::black );
+   int fontWidth = fontMetrics().averageCharWidth();
+   int fontHeight = fontMetrics().height();
+   int left = cr.left() + ( fontWidth / 2 ) + ( lineNumberArea->isVisible() ? lineNumberArea->width() : 0 );
+   int i;
+   for( i = 0; left < cr.width(); i++ )
+   {
+      if( i % 10 == 0 )
+      {
+         painter.drawLine( left, cr.bottom()-3, left, cr.bottom()-5 );
+         QString number = QString::number( i );
+         painter.drawText( left - fontWidth, cr.top()-2, fontWidth * 2, fontHeight, Qt::AlignCenter, number );
+      }
+      else if( i % 5 == 0 )
+      {
+         painter.drawLine( left, cr.bottom()-3, left, cr.bottom()-5 );
+      }
+      else
+      {
+         painter.drawLine( left, cr.bottom()-3, left, cr.bottom()-4 );
+      }
+      if( i == textCursor().columnNumber() )
+      {
+         painter.fillRect( QRect( left, cr.top() + 2, fontWidth, fontHeight - 6 ), QColor( 198,198,198 ) );
+      }
+      left += fontWidth;
+   }
 }
 
 void HBQPlainTextEdit::lineNumberAreaPaintEvent( QPaintEvent *event )
@@ -570,12 +615,17 @@ void HBQPlainTextEdit::hbUpdateLineNumberAreaWidth( int )
 {
    if( numberBlock )
    {
-      setViewportMargins( hbLineNumberAreaWidth(), 0, 0, 0 );
+      setViewportMargins( hbLineNumberAreaWidth(), HORZRULER_HEIGHT, 0, 0 );
    }
    else
    {
-      setViewportMargins( 0, 0, 0, 0 );
+      setViewportMargins( 0, HORZRULER_HEIGHT, 0, 0 );
    }
+}
+
+void HBQPlainTextEdit::hbUpdateHorzRuler()
+{
+  horzRuler->update();
 }
 
 void HBQPlainTextEdit::hbUpdateLineNumberArea( const QRect &rect, int dy )
