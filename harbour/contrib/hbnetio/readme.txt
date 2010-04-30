@@ -89,6 +89,31 @@ Client side functions:
       value sent by the server.
 
 
+   NETIO_OPENDATASTREAM( <cStreamFuncName> [, <params,...>] ) -> <nStreamID>
+   NETIO_OPENITEMSTREAM( <cStreamFuncName> [, <params,...>] ) -> <nStreamID>
+      open communication stream/channel which allow to send data
+      asynchronously from server to client.
+      It executes on the server side:
+         <cStreamFuncName>( <pConnSock>, <nStreamID> [, <params,...>] )
+      and then checks value returned by above function. If it's equal to
+      <nStreamID> then the communication stream is opened and <nStreamID>
+      is returned to the client.
+      The function returns new stream ID or -1 if the communication stream
+      cannot be set.
+      <cStreamFuncName> may contain information about connection parameters
+      just like <cProcName> in NETIO_PROC*() functions.
+
+   NETIO_CLOSESTREAM( <nStreamID>, [<cServer>], [<nPort>] ) -> <lOK>
+      close communication stream/channel
+
+   NETIO_GETDATA( <nStreamID>, [<cServer>], [<nPort>] ) -> <aData>|<cData>|NIL
+      retrieve data sent from the server by communication stream.
+      If stream was open by NETIO_OPENDATASTREAM() then data is returned
+      as string.
+      If stream was open by NETIO_OPENITEMSTREAM() then data is returned
+      as array of items received from the server.
+
+
 
 Server side functions:
 ======================
@@ -108,3 +133,7 @@ Server side functions:
                    [<lRPC> | <sFuncSym> | <hValue>],
                    [<cPasswd>], [<nCompressionLevel>], [<nStrategy>] )
             -> <pListenSocket>
+
+   NETIO_SRVSTATUS( <pConnectionSocket> [, <nStreamID>] ) -> <nStatus>
+   NETIO_SRVSENDITEM( <pConnectionSocket>, <nStreamID>, <xData> ) -> <lSent>
+   NETIO_SRVSENDDATA( <pConnectionSocket>, <nStreamID>, <cData> ) -> <lSent>

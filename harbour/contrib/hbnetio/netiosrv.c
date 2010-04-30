@@ -22,7 +22,13 @@
  *       NETIO_RPC( <pListenSocket> | <pConnectionSocket> [, <lEnable>] )
  *                                              -> <lPrev>
  *       NETIO_RPCFILTER( <pConnectionSocket>,
-                          <sFuncSym> | <hValue> | NIL ) -> NIL
+ *                        <sFuncSym> | <hValue> | NIL ) -> NIL
+ *
+ *       NETIO_SRVSTATUS( <pConnectionSocket> [, <nStreamID>] ) -> <nStatus>
+ *       NETIO_SRVSENDITEM( <pConnectionSocket>, <nStreamID>, <xData> )
+ *             -> <lSent>
+ *       NETIO_SRVSENDDATA( <pConnectionSocket>, <nStreamID>, <cData> )
+ *             -> <lSent>
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://www.harbour-project.org
@@ -86,6 +92,14 @@
  * server code
  */
 
+typedef struct _HB_CONSTREAM
+{
+   int      id;
+   int      type;
+   struct _HB_CONSTREAM * next;
+}
+HB_CONSTREAM, * PHB_CONSTREAM;
+
 typedef struct _HB_CONSRV
 {
    HB_SOCKET      sd;
@@ -98,6 +112,8 @@ typedef struct _HB_CONSRV
    HB_BOOL        login;
    PHB_SYMB       rpcFunc;
    PHB_ITEM       rpcFilter;
+   PHB_ITEM       mutex;
+   PHB_CONSTREAM  streams;
    int            rootPathLen;
    char           rootPath[ HB_PATH_MAX ];
 }
@@ -237,6 +253,16 @@ static void s_consrv_close( PHB_CONSRV conn )
    if( conn->rpcFilter )
       hb_itemRelease( conn->rpcFilter );
 
+   while( conn->streams )
+   {
+      PHB_CONSTREAM stream = conn->streams;
+      conn->streams = stream->next;
+      hb_xfree( stream );
+   }
+
+   if( conn->mutex )
+      hb_itemRelease( conn->mutex );
+
    if( conn->sd != HB_NO_SOCKET )
       hb_socketClose( conn->sd );
 
@@ -354,24 +380,29 @@ static long s_srvSendAll( PHB_CONSRV conn, void * buffer, long len )
    HB_BYTE * ptr = ( HB_BYTE * ) buffer;
    long lSent = 0, lLast = 1, l;
 
-   while( lSent < len && !conn->stop )
+   if( !conn->mutex || hb_threadMutexLock( conn->mutex ) )
    {
-      if( conn->zstream )
-         l = hb_znetWrite( conn->zstream, conn->sd, ptr + lSent, len - lSent, -1, &lLast );
-      else
-         l = lLast = hb_socketSend( conn->sd, ptr + lSent, len - lSent, 0, -1 );
-      if( l > 0 )
-         lSent += l;
-      if( lLast <= 0 )
+      while( lSent < len && !conn->stop )
       {
-         if( hb_socketGetError() != HB_SOCKET_ERR_TIMEOUT ||
-             hb_vmRequestQuery() != 0 )
-            break;
+         if( conn->zstream )
+            l = hb_znetWrite( conn->zstream, conn->sd, ptr + lSent, len - lSent, -1, &lLast );
+         else
+            l = lLast = hb_socketSend( conn->sd, ptr + lSent, len - lSent, 0, -1 );
+         if( l > 0 )
+            lSent += l;
+         if( lLast <= 0 )
+         {
+            if( hb_socketGetError() != HB_SOCKET_ERR_TIMEOUT ||
+                hb_vmRequestQuery() != 0 )
+               break;
+         }
       }
-   }
-   if( conn->zstream && lLast > 0 && !conn->stop )
-      hb_znetFlush( conn->zstream, conn->sd, -1 );
+      if( conn->zstream && lLast > 0 && !conn->stop )
+         hb_znetFlush( conn->zstream, conn->sd, -1 );
 
+      if( conn->mutex )
+         hb_threadMutexUnlock( conn->mutex );
+   }
    return lSent;
 }
 
@@ -583,7 +614,8 @@ HB_FUNC( NETIO_ACCEPT )
 
       if( connsd != HB_NO_SOCKET )
       {
-         hb_socketSetNoDelay( connsd, HB_TRUE );
+         hb_socketSetKeepAlive( connsd, HB_TRUE );
+         hb_socketSetNoDelay( connsd, HB_FALSE );
          conn = s_consrvNew( connsd, lsd->rootPath, lsd->rpc );
 
 
@@ -693,7 +725,7 @@ HB_FUNC( NETIO_SERVER )
          HB_BOOL fNoAnswer = HB_FALSE;
          HB_ERRCODE errCode = 0, errFsCode;
          long len = 0, size, size2;
-         int iFileNo;
+         int iFileNo, iStreamID;
          HB_U32 uiMsg;
          HB_USHORT uiFalgs;
          char * szExt;
@@ -983,11 +1015,44 @@ HB_FUNC( NETIO_SERVER )
                fNoAnswer = HB_TRUE;
                break;
 
+            case NETIO_SRVCLOSE:
+               iStreamID = HB_GET_LE_INT32( &msgbuf[ 4 ] );
+               if( iStreamID && conn->mutex && hb_threadMutexLock( conn->mutex ) )
+               {
+                  PHB_CONSTREAM * pStreamPtr = &conn->streams;
+                  while( *pStreamPtr )
+                  {
+                     if( ( *pStreamPtr )->id == iStreamID )
+                     {
+                        PHB_CONSTREAM stream = *pStreamPtr;
+                        *pStreamPtr = stream->next;
+                        hb_xfree( stream );
+                        break;
+                     }
+                     pStreamPtr = &( *pStreamPtr )->next;
+                  }
+                  if( *pStreamPtr == NULL )
+                     iStreamID = 0;
+                  hb_threadMutexUnlock( conn->mutex );
+               }
+               else
+                  iStreamID = 0;
+
+               if( iStreamID == 0 )
+                  errCode = NETIO_ERR_WRONG_STREAMID;
+               else
+               {
+                  HB_PUT_LE_UINT32( &msg[ 0 ], NETIO_SRVCLOSE );
+                  memset( msg + 4, '\0', NETIO_MSGLEN - 4 );
+               }
+               break;
+
             case NETIO_PROC:
                fNoAnswer = HB_TRUE;
             case NETIO_PROCIS:
             case NETIO_PROCW:
             case NETIO_FUNC:
+            case NETIO_FUNCCTRL:
                if( !conn->rpc )
                {
                   errCode = NETIO_ERR_UNSUPPORTED;
@@ -1030,10 +1095,12 @@ HB_FUNC( NETIO_SERVER )
                         {
                            if( hb_vmRequestReenter() )
                            {
-                              HB_SIZE ulSize = size - size2;
+                              HB_SIZE nSize = size - size2;
                               HB_USHORT uiPCount = 0;
                               HB_BOOL fSend = HB_FALSE;
+                              int iStreamType;
 
+                              iStreamID = 0;
                               data += size2;
                               if( pItem )
                               {
@@ -1053,21 +1120,47 @@ HB_FUNC( NETIO_SERVER )
                                  hb_vmPushDynSym( pDynSym );
                                  hb_vmPushNil();
                               }
-                              while( ulSize )
+                              if( uiMsg == NETIO_FUNCCTRL )
                               {
-                                 pItem = hb_itemDeserialize( &data, &ulSize );
+                                 iStreamID = HB_GET_LE_INT32( &msgbuf[ 8 ] );
+                                 iStreamType = HB_GET_LE_INT32( &msgbuf[ 12 ] );
+                                 hb_vmPush( hb_param( 1, HB_IT_ANY ) );
+                                 hb_vmPushInteger( iStreamID );
+                                 uiPCount += 2;
+                                 if( iStreamType != NETIO_SRVDATA &&
+                                     iStreamType != NETIO_SRVITEM )
+                                    iStreamID = 0;
+                                 if( iStreamID )
+                                 {
+                                    PHB_CONSTREAM stream = ( PHB_CONSTREAM )
+                                            hb_xgrab( sizeof( HB_CONSTREAM ) );
+                                    stream->id = iStreamID;
+                                    stream->type = iStreamType;
+                                    stream->next = conn->streams;
+                                    conn->streams = stream;
+
+                                    if( conn->mutex == NULL )
+                                       conn->mutex = hb_threadMutexCreate();
+                                    if( !hb_threadMutexLock( conn->mutex ) )
+                                       errCode = NETIO_ERR_REFUSED;
+                                 }
+                                 else
+                                    errCode = NETIO_ERR_WRONG_PARAM;
+                              }
+                              while( nSize > 0 && errCode == 0 )
+                              {
+                                 pItem = hb_itemDeserialize( &data, &nSize );
                                  if( !pItem )
                                  {
-                                    ulSize = 1;
+                                    errCode = NETIO_ERR_WRONG_PARAM;
                                     break;
                                  }
                                  ++uiPCount;
                                  hb_vmPush( pItem );
                                  hb_itemRelease( pItem );
                               }
-                              if( ulSize )
+                              if( errCode != 0 )
                               {
-                                 errCode = NETIO_ERR_WRONG_PARAM;
                                  uiPCount += 2;
                                  do
                                     hb_stackPop();
@@ -1079,10 +1172,11 @@ HB_FUNC( NETIO_SERVER )
                                     hb_vmSend( uiPCount );
                                  else
                                     hb_vmProc( uiPCount );
-                                 if( uiMsg == NETIO_FUNC )
+                                 if( uiMsg == NETIO_FUNC || uiMsg == NETIO_FUNCCTRL )
                                  {
                                     HB_SIZE itmSize;
-                                    char * itmData = hb_itemSerialize( hb_stackReturnItem(), HB_TRUE, &itmSize );
+                                    PHB_ITEM pResult = hb_stackReturnItem();
+                                    char * itmData = hb_itemSerialize( pResult, HB_TRUE, &itmSize );
                                     if( itmSize <= sizeof( buffer ) - NETIO_MSGLEN )
                                        msg = buffer;
                                     else if( !ptr || itmSize > ( HB_SIZE ) size - NETIO_MSGLEN )
@@ -1094,9 +1188,25 @@ HB_FUNC( NETIO_SERVER )
                                     memcpy( msg + NETIO_MSGLEN, itmData, itmSize );
                                     hb_xfree( itmData );
                                     len = itmSize;
+                                    if( iStreamID && hb_itemGetNI( pResult ) == iStreamID )
+                                    {
+                                       hb_threadMutexUnlock( conn->mutex );
+                                       iStreamID = 0;
+                                    }
                                  }
                               }
                               hb_vmRequestRestore();
+                              if( iStreamID )
+                              {
+                                 PHB_CONSTREAM stream = conn->streams;
+
+                                 if( stream->id == iStreamID )
+                                 {
+                                    conn->streams = stream->next;
+                                    hb_xfree( conn->streams );
+                                 }
+                                 hb_threadMutexUnlock( conn->mutex );
+                              }
                            }
                            else
                               errCode = NETIO_ERR_REFUSED;
@@ -1146,4 +1256,121 @@ HB_FUNC( NETIO_SERVER )
             break;
       }
    }
+}
+
+/* NETIO_SRVSENDITEM( <pConnectionSocket>, <nStreamID>, <xData> ) -> <lSent>
+ */
+HB_FUNC( NETIO_SRVSENDITEM )
+{
+   PHB_CONSRV conn = s_consrvParam( 1 );
+   int iStreamID = hb_parni( 2 );
+   PHB_ITEM pItem = hb_param( 3, HB_IT_ANY );
+   HB_BOOL fResult = HB_FALSE;
+
+   if( conn && conn->sd != HB_NO_SOCKET && !conn->stop && conn->mutex &&
+       iStreamID && pItem )
+   {
+      char * itmData, * msg;
+      HB_SIZE nLen;
+
+      itmData = hb_itemSerialize( pItem, HB_TRUE, &nLen );
+      msg = ( char * ) hb_xgrab( nLen + NETIO_MSGLEN );
+      HB_PUT_LE_UINT32( &msg[ 0 ], NETIO_SRVITEM );
+      HB_PUT_LE_UINT32( &msg[ 4 ], iStreamID );
+      HB_PUT_LE_UINT32( &msg[ 8 ], nLen );
+      memset( msg + 12, '\0', NETIO_MSGLEN - 12 );
+      memcpy( msg + NETIO_MSGLEN, itmData, nLen );
+      hb_xfree( itmData );
+
+      nLen += NETIO_MSGLEN;
+      if( hb_threadMutexLock( conn->mutex ) )
+      {
+         PHB_CONSTREAM stream = conn->streams;
+         while( stream )
+         {
+            if( stream->id == iStreamID )
+               break;
+            stream = stream->next;
+         }
+         if( stream && stream->type == NETIO_SRVITEM )
+            fResult = s_srvSendAll( conn, msg, nLen ) == ( long ) nLen;
+         hb_threadMutexUnlock( conn->mutex );
+      }
+      hb_xfree( msg );
+   }
+   hb_retl( fResult );
+}
+
+/* NETIO_SRVSENDDATA( <pConnectionSocket>, <nStreamID>, <cData> ) -> <lSent>
+ */
+HB_FUNC( NETIO_SRVSENDDATA )
+{
+   PHB_CONSRV conn = s_consrvParam( 1 );
+   int iStreamID = hb_parni( 2 );
+   HB_SIZE nLen = hb_parclen( 3 );
+   HB_BOOL fResult = HB_FALSE;
+
+   if( conn && conn->sd != HB_NO_SOCKET && !conn->stop && conn->mutex &&
+       iStreamID && nLen > 0 )
+   {
+      char * msg;
+
+      msg = ( char * ) hb_xgrab( nLen + NETIO_MSGLEN );
+      HB_PUT_LE_UINT32( &msg[ 0 ], NETIO_SRVDATA );
+      HB_PUT_LE_UINT32( &msg[ 4 ], iStreamID );
+      HB_PUT_LE_UINT32( &msg[ 8 ], nLen );
+      memset( msg + 12, '\0', NETIO_MSGLEN - 12 );
+      memcpy( msg + NETIO_MSGLEN, hb_parc( 3 ), nLen );
+
+      nLen += NETIO_MSGLEN;
+      if( hb_threadMutexLock( conn->mutex ) )
+      {
+         PHB_CONSTREAM stream = conn->streams;
+         while( stream )
+         {
+            if( stream->id == iStreamID )
+               break;
+            stream = stream->next;
+         }
+         if( stream && stream->type == NETIO_SRVDATA )
+            fResult = s_srvSendAll( conn, msg, nLen ) == ( long ) nLen;
+         hb_threadMutexUnlock( conn->mutex );
+      }
+      hb_xfree( msg );
+   }
+   hb_retl( fResult );
+}
+
+/* NETIO_SRVSTATUS( <pConnectionSocket> [, <nStreamID>] ) -> <nStatus>
+ */
+HB_FUNC( NETIO_SRVSTATUS )
+{
+   PHB_CONSRV conn = s_consrvParam( 1 );
+   int iStreamID = hb_parni( 2 );
+   int iStatus = 0;
+
+   if( !conn )
+      iStatus = -1;
+   else if( conn->sd != HB_NO_SOCKET )
+      iStatus = -2;
+   else if( conn->stop )
+      iStatus = -3;
+   else if( iStreamID != 0 && conn->mutex )
+   {
+      if( hb_threadMutexLock( conn->mutex ) )
+      {
+         PHB_CONSTREAM stream = conn->streams;
+         while( stream )
+         {
+            if( stream->id == iStreamID )
+            {
+               iStatus = stream->type == NETIO_SRVDATA ? 1 : 2;
+               break;
+            }
+            stream = stream->next;
+         }
+         hb_threadMutexUnlock( conn->mutex );
+      }
+   }
+   hb_retni( iStatus );
 }

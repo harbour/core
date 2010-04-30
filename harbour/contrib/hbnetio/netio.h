@@ -76,7 +76,7 @@
 #define NETIO_PASSWD_MAX      64
 
 /* login string */
-#define NETIO_LOGINSTRID      "HarbourFileTcpIpServer\006"
+#define NETIO_LOGINSTRID      "HarbourFileTcpIpServer\007"
 
 /* messages */
 #define NETIO_LOGIN           1
@@ -98,27 +98,36 @@
 #define NETIO_PROC            17
 #define NETIO_PROCW           18
 #define NETIO_FUNC            19
+#define NETIO_FUNCCTRL        20
+#define NETIO_SRVITEM         21
+#define NETIO_SRVDATA         22
+#define NETIO_SRVCLOSE        23
 #define NETIO_CONNECTED       0x4321DEAD
 
 /* messages format */
-/* { NETIO_LOGIN,  len[ 2 ]... } + loginstr[ len ] -> { NETIO_LOGIN, NETIO_CONNECTED[ 4 ], ... } */
-/* { NETIO_EXISTS, len[ 2 ]... } + filename[ len ] -> { NETIO_EXISTS, ... } */
-/* { NETIO_DELETE, len[ 2 ]... } + filename[ len ] -> { NETIO_DELETE, ... } */
-/* { NETIO_RENAME, len[ 2 ], len2[ 2 ]... } + filename[ len ] + filename[ len2 ] -> { NETIO_RENAME, ... } */
-/* { NETIO_OPEN,   len[ 2 ], flags[ 2 ], def_ext[], 0, ... } + filename[ len ] -> { NETIO_OPEN, file_no[2], ... } */
-/* { NETIO_READ,   file_no[2], size[ 4 ], offset[ 8 ], ... } -> { NETIO_READ, read[ 4 ], err[ 4 ], ... } + data[ read ] */
-/* { NETIO_WRITE,  file_no[2], size[ 4 ], offset[ 8 ], ... } + data[ size ] -> { NETIO_WRITE, written[ 4 ], err[ 4 ], ... } */
-/* { NETIO_LOCK,   file_no[2], start[ 8 ], len[ 8 ], flags[ 2 ], ... } -> { NETIO_LOCK, ... } */
-/* { NETIO_TRUNC,  file_no[2], offset[ 8 ], ... } -> { NETIO_TRUNC, ... } */
-/* { NETIO_SIZE,   file_no[2], ... } -> { NETIO_SIZE, size[ 8 ], err[ 4 ], ... } */
-/* { NETIO_COMMIT, file_no[2], ... } -> { NETIO_SYNC, ... } | NULL */
-/* { NETIO_CLOSE,  file_no[2], ... } -> { NETIO_CLOSE, ... } */
-/* { NETIO_UNLOCK, file_no[2], start[ 8 ], len[ 8 ], flags[ 2 ], ... } -> { NETIO_SYNC, ... } | NULL */
-/* { NETIO_PROCIS, size[ 4 ] } + (funcname + \0 + data)[ size ] -> { NETIO_PROCIS, ... } */
-/* { NETIO_PROC,   size[ 4 ] } + (funcname + \0 + data)[ size ] -> { NETIO_SYNC, ... } | NULL */
-/* { NETIO_PROCW,  size[ 4 ] } + (funcname + \0 + data)[ size ] -> { NETIO_PROC, ... } */
-/* { NETIO_FUNC,   size[ 4 ] } + (funcname + \0 + data)[ size ] -> { NETIO_FUNC, size[ 4 ] } + data[ size ] */
-/* { NETIO_SYNC, ... } -> NULL */
+/* { NETIO_LOGIN,    len[ 2 ]... } + loginstr[ len ] -> { NETIO_LOGIN, NETIO_CONNECTED[ 4 ], ... } */
+/* { NETIO_EXISTS,   len[ 2 ]... } + filename[ len ] -> { NETIO_EXISTS, ... } */
+/* { NETIO_DELETE,   len[ 2 ]... } + filename[ len ] -> { NETIO_DELETE, ... } */
+/* { NETIO_RENAME,   len[ 2 ], len2[ 2 ]... } + filename[ len ] + filename[ len2 ] -> { NETIO_RENAME, ... } */
+/* { NETIO_OPEN,     len[ 2 ], flags[ 2 ], def_ext[], 0, ... } + filename[ len ] -> { NETIO_OPEN, file_no[2], ... } */
+/* { NETIO_READ,     file_no[2], size[ 4 ], offset[ 8 ], ... } -> { NETIO_READ, read[ 4 ], err[ 4 ], ... } + data[ read ] */
+/* { NETIO_WRITE,    file_no[2], size[ 4 ], offset[ 8 ], ... } + data[ size ] -> { NETIO_WRITE, written[ 4 ], err[ 4 ], ... } */
+/* { NETIO_LOCK,     file_no[2], start[ 8 ], len[ 8 ], flags[ 2 ], ... } -> { NETIO_LOCK, ... } */
+/* { NETIO_TRUNC,    file_no[2], offset[ 8 ], ... } -> { NETIO_TRUNC, ... } */
+/* { NETIO_SIZE,     file_no[2], ... } -> { NETIO_SIZE, size[ 8 ], err[ 4 ], ... } */
+/* { NETIO_COMMIT,   file_no[2], ... } -> { NETIO_SYNC, ... } | NULL */
+/* { NETIO_CLOSE,    file_no[2], ... } -> { NETIO_CLOSE, ... } */
+/* { NETIO_UNLOCK,   file_no[2], start[ 8 ], len[ 8 ], flags[ 2 ], ... } -> { NETIO_SYNC, ... } | NULL */
+/* { NETIO_PROCIS,   size[ 4 ] } + (funcname + \0 + data)[ size ] -> { NETIO_PROCIS, ... } */
+/* { NETIO_PROC,     size[ 4 ] } + (funcname + \0 + data)[ size ] -> { NETIO_SYNC, ... } | NULL */
+/* { NETIO_PROCW,    size[ 4 ] } + (funcname + \0 + data)[ size ] -> { NETIO_PROC, ... } */
+/* { NETIO_FUNC,     size[ 4 ] } + (funcname + \0 + data)[ size ] -> { NETIO_FUNC, size[ 4 ] } + data[ size ] */
+/* { NETIO_FUNCCTRL, size[ 4 ], id[4], type[4] } + (funcname + \0 + data)[ size ] -> { NETIO_FUNCCTRL, size[ 4 ] } + data[ size ] */
+/* { NETIO_SRVCLOSE, id[4], ... } -> { NETIO_SRVCLOSE, ... } */
+/* { NETIO_SYNC,     ... } -> NULL */
+/* -> { NETIO_SYNC,     ... } */
+/* -> { NETIO_SRVITEM,  id[4], size[ 4 ], ... } + data[ size ] */
+/* -> { NETIO_SRVDATA,  id[4], size[ 4 ], ... } + data[ size ] */
 /* alternative answer for all messages: -> { NETIO_ERROR,  err[ 4 ], ... } */
 
 /* netio errors */
@@ -126,9 +135,11 @@
 #define NETIO_ERR_WRONG_PARAM       0xff02
 #define NETIO_ERR_WRONG_FILE_PATH   0xff03
 #define NETIO_ERR_WRONG_FILE_HANDLE 0xff04
-#define NETIO_ERR_FILES_MAX         0xff05
-#define NETIO_ERR_READ              0xff06
-#define NETIO_ERR_FILE_IO           0xff07
-#define NETIO_ERR_NOT_EXISTS        0xff08
-#define NETIO_ERR_UNSUPPORTED       0xff09
-#define NETIO_ERR_REFUSED           0xff10
+#define NETIO_ERR_WRONG_FILE_SIZE   0xff05
+#define NETIO_ERR_WRONG_STREAMID    0xff06
+#define NETIO_ERR_FILES_MAX         0xff07
+#define NETIO_ERR_READ              0xff08
+#define NETIO_ERR_FILE_IO           0xff09
+#define NETIO_ERR_NOT_EXISTS        0xff0a
+#define NETIO_ERR_UNSUPPORTED       0xff0b
+#define NETIO_ERR_REFUSED           0xff0c

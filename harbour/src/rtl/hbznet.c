@@ -357,7 +357,7 @@ static long hb_znetStreamWrite( PHB_ZNETSTREAM pStream, HB_SOCKET sd, HB_MAXINT 
  */
 long hb_znetFlush( PHB_ZNETSTREAM pStream, HB_SOCKET sd, HB_MAXINT timeout )
 {
-   uInt uiSize = HB_ZNET_BUFSIZE - ( pStream->crypt ? -2 : 0 );
+   uInt uiSize = HB_ZNET_BUFSIZE - ( pStream->crypt ? 2 : 0 );
 
    if( pStream->wr.avail_out > 0 )
       pStream->err = deflate( &pStream->wr, Z_SYNC_FLUSH );
