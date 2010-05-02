@@ -75,6 +75,7 @@
 class LineNumberArea;
 class HorzRuler;
 
+
 class HBQPlainTextEdit : public QPlainTextEdit
 {
    Q_OBJECT
@@ -129,6 +130,8 @@ private:
    QTextEdit::ExtraSelection selection;
    void           hbBraceHighlight();
 
+   int            rowBegins;
+   int            rowEnds;
    int            columnBegins;
    int            columnEnds;
    bool           isColumnSelectionEnabled;
@@ -140,6 +143,9 @@ protected:
    bool           event( QEvent * event );
    void           resizeEvent( QResizeEvent * event );
    void           mouseDoubleClickEvent( QMouseEvent * event );
+   void           mousePressEvent( QMouseEvent * event );
+   void           mouseReleaseEvent( QMouseEvent * event );
+   void           mouseMoveEvent( QMouseEvent * event );
    void           focusInEvent( QFocusEvent * event );
    void           keyPressEvent( QKeyEvent * event );
 
@@ -176,6 +182,8 @@ private slots:
    void           hbUpdateLineNumberArea( const QRect &, int );
    void           hbUpdateHorzRuler();
    void           hbPaintColumnSelection( QPaintEvent * );
+   bool           hbKeyPressColumnSelection( QKeyEvent * );
+   void           hbClearColumnSelection();
 };
 
 

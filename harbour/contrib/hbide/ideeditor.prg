@@ -1411,6 +1411,7 @@ CLASS IdeEdit INHERIT IdeObject
    DATA   isSuspended                             INIT .f.
 
    DATA   qFont
+   DATA   aBlockCopyContents                      INIT {}
 
    METHOD new( oEditor, nMode )
    METHOD create( oEditor, nMode )
@@ -1470,6 +1471,10 @@ CLASS IdeEdit INHERIT IdeObject
    METHOD isModified()                            INLINE ::oEditor:qDocument:isModified()
    METHOD setFont()
    METHOD markCurrentFunction()
+   METHOD copyBlockContents( aCord )
+   METHOD pasteBlockContents()
+   METHOD insertBlockContents( aCord )
+   METHOD deleteBlockContents( aCord )
 
    ENDCLASS
 
@@ -1883,6 +1888,18 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p, p1 )
       ELSEIF p == 21001
          ::handlePreviousWord( .t. )
 
+      ELSEIF p == 21011
+         ::copyBlockContents( p1 )
+
+      ELSEIF p == 21012
+         ::pasteBlockContents()
+
+      ELSEIF p == 21013
+         ::insertBlockContents( p1 )
+
+      ELSEIF p == 21014
+         ::deleteBlockContents( p1 )
+
       ELSEIF p == QEvent_Paint
          // ::oIde:testPainter( p1 )
 
@@ -1892,6 +1909,178 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p, p1 )
    ENDSWITCH
 
    RETURN .F.  /* Important */
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:copyBlockContents( aCord )
+   LOCAL nT, nL, nB, nR, nW, i, cLine, cClip := ""
+
+   nT := iif( aCord[ 1 ] > aCord[ 3 ], aCord[ 3 ], aCord[ 1 ] )
+   nB := iif( aCord[ 1 ] > aCord[ 3 ], aCord[ 1 ], aCord[ 3 ] )
+   nL := iif( aCord[ 2 ] > aCord[ 4 ], aCord[ 4 ], aCord[ 2 ] )
+   nR := iif( aCord[ 2 ] > aCord[ 4 ], aCord[ 2 ], aCord[ 4 ] )
+
+   nW := nR - nL
+
+   ::aBlockCopyContents   := {}
+   FOR i := nT TO nB
+      cLine := ::getLine( i + 1 )
+      cLine := pad( substr( cLine, nL + 1, nW ), nW )
+      aadd( ::aBlockCopyContents, cLine )
+      #if   defined( __PLATFORM__WINDOWS )
+         cClip += cLine + chr( 13 ) + chr( 10 )
+      #elif defined( __PLATFORM__OS2 )
+         cClip += cLine + chr( 13 ) + chr( 10 )
+      #elif defined( __PLATFORM__UNIX )
+         cClip += cLine + chr( 10 )
+      #endif
+   NEXT
+
+   QClipboard():new():setText( cClip )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:pasteBlockContents()
+   LOCAL i, nRow, nCol, qCursor, nMaxCol
+
+   IF empty( ::aBlockCopyContents )
+      RETURN Self
+   ENDIF
+
+   qCursor := QTextCursor():from( ::qEdit:textCursor() )
+   nCol    := qCursor:columnNumber()
+   qCursor:beginEditBlock()
+   //
+   FOR i := 1 TO len( ::aBlockCopyContents )
+      qCursor:insertText( ::aBlockCopyContents[ i ] )
+      IF i < len( ::aBlockCopyContents )
+         nRow := qCursor:blockNumber()
+         qCursor:movePosition( QTextCursor_Down, QTextCursor_MoveAnchor )
+         IF qCursor:blockNumber() == nRow
+            qCursor:movePosition( QTextCursor_EndOfBlock, QTextCursor_MoveAnchor )
+            qCursor:insertBlock()
+            qCursor:movePosition( QTextCursor_NextBlock, QTextCursor_MoveAnchor )
+         ENDIF
+         qCursor:movePosition( QTextCursor_EndOfLine, QTextCursor_MoveAnchor )
+         nMaxCol := qCursor:columnNumber()
+         IF nMaxCol < nCol
+            qCursor:insertText( replicate( " ", nCol - nMaxCol ) )
+         ENDIF
+         qCursor:movePosition( QTextCursor_StartOfBlock, QTextCursor_MoveAnchor )
+         qCursor:movePosition( QTextCursor_Right, QTextCursor_MoveAnchor, nCol )
+      ENDIF
+   NEXT
+   //
+   qCursor:endEditBlock()
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:insertBlockContents( aCord )
+   LOCAL nT, nL, nB, nR, nW, i, cLine, cKey, qCursor
+
+   nT := iif( aCord[ 1 ] > aCord[ 3 ], aCord[ 3 ], aCord[ 1 ] )
+   nB := iif( aCord[ 1 ] > aCord[ 3 ], aCord[ 1 ], aCord[ 3 ] )
+   nL := iif( aCord[ 2 ] > aCord[ 4 ], aCord[ 4 ], aCord[ 2 ] )
+   nR := iif( aCord[ 2 ] > aCord[ 4 ], aCord[ 2 ], aCord[ 4 ] )
+
+   nW := nR - nL
+
+   cKey := chr( XbpQKeyEventToAppEvent( aCord[ 5 ] ) )
+
+   qCursor := QTextCursor():from( ::qEdit:textCursor() )
+   qCursor:beginEditBlock()
+
+   IF nW == 0
+      FOR i := nT TO nB
+         cLine := ::getLine( i + 1 )
+         cLine := pad( substr( cLine, 1, nL ), nL ) + cKey + substr( cLine, nL + 1 )
+
+         qCursor:movePosition( QTextCursor_Start       , QTextCursor_MoveAnchor )
+         qCursor:movePosition( QTextCursor_Down        , QTextCursor_MoveAnchor, i )
+         qCursor:movePosition( QTextCursor_StartOfBlock, QTextCursor_MoveAnchor )
+         qCursor:movePosition( QTextCursor_EndOfLine   , QTextCursor_KeepAnchor )
+         qCursor:insertText( cLine )
+      NEXT
+      qCursor:movePosition( QTextCursor_Start, QTextCursor_MoveAnchor )
+      qCursor:movePosition( QTextCursor_Down , QTextCursor_MoveAnchor, nB )
+      qCursor:movePosition( QTextCursor_Right, QTextCursor_MoveAnchor, nR + 1 )
+   ELSE
+      FOR i := nT TO nB
+         cLine := ::getLine( i + 1 )
+         cLine := pad( substr( cLine, 1, nL ), nL ) + replicate( cKey, nW ) + substr( cLine, nR + 1 )
+
+         qCursor:movePosition( QTextCursor_Start       , QTextCursor_MoveAnchor )
+         qCursor:movePosition( QTextCursor_Down        , QTextCursor_MoveAnchor, i )
+         qCursor:movePosition( QTextCursor_StartOfBlock, QTextCursor_MoveAnchor )
+         qCursor:movePosition( QTextCursor_EndOfLine   , QTextCursor_KeepAnchor )
+         qCursor:insertText( cLine )
+      NEXT
+      qCursor:movePosition( QTextCursor_Start, QTextCursor_MoveAnchor )
+      qCursor:movePosition( QTextCursor_Down , QTextCursor_MoveAnchor, nB )
+      qCursor:movePosition( QTextCursor_Right, QTextCursor_MoveAnchor, nR )
+   ENDIF
+   //
+   ::qEdit:setCursorWidth( 1 )
+   ::qEdit:setTextCursor( qCursor )
+   qCursor:endEditBlock()
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:deleteBlockContents( aCord )
+   LOCAL nT, nL, nB, nR, nW, i, cLine, qCursor, k
+
+   nT := iif( aCord[ 1 ] > aCord[ 3 ], aCord[ 3 ], aCord[ 1 ] )
+   nB := iif( aCord[ 1 ] > aCord[ 3 ], aCord[ 1 ], aCord[ 3 ] )
+   nL := iif( aCord[ 2 ] > aCord[ 4 ], aCord[ 4 ], aCord[ 2 ] )
+   nR := iif( aCord[ 2 ] > aCord[ 4 ], aCord[ 2 ], aCord[ 4 ] )
+   k  := aCord[ 5 ]
+
+   nW := nR - nL
+
+   qCursor := QTextCursor():from( ::qEdit:textCursor() )
+   qCursor:beginEditBlock()
+   IF nW == 0 .AND. k == Qt_Key_Backspace
+      FOR i := nT TO nB
+         cLine := ::getLine( i + 1 )
+         cLine := pad( substr( cLine, 1, nL - 1 ), nL - 1 ) + substr( cLine, nL + 1 )
+
+         qCursor:movePosition( QTextCursor_Start       , QTextCursor_MoveAnchor )
+         qCursor:movePosition( QTextCursor_Down        , QTextCursor_MoveAnchor, i )
+         qCursor:movePosition( QTextCursor_StartOfLine , QTextCursor_MoveAnchor )
+         qCursor:movePosition( QTextCursor_EndOfLine   , QTextCursor_KeepAnchor )
+         qCursor:insertText( cLine )
+      NEXT
+      qCursor:movePosition( QTextCursor_Start, QTextCursor_MoveAnchor )
+      qCursor:movePosition( QTextCursor_Down , QTextCursor_MoveAnchor, nB )
+      qCursor:movePosition( QTextCursor_Right, QTextCursor_MoveAnchor, nR - 1 )
+   ELSE
+      IF k == Qt_Key_Delete
+         FOR i := nT TO nB
+            cLine := ::getLine( i + 1 )
+            cLine := pad( substr( cLine, 1, nL ), nL ) + substr( cLine, nR + 1 )
+
+            qCursor:movePosition( QTextCursor_Start       , QTextCursor_MoveAnchor )
+            qCursor:movePosition( QTextCursor_Down        , QTextCursor_MoveAnchor, i )
+            qCursor:movePosition( QTextCursor_StartOfLine , QTextCursor_MoveAnchor )
+            qCursor:movePosition( QTextCursor_EndOfLine   , QTextCursor_KeepAnchor )
+            qCursor:insertText( cLine )
+         NEXT
+         qCursor:movePosition( QTextCursor_Start, QTextCursor_MoveAnchor )
+         qCursor:movePosition( QTextCursor_Down , QTextCursor_MoveAnchor, nT )
+         qCursor:movePosition( QTextCursor_Right, QTextCursor_MoveAnchor, nL )
+      ENDIF
+   ENDIF
+   //
+   ::qEdit:setTextCursor( qCursor )
+   qCursor:endEditBlock()
+
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
