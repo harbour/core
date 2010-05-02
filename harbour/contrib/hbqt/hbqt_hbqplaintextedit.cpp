@@ -258,8 +258,8 @@ void HBQPlainTextEdit::mouseMoveEvent( QMouseEvent *event )
          else
          {
             QTextCursor c( cursorForPosition( QPoint( 1,1 ) ) );
-            rowEnds    = c.blockNumber() + ( event->y() / fontMetrics().height() );
-            columnEnds = event->x() / fontMetrics().averageCharWidth();
+            rowEnds    = c.blockNumber()  + ( event->y() / fontMetrics().height() );
+            columnEnds = c.columnNumber() + ( event->x() / fontMetrics().averageCharWidth() );
          }
          update();
          event->accept();
