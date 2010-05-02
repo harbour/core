@@ -782,13 +782,14 @@ void HBQPlainTextEdit::hbPaintColumnSelection( QPaintEvent * event )
          int t = cursorForPosition( QPoint( 1, 1 ) ).blockNumber();
          if( rowEnds < rowBegins ? rowBegins >= t : rowEnds >= t )
          {
+            int c = cursorForPosition( QPoint( 1, 1 ) ).columnNumber();
             QRect cr = contentsRect();
 
             int y = ( ( rowBegins <= t ) ? 0 : ( ( rowBegins - t ) * fontMetrics().height() ) );
 
             int fontWidth = fontMetrics().averageCharWidth();
 
-            int x = ( columnBegins ) * fontWidth + cr.left();
+            int x = ( ( columnBegins - c ) * fontWidth ) + cr.left();
             int w = ( columnEnds - columnBegins ) * fontWidth;
 
             QRect r( x, y, ( w == 0 ? 1 : w ), ( ( rowEnds - t + 1 ) * fontMetrics().height() ) - y );
