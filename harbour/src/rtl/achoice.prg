@@ -131,6 +131,9 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
 
 
    lFinished := ( nMode == AC_NOITEM )
+   IF lFinished .AND. lUserFunc
+      Do( xUserFunc, nMode, nPos, nPos - nAtTop )
+   ENDIF
    DO WHILE !lFinished
 
       IF nMode != AC_GOTO .AND. nMode != AC_NOITEM
