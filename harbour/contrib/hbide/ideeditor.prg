@@ -1971,13 +1971,7 @@ METHOD IdeEdit:copyBlockContents( aCord )
       cLine := ::getLine( i + 1 )
       cLine := pad( substr( cLine, nL + 1, nW ), nW )
       aadd( ::aBlockCopyContents, cLine )
-      #if   defined( __PLATFORM__WINDOWS )
-         cClip += cLine + chr( 13 ) + chr( 10 )
-      #elif defined( __PLATFORM__OS2 )
-         cClip += cLine + chr( 13 ) + chr( 10 )
-      #elif defined( __PLATFORM__UNIX )
-         cClip += cLine + chr( 10 )
-      #endif
+      cClip += cLine + hb_osNewLine()
    NEXT
 
    QClipboard():new():setText( cClip )
