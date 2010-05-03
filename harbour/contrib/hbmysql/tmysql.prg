@@ -181,8 +181,8 @@ METHOD FieldDec( nNum, lFormat ) CLASS TMySQLRow
 
    IF nNum >= 1 .AND. nNum <= Len( ::aFieldStruct )
 
-       IF !lFormat .AND. ( ::aFieldStruct[ nNum ][ MYSQL_FS_TYPE ] == MYSQL_FLOAT_TYPE .OR. ;
-                           ::aFieldStruct[ nNum ][ MYSQL_FS_TYPE ] == MYSQL_DOUBLE_TYPE )
+       IF !lFormat .AND. ( ::aFieldStruct[ nNum ][ MYSQL_FS_TYPE ] == MYSQL_TYPE_FLOAT .OR. ;
+                           ::aFieldStruct[ nNum ][ MYSQL_FS_TYPE ] == MYSQL_TYPE_DOUBLE )
          RETURN Set( _SET_DECIMALS )
       ELSE
          RETURN ::aFieldStruct[ nNum ][ MYSQL_FS_DECIMALS ]
@@ -197,28 +197,28 @@ METHOD FieldType( nNum ) CLASS TMySQLRow
    IF nNum >= 1 .AND. nNum <= Len( ::aFieldStruct )
 
       SWITCH ::aFieldStruct[ nNum ][ MYSQL_FS_TYPE ]
-      CASE MYSQL_TINY_TYPE
+      CASE MYSQL_TYPE_TINY
          RETURN "L"
 
-      CASE MYSQL_SHORT_TYPE
-      CASE MYSQL_LONG_TYPE
-      CASE MYSQL_LONGLONG_TYPE
-      CASE MYSQL_FLOAT_TYPE
-      CASE MYSQL_DOUBLE_TYPE
-      CASE MYSQL_DECIMAL_TYPE
-      CASE MYSQL_INT24_TYPE
+      CASE MYSQL_TYPE_SHORT
+      CASE MYSQL_TYPE_LONG
+      CASE MYSQL_TYPE_LONGLONG
+      CASE MYSQL_TYPE_FLOAT
+      CASE MYSQL_TYPE_DOUBLE
+      CASE MYSQL_TYPE_NEWDECIMAL
+      CASE MYSQL_TYPE_INT24
          RETURN "N"
 
-      CASE MYSQL_VAR_STRING_TYPE
-      CASE MYSQL_STRING_TYPE
-      CASE MYSQL_DATETIME_TYPE
+      CASE MYSQL_TYPE_VAR_STRING
+      CASE MYSQL_TYPE_STRING
+      CASE MYSQL_TYPE_DATETIME
          RETURN "C"
 
-      CASE MYSQL_DATE_TYPE
+      CASE MYSQL_TYPE_DATE
          RETURN "D"
 
-      CASE MYSQL_BLOB_TYPE
-      CASE MYSQL_MEDIUM_BLOB_TYPE
+      CASE MYSQL_TYPE_BLOB
+      CASE MYSQL_TYPE_MEDIUM_BLOB
          RETURN "M"
 
       ENDSWITCH
@@ -230,13 +230,17 @@ METHOD FieldType( nNum ) CLASS TMySQLRow
 // returns a WHERE x=y statement which uses primary key (if available)
 METHOD MakePrimaryKeyWhere() CLASS TMySQLRow
 
-   LOCAL ni, cWhere := " WHERE "
+   LOCAL ni, cWhere := ""
 
    FOR nI := 1 TO Len( ::aFieldStruct )
 
       // search for fields part of a primary key
       IF hb_bitAnd( ::aFieldStruct[ nI ][ MYSQL_FS_FLAGS ], PRI_KEY_FLAG ) == PRI_KEY_FLAG .OR. ;
          hb_bitAnd( ::aFieldStruct[ nI ][ MYSQL_FS_FLAGS ], MULTIPLE_KEY_FLAG ) == MULTIPLE_KEY_FLAG
+
+         IF ! Empty( cWhere )
+            cWhere += " AND "
+         ENDIF
 
          cWhere += ::aFieldStruct[ nI ][ MYSQL_FS_NAME ] + "="
 
@@ -246,14 +250,13 @@ METHOD MakePrimaryKeyWhere() CLASS TMySQLRow
          ELSE
             cWhere += ClipValue2SQL( ::aRow[ nI ] )
          ENDIF
-
-         cWhere += " AND "
       ENDIF
 
    NEXT
 
-   // remove last " AND "
-   cWhere := Left( cWhere, Len( cWhere ) - 5 )
+   IF ! Empty( cWhere )
+      cWhere := " WHERE " + cWhere
+   ENDIF
 
    RETURN cWhere
 
@@ -508,7 +511,7 @@ METHOD GetRow( nRow ) CLASS TMySQLQuery
          FOR i := 1 TO ::nNumFields
 
             SWITCH ::aFieldStruct[ i ][ MYSQL_FS_TYPE ]
-            CASE MYSQL_TINY_TYPE
+            CASE MYSQL_TYPE_TINY
                //DAVID:
                IF ::aRow[ i ] == NIL
                   ::aRow[ i ] := "0"
@@ -516,11 +519,11 @@ METHOD GetRow( nRow ) CLASS TMySQLQuery
                ::aRow[ i ] := Val( ::aRow[ i ] ) != 0
                EXIT
 
-            CASE MYSQL_SHORT_TYPE
-            CASE MYSQL_LONG_TYPE
-            CASE MYSQL_LONGLONG_TYPE
-            CASE MYSQL_INT24_TYPE
-            CASE MYSQL_DECIMAL_TYPE
+            CASE MYSQL_TYPE_SHORT
+            CASE MYSQL_TYPE_LONG
+            CASE MYSQL_TYPE_LONGLONG
+            CASE MYSQL_TYPE_INT24
+            CASE MYSQL_TYPE_NEWDECIMAL
                //DAVID:
                IF ::aRow[ i ] == NIL
                   ::aRow[ i ] := "0"
@@ -528,8 +531,8 @@ METHOD GetRow( nRow ) CLASS TMySQLQuery
                ::aRow[ i ] := Val( ::aRow[ i ] )
                EXIT
 
-            CASE MYSQL_DOUBLE_TYPE
-            CASE MYSQL_FLOAT_TYPE
+            CASE MYSQL_TYPE_DOUBLE
+            CASE MYSQL_TYPE_FLOAT
                //DAVID:
                IF ::aRow[ i ] == NIL
                   ::aRow[ i ] := "0"
@@ -537,7 +540,7 @@ METHOD GetRow( nRow ) CLASS TMySQLQuery
                ::aRow[ i ] := Val( ::aRow[ i ] )
                EXIT
 
-            CASE MYSQL_DATE_TYPE
+            CASE MYSQL_TYPE_DATE
                IF Empty( ::aRow[ i ] )
                   ::aRow[ i ] := hb_SToD( "" )
                ELSE
@@ -546,16 +549,16 @@ METHOD GetRow( nRow ) CLASS TMySQLQuery
                ENDIF
                EXIT
 
-            CASE MYSQL_BLOB_TYPE
+            CASE MYSQL_TYPE_BLOB
                // Memo field
                EXIT
 
-            CASE MYSQL_STRING_TYPE
-            CASE MYSQL_VAR_STRING_TYPE
+            CASE MYSQL_TYPE_STRING
+            CASE MYSQL_TYPE_VAR_STRING
                // char field
                EXIT
 
-            CASE MYSQL_DATETIME_TYPE
+            CASE MYSQL_TYPE_DATETIME
                // DateTime field
                EXIT
 
@@ -681,8 +684,8 @@ METHOD FieldDec( nNum, lFormat ) CLASS TMySQLQuery
    DEFAULT lFormat TO .F.
 
    IF nNum >=1 .AND. nNum <= Len( ::aFieldStruct )
-      IF !lFormat .AND. ( ::aFieldStruct[ nNum ][ MYSQL_FS_TYPE ] == MYSQL_FLOAT_TYPE .OR. ;
-                          ::aFieldStruct[ nNum ][ MYSQL_FS_TYPE ] == MYSQL_DOUBLE_TYPE )
+      IF !lFormat .AND. ( ::aFieldStruct[ nNum ][ MYSQL_FS_TYPE ] == MYSQL_TYPE_FLOAT .OR. ;
+                          ::aFieldStruct[ nNum ][ MYSQL_FS_TYPE ] == MYSQL_TYPE_DOUBLE )
          RETURN Set( _SET_DECIMALS )
       ELSE
          RETURN ::aFieldStruct[ nNum ][ MYSQL_FS_DECIMALS ]
@@ -697,28 +700,28 @@ METHOD FieldType( nNum ) CLASS TMySQLQuery
    IF nNum >= 1 .AND. nNum <= Len( ::aFieldStruct )
 
       SWITCH ::aFieldStruct[ nNum ][ MYSQL_FS_TYPE ]
-      CASE MYSQL_TINY_TYPE
+      CASE MYSQL_TYPE_TINY
          RETURN "L"
 
-      CASE MYSQL_SHORT_TYPE
-      CASE MYSQL_LONG_TYPE
-      CASE MYSQL_LONGLONG_TYPE
-      CASE MYSQL_FLOAT_TYPE
-      CASE MYSQL_DOUBLE_TYPE
-      CASE MYSQL_DECIMAL_TYPE
-      CASE MYSQL_INT24_TYPE
+      CASE MYSQL_TYPE_SHORT
+      CASE MYSQL_TYPE_LONG
+      CASE MYSQL_TYPE_LONGLONG
+      CASE MYSQL_TYPE_FLOAT
+      CASE MYSQL_TYPE_DOUBLE
+      CASE MYSQL_TYPE_NEWDECIMAL
+      CASE MYSQL_TYPE_INT24
          RETURN "N"
 
-      CASE MYSQL_VAR_STRING_TYPE
-      CASE MYSQL_STRING_TYPE
-      CASE MYSQL_DATETIME_TYPE
+      CASE MYSQL_TYPE_VAR_STRING
+      CASE MYSQL_TYPE_STRING
+      CASE MYSQL_TYPE_DATETIME
          RETURN "C"
 
-      CASE MYSQL_DATE_TYPE
+      CASE MYSQL_TYPE_DATE
          RETURN "D"
 
-      CASE MYSQL_BLOB_TYPE
-      CASE MYSQL_MEDIUM_BLOB_TYPE
+      CASE MYSQL_TYPE_BLOB
+      CASE MYSQL_TYPE_MEDIUM_BLOB
          RETURN "M"
 
       ENDSWITCH
@@ -824,7 +827,6 @@ METHOD Update( oRow, lOldRecord, lRefresh ) CLASS TMySQLTable
    IF oRow == NIL // default Current row
 
       FOR i := 1 TO  ::nNumFields
-
          IF !( ::aOldValue[ i ] == ::FieldGet( i ) )
             cUpdateQuery += ::aFieldStruct[ i ][ MYSQL_FS_NAME ] + "=" + ClipValue2SQL( ::FieldGet( i ) ) + ","
          ENDIF
@@ -844,10 +846,7 @@ METHOD Update( oRow, lOldRecord, lRefresh ) CLASS TMySQLTable
          // WARNING: if there are more than one record of ALL fields matching, all of those records will be changed
 
          FOR nI := 1 TO Len( ::aFieldStruct )
-            cWhere += ::aFieldStruct[ nI ][ MYSQL_FS_NAME ] + "="
-            // use original value
-            cWhere += ClipValue2SQL( ::aOldValue[ nI ] )
-            cWhere += " AND "
+            cWhere += ::aFieldStruct[ nI ][ MYSQL_FS_NAME ] + "=" + ClipValue2SQL( ::aOldValue[ nI ] ) + " AND "
          NEXT
          // remove last " AND "
          cWhere := Left( cWhere, Len( cWhere ) - 5 )
@@ -886,7 +885,7 @@ METHOD Update( oRow, lOldRecord, lRefresh ) CLASS TMySQLTable
          NEXT
 
          // remove last comma
-         cUpdateQuery := Left( cUpdateQuery, Len( cUpdateQuery ) -1 )
+         cUpdateQuery := Left( cUpdateQuery, Len( cUpdateQuery ) - 1 )
 
          //DAVID:
          IF lOldRecord
@@ -894,10 +893,7 @@ METHOD Update( oRow, lOldRecord, lRefresh ) CLASS TMySQLTable
             // WARNING: if there are more than one record of ALL fields matching, all of those records will be changed
 
             FOR nI := 1 TO Len( oRow:aFieldStruct )
-               cWhere += oRow:aFieldStruct[ nI ][ MYSQL_FS_NAME ] + "="
-               // use original value
-               cWhere += ClipValue2SQL( oRow:aOriValue[ nI ] )
-               cWhere += " AND "
+               cWhere += oRow:aFieldStruct[ nI ][ MYSQL_FS_NAME ] + "=" + ClipValue2SQL( oRow:aOriValue[ nI ] ) + " AND "
             NEXT
             // remove last " AND "
             cWhere := Left( cWhere, Len( cWhere ) - 5 )
@@ -1146,31 +1142,31 @@ METHOD GetBlankRow( lSetValues ) CLASS TMySQLTable
    FOR i := 1 TO ::nNumFields
 
       SWITCH ::aFieldStruct[ i ][ MYSQL_FS_TYPE ]
-      CASE MYSQL_STRING_TYPE
-      CASE MYSQL_VAR_STRING_TYPE
-      CASE MYSQL_BLOB_TYPE
-      CASE MYSQL_DATETIME_TYPE
+      CASE MYSQL_TYPE_STRING
+      CASE MYSQL_TYPE_VAR_STRING
+      CASE MYSQL_TYPE_BLOB
+      CASE MYSQL_TYPE_DATETIME
          aRow[ i ] := ""
          EXIT
 
-      CASE MYSQL_SHORT_TYPE
-      CASE MYSQL_LONG_TYPE
-      CASE MYSQL_LONGLONG_TYPE
-      CASE MYSQL_INT24_TYPE
-      CASE MYSQL_DECIMAL_TYPE
+      CASE MYSQL_TYPE_SHORT
+      CASE MYSQL_TYPE_LONG
+      CASE MYSQL_TYPE_LONGLONG
+      CASE MYSQL_TYPE_INT24
+      CASE MYSQL_TYPE_NEWDECIMAL
          aRow[ i ] := 0
          EXIT
 
-      CASE MYSQL_TINY_TYPE
+      CASE MYSQL_TYPE_TINY
          aRow[ i ] := .F.
          EXIT
 
-      CASE MYSQL_DOUBLE_TYPE
-      CASE MYSQL_FLOAT_TYPE
+      CASE MYSQL_TYPE_DOUBLE
+      CASE MYSQL_TYPE_FLOAT
          aRow[ i ] := 0.0
          EXIT
 
-      CASE MYSQL_DATE_TYPE
+      CASE MYSQL_TYPE_DATE
          aRow[ i ] := hb_SToD( "" )
          EXIT
 
@@ -1264,30 +1260,27 @@ METHOD Refresh() CLASS TMySQLTABLE
 // returns a WHERE x=y statement which uses primary key (if available)
 METHOD MakePrimaryKeyWhere() CLASS TMySQLTable
 
-   LOCAL ni, cWhere := " WHERE "
+   LOCAL ni, cWhere := ""
 
    FOR nI := 1 TO Len( ::aFieldStruct )
 
       // search for fields part of a primary key
-      IF hb_bitAnd( ::aFieldStruct[ nI ][ MYSQL_FS_FLAGS ], PRI_KEY_FLAG ) == PRI_KEY_FLAG .OR.;
+      IF hb_bitAnd( ::aFieldStruct[ nI ][ MYSQL_FS_FLAGS ], PRI_KEY_FLAG ) == PRI_KEY_FLAG .OR. ;
          hb_bitAnd( ::aFieldStruct[ nI ][ MYSQL_FS_FLAGS ], MULTIPLE_KEY_FLAG ) == MULTIPLE_KEY_FLAG
 
-         cWhere += ::aFieldStruct[ nI ][ MYSQL_FS_NAME ] + "="
+         IF ! Empty( cWhere )
+            cWhere += " AND "
+         ENDIF
 
-         // if a part of a primary key has been changed, use original value
-
-            cWhere += ClipValue2SQL( ::aOldValue[ nI ] )
-
-         cWhere += " AND "
+         cWhere += ::aFieldStruct[ nI ][ MYSQL_FS_NAME ] + "=" + ClipValue2SQL( ::aOldValue[ nI ] )
       ENDIF
-
    NEXT
 
-   // remove last " AND "
-   cWhere := Left( cWhere, Len( cWhere ) - 5 )
+   IF ! Empty( cWhere )
+      cWhere := " WHERE " + cWhere
+   ENDIF
 
    RETURN cWhere
-
 
 
 /* ----------------------------------------------------------------------------------------*/
@@ -1648,7 +1641,7 @@ METHOD TableStruct( cTable ) CLASS TMySQLServer
                aSFIeld[ DBS_DEC ] := 8
                EXIT
 
-            CASE MYSQL_MEDIUM_BLOB_TYPE
+            CASE MYSQL_TYPE_MEDIUM_BLOB
                aSField[ DBS_TYPE ] := "B"
                aSField[ DBS_LEN ] := aField[ MSQL_FS_LENGTH ]
                EXIT

@@ -52,56 +52,87 @@
  */
 
 /* MySQL field types */
-#define  MYSQL_TINY_TYPE         1  /* NOTE: TINY is used to map clipper logical values to MySQL tables, so 0 == .F., 1 == .T. */
-#define  MYSQL_SHORT_TYPE        2
-#define  MYSQL_LONG_TYPE         3
-#define  MYSQL_FLOAT_TYPE        4
-#define  MYSQL_DOUBLE_TYPE       5
-#define  MYSQL_NULL_TYPE         6
-#define  MYSQL_TIMESTAMP_TYPE    7
-#define  MYSQL_LONGLONG_TYPE     8
-#define  MYSQL_INT24_TYPE        9
-#define  MYSQL_DATE_TYPE         10
-#define  MYSQL_TIME_TYPE         11
-#define  MYSQL_DATETIME_TYPE     12
-#define  MYSQL_YEAR_TYPE         13
-#define  MYSQL_NEWDATE_TYPE      14
-#define  MYSQL_DECIMAL_TYPE      246
-#define  MYSQL_ENUMTYPE          247
-#define  MYSQL_SET_TYPE          248
-#define  MYSQL_TINY_BLOB_TYPE    249
-#define  MYSQL_MEDIUM_BLOB_TYPE  250
-#define  MYSQL_LONG_BLOB_TYPE    251
-#define  MYSQL_BLOB_TYPE         252
-#define  MYSQL_VAR_STRING_TYPE   253
-#define  MYSQL_STRING_TYPE       254
+#define MYSQL_TYPE_DECIMAL      0
+#define MYSQL_TYPE_TINY         1  /* NOTE: TINY is used to map clipper logical values to MySQL tables, so 0 == .F., 1 == .T. */
+#define MYSQL_TYPE_SHORT        2
+#define MYSQL_TYPE_LONG         3
+#define MYSQL_TYPE_FLOAT        4
+#define MYSQL_TYPE_DOUBLE       5
+#define MYSQL_TYPE_NULL         6
+#define MYSQL_TYPE_TIMESTAMP    7
+#define MYSQL_TYPE_LONGLONG     8
+#define MYSQL_TYPE_INT24        9
+#define MYSQL_TYPE_DATE         10
+#define MYSQL_TYPE_TIME         11
+#define MYSQL_TYPE_DATETIME     12
+#define MYSQL_TYPE_YEAR         13
+#define MYSQL_TYPE_NEWDATE      14
+#define MYSQL_TYPE_VARCHAR      15
+#define MYSQL_TYPE_BIT          16
+#define MYSQL_TYPE_NEWDECIMAL   246
+#define MYSQL_TYPE_ENUM         247
+#define MYSQL_TYPE_SET          248
+#define MYSQL_TYPE_TINY_BLOB    249
+#define MYSQL_TYPE_MEDIUM_BLOB  250
+#define MYSQL_TYPE_LONG_BLOB    251
+#define MYSQL_TYPE_BLOB         252
+#define MYSQL_TYPE_VAR_STRING   253
+#define MYSQL_TYPE_STRING       254
+#define MYSQL_TYPE_GEOMETRY     255
 
 /* MySQL field structure item number
    (C level structure is translated to a clipper array) */
-#define  MYSQL_FS_NAME           1     /* Name of column */
-#define  MYSQL_FS_TABLE          2     /* Table of column if column was a field */
-#define  MYSQL_FS_DEF            3     /* Default value (set by mysql_list_fields) */
-#define  MYSQL_FS_TYPE           4     /* Type of field. Se mysql_com.h for types */
-#define  MYSQL_FS_LENGTH         5     /* Width of column */
-#define  MYSQL_FS_MAXLEN         6     /* Max width of selected set */
-#define  MYSQL_FS_FLAGS          7     /* Div flags */
-#define  MYSQL_FS_DECIMALS       8     /* Number of decimals in field */
+#define MYSQL_FS_NAME           1     /* Name of column */
+#define MYSQL_FS_TABLE          2     /* Table of column if column was a field */
+#define MYSQL_FS_DEF            3     /* Default value (set by mysql_list_fields) */
+#define MYSQL_FS_TYPE           4     /* Type of field. Se mysql_com.h for types */
+#define MYSQL_FS_LENGTH         5     /* Width of column */
+#define MYSQL_FS_MAXLEN         6     /* Max width of selected set */
+#define MYSQL_FS_FLAGS          7     /* Div flags */
+#define MYSQL_FS_DECIMALS       8     /* Number of decimals in field */
 
 /* MySQL field flags */
-#define  NOT_NULL_FLAG           1     /* Field can't be NULL */
-#define  PRI_KEY_FLAG            2     /* Field is part of a primary key */
-#define  UNIQUE_KEY_FLAG         4     /* Field is part of a unique key */
-#define  MULTIPLE_KEY_FLAG       8     /* Field is part of a key */
-#define  BLOB_FLAG               16    /* Field is a blob */
-#define  UNSIGNED_FLAG           32    /* Field is unsigned */
-#define  ZEROFILL_FLAG           64    /* Field is zerofill */
-#define  BINARY_FLAG             128
+#define NOT_NULL_FLAG           1     /* Field can't be NULL */
+#define PRI_KEY_FLAG            2     /* Field is part of a primary key */
+#define UNIQUE_KEY_FLAG         4     /* Field is part of a unique key */
+#define MULTIPLE_KEY_FLAG       8     /* Field is part of a key */
+#define BLOB_FLAG               16    /* Field is a blob */
+#define UNSIGNED_FLAG           32    /* Field is unsigned */
+#define ZEROFILL_FLAG           64    /* Field is zerofill */
+#define BINARY_FLAG             128
 /* The following are only sent to new clients */
-#define  ENUM_FLAG               256   /* field is an enum */
-#define  AUTO_INCREMENT_FLAG     512   /* field is a autoincrement field */
-#define  TIMESTAMP_FLAG          1024  /* Field is a timestamp */
-#define  PART_KEY_FLAG           16384 /* Intern; Part of some key */
-#define  GROUP_FLAG              32768 /* Intern group field */
+#define ENUM_FLAG               256   /* field is an enum */
+#define AUTO_INCREMENT_FLAG     512   /* field is a autoincrement field */
+#define TIMESTAMP_FLAG          1024  /* Field is a timestamp */
+#define PART_KEY_FLAG           16384 /* Intern; Part of some key */
+#define GROUP_FLAG              32768 /* Intern group field */
 
 /* Extension to DBS_xxx defines to encompass NOT NULL fields, needed by indexes */
-#define  DBS_NOTNULL             5     /* True if field has to be NOT NULL */
+#define DBS_NOTNULL             5     /* True if field has to be NOT NULL */
+
+#if defined( HB_LEGACY_LEVEL3 )
+/* MySQL field types (for compatibility with older Harbour versions) */
+#define MYSQL_TINY_TYPE         MYSQL_TYPE_TINY
+#define MYSQL_SHORT_TYPE        MYSQL_TYPE_SHORT
+#define MYSQL_LONG_TYPE         MYSQL_TYPE_LONG
+#define MYSQL_FLOAT_TYPE        MYSQL_TYPE_FLOAT
+#define MYSQL_DOUBLE_TYPE       MYSQL_TYPE_DOUBLE
+#define MYSQL_NULL_TYPE         MYSQL_TYPE_NULL
+#define MYSQL_TIMESTAMP_TYPE    MYSQL_TYPE_TIMESTAMP
+#define MYSQL_LONGLONG_TYPE     MYSQL_TYPE_LONGLONG
+#define MYSQL_INT24_TYPE        MYSQL_TYPE_INT24
+#define MYSQL_DATE_TYPE         MYSQL_TYPE_DATE
+#define MYSQL_TIME_TYPE         MYSQL_TYPE_TIME
+#define MYSQL_DATETIME_TYPE     MYSQL_TYPE_DATETIME
+#define MYSQL_YEAR_TYPE         MYSQL_TYPE_YEAR
+#define MYSQL_NEWDATE_TYPE      MYSQL_TYPE_NEWDATE
+#define MYSQL_DECIMAL_TYPE      MYSQL_TYPE_NEWDECIMAL
+#define MYSQL_ENUMTYPE          MYSQL_TYPE_ENUM
+#define MYSQL_SET_TYPE          MYSQL_TYPE_SET
+#define MYSQL_TINY_BLOB_TYPE    MYSQL_TYPE_TINY_BLOB
+#define MYSQL_MEDIUM_BLOB_TYPE  MYSQL_TYPE_MEDIUM_BLOB
+#define MYSQL_LONG_BLOB_TYPE    MYSQL_TYPE_LONG_BLOB
+#define MYSQL_BLOB_TYPE         MYSQL_TYPE_BLOB
+#define MYSQL_VAR_STRING_TYPE   MYSQL_TYPE_VAR_STRING
+#define MYSQL_STRING_TYPE       MYSQL_TYPE_STRING
+#endif
