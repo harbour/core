@@ -268,6 +268,7 @@ CLASS HbIde
 
    DATA   aMarkTBtns                              INIT   array( 6 )
    DATA   lClosing                                INIT   .f.
+   DATA   lStatusBarVisible                       INIT   .t.
 
    METHOD new( aParams )
    METHOD create( aParams )
@@ -322,8 +323,6 @@ METHOD HbIde:new( aParams )
 
 METHOD HbIde:create( aParams )
    LOCAL qPixmap, qSplash, n, cView
-
-HB_TRACE( HB_TR_ALWAYS, "HbIde:create( cProjIni )", "#Params=" )
 
    qPixmap := QPixmap():new( hb_dirBase() + "resources" + hb_osPathSeparator() + "hbidesplash.png" )
    qSplash := QSplashScreen():new()
@@ -460,21 +459,6 @@ HB_TRACE( HB_TR_ALWAYS, "HbIde:create( cProjIni )", "#Params=" )
    /* Display cWrkEnvironment in StatusBar */
    ::oDK:dispEnvironment( ::cWrkEnvironment )
 
-   /* These docks must not be visible even IDE exits them open */
-   #if 0
-   ::oPropertiesDock:hide()
-   ::oEnvironDock:hide()
-   ::oThemesDock:hide()
-   ::oSkeltnDock:hide()
-   ::oHelpDock:hide()
-   ::oFindDock:hide()
-   ::oDockB1:hide()
-   ::oDockB2:hide()
-   ::oDockB:hide()
-   ::oDocViewDock:hide()
-   ::oDocWriteDock:hide()
-   #endif
-
    #if 0 /* for screen capture */
    n := seconds()
    DO WHILE .t.
@@ -534,24 +518,6 @@ HB_TRACE( HB_TR_ALWAYS, "HbIde:create( cProjIni )", "#Params=" )
 
          CASE ::mp1 == xbeK_ESC
             ::oSM:closeSource()
-
-         CASE ::mp1 == xbeK_CTRL_G
-            ::oEM:goto()
-
-         CASE ::mp1 == xbeK_CTRL_F
-            IF !empty( ::qCurEdit )
-               ::oFR:show()
-            ENDIF
-
-         CASE ::mp1 == xbeK_CTRL_N
-            IF !empty( ::qCurEdit )
-               ::oFR:find()
-            ENDIF
-
-         CASE ::mp1 == xbeK_CTRL_R
-            IF !empty( ::qCurEdit )
-               ::oFR:replace()
-            ENDIF
 
          ENDCASE
 
@@ -654,6 +620,15 @@ METHOD HbIde:showApplicationCursor( nCursor )
 METHOD HbIde:execAction( cKey )
 
    SWITCH cKey
+   CASE "ToggleStatusBar"
+      IF ::lStatusBarVisible
+         ::oSBar:oWidget:hide()
+      ELSE
+         ::oSBar:oWidget:show()
+      ENDIF
+      ::lStatusBarVisible := ! ::lStatusBarVisible
+      EXIT
+
    CASE "Tools"
       ::oTM:show()
       EXIT
@@ -862,10 +837,10 @@ METHOD HbIde:execEditorAction( cKey )
       ::oEM:insertText( cKey )
       EXIT
    CASE "ZoomIn"
-      ::oEM:zoom( 1 )
+      ::oEM:zoom( +1 )
       EXIT
    CASE "ZoomOut"
-      ::oEM:zoom( 0 )
+      ::oEM:zoom( -1 )
       EXIT
    CASE "FormatBraces"
       ::oEM:formatBraces()

@@ -309,7 +309,7 @@ METHOD IdeActions:loadActions()
    aadd( aAct, { "Environments"         , "Environments..."              , "envconfig"      , ""     , "No", "Yes" } )
 
    aadd( aAct, { "GotoFunc"             , "Goto Function"                , "dc_function"    , ""     , "No", "Yes" } )
-   aadd( aAct, { "Shortcuts"            , "Keyboard Mappings"            , ""               , ""     , "No", "Yes" } )
+   aadd( aAct, { "Shortcuts"            , "Keyboard Mappings"            , "keyboardmappings",""     , "No", "Yes" } )
  * aadd( aAct, { "Tools"                , "Tools & Utilities"            , "tools"          , ""     , "No", "Yes" } )
 
    RETURN aAct
@@ -325,10 +325,14 @@ METHOD IdeActions:buildToolBar()
    oTBar:imageHeight := 22
    oTBar:create( , , { 0, ::oDlg:currentSize()[ 2 ]-60 }, { ::oDlg:currentSize()[ 1 ], 60 } )
    oTBar:setStyleSheet( GetStyleSheet( "QToolBar", ::nAnimantionMode ) )
-   oTBar:oWidget:setMaximumHeight( 28 )
+   //oTBar:oWidget:setMaximumHeight( 28 )
+   #if 0
    oTBar:oWidget:setAllowedAreas( Qt_TopToolBarArea )
    oTBar:oWidget:setMovable( .f. )
    oTBar:oWidget:setFloatable( .f. )
+   #else
+   oTBar:oWidget:setAllowedAreas( Qt_LeftToolBarArea + Qt_RightToolBarArea + Qt_TopToolBarArea + Qt_BottomToolBarArea )
+   #endif
 
    oTBar:buttonClick := {|oButton| ::oIde:execAction( oButton:key ) }
 
@@ -518,9 +522,11 @@ METHOD IdeActions:buildMainMenu()
 
    oSubMenu:addItem( { "Toggle Animation", {|| oIde:execAction( "Animate" ) } } )
    oSubMenu:oWidget:addSeparator()
+   oSubMenu:oWidget:addAction_4( ::oIde:oMainToolbar:oWidget:toggleViewAction() )
    oSubMenu:oWidget:addAction_4( ::qTBarPanels:toggleViewAction()             )
    oSubMenu:oWidget:addAction_4( ::qTBarLines:toggleViewAction()              )
    oSubMenu:oWidget:addAction_4( ::qTBarDocks:toggleViewAction()              )
+   oSubMenu:addItem( { "Toggle Statusbar", {|| oIde:execAction( "ToggleStatusBar" ) } } )
    oSubMenu:oWidget:addSeparator()
    oSubMenu:oWidget:addAction_4( ::oDockPT:oWidget:toggleViewAction()         )
    oSubMenu:oWidget:addAction_4( ::oDockED:oWidget:toggleViewAction()         )

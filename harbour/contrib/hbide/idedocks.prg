@@ -128,7 +128,7 @@ CLASS IdeDocks INHERIT IdeObject
    METHOD dispEnvironment( cEnviron )
    METHOD addPanelButton( cPanel )
    METHOD disblePanelButton( qTBtn )
-   METHOD getADockWidget( nArea, cObjectName, cWindowTitle, nFlags )
+   METHOD getADockWidget( nAreas, cObjectName, cWindowTitle, nFlags )
    METHOD getPanelIcon( cView )
    METHOD animateComponents( nMode )
 
@@ -295,7 +295,7 @@ METHOD IdeDocks:buildDockWidgets()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeDocks:getADockWidget( nArea, cObjectName, cWindowTitle, nFlags )
+METHOD IdeDocks:getADockWidget( nAreas, cObjectName, cWindowTitle, nFlags )
    LOCAL oDock, nBasic
 
    DEFAULT nFlags TO 0
@@ -307,7 +307,7 @@ METHOD IdeDocks:getADockWidget( nArea, cObjectName, cWindowTitle, nFlags )
    oDock:oWidget:setObjectName( cObjectName )
    ::oDlg:addChild( oDock )
    oDock:oWidget:setFeatures( nBasic )
-   oDock:oWidget:setAllowedAreas( nArea )
+   oDock:oWidget:setAllowedAreas( nAreas )
    oDock:oWidget:setWindowTitle( cWindowTitle )
    oDock:oWidget:setFocusPolicy( Qt_NoFocus )
    oDock:oWidget:setStyleSheet( getStyleSheet( "QDockWidget", ::nAnimantionMode ) )
@@ -482,10 +482,7 @@ METHOD IdeDocks:buildToolBarPanels()
    ::qTBarPanels:setObjectName( "ToolBar_Panels" )
    ::qTBarPanels:setWindowTitle( "ToolBar: Editor Panels" )
    ::qTBarPanels:setAllowedAreas( Qt_LeftToolBarArea + Qt_RightToolBarArea + Qt_TopToolBarArea + Qt_BottomToolBarArea )
-   //::qTBarPanels:setOrientation( Qt_Vertical )
    ::qTBarPanels:setIconSize( qSize )
-   //::qTBarPanels:setMovable( .f. )
-   //::qTBarPanels:setFloatable( .f. )
 
    ::oDlg:oWidget:addToolBar( Qt_LeftToolBarArea, ::qTBarPanels )
 
@@ -502,10 +499,6 @@ METHOD IdeDocks:buildToolBarPanels()
    ::qTBarLines:setWindowTitle( "ToolBar: Lines and Blocks" )
    ::qTBarLines:setIconSize( qSize )
    ::qTBarPanels:setAllowedAreas( Qt_LeftToolBarArea + Qt_RightToolBarArea + Qt_TopToolBarArea + Qt_BottomToolBarArea )
- * ::qTBarLines:setAllowedAreas( Qt_LeftToolBarArea )
- * ::qTBarLines:setOrientation( Qt_Vertical )
- * ::qTBarLines:setMovable( .f. )
- * ::qTBarLines:setFloatable( .f. )
 
    ::oDlg:oWidget:addToolBar( Qt_LeftToolBarArea, ::qTBarLines )
 
@@ -573,12 +566,7 @@ METHOD IdeDocks:buildToolBarPanels()
    ::qTBarDocks:setIconSize( QSize():new( 16,16 ) )
    ::qTBarDocks:setToolButtonStyle( Qt_ToolButtonIconOnly )
    ::qTBarPanels:setAllowedAreas( Qt_LeftToolBarArea + Qt_RightToolBarArea + Qt_TopToolBarArea + Qt_BottomToolBarArea )
-   #if 0
-   ::qTBarDocks:setAllowedAreas( Qt_RightToolBarArea )
-   ::qTBarDocks:setOrientation( Qt_Vertical )
-   ::qTBarDocks:setMovable( .f. )
-   ::qTBarDocks:setFloatable( .f. )
-   #endif
+
    aBtns := {}
    aadd( aBtns, { ::oDockPT        , "projtree"      } )
    aadd( aBtns, { ::oDockED        , "editstree"     } )
@@ -596,8 +584,6 @@ METHOD IdeDocks:buildToolBarPanels()
    aadd( aBtns, { ::oFindDock      , "search"        } )
    aadd( aBtns, {} )
    aadd( aBtns, { ::oDockB2        , "builderror"    } )
- * aadd( aBtns, { ::oDockB1        , "builderror"    } )
- * aadd( aBtns, { ::oDockB         , "builderror"    } )
 
    FOR EACH a_ IN aBtns
       IF empty( a_ )
@@ -665,8 +651,9 @@ METHOD IdeDocks:addPanelButton( cPanel )
 
 METHOD IdeDocks:buildProjectTree()
    LOCAL i, oItem
+   LOCAL nAreas := Qt_LeftDockWidgetArea + Qt_RightDockWidgetArea + Qt_TopDockWidgetArea + Qt_BottomDockWidgetArea
 
-   ::oIde:oDockPT := ::getADockWidget( Qt_LeftDockWidgetArea, "dockProjectTree", "Projects", QDockWidget_DockWidgetFloatable )
+   ::oIde:oDockPT := ::getADockWidget( nAreas, "dockProjectTree", "Projects", QDockWidget_DockWidgetFloatable )
    ::oDlg:oWidget:addDockWidget_1( Qt_LeftDockWidgetArea, ::oDockPT:oWidget, Qt_Vertical )
 
    ::oIde:oProjTree := XbpTreeView():new()
@@ -713,8 +700,9 @@ METHOD IdeDocks:buildProjectTree()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeDocks:buildEditorTree()
+   LOCAL nAreas := Qt_LeftDockWidgetArea + Qt_RightDockWidgetArea + Qt_TopDockWidgetArea + Qt_BottomDockWidgetArea
 
-   ::oIde:oDockED := ::getADockWidget( Qt_LeftDockWidgetArea, "dockEditorTabs", "Editors", QDockWidget_DockWidgetFloatable )
+   ::oIde:oDockED := ::getADockWidget( nAreas, "dockEditorTabs", "Editors", QDockWidget_DockWidgetFloatable )
    ::oDlg:oWidget:addDockWidget_1( Qt_LeftDockWidgetArea, ::oDockED:oWidget, Qt_Vertical )
 
    ::oIde:oEditTree := XbpTreeView():new()
@@ -746,8 +734,9 @@ METHOD IdeDocks:buildEditorTree()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeDocks:buildSkeletonsTree()
+   LOCAL nAreas := Qt_LeftDockWidgetArea + Qt_RightDockWidgetArea + Qt_TopDockWidgetArea + Qt_BottomDockWidgetArea
 
-   ::oIde:oSkltnsTreeDock := ::getADockWidget( Qt_LeftDockWidgetArea, "dockSkltnsTree", "Skeletons", QDockWidget_DockWidgetFloatable )
+   ::oIde:oSkltnsTreeDock := ::getADockWidget( nAreas, "dockSkltnsTree", "Skeletons", QDockWidget_DockWidgetFloatable )
    ::oDlg:oWidget:addDockWidget_1( Qt_LeftDockWidgetArea, ::oSkltnsTreeDock:oWidget, Qt_Vertical )
 
    ::connect( ::oSkltnsTreeDock:oWidget, "visibilityChanged(bool)", {|p| ::execEvent( dockSkltnsTree_visibilityChanged, p ) } )
@@ -757,8 +746,9 @@ METHOD IdeDocks:buildSkeletonsTree()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeDocks:buildFuncList()
+   LOCAL nAreas := Qt_LeftDockWidgetArea + Qt_RightDockWidgetArea + Qt_TopDockWidgetArea + Qt_BottomDockWidgetArea
 
-   ::oIde:oFuncDock := ::getADockWidget( Qt_RightDockWidgetArea, "dockFuncList", "Functions List", QDockWidget_DockWidgetFloatable )
+   ::oIde:oFuncDock := ::getADockWidget( nAreas, "dockFuncList", "Functions List", QDockWidget_DockWidgetFloatable )
    ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oFuncDock:oWidget, Qt_Vertical )
 
    ::connect( ::oFuncDock:oWidget, "visibilityChanged(bool)", {|p| ::execEvent( oFuncDock_visibilityChanged, p ) } )
@@ -830,8 +820,9 @@ METHOD IdeDocks:buildLinkResults()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeDocks:buildOutputResults()
+   LOCAL nAreas := Qt_TopDockWidgetArea + Qt_BottomDockWidgetArea
 
-   ::oIde:oDockB2 := ::getADockWidget( Qt_BottomDockWidgetArea, "dockOutputResults", "Output Console", QDockWidget_DockWidgetFloatable )
+   ::oIde:oDockB2 := ::getADockWidget( nAreas, "dockOutputResults", "Output Console", QDockWidget_DockWidgetFloatable )
    ::oDlg:oWidget:addDockWidget_1( Qt_BottomDockWidgetArea, ::oDockB2:oWidget, Qt_Horizontal )
 
    ::oIde:oOutputResult := XbpRtf():new( ::oDockB2 ):create( , , { 0,0 }, { 100, 400 }, , .T. )
@@ -904,8 +895,9 @@ METHOD IdeDocks:buildStatusBar()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeDocks:buildThemesDock()
+   LOCAL nAreas := Qt_LeftDockWidgetArea + Qt_RightDockWidgetArea + Qt_TopDockWidgetArea + Qt_BottomDockWidgetArea
 
-   ::oIde:oThemesDock := ::getADockWidget( Qt_RightDockWidgetArea, "dockThemes", "Theme Manager", QDockWidget_DockWidgetFloatable )
+   ::oIde:oThemesDock := ::getADockWidget( nAreas, "dockThemes", "Theme Manager", QDockWidget_DockWidgetFloatable )
    ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oThemesDock:oWidget, Qt_Horizontal )
 
    ::connect( ::oThemesDock:oWidget, "visibilityChanged(bool)", {|p| ::execEvent( dockThemes_visibilityChanged, p ) } )
@@ -915,8 +907,9 @@ METHOD IdeDocks:buildThemesDock()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeDocks:buildPropertiesDock()
+   LOCAL nAreas := Qt_LeftDockWidgetArea + Qt_RightDockWidgetArea + Qt_TopDockWidgetArea + Qt_BottomDockWidgetArea
 
-   ::oIde:oPropertiesDock := ::getADockWidget( Qt_RightDockWidgetArea, "dockProperties", "Project Properties", QDockWidget_DockWidgetFloatable )
+   ::oIde:oPropertiesDock := ::getADockWidget( nAreas, "dockProperties", "Project Properties", QDockWidget_DockWidgetFloatable )
    ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oPropertiesDock:oWidget, Qt_Horizontal )
 
    ::connect( ::oPropertiesDock:oWidget, "visibilityChanged(bool)", {|p| ::execEvent( dockProperties_visibilityChanged, p ) } )
@@ -926,8 +919,9 @@ METHOD IdeDocks:buildPropertiesDock()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeDocks:buildFindInFiles()
+   LOCAL nAreas := Qt_LeftDockWidgetArea + Qt_RightDockWidgetArea + Qt_TopDockWidgetArea + Qt_BottomDockWidgetArea
 
-   ::oIde:oFindDock := ::getADockWidget( Qt_RightDockWidgetArea, "dockFindInFiles", "Find in Files", QDockWidget_DockWidgetFloatable )
+   ::oIde:oFindDock := ::getADockWidget( nAreas, "dockFindInFiles", "Find in Files", QDockWidget_DockWidgetFloatable )
    ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oFindDock:oWidget, Qt_Horizontal )
 
    ::connect( ::oFindDock:oWidget, "visibilityChanged(bool)", {|p| ::execEvent( dockFindInFiles_visibilityChanged, p ) } )
@@ -937,8 +931,9 @@ METHOD IdeDocks:buildFindInFiles()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeDocks:buildDocViewer()
+   LOCAL nAreas := Qt_LeftDockWidgetArea + Qt_RightDockWidgetArea + Qt_TopDockWidgetArea + Qt_BottomDockWidgetArea
 
-   ::oIde:oDocViewDock := ::getADockWidget( Qt_RightDockWidgetArea, "dockDocViewer", "Harbour Documentation", QDockWidget_DockWidgetFloatable )
+   ::oIde:oDocViewDock := ::getADockWidget( nAreas, "dockDocViewer", "Harbour Documentation", QDockWidget_DockWidgetFloatable )
    ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oDocViewDock:oWidget, Qt_Horizontal )
 
    ::connect( ::oDocViewDock:oWidget, "visibilityChanged(bool)", {|p| ::execEvent( dockDocViewer_visibilityChanged, p ) } )
@@ -948,8 +943,9 @@ METHOD IdeDocks:buildDocViewer()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeDocks:buildDocWriter()
+   LOCAL nAreas := Qt_LeftDockWidgetArea + Qt_RightDockWidgetArea + Qt_TopDockWidgetArea + Qt_BottomDockWidgetArea
 
-   ::oIde:oDocWriteDock := ::getADockWidget( Qt_RightDockWidgetArea, "dockDocWriter", "Documentation Writer", QDockWidget_DockWidgetFloatable )
+   ::oIde:oDocWriteDock := ::getADockWidget( nAreas, "dockDocWriter", "Documentation Writer", QDockWidget_DockWidgetFloatable )
    ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oDocWriteDock:oWidget, Qt_Horizontal )
 
    ::connect( ::oDocWriteDock:oWidget, "visibilityChanged(bool)", {|p| ::execEvent( dockDocWriter_visibilityChanged, p ) } )
@@ -959,8 +955,9 @@ METHOD IdeDocks:buildDocWriter()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeDocks:buildFunctionsDock()
+   LOCAL nAreas := Qt_LeftDockWidgetArea + Qt_RightDockWidgetArea + Qt_TopDockWidgetArea + Qt_BottomDockWidgetArea
 
-   ::oIde:oFunctionsDock := ::getADockWidget( Qt_RightDockWidgetArea, "dockFunctions", "Projects Functions Lookup", QDockWidget_DockWidgetFloatable )
+   ::oIde:oFunctionsDock := ::getADockWidget( nAreas, "dockFunctions", "Projects Functions Lookup", QDockWidget_DockWidgetFloatable )
    ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oFunctionsDock:oWidget, Qt_Horizontal )
 
    ::connect( ::oFunctionsDock:oWidget, "visibilityChanged(bool)", {|p| ::execEvent( docFunctions_visibilityChanged, p ) } )
@@ -970,8 +967,9 @@ METHOD IdeDocks:buildFunctionsDock()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeDocks:buildEnvironDock()
+   LOCAL nAreas := Qt_LeftDockWidgetArea + Qt_RightDockWidgetArea + Qt_TopDockWidgetArea + Qt_BottomDockWidgetArea
 
-   ::oIde:oEnvironDock := ::getADockWidget( Qt_RightDockWidgetArea, "dockEnvironments", "Compiler Environments", QDockWidget_DockWidgetFloatable )
+   ::oIde:oEnvironDock := ::getADockWidget( nAreas, "dockEnvironments", "Compiler Environments", QDockWidget_DockWidgetFloatable )
    ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oEnvironDock:oWidget, Qt_Horizontal )
 
    ::connect( ::oEnvironDock:oWidget, "visibilityChanged(bool)", {|p| ::execEvent( docEnvironments_visibilityChanged, p ) } )
@@ -981,8 +979,9 @@ METHOD IdeDocks:buildEnvironDock()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeDocks:buildSkeletonWidget()
+   LOCAL nAreas := Qt_LeftDockWidgetArea + Qt_RightDockWidgetArea + Qt_TopDockWidgetArea + Qt_BottomDockWidgetArea
 
-   ::oIde:oSkeltnDock := ::getADockWidget( Qt_RightDockWidgetArea, "dockSkeleton", "Code Skeletons", QDockWidget_DockWidgetFloatable )
+   ::oIde:oSkeltnDock := ::getADockWidget( nAreas, "dockSkeleton", "Code Skeletons", QDockWidget_DockWidgetFloatable )
    ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oSkeltnDock:oWidget, Qt_Horizontal )
 
    ::connect( ::oSkeltnDock:oWidget, "visibilityChanged(bool)", {|p| ::execEvent( docSkeletons_visibilityChanged, p ) } )

@@ -154,6 +154,7 @@ METHOD XbpToolbar:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::oWidget := QToolBar():new( ::oParent:oWidget )
    ::oWidget:setObjectName( "XBPTOOLBARMAIN" )
+   ::oWidget:setWindowTitle( "Toolbar: Main" )
    ::oParent:oWidget:addToolBar_1( ::oWidget )
 
    IF ::imageWidth > 0 .and. ::imageHeight > 0
@@ -295,8 +296,8 @@ METHOD XbpToolbar:execSlot( cSlot, p )
 
    IF cSlot == "triggered(bool)"
       ::buttonClick( p )
-   ENDIF 
-   
+   ENDIF
+
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
@@ -363,7 +364,7 @@ METHOD XbpToolbar:buttonClick( ... )
       ::sl_lbClick := a_[ 1 ]
    ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_lbClick )
       eval( ::sl_lbClick, a_[ 1 ], NIL, Self )
-   ENDIF 
+   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -374,7 +375,7 @@ METHOD XbpToolbar:change( ... )
       ::sl_change := a_[ 1 ]
    ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_change )
       eval( ::sl_change, NIL, NIL, Self )
-   ENDIF 
+   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -385,7 +386,7 @@ METHOD XbpToolbar:buttonMenuClick( ... )
       ::sl_buttonMenuClick := a_[ 1 ]
    ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_buttonMenuClick )
       eval( ::sl_buttonMenuClick, NIL, NIL, Self )
-   ENDIF 
+   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -396,7 +397,7 @@ METHOD XbpToolbar:buttonDropDown( ... )
       ::sl_buttonDropDown := a_[ 1 ]
    ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_buttonDropDown )
       eval( ::sl_buttonDropDown, NIL, NIL, Self )
-   ENDIF 
+   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/

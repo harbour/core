@@ -711,7 +711,7 @@ METHOD IdeEditsManager:insertText( cKey )
             RETURN Self
          ENDIF
          IF !( hbide_isValidText( cFile ) )
-            MsgBox( 'File type unknown or unsupported: ' + cFile )
+            MsgBox( "File type unknown or unsupported: " + cFile )
             RETURN Self
          ENDIF
          cText := hb_memoread( cFile )
@@ -830,6 +830,7 @@ METHOD IdeEditsManager:RemoveTrailingSpaces()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEditsManager:zoom( nKey )
+   #if 0
    LOCAL nPointSize, qFont, oEdit, oEditor
 
    IF ! empty( oEditor := ::getEditorCurrent() )
@@ -851,6 +852,13 @@ METHOD IdeEditsManager:zoom( nKey )
          NEXT
       ENDIF
    ENDIF
+   #endif
+   LOCAL oEdit
+
+   IF !empty( oEdit := ::getEditObjectCurrent() )
+      oEdit:zoom( nKey )
+   ENDIF
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -916,11 +924,12 @@ METHOD IdeEditsManager:goto( nLine )
          nLine   := qCursor:blockNumber()
 
          qGo := QInputDialog():new( ::oDlg:oWidget )
+         qGo:setInputMode( 1 )
          qGo:setIntMinimum( 1 )
-         qGo:setIntMaximum( nRows + 1 )
+         qGo:setIntMaximum( nRows )
          qGo:setIntValue( nLine + 1 )
          qGo:setLabelText( "Goto Line Number [1-" + hb_ntos( nRows ) + "]" )
-         qGo:setWindowTitle( "Harbour-Qt" )
+         qGo:setWindowTitle( "Harbour" )
 
          ::setPosByIni( qGo, GotoDialogGeometry )
          qGo:exec()
@@ -1410,6 +1419,9 @@ CLASS IdeEdit INHERIT IdeObject
    DATA   nProtoCol                               INIT -1
    DATA   isSuspended                             INIT .f.
 
+   DATA   fontFamily                              INIT "Courier New"
+   DATA   pointSize                               INIT 10
+   DATA   currentPointSize                        INIT 10
    DATA   qFont
    DATA   aBlockCopyContents                      INIT {}
 
@@ -1475,6 +1487,7 @@ CLASS IdeEdit INHERIT IdeObject
    METHOD pasteBlockContents()
    METHOD insertBlockContents( aCord )
    METHOD deleteBlockContents( aCord )
+   METHOD zoom( nKey )
 
    ENDCLASS
 
@@ -1543,12 +1556,43 @@ METHOD IdeEdit:create( oEditor, nMode )
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeEdit:zoom( nKey )
+
+   DEFAULT nKey TO 0
+
+   IF nKey == 1
+      IF ::currentPointSize + 1 < 30
+         ::currentPointSize++
+      ENDIF
+
+   ELSEIF nKey == -1
+      IF ::currentPointSize - 1 > 5
+         ::currentPointSize--
+      ENDIF
+
+   ELSEIF nKey == 0
+      ::currentPointSize := ::pointSize
+
+   ELSEIF nKey >= 5 .AND. nKey <= 30
+      ::currentPointSize := nKey
+
+   ELSE
+      RETURN Self
+
+   ENDIF
+
+   ::setFont()
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeEdit:setFont()
 
    ::qFont := QFont():new()
-   ::qFont:setFamily( "Courier New" )
+   ::qFont:setFamily( ::fontFamily )
    ::qFont:setFixedPitch( .t. )
-   ::qFont:setPointSize( 10 )
+   ::qFont:setPointSize( ::currentPointSize )
 
    ::qEdit:setFont( ::qFont )
 

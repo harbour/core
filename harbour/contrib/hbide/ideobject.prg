@@ -196,6 +196,7 @@ CLASS IdeObject
    ACCESS lTabCloseRequested                      INLINE ::oIde:lTabCloseRequested
    ACCESS isColumnSelectionEnabled                INLINE ::oIde:isColumnSelectionEnabled
    ACCESS lLineNumbersVisible                     INLINE ::oIde:lLineNumbersVisible
+   ACCESS lStatusBarVisible                       INLINE ::oIde:lStatusBarVisible
 
    ACCESS aMarkTBtns                              INLINE ::oIde:aMarkTBtns
 

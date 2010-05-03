@@ -169,6 +169,12 @@ CLASS IdeShortcuts INHERIT IdeObject
    METHOD launch( cProj )
    METHOD insert( cText )
    METHOD separator( cSep )
+   METHOD findAgain()
+   METHOD replace()
+   METHOD toUpper()
+   METHOD toLower()
+   METHOD invertCase()
+   METHOD zoom( nKey )
 
    ENDCLASS
 
@@ -1034,6 +1040,42 @@ METHOD IdeShortcuts:separator( cSep )
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeShortcuts:findAgain()
+   IF !empty( ::qCurEdit )
+      ::oFR:find()
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeShortcuts:replace()
+   IF !empty( ::qCurEdit )
+      ::oFR:replace()
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeShortcuts:toUpper()
+   RETURN ::oEM:convertSelection( "ToUpper" )
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeShortcuts:toLower()
+   RETURN ::oEM:convertSelection( "ToLower" )
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeShortcuts:invertCase()
+   RETURN ::oEM:convertSelection( "Invert" )
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeShortcuts:zoom( nKey )
+   RETURN ::oEM:zoom( nKey )
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeShortcuts:loadMethods()
    #if 0
    aadd( ::aMethods, { '', ;
@@ -1067,6 +1109,12 @@ METHOD IdeShortcuts:loadMethods()
    aadd( ::aMethods, { 'findDlg()', ;
                        'findDlg()', ;
                        'Invokes "Find and Replace" dialog.'  } )
+   aadd( ::aMethods, { 'findAgain()', ;
+                       'findAgain()', ;
+                       'Finds last search string without opening the dialog.'  } )
+   aadd( ::aMethods, { 'replace()', ;
+                       'replace()', ;
+                       'Replaces last replace string if some text is already selected without opening the dialog.'  } )
    aadd( ::aMethods, { 'findDlgEx()', ;
                        'findDlgEx()', ;
                        'Invokes extended "Find and Replace" dialog at the bottom of editing area.'  } )
@@ -1085,6 +1133,15 @@ METHOD IdeShortcuts:loadMethods()
    aadd( ::aMethods, { 'streamComment()', ;
                        'streamComment()', ;
                        'Encloses currently selected text in Anci-C like comments /*  */' } )
+   aadd( ::aMethods, { 'toUpper()', ;
+                       'toUpper()', ;
+                       'Converts currently selected text to upper-case.' } )
+   aadd( ::aMethods, { 'toLower()', ;
+                       'toLower()', ;
+                       'Converts currently selected text to lower-case.' } )
+   aadd( ::aMethods, { 'invertCase()', ;
+                       'invertCase()', ;
+                       'Inverts case of currently selected text: upper => lower; lower => upper.' } )
    aadd( ::aMethods, { 'build( cProj )', ;
                        'build( "" )', ;
                        'Builds <cProj> if it is already loaded. All sources are saved if found in modified state before "build" is initiated.' } )
@@ -1116,6 +1173,9 @@ METHOD IdeShortcuts:loadMethods()
                        'execTool( "", "", "", .f., .f. )', ;
                        'Executes a program or file with parameters and other attributes.' + CRLF + ;
                        'http://hbide.vouch.info/ ( Topic: Tools and Utilities )' } )
+   aadd( ::aMethods, { 'zoom( nVal )'      , ;
+                       'zoom( +1 )'        , ;
+                       'Zooms in/out the current editing instance. nVal: 1-one size up; -1-one size less; NIL-original size; 5~30-to size.' } )
 
    RETURN Self
 
@@ -1141,6 +1201,8 @@ METHOD IdeShortcuts:loadDftSCuts()
    *  aadd( b_, { "Revert to Saved" , "R"      , "NO", "NO" , "YES", "", '::revertToSaved()'     , ""                , "", "" } )
 
       aadd( b_, { "Find Dialog"     , "F"      , "NO", "YES", "NO" , "", '::findDlg()'           , "find"            , "", "" } )
+      aadd( b_, { "Find Again"      , "N"      , "NO", "YES", "NO" , "", '::findAgain()'         , ""                , "", "" } )
+      aadd( b_, { "Replace"         , "R"      , "NO", "YES", "NO" , "", '::replace()'           , ""                , "", "" } )
       aadd( b_, { "Find Dialog Ex"  , "F"      , "NO", "YES", "YES", "", '::findDlgEx()'         , "find"            , "", "" } )
 
       aadd( b_, { "Goto Line"       , "G"      , "NO", "YES", "NO" , "", '::gotoLine()'          , "gotoline"        , "", "" } )

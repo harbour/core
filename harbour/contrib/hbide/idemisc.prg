@@ -186,10 +186,11 @@ FUNCTION hbide_posAndSize( qWidget )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION hbide_showWarning( cMsg, cInfo, cTitle )
+FUNCTION hbide_showWarning( cMsg, cInfo, cTitle, qParent )
    LOCAL oMB
 
-   DEFAULT cTitle TO "Information"
+   DEFAULT cTitle  TO "Information"
+   DEFAULT qParent TO SetAppWindow():pWidget
 
    oMB := QMessageBox():new()
    oMB:setText( cMsg )
@@ -197,7 +198,7 @@ FUNCTION hbide_showWarning( cMsg, cInfo, cTitle )
       oMB:setInformativeText( cInfo )
    ENDIF
    oMB:setIcon( QMessageBox_Critical )
-   oMB:setParent( SetAppWindow():pWidget )
+   oMB:setParent( qParent )
    oMB:setWindowFlags( Qt_Dialog )
    oMB:setWindowTitle( cTitle )
 

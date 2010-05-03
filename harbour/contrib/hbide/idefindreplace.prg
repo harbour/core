@@ -216,10 +216,9 @@ METHOD IdeSearchReplace:beginFind()
    ::oUI:q_radioTop:setChecked( .t. )
 
    ::oUI:show()
-   ::oUI:oWidget:activateWindow()
    ::cFind := ""
 
-   ::oUI:q_comboFind:setFocus( Qt_MouseFocusReason )
+   ::qFindLineEdit:activateWindow()
    ::qFindLineEdit:setFocus_1()
    ::qFindLineEdit:selectAll()
 
@@ -278,6 +277,8 @@ METHOD IdeSearchReplace:startFromTop()
 
 CLASS IdeFindReplace INHERIT IdeObject
 
+   DATA   qLineEdit
+
    METHOD new( oIde )
    METHOD create( oIde )
    METHOD destroy()
@@ -303,7 +304,10 @@ METHOD IdeFindReplace:new( oIde )
 
 METHOD IdeFindReplace:destroy()
 
-   ::oUI:destroy()
+   IF !empty( ::oUI )
+      ::disConnect( ::qLineEdit, "returnPressed()" )
+      ::oUI:destroy()
+   ENDIF
 
    RETURN Self
 
@@ -315,7 +319,7 @@ METHOD IdeFindReplace:create( oIde )
 
    ::oIde := oIde
 
-   ::oUI := HbQtUI():new( ::oIde:resPath + "finddialog.uic", ::oIde:oDlg:oWidget ):build()
+   ::oUI := HbQtUI():new( hbide_uic( "finddialog" ), ::oIde:oDlg:oWidget ):build()
    ::oUI:setWindowFlags( Qt_Sheet )
 
    aeval( ::oIde:aIni[ INI_FIND    ], {|e| ::oUI:q_comboFindWhat:addItem( e ) } )
@@ -339,12 +343,15 @@ METHOD IdeFindReplace:create( oIde )
                                         ::oUI:q_comboReplaceWith:setEnabled( p == 0 ), ;
                                    iif( p == 1, ::oUI:q_buttonReplace:setEnabled( .f. ), NIL ) } )
 
+   ::qLineEdit := QLineEdit():configure( ::oUI:q_comboFindWhat:lineEdit() )
+   ::connect( ::qLineEdit, "returnPressed()", {|| ::onClickFind() } )
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeFindReplace:show()
-   LOCAL cText, qLineEdit
+   LOCAL cText
 
    ::oUI:q_buttonReplace:setEnabled( .f. )
    ::oUI:q_checkGlobal:setEnabled( .f. )
@@ -353,11 +360,10 @@ METHOD IdeFindReplace:show()
    ::oIde:setPosByIni( ::oUI:oWidget, FindDialogGeometry )
    ::oUI:q_comboFindWhat:setFocus()
 
-   qLineEdit := QLineEdit():configure( ::oUI:q_comboFindWhat:lineEdit() )
    IF !empty( cText := ::oEM:getSelectedText() )
-      qLineEdit:setText( cText )
+      ::qLineEdit:setText( cText )
    ENDIF
-   qLineEdit:selectAll()
+   ::qLineEdit:selectAll()
 
    ::oUI:show()
 
@@ -457,7 +463,7 @@ METHOD IdeFindReplace:onClickFind()
       ::oUI:q_buttonReplace:setEnabled( .f. )
       ::oUI:q_checkGlobal:setEnabled( .f. )
       ::oUI:q_checkNoPrompting:setEnabled( .f. )
-
+      ::oUI:q_buttonFind:activateWindow()
       ::oUI:q_buttonFind:setFocus_1()
    ENDIF
 
@@ -477,8 +483,7 @@ METHOD IdeFindReplace:find( lWarn )
       nFlags += iif( ::oUI:q_checkMatchCase:isChecked(), QTextDocument_FindCaseSensitively, 0 )
       nFlags += iif( ::oUI:q_radioUp:isChecked(), QTextDocument_FindBackward, 0 )
 
-      //IF !( lFound := ::qCurEdit:find( cText, nFlags ) ) .and. lWarn
-      IF !( lFound := ::oEM:getEditCurrent():find( cText, nFlags ) ) .and. lWarn
+      IF !( lFound := ::oEM:getEditCurrent():find( cText, nFlags ) ) .AND. lWarn
          hbide_showWarning( "Cannot find : " + cText )
       ENDIF
    ENDIF
@@ -567,6 +572,8 @@ CLASS IdeFindInFiles INHERIT IdeObject
    DATA   lShowOnCreate                           INIT .T.
    DATA   lInDockWindow                           INIT .F.
 
+   DATA   qEditFind
+
    METHOD new( oIde, lShowOnCreate )
    METHOD create( oIde, lShowOnCreate )
    METHOD destroy()
@@ -610,6 +617,8 @@ METHOD IdeFindInFiles:destroy()
    LOCAL qItem
 
    IF !empty( ::oUI )
+      ::disConnect( ::qEditFind, "returnPressed()" )
+
       FOR EACH qItem IN ::aItems
          qItem := NIL
       NEXT
@@ -688,19 +697,21 @@ METHOD IdeFindInFiles:buildUI()
 
    /* Attach all signals */
    //
-   ::oUI:signal( "buttonClose"  , "clicked()"                , {| | ::execEvent( "buttonClose"      ) } )
-   ::oUI:signal( "buttonFolder" , "clicked()"                , {| | ::execEvent( "buttonFolder"     ) } )
-   ::oUI:signal( "buttonFind"   , "clicked()"                , {| | ::execEvent( "buttonFind"       ) } )
-   ::oUI:signal( "buttonRepl"   , "clicked()"                , {| | ::execEvent( "buttonRepl"       ) } )
-   ::oUI:signal( "buttonStop"   , "clicked()"                , {| | ::execEvent( "buttonStop"       ) } )
-   ::oUI:signal( "checkAll"     , "stateChanged(int)"        , {|p| ::execEvent( "checkAll", p      ) } )
-   ::oUI:signal( "comboFind"    , "currentIndexChanged(QString)", {|p| ::execEvent( "comboFind", p     ) } )
-   ::oUI:signal( "checkListOnly", "stateChanged(int)"        , {|p| ::execEvent( "checkListOnly", p ) } )
-   ::oUI:signal( "checkFolders" , "stateChanged(int)"        , {|p| ::execEvent( "checkFolders", p  ) } )
-   ::oUI:signal( "editResults"  , "copyAvailable(bool)"      , {|l| ::execEvent( "editResults", l   ) } )
+   ::oUI:signal( "buttonClose"  , "clicked()"                   , {| | ::execEvent( "buttonClose"      ) } )
+   ::oUI:signal( "buttonFolder" , "clicked()"                   , {| | ::execEvent( "buttonFolder"     ) } )
+   ::oUI:signal( "buttonFind"   , "clicked()"                   , {| | ::execEvent( "buttonFind"       ) } )
+   ::oUI:signal( "buttonRepl"   , "clicked()"                   , {| | ::execEvent( "buttonRepl"       ) } )
+   ::oUI:signal( "buttonStop"   , "clicked()"                   , {| | ::execEvent( "buttonStop"       ) } )
+   ::oUI:signal( "checkAll"     , "stateChanged(int)"           , {|p| ::execEvent( "checkAll", p      ) } )
+   ::oUI:signal( "comboExpr"    , "currentIndexChanged(QString)", {|p| ::execEvent( "comboFind", p     ) } )
+   ::oUI:signal( "checkListOnly", "stateChanged(int)"           , {|p| ::execEvent( "checkListOnly", p ) } )
+   ::oUI:signal( "checkFolders" , "stateChanged(int)"           , {|p| ::execEvent( "checkFolders", p  ) } )
+   ::oUI:signal( "editResults"  , "copyAvailable(bool)"         , {|l| ::execEvent( "editResults", l   ) } )
    ::oUI:signal( "editResults"  , "customContextMenuRequested(QPoint)", {|p| ::execEvent( "editResults-contextMenu", p ) } )
 
-HB_TRACE( HB_TR_ALWAYS, "-------------------------", 1 )
+   ::qEditFind := QLineEdit():from( ::oUI:q_comboExpr:lineEdit() )
+   ::connect( ::qEditFind, "returnPressed()", {|| ::execEvent( "buttonFind" ) } )
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
