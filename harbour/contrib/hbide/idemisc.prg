@@ -1518,8 +1518,14 @@ FUNCTION hbide_image( cName )
 /*----------------------------------------------------------------------*/
 
 FUNCTION hbide_uic( cName )
+   LOCAL tmp
    DEFAULT cName TO ""
-   RETURN hbide_pathToOsPath( hb_DirBase() + "resources" + "/" + cName + ".uic" )
+   tmp := hbide_pathToOsPath( hb_DirBase() + "resources" + "/" + cName + ".uic" )
+   IF ! hb_FileExists( tmp )
+      MsgBox( "Error: File " + tmp + " is missing. Please check your installation." )
+      QUIT
+   ENDIF
+   RETURN tmp
 
 /*----------------------------------------------------------------------*/
 
