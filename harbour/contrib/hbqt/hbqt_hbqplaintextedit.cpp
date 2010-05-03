@@ -701,7 +701,6 @@ void HBQPlainTextEdit::horzRulerPaintEvent( QPaintEvent *event )
    painter.drawLine( cr.left(), cr.bottom(), cr.width(), cr.bottom() );
    painter.setPen( Qt::black );
    int fontWidth = fontMetrics().averageCharWidth();
-   int fontHeight = fontMetrics().height();
    int left = cr.left() + ( fontWidth / 2 ) + ( lineNumberArea->isVisible() ? lineNumberArea->width() : 0 );
 
    QRect rc( cursorRect( textCursor() ) );
@@ -714,7 +713,7 @@ void HBQPlainTextEdit::horzRulerPaintEvent( QPaintEvent *event )
       {
          painter.drawLine( left, cr.bottom()-3, left, cr.bottom()-5 );
          QString number = QString::number( i );
-         painter.drawText( left - fontWidth, cr.top()-2, fontWidth * 2, fontHeight, Qt::AlignCenter, number );
+         painter.drawText( left - fontWidth, cr.top()-2, fontWidth * 2, 17, Qt::AlignCenter, number );
       }
       else if( i % 5 == 0 )
       {
@@ -726,7 +725,7 @@ void HBQPlainTextEdit::horzRulerPaintEvent( QPaintEvent *event )
       }
       if( i == textCursor().columnNumber() )
       {
-         painter.fillRect( QRect( left, cr.top() + 2, fontWidth, fontHeight - 6 ), QColor( 100,100,100 ) );
+         painter.fillRect( QRect( left, cr.top() + 2, fontWidth, 11 ), QColor( 100,100,100 ) );
       }
       left += fontWidth;
    }
@@ -777,22 +776,26 @@ void HBQPlainTextEdit::hbPaintColumnSelection( QPaintEvent * event )
    {
       if( columnBegins >= 0 && columnEnds >= 0 )
       {
+         int cb = columnBegins <= columnEnds ? columnBegins : columnEnds;
+         int ce = columnBegins <= columnEnds ? columnEnds   : columnBegins;
+         int rb = rowBegins    <= rowEnds    ? rowBegins    : rowEnds;
+         int re = rowBegins    <= rowEnds    ? rowEnds      : rowBegins;
+
          QPainter p( viewport() );
 
-         int t = cursorForPosition( QPoint( 1, 1 ) ).blockNumber();
-         if( rowEnds < rowBegins ? rowBegins >= t : rowEnds >= t )
+         int t = cursorForPosition( QPoint( 1,1 ) ).blockNumber();
+         if( re >= t )
          {
-            int c = cursorForPosition( QPoint( 1, 1 ) ).columnNumber();
-            QRect cr = contentsRect();
+            int c = cursorForPosition( QPoint( 1,1 ) ).columnNumber();
 
-            int y = ( ( rowBegins <= t ) ? 0 : ( ( rowBegins - t ) * fontMetrics().height() ) );
+            int y = ( ( rb <= t ) ? 0 : ( ( rb - t ) * fontMetrics().height() ) );
 
             int fontWidth = fontMetrics().averageCharWidth();
 
-            int x = ( ( columnBegins - c ) * fontWidth ) + cr.left();
-            int w = ( columnEnds - columnBegins ) * fontWidth;
+            int x = ( ( cb - c ) * fontWidth ) + ( c > 0 ? 0 : contentsRect().left() );
+            int w = ( ce - cb ) * fontWidth;
 
-            QRect r( x, y, ( w == 0 ? 1 : w ), ( ( rowEnds - t + 1 ) * fontMetrics().height() ) - y );
+            QRect r( x, y, ( w == 0 ? 1 : w ), ( ( re - t + 1 ) * fontMetrics().height() ) - y );
 
             p.fillRect( r, QBrush( QColor( 175, 255, 175 ) ) );
          }
