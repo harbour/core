@@ -440,7 +440,7 @@ static HB_BOOL _hb_thread_cond_wait( HB_COND_T * cond, HB_RAWCRITICAL_T * critic
 }
 #endif
 
-#if defined( HB_OS_OS2 ) && !defined( __GNUC__ )
+#if defined( HB_OS_OS2 )
 #if 0
    ULONG _hb_gettid( void )
    {
