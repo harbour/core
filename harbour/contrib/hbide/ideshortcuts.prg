@@ -1297,6 +1297,13 @@ METHOD IdeShortcuts:loadDftSCuts()
       aadd( b_, { "Help"            , "F1"     , "NO", "NO" , "NO" , "", '::help( "" )'          , "help"            , "", "" } )
       aadd( b_, { "Exit"            , "W"      , "NO", "YES", "YES", "", '::exit( .f. )'         , "exit"            , "", "" } )
 
+      aadd( b_, { "Cut"             , "X"      , "NO", "YES", "NO" , "", '::cut()'               , "cut"             , "", "" } )
+      aadd( b_, { "Copy"            , "C"      , "NO", "YES", "NO" , "", '::copy()'              , "copy"            , "", "" } )
+      aadd( b_, { "Paste"           , "V"      , "NO", "YES", "NO" , "", '::paste()'             , "paste"           , "", "" } )
+      aadd( b_, { "Undo"            , "Z"      , "NO", "YES", "NO" , "", '::undo()'              , "undo"            , "", "" } )
+      aadd( b_, { "Redo"            , "Y"      , "NO", "YES", "NO" , "", '::redo()'              , "redo"            , "", "" } )
+      aadd( b_, { "SelectAll"       , "A"      , "NO", "YES", "NO" , "", '::selectAll()'         , "selectall"       , "", "" } )
+
       aadd( b_, { "New Source"      , "N"      , "NO", "YES", "NO" , "", '::newSource( "" )'     , "new"             , "", "" } )
       aadd( b_, { "Open"            , "O"      , "NO", "YES", "NO" , "", '::open()'              , "open"            , "", "" } )
       aadd( b_, { "Save"            , "S"      , "NO", "YES", "NO" , "", '::save()'              , "save"            , "", "" } )

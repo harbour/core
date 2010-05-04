@@ -692,6 +692,48 @@ HB_FUNC( QT_HBQPLAINTEXTEDIT_HBREFRESH )
    }
 }
 
+/*
+ * void           hbCut()
+ */
+HB_FUNC( QT_HBQPLAINTEXTEDIT_HBCUT )
+{
+   HBQPlainTextEdit * p = hbqt_par_HBQPlainTextEdit( 1 );
+   if( p )
+      ( p )->hbCut();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQPLAINTEXTEDIT_HBCUT FP=( p )->hbCut(); p is NULL" ) );
+   }
+}
+
+/*
+ * void           hbCopy()
+ */
+HB_FUNC( QT_HBQPLAINTEXTEDIT_HBCOPY )
+{
+   HBQPlainTextEdit * p = hbqt_par_HBQPlainTextEdit( 1 );
+   if( p )
+      ( p )->hbCopy();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQPLAINTEXTEDIT_HBCOPY FP=( p )->hbCopy(); p is NULL" ) );
+   }
+}
+
+/*
+ * void           hbPaste()
+ */
+HB_FUNC( QT_HBQPLAINTEXTEDIT_HBPASTE )
+{
+   HBQPlainTextEdit * p = hbqt_par_HBQPlainTextEdit( 1 );
+   if( p )
+      ( p )->hbPaste();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQPLAINTEXTEDIT_HBPASTE FP=( p )->hbPaste(); p is NULL" ) );
+   }
+}
+
 
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */

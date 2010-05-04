@@ -105,6 +105,9 @@ CREATE CLASS HBQPlainTextEdit INHERIT HbQtObjectHandler, QPlainTextEdit
    METHOD  hbSetCurrentLineColor( pColor )
    METHOD  hbSetLineAreaBkColor( pColor )
    METHOD  hbRefresh()
+   METHOD  hbCut()
+   METHOD  hbCopy()
+   METHOD  hbPaste()
 
    ENDCLASS
 
@@ -268,4 +271,16 @@ METHOD HBQPlainTextEdit:hbSetLineAreaBkColor( pColor )
 
 METHOD HBQPlainTextEdit:hbRefresh()
    RETURN Qt_HBQPlainTextEdit_hbRefresh( ::pPtr )
+
+
+METHOD HBQPlainTextEdit:hbCut()
+   RETURN Qt_HBQPlainTextEdit_hbCut( ::pPtr )
+
+
+METHOD HBQPlainTextEdit:hbCopy()
+   RETURN Qt_HBQPlainTextEdit_hbCopy( ::pPtr )
+
+
+METHOD HBQPlainTextEdit:hbPaste()
+   RETURN Qt_HBQPlainTextEdit_hbPaste( ::pPtr )
 

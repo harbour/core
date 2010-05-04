@@ -91,6 +91,7 @@ HBQPlainTextEdit::HBQPlainTextEdit( QWidget * parent ) : QPlainTextEdit( parent 
    isTipActive              = false;
    columnBegins             = -1;
    columnEnds               = -1;
+   selectionState           = 0;
    isColumnSelectionEnabled = false;
    horzRuler                = new HorzRuler( this );
 
@@ -204,6 +205,89 @@ static bool isNavableKey( int k )
 
 /*----------------------------------------------------------------------*/
 
+bool HBQPlainTextEdit::isCursorInSelection()
+{
+   int cb = columnBegins <= columnEnds ? columnBegins : columnEnds;
+   int ce = columnBegins <= columnEnds ? columnEnds   : columnBegins;
+   int rb = rowBegins    <= rowEnds    ? rowBegins    : rowEnds;
+   int re = rowBegins    <= rowEnds    ? rowEnds      : rowBegins;
+
+   QTextCursor c = textCursor();
+   int col = c.columnNumber();
+   int row = c.blockNumber();
+
+   return( col >= cb && col <= ce && row >= rb && row <= re );
+}
+
+/*----------------------------------------------------------------------*/
+
+void HBQPlainTextEdit::hbCut()
+{
+   if( isColumnSelectionEnabled )
+   {
+      PHB_ITEM p1 = hb_itemPutNI( NULL, 21014 );
+      PHB_ITEM p2 = hb_itemNew( NULL );
+      hb_arrayNew( p2, 5 );
+      hb_arraySetNI( p2, 1, rowBegins );
+      hb_arraySetNI( p2, 2, columnBegins );
+      hb_arraySetNI( p2, 3, rowEnds );
+      hb_arraySetNI( p2, 4, columnEnds );
+      hb_arraySetNI( p2, 5, Qt::Key_X );
+
+      hb_vmEvalBlockV( block, 2, p1, p2 );
+      hb_itemRelease( p1 );
+      hb_itemRelease( p2 );
+
+      columnEnds = columnBegins;
+   }
+   else
+   {
+      QPlainTextEdit::cut();
+   }
+}
+
+/*----------------------------------------------------------------------*/
+
+void HBQPlainTextEdit::hbCopy()
+{
+   if( isColumnSelectionEnabled )
+   {
+      PHB_ITEM p1 = hb_itemPutNI( NULL, 21011 );
+      PHB_ITEM p2 = hb_itemNew( NULL );
+      hb_arrayNew( p2, 4 );
+      hb_arraySetNI( p2, 1, rowBegins    );
+      hb_arraySetNI( p2, 2, columnBegins );
+      hb_arraySetNI( p2, 3, rowEnds      );
+      hb_arraySetNI( p2, 4, columnEnds   );
+
+      hb_vmEvalBlockV( block, 2, p1, p2 );
+      hb_itemRelease( p1 );
+      hb_itemRelease( p2 );
+   }
+   else
+   {
+      QPlainTextEdit::copy();
+   }
+}
+
+/*----------------------------------------------------------------------*/
+
+void HBQPlainTextEdit::hbPaste()
+{
+   if( isColumnSelectionEnabled )
+   {
+      PHB_ITEM p1 = hb_itemPutNI( NULL, 21012 );
+      hb_vmEvalBlockV( block, 1, p1 );
+      hb_itemRelease( p1 );
+   }
+   else
+   {
+      QPlainTextEdit::paste();
+   }
+}
+
+/*----------------------------------------------------------------------*/
+
 void HBQPlainTextEdit::mouseDoubleClickEvent( QMouseEvent *event )
 {
    if( block )
@@ -219,13 +303,8 @@ void HBQPlainTextEdit::mouseDoubleClickEvent( QMouseEvent *event )
 
 void HBQPlainTextEdit::mousePressEvent( QMouseEvent *event )
 {
-   if( isColumnSelectionEnabled )
-   {
-      if( columnBegins >= 0 )
-      {
-         hbClearColumnSelection();
-      }
-   }
+   setCursorWidth( 1 );
+   selectionState = 1;
    QPlainTextEdit::mousePressEvent( event );
 }
 
@@ -233,6 +312,7 @@ void HBQPlainTextEdit::mousePressEvent( QMouseEvent *event )
 
 void HBQPlainTextEdit::mouseReleaseEvent( QMouseEvent *event )
 {
+   selectionState = 0;
    QPlainTextEdit::mouseReleaseEvent( event );
 }
 
@@ -244,6 +324,12 @@ void HBQPlainTextEdit::mouseMoveEvent( QMouseEvent *event )
    {
       if( event->buttons() & Qt::LeftButton )
       {
+         if( selectionState == 1 )
+         {
+            selectionState = 0;
+            hbClearColumnSelection();
+         }
+
          if( columnBegins == -1 )
          {
             QTextCursor c( textCursor() );
@@ -266,6 +352,11 @@ void HBQPlainTextEdit::mouseMoveEvent( QMouseEvent *event )
          return;
       }
    }
+   else
+   {
+      selectionState = 0;
+      hbClearColumnSelection();
+   }
    QPlainTextEdit::mouseMoveEvent( event );
 }
 
@@ -273,22 +364,35 @@ void HBQPlainTextEdit::mouseMoveEvent( QMouseEvent *event )
 
 bool HBQPlainTextEdit::hbKeyPressColumnSelection( QKeyEvent * event )
 {
+   bool ctrl  = event->modifiers() & Qt::ControlModifier;
+   bool shift = event->modifiers() & Qt::ShiftModifier;
+   int k      = event->key();
+
+   if( ctrl && ( k == Qt::Key_C || k == Qt::Key_V || k == Qt::Key_X ||
+                 k == Qt::Key_A || k == Qt::Key_Z || k == Qt::Key_Y ) )
+   {
+      event->ignore();
+      return true;
+   }
+
    if( isColumnSelectionEnabled )
    {
-      bool ctrl  = event->modifiers() & Qt::ControlModifier;
-      bool shift = event->modifiers() & Qt::ShiftModifier;
-      int k      = event->key();
+      QTextCursor c( textCursor() );
+      int col = c.columnNumber();
+      int row = c.blockNumber();
 
       if( shift &&  isNavableKey( k ) )
       {
-         QTextCursor c( textCursor() );
-         int col = c.columnNumber();
-         int row = c.blockNumber();
-
+         if( selectionState == 0 )
+         {
+            hbClearColumnSelection();
+         }
          setCursorWidth( 0 );
 
          if( columnBegins == -1 )
          {
+            selectionState = 1;
+
             if( c.hasSelection() )
             {
                QTextBlock b = c.document()->findBlock( c.selectionStart() );
@@ -360,67 +464,40 @@ bool HBQPlainTextEdit::hbKeyPressColumnSelection( QKeyEvent * event )
          c.clearSelection();
          setTextCursor( c );
          return true;
-      }
+      }                                 //   if( shift &&  isNavableKey( k ) )
       else if( isNavableKey( k ) )
       {
-         hbClearColumnSelection();
       }
       else
       {
-         if( ctrl && k == Qt::Key_C )
+         if( ! ctrl && k >= ' ' && k < 127 && columnBegins >= 0 )
          {
-            if( block )
+            if( ( ( columnBegins == columnEnds ) && ( col == columnBegins + 1 ) && ( row == rowEnds ) )
+                                            ||
+                                   isCursorInSelection() )
             {
-               PHB_ITEM p1 = hb_itemPutNI( NULL, 21011 );
+               PHB_ITEM p1 = hb_itemPutNI( NULL, 21013 );
                PHB_ITEM p2 = hb_itemNew( NULL );
-               hb_arrayNew( p2, 4 );
+               hb_arrayNew( p2, 5 );
                hb_arraySetNI( p2, 1, rowBegins );
                hb_arraySetNI( p2, 2, columnBegins );
                hb_arraySetNI( p2, 3, rowEnds );
                hb_arraySetNI( p2, 4, columnEnds );
+               hb_arraySetPtr( p2, 5, event );
 
                hb_vmEvalBlockV( block, 2, p1, p2 );
                hb_itemRelease( p1 );
                hb_itemRelease( p2 );
-            }
-            event->ignore();
-            return true;
-         }
-         if( ctrl && k == Qt::Key_V )
-         {
-            hbClearColumnSelection();
-            if( block )
-            {
-               PHB_ITEM p1 = hb_itemPutNI( NULL, 21012 );
-               hb_vmEvalBlockV( block, 1, p1 );
-               hb_itemRelease( p1 );
-            }
-            event->ignore();
-            return true;
-         }
-         if( ! ctrl && k >= ' ' && k < 127 && columnBegins >= 0 )
-         {
-            PHB_ITEM p1 = hb_itemPutNI( NULL, 21013 );
-            PHB_ITEM p2 = hb_itemNew( NULL );
-            hb_arrayNew( p2, 5 );
-            hb_arraySetNI( p2, 1, rowBegins );
-            hb_arraySetNI( p2, 2, columnBegins );
-            hb_arraySetNI( p2, 3, rowEnds );
-            hb_arraySetNI( p2, 4, columnEnds );
-            hb_arraySetPtr( p2, 5, event );
 
-            hb_vmEvalBlockV( block, 2, p1, p2 );
-            hb_itemRelease( p1 );
-            hb_itemRelease( p2 );
-
-            if( columnBegins == columnEnds )
-            {
-               columnBegins++;
-               columnEnds++;
+               if( columnBegins == columnEnds )
+               {
+                  columnBegins++;
+                  columnEnds++;
+               }
+               update();
+               event->ignore();
+               return true;
             }
-            update();
-            event->ignore();
-            return true;
          }
          if( ! ctrl && ( k == Qt::Key_Backspace || k == Qt::Key_Delete ) && columnBegins >= 0 )
          {
@@ -450,6 +527,14 @@ bool HBQPlainTextEdit::hbKeyPressColumnSelection( QKeyEvent * event )
             event->ignore();
             return true;
          }
+      }
+   }
+   else
+   {
+      if( shift &&  isNavableKey( k ) )
+      {
+         selectionState = 0;
+         hbClearColumnSelection();
       }
    }
    return false;
@@ -813,6 +898,8 @@ void HBQPlainTextEdit::hbClearColumnSelection()
    rowEnds       = -1;
    columnBegins  = -1;
    columnEnds    = -1;
+
+   update();
 }
 
 /*----------------------------------------------------------------------*/

@@ -62,12 +62,10 @@ PROCEDURE hbqt_ErrorSys()
 STATIC FUNCTION DefError( oError )
    LOCAL cMessage
    LOCAL cDOSError
-
    LOCAL aOptions
    LOCAL nChoice
-
    LOCAL n
-
+   LOCAL cClip
    LOCAL aMsg := {}
 
    // By default, division by zero results in zero
@@ -160,6 +158,10 @@ STATIC FUNCTION DefError( oError )
                      "(" + hb_NToS( ProcLine( n ) ) + ")  " )
 
    ENDDO
+
+   cClip := ""
+   aeval( aMsg, {|e| cClip += e + chr( 13 ) + chr( 10 ) } )
+   QClipboard():new():setText( cClip )
 
    hbqt_showError( aMsg )
 

@@ -491,59 +491,65 @@ METHOD IdeEditsManager:setSourceVisibleByIndex( nIndex ) /* nIndex is 0 based */
    RETURN .f.
 
 /*----------------------------------------------------------------------*/
-//////
+
 METHOD IdeEditsManager:undo()
-   IF !empty( ::qCurEdit )
-      ::qCurEdit:undo()
+   LOCAL oEdit
+   IF !empty( oEdit := ::getEditObjectCurrent() )
+      oEdit:undo()
    ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-//////
+
 METHOD IdeEditsManager:redo()
-   IF !empty( ::qCurEdit )
-      ::qCurEdit:redo()
+   LOCAL oEdit
+   IF !empty( oEdit := ::getEditObjectCurrent() )
+      oEdit:redo()
    ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-//////
+
 METHOD IdeEditsManager:cut()
-   IF !empty( ::qCurEdit )
-      ::qCurEdit:cut()
+   LOCAL oEdit
+   IF !empty( oEdit := ::getEditObjectCurrent() )
+      oEdit:cut()
    ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-//////
+
 METHOD IdeEditsManager:copy()
-   IF !empty( ::qCurEdit )
-      ::qCurEdit:copy()
+   LOCAL oEdit
+   IF !empty( oEdit := ::getEditObjectCurrent() )
+      oEdit:copy()
    ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-//////
+
 METHOD IdeEditsManager:paste()
-   IF !empty( ::qCurEdit )
-      ::qCurEdit:paste()
+   LOCAL oEdit
+   IF !empty( oEdit := ::getEditObjectCurrent() )
+      oEdit:paste()
    ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-//////
+
 METHOD IdeEditsManager:selectAll()
-   IF !empty( ::qCurEdit )
-      ::qCurEdit:selectAll()
+   LOCAL oEdit
+   IF !empty( oEdit := ::getEditObjectCurrent() )
+      oEdit:selectAll()
    ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-//////
-METHOD IdeEditsManager:toggleSelectionMode()
 
-   IF !empty( ::qCurEdit )
-      ::qCurEdit:hbHighlightSelectedColumns( ::isColumnSelectionEnabled )
+METHOD IdeEditsManager:toggleSelectionMode()
+   LOCAL oEdit
+   IF !empty( oEdit := ::getEditObjectCurrent() )
+      oEdit:toggleSelectionMode()
    ENDIF
    RETURN Self
 
@@ -1418,6 +1424,14 @@ CLASS IdeEdit INHERIT IdeObject
    METHOD connectEditSignals( oEdit )
    METHOD disconnectEditSignals( oEdit )
 
+   METHOD redo()
+   METHOD undo()
+   METHOD cut()
+   METHOD copy()
+   METHOD paste()
+   METHOD selectAll()
+   METHOD toggleSelectionMode()
+
    METHOD setNewMark()
    METHOD gotoMark( nIndex )
    METHOD duplicateLine()
@@ -1968,6 +1982,8 @@ METHOD IdeEdit:copyBlockContents( aCord )
 METHOD IdeEdit:pasteBlockContents()
    LOCAL i, nRow, nCol, qCursor, nMaxCol
 
+   ::aBlockCopyContents := hbide_memoToArray( QClipboard():new():text() )
+hb_trace( HB_TR_ALWAYS, "MMMMMMMM", LEN( ::aBlockCopyContents ) )
    IF empty( ::aBlockCopyContents )
       RETURN Self
    ENDIF
@@ -2064,6 +2080,10 @@ METHOD IdeEdit:deleteBlockContents( aCord )
    nR := iif( aCord[ 2 ] > aCord[ 4 ], aCord[ 2 ], aCord[ 4 ] )
    k  := aCord[ 5 ]
 
+   IF k == Qt_Key_X
+      ::copyBlockContents( aCord )
+   ENDIF
+
    nW := nR - nL
 
    qCursor := QTextCursor():from( ::qEdit:textCursor() )
@@ -2083,7 +2103,7 @@ METHOD IdeEdit:deleteBlockContents( aCord )
       qCursor:movePosition( QTextCursor_Down , QTextCursor_MoveAnchor, nB )
       qCursor:movePosition( QTextCursor_Right, QTextCursor_MoveAnchor, nR - 1 )
    ELSE
-      IF k == Qt_Key_Delete
+      IF k == Qt_Key_Delete .OR. k == Qt_Key_X
          FOR i := nT TO nB
             cLine := ::getLine( i + 1 )
             cLine := pad( substr( cLine, 1, nL ), nL ) + substr( cLine, nR + 1 )
@@ -2132,17 +2152,55 @@ METHOD IdeEdit:markCurrentFunction()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:presentSkeletons()
-
    ::oSK:selectByMenuAndPostText( ::qEdit )
-
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:toggleLineNumbers()
-
    ::qEdit:hbNumberBlockVisible( ::lLineNumbersVisible )
+   RETURN Self
 
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:toggleSelectionMode()
+   ::qEdit:hbHighlightSelectedColumns( ::isColumnSelectionEnabled )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:redo()
+   ::qEdit:redo()
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:undo()
+   ::qEdit:undo()
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:cut()
+   ::qEdit:hbCut()
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:copy()
+   ::qEdit:hbCopy()
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:paste()
+   ::qEdit:hbPaste()
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:selectAll()
+   ::qEdit:selectAll()
    RETURN Self
 
 /*----------------------------------------------------------------------*/

@@ -66,6 +66,9 @@
         :hbSetCurrentLineColor( pColor )                    -> NIL
         :hbSetLineAreaBkColor( pColor )                     -> NIL
         :hbRefresh()                                        -> NIL
+        :hbCut()                                            -> NIL
+        :hbCopy()                                           -> NIL
+        :hbPaste()                                          -> NIL
 
     $DESCRIPTION$
 

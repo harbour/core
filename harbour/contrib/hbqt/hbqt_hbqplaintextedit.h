@@ -134,10 +134,12 @@ private:
    int            rowEnds;
    int            columnBegins;
    int            columnEnds;
+   int            selectionState;
    bool           isColumnSelectionEnabled;
    bool           isTipActive;
    QCompleter   * c;
    QBrush         brushForBookmark( int index );
+   bool           isCursorInSelection();
 
 protected:
    bool           event( QEvent * event );
@@ -177,6 +179,10 @@ public slots:
    void           hbSetCurrentLineColor( const QColor & color ) { m_currentLineColor = color; };
    void           hbSetLineAreaBkColor( const QColor & color ) { m_lineAreaBkColor = color; };
    void           hbRefresh();
+   void           hbCut();
+   void           hbCopy();
+   void           hbPaste();
+
 private slots:
    void           hbSlotCursorPositionChanged();
    void           hbUpdateLineNumberArea( const QRect &, int );
