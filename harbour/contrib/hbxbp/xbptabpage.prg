@@ -137,6 +137,7 @@ METHOD XbpTabPage:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::oWidget := QWidget():new()
    ::oWidget:setContextMenuPolicy( Qt_CustomContextMenu )
+   ::oWidget:setObjectName( "Tab_Page" )
 
    oPar:oWidget:addTab( ::pWidget, ::caption )
 
@@ -282,6 +283,7 @@ METHOD XbpTabWidget:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
 
    ::oWidget := QTabWidget():new( ::pParent )
    ::oWidget:setContextMenuPolicy( Qt_CustomContextMenu )
+   ::oWidget:setObjectName( "Tab_Widget" )
 
    ::Connect( ::oWidget, "currentChanged(int)"               , {|i| ::execSlot( "currentChanged(int)"   , i ) } )
    ::Connect( ::oWidget, "tabCloseRequested(int)"            , {|i| ::execSlot( "tabCloseRequested(int)", i ) } )
@@ -314,11 +316,15 @@ METHOD XbpTabWidget:destroy()
 /*----------------------------------------------------------------------*/
 
 METHOD XbpTabWidget:execSlot( cSlot, p )
-   LOCAL qTab, nIndex, oTab, qPoint
+   LOCAL qTab, nIndex, oTab, pWidget, qPoint, qApp
    LOCAL iIndex
 
    IF hb_isPointer( p )
-      qPoint := QPoint():from( ::oWidget:mapToGlobal( p ) )
+      qPoint  := QPoint():from( ::oWidget:mapToGlobal( p ) )
+      qApp    := QApplication():new()
+      pWidget := QWidget():from( qApp:widgetAt( qPoint ) )
+      iIndex  := ascan( ::aChildren, {|o| hbqt_IsEqualGcQtPointer( o:oWidget:pPtr, pWidget:pPtr ) } ) - 1
+HB_TRACE( HB_TR_ALWAYS, "iIndex", iIndex, pWidget:objectName() )
    ELSE
       iIndex := p
    ENDIF
@@ -331,7 +337,6 @@ METHOD XbpTabWidget:execSlot( cSlot, p )
 
          DO CASE
          CASE cSlot == "customContextMenuRequested(QPoint)"
-            qPoint := QPoint():from( ::oWidget:mapToGlobal( p ) )
             oTab:hbContextMenu( { qPoint:x(), qPoint:y() } )
 
          CASE cSlot == "currentChanged(int)"
