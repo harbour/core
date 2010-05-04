@@ -502,9 +502,7 @@ METHOD HbIde:create( aParams )
       IF ::nEvent == xbeP_Close
          HB_TRACE( HB_TR_ALWAYS, "================ xbeP_Close" )
          hbide_saveINI( Self )
-         HB_TRACE( HB_TR_ALWAYS, "================ xbeP_Close", "after: hbide_saveINI( Self )"   )
          ::oSM:closeAllSources()
-         HB_TRACE( HB_TR_ALWAYS, "================ xbeP_Close", "after: ::oSM:closeAllSources()" )
          EXIT
 
       ELSEIF ::nEvent == xbeP_Keyboard
@@ -516,11 +514,7 @@ METHOD HbIde:create( aParams )
                ::oCurEditor:dispEditInfo( ::qCurEdit )
             ENDIF
 
-         CASE ::mp1 == xbeK_ESC
-            ::oSM:closeSource()
-
          ENDCASE
-
       ENDIF
 
       ::oXbp:handleEvent( ::nEvent, ::mp1, ::mp2 )

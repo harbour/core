@@ -94,6 +94,8 @@ CLASS IdeDocks INHERIT IdeObject
    DATA   aBtnDocks                               INIT   {}
    DATA   oBtnTabClose
 
+   DATA   qTBtnClose
+
    METHOD new( oIde )
    METHOD create( oIde )
    METHOD destroy()
@@ -427,7 +429,7 @@ METHOD IdeDocks:buildStackedWidget()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeDocks:buildViewWidget( cObjectName )
-   LOCAL oFrame
+   LOCAL oFrame, qTBtnClose
 
    oFrame := XbpWindow():new( ::oStackedWidget )
    oFrame:oWidget := QWidget():new( ::oStackedWidget:oWidget )
@@ -438,16 +440,17 @@ METHOD IdeDocks:buildViewWidget( cObjectName )
    oFrame:qLayout:setContentsMargins( 2, 2, 2, 2 )
 
    oFrame:oTabWidget := XbpTabWidget():new():create( oFrame, , {0,0}, {200,200}, , .t. )
-   #if 0
-   IF empty( qTBtn )
-      qTBtn := QWidget():new() //QToolButton():new( oFrame:oTabWidget:oWidget )
-      qTBtn:setTooltip( "Close Tab" )
-      qTBtn:setIcon( hbide_image( "closetab" ) )
-      qTBtn:setMaximumWidth( 16 )
-      qTBtn:setMaximumHeight( 16 )
+
+   IF empty( qTBtnClose )
+      qTBtnClose := QToolButton():new()
+      qTBtnClose:setTooltip( "Close Tab" )
+      qTBtnClose:setAutoRaise( .t. )
+      qTBtnClose:setIcon( hbide_image( "closetab" ) )
+      ::connect( qTBtnClose, "clicked()", {|| ::oSM:closeSource() } )
    ENDIF
-   oFrame:oTabWidget:oWidget:setCornerWidget( qTBtn, Qt_TopLeftCorner )
-   #endif
+   oFrame:oTabWidget:qCornerWidget := qTBtnClose
+   oFrame:oTabWidget:oWidget:setCornerWidget( qTBtnClose, Qt_TopRightCorner )
+
    oFrame:oTabWidget:oWidget:setUsesScrollButtons( .f. )
    oFrame:oTabWidget:oWidget:setMovable( .t. )
 

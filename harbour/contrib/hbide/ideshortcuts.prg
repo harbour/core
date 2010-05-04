@@ -149,6 +149,7 @@ CLASS IdeShortcuts INHERIT IdeObject
    METHOD newSource( cType )
    METHOD open()
    METHOD save()
+   METHOD saveAs()
    METHOD saveAll()
    METHOD close()
    METHOD print()
@@ -166,6 +167,8 @@ CLASS IdeShortcuts INHERIT IdeObject
    METHOD streamComment()
    METHOD build( cProj )
    METHOD buildLaunch( cProj )
+   METHOD reBuild( cProj )
+   METHOD reBuildLaunch( cProj )
    METHOD launch( cProj )
    METHOD insert( cText )
    METHOD separator( cSep )
@@ -175,6 +178,26 @@ CLASS IdeShortcuts INHERIT IdeObject
    METHOD toLower()
    METHOD invertCase()
    METHOD zoom( nKey )
+   METHOD cut()
+   METHOD copy()
+   METHOD paste()
+   METHOD undo()
+   METHOD redo()
+   METHOD selectAll()
+   METHOD setBookMark()
+   METHOD gotoMark()
+   METHOD switchToReadOnly()
+   METHOD dlgKeyboardMappings()
+   METHOD dlgToolsAndUtils()
+   METHOD setView( cView )
+   METHOD compilePPO()
+   METHOD single2doubleQuotes()
+   METHOD double2singleQuotes()
+   METHOD tabs2spaces()
+   METHOD removeTrailingSpaces()
+   METHOD toggleLineNumbersDisplay()
+   METHOD toggleSelectionMode()
+   METHOD toggleStatusBar()
 
    ENDCLASS
 
@@ -860,57 +883,37 @@ METHOD IdeShortcuts:loadKeys()
    FOR EACH a_ IN ::aKeys
       a_[ 2 ] := trim( a_[ 2 ] )
    NEXT
-
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-
 METHOD IdeShortcuts:execTool( ... )
    RETURN ::oTM:execTool( ... )
-
 /*----------------------------------------------------------------------*/
-
 METHOD IdeShortcuts:getWord( lSelect )
    RETURN ::oEM:getWord( lSelect )
-
 /*----------------------------------------------------------------------*/
-
 METHOD IdeShortcuts:getLine( lSelect )
    RETURN ::oEM:getLine( , lSelect )
-
 /*----------------------------------------------------------------------*/
-
 METHOD IdeShortcuts:getText()
    RETURN ::oEM:getText()
-
 /*----------------------------------------------------------------------*/
-
 METHOD IdeShortcuts:duplicateLine()
    RETURN ::oEM:duplicateLine()
-
 /*----------------------------------------------------------------------*/
-
 METHOD IdeShortcuts:deleteLine()
    RETURN ::oEM:deleteLine()
-
 /*----------------------------------------------------------------------*/
-
 METHOD IdeShortcuts:moveLineUp()
    RETURN ::oEM:moveLine( -1 )
-
 /*----------------------------------------------------------------------*/
-
 METHOD IdeShortcuts:moveLineDown()
    RETURN ::oEM:moveLine( 1 )
-
 /*----------------------------------------------------------------------*/
-
 METHOD IdeShortcuts:help( cTopic )
    HB_SYMBOL_UNUSED( cTopic )
    RETURN ::oHelpDock:show()
-
 /*----------------------------------------------------------------------*/
-
 METHOD IdeShortcuts:exit( lWarn )
    IF hb_isLogical( lWarn ) .AND. lWarn
       IF hbide_getYesNo( "Exit hbIDE ?", , "Macro Executed" )
@@ -920,110 +923,89 @@ METHOD IdeShortcuts:exit( lWarn )
       PostAppEvent( xbeP_Close, NIL, NIL, ::oDlg )
    ENDIF
    RETURN Self
-
 /*----------------------------------------------------------------------*/
-
 METHOD IdeShortcuts:newSource( cType )
    HB_SYMBOL_UNUSED( cType )
    RETURN ::oSM:editSource( '' )
-
 /*----------------------------------------------------------------------*/
-
 METHOD IdeShortcuts:open()
    RETURN ::oSM:openSource()
-
 /*----------------------------------------------------------------------*/
-
 METHOD IdeShortcuts:save()
    RETURN ::oSM:saveSource( ::oEM:getTabCurrent(), .f., .f. )
-
 /*----------------------------------------------------------------------*/
-
+METHOD IdeShortcuts:saveAs()
+   RETURN ::oSM:saveSource( ::oEM:getTabCurrent(), .t., .t. )
+/*----------------------------------------------------------------------*/
 METHOD IdeShortcuts:saveAll()
    RETURN ::oSM:saveAllSources()
-
 /*----------------------------------------------------------------------*/
-
 METHOD IdeShortcuts:close()
    RETURN ::oSM:closeSource()
-
 /*----------------------------------------------------------------------*/
-
 METHOD IdeShortcuts:print()
    RETURN ::oEM:printPreview()
-
 /*----------------------------------------------------------------------*/
-
 METHOD IdeShortcuts:revertToSaved()
    RETURN Self
-
 /*----------------------------------------------------------------------*/
-
 METHOD IdeShortcuts:findDlg()
    IF !Empty( ::qCurEdit )
       ::oFR:show()
    ENDIF
    RETURN Self
-
 /*----------------------------------------------------------------------*/
-
 METHOD IdeShortcuts:findDlgEx()
    IF !Empty( ::qCurEdit )
       ::oSearchReplace:beginFind()
    ENDIF
    RETURN Self
-
 /*----------------------------------------------------------------------*/
-
 METHOD IdeShortcuts:gotoLine( nLine )
    RETURN ::oEM:goTo( nLine )
-
 /*----------------------------------------------------------------------*/
-
 METHOD IdeShortcuts:indentRight()
    RETURN ::oEM:indent( 1 )
-
 /*----------------------------------------------------------------------*/
-
 METHOD IdeShortcuts:indentLeft()
    RETURN ::oEM:indent( -1 )
-
 /*----------------------------------------------------------------------*/
-
 METHOD IdeShortcuts:blockComment()
    RETURN ::oEM:blockComment()
-
 /*----------------------------------------------------------------------*/
-
 METHOD IdeShortcuts:streamComment()
    RETURN ::oEM:streamComment()
-
 /*----------------------------------------------------------------------*/
-
 METHOD IdeShortcuts:build( cProj )
    IF ! hb_isChar( cProj )
       cProj := ""
    ENDIF
    RETURN ::oPM:buildProject( cProj, .F., .F. )
-
 /*----------------------------------------------------------------------*/
-
 METHOD IdeShortcuts:buildLaunch( cProj )
    IF ! hb_isChar( cProj )
       cProj := ""
    ENDIF
    RETURN ::oPM:buildProject( cProj, .T., .F. )
-
 /*----------------------------------------------------------------------*/
-
+METHOD IdeShortcuts:reBuild( cProj )
+   IF ! hb_isChar( cProj )
+      cProj := ""
+   ENDIF
+   RETURN ::oPM:buildProject( cProj, .F., .T. )
+/*----------------------------------------------------------------------*/
+METHOD IdeShortcuts:reBuildLaunch( cProj )
+   IF ! hb_isChar( cProj )
+      cProj := ""
+   ENDIF
+   RETURN ::oPM:buildProject( cProj, .T., .T. )
+/*----------------------------------------------------------------------*/
 METHOD IdeShortcuts:launch( cProj )
    IF ! hb_isChar( cProj )
       cProj := ""
    ENDIF
    RETURN ::oPM:launchProject( cProj )
-
 /*----------------------------------------------------------------------*/
-
 METHOD IdeShortcuts:insert( cText )
    LOCAL oEdit
    IF ! empty( oEdit := ::getEditObjectCurrent() )
@@ -1032,56 +1014,107 @@ METHOD IdeShortcuts:insert( cText )
       ENDIF
    ENDIF
    RETURN Self
-
 /*----------------------------------------------------------------------*/
-
 METHOD IdeShortcuts:separator( cSep )
    RETURN ::oEM:insertSeparator( cSep )
-
 /*----------------------------------------------------------------------*/
-
 METHOD IdeShortcuts:findAgain()
    IF !empty( ::qCurEdit )
       ::oFR:find()
    ENDIF
    RETURN Self
-
 /*----------------------------------------------------------------------*/
-
 METHOD IdeShortcuts:replace()
    IF !empty( ::qCurEdit )
       ::oFR:replace()
    ENDIF
    RETURN Self
-
 /*----------------------------------------------------------------------*/
-
 METHOD IdeShortcuts:toUpper()
    RETURN ::oEM:convertSelection( "ToUpper" )
-
 /*----------------------------------------------------------------------*/
-
 METHOD IdeShortcuts:toLower()
    RETURN ::oEM:convertSelection( "ToLower" )
-
 /*----------------------------------------------------------------------*/
-
 METHOD IdeShortcuts:invertCase()
    RETURN ::oEM:convertSelection( "Invert" )
-
 /*----------------------------------------------------------------------*/
-
 METHOD IdeShortcuts:zoom( nKey )
    RETURN ::oEM:zoom( nKey )
-
+/*----------------------------------------------------------------------*/
+METHOD IdeShortcuts:cut()
+   RETURN ::oEM:cut()
+/*----------------------------------------------------------------------*/
+METHOD IdeShortcuts:copy()
+   RETURN ::oEM:copy()
+/*----------------------------------------------------------------------*/
+METHOD IdeShortcuts:paste()
+   RETURN ::oEM:paste()
+/*----------------------------------------------------------------------*/
+METHOD IdeShortcuts:selectAll()
+   RETURN ::oEM:selectAll()
+/*----------------------------------------------------------------------*/
+METHOD IdeShortcuts:redo()
+   RETURN ::oEM:redo()
+/*----------------------------------------------------------------------*/
+METHOD IdeShortcuts:undo()
+   RETURN ::oEM:undo()
+/*----------------------------------------------------------------------*/
+METHOD IdeShortcuts:setBookMark()
+   RETURN ::oEM:setMark()
+/*----------------------------------------------------------------------*/
+METHOD IdeShortcuts:gotoMark()
+   RETURN ::oEM:gotoMark()
+/*----------------------------------------------------------------------*/
+METHOD IdeShortcuts:switchToReadOnly()
+   RETURN ::oEM:switchToReadOnly()
+/*----------------------------------------------------------------------*/
+METHOD IdeShortcuts:dlgKeyboardMappings()
+   RETURN ::oTM:show()
+/*----------------------------------------------------------------------*/
+METHOD IdeShortcuts:dlgToolsAndUtils()
+   RETURN ::oSC:show()
+/*----------------------------------------------------------------------*/
+METHOD IdeShortcuts:setView( cView )
+   IF empty( cView )
+      cView := "Stats"
+   ENDIF
+   RETURN ::oDK:setView( cView )
+/*----------------------------------------------------------------------*/
+METHOD IdeShortcuts:compilePPO()
+   RETURN ::oPM:buildProject( '', .F., .F., .T., .T. )
+/*----------------------------------------------------------------------*/
+METHOD IdeShortcuts:single2doubleQuotes()
+   RETURN ::oEM:convertDQuotes()
+/*----------------------------------------------------------------------*/
+METHOD IdeShortcuts:double2singleQuotes()
+   RETURN ::oEM:convertQuotes()
+/*----------------------------------------------------------------------*/
+METHOD IdeShortcuts:tabs2spaces()
+   RETURN ::oEM:removeTabs()
+/*----------------------------------------------------------------------*/
+METHOD IdeShortcuts:removeTrailingSpaces()
+   RETURN ::oEM:removeTrailingSpaces()
+/*----------------------------------------------------------------------*/
+METHOD IdeShortcuts:toggleLineNumbersDisplay()
+   RETURN ::oEM:toggleLineNumbers()
+/*----------------------------------------------------------------------*/
+METHOD IdeShortcuts:toggleSelectionMode()
+   ::isColumnSelectionEnabled := ! ::isColumnSelectionEnabled
+   RETURN ::oEM:toggleSelectionMode()
+/*----------------------------------------------------------------------*/
+METHOD IdeShortcuts:toggleStatusBar()
+   IF ::lStatusBarVisible
+      ::oSBar:oWidget:hide()
+   ELSE
+      ::oSBar:oWidget:show()
+   ENDIF
+   ::lStatusBarVisible := ! ::lStatusBarVisible
+   RETURN Self
 /*----------------------------------------------------------------------*/
 
 METHOD IdeShortcuts:loadMethods()
-   #if 0
-   aadd( ::aMethods, { '', ;
-                       '', ;
-                       ''  } )
-   #endif
+
    aadd( ::aMethods, { 'help( cTopic )', ;
                        'help( "" )', ;
                        'Invokes "Help" docking widget in the right docking area. <cTopic> is not active yet.'  } )
@@ -1097,6 +1130,9 @@ METHOD IdeShortcuts:loadMethods()
    aadd( ::aMethods, { 'save()', ;
                        'save()', ;
                        'Saves the current editing instance if in modified state. Visual artifacts are updated accordingly.'  } )
+   aadd( ::aMethods, { 'saveAs()', ;
+                       'saveAs()', ;
+                       'Opens "File Save Dialog" to fetch a file name and saves the current editing instance into new file. Visual artifacts are updated accordingly.'  } )
    aadd( ::aMethods, { 'saveAll()', ;
                        'saveAll()', ;
                        'Saves all opened editing instances on the visible panel, if in modified state. Visual artifacts are updated accordingly.'  } )
@@ -1148,13 +1184,19 @@ METHOD IdeShortcuts:loadMethods()
    aadd( ::aMethods, { 'buildLaunch( cProj )', ;
                        'buildLaunch( "" )', ;
                        'Builds and launches <cProj> if it is already loaded. All sources are saved if found in modified state before "build" is initiated.' } )
-   aadd( ::aMethods, { 'launch( cProj )', ;
-                       'launch( "" )', ;
+   aadd( ::aMethods, { 'reBuild( cProj )', ;
+                       'reBuild( "" )', ;
+                       'Re-builds <cProj> if it is already loaded. All sources are saved if found in modified state before "build" is initiated.' } )
+   aadd( ::aMethods, { 'reBuildLaunch( cProj )', ;
+                       'reBuildLaunch( "" )', ;
+                       'Re-builds and launches <cProj> if it is already loaded. All sources are saved if found in modified state before "build" is initiated.' } )
+   aadd( ::aMethods, { 'launch( cProj )'   , ;
+                       'launch( "" )'      , ;
                        'Launches <cProj> if it is already loaded.'  } )
-   aadd( ::aMethods, { 'insert( cText )', ;
-                       'insert( "" )', ;
+   aadd( ::aMethods, { 'insert( cText )'   , ;
+                       'insert( "" )'      , ;
                        'Insert <cText> at current cursor position.'  } )
-   aadd( ::aMethods, { 'separator( cSep )', ;
+   aadd( ::aMethods, { 'separator( cSep )' , ;
                        'separator( ' + '/*' + replicate( "-", 68 ) + '*/' + ' )', ;
                        'Inserts separator line <cSep> immediately before current line. <cSep> defaults to "/*---*/"'  } )
    aadd( ::aMethods, { 'getWord( lSelect )', ;
@@ -1176,6 +1218,69 @@ METHOD IdeShortcuts:loadMethods()
    aadd( ::aMethods, { 'zoom( nVal )'      , ;
                        'zoom( +1 )'        , ;
                        'Zooms in/out the current editing instance. nVal: 1-one size up; -1-one size less; NIL-original size; 5~30-to size.' } )
+   aadd( ::aMethods, { 'cut()'             , ;
+                       'cut()'             , ;
+                       'Cuts the selected text and copies onto clipboard.' } )
+   aadd( ::aMethods, { 'copy()'            , ;
+                       'copy()'            , ;
+                       'Copies the selected text onto clipboard.' } )
+   aadd( ::aMethods, { 'paste()'           , ;
+                       'paste()'           , ;
+                       'Pastes the text available onto clipboard at the current cursor position.' } )
+   aadd( ::aMethods, { 'undo()'            , ;
+                       'undo()'            , ;
+                       'Attempts to undo the last operation if one still hangs in the buffer.' } )
+   aadd( ::aMethods, { 'redo()'            , ;
+                       'redo()'            , ;
+                       'Attempts to re-do the last undone action.' } )
+   aadd( ::aMethods, { 'selectAll()'       , ;
+                       'selectAll()'       , ;
+                       'Selects the whole text and places the cursor at the end of source.' } )
+   aadd( ::aMethods, { 'print()'           , ;
+                       'print()'           , ;
+                       'Opens Print Preview dialog which will contain the source line broken by pages.' } )
+   aadd( ::aMethods, { 'setBookMark()'     , ;
+                       'setBookMark()'     , ;
+                       'Attempts to install a bookmark onto current cursor position. If successful, mark appears as a colored tool-button on the statusbar and marked line is highlighted with the same color.' } )
+   aadd( ::aMethods, { 'gotoMark( nMark )' , ;
+                       'gotoMark( 1 )'     , ;
+                       'Attempts to reach mark represented by <nMark>. Please note maximum 6 bookmarks are avialable per edit instance.' } )
+   aadd( ::aMethods, { 'switchToReadOnly()', ;
+                       'switchToReadOnly()', ;
+                       'Flags current editing instance read-only.' } )
+   aadd( ::aMethods, { 'dlgKeyboardMappings()', ;
+                       'dlgKeyboardMappings()', ;
+                       'Opens "Keyboard Mappings" dialog.' } )
+   aadd( ::aMethods, { 'dlgToolsAndUtils()', ;
+                       'dlgToolsAndUtils()', ;
+                       'Opens "Toola & Utilities" dialog.' } )
+   aadd( ::aMethods, { 'setView( cView )'  , ;
+                       'setView( "" )'     , ;
+                       'Brings <cView> panel to front. Defaults to "Stats", i.e., <Welcome> tab.' } )
+   aadd( ::aMethods, { 'compilePPO()'      , ;
+                       'compilePPO()'      , ;
+                       'Attemps to compile current source to .ppo formats, and if successful, presents the compiled source in a new edit instance.' } )
+   aadd( ::aMethods, { 'single2doubleQuotes()', ;
+                       'single2doubleQuotes()', ;
+                       'Converts single quotes to double in the currently selected text.' } )
+   aadd( ::aMethods, { 'double2singleQuotes()', ;
+                       'double2singleQuotes()', ;
+                       'Converts double quotes to single in the currently selected text.' } )
+   aadd( ::aMethods, { 'tabs2spaces()', ;
+                       'tabs2spaces()', ;
+                       'Converts tabs to spaces, currently 3, the entire source. However, source is not saved.' } )
+   aadd( ::aMethods, { 'removeTrailingSpaces()', ;
+                       'removeTrailingSpaces()', ;
+                       'Removes trailing spaces per line, the entire source. However, source is not saved.' } )
+   aadd( ::aMethods, { 'toggleLineNumbersDisplay()', ;
+                       'toggleLineNumbersDisplay()', ;
+                       'Toggles line numbers display inside editing instances. This action has global scope and is saved for next run.' } )
+   aadd( ::aMethods, { 'toggleSelectionMode()', ;
+                       'toggleSelectionMode()', ;
+                       'Toggles selection mode from "stream" to "column" or vice-versa.' } )
+   aadd( ::aMethods, { 'toggleStatusBar()', ;
+                       'toggleStatusBar()', ;
+                       'Toggles display of statusbar. The action is not saved for next run.' } )
 
    RETURN Self
 
@@ -1239,7 +1344,7 @@ METHOD IdeShortcuts:mergeMacros( a_ )
 
    FOR EACH c_ IN a_
       IF ( n := ascan( ::aDftSCuts, {|e_| e_[ 2 ] == c_[ 2 ] .AND. e_[ 3 ] == c_[ 3 ] .AND. ;
-                                            e_[ 4 ] == c_[ 4 ] .AND. e_[ 5 ] == c_[ 5 ] } ) ) == 0
+                                          e_[ 4 ] == c_[ 4 ] .AND. e_[ 5 ] == c_[ 5 ] } ) ) == 0
          aadd( ::aDftSCuts, c_ )
       ELSE
          ::aDftSCuts[ n ] := c_
@@ -1249,5 +1354,47 @@ METHOD IdeShortcuts:mergeMacros( a_ )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-
-
+   #if 0
+   CASE "Environments"
+      ::oEV:fetchNew()
+      EXIT
+   CASE "Animate"
+      ::nAnimantionMode := iif( ::nAnimantionMode == HBIDE_ANIMATION_NONE, HBIDE_ANIMATION_GRADIENT, HBIDE_ANIMATION_NONE )
+      ::oDK:animateComponents( ::nAnimantionMode )
+      EXIT
+   CASE "Help"
+      ::oHelpDock:show()
+      EXIT
+   CASE "Goto"
+      ::oEM:goTo()
+      EXIT
+   CASE "FormatBraces"
+      ::oEM:formatBraces()
+      EXIT
+   CASE "SaveExit"
+      ::oSM:saveAndExit()
+      EXIT
+   CASE "Revert"
+      ::oSM:RevertSource()
+      EXIT
+   CASE "CloseAll"
+      ::oSM:closeAllSources()
+      EXIT
+   CASE "CloseOther"
+      ::oSM:closeAllOthers()
+      EXIT
+   CASE "NewProject"
+      ::oPM:loadProperties( , .t., .t., .t. )
+      EXIT
+   CASE "Properties"
+      ::oPM:getProperties()
+      EXIT
+   CASE "SelectProject"
+      ::oPM:selectCurrentProject()
+      EXIT
+   CASE "CloseProject"
+      ::oPM:closeProject()
+      EXIT
+   ENDSWITCH
+   #endif
+/*----------------------------------------------------------------------*/

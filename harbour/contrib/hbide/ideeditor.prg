@@ -87,6 +87,7 @@
 #define timerTimeout                              23
 
 #define qcompleter_activated                      101
+#define qTab_contextMenu                          111
 
 #define EDT_LINNO_WIDTH                           50
 
@@ -830,29 +831,6 @@ METHOD IdeEditsManager:RemoveTrailingSpaces()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEditsManager:zoom( nKey )
-   #if 0
-   LOCAL nPointSize, qFont, oEdit, oEditor
-
-   IF ! empty( oEditor := ::getEditorCurrent() )
-      oEdit := oEditor:oEdit
-
-      qFont := QFont():configure( oEdit:qEdit:font() )
-      qFont:setFamily( "Courier New" )
-      qFont:setFixedPitch( .t. )
-      nPointSize := qFont:pointSize()
-      nPointSize += iif( nKey == 1, 1, -1 )
-
-      IF nPointSize > 4 .AND. nPointSize < 37
-         qFont:setPointSize( nPointSize )
-
-         oEdit:qEdit:setFont( qFont )
-
-         FOR EACH oEdit IN oEditor:aEdits
-            oEdit:qEdit:setFont( qFont )
-         NEXT
-      ENDIF
-   ENDIF
-   #endif
    LOCAL oEdit
 
    IF !empty( oEdit := ::getEditObjectCurrent() )
@@ -1214,7 +1192,7 @@ METHOD IdeEditor:setDocumentProperties()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEditor:execEvent( nMode, p )
-   LOCAL cFileTemp
+   LOCAL cFileTemp, aPops := {}
 
    p := p
 
@@ -1225,6 +1203,12 @@ METHOD IdeEditor:execEvent( nMode, p )
          hb_memowrit( cFileTemp, ::qEdit:toPlainText() )
       ENDIF
       EXIT
+
+   CASE qTab_contextMenu
+HB_TRACE( HB_TR_ALWAYS, "IdeEditor:execEvent( nMode, p )" )
+      aadd( aPops, { "Close", {|| MsgBox( "closing" ) } } )
+      hbide_ExecPopup( aPops, p, ::oTab:oWidget )
+
    ENDSWITCH
 
    RETURN Self
@@ -1313,7 +1297,8 @@ METHOD IdeEditor:buildTabPage( cSource )
 
    ::qTabWidget:setCurrentIndex( ::qTabWidget:indexOf( ::oTab:oWidget ) )
    ::qTabWidget:setTabTooltip( ::qTabWidget:indexOf( ::oTab:oWidget ), cSource )
-
+   //::connect( ::oTab:oWidget, "customContextMenuRequested(QPoint)", {|p| ::execEvent( qTab_contextMenu, p ) } )
+   //::oTab:hbContextMenu := {|| ::execEvent( qTab_contextMenu, p ) }
    ::oTab:tabActivate := {|mp1,mp2,oXbp| ::activateTab( mp1, mp2, oXbp ) }
 
    RETURN Self
@@ -2845,8 +2830,9 @@ FUNCTION hbide_isHarbourKeyword( cWord )
                     'hb_symbol_unused' => NIL,;
                     'error' => NIL,;
                     'handler' => NIL,;
-                    '.or.' => NIL,;
-                    '.and.' => NIL }
+                    'nil' => NIL,;
+                    'or' => NIL,;
+                    'and' => NIL }
 
    RETURN Lower( cWord ) $ s_b_
 

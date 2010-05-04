@@ -194,7 +194,7 @@ METHOD IdeThemes:create( oIde, cIniFile )
           'if','else','elseif','endif','end', 'endswitch', ;
           'docase','case','endcase','otherwise', 'switch', ;
           'do','while','exit',;
-          'for','each','next','step','to',;
+          'for','each','next','step','to','nil','and','or','self',;
           'class','endclass','method','data','var','destructor','inline','assign','access',;
           'inherit','init','create','virtual','message',;
           'begin','sequence','try','catch','always','recover','hb_symbol_unused', ;

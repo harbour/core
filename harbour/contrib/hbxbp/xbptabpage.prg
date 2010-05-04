@@ -136,6 +136,7 @@ METHOD XbpTabPage:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    oPar := ::oParent:oTabWidget
 
    ::oWidget := QWidget():new()
+   ::oWidget:setContextMenuPolicy( Qt_CustomContextMenu )
 
    oPar:oWidget:addTab( ::pWidget, ::caption )
 
@@ -189,7 +190,7 @@ METHOD XbpTabPage:execSlot( cSlot, p )
    LOCAL iIndex := p
 
    HB_SYMBOL_UNUSED( cSlot )
-   
+
    IF iIndex >= 0  .and. len( ::oParent:aTabs ) > 0
       IF hb_isBlock( ::oParent:aTabs[ iIndex+1 ]:sl_tabActivate )
          eval( ::oParent:aTabs[ iIndex+1 ]:sl_tabActivate, NIL, NIL, ::oParent:aTabs[ iIndex+1 ] )
@@ -215,7 +216,7 @@ METHOD XbpTabPage:tabActivate( ... )
       ::sl_tabActivate := a_[ 1 ]
    ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_tabActivate )
       eval( ::sl_tabActivate, NIL, NIL, Self )
-   ENDIF 
+   ENDIF
    RETURN self
 
 /*----------------------------------------------------------------------*/
@@ -226,7 +227,7 @@ METHOD XbpTabPage:closeRequested( ... )
       ::sl_closeRequested := a_[ 1 ]
    ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_closeRequested )
       eval( ::sl_closeRequested, NIL, NIL, Self )
-   ENDIF 
+   ENDIF
    RETURN self
 
 /*----------------------------------------------------------------------*/
@@ -254,6 +255,7 @@ METHOD XbpTabPage:maximize()
 CLASS XbpTabWidget  INHERIT  XbpWindow
 
    DATA     aTabs                 INIT {}
+   DATA     qCornerWidget
 
    METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
@@ -279,9 +281,11 @@ METHOD XbpTabWidget:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::oWidget := QTabWidget():new( ::pParent )
+   ::oWidget:setContextMenuPolicy( Qt_CustomContextMenu )
 
-   ::Connect( ::pWidget, "currentChanged(int)"    , {|i| ::execSlot( "currentChanged(int)"   , i ) } )
-   ::Connect( ::pWidget, "tabCloseRequested(int)" , {|i| ::execSlot( "tabCloseRequested(int)", i ) } )
+   ::Connect( ::oWidget, "currentChanged(int)"               , {|i| ::execSlot( "currentChanged(int)"   , i ) } )
+   ::Connect( ::oWidget, "tabCloseRequested(int)"            , {|i| ::execSlot( "tabCloseRequested(int)", i ) } )
+   ::connect( ::oWidget, "customContextMenuRequested(QPoint)", {|p| ::execSlot( "customContextMenuRequested(QPoint)", p ) } )
 
    ::setPosAndSize()
    IF ::visible
@@ -310,8 +314,14 @@ METHOD XbpTabWidget:destroy()
 /*----------------------------------------------------------------------*/
 
 METHOD XbpTabWidget:execSlot( cSlot, p )
-   LOCAL qTab, nIndex, oTab
-   LOCAL iIndex := p
+   LOCAL qTab, nIndex, oTab, qPoint
+   LOCAL iIndex
+
+   IF hb_isPointer( p )
+      qPoint := QPoint():from( ::oWidget:mapToGlobal( p ) )
+   ELSE
+      iIndex := p
+   ENDIF
 
    IF !empty( ::aChildren ) .and. iIndex >= 0 .and. iIndex < len( ::aChildren )
       qTab := ::oWidget:widget( iIndex )
@@ -320,7 +330,11 @@ METHOD XbpTabWidget:execSlot( cSlot, p )
          oTab := ::aChildren[ nIndex ]
 
          DO CASE
-         CASE cSlot == "currentChanged(int)" 
+         CASE cSlot == "customContextMenuRequested(QPoint)"
+            qPoint := QPoint():from( ::oWidget:mapToGlobal( p ) )
+            oTab:hbContextMenu( { qPoint:x(), qPoint:y() } )
+
+         CASE cSlot == "currentChanged(int)"
             oTab:tabActivate()
 
          CASE cSlot == "tabCloseRequested(int)"
@@ -330,6 +344,6 @@ METHOD XbpTabWidget:execSlot( cSlot, p )
       ENDIF
    ENDIF
 
-   RETURN nil
+   RETURN qPoint
 
 /*----------------------------------------------------------------------*/
