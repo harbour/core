@@ -41,19 +41,6 @@ ifeq ($(HB_BUILD_DEBUG),yes)
    CFLAGS += -g
 endif
 
-ifeq ($(HB_COMPILER),gccomf)
-   RC := $(HB_CCPATH)$(HB_CCPREFIX)windres
-   RC_OUT := -o$(subst x,x, )
-   RCFLAGS := -O omf
-else
-   # NOTE: This fails with error below in certain gcc versions, so I commented it for now:
-   #       'windres: can't get BFD_RELOC_RVA relocation type: No such file or directory'
-
-   #RC := $(HB_CCPATH)$(HB_CCPREFIX)windres
-   #RC_OUT := -o$(subst x,x, )
-   #RCFLAGS := -O coff
-endif
-
 ifneq ($(filter $(HB_BUILD_STRIP),all lib),)
    ifeq ($(HB_COMPILER),gccomf)
       ARSTRIP = & ${HB_CCPATH}${HB_CCPREFIX}stripomf -S $(LIB_DIR)/$@

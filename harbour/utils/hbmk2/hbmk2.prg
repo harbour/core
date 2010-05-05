@@ -2868,6 +2868,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourm",;
                                                    "harbour" ) }
 
+#if 0 /* Disabled because windres seems to be broken in all gcc builds as of 2010-05-05. [vszakats] */
          cBin_Res := hbmk[ _HBMK_cCCPREFIX ] + "windres" + cCCEXT
          cResExt := ".reso"
          IF hbmk[ _HBMK_cCOMP ] == "gccomf"
@@ -2875,13 +2876,16 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          ELSE
             cOpt_Res := "{FR} {IR} -o {OS}"
          ENDIF
+#endif
 
          IF ! Empty( hbmk[ _HBMK_cCCPATH ] )
             cBin_Lib     := FN_Escape( hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_Lib, nCmd_Esc )
             cBin_CompCPP := FN_Escape( hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_CompCPP, nCmd_Esc )
             cBin_CompC   := FN_Escape( hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_CompC, nCmd_Esc )
             cBin_Link    := FN_Escape( hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_Link, nCmd_Esc )
+#if 0
             cBin_Res     := FN_Escape( hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_Res, nCmd_Esc )
+#endif
          ENDIF
 
       CASE hbmk[ _HBMK_cPLAT ] == "dos" .AND. hbmk[ _HBMK_cCOMP ] == "djgpp"
