@@ -149,6 +149,7 @@ CLASS IdeEditsManager INHERIT IdeObject
    METHOD convertDQuotes()
    METHOD toggleSelectionMode()
    METHOD toggleLineNumbers()
+   METHOD toggleLineSelectionMode()
 
    METHOD getText()
    METHOD getWord( lSelect )
@@ -541,6 +542,15 @@ METHOD IdeEditsManager:selectAll()
    LOCAL oEdit
    IF !empty( oEdit := ::getEditObjectCurrent() )
       oEdit:selectAll()
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:toggleLineSelectionMode()
+   LOCAL oEdit
+   IF !empty( oEdit := ::getEditObjectCurrent() )
+      oEdit:toggleLineSelectionMode()
    ENDIF
    RETURN Self
 
@@ -1415,6 +1425,7 @@ CLASS IdeEdit INHERIT IdeObject
    DATA   currentPointSize                        INIT 10
    DATA   qFont
    DATA   aBlockCopyContents                      INIT {}
+   DATA   isLineSelectionMode                     INIT .f.
 
    METHOD new( oEditor, nMode )
    METHOD create( oEditor, nMode )
@@ -1455,6 +1466,7 @@ CLASS IdeEdit INHERIT IdeObject
    METHOD goto( nLine )
    METHOD gotoFunction()
    METHOD toggleLineNumbers()
+   METHOD toggleLineSelectionMode()
 
    METHOD getWord( lSelect )
    METHOD getLine( nLine, lSelect )
@@ -1483,7 +1495,7 @@ CLASS IdeEdit INHERIT IdeObject
    METHOD setFont()
    METHOD markCurrentFunction()
    METHOD copyBlockContents( aCord )
-   METHOD pasteBlockContents()
+   METHOD pasteBlockContents( nMode )
    METHOD insertBlockContents( aCord )
    METHOD deleteBlockContents( aCord )
    METHOD zoom( nKey )
@@ -1935,7 +1947,7 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p, p1 )
          ::copyBlockContents( p1 )
 
       ELSEIF p == 21012
-         ::pasteBlockContents()
+         ::pasteBlockContents( p1 )
 
       ELSEIF p == 21013
          ::insertBlockContents( p1 )
@@ -1956,34 +1968,44 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p, p1 )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:copyBlockContents( aCord )
-   LOCAL nT, nL, nB, nR, nW, i, cLine, cClip := ""
+   LOCAL nT, nL, nB, nR, nW, i, cLine, cClip := "", nMode
 
    nT := iif( aCord[ 1 ] > aCord[ 3 ], aCord[ 3 ], aCord[ 1 ] )
    nB := iif( aCord[ 1 ] > aCord[ 3 ], aCord[ 1 ], aCord[ 3 ] )
    nL := iif( aCord[ 2 ] > aCord[ 4 ], aCord[ 4 ], aCord[ 2 ] )
    nR := iif( aCord[ 2 ] > aCord[ 4 ], aCord[ 2 ], aCord[ 4 ] )
+   nMode := aCord[ 5 ]
 
    nW := nR - nL
 
-   ::aBlockCopyContents   := {}
    FOR i := nT TO nB
       cLine := ::getLine( i + 1 )
-      cLine := pad( substr( cLine, nL + 1, nW ), nW )
-      aadd( ::aBlockCopyContents, cLine )
+      IF     nMode == 2  /* Column */
+         cLine := pad( substr( cLine, nL + 1, nW ), nW )
+      ELSEIF nMode == 3  /* Line   */
+         // Nothing to do, complete line is already pulled
+      ELSEIF nMode == 1  /* Stream */
+         IF i == 1
+            cLine := substr( cLine, nL + 1 )
+         ELSEIF i == nB
+            cLine := substr( cLine, 1, nR + 1 )
+         ENDIF
+      ENDIF
       cClip += cLine + hb_osNewLine()
    NEXT
-
+HB_TRACE( HB_TR_ALWAYS, cClip )
    QClipboard():new():setText( cClip )
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeEdit:pasteBlockContents()
+METHOD IdeEdit:pasteBlockContents( nMode )
    LOCAL i, nRow, nCol, qCursor, nMaxCol
 
+   HB_SYMBOL_UNUSED( nMode )
+
    ::aBlockCopyContents := hbide_memoToArray( QClipboard():new():text() )
-hb_trace( HB_TR_ALWAYS, "MMMMMMMM", LEN( ::aBlockCopyContents ) )
    IF empty( ::aBlockCopyContents )
       RETURN Self
    ENDIF
@@ -2165,6 +2187,13 @@ METHOD IdeEdit:toggleLineNumbers()
 
 METHOD IdeEdit:toggleSelectionMode()
    ::qEdit:hbHighlightSelectedColumns( ::isColumnSelectionEnabled )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:toggleLineSelectionMode()
+   ::isLineSelectionMode := ! ::isLineSelectionMode
+   ::qEdit:hbSetSelectionMode( 3, ::isLineSelectionMode )
    RETURN Self
 
 /*----------------------------------------------------------------------*/

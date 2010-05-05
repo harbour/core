@@ -108,7 +108,7 @@ CREATE CLASS HBQPlainTextEdit INHERIT HbQtObjectHandler, QPlainTextEdit
    METHOD  hbCut()
    METHOD  hbCopy()
    METHOD  hbPaste()
-   METHOD  hbSetSelectionMode( nMode )
+   METHOD  hbSetSelectionMode( nMode, lOn )
 
    ENDCLASS
 
@@ -286,6 +286,6 @@ METHOD HBQPlainTextEdit:hbPaste()
    RETURN Qt_HBQPlainTextEdit_hbPaste( ::pPtr )
 
 
-METHOD HBQPlainTextEdit:hbSetSelectionMode( nMode )
-   RETURN Qt_HBQPlainTextEdit_hbSetSelectionMode( ::pPtr, nMode )
+METHOD HBQPlainTextEdit:hbSetSelectionMode( nMode, lOn )
+   RETURN Qt_HBQPlainTextEdit_hbSetSelectionMode( ::pPtr, nMode, lOn )
 

@@ -441,15 +441,15 @@ METHOD IdeDocks:buildViewWidget( cObjectName )
 
    oFrame:oTabWidget := XbpTabWidget():new():create( oFrame, , {0,0}, {200,200}, , .t. )
 
-   IF empty( qTBtnClose )
+   IF !( cObjectName == "Stats" )
       qTBtnClose := QToolButton():new()
       qTBtnClose:setTooltip( "Close Tab" )
       qTBtnClose:setAutoRaise( .t. )
       qTBtnClose:setIcon( hbide_image( "closetab" ) )
       ::connect( qTBtnClose, "clicked()", {|| ::oSM:closeSource() } )
+      oFrame:oTabWidget:qCornerWidget := qTBtnClose
+      oFrame:oTabWidget:oWidget:setCornerWidget( qTBtnClose, Qt_TopRightCorner )
    ENDIF
-   oFrame:oTabWidget:qCornerWidget := qTBtnClose
-   oFrame:oTabWidget:oWidget:setCornerWidget( qTBtnClose, Qt_TopRightCorner )
 
    oFrame:oTabWidget:oWidget:setUsesScrollButtons( .f. )
    oFrame:oTabWidget:oWidget:setMovable( .t. )

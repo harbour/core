@@ -198,6 +198,7 @@ CLASS IdeShortcuts INHERIT IdeObject
    METHOD toggleLineNumbersDisplay()
    METHOD toggleSelectionMode()
    METHOD toggleStatusBar()
+   METHOD toggleLineSelectionMode()
 
    ENDCLASS
 
@@ -1112,6 +1113,10 @@ METHOD IdeShortcuts:toggleStatusBar()
    ::lStatusBarVisible := ! ::lStatusBarVisible
    RETURN Self
 /*----------------------------------------------------------------------*/
+METHOD IdeShortcuts:toggleLineSelectionMode()
+   RETURN ::oEM:toggleLineSelectionMode()
+/*----------------------------------------------------------------------*/
+
 
 METHOD IdeShortcuts:loadMethods()
 
@@ -1281,6 +1286,9 @@ METHOD IdeShortcuts:loadMethods()
    aadd( ::aMethods, { 'toggleStatusBar()', ;
                        'toggleStatusBar()', ;
                        'Toggles display of statusbar. The action is not saved for next run.' } )
+   aadd( ::aMethods, { 'toggleLineSelectionMode()', ;
+                       'toggleLineSelectionMode()', ;
+                       'Toggles line selection mode.' } )
 
    RETURN Self
 
@@ -1334,6 +1342,8 @@ METHOD IdeShortcuts:loadDftSCuts()
 
       aadd( b_, { "Insert Text"     , "F7"     , "NO", "YES", "NO" , "", '::insert( "" )'        , "insert-external-file", "", "" } )
       aadd( b_, { "Insert Separator", "F7"     , "NO", "NO" , "NO" , "", '::separator( "" )'     , "insert-separator", "", "" } )
+
+      aadd( b_, { "Toggle Line Selection Mode", "F11", "NO", "NO" , "NO" , "", '::toggleLineSelectionMode()', ""         , "", "" } )
 
       ::aDftSCuts := b_
    ENDIF

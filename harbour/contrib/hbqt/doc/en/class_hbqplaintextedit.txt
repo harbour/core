@@ -69,7 +69,7 @@
         :hbCut()                                            -> NIL
         :hbCopy()                                           -> NIL
         :hbPaste()                                          -> NIL
-        :hbSetSelectionMode( nMode )                        -> NIL
+        :hbSetSelectionMode( nMode, lOn )                   -> NIL
 
     $DESCRIPTION$
 

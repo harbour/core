@@ -136,6 +136,8 @@ private:
    int            columnEnds;
    int            selectionState;
    int            selectionMode;
+   int            selectionDisplay;
+   bool           isLineSelectionON;
    bool           isColumnSelectionEnabled;
    bool           isTipActive;
    QCompleter   * c;
@@ -183,7 +185,7 @@ public slots:
    void           hbCut();
    void           hbCopy();
    void           hbPaste();
-   void           hbSetSelectionMode( int mode );
+   void           hbSetSelectionMode( int mode, bool on );
 
 private slots:
    void           hbSlotCursorPositionChanged();
