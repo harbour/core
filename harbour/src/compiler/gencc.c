@@ -1411,25 +1411,25 @@ static HB_GENC_FUNC( hb_p_pushsym )
             return 4;
          case HB_P_PUSHALIASEDFIELDNEAR:
             fprintf( cargo->yyc,
-                     "\thb_xvmPushAliasedFieldExt( symbols + %u, symbols + %u );\n",
+                     "\tif( hb_xvmPushAliasedFieldExt( symbols + %u, symbols + %u ) ) break;\n",
                      HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] ),
                      pFunc->pCode[ lPCodePos + 4 ] );
             return 5;
          case HB_P_PUSHALIASEDFIELD:
             fprintf( cargo->yyc,
-                     "\thb_xvmPushAliasedFieldExt( symbols + %u, symbols + %u );\n",
+                     "\tif( hb_xvmPushAliasedFieldExt( symbols + %u, symbols + %u ) ) break;\n",
                      HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] ),
                      HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 4 ] ) );
             return 6;
          case HB_P_POPALIASEDFIELDNEAR:
             fprintf( cargo->yyc,
-                     "\thb_xvmPopAliasedFieldExt( symbols + %u, symbols + %u );\n",
+                     "\tif( hb_xvmPopAliasedFieldExt( symbols + %u, symbols + %u ) ) break;\n",
                      HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] ),
                      pFunc->pCode[ lPCodePos + 4 ] );
             return 5;
          case HB_P_POPALIASEDFIELD:
             fprintf( cargo->yyc,
-                     "\thb_xvmPopAliasedFieldExt( symbols + %u, symbols + %u );\n",
+                     "\tif( hb_xvmPopAliasedFieldExt( symbols + %u, symbols + %u ) ) break;\n",
                      HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] ),
                      HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 4 ] ) );
             return 6;
@@ -1455,25 +1455,25 @@ static HB_GENC_FUNC( hb_p_pushsymnear )
             return 3;
          case HB_P_PUSHALIASEDFIELDNEAR:
             fprintf( cargo->yyc,
-                     "\thb_xvmPushAliasedFieldExt( symbols + %u, symbols + %u );\n",
+                     "\tif( hb_xvmPushAliasedFieldExt( symbols + %u, symbols + %u ) ) break;\n",
                      pFunc->pCode[ lPCodePos + 1 ],
                      pFunc->pCode[ lPCodePos + 3 ] );
             return 4;
          case HB_P_PUSHALIASEDFIELD:
             fprintf( cargo->yyc,
-                     "\thb_xvmPushAliasedFieldExt( symbols + %u, symbols + %u );\n",
+                     "\tif( hb_xvmPushAliasedFieldExt( symbols + %u, symbols + %u ) ) break;\n",
                      pFunc->pCode[ lPCodePos + 1 ],
                      HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 3 ] ) );
             return 5;
          case HB_P_POPALIASEDFIELDNEAR:
             fprintf( cargo->yyc,
-                     "\thb_xvmPopAliasedFieldExt( symbols + %u, symbols + %u );\n",
+                     "\tif( hb_xvmPopAliasedFieldExt( symbols + %u, symbols + %u ) ) break;\n",
                      pFunc->pCode[ lPCodePos + 1 ],
                      pFunc->pCode[ lPCodePos + 3 ] );
             return 4;
          case HB_P_POPALIASEDFIELD:
             fprintf( cargo->yyc,
-                     "\thb_xvmPopAliasedFieldExt( symbols + %u, symbols + %u );\n",
+                     "\tif( hb_xvmPopAliasedFieldExt( symbols + %u, symbols + %u ) ) break;\n",
                      pFunc->pCode[ lPCodePos + 1 ],
                      HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 3 ] ) );
             return 5;
