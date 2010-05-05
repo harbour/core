@@ -341,14 +341,14 @@ HB_FUNC( MYSQL_FETCH_ROW ) /* MYSQL_ROW * mysql_fetch_row( MYSQL_RES * ) */
 
    if( mresult )
    {
-      int num_fields = mysql_num_fields( mresult );
+      unsigned int num_fields = mysql_num_fields( mresult );
       PHB_ITEM aRow = hb_itemArrayNew( num_fields );
       MYSQL_ROW mrow = mysql_fetch_row( mresult );
 
       if( mrow )
       {
          unsigned long * lengths = mysql_fetch_lengths( mresult );
-         int i;
+         unsigned int i;
          for( i = 0; i < num_fields; ++i )
             hb_arraySetCL( aRow, i + 1, mrow[ i ], lengths[ i ] );
       }
@@ -550,23 +550,39 @@ HB_FUNC( MYSQL_INSERT_ID )
       hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+HB_FUNC( MYSQL_REAL_ESCAPE_STRING ) /* unsigned long STDCALL mysql_real_escape_string( MYSQL * mysql, char * to, const char * from, unsigned long length ); */
+{
+   MYSQL * mysql = hb_MYSQL_par( 1 );
+
+   if( mysql )
+   {
+      const char * from = hb_parcx( 1 );
+      unsigned long nSize = hb_parclen( 1 );
+      char * buffer = ( char * ) hb_xgrab( nSize * 2 + 1 );
+      nSize = mysql_real_escape_string( mysql, buffer, from, nSize );
+      hb_retclen_buffer( ( char * ) buffer, nSize );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 HB_FUNC( MYSQL_ESCAPE_STRING )
 {
    const char * from = hb_parcx( 1 );
-   int iSize = hb_parclen( 1 );
-   char * buffer = ( char * ) hb_xgrab( iSize * 2 + 1 );
-   iSize = mysql_escape_string( buffer, from, iSize );
-   hb_retclen_buffer( ( char * ) buffer, iSize );
+   unsigned long nSize = hb_parclen( 1 );
+   char * buffer = ( char * ) hb_xgrab( nSize * 2 + 1 );
+   nSize = mysql_escape_string( buffer, from, nSize );
+   hb_retclen_buffer( ( char * ) buffer, nSize );
 }
 
-static char * filetoBuff( const char * fname, int * size )
+static char * filetoBuff( const char * fname, unsigned long * size )
 {
    char * buffer = NULL;
    HB_FHANDLE handle = hb_fsOpen( fname, FO_READWRITE );
 
    if( handle != FS_ERROR )
    {
-      *size = ( int ) hb_fsSeek( handle, 0, FS_END );
+      *size = ( unsigned long ) hb_fsSeekLarge( handle, 0, FS_END );
       hb_fsSeek( handle, 0, FS_SET );
       buffer = ( char * ) hb_xgrab( *size + 1 );
       *size = hb_fsReadLarge( handle, buffer, *size );
@@ -581,14 +597,14 @@ static char * filetoBuff( const char * fname, int * size )
 
 HB_FUNC( MYSQL_ESCAPE_STRING_FROM_FILE )
 {
-   int iSize;
-   char * from = filetoBuff( hb_parc( 1 ), &iSize );
+   unsigned long nSize;
+   char * from = filetoBuff( hb_parc( 1 ), &nSize );
 
    if( from )
    {
-      char * buffer = ( char * ) hb_xgrab( iSize * 2 + 1 );
-      iSize = mysql_escape_string( buffer, from, iSize );
-      hb_retclen_buffer( buffer, iSize );
+      char * buffer = ( char * ) hb_xgrab( nSize * 2 + 1 );
+      nSize = mysql_escape_string( buffer, from, nSize );
+      hb_retclen_buffer( buffer, nSize );
       hb_xfree( from );
    }
 }

@@ -624,7 +624,9 @@ STATIC PROCEDURE DispLine( cLine, nRow, nCol, lSelect, lHiLite, nNumCols )
                 iif( lHiLite, CLR_ENHANCED, CLR_STANDARD ), CLR_UNSELECTED ) )
 
    hb_dispOutAt( nRow, nCol, iif( ISCHARACTER( cLine ), PadR( cLine, nNumCols ), Space( nNumCols ) ) )
-   SetPos( nRow, nCol )
+   IF lHiLite
+      SetPos( nRow, nCol )
+   ENDIF
 
    ColorSelect( CLR_STANDARD )
 

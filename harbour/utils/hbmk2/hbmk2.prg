@@ -998,6 +998,10 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       aLIB_BASE_3_MT    := { "macromt", "pp", "common" }
       cLIB_BASE_PCRE    := "pcrepos"
       cLIB_BASE_ZLIB    := "zlib"
+
+      /* NOTE: 'dbfnsx' was added to xhb on 2009-01-08. We chose to prioritize
+               on newer xhb versions, so for older versions, a dummy lib should
+               be created. [vszakats] */
    ENDIF
 
    nCCompVer := Val( GetEnv( "HB_COMPILER_VER" ) ) /* Format: <09><00>[.<00>] = <major><minor>[.<revision>] */
