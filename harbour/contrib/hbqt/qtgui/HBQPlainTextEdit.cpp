@@ -734,6 +734,20 @@ HB_FUNC( QT_HBQPLAINTEXTEDIT_HBPASTE )
    }
 }
 
+/*
+ * void           hbSetSelectionMode( int mode )
+ */
+HB_FUNC( QT_HBQPLAINTEXTEDIT_HBSETSELECTIONMODE )
+{
+   HBQPlainTextEdit * p = hbqt_par_HBQPlainTextEdit( 1 );
+   if( p )
+      ( p )->hbSetSelectionMode( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQPLAINTEXTEDIT_HBSETSELECTIONMODE FP=( p )->hbSetSelectionMode( hb_parni( 2 ) ); p is NULL" ) );
+   }
+}
+
 
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */

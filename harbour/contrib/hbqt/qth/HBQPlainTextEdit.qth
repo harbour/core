@@ -139,6 +139,8 @@ HB_FUNC( QT_HBQPLAINTEXTEDIT )
    void           hbCut()
    void           hbCopy()
    void           hbPaste()
+   void           hbSetSelectionMode( int mode )
+
 </SLOTS>
 
 <SIGNALS>

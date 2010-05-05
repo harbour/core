@@ -92,6 +92,7 @@ HBQPlainTextEdit::HBQPlainTextEdit( QWidget * parent ) : QPlainTextEdit( parent 
    columnBegins             = -1;
    columnEnds               = -1;
    selectionState           = 0;
+   selectionMode            = 0;
    isColumnSelectionEnabled = false;
    horzRuler                = new HorzRuler( this );
 
@@ -221,6 +222,131 @@ bool HBQPlainTextEdit::isCursorInSelection()
 
 /*----------------------------------------------------------------------*/
 
+void HBQPlainTextEdit::hbClearColumnSelection()
+{
+   setCursorWidth( 1 );
+
+   rowBegins     = -1;
+   rowEnds       = -1;
+   columnBegins  = -1;
+   columnEnds    = -1;
+
+   //update();
+}
+
+/*----------------------------------------------------------------------*/
+
+void HBQPlainTextEdit::hbHighlightSelectedColumns( bool yes )
+{
+   if( yes )
+   {
+      selectionMode = 2;
+      isColumnSelectionEnabled = true;
+      QTextCursor c = textCursor();
+
+      if( columnBegins == -1 && c.hasSelection() )
+      {
+         QTextBlock b = c.document()->findBlock( c.selectionStart() );
+         columnBegins = c.selectionStart() - b.position();
+         columnEnds   = c.columnNumber();
+         rowBegins    = b.blockNumber();
+         b            = c.document()->findBlock( c.selectionEnd() );
+         rowEnds      = b.blockNumber();
+         c.clearSelection();
+         setTextCursor( c );
+      }
+   }
+   else
+   {
+      selectionMode = 1;
+
+      if( columnBegins >= 0 )
+      {
+         int cb = columnBegins <= columnEnds ? columnBegins : columnEnds;
+         int ce = columnBegins <= columnEnds ? columnEnds   : columnBegins;
+         int rb = rowBegins    <= rowEnds    ? rowBegins    : rowEnds;
+         int re = rowBegins    <= rowEnds    ? rowEnds      : rowBegins;
+
+         QTextCursor c = textCursor();
+
+         c.movePosition( QTextCursor::Start );
+         c.movePosition( QTextCursor::Down       , QTextCursor::MoveAnchor, rb );
+         c.movePosition( QTextCursor::Right      , QTextCursor::MoveAnchor, cb );
+         c.movePosition( QTextCursor::Down       , QTextCursor::KeepAnchor, re - rb );
+         c.movePosition( QTextCursor::StartOfLine, QTextCursor::KeepAnchor );
+         c.movePosition( QTextCursor::Right      , QTextCursor::KeepAnchor, ce );
+         setTextCursor( c );
+      }
+      hbClearColumnSelection();
+      isColumnSelectionEnabled = false;
+   }
+   update();
+}
+
+/*----------------------------------------------------------------------*/
+
+void HBQPlainTextEdit::hbSetSelectionMode( int mode )
+{
+   switch( mode )
+   {
+      case 1:  /* Stream Selection */
+      {
+         selectionMode = 1;
+         if( columnBegins >= 0 )
+         {
+            int cb = columnBegins <= columnEnds ? columnBegins : columnEnds;
+            int ce = columnBegins <= columnEnds ? columnEnds   : columnBegins;
+            int rb = rowBegins    <= rowEnds    ? rowBegins    : rowEnds;
+            int re = rowBegins    <= rowEnds    ? rowEnds      : rowBegins;
+
+            QTextCursor c = textCursor();
+
+            c.movePosition( QTextCursor::Start );
+            c.movePosition( QTextCursor::Down       , QTextCursor::MoveAnchor, rb );
+            c.movePosition( QTextCursor::Right      , QTextCursor::MoveAnchor, cb );
+            c.movePosition( QTextCursor::Down       , QTextCursor::KeepAnchor, re - rb );
+            c.movePosition( QTextCursor::StartOfLine, QTextCursor::KeepAnchor );
+            c.movePosition( QTextCursor::Right      , QTextCursor::KeepAnchor, ce );
+            setTextCursor( c );
+         }
+         hbClearColumnSelection();
+         isColumnSelectionEnabled = false;
+         break;
+      }
+      case 2:  /* Columns Selection */
+      {
+         selectionMode = 2;
+         QTextCursor c = textCursor();
+
+         if( columnBegins == -1 && c.hasSelection() )
+         {
+            QTextBlock b = c.document()->findBlock( c.selectionStart() );
+            columnBegins = c.selectionStart() - b.position();
+            columnEnds   = c.columnNumber();
+            rowBegins    = b.blockNumber();
+            b            = c.document()->findBlock( c.selectionEnd() );
+            rowEnds      = b.blockNumber();
+            c.clearSelection();
+            setTextCursor( c );
+         }
+         isColumnSelectionEnabled = true;
+         break;
+      }
+      case 3:  /* Line Selection */
+      {
+         selectionMode = 3;
+         break;
+      }
+      default:
+      {
+         selectionMode = 0;
+      }
+   }
+   update();
+}
+
+/*----------------------------------------------------------------------*/
+
 void HBQPlainTextEdit::hbCut()
 {
    if( isColumnSelectionEnabled )
@@ -312,7 +438,14 @@ void HBQPlainTextEdit::mousePressEvent( QMouseEvent *event )
 
 void HBQPlainTextEdit::mouseReleaseEvent( QMouseEvent *event )
 {
+   setCursorWidth( 1 );
    selectionState = 0;
+   if( selectionMode == 1 )
+   {
+      QTextCursor c( textCursor() );
+      rowEnds    = c.blockNumber();
+      columnEnds = c.columnNumber();
+   }
    QPlainTextEdit::mouseReleaseEvent( event );
 }
 
@@ -321,43 +454,55 @@ void HBQPlainTextEdit::mouseReleaseEvent( QMouseEvent *event )
 void HBQPlainTextEdit::mouseMoveEvent( QMouseEvent *event )
 {
    if( isColumnSelectionEnabled )
+      selectionMode = 2;
+   else
    {
-      if( event->buttons() & Qt::LeftButton )
+      selectionMode = 1;
+      QPlainTextEdit::mouseMoveEvent( event );
+      return;
+   }
+
+   if( event->buttons() & Qt::LeftButton )
+   {
+      if( selectionState == 1 )
       {
-         if( selectionState == 1 )
-         {
-            selectionState = 0;
-            hbClearColumnSelection();
-         }
+         selectionState = 0;
+         hbClearColumnSelection();
+      }
 
-         if( columnBegins == -1 )
-         {
-            QTextCursor c( textCursor() );
-            int col = c.columnNumber();
-            int row = c.blockNumber();
+      QTextCursor c( textCursor() );
+      int row = c.blockNumber();
+      int col = c.columnNumber();
 
-            rowBegins    = row;
-            columnBegins = col;
-            rowEnds      = row;
-            columnEnds   = col;
-         }
-         else
+      if( columnBegins == -1 )
+      {
+         rowBegins    = row;
+         columnBegins = col;
+         rowEnds      = row;
+         columnEnds   = col;
+      }
+      else
+      {
+         if( isColumnSelectionEnabled )
          {
             QTextCursor c( cursorForPosition( QPoint( 1,1 ) ) );
             rowEnds    = c.blockNumber()  + ( event->y() / fontMetrics().height() );
             columnEnds = c.columnNumber() + ( event->x() / fontMetrics().averageCharWidth() );
          }
+         else
+         {
+            rowEnds    = row;
+            columnEnds = col;
+         }
+      }
+
+      if( isColumnSelectionEnabled )
+      {
          update();
          event->accept();
          return;
       }
    }
-   else
-   {
-      selectionState = 0;
-      hbClearColumnSelection();
-   }
-   QPlainTextEdit::mouseMoveEvent( event );
 }
 
 /*----------------------------------------------------------------------*/
@@ -377,6 +522,8 @@ bool HBQPlainTextEdit::hbKeyPressColumnSelection( QKeyEvent * event )
 
    if( isColumnSelectionEnabled )
    {
+      selectionMode = 2;
+
       QTextCursor c( textCursor() );
       int col = c.columnNumber();
       int row = c.blockNumber();
@@ -531,6 +678,8 @@ bool HBQPlainTextEdit::hbKeyPressColumnSelection( QKeyEvent * event )
    }
    else
    {
+      selectionMode = 1;
+
       if( shift &&  isNavableKey( k ) )
       {
          selectionState = 0;
@@ -886,66 +1035,6 @@ void HBQPlainTextEdit::hbPaintColumnSelection( QPaintEvent * event )
          }
       }
    }
-}
-
-/*----------------------------------------------------------------------*/
-
-void HBQPlainTextEdit::hbClearColumnSelection()
-{
-   setCursorWidth( 1 );
-
-   rowBegins     = -1;
-   rowEnds       = -1;
-   columnBegins  = -1;
-   columnEnds    = -1;
-
-   update();
-}
-
-/*----------------------------------------------------------------------*/
-
-void HBQPlainTextEdit::hbHighlightSelectedColumns( bool yes )
-{
-   if( yes )
-   {
-      isColumnSelectionEnabled = true;
-      QTextCursor c = textCursor();
-
-      if( columnBegins == -1 && c.hasSelection() )
-      {
-         QTextBlock b = c.document()->findBlock( c.selectionStart() );
-         columnBegins = c.selectionStart() - b.position();
-         columnEnds   = c.columnNumber();
-         rowBegins    = b.blockNumber();
-         b            = c.document()->findBlock( c.selectionEnd() );
-         rowEnds      = b.blockNumber();
-         c.clearSelection();
-         setTextCursor( c );
-      }
-   }
-   else
-   {
-      if( columnBegins >= 0 )
-      {
-         int cb = columnBegins <= columnEnds ? columnBegins : columnEnds;
-         int ce = columnBegins <= columnEnds ? columnEnds   : columnBegins;
-         int rb = rowBegins    <= rowEnds    ? rowBegins    : rowEnds;
-         int re = rowBegins    <= rowEnds    ? rowEnds      : rowBegins;
-
-         QTextCursor c = textCursor();
-
-         c.movePosition( QTextCursor::Start );
-         c.movePosition( QTextCursor::Down       , QTextCursor::MoveAnchor, rb );
-         c.movePosition( QTextCursor::Right      , QTextCursor::MoveAnchor, cb );
-         c.movePosition( QTextCursor::Down       , QTextCursor::KeepAnchor, re - rb );
-         c.movePosition( QTextCursor::StartOfLine, QTextCursor::KeepAnchor );
-         c.movePosition( QTextCursor::Right      , QTextCursor::KeepAnchor, ce );
-         setTextCursor( c );
-      }
-      hbClearColumnSelection();
-      isColumnSelectionEnabled = false;
-   }
-   update();
 }
 
 /*----------------------------------------------------------------------*/
