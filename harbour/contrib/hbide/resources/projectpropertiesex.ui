@@ -96,7 +96,7 @@ p, li { white-space: pre-wrap; }
          </property>
         </widget>
        </item>
-       <item row="5" column="0">
+       <item row="8" column="0">
         <widget class="QLabel" name="label_5">
          <property name="text">
           <string>Destination Folder:</string>
@@ -106,7 +106,7 @@ p, li { white-space: pre-wrap; }
          </property>
         </widget>
        </item>
-       <item row="5" column="1">
+       <item row="8" column="1">
         <widget class="QLineEdit" name="editDstFolder">
          <property name="toolTip">
           <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
@@ -118,7 +118,7 @@ p, li { white-space: pre-wrap; }
          </property>
         </widget>
        </item>
-       <item row="9" column="0">
+       <item row="12" column="0">
         <widget class="QLabel" name="label_7">
          <property name="text">
           <string>Launch Parameters:</string>
@@ -128,10 +128,10 @@ p, li { white-space: pre-wrap; }
          </property>
         </widget>
        </item>
-       <item row="9" column="1" colspan="2">
+       <item row="12" column="1" colspan="2">
         <widget class="QLineEdit" name="editLaunchParams"/>
        </item>
-       <item row="10" column="0">
+       <item row="13" column="0">
         <widget class="QLabel" name="label_8">
          <property name="text">
           <string>Launch Program:</string>
@@ -141,10 +141,10 @@ p, li { white-space: pre-wrap; }
          </property>
         </widget>
        </item>
-       <item row="10" column="1" colspan="2">
+       <item row="13" column="1" colspan="2">
         <widget class="QLineEdit" name="editLaunchExe"/>
        </item>
-       <item row="7" column="0">
+       <item row="10" column="0">
         <widget class="QLabel" name="label_13">
          <property name="text">
           <string>Backup Location:</string>
@@ -154,7 +154,7 @@ p, li { white-space: pre-wrap; }
          </property>
         </widget>
        </item>
-       <item row="7" column="1">
+       <item row="10" column="1">
         <widget class="QLineEdit" name="editBackup"/>
        </item>
        <item row="3" column="1">
@@ -185,21 +185,21 @@ p, li { white-space: pre-wrap; }
          </property>
         </widget>
        </item>
-       <item row="7" column="2">
+       <item row="10" column="2">
         <widget class="QToolButton" name="buttonBackup">
          <property name="text">
           <string>...</string>
          </property>
         </widget>
        </item>
-       <item row="5" column="2">
+       <item row="8" column="2">
         <widget class="QToolButton" name="buttonChooseDest">
          <property name="text">
           <string>...</string>
          </property>
         </widget>
        </item>
-       <item row="8" column="1">
+       <item row="11" column="1">
         <spacer name="verticalSpacer">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -212,7 +212,7 @@ p, li { white-space: pre-wrap; }
          </property>
         </spacer>
        </item>
-       <item row="11" column="1">
+       <item row="14" column="1">
         <widget class="QLineEdit" name="editWrkFolder">
          <property name="toolTip">
           <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
@@ -223,7 +223,7 @@ p, li { white-space: pre-wrap; }
          </property>
         </widget>
        </item>
-       <item row="11" column="0">
+       <item row="14" column="0">
         <widget class="QLabel" name="labelInitFolder">
          <property name="text">
           <string>Start In:</string>
@@ -233,14 +233,14 @@ p, li { white-space: pre-wrap; }
          </property>
         </widget>
        </item>
-       <item row="11" column="2">
+       <item row="14" column="2">
         <widget class="QToolButton" name="buttonChooseWd">
          <property name="text">
           <string>...</string>
          </property>
         </widget>
        </item>
-       <item row="4" column="1">
+       <item row="7" column="1">
         <spacer name="verticalSpacer_2">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -252,6 +252,27 @@ p, li { white-space: pre-wrap; }
           </size>
          </property>
         </spacer>
+       </item>
+       <item row="4" column="1">
+        <widget class="QCheckBox" name="checkXhb">
+         <property name="text">
+          <string>Xharbour</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="1">
+        <widget class="QCheckBox" name="checkXpp">
+         <property name="text">
+          <string>Xbase++</string>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="1">
+        <widget class="QCheckBox" name="checkClp">
+         <property name="text">
+          <string>Clipper</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>

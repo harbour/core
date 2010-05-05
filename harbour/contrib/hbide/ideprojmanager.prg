@@ -125,9 +125,13 @@ CLASS IdeProject
    DATA   wrkDirectory                            INIT ""
    DATA   destination                             INIT ""
    DATA   outputName                              INIT ""
-   DATA   backup                                  INIT ""
    DATA   launchParams                            INIT ""
    DATA   launchProgram                           INIT ""
+   DATA   backup                                  INIT ""
+   DATA   isXhb                                   INIT .f.
+   DATA   isXpp                                   INIT .f.
+   DATA   isClp                                   INIT .f.
+
    DATA   hbpFlags                                INIT {}
    DATA   sources                                 INIT {}
    DATA   dotHbp                                  INIT ""
@@ -154,13 +158,18 @@ METHOD IdeProject:new( oIDE, aProps )
       b_:= aProps
       a_:= b_[ PRJ_PRP_PROPERTIES, 2 ]
 
-      ::type           := a_[ E_qPrjType ]
-      ::title          := a_[ E_oPrjTtl  ]
-      ::wrkDirectory   := a_[ E_oPrjWrk  ]
-      ::destination    := a_[ E_oPrjDst  ]
-      ::outputName     := a_[ E_oPrjOut  ]
-      ::launchParams   := a_[ E_oPrjLau  ]
-      ::launchProgram  := a_[ E_oPrjLEx  ]
+      ::type           := a_[ PRJ_PRP_TYPE      ]
+      ::title          := a_[ PRJ_PRP_TITLE     ]
+      ::location       := ""                        /* See below */
+      ::wrkDirectory   := a_[ PRJ_PRP_WRKFOLDER ]
+      ::destination    := a_[ PRJ_PRP_DSTFOLDER ]
+      ::outputName     := a_[ PRJ_PRP_OUTPUT    ]
+      ::launchParams   := a_[ PRJ_PRP_LPARAMS   ]
+      ::launchProgram  := a_[ PRJ_PRP_LPROGRAM  ]
+      ::backup         := a_[ PRJ_PRP_BACKUP    ]
+      ::isXhb          := a_[ PRJ_PRP_XHB       ] == "YES"
+      ::isXpp          := a_[ PRJ_PRP_XPP       ] == "YES"
+      ::isClp          := a_[ PRJ_PRP_CLP       ] == "YES"
 
       ::projPath       := oIde:oPM:getProjectPathFromTitle( ::title )
       IF empty( ::projPath )
@@ -306,7 +315,7 @@ METHOD IdeProjManager:getProperties()
    LOCAL cTmp, n
 
    cTmp := ::getCurrentProject()
-   IF ( n := ascan( ::aProjects, {|e_| e_[ 3, PRJ_PRP_PROPERTIES, 2, E_oPrjTtl ] == cTmp } ) ) > 0
+   IF ( n := ascan( ::aProjects, {|e_| e_[ 3, PRJ_PRP_PROPERTIES, 2, PRJ_PRP_TITLE ] == cTmp } ) ) > 0
       ::loadProperties( ::aProjects[ n, 1 ], .f., .t., .t. )
    ENDIF
 
@@ -388,13 +397,17 @@ METHOD IdeProjManager:pullHbpData( cHbp )
    LOCAL aPrp := { ;
             "hbide_type="              , ;
             "hbide_title="             , ;
-            "hbide_location="          , ;  // do not pull out this slot
+            "hbide_location="          , ;
             "hbide_workingfolder="     , ;
             "hbide_destinationfolder=" , ;
             "hbide_output="            , ;
             "hbide_launchparams="      , ;
             "hbide_launchprogram="     , ;
-            "hbide_backupfolder="        }
+            "hbide_backupfolder="      , ;
+            "hbide_xhb="               , ;
+            "hbide_xpp="               , ;
+            "hbide_clp="                 ;
+         }
 
    LOCAL a1_0 := afill( array( PRJ_PRP_PRP_VRBLS ), "" )
    LOCAL a1_1 := {}
@@ -529,6 +542,9 @@ METHOD IdeProjManager:save( lCanClose )
    aadd( txt_, c3rd + "hbide_launchparams="      + hbide_space2amp( ::oUI:q_editLaunchParams:text() ) )
    aadd( txt_, c3rd + "hbide_launchprogram="     + hbide_space2amp( ::oUI:q_editLaunchExe   :text() ) )
    aadd( txt_, c3rd + "hbide_backupfolder="      + hbide_space2amp( ::oUI:q_editBackup      :text() ) )
+   aadd( txt_, c3rd + "hbide_xhb="               + iif( ::oUI:q_checkXhb:isChecked(), "YES", "NO" )   )
+   aadd( txt_, c3rd + "hbide_xpp="               + iif( ::oUI:q_checkXpp:isChecked(), "YES", "NO" )   )
+   aadd( txt_, c3rd + "hbide_clp="               + iif( ::oUI:q_checkClp:isChecked(), "YES", "NO" )   )
    aadd( txt_, " " )
    a_:= hbide_memoToArray( ::oUI:q_editFlags:toPlainText() )   ; aeval( a_, {|e| aadd( txt_, e ) } )
    aadd( txt_, " " )
@@ -654,8 +670,12 @@ METHOD IdeProjManager:fetchProperties()
       ::oUI:q_editPrjLoctn :setText( ::oProject:location     )
       ::oUI:q_editWrkFolder:setText( ::oProject:wrkDirectory )
       ::oUI:q_editDstFolder:setText( ::oProject:destination  )
+      ::oUI:q_editOutName  :setText( ::oProject:outputName   )
       ::oUI:q_editBackup   :setText( ::oProject:backup       )
-      ::oUI:q_editOutName  :setText( ::oProject:outputName )
+
+      ::oUI:q_checkXhb     :setChecked( ::oProject:isXhb )
+      ::oUI:q_checkXpp     :setChecked( ::oProject:isXpp )
+      ::oUI:q_checkClp     :setChecked( ::oProject:isClp )
 
       ::oUI:q_editFlags    :setPlainText( hbide_arrayToMemo( ::aPrjProps[ PRJ_PRP_FLAGS   , 1 ] ) )
       ::oUI:q_editSources  :setPlainText( hbide_arrayToMemo( ::aPrjProps[ PRJ_PRP_SOURCES , 1 ] ) )
@@ -1178,6 +1198,9 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
       ENDIF
    ENDIF
 
+   IF ::oProject:isXhb
+      aadd( aHbp, "-xhb" )
+   ENDIF
    aadd( aHbp, "-q"          )
    aadd( aHbp, "-trace"      )
    aadd( aHbp, "-info"       )
@@ -1228,6 +1251,7 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
 
       ::oIDE:oEV := IdeEnvironments():new():create( ::oIDE, hbide_pathFile( ::aINI[ INI_HBIDE, PathEnv ], "hbide.env" ) )
       ::cBatch   := ::oEV:prepareBatch( ::cWrkEnvironment )
+      aeval( ::oEV:getHbmk2Commands( ::cWrkEnvironment ), {|e| aadd( aHbp, e ) } )
 
       cExeHbMk2  := "hbmk2"
 

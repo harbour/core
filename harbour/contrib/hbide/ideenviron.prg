@@ -94,6 +94,7 @@ CLASS IdeEnvironments INHERIT IdeObject
    METHOD show()
    METHOD execEnv( nMode, p )
    METHOD fetchNew()
+   METHOD getHbmk2Commands( cEnvName )
 
    ENDCLASS
 
@@ -183,6 +184,22 @@ METHOD IdeEnvironments:parse( cEnvFile )
    ENDIF
 
    RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEnvironments:getHbmk2Commands( cEnvName )
+   LOCAL n, s, a_, aCmd := {}
+
+   IF ( n := ascan( ::aEnvrns, {|e_| e_[ 1 ] == cEnvName } ) ) > 0
+      FOR EACH a_ IN ::aEnvrns[ n, 2 ]
+         s := a_[ 1 ]
+         IF s == "hbmk2"
+            aadd( aCmd, a_[ 2 ] )
+         ENDIF
+      NEXT
+   ENDIF
+
+   RETURN aCmd
 
 /*----------------------------------------------------------------------*/
 

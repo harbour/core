@@ -129,8 +129,11 @@
 #define PRJ_PRP_LPARAMS                           7
 #define PRJ_PRP_LPROGRAM                          8
 #define PRJ_PRP_BACKUP                            9
+#define PRJ_PRP_XHB                               10
+#define PRJ_PRP_XPP                               11
+#define PRJ_PRP_CLP                               12
 //
-#define PRJ_PRP_PRP_VRBLS                         9
+#define PRJ_PRP_PRP_VRBLS                         12
 
 /* Project Properties array elements */
 #define E_qPrjType                                1
