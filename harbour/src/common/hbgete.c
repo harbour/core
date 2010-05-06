@@ -197,12 +197,16 @@ HB_BOOL hb_getenv_buffer( const char * szName, char * szBuffer, int nSize )
  */
 HB_BOOL hb_setenv( const char * szName, const char * szValue )
 {
+   if( szName == NULL )
+      return HB_FALSE;
+
 #if defined( HB_OS_WIN )
    {
       LPTSTR lpName = HB_TCHAR_CONVTO( szName );
-      LPTSTR lpValue = HB_TCHAR_CONVTO( szValue );
+      LPTSTR lpValue = szValue ? HB_TCHAR_CONVTO( szValue ) : NULL;
       HB_BOOL bResult = ( SetEnvironmentVariable( lpName, lpValue ) != 0 );
-      HB_TCHAR_FREE( lpValue );
+      if( lpValue )
+         HB_TCHAR_FREE( lpValue );
       HB_TCHAR_FREE( lpName );
       return bResult;
    }
