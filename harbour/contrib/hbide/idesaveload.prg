@@ -250,6 +250,8 @@ FUNCTION hbide_getIniPath( cHbideIni )
          cPath := hbide_DirAddPathSep( GetEnv( "APPDATA" ) ) + "hbide\"
       #elif defined( __PLATFORM__UNIX )
          cPath := hbide_DirAddPathSep( GetEnv( "HOME" ) ) + ".hbide/"
+      #elif defined( __PLATFORM__OS2 )
+         cPath := hbide_DirAddPathSep( GetEnv( "HOME" ) ) + ".hbide/"
       #endif
          IF ! hb_dirExists( cPath )
             MakeDir( cPath )
