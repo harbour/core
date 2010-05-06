@@ -83,6 +83,7 @@ C_SOURCES := \
    hbgtcore.c \
    hbi18n1.c \
    hbinet.c \
+   hbinetz.c \
    hbproces.c \
    hbprocfn.c \
    hbrandom.c \

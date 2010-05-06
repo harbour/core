@@ -409,31 +409,3 @@ long hb_znetWrite( PHB_ZNETSTREAM pStream, HB_SOCKET sd, const void * buffer, lo
 
    return len == 0 ? snd : len;
 }
-
-/* this function is intentionally not in hbinet.c to not create binding
- * to ZLIB if user does not use it
- */
-HB_FUNC( HB_INETCOMPRESS )
-{
-   PHB_ITEM pItem = hb_param( 1, HB_IT_POINTER );
-   int iLevel = hb_parnidef( 2, HB_ZLIB_COMPRESSION_DEFAULT ),
-       iStrategy = hb_parnidef( 3, HB_ZLIB_STRATEGY_DEFAULT );
-
-   if( iLevel == HB_ZLIB_COMPRESSION_DISABLE )
-      hb_znetInetInitialize( pItem, NULL, NULL, NULL, NULL, NULL );
-   else
-   {
-      PHB_ZNETSTREAM pStream = hb_znetOpen( iLevel, iStrategy );
-      if( pStream == NULL )
-         pItem = NULL; /* to force RTE */
-      if( hb_znetInetInitialize( pItem, pStream, hb_znetRead, hb_znetWrite,
-                                 hb_znetFlush, hb_znetClose ) )
-      {
-         int keylen = ( int ) hb_parclen( 4 );
-         if( keylen )
-            hb_znetEncryptKey( pStream, hb_parc( 4 ), keylen );
-      }
-      else if( pStream )
-         hb_znetClose( pStream );
-   }
-}

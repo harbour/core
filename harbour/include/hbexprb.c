@@ -2789,7 +2789,7 @@ static HB_EXPR_FUNC( hb_compExprUsePostDec )
 
       case HB_EA_PUSH_POP:
       case HB_EA_STATEMENT:
-         hb_compExprPushPostOp( pSelf, HB_P_DEC, HB_COMP_PARAM );
+         hb_compExprUsePreOp( pSelf, HB_P_DEC, HB_COMP_PARAM );
          break;
 
       case HB_EA_DELETE:
