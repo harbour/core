@@ -1107,7 +1107,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       /* Order is significant.
          watcom also keeps a cl.exe in its binary dir. */
 #if ! defined( __PLATFORM__UNIX )
-      aCOMPDET := { { {|| FindInPath( "cygstart" ) }, "cygwin" },;
+      aCOMPDET := { { {|| FindInSamePath( "cygstart", "gcc" ) }, "cygwin" },;
                     { {|| FindInPath( "gcc-dw2" ) }, "mingw", "", "-dw2" },; /* tdragon DWARF-2 build */
                     { {|| FindInPath( "x86_64-pc-mingw32-gcc" ) }, "mingw64" },; /* Equation Solution build */
                     { {|| FindInPath( hbmk[ _HBMK_cCCPREFIX ] + "gcc" + hbmk[ _HBMK_cCCPOSTFIX ] ) }, "mingw" },;
@@ -1843,21 +1843,28 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             interact with hbmk. */
 #endif
 
-      CASE Left( cParam, 2 ) == "-o" .AND. ! lStopAfterHarbour
+      CASE Left( cParam, 2 ) == "-o"
 
-         tmp := MacroProc( hbmk, ArchCompFilter( hbmk, SubStr( cParam, 3 ) ), aParam[ _PAR_cFileName ] )
-         IF ! Empty( tmp )
-            tmp := PathProc( PathSepToSelf( tmp ), aParam[ _PAR_cFileName ] )
-            hb_FNameSplit( tmp, @cDir, @cName, @cExt )
-            IF ! Empty( cDir ) .AND. Empty( cName ) .AND. Empty( cExt )
-               /* Only a dir was passed, let's store that and pick a default name later. */
-               l_cPROGDIR := cDir
-            ELSEIF ! Empty( tmp )
-               l_cPROGDIR := NIL
-               l_cPROGNAME := tmp
-            ELSE
-               l_cPROGDIR := NIL
-               l_cPROGNAME := NIL
+         IF lStopAfterHarbour
+            tmp := MacroProc( hbmk, ArchCompFilter( hbmk, SubStr( cParam, 3 ) ), aParam[ _PAR_cFileName ] )
+            IF ! Empty( tmp )
+               AAddNotEmpty( hbmk[ _HBMK_aOPTPRG ], "-o" + PathSepToTarget( hbmk, PathNormalize( PathProc( PathSepToSelf( tmp ), aParam[ _PAR_cFileName ] ) ), 2 ) )
+            ENDIF
+         ELSE
+            tmp := MacroProc( hbmk, ArchCompFilter( hbmk, SubStr( cParam, 3 ) ), aParam[ _PAR_cFileName ] )
+            IF ! Empty( tmp )
+               tmp := PathProc( PathSepToSelf( tmp ), aParam[ _PAR_cFileName ] )
+               hb_FNameSplit( tmp, @cDir, @cName, @cExt )
+               IF ! Empty( cDir ) .AND. Empty( cName ) .AND. Empty( cExt )
+                  /* Only a dir was passed, let's store that and pick a default name later. */
+                  l_cPROGDIR := cDir
+               ELSEIF ! Empty( tmp )
+                  l_cPROGDIR := NIL
+                  l_cPROGNAME := tmp
+               ELSE
+                  l_cPROGDIR := NIL
+                  l_cPROGNAME := NIL
+               ENDIF
             ENDIF
          ENDIF
 
@@ -5697,6 +5704,33 @@ STATIC FUNCTION LibExists( hbmk, cDir, cLib, cLibPrefix, cLibExt )
       CASE                           hb_FileExists( tmp := cDir + cLibPrefix + FN_ExtSet( cLib, cLibExt ) ) ; RETURN tmp
       ENDCASE
    ENDCASE
+
+   RETURN NIL
+
+STATIC FUNCTION FindInSamePath( cFileName, cFileName2, cPath )
+   LOCAL cDir, cName, cExt
+
+   cFileName := FindInPath( cFileName, cPath )
+
+   IF ! Empty( cFileName )
+
+      /* Look for the second filename in the same dir the first one was found. */
+
+      hb_FNameSplit( cFileName, @cDir )
+      hb_FNameSplit( cFileName2,, @cName, @cExt )
+
+      #if defined( __PLATFORM__WINDOWS ) .OR. ;
+          defined( __PLATFORM__DOS ) .OR. ;
+          defined( __PLATFORM__OS2 )
+         IF Empty( cExt )
+            cExt := ".exe"
+         ENDIF
+      #endif
+
+      IF hb_FileExists( cFileName := hb_FNameMerge( cDir, cName, cExt ) )
+         RETURN cFileName
+      ENDIF
+   ENDIF
 
    RETURN NIL
 
