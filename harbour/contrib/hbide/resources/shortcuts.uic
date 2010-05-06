@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading ui file 'shortcuts.ui'
 **
-** Created: Tue Apr 27 00:36:36 2010
+** Created: Wed May 5 23:41:37 2010
 **      by: Qt User Interface Compiler version 4.5.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!
@@ -217,6 +217,12 @@ public:
         FormShortCuts->setWindowTitle(QApplication::translate("FormShortCuts", "Keyboard Macros", 0, QApplication::UnicodeUTF8));
         labelMethods->setText(QApplication::translate("FormShortCuts", "Public Methods", 0, QApplication::UnicodeUTF8));
         labelSyntax->setText(QApplication::translate("FormShortCuts", " Description", 0, QApplication::UnicodeUTF8));
+#ifndef QT_NO_WHATSTHIS
+        listMethods->setWhatsThis(QApplication::translate("FormShortCuts", "Public Methods are avialble as API to configure your key-combination to any degree hbIDE can be exploited. Double-click on any node posts method prototype with blank parameters in <Script> edit box below-right. In the immediate right box a brief description of the navigated node is displayed.", 0, QApplication::UnicodeUTF8));
+#endif // QT_NO_WHATSTHIS
+#ifndef QT_NO_WHATSTHIS
+        texteditSyntax->setWhatsThis(QApplication::translate("FormShortCuts", "Description of the public method highlighted on the left.", 0, QApplication::UnicodeUTF8));
+#endif // QT_NO_WHATSTHIS
         labelMacros->setText(QApplication::translate("FormShortCuts", "Keyboard Shortcuts", 0, QApplication::UnicodeUTF8));
         labelName->setText(QApplication::translate("FormShortCuts", " Name", 0, QApplication::UnicodeUTF8));
         labelKey->setText(QApplication::translate("FormShortCuts", " Key", 0, QApplication::UnicodeUTF8));

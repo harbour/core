@@ -70,6 +70,7 @@
         :hbCopy()                                           -> NIL
         :hbPaste()                                          -> NIL
         :hbSetSelectionMode( nMode, lOn )                   -> NIL
+        :hbGetSelectionInfo()                               -> NIL
 
     $DESCRIPTION$
 

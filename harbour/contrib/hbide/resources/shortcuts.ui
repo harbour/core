@@ -29,10 +29,18 @@
     </widget>
    </item>
    <item row="1" column="0">
-    <widget class="QListWidget" name="listMethods"/>
+    <widget class="QListWidget" name="listMethods">
+     <property name="whatsThis">
+      <string>Public Methods are avialble as API to configure your key-combination to any degree hbIDE can be exploited. Double-click on any node posts method prototype with blank parameters in &lt;Script&gt; edit box below-right. In the immediate right box a brief description of the navigated node is displayed.</string>
+     </property>
+    </widget>
    </item>
    <item row="1" column="1" colspan="10">
-    <widget class="QTextEdit" name="texteditSyntax"/>
+    <widget class="QTextEdit" name="texteditSyntax">
+     <property name="whatsThis">
+      <string>Description of the public method highlighted on the left.</string>
+     </property>
+    </widget>
    </item>
    <item row="2" column="0" colspan="11">
     <widget class="QLabel" name="labelMacros">

@@ -748,6 +748,20 @@ HB_FUNC( QT_HBQPLAINTEXTEDIT_HBSETSELECTIONMODE )
    }
 }
 
+/*
+ * void           hbGetSelectionInfo()
+ */
+HB_FUNC( QT_HBQPLAINTEXTEDIT_HBGETSELECTIONINFO )
+{
+   HBQPlainTextEdit * p = hbqt_par_HBQPlainTextEdit( 1 );
+   if( p )
+      ( p )->hbGetSelectionInfo();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQPLAINTEXTEDIT_HBGETSELECTIONINFO FP=( p )->hbGetSelectionInfo(); p is NULL" ) );
+   }
+}
+
 
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */

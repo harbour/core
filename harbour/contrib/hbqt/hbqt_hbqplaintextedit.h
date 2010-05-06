@@ -186,6 +186,7 @@ public slots:
    void           hbCopy();
    void           hbPaste();
    void           hbSetSelectionMode( int mode, bool on );
+   void           hbGetSelectionInfo();
 
 private slots:
    void           hbSlotCursorPositionChanged();

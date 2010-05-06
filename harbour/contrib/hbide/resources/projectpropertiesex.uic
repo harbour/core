@@ -1,8 +1,8 @@
 /********************************************************************************
 ** Form generated from reading ui file 'projectpropertiesex.ui'
 **
-** Created: Wed May 5 12:48:51 2010
-**      by: Qt User Interface Compiler version 4.5.3
+** Created: Wed May 5 23:38:13 2010
+**      by: Qt User Interface Compiler version 4.5.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!
 ********************************************************************************/
@@ -397,16 +397,19 @@ public:
         checkClp->setText(QApplication::translate("FormProjectPropEx", "Clipper", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(tabGeneral), QApplication::translate("FormProjectPropEx", "General", 0, QApplication::UnicodeUTF8));
 #ifndef QT_NO_TOOLTIP
-        editSources->setToolTip(QApplication::translate("FormProjectPropEx", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        editSources->setToolTip(QString());
+#endif // QT_NO_TOOLTIP
+#ifndef QT_NO_WHATSTHIS
+        editSources->setWhatsThis(QApplication::translate("FormProjectPropEx", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
-"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">You can include hereunder any type of file which can be edited via plain text editor. One file per line. You can use meta-keys to define your source paths to make your projects location independant. </p>\n"
-"<p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"></p>\n"
-"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">NOTE:</p>\n"
-"<p align=\""
-                        "center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Only .prg .c .cpp .rc .res files will be supplied to the HBMK2. All other files will be made visible for editing in &lt;Project Tree&gt;.</p></body></html>", 0, QApplication::UnicodeUTF8));
-#endif // QT_NO_TOOLTIP
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt;\">You can include hereunder any type of file which can be edited via plain text editor. One file per line. You can use meta-keys to define your source paths to make your projects location independant. </span></p>\n"
+"<p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;\"></p>\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-in"
+                        "dent:0px;\"><span style=\" font-size:8pt; font-weight:600;\">NOTE:</span></p>\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt;\">Only .prg .c .cpp .rc .res files will be supplied to the HBMK2. All other files will be made visible for editing in &lt;Project Tree&gt;.</span></p></body></html>", 0, QApplication::UnicodeUTF8));
+#endif // QT_NO_WHATSTHIS
         editSources->setStyleSheet(QString());
 #ifndef QT_NO_TOOLTIP
         buttonSelect->setToolTip(QApplication::translate("FormProjectPropEx", "Select Sources", 0, QApplication::UnicodeUTF8));
@@ -426,27 +429,33 @@ public:
         buttonSortOrg->setText(QString());
         tabWidget->setTabText(tabWidget->indexOf(tabFiles), QApplication::translate("FormProjectPropEx", "Sources", 0, QApplication::UnicodeUTF8));
 #ifndef QT_NO_TOOLTIP
-        editFlags->setToolTip(QApplication::translate("FormProjectPropEx", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        editFlags->setToolTip(QString());
+#endif // QT_NO_TOOLTIP
+#ifndef QT_NO_WHATSTHIS
+        editFlags->setWhatsThis(QApplication::translate("FormProjectPropEx", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
-"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Meta-keys are a special way of keeping generic information which is of repeated and/or of dynamic nature. HBIDE implements meta key/value pair more comprehensively. It allows you to write an expression for the value part which get evaluated at the time project is loaded. The only point to take into consideration is that value returned by such expression must be of type character.</p>\n"
-"<p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-ind"
-                        "ent:0px;\"></p>\n"
-"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">The expression is evaluated only once and keeps its value until the HBIDE interface is closed. In case of any error, the expression string itself is returned.</p></body></html>", 0, QApplication::UnicodeUTF8));
-#endif // QT_NO_TOOLTIP
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt;\">Meta-keys are a special way of keeping generic information which is of repeated and/or of dynamic nature. HBIDE implements meta key/value pair more comprehensively. It allows you to write an expression for the value part which get evaluated at the time project is loaded. The only point to take into consideration is that value returned by such expression must be of type character.</span></p>\n"
+"<p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-bl"
+                        "ock-indent:0; text-indent:0px; font-size:8pt;\"></p>\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt;\">The expression is evaluated only once and keeps its value until the HBIDE interface is closed. In case of any error, the expression string itself is returned.</span></p></body></html>", 0, QApplication::UnicodeUTF8));
+#endif // QT_NO_WHATSTHIS
         editFlags->setStyleSheet(QString());
         tabWidget->setTabText(tabWidget->indexOf(tabFlags), QApplication::translate("FormProjectPropEx", "Flags", 0, QApplication::UnicodeUTF8));
 #ifndef QT_NO_TOOLTIP
-        editHbp->setToolTip(QApplication::translate("FormProjectPropEx", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        editHbp->setToolTip(QString());
+#endif // QT_NO_TOOLTIP
+#ifndef QT_NO_WHATSTHIS
+        editHbp->setWhatsThis(QApplication::translate("FormProjectPropEx", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
-"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt;\">Here you can view in real-time the resultant &lt;hbp&gt; output which will be supplied to HBMK2. This view may give you insight about your source layout and many other facts.</span></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt;\">Here you can view in real-time the resultant &lt;hbp&gt; output which will be supplied to HBMK2. This view may give you insight about your source layout and many other facts.</span></p>\n"
 "<p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;\"></p>\n"
-"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px"
-                        ";\"><span style=\" font-size:14pt; font-weight:600; text-decoration: underline;\">Enjoy</span></p></body></html>", 0, QApplication::UnicodeUTF8));
-#endif // QT_NO_TOOLTIP
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\""
+                        " font-size:14pt; font-weight:600; text-decoration: underline;\">Enjoy</span></p></body></html>", 0, QApplication::UnicodeUTF8));
+#endif // QT_NO_WHATSTHIS
         editHbp->setStyleSheet(QString());
         tabWidget->setTabText(tabWidget->indexOf(tabHbp), QApplication::translate("FormProjectPropEx", "hbp", 0, QApplication::UnicodeUTF8));
         buttonSaveExit->setText(QApplication::translate("FormProjectPropEx", "Save and Close", 0, QApplication::UnicodeUTF8));

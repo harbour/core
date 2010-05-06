@@ -534,6 +534,10 @@ METHOD HbQtUI:build( cFileOrBuffer, qParent )
             s := hbq_pullToolTip( cCmd )
             ::qObj[ cNam ]:setText( s )
 
+         ELSEIF "setWhatsThis(" $ cCmd
+            s := hbq_pullToolTip( cCmd )
+            ::qObj[ cNam ]:setWhatsThis( s )
+
          ELSEIF "header()->" $ cCmd
             // TODO: how to handle : __qtreeviewitem->header()->setVisible( .f. )
 
@@ -718,7 +722,7 @@ FUNCTION q__tr( p1, p2, p3, p4 )
 
 STATIC FUNCTION hbq_pullText( org_, nFrom )
    LOCAL s := "", nLen := len( org_ )
-   LOCAL a_:= { "setText(", "setPlainText(", "setStyleSheet(" }
+   LOCAL a_:= { "setText(", "setPlainText(", "setStyleSheet(", "setWhatsThis(" }
 
    IF ascan( a_, {|e| e $ org_[ nFrom ] } ) > 0
       s := org_[ nFrom ]
