@@ -206,7 +206,7 @@ long hb_znetRead( PHB_ZNETSTREAM pStream, HB_SOCKET sd, void * buffer, long len,
 
    while( pStream->rd.avail_out )
    {
-      if( pStream->rd.avail_in == 0 && pStream->err == Z_STREAM_END )
+      if( pStream->rd.avail_in == 0 && pStream->err == Z_BUF_ERROR )
       {
          if( pStream->skip_in )
          {
@@ -268,9 +268,12 @@ long hb_znetRead( PHB_ZNETSTREAM pStream, HB_SOCKET sd, void * buffer, long len,
          rec = 0;
       }
       pStream->err = inflate( &pStream->rd, Z_SYNC_FLUSH );
-      if( pStream->err == Z_BUF_ERROR && pStream->rd.avail_in == 0 )
-         pStream->err = Z_STREAM_END;
-      if( pStream->err != Z_OK && pStream->err != Z_STREAM_END )
+/*
+      if( pStream->err == Z_STREAM_END && pStream->rd.avail_in == 0 )
+         pStream->err = Z_BUF_ERROR;
+*/
+      if( pStream->err != Z_OK &&
+          !( pStream->err == Z_BUF_ERROR && pStream->rd.avail_in == 0 ) )
          break;
    }
 
