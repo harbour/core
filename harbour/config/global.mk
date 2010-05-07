@@ -694,6 +694,12 @@ ifeq ($(HB_COMPILER),)
                else
                   HB_COMP_PATH := $(call find_in_path,cygstart)
                   ifneq ($(HB_COMP_PATH),)
+                     # Check for a gcc executable in the same directory
+                     ifeq ($(wildcard $(dir $(HB_COMP_PATH))gcc$(HB_HOST_BIN_EXT)),)
+                        HB_COMP_PATH :=
+                     endif
+                  endif
+                  ifneq ($(HB_COMP_PATH),)
                      HB_COMPILER := cygwin
                   else
                      HB_COMP_PATH := $(call find_in_path,djasm)
