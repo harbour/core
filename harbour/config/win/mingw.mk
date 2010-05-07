@@ -27,6 +27,11 @@ CFLAGS += -I. -I$(HB_INC_COMPILE)
 # Equivalent to -tsaware MSVC linker option:
 #    peflags --tsaware=true
 
+ifeq ($(HB_COMPILER),mingw64)
+   LDFLAGS += -Wl,--nxcompat -Wl,--dynamicbase
+   DFLAGS += -Wl,--nxcompat -Wl,--dynamicbase
+endif
+
 ifneq ($(HB_BUILD_WARN),no)
    CFLAGS += -W -Wall
 else

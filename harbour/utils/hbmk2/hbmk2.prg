@@ -350,8 +350,9 @@ REQUEST hbmk_KEYW
 #define _HBMK_cCCPATH           83
 #define _HBMK_cCCPREFIX         84
 #define _HBMK_cCCPOSTFIX        85
+#define _HBMK_cCCEXT            86
 
-#define _HBMK_MAX_              85
+#define _HBMK_MAX_              86
 
 #ifndef _HBMK_EMBEDDED_
 
@@ -693,7 +694,6 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    LOCAL lSysLoc
    LOCAL cPrefix
    LOCAL cPostfix
-   LOCAL cCCEXT
 
    LOCAL lSkipBuild := .F.
    LOCAL lStopAfterInit := .F.
@@ -1048,9 +1048,9 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    hbmk[ _HBMK_cCCPOSTFIX ] := GetEnv( "HB_CCPOSTFIX" )
 
    #if defined( __PLATFORM__UNIX )
-      cCCEXT := ""
+      hbmk[ _HBMK_cCCEXT ] := ""
    #else
-      cCCEXT := ".exe"
+      hbmk[ _HBMK_cCCEXT ] := ".exe"
    #endif
 
    /* Setup platform dependent data */
@@ -1181,13 +1181,13 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       l_cHB_INSTALL_PREFIX := MacroProc( hbmk, PathSepToSelf( GetEnv( "HB_INSTALL_PREFIX" ) ), NIL, _MACRO_NO_PREFIX )
       IF Empty( l_cHB_INSTALL_PREFIX )
          DO CASE
-         CASE hb_FileExists( DirAddPathSep( hb_DirBase() ) + cBin_CompPRG + cCCEXT )
+         CASE hb_FileExists( DirAddPathSep( hb_DirBase() ) + cBin_CompPRG + hbmk[ _HBMK_cCCEXT ] )
             l_cHB_INSTALL_PREFIX := DirAddPathSep( hb_DirBase() ) + ".."
-         CASE hb_FileExists( DirAddPathSep( hb_DirBase() ) + "bin" + hb_osPathSeparator() + cBin_CompPRG + cCCEXT )
+         CASE hb_FileExists( DirAddPathSep( hb_DirBase() ) + "bin" + hb_osPathSeparator() + cBin_CompPRG + hbmk[ _HBMK_cCCEXT ] )
             l_cHB_INSTALL_PREFIX := DirAddPathSep( hb_DirBase() )
-         CASE hb_FileExists( DirAddPathSep( hb_DirBase() ) + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + "bin" + hb_osPathSeparator() + cBin_CompPRG + cCCEXT )
+         CASE hb_FileExists( DirAddPathSep( hb_DirBase() ) + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + "bin" + hb_osPathSeparator() + cBin_CompPRG + hbmk[ _HBMK_cCCEXT ] )
             l_cHB_INSTALL_PREFIX := DirAddPathSep( hb_DirBase() ) + ".." + hb_osPathSeparator() + ".."
-         CASE hb_FileExists( DirAddPathSep( hb_DirBase() ) + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + "bin" + hb_osPathSeparator() + cBin_CompPRG + cCCEXT )
+         CASE hb_FileExists( DirAddPathSep( hb_DirBase() ) + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + "bin" + hb_osPathSeparator() + cBin_CompPRG + hbmk[ _HBMK_cCCEXT ] )
             l_cHB_INSTALL_PREFIX := DirAddPathSep( hb_DirBase() ) + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + ".."
          OTHERWISE
             hbmk_OutErr( hbmk, I_( "Error: HB_INSTALL_PREFIX not set, failed to autodetect.\nPlease run this tool from its original location inside the Harbour installation or set HB_INSTALL_PREFIX environment variable to Harbour's root directory." ) )
@@ -1256,39 +1256,39 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
          tmp3 := NIL; HB_SYMBOL_UNUSED( tmp3 )
 
-         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "mingw"    + hb_osPathSeparator() + "bin"   ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT ), tmp1, NIL ) }, "win"  , "mingw"   , ""                    , NIL, NIL } )
-         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "mingw64"  + hb_osPathSeparator() + "bin"   ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT ), tmp1, NIL ) }, "win"  , "mingw64" , "i686-w64-mingw32-"   , NIL, NIL } )
-         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "mingw64"  + hb_osPathSeparator() + "bin"   ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT ), tmp1, NIL ) }, "win"  , "mingw64" , "x86_64-w64-mingw32-" , NIL, NIL } )
-         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "mingwarm" + hb_osPathSeparator() + "bin"   ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT ), tmp1, NIL ) }, "wce"  , "mingwarm", "arm-mingw32ce-"      , NIL, NIL } )
-         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "mingwarm" + hb_osPathSeparator() + "bin"   ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT ), tmp1, NIL ) }, "wce"  , "mingwarm", "arm-wince-mingw32ce-", NIL, NIL } )
-         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "mingwarm" + hb_osPathSeparator() + "bin"   ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT ), tmp1, NIL ) }, "wce"  , "mingw"   , "i386-mingw32ce-"     , NIL, NIL } )
-         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "djgpp"    + hb_osPathSeparator() + "bin"   ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc.exe"      ), tmp1, NIL ) }, "dos"  , "djgpp"   , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_osPathSeparator() + ".." ) } } )
-         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "watcom"   + hb_osPathSeparator() + "binnt" ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "wpp386.exe"   ), tmp1, NIL ) }, "win"  , "watcom"  , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_osPathSeparator() + ".." ) } } )
-         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "watcom"   + hb_osPathSeparator() + "binnt" ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "wpp386.exe"   ), tmp1, NIL ) }, "dos"  , "watcom"  , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_osPathSeparator() + ".." ) } } )
-         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "watcom"   + hb_osPathSeparator() + "binnt" ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "wpp386.exe"   ), tmp1, NIL ) }, "os2"  , "watcom"  , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_osPathSeparator() + ".." ) } } )
-         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "watcom"   + hb_osPathSeparator() + "binnt" ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "wpp386.exe"   ), tmp1, NIL ) }, "linux", "watcom"  , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_osPathSeparator() + ".." ) } } )
-         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "pocc"     + hb_osPathSeparator() + "Bin"   ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "pocc.exe"     ), tmp1, NIL ) }, "win"  , "pocc"    , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_osPathSeparator() + ".." ) } } )
-         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "pocc"     + hb_osPathSeparator() + "Bin"   ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "pocc.exe"     ), tmp1, NIL ) }, "win"  , "pocc64"  , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_osPathSeparator() + ".." ) } } )
-         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "pocc"     + hb_osPathSeparator() + "Bin"   ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "pocc.exe"     ), tmp1, NIL ) }, "wce"  , "poccarm" , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_osPathSeparator() + ".." ) } } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "mingw"    + hb_osPathSeparator() + "bin"   ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + hbmk[ _HBMK_cCCEXT ] ), tmp1, NIL ) }, "win"  , "mingw"   , ""                    , NIL, NIL } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "mingw64"  + hb_osPathSeparator() + "bin"   ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + hbmk[ _HBMK_cCCEXT ] ), tmp1, NIL ) }, "win"  , "mingw64" , "i686-w64-mingw32-"   , NIL, NIL } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "mingw64"  + hb_osPathSeparator() + "bin"   ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + hbmk[ _HBMK_cCCEXT ] ), tmp1, NIL ) }, "win"  , "mingw64" , "x86_64-w64-mingw32-" , NIL, NIL } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "mingwarm" + hb_osPathSeparator() + "bin"   ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + hbmk[ _HBMK_cCCEXT ] ), tmp1, NIL ) }, "wce"  , "mingwarm", "arm-mingw32ce-"      , NIL, NIL } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "mingwarm" + hb_osPathSeparator() + "bin"   ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + hbmk[ _HBMK_cCCEXT ] ), tmp1, NIL ) }, "wce"  , "mingwarm", "arm-wince-mingw32ce-", NIL, NIL } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "mingwarm" + hb_osPathSeparator() + "bin"   ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + hbmk[ _HBMK_cCCEXT ] ), tmp1, NIL ) }, "wce"  , "mingw"   , "i386-mingw32ce-"     , NIL, NIL } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "djgpp"    + hb_osPathSeparator() + "bin"   ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc.exe"                    ), tmp1, NIL ) }, "dos"  , "djgpp"   , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_osPathSeparator() + ".." ) } } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "watcom"   + hb_osPathSeparator() + "binnt" ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "wpp386.exe"                 ), tmp1, NIL ) }, "win"  , "watcom"  , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_osPathSeparator() + ".." ) } } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "watcom"   + hb_osPathSeparator() + "binnt" ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "wpp386.exe"                 ), tmp1, NIL ) }, "dos"  , "watcom"  , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_osPathSeparator() + ".." ) } } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "watcom"   + hb_osPathSeparator() + "binnt" ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "wpp386.exe"                 ), tmp1, NIL ) }, "os2"  , "watcom"  , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_osPathSeparator() + ".." ) } } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "watcom"   + hb_osPathSeparator() + "binnt" ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "wpp386.exe"                 ), tmp1, NIL ) }, "linux", "watcom"  , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_osPathSeparator() + ".." ) } } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "pocc"     + hb_osPathSeparator() + "Bin"   ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "pocc.exe"                   ), tmp1, NIL ) }, "win"  , "pocc"    , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_osPathSeparator() + ".." ) } } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "pocc"     + hb_osPathSeparator() + "Bin"   ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "pocc.exe"                   ), tmp1, NIL ) }, "win"  , "pocc64"  , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_osPathSeparator() + ".." ) } } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "pocc"     + hb_osPathSeparator() + "Bin"   ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "pocc.exe"                   ), tmp1, NIL ) }, "wce"  , "poccarm" , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_osPathSeparator() + ".." ) } } )
 
       #elif defined( __PLATFORM__DOS )
 
          tmp3 := NIL; HB_SYMBOL_UNUSED( tmp3 )
 
-         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "djgpp"    + hb_osPathSeparator() + "bin"   ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc.exe"      ), tmp1, NIL ) }, "dos"  , "djgpp"   , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_osPathSeparator() + ".." ) } } )
-         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "watcom"   + hb_osPathSeparator() + "binw"  ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "wpp386.exe"   ), tmp1, NIL ) }, "dos"  , "watcom"  , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_osPathSeparator() + ".." ) } } )
-         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "watcom"   + hb_osPathSeparator() + "binw"  ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "wpp386.exe"   ), tmp1, NIL ) }, "win"  , "watcom"  , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_osPathSeparator() + ".." ) } } )
-         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "watcom"   + hb_osPathSeparator() + "binw"  ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "wpp386.exe"   ), tmp1, NIL ) }, "os2"  , "watcom"  , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_osPathSeparator() + ".." ) } } )
-         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "watcom"   + hb_osPathSeparator() + "binw"  ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "wpp386.exe"   ), tmp1, NIL ) }, "linux", "watcom"  , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_osPathSeparator() + ".." ) } } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "djgpp"    + hb_osPathSeparator() + "bin"   ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc.exe"                    ), tmp1, NIL ) }, "dos"  , "djgpp"   , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_osPathSeparator() + ".." ) } } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "watcom"   + hb_osPathSeparator() + "binw"  ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "wpp386.exe"                 ), tmp1, NIL ) }, "dos"  , "watcom"  , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_osPathSeparator() + ".." ) } } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "watcom"   + hb_osPathSeparator() + "binw"  ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "wpp386.exe"                 ), tmp1, NIL ) }, "win"  , "watcom"  , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_osPathSeparator() + ".." ) } } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "watcom"   + hb_osPathSeparator() + "binw"  ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "wpp386.exe"                 ), tmp1, NIL ) }, "os2"  , "watcom"  , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_osPathSeparator() + ".." ) } } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "watcom"   + hb_osPathSeparator() + "binw"  ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "wpp386.exe"                 ), tmp1, NIL ) }, "linux", "watcom"  , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_osPathSeparator() + ".." ) } } )
 
       #elif defined( __PLATFORM__OS2 )
 
          tmp3 := NIL; HB_SYMBOL_UNUSED( tmp3 )
 
-         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "watcom"   + hb_osPathSeparator() + "binp"  ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "wpp386.exe"   ), tmp1, NIL ) }, "os2"  , "watcom"  , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_osPathSeparator() + ".." ) } } )
-         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "watcom"   + hb_osPathSeparator() + "binp"  ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "wpp386.exe"   ), tmp1, NIL ) }, "win"  , "watcom"  , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_osPathSeparator() + ".." ) } } )
-         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "watcom"   + hb_osPathSeparator() + "binp"  ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "wpp386.exe"   ), tmp1, NIL ) }, "dos"  , "watcom"  , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_osPathSeparator() + ".." ) } } )
-         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "watcom"   + hb_osPathSeparator() + "binp"  ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "wpp386.exe"   ), tmp1, NIL ) }, "linux", "watcom"  , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_osPathSeparator() + ".." ) } } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "watcom"   + hb_osPathSeparator() + "binp"  ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "wpp386.exe"                 ), tmp1, NIL ) }, "os2"  , "watcom"  , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_osPathSeparator() + ".." ) } } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "watcom"   + hb_osPathSeparator() + "binp"  ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "wpp386.exe"                 ), tmp1, NIL ) }, "win"  , "watcom"  , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_osPathSeparator() + ".." ) } } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "watcom"   + hb_osPathSeparator() + "binp"  ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "wpp386.exe"                 ), tmp1, NIL ) }, "dos"  , "watcom"  , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_osPathSeparator() + ".." ) } } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "watcom"   + hb_osPathSeparator() + "binp"  ), iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "wpp386.exe"                 ), tmp1, NIL ) }, "linux", "watcom"  , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_osPathSeparator() + ".." ) } } )
 
       #elif defined( __PLATFORM__UNIX )
 
@@ -1302,15 +1302,15 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                FOR EACH tmp IN { "/usr", "/usr/local", "/usr/local/mingw32", "/opt/xmingw" }
                   FOR EACH tmp2 IN { "i?86-mingw", "i?86-pc-mingw", "i?86-mingw32", "i?86-pc-mingw32", "i?86-mingw32msvc", "i?86-pc-mingw32msvc" }
                      FOR tmp3 := 3 TO 6
-                        AAdd( aCOMPDET_EMBED, { {| cPrefix, tmp1 | iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT ), tmp1, NIL ) }, "win", "mingw", StrTran( tmp2, "?", hb_ntos( tmp3 ) ) + "-", tmp + hb_osPathSeparator() + "bin", NIL } )
-                        AAdd( aCOMPDET_EMBED, { {| cPrefix, tmp1 | iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT ), tmp1, NIL ) }, "win", "mingw", "", tmp + hb_osPathSeparator() + StrTran( tmp2, "?", hb_ntos( tmp3 ) ) + hb_osPathSeparator() + "bin", NIL } )
+                        AAdd( aCOMPDET_EMBED, { {| cPrefix, tmp1 | iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + hbmk[ _HBMK_cCCEXT ] ), tmp1, NIL ) }, "win", "mingw", StrTran( tmp2, "?", hb_ntos( tmp3 ) ) + "-", tmp + hb_osPathSeparator() + "bin", NIL } )
+                        AAdd( aCOMPDET_EMBED, { {| cPrefix, tmp1 | iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + hbmk[ _HBMK_cCCEXT ] ), tmp1, NIL ) }, "win", "mingw", "", tmp + hb_osPathSeparator() + StrTran( tmp2, "?", hb_ntos( tmp3 ) ) + hb_osPathSeparator() + "bin", NIL } )
                      NEXT
                   NEXT
                NEXT
             CASE hbmk[ _HBMK_cPLAT ] == "wce"
-               AAdd( aCOMPDET_EMBED, { {| cPrefix, tmp1 | iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT ), tmp1, NIL ) }, "wce", "mingwarm", "arm-mingw32ce-"      , "/opt/mingw32ce/bin"   , NIL } )
-               AAdd( aCOMPDET_EMBED, { {| cPrefix, tmp1 | iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT ), tmp1, NIL ) }, "wce", "mingwarm", "arm-wince-mingw32ce-", "/opt/mingw32ce/bin"   , NIL } )
-               AAdd( aCOMPDET_EMBED, { {| cPrefix, tmp1 | iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + cCCEXT ), tmp1, NIL ) }, "wce", "mingw"   , "i386-mingw32ce-"     , "/opt/x86mingw32ce/bin", NIL } )
+               AAdd( aCOMPDET_EMBED, { {| cPrefix, tmp1 | iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + hbmk[ _HBMK_cCCEXT ] ), tmp1, NIL ) }, "wce", "mingwarm", "arm-mingw32ce-"      , "/opt/mingw32ce/bin"   , NIL } )
+               AAdd( aCOMPDET_EMBED, { {| cPrefix, tmp1 | iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + hbmk[ _HBMK_cCCEXT ] ), tmp1, NIL ) }, "wce", "mingwarm", "arm-wince-mingw32ce-", "/opt/mingw32ce/bin"   , NIL } )
+               AAdd( aCOMPDET_EMBED, { {| cPrefix, tmp1 | iif( hb_FileExists( tmp1 + hb_osPathSeparator() + cPrefix + "gcc" + hbmk[ _HBMK_cCCEXT ] ), tmp1, NIL ) }, "wce", "mingw"   , "i386-mingw32ce-"     , "/opt/x86mingw32ce/bin", NIL } )
             ENDCASE
          ENDIF
 
@@ -1762,9 +1762,9 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
       CASE Left( cParamL, Len( "-mkimplib=" ) ) == "-mkimplib="
 
-         cMakeImpLibLib := MacroProc( hbmk, ArchCompFilter( hbmk, SubStr( cParam, Len( "-mkimplib=" ) + 1 ) ), aParam[ _PAR_cFileName ] )
-         IF ! Empty( cMakeImpLibLib )
-            cMakeImpLibLib := PathSepToTarget( hbmk, PathProc( cMakeImpLibLib, aParam[ _PAR_cFileName ] ) )
+         cMakeImpLibDLL := MacroProc( hbmk, ArchCompFilter( hbmk, SubStr( cParam, Len( "-mkimplib=" ) + 1 ) ), aParam[ _PAR_cFileName ] )
+         IF ! Empty( cMakeImpLibDLL )
+            cMakeImpLibDLL := PathSepToTarget( hbmk, PathProc( cMakeImpLibDLL, aParam[ _PAR_cFileName ] ) )
             lStopAfterInit := .T.
             lMakeImpLib := .T.
          ENDIF
@@ -1776,9 +1776,9 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
          lMakeImpLibMS_bcc := .T.
 
-      CASE lMakeImpLib .AND. Empty( cMakeImpLibDLL )
+      CASE lMakeImpLib .AND. Empty( cMakeImpLibLib )
 
-         cMakeImpLibDLL := PathSepToTarget( hbmk, PathProc( MacroProc( hbmk, ArchCompFilter( hbmk, cParam ), aParam[ _PAR_cFileName ] ), aParam[ _PAR_cFileName ] ) )
+         cMakeImpLibLib := PathSepToTarget( hbmk, PathProc( MacroProc( hbmk, ArchCompFilter( hbmk, cParam ), aParam[ _PAR_cFileName ] ), aParam[ _PAR_cFileName ] ) )
 
       CASE Left( cParamL, Len( "-jobs=" ) ) == "-jobs="
 
@@ -2655,8 +2655,8 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          cLibPrefix := "-l"
          cLibExt := ""
          cObjExt := ".o"
-         cBin_CompCPP := hbmk[ _HBMK_cCCPREFIX ] + "g++" + hbmk[ _HBMK_cCCPOSTFIX ] + cCCEXT
-         cBin_CompC := iif( hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ], cBin_CompCPP, hbmk[ _HBMK_cCCPREFIX ] + "gcc" + hbmk[ _HBMK_cCCPOSTFIX ] + cCCEXT )
+         cBin_CompCPP := hbmk[ _HBMK_cCCPREFIX ] + "g++" + hbmk[ _HBMK_cCCPOSTFIX ] + hbmk[ _HBMK_cCCEXT ]
+         cBin_CompC := iif( hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ], cBin_CompCPP, hbmk[ _HBMK_cCCPREFIX ] + "gcc" + hbmk[ _HBMK_cCCPOSTFIX ] + hbmk[ _HBMK_cCCEXT ] )
          cOpt_CompC := "-c"
          IF hbmk[ _HBMK_lOPTIM ]
             cOpt_CompC += " -O3"
@@ -2689,7 +2689,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          cLibPathPrefix := "-L"
          cLibPathSep := " "
          cLibLibExt := ".a"
-         cBin_Lib := hbmk[ _HBMK_cCCPREFIX ] + "ar" + cCCEXT
+         cBin_Lib := hbmk[ _HBMK_cCCPREFIX ] + "ar" + hbmk[ _HBMK_cCCEXT ]
 #if defined( __PLATFORM__WINDOWS )
          nCmd_Esc := _ESC_DBLQUOTE
 #endif
@@ -2782,7 +2782,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          ENDIF
 
          IF hbmk[ _HBMK_cCOMP ] $ "mingw|mingw64|mingwarm"
-            cBin_Res := hbmk[ _HBMK_cCCPREFIX ] + "windres" + cCCEXT
+            cBin_Res := hbmk[ _HBMK_cCCPREFIX ] + "windres" + hbmk[ _HBMK_cCCEXT ]
             cResExt := ".reso"
             cOpt_Res := "{FR} {IR} -O coff -o {OS}"
             IF ! Empty( hbmk[ _HBMK_cCCPATH ] )
@@ -2798,8 +2798,8 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          cLibPrefix := "-l"
          cLibExt := ""
          cObjExt := ".o"
-         cBin_CompCPP := hbmk[ _HBMK_cCCPREFIX ] + "g++" + hbmk[ _HBMK_cCCPOSTFIX ] + cCCEXT
-         cBin_CompC := iif( hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ], cBin_CompCPP, hbmk[ _HBMK_cCCPREFIX ] + "gcc" + hbmk[ _HBMK_cCCPOSTFIX ] + cCCEXT )
+         cBin_CompCPP := hbmk[ _HBMK_cCCPREFIX ] + "g++" + hbmk[ _HBMK_cCCPOSTFIX ] + hbmk[ _HBMK_cCCEXT ]
+         cBin_CompC := iif( hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ], cBin_CompCPP, hbmk[ _HBMK_cCCPREFIX ] + "gcc" + hbmk[ _HBMK_cCCPOSTFIX ] + hbmk[ _HBMK_cCCEXT ] )
          cOpt_CompC := "-c"
          IF hbmk[ _HBMK_lOPTIM ]
             cOpt_CompC += " -O3"
@@ -2826,14 +2826,14 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          cLibPathSep := " "
          IF hbmk[ _HBMK_cCOMP ] == "gccomf"
             cLibLibExt := ".lib"
-            cBin_Lib := hbmk[ _HBMK_cCCPREFIX ] + "emxomfar" + cCCEXT
+            cBin_Lib := hbmk[ _HBMK_cCCPREFIX ] + "emxomfar" + hbmk[ _HBMK_cCCEXT ]
 
             AAdd( hbmk[ _HBMK_aOPTC ], "-Zomf" )
             AAdd( hbmk[ _HBMK_aOPTL ], "-Zomf" )
             AAdd( hbmk[ _HBMK_aOPTD ], "-Zomf" )
          ELSE
             cLibLibExt := ".a"
-            cBin_Lib := hbmk[ _HBMK_cCCPREFIX ] + "ar" + cCCEXT
+            cBin_Lib := hbmk[ _HBMK_cCCPREFIX ] + "ar" + hbmk[ _HBMK_cCCEXT ]
          ENDIF
          cOpt_Lib := "{FA} rcs {OL} {LO}"
          IF hbmk[ _HBMK_lMAP ]
@@ -2876,7 +2876,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                                                    "harbour" ) }
 
 #if 0 /* Disabled because windres seems to be broken in all gcc builds as of 2010-05-05. [vszakats] */
-         cBin_Res := hbmk[ _HBMK_cCCPREFIX ] + "windres" + cCCEXT
+         cBin_Res := hbmk[ _HBMK_cCCPREFIX ] + "windres" + hbmk[ _HBMK_cCCEXT ]
          cResExt := ".reso"
          IF hbmk[ _HBMK_cCOMP ] == "gccomf"
             cOpt_Res := "{FR} {IR} -O omf -o {OS}"
@@ -2904,8 +2904,8 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          cLibPrefix := "-l"
          cLibExt := ""
          cObjExt := ".o"
-         cBin_CompCPP := hbmk[ _HBMK_cCCPREFIX ] + "gpp" + hbmk[ _HBMK_cCCPOSTFIX ] + cCCEXT
-         cBin_CompC := iif( hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ], cBin_CompCPP, hbmk[ _HBMK_cCCPREFIX ] + "gcc" + hbmk[ _HBMK_cCCPOSTFIX ] + cCCEXT )
+         cBin_CompCPP := hbmk[ _HBMK_cCCPREFIX ] + "gpp" + hbmk[ _HBMK_cCCPOSTFIX ] + hbmk[ _HBMK_cCCEXT ]
+         cBin_CompC := iif( hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ], cBin_CompCPP, hbmk[ _HBMK_cCCPREFIX ] + "gcc" + hbmk[ _HBMK_cCCPOSTFIX ] + hbmk[ _HBMK_cCCEXT ] )
          cOpt_CompC := "-c"
          IF hbmk[ _HBMK_lOPTIM ]
             cOpt_CompC += " -O3"
@@ -2929,7 +2929,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          cLibPathPrefix := "-L"
          cLibPathSep := " "
          cLibLibExt := ".a"
-         cBin_Lib := hbmk[ _HBMK_cCCPREFIX ] + "ar" + cCCEXT
+         cBin_Lib := hbmk[ _HBMK_cCCPREFIX ] + "ar" + hbmk[ _HBMK_cCCEXT ]
          cOpt_Lib := "{FA} rcs {OL} {LO}{SCRIPT}"
          IF l_lLIBGROUPING
             AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,--start-group {LL} {LB} -Wl,--end-group" )
@@ -3003,11 +3003,11 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
          cLibPathPrefix := "LIBPATH "
          cLibPathSep := " "
-         cBin_CompCPP := "wpp386" + cCCEXT
+         cBin_CompCPP := "wpp386" + hbmk[ _HBMK_cCCEXT ]
          IF hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ]
             cBin_CompC := cBin_CompCPP
          ELSE
-            cBin_CompC := "wcc386" + cCCEXT
+            cBin_CompC := "wcc386" + hbmk[ _HBMK_cCCEXT ]
          ENDIF
          cOpt_CompC := ""
          IF hbmk[ _HBMK_lOPTIM ]
@@ -3052,7 +3052,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                AAdd( hbmk[ _HBMK_aOPTC ], "-fo={OD}" )
             ENDIF
          ENDIF
-         cBin_Link := "wlink" + cCCEXT
+         cBin_Link := "wlink" + hbmk[ _HBMK_cCCEXT ]
          DO CASE
          CASE hbmk[ _HBMK_cPLAT ] == "linux" ; cOpt_Link := "OP quiet SYS linux {FL} NAME {OE} {LO} {DL} {LL} {LB}{SCRIPT}"
          CASE hbmk[ _HBMK_cPLAT ] == "win"   ; cOpt_Link := "OP quiet {FL} NAME {OE} {LO} {DL} {LL} {LB} {LS}{SCRIPT}"
@@ -3075,7 +3075,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             /* workaround for not included automatically CLIB in pure C mode DOS builds */
             AAdd( l_aLIBSYS, "clib3r" )
          ENDIF
-         cBin_Lib := "wlib" + cCCEXT
+         cBin_Lib := "wlib" + hbmk[ _HBMK_cCCEXT ]
          cOpt_Lib := "-q {FA} {OL} {LO}{SCRIPT}"
          IF hbmk[ _HBMK_cPLAT ] $ "win|os2"
             bBlk_ImpLib := {| cSourceDLL, cTargetLib, cFlags | win_implib_command( hbmk, cBin_Lib + " -q -o={OL} {ID}", nCmd_Esc, cSourceDLL, cTargetLib, cFlags ) }
@@ -3137,7 +3137,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                                                       "harbour" + cDL_Version + cDynLibExt ) }
          ENDCASE
          IF hbmk[ _HBMK_cPLAT ] $ "win|os2"
-            cBin_Res := "wrc" + cCCEXT
+            cBin_Res := "wrc" + hbmk[ _HBMK_cCCEXT ]
             cResExt := ".res"
             cOpt_Res := "-q -r {FR} -zm {IR} -fo={OS}"
             DO CASE
@@ -3674,8 +3674,14 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
    IF lMakeImpLib
       IF ISBLOCK( bBlk_ImpLib )
-         IF ! Empty( cMakeImpLibDLL ) .AND. ! Empty( cMakeImpLibLib )
+         IF ! Empty( cMakeImpLibDLL )
+            cMakeImpLibDLL := FN_ExtDef( cMakeImpLibDLL, ".dll" )
             IF hb_FileExists( PathSepToSelf( cMakeImpLibDLL ) )
+               hb_FNameSplit( cMakeImpLibLib, @tmp, @tmp1 )
+               IF Empty( tmp1 )
+                  hb_FNameSplit( cMakeImpLibDLL,, @tmp1 )
+               ENDIF
+               cMakeImpLibLib := hb_FNameMerge( tmp, tmp1 )
                tmp := FN_CookLib( cMakeImpLibLib, cLibLibPrefix, cLibLibExt )
                IF Eval( bBlk_ImpLib, cMakeImpLibDLL, tmp, cOpt_ImpLib )
                   hbmk_OutStd( hbmk, hb_StrFormat( I_( "Created import library: %1$s <= %2$s" ), tmp, cMakeImpLibDLL ) )
@@ -6076,10 +6082,10 @@ STATIC FUNCTION PathNormalize( cPath, lNormalize )
                cPath += hb_osPathSeparator()
             ENDIF
          NEXT
-      ENDIF
 
-      IF Empty( cPath )
-         cPath := "."
+         IF Empty( cPath )
+            cPath := "." + hb_osPathSeparator()
+         ENDIF
       ENDIF
    ENDIF
 
@@ -8660,116 +8666,116 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       "  - sunos  : gcc, sunpro" }
 
    LOCAL aOpt_Basic := {;
-      { "-o<outname>"       , I_( "output file name" ) },;
-      { "-l<libname>"       , I_( "link with <libname> library. <libname> should be without path, extension and 'lib' prefix (unless part of libname)." ) },;
-      { "-L<libpath>"       , I_( "additional path to search for libraries" ) },;
-      { "-i<p>|-incpath=<p>", I_( "additional path to search for headers" ) },;
-      { "-static|-shared"   , I_( "link with static/shared libs" ) },;
-      { "-mt|-st"           , I_( "link with multi/single-thread VM" ) },;
-      { "-gt<name>"         , I_( "link with GT<name> GT driver, can be repeated to link with more GTs. First one will be the default at runtime" ) },;
-      { "-hbexe"            , I_( "create executable (default)" ) },;
-      { "-hblib"            , I_( "create static library" ) },;
-      { "-hbdyn"            , I_( "create dynamic library" ) }}
+      { "-o<outname>"        , I_( "output file name" ) },;
+      { "-l<libname>"        , I_( "link with <libname> library. <libname> should be without path, extension and 'lib' prefix (unless part of libname)." ) },;
+      { "-L<libpath>"        , I_( "additional path to search for libraries" ) },;
+      { "-i<p>|-incpath=<p>" , I_( "additional path to search for headers" ) },;
+      { "-static|-shared"    , I_( "link with static/shared libs" ) },;
+      { "-mt|-st"            , I_( "link with multi/single-thread VM" ) },;
+      { "-gt<name>"          , I_( "link with GT<name> GT driver, can be repeated to link with more GTs. First one will be the default at runtime" ) },;
+      { "-hbexe"             , I_( "create executable (default)" ) },;
+      { "-hblib"             , I_( "create static library" ) },;
+      { "-hbdyn"             , I_( "create dynamic library" ) }}
 
    LOCAL aOpt_Help := {;
-      { "-help|--help"      , I_( "long help" ) } }
+      { "-help|--help"       , I_( "long help" ) } }
 
    LOCAL aOpt_Long := {;
       NIL,;
-      { "-gui|-std"         , I_( "create GUI/console executable" ) },;
-      { "-main=<mainfunc>"  , I_( "override the name of starting function/procedure" ) },;
-      { "-fullstatic"       , I_( "link with all static libs" ) },;
-      { "-[full|fix]shared" , I_( "create shared Harbour binaries without/with absolute dir reference to Harbour library (default: 'fullshared' when Harbour is installed on system location, 'fixshared' otherwise) (fix/full option in *nix only)" ) },;
-      { "-nulrdd[-]"        , I_( "link with nulrdd" ) },;
-      { "-[no]debug"        , I_( "add/exclude C compiler debug info. For Harbour level debug, use Harbour option -b as usual" ) },;
-      { "-[no]optim"        , I_( "toggle C compiler optimizations (default: on)" ) },;
-      { "-[no]cpp[=def]"    , I_( "force C/C++ mode or reset to default" ) },;
-      { "-[no]map"          , I_( "create (or not) a map file" ) },;
-      { "-[no]implib"       , I_( "create (or not) an import library (in -hbdyn mode)" ) },;
-      { "-[no]strip"        , I_( "strip (no strip) binaries" ) },;
-      { "-[no]trace"        , I_( "show commands executed" ) },;
-      { "-[no]beep"         , I_( "enable (or disable) single beep on successful exit, double beep on failure" ) },;
-      { "-[no]ignore"       , I_( "ignore errors when running compiler tools (default: off)" ) },;
-      { "-[no]hbcppmm"      , I_( "forces to override standard C++ memory management functions with Harbour ones" ) },;
-      { "-nohblib[-]"       , I_( "do not use static core Harbour libraries when linking" ) },;
-      { "-nolibgrouping[-]" , I_( "disable library grouping on gcc based compilers" ) },;
-      { "-nomiscsyslib[-]"  , I_( "don't add extra list of system libraries to default library list" ) },;
-      { "-traceonly"        , I_( "show commands to be executed, but don't execute them" ) },;
-      { "-[no]warn[=lev]"   , I_( "set C compiler warning level\n<lev> can be: max, yes, low, no, def (default: yes)" ) },;
-      { "-[no]compr[=lev]"  , I_( "compress executable/dynamic lib (needs UPX)\n<lev> can be: min, max, def" ) },;
-      { "-[no]run"          , I_( "run/don't run output executable" ) },;
-      { "-vcshead=<file>"   , I_( "generate .ch header file with local repository information. SVN, CVS, Git, Mercurial, Bazaar and Fossil are currently supported. Generated header will define macro _HBMK_VCS_TYPE_ with the name of detected VCS and _HBMK_VCS_ID_ with the unique ID of local repository" ) },;
-      { "-tshead=<file>"    , I_( "generate .ch header file with timestamp information. Generated header will define macros _HBMK_BUILD_DATE_, _HBMK_BUILD_TIME_, _HBMK_BUILD_TIMESTAMP_ with the date/time of build" ) },;
-      { "-icon=<file>"      , I_( "set <file> as application icon. <file> should be a supported format on the target platform (experimental)" ) },;
-      { "-instpath=<path>"  , I_( "copy target to <path>. if <path> is a directory, it should end with path separator. can be specified multiple times" ) },;
-      { "-nohbc"            , I_( "do not process .hbc files in current directory" ) },;
-      { "-stop"             , I_( "stop without doing anything" ) },;
-      { "-echo=<text>"      , I_( "echo text on screen" ) },;
+      { "-gui|-std"          , I_( "create GUI/console executable" ) },;
+      { "-main=<mainfunc>"   , I_( "override the name of starting function/procedure" ) },;
+      { "-fullstatic"        , I_( "link with all static libs" ) },;
+      { "-[full|fix]shared"  , I_( "create shared Harbour binaries without/with absolute dir reference to Harbour library (default: 'fullshared' when Harbour is installed on system location, 'fixshared' otherwise) (fix/full option in *nix only)" ) },;
+      { "-nulrdd[-]"         , I_( "link with nulrdd" ) },;
+      { "-[no]debug"         , I_( "add/exclude C compiler debug info. For Harbour level debug, use Harbour option -b as usual" ) },;
+      { "-[no]optim"         , I_( "toggle C compiler optimizations (default: on)" ) },;
+      { "-[no]cpp[=def]"     , I_( "force C/C++ mode or reset to default" ) },;
+      { "-[no]map"           , I_( "create (or not) a map file" ) },;
+      { "-[no]implib"        , I_( "create (or not) an import library (in -hbdyn mode)" ) },;
+      { "-[no]strip"         , I_( "strip (no strip) binaries" ) },;
+      { "-[no]trace"         , I_( "show commands executed" ) },;
+      { "-[no]beep"          , I_( "enable (or disable) single beep on successful exit, double beep on failure" ) },;
+      { "-[no]ignore"        , I_( "ignore errors when running compiler tools (default: off)" ) },;
+      { "-[no]hbcppmm"       , I_( "forces to override standard C++ memory management functions with Harbour ones" ) },;
+      { "-nohblib[-]"        , I_( "do not use static core Harbour libraries when linking" ) },;
+      { "-nolibgrouping[-]"  , I_( "disable library grouping on gcc based compilers" ) },;
+      { "-nomiscsyslib[-]"   , I_( "don't add extra list of system libraries to default library list" ) },;
+      { "-traceonly"         , I_( "show commands to be executed, but don't execute them" ) },;
+      { "-[no]warn[=lev]"    , I_( "set C compiler warning level\n<lev> can be: max, yes, low, no, def (default: yes)" ) },;
+      { "-[no]compr[=lev]"   , I_( "compress executable/dynamic lib (needs UPX)\n<lev> can be: min, max, def" ) },;
+      { "-[no]run"           , I_( "run/don't run output executable" ) },;
+      { "-vcshead=<file>"    , I_( "generate .ch header file with local repository information. SVN, CVS, Git, Mercurial, Bazaar and Fossil are currently supported. Generated header will define macro _HBMK_VCS_TYPE_ with the name of detected VCS and _HBMK_VCS_ID_ with the unique ID of local repository" ) },;
+      { "-tshead=<file>"     , I_( "generate .ch header file with timestamp information. Generated header will define macros _HBMK_BUILD_DATE_, _HBMK_BUILD_TIME_, _HBMK_BUILD_TIMESTAMP_ with the date/time of build" ) },;
+      { "-icon=<file>"       , I_( "set <file> as application icon. <file> should be a supported format on the target platform (experimental)" ) },;
+      { "-instpath=<path>"   , I_( "copy target to <path>. if <path> is a directory, it should end with path separator. can be specified multiple times" ) },;
+      { "-nohbc"             , I_( "do not process .hbc files in current directory" ) },;
+      { "-stop"              , I_( "stop without doing anything" ) },;
+      { "-echo=<text>"       , I_( "echo text on screen" ) },;
       NIL,;
-      { "-bldf[-]"          , I_( "inherit all/no (default) flags from Harbour build" ) },;
-      { "-bldf=[p][c][l]"   , I_( "inherit .prg/.c/linker flags (or none) from Harbour build" ) },;
-      { "-inctrypath=<p>"   , I_( "additional path to autodetect .c header locations" ) },;
-      { "-prgflag=<f>"      , I_( "pass flag to Harbour" ) },;
-      { "-cflag=<f>"        , I_( "pass flag to C compiler" ) },;
-      { "-resflag=<f>"      , I_( "pass flag to resource compiler (Windows only)" ) },;
-      { "-ldflag=<f>"       , I_( "pass flag to linker (executable)" ) },;
-      { "-aflag=<f>"        , I_( "pass flag to linker (static library)" ) },;
-      { "-dflag=<f>"        , I_( "pass flag to linker (dynamic library)" ) },;
-      { "-runflag=<f>"      , I_( "pass flag to output executable when -run option is used" ) },;
-      { "-3rd=<f>"          , I_( "options/flags reserved for 3rd party tools, always ignored by hbmk2 itself" ) },;
-      { "-jobs=<n>"         , I_( "start n compilation threads (multiprocess platforms only)" ) },;
-      { "-inc"              , I_( "enable incremental build mode" ) },;
-      { "-[no]head[=<m>]"   , I_( "control source header parsing (in incremental build mode)\n<m> can be: native (uses compiler to extract dependencies), full (uses simple text parser on the whole file), partial (default, uses simple text parser on 1st 16KB chunk of the file), off" ) },;
-      { "-rebuild"          , I_( "rebuild all (in incremental build mode)" ) },;
-      { "-clean"            , I_( "clean (in incremental build mode)" ) },;
-      { "-workdir=<dir>"    , hb_StrFormat( I_( "working directory\n(default: %1$s/plat/comp in incremental mode, OS temp directory otherwise)" ), _WORKDIR_BASE_ ) },;
+      { "-bldf[-]"           , I_( "inherit all/no (default) flags from Harbour build" ) },;
+      { "-bldf=[p][c][l]"    , I_( "inherit .prg/.c/linker flags (or none) from Harbour build" ) },;
+      { "-inctrypath=<p>"    , I_( "additional path to autodetect .c header locations" ) },;
+      { "-prgflag=<f>"       , I_( "pass flag to Harbour" ) },;
+      { "-cflag=<f>"         , I_( "pass flag to C compiler" ) },;
+      { "-resflag=<f>"       , I_( "pass flag to resource compiler (Windows only)" ) },;
+      { "-ldflag=<f>"        , I_( "pass flag to linker (executable)" ) },;
+      { "-aflag=<f>"         , I_( "pass flag to linker (static library)" ) },;
+      { "-dflag=<f>"         , I_( "pass flag to linker (dynamic library)" ) },;
+      { "-runflag=<f>"       , I_( "pass flag to output executable when -run option is used" ) },;
+      { "-3rd=<f>"           , I_( "options/flags reserved for 3rd party tools, always ignored by hbmk2 itself" ) },;
+      { "-jobs=<n>"          , I_( "start n compilation threads (multiprocess platforms only)" ) },;
+      { "-inc"               , I_( "enable incremental build mode" ) },;
+      { "-[no]head[=<m>]"    , I_( "control source header parsing (in incremental build mode)\n<m> can be: native (uses compiler to extract dependencies), full (uses simple text parser on the whole file), partial (default, uses simple text parser on 1st 16KB chunk of the file), off" ) },;
+      { "-rebuild"           , I_( "rebuild all (in incremental build mode)" ) },;
+      { "-clean"             , I_( "clean (in incremental build mode)" ) },;
+      { "-workdir=<dir>"     , hb_StrFormat( I_( "working directory\n(default: %1$s/plat/comp in incremental mode, OS temp directory otherwise)" ), _WORKDIR_BASE_ ) },;
       NIL,;
-      { "-hbl[=<output>]"   , hb_StrFormat( I_( "output .hbl filename. %1$s macro is accepted in filename" ), _LNG_MARKER ) },;
-      { "-lng=<languages>"  , hb_StrFormat( I_( "list of languages to be replaced in %1$s macros in .pot/.po filenames and output .hbl/.po filenames. Comma separared list:\n-lng=en,hu-HU,de" ), _LNG_MARKER ) },;
-      { "-po=<output>"      , I_( "create/update .po file from source. Merge it with previous .po file of the same name" ) },;
-      { "-[no]minipo"       , I_( "don't (or do) add Harbour version number and source file reference to .po (default: add them)" ) },;
-      { "-rebuildpo"        , I_( "recreate .po file, thus removing all obsolete entries in it" ) },;
+      { "-hbl[=<output>]"    , hb_StrFormat( I_( "output .hbl filename. %1$s macro is accepted in filename" ), _LNG_MARKER ) },;
+      { "-lng=<languages>"   , hb_StrFormat( I_( "list of languages to be replaced in %1$s macros in .pot/.po filenames and output .hbl/.po filenames. Comma separared list:\n-lng=en,hu-HU,de" ), _LNG_MARKER ) },;
+      { "-po=<output>"       , I_( "create/update .po file from source. Merge it with previous .po file of the same name" ) },;
+      { "-[no]minipo"        , I_( "don't (or do) add Harbour version number and source file reference to .po (default: add them)" ) },;
+      { "-rebuildpo"         , I_( "recreate .po file, thus removing all obsolete entries in it" ) },;
       NIL,;
       { "Options below are available on command line only:" },;
       NIL,;
-      { "-target=<script>"  , I_( "specify a new build target. <script> can be .prg (or no extension) or .hbm/.hbp file" ) },;
-      { "-target"           , I_( "marks beginning of options belonging to a new build target" ) },;
-      { "-alltarget"        , I_( "marks beginning of common options belonging to all targets" ) },;
+      { "-target=<script>"   , I_( "specify a new build target. <script> can be .prg (or no extension) or .hbm/.hbp file" ) },;
+      { "-target"            , I_( "marks beginning of options belonging to a new build target" ) },;
+      { "-alltarget"         , I_( "marks beginning of common options belonging to all targets" ) },;
       NIL,;
-      { "-env:<e>[<o>[<v>]]", I_( "alter local environment. <e> is the name of the environment variable to alter. <o> can be '=' to set/override, '-' to delete, '+' to append to the end of existing value, '#' to insert to the beginning of existing value. <v> is the value to set/append/insert. If multiple options are passed, they are processed from left to right." ) },;
+      { "-env:<e>[<o>[<v>]]" , I_( "alter local environment. <e> is the name of the environment variable to alter. <o> can be '=' to set/override, '-' to delete, '+' to append to the end of existing value, '#' to insert to the beginning of existing value. <v> is the value to set/append/insert. If multiple options are passed, they are processed from left to right." ) },;
       NIL,;
-      { "-hbrun"            , I_( "run target" ) },;
-      { "-hbraw"            , I_( "stop after running Harbour compiler" ) },;
-      { "-hbcmp|-clipper"   , I_( "stop after creating the object files\ncreate link/copy hbmk2 to hbcmp/clipper for the same effect" ) },;
-      { "-hbcc"             , I_( "stop after creating the object files and accept raw C flags\ncreate link/copy hbmk2 to hbcc for the same effect" ) },;
-      { "-hblnk"            , I_( "accept raw linker flags" ) },;
-      { "-hb10"             , I_( "enable Harbour 1.0.x compatibility mode (experimental)" ) },;
-      { "-xhb"              , I_( "enable xhb mode (experimental)" ) },;
-      { "-hbc"              , I_( "enable pure C mode (experimental)" ) },;
-      { "-rtlink"           , "" },;
-      { "-blinker"          , "" },;
-      { "-exospace"         , I_( "emulate Clipper compatible linker behavior\ncreate link/copy hbmk2 to rtlink/blinker/exospace for the same effect" ) },;
+      { "-hbrun"             , I_( "run target" ) },;
+      { "-hbraw"             , I_( "stop after running Harbour compiler" ) },;
+      { "-hbcmp|-clipper"    , I_( "stop after creating the object files\ncreate link/copy hbmk2 to hbcmp/clipper for the same effect" ) },;
+      { "-hbcc"              , I_( "stop after creating the object files and accept raw C flags\ncreate link/copy hbmk2 to hbcc for the same effect" ) },;
+      { "-hblnk"             , I_( "accept raw linker flags" ) },;
+      { "-hb10"              , I_( "enable Harbour 1.0.x compatibility mode (experimental)" ) },;
+      { "-xhb"               , I_( "enable xhb mode (experimental)" ) },;
+      { "-hbc"               , I_( "enable pure C mode (experimental)" ) },;
+      { "-rtlink"            , "" },;
+      { "-blinker"           , "" },;
+      { "-exospace"          , I_( "emulate Clipper compatible linker behavior\ncreate link/copy hbmk2 to rtlink/blinker/exospace for the same effect" ) },;
       NIL,;
-      { "-mkimplib=<l> <d>" , I_( "convert <d> .dll into <l> import library (experimental)" ) },;
+      { "-mkimplib=<d> [<l>]", I_( "convert <d> .dll into <l> import library (experimental)" ) },;
       NIL,;
-      { "-hbmake=<file>"    , I_( "convert hbmake project file to .hbp file (experimental)" ) },;
-      { "-xbp=<file>"       , I_( "convert .xbp (xbuild) project file to .hbp file (experimental)" ) },;
-      { "-xhp=<file>"       , I_( "convert .xhp (xMate) project file to .hbp file (experimental)" ) },;
+      { "-hbmake=<file>"     , I_( "convert hbmake project file to .hbp file (experimental)" ) },;
+      { "-xbp=<file>"        , I_( "convert .xbp (xbuild) project file to .hbp file (experimental)" ) },;
+      { "-xhp=<file>"        , I_( "convert .xhp (xMate) project file to .hbp file (experimental)" ) },;
       NIL,;
-      { "--hbdirbin"        , I_( "output Harbour binary directory" ) },;
-      { "--hbdirdyn"        , I_( "output Harbour dynamic library directory" ) },;
-      { "--hbdirlib"        , I_( "output Harbour static library directory" ) },;
-      { "--hbdirinc"        , I_( "output Harbour header directory" ) },;
+      { "--hbdirbin"         , I_( "output Harbour binary directory" ) },;
+      { "--hbdirdyn"         , I_( "output Harbour dynamic library directory" ) },;
+      { "--hbdirlib"         , I_( "output Harbour static library directory" ) },;
+      { "--hbdirinc"         , I_( "output Harbour header directory" ) },;
       NIL,;
-      { "-plat[form]=<plat>", I_( "select target platform." ) },;
-      { "-comp[iler]=<comp>", I_( "select C compiler.\nSpecial value:\n - bld: use original build settings (default on *nix)" ) },;
-      { "-build=<name>"     , I_( "use a specific build name" ) },;
-      { "-lang=<lang>"      , I_( "override default language. Similar to HB_LANG envvar." ) },;
-      { "-width=<n>"        , I_( "set output width to <n> characters." ) },;
-      { "--version"         , I_( "display version header only" ) },;
-      { "-pause"            , I_( "force waiting for a key on exit in case of failure (with alternate GTs only)" ) },;
-      { "-info"             , I_( "turn on informational messages" ) },;
-      { "-quiet"            , I_( "suppress all screen messages" ) } }
+      { "-plat[form]=<plat>" , I_( "select target platform." ) },;
+      { "-comp[iler]=<comp>" , I_( "select C compiler.\nSpecial value:\n - bld: use original build settings (default on *nix)" ) },;
+      { "-build=<name>"      , I_( "use a specific build name" ) },;
+      { "-lang=<lang>"       , I_( "override default language. Similar to HB_LANG envvar." ) },;
+      { "-width=<n>"         , I_( "set output width to <n> characters." ) },;
+      { "--version"          , I_( "display version header only" ) },;
+      { "-pause"             , I_( "force waiting for a key on exit in case of failure (with alternate GTs only)" ) },;
+      { "-info"              , I_( "turn on informational messages" ) },;
+      { "-quiet"             , I_( "suppress all screen messages" ) } }
 
    LOCAL aText_Notes := {;
       "",;
@@ -8804,6 +8810,8 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
 
    RETURN
 
+#define _OPT_WIDTH 22
+
 STATIC PROCEDURE OutOpt( hbmk, aOpt )
    LOCAL nLine
    LOCAL nLines
@@ -8814,13 +8822,13 @@ STATIC PROCEDURE OutOpt( hbmk, aOpt )
    ELSE
       IF Len( aOpt ) > 1
          aOpt[ 2 ] := StrTran( aOpt[ 2 ], "\n", hb_osNewLine() )
-         nLines := MLCount( aOpt[ 2 ], hbmk[ _HBMK_nMaxCol ] - 21 )
+         nLines := MLCount( aOpt[ 2 ], hbmk[ _HBMK_nMaxCol ] - _OPT_WIDTH )
          FOR nLine := 1 TO nLines
-            IF ! Empty( tmp := RTrim( MemoLine( aOpt[ 2 ], hbmk[ _HBMK_nMaxCol ] - 21, nLine ) ) )
+            IF ! Empty( tmp := RTrim( MemoLine( aOpt[ 2 ], hbmk[ _HBMK_nMaxCol ] - _OPT_WIDTH, nLine ) ) )
                IF nLine == 1
-                  OutStd( PadR( Space( 2 ) + aOpt[ 1 ], 21 ) )
+                  OutStd( PadR( Space( 2 ) + aOpt[ 1 ], _OPT_WIDTH ) )
                ELSE
-                  OutStd( Space( 21 ) )
+                  OutStd( Space( _OPT_WIDTH ) )
                ENDIF
                OutStd( tmp + _OUT_EOL )
             ENDIF

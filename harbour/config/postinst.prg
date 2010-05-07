@@ -77,39 +77,39 @@ PROCEDURE Main()
       ! Empty( GetEnv( "HB_HOST_BIN_DIR" ) )
 
       aArray := {;
-         { "ace32"    , "HB_WITH_ADS"       , "Redistribute\ace32.dll"   , .F. },;
-         { "ace32"    , "HB_WITH_ADS"       , "ace32.dll"                , .F. },;
-         { "ace32"    , "HB_WITH_ADS"       , "32bit\ace32.dll"          , .F. },;
-         { "alleg"    , "HB_WITH_ALLEGRO"   , "..\bin\alleg42.dll"       , .T. },;
-         { "sde61"    , "HB_WITH_APOLLO"    , "..\sde61.dll"             , .F. },;
-         { "sde7"     , "HB_WITH_APOLLO"    , "..\sde7.dll"              , .F. },;
-         { "blat"     , "HB_WITH_BLAT"      , "..\blat.dll"              , .T. },;
-         { "cairo"    , "HB_WITH_CAIRO"     , "..\..\bin\libcairo-2.dll" , .T. },;
-         { "libcurl"  , "HB_WITH_CURL"      , "..\libcurl.dll"           , .T. },;
-         { "libcurl"  , "HB_WITH_CURL"      , "..\bin\libcurl.dll"       , .T. },;
-         { "fbclient" , "HB_WITH_FIREBIRD"  , "..\bin\fbclient.dll"      , .F. },;
-         { "FreeImage", "HB_WITH_FREEIMAGE" , "..\Dist\FreeImage.dll"    , .F. },;
-         { "bgd"      , "HB_WITH_GD"        , "..\bin\bgd.dll"           , .F. },;
-         { "libhpdf"  , "HB_WITH_LIBHARU"   , "..\libhpdf.dll"           , .F. },;
-         { "libhpdf"  , "HB_WITH_LIBHARU"   , "..\lib_dll\libhpdf.dll"   , .F. },;
-         { "libmysql" , "HB_WITH_MYSQL"     , "..\bin\libmySQL.dll"      , .F. },;
-         { "ociliba"  , "HB_WITH_OCILIB"    , "..\lib32\ociliba.dll"     , .F. },;
-         { "ocilibm"  , "HB_WITH_OCILIB"    , "..\lib32\ocilibm.dll"     , .F. },;
-         { "ocilibw"  , "HB_WITH_OCILIB"    , "..\lib32\ocilibw.dll"     , .F. },;
-         { "libeay32" , "HB_WITH_OPENSSL"   , "..\out32dll\libeay32.dll" , .T. },;
-         { "ssleay32" , "HB_WITH_OPENSSL"   , "..\out32dll\ssleay32.dll" , .T. },;
-         { "libeay32" , "HB_WITH_OPENSSL"   , "..\dll\libeay32.dll"      , .T. },;
-         { "ssleay32" , "HB_WITH_OPENSSL"   , "..\dll\ssleay32.dll"      , .T. },;
-         { "libeay32" , "HB_WITH_OPENSSL"   , "..\libeay32.dll"          , .T. },;
-         { "ssleay32" , "HB_WITH_OPENSSL"   , "..\ssleay32.dll"          , .T. },;
-         { "libpq"    , "HB_WITH_PGSQL"     , "..\lib\libpq.dll"         , .T. }}
+         { "HB_WITH_ADS"       , "Redistribute\ace32.dll"   , .F., "" },;
+         { "HB_WITH_ADS"       , "ace32.dll"                , .F., "" },;
+         { "HB_WITH_ADS"       , "32bit\ace32.dll"          , .F., "" },;
+         { "HB_WITH_ALLEGRO"   , "..\bin\alleg42.dll"       , .T., "alleg" },;
+         { "HB_WITH_APOLLO"    , "..\sde61.dll"             , .F., "" },;
+         { "HB_WITH_APOLLO"    , "..\sde7.dll"              , .F., "" },;
+         { "HB_WITH_BLAT"      , "..\blat.dll"              , .T., "" },;
+         { "HB_WITH_CAIRO"     , "..\..\bin\libcairo-2.dll" , .T., "cairo" },;
+         { "HB_WITH_CURL"      , "..\libcurl.dll"           , .T., "" },;
+         { "HB_WITH_CURL"      , "..\bin\libcurl.dll"       , .T., "" },;
+         { "HB_WITH_FIREBIRD"  , "..\bin\fbclient.dll"      , .F., "" },;
+         { "HB_WITH_FREEIMAGE" , "..\Dist\FreeImage.dll"    , .F., "" },;
+         { "HB_WITH_GD"        , "..\bin\bgd.dll"           , .F., "" },;
+         { "HB_WITH_LIBHARU"   , "..\libhpdf.dll"           , .F., "" },;
+         { "HB_WITH_LIBHARU"   , "..\lib_dll\libhpdf.dll"   , .F., "" },;
+         { "HB_WITH_MYSQL"     , "..\bin\libmySQL.dll"      , .F., "" },;
+         { "HB_WITH_OCILIB"    , "..\lib32\ociliba.dll"     , .F., "" },;
+         { "HB_WITH_OCILIB"    , "..\lib32\ocilibm.dll"     , .F., "" },;
+         { "HB_WITH_OCILIB"    , "..\lib32\ocilibw.dll"     , .F., "" },;
+         { "HB_WITH_OPENSSL"   , "..\out32dll\libeay32.dll" , .T., "" },;
+         { "HB_WITH_OPENSSL"   , "..\out32dll\ssleay32.dll" , .T., "" },;
+         { "HB_WITH_OPENSSL"   , "..\dll\libeay32.dll"      , .T., "" },;
+         { "HB_WITH_OPENSSL"   , "..\dll\ssleay32.dll"      , .T., "" },;
+         { "HB_WITH_OPENSSL"   , "..\libeay32.dll"          , .T., "" },;
+         { "HB_WITH_OPENSSL"   , "..\ssleay32.dll"          , .T., "" },;
+         { "HB_WITH_PGSQL"     , "..\lib\libpq.dll"         , .T., "" }}
 
       FOR EACH tmp IN aArray
-         IF ! Empty( GetEnv( tmp[ 2 ] ) )
+         IF ! Empty( GetEnv( tmp[ 1 ] ) )
             hb_processRun( GetEnv( "HB_HOST_BIN_DIR" ) + _PS_ + "hbmk2" +;
-                           " " + Chr( 34 ) + "-mkimplib=" + GetEnv( "HB_LIB_INSTALL" ) + _PS_ + tmp[ 1 ] + Chr( 34 ) +;
-                           " " + Chr( 34 ) + GetEnv( tmp[ 2 ] ) + _PS_ + StrTran( tmp[ 3 ], "\", _PS_ ) + Chr( 34 ) +;
-                           iif( tmp[ 4 ], " -mkimplibms", "" ) )
+                           " " + Chr( 34 ) + "-mkimplib=" + GetEnv( tmp[ 1 ] ) + _PS_ + StrTran( tmp[ 2 ], "\", _PS_ ) + Chr( 34 ) +;
+                           " " + Chr( 34 ) + GetEnv( "HB_LIB_INSTALL" ) + _PS_ + tmp[ 4 ] + Chr( 34 ) +;
+                           iif( tmp[ 3 ], " -mkimplibms", "" ) )
          ENDIF
       NEXT
 
