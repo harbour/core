@@ -18,16 +18,12 @@ CC_OUT := -o
 
 CFLAGS += -I. -I$(HB_INC_COMPILE)
 
-# Equivalent to MSVC -GS (default) option, available in GCC 4.1 and upper:
-#    -fstack-protector
-# Equivalent to -dynamicbase MSVC linker option:
-#    peflags --dynamicbase=true
-# Equivalent to -nxcompat MSVC linker option:
-#    peflags --nxcompat=true
-# Equivalent to -tsaware MSVC linker option:
-#    peflags --tsaware=true
+# Equivalent to MSVC -GS (default) option:
+ifeq ($(filter $(HB_COMPILER_VER),29 34 40),)
+   #CFLAGS += -fstack-protector
+endif
 
-ifeq ($(HB_COMPILER),mingw64)
+ifeq ($(filter $(HB_COMPILER_VER),29 34 40 41 42 43),)
    LDFLAGS += -Wl,--nxcompat -Wl,--dynamicbase
    DFLAGS += -Wl,--nxcompat -Wl,--dynamicbase
 endif

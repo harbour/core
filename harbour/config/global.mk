@@ -713,6 +713,9 @@ ifeq ($(HB_COMPILER),)
                            # Equation Solution build (requires x86_64 host)
                            HB_COMP_PATH := $(call find_in_path,x86_64-pc-mingw32-gcc)
                            ifneq ($(HB_COMP_PATH),)
+                              ifeq ($(HB_COMPILER_VER),)
+                                 HB_COMPILER_VER := 44
+                              endif
                               HB_COMPILER := mingw64
                               HB_CPU := x86_64
                            else
@@ -806,6 +809,9 @@ ifeq ($(HB_COMPILER),)
                                                                         # mingw-w64 build
                                                                         HB_COMP_PATH := $(call find_in_path,x86_64-w64-mingw32-gcc)
                                                                         ifneq ($(HB_COMP_PATH),)
+                                                                           ifeq ($(HB_COMPILER_VER),)
+                                                                              HB_COMPILER_VER := 44
+                                                                           endif
                                                                            HB_COMPILER := mingw64
                                                                            HB_CCPREFIX := x86_64-w64-mingw32-
                                                                            HB_CPU := x86_64

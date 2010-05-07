@@ -44,7 +44,7 @@ Tool/lib versions used to create this package:
    Compiler tools
    --------------
 
-   MinGW GNU C 4.4.1 TDM-2 (included)
+   MinGW GNU C 4.5.0 (included)
    MinGW w64 GNU C 4.4.4-20100129 (prerelease)
    MinGW CEGCC 4.4.0
    MSVC 2010 (version bundled with MS Windows SDK 7.1)
@@ -65,7 +65,7 @@ Tool/lib versions used to create this package:
    MySQL 5.1.41
    OpenSSL 1.0.0
    PostgreSQL 8.4.2-1
-   QT 4.5.3
+   QT 4.6.2
    WATTCP 2.2.10
 
 Changes since previous (2.0.0) release:
@@ -78,6 +78,9 @@ Changes since previous (2.0.0) release:
   source though.
 - Built against Firebird 2.5.0rc1.
 - Downgraded to stable mingw64 version. It fixes .dll handling.
+- Upgraded to mingw 4.5.0 official release.
+- Upgraded to QT 4.6.2 (from 4.5.3).
+- Upgraded to MSVC 2010 (from 2008).
 
 Changes since previous (2.0.0beta3 20090905) release:
 -----------------------------------------------------------------------

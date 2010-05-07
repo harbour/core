@@ -64,6 +64,7 @@ endif
 RC := rc.exe
 RC_OUT := -fo$(subst x,x, )
 RCFLAGS :=
+# Windows SDK 7.0 also supports it, but we cannot detect it.
 ifeq ($(filter $(HB_COMPILER_VER),600 700 710 800 900),)
    RCFLAGS += -nologo
 endif
