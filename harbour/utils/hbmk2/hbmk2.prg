@@ -1776,10 +1776,6 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
          lMakeImpLibMS_bcc := .T.
 
-      CASE lMakeImpLib .AND. Empty( cMakeImpLibLib )
-
-         cMakeImpLibLib := PathSepToTarget( hbmk, PathProc( MacroProc( hbmk, ArchCompFilter( hbmk, cParam ), aParam[ _PAR_cFileName ] ), aParam[ _PAR_cFileName ] ) )
-
       CASE Left( cParamL, Len( "-jobs=" ) ) == "-jobs="
 
          cParam := ArchCompFilter( hbmk, SubStr( cParam, Len( "-jobs=" ) + 1 ) )
@@ -2197,6 +2193,10 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
          hbmk[ _HBMK_cHBL ] := PathSepToTarget( hbmk, cParam )
          hbmk[ _HBMK_cHBLDir ] := FN_DirGet( aParam[ _PAR_cFileName ] )
+
+      CASE lMakeImpLib .AND. Empty( cMakeImpLibLib )
+
+         cMakeImpLibLib := PathSepToTarget( hbmk, PathProc( MacroProc( hbmk, ArchCompFilter( hbmk, cParam ), aParam[ _PAR_cFileName ] ), aParam[ _PAR_cFileName ] ) )
 
       OTHERWISE
 
