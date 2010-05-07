@@ -23,7 +23,10 @@ ifeq ($(filter $(HB_COMPILER_VER),29 34 40),)
    #CFLAGS += -fstack-protector
 endif
 
-ifeq ($(filter $(HB_COMPILER_VER),29 34 40 41 42 43),)
+# It is also supported by official mingw 4.4.x and mingw64 4.4.x,
+# but not supported by mingw tdm 4.4.x, so I only enable it on or
+# above 4.5.0.
+ifeq ($(filter $(HB_COMPILER_VER),29 34 40 41 42 43 44),)
    LDFLAGS += -Wl,--nxcompat -Wl,--dynamicbase
    DFLAGS += -Wl,--nxcompat -Wl,--dynamicbase
 endif

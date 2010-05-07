@@ -1304,8 +1304,7 @@ HARBOUR
 
       MinGW [win, *nix, free, open-soource]
          http://www.tdragon.net/recentgcc/, http://sourceforge.net/projects/tdm-gcc/ (unofficial, recommended)
-         http://www.mingw.org/, http://sourceforge.net/projects/mingw/ (official, rarely updated, MSYS home)
-         http://www.equation.com/servlet/equation.cmd?fa=fortran (unofficial)
+         http://www.mingw.org/, http://sourceforge.net/projects/mingw/ (official, MSYS home)
       MinGW x64 [win, *nix, free, open-source]
          http://mingw-w64.sourceforge.net/, http://sourceforge.net/projects/mingw-w64/
          http://www.cadforte.com/
@@ -1391,12 +1390,13 @@ HARBOUR
          http://get.qt.nokia.com/qt/source/
          Currently supported Windows binary package:
             http://get.qt.nokia.com/qt/source/qt-win-opensource-4.5.3-mingw.exe
+            http://get.qt.nokia.com/qt/source/qt-win-opensource-4.6.2-mingw.exe
          How to create static and MSVC builds:
             http://doc.trolltech.com/4.5/deployment-windows.html
          NOTES:
             - QT 4.5.x requires MinGW builds with SJLJ stack frame unwinding.
-              (This is the recommended QT version to use with Harbour.)
             - QT 4.6.x requires MinGW builds with DWARF-2 stack frame unwinding.
+              (mingw official 4.4.0 or upper, or mingw tdm with dwarf update)
       HB_WITH_SQLITE3 - sqlite3 [multiplatform, free, open-source]
          http://www.sqlite.org/
       HB_WITH_WATT - Watt-32 (TCP/IP sockets) [dos, free, open-source]
