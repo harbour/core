@@ -81,18 +81,16 @@ PROCEDURE Main()
          { "HB_WITH_ADS"       , "ace32.dll"                , .F., "" },;
          { "HB_WITH_ADS"       , "32bit\ace32.dll"          , .F., "" },;
          { "HB_WITH_ALLEGRO"   , "..\bin\alleg42.dll"       , .T., "alleg" },;
-         { "HB_WITH_APOLLO"    , "..\sde61.dll"             , .F., "" },;
-         { "HB_WITH_APOLLO"    , "..\sde7.dll"              , .F., "" },;
          { "HB_WITH_BLAT"      , "..\blat.dll"              , .T., "" },;
          { "HB_WITH_CAIRO"     , "..\..\bin\libcairo-2.dll" , .T., "cairo" },;
          { "HB_WITH_CURL"      , "..\libcurl.dll"           , .T., "" },;
          { "HB_WITH_CURL"      , "..\bin\libcurl.dll"       , .T., "" },;
-         { "HB_WITH_FIREBIRD"  , "..\bin\fbclient.dll"      , .F., "" },;
+         { "HB_WITH_FIREBIRD"  , "..\bin\fbclient.dll"      , .F., "" },; /* Doesn't work for mingw, because .lib has another name in another directory */
          { "HB_WITH_FREEIMAGE" , "..\Dist\FreeImage.dll"    , .F., "" },;
          { "HB_WITH_GD"        , "..\bin\bgd.dll"           , .F., "" },;
          { "HB_WITH_LIBHARU"   , "..\libhpdf.dll"           , .F., "" },;
          { "HB_WITH_LIBHARU"   , "..\lib_dll\libhpdf.dll"   , .F., "" },;
-         { "HB_WITH_MYSQL"     , "..\bin\libmySQL.dll"      , .F., "" },;
+         { "HB_WITH_MYSQL"     , "..\lib\opt\libmySQL.dll"  , .F., "" },;
          { "HB_WITH_OCILIB"    , "..\lib32\ociliba.dll"     , .F., "" },;
          { "HB_WITH_OCILIB"    , "..\lib32\ocilibm.dll"     , .F., "" },;
          { "HB_WITH_OCILIB"    , "..\lib32\ocilibw.dll"     , .F., "" },;
@@ -113,9 +111,9 @@ PROCEDURE Main()
          ENDIF
       NEXT
 
-      /* HACK: Copying .dll to .a doesn't work in case of mysql, so we copy over the supplied import lib. [vszakats] */
-      IF GetEnv( "HB_COMPILER" ) $ "mingw|mingw64"
-         hb_FCopy( GetEnv( "HB_WITH_MYSQL" ) + _PS_ + StrTran( "..\lib\opt\libmySQL.lib", "\", _PS_ ), GetEnv( "HB_LIB_INSTALL" ) + _PS_ + "liblibmysql.a" )
+      /* HACK: Automatic implib generation doesn't work in case of FireBird, so we manually create it. [vszakats] */
+      IF GetEnv( "HB_COMPILER" ) $ "mingw|mingw64|cygwin"
+         hb_FCopy( GetEnv( "HB_WITH_FIREBIRD" ) + _PS_ + StrTran( "..\lib\fbclient_ms.lib", "\", _PS_ ), GetEnv( "HB_LIB_INSTALL" ) + _PS_ + "libfbclient.a" )
       ENDIF
 
       /* Exception: We use static libs with mingw */
