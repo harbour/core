@@ -134,6 +134,132 @@
 /* #define HB_FM_WIN_ALLOC */
 
 /* ***********************************************************************
+ * CPU detection
+ */
+
+/* Partially based on:
+      http://predef.sourceforge.net/prearch.html
+      http://poshlib.hookatooka.com/poshlib/trac.cgi/browser/posh.h
+      [vszakats]
+ */
+
+#if   defined( __alpha__ ) || \
+      defined( __alpha ) || \
+      defined( alpha ) || \
+      defined( _M_ALPHA )
+   #define HB_CPU_ALPHA
+
+#elif defined( __amd64__ ) || \
+      defined( __amd64 ) || \
+      defined( __AMD64__ ) || \
+      defined( __x86_64__ ) || \
+      defined( __x86_64 ) || \
+      defined( _M_AMD64 ) || \
+      defined( _M_X64 ) || \
+      defined( __MINGW64__ )
+   #define HB_CPU_X86_64
+
+#elif defined( __arm__ ) || \
+      defined( __arm ) || \
+      defined( ARM ) || \
+      defined( _ARM ) || \
+      defined( _M_ARM )
+   #define HB_CPU_ARM
+
+#elif defined( __hppa__ ) || \
+      defined( __hppa ) || \
+      defined( hppa )
+   #define HB_CPU_PARISC
+
+#elif defined( i386 ) || \
+      defined( __i386__ ) || \
+      defined( __i386 ) || \
+      defined( __386__ ) || \
+      defined( _M_IX86 ) || \
+      defined( _M_I86 ) || \
+      defined( M_I86 ) || \
+      defined( __X86__ ) || \
+      defined( _X86_ ) || \
+      defined( __I86__ ) || \
+      defined( __THW_INTEL__ ) || \
+      defined( __INTEL__ )
+   #define HB_CPU_X86
+
+#elif defined( __ia64__ ) || \
+      defined( __ia64 ) || \
+      defined( _IA64 ) || \
+      defined( __IA64__ ) || \
+      defined( _M_IA64 )
+   #define HB_CPU_IA_64
+
+#elif defined( __m68k__ ) || \
+      defined( M68000 )
+   #define HB_CPU_M68K
+
+#elif defined( __mips__ ) || \
+      defined( __mips ) || \
+      defined( __MIPS__ ) || \
+      defined( mips ) || \
+      defined( _MIPS ) || \
+      defined( __MIPS__ ) || \
+      defined( _M_MRX000 ) || \
+      defined( _M_MIPS )
+   #define HB_CPU_MIPS
+
+#elif defined( __powerpc64__ ) || \
+      defined( __ppc64__ ) || \
+      defined( _ARCH_PPC64 )
+   #define HB_CPU_PPC_64
+
+#elif defined( __powerpc__ ) || \
+      defined( __powerpc ) || \
+      defined( __POWERPC__ ) || \
+      defined( __ppc ) || \
+      defined( __ppc__ ) || \
+      defined( __PPC__ ) || \
+      defined( _ARCH_PPC ) || \
+      defined( _M_MPPC ) || \
+      defined( _M_PPC )
+   #define HB_CPU_PPC
+
+#elif defined( __THW_RS6000 ) || \
+      defined( _IBMR2 ) || \
+      defined( _POWER ) || \
+      defined( _ARCH_PWR ) || \
+      defined( _ARCH_PWR2 )
+   #define HB_CPU_POWER
+
+#elif defined( __sparc__ ) || \
+      defined( __sparc )
+   #if defined( __arch64__ ) || \
+       defined( __sparcv9 ) || \
+       defined( __sparc_v9__ )
+      #define HB_CPU_SPARC_64
+   #else
+      #define HB_CPU_SPARC
+   #endif
+
+#elif defined( __sh__ ) || \
+      defined( _SH3 ) || \
+      defined( __sh4__ ) || \
+      defined( __SH4__ ) || \
+      defined( _M_SH )
+   #define HB_CPU_SH
+
+#elif defined( __370__ ) || \
+      defined( __THW_370__ )
+   #define HB_CPU_SYS370
+
+#elif defined( __s390__ ) || \
+      defined( __s390x__ )
+   #define HB_CPU_SYS390
+
+#elif defined( __SYSC_ZARCH__ )
+   #define HB_CPU_ZARCH
+
+#endif
+
+/* ***********************************************************************
  * You can select here, what type of main entry will be used in the
  * application (main() or WinMain()).
  *
@@ -246,6 +372,13 @@
    #endif
 #endif
 
+/* Sub-option inside HB_OS_DARWIN */
+#ifndef HB_OS_IPHONE /* Experimental */
+   #if defined( HB_OS_DARWIN ) && defined( HB_CPU_ARM )
+      #define HB_OS_IPHONE
+   #endif
+#endif
+
 #ifndef HB_OS_BSD
    #if defined( __FreeBSD__ ) || defined( __NetBSD__ ) || defined( __OpenBSD__ ) || \
        defined( HB_OS_DARWIN )
@@ -303,131 +436,6 @@
 #endif
 
 #define HB_PATH_MAX     264 /* with trailing 0 byte */
-
-/* ***********************************************************************
- * CPU detection
- */
-
-/* Partially based on:
-      http://predef.sourceforge.net/prearch.html
-      http://poshlib.hookatooka.com/poshlib/trac.cgi/browser/posh.h
-      [vszakats]
- */
-
-#if   defined( __alpha__ ) || \
-      defined( __alpha ) || \
-      defined( alpha ) || \
-      defined( _M_ALPHA )
-   #define HB_CPU_ALPHA
-
-#elif defined( __amd64__ ) || \
-      defined( __amd64 ) || \
-      defined( __AMD64__ ) || \
-      defined( __x86_64__ ) || \
-      defined( __x86_64 ) || \
-      defined( _M_AMD64 ) || \
-      defined( _M_X64 ) || \
-      defined( __MINGW64__ )
-   #define HB_CPU_X86_64
-
-#elif defined( __arm__ ) || \
-      defined( ARM ) || \
-      defined( _ARM ) || \
-      defined( _M_ARM )
-   #define HB_CPU_ARM
-
-#elif defined( __hppa__ ) || \
-      defined( __hppa ) || \
-      defined( hppa )
-   #define HB_CPU_PARISC
-
-#elif defined( i386 ) || \
-      defined( __i386__ ) || \
-      defined( __i386 ) || \
-      defined( __386__ ) || \
-      defined( _M_IX86 ) || \
-      defined( _M_I86 ) || \
-      defined( M_I86 ) || \
-      defined( __X86__ ) || \
-      defined( _X86_ ) || \
-      defined( __I86__ ) || \
-      defined( __THW_INTEL__ ) || \
-      defined( __INTEL__ )
-   #define HB_CPU_X86
-
-#elif defined( __ia64__ ) || \
-      defined( __ia64 ) || \
-      defined( _IA64 ) || \
-      defined( __IA64__ ) || \
-      defined( _M_IA64 )
-   #define HB_CPU_IA_64
-
-#elif defined( __m68k__ ) || \
-      defined( M68000 )
-   #define HB_CPU_M68K
-
-#elif defined( __mips__ ) || \
-      defined( __mips ) || \
-      defined( __MIPS__ ) || \
-      defined( mips ) || \
-      defined( _MIPS ) || \
-      defined( __MIPS__ ) || \
-      defined( _M_MRX000 ) || \
-      defined( _M_MIPS )
-   #define HB_CPU_MIPS
-
-#elif defined( __powerpc64__ ) || \
-      defined( __ppc64__ ) || \
-      defined( _ARCH_PPC64 )
-   #define HB_CPU_PPC_64
-
-#elif defined( __powerpc__ ) || \
-      defined( __powerpc ) || \
-      defined( __POWERPC__ ) || \
-      defined( __ppc ) || \
-      defined( __ppc__ ) || \
-      defined( __PPC__ ) || \
-      defined( _ARCH_PPC ) || \
-      defined( _M_MPPC ) || \
-      defined( _M_PPC )
-   #define HB_CPU_PPC
-
-#elif defined( __THW_RS6000 ) || \
-      defined( _IBMR2 ) || \
-      defined( _POWER ) || \
-      defined( _ARCH_PWR ) || \
-      defined( _ARCH_PWR2 )
-   #define HB_CPU_POWER
-
-#elif defined( __sparc__ ) || \
-      defined( __sparc )
-   #if defined( __arch64__ ) || \
-       defined( __sparcv9 ) || \
-       defined( __sparc_v9__ )
-      #define HB_CPU_SPARC_64
-   #else
-      #define HB_CPU_SPARC
-   #endif
-
-#elif defined( __sh__ ) || \
-      defined( _SH3 ) || \
-      defined( __sh4__ ) || \
-      defined( __SH4__ ) || \
-      defined( _M_SH )
-   #define HB_CPU_SH
-
-#elif defined( __370__ ) || \
-      defined( __THW_370__ )
-   #define HB_CPU_SYS370
-
-#elif defined( __s390__ ) || \
-      defined( __s390x__ )
-   #define HB_CPU_SYS390
-
-#elif defined( __SYSC_ZARCH__ )
-   #define HB_CPU_ZARCH
-
-#endif
 
 /* ***********************************************************************
  * Here you can force the EOL string to be CRLF
