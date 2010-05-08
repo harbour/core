@@ -240,8 +240,8 @@ STATIC FUNCTION PrepareDB( cFile )
 
    FOR EACH enum IN hPerson
       sqlite3_reset( pStmt )
-      sqlite3_bind_text( pStmt, 1, enum:__enumKey )
-      sqlite3_bind_int( pStmt,  2, enum:__enumValue )
+      sqlite3_bind_text( pStmt, 1, enum:__enumKey() )
+      sqlite3_bind_int( pStmt,  2, enum:__enumValue() )
       sqlite3_step( pStmt )
    NEXT
 

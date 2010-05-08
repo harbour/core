@@ -85,4 +85,10 @@
 #define HB_HAUTOADD_ALWAYS      ( HB_HAUTOADD_ACCESS + HB_HAUTOADD_ASSIGN )
 #define HB_HAUTOADD_REFERENCE   HB_HAUTOADD_ALWAYS
 
+/* HB_HMERGE() modes */
+#define HB_HMERGE_UNION         0  /* logical OR  on items in two hash tables (default) */
+#define HB_HMERGE_INTERSECT     1  /* logical AND on items in two hash tables */
+#define HB_HMERGE_DIFFERENCE    2  /* logical XOR on items in two hash tables */
+#define HB_HMERGE_REMOVE        3  /* h1 & ( h1 ^ h2 ) */
+
 #endif /* HB_COMMON_CH_ */

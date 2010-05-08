@@ -49,8 +49,8 @@ rem ; Using msvc64 because mingw64 .dll handling is broken.
 xcopy /y       "%HB_DIR_UPX%upx.exe"                                               F:\hb\hb21\bin\
  copy /y       "%HB_DIR_UPX%LICENSE"                                               F:\hb\hb21\bin\upx_LICENSE.txt
 
-xcopy /y /s /e F:\devl\MinGW-441-tdm                                               F:\hb\hb21\comp\mingw\
-del F:\hb\hb21\comp\mingw\tdm-mingw-1.908.0-4.4.1-2.exe
+xcopy /y /s /e F:\devl\MinGW-450                                                   F:\hb\hb21\comp\mingw\
+rem del F:\hb\hb21\comp\mingw\tdm-mingw-1.908.0-4.4.1-2.exe
 
 pushd
 

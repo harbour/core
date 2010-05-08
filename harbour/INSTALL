@@ -365,7 +365,7 @@ HARBOUR
 
    Linux (.deb based distros: Debian, Ubuntu)
    ------------------------------------------
-   (tested with Ubuntu 7.04, 8.04, 9.04, 9.10)
+   (tested with Ubuntu 7.04, 8.04, 9.04, 9.10, 10.4)
 
       You'll need these base packages to build/package/test/use Harbour:
 

@@ -1410,7 +1410,7 @@ STATIC FUNCTION MakeResponse()
    cRet += cReturnCode + CR_LF
 
    FOR EACH v IN _HTTP_RESPONSE
-       cRet += v:__enumKey() + ": " + v:__enumValue() + CR_LF
+       cRet += v:__enumKey() + ": " + v + CR_LF
    NEXT
 
    //AEVAL( t_aHeader, {|x| cRet += x[1] + ": " + x[2] + CR_LF } )
@@ -1576,7 +1576,7 @@ STATIC FUNCTION CGIExec( cProc, /*@*/ cOutPut )
          // Sending POST variables to CGI via STD_IN
          cSend := ""
          FOR EACH v IN _POST
-             cSend += v:__enumKey() + "=" + LTrim( hb_cStr( v:__enumValue() ) ) + IIF( v:__enumIndex() < Len( _POST ), "&", "" )
+             cSend += v:__enumKey() + "=" + LTrim( hb_cStr( v ) ) + IIF( v:__enumIndex() < Len( _POST ), "&", "" )
          NEXT
          FWrite( hIn, cSend )
          //hb_toOutDebug( "Sending: %s\n\r", cSend )
@@ -2121,7 +2121,7 @@ STATIC PROCEDURE Define_Env( hmServer )
    LOCAL v
 
    FOR EACH v IN hmServer
-       hb_SetEnv( v:__enumKey(), v:__enumValue() )
+       hb_SetEnv( v:__enumKey(), v )
    NEXT
 
    RETURN
@@ -2527,7 +2527,7 @@ STATIC FUNCTION FileUnAlias( cScript )
       // Checking if the request contains an alias
       FOR EACH x IN s_hAliases
           IF x:__enumKey() == Left( cScript, Len( x:__enumKey() ) )
-             cFileName := x:__enumValue() + SubStr( cScript, Len( x:__enumKey() ) + 1 )
+             cFileName := x + SubStr( cScript, Len( x:__enumKey() ) + 1 )
 
              // substitute macros
              cFileName := StrTran( cFileName, "$(DOCROOT_DIR)", _SERVER[ "DOCUMENT_ROOT" ] )
