@@ -66,11 +66,12 @@
         :hbSetCurrentLineColor( pColor )                    -> NIL
         :hbSetLineAreaBkColor( pColor )                     -> NIL
         :hbRefresh()                                        -> NIL
-        :hbCut()                                            -> NIL
+        :hbCut( nKey )                                      -> NIL
         :hbCopy()                                           -> NIL
         :hbPaste()                                          -> NIL
         :hbSetSelectionMode( nMode, lOn )                   -> NIL
         :hbGetSelectionInfo()                               -> NIL
+        :hbSetSelectionInfo( xSelectionInfo )               -> NIL
 
     $DESCRIPTION$
 

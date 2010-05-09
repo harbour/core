@@ -1016,6 +1016,8 @@ METHOD IdeDocks:setStatusText( nPart, xValue )
       oPanel:caption := xValue
       EXIT
    CASE SB_PNL_STREAM
+HB_TRACE( HB_TR_ALWAYS, "lllllllllll" )
+      oPanel:caption := iif( empty( xValue ), "St", xValue )
       EXIT
    CASE SB_PNL_EDIT
       EXIT

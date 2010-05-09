@@ -84,6 +84,10 @@
 
 #define timerTimeout                              23
 
+#define selectionMode_stream                      1
+#define selectionMode_column                      2
+#define selectionMode_line                        3
+
 /*----------------------------------------------------------------------*/
 
 CLASS IdeEdit INHERIT IdeObject
@@ -123,7 +127,7 @@ CLASS IdeEdit INHERIT IdeObject
    DATA   qFont
    DATA   aBlockCopyContents                      INIT {}
    DATA   isLineSelectionMode                     INIT .f.
-   DATA   aSelectionInfo                          INIT { -1,-1,-1,-1,0 }
+   DATA   aSelectionInfo                          INIT { -1,-1,-1,-1,0,0 }
 
    METHOD new( oEditor, nMode )
    METHOD create( oEditor, nMode )
@@ -148,7 +152,7 @@ CLASS IdeEdit INHERIT IdeObject
    METHOD deleteLine()
    METHOD blockComment()
    METHOD streamComment()
-   METHOD blockIndent( nMode )
+   METHOD blockIndent( nDirctn )
    METHOD moveLine( nDirection )
    METHOD caseUpper()
    METHOD caseLower()
@@ -198,6 +202,9 @@ CLASS IdeEdit INHERIT IdeObject
    METHOD insertBlockContents( aCord )
    METHOD deleteBlockContents( aCord )
    METHOD zoom( nKey )
+   METHOD blockConvert( cMode )
+   METHOD clearSelection()
+   METHOD dispStatusInfo()
 
    ENDCLASS
 
@@ -378,7 +385,7 @@ METHOD IdeEdit:connectEditSignals( oEdit )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
-   LOCAL pAct, qAct, n, qCursor, qEdit, oo, nLine
+   LOCAL pAct, qAct, n, qEdit, oo, nLine, qCursor
 
    HB_SYMBOL_UNUSED( p1 )
 
@@ -419,6 +426,7 @@ METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
       ENDIF
       EXIT
 
+
    CASE textChanged
       //HB_TRACE( HB_TR_ALWAYS, "textChanged()" )
       ::oEditor:setTabImage( qEdit )
@@ -429,18 +437,15 @@ METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
       ::oEditor:qCqEdit := qEdit
       ::oEditor:qCoEdit := oEdit
 
-      qCursor := QTextCursor():configure( qEdit:TextCursor() )
-
       /* Book Marks reach-out buttons */
       ::relayMarkButtons()
       ::toggleLineNumbers()
 
       ::updateTitleBar()
 
-      /* An experimental move but seems a lot is required to achieve column selection */
-      qEdit:hbHighlightSelectedColumns( ::isColumnSelectionEnabled )
-
-      ::oDK:setStatusText( SB_PNL_SELECTEDCHARS, len( qCursor:selectedText() ) )
+//      qEdit:hbHighlightSelectedColumns( ::isColumnSelectionEnabled )
+      ::dispStatusInfo()
+      ::oDK:setStatusText( SB_PNL_SELECTEDCHARS, len( ::getSelectedText() ) )
       EXIT
 
    CASE cursorPositionChanged
@@ -500,13 +505,22 @@ METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeEdit:dispStatusInfo()
+   ::qEdit:hbGetSelectionInfo()
+   ::oDK:setStatusText( SB_PNL_STREAM, iif( ::aSelectionInfo[ 5 ] == 2, "Column", ;
+                                               iif( ::aSelectionInfo[ 5 ] == 3, "Line", "Stream" ) ) )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeEdit:execKeyEvent( nMode, nEvent, p, p1 )
-   LOCAL key, kbm, txt, qEvent
+   LOCAL key, kbm, qEvent
    LOCAL lAlt   := .f.
    LOCAL lCtrl  := .f.
    LOCAL lShift := .f.
 
-   p1 := p1
+   HB_SYMBOL_UNUSED( nMode )
+   HB_SYMBOL_UNUSED( p1 )
 
    SWITCH nEvent
    CASE QEvent_KeyPress
@@ -515,7 +529,6 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p, p1 )
 
       key := qEvent:key()
       kbm := qEvent:modifiers()
-      txt := qEvent:text()
 
       IF hb_bitAnd( kbm, Qt_AltModifier     ) == Qt_AltModifier
          lAlt := .t.
@@ -542,59 +555,6 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p, p1 )
          ::handlePreviousWord( .t. )
          ::lIndentIt := .t.
          EXIT
-      CASE Qt_Key_Tab
-         IF lCtrl
-            ::blockIndent( 1 )
-            RETURN .T.
-         ENDIF
-         EXIT
-      CASE Qt_Key_Backtab
-         IF lCtrl
-            ::blockIndent( -1 )
-            RETURN .t.
-         ENDIF
-         EXIT
-      CASE Qt_Key_Q                   /* All these actions will be pulled from user-setup */
-         IF lCtrl .AND. lShift
-            ::streamComment()
-         ENDIF
-         EXIT
-      CASE Qt_Key_Slash
-         IF lCtrl
-            ::blockComment()
-         ENDIF
-         EXIT
-      CASE Qt_Key_D
-         IF lCtrl
-            ::duplicateLine()
-         ENDIF
-         EXIT
-      CASE Qt_Key_K
-         IF lCtrl
-            ::presentSkeletons()
-         ENDIF
-         EXIT
-      CASE Qt_Key_Backspace
-         hbide_justACall( txt, lAlt, lShift, lCtrl, qEvent, nMode )
-         EXIT
-      CASE Qt_Key_Delete
-         IF lCtrl
-            ::deleteLine()
-            RETURN .t.
-         ENDIF
-         EXIT
-      CASE Qt_Key_Up
-         IF lCtrl .AND. lShift
-            ::moveLine( -1 )
-            RETURN .t.
-         ENDIF
-         EXIT
-      CASE Qt_Key_Down
-         IF lCtrl .AND. lShift
-            ::moveLine( 1 )
-            RETURN .t.
-         ENDIF
-         EXIT
       CASE Qt_Key_ParenLeft
          IF ! lCtrl .AND. ! lAlt
             ::loadFuncHelp()     // Also invokes prototype display
@@ -604,14 +564,6 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p, p1 )
          IF ! lCtrl .AND. ! lAlt
             ::hidePrototype()
          ENDIF
-         EXIT
-      CASE Qt_Key_T
-         IF lCtrl
-            ::gotoFunction()
-         ENDIF
-         EXIT
-      CASE Qt_Key_F1
-         ::gotoFunction()
          EXIT
       ENDSWITCH
 
@@ -642,7 +594,7 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p, p1 )
       ELSEIF p == QEvent_Paint
          // ::oIde:testPainter( p1 )
 
-      ELSEIF p == 21000
+      ELSEIF p == 21000                     /* Sends Block Info { t,l,b,r,mode,state } hbGetBlockInfo() */
          ::aSelectionInfo := p1
 
       ELSEIF p == 21001
@@ -669,73 +621,230 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p, p1 )
 
 /*----------------------------------------------------------------------*/
 
+STATIC FUNCTION hbide_blockContents( aContents )
+   LOCAL oldContents
+   STATIC contents := {}
+
+   oldContents := contents
+   IF hb_isArray( aContents )
+      contents := aclone( aContents )
+   ENDIF
+
+   RETURN oldContents
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION hbide_setQCursor( qEdit, q_ )
+   LOCAL qCursor
+
+   IF hb_isArray( q_ )
+      qCursor := q_[ 1 ]
+      qCursor:movePosition( QTextCursor_Start, QTextCursor_MoveAnchor )
+      qCursor:movePosition( QTextCursor_Down , QTextCursor_MoveAnchor, q_[ 2 ] )
+      qCursor:movePosition( QTextCursor_Right, QTextCursor_MoveAnchor, q_[ 3 ] )
+      qEdit:setTextCursor( qCursor )
+      qCursor:endEditBlock()
+   ELSE
+      qCursor := QTextCursor():from( qEdit:textCursor() )
+      qCursor:beginEditBlock()
+      RETURN { qCursor, qCursor:blockNumber(), qCursor:columnNumber() }
+   ENDIF
+
+   RETURN NIL
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION hbide_qReplaceLine( qCursor, nLine, cLine )
+
+   qCursor:movePosition( QTextCursor_Start      , QTextCursor_MoveAnchor )
+   qCursor:movePosition( QTextCursor_Down       , QTextCursor_MoveAnchor, nLine )
+   qCursor:movePosition( QTextCursor_StartOfLine, QTextCursor_MoveAnchor )
+   qCursor:movePosition( QTextCursor_EndOfLine  , QTextCursor_KeepAnchor )
+   qCursor:insertText( cLine )
+
+   RETURN NIL
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION hbide_qPositionCursor( qCursor, nRow, nCol )
+
+   qCursor:movePosition( QTextCursor_Start, QTextCursor_MoveAnchor       )
+   qCursor:movePosition( QTextCursor_Down , QTextCursor_MoveAnchor, nRow )
+   qCursor:movePosition( QTextCursor_Right, QTextCursor_MoveAnchor, nCol )
+
+   RETURN NIL
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION hbide_invert( cBuffer )
+   LOCAL s, i, c, nLen
+
+   s    := ""
+   nLen := len( cBuffer )
+   FOR i := 1 TO nLen
+      c := substr( cBuffer, i, 1 )
+      IF isAlpha( c )
+         s += iif( isUpper( c ), lower( c ), upper( c ) )
+      ELSE
+         s += c
+      ENDIF
+   NEXT
+
+   RETURN s
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION hbide_convertALine( cLine, cMode )
+
+   SWITCH cMode
+   CASE "toupper"
+      cLine := upper( cLine )
+      EXIT
+   CASE "tolower"
+      cLine := lower( cLine )
+      EXIT
+   CASE "invert"
+      cLine := hbide_invert( cLine )
+      EXIT
+   CASE "sgl2dbl"
+      cLine := strtran( cLine, "'", '"' )
+      EXIT
+   CASE "dbl2sgl"
+      cLine := strtran( cLine, '"', "'" )
+      EXIT
+   ENDSWITCH
+
+   RETURN cLine
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION hbide_qCursorDownInsert( qCursor )
+   LOCAL nRow := qCursor:blockNumber()
+
+   qCursor:movePosition( QTextCursor_Down, QTextCursor_MoveAnchor )
+   IF qCursor:blockNumber() == nRow
+      qCursor:movePosition( QTextCursor_EndOfBlock, QTextCursor_MoveAnchor )
+      qCursor:insertBlock()
+      qCursor:movePosition( QTextCursor_NextBlock, QTextCursor_MoveAnchor )
+   ENDIF
+
+   RETURN NIL
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:clearSelection()
+
+   ::qEdit:hbSetSelectionInfo( { -1,-1,-1,-1,0 } )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeEdit:copyBlockContents( aCord )
-   LOCAL nT, nL, nB, nR, nW, i, cLine, nMode
+   LOCAL nT, nL, nB, nR, nW, i, cLine, nMode, qClip
    LOCAL cClip := ""
 
    hbide_normalizeRect( aCord, @nT, @nL, @nB, @nR )
    nMode := aCord[ 5 ]
 
+   ::aBlockCopyContents := {}
+
    nW := nR - nL
    FOR i := nT TO nB
       cLine := ::getLine( i + 1 )
 
-      IF nMode == 1      /* Stream */
-         IF i == 1
+      IF nMode == selectionMode_stream
+         IF i == nT .AND. i == nB
+            cLine := substr( cLine, nL + 1, nW )
+         ELSEIF i == nT
             cLine := substr( cLine, nL + 1 )
          ELSEIF i == nB
             cLine := substr( cLine, 1, nR + 1 )
          ENDIF
 
-      ELSEIF nMode == 2  /* Column */
+      ELSEIF nMode == selectionMode_column
          cLine := pad( substr( cLine, nL + 1, nW ), nW )
 
-      ELSEIF nMode == 3  /* Line   */
+      ELSEIF nMode == selectionMode_line
          // Nothing to do, complete line is already pulled
 
       ENDIF
-      cClip += cLine + hb_osNewLine()
+
+      aadd( ::aBlockCopyContents, cLine )
+      cClip += cLine + iif( i < nB, hb_osNewLine(), "" )
    NEXT
 
-   QClipboard():new():setText( cClip )
+   hbide_blockContents( { nMode, ::aBlockCopyContents } )
+
+   qClip := QClipboard():new()
+   qClip:clear()
+   qClip:setText( cClip )
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:pasteBlockContents( nMode )
-   LOCAL i, nRow, nCol, qCursor, nMaxCol, aBlockCopyContents
+   LOCAL i, nCol, qCursor, nMaxCol, aCopy, a_, nPasteMode
 
-   HB_SYMBOL_UNUSED( nMode )
-
-   aBlockCopyContents := hbide_memoToArray( QClipboard():new():text() )
-   IF empty( aBlockCopyContents )
+   aCopy := hbide_memoToArray( QClipboard():new():text() )
+   IF empty( aCopy )
       RETURN Self
    ENDIF
+
+   nPasteMode := nMode   /* OR Stream - needs to be thought carefully */
+
+   a_:= hbide_blockContents()
+   IF !empty( a_ )
+      IF ( len( a_[ 2 ] ) == len( aCopy ) ) .OR. ( len( a_[ 2 ] ) == len( aCopy ) + 1 )
+         IF a_[ 2,1 ] == aCopy[ 1 ]
+            nPasteMode := a_[ 1 ]
+         ENDIF
+      ENDIF
+   ENDIF
+
+   nPasteMode := iif( empty( nPasteMode ), selectionMode_stream, nPasteMode )
 
    qCursor := QTextCursor():from( ::qEdit:textCursor() )
    nCol    := qCursor:columnNumber()
    qCursor:beginEditBlock()
    //
-   FOR i := 1 TO len( aBlockCopyContents )
-      qCursor:insertText( aBlockCopyContents[ i ] )
-      IF i < len( aBlockCopyContents )
-         nRow := qCursor:blockNumber()
-         qCursor:movePosition( QTextCursor_Down, QTextCursor_MoveAnchor )
-         IF qCursor:blockNumber() == nRow
-            qCursor:movePosition( QTextCursor_EndOfBlock, QTextCursor_MoveAnchor )
-            qCursor:insertBlock()
-            qCursor:movePosition( QTextCursor_NextBlock, QTextCursor_MoveAnchor )
+   DO CASE
+   CASE nPasteMode == selectionMode_column
+      FOR i := 1 TO len( aCopy )
+         qCursor:insertText( aCopy[ i ] )
+         IF i < len( aCopy )
+            hbide_qCursorDownInsert( qCursor )
+
+            qCursor:movePosition( QTextCursor_EndOfLine, QTextCursor_MoveAnchor )
+            nMaxCol := qCursor:columnNumber()
+            IF nMaxCol < nCol
+               qCursor:insertText( replicate( " ", nCol - nMaxCol ) )
+            ENDIF
+            qCursor:movePosition( QTextCursor_StartOfLine, QTextCursor_MoveAnchor       )
+            qCursor:movePosition( QTextCursor_Right      , QTextCursor_MoveAnchor, nCol )
          ENDIF
-         qCursor:movePosition( QTextCursor_EndOfLine, QTextCursor_MoveAnchor )
-         nMaxCol := qCursor:columnNumber()
-         IF nMaxCol < nCol
-            qCursor:insertText( replicate( " ", nCol - nMaxCol ) )
+      NEXT
+
+   CASE nPasteMode == selectionMode_stream
+      FOR i := 1 TO len( aCopy )
+         qCursor:insertText( aCopy[ i ] )
+         IF i < len( aCopy )
+            qCursor:insertText( hb_osNewLine() )
          ENDIF
-         qCursor:movePosition( QTextCursor_StartOfBlock, QTextCursor_MoveAnchor )
-         qCursor:movePosition( QTextCursor_Right, QTextCursor_MoveAnchor, nCol )
-      ENDIF
-   NEXT
+      NEXT
+
+   CASE nPasteMode == selectionMode_line
+      FOR i := 1 TO len( aCopy )
+         qCursor:movePosition( QTextCursor_StartOfLine, QTextCursor_MoveAnchor       )
+         qCursor:movePosition( QTextCursor_EndOfLine  , QTextCursor_KeepAnchor       )
+         qCursor:insertText( aCopy[ i ] )
+         IF i < len( aCopy )
+            hbide_qCursorDownInsert( qCursor )
+         ENDIF
+      NEXT
+
+   ENDCASE
    //
    qCursor:endEditBlock()
 
@@ -759,30 +868,19 @@ METHOD IdeEdit:insertBlockContents( aCord )
       FOR i := nT TO nB
          cLine := ::getLine( i + 1 )
          cLine := pad( substr( cLine, 1, nL ), nL ) + cKey + substr( cLine, nL + 1 )
-
-         qCursor:movePosition( QTextCursor_Start       , QTextCursor_MoveAnchor )
-         qCursor:movePosition( QTextCursor_Down        , QTextCursor_MoveAnchor, i )
-         qCursor:movePosition( QTextCursor_StartOfBlock, QTextCursor_MoveAnchor )
-         qCursor:movePosition( QTextCursor_EndOfLine   , QTextCursor_KeepAnchor )
-         qCursor:insertText( cLine )
+         hbide_qReplaceLine( qCursor, i, cLine )
       NEXT
-      qCursor:movePosition( QTextCursor_Start, QTextCursor_MoveAnchor )
-      qCursor:movePosition( QTextCursor_Down , QTextCursor_MoveAnchor, nB )
-      qCursor:movePosition( QTextCursor_Right, QTextCursor_MoveAnchor, nR + 1 )
+
+      hbide_qPositionCursor( qCursor, nB, nR + 1 )
    ELSE
       FOR i := nT TO nB
          cLine := ::getLine( i + 1 )
          cLine := pad( substr( cLine, 1, nL ), nL ) + replicate( cKey, nW ) + substr( cLine, nR + 1 )
 
-         qCursor:movePosition( QTextCursor_Start       , QTextCursor_MoveAnchor )
-         qCursor:movePosition( QTextCursor_Down        , QTextCursor_MoveAnchor, i )
-         qCursor:movePosition( QTextCursor_StartOfBlock, QTextCursor_MoveAnchor )
-         qCursor:movePosition( QTextCursor_EndOfLine   , QTextCursor_KeepAnchor )
-         qCursor:insertText( cLine )
+         hbide_qReplaceLine( qCursor, i, cLine )
       NEXT
-      qCursor:movePosition( QTextCursor_Start, QTextCursor_MoveAnchor )
-      qCursor:movePosition( QTextCursor_Down , QTextCursor_MoveAnchor, nB )
-      qCursor:movePosition( QTextCursor_Right, QTextCursor_MoveAnchor, nR )
+
+      hbide_qPositionCursor( qCursor, nB, nR )
    ENDIF
    //
    ::qEdit:setCursorWidth( 1 )
@@ -797,45 +895,52 @@ METHOD IdeEdit:deleteBlockContents( aCord )
    LOCAL nT, nL, nB, nR, nW, i, cLine, qCursor, k
 
    hbide_normalizeRect( aCord, @nT, @nL, @nB, @nR )
-   k  := aCord[ 5 ]
+   k := aCord[ 7 ]
+   k := iif( empty( k ), Qt_Key_X, k )
 
    IF k == Qt_Key_X
       ::copyBlockContents( aCord )
    ENDIF
 
-   nW := nR - nL
-
    qCursor := QTextCursor():from( ::qEdit:textCursor() )
    qCursor:beginEditBlock()
+
+   nW := nR - nL
    IF nW == 0 .AND. k == Qt_Key_Backspace
       FOR i := nT TO nB
          cLine := ::getLine( i + 1 )
          cLine := pad( substr( cLine, 1, nL - 1 ), nL - 1 ) + substr( cLine, nL + 1 )
-
-         qCursor:movePosition( QTextCursor_Start       , QTextCursor_MoveAnchor )
-         qCursor:movePosition( QTextCursor_Down        , QTextCursor_MoveAnchor, i )
-         qCursor:movePosition( QTextCursor_StartOfLine , QTextCursor_MoveAnchor )
-         qCursor:movePosition( QTextCursor_EndOfLine   , QTextCursor_KeepAnchor )
-         qCursor:insertText( cLine )
+         hbide_qReplaceLine( qCursor, i, cLine )
       NEXT
-      qCursor:movePosition( QTextCursor_Start, QTextCursor_MoveAnchor )
-      qCursor:movePosition( QTextCursor_Down , QTextCursor_MoveAnchor, nB )
-      qCursor:movePosition( QTextCursor_Right, QTextCursor_MoveAnchor, nR - 1 )
+      hbide_qPositionCursor( qCursor, nB, nR - 1 )
+
    ELSE
       IF k == Qt_Key_Delete .OR. k == Qt_Key_X
-         FOR i := nT TO nB
-            cLine := ::getLine( i + 1 )
-            cLine := pad( substr( cLine, 1, nL ), nL ) + substr( cLine, nR + 1 )
+         IF aCord[ 5 ] == selectionMode_column
+            FOR i := nT TO nB
+               cLine := ::getLine( i + 1 )
+               cLine := pad( substr( cLine, 1, nL ), nL ) + substr( cLine, nR + 1 )
+               hbide_qReplaceLine( qCursor, i, cLine )
+            NEXT
+            hbide_qPositionCursor( qCursor, nT, nL )
 
-            qCursor:movePosition( QTextCursor_Start       , QTextCursor_MoveAnchor )
-            qCursor:movePosition( QTextCursor_Down        , QTextCursor_MoveAnchor, i )
-            qCursor:movePosition( QTextCursor_StartOfLine , QTextCursor_MoveAnchor )
-            qCursor:movePosition( QTextCursor_EndOfLine   , QTextCursor_KeepAnchor )
-            qCursor:insertText( cLine )
-         NEXT
-         qCursor:movePosition( QTextCursor_Start, QTextCursor_MoveAnchor )
-         qCursor:movePosition( QTextCursor_Down , QTextCursor_MoveAnchor, nT )
-         qCursor:movePosition( QTextCursor_Right, QTextCursor_MoveAnchor, nL )
+         ELSEIF aCord[ 5 ] == selectionMode_stream
+            hbide_qPositionCursor( qCursor, nT, nL )
+            qCursor:movePosition( QTextCursor_Down       , QTextCursor_KeepAnchor, nB - nT )
+            qCursor:movePosition( QTextCursor_StartOfLine, QTextCursor_KeepAnchor          )
+            qCursor:movePosition( QTextCursor_Right      , QTextCursor_KeepAnchor, nR      )
+            qCursor:removeSelectedText()
+            ::qEdit:hbSetSelectionInfo( { -1,-1,-1,-1,0 } )
+
+         ELSEIF aCord[ 5 ] == selectionMode_line
+            hbide_qPositionCursor( qCursor, nT, nL )
+            qCursor:movePosition( QTextCursor_Down       , QTextCursor_KeepAnchor, nB - nT + 1 )
+            qCursor:movePosition( QTextCursor_StartOfLine, QTextCursor_KeepAnchor          )
+            qCursor:removeSelectedText()
+            ::qEdit:hbSetSelectionInfo( { -1,-1,-1,-1,0 } )
+            ::isLineSelectionMode := .f.
+
+         ENDIF
       ENDIF
    ENDIF
    //
@@ -843,6 +948,240 @@ METHOD IdeEdit:deleteBlockContents( aCord )
    qCursor:endEditBlock()
 
    RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:blockComment()
+   LOCAL nT, nL, nB, nR, nW, i, cLine, qCursor, aCord, nMode, q_
+   LOCAL cComment := "// "
+   LOCAL nLen := len( cComment )
+
+   ::qEdit:hbGetSelectionInfo(); aCord := ::aSelectionInfo
+   hbide_normalizeRect( aCord, @nT, @nL, @nB, @nR )
+   nW := nR - nL
+
+   IF nW >= 0
+      nMode   := aCord[ 5 ]
+      q_:= hbide_setQCursor( ::qEdit ) ; qCursor := q_[ 1 ]
+
+      FOR i := nT TO nB
+         cLine := ::getLine( i + 1 )
+
+         DO CASE
+         CASE nMode == selectionMode_stream .OR. nMode == selectionMode_line
+            IF substr( cLine, 1, nLen ) == cComment
+               cLine := substr( cLine, nLen + 1 )
+            ELSE
+               cLine := cComment + cLine
+            ENDIF
+
+         CASE nMode == selectionMode_column
+            IF substr( cLine, nL + 1, nLen ) == cComment
+               cLine := pad( substr( cLine, 1, nL ), nL ) + substr( cLine, nL + nLen + 1 )
+            ELSE
+               cLine := pad( substr( cLine, 1, nL ), nL ) + cComment + substr( cLine, nL + 1 )
+            ENDIF
+
+         ENDCASE
+
+         hbide_qReplaceLine( qCursor, i, cLine )
+      NEXT
+
+      hbide_setQCursor( ::qEdit, q_ )
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:streamComment()
+   LOCAL nT, nL, nB, nR, nW, i, cLine, qCursor, aCord, nMode, q_
+
+   ::qEdit:hbGetSelectionInfo(); aCord := ::aSelectionInfo
+
+   hbide_normalizeRect( aCord, @nT, @nL, @nB, @nR )
+   nW := nR - nL
+
+   IF nW >= 0
+      nMode   := aCord[ 5 ]
+      q_:= hbide_setQCursor( ::qEdit ) ; qCursor := q_[ 1 ]
+
+      FOR i := nT TO nB
+         cLine := ::getLine( i + 1 )
+
+         DO CASE
+         CASE nMode == selectionMode_stream
+            IF i == nT
+               cLine := substr( cLine, 1, nL ) + "/* " + substr( cLine, nL + 1 )
+            ELSEIF i == nB
+               cLine := substr( cLine, 1, nR ) + " */" + substr( cLine, nR + 1 )
+            ENDIF
+
+         CASE nMode == selectionMode_line
+            IF i == nT
+               cLine := "/* " + cLine
+            ELSEIF i == nB
+               cLine += " */"
+            ENDIF
+
+         ENDCASE
+
+         hbide_qReplaceLine( qCursor, i, cLine )
+      NEXT
+
+      hbide_setQCursor( ::qEdit, q_ )
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:blockIndent( nDirctn )
+   LOCAL nT, nL, nB, nR, nW, i, cLine, qCursor, aCord, q_, nMode, cLineSel
+
+   ::qEdit:hbGetSelectionInfo(); aCord := ::aSelectionInfo
+   hbide_normalizeRect( aCord, @nT, @nL, @nB, @nR )
+   nW := nR - nL
+
+   IF nW >= 0
+      nMode := aCord[ 5 ]
+      q_:= hbide_setQCursor( ::qEdit ) ; qCursor := q_[ 1 ]
+
+      FOR i := nT TO nB
+         cLine := ::getLine( i + 1 )
+
+         DO CASE
+         CASE nMode == selectionMode_stream .OR. nMode == selectionMode_line
+            IF nDirctn == -1
+               IF left( cLine, 1 ) == " "
+                  cLine := substr( cLine, 2 )
+               ENDIF
+            ELSE
+               cLine := " " + cLine
+            ENDIF
+
+         CASE nMode == selectionMode_column
+            cLineSel := pad( substr( cLine, nL + 1, nW ), nW )
+            IF nDirctn == -1
+               IF left( cLineSel, 1 ) == " "
+                  cLineSel := substr( cLineSel, 2 )
+               ENDIF
+            ELSE
+               cLineSel := " " + cLineSel
+            ENDIF
+            cLine := pad( substr( cLine, 1, nL ), nL ) + cLineSel + substr( cLine, nR + 1 )
+
+         ENDCASE
+
+         hbide_qReplaceLine( qCursor, i, cLine )
+      NEXT
+
+      hbide_setQCursor( ::qEdit, q_ )
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:blockConvert( cMode )
+   LOCAL nT, nL, nB, nR, nW, i, cLine, qCursor, aCord, q_, nMode
+
+   ::qEdit:hbGetSelectionInfo(); aCord := ::aSelectionInfo
+   hbide_normalizeRect( aCord, @nT, @nL, @nB, @nR )
+   nW := nR - nL
+
+   IF nW >= 0
+      nMode := aCord[ 5 ]
+      q_:= hbide_setQCursor( ::qEdit ) ; qCursor := q_[ 1 ]
+
+      FOR i := nT TO nB
+         cLine := ::getLine( i + 1 )
+
+         DO CASE
+         CASE nMode == selectionMode_stream
+            IF i == nT
+               cLine := substr( cLine, 1, nL ) + hbide_convertALine( substr( cLine, nL + 1 ), cMode )
+            ELSEIF i == nB
+               cLine := hbide_convertALine( substr( cLine, 1, nR ), cMode ) + substr( cLine, nR + 1 )
+            ELSE
+               cLine := hbide_convertALine( cLine, cMode )
+            ENDIF
+
+         CASE nMode == selectionMode_column
+            cLine := pad( substr( cLine, 1, nL ), nL ) + hbide_convertALine( pad( substr( cLine, nL + 1, nW ), nW ), cMode ) + substr( cLine, nR + 1 )
+
+         CASE nMode == selectionMode_line
+            cLine := hbide_convertALine( cLine, cMode )
+
+         ENDCASE
+
+         hbide_qReplaceLine( qCursor, i, cLine )
+      NEXT
+
+      hbide_setQCursor( ::qEdit, q_ )
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:getSelectedText()
+   LOCAL nT, nL, nB, nR, nW, i, cLine, nMode, cClip := "", aCord
+
+   ::qEdit:hbGetSelectionInfo(); aCord := ::aSelectionInfo
+   hbide_normalizeRect( aCord, @nT, @nL, @nB, @nR )
+   nMode := aCord[ 5 ]
+
+   nW := nR - nL
+   FOR i := nT TO nB
+      cLine := ::getLine( i + 1 )
+
+      IF nMode == selectionMode_stream
+         IF i == nT .AND. i == nB
+            cLine := substr( cLine, nL + 1, nR - nL )
+         ELSEIF i == nT
+            cLine := substr( cLine, nL + 1 )
+         ELSEIF i == nB
+            cLine := substr( cLine, 1, nR + 1 )
+         ENDIF
+
+      ELSEIF nMode == selectionMode_column
+         cLine := pad( substr( cLine, nL + 1, nW ), nW )
+
+      ELSEIF nMode == selectionMode_line
+         // Nothing to do, complete line is already pulled
+
+      ENDIF
+
+      cClip += cLine + iif( i < nB, hb_osNewLine(), "" )
+   NEXT
+
+   RETURN cClip
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:caseUpper()
+   RETURN ::blockConvert( "toupper" )
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:caseLower()
+   RETURN ::blockConvert( "tolower" )
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:caseInvert()
+   RETURN ::blockConvert( "invert" )
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:convertQuotes()
+   RETURN ::blockConvert( "dbl2sgl" )
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:convertDQuotes()
+   RETURN ::blockConvert( "sgl2dbl" )
 
 /*----------------------------------------------------------------------*/
 
@@ -884,6 +1223,7 @@ METHOD IdeEdit:toggleLineNumbers()
 
 METHOD IdeEdit:toggleSelectionMode()
    ::qEdit:hbHighlightSelectedColumns( ::isColumnSelectionEnabled )
+   ::dispStatusInfo()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -891,6 +1231,7 @@ METHOD IdeEdit:toggleSelectionMode()
 METHOD IdeEdit:toggleLineSelectionMode()
    ::isLineSelectionMode := ! ::isLineSelectionMode
    ::qEdit:hbSetSelectionMode( 3, ::isLineSelectionMode )
+   ::dispStatusInfo()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1066,74 +1407,6 @@ METHOD IdeEdit:deleteLine()
 METHOD IdeEdit:moveLine( nDirection )
    ::qEdit:hbMoveLine( nDirection )
    RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeEdit:blockComment()
-   ::qEdit:hbBlockComment()
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeEdit:streamComment()
-   ::qEdit:hbStreamComment()
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeEdit:blockIndent( nMode )
-   ::qEdit:hbBlockIndent( nMode )
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeEdit:caseUpper()
-   ::qEdit:hbCaseUpper()
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeEdit:caseLower()
-   ::qEdit:hbCaseLower()
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeEdit:convertQuotes()
-   ::qEdit:hbConvertQuotes()
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeEdit:convertDQuotes()
-   ::qEdit:hbConvertDQuotes()
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeEdit:caseInvert()
-   LOCAL i, c, s, cBuffer, nLen
-
-   IF !empty( cBuffer := ::getSelectedText() )
-      s    := ""
-      nLen := len( cBuffer )
-      FOR i := 1 TO nLen
-         c := substr( cBuffer, i, 1 )
-         IF isAlpha( c )
-            s += iif( isUpper( c ), lower( c ), upper( c ) )
-         ELSE
-            s += c
-         ENDIF
-      NEXT
-      ::qEdit:hbReplaceSelection( s )
-   ENDIF
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeEdit:getSelectedText()
-   RETURN ::qEdit:hbGetSelectedText()
 
 /*----------------------------------------------------------------------*/
 

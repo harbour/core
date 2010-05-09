@@ -693,16 +693,16 @@ HB_FUNC( QT_HBQPLAINTEXTEDIT_HBREFRESH )
 }
 
 /*
- * void           hbCut()
+ * void           hbCut( int key )
  */
 HB_FUNC( QT_HBQPLAINTEXTEDIT_HBCUT )
 {
    HBQPlainTextEdit * p = hbqt_par_HBQPlainTextEdit( 1 );
    if( p )
-      ( p )->hbCut();
+      ( p )->hbCut( hb_parni( 2 ) );
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQPLAINTEXTEDIT_HBCUT FP=( p )->hbCut(); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQPLAINTEXTEDIT_HBCUT FP=( p )->hbCut( hb_parni( 2 ) ); p is NULL" ) );
    }
 }
 
@@ -759,6 +759,20 @@ HB_FUNC( QT_HBQPLAINTEXTEDIT_HBGETSELECTIONINFO )
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQPLAINTEXTEDIT_HBGETSELECTIONINFO FP=( p )->hbGetSelectionInfo(); p is NULL" ) );
+   }
+}
+
+/*
+ * void           hbSetSelectionInfo( PHB_ITEM selectionInfo )
+ */
+HB_FUNC( QT_HBQPLAINTEXTEDIT_HBSETSELECTIONINFO )
+{
+   HBQPlainTextEdit * p = hbqt_par_HBQPlainTextEdit( 1 );
+   if( p )
+      ( p )->hbSetSelectionInfo( hb_param( 2, HB_IT_ANY ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQPLAINTEXTEDIT_HBSETSELECTIONINFO FP=( p )->hbSetSelectionInfo( hb_param( 2, HB_IT_ANY ) ); p is NULL" ) );
    }
 }
 

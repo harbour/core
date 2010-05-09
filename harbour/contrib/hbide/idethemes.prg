@@ -191,14 +191,17 @@ METHOD IdeThemes:create( oIde, cIniFile )
 
    /* Harbour Keywords */
    b_:= { 'function','return','static','local','default', ;
-          'if','else','elseif','endif','end', 'endswitch', ;
-          'docase','case','endcase','otherwise', 'switch', ;
-          'do','while','exit',;
-          'for','each','next','step','to','nil','and','or','self',;
+          'if','else','elseif','endif','end', ;
+          'docase','case','endcase','otherwise', ;
+          'switch','endswitch', ;
+          'do','while','exit','enddo',;
+          'for','each','next','step','to',;
+          'with','object','endwith',;
+          'nil','and','or','self',;
           'class','endclass','method','data','var','destructor','inline','assign','access',;
-          'inherit','init','create','virtual','message',;
+          'inherit','init','create','virtual','message', 'from', 'setget',;
           'begin','sequence','try','catch','always','recover','hb_symbol_unused', ;
-          'error','handler','setget' }
+          'error','handler' }
    s := ""; aeval( b_, {|e| s += iif( empty( s ), "", "|" ) + "\b" + upper( e ) + "\b|\b" + e + "\b" } )
    aadd( ::aPatterns, { "HarbourKeywords"   , s } )
 

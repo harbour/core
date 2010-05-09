@@ -182,17 +182,19 @@ public slots:
    void           hbSetCurrentLineColor( const QColor & color ) { m_currentLineColor = color; };
    void           hbSetLineAreaBkColor( const QColor & color ) { m_lineAreaBkColor = color; };
    void           hbRefresh();
-   void           hbCut();
+   void           hbCut( int key );
    void           hbCopy();
    void           hbPaste();
    void           hbSetSelectionMode( int mode, bool on );
    void           hbGetSelectionInfo();
+   void           hbToStream();
+   void           hbSetSelectionInfo( PHB_ITEM selectionInfo );
 
 private slots:
    void           hbSlotCursorPositionChanged();
    void           hbUpdateLineNumberArea( const QRect &, int );
    void           hbUpdateHorzRuler();
-   void           hbPaintColumnSelection( QPaintEvent * );
+   void           hbPaintSelection( QPaintEvent * );
    bool           hbKeyPressColumnSelection( QKeyEvent * );
    void           hbClearColumnSelection();
 };

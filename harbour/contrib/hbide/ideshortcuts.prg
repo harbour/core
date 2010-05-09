@@ -199,6 +199,9 @@ CLASS IdeShortcuts INHERIT IdeObject
    METHOD toggleSelectionMode()
    METHOD toggleStatusBar()
    METHOD toggleLineSelectionMode()
+   METHOD presentSkeletons()
+   METHOD gotoFunction()
+   METHOD clearSelection()
 
    ENDCLASS
 
@@ -1116,7 +1119,15 @@ METHOD IdeShortcuts:toggleStatusBar()
 METHOD IdeShortcuts:toggleLineSelectionMode()
    RETURN ::oEM:toggleLineSelectionMode()
 /*----------------------------------------------------------------------*/
-
+METHOD IdeShortcuts:presentSkeletons()
+   RETURN ::oEM:presentSkeletons()
+/*----------------------------------------------------------------------*/
+METHOD IdeShortcuts:gotoFunction()
+   RETURN ::oEM:gotoFunction()
+/*----------------------------------------------------------------------*/
+METHOD IdeShortcuts:clearSelection()
+   RETURN ::oEM:clearSelection()
+/*----------------------------------------------------------------------*/
 
 METHOD IdeShortcuts:loadMethods()
 
@@ -1289,6 +1300,15 @@ METHOD IdeShortcuts:loadMethods()
    aadd( ::aMethods, { 'toggleLineSelectionMode()', ;
                        'toggleLineSelectionMode()', ;
                        'Toggles line selection mode.' } )
+   aadd( ::aMethods, { 'clearSelection()', ;
+                       'clearSelection()', ;
+                       'Clears the selection block, if any, and resets the selection mode to stream.' } )
+   aadd( ::aMethods, { 'presentSkeletons()', ;
+                       'presentSkeletons()', ;
+                       'Present snippets for selection.' } )
+   aadd( ::aMethods, { 'gotoFunction()', ;
+                       'gotoFunction()', ;
+                       'Takes under-cursor word and attempts to open the source containing that function in a new tab.' } )
 
    RETURN Self
 
@@ -1343,7 +1363,10 @@ METHOD IdeShortcuts:loadDftSCuts()
       aadd( b_, { "Insert Text"     , "F7"     , "NO", "YES", "NO" , "", '::insert( "" )'        , "insert-external-file", "", "" } )
       aadd( b_, { "Insert Separator", "F7"     , "NO", "NO" , "NO" , "", '::separator( "" )'     , "insert-separator", "", "" } )
 
-      aadd( b_, { "Toggle Line Selection Mode", "F11", "NO", "NO" , "NO" , "", '::toggleLineSelectionMode()', ""         , "", "" } )
+      aadd( b_, { "Toggle Line Selection Mode", "F11", "NO", "NO" , "NO" , "", '::toggleLineSelectionMode()', ""     , "", "" } )
+      aadd( b_, { "Clear Selection" , "F11"    , "NO", "NO" , "YES", "", '::clearSelection()'    , ""                , "", "" } )
+      aadd( b_, { "Present Snippets", "K"      , "NO", "YES", "NO" , "", '::presentSkeletons()'  , ""                , "", "" } )
+      aadd( b_, { "Goto Function"   , "T"      , "NO", "YES", "NO" , "", '::gotoFunction()'      , ""                , "", "" } )
 
       ::aDftSCuts := b_
    ENDIF

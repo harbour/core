@@ -105,11 +105,12 @@ CREATE CLASS HBQPlainTextEdit INHERIT HbQtObjectHandler, QPlainTextEdit
    METHOD  hbSetCurrentLineColor( pColor )
    METHOD  hbSetLineAreaBkColor( pColor )
    METHOD  hbRefresh()
-   METHOD  hbCut()
+   METHOD  hbCut( nKey )
    METHOD  hbCopy()
    METHOD  hbPaste()
    METHOD  hbSetSelectionMode( nMode, lOn )
    METHOD  hbGetSelectionInfo()
+   METHOD  hbSetSelectionInfo( xSelectionInfo )
 
    ENDCLASS
 
@@ -275,8 +276,8 @@ METHOD HBQPlainTextEdit:hbRefresh()
    RETURN Qt_HBQPlainTextEdit_hbRefresh( ::pPtr )
 
 
-METHOD HBQPlainTextEdit:hbCut()
-   RETURN Qt_HBQPlainTextEdit_hbCut( ::pPtr )
+METHOD HBQPlainTextEdit:hbCut( nKey )
+   RETURN Qt_HBQPlainTextEdit_hbCut( ::pPtr, nKey )
 
 
 METHOD HBQPlainTextEdit:hbCopy()
@@ -293,4 +294,8 @@ METHOD HBQPlainTextEdit:hbSetSelectionMode( nMode, lOn )
 
 METHOD HBQPlainTextEdit:hbGetSelectionInfo()
    RETURN Qt_HBQPlainTextEdit_hbGetSelectionInfo( ::pPtr )
+
+
+METHOD HBQPlainTextEdit:hbSetSelectionInfo( xSelectionInfo )
+   RETURN Qt_HBQPlainTextEdit_hbSetSelectionInfo( ::pPtr, xSelectionInfo )
 

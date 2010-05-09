@@ -72,16 +72,6 @@
 
 /*----------------------------------------------------------------------*/
 
-#define customContextMenuRequested                1
-#define textChanged                               2
-#define copyAvailable                             3
-#define modificationChanged                       4
-#define redoAvailable                             5
-#define selectionChanged                          6
-#define undoAvailable                             7
-#define updateRequest                             8
-#define cursorPositionChanged                     9
-
 #define blockCountChanged                         21
 #define contentsChange                            22
 #define timerTimeout                              23
@@ -154,6 +144,9 @@ CLASS IdeEditsManager INHERIT IdeObject
    METHOD getText()
    METHOD getWord( lSelect )
    METHOD getLine( nLine, lSelect )
+   METHOD presentSkeletons()
+   METHOD gotoFunction()
+   METHOD clearSelection()
 
    ENDCLASS
 
@@ -646,10 +639,37 @@ METHOD IdeEditsManager:switchToReadOnly()
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeEditsManager:presentSkeletons()
+   LOCAL oEdit
+   IF !empty( oEdit := ::getEditObjectCurrent() )
+      oEdit:presentSkeletons()
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:clearSelection()
+   LOCAL oEdit
+   IF !empty( oEdit := ::getEditObjectCurrent() )
+      oEdit:clearSelection()
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeEditsManager:toggleLineNumbers()
    LOCAL oEdit
    IF !empty( oEdit := ::getEditObjectCurrent() )
       oEdit:toggleLineNumbers()
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:gotoFunction()
+   LOCAL oEdit
+   IF !empty( oEdit := ::getEditObjectCurrent() )
+      oEdit:gotoFunction()
    ENDIF
    RETURN Self
 

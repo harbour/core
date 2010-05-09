@@ -136,11 +136,12 @@ HB_FUNC( QT_HBQPLAINTEXTEDIT )
    void           hbSetCurrentLineColor( const QColor & color )
    void           hbSetLineAreaBkColor( const QColor & color )
    void           hbRefresh()
-   void           hbCut()
+   void           hbCut( int key )
    void           hbCopy()
    void           hbPaste()
    void           hbSetSelectionMode( int mode, bool on )
    void           hbGetSelectionInfo()
+   void           hbSetSelectionInfo( PHB_ITEM selectionInfo )
 </SLOTS>
 
 <SIGNALS>
