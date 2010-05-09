@@ -85,7 +85,7 @@ PROCEDURE Main()
          { "HB_WITH_CAIRO"     , "..\..\bin\libcairo-2.dll" , .T., "cairo" },;
          { "HB_WITH_CURL"      , "..\libcurl.dll"           , .T., "" },;
          { "HB_WITH_CURL"      , "..\bin\libcurl.dll"       , .T., "" },;
-         { "HB_WITH_FIREBIRD"  , "..\bin\fbclient.dll"      , .F., "" },; /* Doesn't work for mingw, because .lib has another name in another directory */
+         { "HB_WITH_FIREBIRD"  , "..\bin\fbclient.dll"      , .F., "" },; /* Doesn't work with mingw*/cygwin, because .lib has another name in another directory */
          { "HB_WITH_FREEIMAGE" , "..\Dist\FreeImage.dll"    , .F., "" },;
          { "HB_WITH_GD"        , "..\bin\bgd.dll"           , .F., "" },;
          { "HB_WITH_LIBHARU"   , "..\libhpdf.dll"           , .F., "" },;
