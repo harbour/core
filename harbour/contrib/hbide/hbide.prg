@@ -490,6 +490,8 @@ METHOD HbIde:create( aParams )
    /* Load tags last tagged projects */
    ::oFN:loadTags( ::aINI[ INI_TAGGEDPROJECTS ] )
 
+   hbide_loadPlugins()
+
    DO WHILE .t.
       ::nEvent := AppEvent( @::mp1, @::mp2, @::oXbp )
 
@@ -749,7 +751,6 @@ METHOD HbIde:execEditorAction( cKey )
       ::oEM:selectAll()
       EXIT
    CASE "SelectionMode"
-      ::isColumnSelectionEnabled := ! ::isColumnSelectionEnabled
       ::oEM:toggleSelectionMode()
       EXIT
    CASE "DuplicateLine"

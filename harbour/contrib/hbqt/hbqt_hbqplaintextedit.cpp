@@ -165,7 +165,7 @@ void HBQPlainTextEdit::hbShowPrototype( const QString & tip )
    else
    {
       QRect r = HBQPlainTextEdit::cursorRect();
-      QToolTip::showText( mapToGlobal( QPoint( r.x(), r.y() ) ), tip );
+      QToolTip::showText( mapToGlobal( QPoint( r.x(), r.y()+20 ) ), tip );
       isTipActive = true;
    }
 }
@@ -325,12 +325,14 @@ void HBQPlainTextEdit::hbSetSelectionMode( int mode, bool on )
             rowEnds      = c.blockNumber();
             columnBegins = 0;
             columnEnds   = 0;
+            selectionMode = selectionMode_line;
          }
          else
          {
             isLineSelectionON = false;
+            selectionMode = selectionMode_stream;
          }
-         selectionMode = selectionMode_line;
+
          break;
       }
       default:
@@ -723,6 +725,17 @@ bool HBQPlainTextEdit::hbKeyPressColumnSelection( QKeyEvent * event )
             return true;
          }
       }
+      else if( selectionMode == selectionMode_stream || selectionMode == selectionMode_line )
+      {
+         if( selectionState > 0 && ! ctrl && k == Qt::Key_Delete )
+         {
+            hbCut( k );
+            update();
+            selectionState = 0;
+            event->ignore();
+            return true;
+         }
+      }
       else
       {
          //emit selectionChanged();
@@ -817,7 +830,11 @@ void HBQPlainTextEdit::keyPressEvent( QKeyEvent * event )
       c->popup()->setCurrentIndex( c->completionModel()->index( 0, 0 ) );
    }
    QRect cr = cursorRect();
+
    cr.setWidth( c->popup()->sizeHintForColumn( 0 ) + c->popup()->verticalScrollBar()->sizeHint().width() );
+   cr.setTop( cr.top() + 25 );
+   cr.setBottom( cr.bottom() + 25 );
+
    c->complete( cr ); // popup it up!
 }
 

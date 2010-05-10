@@ -195,7 +195,7 @@ METHOD IdeThemes:create( oIde, cIniFile )
           'docase','case','endcase','otherwise', ;
           'switch','endswitch', ;
           'do','while','exit','enddo',;
-          'for','each','next','step','to',;
+          'for','each','next','step','to','in',;
           'with','object','endwith',;
           'nil','and','or','self',;
           'class','endclass','method','data','var','destructor','inline','assign','access',;

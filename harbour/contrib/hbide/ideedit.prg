@@ -126,8 +126,10 @@ CLASS IdeEdit INHERIT IdeObject
    DATA   currentPointSize                        INIT 10
    DATA   qFont
    DATA   aBlockCopyContents                      INIT {}
-   DATA   isLineSelectionMode                     INIT .f.
+   DATA   isLineSelectionON                       INIT .f.
    DATA   aSelectionInfo                          INIT { -1,-1,-1,-1,0,0 }
+
+   DATA   isColumnSelectionON                     INIT .f.
 
    METHOD new( oEditor, nMode )
    METHOD create( oEditor, nMode )
@@ -443,7 +445,6 @@ METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
 
       ::updateTitleBar()
 
-//      qEdit:hbHighlightSelectedColumns( ::isColumnSelectionEnabled )
       ::dispStatusInfo()
       ::oDK:setStatusText( SB_PNL_SELECTEDCHARS, len( ::getSelectedText() ) )
       EXIT
@@ -506,9 +507,16 @@ METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:dispStatusInfo()
+   LOCAL nMode
+
    ::qEdit:hbGetSelectionInfo()
-   ::oDK:setStatusText( SB_PNL_STREAM, iif( ::aSelectionInfo[ 5 ] == 2, "Column", ;
-                                               iif( ::aSelectionInfo[ 5 ] == 3, "Line", "Stream" ) ) )
+   nMode := ::aSelectionInfo[ 5 ]
+
+   ::oAC:getAction( "TB_SelectionMode" ):setIcon( hbide_image( iif( nMode == 3, "selectionline", "stream" ) ) )
+   ::oAC:getAction( "TB_SelectionMode" ):setChecked( nMode > 1 )
+
+   ::oDK:setStatusText( SB_PNL_STREAM, iif( nMode == 2, "Column", iif( nMode == 3, "Line", "Stream" ) ) )
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -938,7 +946,7 @@ METHOD IdeEdit:deleteBlockContents( aCord )
             qCursor:movePosition( QTextCursor_StartOfLine, QTextCursor_KeepAnchor          )
             qCursor:removeSelectedText()
             ::qEdit:hbSetSelectionInfo( { -1,-1,-1,-1,0 } )
-            ::isLineSelectionMode := .f.
+            ::isLineSelectionON := .f.
 
          ENDIF
       ENDIF
@@ -1222,15 +1230,16 @@ METHOD IdeEdit:toggleLineNumbers()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:toggleSelectionMode()
-   ::qEdit:hbHighlightSelectedColumns( ::isColumnSelectionEnabled )
+   ::isColumnSelectionON := ! ::isColumnSelectionON
+   ::qEdit:hbHighlightSelectedColumns( ::isColumnSelectionON )
    ::dispStatusInfo()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:toggleLineSelectionMode()
-   ::isLineSelectionMode := ! ::isLineSelectionMode
-   ::qEdit:hbSetSelectionMode( 3, ::isLineSelectionMode )
+   ::isLineSelectionON := ! ::isLineSelectionON
+   ::qEdit:hbSetSelectionMode( 3, ::isLineSelectionON )
    ::dispStatusInfo()
    RETURN Self
 
@@ -1894,6 +1903,7 @@ FUNCTION hbide_isHarbourKeyword( cWord )
                     'hb_symbol_unused' => NIL,;
                     'error' => NIL,;
                     'handler' => NIL,;
+                    'in' => NIL,;
                     'nil' => NIL,;
                     'or' => NIL,;
                     'and' => NIL }

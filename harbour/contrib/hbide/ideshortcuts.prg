@@ -202,6 +202,7 @@ CLASS IdeShortcuts INHERIT IdeObject
    METHOD presentSkeletons()
    METHOD gotoFunction()
    METHOD clearSelection()
+   METHOD execPlugin( cPlugin, ... )
 
    ENDCLASS
 
@@ -1128,6 +1129,9 @@ METHOD IdeShortcuts:gotoFunction()
 METHOD IdeShortcuts:clearSelection()
    RETURN ::oEM:clearSelection()
 /*----------------------------------------------------------------------*/
+METHOD IdeShortcuts:execPlugin( cPlugin, ... )
+   RETURN hbide_execPlugin( cPlugin, ::oIde, ... )
+/*----------------------------------------------------------------------*/
 
 METHOD IdeShortcuts:loadMethods()
 
@@ -1309,6 +1313,9 @@ METHOD IdeShortcuts:loadMethods()
    aadd( ::aMethods, { 'gotoFunction()', ;
                        'gotoFunction()', ;
                        'Takes under-cursor word and attempts to open the source containing that function in a new tab.' } )
+   aadd( ::aMethods, { 'execPlugin( cPlugin )', ;
+                       'execPlugin( "" )', ;
+                       'Attempts to execute third-party plugins. First parameter passed is the instance to SELF exposing public API methods. Next parameters are passes as a list.' } )
 
    RETURN Self
 

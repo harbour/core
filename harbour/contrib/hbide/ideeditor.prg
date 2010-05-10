@@ -1310,6 +1310,7 @@ METHOD IdeEditor:activateTab( mp1, mp2, oXbp )
       oEdit:setDocumentProperties()
       oEdit:qCoEdit:relayMarkButtons()
       oEdit:qCoEdit:toggleLineNumbers()
+      oEdit:qCoEdit:dispStatusInfo()
    ENDIF
 
    RETURN Self
