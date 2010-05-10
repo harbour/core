@@ -733,7 +733,7 @@ HARBOUR
 8. EXAMPLES
 ===========
 
-   for Windows hosts
+   for Windows hosts (x86, 32-bit)
    -----------------
 
       NOTES: - All code below should be copied to batch files or typed at command
@@ -934,10 +934,11 @@ HARBOUR
    for Windows x64 (x86-64) hosts
    ------------------------------
 
-      Same as regular Windows, but you'll have to change %ProgramFiles% to
+      Same as 32-bit Windows, but you'll have to change %ProgramFiles% to
       %ProgramFiles(x86)% for 32-bit and mixed tools, you can build for
       both x86 and x64 without building a native target first, and potential
-      differences in compilers to use native binaries if they are available.
+      differences with some compilers in order to use native binaries if 
+      they are available.
 
       --- MSVC 2010 and Windows SDK 7.1 for Windows x86
       call "%ProgramFiles(x86)%\Microsoft Visual Studio 10.0\VC\vcvarsall.bat"
