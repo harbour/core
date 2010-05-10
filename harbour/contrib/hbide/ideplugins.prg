@@ -73,6 +73,7 @@
 /*----------------------------------------------------------------------*/
 
 STATIC s_aPlugins := { { "", NIL } }
+STATIC s_aLoaded  := { { "", .f. } }
 
 /*----------------------------------------------------------------------*/
 
@@ -99,17 +100,48 @@ FUNCTION hbide_loadPlugins()
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION hbide_execPlugin( cPlugin, oAPI, ... )
-   LOCAL n
+FUNCTION hbide_loadAPlugin( cPlugin )
+   LOCAL cPath, pHrb, bBlock, lLoaded
 
-   IF empty( cPlugin )
-      RETURN NIL
+   cPath := hb_dirBase() + hb_osPathSeparator() + "plugins" + hb_osPathSeparator() + cPlugin + ".hrb"
+
+   IF ( lLoaded := hb_fileExists( cPath ) )
+      pHrb := hb_hrbLoad( HB_HRB_BIND_OVERLOAD, cPath )
+
+      IF ! Empty( pHrb ) .AND. ! Empty( hb_hrbGetFunSym( pHrb, cPlugin + "_init" ) )
+         bBlock := &( "{|...| " + cPlugin + "_init(...) }" )
+
+         IF eval( bBlock, "1.0" )
+
+            IF ! Empty( hb_hrbGetFunSym( pHrb, cPlugin + "_exec" ) )
+               aadd( s_aPlugins, { cPlugin, &( "{|...| " + cPlugin + "_exec(...) }" ), pHrb } )
+               lLoaded := .t.
+
+            ENDIF
+         ENDIF
+      ENDIF
    ENDIF
+
+   aadd( s_aLoaded, { cPlugin, lLoaded } )
+
+   RETURN lLoaded
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION hbide_execPlugin( cPlugin, oAPI, ... )
+   LOCAL n, lLoaded
 
    cPlugin := lower( cPlugin )
 
-   IF ( n := ascan( s_aPlugins, {|e_| e_[ 1 ] == cPlugin } ) ) > 0
-      RETURN eval( s_aPlugins[ n, 2 ], oAPI, ... )
+   IF ( n := ascan( s_aLoaded, {|e_| e_[ 1 ] == cPlugin } ) ) == 0
+      lLoaded := hbide_loadAPlugin( cPlugin )
+   ELSE
+      lLoaded := s_aLoaded[ n,2 ]
+   ENDIF
+   IF lLoaded
+      IF ( n := ascan( s_aPlugins, {|e_| e_[ 1 ] == cPlugin } ) ) > 0
+         RETURN eval( s_aPlugins[ n, 2 ], oAPI, ... )
+      ENDIF
    ENDIF
 
    RETURN NIL
