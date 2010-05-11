@@ -85,7 +85,7 @@ PROCEDURE Main()
          { "HB_WITH_CAIRO"     , "..\..\bin\libcairo-2.dll" , .T., "cairo" },;
          { "HB_WITH_CURL"      , "..\libcurl.dll"           , .T., "" },;
          { "HB_WITH_CURL"      , "..\bin\libcurl.dll"       , .T., "" },;
-         { "HB_WITH_FIREBIRD"  , "..\bin\fbclient.dll"      , .F., "" },; /* Doesn't work with mingw cygwin, because .lib has another name in another directory */
+         { "HB_WITH_FIREBIRD"  , "..\bin\fbclient.dll"      , .F., "" },; /* Doesn't work with mingw/cygwin, because .lib has another name in another directory */
          { "HB_WITH_FREEIMAGE" , "..\Dist\FreeImage.dll"    , .F., "" },;
          { "HB_WITH_GD"        , "..\bin\bgd.dll"           , .F., "" },;
          { "HB_WITH_LIBHARU"   , "..\libhpdf.dll"           , .F., "" },;
@@ -105,8 +105,8 @@ PROCEDURE Main()
       FOR EACH tmp IN aArray
          IF ! Empty( GetEnv( tmp[ 1 ] ) )
             hb_processRun( GetEnv( "HB_HOST_BIN_DIR" ) + _PS_ + "hbmk2" +;
-                           " " + Chr( 34 ) + "-mkimplib=" + GetEnv( tmp[ 1 ] ) + _PS_ + StrTran( tmp[ 2 ], "\", _PS_ ) + Chr( 34 ) +;
-                           " " + Chr( 34 ) + GetEnv( "HB_LIB_INSTALL" ) + _PS_ + tmp[ 4 ] + Chr( 34 ) +;
+                           " " + Chr( 34 ) + "-mkimplib=" + StrTran( GetEnv( tmp[ 1 ] ) + "\" + tmp[ 2 ], "\", "/" ) + Chr( 34 ) +;
+                           " " + Chr( 34 ) + StrTran( GetEnv( "HB_LIB_INSTALL" ) + "\" + tmp[ 4 ], "\", "/" ) + Chr( 34 ) +;
                            iif( tmp[ 3 ], " -mkimplibms", "" ) )
          ENDIF
       NEXT

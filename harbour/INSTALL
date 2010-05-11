@@ -937,7 +937,7 @@ HARBOUR
       Same as 32-bit Windows, but you'll have to change %ProgramFiles% to
       %ProgramFiles(x86)% for 32-bit and mixed tools, you can build for
       both x86 and x64 without building a native target first, and potential
-      differences with some compilers in order to use native binaries if 
+      differences with some compilers in order to use native binaries if
       they are available.
 
       --- MSVC 2010 and Windows SDK 7.1 for Windows x86
