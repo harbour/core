@@ -57,6 +57,8 @@
 #include "directry.ch"
 #include "fileio.ch"
 
+#include "hbmzip.ch"
+
 THREAD STATIC t_nReadBuffer := 32768
 THREAD STATIC t_cComment
 THREAD STATIC t_lReadOnly := .F.
@@ -304,7 +306,7 @@ FUNCTION hb_ZipFile( cFileName,;
       FErase( cFileName )
    ENDIF
 
-   IF !Empty( hZip := hb_ZipOpen( cFileName ) )
+   IF !Empty( hZip := hb_ZipOpen( cFileName, iif( lOverwrite, NIL, HB_ZIP_OPEN_ADDINZIP ) ) )
 
       DEFAULT acFiles TO {}
       DEFAULT acExclude TO {}
