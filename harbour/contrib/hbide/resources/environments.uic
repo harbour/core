@@ -1,8 +1,8 @@
 /********************************************************************************
 ** Form generated from reading ui file 'environments.ui'
 **
-** Created: Mon Apr 12 21:21:08 2010
-**      by: Qt User Interface Compiler version 4.5.2
+** Created: Mon May 10 16:37:02 2010
+**      by: Qt User Interface Compiler version 4.5.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!
 ********************************************************************************/
@@ -119,17 +119,20 @@ public:
         labelPathEnv->setText(QApplication::translate("FormEnvironments", "Path to hbide.env", 0, QApplication::UnicodeUTF8));
         buttonPathEnv->setText(QString());
 #ifndef QT_NO_TOOLTIP
-        editCompilers->setToolTip(QApplication::translate("FormEnvironments", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        editCompilers->setToolTip(QString());
+#endif // QT_NO_TOOLTIP
+#ifndef QT_NO_WHATSTHIS
+        editCompilers->setWhatsThis(QApplication::translate("FormEnvironments", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
-"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt;\">HBIDE employes the concept of keeping everything tied together. It means all complier specific environments are kept together in a convinient way and applied as per need.</span></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt;\">HBIDE employes the concept of keeping everything tied together. It means all complier specific environments are kept together in a convinient way and applied as per need.</span></p>\n"
 "<p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;\"></p>\n"
-"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">"
-                        "<span style=\" font-size:8pt;\">So here you view/edit all the environments you employ in your applications. At the time you will build the project, a list of stated environments will be presented to choose from.</span></p>\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" fo"
+                        "nt-size:8pt;\">So here you view/edit all the environments you employ in your applications. At the time you will build the project, a list of stated environments will be presented to choose from.</span></p>\n"
 "<p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;\"></p>\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt;\">This opens up the possibility to experiment with different compilers without re-opening the IDE or setting up the envvars manually.</span></p></body></html>", 0, QApplication::UnicodeUTF8));
-#endif // QT_NO_TOOLTIP
+#endif // QT_NO_WHATSTHIS
         editCompilers->setStyleSheet(QString());
         buttonCn->setText(QApplication::translate("FormEnvironments", "Cancel", 0, QApplication::UnicodeUTF8));
         labelPathMk2->setText(QApplication::translate("FormEnvironments", "Path to hbmk2", 0, QApplication::UnicodeUTF8));

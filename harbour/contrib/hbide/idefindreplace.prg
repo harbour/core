@@ -689,7 +689,7 @@ METHOD IdeFindInFiles:buildUI()
    ::oUI:q_editResults:setReadOnly( .t. )
    //::oUI:q_editResults:setFontFamily( "Courier New" )
    //::oUI:q_editResults:setFontPointSize( 10 )
-   //::oUI:q_editResults:setFont( ::oIde:oFont:oWidget )
+   ::oUI:q_editResults:setFont( ::oIde:oFont:oWidget )
    ::oUI:q_editResults:setContextMenuPolicy( Qt_CustomContextMenu )
 
    ::oUI:q_labelStatus:setText( "Ready" )

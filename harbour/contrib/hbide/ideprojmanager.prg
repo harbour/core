@@ -732,6 +732,20 @@ METHOD IdeProjManager:buildInterface()
 
    ::oUI:signal( "editPrjLoctn"      , "textChanged(QString)", {|cPath| ::setProjectLocation( cPath ) } )
 
+   /* Set monospaced fonts */
+   ::oUI:q_editFlags       :setFont( ::oFont:oWidget )
+   ::oUI:q_editSources     :setFont( ::oFont:oWidget )
+   ::oUI:q_editHbp         :setFont( ::oFont:oWidget )
+
+   ::oUI:q_editPrjTitle    :setFont( ::oFont:oWidget )
+   ::oUI:q_editPrjLoctn    :setFont( ::oFont:oWidget )
+   ::oUI:q_editWrkFolder   :setFont( ::oFont:oWidget )
+   ::oUI:q_editDstFolder   :setFont( ::oFont:oWidget )
+   ::oUI:q_editOutName     :setFont( ::oFont:oWidget )
+   ::oUI:q_editBackup      :setFont( ::oFont:oWidget )
+   ::oUI:q_editLaunchParams:setFont( ::oFont:oWidget )
+   ::oUI:q_editLaunchExe   :setFont( ::oFont:oWidget )
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/

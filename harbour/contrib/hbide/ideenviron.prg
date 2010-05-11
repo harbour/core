@@ -233,6 +233,10 @@ METHOD IdeEnvironments:show()
       ::oUI:signal( "buttonSaveExit", "clicked()", {|| ::saveEnv(), ::oEnvironDock:hide() } )
       ::oUI:signal( "buttonPathMk2" , "clicked()", {|| ::execEnv( 1 ) } )
       ::oUI:signal( "buttonPathEnv" , "clicked()", {|| ::execEnv( 2 ) } )
+
+      ::oUI:q_editCompilers:setFont( ::oFont:oWidget )
+      ::oUI:q_editPathEnv:setFont( ::oFont:oWidget )
+      ::oUI:q_editPathMk2:setFont( ::oFont:oWidget )
    ENDIF
 
    ::oUI:q_editPathMk2  :setText( ::aINI[ INI_HBIDE, PathMk2 ] )
