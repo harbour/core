@@ -1095,15 +1095,18 @@ void HBQPlainTextEdit::hbPaintSelection( QPaintEvent * event )
       QTextCursor ct = cursorForPosition( QPoint( 1,1 ) );
       int t = ct.blockNumber();
       int c = ct.columnNumber();
+      int fontHeight = fontMetrics().height();
+      int b = t + ( viewport()->height() / fontHeight ) + 1 ; /* just in case */
+      re = re > b ? b : re;
 
-      if( re >= t )
+      if( re >= t && rb < b )
       {
          QPainter p( viewport() );
 
          int fontWidth = fontMetrics().averageCharWidth();
 
-         int top = ( ( rb <= t ) ? 0 : ( ( rb - t ) * fontMetrics().height() ) );
-         int btm = ( ( re - t + 1 ) * fontMetrics().height() ) - top;
+         int top = ( ( rb <= t ) ? 0 : ( ( rb - t ) * fontHeight ) );
+         int btm = ( ( re - t + 1 ) * fontHeight ) - top;
 
          if( selectionMode == selectionMode_column )
          {
@@ -1118,7 +1121,6 @@ void HBQPlainTextEdit::hbPaintSelection( QPaintEvent * event )
          {
             int i;
             int width  = viewport()->width();
-            int height = fontMetrics().height();
 
             for( i = rb; i <= re; i++ )
             {
@@ -1132,25 +1134,25 @@ void HBQPlainTextEdit::hbPaintSelection( QPaintEvent * event )
                      {
                         int x = ( ( cb - c ) * fontWidth ) + ( c > 0 ? 0 : contentsRect().left() );
                         int w = ( ce - cb ) * fontWidth;
-                        r = QRect( x, top, ( w == 0 ? 1 : w ), height );
+                        r = QRect( x, top, ( w == 0 ? 1 : w ), fontHeight );
                      }
                      else
                      {
                         int x = ( ( columnBegins - c ) * fontWidth ) + ( c > 0 ? 0 : contentsRect().left() );
-                        r = QRect( x, top, width, height );
+                        r = QRect( x, top, width, fontHeight );
                      }
                   }
                   else if( i == re )
                   {
                      int x = ( ( columnEnds - c ) * fontWidth ) + ( c > 0 ? 0 : contentsRect().left() );
-                     r = QRect( 0, top, x, height );
+                     r = QRect( 0, top, x, fontHeight );
                   }
                   else
                   {
-                     r = QRect( 0, top, width, height );
+                     r = QRect( 0, top, width, fontHeight );
                   }
                   p.fillRect( r, QBrush( QColor( 175, 255, 175 ) ) );
-                  top += height;
+                  top += fontHeight;
                }
             }
          }
@@ -1819,41 +1821,30 @@ void HBQPlainTextEdit::hbDuplicateLine()
 
 void HBQPlainTextEdit::hbBraceHighlight()
 {
-   extraSelections.clear();
-   setExtraSelections( extraSelections );
    QColor lineColor = QColor( Qt::yellow ).lighter( 160 );
-   selection.format.setBackground( lineColor );
 
    QTextDocument *doc = document();
+   #if 0
+   docLayout = QPlainTextDocumentLayout( doc );
+   docLayout->format.setBackground( lineColor );
+   #endif
+
+   extraSelections.clear();
+   setExtraSelections( extraSelections );
+   selection.format.setBackground( lineColor );
+
    QTextCursor cursor = textCursor();
-   QTextCursor beforeCursor = cursor;
 
    cursor.movePosition( QTextCursor::NextCharacter, QTextCursor::KeepAnchor );
    QString brace = cursor.selectedText();
-
-   beforeCursor.movePosition( QTextCursor::PreviousCharacter, QTextCursor::KeepAnchor );
-   QString beforeBrace = beforeCursor.selectedText();
 
    if(    ( brace != "{" ) && ( brace != "}" )
        && ( brace != "[" ) && ( brace != "]" )
        && ( brace != "(" ) && ( brace != ")" )
        && ( brace != "<" ) && ( brace != ">" ) )
    {
-      if(    ( beforeBrace == "{" ) || ( beforeBrace == "}" )
-          || ( beforeBrace == "[" ) || ( beforeBrace == "]" )
-          || ( beforeBrace == "(" ) || ( beforeBrace == ")" )
-          || ( beforeBrace == "<" ) || ( beforeBrace == ">" )  )
-      {
-         cursor = beforeCursor;
-         brace = cursor.selectedText();
-      }
-      else
-         return;
+      return;
    }
-
-   QTextCharFormat format;
-   format.setForeground( Qt::red );
-   format.setFontWeight( QFont::Bold );
 
    QString openBrace;
    QString closeBrace;
@@ -1863,19 +1854,16 @@ void HBQPlainTextEdit::hbBraceHighlight()
       openBrace = "{";
       closeBrace = "}";
    }
-
    if( ( brace == "[" ) || ( brace == "]" ) )
    {
       openBrace = "[";
       closeBrace = "]";
    }
-
    if( ( brace == "(" ) || ( brace == ")" ) )
    {
       openBrace = "(";
       closeBrace = ")";
    }
-
    if( ( brace == "<" ) || ( brace == ">" ) )
    {
       openBrace = "<";
@@ -1888,8 +1876,6 @@ void HBQPlainTextEdit::hbBraceHighlight()
       QTextCursor cursor2 = doc->find( openBrace, cursor );
       if( cursor2.isNull() )
       {
-         selection.cursor = cursor;
-         extraSelections.append( selection );
          selection.cursor = cursor1;
          extraSelections.append( selection );
          setExtraSelections( extraSelections );
@@ -1903,8 +1889,6 @@ void HBQPlainTextEdit::hbBraceHighlight()
             if( cursor2.isNull() )
                 break;
          }
-         selection.cursor = cursor;
-         extraSelections.append( selection );
          selection.cursor = cursor1;
          extraSelections.append( selection );
          setExtraSelections( extraSelections );
@@ -1918,8 +1902,6 @@ void HBQPlainTextEdit::hbBraceHighlight()
          QTextCursor cursor2 = doc->find( closeBrace, cursor, QTextDocument::FindBackward );
          if( cursor2.isNull() )
          {
-            selection.cursor = cursor;
-            extraSelections.append( selection );
             selection.cursor = cursor1;
             extraSelections.append( selection );
             setExtraSelections( extraSelections );
@@ -1933,8 +1915,6 @@ void HBQPlainTextEdit::hbBraceHighlight()
                if( cursor2.isNull() )
                    break;
             }
-            selection.cursor = cursor;
-            extraSelections.append( selection );
             selection.cursor = cursor1;
             extraSelections.append( selection );
             setExtraSelections( extraSelections );
