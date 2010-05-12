@@ -297,62 +297,65 @@ REQUEST hbmk_KEYW
 #define _HBMK_aOPTL             36
 #define _HBMK_aOPTA             37
 #define _HBMK_aOPTD             38
-#define _HBMK_lCPP              39
-#define _HBMK_lSHARED           40
-#define _HBMK_lSTATICFULL       41
-#define _HBMK_lSHAREDDIST       42
-#define _HBMK_lNULRDD           43
-#define _HBMK_lMAP              44
-#define _HBMK_lBEEP             45
-#define _HBMK_lSTRIP            46
-#define _HBMK_lOPTIM            47
-#define _HBMK_nCOMPR            48
-#define _HBMK_nWARN             49
-#define _HBMK_lRUN              50
-#define _HBMK_lINC              51
-#define _HBMK_lREBUILDPO        52
-#define _HBMK_lMINIPO           53
-#define _HBMK_lUNICODE          54
-#define _HBMK_nCONF             55
-#define _HBMK_lIGNOREERROR      56
-#define _HBMK_lIMPLIB           57
-#define _HBMK_lHBCPPMM          58
-#define _HBMK_aVAR              59
+#define _HBMK_aOPTI             39
+#define _HBMK_lCPP              40
+#define _HBMK_lSHARED           41
+#define _HBMK_lSTATICFULL       42
+#define _HBMK_lSHAREDDIST       43
+#define _HBMK_lNULRDD           44
+#define _HBMK_lMAP              45
+#define _HBMK_lBEEP             46
+#define _HBMK_lSTRIP            47
+#define _HBMK_lOPTIM            48
+#define _HBMK_nCOMPR            49
+#define _HBMK_nWARN             50
+#define _HBMK_lRUN              51
+#define _HBMK_lINC              52
+#define _HBMK_lREBUILDPO        53
+#define _HBMK_lMINIPO           54
+#define _HBMK_lUNICODE          55
+#define _HBMK_nCONF             56
+#define _HBMK_lIGNOREERROR      57
+#define _HBMK_lIMPLIB           58
+#define _HBMK_lHBCPPMM          59
+#define _HBMK_aVAR              60
 
-#define _HBMK_lCreateLib        60
-#define _HBMK_lCreateDyn        61
+#define _HBMK_lCreateLib        61
+#define _HBMK_lCreateDyn        62
+#define _HBMK_lCreateImpLib     63
 
-#define _HBMK_lBLDFLGP          62
-#define _HBMK_lBLDFLGC          63
-#define _HBMK_lBLDFLGL          64
+#define _HBMK_lBLDFLGP          64
+#define _HBMK_lBLDFLGC          65
+#define _HBMK_lBLDFLGL          66
 
-#define _HBMK_cFIRST            65
-#define _HBMK_aPRG              66
-#define _HBMK_aC                67
-#define _HBMK_aCPP              68
-#define _HBMK_aRESSRC           69
-#define _HBMK_aRESCMP           70
-#define _HBMK_aOBJUSER          71
-#define _HBMK_aICON             72
-#define _HBMK_hDEPTS            73
+#define _HBMK_cFIRST            67
+#define _HBMK_aPRG              68
+#define _HBMK_aC                69
+#define _HBMK_aCPP              70
+#define _HBMK_aRESSRC           71
+#define _HBMK_aRESCMP           72
+#define _HBMK_aOBJUSER          73
+#define _HBMK_aICON             74
+#define _HBMK_aIMPLIBSRC        75
+#define _HBMK_hDEPTS            76
 
-#define _HBMK_aPO               74
-#define _HBMK_cHBL              75
-#define _HBMK_cHBLDir           76
-#define _HBMK_aLNG              77
-#define _HBMK_cPO               78
+#define _HBMK_aPO               77
+#define _HBMK_cHBL              78
+#define _HBMK_cHBLDir           79
+#define _HBMK_aLNG              80
+#define _HBMK_cPO               81
 
-#define _HBMK_lDEBUGTIME        79
-#define _HBMK_lDEBUGINC         80
-#define _HBMK_lDEBUGSTUB        81
-#define _HBMK_lDEBUGI18N        82
+#define _HBMK_lDEBUGTIME        82
+#define _HBMK_lDEBUGINC         83
+#define _HBMK_lDEBUGSTUB        84
+#define _HBMK_lDEBUGI18N        85
 
-#define _HBMK_cCCPATH           83
-#define _HBMK_cCCPREFIX         84
-#define _HBMK_cCCPOSTFIX        85
-#define _HBMK_cCCEXT            86
+#define _HBMK_cCCPATH           86
+#define _HBMK_cCCPREFIX         87
+#define _HBMK_cCCPOSTFIX        88
+#define _HBMK_cCCEXT            89
 
-#define _HBMK_MAX_              86
+#define _HBMK_MAX_              89
 
 #ifndef _HBMK_EMBEDDED_
 
@@ -674,7 +677,6 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    LOCAL cOpt_Res
    LOCAL cOpt_Lib
    LOCAL cOpt_Dyn
-   LOCAL cOpt_ImpLib
    LOCAL cBin_CompPRG
    LOCAL cBin_CompC
    LOCAL cBin_CompCPP
@@ -702,11 +704,10 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    LOCAL lAcceptCFlag := .F.
    LOCAL lAcceptLDFlag := .F.
    LOCAL lAcceptLDClipper := .F.
+   LOCAL lAcceptIFlag := .F.
    LOCAL lHarbourInfo := .F.
-   LOCAL lMakeImpLib := .F.
    LOCAL cMakeImpLibDLL := NIL
    LOCAL cMakeImpLibLib := NIL
-   LOCAL lMakeImpLibMS_bcc := .F.
 
    LOCAL nHarbourPPO := 0
    LOCAL cHarbourOutputExt
@@ -740,6 +741,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
    hbmk[ _HBMK_lCreateLib ] := .F.
    hbmk[ _HBMK_lCreateDyn ] := .F.
+   hbmk[ _HBMK_lCreateImpLib ] := .F.
 
    hbmk[ _HBMK_lQuiet ] := .F.
    hbmk[ _HBMK_lInfo ] := .F.
@@ -1509,6 +1511,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    hbmk[ _HBMK_aOPTL ] := {}
    hbmk[ _HBMK_aOPTA ] := {}
    hbmk[ _HBMK_aOPTD ] := {}
+   hbmk[ _HBMK_aOPTI ] := {}
    l_aOPTRUN := {}
    hbmk[ _HBMK_aRESSRC ] := {}
    hbmk[ _HBMK_aRESCMP ] := {}
@@ -1519,6 +1522,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    hbmk[ _HBMK_aLIBUSERSYSPRE ] := {}
    hbmk[ _HBMK_aOBJUSER ] := {}
    hbmk[ _HBMK_aICON ] := {}
+   hbmk[ _HBMK_aIMPLIBSRC ] := {}
    l_aOBJA := {}
    l_cPROGDIR := NIL
    l_cPROGNAME := NIL
@@ -1617,6 +1621,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       CASE cParamL == "-hbexe"           ; hbmk[ _HBMK_lInfo ] := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .F. ; hbmk[ _HBMK_lCreateLib ] := .F. ; hbmk[ _HBMK_lCreateDyn ] := .F.
       CASE cParamL == "-hblib"           ; hbmk[ _HBMK_lInfo ] := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T. ; hbmk[ _HBMK_lCreateLib ] := .T. ; hbmk[ _HBMK_lCreateDyn ] := .F.
       CASE cParamL == "-hbdyn"           ; hbmk[ _HBMK_lInfo ] := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T. ; hbmk[ _HBMK_lCreateLib ] := .F. ; hbmk[ _HBMK_lCreateDyn ] := .T. ; l_lNOHBLIB := .T.
+      CASE cParamL == "-hbimplib"        ; hbmk[ _HBMK_lInfo ] := .F. ; lStopAfterInit := .T. ; hbmk[ _HBMK_lCreateImpLib ] := .T. ; lAcceptIFlag := .T.
       CASE cParamL == "-gui" .OR. ;
            cParamL == "-mwindows"        ; hbmk[ _HBMK_lGUI ]       := .T. /* Compatibility */
       CASE cParamL == "-std" .OR. ;
@@ -1760,22 +1765,6 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
          OutStd( l_cHB_INC_INSTALL )
 
-      CASE Left( cParamL, Len( "-mkimplib=" ) ) == "-mkimplib="
-
-         cMakeImpLibDLL := MacroProc( hbmk, ArchCompFilter( hbmk, SubStr( cParam, Len( "-mkimplib=" ) + 1 ) ), aParam[ _PAR_cFileName ] )
-         IF ! Empty( cMakeImpLibDLL )
-            cMakeImpLibDLL := PathSepToTarget( hbmk, PathProc( cMakeImpLibDLL, aParam[ _PAR_cFileName ] ) )
-            lStopAfterInit := .T.
-            lMakeImpLib := .T.
-         ENDIF
-
-      /* NOTE: Undocumented option to enable -a option when calling bcc implib tool.
-               This is needed for some .dlls to make them work with bcc, because
-               bcc chose not to follow name-mangling/callconv standard. */
-      CASE cParamL == "-mkimplibms"
-
-         lMakeImpLibMS_bcc := .T.
-
       CASE Left( cParamL, Len( "-jobs=" ) ) == "-jobs="
 
          cParam := ArchCompFilter( hbmk, SubStr( cParam, Len( "-jobs=" ) + 1 ) )
@@ -1841,10 +1830,15 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
       CASE Left( cParam, 2 ) == "-o"
 
-         IF lStopAfterHarbour
+         IF hbmk[ _HBMK_lCreateImpLib ]
             tmp := MacroProc( hbmk, ArchCompFilter( hbmk, SubStr( cParam, 3 ) ), aParam[ _PAR_cFileName ] )
             IF ! Empty( tmp )
-               AAddNotEmpty( hbmk[ _HBMK_aOPTPRG ], "-o" + PathSepToTarget( hbmk, PathNormalize( PathProc( PathSepToSelf( tmp ), aParam[ _PAR_cFileName ] ) ), 2 ) )
+               cMakeImpLibLib := PathSepToTarget( hbmk, PathNormalize( PathProc( PathSepToSelf( tmp ), aParam[ _PAR_cFileName ] ) ) )
+            ENDIF
+         ELSEIF lStopAfterHarbour
+            tmp := MacroProc( hbmk, ArchCompFilter( hbmk, SubStr( cParam, 3 ) ), aParam[ _PAR_cFileName ] )
+            IF ! Empty( tmp )
+               AAddNotEmpty( hbmk[ _HBMK_aOPTPRG ], "-o" + PathSepToTarget( hbmk, PathNormalize( PathProc( PathSepToSelf( tmp ), aParam[ _PAR_cFileName ] ) ) ) )
             ENDIF
          ELSE
             tmp := MacroProc( hbmk, ArchCompFilter( hbmk, SubStr( cParam, 3 ) ), aParam[ _PAR_cFileName ] )
@@ -1910,6 +1904,13 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          cParam := MacroProc( hbmk, ArchCompFilter( hbmk, SubStr( cParam, Len( "-icon=" ) + 1 ) ), aParam[ _PAR_cFileName ] )
          IF ! Empty( cParam )
             AAdd( hbmk[ _HBMK_aICON ], PathNormalize( PathProc( PathSepToSelf( cParam ), aParam[ _PAR_cFileName ] ) ) )
+         ENDIF
+
+      CASE Left( cParamL, Len( "-iflag=" ) ) == "-iflag="
+
+         cParam := MacroProc( hbmk, ArchCompFilter( hbmk, SubStr( cParam, Len( "-iflag=" ) + 1 ) ), aParam[ _PAR_cFileName ] )
+         IF Left( cParam, 1 ) $ cOptPrefix
+            AAdd( hbmk[ _HBMK_aOPTI ]   , PathSepToTarget( hbmk, cParam, 2 ) )
          ENDIF
 
       CASE Left( cParamL, 2 ) == "-i" .AND. ;
@@ -2041,6 +2042,8 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             ELSE
                AAddNotEmpty( hbmk[ _HBMK_aOPTC ], ArchCompFilter( hbmk, PathSepToTarget( hbmk, cParam, 2 ) ) )
             ENDIF
+         CASE lAcceptIFlag
+            AAddNotEmpty( hbmk[ _HBMK_aOPTI ], ArchCompFilter( hbmk, PathSepToTarget( hbmk, cParam, 2 ) ) )
          OTHERWISE
             IF SubStr( cParamL, 2 ) == "gh"
                lStopAfterHarbour := .T.
@@ -2060,6 +2063,13 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             ENDIF
             AAddNotEmpty( hbmk[ _HBMK_aOPTPRG ], PathSepToTarget( hbmk, cParam, 2 ) )
          ENDCASE
+
+      CASE hbmk[ _HBMK_lCreateImpLib ]
+
+         cParam := MacroProc( hbmk, ArchCompFilter( hbmk, cParam ), aParam[ _PAR_cFileName ] )
+         IF ! Empty( cParam )
+            AAdd( hbmk[ _HBMK_aIMPLIBSRC ], PathSepToTarget( hbmk, PathNormalize( PathProc( PathSepToSelf( cParam ), aParam[ _PAR_cFileName ] ) ) ) )
+         ENDIF
 
       CASE FN_ExtGet( cParamL ) == ".lib" .OR. ;
            ( ! Empty( cDynLibExt ) .AND. FN_ExtGet( cParamL ) == cDynLibExt )
@@ -2194,10 +2204,6 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          hbmk[ _HBMK_cHBL ] := PathSepToTarget( hbmk, cParam )
          hbmk[ _HBMK_cHBLDir ] := FN_DirGet( aParam[ _PAR_cFileName ] )
 
-      CASE lMakeImpLib .AND. Empty( cMakeImpLibLib )
-
-         cMakeImpLibLib := PathSepToTarget( hbmk, PathProc( MacroProc( hbmk, ArchCompFilter( hbmk, cParam ), aParam[ _PAR_cFileName ] ), aParam[ _PAR_cFileName ] ) )
-
       OTHERWISE
 
          cParam := ArchCompFilter( hbmk, cParam )
@@ -2305,7 +2311,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       ENDIF
    ENDIF
 
-   IF ( ! lStopAfterInit .AND. ! lStopAfterHarbour ) .OR. lMakeImpLib
+   IF ( ! lStopAfterInit .AND. ! lStopAfterHarbour ) .OR. hbmk[ _HBMK_lCreateImpLib ]
 
       IF hbmk[ _HBMK_cGT ] != NIL .AND. hbmk[ _HBMK_cGT ] == hbmk[ _HBMK_cGTDEFAULT ]
          hbmk[ _HBMK_cGT ] := NIL
@@ -3190,9 +3196,6 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          cBin_Dyn := cBin_Link
          cOpt_Link := '-Gn -Tpe -L{DL} {FL} ' + iif( hbmk[ _HBMK_lGUI ], "c0w32.obj", "c0x32.obj" ) + " {LO}, {OE}, " + iif( hbmk[ _HBMK_lMAP ], "{OM}", "nul" ) + ", {LL} {LB} cw32mt.lib import32.lib,, {LS}{SCRIPT}"
          cOpt_Dyn  := '-Gn -Tpd -L{DL} {FD} ' +                          "c0d32.obj"                + " {LO}, {OD}, " + iif( hbmk[ _HBMK_lMAP ], "{OM}", "nul" ) + ", {LL} {LB} cw32mt.lib import32.lib,, {LS}{SCRIPT}"
-         IF lMakeImpLibMS_bcc
-            cOpt_ImpLib := "-a"
-         ENDIF
          bBlk_ImpLib := {| cSourceDLL, cTargetLib, cFlags | win_implib_command( hbmk, "implib.exe {FI} {OL} {ID}", nCmd_Esc, cSourceDLL, cTargetLib, cFlags ) }
          cLibPathPrefix := ""
          cLibPathSep := ";"
@@ -3343,16 +3346,16 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          cOpt_CompC += " {FC} {LC}"
          cOptIncMask := "-I{DI}"
          cOpt_Link := "-nologo -out:{OE} {LO} {DL} {FL} {LL} {LB} {LS}"
-         DO CASE
-         CASE hbmk[ _HBMK_cCOMP ] == "msvc"     ; cOpt_ImpLib := "-machine:x86"
-         CASE hbmk[ _HBMK_cCOMP ] == "msvc64"   ; cOpt_ImpLib := "-machine:x64"
-         CASE hbmk[ _HBMK_cCOMP ] == "msvcia64" ; cOpt_ImpLib := "-machine:ia64"
-         CASE hbmk[ _HBMK_cCOMP ] == "icc"      ; cOpt_ImpLib := "-machine:x86"
-         CASE hbmk[ _HBMK_cCOMP ] == "iccia64"  ; cOpt_ImpLib := "-machine:ia64"
-         CASE hbmk[ _HBMK_cCOMP ] == "msvcarm"  ; cOpt_ImpLib := "-machine:xarm"
-         CASE hbmk[ _HBMK_cCOMP ] == "msvcmips" ; cOpt_ImpLib := "-machine:mips"
-         CASE hbmk[ _HBMK_cCOMP ] == "msvcsh"   ; cOpt_ImpLib := "-machine:sh5"
-         ENDCASE
+         SWITCH hbmk[ _HBMK_cCOMP ]
+         CASE "msvc"     ; AAdd( hbmk[ _HBMK_aOPTI ], "-machine:x86"  ) ; EXIT
+         CASE "msvc64"   ; AAdd( hbmk[ _HBMK_aOPTI ], "-machine:x64"  ) ; EXIT
+         CASE "msvcia64" ; AAdd( hbmk[ _HBMK_aOPTI ], "-machine:ia64" ) ; EXIT
+         CASE "icc"      ; AAdd( hbmk[ _HBMK_aOPTI ], "-machine:x86"  ) ; EXIT
+         CASE "iccia64"  ; AAdd( hbmk[ _HBMK_aOPTI ], "-machine:ia64" ) ; EXIT
+         CASE "msvcarm"  ; AAdd( hbmk[ _HBMK_aOPTI ], "-machine:xarm" ) ; EXIT
+         CASE "msvcmips" ; AAdd( hbmk[ _HBMK_aOPTI ], "-machine:mips" ) ; EXIT
+         CASE "msvcsh"   ; AAdd( hbmk[ _HBMK_aOPTI ], "-machine:sh5"  ) ; EXIT
+         ENDSWITCH
          bBlk_ImpLib := {| cSourceDLL, cTargetLib, cFlags | win_implib_command_msvc( hbmk, cBin_Lib + " -nologo {FI} -def:{ID} -out:{OL}", nCmd_Esc, cSourceDLL, cTargetLib, cFlags ) }
          cLibPathPrefix := "-libpath:"
          cLibPathSep := " "
@@ -3672,27 +3675,32 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       ENDIF
    ENDIF
 
-   IF lMakeImpLib
+   IF hbmk[ _HBMK_lCreateImpLib ]
       IF ISBLOCK( bBlk_ImpLib )
-         IF ! Empty( cMakeImpLibDLL )
-            cMakeImpLibDLL := FN_ExtDef( cMakeImpLibDLL, ".dll" )
-            IF hb_FileExists( PathSepToSelf( cMakeImpLibDLL ) )
-               hb_FNameSplit( cMakeImpLibLib, @tmp, @tmp1 )
-               IF Empty( tmp1 )
-                  hb_FNameSplit( cMakeImpLibDLL,, @tmp1 )
-               ENDIF
-               cMakeImpLibLib := hb_FNameMerge( tmp, tmp1 )
-               tmp := FN_CookLib( cMakeImpLibLib, cLibLibPrefix, cLibLibExt )
-               IF Eval( bBlk_ImpLib, cMakeImpLibDLL, tmp, cOpt_ImpLib )
-                  hbmk_OutStd( hbmk, hb_StrFormat( I_( "Created import library: %1$s <= %2$s" ), tmp, cMakeImpLibDLL ) )
+         IF ! Empty( hbmk[ _HBMK_aIMPLIBSRC ] )
+            FOR EACH cMakeImpLibDLL IN hbmk[ _HBMK_aIMPLIBSRC ]
+               cMakeImpLibDLL := FN_ExtDef( cMakeImpLibDLL, ".dll" )
+               IF hb_FileExists( PathSepToSelf( cMakeImpLibDLL ) )
+                  hb_FNameSplit( cMakeImpLibLib, @tmp, @tmp1 )
+                  IF Empty( tmp1 )
+                     hb_FNameSplit( cMakeImpLibDLL,, @tmp1 )
+                  ENDIF
+                  tmp := FN_CookLib( hb_FNameMerge( tmp, tmp1 ), cLibLibPrefix, cLibLibExt )
+                  IF Eval( bBlk_ImpLib, cMakeImpLibDLL, tmp, ArrayToList( hbmk[ _HBMK_aOPTI ] ) )
+                     hbmk_OutStd( hbmk, hb_StrFormat( I_( "Created import library: %1$s <= %2$s" ), tmp, cMakeImpLibDLL ) )
+                  ELSE
+                     hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Failed creating import library %1$s from %2$s." ), tmp, cMakeImpLibDLL ) )
+                  ENDIF
                ELSE
-                  hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Failed creating import library %1$s from %2$s." ), tmp, cMakeImpLibDLL ) )
+                  IF hbmk[ _HBMK_lInfo ]
+                     hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Source dynamic library not found: %1$s" ), cMakeImpLibDLL ) )
+                  ENDIF
                ENDIF
-            ELSE
-               hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Source dynamic library not found: %1$s" ), cMakeImpLibDLL ) )
-            ENDIF
+            NEXT
          ELSE
-            hbmk_OutErr( hbmk, I_( "Error: Missing parameter for import library creation." ) )
+            IF hbmk[ _HBMK_lInfo ]
+               hbmk_OutErr( hbmk, I_( "Warning: No import library source was specified" ) )
+            ENDIF
          ENDIF
       ELSE
          hbmk_OutErr( hbmk, I_( "Error: Creating import libraries is not supported for this platform or compiler." ) )
@@ -8736,7 +8744,8 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-gt<name>"          , I_( "link with GT<name> GT driver, can be repeated to link with more GTs. First one will be the default at runtime" ) },;
       { "-hbexe"             , I_( "create executable (default)" ) },;
       { "-hblib"             , I_( "create static library" ) },;
-      { "-hbdyn"             , I_( "create dynamic library" ) }}
+      { "-hbdyn"             , I_( "create dynamic library" ) },;
+      { "-hbimplib"          , I_( "create import library" ) }}
 
    LOCAL aOpt_Help := {;
       { "-help|--help"       , I_( "long help" ) } }
@@ -8767,7 +8776,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-[no]run"           , I_( "run/don't run output executable" ) },;
       { "-vcshead=<file>"    , I_( "generate .ch header file with local repository information. SVN, CVS, Git, Mercurial, Bazaar and Fossil are currently supported. Generated header will define macro _HBMK_VCS_TYPE_ with the name of detected VCS and _HBMK_VCS_ID_ with the unique ID of local repository" ) },;
       { "-tshead=<file>"     , I_( "generate .ch header file with timestamp information. Generated header will define macros _HBMK_BUILD_DATE_, _HBMK_BUILD_TIME_, _HBMK_BUILD_TIMESTAMP_ with the date/time of build" ) },;
-      { "-icon=<file>"       , I_( "set <file> as application icon. <file> should be a supported format on the target platform (experimental)" ) },;
+      { "-icon=<file>"       , I_( "set <file> as application icon. <file> should be a supported format on the target platform" ) },;
       { "-instpath=<path>"   , I_( "copy target to <path>. if <path> is a directory, it should end with path separator. can be specified multiple times" ) },;
       { "-nohbc"             , I_( "do not process .hbc files in current directory" ) },;
       { "-stop"              , I_( "stop without doing anything" ) },;
@@ -8782,6 +8791,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-ldflag=<f>"        , I_( "pass flag to linker (executable)" ) },;
       { "-aflag=<f>"         , I_( "pass flag to linker (static library)" ) },;
       { "-dflag=<f>"         , I_( "pass flag to linker (dynamic library)" ) },;
+      { "-iflag=<f>"         , I_( "pass flag to import library creation command" ) },;
       { "-runflag=<f>"       , I_( "pass flag to output executable when -run option is used" ) },;
       { "-3rd=<f>"           , I_( "options/flags reserved for 3rd party tools, always ignored by hbmk2 itself" ) },;
       { "-jobs=<n>"          , I_( "start n compilation threads (multiprocess platforms only)" ) },;
@@ -8810,18 +8820,16 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-hbcmp|-clipper"    , I_( "stop after creating the object files\ncreate link/copy hbmk2 to hbcmp/clipper for the same effect" ) },;
       { "-hbcc"              , I_( "stop after creating the object files and accept raw C flags\ncreate link/copy hbmk2 to hbcc for the same effect" ) },;
       { "-hblnk"             , I_( "accept raw linker flags" ) },;
-      { "-hb10"              , I_( "enable Harbour 1.0.x compatibility mode (experimental)" ) },;
-      { "-xhb"               , I_( "enable xhb mode (experimental)" ) },;
-      { "-hbc"               , I_( "enable pure C mode (experimental)" ) },;
+      { "-hb10"              , I_( "enable Harbour 1.0.x compatibility mode" ) },;
+      { "-xhb"               , I_( "enable xhb mode" ) },;
+      { "-hbc"               , I_( "enable pure C mode" ) },;
       { "-rtlink"            , "" },;
       { "-blinker"           , "" },;
       { "-exospace"          , I_( "emulate Clipper compatible linker behavior\ncreate link/copy hbmk2 to rtlink/blinker/exospace for the same effect" ) },;
       NIL,;
-      { "-mkimplib=<d> [<l>]", I_( "convert <d> .dll into <l> import library (experimental)" ) },;
-      NIL,;
-      { "-hbmake=<file>"     , I_( "convert hbmake project file to .hbp file (experimental)" ) },;
-      { "-xbp=<file>"        , I_( "convert .xbp (xbuild) project file to .hbp file (experimental)" ) },;
-      { "-xhp=<file>"        , I_( "convert .xhp (xMate) project file to .hbp file (experimental)" ) },;
+      { "-hbmake=<file>"     , I_( "convert hbmake project file to .hbp file" ) },;
+      { "-xbp=<file>"        , I_( "convert .xbp (xbuild) project file to .hbp file" ) },;
+      { "-xhp=<file>"        , I_( "convert .xhp (xMate) project file to .hbp file" ) },;
       NIL,;
       { "--hbdirbin"         , I_( "output Harbour binary directory" ) },;
       { "--hbdirdyn"         , I_( "output Harbour dynamic library directory" ) },;

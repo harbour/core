@@ -224,13 +224,13 @@ msgstr "Generálja újra a .po fájlt, törölve ezáltal minden szükségtelen bejegyzé
 
 #: hbmk2.prg:7941
 #, c-format
-msgid "convert .xbp (xbuild) project file to .hbp file (experimental)"
-msgstr ".xbp (xbuild) project állomány konvertálása .hbp állományba (kísérleti)"
+msgid "convert .xbp (xbuild) project file to .hbp file"
+msgstr ".xbp (xbuild) project állomány konvertálása .hbp állományba"
 
 #: hbmk2.prg:7941
 #, c-format
-msgid "convert .xhp (xMate) project file to .hbp file (experimental)"
-msgstr ".xhp (xMate) project állomány konvertálása .hbp állományba (kísérleti)"
+msgid "convert .xhp (xMate) project file to .hbp file"
+msgstr ".xhp (xMate) project állomány konvertálása .hbp állományba"
 
 #: hbmk2.prg:7959
 #, c-format
@@ -399,7 +399,7 @@ msgstr "álljon meg az object állományok létrehozása után és továbbítsa a kapcsol
 
 #: hbmk2.prg:7941
 #, c-format
-msgid "set <file> as application icon. <file> should be a supported format on the target platform (experimental)"
+msgid "set <file> as application icon. <file> should be a supported format on the target platform"
 msgstr ""
 
 #: hbmk2.prg:7959
@@ -484,12 +484,12 @@ msgstr "továbbítsa a kapcsolót a létrehozott alkalmazásnak, -run kapcsoló haszná
 
 #: hbmk2.prg:7941
 #, c-format
-msgid "enable Harbour 1.0.x compatibility mode (experimental)"
+msgid "enable Harbour 1.0.x compatibility mode"
 msgstr ""
 
 #: hbmk2.prg:7941
 #, c-format
-msgid "convert hbmake project file to .hbp file (experimental)"
+msgid "convert hbmake project file to .hbp file"
 msgstr ""
 
 #: hbmk2.prg:7941
@@ -749,7 +749,7 @@ msgstr "törlés (lépcsõzetes üzemmódban)"
 
 #: hbmk2.prg:7941
 #, c-format
-msgid "enable pure C mode (experimental)"
+msgid "enable pure C mode"
 msgstr ""
 
 #: hbmk2.prg:7941
@@ -944,8 +944,8 @@ msgstr "kapcsolja be a lépcsõzetes (incremental) üzemmódot"
 
 #: hbmk2.prg:7941
 #, c-format
-msgid "enable xhb mode (experimental)"
-msgstr "kapcsolja be az xhb üzemmódot (kísérleti)"
+msgid "enable xhb mode"
+msgstr "kapcsolja be az xhb üzemmódot"
 
 #: hbmk2.prg:7941
 #, c-format

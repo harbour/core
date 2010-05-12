@@ -333,8 +333,8 @@ msgstr ""
 
 #: hbmk2.prg:7942
 #, c-format
-msgid "convert .xhp (xMate) project file to .hbp file (experimental)"
-msgstr "converte um projeto .xhp (xMate) em um arquivo .hbp (experimental)"
+msgid "convert .xhp (xMate) project file to .hbp file"
+msgstr "converte um projeto .xhp (xMate) em um arquivo .hbp"
 
 #: hbmk2.prg:4451
 #, c-format
@@ -579,8 +579,8 @@ msgstr "ajuda detalhada"
 
 #: hbmk2.prg:7942
 #, c-format
-msgid "set <file> as application icon. <file> should be a supported format on the target platform (experimental)"
-msgstr "seta o ícone para o aplicativo. <file> deve possuir um formato compatível com a plataforma de destino (experimental)"
+msgid "set <file> as application icon. <file> should be a supported format on the target platform"
+msgstr "seta o ícone para o aplicativo. <file> deve possuir um formato compatível com a plataforma de destino"
 
 #: hbmk2.prg:7942
 #, c-format
@@ -721,18 +721,18 @@ msgstr "parâmetros específicos do linkeditor."
 
 #: hbmk2.prg:7942
 #, c-format
-msgid "enable xhb mode (experimental)"
-msgstr "habilitar modo xHb (experimental)"
+msgid "enable xhb mode"
+msgstr "habilitar modo xHb"
 
 #: hbmk2.prg:7942
 #, c-format
-msgid "convert hbmake project file to .hbp file (experimental)"
-msgstr "converte um projeto do hbmake em um arquivo .hbp (experimental)"
+msgid "convert hbmake project file to .hbp file"
+msgstr "converte um projeto do hbmake em um arquivo .hbp"
 
 #: hbmk2.prg:7942
 #, c-format
-msgid "convert .xbp (xbuild) project file to .hbp file (experimental)"
-msgstr "converte um projeto .xbp (xbuild) em um arquivo .hbp (experimental)"
+msgid "convert .xbp (xbuild) project file to .hbp file"
+msgstr "converte um projeto .xbp (xbuild) em um arquivo .hbp"
 
 #: hbmk2.prg:7942
 #, c-format
@@ -917,8 +917,8 @@ msgstr "Atenção: Executando comando pós processo. %1$s:"
 
 #: hbmk2.prg:7942
 #, c-format
-msgid "enable Harbour 1.0.x compatibility mode (experimental)"
-msgstr "habilita modo de compatibilidade 'Harbour 1.0.x' (experimental)"
+msgid "enable Harbour 1.0.x compatibility mode"
+msgstr "habilita modo de compatibilidade 'Harbour 1.0.x'"
 
 #: hbmk2.prg:4582
 #, c-format
@@ -947,8 +947,8 @@ msgstr "criar binário que faça uso da biblioteca compartilhada do Harbour com re
 
 #: hbmk2.prg:7942
 #, c-format
-msgid "enable pure C mode (experimental)"
-msgstr "ativa modo C puro (experimental)"
+msgid "enable pure C mode"
+msgstr "ativa modo C puro"
 
 #: hbmk2.prg:5926
 #: hbmk2.prg:5969

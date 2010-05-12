@@ -1642,7 +1642,7 @@ long hb_comSend( int iPort, const void * data, long len, HB_MAXINT timeout )
 
       if( lSent >= 0 )
       {
-         DWORD dwWritten = 0;;
+         DWORD dwWritten = 0;
          BOOL fResult;
 
          fResult = WriteFile( pCom->hComm, data, ( DWORD ) len, &dwWritten, NULL );
@@ -1701,7 +1701,7 @@ long hb_comRecv( int iPort, void * data, long len, HB_MAXINT timeout )
       if( lReceived >= 0 )
       {
          DWORD dwToRead = ( DWORD ) len;
-         DWORD dwRead = 0;;
+         DWORD dwRead = 0;
          BOOL fResult;
 
          fResult = ReadFile( pCom->hComm, data, dwToRead, &dwRead, NULL );
