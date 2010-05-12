@@ -76,14 +76,10 @@ PROCEDURE Main()
       GetEnv( "HB_BUILD_IMPLIB" ) == "yes" .AND. ;
       ! Empty( GetEnv( "HB_HOST_BIN_DIR" ) )
 
-      FOR EACH tmp IN Directory( "contrib\*", "D" )
-         IF "D" $ tmp[ F_ATTR ] .AND. ;
-            !( tmp[ F_NAME ] == "." ) .AND. ;
-            !( tmp[ F_NAME ] == ".." ) .AND. ;
-            hb_FileExists( "contrib\" + tmp[ F_NAME ] + "\" + tmp[ F_NAME ] + ".hbi" )
-
+      FOR EACH tmp IN PackageList( "contrib\*", GetEnv( "HB_CONTRIBLIBS" ), GetEnv( "HB_CONTRIB_ADDONS" ) )
+         IF hb_FileExists( "contrib\" + tmp + "\" + tmp + ".hbi" )
             hb_processRun( GetEnv( "HB_HOST_BIN_DIR" ) + _PS_ + "hbmk2" +;
-                           " @" + "contrib\" + tmp[ F_NAME ] + "\" + tmp[ F_NAME ] + ".hbi " +;
+                           " @" + "contrib\" + tmp + "\" + tmp + ".hbi " +;
                            "-o${HB_LIB_INSTALL}/" )
          ENDIF
       NEXT
@@ -169,3 +165,44 @@ PROCEDURE Main()
 
 STATIC FUNCTION FN_Escape( cFN )
    RETURN Chr( 34 ) + cFN + Chr( 34 )
+
+/* NOTE: Must be in sync with contrib/Makefile logic */
+STATIC FUNCTION PackageList( cMask, cBase, cAddOn )
+   LOCAL aList := {}
+   LOCAL aBase
+   LOCAL tmp
+
+   aBase := iif( Empty( cBase ), {}, hb_ATokens( cBase,, .T. ) )
+
+   DO CASE
+   CASE Len( aBase ) == 1 .AND. aBase[ 1 ] == "no"
+      /* fall through */
+   CASE Len( aBase ) > 1 .AND. aBase[ 1 ] == "no"
+      hb_ADel( aBase, 1, .T. )
+      FOR EACH tmp IN Directory( cMask, "D" )
+         IF "D" $ tmp[ F_ATTR ] .AND. !( tmp[ F_NAME ] == "." ) .AND. !( tmp[ F_NAME ] == ".." ) .AND. ;
+            AScan( aBase, {| tmp1 | tmp1 == tmp[ F_NAME ] } ) == 0
+            AAdd( aList, tmp[ F_NAME ] )
+         ENDIF
+      NEXT
+   CASE Len( aBase ) > 0
+      aList := hb_ATokens( cBase,, .T. )
+   OTHERWISE
+      FOR EACH tmp IN Directory( cMask, "D" )
+         IF "D" $ tmp[ F_ATTR ] .AND. !( tmp[ F_NAME ] == "." ) .AND. !( tmp[ F_NAME ] == ".." )
+            AAdd( aList, tmp[ F_NAME ] )
+         ENDIF
+      NEXT
+   ENDCASE
+
+   IF ! Empty( cAddOn )
+      FOR EACH tmp IN hb_ATokens( cAddOn,, .T. )
+         IF ! Empty( tmp )
+            IF AScan( aList, {| tmp1 | tmp1 == tmp } ) == 0
+               AAdd( aList, tmp )
+            ENDIF
+         ENDIF
+      NEXT
+   ENDIF
+
+   RETURN aList

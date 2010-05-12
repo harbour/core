@@ -689,6 +689,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    LOCAL cPath_CompC
    LOCAL nErrorLevel := 0
    LOCAL tmp, tmp1, tmp2, tmp3, array
+   LOCAL cLibBCC_CRTL
    LOCAL cScriptFile
    LOCAL fhnd
    LOCAL cFile
@@ -3183,9 +3184,20 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          cOptIncMask := "-I{DI}"
          cBin_CompC := "bcc32.exe"
          cBin_CompCPP := cBin_CompC
-         cOpt_CompC := "-c -q -tWM"
+         cOpt_CompC := "-c -q"
          IF hbmk[ _HBMK_lOPTIM ]
             cOpt_CompC += " -d -6 -O2 -OS -Ov -Oi -Oc"
+         ENDIF
+         cLibBCC_CRTL := "cw32mt.lib"
+         IF hbmk[ _HBMK_nHBMODE ] == _HBMODE_XHB
+            /* Adding weird hack for xhb to make it possible to force ST C mode. */
+            IF AScan( hbmk[ _HBMK_aOPTC ], {| tmp | tmp == "-tW" } ) == 0
+               AAdd( hbmk[ _HBMK_aOPTC ], "-tWM" )
+            ELSE
+               cLibBCC_CRTL := "cw32.lib"
+            ENDIF
+         ELSE
+            AAdd( hbmk[ _HBMK_aOPTC ], "-tWM" )
          ENDIF
          SWITCH hbmk[ _HBMK_nWARN ]
          CASE _WARN_MAX ; AAdd( hbmk[ _HBMK_aOPTC ], "-w -Q" )         ; EXIT
@@ -3199,8 +3211,8 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          cResExt := ".res"
          cBin_Link := "ilink32.exe"
          cBin_Dyn := cBin_Link
-         cOpt_Link := '-Gn -Tpe -L{DL} {FL} ' + iif( hbmk[ _HBMK_lGUI ], "c0w32.obj", "c0x32.obj" ) + " {LO}, {OE}, " + iif( hbmk[ _HBMK_lMAP ], "{OM}", "nul" ) + ", {LL} {LB} cw32mt.lib import32.lib,, {LS}{SCRIPT}"
-         cOpt_Dyn  := '-Gn -Tpd -L{DL} {FD} ' +                          "c0d32.obj"                + " {LO}, {OD}, " + iif( hbmk[ _HBMK_lMAP ], "{OM}", "nul" ) + ", {LL} {LB} cw32mt.lib import32.lib,, {LS}{SCRIPT}"
+         cOpt_Link := '-Gn -Tpe -L{DL} {FL} ' + iif( hbmk[ _HBMK_lGUI ], "c0w32.obj", "c0x32.obj" ) + " {LO}, {OE}, " + iif( hbmk[ _HBMK_lMAP ], "{OM}", "nul" ) + ", {LL} {LB} " + cLibBCC_CRTL + " import32.lib,, {LS}{SCRIPT}"
+         cOpt_Dyn  := '-Gn -Tpd -L{DL} {FD} ' +                          "c0d32.obj"                + " {LO}, {OD}, " + iif( hbmk[ _HBMK_lMAP ], "{OM}", "nul" ) + ", {LL} {LB} " + cLibBCC_CRTL + " import32.lib,, {LS}{SCRIPT}"
          bBlk_ImpLib := {| cSourceDLL, cTargetLib, cFlags | win_implib_command( hbmk, "implib.exe {FI} {OL} {ID}", nCmd_Esc, cSourceDLL, cTargetLib, cFlags ) }
          cLibPathPrefix := ""
          cLibPathSep := ";"

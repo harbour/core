@@ -534,7 +534,7 @@ HARBOUR
    wce
    ---
    mingw    - MinGW GNU C x86
-   mingwarm - MinGW GNU C ARM (from CEGCC 0.55 and above)
+   mingwarm - MinGW GNU C ARM (CEGCC 0.55 and above)
    msvcarm  - Microsoft Visual C++ ARM
    poccarm  - Pelles C 5.0 ARM
 
@@ -652,9 +652,9 @@ HARBOUR
    - HB_UTIL_ADDONS=<list>       Build space separated <list> of additional
                                  utilities stored in the utils directory.
    - HB_COMPILER_VER=[<ver>]     Set C compiler version. This is used with msvc
-                                 targets currently.
+                                 and mingw/cygwin targets currently.
                                  <ver> format:
-                                     <9><0><0> = <major><minor>[.<revision>]
+                                     <9><0>[<0>] = <major><minor>[.<revision>]
                                  Default: filled by compiler autodetection or empty
    - HB_USER_LIBS=[<list>]       Add space separated <list> of libs to link process.
                                  Lib names should be without extension and path.
