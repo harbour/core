@@ -706,8 +706,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    LOCAL lAcceptLDClipper := .F.
    LOCAL lAcceptIFlag := .F.
    LOCAL lHarbourInfo := .F.
-   LOCAL cMakeImpLibDLL := NIL
-   LOCAL cMakeImpLibLib := NIL
+   LOCAL cMakeImpLibDLL
 
    LOCAL nHarbourPPO := 0
    LOCAL cHarbourOutputExt
@@ -1830,31 +1829,37 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
       CASE Left( cParam, 2 ) == "-o"
 
-         IF hbmk[ _HBMK_lCreateImpLib ]
-            tmp := MacroProc( hbmk, ArchCompFilter( hbmk, SubStr( cParam, 3 ) ), aParam[ _PAR_cFileName ] )
-            IF ! Empty( tmp )
-               cMakeImpLibLib := PathSepToTarget( hbmk, PathNormalize( PathProc( PathSepToSelf( tmp ), aParam[ _PAR_cFileName ] ) ) )
-            ENDIF
-         ELSEIF lStopAfterHarbour
-            tmp := MacroProc( hbmk, ArchCompFilter( hbmk, SubStr( cParam, 3 ) ), aParam[ _PAR_cFileName ] )
+         tmp := SubStr( cParam, 3 )
+
+         IF lStopAfterHarbour
+            tmp := MacroProc( hbmk, ArchCompFilter( hbmk, tmp ), aParam[ _PAR_cFileName ] )
             IF ! Empty( tmp )
                AAddNotEmpty( hbmk[ _HBMK_aOPTPRG ], "-o" + PathSepToTarget( hbmk, PathNormalize( PathProc( PathSepToSelf( tmp ), aParam[ _PAR_cFileName ] ) ) ) )
             ENDIF
          ELSE
-            tmp := MacroProc( hbmk, ArchCompFilter( hbmk, SubStr( cParam, 3 ) ), aParam[ _PAR_cFileName ] )
             IF ! Empty( tmp )
-               tmp := PathProc( PathSepToSelf( tmp ), aParam[ _PAR_cFileName ] )
-               hb_FNameSplit( tmp, @cDir, @cName, @cExt )
-               IF ! Empty( cDir ) .AND. Empty( cName ) .AND. Empty( cExt )
-                  /* Only a dir was passed, let's store that and pick a default name later. */
-                  l_cPROGDIR := cDir
-               ELSEIF ! Empty( tmp )
-                  l_cPROGDIR := NIL
-                  l_cPROGNAME := tmp
-               ELSE
-                  l_cPROGDIR := NIL
-                  l_cPROGNAME := NIL
+               tmp := MacroProc( hbmk, ArchCompFilter( hbmk, tmp ), aParam[ _PAR_cFileName ] )
+               IF ! Empty( tmp )
+                  tmp := PathSepToSelf( tmp )
+                  hb_FNameSplit( tmp, @cDir, @cName, @cExt )
+                  DO CASE
+                  CASE Empty( cDir )
+                     tmp := PathProc( tmp, aParam[ _PAR_cFileName ] )
+                     hb_FNameSplit( tmp, @cDir, @cName, @cExt )
+                     IF l_cPROGDIR == NIL
+                        l_cPROGDIR := cDir
+                     ENDIF
+                     l_cPROGNAME := FN_NameExtGet( tmp )
+                  CASE ! Empty( cDir ) .AND. Empty( cName ) .AND. Empty( cExt )
+                     l_cPROGDIR := PathProc( cDir, aParam[ _PAR_cFileName ] )
+                  OTHERWISE /* ! Empty( cDir ) .AND. !( Empty( cName ) .AND. Empty( cExt ) ) */
+                     l_cPROGDIR := PathProc( cDir, aParam[ _PAR_cFileName ] )
+                     l_cPROGNAME := FN_NameExtGet( tmp )
+                  ENDCASE
                ENDIF
+            ELSE
+               l_cPROGDIR := NIL
+               l_cPROGNAME := NIL
             ENDIF
          ENDIF
 
@@ -3681,11 +3686,9 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             FOR EACH cMakeImpLibDLL IN hbmk[ _HBMK_aIMPLIBSRC ]
                cMakeImpLibDLL := FN_ExtDef( cMakeImpLibDLL, ".dll" )
                IF hb_FileExists( PathSepToSelf( cMakeImpLibDLL ) )
-                  hb_FNameSplit( cMakeImpLibLib, @tmp, @tmp1 )
-                  IF Empty( tmp1 )
-                     hb_FNameSplit( cMakeImpLibDLL,, @tmp1 )
-                  ENDIF
-                  tmp := FN_CookLib( hb_FNameMerge( tmp, tmp1 ), cLibLibPrefix, cLibLibExt )
+                  tmp1 := l_cPROGNAME
+                  DEFAULT tmp1 TO FN_NameGet( cMakeImpLibDLL )
+                  tmp := FN_CookLib( hb_FNameMerge( l_cPROGDIR, tmp1 ), cLibLibPrefix, cLibLibExt )
                   IF Eval( bBlk_ImpLib, cMakeImpLibDLL, tmp, ArrayToList( hbmk[ _HBMK_aOPTI ] ) )
                      hbmk_OutStd( hbmk, hb_StrFormat( I_( "Created import library: %1$s <= %2$s" ), tmp, cMakeImpLibDLL ) )
                   ELSE

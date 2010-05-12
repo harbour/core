@@ -1,0 +1,9 @@
+#
+# $Id$
+#
+
+-hbimplib
+
+${HB_WITH_ADS}/Redistribute/ace32.dll
+${HB_WITH_ADS}/ace32.dll
+${HB_WITH_ADS}/32bit/ace32.dll

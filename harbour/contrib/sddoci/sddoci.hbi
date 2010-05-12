@@ -1,0 +1,9 @@
+#
+# $Id$
+#
+
+-hbimplib
+
+${HB_WITH_OCILIB}/../lib32/ociliba.dll
+${HB_WITH_OCILIB}/../lib32/ocilibm.dll
+${HB_WITH_OCILIB}/../lib32/ocilibw.dll

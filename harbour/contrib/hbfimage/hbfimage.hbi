@@ -1,0 +1,7 @@
+#
+# $Id$
+#
+
+-hbimplib
+
+${HB_WITH_FREEIMAGE}/../Dist/FreeImage.dll

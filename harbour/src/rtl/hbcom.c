@@ -116,7 +116,7 @@ typedef struct
    int            oserr;
    int            port;
    char *         name;
-//   struct termios tio;
+/* struct termios tio; */
 }
 HB_COM, * PHB_COM;
 

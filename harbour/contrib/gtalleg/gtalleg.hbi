@@ -1,0 +1,7 @@
+#
+# $Id$
+#
+
+-hbimplib
+
+${HB_WITH_ALLEGRO}/../bin/alleg42.dll

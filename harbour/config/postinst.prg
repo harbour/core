@@ -76,54 +76,17 @@ PROCEDURE Main()
       GetEnv( "HB_BUILD_IMPLIB" ) == "yes" .AND. ;
       ! Empty( GetEnv( "HB_HOST_BIN_DIR" ) )
 
-      aArray := {;
-         { "HB_WITH_ADS"       , "Redistribute/ace32.dll"   , ""               , "" },;
-         { "HB_WITH_ADS"       , "ace32.dll"                , ""               , "" },;
-         { "HB_WITH_ADS"       , "32bit/ace32.dll"          , ""               , "" },;
-         { "HB_WITH_ALLEGRO"   , "../bin/alleg42.dll"       , " -iflag={bcc}-a", "alleg" },;
-         { "HB_WITH_BLAT"      , "../blat.dll"              , " -iflag={bcc}-a", "" },;
-         { "HB_WITH_CAIRO"     , "../../bin/libcairo-2.dll" , " -iflag={bcc}-a", "cairo" },;
-         { "HB_WITH_CURL"      , "../libcurl.dll"           , " -iflag={bcc}-a", "" },;
-         { "HB_WITH_CURL"      , "../bin/libcurl.dll"       , " -iflag={bcc}-a", "" },;
-         { "HB_WITH_FIREBIRD"  , "../bin/fbclient.dll"      , ""               , "" },; /* Doesn't work with mingw/cygwin, because .lib has another name in another directory */
-         { "HB_WITH_FREEIMAGE" , "../Dist/FreeImage.dll"    , ""               , "" },;
-         { "HB_WITH_GD"        , "../bin/bgd.dll"           , ""               , "" },;
-         { "HB_WITH_LIBHARU"   , "../libhpdf.dll"           , ""               , "" },;
-         { "HB_WITH_LIBHARU"   , "../lib_dll/libhpdf.dll"   , ""               , "" },;
-         { "HB_WITH_MYSQL"     , "../lib/opt/libmySQL.dll"  , ""               , "" },;
-         { "HB_WITH_OCILIB"    , "../lib32/ociliba.dll"     , ""               , "" },;
-         { "HB_WITH_OCILIB"    , "../lib32/ocilibm.dll"     , ""               , "" },;
-         { "HB_WITH_OCILIB"    , "../lib32/ocilibw.dll"     , ""               , "" },;
-         { "HB_WITH_OPENSSL"   , "../out32dll/libeay32.dll" , " -iflag={bcc}-a", "" },;
-         { "HB_WITH_OPENSSL"   , "../out32dll/ssleay32.dll" , " -iflag={bcc}-a", "" },;
-         { "HB_WITH_OPENSSL"   , "../dll/libeay32.dll"      , " -iflag={bcc}-a", "" },;
-         { "HB_WITH_OPENSSL"   , "../dll/ssleay32.dll"      , " -iflag={bcc}-a", "" },;
-         { "HB_WITH_OPENSSL"   , "../libeay32.dll"          , " -iflag={bcc}-a", "" },;
-         { "HB_WITH_OPENSSL"   , "../ssleay32.dll"          , " -iflag={bcc}-a", "" },;
-         { "HB_WITH_PGSQL"     , "../lib/libpq.dll"         , " -iflag={bcc}-a", "" }}
+      FOR EACH tmp IN Directory( "contrib\*", "D" )
+         IF "D" $ tmp[ F_ATTR ] .AND. ;
+            !( tmp[ F_NAME ] == "." ) .AND. ;
+            !( tmp[ F_NAME ] == ".." ) .AND. ;
+            hb_FileExists( "contrib\" + tmp[ F_NAME ] + "\" + tmp[ F_NAME ] + ".hbi" )
 
-      FOR EACH tmp IN aArray
-         IF ! Empty( GetEnv( tmp[ 1 ] ) )
             hb_processRun( GetEnv( "HB_HOST_BIN_DIR" ) + _PS_ + "hbmk2" +;
-                           " -hbimplib" +;
-                           " ${" + tmp[ 1 ] + "}/" + tmp[ 2 ] +;
-                           " -o${HB_LIB_INSTALL}/" + tmp[ 4 ] +;
-                           tmp[ 3 ] )
+                           " @" + "contrib\" + tmp[ F_NAME ] + "\" + tmp[ F_NAME ] + ".hbi " +;
+                           "-o${HB_LIB_INSTALL}/ -trace" )
          ENDIF
       NEXT
-
-      /* HACK: Automatic implib generation doesn't work in case of FireBird, so we manually create it. [vszakats] */
-      IF GetEnv( "HB_COMPILER" ) $ "mingw|mingw64|cygwin"
-         hb_FCopy( GetEnv( "HB_WITH_FIREBIRD" ) + _PS_ + StrTran( "../lib/fbclient_ms.lib", "/", _PS_ ), GetEnv( "HB_LIB_INSTALL" ) + _PS_ + "libfbclient.a" )
-      ENDIF
-
-      /* Exception: We use static libs with mingw */
-      IF GetEnv( "HB_COMPILER" ) == "mingw" .AND. ;
-         ! Empty( GetEnv( "HB_WITH_OCILIB" ) )
-         hb_FCopy( GetEnv( "HB_WITH_OCILIB" ) + _PS_ + StrTran( "../lib32/libociliba.a", "/", _PS_ ), GetEnv( "HB_LIB_INSTALL" ) + _PS_ + "libociliba.a" )
-         hb_FCopy( GetEnv( "HB_WITH_OCILIB" ) + _PS_ + StrTran( "../lib32/libocilibm.a", "/", _PS_ ), GetEnv( "HB_LIB_INSTALL" ) + _PS_ + "libocilibm.a" )
-         hb_FCopy( GetEnv( "HB_WITH_OCILIB" ) + _PS_ + StrTran( "../lib32/libocilibw.a", "/", _PS_ ), GetEnv( "HB_LIB_INSTALL" ) + _PS_ + "libocilibw.a" )
-      ENDIF
    ENDIF
 
    /* Creating shared version of Harbour binaries */

@@ -1,0 +1,14 @@
+#
+# $Id$
+#
+
+-hbimplib
+
+${HB_WITH_OPENSSL}/../out32dll/libeay32.dll
+${HB_WITH_OPENSSL}/../out32dll/ssleay32.dll
+${HB_WITH_OPENSSL}/../dll/libeay32.dll
+${HB_WITH_OPENSSL}/../dll/ssleay32.dll
+${HB_WITH_OPENSSL}/../libeay32.dll
+${HB_WITH_OPENSSL}/../ssleay32.dll
+
+-iflag={bcc}-a
