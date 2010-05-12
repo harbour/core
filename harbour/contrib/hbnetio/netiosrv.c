@@ -398,7 +398,10 @@ static long s_srvSendAll( PHB_CONSRV conn, void * buffer, long len )
          }
       }
       if( conn->zstream && lLast > 0 && !conn->stop )
-         hb_znetFlush( conn->zstream, conn->sd, -1 );
+      {
+         if( hb_znetFlush( conn->zstream, conn->sd, -1 ) != 0 )
+            lSent = -1;
+      }
 
       if( conn->mutex )
          hb_threadMutexUnlock( conn->mutex );
