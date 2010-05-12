@@ -85,6 +85,9 @@ static HB_ERRCODE hb_errnoToDosError( int ErrCode )
 #if defined( ETXTBSY )
       case ETXTBSY:
 #endif
+#if defined( EPERM )
+      case EPERM:
+#endif
          return 5;   /* Access denied */
       case EBADF:
          return 6;   /* Invalid handle */

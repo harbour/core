@@ -10,6 +10,7 @@ C_HEADERS := \
    hbapi.h \
    hbapicdp.h \
    hbapicls.h \
+   hbapicom.h \
    hbapidbg.h \
    hbapierr.h \
    hbapifs.h \
@@ -57,6 +58,7 @@ C_HEADERS := \
    hbsocket.h \
    hbstack.h \
    hbsxfunc.h \
+   hbtask.h \
    hbthread.h \
    hbtrace.h \
    hbtypes.h \

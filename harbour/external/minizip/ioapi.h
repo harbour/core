@@ -46,7 +46,9 @@
 #if defined( __BORLANDC__ ) || \
     defined( __WATCOMC__ ) || \
     defined( __MINGW32CE__ ) || \
-    defined( HB_OS_DARWIN )
+    defined( HB_OS_BSD ) || \
+    defined( HB_OS_DARWIN ) || \
+    defined( HB_OS_HAIKU )
 #  define USE_FILE32API
 #endif
 

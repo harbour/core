@@ -1351,7 +1351,7 @@ HB_FUNC( NETIO_SRVSTATUS )
 
    if( !conn )
       iStatus = -1;
-   else if( conn->sd != HB_NO_SOCKET )
+   else if( conn->sd == HB_NO_SOCKET )
       iStatus = -2;
    else if( conn->stop )
       iStatus = -3;

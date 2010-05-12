@@ -30,6 +30,8 @@ C_SOURCES := \
    count.c \
    ctc.c \
    ctchksum.c \
+   ctcom1.c \
+   ctcom2.c \
    ctcrypt.c \
    ctmath.c \
    ctmath2.c \
@@ -115,6 +117,7 @@ PRG_SOURCES := \
 
 PRG_HEADERS := \
    ct.ch \
+   ctcom.ch \
    ctdisk.ch \
    cterror.ch \
    ctextern.ch \
