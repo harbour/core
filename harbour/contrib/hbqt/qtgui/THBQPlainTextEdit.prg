@@ -111,6 +111,8 @@ CREATE CLASS HBQPlainTextEdit INHERIT HbQtObjectHandler, QPlainTextEdit
    METHOD  hbSetSelectionMode( nMode, lOn )
    METHOD  hbGetSelectionInfo()
    METHOD  hbSetSelectionInfo( xSelectionInfo )
+   METHOD  hbSetSelectionColor( pColor )
+   METHOD  hbSetMatchBraces( lAll )
 
    ENDCLASS
 
@@ -298,4 +300,12 @@ METHOD HBQPlainTextEdit:hbGetSelectionInfo()
 
 METHOD HBQPlainTextEdit:hbSetSelectionInfo( xSelectionInfo )
    RETURN Qt_HBQPlainTextEdit_hbSetSelectionInfo( ::pPtr, xSelectionInfo )
+
+
+METHOD HBQPlainTextEdit:hbSetSelectionColor( pColor )
+   RETURN Qt_HBQPlainTextEdit_hbSetSelectionColor( ::pPtr, hbqt_ptr( pColor ) )
+
+
+METHOD HBQPlainTextEdit:hbSetMatchBraces( lAll )
+   RETURN Qt_HBQPlainTextEdit_hbSetMatchBraces( ::pPtr, lAll )
 

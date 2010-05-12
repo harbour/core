@@ -72,6 +72,8 @@
         :hbSetSelectionMode( nMode, lOn )                   -> NIL
         :hbGetSelectionInfo()                               -> NIL
         :hbSetSelectionInfo( xSelectionInfo )               -> NIL
+        :hbSetSelectionColor( pColor )                      -> NIL
+        :hbSetMatchBraces( lAll )                           -> NIL
 
     $DESCRIPTION$
 

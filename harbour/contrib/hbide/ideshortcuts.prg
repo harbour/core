@@ -203,6 +203,7 @@ CLASS IdeShortcuts INHERIT IdeObject
    METHOD gotoFunction()
    METHOD clearSelection()
    METHOD execPlugin( cPlugin, ... )
+   METHOD toggleCurrentLineHilight()
 
    ENDCLASS
 
@@ -1105,7 +1106,6 @@ METHOD IdeShortcuts:toggleLineNumbersDisplay()
    RETURN ::oEM:toggleLineNumbers()
 /*----------------------------------------------------------------------*/
 METHOD IdeShortcuts:toggleSelectionMode()
-   ::isColumnSelectionEnabled := ! ::isColumnSelectionEnabled
    RETURN ::oEM:toggleSelectionMode()
 /*----------------------------------------------------------------------*/
 METHOD IdeShortcuts:toggleStatusBar()
@@ -1114,7 +1114,7 @@ METHOD IdeShortcuts:toggleStatusBar()
    ELSE
       ::oSBar:oWidget:show()
    ENDIF
-   ::lStatusBarVisible := ! ::lStatusBarVisible
+   ::oIde:lStatusBarVisible := ! ::lStatusBarVisible
    RETURN Self
 /*----------------------------------------------------------------------*/
 METHOD IdeShortcuts:toggleLineSelectionMode()
@@ -1131,6 +1131,9 @@ METHOD IdeShortcuts:clearSelection()
 /*----------------------------------------------------------------------*/
 METHOD IdeShortcuts:execPlugin( cPlugin, ... )
    RETURN hbide_execPlugin( cPlugin, ::oIde, ... )
+/*----------------------------------------------------------------------*/
+METHOD IdeShortcuts:toggleCurrentLineHilight()
+   RETURN ::oEM:toggleCurrentLineHighlightMode()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeShortcuts:loadMethods()
@@ -1316,6 +1319,9 @@ METHOD IdeShortcuts:loadMethods()
    aadd( ::aMethods, { 'execPlugin( cPlugin )', ;
                        'execPlugin( "" )', ;
                        'Attempts to execute third-party plugins. First parameter passed is the instance to SELF exposing public API methods. Next parameters are passes as a list.' } )
+   aadd( ::aMethods, { 'toggleCurrentLineHilight()', ;
+                       'toggleCurrentLineHilight()', ;
+                       'Toggles the mode to highlight current line or not in the editor. The effect is global. Setting is not retained for next run' } )
 
    RETURN Self
 

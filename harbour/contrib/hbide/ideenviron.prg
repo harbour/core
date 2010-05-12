@@ -235,8 +235,11 @@ METHOD IdeEnvironments:show()
       ::oUI:signal( "buttonPathEnv" , "clicked()", {|| ::execEnv( 2 ) } )
 
       ::oUI:q_editCompilers:setFont( ::oFont:oWidget )
+
+      #if 0
       ::oUI:q_editPathEnv:setFont( ::oFont:oWidget )
       ::oUI:q_editPathMk2:setFont( ::oFont:oWidget )
+      #endif
    ENDIF
 
    ::oUI:q_editPathMk2  :setText( ::aINI[ INI_HBIDE, PathMk2 ] )

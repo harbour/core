@@ -506,13 +506,13 @@ METHOD IdeDocks:buildToolBarPanels()
    ::oDlg:oWidget:addToolBar( Qt_LeftToolBarArea, ::qTBarLines )
 
    aBtns := {}
-   aadd( aBtns, { "movelineup"      , "Move Current Line Up"   , {|| ::oEM:moveLine( -1 )  } } )
-   aadd( aBtns, { "movelinedown"    , "Move Current Line Down" , {|| ::oEM:moveLine(  1 )  } } )
-   aadd( aBtns, { "deleteline"      , "Delete Current Line"    , {|| ::oEM:deleteLine()    } } )
-   aadd( aBtns, { "duplicateline"   , "Duplicate Current Line" , {|| ::oEM:duplicateLine() } } )
+   aadd( aBtns, { "movelineup"      , "Move Current Line Up"       , {|| ::oEM:moveLine( -1 )  } } )
+   aadd( aBtns, { "movelinedown"    , "Move Current Line Down"     , {|| ::oEM:moveLine(  1 )  } } )
+   aadd( aBtns, { "deleteline"      , "Delete Current Line"        , {|| ::oEM:deleteLine()    } } )
+   aadd( aBtns, { "duplicateline"   , "Duplicate Current Line"     , {|| ::oEM:duplicateLine() } } )
    aadd( aBtns, {} )
-   aadd( aBtns, { "togglelinenumber", "Toggle Line Numbers"    , ;
-                {|| ::oIde:lLineNumbersVisible := ! ::lLineNumbersVisible, ::oEM:toggleLineNumbers() } } )
+   aadd( aBtns, { "togglelinenumber", "Toggle Line Numbers"        , {|| ::oEM:toggleLineNumbers() } } )
+   aadd( aBtns, { "curlinehilight"  , "Toggle Current Line Hilight", {|| ::oEM:toggleCurrentLineHighlightMode() } } )
    FOR EACH a_ IN aBtns
       IF empty( a_ )
          ::qTBarLines:addSeparator()

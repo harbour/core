@@ -227,6 +227,7 @@ CLASS HbIde
    DATA   lTabCloseRequested                      INIT   .f.
    DATA   isColumnSelectionEnabled                INIT   .f.
    DATA   lLineNumbersVisible                     INIT   .t.
+   DATA   lCurrentLineHighlightEnabled            INIT   .t.
 
    DATA   cWrkProject                             INIT   ""
    DATA   cWrkTheme                               INIT   ""
@@ -490,7 +491,9 @@ METHOD HbIde:create( aParams )
    /* Load tags last tagged projects */
    ::oFN:loadTags( ::aINI[ INI_TAGGEDPROJECTS ] )
 
-   /* hbide_loadPlugins() */
+   #if 0   /* Can be controlled through setup */
+   hbide_loadPlugins( Self, "1.0" )
+   #endif
 
    DO WHILE .t.
       ::nEvent := AppEvent( @::mp1, @::mp2, @::oXbp )

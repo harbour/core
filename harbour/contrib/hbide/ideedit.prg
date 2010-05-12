@@ -207,6 +207,7 @@ CLASS IdeEdit INHERIT IdeObject
    METHOD blockConvert( cMode )
    METHOD clearSelection()
    METHOD dispStatusInfo()
+   METHOD toggleCurrentLineHighlightMode()
 
    ENDCLASS
 
@@ -441,11 +442,12 @@ METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
 
       /* Book Marks reach-out buttons */
       ::relayMarkButtons()
-      ::toggleLineNumbers()
-
       ::updateTitleBar()
 
+      ::toggleLineNumbers()
+      ::toggleCurrentLineHighlightMode()
       ::dispStatusInfo()
+
       ::oDK:setStatusText( SB_PNL_SELECTEDCHARS, len( ::getSelectedText() ) )
       EXIT
 
@@ -1241,6 +1243,12 @@ METHOD IdeEdit:toggleLineSelectionMode()
    ::isLineSelectionON := ! ::isLineSelectionON
    ::qEdit:hbSetSelectionMode( 3, ::isLineSelectionON )
    ::dispStatusInfo()
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:toggleCurrentLineHighlightMode()
+   ::qEdit:hbHighlightCurrentLine( ::lCurrentLineHighlightEnabled )
    RETURN Self
 
 /*----------------------------------------------------------------------*/

@@ -94,6 +94,7 @@ HBQPlainTextEdit::HBQPlainTextEdit( QWidget * parent ) : QPlainTextEdit( parent 
    m_currentLineColor.setNamedColor( "#e8e8ff" );
    m_lineAreaBkColor.setNamedColor( "#e4e4e4" );
    m_horzRulerBkColor.setNamedColor( "whitesmoke" );
+   m_matchBracesAll         = false;
 
    spaces                   = 3;
    spacesTab                = "";
@@ -122,6 +123,9 @@ HBQPlainTextEdit::HBQPlainTextEdit( QWidget * parent ) : QPlainTextEdit( parent 
 
    horzRuler->setFrameShape( QFrame::Panel );
    horzRuler->setFrameShadow( QFrame::Sunken );
+
+   QPalette pl( QPlainTextEdit::palette() );
+   m_selectionColor = pl.color( QPalette::Highlight );
 }
 
 /*----------------------------------------------------------------------*/
@@ -210,6 +214,18 @@ bool HBQPlainTextEdit::event( QEvent *event )
    }
 
    return QPlainTextEdit::event( event );
+}
+
+/*----------------------------------------------------------------------*/
+
+void HBQPlainTextEdit::hbSetSelectionColor( const QColor & color )
+{
+   m_selectionColor = color;
+
+   QPalette pl( QPlainTextEdit::palette() );
+   pl.setColor( QPalette::Highlight, m_selectionColor );
+   pl.setColor( QPalette::HighlightedText, QColor( 0,0,0 ) );
+   setPalette( pl );
 }
 
 /*----------------------------------------------------------------------*/
@@ -738,7 +754,8 @@ bool HBQPlainTextEdit::hbKeyPressColumnSelection( QKeyEvent * event )
       }
       else
       {
-         //emit selectionChanged();
+         if( selectionState > 0 )
+            emit selectionChanged();
          setCursorWidth( 1 );
          selectionState = 0;
       }
@@ -934,6 +951,8 @@ void HBQPlainTextEdit::paintEvent( QPaintEvent * event )
    int top           = ( int ) blockBoundingGeometry( tblock ).translated( contentOffset() ).top();
    int bottom        = top + height;
 
+   this->hbPaintSelection( event );
+
    while( tblock.isValid() && top <= event->rect().bottom() )
    {
       if( tblock.isVisible() && bottom >= event->rect().top() )
@@ -960,7 +979,6 @@ void HBQPlainTextEdit::paintEvent( QPaintEvent * event )
       bottom = top + height;
       ++blockNumber;
    }
-   this->hbPaintSelection( event );
 
    #if 0  /* A day wasted - I could not find how I can execute paiting from within prg code */
    if( block )
@@ -1115,7 +1133,7 @@ void HBQPlainTextEdit::hbPaintSelection( QPaintEvent * event )
 
             QRect r( x, top, ( w == 0 ? 1 : w ), btm );
 
-            p.fillRect( r, QBrush( QColor( 175, 255, 175 ) ) );
+            p.fillRect( r, QBrush( m_selectionColor ) );
          }
          else if( selectionMode == selectionMode_stream )
          {
@@ -1151,7 +1169,7 @@ void HBQPlainTextEdit::hbPaintSelection( QPaintEvent * event )
                   {
                      r = QRect( 0, top, width, fontHeight );
                   }
-                  p.fillRect( r, QBrush( QColor( 175, 255, 175 ) ) );
+                  p.fillRect( r, QBrush( m_selectionColor ) );
                   top += fontHeight;
                }
             }
@@ -1159,7 +1177,7 @@ void HBQPlainTextEdit::hbPaintSelection( QPaintEvent * event )
          else if( selectionMode == selectionMode_line )
          {
             QRect r( 0, top, viewport()->width(), btm );
-            p.fillRect( r, QBrush( QColor( 175, 255, 175 ) ) );
+            p.fillRect( r, QBrush( m_selectionColor ) );
          }
       }
    }
@@ -1824,10 +1842,6 @@ void HBQPlainTextEdit::hbBraceHighlight()
    QColor lineColor = QColor( Qt::yellow ).lighter( 160 );
 
    QTextDocument *doc = document();
-   #if 0
-   docLayout = QPlainTextDocumentLayout( doc );
-   docLayout->format.setBackground( lineColor );
-   #endif
 
    extraSelections.clear();
    setExtraSelections( extraSelections );
@@ -1870,15 +1884,17 @@ void HBQPlainTextEdit::hbBraceHighlight()
       closeBrace = ">";
    }
 
+   QTextCursor cursor1;
+   QTextCursor cursor2;
+   QTextCursor matches;
+
    if( brace == openBrace )
    {
-      QTextCursor cursor1 = doc->find( closeBrace, cursor );
-      QTextCursor cursor2 = doc->find( openBrace, cursor );
+      cursor1 = doc->find( closeBrace, cursor );
+      cursor2 = doc->find( openBrace, cursor );
       if( cursor2.isNull() )
       {
-         selection.cursor = cursor1;
-         extraSelections.append( selection );
-         setExtraSelections( extraSelections );
+         matches = cursor1;
       }
       else
       {
@@ -1889,22 +1905,18 @@ void HBQPlainTextEdit::hbBraceHighlight()
             if( cursor2.isNull() )
                 break;
          }
-         selection.cursor = cursor1;
-         extraSelections.append( selection );
-         setExtraSelections( extraSelections );
+         matches = cursor1;
       }
    }
    else
    {
       if( brace == closeBrace )
       {
-         QTextCursor cursor1 = doc->find( openBrace, cursor, QTextDocument::FindBackward );
-         QTextCursor cursor2 = doc->find( closeBrace, cursor, QTextDocument::FindBackward );
+         cursor1 = doc->find( openBrace, cursor, QTextDocument::FindBackward );
+         cursor2 = doc->find( closeBrace, cursor, QTextDocument::FindBackward );
          if( cursor2.isNull() )
          {
-            selection.cursor = cursor1;
-            extraSelections.append( selection );
-            setExtraSelections( extraSelections );
+            matches = cursor1;
          }
          else
          {
@@ -1915,11 +1927,20 @@ void HBQPlainTextEdit::hbBraceHighlight()
                if( cursor2.isNull() )
                    break;
             }
-            selection.cursor = cursor1;
-            extraSelections.append( selection );
-            setExtraSelections( extraSelections );
+            matches = cursor1;
          }
       }
+   }
+   if( ! matches.isNull() )
+   {
+      if( m_matchBracesAll )
+      {
+         selection.cursor = cursor;
+         extraSelections.append( selection );
+      }
+      selection.cursor = cursor1;
+      extraSelections.append( selection );
+      setExtraSelections( extraSelections );
    }
 }
 

@@ -776,6 +776,34 @@ HB_FUNC( QT_HBQPLAINTEXTEDIT_HBSETSELECTIONINFO )
    }
 }
 
+/*
+ * void           hbSetSelectionColor( const QColor & color )
+ */
+HB_FUNC( QT_HBQPLAINTEXTEDIT_HBSETSELECTIONCOLOR )
+{
+   HBQPlainTextEdit * p = hbqt_par_HBQPlainTextEdit( 1 );
+   if( p )
+      ( p )->hbSetSelectionColor( *hbqt_par_QColor( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQPLAINTEXTEDIT_HBSETSELECTIONCOLOR FP=( p )->hbSetSelectionColor( *hbqt_par_QColor( 2 ) ); p is NULL" ) );
+   }
+}
+
+/*
+ * void           hbSetMatchBraces( bool all )
+ */
+HB_FUNC( QT_HBQPLAINTEXTEDIT_HBSETMATCHBRACES )
+{
+   HBQPlainTextEdit * p = hbqt_par_HBQPlainTextEdit( 1 );
+   if( p )
+      ( p )->hbSetMatchBraces( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQPLAINTEXTEDIT_HBSETMATCHBRACES FP=( p )->hbSetMatchBraces( hb_parl( 2 ) ); p is NULL" ) );
+   }
+}
+
 
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */

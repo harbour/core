@@ -48,39 +48,50 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+
 /*----------------------------------------------------------------------*/
 
-FUNCTION savebackup_init( ... )
+#include "common.ch"
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION savebackup_init( oIde, cVer )
+
+   HB_SYMBOL_UNUSED( oIde )
+   HB_SYMBOL_UNUSED( cVer )
+
+   IF cVer != "1.0"
+      RETURN .f.
+   ENDIF
 
    RETURN .t.
-   
+
 /*----------------------------------------------------------------------*/
-   
+
 FUNCTION savebackup_exec( oIde, ... )
    LOCAL c
 
    FOR EACH c IN { ... }
-      IF lower( c ) == "saveas" 
+      IF lower( c ) == "saveas"
          savebackup_saveAs( oIde )
-      ENDIF       
-      
-   NEXT    
+      ENDIF
+
+   NEXT
    RETURN NIL
-   
+
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION savebackup_saveAs( oIde )
    LOCAL cFile, oEdit
-   
+
    oEdit := oIde:oEM:getEditorCurrent()
    cFile := oEdit:sourceFile + "_bkp_" + strtran( dtoc( date() ), "/", "-" ) + "_" + strtran( time(), ":", "_" )
    cFile := hbide_pathToOSPath( cFile )
-   
+
    hb_memowrit( cFile, oIde:oEM:getEditObjectCurrent():qEdit:toPlainText() )
-   
-   MsgBox( cFile, "Backup Saved" )   
-   
+
+   MsgBox( cFile, "Backup Saved" )
+
    RETURN NIL
-   
+
 /*----------------------------------------------------------------------*/
-   

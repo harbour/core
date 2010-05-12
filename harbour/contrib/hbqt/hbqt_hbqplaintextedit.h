@@ -88,8 +88,10 @@ public:
    QColor         m_currentLineColor;
    QColor         m_lineAreaBkColor;
    QColor         m_horzRulerBkColor;
+   QColor         m_selectionColor;
    long           m_matchingBegin;
    long           m_matchingEnd;
+   bool           m_matchBracesAll;
 
    void           paintEvent( QPaintEvent * event );
    void           lineNumberAreaPaintEvent( QPaintEvent * event );
@@ -99,20 +101,20 @@ public:
 
    QString        styleHightlighter;
    void           hbSetStyleHightlighter( const QString & style );
-   QString        hbGetStyleHightlighter()         { return styleHightlighter; }
+   QString        hbGetStyleHightlighter()         { return styleHightlighter; };
    void           hbShowHighlighter( const QString & style, bool b );
 
    int            hbGetIndex( const QTextCursor &crQTextCursor );
    int            hbGetLine( const QTextCursor &crQTextCursor );
    int            hbLineNumberAreaWidth();
-   int            hbGetSpaces()                    { return spaces; }
+   int            hbGetSpaces()                    { return spaces; };
    void           hbSetSpaces( int newSpaces );
    void           hbBookmarks( int block );
    void           hbNextBookmark( int block );
    void           hbPrevBookmark( int block );
    void           hbGotoBookmark( int block );
-   void           hbHighlightCurrentLine( bool b ) { highlightCurLine = b; }
-   bool           hbHighlightCurrentLine()         { return highlightCurLine; }
+   void           hbHighlightCurrentLine( bool b ) { highlightCurLine = b; update(); };
+   bool           hbHighlightCurrentLine()         { return highlightCurLine; };
    void           hbSetEventBlock( PHB_ITEM pBlock );
 
 private:
@@ -185,10 +187,13 @@ public slots:
    void           hbCut( int key );
    void           hbCopy();
    void           hbPaste();
-   void           hbSetSelectionMode( int mode, bool on );
-   void           hbGetSelectionInfo();
    void           hbToStream();
+   void           hbGetSelectionInfo();
+   void           hbSetSelectionMode( int mode, bool on );
    void           hbSetSelectionInfo( PHB_ITEM selectionInfo );
+   void           hbSetSelectionColor( const QColor & color );
+   void           hbSetMatchBraces( bool all ){ m_matchBracesAll = all; };
+
 
 private slots:
    void           hbSlotCursorPositionChanged();

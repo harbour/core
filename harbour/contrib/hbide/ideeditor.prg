@@ -140,6 +140,7 @@ CLASS IdeEditsManager INHERIT IdeObject
    METHOD toggleSelectionMode()
    METHOD toggleLineNumbers()
    METHOD toggleLineSelectionMode()
+   METHOD toggleCurrentLineHighlightMode()
 
    METHOD getText()
    METHOD getWord( lSelect )
@@ -551,8 +552,32 @@ METHOD IdeEditsManager:toggleLineSelectionMode()
 
 METHOD IdeEditsManager:toggleSelectionMode()
    LOCAL oEdit
+   ::oIde:isColumnSelectionEnabled := ! ::isColumnSelectionEnabled
    IF !empty( oEdit := ::getEditObjectCurrent() )
       oEdit:toggleSelectionMode()
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:toggleCurrentLineHighlightMode()
+   LOCAL oEdit
+
+   ::oIde:lCurrentLineHighlightEnabled := ! ::lCurrentLineHighlightEnabled
+
+   IF !empty( oEdit := ::getEditObjectCurrent() )
+      oEdit:toggleCurrentLineHighlightMode()
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:toggleLineNumbers()
+   LOCAL oEdit
+   ::oIde:lLineNumbersVisible := ! ::lLineNumbersVisible
+   IF !empty( oEdit := ::getEditObjectCurrent() )
+      oEdit:toggleLineNumbers()
    ENDIF
    RETURN Self
 
@@ -652,15 +677,6 @@ METHOD IdeEditsManager:clearSelection()
    LOCAL oEdit
    IF !empty( oEdit := ::getEditObjectCurrent() )
       oEdit:clearSelection()
-   ENDIF
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeEditsManager:toggleLineNumbers()
-   LOCAL oEdit
-   IF !empty( oEdit := ::getEditObjectCurrent() )
-      oEdit:toggleLineNumbers()
    ENDIF
    RETURN Self
 
@@ -1310,6 +1326,7 @@ METHOD IdeEditor:activateTab( mp1, mp2, oXbp )
       oEdit:setDocumentProperties()
       oEdit:qCoEdit:relayMarkButtons()
       oEdit:qCoEdit:toggleLineNumbers()
+      oEdit:qCoEdit:toggleCurrentLineHighlightMode()
       oEdit:qCoEdit:dispStatusInfo()
    ENDIF
 

@@ -737,6 +737,7 @@ METHOD IdeProjManager:buildInterface()
    ::oUI:q_editSources     :setFont( ::oFont:oWidget )
    ::oUI:q_editHbp         :setFont( ::oFont:oWidget )
 
+   #if 0
    ::oUI:q_editPrjTitle    :setFont( ::oFont:oWidget )
    ::oUI:q_editPrjLoctn    :setFont( ::oFont:oWidget )
    ::oUI:q_editWrkFolder   :setFont( ::oFont:oWidget )
@@ -745,7 +746,7 @@ METHOD IdeProjManager:buildInterface()
    ::oUI:q_editBackup      :setFont( ::oFont:oWidget )
    ::oUI:q_editLaunchParams:setFont( ::oFont:oWidget )
    ::oUI:q_editLaunchExe   :setFont( ::oFont:oWidget )
-
+   #endif
    RETURN Self
 
 /*----------------------------------------------------------------------*/
