@@ -1206,7 +1206,7 @@ HB_FUNC( NETIO_SERVER )
                                  if( stream->id == iStreamID )
                                  {
                                     conn->streams = stream->next;
-                                    hb_xfree( conn->streams );
+                                    hb_xfree( stream );
                                  }
                                  hb_threadMutexUnlock( conn->mutex );
                               }
