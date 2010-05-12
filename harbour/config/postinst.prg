@@ -84,7 +84,7 @@ PROCEDURE Main()
 
             hb_processRun( GetEnv( "HB_HOST_BIN_DIR" ) + _PS_ + "hbmk2" +;
                            " @" + "contrib\" + tmp[ F_NAME ] + "\" + tmp[ F_NAME ] + ".hbi " +;
-                           "-o${HB_LIB_INSTALL}/ -trace" )
+                           "-o${HB_LIB_INSTALL}/" )
          ENDIF
       NEXT
    ENDIF
