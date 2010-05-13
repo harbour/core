@@ -382,8 +382,8 @@ HB_FUNC( COM_INIT )
    hb_retl( hb_comInit( iPort, iBaud, iParity, iSize, iStop ) != -1 );
 }
 
-/*  COM_OPEN( <nComPort>, [<nBufferIn>=100] [, <nBufferOut>=0],
- *            [<lTrapMode>] ) -> <lStatus>
+/* COM_OPEN( <nComPort>, [<nBufferIn>=100] [, <nBufferOut>=0],
+ *           [<lTrapMode>] ) -> <lStatus>
  */
 HB_FUNC( COM_OPEN )
 {

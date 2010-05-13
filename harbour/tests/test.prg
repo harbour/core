@@ -1,18 +1,23 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
-//
+PROCEDURE Main()
 
-procedure main()
-
-   local s := " " + chr(0) + "  mab  " + chr(0) + " "
+   LOCAL s := " " + Chr( 0 ) + "  mab  " + Chr( 0 ) + " "
 
    StrDump( s )
    QOut( s )
 
-   qout( '"' + ltrim(s) + '"' )
-   qout( '"' + rtrim(s) + '"' )
-   qout( '"' + alltrim(s) + '"' )
+   QOut( '"' + LTrim( s ) + '"' )
+   QOut( '"' + RTrim( s ) + '"' )
+   QOut( '"' + AllTrim( s ) + '"' )
 
-return
+   RETURN
+
+STATIC PROCEDURE StrDump( s )
+   LOCAL tmp
+   FOR EACH tmp IN s
+      QOut( Asc( tmp ) )
+   NEXT
+   RETURN

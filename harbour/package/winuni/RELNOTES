@@ -81,6 +81,7 @@ Changes since previous (2.0.0) release:
 - Upgraded to mingw 4.5.0 official release.
 - Upgraded to QT 4.6.2 (from 4.5.3).
 - Upgraded to MSVC 2010 (from 2008).
+- upx updated to 3.05.
 
 Changes since previous (2.0.0beta3 20090905) release:
 -----------------------------------------------------------------------
