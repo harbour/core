@@ -472,6 +472,13 @@ HB_BOOL hb_dynsymIsFunction( PHB_DYNS pDynSym )
    return pDynSym->pSymbol->value.pFunPtr != NULL;
 }
 
+HB_BOOL hb_dynsymIsMemvar( PHB_DYNS pDynSym )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_dynsymIsMemvar(%p)", pDynSym));
+
+   return hb_dynsymHandles( pDynSym )->pMemvar != NULL;
+}
+
 PHB_ITEM hb_dynsymGetMemvar( PHB_DYNS pDynSym )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_dynsymGetMemvar(%p)", pDynSym));
