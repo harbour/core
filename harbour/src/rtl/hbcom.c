@@ -445,18 +445,36 @@ int hb_comFlush( int iPort, int iType )
 }
 
 /*
-TIOCM_LE        DSR (data set ready/line enable)
-TIOCM_DTR       DTR (data terminal ready)
-TIOCM_RTS       RTS (request to send)
-TIOCM_ST        Secondary TXD (transmit)
-TIOCM_SR        Secondary RXD (receive)
-TIOCM_CTS       CTS (clear to send)
-TIOCM_CAR       DCD (data carrier detect)
-TIOCM_CD         see TIOCM_CAR
-TIOCM_RNG       RNG (ring)
-TIOCM_RI         see TIOCM_RNG
-TIOCM_DSR       DSR (data set ready)
+TIOCM_LE          DSR (data set ready/line enable)
+TIOCM_DTR         DTR (data terminal ready)
+TIOCM_RTS         RTS (request to send)
+TIOCM_ST          Secondary TXD (transmit)
+TIOCM_SR          Secondary RXD (receive)
+TIOCM_CTS         CTS (clear to send)
+TIOCM_CAR         DCD (data carrier detect)
+TIOCM_CD           see TIOCM_CAR
+TIOCM_RNG         RNG (ring)
+TIOCM_RI           see TIOCM_RNG
+TIOCM_DSR         DSR (data set ready)
+
+supported only by few platforms (i.e. newer Linux kernels >= 2.4)
+TIOCM_OUT1        OUT 1 (auxiliary user-designated output 2)
+TIOCM_OUT2        OUT 2 (auxiliary user-designated output 1)
+TIOCM_LOOP        LOOP (loopback mode)
 */
+
+#ifdef HB_OS_LINUX
+   /* hack for missing defintions in standard header files */
+#  ifndef TIOCM_OUT1
+#     define TIOCM_OUT1    0x2000
+#  endif
+#  ifndef TIOCM_OUT2
+#     define TIOCM_OUT2    0x4000
+#  endif
+#  ifndef TIOCM_LOOP
+#     define TIOCM_LOOP    0x8000
+#  endif
+#endif
 
 int hb_comMCR( int iPort, int * piValue, int iClr, int iSet )
 {
@@ -475,6 +493,18 @@ int hb_comMCR( int iPort, int * piValue, int iClr, int iSet )
             iValue |= HB_COM_MCR_DTR;
          if( iRawVal & TIOCM_RTS )
             iValue |= HB_COM_MCR_RTS;
+#ifdef TIOCM_OUT1
+         if( iRawVal & TIOCM_OUT1 )
+            iValue |= HB_COM_MCR_OUT1;
+#endif
+#ifdef TIOCM_OUT2
+         if( iRawVal & TIOCM_OUT2 )
+            iValue |= HB_COM_MCR_OUT2;
+#endif
+#ifdef TIOCM_LOOP
+         if( iRawVal & TIOCM_LOOP )
+            iValue |= HB_COM_MCR_LOOP;
+#endif
 
          iOldVal = iRawVal;
 
@@ -487,6 +517,25 @@ int hb_comMCR( int iPort, int * piValue, int iClr, int iSet )
             iRawVal |= TIOCM_RTS;
          else if( iClr & HB_COM_MCR_RTS )
             iRawVal &= ~TIOCM_RTS;
+
+#ifdef TIOCM_OUT1
+         if( iSet & HB_COM_MCR_OUT1 )
+            iRawVal |= TIOCM_OUT1;
+         else if( iClr & HB_COM_MCR_OUT1 )
+            iRawVal &= ~TIOCM_OUT1;
+#endif
+#ifdef TIOCM_OUT2
+         if( iSet & HB_COM_MCR_OUT2 )
+            iRawVal |= TIOCM_OUT2;
+         else if( iClr & HB_COM_MCR_OUT2 )
+            iRawVal &= ~TIOCM_OUT2;
+#endif
+#ifdef TIOCM_LOOP
+         if( iSet & HB_COM_MCR_LOOP )
+            iRawVal |= TIOCM_LOOP;
+         else if( iClr & HB_COM_MCR_LOOP )
+            iRawVal &= ~TIOCM_LOOP;
+#endif
 
          if( iRawVal != iOldVal )
             iResult = ioctl( pCom->fd, TIOCMSET, &iRawVal );
@@ -548,9 +597,15 @@ int hb_comLSR( int iPort, int * piValue )
 
    if( pCom )
    {
-      /* NOTE: there is no support to read the Line Status Register (LSR)
+#ifdef TIOCSERGETLSR
+      iResult = ioctl( pCom->fd, TIOCSERGETLSR, &iValue );
+      hb_comSetOsError( pCom, iResult == -1 );
+#else
+      /* NOTE: most of systems do not give access to the
+       *       Line Status Register (LSR)
        */
       hb_comSetError( pCom, HB_COM_ERR_NOSUPPORT );
+#endif
    }
 
    if( piValue )
@@ -1266,7 +1321,7 @@ int hb_comMCR( int iPort, int * piValue, int iClr, int iSet )
       else if( iClr & HB_COM_MCR_RTS )
          fResult = EscapeCommFunction( pCom->hComm, CLRRTS );
 
-      /* MCR_OUT_1, MCR_OUT_2, MCR_LOOP and reading current state
+      /* MCR_OUT1, MCR_OUT2, MCR_LOOP and reading current state
        * is unsupported
        */
       hb_comSetOsError( pCom, !fResult );
@@ -1991,7 +2046,7 @@ int hb_comMCR( int iPort, int * piValue, int iClr, int iSet )
       {
          MODEMSTATUS ms;
 
-         /* MCR_OUT_1, MCR_OUT_2, MCR_LOOP are unsupported
+         /* MCR_OUT1, MCR_OUT2, MCR_LOOP are unsupported
           */
 
          if( mcos & DTR_ON )

@@ -70,9 +70,9 @@
 
 #define HB_COM_MCR_DTR        0x01  /* Data terminal ready (DTR) TIOCM_DTR */
 #define HB_COM_MCR_RTS        0x02  /* Request to send (RTS)     TIOCM_RTS */
-#define HB_COM_MCR_OUT_1      0x04  /* OUT 1 */
-#define HB_COM_MCR_OUT_2      0x08  /* OUT 2 */
-#define HB_COM_MCR_LOOP       0x10  /* LOOP */
+#define HB_COM_MCR_OUT1       0x04  /* OUT 1                     TIOCM_OUT1 */
+#define HB_COM_MCR_OUT2       0x08  /* OUT 2                     TIOCM_OUT2 */
+#define HB_COM_MCR_LOOP       0x10  /* LOOP                      TIOCM_LOOP */
 
 #define HB_COM_MSR_DELTA_CTS  0x01  /* DELTA ready to send (DCTS) */
 #define HB_COM_MSR_DELTA_DSR  0x02  /* DELTA data terminal ready (DDSR) */

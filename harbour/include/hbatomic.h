@@ -210,7 +210,7 @@ HB_EXTERN_BEGIN
 
 #     define HB_SPINLOCK_T          int
 #     define HB_SPINLOCK_INIT       0
-#     define HB_SPINLOCK_TRY(l)     (__sync_lock_test_and_set(l. 1)==0)
+#     define HB_SPINLOCK_TRY(l)     (__sync_lock_test_and_set(l, 1)==0)
 #     define HB_SPINLOCK_RELEASE(l) __sync_lock_release(l)
 #     define HB_SPINLOCK_ACQUIRE(l) hb_spinlock_acquire(l)
 
