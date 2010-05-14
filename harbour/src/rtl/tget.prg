@@ -1096,6 +1096,8 @@ METHOD picture( cPicture ) CLASS GET
 
                IF ::cPicFunc == "@"
                   ::cPicFunc := ""
+               ELSEIF "R" $ ::cPicFunc .AND. "E" $ ::cPicFunc
+                  ::cPicFunc := StrTran( ::cPicFunc, "R" )
                ENDIF
             ELSE
                ::cPicMask := cPicture
