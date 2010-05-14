@@ -869,7 +869,7 @@ METHOD IdeEdit:insertBlockContents( aCord )
 
    nW := nR - nL
 
-   cKey := chr( XbpQKeyEventToAppEvent( aCord[ 5 ] ) )
+   cKey := chr( XbpQKeyEventToAppEvent( aCord[ 7 ] ) )
 
    qCursor := QTextCursor():from( ::qEdit:textCursor() )
    qCursor:beginEditBlock()
