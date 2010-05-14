@@ -614,7 +614,7 @@ HARBOUR
                                  Default: yes when HB_INSTALL_PREFIX points
                                  to a *nix system location, otherwise no.
    - HB_BUILD_IMPLIB=yes         Create import libraries for external .dll
-                                 dependencies (including contribs). Default: no
+                                 dependencies in 'install' phase. Default: no
                                  (for Windows targets only. Please note that
                                  this feature doesn't work with all possible
                                  binary distributions of 3rd party packages.
