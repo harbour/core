@@ -119,7 +119,7 @@ HBQPlainTextEdit::HBQPlainTextEdit( QWidget * parent ) : QPlainTextEdit( parent 
    hbUpdateLineNumberAreaWidth( 0 );
 
    connect( this, SIGNAL( cursorPositionChanged() )            , this, SLOT( hbSlotCursorPositionChanged() ) );
-   connect( this, SIGNAL( cursorPositionChanged() )            , this, SLOT( hbUpdateHorzRuler() ) );
+   connect( this, SIGNAL( updateRequest( const QRect &, int ) ), this, SLOT( hbUpdateHorzRuler( const QRect &, int ) ) );
 
    horzRuler->setFrameShape( QFrame::Panel );
    horzRuler->setFrameShadow( QFrame::Sunken );
@@ -127,6 +127,7 @@ HBQPlainTextEdit::HBQPlainTextEdit( QWidget * parent ) : QPlainTextEdit( parent 
    QPalette pl( QPlainTextEdit::palette() );
    m_selectionColor = pl.color( QPalette::Highlight );
 
+   setContentsMargins( 0,0,0,0 );
 }
 
 /*----------------------------------------------------------------------*/
@@ -619,7 +620,9 @@ bool HBQPlainTextEdit::hbKeyPressColumnSelection( QKeyEvent * event )
                   return true;
                }
                break;
+
             case Qt::Key_Right:
+               int pos = c.position();
                c.movePosition( QTextCursor::EndOfLine, QTextCursor::MoveAnchor );
                if( c.columnNumber() <= columnEnds )
                {
@@ -641,6 +644,7 @@ bool HBQPlainTextEdit::hbKeyPressColumnSelection( QKeyEvent * event )
                   event->ignore();
                   return true;
                }
+               c.setPosition( pos );
                break;
             }
          }
@@ -763,12 +767,12 @@ bool HBQPlainTextEdit::hbKeyPressColumnSelection( QKeyEvent * event )
          if( selectionState > 0 )
          {
             emit selectionChanged();
-         }
-         setCursorWidth( 1 );
-         selectionState = 0;
-         if( columnEnds == columnBegins )
-         {
-            hbClearColumnSelection();
+            setCursorWidth( 1 );
+            selectionState = 0;
+            if( columnEnds == columnBegins )
+            {
+               hbClearColumnSelection();
+            }
          }
       }
    }
@@ -1116,13 +1120,7 @@ void HBQPlainTextEdit::lineNumberAreaPaintEvent( QPaintEvent *event )
 
 void HBQPlainTextEdit::hbPaintSelection( QPaintEvent * event )
 {
-   HB_SYMBOL_UNUSED( event );
 //HB_TRACE( HB_TR_ALWAYS, ( "       1     " ) );
-#if 0
-HB_TRACE( HB_TR_ALWAYS, ( "%i %i %i %i %i %i %i %i",
-                 event->rect().x(), event->rect().y(), event->rect().width(), event->rect().height(),
-                 cursorRect().x() , cursorRect().y() , cursorRect().width() , cursorRect().height() ) );
-#endif
    if( rowBegins >= 0 && rowEnds >= 0 )
    {
       int cb = columnBegins <= columnEnds ? columnBegins : columnEnds;
@@ -1151,58 +1149,53 @@ HB_TRACE( HB_TR_ALWAYS, ( "%i %i %i %i %i %i %i %i",
 
          if( selectionMode == selectionMode_column )
          {
-            #if 0
             int x = ( ( cb - c ) * fontWidth ) + marginX;
-            int w = ( ce - cb ) * fontWidth;
+            int w = ( cb == ce ? 1 : ( ( ce - cb ) * fontWidth ) );
 
-            QRect r( x, top, ( w == 0 ? 1 : w ), btm );
+            QRect r( x, top, w, btm );
 
-            p.fillRect( r, QBrush( m_selectionColor ) );
-            #endif
-            int x = cb < c ? 0 : ( ( cb - c ) * fontWidth ) + marginX;
-            int w = ce < c ? 0 : ( ( ce - cb - c ) * fontWidth );
-
-            QRect r( x, top, ( w == 0 ? 1 : w ), btm );
-
-            p.fillRect( r, QBrush( m_selectionColor ) );
+            //if( event->rect().intersects( r ) )
+            {
+               p.fillRect( r, QBrush( m_selectionColor ) );
+            }
          }
          else if( selectionMode == selectionMode_stream )
          {
-            int i;
-            int width  = viewport()->width();
+            int   i;
+            int   width  = viewport()->width();
+            QRect r;
 
-            for( i = rb; i <= re; i++ )
+            for( i = ( rb >= t ? rb : t ); i <= re; i++ )
             {
-               if( i >= t )
+               if( i == rb )
                {
-                  QRect r;
-
-                  if( i == rb )
+                  if( rb == re )
                   {
-                     if( rb == re )
-                     {
-                        int x = ( ( columnBegins - c ) * fontWidth ) + marginX;
-                        int w = ( columnEnds - columnBegins - c ) * fontWidth;
-                        r = QRect( x, top, ( w == 0 ? 1 : w ), fontHeight );
-                     }
-                     else
-                     {
-                        int x = ( ( columnBegins - c ) * fontWidth ) + marginX;
-                        r = QRect( x, top, width, fontHeight );
-                     }
-                  }
-                  else if( i == re )
-                  {
-                     int x = ( ( columnEnds - c ) * fontWidth ) + marginX;
-                     r = QRect( 0, top, x, fontHeight );
+                     int x = ( ( columnBegins - c ) * fontWidth ) + marginX;
+                     int w = ( ce - cb ) * fontWidth;
+                     r = QRect( x, top, w, fontHeight );
                   }
                   else
                   {
-                     r = QRect( 0, top, width, fontHeight );
+                     int x = ( ( columnBegins - c ) * fontWidth ) + marginX;
+                     r = QRect( x, top, width + abs( x ), fontHeight );
                   }
-                  p.fillRect( r, QBrush( m_selectionColor ) );
-                  top += fontHeight;
                }
+               else if( i == re )
+               {
+                  int x = ( ( columnEnds - c ) * fontWidth ) + marginX;
+                  r = QRect( 0, top, x, fontHeight );
+               }
+               else
+               {
+                  r = QRect( 0, top, width, fontHeight );
+               }
+
+               //if( event->rect().intersects( r ) )
+               {
+                  p.fillRect( r, QBrush( m_selectionColor ) );
+               }
+               top += fontHeight;
             }
          }
          else if( selectionMode == selectionMode_line )
@@ -1374,9 +1367,12 @@ void HBQPlainTextEdit::hbUpdateLineNumberAreaWidth( int )
 
 /*----------------------------------------------------------------------*/
 
-void HBQPlainTextEdit::hbUpdateHorzRuler()
+void HBQPlainTextEdit::hbUpdateHorzRuler( const QRect & rect, int dy )
 {
-  horzRuler->update();
+   HB_SYMBOL_UNUSED( rect );
+
+   if( dy == 0 )
+      horzRuler->update();
 }
 
 /*----------------------------------------------------------------------*/

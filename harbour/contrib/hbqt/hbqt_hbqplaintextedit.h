@@ -198,7 +198,7 @@ public slots:
 private slots:
    void           hbSlotCursorPositionChanged();
    void           hbUpdateLineNumberArea( const QRect &, int );
-   void           hbUpdateHorzRuler();
+   void           hbUpdateHorzRuler( const QRect &, int );
    void           hbPaintSelection( QPaintEvent * );
    bool           hbKeyPressColumnSelection( QKeyEvent * );
    void           hbClearColumnSelection();
