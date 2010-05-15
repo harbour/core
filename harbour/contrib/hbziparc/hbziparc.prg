@@ -306,7 +306,7 @@ FUNCTION hb_ZipFile( cFileName,;
       FErase( cFileName )
    ENDIF
 
-   IF !Empty( hZip := hb_ZipOpen( cFileName, iif( lOverwrite, NIL, HB_ZIP_OPEN_ADDINZIP ) ) )
+   IF !Empty( hZip := hb_ZipOpen( cFileName, iif( ! lOverwrite .AND. hb_FileExists( cFileName ), HB_ZIP_OPEN_ADDINZIP, NIL ) ) )
 
       DEFAULT acFiles TO {}
       DEFAULT acExclude TO {}
