@@ -68,6 +68,11 @@
 #include <windows.h>
 #include <winuser.h>
 #include <commctrl.h>
+#if ! defined( HB_OS_WIN_CE )
+   #include <ole2.h>
+   #include <olectl.h>
+   #include <ocidl.h>
+#endif
 #include <commdlg.h>
 #include <shellapi.h>
 
@@ -84,6 +89,10 @@
 #include "hbgfxdef.ch"
 
 #include "hbgtwvg.ch"
+
+#if defined( HB_OS_WIN_CE )
+   #include "hbwince.h"
+#endif
 
 HB_EXTERN_BEGIN
 

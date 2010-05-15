@@ -69,6 +69,7 @@
 #include <winuser.h>
 #include <commctrl.h>
 #if ! defined( HB_OS_WIN_CE )
+   #include <ole2.h>
    #include <olectl.h>
    #include <ocidl.h>
 #endif

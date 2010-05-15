@@ -206,7 +206,6 @@ HB_FUNC( ZEROINSERT )
       nLen = hb_itemGetCLen( pString );
       uiVal = 0;
       nBits = 0;
-      uiVal = 0;
       /* NOTE: trailing zero accessed intentionally */
       for( n = 0; n <= nLen; ++n )
       {

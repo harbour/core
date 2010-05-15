@@ -420,7 +420,7 @@ HB_FUNC( COM_READ )
    else
    {
       lLen = hb_comInputCount( iPort );
-      if( lLen < ( long ) sizeof( buffer ) >> 1 )
+      if( lLen < ( long ) ( sizeof( buffer ) >> 1 ) )
          lLen = sizeof( buffer );
       else
          lLen <<= 2;

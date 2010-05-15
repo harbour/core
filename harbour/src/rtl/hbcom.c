@@ -1833,8 +1833,6 @@ int hb_comInit( int iPort, int iBaud, int iParity, int iSize, int iStop )
          {
             if( iBaud )
                dcb.BaudRate = ( DWORD ) iBaud;
-            else
-               iBaud = ( int ) dcb.BaudRate;
             dcb.fBinary = 1;
             dcb.fParity = 0;
             dcb.fOutxCtsFlow = 0;
