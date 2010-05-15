@@ -2273,6 +2273,12 @@ static int hb_gt_def_InkeyFilter( PHB_GT pGT, int iKey, int iEventMask )
       case K_MWBACKWARD:
          iMask = INKEY_MWHEEL;
          break;
+      case HB_K_RESIZE:
+      case HB_K_CLOSE:
+      case HB_K_GOTFOCUS:
+      case HB_K_LOSTFOCUS:
+         iMask = HB_INKEY_GTEVENT;
+         break;
       default:
          iMask = INKEY_KEYBOARD;
          break;

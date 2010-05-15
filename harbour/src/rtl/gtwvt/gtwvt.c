@@ -1149,28 +1149,8 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
          }
          else
          {
-#if defined( __HB_GTWVT_GEN_K_MMDOWN_EVENTS )
-            SHORT keyState = ( SHORT ) wParam;
-
-            switch( keyState )
-            {
-               case MK_LBUTTON:
-                  keyCode = K_MMLEFTDOWN;
-                  break;
-               case MK_RBUTTON:
-                  keyCode = K_MMRIGHTDOWN;
-                  break;
-               case MK_MBUTTON:
-                  keyCode = K_MMMIDDLEDOWN;
-                  break;
-               default:
-                  keyCode = K_MOUSEMOVE;
-            }
-            break;
-#else
             keyCode = K_MOUSEMOVE;
             break;
-#endif
          }
       }
       case WM_MOUSEWHEEL:
@@ -1695,6 +1675,8 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          return 0;
 
       case WM_CLOSE:  /* Clicked 'X' on system menu */
+         hb_gt_wvt_AddCharToInputQueue( pWVT, HB_K_CLOSE );
+/*
          if( hb_gt_wvt_FireEvent( pWVT, HB_GTE_CLOSE ) == 0 )
          {
             PHB_ITEM pItem = hb_itemPutL( NULL, HB_TRUE );
@@ -1702,6 +1684,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
             hb_itemRelease( pItem );
             hb_vmRequestCancel();
          }
+*/
          return 0;
 
       case WM_QUIT:
@@ -1715,6 +1698,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
 
       /* Pritpal Bedi - 06 Jun 2008 */
       case WM_ACTIVATE:
+         hb_gt_wvt_AddCharToInputQueue( pWVT, ( LOWORD( wParam ) == WA_INACTIVE ? HB_K_LOSTFOCUS : HB_K_GOTFOCUS ) );
          hb_gt_wvt_FireEvent( pWVT, ( LOWORD( wParam ) == WA_INACTIVE ? HB_GTE_KILLFOCUS : HB_GTE_SETFOCUS ) );
          return 0;
 
