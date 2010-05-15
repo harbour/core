@@ -66,28 +66,28 @@ PROCEDURE Main( cMode )
    SWITCH Upper( cMode )
    CASE "I"
 
-      IF win_serviceInstall( _SERVICE_NAME, "Win32 Harbour Service" )
-         Alert( "Service has been successfully installed" )
+      IF win_serviceInstall( _SERVICE_NAME, "Harbour Windows Service" )
+         ? "Service has been successfully installed"
       ELSE
-         Alert( "Error installing service:" + hb_ntos( wapi_GetLastError() ) )
+         ? "Error installing service: " + hb_ntos( wapi_GetLastError() )
       ENDIf
       EXIT
 
    CASE "U"
 
       IF win_serviceDelete( _SERVICE_NAME )
-         Alert( "Service has been deleted" )
+         ? "Service has been deleted"
       ELSE
-         Alert( "Error deleting service:" + hb_ntos( wapi_GetLastError() ) )
+         ? "Error deleting service:" + hb_ntos( wapi_GetLastError() )
       ENDIf
       EXIT
 
    CASE "S"
 
       IF win_serviceStart( _SERVICE_NAME, "SrvMain" )
-         HB_TRACE( HB_TR_INFO, "Service has worked Ok" )
+         ? "Service has started OK"
       ELSE
-         HB_TRACE( HB_TR_ERROR, "Service has had som problems : " + hb_ntos( wapi_GetLastError() ) )
+         ? "Service has had some problems: " + hb_ntos( wapi_GetLastError() )
       ENDIF
       EXIT
 
@@ -95,17 +95,17 @@ PROCEDURE Main( cMode )
 
    RETURN
 
-FUNCTION SrvMain()
+PROCEDURE SrvMain()
    LOCAL n
 
    n := 1
    DO WHILE win_serviceGetStatus() == WIN_SERVICE_RUNNING
-      HB_TRACE( HB_TR_INFO, "Work in progress " + hb_ntos( n ) )
-      n := n + 1
+      HB_TRACE( HB_TR_ALWAYS, "Work in progress " + hb_ntos( n ) )
+      ++n
       Inkey( 0.1 )
    ENDDO
 
    win_serviceSetExitCode( 0 )
    win_serviceStop()
 
-   RETURN NIL
+   RETURN

@@ -60,11 +60,8 @@
 
 static SERVICE_STATUS        s_ServiceStatus;
 static SERVICE_STATUS_HANDLE s_hStatus;
-static char *                s_pszPrgFunction;
-static char *                s_pszSrvName;
-
-static void hbwin_ControlHandler( DWORD request );
-static void hbwin_SrvFunction( int argc, char ** argv );
+static char                  s_szPrgFunction[ 64 ];
+static TCHAR                 s_lpSrvName[ 64 ];
 
 /* Control handler function */
 static void hbwin_ControlHandler( DWORD request )
@@ -82,8 +79,7 @@ static void hbwin_ControlHandler( DWORD request )
          return;
    }
 
-   /* Report current status */
-   SetServiceStatus( s_hStatus, &s_ServiceStatus );
+   SetServiceStatus( s_hStatus, &s_ServiceStatus ); /* Report current status */
 }
 
 static void hbwin_SrvFunction( int argc, char** argv )
@@ -99,11 +95,11 @@ static void hbwin_SrvFunction( int argc, char** argv )
    s_ServiceStatus.dwCheckPoint              = 0;
    s_ServiceStatus.dwWaitHint                = 0;
 
-   s_hStatus = RegisterServiceCtrlHandler( s_pszSrvName, ( LPHANDLER_FUNCTION ) hbwin_ControlHandler );
+   s_hStatus = RegisterServiceCtrlHandler( s_lpSrvName, ( LPHANDLER_FUNCTION ) hbwin_ControlHandler );
 
    if( s_hStatus != ( SERVICE_STATUS_HANDLE ) 0 )
    {
-      PHB_DYNS pDynSym = hb_dynsymFindName( s_pszPrgFunction );
+      PHB_DYNS pDynSym = hb_dynsymFindName( s_szPrgFunction );
 
       /* We report the running status to SCM. */
       s_ServiceStatus.dwCurrentState = SERVICE_RUNNING;
@@ -122,7 +118,7 @@ static void hbwin_SrvFunction( int argc, char** argv )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "Error registering service\n" ) );
+      HB_TRACE( HB_TR_DEBUG, ("Error registering service") );
    }
 }
 
@@ -160,7 +156,7 @@ HB_FUNC( WIN_SERVICESETEXITCODE ) /* dwExitCode */
 HB_FUNC( WIN_SERVICESTOP )
 {
 #if ! defined( HB_OS_WIN_CE )
-   s_ServiceStatus.dwCurrentState  = SERVICE_STOPPED;
+   s_ServiceStatus.dwCurrentState = SERVICE_STOPPED;
    SetServiceStatus( s_hStatus, &s_ServiceStatus );
 #endif
 }
@@ -169,9 +165,9 @@ HB_FUNC( WIN_SERVICEINSTALL )
 {
    HB_BOOL bRetVal = HB_FALSE;
 #if ! defined( HB_OS_WIN_CE )
-   TCHAR szPath[ MAX_PATH ];
+   TCHAR lpPath[ MAX_PATH ];
 
-   if( GetModuleFileName( NULL, szPath, MAX_PATH ) )
+   if( GetModuleFileName( NULL, lpPath, HB_SIZEOFARRAY( lpPath ) ) )
    {
       SC_HANDLE schSCM = OpenSCManager( NULL, NULL, SC_MANAGER_ALL_ACCESS );
 
@@ -192,7 +188,7 @@ HB_FUNC( WIN_SERVICEINSTALL )
                                  SERVICE_WIN32_OWN_PROCESS,    /* service type */
                                  SERVICE_DEMAND_START,         /* start type */
                                  SERVICE_ERROR_NORMAL,         /* error control type */
-                                 szPath,                       /* path to service's binary */
+                                 lpPath,                       /* path to service's binary */
                                  NULL,                         /* no load ordering group */
                                  NULL,                         /* no tag identifier */
                                  NULL,                         /* no dependencies */
@@ -262,25 +258,15 @@ HB_FUNC( WIN_SERVICESTART ) /* pszServiceName, pszPrgFunction */
 {
 #if ! defined( HB_OS_WIN_CE )
    SERVICE_TABLE_ENTRY ServiceTable[ 2 ];
-   LPTSTR lpServiceName;
-   LPTSTR lpPrgFunction;
-   void * hServiceName;
-   void * hPrgFunction;
 
-   lpServiceName = ( LPTSTR ) HB_PARSTR( 1, &hServiceName, NULL );
-   lpPrgFunction = ( LPTSTR ) HB_PARSTR( 2, &hPrgFunction, NULL );
+   HB_TCHAR_COPYTO( s_lpSrvName, hb_parcx( 1 ), HB_SIZEOFARRAY( s_lpSrvName ) - 1 );
+   hb_strncpy( s_szPrgFunction, hb_parcx( 2 ), HB_SIZEOFARRAY( s_szPrgFunction ) - 1 );
 
-   ServiceTable[ 0 ].lpServiceName = lpServiceName;
+   ServiceTable[ 0 ].lpServiceName = s_lpSrvName;
    ServiceTable[ 0 ].lpServiceProc = ( LPSERVICE_MAIN_FUNCTION ) hbwin_SrvFunction;
 
    ServiceTable[ 1 ].lpServiceName = NULL;
    ServiceTable[ 1 ].lpServiceProc = NULL;
-
-   s_pszPrgFunction = lpPrgFunction;
-   s_pszSrvName     = lpServiceName;
-
-   hb_strfree( hServiceName );
-   hb_strfree( hPrgFunction );
 
    hb_retl( ( HB_BOOL ) StartServiceCtrlDispatcher( ServiceTable ) );
 #else
