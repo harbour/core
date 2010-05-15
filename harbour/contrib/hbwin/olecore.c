@@ -1088,7 +1088,7 @@ HB_BOOL hb_oleDispInvoke( PHB_SYMB pSym, PHB_ITEM pObject, DISPID* pDispId,
 
       for( i = 1, ii = 0; i <= iCount; i++ )
       {
-         if( pParams->rgvarg[ iCount - i ].n1.n2.vt & VT_BYREF )
+         if( pParams->rgvarg[ iCount - i ].n1.n2.vt & VT_BYREF && ii < iRefs )
          {
             refArray[ ii ].variant = &pParams->rgvarg[ iCount - i ];
             hb_oleVariantToItem( refArray[ ii ].item, refArray[ ii ].variant );
