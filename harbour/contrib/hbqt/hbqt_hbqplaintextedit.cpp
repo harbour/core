@@ -1235,7 +1235,7 @@ void HBQPlainTextEdit::hbPaintSelection( QPaintEvent * event )
                {
                   if( rb == re )
                   {
-                     int x = ( ( columnBegins - c ) * fontWidth ) + marginX;
+                     int x = ( ( cb - c ) * fontWidth ) + marginX;
                      int w = ( ce - cb ) * fontWidth;
                      r = QRect( x, top, w, fontHeight );
                   }
