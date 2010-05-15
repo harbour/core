@@ -145,6 +145,9 @@ private:
    QCompleter   * c;
    QBrush         brushForBookmark( int index );
    bool           isCursorInSelection();
+   QTimer       * timer;
+   int            caretState;
+
 
 protected:
    bool           event( QEvent * event );
@@ -202,6 +205,7 @@ private slots:
    void           hbPaintSelection( QPaintEvent * );
    bool           hbKeyPressColumnSelection( QKeyEvent * );
    void           hbClearColumnSelection();
+   void           hbUpdateCaret();
 };
 
 
