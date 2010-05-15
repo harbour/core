@@ -363,27 +363,6 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
    return pWVT;
 }
 
-static int hb_gt_wvt_FireEvent( PHB_GTWVT pWVT, int nEvent )
-{
-   int nResult = 0; /* Unhandled */
-
-   if( pWVT->pGT->pNotifierBlock )
-   {
-      if( hb_vmRequestReenter() )
-      {
-         PHB_ITEM pEvent = hb_itemPutNI( NULL, nEvent );
-
-         nResult = hb_itemGetNI( hb_vmEvalBlockV( pWVT->pGT->pNotifierBlock, 1, pEvent ) );
-
-         hb_itemRelease( pEvent );
-
-         hb_vmRequestRestore();
-      }
-   }
-
-   return nResult;
-}
-
 /*
  * use the standard fixed OEM font, unless the caller has requested set size fonts
  */
@@ -778,7 +757,6 @@ static void hb_gt_wvt_Maximize( PHB_GTWVT pWVT )
       ShowWindow( pWVT->hWnd, SW_HIDE );
       ShowWindow( pWVT->hWnd, SW_NORMAL );
 
-      hb_gt_wvt_FireEvent( pWVT, HB_GTE_RESIZED );
       if( pWVT->ResizeMode == HB_GTI_RESIZEMODE_ROWS )
          hb_gt_wvt_AddCharToInputQueue( pWVT, HB_K_RESIZE );
 }
@@ -1675,19 +1653,15 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          return 0;
 
       case WM_CLOSE:  /* Clicked 'X' on system menu */
-         if( hb_gt_wvt_FireEvent( pWVT, HB_GTE_CLOSE ) == 0 )
+         if( pWVT->bClosable )
          {
-            if( pWVT->bClosable )
-            {
-               PHB_ITEM pItem = hb_itemPutL( NULL, HB_TRUE );
-               hb_setSetItem( HB_SET_CANCEL, pItem );
-               hb_itemRelease( pItem );
-               hb_vmRequestCancel();
-            }
-            else
-               hb_gt_wvt_AddCharToInputQueue( pWVT, HB_K_CLOSE );
+            PHB_ITEM pItem = hb_itemPutL( NULL, HB_TRUE );
+            hb_setSetItem( HB_SET_CANCEL, pItem );
+            hb_itemRelease( pItem );
+            hb_vmRequestCancel();
          }
-         return 0;
+         else
+            hb_gt_wvt_AddCharToInputQueue( pWVT, HB_K_CLOSE );
 
       case WM_QUIT:
       case WM_DESTROY:
@@ -1701,7 +1675,6 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
       /* Pritpal Bedi - 06 Jun 2008 */
       case WM_ACTIVATE:
          hb_gt_wvt_AddCharToInputQueue( pWVT, ( LOWORD( wParam ) == WA_INACTIVE ? HB_K_LOSTFOCUS : HB_K_GOTFOCUS ) );
-         hb_gt_wvt_FireEvent( pWVT, ( LOWORD( wParam ) == WA_INACTIVE ? HB_GTE_KILLFOCUS : HB_GTE_SETFOCUS ) );
          return 0;
 
       case WM_ENTERSIZEMOVE:
@@ -1728,7 +1701,6 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
       case WM_EXITSIZEMOVE:
          pWVT->bResizing = HB_FALSE;
 
-         hb_gt_wvt_FireEvent( pWVT, HB_GTE_RESIZED );
          if( pWVT->ResizeMode == HB_GTI_RESIZEMODE_ROWS )
             hb_gt_wvt_AddCharToInputQueue( pWVT, HB_K_RESIZE );
          return 0;
