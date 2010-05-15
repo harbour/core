@@ -629,6 +629,14 @@ bool HBQPlainTextEdit::hbKeyPressColumnSelection( QKeyEvent * event )
 
    bool bClear = false;
 
+   if( shift && isNavableKey( k ) && selectionMode == selectionMode_line )
+   {
+      selectionMode = selectionMode_stream;
+      selectionState = 0;
+      hbClearColumnSelection();
+      repaint();
+   }
+
    if( selectionMode == selectionMode_column || selectionMode == selectionMode_stream )
    {
       QTextCursor c( textCursor() );
@@ -637,6 +645,12 @@ bool HBQPlainTextEdit::hbKeyPressColumnSelection( QKeyEvent * event )
 
       if( shift && isNavableKey( k ) )
       {
+         if( selectionMode == selectionMode_line )
+         {
+            selectionMode = selectionMode_stream;
+            selectionState = 0;
+         }
+
          if( selectionState == 0 )
          {
             hbClearColumnSelection();
@@ -648,7 +662,7 @@ bool HBQPlainTextEdit::hbKeyPressColumnSelection( QKeyEvent * event )
 
          if( columnBegins == -1 )
          {
-            selectionState = 1;
+            selectionState = 2;
             //
             rowBegins      = row;
             columnBegins   = col;
@@ -808,7 +822,7 @@ bool HBQPlainTextEdit::hbKeyPressColumnSelection( QKeyEvent * event )
          }
          else
          {
-            bClear = true;
+         //   bClear = true;
          }
       }
       else
@@ -1231,34 +1245,59 @@ void HBQPlainTextEdit::hbPaintSelection( QPaintEvent * event )
 
             for( i = ( rb >= t ? rb : t ); i <= re; i++ )
             {
-               if( i == rowBegins )
+               if( rowBegins > rowEnds )
                {
-                  if( rb == re )
+                  if( i == rowEnds )
                   {
-                     int x = ( ( cb - c ) * fontWidth ) + marginX;
-                     int w = ( ce - cb ) * fontWidth;
-                     r = QRect( x, top, w, fontHeight );
+                     if( rb == re )
+                     {
+                        int x = ( ( cb - c ) * fontWidth ) + marginX;
+                        int w = ( ce - cb ) * fontWidth;
+                        r = QRect( x, top, w, fontHeight );
+                     }
+                     else
+                     {
+                        int x = ( ( columnEnds - c ) * fontWidth ) + marginX;
+                        r = QRect( x, top, width + abs( x ), fontHeight );
+                     }
+                  }
+                  else if( i == rowBegins )
+                  {
+                     int x = ( ( columnBegins - c ) * fontWidth ) + marginX;
+                     r = QRect( 0, top, x, fontHeight );
                   }
                   else
                   {
-                     int x = ( ( columnBegins - c ) * fontWidth ) + marginX;
-                     r = QRect( x, top, width + abs( x ), fontHeight );
+                     r = QRect( 0, top, width, fontHeight );
                   }
-               }
-               else if( i == rowEnds )
-               {
-                  int x = ( ( columnEnds - c ) * fontWidth ) + marginX;
-                  r = QRect( 0, top, x, fontHeight );
                }
                else
                {
-                  r = QRect( 0, top, width, fontHeight );
+                  if( i == rowBegins )
+                  {
+                     if( rb == re )
+                     {
+                        int x = ( ( cb - c ) * fontWidth ) + marginX;
+                        int w = ( ce - cb ) * fontWidth;
+                        r = QRect( x, top, w, fontHeight );
+                     }
+                     else
+                     {
+                        int x = ( ( columnBegins - c ) * fontWidth ) + marginX;
+                        r = QRect( x, top, width + abs( x ), fontHeight );
+                     }
+                  }
+                  else if( i == rowEnds )
+                  {
+                     int x = ( ( columnEnds - c ) * fontWidth ) + marginX;
+                     r = QRect( 0, top, x, fontHeight );
+                  }
+                  else
+                  {
+                     r = QRect( 0, top, width, fontHeight );
+                  }
                }
-
-               //if( event->rect().intersects( r ) )
-               {
-                  p.fillRect( r, QBrush( m_selectionColor ) );
-               }
+               p.fillRect( r, QBrush( m_selectionColor ) );
                top += fontHeight;
             }
          }

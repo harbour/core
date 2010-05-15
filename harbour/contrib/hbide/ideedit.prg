@@ -764,12 +764,22 @@ METHOD IdeEdit:copyBlockContents( aCord )
       cLine := ::getLine( i + 1 )
 
       IF nMode == selectionMode_stream
-         IF i == nT .AND. i == nB
-            cLine := substr( cLine, min( aCord[ 2 ], aCord[ 4 ] ) + 1, nW )
-         ELSEIF i == aCord[ 1 ]
-            cLine := substr( cLine, aCord[ 2 ] + 1 )
-         ELSEIF i == aCord[ 3 ]
-            cLine := substr( cLine, 1, aCord[ 4 ] + 1 )
+         IF aCord[ 1 ] > aCord[ 3 ]
+            IF i == nT .AND. i == nB
+               cLine := substr( cLine, min( aCord[ 2 ], aCord[ 4 ] ) + 1, nW )
+            ELSEIF i == aCord[ 1 ]
+               cLine := substr( cLine, 1, aCord[ 2 ] )
+            ELSEIF i == aCord[ 3 ]
+               cLine := substr( cLine, aCord[ 4 ] + 1 )
+            ENDIF
+         ELSE
+            IF i == nT .AND. i == nB
+               cLine := substr( cLine, min( aCord[ 2 ], aCord[ 4 ] ) + 1, nW )
+            ELSEIF i == aCord[ 1 ]
+               cLine := substr( cLine, aCord[ 2 ] + 1 )
+            ELSEIF i == aCord[ 3 ]
+               cLine := substr( cLine, 1, aCord[ 4 ] )
+            ENDIF
          ENDIF
 
       ELSEIF nMode == selectionMode_column
@@ -847,13 +857,10 @@ METHOD IdeEdit:pasteBlockContents( nMode )
       NEXT
 
    CASE nPasteMode == selectionMode_line
+      qCursor:movePosition( QTextCursor_StartOfLine, QTextCursor_MoveAnchor       )
       FOR i := 1 TO len( aCopy )
-         qCursor:movePosition( QTextCursor_StartOfLine, QTextCursor_MoveAnchor       )
-         qCursor:movePosition( QTextCursor_EndOfLine  , QTextCursor_KeepAnchor       )
          qCursor:insertText( aCopy[ i ] )
-         IF i < len( aCopy )
-            hbide_qCursorDownInsert( qCursor )
-         ENDIF
+         qCursor:insertBlock()
       NEXT
 
    ENDCASE
