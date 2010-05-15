@@ -1675,13 +1675,17 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          return 0;
 
       case WM_CLOSE:  /* Clicked 'X' on system menu */
-         hb_gt_wvt_AddCharToInputQueue( pWVT, HB_K_CLOSE );
          if( hb_gt_wvt_FireEvent( pWVT, HB_GTE_CLOSE ) == 0 )
          {
-            PHB_ITEM pItem = hb_itemPutL( NULL, HB_TRUE );
-            hb_setSetItem( HB_SET_CANCEL, pItem );
-            hb_itemRelease( pItem );
-            hb_vmRequestCancel();
+            if( pWVT->bClosable )
+            {
+               PHB_ITEM pItem = hb_itemPutL( NULL, HB_TRUE );
+               hb_setSetItem( HB_SET_CANCEL, pItem );
+               hb_itemRelease( pItem );
+               hb_vmRequestCancel();
+            }
+            else
+               hb_gt_wvt_AddCharToInputQueue( pWVT, HB_K_CLOSE );
          }
          return 0;
 
@@ -1877,9 +1881,6 @@ static HB_BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
          {
             /* Create "Mark" prompt in SysMenu to allow console type copy operation */
             AppendMenu( hSysMenu, MF_STRING, SYS_EV_MARK, pWVT->lpSelectCopy );
-            /* disable [x] button / close menu item */
-            if( ! pWVT->bClosable )
-               EnableMenuItem( hSysMenu, SC_CLOSE, MF_BYCOMMAND | MF_GRAYED );
          }
       }
 
@@ -2577,23 +2578,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       case HB_GTI_CLOSABLE:
          pInfo->pResult = hb_itemPutL( pInfo->pResult, pWVT->bClosable );
          if( pInfo->pNewVal )
-         {
-            HB_BOOL bNewValue = hb_itemGetL( pInfo->pNewVal );
-            if( bNewValue != pWVT->bClosable )
-            {
-               if( pWVT->hWnd )
-               {
-                  HMENU hSysMenu = GetSystemMenu( pWVT->hWnd, FALSE );
-                  if( hSysMenu )
-                  {
-                     EnableMenuItem( hSysMenu, SC_CLOSE, MF_BYCOMMAND | ( bNewValue ? MF_ENABLED : MF_GRAYED ) );
-                     pWVT->bClosable = bNewValue;
-                  }
-               }
-               else
-                  pWVT->bClosable = bNewValue;
-            }
-         }
+            pWVT->bClosable = hb_itemGetL( pInfo->pNewVal );
          break;
 
       case HB_GTI_PALETTE:
