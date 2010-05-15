@@ -75,7 +75,7 @@ PROCEDURE Main( cMode )
       IF win_serviceDelete( _SERVICE_NAME )
          ? "Service has been deleted"
       ELSE
-         ? "Error deleting service:" + hb_ntos( wapi_GetLastError() )
+         ? "Error deleting service: " + hb_ntos( wapi_GetLastError() )
       ENDIf
       EXIT
 
@@ -96,7 +96,7 @@ PROCEDURE Main( cMode )
 
 PROCEDURE SrvMain()
    LOCAL n := 1
-   LOCAL fhnd := hb_FCreate( hb_dirBase() + "testsrv.out", FC_NORMAL, FO_DENYNONE + FO_WRITE )
+   LOCAL fhnd := hb_FCreate( hb_dirBase() + "testsvc.out", FC_NORMAL, FO_DENYNONE + FO_WRITE )
 
    FWrite( fhnd, "Startup" + hb_osNewLine() )
 
