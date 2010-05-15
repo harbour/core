@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *    Windows Service
+ * Windows Service API test code
  *
  * Copyright 2010 Jose Luis Capel - <jlcapel at hotmail . com>
  * www - http://www.harbour-project.org
@@ -50,7 +50,6 @@
  *
  */
 
-#include "hbtrace.ch"
 #include "hbwin.ch"
 
 #include "common.ch"

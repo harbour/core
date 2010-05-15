@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *    Windows Service
+ * Windows Service API
  *
  * Copyright 2010 Jose Luis Capel - <jlcapel at hotmail . com>
  * www - http://www.harbour-project.org
@@ -50,18 +50,16 @@
  *
  */
 
-#include "hbapi.h"
-#include "hbvm.h"
-#include "hbwinuni.h"
-
 #include "hbwapi.h"
+
+#include "hbvm.h"
 
 #if ! defined( HB_OS_WIN_CE )
 
 static SERVICE_STATUS        s_ServiceStatus;
 static SERVICE_STATUS_HANDLE s_hStatus;
-static char                  s_szHarbourEntryFunc[ 64 ];
-static TCHAR                 s_lpServiceName[ 64 ];
+static char                  s_szHarbourEntryFunc[ HB_SYMBOL_NAME_LEN + 1 ];
+static TCHAR                 s_lpServiceName[ 256 ];
 
 /* Control handler function */
 static void hbwin_ControlHandler( DWORD request )
@@ -82,7 +80,7 @@ static void hbwin_ControlHandler( DWORD request )
    SetServiceStatus( s_hStatus, &s_ServiceStatus ); /* Report current status */
 }
 
-static void hbwin_SrvFunction( int argc, char** argv )
+static void hbwin_SrvFunction( int argc, char ** argv )
 {
    HB_SYMBOL_UNUSED( argc );
    HB_SYMBOL_UNUSED( argv );
