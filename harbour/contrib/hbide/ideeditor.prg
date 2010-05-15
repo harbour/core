@@ -1374,8 +1374,6 @@ METHOD IdeEditor:dispEditInfo( qEdit )
    ::oIde:oSBar:getItem( SB_PNL_COLUMN   ):caption := "Col " + hb_ntos( qCursor:columnNumber() + 1 )
    ::oIde:oSBar:getItem( SB_PNL_INS      ):caption := iif( qEdit:overwriteMode() , " ", "Ins" )
    ::oIde:oSBar:getItem( SB_PNL_MODIFIED ):caption := iif( qDocument:isModified(), "Modified", iif( qEdit:isReadOnly(), "ReadOnly", " " ) )
-
-   ::oIde:oSBar:getItem( SB_PNL_STREAM   ):caption := "Stream"
    ::oIde:oSBar:getItem( SB_PNL_EDIT     ):caption := "Edit"
 
    RETURN Self

@@ -451,7 +451,7 @@ METHOD IdeDocks:buildViewWidget( cObjectName )
       oFrame:oTabWidget:oWidget:setCornerWidget( qTBtnClose, Qt_TopRightCorner )
    ENDIF
 
-   oFrame:oTabWidget:oWidget:setUsesScrollButtons( .f. )
+   oFrame:oTabWidget:oWidget:setUsesScrollButtons( .t. )
    oFrame:oTabWidget:oWidget:setMovable( .t. )
 
    aadd( ::oIde:aViews, oFrame )

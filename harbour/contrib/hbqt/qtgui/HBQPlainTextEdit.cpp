@@ -581,20 +581,6 @@ HB_FUNC( QT_HBQPLAINTEXTEDIT_HBMOVELINE )
 }
 
 /*
- * void           hbHighlightSelectedColumns( bool yes )
- */
-HB_FUNC( QT_HBQPLAINTEXTEDIT_HBHIGHLIGHTSELECTEDCOLUMNS )
-{
-   HBQPlainTextEdit * p = hbqt_par_HBQPlainTextEdit( 1 );
-   if( p )
-      ( p )->hbHighlightSelectedColumns( hb_parl( 2 ) );
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQPLAINTEXTEDIT_HBHIGHLIGHTSELECTEDCOLUMNS FP=( p )->hbHighlightSelectedColumns( hb_parl( 2 ) ); p is NULL" ) );
-   }
-}
-
-/*
  * QString        hbGetSelectedText()
  */
 HB_FUNC( QT_HBQPLAINTEXTEDIT_HBGETSELECTEDTEXT )

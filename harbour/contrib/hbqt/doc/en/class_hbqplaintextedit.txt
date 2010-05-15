@@ -58,7 +58,6 @@
         :hbBlockIndent( nSteps )                            -> NIL
         :hbDeleteLine()                                     -> NIL
         :hbMoveLine( nIDirection )                          -> NIL
-        :hbHighlightSelectedColumns( lYes )                 -> NIL
         :hbGetSelectedText()                                -> cQString
         :hbTextUnderCursor()                                -> cQString
         :hbShowPrototype( cTip )                            -> NIL

@@ -97,7 +97,6 @@ CREATE CLASS HBQPlainTextEdit INHERIT HbQtObjectHandler, QPlainTextEdit
    METHOD  hbBlockIndent( nSteps )
    METHOD  hbDeleteLine()
    METHOD  hbMoveLine( nIDirection )
-   METHOD  hbHighlightSelectedColumns( lYes )
    METHOD  hbGetSelectedText()
    METHOD  hbTextUnderCursor()
    METHOD  hbShowPrototype( cTip )
@@ -244,10 +243,6 @@ METHOD HBQPlainTextEdit:hbDeleteLine()
 
 METHOD HBQPlainTextEdit:hbMoveLine( nIDirection )
    RETURN Qt_HBQPlainTextEdit_hbMoveLine( ::pPtr, nIDirection )
-
-
-METHOD HBQPlainTextEdit:hbHighlightSelectedColumns( lYes )
-   RETURN Qt_HBQPlainTextEdit_hbHighlightSelectedColumns( ::pPtr, lYes )
 
 
 METHOD HBQPlainTextEdit:hbGetSelectedText()

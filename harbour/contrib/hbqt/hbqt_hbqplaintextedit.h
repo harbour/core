@@ -177,7 +177,6 @@ public slots:
    void           hbDuplicateLine();
    void           hbReplaceSelection( const QString & txt );
    void           hbInsertTab( int mode );
-   void           hbHighlightSelectedColumns( bool yes );
    QString        hbGetSelectedText();
    QString        hbTextUnderCursor();
    void           hbNumberBlockVisible( bool b );

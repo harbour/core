@@ -765,7 +765,7 @@ METHOD IdeEdit:copyBlockContents( aCord )
 
       IF nMode == selectionMode_stream
          IF i == nT .AND. i == nB
-            cLine := substr( cLine, aCord[ 4 ] + 1, nW )
+            cLine := substr( cLine, aCord[ 2 ] + 1, nW )
          ELSEIF i == nT
             cLine := substr( cLine, aCord[ 2 ] + 1 )
          ELSEIF i == nB
@@ -783,6 +783,8 @@ METHOD IdeEdit:copyBlockContents( aCord )
       aadd( ::aBlockCopyContents, cLine )
       cClip += cLine + iif( i < nB, hb_osNewLine(), "" )
    NEXT
+
+ * HB_TRACE( HB_TR_ALWAYS, "copyBlockContents", cClip )
 
    hbide_blockContents( { nMode, ::aBlockCopyContents } )
 
@@ -1233,7 +1235,8 @@ METHOD IdeEdit:toggleLineNumbers()
 
 METHOD IdeEdit:toggleSelectionMode()
    ::isColumnSelectionON := ! ::isColumnSelectionON
-   ::qEdit:hbHighlightSelectedColumns( ::isColumnSelectionON )
+   //::qEdit:hbHighlightSelectedColumns( ::isColumnSelectionON )
+   ::qEdit:hbSetSelectionMode( iif( ::isColumnSelectionON, 2, 1 ), .t. )
    ::dispStatusInfo()
    RETURN Self
 
