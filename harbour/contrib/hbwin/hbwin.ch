@@ -645,6 +645,18 @@
 #define WIN_EVENTLOG_AUDIT_SUCCESS        0x0008
 #define WIN_EVENTLOG_AUDIT_FAILURE        0x0010
 
+
+/* Windows Service defines */
+#define SERVICE_NO_CHANGE 0xffffffff
+#define SERVICE_STOPPED	1
+#define SERVICE_START_PENDING	2
+#define SERVICE_STOP_PENDING	3
+#define SERVICE_RUNNING	4
+#define SERVICE_CONTINUE_PENDING	5
+#define SERVICE_PAUSE_PENDING	6
+#define SERVICE_PAUSED	7
+
+
 /* ------------------------------- */
 /* Deprecated constants and macros */
 /* ------------------------------- */

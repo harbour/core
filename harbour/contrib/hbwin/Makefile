@@ -41,6 +41,7 @@ C_SOURCES := \
    win_prn3.c \
    win_regc.c \
    win_shell.c \
+   win_srv.c \
 
 PRG_SOURCES := \
    legacy.prg \
