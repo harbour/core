@@ -1676,7 +1676,6 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
 
       case WM_CLOSE:  /* Clicked 'X' on system menu */
          hb_gt_wvt_AddCharToInputQueue( pWVT, HB_K_CLOSE );
-/*
          if( hb_gt_wvt_FireEvent( pWVT, HB_GTE_CLOSE ) == 0 )
          {
             PHB_ITEM pItem = hb_itemPutL( NULL, HB_TRUE );
@@ -1684,7 +1683,6 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
             hb_itemRelease( pItem );
             hb_vmRequestCancel();
          }
-*/
          return 0;
 
       case WM_QUIT:
