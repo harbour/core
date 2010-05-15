@@ -55,18 +55,16 @@
 
 #include "common.ch"
 
-#define _SERVICE_NAME "HarbourService"
-
-/* Uncomment this piece of code to install this service (should be called via consola) */
+#define _SERVICE_NAME "Harbour_Test_Service"
 
 PROCEDURE Main( cMode )
 
-   DEFAULT cMode TO "I"
+   DEFAULT cMode TO "S" /* NOTE: Must be the default action */
 
    SWITCH Upper( cMode )
    CASE "I"
 
-      IF win_serviceInstall( _SERVICE_NAME, "Harbour Windows Service" )
+      IF win_serviceInstall( _SERVICE_NAME, "Harbour Windows Test Service" )
          ? "Service has been successfully installed"
       ELSE
          ? "Error installing service: " + hb_ntos( wapi_GetLastError() )
@@ -95,15 +93,22 @@ PROCEDURE Main( cMode )
 
    RETURN
 
-PROCEDURE SrvMain()
-   LOCAL n
+#include "fileio.ch"
 
-   n := 1
+PROCEDURE SrvMain()
+   LOCAL n := 1
+   LOCAL fhnd := hb_FCreate( hb_dirBase() + "testsrv.out", FC_NORMAL, FO_DENYNONE + FO_WRITE )
+
+   FWrite( fhnd, "Startup" + hb_osNewLine() )
+
    DO WHILE win_serviceGetStatus() == WIN_SERVICE_RUNNING
-      HB_TRACE( HB_TR_ALWAYS, "Work in progress " + hb_ntos( n ) )
-      ++n
-      Inkey( 0.1 )
+      FWrite( fhnd, "Work in progress " + hb_ntos( ++n ) + hb_osNewLine() )
+      hb_idleSleep( 0.5 )
    ENDDO
+
+   FWrite( fhnd, "Exiting..." + hb_osNewLine() )
+
+   FClose( fhnd )
 
    win_serviceSetExitCode( 0 )
    win_serviceStop()

@@ -60,8 +60,8 @@
 
 static SERVICE_STATUS        s_ServiceStatus;
 static SERVICE_STATUS_HANDLE s_hStatus;
-static char                  s_szPrgFunction[ 64 ];
-static TCHAR                 s_lpSrvName[ 64 ];
+static char                  s_szHarbourEntryFunc[ 64 ];
+static TCHAR                 s_lpServiceName[ 64 ];
 
 /* Control handler function */
 static void hbwin_ControlHandler( DWORD request )
@@ -95,11 +95,11 @@ static void hbwin_SrvFunction( int argc, char** argv )
    s_ServiceStatus.dwCheckPoint              = 0;
    s_ServiceStatus.dwWaitHint                = 0;
 
-   s_hStatus = RegisterServiceCtrlHandler( s_lpSrvName, ( LPHANDLER_FUNCTION ) hbwin_ControlHandler );
+   s_hStatus = RegisterServiceCtrlHandler( s_lpServiceName, ( LPHANDLER_FUNCTION ) hbwin_ControlHandler );
 
    if( s_hStatus != ( SERVICE_STATUS_HANDLE ) 0 )
    {
-      PHB_DYNS pDynSym = hb_dynsymFindName( s_szPrgFunction );
+      PHB_DYNS pDynSym = hb_dynsymFindName( s_szHarbourEntryFunc );
 
       /* We report the running status to SCM. */
       s_ServiceStatus.dwCurrentState = SERVICE_RUNNING;
@@ -178,10 +178,10 @@ HB_FUNC( WIN_SERVICEINSTALL )
          void * hServiceName;
          void * hDisplayName;
 
-         LPCTSTR lpServiceName = HB_PARSTR( 1, &hServiceName, NULL );
-         LPCTSTR lpDisplayName = HB_PARSTR( 2, &hDisplayName, NULL );
+         LPCTSTR lpServiceName = HB_PARSTRDEF( 1, &hServiceName, NULL );
+         LPCTSTR lpDisplayName = HB_PARSTRDEF( 2, &hDisplayName, NULL );
 
-         schSrv = CreateService( schSCM,                       /* SCM database  */
+         schSrv = CreateService( schSCM,                       /* SCM database */
                                  lpServiceName,                /* name of service */
                                  lpDisplayName,                /* service name to display */
                                  SERVICE_ALL_ACCESS,           /* desired access */
@@ -195,9 +195,6 @@ HB_FUNC( WIN_SERVICEINSTALL )
                                  NULL,                         /* LocalSystem account */
                                  NULL );                       /* no password */
 
-         hb_strfree( hServiceName );
-         hb_strfree( hDisplayName );
-
          if( schSrv )
          {
             bRetVal = HB_TRUE;
@@ -206,6 +203,9 @@ HB_FUNC( WIN_SERVICEINSTALL )
          }
          else
             hbwapi_SetLastError( GetLastError() );
+
+         hb_strfree( hServiceName );
+         hb_strfree( hDisplayName );
 
          CloseServiceHandle( schSCM );
       }
@@ -227,10 +227,10 @@ HB_FUNC( WIN_SERVICEDELETE ) /* sServiceName */
 
    if( schSCM )
    {
-      void * hschSCM;
+      void * hServiceName;
 
       SC_HANDLE schSrv = OpenService( schSCM,
-                                      HB_PARSTR( 1, &hschSCM, NULL ),
+                                      HB_PARSTRDEF( 1, &hServiceName, NULL ),
                                       SERVICE_ALL_ACCESS );
 
       if( schSrv )
@@ -244,7 +244,7 @@ HB_FUNC( WIN_SERVICEDELETE ) /* sServiceName */
       else
          hbwapi_SetLastError( GetLastError() );
 
-      hb_strfree( hschSCM );
+      hb_strfree( hServiceName );
 
       CloseServiceHandle( schSCM );
    }
@@ -256,20 +256,25 @@ HB_FUNC( WIN_SERVICEDELETE ) /* sServiceName */
 
 HB_FUNC( WIN_SERVICESTART ) /* pszServiceName, pszPrgFunction */
 {
+   HB_BOOL bRetVal = HB_FALSE;
 #if ! defined( HB_OS_WIN_CE )
-   SERVICE_TABLE_ENTRY ServiceTable[ 2 ];
 
-   HB_TCHAR_COPYTO( s_lpSrvName, hb_parcx( 1 ), HB_SIZEOFARRAY( s_lpSrvName ) - 1 );
-   hb_strncpy( s_szPrgFunction, hb_parcx( 2 ), HB_SIZEOFARRAY( s_szPrgFunction ) - 1 );
+   SERVICE_TABLE_ENTRY lpServiceTable[ 2 ];
 
-   ServiceTable[ 0 ].lpServiceName = s_lpSrvName;
-   ServiceTable[ 0 ].lpServiceProc = ( LPSERVICE_MAIN_FUNCTION ) hbwin_SrvFunction;
+   HB_TCHAR_COPYTO( s_lpServiceName, hb_parcx( 1 ), HB_SIZEOFARRAY( s_lpServiceName ) - 1 );
+   hb_strncpy( s_szHarbourEntryFunc, hb_parcx( 2 ), HB_SIZEOFARRAY( s_szHarbourEntryFunc ) - 1 );
 
-   ServiceTable[ 1 ].lpServiceName = NULL;
-   ServiceTable[ 1 ].lpServiceProc = NULL;
+   lpServiceTable[ 0 ].lpServiceName = s_lpServiceName;
+   lpServiceTable[ 0 ].lpServiceProc = ( LPSERVICE_MAIN_FUNCTION ) hbwin_SrvFunction;
 
-   hb_retl( ( HB_BOOL ) StartServiceCtrlDispatcher( ServiceTable ) );
-#else
-   hb_retl( HB_FALSE );
+   lpServiceTable[ 1 ].lpServiceName = NULL;
+   lpServiceTable[ 1 ].lpServiceProc = NULL;
+
+   if( StartServiceCtrlDispatcher( lpServiceTable ) )
+      bRetVal = HB_TRUE;
+   else
+      hbwapi_SetLastError( GetLastError() );
+
 #endif
+   hb_retl( bRetVal );
 }
