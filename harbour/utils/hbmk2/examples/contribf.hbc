@@ -6,7 +6,7 @@
 # [ This should be kept in sync with local Makefile information. ]
 
 # contribs portable, with no external dependencies:
-libs=hbblink hbbtree hbclipsm hbct hbfoxpro hbfship hbgt hbmisc hbmzip minizip hbnf hbtpathy hbxpp hbziparc rddbmcdx rddsql xhb
+libs=hbblink hbbtree hbclipsm hbct hbfoxpro hbfship hbgt hbmisc hbmzip minizip hbnf hbsms hbtpathy hbxpp hbziparc rddbmcdx rddsql xhb
 
 # contribs portable, with external dependencies:
 libs=hbcurl hbfbird hbgd hbhpdf hbmysql hbpgsql hbqt hbtip sddfb sddmy sddpg

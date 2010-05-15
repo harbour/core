@@ -1,0 +1,9 @@
+#
+# $Id: hbsms.hbc 12881 2009-11-15 04:31:21Z vszakats $
+#
+
+incpaths=.
+
+libs=hbsms
+
+libs=../hbct/hbct.hbc
