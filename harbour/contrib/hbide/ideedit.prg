@@ -765,10 +765,10 @@ METHOD IdeEdit:copyBlockContents( aCord )
 
       IF nMode == selectionMode_stream
          IF i == nT .AND. i == nB
-            cLine := substr( cLine, aCord[ 2 ] + 1, nW )
-         ELSEIF i == nT
+            cLine := substr( cLine, min( aCord[ 2 ], aCord[ 4 ] ) + 1, nW )
+         ELSEIF i == aCord[ 1 ]
             cLine := substr( cLine, aCord[ 2 ] + 1 )
-         ELSEIF i == nB
+         ELSEIF i == aCord[ 3 ]
             cLine := substr( cLine, 1, aCord[ 4 ] + 1 )
          ENDIF
 
