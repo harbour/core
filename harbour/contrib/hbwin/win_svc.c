@@ -131,7 +131,7 @@ HB_FUNC( WIN_SERVICEGETSTATUS )
 #endif
 }
 
-HB_FUNC( WIN_SERVICESETSTATUS ) /* dwStatus */
+HB_FUNC( WIN_SERVICESETSTATUS )
 {
 #if ! defined( HB_OS_WIN_CE )
    s_ServiceStatus.dwCurrentState = ( DWORD ) hb_parnl( 1 );
@@ -141,7 +141,7 @@ HB_FUNC( WIN_SERVICESETSTATUS ) /* dwStatus */
 #endif
 }
 
-HB_FUNC( WIN_SERVICESETEXITCODE ) /* dwExitCode */
+HB_FUNC( WIN_SERVICESETEXITCODE )
 {
 #if ! defined( HB_OS_WIN_CE )
    s_ServiceStatus.dwWin32ExitCode = ( DWORD ) hb_parnl( 1 );
@@ -217,7 +217,7 @@ HB_FUNC( WIN_SERVICEINSTALL )
    hb_retl( bRetVal );
 }
 
-HB_FUNC( WIN_SERVICEDELETE ) /* sServiceName */
+HB_FUNC( WIN_SERVICEDELETE )
 {
    HB_BOOL bRetVal = HB_FALSE;
 #if ! defined( HB_OS_WIN_CE )
@@ -252,7 +252,7 @@ HB_FUNC( WIN_SERVICEDELETE ) /* sServiceName */
    hb_retl( bRetVal );
 }
 
-HB_FUNC( WIN_SERVICESTART ) /* pszServiceName, pszPrgFunction */
+HB_FUNC( WIN_SERVICESTART )
 {
    HB_BOOL bRetVal = HB_FALSE;
 #if ! defined( HB_OS_WIN_CE )
