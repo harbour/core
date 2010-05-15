@@ -319,19 +319,12 @@ static HRESULT STDMETHODCALLTYPE GetIDsOfNames( IDispatch* lpThis, REFIID riid, 
    return E_NOTIMPL;
 }
 
-typedef struct
-{
-   PHB_ITEM item;
-   VARIANT* variant;
-}
-HB_OLE_PARAM_REF;
 
 static HRESULT STDMETHODCALLTYPE Invoke( IDispatch* lpThis, DISPID dispid, REFIID riid,
                                          LCID lcid, WORD wFlags, DISPPARAMS* pParams,
                                          VARIANT* pVarResult, EXCEPINFO* pExcepInfo,
                                          UINT* puArgErr )
 {
-   int i, iCount, ii, iRefs;
    PHB_ITEM pAction, pKey = NULL;
 
    HB_SYMBOL_UNUSED( lcid );
@@ -342,63 +335,20 @@ static HRESULT STDMETHODCALLTYPE Invoke( IDispatch* lpThis, DISPID dispid, REFII
    if( ! IsEqualIID( riid, HB_ID_REF( IID_NULL ) ) )
       return DISP_E_UNKNOWNINTERFACE;
 
-   if( ! ( ( ISink* ) lpThis )->pItemHandler )
-      return S_OK;
-
    pAction = ( ( ISink* ) lpThis )->pItemHandler;
 
-   if( HB_IS_HASH( pAction ) )
+   if( pAction && HB_IS_HASH( pAction ) )
    {
       pKey = hb_itemPutNL( pKey, ( long ) dispid );
       pAction = hb_hashGetItemPtr( pAction, pKey, 0 );
       hb_itemRelease( pKey );
    }
 
-   if( pAction && hb_vmRequestReenter() )
-   {
-      HB_OLE_PARAM_REF refArray[ 32 ];
-
-      iCount = pParams->cArgs;
-
-      for( i = iRefs = 0; i < iCount && iRefs < ( int ) HB_SIZEOFARRAY( refArray ); i++ )
-      {
-         if( pParams->rgvarg[ i ].n1.n2.vt & VT_BYREF )
-            refArray[ iRefs++ ].item = hb_stackAllocItem();
-      }
-
-      hb_vmPushEvalSym();
-      hb_vmPush( pAction );
-      if( pKey == NULL )
-         hb_vmPushLong( ( long ) dispid );
-
-      for( i = 1, ii = 0; i <= iCount; i++ )
-      {
-         if( pParams->rgvarg[ iCount - i ].n1.n2.vt & VT_BYREF )
-         {
-            refArray[ ii ].variant = &pParams->rgvarg[ iCount - i ];
-            hb_oleVariantToItem( refArray[ ii ].item, refArray[ ii ].variant );
-            hb_vmPushItemRef( refArray[ ii++ ].item );
-         }
-         else
-            hb_oleVariantToItem( hb_stackAllocItem(),
-                                 &pParams->rgvarg[ iCount - i ] );
-      }
-
-      hb_vmSend( ( HB_USHORT ) ( iCount + ( pKey == NULL ? 1 : 0 ) ) );
-
-      if( pVarResult )
-         hb_oleItemToVariant( pVarResult, hb_stackReturnItem() );
-
-      for( i = 0; i < iRefs; i++ )
-         hb_oleVariantUpdate( refArray[ i ].variant, refArray[ i ].item );
-
-      for( i = 0; i < iRefs; i++ )
-         hb_stackPop();
-
-      hb_vmRequestRestore();
-   }
-
-   return S_OK;
+   if( pAction && hb_oleDispInvoke( NULL, pAction, pKey ? NULL : &dispid,
+                                    pParams, pVarResult ) )
+      return S_OK;
+   else
+      return DISP_E_MEMBERNOTFOUND;
 }
 
 

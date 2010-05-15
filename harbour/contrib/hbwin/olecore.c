@@ -1042,6 +1042,86 @@ void hb_oleVariantUpdate( VARIANT* pVariant, PHB_ITEM pItem )
 }
 
 
+/* Invoke IDispatch method */
+
+typedef struct
+{
+   PHB_ITEM item;
+   VARIANT* variant;
+}
+HB_OLE_PARAM_REF;
+
+HB_BOOL hb_oleDispInvoke( PHB_SYMB pSym, PHB_ITEM pObject, DISPID* pDispId,
+                          DISPPARAMS* pParams, VARIANT* pVarResult )
+{
+   if( !pSym && HB_IS_SYMBOL( pObject ) )
+   {
+      pSym = hb_itemGetSymbol( pObject );
+      pObject = NULL;
+   }
+
+   if( ( pSym || ( pObject && HB_IS_BLOCK( pObject ) ) ) &&
+       hb_vmRequestReenter() )
+   {
+      HB_OLE_PARAM_REF refArray[ 32 ];
+      int i, ii, iCount, iRefs;
+
+      iCount = pParams->cArgs;
+
+      for( i = iRefs = 0; i < iCount && iRefs < ( int ) HB_SIZEOFARRAY( refArray ); i++ )
+      {
+         if( pParams->rgvarg[ i ].n1.n2.vt & VT_BYREF )
+            refArray[ iRefs++ ].item = hb_stackAllocItem();
+      }
+
+      if( pSym )
+         hb_vmPushSymbol( pSym );
+      else
+         hb_vmPushEvalSym();
+      if( pObject )
+         hb_vmPush( pObject );
+      else
+         hb_vmPushNil();
+
+      if( pDispId )
+         hb_vmPushLong( ( long ) *pDispId );
+
+      for( i = 1, ii = 0; i <= iCount; i++ )
+      {
+         if( pParams->rgvarg[ iCount - i ].n1.n2.vt & VT_BYREF )
+         {
+            refArray[ ii ].variant = &pParams->rgvarg[ iCount - i ];
+            hb_oleVariantToItem( refArray[ ii ].item, refArray[ ii ].variant );
+            hb_vmPushItemRef( refArray[ ii++ ].item );
+         }
+         else
+            hb_oleVariantToItem( hb_stackAllocItem(),
+                                 &pParams->rgvarg[ iCount - i ] );
+      }
+
+      if( pDispId )
+         ++iCount;
+      if( pObject )
+         hb_vmSend( ( HB_USHORT ) iCount );
+      else
+         hb_vmProc( ( HB_USHORT ) iCount );
+
+      if( pVarResult )
+         hb_oleItemToVariant( pVarResult, hb_stackReturnItem() );
+
+      for( i = 0; i < iRefs; i++ )
+         hb_oleVariantUpdate( refArray[ i ].variant, refArray[ i ].item );
+
+      for( i = 0; i < iRefs; i++ )
+         hb_stackPop();
+
+      hb_vmRequestRestore();
+      return HB_TRUE;
+   }
+   return HB_FALSE;
+}
+
+
 /* IDispatch parameters, return value handling */
 
 static void GetParams( DISPPARAMS * dispparam )
