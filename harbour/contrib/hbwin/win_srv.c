@@ -83,7 +83,7 @@ static void hbwin_ControlHandler( DWORD request )
    }
 
    /* Report current status */
-   Sets_ServiceStatus( s_hStatus, &s_ServiceStatus );
+   SetServiceStatus( s_hStatus, &s_ServiceStatus );
 }
 
 static void hbwin_SrvFunction( int argc, char** argv )
@@ -101,17 +101,13 @@ static void hbwin_SrvFunction( int argc, char** argv )
 
    s_hStatus = RegisterServiceCtrlHandler( s_pszSrvName, ( LPHANDLER_FUNCTION ) hbwin_ControlHandler );
 
-   if( s_hStatus == ( SERVICE_STATUS_HANDLE ) 0 )
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "Error registering service\n" ) );
-   }
-   else
+   if( s_hStatus != ( SERVICE_STATUS_HANDLE ) 0 )
    {
       PHB_DYNS pDynSym = hb_dynsymFindName( s_pszPrgFunction );
 
       /* We report the running status to SCM. */
       s_ServiceStatus.dwCurrentState = SERVICE_RUNNING;
-      Sets_ServiceStatus( s_hStatus, &s_ServiceStatus );
+      SetServiceStatus( s_hStatus, &s_ServiceStatus );
 
       if( pDynSym )
       {
@@ -123,6 +119,10 @@ static void hbwin_SrvFunction( int argc, char** argv )
             hb_vmRequestRestore();
          }
       }
+   }
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "Error registering service\n" ) );
    }
 }
 
@@ -141,7 +141,7 @@ HB_FUNC( WIN_SERVICESETSTATUS ) /* dwStatus */
 {
 #if ! defined( HB_OS_WIN_CE )
    s_ServiceStatus.dwCurrentState = ( DWORD ) hb_parnl( 1 );
-   hb_retl( Sets_ServiceStatus( s_hStatus, &s_ServiceStatus ) );
+   hb_retl( SetServiceStatus( s_hStatus, &s_ServiceStatus ) );
 #else
    hb_retl( HB_FALSE );
 #endif
@@ -151,7 +151,7 @@ HB_FUNC( WIN_SERVICESETEXITCODE ) /* dwExitCode */
 {
 #if ! defined( HB_OS_WIN_CE )
    s_ServiceStatus.dwWin32ExitCode = ( DWORD ) hb_parnl( 1 );
-   hb_retl( Sets_ServiceStatus( s_hStatus, &s_ServiceStatus ) );
+   hb_retl( SetServiceStatus( s_hStatus, &s_ServiceStatus ) );
 #else
    hb_retl( HB_FALSE );
 #endif
@@ -161,7 +161,7 @@ HB_FUNC( WIN_SERVICESTOP )
 {
 #if ! defined( HB_OS_WIN_CE )
    s_ServiceStatus.dwCurrentState  = SERVICE_STOPPED;
-   Sets_ServiceStatus( s_hStatus, &s_ServiceStatus );
+   SetServiceStatus( s_hStatus, &s_ServiceStatus );
 #endif
 }
 

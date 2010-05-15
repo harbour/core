@@ -183,16 +183,14 @@ To add one to a file lacking it simply put as first lines:
  * Chr(36) + "Id" + Chr(36)
  */
 
-IMPORTANT: In real code, replaces 'Chr(36)' with '$' signes.
+IMPORTANT 1: In real code, replace 'Chr(36)' with '$' signes.
 
 as soon as you commit your file SVN ID string will be expanded
 by SVN server to full length.
 
-Note that last dollar sign is mandatory.
-
-Run these commands and commit:
-svn propset svn:keywords "Author Date Id Revision" "filename"
-svn propset svn:eol-style native "filename"
+IMPORTANT 2: Run these commands and commit:
+  svn propset svn:keywords "Author Date Id Revision" "filename"
+  svn propset svn:eol-style native "filename"
 
 
 [ Copyright (c) 1999-2009 Viktor Szakats (harbour.01 syenar.hu)
