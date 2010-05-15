@@ -6,7 +6,7 @@
 //----------------------------------------------------------------------//
 //----------------------------------------------------------------------//
 //
-//                  [x]Harbour Extended Features Deno
+//                   Harbour Extended Features Demo
 //                                    .
 //                 Pritpal Bedi <pritpal@vouchcac.com>
 //
@@ -16,15 +16,14 @@
 
 #include "hbgtinfo.ch"
 #include "inkey.ch"
-#ifdef __GTWVG__
-#include "hbgtwvg.ch"
-#endif
 
 #define RGB(r,g,b) ( r + ( g * 256 ) + ( b * 256 * 256 ) )
 
 //----------------------------------------------------------------------//
 
-STATIC nRows := 20, nCols := 60, nColorIndex := 1
+STATIC s_nRows := 20
+STATIC s_nCols := 60
+STATIC s_nColorIndex := 1
 
 //----------------------------------------------------------------------//
 
@@ -34,24 +33,30 @@ FUNCTION Main()
    Local nWidth  := Int( nHeight/2 )
    Local cFont
 
+   LOCAL nMSec
+
    Hb_GtInfo( HB_GTI_FONTNAME , cFont   )
    Hb_GtInfo( HB_GTI_FONTWIDTH, nWidth  )
    Hb_GtInfo( HB_GTI_FONTSIZE , nHeight )
-   #ifdef __GTWVG__
-   Hb_GtInfo( HB_GTI_ICONFILE, "..\contrib\gtwvg\tests\vr_1.ico" )
-   #endif
    SetCursor( 0 )
    SetColor( "n/w" )
 
-   HB_GtInfo( HB_GTI_NOTIFIERBLOCK, {|nEvent, ...| MyNotifier( nEvent, ... ) } )
+   HB_GtInfo( HB_GTI_CLOSABLE, .F. )
 
    DispScreen()
 
    DO WHILE .T.
-      nKey := Inkey()
+
+      nKey := Inkey( , INKEY_ALL + HB_INKEY_GTEVENT )
+
       if nKey == K_ESC
          exit
       endif
+
+      IF nMSec != NIL .AND. hb_milliSeconds() > nMSec + 1500
+         DispOutAt( maxrow(), 0, Space( maxcol()+1 ), "N/G*" )
+         nMSec := NIL
+      ENDIF
 
       DO CASE
       CASE nKey == K_ENTER
@@ -81,35 +86,26 @@ FUNCTION Main()
       CASE nKey == K_F8
          Alert( "Menu text changed. Was: " + hb_GtInfo( HB_GTI_SELECTCOPY, DToS(Date()) + " " + Time() ) )
 
-      CASE nKey == K_F9
-         RunInSysTray()
-
       CASE nKey == K_F10
          hb_threadStart( @thFunc() )
+
+      CASE nKey == HB_K_GOTFOCUS
+         DispOutAt( maxrow(), 33, "We got focus ", "B/G*" )
+         nMSec := hb_milliSeconds()
+
+      CASE nKey == HB_K_LOSTFOCUS
+         DispOutAt( maxrow(), 33, "We lost focus", "B/G*" )
+         nMSec := hb_milliSeconds()
+
+      CASE nKey == HB_K_CLOSE
+         IF Alert( "Close Application", {"Yes","No" } ) == 1
+            QUIT
+         ENDIF
 
       ENDCASE
    ENDDO
 
    RETURN NIL
-//----------------------------------------------------------------------//
-
-STATIC FUNCTION MyNotifier( nEvent, ... )
-
-   DO CASE
-
-   CASE nEvent == HB_GTE_SETFOCUS
-      DispScreen()
-      DispOutAt( maxrow(), 33, "We got focus", "B/G*" )
-
-   CASE nEvent == HB_GTE_CLOSE
-      DispScreen()
-      if Alert( "Close Application", {"Yes","No" } ) == 2
-         Return 1
-      endif
-
-   ENDCASE
-
-   RETURN 0
 
 //----------------------------------------------------------------------//
 
@@ -139,9 +135,6 @@ STATIC FUNCTION DispScreen()
    DispOutAt( ++nRow, nCol, "< F8 MarkCopy menu text >", cColor )
    DispOutAt( ++nRow, nCol, "<    Click Other Window >", cColor )
    DispOutAt( ++nRow, nCol, "<    Click X Button     >", cColor )
-#ifdef __GTWVG__
-   DispOutAt( ++nRow, nCol, "< F9 Run in SysTray     >", cColor )
-#endif
    DispOutAt( ++nRow, nCol, "< F10 Open New Window   >", cColor )
 
    DispOutAt( maxrow(), 0, Space( maxcol()+1 ), "N/G*" )
@@ -157,12 +150,8 @@ STATIC FUNCTION DispScreen()
 //----------------------------------------------------------------------//
 
 PROCEDURE HB_GTSYS()
-#ifdef __GTWVG__
-   REQUEST HB_GT_WVG_DEFAULT
-#else
    REQUEST HB_GT_WVT_DEFAULT
    REQUEST HB_GT_WIN
-#endif
    RETURN
 
 //----------------------------------------------------------------------//
@@ -197,23 +186,6 @@ FUNCTION SetPaletteIndex()
 
 //----------------------------------------------------------------------//
 
-#define NIM_ADD               0
-#define NIM_MODIFY            1
-#define NIM_DELETE            2
-
-FUNCTION RunInSysTray()
-   #ifdef __GTWVG__
-   Alert( "Please check your System Tray area after exiting this alert,"+;
-             ";then right click on the icon"+;
-                 ";displaying tooltip "Harbour GT in SysTray" !" )
-
-   Hb_GtInfo( HB_GTI_SPEC, HB_GTS_SYSTRAYICON, { NIM_ADD, NIT_FILE, ;
-                "..\contrib\gtwvg\tests\vr_1.ico", "Harbour GT in SysTray" } )
-   #endif
-   RETURN NIL
-
-//----------------------------------------------------------------------//
-
 PROCEDURE thFunc()
    Local cTitle, oBrowse, lEnd, nKey, i, aStruct
    Local aColor := { 'W+/N', 'W+/B', 'W+/G', 'W+/BG', 'W+/N*', 'W+/RB', 'N/W*', 'N/GR*' }
@@ -237,16 +209,16 @@ PROCEDURE thFunc()
 
    SetCursor( 0 )
 
-   nColorIndex++
-   if nColorIndex > len( aColor )
-      nColorIndex := 1
+   s_nColorIndex++
+   if s_nColorIndex > len( aColor )
+      s_nColorIndex := 1
    endif
 
-   nRows++
-   nCols += 2
+   s_nRows++
+   s_nCols += 2
 
-   SetMode( nRows,nCols )
-   SetColor( aColor[ nColorIndex ] )
+   SetMode( s_nRows, s_nCols )
+   SetColor( aColor[ s_nColorIndex ] )
    Hb_GtInfo( HB_GTI_WINTITLE, cTitle )
    Hb_GtInfo( HB_GTI_SETPOS_XY, nZx, nZy )
 
@@ -275,7 +247,7 @@ PROCEDURE thFunc()
    While !lEnd
       oBrowse:ForceStable()
 
-      nKey := InKey( 0 )
+      nKey := InKey( 0, INKEY_ALL + HB_INKEY_GTEVENT )
 
       if BrwHandleKey( oBrowse, nKey, @lEnd )
          //
