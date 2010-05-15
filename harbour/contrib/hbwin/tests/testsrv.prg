@@ -1,12 +1,12 @@
 /*
- * Chr(36) + "Id" + Chr(36)
+ * $Id$
  */
 
 /*
  * Harbour Project source code:
  *    Windows Service
  *
- * Copyright 2010 José Luis Capel - <jlcapel at hotmail . com>
+ * Copyright 2010 Jose Luis Capel - <jlcapel at hotmail . com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,63 +50,62 @@
  *
  */
 
-
 #include "hbtrace.ch"
 #include "hbwin.ch"
 
+#include "common.ch"
+
+#define _SERVICE_NAME "HarbourService"
 
 /* Uncomment this piece of code to install this service (should be called via consola) */
 
-PROCEDURE Main
+PROCEDURE Main( cMode )
 
-   IF WIN_SERVICEInstall("HarbourService","Win32 Harbour Service")
-      Alert("Service has been successfully installed")
-   ELSE
-      Alert("Error installing service :" + STR( GETLASTERROR() ))
-   ENDIf
+   DEFAULT cMode TO "I"
+
+   SWITCH Upper( cMode )
+   CASE "I"
+
+      IF win_serviceInstall( _SERVICE_NAME, "Win32 Harbour Service" )
+         Alert( "Service has been successfully installed" )
+      ELSE
+         Alert( "Error installing service:" + hb_ntos( wapi_GetLastError() ) )
+      ENDIf
+      EXIT
+
+   CASE "U"
+
+      IF win_serviceDelete( _SERVICE_NAME )
+         Alert( "Service has been deleted" )
+      ELSE
+         Alert( "Error deleting service:" + hb_ntos( wapi_GetLastError() ) )
+      ENDIf
+      EXIT
+
+   CASE "S"
+
+      IF win_serviceStart( _SERVICE_NAME, "SrvMain" )
+         HB_TRACE( HB_TR_INFO, "Service has worked Ok" )
+      ELSE
+         HB_TRACE( HB_TR_ERROR, "Service has had som problems : " + hb_ntos( wapi_GetLastError() ) )
+      ENDIF
+      EXIT
+
+   ENDSWITCH
+
    RETURN
 
-
-/* Uncomment this piece of code to de-install this service (should be called via consola)
-
-PROCEDURE Main
-
-   IF WIN_SERVICEDelete("HarbourService")
-      Alert("Service has been deleted")
-   ELSE
-      Alert("Error deleting service :" + STR( hb_SrvGetLastError()) )
-   ENDIf
-   RETURN
-*/
-
-/* Uncomment this piece of code to be called by SCM (not via console)
-
-PROCEDURE Main
-
-   IF !WIN_SERVICESTART("HarbourService","SRVMAIN")
-      HB_TRACE(HB_TR_INFO, "Service has worked Ok")
-   ELSE
-      HB_TRACE(HB_TR_ERROR, "Service has had som problems : "+ STR( hb_SrvGetLastError())
-   ENDIf
-
-   RETURN
-*/
-
-/*
 FUNCTION SrvMain()
-
    LOCAL n
 
    n := 1
-   DO WHILE WIN_SERVICEGETSTATUS() == SERVICE_RUNNING
-      HB_TRACE(HB_TR_INFO, "Work in progress " + STR(n))
+   DO WHILE win_serviceGetStatus() == WIN_SERVICE_RUNNING
+      HB_TRACE( HB_TR_INFO, "Work in progress " + hb_ntos( n ) )
       n := n + 1
-      Inkey(0.1)
+      Inkey( 0.1 )
    ENDDO
 
-
-   WIN_SERVICESETEXITCODE( 0 )
-   WIN_SERVICESTOP()
+   win_serviceSetExitCode( 0 )
+   win_serviceStop()
 
    RETURN NIL
-*/

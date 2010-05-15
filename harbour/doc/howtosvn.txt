@@ -183,9 +183,7 @@ To add one to a file lacking it simply put as first lines:
  * Chr(36) + "Id" + Chr(36)
  */
 
-I can't write it here because SVN server would change it as soon as I
-commit this file, but second line should not have Chr(36) but $ signs
-and no spaces between dollar sign and Id.
+IMPORTANT: In real code, replaces 'Chr(36)' with '$' signes.
 
 as soon as you commit your file SVN ID string will be expanded
 by SVN server to full length.
