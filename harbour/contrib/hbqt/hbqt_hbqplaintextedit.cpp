@@ -536,9 +536,31 @@ void HBQPlainTextEdit::mouseDoubleClickEvent( QMouseEvent *event )
 
 void HBQPlainTextEdit::mousePressEvent( QMouseEvent *event )
 {
-   selectionState = 1;
-   setCursorWidth( 1 );
-   QPlainTextEdit::mousePressEvent( event );
+   if( event->modifiers() & Qt::ShiftModifier )
+   {
+      QTextCursor c( textCursor() );
+      rowBegins    = c.blockNumber();
+      columnBegins = c.columnNumber();
+
+      QPlainTextEdit::mousePressEvent( event );
+
+      c = textCursor();
+      rowEnds    = c.blockNumber();
+      columnEnds = c.columnNumber();
+
+      selectionState = 1;
+      setCursorWidth( 1 );
+      selectionMode = selectionMode_stream;
+      emit selectionChanged();
+
+      repaint();
+   }
+   else
+   {
+      selectionState = 1;
+      setCursorWidth( 1 );
+      QPlainTextEdit::mousePressEvent( event );
+   }
 }
 
 /*----------------------------------------------------------------------*/
@@ -822,7 +844,7 @@ bool HBQPlainTextEdit::hbKeyPressColumnSelection( QKeyEvent * event )
          }
          else
          {
-         //   bClear = true;
+            selectionState = 0;
          }
       }
       else
@@ -857,6 +879,22 @@ bool HBQPlainTextEdit::hbKeyPressColumnSelection( QKeyEvent * event )
       }
    }
    return false;
+}
+
+/*----------------------------------------------------------------------*/
+
+void HBQPlainTextEdit::keyReleaseEvent( QKeyEvent * event )
+{
+   QPlainTextEdit::keyReleaseEvent( event );
+
+   bool ctrl = event->modifiers() & Qt::ControlModifier;
+   if( ctrl && event->text() == "" )
+   {
+      if( selectionState > 0 )
+      {
+         selectionState = 0;
+      }
+   }
 }
 
 /*----------------------------------------------------------------------*/

@@ -158,6 +158,7 @@ protected:
    void           mouseMoveEvent( QMouseEvent * event );
    void           focusInEvent( QFocusEvent * event );
    void           keyPressEvent( QKeyEvent * event );
+   void           keyReleaseEvent( QKeyEvent * event );
 
 public slots:
    void           hbUpdateLineNumberAreaWidth( int newBlockCount );

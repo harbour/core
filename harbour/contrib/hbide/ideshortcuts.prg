@@ -662,9 +662,9 @@ METHOD IdeShortcuts:populateKeys()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeShortcuts:buildBlock( cString )
-   LOCAL n, cBlock, cParam, a_
+   LOCAL n, cBlock, cParam
+   LOCAL a_:= hbide_memoTOarray( cString )
 
-   a_:= hbide_memoTOarray( cString )
    cString := ""
    aeval( a_, {|e| cString += e } )
 

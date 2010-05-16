@@ -72,7 +72,7 @@
 #include "../hbqt_hbqplaintextedit.h"
 
 /*
- * HBQPlainTextEdit ( QWidget * parent = 0 )
+ * HBQPlainTextEdit ( QWidget * parent = 0 ) .
  * HBQPlainTextEdit ( const QString & text, QWidget * parent = 0 )
  * virtual ~HBQPlainTextEdit ()
  */
