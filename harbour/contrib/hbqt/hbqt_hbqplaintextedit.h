@@ -204,7 +204,7 @@ private slots:
    void           hbUpdateHorzRuler( const QRect &, int );
    void           hbPaintSelection( QPaintEvent * );
    bool           hbKeyPressSelection( QKeyEvent * );
-   void           hbClearColumnSelection();
+   void           hbClearSelection();
    void           hbUpdateCaret();
 };
 

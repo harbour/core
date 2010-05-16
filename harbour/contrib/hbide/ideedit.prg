@@ -744,7 +744,7 @@ STATIC FUNCTION hbide_qCursorDownInsert( qCursor )
 
 METHOD IdeEdit:clearSelection()
 
-   ::qEdit:hbSetSelectionInfo( { -1,-1,-1,-1,0 } )
+   ::qEdit:hbSetSelectionInfo( { -1,-1,-1,-1,1 } )
 
    RETURN Self
 
@@ -950,14 +950,14 @@ METHOD IdeEdit:deleteBlockContents( aCord )
             qCursor:movePosition( QTextCursor_StartOfLine, QTextCursor_KeepAnchor          )
             qCursor:movePosition( QTextCursor_Right      , QTextCursor_KeepAnchor, nR      )
             qCursor:removeSelectedText()
-            ::qEdit:hbSetSelectionInfo( { -1,-1,-1,-1,0 } )
+            ::qEdit:hbSetSelectionInfo( { -1,-1,-1,-1,1 } )
 
          ELSEIF nSelMode == selectionMode_line
             hbide_qPositionCursor( qCursor, nT, nL )
             qCursor:movePosition( QTextCursor_Down       , QTextCursor_KeepAnchor, nB - nT + 1 )
             qCursor:movePosition( QTextCursor_StartOfLine, QTextCursor_KeepAnchor          )
             qCursor:removeSelectedText()
-            ::qEdit:hbSetSelectionInfo( { -1,-1,-1,-1,0 } )
+            ::qEdit:hbSetSelectionInfo( { -1,-1,-1,-1,1 } )
             ::isLineSelectionON := .f.
 
          ENDIF

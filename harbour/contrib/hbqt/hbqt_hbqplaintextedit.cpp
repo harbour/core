@@ -74,6 +74,7 @@
 #if QT_VERSION >= 0x040500
 
 #include "hbqt_hbqplaintextedit.h"
+#include <QApplication>
 
 #define selectionState_off                        0
 #define selectionState_on                         1
@@ -282,7 +283,7 @@ bool HBQPlainTextEdit::isCursorInSelection()
 
 /*----------------------------------------------------------------------*/
 
-void HBQPlainTextEdit::hbClearColumnSelection()
+void HBQPlainTextEdit::hbClearSelection()
 {
    setCursorWidth( 1 );
 
@@ -361,7 +362,7 @@ void HBQPlainTextEdit::hbSetSelectionMode( int mode, bool on )
          if( on )
          {
             isLineSelectionON = true;
-            hbClearColumnSelection();
+            hbClearSelection();
             QTextCursor c( textCursor() );
             rowBegins     = c.blockNumber();
             rowEnds       = rowBegins;
@@ -584,7 +585,7 @@ void HBQPlainTextEdit::mouseMoveEvent( QMouseEvent *event )
       if( selectionState == 1 )
       {
          selectionState = 2;
-         hbClearColumnSelection();
+         hbClearSelection();
       }
 
       if( columnBegins == -1 )
@@ -600,6 +601,7 @@ void HBQPlainTextEdit::mouseMoveEvent( QMouseEvent *event )
          columnEnds   = columnBegins;
 
          emit selectionChanged();
+         QPlainTextEdit::mouseMoveEvent( event );
       }
       else
       {
@@ -619,7 +621,6 @@ void HBQPlainTextEdit::mouseMoveEvent( QMouseEvent *event )
          }
          c.clearSelection();
          setTextCursor( c );
-         event->accept();
          repaint();
       }
    }
@@ -664,7 +665,7 @@ bool HBQPlainTextEdit::hbKeyPressSelection( QKeyEvent * event )
    {
       selectionMode = selectionMode_stream;
       selectionState = 0;
-      hbClearColumnSelection();
+      hbClearSelection();
       repaint();
    }
 
@@ -684,7 +685,7 @@ bool HBQPlainTextEdit::hbKeyPressSelection( QKeyEvent * event )
 
          if( selectionState == 0 )
          {
-            hbClearColumnSelection();
+            hbClearSelection();
          }
          if( selectionMode == selectionMode_column )
             setCursorWidth( 0 );
@@ -744,7 +745,7 @@ bool HBQPlainTextEdit::hbKeyPressSelection( QKeyEvent * event )
                break;
             }
          }
-//HB_TRACE( HB_TR_ALWAYS, ( "0 NAV %i %i %i %i", rowBegins, columnBegins, rowEnds, columnEnds ) );
+         event->accept();
          c.clearSelection();
          setTextCursor( c );
 
@@ -782,9 +783,8 @@ bool HBQPlainTextEdit::hbKeyPressSelection( QKeyEvent * event )
             rowEnds    = row;
             columnEnds = col;
          }
-//HB_TRACE( HB_TR_ALWAYS, ( "1 NAV %i %i %i %i", rowBegins, columnBegins, rowEnds, columnEnds ) );
          update();
-         event->accept();
+         //event->accept();
          return true;
       }                                 //   if( shift &&  isNavableKey( k ) )
       else if( selectionMode == selectionMode_column )
@@ -871,7 +871,7 @@ bool HBQPlainTextEdit::hbKeyPressSelection( QKeyEvent * event )
             selectionState = 0;
             if( columnEnds == columnBegins )
             {
-               hbClearColumnSelection();
+               hbClearSelection();
             }
          }
       }
@@ -883,8 +883,8 @@ bool HBQPlainTextEdit::hbKeyPressSelection( QKeyEvent * event )
          QPlainTextEdit::keyPressEvent( event );
          QTextCursor c( textCursor() );
          rowEnds = c.blockNumber();
-         event->accept();
-         update();
+         //event->accept();
+         repaint();
          return true;
       }
    }
@@ -897,6 +897,7 @@ void HBQPlainTextEdit::keyPressEvent( QKeyEvent * event )
 {
    if( hbKeyPressSelection( event ) )
    {
+      QApplication::processEvents();
       return;
    }
 
@@ -967,15 +968,6 @@ void HBQPlainTextEdit::keyPressEvent( QKeyEvent * event )
    c->complete( cr ); // popup it up!
 }
 
-/*----------------------------------------------------------------------*/
-#if 0
-QString HBQPlainTextEdit::hbTextForPrefix()
-{
-   QTextCursor tc = textCursor();
-   tc.select( QTextCursor::WordUnderCursor );
-   return tc.selectedText();
-}
-#endif
 /*----------------------------------------------------------------------*/
 
 QString HBQPlainTextEdit::hbTextUnderCursor()
