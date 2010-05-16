@@ -344,6 +344,7 @@ void HBQPlainTextEdit::hbSetSelectionMode( int mode, bool on )
          selectionMode = selectionMode_stream;
          isColumnSelectionEnabled = false;
          isLineSelectionON = false;
+         setCursorWidth( 1 );
          break;
       }
       case selectionMode_column:
@@ -373,13 +374,6 @@ void HBQPlainTextEdit::hbSetSelectionMode( int mode, bool on )
          }
          break;
       }
-      #if 0
-      default:
-      {
-         selectionMode = selectionMode_none;
-         hbClearColumnSelection();
-      }
-      #endif
    }
    update();
 }
@@ -451,7 +445,7 @@ void HBQPlainTextEdit::hbCut( int k )
       hb_itemRelease( p1 );
       hb_itemRelease( p2 );
 
-      if( selectionMode == selectionMode_column && k == 0 )
+      if( selectionMode == selectionMode_column ) //&& k == 0 )
          columnEnds = columnBegins;
    }
    else
@@ -633,7 +627,22 @@ void HBQPlainTextEdit::mouseMoveEvent( QMouseEvent *event )
 
 /*----------------------------------------------------------------------*/
 
-bool HBQPlainTextEdit::hbKeyPressColumnSelection( QKeyEvent * event )
+void HBQPlainTextEdit::keyReleaseEvent( QKeyEvent * event )
+{
+   QPlainTextEdit::keyReleaseEvent( event );
+
+   if( ( event->modifiers() & Qt::ControlModifier ) && event->text() == "" )
+   {
+      if( selectionState == 2 )
+      {
+         selectionState = 1;
+      }
+   }
+}
+
+/*----------------------------------------------------------------------*/
+
+bool HBQPlainTextEdit::hbKeyPressSelection( QKeyEvent * event )
 {
    bool ctrl  = event->modifiers() & Qt::ControlModifier;
    bool shift = event->modifiers() & Qt::ShiftModifier;
@@ -735,7 +744,7 @@ bool HBQPlainTextEdit::hbKeyPressColumnSelection( QKeyEvent * event )
                break;
             }
          }
-
+//HB_TRACE( HB_TR_ALWAYS, ( "0 NAV %i %i %i %i", rowBegins, columnBegins, rowEnds, columnEnds ) );
          c.clearSelection();
          setTextCursor( c );
 
@@ -773,8 +782,9 @@ bool HBQPlainTextEdit::hbKeyPressColumnSelection( QKeyEvent * event )
             rowEnds    = row;
             columnEnds = col;
          }
+//HB_TRACE( HB_TR_ALWAYS, ( "1 NAV %i %i %i %i", rowBegins, columnBegins, rowEnds, columnEnds ) );
          update();
-         event->ignore();
+         event->accept();
          return true;
       }                                 //   if( shift &&  isNavableKey( k ) )
       else if( selectionMode == selectionMode_column )
@@ -805,7 +815,7 @@ bool HBQPlainTextEdit::hbKeyPressColumnSelection( QKeyEvent * event )
                      columnEnds++;
                   }
                   repaint();
-                  event->ignore();
+                  event->accept();
                   return true;
                }
             }
@@ -824,7 +834,7 @@ bool HBQPlainTextEdit::hbKeyPressColumnSelection( QKeyEvent * event )
                columnEnds = columnBegins;
             }
             repaint();
-            event->ignore();
+            event->accept();
             return true;
          }
          else
@@ -839,7 +849,7 @@ bool HBQPlainTextEdit::hbKeyPressColumnSelection( QKeyEvent * event )
             hbCut( k );
             repaint();
             selectionState = 0;
-            event->ignore();
+            event->accept();
             return true;
          }
          else
@@ -873,7 +883,7 @@ bool HBQPlainTextEdit::hbKeyPressColumnSelection( QKeyEvent * event )
          QPlainTextEdit::keyPressEvent( event );
          QTextCursor c( textCursor() );
          rowEnds = c.blockNumber();
-         event->ignore();
+         event->accept();
          update();
          return true;
       }
@@ -883,25 +893,9 @@ bool HBQPlainTextEdit::hbKeyPressColumnSelection( QKeyEvent * event )
 
 /*----------------------------------------------------------------------*/
 
-void HBQPlainTextEdit::keyReleaseEvent( QKeyEvent * event )
-{
-   QPlainTextEdit::keyReleaseEvent( event );
-
-   bool ctrl = event->modifiers() & Qt::ControlModifier;
-   if( ctrl && event->text() == "" )
-   {
-      if( selectionState > 0 )
-      {
-         selectionState = 0;
-      }
-   }
-}
-
-/*----------------------------------------------------------------------*/
-
 void HBQPlainTextEdit::keyPressEvent( QKeyEvent * event )
 {
-   if( hbKeyPressColumnSelection( event ) )
+   if( hbKeyPressSelection( event ) )
    {
       return;
    }

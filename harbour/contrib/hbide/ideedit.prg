@@ -911,16 +911,17 @@ METHOD IdeEdit:insertBlockContents( aCord )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:deleteBlockContents( aCord )
-   LOCAL nT, nL, nB, nR, nW, i, cLine, qCursor, k
+   LOCAL nT, nL, nB, nR, nW, i, cLine, qCursor, k, nSelMode
 
    hbide_normalizeRect( aCord, @nT, @nL, @nB, @nR )
    k := aCord[ 7 ]
    k := iif( empty( k ), Qt_Key_X, k )
-
    IF k == Qt_Key_X
       ::copyBlockContents( aCord )
    ENDIF
 
+   nSelMode := aCord[ 5 ]
+//HB_TRACE( HB_TR_ALWAYS, nT, nL, nB, nR, nSelMode )
    qCursor := QTextCursor():from( ::qEdit:textCursor() )
    qCursor:beginEditBlock()
 
@@ -935,7 +936,7 @@ METHOD IdeEdit:deleteBlockContents( aCord )
 
    ELSE
       IF k == Qt_Key_Delete .OR. k == Qt_Key_X
-         IF aCord[ 5 ] == selectionMode_column
+         IF nSelMode == selectionMode_column
             FOR i := nT TO nB
                cLine := ::getLine( i + 1 )
                cLine := pad( substr( cLine, 1, nL ), nL ) + substr( cLine, nR + 1 )
@@ -943,7 +944,7 @@ METHOD IdeEdit:deleteBlockContents( aCord )
             NEXT
             hbide_qPositionCursor( qCursor, nT, nL )
 
-         ELSEIF aCord[ 5 ] == selectionMode_stream
+         ELSEIF nSelMode == selectionMode_stream
             hbide_qPositionCursor( qCursor, nT, nL )
             qCursor:movePosition( QTextCursor_Down       , QTextCursor_KeepAnchor, nB - nT )
             qCursor:movePosition( QTextCursor_StartOfLine, QTextCursor_KeepAnchor          )
@@ -951,7 +952,7 @@ METHOD IdeEdit:deleteBlockContents( aCord )
             qCursor:removeSelectedText()
             ::qEdit:hbSetSelectionInfo( { -1,-1,-1,-1,0 } )
 
-         ELSEIF aCord[ 5 ] == selectionMode_line
+         ELSEIF nSelMode == selectionMode_line
             hbide_qPositionCursor( qCursor, nT, nL )
             qCursor:movePosition( QTextCursor_Down       , QTextCursor_KeepAnchor, nB - nT + 1 )
             qCursor:movePosition( QTextCursor_StartOfLine, QTextCursor_KeepAnchor          )
@@ -1242,7 +1243,6 @@ METHOD IdeEdit:toggleLineNumbers()
 
 METHOD IdeEdit:toggleSelectionMode()
    ::isColumnSelectionON := ! ::isColumnSelectionON
-   //::qEdit:hbHighlightSelectedColumns( ::isColumnSelectionON )
    ::qEdit:hbSetSelectionMode( iif( ::isColumnSelectionON, 2, 1 ), .t. )
    ::dispStatusInfo()
    RETURN Self
@@ -1276,7 +1276,7 @@ METHOD IdeEdit:undo()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:cut()
-   ::qEdit:hbCut()
+   ::qEdit:hbCut( Qt_Key_X )
    RETURN Self
 
 /*----------------------------------------------------------------------*/

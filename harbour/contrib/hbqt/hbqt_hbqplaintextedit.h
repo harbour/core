@@ -203,7 +203,7 @@ private slots:
    void           hbUpdateLineNumberArea( const QRect &, int );
    void           hbUpdateHorzRuler( const QRect &, int );
    void           hbPaintSelection( QPaintEvent * );
-   bool           hbKeyPressColumnSelection( QKeyEvent * );
+   bool           hbKeyPressSelection( QKeyEvent * );
    void           hbClearColumnSelection();
    void           hbUpdateCaret();
 };
