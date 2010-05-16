@@ -1098,9 +1098,7 @@ HB_FUNC( __MVPUBLIC )
                HB_SIZE j, ulLen = hb_arrayLen( pMemvar );
 
                for( j = 1; j <= ulLen; j++ )
-               {
                   hb_memvarCreateFromItem( hb_arrayGetItemPtr( pMemvar, j ), VS_PUBLIC, NULL );
-               }
             }
             else
                hb_memvarCreateFromItem( pMemvar, VS_PUBLIC, NULL );
@@ -1132,9 +1130,7 @@ HB_FUNC( __MVPRIVATE )
                HB_SIZE j, ulLen = hb_arrayLen( pMemvar );
 
                for( j = 1; j <= ulLen; j++ )
-               {
                   hb_memvarCreateFromItem( hb_arrayGetItemPtr( pMemvar, j ), VS_PRIVATE, NULL );
-               }
             }
             else
                hb_memvarCreateFromItem( pMemvar, VS_PRIVATE, NULL );
@@ -1392,7 +1388,7 @@ static HB_DYNS_FUNC( hb_memvarSave )
             HB_SIZE ulLen = hb_itemGetCLen( pMemvar ) + 1;
             int iOverFlow = 0;
 
-            /* Clipper support only 64KB strings */
+            /* Clipper supports only 64KB strings */
             if( ulLen > USHRT_MAX )
             {
                ulLen = USHRT_MAX;

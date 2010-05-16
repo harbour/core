@@ -4,5 +4,7 @@
 
 -hbimplib
 
+-ofbclient
+
 {!allgcc}${HB_WITH_FIREBIRD}/../bin/fbclient.dll
 {allgcc}${HB_WITH_FIREBIRD}/../lib/fbclient_ms.lib
