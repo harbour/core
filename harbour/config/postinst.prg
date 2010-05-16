@@ -79,8 +79,37 @@ PROCEDURE Main()
       FOR EACH tmp IN PackageList( "contrib\*", GetEnv( "HB_CONTRIBLIBS" ), GetEnv( "HB_CONTRIB_ADDONS" ) )
          IF hb_FileExists( "contrib\" + tmp + "\" + tmp + ".hbi" )
             hb_processRun( GetEnv( "HB_HOST_BIN_DIR" ) + _PS_ + "hbmk2" +;
-                           " @" + "contrib\" + tmp + "\" + tmp + ".hbi " +;
-                           "-o${HB_LIB_INSTALL}/" )
+                           " -quiet -lang=en " +;
+                           " @contrib/" + tmp + "/" + tmp + ".hbi" +;
+                           " -o${HB_LIB_INSTALL}/" )
+         ENDIF
+      NEXT
+   ENDIF
+
+   /* Converting build options to hbmk2 options */
+
+   cOptions := ""
+   IF GetEnv( "HB_BUILD_MODE" ) == "cpp"
+      cOptions += " -cpp=yes"
+   ELSEIF GetEnv( "HB_BUILD_MODE" ) == "c"
+      cOptions += " -cpp=no"
+   ENDIF
+   IF GetEnv( "HB_BUILD_DEBUG" ) == "yes"
+      cOptions += " -debug"
+   ENDIF
+
+   /* Creating extra binaries */
+
+   IF ! Empty( GetEnv( "HB_BUILD_ADDONS" ) )
+
+      OutStd( "! Making binaries for .hbp project addons..." + hb_osNewLine() )
+
+      FOR EACH tmp IN hb_ATokens( GetEnv( "HB_BUILD_ADDONS" ),, .T. )
+         IF ! Empty( tmp )
+            hb_processRun( GetEnv( "HB_HOST_BIN_DIR" ) + _PS_ + "hbmk2" +;
+                           " -quiet -lang=en -q0 " + cOptions +;
+                           " " + Chr( 34 ) + StrTran( tmp, "\", "/" ) + Chr( 34 ) +;
+                           " -o${HB_BIN_INSTALL}/" )
          ENDIF
       NEXT
    ENDIF
@@ -91,16 +120,6 @@ PROCEDURE Main()
       !( GetEnv( "HB_BUILD_DLL" ) == "no" ) .AND. ;
       !( GetEnv( "HB_BUILD_SHARED" ) == "yes" )
 
-      cOptions := ""
-      IF GetEnv( "HB_BUILD_MODE" ) == "cpp"
-         cOptions += " -cpp=yes"
-      ELSEIF GetEnv( "HB_BUILD_MODE" ) == "c"
-         cOptions += " -cpp=no"
-      ENDIF
-      IF GetEnv( "HB_BUILD_DEBUG" ) == "yes"
-         cOptions += " -debug"
-      ENDIF
-
       OutStd( "! Making shared version of Harbour binaries..." + hb_osNewLine() )
 
       FOR EACH tmp IN Directory( "utils\*", "D" )
@@ -110,12 +129,11 @@ PROCEDURE Main()
             hb_FileExists( "utils\" + tmp[ F_NAME ] + "\" + tmp[ F_NAME ] + ".hbp" )
 
             hb_processRun( GetEnv( "HB_HOST_BIN_DIR" ) + _PS_ + "hbmk2" +;
-                           " -quiet -q0 -lang=en -shared" + cOptions +;
-                           " " + Chr( 34 ) + "-o" + GetEnv( "HB_BIN_INSTALL" ) + _PS_ + tmp[ F_NAME ] + "-dll" + Chr( 34 ) +;
-                           " " + Chr( 34 ) + StrTran( "utils\" + tmp[ F_NAME ] + "\" + tmp[ F_NAME ] + ".hbp", "\", _PS_ ) + Chr( 34 ) )
+                           " -quiet -lang=en -q0 -shared" + cOptions +;
+                           " utils/" + tmp[ F_NAME ] + "/" + tmp[ F_NAME ] + ".hbp" +;
+                           " -o${HB_BIN_INSTALL}/" + tmp[ F_NAME ] + "-dll" )
          ENDIF
       NEXT
-
    ENDIF
 
    /* Creating install packages */

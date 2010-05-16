@@ -96,16 +96,16 @@ static VOID WINAPI hbwin_SvcMainFunction( DWORD dwArgc, LPTSTR * lpszArgv )
    {
       PHB_DYNS pDynSym = hb_dynsymFindName( s_szHarbourEntryFunc );
 
-      /* We report the running status to SCM. */
-      s_ServiceStatus.dwCurrentState = SERVICE_RUNNING;
-      SetServiceStatus( s_hStatus, &s_ServiceStatus );
-
       if( pDynSym )
       {
          if( hb_vmRequestReenter() )
          {
             DWORD i;
             int iArgCount = 0;
+
+            /* We report the running status to SCM. */
+            s_ServiceStatus.dwCurrentState = SERVICE_RUNNING;
+            SetServiceStatus( s_hStatus, &s_ServiceStatus );
 
             hb_vmPushSymbol( hb_dynsymSymbol( pDynSym ) );
             hb_vmPushNil();
@@ -127,6 +127,10 @@ static VOID WINAPI hbwin_SvcMainFunction( DWORD dwArgc, LPTSTR * lpszArgv )
 
             hb_vmRequestRestore();
          }
+      }
+      else
+      {
+         HB_TRACE( HB_TR_DEBUG, ("Harbour service entry function not found") );
       }
    }
    else
