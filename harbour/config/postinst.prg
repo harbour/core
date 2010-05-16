@@ -78,10 +78,10 @@ PROCEDURE Main()
 
       FOR EACH tmp IN PackageList( "contrib\*", GetEnv( "HB_CONTRIBLIBS" ), GetEnv( "HB_CONTRIB_ADDONS" ) )
          IF hb_FileExists( "contrib\" + tmp + "\" + tmp + ".hbi" )
-            hb_processRun( GetEnv( "HB_HOST_BIN_DIR" ) + _PS_ + "hbmk2" +;
-                           " -quiet -lang=en " +;
-                           " @contrib/" + tmp + "/" + tmp + ".hbi" +;
-                           " -o${HB_LIB_INSTALL}/" )
+            mk_hb_processRun( GetEnv( "HB_HOST_BIN_DIR" ) + _PS_ + "hbmk2" +;
+                              " -quiet -lang=en" +;
+                              " @contrib/" + tmp + "/" + tmp + ".hbi" +;
+                              " -o${HB_LIB_INSTALL}/" )
          ENDIF
       NEXT
    ENDIF
@@ -100,16 +100,17 @@ PROCEDURE Main()
 
    /* Creating extra binaries */
 
-   IF ! Empty( GetEnv( "HB_BUILD_ADDONS" ) )
+   IF ! Empty( GetEnv( "HB_BUILD_ADDONS" ) ) .AND. ;
+      ! Empty( GetEnv( "HB_HOST_BIN_DIR" ) )
 
       OutStd( "! Making binaries for .hbp project addons..." + hb_osNewLine() )
 
       FOR EACH tmp IN hb_ATokens( GetEnv( "HB_BUILD_ADDONS" ),, .T. )
          IF ! Empty( tmp )
-            hb_processRun( GetEnv( "HB_HOST_BIN_DIR" ) + _PS_ + "hbmk2" +;
-                           " -quiet -lang=en -q0 " + cOptions +;
-                           " " + Chr( 34 ) + StrTran( tmp, "\", "/" ) + Chr( 34 ) +;
-                           " -o${HB_BIN_INSTALL}/" )
+            mk_hb_processRun( GetEnv( "HB_HOST_BIN_DIR" ) + _PS_ + "hbmk2" +;
+                              " -quiet -lang=en -q0" + cOptions +;
+                              " " + Chr( 34 ) + StrTran( tmp, "\", "/" ) + Chr( 34 ) +;
+                              " -o${HB_BIN_INSTALL}/" )
          ENDIF
       NEXT
    ENDIF
@@ -118,7 +119,8 @@ PROCEDURE Main()
 
    IF !( GetEnv( "HB_PLATFORM" ) $ "dos|linux" ) .AND. ;
       !( GetEnv( "HB_BUILD_DLL" ) == "no" ) .AND. ;
-      !( GetEnv( "HB_BUILD_SHARED" ) == "yes" )
+      !( GetEnv( "HB_BUILD_SHARED" ) == "yes" ) .AND. ;
+      ! Empty( GetEnv( "HB_HOST_BIN_DIR" ) )
 
       OutStd( "! Making shared version of Harbour binaries..." + hb_osNewLine() )
 
@@ -128,10 +130,10 @@ PROCEDURE Main()
             !( tmp[ F_NAME ] == ".." ) .AND. ;
             hb_FileExists( "utils\" + tmp[ F_NAME ] + "\" + tmp[ F_NAME ] + ".hbp" )
 
-            hb_processRun( GetEnv( "HB_HOST_BIN_DIR" ) + _PS_ + "hbmk2" +;
-                           " -quiet -lang=en -q0 -shared" + cOptions +;
-                           " utils/" + tmp[ F_NAME ] + "/" + tmp[ F_NAME ] + ".hbp" +;
-                           " -o${HB_BIN_INSTALL}/" + tmp[ F_NAME ] + "-dll" )
+            mk_hb_processRun( GetEnv( "HB_HOST_BIN_DIR" ) + _PS_ + "hbmk2" +;
+                              " -quiet -lang=en -q0 -shared" + cOptions +;
+                              " utils/" + tmp[ F_NAME ] + "/" + tmp[ F_NAME ] + ".hbp" +;
+                              " -o${HB_BIN_INSTALL}/" + tmp[ F_NAME ] + "-dll" )
          ENDIF
       NEXT
    ENDIF
@@ -157,11 +159,11 @@ PROCEDURE Main()
       cOldDir := _PS_ + CurDir()
       DirChange( GetEnv( "HB_INSTALL_PREFIX" ) + _PS_ + ".." )
 
-      hb_processRun( GetEnv( "HB_DIR_ZIP" ) + "zip" +;
-                     " -q -9 -X -r -o" +;
-                     " " + FN_Escape( tmp ) +;
-                     " . -i " + FN_Escape( GetEnv( "HB_PKGNAME" ) + _PS_ + "*" ) +;
-                     " -x *.tds -x *.exp" )
+      mk_hb_processRun( GetEnv( "HB_DIR_ZIP" ) + "zip" +;
+                        " -q -9 -X -r -o" +;
+                        " " + FN_Escape( tmp ) +;
+                        " . -i " + FN_Escape( GetEnv( "HB_PKGNAME" ) + _PS_ + "*" ) +;
+                        " -x *.tds -x *.exp" )
 
       DirChange( cOldDir )
 
@@ -171,15 +173,21 @@ PROCEDURE Main()
 
          OutStd( "! Making Harbour .exe install package: '" + tmp + "'" + hb_osNewLine() )
 
-         hb_processRun( GetEnv( "HB_DIR_NSIS" ) + "makensis.exe" +;
-                        " -V2" +;
-                        " " + FN_Escape( "package\mpkg_win.nsi" ) )
+         mk_hb_processRun( GetEnv( "HB_DIR_NSIS" ) + "makensis.exe" +;
+                           " -V2" +;
+                           " " + FN_Escape( StrTran( "package/mpkg_win.nsi", "/", _PS_ ) ) )
       ENDIF
    ENDIF
 
    ErrorLevel( nErrorLevel )
 
    RETURN
+
+STATIC FUNCTION mk_hb_processRun( ... )
+
+   OutStd( hb_PValue( 1 ) + hb_osNewLine() )
+
+   RETURN hb_processRun( ... )
 
 STATIC FUNCTION FN_Escape( cFN )
    RETURN Chr( 34 ) + cFN + Chr( 34 )

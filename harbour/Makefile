@@ -14,18 +14,12 @@ ifeq ($(HB_BUILD_PARTS),compiler)
 
 else
 
-   ifeq ($(HB_BUILD_PARTS),lib)
-      HB_UTIL_DIR :=
-   else
-      HB_UTIL_DIR := utils{src}
-   endif
-
    DIRS := \
       doc \
       include \
       external \
       src{external} \
-      $(HB_UTIL_DIR) \
+      utils{src} \
       contrib{src} \
 
 endif

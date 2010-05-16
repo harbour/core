@@ -1,13 +1,13 @@
-.TH HBMK 1
+.TH HBMK2 1
 
 .SH NAME
-hbmk \- Harbour Project Make
+hbmk2 \- Harbour Project Make
 
 .SH SYNOPSIS
-\fBhbmk\fP \fB[options] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res]>\fP
+\fBhbmk2\fP \fB[options] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res]>\fP
 
 .SH DESCRIPTION
-\fBhbmk\fP is the Harbour Project make utility.
+\fBhbmk2\fP is the Harbour Project make utility.
 
 It's a wrapper to the Harbour compiler, a C compiler and linker.
 
@@ -75,7 +75,7 @@ do not process .hbc files in current directory
 
 .IP "\fB-hbcc, -hbcmp\fP" 10
 stop after creating the object files
-create link/copy hbmk to hbcc/hbcmp for the same effect
+create link/copy hbmk2 to hbcc/hbcmp for the same effect
 
 .IP "\fB-hblnk\fP" 10
 act as linker. Currently this is the same as -q
@@ -100,9 +100,9 @@ Regular Harbour compiler options are also accepted.
 
 Multiple -l, -L and <script> parameters are accepted.
 
-hbmk.cfg option file in hbmk directory is always processed if it exists.
+hbmk.cfg option file in hbmk2 directory is always processed if it exists.
 On *nix platforms ~/.harbour, /etc/harbour, <base>/etc/harbour,
-<base>/etc are checked (in that order) before the hbmk directory.
+<base>/etc are checked (in that order) before the hbmk2 directory.
 The file format is the same as .hbc.
 
 .hbc option files in current dir are automatically processed.

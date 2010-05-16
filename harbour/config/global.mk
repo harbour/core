@@ -296,6 +296,9 @@ ifeq ($(HB_INIT_DONE),)
    ifneq ($(HB_BUILD_DLL),)
       $(info ! HB_BUILD_DLL: $(HB_BUILD_DLL))
    endif
+   ifneq ($(HB_BUILD_IMPLIB),)
+      $(info ! HB_BUILD_IMPLIB: $(HB_BUILD_IMPLIB))
+   endif
    ifneq ($(HB_BUILD_SHARED),)
       $(info ! HB_BUILD_SHARED: $(HB_BUILD_SHARED))
    endif
