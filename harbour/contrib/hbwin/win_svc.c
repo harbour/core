@@ -62,9 +62,9 @@ static char                  s_szHarbourEntryFunc[ HB_SYMBOL_NAME_LEN + 1 ];
 static TCHAR                 s_lpServiceName[ 256 ];
 
 /* Control handler function */
-static void hbwin_ControlHandler( DWORD request )
+static VOID WINAPI hbwin_SvcControlHandler( DWORD fdwControl )
 {
-   switch( request )
+   switch( fdwControl )
    {
       case SERVICE_CONTROL_STOP:
          s_ServiceStatus.dwWin32ExitCode = 0;
@@ -80,11 +80,8 @@ static void hbwin_ControlHandler( DWORD request )
    SetServiceStatus( s_hStatus, &s_ServiceStatus ); /* Report current status */
 }
 
-static void hbwin_SrvFunction( int argc, char ** argv )
+static VOID WINAPI hbwin_SvcMainFunction( DWORD dwArgc, LPTSTR * lpszArgv )
 {
-   HB_SYMBOL_UNUSED( argc );
-   HB_SYMBOL_UNUSED( argv );
-
    s_ServiceStatus.dwServiceType             = SERVICE_WIN32;
    s_ServiceStatus.dwCurrentState            = SERVICE_START_PENDING;
    s_ServiceStatus.dwControlsAccepted        = SERVICE_ACCEPT_STOP | SERVICE_ACCEPT_SHUTDOWN;
@@ -93,7 +90,7 @@ static void hbwin_SrvFunction( int argc, char ** argv )
    s_ServiceStatus.dwCheckPoint              = 0;
    s_ServiceStatus.dwWaitHint                = 0;
 
-   s_hStatus = RegisterServiceCtrlHandler( s_lpServiceName, ( LPHANDLER_FUNCTION ) hbwin_ControlHandler );
+   s_hStatus = RegisterServiceCtrlHandler( s_lpServiceName, ( LPHANDLER_FUNCTION ) hbwin_SvcControlHandler );
 
    if( s_hStatus != ( SERVICE_STATUS_HANDLE ) 0 )
    {
@@ -107,9 +104,27 @@ static void hbwin_SrvFunction( int argc, char ** argv )
       {
          if( hb_vmRequestReenter() )
          {
+            DWORD i;
+            int iArgCount = 0;
+
             hb_vmPushSymbol( hb_dynsymSymbol( pDynSym ) );
             hb_vmPushNil();
-            hb_vmDo( 0 );
+
+            for( i = 1; i < dwArgc; ++i )
+            {
+               char * pszArg = HB_TCHAR_CONVFROM( lpszArgv[ i ] );
+
+               if( ! hb_cmdargIsInternal( pszArg, NULL ) )
+               {
+                  hb_vmPushString( pszArg, strlen( pszArg ) );
+                  ++iArgCount;
+               }
+
+               HB_TCHAR_FREE( pszArg );
+            }
+
+            hb_vmProc( ( HB_USHORT ) iArgCount );
+
             hb_vmRequestRestore();
          }
       }
@@ -263,7 +278,7 @@ HB_FUNC( WIN_SERVICESTART )
    hb_strncpy( s_szHarbourEntryFunc, hb_parcx( 2 ), HB_SIZEOFARRAY( s_szHarbourEntryFunc ) - 1 );
 
    lpServiceTable[ 0 ].lpServiceName = s_lpServiceName;
-   lpServiceTable[ 0 ].lpServiceProc = ( LPSERVICE_MAIN_FUNCTION ) hbwin_SrvFunction;
+   lpServiceTable[ 0 ].lpServiceProc = ( LPSERVICE_MAIN_FUNCTION ) hbwin_SvcMainFunction;
 
    lpServiceTable[ 1 ].lpServiceName = NULL;
    lpServiceTable[ 1 ].lpServiceProc = NULL;

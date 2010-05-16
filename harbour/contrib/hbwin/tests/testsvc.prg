@@ -95,10 +95,15 @@ PROCEDURE Main( cMode )
 #include "fileio.ch"
 
 PROCEDURE SrvMain()
-   LOCAL n := 1
+   LOCAL n := 0
    LOCAL fhnd := hb_FCreate( hb_dirBase() + "testsvc.out", FC_NORMAL, FO_DENYNONE + FO_WRITE )
+   LOCAL cParam
 
    FWrite( fhnd, "Startup" + hb_osNewLine() )
+
+   FOR EACH cParam IN hb_AParams()
+      FWrite( fhnd, "Parameter " + hb_ntos( cParam:__enumIndex() ) + " >" + cParam + "<" + hb_osNewLine() )
+   NEXT
 
    DO WHILE win_serviceGetStatus() == WIN_SERVICE_RUNNING
       FWrite( fhnd, "Work in progress " + hb_ntos( ++n ) + hb_osNewLine() )
@@ -106,7 +111,6 @@ PROCEDURE SrvMain()
    ENDDO
 
    FWrite( fhnd, "Exiting..." + hb_osNewLine() )
-
    FClose( fhnd )
 
    win_serviceSetExitCode( 0 )
