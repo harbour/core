@@ -94,6 +94,10 @@ static HB_USHORT   s_uiDynSymbols = 0;    /* Number of symbols present */
 
 static PHB_SYM_HOLDER s_pAllocSyms = NULL;/* symbols allocated dynamically */
 
+/* table index for dynamic symbol to number conversions */
+static PDYNHB_ITEM s_pDynIndex = NULL;
+static int         s_iDynIdxSize = 0;
+
 /* Insert new symbol into dynamic symbol table.
  * In MT mode caller should protected it by HB_DYNSYM_LOCK
  */
@@ -528,6 +532,48 @@ long hb_dynsymCount( void )
    return s_uiDynSymbols;
 }
 
+int hb_dynsymToNum( PHB_DYNS pDynSym )
+{
+   int iSymNum;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_dynsymToNum(%p)", pDynSym));
+
+   HB_DYNSYM_LOCK
+
+   iSymNum = pDynSym->uiSymNum;
+
+   if( iSymNum > s_iDynIdxSize )
+   {
+      s_pDynIndex = hb_xrealloc( s_pDynIndex, iSymNum * sizeof( DYNHB_ITEM ) );
+      memset( &s_pDynIndex[ s_iDynIdxSize ], 0, ( iSymNum - s_iDynIdxSize ) *
+                                                sizeof( DYNHB_ITEM ) );
+      s_iDynIdxSize = iSymNum;
+   }
+
+   if( s_pDynIndex[ iSymNum - 1 ].pDynSym == NULL )
+      s_pDynIndex[ iSymNum - 1 ].pDynSym = pDynSym;
+
+   HB_DYNSYM_UNLOCK
+
+   return iSymNum;
+}
+
+PHB_DYNS hb_dynsymFromNum( int iSymNum )
+{
+   PHB_DYNS pDynSym;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_dynsymFromNum(%d)", iSymNum));
+
+   HB_DYNSYM_LOCK
+
+   pDynSym = iSymNum > 0 && iSymNum <= s_iDynIdxSize ?
+             s_pDynIndex[ iSymNum - 1 ].pDynSym : NULL;
+
+   HB_DYNSYM_UNLOCK
+
+   return pDynSym;
+}
+
 void hb_dynsymEval( PHB_DYNS_FUNC pFunction, void * Cargo )
 {
    PHB_DYNS pDynSym = NULL;
@@ -585,6 +631,13 @@ void hb_dynsymRelease( void )
    HB_TRACE(HB_TR_DEBUG, ("hb_dynsymRelease()"));
 
    HB_DYNSYM_LOCK
+
+   if( s_iDynIdxSize )
+   {
+      hb_xfree( s_pDynIndex );
+      s_pDynIndex = NULL;
+      s_iDynIdxSize = 0;
+   }
 
    if( s_uiDynSymbols )
    {
