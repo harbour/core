@@ -1021,6 +1021,7 @@ CLASS IdeEditor INHERIT IdeObject
    DATA   nnRow                                   INIT -99
 
    DATA   qEvents
+   DATA   lReadOnly                               INIT  .F.
 
    METHOD new( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView )
    METHOD create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView, aBookMarks )
@@ -1064,7 +1065,7 @@ METHOD IdeEditor:new( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView, aBookMarks )
-   LOCAL cFileTemp
+   LOCAL cFileTemp, nAttr
 
    DEFAULT oIde        TO ::oIde
    DEFAULT cSourceFile TO ::sourceFile
@@ -1097,6 +1098,9 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView, a
       ELSE
          ferase( cFileTemp )
       ENDIF
+   ENDIF
+   IF hb_fGetAttr( cSourceFile, @nAttr )
+      ::lReadOnly := ( nAttr == 33 )
    ENDIF
 
    ::cType := upper( strtran( ::cExt, ".", "" ) )
@@ -1136,6 +1140,10 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView, a
    ::oEM:addSourceInTree( ::sourceFile, ::cView )
 
    ::qTabWidget:setStyleSheet( GetStyleSheet( "QTabWidget", ::nAnimantionMode ) )
+   IF ::lReadOnly
+      ::oEdit:setReadOnly( .t. )
+      ::qEdit:setTextInteractionFlags( Qt_TextSelectableByMouse + Qt_TextSelectableByKeyboard )
+   ENDIF
    ::setTabImage()
 
    RETURN Self
@@ -1214,7 +1222,8 @@ METHOD IdeEditor:setDocumentProperties()
 
       QTextDocument():configure( ::qEdit:document() ):setModified( .f. )
 
-      ::qTabWidget:setTabIcon( ::qTabWidget:indexOf( ::oTab:oWidget ), ::resPath + "tabunmodified.png" )
+      ::qTabWidget:setTabIcon( ::qTabWidget:indexOf( ::oTab:oWidget ), ;
+                                hbide_image( iif( ::lReadOnly, "tabreadonly", "tabunmodified" ) ) )
       ::lLoaded := .T.
 
       IF ::cType $ "PRG,C,CPP,H,CH"
@@ -1387,17 +1396,19 @@ METHOD IdeEditor:setTabImage( qEdit )
 
    nIndex    := ::qTabWidget:indexOf( ::oTab:oWidget )
    lModified := ::qDocument:isModified()
-   lReadOnly := qEdit:isReadOnly()
+   lReadOnly := iif( ::lReadOnly, ::lReadOnly, qEdit:isReadOnly() )
 
-   IF lModified
-      cIcon := "tabmodified.png"
-   ELSEIF lReadOnly
-      cIcon := "tabreadonly.png"
+   IF lReadOnly
+      cIcon := "tabreadonly"
    ELSE
-      cIcon := "tabunmodified.png"
+      IF lModified
+         cIcon := "tabmodified"
+      ELSE
+         cIcon := "tabunmodified"
+      ENDIF
    ENDIF
 
-   ::qTabWidget:setTabIcon( nIndex, ::resPath + cIcon )
+   ::qTabWidget:setTabIcon( nIndex, hbide_image( cIcon ) )
    ::oDK:setStatusText( SB_PNL_MODIFIED, iif( lModified, "Modified", iif( lReadOnly, "ReadOnly", " " ) ) )
 
    RETURN Self

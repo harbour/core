@@ -110,26 +110,27 @@ CLASS IdeEdit INHERIT IdeObject
    DATA   aBookMarks                              INIT  {}
 
    DATA   lModified                               INIT  .F.
-   DATA   lIndentIt                               INIT  .f.
-   DATA   lUpdatePrevWord                         INIT  .f.
-   DATA   lCopyWhenDblClicked                     INIT  .f.
+   DATA   lIndentIt                               INIT  .F.
+   DATA   lUpdatePrevWord                         INIT  .F.
+   DATA   lCopyWhenDblClicked                     INIT  .F.
    DATA   cCurLineText                            INIT  ""
 
    DATA   cProto                                  INIT ""
    DATA   qTimer
    DATA   nProtoLine                              INIT -1
    DATA   nProtoCol                               INIT -1
-   DATA   isSuspended                             INIT .f.
+   DATA   isSuspended                             INIT .F.
 
    DATA   fontFamily                              INIT "Courier New"
    DATA   pointSize                               INIT 10
    DATA   currentPointSize                        INIT 10
    DATA   qFont
    DATA   aBlockCopyContents                      INIT {}
-   DATA   isLineSelectionON                       INIT .f.
-   DATA   aSelectionInfo                          INIT { -1,-1,-1,-1,0,0 }
+   DATA   isLineSelectionON                       INIT .F.
+   DATA   aSelectionInfo                          INIT { -1,-1,-1,-1,1,0 }
 
-   DATA   isColumnSelectionON                     INIT .f.
+   DATA   isColumnSelectionON                     INIT .F.
+   DATA   lReadOnly                               INIT .F.
 
    METHOD new( oEditor, nMode )
    METHOD create( oEditor, nMode )
@@ -147,7 +148,7 @@ CLASS IdeEdit INHERIT IdeObject
    METHOD selectAll()
    METHOD toggleSelectionMode()
 
-   METHOD setReadOnly()
+   METHOD setReadOnly( lReadOnly )
    METHOD setNewMark()
    METHOD gotoMark( nIndex )
    METHOD duplicateLine()
@@ -809,6 +810,10 @@ METHOD IdeEdit:copyBlockContents( aCord )
 METHOD IdeEdit:pasteBlockContents( nMode )
    LOCAL i, nCol, qCursor, nMaxCol, aCopy, a_, nPasteMode
 
+   IF ::lReadOnly
+      RETURN Self
+   ENDIF
+
    aCopy := hbide_memoToArray( QClipboard():new():text() )
    IF empty( aCopy )
       RETURN Self
@@ -874,6 +879,10 @@ METHOD IdeEdit:pasteBlockContents( nMode )
 METHOD IdeEdit:insertBlockContents( aCord )
    LOCAL nT, nL, nB, nR, nW, i, cLine, cKey, qCursor
 
+   IF ::lReadOnly
+      RETURN Self
+   ENDIF
+
    hbide_normalizeRect( aCord, @nT, @nL, @nB, @nR )
 
    nW := nR - nL
@@ -913,6 +922,10 @@ METHOD IdeEdit:insertBlockContents( aCord )
 METHOD IdeEdit:deleteBlockContents( aCord )
    LOCAL nT, nL, nB, nR, nW, i, cLine, qCursor, k, nSelMode
 
+   IF ::lReadOnly
+      RETURN Self
+   ENDIF
+
    hbide_normalizeRect( aCord, @nT, @nL, @nB, @nR )
    k := aCord[ 7 ]
    k := iif( empty( k ), Qt_Key_X, k )
@@ -921,7 +934,7 @@ METHOD IdeEdit:deleteBlockContents( aCord )
    ENDIF
 
    nSelMode := aCord[ 5 ]
-//HB_TRACE( HB_TR_ALWAYS, nT, nL, nB, nR, nSelMode )
+
    qCursor := QTextCursor():from( ::qEdit:textCursor() )
    qCursor:beginEditBlock()
 
@@ -976,6 +989,10 @@ METHOD IdeEdit:blockComment()
    LOCAL cComment := "// "
    LOCAL nLen := len( cComment )
 
+   IF ::lReadOnly
+      RETURN Self
+   ENDIF
+
    ::qEdit:hbGetSelectionInfo(); aCord := ::aSelectionInfo
    hbide_normalizeRect( aCord, @nT, @nL, @nB, @nR )
    nW := nR - nL
@@ -1016,6 +1033,10 @@ METHOD IdeEdit:blockComment()
 
 METHOD IdeEdit:streamComment()
    LOCAL nT, nL, nB, nR, nW, i, cLine, qCursor, aCord, nMode, q_
+
+   IF ::lReadOnly
+      RETURN Self
+   ENDIF
 
    ::qEdit:hbGetSelectionInfo(); aCord := ::aSelectionInfo
 
@@ -1058,6 +1079,10 @@ METHOD IdeEdit:streamComment()
 
 METHOD IdeEdit:blockIndent( nDirctn )
    LOCAL nT, nL, nB, nR, nW, i, cLine, qCursor, aCord, q_, nMode, cLineSel
+
+   IF ::lReadOnly
+      RETURN Self
+   ENDIF
 
    ::qEdit:hbGetSelectionInfo(); aCord := ::aSelectionInfo
    hbide_normalizeRect( aCord, @nT, @nL, @nB, @nR )
@@ -1105,6 +1130,10 @@ METHOD IdeEdit:blockIndent( nDirctn )
 
 METHOD IdeEdit:blockConvert( cMode )
    LOCAL nT, nL, nB, nR, nW, i, cLine, qCursor, aCord, q_, nMode
+
+   IF ::lReadOnly
+      RETURN Self
+   ENDIF
 
    ::qEdit:hbGetSelectionInfo(); aCord := ::aSelectionInfo
    hbide_normalizeRect( aCord, @nT, @nL, @nB, @nR )
@@ -1276,6 +1305,9 @@ METHOD IdeEdit:undo()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:cut()
+   IF ::lReadOnly
+      RETURN Self
+   ENDIF
    ::qEdit:hbCut( Qt_Key_X )
    RETURN Self
 
@@ -1288,6 +1320,9 @@ METHOD IdeEdit:copy()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:paste()
+   IF ::lReadOnly
+      RETURN Self
+   ENDIF
    ::qEdit:hbPaste()
    RETURN Self
 
@@ -1299,8 +1334,16 @@ METHOD IdeEdit:selectAll()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeEdit:setReadOnly()
-   ::qEdit:setReadOnly( .t. ) // ! ::qEdit:isReadOnly() )
+METHOD IdeEdit:setReadOnly( lReadOnly )
+   IF ::oEditor:lReadOnly
+      lReadOnly := .t.
+   ELSE
+      IF ! hb_isLogical( lReadOnly )
+         lReadOnly := ! ::qEdit:isReadOnly()
+      ENDIF
+   ENDIF
+   ::lReadOnly := lReadOnly
+   ::qEdit:setReadOnly( lReadOnly )
    ::oEditor:setTabImage()
    RETURN Self
 
