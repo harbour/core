@@ -443,7 +443,7 @@ METHOD IdeProjManager:pullHbpData( cHbp )
       s := hbide_stripRoot( cHome, s )
    NEXT
 
-   IF ( n := ascan( aOptns, {|e| lower( e ) $ "-hbexec,-hblib,-hbdyn" } ) ) > 0
+   IF ( n := ascan( aOptns, {|e| lower( e ) $ "-hbexe,-hblib,-hbdyn" } ) ) > 0
       cType := lower( aOptns[ n ] )
       cType := iif( cType == "-hblib", "Lib", iif( cType == "-hbdyn", "Dll", "Executable" ) )
    ELSE

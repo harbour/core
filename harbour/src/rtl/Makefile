@@ -224,6 +224,7 @@ PRG_SOURCES := \
    listbox.prg \
    memoedit.prg \
    memvarbl.prg \
+   memvarhb.prg \
    menuto.prg \
    menusys.prg \
    objfunc.prg \

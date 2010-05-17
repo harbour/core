@@ -80,10 +80,10 @@ PROCEDURE __TypeFile( cFile, lPrint )
    IF ! ISCHARACTER( cFile )
       oErr := ErrorNew()
       oErr:severity    := ES_ERROR
-      oErr:genCode     := EG_OPEN
+      oErr:genCode     := EG_ARG
       oErr:subSystem   := "BASE"
       oErr:SubCode     := 2009
-      oErr:Description := "Argument error: __TYPEFILE"
+      oErr:Description := ProcName()
       Eval( ErrorBlock(), oErr )
    ENDIF
 
@@ -113,9 +113,9 @@ PROCEDURE __TypeFile( cFile, lPrint )
       oErr:genCode     := EG_OPEN
       oErr:subSystem   := "BASE"
       oErr:SubCode     := 2011
-      oErr:Description := "Open Error: " + cFile
       oErr:canDefault  := .T.
       oErr:canRetry    := .T.
+      oErr:fileName    := cFile
       oErr:OsCode      := FError()
       oErr:tries       := ++nRetries
       xRecover := Eval( ErrorBlock(), oErr )

@@ -542,7 +542,7 @@ METHOD GetRow( nRow ) CLASS TMySQLQuery
 
             CASE MYSQL_TYPE_DATE
                IF Empty( ::aRow[ i ] )
-                  ::aRow[ i ] := hb_SToD( "" )
+                  ::aRow[ i ] := hb_SToD()
                ELSE
                   // Date format YYYY-MM-DD
                   ::aRow[ i ] := hb_SToD( Left( ::aRow[ i ], 4 ) + SubStr( ::aRow[ i ], 6, 2 ) + Right( ::aRow[ i ], 2 ) )
@@ -1167,7 +1167,7 @@ METHOD GetBlankRow( lSetValues ) CLASS TMySQLTable
          EXIT
 
       CASE MYSQL_TYPE_DATE
-         aRow[ i ] := hb_SToD( "" )
+         aRow[ i ] := hb_SToD()
          EXIT
 
       OTHERWISE
