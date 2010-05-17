@@ -324,7 +324,7 @@ METHOD IdeProjManager:getProperties()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeProjManager:loadProperties( cProjFileName, lNew, lFetch, lUpdateTree )
-   LOCAL nAlready
+   LOCAL nAlready, cProjPath
 
    DEFAULT cProjFileName TO ""
    DEFAULT lNew          TO .F.
@@ -364,8 +364,17 @@ METHOD IdeProjManager:loadProperties( cProjFileName, lNew, lFetch, lUpdateTree )
    ENDIF
 
    IF lFetch
+      IF lNew
+         IF empty( cProjPath := hbide_fetchADir( ::oDlg, "Project Path", hbide_SetWrkFolderLast() ) )
+            RETURN Self
+         ENDIF
+         cProjPath := hbide_pathAppendLastSlash( cProjPath )
+         hbide_SetWrkFolderLast( cProjPath )
+      ENDIF
       /* Access/Assign via this object */
       ::oProject := IdeProject():new( ::oIDE, ::aPrjProps )
+      ::oProject:location := cProjPath
+      ::oProject:projPath := cProjPath
       //
       ::oPropertiesDock:hide()
       ::oPropertiesDock:show()
@@ -627,7 +636,6 @@ METHOD IdeProjManager:updateHbp( iIndex )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeProjManager:fetchProperties()
-   LOCAL cPrjLoc := hb_dirBase() + "projects"
 
    IF empty( ::oProject )
       ::oProject := IdeProject():new( ::oIDE, ::aPrjProps )
@@ -641,7 +649,7 @@ METHOD IdeProjManager:fetchProperties()
       ::oUI:q_comboPrjType:setCurrentIndex( 0 )
 
       ::oUI:q_editPrjTitle :setText( "" )
-      ::oUI:q_editPrjLoctn :setText( hbide_pathNormalized( cPrjLoc, .F. ) )
+      ::oUI:q_editPrjLoctn :setText( hbide_pathNormalized( ::oProject:location, .F. ) )
       ::oUI:q_editWrkFolder:setText( "" )
       ::oUI:q_editDstFolder:setText( "" )
       ::oUI:q_editBackup   :setText( "" )

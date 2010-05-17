@@ -229,6 +229,7 @@ CLASS HbIde
    DATA   lLineNumbersVisible                     INIT   .t.
    DATA   lCurrentLineHighlightEnabled            INIT   .t.
 
+   DATA   cWrkFolderLast                          INIT   ""
    DATA   cWrkProject                             INIT   ""
    DATA   cWrkTheme                               INIT   ""
    DATA   cWrkCodec                               INIT   ""

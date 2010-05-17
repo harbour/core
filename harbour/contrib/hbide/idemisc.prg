@@ -551,6 +551,11 @@ FUNCTION hbide_pathStripLastSlash( cPath )
 
 /*----------------------------------------------------------------------*/
 
+FUNCTION hbide_pathAppendLastSlash( cPath )
+   RETURN iif( right( cPath, 1 ) $ "\/", cPath, cPath + hb_osPathSeparator() )
+
+/*----------------------------------------------------------------------*/
+
 FUNCTION hbide_pathToOSPath( cPath )
    LOCAL n
 
@@ -1980,3 +1985,21 @@ FUNCTION hbide_parseToolComponents( cCompositeTool )
    RETURN a_
 
 /*----------------------------------------------------------------------*/
+
+FUNCTION hbide_SetWrkFolderLast( cPathFile )
+   LOCAL cPth, cOldPath
+
+   STATIC cPath
+   IF empty( cPath )
+      cPath := hb_dirBase()
+   ENDIF
+   cOldPath := cPath
+
+   IF hb_isChar( cPathFile )
+      hb_fNameSplit( cPathFile, @cPth )
+      cPath := cPth
+   ENDIF
+   RETURN cOldPath
+
+/*----------------------------------------------------------------------*/
+

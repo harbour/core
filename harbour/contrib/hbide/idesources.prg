@@ -232,15 +232,24 @@ METHOD IdeSourcesManager:saveSource( nTab, lCancel, lAs )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeSourcesManager:editSource( cSourceFile, nPos, nHPos, nVPos, cTheme, cView, lAlert, lVisible, aBookMarks )
+   LOCAL lNew
 
    DEFAULT lAlert   TO .T.
    DEFAULT lVisible TO .T.
+
+   IF ( lNew := empty( cSourceFile ) )
+      cSourceFile := hbide_saveAFile( ::oDlg, "Provide source filename", /*aFltr*/, hbide_SetWrkFolderLast(), /*cDftSuffix*/ )
+      IF empty( cSourceFile )
+         RETURN Self
+      ENDIF
+      hbide_SetWrkFolderLast( cSourceFile )
+   ENDIF
 
    IF !Empty( cSourceFile )
       IF !( hbide_isValidText( cSourceFile ) )
          MsgBox( 'File type unknown or unsupported: ' + cSourceFile )
          RETURN .f.
-      ELSEIF !hb_FileExists( cSourceFile )
+      ELSEIF ! lNew .AND. ! hb_FileExists( cSourceFile )
          MsgBox( 'File not found: ' + cSourceFile )
          RETURN .f.
       ENDIF

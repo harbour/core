@@ -139,6 +139,7 @@ CLASS IdeObject
    ACCESS cWrkHarbour                             INLINE ::oIde:cWrkHarbour
    ACCESS cPathShortcuts                          INLINE ::oIde:cPathShortcuts
    ACCESS cTextExtensions                         INLINE ::oIde:cTextExtensions
+   ACCESS cWrkFolderLast                          INLINE ::oIde:cWrkFolderLast
    //
    ACCESS resPath                                 INLINE ::oIde:resPath
    ACCESS pathSep                                 INLINE ::oIde:pathSep
