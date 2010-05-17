@@ -544,7 +544,8 @@ int hb_dynsymToNum( PHB_DYNS pDynSym )
 
    if( iSymNum > s_iDynIdxSize )
    {
-      s_pDynIndex = hb_xrealloc( s_pDynIndex, iSymNum * sizeof( DYNHB_ITEM ) );
+      s_pDynIndex = ( PDYNHB_ITEM )
+                    hb_xrealloc( s_pDynIndex, iSymNum * sizeof( DYNHB_ITEM ) );
       memset( &s_pDynIndex[ s_iDynIdxSize ], 0, ( iSymNum - s_iDynIdxSize ) *
                                                 sizeof( DYNHB_ITEM ) );
       s_iDynIdxSize = iSymNum;
