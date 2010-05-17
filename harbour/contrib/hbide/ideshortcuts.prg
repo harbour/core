@@ -196,7 +196,7 @@ CLASS IdeShortcuts INHERIT IdeObject
    METHOD tabs2spaces()
    METHOD removeTrailingSpaces()
    METHOD toggleLineNumbersDisplay()
-   METHOD toggleSelectionMode()
+   METHOD toggleColumnSelectionMode()
    METHOD toggleStatusBar()
    METHOD toggleLineSelectionMode()
    METHOD presentSkeletons()
@@ -1105,9 +1105,6 @@ METHOD IdeShortcuts:removeTrailingSpaces()
 METHOD IdeShortcuts:toggleLineNumbersDisplay()
    RETURN ::oEM:toggleLineNumbers()
 /*----------------------------------------------------------------------*/
-METHOD IdeShortcuts:toggleSelectionMode()
-   RETURN ::oEM:toggleSelectionMode()
-/*----------------------------------------------------------------------*/
 METHOD IdeShortcuts:toggleStatusBar()
    IF ::lStatusBarVisible
       ::oSBar:oWidget:hide()
@@ -1117,23 +1114,26 @@ METHOD IdeShortcuts:toggleStatusBar()
    ::oIde:lStatusBarVisible := ! ::lStatusBarVisible
    RETURN Self
 /*----------------------------------------------------------------------*/
-METHOD IdeShortcuts:toggleLineSelectionMode()
-   RETURN ::oEM:toggleLineSelectionMode()
-/*----------------------------------------------------------------------*/
 METHOD IdeShortcuts:presentSkeletons()
    RETURN ::oEM:presentSkeletons()
 /*----------------------------------------------------------------------*/
 METHOD IdeShortcuts:gotoFunction()
    RETURN ::oEM:gotoFunction()
 /*----------------------------------------------------------------------*/
-METHOD IdeShortcuts:clearSelection()
-   RETURN ::oEM:clearSelection()
-/*----------------------------------------------------------------------*/
 METHOD IdeShortcuts:execPlugin( cPlugin, ... )
    RETURN hbide_execPlugin( cPlugin, ::oIde, ... )
 /*----------------------------------------------------------------------*/
 METHOD IdeShortcuts:toggleCurrentLineHilight()
    RETURN ::oEM:toggleCurrentLineHighlightMode()
+/*----------------------------------------------------------------------*/
+METHOD IdeShortcuts:toggleColumnSelectionMode()
+   RETURN ::oEM:toggleColumnSelectionMode()
+/*----------------------------------------------------------------------*/
+METHOD IdeShortcuts:toggleLineSelectionMode()
+   RETURN ::oEM:toggleLineSelectionMode()
+/*----------------------------------------------------------------------*/
+METHOD IdeShortcuts:clearSelection()
+   RETURN ::oEM:clearSelection()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeShortcuts:loadMethods()
@@ -1298,18 +1298,18 @@ METHOD IdeShortcuts:loadMethods()
    aadd( ::aMethods, { 'toggleLineNumbersDisplay()', ;
                        'toggleLineNumbersDisplay()', ;
                        'Toggles line numbers display inside editing instances. This action has global scope and is saved for next run.' } )
-   aadd( ::aMethods, { 'toggleSelectionMode()', ;
-                       'toggleSelectionMode()', ;
+   aadd( ::aMethods, { 'toggleColumnSelectionMode()', ;
+                       'toggleColumnSelectionMode()', ;
                        'Toggles selection mode from "stream" to "column" or vice-versa.' } )
-   aadd( ::aMethods, { 'toggleStatusBar()', ;
-                       'toggleStatusBar()', ;
-                       'Toggles display of statusbar. The action is not saved for next run.' } )
    aadd( ::aMethods, { 'toggleLineSelectionMode()', ;
                        'toggleLineSelectionMode()', ;
                        'Toggles line selection mode.' } )
    aadd( ::aMethods, { 'clearSelection()', ;
                        'clearSelection()', ;
                        'Clears the selection block, if any, and resets the selection mode to stream.' } )
+   aadd( ::aMethods, { 'toggleStatusBar()', ;
+                       'toggleStatusBar()', ;
+                       'Toggles display of statusbar. The action is not saved for next run.' } )
    aadd( ::aMethods, { 'presentSkeletons()', ;
                        'presentSkeletons()', ;
                        'Present snippets for selection.' } )

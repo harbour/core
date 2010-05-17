@@ -69,6 +69,7 @@
 #include "hbqt.ch"
 #include "hbide.ch"
 #include "xbp.ch"
+#include "fileio.ch"
 
 /*----------------------------------------------------------------------*/
 
@@ -1100,7 +1101,7 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView, a
       ENDIF
    ENDIF
    IF hb_fGetAttr( cSourceFile, @nAttr )
-      ::lReadOnly := ( nAttr == 33 )
+      ::lReadOnly := hb_bitAnd( nAttr, FC_READONLY ) == FC_READONLY
    ENDIF
 
    ::cType := upper( strtran( ::cExt, ".", "" ) )

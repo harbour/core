@@ -844,7 +844,7 @@ bool HBQPlainTextEdit::hbKeyPressSelection( QKeyEvent * event )
       }
       else if( selectionMode == selectionMode_stream || selectionMode == selectionMode_line )
       {
-         if( selectionState > 0 && ! ctrl && k == Qt::Key_Delete )
+         if( selectionState > 0 && ! ctrl && k == Qt::Key_Delete && columnBegins >= 0 )
          {
             hbCut( k );
             repaint();
