@@ -757,6 +757,32 @@ METHOD IdeProjManager:buildInterface()
    ::oUI:q_editLaunchParams:setFont( ::oFont:oWidget )
    ::oUI:q_editLaunchExe   :setFont( ::oFont:oWidget )
    #endif
+
+   ::oUI:setTabOrder( ::oUI:q_comboPrjType    , ::oUI:q_editPrjTitle     )
+   ::oUI:setTabOrder( ::oUI:q_editPrjTitle    , ::oUI:q_editPrjLoctn     )
+   ::oUI:setTabOrder( ::oUI:q_editPrjLoctn    , ::oUI:q_editOutName      )
+   ::oUI:setTabOrder( ::oUI:q_editOutName     , ::oUI:q_checkXhb         )
+   ::oUI:setTabOrder( ::oUI:q_checkXhb        , ::oUI:q_checkXpp         )
+   ::oUI:setTabOrder( ::oUI:q_checkXpp        , ::oUI:q_checkClp         )
+   ::oUI:setTabOrder( ::oUI:q_checkClp        , ::oUI:q_editDstFolder    )
+   ::oUI:setTabOrder( ::oUI:q_editDstFolder   , ::oUI:q_editBackup       )
+   ::oUI:setTabOrder( ::oUI:q_editBackup      , ::oUI:q_editLaunchParams )
+   ::oUI:setTabOrder( ::oUI:q_editLaunchParams, ::oUI:q_editLaunchExe    )
+   ::oUI:setTabOrder( ::oUI:q_editLaunchExe   , ::oUI:q_editWrkFolder    )
+   ::oUI:setTabOrder( ::oUI:q_editWrkFolder   , ::oUI:q_tabFiles         )
+   //
+   ::oUI:setTabOrder( ::oUI:q_tabFiles        , ::oUI:q_editSources      )
+   ::oUI:setTabOrder( ::oUI:q_editSources     , ::oUI:q_tabFlags         )
+   //
+   ::oUI:setTabOrder( ::oUI:q_tabFlags        , ::oUI:q_editFlags        )
+   ::oUI:setTabOrder( ::oUI:q_editFlags       , ::oUI:q_tabHbp           )
+   //
+   ::oUI:setTabOrder( ::oUI:q_tabHbp          , ::oUI:q_editHbp          )
+   //
+   ::oUI:setTabOrder( ::oUI:q_editHbp         , ::oUI:q_buttonSaveExit   )
+   ::oUI:setTabOrder( ::oUI:q_buttonSaveExit  , ::oUI:q_buttonSave       )
+   ::oUI:setTabOrder( ::oUI:q_buttonSave      , ::oUI:q_buttonCn         )
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
