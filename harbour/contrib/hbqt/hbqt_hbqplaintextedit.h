@@ -149,6 +149,8 @@ private:
    QTimer       * timer;
    int            caretState;
    bool           isSelectionByApplication;
+   int            hitTestRow;
+   int            hitTestColumn;
 
 
 protected:
@@ -209,6 +211,8 @@ private slots:
    bool           hbKeyPressSelection( QKeyEvent * );
    void           hbClearSelection();
    void           hbUpdateCaret();
+   void           hbHitTest( const QPoint & );
+   bool           hbKeyPressSelectionByApplication( QKeyEvent * event );
 };
 
 
