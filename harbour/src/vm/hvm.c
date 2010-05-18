@@ -8619,6 +8619,13 @@ void hb_vmRequestRestore( void )
    hb_stackPopReturn();
 }
 
+HB_BOOL hb_vmIsActive( void )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmIsActive()"));
+
+   return s_fHVMActive;
+}
+
 PHB_CODEPAGE hb_vmCDP( void )
 {
    HB_STACK_TLS_PRELOAD

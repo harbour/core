@@ -1250,6 +1250,9 @@ HB_FUNC( __OLECREATEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
 
 HB_FUNC( __OLEGETACTIVEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
 {
+#if defined( HB_OS_WIN_CE )
+   hb_oleSetError( E_NOTIMPL );
+#else
    BSTR        wCLSID;
    IID         ClassID, iid = IID_IDispatch;
    IDispatch*  pDisp = NULL;
@@ -1297,6 +1300,7 @@ HB_FUNC( __OLEGETACTIVEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
       hb_oleItemPut( hb_stackReturnItem(), pDisp );
    else
       hb_ret();
+#endif
 }
 
 
@@ -1404,6 +1408,7 @@ HB_FUNC( WIN_OLEERRORTEXT )
       case E_OUTOFMEMORY:           hb_retc_const( "E_OUTOFMEMORY" );            break;
       case E_INVALIDARG:            hb_retc_const( "E_INVALIDARG" );             break;
       case E_UNEXPECTED:            hb_retc_const( "E_UNEXPECTED" );             break;
+      case E_NOTIMPL:               hb_retc_const( "E_NOTIMPL" );                break;
       case DISP_E_UNKNOWNNAME:      hb_retc_const( "DISP_E_UNKNOWNNAME" );       break;
       case DISP_E_UNKNOWNLCID:      hb_retc_const( "DISP_E_UNKNOWNLCID" );       break;
       case DISP_E_BADPARAMCOUNT:    hb_retc_const( "DISP_E_BADPARAMCOUNT" );     break;

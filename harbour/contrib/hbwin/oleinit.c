@@ -67,7 +67,11 @@ static void hb_ole_exit( void* cargo )
 
    if( s_iOleInit )
    {
+#if defined( HB_OS_WIN_CE )
+      CoUninitialize();
+#else
       OleUninitialize();
+#endif
       s_iOleInit = 0;
    }
 }
@@ -78,7 +82,11 @@ HB_BOOL hb_oleInit( void )
 
    if( ! s_iOleInit )
    {
+#if defined( HB_OS_WIN_CE )
+      fResult = CoInitializeEx( NULL, COINIT_APARTMENTTHREADED ) == S_OK;
+#else
       fResult = OleInitialize( NULL ) == S_OK;
+#endif
       if( fResult )
       {
          hb_vmAtQuit( hb_ole_exit, NULL );

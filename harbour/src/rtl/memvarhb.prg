@@ -101,7 +101,7 @@ PROCEDURE HB_MVSAVE( cFileName, cMask, lIncludeMask )
          nCount := __mvDbgInfo( nScope )
          FOR tmp := 1 TO nCount
             xValue := __mvDbgInfo( nScope, tmp, @cName )
-            IF !( cName == "GETLIST" )
+            IF ValType( xValue ) $ "CNDTL"
                lMatch := hb_WildMatchI( cMask, cName )
                IF iif( lIncludeMask, lMatch, ! lMatch )
                   AAdd( aVars, { Upper( cName ), xValue } )
@@ -153,7 +153,7 @@ PROCEDURE HB_MVSAVE( cFileName, cMask, lIncludeMask )
       Eval( ErrorBlock(), oError )
    ENDIF
 
-   RETURN NIL
+   RETURN
 
 FUNCTION HB_MVRESTORE( cFileName, lAdditive, cMask, lIncludeMask )
    LOCAL item
@@ -247,14 +247,11 @@ FUNCTION HB_MVRESTORE( cFileName, lAdditive, cMask, lIncludeMask )
                   IF xValue == NIL
                      xValue := item[ 2 ]
                   ENDIF
-                  IF __MVExist( cName )
-                     &cName := item[ 2 ]
-                  ELSE
-                     PUBLIC &cName := item[ 2 ]
-                  ENDIF
+                  &cName := item[ 2 ]
                ENDIF
             ENDIF
          NEXT
+         __MVSETBASE()
       ENDIF
 
       RETURN xValue
