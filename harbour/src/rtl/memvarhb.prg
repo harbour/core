@@ -77,14 +77,8 @@ PROCEDURE HB_MVSAVE( cFileName, cMask, lIncludeMask )
    LOCAL xRecover
    LOCAL nRetries
 
-#ifdef HB_CLP_STRICT
-   IF PCount() == 3 .AND. ;
-      ISCHARACTER( cFileName ) .AND. ;
-      ISCHARACTER( cMask ) .AND. ;
-      ISLOGICAL( lIncludeMask )
-#else
    IF ISCHARACTER( cFileName )
-#endif
+
       IF Set( _SET_DEFEXTENSIONS )
          hb_FNameSplit( cFileName, NIL, NIL, @cExt )
          IF Empty( cExt )
@@ -177,12 +171,7 @@ FUNCTION HB_MVRESTORE( cFileName, lAdditive, cMask, lIncludeMask )
    LOCAL xRecover
    LOCAL nRetries
 
-#ifdef HB_CLP_STRICT
-   IF ISCHARACTER( cFileName ) .AND. ;
-      ISLOGICAL( lAdditive )
-#else
    IF ISCHARACTER( cFileName )
-#endif
 
       IF ! ISLOGICAL( lAdditive )
          lAdditive := .T.
@@ -243,6 +232,8 @@ FUNCTION HB_MVRESTORE( cFileName, lAdditive, cMask, lIncludeMask )
 
       aVars := hb_deserialize( cBuffer )
       cBuffer := NIL
+
+      xValue := NIL
 
       IF ISARRAY( aVars )
          FOR EACH item IN aVars

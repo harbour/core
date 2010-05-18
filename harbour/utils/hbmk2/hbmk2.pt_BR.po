@@ -368,8 +368,8 @@ msgstr "linkar com suporte multi ou single-thread na HVM"
 
 #: hbmk2.prg:7825
 #, c-format
-msgid "  hbmk2 [options] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res|.po|.pot|.hbl|@.clp|.d]>"
-msgstr "  hbmk2 [opções] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res|.po|.pot|.hbl|@.clp|.d]>"
+msgid "  hbmk2 [options] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res|.def|.po|.pot|.hbl|@.clp|.d]>"
+msgstr "  hbmk2 [opções] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res|.def|.po|.pot|.hbl|@.clp|.d]>"
 
 #: hbmk2.prg:7942
 #, c-format

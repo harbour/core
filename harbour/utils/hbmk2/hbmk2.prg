@@ -337,25 +337,26 @@ REQUEST hbmk_KEYW
 #define _HBMK_aOBJUSER          73
 #define _HBMK_aICON             74
 #define _HBMK_aIMPLIBSRC        75
-#define _HBMK_hDEPTS            76
+#define _HBMK_cDEF              76
+#define _HBMK_hDEPTS            77
 
-#define _HBMK_aPO               77
-#define _HBMK_cHBL              78
-#define _HBMK_cHBLDir           79
-#define _HBMK_aLNG              80
-#define _HBMK_cPO               81
+#define _HBMK_aPO               78
+#define _HBMK_cHBL              79
+#define _HBMK_cHBLDir           80
+#define _HBMK_aLNG              81
+#define _HBMK_cPO               82
 
-#define _HBMK_lDEBUGTIME        82
-#define _HBMK_lDEBUGINC         83
-#define _HBMK_lDEBUGSTUB        84
-#define _HBMK_lDEBUGI18N        85
+#define _HBMK_lDEBUGTIME        83
+#define _HBMK_lDEBUGINC         84
+#define _HBMK_lDEBUGSTUB        85
+#define _HBMK_lDEBUGI18N        86
 
-#define _HBMK_cCCPATH           86
-#define _HBMK_cCCPREFIX         87
-#define _HBMK_cCCPOSTFIX        88
-#define _HBMK_cCCEXT            89
+#define _HBMK_cCCPATH           87
+#define _HBMK_cCCPREFIX         88
+#define _HBMK_cCCPOSTFIX        89
+#define _HBMK_cCCEXT            90
 
-#define _HBMK_MAX_              89
+#define _HBMK_MAX_              90
 
 #ifndef _HBMK_EMBEDDED_
 
@@ -1523,6 +1524,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    hbmk[ _HBMK_aOBJUSER ] := {}
    hbmk[ _HBMK_aICON ] := {}
    hbmk[ _HBMK_aIMPLIBSRC ] := {}
+   hbmk[ _HBMK_cDEF ] := ""
    l_aOBJA := {}
    l_cPROGDIR := NIL
    l_cPROGNAME := NIL
@@ -1621,6 +1623,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       CASE cParamL == "-hbexe"           ; hbmk[ _HBMK_lInfo ] := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .F. ; hbmk[ _HBMK_lCreateLib ] := .F. ; hbmk[ _HBMK_lCreateDyn ] := .F.
       CASE cParamL == "-hblib"           ; hbmk[ _HBMK_lInfo ] := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T. ; hbmk[ _HBMK_lCreateLib ] := .T. ; hbmk[ _HBMK_lCreateDyn ] := .F.
       CASE cParamL == "-hbdyn"           ; hbmk[ _HBMK_lInfo ] := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T. ; hbmk[ _HBMK_lCreateLib ] := .F. ; hbmk[ _HBMK_lCreateDyn ] := .T. ; l_lNOHBLIB := .T.
+      CASE cParamL == "-hbdynvm"         ; hbmk[ _HBMK_lInfo ] := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T. ; hbmk[ _HBMK_lCreateLib ] := .F. ; hbmk[ _HBMK_lCreateDyn ] := .T. ; l_lNOHBLIB := .F.
       CASE cParamL == "-hbimplib"        ; hbmk[ _HBMK_lInfo ] := .F. ; lStopAfterInit := .T. ; hbmk[ _HBMK_lCreateImpLib ] := .T. ; lAcceptIFlag := .T.
       CASE cParamL == "-gui" .OR. ;
            cParamL == "-mwindows"        ; hbmk[ _HBMK_lGUI ]       := .T. /* Compatibility */
@@ -2153,6 +2156,14 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
          cParam := PathProc( cParam, aParam[ _PAR_cFileName ] )
          AAdd( l_aOBJA, PathSepToTarget( hbmk, cParam ) )
+
+      CASE FN_ExtGet( cParamL ) == ".def"
+
+         cParam := ArchCompFilter( hbmk, cParam )
+         IF ! Empty( cParam )
+            cParam := PathProc( cParam, aParam[ _PAR_cFileName ] )
+            hbmk[ _HBMK_cDEF ] := PathSepToTarget( hbmk, cParam )
+         ENDIF
 
       CASE FN_ExtGet( cParamL ) == ".o" .OR. ;
            FN_ExtGet( cParamL ) == ".obj"
@@ -2694,7 +2705,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             cOpt_CompC += " {LC}"
          ENDIF
          cBin_Dyn := cBin_CompC
-         cOpt_Dyn := "-shared -o {OD} {LO} {FD} {DL} {LS}"
+         cOpt_Dyn := "-shared -o {OD} {IM} {LO} {FD} {DL} {LS}"
          cBin_Link := cBin_CompC
          cOpt_Link := "{LO} {LA} {LS} {FL} {DL}"
          bBlk_ImpLib := {| cSourceDLL, cTargetLib, cFlags | win_implib_command_gcc( hbmk, hbmk[ _HBMK_cCCPREFIX ] + "dlltool" + hbmk[ _HBMK_cCCPOSTFIX ] + hbmk[ _HBMK_cCCEXT ] + " {FI} -d {ID} -l {OL}", nCmd_Esc, cSourceDLL, cTargetLib, cFlags ) }
@@ -2830,7 +2841,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             cOpt_CompC += " {LC}"
          ENDIF
          cBin_Dyn := cBin_CompC
-         cOpt_Dyn := "-shared -o {OD} {LO} {LL} {LB} {FD} {DL} {LS}"
+         cOpt_Dyn := "-shared -o {OD} {IM} {LO} {LL} {LB} {FD} {DL} {LS}"
          cBin_Link := cBin_CompC
          cOpt_Link := "{LO} {LA} {FL} {DL}"
          bBlk_ImpLib := {| cSourceDLL, cTargetLib | hb_FCopy( cSourceDLL, cTargetLib ) != F_ERROR }
@@ -3212,7 +3223,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          cBin_Link := "ilink32.exe"
          cBin_Dyn := cBin_Link
          cOpt_Link := '-Gn -Tpe -L{DL} {FL} ' + iif( hbmk[ _HBMK_lGUI ], "c0w32.obj", "c0x32.obj" ) + " {LO}, {OE}, " + iif( hbmk[ _HBMK_lMAP ], "{OM}", "nul" ) + ", {LL} {LB} " + cLibBCC_CRTL + " import32.lib,, {LS}{SCRIPT}"
-         cOpt_Dyn  := '-Gn -Tpd -L{DL} {FD} ' +                          "c0d32.obj"                + " {LO}, {OD}, " + iif( hbmk[ _HBMK_lMAP ], "{OM}", "nul" ) + ", {LL} {LB} " + cLibBCC_CRTL + " import32.lib,, {LS}{SCRIPT}"
+         cOpt_Dyn  := '-Gn -Tpd -L{DL} {FD} ' +                          "c0d32.obj"                + " {LO}, {OD}, " + iif( hbmk[ _HBMK_lMAP ], "{OM}", "nul" ) + ", {LL} {LB} " + cLibBCC_CRTL + " import32.lib, {IM}, {LS}{SCRIPT}"
          bBlk_ImpLib := {| cSourceDLL, cTargetLib, cFlags | win_implib_command( hbmk, "implib.exe {FI} {OL} {ID}", nCmd_Esc, cSourceDLL, cTargetLib, cFlags ) }
          cLibPathPrefix := ""
          cLibPathSep := ";"
@@ -3376,6 +3387,9 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          bBlk_ImpLib := {| cSourceDLL, cTargetLib, cFlags | win_implib_command_msvc( hbmk, cBin_Lib + " -nologo {FI} -def:{ID} -out:{OL}", nCmd_Esc, cSourceDLL, cTargetLib, cFlags ) }
          cLibPathPrefix := "-libpath:"
          cLibPathSep := " "
+         IF ! Empty( hbmk[ _HBMK_cDEF ] )
+            AAdd( hbmk[ _HBMK_aOPTD ], "-def:{IM}" )
+         ENDIF
          IF hbmk[ _HBMK_lMAP ]
             AAdd( hbmk[ _HBMK_aOPTL ], "-map" )
             AAdd( hbmk[ _HBMK_aOPTD ], "-map" )
@@ -3523,6 +3537,9 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          cOpt_Link := "-out:{OE} {LO} {DL} {FL} {LL} {LB} {LS}"
          cLibPathPrefix := "-libpath:"
          cLibPathSep := " "
+         IF ! Empty( hbmk[ _HBMK_cDEF ] )
+            AAdd( hbmk[ _HBMK_aOPTD ], "-def:{IM}" )
+         ENDIF
          IF hbmk[ _HBMK_lMAP ]
             AAdd( hbmk[ _HBMK_aOPTL ], "-map" )
             AAdd( hbmk[ _HBMK_aOPTD ], "-map" )
@@ -4885,6 +4902,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                cOpt_Dyn := StrTran( cOpt_Dyn, "{LS}"  , ArrayToList( ArrayJoin( ListDirExt( hbmk[ _HBMK_aRESSRC ], cWorkDir, cResExt ), hbmk[ _HBMK_aRESCMP ] ),, nOpt_Esc, cResPrefix ) )
                cOpt_Dyn := StrTran( cOpt_Dyn, "{LL}"  , ArrayToList( l_aLIB,, nOpt_Esc, cLibPrefix ) )
                cOpt_Dyn := StrTran( cOpt_Dyn, "{LB}"  , ArrayToList( l_aLIBA,, nOpt_Esc ) )
+               cOpt_Dyn := StrTran( cOpt_Dyn, "{IM}"  , FN_Escape( PathSepToTarget( hbmk, hbmk[ _HBMK_cDEF ] ), nOpt_Esc ) )
                cOpt_Dyn := StrTran( cOpt_Dyn, "{OD}"  , FN_Escape( PathSepToTarget( hbmk, l_cPROGNAME ), nOpt_Esc ) )
                cOpt_Dyn := StrTran( cOpt_Dyn, "{OM}"  , FN_Escape( PathSepToTarget( hbmk, FN_ExtSet( l_cPROGNAME, ".map" ) ), nOpt_Esc ) )
                cOpt_Dyn := StrTran( cOpt_Dyn, "{OI}"  , FN_Escape( PathSepToTarget( hbmk, l_cIMPLIBNAME ), nOpt_Esc ) )
@@ -6593,6 +6611,8 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
                         AAddNew( hbmk[ _HBMK_aRESCMP ], PathSepToTarget( hbmk, tmp ) )
                      NEXT
                   ENDIF
+               CASE FN_ExtGet( cItemL ) == ".def"
+                  hbmk[ _HBMK_cDEF ] := PathSepToSelf( cItem )
                OTHERWISE /* .prg */
                   IF Empty( FN_ExtGet( cItem ) )
                      cItem := FN_ExtSet( cItem, ".prg" )
@@ -8730,7 +8750,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
    LOCAL aText_Basic := {;
       I_( "Syntax:" ),;
       "",;
-      I_( "  hbmk2 [options] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res|.po|.pot|.hbl|@.clp|.d]>" ),;
+      I_( "  hbmk2 [options] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res|.def|.po|.pot|.hbl|@.clp|.d]>" ),;
       "",;
       I_( "Options:" ) }
 
@@ -8760,6 +8780,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-hbexe"             , I_( "create executable (default)" ) },;
       { "-hblib"             , I_( "create static library" ) },;
       { "-hbdyn"             , I_( "create dynamic library" ) },;
+      { "-hbdynvm"           , I_( "create dynamic library (EXPERIMENTAL)" ) },;
       { "-hbimplib"          , I_( "create import library" ) }}
 
    LOCAL aOpt_Help := {;

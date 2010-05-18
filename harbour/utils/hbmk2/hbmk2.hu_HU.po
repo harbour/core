@@ -354,8 +354,8 @@ msgstr "Automatikusan detektált '%1$s' C fordító figyelmen kívül hagyva, mert a 
 
 #: hbmk2.prg:7824
 #, c-format
-msgid "  hbmk2 [options] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res|.po|.pot|.hbl|@.clp|.d]>"
-msgstr "  hbmk2 [kapcsolók] [<parancsállomány[s]>] <forrás[.prg|.c|.obj|.o|.rc|.res|.po|.pot|.hbl|@.clp|.d]>"
+msgid "  hbmk2 [options] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res|.def|.po|.pot|.hbl|@.clp|.d]>"
+msgstr "  hbmk2 [kapcsolók] [<parancsállomány[s]>] <forrás[.prg|.c|.obj|.o|.rc|.res|.def|.po|.pot|.hbl|@.clp|.d]>"
 
 #: hbmk2.prg:7941
 #, c-format
