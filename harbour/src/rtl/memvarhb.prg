@@ -50,8 +50,6 @@
  *
  */
 
-/* TOFIX: PUBLICs are created on restore, instead of PRIVATEs */
-
 #include "hbmemvar.ch"
 #include "common.ch"
 #include "error.ch"
@@ -59,7 +57,7 @@
 
 #define _HBMEM_EXT ".hbv"
 
-PROCEDURE HB_MVSAVE( cFileName, cMask, lIncludeMask )
+FUNCTION HB_MVSAVE( cFileName, cMask, lIncludeMask )
    LOCAL nCount
    LOCAL xValue
    LOCAL cName
@@ -104,7 +102,7 @@ PROCEDURE HB_MVSAVE( cFileName, cMask, lIncludeMask )
             IF ValType( xValue ) $ "CNDTL"
                lMatch := hb_WildMatchI( cMask, cName )
                IF iif( lIncludeMask, lMatch, ! lMatch )
-                  AAdd( aVars, { Upper( cName ), xValue } )
+                  AAdd( aVars, { cName, xValue } )
                ENDIF
             ENDIF
          NEXT
@@ -153,7 +151,7 @@ PROCEDURE HB_MVSAVE( cFileName, cMask, lIncludeMask )
       Eval( ErrorBlock(), oError )
    ENDIF
 
-   RETURN
+   RETURN NIL
 
 FUNCTION HB_MVRESTORE( cFileName, lAdditive, cMask, lIncludeMask )
    LOCAL item
