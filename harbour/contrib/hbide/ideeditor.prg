@@ -138,9 +138,13 @@ CLASS IdeEditsManager INHERIT IdeObject
    METHOD indent( nStep )
    METHOD convertQuotes()
    METHOD convertDQuotes()
+
    METHOD toggleSelectionMode()
-   METHOD toggleLineNumbers()
+   METHOD toggleStreamSelectionMode()
+   METHOD toggleColumnSelectionMode()
    METHOD toggleLineSelectionMode()
+
+   METHOD toggleLineNumbers()
    METHOD toggleCurrentLineHighlightMode()
 
    METHOD getText()
@@ -555,20 +559,37 @@ METHOD IdeEditsManager:selectAll()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeEditsManager:toggleLineSelectionMode()
+METHOD IdeEditsManager:toggleSelectionMode()
    LOCAL oEdit
    IF !empty( oEdit := ::getEditObjectCurrent() )
-      oEdit:toggleLineSelectionMode()
+      oEdit:toggleSelectionMode()
    ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeEditsManager:toggleSelectionMode()
+METHOD IdeEditsManager:toggleStreamSelectionMode()
    LOCAL oEdit
-   ::oIde:isColumnSelectionEnabled := ! ::isColumnSelectionEnabled
    IF !empty( oEdit := ::getEditObjectCurrent() )
-      oEdit:toggleSelectionMode()
+      oEdit:toggleStreamSelectionMode()
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:toggleColumnSelectionMode()
+   LOCAL oEdit
+   IF !empty( oEdit := ::getEditObjectCurrent() )
+      oEdit:toggleColumnSelectionMode()
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:toggleLineSelectionMode()
+   LOCAL oEdit
+   IF !empty( oEdit := ::getEditObjectCurrent() )
+      oEdit:toggleLineSelectionMode()
    ENDIF
    RETURN Self
 

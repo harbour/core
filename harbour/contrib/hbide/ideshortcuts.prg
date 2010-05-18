@@ -195,15 +195,20 @@ CLASS IdeShortcuts INHERIT IdeObject
    METHOD double2singleQuotes()
    METHOD tabs2spaces()
    METHOD removeTrailingSpaces()
-   METHOD toggleLineNumbersDisplay()
-   METHOD toggleColumnSelectionMode()
-   METHOD toggleStatusBar()
-   METHOD toggleLineSelectionMode()
    METHOD presentSkeletons()
    METHOD gotoFunction()
-   METHOD clearSelection()
    METHOD execPlugin( cPlugin, ... )
+
    METHOD toggleCurrentLineHilight()
+   METHOD toggleLineNumbersDisplay()
+   METHOD toggleStatusBar()
+
+   /* Selection Modes */
+   METHOD toggleStreamSelectionMode()
+   METHOD toggleColumnSelectionMode()
+   METHOD toggleLineSelectionMode()
+   METHOD clearSelection()
+
    /* Navigation */
    METHOD home()
    METHOD end()
@@ -1149,6 +1154,9 @@ METHOD IdeShortcuts:execPlugin( cPlugin, ... )
 METHOD IdeShortcuts:toggleCurrentLineHilight()
    RETURN ::oEM:toggleCurrentLineHighlightMode()
 /*----------------------------------------------------------------------*/
+METHOD IdeShortcuts:toggleStreamSelectionMode()
+   RETURN ::oEM:toggleStreamSelectionMode()
+/*----------------------------------------------------------------------*/
 METHOD IdeShortcuts:toggleColumnSelectionMode()
    RETURN ::oEM:toggleColumnSelectionMode()
 /*----------------------------------------------------------------------*/
@@ -1454,12 +1462,15 @@ METHOD IdeShortcuts:loadMethods()
                        '', ;
                        'Selections API Methods follow.' } )
    //........................................................//
+   aadd( ::aMethods, { 'toggleStreamSelectionMode()', ;
+                       'toggleStreamSelectionMode()', ;
+                       'Toggles stream selection mode. It switches on/off this mode.' } )
    aadd( ::aMethods, { 'toggleColumnSelectionMode()', ;
                        'toggleColumnSelectionMode()', ;
-                       'Toggles selection mode from "stream" to "column" or vice-versa.' } )
+                       'Toggles column selection mode. It switches on/off this mode.' } )
    aadd( ::aMethods, { 'toggleLineSelectionMode()', ;
                        'toggleLineSelectionMode()', ;
-                       'Toggles line selection mode.' } )
+                       'Toggles line selection mode. It switches on/off this mode' } )
    aadd( ::aMethods, { 'clearSelection()', ;
                        'clearSelection()', ;
                        'Clears the selection block, if any, and resets the selection mode to stream.' } )

@@ -110,10 +110,11 @@ HBQPlainTextEdit::HBQPlainTextEdit( QWidget * parent ) : QPlainTextEdit( parent 
    selectionState           = selectionState_off;
    selectionMode            = selectionMode_stream;
    selectionDisplay         = selectionDisplay_none;
-   isColumnSelectionEnabled = false;
+   isColumnSelectionON      = false;
    isLineSelectionON        = false;
    horzRuler                = new HorzRuler( this );
    caretState               = 0;
+   isSelectionByApplication = false;
 
    connect( this, SIGNAL( blockCountChanged( int ) )           , this, SLOT( hbUpdateLineNumberAreaWidth( int ) ) );
    connect( this, SIGNAL( updateRequest( const QRect &, int ) ), this, SLOT( hbUpdateLineNumberArea( const QRect &, int ) ) );
@@ -370,6 +371,95 @@ void HBQPlainTextEdit::hbGetSelectionInfo()
 
 /*----------------------------------------------------------------------*/
 
+void HBQPlainTextEdit::hbSetSelectionMode( int mode, bool byApplication )
+{
+   if( byApplication )
+   {
+      if( isSelectionByApplication )
+         isSelectionByApplication = ! isSelectionByApplication;
+
+      if( ! isSelectionByApplication )
+      {
+         isStreamSelectionON = false;
+         isColumnSelectionON = false;
+         isLineSelectionON   = false;
+      }
+
+      switch( mode )
+      {
+         case selectionMode_stream:
+         {
+            setCursorWidth( 1 );
+
+            if( columnBegins >= 0 )
+            {
+               hbToStream();
+            }
+            selectionMode       = selectionMode_stream;
+            isStreamSelectionON = true;
+            isColumnSelectionON = false;
+            isLineSelectionON   = false;
+            break;
+         }
+         case selectionMode_column:
+         {
+            selectionMode       = selectionMode_column;
+            isStreamSelectionON = false;
+            isColumnSelectionON = true;
+            isLineSelectionON   = false;
+            break;
+         }
+         case selectionMode_line:
+         {
+            setCursorWidth( 1 );
+            selectionMode       = selectionMode_line;
+            isStreamSelectionON = false;
+            isColumnSelectionON = false;
+            isLineSelectionON   = true;
+
+            hbClearSelection();
+
+            QTextCursor c( textCursor() );
+            rowBegins     = c.blockNumber();
+            rowEnds       = rowBegins;
+            columnBegins  = 0;
+            columnEnds    = 0;
+            break;
+         }
+      }
+   }
+   else
+   {
+      if( ! isSelectionByApplication )
+      {
+         switch( mode )
+         {
+            case selectionMode_stream:
+            {
+               if( columnBegins >= 0 )
+               {
+                  hbToStream();
+               }
+               selectionMode = selectionMode_stream;
+               isColumnSelectionON = false;
+               isLineSelectionON   = false;
+               setCursorWidth( 1 );
+               break;
+            }
+            case selectionMode_column:
+            {
+               selectionMode = selectionMode_column;
+               isColumnSelectionON = true;
+               isLineSelectionON   = false;
+               break;
+            }
+         }
+      }
+   }
+   emit selectionChanged();
+   repaint();
+}
+#if 0
 void HBQPlainTextEdit::hbSetSelectionMode( int mode, bool on )
 {
    switch( mode )
@@ -381,22 +471,22 @@ void HBQPlainTextEdit::hbSetSelectionMode( int mode, bool on )
             hbToStream();
          }
          selectionMode = selectionMode_stream;
-         isColumnSelectionEnabled = false;
-         isLineSelectionON = false;
+         isColumnSelectionON = false;
+         isLineSelectionON   = false;
          setCursorWidth( 1 );
          break;
       }
       case selectionMode_column:
       {
          selectionMode = selectionMode_column;
-         isColumnSelectionEnabled = true;
-         isLineSelectionON = false;
+         isColumnSelectionON = true;
+         isLineSelectionON   = false;
          break;
       }
       case selectionMode_line:
       {
          selectionMode = selectionMode_line;
-         isColumnSelectionEnabled = false;
+         isColumnSelectionON = false;
          if( on )
          {
             isLineSelectionON = true;
@@ -416,7 +506,7 @@ void HBQPlainTextEdit::hbSetSelectionMode( int mode, bool on )
    }
    update();
 }
-
+#endif
 /*----------------------------------------------------------------------*/
 
 void HBQPlainTextEdit::hbToStream()

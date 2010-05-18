@@ -147,7 +147,6 @@ CLASS IdeEdit INHERIT IdeObject
    METHOD copy()
    METHOD paste()
    METHOD selectAll()
-   METHOD toggleSelectionMode()
 
    METHOD setReadOnly( lReadOnly )
    METHOD setNewMark()
@@ -173,7 +172,12 @@ CLASS IdeEdit INHERIT IdeObject
    METHOD goto( nLine )
    METHOD gotoFunction()
    METHOD toggleLineNumbers()
+
+   METHOD toggleSelectionMode()
+   METHOD toggleStreamSelectionMode()
+   METHOD toggleColumnSelectionMode()
    METHOD toggleLineSelectionMode()
+   METHOD clearSelection()
 
    METHOD getWord( lSelect )
    METHOD getLine( nLine, lSelect )
@@ -204,7 +208,6 @@ CLASS IdeEdit INHERIT IdeObject
    METHOD deleteBlockContents( aCord )
    METHOD zoom( nKey )
    METHOD blockConvert( cMode )
-   METHOD clearSelection()
    METHOD dispStatusInfo()
    METHOD toggleCurrentLineHighlightMode()
 
@@ -1283,19 +1286,28 @@ METHOD IdeEdit:toggleLineNumbers()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
+/* Fired by icon */
 
 METHOD IdeEdit:toggleSelectionMode()
-   ::isColumnSelectionON := ! ::isColumnSelectionON
-   ::qEdit:hbSetSelectionMode( iif( ::isColumnSelectionON, 2, 1 ), .t. )
-   ::dispStatusInfo()
+   ::qEdit:hbSetSelectionMode( iif( ::oAC:getAction( "TB_SelectionMode" ):isChecked(), 2, 1 ), .f. )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:toggleStreamSelectionMode()
+   ::qEdit:hbSetSelectionMode( 1, .t. )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:toggleColumnSelectionMode()
+   ::qEdit:hbSetSelectionMode( 2, .t. )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:toggleLineSelectionMode()
-   ::isLineSelectionON := ! ::isLineSelectionON
-   ::qEdit:hbSetSelectionMode( 3, ::isLineSelectionON )
-   ::dispStatusInfo()
+   ::qEdit:hbSetSelectionMode( 3, .t. )
    RETURN Self
 
 /*----------------------------------------------------------------------*/

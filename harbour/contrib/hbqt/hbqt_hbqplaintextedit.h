@@ -139,14 +139,16 @@ private:
    int            selectionState;
    int            selectionMode;
    int            selectionDisplay;
+   bool           isStreamSelectionON;
    bool           isLineSelectionON;
-   bool           isColumnSelectionEnabled;
+   bool           isColumnSelectionON;
    bool           isTipActive;
    QCompleter   * c;
    QBrush         brushForBookmark( int index );
    bool           isCursorInSelection();
    QTimer       * timer;
    int            caretState;
+   bool           isSelectionByApplication;
 
 
 protected:
