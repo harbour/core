@@ -73,6 +73,8 @@
         :hbSetSelectionInfo( xSelectionInfo )               -> NIL
         :hbSetSelectionColor( pColor )                      -> NIL
         :hbSetMatchBraces( lAll )                           -> NIL
+        :hbGetViewportInfo()                                -> NIL
+        :hbApplyKey( nKey, nModifiers, cTxt )               -> NIL
 
     $DESCRIPTION$
 

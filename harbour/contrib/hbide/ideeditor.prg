@@ -150,6 +150,19 @@ CLASS IdeEditsManager INHERIT IdeObject
    METHOD gotoFunction()
    METHOD clearSelection()
 
+   METHOD home()
+   METHOD end()
+   METHOD down()
+   METHOD up()
+   METHOD goBottom()
+   METHOD goTop()
+   METHOD left()
+   METHOD right()
+   METHOD panEnd()
+   METHOD panHome()
+   METHOD pageUp()
+   METHOD pageDown()
+
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
@@ -972,7 +985,92 @@ METHOD IdeEditsManager:goto( nLine )
    ENDIF
 
    RETURN nLine
-
+/*----------------------------------------------------------------------*/
+//                            Navigation
+/*----------------------------------------------------------------------*/
+METHOD IdeEditsManager:home()
+   LOCAL oEdit
+   IF !empty( oEdit := ::getEditObjectCurrent() )
+      oEdit:home()
+   ENDIF
+   RETURN Self
+/*----------------------------------------------------------------------*/
+METHOD IdeEditsManager:end()
+   LOCAL oEdit
+   IF !empty( oEdit := ::getEditObjectCurrent() )
+      oEdit:end()
+   ENDIF
+   RETURN Self
+/*----------------------------------------------------------------------*/
+METHOD IdeEditsManager:down()
+   LOCAL oEdit
+   IF !empty( oEdit := ::getEditObjectCurrent() )
+      oEdit:down()
+   ENDIF
+   RETURN Self
+/*----------------------------------------------------------------------*/
+METHOD IdeEditsManager:up()
+   LOCAL oEdit
+   IF !empty( oEdit := ::getEditObjectCurrent() )
+      oEdit:up()
+   ENDIF
+   RETURN Self
+/*----------------------------------------------------------------------*/
+METHOD IdeEditsManager:goBottom()
+   LOCAL oEdit
+   IF !empty( oEdit := ::getEditObjectCurrent() )
+      oEdit:goBottom()
+   ENDIF
+   RETURN Self
+/*----------------------------------------------------------------------*/
+METHOD IdeEditsManager:goTop()
+   LOCAL oEdit
+   IF !empty( oEdit := ::getEditObjectCurrent() )
+      oEdit:goTop()
+   ENDIF
+   RETURN Self
+/*----------------------------------------------------------------------*/
+METHOD IdeEditsManager:left()
+   LOCAL oEdit
+   IF !empty( oEdit := ::getEditObjectCurrent() )
+      oEdit:left()
+   ENDIF
+   RETURN Self
+/*----------------------------------------------------------------------*/
+METHOD IdeEditsManager:right()
+   LOCAL oEdit
+   IF !empty( oEdit := ::getEditObjectCurrent() )
+      oEdit:right()
+   ENDIF
+   RETURN Self
+/*----------------------------------------------------------------------*/
+METHOD IdeEditsManager:panEnd()
+   LOCAL oEdit
+   IF !empty( oEdit := ::getEditObjectCurrent() )
+      oEdit:panEnd()
+   ENDIF
+   RETURN Self
+/*----------------------------------------------------------------------*/
+METHOD IdeEditsManager:panHome()
+   LOCAL oEdit
+   IF !empty( oEdit := ::getEditObjectCurrent() )
+      oEdit:panHome()
+   ENDIF
+   RETURN Self
+/*----------------------------------------------------------------------*/
+METHOD IdeEditsManager:pageUp()
+   LOCAL oEdit
+   IF !empty( oEdit := ::getEditObjectCurrent() )
+      oEdit:pageUp()
+   ENDIF
+   RETURN Self
+/*----------------------------------------------------------------------*/
+METHOD IdeEditsManager:pageDown()
+   LOCAL oEdit
+   IF !empty( oEdit := ::getEditObjectCurrent() )
+      oEdit:pageDown()
+   ENDIF
+   RETURN Self
 /*----------------------------------------------------------------------*/
 //
 //                            CLASS IdeEditor

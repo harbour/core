@@ -128,6 +128,7 @@ CLASS IdeEdit INHERIT IdeObject
    DATA   aBlockCopyContents                      INIT {}
    DATA   isLineSelectionON                       INIT .F.
    DATA   aSelectionInfo                          INIT { -1,-1,-1,-1,1,0 }
+   DATA   aViewportInfo                           INIT { -1,-1,-1,-1,-1,-1 }
 
    DATA   isColumnSelectionON                     INIT .F.
    DATA   lReadOnly                               INIT .F.
@@ -192,9 +193,6 @@ CLASS IdeEdit INHERIT IdeObject
    METHOD setLineNumbersBkColor( nR, nG, nB )
    METHOD setCurrentLineColor( nR, nG, nB )
    METHOD getCursor()                             INLINE QTextCursor():from( ::qEdit:textCursor() )
-   METHOD down()
-   METHOD up()
-   METHOD home()
    METHOD find( cText, nPosFrom )
    METHOD refresh()
    METHOD isModified()                            INLINE ::oEditor:qDocument:isModified()
@@ -209,6 +207,19 @@ CLASS IdeEdit INHERIT IdeObject
    METHOD clearSelection()
    METHOD dispStatusInfo()
    METHOD toggleCurrentLineHighlightMode()
+
+   METHOD home()
+   METHOD end()
+   METHOD down()
+   METHOD up()
+   METHOD goBottom()
+   METHOD goTop()
+   METHOD left()
+   METHOD right()
+   METHOD panEnd()
+   METHOD panHome()
+   METHOD pageUp()
+   METHOD pageDown()
 
    ENDCLASS
 
@@ -622,6 +633,9 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p, p1 )
 
       ELSEIF p == 21014
          ::deleteBlockContents( p1 )
+
+      ELSEIF p == 21017                     /* Sends Block Info { t,l,b,r,mode,state } hbGetBlockInfo() */
+         ::aViewportInfo := p1
 
       ENDIF
       EXIT
@@ -1431,35 +1445,96 @@ METHOD IdeEdit:refresh()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
+//                       TBrowse Like Navigation
+/*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:home()
-   LOCAL qCursor := ::getCursor()
+   ::qEdit:hbApplyKey( Qt_Key_Home )
+   RETURN Self
 
-   qCursor:movePosition( QTextCursor_StartOfBlock )
-   ::qEdit:setTextCursor( qCursor )
+/*----------------------------------------------------------------------*/
 
+METHOD IdeEdit:end()
+   ::qEdit:hbApplyKey( Qt_Key_End )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:down()
-   LOCAL qCursor := QTextCursor():configure( ::qEdit:textCursor() )
-
-   qCursor:movePosition( QTextCursor_Down )
-   ::qEdit:setTextCursor( qCursor )
-
+   ::qEdit:hbApplyKey( Qt_Key_Down )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:up()
-   LOCAL qCursor := QTextCursor():configure( ::qEdit:textCursor() )
-
-   qCursor:movePosition( QTextCursor_Up )
-   ::qEdit:setTextCursor( qCursor )
-
+   ::qEdit:hbApplyKey( Qt_Key_Up )
    RETURN Self
 
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:goBottom()
+   ::qEdit:hbApplyKey( Qt_Key_End, Qt_ControlModifier )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:goTop()
+   ::qEdit:hbApplyKey( Qt_Key_Home, Qt_ControlModifier )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:left()
+   ::qEdit:hbApplyKey( Qt_Key_Left )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:right()
+   ::qEdit:hbApplyKey( Qt_Key_Right )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:panEnd()
+   LOCAL qCursor := ::getCursor()
+   LOCAL cLine := ::getLine()
+   ::qEdit:hbGetViewportInfo()
+   IF len( cLine ) - ::aViewportInfo[ 2 ] > ::aViewportInfo[ 4 ]
+      qCursor:movePosition( QTextCursor_Right, QTextCursor_MoveAnchor, len( cLine ) - ::aViewportInfo[ 2 ] )
+   ELSE
+      qCursor:movePosition( QTextCursor_EndOfLine )
+   ENDIF
+   ::qEdit:setTextCursor( qCursor )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:panHome()
+   LOCAL qCursor := ::getCursor()
+   ::qEdit:hbGetViewportInfo()
+   IF ::aViewportInfo[ 2 ] == 0
+      qCursor:movePosition( QTextCursor_StartOfLine )
+   ELSE
+      qCursor:movePosition( QTextCursor_Left, QTextCursor_MoveAnchor, qCursor:columnNumber() - ::aViewportInfo[ 2 ] )
+   ENDIF
+   ::qEdit:setTextCursor( qCursor )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:pageUp()
+   ::qEdit:hbApplyKey( Qt_Key_PageUp )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:pageDown()
+   ::qEdit:hbApplyKey( Qt_Key_PageDown )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+//
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:duplicateLine()

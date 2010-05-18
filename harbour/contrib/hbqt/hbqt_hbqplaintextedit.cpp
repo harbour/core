@@ -167,6 +167,14 @@ void HBQPlainTextEdit::hbSetEventBlock( PHB_ITEM pBlock )
 
 /*----------------------------------------------------------------------*/
 
+void HBQPlainTextEdit::hbApplyKey( int key, Qt::KeyboardModifiers modifiers, const QString & txt )
+{
+   QKeyEvent * ev = new QKeyEvent( QEvent::KeyPress, key, modifiers, txt );
+   QPlainTextEdit::keyPressEvent( ev );
+}
+
+/*----------------------------------------------------------------------*/
+
 void HBQPlainTextEdit::hbRefresh()
 {
    repaint();
@@ -291,6 +299,36 @@ void HBQPlainTextEdit::hbClearSelection()
    rowEnds      = -1;
    columnBegins = -1;
    columnEnds   = -1;
+}
+
+/*----------------------------------------------------------------------*/
+
+void HBQPlainTextEdit::hbGetViewportInfo()
+{
+   if( block )
+   {
+      PHB_ITEM p1 = hb_itemPutNI( NULL, 21017 );
+      PHB_ITEM p2 = hb_itemNew( NULL );
+
+      hb_arrayNew( p2, 6 );
+
+      QTextCursor ct = cursorForPosition( QPoint( 2,2 ) );
+      int          t = ct.blockNumber();
+      int          c = ct.columnNumber();
+      int       rows = viewport()->height() / fontMetrics().height();
+      int       cols = viewport()->width()  / fontMetrics().averageCharWidth();
+
+      hb_arraySetNI( p2, 1, t    );
+      hb_arraySetNI( p2, 2, c    );
+      hb_arraySetNI( p2, 3, rows );
+      hb_arraySetNI( p2, 4, cols );
+      hb_arraySetNI( p2, 5, textCursor().blockNumber() );
+      hb_arraySetNI( p2, 6, textCursor().columnNumber() );
+
+      hb_vmEvalBlockV( block, 2, p1, p2 );
+      hb_itemRelease( p1 );
+      hb_itemRelease( p2 );
+   }
 }
 
 /*----------------------------------------------------------------------*/

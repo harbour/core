@@ -196,7 +196,8 @@ public slots:
    void           hbSetSelectionInfo( PHB_ITEM selectionInfo );
    void           hbSetSelectionColor( const QColor & color );
    void           hbSetMatchBraces( bool all ){ m_matchBracesAll = all; };
-
+   void           hbGetViewportInfo();
+   void           hbApplyKey( int key, Qt::KeyboardModifiers modifiers = 0, const QString & txt = "" );
 
 private slots:
    void           hbSlotCursorPositionChanged();

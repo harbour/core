@@ -204,6 +204,19 @@ CLASS IdeShortcuts INHERIT IdeObject
    METHOD clearSelection()
    METHOD execPlugin( cPlugin, ... )
    METHOD toggleCurrentLineHilight()
+   /* Navigation */
+   METHOD home()
+   METHOD end()
+   METHOD down()
+   METHOD up()
+   METHOD goBottom()
+   METHOD goTop()
+   METHOD left()
+   METHOD right()
+   METHOD panEnd()
+   METHOD panHome()
+   METHOD pageUp()
+   METHOD pageDown()
 
    ENDCLASS
 
@@ -369,8 +382,10 @@ METHOD IdeShortcuts:execEvent( nMode, p )
    CASE listMethods_itemDoubleClicked
       IF ( nRow := ::oUI:q_listMethods:currentRow() ) >= 0
          nRow++
-         cMethod := "::" + ::aMethods[ nRow, 2 ]
-         ::oUI:q_plainBlock:insertPlainText( cMethod )
+         IF !empty( ::aMethods[ nRow, 2 ] )
+            cMethod := "::" + ::aMethods[ nRow, 2 ]
+            ::oUI:q_plainBlock:insertPlainText( cMethod )
+         ENDIF
       ENDIF
       EXIT
    CASE listMethods_currentRowChanged
@@ -637,7 +652,15 @@ METHOD IdeShortcuts:populateMethods()
    FOR EACH a_ IN ::aMethods
       IF !empty( a_[ 1 ] )
          qItem := QListWidgetItem():new()
-         qItem:setText( a_[ 1 ] )
+
+         IF left( a_[ 1 ], 1 ) == " "
+            qItem:setText( alltrim( a_[ 1 ] ) )
+            qItem:setForeground( QBrush():new( "QColor", QColor():new( 255,0,0 ) ) )
+            qItem:setBackground( QBrush():new( "QColor", QColor():new( 255,255,200 ) ) )
+            qItem:setTextAlignment( Qt_AlignHCenter )
+         ELSE
+            qItem:setText( a_[ 1 ] )
+         ENDIF
          aadd( ::aMtdItms, qItem )
          qLW:addItem_1( qItem )
       ENDIF
@@ -1135,15 +1158,133 @@ METHOD IdeShortcuts:toggleLineSelectionMode()
 METHOD IdeShortcuts:clearSelection()
    RETURN ::oEM:clearSelection()
 /*----------------------------------------------------------------------*/
+//                              Navigation
+/*----------------------------------------------------------------------*/
+METHOD IdeShortcuts:home()
+   RETURN ::oEM:home()
+/*----------------------------------------------------------------------*/
+METHOD IdeShortcuts:end()
+   RETURN ::oEM:end()
+/*----------------------------------------------------------------------*/
+METHOD IdeShortcuts:down()
+   RETURN ::oEM:down()
+/*----------------------------------------------------------------------*/
+METHOD IdeShortcuts:up()
+   RETURN ::oEM:up()
+/*----------------------------------------------------------------------*/
+METHOD IdeShortcuts:goBottom()
+   RETURN ::oEM:goBottom()
+/*----------------------------------------------------------------------*/
+METHOD IdeShortcuts:goTop()
+   RETURN ::oEM:goTop()
+/*----------------------------------------------------------------------*/
+METHOD IdeShortcuts:left()
+   RETURN ::oEM:left()
+/*----------------------------------------------------------------------*/
+METHOD IdeShortcuts:right()
+   RETURN ::oEM:right()
+/*----------------------------------------------------------------------*/
+METHOD IdeShortcuts:panEnd()
+   RETURN ::oEM:panEnd()
+/*----------------------------------------------------------------------*/
+METHOD IdeShortcuts:panHome()
+   RETURN ::oEM:panHome()
+/*----------------------------------------------------------------------*/
+METHOD IdeShortcuts:pageUp()
+   RETURN ::oEM:pageUp()
+/*----------------------------------------------------------------------*/
+METHOD IdeShortcuts:pageDown()
+   RETURN ::oEM:pageDown()
+/*----------------------------------------------------------------------*/
+//                       Public API Definitions
+/*----------------------------------------------------------------------*/
 
 METHOD IdeShortcuts:loadMethods()
 
+   aadd( ::aMethods, { '          General', ;
+                       '', ;
+                       'General API Methods follow.' } )
+   //........................................................//
    aadd( ::aMethods, { 'help( cTopic )', ;
                        'help( "" )', ;
                        'Invokes "Help" docking widget in the right docking area. <cTopic> is not active yet.'  } )
    aadd( ::aMethods, { 'exit( lWarn )', ;
                        'exit( .f. )', ;
                        'Exits hbIDE. If <lWarn == TRUE> then confirmation is requested through a popup dialog. All sources are saved if in modified state after confirmation to do so.'  } )
+   aadd( ::aMethods, { 'execTool( cName )' , ;
+                       'execTool( "" )'    , ;
+                       'Executes a Tool defined and visible under tools menu.' } )
+   aadd( ::aMethods, { 'execTool( cCmd, cParams, cStartIn, lCapture, lShowOutput )' , ;
+                       'execTool( "", "", "", .f., .f. )', ;
+                       'Executes a program or file with parameters and other attributes.' + CRLF + ;
+                       'http://hbide.vouch.info/ ( Topic: Tools and Utilities )' } )
+   aadd( ::aMethods, { 'execPlugin( cPlugin )', ;
+                       'execPlugin( "" )', ;
+                       'Attempts to execute third-party plugins. First parameter passed is the instance to SELF exposing public API methods. Next parameters are passes as a list.' } )
+   aadd( ::aMethods, { 'setBookMark()'     , ;
+                       'setBookMark()'     , ;
+                       'Attempts to install a bookmark onto current cursor position. If successful, mark appears as a colored tool-button on the statusbar and marked line is highlighted with the same color.' } )
+   aadd( ::aMethods, { 'gotoMark( nMark )' , ;
+                       'gotoMark( 1 )'     , ;
+                       'Attempts to reach mark represented by <nMark>. Please note maximum 6 bookmarks are avialable per edit instance.' } )
+   aadd( ::aMethods, { 'setView( cView )'  , ;
+                       'setView( "" )'     , ;
+                       'Brings <cView> panel to front. Defaults to "Stats", i.e., <Welcome> tab.' } )
+   aadd( ::aMethods, { 'presentSkeletons()', ;
+                       'presentSkeletons()', ;
+                       'Present snippets for selection.' } )
+   aadd( ::aMethods, { 'gotoFunction()', ;
+                       'gotoFunction()', ;
+                       'Takes under-cursor word and attempts to open the source containing that function in a new tab.' } )
+
+   aadd( ::aMethods, { '          Navigation', ;
+                       '', ;
+                       'Navigation API Methods follow.' } )
+   //........................................................//
+   aadd( ::aMethods, { 'down()', ;
+                       'down()', ;
+                       'Cursor is positioned one row down.' } )
+   aadd( ::aMethods, { 'up()', ;
+                       'up()', ;
+                       'Cursor is positioned one row up.' } )
+   aadd( ::aMethods, { 'pageDown()', ;
+                       'pageDown()', ;
+                       'Cursor is positioned one page down.' } )
+   aadd( ::aMethods, { 'pageUp()', ;
+                       'pageUp()', ;
+                       'Cursor is positioned one page up.' } )
+   aadd( ::aMethods, { 'goBottom()', ;
+                       'goBottom()', ;
+                       'Cursor is positioned at the end of the source.' } )
+   aadd( ::aMethods, { 'goTop()', ;
+                       'goTop()', ;
+                       'Cursor is positioned at the begining of the source.' } )
+   aadd( ::aMethods, { 'right()', ;
+                       'right()', ;
+                       'Cursor is positioned one character to the right. If there is no character to the right in current line, cursor is positioned on next line, character 0.' } )
+   aadd( ::aMethods, { 'left()', ;
+                       'left()', ;
+                       'Cursor is positioned one character to the left. If there is no character to the left in current line, cursor is positioned on previous line, last character.' } )
+   aadd( ::aMethods, { 'end()', ;
+                       'end()', ;
+                       'Cursor is positioned at the right-most column.' } )
+   aadd( ::aMethods, { 'home()', ;
+                       'home()', ;
+                       'Cursor is positioned at the left-most column.' } )
+   aadd( ::aMethods, { 'panEnd()', ;
+                       'panEnd()', ;
+                       'Cursor is positioned last visible column in the viewport.' } )
+   aadd( ::aMethods, { 'panHome()', ;
+                       'panHome()', ;
+                       'Cursor is positioned first visible column in the viewport.' } )
+   aadd( ::aMethods, { 'gotoLine( nLine )', ;
+                       'gotoLine(  )', ;
+                       'Attempt is made to position the cursor at <nLine>. If <nLine> is not supplied, a "Goto" dialog is opened to supply <nLine>.'  } )
+
+   aadd( ::aMethods, { '          Files', ;
+                       '', ;
+                       'Files API Methods follow.' } )
+   //........................................................//
    aadd( ::aMethods, { 'newSource( cType )', ;
                        'newSource( "" )', ;
                        'Initiates a blank source file in an editing instance on the current panel.'  } )
@@ -1165,82 +1306,11 @@ METHOD IdeShortcuts:loadMethods()
    aadd( ::aMethods, { 'print()', ;
                        'print()', ;
                        'Invokes "Print Preview" dialog with current source contents ready to be printed.'  } )
-   aadd( ::aMethods, { 'findDlg()', ;
-                       'findDlg()', ;
-                       'Invokes "Find and Replace" dialog.'  } )
-   aadd( ::aMethods, { 'findAgain()', ;
-                       'findAgain()', ;
-                       'Finds last search string without opening the dialog.'  } )
-   aadd( ::aMethods, { 'replace()', ;
-                       'replace()', ;
-                       'Replaces last replace string if some text is already selected without opening the dialog.'  } )
-   aadd( ::aMethods, { 'findDlgEx()', ;
-                       'findDlgEx()', ;
-                       'Invokes extended "Find and Replace" dialog at the bottom of editing area.'  } )
-   aadd( ::aMethods, { 'gotoLine( nLine )', ;
-                       'gotoLine(  )', ;
-                       'Attempt is made to position the cursor at <nLine>. If <nLine> is not supplied, a "Goto" dialog is opened to supply <nLine>.'  } )
-   aadd( ::aMethods, { 'indentRight()', ;
-                       'indentRight()', ;
-                       'Pushes one character right the currently selected text.'  } )
-   aadd( ::aMethods, { 'indentLeft()', ;
-                       'indentLeft()', ;
-                       'Pushes one character left the currently selected text. If there are no columns remains at left nothing happens.'  } )
-   aadd( ::aMethods, { 'blockComment()', ;
-                       'blockComment()', ;
-                       'Encloses currently selected text in line comments where each line is prefixed with //.' } )
-   aadd( ::aMethods, { 'streamComment()', ;
-                       'streamComment()', ;
-                       'Encloses currently selected text in Anci-C like comments /*  */' } )
-   aadd( ::aMethods, { 'toUpper()', ;
-                       'toUpper()', ;
-                       'Converts currently selected text to upper-case.' } )
-   aadd( ::aMethods, { 'toLower()', ;
-                       'toLower()', ;
-                       'Converts currently selected text to lower-case.' } )
-   aadd( ::aMethods, { 'invertCase()', ;
-                       'invertCase()', ;
-                       'Inverts case of currently selected text: upper => lower; lower => upper.' } )
-   aadd( ::aMethods, { 'build( cProj )', ;
-                       'build( "" )', ;
-                       'Builds <cProj> if it is already loaded. All sources are saved if found in modified state before "build" is initiated.' } )
-   aadd( ::aMethods, { 'buildLaunch( cProj )', ;
-                       'buildLaunch( "" )', ;
-                       'Builds and launches <cProj> if it is already loaded. All sources are saved if found in modified state before "build" is initiated.' } )
-   aadd( ::aMethods, { 'reBuild( cProj )', ;
-                       'reBuild( "" )', ;
-                       'Re-builds <cProj> if it is already loaded. All sources are saved if found in modified state before "build" is initiated.' } )
-   aadd( ::aMethods, { 'reBuildLaunch( cProj )', ;
-                       'reBuildLaunch( "" )', ;
-                       'Re-builds and launches <cProj> if it is already loaded. All sources are saved if found in modified state before "build" is initiated.' } )
-   aadd( ::aMethods, { 'launch( cProj )'   , ;
-                       'launch( "" )'      , ;
-                       'Launches <cProj> if it is already loaded.'  } )
-   aadd( ::aMethods, { 'insert( cText )'   , ;
-                       'insert( "" )'      , ;
-                       'Insert <cText> at current cursor position.'  } )
-   aadd( ::aMethods, { 'separator( cSep )' , ;
-                       'separator( ' + '/*' + replicate( "-", 68 ) + '*/' + ' )', ;
-                       'Inserts separator line <cSep> immediately before current line. <cSep> defaults to "/*---*/"'  } )
-   aadd( ::aMethods, { 'getWord( lSelect )', ;
-                       'getWord( .f. )'    , ;
-                       'Returns text of the word under cursor. If <lSelect == .T.> text appears as selected.' } )
-   aadd( ::aMethods, { 'getLine( lSelect )', ;
-                       'getLine( .f. )'    , ;
-                       'Returns text of the current line. If <lSelect == .T.> text appears as selected.' } )
-   aadd( ::aMethods, { 'getText()'         , ;
-                       'getText()'         , ;
-                       'Returns current selected text.' } )
-   aadd( ::aMethods, { 'execTool( cName )' , ;
-                       'execTool( "" )'    , ;
-                       'Executes a Tool defined and visible under tools menu.' } )
-   aadd( ::aMethods, { 'execTool( cCmd, cParams, cStartIn, lCapture, lShowOutput )' , ;
-                       'execTool( "", "", "", .f., .f. )', ;
-                       'Executes a program or file with parameters and other attributes.' + CRLF + ;
-                       'http://hbide.vouch.info/ ( Topic: Tools and Utilities )' } )
-   aadd( ::aMethods, { 'zoom( nVal )'      , ;
-                       'zoom( +1 )'        , ;
-                       'Zooms in/out the current editing instance. nVal: 1-one size up; -1-one size less; NIL-original size; 5~30-to size.' } )
+
+   aadd( ::aMethods, { '          Edit', ;
+                       '', ;
+                       'Edit API Methods follow.' } )
+   //........................................................//
    aadd( ::aMethods, { 'cut()'             , ;
                        'cut()'             , ;
                        'Cuts the selected text and copies onto clipboard.' } )
@@ -1262,42 +1332,128 @@ METHOD IdeShortcuts:loadMethods()
    aadd( ::aMethods, { 'print()'           , ;
                        'print()'           , ;
                        'Opens Print Preview dialog which will contain the source line broken by pages.' } )
-   aadd( ::aMethods, { 'setBookMark()'     , ;
-                       'setBookMark()'     , ;
-                       'Attempts to install a bookmark onto current cursor position. If successful, mark appears as a colored tool-button on the statusbar and marked line is highlighted with the same color.' } )
-   aadd( ::aMethods, { 'gotoMark( nMark )' , ;
-                       'gotoMark( 1 )'     , ;
-                       'Attempts to reach mark represented by <nMark>. Please note maximum 6 bookmarks are avialable per edit instance.' } )
-   aadd( ::aMethods, { 'switchToReadOnly()', ;
-                       'switchToReadOnly()', ;
-                       'Flags current editing instance read-only.' } )
-   aadd( ::aMethods, { 'dlgKeyboardMappings()', ;
-                       'dlgKeyboardMappings()', ;
-                       'Opens "Keyboard Mappings" dialog.' } )
-   aadd( ::aMethods, { 'dlgToolsAndUtils()', ;
-                       'dlgToolsAndUtils()', ;
-                       'Opens "Toola & Utilities" dialog.' } )
-   aadd( ::aMethods, { 'setView( cView )'  , ;
-                       'setView( "" )'     , ;
-                       'Brings <cView> panel to front. Defaults to "Stats", i.e., <Welcome> tab.' } )
-   aadd( ::aMethods, { 'compilePPO()'      , ;
-                       'compilePPO()'      , ;
-                       'Attemps to compile current source to .ppo formats, and if successful, presents the compiled source in a new edit instance.' } )
-   aadd( ::aMethods, { 'single2doubleQuotes()', ;
-                       'single2doubleQuotes()', ;
-                       'Converts single quotes to double in the currently selected text.' } )
-   aadd( ::aMethods, { 'double2singleQuotes()', ;
-                       'double2singleQuotes()', ;
-                       'Converts double quotes to single in the currently selected text.' } )
+   aadd( ::aMethods, { 'findDlg()', ;
+                       'findDlg()', ;
+                       'Invokes "Find and Replace" dialog.'  } )
+   aadd( ::aMethods, { 'findAgain()', ;
+                       'findAgain()', ;
+                       'Finds last search string without opening the dialog.'  } )
+   aadd( ::aMethods, { 'replace()', ;
+                       'replace()', ;
+                       'Replaces last replace string if some text is already selected without opening the dialog.'  } )
+   aadd( ::aMethods, { 'findDlgEx()', ;
+                       'findDlgEx()', ;
+                       'Invokes extended "Find and Replace" dialog at the bottom of editing area.'  } )
+   aadd( ::aMethods, { 'insert( cText )'   , ;
+                       'insert( "" )'      , ;
+                       'Insert <cText> at current cursor position.'  } )
+   aadd( ::aMethods, { 'separator( cSep )' , ;
+                       'separator( ' + '/*' + replicate( "-", 68 ) + '*/' + ' )', ;
+                       'Inserts separator line <cSep> immediately before current line. <cSep> defaults to "/*---*/"'  } )
    aadd( ::aMethods, { 'tabs2spaces()', ;
                        'tabs2spaces()', ;
                        'Converts tabs to spaces, currently 3, the entire source. However, source is not saved.' } )
    aadd( ::aMethods, { 'removeTrailingSpaces()', ;
                        'removeTrailingSpaces()', ;
                        'Removes trailing spaces per line, the entire source. However, source is not saved.' } )
+   aadd( ::aMethods, { 'switchToReadOnly()', ;
+                       'switchToReadOnly()', ;
+                       'Flags current editing instance read-only.' } )
+
+   aadd( ::aMethods, { '          Line Operations', ;
+                       '', ;
+                       'Line API Methods follow.' } )
+   //........................................................//
+   aadd( ::aMethods, { 'duplicateLine()', ;
+                       'duplicateLine()', ;
+                       'Duplicates current line.'  } )
+   aadd( ::aMethods, { 'deleteLine()', ;
+                       'deleteLine()', ;
+                       'Deletes current line.'  } )
+   aadd( ::aMethods, { 'moveLineUp()', ;
+                       'moveLineUp()', ;
+                       'Moves current line up.'  } )
+   aadd( ::aMethods, { 'moveLineDown()', ;
+                       'moveLineDown()', ;
+                       'Moves current line down.'  } )
+
+   aadd( ::aMethods, { '          Display Attributes', ;
+                       '', ;
+                       'Display API Methods follow.' } )
+   //........................................................//
+   aadd( ::aMethods, { 'zoom( nVal )'      , ;
+                       'zoom( +1 )'        , ;
+                       'Zooms in/out the current editing instance. nVal: 1-one size up; -1-one size less; NIL-original size; 5~30-to size.' } )
    aadd( ::aMethods, { 'toggleLineNumbersDisplay()', ;
                        'toggleLineNumbersDisplay()', ;
                        'Toggles line numbers display inside editing instances. This action has global scope and is saved for next run.' } )
+   aadd( ::aMethods, { 'toggleCurrentLineHilight()', ;
+                       'toggleCurrentLineHilight()', ;
+                       'Toggles the mode to highlight current line or not in the editor. The effect is global. Setting is not retained for next run' } )
+   aadd( ::aMethods, { 'toggleStatusBar()', ;
+                       'toggleStatusBar()', ;
+                       'Toggles display of statusbar. The action is not saved for next run.' } )
+
+   aadd( ::aMethods, { '          Block Operations', ;
+                       '', ;
+                       'Blocks API Methods follow.' } )
+   //........................................................//
+   aadd( ::aMethods, { 'indentRight()', ;
+                       'indentRight()', ;
+                       'Pushes one character right the currently selected text.'  } )
+   aadd( ::aMethods, { 'indentLeft()', ;
+                       'indentLeft()', ;
+                       'Pushes one character left the currently selected text. If there are no columns remains at left nothing happens.'  } )
+   aadd( ::aMethods, { 'blockComment()', ;
+                       'blockComment()', ;
+                       'Encloses currently selected text in line comments where each line is prefixed with //.' } )
+   aadd( ::aMethods, { 'streamComment()', ;
+                       'streamComment()', ;
+                       'Encloses currently selected text in Anci-C like comments /*  */' } )
+   aadd( ::aMethods, { 'toUpper()', ;
+                       'toUpper()', ;
+                       'Converts currently selected text to upper-case.' } )
+   aadd( ::aMethods, { 'toLower()', ;
+                       'toLower()', ;
+                       'Converts currently selected text to lower-case.' } )
+   aadd( ::aMethods, { 'invertCase()', ;
+                       'invertCase()', ;
+                       'Inverts case of currently selected text: upper => lower; lower => upper.' } )
+   aadd( ::aMethods, { 'single2doubleQuotes()', ;
+                       'single2doubleQuotes()', ;
+                       'Converts single quotes to double in the currently selected text.' } )
+   aadd( ::aMethods, { 'double2singleQuotes()', ;
+                       'double2singleQuotes()', ;
+                       'Converts double quotes to single in the currently selected text.' } )
+
+
+   aadd( ::aMethods, { '          Projects', ;
+                       '', ;
+                       'Projects API Methods follow.' } )
+   //........................................................//
+   aadd( ::aMethods, { 'build( cProj )', ;
+                       'build( "" )', ;
+                       'Builds <cProj> if it is already loaded. All sources are saved if found in modified state before "build" is initiated.' } )
+   aadd( ::aMethods, { 'buildLaunch( cProj )', ;
+                       'buildLaunch( "" )', ;
+                       'Builds and launches <cProj> if it is already loaded. All sources are saved if found in modified state before "build" is initiated.' } )
+   aadd( ::aMethods, { 'reBuild( cProj )', ;
+                       'reBuild( "" )', ;
+                       'Re-builds <cProj> if it is already loaded. All sources are saved if found in modified state before "build" is initiated.' } )
+   aadd( ::aMethods, { 'reBuildLaunch( cProj )', ;
+                       'reBuildLaunch( "" )', ;
+                       'Re-builds and launches <cProj> if it is already loaded. All sources are saved if found in modified state before "build" is initiated.' } )
+   aadd( ::aMethods, { 'launch( cProj )'   , ;
+                       'launch( "" )'      , ;
+                       'Launches <cProj> if it is already loaded.'  } )
+   aadd( ::aMethods, { 'compilePPO()'      , ;
+                       'compilePPO()'      , ;
+                       'Attemps to compile current source to .ppo formats, and if successful, presents the compiled source in a new edit instance.' } )
+
+   aadd( ::aMethods, { '          Selections', ;
+                       '', ;
+                       'Selections API Methods follow.' } )
+   //........................................................//
    aadd( ::aMethods, { 'toggleColumnSelectionMode()', ;
                        'toggleColumnSelectionMode()', ;
                        'Toggles selection mode from "stream" to "column" or vice-versa.' } )
@@ -1307,21 +1463,33 @@ METHOD IdeShortcuts:loadMethods()
    aadd( ::aMethods, { 'clearSelection()', ;
                        'clearSelection()', ;
                        'Clears the selection block, if any, and resets the selection mode to stream.' } )
-   aadd( ::aMethods, { 'toggleStatusBar()', ;
-                       'toggleStatusBar()', ;
-                       'Toggles display of statusbar. The action is not saved for next run.' } )
-   aadd( ::aMethods, { 'presentSkeletons()', ;
-                       'presentSkeletons()', ;
-                       'Present snippets for selection.' } )
-   aadd( ::aMethods, { 'gotoFunction()', ;
-                       'gotoFunction()', ;
-                       'Takes under-cursor word and attempts to open the source containing that function in a new tab.' } )
-   aadd( ::aMethods, { 'execPlugin( cPlugin )', ;
-                       'execPlugin( "" )', ;
-                       'Attempts to execute third-party plugins. First parameter passed is the instance to SELF exposing public API methods. Next parameters are passes as a list.' } )
-   aadd( ::aMethods, { 'toggleCurrentLineHilight()', ;
-                       'toggleCurrentLineHilight()', ;
-                       'Toggles the mode to highlight current line or not in the editor. The effect is global. Setting is not retained for next run' } )
+
+
+   aadd( ::aMethods, { '          Retreivals', ;
+                       '', ;
+                       'Text Retreival API Methods follow.' } )
+   //........................................................//
+   aadd( ::aMethods, { 'getWord( lSelect )', ;
+                       'getWord( .f. )'    , ;
+                       'Returns text of the word under cursor. If <lSelect == .T.> text appears as selected.' } )
+   aadd( ::aMethods, { 'getLine( lSelect )', ;
+                       'getLine( .f. )'    , ;
+                       'Returns text of the current line. If <lSelect == .T.> text appears as selected.' } )
+   aadd( ::aMethods, { 'getText()'         , ;
+                       'getText()'         , ;
+                       'Returns current selected text.' } )
+
+
+   aadd( ::aMethods, { '          Activating Dialogs', ;
+                       '', ;
+                       'Dialog API Methods follow.' } )
+   //........................................................//
+   aadd( ::aMethods, { 'dlgKeyboardMappings()', ;
+                       'dlgKeyboardMappings()', ;
+                       'Opens "Keyboard Mappings" dialog.' } )
+   aadd( ::aMethods, { 'dlgToolsAndUtils()', ;
+                       'dlgToolsAndUtils()', ;
+                       'Opens "Toola & Utilities" dialog.' } )
 
    RETURN Self
 

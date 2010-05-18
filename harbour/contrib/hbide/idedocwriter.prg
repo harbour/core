@@ -520,12 +520,16 @@ METHOD IdeDocWriter:saveInFile()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeDocWriter:saveInFunction()
-   LOCAL nCurLine, oEdit, txt_:= ::buildDocument()
+   LOCAL nCurLine, oEdit
 
    /* Bring it on top and make it current */
    ::oSM:editSource( ::cSourceFile, , , , , , .f. )
 
    IF !empty( oEdit := ::oEM:getEditObjectCurrent() )
+      IF oEdit:lReadOnly
+         RETURN Self
+      ENDIF
+
       IF oEdit:isModified()
          MsgBox( oEdit:oEditor:sourceFile + " is modified.", "Please save the source first!" )
          RETURN Self
@@ -537,7 +541,7 @@ METHOD IdeDocWriter:saveInFunction()
             MsgBox( "Source is modified, anyway proceeding.", "Documentation Save Alert" )
          ENDIF
          oEdit:home()
-         oEdit:insertText( hbide_arrayToMemo( txt_ ) )
+         oEdit:insertText( hbide_arrayToMemo( ::buildDocument() ) )
          oEdit:up()
          oEdit:deleteLine()
          oEdit:qEdit:centerCursor()

@@ -72,7 +72,7 @@
 #include "../hbqt_hbqplaintextedit.h"
 
 /*
- * HBQPlainTextEdit ( QWidget * parent = 0 ) .
+ * HBQPlainTextEdit ( QWidget * parent = 0 )
  * HBQPlainTextEdit ( const QString & text, QWidget * parent = 0 )
  * virtual ~HBQPlainTextEdit ()
  */
@@ -787,6 +787,34 @@ HB_FUNC( QT_HBQPLAINTEXTEDIT_HBSETMATCHBRACES )
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQPLAINTEXTEDIT_HBSETMATCHBRACES FP=( p )->hbSetMatchBraces( hb_parl( 2 ) ); p is NULL" ) );
+   }
+}
+
+/*
+ * void           hbGetViewportInfo()
+ */
+HB_FUNC( QT_HBQPLAINTEXTEDIT_HBGETVIEWPORTINFO )
+{
+   HBQPlainTextEdit * p = hbqt_par_HBQPlainTextEdit( 1 );
+   if( p )
+      ( p )->hbGetViewportInfo();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQPLAINTEXTEDIT_HBGETVIEWPORTINFO FP=( p )->hbGetViewportInfo(); p is NULL" ) );
+   }
+}
+
+/*
+ * void           hbApplyKey( int key, Qt::KeyboardModifiers modifiers = 0, const QString & txt )
+ */
+HB_FUNC( QT_HBQPLAINTEXTEDIT_HBAPPLYKEY )
+{
+   HBQPlainTextEdit * p = hbqt_par_HBQPlainTextEdit( 1 );
+   if( p )
+      ( p )->hbApplyKey( hb_parni( 2 ), ( Qt::KeyboardModifiers ) hb_parni( 3 ), HBQPlainTextEdit::tr( hb_parc( 4 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQPLAINTEXTEDIT_HBAPPLYKEY FP=( p )->hbApplyKey( hb_parni( 2 ), ( Qt::KeyboardModifiers ) hb_parni( 3 ), HBQPlainTextEdit::tr( hb_parc( 4 ) ) ); p is NULL" ) );
    }
 }
 
