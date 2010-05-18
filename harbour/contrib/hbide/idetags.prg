@@ -71,7 +71,7 @@
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION UpdateTags( cModule, aSummary, aSumData, aFuncList, aLines )
+FUNCTION UpdateTags( cModule, aSummary, aSumData, aFuncList, aLines, aText )
    LOCAL cType, cName, cSyntax, n, m, i, cSource, cExt
    LOCAL cClassName := ""
    LOCAL aTags      := {}
@@ -174,7 +174,8 @@ FUNCTION UpdateTags( cModule, aSummary, aSumData, aFuncList, aLines )
                         cModule        ,;
                         cSyntax        ,;
                         cType          ,;
-                        Iif( cType = "METH", ":", "" ) + cSyntax ;
+                        Iif( cType = "METH", ":", "" ) + cSyntax, ;
+                        aText[ aSumData[ i,2 ] ] ;
                      };
              )
       ENDIF

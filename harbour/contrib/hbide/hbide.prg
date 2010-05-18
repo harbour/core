@@ -1274,7 +1274,7 @@ METHOD HbIde:CreateTags()
 
             cComments := CheckComments( ::aText )
             aSummary  := Summarize( ::aText, cComments, @aSumData , iif( Upper( cExt ) == ".PRG", 9, 1 ) )
-            ::aTags   := UpdateTags( ::aSources[ i ], aSummary, aSumData, @::aFuncList, @::aLines )
+            ::aTags   := UpdateTags( ::aSources[ i ], aSummary, aSumData, @::aFuncList, @::aLines, ::aText )
 
             #if 0
             IF !empty( aTags )

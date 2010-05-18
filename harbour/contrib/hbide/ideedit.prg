@@ -1441,11 +1441,17 @@ METHOD IdeEdit:find( cText, nPosFrom )
       qCursor:setPosition( nPosFrom )
    ENDIF
    ::qEdit:setTextCursor( qCursor )
-   IF ( lFound := ::qEdit:find( cText, QTextDocument_FindCaseSensitively ) )
-      ::qEdit:centerCursor()
-   ELSE
+   IF ! ( lFound := ::qEdit:find( cText, QTextDocument_FindCaseSensitively ) )
+      IF ! hb_isNumeric( nPosFrom )
+         lFound := ::qEdit:find( cText, QTextDocument_FindBackward + QTextDocument_FindCaseSensitively )
+      ENDIF
+   ENDIF
+
+   IF ! lFound
       qCursor:setPosition( nPos )
       ::qEdit:setTextCursor( qCursor )
+   ELSE
+      ::qEdit:centerCursor()
    ENDIF
 
    RETURN lFound
@@ -1798,9 +1804,17 @@ METHOD IdeEdit:handleCurrentIndent()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:gotoFunction()
-   LOCAL cWord
+   LOCAL cWord, n
+   LOCAL lFindCur := .f.
    IF !empty( cWord := ::getWord( .f. ) )
-      ::oFN:jumpToFunction( cWord, .t. )
+      IF ( n := ascan( ::aTags, {|e_| lower( cWord ) $ lower( e_[ 7 ] ) } ) ) > 0
+         IF ::find( alltrim( ::aTags[ n,8 ] ) )
+            lFindCur := .t.
+         ENDIF
+      ENDIF
+      IF ! lFindCur
+         ::oFN:jumpToFunction( cWord, .t. )
+      ENDIF
    ENDIF
    RETURN Self
 

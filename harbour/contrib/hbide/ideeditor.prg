@@ -167,6 +167,8 @@ CLASS IdeEditsManager INHERIT IdeObject
    METHOD pageUp()
    METHOD pageDown()
 
+   METHOD find( cString )
+
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
@@ -1090,6 +1092,15 @@ METHOD IdeEditsManager:pageDown()
    LOCAL oEdit
    IF !empty( oEdit := ::getEditObjectCurrent() )
       oEdit:pageDown()
+   ENDIF
+   RETURN Self
+/*----------------------------------------------------------------------*/
+//                            Locating
+/*----------------------------------------------------------------------*/
+METHOD IdeEditsManager:find( cString )
+   LOCAL oEdit
+   IF !empty( oEdit := ::getEditObjectCurrent() )
+      oEdit:find( cString )
    ENDIF
    RETURN Self
 /*----------------------------------------------------------------------*/
