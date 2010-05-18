@@ -760,14 +760,6 @@ STATIC FUNCTION hbide_qCursorDownInsert( qCursor )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeEdit:clearSelection()
-
-   ::qEdit:hbSetSelectionInfo( { -1,-1,-1,-1,1 } )
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
 METHOD IdeEdit:copyBlockContents( aCord )
    LOCAL nT, nL, nB, nR, nW, i, cLine, nMode, qClip
    LOCAL cClip := ""
@@ -1308,6 +1300,13 @@ METHOD IdeEdit:toggleColumnSelectionMode()
 
 METHOD IdeEdit:toggleLineSelectionMode()
    ::qEdit:hbSetSelectionMode( 3, .t. )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:clearSelection()
+   //::qEdit:hbSetSelectionInfo( { -1,-1,-1,-1,1 } )
+   ::qEdit:hbSetSelectionMode( 0, .t. )
    RETURN Self
 
 /*----------------------------------------------------------------------*/

@@ -389,6 +389,17 @@ void HBQPlainTextEdit::hbSetSelectionMode( int mode, bool byApplication )
 {
    if( byApplication )
    {
+      if( mode == 0 )
+      {
+         isSelectionByApplication = false;
+         isStreamSelectionON      = false;
+         isColumnSelectionON      = false;
+         isLineSelectionON        = false;
+         hbClearSelection();
+         repaint();
+         return;
+      }
+
       isSelectionByApplication = ! isSelectionByApplication;
 
       if( ! isSelectionByApplication )
@@ -396,6 +407,18 @@ void HBQPlainTextEdit::hbSetSelectionMode( int mode, bool byApplication )
          isStreamSelectionON = false;
          isColumnSelectionON = false;
          isLineSelectionON   = false;
+
+         if( mode == selectionMode_column )
+         {
+            QTextCursor c( textCursor() );
+            c.movePosition( QTextCursor::EndOfLine );
+            if( c.columnNumber() > columnEnds )
+            {
+               c.movePosition( QTextCursor::StartOfLine );
+               c.movePosition( QTextCursor::Right, QTextCursor::MoveAnchor, columnEnds );
+            }
+            setTextCursor( c );
+         }
          setCursorWidth( 1 );
       }
       else
@@ -405,14 +428,17 @@ void HBQPlainTextEdit::hbSetSelectionMode( int mode, bool byApplication )
             case selectionMode_stream:
             {
                setCursorWidth( 1 );
-               if( columnBegins >= 0 )
-               {
-                  hbToStream();
-               }
                selectionMode       = selectionMode_stream;
                isStreamSelectionON = true;
                isColumnSelectionON = false;
                isLineSelectionON   = false;
+
+               QTextCursor c( textCursor() );
+
+               rowBegins     = c.blockNumber();
+               rowEnds       = rowBegins;
+               columnBegins  = c.columnNumber();
+               columnEnds    = columnBegins;
                break;
             }
             case selectionMode_column:
@@ -460,19 +486,20 @@ void HBQPlainTextEdit::hbSetSelectionMode( int mode, bool byApplication )
          {
             case selectionMode_stream:
             {
+               setCursorWidth( 1 );
                if( columnBegins >= 0 )
                {
                   hbToStream();
                }
-               selectionMode = selectionMode_stream;
+               selectionMode       = selectionMode_stream;
                isColumnSelectionON = false;
                isLineSelectionON   = false;
-               setCursorWidth( 1 );
                break;
             }
             case selectionMode_column:
             {
-               selectionMode = selectionMode_column;
+               setCursorWidth( 0 );
+               selectionMode       = selectionMode_column;
                isColumnSelectionON = true;
                isLineSelectionON   = false;
                break;
