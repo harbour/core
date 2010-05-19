@@ -324,39 +324,41 @@ REQUEST hbmk_KEYW
 #define _HBMK_lCreateDyn        62
 #define _HBMK_lCreateImpLib     63
 
-#define _HBMK_lBLDFLGP          64
-#define _HBMK_lBLDFLGC          65
-#define _HBMK_lBLDFLGL          66
+#define _HBMK_lDynVM            64
 
-#define _HBMK_cFIRST            67
-#define _HBMK_aPRG              68
-#define _HBMK_aC                69
-#define _HBMK_aCPP              70
-#define _HBMK_aRESSRC           71
-#define _HBMK_aRESCMP           72
-#define _HBMK_aOBJUSER          73
-#define _HBMK_aICON             74
-#define _HBMK_aIMPLIBSRC        75
-#define _HBMK_cDEF              76
-#define _HBMK_hDEPTS            77
+#define _HBMK_lBLDFLGP          65
+#define _HBMK_lBLDFLGC          66
+#define _HBMK_lBLDFLGL          67
 
-#define _HBMK_aPO               78
-#define _HBMK_cHBL              79
-#define _HBMK_cHBLDir           80
-#define _HBMK_aLNG              81
-#define _HBMK_cPO               82
+#define _HBMK_cFIRST            68
+#define _HBMK_aPRG              69
+#define _HBMK_aC                70
+#define _HBMK_aCPP              71
+#define _HBMK_aRESSRC           72
+#define _HBMK_aRESCMP           73
+#define _HBMK_aOBJUSER          74
+#define _HBMK_aICON             75
+#define _HBMK_aIMPLIBSRC        76
+#define _HBMK_cDEF              77
+#define _HBMK_hDEPTS            78
 
-#define _HBMK_lDEBUGTIME        83
-#define _HBMK_lDEBUGINC         84
-#define _HBMK_lDEBUGSTUB        85
-#define _HBMK_lDEBUGI18N        86
+#define _HBMK_aPO               79
+#define _HBMK_cHBL              80
+#define _HBMK_cHBLDir           81
+#define _HBMK_aLNG              82
+#define _HBMK_cPO               83
 
-#define _HBMK_cCCPATH           87
-#define _HBMK_cCCPREFIX         88
-#define _HBMK_cCCPOSTFIX        89
-#define _HBMK_cCCEXT            90
+#define _HBMK_lDEBUGTIME        84
+#define _HBMK_lDEBUGINC         85
+#define _HBMK_lDEBUGSTUB        86
+#define _HBMK_lDEBUGI18N        87
 
-#define _HBMK_MAX_              90
+#define _HBMK_cCCPATH           88
+#define _HBMK_cCCPREFIX         89
+#define _HBMK_cCCPOSTFIX        90
+#define _HBMK_cCCEXT            91
+
+#define _HBMK_MAX_              91
 
 #ifndef _HBMK_EMBEDDED_
 
@@ -743,6 +745,8 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    hbmk[ _HBMK_lCreateLib ] := .F.
    hbmk[ _HBMK_lCreateDyn ] := .F.
    hbmk[ _HBMK_lCreateImpLib ] := .F.
+
+   hbmk[ _HBMK_lDynVM ] := .F.
 
    hbmk[ _HBMK_lQuiet ] := .F.
    hbmk[ _HBMK_lInfo ] := .F.
@@ -1622,8 +1626,8 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       CASE cParamL == "-pause"           ; lPause := .T.
       CASE cParamL == "-hbexe"           ; hbmk[ _HBMK_lInfo ] := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .F. ; hbmk[ _HBMK_lCreateLib ] := .F. ; hbmk[ _HBMK_lCreateDyn ] := .F.
       CASE cParamL == "-hblib"           ; hbmk[ _HBMK_lInfo ] := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T. ; hbmk[ _HBMK_lCreateLib ] := .T. ; hbmk[ _HBMK_lCreateDyn ] := .F.
-      CASE cParamL == "-hbdyn"           ; hbmk[ _HBMK_lInfo ] := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T. ; hbmk[ _HBMK_lCreateLib ] := .F. ; hbmk[ _HBMK_lCreateDyn ] := .T. ; l_lNOHBLIB := .T.
-      CASE cParamL == "-hbdynvm"         ; hbmk[ _HBMK_lInfo ] := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T. ; hbmk[ _HBMK_lCreateLib ] := .F. ; hbmk[ _HBMK_lCreateDyn ] := .T. ; l_lNOHBLIB := .F.
+      CASE cParamL == "-hbdyn"           ; hbmk[ _HBMK_lInfo ] := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T. ; hbmk[ _HBMK_lCreateLib ] := .F. ; hbmk[ _HBMK_lCreateDyn ] := .T. ; hbmk[ _HBMK_lDynVM ] := .F. ; l_lNOHBLIB := .T.
+      CASE cParamL == "-hbdynvm"         ; hbmk[ _HBMK_lInfo ] := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T. ; hbmk[ _HBMK_lCreateLib ] := .F. ; hbmk[ _HBMK_lCreateDyn ] := .T. ; hbmk[ _HBMK_lDynVM ] := .T. ; l_lNOHBLIB := .F.
       CASE cParamL == "-hbimplib"        ; hbmk[ _HBMK_lInfo ] := .F. ; lStopAfterInit := .T. ; hbmk[ _HBMK_lCreateImpLib ] := .T. ; lAcceptIFlag := .T.
       CASE cParamL == "-gui" .OR. ;
            cParamL == "-mwindows"        ; hbmk[ _HBMK_lGUI ]       := .T. /* Compatibility */
@@ -3094,6 +3098,12 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          CASE hbmk[ _HBMK_cPLAT ] == "win"   ; cOpt_Dyn := "OP quiet SYS nt_dll {FD} NAME {OD} {LO} {DL} {LL} {LB} {LS}{SCRIPT}"
          CASE hbmk[ _HBMK_cPLAT ] == "os2"   ; cOpt_Dyn := "OP quiet SYS os2v2_dll {FD} NAME {OD} {LO} {DL} {LL} {LB} {LS}{SCRIPT}"
          ENDCASE
+         IF hbmk[ _HBMK_cPLAT ] $ "win|os2" .AND. ! Empty( hbmk[ _HBMK_cDEF ] )
+            /* TODO: Watcom wlink requires a non-standard layout for .def files.
+                     We will need a converter and implement on-the-fly conversion
+                     to a temp file and pass that via {IM}. */
+            AAdd( hbmk[ _HBMK_aOPTD ], "@{IM}" )
+         ENDIF
          IF hbmk[ _HBMK_cPLAT ] == "dos"
             /* workaround for not included automatically CLIB in pure C mode DOS builds */
             AAdd( l_aLIBSYS, "clib3r" )
@@ -4058,7 +4068,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
          /* HACK: Override entry point requested by user or detected by us,
                   and override the GT if requested by user. */
-         IF ! lStopAfterCComp .AND. ;
+         IF ( ! lStopAfterCComp .OR. hbmk[ _HBMK_lDynVM ] ) .AND. ;
             ( l_cMAIN != NIL .OR. ;
               ! Empty( hbmk[ _HBMK_aLIBUSERGT ] ) .OR. ;
               hbmk[ _HBMK_cGT ] != NIL .OR. ;
@@ -4326,17 +4336,22 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
          /* Library list assembly */
          IF hbmk[ _HBMK_lSHARED ] .AND. ! Empty( l_aLIBSHARED )
-            l_aLIBHB := AClone( l_aLIBSHAREDPOST )
-            /* NOTE: Make sure to add these static libs only if they can be found.
-                     This will ensure that hbmk2 can be used to build shared mode binaries
-                     even when static libs are not installed (typically on *nix systems).
-                     [vszakats] */
-            FOR EACH tmp IN ArrayAJoin( { aLIB_BASE_CPLR,;
-                                          aLIB_BASE_DEBUG } )
-               IF hb_FileExists( _HBLIB_FULLPATH( tmp ) )
-                  AAdd( l_aLIBHB, tmp )
-               ENDIF
-            NEXT
+            /* Don't link Harbour dynamic/static libs when in '-hbdyn -shared' mode */
+            IF !( hbmk[ _HBMK_lCreateDyn ] .AND. ! hbmk[ _HBMK_lDynVM ] )
+               l_aLIBHB := AClone( l_aLIBSHAREDPOST )
+               /* NOTE: Make sure to add these static libs only if they can be found.
+                        This will ensure that hbmk2 can be used to build shared mode binaries
+                        even when static libs are not installed (typically on *nix systems).
+                        [vszakats] */
+               FOR EACH tmp IN ArrayAJoin( { aLIB_BASE_CPLR,;
+                                             aLIB_BASE_DEBUG } )
+                  IF hb_FileExists( _HBLIB_FULLPATH( tmp ) )
+                     AAdd( l_aLIBHB, tmp )
+                  ENDIF
+               NEXT
+            ELSE
+               l_aLIBHB := {}
+            ENDIF
          ELSE
             l_aLIBHB := ArrayAJoin( { aLIB_BASE_EXTERN,;
                                       aLIB_BASE_DEBUG,;
@@ -4360,8 +4375,11 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       l_aLIBA := {}
       ListCookLib( hbmk, l_aLIB, l_aLIBA, l_aLIBRAW, NIL, cLibExt )
       IF hbmk[ _HBMK_lSHARED ] .AND. ! Empty( l_aLIBSHARED )
-         l_aLIBRAW := ArrayJoin( l_aLIBSHARED, l_aLIBRAW )
-         ListCookLib( hbmk, l_aLIB, l_aLIBA, l_aLIBSHARED, NIL )
+         /* Don't link Harbour dynamic/static libs when in '-hbdyn -shared' mode */
+         IF !( hbmk[ _HBMK_lCreateDyn ] .AND. ! hbmk[ _HBMK_lDynVM ] )
+            l_aLIBRAW := ArrayJoin( l_aLIBSHARED, l_aLIBRAW )
+            ListCookLib( hbmk, l_aLIB, l_aLIBA, l_aLIBSHARED, NIL )
+         ENDIF
       ENDIF
       /* Dress obj names. */
       IF cObjExt == NIL
@@ -8775,12 +8793,12 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-L<libpath>"        , I_( "additional path to search for libraries" ) },;
       { "-i<p>|-incpath=<p>" , I_( "additional path to search for headers" ) },;
       { "-static|-shared"    , I_( "link with static/shared libs" ) },;
-      { "-mt|-st"            , I_( "link with multi/single-thread VM" ) },;
+      { "-mt|-st"            , I_( "link with multi/single-thread Harbour VM" ) },;
       { "-gt<name>"          , I_( "link with GT<name> GT driver, can be repeated to link with more GTs. First one will be the default at runtime" ) },;
       { "-hbexe"             , I_( "create executable (default)" ) },;
       { "-hblib"             , I_( "create static library" ) },;
-      { "-hbdyn"             , I_( "create dynamic library" ) },;
-      { "-hbdynvm"           , I_( "create dynamic library (EXPERIMENTAL)" ) },;
+      { "-hbdyn"             , I_( "create dynamic library (without linked Harbour VM)" ) },;
+      { "-hbdynvm"           , I_( "create dynamic library" ) },;
       { "-hbimplib"          , I_( "create import library" ) }}
 
    LOCAL aOpt_Help := {;

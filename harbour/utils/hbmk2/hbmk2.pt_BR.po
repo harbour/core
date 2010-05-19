@@ -363,7 +363,7 @@ msgstr "Atenção: Não foi possível criar o diretório de destino: %1$s."
 
 #: hbmk2.prg:7851
 #, c-format
-msgid "link with multi/single-thread VM"
+msgid "link with multi/single-thread Harbour VM"
 msgstr "linkar com suporte multi ou single-thread na HVM"
 
 #: hbmk2.prg:7825

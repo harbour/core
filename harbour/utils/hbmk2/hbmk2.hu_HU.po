@@ -794,7 +794,7 @@ msgstr "kapcsoló továbbítása (statikus függvénykönyvtár) szerkesztõnek"
 
 #: hbmk2.prg:7850
 #, c-format
-msgid "link with multi/single-thread VM"
+msgid "link with multi/single-thread Harbour VM"
 msgstr "többszálú/egyszálú virtuális gép használata"
 
 #: hbmk2.prg:7941
