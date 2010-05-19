@@ -151,6 +151,7 @@ private:
    bool           isSelectionByApplication;
    int            hitTestRow;
    int            hitTestColumn;
+   QRect          highlight;
 
 
 protected:
@@ -202,12 +203,14 @@ public slots:
    void           hbSetMatchBraces( bool all ){ m_matchBracesAll = all; };
    void           hbGetViewportInfo();
    void           hbApplyKey( int key, Qt::KeyboardModifiers modifiers = 0, const QString & txt = "" );
+   void           hbHighlightArea( int, int, int, int, int );
 
 private slots:
    void           hbSlotCursorPositionChanged();
    void           hbUpdateLineNumberArea( const QRect &, int );
    void           hbUpdateHorzRuler( const QRect &, int );
    void           hbPaintSelection( QPaintEvent * );
+   void           hbPaintHighlight( QPaintEvent * );
    bool           hbKeyPressSelection( QKeyEvent * );
    void           hbClearSelection();
    void           hbUpdateCaret();

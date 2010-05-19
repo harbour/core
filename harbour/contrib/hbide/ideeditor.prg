@@ -167,8 +167,9 @@ CLASS IdeEditsManager INHERIT IdeObject
    METHOD pageUp()
    METHOD pageDown()
 
-   METHOD find( cString )
+   METHOD find( cString, nPosFrom )
    METHOD showThumbnail()
+   METHOD changeThumbnail()
 
    ENDCLASS
 
@@ -1103,12 +1104,19 @@ METHOD IdeEditsManager:showThumbnail()
    ENDIF
    RETURN Self
 /*----------------------------------------------------------------------*/
+METHOD IdeEditsManager:changeThumbnail()
+   LOCAL oEdit
+   IF !empty( oEdit := ::getEditorCurrent() )
+      oEdit:changeThumbnail()
+   ENDIF
+   RETURN Self
+/*----------------------------------------------------------------------*/
 //                            Locating
 /*----------------------------------------------------------------------*/
-METHOD IdeEditsManager:find( cString )
+METHOD IdeEditsManager:find( cString, nPosFrom )
    LOCAL oEdit
    IF !empty( oEdit := ::getEditObjectCurrent() )
-      oEdit:find( cString )
+      oEdit:find( cString, nPosFrom )
    ENDIF
    RETURN Self
 /*----------------------------------------------------------------------*/
@@ -1179,6 +1187,8 @@ CLASS IdeEditor INHERIT IdeObject
    METHOD setTabImage( qEdit )
    METHOD applyTheme( cTheme )
    METHOD showThumbnail()
+   METHOD changeThumbnail()
+   METHOD scrollThumbnail()
 
    ENDCLASS
 
@@ -1266,6 +1276,8 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView, a
    ::qCqEdit := ::oEdit:qEdit
    ::qCoEdit := ::oEdit
 
+   ::connect( ::oEdit:qEdit, "updateRequest(QRect,int)", {|| ::scrollThumbnail() } )
+
    ::qDocument  := QTextDocument():configure( ::qEdit:document() )
    ::qDocLayout := QPlainTextDocumentLayout():new( ::qDocument )
    ::qDocument:setDocumentLayout( ::qDocLayout )
@@ -1296,6 +1308,8 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView, a
 
 METHOD IdeEditor:destroy()
    LOCAL n, oEdit
+
+   ::disconnect( ::oEdit:qEdit, "updateRequest(QRect,int)" )
 
    IF !empty( ::qTimerSave )
       ::disconnect( ::qTimerSave, "timeout()" )
@@ -1481,6 +1495,7 @@ METHOD IdeEditor:activateTab( mp1, mp2, oXbp )
       oEdit:qCoEdit:toggleLineNumbers()
       oEdit:qCoEdit:toggleCurrentLineHighlightMode()
       oEdit:qCoEdit:dispStatusInfo()
+      oEdit:changeThumbnail()
    ENDIF
 
    RETURN Self
@@ -1581,7 +1596,7 @@ METHOD IdeEditor:showThumbnail()
       ::qTNFont := QFont():new()
       ::qTNFont:setFamily( "Courier New" )
       ::qTNFont:setFixedPitch( .t. )
-      ::qTNFont:setPointSize( 6 )
+      ::qTNFont:setPointSize( 5 )
 
       ::qThumbnail := IdeEdit():new( Self, 0 ):create()
       IF ::cType != "U"
@@ -1589,12 +1604,39 @@ METHOD IdeEditor:showThumbnail()
       ENDIF
 
       ::qThumbnail:qEdit:setFont( ::qTNFont )
-      ::oSourceThumbnailDock:oWidget:setWidget( ::qThumbnail:qEdit )
-      ::qThumbnail:lReadOnly := .t.
+      ::qThumbnail:setReadOnly( .t. )
+      ::qThumbnail:qEdit:setTextInteractionFlags( Qt_TextSelectableByMouse + Qt_TextSelectableByKeyboard )
    ENDIF
 
+   ::oSourceThumbnailDock:oWidget:setWidget( ::qThumbnail:qEdit )
    ::qThumbnail:qEdit:clear()
    ::qThumbnail:qEdit:setPlainText( hb_memoRead( ::sourceFile ) )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditor:changeThumbnail()
+
+   IF ::lLoaded .AND. ::oSourceThumbnailDock:oWidget:isVisible()
+      ::showThumbnail()
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditor:scrollThumbnail()
+   LOCAL qScroll
+
+   IF ::lLoaded .AND. ::oSourceThumbnailDock:oWidget:isVisible() .AND. !empty( ::qThumbnail )
+      qScroll := QScrollBar():configure( ::oEdit:qEdit:verticalScrollBar() )
+      QScrollBar():configure( ::qThumbnail:qEdit:verticalScrollBar() ):setValue( qScroll:value() )
+
+      ::oEdit:qEdit:hbGetViewportInfo()
+
+      ::qThumbnail:qEdit:hbHighlightArea( ::oEdit:aViewportInfo[ 1 ], 0, ::oEdit:aViewportInfo[ 1 ]+::oEdit:aViewportInfo[ 3 ]-1, 0, 1 )
+   ENDIF
 
    RETURN Self
 

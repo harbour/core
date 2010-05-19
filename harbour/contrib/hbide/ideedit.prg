@@ -1305,7 +1305,6 @@ METHOD IdeEdit:toggleLineSelectionMode()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:clearSelection()
-   //::qEdit:hbSetSelectionInfo( { -1,-1,-1,-1,1 } )
    ::qEdit:hbSetSelectionMode( 0, .t. )
    RETURN Self
 

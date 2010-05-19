@@ -222,6 +222,7 @@ CLASS IdeShortcuts INHERIT IdeObject
    METHOD panHome()
    METHOD pageUp()
    METHOD pageDown()
+   METHOD find( cString, nPosFrom )
 
    ENDCLASS
 
@@ -1204,6 +1205,9 @@ METHOD IdeShortcuts:pageUp()
 METHOD IdeShortcuts:pageDown()
    RETURN ::oEM:pageDown()
 /*----------------------------------------------------------------------*/
+METHOD IdeShortcuts:find( cString, nPosFrom )
+   RETURN ::oEM:find( cString, nPosFrom )
+/*----------------------------------------------------------------------*/
 //                       Public API Definitions
 /*----------------------------------------------------------------------*/
 
@@ -1489,6 +1493,9 @@ METHOD IdeShortcuts:loadMethods()
    aadd( ::aMethods, { 'getText()'         , ;
                        'getText()'         , ;
                        'Returns current selected text.' } )
+   aadd( ::aMethods, { 'find( cString[, nFromPos ] )'   , ;
+                       'find( "" )'        , ;
+                       'Finds the <cString> from current location. If not found it searches backward. If <nFromPos> is given, it searches from this position and no backward search is performed.' } )
 
 
    aadd( ::aMethods, { '          Activating Dialogs', ;

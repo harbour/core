@@ -117,6 +117,7 @@ HBQPlainTextEdit::HBQPlainTextEdit( QWidget * parent ) : QPlainTextEdit( parent 
    isSelectionByApplication = false;
    hitTestRow               = -1;
    hitTestColumn            = -1;
+   highlight                = QRect( -1, -1, -1, -1 );
 
    connect( this, SIGNAL( blockCountChanged( int ) )           , this, SLOT( hbUpdateLineNumberAreaWidth( int ) ) );
    connect( this, SIGNAL( updateRequest( const QRect &, int ) ), this, SLOT( hbUpdateLineNumberArea( const QRect &, int ) ) );
@@ -258,6 +259,20 @@ bool HBQPlainTextEdit::event( QEvent *event )
 
 /*----------------------------------------------------------------------*/
 
+void HBQPlainTextEdit::hbHighlightArea( int top, int left, int bottom, int right, int mode )
+{
+   HB_SYMBOL_UNUSED( mode );
+
+   highlight.setTop( top );
+   highlight.setLeft( left );
+   highlight.setBottom( bottom );
+   highlight.setRight( right );
+
+   repaint();
+}
+
+/*----------------------------------------------------------------------*/
+
 void HBQPlainTextEdit::hbSetSelectionColor( const QColor & color )
 {
    m_selectionColor = color;
@@ -334,11 +349,10 @@ void HBQPlainTextEdit::hbGetViewportInfo()
 
       hb_arrayNew( p2, 6 );
 
-      QTextCursor ct = cursorForPosition( QPoint( 2,2 ) );
-      int          t = ct.blockNumber();
-      int          c = ct.columnNumber();
-      int       rows = viewport()->height() / fontMetrics().height();
-      int       cols = viewport()->width()  / fontMetrics().averageCharWidth();
+      int    t = firstVisibleBlock().blockNumber();
+      int    c = hbFirstVisibleColumn();
+      int rows = viewport()->height() / fontMetrics().height();
+      int cols = viewport()->width()  / fontMetrics().averageCharWidth();
 
       hb_arraySetNI( p2, 1, t    );
       hb_arraySetNI( p2, 2, c    );
@@ -1200,11 +1214,11 @@ void HBQPlainTextEdit::keyPressEvent( QKeyEvent * event )
       // The following keys are forwarded by the completer to the widget
       switch( event->key() )
       {
-      case Qt::Key_Enter:
-      case Qt::Key_Return:
-      case Qt::Key_Escape:
-      case Qt::Key_Tab:
-      case Qt::Key_Backtab:
+      case Qt::Key_Enter   :
+      case Qt::Key_Return  :
+      case Qt::Key_Escape  :
+      case Qt::Key_Tab     :
+      case Qt::Key_Backtab :
          event->ignore();
          return;                                    // let the completer do default behavior
       case Qt::Key_Space:
@@ -1337,6 +1351,7 @@ void HBQPlainTextEdit::paintEvent( QPaintEvent * event )
       ++blockNumber;
    }
    this->hbPaintSelection( event );
+   this->hbPaintHighlight( event );
 
    #if 0
    //if( event->rect().width() == cursorWidth() && event->rect().height() == cursorRect().height() )
@@ -1485,6 +1500,32 @@ void HBQPlainTextEdit::lineNumberAreaPaintEvent( QPaintEvent *event )
       top    = bottom;
       bottom = top +( int ) blockBoundingRect( block ).height();
       ++blockNumber;
+   }
+}
+
+/*----------------------------------------------------------------------*/
+
+void HBQPlainTextEdit::hbPaintHighlight( QPaintEvent * event )
+{
+   if( highlight.top() > -1 )
+   {
+      int fontHeight = fontMetrics().height();
+      int          t = firstVisibleBlock().blockNumber();
+      int          b = t + ( viewport()->height() / fontHeight ) + 1;
+      int         rb = highlight.top();
+      int         re = highlight.bottom();
+
+      if( re >= t && rb < b )
+      {
+         QPainter p( viewport() );
+         int    top = ( ( rb <= t ) ? 0 : ( ( rb - t ) * fontHeight ) );
+         int    btm = ( ( re - t + 1 ) * fontHeight ) - top;
+
+         btm = btm > viewport()->height() ? viewport()->height() : btm;
+
+         QRect r( 0, top, viewport()->width(), btm );
+         p.fillRect( r, QBrush( QColor( 255,255,0 ) ) );
+      }
    }
 }
 

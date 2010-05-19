@@ -818,6 +818,20 @@ HB_FUNC( QT_HBQPLAINTEXTEDIT_HBAPPLYKEY )
    }
 }
 
+/*
+ * void           hbHighlightArea( int top, int left, int bottom, int right, int mode )
+ */
+HB_FUNC( QT_HBQPLAINTEXTEDIT_HBHIGHLIGHTAREA )
+{
+   HBQPlainTextEdit * p = hbqt_par_HBQPlainTextEdit( 1 );
+   if( p )
+      ( p )->hbHighlightArea( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), hb_parni( 6 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQPLAINTEXTEDIT_HBHIGHLIGHTAREA FP=( p )->hbHighlightArea( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), hb_parni( 6 ) ); p is NULL" ) );
+   }
+}
+
 
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */

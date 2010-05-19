@@ -76,8 +76,6 @@ STATIC FUNCTION hbide_saveSettings( oIde )
    hb_fNameSplit( oIde:cProjIni, @cPath )
    hbqt_QMainWindow_saveSettings( cPath + "settings.ide", "hbidesettings", oIde:oDlg:oWidget:pPtr )
 
- * hbqt_QMainWindow_saveSettings( oIde:cProjIni, "hbidesettings", oIde:oDlg:oWidget:pPtr )
-
    RETURN nil
 
 /*----------------------------------------------------------------------*/
@@ -87,8 +85,6 @@ FUNCTION hbide_restSettings( oIde )
 
    hb_fNameSplit( oIde:cProjIni, @cPath )
    hbqt_QMainWindow_restSettings( cPath + "settings.ide", "hbidesettings", oIde:oDlg:oWidget:pPtr )
-
- * hbqt_QMainWindow_restSettings( oIde:cProjIni, "hbidesettings", oIde:oDlg:oWidget:pPtr )
 
    RETURN nil
 

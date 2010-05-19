@@ -145,6 +145,7 @@ HB_FUNC( QT_HBQPLAINTEXTEDIT )
    void           hbSetMatchBraces( bool all )
    void           hbGetViewportInfo()
    void           hbApplyKey( int key, Qt::KeyboardModifiers modifiers = 0, const QString & txt )
+   void           hbHighlightArea( int top, int left, int bottom, int right, int mode )
 </SLOTS>
 
 <SIGNALS>

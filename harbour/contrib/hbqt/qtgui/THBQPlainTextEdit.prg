@@ -114,6 +114,7 @@ CREATE CLASS HBQPlainTextEdit INHERIT HbQtObjectHandler, QPlainTextEdit
    METHOD  hbSetMatchBraces( lAll )
    METHOD  hbGetViewportInfo()
    METHOD  hbApplyKey( nKey, nModifiers, cTxt )
+   METHOD  hbHighlightArea( nTop, nLeft, nBottom, nRight, nMode )
 
    ENDCLASS
 
@@ -313,4 +314,8 @@ METHOD HBQPlainTextEdit:hbGetViewportInfo()
 
 METHOD HBQPlainTextEdit:hbApplyKey( nKey, nModifiers, cTxt )
    RETURN Qt_HBQPlainTextEdit_hbApplyKey( ::pPtr, nKey, nModifiers, cTxt )
+
+
+METHOD HBQPlainTextEdit:hbHighlightArea( nTop, nLeft, nBottom, nRight, nMode )
+   RETURN Qt_HBQPlainTextEdit_hbHighlightArea( ::pPtr, nTop, nLeft, nBottom, nRight, nMode )
 
