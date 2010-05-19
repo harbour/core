@@ -308,7 +308,7 @@ METHOD IdeEdit:zoom( nKey )
    ELSEIF nKey == 0
       ::currentPointSize := ::pointSize
 
-   ELSEIF nKey >= 5 .AND. nKey <= 30
+   ELSEIF nKey >= 3 .AND. nKey <= 30
       ::currentPointSize := nKey
 
    ELSE

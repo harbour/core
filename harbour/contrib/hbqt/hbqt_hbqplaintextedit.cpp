@@ -318,6 +318,13 @@ void HBQPlainTextEdit::hbHitTest( const QPoint & pt )
 
 /*----------------------------------------------------------------------*/
 
+int HBQPlainTextEdit::hbFirstVisibleColumn()
+{
+   return ( horizontalScrollBar()->value() / fontMetrics().averageCharWidth() );
+}
+
+/*----------------------------------------------------------------------*/
+
 void HBQPlainTextEdit::hbGetViewportInfo()
 {
    if( block )
@@ -1405,47 +1412,24 @@ void HBQPlainTextEdit::paintEvent( QPaintEvent * event )
 }
 /*----------------------------------------------------------------------*/
 
-QBrush HBQPlainTextEdit::brushForBookmark( int index )
-{
-   QBrush br;
-
-   if(      index == 0 )
-      br = QBrush( QColor( 255, 255, 127 ) );
-   else if( index == 1 )
-      br = QBrush( QColor( 175, 175, 255 ) );
-   else if( index == 2 )
-      br = QBrush( QColor( 255, 175, 175 ) );
-   else if( index == 3 )
-      br = QBrush( QColor( 175, 255, 175 ) );
-   else if( index == 4 )
-      br = QBrush( QColor( 255, 190, 125 ) );
-   else if( index == 5 )
-      br = QBrush( QColor( 175, 255, 255 ) );
-   else
-      br = QBrush( m_currentLineColor );
-
-   return br;
-}
-
-/*----------------------------------------------------------------------*/
-
 void HBQPlainTextEdit::horzRulerPaintEvent( QPaintEvent *event )
 {
-   QRect cr = event->rect();
+   int   fontWidth = fontMetrics().averageCharWidth();
+   QRect        cr = event->rect();
    QPainter painter( horzRuler );
 
    painter.fillRect( cr, m_horzRulerBkColor );
    painter.setPen( Qt::gray );
    painter.drawLine( cr.left(), cr.bottom(), cr.width(), cr.bottom() );
    painter.setPen( Qt::black );
-   int fontWidth = fontMetrics().averageCharWidth();
+
    int left = cr.left() + ( fontWidth / 2 ) + ( lineNumberArea->isVisible() ? lineNumberArea->width() : 0 );
 
    QRect rc( cursorRect( textCursor() ) );
    QTextCursor cursor( cursorForPosition( QPoint( 1, rc.top() + 1 ) ) );
 
    int i;
-   for( i = cursor.columnNumber(); left < cr.width(); i++ )
+   for( i = hbFirstVisibleColumn(); left < cr.width(); i++ )
    {
       if( i % 10 == 0 )
       {
@@ -1509,7 +1493,7 @@ void HBQPlainTextEdit::lineNumberAreaPaintEvent( QPaintEvent *event )
 void HBQPlainTextEdit::hbPaintSelection( QPaintEvent * event )
 {
    HB_SYMBOL_UNUSED( event );
-//HB_TRACE( HB_TR_ALWAYS, ( "       1     " ) );
+
    if( rowBegins >= 0 && rowEnds >= 0 )
    {
       int cb = columnBegins <= columnEnds ? columnBegins : columnEnds;
@@ -1517,9 +1501,8 @@ void HBQPlainTextEdit::hbPaintSelection( QPaintEvent * event )
       int rb = rowBegins    <= rowEnds    ? rowBegins    : rowEnds;
       int re = rowBegins    <= rowEnds    ? rowEnds      : rowBegins;
 
-      QTextCursor ct = cursorForPosition( QPoint( 2,2 ) );
-      int          t = ct.blockNumber();
-      int          c = ct.columnNumber();
+      int          t = firstVisibleBlock().blockNumber();
+      int          c = hbFirstVisibleColumn();
       int fontHeight = fontMetrics().height();
       int          b = t + ( viewport()->height() / fontHeight ) + 1;
 
@@ -1542,11 +1525,7 @@ void HBQPlainTextEdit::hbPaintSelection( QPaintEvent * event )
             int w = ( cb == ce ? 1 : ( ( ce - cb ) * fontWidth ) );
 
             QRect r( x, top, w, btm );
-
-            //if( event->rect().intersects( r ) )
-            {
-               p.fillRect( r, QBrush( m_selectionColor ) );
-            }
+            p.fillRect( r, QBrush( m_selectionColor ) );
          }
          else if( selectionMode == selectionMode_stream )
          {
@@ -1619,7 +1598,30 @@ void HBQPlainTextEdit::hbPaintSelection( QPaintEvent * event )
          }
       }
    }
-//HB_TRACE( HB_TR_ALWAYS, ( "        2     " ) );
+}
+
+/*----------------------------------------------------------------------*/
+
+QBrush HBQPlainTextEdit::brushForBookmark( int index )
+{
+   QBrush br;
+
+   if(      index == 0 )
+      br = QBrush( QColor( 255, 255, 127 ) );
+   else if( index == 1 )
+      br = QBrush( QColor( 175, 175, 255 ) );
+   else if( index == 2 )
+      br = QBrush( QColor( 255, 175, 175 ) );
+   else if( index == 3 )
+      br = QBrush( QColor( 175, 255, 175 ) );
+   else if( index == 4 )
+      br = QBrush( QColor( 255, 190, 125 ) );
+   else if( index == 5 )
+      br = QBrush( QColor( 175, 255, 255 ) );
+   else
+      br = QBrush( m_currentLineColor );
+
+   return br;
 }
 
 /*----------------------------------------------------------------------*/

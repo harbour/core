@@ -220,6 +220,7 @@ CLASS HbIde
    DATA   oHelpDock
    DATA   oSkeltnDock
    DATA   oFindDock
+   DATA   oSourceThumbnailDock
 
    DATA   lProjTreeVisible                        INIT   .t.
    DATA   lDockRVisible                           INIT   .f.

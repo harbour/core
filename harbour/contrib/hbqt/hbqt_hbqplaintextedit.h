@@ -213,6 +213,7 @@ private slots:
    void           hbUpdateCaret();
    void           hbHitTest( const QPoint & );
    bool           hbKeyPressSelectionByApplication( QKeyEvent * event );
+   int            hbFirstVisibleColumn();
 };
 
 

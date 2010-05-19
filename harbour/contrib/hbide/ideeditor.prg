@@ -168,6 +168,7 @@ CLASS IdeEditsManager INHERIT IdeObject
    METHOD pageDown()
 
    METHOD find( cString )
+   METHOD showThumbnail()
 
    ENDCLASS
 
@@ -1095,6 +1096,13 @@ METHOD IdeEditsManager:pageDown()
    ENDIF
    RETURN Self
 /*----------------------------------------------------------------------*/
+METHOD IdeEditsManager:showThumbnail()
+   LOCAL oEdit
+   IF !empty( oEdit := ::getEditorCurrent() )
+      oEdit:showThumbnail()
+   ENDIF
+   RETURN Self
+/*----------------------------------------------------------------------*/
 //                            Locating
 /*----------------------------------------------------------------------*/
 METHOD IdeEditsManager:find( cString )
@@ -1129,6 +1137,10 @@ CLASS IdeEditor INHERIT IdeObject
    DATA   pathNormalized
    DATA   qLayout
    DATA   lLoaded                                 INIT   .F.
+
+   DATA   qThumbnail
+   DATA   qTNFont
+   DATA   qTNHiliter
 
    DATA   aEdits                                  INIT   {}   /* Hold IdeEdit Objects */
    DATA   oEdit
@@ -1166,6 +1178,7 @@ CLASS IdeEditor INHERIT IdeObject
    METHOD dispEditInfo( qEdit )
    METHOD setTabImage( qEdit )
    METHOD applyTheme( cTheme )
+   METHOD showThumbnail()
 
    ENDCLASS
 
@@ -1558,6 +1571,31 @@ METHOD IdeEditor:applyTheme( cTheme )
          ::qHiliter := ::oTH:SetSyntaxHilighting( ::qEdit, @::cTheme )
       ENDIF
    ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditor:showThumbnail()
+
+   IF empty( ::qThumbnail )
+      ::qTNFont := QFont():new()
+      ::qTNFont:setFamily( "Courier New" )
+      ::qTNFont:setFixedPitch( .t. )
+      ::qTNFont:setPointSize( 6 )
+
+      ::qThumbnail := IdeEdit():new( Self, 0 ):create()
+      IF ::cType != "U"
+         ::qTNHiliter := ::oTH:SetSyntaxHilighting( ::qThumbnail:qEdit, @::cTheme )
+      ENDIF
+
+      ::qThumbnail:qEdit:setFont( ::qTNFont )
+      ::oSourceThumbnailDock:oWidget:setWidget( ::qThumbnail:qEdit )
+      ::qThumbnail:lReadOnly := .t.
+   ENDIF
+
+   ::qThumbnail:qEdit:clear()
+   ::qThumbnail:qEdit:setPlainText( hb_memoRead( ::sourceFile ) )
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/

@@ -83,6 +83,7 @@
 #define dockSkltnsTree_visibilityChanged          309
 #define dockHelpDock_visibilityChanged            310
 #define oFuncDock_visibilityChanged               311
+#define dockSourceThumbnail_visibilityChanged     312
 
 /*----------------------------------------------------------------------*/
 
@@ -133,6 +134,7 @@ CLASS IdeDocks INHERIT IdeObject
    METHOD getADockWidget( nAreas, cObjectName, cWindowTitle, nFlags )
    METHOD getPanelIcon( cView )
    METHOD animateComponents( nMode )
+   METHOD buildSourceThumbnail()
 
    ENDCLASS
 
@@ -169,6 +171,8 @@ METHOD IdeDocks:destroy()
    ::disconnect( ::oSkeltnDock:oWidget    , "visibilityChanged(bool)" )
    ::disconnect( ::oHelpDock:oWidget      , "visibilityChanged(bool)" )
    ::disconnect( ::oFuncDock:oWidget      , "visibilityChanged(bool)" )
+
+   ::disconnect( ::oSourceThumbnailDock:oWidget, "visibilityChanged(bool)" )
 
    #if 0  /* Not Implemented */
    ::disconnect( ::oDockPT:oWidget        , "visibilityChanged(bool)" )
@@ -275,6 +279,7 @@ METHOD IdeDocks:buildDockWidgets()
    ::buildDocViewer()
    ::buildDocWriter()
    ::buildFunctionsDock()
+   ::buildSourceThumbnail()
 
    /* Bottom Docks */
    ::oDlg:oWidget:tabifyDockWidget( ::oDockB:oWidget         , ::oDockB1:oWidget         )
@@ -290,6 +295,7 @@ METHOD IdeDocks:buildDockWidgets()
    ::oDlg:oWidget:tabifyDockWidget( ::oSkeltnDock:oWidget    , ::oThemesDock:oWidget     )
    ::oDlg:oWidget:tabifyDockWidget( ::oThemesDock:oWidget    , ::oFindDock:oWidget       )
    ::oDlg:oWidget:tabifyDockWidget( ::oFindDock:oWidget      , ::oDocWriteDock:oWidget   )
+   ::oDlg:oWidget:tabifyDockWidget( ::oDocWriteDock:oWidget  , ::oSourceThumbnailDock:oWidget   )
 
    ::buildToolBarPanels()
 
@@ -326,6 +332,9 @@ METHOD IdeDocks:execEvent( nMode, p )
 
    CASE nMode == 2  /* HelpWidget:contextMenuRequested(qPoint) */
       hbide_popupBrwContextMenu( ::qHelpBrw, p )
+
+   CASE nMode == dockSourceThumbnail_visibilityChanged
+      IF p; ::oEM:showThumbnail(); ENDIF
 
    /* Left Panel Docks */
    CASE nMode == dockSkltnsTree_visibilityChanged
@@ -988,6 +997,18 @@ METHOD IdeDocks:buildSkeletonWidget()
    ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oSkeltnDock:oWidget, Qt_Horizontal )
 
    ::connect( ::oSkeltnDock:oWidget, "visibilityChanged(bool)", {|p| ::execEvent( docSkeletons_visibilityChanged, p ) } )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeDocks:buildSourceThumbnail()
+   LOCAL nAreas := Qt_LeftDockWidgetArea + Qt_RightDockWidgetArea + Qt_TopDockWidgetArea + Qt_BottomDockWidgetArea
+
+   ::oIde:oSourceThumbnailDock := ::getADockWidget( nAreas, "dockSourceThumbnail", "Source Thumbnail", QDockWidget_DockWidgetFloatable )
+   ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oSourceThumbnailDock:oWidget, Qt_Horizontal )
+
+   ::connect( ::oSourceThumbnailDock:oWidget, "visibilityChanged(bool)", {|p| ::execEvent( dockSourceThumbnail_visibilityChanged, p ) } )
 
    RETURN Self
 
