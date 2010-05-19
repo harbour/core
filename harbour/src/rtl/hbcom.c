@@ -716,7 +716,7 @@ int hb_comFlowControl( int iPort, int *piFlow, int iFlow )
          if( iFlow >= 0 )
          {
             if( iFlow & HB_COM_FLOW_DCD )
-               tio.c_cflag &= CLOCAL;
+               tio.c_cflag &= ~CLOCAL;
             else
                tio.c_cflag |= CLOCAL;
          }

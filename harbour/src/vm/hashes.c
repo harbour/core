@@ -495,6 +495,30 @@ PHB_ITEM hb_hashGetCItemPtr( PHB_ITEM pHash, const char * pszKey )
    return NULL;
 }
 
+HB_SIZE hb_hashGetCItemPos( PHB_ITEM pHash, const char * pszKey )
+{
+   HB_SIZE ulPos = 0;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_hashGetCItemPos(%p,%s)", pHash, pszKey));
+
+   if( HB_IS_HASH( pHash ) )
+   {
+      HB_STACK_TLS_PRELOAD
+      /* we will not make any copy of pKey (autoadd is disabled) so it's
+       * safe to use hb_itemPutCConst()
+       */
+      PHB_ITEM pKey = hb_itemPutCConst( hb_stackAllocItem(), pszKey );
+
+      if( hb_hashFind( pHash->item.asHash.value, pKey, &ulPos ) )
+         ulPos++;
+      else
+         ulPos = 0;
+      hb_stackPop();
+   }
+
+   return ulPos;
+}
+
 PHB_ITEM hb_hashGetItemRefPtr( PHB_ITEM pHash, PHB_ITEM pKey )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_hashGetItemRefPtr(%p,%p)", pHash, pKey));
@@ -705,9 +729,10 @@ PHB_ITEM hb_hashGetValueAt( PHB_ITEM pHash, HB_SIZE ulPos )
    HB_TRACE(HB_TR_DEBUG, ("hb_hashGetValueAt(%p,%lu)", pHash, ulPos));
 
    if( HB_IS_HASH( pHash ) && ulPos > 0 && ulPos <= pHash->item.asHash.value->ulLen )
-      return HB_IS_BYREF( &pHash->item.asHash.value->pPairs[ ulPos - 1 ].value ) ?
-             hb_itemUnRef( &pHash->item.asHash.value->pPairs[ ulPos - 1 ].value ) :
-             &pHash->item.asHash.value->pPairs[ ulPos - 1 ].value;
+   {
+      PHB_ITEM pValue = &pHash->item.asHash.value->pPairs[ ulPos - 1 ].value;
+      return HB_IS_BYREF( pValue ) ? hb_itemUnRef( pValue ) : pValue;
+   }
    else
       return NULL;
 }
