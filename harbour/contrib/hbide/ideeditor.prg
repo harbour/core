@@ -170,6 +170,7 @@ CLASS IdeEditsManager INHERIT IdeObject
    METHOD find( cString, nPosFrom )
    METHOD showThumbnail()
    METHOD changeThumbnail()
+   METHOD spaces2tabs()
 
    ENDCLASS
 
@@ -818,104 +819,38 @@ METHOD IdeEditsManager:insertText( cKey )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-////
+
 METHOD IdeEditsManager:formatBraces()
-   LOCAL qEdit, qDoc, cText
-
-   IF !empty( qEdit := ::getEditCurrent() )
-
-      qDoc := QTextDocument():configure( qedit:document() )
-
-      IF !( qDoc:isEmpty() )
-         qDoc:setUndoRedoEnabled( .f. )
-
-         cText := qDoc:toPlainText()
-
-         cText := strtran( cText, "( ", "(" )
-         cText := strtran( cText, "(  ", "(" )
-         cText := strtran( cText, "(   ", "(" )
-         cText := strtran( cText, "(    ", "(" )
-         cText := strtran( cText, "(     ", "(" )
-         cText := strtran( cText, "(      ", "(" )
-         cText := strtran( cText, " (", "(" )
-         cText := strtran( cText, "  (", "(" )
-         cText := strtran( cText, "   (", "(" )
-         cText := strtran( cText, "    (", "(" )
-         cText := strtran( cText, "     (", "(" )
-
-         cText := strtran( cText, "      )", ")" )
-         cText := strtran( cText, "     )", ")" )
-         cText := strtran( cText, "    )", ")" )
-         cText := strtran( cText, "   )", ")" )
-         cText := strtran( cText, "  )", ")" )
-         cText := strtran( cText, " )", ")" )
-
-         cText := strtran( cText, "(", "( " )
-         cText := strtran( cText, ")", " )" )
-
-         cText := strtran( cText, "(     )", "()" )
-         cText := strtran( cText, "(    )", "()" )
-         cText := strtran( cText, "(   )", "()" )
-         cText := strtran( cText, "(  )", "()" )
-         cText := strtran( cText, "( )", "()" )
-
-         qDoc:clear()
-         qDoc:setPlainText( cText )
-
-         qDoc:setUndoRedoEnabled( .t. )
-      ENDIF
+   LOCAL oEdit
+   IF !empty( oEdit := ::getEditObjectCurrent() )
+      oEdit:formatBraces()
    ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-//////
-METHOD IdeEditsManager:RemoveTabs()
-   LOCAL qEdit, qDoc, cText, cSpaces
 
-   IF ! empty( qEdit := ::getEditCurrent() )
-
-      qDoc := QTextDocument():configure( qedit:document() )
-
-      IF !( qDoc:isEmpty() )
-         cSpaces := space( ::nTabSpaces )
-
-         qDoc:setUndoRedoEnabled( .f. )
-
-         cText := qDoc:toPlainText()
-         qDoc:clear()
-         qDoc:setPlainText( strtran( cText, chr( 9 ), cSpaces ) )
-
-         qDoc:setUndoRedoEnabled( .t. )
-      ENDIF
+METHOD IdeEditsManager:removeTabs()
+   LOCAL oEdit
+   IF !empty( oEdit := ::getEditObjectCurrent() )
+      oEdit:tabs2spaces()
    ENDIF
-
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeEditsManager:RemoveTrailingSpaces()
-   LOCAL qEdit, qDoc, cText, a_, s
+METHOD IdeEditsManager:spaces2tabs()
+   LOCAL oEdit
+   IF !empty( oEdit := ::getEditObjectCurrent() )
+      oEdit:spaces2tabs()
+   ENDIF
+   RETURN Self
 
-   IF ! empty( qEdit := ::getEditCurrent() )
+/*----------------------------------------------------------------------*/
 
-      qDoc := QTextDocument():configure( qedit:document() )
-
-      IF !( qDoc:isEmpty() )
-         qDoc:setUndoRedoEnabled( .f. )
-
-         cText := qDoc:toPlainText()
-
-         a_:= hbide_memoToArray( cText )
-         FOR EACH s IN a_
-            s := trim( s )
-         NEXT
-         cText := hbide_arrayToMemo( a_ )
-
-         qDoc:clear()
-         qDoc:setPlainText( cText )
-
-         qDoc:setUndoRedoEnabled( .t. )
-      ENDIF
+METHOD IdeEditsManager:removeTrailingSpaces()
+   LOCAL oEdit
+   IF !empty( oEdit := ::getEditObjectCurrent() )
+      oEdit:removeTrailingSpaces()
    ENDIF
    RETURN Self
 
@@ -923,23 +858,17 @@ METHOD IdeEditsManager:RemoveTrailingSpaces()
 
 METHOD IdeEditsManager:zoom( nKey )
    LOCAL oEdit
-
    IF !empty( oEdit := ::getEditObjectCurrent() )
       oEdit:zoom( nKey )
    ENDIF
-
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 ////
 METHOD IdeEditsManager:printPreview()
-   LOCAL qDlg
-   IF ! empty( ::qCurEdit )
-      qDlg := QPrintPreviewDialog():new( ::oDlg:oWidget )
-      qDlg:setWindowTitle( "Harbour-QT Preview Dialog" )
-      Qt_Slots_Connect( ::pSlots, qDlg, "paintRequested(QPrinter)", {|p| ::paintRequested( p ) } )
-      qDlg:exec()
-      Qt_Slots_disConnect( ::pSlots, qDlg, "paintRequested(QPrinter)" )
+   LOCAL oEdit
+   IF !empty( oEdit := ::getEditObjectCurrent() )
+      oEdit:printPreview()
    ENDIF
    RETURN self
 
@@ -1593,25 +1522,20 @@ METHOD IdeEditor:applyTheme( cTheme )
 METHOD IdeEditor:showThumbnail()
 
    IF empty( ::qThumbnail )
-      ::qTNFont := QFont():new()
-      ::qTNFont:setFamily( "Courier New" )
-      ::qTNFont:setFixedPitch( .t. )
-      ::qTNFont:setPointSize( 5 )
-
       ::qThumbnail := IdeEdit():new( Self, 0 ):create()
+      ::qThumbnail:currentPointSize := 4
+      ::qThumbnail:fontFamily := "Courier New"
+      ::qThumbnail:setFont()
+      ::qThumbnail:setReadOnly( .t. )
       IF ::cType != "U"
          ::qTNHiliter := ::oTH:SetSyntaxHilighting( ::qThumbnail:qEdit, @::cTheme )
       ENDIF
-
-      ::qThumbnail:qEdit:setFont( ::qTNFont )
-      ::qThumbnail:setReadOnly( .t. )
       ::qThumbnail:qEdit:setTextInteractionFlags( Qt_TextSelectableByMouse + Qt_TextSelectableByKeyboard )
    ENDIF
 
    ::oSourceThumbnailDock:oWidget:setWidget( ::qThumbnail:qEdit )
    ::qThumbnail:qEdit:clear()
    ::qThumbnail:qEdit:setPlainText( hb_memoRead( ::sourceFile ) )
-
    RETURN Self
 
 /*----------------------------------------------------------------------*/

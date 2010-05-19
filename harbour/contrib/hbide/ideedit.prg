@@ -223,6 +223,12 @@ CLASS IdeEdit INHERIT IdeObject
    METHOD panHome()
    METHOD pageUp()
    METHOD pageDown()
+   METHOD printPreview()
+   METHOD paintRequested( pPrinter )
+   METHOD tabs2spaces()
+   METHOD spaces2tabs()
+   METHOD removeTrailingSpaces()
+   METHOD formatBraces()
 
    ENDCLASS
 
@@ -301,7 +307,7 @@ METHOD IdeEdit:zoom( nKey )
       ENDIF
 
    ELSEIF nKey == -1
-      IF ::currentPointSize - 1 > 5
+      IF ::currentPointSize - 1 > 3
          ::currentPointSize--
       ENDIF
 
@@ -539,10 +545,7 @@ METHOD IdeEdit:dispStatusInfo()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:execKeyEvent( nMode, nEvent, p, p1 )
-   LOCAL key, kbm, qEvent
-   LOCAL lAlt   := .f.
-   LOCAL lCtrl  := .f.
-   LOCAL lShift := .f.
+   LOCAL key, kbm, qEvent, lAlt, lCtrl, lShift
 
    HB_SYMBOL_UNUSED( nMode )
    HB_SYMBOL_UNUSED( p1 )
@@ -552,20 +555,14 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p, p1 )
 
       qEvent := QKeyEvent():configure( p )
 
-      key := qEvent:key()
-      kbm := qEvent:modifiers()
+      key    := qEvent:key()
+      kbm    := qEvent:modifiers()
 
-      IF hb_bitAnd( kbm, Qt_AltModifier     ) == Qt_AltModifier
-         lAlt := .t.
-      ENDIF
-      IF hb_bitAnd( kbm, Qt_ControlModifier ) == Qt_ControlModifier
-         lCtrl := .t.
-      ENDIF
-      IF hb_bitAnd( kbm, Qt_ShiftModifier   ) == Qt_ShiftModifier
-         lShift := .t.
-      ENDIF
+      lAlt   := hb_bitAnd( kbm, Qt_AltModifier     ) == Qt_AltModifier
+      lCtrl  := hb_bitAnd( kbm, Qt_ControlModifier ) == Qt_ControlModifier
+      lShift := hb_bitAnd( kbm, Qt_ShiftModifier   ) == Qt_ShiftModifier
 
-      IF ::oSC:execKey( key, lAlt, lCtrl, lShift )
+      IF ::oSC:execKey( Self, key, lAlt, lCtrl, lShift )
          RETURN .f.
       ENDIF
 
@@ -1553,6 +1550,131 @@ METHOD IdeEdit:pageDown()
 //
 /*----------------------------------------------------------------------*/
 
+METHOD IdeEdit:printPreview()
+   LOCAL qDlg := QPrintPreviewDialog():new( ::oDlg:oWidget )
+
+   qDlg:setWindowTitle( "hbIDE Preview Dialog" )
+   Qt_Slots_Connect( ::pSlots, qDlg, "paintRequested(QPrinter)", {|p| ::paintRequested( p ) } )
+   qDlg:exec()
+   Qt_Slots_disConnect( ::pSlots, qDlg, "paintRequested(QPrinter)" )
+
+   RETURN self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:paintRequested( pPrinter )
+   LOCAL qPrinter
+   qPrinter := QPrinter():configure( pPrinter )
+   ::qEdit:print( qPrinter )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:formatBraces()
+   LOCAL qDoc, cText
+
+   qDoc := QTextDocument():configure( ::qEdit:document() )
+
+   IF !( qDoc:isEmpty() )
+      qDoc:setUndoRedoEnabled( .f. )
+
+      cText := qDoc:toPlainText()
+
+      cText := strtran( cText, "( ", "(" )
+      cText := strtran( cText, "(  ", "(" )
+      cText := strtran( cText, "(   ", "(" )
+      cText := strtran( cText, "(    ", "(" )
+      cText := strtran( cText, "(     ", "(" )
+      cText := strtran( cText, "(      ", "(" )
+      cText := strtran( cText, " (", "(" )
+      cText := strtran( cText, "  (", "(" )
+      cText := strtran( cText, "   (", "(" )
+      cText := strtran( cText, "    (", "(" )
+      cText := strtran( cText, "     (", "(" )
+
+      cText := strtran( cText, "      )", ")" )
+      cText := strtran( cText, "     )", ")" )
+      cText := strtran( cText, "    )", ")" )
+      cText := strtran( cText, "   )", ")" )
+      cText := strtran( cText, "  )", ")" )
+      cText := strtran( cText, " )", ")" )
+
+      cText := strtran( cText, "(", "( " )
+      cText := strtran( cText, ")", " )" )
+
+      cText := strtran( cText, "(     )", "()" )
+      cText := strtran( cText, "(    )", "()" )
+      cText := strtran( cText, "(   )", "()" )
+      cText := strtran( cText, "(  )", "()" )
+      cText := strtran( cText, "( )", "()" )
+
+      qDoc:clear()
+      qDoc:setPlainText( cText )
+
+      qDoc:setUndoRedoEnabled( .t. )
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:removeTrailingSpaces()
+   LOCAL qDoc, cText, a_, s
+
+   qDoc := QTextDocument():from( ::qEdit:document() )
+   IF !( qDoc:isEmpty() )
+      qDoc:setUndoRedoEnabled( .f. )
+      cText := qDoc:toPlainText()
+      a_:= hbide_memoToArray( cText )
+      FOR EACH s IN a_
+         s := trim( s )
+      NEXT
+      cText := hbide_arrayToMemo( a_ )
+      qDoc:clear()
+      qDoc:setPlainText( cText )
+      qDoc:setUndoRedoEnabled( .t. )
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:tabs2spaces()
+   LOCAL qDoc, cText, cSpaces
+
+   qDoc := QTextDocument():configure( ::qEdit:document() )
+   IF !( qDoc:isEmpty() )
+      cSpaces := space( ::nTabSpaces )
+
+      qDoc:setUndoRedoEnabled( .f. )
+
+      cText := qDoc:toPlainText()
+      qDoc:clear()
+      qDoc:setPlainText( strtran( cText, chr( 9 ), cSpaces ) )
+
+      qDoc:setUndoRedoEnabled( .t. )
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:spaces2tabs()
+   LOCAL qDoc, cText, cSpaces
+
+   qDoc := QTextDocument():configure( ::qEdit:document() )
+   IF !( qDoc:isEmpty() )
+      cSpaces := space( ::nTabSpaces )
+
+      qDoc:setUndoRedoEnabled( .f. )
+
+      cText := qDoc:toPlainText()
+      qDoc:clear()
+      qDoc:setPlainText( strtran( cText, cSpaces, chr( 9 ) ) )
+
+      qDoc:setUndoRedoEnabled( .t. )
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeEdit:duplicateLine()
    ::qEdit:hbDuplicateLine()
    RETURN Self
@@ -1655,7 +1777,7 @@ METHOD IdeEdit:insertSeparator( cSep )
 METHOD IdeEdit:insertText( cText )
    LOCAL qCursor, nL, nB
 
-   IF !Empty( cText )
+   IF hb_isChar( cText ) .AND. !Empty( cText )
       qCursor := QTextCursor():configure( ::qEdit:textCursor() )
 
       nL := len( cText )

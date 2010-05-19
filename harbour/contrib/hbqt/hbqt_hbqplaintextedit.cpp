@@ -1354,15 +1354,13 @@ void HBQPlainTextEdit::paintEvent( QPaintEvent * event )
    this->hbPaintHighlight( event );
 
    #if 0
-   //if( event->rect().width() == cursorWidth() && event->rect().height() == cursorRect().height() )
    {
+      QPainter p( viewport() );
+      caretState = caretState == 0 ? 1 : 0;
       QRect r( cursorRect() );
       r.setX( r.x() + 100 );
-      r.setWidth( cursorWidth() );
-      if( caretState == 0 )
-         painter.fillRect( r, QBrush( QColor( Qt::red ) ) );
-      else
-         painter.fillRect( r, QBrush( QColor( Qt::green ) ) );
+      r.setWidth( 1 );
+      p.fillRect( r, QBrush( QColor( caretState == 1 ? Qt::red : Qt::white ) ) );
    }
    #endif
 
@@ -1812,6 +1810,8 @@ int HBQPlainTextEdit::hbLineNumberAreaWidth()
 
 void HBQPlainTextEdit::hbUpdateLineNumberAreaWidth( int )
 {
+   setTabStopWidth( spaces * fontMetrics().averageCharWidth() );
+
    if( numberBlock )
    {
       setViewportMargins( hbLineNumberAreaWidth(), HORZRULER_HEIGHT, 0, 0 );

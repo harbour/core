@@ -712,6 +712,7 @@ METHOD HbIde:execAction( cKey )
    CASE "ZoomOut"
    CASE "FormatBraces"
    CASE "RemoveTabs"
+   CASE "Spaces2Tabs"
    CASE "RemoveTrailingSpaces"
       ::execEditorAction( cKey )
       EXIT
@@ -847,6 +848,9 @@ METHOD HbIde:execEditorAction( cKey )
       EXIT
    CASE "RemoveTabs"
       ::oEM:removeTabs()
+      EXIT
+   CASE "Spaces2Tabs"
+      ::oEM:spaces2tabs()
       EXIT
    CASE "RemoveTrailingSpaces"
       ::oEM:removeTrailingSpaces()

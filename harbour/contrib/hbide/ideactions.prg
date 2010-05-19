@@ -284,6 +284,7 @@ METHOD IdeActions:loadActions()
    aadd( aAct, { "RebuildLaunchQt"      , "Rebuild and Launch"           , "rebuildlaunch"  , ""     , "No", "Yes" } )
 
    aadd( aAct, { "RemoveTabs"           , "Replace Tabs with Spaces"     , "tabstospaces"   , ""     , "No", "Yes" } )
+   aadd( aAct, { "Spaces2Tabs"          , "Replace Spaces with Tabs"     , ""               , ""     , "No", "Yes" } )
    aadd( aAct, { "RemoveTrailingSpaces" , "Remove Trailing Spaces"       , "removetrailingspaces", "", "No", "Yes" } )
    aadd( aAct, { "FormatBraces"         , "Format Braces"                , "ormatbraces"    , ""     , "No", "Yes" } )
 
@@ -504,6 +505,7 @@ METHOD IdeActions:buildMainMenu()
 
    oSubMenu2 := XbpMenu():new( oSubMenu ):create()
    oSubMenu2:addItem( { ::getAction( "RemoveTabs"         ), {|| oIde:execAction( "RemoveTabs"         ) } } )
+   oSubMenu2:addItem( { ::getAction( "Spaces2Tabs"        ), {|| oIde:execAction( "Spaces2Tabs"        ) } } )
    hbide_menuAddSep( oSubMenu )
    oSubMenu2:addItem( { ::getAction( "RemoveTrailingSpaces"), {|| oIde:execAction( "RemoveTrailingSpaces" ) } } )
    oSubMenu2:addItem( { ::getAction( "FormatBraces"       ), {|| oIde:execAction( "FormatBraces"       ) } } )
