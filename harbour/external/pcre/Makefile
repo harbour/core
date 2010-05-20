@@ -35,7 +35,10 @@ LIBNAME := hbpcre
 
 ifneq ($(HB_HAS_PCRE_LOCAL),)
 
-   HB_CFLAGS += -DPCRE_STATIC -DHAVE_STDINT_H=0
+   HB_CFLAGS += -DHAVE_STDINT_H=0
+   # only needed for win/wce, for other platforms these are noops
+   HB_CFLAGS += -DPCRE_STATIC
+   HB_CFLAGS_DYN := -UPCRE_STATIC
 
    ifneq ($(filter $(HB_COMPILER),bcc msvc msvc64 msvcia64 icc iccia64),)
       HB_CFLAGS += -DHAVE_INTTYPES_H=0

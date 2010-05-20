@@ -45,6 +45,7 @@ ifeq ($(filter $(HB_COMPILER),poccarm xcc),)
       ifneq ($(HB_HAS_ZLIB),)
 
          HB_CFLAGS += $(foreach d,$(HB_HAS_ZLIB),-I$(d))
+         HB_CFLAGS_DYN := -DPNG_BUILD_DLL
 
          ifeq ($(HB_COMPILER),djgpp)
             HB_CFLAGS += -DPNG_NO_SNPRINTF

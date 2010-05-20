@@ -45,7 +45,7 @@ ifeq ($(CC_RULE),)
             ifneq ($(filter $(LIBNAME),$(HB_DYN_LIBS)),)
                define cc_comp_all
                   $(CC) $(subst $(CC_DIRSEPFROM),$(CC_DIRSEPTO),$(CC_FLAGS) $(HB_USER_CFLAGS) $(CC_OUT)$(<F:.c=$(OBJ_EXT)) $(CC_IN) $<)
-                  $(CC) $(subst $(CC_DIRSEPFROM),$(CC_DIRSEPTO),$(CC_FLAGS) $(HB_USER_CFLAGS) $(CC_OUT)$(<F:.c=$(OBJ_DYN_POSTFIX)$(OBJ_EXT)) $(HB_DYN_COPT) $(CC_IN) $<)
+                  $(CC) $(subst $(CC_DIRSEPFROM),$(CC_DIRSEPTO),$(CC_FLAGS) $(HB_USER_CFLAGS) $(CC_OUT)$(<F:.c=$(OBJ_DYN_POSTFIX)$(OBJ_EXT)) $(HB_DYN_COPT) $(HB_CFLAGS_DYN) $(CC_IN) $<)
                endef
                CC_RULE = $(cc_comp_all)
             endif
