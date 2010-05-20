@@ -1107,11 +1107,14 @@ endif
 # Notice that even single lib/bin builds will currently
 # result in recursive runs, see rule 'descend'. [vszakats]
 HB_CFLAGS :=
-# C flags passed when compiling to create .dll
-HB_CFLAGS_DYN :=
 HB_LDFLAGS :=
 HB_AFLAGS :=
 HB_PRGFLAGS :=
+
+# C flags passed when compiling to create static lib
+HB_CFLAGS_STA :=
+# C flags passed when compiling to create dynamic lib
+HB_CFLAGS_DYN :=
 
 CFLAGS :=
 ARFLAGS :=
