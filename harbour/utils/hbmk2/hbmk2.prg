@@ -8219,43 +8219,49 @@ STATIC FUNCTION hbmk_CPU( hbmk )
 FUNCTION hbmk_KEYW( hbmk, cKeyword )
    LOCAL tmp
 
-   cKeyword := Lower( cKeyword )
-
    IF cKeyword == hbmk[ _HBMK_cPLAT ] .OR. ;
       cKeyword == hbmk[ _HBMK_cCOMP ]
       RETURN .T.
    ENDIF
 
-   IF cKeyword == iif( hbmk[ _HBMK_lMT ]     , "mt"      , "st"      ) .OR. ;
-      cKeyword == iif( hbmk[ _HBMK_lGUI ]    , "gui"     , "std"     ) .OR. ;
-      cKeyword == iif( hbmk[ _HBMK_lDEBUG ]  , "debug"   , "nodebug" ) .OR. ;
-      cKeyword == iif( hbmk[ _HBMK_lSHARED ] , "shared"  , "static"  ) .OR. ;
-      cKeyword == iif( hbmk[ _HBMK_lUNICODE ], "unicode" , "ascii"   )
-      RETURN .T.
-   ENDIF
-
-   IF ( cKeyword == "unix"     .AND. ( hbmk[ _HBMK_cPLAT ] $ "bsd|hpux|sunos|beos|linux" .OR. hbmk[ _HBMK_cPLAT ] == "darwin" ) ) .OR. ;
-      ( cKeyword == "allwin"   .AND. hbmk[ _HBMK_cPLAT ] $ "win|wce"                                                     ) .OR. ;
-      ( cKeyword == "allgcc"   .AND. hbmk[ _HBMK_cCOMP ] $ "gcc|mingw|mingw64|mingwarm|cygwin|djgpp|gccomf|clang|open64" ) .OR. ;
-      ( cKeyword == "allmingw" .AND. hbmk[ _HBMK_cCOMP ] $ "mingw|mingw64|mingwarm"                                      ) .OR. ;
-      ( cKeyword == "allmsvc"  .AND. hbmk[ _HBMK_cCOMP ] $ "msvc|msvc64|msvcia64|msvcarm"                                ) .OR. ;
-      ( cKeyword == "allpocc"  .AND. hbmk[ _HBMK_cCOMP ] $ "pocc|pocc64|poccarm"                                         ) .OR. ;
-      ( cKeyword == "allicc"   .AND. hbmk[ _HBMK_cCOMP ] $ "icc|iccia64"                                                 )
-      RETURN .T.
-   ENDIF
-
-   IF ( cKeyword == "xhb" .AND. hbmk[ _HBMK_nHBMODE ] == _HBMODE_XHB ) .OR. ;
-      ( cKeyword == "hb10" .AND. hbmk[ _HBMK_nHBMODE ] == _HBMODE_HB10 )
-      RETURN .T.
-   ENDIF
+   SWITCH cKeyword
+   CASE "mt"       ; RETURN hbmk[ _HBMK_lMT ]
+   CASE "st"       ; RETURN ! hbmk[ _HBMK_lMT ]
+   CASE "gui"      ; RETURN hbmk[ _HBMK_lGUI ]
+   CASE "std"      ; RETURN ! hbmk[ _HBMK_lGUI ]
+   CASE "debug"    ; RETURN hbmk[ _HBMK_lDEBUG ]
+   CASE "nodebug"  ; RETURN ! hbmk[ _HBMK_lDEBUG ]
+   CASE "shared"   ; RETURN hbmk[ _HBMK_lSHARED ]
+   CASE "static"   ; RETURN ! hbmk[ _HBMK_lSHARED ]
+   CASE "unicode"  ; RETURN hbmk[ _HBMK_lUNICODE ]
+   CASE "ascii"    ; RETURN ! hbmk[ _HBMK_lUNICODE ]
+   CASE "unix"     ; RETURN "|" + hbmk[ _HBMK_cPLAT ] + "|" $ "|bsd|hpux|sunos|beos|linux|darwin|"
+   CASE "allwin"   ; RETURN "|" + hbmk[ _HBMK_cPLAT ] + "|" $ "|win|wce|"
+   CASE "allgcc"   ; RETURN "|" + hbmk[ _HBMK_cCOMP ] + "|" $ "|gcc|mingw|mingw64|mingwarm|cygwin|djgpp|gccomf|clang|open64|"
+   CASE "allmingw" ; RETURN "|" + hbmk[ _HBMK_cCOMP ] + "|" $ "|mingw|mingw64|mingwarm|"
+   CASE "allmsvc"  ; RETURN "|" + hbmk[ _HBMK_cCOMP ] + "|" $ "|msvc|msvc64|msvcia64|msvcarm|"
+   CASE "allpocc"  ; RETURN "|" + hbmk[ _HBMK_cCOMP ] + "|" $ "|pocc|pocc64|poccarm|"
+   CASE "allicc"   ; RETURN "|" + hbmk[ _HBMK_cCOMP ] + "|" $ "|icc|iccia64|"
+   CASE "xhb"      ; RETURN hbmk[ _HBMK_nHBMODE ] == _HBMODE_XHB
+   CASE "hb10"     ; RETURN hbmk[ _HBMK_nHBMODE ] == _HBMODE_HB10
+   ENDSWITCH
 
    IF cKeyword == hbmk_CPU( hbmk )
       RETURN .T.
    ENDIF
 
-   tmp := GetEnv( cKeyword )
-   IF ! Empty( tmp ) .AND. !( tmp == "0" ) .AND. !( Lower( tmp ) == "no" )
-      RETURN .T.
+   IF ! ( "|" + cKeyword + "|" $ "|win|wce|dos|os2" + ;
+                                 "|bsd|hpux|sunos|beos|linux|darwin" + ;
+                                 "|msvc|msvc64|msvcia64|msvcarm" + ;
+                                 "|pocc|pocc64|poccarm|xcc" + ;
+                                 "|mingw|mingw64|mingwarm|cygwin|bcc|watcom" + ;
+                                 "|gcc|gccomf|djgpp" + ;
+                                 "|icc|iccia64|clang|open64|sunpro" + ;
+                                 "|x86|x86_64|ia64|arm|mips|sh" )
+      tmp := GetEnv( cKeyword )
+      IF ! Empty( tmp ) .AND. !( tmp == "0" ) .AND. !( Lower( tmp ) == "no" )
+         RETURN .T.
+      ENDIF
    ENDIF
 
    RETURN .F.
