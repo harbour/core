@@ -86,7 +86,7 @@ CLASS IdeSourcesManager INHERIT IdeObject
    METHOD saveAndExit()
    METHOD revertSource( nTab )
    METHOD openSource()
-   METHOD selectSource( cMode, cFile, cTitle )
+   METHOD selectSource( cMode, cFile, cTitle, cDftPath )
 
    ENDCLASS
 
@@ -456,8 +456,10 @@ METHOD IdeSourcesManager:openSource()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeSourcesManager:selectSource( cMode, cFile, cTitle )
+METHOD IdeSourcesManager:selectSource( cMode, cFile, cTitle, cDftPath )
    LOCAL oDlg, cPath
+
+   DEFAULT cDftPath TO ::cLastFileOpenPath
 
    oDlg := XbpFileDialog():new():create( ::oDlg, , { 10,10 } )
 
@@ -466,7 +468,7 @@ METHOD IdeSourcesManager:selectSource( cMode, cFile, cTitle )
       oDlg:center      := .t.
       oDlg:fileFilters := { { "All Files"  , "*.*"   }, { "PRG Sources", "*.prg" }, { "C Sources" , "*.c"  },;
                             { "CPP Sources", "*.cpp" }, { "H Headers"  , "*.h"   }, { "CH Headers", "*.ch" } }
-      cFile := oDlg:open( ::cLastFileOpenPath, , .f. )
+      cFile := oDlg:open( cDftPath, , .f. )
       IF !empty( cFile )
          ::oIde:cLastFileOpenPath := cFile
       ENDIF
@@ -477,7 +479,7 @@ METHOD IdeSourcesManager:selectSource( cMode, cFile, cTitle )
       oDlg:defExtension:= 'prg'
       oDlg:fileFilters := { { "All Files"  , "*.*"   }, { "PRG Sources", "*.prg" }, { "C Sources" , "*.c"  },;
                             { "CPP Sources", "*.cpp" }, { "H Headers"  , "*.h"   }, { "CH Headers", "*.ch" } }
-      cFile := oDlg:open( ::cLastFileOpenPath, , .t. )
+      cFile := oDlg:open( cDftPath, , .t. )
       IF !empty( cFile ) .AND. !empty( cFile[ 1 ] )
          ::oIde:cLastFileOpenPath := cFile[ 1 ]
       ENDIF

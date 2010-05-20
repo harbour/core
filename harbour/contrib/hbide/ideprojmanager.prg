@@ -910,7 +910,7 @@ METHOD IdeProjManager:addSources()
    LOCAL aFiles, a_, b_, s
 
    IF ::isValidProjectLocation( .t. )
-      IF !empty( aFiles := ::oSM:selectSource( "openmany" ) )
+      IF !empty( aFiles := ::oSM:selectSource( "openmany", , , ::oUI:q_editPrjLoctn:text() ) )
          a_:= hbide_memoToArray( ::oUI:q_editSources:toPlainText() )
 
          b_:={}
