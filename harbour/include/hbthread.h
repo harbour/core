@@ -362,37 +362,7 @@ HB_EXTERN_BEGIN
 
 typedef HB_THREAD_STARTFUNC( PHB_THREAD_STARTFUNC );
 
-typedef struct _HB_THREADSTATE
-{
-   const char *   pszCDP;
-   const char *   pszLang;
-   const char *   pszDefRDD;
-   PHB_SET_STRUCT pSet;
-   void *         pI18N;
-   void *         hGT;
-   void *         pStackId;
-   HB_BOOL        fActive;
-   HB_BOOL        fFinished;
-   PHB_ITEM       pParams;
-   PHB_ITEM       pMemvars;
-   PHB_ITEM       pResult;
-   PHB_ITEM       pThItm;
-   HB_THREAD_NO      th_no;
-   HB_THREAD_ID      th_id;
-   HB_THREAD_HANDLE  th_h;
-   struct _HB_THREADSTATE * pPrev;
-   struct _HB_THREADSTATE * pNext;
-#if defined( HB_COND_HARBOUR_SUPPORT )
-   HB_WAIT_LIST   pWaitList;
-#endif
-} HB_THREADSTATE, * PHB_THREADSTATE;
-
-extern void hb_threadInit( void );
-extern void hb_threadExit( void );
-
-extern PHB_THREADSTATE hb_threadStateNew( void );
-
-extern void hb_threadReleaseCPU( void );
+extern HB_EXPORT void hb_threadReleaseCPU( void );
 
 /* atomic oprtations */
 extern HB_EXPORT void        hb_atomic_set( volatile HB_COUNTER * pCounter, HB_COUNTER value );
@@ -423,7 +393,39 @@ extern HB_EXPORT void     hb_threadMutexNotify( PHB_ITEM pItem, PHB_ITEM pNotifi
 extern HB_EXPORT PHB_ITEM hb_threadMutexSubscribe( PHB_ITEM pItem, HB_BOOL fClear );
 extern HB_EXPORT PHB_ITEM hb_threadMutexTimedSubscribe( PHB_ITEM pItem, HB_ULONG ulMilliSec, HB_BOOL fClear );
 
-#if defined( HB_MT_VM ) && defined( _HB_API_INTERNAL_ )
+#if defined( _HB_API_INTERNAL_ )
+
+typedef struct _HB_THREADSTATE
+{
+   const char *   pszCDP;
+   const char *   pszLang;
+   const char *   pszDefRDD;
+   PHB_SET_STRUCT pSet;
+   void *         pI18N;
+   void *         hGT;
+   void *         pStackId;
+   HB_BOOL        fActive;
+   HB_BOOL        fFinished;
+   PHB_ITEM       pParams;
+   PHB_ITEM       pMemvars;
+   PHB_ITEM       pResult;
+   PHB_ITEM       pThItm;
+   HB_THREAD_NO      th_no;
+   HB_THREAD_ID      th_id;
+   HB_THREAD_HANDLE  th_h;
+   struct _HB_THREADSTATE * pPrev;
+   struct _HB_THREADSTATE * pNext;
+#if defined( HB_COND_HARBOUR_SUPPORT )
+   HB_WAIT_LIST   pWaitList;
+#endif
+} HB_THREADSTATE, * PHB_THREADSTATE;
+
+#if defined( HB_MT_VM )
+
+extern void hb_threadInit( void );
+extern void hb_threadExit( void );
+
+extern PHB_THREADSTATE hb_threadStateNew( void );
 
 extern void    hb_threadMutexUnlockAll( void );
 extern void    hb_threadMutexSyncSignal( PHB_ITEM pItemMtx );
@@ -456,7 +458,7 @@ extern HB_BOOL hb_threadMutexSyncWait( PHB_ITEM pItemMtx, HB_ULONG ulMilliSec, P
 #     undef HB_USE_TLS
 #     error "TLS support undefined for this compiler" /* */
 #  endif
-#endif
+#endif /* HB_USE_TLS */
 
 #ifndef HB_USE_TLS
 #  if defined( HB_TASK_THREAD )
@@ -480,9 +482,11 @@ extern HB_BOOL hb_threadMutexSyncWait( PHB_ITEM pItemMtx, HB_ULONG ulMilliSec, P
 #     define hb_tls_set(k,v)  do { *k = ( ULONG ) (v); } while( 0 )
 #     define hb_tls_get(k)    ( *k )
 #  endif
-#endif
+#endif /* !HB_USE_TLS */
 
-#endif
+#endif /* HB_MT_VM */
+
+#endif /* _HB_API_INTERNAL_ */
 
 HB_EXTERN_END
 
