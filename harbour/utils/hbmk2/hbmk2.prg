@@ -3334,7 +3334,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          cBin_CompCPP := cBin_CompC
          nCmd_Esc := _ESC_DBLQUOTE
          cOpt_Lib := "-nologo {FA} -out:{OL} {LO}"
-         cOpt_Dyn := "{FD} {IM} -dll -out:{OD} {DL} {LO} {LL} {LB} {LS}"
+         cOpt_Dyn := "-nologo {FD} {IM} -dll -out:{OD} {DL} {LO} {LL} {LB} {LS}"
          cOpt_CompC := "-nologo -c"
          IF hbmk[ _HBMK_lOPTIM ]
             IF hbmk[ _HBMK_cPLAT ] == "wce"
@@ -3385,7 +3385,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          ENDIF
          cOpt_CompC += " {FC} {LC}"
          cOptIncMask := "-I{DI}"
-         cOpt_Link := "-nologo -out:{OE} {LO} {DL} {FL} {IM} {LL} {LB} {LS}"
+         cOpt_Link := "-nologo -out:{OE} {LO} {DL} {FL} {LL} {LB} {LS}"
          SWITCH hbmk[ _HBMK_cCOMP ]
          CASE "msvc"     ; AAdd( hbmk[ _HBMK_aOPTI ], "-machine:x86"  ) ; EXIT
          CASE "msvc64"   ; AAdd( hbmk[ _HBMK_aOPTI ], "-machine:x64"  ) ; EXIT
@@ -3544,7 +3544,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          IF hbmk[ _HBMK_lMT ]
             AAdd( hbmk[ _HBMK_aOPTC ], "-MT" )
          ENDIF
-         cOpt_Link := "-out:{OE} {LO} {DL} {FL} {IM} {LL} {LB} {LS}"
+         cOpt_Link := "-out:{OE} {LO} {DL} {FL} {LL} {LB} {LS}"
          cLibPathPrefix := "-libpath:"
          cLibPathSep := " "
          cDynDefPrefix := "-def:"
