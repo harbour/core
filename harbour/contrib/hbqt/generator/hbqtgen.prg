@@ -767,6 +767,8 @@ FUNCTION GetSourcePathByLib( cWidget, cPathOut, cExt, cPre )
       cFileOut := cPathOut + s_PathSep + "qtwebkit" + s_pathSep + cPre + cWidget + cExt
    ELSEIF ascan( aNetwork, cWidget ) > 0
       cFileOut := cPathOut + s_PathSep + "qtnetwork" + s_pathSep + cPre + cWidget + cExt
+   ELSE
+      cFileOut := cPathOut + s_PathSep + cPre + cWidget + cExt
    ENDIF
 
    RETURN cFileOut
@@ -1576,7 +1578,7 @@ STATIC FUNCTION HBRawVersion()
 STATIC FUNCTION CreateTarget( cFile, txt_ )
    LOCAL cContent := ""
 
-   AEval( txt_, { |e| cContent += RTrim( e ) + s_NewLine } )
+   AEval( txt_, { |e| cContent += RTrim( e ) + hb_osNewLine() } )
 
    /* Save it only if it has changed. */
    IF !( hb_MemoRead( cFile ) == cContent )
@@ -1708,6 +1710,8 @@ STATIC FUNCTION Build_Document( cWidget, cls_, doc_, cPathDoc, subCls_, docum_ )
       cLib := "qtwebkit"
    ELSEIF ascan( aNetwork, cWidget ) > 0
       cLib := "qtnetwork"
+   ELSE
+      cLib := ""
    ENDIF
 
    aadd( txt_, '/* '  )
