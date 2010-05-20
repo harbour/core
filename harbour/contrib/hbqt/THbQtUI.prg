@@ -479,12 +479,11 @@ METHOD HbQtUI:build( cFileOrBuffer, qParent )
 
    ::qObj[ cMNam ] := ::oWidget
 
-//HB_TRACE( HB_TR_ALWAYS, "------------------------------------------------------------" )
    FOR EACH a_ IN ::widgets
       IF a_:__enumIndex() > 1
          IF type( a_[ 3 ] ) == "UI"
             cBlock := "{|o| " + a_[ 4 ] + "}"
-//HB_TRACE( HB_TR_ALWAYS, "Constr   ", pad( a_[ 2 ], 20 ), cBlock )
+
             bBlock := &( cBlock )
 
             x := eval( bBlock, ::qObj )
@@ -492,11 +491,10 @@ METHOD HbQtUI:build( cFileOrBuffer, qParent )
                ::qObj[ a_[ 2 ] ] := x
             ENDIF
          ELSE
-//HB_TRACE( HB_TR_ALWAYS, "----------------------------", a_[ 3 ] )
+
          ENDIF
       ENDIF
    NEXT
-//HB_TRACE( HB_TR_ALWAYS, "------------------------------------------------------------" )
 
    ::aCommands := aCommands
 

@@ -1810,8 +1810,6 @@ int HBQPlainTextEdit::hbLineNumberAreaWidth()
 
 void HBQPlainTextEdit::hbUpdateLineNumberAreaWidth( int )
 {
-   setTabStopWidth( spaces * fontMetrics().averageCharWidth() );
-
    if( numberBlock )
    {
       setViewportMargins( hbLineNumberAreaWidth(), HORZRULER_HEIGHT, 0, 0 );
@@ -1827,6 +1825,8 @@ void HBQPlainTextEdit::hbUpdateLineNumberAreaWidth( int )
 void HBQPlainTextEdit::hbUpdateHorzRuler( const QRect & rect, int dy )
 {
    HB_SYMBOL_UNUSED( rect );
+
+   setTabStopWidth( spaces * fontMetrics().averageCharWidth() );
 
    if( dy == 0 )
       horzRuler->update();
