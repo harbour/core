@@ -373,8 +373,10 @@ METHOD IdeProjManager:loadProperties( cProjFileName, lNew, lFetch, lUpdateTree )
       ENDIF
       /* Access/Assign via this object */
       ::oProject := IdeProject():new( ::oIDE, ::aPrjProps )
-      ::oProject:location := cProjPath
-      ::oProject:projPath := cProjPath
+      IF !empty( cProjPath )
+         ::oProject:location := hbide_pathNormalized( cProjPath, .f. )
+         ::oProject:projPath := ::oProject:location
+      ENDIF
       //
       ::oPropertiesDock:hide()
       ::oPropertiesDock:show()
