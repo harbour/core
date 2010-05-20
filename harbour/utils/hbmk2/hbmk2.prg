@@ -339,7 +339,7 @@ REQUEST hbmk_KEYW
 #define _HBMK_aOBJUSER          74
 #define _HBMK_aICON             75
 #define _HBMK_aIMPLIBSRC        76
-#define _HBMK_cDEF              77
+#define _HBMK_aDEF              77
 #define _HBMK_hDEPTS            78
 
 #define _HBMK_aPO               79
@@ -652,6 +652,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    LOCAL cLibLibPrefix := ""
    LOCAL cLibObjPrefix
    LOCAL cDynObjPrefix := NIL
+   LOCAL cDynDefPrefix := NIL
    LOCAL cLibPathPrefix
    LOCAL cLibPathSep
    LOCAL cDynLibNamePrefix
@@ -1528,7 +1529,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    hbmk[ _HBMK_aOBJUSER ] := {}
    hbmk[ _HBMK_aICON ] := {}
    hbmk[ _HBMK_aIMPLIBSRC ] := {}
-   hbmk[ _HBMK_cDEF ] := ""
+   hbmk[ _HBMK_aDEF ] := {}
    l_aOBJA := {}
    l_cPROGDIR := NIL
    l_cPROGNAME := NIL
@@ -2165,8 +2166,9 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
          cParam := ArchCompFilter( hbmk, cParam )
          IF ! Empty( cParam )
-            cParam := PathProc( cParam, aParam[ _PAR_cFileName ] )
-            hbmk[ _HBMK_cDEF ] := PathSepToTarget( hbmk, cParam )
+            FOR EACH cParam IN FN_Expand( PathProc( cParam, aParam[ _PAR_cFileName ] ), Empty( aParam[ _PAR_cFileName ] ) )
+               AAdd( hbmk[ _HBMK_aDEF ], PathSepToTarget( hbmk, cParam ) )
+            NEXT
          ENDIF
 
       CASE FN_ExtGet( cParamL ) == ".o" .OR. ;
@@ -2709,7 +2711,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             cOpt_CompC += " {LC}"
          ENDIF
          cBin_Dyn := cBin_CompC
-         cOpt_Dyn := "-shared -o {OD} {IM} {LO} {FD} {DL} {LS}"
+         cOpt_Dyn := "-shared -o {OD} {LO} {FD} {IM} {DL} {LS}"
          cBin_Link := cBin_CompC
          cOpt_Link := "{LO} {LA} {LS} {FL} {DL}"
          bBlk_ImpLib := {| cSourceDLL, cTargetLib, cFlags | win_implib_command_gcc( hbmk, hbmk[ _HBMK_cCCPREFIX ] + "dlltool" + hbmk[ _HBMK_cCCPOSTFIX ] + hbmk[ _HBMK_cCCEXT ] + " {FI} -d {ID} -l {OL}", nCmd_Esc, cSourceDLL, cTargetLib, cFlags ) }
@@ -2845,7 +2847,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             cOpt_CompC += " {LC}"
          ENDIF
          cBin_Dyn := cBin_CompC
-         cOpt_Dyn := "-shared -o {OD} {IM} {LO} {LL} {LB} {FD} {DL} {LS}"
+         cOpt_Dyn := "-shared -o {OD} {LO} {LL} {LB} {FD} {IM} {DL} {LS}"
          cBin_Link := cBin_CompC
          cOpt_Link := "{LO} {LA} {FL} {DL}"
          bBlk_ImpLib := {| cSourceDLL, cTargetLib | hb_FCopy( cSourceDLL, cTargetLib ) != F_ERROR }
@@ -3095,14 +3097,14 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                AAdd( hbmk[ _HBMK_aLIBPATH ], PathSepToTarget( hbmk, GetEnv( "WATCOM") + hb_osPathSeparator() + "lib386" ) )
                AAdd( hbmk[ _HBMK_aLIBPATH ], PathSepToTarget( hbmk, GetEnv( "WATCOM") + hb_osPathSeparator() + "lib386" + hb_osPathSeparator() + "linux" ) )
             ENDIF
-         CASE hbmk[ _HBMK_cPLAT ] == "win"   ; cOpt_Dyn := "OP quiet SYS nt_dll {FD} NAME {OD} {LO} {DL} {LL} {LB} {LS}{SCRIPT}"
-         CASE hbmk[ _HBMK_cPLAT ] == "os2"   ; cOpt_Dyn := "OP quiet SYS os2v2_dll {FD} NAME {OD} {LO} {DL} {LL} {LB} {LS}{SCRIPT}"
+         CASE hbmk[ _HBMK_cPLAT ] == "win"   ; cOpt_Dyn := "OP quiet SYS nt_dll {FD} {IM} NAME {OD} {LO} {DL} {LL} {LB} {LS}{SCRIPT}"
+         CASE hbmk[ _HBMK_cPLAT ] == "os2"   ; cOpt_Dyn := "OP quiet SYS os2v2_dll {FD} {IM} NAME {OD} {LO} {DL} {LL} {LB} {LS}{SCRIPT}"
          ENDCASE
-         IF hbmk[ _HBMK_cPLAT ] $ "win|os2" .AND. ! Empty( hbmk[ _HBMK_cDEF ] )
+         IF hbmk[ _HBMK_cPLAT ] $ "win|os2" .AND. ! Empty( hbmk[ _HBMK_aDEF ] )
             /* TODO: Watcom wlink requires a non-standard layout for .def files.
                      We will need a converter and implement on-the-fly conversion
                      to a temp file and pass that via {IM}. */
-            AAdd( hbmk[ _HBMK_aOPTD ], "@{IM}" )
+            cDynDefPrefix := "@"
          ENDIF
          IF hbmk[ _HBMK_cPLAT ] == "dos"
             /* workaround for not included automatically CLIB in pure C mode DOS builds */
@@ -3332,7 +3334,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          cBin_CompCPP := cBin_CompC
          nCmd_Esc := _ESC_DBLQUOTE
          cOpt_Lib := "-nologo {FA} -out:{OL} {LO}"
-         cOpt_Dyn := "{FD} -dll -out:{OD} {DL} {LO} {LL} {LB} {LS}"
+         cOpt_Dyn := "{FD} {IM} -dll -out:{OD} {DL} {LO} {LL} {LB} {LS}"
          cOpt_CompC := "-nologo -c"
          IF hbmk[ _HBMK_lOPTIM ]
             IF hbmk[ _HBMK_cPLAT ] == "wce"
@@ -3383,7 +3385,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          ENDIF
          cOpt_CompC += " {FC} {LC}"
          cOptIncMask := "-I{DI}"
-         cOpt_Link := "-nologo -out:{OE} {LO} {DL} {FL} {LL} {LB} {LS}"
+         cOpt_Link := "-nologo -out:{OE} {LO} {DL} {FL} {IM} {LL} {LB} {LS}"
          SWITCH hbmk[ _HBMK_cCOMP ]
          CASE "msvc"     ; AAdd( hbmk[ _HBMK_aOPTI ], "-machine:x86"  ) ; EXIT
          CASE "msvc64"   ; AAdd( hbmk[ _HBMK_aOPTI ], "-machine:x64"  ) ; EXIT
@@ -3397,9 +3399,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          bBlk_ImpLib := {| cSourceDLL, cTargetLib, cFlags | win_implib_command_msvc( hbmk, cBin_Lib + " -nologo {FI} -def:{ID} -out:{OL}", nCmd_Esc, cSourceDLL, cTargetLib, cFlags ) }
          cLibPathPrefix := "-libpath:"
          cLibPathSep := " "
-         IF ! Empty( hbmk[ _HBMK_cDEF ] )
-            AAdd( hbmk[ _HBMK_aOPTD ], "-def:{IM}" )
-         ENDIF
+         cDynDefPrefix := "-def:"
          IF hbmk[ _HBMK_lMAP ]
             AAdd( hbmk[ _HBMK_aOPTL ], "-map" )
             AAdd( hbmk[ _HBMK_aOPTD ], "-map" )
@@ -3512,7 +3512,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             cWorkDir := "."
          ENDIF
          cOptIncMask := "-I{DI}"
-         cOpt_Dyn := "{FD} -dll -out:{OD} {DL} {LO} {LL} {LB} {LS}"
+         cOpt_Dyn := "{FD} {IM} -dll -out:{OD} {DL} {LO} {LL} {LB} {LS}"
          bBlk_ImpLib := {| cSourceDLL, cTargetLib, cFlags | win_implib_command( hbmk, cBin_Lib + " {ID} -out:{OL}", nCmd_Esc, cSourceDLL, cTargetLib, cFlags ) }
          IF hbmk[ _HBMK_cPLAT ] == "wce"
             AAdd( hbmk[ _HBMK_aOPTC ], "-DUNICODE" )
@@ -3544,12 +3544,10 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          IF hbmk[ _HBMK_lMT ]
             AAdd( hbmk[ _HBMK_aOPTC ], "-MT" )
          ENDIF
-         cOpt_Link := "-out:{OE} {LO} {DL} {FL} {LL} {LB} {LS}"
+         cOpt_Link := "-out:{OE} {LO} {DL} {FL} {IM} {LL} {LB} {LS}"
          cLibPathPrefix := "-libpath:"
          cLibPathSep := " "
-         IF ! Empty( hbmk[ _HBMK_cDEF ] )
-            AAdd( hbmk[ _HBMK_aOPTD ], "-def:{IM}" )
-         ENDIF
+         cDynDefPrefix := "-def:"
          IF hbmk[ _HBMK_lMAP ]
             AAdd( hbmk[ _HBMK_aOPTL ], "-map" )
             AAdd( hbmk[ _HBMK_aOPTD ], "-map" )
@@ -4920,7 +4918,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                cOpt_Dyn := StrTran( cOpt_Dyn, "{LS}"  , ArrayToList( ArrayJoin( ListDirExt( hbmk[ _HBMK_aRESSRC ], cWorkDir, cResExt ), hbmk[ _HBMK_aRESCMP ] ),, nOpt_Esc, cResPrefix ) )
                cOpt_Dyn := StrTran( cOpt_Dyn, "{LL}"  , ArrayToList( l_aLIB,, nOpt_Esc, cLibPrefix ) )
                cOpt_Dyn := StrTran( cOpt_Dyn, "{LB}"  , ArrayToList( l_aLIBA,, nOpt_Esc ) )
-               cOpt_Dyn := StrTran( cOpt_Dyn, "{IM}"  , FN_Escape( PathSepToTarget( hbmk, hbmk[ _HBMK_cDEF ] ), nOpt_Esc ) )
+               cOpt_Dyn := StrTran( cOpt_Dyn, "{IM}"  , ArrayToList( hbmk[ _HBMK_aDEF ],, nOpt_Esc, cDynDefPrefix ) )
                cOpt_Dyn := StrTran( cOpt_Dyn, "{OD}"  , FN_Escape( PathSepToTarget( hbmk, l_cPROGNAME ), nOpt_Esc ) )
                cOpt_Dyn := StrTran( cOpt_Dyn, "{OM}"  , FN_Escape( PathSepToTarget( hbmk, FN_ExtSet( l_cPROGNAME, ".map" ) ), nOpt_Esc ) )
                cOpt_Dyn := StrTran( cOpt_Dyn, "{OI}"  , FN_Escape( PathSepToTarget( hbmk, l_cIMPLIBNAME ), nOpt_Esc ) )
@@ -6630,7 +6628,9 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
                      NEXT
                   ENDIF
                CASE FN_ExtGet( cItemL ) == ".def"
-                  hbmk[ _HBMK_cDEF ] := PathSepToSelf( cItem )
+                  FOR EACH tmp IN FN_Expand( cItem )
+                     AAddNew( hbmk[ _HBMK_aDEF ], PathSepToTarget( hbmk, tmp ) )
+                  NEXT
                OTHERWISE /* .prg */
                   IF Empty( FN_ExtGet( cItem ) )
                      cItem := FN_ExtSet( cItem, ".prg" )
