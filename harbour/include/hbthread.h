@@ -395,33 +395,33 @@ extern PHB_THREADSTATE hb_threadStateNew( void );
 extern void hb_threadReleaseCPU( void );
 
 /* atomic oprtations */
-void        hb_atomic_set( volatile HB_COUNTER * pCounter, HB_COUNTER value );
-HB_COUNTER  hb_atomic_get( volatile HB_COUNTER * pCounter );
-void        hb_atomic_inc( volatile HB_COUNTER * pCounter );
-HB_BOOL     hb_atomic_dec( volatile HB_COUNTER * pCounter ); /* returns HB_TRUE when counter reach after decrementation */
+extern HB_EXPORT void        hb_atomic_set( volatile HB_COUNTER * pCounter, HB_COUNTER value );
+extern HB_EXPORT HB_COUNTER  hb_atomic_get( volatile HB_COUNTER * pCounter );
+extern HB_EXPORT void        hb_atomic_inc( volatile HB_COUNTER * pCounter );
+extern HB_EXPORT HB_BOOL     hb_atomic_dec( volatile HB_COUNTER * pCounter ); /* returns HB_TRUE when counter reach after decrementation */
 
 /* Critical sections or fast non recursive MUTEXes */
-extern void hb_threadEnterCriticalSection( HB_CRITICAL_T * critical );
-extern void hb_threadLeaveCriticalSection( HB_CRITICAL_T * critical );
+extern HB_EXPORT void     hb_threadEnterCriticalSection( HB_CRITICAL_T * critical );
+extern HB_EXPORT void     hb_threadLeaveCriticalSection( HB_CRITICAL_T * critical );
 
 /* conditional variables */
-extern HB_BOOL hb_threadCondSignal( HB_COND_T * cond );
-extern HB_BOOL hb_threadCondBroadcast( HB_COND_T * cond );
-extern HB_BOOL hb_threadCondWait( HB_COND_T * cond, HB_CRITICAL_T * mutex );
-extern HB_BOOL hb_threadCondTimedWait( HB_COND_T * cond, HB_CRITICAL_T * mutex, HB_ULONG ulMilliSec );
+extern HB_EXPORT HB_BOOL  hb_threadCondSignal( HB_COND_T * cond );
+extern HB_EXPORT HB_BOOL  hb_threadCondBroadcast( HB_COND_T * cond );
+extern HB_EXPORT HB_BOOL  hb_threadCondWait( HB_COND_T * cond, HB_CRITICAL_T * mutex );
+extern HB_EXPORT HB_BOOL  hb_threadCondTimedWait( HB_COND_T * cond, HB_CRITICAL_T * mutex, HB_ULONG ulMilliSec );
 
-extern HB_THREAD_HANDLE hb_threadCreate( HB_THREAD_ID * th_id, PHB_THREAD_STARTFUNC start_func, void * Cargo );
-extern HB_BOOL     hb_threadJoin( HB_THREAD_HANDLE th_h );
-extern HB_BOOL     hb_threadDetach( HB_THREAD_HANDLE th_h );
+extern HB_EXPORT HB_THREAD_HANDLE hb_threadCreate( HB_THREAD_ID * th_id, PHB_THREAD_STARTFUNC start_func, void * Cargo );
+extern HB_EXPORT HB_BOOL  hb_threadJoin( HB_THREAD_HANDLE th_h );
+extern HB_EXPORT HB_BOOL  hb_threadDetach( HB_THREAD_HANDLE th_h );
 
 /* used by .prg code */
-extern PHB_ITEM hb_threadMutexCreate( void );
-extern HB_BOOL  hb_threadMutexLock( PHB_ITEM pItem );
-extern HB_BOOL  hb_threadMutexTimedLock( PHB_ITEM pItem, HB_ULONG ulMilliSec );
-extern HB_BOOL  hb_threadMutexUnlock( PHB_ITEM pItem );
-extern void     hb_threadMutexNotify( PHB_ITEM pItem, PHB_ITEM pNotifier, HB_BOOL fWaiting );
-extern PHB_ITEM hb_threadMutexSubscribe( PHB_ITEM pItem, HB_BOOL fClear );
-extern PHB_ITEM hb_threadMutexTimedSubscribe( PHB_ITEM pItem, HB_ULONG ulMilliSec, HB_BOOL fClear );
+extern HB_EXPORT PHB_ITEM hb_threadMutexCreate( void );
+extern HB_EXPORT HB_BOOL  hb_threadMutexLock( PHB_ITEM pItem );
+extern HB_EXPORT HB_BOOL  hb_threadMutexTimedLock( PHB_ITEM pItem, HB_ULONG ulMilliSec );
+extern HB_EXPORT HB_BOOL  hb_threadMutexUnlock( PHB_ITEM pItem );
+extern HB_EXPORT void     hb_threadMutexNotify( PHB_ITEM pItem, PHB_ITEM pNotifier, HB_BOOL fWaiting );
+extern HB_EXPORT PHB_ITEM hb_threadMutexSubscribe( PHB_ITEM pItem, HB_BOOL fClear );
+extern HB_EXPORT PHB_ITEM hb_threadMutexTimedSubscribe( PHB_ITEM pItem, HB_ULONG ulMilliSec, HB_BOOL fClear );
 
 #if defined( HB_MT_VM ) && defined( _HB_API_INTERNAL_ )
 
