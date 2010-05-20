@@ -1051,7 +1051,7 @@ typedef struct
 }
 HB_OLE_PARAM_REF;
 
-HB_BOOL hb_oleDispInvoke( PHB_SYMB pSym, PHB_ITEM pObject, DISPID* pDispId,
+HB_BOOL hb_oleDispInvoke( PHB_SYMB pSym, PHB_ITEM pObject, PHB_ITEM pParam,
                           DISPPARAMS* pParams, VARIANT* pVarResult )
 {
    if( !pSym && HB_IS_SYMBOL( pObject ) )
@@ -1064,9 +1064,9 @@ HB_BOOL hb_oleDispInvoke( PHB_SYMB pSym, PHB_ITEM pObject, DISPID* pDispId,
        hb_vmRequestReenter() )
    {
       HB_OLE_PARAM_REF refArray[ 32 ];
-      int i, ii, iCount, iRefs;
+      int i, ii, iParams, iCount, iRefs;
 
-      iCount = pParams->cArgs;
+      iParams = iCount = pParams->cArgs;
 
       for( i = iRefs = 0; i < iCount && iRefs < ( int ) HB_SIZEOFARRAY( refArray ); i++ )
       {
@@ -1083,8 +1083,11 @@ HB_BOOL hb_oleDispInvoke( PHB_SYMB pSym, PHB_ITEM pObject, DISPID* pDispId,
       else
          hb_vmPushNil();
 
-      if( pDispId )
-         hb_vmPushLong( ( long ) *pDispId );
+      if( pParam )
+      {
+         hb_vmPush( pParam );
+         iParams++;
+      }
 
       for( i = 1, ii = 0; i <= iCount; i++ )
       {
@@ -1099,12 +1102,10 @@ HB_BOOL hb_oleDispInvoke( PHB_SYMB pSym, PHB_ITEM pObject, DISPID* pDispId,
                                  &pParams->rgvarg[ iCount - i ] );
       }
 
-      if( pDispId )
-         ++iCount;
       if( pObject )
-         hb_vmSend( ( HB_USHORT ) iCount );
+         hb_vmSend( ( HB_USHORT ) iParams );
       else
-         hb_vmProc( ( HB_USHORT ) iCount );
+         hb_vmProc( ( HB_USHORT ) iParams );
 
       if( pVarResult )
          hb_oleItemToVariant( pVarResult, hb_stackReturnItem() );

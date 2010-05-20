@@ -2202,7 +2202,6 @@ static HB_ERRCODE hb_dbfPutValue( DBFAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pI
    const char * pszPtr;
    HB_SIZE ulSize, ulLen;
    HB_BYTE * ptr;
-   PHB_ITEM pError;
    HB_ERRCODE errCode;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_dbfPutValue(%p, %hu, %p)", pArea, uiIndex, pItem));
@@ -2477,7 +2476,7 @@ static HB_ERRCODE hb_dbfPutValue( DBFAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pI
    /* Exit if any error */
    if( errCode != HB_SUCCESS )
    {
-      pError = hb_errNew();
+      PHB_ITEM pError = hb_errNew();
       hb_errPutGenCode( pError, hb_dbfGetEGcode( errCode ) );
       hb_errPutDescription( pError, hb_langDGetErrorDesc( hb_dbfGetEGcode( errCode ) ) );
       hb_errPutOperation( pError, hb_dynsymName( ( PHB_DYNS ) pField->sym ) );

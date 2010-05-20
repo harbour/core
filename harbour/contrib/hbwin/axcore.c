@@ -325,7 +325,8 @@ static HRESULT STDMETHODCALLTYPE Invoke( IDispatch* lpThis, DISPID dispid, REFII
                                          VARIANT* pVarResult, EXCEPINFO* pExcepInfo,
                                          UINT* puArgErr )
 {
-   PHB_ITEM pAction, pKey = NULL;
+   PHB_ITEM pAction;
+   HRESULT hr;
 
    HB_SYMBOL_UNUSED( lcid );
    HB_SYMBOL_UNUSED( wFlags );
@@ -335,20 +336,24 @@ static HRESULT STDMETHODCALLTYPE Invoke( IDispatch* lpThis, DISPID dispid, REFII
    if( ! IsEqualIID( riid, HB_ID_REF( IID_NULL ) ) )
       return DISP_E_UNKNOWNINTERFACE;
 
-   pAction = ( ( ISink* ) lpThis )->pItemHandler;
+   hr = DISP_E_MEMBERNOTFOUND;
 
-   if( pAction && HB_IS_HASH( pAction ) )
+   pAction = ( ( ISink* ) lpThis )->pItemHandler;
+   if( pAction )
    {
-      pKey = hb_itemPutNL( pKey, ( long ) dispid );
-      pAction = hb_hashGetItemPtr( pAction, pKey, 0 );
-      hb_itemRelease( pKey );
+      PHB_ITEM pKey = hb_itemPutNL( hb_stackAllocItem(), ( long ) dispid );
+
+      if( pAction && HB_IS_HASH( pAction ) )
+         pAction = hb_hashGetItemPtr( pAction, pKey, 0 );
+
+      if( pAction &&  hb_oleDispInvoke( NULL, pAction, pKey,
+                                        pParams, pVarResult ) )
+         hr = S_OK;
+
+      hb_stackPop();
    }
 
-   if( pAction && hb_oleDispInvoke( NULL, pAction, pKey ? NULL : &dispid,
-                                    pParams, pVarResult ) )
-      return S_OK;
-   else
-      return DISP_E_MEMBERNOTFOUND;
+   return hr;
 }
 
 

@@ -101,6 +101,7 @@ HB_EXTERN_BEGIN
 #define HB_IT_ANY       ( ( HB_TYPE ) 0xFFFFFFFF )
 #define HB_IT_COMPLEX   ( ( HB_TYPE ) ( HB_IT_BLOCK | HB_IT_ARRAY | HB_IT_HASH | HB_IT_POINTER | /* HB_IT_MEMVAR | HB_IT_ENUM | HB_IT_EXTREF |*/ HB_IT_BYREF | HB_IT_STRING ) )
 #define HB_IT_GCITEM    ( ( HB_TYPE ) ( HB_IT_BLOCK | HB_IT_ARRAY | HB_IT_HASH | HB_IT_POINTER | HB_IT_BYREF ) )
+#define HB_IT_EVALITEM  ( ( HB_TYPE ) ( HB_IT_BLOCK | HB_IT_SYMBOL ) )
 #define HB_IT_HASHKEY   ( ( HB_TYPE ) ( HB_IT_INTEGER | HB_IT_LONG | HB_IT_DOUBLE | HB_IT_DATE | HB_IT_TIMESTAMP | HB_IT_STRING | HB_IT_POINTER ) )
 
 #if 0
@@ -148,6 +149,7 @@ HB_EXTERN_BEGIN
 #define HB_IS_DATETIME( p )   ( ( HB_ITEM_TYPE( p ) & HB_IT_DATETIME ) != 0 )
 #define HB_IS_COMPLEX( p )    ( ( HB_ITEM_TYPE( p ) & HB_IT_COMPLEX ) != 0 )
 #define HB_IS_GCITEM( p )     ( ( HB_ITEM_TYPE( p ) & HB_IT_GCITEM ) != 0 )
+#define HB_IS_EVALITEM( p )   ( ( HB_ITEM_TYPE( p ) & HB_IT_EVALITEM ) != 0 )
 #define HB_IS_BADITEM( p )    ( ( HB_ITEM_TYPE( p ) & HB_IT_COMPLEX ) != 0 && ( HB_ITEM_TYPE( p ) & ~( HB_IT_COMPLEX | HB_IT_MEMOFLAG ) ) != 0 )
 #define HB_IS_HASHKEY( p )    ( ( HB_ITEM_TYPE( p ) & HB_IT_HASHKEY ) != 0 )
 #define HB_IS_OBJECT( p )     ( HB_IS_ARRAY( p ) && HB_ARRAY_OBJ( p ) )
@@ -183,6 +185,7 @@ HB_EXTERN_BEGIN
 #define HB_IS_DATETIME( p )   ( ( HB_ITEM_TYPE( p ) & HB_IT_DATETIME ) != 0 )
 #define HB_IS_COMPLEX( p )    ( ( HB_ITEM_TYPE( p ) & HB_IT_COMPLEX ) != 0 )
 #define HB_IS_GCITEM( p )     ( ( HB_ITEM_TYPE( p ) & HB_IT_GCITEM ) != 0 )
+#define HB_IS_EVALITEM( p )   ( ( HB_ITEM_TYPE( p ) & HB_IT_EVALITEM ) != 0 )
 #define HB_IS_HASHKEY( p )    ( ( HB_ITEM_TYPE( p ) & HB_IT_HASHKEY ) != 0 )
 #define HB_IS_BADITEM( p )    ( ( HB_ITEM_TYPE( p ) & HB_IT_COMPLEX ) != 0 && ( HB_ITEM_TYPE( p ) & ~( HB_IT_COMPLEX | HB_IT_MEMOFLAG ) ) != 0 )
 #define HB_IS_OBJECT( p )     ( HB_IS_ARRAY( p ) && HB_ARRAY_OBJ( p ) )
@@ -216,6 +219,7 @@ HB_EXTERN_BEGIN
 #define HB_IS_DATETIME( p )   ( ( HB_ITEM_TYPERAW( p ) & HB_IT_DATETIME ) != 0 )
 #define HB_IS_COMPLEX( p )    ( ( HB_ITEM_TYPERAW( p ) & HB_IT_COMPLEX ) != 0 )
 #define HB_IS_GCITEM( p )     ( ( HB_ITEM_TYPERAW( p ) & HB_IT_GCITEM ) != 0 )
+#define HB_IS_EVALITEM( p )   ( ( HB_ITEM_TYPERAW( p ) & HB_IT_EVALITEM ) != 0 )
 #define HB_IS_HASHKEY( p )    ( ( HB_ITEM_TYPERAW( p ) & HB_IT_HASHKEY ) != 0 )
 #define HB_IS_BADITEM( p )    ( ( HB_ITEM_TYPERAW( p ) & HB_IT_COMPLEX ) != 0 && ( HB_ITEM_TYPERAW( p ) & ~( HB_IT_COMPLEX | HB_IT_MEMOFLAG | HB_IT_DEFAULT ) ) != 0 )
 #define HB_IS_OBJECT( p )     ( HB_IS_ARRAY( p ) && HB_ARRAY_OBJ( p ) )

@@ -116,7 +116,7 @@ HB_EXPORT IDispatch* hb_oleItemGet( PHB_ITEM pItem );
 HB_EXPORT PHB_ITEM   hb_oleItemPut( PHB_ITEM pItem, IDispatch* pDisp );
 HB_EXPORT PHB_ITEM   hb_oleItemGetCallBack( PHB_ITEM pItem );
 HB_EXPORT void       hb_oleItemSetCallBack( PHB_ITEM pItem, PHB_ITEM* pCallBack );
-HB_EXPORT HB_BOOL    hb_oleDispInvoke( PHB_SYMB pSym, PHB_ITEM pObject, DISPID* pDispId,
+HB_EXPORT HB_BOOL    hb_oleDispInvoke( PHB_SYMB pSym, PHB_ITEM pObject, PHB_ITEM pParam,
                                        DISPPARAMS* pParams, VARIANT* pVarResult );
 
 /* activex control */
