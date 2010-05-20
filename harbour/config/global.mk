@@ -226,6 +226,14 @@ ifeq ($(HB_INIT_DONE),)
    ifeq ($(HB_BUILD_DLL),no)
       export HB_BUILD_SHARED := no
    endif
+
+   ifeq ($(HB_BUILD_IMPLIB),yes)
+      # 'install' is required to create import libraries
+      ifeq ($(filter install,$(HB_MAKECMDGOALS)),)
+         export HB_BUILD_IMPLIB := no
+         $(warning ! Warning: HB_BUILD_IMPLIB option works only when 'install' is requested.)
+      endif
+   endif
 endif
 
 # Make platform detection
