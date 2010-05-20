@@ -1481,10 +1481,10 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    /* Make a copy to hbmk structure so that we can use it in deeper
       functions. The only reason I kept the local version is to
       keep above code parts easier to read. [vszakats] */
-   hbmk[ _HBMK_cHB_BIN_INSTALL ] := l_cHB_BIN_INSTALL := PathSepToTarget( hbmk, l_cHB_BIN_INSTALL )
-   hbmk[ _HBMK_cHB_LIB_INSTALL ] := l_cHB_LIB_INSTALL := PathSepToTarget( hbmk, l_cHB_LIB_INSTALL )
-   hbmk[ _HBMK_cHB_DYN_INSTALL ] := l_cHB_DYN_INSTALL := PathSepToTarget( hbmk, l_cHB_DYN_INSTALL )
-   hbmk[ _HBMK_cHB_INC_INSTALL ] := l_cHB_INC_INSTALL := PathSepToTarget( hbmk, l_cHB_INC_INSTALL )
+   hbmk[ _HBMK_cHB_BIN_INSTALL ] := l_cHB_BIN_INSTALL := PathSepToTarget( hbmk, DirDelPathSep( PathSepToSelf( l_cHB_BIN_INSTALL ) ) )
+   hbmk[ _HBMK_cHB_LIB_INSTALL ] := l_cHB_LIB_INSTALL := PathSepToTarget( hbmk, DirDelPathSep( PathSepToSelf( l_cHB_LIB_INSTALL ) ) )
+   hbmk[ _HBMK_cHB_DYN_INSTALL ] := l_cHB_DYN_INSTALL := PathSepToTarget( hbmk, DirDelPathSep( PathSepToSelf( l_cHB_DYN_INSTALL ) ) )
+   hbmk[ _HBMK_cHB_INC_INSTALL ] := l_cHB_INC_INSTALL := PathSepToTarget( hbmk, DirDelPathSep( PathSepToSelf( l_cHB_INC_INSTALL ) ) )
 
    /* Add main Harbour library dir to lib path list */
    AAddNotEmpty( hbmk[ _HBMK_aLIBPATH ], l_cHB_LIB_INSTALL )
@@ -1877,7 +1877,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
          cParam := MacroProc( hbmk, ArchCompFilter( hbmk, SubStr( cParam, 3 ) ), aParam[ _PAR_cFileName ] )
          IF ! Empty( cParam )
-            AAdd( hbmk[ _HBMK_aLIBPATH ], PathSepToTarget( hbmk, PathProc( cParam, aParam[ _PAR_cFileName ] ) ) )
+            AAdd( hbmk[ _HBMK_aLIBPATH ], PathSepToTarget( hbmk, DirDelPathSep( PathSepToSelf( PathProc( cParam, aParam[ _PAR_cFileName ] ) ) ) ) )
          ENDIF
 
       CASE Left( cParamL, Len( "-instpath=" ) ) == "-instpath=" .AND. ;
@@ -1898,7 +1898,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          IF ! Empty( cParam )
             cParam := PathNormalize( PathProc( PathSepToSelf( cParam ), aParam[ _PAR_cFileName ] ) )
             IF AScan( hbmk[ _HBMK_aINCPATH ], {| tmp | tmp == cParam } ) == 0
-               AAdd( hbmk[ _HBMK_aINCPATH ], PathSepToTarget( hbmk, cParam ) )
+               AAdd( hbmk[ _HBMK_aINCPATH ], PathSepToTarget( hbmk, DirDelPathSep( cParam ) ) )
             ENDIF
          ENDIF
 
@@ -1934,7 +1934,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          IF ! Empty( cParam )
             cParam := PathNormalize( PathProc( PathSepToSelf( cParam ), aParam[ _PAR_cFileName ] ) )
             IF AScan( hbmk[ _HBMK_aINCPATH ], {| tmp | tmp == cParam } ) == 0
-               AAdd( hbmk[ _HBMK_aINCPATH ], PathSepToTarget( hbmk, cParam ) )
+               AAdd( hbmk[ _HBMK_aINCPATH ], PathSepToTarget( hbmk, DirDelPathSep( cParam ) ) )
             ENDIF
          ENDIF
 
@@ -5671,7 +5671,7 @@ STATIC FUNCTION FindHeader( hbmk, cFileName, cParentDir, aINCTRYPATH )
          IF hb_FileExists( DirAddPathSep( PathSepToSelf( cDir ) ) + cFileName )
             /* Add these dir to include paths */
             IF AScan( hbmk[ _HBMK_aINCPATH ], { |tmp| tmp == cDir } ) == 0
-               AAdd( hbmk[ _HBMK_aINCPATH ], cDir )
+               AAdd( hbmk[ _HBMK_aINCPATH ], DirDelPathSep( PathSepToSelf( cDir ) ) )
                IF hbmk[ _HBMK_lInfo ]
                   hbmk_OutStd( hbmk, hb_StrFormat( I_( "Autodetected header dir for %1$s: %2$s" ), cFileName, cDir ) )
                ENDIF
@@ -6720,7 +6720,7 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
             IF ! Empty( cItem )
                cItem := PathNormalize( PathProc( PathSepToSelf( cItem ), FN_DirGet( cFileName ) ) )
                IF AScan( hbmk[ _HBMK_aLIBPATH ], {| tmp | tmp == cItem } ) == 0
-                  AAdd( hbmk[ _HBMK_aLIBPATH ], PathSepToTarget( hbmk, cItem ) )
+                  AAdd( hbmk[ _HBMK_aLIBPATH ], PathSepToTarget( hbmk, DirDelPathSep( cItem ) ) )
                ENDIF
             ENDIF
          NEXT
@@ -6731,7 +6731,7 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
             IF ! Empty( cItem )
                cItem := PathNormalize( PathProc( PathSepToSelf( cItem ), FN_DirGet( cFileName ) ) )
                IF AScan( hbmk[ _HBMK_aINCPATH ], {| tmp | tmp == cItem } ) == 0
-                  AAdd( hbmk[ _HBMK_aINCPATH ], PathSepToTarget( hbmk, cItem ) )
+                  AAdd( hbmk[ _HBMK_aINCPATH ], PathSepToTarget( hbmk, DirDelPathSep( cItem ) ) )
                ENDIF
             ENDIF
          NEXT
@@ -7251,6 +7251,12 @@ STATIC FUNCTION getFirstFunc( hbmk, cFile )
                EXIT
             ENDIF
          NEXT
+      ELSEIF Lower( cExt ) == ".c" .OR. ;
+             Lower( cExt ) == ".cpp" .OR. ;
+             Lower( cExt ) == ".cc" .OR. ;
+             Lower( cExt ) == ".cxx" .OR. ;
+             Lower( cExt ) == ".cx"
+         /* do nothing */
       ELSEIF ! Empty( cExecNM := FindInPath( hbmk[ _HBMK_cCCPREFIX ] + "nm" ) )
          cFuncList := ""
          hb_processRun( cExecNM + " " + cFile + " -g -n" + iif( hbmk[ _HBMK_cCOMP ] == "darwin", "", " --defined-only -C" ),, @cFuncList )
