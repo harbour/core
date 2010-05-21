@@ -185,10 +185,23 @@ HB_FUNC( WIN_SERVICESTOP )
 HB_FUNC( WIN_SERVICEINSTALL )
 {
    HB_BOOL bRetVal = HB_FALSE;
-#if ! defined( HB_OS_WIN_CE )
-   TCHAR lpPath[ MAX_PATH ];
 
-   if( GetModuleFileName( NULL, lpPath, HB_SIZEOFARRAY( lpPath ) ) )
+#if ! defined( HB_OS_WIN_CE )
+
+   void * hPath;
+   LPCTSTR lpPath = HB_PARSTR( 3, &hPath, NULL );
+
+   TCHAR lpPathBuffer[ MAX_PATH ];
+
+   if( lpPath == NULL )
+   {
+      if( GetModuleFileName( NULL, lpPathBuffer, HB_SIZEOFARRAY( lpPathBuffer ) ) )
+         lpPath = lpPathBuffer;
+      else
+         hbwapi_SetLastError( GetLastError() );
+   }
+
+   if( lpPath )
    {
       SC_HANDLE schSCM = OpenSCManager( NULL, NULL, SC_MANAGER_ALL_ACCESS );
 
@@ -233,8 +246,8 @@ HB_FUNC( WIN_SERVICEINSTALL )
       else
          hbwapi_SetLastError( GetLastError() );
    }
-   else
-      hbwapi_SetLastError( GetLastError() );
+
+   hb_strfree( hPath );
 
 #endif
    hb_retl( bRetVal );
