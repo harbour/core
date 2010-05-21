@@ -635,8 +635,8 @@ extern WIN_DATA * hb_gt_wvw_GetWindowsData( UINT iWin ) ;
 extern WVW_DATA * hb_getWvwData( void ) ;
 extern char * hb_gt_wvw_GetAppName( void );
 extern void hb_gt_wvwResetWindow( UINT usWinNum );
-extern int HB_EXPORT hb_gt_wvwGetLastMenuEvent( UINT usWinNum );
-extern int HB_EXPORT hb_gt_wvwSetLastMenuEvent( UINT usWinNum, int iLastMenuEvent );
+extern HB_EXPORT int hb_gt_wvwGetLastMenuEvent( UINT usWinNum );
+extern HB_EXPORT int hb_gt_wvwSetLastMenuEvent( UINT usWinNum, int iLastMenuEvent );
 extern BOOL hb_gt_wvwSetMenuKeyEvent( UINT usWinNum, int iMenuKeyEvent );
 /* bitmap caching functions: */
 extern HBITMAP FindBitmapHandle(const char * szFileName, int * piWidth, int * piHeight);
@@ -654,15 +654,15 @@ extern HB_EXPORT void hb_gt_wvwDrawBoxRaised( UINT usWinNum, int iTop, int iLeft
 extern HB_EXPORT void hb_gt_wvwDrawBoxRecessed( UINT usWinNum, int iTop, int iLeft, int iBottom, int iRight,
                                        BOOL bTight );
 
-extern BOOL HB_EXPORT hb_gt_wvwDrawImage( UINT usWinNum, int x1, int y1, int wd, int ht, const char * image,
+extern HB_EXPORT BOOL hb_gt_wvwDrawImage( UINT usWinNum, int x1, int y1, int wd, int ht, const char * image,
                                    BOOL bTransparent );
 extern HB_EXPORT void hb_gt_wvwDrawOutline( UINT usWinNum, int iTop, int iLeft, int iBottom, int iRight );
 extern DWORD hb_gt_wvwGetColorData( int iIndex );
-extern BOOL HB_EXPORT hb_gt_wvwRenderPicture( UINT usWinNum, int x1, int y1, int wd, int ht, IPicture * iPicture,
+extern HB_EXPORT BOOL hb_gt_wvwRenderPicture( UINT usWinNum, int x1, int y1, int wd, int ht, IPicture * iPicture,
                                        BOOL bTransp );
-extern  BOOL GetImageDimension(const char * image, int * pWidth, int * pHeight);
-extern  BOOL GetIPictDimension(IPicture * pPic, int * pWidth, int * pHeight);
-extern  BOOL HB_EXPORT hb_gt_wvwRenderPicture( UINT usWinNum, int x1, int y1, int wd, int ht, IPicture * iPicture,
+extern BOOL GetImageDimension(const char * image, int * pWidth, int * pHeight);
+extern BOOL GetIPictDimension(IPicture * pPic, int * pWidth, int * pHeight);
+extern HB_EXPORT BOOL hb_gt_wvwRenderPicture( UINT usWinNum, int x1, int y1, int wd, int ht, IPicture * iPicture,
                                        BOOL bTransp );
 extern HB_EXPORT IPicture * rr_LoadPictureFromResource(const char * resname,UINT iresimage,LONG *lwidth,LONG *lheight);
 extern HB_EXPORT IPicture * rr_LoadPicture(const char * filename,LONG * lwidth,LONG * lheight);
@@ -702,7 +702,7 @@ extern USHORT hb_gt_wvwColOfs( UINT usWinNum );
 extern HB_EXPORT BOOL CALLBACK hb_gt_wvwDlgProcModal( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam );
 extern HB_EXPORT BOOL CALLBACK hb_gt_wvwDlgProcMLess( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam );
 extern IPicture * hb_gt_wvwLoadPicture( const char * image );
-extern BOOL HB_EXPORT hb_gt_wvwDestroyPicture( IPicture * iPicture );
+extern HB_EXPORT BOOL hb_gt_wvwDestroyPicture( IPicture * iPicture );
 extern int nCopyAnsiToWideChar( LPWORD lpWCStr, LPSTR lpAnsiIn );
 extern LPWORD lpwAlign( LPWORD lpIn );
 HB_EXTERN_END

@@ -565,28 +565,28 @@ typedef enum
    #define SWP_NOREDRAW         0
 #endif
 
-POINT       HB_EXPORT   hb_wvt_gtGetXYFromColRow( int col, int row );
+extern HB_EXPORT POINT         hb_wvt_gtGetXYFromColRow( int col, int row );
 #if ! defined( HB_OS_WIN_CE )
-IPicture    HB_EXPORT * hb_wvt_gtLoadPicture( const char * image );
-IPicture    HB_EXPORT * hb_wvt_gtLoadPictureFromResource( LPCSTR cResource, LPCSTR cSection );
-HB_BOOL     HB_EXPORT   hb_wvt_gtRenderPicture( int x1, int y1, int wd, int ht, IPicture * iPicture );
-HB_BOOL     HB_EXPORT   hb_wvt_gtDestroyPicture( IPicture * iPicture );
+extern HB_EXPORT IPicture *    hb_wvt_gtLoadPicture( const char * image );
+extern HB_EXPORT IPicture *    hb_wvt_gtLoadPictureFromResource( LPCSTR cResource, LPCSTR cSection );
+extern HB_EXPORT HB_BOOL       hb_wvt_gtRenderPicture( int x1, int y1, int wd, int ht, IPicture * iPicture );
+extern HB_EXPORT HB_BOOL       hb_wvt_gtDestroyPicture( IPicture * iPicture );
 #endif
-HB_BOOL     HB_EXPORT   hb_wvt_DrawImage( HDC hdc, int x1, int y1, int wd, int ht, const char * image );
-void        HB_EXPORT   hb_wvt_GetStringAttrib( int top, int left, int bottom, int right, HB_BYTE * sBuffer, HB_BYTE * sAttrib );
-void        HB_EXPORT   hb_wvt_PutStringAttrib( int top, int left, int bottom, int right, HB_BYTE * sBuffer, HB_BYTE * sAttrib );
+extern HB_EXPORT HB_BOOL       hb_wvt_DrawImage( HDC hdc, int x1, int y1, int wd, int ht, const char * image );
+extern HB_EXPORT void          hb_wvt_GetStringAttrib( int top, int left, int bottom, int right, HB_BYTE * sBuffer, HB_BYTE * sAttrib );
+extern HB_EXPORT void          hb_wvt_PutStringAttrib( int top, int left, int bottom, int right, HB_BYTE * sBuffer, HB_BYTE * sAttrib );
 
-LPWORD      HB_EXPORT   lpwAlign( LPWORD lpIn );
-int         HB_EXPORT   nCopyAnsiToWideChar( LPWORD lpWCStr, LPCSTR lpAnsiIn );
-BOOL        HB_EXPORT CALLBACK hb_wvt_gtDlgProcMLess( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam );
-BOOL        HB_EXPORT CALLBACK hb_wvt_gtDlgProcModal( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam );
+extern HB_EXPORT LPWORD        lpwAlign( LPWORD lpIn );
+extern HB_EXPORT int           nCopyAnsiToWideChar( LPWORD lpWCStr, LPCSTR lpAnsiIn );
+extern HB_EXPORT BOOL CALLBACK hb_wvt_gtDlgProcMLess( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam );
+extern HB_EXPORT BOOL CALLBACK hb_wvt_gtDlgProcModal( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam );
 
-void        HB_EXPORT   hb_wvt_wvtCore( void );
-void        HB_EXPORT   hb_wvt_wvtUtils( void );
+extern HB_EXPORT void          hb_wvt_wvtCore( void );
+extern HB_EXPORT void          hb_wvt_wvtUtils( void );
 
-PHB_GTWVT   HB_EXPORT   hb_wvt_gtGetWVT( void );
+extern HB_EXPORT PHB_GTWVT     hb_wvt_gtGetWVT( void );
 
-void        HB_EXPORT   hb_gt_wvt_PaintGObjects( PHB_GTWVT pWVT, RECT *uRect );
+extern HB_EXPORT void          hb_gt_wvt_PaintGObjects( PHB_GTWVT pWVT, RECT *uRect );
 
 /*----------------------------------------------------------------------*/
 

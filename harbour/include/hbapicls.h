@@ -111,25 +111,25 @@ extern void       hb_mthAddTime( HB_ULONG );       /* profiler from classes.c */
 #endif   /* _HB_API_INTERNAL_ */
 
 /* class management */
-HB_EXPORT extern const char * hb_clsName( HB_USHORT uiClass );
-HB_EXPORT extern const char * hb_clsFuncName( HB_USHORT uiClass );
-HB_EXPORT extern const char * hb_clsMethodName( HB_USHORT uiClass, HB_USHORT uiMethod );
-HB_EXPORT extern HB_BOOL    hb_clsIsParent( HB_USHORT uiClass, const char * szParentName ); /* is a class handle inherited from szParentName Class ? */
-HB_EXPORT extern HB_USHORT  hb_clsFindClass( const char * szClass, const char * szFunc );
+extern HB_EXPORT const char * hb_clsName( HB_USHORT uiClass );
+extern HB_EXPORT const char * hb_clsFuncName( HB_USHORT uiClass );
+extern HB_EXPORT const char * hb_clsMethodName( HB_USHORT uiClass, HB_USHORT uiMethod );
+extern HB_EXPORT HB_BOOL    hb_clsIsParent( HB_USHORT uiClass, const char * szParentName ); /* is a class handle inherited from szParentName Class ? */
+extern HB_EXPORT HB_USHORT  hb_clsFindClass( const char * szClass, const char * szFunc );
 
 /* object management */
-HB_EXPORT extern HB_USHORT  hb_objGetClass( PHB_ITEM pItem );      /* get object class handle */
-HB_EXPORT extern HB_USHORT  hb_objSetClass( PHB_ITEM pItem, const char * szClass, const char * szFunc );    /* get object class handle using class name and class function name */
-HB_EXPORT extern const char * hb_objGetClsName( PHB_ITEM pObject );  /* retrieves an object class name */
-HB_EXPORT extern const char * hb_objGetRealClsName( PHB_ITEM pObject, const char * szString  ); /* retrieves an object class name for a specific message */
+extern HB_EXPORT HB_USHORT  hb_objGetClass( PHB_ITEM pItem );      /* get object class handle */
+extern HB_EXPORT HB_USHORT  hb_objSetClass( PHB_ITEM pItem, const char * szClass, const char * szFunc );    /* get object class handle using class name and class function name */
+extern HB_EXPORT const char * hb_objGetClsName( PHB_ITEM pObject );  /* retrieves an object class name */
+extern HB_EXPORT const char * hb_objGetRealClsName( PHB_ITEM pObject, const char * szString  ); /* retrieves an object class name for a specific message */
 
-HB_EXPORT extern HB_BOOL    hb_objHasMsg( PHB_ITEM pObject, const char * szString ); /* returns HB_TRUE/HB_FALSE whether szString is an existing message for object */
-HB_EXPORT extern HB_BOOL    hb_objHasMessage( PHB_ITEM pObject, PHB_DYNS pMessage );
-HB_EXPORT extern PHB_ITEM   hb_objSendMsg( PHB_ITEM pObj, const char *sMsg, HB_ULONG ulArg, ... );
-HB_EXPORT extern PHB_ITEM   hb_objSendMessage( PHB_ITEM pObj, PHB_DYNS pMessage, HB_ULONG ulArg, ... );
+extern HB_EXPORT HB_BOOL    hb_objHasMsg( PHB_ITEM pObject, const char * szString ); /* returns HB_TRUE/HB_FALSE whether szString is an existing message for object */
+extern HB_EXPORT HB_BOOL    hb_objHasMessage( PHB_ITEM pObject, PHB_DYNS pMessage );
+extern HB_EXPORT PHB_ITEM   hb_objSendMsg( PHB_ITEM pObj, const char *sMsg, HB_ULONG ulArg, ... );
+extern HB_EXPORT PHB_ITEM   hb_objSendMessage( PHB_ITEM pObj, PHB_DYNS pMessage, HB_ULONG ulArg, ... );
 
 /* send message which allows to set execution context for debugger */
-HB_EXPORT extern void       hb_dbg_objSendMessage( int iProcLevel, PHB_ITEM pObject, PHB_ITEM pMessage, int iParamOffset );
+extern HB_EXPORT void       hb_dbg_objSendMessage( int iProcLevel, PHB_ITEM pObject, PHB_ITEM pMessage, int iParamOffset );
 
 /* Harbour equivalent for Clipper internal __mdCreate() */
 HB_USHORT hb_clsCreate( HB_USHORT usSize, const char * szClassName );

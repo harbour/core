@@ -59,20 +59,20 @@
 
 HB_EXTERN_BEGIN
 
-HB_EXPORT cairo_t *          hb_cairoItemGet( PHB_ITEM pItem );
-HB_EXPORT PHB_ITEM           hb_cairoItemPut( PHB_ITEM pItem, cairo_t * pCairo );
-HB_EXPORT cairo_t *          hb_cairo_param( int iParam );
-HB_EXPORT void               hb_cairo_ret( cairo_t * );
+extern HB_EXPORT cairo_t *          hb_cairoItemGet( PHB_ITEM pItem );
+extern HB_EXPORT PHB_ITEM           hb_cairoItemPut( PHB_ITEM pItem, cairo_t * pCairo );
+extern HB_EXPORT cairo_t *          hb_cairo_param( int iParam );
+extern HB_EXPORT void               hb_cairo_ret( cairo_t * );
 
-HB_EXPORT cairo_surface_t *  hb_cairoSurfaceItemGet( PHB_ITEM pItem );
-HB_EXPORT PHB_ITEM           hb_cairoSurfaceItemPut( PHB_ITEM pItem, cairo_surface_t * pSurface );
-HB_EXPORT cairo_surface_t *  hb_cairo_surface_param( int iParam );
-HB_EXPORT void               hb_cairo_surface_ret( cairo_surface_t * pSurface );
+extern HB_EXPORT cairo_surface_t *  hb_cairoSurfaceItemGet( PHB_ITEM pItem );
+extern HB_EXPORT PHB_ITEM           hb_cairoSurfaceItemPut( PHB_ITEM pItem, cairo_surface_t * pSurface );
+extern HB_EXPORT cairo_surface_t *  hb_cairo_surface_param( int iParam );
+extern HB_EXPORT void               hb_cairo_surface_ret( cairo_surface_t * pSurface );
 
-HB_EXPORT cairo_path_t *     hb_cairoPathItemGet( PHB_ITEM pItem );
-HB_EXPORT PHB_ITEM           hb_cairoPathItemPut( PHB_ITEM pItem, cairo_path_t * pPath );
-HB_EXPORT cairo_path_t *     hb_cairo_path_param( int iParam );
-HB_EXPORT void               hb_cairo_path_ret( cairo_path_t * pPath );
+extern HB_EXPORT cairo_path_t *     hb_cairoPathItemGet( PHB_ITEM pItem );
+extern HB_EXPORT PHB_ITEM           hb_cairoPathItemPut( PHB_ITEM pItem, cairo_path_t * pPath );
+extern HB_EXPORT cairo_path_t *     hb_cairo_path_param( int iParam );
+extern HB_EXPORT void               hb_cairo_path_ret( cairo_path_t * pPath );
 
 HB_EXTERN_END
 

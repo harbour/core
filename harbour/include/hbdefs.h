@@ -1495,6 +1495,8 @@ typedef HB_U32 HB_FATTR;
    #define HB_DLL_ENTRY_POINT    DllEntryPoint
 #endif
 
+#define HB_EXTERN extern
+
 #if defined( __RSXNT__ )
    /* RSXNT does not support any type of export keyword.
       Exported (i.e., public) names can be obtained via

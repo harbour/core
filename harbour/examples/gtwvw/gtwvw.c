@@ -518,7 +518,7 @@ static void hb_gt_wvw_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 
 /*-------------------------------------------------------------------*/
 
-BOOL HB_EXPORT hb_gt_wvwDestroyPicture( IPicture * iPicture )
+HB_EXPORT BOOL hb_gt_wvwDestroyPicture( IPicture * iPicture )
 {
    BOOL bResult = FALSE;
 
@@ -7130,14 +7130,14 @@ static BOOL hb_gt_wvwSetCodePage( UINT usWinNum, int iCodePage )
 
 /*-------------------------------------------------------------------*/
 
-int HB_EXPORT hb_gt_wvwGetLastMenuEvent( UINT usWinNum )
+HB_EXPORT int hb_gt_wvwGetLastMenuEvent( UINT usWinNum )
 {
   return( s_pWvwData->s_pWindows[usWinNum]->LastMenuEvent );
 }
 
 /*-------------------------------------------------------------------*/
 
-int HB_EXPORT hb_gt_wvwSetLastMenuEvent( UINT usWinNum, int iLastMenuEvent )
+HB_EXPORT int hb_gt_wvwSetLastMenuEvent( UINT usWinNum, int iLastMenuEvent )
 {
   int iRetval = s_pWvwData->s_pWindows[usWinNum]->LastMenuEvent;
   s_pWvwData->s_pWindows[usWinNum]->LastMenuEvent = iLastMenuEvent;
@@ -7220,14 +7220,14 @@ static HICON hb_gt_wvwSetWindowIconFromFile( UINT usWinNum, const char *icon )
 
 /*-------------------------------------------------------------------*/
 
-int HB_EXPORT hb_gt_wvwGetWindowTitle( UINT usWinNum, char *title, int length )
+HB_EXPORT int hb_gt_wvwGetWindowTitle( UINT usWinNum, char *title, int length )
 {
   return( GetWindowText( s_pWvwData->s_pWindows[usWinNum]->hWnd, title, length ) );
 }
 
 /*-------------------------------------------------------------------*/
 
-BOOL HB_EXPORT hb_gt_wvwSetFont( UINT usWinNum, const char *fontFace, int height, int width, int Bold, int Quality )
+HB_EXPORT BOOL hb_gt_wvwSetFont( UINT usWinNum, const char *fontFace, int height, int width, int Bold, int Quality )
 {
   int   size;
   BOOL  bResult = FALSE ;
@@ -7281,21 +7281,21 @@ BOOL HB_EXPORT hb_gt_wvwSetFont( UINT usWinNum, const char *fontFace, int height
 
 /*-------------------------------------------------------------------*/
 
-HWND HB_EXPORT hb_gt_wvwGetWindowHandle( UINT usWinNum )
+HB_EXPORT HWND hb_gt_wvwGetWindowHandle( UINT usWinNum )
 {
   return( s_pWvwData->s_pWindows[usWinNum]->hWnd );
 }
 
 /*-------------------------------------------------------------------*/
 
-void HB_EXPORT hb_gt_wvwPostMessage( UINT usWinNum, int message )
+HB_EXPORT void hb_gt_wvwPostMessage( UINT usWinNum, int message )
 {
   SendMessage( s_pWvwData->s_pWindows[usWinNum]->hWnd, WM_CHAR,message, 0 );
 }
 
 /*-------------------------------------------------------------------*/
 
-BOOL HB_EXPORT hb_gt_wvwSetWindowPos( UINT usWinNum, int left, int top )
+HB_EXPORT BOOL hb_gt_wvwSetWindowPos( UINT usWinNum, int left, int top )
 {
   RECT wi = { 0 };
 
@@ -7305,7 +7305,7 @@ BOOL HB_EXPORT hb_gt_wvwSetWindowPos( UINT usWinNum, int left, int top )
 
 /*-------------------------------------------------------------------*/
 
-BOOL HB_EXPORT hb_gt_wvwSetAltF4Close( BOOL bCanClose )
+HB_EXPORT BOOL hb_gt_wvwSetAltF4Close( BOOL bCanClose )
 {
   BOOL bWas;
 
@@ -7316,7 +7316,7 @@ BOOL HB_EXPORT hb_gt_wvwSetAltF4Close( BOOL bCanClose )
 
 /*-------------------------------------------------------------------*/
 
-void HB_EXPORT hb_gt_wvwDoProcessMessages( UINT usWinNum )
+HB_EXPORT void hb_gt_wvwDoProcessMessages( UINT usWinNum )
 {
   /*NOTE: despite the parameter, the following will actually process messages for all windows*/
   hb_gt_wvwProcessMessages( s_pWvwData->s_pWindows[ usWinNum ] );
@@ -7324,7 +7324,7 @@ void HB_EXPORT hb_gt_wvwDoProcessMessages( UINT usWinNum )
 
 /*-------------------------------------------------------------------*/
 
-BOOL HB_EXPORT hb_gt_wvwSetMouseMove( UINT usWinNum, BOOL bHandleEvent )
+HB_EXPORT BOOL hb_gt_wvwSetMouseMove( UINT usWinNum, BOOL bHandleEvent )
 {
   BOOL bWas = s_pWvwData->s_pWindows[usWinNum]->MouseMove;
   s_pWvwData->s_pWindows[usWinNum]->MouseMove = bHandleEvent;
@@ -7333,7 +7333,7 @@ BOOL HB_EXPORT hb_gt_wvwSetMouseMove( UINT usWinNum, BOOL bHandleEvent )
 
 /*-------------------------------------------------------------------*/
 
-BOOL HB_EXPORT hb_gt_wvwEnableShortCuts( UINT usWinNum, BOOL bEnable )
+HB_EXPORT BOOL hb_gt_wvwEnableShortCuts( UINT usWinNum, BOOL bEnable )
 {
   BOOL bWas = s_pWvwData->s_pWindows[usWinNum]->EnableShortCuts;
   s_pWvwData->s_pWindows[usWinNum]->EnableShortCuts = bEnable;
@@ -7479,7 +7479,7 @@ static void DrawTransparentBitmap(HDC hdc, HBITMAP hBitmap, short xStart,
    is never closed.
    TODO: make it an option.
  */
-BOOL HB_EXPORT hb_gt_wvwDrawImage( UINT usWinNum, int x1, int y1, int wd, int ht, const char * image,
+HB_EXPORT BOOL hb_gt_wvwDrawImage( UINT usWinNum, int x1, int y1, int wd, int ht, const char * image,
                                    BOOL bTransparent )
 {
   HBITMAP hBitmap;
@@ -7618,7 +7618,7 @@ IPicture * hb_gt_wvwLoadPicture( const char * image )
 
 /*-------------------------------------------------------------------*/
 
-BOOL HB_EXPORT hb_gt_wvwRenderPicture( UINT usWinNum, int x1, int y1, int wd, int ht, IPicture * iPicture,
+HB_EXPORT BOOL hb_gt_wvwRenderPicture( UINT usWinNum, int x1, int y1, int wd, int ht, IPicture * iPicture,
                                        BOOL bTransp )
 {
   LONG     lWidth,lHeight;

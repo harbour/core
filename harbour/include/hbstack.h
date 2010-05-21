@@ -274,15 +274,16 @@ typedef struct
 
 #endif /* _HB_API_INTERNAL_ */
 
-HB_EXPORT extern void *      hb_stackId( void );
-HB_EXPORT extern HB_ITEM_PTR hb_stackItemFromTop( int nFromTop );
-HB_EXPORT extern HB_ITEM_PTR hb_stackItemFromBase( int nFromBase );
-HB_EXPORT extern HB_ITEM_PTR hb_stackBaseItem( void );
-HB_EXPORT extern HB_ITEM_PTR hb_stackSelfItem( void );   /* returns Self object at C function level */
-HB_EXPORT extern HB_ITEM_PTR hb_stackReturnItem( void ); /* returns RETURN Item from stack */
+extern HB_EXPORT void *      hb_stackId( void );
+extern HB_EXPORT HB_ITEM_PTR hb_stackItemFromTop( int nFromTop );
+extern HB_EXPORT HB_ITEM_PTR hb_stackItemFromBase( int nFromBase );
+extern HB_EXPORT HB_ITEM_PTR hb_stackBaseItem( void );
+extern HB_EXPORT HB_ITEM_PTR hb_stackSelfItem( void );   /* returns Self object at C function level */
+extern HB_EXPORT HB_ITEM_PTR hb_stackReturnItem( void ); /* returns RETURN Item from stack */
 
-HB_EXPORT extern HB_ITEM_PTR hb_stackAllocItem( void );  /* allocates new item on the top of stack, returns pointer to it */
-HB_EXPORT extern void        hb_stackPop( void );        /* pops an item from the stack */
+extern HB_EXPORT HB_ITEM_PTR hb_stackAllocItem( void );  /* allocates new item on the top of stack, returns pointer to it */
+extern HB_EXPORT void        hb_stackPop( void );        /* pops an item from the stack */
+
 extern void        hb_stackPush( void );                 /* pushes an item on to the stack */
 extern void        hb_stackPushReturn( void );
 extern void        hb_stackPopReturn( void );
@@ -295,8 +296,9 @@ extern HB_ITEM_PTR hb_stackItem( long iItemPos );
 extern char *      hb_stackDateBuffer( void );
 
 /* stack management functions */
-HB_EXPORT extern int         hb_stackCallDepth( void );
-HB_EXPORT extern void        hb_stackBaseProcInfo( char * szProcName, HB_USHORT * puiProcLine ); /* get current .prg function name and line number */
+extern HB_EXPORT int         hb_stackCallDepth( void );
+extern HB_EXPORT void        hb_stackBaseProcInfo( char * szProcName, HB_USHORT * puiProcLine ); /* get current .prg function name and line number */
+
 extern HB_LONG    hb_stackBaseProcOffset( int iLevel );
 extern void       hb_stackDispCall( void );
 extern void       hb_stackFree( void );       /* releases all memory used by the stack */
@@ -304,17 +306,17 @@ extern void       hb_stackInit( void );       /* initializes the stack */
 extern void       hb_stackIncrease( void );   /* increase the stack size */
 
 /* thread specific data */
-HB_EXPORT extern void * hb_stackGetTSD( PHB_TSD pTSD );
-HB_EXPORT extern void * hb_stackTestTSD( PHB_TSD pTSD );
-HB_EXPORT extern void   hb_stackReleaseTSD( PHB_TSD pTSD );
+extern HB_EXPORT void * hb_stackGetTSD( PHB_TSD pTSD );
+extern HB_EXPORT void * hb_stackTestTSD( PHB_TSD pTSD );
+extern HB_EXPORT void   hb_stackReleaseTSD( PHB_TSD pTSD );
 
-extern char *     hb_stackDirBuffer( void );
+extern char *       hb_stackDirBuffer( void );
 extern PHB_IOERRORS hb_stackIOErrors( void );
-extern void *     hb_stackGetGT( void );
-extern void       hb_stackSetGT( void * );
+extern void *       hb_stackGetGT( void );
+extern void         hb_stackSetGT( void * );
 extern PHB_STACKRDD hb_stackRDD( void );
 
-extern void **     hb_stackDebugInfo( void );
+extern void **      hb_stackDebugInfo( void );
 
 #ifdef _HB_API_INTERNAL_
 extern void        hb_stackDecrease( HB_ULONG ulItems );
