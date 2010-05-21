@@ -7996,6 +7996,16 @@ STATIC FUNCTION win_implib_command_msvc( hbmk, cCommand, nCmd_Esc, cSourceDLL, c
 
    LOCAL cCommandDump
 
+   /* Try to find COFF .lib with the same name */
+   IF hb_FileExists( tmp := FN_ExtSet( cSourceDLL, ".lib" ) )
+      IF IsCOFFLib( tmp )
+         IF ! hbmk[ _HBMK_lQuiet ]
+            hbmk_OutStd( hbmk, I_( "Found COFF .lib with the same name, falling back to using it instead of the .dll." ) )
+         ENDIF
+         RETURN hb_FCopy( tmp, cTargetLib ) != F_ERROR
+      ENDIF
+   ENDIF
+
    cCommandDump := "dumpbin.exe -exports {ID}"
    cCommandDump := StrTran( cCommandDump, "{ID}", FN_Escape( cSourceDLL, nCmd_Esc ) )
 
