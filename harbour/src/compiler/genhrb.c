@@ -159,7 +159,7 @@ void hb_compGenPortObj( HB_COMP_DECL, PHB_FNAME pFileName )
    {
       char buffer[ 80 + HB_PATH_MAX - 1 ];
       hb_snprintf( buffer, sizeof( buffer ),
-                "Generating Harbour Portable Object source output to \'%s\'... ", szFileName );
+                "Generating Harbour Portable Object output to \'%s\'... ", szFileName );
       hb_compOutStd( HB_COMP_PARAM, buffer );
    }
 
