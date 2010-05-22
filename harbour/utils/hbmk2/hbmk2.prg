@@ -254,6 +254,10 @@ REQUEST hbmk_KEYW
 #define _CHR_EOL                Chr( 10 )
 #define _OUT_EOL                Chr( 10 )
 
+#define _HBMK_IMPLIB_NOTFOUND   -1
+#define _HBMK_IMPLIB_OK         0
+#define _HBMK_IMPLIB_FAILED     1
+
 #define _CCOMP_PASS_C           1
 #define _CCOMP_PASS_CPP         2
 
@@ -2850,7 +2854,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          cOpt_Dyn := "-shared -o {OD} {LO} {LL} {LB} {FD} {IM} {DL} {LS}"
          cBin_Link := cBin_CompC
          cOpt_Link := "{LO} {LA} {FL} {DL}"
-         bBlk_ImpLib := {| cSourceDLL, cTargetLib | hb_FCopy( cSourceDLL, cTargetLib ) != F_ERROR }
+         bBlk_ImpLib := {| cSourceDLL, cTargetLib | win_implib_copy( hbmk, cSourceDLL, cTargetLib ) }
          cLibPathPrefix := "-L"
          cLibPathSep := " "
          IF hbmk[ _HBMK_cCOMP ] == "gccomf"
@@ -3113,7 +3117,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          cBin_Lib := "wlib" + hbmk[ _HBMK_cCCEXT ]
          cOpt_Lib := "-q {FA} {OL} {LO}{SCRIPT}"
          IF hbmk[ _HBMK_cPLAT ] $ "win|os2"
-            bBlk_ImpLib := {| cSourceDLL, cTargetLib, cFlags | win_implib_command( hbmk, cBin_Lib + " -q -o={OL} {ID}", nCmd_Esc, cSourceDLL, cTargetLib, cFlags ) }
+            bBlk_ImpLib := {| cSourceDLL, cTargetLib, cFlags | win_implib_command_watcom( hbmk, cBin_Lib + " -q -o={OL} {ID}", nCmd_Esc, cSourceDLL, cTargetLib, cFlags ) }
          ENDIF
          cLibLibExt := cLibExt
          cLibObjPrefix := "-+ "
@@ -3236,7 +3240,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          cBin_Dyn := cBin_Link
          cOpt_Link := '-Gn -Tpe -L{DL} {FL} ' + iif( hbmk[ _HBMK_lGUI ], "c0w32.obj", "c0x32.obj" ) + " {LO}, {OE}, " + iif( hbmk[ _HBMK_lMAP ], "{OM}", "nul" ) + ", {LL} {LB} " + cLibBCC_CRTL + " import32.lib,, {LS}{SCRIPT}"
          cOpt_Dyn  := '-Gn -Tpd -L{DL} {FD} ' +                          "c0d32.obj"                + " {LO}, {OD}, " + iif( hbmk[ _HBMK_lMAP ], "{OM}", "nul" ) + ", {LL} {LB} " + cLibBCC_CRTL + " import32.lib, {IM}, {LS}{SCRIPT}"
-         bBlk_ImpLib := {| cSourceDLL, cTargetLib, cFlags | win_implib_command( hbmk, "implib.exe {FI} {OL} {ID}", nCmd_Esc, cSourceDLL, cTargetLib, cFlags ) }
+         bBlk_ImpLib := {| cSourceDLL, cTargetLib, cFlags | win_implib_command_bcc( hbmk, "implib.exe {FI} {OL} {ID}", nCmd_Esc, cSourceDLL, cTargetLib, cFlags ) }
          cLibPathPrefix := ""
          cLibPathSep := ";"
          IF hbmk[ _HBMK_lMAP ]
@@ -3721,21 +3725,20 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       IF ISBLOCK( bBlk_ImpLib )
          IF ! Empty( hbmk[ _HBMK_aIMPLIBSRC ] )
             FOR EACH cMakeImpLibDLL IN hbmk[ _HBMK_aIMPLIBSRC ]
+
                cMakeImpLibDLL := FN_ExtDef( cMakeImpLibDLL, ".dll" )
-               IF hb_FileExists( PathSepToSelf( cMakeImpLibDLL ) )
-                  tmp1 := l_cPROGNAME
-                  DEFAULT tmp1 TO FN_NameGet( cMakeImpLibDLL )
-                  tmp := FN_CookLib( hb_FNameMerge( l_cPROGDIR, tmp1 ), cLibLibPrefix, cLibLibExt )
-                  IF Eval( bBlk_ImpLib, cMakeImpLibDLL, tmp, ArrayToList( hbmk[ _HBMK_aOPTI ] ) )
-                     hbmk_OutStd( hbmk, hb_StrFormat( I_( "Created import library: %1$s <= %2$s" ), tmp, cMakeImpLibDLL ) )
-                  ELSE
-                     hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Failed creating import library %1$s from %2$s." ), tmp, cMakeImpLibDLL ) )
-                  ENDIF
-               ELSE
-                  IF hbmk[ _HBMK_lInfo ]
-                     hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Source dynamic library not found: %1$s" ), cMakeImpLibDLL ) )
-                  ENDIF
-               ENDIF
+               tmp1 := l_cPROGNAME
+               DEFAULT tmp1 TO FN_NameGet( cMakeImpLibDLL )
+               tmp := FN_CookLib( hb_FNameMerge( l_cPROGDIR, tmp1 ), cLibLibPrefix, cLibLibExt )
+
+               SWITCH Eval( bBlk_ImpLib, cMakeImpLibDLL, tmp, ArrayToList( hbmk[ _HBMK_aOPTI ] ) )
+               CASE _HBMK_IMPLIB_OK
+                  hbmk_OutStd( hbmk, hb_StrFormat( I_( "Created import library: %1$s <= %2$s" ), tmp, cMakeImpLibDLL ) )
+                  EXIT
+               CASE _HBMK_IMPLIB_FAILED
+                  hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Failed creating import library %1$s from %2$s." ), tmp, cMakeImpLibDLL ) )
+                  EXIT
+               ENDSWITCH
             NEXT
          ELSE
             IF hbmk[ _HBMK_lInfo ]
@@ -7906,6 +7909,13 @@ STATIC FUNCTION GenHBL( hbmk, aFiles, cFileOut, lEmpty )
 
 STATIC FUNCTION win_implib_command( hbmk, cCommand, nCmd_Esc, cSourceDLL, cTargetLib, cFlags )
 
+   IF ! hb_FileExists( PathSepToSelf( cSourceDLL ) )
+      IF hbmk[ _HBMK_lInfo ]
+         hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Source dynamic library not found: %1$s" ), cSourceDLL ) )
+      ENDIF
+      RETURN _HBMK_IMPLIB_NOTFOUND
+   ENDIF
+
    DEFAULT cFlags TO ""
 
    cCommand := StrTran( cCommand, "{FI}", cFlags )
@@ -7919,7 +7929,7 @@ STATIC FUNCTION win_implib_command( hbmk, cCommand, nCmd_Esc, cSourceDLL, cTarge
       OutStd( cCommand + _OUT_EOL )
    ENDIF
 
-   RETURN hb_processRun( cCommand ) == 0
+   RETURN iif( hb_processRun( cCommand ) == 0, _HBMK_IMPLIB_OK, _HBMK_IMPLIB_FAILED )
 
 #define _COFF_LIB_SIGNATURE "!<arch>"
 
@@ -7938,50 +7948,141 @@ STATIC FUNCTION IsCOFFLib( cFileName )
 
    RETURN .F.
 
-STATIC FUNCTION win_implib_command_gcc( hbmk, cCommand, nCmd_Esc, cSourceDLL, cTargetLib, cFlags )
-   LOCAL tmp
+#define _OMF_LIB_SIGNATURE 0xF0
 
-   /* NOTE: There is a big problem with mingw/cygwin 'ld' linker:
-            It cannot properly link stdcall decorated (_sym@nn) function names
-            directly with .dlls, since in .dlls the decoration is stripped from
-            the exported symbols. So, it _requires_ a .def file or a COFF import .lib
-            which have the the decorated version of the symbols. Such .def/.lib
-            file cannot be automatically generated from the .dll, as the
-            decoration needs to be rebuilt based on function parameters.
-            Not even 'ld' option '--enable-stdcall-fixup' ("Link _sym to _sym@nn without warnings")
-            option will help the case, since we'd need a "Link _sym@nn to _sym"
-            option. For some reason and despite the frequent complaints, gcc
-            developers failed to add such option since year ~2000.
-            To circumvent that and make it possible for Harbour users to
-            effortlessly generate implibs from .dlls, we cannot do more than
-            rely on .dll distributors to provide .def or COFF import .libs
-            and make use of these automatically if they are available.
-            Hopefully one day gcc will introduce a feature to make such tricks
-            unnecessary and make it possible to create proper implibs out of
-            ordinary .dlls, like with every other compiler.
-            [vszakats] */
+STATIC FUNCTION IsOMFLib( cFileName )
+   LOCAL fhnd := FOpen( cFileName, FO_READ )
+   LOCAL cBuffer
 
-   IF win_implib_coff( hbmk, cSourceDLL, cTargetLib )
-      RETURN .T.
+   IF fhnd != F_ERROR
+      cBuffer := Space( Len( _OMF_LIB_SIGNATURE ) )
+      FRead( fhnd, @cBuffer, Len( cBuffer ) )
+      FClose( fhnd )
+      IF cBuffer == _OMF_LIB_SIGNATURE
+         RETURN .T.
+      ENDIF
    ENDIF
 
+   RETURN .F.
+
+STATIC FUNCTION win_implib_coff( hbmk, cSourceDLL, cTargetLib )
+   LOCAL cSourceLib
+
+   /* Try to find COFF .lib with the same name */
+   IF hb_FileExists( cSourceLib := FN_ExtSet( PathSepToSelf( cSourceDLL ), ".lib" ) )
+      IF IsCOFFLib( cSourceLib )
+         IF ! hbmk[ _HBMK_lQuiet ]
+            hbmk_OutStd( hbmk, I_( "Found COFF .lib with the same name, falling back to using it instead of the .dll." ) )
+         ENDIF
+         RETURN iif( hb_FCopy( cSourceLib, PathSepToSelf( cTargetLib ) ) != F_ERROR, _HBMK_IMPLIB_OK, _HBMK_IMPLIB_FAILED )
+      ENDIF
+   ENDIF
+
+   RETURN _HBMK_IMPLIB_NOTFOUND
+
+STATIC FUNCTION win_implib_omf( hbmk, cSourceDLL, cTargetLib )
+   LOCAL cSourceLib
+
+   /* Try to find COFF .lib with the same name */
+   IF hb_FileExists( cSourceLib := FN_ExtSet( PathSepToSelf( cSourceDLL ), ".lib" ) )
+      IF IsOMFLib( cSourceLib )
+         IF ! hbmk[ _HBMK_lQuiet ]
+            hbmk_OutStd( hbmk, I_( "Found OMF .lib with the same name, falling back to using it instead of the .dll." ) )
+         ENDIF
+         RETURN iif( hb_FCopy( cSourceLib, PathSepToSelf( cTargetLib ) ) != F_ERROR, _HBMK_IMPLIB_OK, _HBMK_IMPLIB_FAILED )
+      ENDIF
+   ENDIF
+
+   RETURN _HBMK_IMPLIB_NOTFOUND
+
+STATIC FUNCTION win_implib_def( hbmk, cCommand, nCmd_Esc, cSourceDLL, cTargetLib, cFlags )
+   LOCAL cSourceDef
+
    /* Try to find .def file with the same name */
-   IF hb_FileExists( tmp := FN_ExtSet( cSourceDLL, ".def" ) )
+   IF hb_FileExists( PathSepToSelf( cSourceDef := FN_ExtSet( cSourceDLL, ".def" ) ) )
       IF ! hbmk[ _HBMK_lQuiet ]
          hbmk_OutStd( hbmk, I_( "Found .def file with the same name, falling back to using it instead of the .dll." ) )
       ENDIF
-      RETURN win_implib_command( hbmk, cCommand, nCmd_Esc, tmp, cTargetLib, cFlags )
+      RETURN win_implib_command( hbmk, cCommand, nCmd_Esc, cSourceDef, cTargetLib, cFlags )
    ENDIF
 
-   /* Use .dll directly if all other attempts failed */
-   RETURN hb_FCopy( cSourceDLL, cTargetLib ) != F_ERROR
+   RETURN _HBMK_IMPLIB_NOTFOUND
+
+STATIC FUNCTION win_implib_copy( hbmk, cSourceDLL, cTargetLib )
+
+   HB_SYMBOL_UNUSED( hbmk )
+
+   IF hb_FileExists( PathSepToSelf( cSourceDLL ) )
+      /* Use .dll directly if all other attempts failed */
+      RETURN iif( hb_FCopy( PathSepToSelf( cSourceDLL ), PathSepToSelf( cTargetLib ) ) != F_ERROR, _HBMK_IMPLIB_OK, _HBMK_IMPLIB_FAILED )
+   ENDIF
+
+   RETURN _HBMK_IMPLIB_NOTFOUND
+
+/* NOTE: There is a big problem with mingw/cygwin 'ld' linker:
+         It cannot properly link stdcall decorated (_sym@nn) function names
+         directly with .dlls, since in .dlls the decoration is stripped from
+         the exported symbols. So, it _requires_ a .def file or a COFF import .lib
+         which have the the decorated version of the symbols. Such .def/.lib
+         file cannot be automatically generated from the .dll, as the
+         decoration needs to be rebuilt based on function parameters.
+         Not even 'ld' option '--enable-stdcall-fixup' ("Link _sym to _sym@nn without warnings")
+         option will help the case, since we'd need a "Link _sym@nn to _sym"
+         option. For some reason and despite the frequent complaints, gcc
+         developers failed to add such option since year ~2000.
+         To circumvent that and make it possible for Harbour users to
+         effortlessly generate implibs from .dlls, we cannot do more than
+         rely on .dll distributors to provide .def or COFF import .libs
+         and make use of these automatically if they are available.
+         Hopefully one day gcc will introduce a feature to make such tricks
+         unnecessary and make it possible to create proper implibs out of
+         ordinary .dlls, like with every other compiler.
+         [vszakats] */
+
+STATIC FUNCTION win_implib_command_gcc( hbmk, cCommand, nCmd_Esc, cSourceDLL, cTargetLib, cFlags )
+   LOCAL nResult
+
+   IF ( nResult := win_implib_coff( hbmk, cSourceDLL, cTargetLib ) ) != _HBMK_IMPLIB_NOTFOUND
+      RETURN nResult
+   ENDIF
+
+   IF ( nResult := win_implib_def( hbmk, cCommand, nCmd_Esc, cSourceDLL, cTargetLib, cFlags ) ) != _HBMK_IMPLIB_NOTFOUND
+      RETURN nResult
+   ENDIF
+
+   RETURN win_implib_copy( hbmk, cSourceDLL, cTargetLib )
+
+STATIC FUNCTION win_implib_command_bcc( hbmk, cCommand, nCmd_Esc, cSourceDLL, cTargetLib, cFlags )
+   LOCAL nResult
+
+   IF ( nResult := win_implib_omf( hbmk, cSourceDLL, cTargetLib ) ) != _HBMK_IMPLIB_NOTFOUND
+      RETURN nResult
+   ENDIF
+
+   IF ( nResult := win_implib_def( hbmk, cCommand, nCmd_Esc, cSourceDLL, cTargetLib, cFlags ) ) != _HBMK_IMPLIB_NOTFOUND
+      RETURN nResult
+   ENDIF
+
+   RETURN win_implib_command( hbmk, cCommand, nCmd_Esc, cSourceDLL, cTargetLib, cFlags )
+
+STATIC FUNCTION win_implib_command_watcom( hbmk, cCommand, nCmd_Esc, cSourceDLL, cTargetLib, cFlags )
+   RETURN win_implib_command( hbmk, cCommand, nCmd_Esc, cSourceDLL, cTargetLib, cFlags )
+
+STATIC FUNCTION win_implib_command_pocc( hbmk, cCommand, nCmd_Esc, cSourceDLL, cTargetLib, cFlags )
+   LOCAL nResult
+
+   IF ( nResult := win_implib_coff( hbmk, cSourceDLL, cTargetLib ) ) != _HBMK_IMPLIB_NOTFOUND
+      RETURN nResult
+   ENDIF
+
+   RETURN win_implib_command( hbmk, cCommand, nCmd_Esc, cSourceDLL, cTargetLib, cFlags )
 
 STATIC FUNCTION win_implib_command_msvc( hbmk, cCommand, nCmd_Esc, cSourceDLL, cTargetLib, cFlags )
-   LOCAL lSuccess := .F.
+   LOCAL nResult
 
    LOCAL cExports
    LOCAL fhnd
-   LOCAL cDef
+   LOCAL cSourceDef
    LOCAL cLine
    LOCAL tmp
    LOCAL aCols
@@ -7990,8 +8091,19 @@ STATIC FUNCTION win_implib_command_msvc( hbmk, cCommand, nCmd_Esc, cSourceDLL, c
 
    LOCAL cCommandDump
 
-   IF win_implib_coff( hbmk, cSourceDLL, cTargetLib )
-      RETURN .T.
+   IF ( nResult := win_implib_coff( hbmk, cSourceDLL, cTargetLib ) ) != _HBMK_IMPLIB_NOTFOUND
+      RETURN nResult
+   ENDIF
+
+   IF ( nResult := win_implib_def( hbmk, cCommand, nCmd_Esc, cSourceDLL, cTargetLib, cFlags ) ) != _HBMK_IMPLIB_NOTFOUND
+      RETURN nResult
+   ENDIF
+
+   IF ! hb_FileExists( PathSepToSelf( cSourceDLL ) )
+      IF hbmk[ _HBMK_lInfo ]
+         hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Source dynamic library not found: %1$s" ), cSourceDLL ) )
+      ENDIF
+      RETURN _HBMK_IMPLIB_NOTFOUND
    ENDIF
 
    cCommandDump := "dumpbin.exe -exports {ID}"
@@ -8003,6 +8115,8 @@ STATIC FUNCTION win_implib_command_msvc( hbmk, cCommand, nCmd_Esc, cSourceDLL, c
       ENDIF
       OutStd( cCommandDump + _OUT_EOL )
    ENDIF
+
+   nResult := _HBMK_IMPLIB_FAILED
 
    IF hb_processRun( cCommandDump,, @cExports ) == 0
 
@@ -8025,41 +8139,18 @@ STATIC FUNCTION win_implib_command_msvc( hbmk, cCommand, nCmd_Esc, cSourceDLL, c
          ENDIF
       NEXT
 
-      fhnd := hb_FTempCreateEx( @cDef )
+      fhnd := hb_FTempCreateEx( @cSourceDef )
       IF fhnd != F_ERROR
          FWrite( fhnd, cFuncList )
          FClose( fhnd )
 
-         lSuccess := win_implib_command( hbmk, cCommand, nCmd_Esc, cDef, cTargetLib, cFlags )
+         nResult := win_implib_command( hbmk, cCommand, nCmd_Esc, cSourceDef, cTargetLib, cFlags )
 
-         FErase( cDef )
+         FErase( cSourceDef )
       ENDIF
    ENDIF
 
-   RETURN lSuccess
-
-STATIC FUNCTION win_implib_command_pocc( hbmk, cCommand, nCmd_Esc, cSourceDLL, cTargetLib, cFlags )
-
-   IF win_implib_coff( hbmk, cSourceDLL, cTargetLib )
-      RETURN .T.
-   ENDIF
-
-   RETURN win_implib_command( hbmk, cCommand, nCmd_Esc, cSourceDLL, cTargetLib, cFlags )
-
-STATIC FUNCTION win_implib_coff( hbmk, cSourceDLL, cTargetLib )
-   LOCAL tmp
-
-   /* Try to find COFF .lib with the same name */
-   IF hb_FileExists( tmp := FN_ExtSet( cSourceDLL, ".lib" ) )
-      IF IsCOFFLib( tmp )
-         IF ! hbmk[ _HBMK_lQuiet ]
-            hbmk_OutStd( hbmk, I_( "Found COFF .lib with the same name, falling back to using it instead of the .dll." ) )
-         ENDIF
-         RETURN hb_FCopy( tmp, cTargetLib ) != F_ERROR
-      ENDIF
-   ENDIF
-
-   RETURN .F.
+   RETURN nResult
 
 #define _VCS_UNKNOWN            0
 #define _VCS_SVN                1
