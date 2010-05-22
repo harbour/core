@@ -581,7 +581,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/harbour
 %{_bindir}/hbpp
 %{_bindir}/hb-mkdyn
-%{_bindir}/hb-mkslib
 %{_bindir}/%{hb_pref}-build
 %{_bindir}/%{hb_pref}cc
 %{_bindir}/%{hb_pref}cmp
@@ -752,7 +751,7 @@ rm -rf $RPM_BUILD_ROOT
 * Wed Apr 30 2003 Przemyslaw Czerpak <druzus@polbox.com>
 - new tool "%{hb_pref}-build" (%{hb_pref}cmp, %{hb_pref}lnk, %{hb_pref}mk) added -
   compiler/linker wrapper.
-- new tool "hb-mkslib" (build shared libraries from static ones and object
+- new tool "hb-mkdyn" (build shared libraries from static ones and object
   files).
 - shared libraries added.
 - binary package divided.
