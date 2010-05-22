@@ -59,6 +59,14 @@ Client side functions:
       given then default connection is chosen.
 
 
+   NETIO_GETCONNECTION( [<cServer>], [<nPort>], [<nTimeOut>], ;
+                        [<cPasswd>], [<nCompressionLevel>], [<nStrategy>] )
+         -> <pConnection> | NIL
+      Get pointer item with HBNTIO connection. It can be used to speedup
+      RPC calls and stream functions when <pConnection> is passed as
+      parameter to these functions.
+
+
    NETIO_DISCONNECT( [<cServer>], [<nPort>] ) -> <lOK>
       Close the connection created by NETIO_CONNECT()
 
@@ -70,27 +78,32 @@ Client side functions:
       Return .T. if <cFullName> contains any connection settings.
       <cFullName> should not contain "net:" prefix.
 
-   NETIO_PROCEXISTS( <cProcName> ) -> <lExists>
+
+   NETIO_PROCEXISTS( [<pConnection>,] <cProcName> ) -> <lExists>
       Check if function or procedure exists on the server side.
 
 
-   NETIO_PROCEXEC( <cProcName> [, <params,...>] ) -> <lSent>
+   NETIO_PROCEXEC( [<pConnection>,] <cProcName> [, <params,...>] ) -> <lSent>
       Execute function or procedure on server the side do not wait for
       confirmation from the server.
 
 
-   NETIO_PROCEXECW( <cProcName> [, <params,...>] ) -> <lExecuted>
+   NETIO_PROCEXECW( [<pConnection>,] <cProcName> [, <params,...>] )
+         -> <lExecuted>
       Execute function or procedure on the server side and wait for
       confirmation from the server.
 
 
-   NETIO_FUNCEXEC( <cFuncName> [, <params,...>] ) -> <xFuncRetVal>
+   NETIO_FUNCEXEC( [<pConnection>,] <cFuncName> [, <params,...>] )
+         -> <xFuncRetVal>
       Execute function on the server side and wait for function return
       value sent by the server.
 
 
-   NETIO_OPENDATASTREAM( <cStreamFuncName> [, <params,...>] ) -> <nStreamID>
-   NETIO_OPENITEMSTREAM( <cStreamFuncName> [, <params,...>] ) -> <nStreamID>
+   NETIO_OPENDATASTREAM( [<pConnection>,] <cStreamFuncName> [, <params,...>] )
+         -> <nStreamID>
+   NETIO_OPENITEMSTREAM( [<pConnection>,] <cStreamFuncName> [, <params,...>] )
+         -> <nStreamID>
       open communication stream/channel which allow to send data
       asynchronously from server to client.
       It executes on the server side:
@@ -103,10 +116,13 @@ Client side functions:
       <cStreamFuncName> may contain information about connection parameters
       just like <cProcName> in NETIO_PROC*() functions.
 
-   NETIO_CLOSESTREAM( <nStreamID>, [<cServer>], [<nPort>] ) -> <lOK>
+   NETIO_CLOSESTREAM( <nStreamID>,
+                      [<pConnection>] | [[<cServer>], [<nPort>]] ) -> <lOK>
       close communication stream/channel
 
-   NETIO_GETDATA( <nStreamID>, [<cServer>], [<nPort>] ) -> <aData>|<cData>|NIL
+   NETIO_GETDATA( <nStreamID>,
+                  [<pConnection>] | [[<cServer>], [<nPort>]] )
+         -> <aData> | <cData> | NIL
       retrieve data sent from the server by communication stream.
       If stream was open by NETIO_OPENDATASTREAM() then data is returned
       as string.
