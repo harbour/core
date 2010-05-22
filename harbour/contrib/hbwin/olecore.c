@@ -1060,7 +1060,7 @@ HB_BOOL hb_oleDispInvoke( PHB_SYMB pSym, PHB_ITEM pObject, PHB_ITEM pParam,
       pObject = NULL;
    }
 
-   if( ( pSym || ( pObject && HB_IS_BLOCK( pObject ) ) ) &&
+   if( ( pSym || pObject ) &&
        hb_vmRequestReenter() )
    {
       HB_OLE_PARAM_REF refArray[ 32 ];
@@ -1102,7 +1102,7 @@ HB_BOOL hb_oleDispInvoke( PHB_SYMB pSym, PHB_ITEM pObject, PHB_ITEM pParam,
                                  &pParams->rgvarg[ iCount - i ] );
       }
 
-      if( pObject )
+      if( pObject && !HB_IS_HASH( pObject ) )
          hb_vmSend( ( HB_USHORT ) iParams );
       else
          hb_vmProc( ( HB_USHORT ) iParams );
