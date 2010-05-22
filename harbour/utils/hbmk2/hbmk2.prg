@@ -3513,7 +3513,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          ENDIF
          cOptIncMask := "-I{DI}"
          cOpt_Dyn := "{FD} {IM} -dll -out:{OD} {DL} {LO} {LL} {LB} {LS}"
-         bBlk_ImpLib := {| cSourceDLL, cTargetLib, cFlags | win_implib_command( hbmk, cBin_Lib + " {ID} -out:{OL}", nCmd_Esc, cSourceDLL, cTargetLib, cFlags ) }
+         bBlk_ImpLib := {| cSourceDLL, cTargetLib, cFlags | win_implib_command_pocc( hbmk, cBin_Lib + " {ID} -out:{OL}", nCmd_Esc, cSourceDLL, cTargetLib, cFlags ) }
          IF hbmk[ _HBMK_cPLAT ] == "wce"
             AAdd( hbmk[ _HBMK_aOPTC ], "-DUNICODE" )
             AAdd( hbmk[ _HBMK_aOPTC ], "-D_WINCE" ) /* Required by pocc Windows headers */
@@ -7961,14 +7961,8 @@ STATIC FUNCTION win_implib_command_gcc( hbmk, cCommand, nCmd_Esc, cSourceDLL, cT
             ordinary .dlls, like with every other compiler.
             [vszakats] */
 
-   /* Try to find COFF .lib with the same name */
-   IF hb_FileExists( tmp := FN_ExtSet( cSourceDLL, ".lib" ) )
-      IF IsCOFFLib( tmp )
-         IF ! hbmk[ _HBMK_lQuiet ]
-            hbmk_OutStd( hbmk, I_( "Found COFF .lib with the same name, falling back to using it instead of the .dll." ) )
-         ENDIF
-         RETURN hb_FCopy( tmp, cTargetLib ) != F_ERROR
-      ENDIF
+   IF win_implib_coff( hbmk, cSourceDLL, cTargetLib )
+      RETURN .T.
    ENDIF
 
    /* Try to find .def file with the same name */
@@ -7996,14 +7990,8 @@ STATIC FUNCTION win_implib_command_msvc( hbmk, cCommand, nCmd_Esc, cSourceDLL, c
 
    LOCAL cCommandDump
 
-   /* Try to find COFF .lib with the same name */
-   IF hb_FileExists( tmp := FN_ExtSet( cSourceDLL, ".lib" ) )
-      IF IsCOFFLib( tmp )
-         IF ! hbmk[ _HBMK_lQuiet ]
-            hbmk_OutStd( hbmk, I_( "Found COFF .lib with the same name, falling back to using it instead of the .dll." ) )
-         ENDIF
-         RETURN hb_FCopy( tmp, cTargetLib ) != F_ERROR
-      ENDIF
+   IF win_implib_coff( hbmk, cSourceDLL, cTargetLib )
+      RETURN .T.
    ENDIF
 
    cCommandDump := "dumpbin.exe -exports {ID}"
@@ -8049,6 +8037,29 @@ STATIC FUNCTION win_implib_command_msvc( hbmk, cCommand, nCmd_Esc, cSourceDLL, c
    ENDIF
 
    RETURN lSuccess
+
+STATIC FUNCTION win_implib_command_pocc( hbmk, cCommand, nCmd_Esc, cSourceDLL, cTargetLib, cFlags )
+
+   IF win_implib_coff( hbmk, cSourceDLL, cTargetLib )
+      RETURN .T.
+   ENDIF
+
+   RETURN win_implib_command( hbmk, cCommand, nCmd_Esc, cSourceDLL, cTargetLib, cFlags )
+
+STATIC FUNCTION win_implib_coff( hbmk, cSourceDLL, cTargetLib )
+   LOCAL tmp
+
+   /* Try to find COFF .lib with the same name */
+   IF hb_FileExists( tmp := FN_ExtSet( cSourceDLL, ".lib" ) )
+      IF IsCOFFLib( tmp )
+         IF ! hbmk[ _HBMK_lQuiet ]
+            hbmk_OutStd( hbmk, I_( "Found COFF .lib with the same name, falling back to using it instead of the .dll." ) )
+         ENDIF
+         RETURN hb_FCopy( tmp, cTargetLib ) != F_ERROR
+      ENDIF
+   ENDIF
+
+   RETURN .F.
 
 #define _VCS_UNKNOWN            0
 #define _VCS_SVN                1
