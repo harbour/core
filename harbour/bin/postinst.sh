@@ -91,15 +91,6 @@ then
         install -c -m 755 "${hb_root}/bin/hb-mkdyn.sh" "${hb_mkdyn}"
     fi
 
-    # Compatibility hb-mkslib creation. Please use hb-mkdyn instead.
-    if [ -n "${hb_mkdyn}" ] && [ -f "${hb_mkdyn}" ]; then
-        hb_mkdyn="${HB_TOOLS_PREF-hb}-mkslib"
-        (cd "${HB_INST_PKGPREF}${HB_BIN_INSTALL}" && rm -f "${hb_mkdyn}" && \
-         ln -s "${HB_TOOLS_PREF-hb}-mkdyn" "${hb_mkdyn}")
-    fi
-
-    mk_hbtools "${HB_INST_PKGPREF}${HB_BIN_INSTALL}" "$@"
-
     if [ "${HB_PLATFORM}" != "dos" ]; then
         mk_hblibso "${hb_root}"
     fi
