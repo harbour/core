@@ -104,7 +104,7 @@ msgstr "Compilador C detectado automaticamente: %1$s"
 #: hbmk2.prg:1301
 #, c-format
 msgid ""
-"Couldn't detect any supported C compiler in your PATH.\\n"
+"Could not detect any supported C compiler in your PATH.\\n"
 "Please setup one or set -compiler= option to one of these values: %1$s"
 msgstr ""
 "Nenhum compilador C suportado foi encontrado em seu PATH.\\n"
@@ -147,7 +147,7 @@ msgstr "Processando script local: %1$s"
 
 #: hbmk2.prg:4127
 #, c-format
-msgid "Warning: C/C++ compiler script couldn't be created, continuing in command line."
+msgid "Warning: C/C++ compiler script could not be created, continuing in command line."
 msgstr "Atenção: Script para o compilador C/C++ não pode ser criado, continuando com a linha de comando."
 
 #: hbmk2.prg:4457
@@ -168,7 +168,7 @@ msgstr "Criando cabeçalho VCS: %1$s"
 
 #: hbmk2.prg:3921
 #, c-format
-msgid "Warning: Stub helper .rc file couldn't be created."
+msgid "Warning: Stub helper .rc file could not be created."
 msgstr "Atencao: arquivo auxiliar .rc não pode ser criado."
 
 #: hbmk2.prg:3961
@@ -184,7 +184,7 @@ msgstr "As opções também podem ser especificados na variável de ambiente %1$s"
 
 #: hbmk2.prg:4378
 #, c-format
-msgid "Warning: Dynamic lib link script couldn't be created, continuing in command line."
+msgid "Warning: Dynamic lib link script could not be created, continuing in command line."
 msgstr "Atenção: Script para linkagem da biblioteca dinâmica não pode ser criado, continuando com a linha de comando."
 
 #: hbmk2.prg:4240
@@ -204,7 +204,7 @@ msgstr "Script para linkagem da biblioteca dinâmica:"
 
 #: hbmk2.prg:4290
 #, c-format
-msgid "Warning: Link script couldn't be created, continuing in command line."
+msgid "Warning: Link script could not be created, continuing in command line."
 msgstr "Atenção: Script de linkagem não pode ser criado, continuando com a linha de comando."
 
 #: hbmk2.prg:4298
@@ -278,12 +278,12 @@ msgstr "Criando biblioteca dinâmica... %1$s"
 
 #: hbmk2.prg:3991
 #, c-format
-msgid "Warning: Resource compiler script couldn't be created, continuing in command line."
+msgid "Warning: Resource compiler script could not be created, continuing in command line."
 msgstr "Atenção: Script para o compilador de Recursos não pode ser criado, continuando com a linha de comando."
 
 #: hbmk2.prg:3772
 #, c-format
-msgid "Warning: Stub helper .c program couldn't be created."
+msgid "Warning: Stub helper .c program could not be created."
 msgstr "Atenção: arquivo auxiliar .c não pode ser criado."
 
 #: hbmk2.prg:4060
@@ -409,7 +409,7 @@ msgstr "O script %1$s no diretório atual será sempre processado se existir."
 
 #: hbmk2.prg:4439
 #, c-format
-msgid "Warning: Lib script couldn't be created, continuing in command line."
+msgid "Warning: Lib script could not be created, continuing in command line."
 msgstr "Atenção: Script para criação da biblioteca não pode ser criado, continuando com a linha de comando."
 
 #: hbmk2.prg:4396
@@ -656,7 +656,7 @@ msgstr "desativar agrupamento de LIBs em compiladores baseados no gcc."
 
 #: hbmk2.prg:7942
 #, c-format
-msgid "run/don't run output executable"
+msgid "run/do not run output executable"
 msgstr "executar/não executar o aplicativo gerado."
 
 #: hbmk2.prg:7942
@@ -706,7 +706,7 @@ msgstr "exibe o diretório das bibliotecas estáticas do Harbour"
 
 #: hbmk2.prg:7942
 #, c-format
-msgid "don't (or do) add Harbour version number and source file reference to .po (default: add them)"
+msgid "do (not) add Harbour version number and source file reference to .po (default: add them)"
 msgstr "adicionar (ou não) a referência do número da versão do Harbour e o arquivo de origem ao .po (ativo por padrão)"
 
 #: hbmk2.prg:7942
@@ -836,7 +836,7 @@ msgstr "passa flag para o linkeditor (lib estática)"
 
 #: hbmk2.prg:7942
 #, c-format
-msgid "show commands to be executed, but don't execute them"
+msgid "show commands to be executed, but do not execute them"
 msgstr "exibir os comandos à serem executados, mas não execute-os"
 
 #: hbmk2.prg:7942
@@ -863,7 +863,7 @@ msgstr "Erro: Executando compilador C/C++. %1$s"
 
 #: hbmk2.prg:4190
 #, c-format
-msgid "Error: This platform/compiler isn't implemented."
+msgid "Error: This platform/compiler is not implemented."
 msgstr "Erro: Arquitetura/compilador não implementado."
 
 #: hbmk2.prg:4302
@@ -1020,7 +1020,7 @@ msgstr "Atenção: %1$s"
 
 #: hbmk2.prg:7942
 #, c-format
-msgid "don't add extra list of system libraries to default library list"
+msgid "do not add extra list of system libraries to default library list"
 msgstr "não adicione bibliotecas extras do sistema à lista padrão de bibliotecas"
 
 #: hbmk2.prg:7960

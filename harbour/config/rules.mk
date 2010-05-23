@@ -38,7 +38,7 @@ CC_FLAGS := $(HB_INC_DEPEND) $(CFLAGS) $(HB_CFLAGS)
 
 # The rule to compile a C source file.
 ifeq ($(CC_RULE),)
-   CC_RULE = $(CC) $(subst $(CC_DIRSEPFROM),$(CC_DIRSEPTO),$(CC_FLAGS) $(HB_USER_CFLAGS) $(CC_OUT)$(<F:.c=$(OBJ_EXT)) $(CC_IN) $<)
+   CC_RULE = $(CC) $(subst $(CC_DIRSEPFROM),$(CC_DIRSEPTO),$(CC_FLAGS) $(HB_USER_CFLAGS) $(CC_OUT)$(<F:.c=$(OBJ_EXT)) $(HB_CFLAGS_STA) $(CC_IN) $<)
    ifneq ($(HB_BUILD_DLL),no)
       ifneq ($(HB_DYN_COPT),)
          ifneq ($(LIBNAME),)

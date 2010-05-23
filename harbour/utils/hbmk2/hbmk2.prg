@@ -746,6 +746,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    LOCAL nStart := Seconds()
 
    LOCAL lDoSupportDetection
+   LOCAL lDeleteWorkDir
 
    hbmk[ _HBMK_lCreateLib ] := .F.
    hbmk[ _HBMK_lCreateDyn ] := .F.
@@ -1399,7 +1400,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             IF Empty( aCOMPDET )
                hbmk_OutErr( hbmk, hb_StrFormat( I_( "Please choose a C compiler by using -compiler= option.\nYou have the following choices on your platform: %1$s" ), ArrayToList( aCOMPSUP, ", " ) ) )
             ELSE
-               hbmk_OutErr( hbmk, hb_StrFormat( I_( "Couldn't detect any supported C compiler in your PATH.\nPlease setup one or set -compiler= option to one of these values: %1$s" ), ArrayToList( aCOMPSUP, ", " ) ) )
+               hbmk_OutErr( hbmk, hb_StrFormat( I_( "Could not detect any supported C compiler in your PATH.\nPlease setup one or set -compiler= option to one of these values: %1$s" ), ArrayToList( aCOMPSUP, ", " ) ) )
             ENDIF
             RETURN 2
          ENDIF
@@ -2298,7 +2299,18 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             /* It's controlled by -o option in these cases */
             cWorkDir := ""
          ELSE
-            DEFAULT cWorkDir TO hb_DirTemp()
+            IF cWorkDir == NIL
+               FClose( hb_FTempCreateEx( @cWorkDir, NIL, "hbmk_", ".dir" ) )
+               FErase( cWorkDir )
+               IF hb_DirCreate( cWorkDir ) != 0
+                  hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Temporary Working directory cannot be created: %1$s" ), cWorkDir ) )
+                  IF hbmk[ _HBMK_lBEEP ]
+                     DoBeep( .F. )
+                  ENDIF
+                  RETURN 9
+               ENDIF
+               lDeleteWorkDir := .T.
+            ENDIF
          ENDIF
       ENDIF
    ENDIF
@@ -3955,6 +3967,9 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                                 " " + ArrayToList( aCommand ) + _OUT_EOL )
                      ENDIF
                      IF ! hbmk[ _HBMK_lIGNOREERROR ]
+                        IF lDeleteWorkDir
+                           hb_DirDelete( cWorkDir )
+                        ENDIF
                         IF hbmk[ _HBMK_lBEEP ]
                            DoBeep( .F. )
                         ENDIF
@@ -3978,6 +3993,9 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                      OutErr( ArrayToList( thread[ 2 ] ) + _OUT_EOL )
                   ENDIF
                   IF ! hbmk[ _HBMK_lIGNOREERROR ]
+                     IF lDeleteWorkDir
+                        hb_DirDelete( cWorkDir )
+                     ENDIF
                      IF hbmk[ _HBMK_lBEEP ]
                         DoBeep( .F. )
                      ENDIF
@@ -4011,6 +4029,9 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                OutErr( cCommand + _OUT_EOL )
             ENDIF
             IF ! hbmk[ _HBMK_lIGNOREERROR ]
+               IF lDeleteWorkDir
+                  hb_DirDelete( cWorkDir )
+               ENDIF
                IF hbmk[ _HBMK_lBEEP ]
                   DoBeep( .F. )
                ENDIF
@@ -4174,9 +4195,12 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                   AAdd( hbmk[ _HBMK_aC ], l_cCSTUB )
                   AAdd( l_aC_TODO, l_cCSTUB )
                ELSE
-                  hbmk_OutErr( hbmk, I_( "Warning: Stub helper .c program couldn't be created." ) )
+                  hbmk_OutErr( hbmk, I_( "Warning: Stub helper .c program could not be created." ) )
                   IF ! hbmk[ _HBMK_lINC ]
                      AEval( ListDirExt( hbmk[ _HBMK_aPRG ], cWorkDir, ".c", .T. ), {| tmp | FErase( tmp ) } )
+                  ENDIF
+                  IF lDeleteWorkDir
+                     hb_DirDelete( cWorkDir )
                   ENDIF
                   IF hbmk[ _HBMK_lBEEP ]
                      DoBeep( .F. )
@@ -4275,9 +4299,12 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                   AAdd( hbmk[ _HBMK_aCPP ], l_cCPPSTUB )
                   AAdd( l_aCPP_TODO, l_cCPPSTUB )
                ELSE
-                  hbmk_OutErr( hbmk, I_( "Warning: Stub helper .cpp program couldn't be created." ) )
+                  hbmk_OutErr( hbmk, I_( "Warning: Stub helper .cpp program could not be created." ) )
                   IF ! hbmk[ _HBMK_lINC ]
                      AEval( ListDirExt( hbmk[ _HBMK_aPRG ], cWorkDir, ".c", .T. ), {| tmp | FErase( tmp ) } )
+                  ENDIF
+                  IF lDeleteWorkDir
+                     hb_DirDelete( cWorkDir )
                   ENDIF
                   IF hbmk[ _HBMK_lBEEP ]
                      DoBeep( .F. )
@@ -4441,7 +4468,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                hb_AIns( hbmk[ _HBMK_aRESSRC ], 1, l_cRESSTUB, .T. )
                AAdd( l_aRESSRC_TODO, l_cRESSTUB )
             ELSE
-               hbmk_OutErr( hbmk, I_( "Warning: Stub helper .rc file couldn't be created." ) )
+               hbmk_OutErr( hbmk, I_( "Warning: Stub helper .rc file could not be created." ) )
             ENDIF
             /* Don't delete stub in workdir in incremental mode. */
             IF hbmk[ _HBMK_lINC ]
@@ -4511,7 +4538,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                   FClose( fhnd )
                   cOpt_Res := "@" + cScriptFile
                ELSE
-                  hbmk_OutErr( hbmk, I_( "Warning: Resource compiler script couldn't be created, continuing in command line." ) )
+                  hbmk_OutErr( hbmk, I_( "Warning: Resource compiler script could not be created, continuing in command line." ) )
                ENDIF
             ENDIF
 
@@ -4649,7 +4676,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                               FClose( fhnd )
                               cOpt_CompCLoop := "@" + cScriptFile
                            ELSE
-                              hbmk_OutErr( hbmk, I_( "Warning: C/C++ compiler script couldn't be created, continuing in command line." ) )
+                              hbmk_OutErr( hbmk, I_( "Warning: C/C++ compiler script could not be created, continuing in command line." ) )
                            ENDIF
                         ENDIF
 
@@ -4712,7 +4739,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                      ENDIF
                   ENDIF
                ELSE
-                  hbmk_OutErr( hbmk, I_( "Error: C/C++ command isn't implemented for this platform/compiler." ) )
+                  hbmk_OutErr( hbmk, I_( "Error: C/C++ command is not implemented for this platform/compiler." ) )
                   nErrorLevel := 8
                ENDIF
             ENDIF
@@ -4814,7 +4841,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                      FClose( fhnd )
                      cOpt_Link := "@" + cScriptFile
                   ELSE
-                     hbmk_OutErr( hbmk, I_( "Warning: Link script couldn't be created, continuing in command line." ) )
+                     hbmk_OutErr( hbmk, I_( "Warning: Link script could not be created, continuing in command line." ) )
                   ENDIF
                ENDIF
 
@@ -4904,7 +4931,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                      FClose( fhnd )
                      cOpt_Dyn := "@" + cScriptFile
                   ELSE
-                     hbmk_OutErr( hbmk, I_( "Warning: Dynamic lib link script couldn't be created, continuing in command line." ) )
+                     hbmk_OutErr( hbmk, I_( "Warning: Dynamic lib link script could not be created, continuing in command line." ) )
                   ENDIF
                ENDIF
 
@@ -4965,7 +4992,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                      FClose( fhnd )
                      cOpt_Lib := "@" + cScriptFile
                   ELSE
-                     hbmk_OutErr( hbmk, I_( "Warning: Lib script couldn't be created, continuing in command line." ) )
+                     hbmk_OutErr( hbmk, I_( "Warning: Lib script could not be created, continuing in command line." ) )
                   ENDIF
                ENDIF
 
@@ -5026,6 +5053,9 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          ENDIF
       ENDIF
       AEval( l_aCLEAN, {| tmp | FErase( tmp ) } )
+      IF lDeleteWorkDir
+         hb_DirDelete( cWorkDir )
+      ENDIF
       IF l_lCLEAN
          DirUnbuild( cWorkDir )
       ENDIF
@@ -7805,7 +7835,7 @@ STATIC FUNCTION LoadPOTFiles( hbmk, aFiles, cFileBase, lIgnoreError )
    NEXT
 
    IF hbmk[ _HBMK_lDEBUGI18N ] .AND. aTrans == NIL
-      hbmk_OutErr( hbmk, "LoadPOTFiles() didn't load anything" )
+      hbmk_OutErr( hbmk, "LoadPOTFiles() did not load anything" )
    ENDIF
 
    RETURN aTrans
@@ -8912,11 +8942,11 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-[no]hbcppmm"       , I_( "forces to override standard C++ memory management functions with Harbour ones" ) },;
       { "-nohblib[-]"        , I_( "do not use static core Harbour libraries when linking" ) },;
       { "-nolibgrouping[-]"  , I_( "disable library grouping on gcc based compilers" ) },;
-      { "-nomiscsyslib[-]"   , I_( "don't add extra list of system libraries to default library list" ) },;
-      { "-traceonly"         , I_( "show commands to be executed, but don't execute them" ) },;
+      { "-nomiscsyslib[-]"   , I_( "do not add extra list of system libraries to default library list" ) },;
+      { "-traceonly"         , I_( "show commands to be executed, but do not execute them" ) },;
       { "-[no]warn[=lev]"    , I_( "set C compiler warning level\n<lev> can be: max, yes, low, no, def (default: yes)" ) },;
       { "-[no]compr[=lev]"   , I_( "compress executable/dynamic lib (needs UPX)\n<lev> can be: min, max, def" ) },;
-      { "-[no]run"           , I_( "run/don't run output executable" ) },;
+      { "-[no]run"           , I_( "run/do not run output executable" ) },;
       { "-vcshead=<file>"    , I_( "generate .ch header file with local repository information. SVN, CVS, Git, Mercurial, Bazaar and Fossil are currently supported. Generated header will define macro _HBMK_VCS_TYPE_ with the name of detected VCS and _HBMK_VCS_ID_ with the unique ID of local repository" ) },;
       { "-tshead=<file>"     , I_( "generate .ch header file with timestamp information. Generated header will define macros _HBMK_BUILD_DATE_, _HBMK_BUILD_TIME_, _HBMK_BUILD_TIMESTAMP_ with the date/time of build" ) },;
       { "-icon=<file>"       , I_( "set <file> as application icon. <file> should be a supported format on the target platform" ) },;
@@ -8947,7 +8977,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-hbl[=<output>]"    , hb_StrFormat( I_( "output .hbl filename. %1$s macro is accepted in filename" ), _LNG_MARKER ) },;
       { "-lng=<languages>"   , hb_StrFormat( I_( "list of languages to be replaced in %1$s macros in .pot/.po filenames and output .hbl/.po filenames. Comma separared list:\n-lng=en,hu-HU,de" ), _LNG_MARKER ) },;
       { "-po=<output>"       , I_( "create/update .po file from source. Merge it with previous .po file of the same name" ) },;
-      { "-[no]minipo"        , I_( "don't (or do) add Harbour version number and source file reference to .po (default: add them)" ) },;
+      { "-[no]minipo"        , I_( "do (not) add Harbour version number and source file reference to .po (default: add them)" ) },;
       { "-rebuildpo"         , I_( "recreate .po file, thus removing all obsolete entries in it" ) },;
       NIL,;
       { "Options below are available on command line only:" },;

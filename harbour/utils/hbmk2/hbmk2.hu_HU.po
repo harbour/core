@@ -4,12 +4,12 @@
 
 #: hbmk2.prg:3992
 #, c-format
-msgid "Warning: Resource compiler script couldn't be created, continuing in command line."
+msgid "Warning: Resource compiler script could not be created, continuing in command line."
 msgstr "Figyelem: Erõforrás fordító parancsállománya ne hozható létre, folytatás parancssorban."
 
 #: hbmk2.prg:4379
 #, c-format
-msgid "Warning: Dynamic lib link script couldn't be created, continuing in command line."
+msgid "Warning: Dynamic lib link script could not be created, continuing in command line."
 msgstr "Figyelem: Dinamikus függvénykönyvtár parancsállománya nem hozható létre, folytatás parancssorban."
 
 #: hbmk2.prg:7941
@@ -104,7 +104,7 @@ msgstr "A szûrõk az egyes .hbc sorokban használhatók és számos opció esetén támo
 
 #: hbmk2.prg:4128
 #, c-format
-msgid "Warning: C/C++ compiler script couldn't be created, continuing in command line."
+msgid "Warning: C/C++ compiler script could not be created, continuing in command line."
 msgstr "Figyelem: C/C++ fordító parancsállománya ne hozható létre, folytatás parancssorban."
 
 #: hbmk2.prg:7941
@@ -344,7 +344,7 @@ msgstr ".pot hiba: %1$s"
 
 #: hbmk2.prg:7941
 #, c-format
-msgid "don't (or do) add Harbour version number and source file reference to .po (default: add them)"
+msgid "do (not) add Harbour version number and source file reference to .po (default: add them)"
 msgstr "írja bele (vagy ne) a Harbour verizószámát és a forrásállomány referenciákat a .po állományba (alapértelmezés: írja)"
 
 #: hbmk2.prg:1272
@@ -424,17 +424,17 @@ msgstr "Hiba: Harbour fordító futtatásakor (beágyazott). %1$s"
 
 #: hbmk2.prg:3773
 #, c-format
-msgid "Warning: Stub helper .c program couldn't be created."
+msgid "Warning: Stub helper .c program could not be created."
 msgstr ""
 
 #: hbmk2.prg:3922
 #, c-format
-msgid "Warning: Stub helper .rc file couldn't be created."
+msgid "Warning: Stub helper .rc file could not be created."
 msgstr ""
 
 #: hbmk2.prg:4191
 #, c-format
-msgid "Error: This platform/compiler isn't implemented."
+msgid "Error: This platform/compiler is not implemented."
 msgstr "Hiba: Ez a platform/fordító nincs megvalósítva."
 
 #: hbmk2.prg:4244
@@ -464,7 +464,7 @@ msgstr ""
 
 #: hbmk2.prg:7941
 #, c-format
-msgid "show commands to be executed, but don't execute them"
+msgid "show commands to be executed, but do not execute them"
 msgstr "mutassa a végrehajtandó parancsokat, anélkül hogy végrehajtaná õket"
 
 #: hbmk2.prg:7941
@@ -604,12 +604,12 @@ msgstr "C fordító optimalizálási szintjét állítja (alapértelmezés: be)"
 
 #: hbmk2.prg:4291
 #, c-format
-msgid "Warning: Link script couldn't be created, continuing in command line."
+msgid "Warning: Link script could not be created, continuing in command line."
 msgstr "Figyelem: Szerkesztõ parancsállománya ne hozható létre, folytatás parancssorban."
 
 #: hbmk2.prg:4440
 #, c-format
-msgid "Warning: Lib script couldn't be created, continuing in command line."
+msgid "Warning: Lib script could not be created, continuing in command line."
 msgstr "Figyelem: Statikus függvénykönyvtár létrehozás parancsállománya nem hozható létre, folytatás parancssorban."
 
 #: hbmk2.prg:7941
@@ -624,7 +624,7 @@ msgstr "munkakönyvtár lépcsõzetes üzemmód használatakor\\n(alapértelmezés: %1$s/
 
 #: hbmk2.prg:7941
 #, c-format
-msgid "don't add extra list of system libraries to default library list"
+msgid "do not add extra list of system libraries to default library list"
 msgstr ""
 
 #: hbmk2.prg:7959
@@ -634,7 +634,7 @@ msgstr ""
 
 #: hbmk2.prg:1302
 #, c-format
-msgid "Couldn't detect any supported C compiler in your PATH.\\nPlease setup one or set -compiler= option to one of these values: %1$s"
+msgid "Could not detect any supported C compiler in your PATH.\\nPlease setup one or set -compiler= option to one of these values: %1$s"
 msgstr "Nem sikerült automatikusan detektálni egyetlen C fordítót sem a PATH-ban.\\nKérem, telepítsen egyet vagy állítsa a -compiler= kapcsolót a következõ értékek valamelyikére: %1$s"
 
 #: hbmk2.prg:7824
@@ -929,7 +929,7 @@ msgstr "távolítsa el (vagy ne) a kimenetrõl az extra belsõ információkat (strip)
 
 #: hbmk2.prg:7941
 #, c-format
-msgid "run/don't run output executable"
+msgid "run/do not run output executable"
 msgstr "futtassa/ne az elkészült alkalmazást"
 
 #: hbmk2.prg:7941
