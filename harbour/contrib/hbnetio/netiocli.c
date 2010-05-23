@@ -1302,6 +1302,28 @@ HB_FUNC( NETIO_OPENITEMSTREAM )
    s_netio_procexec( NETIO_FUNCCTRL, NETIO_SRVITEM );
 }
 
+static PHB_CONCLI s_netio_getConn( void )
+{
+   PHB_CONCLI conn = s_connParam( 2 );
+
+   if( !conn )
+   {
+      const char * pszServer = hb_parc( 2 );
+      char * pszIpAddres;
+      int iPort = hb_parni( 3 );
+
+      s_fileGetConnParam( &pszServer, &iPort, NULL, NULL, NULL );
+      pszIpAddres = hb_socketResolveAddr( pszServer, HB_SOCKET_AF_INET );
+      if( pszIpAddres != NULL )
+      {
+         conn = s_fileConFind( pszIpAddres, iPort );
+         hb_xfree( pszIpAddres );
+      }
+   }
+
+   return conn;
+}
+
 /* close communication stream/channel:
  *
  * NETIO_CLOSESTREAM( <nStreamID>, [<pConnection>] | [[<cServer>], [<nPort>]] )
@@ -1314,22 +1336,7 @@ HB_FUNC( NETIO_CLOSESTREAM )
 
    if( iStreamID )
    {
-      PHB_CONCLI conn = s_connParam( 2 );
-
-      if( !conn )
-      {
-         const char * pszServer = hb_parc( 2 );
-         char * pszIpAddres;
-         int iPort = hb_parni( 3 );
-
-         s_fileGetConnParam( &pszServer, &iPort, NULL, NULL, NULL );
-         pszIpAddres = hb_socketResolveAddr( pszServer, HB_SOCKET_AF_INET );
-         if( pszIpAddres != NULL )
-         {
-            conn = s_fileConFind( pszIpAddres, iPort );
-            hb_xfree( pszIpAddres );
-         }
-      }
+      PHB_CONCLI conn = s_netio_getConn();
 
       if( conn )
       {
@@ -1364,22 +1371,7 @@ HB_FUNC( NETIO_GETDATA )
 
    if( iStreamID )
    {
-      PHB_CONCLI conn = s_connParam( 2 );
-
-      if( !conn )
-      {
-         const char * pszServer = hb_parc( 2 );
-         char * pszIpAddres;
-         int iPort = hb_parni( 3 );
-
-         s_fileGetConnParam( &pszServer, &iPort, NULL, NULL, NULL );
-         pszIpAddres = hb_socketResolveAddr( pszServer, HB_SOCKET_AF_INET );
-         if( pszIpAddres != NULL )
-         {
-            conn = s_fileConFind( pszIpAddres, iPort );
-            hb_xfree( pszIpAddres );
-         }
-      }
+      PHB_CONCLI conn = s_netio_getConn();
 
       if( conn )
       {
