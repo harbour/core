@@ -54,6 +54,11 @@ PROCEDURE Main()
       cFile += "{dos}libpaths=${WATT_ROOT}/lib" + hb_osNewLine()
    ENDIF
 
+   IF ! Empty( GetEnv( "HB_HAS_GPM" ) )
+      cFile += hb_osNewLine()
+      cFile += "{" + GetEnv( "HB_PLATFORM" ) + "&" + GetEnv( "HB_COMPILER" ) + "}syslibs=gpm" + hb_osNewLine()
+   ENDIF
+
    hb_MemoWrit( GetEnv( "HB_BIN_INSTALL" ) + _PS_ + "hbmk.cfg", cFile )
 
    /* Installing some misc files */
