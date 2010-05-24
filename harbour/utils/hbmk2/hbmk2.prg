@@ -5923,24 +5923,26 @@ FUNCTION hbmk2_DirAddPathSep( ... )    ; RETURN DirAddPathSep( ... )
 FUNCTION hbmk2_DirDelPathSep( ... )    ; RETURN DirDelPathSep( ... )
 FUNCTION hbmk2_DirBuild( ... )         ; RETURN DirBuild( ... )
 FUNCTION hbmk2_DirUnbuild( ... )       ; RETURN DirUnbuild( ... )
-FUNCTION hbmk2_FN_DirGet( ... )        ; RETURN FN_DirGet( ... )
-FUNCTION hbmk2_FN_DirExtSet( ... )     ; RETURN FN_DirExtSet( ... )
-FUNCTION hbmk2_FN_NameGet( ... )       ; RETURN FN_NameGet( ... )
-FUNCTION hbmk2_FN_NameExtGet( ... )    ; RETURN FN_NameExtGet( ... )
-FUNCTION hbmk2_FN_ExtGet( ... )        ; RETURN FN_ExtGet( ... )
-FUNCTION hbmk2_FN_ExtDef( ... )        ; RETURN FN_ExtDef( ... )
-FUNCTION hbmk2_FN_ExtSet( ... )        ; RETURN FN_ExtSet( ... )
-FUNCTION hbmk2_FN_Escape( ... )        ; RETURN FN_Escape( ... )
+FUNCTION hbmk2_FNameDirGet( ... )      ; RETURN FN_DirGet( ... )
+FUNCTION hbmk2_FNameDirExtSet( ... )   ; RETURN FN_DirExtSet( ... )
+FUNCTION hbmk2_FNameNameGet( ... )     ; RETURN FN_NameGet( ... )
+FUNCTION hbmk2_FNameNameExtGet( ... )  ; RETURN FN_NameExtGet( ... )
+FUNCTION hbmk2_FNameExtGet( ... )      ; RETURN FN_ExtGet( ... )
+FUNCTION hbmk2_FNameExtDef( ... )      ; RETURN FN_ExtDef( ... )
+FUNCTION hbmk2_FNameExtSet( ... )      ; RETURN FN_ExtSet( ... )
+FUNCTION hbmk2_FNameEscape( ... )      ; RETURN FN_Escape( ... )
 FUNCTION hbmk2_StrStripQuote( ... )    ; RETURN StrStripQuote( ... )
-
-FUNCTION hbmk2_PathSepToTarget( ctx, ... )
-   RETURN PathSepToTarget( ctx[ s_cSecToken ], ... )
+FUNCTION hbmk2_OutStdRaw( ... )        ; RETURN ( OutStd( ... ), OutStd( _OUT_EOL ) )
+FUNCTION hbmk2_OutErrRaw( ... )        ; RETURN ( OutErr( ... ), OutErr( _OUT_EOL ) )
 
 FUNCTION hbmk2_OutStd( ctx, cText )
    RETURN hbmk_OutStd( ctx[ s_cSecToken ], hb_StrFormat( I_( "plugin: %1$s" ), cText ) )
 
 FUNCTION hbmk2_OutErr( ctx, cText )
    RETURN hbmk_OutErr( ctx[ s_cSecToken ], hb_StrFormat( I_( "plugin: %1$s" ), cText ) )
+
+FUNCTION hbmk2_PathSepToTarget( ctx, ... )
+   RETURN PathSepToTarget( ctx[ s_cSecToken ], ... )
 
 FUNCTION hbmk2_AddInput_PRG( ctx, cFileName )
    AAdd( ctx[ s_cSecToken ][ _HBMK_aPRG ], cFileName )
@@ -5962,14 +5964,14 @@ FUNCTION hbmk2_AddInput_RC( ctx, cFileName )
 
 STATIC FUNCTION PlugIn_Execute( hbmk, cState )
    LOCAL cHRB
-   LOCAL hContext
+   LOCAL ctx
    LOCAL xResult
 
    LOCAL oError
 
    IF ! Empty( hbmk[ _HBMK_hPLUGINHRB ] )
 
-      hContext := {;
+      ctx := {;
          "cSTATE"       => cState ,;
          "params"       => hbmk[ _HBMK_aPLUGINPars ]  ,;
          "vars"         => hbmk[ _HBMK_hPLUGINVars ]  ,;
@@ -5996,7 +5998,7 @@ STATIC FUNCTION PlugIn_Execute( hbmk, cState )
       FOR EACH cHRB IN hbmk[ _HBMK_hPLUGINHRB ]
 
          BEGIN SEQUENCE WITH {| oError | oError:cargo := { ProcName( 1 ), ProcLine( 1 ) }, Break( oError ) }
-            xResult := hb_hrbRun( HB_HRB_BIND_FORCELOCAL, cHRB, hContext )
+            xResult := hb_hrbRun( HB_HRB_BIND_FORCELOCAL, cHRB, ctx )
             IF ! Empty( xResult )
                IF hbmk[ _HBMK_lInfo ]
                   hbmk_OutStd( hbmk, hb_StrFormat( I_( "Plugin %1$s returned: '%2$s'" ), cHRB:__enumKey(), xResult ) )

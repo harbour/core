@@ -9,7 +9,6 @@
  * See COPYING for licensing terms.
  */
 
-#define _OUT_EOL                Chr( 10 )
 #define I_( x )                 hb_i18n_gettext( x )
 
 FUNCTION hbmk2_plugin_moc( hbmk2 )
@@ -35,7 +34,7 @@ FUNCTION hbmk2_plugin_moc( hbmk2 )
 
       aMOC := {}
       FOR EACH tmp IN hbmk2[ "params" ]
-         IF Lower( hbmk2_FN_ExtGet( tmp ) ) $ ".h|.hpp"
+         IF Lower( hbmk2_FNameExtGet( tmp ) ) $ ".h|.hpp"
             AAdd( aMOC, tmp )
          ENDIF
       NEXT
@@ -79,7 +78,7 @@ FUNCTION hbmk2_plugin_moc( hbmk2 )
 
          FOR EACH tmp IN aMOC
 
-            cDst := hbmk2_FN_DirExtSet( "moc_" + tmp, hbmk2[ "cWorkDir" ], ".cpp" )
+            cDst := hbmk2_FNameDirExtSet( "moc_" + tmp, hbmk2[ "cWorkDir" ], ".cpp" )
 
             IF hbmk2[ "lINC" ] .AND. ! hbmk2[ "lREBUILD" ]
                lBuildIt := ! hb_FGetDateTime( cDst, @tmp2 ) .OR. ;
@@ -91,20 +90,20 @@ FUNCTION hbmk2_plugin_moc( hbmk2 )
 
             IF lBuildIt
                cCommand := cMOC_BIN +;
-                           " " + hbmk2_FN_Escape( hbmk2_PathSepToTarget( hbmk2, tmp ), hbmk2[ "nCmd_Esc" ] ) +;
-                           " -o " + hbmk2_FN_Escape( hbmk2_PathSepToTarget( hbmk2, cDst ), hbmk2[ "nCmd_Esc" ] )
+                           " " + hbmk2_FNameEscape( hbmk2_PathSepToTarget( hbmk2, tmp ), hbmk2[ "nCmd_Esc" ] ) +;
+                           " -o " + hbmk2_FNameEscape( hbmk2_PathSepToTarget( hbmk2, cDst ), hbmk2[ "nCmd_Esc" ] )
 
                IF hbmk2[ "lTRACE" ]
                   IF ! hbmk2[ "lQUIET" ]
                      hbmk2_OutStd( hbmk2, I_( "'moc' command:" ) )
                   ENDIF
-                  OutStd( cCommand + _OUT_EOL )
+                  hbmk2_OutStdRaw( cCommand )
                ENDIF
 
                IF ! hbmk2[ "lDONTEXEC" ] .AND. ( nError := hb_processRun( cCommand ) ) != 0
                   hbmk2_OutErr( hbmk2, hb_StrFormat( I_( "Error: Running 'moc' executable. %1$s" ), hb_ntos( nError ) ) )
                   IF ! hbmk2[ "lQUIET" ]
-                     OutErr( cCommand + _OUT_EOL )
+                     hbmk2_OutErrRaw( cCommand )
                   ENDIF
                   IF ! hbmk2[ "lIGNOREERROR" ]
                      cRetVal := "error"
@@ -130,6 +129,8 @@ FUNCTION hbmk2_plugin_moc( hbmk2 )
       IF ! hbmk2[ "lINC" ] .OR. hbmk2[ "lCLEAN" ]
          AEval( hbmk2[ "vars" ][ "aMOC_Dst" ], {| tmp | FErase( tmp ) } )
       ENDIF
+
+      EXIT
 
    ENDSWITCH
 

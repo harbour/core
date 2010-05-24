@@ -139,7 +139,7 @@ PROCEDURE __TypeFile( cFile, lPrint )
 
    /* Here we try to read a line at a time but I think we could just
       display the whole buffer since it said:
-      "without any headings or formating" */
+      "without any headings or formatting" */
 
    nHasRead := 0
    cBuffer := Space( nBuffer )
