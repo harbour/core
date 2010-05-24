@@ -371,8 +371,10 @@ REQUEST hbmk_KEYW
 #define _HBMK_cCCEXT            96
 
 #define _HBMK_cWorkDir          97
+#define _HBMK_nCmd_Esc          98
+#define _HBMK_nScr_Esc          99
 
-#define _HBMK_MAX_              97
+#define _HBMK_MAX_              99
 
 #ifndef _HBMK_EMBEDDED_
 
@@ -684,8 +686,6 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    LOCAL cBin_Post := NIL
    LOCAL cOpt_Post
    LOCAL nOpt_Esc
-   LOCAL nCmd_Esc := NIL
-   LOCAL nScr_Esc := NIL
    LOCAL nCCompVer
 
    LOCAL cCommand
@@ -816,6 +816,9 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    hbmk[ _HBMK_lDEBUGINC ] := .F.
    hbmk[ _HBMK_lDEBUGSTUB ] := .F.
    hbmk[ _HBMK_lDEBUGI18N ] := .F.
+
+   hbmk[ _HBMK_nCmd_Esc ] := NIL
+   hbmk[ _HBMK_nScr_Esc ] := NIL
 
    GetUILangCDP( @hbmk[ _HBMK_cUILNG ], @hbmk[ _HBMK_cUICDP ] )
    SetUILang( hbmk )
@@ -2278,7 +2281,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          hb_compile( "harbour", hbmk[ _HBMK_aOPTPRG ] )
       ELSE
          /* Use external compiler */
-         cCommand := FN_Escape( DirAddPathSep( PathSepToSelf( l_cHB_BIN_INSTALL ) ) + cBin_CompPRG + cBinExt, nCmd_Esc ) +;
+         cCommand := FN_Escape( DirAddPathSep( PathSepToSelf( l_cHB_BIN_INSTALL ) ) + cBin_CompPRG + cBinExt, hbmk[ _HBMK_nCmd_Esc ] ) +;
                      iif( ! Empty( hbmk[ _HBMK_aOPTPRG ] ), " " + ArrayToList( hbmk[ _HBMK_aOPTPRG ] ), "" )
          hb_processRun( AllTrim( cCommand ) )
       ENDIF
@@ -2487,7 +2490,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
            ( hbmk[ _HBMK_cPLAT ] == "beos"   .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "linux"  .AND. hbmk[ _HBMK_cCOMP ] == "open64" )
 
-         nCmd_Esc := _ESC_NIX
+         hbmk[ _HBMK_nCmd_Esc ] := _ESC_NIX
          IF hbmk[ _HBMK_lDEBUG ]
             AAdd( hbmk[ _HBMK_aOPTC ], "-g" )
          ENDIF
@@ -2751,21 +2754,21 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          cOpt_Dyn := "-shared -o {OD} {LO} {FD} {IM} {DL} {LS}"
          cBin_Link := cBin_CompC
          cOpt_Link := "{LO} {LA} {LS} {FL} {DL}"
-         bBlk_ImpLib := {| cSourceDLL, cTargetLib, cFlags | win_implib_command_gcc( hbmk, hbmk[ _HBMK_cCCPREFIX ] + "dlltool" + hbmk[ _HBMK_cCCPOSTFIX ] + hbmk[ _HBMK_cCCEXT ] + " {FI} -d {ID} -l {OL}", nCmd_Esc, cSourceDLL, cTargetLib, cFlags ) }
+         bBlk_ImpLib := {| cSourceDLL, cTargetLib, cFlags | win_implib_command_gcc( hbmk, hbmk[ _HBMK_cCCPREFIX ] + "dlltool" + hbmk[ _HBMK_cCCPOSTFIX ] + hbmk[ _HBMK_cCCEXT ] + " {FI} -d {ID} -l {OL}", cSourceDLL, cTargetLib, cFlags ) }
          cLibPathPrefix := "-L"
          cLibPathSep := " "
          cLibLibExt := ".a"
          cBin_Lib := hbmk[ _HBMK_cCCPREFIX ] + "ar" + hbmk[ _HBMK_cCCEXT ]
 #if defined( __PLATFORM__WINDOWS )
-         nCmd_Esc := _ESC_DBLQUOTE
+         hbmk[ _HBMK_nCmd_Esc ] := _ESC_DBLQUOTE
 #endif
          cOpt_Lib := "{FA} rcs {OL} {LO}"
          cLibObjPrefix := NIL
          IF ! Empty( hbmk[ _HBMK_cCCPATH ] )
-            cBin_Lib     := FN_Escape( hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_Lib, nCmd_Esc )
-            cBin_CompCPP := FN_Escape( hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_CompCPP, nCmd_Esc )
-            cBin_CompC   := FN_Escape( hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_CompC, nCmd_Esc )
-            cBin_Link    := FN_Escape( hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_Link, nCmd_Esc )
+            cBin_Lib     := FN_Escape( hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_Lib, hbmk[ _HBMK_nCmd_Esc ] )
+            cBin_CompCPP := FN_Escape( hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_CompCPP, hbmk[ _HBMK_nCmd_Esc ] )
+            cBin_CompC   := FN_Escape( hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_CompC, hbmk[ _HBMK_nCmd_Esc ] )
+            cBin_Link    := FN_Escape( hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_Link, hbmk[ _HBMK_nCmd_Esc ] )
          ENDIF
          IF !( hbmk[ _HBMK_cPLAT ] == "wce" )
             IF hbmk[ _HBMK_lGUI ]
@@ -2852,7 +2855,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             cResExt := ".reso"
             cOpt_Res := "{FR} {IR} -O coff -o {OS}"
             IF ! Empty( hbmk[ _HBMK_cCCPATH ] )
-               cBin_Res := FN_Escape( hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_Res, nCmd_Esc )
+               cBin_Res := FN_Escape( hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_Res, hbmk[ _HBMK_nCmd_Esc ] )
             ENDIF
          ENDIF
 
@@ -2952,12 +2955,12 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 #endif
 
          IF ! Empty( hbmk[ _HBMK_cCCPATH ] )
-            cBin_Lib     := FN_Escape( hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_Lib, nCmd_Esc )
-            cBin_CompCPP := FN_Escape( hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_CompCPP, nCmd_Esc )
-            cBin_CompC   := FN_Escape( hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_CompC, nCmd_Esc )
-            cBin_Link    := FN_Escape( hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_Link, nCmd_Esc )
+            cBin_Lib     := FN_Escape( hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_Lib, hbmk[ _HBMK_nCmd_Esc ] )
+            cBin_CompCPP := FN_Escape( hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_CompCPP, hbmk[ _HBMK_nCmd_Esc ] )
+            cBin_CompC   := FN_Escape( hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_CompC, hbmk[ _HBMK_nCmd_Esc ] )
+            cBin_Link    := FN_Escape( hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_Link, hbmk[ _HBMK_nCmd_Esc ] )
 #if 0
-            cBin_Res     := FN_Escape( hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_Res, nCmd_Esc )
+            cBin_Res     := FN_Escape( hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_Res, hbmk[ _HBMK_nCmd_Esc ] )
 #endif
          ENDIF
 
@@ -3037,18 +3040,18 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                                                    "harbour" + cLibExt ) }
 
          IF ! Empty( hbmk[ _HBMK_cCCPATH ] )
-            cBin_Lib     := FN_Escape( hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_Lib, nCmd_Esc )
-            cBin_CompCPP := FN_Escape( hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_CompCPP, nCmd_Esc )
-            cBin_CompC   := FN_Escape( hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_CompC, nCmd_Esc )
-            cBin_Link    := FN_Escape( hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_Link, nCmd_Esc )
+            cBin_Lib     := FN_Escape( hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_Lib, hbmk[ _HBMK_nCmd_Esc ] )
+            cBin_CompCPP := FN_Escape( hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_CompCPP, hbmk[ _HBMK_nCmd_Esc ] )
+            cBin_CompC   := FN_Escape( hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_CompC, hbmk[ _HBMK_nCmd_Esc ] )
+            cBin_Link    := FN_Escape( hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_Link, hbmk[ _HBMK_nCmd_Esc ] )
          ENDIF
 
       /* Watcom family */
       CASE hbmk[ _HBMK_cCOMP ] == "watcom"
 
          IF hbmk[ _HBMK_cPLAT ] == "win"
-            nCmd_Esc := _ESC_DBLQUOTE
-            nScr_Esc := _ESC_SGLQUOTE_WATCOM
+            hbmk[ _HBMK_nCmd_Esc ] := _ESC_DBLQUOTE
+            hbmk[ _HBMK_nScr_Esc ] := _ESC_SGLQUOTE_WATCOM
          ENDIF
 
          cLibPrefix := "LIB "
@@ -3150,7 +3153,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          cBin_Lib := "wlib" + hbmk[ _HBMK_cCCEXT ]
          cOpt_Lib := "-q {FA} {OL} {LO}{SCRIPT}"
          IF hbmk[ _HBMK_cPLAT ] $ "win|os2"
-            bBlk_ImpLib := {| cSourceDLL, cTargetLib, cFlags | win_implib_command_watcom( hbmk, cBin_Lib + " -q -o={OL} {ID}", nCmd_Esc, cSourceDLL, cTargetLib, cFlags ) }
+            bBlk_ImpLib := {| cSourceDLL, cTargetLib, cFlags | win_implib_command_watcom( hbmk, cBin_Lib + " -q -o={OL} {ID}", cSourceDLL, cTargetLib, cFlags ) }
          ENDIF
          cLibLibExt := cLibExt
          cLibObjPrefix := "-+ "
@@ -3232,7 +3235,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          IF hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ]
             AAdd( hbmk[ _HBMK_aOPTC ], "-P" )
          ENDIF
-         nCmd_Esc := _ESC_DBLQUOTE
+         hbmk[ _HBMK_nCmd_Esc ] := _ESC_DBLQUOTE
          cLibPrefix := NIL
          cLibExt := ".lib"
          cObjExt := ".obj"
@@ -3273,7 +3276,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          cBin_Dyn := cBin_Link
          cOpt_Link := '-Gn -Tpe -L{DL} {FL} ' + iif( hbmk[ _HBMK_lGUI ], "c0w32.obj", "c0x32.obj" ) + " {LO}, {OE}, " + iif( hbmk[ _HBMK_lMAP ], "{OM}", "nul" ) + ", {LL} {LB} " + cLibBCC_CRTL + " import32.lib,, {LS}{SCRIPT}"
          cOpt_Dyn  := '-Gn -Tpd -L{DL} {FD} ' +                          "c0d32.obj"                + " {LO}, {OD}, " + iif( hbmk[ _HBMK_lMAP ], "{OM}", "nul" ) + ", {LL} {LB} " + cLibBCC_CRTL + " import32.lib, {IM}, {LS}{SCRIPT}"
-         bBlk_ImpLib := {| cSourceDLL, cTargetLib, cFlags | win_implib_command_bcc( hbmk, "implib.exe {FI} {OL} {ID}", nCmd_Esc, cSourceDLL, cTargetLib, cFlags ) }
+         bBlk_ImpLib := {| cSourceDLL, cTargetLib, cFlags | win_implib_command_bcc( hbmk, "implib.exe {FI} {OL} {ID}", cSourceDLL, cTargetLib, cFlags ) }
          cLibPathPrefix := ""
          cLibPathSep := ";"
          IF hbmk[ _HBMK_lMAP ]
@@ -3293,7 +3296,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             AAdd( hbmk[ _HBMK_aOPTD ], "-Gi" )
          ENDIF
          IF ! Empty( hbmk[ _HBMK_cWorkDir ] )
-            AAdd( hbmk[ _HBMK_aOPTC ], "-n" + FN_Escape( PathSepToTarget( hbmk, hbmk[ _HBMK_cWorkDir ] ), nCmd_Esc ) )
+            AAdd( hbmk[ _HBMK_aOPTC ], "-n" + FN_Escape( PathSepToTarget( hbmk, hbmk[ _HBMK_cWorkDir ] ), hbmk[ _HBMK_nCmd_Esc ] ) )
          ELSE
             IF lStopAfterCComp .AND. ! hbmk[ _HBMK_lCreateLib ] .AND. ! hbmk[ _HBMK_lCreateDyn ]
                IF ( Len( hbmk[ _HBMK_aPRG ] ) + Len( hbmk[ _HBMK_aC ] ) + Len( hbmk[ _HBMK_aCPP ] ) ) == 1
@@ -3369,7 +3372,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             cBin_Dyn := cBin_Link
          ENDIF
          cBin_CompCPP := cBin_CompC
-         nCmd_Esc := _ESC_DBLQUOTE
+         hbmk[ _HBMK_nCmd_Esc ] := _ESC_DBLQUOTE
          cOpt_Lib := "-nologo {FA} -out:{OL} {LO}"
          cOpt_Dyn := "-nologo {FD} {IM} -dll -out:{OD} {DL} {LO} {LL} {LB} {LS}"
          cOpt_CompC := "-nologo -c"
@@ -3433,7 +3436,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          CASE "msvcmips" ; AAdd( hbmk[ _HBMK_aOPTI ], "-machine:mips" ) ; EXIT
          CASE "msvcsh"   ; AAdd( hbmk[ _HBMK_aOPTI ], "-machine:sh5"  ) ; EXIT
          ENDSWITCH
-         bBlk_ImpLib := {| cSourceDLL, cTargetLib, cFlags | win_implib_command_msvc( hbmk, cBin_Lib + " -nologo {FI} -def:{ID} -out:{OL}", nCmd_Esc, cSourceDLL, cTargetLib, cFlags ) }
+         bBlk_ImpLib := {| cSourceDLL, cTargetLib, cFlags | win_implib_command_msvc( hbmk, cBin_Lib + " -nologo {FI} -def:{ID} -out:{OL}", cSourceDLL, cTargetLib, cFlags ) }
          cLibPathPrefix := "-libpath:"
          cLibPathSep := " "
          cDynDefPrefix := "-def:"
@@ -3465,7 +3468,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             ENDIF
          ENDIF
          IF ! Empty( hbmk[ _HBMK_cWorkDir ] )
-            AAdd( hbmk[ _HBMK_aOPTC ], "-Fo" + FN_Escape( DirAddPathSep( PathSepToTarget( hbmk, hbmk[ _HBMK_cWorkDir ] ) ), nCmd_Esc ) ) /* NOTE: Ending path sep is important. */
+            AAdd( hbmk[ _HBMK_aOPTC ], "-Fo" + FN_Escape( DirAddPathSep( PathSepToTarget( hbmk, hbmk[ _HBMK_cWorkDir ] ) ), hbmk[ _HBMK_nCmd_Esc ] ) ) /* NOTE: Ending path sep is important. */
          ELSE
             IF lStopAfterCComp .AND. ! hbmk[ _HBMK_lCreateLib ] .AND. ! hbmk[ _HBMK_lCreateDyn ]
                IF ( Len( hbmk[ _HBMK_aPRG ] ) + Len( hbmk[ _HBMK_aC ] ) + Len( hbmk[ _HBMK_aCPP ] ) ) == 1
@@ -3518,7 +3521,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          IF hbmk[ _HBMK_lDEBUG ]
             AAdd( hbmk[ _HBMK_aOPTC ], "-Zi" )
          ENDIF
-         nCmd_Esc := _ESC_DBLQUOTE
+         hbmk[ _HBMK_nCmd_Esc ] := _ESC_DBLQUOTE
          cLibPrefix := NIL
          cLibExt := ".lib"
          cObjExt := ".obj"
@@ -3550,7 +3553,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          ENDIF
          cOptIncMask := "-I{DI}"
          cOpt_Dyn := "{FD} {IM} -dll -out:{OD} {DL} {LO} {LL} {LB} {LS}"
-         bBlk_ImpLib := {| cSourceDLL, cTargetLib, cFlags | win_implib_command_pocc( hbmk, cBin_Lib + " {ID} -out:{OL}", nCmd_Esc, cSourceDLL, cTargetLib, cFlags ) }
+         bBlk_ImpLib := {| cSourceDLL, cTargetLib, cFlags | win_implib_command_pocc( hbmk, cBin_Lib + " {ID} -out:{OL}", cSourceDLL, cTargetLib, cFlags ) }
          IF hbmk[ _HBMK_cPLAT ] == "wce"
             AAdd( hbmk[ _HBMK_aOPTC ], "-DUNICODE" )
             AAdd( hbmk[ _HBMK_aOPTC ], "-D_WINCE" ) /* Required by pocc Windows headers */
@@ -3614,7 +3617,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       CASE ( hbmk[ _HBMK_cPLAT ] == "sunos" .AND. hbmk[ _HBMK_cCOMP ] == "sunpro" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "linux" .AND. hbmk[ _HBMK_cCOMP ] == "sunpro" )
 
-         nCmd_Esc := _ESC_NIX
+         hbmk[ _HBMK_nCmd_Esc ] := _ESC_NIX
          IF hbmk[ _HBMK_lDEBUG ]
             AAdd( hbmk[ _HBMK_aOPTC ], "-g" )
          ENDIF
@@ -3734,9 +3737,9 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          ENDIF
 
          IF ! Empty( hbmk[ _HBMK_cCCPATH ] )
-            cBin_CompCPP := FN_Escape( hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_CompCPP, nCmd_Esc )
-            cBin_CompC   := FN_Escape( hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_CompC, nCmd_Esc )
-            cBin_Link    := FN_Escape( hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_Link, nCmd_Esc )
+            cBin_CompCPP := FN_Escape( hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_CompCPP, hbmk[ _HBMK_nCmd_Esc ] )
+            cBin_CompC   := FN_Escape( hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_CompC, hbmk[ _HBMK_nCmd_Esc ] )
+            cBin_Link    := FN_Escape( hbmk[ _HBMK_cCCPATH ] + hb_osPathSeparator() + cBin_Link, hbmk[ _HBMK_nCmd_Esc ] )
          ENDIF
 
       ENDCASE
@@ -3790,7 +3793,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       ENDIF
    ENDIF
 
-   DEFAULT nScr_Esc TO nCmd_Esc
+   DEFAULT hbmk[ _HBMK_nScr_Esc ] TO hbmk[ _HBMK_nCmd_Esc ]
 
    /* Delete all lib paths which contain late-evaluation macros. */
    FOR EACH tmp IN hbmk[ _HBMK_aLIBPATH ] DESCEND
@@ -3806,7 +3809,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          IF hbmk[ _HBMK_nHBMODE ] == _HBMODE_NATIVE
             AAdd( hbmk[ _HBMK_aOPTPRG ], "-o" + DirAddPathSep( hbmk[ _HBMK_cWorkDir ] ) )
          ELSE
-            AAdd( hbmk[ _HBMK_aOPTPRG ], "-o" + FN_Escape( DirAddPathSep( hbmk[ _HBMK_cWorkDir ] ), nCmd_Esc ) )
+            AAdd( hbmk[ _HBMK_aOPTPRG ], "-o" + FN_Escape( DirAddPathSep( hbmk[ _HBMK_cWorkDir ] ), hbmk[ _HBMK_nCmd_Esc ] ) )
          ENDIF
       ENDIF
    ENDIF
@@ -3869,11 +3872,11 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             IF hbmk[ _HBMK_nHBMODE ] == _HBMODE_NATIVE
                AAdd( hbmk[ _HBMK_aOPTPRG ], "-i" + tmp )
             ELSE
-               AAdd( hbmk[ _HBMK_aOPTPRG ], "-i" + FN_Escape( tmp, nCmd_Esc ) )
+               AAdd( hbmk[ _HBMK_aOPTPRG ], "-i" + FN_Escape( tmp, hbmk[ _HBMK_nCmd_Esc ] ) )
             ENDIF
             IF ! lStopAfterHarbour
-               AAdd( hbmk[ _HBMK_aOPTC ], StrTran( cOptIncMask, "{DI}", FN_Escape( tmp, nCmd_Esc ) ) )
-               AAdd( hbmk[ _HBMK_aOPTRES ], StrTran( cOptIncMask, "{DI}", FN_Escape( tmp, nCmd_Esc ) ) )
+               AAdd( hbmk[ _HBMK_aOPTC ], StrTran( cOptIncMask, "{DI}", FN_Escape( tmp, hbmk[ _HBMK_nCmd_Esc ] ) ) )
+               AAdd( hbmk[ _HBMK_aOPTRES ], StrTran( cOptIncMask, "{DI}", FN_Escape( tmp, hbmk[ _HBMK_nCmd_Esc ] ) ) )
             ENDIF
          ENDIF
       NEXT
@@ -3894,7 +3897,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             IF ! hb_FGetDateTime( FN_DirExtSet( tmp, hbmk[ _HBMK_cWorkDir ], cObjExt ), @tmp2 ) .OR. ;
                ! hb_FGetDateTime( tmp, @tmp1 ) .OR. ;
                tmp1 > tmp2 .OR. ;
-               ( hbmk[ _HBMK_nHEAD ] != _HEAD_OFF .AND. FindNewerHeaders( hbmk, tmp, NIL, tmp2, ! Empty( hbmk[ _HBMK_aINCTRYPATH ] ), .T., cBin_CompC, nCmd_Esc, @headstate ) )
+               ( hbmk[ _HBMK_nHEAD ] != _HEAD_OFF .AND. FindNewerHeaders( hbmk, tmp, NIL, tmp2, ! Empty( hbmk[ _HBMK_aINCTRYPATH ] ), .T., cBin_CompC, @headstate ) )
                AAdd( l_aC_TODO, tmp )
             ENDIF
          NEXT
@@ -3905,7 +3908,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       /* Header dir detection if needed and if FindNewerHeaders() wasn't called yet. */
       IF ! Empty( hbmk[ _HBMK_aINCTRYPATH ] ) .AND. ! Empty( l_aC_TODO ) .AND. headstate == NIL
          FOR EACH tmp IN l_aC_TODO
-            FindNewerHeaders( hbmk, tmp, NIL, NIL, .T., .T., cBin_CompC, nCmd_Esc, @headstate )
+            FindNewerHeaders( hbmk, tmp, NIL, NIL, .T., .T., cBin_CompC, @headstate )
          NEXT
       ENDIF
    ENDIF
@@ -3925,7 +3928,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             IF ! hb_FGetDateTime( FN_DirExtSet( tmp, hbmk[ _HBMK_cWorkDir ], cObjExt ), @tmp2 ) .OR. ;
                ! hb_FGetDateTime( tmp, @tmp1 ) .OR. ;
                tmp1 > tmp2 .OR. ;
-               ( hbmk[ _HBMK_nHEAD ] != _HEAD_OFF .AND. FindNewerHeaders( hbmk, tmp, NIL, tmp2, ! Empty( hbmk[ _HBMK_aINCTRYPATH ] ), .T., cBin_CompCPP, nCmd_Esc, @headstate ) )
+               ( hbmk[ _HBMK_nHEAD ] != _HEAD_OFF .AND. FindNewerHeaders( hbmk, tmp, NIL, tmp2, ! Empty( hbmk[ _HBMK_aINCTRYPATH ] ), .T., cBin_CompCPP, @headstate ) )
                AAdd( l_aCPP_TODO, tmp )
             ENDIF
          NEXT
@@ -3936,7 +3939,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       /* Header dir detection if needed and if FindNewerHeaders() wasn't called yet. */
       IF ! Empty( hbmk[ _HBMK_aINCTRYPATH ] ) .AND. ! Empty( l_aCPP_TODO ) .AND. headstate == NIL
          FOR EACH tmp IN l_aCPP_TODO
-            FindNewerHeaders( hbmk, tmp, NIL, NIL, .T., .T., cBin_CompCPP, nCmd_Esc, @headstate )
+            FindNewerHeaders( hbmk, tmp, NIL, NIL, .T., .T., cBin_CompCPP, @headstate )
          NEXT
       ENDIF
    ENDIF
@@ -3970,7 +3973,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             IF ! hb_FGetDateTime( FN_DirExtSet( tmp3, cHarbourOutputDir, cHarbourOutputExt ), @tmp2 ) .OR. ;
                ! hb_FGetDateTime( tmp3, @tmp1 ) .OR. ;
                tmp1 > tmp2 .OR. ;
-               ( hbmk[ _HBMK_nHEAD ] != _HEAD_OFF .AND. FindNewerHeaders( hbmk, tmp, NIL, tmp2, .F., .F., cBin_CompC, NIL, @headstate ) )
+               ( hbmk[ _HBMK_nHEAD ] != _HEAD_OFF .AND. FindNewerHeaders( hbmk, tmp, NIL, tmp2, .F., .F., cBin_CompC, @headstate ) )
                AAdd( l_aPRG_TODO, tmp )
             ENDIF
          NEXT
@@ -4017,7 +4020,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                      hbmk_OutStd( hbmk, I_( "Harbour compiler command (embedded):" ) )
                   ENDIF
                ENDIF
-               OutStd( "(" + FN_Escape( DirAddPathSep( hb_DirBase() ) + cBin_CompPRG + cBinExt + ")", nCmd_Esc ) +;
+               OutStd( "(" + FN_Escape( DirAddPathSep( hb_DirBase() ) + cBin_CompPRG + cBinExt + ")", hbmk[ _HBMK_nCmd_Esc ] ) +;
                        " " + ArrayToList( aCommand ) + _OUT_EOL )
             ENDIF
 
@@ -4028,7 +4031,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                   IF ( tmp := hb_compile( "harbour", aCommand ) ) != 0
                      hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Running Harbour compiler (embedded). %1$s" ), hb_ntos( tmp ) ) )
                      IF ! hbmk[ _HBMK_lQuiet ]
-                        OutErr( "(" + FN_Escape( DirAddPathSep( hb_DirBase() ) + cBin_CompPRG + cBinExt + ")", nCmd_Esc ) +;
+                        OutErr( "(" + FN_Escape( DirAddPathSep( hb_DirBase() ) + cBin_CompPRG + cBinExt + ")", hbmk[ _HBMK_nCmd_Esc ] ) +;
                                 " " + ArrayToList( aCommand ) + _OUT_EOL )
                      ENDIF
                      IF ! hbmk[ _HBMK_lIGNOREERROR ]
@@ -4072,9 +4075,9 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       ELSE
          /* Use external compiler */
 
-         cCommand := FN_Escape( DirAddPathSep( PathSepToSelf( l_cHB_BIN_INSTALL ) ) + cBin_CompPRG + cBinExt, nCmd_Esc ) +;
+         cCommand := FN_Escape( DirAddPathSep( PathSepToSelf( l_cHB_BIN_INSTALL ) ) + cBin_CompPRG + cBinExt, hbmk[ _HBMK_nCmd_Esc ] ) +;
                      " " + iif( hbmk[ _HBMK_lCreateLib ] .OR. hbmk[ _HBMK_lCreateDyn ], "-n1", iif( hbmk[ _HBMK_nHBMODE ] != _HBMODE_NATIVE, "-n", "-n2" ) ) +;
-                     " " + ArrayToList( l_aPRG_TODO,, nCmd_Esc ) +;
+                     " " + ArrayToList( l_aPRG_TODO,, hbmk[ _HBMK_nCmd_Esc ] ) +;
                      iif( hbmk[ _HBMK_lBLDFLGP ], " " + hb_Version( HB_VERSION_FLAG_PRG ), "" ) +;
                      iif( ! Empty( GetEnv( "HB_USER_PRGFLAGS" ) ), " " + GetEnv( "HB_USER_PRGFLAGS" ), "" ) +;
                      iif( ! Empty( hbmk[ _HBMK_aOPTPRG ] ), " " + ArrayToList( hbmk[ _HBMK_aOPTPRG ] ), "" )
@@ -4460,7 +4463,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             IF ! hb_FGetDateTime( FN_DirExtSet( tmp, hbmk[ _HBMK_cWorkDir ], cResExt ), @tmp2 ) .OR. ;
                ! hb_FGetDateTime( tmp, @tmp1 ) .OR. ;
                tmp1 > tmp2 .OR. ;
-               ( hbmk[ _HBMK_nHEAD ] != _HEAD_OFF .AND. FindNewerHeaders( hbmk, tmp, NIL, tmp2, .F., .T., cBin_CompC, nCmd_Esc, @headstate ) )
+               ( hbmk[ _HBMK_nHEAD ] != _HEAD_OFF .AND. FindNewerHeaders( hbmk, tmp, NIL, tmp2, .F., .T., cBin_CompC, @headstate ) )
                AAdd( l_aRESSRC_TODO, tmp )
             ENDIF
          NEXT
@@ -4558,7 +4561,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
          /* Compiling resource */
 
-         nOpt_Esc := iif( "{SCRIPT}" $ cOpt_Res, nScr_Esc, nCmd_Esc )
+         nOpt_Esc := iif( "{SCRIPT}" $ cOpt_Res, hbmk[ _HBMK_nScr_Esc ], hbmk[ _HBMK_nCmd_Esc ] )
 
          cOpt_Res := StrTran( cOpt_Res, "{FR}"  , GetEnv( "HB_USER_RESFLAGS" ) + " " + ArrayToList( hbmk[ _HBMK_aOPTRES ] ) )
          cOpt_Res := StrTran( cOpt_Res, "{DI}"  , FN_Escape( l_cHB_INC_INSTALL, nOpt_Esc ) )
@@ -4693,7 +4696,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
                   /* Compiling */
 
-                  nOpt_Esc := iif( "{SCRIPT}" $ cOpt_CompC, nScr_Esc, nCmd_Esc )
+                  nOpt_Esc := iif( "{SCRIPT}" $ cOpt_CompC, hbmk[ _HBMK_nScr_Esc ], hbmk[ _HBMK_nCmd_Esc ] )
 
                   /* Order is significant */
                   cOpt_CompC := StrTran( cOpt_CompC, "{FC}"  , iif( hbmk[ _HBMK_lBLDFLGC ], hb_Version( HB_VERSION_FLAG_C ) + " ", "" ) +;
@@ -4885,7 +4888,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
                /* Linking */
 
-               nOpt_Esc := iif( "{SCRIPT}" $ cOpt_Link, nScr_Esc, nCmd_Esc )
+               nOpt_Esc := iif( "{SCRIPT}" $ cOpt_Link, hbmk[ _HBMK_nScr_Esc ], hbmk[ _HBMK_nCmd_Esc ] )
 
                /* Order is significant */
                cOpt_Link := StrTran( cOpt_Link, "{FL}"  , iif( hbmk[ _HBMK_lBLDFLGL ], hb_Version( HB_VERSION_FLAG_LINKER ) + " ", "" ) +;
@@ -4978,7 +4981,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
                /* Lib creation (dynamic) */
 
-               nOpt_Esc := iif( "{SCRIPT}" $ cOpt_Dyn, nScr_Esc, nCmd_Esc )
+               nOpt_Esc := iif( "{SCRIPT}" $ cOpt_Dyn, hbmk[ _HBMK_nScr_Esc ], hbmk[ _HBMK_nCmd_Esc ] )
 
                /* Order is significant */
                cOpt_Dyn := StrTran( cOpt_Dyn, "{FD}"  , GetEnv( "HB_USER_DFLAGS" ) + " " + ArrayToList( hbmk[ _HBMK_aOPTD ] ) )
@@ -5045,7 +5048,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
                /* Lib creation (static) */
 
-               nOpt_Esc := iif( "{SCRIPT}" $ cOpt_Lib, nScr_Esc, nCmd_Esc )
+               nOpt_Esc := iif( "{SCRIPT}" $ cOpt_Lib, hbmk[ _HBMK_nScr_Esc ], hbmk[ _HBMK_nCmd_Esc ] )
 
                /* Order is significant */
                cOpt_Lib := StrTran( cOpt_Lib, "{FA}"  , GetEnv( "HB_USER_AFLAGS" ) + " " + ArrayToList( hbmk[ _HBMK_aOPTA ] ) )
@@ -5424,7 +5427,7 @@ STATIC FUNCTION SetupForGT( cGT_New, /* @ */ cGT, /* @ */ lGUI )
 #define _HEADSTATE_lAnyNewer    2
 #define _HEADSTATE_MAX_         2
 
-STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, tTimeParent, lIncTry, lCMode, cBin_CompC, nEsc, /* @ */ headstate, nNestingLevel )
+STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, tTimeParent, lIncTry, lCMode, cBin_CompC, /* @ */ headstate, nNestingLevel )
    LOCAL cFile
    LOCAL fhnd
    LOCAL nPos
@@ -5572,7 +5575,7 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, tTimeParent, lInc
       hb_processRun( cBin_CompC + " -MM" +;
                      " " + iif( hbmk[ _HBMK_lBLDFLGC ], hb_Version( HB_VERSION_FLAG_C ) + " ", "" ) +;
                            GetEnv( "HB_USER_CFLAGS" ) + " " + ArrayToList( hbmk[ _HBMK_aOPTC ] ) +;
-                     " " + FN_Escape( hbmk[ _HBMK_cHB_INC_INSTALL ], nEsc ) +;
+                     " " + FN_Escape( hbmk[ _HBMK_cHB_INC_INSTALL ], hbmk[ _HBMK_nCmd_Esc ] ) +;
                      " " + cFileName,, @tmp )
 
       tmp := StrTran( tmp, Chr( 13 ) )
@@ -5631,7 +5634,7 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, tTimeParent, lInc
          ENDIF
 
          IF cHeader != NIL .AND. ;
-            FindNewerHeaders( hbmk, cHeader, iif( lCMode, FN_DirGet( cFileName ), cParentDir ), tTimeParent, lIncTry, lCMode, cBin_CompC, nEsc, @headstate, nNestingLevel + 1 )
+            FindNewerHeaders( hbmk, cHeader, iif( lCMode, FN_DirGet( cFileName ), cParentDir ), tTimeParent, lIncTry, lCMode, cBin_CompC, @headstate, nNestingLevel + 1 )
             headstate[ _HEADSTATE_lAnyNewer ] := .T.
             /* Let it continue if we want to scan for header locations */
             IF ! lIncTry
@@ -5921,11 +5924,13 @@ FUNCTION hbmk2_DirDelPathSep( ... )    ; RETURN DirDelPathSep( ... )
 FUNCTION hbmk2_DirBuild( ... )         ; RETURN DirBuild( ... )
 FUNCTION hbmk2_DirUnbuild( ... )       ; RETURN DirUnbuild( ... )
 FUNCTION hbmk2_FN_DirGet( ... )        ; RETURN FN_DirGet( ... )
+FUNCTION hbmk2_FN_DirExtSet( ... )     ; RETURN FN_DirExtSet( ... )
 FUNCTION hbmk2_FN_NameGet( ... )       ; RETURN FN_NameGet( ... )
 FUNCTION hbmk2_FN_NameExtGet( ... )    ; RETURN FN_NameExtGet( ... )
 FUNCTION hbmk2_FN_ExtGet( ... )        ; RETURN FN_ExtGet( ... )
 FUNCTION hbmk2_FN_ExtDef( ... )        ; RETURN FN_ExtDef( ... )
 FUNCTION hbmk2_FN_ExtSet( ... )        ; RETURN FN_ExtSet( ... )
+FUNCTION hbmk2_FN_Escape( ... )        ; RETURN FN_Escape( ... )
 FUNCTION hbmk2_StrStripQuote( ... )    ; RETURN StrStripQuote( ... )
 
 FUNCTION hbmk2_PathSepToTarget( ctx, ... )
@@ -5965,23 +5970,28 @@ STATIC FUNCTION PlugIn_Execute( hbmk, cState )
    IF ! Empty( hbmk[ _HBMK_hPLUGINHRB ] )
 
       hContext := {;
-         "cSTATE"     => cState ,;
-         "params"     => hbmk[ _HBMK_aPLUGINPars ] ,;
-         "vars"       => hbmk[ _HBMK_hPLUGINVars ] ,;
-         "cPLAT"      => hbmk[ _HBMK_cPLAT ]       ,;
-         "cCOMP"      => hbmk[ _HBMK_cCOMP ]       ,;
-         "cCPU"       => hbmk[ _HBMK_cCPU ]        ,;
-         "cBUILD"     => hbmk[ _HBMK_cBUILD ]      ,;
-         "lREBUILD"   => hbmk[ _HBMK_lREBUILD ]    ,;
-         "lCLEAN"     => hbmk[ _HBMK_lCLEAN ]      ,;
-         "lTRACE"     => hbmk[ _HBMK_lTRACE ]      ,;
-         "lINC"       => hbmk[ _HBMK_lINC ]        ,;
-         "cCCPATH"    => hbmk[ _HBMK_cCCPATH ]     ,;
-         "cCCPREFIX"  => hbmk[ _HBMK_cCCPREFIX ]   ,;
-         "cCCPOSTFIX" => hbmk[ _HBMK_cCCPOSTFIX ]  ,;
-         "cCCEXT"     => hbmk[ _HBMK_cCCEXT ]      ,;
-         "cWorkDir"   => hbmk[ _HBMK_cWorkDir ]    ,;
-         s_cSecToken  => hbmk                      }
+         "cSTATE"       => cState ,;
+         "params"       => hbmk[ _HBMK_aPLUGINPars ]  ,;
+         "vars"         => hbmk[ _HBMK_hPLUGINVars ]  ,;
+         "cPLAT"        => hbmk[ _HBMK_cPLAT ]        ,;
+         "cCOMP"        => hbmk[ _HBMK_cCOMP ]        ,;
+         "cCPU"         => hbmk[ _HBMK_cCPU ]         ,;
+         "cBUILD"       => hbmk[ _HBMK_cBUILD ]       ,;
+         "lREBUILD"     => hbmk[ _HBMK_lREBUILD ]     ,;
+         "lCLEAN"       => hbmk[ _HBMK_lCLEAN ]       ,;
+         "lTRACE"       => hbmk[ _HBMK_lTRACE ]       ,;
+         "lQUIET"       => hbmk[ _HBMK_lQuiet ]       ,;
+         "lDONTEXEC"    => hbmk[ _HBMK_lDONTEXEC ]    ,;
+         "lIGNOREERROR" => hbmk[ _HBMK_lIGNOREERROR ] ,;
+         "lINC"         => hbmk[ _HBMK_lINC ]         ,;
+         "cCCPATH"      => hbmk[ _HBMK_cCCPATH ]      ,;
+         "cCCPREFIX"    => hbmk[ _HBMK_cCCPREFIX ]    ,;
+         "cCCPOSTFIX"   => hbmk[ _HBMK_cCCPOSTFIX ]   ,;
+         "cCCEXT"       => hbmk[ _HBMK_cCCEXT ]       ,;
+         "nCmd_Esc"     => hbmk[ _HBMK_nCmd_Esc ]     ,;
+         "nScr_Esc"     => hbmk[ _HBMK_nScr_Esc ]     ,;
+         "cWorkDir"     => hbmk[ _HBMK_cWorkDir ]     ,;
+         s_cSecToken    => hbmk                       }
 
       FOR EACH cHRB IN hbmk[ _HBMK_hPLUGINHRB ]
 
@@ -8162,7 +8172,7 @@ STATIC FUNCTION GenHBL( hbmk, aFiles, cFileOut, lEmpty )
 
    RETURN lRetVal
 
-STATIC FUNCTION win_implib_command( hbmk, cCommand, nCmd_Esc, cSourceDLL, cTargetLib, cFlags )
+STATIC FUNCTION win_implib_command( hbmk, cCommand, cSourceDLL, cTargetLib, cFlags )
 
    IF ! hb_FileExists( PathSepToSelf( cSourceDLL ) )
       IF hbmk[ _HBMK_lInfo ]
@@ -8174,8 +8184,8 @@ STATIC FUNCTION win_implib_command( hbmk, cCommand, nCmd_Esc, cSourceDLL, cTarge
    DEFAULT cFlags TO ""
 
    cCommand := StrTran( cCommand, "{FI}", cFlags )
-   cCommand := StrTran( cCommand, "{ID}", FN_Escape( cSourceDLL, nCmd_Esc ) )
-   cCommand := StrTran( cCommand, "{OL}", FN_Escape( cTargetLib, nCmd_Esc ) )
+   cCommand := StrTran( cCommand, "{ID}", FN_Escape( cSourceDLL, hbmk[ _HBMK_nCmd_Esc ] ) )
+   cCommand := StrTran( cCommand, "{OL}", FN_Escape( cTargetLib, hbmk[ _HBMK_nCmd_Esc ] ) )
 
    IF hbmk[ _HBMK_lTRACE ]
       IF ! hbmk[ _HBMK_lQuiet ]
@@ -8250,7 +8260,7 @@ STATIC FUNCTION win_implib_omf( hbmk, cSourceDLL, cTargetLib )
 
    RETURN _HBMK_IMPLIB_NOTFOUND
 
-STATIC FUNCTION win_implib_def( hbmk, cCommand, nCmd_Esc, cSourceDLL, cTargetLib, cFlags )
+STATIC FUNCTION win_implib_def( hbmk, cCommand, cSourceDLL, cTargetLib, cFlags )
    LOCAL cSourceDef
 
    /* Try to find .def file with the same name */
@@ -8258,7 +8268,7 @@ STATIC FUNCTION win_implib_def( hbmk, cCommand, nCmd_Esc, cSourceDLL, cTargetLib
       IF ! hbmk[ _HBMK_lQuiet ]
          hbmk_OutStd( hbmk, I_( "Found .def file with the same name, falling back to using it instead of the .dll." ) )
       ENDIF
-      RETURN win_implib_command( hbmk, cCommand, nCmd_Esc, cSourceDef, cTargetLib, cFlags )
+      RETURN win_implib_command( hbmk, cCommand, cSourceDef, cTargetLib, cFlags )
    ENDIF
 
    RETURN _HBMK_IMPLIB_NOTFOUND
@@ -8294,45 +8304,45 @@ STATIC FUNCTION win_implib_copy( hbmk, cSourceDLL, cTargetLib )
          ordinary .dlls, like with every other compiler.
          [vszakats] */
 
-STATIC FUNCTION win_implib_command_gcc( hbmk, cCommand, nCmd_Esc, cSourceDLL, cTargetLib, cFlags )
+STATIC FUNCTION win_implib_command_gcc( hbmk, cCommand, cSourceDLL, cTargetLib, cFlags )
    LOCAL nResult
 
    IF ( nResult := win_implib_coff( hbmk, cSourceDLL, cTargetLib ) ) != _HBMK_IMPLIB_NOTFOUND
       RETURN nResult
    ENDIF
 
-   IF ( nResult := win_implib_def( hbmk, cCommand, nCmd_Esc, cSourceDLL, cTargetLib, cFlags ) ) != _HBMK_IMPLIB_NOTFOUND
+   IF ( nResult := win_implib_def( hbmk, cCommand, cSourceDLL, cTargetLib, cFlags ) ) != _HBMK_IMPLIB_NOTFOUND
       RETURN nResult
    ENDIF
 
    RETURN win_implib_copy( hbmk, cSourceDLL, cTargetLib )
 
-STATIC FUNCTION win_implib_command_bcc( hbmk, cCommand, nCmd_Esc, cSourceDLL, cTargetLib, cFlags )
+STATIC FUNCTION win_implib_command_bcc( hbmk, cCommand, cSourceDLL, cTargetLib, cFlags )
    LOCAL nResult
 
    IF ( nResult := win_implib_omf( hbmk, cSourceDLL, cTargetLib ) ) != _HBMK_IMPLIB_NOTFOUND
       RETURN nResult
    ENDIF
 
-   IF ( nResult := win_implib_def( hbmk, cCommand, nCmd_Esc, cSourceDLL, cTargetLib, cFlags ) ) != _HBMK_IMPLIB_NOTFOUND
+   IF ( nResult := win_implib_def( hbmk, cCommand, cSourceDLL, cTargetLib, cFlags ) ) != _HBMK_IMPLIB_NOTFOUND
       RETURN nResult
    ENDIF
 
-   RETURN win_implib_command( hbmk, cCommand, nCmd_Esc, cSourceDLL, cTargetLib, cFlags )
+   RETURN win_implib_command( hbmk, cCommand, cSourceDLL, cTargetLib, cFlags )
 
-STATIC FUNCTION win_implib_command_watcom( hbmk, cCommand, nCmd_Esc, cSourceDLL, cTargetLib, cFlags )
-   RETURN win_implib_command( hbmk, cCommand, nCmd_Esc, cSourceDLL, cTargetLib, cFlags )
+STATIC FUNCTION win_implib_command_watcom( hbmk, cCommand, cSourceDLL, cTargetLib, cFlags )
+   RETURN win_implib_command( hbmk, cCommand, cSourceDLL, cTargetLib, cFlags )
 
-STATIC FUNCTION win_implib_command_pocc( hbmk, cCommand, nCmd_Esc, cSourceDLL, cTargetLib, cFlags )
+STATIC FUNCTION win_implib_command_pocc( hbmk, cCommand, cSourceDLL, cTargetLib, cFlags )
    LOCAL nResult
 
    IF ( nResult := win_implib_coff( hbmk, cSourceDLL, cTargetLib ) ) != _HBMK_IMPLIB_NOTFOUND
       RETURN nResult
    ENDIF
 
-   RETURN win_implib_command( hbmk, cCommand, nCmd_Esc, cSourceDLL, cTargetLib, cFlags )
+   RETURN win_implib_command( hbmk, cCommand, cSourceDLL, cTargetLib, cFlags )
 
-STATIC FUNCTION win_implib_command_msvc( hbmk, cCommand, nCmd_Esc, cSourceDLL, cTargetLib, cFlags )
+STATIC FUNCTION win_implib_command_msvc( hbmk, cCommand, cSourceDLL, cTargetLib, cFlags )
    LOCAL nResult
 
    LOCAL cExports
@@ -8350,7 +8360,7 @@ STATIC FUNCTION win_implib_command_msvc( hbmk, cCommand, nCmd_Esc, cSourceDLL, c
       RETURN nResult
    ENDIF
 
-   IF ( nResult := win_implib_def( hbmk, cCommand, nCmd_Esc, cSourceDLL, cTargetLib, cFlags ) ) != _HBMK_IMPLIB_NOTFOUND
+   IF ( nResult := win_implib_def( hbmk, cCommand, cSourceDLL, cTargetLib, cFlags ) ) != _HBMK_IMPLIB_NOTFOUND
       RETURN nResult
    ENDIF
 
@@ -8362,7 +8372,7 @@ STATIC FUNCTION win_implib_command_msvc( hbmk, cCommand, nCmd_Esc, cSourceDLL, c
    ENDIF
 
    cCommandDump := "dumpbin.exe -exports {ID}"
-   cCommandDump := StrTran( cCommandDump, "{ID}", FN_Escape( cSourceDLL, nCmd_Esc ) )
+   cCommandDump := StrTran( cCommandDump, "{ID}", FN_Escape( cSourceDLL, hbmk[ _HBMK_nCmd_Esc ] ) )
 
    IF hbmk[ _HBMK_lTRACE ]
       IF ! hbmk[ _HBMK_lQuiet ]
@@ -8399,7 +8409,7 @@ STATIC FUNCTION win_implib_command_msvc( hbmk, cCommand, nCmd_Esc, cSourceDLL, c
          FWrite( fhnd, cFuncList )
          FClose( fhnd )
 
-         nResult := win_implib_command( hbmk, cCommand, nCmd_Esc, cSourceDef, cTargetLib, cFlags )
+         nResult := win_implib_command( hbmk, cCommand, cSourceDef, cTargetLib, cFlags )
 
          FErase( cSourceDef )
       ENDIF
