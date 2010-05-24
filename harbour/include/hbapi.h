@@ -699,7 +699,7 @@ extern HB_EXPORT void   hb_retnlllen( HB_LONGLONG lNumber, int iWidth ); /* retu
 
 #define HB_IS_VALID_INDEX( idx, max )  ( (idx) > 0 && ( HB_ULONG ) (idx) <= (max) )
 
-#ifdef HB_API_MACROS
+#ifdef _HB_API_MACROS_
 
 #define hb_pcount()                          ( ( int ) ( hb_stackBaseItem() )->item.asSymbol.paramcnt )
 
@@ -731,7 +731,7 @@ extern HB_EXPORT void   hb_retnlllen( HB_LONGLONG lNumber, int iWidth ); /* retu
 #define hb_retptr( pointer )                 hb_itemPutPtr( hb_stackReturnItem(), pointer )
 #define hb_retptrGC( pointer )               hb_itemPutPtrGC( hb_stackReturnItem(), pointer )
 
-#endif /* HB_API_MACROS */
+#endif /* _HB_API_MACROS_ */
 
 
 extern HB_EXPORT int    hb_stor( int iParam ); /* stores a NIL on a variable by reference */
@@ -1047,9 +1047,9 @@ extern void       hb_memvarRestoreFromArray( PHB_ITEM pArray );
 extern void       hb_memvarValueIncRef( PHB_ITEM pValue ); /* increase the reference count of a global value */
 extern void       hb_memvarValueDecRef( PHB_ITEM pValue ); /* decrease the reference count of a global value */
 extern PHB_ITEM   hb_memvarGetItem( PHB_SYMB pMemvarSymb );
-#if defined( HB_API_MACROS )
+#if defined( _HB_API_MACROS_ )
 #  define hb_memvarValueIncRef( p )       hb_xRefInc( p )
-#endif /* HB_API_MACROS */
+#endif /* _HB_API_MACROS_ */
 #endif /* _HB_API_INTERNAL_ */
 
 /* console I/O subsystem */

@@ -87,13 +87,13 @@
 #  ifdef HB_USE_TLS
 
       /* compiler has native support for TLS */
-#     if !defined( HB_STACK_MACROS )
+#     if !defined( _HB_STACK_MACROS_ )
 #        if defined( __BORLANDC__ )
             static PHB_STACK HB_TLS_ATTR hb_stack_ptr;
 #        else
             static HB_TLS_ATTR PHB_STACK hb_stack_ptr;
 #        endif
-#     elif !defined( HB_STACK_LOCAL_MACROS )
+#     elif !defined( _HB_STACK_LOCAL_MACROS_ )
 #        if defined( __BORLANDC__ )
             PHB_STACK HB_TLS_ATTR hb_stack_ptr = NULL;
 #        else
@@ -110,10 +110,10 @@
 #  else
 
       /* compiler has no native TLS support, we have to implement it ourselves */
-#     if !defined( HB_STACK_MACROS )
+#     if !defined( _HB_STACK_MACROS_ )
          static HB_TLS_KEY hb_stack_key;
 #        define hb_stack_ptr     ( ( PHB_STACK ) hb_tls_get( hb_stack_key ) )
-#     elif !defined( HB_STACK_LOCAL_MACROS )
+#     elif !defined( _HB_STACK_LOCAL_MACROS_ )
          HB_TLS_KEY hb_stack_key;
 #     endif
       static volatile HB_BOOL s_fInited = HB_FALSE;
@@ -138,9 +138,9 @@
 #else
 
    /* no MT mode */
-#  if !defined( HB_STACK_MACROS )
+#  if !defined( _HB_STACK_MACROS_ )
       static HB_STACK hb_stack;
-#  elif !defined( HB_STACK_LOCAL_MACROS )
+#  elif !defined( _HB_STACK_LOCAL_MACROS_ )
       HB_STACK hb_stack;
 #  endif
 

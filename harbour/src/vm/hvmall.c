@@ -58,7 +58,7 @@
 
 #define HB_NO_FLATTEN
 
-#define HB_STACK_LOCAL_MACROS
+#define _HB_STACK_LOCAL_MACROS_
 #define HB_STACK_PRELOAD
 
 #define INCL_BASE
@@ -84,7 +84,7 @@
 
 #include "hbstack.h"
 
-#if defined( HB_STACK_MACROS ) && defined( HB_STACK_LOCAL_MACROS )
+#if defined( _HB_STACK_MACROS_ ) && defined( _HB_STACK_LOCAL_MACROS_ )
 #  if defined( HB_MT_VM )
 #     if defined( HB_USE_TLS )
 #        if defined( __BORLANDC__ )

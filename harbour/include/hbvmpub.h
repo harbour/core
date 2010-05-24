@@ -157,8 +157,8 @@ struct _HB_SYMB;
 
 #else /* !_HB_API_INTERNAL_ */
 
-#  undef HB_API_MACROS
-#  undef HB_STACK_MACROS
+#  undef _HB_API_MACROS_
+#  undef _HB_STACK_MACROS_
 
 /* This is ugly trick but works without speed overhead */
 #  define HB_ITEM_TYPERAW( p )   ( * ( HB_TYPE * ) ( p ) )

@@ -59,8 +59,8 @@
  * which interacts with alignment are used. [druzus]
  */
 
-#undef HB_API_MACROS
-#undef HB_STACK_MACROS
+#undef _HB_API_MACROS_
+#undef _HB_STACK_MACROS_
 
 #if !defined( _HB_API_INTERNAL_ )
 #  define _HB_API_INTERNAL_

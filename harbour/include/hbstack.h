@@ -188,10 +188,10 @@ typedef struct
 #endif
 } HB_STACK, * PHB_STACK;
 
-#if defined( HB_STACK_MACROS )
+#if defined( _HB_STACK_MACROS_ )
 #  if defined( HB_MT_VM )
 #     if defined( HB_USE_TLS )
-#        if !defined( HB_STACK_LOCAL_MACROS )
+#        if !defined( _HB_STACK_LOCAL_MACROS_ )
 #           if defined( __BORLANDC__ )
                extern PHB_STACK HB_TLS_ATTR hb_stack_ptr;
 #           else
@@ -199,13 +199,13 @@ typedef struct
 #           endif
 #        endif
 #     else
-#        if !defined( HB_STACK_LOCAL_MACROS )
+#        if !defined( _HB_STACK_LOCAL_MACROS_ )
             extern HB_TLS_KEY hb_stack_key;
 #        endif
 #        if defined( __BORLANDC__ ) && defined( HB_STACK_PRELOAD ) && \
             !defined( HB_OS_WIN_64 ) && !defined( HB_OS_WIN_CE ) && \
             defined( HB_ASM_TLS )
-#           if defined( HB_STACK_LOCAL_MACROS )
+#           if defined( _HB_STACK_LOCAL_MACROS_ )
                static HB_TLS_KEY hb_stack_key;
 #           endif
             static __inline void * hb_stack_ptr_from_tls( void )
@@ -222,7 +222,7 @@ typedef struct
 #           define hb_stack_ptr_get()    hb_stack_ptr_from_tls()
 #        elif defined( __MINGW32__ ) && defined( HB_ASM_TLS ) && \
               !defined( HB_OS_WIN_64 ) && !defined( HB_OS_WIN_CE )
-#           if defined( HB_STACK_LOCAL_MACROS )
+#           if defined( _HB_STACK_LOCAL_MACROS_ )
                static HB_TLS_KEY hb_stack_key;
 #           endif
             static __inline__  __attribute__ ((pure, malloc)) void * hb_stack_ptr_from_tls( void )
@@ -257,7 +257,7 @@ typedef struct
 #        define hb_stack_ref()      ( hb_stack_ptr )
 #     endif
 #  else
-#     if !defined( HB_STACK_LOCAL_MACROS )
+#     if !defined( _HB_STACK_LOCAL_MACROS_ )
          extern HB_STACK hb_stack;
 #     endif
 #     define hb_stack_ref()         ( &hb_stack )
@@ -267,7 +267,7 @@ typedef struct
 #  if defined( HB_STACK_PRELOAD )
 #     define HB_STACK_TLS_PRELOAD
 #     undef  HB_STACK_PRELOAD
-#  elif defined( HB_STACK_MACROS )
+#  elif defined( _HB_STACK_MACROS_ )
 #     define HB_STACK_TLS_PRELOAD
 #  endif
 #endif
@@ -376,7 +376,7 @@ extern void        hb_stackUpdateAllocator( void *, PHB_ALLOCUPDT_FUNC, int );
 #endif
 
 
-#if defined( HB_STACK_MACROS )
+#if defined( _HB_STACK_MACROS_ )
 
 #define hb_stackItemFromTop( n )    ( * ( hb_stack.pPos + ( int ) ( n ) ) )
 #define hb_stackItemFromBase( n )   ( * ( hb_stack.pBase + ( int ) ( n ) + 1 ) )

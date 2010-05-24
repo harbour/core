@@ -53,7 +53,7 @@
 #ifndef HB_TYPES_H_
 #define HB_TYPES_H_
 
-#undef HB_API_MACROS
+#undef _HB_API_MACROS_
 
 #include "hbapi.h"
 

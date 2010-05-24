@@ -58,12 +58,12 @@
  * it was compiled and only if exactly the same C compiler switches
  * which interacts with alignment are used. [druzus]
  */
-#if !defined( HB_NO_DEFAULT_API_MACROS ) && !defined( HB_API_MACROS )
-#  define HB_API_MACROS
+#if !defined( HB_NO_DEFAULT_API_MACROS ) && !defined( _HB_API_MACROS_ )
+#  define _HB_API_MACROS_
 #endif
 
-#if !defined( HB_NO_DEFAULT_STACK_MACROS ) && !defined( HB_STACK_MACROS )
-#  define HB_STACK_MACROS
+#if !defined( HB_NO_DEFAULT_STACK_MACROS ) && !defined( _HB_STACK_MACROS_ )
+#  define _HB_STACK_MACROS_
 #endif
 
 #if !defined( _HB_API_INTERNAL_ )
