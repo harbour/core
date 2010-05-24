@@ -5891,7 +5891,7 @@ STATIC PROCEDURE PlugIn_Load( hbmk )
       hb_FNameSplit( cFileName, NIL, NIL, @cExt )
 
       IF Lower( cExt ) == ".prg"
-         cFile := hb_compileBuf( "", "-n2", "-w0", "-es2", "-q0", cFileName )
+         cFile := hb_compileBuf( "", "-n2", "-w3", "-es2", "-q0", cFileName )
       ELSE
          cFile := hb_MemoRead( cFileName )
       ENDIF

@@ -9,7 +9,7 @@
  * See COPYING for licensing terms.
  */
 
-FUNCTION hbmk2_plugin_moc( hbmk2 )
+FUNCTION hbmk2_plugin_tpl( hbmk2 )
    LOCAL cMOC_BIN
 
    LOCAL tmp

@@ -17,14 +17,19 @@ FUNCTION hbmk2_plugin_moc( hbmk2 )
 
    LOCAL cMOC_BIN
    LOCAL aMOC
+   LOCAL aMOC_Dst
 
    LOCAL cCommand
    LOCAL cDst
    LOCAL nError
-   LOCAL tmp
+   LOCAL tmp, tmp1, tmp2
+
+   LOCAL lBuildIt
 
    SWITCH hbmk2[ "cSTATE" ]
    CASE "pre_all"
+
+      aMOC_Dst := {}
 
       /* Gather input parameters */
 
@@ -76,33 +81,55 @@ FUNCTION hbmk2_plugin_moc( hbmk2 )
 
             cDst := hbmk2_FN_DirExtSet( "moc_" + tmp, hbmk2[ "cWorkDir" ], ".cpp" )
 
-            cCommand := cMOC_BIN +;
-                        " " + hbmk2_FN_Escape( hbmk2_PathSepToTarget( hbmk2, tmp ), hbmk2[ "nCmd_Esc" ] ) +;
-                        " -o " + hbmk2_FN_Escape( hbmk2_PathSepToTarget( hbmk2, cDst ), hbmk2[ "nCmd_Esc" ] )
-
-            IF hbmk2[ "lTRACE" ]
-               IF ! hbmk2[ "lQUIET" ]
-                  hbmk2_OutStd( hbmk2, I_( "'moc' command:" ) )
-               ENDIF
-               OutStd( cCommand + _OUT_EOL )
+            IF hbmk2[ "lINC" ] .AND. ! hbmk2[ "lREBUILD" ]
+               lBuildIt := ! hb_FGetDateTime( cDst, @tmp2 ) .OR. ;
+                           ! hb_FGetDateTime( tmp, @tmp1 ) .OR. ;
+                           tmp1 > tmp2
+            ELSE
+               lBuildIt := .T.
             ENDIF
 
-            IF ! hbmk2[ "lDONTEXEC" ] .AND. ( nError := hb_processRun( cCommand ) ) != 0
-               hbmk2_OutErr( hbmk2, hb_StrFormat( I_( "Error: Running 'moc' executable. %1$s" ), hb_ntos( nError ) ) )
-               IF ! hbmk2[ "lQUIET" ]
-                  OutErr( cCommand + _OUT_EOL )
+            IF lBuildIt
+               cCommand := cMOC_BIN +;
+                           " " + hbmk2_FN_Escape( hbmk2_PathSepToTarget( hbmk2, tmp ), hbmk2[ "nCmd_Esc" ] ) +;
+                           " -o " + hbmk2_FN_Escape( hbmk2_PathSepToTarget( hbmk2, cDst ), hbmk2[ "nCmd_Esc" ] )
+
+               IF hbmk2[ "lTRACE" ]
+                  IF ! hbmk2[ "lQUIET" ]
+                     hbmk2_OutStd( hbmk2, I_( "'moc' command:" ) )
+                  ENDIF
+                  OutStd( cCommand + _OUT_EOL )
                ENDIF
-               IF ! hbmk2[ "lIGNOREERROR" ]
-                  cRetVal := "error"
-                  EXIT
+
+               IF ! hbmk2[ "lDONTEXEC" ] .AND. ( nError := hb_processRun( cCommand ) ) != 0
+                  hbmk2_OutErr( hbmk2, hb_StrFormat( I_( "Error: Running 'moc' executable. %1$s" ), hb_ntos( nError ) ) )
+                  IF ! hbmk2[ "lQUIET" ]
+                     OutErr( cCommand + _OUT_EOL )
+                  ENDIF
+                  IF ! hbmk2[ "lIGNOREERROR" ]
+                     cRetVal := "error"
+                     EXIT
+                  ENDIF
+               ELSE
+                  hbmk2_AddInput_CPP( hbmk2, cDst )
+                  AAdd( aMOC_Dst, cDst )
                ENDIF
             ELSE
                hbmk2_AddInput_CPP( hbmk2, cDst )
+               AAdd( aMOC_Dst, cDst )
             ENDIF
          NEXT
       ENDIF
 
+      hbmk2[ "vars" ][ "aMOC_Dst" ] := aMOC_Dst
+
       EXIT
+
+   CASE "post_all"
+
+      IF ! hbmk2[ "lINC" ] .OR. hbmk2[ "lCLEAN" ]
+         AEval( hbmk2[ "vars" ][ "aMOC_Dst" ], {| tmp | FErase( tmp ) } )
+      ENDIF
 
    ENDSWITCH
 
