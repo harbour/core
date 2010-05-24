@@ -85,15 +85,6 @@
 /* TODO: Support debug/release modes. Some default setting can be set
          accordingly, and user can use it to further tweak settings. */
 /* TODO: Support unicode/non-unicode build modes. */
-/* TODO: Create temporary .c files with mangled names, to avoid
-         incidentally overwriting existing .c file with the same name.
-         Problems to solve: -hbcc compatibility (the feature has to be
-         disabled when this switch is used). Collision with -o harbour
-         option isn't a problem, since we're overriding it already for
-         hbmk2, but we will need to deal with "/" prefixed variant. Since
-         we need to use -o Harbour switch, it will be a problem also when
-         user tries to use -p option, .ppo files will be generated in temp
-         dir. */
 /* TODO: Further clean hbmk context var usage (hbmk2 scope, project scope,
          adding rest of variables). */
 /* TODO: Add a way to fallback to stop if required headers couldn't be found.
@@ -381,6 +372,8 @@ REQUEST hbmk_KEYW
 #define hb_DirCreate( d )       MakeDir( d )
 #define hb_DirDelete( d )       DirRemove( d )
 
+/* NOTE: Security token to protect against plugins accessing our
+         internal structures referenced from context variable */
 STATIC s_cSecToken := NIL
 
 PROCEDURE Main( ... )
@@ -3863,25 +3856,6 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       ENDIF
    ENDIF
 
-   /* Header paths */
-
-   IF ! lSkipBuild .AND. ! lStopAfterInit
-      FOR EACH tmp IN hbmk[ _HBMK_aINCPATH ]
-         IF ! Empty( tmp )
-            /* Different escaping for internal and external compiler. */
-            IF hbmk[ _HBMK_nHBMODE ] == _HBMODE_NATIVE
-               AAdd( hbmk[ _HBMK_aOPTPRG ], "-i" + tmp )
-            ELSE
-               AAdd( hbmk[ _HBMK_aOPTPRG ], "-i" + FN_Escape( tmp, hbmk[ _HBMK_nCmd_Esc ] ) )
-            ENDIF
-            IF ! lStopAfterHarbour
-               AAdd( hbmk[ _HBMK_aOPTC ], StrTran( cOptIncMask, "{DI}", FN_Escape( tmp, hbmk[ _HBMK_nCmd_Esc ] ) ) )
-               AAdd( hbmk[ _HBMK_aOPTRES ], StrTran( cOptIncMask, "{DI}", FN_Escape( tmp, hbmk[ _HBMK_nCmd_Esc ] ) ) )
-            ENDIF
-         ENDIF
-      NEXT
-   ENDIF
-
    /* Do header detection and create incremental file list for .c files */
 
    IF ! lSkipBuild .AND. ! lStopAfterInit .AND. ! lStopAfterHarbour
@@ -3982,6 +3956,25 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       ENDIF
    ELSE
       l_aPRG_TODO := hbmk[ _HBMK_aPRG ]
+   ENDIF
+
+   /* Header paths */
+
+   IF ! lSkipBuild .AND. ! lStopAfterInit
+      FOR EACH tmp IN hbmk[ _HBMK_aINCPATH ]
+         IF ! Empty( tmp )
+            /* Different escaping for internal and external compiler. */
+            IF hbmk[ _HBMK_nHBMODE ] == _HBMODE_NATIVE
+               AAdd( hbmk[ _HBMK_aOPTPRG ], "-i" + tmp )
+            ELSE
+               AAdd( hbmk[ _HBMK_aOPTPRG ], "-i" + FN_Escape( tmp, hbmk[ _HBMK_nCmd_Esc ] ) )
+            ENDIF
+            IF ! lStopAfterHarbour
+               AAdd( hbmk[ _HBMK_aOPTC ], StrTran( cOptIncMask, "{DI}", FN_Escape( tmp, hbmk[ _HBMK_nCmd_Esc ] ) ) )
+               AAdd( hbmk[ _HBMK_aOPTRES ], StrTran( cOptIncMask, "{DI}", FN_Escape( tmp, hbmk[ _HBMK_nCmd_Esc ] ) ) )
+            ENDIF
+         ENDIF
+      NEXT
    ENDIF
 
    /* Harbour compilation */
