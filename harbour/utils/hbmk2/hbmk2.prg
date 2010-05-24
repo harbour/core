@@ -751,7 +751,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    LOCAL nStart := Seconds()
 
    LOCAL lDoSupportDetection
-   LOCAL lDeleteWorkDir
+   LOCAL lDeleteWorkDir := .F.
 
    hbmk[ _HBMK_cWorkDir ] := NIL
 
