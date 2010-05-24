@@ -5957,14 +5957,15 @@ FUNCTION hbmk2_AddInput_RC( ctx, cFileName )
 
 STATIC FUNCTION PlugIn_Execute( hbmk, cState )
    LOCAL cHRB
-   LOCAL hVar
+   LOCAL hContext
    LOCAL xResult
 
    LOCAL oError
 
    IF ! Empty( hbmk[ _HBMK_hPLUGINHRB ] )
 
-      hVar := {;
+      hContext := {;
+         "cSTATE"     => cState ,;
          "params"     => hbmk[ _HBMK_aPLUGINPars ] ,;
          "vars"       => hbmk[ _HBMK_hPLUGINVars ] ,;
          "cPLAT"      => hbmk[ _HBMK_cPLAT ]       ,;
@@ -5985,7 +5986,7 @@ STATIC FUNCTION PlugIn_Execute( hbmk, cState )
       FOR EACH cHRB IN hbmk[ _HBMK_hPLUGINHRB ]
 
          BEGIN SEQUENCE WITH {| oError | oError:cargo := { ProcName( 1 ), ProcLine( 1 ) }, Break( oError ) }
-            xResult := hb_hrbRun( HB_HRB_BIND_FORCELOCAL, cHRB, cState, hVar )
+            xResult := hb_hrbRun( HB_HRB_BIND_FORCELOCAL, cHRB, hContext )
             IF ! Empty( xResult )
                IF hbmk[ _HBMK_lInfo ]
                   hbmk_OutStd( hbmk, hb_StrFormat( I_( "Plugin %1$s returned: '%2$s'" ), cHRB:__enumKey(), xResult ) )

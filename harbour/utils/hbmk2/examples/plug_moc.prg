@@ -9,12 +9,12 @@
  * See COPYING for licensing terms.
  */
 
-FUNCTION hbmk2_plugin_moc( cState, hbmk2 )
+FUNCTION hbmk2_plugin_moc( hbmk2 )
    LOCAL cMOC_BIN
 
    LOCAL tmp
 
-   SWITCH cState
+   SWITCH hbmk2[ "cSTATE" ]
    CASE "pre_all"
 
       FOR EACH tmp IN hbmk2[ "params" ]
@@ -64,7 +64,7 @@ FUNCTION hbmk2_plugin_moc( cState, hbmk2 )
       hbmk2_OutStd( hbmk2, "POST_ALL: " + hbmk2[ "vars" ][ "MOC_BIN" ] )
    OTHERWISE
       IF hbmk2[ "lTRACE" ]
-         hbmk2_OutStd( hbmk2, "@@ Entered plugin: " + cState )
+         hbmk2_OutStd( hbmk2, "@@ Entered plugin: " + hbmk2[ "cSTATE" ] )
       ENDIF
    ENDSWITCH
 
