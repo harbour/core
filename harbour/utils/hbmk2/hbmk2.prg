@@ -61,6 +61,7 @@
 
 #include "common.ch"
 #include "directry.ch"
+#include "error.ch"
 #include "fileio.ch"
 
 #include "hbgtinfo.ch"
@@ -357,25 +358,28 @@ REQUEST hbmk_KEYW
 #define _HBMK_aPLUGIN           85
 #define _HBMK_hPLUGINHRB        86
 #define _HBMK_hPLUGINVars       87
+#define _HBMK_aPLUGINPars       88
 
-#define _HBMK_lDEBUGTIME        88
-#define _HBMK_lDEBUGINC         89
-#define _HBMK_lDEBUGSTUB        90
-#define _HBMK_lDEBUGI18N        91
+#define _HBMK_lDEBUGTIME        89
+#define _HBMK_lDEBUGINC         90
+#define _HBMK_lDEBUGSTUB        91
+#define _HBMK_lDEBUGI18N        92
 
-#define _HBMK_cCCPATH           92
-#define _HBMK_cCCPREFIX         93
-#define _HBMK_cCCPOSTFIX        94
-#define _HBMK_cCCEXT            95
+#define _HBMK_cCCPATH           93
+#define _HBMK_cCCPREFIX         94
+#define _HBMK_cCCPOSTFIX        95
+#define _HBMK_cCCEXT            96
 
-#define _HBMK_cWorkDir          96
+#define _HBMK_cWorkDir          97
 
-#define _HBMK_MAX_              96
+#define _HBMK_MAX_              97
 
 #ifndef _HBMK_EMBEDDED_
 
 #define hb_DirCreate( d )       MakeDir( d )
 #define hb_DirDelete( d )       DirRemove( d )
+
+STATIC s_cSecToken := NIL
 
 PROCEDURE Main( ... )
    LOCAL aArgsIn := hb_AParams()
@@ -753,6 +757,10 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    LOCAL lDoSupportDetection
    LOCAL lDeleteWorkDir := .F.
 
+   IF s_cSecToken == NIL
+      s_cSecToken := StrZero( hb_Random( 1, 4294967294 ), 10, 0 )
+   ENDIF
+
    hbmk[ _HBMK_cWorkDir ] := NIL
 
    hbmk[ _HBMK_lCreateLib ] := .F.
@@ -802,6 +810,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
    hbmk[ _HBMK_aPLUGIN ] := {}
    hbmk[ _HBMK_hPLUGINVars ] := { => }
+   hbmk[ _HBMK_aPLUGINPars ] := {}
 
    hbmk[ _HBMK_lDEBUGTIME ] := .F.
    hbmk[ _HBMK_lDEBUGINC ] := .F.
@@ -2021,6 +2030,20 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          IF ! Empty( cParam )
             AAdd( l_aOPTRUN, cParam )
          ENDIF
+
+      CASE Left( cParamL, Len( "-pflag=" ) ) == "-pflag="
+
+         cParam := MacroProc( hbmk, SubStr( cParam, Len( "-pflag=" ) + 1 ), aParam[ _PAR_cFileName ] )
+         IF Left( cParam, 1 ) $ cOptPrefix
+            AAdd( hbmk[ _HBMK_aPLUGINPars ], PathSepToTarget( hbmk, cParam, 2 ) )
+         ENDIF
+
+      CASE Left( cParamL, Len( "-pi=" ) ) == "-pi="
+
+         cParam := PathProc( MacroProc( hbmk, SubStr( cParam, Len( "-pi=" ) + 1 ), aParam[ _PAR_cFileName ] ), aParam[ _PAR_cFileName ] )
+         FOR EACH cParam IN FN_Expand( PathProc( cParam, aParam[ _PAR_cFileName ] ), Empty( aParam[ _PAR_cFileName ] ) )
+            AAdd( hbmk[ _HBMK_aPLUGINPars ], PathSepToTarget( hbmk, cParam ) )
+         NEXT
 
       CASE Left( cParamL, Len( "-3rd=" ) ) == "-3rd="
 
@@ -3731,6 +3754,13 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       ENDIF
    ENDIF
 
+   /* Prepare plugins */
+
+   PlugIn_Load( hbmk )
+   PlugIn_Execute( hbmk, "pre_all" )
+
+   /* ; */
+
    IF hbmk[ _HBMK_lCreateImpLib ]
       IF ISBLOCK( bBlk_ImpLib )
          IF ! Empty( hbmk[ _HBMK_aIMPLIBSRC ] )
@@ -3950,11 +3980,6 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    ELSE
       l_aPRG_TODO := hbmk[ _HBMK_aPRG ]
    ENDIF
-
-   /* Prepare plugins */
-
-   PlugIn_Load( hbmk )
-   PlugIn_Execute( hbmk, "pre_all" )
 
    /* Harbour compilation */
 
@@ -5891,7 +5916,6 @@ FUNCTION hbmk2_PathProc( ... )         ; RETURN PathProc( ... )
 FUNCTION hbmk2_PathMakeRelative( ... ) ; RETURN PathMakeRelative( ... )
 FUNCTION hbmk2_PathSepToForward( ... ) ; RETURN PathSepToForward( ... )
 FUNCTION hbmk2_PathSepToSelf( ... )    ; RETURN PathSepToSelf( ... )
-FUNCTION hbmk2_PathSepToTarget( ... )  ; RETURN PathSepToTarget( ... )
 FUNCTION hbmk2_DirAddPathSep( ... )    ; RETURN DirAddPathSep( ... )
 FUNCTION hbmk2_DirDelPathSep( ... )    ; RETURN DirDelPathSep( ... )
 FUNCTION hbmk2_DirBuild( ... )         ; RETURN DirBuild( ... )
@@ -5904,11 +5928,30 @@ FUNCTION hbmk2_FN_ExtDef( ... )        ; RETURN FN_ExtDef( ... )
 FUNCTION hbmk2_FN_ExtSet( ... )        ; RETURN FN_ExtSet( ... )
 FUNCTION hbmk2_StrStripQuote( ... )    ; RETURN StrStripQuote( ... )
 
-FUNCTION hbmk2_OutStd( hbmk, cText )
-   RETURN hbmk_OutStd( hbmk, hb_StrFormat( "plugin: %1$s", cText ) )
+FUNCTION hbmk2_PathSepToTarget( ctx, ... )
+   RETURN PathSepToTarget( ctx[ s_cSecToken ], ... )
 
-FUNCTION hbmk2_OutErr( hbmk, cText )
-   RETURN hbmk_OutErr( hbmk, hb_StrFormat( "plugin: %1$s", cText ) )
+FUNCTION hbmk2_OutStd( ctx, cText )
+   RETURN hbmk_OutStd( ctx[ s_cSecToken ], hb_StrFormat( I_( "plugin: %1$s" ), cText ) )
+
+FUNCTION hbmk2_OutErr( ctx, cText )
+   RETURN hbmk_OutErr( ctx[ s_cSecToken ], hb_StrFormat( I_( "plugin: %1$s" ), cText ) )
+
+FUNCTION hbmk2_AddInput_PRG( ctx, cFileName )
+   AAdd( ctx[ s_cSecToken ][ _HBMK_aPRG ], cFileName )
+   RETURN NIL
+
+FUNCTION hbmk2_AddInput_C( ctx, cFileName )
+   AAdd( ctx[ s_cSecToken ][ _HBMK_aC ], cFileName )
+   RETURN NIL
+
+FUNCTION hbmk2_AddInput_CPP( ctx, cFileName )
+   AAdd( ctx[ s_cSecToken ][ _HBMK_aCPP ], cFileName )
+   RETURN NIL
+
+FUNCTION hbmk2_AddInput_RC( ctx, cFileName )
+   AAdd( ctx[ s_cSecToken ][ _HBMK_aRESSRC ], cFileName )
+   RETURN NIL
 
 /* ; */
 
@@ -5917,42 +5960,80 @@ STATIC FUNCTION PlugIn_Execute( hbmk, cState )
    LOCAL hVar
    LOCAL xResult
 
+   LOCAL oError
+
    IF ! Empty( hbmk[ _HBMK_hPLUGINHRB ] )
 
       hVar := {;
-         "ctx"        => AClone( hbmk )           ,;
-         "cPLAT"      => hbmk[ _HBMK_cPLAT ]      ,;
-         "cCOMP"      => hbmk[ _HBMK_cCOMP ]      ,;
-         "cCPU"       => hbmk[ _HBMK_cCPU ]       ,;
-         "cBUILD"     => hbmk[ _HBMK_cBUILD ]     ,;
-         "lREBUILD"   => hbmk[ _HBMK_lREBUILD ]   ,;
-         "lCLEAN"     => hbmk[ _HBMK_lCLEAN ]     ,;
-         "lTRACE"     => hbmk[ _HBMK_lTRACE ]     ,;
-         "lINC"       => hbmk[ _HBMK_lINC ]       ,;
-         "cCCPATH"    => hbmk[ _HBMK_cCCPATH ]    ,;
-         "cCCPREFIX"  => hbmk[ _HBMK_cCCPREFIX ]  ,;
-         "cCCPOSTFIX" => hbmk[ _HBMK_cCCPOSTFIX ] ,;
-         "cCCEXT"     => hbmk[ _HBMK_cCCEXT ]     ,;
-         "cWorkDir"   => hbmk[ _HBMK_cWorkDir ]   }
+         "params"     => hbmk[ _HBMK_aPLUGINPars ] ,;
+         "vars"       => hbmk[ _HBMK_hPLUGINVars ] ,;
+         "cPLAT"      => hbmk[ _HBMK_cPLAT ]       ,;
+         "cCOMP"      => hbmk[ _HBMK_cCOMP ]       ,;
+         "cCPU"       => hbmk[ _HBMK_cCPU ]        ,;
+         "cBUILD"     => hbmk[ _HBMK_cBUILD ]      ,;
+         "lREBUILD"   => hbmk[ _HBMK_lREBUILD ]    ,;
+         "lCLEAN"     => hbmk[ _HBMK_lCLEAN ]      ,;
+         "lTRACE"     => hbmk[ _HBMK_lTRACE ]      ,;
+         "lINC"       => hbmk[ _HBMK_lINC ]        ,;
+         "cCCPATH"    => hbmk[ _HBMK_cCCPATH ]     ,;
+         "cCCPREFIX"  => hbmk[ _HBMK_cCCPREFIX ]   ,;
+         "cCCPOSTFIX" => hbmk[ _HBMK_cCCPOSTFIX ]  ,;
+         "cCCEXT"     => hbmk[ _HBMK_cCCEXT ]      ,;
+         "cWorkDir"   => hbmk[ _HBMK_cWorkDir ]    ,;
+         s_cSecToken  => hbmk                      }
 
       FOR EACH cHRB IN hbmk[ _HBMK_hPLUGINHRB ]
 
-         BEGIN SEQUENCE WITH {| oError | Break( oError ) }
-            xResult := hb_hrbRun( HB_HRB_BIND_FORCELOCAL, cHRB, cState, hVar, hbmk[ _HBMK_hPLUGINVars ] )
+         BEGIN SEQUENCE WITH {| oError | oError:cargo := { ProcName( 1 ), ProcLine( 1 ) }, Break( oError ) }
+            xResult := hb_hrbRun( HB_HRB_BIND_FORCELOCAL, cHRB, cState, hVar )
             IF ! Empty( xResult )
                IF hbmk[ _HBMK_lInfo ]
                   hbmk_OutStd( hbmk, hb_StrFormat( I_( "Plugin %1$s returned: '%2$s'" ), cHRB:__enumKey(), xResult ) )
                ENDIF
             ENDIF
-         RECOVER
+         RECOVER USING oError
             IF hbmk[ _HBMK_lInfo ]
-               hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Executing plugin: %1$s" ), cHRB:__enumKey() ) )
+               hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Executing plugin: %1$s at %3$s(%4$s)\n'%2$s'" ), cHRB:__enumKey(), hbmk_ErrorMessage( oError ), oError:cargo[ 1 ], hb_ntos( oError:cargo[ 2 ] ) ) )
             ENDIF
          END SEQUENCE
       NEXT
    ENDIF
 
    RETURN NIL
+
+STATIC FUNCTION hbmk_ErrorMessage( oError )
+
+   // start error message
+   LOCAL cMessage := iif( oError:severity > ES_WARNING, "Error", "Warning" ) + " "
+
+   // add subsystem name if available
+   IF ISCHARACTER( oError:subsystem )
+      cMessage += oError:subsystem()
+   ELSE
+      cMessage += "???"
+   ENDIF
+
+   // add subsystem's error code if available
+   IF ISNUMBER( oError:subCode )
+      cMessage += "/" + hb_NToS( oError:subCode )
+   ELSE
+      cMessage += "/???"
+   ENDIF
+
+   // add error description if available
+   IF ISCHARACTER( oError:description )
+      cMessage += "  " + oError:description
+   ENDIF
+
+   // add either filename or operation
+   DO CASE
+   CASE !Empty( oError:filename )
+      cMessage += ": " + oError:filename
+   CASE !Empty( oError:operation )
+      cMessage += ": " + oError:operation
+   ENDCASE
+
+   RETURN cMessage
 
 STATIC FUNCTION FindInPathPlugIn( /* @ */ cFileName )
    LOCAL cDir
@@ -9162,6 +9243,8 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-rebuildpo"         , I_( "recreate .po file, thus removing all obsolete entries in it" ) },;
       NIL,;
       { "-plug=<.prg|.hrb>"  , I_( "add plugin (EXPERIMENTAL)" ) },;
+      { "-pi=<filename>"     , I_( "pass input file to plugins (EXPERIMENTAL)" ) },;
+      { "-pflag=<f>"         , I_( "pass flag to plugins (EXPERIMENTAL)" ) },;
       NIL,;
       { "Options below are available on command line only:" },;
       NIL,;
