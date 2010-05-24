@@ -122,12 +122,12 @@ CLASS IdeProject
    DATA   type                                    INIT "Executable"
    DATA   title                                   INIT ""
    DATA   location                                INIT hb_dirBase() + "projects"
-   DATA   wrkDirectory                            INIT ""
    DATA   destination                             INIT ""
    DATA   outputName                              INIT ""
+   DATA   backup                                  INIT ""
    DATA   launchParams                            INIT ""
    DATA   launchProgram                           INIT ""
-   DATA   backup                                  INIT ""
+   DATA   wrkDirectory                            INIT ""
    DATA   isXhb                                   INIT .f.
    DATA   isXpp                                   INIT .f.
    DATA   isClp                                   INIT .f.
@@ -268,7 +268,7 @@ CLASS IdeProjManager INHERIT IdeObject
    METHOD synchronizeAlienProject( cProjFileName )
    METHOD outputText( cText )
 
-ENDCLASS
+   ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
@@ -419,7 +419,8 @@ METHOD IdeProjManager:pullHbpData( cHbp )
             "hbide_backupfolder="      , ;
             "hbide_xhb="               , ;
             "hbide_xpp="               , ;
-            "hbide_clp="                 ;
+            "hbide_clp="               , ;
+            "hbide_launchim="            ;
          }
 
    LOCAL a1_0 := afill( array( PRJ_PRP_PRP_VRBLS ), "" )
@@ -652,7 +653,6 @@ METHOD IdeProjManager:fetchProperties()
 
       ::oUI:q_editPrjTitle :setText( "" )
       ::oUI:q_editPrjLoctn :setText( hbide_pathNormalized( ::oProject:location, .F. ) )
-      ::oUI:q_editWrkFolder:setText( "" )
       ::oUI:q_editDstFolder:setText( "" )
       ::oUI:q_editBackup   :setText( "" )
       ::oUI:q_editOutName  :setText( "" )
@@ -662,6 +662,7 @@ METHOD IdeProjManager:fetchProperties()
 
       ::oUI:q_editLaunchParams:setText( "" )
       ::oUI:q_editLaunchExe:setText( "" )
+      ::oUI:q_editWrkFolder:setText( "" )
       ::oUI:q_editHbp:setPlainText( "" )
 
       ::oUI:oWidget:setWindowTitle( 'New Project...' )
@@ -680,7 +681,6 @@ METHOD IdeProjManager:fetchProperties()
 
       ::oUI:q_editPrjTitle :setText( ::oProject:title        )
       ::oUI:q_editPrjLoctn :setText( ::oProject:location     )
-      ::oUI:q_editWrkFolder:setText( ::oProject:wrkDirectory )
       ::oUI:q_editDstFolder:setText( ::oProject:destination  )
       ::oUI:q_editOutName  :setText( ::oProject:outputName   )
       ::oUI:q_editBackup   :setText( ::oProject:backup       )
@@ -694,6 +694,7 @@ METHOD IdeProjManager:fetchProperties()
 
       ::oUI:q_editLaunchParams:setText( ::oProject:launchParams )
       ::oUI:q_editLaunchExe:setText( ::oProject:launchProgram )
+      ::oUI:q_editWrkFolder:setText( ::oProject:wrkDirectory )
 
       ::oUI:q_editHbp:setPlainText( "" )
 
@@ -1465,15 +1466,13 @@ METHOD IdeProjManager:launchProject( cProject, cExe )
 
       if .t.
          qProcess := QProcess():new()
-         qProcess:setWorkingDirectory( hbide_pathToOSPath( oProject:wrkDirectory ) )
+
+         qStr := QStringList():new()
          IF !empty( oProject:launchParams )
-            qStr := QStringList():new()
             qStr:append( oProject:launchParams )
-            qProcess:startDetached_1( cTargetFN, qStr )
-         ELSE
-            qProcess:startDetached_2( cTargetFN )
          ENDIF
-         qProcess:waitForStarted()
+         qProcess:startDetached( cTargetFN, qStr, hbide_pathToOSPath( oProject:wrkDirectory ) )
+         qProcess:waitForStarted( 3000 )
          qProcess := NIL
 
       else
