@@ -62,7 +62,7 @@
 
 #include <ocilib.h>
 
-#if defined( OCI_CHARSET_UNICODE )
+#if defined( OCI_CHARSET_UNICODE ) || defined( OCI_CHARSET_WIDE )
    #define M_HB_ARRAYGETSTR( arr, n, phstr, plen ) hb_arrayGetStrU16( arr, n, HB_CDP_ENDIAN_NATIVE, phstr, plen )
    #define M_HB_ITEMCOPYSTR( itm, str, len )       hb_itemCopyStrU16( itm, HB_CDP_ENDIAN_NATIVE, str, len )
    #define M_HB_ITEMGETSTR( itm, phstr, plen )     hb_itemGetStrU16( itm, HB_CDP_ENDIAN_NATIVE, phstr, plen )
@@ -78,7 +78,7 @@
    #define M_HB_CHAR char
 #endif
 
-#if defined( OCI_CHARSET_UNICODE ) || defined( OCI_CHARSET_MIXED )
+#if defined( OCI_CHARSET_UNICODE ) || defined( OCI_CHARSET_WIDE ) || defined( OCI_CHARSET_MIXED )
    #define D_HB_ARRAYGETSTR( arr, n, phstr, plen ) hb_arrayGetStrU16( arr, n, HB_CDP_ENDIAN_NATIVE, phstr, plen )
    #define D_HB_ITEMCOPYSTR( itm, str, len )       hb_itemCopyStrU16( itm, HB_CDP_ENDIAN_NATIVE, str, len )
    #define D_HB_ITEMGETSTR( itm, phstr, plen )     hb_itemGetStrU16( itm, HB_CDP_ENDIAN_NATIVE, phstr, plen )
@@ -390,8 +390,13 @@ static HB_ERRCODE ocilibOpen( SQLBASEAREAP pArea )
 
          case OCI_CDT_NUMERIC:
             pFieldInfo.uiType = HB_FT_LONG;
-            pFieldInfo.uiLen = ( HB_USHORT ) OCI_ColumnGetPrecision( col );
-            pFieldInfo.uiDec = ( HB_USHORT ) OCI_ColumnGetScale( col );
+            /* For plain 'NUMERIC', precision is zero and scale is -127 */
+            if( OCI_ColumnGetPrecision( col ) > 0 )
+               pFieldInfo.uiLen = ( HB_USHORT ) OCI_ColumnGetPrecision( col );
+            if( OCI_ColumnGetScale( col ) >= 0 )
+               pFieldInfo.uiDec = ( HB_USHORT ) OCI_ColumnGetScale( col );
+            else
+               pFieldInfo.uiDec = ( HB_USHORT ) hb_setGetDecimals();
             break;
 
          case OCI_CDT_LONG:

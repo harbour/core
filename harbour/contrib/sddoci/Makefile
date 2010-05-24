@@ -31,8 +31,8 @@ ifneq ($(HB_HAS_OCILIB),)
    ifeq ($(HB_COMPILER),bcc)
       HB_CFLAGS += -DOCI_API=_stdcall
    endif
-   ifneq ($(HB_WITH_OCILIB_UNICODE),)
-      HB_CFLAGS += -DOCI_CHARSET_UNICODE
+   ifneq ($(HB_WITH_OCILIB_WIDE),)
+      HB_CFLAGS += -DOCI_CHARSET_UNICODE -DOCI_CHARSET_WIDE
    else ifneq ($(HB_WITH_OCILIB_MIXED),)
       HB_CFLAGS += -DOCI_CHARSET_MIXED
    endif

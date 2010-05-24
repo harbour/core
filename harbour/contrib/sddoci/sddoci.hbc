@@ -3,8 +3,8 @@
 #
 
 libs=sddoci
-{HB_WITH_OCILIB_UNICODE}libs=ocilibw
+{HB_WITH_OCILIB_WIDE}libs=ocilibw
 {HB_WITH_OCILIB_MIXED}libs=ocilibm
-{!HB_WITH_OCILIB_UNICODE&!HB_WITH_OCILIB_MIXED}libs=ociliba
+{!HB_WITH_OCILIB_WIDE&!HB_WITH_OCILIB_MIXED}libs=ociliba
 
 libs=../rddsql/rddsql.hbc

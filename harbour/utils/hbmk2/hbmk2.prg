@@ -6015,34 +6015,25 @@ STATIC FUNCTION PlugIn_Execute( hbmk, cState )
    RETURN NIL
 
 STATIC FUNCTION hbmk_ErrorMessage( oError )
-
-   // start error message
+   /* start error message */
    LOCAL cMessage := iif( oError:severity > ES_WARNING, "Error", "Warning" ) + " "
 
-   // add subsystem name if available
-   IF ISCHARACTER( oError:subsystem )
-      cMessage += oError:subsystem()
-   ELSE
-      cMessage += "???"
-   ENDIF
+   /* add subsystem name if available */
+   cMessage += iif( ISCHARACTER( oError:subsystem ), oError:subsystem(), "???" )
 
-   // add subsystem's error code if available
-   IF ISNUMBER( oError:subCode )
-      cMessage += "/" + hb_NToS( oError:subCode )
-   ELSE
-      cMessage += "/???"
-   ENDIF
+   /* add subsystem's error code if available */
+   cMessage += "/" + iif( ISNUMBER( oError:subCode ), hb_ntos( oError:subCode ), "???" )
 
-   // add error description if available
+   /* add error description if available */
    IF ISCHARACTER( oError:description )
       cMessage += "  " + oError:description
    ENDIF
 
-   // add either filename or operation
+   /* add either filename or operation */
    DO CASE
-   CASE !Empty( oError:filename )
+   CASE ! Empty( oError:filename )
       cMessage += ": " + oError:filename
-   CASE !Empty( oError:operation )
+   CASE ! Empty( oError:operation )
       cMessage += ": " + oError:operation
    ENDCASE
 
