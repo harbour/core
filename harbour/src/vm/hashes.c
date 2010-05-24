@@ -768,7 +768,7 @@ void hb_hashCloneBody( PHB_ITEM pHash, PHB_ITEM pDest, PHB_NESTED_CLONED pCloned
    HB_TRACE(HB_TR_DEBUG, ("hb_hashCloneBody(%p,%p,%p)", pHash, pDest, pClonedList));
 
    hb_hashNew( pDest );
-   hb_hashResize( pDest->item.asHash.value, pHash->item.asHash.value->ulSize );
+   hb_hashResize( pDest->item.asHash.value, pHash->item.asHash.value->ulLen );
    pDest->item.asHash.value->iFlags = pHash->item.asHash.value->iFlags;
    if( pHash->item.asHash.value->pDefault )
    {
