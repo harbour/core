@@ -56,6 +56,7 @@ PROCEDURE Main
    oNode         := oNode   - "font"
 
    oNode         := oNode   + "hr"
+   HB_SYMBOL_UNUSED( oNode )
 
    // Operator ":" returns first "table" from body (creates if not existent)
    oTable        := oDoc:body:table
@@ -65,7 +66,12 @@ PROCEDURE Main
    FOR i:=1 TO FCount()
        oCell     := oRow + "th"
        oCell:text:= FieldName(i)
+       oCell     := oCell - "th"
+       HB_SYMBOL_UNUSED( oCell )
    NEXT
+
+   oRow := oRow - "tr"
+   HB_SYMBOL_UNUSED( oRow )
 
    FOR i:=1 TO 10
       oRow         := oTable + "tr"
@@ -74,12 +80,18 @@ PROCEDURE Main
       FOR j:=1 TO FCount()
          oCell      := oRow + "td"
          oCell:text := FieldGet(j)
+         oCell      := oCell - "td"
+         HB_SYMBOL_UNUSED( oCell )
       NEXT
+
+      oRow := oRow - "tr"
+      HB_SYMBOL_UNUSED( oRow )
 
       SKIP
    NEXT
 
    oNode := oDoc:body  + "hr"
+   HB_SYMBOL_UNUSED( oNode )
    oNode := oDoc:body  + "p"
 
    oNode:text := "10 records from database " + ALias() + ".dbf"
