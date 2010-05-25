@@ -16,6 +16,7 @@ C_SOURCES := \
    mapi.c \
    olecore.c \
    oleinit.c \
+   hbolesrv.c \
    wapi_alloc.c \
    wapi_commctrl.c \
    wapi_err.c \

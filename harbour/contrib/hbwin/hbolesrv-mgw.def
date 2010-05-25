@@ -1,0 +1,6 @@
+EXPORTS
+DllGetClassObject    = DllGetClassObject@12     PRIVATE
+DllCanUnloadNow      = DllCanUnloadNow@0        PRIVATE
+DllRegisterServer    = DllRegisterServer@0
+DllUnregisterServer  = DllUnregisterServer@0
+DllMain              = DllMain@12

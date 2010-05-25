@@ -1,0 +1,15 @@
+#
+# $Id$
+#
+
+olesrv2.prg
+-w3
+-es2
+-lhbwin
+-gtgui
+-hbdynvm
+-static
+-cflag={watcom}-6r
+{mingw}../hbolesrv-mgw.def
+{watcom}../hbolesrv-ow.def
+{!mingw&!watcom}../hbolesrv.def
