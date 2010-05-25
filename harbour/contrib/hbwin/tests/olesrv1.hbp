@@ -2,16 +2,10 @@
 # $Id$
 #
 
-olesrv1.prg
-
 -hbdynvm
--static
--gtgui
 
--cflag={watcom}-6r
+../hbolesrv.hbc
 
-{mingw}../hbolesrv-mgw.def
-{watcom}../hbolesrv-ow.def
-{!mingw&!watcom}../hbolesrv.def
+olesrv1.prg
 
 ../../hbnetio/hbnetio.hbc

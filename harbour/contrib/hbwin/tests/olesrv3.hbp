@@ -2,14 +2,8 @@
 # $Id$
 #
 
-olesrv3.prg
-
 -hbdynvm
--static
--gtgui
 
--cflag={watcom}-6r
+../hbolesrv.hbc
 
-{mingw}../hbolesrv-mgw.def
-{watcom}../hbolesrv-ow.def
-{!mingw&!watcom}../hbolesrv.def
+olesrv3.prg

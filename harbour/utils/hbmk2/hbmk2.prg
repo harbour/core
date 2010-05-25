@@ -6967,6 +6967,10 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
                   FOR EACH tmp IN FN_Expand( cItem )
                      AAddNew( hbmk[ _HBMK_aRESSRC ], PathSepToTarget( hbmk, tmp ) )
                   NEXT
+               CASE FN_ExtGet( cItemL ) == ".def"
+                  FOR EACH tmp IN FN_Expand( cItem )
+                     AAddNew( hbmk[ _HBMK_aDEF ], PathSepToTarget( hbmk, tmp ) )
+                  NEXT
                CASE FN_ExtGet( cItemL ) == ".res"
                   IF hbmk[ _HBMK_cCOMP ] $ "mingw|mingw64|mingwarm"
                      /* For MinGW family add .res files as source input, as they

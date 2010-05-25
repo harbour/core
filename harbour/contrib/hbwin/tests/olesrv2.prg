@@ -21,6 +21,7 @@ PROCEDURE DllMain()
 
    hAction := { => }
    hb_HKeepOrder( hAction, .T. )
+   hb_HSetCaseMatch( hAction, .F. )
    hAction[ "DATE" ]     := @date()          // DISPID=1
    hAction[ "TIME" ]     := @time()          // DISPID=2
    hAction[ "DATETIME" ] := @hb_datetime()   // DISPID=3
