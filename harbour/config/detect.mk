@@ -104,7 +104,7 @@ _DET_INC_DEFP += /usr/include /usr/include/slang
 _DET_INC_DEFP += /usr/local/include /usr/local/include/slang
 _DET_INC_DEFP += /sw/include /sw/include/slang
 _DET_INC_DEFP += /opt/local/include /opt/local/include/slang
-_DET_INC_DEFP += /usr/pkg/include/slang2
+_DET_INC_DEFP += /usr/pkg/include/slang2 /usr/pkg/include
 
 include $(TOP)$(ROOT)config/detfun.mk
 
@@ -132,7 +132,7 @@ _DET_VAR_HAS_ := HB_HAS_X11
 _DET_FLT_PLAT :=
 _DET_FLT_COMP :=
 _DET_INC_DEFP := /usr/include /usr/local/include /usr/X11R6/include /usr/pkg/include
-_DET_INC_HEAD := /X11/X.h
+_DET_INC_HEAD := /X11/Xlib.h
 
 include $(TOP)$(ROOT)config/detfun.mk
 

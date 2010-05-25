@@ -627,9 +627,7 @@ static void hb_hrbDo( PHRB_BODY pHrbBody, int iPCount, PHB_ITEM * pParams )
    hb_hrbExit( pHrbBody );
 
    if( pRetVal )
-   {
       hb_itemReturnRelease( pRetVal );
-   }
 }
 
 /* HRB module destructor */

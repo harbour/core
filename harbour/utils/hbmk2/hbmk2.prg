@@ -2078,9 +2078,9 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             l_cTSHEAD := FN_ExtSet( l_cTSHEAD, ".ch" )
          ENDIF
 
-      CASE Left( cParamL, Len( "-plug=" ) ) == "-plug="
+      CASE Left( cParamL, Len( "-plugin=" ) ) == "-plugin="
 
-         cParam := PathProc( MacroProc( hbmk, SubStr( cParam, Len( "-plug=" ) + 1 ), aParam[ _PAR_cFileName ] ), aParam[ _PAR_cFileName ] )
+         cParam := PathProc( MacroProc( hbmk, SubStr( cParam, Len( "-plugin=" ) + 1 ), aParam[ _PAR_cFileName ] ), aParam[ _PAR_cFileName ] )
          IF ( tmp := FindInPathPlugIn( PathSepToSelf( cParam ) ) ) != NIL
             AAdd( hbmk[ _HBMK_aPLUGIN ], PathSepToTarget( hbmk, tmp ) )
          ELSE
@@ -5921,6 +5921,9 @@ STATIC PROCEDURE PlugIn_Load( hbmk )
    LOCAL cFileName
    LOCAL cFile
    LOCAL cExt
+   LOCAL lOK
+   LOCAL cType
+   LOCAL hrb
 
    hbmk[ _HBMK_hPLUGINHRB ] := { => }
 
@@ -5928,17 +5931,33 @@ STATIC PROCEDURE PlugIn_Load( hbmk )
 
       hb_FNameSplit( cFileName, NIL, NIL, @cExt )
 
-      IF Lower( cExt ) == ".prg"
-         cFile := hb_compileBuf( "", "-n2", "-w3", "-es2", "-q0", cFileName )
-      ELSE
-         cFile := hb_MemoRead( cFileName )
-      ENDIF
+      hrb := NIL
+
+      cFile := hb_MemoRead( cFileName )
 
       IF ! Empty( cFile )
-         hbmk[ _HBMK_hPLUGINHRB ][ cFileName ] := cFile
+         lOK := .F.
+         IF !( Lower( cExt ) == ".prg" ) /* Optimization: Don't try to load is as .hrb if the extension is .prg */
+            BEGIN SEQUENCE WITH {| oError | Break( oError ) }
+               hrb := hb_hrbLoad( HB_HRB_BIND_FORCELOCAL, cFile )
+               cType := I_( "(compiled)" )
+               lOK := .T.
+            END SEQUENCE
+         ENDIF
+         IF ! lOK .AND. !( Lower( cExt ) == ".hrb" ) /* Optimization: Don't try to load it as .prg if the extension is .hrb */
+            cType := I_( "(source)" )
+            cFile := hb_compileFromBuf( cFile, "-n2", "-w3", "-es2", "-q0" )
+            IF ! Empty( cFile )
+               hrb := hb_hrbLoad( HB_HRB_BIND_FORCELOCAL, cFile )
+            ENDIF
+         ENDIF
+      ENDIF
+
+      IF ! Empty( hrb )
+         hbmk[ _HBMK_hPLUGINHRB ][ cFileName ] := hrb
 
          IF hbmk[ _HBMK_lTRACE ]
-            hbmk_OutStd( hbmk, hb_StrFormat( I_( "Loaded plugin #%1$s: %2$s" ), hb_ntos( cFileName:__enumIndex() ), cFileName ) )
+            hbmk_OutStd( hbmk, hb_StrFormat( I_( "Loaded plugin #%1$s: %2$s %3$s" ), hb_ntos( cFileName:__enumIndex() ), cFileName, cType ) )
          ENDIF
       ELSE
          IF hbmk[ _HBMK_lInfo ]
@@ -6015,7 +6034,7 @@ FUNCTION hbmk2_AddInput_RC( ctx, cFileName )
 /* ; */
 
 STATIC FUNCTION PlugIn_Execute( hbmk, cState )
-   LOCAL cHRB
+   LOCAL hrb
    LOCAL ctx
    LOCAL xResult
 
@@ -6065,18 +6084,18 @@ STATIC FUNCTION PlugIn_Execute( hbmk, cState )
          "nErrorLevel"  => hbmk[ _HBMK_nErrorLevel ]  ,;
          s_cSecToken    => hbmk                       }
 
-      FOR EACH cHRB IN hbmk[ _HBMK_hPLUGINHRB ]
+      FOR EACH hrb IN hbmk[ _HBMK_hPLUGINHRB ]
 
          BEGIN SEQUENCE WITH {| oError | oError:cargo := { ProcName( 1 ), ProcLine( 1 ) }, Break( oError ) }
-            xResult := hb_hrbRun( HB_HRB_BIND_FORCELOCAL, cHRB, ctx )
+            xResult := hb_hrbDo( hrb, ctx )
             IF ! Empty( xResult )
                IF hbmk[ _HBMK_lInfo ]
-                  hbmk_OutStd( hbmk, hb_StrFormat( I_( "Plugin %1$s returned: '%2$s'" ), cHRB:__enumKey(), xResult ) )
+                  hbmk_OutStd( hbmk, hb_StrFormat( I_( "Plugin %1$s returned: '%2$s'" ), hrb:__enumKey(), xResult ) )
                ENDIF
             ENDIF
          RECOVER USING oError
             IF hbmk[ _HBMK_lInfo ]
-               hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Executing plugin: %1$s at %3$s(%4$s)\n'%2$s'" ), cHRB:__enumKey(), hbmk_ErrorMessage( oError ), oError:cargo[ 1 ], hb_ntos( oError:cargo[ 2 ] ) ) )
+               hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Executing plugin: %1$s at %3$s(%4$s)\n'%2$s'" ), hrb:__enumKey(), hbmk_ErrorMessage( oError ), oError:cargo[ 1 ], hb_ntos( oError:cargo[ 2 ] ) ) )
             ENDIF
          END SEQUENCE
       NEXT
@@ -6121,7 +6140,7 @@ STATIC FUNCTION FindInPathPlugIn( /* @ */ cFileName )
    ENDIF
 
    IF Empty( cExt )
-      cExt := ".hrb"
+      cExt := ".prg"
    ENDIF
 
    cFileName := hb_FNameMerge( cDir, cName, cExt )
@@ -7245,6 +7264,17 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
          CASE ValueIsT( cLine ) ; hbmk[ _HBMK_lINC ] := .T.
          CASE ValueIsF( cLine ) ; hbmk[ _HBMK_lINC ] := .F.
          ENDCASE
+
+      CASE Lower( Left( cLine, Len( "plugins="      ) ) ) == "plugins="      ; cLine := SubStr( cLine, Len( "plugins="      ) + 1 )
+
+         cLine := PathProc( MacroProc( hbmk, cLine, cFileName ), FN_DirGet( cFileName ) )
+         IF ( tmp := FindInPathPlugIn( PathSepToSelf( cLine ) ) ) != NIL
+            AAdd( hbmk[ _HBMK_aPLUGIN ], PathSepToTarget( hbmk, tmp ) )
+         ELSE
+            IF hbmk[ _HBMK_lInfo ]
+               hbmk_OutStd( hbmk, hb_StrFormat( I_( "Warning: Plugin not found: %1$s" ), cLine ) )
+            ENDIF
+         ENDIF
 
       /* NOTE: This keyword is used to signal the default GT used when
                building Harbour. It only needs to be filled if this default
@@ -9317,7 +9347,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-[no]minipo"        , I_( "do (not) add Harbour version number and source file reference to .po (default: add them)" ) },;
       { "-rebuildpo"         , I_( "recreate .po file, thus removing all obsolete entries in it" ) },;
       NIL,;
-      { "-plug=<.prg|.hrb>"  , I_( "add plugin (EXPERIMENTAL)" ) },;
+      { "-plugin=<.prg|.hrb>", I_( "add plugin (EXPERIMENTAL)" ) },;
       { "-pi=<filename>"     , I_( "pass input file to plugins (EXPERIMENTAL)" ) },;
       { "-pflag=<f>"         , I_( "pass flag to plugins (EXPERIMENTAL)" ) },;
       NIL,;
@@ -9368,7 +9398,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       hb_StrFormat( I_( "%1$s option file in hbmk2 directory is always processed if it exists. On *nix platforms ~/.harbour, /etc/harbour, <base>/etc/harbour, <base>/etc are checked (in that order) before the hbmk2 directory. The file format is the same as .hbc." ), _HBMK_CFG_NAME ),;
       hb_StrFormat( I_( "%1$s make script in current directory is always processed if it exists." ), _HBMK_AUTOHBM_NAME ),;
       I_( ".hbc config files in current dir are automatically processed." ),;
-      I_( ".hbc options (they should come in separate lines): libs=[<libname[s]>], hbcs=[<.hbc file[s]>], gt=[gtname], syslibs=[<libname[s]>], prgflags=[Harbour flags], cflags=[C compiler flags], resflags=[resource compiler flags], ldflags=[linker flags], libpaths=[paths], sources=[source files], incpaths=[paths], inctrypaths=[paths], instpaths=[paths], gui|mt|shared|nulrdd|debug|opt|map|implib|hbcppmm|strip|run|inc=[yes|no], cpp=[yes|no|def], warn=[max|yes|low|no|def], compr=[yes|no|def|min|max], head=[off|partial|full|native], skip=[yes|no], echo=<text>\nLines starting with '#' char are ignored" ),;
+      I_( ".hbc options (they should come in separate lines): libs=[<libname[s]>], hbcs=[<.hbc file[s]>], gt=[gtname], syslibs=[<libname[s]>], prgflags=[Harbour flags], cflags=[C compiler flags], resflags=[resource compiler flags], ldflags=[linker flags], libpaths=[paths], sources=[source files], incpaths=[paths], inctrypaths=[paths], instpaths=[paths], plugins=[plugins], gui|mt|shared|nulrdd|debug|opt|map|implib|hbcppmm|strip|run|inc=[yes|no], cpp=[yes|no|def], warn=[max|yes|low|no|def], compr=[yes|no|def|min|max], head=[off|partial|full|native], skip=[yes|no], echo=<text>\nLines starting with '#' char are ignored" ),;
       I_( "Platform filters are accepted in each .hbc line and with several options.\nFilter format: {[!][<plat>|<comp>|<cpu>|<keyword>]}. Filters can be combined using '&', '|' operators and grouped by parantheses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}, {allwin|allmsvc|allgcc|allmingw|allicc|allpocc|unix}, {x86|x86_64|ia64|arm|mips|sh}, {debug|nodebug|gui|std|mt|st|shared|static|unicode|ascii|xhb}" ),;
       I_( "Certain .hbc lines (libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, inctrypaths=, instpaths=, echo=) and corresponding command line parameters will accept macros: ${hb_root}, ${hb_dir}, ${hb_name}, ${hb_plat}, ${hb_comp}, ${hb_build}, ${hb_cpu}, ${hb_bin}, ${hb_lib}, ${hb_dyn}, ${hb_inc}, ${<envvar>}. libpaths= also accepts %{hb_name} which translates to the name of the .hbc file under search." ),;
       I_( 'Options accepting macros also support command substitution. Enclose command inside ``, and, if the command contains space, also enclose in double quotes. F.e. "-cflag=`wx-config --cflags`", or ldflags={unix&gcc}"`wx-config --libs`".' ),;
