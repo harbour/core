@@ -1260,7 +1260,7 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
    aadd( aHbp, "-info"       )
    aadd( aHbp, "-lang=en"    )
    aadd( aHbp, "-width=512"  )
-   aadd( aHbp, "-plugin=" + hb_dirBase() + "idedetect.prg" )
+   aadd( aHbp, "-plugin=" + hb_dirBase() + "resources/hbmk2_plugin_hbide.prg" )
    IF lRebuild
       aadd( aHbp, "-rebuild" )
    ENDIF
@@ -1373,13 +1373,6 @@ METHOD IdeProjManager:finished( nExitCode, nExitStatus, oProcess )
       cTmp := ::oOutputResult:oWidget:toPlainText()
       cExe := ""
       IF empty( cExe )
-         cTkn := "TARGET (ABSOLUTE): "
-         IF ( n := at( cTkn, cTmp ) ) > 0
-            n1   := hb_at( Chr( 10 ), cTmp, n + len( cTkn ) )
-            cExe := StrTran( substr( cTmp, n + len( cTkn ), n1 - n - len( cTkn ) ), Chr( 13 ) )
-         ENDIF
-      ENDIF
-      IF empty( cExe )
          cTkn := "hbmk2: Linking... "
          IF ( n := at( cTkn, cTmp ) ) > 0
             n1   := hb_at( Chr( 10 ), cTmp, n + len( cTkn ) )
@@ -1393,6 +1386,8 @@ METHOD IdeProjManager:finished( nExitCode, nExitStatus, oProcess )
             cExe := StrTran( substr( cTmp, n + len( cTkn ), n1 - n - len( cTkn ) ), Chr( 13 ) )
          ENDIF
       ENDIF
+
+      cExe := hbide_PathProc( cExe, hbide_pathToOSPath( ::oProject:location ) )
 
       ::outputText( " " )
       IF empty( cExe )

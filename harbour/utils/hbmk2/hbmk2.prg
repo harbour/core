@@ -2080,9 +2080,9 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
       CASE Left( cParamL, Len( "-plugin=" ) ) == "-plugin="
 
-         cParam := PathProc( MacroProc( hbmk, SubStr( cParam, Len( "-plugin=" ) + 1 ), aParam[ _PAR_cFileName ] ), aParam[ _PAR_cFileName ] )
-         IF ( tmp := FindInPathPlugIn( PathSepToSelf( cParam ) ) ) != NIL
-            AAdd( hbmk[ _HBMK_aPLUGIN ], PathSepToTarget( hbmk, tmp ) )
+         cParam := PathNormalize( PathProc( PathSepToSelf( MacroProc( hbmk, SubStr( cParam, Len( "-plugin=" ) + 1 ), aParam[ _PAR_cFileName ] ) ), aParam[ _PAR_cFileName ] ) )
+         IF ( tmp := FindInPathPlugIn( cParam ) ) != NIL
+            AAdd( hbmk[ _HBMK_aPLUGIN ], tmp )
          ELSE
             IF hbmk[ _HBMK_lInfo ]
                hbmk_OutStd( hbmk, hb_StrFormat( I_( "Warning: Plugin not found: %1$s" ), cParam ) )
@@ -7267,9 +7267,9 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
 
       CASE Lower( Left( cLine, Len( "plugins="      ) ) ) == "plugins="      ; cLine := SubStr( cLine, Len( "plugins="      ) + 1 )
 
-         cLine := PathProc( MacroProc( hbmk, cLine, cFileName ), FN_DirGet( cFileName ) )
-         IF ( tmp := FindInPathPlugIn( PathSepToSelf( cLine ) ) ) != NIL
-            AAdd( hbmk[ _HBMK_aPLUGIN ], PathSepToTarget( hbmk, tmp ) )
+         cLine := PathNormalize( PathProc( PathSepToSelf( MacroProc( hbmk, cLine, cFileName ) ), FN_DirGet( cFileName ) ) )
+         IF ( tmp := FindInPathPlugIn( cLine ) ) != NIL
+            AAdd( hbmk[ _HBMK_aPLUGIN ], tmp )
          ELSE
             IF hbmk[ _HBMK_lInfo ]
                hbmk_OutStd( hbmk, hb_StrFormat( I_( "Warning: Plugin not found: %1$s" ), cLine ) )

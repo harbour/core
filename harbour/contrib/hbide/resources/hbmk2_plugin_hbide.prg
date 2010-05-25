@@ -25,18 +25,17 @@
  *
  */
 
-FUNCTION hbmk2_plugin_show_target( hbmk2 ) 
+FUNCTION hbmk2_plugin_show_target( hbmk2 )
 
-   SWITCH hbmk2[ "cSTATE" ] 
-   CASE "post_all" 
+   SWITCH hbmk2[ "cSTATE" ]
+   CASE "post_all"
 
-      IF hbmk2[ "nErrorLevel" ] == 0 
-         hbmk2_OutStd( hbmk2, "@@ TARGET: " + hbmk2[ "cTARGETTYPE" ] + " : " + hbmk2[ "cTARGETNAME" ] ) 
-         hbmk2_OutStd( hbmk2, "@@ TARGET (ABSOLUTE): " + hbmk2_PathMakeAbsolute( hbmk2[ "cTARGETNAME" ], hbmk2_Macro( hbmk2, "${hb_curdir}" ) ) ) 
-      ENDIF 
-      EXIT 
+//    IF hbmk2[ "nErrorLevel" ] == 0
+//       hbmk2_OutStd( hbmk2, "@@ TARGET: " + hbmk2[ "cTARGETTYPE" ] + " : " + hbmk2[ "cTARGETNAME" ] )
+//       hbmk2_OutStd( hbmk2, "@@ TARGET (ABSOLUTE): " + hbmk2_PathMakeAbsolute( hbmk2[ "cTARGETNAME" ], hbmk2_Macro( hbmk2, "${hb_curdir}" ) ) )
+//    ENDIF
+      EXIT
 
-   ENDSWITCH 
+   ENDSWITCH
 
-   RETURN "" 
-
+   RETURN ""
