@@ -22,10 +22,10 @@ PROCEDURE Main()
       ? "TIME:", oObject:time()
       ? "DATTIME:", oObject:datetime()
       ? "VALUE:", oObject:value
-      ? "GETVALUE:", oObject:getvalue()
+      ? "GETDATA:", oObject:getdata()
       oObject:value := "hello"
       ? "VALUE:", oObject:value
-      ? "GETVALUE:", oObject:getvalue()
+      ? "GETDATA:", oObject:getdata()
    ELSE
       ? "Can not access 'MyOleTimeServer' OLE server."
    ENDIF
