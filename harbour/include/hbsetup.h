@@ -381,7 +381,7 @@
 
 #ifndef HB_OS_BSD
    #if defined( __FreeBSD__ ) || defined( __NetBSD__ ) || defined( __OpenBSD__ ) || \
-       defined( HB_OS_DARWIN )
+       defined( HB_OS_DARWIN ) || defined( __DragonFly__ )
       #define HB_OS_BSD
    #endif
 #endif

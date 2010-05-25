@@ -2688,7 +2688,12 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             AAdd( l_aLIBSYS, iif( hbmk[ _HBMK_cPLAT ] $ "sunos|bsd", "curses", "ncurses" ) )
          ENDIF
          IF IsGTRequested( hbmk, "gtsln" )
-            AAdd( l_aLIBSYS, "slang" )
+            IF hbmk[ _HBMK_cPLAT ] == "bsd" .AND. ;
+               hb_FileExists( "/usr/pkg/lib/libslang2.so" ) /* For DragonFly BSD */
+               AAdd( l_aLIBSYS, "slang2" )
+            ELSE
+               AAdd( l_aLIBSYS, "slang" )
+            ENDIF
             /* Add paths, where this isn't a system component */
             DO CASE
             CASE hbmk[ _HBMK_cPLAT ] == "darwin"
@@ -2696,6 +2701,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                AAdd( hbmk[ _HBMK_aLIBPATH ], "/opt/local/lib" )
             CASE hbmk[ _HBMK_cPLAT ] == "bsd"
                AAdd( hbmk[ _HBMK_aLIBPATH ], "/usr/local/lib" )
+               AAdd( hbmk[ _HBMK_aLIBPATH ], "/usr/pkg/lib" ) /* For DragonFly BSD */
             ENDCASE
          ENDIF
          IF IsGTRequested( hbmk, "gtxwc" )

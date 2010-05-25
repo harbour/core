@@ -100,6 +100,8 @@ define check_host
       HB_HOST_PLAT := bsd
    else ifneq ($(findstring bsd,$(1)),)
       HB_HOST_PLAT := bsd
+   else ifneq ($(findstring DragonFly,$(1)),)
+      HB_HOST_PLAT := bsd
    else ifneq ($(findstring OS/2,$(1)),)
       HB_HOST_PLAT := os2
    else ifneq ($(findstring MS-DOS,$(1)),)

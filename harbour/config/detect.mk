@@ -60,7 +60,7 @@ _DET_VAR_INC_ := HB_INC_PCRE
 _DET_VAR_HAS_ := HB_HAS_PCRE
 _DET_FLT_PLAT :=
 _DET_FLT_COMP :=
-_DET_INC_DEFP := /usr/include /usr/local/include /opt/local/include
+_DET_INC_DEFP := /usr/include /usr/local/include /usr/pkg/include /opt/local/include
 _DET_INC_LOCL := $(realpath $(TOP)$(ROOT)external/pcre)
 _DET_INC_HEAD := /pcre.h
 
@@ -104,6 +104,7 @@ _DET_INC_DEFP += /usr/include /usr/include/slang
 _DET_INC_DEFP += /usr/local/include /usr/local/include/slang
 _DET_INC_DEFP += /sw/include /sw/include/slang
 _DET_INC_DEFP += /opt/local/include /opt/local/include/slang
+_DET_INC_DEFP += /usr/pkg/include/slang2
 
 include $(TOP)$(ROOT)config/detfun.mk
 
@@ -130,8 +131,8 @@ _DET_VAR_INC_ := HB_INC_X11
 _DET_VAR_HAS_ := HB_HAS_X11
 _DET_FLT_PLAT :=
 _DET_FLT_COMP :=
-_DET_INC_DEFP := /usr/include /usr/local/include /usr/X11R6/include
-_DET_INC_HEAD := /X11/Xlib.h
+_DET_INC_DEFP := /usr/include /usr/local/include /usr/X11R6/include /usr/pkg/include
+_DET_INC_HEAD := /X11/X.h
 
 include $(TOP)$(ROOT)config/detfun.mk
 
