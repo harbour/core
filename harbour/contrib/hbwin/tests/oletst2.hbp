@@ -3,7 +3,5 @@
 #
 
 oletst2.prg
--w3
--es2
--lhbwin
+
 -cflag={watcom}-6r

@@ -1,3 +1,7 @@
+;
+; $Id: globsh.mk 13886 2010-02-16 15:30:31Z vszakats $
+;
+
 EXPORT DllGetClassObject   = '_DllGetClassObject@12'  PRIVATE
 EXPORT DllCanUnloadNow     = '_DllCanUnloadNow@0'     PRIVATE
 EXPORT DllRegisterServer   = '_DllRegisterServer@0'
