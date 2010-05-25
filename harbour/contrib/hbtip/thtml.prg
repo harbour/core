@@ -57,8 +57,6 @@
 // A Html document can have more than 16 nesting levels.
 // The current implementation of FOR EACH is not suitable for the HTML classes
 
-#define  FOR_EACH_NESTING_LIMIT_IS_ONLY_16_AND_FAR_TOO_SMALL
-
 // Directives for a light weight html parser
 #xtrans  P_PARSER( <c> )       =>    {<c>,0,Len(<c>),0}
 #define  P_STR                 1    // the string to parse
@@ -1018,7 +1016,7 @@ METHOD prevNode() CLASS THtmlNode
 
 // creates HTML code for this node
 METHOD toString( nIndent ) CLASS THtmlNode
-   LOCAL cIndent, cHtml := "", oNode, i, imax
+   LOCAL cIndent, cHtml := "", oNode
 
    IF ::htmlTagName == "_text_"
       // a leaf has no child nodes
@@ -1036,7 +1034,7 @@ METHOD toString( nIndent ) CLASS THtmlNode
       IF ! ::isInline() .OR. ::htmlTagName == "!--"
          cHtml += cIndent
       ELSEIF ::keepFormatting()
-         cHtml += Chr( 13 ) + Chr( 10 )
+         cHtml += hb_osNewLine()
       ENDIF
       cHtml += "<" + ::htmlTagName + ::attrToString()
 
@@ -1047,23 +1045,12 @@ METHOD toString( nIndent ) CLASS THtmlNode
 
    IF ISARRAY( ::htmlContent )
 
-#ifdef FOR_EACH_NESTING_LIMIT_IS_ONLY_16_AND_FAR_TOO_SMALL
-       imax := Len( ::htmlContent )
-       FOR i := 1 TO imax
-          oNode := ::htmlContent[ i ]
-          IF ! oNode:isInline() .OR. oNode:htmlTagName == "!--"
-             cHtml += Chr( 13 ) + Chr( 10 )
-          ENDIF
-          cHtml += oNode:toString( nIndent + 1 )
-       NEXT
-#else
       FOR EACH oNode IN ::htmlContent
           IF ! oNode:isInline() .OR. oNode:htmlTagName == "!--"
-             cHtml += Xhr( 13 ) + Chr( 10 )
+             cHtml += hb_osNewLine()
           ENDIF
          cHtml += oNode:toString( nIndent + 1 )
       NEXT
-#endif
 
    ELSEIF ISCHARACTER( ::htmlContent )
       cHtml += ::htmlContent
@@ -1073,12 +1060,12 @@ METHOD toString( nIndent ) CLASS THtmlNode
       IF ::isInline() .OR. ::keepFormatting() .OR. ::isType( CM_HEADING ) .OR. ::isType( CM_HEAD )
          RETURN cHtml += iif( ::htmlEndTagName == "/", " />", "<" + ::htmlEndTagName + ">" )
       ENDIF
-      IF !( Right( cHtml, 1 ) == Chr( 10 ) )
-         cHtml += Chr( 13 ) + Chr( 10 )
+      IF !( Right( cHtml, Len( hb_osNewLine() ) ) == hb_osNewLine() )
+         cHtml += hb_osNewLine()
       ENDIF
       RETURN cHtml += cIndent + iif( ::htmlEndTagName == "/", " />", "<" + ::htmlEndTagName + ">" )
    ELSEIF ::htmlTagName $ "!--,br"
-      RETURN cHtml += Chr( 13 ) + Chr( 10 ) + cIndent
+      RETURN cHtml += hb_osNewLine() + cIndent
    ENDIF
 
    RETURN cHtml
@@ -1139,25 +1126,6 @@ METHOD collect( oEndNode ) CLASS THtmlNode
 
    RETURN stack[ S_DATA ]
 
-#ifdef FOR_EACH_NESTING_LIMIT_IS_ONLY_16_AND_FAR_TOO_SMALL
-
-STATIC FUNCTION __CollectTags( oTHtmlNode, stack, oEndNode )
-   LOCAL i, imax
-   S_PUSH( stack, oTHtmlNode )
-
-   IF oTHtmlNode:isNode() .AND. ! oTHtmlNode == oEndNode
-      imax := Len( oTHtmlNode:htmlContent )
-      FOR i := 1 TO imax
-         __CollectTags( oTHtmlNode:htmlContent[ i ], stack, oEndNode )
-      NEXT
-   ENDIF
-
-   RETURN stack
-
-#else
-
-// $HZ BUG: Unrecoverable error 9000: FOR EACH excessive nesting!
-
 STATIC FUNCTION __CollectTags( oTHtmlNode, stack, oEndNode )
    LOCAL oSubNode
 
@@ -1170,12 +1138,11 @@ STATIC FUNCTION __CollectTags( oTHtmlNode, stack, oEndNode )
    ENDIF
 
    RETURN stack
-#endif
 
 // Retrieves the textual content of a node
 METHOD getText( cEOL ) CLASS THtmlNode
    LOCAL cText := ""
-   LOCAL oNode, i, imax
+   LOCAL oNode
 
    IF cEOL == NIL
       cEOL := hb_osNewLine()
@@ -1185,21 +1152,6 @@ METHOD getText( cEOL ) CLASS THtmlNode
       RETURN RTrim( ::htmlContent ) + cEOL
    ENDIF
 
-#ifdef FOR_EACH_NESTING_LIMIT_IS_ONLY_16_AND_FAR_TOO_SMALL
-
-   imax := Len( ::htmlContent )
-   FOR i := 1 TO imax
-      oNode := ::htmlContent[ i ]
-      cText += oNode:getText( cEOL )
-      IF Lower( ::htmlTagName ) $ "td,th" .AND. AScan( ::parent:htmlContent, {| o | o == Self } ) < Len( ::parent:htmlContent )
-         // leave table rows in one line, cells separated by Tab
-         cText := SubStr( cText, 1, Len( cText ) - Len( cEol ) )
-         cText += Chr( 9 )
-      ENDIF
-   NEXT
-
-#else
-
    FOR EACH oNode IN ::htmlContent
       cText += oNode:getText( cEOL )
       IF Lower( ::htmlTagName ) $ "td,th" .AND. AScan( ::parent:htmlContent, {| o | o == Self } ) < Len( ::parent:htmlContent )
@@ -1208,8 +1160,6 @@ METHOD getText( cEOL ) CLASS THtmlNode
          cText += Chr( 9 )
       ENDIF
    NEXT
-
-#endif
 
    RETURN cText
 
@@ -1305,7 +1255,7 @@ STATIC FUNCTION __ParseAttr( parser )
          parser:p_pos--
          EXIT
 
-      CASE '"'
+      CASE Chr( 34 )
       CASE "'"
          lIsQuoted := .T.
          parser:p_end := parser:p_pos
@@ -1557,14 +1507,26 @@ METHOD pushNode( cTagName ) CLASS THtmlNode
 // called by "-" operator
 // returns the parent of this node and raises error if cName is an invalid closing tag
 METHOD popNode( cName ) CLASS THtmlNode
-   cName := LTrim( cName )
+   LOCAL endTag
+   cName := Lower( LTrim( cName ) )
 
    IF Left( cName, 1 ) == "/"
       cName := SubStr( cName, 2 )
    ENDIF
 
-   IF !( Lower( cName ) == Lower( ::htmlTagName ) )
+   IF !( cName == Lower( ::htmlTagName ) )
       RETURN ::error( "Invalid closing HTML tag for: <" + ::htmlTagName + ">", ::className(), "-", EG_ARG, { cName } )
+   ENDIF
+   
+   /* tfonrouge: 2010-05-25
+      this allows to properly close the tags "tr,th,td" by simply using:
+      node - ["tr","th","td"]
+    */
+   IF AScan( {"tr","th","td"}, cName ) > 0
+      endTag := "</" + cName + ">"
+      IF !Right( ::toString(), 3 + Len( cName ) ) == endTag
+         ::addNode( THtmlNode():new( Self, "/"+cName, ,  ) )
+      ENDIF
    ENDIF
 
    RETURN Self:parent
