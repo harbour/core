@@ -1298,7 +1298,7 @@ HARBOUR
      dos  / POSIX shell (bash.exe)
      os/2 / OS/2 shell (cmd.exe)
      os/2 / POSIX shell (bash.exe)
-     *nix / POSIX shell (* not supported: HB_BUILD_PKG - implemented as standalone scripts)
+     *nix / POSIX shell
 
 
 13. LINKS TO EXTERNAL COMPONENTS
