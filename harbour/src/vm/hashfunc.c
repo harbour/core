@@ -736,6 +736,33 @@ HB_FUNC( HB_HAUTOADD )
       hb_errRT_BASE( EG_ARG, 2017, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+HB_FUNC( HB_HKEEPORDER )
+{
+   PHB_ITEM pHash = hb_param( 1, HB_IT_HASH );
+   PHB_ITEM pValue = hb_param( 2, HB_IT_LOGICAL );
+
+   if( pHash )
+   {
+      int iFlags = hb_hashGetFlags( pHash );
+      hb_retl( ( iFlags & HB_HASH_KEEPORDER ) != 0 );
+      if( pValue )
+      {
+         if( hb_itemGetL( pValue ) )
+         {
+            if( ( iFlags & HB_HASH_KEEPORDER ) == 0 )
+               hb_hashSetFlags( pHash, HB_HASH_KEEPORDER );
+         }
+         else if( ( iFlags & HB_HASH_KEEPORDER ) != 0 )
+         {
+            hb_hashClearFlags( pHash, HB_HASH_KEEPORDER );
+            hb_hashSetFlags( pHash, HB_HASH_RESORT );
+         }
+      }
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2017, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 HB_FUNC( HB_HALLOCATE )
 {
    PHB_ITEM pHash = hb_param( 1, HB_IT_HASH );
@@ -768,3 +795,4 @@ HB_FUNC( HB_HDEFAULT )
 HB_FUNC( HB_HSETAUTOADD )     { HB_FUNC_EXEC( HB_HAUTOADD ); hb_itemReturn( hb_param( 1, HB_IT_HASH ) ); }
 HB_FUNC( HB_HSETCASEMATCH )   { HB_FUNC_EXEC( HB_HCASEMATCH ); hb_itemReturn( hb_param( 1, HB_IT_HASH ) ); }
 HB_FUNC( HB_HSETBINARY )      { HB_FUNC_EXEC( HB_HBINARY ); hb_itemReturn( hb_param( 1, HB_IT_HASH ) ); }
+HB_FUNC( HB_HSETORDER )       { HB_FUNC_EXEC( HB_HKEEPORDER ); hb_itemReturn( hb_param( 1, HB_IT_HASH ) ); }

@@ -891,6 +891,7 @@ extern HB_EXPORT HB_BOOL   hb_hashDelAt( PHB_ITEM pHash, HB_SIZE ulPos );
 
 #define HB_HASH_IGNORECASE          0x10
 #define HB_HASH_BINARY              0x20
+#define HB_HASH_KEEPORDER           0x40
 
 #define HB_HASH_FLAG_MASK           0xFFFF
 #define HB_HASH_FLAG_DEFAULT        ( HB_HASH_AUTOADD_ASSIGN | HB_HASH_BINARY )

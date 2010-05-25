@@ -618,7 +618,7 @@ HB_FUNC( NETIO_ACCEPT )
       if( connsd != HB_NO_SOCKET )
       {
          hb_socketSetKeepAlive( connsd, HB_TRUE );
-         hb_socketSetNoDelay( connsd, HB_FALSE );
+         hb_socketSetNoDelay( connsd, HB_TRUE );
          conn = s_consrvNew( connsd, lsd->rootPath, lsd->rpc );
 
 

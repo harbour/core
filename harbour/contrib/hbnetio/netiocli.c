@@ -860,7 +860,7 @@ static PHB_CONCLI s_fileConnect( const char ** pFilename,
                HB_PUT_LE_UINT16( &msgbuf[ 4 ], len );
                memset( msgbuf + 6, '\0', sizeof( msgbuf ) - 6 );
 
-               hb_socketSetNoDelay( sd, HB_FALSE );
+               hb_socketSetNoDelay( sd, HB_TRUE );
                conn = s_fileConNew( sd, pszIpAddres, iPort, iTimeOut,
                                     pszPasswd, iPassLen, iLevel, iStrategy );
                sd = HB_NO_SOCKET;

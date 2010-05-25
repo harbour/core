@@ -1460,7 +1460,7 @@ HB_FUNC( WIN_OLEAUTO___ONERROR )
 
    /* Try property put */
 
-   if( szMethod[ 0 ] == '_' && hb_pcount() > 0 )
+   if( szMethod[ 0 ] == '_' && hb_pcount() == 1 )
    {
       pMemberArray = &szMethodWide[ 1 ];
       lOleError = HB_VTBL( pDisp )->GetIDsOfNames( HB_THIS_( pDisp ) HB_ID_REF( IID_NULL ), &pMemberArray,
