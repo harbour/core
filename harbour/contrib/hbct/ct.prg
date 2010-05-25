@@ -96,13 +96,13 @@ FUNCTION CTINIT()
 
    RETURN s_bInitialized
 
-INIT FUNCTION _CTINIT()
+INIT PROCEDURE _CTINIT()
 
    IF ! s_bInitialized
       s_bInitialized := ctcinit()
    ENDIF
 
-   RETURN s_bInitialized
+   RETURN
 
 
 /*  $DOC$
@@ -147,11 +147,11 @@ FUNCTION CTEXIT()
 
    RETURN NIL
 
-EXIT FUNCTION _CTEXIT()
+EXIT PROCEDURE _CTEXIT()
 
    IF s_bInitialized
       ctcexit()
       s_bInitialized := .F.
    ENDIF
 
-   RETURN NIL
+   RETURN

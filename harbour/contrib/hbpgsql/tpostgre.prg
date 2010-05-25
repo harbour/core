@@ -104,7 +104,9 @@ ENDCLASS
 METHOD New( cHost, cDatabase, cUser, cPass, nPort, Schema ) CLASS TPQserver
    LOCAL res
 
-   DEFAULT nPort TO 5432
+   IF ! ISNUMBER( nPort )
+      nPort := 5432
+   ENDIF
 
    ::pDB := PQconnect( cDatabase, cHost, cUser, cPass, nPort )
 
@@ -552,8 +554,12 @@ METHOD Refresh( lQuery, lMeta ) CLASS TPQquery
    LOCAL i
    LOCAL cType, nDec, nSize
 
-   DEFAULT lQuery TO .T.
-   DEFAULT lMeta TO .T.
+   IF ! ISLOGICAL( lQuery )
+      lQuery := .T.
+   ENDIF
+   IF ! ISLOGICAL( lMeta )
+      lMeta := .T.
+   ENDIF
 
    ::Destroy()
 
@@ -722,7 +728,9 @@ METHOD Read() CLASS TPQquery
 
 METHOD Skip( nrecno ) CLASS TPQquery
 
-   DEFAULT nRecno TO 1
+   IF ! ISNUMBER( nRecno )
+      nRecno := 1
+   ENDIF
 
    IF ::nRecno + nRecno > 0 .AND. ::nRecno + nRecno <= ::nLastrec
       ::nRecno := ::nRecno + nRecno
@@ -990,7 +998,9 @@ METHOD FieldGet( nField, nRow ) CLASS TPQquery
 
    IF nField > 0 .AND. ::nResultStatus == PGRES_TUPLES_OK
 
-      DEFAULT nRow TO ::nRecno
+      IF ! ISNUMBER( nRow )
+         nRow := ::nRecno
+      ENDIF
 
       result := PQgetvalue( ::pQuery, nRow, nField )
 
@@ -1038,7 +1048,9 @@ METHOD Getrow( nRow ) CLASS TPQquery
    LOCAL aOld
    LOCAL nCol
 
-   DEFAULT nRow TO ::nRecno
+   IF ! ISNUMBER( nRow )
+      nRow := ::nRecno
+   ENDIF
 
    IF ::nResultStatus == PGRES_TUPLES_OK
 

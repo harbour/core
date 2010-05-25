@@ -179,11 +179,15 @@ METHOD New( cODBCStr, cUserName, cPassword, lCache ) CLASS TODBC
    LOCAL xBuf
    LOCAL nRet
 
-   IF cUserName != NIL
-      DEFAULT cPassword TO ""
+   IF ISCHARACTER( cUserName )
+      IF ! ISCHARACTER( cPassword )
+         cPassword := ""
+      ENDIF
    ENDIF
 
-   DEFAULT lCache TO .T.
+   IF ! ISLOGICAL( lCache )
+      lCache := .T.
+   ENDIF
 
    ::cODBCStr  := cODBCStr
    ::lCacheRS  := lCache
@@ -199,13 +203,13 @@ METHOD New( cODBCStr, cUserName, cPassword, lCache ) CLASS TODBC
    SQLAllocConnect( ::hEnv, @xBuf )                 // Allocates SQL Connection
    ::hDbc := xBuf
 
-   IF cUserName == NIL
-      SQLDriverConnect( ::hDbc, ::cODBCStr, @xBuf )     // Connects to Driver
-      ::cODBCRes := xBuf
-   ELSE
+   IF ISCHARACTER( cUserName )
       IF ! ( ( nRet := SQLConnect( ::hDbc, cODBCStr, cUserName, cPassword ) ) == SQL_SUCCESS .OR. nRet == SQL_SUCCESS_WITH_INFO )
          // TODO: Some error here
       ENDIF
+   ELSE
+      SQLDriverConnect( ::hDbc, ::cODBCStr, @xBuf )     // Connects to Driver
+      ::cODBCRes := xBuf
    ENDIF
 
    RETURN Self
@@ -216,7 +220,9 @@ METHOD SetAutocommit( lEnable ) CLASS TODBC
 
    LOCAL lOld := ::lAutoCommit
 
-   DEFAULT lEnable TO .T.
+   IF ! ISLOGICAL( lEnable )
+      lEnable := .T.
+   ENDIF
 
    IF lEnable != lOld
       ::SetCnnOptions( SQL_AUTOCOMMIT, iif( lEnable, SQL_AUTOCOMMIT_ON, SQL_AUTOCOMMIT_OFF ) )

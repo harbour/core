@@ -292,18 +292,18 @@ FUNCTION MemoEdit( cString,;
 
    LOCAL nOldCursor
 
-   DEFAULT nTop            TO 0
-   DEFAULT nLeft           TO 0
-   DEFAULT nBottom         TO MaxRow()
-   DEFAULT nRight          TO MaxCol()
-   DEFAULT lEditMode       TO .T.
-   DEFAULT nLineLength     TO nRight - nLeft + 1
-   DEFAULT nTabSize        TO 4
-   DEFAULT nTextBuffRow    TO 1
-   DEFAULT nTextBuffColumn TO 0
-   DEFAULT nWindowRow      TO 0
-   DEFAULT nWindowColumn   TO nTextBuffColumn
-   DEFAULT cString         TO ""
+   IF ! ISNUMBER( nTop )            ; nTop            := 0                  ; ENDIF
+   IF ! ISNUMBER( nLeft )           ; nLeft           := 0                  ; ENDIF
+   IF ! ISNUMBER( nBottom )         ; nBottom         := MaxRow()           ; ENDIF
+   IF ! ISNUMBER( nRight )          ; nRight          := MaxCol()           ; ENDIF
+   IF ! ISLOGICAL( lEditMode )      ; lEditMode       := .T.                ; ENDIF
+   IF ! ISNUMBER( nLineLength )     ; nLineLength     := nRight - nLeft + 1 ; ENDIF
+   IF ! ISNUMBER( nTabSize )        ; nTabSize        := 4                  ; ENDIF
+   IF ! ISNUMBER( nTextBuffRow )    ; nTextBuffRow    := 1                  ; ENDIF
+   IF ! ISNUMBER( nTextBuffColumn ) ; nTextBuffColumn := 0                  ; ENDIF
+   IF ! ISNUMBER( nWindowRow )      ; nWindowRow      := 0                  ; ENDIF
+   IF ! ISNUMBER( nWindowColumn )   ; nWindowColumn   := nTextBuffColumn    ; ENDIF
+   IF ! ISCHARACTER( cString )      ; cString         := ""                 ; ENDIF
 
    // Original MemoEdit() converts Tabs into spaces;
    oEd := HBMemoEditor():New( StrTran( cString, Chr( K_TAB ), Space( 1 ) ), nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabSize, nTextBuffRow, nTextBuffColumn, nWindowRow, nWindowColumn )

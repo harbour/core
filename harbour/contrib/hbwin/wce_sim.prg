@@ -115,7 +115,9 @@ METHOD lNumberOfPhoneBookEntries( nType, /* @ */ nTotal, /* @ */ nUsed ) CLASS w
       RETURN .F.
    ENDIF
 
-   DEFAULT nType TO SIM_PBSTORAGE_SIM
+   IF ! ISNUMBER( nType )
+      nType := SIM_PBSTORAGE_SIM
+   ENDIF
 
    nResult       := wce_SimPhoneBookStatus( ::hSim, nType, @nTotal, @nUsed )
    ::nLastError  := nResult
@@ -136,8 +138,12 @@ METHOD aGetAllPhoneBookEntries( nType ) CLASS wce_sim
       RETURN .F.
    ENDIF
 
-   DEFAULT nType    TO SIM_PBSTORAGE_SIM
-   DEFAULT aEntries TO {}
+   IF ! ISNUMBER( nType )
+      nType := SIM_PBSTORAGE_SIM
+   ENDIF
+   IF ! ISARRAY( aEntries )
+      aEntries := {}
+   ENDIF
 
    IF ! ::lNumberOfPhoneBookEntries( nType, @nTotal, @nUsed )
       RETURN {}
@@ -168,7 +174,9 @@ METHOD lGetSimPhoneEntry( nPos, nType, /* @ */ aEntry ) CLASS wce_sim
       RETURN .F.
    ENDIF
 
-   DEFAULT nType TO SIM_PBSTORAGE_SIM
+   IF ! ISNUMBER( nType )
+      nType := SIM_PBSTORAGE_SIM
+   ENDIF
 
    nResult := wce_SimReadPhoneBookEntry( ::hSim, nType, nPos, @a )
 
@@ -186,8 +194,12 @@ METHOD lSetSimPhoneEntry( nPos, nType, cNumber, cName, nPlan, nAddrType ) CLASS 
       RETURN .F.
    ENDIF
 
-   DEFAULT nPos  TO SIM_PBINDEX_FIRSTAVAILABLE
-   DEFAULT nType TO SIM_PBSTORAGE_SIM
+   IF ! ISNUMBER( nType )
+      nPos := SIM_PBINDEX_FIRSTAVAILABLE
+   ENDIF
+   IF ! ISNUMBER( nType )
+      nType := SIM_PBSTORAGE_SIM
+   ENDIF
 
    nResult := wce_SimWritePhoneBookEntry( ::hSim, nType, nPos, cNumber, cName, nPlan, nAddrType )
    ::nLastError := nResult
@@ -203,7 +215,9 @@ METHOD lDelSimPhoneEntry( nPos, nType ) CLASS wce_sim
       RETURN .F.
    ENDIF
 
-   DEFAULT nType TO SIM_PBSTORAGE_SIM
+   IF ! ISNUMBER( nType )
+      nType := SIM_PBSTORAGE_SIM
+   ENDIF
 
    nResult := wce_SimDeletePhoneBookEntry( ::hSim, nType, nPos )
    ::nLastError := nResult

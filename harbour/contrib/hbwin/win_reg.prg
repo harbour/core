@@ -141,7 +141,9 @@ FUNCTION win_regQuery( nHKEY, cKeyName, cEntryName, xValue, lSetIt )
    LOCAL cValType := ValType( xValue )
    LOCAL lRetVal
 
-   DEFAULT lSetIt TO .F.
+   IF ! ISLOGICAL( lSetIt )
+      lSetIt := .F.
+   ENDIF
 
    IF cValType == "L"
       xValue := iif( xValue, 1, 0 )

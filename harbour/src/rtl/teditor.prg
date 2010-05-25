@@ -160,10 +160,18 @@ ENDCLASS
 METHOD Resize( nTop, nLeft, nBottom, nRight ) CLASS HBEditor
 
    // don't change coordinates not given
-   DEFAULT nTop    TO ::nTop
-   DEFAULT nLeft   TO ::nLeft
-   DEFAULT nBottom TO ::nBottom
-   DEFAULT nRight  TO ::nRight
+   IF ! ISNUMBER( nTop )
+      nTop := ::nTop
+   ENDIF
+   IF ! ISNUMBER( nLeft )
+      nLeft := ::nLeft
+   ENDIF
+   IF ! ISNUMBER( nBottom )
+      nBottom := ::nBottom
+   ENDIF
+   IF ! ISNUMBER( nRight )
+      nRight := ::nRight
+   ENDIF
 
    ::nTop := nTop
    ::nLeft := nLeft
@@ -852,8 +860,12 @@ METHOD DeHilite() CLASS HBEditor
 
 METHOD SetPos( nRow, nCol ) CLASS HBEditor
 
-   DEFAULT nRow TO ::nPhysRow
-   DEFAULT nCol TO ::nPhysCol
+   IF ! ISNUMBER( nRow )
+      nRow := ::nPhysRow
+   ENDIF
+   IF ! ISNUMBER( nCol )
+      nCol := ::nPhysCol
+   ENDIF
 
    ::nPhysRow := nRow
    ::nPhysCol := nCol
@@ -967,18 +979,18 @@ METHOD BrowseText( nPassedKey )
 
 METHOD New( cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabSize, nTextRow, nTextCol, nWndRow, nWndCol ) CLASS HBEditor
 
-   DEFAULT cString     TO ""
-   DEFAULT nTop        TO 0
-   DEFAULT nLeft       TO 0
-   DEFAULT nBottom     TO MaxRow()
-   DEFAULT nRight      TO MaxCol()
-   DEFAULT lEditMode   TO .T.
-   DEFAULT nLineLength TO NIL
-   DEFAULT nTabSize    TO NIL
-   DEFAULT nTextRow    TO 1
-   DEFAULT nTextCol    TO 0
-   DEFAULT nWndRow     TO 0
-   DEFAULT nWndCol     TO 0
+   IF ! ISCHARACTER( cString )      ; cString         := ""       ; ENDIF
+   IF ! ISNUMBER( nTop )            ; nTop            := 0        ; ENDIF
+   IF ! ISNUMBER( nLeft )           ; nLeft           := 0        ; ENDIF
+   IF ! ISNUMBER( nBottom )         ; nBottom         := MaxRow() ; ENDIF
+   IF ! ISNUMBER( nRight )          ; nRight          := MaxCol() ; ENDIF
+   IF ! ISLOGICAL( lEditMode )      ; lEditMode       := .T.      ; ENDIF
+   IF ! ISNUMBER( nLineLength )     ; nLineLength     := NIL      ; ENDIF
+   IF ! ISNUMBER( nTabSize )        ; nTabSize        := NIL      ; ENDIF
+   IF ! ISNUMBER( nTextRow )        ; nTextRow        := 1        ; ENDIF
+   IF ! ISNUMBER( nTextCol )        ; nTextCol        := 0        ; ENDIF
+   IF ! ISNUMBER( nWndRow )         ; nWndRow         := 0        ; ENDIF
+   IF ! ISNUMBER( nWndCol )         ; nWndCol         := 0        ; ENDIF
 
    ::aText := Text2Array( cString, nLineLength )
    ::naTextLen := Len( ::aText )

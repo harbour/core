@@ -72,8 +72,12 @@ FUNCTION WIN_OSNETREGOK( lSetIt, lDoVista )
    LOCAL cKeySrv
    LOCAL cKeyWks
 
-   DEFAULT lSetIt TO .F.
-   DEFAULT lDoVista TO .T.
+   IF ! ISLOGICAL( lSetIt )
+      lSetIt := .F.
+   ENDIF
+   IF ! ISLOGICAL( lDoVista )
+      lDoVista := .T.
+   ENDIF
 
    IF ! lDoVista .AND. hb_osIsWinVista()
       /* do nothing */

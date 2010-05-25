@@ -328,9 +328,15 @@ METHOD BrowseTable( lCanEdit, aExitKeys ) CLASS TBrowseSQL
    LOCAL nKey
    LOCAL lKeepGoing := .T.
 
-   DEFAULT nKey      TO NIL
-   DEFAULT lCanEdit  TO .F.
-   DEFAULT aExitKeys TO { K_ESC }
+   IF ! ISNUMBER( nKey )
+      nKey := NIL
+   ENDIF
+   IF ! ISLOGICAL( lCanEdit )
+      lCanEdit := .F.
+   ENDIF
+   IF ! ISARRAY( aExitKeys )
+      aExitKeys := { K_ESC }
+   ENDIF
 
    DO WHILE lKeepGoing
 

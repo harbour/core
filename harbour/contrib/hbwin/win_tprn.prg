@@ -304,7 +304,9 @@ METHOD PROCEDURE Destruct() CLASS WIN_PRN
 METHOD StartDoc( cDocName ) CLASS WIN_PRN
    LOCAL lResult
 
-   DEFAULT cDocName TO hb_ArgV( 0 ) + " [" + DToC( Date() ) + " - " + Time() + "]"
+   IF ! ISCHARACTER( cDocName )
+      cDocName := hb_ArgV( 0 ) + " [" + DToC( Date() ) + " - " + Time() + "]"
+   ENDIF
 
    IF ( lResult := win_StartDoc( ::hPrinterDc, cDocName ) )
       IF !( lResult := ::StartPage( ::hPrinterDc ) )
@@ -317,7 +319,9 @@ METHOD StartDoc( cDocName ) CLASS WIN_PRN
 
 METHOD EndDoc( lAbortDoc ) CLASS WIN_PRN
    IF ::HavePrinted
-      DEFAULT lAbortDoc TO .F.
+      IF ! ISLOGICAL( lAbortDoc )
+         lAbortDoc := .F.
+      ENDIF
    ELSE
       lAbortDoc := .T.
    ENDIF
@@ -397,7 +401,9 @@ METHOD CheckPage() CLASS WIN_PRN
 
 METHOD EndPage( lStartNewPage ) CLASS WIN_PRN
 
-   DEFAULT lStartNewPage TO .T.
+   IF ! ISLOGICAL( lStartNewPage )
+      lStartNewPage := .T.
+   ENDIF
 
    win_EndPage( ::hPrinterDC )
    IF lStartNewPage
@@ -421,7 +427,9 @@ METHOD NewLine() CLASS WIN_PRN
 
 METHOD NewPage( lDelay ) CLASS WIN_PRN
 
-   DEFAULT lDelay TO .F.
+   IF ! ISLOGICAL( lDelay )
+      lDelay := .F.
+   ENDIF
 
    IF ::Printing
       IF lDelay
@@ -596,9 +604,15 @@ METHOD TextOut( cString, lNewLine, lUpdatePosX, nAlign ) CLASS WIN_PRN
 
    IF cString != NIL .AND. ::CheckPage()
 
-      DEFAULT lNewLine TO .F.
-      DEFAULT lUpdatePosX TO .T.
-      DEFAULT nAlign TO HB_BITOR( WIN_TA_BOTTOM, WIN_TA_LEFT )
+      IF ! ISLOGICAL( lNewLine )
+         lNewLine := .F.
+      ENDIF
+      IF ! ISLOGICAL( lUpdatePosX )
+         lUpdatePosX := .T.
+      ENDIF
+      IF ! ISNUMBER( nAlign )
+         nAlign := HB_BITOR( WIN_TA_BOTTOM, WIN_TA_LEFT )
+      ENDIF
 
       nPosX := win_TextOut( ::hPrinterDC, ::PosX, ::PosY, cString, Len( cString ), ::fCharWidth, nAlign )
 
@@ -627,7 +641,9 @@ METHOD TextAtFont( nPosX, nPosY, cString, cFont, nPointSize, nWidth, nBold, lUnd
 
    IF ::CheckPage()
 
-      DEFAULT nPointSize TO ::FontPointSize
+      IF ! ISNUMBER( nPointSize )
+         nPointSize := ::FontPointSize
+      ENDIF
 
       IF cFont != NIL
          cType := ValType( nWidth )

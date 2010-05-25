@@ -90,8 +90,12 @@ ENDCLASS
 
 METHOD New( aRow, aFStruct, cTableName ) CLASS TMySQLRow
 
-   DEFAULT cTableName TO ""
-   DEFAULT aFStruct TO {}
+   IF ! ISCHARACTER( cTableName )
+      cTableName := ""
+   ENDIF
+   IF ! ISARRAY( aFStruct )
+      aFStruct := {}
+   ENDIF
 
    ::aRow := aRow
    //DAVID:
@@ -177,7 +181,9 @@ METHOD FieldLen( nNum ) CLASS TMySQLRow
 */
 METHOD FieldDec( nNum, lFormat ) CLASS TMySQLRow
 
-   DEFAULT lFormat TO .F.
+   IF ! ISLOGICAL( lFormat )
+      lFormat := .F.
+   ENDIF
 
    IF nNum >= 1 .AND. nNum <= Len( ::aFieldStruct )
 
@@ -412,10 +418,12 @@ METHOD Skip( nRows ) CLASS TMySQLQuery
    LOCAL lbof
 
    // NOTE: MySQL row count starts from 0
-   DEFAULT nRows TO 1
+   IF ! ISNUMBER( nRows )
+      nRows := 1
+   ENDIF
 
    //DAVID:
-   ::lBof := ( Empty( ::LastRec() ) )
+   ::lBof := Empty( ::LastRec() )
 
    IF nRows == 0
       // No move
@@ -469,8 +477,10 @@ METHOD GetRow( nRow ) CLASS TMySQLQuery
    LOCAL oRow := NIL
    LOCAL i
 
-   //DAVID: use current row  DEFAULT nRow TO 0
-   DEFAULT nRow TO ::nCurRow
+   //DAVID: use current row DEFAULT nRow TO 0
+   IF ! ISNUMBER( nRow )
+      nRow := ::nCurRow
+   ENDIF
 
    IF ::nResultHandle != NIL
 
@@ -681,7 +691,9 @@ METHOD FieldLen( nNum ) CLASS TMySQLQuery
 */
 METHOD FieldDec( nNum, lFormat ) CLASS TMySQLQuery
 
-   DEFAULT lFormat TO .F.
+   IF ! ISLOGICAL( lFormat )
+      lFormat := .F.
+   ENDIF
 
    IF nNum >=1 .AND. nNum <= Len( ::aFieldStruct )
       IF !lFormat .AND. ( ::aFieldStruct[ nNum ][ MYSQL_FS_TYPE ] == MYSQL_TYPE_FLOAT .OR. ;
@@ -818,9 +830,14 @@ METHOD Update( oRow, lOldRecord, lRefresh ) CLASS TMySQLTable
    LOCAL i
    //DAVID:
    LOCAL ni, cWhere := " WHERE "
-   DEFAULT lOldRecord TO .F.
+
+   IF ! ISLOGICAL( lOldRecord )
+      lOldRecord := .F.
+   ENDIF
    //DAVID: too many ::refresh() can slow some processes, so we can desactivate it by parameter
-   DEFAULT lRefresh TO .T.
+   IF ! ISLOGICAL( lRefresh )
+      lRefresh := .T.
+   ENDIF
 
    ::lError := .F.
 
@@ -936,9 +953,14 @@ METHOD Delete( oRow, lOldRecord, lRefresh ) CLASS TMySQLTable
 
    //DAVID:
    LOCAL ni, cWhere := " WHERE "
-   DEFAULT lOldRecord TO .F.
+
+   IF ! ISLOGICAL( lOldRecord )
+      lOldRecord := .F.
+   ENDIF
    //DAVID: too many ::refresh() can slow some processes, so we can desactivate it by parameter
-   DEFAULT lRefresh TO .T.
+   IF ! ISLOGICAL( lRefresh )
+      lRefresh := .T.
+   ENDIF
 
    // is this a row of this table ?
    IF oRow == NIL
@@ -1030,7 +1052,9 @@ METHOD Append( oRow, lRefresh ) CLASS TMySQLTable
    LOCAL i
 
    //DAVID: too many ::refresh() can slow some processes, so we can desactivate it by parameter
-   DEFAULT lRefresh TO .T.
+   IF ! ISLOGICAL( lRefresh )
+      lRefresh := .T.
+   ENDIF
 
    IF oRow == NIL // default Current row
 
@@ -1136,7 +1160,9 @@ METHOD GetBlankRow( lSetValues ) CLASS TMySQLTable
    LOCAL aRow := Array( ::nNumFields )
 
    //DAVID: It is not current row, so do not change it
-   DEFAULT lSetValues TO .F.
+   IF ! ISLOGICAL( lSetValues )
+      lSetValues := .F.
+   ENDIF
 
    // crate an array of empty fields
    FOR i := 1 TO ::nNumFields
@@ -1488,7 +1514,9 @@ METHOD CreateIndex( cName, cTable, aFNames, lUnique ) CLASS TMySQLServer
    LOCAL cCreateQuery := "CREATE "
    LOCAL i
 
-   DEFAULT lUnique TO .F.
+   IF ! ISLOGICAL( lUnique )
+      lUnique := .F.
+   ENDIF
 
    IF lUnique
       cCreateQuery += "UNIQUE INDEX "
@@ -1538,8 +1566,9 @@ METHOD Query( cQuery ) CLASS TMySQLServer
 
    LOCAL oQuery, cTableName, i, cUpperQuery, nNumTables, cToken
 
-   DEFAULT cQuery TO ""
-
+   IF ! ISCHARACTER( cQuery )
+      cQuery := ""
+   ENDIF
 
    cUpperQuery := Upper( AllTrim( cQuery ) )
    i := 1

@@ -106,7 +106,9 @@ ENDCLASS
 
 METHOD New( cServer, cUser, cPassword, nDialect ) CLASS TFbServer
 
-   Default nDialect TO 1
+   IF ! ISNUMBER( nDialect )
+      nDialect := 1
+   ENDIF
 
    ::lError := .F.
    ::nError := 0

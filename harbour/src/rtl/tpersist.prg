@@ -118,12 +118,14 @@ METHOD SaveToText( cObjectName, nIndent ) CLASS HBPersistent
    LOCAL cObject
    LOCAL cType
 
-   DEFAULT cObjectName TO "o" + ::ClassName()
+   IF ! ISCHARACTER( cObjectName )
+      cObjectName := "o" + ::ClassName()
+   ENDIF
 
-   IF nIndent == NIL
-      nIndent := 0
-   ELSE
+   IF ISNUMBER( nIndent )
       nIndent += 3
+   ELSE
+      nIndent := 0
    ENDIF
 
    cObject := iif( nIndent > 0, hb_OSNewLine(), "" ) + Space( nIndent ) + ;

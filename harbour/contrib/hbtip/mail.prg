@@ -386,7 +386,9 @@ METHOD FromString( cMail, cBoundary, nPos ) CLASS TipMail
    ENDIF
 
    // Part 1: parsing header
-   DEFAULT nPos TO 1
+   IF ! ISNUMBER( nPos )
+      nPos := 1
+   ENDIF
 
    nLinePos := hb_At( e"\r\n", cMail, nPos )
    DO WHILE nLinePos > nPos
@@ -550,7 +552,7 @@ METHOD setHeader( cSubject, cFrom, xTo, xCC, xBCC ) CLASS TipMail
    IF ! ::setFieldPart( "Subject", WordEncodeQ( cSubject, ::cCharset ) )
       RETURN .F.
    ENDIF
-   
+
    IF ! ::setFieldPart( "From", LTrim( WordEncodeQ( tip_GetNameEMail( AllTrim( cFrom ) ), ::cCharset ) + " <" + tip_GetRawEMail( AllTrim( cFrom ) ) + ">" ) )
       RETURN .F.
    ENDIF
@@ -661,7 +663,9 @@ METHOD getMultiParts( aParts ) CLASS TipMail
 
    ::resetAttachment()
 
-   DEFAULT aParts TO {}
+   IF ! ISARRAY( aParts )
+      aParts := {}
+   ENDIF
 
    DO WHILE ( oSubPart := ::nextAttachment() ) != NIL
       lReset := .T.
