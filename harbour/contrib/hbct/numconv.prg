@@ -54,7 +54,8 @@
  */
 
 #include "common.ch"
-#define WORLD   '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+
+#define WORLD   "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 /*  $DOC$
  *  $FUNCNAME$
@@ -83,34 +84,38 @@
  */
 
 FUNCTION NTOC( xNum, nBase, nLenght, cPad )
-LOCAL cNum
+   LOCAL cNum
 
-Default cPad to " "
-Default nBase to 10
-
-IF ISCHARACTER( xNum )
-   xNum := UPPER( ALLTRIM( xNum ) )
-   xNum := CTON( xNum, 16 )
-ENDIF
-IF nBase > 36 .OR. nBase < 2
-   RETURN ""
-ENDIF
-
-if xNum < 0
-  xNum += 4294967296
-endif
-cNum := B10TOBN( xNum, @nBase )
-
-IF ISNUMBER( nLenght )
-   IF LEN(cNum) > nLenght
-      cNum := REPLICATE( "*", nLenght )
-   ELSEIF ISCHARACTER( cPad ) .AND. LEN( cNum ) < nLenght
-      cNum := REPLICATE( cPad, nLenght - LEN( cNum ) ) + cNum
+   IF ! ISCHARACTER( cPad )
+      cPad := " "
    ENDIF
-ENDIF
+   IF ! ISNUMBER( nBase )
+      nBase := 10
+   ENDIF
 
-RETURN cNum
+   IF ISCHARACTER( xNum )
+      xNum := Upper( AllTrim( xNum ) )
+      xNum := CTON( xNum, 16 )
+   ENDIF
 
+   IF nBase > 36 .OR. nBase < 2
+      RETURN ""
+   ENDIF
+
+   IF xNum < 0
+      xNum += 4294967296
+   ENDIF
+   cNum := B10TOBN( xNum, @nBase )
+
+   IF ISNUMBER( nLenght )
+      IF Len( cNum ) > nLenght
+         cNum := Replicate( "*", nLenght )
+      ELSEIF ISCHARACTER( cPad ) .AND. Len( cNum ) < nLenght
+         cNum := Replicate( cPad, nLenght - Len( cNum ) ) + cNum
+      ENDIF
+   ENDIF
+
+   RETURN cNum
 
 /*  $DOC$
  *  $FUNCNAME$
@@ -139,48 +144,50 @@ RETURN cNum
  */
 
 FUNCTION CTON( xNum, nBase, lMode )
-LOCAL i, nNum := 0, nPos
+   LOCAL i
+   LOCAL nNum := 0
+   LOCAL nPos
 
-Default lMode TO .F.
-Default nBase TO 10
-
-IF ISCHARACTER(xNum) .and. nBase >= 2 .and. nBase <= 36
-
-   xNum := UPPER( ALLTRIM( xNum) )
-
-   FOR i := 1 TO LEN( xNum )
-      nPos := AT( SUBSTR( xNum, i, 1 ), WORLD )
-      IF nPos == 0 .or. nPos > nBase
-         EXIT
-      ELSE
-         nNum := nNum * nBase + ( nPos - 1 )
-      ENDIF
-   NEXT
-
-   IF lMode
-      IF nNum > 32767
-         nNum := nNum - 65536
-      ENDIF
+   IF ! ISLOGICAL( lMode )
+      lMode := .F.
+   ENDIF
+   IF ! ISNUMBER( nBase )
+      nBase := 10
    ENDIF
 
-ENDIF
+   IF ISCHARACTER( xNum ) .AND. nBase >= 2 .AND. nBase <= 36
 
-RETURN nNum
+      xNum := Upper( AllTrim( xNum) )
 
+      FOR i := 1 TO Len( xNum )
+         nPos := At( SubStr( xNum, i, 1 ), WORLD )
+         IF nPos == 0 .OR. nPos > nBase
+            EXIT
+         ELSE
+            nNum := nNum * nBase + ( nPos - 1 )
+         ENDIF
+      NEXT
+
+      IF lMode .AND. nNum > 32767
+         nNum := nNum - 65536
+      ENDIF
+
+   ENDIF
+
+   RETURN nNum
 
 STATIC FUNCTION B10TOBN( nNum, nBase )
-LOCAL nInt
-IF nNum > 0
+   LOCAL nInt
 
-   nInt := INT( nNum / nBase)
-   RETURN iif(nInt==0, "", B10TOBN( nInt, @nBase )) +;
-          SUBSTR( WORLD, ( nNum % nBase ) + 1, 1 )
+   IF nNum > 0
+      nInt := Int( nNum / nBase)
+      RETURN iif( nInt == 0, "", B10TOBN( nInt, @nBase ) ) +;
+             SubStr( WORLD, ( nNum % nBase ) + 1, 1 )
+   ELSEIF nNum == 0
+      RETURN "0"
+   ENDIF
 
-ELSEIF nNum == 0
-   RETURN "0"
-ENDIF
-RETURN ""
-
+   RETURN ""
 
 /*  $DOC$
  *  $FUNCNAME$
@@ -209,30 +216,26 @@ RETURN ""
  */
 
 FUNCTION BITTOC( nInteger, cBitPattern, lMode )
+   LOCAL cBinary
+   LOCAL nI
+   LOCAL cString := ""
 
-  LOCAL cBinary, nI, cString := ''
+   IF ! ISLOGICAL( lMode )
+      lMode := .F.
+   ENDIF
 
-  Default lMode TO .F.
+   cBitPattern := Right( cBitPattern, 16 )
+   cBinary := NTOC( nInteger, 2, 16 )
 
+   FOR nI := 1 TO 16
+      IF SubStr( cBinary, -nI, 1 ) == "1"
+         cString := SubStr( cBitPattern, -nI, 1 ) + cString
+      ELSEIF lMode
+         cString := " " + cString
+      ENDIF
+   NEXT
 
-  cBitPattern := RIGHT( cBitPattern, 16 )
-  cBinary := NTOC( nInteger, 2, 16 )
-
-  FOR nI := 1 TO 16
-
-     IF SUBSTR( cBinary, -nI, 1 ) == '1'
-
-        cString := SUBSTR( cBitPattern, -nI, 1 ) + cString
-
-     ELSEIF lMode
-
-        cString := ' ' + cString
-
-     ENDIF
-
-  NEXT
-
-RETURN RIGHT( cString, LEN( cBitPattern ) )
+   RETURN Right( cString, Len( cBitPattern ) )
 
 /*  $DOC$
  *  $FUNCNAME$
@@ -261,16 +264,13 @@ RETURN RIGHT( cString, LEN( cBitPattern ) )
  */
 
 FUNCTION CTOBIT( cCharString, cBitPattern )
+   LOCAL nI, cString := ""
 
-  LOCAL nI, cString := ''
+   cCharString := Right( cCharString, 16 )
+   cBitPattern := Right( cBitPattern, 16 )
 
-  cCharString := RIGHT( cCharString, 16 )
-  cBitPattern := RIGHT( cBitPattern, 16 )
+   FOR nI := 1 TO Len( cBitPattern )
+      cString := iif( At( SubStr( cBitPattern, -nI, 1 ), cCharString ) > 0, "1", "0" ) + cString
+   NEXT
 
-  FOR nI := 1 TO LEN( cBitPattern )
-
-     cString := iif( AT(SUBSTR( cBitPattern, -nI, 1), cCharString) > 0, '1', '0') + cString
-
-  NEXT
-
-RETURN CTON( cString, 2 )
+   RETURN CTON( cString, 2 )

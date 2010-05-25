@@ -63,16 +63,16 @@ FUNCTION KeySec( nKey, nTime, nCounter, lMode )
    ENDIF
 
    IF ISNUMBER( nKey )
-      IF !ISNUMBER( nTime )
+      IF ! ISNUMBER( nTime )
          nTime := 0
       ELSEIF nTime < 0
          nTime := -nTime / 18.2
       ENDIF
-      IF !ISNUMBER( nCounter )
+      IF ! ISNUMBER( nCounter )
          nCounter := 1
       ENDIF
-      IF !ISLOGICAL( lMode )
-         lMode := .f.
+      IF ! ISLOGICAL( lMode )
+         lMode := .F.
       ENDIF
 
       nSeconds := SECONDS()
@@ -81,7 +81,7 @@ FUNCTION KeySec( nKey, nTime, nCounter, lMode )
       RETURN .T.
    ENDIF
 
-RETURN .F.
+   RETURN .F.
 
 STATIC PROCEDURE doKeySec( nKey, nTime, lMode, nCounter, nSeconds )
    LOCAL nSec := SECONDS()
@@ -100,4 +100,5 @@ STATIC PROCEDURE doKeySec( nKey, nTime, lMode, nCounter, nSeconds )
          nSeconds := nSec
       ENDIF
    ENDIF
-RETURN
+
+   RETURN

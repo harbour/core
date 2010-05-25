@@ -60,13 +60,13 @@ FUNCTION GETINPUT( xVar, nRow, nCol, lSay, xPrompt )
    LOCAL nCursorCol := COL()
    LOCAL GetList := {}
 
-   IF !ISNUMBER( nRow )
+   IF ! ISNUMBER( nRow )
       nRow := nCursorRow
    ENDIF
-   IF !ISNUMBER( nCol )
+   IF ! ISNUMBER( nCol )
       nCol := nCursorCol
    ENDIF
-   IF !ISLOGICAL( lSay )
+   IF ! ISLOGICAL( lSay )
       lSay := .F.
    ENDIF
 
@@ -87,4 +87,4 @@ FUNCTION GETINPUT( xVar, nRow, nCol, lSay, xPrompt )
 
    SETPOS( nCursorRow, nCursorCol )
 
-RETURN xVar
+   RETURN xVar

@@ -58,20 +58,21 @@
 #include "common.ch"
 
 FUNCTION SCREENMARK( cSearch, xAttr, lUpperLower, lAll, cForward, cTrailing )
-   LOCAL lFound := .f., nCount := 1
+   LOCAL lFound := .F.
+   LOCAL nCount := 1
    LOCAL nAt, nLen, nLast, nRow, nCol, nEnd, nCols
    LOCAL cScreen
 
-   IF !ISLOGICAL( lUpperLower )
+   IF ! ISLOGICAL( lUpperLower )
       lUpperLower := .F.
    ENDIF
-   IF !ISLOGICAL( lAll )
+   IF ! ISLOGICAL( lAll )
       lAll := .F.
    ENDIF
-   IF !ISCHARACTER( cForward ) .OR. cForward == ""
+   IF ! ISCHARACTER( cForward ) .OR. cForward == ""
       cForward := NIL
    ENDIF
-   IF !ISCHARACTER( cTrailing ) .OR. cTrailing == ""
+   IF ! ISCHARACTER( cTrailing ) .OR. cTrailing == ""
       cTrailing := NIL
    ENDIF
 
@@ -90,7 +91,7 @@ FUNCTION SCREENMARK( cSearch, xAttr, lUpperLower, lAll, cForward, cTrailing )
            SUBSTR( cScreen, nAt, 1 ) $ cForward ) .AND. ;
          ( nAt == nLast .OR. cTrailing == NIL .OR. ;
            SUBSTR( cScreen, nAt + nLen ) $ cTrailing )
-         lFound := .t.
+         lFound := .T.
          --nAt
          nRow := INT( nAt / nCols )
          nCol := INT( nAt % nCols )
@@ -108,4 +109,5 @@ FUNCTION SCREENMARK( cSearch, xAttr, lUpperLower, lAll, cForward, cTrailing )
       ENDIF
       nCount++
    ENDDO
-RETURN lFound
+
+   RETURN lFound

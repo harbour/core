@@ -52,8 +52,7 @@
  *
  */
 
-
-static sbInitialized := .F.
+STATIC s_bInitialized := .F.
 
 
 /*  $DOC$
@@ -89,21 +88,21 @@ static sbInitialized := .F.
  *  $END$
  */
 
-function CTINIT()
+FUNCTION CTINIT()
 
-   if !sbInitialized
-      sbInitialized := ctcinit()
-   endif
+   IF ! s_bInitialized
+      s_bInitialized := ctcinit()
+   ENDIF
 
-return sbInitialized
+   RETURN s_bInitialized
 
-init function _CTINIT()
+INIT FUNCTION _CTINIT()
 
-   if !sbInitialized
-      sbInitialized := ctcinit()
-   endif
+   IF ! s_bInitialized
+      s_bInitialized := ctcinit()
+   ENDIF
 
-return sbInitialized
+   RETURN s_bInitialized
 
 
 /*  $DOC$
@@ -139,20 +138,20 @@ return sbInitialized
  *  $END$
  */
 
-function CTEXIT()
+FUNCTION CTEXIT()
 
-   if sbInitialized
+   IF s_bInitialized
       ctcexit()
-      sbInitialized := .F.
-   endif
+      s_bInitialized := .F.
+   ENDIF
 
-return nil
+   RETURN NIL
 
-exit function _CTEXIT()
+EXIT FUNCTION _CTEXIT()
 
-  if sbInitialized
-    ctcexit()
-    sbInitialized := .F.
-  endif
+   IF s_bInitialized
+      ctcexit()
+      s_bInitialized := .F.
+   ENDIF
 
-return nil
+   RETURN NIL

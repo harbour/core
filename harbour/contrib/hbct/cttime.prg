@@ -53,49 +53,55 @@
 
 #include "common.ch"
 
-function TIMETOSEC( cTime )
-local nSec := 0, nLen, i, aLim, aMod, nInd, n
-if cTime == NIL
-   nSec := seconds()
-elseif ISCHARACTER( cTime )
-   nLen := len( cTime )
-   if ( nLen + 1 ) % 3 == 0 .and. nLen <= 11
-      nInd := 1
-      aLim := { 24, 60, 60, 100 }
-      aMod := { 3600, 60, 1, 1/100 }
-      for i := 1 to nLen step 3
-         if isdigit( substr( cTime, i,     1 ) ) .and. ;
-            isdigit( substr( cTime, i + 1, 1 ) ) .and. ;
-            ( i == nLen - 1 .or. substr( cTime, i + 2, 1 ) == ":" ) .and. ;
-            ( n := val( substr( cTime, i, 2 ) ) ) < aLim[ nInd ]
-            nSec += n * aMod[ nInd ]
-         else
-            nSec := 0
-            exit
-         endif
-         ++nInd
-      next
-   endif
-endif
-return round( nSec, 2) /* round FL val to be sure that you can compare it */
+FUNCTION TIMETOSEC( cTime )
+   LOCAL nSec := 0
+   LOCAL nLen, i, aLim, aMod, nInd, n
 
+   IF cTime == NIL
+      nSec := Seconds()
+   ELSEIF ISCHARACTER( cTime )
+      nLen := Len( cTime )
+      IF ( nLen + 1 ) % 3 == 0 .AND. nLen <= 11
+         nInd := 1
+         aLim := { 24, 60, 60, 100 }
+         aMod := { 3600, 60, 1, 1 / 100 }
+         FOR i := 1 TO nLen STEP 3
+            IF IsDigit( SubStr( cTime, i,     1 ) ) .AND. ;
+               IsDigit( SubStr( cTime, i + 1, 1 ) ) .AND. ;
+               ( i == nLen - 1 .OR. SubStr( cTime, i + 2, 1 ) == ":" ) .AND. ;
+               ( n := Val( SubStr( cTime, i, 2 ) ) ) < aLim[ nInd ]
+               nSec += n * aMod[ nInd ]
+            ELSE
+               nSec := 0
+               EXIT
+            ENDIF
+            ++nInd
+         NEXT
+      ENDIF
+   ENDIF
 
-function SECTOTIME( nSec, lHundr )
-local i, h, n
-n := iif( !ISNUMBER( nSec ), seconds(), nSec )
-if ISLOGICAL( lHundr ) .and. lHundr
-   h := ":" + strzero( ( nSec * 100 ) % 100, 2 )
-else
-   h := ""
-endif
-n := int( n % 86400 )
-for i := 1 to 3
-   h := strzero( n % 60, 2 ) + iif( len( h ) == 0, "", ":") + h
-   n := int( n / 60 )
-next
-return h
+   RETURN Round( nSec, 2 ) /* round FL val to be sure that you can compare it */
 
+FUNCTION SECTOTIME( nSec, lHundr )
+   LOCAL i, h, n
 
-function MILLISEC( nDelay )
-HB_IDLESLEEP( nDelay / 1000 )
-return ""
+   n := iif( ! ISNUMBER( nSec ), Seconds(), nSec )
+
+   IF ISLOGICAL( lHundr ) .AND. lHundr
+      h := ":" + StrZero( ( nSec * 100 ) % 100, 2 )
+   ELSE
+      h := ""
+   ENDIF
+
+   n := Int( n % 86400 )
+
+   FOR i := 1 TO 3
+      h := StrZero( n % 60, 2 ) + iif( Len( h ) == 0, "", ":" ) + h
+      n := Int( n / 60 )
+   NEXT
+
+   RETURN h
+
+FUNCTION MILLISEC( nDelay )
+   HB_IDLESLEEP( nDelay / 1000 )
+   RETURN ""

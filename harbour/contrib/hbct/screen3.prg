@@ -56,16 +56,16 @@
 #include "common.ch"
 
 FUNCTION CLEAREOL( nRow, nCol, xAttr, xChar )
-   IF !ISNUMBER( nRow )
+   IF ! ISNUMBER( nRow )
       nRow := ROW()
    ENDIF
-RETURN CLEARWIN( nRow, nCol, nRow, /*MAXCOL()*/, xAttr, xChar )
+   RETURN CLEARWIN( nRow, nCol, nRow, /*MAXCOL()*/, xAttr, xChar )
 
 FUNCTION CLEOL( nRow, nCol )
-   IF !ISNUMBER( nRow )
+   IF ! ISNUMBER( nRow )
       nRow := ROW()
    ENDIF
-RETURN CLEARWIN( nRow, nCol, nRow, /*MAXCOL()*/, 7 /*"W/N"*/, " " )
+   RETURN CLEARWIN( nRow, nCol, nRow, /*MAXCOL()*/, 7 /*"W/N"*/, " " )
 
 FUNCTION CLWIN( nRow, nCol )
-RETURN CLEARWIN( nRow, nCol, /*MAXROW()*/, /*MAXCOL()*/, 7 /*"W/N"*/, " " )
+   RETURN CLEARWIN( nRow, nCol, /*MAXROW()*/, /*MAXCOL()*/, 7 /*"W/N"*/, " " )

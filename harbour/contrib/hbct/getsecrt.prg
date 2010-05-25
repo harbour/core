@@ -63,13 +63,13 @@ FUNCTION GETSECRET( cVar, nRow, nCol, lSay, xPrompt )
    LOCAL _cGetSecret := cVar
    LOCAL lHide := .T.
 
-   IF !ISNUMBER( nRow )
+   IF ! ISNUMBER( nRow )
       nRow := ROW()
    ENDIF
-   IF !ISNUMBER( nCol )
+   IF ! ISNUMBER( nCol )
       nCol := COL()
    ENDIF
-   IF !ISLOGICAL( lSay )
+   IF ! ISLOGICAL( lSay )
       lSay := .F.
    ENDIF
 
@@ -94,18 +94,18 @@ FUNCTION GETSECRET( cVar, nRow, nCol, lSay, xPrompt )
 
    SETPOS( nCursorRow, nCursorCol )
 
-RETURN _cGetSecret
+   RETURN _cGetSecret
 
 STATIC FUNCTION _HIDE( cVar )
-RETURN RANGEREPL( ASC( " " ) + 1, 255, cVar, "*" )
+   RETURN RANGEREPL( ASC( " " ) + 1, 255, cVar, "*" )
 
 STATIC FUNCTION _VALUE( cVar, lHide, xNew )
-IF lHide
-   RETURN _HIDE( cVar )
-ELSEIF xNew != NIL
-   cVar := PADR( xNew, LEN( cVar ) )
-ENDIF
-RETURN cVar
+   IF lHide
+      RETURN _HIDE( cVar )
+   ELSEIF xNew != NIL
+      cVar := PADR( xNew, LEN( cVar ) )
+   ENDIF
+   RETURN cVar
 
 STATIC PROCEDURE _SECRET( _cGetSecret, lHide, oGet, oGetList )
    LOCAL nKey, nLen, bKeyBlock
@@ -113,6 +113,7 @@ STATIC PROCEDURE _SECRET( _cGetSecret, lHide, oGet, oGetList )
    IF oGetList == NIL
       oGetList := __GetListActive()
    ENDIF
+
    IF GetPreValidate( oGet )
 
       nLen := LEN( _cGetSecret )
@@ -150,4 +151,4 @@ STATIC PROCEDURE _SECRET( _cGetSecret, lHide, oGet, oGetList )
       oGet:KillFocus()
    ENDIF
 
-RETURN
+   RETURN

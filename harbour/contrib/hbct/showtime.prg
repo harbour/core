@@ -66,4 +66,5 @@ FUNCTION SHOWTIME( nRow, nCol, lNoSec, cColor, l12, lAmPm )
       HB_IDLEDEL( t_hTimer )
       t_hTimer := NIL
    ENDIF
-RETURN ""
+
+   RETURN ""

@@ -67,12 +67,12 @@
  */
 
 
-#include "fileio.ch"
 #include "common.ch"
+#include "fileio.ch"
 
-#define  F_BLOCK   512
+#define F_BLOCK   512
 
-THREAD STATIC t_hSrcFile := -1
+THREAD STATIC t_hSrcFile := F_ERROR
 THREAD STATIC t_lSetDaTi := .T.
 THREAD STATIC t_fileDate
 THREAD STATIC t_fileTime
@@ -88,16 +88,16 @@ FUNCTION FILECOPY( cSource, cDest, lMode )
    LOCAL lDone := .F.
    LOCAL nSrcBytes, nDstBytes, nTotBytes := 0
 
-   IF !ISLOGICAL( lMode )
+   IF ! ISLOGICAL( lMode )
       lMode := .F.
    ENDIF
-   IF t_hSrcFile != -1
+   IF t_hSrcFile != F_ERROR
       FCLOSE( t_hSrcFile )
    ENDIF
    t_hSrcFile := FOPEN( cSource, FO_READ )
-   IF t_hSrcFile != -1
+   IF t_hSrcFile != F_ERROR
       hDstFile := FCREATE( cDest )
-      IF hDstFile != -1
+      IF hDstFile != F_ERROR
          DO WHILE !lDone
             nSrcBytes := FREAD( t_hSrcFile, @cBuffer, F_BLOCK )
             IF nSrcBytes == 0
@@ -115,7 +115,7 @@ FUNCTION FILECOPY( cSource, cDest, lMode )
          FCLOSE( hDstFile )
          IF lDone .OR. !lMode
             FCLOSE( t_hSrcFile )
-            t_hSrcFile := -1
+            t_hSrcFile := F_ERROR
          ENDIF
          t_fileDate := FILEDATE( cSource )
          t_fileTime := FILETIME( cSource )
@@ -124,23 +124,22 @@ FUNCTION FILECOPY( cSource, cDest, lMode )
          ENDIF
       ELSE
          FCLOSE( t_hSrcFile )
-         t_hSrcFile := -1
+         t_hSrcFile := F_ERROR
       ENDIF
    ENDIF
-RETURN nTotBytes
-
+   RETURN nTotBytes
 
 FUNCTION FILECOPEN()
-RETURN t_hSrcFile != -1
-
+   RETURN t_hSrcFile != F_ERROR
 
 FUNCTION FILECDATI( lNewMode )
    LOCAL lOldMode := t_lSetDaTi
+
    IF ISLOGICAL( lNewMode )
       t_lSetDaTi := lNewMode
    ENDIF
-RETURN lOldMode
 
+   RETURN lOldMode
 
 FUNCTION FILECCONT( cDest )
    LOCAL hDstFile
@@ -148,9 +147,9 @@ FUNCTION FILECCONT( cDest )
    LOCAL lDone := .F.
    LOCAL nSrcBytes, nDstBytes, nTotBytes := 0
 
-   IF t_hSrcFile != -1
+   IF t_hSrcFile != F_ERROR
       hDstFile := FCREATE( cDest )
-      IF hDstFile != -1
+      IF hDstFile != F_ERROR
          DO WHILE !lDone
             nSrcBytes := FREAD( t_hSrcFile, @cBuffer, F_BLOCK )
             IF nSrcBytes == 0
@@ -168,24 +167,22 @@ FUNCTION FILECCONT( cDest )
          FCLOSE( hDstFile )
          IF lDone
             FCLOSE( t_hSrcFile )
-            t_hSrcFile := -1
+            t_hSrcFile := F_ERROR
          ENDIF
          IF t_lSetDaTi
             SETFDATI( cDest, t_fileDate, t_fileTime )
          ENDIF
       ENDIF
    ENDIF
-RETURN nTotBytes
-
+   RETURN nTotBytes
 
 FUNCTION FILECCLOSE()
-   IF t_hSrcFile != -1
+   IF t_hSrcFile != F_ERROR
       FCLOSE( t_hSrcFile )
-      t_hSrcFile := -1
+      t_hSrcFile := F_ERROR
       RETURN .T.
    ENDIF
-RETURN .F.
-
+   RETURN .F.
 
 FUNCTION FILEAPPEND( cSrc, cDest )
    LOCAL cBuffer := Space( F_BLOCK )
@@ -193,7 +190,7 @@ FUNCTION FILEAPPEND( cSrc, cDest )
    LOCAL nSrcBytes, nDstBytes, nTotBytes := 0
 
    hSrcFile  := FOPEN( cSrc, FO_READ )
-   IF hSrcFile != -1
+   IF hSrcFile != F_ERROR
       IF !hb_FileExists( cDest )
          hDstFile := FCREATE( cDest )
       ELSE
@@ -201,7 +198,7 @@ FUNCTION FILEAPPEND( cSrc, cDest )
          FSEEK( hDstFile, 0, FS_END )
       ENDIF
 
-      IF hDstFile != -1
+      IF hDstFile != F_ERROR
          DO WHILE .T.
             nSrcBytes := FREAD( hSrcFile, @cBuffer, F_BLOCK )
             IF nSrcBytes == 0
@@ -217,4 +214,4 @@ FUNCTION FILEAPPEND( cSrc, cDest )
       ENDIF
       FCLOSE( hSrcFile )
    ENDIF
-RETURN nTotBytes
+   RETURN nTotBytes

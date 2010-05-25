@@ -60,21 +60,29 @@ MEMVAR GetList
 
 FUNCTION AlloFree( lMode )
 
-   DEFAULT lMode TO .F.
+   IF ! ISLOGICAL( lMode )
+      lMode := .F.
+   ENDIF
 
    RETURN Memory( iif( lMode, HB_MEM_CHAR, HB_MEM_BLOCK ) )
 
 FUNCTION CENTER( c, n, p, lMode )
    LOCAL cRet
 
-   DEFAULT n TO MaxCol() + 1 - Col() * 2
-   DEFAULT c TO ""
+   IF ! ISNUMBER( n )
+      n := MaxCol() + 1 - Col() * 2
+   ENDIF
+   IF ! ISCHARACTER( c )
+      c := ""
+   ENDIF
 
    IF ISLOGICAL( p )
       lMode := p
       p := NIL
    ELSE
-      DEFAULT lMode TO .F.
+      IF ! ISLOGICAL( lMode )
+         lMode := .F.
+      ENDIF
    ENDIF
 
    cRet := PadC( RTrim( c ), n, p )
