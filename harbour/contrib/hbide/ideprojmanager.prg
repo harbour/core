@@ -1260,6 +1260,7 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
    aadd( aHbp, "-info"       )
    aadd( aHbp, "-lang=en"    )
    aadd( aHbp, "-width=512"  )
+   aadd( aHbp, "-plugin=" + hb_dirBase() + "idedetect.prg" )
    IF lRebuild
       aadd( aHbp, "-rebuild" )
    ENDIF
@@ -1372,6 +1373,13 @@ METHOD IdeProjManager:finished( nExitCode, nExitStatus, oProcess )
       cTmp := ::oOutputResult:oWidget:toPlainText()
       cExe := ""
       IF empty( cExe )
+         cTkn := "TARGET (ABSOLUTE): "
+         IF ( n := at( cTkn, cTmp ) ) > 0
+            n1   := hb_at( Chr( 10 ), cTmp, n + len( cTkn ) )
+            cExe := StrTran( substr( cTmp, n + len( cTkn ), n1 - n - len( cTkn ) ), Chr( 13 ) )
+         ENDIF
+      ENDIF
+      IF empty( cExe )
          cTkn := "hbmk2: Linking... "
          IF ( n := at( cTkn, cTmp ) ) > 0
             n1   := hb_at( Chr( 10 ), cTmp, n + len( cTkn ) )
@@ -1438,25 +1446,6 @@ METHOD IdeProjManager:launchProject( cProject, cExe )
       cTargetFN := cExe
    ENDIF
    cTargetFN := hbide_pathToOSPath( cTargetFN )
-
-   #if 0
-   IF !empty( cExe )
-      hb_fNameSplit( cExe, , , @cExt )
-   ENDIF
-   IF !empty( cExt ) .AND. lower( cExt ) == ".exe"
-      cTargetFN := cExe
-   ELSE
-      cTargetFN := hbide_pathFile( oProject:destination, iif( empty( oProject:outputName ), "_temp", oProject:outputName ) )
-      #ifdef __PLATFORM__WINDOWS
-      IF oProject:type == "Executable"
-         cTargetFN += '.exe'
-      ENDIF
-      #endif
-      IF !hb_FileExists( cTargetFN )
-         cTargetFN := oProject:launchProgram
-      ENDIF
-   ENDIF
-   #endif
 
    IF ! hb_FileExists( cTargetFN )
       cTmp := "Launch error: file not found - " + cTargetFN
