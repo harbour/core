@@ -549,7 +549,7 @@
 #define WIN_MF_BYCOMMAND            0x0000
 #define WIN_MF_BYPOSITION           0x0400
 
-/* TrackPopupMenu() */
+/* WAPI_TRACKPOPUPMENU() */
 #define WIN_TPM_CENTERALIGN         4
 #define WIN_TPM_LEFTALIGN           0
 #define WIN_TPM_RIGHTALIGN          8
@@ -582,7 +582,7 @@
 #define WIN_SND_RING                0x00100000
 #define WIN_SND_SYSTEM              0x00200000
 
-/* SETWINDOWPOS() flags */
+/* WAPI_SETWINDOWPOS() flags */
 #define WIN_SWP_NOSIZE              0x0001
 #define WIN_SWP_NOMOVE              0x0002
 #define WIN_SWP_NOZORDER            0x0004
@@ -654,6 +654,43 @@
 #define WIN_SERVICE_CONTINUE_PENDING      5
 #define WIN_SERVICE_PAUSE_PENDING         6
 #define WIN_SERVICE_PAUSED                7
+
+/* WAPI_MESSAGEBOX()/WAPI_MESSAGEBEEP() flags */
+#define WIN_MB_OK                         0x00000000
+#define WIN_MB_OKCANCEL                   0x00000001
+#define WIN_MB_ABORTRETRYIGNORE           0x00000002
+#define WIN_MB_YESNOCANCEL                0x00000003
+#define WIN_MB_YESNO                      0x00000004
+#define WIN_MB_RETRYCANCEL                0x00000005
+#define WIN_MB_CANCELTRYCONTINUE          0x00000006
+#define WIN_MB_ICONHAND                   0x00000010
+#define WIN_MB_ICONQUESTION               0x00000020
+#define WIN_MB_ICONEXCLAMATION            0x00000030
+#define WIN_MB_ICONASTERISK               0x00000040
+#define WIN_MB_USERICON                   0x00000080
+#define WIN_MB_ICONWARNING                WIN_MB_ICONEXCLAMATION
+#define WIN_MB_ICONERROR                  WIN_MB_ICONHAND
+#define WIN_MB_ICONINFORMATION            WIN_MB_ICONASTERISK
+#define WIN_MB_ICONSTOP                   WIN_MB_ICONHAND
+#define WIN_MB_DEFBUTTON1                 0x00000000
+#define WIN_MB_DEFBUTTON2                 0x00000100
+#define WIN_MB_DEFBUTTON3                 0x00000200
+#define WIN_MB_DEFBUTTON4                 0x00000300
+#define WIN_MB_APPLMODAL                  0x00000000
+#define WIN_MB_SYSTEMMODAL                0x00001000
+#define WIN_MB_TASKMODAL                  0x00002000
+#define WIN_MB_HELP                       0x00004000
+#define WIN_MB_NOFOCUS                    0x00008000
+#define WIN_MB_SETFOREGROUND              0x00010000
+#define WIN_MB_DEFAULT_DESKTOP_ONLY       0x00020000
+#define WIN_MB_TOPMOST                    0x00040000
+#define WIN_MB_RIGHT                      0x00080000
+#define WIN_MB_RTLREADING                 0x00100000
+#define WIN_MB_TYPEMASK                   0x0000000F
+#define WIN_MB_ICONMASK                   0x000000F0
+#define WIN_MB_DEFMASK                    0x00000F00
+#define WIN_MB_MODEMASK                   0x00003000
+#define WIN_MB_MISCMASK                   0x0000C000
 
 /* ------------------------------- */
 /* Deprecated constants and macros */

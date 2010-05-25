@@ -121,6 +121,13 @@ HB_FUNC( WAPI_MESSAGEBOX )
    hb_strfree( hStr2 );
 }
 
+HB_FUNC( WAPI_MESSAGEBEEP )
+{
+   BOOL bResult = MessageBeep( wapi_par_UINT( 1 ) );
+   hbwapi_SetLastError( GetLastError() );
+   wapi_ret_L( bResult );
+}
+
 HB_FUNC( WAPI_CREATEWINDOWEX )
 {
    void * hClassName;
