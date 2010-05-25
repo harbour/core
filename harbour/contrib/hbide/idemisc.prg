@@ -54,7 +54,8 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 2010 Viktor Szakats (harbour.01 syenar.hu)
- *    hbide_PathProc()
+ *    hbide_PathProc(), hbide_DirAddPathSep(), DirDelPathSep()
+ *    hbide_pwd()
  *
  * See COPYING for licensing terms.
  *
@@ -880,6 +881,11 @@ FUNCTION hbide_pathProc( cPathR, cPathA )
    ENDIF
 
    RETURN hb_FNameMerge( cDirA + cDirR, cNameR, cExtR )
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION hbide_pwd()
+   RETURN hbide_DirAddPathSep( hb_CurDrive() + hb_osDriveSeparator() + hb_osPathSeparator() + CurDir() )
 
 /*----------------------------------------------------------------------*/
 
@@ -2002,4 +2008,3 @@ FUNCTION hbide_SetWrkFolderLast( cPathFile )
    RETURN cOldPath
 
 /*----------------------------------------------------------------------*/
-

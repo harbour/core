@@ -1098,6 +1098,8 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          aCOMPSUP := { "gcc", "clang", "icc", "watcom", "sunpro", "open64" }
       CASE hbmk[ _HBMK_cPLAT ] == "darwin"
          aCOMPSUP := { "gcc", "clang", "icc" }
+      CASE hbmk[ _HBMK_cPLAT ] == "bsd"
+         aCOMPSUP := { "gcc", "clang" }
       CASE hbmk[ _HBMK_cPLAT ] == "sunos"
          aCOMPSUP := { "gcc", "sunpro" }
       OTHERWISE
@@ -2492,6 +2494,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
            ( hbmk[ _HBMK_cPLAT ] == "darwin" .AND. hbmk[ _HBMK_cCOMP ] == "icc" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "linux"  .AND. hbmk[ _HBMK_cCOMP ] == "clang" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "darwin" .AND. hbmk[ _HBMK_cCOMP ] == "clang" ) .OR. ;
+           ( hbmk[ _HBMK_cPLAT ] == "bsd"    .AND. hbmk[ _HBMK_cCOMP ] == "clang" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "beos"   .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "linux"  .AND. hbmk[ _HBMK_cCOMP ] == "open64" )
 
@@ -2554,7 +2557,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          ENDIF
          cOpt_CompC += " {FC}"
          IF ! Empty( hbmk[ _HBMK_cWorkDir ] )
-            IF hbmk[ _HBMK_cPLAT ] == "linux" .AND. hbmk[ _HBMK_cCOMP ] == "clang"
+            IF hbmk[ _HBMK_cPLAT ] $ "linux|bsd" .AND. hbmk[ _HBMK_cCOMP ] == "clang"
                /* NOTE: It's also accepted by darwin/clang */
                cOpt_CompC += " {IC} -o{OO}"
             ELSE
@@ -9264,7 +9267,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       "  - wce    : mingwarm, mingw, msvcarm, poccarm",;
       "  - os2    : gcc, gccomf, watcom",;
       "  - dos    : djgpp, watcom",;
-      "  - bsd    : gcc",;
+      "  - bsd    : gcc, clang",;
       "  - hpux   : gcc",;
       "  - beos   : gcc",;
       "  - sunos  : gcc, sunpro" }

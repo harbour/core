@@ -498,6 +498,7 @@ HARBOUR
    bsd
    ---
    gcc      - GNU C
+   clang    - Clang compiler frontend
 
    hpux
    ----
@@ -1260,6 +1261,7 @@ HARBOUR
    x linux  -> dos/watcom    x86
    x linux  -> dos/djgpp     x86
      bsd    -> bsd/gcc       (CPU cross-builds possible)
+     bsd    -> bsd/clang     (CPU cross-builds possible)
    x bsd    -> wce/mingwarm  arm
    x bsd    -> wce/mingw     x86
    x bsd    -> win/mingw     x86
