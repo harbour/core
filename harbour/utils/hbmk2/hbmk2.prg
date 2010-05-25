@@ -437,7 +437,7 @@ PROCEDURE Main( ... )
 
    FOR EACH tmp IN aArgsIn
       DO CASE
-      CASE !( Left( tmp, 1 ) == "-" ) .AND. Lower( FN_ExtGet( tmp ) ) == ".hbp"
+      CASE !( Left( tmp, 1 ) == "-" ) .AND. ( Lower( FN_ExtGet( tmp ) ) == ".hbp" .OR. Lower( FN_ExtGet( tmp ) ) == ".hbi" )
          FOR EACH tmp1 IN FN_Expand( tmp, .T. )
             AAdd( aArgsProc, tmp1 )
          NEXT
@@ -461,7 +461,7 @@ PROCEDURE Main( ... )
 
       FOR EACH tmp IN aArgsProc
          DO CASE
-         CASE !( Left( tmp, 1 ) == "-" ) .AND. Lower( FN_ExtGet( tmp ) ) == ".hbp" .AND. ! lHadTarget
+         CASE !( Left( tmp, 1 ) == "-" ) .AND. ( Lower( FN_ExtGet( tmp ) ) == ".hbp" .OR. Lower( FN_ExtGet( tmp ) ) == ".hbi" ) .AND. ! lHadTarget
             ++nTarget
             IF nTarget == nTargetTODO
                AAdd( aArgsTarget, tmp )
@@ -1963,9 +1963,9 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             ENDIF
          ENDIF
 
-      CASE Left( cParamL, Len( "-keyheader=" ) ) == "-keyheader="
+      CASE Left( cParamL, Len( "-reqheader=" ) ) == "-reqheader="
 
-         cParam := MacroProc( hbmk, tmp := SubStr( cParam, Len( "-keyheader=" ) + 1 ), aParam[ _PAR_cFileName ] )
+         cParam := MacroProc( hbmk, tmp := SubStr( cParam, Len( "-reqheader=" ) + 1 ), aParam[ _PAR_cFileName ] )
          IF ! Empty( cParam )
             hbmk[ _HBMK_hKEYHEADER ][ cParam ] := NIL
          ENDIF
@@ -8245,7 +8245,7 @@ STATIC FUNCTION IsCOFFLib( cFileName )
 
    RETURN .F.
 
-#define _OMF_LIB_SIGNATURE 0xF0
+#define _OMF_LIB_SIGNATURE Chr( 0xF0 )
 
 STATIC FUNCTION IsOMFLib( cFileName )
    LOCAL fhnd := FOpen( cFileName, FO_READ )
@@ -9263,7 +9263,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-bldf[-]"           , I_( "inherit all/no (default) flags from Harbour build" ) },;
       { "-bldf=[p][c][l]"    , I_( "inherit .prg/.c/linker flags (or none) from Harbour build" ) },;
       { "-inctrypath=<p>"    , I_( "additional path to autodetect .c header locations" ) },;
-      { "-keyheader=<file>"  , I_( "add header requirement. Build will stop if header is not found (EXPERIMENTAL)" ) },;
+      { "-reqheader=<file>"  , I_( "add header requirement. Build will stop if header is not found (EXPERIMENTAL)" ) },;
       { "-prgflag=<f>"       , I_( "pass flag to Harbour" ) },;
       { "-cflag=<f>"         , I_( "pass flag to C compiler" ) },;
       { "-resflag=<f>"       , I_( "pass flag to resource compiler (Windows only)" ) },;
@@ -9292,7 +9292,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       NIL,;
       { "Options below are available on command line only:" },;
       NIL,;
-      { "-target=<script>"   , I_( "specify a new build target. <script> can be .prg (or no extension) or .hbm/.hbp file" ) },;
+      { "-target=<script>"   , I_( "specify a new build target. <script> can be .prg (or no extension) or .hbm/.hbp/.hbi file" ) },;
       { "-target"            , I_( "marks beginning of options belonging to a new build target" ) },;
       { "-alltarget"         , I_( "marks beginning of common options belonging to all targets" ) },;
       NIL,;
@@ -9331,7 +9331,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       I_( "Notes:" ) }
 
    LOCAL aNotes := {;
-      I_( "<script> can be:\n  <@script> or <script.hbm>: command line options in file\n  <script.hbp>: command line options in file, it also marks a new target if specified on the command line\n  <script.hbc>: package configuration file" ),;
+      I_( "<script> can be:\n  <@script> or <script.hbm>: command line options in file\n  <script.hbp>: command line options in file, it also marks a new target if specified on the command line\n  <script.hbi>: command line options in file (used to create import libraries), it also marks a new target if specified on the command line\n  <script.hbc>: package configuration file" ),;
       I_( "Multiple -l, -L and <script> parameters are accepted." ),;
       I_( "Regular Harbour compiler options are also accepted.\n(see them with -harbourhelp option)" ),;
       hb_StrFormat( I_( "%1$s option file in hbmk2 directory is always processed if it exists. On *nix platforms ~/.harbour, /etc/harbour, <base>/etc/harbour, <base>/etc are checked (in that order) before the hbmk2 directory. The file format is the same as .hbc." ), _HBMK_CFG_NAME ),;
