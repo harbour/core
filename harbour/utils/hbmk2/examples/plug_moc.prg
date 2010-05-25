@@ -34,7 +34,8 @@ FUNCTION hbmk2_plugin_moc( hbmk2 )
 
       aMOC := {}
       FOR EACH tmp IN hbmk2[ "params" ]
-         IF Lower( hbmk2_FNameExtGet( tmp ) ) $ ".h|.hpp"
+         IF Lower( hbmk2_FNameExtGet( tmp ) ) == ".h" .OR. ;
+            Lower( hbmk2_FNameExtGet( tmp ) ) == ".hpp"
             AAdd( aMOC, tmp )
          ENDIF
       NEXT

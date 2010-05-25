@@ -317,55 +317,56 @@ REQUEST hbmk_KEYW
 #define _HBMK_lIMPLIB           59
 #define _HBMK_lHBCPPMM          60
 #define _HBMK_aVAR              61
+#define _HBMK_hKEYHEADER        62
 
-#define _HBMK_lCreateLib        62
-#define _HBMK_lCreateDyn        63
-#define _HBMK_lCreateImpLib     64
+#define _HBMK_lCreateLib        63
+#define _HBMK_lCreateDyn        64
+#define _HBMK_lCreateImpLib     65
 
-#define _HBMK_lDynVM            65
+#define _HBMK_lDynVM            66
 
-#define _HBMK_lBLDFLGP          66
-#define _HBMK_lBLDFLGC          67
-#define _HBMK_lBLDFLGL          68
+#define _HBMK_lBLDFLGP          67
+#define _HBMK_lBLDFLGC          68
+#define _HBMK_lBLDFLGL          69
 
-#define _HBMK_cFIRST            69
-#define _HBMK_aPRG              70
-#define _HBMK_aC                71
-#define _HBMK_aCPP              72
-#define _HBMK_aRESSRC           73
-#define _HBMK_aRESCMP           74
-#define _HBMK_aOBJUSER          75
-#define _HBMK_aICON             76
-#define _HBMK_aIMPLIBSRC        77
-#define _HBMK_aDEF              78
-#define _HBMK_hDEPTS            79
+#define _HBMK_cFIRST            70
+#define _HBMK_aPRG              71
+#define _HBMK_aC                72
+#define _HBMK_aCPP              73
+#define _HBMK_aRESSRC           74
+#define _HBMK_aRESCMP           75
+#define _HBMK_aOBJUSER          76
+#define _HBMK_aICON             77
+#define _HBMK_aIMPLIBSRC        78
+#define _HBMK_aDEF              79
+#define _HBMK_hDEPTS            80
 
-#define _HBMK_aPO               80
-#define _HBMK_cHBL              81
-#define _HBMK_cHBLDir           82
-#define _HBMK_aLNG              83
-#define _HBMK_cPO               84
+#define _HBMK_aPO               81
+#define _HBMK_cHBL              82
+#define _HBMK_cHBLDir           83
+#define _HBMK_aLNG              84
+#define _HBMK_cPO               85
 
-#define _HBMK_aPLUGIN           85
-#define _HBMK_hPLUGINHRB        86
-#define _HBMK_hPLUGINVars       87
-#define _HBMK_aPLUGINPars       88
+#define _HBMK_aPLUGIN           86
+#define _HBMK_hPLUGINHRB        87
+#define _HBMK_hPLUGINVars       88
+#define _HBMK_aPLUGINPars       89
 
-#define _HBMK_lDEBUGTIME        89
-#define _HBMK_lDEBUGINC         90
-#define _HBMK_lDEBUGSTUB        91
-#define _HBMK_lDEBUGI18N        92
+#define _HBMK_lDEBUGTIME        90
+#define _HBMK_lDEBUGINC         91
+#define _HBMK_lDEBUGSTUB        92
+#define _HBMK_lDEBUGI18N        93
 
-#define _HBMK_cCCPATH           93
-#define _HBMK_cCCPREFIX         94
-#define _HBMK_cCCPOSTFIX        95
-#define _HBMK_cCCEXT            96
+#define _HBMK_cCCPATH           94
+#define _HBMK_cCCPREFIX         95
+#define _HBMK_cCCPOSTFIX        96
+#define _HBMK_cCCEXT            97
 
-#define _HBMK_cWorkDir          97
-#define _HBMK_nCmd_Esc          98
-#define _HBMK_nScr_Esc          99
+#define _HBMK_cWorkDir          98
+#define _HBMK_nCmd_Esc          99
+#define _HBMK_nScr_Esc          100
 
-#define _HBMK_MAX_              99
+#define _HBMK_MAX_              100
 
 #ifndef _HBMK_EMBEDDED_
 
@@ -796,6 +797,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    hbmk[ _HBMK_lIMPLIB ] := .F.
    hbmk[ _HBMK_lHBCPPMM ] := .F.
    hbmk[ _HBMK_aVAR ] := {}
+   hbmk[ _HBMK_hKEYHEADER ] := { => }
 
    hbmk[ _HBMK_lBLDFLGP ] := .F.
    hbmk[ _HBMK_lBLDFLGC ] := .F.
@@ -1959,6 +1961,13 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             IF AScan( hbmk[ _HBMK_aINCPATH ], {| tmp | tmp == cParam } ) == 0
                AAdd( hbmk[ _HBMK_aINCPATH ], PathSepToTarget( hbmk, DirDelPathSep( cParam ) ) )
             ENDIF
+         ENDIF
+
+      CASE Left( cParamL, Len( "-keyheader=" ) ) == "-keyheader="
+
+         cParam := MacroProc( hbmk, tmp := SubStr( cParam, Len( "-keyheader=" ) + 1 ), aParam[ _PAR_cFileName ] )
+         IF ! Empty( cParam )
+            hbmk[ _HBMK_hKEYHEADER ][ cParam ] := NIL
          ENDIF
 
       CASE Left( cParamL, Len( "-stop" ) ) == "-stop"
@@ -3977,6 +3986,30 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       NEXT
    ENDIF
 
+   /* Check if we've found all key headers */
+
+   tmp1 := {}
+   FOR EACH tmp IN hbmk[ _HBMK_hKEYHEADER ]
+      IF tmp == NIL
+         AAdd( tmp1, tmp:__enumKey() )
+         IF hbmk[ _HBMK_lDEBUGINC ]
+            hbmk_OutStd( hbmk, hb_StrFormat( "debuginc: KEYHEADER %1$s: missing", tmp:__enumKey() ) )
+         ENDIF
+      ELSE
+         IF hbmk[ _HBMK_lDEBUGINC ]
+            hbmk_OutStd( hbmk, hb_StrFormat( "debuginc: KEYHEADER %1$s %2$s", tmp:__enumKey(), tmp ) )
+         ENDIF
+      ENDIF
+   NEXT
+
+   IF ! Empty( tmp1 )
+      hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Missing header dependency: %1$s" ), ArrayToList( tmp1, ", " ) ) )
+      IF hbmk[ _HBMK_lBEEP ]
+         DoBeep( .F. )
+      ENDIF
+      RETURN 10
+   ENDIF
+
    /* Harbour compilation */
 
    IF ! lSkipBuild .AND. ! lStopAfterInit .AND. Len( l_aPRG_TODO ) > 0 .AND. ! hbmk[ _HBMK_lCLEAN ] .AND. hbmk[ _HBMK_nHBMODE ] != _HBMODE_RAW_C
@@ -5747,6 +5780,9 @@ STATIC FUNCTION FindHeader( hbmk, cFileName, cParentDir, aINCTRYPATH )
             /* Add these dir to include paths */
             IF AScan( hbmk[ _HBMK_aINCPATH ], { |tmp| tmp == cDir } ) == 0
                AAdd( hbmk[ _HBMK_aINCPATH ], DirDelPathSep( PathSepToSelf( cDir ) ) )
+               IF cFileName $ hbmk[ _HBMK_hKEYHEADER ]
+                  hbmk[ _HBMK_hKEYHEADER ][ cFileName ] := cDir
+               ENDIF
                IF hbmk[ _HBMK_lInfo ]
                   hbmk_OutStd( hbmk, hb_StrFormat( I_( "Autodetected header dir for %1$s: %2$s" ), cFileName, cDir ) )
                ENDIF
@@ -5929,28 +5965,38 @@ FUNCTION hbmk2_OutStdRaw( ... )        ; RETURN ( OutStd( ... ), OutStd( _OUT_EO
 FUNCTION hbmk2_OutErrRaw( ... )        ; RETURN ( OutErr( ... ), OutErr( _OUT_EOL ) )
 
 FUNCTION hbmk2_OutStd( ctx, cText )
-   RETURN hbmk_OutStd( ctx[ s_cSecToken ], hb_StrFormat( I_( "plugin: %1$s" ), cText ) )
+   LOCAL hbmk := ctx[ s_cSecToken ]
+   RETURN hbmk_OutStd( hbmk, hb_StrFormat( I_( "plugin: %1$s" ), cText ) )
 
 FUNCTION hbmk2_OutErr( ctx, cText )
-   RETURN hbmk_OutErr( ctx[ s_cSecToken ], hb_StrFormat( I_( "plugin: %1$s" ), cText ) )
+   LOCAL hbmk := ctx[ s_cSecToken ]
+   RETURN hbmk_OutErr( hbmk, hb_StrFormat( I_( "plugin: %1$s" ), cText ) )
 
 FUNCTION hbmk2_PathSepToTarget( ctx, ... )
-   RETURN PathSepToTarget( ctx[ s_cSecToken ], ... )
+   LOCAL hbmk := ctx[ s_cSecToken ]
+   RETURN PathSepToTarget( hbmk, ... )
 
 FUNCTION hbmk2_AddInput_PRG( ctx, cFileName )
-   AAdd( ctx[ s_cSecToken ][ _HBMK_aPRG ], cFileName )
+   LOCAL hbmk := ctx[ s_cSecToken ]
+   AAdd( hbmk[ _HBMK_aPRG ], PathSepToTarget( hbmk, cFileName ) )
+   DEFAULT hbmk[ _HBMK_cFIRST ] TO PathSepToSelf( cFileName )
    RETURN NIL
 
 FUNCTION hbmk2_AddInput_C( ctx, cFileName )
-   AAdd( ctx[ s_cSecToken ][ _HBMK_aC ], cFileName )
+   LOCAL hbmk := ctx[ s_cSecToken ]
+   AAdd( hbmk[ _HBMK_aC ], PathSepToTarget( hbmk, cFileName ) )
+   DEFAULT hbmk[ _HBMK_cFIRST ] TO PathSepToSelf( cFileName )
    RETURN NIL
 
 FUNCTION hbmk2_AddInput_CPP( ctx, cFileName )
-   AAdd( ctx[ s_cSecToken ][ _HBMK_aCPP ], cFileName )
+   LOCAL hbmk := ctx[ s_cSecToken ]
+   AAdd( hbmk[ _HBMK_aCPP ], PathSepToTarget( hbmk, cFileName ) )
+   DEFAULT hbmk[ _HBMK_cFIRST ] TO PathSepToSelf( cFileName )
    RETURN NIL
 
 FUNCTION hbmk2_AddInput_RC( ctx, cFileName )
-   AAdd( ctx[ s_cSecToken ][ _HBMK_aRESSRC ], cFileName )
+   LOCAL hbmk := ctx[ s_cSecToken ]
+   AAdd( hbmk[ _HBMK_aRESSRC ], PathSepToTarget( hbmk, cFileName ) )
    RETURN NIL
 
 /* ; */
@@ -9217,6 +9263,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-bldf[-]"           , I_( "inherit all/no (default) flags from Harbour build" ) },;
       { "-bldf=[p][c][l]"    , I_( "inherit .prg/.c/linker flags (or none) from Harbour build" ) },;
       { "-inctrypath=<p>"    , I_( "additional path to autodetect .c header locations" ) },;
+      { "-keyheader=<file>"  , I_( "add header requirement. Build will stop if header is not found (EXPERIMENTAL)" ) },;
       { "-prgflag=<f>"       , I_( "pass flag to Harbour" ) },;
       { "-cflag=<f>"         , I_( "pass flag to C compiler" ) },;
       { "-resflag=<f>"       , I_( "pass flag to resource compiler (Windows only)" ) },;
