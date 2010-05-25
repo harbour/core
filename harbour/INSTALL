@@ -1126,6 +1126,7 @@ HARBOUR
         set HB_GT_LIB=
         set HB_INC_*=
         set HB_DIR_*=
+        set HB_LEX=
    - Try to do no or only small modifications at once to command examples
      included in this document. If it doesn't work, fall back to documented
      examples as is.

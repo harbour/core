@@ -18,7 +18,6 @@ PROCEDURE Main()
    LOCAL cFile
    LOCAL aFile
 
-   LOCAL aArray
    LOCAL tmp
    LOCAL cOptions
    LOCAL cOldDir
@@ -188,11 +187,11 @@ PROCEDURE Main()
 
    RETURN
 
-STATIC FUNCTION mk_hb_processRun( ... )
+STATIC FUNCTION mk_hb_processRun( cCommand )
 
-   OutStd( hb_PValue( 1 ) + hb_osNewLine() )
+   OutStd( cCommand + hb_osNewLine() )
 
-   RETURN hb_processRun( ... )
+   RETURN hb_processRun( cCommand )
 
 STATIC FUNCTION FN_Escape( cFN )
    RETURN Chr( 34 ) + cFN + Chr( 34 )
