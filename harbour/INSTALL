@@ -467,7 +467,7 @@ HARBOUR
 
    linux    - Linux
    darwin   - Mac OS X
-   bsd      - FreeBSD / OpenBSD / NetBSD / *BSD
+   bsd      - FreeBSD / OpenBSD / NetBSD / DragonFly BSD / *BSD
    beos     - BeOS / Haiku
    hpux     - HP-UX
    sunos    - Sun Solaris / OpenSolaris
