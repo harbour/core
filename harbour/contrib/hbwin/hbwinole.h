@@ -105,11 +105,14 @@
 
 HB_EXTERN_BEGIN
 
+typedef HB_BOOL ( * HB_OLEOBJ_FUNC )( VARIANT*, PHB_ITEM );
+
 extern HB_EXPORT HB_BOOL    hb_oleInit( void );
 extern HB_EXPORT HRESULT    hb_oleGetError( void );
 extern HB_EXPORT void       hb_oleSetError( HRESULT lOleError );
 extern HB_EXPORT void       hb_oleVariantToItem( PHB_ITEM pItem, VARIANT * pVariant );
 extern HB_EXPORT void       hb_oleItemToVariant( VARIANT * pVariant, PHB_ITEM pItem );
+extern HB_EXPORT void       hb_oleItemToVariantEx( VARIANT* pVariant, PHB_ITEM pItem, HB_OLEOBJ_FUNC pObjFunc );
 extern HB_EXPORT void       hb_oleVariantUpdate( VARIANT * pVariant, PHB_ITEM pItem );
 extern HB_EXPORT IDispatch* hb_oleParam( int iParam );
 extern HB_EXPORT IDispatch* hb_oleItemGet( PHB_ITEM pItem );
@@ -117,7 +120,8 @@ extern HB_EXPORT PHB_ITEM   hb_oleItemPut( PHB_ITEM pItem, IDispatch * pDisp );
 extern HB_EXPORT PHB_ITEM   hb_oleItemGetCallBack( PHB_ITEM pItem );
 extern HB_EXPORT void       hb_oleItemSetCallBack( PHB_ITEM pItem, PHB_ITEM * pCallBack );
 extern HB_EXPORT HB_BOOL    hb_oleDispInvoke( PHB_SYMB pSym, PHB_ITEM pObject, PHB_ITEM pParam,
-extern                                        DISPPARAMS * pParams, VARIANT* pVarResult );
+                                              DISPPARAMS * pParams, VARIANT* pVarResult,
+                                              HB_OLEOBJ_FUNC pObjFunc );
 
 /* activex control */
 extern HB_EXPORT HB_BOOL    hb_oleAxInit( void );

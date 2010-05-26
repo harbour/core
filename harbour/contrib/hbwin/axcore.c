@@ -347,7 +347,7 @@ static HRESULT STDMETHODCALLTYPE Invoke( IDispatch* lpThis, DISPID dispid, REFII
          pAction = hb_hashGetItemPtr( pAction, pKey, 0 );
 
       if( pAction &&  hb_oleDispInvoke( NULL, pAction, pKey,
-                                        pParams, pVarResult ) )
+                                        pParams, pVarResult, NULL ) )
          hr = S_OK;
 
       hb_stackPop();

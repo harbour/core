@@ -349,7 +349,7 @@ static void hb_oleDispatchToVariant( VARIANT* pVariant, IDispatch* pDisp,
 /* Item <-> Variant conversion */
 
 static void hb_oleItemToVariantRef( VARIANT* pVariant, PHB_ITEM pItem,
-                                    VARIANT* pVarRef )
+                                    VARIANT* pVarRef, HB_OLEOBJ_FUNC pObjFunc )
 {
    VariantClear( pVariant );  /* pVariant->n1.n2.vt = VT_EMPTY; */
 
@@ -473,6 +473,8 @@ static void hb_oleItemToVariantRef( VARIANT* pVariant, PHB_ITEM pItem,
 
             if( pDisp )
                hb_oleDispatchToVariant( pVariant, pDisp, pVarRef );
+            else if( pObjFunc )
+               pObjFunc( pVariant, pItem );
          }
          else
          {
@@ -500,7 +502,7 @@ static void hb_oleItemToVariantRef( VARIANT* pVariant, PHB_ITEM pItem,
                long     lIndex[ 1 ];
 
                VariantInit( &vItem );
-               hb_oleItemToVariantRef( &vItem, hb_arrayGetItemPtr( pItem, ul + 1 ), NULL );
+               hb_oleItemToVariantRef( &vItem, hb_arrayGetItemPtr( pItem, ul + 1 ), NULL, NULL );
                lIndex[ 0 ] = ( long ) ul;
                SafeArrayPutElement( pSafeArray, lIndex, &vItem );
                VariantClear( &vItem );
@@ -532,7 +534,14 @@ static void hb_oleItemToVariantRef( VARIANT* pVariant, PHB_ITEM pItem,
 
 void hb_oleItemToVariant( VARIANT* pVariant, PHB_ITEM pItem )
 {
-   hb_oleItemToVariantRef( pVariant, pItem, NULL );
+   hb_oleItemToVariantRef( pVariant, pItem, NULL, NULL );
+}
+
+
+void hb_oleItemToVariantExt( VARIANT* pVariant, PHB_ITEM pItem,
+                             HB_OLEOBJ_FUNC pObjFunc )
+{
+   hb_oleItemToVariantRef( pVariant, pItem, NULL, pObjFunc );
 }
 
 
@@ -1032,7 +1041,7 @@ void hb_oleVariantUpdate( VARIANT* pVariant, PHB_ITEM pItem )
 #endif
 
       case VT_BYREF | VT_VARIANT:
-         hb_oleItemToVariantRef( pVariant->n1.n2.n3.pvarVal, pItem, NULL );
+         hb_oleItemToVariantRef( pVariant->n1.n2.n3.pvarVal, pItem, NULL, NULL );
          break;
 
       case VT_VARIANT | VT_ARRAY | VT_BYREF:
@@ -1052,7 +1061,8 @@ typedef struct
 HB_OLE_PARAM_REF;
 
 HB_BOOL hb_oleDispInvoke( PHB_SYMB pSym, PHB_ITEM pObject, PHB_ITEM pParam,
-                          DISPPARAMS* pParams, VARIANT* pVarResult )
+                          DISPPARAMS* pParams, VARIANT* pVarResult,
+                          HB_OLEOBJ_FUNC pObjFunc )
 {
    if( !pSym && HB_IS_SYMBOL( pObject ) )
    {
@@ -1108,7 +1118,7 @@ HB_BOOL hb_oleDispInvoke( PHB_SYMB pSym, PHB_ITEM pObject, PHB_ITEM pParam,
          hb_vmProc( ( HB_USHORT ) iParams );
 
       if( pVarResult )
-         hb_oleItemToVariant( pVarResult, hb_stackReturnItem() );
+         hb_oleItemToVariantRef( pVarResult, hb_stackReturnItem(), NULL, pObjFunc );
 
       for( i = 0; i < iRefs; i++ )
          hb_oleVariantUpdate( refArray[ i ].variant, refArray[ i ].item );
@@ -1151,11 +1161,11 @@ static void GetParams( DISPPARAMS * dispparam )
          {
             VariantInit( pRefs );
             hb_oleItemToVariantRef( pRefs, hb_param( uiArgCount - uiArg, HB_IT_ANY ),
-                                    &pArgs[ uiArg ] );
+                                    &pArgs[ uiArg ], NULL );
             ++pRefs;
          }
          else
-            hb_oleItemToVariantRef( &pArgs[ uiArg ], hb_param( uiArgCount - uiArg, HB_IT_ANY ), NULL );
+            hb_oleItemToVariantRef( &pArgs[ uiArg ], hb_param( uiArgCount - uiArg, HB_IT_ANY ), NULL, NULL );
       }
    }
 
