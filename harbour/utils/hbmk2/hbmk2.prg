@@ -895,6 +895,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       CASE Left( cParamL, 10 ) == "-platform=" ; ParseCOMPPLAT( hbmk, SubStr( cParam, 11 ), _TARG_PLAT )
       CASE Left( cParamL, 6 )  == "-arch="     ; ParseCOMPPLAT( hbmk, SubStr( cParam, 7 ), _TARG_PLAT ) /* Compatibility */
       CASE Left( cParamL, 7 )  == "-build="    ; hbmk[ _HBMK_cBUILD ] := SubStr( cParam, 8 )
+      CASE Left( cParamL, 6 )  == "-build"     ; lStopAfterHarbour := .T.
       CASE Left( cParamL, 6 )  == "-lang="     ; hbmk[ _HBMK_cUILNG ] := SubStr( cParam, 7 ) ; SetUILang( hbmk )
       CASE Left( cParamL, 7 )  == "-width="
 
@@ -1464,8 +1465,14 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          /* NOTE: Automatically configure bcc installation with missing configuration. [vszakats] */
          IF ! hb_FileExists( FN_DirGet( cPath_CompC ) + ".." + hb_osPathSeparator() + "Bin" + hb_osPathSeparator() + "bcc32.cfg" ) .OR. ;
             ! hb_FileExists( FN_DirGet( cPath_CompC ) + ".." + hb_osPathSeparator() + "Bin" + hb_osPathSeparator() + "ilink32.cfg" )
+            /* NOTE: BCC 5.8 has different casing: 'include', 'lib', 'psdk' respectively. */
             AAdd( hbmk[ _HBMK_aINCPATH ], PathNormalize( FN_DirGet( cPath_CompC ) + ".." + hb_osPathSeparator() + "Include" ) )
             AAdd( hbmk[ _HBMK_aLIBPATH ], PathNormalize( FN_DirGet( cPath_CompC ) + ".." + hb_osPathSeparator() + "Lib" ) )
+            /* NOTE: BCC 5.8 (and upper ?) thing */
+            tmp := PathNormalize( FN_DirGet( cPath_CompC ) + ".." + hb_osPathSeparator() + "Include" + hb_osPathSeparator() + "dinkumware" )
+            IF hb_DirExists( tmp )
+               AAdd( hbmk[ _HBMK_aINCPATH ], tmp )
+            ENDIF
          ENDIF
          AAdd( hbmk[ _HBMK_aLIBPATH ], PathNormalize( FN_DirGet( cPath_CompC ) + ".." + hb_osPathSeparator() + "Lib" + hb_osPathSeparator() + "PSDK" ) )
       ENDIF
@@ -7474,6 +7481,8 @@ STATIC FUNCTION MacroProc( hbmk, cString, cFileName, cMacroPrefix )
          cMacro := PathSepToSelf( DirAddPathSep( hb_DirBase() ) ) ; EXIT
       CASE "HB_DIR"
          cMacro := PathSepToSelf( FN_DirGet( cFileName ) ) ; EXIT
+      CASE "HB_DIRNAME"
+         cMacro := FN_NameGet( DirDelPathSep( PathSepToSelf( FN_DirGet( cFileName ) ) ) ) ; EXIT
       CASE "HB_NAME"
          cMacro := PathSepToSelf( FN_NameGet( cFileName ) ) ; EXIT
       CASE "HB_CURDIR"

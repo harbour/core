@@ -1,0 +1,20 @@
+#
+# $Id$
+#
+
+-hblib
+-inc
+
+-o${hb_dirname}
+
+firebird.c
+tfirebrd.prg
+
+-stop{pocc64|poccarm}
+
+-reqheader=ibase.h
+
+-inctrypath=${HB_WITH_FIREBIRD}
+-inctrypath=/usr/include
+-inctrypath=/opt/firebird/include
+-inctrypath=/Library/Frameworks/Firebird.framework/Headers

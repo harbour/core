@@ -1,0 +1,9 @@
+#
+# $Id$
+#
+
+incpaths=.
+
+libs=hbcomm
+
+libs=../hbct/hbct.hbc

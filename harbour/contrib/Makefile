@@ -11,6 +11,7 @@ DIRS := \
    hbbtree \
    hbbz2 \
    hbclipsm \
+   hbcomm \
    hbct \
    hbfoxpro \
    hbfship \

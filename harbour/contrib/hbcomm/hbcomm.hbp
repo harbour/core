@@ -1,0 +1,10 @@
+#
+# $Id$
+#
+
+-hblib
+-inc
+
+-o${hb_name}
+
+hbcomm.prg
