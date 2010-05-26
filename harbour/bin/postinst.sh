@@ -270,7 +270,8 @@ if [ "$HB_COMPILER" = "gcc" ] || \
    [ "$HB_COMPILER" = "djgpp" ] || \
    [ "$HB_COMPILER" = "icc" ] || \
    [ "$HB_COMPILER" = "sunpro" ] || \
-   [ "$HB_COMPILER" = "open64" ]
+   [ "$HB_COMPILER" = "open64" ] || \
+   [ "$HB_COMPILER" = "clang" ]
 then
     if [ -n "${HB_TOOLS_PREF}" ]; then
         hb_mkdyn="${HB_INST_PKGPREF}${HB_BIN_INSTALL}/${HB_TOOLS_PREF}-mkdyn"
