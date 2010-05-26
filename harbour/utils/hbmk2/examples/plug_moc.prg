@@ -21,7 +21,7 @@ FUNCTION hbmk2_plugin_moc( hbmk2 )
    LOCAL cCommand
    LOCAL cDst
    LOCAL nError
-   LOCAL tmp, tmp1, tmp2
+   LOCAL tmp, tmp1, tmp2, tmp3
 
    LOCAL lBuildIt
 
@@ -79,7 +79,9 @@ FUNCTION hbmk2_plugin_moc( hbmk2 )
 
          FOR EACH tmp IN aMOC
 
-            cDst := hbmk2_FNameDirExtSet( "moc_" + tmp, hbmk2[ "cWorkDir" ], ".cpp" )
+            hb_fNameSplit( tmp, , @tmp3 )
+
+            cDst := hbmk2_FNameDirExtSet( "moc_" + tmp3, hbmk2[ "cWorkDir" ], ".cpp" )
 
             IF hbmk2[ "lINC" ] .AND. ! hbmk2[ "lREBUILD" ]
                lBuildIt := ! hb_FGetDateTime( cDst, @tmp2 ) .OR. ;
