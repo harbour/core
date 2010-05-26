@@ -5940,7 +5940,7 @@ STATIC PROCEDURE PlugIn_Load( hbmk )
 
       IF ! Empty( cFile )
          lOK := .F.
-         IF !( Lower( cExt ) == ".prg" ) /* Optimization: Don't try to load is as .hrb if the extension is .prg */
+         IF !( Lower( cExt ) == ".prg" ) /* Optimization: Don't try to load it as .hrb if the extension is .prg */
             BEGIN SEQUENCE WITH {| oError | Break( oError ) }
                hrb := hb_hrbLoad( HB_HRB_BIND_FORCELOCAL, cFile )
                cType := I_( "(compiled)" )
