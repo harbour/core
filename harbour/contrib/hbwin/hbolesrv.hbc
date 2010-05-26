@@ -2,6 +2,8 @@
 # $Id$
 #
 
+libs=hbwin.hbc
+
 gt=gtgui
 
 cflags={watcom}-6r

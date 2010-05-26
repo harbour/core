@@ -6964,11 +6964,11 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
                     FN_ExtGet( cItemL ) == ".pot"
                   AAddNew( hbmk[ _HBMK_aPO ], PathSepToTarget( hbmk, cItem ) )
                CASE FN_ExtGet( cItemL ) == ".rc"
-                  FOR EACH tmp IN FN_Expand( cItem )
+                  FOR EACH tmp IN FN_Expand( cItem, .F. )
                      AAddNew( hbmk[ _HBMK_aRESSRC ], PathSepToTarget( hbmk, tmp ) )
                   NEXT
                CASE FN_ExtGet( cItemL ) == ".def"
-                  FOR EACH tmp IN FN_Expand( cItem )
+                  FOR EACH tmp IN FN_Expand( cItem, .F.  )
                      AAddNew( hbmk[ _HBMK_aDEF ], PathSepToTarget( hbmk, tmp ) )
                   NEXT
                CASE FN_ExtGet( cItemL ) == ".res"
@@ -6976,18 +6976,14 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
                      /* For MinGW family add .res files as source input, as they
                         will need to be converted to coff format with windres (just
                         like plain .rc files) before feeding them to gcc. */
-                     FOR EACH tmp IN FN_Expand( cItem )
+                     FOR EACH tmp IN FN_Expand( cItem, .F.  )
                         AAddNew( hbmk[ _HBMK_aRESSRC ], PathSepToTarget( hbmk, tmp ) )
                      NEXT
                   ELSE
-                     FOR EACH tmp IN FN_Expand( cItem )
+                     FOR EACH tmp IN FN_Expand( cItem, .F.  )
                         AAddNew( hbmk[ _HBMK_aRESCMP ], PathSepToTarget( hbmk, tmp ) )
                      NEXT
                   ENDIF
-               CASE FN_ExtGet( cItemL ) == ".def"
-                  FOR EACH tmp IN FN_Expand( cItem )
-                     AAddNew( hbmk[ _HBMK_aDEF ], PathSepToTarget( hbmk, tmp ) )
-                  NEXT
                OTHERWISE /* .prg */
                   IF Empty( FN_ExtGet( cItem ) )
                      cItem := FN_ExtSet( cItem, ".prg" )

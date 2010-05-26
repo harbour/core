@@ -294,24 +294,25 @@ extern HB_EXPORT HB_BOOL   hb_fsFindNext( PHB_FFIND ffind );
 extern HB_EXPORT void      hb_fsFindClose( PHB_FFIND ffind );
 
 /* functions to create, wait and terminate processes */
-extern HB_FHANDLE hb_fsProcessOpen( const char * pszFilename,
-                                    HB_FHANDLE * phStdin, HB_FHANDLE * phStdout,
-                                    HB_FHANDLE * phStderr,
-                                    HB_BOOL fDetach, HB_ULONG * pulPID );
-extern int hb_fsProcessRun( const char * pszFilename,
-                            const char * pStdInBuf, HB_SIZE ulStdInLen,
-                            char ** pStdOutPtr, HB_SIZE * pulStdOut,
-                            char ** pStdErrPtr, HB_SIZE * pulStdErr,
-                            HB_BOOL fDetach );
-extern int     hb_fsProcessValue( HB_FHANDLE hProcess, HB_BOOL fWait );
-extern HB_BOOL hb_fsProcessClose( HB_FHANDLE hProcess, HB_BOOL fGentle );
+extern HB_EXPORT HB_FHANDLE hb_fsProcessOpen( const char * pszFilename,
+                                              HB_FHANDLE * phStdin, HB_FHANDLE * phStdout,
+                                              HB_FHANDLE * phStderr,
+                                              HB_BOOL fDetach, HB_ULONG * pulPID );
+extern HB_EXPORT int        hb_fsProcessRun( const char * pszFilename,
+                                             const char * pStdInBuf, HB_SIZE ulStdInLen,
+                                             char ** pStdOutPtr, HB_SIZE * pulStdOut,
+                                             char ** pStdErrPtr, HB_SIZE * pulStdErr,
+                                             HB_BOOL fDetach );
+extern HB_EXPORT int        hb_fsProcessValue( HB_FHANDLE hProcess, HB_BOOL fWait );
+extern HB_EXPORT HB_BOOL    hb_fsProcessClose( HB_FHANDLE hProcess, HB_BOOL fGentle );
 
 /* Misc helper functions */
 extern HB_FATTR            hb_fsAttrFromRaw( HB_FATTR raw_attr );
 extern HB_FATTR            hb_fsAttrToRaw( HB_FATTR ulAttr );
 extern HB_FATTR            hb_fsAttrEncode( const char * szAttr );
 extern char *              hb_fsAttrDecode( HB_FATTR ulAttr, char * szAttr );
-extern HB_EXPORT HB_BOOL   hb_fsMaxFilesError( void );
+
+extern HB_EXPORT HB_BOOL      hb_fsMaxFilesError( void );
 extern HB_EXPORT const char * hb_fsNameConv( const char * szFileName, char ** pszFree );
 
 /* Harbour file functions with shared file handles and locks
