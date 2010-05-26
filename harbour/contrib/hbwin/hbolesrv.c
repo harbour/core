@@ -433,7 +433,7 @@ static HRESULT STDMETHODCALLTYPE Invoke( IDispatch* lpThis, DISPID dispid, REFII
                      pParams->cArgs == 0 )
             {
                if( pVarResult )
-                  hb_oleItemToVariant( pVarResult, pItem );
+                  hb_oleItemToVariantEx( pVarResult, pItem, s_objItemToVariant );
                fResult = HB_TRUE;
             }
             else if( ( wFlags & DISPATCH_PROPERTYPUT ) != 0 &&
@@ -497,7 +497,7 @@ static HRESULT STDMETHODCALLTYPE Invoke( IDispatch* lpThis, DISPID dispid, REFII
          {
             PHB_ITEM pItem = hb_stackAllocItem();
             hb_memvarGet( pItem, hb_dynsymSymbol( pDynSym ) );
-            hb_oleItemToVariant( pVarResult, pItem );
+            hb_oleItemToVariantEx( pVarResult, pItem, s_objItemToVariant );
             hb_stackPop();
          }
          return S_OK;
@@ -611,6 +611,7 @@ static HB_BOOL s_objItemToVariant( VARIANT * pVariant, PHB_ITEM pItem )
    {
       pVariant->n1.n2.vt = VT_DISPATCH;
       pVariant->n1.n2.n3.pdispVal = ( IDispatch * ) pvObj;
+      return HB_TRUE;
    }
    return HB_FALSE;
 }

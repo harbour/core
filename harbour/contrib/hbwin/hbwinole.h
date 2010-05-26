@@ -113,7 +113,7 @@ extern HB_EXPORT void       hb_oleSetError( HRESULT lOleError );
 extern HB_EXPORT void       hb_oleVariantToItem( PHB_ITEM pItem, VARIANT * pVariant );
 extern HB_EXPORT void       hb_oleItemToVariant( VARIANT * pVariant, PHB_ITEM pItem );
 extern HB_EXPORT void       hb_oleItemToVariantEx( VARIANT* pVariant, PHB_ITEM pItem, HB_OLEOBJ_FUNC pObjFunc );
-extern HB_EXPORT void       hb_oleVariantUpdate( VARIANT * pVariant, PHB_ITEM pItem );
+extern HB_EXPORT void       hb_oleVariantUpdate( VARIANT * pVariant, PHB_ITEM pItem, HB_OLEOBJ_FUNC pObjFunc );
 extern HB_EXPORT IDispatch* hb_oleParam( int iParam );
 extern HB_EXPORT IDispatch* hb_oleItemGet( PHB_ITEM pItem );
 extern HB_EXPORT PHB_ITEM   hb_oleItemPut( PHB_ITEM pItem, IDispatch * pDisp );
