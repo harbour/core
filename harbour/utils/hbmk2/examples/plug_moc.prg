@@ -56,7 +56,7 @@ FUNCTION hbmk2_plugin_moc( hbmk2 )
                ELSE
                   cMOC_BIN := hbmk2_FindInPath( "moc", "/opt/qtsdk/qt/bin" )
                   IF Empty( cMOC_BIN )
-                     cMOC_BIN := hbmk2_FindInPath( "moc", "/opt/qtsdk/qt/bin" )
+                     cMOC_BIN := hbmk2_FindInPath( "moc-qt4", "/opt/qtsdk/qt/bin" )
                      IF Empty( cMOC_BIN )
                         hbmk2_OutErr( hbmk2, "HB_QT_MOC_BIN not set, could not autodetect" )
                         RETURN NIL
