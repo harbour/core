@@ -1,5 +1,5 @@
 ;
-; $Id: globsh.mk 13886 2010-02-16 15:30:31Z vszakats $
+; $Id$
 ;
 
 EXPORT DllGetClassObject   = '_DllGetClassObject@12'  PRIVATE
