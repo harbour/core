@@ -105,23 +105,23 @@
 
 HB_EXTERN_BEGIN
 
-HB_EXPORT HB_BOOL    hb_oleInit( void );
-HB_EXPORT HRESULT    hb_oleGetError( void );
-HB_EXPORT void       hb_oleSetError( HRESULT lOleError );
-HB_EXPORT void       hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant );
-HB_EXPORT void       hb_oleItemToVariant( VARIANT* pVariant, PHB_ITEM pItem );
-HB_EXPORT void       hb_oleVariantUpdate( VARIANT* pVariant, PHB_ITEM pItem );
-HB_EXPORT IDispatch* hb_oleParam( int iParam );
-HB_EXPORT IDispatch* hb_oleItemGet( PHB_ITEM pItem );
-HB_EXPORT PHB_ITEM   hb_oleItemPut( PHB_ITEM pItem, IDispatch* pDisp );
-HB_EXPORT PHB_ITEM   hb_oleItemGetCallBack( PHB_ITEM pItem );
-HB_EXPORT void       hb_oleItemSetCallBack( PHB_ITEM pItem, PHB_ITEM* pCallBack );
-HB_EXPORT HB_BOOL    hb_oleDispInvoke( PHB_SYMB pSym, PHB_ITEM pObject, PHB_ITEM pParam,
-                                       DISPPARAMS* pParams, VARIANT* pVarResult );
+extern HB_EXPORT HB_BOOL    hb_oleInit( void );
+extern HB_EXPORT HRESULT    hb_oleGetError( void );
+extern HB_EXPORT void       hb_oleSetError( HRESULT lOleError );
+extern HB_EXPORT void       hb_oleVariantToItem( PHB_ITEM pItem, VARIANT * pVariant );
+extern HB_EXPORT void       hb_oleItemToVariant( VARIANT * pVariant, PHB_ITEM pItem );
+extern HB_EXPORT void       hb_oleVariantUpdate( VARIANT * pVariant, PHB_ITEM pItem );
+extern HB_EXPORT IDispatch* hb_oleParam( int iParam );
+extern HB_EXPORT IDispatch* hb_oleItemGet( PHB_ITEM pItem );
+extern HB_EXPORT PHB_ITEM   hb_oleItemPut( PHB_ITEM pItem, IDispatch * pDisp );
+extern HB_EXPORT PHB_ITEM   hb_oleItemGetCallBack( PHB_ITEM pItem );
+extern HB_EXPORT void       hb_oleItemSetCallBack( PHB_ITEM pItem, PHB_ITEM * pCallBack );
+extern HB_EXPORT HB_BOOL    hb_oleDispInvoke( PHB_SYMB pSym, PHB_ITEM pObject, PHB_ITEM pParam,
+extern                                        DISPPARAMS * pParams, VARIANT* pVarResult );
 
 /* activex control */
-HB_EXPORT HB_BOOL    hb_oleAxInit( void );
-HB_EXPORT PHB_ITEM   hb_oleAxControlNew( PHB_ITEM pItem, HWND hWnd );
+extern HB_EXPORT HB_BOOL    hb_oleAxInit( void );
+extern HB_EXPORT PHB_ITEM   hb_oleAxControlNew( PHB_ITEM pItem, HWND hWnd );
 
 HB_EXTERN_END
 
