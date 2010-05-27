@@ -118,7 +118,7 @@ typedef struct _SHNAMEMAPPING
    LPTSTR pszNewPath;
    int    cchOldPath;
    int    cchNewPath;
-} SHNAMEMAPPING, *LPSHNAMEMAPPING;
+} SHNAMEMAPPING, * LPSHNAMEMAPPING;
 
 #endif
 

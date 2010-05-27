@@ -16,6 +16,7 @@ C_SOURCES := \
    stringsx.c \
 
 PRG_SOURCES := \
+   calldll.prg \
    fcomma.prg \
    fileread.prg \
    hbedit.prg \
