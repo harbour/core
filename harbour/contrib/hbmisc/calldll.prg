@@ -63,9 +63,10 @@ PROCEDURE UNLOADALLDLL()
 FUNCTION CALLDLL32( cFunction, cLibrary, ... )
    RETURN HB_DYNACALL1( cFunction, cLibrary, NIL, ... )
 
-FUNCTION HB_DYNACALL1( cFunction, cLibrary, nCount, ... )
+#define _DEF_CALLCONV_ HB_DYN_CTYPE_CHAR_PTR
 
-   HB_SYMBOL_UNUSED( nCount )
+FUNCTION HB_DYNACALL1( cFunction, cLibrary, nCount, ... )
+   LOCAL aParams
 
    IF ISCHARACTER( cFunction ) .AND. ;
       ISCHARACTER( cLibrary )
@@ -74,7 +75,16 @@ FUNCTION HB_DYNACALL1( cFunction, cLibrary, nCount, ... )
          s_hDLL[ cLibrary ] := hb_LibLoad( cLibrary )
       ENDIF
 
-      RETURN hb_dynCall( { cFunction, s_hDLL[ cLibrary ], HB_DYN_CTYPE_CHAR_PTR }, ... )
+      IF ISNUMBER( nCount )
+         IF nCount == 0
+            RETURN hb_dynCall( { cFunction, s_hDLL[ cLibrary ], _DEF_CALLCONV_ } )
+         ELSEIF nCount >= 0 .AND. nCount < PCount() - 3
+            aParams := ASize( hb_AParams(), nCount )
+            RETURN hb_dynCall( { cFunction, s_hDLL[ cLibrary ], _DEF_CALLCONV_ }, hb_arrayToParams( aParams ) )
+         ENDIF
+      ELSE
+         RETURN hb_dynCall( { cFunction, s_hDLL[ cLibrary ], _DEF_CALLCONV_ }, ... )
+      ENDIF
    ENDIF
 
    RETURN NIL
