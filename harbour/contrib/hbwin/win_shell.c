@@ -7,6 +7,7 @@
  * Windows API functions (shellapi.h - shell32.dll)
  *
  * Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
+ * Copyright 2010 Viktor Szakats (harbour.01 syenar.hu)
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -61,6 +62,7 @@
 #endif
 
 #include "hbwapi.h"
+#include "hbapiitm.h"
 
 #include <shellapi.h>
 
@@ -99,4 +101,210 @@ HB_FUNC( WIN_SHELLNOTIFYICON )
 
    wapi_ret_L( Shell_NotifyIcon( HB_ISLOG( 6 ) ?
                ( hb_parl( 6 ) ? NIM_ADD : NIM_DELETE ) : NIM_MODIFY, &tnid ) );
+}
+
+/* Details:
+      http://msdn.microsoft.com/en-us/library/bb762164(VS.85).aspx
+      http://msdn.microsoft.com/en-us/library/bb759795(v=VS.85).aspx
+*/
+
+#if ! defined( HB_OS_WIN_CE )
+
+#if defined( __MINGW32__ )
+
+typedef struct _SHNAMEMAPPING
+{
+   LPTSTR pszOldPath;
+   LPTSTR pszNewPath;
+   int    cchOldPath;
+   int    cchNewPath;
+} SHNAMEMAPPING, *LPSHNAMEMAPPING;
+
+#endif
+
+typedef struct
+{
+   UINT            uNumberOfMappings;
+   LPSHNAMEMAPPING lpSHNameMapping;
+} HANDLETOMAPPINGS;
+
+static LPTSTR s_StringList( int iParam, DWORD * pdwIndex )
+{
+   PHB_ITEM pItem = hb_param( iParam, HB_IT_ARRAY | HB_IT_STRING ), pArrItem;
+   LPTSTR lpStr = NULL;
+   DWORD dwMaxIndex = 0;
+
+   if( pItem )
+   {
+      HB_SIZE nLen, nSize, nTotal, n, n1;
+
+      if( HB_IS_ARRAY( pItem ) )
+      {
+         nSize = hb_arrayLen( pItem );
+         for( n = nLen = 0; n < nSize; ++n )
+         {
+            pArrItem = hb_arrayGetItemPtr( pItem, n + 1 );
+            if( HB_IS_STRING( pArrItem ) )
+            {
+               n1 = HB_ITEMCOPYSTR( pArrItem, NULL, 0 );
+               if( n1 )
+                  nLen += n1 + 1;
+            }
+         }
+         if( nLen )
+         {
+            nTotal = nLen + 1;
+            lpStr = ( LPTSTR ) hb_xgrab( nTotal * sizeof( TCHAR ) );
+            for( n = nLen = 0; n < nSize; ++n )
+            {
+               pArrItem = hb_arrayGetItemPtr( pItem, n + 1 );
+               if( HB_IS_STRING( pArrItem ) )
+               {
+                  n1 = HB_ITEMCOPYSTR( pArrItem,
+                                       lpStr + nLen, nTotal - nLen );
+                  if( n1 )
+                  {
+                     nLen += n1 + 1;
+                     dwMaxIndex++;
+                  }
+               }
+            }
+            lpStr[ nLen ] = 0;
+         }
+      }
+      else
+      {
+         nLen = HB_ITEMCOPYSTR( pItem, NULL, 0 );
+         if( nLen )
+         {
+            lpStr = ( LPTSTR ) hb_xgrab( ( nLen * 1 + 2 ) * sizeof( TCHAR ) );
+
+            HB_ITEMCOPYSTR( pItem, lpStr, nLen + 1 );
+
+            for( n = n1 = 0; n < nLen; ++n )
+            {
+               if( lpStr[ n ] == 0 )
+               {
+                  ++n1;
+                  if( lpStr[ n + 1 ] == 0 )
+                     break;
+               }
+            }
+
+            if( n1 == 0 )
+            {
+               HB_ITEMCOPYSTR( pItem, lpStr + nLen + 1, nLen + 1 );
+               lpStr[ nLen * 1 + 2 ] = 0;
+               dwMaxIndex = 1;
+            }
+            else
+            {
+               if( n == nLen && lpStr[ n - 1 ] != 0 )
+               {
+                  lpStr[ n + 1 ] = 0;
+                  ++n1;
+               }
+               if( ( n1 & 1 ) == 0 )
+                  dwMaxIndex = ( DWORD ) n1;
+               else
+               {
+                  hb_xfree( lpStr );
+                  lpStr = NULL;
+               }
+            }
+         }
+      }
+   }
+
+   if( pdwIndex )
+   {
+      if( dwMaxIndex < *pdwIndex )
+         *pdwIndex = dwMaxIndex;
+      else if( dwMaxIndex && *pdwIndex == 0 )
+         *pdwIndex = 1;
+   }
+
+   return lpStr;
+}
+
+#endif
+
+/* WIN_SHFileOperation( [<hWnd>], [<nFunction>], [<cFrom>|<aFrom>], [<cTo>|<aTo>],
+                        [<nFlags>], [<@lAnyOperationAborted>],
+                        [<aNameMappings>], [<cProgressTitle>] ) -> <nResult> */
+HB_FUNC( WIN_SHFILEOPERATION )
+{
+   int iRetVal;
+#if defined( HB_OS_WIN_CE )
+   iRetVal = -1;
+#else
+   SHFILEOPSTRUCT fop;
+
+   void * hProgressTitle;
+
+   fop.hwnd                  = wapi_par_HWND( 1 );
+   fop.wFunc                 = ( UINT ) hb_parni( 2 );
+   fop.pFrom                 = ( LPCTSTR ) s_StringList( 3, NULL );
+   fop.pTo                   = ( LPCTSTR ) s_StringList( 4, NULL );
+   fop.fFlags                = ( FILEOP_FLAGS ) hb_parnl( 5 );
+   fop.fAnyOperationsAborted = FALSE;
+   fop.hNameMappings         = NULL;
+   fop.lpszProgressTitle     = HB_PARSTR( 8, &hProgressTitle, NULL );
+
+   iRetVal = SHFileOperation( &fop );
+   hbwapi_SetLastError( GetLastError() );
+
+   hb_storl( fop.fAnyOperationsAborted, 6 );
+
+   if( fop.pFrom )
+      hb_xfree( ( void * ) fop.pFrom );
+
+   if( fop.pTo )
+      hb_xfree( ( void * ) fop.pTo );
+
+   hb_strfree( hProgressTitle );
+
+   if( ( fop.fFlags & FOF_WANTMAPPINGHANDLE ) != 0 )
+   {
+      HANDLETOMAPPINGS * hm = ( HANDLETOMAPPINGS * ) fop.hNameMappings;
+      PHB_ITEM pArray = hb_param( 7, HB_IT_ARRAY );
+
+      if( pArray )
+         hb_arraySize( pArray, 0 );
+
+      /* Process hNameMappings */
+      if( hm )
+      {
+         PHB_ITEM pTempItem = hb_itemNew( NULL );
+         UINT tmp;
+         LPSHNAMEMAPPING pmap = hm->lpSHNameMapping;
+         HB_BOOL bIsWin9x = hb_iswin9x();
+
+         for( tmp = 0; tmp < hm->uNumberOfMappings; ++tmp )
+         {
+            hb_arrayNew( pTempItem, 2 );
+
+            if( bIsWin9x )
+            {
+               /* always returns non-UNICODE on Win9x systems */
+               hb_arraySetCL( pTempItem, 1, ( char * ) pmap[ tmp ].pszOldPath, pmap[ tmp ].cchOldPath );
+               hb_arraySetCL( pTempItem, 2, ( char * ) pmap[ tmp ].pszNewPath, pmap[ tmp ].cchNewPath );
+            }
+            else
+            {
+               /* always returns UNICODE on NT and upper systems */
+               HB_ARRAYSETSTRLEN( pTempItem, 1, ( LPTSTR ) pmap[ tmp ].pszOldPath, pmap[ tmp ].cchOldPath );
+               HB_ARRAYSETSTRLEN( pTempItem, 2, ( LPTSTR ) pmap[ tmp ].pszNewPath, pmap[ tmp ].cchNewPath );
+            }
+
+            hb_arraySetForward( pTempItem, ( HB_SIZE ) ( tmp + 1 ), pTempItem );
+         }
+
+         hb_itemRelease( pTempItem );
+
+         SHFreeNameMappings( hm );
+      }
+   }
+#endif
+   hb_retni( iRetVal );
 }

@@ -61,9 +61,9 @@
 /* For Arc() */
 #if defined( HB_OS_WIN_CE )
    #include "hbwince.h"
+#else
+   #include <winspool.h>
 #endif
-
-#include <winspool.h>
 
 static void s_hb_hashSetCItemNL( PHB_ITEM pHash, const char * pszKey, long v )
 {

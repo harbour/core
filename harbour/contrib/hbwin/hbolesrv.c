@@ -783,12 +783,12 @@ BOOL WINAPI DllMain( HINSTANCE hInstance, DWORD dwReason, PVOID pvReserved )
    switch( dwReason )
    {
       case DLL_PROCESS_ATTACH:
-         s_hInstDll = hInstance;
+         s_hInstDll = ( HINSTANCE ) hInstance;
          s_lLockCount = s_lObjectCount = 0;
          s_IClassFactoryObj.lpVtbl = ( IClassFactoryVtbl * )
                                      &IClassFactory_Vtbl;
 
-         DisableThreadLibraryCalls( hInstance );
+         DisableThreadLibraryCalls( ( HMODULE ) hInstance );
 
          s_fInit = !hb_vmIsActive();
          if( s_fInit )

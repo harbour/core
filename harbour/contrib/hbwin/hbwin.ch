@@ -692,6 +692,56 @@
 #define WIN_MB_MODEMASK                   0x00003000
 #define WIN_MB_MISCMASK                   0x0000C000
 
+/* WIN_SHFILEOPERATION() functions */
+#define WIN_FO_MOVE                       0x0001
+#define WIN_FO_COPY                       0x0002
+#define WIN_FO_DELETE                     0x0003
+#define WIN_FO_RENAME                     0x0004
+
+/* WIN_SHFILEOPERATION() flags */
+#define WIN_FOF_MULTIDESTFILES            0x0001
+#define WIN_FOF_CONFIRMMOUSE              0x0002
+#define WIN_FOF_SILENT                    0x0004
+#define WIN_FOF_RENAMEONCOLLISION         0x0008
+#define WIN_FOF_NOCONFIRMATION            0x0010
+#define WIN_FOF_WANTMAPPINGHANDLE         0x0020
+#define WIN_FOF_ALLOWUNDO                 0x0040
+#define WIN_FOF_FILESONLY                 0x0080
+#define WIN_FOF_SIMPLEPROGRESS            0x0100
+#define WIN_FOF_NOCONFIRMMKDIR            0x0200
+#define WIN_FOF_NOERRORUI                 0x0400
+#define WIN_FOF_NOCOPYSECURITYATTRIBS     0x0800
+#define WIN_FOF_NORECURSION               0x1000
+#define WIN_FOF_NO_CONNECTED_ELEMENTS     0x2000
+#define WIN_FOF_WANTNUKEWARNING           0x4000
+
+/* WIN_SHFILEOPERATION() results */
+#define HB_WIN_DE_SAMEFILE                0x71      /* The source and destination files are the same file. */
+#define HB_WIN_DE_MANYSRC1DEST            0x72      /* Multiple file paths were specified in the source buffer, but only one destination file path. */
+#define HB_WIN_DE_DIFFDIR                 0x73      /* Rename operation was specified but the destination path is a different directory. Use the move operation instead. */
+#define HB_WIN_DE_ROOTDIR                 0x74      /* The source is a root directory, which cannot be moved or renamed. */
+#define HB_WIN_DE_OPCANCELLED             0x75      /* The operation was cancelled by the user, or silently cancelled if the appropriate flags were supplied to SHFileOperation. */
+#define HB_WIN_DE_DESTSUBTREE             0x76      /* The destination is a subtree of the source. */
+#define HB_WIN_DE_ACCESSDENIEDSRC         0x78      /* Security settings denied access to the source. */
+#define HB_WIN_DE_PATHTOODEEP             0x79      /* The source or destination path exceeded or would exceed MAX_PATH. */
+#define HB_WIN_DE_MANYDEST                0x7A      /* The operation involved multiple destination paths, which can fail in the case of a move operation. */
+#define HB_WIN_DE_INVALIDFILES            0x7C      /* The path in the source or destination or both was invalid. */
+#define HB_WIN_DE_DESTSAMETREE            0x7D      /* The source and destination have the same parent folder. */
+#define HB_WIN_DE_FLDDESTISFILE           0x7E      /* The destination path is an existing file. */
+#define HB_WIN_DE_FILEDESTISFLD           0x80      /* The destination path is an existing folder. */
+#define HB_WIN_DE_FILENAMETOOLONG         0x81      /* The name of the file exceeds MAX_PATH. */
+#define HB_WIN_DE_DEST_IS_CDROM           0x82      /* The destination is a read-only CD-ROM, possibly unformatted. */
+#define HB_WIN_DE_DEST_IS_DVD             0x83      /* The destination is a read-only DVD, possibly unformatted. */
+#define HB_WIN_DE_DEST_IS_CDRECORD        0x84      /* The destination is a writable CD-ROM, possibly unformatted. */
+#define HB_WIN_DE_FILE_TOO_LARGE          0x85      /* The file involved in the operation is too large for the destination media or file system. */
+#define HB_WIN_DE_SRC_IS_CDROM            0x86      /* The source is a read-only CD-ROM, possibly unformatted. */
+#define HB_WIN_DE_SRC_IS_DVD              0x87      /* The source is a read-only DVD, possibly unformatted. */
+#define HB_WIN_DE_SRC_IS_CDRECORD         0x88      /* The source is a writable CD-ROM, possibly unformatted. */
+#define HB_WIN_DE_ERROR_MAX               0xB7      /* MAX_PATH was exceeded during the operation. */
+#define HB_WIN_DE_UNKNOWN_                0x402     /* An unknown error occurred. This is typically due to an invalid path in the source or destination. This error does not occur on Windows Vista and later. */
+#define HB_WIN_DE_ERRORONDEST_            0x10000   /* An unspecified error occurred on the destination. */
+#define HB_WIN_DE_ROOTDIR_ERRORONDEST_    0x10074   /* Destination is a root directory and cannot be renamed. */
+
 /* ------------------------------- */
 /* Deprecated constants and macros */
 /* ------------------------------- */
