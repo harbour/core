@@ -82,7 +82,6 @@ static HB_BOOL s_fServerReady = HB_FALSE;
 static HB_BOOL s_fHashClone = HB_FALSE;
 static PHB_ITEM s_pAction = NULL;
 static PHB_ITEM s_pMsgHash = NULL;
-static PHB_ITEM s_pMsgArray = NULL;
 
 static HINSTANCE s_hInstDll;
 
@@ -313,18 +312,11 @@ static HRESULT STDMETHODCALLTYPE GetIDsOfNames( IDispatch* lpThis, REFIID riid,
             {
                HB_SIZE nPos = hb_hashGetCItemPos( s_pMsgHash, szName );
 
-               if( nPos )
-                  nPos = hb_itemGetNL( hb_hashGetValueAt( s_pMsgHash, nPos ) );
-               else
+               if( nPos == 0 )
                {
-                  PHB_ITEM pKey, pValue;
-
-                  pKey = hb_itemPutC( hb_stackAllocItem(), szName );
-                  hb_arrayAdd( s_pMsgArray, pKey );
-                  nPos = hb_arrayLen( s_pMsgArray );
-                  pValue = hb_itemPutNL( hb_stackAllocItem(), ( long ) nPos );
-                  hb_hashAdd( s_pMsgHash, pKey, pValue );
-                  hb_stackPop();
+                  PHB_ITEM pKey = hb_itemPutC( hb_stackAllocItem(), szName );
+                  if( hb_hashAdd( s_pMsgHash, pKey, NULL ) )
+                     hb_hashScan( s_pMsgHash, pKey, &nPos );
                   hb_stackPop();
                }
                dispid = ( DISPID ) nPos;
@@ -399,7 +391,7 @@ static HRESULT STDMETHODCALLTYPE Invoke( IDispatch* lpThis, DISPID dispid, REFII
              ( ( wFlags & DISPATCH_PROPERTYPUT ) != 0 && pParams->cArgs == 1 ) )
          {
             fResult = hb_oleDispInvoke( NULL, pAction,
-                                        hb_arrayGetItemPtr( s_pMsgArray, ( HB_SIZE ) dispid ),
+                                        hb_hashGetKeyAt( s_pMsgHash, ( HB_SIZE ) dispid ),
                                         pParams, pVarResult, s_objItemToVariant );
          }
       }
@@ -830,11 +822,6 @@ BOOL WINAPI DllMain( HINSTANCE hInstance, DWORD dwReason, PVOID pvReserved )
             hb_itemRelease( s_pMsgHash );
             s_pMsgHash = NULL;
          }
-         if( s_pMsgArray )
-         {
-            hb_itemRelease( s_pMsgArray );
-            s_pMsgArray = NULL;
-         }
          if( s_fInit )
          {
             hb_vmQuit();
@@ -876,11 +863,6 @@ HB_FUNC( WIN_OLESERVERINIT )
                hb_itemRelease( s_pMsgHash );
                s_pMsgHash = NULL;
             }
-            if( s_pMsgArray )
-            {
-               hb_itemRelease( s_pMsgArray );
-               s_pMsgArray = NULL;
-            }
 
             pAction = hb_param( 3, HB_IT_HASH | HB_IT_BLOCK | HB_IT_SYMBOL );
             if( !pAction && HB_ISOBJECT( 3 ) )
@@ -900,7 +882,7 @@ HB_FUNC( WIN_OLESERVERINIT )
                      else
                      {
                         s_pMsgHash = hb_hashNew( hb_itemNew( NULL ) );
-                        s_pMsgArray = hb_itemArrayNew( 0 );
+                        hb_hashSetFlags( s_pMsgHash, HB_HASH_KEEPORDER );
                      }
                   }
                }
@@ -926,12 +908,4 @@ HB_FUNC( WIN_OLESERVERINIT )
       hb_errRT_OLESRV( EG_ARG, errCode, 0, NULL, HB_ERR_FUNCNAME );
    else
       hb_retl( s_fServerReady );
-}
-
-/* WIN_OleServerMsg( <nMsgId> ) -> <cMsg> )
- */
-HB_FUNC( WIN_OLESERVERMSG )
-{
-   if( s_pMsgArray )
-      hb_itemReturn( hb_arrayGetItemPtr( s_pMsgArray, hb_parnl( 1 ) ) );
 }
