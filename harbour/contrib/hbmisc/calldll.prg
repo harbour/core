@@ -75,13 +75,9 @@ FUNCTION HB_DYNACALL1( cFunction, cLibrary, nCount, ... )
          s_hDLL[ cLibrary ] := hb_LibLoad( cLibrary )
       ENDIF
 
-      IF ISNUMBER( nCount )
-         IF nCount == 0
-            RETURN hb_dynCall( { cFunction, s_hDLL[ cLibrary ], _DEF_CALLCONV_ } )
-         ELSEIF nCount >= 0 .AND. nCount < PCount() - 3
-            aParams := ASize( hb_AParams(), nCount )
-            RETURN hb_dynCall( { cFunction, s_hDLL[ cLibrary ], _DEF_CALLCONV_ }, hb_arrayToParams( aParams ) )
-         ENDIF
+      IF ISNUMBER( nCount ) .AND. nCount >= 0 .AND. nCount < PCount() - 3
+         aParams := ASize( hb_AParams(), nCount )
+         RETURN hb_dynCall( { cFunction, s_hDLL[ cLibrary ], _DEF_CALLCONV_ }, hb_arrayToParams( aParams ) )
       ELSE
          RETURN hb_dynCall( { cFunction, s_hDLL[ cLibrary ], _DEF_CALLCONV_ }, ... )
       ENDIF
