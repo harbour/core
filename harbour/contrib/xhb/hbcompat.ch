@@ -266,7 +266,7 @@
    #xtranslate gtSetClipboard(<x>)         => hb_gtInfo( HB_GTI_CLIPBOARDDATA, <x> )
    #xtranslate gtGetClipboard()            => hb_gtInfo( HB_GTI_CLIPBOARDDATA )
    #xtranslate gtGetClipBoardSize()        => Len( hb_gtInfo( HB_GTI_CLIPBOARDDATA ) )
-   #xtranslate gtPasteClipBoard([<n>])     => hb_gtInfo( HB_GTI_CLIPBOARDPASTE )
+   #xtranslate gtPasteClipBoard()          => hb_gtInfo( HB_GTI_CLIPBOARDPASTE )
    #xtranslate gtProcessMessages()         => NextKey()
    #xtranslate gfxPrimitive([<x,...>])     => hb_gfxPrimitive(<x>)
    #xtranslate gfxText([<x,...>])          => hb_gfxText(<x>)

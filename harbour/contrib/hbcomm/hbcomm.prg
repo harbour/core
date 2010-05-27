@@ -129,7 +129,7 @@ FUNCTION INCHR( nPort, nCount, /* @ */ cString )
 
 /* Send out characters. Returns .t. if successful. */
 FUNCTION OUTCHR( nPort, cString )
-   RETURN com_send( nPort, cString )
+   RETURN com_send( nPort, cString ) == 0
 
 /* Find out how many chars are in input buffer */
 FUNCTION INBUFSIZE( nPort )

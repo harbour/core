@@ -53,6 +53,7 @@ PRG_SOURCES := \
    dirrec.prg \
    diskhb.prg \
    dumpvar.prg \
+   hbcompat.prg \
    hblog.prg \
    hblognet.prg \
    hbstruct.prg \
