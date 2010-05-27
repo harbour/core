@@ -29,6 +29,7 @@
         An instance of the object of type QChar
     $METHODS$
         :category()                                         -> nCategory
+        :combiningClass()                                   -> nUnsigned
         :decomposition()                                    -> cQString
         :decompositionTag()                                 -> nDecomposition
         :digitValue()                                       -> nInt

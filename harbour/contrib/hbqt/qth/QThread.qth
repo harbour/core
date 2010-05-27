@@ -87,7 +87,8 @@ Priority priority () const
 void setPriority ( Priority priority )
 void setStackSize ( uint stackSize )
 uint stackSize () const
-bool wait ( unsigned long time = ULONG_MAX )
+#bool wait ( unsigned long time = ULONG_MAX )
+bool wait ( ulong time = ULONG_MAX )
 
 QThread * currentThread ()
 // Qt::HANDLE currentThreadId ()

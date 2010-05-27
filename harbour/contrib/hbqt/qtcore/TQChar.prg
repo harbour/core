@@ -68,6 +68,7 @@ CREATE CLASS QChar INHERIT HbQtObjectHandler
    METHOD  new( ... )
 
    METHOD  category()
+   METHOD  combiningClass()
    METHOD  decomposition()
    METHOD  decompositionTag()
    METHOD  digitValue()
@@ -114,6 +115,10 @@ METHOD QChar:new( ... )
 
 METHOD QChar:category()
    RETURN Qt_QChar_category( ::pPtr )
+
+
+METHOD QChar:combiningClass()
+   RETURN Qt_QChar_combiningClass( ::pPtr )
 
 
 METHOD QChar:decomposition()

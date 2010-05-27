@@ -249,16 +249,16 @@ HB_FUNC( QT_QTHREAD_STACKSIZE )
 }
 
 /*
- * bool wait ( unsigned long time = ULONG_MAX )
+ * bool wait ( ulong time = ULONG_MAX )
  */
 HB_FUNC( QT_QTHREAD_WAIT )
 {
    QThread * p = hbqt_par_QThread( 1 );
    if( p )
-      hb_retl( ( p )->wait() );
+      hb_retl( ( p )->wait( ( HB_ISNUM( 2 ) ? ( ulong ) hb_parnint( 2 ) : ULONG_MAX ) ) );
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTHREAD_WAIT FP=hb_retl( ( p )->wait() ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTHREAD_WAIT FP=hb_retl( ( p )->wait( ( HB_ISNUM( 2 ) ? ( ulong ) hb_parnint( 2 ) : ULONG_MAX ) ) ); p is NULL" ) );
    }
 }
 

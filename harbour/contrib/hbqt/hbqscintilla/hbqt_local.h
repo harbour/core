@@ -4,10 +4,9 @@
 
 /*
  * Harbour Project source code:
- * QT Source Generator for Harbour
+ * QT wrapper main header
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
- * www - http://www.harbour-project.org
+ * Copyright 2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,53 +49,22 @@
  *
  */
 /*----------------------------------------------------------------------*/
-;
-;              Header File to Generate QT Wrapper Sources
-;
-
-<CLASS>
-QObject  = 
-Inherits = 
-Type     = 
-New      = 
-Folder   = hbqscintilla
-</CLASS>
-
-<SUBCLASS>
-</SUBCLASS>
-
-<DOC>
-</DOC>
-
-<CODE>
-#include <qsciabstractapis.h>
-#include "hbqt_garbage.h"
-#include "hbqt_local.h"
 
 
-/*
- * QsciAbstractAPIs (QsciLexer *lexer) 
- * virtual ~QsciAbstractAPIs () 
- * 
- */
-HB_FUNC( QT_QSCIABSTRACTAPIS )
-{
+#ifndef __HBQT_LOCAL_H
+#define __HBQT_LOCAL_H
 
-}
-</CODE>
+#define hbqt_par_HBQsciScintilla( n )               ( ( HBQsciScintilla             * ) hbqt_gcpointer( n ) )
+#define hbqt_par_QsciScintilla( n )                 ( ( QsciScintilla               * ) hbqt_gcpointer( n ) )
+#define hbqt_par_QsciLexer( n )                     ( ( QsciLexer                   * ) hbqt_gcpointer( n ) )
+#define hbqt_par_QsciLexerCPP( n )                  ( ( QsciLexerCPP                * ) hbqt_gcpointer( n ) )
+#define hbqt_par_QsciLexerFlagship( n )             ( ( QsciLexerFlagship           * ) hbqt_gcpointer( n ) )
+#define hbqt_par_QsciAbstractAPIs( n )              ( ( QsciAbstractAPIs            * ) hbqt_gcpointer( n ) )
+#define hbqt_par_QsciAPIs( n )                      ( ( QsciAPIs                    * ) hbqt_gcpointer( n ) )
+#define hbqt_par_QsciDocument( n )                  ( ( QsciDocument                * ) hbqt_gcpointer( n ) )
+#define hbqt_par_QsciStyle( n )                     ( ( QsciStyle                   * ) hbqt_gcpointer( n ) )
+#define hbqt_par_QsciStyledText( n )                ( ( QsciStyledText              * ) hbqt_gcpointer( n ) )
+#define hbqt_par_QsciCommand( n )                   ( ( QsciCommand                 * ) hbqt_gcpointer( n ) )
+#define hbqt_par_QsciCommandSet( n )                ( ( QsciCommandSet              * ) hbqt_gcpointer( n ) )
 
-<ENUMS>
-</ENUMS>
-
-<PROTOS>
-QsciLexer * lexer () const 
-virtual void updateAutoCompletionList (const QStringList &context, QStringList &list)=0 
-virtual void autoCompletionSelected (const QString &selection) 
-virtual QStringList callTips (const QStringList &context, int commas, QsciScintilla::CallTipsStyle style, QList< int > &shifts)=0 
-</PROTOS>
-
-<SLOTS>
-</SLOTS>
-
-<SIGNALS>
-</SIGNALS>
+#endif /* __HBQT_LOCAL_H */

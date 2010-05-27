@@ -75,13 +75,12 @@
  */
 
 /*
- *  Constructed[ 32/35 [ 91.43% ] ]
+ *  Constructed[ 33/35 [ 94.29% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
  *
  *  uchar cell () const
- *  unsigned char combiningClass () const
  *  uchar row () const
  */
 
@@ -160,6 +159,20 @@ HB_FUNC( QT_QCHAR_CATEGORY )
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCHAR_CATEGORY FP=hb_retni( ( QChar::Category ) ( p )->category() ); p is NULL" ) );
+   }
+}
+
+/*
+ * unsigned char combiningClass () const
+ */
+HB_FUNC( QT_QCHAR_COMBININGCLASS )
+{
+   QChar * p = hbqt_par_QChar( 1 );
+   if( p )
+      hb_retni( ( p )->combiningClass() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCHAR_COMBININGCLASS FP=hb_retni( ( p )->combiningClass() ); p is NULL" ) );
    }
 }
 

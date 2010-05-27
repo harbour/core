@@ -69,6 +69,7 @@
 
 #include <qscistyledtext.h>
 #include "hbqt_garbage.h"
+#include "hbqt_local.h"
 
 
 /*

@@ -35,7 +35,7 @@
         :setPriority( nPriority )                           -> NIL
         :setStackSize( nStackSize )                         -> NIL
         :stackSize()                                        -> nUint
-        :wait()                                             -> lBool
+        :wait( nTime )                                      -> lBool
         :idealThreadCount()                                 -> nInt
         :yieldCurrentThread()                               -> NIL
         :quit()                                             -> NIL

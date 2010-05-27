@@ -74,7 +74,7 @@ CREATE CLASS QThread INHERIT HbQtObjectHandler, QObject
    METHOD  setPriority( nPriority )
    METHOD  setStackSize( nStackSize )
    METHOD  stackSize()
-   METHOD  wait()
+   METHOD  wait( nTime )
    METHOD  currentThread()
    METHOD  idealThreadCount()
    METHOD  yieldCurrentThread()
@@ -122,8 +122,8 @@ METHOD QThread:stackSize()
    RETURN Qt_QThread_stackSize( ::pPtr )
 
 
-METHOD QThread:wait()
-   RETURN Qt_QThread_wait( ::pPtr )
+METHOD QThread:wait( nTime )
+   RETURN Qt_QThread_wait( ::pPtr, nTime )
 
 
 METHOD QThread:currentThread()

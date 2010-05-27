@@ -73,7 +73,7 @@
 
 #include <qscistyle.h>
 #include "hbqt_garbage.h"
-
+#include "hbqt_local.h"
 
 /*
  * QsciStyle (int style=-1)
