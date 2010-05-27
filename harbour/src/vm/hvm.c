@@ -5583,12 +5583,17 @@ static void hb_vmPushAParams( void )
    {
       HB_SIZE ulLen = pArray->item.asArray.value->ulLen, ul;
 
-      for( ul = 1; ul < ulLen; ++ul )
-         hb_vmPush( pArray->item.asArray.value->pItems + ul );
-      hb_vmPush( pArray->item.asArray.value->pItems );
-      pCount = hb_stackItemFromTop( -1 );
-      hb_itemMove( pArray, pCount );
-      hb_itemPutNL( pCount, ulLen );
+      if( ulLen )
+      {
+         for( ul = 1; ul < ulLen; ++ul )
+            hb_vmPush( pArray->item.asArray.value->pItems + ul );
+         pCount = hb_stackAllocItem();
+         hb_itemCopy( pCount, pArray->item.asArray.value->pItems );
+         hb_itemMove( pArray, pCount );
+         hb_itemPutNL( pCount, ulLen );
+      }
+      else
+         hb_itemPutNL( pArray, 0 );
    }
    else
       hb_errRT_BASE( EG_ARG, 1068, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ), 1, pArray );
