@@ -27,12 +27,22 @@ C_SOURCES := \
    xhbarr.c \
    xhbat.c \
    xhbcopyf.c \
+   xhbdate.c \
    xhbenum.c \
    xhberrc.c \
+   xhbfs.c \
    xhbfunc.c \
+   xhbgt.c \
+   xhbhash.c \
+   xhbi18n.c \
+   xhbinet.c \
+   xhbini.c \
    xhbis.c \
    xhbmsgs.c \
+   xhbmtc.c \
    xhbqself.c \
+   xhbproc.c \
+   xhbregx.c \
    xhbsave.c \
    xhbscr.c \
    xhbtrim.c \
@@ -53,7 +63,6 @@ PRG_SOURCES := \
    dirrec.prg \
    diskhb.prg \
    dumpvar.prg \
-   hbcompat.prg \
    hblog.prg \
    hblognet.prg \
    hbstruct.prg \
@@ -69,6 +78,7 @@ PRG_SOURCES := \
    xdbmodst.prg \
    xhbcomp.prg \
    xhberr.prg \
+   xhbfunp.prg \
    xhbmt.prg \
    xhbver.prg \
    xthrow.prg \

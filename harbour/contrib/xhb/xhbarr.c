@@ -285,4 +285,7 @@ HB_FUNC( XHB_AINS )
 
       hb_itemReturn( pArray ); /* AIns() returns the array itself */
    }
+
 }
+
+HB_FUNC_EXTERN( HB_RASCAN             ) ; HB_FUNC( RASCAN                   ) { HB_FUNC_EXEC( HB_RASCAN             ); }

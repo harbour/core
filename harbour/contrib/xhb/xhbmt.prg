@@ -79,22 +79,6 @@ function SubscribeNow( mtx, nTimeOut, lSubscribed )
    return xSubscribed
 
 
-function hb_MultiThread()
-   return hb_mtvm()
-
-
-function GetCurrentThread()
-   return hb_threadSelf()
-
-
-function GetThreadId( pThID )
-   return hb_threadId( pThID )
-
-
-function ThreadGetCurrentInternal()
-   return hb_threadId()
-
-
 function IsSameThread( pThID1, pThID2 )
    return hb_threadId( pThID1 ) == iif( pcount() < 2, hb_threadId(), ;
                                                       hb_threadId( pThID2 ) )
@@ -112,10 +96,6 @@ function IsValidThread( pThID )
    return lValid
 
 
-function JoinThread( pThID )
-   return hb_threadJoin( pThID )
-
-
 function KillThread( pThID )
    hb_threadQuitRequest( pThID )
    return NIL
@@ -127,21 +107,8 @@ function StopThread( pThID )
    return NIL
 
 
-function KillAllThreads()
-   return hb_threadTerminateAll()
-
-
-function WaitForThreads()
-   return hb_threadWaitForAll()
-
-
 function ThreadSleep( nTimeOut )
    return hb_idleSleep( nTimeOut / 1000 )
-
-
-function DestroyMutex( mtx )
-   HB_SYMBOL_UNUSED( mtx )
-   return NIL
 
 
 function hb_MutexTryLock( mtx )
@@ -150,18 +117,6 @@ function hb_MutexTryLock( mtx )
 
 function hb_MutexTimeOutLock( mtx, nTimeOut )
    return hb_mutexLock( mtx, IIF( hb_isNumeric( nTimeOut ), nTimeOut / 1000, 0 ) )
-
-
-function Notify( mtx, xVal )
-   return hb_mutexNotify( mtx, xVal )
-
-
-function NotifyAll( mtx, xVal )
-   return hb_mutexNotifyAll( mtx, xVal )
-
-
-function ThreadGetCurrent()
-   return hb_threadId()
 
 
 function GetSystemThreadId( pThID )
