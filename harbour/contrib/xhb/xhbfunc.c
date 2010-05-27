@@ -310,5 +310,4 @@ HB_FUNC_EXTERN( HB_NUMTOHEX           ) ; HB_FUNC( NUMTOHEX                 ) { 
 HB_FUNC_EXTERN( HB_HEXTOSTR           ) ; HB_FUNC( HEXTOSTR                 ) { HB_FUNC_EXEC( HB_HEXTOSTR           ); }
 HB_FUNC_EXTERN( HB_STRTOHEX           ) ; HB_FUNC( STRTOHEX                 ) { HB_FUNC_EXEC( HB_STRTOHEX           ); }
 HB_FUNC_EXTERN( HB_ISPOINTER          ) ; HB_FUNC( ISPOINTER                ) { HB_FUNC_EXEC( HB_ISPOINTER          ); }
-HB_FUNC_EXTERN( HB_GETENV             ) ; HB_FUNC( GETENV                   ) { HB_FUNC_EXEC( HB_GETENV             ); }
 HB_FUNC_EXTERN( HB_CDPSELECT          ) ; HB_FUNC( HB_SETCODEPAGE           ) { HB_FUNC_EXEC( HB_CDPSELECT          ); }

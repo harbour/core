@@ -263,6 +263,71 @@
    #define GTI_CLIENT         2  /* Maximum possible client size of a window */
    #define GTI_MAX            3  /* Maximum possible window size (in Windows) */
 
+   #xtranslate NetName(<n>)                    => iif( hb_isNumeric( <n> ) .AND. <n> == 1, hb_UserName(), NetName() )
+   #xtranslate MaxRow(.T.)                     => hb_gtInfo( HB_GTI_VIEWPORTHEIGHT )
+   #xtranslate MaxCol(.T.)                     => hb_gtInfo( HB_GTI_VIEWPORTWIDTH )
+
+   #xtranslate Str(<x>,[<y>],[<y>],<z>)        => iif(<z>, hb_NToS(<x>), Str(<x>))
+
+   #xtranslate AScan(<a>,<b>,[<c>],[<d>],<e>)  => hb_AScan(<a>,<b>,<c>,<d>,<e>)
+   #xtranslate AIns(<a>,<n>,[<x,...>])         => hb_AIns(<a>,<n>,<x>)
+   #xtranslate ADel(<a>,<n>,<l>)               => hb_ADel(<a>,<n>,<l>)
+   #xtranslate At(<a>,<b>,[<x,...>])           => hb_At(<a>,<b>,<x>)
+
+   #xtranslate GetEnv([<x,...>])               => hb_GetEnv(<x>)
+   #xtranslate SetKey([<x,...>])               => hb_SetKey(<x>)
+   #xtranslate MemoWrit(<x>,<y>,<z>)           => iif( hb_isLogical(<z>) .AND. <z>, MemoWrit(<x>,<y>), hb_MemoWrit(<x>,<y>) )
+
+   /* _SET_TRACE* / TraceLog() */
+   #xtranslate Set(_SET_TRACE [,<x,...>])      => xhb_setTrace( <x> )
+   #xtranslate Set(_SET_TRACEFILE [,<x,...>])  => xhb_setTraceFile( <x> )
+   #xtranslate Set(_SET_TRACESTACK [,<x,...>]) => xhb_setTraceStack( <x> )
+
+   /* TEXT INTO <varname> */
+   #xcommand TEXT INTO <v> => #pragma __text|<v>+=%s+HB_OSNEWLINE();<v>:=""
+
+   /* SWITCH ... ; case ... ; DEFAULT ; ... ; END */
+   #xcommand DEFAULT => OTHERWISE
+
+   /* FOR EACH hb_enumIndex() */
+   #xtranslate hb_enumIndex(<!v!>) => <v>:__enumIndex()
+
+   /* TRY / CATCH / FINALLY / END */
+   #xcommand TRY  => BEGIN SEQUENCE WITH {|oErr| Break( oErr )}
+   #xcommand CATCH [<!oErr!>] => RECOVER [USING <oErr>] <-oErr->
+   #xcommand FINALLY => ALWAYS
+
+   /* EXTENDED CODEBLOCKs */
+   #xtranslate \<|[<x,...>]| => {|<x>|
+   #xcommand > [<*x*>]       => } <x>
+
+   /* xHarbour operators: IN, HAS, LIKE, >>, <<, |, &, ^^ */
+   #translate ( <exp1> IN <exp2> )     => ( (<exp1>) $ (<exp2>) )
+   #translate ( <exp1> HAS <exp2> )    => ( HB_REGEXHAS( (<exp2>), (<exp1>) ) )
+   #translate ( <exp1> LIKE <exp2> )   => ( HB_REGEXLIKE( (<exp2>), (<exp1>) ) )
+   #translate ( <exp1> \<\< <exp2> )   => ( HB_BITSHIFT( (<exp1>), (<exp2>) ) )
+   #translate ( <exp1> >> <exp2> )     => ( HB_BITSHIFT( (<exp1>), -(<exp2>) ) )
+   /* NOTE: These macros can break some valid Harbour/Clipper constructs,
+            so they are disabled by default. Enable them with care, or
+            even better to switch to use HB_BIT*() functions directly.
+            They are optimized by Harbour compiler the same way (and even
+            more) as these C-like operators, without any bad side-effects. */
+   #if defined( XHB_BITOP )
+      #translate ( <exp1> | <exp2> )      => ( HB_BITOR( (<exp1>), (<exp2>) ) )
+      #translate ( <exp1> & <exp2> )      => ( HB_BITAND( (<exp1>), (<exp2>) ) )
+      #translate ( <exp1> ^^ <exp2> )     => ( HB_BITXOR( (<exp1>), (<exp2>) ) )
+   #endif
+
+   #command @ <row>, <col> PROMPT <prompt> [ MESSAGE <msg> ] [ COLOR <color> ] => ;
+      __AtPrompt( <row>, <col>, <prompt>, <msg>, <color> )
+
+   #command SET TRIMFILENAME <x:ON,OFF,&> => Set( _SET_TRIMFILENAME, <(x)> )
+   #command SET TIME FORMAT [TO] <f>      => Set( _SET_TIMEFORMAT, <f> )
+
+   #define HB_GTI_CLIPBOARDPAST HB_GTI_CLIPBOARDPASTE
+
+   /* These also have wrapper function in xhb lib */
+
    #xtranslate gtSetClipboard(<x>)         => hb_gtInfo( HB_GTI_CLIPBOARDDATA, <x> )
    #xtranslate gtGetClipboard()            => hb_gtInfo( HB_GTI_CLIPBOARDDATA )
    #xtranslate gtGetClipBoardSize()        => Len( hb_gtInfo( HB_GTI_CLIPBOARDDATA ) )
@@ -270,8 +335,6 @@
    #xtranslate gtProcessMessages()         => NextKey()
    #xtranslate gfxPrimitive([<x,...>])     => hb_gfxPrimitive(<x>)
    #xtranslate gfxText([<x,...>])          => hb_gfxText(<x>)
-   #xtranslate MaxRow(.T.)                 => hb_gtInfo( HB_GTI_VIEWPORTHEIGHT )
-   #xtranslate MaxCol(.T.)                 => hb_gtInfo( HB_GTI_VIEWPORTWIDTH )
 
    #xtranslate hb_openProcess([<x,...>])   => hb_processOpen(<x>)
    #xtranslate hb_closeProcess([<x,...>])  => hb_processClose(<x>)
@@ -287,7 +350,6 @@
    #xtranslate ValToPrgExp([<x,...>])      => hb_valToExp(<x>)
    #xtranslate IsDirectory(<x>)            => hb_dirExists(<x>)
    #xtranslate SecondsSleep([<x,...>])     => hb_idleSleep(<x>)
-   #xtranslate NetName(<n>)                => iif( hb_isNumeric( <n> ) .AND. <n> == 1, hb_UserName(), NetName() )
    #xtranslate FileSize(<x>)               => hb_FSize(<x>)
    #xtranslate WildMatch([<x,...>])        => hb_WildMatch(<x>)
    #xtranslate hb_DeserialNext(<x>)        => hb_Deserialize(<x>)
@@ -309,14 +371,9 @@
    #xtranslate HBCONSOLELOCK()             => hb_gtLock()
    #xtranslate HBCONSOLEUNLOCK()           => hb_gtUnLock()
 
-   #xtranslate Str(<x>,[<y>],[<y>],<z>)    => iif(<z>, hb_NToS(<x>), Str(<x>))
    #xtranslate hb_CMDARGARGV([<x,...>])    => hb_ARGV(<x>)
 
-   #xtranslate AScan(<a>,<b>,[<c>],[<d>],<e>)  => hb_AScan(<a>,<b>,<c>,<d>,<e>)
    #xtranslate RAScan([<x,...>])               => hb_RAScan(<x>)
-   #xtranslate AIns(<a>,<n>,[<x,...>])         => hb_AIns(<a>,<n>,<x>)
-   #xtranslate ADel(<a>,<n>,<l>)               => hb_ADel(<a>,<n>,<l>)
-   #xtranslate At(<a>,<b>,[<x,...>])           => hb_At(<a>,<b>,<x>)
 
    #xtranslate DateTime()                      => hb_DateTime()
    #xtranslate Hour([<x>])                     => hb_Hour(<x>)
@@ -326,18 +383,9 @@
    #xtranslate TToC([<x,...>])                 => hb_TToC(<x>)
    #xtranslate CToT([<x,...>])                 => hb_CToT(<x>)
 
-   #xtranslate GetEnv([<x,...>])               => hb_GetEnv(<x>)
-   #xtranslate SetKey([<x,...>])               => hb_SetKey(<x>)
-   #xtranslate MemoWrit(<x>,<y>,<z>)           => iif( hb_isLogical(<z>) .AND. <z>, MemoWrit(<x>,<y>), hb_MemoWrit(<x>,<y>) )
-
    #xtranslate i18n(<x>)                       => hb_i18n_gettext(<x>)
 
    #xtranslate hb_SetCodepage([<x,...>])       => hb_cdpSelect( <x> )
-
-   /* _SET_TRACE* / TraceLog() */
-   #xtranslate Set(_SET_TRACE [,<x,...>])      => xhb_setTrace( <x> )
-   #xtranslate Set(_SET_TRACEFILE [,<x,...>])  => xhb_setTraceFile( <x> )
-   #xtranslate Set(_SET_TRACESTACK [,<x,...>]) => xhb_setTraceStack( <x> )
 
    /* MT functions */
    #xtranslate hb_MultiThread()                => hb_mtvm()
@@ -476,50 +524,6 @@
 
    /* THROW => generate error */
    #xtranslate THROW(<oErr>) => (Eval(ErrorBlock(), <oErr>), Break(<oErr>))
-
-   /* TEXT INTO <varname> */
-   #xcommand TEXT INTO <v> => #pragma __text|<v>+=%s+HB_OSNEWLINE();<v>:=""
-
-   /* SWITCH ... ; case ... ; DEFAULT ; ... ; END */
-   #xcommand DEFAULT => OTHERWISE
-
-   /* FOR EACH hb_enumIndex() */
-   #xtranslate hb_enumIndex(<!v!>) => <v>:__enumIndex()
-
-   /* TRY / CATCH / FINALLY / END */
-   #xcommand TRY  => BEGIN SEQUENCE WITH {|oErr| Break( oErr )}
-   #xcommand CATCH [<!oErr!>] => RECOVER [USING <oErr>] <-oErr->
-   #xcommand FINALLY => ALWAYS
-
-   /* EXTENDED CODEBLOCKs */
-   #xtranslate \<|[<x,...>]| => {|<x>|
-   #xcommand > [<*x*>]       => } <x>
-
-
-   /* xHarbour operators: IN, HAS, LIKE, >>, <<, |, &, ^^ */
-   #translate ( <exp1> IN <exp2> )     => ( (<exp1>) $ (<exp2>) )
-   #translate ( <exp1> HAS <exp2> )    => ( HB_REGEXHAS( (<exp2>), (<exp1>) ) )
-   #translate ( <exp1> LIKE <exp2> )   => ( HB_REGEXLIKE( (<exp2>), (<exp1>) ) )
-   #translate ( <exp1> \<\< <exp2> )   => ( HB_BITSHIFT( (<exp1>), (<exp2>) ) )
-   #translate ( <exp1> >> <exp2> )     => ( HB_BITSHIFT( (<exp1>), -(<exp2>) ) )
-   /* NOTE: These macros can break some valid Harbour/Clipper constructs,
-            so they are disabled by default. Enable them with care, or
-            even better to switch to use HB_BIT*() functions directly.
-            They are optimized by Harbour compiler the same way (and even
-            more) as these C-like operators, without any bad side-effects. */
-   #if defined( XHB_BITOP )
-      #translate ( <exp1> | <exp2> )      => ( HB_BITOR( (<exp1>), (<exp2>) ) )
-      #translate ( <exp1> & <exp2> )      => ( HB_BITAND( (<exp1>), (<exp2>) ) )
-      #translate ( <exp1> ^^ <exp2> )     => ( HB_BITXOR( (<exp1>), (<exp2>) ) )
-   #endif
-
-   #command @ <row>, <col> PROMPT <prompt> [ MESSAGE <msg> ] [ COLOR <color> ] => ;
-      __AtPrompt( <row>, <col>, <prompt>, <msg>, <color> )
-
-   #command SET TRIMFILENAME <x:ON,OFF,&> => Set( _SET_TRIMFILENAME, <(x)> )
-   #command SET TIME FORMAT [TO] <f>      => Set( _SET_TIMEFORMAT, <f> )
-
-   #define HB_GTI_CLIPBOARDPAST HB_GTI_CLIPBOARDPASTE
 
 #endif
 
