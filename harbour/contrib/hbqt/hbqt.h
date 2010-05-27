@@ -407,6 +407,20 @@ extern void * hbqt_pPtrFromItem( PHB_ITEM pObj );
 #define hbqt_par_HBQTextBlockUserData( n )          ( ( HBQTextBlockUserData        * ) hbqt_gcpointer( n ) )
 #define hbqt_par_HBSlots( n )                       ( ( HBSlots                     * ) hbqt_gcpointer( n ) )
 
+#define hbqt_par_HBQsciScintilla( n )               ( ( HBQsciScintilla             * ) hbqt_gcpointer( n ) )
+#define hbqt_par_QsciScintilla( n )                 ( ( QsciScintilla               * ) hbqt_gcpointer( n ) )
+#define hbqt_par_QsciLexer( n )                     ( ( QsciLexer                   * ) hbqt_gcpointer( n ) )
+#define hbqt_par_QsciLexerCPP( n )                  ( ( QsciLexerCPP                * ) hbqt_gcpointer( n ) )
+#define hbqt_par_QsciLexerFlagship( n )             ( ( QsciLexerFlagship           * ) hbqt_gcpointer( n ) )
+#define hbqt_par_QsciAbstractAPIs( n )              ( ( QsciAbstractAPIs            * ) hbqt_gcpointer( n ) )
+#define hbqt_par_QsciAPIs( n )                      ( ( QsciAPIs                    * ) hbqt_gcpointer( n ) )
+#define hbqt_par_QsciDocument( n )                  ( ( QsciDocument                * ) hbqt_gcpointer( n ) )
+#define hbqt_par_QsciStyle( n )                     ( ( QsciStyle                   * ) hbqt_gcpointer( n ) )
+#define hbqt_par_QsciStyledText( n )                ( ( QsciStyledText              * ) hbqt_gcpointer( n ) )
+#define hbqt_par_QsciCommand( n )                   ( ( QsciCommand                 * ) hbqt_gcpointer( n ) )
+#define hbqt_par_QsciCommandSet( n )                ( ( QsciCommandSet              * ) hbqt_gcpointer( n ) )
+
+
 #define hbqt_par_QString( n )                       ( ( QString ) hb_parcx( n ) )
 #define hbqt_par_QRgb( n )                          ( hb_parnint( n ) )
 #define hbqt_par_Bool( n )                          ( hb_parl( n ) )

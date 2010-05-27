@@ -78,7 +78,7 @@ STATIC s_trMode   := "HB_TR_DEBUG"
 FUNCTION Main( ... )
    LOCAL aParam, cLParam
    LOCAL cParam, cPathOut, cPathIn, cProFile, cPathDoc
-   LOCAL x, cPath, cFile, cExt, cTrMode
+   LOCAL x, cPath, cFile, cExt, cTrMode, a_
    LOCAL aPrjFiles := {}
    LOCAL aProFiles := {}
 
@@ -106,7 +106,7 @@ FUNCTION Main( ... )
          IF empty( cExt ) .or. lower( cExt ) != 'qtp'
             cExt := 'qtp'
          ENDIF
-         x := cPath + s_PathSep + cFile + '.' + cExt
+         x := iif( empty( cPath ), "", cPath + s_PathSep )+ cFile + "." + cExt
          aadd( aPrjFiles, x )
 
       CASE right( cLParam,4 ) == '.qtp'
@@ -135,6 +135,13 @@ FUNCTION Main( ... )
 
    IF empty( aPrjFiles ) .and. hb_fileExists( "qt45.qtp" )
       aadd( aPrjFiles, "qt45.qtp" )
+   ENDIF
+
+   IF empty( aPrjFiles )
+
+      FOR EACH a_ IN directory( "*.qtp" )
+         aadd( aPrjFiles, a_[ 1 ] )
+      NEXT
    ENDIF
 
    IF empty( aPrjFiles ) .and. empty( aProFiles )
@@ -176,11 +183,12 @@ FUNCTION Main( ... )
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION ManageProject( cProFile, cPathIn, cPathOut, cPathDoc )
-   LOCAL cFile, cPath, cExt, cPrj, cTkn, cVal
+   LOCAL cFile, cPrj, cTkn, cVal // cPath, cExt,
    LOCAL cPIn, cPOut, cPDoc
    LOCAL n, nn
    LOCAL prj_, cpp_, prg_, a_
 
+#if 0
    hb_fNameSplit( cProFile, @cPath, @cFile, @cExt )
 
    IF empty( cPath )
@@ -188,7 +196,9 @@ STATIC FUNCTION ManageProject( cProFile, cPathIn, cPathOut, cPathDoc )
    ELSE
       cFile := cProFile
    ENDIF
-   IF !file( cFile )
+#endif
+   cFile := cProFile
+   IF ! hb_fileExists( cFile )
       RETURN nil
    ENDIF
 
@@ -235,7 +245,7 @@ STATIC FUNCTION ManageProject( cProFile, cPathIn, cPathOut, cPathDoc )
          cTkn := alltrim( substr( cPrj,1,n-1 ) )
          cVal := alltrim( substr( cPrj,n+1   ) )
 
-         IF !empty( cVal )
+         //IF !empty( cVal )
             DO CASE
             CASE cTkn == '-I'
                cPIn := cVal
@@ -247,7 +257,7 @@ STATIC FUNCTION ManageProject( cProFile, cPathIn, cPathOut, cPathDoc )
                cPDoc := cVal
 
             ENDCASE
-         ENDIF
+         //ENDIF
 
       ELSEIF lower( right( cPrj,4 ) ) == '.qth'
          a_:= GenSource( cPrj, cPIn, cPOut, cPDoc )
@@ -330,7 +340,7 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
    ELSE
       cFile := cProFile
    ENDIF
-   IF !file( cFile )
+   IF ! hb_fileExists( cFile )
       OutStd( "Cannot find: " + cFile + s_NewLine )
       RETURN { nil }
    ENDIF
@@ -735,7 +745,7 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
 
       /* Build Class PRG Source */
       /* Distribute in specific lib subfolder */
-      cFileCpp := GetSourcePathByLib( cWidget, cPathOut, '.cpp' )
+      cFileCpp := GetSourcePathByLib( cWidget, cPathOut, '.cpp', NIL, cls_ )
       CreateTarget( cFileCpp, cpp_ )
 
       /* Build CLASS */
@@ -754,21 +764,25 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION GetSourcePathByLib( cWidget, cPathOut, cExt, cPre )
-   LOCAL cFileOut
+FUNCTION GetSourcePathByLib( cWidget, cPathOut, cExt, cPre, cls_ )
+   LOCAL cFileOut, n
 
    DEFAULT cPre TO ""
 
-   IF ascan( aGui, cWidget ) > 0
-      cFileOut := cPathOut + s_PathSep + "qtgui" + s_pathSep + cPre + cWidget + cExt
-   ELSEIF ascan( aCore, cWidget ) > 0
-      cFileOut := cPathOut + s_PathSep + "qtcore" + s_pathSep + cPre + cWidget + cExt
-   ELSEIF ascan( aWebkit, cWidget ) > 0
-      cFileOut := cPathOut + s_PathSep + "qtwebkit" + s_pathSep + cPre + cWidget + cExt
-   ELSEIF ascan( aNetwork, cWidget ) > 0
-      cFileOut := cPathOut + s_PathSep + "qtnetwork" + s_pathSep + cPre + cWidget + cExt
+   IF ( n := ascan( cls_, {|e_| lower( e_[ 1 ] ) == "folder" .AND. !empty( e_[ 2 ] ) } ) ) > 0
+      cFileOut := iif( empty( cPathOut ), "", cPathOut + s_PathSep + cls_[ n,2 ] + s_pathSep ) + cPre + cWidget + cExt
    ELSE
-      cFileOut := cPathOut + s_PathSep + cPre + cWidget + cExt
+      IF ascan( aGui, cWidget ) > 0
+         cFileOut := cPathOut + s_PathSep + "qtgui" + s_pathSep + cPre + cWidget + cExt
+      ELSEIF ascan( aCore, cWidget ) > 0
+         cFileOut := cPathOut + s_PathSep + "qtcore" + s_pathSep + cPre + cWidget + cExt
+      ELSEIF ascan( aWebkit, cWidget ) > 0
+         cFileOut := cPathOut + s_PathSep + "qtwebkit" + s_pathSep + cPre + cWidget + cExt
+      ELSEIF ascan( aNetwork, cWidget ) > 0
+         cFileOut := cPathOut + s_PathSep + "qtnetwork" + s_pathSep + cPre + cWidget + cExt
+      ELSE
+         cFileOut := cPathOut + s_PathSep + cPre + cWidget + cExt
+      ENDIF
    ENDIF
 
    RETURN cFileOut
@@ -797,9 +811,9 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_, lList, fB
    LOCAL cPre, cPar, cRet, cFun, cParas, cDocs, cCmd, cPas, s, ss, cFirstParamCast
    LOCAL cWdg, cCmn, cPrgRet, cHBFunc, cHBIdx, cDocNM
    LOCAL lSuccess, FP
-   LOCAL cInt         := 'int,qint16,quint16,short,ushort'
+   LOCAL cInt         := 'int,qint16,quint16,short,ushort,unsigned'
    LOCAL cIntLong     := 'qint32,quint32,QRgb'
-   LOCAL cIntLongLong := 'qint64,quint64,qlonglong,qulonglong'
+   LOCAL cIntLongLong := 'qint64,quint64,qlonglong,qulonglong,ulong'
 
    cParas := ''
    cDocs  := ''
@@ -1685,7 +1699,7 @@ STATIC FUNCTION Build_Class( cWidget, cls_, doc_, cPathOut, subCls_ )
    ENDIF
 
    /* Generate .prg */
-   cFile := GetSourcePathByLib( cWidget, cPathOut, '.prg', 'T' )
+   cFile := GetSourcePathByLib( cWidget, cPathOut, '.prg', 'T', cls_ )
    CreateTarget( cFile, txt_ )
 
    RETURN nil
@@ -1801,7 +1815,7 @@ STATIC FUNCTION Build_Document( cWidget, cls_, doc_, cPathDoc, subCls_, docum_ )
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION Build_GarbageFile( cpp_, cPathOut )
-   LOCAL cFile := cPathOut + s_PathSep + "hbqt_garbage.h"
+   LOCAL cFile := iif( empty( cPathOut ), "", cPathOut + s_PathSep ) + "hbqt_garbage.h"
    LOCAL txt_ := {}
    LOCAL s
 
@@ -1851,10 +1865,18 @@ STATIC FUNCTION Build_MakeFile( cpp_, prg_, cPathOut )
    aadd( hdr_, "" )
 
    /* Sub Libraries */
-   aadd( aSubs, { "qtwebkit" , aWebkit  } )
-   aadd( aSubs, { "qtnetwork", aNetwork } )
-   aadd( aSubs, { "qtgui"    , aGui     } )
-   aadd( aSubs, { "qtcore"   , aCore    } )
+   IF !empty( aWebkit )
+      aadd( aSubs, { "qtwebkit" , aWebkit  } )
+   ENDIF
+   IF !empty( aNetwork )
+      aadd( aSubs, { "qtnetwork", aNetwork } )
+   ENDIF
+   IF !empty( aGui )
+      aadd( aSubs, { "qtgui"    , aGui     } )
+   ENDIF
+   IF !empty( aCore )
+      aadd( aSubs, { "qtcore"   , aCore    } )
+   ENDIF
    //
    FOR i := 1 TO len( aSubs )
       txt_:= {}
@@ -1875,7 +1897,7 @@ STATIC FUNCTION Build_MakeFile( cpp_, prg_, cPathOut )
       aadd( txt_, "# Don't delete this comment, it's here to ensure empty" )
       aadd( txt_, "# line above is kept intact." )
       //
-      cFile := cPathOut + s_PathSep + aSubs[ i, 1 ] + s_PathSep + "filelist.mk"
+      cFile := iif( empty( cPathOut ), "", cPathOut + s_PathSep + aSubs[ i, 1 ] + s_PathSep ) + "filelist.mk"
       CreateTarget( cFile, txt_ )
    NEXT
 
