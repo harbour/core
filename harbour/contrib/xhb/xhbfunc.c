@@ -298,6 +298,28 @@ HB_FUNC( HB_EXEC )
       hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+HB_FUNC_EXTERN( HB_USERNAME );
+HB_FUNC_EXTERN( NETNAME );
+
+HB_FUNC( XHB_NETNAME )
+{
+   if( ISNUM( 1 ) && hb_parni( 1 ) == 1 )
+      HB_FUNC_EXEC( HB_USERNAME )
+   else
+      HB_FUNC_EXEC( NETNAME )
+}
+
+HB_FUNC_EXTERN( HB_MEMOWRIT );
+HB_FUNC_EXTERN( MEMOWRIT );
+
+HB_FUNC( XHB_MEMOWRIT )
+{
+   if( ISLOG( 3 ) && ! hb_parl( 3 ) )
+      HB_FUNC_EXEC( HB_MEMOWRIT )
+   else
+      HB_FUNC_EXEC( MEMOWRIT )
+}
+
 HB_FUNC_EXTERN( HB_PVALUE             ) ; HB_FUNC( PVALUE                   ) { HB_FUNC_EXEC( HB_PVALUE             ); }
 HB_FUNC_EXTERN( HB_METHODNAME         ) ; HB_FUNC( METHODNAME               ) { HB_FUNC_EXEC( HB_METHODNAME         ); }
 HB_FUNC_EXTERN( HB_LIBLOAD            ) ; HB_FUNC( LIBLOAD                  ) { HB_FUNC_EXEC( HB_LIBLOAD            ); }

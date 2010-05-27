@@ -64,6 +64,11 @@
    #xtranslate __Keyboard([<x,...>])           => xhb__Keyboard(<x>)
    #xtranslate __CopyFile([<x,...>])           => xhb_CopyFile(<x>)
 
+   /* _SET_TRACE* / TraceLog() */
+   #xtranslate Set(_SET_TRACE [,<x,...>])      => xhb_setTrace( <x> )
+   #xtranslate Set(_SET_TRACEFILE [,<x,...>])  => xhb_setTraceFile( <x> )
+   #xtranslate Set(_SET_TRACESTACK [,<x,...>]) => xhb_setTraceStack( <x> )
+
 #endif
 
 #endif /* __HARBOUR__ */

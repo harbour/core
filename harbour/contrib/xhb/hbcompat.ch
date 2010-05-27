@@ -276,12 +276,7 @@
 
    #xtranslate GetEnv([<x,...>])               => hb_GetEnv(<x>)
    #xtranslate SetKey([<x,...>])               => hb_SetKey(<x>)
-   #xtranslate MemoWrit(<x>,<y>,<z>)           => iif( hb_isLogical(<z>) .AND. <z>, MemoWrit(<x>,<y>), hb_MemoWrit(<x>,<y>) )
-
-   /* _SET_TRACE* / TraceLog() */
-   #xtranslate Set(_SET_TRACE [,<x,...>])      => xhb_setTrace( <x> )
-   #xtranslate Set(_SET_TRACEFILE [,<x,...>])  => xhb_setTraceFile( <x> )
-   #xtranslate Set(_SET_TRACESTACK [,<x,...>]) => xhb_setTraceStack( <x> )
+   #xtranslate MemoWrit(<x>,<y>,<z>)           => iif( hb_isLogical(<z>) .AND. ! <z>, hb_MemoWrit(<x>,<y>), MemoWrit(<x>,<y>) )
 
    /* TEXT INTO <varname> */
    #xcommand TEXT INTO <v> => #pragma __text|<v>+=%s+HB_OSNEWLINE();<v>:=""
@@ -328,50 +323,50 @@
 
    /* These also have wrapper function in xhb lib */
 
-   #xtranslate gtSetClipboard(<x>)         => hb_gtInfo( HB_GTI_CLIPBOARDDATA, <x> )
-   #xtranslate gtGetClipboard()            => hb_gtInfo( HB_GTI_CLIPBOARDDATA )
-   #xtranslate gtGetClipBoardSize()        => Len( hb_gtInfo( HB_GTI_CLIPBOARDDATA ) )
-   #xtranslate gtPasteClipBoard()          => hb_gtInfo( HB_GTI_CLIPBOARDPASTE )
-   #xtranslate gtProcessMessages()         => NextKey()
-   #xtranslate gfxPrimitive([<x,...>])     => hb_gfxPrimitive(<x>)
-   #xtranslate gfxText([<x,...>])          => hb_gfxText(<x>)
+   #xtranslate gtSetClipboard(<x>)             => hb_gtInfo( HB_GTI_CLIPBOARDDATA, <x> )
+   #xtranslate gtGetClipboard()                => hb_gtInfo( HB_GTI_CLIPBOARDDATA )
+   #xtranslate gtGetClipBoardSize()            => Len( hb_gtInfo( HB_GTI_CLIPBOARDDATA ) )
+   #xtranslate gtPasteClipBoard()              => hb_gtInfo( HB_GTI_CLIPBOARDPASTE )
+   #xtranslate gtProcessMessages()             => NextKey()
+   #xtranslate gfxPrimitive([<x,...>])         => hb_gfxPrimitive(<x>)
+   #xtranslate gfxText([<x,...>])              => hb_gfxText(<x>)
 
-   #xtranslate hb_openProcess([<x,...>])   => hb_processOpen(<x>)
-   #xtranslate hb_closeProcess([<x,...>])  => hb_processClose(<x>)
+   #xtranslate hb_openProcess([<x,...>])       => hb_processOpen(<x>)
+   #xtranslate hb_closeProcess([<x,...>])      => hb_processClose(<x>)
 
-   #xtranslate hb_isregexstring([<x>])     => hb_isregex(<x>)
-   #xtranslate pvalue([<x,...>])           => hb_pvalue(<x>)
-   #xtranslate methodName([<x,...>])       => hb_methodName(<x>)
-   #xtranslate libLoad([<x,...>])          => hb_libLoad(<x>)
-   #xtranslate libFree([<x,...>])          => hb_libFree(<x>)
-   #xtranslate hb_checksum([<x,...>])      => hb_adler32(<x>)
-   #xtranslate setLastKey([<x,...>])       => hb_setLastKey(<x>)
-   #xtranslate CStr([<x,...>])             => hb_CStr(<x>)
-   #xtranslate ValToPrgExp([<x,...>])      => hb_valToExp(<x>)
-   #xtranslate IsDirectory(<x>)            => hb_dirExists(<x>)
-   #xtranslate SecondsSleep([<x,...>])     => hb_idleSleep(<x>)
-   #xtranslate FileSize(<x>)               => hb_FSize(<x>)
-   #xtranslate WildMatch([<x,...>])        => hb_WildMatch(<x>)
-   #xtranslate hb_DeserialNext(<x>)        => hb_Deserialize(<x>)
-   #xtranslate hb_funcptr(<x>)             => __dynsn2sym(<x>)
+   #xtranslate hb_isregexstring([<x>])         => hb_isregex(<x>)
+   #xtranslate pvalue([<x,...>])               => hb_pvalue(<x>)
+   #xtranslate methodName([<x,...>])           => hb_methodName(<x>)
+   #xtranslate libLoad([<x,...>])              => hb_libLoad(<x>)
+   #xtranslate libFree([<x,...>])              => hb_libFree(<x>)
+   #xtranslate hb_checksum([<x,...>])          => hb_adler32(<x>)
+   #xtranslate setLastKey([<x,...>])           => hb_setLastKey(<x>)
+   #xtranslate CStr([<x,...>])                 => hb_CStr(<x>)
+   #xtranslate ValToPrgExp([<x,...>])          => hb_valToExp(<x>)
+   #xtranslate IsDirectory(<x>)                => hb_dirExists(<x>)
+   #xtranslate SecondsSleep([<x,...>])         => hb_idleSleep(<x>)
+   #xtranslate FileSize(<x>)                   => hb_FSize(<x>)
+   #xtranslate WildMatch([<x,...>])            => hb_WildMatch(<x>)
+   #xtranslate hb_DeserialNext(<x>)            => hb_Deserialize(<x>)
+   #xtranslate hb_funcptr(<x>)                 => __dynsn2sym(<x>)
 
-   #xtranslate HexToNum([<c,...>])         => hb_HexToNum(<c>)
-   #xtranslate NumToHex([<n,...>])         => hb_NumToHex(<n>)
-   #xtranslate HexToStr([<c,...>])         => hb_HexToStr(<c>)
-   #xtranslate StrToHex([<c,...>])         => hb_StrToHex(<c>)
+   #xtranslate HexToNum([<c,...>])             => hb_HexToNum(<c>)
+   #xtranslate NumToHex([<n,...>])             => hb_NumToHex(<n>)
+   #xtranslate HexToStr([<c,...>])             => hb_HexToStr(<c>)
+   #xtranslate StrToHex([<c,...>])             => hb_StrToHex(<c>)
 
-   #xtranslate ISPOINTER( <xValue> )       => hb_ISPOINTER( <xValue> )
+   #xtranslate ISPOINTER( <xValue> )           => hb_ISPOINTER( <xValue> )
 
-   #xtranslate hb_SetIniComment([<x,...>]) => hb_IniSetComment(<x>)
-   #xtranslate hb_ReadIni([<x,...>])       => hb_IniRead(<x>)
-   #xtranslate hb_WriteIni([<x,...>])      => hb_IniWrite(<x>)
+   #xtranslate hb_SetIniComment([<x,...>])     => hb_IniSetComment(<x>)
+   #xtranslate hb_ReadIni([<x,...>])           => hb_IniRead(<x>)
+   #xtranslate hb_WriteIni([<x,...>])          => hb_IniWrite(<x>)
 
-   #xtranslate DisableWaitLocks([<x>])     => hb_DisableWaitLocks(<x>)
+   #xtranslate DisableWaitLocks([<x>])         => hb_DisableWaitLocks(<x>)
 
-   #xtranslate HBCONSOLELOCK()             => hb_gtLock()
-   #xtranslate HBCONSOLEUNLOCK()           => hb_gtUnLock()
+   #xtranslate HBCONSOLELOCK()                 => hb_gtLock()
+   #xtranslate HBCONSOLEUNLOCK()               => hb_gtUnLock()
 
-   #xtranslate hb_CMDARGARGV([<x,...>])    => hb_ARGV(<x>)
+   #xtranslate hb_CMDARGARGV([<x,...>])        => hb_ARGV(<x>)
 
    #xtranslate RAScan([<x,...>])               => hb_RAScan(<x>)
 
