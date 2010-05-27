@@ -34,6 +34,7 @@ C_SOURCES := \
    xhbfunc.c \
    xhbgt.c \
    xhbhash.c \
+   xhbhasha.c \
    xhbi18n.c \
    xhbinet.c \
    xhbini.c \
