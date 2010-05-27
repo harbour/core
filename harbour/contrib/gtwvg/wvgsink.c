@@ -279,7 +279,7 @@ static HRESULT STDMETHODCALLTYPE Invoke( IEventHandler *lpThis, DISPID dispid, R
          hb_oleItemToVariant( pVarResult, hb_stackReturnItem() );
 
       for( i = 0; i < iRefs; i++ )
-         hb_oleVariantUpdate( refArray[ i ].variant, refArray[ i ].item );
+         hb_oleVariantUpdate( refArray[ i ].variant, refArray[ i ].item, NULL );
 
       for( i = 0; i < iRefs; i++ )
          hb_stackPop();
