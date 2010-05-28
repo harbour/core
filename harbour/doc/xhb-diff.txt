@@ -13,6 +13,7 @@ It describes status of both compiler at the end of October 2009:
 
 Przemek,
 
+(Przemyslaw Czerpak, druzus/at/acn.waw.pl)
 
 
 
@@ -282,15 +283,28 @@ xHarbour does not support autoadd on access or reference operations and
 passing hash array items by reference does not work (see passing array and
 hash item by reference).
 
-xHarbour has additional functionality which can be enabled for each hash
-array. It's an index where is stored information about the order in which
-items were added to hash array and some set of functions to operate on this
-index (HAA*()). It's called associative arrays in xHarbour. Harbour does
-not have such functionality.
-
 Both compilers have set of functions to make different operations on hash
 arrays which give similar functionality. In Harbour they use HB_H prefix
 (f.e. HB_HSCAN()) in xHarbour H prefix (f.e. HSCAN())
+
+xHarbour has additional functionality which can be enabled for each hash
+array using HSetAACompatibility() function. It's an index where is stored
+information about the order in which items were added to hash array and
+set of functions with HAA prefix to operate on hash array items using this
+index instead of real position in hash array, i.e. HAAGETVALUEAT() which
+works like HGETVALUEAT().
+In Harbour such functionality also exists and it's enabled by HB_HKEEPORDER()
+function but the internal implementation is completely different. Harbour
+does not emulate associative arrays by special index which keeps assign order
+but it uses real natural order in hash array. It means that associative array
+indexes are equal to regular hash indexes so it does not need any translation
+between them and Harbour users can use regular hash array functions for
+associative array indexes. So separated functions for accessing by other
+index are not necessary. The Harbour implementation is also more efficient
+because it does not introduce linear index updated each time new key is
+added to hash array.
+Harbour emulates HAA*() xHarbour functions in XHB library but only for
+compatibility with existing xHarbour code.
 
 
 
@@ -2375,10 +2389,11 @@ HBRUN can compile any given code just like Harbour Compiler (in fact
 it uses the same compiler code from compiler library) and then dynamically
 execute it.
 
-Unlike XBSCRIPT HBRUN does cause any performance reduction in comparison
-to standalone compilation with Harbour compiler to PCODE (-gc[0-2], -gh)
-because exactly the same PCODE is generated and later executed in both
-cases. Also the compilation phase is many times faster then in XBSCRIPT.
+Unlike XBSCRIPT the HBRUN does not cause any performance reduction in
+comparison to standalone compilation with Harbour compiler to PCODE
+(-gc[0-2], -gh) because exactly the same PCODE is generated and later
+executed in both cases. Also the compilation phase is many times faster
+then in XBSCRIPT.
 The commercial version of xBaseScript has some extensions which allows
 to integrate it with IE and/or IIS. HBRUN from Harbour does not have such
 functionality yet.

@@ -66,7 +66,7 @@ RETURN lOld
 
 PROCEDURE HB_ToOutDebug( ... )
    IF s_lToOutDebug
-      hb_OutDebug( hb_sprintf( ... ) )
+      hb_OutDebug( sprintf( ... ) )
    ENDIF
 RETURN
 
@@ -110,7 +110,7 @@ PROCEDURE HB_ToLogFile( cLogFile, ... )
       // Writing
       IF nHandle != F_ERROR
          FSeek( nHandle, 0, FS_END )
-         FWrite( nHandle, hb_sprintf( ... ) )
+         FWrite( nHandle, sprintf( ... ) )
          FWrite( nHandle, HB_OSNewLine() )
          FClose( nHandle )
       ENDIF

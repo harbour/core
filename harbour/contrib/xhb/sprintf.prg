@@ -53,7 +53,7 @@
 
 #include "common.ch"
 
-FUNCTION hb_sprintf( ... )
+FUNCTION sprintf( ... )
    LOCAL aPar, cReturn, nPar, nPos, cTok
    LOCAL nLen := 0, lUnsigned, l0 := .F., lSign := .F., nDec, xVal
    LOCAL cString
