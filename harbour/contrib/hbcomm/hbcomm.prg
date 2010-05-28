@@ -120,7 +120,7 @@ FUNCTION ISWORKING( nPort )
 
 /* NOTE: INCOMPATIBILITY.
          In contratry to original HBCOMM, here <cString> must be passed by reference.
-         HBCOMM could corrupt HVM because of it's buggy way of returning data.
+         HBCOMM could corrupt HVM because of its buggy way of returning data.
          [vszakats] */
 /* Fetch <nCount> chars into <cString> */
 FUNCTION INCHR( nPort, nCount, /* @ */ cString )

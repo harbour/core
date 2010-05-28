@@ -2,7 +2,7 @@
 # $Id$
 #
 
-echo={!hbdynvm}Warning: Target must be '-hbdynvm' when using '${hb_filename}'. Input file ignored.
+echo={!hbdynvm}Warning: Target must be '-hbdynvm' when using '${hb_self}'. Input file ignored.
 skip={!hbdynvm}on
 
 libs=hbwin.hbc

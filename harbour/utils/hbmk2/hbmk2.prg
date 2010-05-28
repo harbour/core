@@ -7476,7 +7476,7 @@ STATIC FUNCTION MacroProc( hbmk, cString, cFileName, cMacroPrefix )
          cMacro := FN_NameGet( DirDelPathSep( PathSepToSelf( FN_DirGet( cFileName ) ) ) ) ; EXIT
       CASE "HB_NAME"
          cMacro := PathSepToSelf( FN_NameGet( cFileName ) ) ; EXIT
-      CASE "HB_FILENAME"
+      CASE "HB_SELF"
          cMacro := PathSepToSelf( cFileName ) ; EXIT
       CASE "HB_CURDIR"
          cMacro := hb_pwd() ; EXIT
