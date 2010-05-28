@@ -318,59 +318,60 @@ REQUEST hbmk_KEYW
 #define _HBMK_lHBCPPMM          60
 #define _HBMK_aVAR              61
 #define _HBMK_hKEYHEADER        62
+#define _HBMK_aREQPKG           63 /* TODO */
 
-#define _HBMK_lCreateLib        63
-#define _HBMK_lCreateDyn        64
-#define _HBMK_lCreateImpLib     65
+#define _HBMK_lCreateLib        64
+#define _HBMK_lCreateDyn        65
+#define _HBMK_lCreateImpLib     66
 
-#define _HBMK_lDynVM            66
+#define _HBMK_lDynVM            67
 
-#define _HBMK_lBLDFLGP          67
-#define _HBMK_lBLDFLGC          68
-#define _HBMK_lBLDFLGL          69
+#define _HBMK_lBLDFLGP          68
+#define _HBMK_lBLDFLGC          69
+#define _HBMK_lBLDFLGL          70
 
-#define _HBMK_cFIRST            70
-#define _HBMK_aPRG              71
-#define _HBMK_aC                72
-#define _HBMK_aCPP              73
-#define _HBMK_aRESSRC           74
-#define _HBMK_aRESCMP           75
-#define _HBMK_aOBJUSER          76
-#define _HBMK_aICON             77
-#define _HBMK_aIMPLIBSRC        78
-#define _HBMK_aDEF              79
-#define _HBMK_hDEPTS            80
+#define _HBMK_cFIRST            71
+#define _HBMK_aPRG              72
+#define _HBMK_aC                73
+#define _HBMK_aCPP              74
+#define _HBMK_aRESSRC           75
+#define _HBMK_aRESCMP           76
+#define _HBMK_aOBJUSER          77
+#define _HBMK_aICON             78
+#define _HBMK_aIMPLIBSRC        79
+#define _HBMK_aDEF              80
+#define _HBMK_hDEPTS            81
 
-#define _HBMK_aPO               81
-#define _HBMK_cHBL              82
-#define _HBMK_cHBLDir           83
-#define _HBMK_aLNG              84
-#define _HBMK_cPO               85
+#define _HBMK_aPO               82
+#define _HBMK_cHBL              83
+#define _HBMK_cHBLDir           84
+#define _HBMK_aLNG              85
+#define _HBMK_cPO               86
 
-#define _HBMK_aPLUGIN           86
-#define _HBMK_hPLUGINHRB        87
-#define _HBMK_hPLUGINVars       88
-#define _HBMK_aPLUGINPars       89
+#define _HBMK_aPLUGIN           87
+#define _HBMK_hPLUGINHRB        88
+#define _HBMK_hPLUGINVars       89
+#define _HBMK_aPLUGINPars       90
 
-#define _HBMK_lDEBUGTIME        90
-#define _HBMK_lDEBUGINC         91
-#define _HBMK_lDEBUGSTUB        92
-#define _HBMK_lDEBUGI18N        93
+#define _HBMK_lDEBUGTIME        91
+#define _HBMK_lDEBUGINC         92
+#define _HBMK_lDEBUGSTUB        93
+#define _HBMK_lDEBUGI18N        94
 
-#define _HBMK_cCCPATH           94
-#define _HBMK_cCCPREFIX         95
-#define _HBMK_cCCPOSTFIX        96
-#define _HBMK_cCCEXT            97
+#define _HBMK_cCCPATH           95
+#define _HBMK_cCCPREFIX         96
+#define _HBMK_cCCPOSTFIX        97
+#define _HBMK_cCCEXT            98
 
-#define _HBMK_cWorkDir          98
-#define _HBMK_nCmd_Esc          99
-#define _HBMK_nScr_Esc          100
-#define _HBMK_nErrorLevel       101
+#define _HBMK_cWorkDir          99
+#define _HBMK_nCmd_Esc          100
+#define _HBMK_nScr_Esc          101
+#define _HBMK_nErrorLevel       102
 
-#define _HBMK_cPROGDIR          102
-#define _HBMK_cPROGNAME         103
+#define _HBMK_cPROGDIR          103
+#define _HBMK_cPROGNAME         104
 
-#define _HBMK_MAX_              103
+#define _HBMK_MAX_              104
 
 #ifndef _HBMK_EMBEDDED_
 
@@ -1914,7 +1915,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
          cParam := MacroProc( hbmk, SubStr( cParam, 3 ), aParam[ _PAR_cFileName ] )
          IF ! Empty( cParam )
-            AAdd( hbmk[ _HBMK_aLIBPATH ], PathSepToTarget( hbmk, DirDelPathSep( PathSepToSelf( PathProc( cParam, aParam[ _PAR_cFileName ] ) ) ) ) )
+            AAdd( hbmk[ _HBMK_aLIBPATH ], PathSepToTarget( hbmk, DirDelPathSep( PathProc( PathSepToSelf( cParam ), aParam[ _PAR_cFileName ] ) ) ) )
          ENDIF
 
       CASE Left( cParamL, Len( "-instpath=" ) ) == "-instpath=" .AND. ;
@@ -2097,6 +2098,13 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             ELSE
                AAdd( hbmk[ _HBMK_aLIBUSER ], PathSepToTarget( hbmk, cParam ) )
             ENDIF
+         ENDIF
+
+      CASE Left( cParam, Len( "-reqpkg=" ) ) == "-reqpkg="
+
+         cParam := MacroProc( hbmk, SubStr( cParam, Len( "-reqpkg=" ) + 1 ), aParam[ _PAR_cFileName ] )
+         IF ! Empty( cParam )
+            AAdd( hbmk[ _HBMK_aREQPKG ], cParam )
          ENDIF
 
       CASE Left( cParam, 1 ) $ cOptPrefix
@@ -2375,6 +2383,11 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          ENDIF
       ENDIF
    ENDIF
+
+   /* Process any package requirements */
+   FOR EACH tmp IN hbmk[ _HBMK_aREQPKG ]
+      pkg_try_detection( hbmk, tmp )
+   NEXT
 
    IF ( ! lStopAfterInit .AND. ! lStopAfterHarbour ) .OR. hbmk[ _HBMK_lCreateImpLib ]
 
@@ -5748,6 +5761,58 @@ STATIC FUNCTION deplst_add( hDeps, cList )
 
    RETURN .T.
 
+/* Try '*-config' and 'pkg-config *' detection */
+STATIC FUNCTION pkg_try_detection( hbmk, cName )
+   LOCAL cStdOut
+   LOCAL cItem
+
+   LOCAL lFound := .F.
+
+   cStdOut := ""
+   hb_processRun( "pkg-config --libs --cflags " + cName,, @cStdOut )
+   IF Empty( cStdOut )
+      hb_processRun( cName + "-config --libs --cflags",, @cStdOut )
+   ENDIF
+
+   IF ! Empty( cStdOut )
+      FOR EACH cItem IN hb_ATokens( cStdOut,, .T. )
+         IF ! Empty( cItem )
+            lFound := .T.
+            DO CASE
+            CASE Left( cItem, Len( "-l" ) ) == "-l"
+               IF _IS_AUTOLIBSYSPRE( cItem )
+                  AAdd( hbmk[ _HBMK_aLIBUSERSYSPRE ], PathSepToTarget( hbmk, cItem ) )
+               ELSE
+                  AAdd( hbmk[ _HBMK_aLIBUSER ], PathSepToTarget( hbmk, cItem ) )
+               ENDIF
+            CASE Left( cItem, Len( "-l" ) ) == "-L"
+               AAdd( hbmk[ _HBMK_aLIBPATH ], PathSepToTarget( hbmk, DirDelPathSep( PathSepToSelf( cItem ) ) ) )
+            CASE Left( cItem, Len( "-l" ) ) == "-I"
+               AAdd( hbmk[ _HBMK_aINCPATH ], PathSepToTarget( hbmk, DirDelPathSep( PathSepToSelf( cItem ) ) ) )
+            ENDCASE
+         ENDIF
+      NEXT
+      IF lFound
+         AAdd( hbmk[ _HBMK_aOPTC ], "-DHBMK2_HAS_" + StrToDefine( cName ) )
+      ENDIF
+   ENDIF
+
+   RETURN lFound
+
+STATIC FUNCTION StrToDefine( cString )
+   LOCAL cDefine := ""
+   LOCAL c
+
+   FOR EACH c IN Upper( cString )
+      IF c $ "- "
+         cDefine += "_"
+      ELSEIF IsDigit( c ) .OR. hb_asciiIsAlpha( c ) .OR. c == "_"
+         cDefine += c
+      ENDIF
+   NEXT
+
+   RETURN cDefine
+
 STATIC FUNCTION AMerge( aDst, aSrc )
    LOCAL item
 
@@ -7115,6 +7180,11 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
       CASE Lower( Left( cLine, Len( "pflags="       ) ) ) == "pflags="       ; cLine := SubStr( cLine, Len( "pflags="       ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
             AAddNewNotEmpty( hbmk[ _HBMK_aPLUGINPars ], PathSepToTarget( hbmk, MacroProc( hbmk, StrStripQuote( cItem ), cFileName ), 2 ) )
+         NEXT
+
+      CASE Lower( Left( cLine, Len( "reqpkgs="      ) ) ) == "reqpkgs="      ; cLine := SubStr( cLine, Len( "reqpkgs="      ) + 1 )
+         FOR EACH cItem IN hb_ATokens( cLine,, .T. )
+            AAddNewNotEmpty( hbmk[ _HBMK_aREQPKG ], MacroProc( hbmk, StrStripQuote( cItem ), cFileName ) )
          NEXT
 
       CASE Lower( Left( cLine, Len( "psources="     ) ) ) == "psources="     ; cLine := SubStr( cLine, Len( "psources="     ) + 1 )
