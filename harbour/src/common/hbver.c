@@ -739,30 +739,29 @@ char * hb_verCompiler( void )
 #elif defined( __SUNPRO_C )
 
    pszName = "Sun C";
-   #if __SUNPRO_C < 0x600
+   #if __SUNPRO_C < 0x1000
       iVerMajor = __SUNPRO_C / 0x100;
       iVerMinor = ( __SUNPRO_C & 0xff ) / 0x10;
       iVerPatch = __SUNPRO_C & 0xf;
    #else
-      /* Until someone at Sun somes up with a reliable way of identifying
-         Sun Studio releases >= about 11. */
-      iVerMajor = iVerMinor = iVerPatch = 0;
-      hb_snprintf( szSub, sizeof( szSub ) - 1, " (ident 0x%X)", __SUNPRO_C );
+      iVerMajor = __SUNPRO_C / 0x1000;
+      iVerMinor = __SUNPRO_C / 0x10 & 0xff;
+      iVerMinor = iVerMinor / 16 * 10 + iVerMinor % 16;
+      iVerPatch = __SUNPRO_C & 0xf;
    #endif
 
 #elif defined( __SUNPRO_CC )
 
    pszName = "Sun C++";
-   #if __SUNPRO_CC < 0x600
-      pszName = "Sun C++";
+   #if __SUNPRO_CC < 0x1000
       iVerMajor = __SUNPRO_CC / 0x100;
       iVerMinor = ( __SUNPRO_CC & 0xff ) / 0x10;
       iVerPatch = __SUNPRO_CC & 0xf;
    #else
-      /* Until someone at Sun somes up with a reliable way of identifying
-         Sun Studio releases >= about 11. */
-      iVerMajor = iVerMinor = iVerPatch = 0;
-      hb_snprintf( szSub, sizeof( szSub ) - 1, " (ident 0x%X)", __SUNPRO_CC );
+      iVerMajor = __SUNPRO_CC / 0x1000;
+      iVerMinor = __SUNPRO_CC / 0x10 & 0xff;
+      iVerMinor = iVerMinor / 16 * 10 + iVerMinor % 16;
+      iVerPatch = __SUNPRO_CC & 0xf;
    #endif
 
 #else

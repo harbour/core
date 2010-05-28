@@ -128,11 +128,10 @@ typedef struct
    LPSHNAMEMAPPING lpSHNameMapping;
 } HANDLETOMAPPINGS;
 
-static LPTSTR s_StringList( int iParam, DWORD * pdwIndex )
+static LPTSTR s_StringList( int iParam )
 {
    PHB_ITEM pItem = hb_param( iParam, HB_IT_ARRAY | HB_IT_STRING ), pArrItem;
    LPTSTR lpStr = NULL;
-   DWORD dwMaxIndex = 0;
 
    if( pItem )
    {
@@ -163,10 +162,7 @@ static LPTSTR s_StringList( int iParam, DWORD * pdwIndex )
                   n1 = HB_ITEMCOPYSTR( pArrItem,
                                        lpStr + nLen, nTotal - nLen );
                   if( n1 )
-                  {
                      nLen += n1 + 1;
-                     dwMaxIndex++;
-                  }
                }
             }
             lpStr[ nLen ] = 0;
@@ -177,51 +173,11 @@ static LPTSTR s_StringList( int iParam, DWORD * pdwIndex )
          nLen = HB_ITEMCOPYSTR( pItem, NULL, 0 );
          if( nLen )
          {
-            lpStr = ( LPTSTR ) hb_xgrab( ( nLen * 1 + 2 ) * sizeof( TCHAR ) );
-
-            HB_ITEMCOPYSTR( pItem, lpStr, nLen + 1 );
-
-            for( n = n1 = 0; n < nLen; ++n )
-            {
-               if( lpStr[ n ] == 0 )
-               {
-                  ++n1;
-                  if( lpStr[ n + 1 ] == 0 )
-                     break;
-               }
-            }
-
-            if( n1 == 0 )
-            {
-               HB_ITEMCOPYSTR( pItem, lpStr + nLen + 1, nLen + 1 );
-               lpStr[ nLen * 1 + 2 ] = 0;
-               dwMaxIndex = 1;
-            }
-            else
-            {
-               if( n == nLen && lpStr[ n - 1 ] != 0 )
-               {
-                  lpStr[ n + 1 ] = 0;
-                  ++n1;
-               }
-               if( ( n1 & 1 ) == 0 )
-                  dwMaxIndex = ( DWORD ) n1;
-               else
-               {
-                  hb_xfree( lpStr );
-                  lpStr = NULL;
-               }
-            }
+            lpStr = ( LPTSTR ) hb_xgrab( ( nLen + 1 ) * sizeof( TCHAR ) );
+            HB_ITEMCOPYSTR( pItem, lpStr, nLen );
+            lpStr[ nLen ] = 0;
          }
       }
-   }
-
-   if( pdwIndex )
-   {
-      if( dwMaxIndex < *pdwIndex )
-         *pdwIndex = dwMaxIndex;
-      else if( dwMaxIndex && *pdwIndex == 0 )
-         *pdwIndex = 1;
    }
 
    return lpStr;
@@ -244,8 +200,8 @@ HB_FUNC( WIN_SHFILEOPERATION )
 
    fop.hwnd                  = wapi_par_HWND( 1 );
    fop.wFunc                 = ( UINT ) hb_parni( 2 );
-   fop.pFrom                 = ( LPCTSTR ) s_StringList( 3, NULL );
-   fop.pTo                   = ( LPCTSTR ) s_StringList( 4, NULL );
+   fop.pFrom                 = ( LPCTSTR ) s_StringList( 3 );
+   fop.pTo                   = ( LPCTSTR ) s_StringList( 4 );
    fop.fFlags                = ( FILEOP_FLAGS ) hb_parnl( 5 );
    fop.fAnyOperationsAborted = FALSE;
    fop.hNameMappings         = NULL;
@@ -269,41 +225,45 @@ HB_FUNC( WIN_SHFILEOPERATION )
       HANDLETOMAPPINGS * hm = ( HANDLETOMAPPINGS * ) fop.hNameMappings;
       PHB_ITEM pArray = hb_param( 7, HB_IT_ARRAY );
 
-      if( pArray )
-         hb_arraySize( pArray, 0 );
-
       /* Process hNameMappings */
       if( hm )
       {
-         PHB_ITEM pTempItem = hb_itemNew( NULL );
-         UINT tmp;
-         LPSHNAMEMAPPING pmap = hm->lpSHNameMapping;
-         HB_BOOL bIsWin9x = hb_iswin9x();
-
-         for( tmp = 0; tmp < hm->uNumberOfMappings; ++tmp )
+         if( pArray )
          {
-            hb_arrayNew( pTempItem, 2 );
+            PHB_ITEM pTempItem = hb_itemNew( NULL );
+            UINT tmp;
+            LPSHNAMEMAPPING pmap = hm->lpSHNameMapping;
+            HB_BOOL bIsWin9x = hb_iswin9x();
 
-            if( bIsWin9x )
+            hb_arraySize( pArray, hm->uNumberOfMappings );
+
+            for( tmp = 0; tmp < hm->uNumberOfMappings; ++tmp )
             {
-               /* always returns non-UNICODE on Win9x systems */
-               hb_arraySetCL( pTempItem, 1, ( char * ) pmap[ tmp ].pszOldPath, pmap[ tmp ].cchOldPath );
-               hb_arraySetCL( pTempItem, 2, ( char * ) pmap[ tmp ].pszNewPath, pmap[ tmp ].cchNewPath );
-            }
-            else
-            {
-               /* always returns UNICODE on NT and upper systems */
-               HB_ARRAYSETSTRLEN( pTempItem, 1, ( LPTSTR ) pmap[ tmp ].pszOldPath, pmap[ tmp ].cchOldPath );
-               HB_ARRAYSETSTRLEN( pTempItem, 2, ( LPTSTR ) pmap[ tmp ].pszNewPath, pmap[ tmp ].cchNewPath );
+               hb_arrayNew( pTempItem, 2 );
+
+               if( bIsWin9x )
+               {
+                  /* always returns non-UNICODE on Win9x systems */
+                  hb_arraySetCL( pTempItem, 1, ( char * ) pmap[ tmp ].pszOldPath, pmap[ tmp ].cchOldPath );
+                  hb_arraySetCL( pTempItem, 2, ( char * ) pmap[ tmp ].pszNewPath, pmap[ tmp ].cchNewPath );
+               }
+               else
+               {
+                  /* always returns UNICODE on NT and upper systems */
+                  HB_ARRAYSETSTRLEN( pTempItem, 1, ( LPTSTR ) pmap[ tmp ].pszOldPath, pmap[ tmp ].cchOldPath );
+                  HB_ARRAYSETSTRLEN( pTempItem, 2, ( LPTSTR ) pmap[ tmp ].pszNewPath, pmap[ tmp ].cchNewPath );
+               }
+
+               hb_arraySetForward( pArray, ( HB_SIZE ) ( tmp + 1 ), pTempItem );
             }
 
-            hb_arraySetForward( pTempItem, ( HB_SIZE ) ( tmp + 1 ), pTempItem );
+            hb_itemRelease( pTempItem );
          }
-
-         hb_itemRelease( pTempItem );
 
          SHFreeNameMappings( hm );
       }
+      else if( pArray )
+         hb_arraySize( pArray, 0 );
    }
 #endif
    hb_retni( iRetVal );
