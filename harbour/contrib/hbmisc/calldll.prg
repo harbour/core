@@ -63,7 +63,14 @@ PROCEDURE UNLOADALLDLL()
 FUNCTION CALLDLL32( cFunction, cLibrary, ... )
    RETURN HB_DYNACALL1( cFunction, cLibrary, NIL, ... )
 
-#define _DEF_CALLCONV_ HB_DYN_CTYPE_CHAR_PTR
+#if define( __PLATFORM__WINDOWS )
+   /* Use Windows system .dll calling convention on Windows systems,
+      like in original lib. Original .lib was a Windows-only solution.
+      [vszakats] */
+   #define _DEF_CALLCONV_ HB_DYN_CALLCONV_STDCALL
+#else
+   #define _DEF_CALLCONV_ HB_DYN_CALLCONV_CDECL
+#endif
 
 FUNCTION HB_DYNACALL1( cFunction, cLibrary, nCount, ... )
    LOCAL aParams

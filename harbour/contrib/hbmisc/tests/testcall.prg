@@ -11,15 +11,10 @@
  */
 
 PROCEDURE Main()
+   LOCAL nFlags
 
-   ? CALLDLL32( "curl_version", "libcurl.dll" )
-
-   ? CALLDLL32( "SSLeay_version", "libeay32.dll", 0 )
-   ? CALLDLL32( "SSLeay_version", "libeay32.dll", 1 )
-   ? CALLDLL32( "SSLeay_version", "libeay32.dll", 2 )
-   ? CALLDLL32( "SSLeay_version", "libeay32.dll", 3 )
-   ? CALLDLL32( "SSLeay_version", "libeay32.dll", 4 )
-
-   ? HB_DYNACALL1( "SSLeay_version", "libeay32.dll", 0, 4 )
+   nFlags := -1
+   ? CALLDLL32( "InternetGetConnectedState", "wininet.dll", @nFlags, 0 )
+   ? nFlags
 
    RETURN
