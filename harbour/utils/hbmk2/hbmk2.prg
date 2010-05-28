@@ -6036,18 +6036,9 @@ STATIC FUNCTION PlugIn_Execute( hbmk, cState )
    LOCAL ctx
    LOCAL xResult
 
-   LOCAL cTargetType
-
    LOCAL oError
 
    IF ! Empty( hbmk[ _HBMK_hPLUGINHRB ] )
-
-      IF hbmk[ _HBMK_lCreateLib ]                                  ; cTargetType := "hblib"
-      ELSEIF hbmk[ _HBMK_lCreateDyn ] .AND. ! hbmk[ _HBMK_lDynVM ] ; cTargetType := "hbdyn"
-      ELSEIF hbmk[ _HBMK_lCreateDyn ] .AND. hbmk[ _HBMK_lDynVM ]   ; cTargetType := "hbdynvm"
-      ELSEIF hbmk[ _HBMK_lCreateImpLib ]                           ; cTargetType := "hbimplib"
-      ELSE                                                         ; cTargetType := "hbexe"
-      ENDIF
 
       ctx := {;
          "cSTATE"       => cState                     ,;
@@ -6057,7 +6048,7 @@ STATIC FUNCTION PlugIn_Execute( hbmk, cState )
          "cCOMP"        => hbmk[ _HBMK_cCOMP ]        ,;
          "cCPU"         => hbmk[ _HBMK_cCPU ]         ,;
          "cBUILD"       => hbmk[ _HBMK_cBUILD ]       ,;
-         "cTARGETTYPE"  => cTargetType                ,;
+         "cTARGETTYPE"  => hbmk_TARGET( hbmk )        ,;
          "cTARGETNAME"  => hbmk[ _HBMK_cPROGNAME ]    ,;
          "lREBUILD"     => hbmk[ _HBMK_lREBUILD ]     ,;
          "lCLEAN"       => hbmk[ _HBMK_lCLEAN ]       ,;
@@ -7485,6 +7476,8 @@ STATIC FUNCTION MacroProc( hbmk, cString, cFileName, cMacroPrefix )
          cMacro := FN_NameGet( DirDelPathSep( PathSepToSelf( FN_DirGet( cFileName ) ) ) ) ; EXIT
       CASE "HB_NAME"
          cMacro := PathSepToSelf( FN_NameGet( cFileName ) ) ; EXIT
+      CASE "HB_FILENAME"
+         cMacro := PathSepToSelf( cFileName ) ; EXIT
       CASE "HB_CURDIR"
          cMacro := hb_pwd() ; EXIT
       CASE "HB_TEMPDIR"
@@ -8644,6 +8637,16 @@ STATIC FUNCTION VCSID( cDir, cVCSHEAD, /* @ */ cType )
 
    RETURN cResult
 
+STATIC FUNCTION hbmk_TARGET( hbmk )
+
+   IF hbmk[ _HBMK_lCreateLib ]                                  ; RETURN "hblib"
+   ELSEIF hbmk[ _HBMK_lCreateDyn ] .AND. ! hbmk[ _HBMK_lDynVM ] ; RETURN "hbdyn"
+   ELSEIF hbmk[ _HBMK_lCreateDyn ] .AND. hbmk[ _HBMK_lDynVM ]   ; RETURN "hbdynvm"
+   ELSEIF hbmk[ _HBMK_lCreateImpLib ]                           ; RETURN "hbimplib"
+   ENDIF
+
+   RETURN "hbexe"
+
 STATIC FUNCTION hbmk_CPU( hbmk )
 
    DO CASE
@@ -8710,12 +8713,17 @@ FUNCTION hbmk_KEYW( hbmk, cKeyword )
       RETURN .T.
    ENDIF
 
+   IF cKeyword == hbmk_TARGET( hbmk )
+      RETURN .T.
+   ENDIF
+
    IF ! ( "|" + cKeyword + "|" $ "|win|wce|dos|os2" + ;
                                  "|bsd|hpux|sunos|beos|linux|darwin" + ;
                                  "|msvc|msvc64|msvcia64|msvcarm" + ;
                                  "|pocc|pocc64|poccarm|xcc" + ;
                                  "|mingw|mingw64|mingwarm|cygwin|bcc|watcom" + ;
                                  "|gcc|gccomf|djgpp" + ;
+                                 "|hblib|hbdyn|hbdynvm|hbimplib|hbexe" + ;
                                  "|icc|iccia64|clang|open64|sunpro" + ;
                                  "|x86|x86_64|ia64|arm|mips|sh" )
       tmp := GetEnv( cKeyword )
