@@ -333,19 +333,18 @@ HARBOUR
    locally hosted copy of these packages, where applicable. 'nolocal' will
    explicitly disable using locally hosted copies.
 
+   Some contribs support build mode in which they can be linkek _statically_
+   with 3rd party components:
+      HB_QT_STATIC=yes
+
+   You can override automatic detection of QT 'moc' tool, f.e.:
+      HB_QT_MOC_BIN=/opt/qt46/bin/moc
+
    NOTES: - You need to use native path format to your shell/OS.
           - Spaces in directory names aren't currently supported.
             (You can use 8.3 name alias on Windows platform, though)
           - Don't put directory names inside double quotes.
           - Use absolute paths.
-
-   Windows/Windows CE
-   ------------------
-
-      Some contribs support build mode in which they can be linked
-      *statically* with 3rd party components:
-
-      HB_QT_STATIC=yes
 
    Darwin (Mac OS X)
    -----------------
