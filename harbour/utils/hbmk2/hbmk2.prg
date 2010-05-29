@@ -5776,9 +5776,11 @@ STATIC FUNCTION pkg_try_detection( hbmk, cName )
 
    LOCAL lFound := .F.
    LOCAL cDefine
+   LOCAL tmp
 
    LOCAL cNameFlavour
    LOCAL cIncludeDir
+   LOCAL cVersion
 
    FOR EACH cNameFlavour IN hb_ATokens( cName, "|" )
 
@@ -5787,12 +5789,21 @@ STATIC FUNCTION pkg_try_detection( hbmk, cName )
             cNameFlavour := AllTrim( cNameFlavour )
 
             cStdOut := ""
-            hb_processRun( "pkg-config --libs --cflags " + cNameFlavour,, @cStdOut, @cErrOut )
+            hb_processRun( "pkg-config --modversion --libs --cflags " + cNameFlavour,, @cStdOut, @cErrOut )
             IF Empty( cStdOut )
-               hb_processRun( cNameFlavour + "-config --libs --cflags",, @cStdOut, @cErrOut )
+               hb_processRun( cNameFlavour + "-config --version --libs --cflags",, @cStdOut, @cErrOut )
             ENDIF
 
             IF ! Empty( cStdOut )
+
+               cStdOut := StrTran( cStdOut, Chr( 13 ) )
+               IF ( tmp := At( Chr( 10 ), cStdOut ) ) > 0
+                  cVersion := Left( cStdOut, tmp - 1 )
+                  cStdOut := SubStr( cStdOut, tmp + 1 )
+               ELSE
+                  cVersion := ""
+               ENDIF
+
                FOR EACH cItem IN hb_ATokens( cStdOut,, .T. )
                   IF ! Empty( cItem )
                      lFound := .T.
@@ -5822,7 +5833,7 @@ STATIC FUNCTION pkg_try_detection( hbmk, cName )
                   ENDIF
                   cDefine := "HBMK2_HAS_" + StrToDefine( cNameFlavour )
                   IF hbmk[ _HBMK_lInfo ]
-                     hbmk_OutStd( hbmk, hb_StrFormat( I_( "Autodetected package '%1$s' at '%2$s', defining '%3$s'." ), cNameFlavour, cIncludeDir, cDefine ) )
+                     hbmk_OutStd( hbmk, hb_StrFormat( I_( "Autodetected package '%1$s' (%2$s) at '%3$s', defining '%4$s'." ), cNameFlavour, cVersion, cIncludeDir, cDefine ) )
                   ENDIF
                   AAdd( hbmk[ _HBMK_aOPTC ], "-D" + cDefine )
                   EXIT
