@@ -20,11 +20,9 @@ ifneq ($(HB_HAS_QT),)
    include $(TOP)$(ROOT)config/header.mk
    include $(TOP)$(ROOT)config/lib.mk
 
-   ifneq ($(filter $(HB_PLATFORM),win wce),)
-      ifneq ($(HB_QT_STATIC),)
-         DIRS += qtnetworks
-         include $(TOP)$(ROOT)config/dir.mk
-      endif
+   ifneq ($(HB_QT_STATIC),)
+      DIRS += qtnetworks
+      include $(TOP)$(ROOT)config/dir.mk
    endif
 else
    HB_SKIP_REASON := $(_DET_RES_TEXT)

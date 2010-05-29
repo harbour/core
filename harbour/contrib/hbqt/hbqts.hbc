@@ -7,10 +7,9 @@ incpaths=.
 {allwin|os2}libpaths=${HB_WITH_QT}\..\lib
 
 libs=hbqts
-libs=hbqtcores hbqtguis hbqtnetworks hbqtwebkits
+libs=hbqtcores hbqtguis hbqtnetworks
 
-{win}libs=version shlwapi
-{allwin}libs=QtCore QtGui QtNetwork QtWebKit QtUiTools
+{allwin|linux}libs=QtCore QtGui QtNetwork QtUiTools
 {allgcc}libs=supc++
 
 {win|os2}hbcppmm=yes

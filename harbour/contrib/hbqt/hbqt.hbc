@@ -9,7 +9,6 @@ incpaths=.
 libs=hbqt
 libs=hbqtcore hbqtgui hbqtnetwork
 
-{win}libs=version shlwapi
 {allwin}libs=QtCore4 QtGui4 QtNetwork4 QtUiTools
 {os2}libs=QtCore4 QtGui4 QtNet4 QtUiTools
 {linux}libs=QtCore QtGui QtNetwork QtUiTools
