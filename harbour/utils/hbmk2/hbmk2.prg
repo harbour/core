@@ -804,6 +804,12 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    hbmk[ _HBMK_hKEYHEADER ] := { => }
    hbmk[ _HBMK_aREQPKG ] := {}
 
+   #if defined( __PLATFORM__UNIX )
+      hb_HSetCaseMatch( hbmk[ _HBMK_hKEYHEADER ], .T. )
+   #else
+      hb_HSetCaseMatch( hbmk[ _HBMK_hKEYHEADER ], .F. )
+   #endif
+
    hbmk[ _HBMK_lBLDFLGP ] := .F.
    hbmk[ _HBMK_lBLDFLGC ] := .F.
    hbmk[ _HBMK_lBLDFLGL ] := .F.
@@ -5765,36 +5771,85 @@ STATIC FUNCTION deplst_add( hDeps, cList )
 /* Try '*-config' and 'pkg-config *' detection */
 STATIC FUNCTION pkg_try_detection( hbmk, cName )
    LOCAL cStdOut
+   LOCAL cErrOut
    LOCAL cItem
 
    LOCAL lFound := .F.
+   LOCAL cDefine
 
-   cStdOut := ""
-   hb_processRun( "pkg-config --libs --cflags " + cName,, @cStdOut )
-   IF Empty( cStdOut )
-      hb_processRun( cName + "-config --libs --cflags",, @cStdOut )
-   ENDIF
+   LOCAL cNameFlavour
+   LOCAL cIncludeDir
 
-   IF ! Empty( cStdOut )
-      FOR EACH cItem IN hb_ATokens( cStdOut,, .T. )
-         IF ! Empty( cItem )
-            lFound := .T.
-            DO CASE
-            CASE Left( cItem, Len( "-l" ) ) == "-l"
-               IF _IS_AUTOLIBSYSPRE( cItem )
-                  AAdd( hbmk[ _HBMK_aLIBUSERSYSPRE ], PathSepToTarget( hbmk, cItem ) )
-               ELSE
-                  AAdd( hbmk[ _HBMK_aLIBUSER ], PathSepToTarget( hbmk, cItem ) )
+   FOR EACH cNameFlavour IN hb_ATokens( cName, "|" )
+
+      IF ! Empty( cNameFlavour )
+         IF ! lFound
+            cNameFlavour := AllTrim( cNameFlavour )
+
+            cStdOut := ""
+            hb_processRun( "pkg-config --libs --cflags " + cNameFlavour,, @cStdOut, @cErrOut )
+            IF Empty( cStdOut )
+               hb_processRun( cNameFlavour + "-config --libs --cflags",, @cStdOut, @cErrOut )
+            ENDIF
+
+            IF ! Empty( cStdOut )
+               FOR EACH cItem IN hb_ATokens( cStdOut,, .T. )
+                  IF ! Empty( cItem )
+                     lFound := .T.
+                     DO CASE
+                     CASE Left( cItem, Len( "-l" ) ) == "-l"
+                        cItem := SubStr( cItem, Len( "-l" ) + 1 )
+                        IF _IS_AUTOLIBSYSPRE( cItem )
+                           AAdd( hbmk[ _HBMK_aLIBUSERSYSPRE ], PathSepToTarget( hbmk, cItem ) )
+                        ELSE
+                           AAdd( hbmk[ _HBMK_aLIBUSER ], PathSepToTarget( hbmk, cItem ) )
+                        ENDIF
+                     CASE Left( cItem, Len( "-L" ) ) == "-L"
+                        cItem := SubStr( cItem, Len( "-L" ) + 1 )
+                        AAdd( hbmk[ _HBMK_aLIBPATH ], PathSepToTarget( hbmk, DirDelPathSep( PathSepToSelf( cItem ) ) ) )
+                     CASE Left( cItem, Len( "-I" ) ) == "-I"
+                        cItem := SubStr( cItem, Len( "-I" ) + 1 )
+                        IF Empty( cIncludeDir )
+                           cIncludeDir := cItem
+                        ENDIF
+                        AAdd( hbmk[ _HBMK_aINCPATH ], PathSepToTarget( hbmk, DirDelPathSep( PathSepToSelf( cItem ) ) ) )
+                     ENDCASE
+                  ENDIF
+               NEXT
+               IF lFound
+                  IF Empty( cIncludeDir )
+                     cIncludeDir := "(system)"
+                  ENDIF
+                  cDefine := "HBMK2_HAS_" + StrToDefine( cNameFlavour )
+                  IF hbmk[ _HBMK_lInfo ]
+                     hbmk_OutStd( hbmk, hb_StrFormat( I_( "Autodetected package '%1$s' at '%2$s', defining '%3$s'." ), cNameFlavour, cIncludeDir, cDefine ) )
+                  ENDIF
+                  AAdd( hbmk[ _HBMK_aOPTC ], "-D" + cDefine )
+                  EXIT
                ENDIF
-            CASE Left( cItem, Len( "-l" ) ) == "-L"
-               AAdd( hbmk[ _HBMK_aLIBPATH ], PathSepToTarget( hbmk, DirDelPathSep( PathSepToSelf( cItem ) ) ) )
-            CASE Left( cItem, Len( "-l" ) ) == "-I"
-               AAdd( hbmk[ _HBMK_aINCPATH ], PathSepToTarget( hbmk, DirDelPathSep( PathSepToSelf( cItem ) ) ) )
-            ENDCASE
+            ENDIF
+         ELSE
+            IF FN_ExtGet( cNameFlavour ) $ ".h" .OR. ;
+               FN_ExtGet( cNameFlavour ) $ ".hpp" .OR. ;
+               Right( cNameFlavour, 1 ) == "."
+
+               IF Right( cNameFlavour, 1 ) == "."
+                  cNameFlavour := hb_StrShrink( cNameFlavour, 1 )
+               ENDIF
+
+               IF cNameFlavour $ hbmk[ _HBMK_hKEYHEADER ]
+                  hbmk[ _HBMK_hKEYHEADER ][ cNameFlavour ] := cIncludeDir
+               ENDIF
+
+               EXIT
+            ENDIF
          ENDIF
-      NEXT
-      IF lFound
-         AAdd( hbmk[ _HBMK_aOPTC ], "-DHBMK2_HAS_" + StrToDefine( cName ) )
+      ENDIF
+   NEXT
+
+   IF ! lFound
+      IF hbmk[ _HBMK_lInfo ]
+         hbmk_OutStd( hbmk, hb_StrFormat( I_( "Package not found: '%1$s'" ), cName ) )
       ENDIF
    ENDIF
 
