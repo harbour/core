@@ -36,8 +36,9 @@ HARBOUR
           (in PATH). Refer to your C compiler installation and setup
           instructions for details. It's recommended to make sure no tools
           in your PATH belonging to other C compilers are interfering with
-          your setup. Also make sure not to have duplicate entries for
-          your C compiler in PATH. For the list of supported compilers,
+          your setup. It's also highly discouraged to keep multiple copies
+          of the same compiler, or different versions of the same compiler
+          in PATH at the same time. For the list of supported compilers,
           please look up the relevant section in this document.
       3.) You need to get GNU Make. We recommend this link:
              http://sourceforge.net/projects/mingw/files/MinGW%20make/make-3.81-20090914-mingw32/make-3.81-20090914-mingw32-bin.tar.gz/download
