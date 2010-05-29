@@ -6,12 +6,12 @@
 
 REQUEST ADORDD
 
-function Main()
-
-   USE test.mdb VIA "ADORDD" TABLE "Tabla1"
+PROCEDURE Main()
+? hb_dirBase() + "test.mdb"
+   USE ( hb_dirBase() + "test.mdb" ) VIA "ADORDD" TABLE "Tabla1"
 
    Browse()
 
    USE
 
-return nil
+   RETURN

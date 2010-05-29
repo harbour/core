@@ -802,6 +802,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    hbmk[ _HBMK_lHBCPPMM ] := .F.
    hbmk[ _HBMK_aVAR ] := {}
    hbmk[ _HBMK_hKEYHEADER ] := { => }
+   hbmk[ _HBMK_aREQPKG ] := {}
 
    hbmk[ _HBMK_lBLDFLGP ] := .F.
    hbmk[ _HBMK_lBLDFLGC ] := .F.

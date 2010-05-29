@@ -68,10 +68,10 @@ HB_FUNC( WAPI_SHELLEXECUTE )
    void * hDirectory;
 
    hb_retnint( ( HB_PTRDIFF ) ShellExecute( ( HWND ) hb_parptr( 1 ),
-                                            HB_PARSTRDEF( 2, &hOperation , NULL ), /* edit, explore, open, print, play?, properties? */
-                                            HB_PARSTR( 3, &hFile      , NULL ),
+                                            HB_PARSTR( 2, &hOperation, NULL ), /* edit, explore, open, print, play?, properties? */
+                                            HB_PARSTRDEF( 3, &hFile, NULL ),
                                             HB_PARSTR( 4, &hParameters, NULL ),
-                                            HB_PARSTR( 5, &hDirectory , NULL ),
+                                            HB_PARSTR( 5, &hDirectory, NULL ),
                                             HB_ISNUM( 6 ) ? hb_parni( 6 ) : SW_SHOWNORMAL /* nShowCmd */ ) );
 
    hb_strfree( hOperation  );
