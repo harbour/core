@@ -1,0 +1,7 @@
+#
+# $Id: oletst3.hbp 14594 2010-05-25 22:23:11Z vszakats $
+#
+
+oletst4.prg
+
+-cflag={watcom}-6r

@@ -1126,7 +1126,8 @@ HB_BOOL hb_oleDispInvoke( PHB_SYMB pSym, PHB_ITEM pObject, PHB_ITEM pParam,
 
       for( i = 1, ii = 0; i <= iCount; i++ )
       {
-         if( pParams->rgvarg[ iCount - i ].n1.n2.vt & VT_BYREF && ii < iRefs )
+         if( ( pParams->rgvarg[ iCount - i ].n1.n2.vt & VT_BYREF ) &&
+             ( ii < iRefs ) )
          {
             refArray[ ii ].variant = &pParams->rgvarg[ iCount - i ];
             hb_oleVariantToItem( refArray[ ii ].item, refArray[ ii ].variant );
@@ -1170,9 +1171,9 @@ static void GetParams( DISPPARAMS * dispparam )
    if( uiArgCount > 0 )
    {
       uiRefs = 0;
-      for( uiArg = 0; uiArg < uiArgCount; uiArg++ )
+      for( uiArg = 1; uiArg <= uiArgCount; uiArg++ )
       {
-         if( HB_ISBYREF( uiArg + 1 ) )
+         if( HB_ISBYREF( uiArg ) )
             uiRefs++;
       }
 
@@ -1206,14 +1207,14 @@ static void PutParams( DISPPARAMS * dispparam )
    PHB_ITEM pItem = NULL;
    UINT uiArg;
 
-   for( uiArg = 1; uiArg <= dispparam->cArgs; uiArg++ )
+   for( uiArg = 0; uiArg < dispparam->cArgs; uiArg++ )
    {
-      if( HB_ISBYREF( uiArg ) )
+      if( HB_ISBYREF( dispparam->cArgs - uiArg ) )
       {
          if( !pItem )
             pItem = hb_itemNew( NULL );
-         hb_oleVariantToItem( pItem, &dispparam->rgvarg[ dispparam->cArgs - uiArg ] );
-         hb_itemParamStoreForward( ( HB_USHORT ) uiArg, pItem );
+         hb_oleVariantToItem( pItem, &dispparam->rgvarg[ uiArg ] );
+         hb_itemParamStoreForward( ( HB_USHORT ) ( dispparam->cArgs - uiArg ), pItem );
          VariantClear( pRefs );
          pRefs++;
       }
