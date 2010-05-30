@@ -171,6 +171,7 @@ CLASS IdeEditsManager INHERIT IdeObject
    METHOD showThumbnail()
    METHOD changeThumbnail()
    METHOD spaces2tabs()
+   METHOD qscintilla()
 
    ENDCLASS
 
@@ -507,6 +508,15 @@ METHOD IdeEditsManager:setSourceVisibleByIndex( nIndex ) /* nIndex is 0 based */
    ::getEditorByIndex( nIndex ):setDocumentProperties()
 
    RETURN .f.
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:qscintilla()
+   LOCAL oEdit
+   IF !empty( oEdit := ::getEditorCurrent() )
+      oEdit:qscintilla()
+   ENDIF
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
@@ -1118,6 +1128,7 @@ CLASS IdeEditor INHERIT IdeObject
    METHOD showThumbnail()
    METHOD changeThumbnail()
    METHOD scrollThumbnail()
+   METHOD qscintilla()
 
    ENDCLASS
 
@@ -1536,6 +1547,7 @@ METHOD IdeEditor:showThumbnail()
    ::oSourceThumbnailDock:oWidget:setWidget( ::qThumbnail:qEdit )
    ::qThumbnail:qEdit:clear()
    ::qThumbnail:qEdit:setPlainText( hb_memoRead( ::sourceFile ) )
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1565,3 +1577,131 @@ METHOD IdeEditor:scrollThumbnail()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
+//                            QScintilla Test
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditor:qscintilla()
+   #ifdef HB_WITH_QSCINTILLA
+   #include "hbqscintilla.ch"
+
+   #if 0
+   SCE_FS_DEFAULT
+   SCE_FS_COMMENT
+   SCE_FS_COMMENTLINE
+   SCE_FS_COMMENTDOC
+   SCE_FS_COMMENTLINEDOC
+   SCE_FS_COMMENTDOCKEYWORD
+   SCE_FS_COMMENTDOCKEYWORDERROR
+   SCE_FS_KEYWORD
+   SCE_FS_KEYWORD2
+   SCE_FS_KEYWORD3
+   SCE_FS_KEYWORD4
+   SCE_FS_NUMBER
+   SCE_FS_STRING
+   SCE_FS_PREPROCESSOR
+   SCE_FS_OPERATOR
+   SCE_FS_IDENTIFIER
+   SCE_FS_DATE
+   SCE_FS_STRINGEOL
+   SCE_FS_CONSTANT
+   SCE_FS_WORDOPERATOR
+   SCE_FS_DISABLEDCODE
+   SCE_FS_DEFAULT_C
+   SCE_FS_COMMENTDOC_C
+   SCE_FS_COMMENTLINEDOC_C
+   SCE_FS_KEYWORD_C
+   SCE_FS_KEYWORD2_C
+   SCE_FS_NUMBER_C
+   SCE_FS_STRING_C
+   SCE_FS_PREPROCESSOR_C
+   SCE_FS_OPERATOR_C
+   SCE_FS_IDENTIFIER_C
+   SCE_FS_STRINGEOL_C
+   SCE_FS_BRACE
+   #endif
+
+   STATIC oSci, qLexer, qAPIs, fontBold, fontNormal, fontItalic, c1, c2, c3
+
+   IF empty( oSci )
+      oSci := HBQsciScintilla():new()
+      //
+      oSci:setAutoIndent( .t. )
+      oSci:setCaretLineVisible( .t. )
+      oSci:setCaretWidth( 2 )
+      oSci:setFolding( QsciScintilla_BoxedTreeFoldStyle )
+      oSci:setTabWidth( 3 )
+      oSci:setMarginLineNumbers( 0,.t. )
+      oSci:setMarginWidth( 0,30 )
+      oSci:setSelectionBackgroundColor( QColor():new( 255,0,0 ) )
+      oSci:setEdgeColumn( 40 )
+      oSci:setCallTipsVisible( 3 )
+      oSci:setFont( ::oFont:oWidget )
+      oSci:setEdgeColor( QColor():new( 0,0,255 ) )
+      oSci:setMarginsFont( ::oFont:oWidget )
+      oSci:setIndentationGuides( .t. )
+
+      oSci:setCallTipsHighlightColor( QColor():new( 255,127,0 ) )
+
+      /* Auto Completion */
+      oSci:setAutoCompletionSource( QsciScintilla_AcsAll )
+      oSci:setAutoCompletionThreshold( 3 )
+      oSci:setAutoCompletionCaseSensitivity( .t. )
+      oSci:setAutoCompletionShowSingle( .t. )
+      oSci:setAutoCompletionFillupsEnabled( .t. )
+
+HB_TRACE( HB_TR_ALWAYS, time() )
+      oSci:setText( hb_memoread( "c:\harbour\contrib\hbide\idemisc.prg" ) )
+   // oSci:setText( hb_memoread( "c:\harbour\contrib\hbide\ideparseexpr.c" ) )
+HB_TRACE( HB_TR_ALWAYS, time(), "after" )
+      c1 := QColor():new( 0,0,255 )
+      c2 := QColor():new( 0,12,133 )
+      c3 := QColor():new( 20,122,144 )
+      oSci:setBraceMatching( QsciScintilla_StrictBraceMatch )
+      oSci:setMatchedBraceForegroundColor( c1 )
+      oSci:setMatchedBraceBackgroundColor( c2 )
+      oSci:setUnmatchedBraceForegroundColor( c3 )
+
+      qLexer := QsciLexerFlagship():new()
+      //qLexer := QsciLexerCPP():new()
+      qLexer:setDefaultFont( ::oFont:oWidget )
+      qLexer:setFoldAtElse( .f. )
+
+      fontBold := QFont():new()
+      fontBold:setFamily( "Courier New" )
+      fontBold:setPointSize(10)
+      fontBold:setWeight(100)
+
+      fontNormal := QFont():new()
+      fontNormal:setFamily( "Courier New" )
+      fontNormal:setPointSize(10)
+
+      fontItalic := QFont():new()
+      fontItalic:setFamily( "Courier New" )
+      fontItalic:setPointSize( 10 )
+      fontItalic:setItalic( .t. )
+
+      qLexer:setFont( fontBold, SCE_FS_COMMENTLINEDOC )
+      qLexer:setFont( fontBold, SCE_FS_COMMENTDOCKEYWORD )
+      qLexer:setFont( fontBold, SCE_FS_NUMBER )
+
+      qLexer:setColor( QColor():new( 255, 127,  67 ), SCE_FS_KEYWORD  )
+      qLexer:setColor( QColor():new( 255,   0, 127 ), SCE_FS_KEYWORD2 )
+      qLexer:setColor( QColor():new( 127, 67 , 255 ), SCE_FS_OPERATOR )
+      qLexer:setColor( QColor():new( 255, 0  ,   0 ), SCE_FS_BRACE    )
+
+      qApis := QsciAPIs():new( qLexer )
+      qApis:load( "c:/temp/cpp.api" )
+      qApis:prepare()
+      qLexer:setAPIs( qApis )
+
+      oSci:setLexer( qLexer )
+      qLexer:setEditor( oSci )
+
+   ENDIF
+   ::oQScintillaDock:oWidget:setWidget( oSci )
+   #endif
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+

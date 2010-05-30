@@ -84,6 +84,7 @@
 #define dockHelpDock_visibilityChanged            310
 #define oFuncDock_visibilityChanged               311
 #define dockSourceThumbnail_visibilityChanged     312
+#define dockQScintilla_visibilityChanged          313
 
 /*----------------------------------------------------------------------*/
 
@@ -135,6 +136,7 @@ CLASS IdeDocks INHERIT IdeObject
    METHOD getPanelIcon( cView )
    METHOD animateComponents( nMode )
    METHOD buildSourceThumbnail()
+   METHOD buildQScintilla()
 
    ENDCLASS
 
@@ -173,6 +175,7 @@ METHOD IdeDocks:destroy()
    ::disconnect( ::oFuncDock:oWidget      , "visibilityChanged(bool)" )
 
    ::disconnect( ::oSourceThumbnailDock:oWidget, "visibilityChanged(bool)" )
+   ::disconnect( ::oQScintillaDock:oWidget, "visibilityChanged(bool)" )
 
    #if 0  /* Not Implemented */
    ::disconnect( ::oDockPT:oWidget        , "visibilityChanged(bool)" )
@@ -280,6 +283,7 @@ METHOD IdeDocks:buildDockWidgets()
    ::buildDocWriter()
    ::buildFunctionsDock()
    ::buildSourceThumbnail()
+   ::buildQScintilla()
 
    /* Bottom Docks */
    ::oDlg:oWidget:tabifyDockWidget( ::oDockB:oWidget         , ::oDockB1:oWidget         )
@@ -296,6 +300,7 @@ METHOD IdeDocks:buildDockWidgets()
    ::oDlg:oWidget:tabifyDockWidget( ::oThemesDock:oWidget    , ::oFindDock:oWidget       )
    ::oDlg:oWidget:tabifyDockWidget( ::oFindDock:oWidget      , ::oDocWriteDock:oWidget   )
    ::oDlg:oWidget:tabifyDockWidget( ::oDocWriteDock:oWidget  , ::oSourceThumbnailDock:oWidget   )
+   ::oDlg:oWidget:tabifyDockWidget( ::oSourceThumbnailDock:oWidget, ::oQScintillaDock:oWidget   )
 
    ::buildToolBarPanels()
 
@@ -332,6 +337,9 @@ METHOD IdeDocks:execEvent( nMode, p )
 
    CASE nMode == 2  /* HelpWidget:contextMenuRequested(qPoint) */
       hbide_popupBrwContextMenu( ::qHelpBrw, p )
+
+   CASE nMode == dockQScintilla_visibilityChanged
+      IF p; ::oEM:qscintilla(); ENDIF
 
    CASE nMode == dockSourceThumbnail_visibilityChanged
       IF p; ::oEM:showThumbnail(); ENDIF
@@ -1009,6 +1017,18 @@ METHOD IdeDocks:buildSourceThumbnail()
    ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oSourceThumbnailDock:oWidget, Qt_Horizontal )
 
    ::connect( ::oSourceThumbnailDock:oWidget, "visibilityChanged(bool)", {|p| ::execEvent( dockSourceThumbnail_visibilityChanged, p ) } )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeDocks:buildQScintilla()
+   LOCAL nAreas := Qt_LeftDockWidgetArea + Qt_RightDockWidgetArea + Qt_TopDockWidgetArea + Qt_BottomDockWidgetArea
+
+   ::oIde:oQScintillaDock := ::getADockWidget( nAreas, "dockQScintilla", "QScintilla Widget", QDockWidget_DockWidgetFloatable )
+   ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oQScintillaDock:oWidget, Qt_Horizontal )
+
+   ::connect( ::oQScintillaDock:oWidget, "visibilityChanged(bool)", {|p| ::execEvent( dockQScintilla_visibilityChanged, p ) } )
 
    RETURN Self
 

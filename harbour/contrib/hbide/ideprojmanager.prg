@@ -1248,7 +1248,7 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
       IF     ::oProject:type == "Lib"
          aadd( aHbp, "-hblib" )
       ELSEIF ::oProject:type == "Dll"
-         aadd( aHbp, "-hbdyn" )
+      // aadd( aHbp, "-hbdynvm" )  /* Better if is provided as a flag -hbdyn  or   -hbdynvm */
       ENDIF
    ENDIF
 

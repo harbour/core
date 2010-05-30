@@ -152,7 +152,8 @@ private:
    int            hitTestRow;
    int            hitTestColumn;
    QRect          highlight;
-
+   bool           isSelectionPersistent;
+   bool           isShiftPressed;
 
 protected:
    bool           event( QEvent * event );
@@ -204,6 +205,7 @@ public slots:
    void           hbGetViewportInfo();
    void           hbApplyKey( int key, Qt::KeyboardModifiers modifiers = 0, const QString & txt = "" );
    void           hbHighlightArea( int, int, int, int, int );
+   void           hbTogglePersistentSelection();
 
 private slots:
    void           hbSlotCursorPositionChanged();

@@ -121,7 +121,7 @@ FUNCTION hbide_populateParam( txt_, cToken, cParam )
    IF !empty( cParam )
       aadd( txt_, cToken )
       a_:= hbide_memoToArray( cParam )
-      aeval( a_, {|e| aadd( txt_, " *      " + e ) } )
+      aeval( a_, {|e| aadd( txt_, " *      " + strtran( strtran( e, chr( 13 ), "" ), chr( 10 ), "" ) ) } )
    ENDIF
    RETURN nil
 
@@ -171,9 +171,12 @@ CLASS IdeDocWriter INHERIT IdeObject
    METHOD parsePrototype( cProto )
    METHOD clear()
    METHOD fillForm( aFacts )
+   METHOD fillFormByObject( oFunc )
    METHOD buildDocument()
    METHOD saveInFunction()
    METHOD saveInFile()
+   METHOD pullDocFromSource( nLineFrom, oEdit )
+   METHOD removeDocHelp( nLineFrom, oEdit )
 
    ENDCLASS
 
@@ -250,21 +253,21 @@ METHOD IdeDocWriter:setImages()
 
 METHOD IdeDocWriter:installSignals()
 
-   ::oUI:signal( "buttonArgs"     , "toggled(bool)", {|p| ::execEvent( buttonArgs_clicked        , p ) } )
-   ::oUI:signal( "buttonDesc"     , "toggled(bool)", {|p| ::execEvent( buttonDesc_clicked        , p ) } )
-   ::oUI:signal( "buttonExamples" , "toggled(bool)", {|p| ::execEvent( buttonExample_clicked     , p ) } )
-   ::oUI:signal( "buttonTests"    , "toggled(bool)", {|p| ::execEvent( buttonTests_clicked       , p ) } )
+   ::oUI:signal( "buttonArgs"           , "toggled(bool)", {|p| ::execEvent( buttonArgs_clicked        , p ) } )
+   ::oUI:signal( "buttonDesc"           , "toggled(bool)", {|p| ::execEvent( buttonDesc_clicked        , p ) } )
+   ::oUI:signal( "buttonExamples"       , "toggled(bool)", {|p| ::execEvent( buttonExample_clicked     , p ) } )
+   ::oUI:signal( "buttonTests"          , "toggled(bool)", {|p| ::execEvent( buttonTests_clicked       , p ) } )
 
-   ::oUI:signal( "buttonCloseArgs"    , "clicked()", {| | ::execEvent( buttonCloseArgs_clicked       ) } )
-   ::oUI:signal( "buttonCloseDesc"    , "clicked()", {| | ::execEvent( buttonCloseDesc_clicked       ) } )
-   ::oUI:signal( "buttonCloseExamples", "clicked()", {| | ::execEvent( buttonCloseExample_clicked    ) } )
-   ::oUI:signal( "buttonCloseTests"   , "clicked()", {| | ::execEvent( buttonCloseTests_clicked      ) } )
+   ::oUI:signal( "buttonCloseArgs"      , "clicked()"    , {| | ::execEvent( buttonCloseArgs_clicked       ) } )
+   ::oUI:signal( "buttonCloseDesc"      , "clicked()"    , {| | ::execEvent( buttonCloseDesc_clicked       ) } )
+   ::oUI:signal( "buttonCloseExamples"  , "clicked()"    , {| | ::execEvent( buttonCloseExample_clicked    ) } )
+   ::oUI:signal( "buttonCloseTests"     , "clicked()"    , {| | ::execEvent( buttonCloseTests_clicked      ) } )
 
-   ::oUI:signal( "buttonClear"        , "clicked()", {| | ::execEvent( buttonClear_clicked           ) } )
-   ::oUI:signal( "buttonSaveInFunc"   , "clicked()", {| | ::execEvent( buttonSaveInFunc_clicked      ) } )
-   ::oUI:signal( "buttonSave"         , "clicked()", {| | ::execEvent( buttonSave_clicked            ) } )
+   ::oUI:signal( "buttonClear"          , "clicked()"    , {| | ::execEvent( buttonClear_clicked           ) } )
+   ::oUI:signal( "buttonSaveInFunc"     , "clicked()"    , {| | ::execEvent( buttonSaveInFunc_clicked      ) } )
+   ::oUI:signal( "buttonSave"           , "clicked()"    , {| | ::execEvent( buttonSave_clicked            ) } )
 
-   ::oUI:signal( "buttonLoadFromCurFunc", "clicked()", {|| ::execEvent( buttonLoadFromCurFunc_clicked ) } )
+   ::oUI:signal( "buttonLoadFromCurFunc", "clicked()"    , {|| ::execEvent( buttonLoadFromCurFunc_clicked  ) } )
 
    RETURN Self
 
@@ -404,8 +407,111 @@ METHOD IdeDocWriter:fillForm( aFacts )
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeDocWriter:fillFormByObject( oFunc )
+
+   ::oUI:q_editVersion     :setText      ( oFunc:cVersion      )
+   ::oUI:q_editStatus      :setText      ( oFunc:cStatus       )
+   ::oUI:q_editCompliance  :setText      ( oFunc:cPlatForms    )
+   ::oUI:q_editCategory    :setText      ( oFunc:cCategory     )
+   ::oUI:q_editSubCategory :setText      ( oFunc:cSubCategory  )
+   ::oUI:q_editName        :setText      ( oFunc:cName         )
+   ::oUI:q_editExtLink     :setText      ( oFunc:cExternalLink )
+   ::oUI:q_editOneLiner    :setText      ( oFunc:cOneLiner     )
+   ::oUI:q_editSyntax      :setText      ( hbide_ar2delString( oFunc:aSyntax , "; " ) )
+   ::oUI:q_editReturns     :setText      ( hbide_ar2delString( oFunc:aReturns, "; " ) )
+   ::oUI:q_editSeeAlso     :setText      ( oFunc:cSeaAlso      )
+   ::oUI:q_editFiles       :setText      ( hbide_ar2delString( oFunc:aFiles  , "; " ) )
+   ::oUI:q_plainArgs       :setPlainText ( hbide_arrayTOmemo( oFunc:aArguments    ) )
+   ::oUI:q_plainDesc       :setPlainText ( hbide_arrayTOmemo( oFunc:aDescription  ) )
+   ::oUI:q_plainExamples   :setPlainText ( hbide_arrayTOmemo( oFunc:aExamples     ) )
+   ::oUI:q_plainTests      :setPlainText ( hbide_arrayTOmemo( oFunc:aTests        ) )
+
+   ::oUI:q_comboTemplate:setCurrentIndex( iif( oFunc:cTemplate == "Procedure", 1, ;
+                                          iif( oFunc:cTemplate == "Class", 2, 0 ) ) )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeDocWriter:removeDocHelp( nLineFrom, oEdit )
+   LOCAL i, cLine, n, lExists, lDone, nFrom, nTo
+
+   n       := 0
+   lExists := .f.
+   lDone   := .f.
+
+   FOR i := ( nLineFrom - 1 ) TO 1 STEP -1
+      cLine := oEdit:getLine( i )
+
+      IF "$END$" $ cLine
+         nTo := i + 1
+         lExists := .t.
+      ENDIF
+      IF "$DOC$" $ cLine
+         lDone := .t.
+         nFrom := i
+      ENDIF
+      IF ++n > 4 .AND. ! lExists
+         EXIT
+      ENDIF
+      IF lDone
+         EXIT
+      ENDIF
+   NEXT
+
+   IF !empty( nFrom ) .AND. !empty( nTo )
+      oEdit:goto( nFrom )
+      FOR i := 1 TO ( nTo - nFrom + 1 )
+         oEdit:deleteLine()
+      NEXT
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeDocWriter:pullDocFromSource( nLineFrom, oEdit )
+   LOCAL aDoc, i, cLine, n, lExists, lDone, a_
+
+   aDoc    := {}
+   n       := 0
+   lExists := .f.
+   lDone   := .f.
+
+   FOR i := ( nLineFrom - 1 ) TO 1 STEP -1
+      cLine := oEdit:getLine( i )
+
+      IF "$END$" $ cLine
+         lExists := .t.
+      ENDIF
+      IF "$DOC$" $ cLine
+         lDone := .t.
+      ENDIF
+
+      IF lExists
+         aadd( aDoc, cLine )
+      ENDIF
+
+      IF ++n > 4 .AND. ! lExists /* Search must terminate after 4 lines if document is not in sight */
+         EXIT
+      ENDIF
+      IF lDone
+         EXIT
+      ENDIF
+   NEXT
+
+   a_:={}
+   IF lDone
+      FOR i := len( aDoc ) TO 1 STEP -1
+         aadd( a_, aDoc[ i ] )
+      NEXT
+   ENDIF
+
+   RETURN a_
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeDocWriter:loadCurrentFuncDoc()
-   LOCAL oEdit, nCurLine, n, cProto, nProtoLine, aFacts
+   LOCAL oEdit, nCurLine, n, cProto, nProtoLine, aFacts, aDoc, oFunc
    //LOCAL qCursor, qEdit
 
    IF !empty( oEdit := ::oEM:getEditObjectCurrent() )
@@ -434,7 +540,15 @@ METHOD IdeDocWriter:loadCurrentFuncDoc()
                ::nFuncLine   := nProtoLine
                ::nTagsIndex  := n
                ::cSourceFile := oEdit:oEditor:sourceFile
-               ::fillForm( aFacts )
+               IF empty( aDoc := ::pullDocFromSource( nProtoLine, oEdit ) )
+                  ::fillForm( aFacts )
+               ELSE
+                  IF !empty( oFunc := ::oHL:getDocFunction( aDoc ) )
+                     ::fillFormByObject( oFunc )
+                  ELSE
+                     ::fillForm( aFacts )
+                  ENDIF
+               ENDIF
             ENDIF
          ENDIF
       ENDIF
@@ -520,7 +634,7 @@ METHOD IdeDocWriter:saveInFile()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeDocWriter:saveInFunction()
-   LOCAL nCurLine, oEdit
+   LOCAL nCurLine, oEdit, qCursor, a_, b_, s
 
    /* Bring it on top and make it current */
    ::oSM:editSource( ::cSourceFile, , , , , , .f. )
@@ -540,10 +654,25 @@ METHOD IdeDocWriter:saveInFunction()
             // This is possible user might have edited the source; just issue warning
             MsgBox( "Source is modified, anyway proceeding.", "Documentation Save Alert" )
          ENDIF
+
+         qCursor := QTextCursor():from( oEdit:qEdit:textCursor() )
+         qCursor:beginEditBlock()
+
+         ::removeDocHelp( nCurLine, oEdit )
+         b_:={}
+         a_:= ::buildDocument()
+         FOR EACH s IN a_
+            IF "*" $ s
+               aadd( b_, s )
+            ENDIF
+         NEXT
          oEdit:home()
-         oEdit:insertText( hbide_arrayToMemo( ::buildDocument() ) )
+         oEdit:insertText( hbide_arrayToMemo( b_ ) )
          oEdit:up()
          oEdit:deleteLine()
+
+         qCursor:endEditBlock()
+         oEdit:qEdit:setTextCursor( qCursor )
          oEdit:qEdit:centerCursor()
       ENDIF
    ENDIF

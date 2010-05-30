@@ -115,13 +115,13 @@ FUNCTION Main( ... )
       CASE right( cLParam,4 ) == '.qth'
          aadd( aProFiles, cParam )
 
-      CASE left( cParam,2 ) == '-O'
+      CASE lower( left( cParam,2 ) ) == '-o'
          cPathOut := substr( cParam, 3 )
 
-      CASE left( cParam,2 ) == '-I'
+      CASE lower( left( cParam,2 ) ) == '-i'
          cPathIn := substr( cParam, 3 )
 
-      CASE left( cParam,2 ) == '-D'
+      CASE lower( left( cParam,2 ) ) == '-d'
          cPathDoc := substr( cParam, 3 )
 
       CASE cParam == '-c'
@@ -133,18 +133,17 @@ FUNCTION Main( ... )
       ENDCASE
    NEXT
 
-   IF empty( aPrjFiles ) .and. hb_fileExists( "qt45.qtp" )
+   IF empty( aPrjFiles ) .AND. empty( aProFiles ) .AND. hb_fileExists( "qt45.qtp" )
       aadd( aPrjFiles, "qt45.qtp" )
    ENDIF
 
-   IF empty( aPrjFiles )
-
+   IF empty( aPrjFiles ) .AND. empty( aProFiles )
       FOR EACH a_ IN directory( "*.qtp" )
          aadd( aPrjFiles, a_[ 1 ] )
       NEXT
    ENDIF
 
-   IF empty( aPrjFiles ) .and. empty( aProFiles )
+   IF empty( aPrjFiles ) .AND. empty( aProFiles )
       DispHelp()
       RETURN nil
    ENDIF
@@ -224,7 +223,7 @@ STATIC FUNCTION ManageProject( cProFile, cPathIn, cPathOut, cPathDoc )
          OutStd( 'Project file has unbalanced comment section...' + s_NewLine )
          RETURN nil
       ENDIF
-      cPrj := substr( cPrj,1,n-1 ) + substr( cPrj,nn+2 )
+      cPrj := substr( cPrj, 1, n-1 ) + substr( cPrj, nn+2 )
    ENDDO
 
    /* Prepare to be parsed properly */

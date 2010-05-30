@@ -190,6 +190,7 @@ CLASS IdeObject
    ACCESS oSkltnsTreeDock                         INLINE ::oIde:oSkltnsTreeDock
    ACCESS oFindDock                               INLINE ::oIde:oFindDock
    ACCESS oSourceThumbnailDock                    INLINE ::oIde:oSourceThumbnailDock
+   ACCESS oQScintillaDock                         INLINE ::oIde:oQScintillaDock
    ACCESS oMainToolbar                            INLINE ::oIde:oMainToolbar
 
    ACCESS lProjTreeVisible                        INLINE ::oIde:lProjTreeVisible

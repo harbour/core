@@ -386,6 +386,15 @@ FUNCTION hbide_parseWithMetaData( s, a_ )
 
 /*----------------------------------------------------------------------*/
 
+FUNCTION hbide_ar2delString( a_, cDlm )
+   LOCAL s := ""
+
+   aeval( a_, {|e| s += e + cDlm  } )
+
+   RETURN substr( s, 1, len( s ) - len( cDlm ) )
+
+/*----------------------------------------------------------------------*/
+
 FUNCTION hbide_arrayToMemo( a_ )
    LOCAL s := ""
 

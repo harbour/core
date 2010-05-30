@@ -832,6 +832,20 @@ HB_FUNC( QT_HBQPLAINTEXTEDIT_HBHIGHLIGHTAREA )
    }
 }
 
+/*
+ * void           hbTogglePersistentSelection()
+ */
+HB_FUNC( QT_HBQPLAINTEXTEDIT_HBTOGGLEPERSISTENTSELECTION )
+{
+   HBQPlainTextEdit * p = hbqt_par_HBQPlainTextEdit( 1 );
+   if( p )
+      ( p )->hbTogglePersistentSelection();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQPLAINTEXTEDIT_HBTOGGLEPERSISTENTSELECTION FP=( p )->hbTogglePersistentSelection(); p is NULL" ) );
+   }
+}
+
 
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */

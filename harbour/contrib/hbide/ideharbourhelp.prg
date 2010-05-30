@@ -194,6 +194,7 @@ CLASS IdeHarbourHelp INHERIT IdeObject
    METHOD paintRequested( pPrinter )
    METHOD parseTextFile( cTextFile, oParent )
    METHOD jumpToFunction( cFunction )
+   METHOD getDocFunction( acBuffer )
 
    ENDCLASS
 
@@ -763,6 +764,143 @@ METHOD IdeHarbourHelp:populateIndex()
    NEXT
 
    RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeHarbourHelp:getDocFunction( acBuffer )
+   LOCAL a_, s, oFunc, nPart, lIsFunc
+
+   IF hb_isArray( acBuffer )
+      a_:= acBuffer
+   ELSE
+      a_:= hbide_memoTOarray( acBuffer )
+   ENDIF
+
+   oFunc := IdeDocFunction():new()
+
+   lIsFunc := .f.
+   FOR EACH s IN a_
+
+      DO CASE
+      CASE "$DOC$"         $ s
+         lIsFunc := .t.
+      CASE "$END$"         $ s
+         EXIT
+      CASE "$TEMPLATE$"    $ s
+         nPart := DOC_FUN_TEMPLATE
+      CASE "$FUNCNAME$"    $ s   .OR.  "$NAME$" $ s
+         nPart := DOC_FUN_FUNCNAME
+      CASE "$CATEGORY$"    $ s
+         nPart := DOC_FUN_CATEGORY
+      CASE "$SUBCATEGORY$" $ s
+         nPart := DOC_FUN_SUBCATEGORY
+      CASE "$ONELINER$"    $ s
+         nPart := DOC_FUN_ONELINER
+      CASE "$SYNTAX$"      $ s
+         nPart := DOC_FUN_SYNTAX
+      CASE "$ARGUMENTS$"   $ s
+         nPart := DOC_FUN_ARGUMENTS
+      CASE "$RETURNS$"     $ s
+         nPart := DOC_FUN_RETURNS
+      CASE "$DESCRIPTION$" $ s
+         nPart := DOC_FUN_DESCRIPTION
+      CASE "$EXAMPLES$"    $ s
+         nPart := DOC_FUN_EXAMPLES
+      CASE "$TESTS$"       $ s
+         nPart := DOC_FUN_TESTS
+      CASE "$FILES$"       $ s
+         nPart := DOC_FUN_FILES
+      CASE "$STATUS$"       $ s
+         nPart := DOC_FUN_STATUS
+      CASE "$PLATFORMS$"   $ s  .OR.  "$COMPLIANCE$" $ s
+         nPart := DOC_FUN_PLATFORMS
+      CASE "$SEEALSO$"     $ s
+         nPart := DOC_FUN_SEEALSO
+      CASE "$VERSION$"     $ s
+         nPart := DOC_FUN_VERSION
+      CASE "$INHERITS"     $ s
+         nPart := DOC_FUN_INHERITS
+      CASE "$METHODS"      $ s
+         nPart := DOC_FUN_METHODS
+      CASE "$EXTERNALLINK" $ s
+         nPart := DOC_FUN_EXTERNALLINK
+      OTHERWISE
+         IF ! lIsFunc
+            LOOP   // It is a fake line not within $DOC$ => $END$ block
+         ENDIF
+         s := substr( s, 9 )
+
+         SWITCH nPart
+         CASE DOC_FUN_BEGINS
+            EXIT
+         CASE DOC_FUN_TEMPLATE
+            oFunc:cTemplate    := s
+            EXIT
+         CASE DOC_FUN_FUNCNAME
+            oFunc:cName        := alltrim( s )
+            EXIT
+         CASE DOC_FUN_CATEGORY
+            oFunc:cCategory    := alltrim( s )
+            EXIT
+         CASE DOC_FUN_SUBCATEGORY
+            oFunc:cSubCategory := alltrim( s )
+            EXIT
+         CASE DOC_FUN_ONELINER
+            oFunc:cOneLiner    := s
+            EXIT
+         CASE DOC_FUN_SYNTAX
+            aadd( oFunc:aSyntax     , s )
+            EXIT
+         CASE DOC_FUN_ARGUMENTS
+            aadd( oFunc:aArguments  , s )
+            EXIT
+         CASE DOC_FUN_RETURNS
+            aadd( oFunc:aReturns    , s )
+            EXIT
+         CASE DOC_FUN_DESCRIPTION
+            aadd( oFunc:aDescription, s )
+            EXIT
+         CASE DOC_FUN_EXAMPLES
+            aadd( oFunc:aExamples   , s )
+            EXIT
+         CASE DOC_FUN_TESTS
+            aadd( oFunc:aTests      , s )
+            EXIT
+         CASE DOC_FUN_FILES
+            aadd( oFunc:aFiles      , s )
+            EXIT
+         CASE DOC_FUN_STATUS
+            oFunc:cStatus    := alltrim( s )
+            EXIT
+         CASE DOC_FUN_PLATFORMS
+            oFunc:cPlatForms := alltrim( s )
+            EXIT
+         CASE DOC_FUN_SEEALSO
+            oFunc:cSeaAlso   := alltrim( s )
+            EXIT
+         CASE DOC_FUN_INHERITS
+            oFunc:cInherits  := alltrim( s )
+            EXIT
+         CASE DOC_FUN_METHODS
+            aadd( oFunc:aMethods    , s )
+            EXIT
+         CASE DOC_FUN_VERSION
+            oFunc:cVersion   := alltrim( s )
+            EXIT
+         CASE DOC_FUN_EXTERNALLINK
+            oFunc:cExternalLink := alltrim( s )
+            EXIT
+         OTHERWISE
+            nPart := DOC_FUN_NONE
+            EXIT
+         ENDSWITCH
+      ENDCASE
+   NEXT
+
+   IF ! lIsFunc
+      oFunc := NIL
+   ENDIF
+   RETURN oFunc
 
 /*----------------------------------------------------------------------*/
 

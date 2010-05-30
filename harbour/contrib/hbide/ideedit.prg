@@ -178,6 +178,7 @@ CLASS IdeEdit INHERIT IdeObject
    METHOD toggleColumnSelectionMode()
    METHOD toggleLineSelectionMode()
    METHOD clearSelection()
+   METHOD togglePersistentSelection()
 
    METHOD getWord( lSelect )
    METHOD getLine( nLine, lSelect )
@@ -758,7 +759,7 @@ STATIC FUNCTION hbide_qCursorDownInsert( qCursor )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:copyBlockContents( aCord )
-   LOCAL nT, nL, nB, nR, nW, i, cLine, nMode, qClip
+   LOCAL nT, nL, nB, nR, nW, i, cLine, nMode, qClip, oLine
    LOCAL cClip := ""
 
    hbide_normalizeRect( aCord, @nT, @nL, @nB, @nR )
@@ -769,7 +770,7 @@ METHOD IdeEdit:copyBlockContents( aCord )
    nW := nR - nL
    FOR i := nT TO nB
       cLine := ::getLine( i + 1 )
-
+      oLine := cLine
       IF nMode == selectionMode_stream
          IF aCord[ 1 ] > aCord[ 3 ]
             IF i == nT .AND. i == nB
@@ -798,7 +799,7 @@ METHOD IdeEdit:copyBlockContents( aCord )
       ENDIF
 
       aadd( ::aBlockCopyContents, cLine )
-      cClip += cLine + iif( i < nB, hb_osNewLine(), "" )
+      cClip += cLine + iif( i < nB, hb_osNewLine(), iif( cLine == oLine, hb_osNewLine(), "" ) )
    NEXT
 
  * HB_TRACE( HB_TR_ALWAYS, "copyBlockContents", cClip )
@@ -820,7 +821,11 @@ METHOD IdeEdit:pasteBlockContents( nMode )
       RETURN Self
    ENDIF
 
-   aCopy := hbide_memoToArray( QClipboard():new():text() )
+// aCopy := hbide_memoToArray( QClipboard():new():text() )
+   aCopy := hb_ATokens( StrTran( RTrim( QClipboard():new():text() ), Chr( 13 ) + Chr( 10 ), _EOL ), _EOL )
+   IF empty( aCopy[ len( aCopy ) ] )
+      hb_adel( aCopy, len( aCopy ), .t. )
+   ENDIF
    IF empty( aCopy )
       RETURN Self
    ENDIF
@@ -837,9 +842,9 @@ METHOD IdeEdit:pasteBlockContents( nMode )
    ENDIF
 
    nPasteMode := iif( empty( nPasteMode ), selectionMode_stream, nPasteMode )
+   qCursor    := QTextCursor():from( ::qEdit:textCursor() )
+   nCol       := qCursor:columnNumber()
 
-   qCursor := QTextCursor():from( ::qEdit:textCursor() )
-   nCol    := qCursor:columnNumber()
    qCursor:beginEditBlock()
    //
    DO CASE
@@ -877,6 +882,7 @@ METHOD IdeEdit:pasteBlockContents( nMode )
    ENDCASE
    //
    qCursor:endEditBlock()
+   ::qEdit:ensureCursorVisible()
 
    RETURN Self
 
@@ -1303,6 +1309,12 @@ METHOD IdeEdit:toggleLineSelectionMode()
 
 METHOD IdeEdit:clearSelection()
    ::qEdit:hbSetSelectionMode( 0, .t. )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:togglePersistentSelection()
+   ::qEdit:hbTogglePersistentSelection()
    RETURN Self
 
 /*----------------------------------------------------------------------*/

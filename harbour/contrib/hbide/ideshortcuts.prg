@@ -210,6 +210,7 @@ CLASS IdeShortcuts INHERIT IdeObject
    METHOD toggleColumnSelectionMode()
    METHOD toggleLineSelectionMode()
    METHOD clearSelection()
+   METHOD togglePersistentSelection()
 
    /* Navigation */
    METHOD home()
@@ -1045,6 +1046,9 @@ METHOD IdeShortcuts:toggleColumnSelectionMode()
 METHOD IdeShortcuts:toggleLineSelectionMode()
    RETURN ::oEdit:toggleLineSelectionMode()
 /*----------------------------------------------------------------------*/
+METHOD IdeShortcuts:togglePersistentSelection()
+   RETURN ::oEdit:togglePersistentSelection()
+/*----------------------------------------------------------------------*/
 METHOD IdeShortcuts:clearSelection()
    RETURN ::oEdit:clearSelection()
 /*----------------------------------------------------------------------*/
@@ -1481,6 +1485,9 @@ METHOD IdeShortcuts:loadMethods()
    aadd( ::aMethods, { 'clearSelection()', ;
                        'clearSelection()', ;
                        'Clears the selection block, if any, and resets the selection mode to stream.' } )
+   aadd( ::aMethods, { 'togglePersistentSelection()', ;
+                       'togglePersistentSelection()', ;
+                       'Toggles persistent selection mode. It switches on/off this mode' } )
 
 
    aadd( ::aMethods, { '          Retreivals', ;
@@ -1566,6 +1573,7 @@ METHOD IdeShortcuts:loadDftSCuts()
       aadd( b_, { "Insert Separator", "F7"     , "NO", "NO" , "NO" , "", '::separator( "" )'     , "insert-separator", "", "" } )
 
       aadd( b_, { "Toggle Line Selection Mode", "F11", "NO", "NO" , "NO" , "", '::toggleLineSelectionMode()', ""     , "", "" } )
+      aadd( b_, { "Toggle Persistent Selection Mode", "F11", "NO", "YES" , "NO" , "", '::togglePersistentSelection()', ""     , "", "" } )
       aadd( b_, { "Clear Selection" , "F11"    , "NO", "NO" , "YES", "", '::clearSelection()'    , ""                , "", "" } )
       aadd( b_, { "Present Snippets", "K"      , "NO", "YES", "NO" , "", '::presentSkeletons()'  , ""                , "", "" } )
       aadd( b_, { "Goto Function"   , "T"      , "NO", "YES", "NO" , "", '::gotoFunction()'      , ""                , "", "" } )

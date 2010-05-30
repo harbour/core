@@ -525,7 +525,7 @@ METHOD IdeFunctions:tagProject( cProjectTitle )
                aSumData  := {}
                cComments := CheckComments( aText )
                aSummary  := Summarize( aText, cComments, @aSumData , iif( upper( cExt ) == ".PRG", 9, 1 ) )
-               aTags     := UpdateTags( cSrc, aSummary, aSumData, @aFuncList, @aLines )
+               aTags     := UpdateTags( cSrc, aSummary, aSumData, @aFuncList, @aLines, aText )
 
                IF !empty( aTags )
                   aeval( aTags, {|e_| aadd( aCTags, { e_[1],e_[2],e_[3],e_[4],e_[7] } ) } )
