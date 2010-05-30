@@ -18,6 +18,8 @@
                don't have to mess with it.
  */
 
+#pragma warninglevel=3
+
 PROCEDURE Main( cMode )
    LOCAL files := {}
    LOCAL cFile := MemoRead( "ren_sfn.txt" )

@@ -700,6 +700,18 @@ char * hb_verCompiler( void )
       iVerPatch = 0;
    #endif
 
+#elif defined( __llvm__ ) && defined( __clang_major__ )
+
+   pszName = "LLVM/Clang C";
+
+   iVerMajor = __clang_major__;
+   iVerMinor = __clang_minor__;
+   iVerPatch = __clang_patchlevel__;
+
+   #if defined( __cplusplus )
+      hb_strncpy( szSub, "++", sizeof( szSub ) - 1 );
+   #endif
+
 #elif defined( __GNUC__ )
 
    #if defined( __DJGPP__ )
@@ -782,6 +794,15 @@ char * hb_verCompiler( void )
    }
    else
       hb_strncpy( pszCompiler, "(unknown)", COMPILER_BUF_SIZE - 1 );
+
+#if defined( __clang_version__ )
+   if (strstr( __clang_version__, "("))
+      /* "2.0 (trunk 103176)" -> "(trunk 103176)" */
+      hb_snprintf( szSub, sizeof( szSub ), " %s", strstr( __clang_version__, "("));
+   else
+      hb_snprintf( szSub, sizeof( szSub ), " (%s)", __clang_version__);
+   hb_strncat( pszCompiler, szSub, COMPILER_BUF_SIZE - 1 );
+#endif
 
 #if defined( __DJGPP__ )
    hb_snprintf( szSub, sizeof( szSub ), " (DJGPP %i.%02i)", ( int ) __DJGPP__, ( int ) __DJGPP_MINOR__ );

@@ -345,7 +345,6 @@
    #xtranslate ValToPrgExp([<x,...>])          => hb_valToExp(<x>)
    #xtranslate IsDirectory(<x>)                => hb_dirExists(<x>)
    #xtranslate SecondsSleep([<x,...>])         => hb_idleSleep(<x>)
-   #xtranslate FileSize(<x>)                   => hb_FSize(<x>)
    #xtranslate WildMatch([<x,...>])            => hb_WildMatch(<x>)
    #xtranslate hb_DeserialNext(<x>)            => hb_Deserialize(<x>)
    #xtranslate hb_funcptr(<x>)                 => __dynsn2sym(<x>)

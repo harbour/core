@@ -7,6 +7,8 @@
  * See COPYING for licensing terms.
  */
 
+#pragma warninglevel=3
+
 /* TOFIX: Ugly hack to avoid #include "directry.ch" */
 #define F_NAME          1       /* File name */
 #define F_ATTR          5       /* File attribute */

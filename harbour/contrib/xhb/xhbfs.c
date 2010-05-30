@@ -53,5 +53,4 @@
 #include "hbapi.h"
 
 HB_FUNC_EXTERN( HB_DIREXISTS          ) ; HB_FUNC( ISDIRECTORY              ) { HB_FUNC_EXEC( HB_DIREXISTS          ); }
-HB_FUNC_EXTERN( HB_FSIZE              ) ; HB_FUNC( FILESIZE                 ) { HB_FUNC_EXEC( HB_FSIZE              ); }
 HB_FUNC_EXTERN( HB_DISABLEWAITLOCKS   ) ; HB_FUNC( DISABLEWAITLOCKS         ) { HB_FUNC_EXEC( HB_DISABLEWAITLOCKS   ); }

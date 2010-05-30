@@ -735,8 +735,8 @@ HARBOUR
 8. EXAMPLES
 ===========
 
-   for Windows hosts (x86, 32-bit)
-   -----------------
+   for Windows (x86, 32-bit) hosts
+   -------------------------------
 
       NOTES: - All code below should be copied to batch files or typed at command
                line.
