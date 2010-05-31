@@ -87,7 +87,7 @@ HB_FUNC( W2BIN )
    char szResult[ 2 ];
    HB_U16 uiValue = ( HB_U16 ) hb_parni( 1 );
    HB_PUT_LE_UINT16( szResult, uiValue );
-   hb_retclen( szResult, 4 );
+   hb_retclen( szResult, 2 );
 }
 
 HB_FUNC( F2BIN )
