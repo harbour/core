@@ -1,0 +1,29 @@
+#
+# $Id$
+#
+
+-hblib
+-inc
+-nohbc
+
+-o${hb_name}
+
+-w3 -es2
+
+dates2.c
+ffind.c
+hb_f.c
+hbeditc.c
+spd.c
+strfmt.c
+stringsx.c
+
+calldll.prg
+fcomma.prg
+fileread.prg
+hbedit.prg
+nconvert.prg
+numtxthu.prg
+numtxten.prg
+stringp.prg
+twirler.prg

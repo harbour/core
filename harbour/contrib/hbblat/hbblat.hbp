@@ -1,0 +1,16 @@
+#
+# $Id$
+#
+
+-hblib
+-inc
+-nohbc
+
+-o${hb_name}
+
+-w3 -es2
+
+-stop{!win}
+
+blatwrp.c
+blatcls.prg

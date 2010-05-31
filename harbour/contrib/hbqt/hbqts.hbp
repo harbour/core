@@ -2,6 +2,8 @@
 # $Id$
 #
 
+-stop{!HB_QT_STATIC}
+
 hbqt.hbp
 
 -o${hb_name}

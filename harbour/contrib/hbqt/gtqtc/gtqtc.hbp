@@ -1,0 +1,15 @@
+#
+# $Id$
+#
+
+../hbqt_common.hbm
+
+-o${hb_name}
+-workdir=${hb_work}/${hb_plat}/${hb_comp}/${hb_name}
+
+gtqtc.cpp
+
+-pi=gtqtc.h
+
+{darwin&!HB_WITH_QT}-cflag=-I/Library/Frameworks/QtGui.framework/Headers
+

@@ -1,0 +1,16 @@
+#
+# $Id$
+#
+
+-hblib
+-inc
+-nohbc
+
+-o${hb_name}
+
+-w3 -es2
+
+netiosrv.c
+netiocli.c
+
+netiomt.prg

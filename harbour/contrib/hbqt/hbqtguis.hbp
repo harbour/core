@@ -2,6 +2,8 @@
 # $Id$
 #
 
+-stop{!HB_QT_STATIC}
+
 hbqtgui.hbp
 
 -o${hb_name}

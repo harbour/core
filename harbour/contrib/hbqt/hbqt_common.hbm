@@ -12,7 +12,7 @@
 
 -plugin=plug_moc.prg
 
-{!darwin|HB_WITH_QT}-reqheader=QtCore/QObject
+{!darwin|HB_WITH_QT}-reqheader=QtCore/qglobal.h
 {!darwin|HB_WITH_QT}-inctrypath=${HB_WITH_QT}
 {!darwin}-inctrypath=/usr/include/qt4
 {!darwin}-inctrypath=/usr/lib/qt4/include

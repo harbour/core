@@ -1,0 +1,14 @@
+#
+# $Id$
+#
+
+-hblib
+-inc
+-nohbc
+
+-o${hb_name}
+
+-w3 -es2
+
+hb_btree.c
+tbtree.prg
