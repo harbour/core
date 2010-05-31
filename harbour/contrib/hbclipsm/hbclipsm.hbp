@@ -1,0 +1,21 @@
+#
+# $Id$
+#
+
+-hblib
+-inc
+-nohbc
+
+-o${hb_name}
+
+-w3 -es2
+
+date.c
+environ.c
+gauge.c
+num.c
+numceil.c
+numfloor.c
+stack.c
+status.c
+time.c

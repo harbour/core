@@ -1,0 +1,19 @@
+#
+# $Id$
+#
+
+-hblib
+-inc
+-nohbc
+
+-o${hb_name}
+
+-w3 -es2
+
+tpcommon.c
+tpunix.c
+tpwin.c
+tpos2.c
+tpdos.c
+
+telepath.prg

@@ -6,7 +6,8 @@
  * Harbour Project source code:
  * Visual FoxPro compatibility header
  *
- * Copyright 2010 {list of individual authors and e-mail addresses}
+ * Copyright 2010 Viktor Szakats (harbour.01 syenar.hu)
+ * Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
