@@ -36,10 +36,8 @@ PRG_HEADERS := \
    thtml.ch \
    tip.ch \
 
+DIRS := hbtipssl
+
 include $(TOP)$(ROOT)config/header.mk
 include $(TOP)$(ROOT)config/lib.mk
-
-ifneq ($(HB_HAS_OPENSSL),)
-   DIRS := hbtipssl
-   include $(TOP)$(ROOT)config/dir.mk
-endif
+include $(TOP)$(ROOT)config/dir.mk

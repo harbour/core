@@ -31,6 +31,8 @@ ifneq ($(HB_HAS_OPENSSL),)
 
    HB_CFLAGS += $(foreach d,$(HB_HAS_OPENSSL),-I$(d))
 
+   HB_CFLAGS += -DHB_OPENSSL_STATIC
+
    # Patent will expire in 2010/2011
    HB_CFLAGS += -DOPENSSL_NO_IDEA
 

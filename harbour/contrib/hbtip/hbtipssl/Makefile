@@ -35,12 +35,7 @@ PRG_SOURCES := \
    thtml.prg \
    url.prg \
 
-ifneq ($(HB_HAS_OPENSSL),)
+HB_PRGFLAGS += -DHB_HAS_OPENSSL
+HB_INC_DEPEND := -I$(TOP)$(ROOT)contrib/hbssl
 
-   HB_PRGFLAGS += -DHB_HAS_OPENSSL
-   HB_INC_DEPEND := -I$(TOP)$(ROOT)contrib/hbssl
-
-   include $(TOP)$(ROOT)config/lib.mk
-else
-   include $(TOP)$(ROOT)config/none.mk
-endif
+include $(TOP)$(ROOT)config/lib.mk
