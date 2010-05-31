@@ -481,6 +481,24 @@
    #xtranslate HALLOCATE([<x,...>])        => hb_HALLOCATE(<x>)
    #xtranslate HDEFAULT([<x,...>])         => hb_HDEFAULT(<x>)
 
+   /* Associative hash array functions */
+   #xtranslate HAAGETKEYAT([<x,...>])      => hb_HKEYAT(<x>)
+   #xtranslate HAAGETVALUEAT([<x,...>])    => hb_HVALUEAT(<x>)
+   #xtranslate HAADELAT([<x,...>])         => hb_HDELAT(<x>)
+   #xtranslate HAAGETPOS([<x,...>])        => hb_HPOS(<x>)
+   #xtranslate HAAGETREALPOS(<x>,<y>)      => iif( hb_isNumeric( <y> ) .AND. <y> >= 1 .AND. ;
+                                                   int( <y> ) <= len( <x> ), int( <y> ), 0 )
+   #xtranslate HGETVAAPOS(<x>)             => {|h| ;;
+                                                local a := array( len( h ), v ;;
+                                                for each v in a ;;
+                                                   v := v:__enumIndex() ;;
+                                                next ;;
+                                                return a ; }:eval( <x> )
+   #xtranslate HGETAACOMPATIBILITY(<x>)    => hb_HKEEPORDER(<x>)
+   #xtranslate HSETAACOMPATIBILITY([<x,...>]) => {|h| ;;
+                                                   hb_HKEEPORDER( h ) ;;
+                                                   return .T. ; }:eval( <x> )
+
    /* Inet functions */
    #xtranslate INETINIT([<x,...>])                => hb_INETINIT(<x>)
    #xtranslate INETCLEANUP([<x,...>])             => hb_INETCLEANUP(<x>)

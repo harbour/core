@@ -229,6 +229,7 @@ HB_FUNC( HSETAACOMPATIBILITY )
          hb_hashClearFlags( pHash, HB_HASH_KEEPORDER );
          hb_hashSetFlags( pHash, HB_HASH_RESORT );
       }
+      hb_retl( HB_TRUE );
    }
    else
       s_errRT_hashArg();
