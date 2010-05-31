@@ -28,8 +28,6 @@
 {darwin}-cflag=-DOPENSSL_NO_DGRAM
 {darwin}-cflag=-DHB_OPENSSL_OLD_OSX_
 
-{win|wce}-cflag=-DOPENSSL_OPT_WINDLL
-
 # Patent will expire in 2010/2011
 -cflag=-DOPENSSL_NO_IDEA
 

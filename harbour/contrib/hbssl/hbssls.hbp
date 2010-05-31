@@ -9,4 +9,4 @@ hbssl.hbp
 -o${hb_name}
 -workdir=${hb_work}/${hb_plat}/${hb_comp}/${hb_name}
 
-{win|wce}-cflag=-UOPENSSL_OPT_WINDLL
+{win|wce}-cflag=-DHB_OPENSSL_STATIC

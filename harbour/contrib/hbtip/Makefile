@@ -28,7 +28,7 @@ PRG_SOURCES := \
    popcli.prg \
    sendmail.prg \
    sessid.prg \
-   smtpcli.prg   \
+   smtpcli.prg \
    thtml.prg \
    url.prg \
 

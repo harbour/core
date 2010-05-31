@@ -55,6 +55,12 @@
 
 #include "hbapi.h"
 
+#if defined( HB_OS_WIN )
+   #if ! defined( HB_OPENSSL_STATIC )
+      #define OPENSSL_OPT_WINDLL
+   #endif
+#endif
+
 #include <openssl/ssl.h>
 
 #include "hbssl.ch"

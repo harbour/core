@@ -53,6 +53,8 @@
 #include "hbapi.h"
 #include "hbapierr.h"
 
+#include "hbssl.h"
+
 #include <openssl/rand.h>
 
 HB_FUNC( RAND_SEED )
