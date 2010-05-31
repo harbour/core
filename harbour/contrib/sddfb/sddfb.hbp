@@ -1,0 +1,24 @@
+#
+# $Id$
+#
+
+-hblib
+-inc
+-nohbc
+
+-o${hb_name}
+
+-w3 -es2
+
+../rddsql/rddsql.hbc
+
+-stop{pocc64|poccarm}
+
+-reqheader=ibase.h
+
+-inctrypath=${HB_WITH_FIREBIRD}
+-inctrypath=/usr/include
+-inctrypath=/opt/firebird/include
+-inctrypath=/Library/Frameworks/Firebird.framework/Headers
+
+sddfb.c

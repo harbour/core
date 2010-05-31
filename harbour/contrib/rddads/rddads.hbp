@@ -1,0 +1,24 @@
+#
+# $Id$
+#
+
+-hblib
+-inc
+-nohbc
+
+-o${hb_name}
+
+-w3 -es2
+
+-stop{dos|os2}
+
+-reqheader=ace.h
+
+-inctrypath=${HB_WITH_ADS}
+-inctrypath=/usr/local/ads/acesdk
+-inctrypath=${HOME}/ads/acesdk
+
+ads1.c
+adsfunc.c
+adsmgmnt.c
+adsx.c

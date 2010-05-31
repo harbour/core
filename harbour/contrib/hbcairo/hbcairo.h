@@ -55,6 +55,7 @@
 
 #include "hbapi.h"
 #include "hbstack.h"
+
 #include "cairo.h"
 
 HB_EXTERN_BEGIN

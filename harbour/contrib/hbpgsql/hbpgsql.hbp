@@ -1,0 +1,28 @@
+#
+# $Id$
+#
+
+-hblib
+-inc
+-nohbc
+
+-o${hb_name}
+
+-w3 -es2
+
+-reqheader=libpq-fe.h
+
+-inctrypath=${HB_WITH_PGSQL}
+-inctrypath=/usr/include
+-inctrypath=/usr/local/pgsql/include
+-inctrypath=/usr/local/pgsql/include/libpq
+-inctrypath=/usr/include/pgsql
+-inctrypath=/usr/include/postgresql
+-inctrypath=/postgres/include
+-inctrypath=/opt/local/include/postgresql84
+-inctrypath=/opt/local/include/postgresql83
+
+postgres.c
+
+tpostgre.prg
+pgrdd.prg

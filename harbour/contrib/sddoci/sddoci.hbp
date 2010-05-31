@@ -1,0 +1,23 @@
+#
+# $Id$
+#
+
+-hblib
+-inc
+-nohbc
+
+-o${hb_name}
+
+-w3 -es2
+
+../rddsql/rddsql.hbc
+
+-stop{dos|os2|wce}
+
+-reqheader=ocilib.h
+
+-inctrypath=${HB_WITH_OCILIB}
+-inctrypath=/usr/include
+-inctrypath=/usr/local/include
+
+sddoci.c

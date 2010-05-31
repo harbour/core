@@ -2,12 +2,6 @@
 # $Id$
 #
 
-# You can get the library from this link:
-#    http://www.libgd.org/Downloads
-
-# On Linux you'll need these packages:
-#    gd, gd-devel
-
 ROOT := ../../
 
 include $(TOP)$(ROOT)config/global.mk

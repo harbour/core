@@ -3907,7 +3907,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             IF ! hb_FGetDateTime( FN_DirExtSet( tmp, hbmk[ _HBMK_cWorkDir ], cObjExt ), @tmp2 ) .OR. ;
                ! hb_FGetDateTime( tmp, @tmp1 ) .OR. ;
                tmp1 > tmp2 .OR. ;
-               ( hbmk[ _HBMK_nHEAD ] != _HEAD_OFF .AND. FindNewerHeaders( hbmk, tmp, NIL, tmp2, ! Empty( hbmk[ _HBMK_aINCTRYPATH ] ), .T., cBin_CompC, @headstate ) )
+               ( hbmk[ _HBMK_nHEAD ] != _HEAD_OFF .AND. FindNewerHeaders( hbmk, tmp, NIL, .F., tmp2, ! Empty( hbmk[ _HBMK_aINCTRYPATH ] ), .T., cBin_CompC, @headstate ) )
                AAdd( l_aC_TODO, tmp )
             ENDIF
          NEXT
@@ -3918,7 +3918,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       /* Header dir detection if needed and if FindNewerHeaders() wasn't called yet. */
       IF ! Empty( hbmk[ _HBMK_aINCTRYPATH ] ) .AND. ! Empty( l_aC_TODO ) .AND. headstate == NIL
          FOR EACH tmp IN l_aC_TODO
-            FindNewerHeaders( hbmk, tmp, NIL, NIL, .T., .T., cBin_CompC, @headstate )
+            FindNewerHeaders( hbmk, tmp, NIL, .F., NIL, .T., .T., cBin_CompC, @headstate )
          NEXT
       ENDIF
    ENDIF
@@ -3938,7 +3938,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             IF ! hb_FGetDateTime( FN_DirExtSet( tmp, hbmk[ _HBMK_cWorkDir ], cObjExt ), @tmp2 ) .OR. ;
                ! hb_FGetDateTime( tmp, @tmp1 ) .OR. ;
                tmp1 > tmp2 .OR. ;
-               ( hbmk[ _HBMK_nHEAD ] != _HEAD_OFF .AND. FindNewerHeaders( hbmk, tmp, NIL, tmp2, ! Empty( hbmk[ _HBMK_aINCTRYPATH ] ), .T., cBin_CompCPP, @headstate ) )
+               ( hbmk[ _HBMK_nHEAD ] != _HEAD_OFF .AND. FindNewerHeaders( hbmk, tmp, NIL, .F., tmp2, ! Empty( hbmk[ _HBMK_aINCTRYPATH ] ), .T., cBin_CompCPP, @headstate ) )
                AAdd( l_aCPP_TODO, tmp )
             ENDIF
          NEXT
@@ -3949,7 +3949,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       /* Header dir detection if needed and if FindNewerHeaders() wasn't called yet. */
       IF ! Empty( hbmk[ _HBMK_aINCTRYPATH ] ) .AND. ! Empty( l_aCPP_TODO ) .AND. headstate == NIL
          FOR EACH tmp IN l_aCPP_TODO
-            FindNewerHeaders( hbmk, tmp, NIL, NIL, .T., .T., cBin_CompCPP, @headstate )
+            FindNewerHeaders( hbmk, tmp, NIL, .F., NIL, .T., .T., cBin_CompCPP, @headstate )
          NEXT
       ENDIF
    ENDIF
@@ -3983,7 +3983,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             IF ! hb_FGetDateTime( FN_DirExtSet( tmp3, cHarbourOutputDir, cHarbourOutputExt ), @tmp2 ) .OR. ;
                ! hb_FGetDateTime( tmp3, @tmp1 ) .OR. ;
                tmp1 > tmp2 .OR. ;
-               ( hbmk[ _HBMK_nHEAD ] != _HEAD_OFF .AND. FindNewerHeaders( hbmk, tmp, NIL, tmp2, .F., .F., cBin_CompC, @headstate ) )
+               ( hbmk[ _HBMK_nHEAD ] != _HEAD_OFF .AND. FindNewerHeaders( hbmk, tmp, NIL, .F., tmp2, .F., .F., cBin_CompC, @headstate ) )
                AAdd( l_aPRG_TODO, tmp )
             ENDIF
          NEXT
@@ -4516,7 +4516,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             IF ! hb_FGetDateTime( FN_DirExtSet( tmp, hbmk[ _HBMK_cWorkDir ], cResExt ), @tmp2 ) .OR. ;
                ! hb_FGetDateTime( tmp, @tmp1 ) .OR. ;
                tmp1 > tmp2 .OR. ;
-               ( hbmk[ _HBMK_nHEAD ] != _HEAD_OFF .AND. FindNewerHeaders( hbmk, tmp, NIL, tmp2, .F., .T., cBin_CompC, @headstate ) )
+               ( hbmk[ _HBMK_nHEAD ] != _HEAD_OFF .AND. FindNewerHeaders( hbmk, tmp, NIL, .F., tmp2, .F., .T., cBin_CompC, @headstate ) )
                AAdd( l_aRESSRC_TODO, tmp )
             ENDIF
          NEXT
@@ -5481,7 +5481,7 @@ STATIC FUNCTION SetupForGT( cGT_New, /* @ */ cGT, /* @ */ lGUI )
 #define _HEADSTATE_lAnyNewer    2
 #define _HEADSTATE_MAX_         2
 
-STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, tTimeParent, lIncTry, lCMode, cBin_CompC, /* @ */ headstate, nNestingLevel )
+STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, lSystemHeader, tTimeParent, lIncTry, lCMode, cBin_CompC, /* @ */ headstate, nNestingLevel )
    LOCAL cFile
    LOCAL fhnd
    LOCAL nPos
@@ -5521,7 +5521,7 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, tTimeParent, lInc
    ENDIF
 
    IF nNestingLevel > 1
-      cFileName := FindHeader( hbmk, cFileName, cParentDir, iif( lIncTry, hbmk[ _HBMK_aINCTRYPATH ], NIL ) )
+      cFileName := FindHeader( hbmk, cFileName, cParentDir, iif( lIncTry, hbmk[ _HBMK_aINCTRYPATH ], NIL ), lSystemHeader )
       IF Empty( cFileName )
          RETURN .F.
       ENDIF
@@ -5682,7 +5682,8 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, tTimeParent, lInc
             tmp := SubStr( cFile, nPos, 1 )
             ++nPos
             IF tmp $ '"<'
-               IF ( tmp := hb_At( iif( tmp == "<", ">", '"' ), cFile, nPos ) ) > 0
+               lSystemHeader := ( tmp == "<" )
+               IF ( tmp := hb_At( iif( lSystemHeader, ">", '"' ), cFile, nPos ) ) > 0
                   cHeader := SubStr( cFile, nPos, tmp - nPos )
                   nPos := tmp
                ENDIF
@@ -5692,7 +5693,7 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, tTimeParent, lInc
          ENDIF
 
          IF cHeader != NIL .AND. ;
-            FindNewerHeaders( hbmk, cHeader, iif( lCMode, FN_DirGet( cFileName ), cParentDir ), tTimeParent, lIncTry, lCMode, cBin_CompC, @headstate, nNestingLevel + 1 )
+            FindNewerHeaders( hbmk, cHeader, iif( lCMode, FN_DirGet( cFileName ), cParentDir ), lSystemHeader, tTimeParent, lIncTry, lCMode, cBin_CompC, @headstate, nNestingLevel + 1 )
             headstate[ _HEADSTATE_lAnyNewer ] := .T.
             /* Let it continue if we want to scan for header locations */
             IF ! lIncTry
@@ -5898,17 +5899,17 @@ STATIC FUNCTION AMerge( aDst, aSrc )
 
    RETURN aDst
 
-STATIC FUNCTION FindHeader( hbmk, cFileName, cParentDir, aINCTRYPATH )
+STATIC FUNCTION FindHeader( hbmk, cFileName, cParentDir, aINCTRYPATH, lSystemHeader )
    LOCAL cDir
 
    /* Check in current dir */
-   IF hb_FileExists( cFileName )
+   IF ! lSystemHeader .AND. hb_FileExists( cFileName )
       RETURN cFileName
    ENDIF
 
    /* Check in parent dir */
 
-   IF hb_FileExists( DirAddPathSep( PathSepToSelf( cParentDir ) ) + cFileName )
+   IF ! lSystemHeader .AND. hb_FileExists( DirAddPathSep( PathSepToSelf( cParentDir ) ) + cFileName )
       RETURN DirAddPathSep( PathSepToSelf( cParentDir ) ) + cFileName
    ENDIF
 

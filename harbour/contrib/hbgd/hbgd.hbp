@@ -1,0 +1,27 @@
+#
+# $Id$
+#
+
+-hblib
+-inc
+-nohbc
+
+-o${hb_name}
+
+-w3 -es2
+
+-reqpkg=gd|gd-devel|gd.h
+
+-reqheader=gd.h
+
+-inctrypath=${HB_WITH_GD}
+-inctrypath=/usr/include
+-inctrypath=/opt/local/include
+
+gdwrp.c
+
+gd.prg
+gdbar.prg
+gdchart.prg
+gdimage.prg
+gdbarcod.prg

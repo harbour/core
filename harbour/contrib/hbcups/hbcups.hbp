@@ -1,0 +1,18 @@
+#
+# $Id$
+#
+
+-hblib
+-inc
+-nohbc
+
+-o${hb_name}
+
+-w3 -es2
+
+-reqheader=cups/cups.h
+
+-inctrypath=${HB_WITH_CUPS}
+-inctrypath=/usr/include
+
+hbcups.c

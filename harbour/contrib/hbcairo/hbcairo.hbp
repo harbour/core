@@ -1,0 +1,28 @@
+#
+# $Id$
+#
+
+-hblib
+-inc
+-nohbc
+
+-o${hb_name}
+
+-w3 -es2
+
+-reqheader=cairo.h
+
+-inctrypath=${HB_WITH_CAIRO}
+-inctrypath=/usr/include/cairo
+-inctrypath=/opt/local/include/cairo
+
+context.c
+core.c
+image.c
+paths.c
+pdf.c
+png.c
+surface.c
+text.c
+transfor.c
+util.c

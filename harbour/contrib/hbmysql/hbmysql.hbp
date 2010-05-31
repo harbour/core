@@ -1,0 +1,23 @@
+#
+# $Id$
+#
+
+-hblib
+-inc
+-nohbc
+
+-o${hb_name}
+
+-w3 -es2
+
+-reqheader=mysql.h
+
+-inctrypath=${HB_WITH_MYSQL}
+-inctrypath=/usr/include/mysql
+-inctrypath=/opt/local/include/mysql5/mysql
+
+mysql.c
+mysqlold.c
+
+tmysql.prg
+tsqlbrw.prg
