@@ -263,20 +263,28 @@
    #define GTI_CLIENT         2  /* Maximum possible client size of a window */
    #define GTI_MAX            3  /* Maximum possible window size (in Windows) */
 
-   #xtranslate NetName(<n>)                    => iif( hb_isNumeric( <n> ) .AND. <n> == 1, hb_UserName(), NetName() )
    #xtranslate MaxRow(.T.)                     => hb_gtInfo( HB_GTI_VIEWPORTHEIGHT )
    #xtranslate MaxCol(.T.)                     => hb_gtInfo( HB_GTI_VIEWPORTWIDTH )
 
    #xtranslate Str(<x>,[<y>],[<y>],<z>)        => iif(<z>, hb_NToS(<x>), Str(<x>))
 
-   #xtranslate AScan(<a>,<b>,[<c>],[<d>],<e>)  => hb_AScan(<a>,<b>,<c>,<d>,<e>)
+   #xuntranslate NetName(                      =>
+   #xuntranslate MemoWrit(                     =>
+
+   #xtranslate NetName(<n>)                    => iif( hb_isNumeric( <n> ) .AND. <n> == 1, hb_UserName(), NetName() )
+   #xtranslate MemoWrit(<x>,<y>,<z>)           => iif( hb_isLogical(<z>) .AND. ! <z>, hb_MemoWrit(<x>,<y>), MemoWrit(<x>,<y>) )
+
+   #xuntranslate AIns(                         =>
+   #xuntranslate ADel(                         =>
+
    #xtranslate AIns(<a>,<n>,[<x,...>])         => hb_AIns(<a>,<n>,<x>)
    #xtranslate ADel(<a>,<n>,<l>)               => hb_ADel(<a>,<n>,<l>)
+
+   #xtranslate AScan(<a>,<b>,[<c>],[<d>],<e>)  => hb_AScan(<a>,<b>,<c>,<d>,<e>)
    #xtranslate At(<a>,<b>,[<x,...>])           => hb_At(<a>,<b>,<x>)
 
    #xtranslate GetEnv([<x,...>])               => hb_GetEnv(<x>)
    #xtranslate SetKey([<x,...>])               => hb_SetKey(<x>)
-   #xtranslate MemoWrit(<x>,<y>,<z>)           => iif( hb_isLogical(<z>) .AND. ! <z>, hb_MemoWrit(<x>,<y>), MemoWrit(<x>,<y>) )
 
    /* TEXT INTO <varname> */
    #xcommand TEXT INTO <v> => #pragma __text|<v>+=%s+HB_OSNEWLINE();<v>:=""
