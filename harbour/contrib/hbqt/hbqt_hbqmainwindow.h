@@ -57,9 +57,9 @@
 
 /*----------------------------------------------------------------------*/
 
-#include <QPointer>
-#include <QMainWindow>
-#include <QMouseEvent>
+#include <QtCore/QPointer>
+#include <QtGui/QMainWindow>
+#include <QtGui/QMouseEvent>
 
 class HBQMainWindow : public QMainWindow
 {

@@ -71,7 +71,7 @@
 
 #include <QtCore/QPointer>
 
-#include <qpalette.h>
+#include <QtGui/QPalette>
 #include <QtGui/QClipboard>
 #include <QtGui/QApplication>
 #include <QtCore/QMimeData>

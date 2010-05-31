@@ -55,18 +55,18 @@
 
 #include "hbapiitm.h"
 
-#include <QPointer>
+#include <QtCore/QPointer>
 
 #include <QtGui/QPlainTextEdit>
-#include <QtCore>
-#include <QKeyEvent>
-#include <QTextBlock>
-#include <QPainter>
-#include <QMessageBox>
-#include <QCompleter>
-#include <QAbstractItemView>
-#include <QScrollBar>
-#include <QToolTip>
+#include <QtCore/QtCore>
+#include <QtGui/QKeyEvent>
+#include <QtGui/QTextBlock>
+#include <QtGui/QPainter>
+#include <QtGui/QMessageBox>
+#include <QtGui/QCompleter>
+#include <QtGui/QAbstractItemView>
+#include <QtGui/QScrollBar>
+#include <QtGui/QToolTip>
 
 #include "hbqt_hbqsyntaxhighlighter.h"
 
@@ -271,4 +271,3 @@ private:
 };
 
 #endif
-

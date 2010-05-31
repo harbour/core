@@ -62,7 +62,7 @@ New      =
 </CLASS>
 
 <CODE>
-#include <QColor>
+#include <QtGui/QColor>
 #include <QtGui/QImageReader>
 
 

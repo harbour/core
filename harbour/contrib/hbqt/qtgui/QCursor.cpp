@@ -67,7 +67,7 @@
 
 #include <QtCore/QPointer>
 
-#include <qpixmap.h>
+#include <QtGui/QPixmap>
 #include <QtGui/QCursor>
 #include <QtGui/QBitmap>
 

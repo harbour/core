@@ -82,10 +82,10 @@
 #include "hbdate.h"
 #include "hbapierr.h"
 
-#include <qfont.h>
-#include <qfontmetrics.h>
-#include <qimage.h>
-#include <qpalette.h>
+#include <QtGui/QFont>
+#include <QtGui/QFontmetrics>
+#include <QtGui/QImage>
+#include <QtGui/QPalette>
 #include <QtGui/QApplication>
 #include <QtCore/QLocale>
 #include <QtCore/QTextCodec>

@@ -90,7 +90,7 @@
 
 #include <QtCore/QPointer>
 
-#include <QStringList>
+#include <QtCore/QStringList>
 #include <QtCore/QUrl>
 
 

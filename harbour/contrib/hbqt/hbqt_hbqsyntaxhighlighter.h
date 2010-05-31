@@ -55,8 +55,8 @@
 
 /*----------------------------------------------------------------------*/
 
-#include <QSyntaxHighlighter>
-#include <QTextBlockUserData>
+#include <QtGui/QSyntaxHighlighter>
+#include <QtGui/QTextBlockUserData>
 
 class QTextDocument;
 

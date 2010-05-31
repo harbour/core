@@ -61,7 +61,7 @@ New      = pParent
 </CLASS>
 
 <CODE>
-#include <QStringList>
+#include <QtCore/QStringList>
 #include <QtCore/QUrl>
 
 

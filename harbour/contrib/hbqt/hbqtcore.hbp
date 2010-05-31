@@ -1,0 +1,12 @@
+#
+# $Id$
+#
+
+hbqt_common.hbm
+
+-o${hb_name}
+
+qtcore/*.cpp
+qtcore/*.prg
+
+-pi=qtcore/*.h

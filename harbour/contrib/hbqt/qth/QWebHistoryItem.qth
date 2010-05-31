@@ -62,7 +62,7 @@ New      =
 </CLASS>
 
 <CODE>
-#include <qvariant.h>
+#include <QtCore/QVariant>
 
 #include <QtWebKit/QWebHistoryItem>
 

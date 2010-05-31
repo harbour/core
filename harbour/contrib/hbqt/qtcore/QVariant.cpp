@@ -87,9 +87,9 @@
 
 #include <QtCore/QPointer>
 
-#include <QLine>
-#include <QRect>
-#include <QStringList>
+#include <QtCore/QLine>
+#include <QtCore/QRect>
+#include <QtCore/QStringList>
 #include <QtCore/QVariant>
 #include <QtCore/QBitArray>
 #include <QtCore/QTime>

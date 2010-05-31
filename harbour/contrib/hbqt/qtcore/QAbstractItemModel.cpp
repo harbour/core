@@ -82,8 +82,8 @@
 
 #include <QtCore/QPointer>
 
-#include <QSize>
-#include <QStringList>
+#include <QtCore/QSize>
+#include <QtCore/QStringList>
 #include <QtCore/QAbstractItemModel>
 
 

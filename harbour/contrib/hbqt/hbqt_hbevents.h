@@ -59,9 +59,9 @@
 
 /*----------------------------------------------------------------------*/
 
-#include <QObject>
-#include <QEvent>
-#include <QList>
+#include <QtCore/QObject>
+#include <QtCore/QEvent>
+#include <QtCore/QList>
 
 class HBEvents: public QObject
 {

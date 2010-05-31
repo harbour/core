@@ -60,8 +60,8 @@
 
 #include "hbqt_hbdbfmodel.h"
 
-#include <QIcon>
-#include <QWidget>
+#include <QtGui/QIcon>
+#include <QtGui/QWidget>
 
 #define HBQT_BRW_CELLVALUE                        1001
 

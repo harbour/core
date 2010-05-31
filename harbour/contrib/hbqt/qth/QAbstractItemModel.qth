@@ -64,8 +64,8 @@ New      =
 </SUBCLASS>
 
 <CODE>
-#include <QSize>
-#include <QStringList>
+#include <QtCore/QSize>
+#include <QtCore/QStringList>
 #include <QtCore/QAbstractItemModel>
 
 

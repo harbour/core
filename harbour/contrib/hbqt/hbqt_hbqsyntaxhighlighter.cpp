@@ -58,8 +58,8 @@
 #include "hbqt_hbqsyntaxhighlighter.h"
 
 #include <QtCore/QPointer>
-#include <QHash>
-#include <QTextCharFormat>
+#include <QtCore/QHash>
+#include <QtGui/QTextCharFormat>
 
 HBQTextBlockUserData::HBQTextBlockUserData() : QTextBlockUserData()
 {

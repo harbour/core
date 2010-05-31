@@ -57,8 +57,8 @@
 
 /*----------------------------------------------------------------------*/
 
-#include <QAbstractItemModel>
-#include <QPointer>
+#include <QtCore/QAbstractItemModel>
+#include <QtCore/QPointer>
 
 class HBDbfModel : public QAbstractItemModel
 {

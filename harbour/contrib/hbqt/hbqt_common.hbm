@@ -1,0 +1,23 @@
+#
+# $Id$
+#
+
+-hblib
+-inc
+
+-w3 -es2
+
+-stop{dos|mingw64|watcom|bcc|pocc|pocc64|poccarm|msvcia64}
+
+-plugin=plug_moc.prg
+
+{!darwin|HB_WITH_QT}-reqheader=QtCore/QObject
+{!darwin|HB_WITH_QT}-inctrypath=${HB_WITH_QT}
+{!darwin}-inctrypath=/usr/include/qt4
+{!darwin}-inctrypath=/usr/lib/qt4/include
+{!darwin}-inctrypath=/usr/include
+{!darwin}-inctrypath=/Developer/qt/include
+
+{darwin&!HB_WITH_QT}-reqheader=QtCore
+{darwin&!HB_WITH_QT}-inctrypath=/Library/Frameworks/QtCore.framework/Headers
+{darwin&!HB_WITH_QT}-cflag=-I/Library/Frameworks/QtCore.framework/Headers

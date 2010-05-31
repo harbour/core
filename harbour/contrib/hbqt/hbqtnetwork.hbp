@@ -1,0 +1,14 @@
+#
+# $Id$
+#
+
+hbqt_common.hbm
+
+-o${hb_name}
+
+qtnetwork/*.cpp
+qtnetwork/*.prg
+
+-pi=qtnetwork/*.h
+
+{darwin&!HB_WITH_QT}-cflag=-I/Library/Frameworks/QtNetwork.framework/Headers

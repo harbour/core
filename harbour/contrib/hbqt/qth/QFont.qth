@@ -70,7 +70,7 @@ oFont := QFont():new( pFont, pPaintDevice )
 </DOC>
 
 <CODE>
-#include <QStringList>
+#include <QtCore/QStringList>
 #include <QtGui/QFont>
 
 /*

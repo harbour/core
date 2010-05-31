@@ -62,7 +62,7 @@ New      =
 </CLASS>
 
 <CODE>
-#include <QStringList>
+#include <QtCore/QStringList>
 #include <QtGui/QFontDatabase>
 
 

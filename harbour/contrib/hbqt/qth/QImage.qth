@@ -75,7 +75,7 @@ oImage := QImage():new( pQImage )
 </DOC>
 
 <CODE>
-#include <QStringList>
+#include <QtCore/QStringList>
 #include <QtGui/QImage>
 
 

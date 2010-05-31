@@ -1,0 +1,14 @@
+#
+# $Id$
+#
+
+hbqt_common.hbm
+
+-o${hb_name}
+
+qtgui/*.cpp
+qtgui/*.prg
+
+-pi=qtgui/*.h
+
+{darwin&!HB_WITH_QT}-cflag=-I/Library/Frameworks/QtGui.framework/Headers

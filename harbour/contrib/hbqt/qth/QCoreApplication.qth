@@ -62,7 +62,7 @@ New      =
 
 
 <CODE>
-#include <QStringList>
+#include <QtCore/QStringList>
 #include <QtCore/QCoreApplication>
 
 

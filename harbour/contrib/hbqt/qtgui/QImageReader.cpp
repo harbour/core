@@ -80,7 +80,7 @@
 
 #include <QtCore/QPointer>
 
-#include <QColor>
+#include <QtGui/QColor>
 #include <QtGui/QImageReader>
 
 

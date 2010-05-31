@@ -55,7 +55,7 @@
 #ifndef HBQT_HBQTABLEVIEW_H
 #define HBQT_HBQTABLEVIEW_H
 
-#include <QTableView>
+#include <QtGui/QTableView>
 
 /*----------------------------------------------------------------------*/
 class HBQTableView : public QTableView

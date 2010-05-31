@@ -5,6 +5,8 @@
 -hblib
 -inc
 
--o${hb_dirname}
+-o${hb_name}
+
+-w3 -es2
 
 hbsms.prg

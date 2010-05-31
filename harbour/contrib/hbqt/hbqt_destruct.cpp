@@ -58,7 +58,7 @@
 
 #if QT_VERSION >= 0x040500
 
-#include <QTextCodec>
+#include <QtCore/QTextCodec>
 
 /*----------------------------------------------------------------------*/
 

@@ -1,0 +1,7 @@
+#
+# $Id$
+#
+
+@hbqtcore.hbp
+
+-cflag=-DQT_NODLL

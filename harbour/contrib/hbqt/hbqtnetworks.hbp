@@ -1,0 +1,7 @@
+#
+# $Id$
+#
+
+@hbqtnetwork.hbp
+
+-cflag=-DQT_NODLL

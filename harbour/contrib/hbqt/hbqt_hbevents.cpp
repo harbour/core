@@ -63,8 +63,8 @@
 
 #include "hbqt_hbevents.h"
 
-#include <QPointer>
-#include <QVariant>
+#include <QtCore/QPointer>
+#include <QtCore/QVariant>
 
 HBEvents::HBEvents( QObject * parent ) : QObject( parent )
 {

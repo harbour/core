@@ -63,7 +63,7 @@
 
 #include "hbqt_hbslots.h"
 
-#include <QPointer>
+#include <QtCore/QPointer>
 
 /*----------------------------------------------------------------------*/
 

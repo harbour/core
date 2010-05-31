@@ -70,7 +70,7 @@ oCursor := QCursor():new( pQBitmap, pQBitmapAsMask, [ nHotX = -1 ], [ nHotY = -1
 </DOC>
 
 <CODE>
-#include <qpixmap.h>
+#include <QtGui/QPixmap>
 #include <QtGui/QCursor>
 #include <QtGui/QBitmap>
 

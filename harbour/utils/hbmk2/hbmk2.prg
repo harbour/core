@@ -1975,7 +1975,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
          cParam := MacroProc( hbmk, tmp := SubStr( cParam, Len( "-reqheader=" ) + 1 ), aParam[ _PAR_cFileName ] )
          IF ! Empty( cParam )
-            hbmk[ _HBMK_hKEYHEADER ][ cParam ] := NIL
+            hbmk[ _HBMK_hKEYHEADER ][ StrTran( cParam, "\", "/" ) ] := NIL
          ENDIF
 
       CASE Left( cParamL, Len( "-stop" ) ) == "-stop"
@@ -5848,6 +5848,8 @@ STATIC FUNCTION pkg_try_detection( hbmk, cName )
                   cNameFlavour := hb_StrShrink( cNameFlavour, 1 )
                ENDIF
 
+               cNameFlavour := StrTran( cNameFlavour, "\", "/" )
+
                IF cNameFlavour $ hbmk[ _HBMK_hKEYHEADER ]
                   hbmk[ _HBMK_hKEYHEADER ][ cNameFlavour ] := cIncludeDir
                ENDIF
@@ -5919,6 +5921,7 @@ STATIC FUNCTION FindHeader( hbmk, cFileName, cParentDir, aINCTRYPATH )
             /* Add these dir to include paths */
             IF AScan( hbmk[ _HBMK_aINCPATH ], { |tmp| tmp == cDir } ) == 0
                AAdd( hbmk[ _HBMK_aINCPATH ], DirDelPathSep( PathSepToSelf( cDir ) ) )
+               cFileName := StrTran( cFileName, "\", "/" )
                IF cFileName $ hbmk[ _HBMK_hKEYHEADER ]
                   hbmk[ _HBMK_hKEYHEADER ][ cFileName ] := cDir
                ENDIF

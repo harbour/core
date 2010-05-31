@@ -74,7 +74,7 @@
 #if QT_VERSION >= 0x040500
 
 #include "hbqt_hbqplaintextedit.h"
-#include <QApplication>
+#include <QtGui/QApplication>
 
 #define selectionState_off                        0
 #define selectionState_on                         1

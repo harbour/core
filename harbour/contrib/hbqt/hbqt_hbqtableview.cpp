@@ -57,7 +57,7 @@
 
 #if QT_VERSION >= 0x040500
 
-#include <QPointer>
+#include <QtCore/QPointer>
 #include "hbqt_hbqtableview.h"
 
 HBQTableView::HBQTableView( QWidget * parent ) : QTableView( parent )
