@@ -1,5 +1,5 @@
 #
-# $Id: Makefile 14244 2010-03-27 12:27:08Z vszakats $
+# $Id$
 #
 
 ROOT := ../../
