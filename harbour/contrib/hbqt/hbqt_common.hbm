@@ -4,6 +4,7 @@
 
 -hblib
 -inc
+-nohbc
 
 -w3 -es2
 

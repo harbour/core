@@ -4,6 +4,7 @@
 
 -hblib
 -inc
+-nohbc
 
 -o${hb_name}
 

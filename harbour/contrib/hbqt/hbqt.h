@@ -67,7 +67,6 @@
 #endif
 
 #include <QtCore/qglobal.h>
-/* For hbmk2: #include "QtCore/QObject" */
 
 #if !( QT_VERSION >= 0x040500 )
    #error QT library version 4.5.0 or upper is required for hbqt.

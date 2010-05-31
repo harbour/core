@@ -2,6 +2,9 @@
 # $Id$
 #
 
-@hbqt.hbp
+hbqt.hbp
+
+-o${hb_name}
+-workdir=${hb_work}/${hb_plat}/${hb_comp}/${hb_name}
 
 -cflag=-DQT_NODLL

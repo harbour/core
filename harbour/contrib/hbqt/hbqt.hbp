@@ -5,6 +5,7 @@
 hbqt_common.hbm
 
 -o${hb_name}
+-workdir=${hb_work}/${hb_plat}/${hb_comp}/${hb_name}
 
 hbqt_base.cpp
 hbqt_destruct.cpp

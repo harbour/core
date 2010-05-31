@@ -1,0 +1,19 @@
+#
+# $Id$
+#
+
+-hblib
+-inc
+-nohbc
+
+-o${hb_name}
+-workdir=${hb_work}/${hb_plat}/${hb_comp}/${hb_name}
+
+-w3 -es2
+
+-reqheader=curl/curl.h
+
+-inctrypath=${HB_WITH_CURL}
+-inctrypath=/usr/include
+
+hbcurl.c

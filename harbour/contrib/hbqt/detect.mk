@@ -16,7 +16,7 @@ _DET_VAR_HAS_ := HB_HAS_QT
 _DET_FLT_PLAT := !dos
 _DET_FLT_COMP := !mingw64 !watcom !bcc !pocc !pocc64 !poccarm !msvcia64
 _DET_INC_DEFP := /usr/include/qt4 /usr/lib/qt4/include /usr/include /Developer/qt/include
-_DET_INC_HEAD := /QtCore/qglobal.h
+_DET_INC_HEAD := /QtCore/QObject
 include $(TOP)$(ROOT)config/detfun.mk
 
 _QT_DARWIN :=

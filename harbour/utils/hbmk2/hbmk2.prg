@@ -5472,8 +5472,9 @@ STATIC FUNCTION SetupForGT( cGT_New, /* @ */ cGT, /* @ */ lGUI )
    root file. It won't attempt to parse all possible #include syntaxes
    and source code formats, won't try to interpret comments, line
    continuation, different keyword and filename cases, etc, etc. In
-   order to work, it will need #include "filename" format in source.
-   If this isn't enough for your needs, feel free to update the code.
+   order to work, it will need #include "filename" and #include
+   <filename> format in source. If this isn't enough for your needs,
+   feel free to update the code.
    [vszakats] */
 
 #define _HEADSTATE_hFiles       1
@@ -5676,11 +5677,15 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, tTimeParent, lInc
       cHeader := NIL
       nPos := 1
       DO WHILE .T.
-
-         IF ( tmp := hb_At( '#include "', cFile, nPos ) ) > 0
-            nPos := tmp + Len( '#include "' )
-            IF ( tmp := hb_At( '"', cFile, nPos ) ) > 0
-               cHeader := SubStr( cFile, nPos, tmp - nPos )
+         IF ( tmp := hb_At( '#include ', cFile, nPos ) ) > 0
+            nPos := tmp + Len( '#include ' )
+            tmp := SubStr( cFile, nPos, 1 )
+            ++nPos
+            IF tmp $ '"<'
+               IF ( tmp := hb_At( iif( tmp == "<", ">", '"' ), cFile, nPos ) ) > 0
+                  cHeader := SubStr( cFile, nPos, tmp - nPos )
+                  nPos := tmp
+               ENDIF
             ENDIF
          ELSE
             EXIT
