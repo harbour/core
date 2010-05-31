@@ -68,4 +68,14 @@
 #define HB_ZLIB_STRATEGY_RLE              3
 #define HB_ZLIB_STRATEGY_FIXED            4
 
+#define HB_ZLIB_RES_OK                    0
+#define HB_ZLIB_RES_STREAM_END            1
+#define HB_ZLIB_RES_NEED_DICT             2
+#define HB_ZLIB_RES_ERRNO                 (-1)
+#define HB_ZLIB_RES_STREAM_ERROR          (-2)
+#define HB_ZLIB_RES_DATA_ERROR            (-3)
+#define HB_ZLIB_RES_MEM_ERROR             (-4)
+#define HB_ZLIB_RES_BUF_ERROR             (-5)
+#define HB_ZLIB_RES_VERSION_ERROR         (-6)
+
 #endif /* HB_ZLIB_CH_ */

@@ -17,7 +17,6 @@ C_SOURCES := \
    filestat.c \
    fparse.c \
    freadlin.c \
-   hbcomprs.c \
    hbcrypt.c \
    hboutdbg.c \
    hbserv.c \
@@ -64,6 +63,7 @@ PRG_SOURCES := \
    dirrec.prg \
    diskhb.prg \
    dumpvar.prg \
+   hbcomprs.prg \
    hblog.prg \
    hblognet.prg \
    hbstruct.prg \
@@ -99,12 +99,5 @@ PRG_HEADERS := \
    hbcompat.ch \
    xhb.ch \
 
-ifneq ($(HB_HAS_ZLIB),)
-   HB_CFLAGS += -DHB_HAS_ZLIB $(foreach d,$(HB_HAS_ZLIB),-I$(d))
-
-   include $(TOP)$(ROOT)config/header.mk
-   include $(TOP)$(ROOT)config/lib.mk
-else
-   HB_SKIP_REASON := $(_DET_RES_TEXT)
-   include $(TOP)$(ROOT)config/none.mk
-endif
+include $(TOP)$(ROOT)config/header.mk
+include $(TOP)$(ROOT)config/lib.mk

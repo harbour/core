@@ -7536,10 +7536,14 @@ STATIC FUNCTION ArchCompFilter( hbmk, cItem )
    LOCAL cFilterHarb
    LOCAL bFilter
    LOCAL xResult
+   LOCAL cKeyword
    LOCAL cValue
    LOCAL cChar
+   LOCAL lSkipQuote
 
    LOCAL cExpr := "hbmk_KEYW( hbmk, '%1' )"
+   LOCAL cExprWithValue := "hbmk_KEYW( hbmk, '%1', '%2' )"
+   LOCAL tmp
 
    IF ( nStart := At( _MACRO_OPEN, cItem ) ) > 0 .AND. ;
       !( SubStr( cItem, nStart - 1, 1 ) $ _MACRO_PREFIX_ALL ) .AND. ;
@@ -7553,23 +7557,54 @@ STATIC FUNCTION ArchCompFilter( hbmk, cItem )
 
          /* Parse filter and convert it to Harbour expression */
          cFilterHarb := ""
-         cValue := ""
+         cKeyword := ""
+         cValue := NIL
+         lSkipQuote := .F.
          FOR EACH cChar IN cFilterSrc
-            IF iif( Empty( cValue ),;
-                  HB_ISFIRSTIDCHAR( cChar ),;
-                  HB_ISNEXTIDCHAR( cChar ) )
-               cValue += cChar
-            ELSE
-               IF ! Empty( cValue )
-                  cFilterHarb += StrTran( cExpr, "%1", cValue ) + cChar
+            IF cValue == NIL
+               IF iif( Empty( cKeyword ),;
+                     HB_ISFIRSTIDCHAR( cChar ),;
+                     HB_ISNEXTIDCHAR( cChar ) )
+                  cKeyword += cChar
+               ELSEIF cChar == "=" .AND. SubStr( cFilterSrc, cChar:__enumIndex() + 1, 1 ) == "'"
                   cValue := ""
+                  lSkipQuote := .T.
                ELSE
-                  cFilterHarb += cChar
+                  IF ! Empty( cKeyword )
+                     cFilterHarb += StrTran( cExpr, "%1", cKeyword ) + cChar
+                     cKeyword := ""
+                  ELSE
+                     cFilterHarb += cChar
+                  ENDIF
+               ENDIF
+            ELSE
+               IF !( cChar == "'" ) .OR. lSkipQuote
+                  IF lSkipQuote
+                     lSkipQuote := .F.
+                  ELSE
+                     cValue += cChar
+                  ENDIF
+               ELSE
+                  IF ! Empty( cKeyword ) .AND. ! Empty( cValue )
+                     tmp := cExprWithValue
+                     tmp := StrTran( tmp, "%1", cKeyword )
+                     tmp := StrTran( tmp, "%2", cValue )
+                     cFilterHarb += tmp
+                     cKeyword := ""
+                     cValue := NIL
+                  ENDIF
                ENDIF
             ENDIF
          NEXT
-         IF ! Empty( cValue )
-            cFilterHarb += StrTran( cExpr, "%1", cValue )
+         IF ! Empty( cKeyword )
+            IF ! Empty( cValue )
+               tmp := cExprWithValue
+               tmp := StrTran( tmp, "%1", cKeyword )
+               tmp := StrTran( tmp, "%2", cValue )
+               cFilterHarb += tmp
+            ELSE
+               cFilterHarb += StrTran( cExpr, "%1", cKeyword )
+            ENDIF
          ENDIF
 
          cFilterHarb := StrTran( cFilterHarb, "&&", "&" )
@@ -8824,7 +8859,7 @@ STATIC FUNCTION hbmk_CPU( hbmk )
    RETURN ""
 
 /* Keep this public, it's used from macro. */
-FUNCTION hbmk_KEYW( hbmk, cKeyword )
+FUNCTION hbmk_KEYW( hbmk, cKeyword, cValue )
    LOCAL tmp
 
    IF cKeyword == hbmk[ _HBMK_cPLAT ] .OR. ;
@@ -8872,8 +8907,14 @@ FUNCTION hbmk_KEYW( hbmk, cKeyword )
                                  "|icc|iccia64|clang|open64|sunpro" + ;
                                  "|x86|x86_64|ia64|arm|mips|sh" )
       tmp := GetEnv( cKeyword )
-      IF ! Empty( tmp ) .AND. !( tmp == "0" ) .AND. !( Lower( tmp ) == "no" )
-         RETURN .T.
+      IF cValue != NIL
+         IF hb_asciiUpper( tmp ) == hb_asciiUpper( cValue )
+            RETURN .T.
+         ENDIF
+      ELSE
+         IF ! Empty( tmp ) .AND. !( tmp == "0" ) .AND. !( Lower( tmp ) == "no" )
+            RETURN .T.
+         ENDIF
       ENDIF
    ENDIF
 

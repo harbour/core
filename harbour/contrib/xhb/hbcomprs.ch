@@ -51,38 +51,24 @@
  *
  */
 
-/* This file is based upon ZLIB source code, whose copyright holder is:
- *
- * Copyright (C) 1995-2002 Jean-loup Gailly.
- *
- * Also, this file includes code slices from adler32.c for advanced CRC
- * Holder of copyright for this code is:
- *
- * Copyright (C) 1995-2002 Mark Adler
- *
- * ZLIB (containing adler32 code) can be found at:
- * http://www.gzip.org/zlib/
- */
-
 #ifndef HB_COMPRESS_CH
 #define HB_COMPRESS_CH
 
-#define HB_Z_OK            0
-#define HB_Z_STREAM_END    1
-#define HB_Z_NEED_DICT     2
-#define HB_Z_ERRNO        (-1)
-#define HB_Z_STREAM_ERROR (-2)
-#define HB_Z_DATA_ERROR   (-3)
-#define HB_Z_MEM_ERROR    (-4)
-#define HB_Z_BUF_ERROR    (-5)
-#define HB_Z_VERSION_ERROR (-6)
-/* Return codes for the compression/decompression functions. Negative
- * values are errors, positive values are used for special but normal events.
- */
+#include "hbzlib.ch"
 
-#define HB_Z_NO_COMPRESSION         0
-#define HB_Z_BEST_SPEED             1
-#define HB_Z_BEST_COMPRESSION       9
-#define HB_Z_DEFAULT_COMPRESSION  (-1)
+#define HB_Z_OK                   HB_ZLIB_RES_OK
+#define HB_Z_STREAM_END           HB_ZLIB_RES_STREAM_END
+#define HB_Z_NEED_DICT            HB_ZLIB_RES_NEED_DICT
+#define HB_Z_ERRNO                HB_ZLIB_RES_ERRNO
+#define HB_Z_STREAM_ERROR         HB_ZLIB_RES_STREAM_ERROR
+#define HB_Z_DATA_ERROR           HB_ZLIB_RES_DATA_ERROR
+#define HB_Z_MEM_ERROR            HB_ZLIB_RES_MEM_ERROR
+#define HB_Z_BUF_ERROR            HB_ZLIB_RES_BUF_ERROR
+#define HB_Z_VERSION_ERROR        HB_ZLIB_RES_VERSION_ERROR
+
+#define HB_Z_NO_COMPRESSION       HB_ZLIB_COMPRESSION_NONE
+#define HB_Z_BEST_SPEED           HB_ZLIB_COMPRESSION_SPEED
+#define HB_Z_BEST_COMPRESSION     HB_ZLIB_COMPRESSION_SIZE
+#define HB_Z_DEFAULT_COMPRESSION  HB_ZLIB_COMPRESSION_DEFAULT
 
 #endif
