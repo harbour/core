@@ -325,9 +325,9 @@ STATIC FUNCTION LogError( oerr )
         FWriteLine( nHandle, 'Multi Threading....: ' + If( hb_mtvm(),"YES","NO" ) )
         FWriteLine( nHandle, 'VM Optimization....: ' + strvalue( Hb_VmMode() ) )
 
-        IF Type( "Select()" ) == "UI"
-        FWriteLine( nHandle, '' )
-        FWriteLine( nHandle, 'Current Area ......:' + strvalue( &("Select()") ) )
+        IF __dynsIsFun( "Select" )
+            FWriteLine( nHandle, '' )
+            FWriteLine( nHandle, 'Current Area ......:' + strvalue( &("Select()") ) )
         ENDIF
 
         FWriteLine( nHandle, '' )
@@ -442,21 +442,31 @@ STATIC FUNCTION LogError( oerr )
         ENDIF
         FWriteLine( nHandle, "" )
 
-        IF Type( "Select()" ) == "UI"
-           For nCount := 1 To 600
-              If !Empty( ( nCount )->( &("Alias()") ) )
-                 ( nCount )->( FWriteLine( nHandle, "Work Area No ......: " + strvalue( &("Select()") ) ) )
-                 ( nCount )->( FWriteLine( nHandle, "Alias .............: " + &("Alias()") ) )
-                 ( nCount )->( FWriteLine( nHandle, "Current Recno .....: " + strvalue( &("RecNo()") ) ) )
-                 ( nCount )->( FWriteLine( nHandle, "Current Filter ....: " + &("DbFilter()") ) )
-                 ( nCount )->( FWriteLine( nHandle, "Relation Exp. .....: " + &("DbRelation()") ) )
-                 ( nCount )->( FWriteLine( nHandle, "Index Order .......: " + strvalue( &("IndexOrd(0)") ) ) )
-                 ( nCount )->( FWriteLine( nHandle, "Active Key ........: " + strvalue( &("IndexKey(0)") ) ) )
-                 ( nCount )->( FWriteLine( nHandle, "" ) )
-              Endif
-           Next
-        ENDIF
-
+        HB_WAEval( { ||
+                     IF __dynsIsFun( "Select" )
+                        FWriteLine( nHandle, "Work Area No ......: " + strvalue( &("Select()") ) )
+                     ENDIF
+                     IF __dynsIsFun( "Alias" )
+                        FWriteLine( nHandle, "Alias .............: " + &("Alias()") )
+                     ENDIF
+                     IF __dynsIsFun( "RecNo" )
+                        FWriteLine( nHandle, "Current Recno .....: " + strvalue( &("RecNo()") ) )
+                     ENDIF
+                     IF __dynsIsFun( "DbFilter" )
+                        FWriteLine( nHandle, "Current Filter ....: " + &("DbFilter()") )
+                     ENDIF
+                     IF __dynsIsFun( "DbRelation" )
+                        FWriteLine( nHandle, "Relation Exp. .....: " + &("DbRelation()") )
+                     ENDIF
+                     IF __dynsIsFun( "IndexOrd" )
+                        FWriteLine( nHandle, "Index Order .......: " + strvalue( &("IndexOrd(0)") ) )
+                     ENDIF
+                     IF __dynsIsFun( "IndexKey" )
+                        FWriteLine( nHandle, "Active Key ........: " + strvalue( &("IndexKey(0)") ) )
+                     ENDIF
+                     FWriteLine( nHandle, "" )
+                     Return .T.
+                   } )
         FWriteLine( nHandle, "" )
         IF nCols > 0
             FWriteLine( nHandle, Padc( " Internal Error Handling Information  ", nCols, "-" ) )
