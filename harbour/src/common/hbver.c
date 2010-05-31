@@ -700,16 +700,44 @@ char * hb_verCompiler( void )
       iVerPatch = 0;
    #endif
 
-#elif defined( __llvm__ ) && defined( __clang_major__ )
+#elif defined( __clang__ ) && defined( __clang_major__ )
 
    pszName = "LLVM/Clang C";
+
+   #if defined( __cplusplus )
+      hb_strncpy( szSub, "++", sizeof( szSub ) - 1 );
+   #endif
 
    iVerMajor = __clang_major__;
    iVerMinor = __clang_minor__;
    iVerPatch = __clang_patchlevel__;
 
+#elif defined( __clang__ )
+
+   pszName = "LLVM/Clang C";
+
    #if defined( __cplusplus )
       hb_strncpy( szSub, "++", sizeof( szSub ) - 1 );
+   #endif
+
+   hb_strncat( szSub, " 1.x", sizeof( szSub ) - 1 );
+
+   iVerMajor = iVerMinor = iVerPatch = 0;
+
+#elif defined( __llvm__ ) && defined( __GNUC__ )
+
+   pszName = "LLVM/GNU C"
+
+   #if defined( __cplusplus )
+      hb_strncpy( szSub, "++", sizeof( szSub ) - 1 );
+   #endif
+
+   iVerMajor = __GNUC__;
+   iVerMinor = __GNUC_MINOR__;
+   #if defined( __GNUC_PATCHLEVEL__ )
+      iVerPatch = __GNUC_PATCHLEVEL__;
+   #else
+      iVerPatch = 0;
    #endif
 
 #elif defined( __GNUC__ )
@@ -726,12 +754,6 @@ char * hb_verCompiler( void )
       pszName = "EMX/RSXNT/Win32 GNU C";
    #elif defined( __EMX__ )
       pszName = "EMX GNU C";
-   #elif defined( __clang__ ) && defined( __llvm__ )
-      pszName = "LLVM/Clang C";
-   #elif defined( __clang__ )
-      pszName = "Clang/GNU C";
-   #elif defined( __llvm__ )
-      pszName = "LLVM/GNU C";
    #else
       pszName = "GNU C";
    #endif
@@ -758,7 +780,7 @@ char * hb_verCompiler( void )
    #else
       iVerMajor = __SUNPRO_C / 0x1000;
       iVerMinor = __SUNPRO_C / 0x10 & 0xff;
-      iVerMinor = iVerMinor / 16 * 10 + iVerMinor % 16;
+      iVerMinor = iVerMinor / 0x10 * 0xa + iVerMinor % 0x10;
       iVerPatch = __SUNPRO_C & 0xf;
    #endif
 
@@ -772,7 +794,7 @@ char * hb_verCompiler( void )
    #else
       iVerMajor = __SUNPRO_CC / 0x1000;
       iVerMinor = __SUNPRO_CC / 0x10 & 0xff;
-      iVerMinor = iVerMinor / 16 * 10 + iVerMinor % 16;
+      iVerMinor = iVerMinor / 0x10 * 0xa + iVerMinor % 0x10;
       iVerPatch = __SUNPRO_CC & 0xf;
    #endif
 
