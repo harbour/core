@@ -1140,8 +1140,9 @@ METHOD IdeHarbourHelp:populateFuncDetails( n )
    IF ( nIndex := ascan( ::aFunctions, {|e_| e_[ 4 ] == oTWItem } ) ) > 0
       oFunc := ::aFunctions[ nIndex, 3 ]
    ENDIF
-   ::buildView( oFunc )
-
+   IF !empty( oFunc )
+      ::buildView( oFunc )
+   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/

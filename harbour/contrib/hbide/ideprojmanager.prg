@@ -595,6 +595,9 @@ METHOD IdeProjManager:save( lCanClose )
       ::oPropertiesDock:hide()
    ENDIF
 
+   IF lOk
+      ::oDockPT:show()
+   ENDIF
    RETURN lOk
 
 /*----------------------------------------------------------------------*/
@@ -817,7 +820,7 @@ METHOD IdeProjManager:synchronizeAlienProject( cProjFileName )
 
 METHOD IdeProjManager:sortSources( cMode )
    LOCAL a_, cTyp, s, d_, n
-   LOCAL aSrc := { ".ch", ".prg", ".c", ".cpp", ".h", ".obj", ".o", ".lib", ".a", ".rc", ".res" }
+   LOCAL aSrc := { ".prg", ".ch", ".c", ".cpp", ".h", ".obj", ".o", ".lib", ".a", ".rc", ".res" }
    LOCAL aTxt := { {}   , {}    , {}  , {}    , {}  , {}    , {}  , {}   , {} , {}, {}    }
    LOCAL aRst := {}
 
