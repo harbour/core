@@ -2391,10 +2391,12 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       ENDIF
    ENDIF
 
-   /* Process any package requirements */
-   FOR EACH tmp IN hbmk[ _HBMK_aREQPKG ]
-      pkg_try_detection( hbmk, tmp )
-   NEXT
+   IF ! lStopAfterInit .AND. ! lStopAfterHarbour
+      /* Process any package requirements */
+      FOR EACH tmp IN hbmk[ _HBMK_aREQPKG ]
+         pkg_try_detection( hbmk, tmp )
+      NEXT
+   ENDIF
 
    IF ( ! lStopAfterInit .AND. ! lStopAfterHarbour ) .OR. hbmk[ _HBMK_lCreateImpLib ]
 
@@ -4015,26 +4017,28 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
    /* Check if we've found all key headers */
 
-   tmp1 := {}
-   FOR EACH tmp IN hbmk[ _HBMK_hKEYHEADER ]
-      IF tmp == NIL
-         AAdd( tmp1, tmp:__enumKey() )
-         IF hbmk[ _HBMK_lDEBUGINC ]
-            hbmk_OutStd( hbmk, hb_StrFormat( "debuginc: KEYHEADER %1$s: missing", tmp:__enumKey() ) )
+   IF ! lSkipBuild .AND. ! lStopAfterInit .AND. ! lStopAfterHarbour
+      tmp1 := {}
+      FOR EACH tmp IN hbmk[ _HBMK_hKEYHEADER ]
+         IF tmp == NIL
+            AAdd( tmp1, tmp:__enumKey() )
+            IF hbmk[ _HBMK_lDEBUGINC ]
+               hbmk_OutStd( hbmk, hb_StrFormat( "debuginc: KEYHEADER %1$s: missing", tmp:__enumKey() ) )
+            ENDIF
+         ELSE
+            IF hbmk[ _HBMK_lDEBUGINC ]
+               hbmk_OutStd( hbmk, hb_StrFormat( "debuginc: KEYHEADER %1$s %2$s", tmp:__enumKey(), tmp ) )
+            ENDIF
          ENDIF
-      ELSE
-         IF hbmk[ _HBMK_lDEBUGINC ]
-            hbmk_OutStd( hbmk, hb_StrFormat( "debuginc: KEYHEADER %1$s %2$s", tmp:__enumKey(), tmp ) )
-         ENDIF
-      ENDIF
-   NEXT
+      NEXT
 
-   IF ! Empty( tmp1 )
-      hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Missing header dependency: %1$s" ), ArrayToList( tmp1, ", " ) ) )
-      IF hbmk[ _HBMK_lBEEP ]
-         DoBeep( .F. )
+      IF ! Empty( tmp1 )
+         hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Missing header dependency: %1$s" ), ArrayToList( tmp1, ", " ) ) )
+         IF hbmk[ _HBMK_lBEEP ]
+            DoBeep( .F. )
+         ENDIF
+         RETURN 10
       ENDIF
-      RETURN 10
    ENDIF
 
    /* Harbour compilation */
@@ -5488,14 +5492,106 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, lSystemHeader, tT
    LOCAL tTimeSelf
    LOCAL tTimeDependency
    LOCAL tmp
-   LOCAL cNameExtL
    LOCAL cExt
    LOCAL cHeader
    LOCAL cModule
    LOCAL cDependency
    LOCAL aCommand
 
-   STATIC l_aExcl := { "windows.h", "ole2.h", "os2.h" }
+   STATIC s_hExclStd := NIL
+
+   IF s_hExclStd == NIL
+      s_hExclStd := {;
+         "assert.h"       => NIL ,; /* Standard C */
+         "ctype.h"        => NIL ,;
+         "errno.h"        => NIL ,;
+         "float.h"        => NIL ,;
+         "limits.h"       => NIL ,;
+         "locale.h"       => NIL ,;
+         "math.h"         => NIL ,;
+         "setjmp.h"       => NIL ,;
+         "signal.h"       => NIL ,;
+         "stdarg.h"       => NIL ,;
+         "stddef.h"       => NIL ,;
+         "stdio.h"        => NIL ,;
+         "stdlib.h"       => NIL ,;
+         "string.h"       => NIL ,;
+         "time.h"         => NIL ,;
+         "iso646.h"       => NIL ,; /* ISO C NA1 */
+         "wchar.h"        => NIL ,;
+         "wctype.h"       => NIL ,;
+         "complex.h"      => NIL ,; /* ISO C C99 */
+         "fenv.h"         => NIL ,;
+         "inttypes.h"     => NIL ,;
+         "stdbool.h"      => NIL ,;
+         "stdint.h"       => NIL ,;
+         "tgmath.h"       => NIL ,;
+         "unistd.h"       => NIL ,; /* Standard C POSIX */
+         "aio.h"          => NIL ,;
+         "arpa/inet.h"    => NIL ,;
+         "cpio.h"         => NIL ,;
+         "dirent.h"       => NIL ,;
+         "dlfcn.h"        => NIL ,;
+         "fcntl.h"        => NIL ,;
+         "fmtmsg.h"       => NIL ,;
+         "fnmatch.h"      => NIL ,;
+         "ftw.h"          => NIL ,;
+         "glob.h"         => NIL ,;
+         "grp.h"          => NIL ,;
+         "iconv.h"        => NIL ,;
+         "langinfo.h"     => NIL ,;
+         "libgen.h"       => NIL ,;
+         "monetary.h"     => NIL ,;
+         "mqueue.h"       => NIL ,;
+         "ndbm.h"         => NIL ,;
+         "net/if.h"       => NIL ,;
+         "netdb.h"        => NIL ,;
+         "netinet/in.h"   => NIL ,;
+         "netinet/tcp.h"  => NIL ,;
+         "nl_types.h"     => NIL ,;
+         "poll.h"         => NIL ,;
+         "pthread.h"      => NIL ,;
+         "pwd.h"          => NIL ,;
+         "regex.h"        => NIL ,;
+         "sched.h"        => NIL ,;
+         "search.h"       => NIL ,;
+         "semaphore.h"    => NIL ,;
+         "spawn.h"        => NIL ,;
+         "strings.h"      => NIL ,;
+         "stropts.h"      => NIL ,;
+         "sys/ipc.h"      => NIL ,;
+         "sys/mman.h"     => NIL ,;
+         "sys/msg.h"      => NIL ,;
+         "sys/resource.h" => NIL ,;
+         "sys/select.h"   => NIL ,;
+         "sys/sem.h"      => NIL ,;
+         "sys/shm.h"      => NIL ,;
+         "sys/socket.h"   => NIL ,;
+         "sys/stat.h"     => NIL ,;
+         "sys/statvfs.h"  => NIL ,;
+         "sys/time.h"     => NIL ,;
+         "sys/times.h"    => NIL ,;
+         "sys/types.h"    => NIL ,;
+         "sys/uio.h"      => NIL ,;
+         "sys/un.h"       => NIL ,;
+         "sys/utsname.h"  => NIL ,;
+         "sys/wait.h"     => NIL ,;
+         "syslog.h"       => NIL ,;
+         "tar.h"          => NIL ,;
+         "termios.h"      => NIL ,;
+         "trace.h"        => NIL ,;
+         "ulimit.h"       => NIL ,;
+         "unistd.h"       => NIL ,;
+         "utime.h"        => NIL ,;
+         "utmpx.h"        => NIL ,;
+         "wordexp.h"      => NIL ,;
+         "windows.h"      => NIL ,; /* OS (win) */
+         "winspool.h"     => NIL ,;
+         "shellapi.h"     => NIL ,;
+         "ole2.h"         => NIL ,;
+         "dos.h"          => NIL ,; /* OS (dos) */
+         "os2.h"          => NIL }  /* OS (os2) */
+   ENDIF
 
    DEFAULT nNestingLevel TO 1
    DEFAULT cParentDir TO FN_DirGet( cFileName )
@@ -5514,9 +5610,8 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, lSystemHeader, tT
       RETURN .F.
    ENDIF
 
-   /* Don't spend time on some known headers */
-   cNameExtL := Lower( FN_NameExtGet( cFileName ) )
-   IF AScan( l_aExcl, { |tmp| Lower( tmp ) == cNameExtL } ) > 0
+   /* Don't spend time on known headers */
+   IF StrTran( Lower( cFileName ), "\", "/" ) $ s_hExclStd
       RETURN .F.
    ENDIF
 

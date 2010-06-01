@@ -550,7 +550,10 @@ void hb_xclean( void )
 void hb_xsetfilename( const char * szValue )
 {
 #ifdef HB_FM_STATISTICS
-   hb_strncpy( s_szFileName, szValue, sizeof( s_szFileName ) - 1 );
+   if( szValue )
+      hb_strncpy( s_szFileName, szValue, sizeof( s_szFileName ) - 1 );
+   else
+      s_szFileName[ 0 ] = '\0';
 #else
    HB_SYMBOL_UNUSED( szValue );
 #endif
@@ -1108,8 +1111,8 @@ void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
       char buffer[ 100 ];
       FILE * hLog = NULL;
 
-      if( s_lMemoryBlocks && s_szFileName[ 0 ] )
-         hLog = hb_fopen( s_szFileName, "a+" );
+      if( s_lMemoryBlocks )
+         hLog = hb_fopen( s_szFileName[ 0 ] ? s_szFileName : "hb_out.log", "a+" );
 
       hb_conOutErr( hb_conNewLine(), 0 );
       hb_conOutErr( "----------------------------------------", 0 );

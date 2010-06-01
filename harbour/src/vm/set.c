@@ -963,9 +963,15 @@ HB_FUNC( SET )
          break;
       case HB_SET_HBOUTLOG:
          hb_retc( pSet->HB_SET_HBOUTLOG );
-         if( args > 1 )
+         if( args > 1 && ( HB_IS_STRING( pArg2 ) || HB_IS_NIL( pArg2 ) ) )
          {
-            pSet->HB_SET_HBOUTLOG = set_string( pArg2, pSet->HB_SET_HBOUTLOG );
+            if( pSet->HB_SET_HBOUTLOG )
+               hb_xfree( pSet->HB_SET_HBOUTLOG );
+            if( HB_IS_NIL( pArg2 ) )
+               pSet->HB_SET_HBOUTLOG = NULL;
+            else
+               /* Limit size of SET strings to 64K, truncating if source is longer */
+               pSet->HB_SET_HBOUTLOG = hb_strndup( hb_itemGetCPtr( pArg2 ), USHRT_MAX );
             hb_xsetfilename( pSet->HB_SET_HBOUTLOG );
          }
          break;
@@ -1109,7 +1115,7 @@ void hb_setInitialize( PHB_SET_STRUCT pSet )
    pSet->HB_SET_DEFEXTENSIONS = HB_TRUE;
    pSet->HB_SET_EOL = hb_strdup( hb_conNewLine() );
    pSet->HB_SET_TRIMFILENAME = HB_FALSE;
-   pSet->HB_SET_HBOUTLOG = hb_strdup( "hb_out.log" );
+   pSet->HB_SET_HBOUTLOG = NULL;
    pSet->HB_SET_HBOUTLOGINFO = hb_strdup( "" );
    pSet->HB_SET_OSCODEPAGE = NULL;
    pSet->HB_SET_DBCODEPAGE = NULL;
@@ -1809,7 +1815,10 @@ HB_BOOL hb_setSetItem( HB_set_enum set_specifier, PHB_ITEM pItem )
          case HB_SET_HBOUTLOG:
             if( HB_IS_STRING( pItem ) || HB_IS_NIL( pItem ) )
             {
-               szValue = hb_strndup( hb_itemGetCPtr( pItem ), USHRT_MAX );
+               if( HB_IS_NIL( pItem ) )
+                  szValue = NULL;
+               else
+                  szValue = hb_strndup( hb_itemGetCPtr( pItem ), USHRT_MAX );
                if( pSet->HB_SET_HBOUTLOG )
                   hb_xfree( pSet->HB_SET_HBOUTLOG );
                pSet->HB_SET_HBOUTLOG = szValue;
