@@ -42,7 +42,7 @@ FUNCTION WvtMyBrowse()
    IF hb_mtvm()
       Hb_ThreadStart( {|oCrt|  oCrt := WvgCrt():New( , , { -1,-2 }, { 34,69 }, , .T. ), ;
                             oCrt:resizeMode := HB_GTI_RESIZEMODE_ROWS,;
-                            oCrt:icon := "dia_excl.ico",;
+                            oCrt:icon := GetResource( "dia_excl.ico" ),;
                             oCrt:create(),;
                             Wvt_SetGui( .t. ),;
                             ExecBrowser( oCrt ),;

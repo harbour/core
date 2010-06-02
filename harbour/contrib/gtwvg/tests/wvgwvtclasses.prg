@@ -79,13 +79,13 @@ STATIC FUNCTION MyDialogOne( oCrt )
    cTxt := cTxt + "Enjoy - Pritpal Bedi, INDIA"
 
    aImg_:={}
-   aadd( aImg_, hb_DirBase() + "v_lock.bmp"   )
-   aadd( aImg_, hb_DirBase() + "v_new.bmp"    )
-   aadd( aImg_, hb_DirBase() + "v_clclt.bmp"  )
-   aadd( aImg_, hb_DirBase() + "v_calend.bmp" )
-   aadd( aImg_, hb_DirBase() + "v_index.bmp"  )
-   aadd( aImg_, hb_DirBase() + "v_notes1.bmp" )
-   aadd( aImg_, hb_DirBase() + "v_selct1.bmp" )
+   aadd( aImg_, GetResource( "v_lock.bmp"   ) )
+   aadd( aImg_, GetResource( "v_new.bmp"    ) )
+   aadd( aImg_, GetResource( "v_clclt.bmp"  ) )
+   aadd( aImg_, GetResource( "v_calend.bmp" ) )
+   aadd( aImg_, GetResource( "v_index.bmp"  ) )
+   aadd( aImg_, GetResource( "v_notes1.bmp" ) )
+   aadd( aImg_, GetResource( "v_selct1.bmp" ) )
    ? '.'
    Wvt_ShowWindow( 1 )
    nWinRows  := 55
@@ -170,7 +170,7 @@ STATIC FUNCTION MyDialogOne( oCrt )
    oPBar2:cBackColor := "W/N*"
    oPBar2:lVertical  := .t.
    oPBar2:nDirection := 0
-   oPBar2:cImage     := "vouch1.bmp"
+   oPBar2:cImage     := GetResource( "vouch1.bmp" )
    oDlg:AddObject( oPBar2 )
 
    oPBar3 := WvtProgressBar():New( oDlg, , 26, 129, 36, 137 )
@@ -178,7 +178,7 @@ STATIC FUNCTION MyDialogOne( oCrt )
    oPBar3:cBackColor := "W/N*"
    oPBar3:lVertical  := .t.
    oPBar3:nDirection := 1
-   oPBar3:cImage     := "vouch1.bmp"
+   oPBar3:cImage     := GetResource( "vouch1.bmp" )
    oDlg:AddObject( oPBar3 )
 
    oBBox2 := WvtStatic():New( oDlg, , 9, oDlg:MaxCol()-40, 18, oDlg:Maxcol()-2 )

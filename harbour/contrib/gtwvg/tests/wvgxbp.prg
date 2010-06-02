@@ -36,7 +36,7 @@ FUNCTION demoxbp()
    //--------------------------- Dialog -------------------------------\\
    oCrt := WvgDialog():new( , , { 30,30 }, { 900,600 }, , .t. )
    oCrt:closable := .t.
-   oCrt:icon := "vr_1.ico"
+   oCrt:icon := GetResource( "vr_1.ico" )
    oCrt:create()
 
    oCrt:setFontCompoundName( '12.Courier italic' )
@@ -232,7 +232,7 @@ FUNCTION demoxbp()
    oXbp:killInputFocus := { |x,y,oSLE| x:=x,y:=y, oSLE:getData(), oPanel:caption := "cVarB =" + cVarB }
 
    // Read file into LOCAL variable
-   cText   := MemoRead( 'gtwvg.hbc' )
+   cText   := MemoRead( GetResource( 'gtwvg.hbc' ) )
    // Create MLE, specify position using :create() and
    // assign data code block accessing LOCAL variable
    oMLE    := WvgMLE():new()

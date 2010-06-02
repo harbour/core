@@ -39,12 +39,12 @@ REQUEST DbfNtx
 
 //-------------------------------------------------------------------//
 
-#define IMAGE_VOUCH                "vouch1.bmp"
-#define IMAGE_BROWSE               "v_browse.ico"
-#define IMAGE_VR                   "vr_1.ico"
-#define IMAGE_NOTES                "v_notes.ico"
-#define IMAGE_TOOLS                "v_tools.ico"
-#define IMAGE_HELP                 "v_notes.ico"
+#define IMAGE_VOUCH                hb_dirBase() + "vouch1.bmp"
+#define IMAGE_BROWSE               hb_dirBase() + "v_browse.ico"
+#define IMAGE_VR                   hb_dirBase() + "vr_1.ico"
+#define IMAGE_NOTES                hb_dirBase() + "v_notes.ico"
+#define IMAGE_TOOLS                hb_dirBase() + "v_tools.ico"
+#define IMAGE_HELP                 hb_dirBase() + "v_notes.ico"
 
 #define OBJ_TYPE_BUTTON            1
 
@@ -91,7 +91,7 @@ PROCEDURE Main()
    LOCAL cName     := Pad( "Pritpal Bedi", 35 )
    LOCAL cAdd1     := Pad( "60, New Professor Colony", 35 )
    LOCAL cAdd2     := Pad( "Ludhiana, INDIA", 35 )
-   LOCAL cAdd3     := Pad( "http://www.vouchcac.com", 35 )
+   LOCAL cAdd3     := Pad( "http://hbide.vouch.info", 35 )
    LOCAL nSlry     := 20000
    LOCAL aBlocks   := {}
    LOCAL nColGet   := 8
@@ -131,7 +131,7 @@ PROCEDURE Main()
    //
    Wvt_SetMousePos( 2,40 )
 
-   aAdd( aBlocks, {|| Wvt_SetIcon( "vr_1.ico" ) } )
+   aAdd( aBlocks, {|| Wvt_SetIcon( GetResource( "vr_1.ico" ) ) } )
    aAdd( aBlocks, {|| Wvt_SetTitle( "Vouch" ) } )
    aAdd( aBlocks, {|| Wvt_DrawLabel( 1,40, cLabel,6,, rgb(255,255,255), rgb(198,198,198), "Arial", 26, , , , , .t., .t. ) } )
    aAdd( aBlocks, {|| Wvt_DrawBoxRaised( nTop, nLft, nBtm, nRgt ) } )
@@ -354,20 +354,20 @@ PROCEDURE WvtNextGets_X()
    Wvt_SetPalette( aNewPalette )
 
    aAdd( aBlocks, {|| Wvt_SetTitle( "Wvt Gets 2nd Window with Different Palette" ) } )
-   aAdd( aBlocks, {|| Wvt_DrawLine( maxrow()-1,0,maxrow()-1,maxcol() ) })
-   aAdd( aBlocks, {|| Wvt_SetBrush( 0, rgb( 32,255,100 ) ) } )
-   aAdd( aBlocks, {|| Wvt_DrawEllipse( 6,50,10,58 ) } )
+   aAdd( aBlocks, {|| Wvt_DrawLine( maxrow()-1,0,maxrow()-1,maxcol() ) } )
+   aAdd( aBlocks, {|| Wvt_SetBrush( 0, rgb( 32,255,100 ) )    } )
+   aAdd( aBlocks, {|| Wvt_DrawEllipse( 6,50,10,58 )           } )
    aAdd( aBlocks, {|| Wvt_SetBrush( 2, rgb( 255,255,100 ),1 ) } )
-   aAdd( aBlocks, {|| Wvt_DrawRectangle( 11, 50, 13, 58 ) } )
-   aAdd( aBlocks, {|| Wvt_DrawBoxGroupRaised( 5, 6, 19, 72 ) } )
+   aAdd( aBlocks, {|| Wvt_DrawRectangle( 11, 50, 13, 58 )     } )
+   aAdd( aBlocks, {|| Wvt_DrawBoxGroupRaised( 5, 6, 19, 72 )  } )
    aAdd( aBlocks, {|| aEval( GetList, {|oGet| Wvt_DrawBoxGet( oGet:Row, oGet:Col, Len( Transform( oGet:VarGet(), oGet:Picture ) ) ) } ) } )
 
-   aAdd( aBlocks, {|| Wvt_DrawButton( 21, 6,22, 9,"New"   ,"vouch1.bmp" ) } )
-   aAdd( aBlocks, {|| Wvt_DrawButton( 21,11,22,14,"Browse","vouch1.bmp", 1, rgb( 255,255,255 ) ) } )
-   aAdd( aBlocks, {|| Wvt_DrawButton( 21,16,22,19, ,"vouch1.bmp" ) } )
+   aAdd( aBlocks, {|| Wvt_DrawButton( 21, 6,22, 9,"New"   ,"vouch1.bmp" )                             } )
+   aAdd( aBlocks, {|| Wvt_DrawButton( 21,11,22,14,"Browse","vouch1.bmp", 1, rgb( 255,255,255 ) )      } )
+   aAdd( aBlocks, {|| Wvt_DrawButton( 21,16,22,19, ,"vouch1.bmp" )                                    } )
    aAdd( aBlocks, {|| Wvt_DrawButton( 21,21,22,24,"Data",, 0, rgb( 100,22,241 ), rgb( 198,198,198 ) ) } )
-   aAdd( aBlocks, {|| Wvt_DrawButton( 21,26,22,29,"Flat",IMAGE_VR,2 ) } )
-   aAdd( aBlocks, {|| Wvt_DrawButton( 21,31,22,34,"Outline",IMAGE_VR,3 ) } )
+   aAdd( aBlocks, {|| Wvt_DrawButton( 21,26,22,29,"Flat",IMAGE_VR,2 )                                 } )
+   aAdd( aBlocks, {|| Wvt_DrawButton( 21,31,22,34,"Outline",IMAGE_VR,3 )                              } )
    aAdd( aBlocks, {|| Wvt_DrawButton( 22,36,22,41,"Data",, 0, rgb( 100,22,241 ), rgb( 198,198,198 ) ) } )
 
    aLastPaint := WvtSetBlocks( aBlocks )
@@ -461,7 +461,7 @@ function WvtLines()
    CLS
 
    aAdd( aBlocks, {|| Wvt_DrawLine( 0, 0, 0, nCols, WVT_LINE_HORZ, WVT_LINE_RAISED  , WVT_LINE_CENTER ) } )
-   aAdd( aBlocks, {|| Wvt_DrawLine( 1, 0, 1, nCols, WVT_LINE_HORZ, WVT_LINE_RECESSED, WVT_LINE_TOP ) } )
+   aAdd( aBlocks, {|| Wvt_DrawLine( 1, 0, 1, nCols, WVT_LINE_HORZ, WVT_LINE_RECESSED, WVT_LINE_TOP )    } )
    aAdd( aBlocks, {|| Wvt_DrawLine( 2, 0, 2, nCols, WVT_LINE_HORZ, WVT_LINE_PLAIN   , WVT_LINE_CENTER, WVT_LINE_SOLID, 4, Rgb( 255,255,255 ) ) } )
    aAdd( aBlocks, {|| Wvt_DrawLine( 3, 0, 3, nCols, WVT_LINE_HORZ, WVT_LINE_RAISED  , WVT_LINE_CENTER, WVT_LINE_DASH , 0, Rgb( 255,0,0 ) ) } )
    aAdd( aBlocks, {|| Wvt_DrawLine( 4, 0, 4, nCols, WVT_LINE_HORZ, WVT_LINE_RECESSED, WVT_LINE_BOTTOM ) } )
@@ -515,7 +515,7 @@ FUNCTION CreateMainMenu()
 
    oMenu := WvtMenu():new():create()
    oMenu:Caption:= "Wvt*Classes"
-   oMenu:AddItem( "Dialog One . New Window . Threaded", {|| DialogWvgClassesOne( 1 ) } )
+   oMenu:AddItem( "Dialog One . New Window . Threaded"       , {|| DialogWvgClassesOne( 1 ) } )
    oMenu:AddItem( "Dialog One . Main Window . Primary Thread", {|| DialogWvgClassesOne( 2 ) } )
    oMenu:AddItem( "-" )
    oMenu:AddItem( "Dialog Two"                  , {|| DialogWvgClassesTwo()       } )

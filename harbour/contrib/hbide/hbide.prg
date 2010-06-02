@@ -93,6 +93,19 @@ STATIC s_pathSep
 PROCEDURE Main( ... )
    LOCAL oIde
 
+   #ifdef HB_IDE_DISTRO
+      LOCAL cSep := hb_osPathSeparator()
+      LOCAL cBse := hb_dirBase() + ".."
+
+      /* Set the path env variable to Qt's run-time which is used to compile Harbour binaries */
+      hb_setEnv( "PATH", cBse + cSep + "Qt" + cSep + "4.6.2" + cSep + "lib" + ;
+                                      hb_osPathListSeparator() + hb_getEnv( "PATH" ) )
+
+      /* Variable is used in hbide.env */
+      hb_setEnv( "HB_IDE_INSTALL", cBse )
+   #endif
+
+
    SET CENTURY ON
    SET EPOCH TO 1970
 
@@ -433,7 +446,7 @@ METHOD HbIde:create( aParams )
    ::oEM := IdeEditsManager():new( Self ):create()
 
    /* Load Environments */
-   ::oEV := IdeEnvironments():new( Self, hbide_pathToOSPath( ::aINI[ INI_HBIDE, PathEnv ] + ::pathSep + "hbide.env" ) ):create()
+   ::oEV := IdeEnvironments():new( Self ):create()
 
    /* Home Implementation */
    ::oHM := IdeHome():new():create( Self )

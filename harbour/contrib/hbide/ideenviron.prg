@@ -102,7 +102,7 @@ CLASS IdeEnvironments INHERIT IdeObject
 
 METHOD IdeEnvironments:new( oIDE, cEnvFile )
 
-   ::oIDE     := oIDE
+   ::oIDE := oIDE
    ::cEnvFile := cEnvFile
 
    RETURN Self
@@ -110,12 +110,27 @@ METHOD IdeEnvironments:new( oIDE, cEnvFile )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEnvironments:create( oIDE, cEnvFile )
+   LOCAL cPath, cFile
 
    DEFAULT oIDE     TO ::oIDE
    DEFAULT cEnvFile TO ::cEnvFile
 
    ::oIDE     := oIDE
    ::cEnvFile := cEnvFile
+
+   IF empty( ::cEnvFile )
+      cFile := ::oIde:aINI[ INI_HBIDE, PathEnv ]
+      cFile := iif( empty( cFile ), cFile, hbide_pathAppendLastSlash( cFile ) )
+      IF empty( cFile )
+         cFile := oIde:cProjIni
+      ENDIF
+      hb_fNameSplit( cFile, @cPath )
+      ::cEnvFile := cPath + "hbide.env"
+   ENDIF
+
+   hb_fNameSplit( ::cEnvFile, @cPath )
+   ::oIDE:cWrkPathEnv := hbide_pathNormalized( cPath, .f. )
+   ::oIde:aINI[ INI_HBIDE, PathEnv ] := ::oIDE:cWrkPathEnv
 
    IF !empty( ::cEnvFile ) .AND. hb_fileExists( ::cEnvFile )
       ::parse( ::cEnvFile )
@@ -271,7 +286,7 @@ METHOD IdeEnvironments:execEnv( nMode, p )
       IF !empty( cPath )
          hb_fNameSplit( cPath, @cP )
          ::oIDE:cWrkPathEnv := cP
-         ::oUI:q_editPathEnv:setText( hbide_pathStripLastSlash( cP ) )
+         ::oUI:q_editPathEnv:setText( cP ) // hbide_pathStripLastSlash( cP ) )
 
          ::oUI:q_editCompilers:setPlainText( ;
              hb_memoread( hbide_pathFile( ::oUI:q_editPathEnv:text(), "hbide.env" ) ) )

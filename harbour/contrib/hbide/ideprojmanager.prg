@@ -1307,7 +1307,7 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
       ::oOutputResult:oWidget:append( cTmp )
       ::oOutputResult:oWidget:append( hbide_outputLine() )
 
-      ::oIDE:oEV := IdeEnvironments():new():create( ::oIDE, hbide_pathFile( ::aINI[ INI_HBIDE, PathEnv ], "hbide.env" ) )
+      ::oIDE:oEV := IdeEnvironments():new():create( ::oIDE )
       ::cBatch   := ::oEV:prepareBatch( ::cWrkEnvironment )
       aeval( ::oEV:getHbmk2Commands( ::cWrkEnvironment ), {|e| aadd( aHbp, e ) } )
 
