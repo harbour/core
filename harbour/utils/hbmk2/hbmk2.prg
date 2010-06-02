@@ -5488,7 +5488,7 @@ STATIC FUNCTION SetupForGT( cGT_New, /* @ */ cGT, /* @ */ lGUI )
 STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, lSystemHeader, tTimeParent, lIncTry, lCMode, cBin_CompC, /* @ */ headstate, nNestingLevel )
    LOCAL cFile
    LOCAL fhnd
-   LOCAL nPos
+   LOCAL aMatch
    LOCAL tTimeSelf
    LOCAL tTimeDependency
    LOCAL tmp
@@ -5769,34 +5769,27 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, lSystemHeader, tT
          FClose( fhnd )
       ENDIF
 
-      cHeader := NIL
-      nPos := 1
-      DO WHILE .T.
-         IF ( tmp := hb_At( '#include ', cFile, nPos ) ) > 0
-            nPos := tmp + Len( '#include ' )
-            tmp := SubStr( cFile, nPos, 1 )
-            ++nPos
-            IF tmp $ '"<'
-               lSystemHeader := ( tmp == "<" )
-               IF ( tmp := hb_At( iif( lSystemHeader, ">", '"' ), cFile, nPos ) ) > 0
-                  cHeader := SubStr( cFile, nPos, tmp - nPos )
-                  nPos := tmp
-               ENDIF
-            ENDIF
-         ELSE
-            EXIT
-         ENDIF
+      /* NOTE:
+            http://en.wikipedia.org/wiki/PCRE
+            http://www.pcre.org/pcre.txt */
 
-         IF cHeader != NIL .AND. ;
+      aMatch := hb_regexAll( '^[ \t]*#[ \t]*include[ \t]+(\".+?\"|<.+?>)', cFile, .F. /* lCaseSensitive */, .T. /* lNewLine */, NIL, NIL /* nGetMatch */, .T. /* lOnlyMatch */ )
+
+      IF ! Empty( aMatch )
+         FOR EACH tmp IN aMatch
+
+            cHeader := tmp[ 2 ] /* First match marker */
+            lSystemHeader := ( Left( cHeader, 1 ) == "<" )
+            cHeader := SubStr( cHeader, 2, Len( cHeader ) - 2 )
+
             FindNewerHeaders( hbmk, cHeader, iif( lCMode, FN_DirGet( cFileName ), cParentDir ), lSystemHeader, tTimeParent, lIncTry, lCMode, cBin_CompC, @headstate, nNestingLevel + 1 )
             headstate[ _HEADSTATE_lAnyNewer ] := .T.
             /* Let it continue if we want to scan for header locations */
             IF ! lIncTry
                RETURN .T.
             ENDIF
-            cHeader := NIL
-         ENDIF
-      ENDDO
+         NEXT
+      ENDIF
    ENDIF
 
    RETURN headstate[ _HEADSTATE_lAnyNewer ]

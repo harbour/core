@@ -184,58 +184,52 @@ HB_FUNC( HB_ISREGEX )
 
 HB_FUNC( HB_ATX )
 {
-   const char * pszString;
-   HB_SIZE ulLen, ulStart, ulEnd;
-   PHB_REGEX pRegEx;
-   PHB_ITEM pString;
-   int iPCount = hb_pcount();
+   PHB_ITEM pString = hb_param( 2, HB_IT_STRING );
 
-   pString = hb_param( 2, HB_IT_STRING );
-   if( ! pString )
+   if( pString )
    {
-      hb_errRT_BASE_SubstR( EG_ARG, 3013, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-      return;
-   }
-   pszString = hb_itemGetCPtr( pString );
-   ulLen     = hb_itemGetCLen( pString );
-   pRegEx = hb_regexGet( hb_param( 1, HB_IT_ANY ),
-                         !hb_parldef( 3, 1 ) ? HBREG_ICASE : 0 );
-   if( ! pRegEx )
-      return;
+      PHB_REGEX pRegEx = hb_regexGet( hb_param( 1, HB_IT_ANY ),
+                                      ! hb_parldef( 3, 1 ) ? HBREG_ICASE : 0 );
 
-   ulStart = hb_parnl( 4 );
-   ulEnd = hb_parnl( 5 );
-
-   if( ulLen && ulStart <= ulLen && ulStart <= ulEnd )
-   {
-      HB_REGMATCH aMatches[ HB_REGMATCH_SIZE( 1 ) ];
-
-      if( ulEnd < ulLen )
-         ulLen = ulEnd;
-      if( ulStart )
+      if( pRegEx )
       {
-         --ulStart;
-         ulLen -= ulStart;
+         HB_SIZE ulLen = hb_itemGetCLen( pString );
+         HB_SIZE ulStart = hb_parnl( 4 );
+         HB_SIZE ulEnd = ISNUM( 5 ) ? ( HB_SIZE ) hb_parnl( 5 ) : ulLen;
+
+         if( ulLen && ulStart <= ulLen && ulStart <= ulEnd )
+         {
+            const char * pszString = hb_itemGetCPtr( pString );
+            HB_REGMATCH aMatches[ HB_REGMATCH_SIZE( 1 ) ];
+
+            if( ulEnd < ulLen )
+               ulLen = ulEnd;
+            if( ulStart )
+            {
+               --ulStart;
+               ulLen -= ulStart;
+            }
+
+            if( hb_regexec( pRegEx, pszString + ulStart, ulLen, 1, aMatches ) > 0 )
+            {
+               ulStart += HB_REGMATCH_SO( aMatches, 0 ) + 1;
+               ulLen = HB_REGMATCH_EO( aMatches, 0 ) - HB_REGMATCH_SO( aMatches, 0 );
+               hb_retclen( pszString + ulStart - 1, ulLen );
+            }
+            else
+               ulStart = ulLen = 0;
+         }
+         else
+            ulStart = ulLen = 0;
+
+         hb_regexFree( pRegEx );
+
+         hb_stornl( ulStart, 4 );
+         hb_stornl( ulLen, 5 );
       }
-      if( hb_regexec( pRegEx, pszString + ulStart, ulLen, 1, aMatches ) > 0 )
-      {
-         ulStart += HB_REGMATCH_SO( aMatches, 0 ) + 1;
-         ulLen = HB_REGMATCH_EO( aMatches, 0 ) - HB_REGMATCH_SO( aMatches, 0 );
-         hb_retclen( pszString + ulStart - 1, ulLen );
-      }
-      else
-         ulStart = ulLen = 0;
    }
    else
-      ulStart = ulLen = 0;
-
-   hb_regexFree( pRegEx );
-   if( iPCount > 3 )
-   {
-      hb_stornl( ulStart, 4 );
-      if( iPCount > 4 )
-         hb_stornl( ulLen, 5 );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 3013, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 static HB_BOOL hb_regex( int iRequest )
