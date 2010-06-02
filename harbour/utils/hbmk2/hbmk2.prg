@@ -5498,6 +5498,7 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, lSystemHeader, tT
    LOCAL cDependency
    LOCAL aCommand
 
+   STATIC s_hRegexInclude := NIL
    STATIC s_hExclStd := NIL
 
    IF s_hExclStd == NIL
@@ -5773,7 +5774,9 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, lSystemHeader, tT
             http://en.wikipedia.org/wiki/PCRE
             http://www.pcre.org/pcre.txt */
 
-      aMatch := hb_regexAll( '^[ \t]*#[ \t]*include[ \t]+(\".+?\"|<.+?>)', cFile, .F. /* lCaseSensitive */, .T. /* lNewLine */, NIL, NIL /* nGetMatch */, .T. /* lOnlyMatch */ )
+      DEFAULT s_hRegexInclude TO hb_regexComp( '^[ \t]*#[ \t]*include[ \t]+(\".+?\"|<.+?>)', .F. /* lCaseSensitive */, .T. /* lNewLine */ )
+
+      aMatch := hb_regexAll( s_hRegexInclude, cFile, NIL /* lCaseSensitive */, NIL /* lNewLine */, NIL, NIL /* nGetMatch */, .T. /* lOnlyMatch */ )
 
       IF ! Empty( aMatch )
          FOR EACH tmp IN aMatch
@@ -7864,11 +7867,11 @@ STATIC FUNCTION getFirstFunc( hbmk, cFile )
                EXIT
             ENDIF
          NEXT
-      ELSEIF Lower( cExt ) == ".c" .OR. ;
-             Lower( cExt ) == ".cpp" .OR. ;
+      ELSEIF Lower( cExt ) == ".cpp" .OR. ;
              Lower( cExt ) == ".cc" .OR. ;
              Lower( cExt ) == ".cxx" .OR. ;
-             Lower( cExt ) == ".cx"
+             Lower( cExt ) == ".cx" .OR. ;
+             _EXT_IS_UPPER( cExt, ".C" )
          /* do nothing */
       ELSEIF ! Empty( cExecNM := FindInPath( hbmk[ _HBMK_cCCPREFIX ] + "nm" ) )
          cFuncList := ""
