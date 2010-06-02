@@ -210,6 +210,9 @@ REQUEST hbmk_KEYW
 #define _HBMK_CFG_NAME          "hbmk.cfg"
 #define _HBMK_AUTOHBM_NAME      "hbmk.hbm"
 
+#define _HBMK_WITH_PREF         "HBMK_WITH_"
+#define _HBMK_HAS_PREF          "HBMK_HAS_"
+
 #define _HBMK_NEST_MAX          10
 #define _HBMK_HEAD_NEST_MAX     10
 
@@ -2392,6 +2395,23 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    ENDIF
 
    IF ! lStopAfterInit .AND. ! lStopAfterHarbour
+
+      /*
+         /boot/common/include                        (beos)
+         /boot/develop/headers/3rdparty              (beos)
+
+         /opt/local/include                          (darwin MacPorts)
+         /sw/include                                 (darwin Fink)
+         /Library/Frameworks/<pkg>.framework/Headers (darwin)
+
+         /usr/<pkg>/include                          (FHS)
+         /usr/include                                (FHS)
+         /opt/<pkg>/include                          (FHS)
+         /opt/include                                (FHS)
+         /usr/local/<pkg>/include                    (FHS)
+         /usr/local/include                          (FHS)
+      */
+
       /* Process any package requirements */
       FOR EACH tmp IN hbmk[ _HBMK_aREQPKG ]
          pkg_try_detection( hbmk, tmp )
@@ -5928,7 +5948,7 @@ STATIC FUNCTION pkg_try_detection( hbmk, cName )
                   IF Empty( cIncludeDir )
                      cIncludeDir := "(system)"
                   ENDIF
-                  cDefine := "HBMK2_HAS_" + StrToDefine( cNameFlavour )
+                  cDefine := _HBMK_HAS_PREF + StrToDefine( cNameFlavour )
                   IF hbmk[ _HBMK_lInfo ]
                      hbmk_OutStd( hbmk, hb_StrFormat( I_( "Autodetected package '%1$s' (%2$s) at '%3$s', defining '%4$s'." ), cNameFlavour, cVersion, cIncludeDir, cDefine ) )
                   ENDIF
