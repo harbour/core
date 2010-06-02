@@ -66,7 +66,7 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 46/49 [ 93.88% ] ]
+ *  Constructed[ 46/53 [ 86.79% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
@@ -74,6 +74,10 @@
  *  QList<QTableWidgetItem *> findItems ( const QString & text, Qt::MatchFlags flags ) const
  *  QList<QTableWidgetItem *> selectedItems ()
  *  QList<QTableWidgetSelectionRange> selectedRanges () const
+ *  }
+ *  }
+ *  }
+ *  }
  */
 
 #include <QtCore/QPointer>
@@ -461,12 +465,14 @@ HB_FUNC( QT_QTABLEWIDGET_SETCURRENTCELL_1 )
  */
 HB_FUNC( QT_QTABLEWIDGET_SETCURRENTITEM )
 {
-   QTableWidget * p = hbqt_par_QTableWidget( 1 );
-   if( p )
-      ( p )->setCurrentItem( hbqt_par_QTableWidgetItem( 2 ) );
-   else
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   QGC_POINTER * q = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+   HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QTABLEWIDGET_SETCURRENTITEM()" ) );
+   if( p && p->ph && q && q->ph )
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_SETCURRENTITEM FP=( p )->setCurrentItem( hbqt_par_QTableWidgetItem( 2 ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "QT_QTABLEWIDGET_SETCURRENTITEM() Qt object: %p is attached to: %p", p->ph, q->ph ) );
+      q->bNew = HB_FALSE;
+      hbqt_par_QTableWidget( 1 )->setCurrentItem( hbqt_par_QTableWidgetItem( 2 ) );
    }
 }
 
@@ -475,12 +481,14 @@ HB_FUNC( QT_QTABLEWIDGET_SETCURRENTITEM )
  */
 HB_FUNC( QT_QTABLEWIDGET_SETCURRENTITEM_1 )
 {
-   QTableWidget * p = hbqt_par_QTableWidget( 1 );
-   if( p )
-      ( p )->setCurrentItem( hbqt_par_QTableWidgetItem( 2 ), ( QItemSelectionModel::SelectionFlags ) hb_parni( 3 ) );
-   else
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   QGC_POINTER * q = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+   HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QTABLEWIDGET_SETCURRENTITEM_1()" ) );
+   if( p && p->ph && q && q->ph )
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_SETCURRENTITEM_1 FP=( p )->setCurrentItem( hbqt_par_QTableWidgetItem( 2 ), ( QItemSelectionModel::SelectionFlags ) hb_parni( 3 ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "QT_QTABLEWIDGET_SETCURRENTITEM_1() Qt object: %p is attached to: %p", p->ph, q->ph ) );
+      q->bNew = HB_FALSE;
+      hbqt_par_QTableWidget( 1 )->setCurrentItem( hbqt_par_QTableWidgetItem( 2 ), ( QItemSelectionModel::SelectionFlags ) hb_parni( 2 ) );
    }
 }
 
@@ -489,12 +497,14 @@ HB_FUNC( QT_QTABLEWIDGET_SETCURRENTITEM_1 )
  */
 HB_FUNC( QT_QTABLEWIDGET_SETHORIZONTALHEADERITEM )
 {
-   QTableWidget * p = hbqt_par_QTableWidget( 1 );
-   if( p )
-      ( p )->setHorizontalHeaderItem( hb_parni( 2 ), hbqt_par_QTableWidgetItem( 3 ) );
-   else
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   QGC_POINTER * q = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 3 );
+   HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QTABLEWIDGET_SETHORIZONTALHEADERITEM()" ) );
+   if( p && p->ph && q && q->ph )
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_SETHORIZONTALHEADERITEM FP=( p )->setHorizontalHeaderItem( hb_parni( 2 ), hbqt_par_QTableWidgetItem( 3 ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "QT_QTABLEWIDGET_SETHORIZONTALHEADERITEM() Qt object: %p is attached to: %p", p->ph, q->ph ) );
+      q->bNew = HB_FALSE;
+      hbqt_par_QTableWidget( 1 )->setHorizontalHeaderItem( hb_parni( 2 ), hbqt_par_QTableWidgetItem( 3 ) );
    }
 }
 
@@ -573,12 +583,14 @@ HB_FUNC( QT_QTABLEWIDGET_SETROWCOUNT )
  */
 HB_FUNC( QT_QTABLEWIDGET_SETVERTICALHEADERITEM )
 {
-   QTableWidget * p = hbqt_par_QTableWidget( 1 );
-   if( p )
-      ( p )->setVerticalHeaderItem( hb_parni( 2 ), hbqt_par_QTableWidgetItem( 3 ) );
-   else
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   QGC_POINTER * q = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 3 );
+   HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QTABLEWIDGET_SETVERTICALHEADERITEM()" ) );
+   if( p && p->ph && q && q->ph )
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_SETVERTICALHEADERITEM FP=( p )->setVerticalHeaderItem( hb_parni( 2 ), hbqt_par_QTableWidgetItem( 3 ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "QT_QTABLEWIDGET_SETVERTICALHEADERITEM() Qt object: %p is attached to: %p", p->ph, q->ph ) );
+      q->bNew = HB_FALSE;
+      hbqt_par_QTableWidget( 1 )->setVerticalHeaderItem( hb_parni( 2 ), hbqt_par_QTableWidgetItem( 3 ) );
    }
 }
 

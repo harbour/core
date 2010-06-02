@@ -75,7 +75,17 @@ HB_FUNC( QT_QLISTWIDGET )
 
 <PROTOS>
 void addItem ( const QString & label )
-void addItem ( QListWidgetItem * item )
+void addItem ( QListWidgetItem * item ){
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   QGC_POINTER * q = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+   HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QLISTWIDGET_ADDITEM()" ) );
+   if( p && p->ph && q && q->ph )
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "QT_QLISTWIDGET_ADDITEM() Qt object: %p is attached to: %p", p->ph, q->ph ) );
+      q->bNew = HB_FALSE;
+      hbqt_par_QListWidget( 1 )->addItem( hbqt_par_QListWidgetItem( 2 ) );
+   }
+}
 void addItems ( const QStringList & labels )
 void closePersistentEditor ( QListWidgetItem * item )
 int count () const
@@ -83,7 +93,17 @@ QListWidgetItem * currentItem () const
 int currentRow () const
 void editItem ( QListWidgetItem * item )
 QList<QListWidgetItem *> findItems ( const QString & text, Qt::MatchFlags flags ) const
-void insertItem ( int row, QListWidgetItem * item )
+void insertItem ( int row, QListWidgetItem * item ){
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   QGC_POINTER * q = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 3 );
+   HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QLISTWIDGET_INSERTITEM()" ) );
+   if( p && p->ph && q && q->ph )
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "QT_QLISTWIDGET_INSERTITEM() Qt object: %p is attached to: %p", p->ph, q->ph ) );
+      q->bNew = HB_FALSE;
+      hbqt_par_QListWidget( 1 )->insertItem( hb_parni( 2 ), hbqt_par_QListWidgetItem( 3 ) );
+   }
+}
 void insertItem ( int row, const QString & label )
 void insertItems ( int row, const QStringList & labels )
 bool isSortingEnabled () const

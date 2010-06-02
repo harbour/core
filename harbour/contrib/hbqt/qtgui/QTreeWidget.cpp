@@ -66,7 +66,7 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 37/41 [ 90.24% ] ]
+ *  Constructed[ 37/45 [ 82.22% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
@@ -75,6 +75,10 @@
  *  QList<QTreeWidgetItem *> findItems ( const QString & text, Qt::MatchFlags flags, int column = 0 ) const
  *  void insertTopLevelItems ( int index, const QList<QTreeWidgetItem *> & items )
  *  QList<QTreeWidgetItem *> selectedItems () const
+ *  }
+ *  }
+ *  }
+ *  }
  */
 
 #include <QtCore/QPointer>
@@ -430,12 +434,14 @@ HB_FUNC( QT_QTREEWIDGET_SETCOLUMNCOUNT )
  */
 HB_FUNC( QT_QTREEWIDGET_SETCURRENTITEM )
 {
-   QTreeWidget * p = hbqt_par_QTreeWidget( 1 );
-   if( p )
-      ( p )->setCurrentItem( hbqt_par_QTreeWidgetItem( 2 ) );
-   else
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   QGC_POINTER * q = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+   HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QTREEWIDGET_SETCURRENTITEM()" ) );
+   if( p && p->ph && q && q->ph )
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGET_SETCURRENTITEM FP=( p )->setCurrentItem( hbqt_par_QTreeWidgetItem( 2 ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "QT_QTREEWIDGET_SETCURRENTITEM() Qt object: %p is attached to: %p", p->ph, q->ph ) );
+      q->bNew = HB_FALSE;
+      hbqt_par_QTreeWidget( 1 )->setCurrentItem( hbqt_par_QTreeWidgetItem( 2 ) );
    }
 }
 
@@ -444,12 +450,14 @@ HB_FUNC( QT_QTREEWIDGET_SETCURRENTITEM )
  */
 HB_FUNC( QT_QTREEWIDGET_SETCURRENTITEM_1 )
 {
-   QTreeWidget * p = hbqt_par_QTreeWidget( 1 );
-   if( p )
-      ( p )->setCurrentItem( hbqt_par_QTreeWidgetItem( 2 ), hb_parni( 3 ) );
-   else
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   QGC_POINTER * q = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+   HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QTREEWIDGET_SETCURRENTITEM_1()" ) );
+   if( p && p->ph && q && q->ph )
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGET_SETCURRENTITEM_1 FP=( p )->setCurrentItem( hbqt_par_QTreeWidgetItem( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "QT_QTREEWIDGET_SETCURRENTITEM_1() Qt object: %p is attached to: %p", p->ph, q->ph ) );
+      q->bNew = HB_FALSE;
+      hbqt_par_QTreeWidget( 1 )->setCurrentItem( hbqt_par_QTreeWidgetItem( 2 ), hb_parni( 3 ) );
    }
 }
 
@@ -458,12 +466,14 @@ HB_FUNC( QT_QTREEWIDGET_SETCURRENTITEM_1 )
  */
 HB_FUNC( QT_QTREEWIDGET_SETCURRENTITEM_2 )
 {
-   QTreeWidget * p = hbqt_par_QTreeWidget( 1 );
-   if( p )
-      ( p )->setCurrentItem( hbqt_par_QTreeWidgetItem( 2 ), hb_parni( 3 ), ( QItemSelectionModel::SelectionFlags ) hb_parni( 4 ) );
-   else
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   QGC_POINTER * q = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+   HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QTREEWIDGET_SETCURRENTITEM_2()" ) );
+   if( p && p->ph && q && q->ph )
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGET_SETCURRENTITEM_2 FP=( p )->setCurrentItem( hbqt_par_QTreeWidgetItem( 2 ), hb_parni( 3 ), ( QItemSelectionModel::SelectionFlags ) hb_parni( 4 ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "QT_QTREEWIDGET_SETCURRENTITEM_2() Qt object: %p is attached to: %p", p->ph, q->ph ) );
+      q->bNew = HB_FALSE;
+      hbqt_par_QTreeWidget( 1 )->setCurrentItem( hbqt_par_QTreeWidgetItem( 2 ), hb_parni( 3 ), ( QItemSelectionModel::SelectionFlags ) hb_parni( 4 ) );
    }
 }
 
@@ -486,12 +496,14 @@ HB_FUNC( QT_QTREEWIDGET_SETFIRSTITEMCOLUMNSPANNED )
  */
 HB_FUNC( QT_QTREEWIDGET_SETHEADERITEM )
 {
-   QTreeWidget * p = hbqt_par_QTreeWidget( 1 );
-   if( p )
-      ( p )->setHeaderItem( hbqt_par_QTreeWidgetItem( 2 ) );
-   else
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   QGC_POINTER * q = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+   HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QTREEWIDGET_SETHEADERITEM()" ) );
+   if( p && p->ph && q && q->ph )
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGET_SETHEADERITEM FP=( p )->setHeaderItem( hbqt_par_QTreeWidgetItem( 2 ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "QT_QTREEWIDGET_SETHEADERITEM() Qt object: %p is attached to: %p", p->ph, q->ph ) );
+      q->bNew = HB_FALSE;
+      hbqt_par_QTreeWidget( 1 )->setHeaderItem( hbqt_par_QTreeWidgetItem( 2 ) );
    }
 }
 

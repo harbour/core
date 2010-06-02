@@ -66,12 +66,14 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 30/32 [ 93.75% ] ]
+ *  Constructed[ 30/34 [ 88.24% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
  *
+ *  }
  *  QList<QListWidgetItem *> findItems ( const QString & text, Qt::MatchFlags flags ) const
+ *  }
  *  QList<QListWidgetItem *> selectedItems () const
  */
 
@@ -176,12 +178,14 @@ HB_FUNC( QT_QLISTWIDGET_ADDITEM )
  */
 HB_FUNC( QT_QLISTWIDGET_ADDITEM_1 )
 {
-   QListWidget * p = hbqt_par_QListWidget( 1 );
-   if( p )
-      ( p )->addItem( hbqt_par_QListWidgetItem( 2 ) );
-   else
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   QGC_POINTER * q = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+   HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QLISTWIDGET_ADDITEM()" ) );
+   if( p && p->ph && q && q->ph )
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTWIDGET_ADDITEM_1 FP=( p )->addItem( hbqt_par_QListWidgetItem( 2 ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "QT_QLISTWIDGET_ADDITEM() Qt object: %p is attached to: %p", p->ph, q->ph ) );
+      q->bNew = HB_FALSE;
+      hbqt_par_QListWidget( 1 )->addItem( hbqt_par_QListWidgetItem( 2 ) );
    }
 }
 
@@ -274,12 +278,14 @@ HB_FUNC( QT_QLISTWIDGET_EDITITEM )
  */
 HB_FUNC( QT_QLISTWIDGET_INSERTITEM )
 {
-   QListWidget * p = hbqt_par_QListWidget( 1 );
-   if( p )
-      ( p )->insertItem( hb_parni( 2 ), hbqt_par_QListWidgetItem( 3 ) );
-   else
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   QGC_POINTER * q = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 3 );
+   HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QLISTWIDGET_INSERTITEM()" ) );
+   if( p && p->ph && q && q->ph )
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTWIDGET_INSERTITEM FP=( p )->insertItem( hb_parni( 2 ), hbqt_par_QListWidgetItem( 3 ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "QT_QLISTWIDGET_INSERTITEM() Qt object: %p is attached to: %p", p->ph, q->ph ) );
+      q->bNew = HB_FALSE;
+      hbqt_par_QListWidget( 1 )->insertItem( hb_parni( 2 ), hbqt_par_QListWidgetItem( 3 ) );
    }
 }
 
