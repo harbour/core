@@ -5794,7 +5794,7 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, lSystemHeader, tT
             http://en.wikipedia.org/wiki/PCRE
             http://www.pcre.org/pcre.txt */
 
-      DEFAULT s_hRegexInclude TO hb_regexComp( '^[ \t]*#[ \t]*include[ \t]+(\".+?\"|<.+?>)', .F. /* lCaseSensitive */, .T. /* lNewLine */ )
+      DEFAULT s_hRegexInclude TO hb_regexComp( '^[ \t]*#[ \t]*include[ \t]*(\".+?\"|<.+?>)', .F. /* lCaseSensitive */, .T. /* lNewLine */ )
 
       aMatch := hb_regexAll( s_hRegexInclude, cFile, NIL /* lCaseSensitive */, NIL /* lNewLine */, NIL, NIL /* nGetMatch */, .T. /* lOnlyMatch */ )
 
