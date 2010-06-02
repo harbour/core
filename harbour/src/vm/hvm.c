@@ -6194,7 +6194,8 @@ static void hb_vmDebugEntry( int nMode, int nLine, const char *szName, int nInde
          hb_vmPushDynSym( s_pDynsDbgEntry );
          hb_vmPushNil();
          hb_vmPushInteger( HB_DBG_VMQUIT );
-         hb_vmProc( 1 );
+         hb_vmPushInteger( nIndex );
+         hb_vmProc( 2 );
          break;
    }
 }
@@ -6218,7 +6219,7 @@ static void hb_vmDebuggerExit( HB_BOOL fRemove )
    if( s_pFunDbgEntry )
    {
       /* inform debugger that we are quitting now */
-      s_pFunDbgEntry( HB_DBG_VMQUIT, 0, NULL, 0, NULL );
+      s_pFunDbgEntry( HB_DBG_VMQUIT, 0, NULL, fRemove ? 1 : 0, NULL );
       /* set dummy debugger function to avoid debugger activation in .prg
        *       destructors if any */
       if( fRemove )
