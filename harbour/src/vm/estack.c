@@ -688,8 +688,8 @@ static void hb_stackDispLocal( void )
 
    hb_conOutErr( hb_conNewLine(), 0 );
    hb_snprintf( buffer, sizeof( buffer ), HB_I_("Virtual Machine Stack Dump at %s(%i):"),
-           ( *hb_stack.pBase )->item.asSymbol.value->szName,
-           ( *hb_stack.pBase )->item.asSymbol.stackstate->uiLineNo );
+                ( *hb_stack.pBase )->item.asSymbol.value->szName,
+                ( *hb_stack.pBase )->item.asSymbol.stackstate->uiLineNo );
    hb_conOutErr( buffer, 0 );
    hb_conOutErr( hb_conNewLine(), 0 );
    hb_conOutErr( "--------------------------", 0 );
@@ -726,8 +726,8 @@ static void hb_stackDispLocal( void )
             {
                char szDateTime[ 24 ];
                hb_snprintf( buffer, sizeof( buffer ), HB_I_("TIMESTAMP = \"%s\" "),
-                       hb_timeStampStr( szDateTime, ( *pBase )->item.asDateTime.julian,
-                                                    ( *pBase )->item.asDateTime.time ) );
+                            hb_timeStampStr( szDateTime, ( *pBase )->item.asDateTime.julian,
+                                             ( *pBase )->item.asDateTime.time ) );
             }
             break;
 

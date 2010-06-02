@@ -632,7 +632,7 @@ void hb_compGenObj32( HB_COMP_DECL, PHB_FNAME pFileName )
    {
       char buffer[ 80 + HB_PATH_MAX - 1 ];
       hb_snprintf( buffer, sizeof( buffer ),
-                "Generating Windows/DOS OBJ32 output to \'%s\'... ", szFileName );
+                   "Generating Windows/DOS OBJ32 output to \'%s\'... ", szFileName );
       hb_compOutStd( HB_COMP_PARAM, buffer );
    }
 

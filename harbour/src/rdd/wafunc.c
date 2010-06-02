@@ -154,7 +154,7 @@ HB_ERRCODE hb_rddGetTempAlias( char * szAliasTmp )
 
    for( i = 1; i < 1000; i++ )
    {
-      hb_snprintf( szAliasTmp, 11, "__HBTMP%03i", i);
+      hb_snprintf( szAliasTmp, 11, "__HBTMP%03i", i );
       if( hb_rddGetAliasNumber( szAliasTmp, &iArea ) != HB_SUCCESS )
          return HB_SUCCESS;
    }

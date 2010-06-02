@@ -103,10 +103,11 @@ HB_FUNC( TIP_TIMESTAMP )
    }
 
    hb_snprintf( szRet, sizeof( szRet ), "%s, %d %s %d %02d:%02d:%02d %+03d%02d",
-      s_days[ hb_dateDOW( iYear, iMonth, iDay ) - 1 ], iDay, s_months[ iMonth - 1 ],
-      iYear, iHour, iMinute, iSecond,
-      ( int ) lOffset / 3600,
-      ( int ) ( lOffset % 3600 ) / 60 );
+                s_days[ hb_dateDOW( iYear, iMonth, iDay ) - 1 ],
+                iDay, s_months[ iMonth - 1 ], iYear,
+                iHour, iMinute, iSecond,
+                ( int ) ( lOffset / 3600 ),
+                ( int ) ( ( lOffset % 3600 ) / 60 ) );
 
    hb_retc( szRet );
 }

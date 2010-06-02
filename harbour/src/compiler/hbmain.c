@@ -204,7 +204,7 @@ static int hb_compReadClpFile( HB_COMP_DECL, const char * szClpFile )
    {
       /* TODO: Clipper compatible error */
       hb_snprintf( buffer, sizeof( buffer ),
-                "Cannot open input file: %s\n", szClpFile );
+                   "Cannot open input file: %s\n", szClpFile );
       hb_compOutErr( HB_COMP_PARAM, buffer );
       iStatus = EXIT_FAILURE;
    }
@@ -439,8 +439,8 @@ void hb_compVariableAdd( HB_COMP_DECL, const char * szVarName, PHB_VARTYPE pVarT
    {
       char buffer[ 80 ];
       hb_snprintf( buffer, sizeof( buffer ),
-                "Wrong type of codeblock parameter, is: %d, should be: %d\n",
-                HB_COMP_PARAM->iVarScope, VS_PARAMETER );
+                   "Wrong type of codeblock parameter, is: %d, should be: %d\n",
+                   HB_COMP_PARAM->iVarScope, VS_PARAMETER );
       hb_compOutErr( HB_COMP_PARAM, buffer );
       /* variable defined in a codeblock */
       HB_COMP_PARAM->iVarScope = VS_PARAMETER;
@@ -4275,9 +4275,9 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, const char * szBuff
             iStatus = EXIT_FAILURE;
             fGenCode = HB_FALSE;
             hb_snprintf( buffer, sizeof( buffer ),
-                      "\r%i error%s\n",
-                      HB_COMP_PARAM->iErrorCount,
-                      HB_COMP_PARAM->iErrorCount > 1 ? "s" : "" );
+                         "\r%i error%s\n",
+                         HB_COMP_PARAM->iErrorCount,
+                         HB_COMP_PARAM->iErrorCount > 1 ? "s" : "" );
             hb_compOutStd( HB_COMP_PARAM, buffer );
          }
          else if( HB_COMP_PARAM->iExitLevel == HB_EXITLEVEL_SETEXIT )

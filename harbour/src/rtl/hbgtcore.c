@@ -3164,7 +3164,7 @@ static const char * hb_gt_FindDefault( void )
    for( iPos = 0; iPos < s_iGtCount; iPos++ )
    {
       hb_snprintf( szFuncName, sizeof( szFuncName ),
-                "HB_GT_%s_DEFAULT", s_gtInit[ iPos ]->id );
+                   "HB_GT_%s_DEFAULT", s_gtInit[ iPos ]->id );
       if( hb_dynsymFind( szFuncName ) )
          return s_gtInit[ iPos ]->id;
    }

@@ -193,7 +193,7 @@ HB_FUNC( NETREDIR )
             char szFunction[ 128 ];
 
             hb_snprintf( szFunction, sizeof( szFunction ), "NETREDIR( \"%s\", \"%s\", \"%s\" )",
-                      hb_parcx( 1 ), hb_parcx( 2 ), hb_parcx( 3 ) );
+                         hb_parcx( 1 ), hb_parcx( 2 ), hb_parcx( 3 ) );
 
             pError = hb_errRT_New( ES_ERROR,
                                    "CT",

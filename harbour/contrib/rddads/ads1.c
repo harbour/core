@@ -2971,16 +2971,16 @@ static HB_ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo )
          case HB_FT_MEMO:
          case HB_FT_VARLENGTH:
             uiFldLen = hb_snprintf( ( char * ) ucBuffer, MAX_STR_LEN, "%.*s,%s,%d;",
-                                 ( int ) pArea->area.uiMaxFieldNameLength,
-                                 hb_dynsymName( ( PHB_DYNS ) pField->sym ),
-                                 cType, pField->uiLen );
+                                    ( int ) pArea->area.uiMaxFieldNameLength,
+                                    hb_dynsymName( ( PHB_DYNS ) pField->sym ),
+                                    cType, pField->uiLen );
             break;
 
          default:
             uiFldLen = hb_snprintf( ( char * ) ucBuffer, MAX_STR_LEN, "%.*s,%s,%d,%d;",
-                                 ( int ) pArea->area.uiMaxFieldNameLength,
-                                 hb_dynsymName( ( PHB_DYNS ) pField->sym ),
-                                 cType, pField->uiLen, pField->uiDec );
+                                    ( int ) pArea->area.uiMaxFieldNameLength,
+                                    hb_dynsymName( ( PHB_DYNS ) pField->sym ),
+                                    cType, pField->uiLen, pField->uiDec );
             break;
       }
 
@@ -3168,7 +3168,7 @@ static HB_ERRCODE adsInfo( ADSAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem )
          AdsGetVersion( &ulMajor, &ulMinor, &ucLetter, ucDesc, &usDescLen);
 
          hb_snprintf( ( char * ) ucVersion, sizeof( ucVersion ), "%s, v%lu.%lu%c",
-                   ( char * ) ucDesc, ( HB_ULONG ) ulMajor, ( HB_ULONG ) ulMinor, ucLetter );
+                      ( char * ) ucDesc, ( HB_ULONG ) ulMajor, ( HB_ULONG ) ulMinor, ucLetter );
          hb_itemPutC( pItem, ( char * ) ucVersion );
          break;
       }

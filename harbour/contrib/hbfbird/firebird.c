@@ -137,8 +137,8 @@ HB_FUNC( FBCREATEDB )
       unsigned short dialect = ( unsigned short ) hb_parni( 6 );
 
       hb_snprintf( create_db, sizeof( create_db ),
-                "CREATE DATABASE '%s' USER '%s' PASSWORD '%s' PAGE_SIZE = %i DEFAULT CHARACTER SET %s",
-                db_name, user, pass, page, charset );
+                   "CREATE DATABASE '%s' USER '%s' PASSWORD '%s' PAGE_SIZE = %i DEFAULT CHARACTER SET %s",
+                   db_name, user, pass, page, charset );
 
       if( isc_dsql_execute_immediate( status, &newdb, &trans, 0, create_db, dialect, NULL ) )
          hb_retnl( isc_sqlcode( status ) );
@@ -651,22 +651,22 @@ HB_FUNC( FBGETDATA )
 
                   if( value >= 0 )
                      hb_snprintf( data, sizeof( data ), "%*" ISC_INT64_FORMAT "d.%0*" ISC_INT64_FORMAT "d",
-                               field_width - 1 + dscale,
-                               ( ISC_INT64 ) value / tens,
-                               -dscale,
-                               ( ISC_INT64 ) value % tens );
+                                  field_width - 1 + dscale,
+                                  ( ISC_INT64 ) value / tens,
+                                  -dscale,
+                                  ( ISC_INT64 ) value % tens );
                   else if( ( value / tens ) != 0 )
                      hb_snprintf( data, sizeof( data ), "%*" ISC_INT64_FORMAT "d.%0*" ISC_INT64_FORMAT "d",
-                               field_width - 1 + dscale,
-                               ( ISC_INT64 ) ( value / tens ),
-                               -dscale,
-                               ( ISC_INT64 ) -( value % tens ) );
+                                  field_width - 1 + dscale,
+                                  ( ISC_INT64 ) ( value / tens ),
+                                  -dscale,
+                                  ( ISC_INT64 ) -( value % tens ) );
                   else
                      hb_snprintf( data, sizeof( data ), "%*s.%0*" ISC_INT64_FORMAT "d",
-                               field_width - 1 + dscale,
-                               "-0",
-                               -dscale,
-                               ( ISC_INT64 ) -( value % tens ) );
+                                  field_width - 1 + dscale,
+                                  "-0",
+                                  -dscale,
+                                  ( ISC_INT64 ) -( value % tens ) );
                }
                else if( dscale )
                   hb_snprintf( data, sizeof( data ), "%*" ISC_INT64_FORMAT "d%0*d", field_width, ( ISC_INT64 ) value, dscale, 0 );

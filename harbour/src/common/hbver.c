@@ -246,12 +246,12 @@ char * hb_verPlatform( void )
          if( aulQSV[ QSV_VERSION_MINOR - 1 ] < 30 )
          {
             hb_snprintf( pszPlatform, PLATFORM_BUF_SIZE + 1, "OS/2 %ld.%02ld",
-                      aulQSV[ QSV_VERSION_MAJOR - 1 ] / 10,
-                      aulQSV[ QSV_VERSION_MINOR - 1 ] );
+                         aulQSV[ QSV_VERSION_MAJOR - 1 ] / 10,
+                         aulQSV[ QSV_VERSION_MINOR - 1 ] );
          }
          else
             hb_snprintf( pszPlatform, PLATFORM_BUF_SIZE + 1, "OS/2 %2.2f",
-                      ( float ) aulQSV[ QSV_VERSION_MINOR - 1 ] / 10 );
+                         ( float ) aulQSV[ QSV_VERSION_MINOR - 1 ] / 10 );
       }
       else
          hb_snprintf( pszPlatform, PLATFORM_BUF_SIZE + 1, "OS/2" );
@@ -374,11 +374,11 @@ char * hb_verPlatform( void )
          }
 
          hb_snprintf( pszPlatform, PLATFORM_BUF_SIZE + 1, "Windows%s%s %lu.%lu.%04u",
-                   pszName,
-                   pszWine,
-                   osVer.dwMajorVersion,
-                   osVer.dwMinorVersion,
-                   LOWORD( osVer.dwBuildNumber ) );
+                      pszName,
+                      pszWine,
+                      osVer.dwMajorVersion,
+                      osVer.dwMinorVersion,
+                      LOWORD( osVer.dwBuildNumber ) );
 
          /* Add service pack/other info */
 
@@ -857,8 +857,8 @@ char * hb_verHarbour( void )
 
    pszVersion = ( char * ) hb_xgrab( 80 );
    hb_snprintf( pszVersion, 80, "Harbour %d.%d.%d%s (Rev. %d)",
-             HB_VER_MAJOR, HB_VER_MINOR, HB_VER_RELEASE, HB_VER_STATUS,
-             hb_verSvnID() );
+                HB_VER_MAJOR, HB_VER_MINOR, HB_VER_RELEASE, HB_VER_STATUS,
+                hb_verSvnID() );
 
    return pszVersion;
 }
@@ -871,7 +871,7 @@ char * hb_verPCode( void )
 
    pszPCode = ( char * ) hb_xgrab( 24 );
    hb_snprintf( pszPCode, 24, "PCode version: %d.%d",
-             HB_PCODE_VER >> 8, HB_PCODE_VER & 0xFF );
+                HB_PCODE_VER >> 8, HB_PCODE_VER & 0xFF );
 
    return pszPCode;
 }

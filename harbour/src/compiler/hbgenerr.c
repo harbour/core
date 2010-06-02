@@ -161,10 +161,10 @@ static void hb_compDispMessage( HB_COMP_DECL, char cPrefix, int iValue,
                       HB_COMP_PARAM->currModule, HB_COMP_PARAM->currLine );
       else if( HB_COMP_PARAM->currLine )
          hb_snprintf( buffer, sizeof( buffer ), "\n%s:%i: ",
-                   HB_COMP_PARAM->currModule, HB_COMP_PARAM->currLine );
+                      HB_COMP_PARAM->currModule, HB_COMP_PARAM->currLine );
       else
          hb_snprintf( buffer, sizeof( buffer ), "\n%s:%s ",
-                   HB_COMP_PARAM->currModule, szPar2 );
+                      HB_COMP_PARAM->currModule, szPar2 );
 
       hb_compOutErr( HB_COMP_PARAM, buffer );
    }

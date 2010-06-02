@@ -681,7 +681,7 @@ char * hb_timeStampStr( char * szDateTime, long lJulian, long lMilliSec )
    hb_dateDecode( lJulian, &iYear, &iMonth, &iDay );
    hb_timeDecode( lMilliSec, &iHour, &iMinutes, &iSeconds, &iMSec );
    hb_snprintf( szDateTime, 24, "%04d-%02d-%02d %02d:%02d:%02d.%03d",
-             iYear, iMonth, iDay, iHour, iMinutes, iSeconds, iMSec );
+                iYear, iMonth, iDay, iHour, iMinutes, iSeconds, iMSec );
    szDateTime[ 23 ] = '\0';
 
    return szDateTime;

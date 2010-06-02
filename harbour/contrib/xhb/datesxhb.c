@@ -97,7 +97,7 @@ HB_FUNC( TIMEOFDAY )
       int iSeconds = hb_parni(1);
       iSeconds %= 3600*24;
       hb_snprintf( szResult, sizeof( szResult ), "%02d:%02d:%02d",
-      iSeconds/3600 , (iSeconds % 3600)/60, iSeconds % 60 );
+                   iSeconds/3600 , (iSeconds % 3600)/60, iSeconds % 60 );
    }
    hb_retclen( szResult, 8 );
 }

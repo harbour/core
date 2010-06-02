@@ -1340,7 +1340,7 @@ static void disp_cursor( InOutBase * ioBase )
          if ( ioBase->terminal_type == TERM_LINUX )
          {
             hb_snprintf( escseq, sizeof( escseq ), "\033[?25%c\033[?%hdc",
-                      ioBase->cursor == SC_NONE ? 'l' : 'h', lcurs );
+                         ioBase->cursor == SC_NONE ? 'l' : 'h', lcurs );
             write_ttyseq( ioBase, escseq );
          }
          else if ( cv != NULL )
@@ -1704,8 +1704,8 @@ static void gt_tone( InOutBase * ioBase, double dFrequency, double dDuration )
    if ( ioBase->terminal_type == TERM_LINUX && ioBase->beep != NULL )
    {
       hb_snprintf( escseq, sizeof( escseq ), "\033[10;%hd]\033[11;%hd]%s",
-                ( int ) dFrequency,
-                ( int ) ( dDuration * 1000.0 / 18.2 ), ioBase->beep );
+                   ( int ) dFrequency,
+                   ( int ) ( dDuration * 1000.0 / 18.2 ), ioBase->beep );
       write_ttyseq( ioBase, escseq );
    }
    else

@@ -105,7 +105,7 @@ static void hb_notSupportedInfo( HB_COMP_DECL, const char *szSwitch )
    char buffer[ 512 ];
 
    hb_snprintf( buffer, sizeof( buffer ),
-             "Not yet supported command line option: %s\n", szSwitch );
+                "Not yet supported command line option: %s\n", szSwitch );
 
    hb_compOutStd( HB_COMP_PARAM, buffer );
 }
@@ -667,8 +667,8 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, const char *szSwitch )
                else
                {
                   hb_snprintf( HB_COMP_PARAM->szPrefix,
-                            sizeof( HB_COMP_PARAM->szPrefix ),
-                            "%08lX_", PackDateTime() );
+                               sizeof( HB_COMP_PARAM->szPrefix ),
+                               "%08lX_", PackDateTime() );
                }
                break;
             }

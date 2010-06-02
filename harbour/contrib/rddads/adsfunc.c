@@ -1584,11 +1584,11 @@ HB_FUNC( ADSVERSION )
    {
       case 0:
          hb_snprintf( ucVersion, sizeof( ucVersion ), "%lu.%lu%c",
-                   ( HB_ULONG ) ulMajor, ( HB_ULONG ) ulMinor, ucLetter );
+                      ( HB_ULONG ) ulMajor, ( HB_ULONG ) ulMinor, ucLetter );
          break;
       case 3:
          hb_snprintf( ucVersion, sizeof( ucVersion ), "%s, v%lu.%lu%c",
-                   ( char * ) ucDesc, ( HB_ULONG ) ulMajor, ( HB_ULONG ) ulMinor, ucLetter );
+                      ( char * ) ucDesc, ( HB_ULONG ) ulMajor, ( HB_ULONG ) ulMinor, ucLetter );
          break;
       default:
          ucVersion[ 0 ] = '\0';

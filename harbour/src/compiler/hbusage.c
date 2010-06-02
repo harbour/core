@@ -117,7 +117,7 @@ void hb_compPrintUsage( HB_COMP_DECL, const char * szSelf )
    int iLine;
 
    hb_snprintf( buffer, sizeof( buffer ),
-             "\nSyntax:  %s <file[s][.prg]|@file> [options]\n", szSelf );
+                "\nSyntax:  %s <file[s][.prg]|@file> [options]\n", szSelf );
    hb_compOutStd( HB_COMP_PARAM, buffer );
 
    for( iLine = 0; iLine < ( int ) ( sizeof( szOptions ) / sizeof( char * ) ); iLine++ )
