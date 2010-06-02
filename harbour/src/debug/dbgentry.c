@@ -702,21 +702,26 @@ static void hb_dbgAddStopLines( HB_DEBUGINFO * info, PHB_ITEM pItem )
                int nOrigLen = hb_arrayGetCLen( pLines, 3 );
                int nNewLen = hb_arrayGetCLen( pEntry, 3 );
                int nMin = HB_MIN( nNewMin, nOrigMin );
-               int nMax = HB_MAX( nNewMin + nNewLen * 8, nOrigMin + nOrigLen * 8 );
+               int nMax = HB_MAX( nNewMin + ( nNewLen << 3 ) - 1,
+                                  nOrigMin + ( nOrigLen << 3 ) - 1 );
                const char * pOrigBuffer = hb_arrayGetCPtr( pLines, 3 );
                const char * pNewBuffer = hb_arrayGetCPtr( pEntry, 3 );
-               int nLen = ( nMax + 1 - nMin + 7 ) / 8 + 1;
+               int nLen = ( ( nMax - nMin ) >> 3 ) + 1;
                int k;
-               char * pBuffer = ( char * ) hb_xgrab( nLen );
+               char * pBuffer = ( char * ) hb_xgrab( nLen + 1 );
 
                hb_xmemset( pBuffer, 0, nLen );
 
-               memmove( &( pBuffer[ ( nNewMin - nMin ) / 8 ] ), pNewBuffer, nNewLen );
+               /* the bitfields with line numbers should use
+                * 8bit alignment so it's safe to use byte copy
+                */
+               memmove( &pBuffer[ ( nNewMin - nMin ) >> 3 ], pNewBuffer, nNewLen );
+               nOrigMin = ( nOrigMin - nMin ) >> 3;
                for( k = 0; k < nOrigLen; k++ )
-                  pBuffer[ nOrigMin / 8 + k - nMin / 8 ] |= pOrigBuffer[ k ];
+                  pBuffer[ nOrigMin + k ] |= pOrigBuffer[ k ];
 
                hb_arraySetNL( pLines, 2, nMin );
-               if( !hb_arraySetCLPtr( pLines, 3, pBuffer, nLen - 1 ) )
+               if( !hb_arraySetCLPtr( pLines, 3, pBuffer, nLen ) )
                   hb_xfree( pBuffer );
                bFound = HB_TRUE;
                break;
@@ -1351,10 +1356,10 @@ HB_BOOL hb_dbgIsValidStopLine( void * handle, const char * szModule, int nLine )
          int nMin = hb_arrayGetNL( pEntry, 2 );
          int nOfs = nLine - nMin;
 
-         if( nLine < nMin || ( HB_SIZE )( nOfs / 8 ) > hb_arrayGetCLen( pEntry, 3 ) )
+         if( nOfs < 0 || ( HB_SIZE ) ( nOfs >> 3 ) >= hb_arrayGetCLen( pEntry, 3 ) )
             return HB_FALSE;
 
-         return ( hb_arrayGetCPtr( pEntry, 3 )[ nOfs / 8 ] & ( 1 << ( nOfs % 8 ) ) ) != 0;
+         return ( hb_arrayGetCPtr( pEntry, 3 )[ nOfs >> 3 ] & ( 1 << ( nOfs & 0x07 ) ) ) != 0;
       }
    }
    return HB_FALSE;
@@ -1386,6 +1391,14 @@ static void hb_dbgQuit( HB_DEBUGINFO * info )
       if( module->nStatics )
       {
          hb_xfree( module->aStatics );
+      }
+      if( module->nGlobals )
+      {
+         hb_xfree( module->aGlobals );
+      }
+      if( module->nExternGlobals )
+      {
+         hb_xfree( module->aExternGlobals );
       }
       if( module->szModule )
       {

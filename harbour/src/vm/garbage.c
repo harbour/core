@@ -131,14 +131,15 @@ typedef struct HB_GARBAGE_
 #define HB_GC_DELETELST    4  /* item will be deleted during finalization */
 
 #ifdef HB_GC_AUTO
-#define HB_GC_AUTO_CHECK      100000
-#define HB_GC_AUTO_MAX        ( ( HB_PTRUINT ) ( -1 ) );
+#define HB_GC_AUTO_MAX        ( ( HB_PTRUINT ) ( -1 ) )
 /* number of allocated memory blocks */
 static HB_PTRUINT s_ulBlocks = 0;
 /* number of allocated memory blocks after last GC activation */
 static HB_PTRUINT s_ulBlocksMarked = 0;
+/* number of memory blocks between automatic GC activation */
+static HB_PTRUINT s_ulBlocksAuto = 0;
 /* number of allocated memory blocks which should force next GC activation */
-static HB_PTRUINT s_ulBlocksCheck = HB_GC_AUTO_CHECK;
+static HB_PTRUINT s_ulBlocksCheck = 0;
 
 #  define HB_GC_AUTO_INC      ++s_ulBlocks;
 #  define HB_GC_AUTO_DEC      --s_ulBlocks;
@@ -200,28 +201,14 @@ void * hb_gcAllocate( HB_SIZE ulSize, const HB_GC_FUNCS * pFuncs )
    HB_GARBAGE_PTR pAlloc;
 
    pAlloc = HB_GARBAGE_NEW( ulSize );
-   if( pAlloc )
-   {
-      pAlloc->pFuncs = pFuncs;
-      pAlloc->locked = 1;
-      pAlloc->used   = s_uUsedFlag;
-      HB_GC_LOCK
-#ifdef HB_GC_AUTO
-      if( s_ulBlocks > s_ulBlocksCheck )
-      {
-         HB_GC_UNLOCK
-         hb_gcCollectAll( HB_TRUE );
-         HB_GC_LOCK
-         pAlloc->used   = s_uUsedFlag;
-      }
-#endif
-      hb_gcLink( &s_pLockedBlock, pAlloc );
-      HB_GC_UNLOCK
+   pAlloc->pFuncs = pFuncs;
+   pAlloc->locked = 1;
+   pAlloc->used   = s_uUsedFlag;
+   HB_GC_LOCK
+   hb_gcLink( &s_pLockedBlock, pAlloc );
+   HB_GC_UNLOCK
 
-      return HB_BLOCK_PTR( pAlloc );        /* hide the internal data */
-   }
-   else
-      return NULL;
+   return HB_BLOCK_PTR( pAlloc );        /* hide the internal data */
 }
 
 /* allocates a memory block */
@@ -230,30 +217,25 @@ void * hb_gcAllocRaw( HB_SIZE ulSize, const HB_GC_FUNCS * pFuncs )
    HB_GARBAGE_PTR pAlloc;
 
    pAlloc = HB_GARBAGE_NEW( ulSize );
-   if( pAlloc )
-   {
-      pAlloc->pFuncs = pFuncs;
-      pAlloc->locked = 0;
-      pAlloc->used   = s_uUsedFlag;
+   pAlloc->pFuncs = pFuncs;
+   pAlloc->locked = 0;
+   pAlloc->used   = s_uUsedFlag;
 
-      HB_GC_LOCK
+   HB_GC_LOCK
 #ifdef HB_GC_AUTO
-      if( s_ulBlocks > s_ulBlocksCheck )
-      {
-         HB_GC_UNLOCK
-         hb_gcCollectAll( HB_TRUE );
-         HB_GC_LOCK
-         pAlloc->used   = s_uUsedFlag;
-      }
-      HB_GC_AUTO_INC
-#endif
-      hb_gcLink( &s_pCurrBlock, pAlloc );
+   if( s_ulBlocks > s_ulBlocksCheck )
+   {
       HB_GC_UNLOCK
-
-      return HB_BLOCK_PTR( pAlloc );        /* hide the internal data */
+      hb_gcCollectAll( HB_TRUE );
+      HB_GC_LOCK
+      pAlloc->used   = s_uUsedFlag;
    }
-   else
-      return NULL;
+   HB_GC_AUTO_INC
+#endif
+   hb_gcLink( &s_pCurrBlock, pAlloc );
+   HB_GC_UNLOCK
+
+   return HB_BLOCK_PTR( pAlloc );        /* hide the internal data */
 }
 
 /* release a memory block allocated with hb_gcAlloc*() */
@@ -399,30 +381,23 @@ static const HB_GC_FUNCS s_gcGripFuncs =
 
 HB_ITEM_PTR hb_gcGripGet( HB_ITEM_PTR pOrigin )
 {
-   HB_GARBAGE_PTR pAlloc;
+   HB_GARBAGE_PTR pAlloc = HB_GARBAGE_NEW( sizeof( HB_ITEM ) );
+   HB_ITEM_PTR pItem = ( HB_ITEM_PTR ) HB_BLOCK_PTR( pAlloc );
 
-   pAlloc = HB_GARBAGE_NEW( sizeof( HB_ITEM ) );
-   if( pAlloc )
-   {
-      HB_ITEM_PTR pItem = ( HB_ITEM_PTR ) HB_BLOCK_PTR( pAlloc );
+   pAlloc->pFuncs = &s_gcGripFuncs;
+   pAlloc->locked = 1;
+   pAlloc->used   = s_uUsedFlag;
 
-      pAlloc->pFuncs  = &s_gcGripFuncs;
-      pAlloc->locked = 1;
-      pAlloc->used   = s_uUsedFlag;
+   pItem->type = HB_IT_NIL;
 
-      pItem->type = HB_IT_NIL;
+   HB_GC_LOCK
+   hb_gcLink( &s_pLockedBlock, pAlloc );
+   HB_GC_UNLOCK
 
-      HB_GC_LOCK
-      hb_gcLink( &s_pLockedBlock, pAlloc );
-      HB_GC_UNLOCK
+   if( pOrigin )
+      hb_itemCopy( pItem, pOrigin );
 
-      if( pOrigin )
-         hb_itemCopy( pItem, pOrigin );
-
-      return pItem;
-   }
-   else
-      return NULL;
+   return pItem;
 }
 
 void hb_gcGripDrop( HB_ITEM_PTR pItem )
@@ -701,9 +676,14 @@ void hb_gcCollectAll( HB_BOOL fForce )
 #ifdef HB_GC_AUTO
       /* store number of marked blocks for automatic GC activation */
       s_ulBlocksMarked = s_ulBlocks;
-      s_ulBlocksCheck = s_ulBlocksMarked + HB_GC_AUTO_CHECK;
-      if( s_ulBlocksCheck <= s_ulBlocksMarked )
+      if( s_ulBlocksAuto == 0 )
          s_ulBlocksCheck = HB_GC_AUTO_MAX;
+      else
+      {
+         s_ulBlocksCheck = s_ulBlocksMarked + s_ulBlocksAuto;
+         if( s_ulBlocksCheck <= s_ulBlocksMarked )
+            s_ulBlocksCheck = HB_GC_AUTO_MAX;
+      }
 #endif
 
       /* call memory manager cleanup function */
@@ -814,3 +794,31 @@ HB_FUNC( HB_GCALL )
 
    hb_gcCollectAll( hb_pcount() < 1 || hb_parl( 1 ) );
 }
+
+#ifdef HB_GC_AUTO
+HB_FUNC( HB_GCSETAUTO )
+{
+   HB_PTRUINT nBlocks, nPrevBlocks;
+   HB_BOOL fSet = HB_ISNUM( 1 );
+
+   nBlocks = fSet ? hb_parnint( 1 ) * 1000 : 0;
+
+   HB_GC_LOCK
+   nPrevBlocks = s_ulBlocksAuto;
+   if( fSet )
+   {
+      s_ulBlocksAuto = nBlocks;
+      if( s_ulBlocksAuto == 0 )
+         s_ulBlocksCheck = HB_GC_AUTO_MAX;
+      else
+      {
+         s_ulBlocksCheck = s_ulBlocksMarked + s_ulBlocksAuto;
+         if( s_ulBlocksCheck <= s_ulBlocksMarked )
+            s_ulBlocksCheck = HB_GC_AUTO_MAX;
+      }
+   }
+   HB_GC_UNLOCK
+
+   hb_retnint( nPrevBlocks / 1000 );
+}
+#endif
