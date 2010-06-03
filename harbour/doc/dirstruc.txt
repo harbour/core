@@ -53,12 +53,6 @@ track of all files (read the FAQ if you don't know what SVN is).
 |   +---hbbmcdx         - DBFCDX RDD with bitmap filters compatible with
 |   |                     CA-Cl*pper 5.3
 |   |
-|   +---hbbtree         - BTree library.
-|   |   |
-|   |   +---doc         - HB_BTree C and Harbour API documentation.
-|   |   |
-|   |   +---tests       - HB_BTree api test programs.
-|   |
 |   +---hbclipsm        - Miscellaneous contribution files.
 |   |   |
 |   |   +---tests       - Test programs.
@@ -218,6 +212,12 @@ track of all files (read the FAQ if you don't know what SVN is).
 |   +---dbu         - Make files (without source) for CA-Cl*pper DBU.
 |   |
 |   +---guestbk     - Harbour Guests Book.
+|   |
+|   +---hbbtree         - BTree library.
+|   |   |
+|   |   +---doc         - HB_BTree C and Harbour API documentation.
+|   |   |
+|   |   +---tests       - HB_BTree api test programs.
 |   |
 |   +---hbdoc           - Documentation generation tool.
 |   |

@@ -8,7 +8,6 @@ ROOT := ../
 DIRS := \
    gtwvg \
    hbblink \
-   hbbtree \
    hbbz2 \
    hbclipsm \
    hbcomm \
