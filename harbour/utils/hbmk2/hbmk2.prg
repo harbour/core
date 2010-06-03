@@ -4076,7 +4076,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    /* Check if we've found all dependencies */
 
    IF ! lSkipBuild .AND. ! lStopAfterInit .AND. ! lStopAfterHarbour
-      IF dep_evaluate( hbmk )
+      IF ! dep_evaluate( hbmk )
          IF hbmk[ _HBMK_lBEEP ]
             DoBeep( .F. )
          ENDIF
