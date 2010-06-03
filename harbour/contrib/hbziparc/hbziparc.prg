@@ -10,7 +10,7 @@
  * Copyright 2008 Toninho (toninhofwi yahoo.com.br)
  * Copyright 2000-2001 Luiz Rafael Culik <culik@sl.conex.net>
  *   (original ZipArchive interface, docs)
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

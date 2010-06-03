@@ -8,7 +8,7 @@
  * Copyright 2009 Viktor Szakats (harbour.01 syenar.hu)
  *    (fixed, adapted to CLI, translated, formatted)
  * Copyright 2006 Marcelo Torres <lichitorres@yahoo.com.ar>
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  */
 

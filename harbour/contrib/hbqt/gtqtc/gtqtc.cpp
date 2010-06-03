@@ -14,7 +14,7 @@
  * Copyright 2006 Przemyslaw Czerpak <druzus /at/ priv.onet.pl>
  *    Adopted to new GT API
  *
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  * See COPYING for licensing terms.
  *

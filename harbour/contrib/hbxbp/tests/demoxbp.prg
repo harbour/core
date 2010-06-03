@@ -6,7 +6,7 @@
  * Harbour Project source code:
  *
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -1288,7 +1288,7 @@ FUNCTION Build_HTMLViewer( oWnd )
    // oHtm := XbpHTMLViewer():new( oWnd, , {10,10}, {sz_[1]-25,sz_[2]-30-15} )
    oHtm := XbpHTMLViewer():new( oFrm, , {10,10}, {sz_[1]-10-10,sz_[2]-10-10} )
    oHtm:create()
-   oHtm:navigate( "http://www.harbour-project.org" )
+   oHtm:navigate( "http://harbour-project.org" )
    oHtm:titleChange := {|e| UNU( e ) }
 
    RETURN oHtm

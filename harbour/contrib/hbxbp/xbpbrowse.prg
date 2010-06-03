@@ -7,7 +7,7 @@
  * Source file for the Xbp*Classes
  *
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
- * http://www.harbour-project.org
+ * http://harbour-project.org
  *
  * Navigation Based on TBrowse.prg
  * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>

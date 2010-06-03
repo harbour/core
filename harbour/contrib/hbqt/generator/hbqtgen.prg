@@ -7,7 +7,7 @@
  * Harbour-Qt wrapper generator.
  *
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -1471,7 +1471,7 @@ STATIC FUNCTION BuildHeader( txt_, nMode )
    aadd( txt_, " * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>"                    )
    aadd( txt_, " * "                                                                           )
    aadd( txt_, " * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>"     )
-   aadd( txt_, " * www - http://www.harbour-project.org"                                       )
+   aadd( txt_, " * www - http://harbour-project.org"                                       )
    aadd( txt_, " * "                                                                           )
    aadd( txt_, " * This program is free software; you can redistribute it and/or modify"       )
    aadd( txt_, " * it under the terms of the GNU General Public License as published by"       )
@@ -1574,7 +1574,7 @@ STATIC FUNCTION DispLogo()
    cHlp += ''                                                        + s_NewLine
    cHlp += "Harbour Source Gennerator for QT " + HBRawVersion()      + s_NewLine
    cHlp += "Copyright (c) 2009, Pritpal Bedi <pritpal@vouchcac.com>" + s_NewLine
-   cHlp += "http://www.harbour-project.org/"                         + s_NewLine
+   cHlp += "http://harbour-project.org/"                         + s_NewLine
    cHlp += ''                                                        + s_NewLine
 
    OutStd( cHlp )

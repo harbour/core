@@ -6,7 +6,7 @@
  * Harbour Project source code:
  *
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -51,7 +51,7 @@
 
 /*
  * The following parts are Copyright of the individual authors.
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  * Copyright 2010 Viktor Szakats (harbour.01 syenar.hu)
  *    hbide_PathProc(), hbide_DirAddPathSep(), DirDelPathSep()
@@ -979,7 +979,7 @@ FUNCTION hbide_help( nOption )
       AAdd( txt_, "Qt " + QT_VERSION_STR() )
       AAdd( txt_, "" )
       AAdd( txt_, "Visit the project website at:" )
-      AAdd( txt_, "<a href='http://www.harbour-project.org/'>http://www.harbour-project.org/</a>" )
+      AAdd( txt_, "<a href='http://harbour-project.org/'>http://harbour-project.org/</a>" )
       AAdd( txt_, "<a href='http://hbide.vouch.info/'>http://hbide.vouch.info/</a>" )
       EXIT
 
@@ -1009,7 +1009,7 @@ FUNCTION hbide_help( nOption )
       AAdd( txt_, 'terminal plugins and different databases (not just DBF)"' )
       AAdd( txt_, "" )
       AAdd( txt_, "Get downloads, samples, contribs and much more at:" )
-      AAdd( txt_, "<a href='http://www.harbour-project.org/'>http://www.harbour-project.org/</a>" )
+      AAdd( txt_, "<a href='http://harbour-project.org/'>http://harbour-project.org/</a>" )
       EXIT
 
    END
@@ -1196,7 +1196,7 @@ FUNCTION hbide_fetchAString( qParent, cDefault, cWhat, cTitle )
  * Harbour Project source code:
  *
  * Copyright 2010 Viktor Szakats (harbour.01 syenar.hu)
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  */
 #define HBIDE_HBP_PTYPE_FILES           "files"
