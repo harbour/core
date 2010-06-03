@@ -379,7 +379,7 @@ REQUEST hbmk_KEYW
 
 #define _HBMKDEP_cName          1
 #define _HBMKDEP_aPKG           2
-#define _HBMKDEP_cKeyHeader     3
+#define _HBMKDEP_aKeyHeader     3
 #define _HBMKDEP_cControl       4
 #define _HBMKDEP_lOptional      5
 #define _HBMKDEP_aINCPATH       6
@@ -2117,7 +2117,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
          cParam := MacroProc( hbmk, SubStr( cParam, Len( "-depkeyhead=" ) + 1 ), aParam[ _PAR_cFileName ] )
          IF dep_split_arg( hbmk, cParam, @cParam, @tmp )
-            hbmk[ _HBMK_hDEP ][ cParam ][ _HBMKDEP_cKeyHeader ] := AllTrim( StrTran( tmp, "\", "/" ) )
+            AAddNew( hbmk[ _HBMK_hDEP ][ cParam ][ _HBMKDEP_aKeyHeader ], AllTrim( StrTran( tmp, "\", "/" ) ) )
          ENDIF
 
       CASE Left( cParam, Len( "-depoptional=" ) ) == "-depoptional="
@@ -5828,11 +5828,12 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, lSystemHeader, tT
             lSystemHeader := ( Left( cHeader, 1 ) == "<" )
             cHeader := SubStr( cHeader, 2, Len( cHeader ) - 2 )
 
-            FindNewerHeaders( hbmk, cHeader, iif( lCMode, FN_DirGet( cFileName ), cParentDir ), lSystemHeader, tTimeParent, lIncTry, lCMode, cBin_CompC, @headstate, nNestingLevel + 1 )
-            headstate[ _HEADSTATE_lAnyNewer ] := .T.
-            /* Let it continue if we want to scan for header locations */
-            IF ! lIncTry
-               RETURN .T.
+            IF FindNewerHeaders( hbmk, cHeader, iif( lCMode, FN_DirGet( cFileName ), cParentDir ), lSystemHeader, tTimeParent, lIncTry, lCMode, cBin_CompC, @headstate, nNestingLevel + 1 )
+               headstate[ _HEADSTATE_lAnyNewer ] := .T.
+               /* Let it continue if we want to scan for header locations */
+               IF ! lIncTry
+                  RETURN .T.
+               ENDIF
             ENDIF
          NEXT
       ENDIF
@@ -5925,7 +5926,7 @@ STATIC FUNCTION dep_split_arg( hbmk, cParam, /* @ */ cName, /* @ */ cData )
          dep := Array( _HBMKDEP_MAX_ )
          dep[ _HBMKDEP_cName ] := cName
          dep[ _HBMKDEP_aPKG ] := {}
-         dep[ _HBMKDEP_cKeyHeader ] := NIL
+         dep[ _HBMKDEP_aKeyHeader ] := {}
          dep[ _HBMKDEP_cControl ] := NIL
          dep[ _HBMKDEP_lOptional ] := .F.
          dep[ _HBMKDEP_aINCPATH ] := {}
@@ -5961,7 +5962,7 @@ STATIC PROCEDURE dep_postprocess( hbmk )
       SWITCH Lower( dep[ _HBMKDEP_cControl ] )
       CASE "no"
          dep[ _HBMKDEP_cControl ] := Lower( dep[ _HBMKDEP_cControl ] )
-         dep[ _HBMKDEP_cKeyHeader ] := ""
+         dep[ _HBMKDEP_aKeyHeader ] := {}
          dep[ _HBMKDEP_aPKG ] := {}
          dep[ _HBMKDEP_aINCPATH ] := {}
          dep[ _HBMKDEP_aINCPATHLOCAL ] := {}
@@ -5978,7 +5979,7 @@ STATIC PROCEDURE dep_postprocess( hbmk )
       CASE "yes" /* do nothing */
          EXIT
       CASE "force"
-         dep[ _HBMKDEP_cKeyHeader ] := ""
+         dep[ _HBMKDEP_aKeyHeader ] := {}
          dep[ _HBMKDEP_aPKG ] := {}
          dep[ _HBMKDEP_aINCPATH ] := {}
          dep[ _HBMKDEP_aINCPATHLOCAL ] := {}
@@ -5997,6 +5998,7 @@ STATIC PROCEDURE dep_postprocess( hbmk )
 
 STATIC PROCEDURE dep_postprocess_2( hbmk )
    LOCAL dep
+   LOCAL tmp
 
    /* Create a hash table of dependencies "indexed" by key header,
       for header detection. */
@@ -6010,17 +6012,19 @@ STATIC PROCEDURE dep_postprocess_2( hbmk )
    #endif
 
    FOR EACH dep IN hbmk[ _HBMK_hDEP ]
-      IF ! Empty( dep[ _HBMKDEP_cKeyHeader ] ) .AND. ;
+      IF ! Empty( dep[ _HBMKDEP_aKeyHeader ] ) .AND. ;
          ! dep[ _HBMKDEP_lFound ]
          IF ! Empty( dep[ _HBMKDEP_aINCPATH ] ) .OR. ;
             ! Empty( dep[ _HBMKDEP_aINCPATHLOCAL ] )
-            IF dep[ _HBMKDEP_cKeyHeader ] $ hbmk[ _HBMK_hDEPBYHEADER ]
-               hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Same key header used for multiple dependencies: %1$s in %2$s (found already in: %3$s)" ), dep[ _HBMKDEP_cKeyHeader ], dep[ _HBMKDEP_cName ], hbmk[ _HBMK_hDEPBYHEADER ][ dep[ _HBMKDEP_cKeyHeader ] ][ _HBMKDEP_cName ] ) )
-            ELSE
-               hbmk[ _HBMK_hDEPBYHEADER ][ dep[ _HBMKDEP_cKeyHeader ] ] := dep
-            ENDIF
+            FOR EACH tmp IN dep[ _HBMKDEP_aKeyHeader ]
+               IF tmp $ hbmk[ _HBMK_hDEPBYHEADER ]
+                  hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Same key header used for multiple dependencies: %1$s in %2$s (found already in: %3$s)" ), tmp, dep[ _HBMKDEP_cName ], hbmk[ _HBMK_hDEPBYHEADER ][ tmp ][ _HBMKDEP_cName ] ) )
+               ELSE
+                  hbmk[ _HBMK_hDEPBYHEADER ][ tmp ] := dep
+               ENDIF
+            NEXT
          ELSE
-            hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Key header specified without header search paths: %1$s" ), dep[ _HBMKDEP_cKeyHeader ] ) )
+            hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Key header specified without header search paths: %1$s" ), dep[ _HBMKDEP_cName ] ) )
          ENDIF
       ENDIF
    NEXT
@@ -6219,15 +6223,17 @@ STATIC FUNCTION FindHeader( hbmk, cFileName, cParentDir, lIncTry, lSystemHeader 
                   IF hb_FileExists( tmp )
                      dep[ _HBMKDEP_cFound ] := DirDelPathSep( PathSepToSelf( cDir ) )
                      dep[ _HBMKDEP_lFound ] := .T.
-                     dep[ _HBMKDEP_lFoundLOCAL ] := ( cDir:__enumIndex() == 2 )
+                     dep[ _HBMKDEP_lFoundLOCAL ] := ( aINCPATH:__enumIndex() == 2 )
                      IF hbmk[ _HBMK_lDEBUGDEPD ]
-                        hbmk_OutStd( hbmk, hb_StrFormat( "debugdepd: REQ %1$s: found as header at %2$s %3$s", dep[ _HBMKDEP_cName ], dep[ _HBMKDEP_cFound ], iif( dep[ _HBMKDEP_lFoundLOCAL ], "(local)", "" ) ) )
+                        hbmk_OutStd( hbmk, hb_StrFormat( "debugdepd: REQ %1$s: found by %2$s header at %3$s %4$s", dep[ _HBMKDEP_cName ], PathSepToSelf( cFileName ), dep[ _HBMKDEP_cFound ], iif( dep[ _HBMKDEP_lFoundLOCAL ], "(local)", "" ) ) )
                      ENDIF
                      IF AScan( hbmk[ _HBMK_aINCPATH ], { |tmp| tmp == cDir } ) == 0
                         AAdd( hbmk[ _HBMK_aINCPATH ], DirDelPathSep( PathSepToSelf( cDir ) ) )
                      ENDIF
                      AAdd( hbmk[ _HBMK_aOPTC ], "-D" + _HBMK_HAS_PREF + StrToDefine( dep[ _HBMKDEP_cName ] ) )
-                     hb_HDel( hbmk[ _HBMK_hDEPBYHEADER ], cFileName )
+                     FOR EACH cFileName IN hbmk[ _HBMK_hDEP ][ dep[ _HBMKDEP_cName ] ][ _HBMKDEP_aKeyHeader ]
+                        hb_HDel( hbmk[ _HBMK_hDEPBYHEADER ], cFileName )
+                     NEXT
                      RETURN tmp
                   ENDIF
                NEXT
@@ -9821,7 +9827,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-rebuildpo"         , I_( "recreate .po file, thus removing all obsolete entries in it" ) },;
       NIL,;
       { "-deppkgname=<d:n>"       , I_( "<d> is the name of the dependency. <n> name of the package depedency. Can be specified multiple times." ) },;
-      { "-depkeyhead=<d:h>"       , I_( "<d> is the name of the dependency. <h> is the key header (.h) of the package dependency. Only one can be speficied." ) },;
+      { "-depkeyhead=<d:h>"       , I_( "<d> is the name of the dependency. <h> is the key header (.h) of the package dependency. Multiple alternative headers can be specified." ) },;
       { "-depoptional=<d:f>"      , I_( "<d> is the name of the dependency. <f> can be 'yes' or 'no', specifies whether the dependency is optional. Default: no" ) },;
       { "-depcontrol=<d:v>"       , I_( "<d> is the name of the dependency. <v> is a value that controls how detection is done. Accepted values: no, yes, force, nolocal, local. Default: content of envvar HBMK2_WITH_<d>" ) },;
       { "-depincpath=<d:i>"       , I_( "<d> is the name of the dependency. Add <i> to the header detection path list" ) },;
