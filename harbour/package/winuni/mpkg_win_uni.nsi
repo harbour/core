@@ -326,10 +326,10 @@ Section "Start Menu and Desktop icons" hb_shortcuts
   CreateShortCut  "$SMPROGRAMS\Harbour Project 2.0\Harbour Project.lnk" "$INSTDIR" "" "$INSTDIR" 0
   CreateShortCut  "$SMPROGRAMS\Harbour Project 2.0\hbrun.lnk" "$INSTDIR\bin\hbrun.exe" "-v" "$INSTDIR\bin\hbrun.exe" 0
   CreateDirectory "$SMPROGRAMS\Harbour Project 2.0\Links"
-  WriteINIStr     "$SMPROGRAMS\Harbour Project 2.0\Links\Homepage.url"                   "InternetShortcut" "URL" "http://www.harbour-project.org/"
-  WriteINIStr     "$SMPROGRAMS\Harbour Project 2.0\Links\User Forums.url"                "InternetShortcut" "URL" "http://sourceforge.net/apps/phpbb/harbour-project/"
+  WriteINIStr     "$SMPROGRAMS\Harbour Project 2.0\Links\Homepage.url"                   "InternetShortcut" "URL" "http://harbour-project.org/"
   WriteINIStr     "$SMPROGRAMS\Harbour Project 2.0\Links\Sourceforge Page.url"           "InternetShortcut" "URL" "http://sourceforge.net/projects/harbour-project/"
-  WriteINIStr     "$SMPROGRAMS\Harbour Project 2.0\Links\Developers' Mail Archives.url"  "InternetShortcut" "URL" "http://lists.harbour-project.org/pipermail/harbour/"
+  WriteINIStr     "$SMPROGRAMS\Harbour Project 2.0\Links\Users' Mailing List.url"        "InternetShortcut" "URL" "http://groups.google.com/group/harbour-users/"
+  WriteINIStr     "$SMPROGRAMS\Harbour Project 2.0\Links\Developers' Mailing List.url"   "InternetShortcut" "URL" "http://groups.google.com/group/harbour-devel/"
   WriteINIStr     "$SMPROGRAMS\Harbour Project 2.0\Links\Development Timeline.url"       "InternetShortcut" "URL" "http://sourceforge.net/apps/trac/harbour-project/timeline"
 
 SectionEnd
