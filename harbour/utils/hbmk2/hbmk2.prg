@@ -279,118 +279,117 @@ REQUEST hbmk_KEYW
 #define _HBMK_lDEBUG            17
 #define _HBMK_nHEAD             18
 #define _HBMK_aINCPATH          19
-#define _HBMK_lINCPATHDETECT    20
-#define _HBMK_lREBUILD          21
-#define _HBMK_lCLEAN            22
-#define _HBMK_lTRACE            23
-#define _HBMK_lDONTEXEC         24
-#define _HBMK_nHBMODE           25
-#define _HBMK_cUILNG            26
-#define _HBMK_cUICDP            27
-#define _HBMK_aLIBUSER          28
-#define _HBMK_aLIBUSERGT        29
-#define _HBMK_aLIBUSERSYS       30
-#define _HBMK_aLIBUSERSYSPRE    31
-#define _HBMK_aLIBPATH          32
-#define _HBMK_aINSTPATH         33
-#define _HBMK_aOPTC             34
-#define _HBMK_aOPTPRG           35
-#define _HBMK_aOPTRES           36
-#define _HBMK_aOPTL             37
-#define _HBMK_aOPTA             38
-#define _HBMK_aOPTD             39
-#define _HBMK_aOPTI             40
-#define _HBMK_lCPP              41
-#define _HBMK_lSHARED           42
-#define _HBMK_lSTATICFULL       43
-#define _HBMK_lSHAREDDIST       44
-#define _HBMK_lNULRDD           45
-#define _HBMK_lMAP              46
-#define _HBMK_lBEEP             47
-#define _HBMK_lSTRIP            48
-#define _HBMK_lOPTIM            49
-#define _HBMK_nCOMPR            50
-#define _HBMK_nWARN             51
-#define _HBMK_lRUN              52
-#define _HBMK_lINC              53
-#define _HBMK_lREBUILDPO        54
-#define _HBMK_lMINIPO           55
-#define _HBMK_lUNICODE          56
-#define _HBMK_nCONF             57
-#define _HBMK_lIGNOREERROR      58
-#define _HBMK_lIMPLIB           59
-#define _HBMK_lHBCPPMM          60
-#define _HBMK_aVAR              61
-#define _HBMK_hREQ              62
-#define _HBMK_hREQBYHEADER      63
+#define _HBMK_lREBUILD          20
+#define _HBMK_lCLEAN            21
+#define _HBMK_lTRACE            22
+#define _HBMK_lDONTEXEC         23
+#define _HBMK_nHBMODE           24
+#define _HBMK_cUILNG            25
+#define _HBMK_cUICDP            26
+#define _HBMK_aLIBUSER          27
+#define _HBMK_aLIBUSERGT        28
+#define _HBMK_aLIBUSERSYS       29
+#define _HBMK_aLIBUSERSYSPRE    30
+#define _HBMK_aLIBPATH          31
+#define _HBMK_aINSTPATH         32
+#define _HBMK_aOPTC             33
+#define _HBMK_aOPTPRG           34
+#define _HBMK_aOPTRES           35
+#define _HBMK_aOPTL             36
+#define _HBMK_aOPTA             37
+#define _HBMK_aOPTD             38
+#define _HBMK_aOPTI             39
+#define _HBMK_lCPP              40
+#define _HBMK_lSHARED           41
+#define _HBMK_lSTATICFULL       42
+#define _HBMK_lSHAREDDIST       43
+#define _HBMK_lNULRDD           44
+#define _HBMK_lMAP              45
+#define _HBMK_lBEEP             46
+#define _HBMK_lSTRIP            47
+#define _HBMK_lOPTIM            48
+#define _HBMK_nCOMPR            49
+#define _HBMK_nWARN             50
+#define _HBMK_lRUN              51
+#define _HBMK_lINC              52
+#define _HBMK_lREBUILDPO        53
+#define _HBMK_lMINIPO           54
+#define _HBMK_lUNICODE          55
+#define _HBMK_nCONF             56
+#define _HBMK_lIGNOREERROR      57
+#define _HBMK_lIMPLIB           58
+#define _HBMK_lHBCPPMM          59
+#define _HBMK_aVAR              60
+#define _HBMK_hDEP              61
+#define _HBMK_hDEPBYHEADER      62
 
-#define _HBMK_lCreateLib        64
-#define _HBMK_lCreateDyn        65
-#define _HBMK_lCreateImpLib     66
+#define _HBMK_lCreateLib        63
+#define _HBMK_lCreateDyn        64
+#define _HBMK_lCreateImpLib     65
 
-#define _HBMK_lDynVM            67
+#define _HBMK_lDynVM            66
 
-#define _HBMK_lBLDFLGP          68
-#define _HBMK_lBLDFLGC          69
-#define _HBMK_lBLDFLGL          70
+#define _HBMK_lBLDFLGP          67
+#define _HBMK_lBLDFLGC          68
+#define _HBMK_lBLDFLGL          69
 
-#define _HBMK_cFIRST            71
-#define _HBMK_aPRG              72
-#define _HBMK_aC                73
-#define _HBMK_aCPP              74
-#define _HBMK_aRESSRC           75
-#define _HBMK_aRESCMP           76
-#define _HBMK_aOBJUSER          77
-#define _HBMK_aICON             78
-#define _HBMK_aIMPLIBSRC        79
-#define _HBMK_aDEF              80
-#define _HBMK_hDEPTS            81
+#define _HBMK_cFIRST            70
+#define _HBMK_aPRG              71
+#define _HBMK_aC                72
+#define _HBMK_aCPP              73
+#define _HBMK_aRESSRC           74
+#define _HBMK_aRESCMP           75
+#define _HBMK_aOBJUSER          76
+#define _HBMK_aICON             77
+#define _HBMK_aIMPLIBSRC        78
+#define _HBMK_aDEF              79
+#define _HBMK_hDEPTS            80
 
-#define _HBMK_aPO               82
-#define _HBMK_cHBL              83
-#define _HBMK_cHBLDir           84
-#define _HBMK_aLNG              85
-#define _HBMK_cPO               86
+#define _HBMK_aPO               81
+#define _HBMK_cHBL              82
+#define _HBMK_cHBLDir           83
+#define _HBMK_aLNG              84
+#define _HBMK_cPO               85
 
-#define _HBMK_aPLUGIN           87
-#define _HBMK_hPLUGINHRB        88
-#define _HBMK_hPLUGINVars       89
-#define _HBMK_aPLUGINPars       90
+#define _HBMK_aPLUGIN           86
+#define _HBMK_hPLUGINHRB        87
+#define _HBMK_hPLUGINVars       88
+#define _HBMK_aPLUGINPars       89
 
-#define _HBMK_lDEBUGTIME        91
-#define _HBMK_lDEBUGINC         92
-#define _HBMK_lDEBUGSTUB        93
-#define _HBMK_lDEBUGI18N        94
-#define _HBMK_lDEBUGDEPD        95
+#define _HBMK_lDEBUGTIME        90
+#define _HBMK_lDEBUGINC         91
+#define _HBMK_lDEBUGSTUB        92
+#define _HBMK_lDEBUGI18N        93
+#define _HBMK_lDEBUGDEPD        94
 
-#define _HBMK_cCCPATH           96
-#define _HBMK_cCCPREFIX         97
-#define _HBMK_cCCPOSTFIX        98
-#define _HBMK_cCCEXT            99
+#define _HBMK_cCCPATH           95
+#define _HBMK_cCCPREFIX         96
+#define _HBMK_cCCPOSTFIX        97
+#define _HBMK_cCCEXT            98
 
-#define _HBMK_cWorkDir          100
-#define _HBMK_nCmd_Esc          101
-#define _HBMK_nScr_Esc          102
-#define _HBMK_nErrorLevel       103
+#define _HBMK_cWorkDir          99
+#define _HBMK_nCmd_Esc          100
+#define _HBMK_nScr_Esc          101
+#define _HBMK_nErrorLevel       102
 
-#define _HBMK_cPROGDIR          104
-#define _HBMK_cPROGNAME         105
+#define _HBMK_cPROGDIR          103
+#define _HBMK_cPROGNAME         104
 
-#define _HBMK_MAX_              105
+#define _HBMK_MAX_              104
 
-#define _HBMKREQ_cName          1
-#define _HBMKREQ_aPKG           2
-#define _HBMKREQ_cKeyHeader     3
-#define _HBMKREQ_cControl       4
-#define _HBMKREQ_lOptional      5
-#define _HBMKREQ_aINCPATH       6
-#define _HBMKREQ_aINCPATHLOCAL  7
-#define _HBMKREQ_cFound         8
-#define _HBMKREQ_lFound         9
-#define _HBMKREQ_lFoundLOCAL    10
-#define _HBMKREQ_cVersion       11
-#define _HBMKREQ_lForced        12
-#define _HBMKREQ_MAX_           12
+#define _HBMKDEP_cName          1
+#define _HBMKDEP_aPKG           2
+#define _HBMKDEP_cKeyHeader     3
+#define _HBMKDEP_cControl       4
+#define _HBMKDEP_lOptional      5
+#define _HBMKDEP_aINCPATH       6
+#define _HBMKDEP_aINCPATHLOCAL  7
+#define _HBMKDEP_cFound         8
+#define _HBMKDEP_lFound         9
+#define _HBMKDEP_lFoundLOCAL    10
+#define _HBMKDEP_cVersion       11
+#define _HBMKDEP_lForced        12
+#define _HBMKDEP_MAX_           12
 
 #ifndef _HBMK_EMBEDDED_
 
@@ -820,9 +819,9 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    hbmk[ _HBMK_lIMPLIB ] := .F.
    hbmk[ _HBMK_lHBCPPMM ] := .F.
    hbmk[ _HBMK_aVAR ] := {}
-   hbmk[ _HBMK_hREQ ] := { => }
+   hbmk[ _HBMK_hDEP ] := { => }
 
-   hb_HSetCaseMatch( hbmk[ _HBMK_hREQ ], .F. )
+   hb_HSetCaseMatch( hbmk[ _HBMK_hDEP ], .F. )
 
    hbmk[ _HBMK_lBLDFLGP ] := .F.
    hbmk[ _HBMK_lBLDFLGC ] := .F.
@@ -2107,49 +2106,49 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             ENDIF
          ENDIF
 
-      CASE Left( cParam, Len( "-reqpkgname=" ) ) == "-reqpkgname="
+      CASE Left( cParam, Len( "-deppkgname=" ) ) == "-deppkgname="
 
-         cParam := MacroProc( hbmk, SubStr( cParam, Len( "-reqpkgname=" ) + 1 ), aParam[ _PAR_cFileName ] )
-         IF req_split( hbmk, cParam, @cParam, @tmp )
-            AAddNew( hbmk[ _HBMK_hREQ ][ cParam ][ _HBMKREQ_aPKG ], AllTrim( tmp ) )
+         cParam := MacroProc( hbmk, SubStr( cParam, Len( "-deppkgname=" ) + 1 ), aParam[ _PAR_cFileName ] )
+         IF dep_split_arg( hbmk, cParam, @cParam, @tmp )
+            AAddNew( hbmk[ _HBMK_hDEP ][ cParam ][ _HBMKDEP_aPKG ], AllTrim( tmp ) )
          ENDIF
 
-      CASE Left( cParam, Len( "-reqkeyhead=" ) ) == "-reqkeyhead="
+      CASE Left( cParam, Len( "-depkeyhead=" ) ) == "-depkeyhead="
 
-         cParam := MacroProc( hbmk, SubStr( cParam, Len( "-reqkeyhead=" ) + 1 ), aParam[ _PAR_cFileName ] )
-         IF req_split( hbmk, cParam, @cParam, @tmp )
-            hbmk[ _HBMK_hREQ ][ cParam ][ _HBMKREQ_cKeyHeader ] := AllTrim( StrTran( tmp, "\", "/" ) )
+         cParam := MacroProc( hbmk, SubStr( cParam, Len( "-depkeyhead=" ) + 1 ), aParam[ _PAR_cFileName ] )
+         IF dep_split_arg( hbmk, cParam, @cParam, @tmp )
+            hbmk[ _HBMK_hDEP ][ cParam ][ _HBMKDEP_cKeyHeader ] := AllTrim( StrTran( tmp, "\", "/" ) )
          ENDIF
 
-      CASE Left( cParam, Len( "-reqoptional=" ) ) == "-reqoptional="
+      CASE Left( cParam, Len( "-depoptional=" ) ) == "-depoptional="
 
-         cParam := MacroProc( hbmk, SubStr( cParam, Len( "-reqoptional=" ) + 1 ), aParam[ _PAR_cFileName ] )
-         IF req_split( hbmk, cParam, @cParam, @tmp )
+         cParam := MacroProc( hbmk, SubStr( cParam, Len( "-depoptional=" ) + 1 ), aParam[ _PAR_cFileName ] )
+         IF dep_split_arg( hbmk, cParam, @cParam, @tmp )
             DO CASE
-            CASE Lower( tmp ) == "yes" ; hbmk[ _HBMK_hREQ ][ cParam ][ _HBMKREQ_lOptional ] := .T.
-            CASE Lower( tmp ) == "no"  ; hbmk[ _HBMK_hREQ ][ cParam ][ _HBMKREQ_lOptional ] := .F.
+            CASE Lower( tmp ) == "yes" ; hbmk[ _HBMK_hDEP ][ cParam ][ _HBMKDEP_lOptional ] := .T.
+            CASE Lower( tmp ) == "no"  ; hbmk[ _HBMK_hDEP ][ cParam ][ _HBMKDEP_lOptional ] := .F.
             ENDCASE
          ENDIF
 
-      CASE Left( cParam, Len( "-reqcontrol=" ) ) == "-reqcontrol="
+      CASE Left( cParam, Len( "-depcontrol=" ) ) == "-depcontrol="
 
-         cParam := MacroProc( hbmk, SubStr( cParam, Len( "-reqcontrol=" ) + 1 ), aParam[ _PAR_cFileName ] )
-         IF req_split( hbmk, cParam, @cParam, @tmp )
-            hbmk[ _HBMK_hREQ ][ cParam ][ _HBMKREQ_cControl ] := AllTrim( tmp )
+         cParam := MacroProc( hbmk, SubStr( cParam, Len( "-depcontrol=" ) + 1 ), aParam[ _PAR_cFileName ] )
+         IF dep_split_arg( hbmk, cParam, @cParam, @tmp )
+            hbmk[ _HBMK_hDEP ][ cParam ][ _HBMKDEP_cControl ] := AllTrim( tmp )
          ENDIF
 
-      CASE Left( cParam, Len( "-reqincpath=" ) ) == "-reqincpath="
+      CASE Left( cParam, Len( "-depincpath=" ) ) == "-depincpath="
 
-         cParam := MacroProc( hbmk, SubStr( cParam, Len( "-reqincpath=" ) + 1 ), aParam[ _PAR_cFileName ] )
-         IF req_split( hbmk, cParam, @cParam, @tmp )
-            AAddNew( hbmk[ _HBMK_hREQ ][ cParam ][ _HBMKREQ_aINCPATH ], PathSepToTarget( hbmk, PathNormalize( PathProc( PathSepToSelf( tmp ), aParam[ _PAR_cFileName ] ) ) ) )
+         cParam := MacroProc( hbmk, SubStr( cParam, Len( "-depincpath=" ) + 1 ), aParam[ _PAR_cFileName ] )
+         IF dep_split_arg( hbmk, cParam, @cParam, @tmp )
+            AAddNew( hbmk[ _HBMK_hDEP ][ cParam ][ _HBMKDEP_aINCPATH ], PathSepToTarget( hbmk, PathNormalize( PathProc( PathSepToSelf( tmp ), aParam[ _PAR_cFileName ] ) ) ) )
          ENDIF
 
-      CASE Left( cParam, Len( "-reqincpathlocal=" ) ) == "-reqincpathlocal="
+      CASE Left( cParam, Len( "-depincpathlocal=" ) ) == "-depincpathlocal="
 
-         cParam := MacroProc( hbmk, SubStr( cParam, Len( "-reqincpathlocal=" ) + 1 ), aParam[ _PAR_cFileName ] )
-         IF req_split( hbmk, cParam, @cParam, @tmp )
-            AAddNew( hbmk[ _HBMK_hREQ ][ cParam ][ _HBMKREQ_aINCPATHLOCAL ], PathSepToTarget( hbmk, PathNormalize( PathProc( PathSepToSelf( tmp ), aParam[ _PAR_cFileName ] ) ) ) )
+         cParam := MacroProc( hbmk, SubStr( cParam, Len( "-depincpathlocal=" ) + 1 ), aParam[ _PAR_cFileName ] )
+         IF dep_split_arg( hbmk, cParam, @cParam, @tmp )
+            AAddNew( hbmk[ _HBMK_hDEP ][ cParam ][ _HBMKDEP_aINCPATHLOCAL ], PathSepToTarget( hbmk, PathNormalize( PathProc( PathSepToSelf( tmp ), aParam[ _PAR_cFileName ] ) ) ) )
          ENDIF
 
       CASE Left( cParam, 1 ) $ cOptPrefix
@@ -2326,7 +2325,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       ENDCASE
    NEXT
 
-   req_postprocess( hbmk )
+   dep_postprocess( hbmk )
 
    IF ! l_lLIBSYSMISC
       l_aLIBSYSMISC := {}
@@ -2449,10 +2448,10 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          /usr/local/include                          (FHS)
       */
 
-      req_postprocess_2( hbmk )
+      dep_postprocess_2( hbmk )
 
       /* Process any package requirements */
-      FOR EACH tmp IN hbmk[ _HBMK_hREQ ]
+      FOR EACH tmp IN hbmk[ _HBMK_hDEP ]
          pkg_try_detection( hbmk, tmp )
       NEXT
    ENDIF
@@ -3968,7 +3967,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             IF ! hb_FGetDateTime( FN_DirExtSet( tmp, hbmk[ _HBMK_cWorkDir ], cObjExt ), @tmp2 ) .OR. ;
                ! hb_FGetDateTime( tmp, @tmp1 ) .OR. ;
                tmp1 > tmp2 .OR. ;
-               ( hbmk[ _HBMK_nHEAD ] != _HEAD_OFF .AND. FindNewerHeaders( hbmk, tmp, NIL, .F., tmp2, hbmk[ _HBMK_lINCPATHDETECT ], .T., cBin_CompC, @headstate ) )
+               ( hbmk[ _HBMK_nHEAD ] != _HEAD_OFF .AND. FindNewerHeaders( hbmk, tmp, NIL, .F., tmp2, ! Empty( hbmk[ _HBMK_hDEPBYHEADER ] ), .T., cBin_CompC, @headstate ) )
                AAdd( l_aC_TODO, tmp )
             ENDIF
          NEXT
@@ -3977,7 +3976,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       ENDIF
 
       /* Header dir detection if needed and if FindNewerHeaders() wasn't called yet. */
-      IF hbmk[ _HBMK_lINCPATHDETECT ] .AND. ! Empty( l_aC_TODO ) .AND. headstate == NIL
+      IF ! Empty( hbmk[ _HBMK_hDEPBYHEADER ] ) .AND. ! Empty( l_aC_TODO ) .AND. headstate == NIL
          FOR EACH tmp IN l_aC_TODO
             FindNewerHeaders( hbmk, tmp, NIL, .F., NIL, .T., .T., cBin_CompC, @headstate )
          NEXT
@@ -3999,7 +3998,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             IF ! hb_FGetDateTime( FN_DirExtSet( tmp, hbmk[ _HBMK_cWorkDir ], cObjExt ), @tmp2 ) .OR. ;
                ! hb_FGetDateTime( tmp, @tmp1 ) .OR. ;
                tmp1 > tmp2 .OR. ;
-               ( hbmk[ _HBMK_nHEAD ] != _HEAD_OFF .AND. FindNewerHeaders( hbmk, tmp, NIL, .F., tmp2, hbmk[ _HBMK_lINCPATHDETECT ], .T., cBin_CompCPP, @headstate ) )
+               ( hbmk[ _HBMK_nHEAD ] != _HEAD_OFF .AND. FindNewerHeaders( hbmk, tmp, NIL, .F., tmp2, ! Empty( hbmk[ _HBMK_hDEPBYHEADER ] ), .T., cBin_CompCPP, @headstate ) )
                AAdd( l_aCPP_TODO, tmp )
             ENDIF
          NEXT
@@ -4008,7 +4007,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       ENDIF
 
       /* Header dir detection if needed and if FindNewerHeaders() wasn't called yet. */
-      IF hbmk[ _HBMK_lINCPATHDETECT ] .AND. ! Empty( l_aCPP_TODO ) .AND. headstate == NIL
+      IF ! Empty( hbmk[ _HBMK_hDEPBYHEADER ] ) .AND. ! Empty( l_aCPP_TODO ) .AND. headstate == NIL
          FOR EACH tmp IN l_aCPP_TODO
             FindNewerHeaders( hbmk, tmp, NIL, .F., NIL, .T., .T., cBin_CompCPP, @headstate )
          NEXT
@@ -4077,7 +4076,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    /* Check if we've found all dependencies */
 
    IF ! lSkipBuild .AND. ! lStopAfterInit .AND. ! lStopAfterHarbour
-      IF req_evaluate( hbmk )
+      IF dep_evaluate( hbmk )
          IF hbmk[ _HBMK_lBEEP ]
             DoBeep( .F. )
          ENDIF
@@ -5909,9 +5908,9 @@ STATIC FUNCTION deplst_add( hDeps, cList )
 
    RETURN .T.
 
-STATIC FUNCTION req_split( hbmk, cParam, /* @ */ cName, /* @ */ cData )
+STATIC FUNCTION dep_split_arg( hbmk, cParam, /* @ */ cName, /* @ */ cData )
    LOCAL nPos
-   LOCAL req
+   LOCAL dep
 
    IF ( nPos := At( ":", cParam ) ) > 1
       cName := Left( cParam, nPos - 1 )
@@ -5922,142 +5921,140 @@ STATIC FUNCTION req_split( hbmk, cParam, /* @ */ cName, /* @ */ cData )
    ENDIF
 
    IF ! Empty( cName ) .AND. ! Empty( cData )
-      IF !( cName $ hbmk[ _HBMK_hREQ ] )
-         req := Array( _HBMKREQ_MAX_ )
-         req[ _HBMKREQ_cName ] := cName
-         req[ _HBMKREQ_aPKG ] := {}
-         req[ _HBMKREQ_cKeyHeader ] := NIL
-         req[ _HBMKREQ_cControl ] := NIL
-         req[ _HBMKREQ_lOptional ] := .F.
-         req[ _HBMKREQ_aINCPATH ] := {}
-         req[ _HBMKREQ_aINCPATHLOCAL ] := {}
-         req[ _HBMKREQ_cFound ] := NIL
-         req[ _HBMKREQ_lFound ] := .F.
-         req[ _HBMKREQ_lFoundLOCAL ] := .F.
-         req[ _HBMKREQ_cVersion ] := ""
-         req[ _HBMKREQ_lForced ] := .F.
-         hbmk[ _HBMK_hREQ ][ cName ] := req
+      IF !( cName $ hbmk[ _HBMK_hDEP ] )
+         dep := Array( _HBMKDEP_MAX_ )
+         dep[ _HBMKDEP_cName ] := cName
+         dep[ _HBMKDEP_aPKG ] := {}
+         dep[ _HBMKDEP_cKeyHeader ] := NIL
+         dep[ _HBMKDEP_cControl ] := NIL
+         dep[ _HBMKDEP_lOptional ] := .F.
+         dep[ _HBMKDEP_aINCPATH ] := {}
+         dep[ _HBMKDEP_aINCPATHLOCAL ] := {}
+         dep[ _HBMKDEP_cFound ] := NIL
+         dep[ _HBMKDEP_lFound ] := .F.
+         dep[ _HBMKDEP_lFoundLOCAL ] := .F.
+         dep[ _HBMKDEP_cVersion ] := ""
+         dep[ _HBMKDEP_lForced ] := .F.
+         hbmk[ _HBMK_hDEP ][ cName ] := dep
       ENDIF
       RETURN .T.
    ENDIF
 
    RETURN .F.
 
-STATIC PROCEDURE req_postprocess( hbmk )
-   LOCAL req
+STATIC PROCEDURE dep_postprocess( hbmk )
+   LOCAL dep
 
-   FOR EACH req IN hbmk[ _HBMK_hREQ ]
+   FOR EACH dep IN hbmk[ _HBMK_hDEP ]
 
       /* Add our given name of the dependency to the list of
          package names to check. Little convenience also
          encouraging usage of standard package names. [vszakats] */
-      AAddNew( req[ _HBMKREQ_aPKG ], Lower( req:__enumKey() ) )
+      AAddNew( dep[ _HBMKDEP_aPKG ], Lower( dep:__enumKey() ) )
 
       /* Process "control" value. It can be a control keyword,
          or a custom header include path. */
-      IF req[ _HBMKREQ_cControl ] == NIL
-         req[ _HBMKREQ_cControl ] := GetEnv( _HBMK_WITH_PREF + StrToDefine( req:__enumKey() ) )
+      IF dep[ _HBMKDEP_cControl ] == NIL
+         dep[ _HBMKDEP_cControl ] := GetEnv( _HBMK_WITH_PREF + StrToDefine( dep:__enumKey() ) )
       ENDIF
 
-      SWITCH Lower( req[ _HBMKREQ_cControl ] )
+      SWITCH Lower( dep[ _HBMKDEP_cControl ] )
       CASE "no"
-         req[ _HBMKREQ_cControl ] := Lower( req[ _HBMKREQ_cControl ] )
-         req[ _HBMKREQ_cKeyHeader ] := ""
-         req[ _HBMKREQ_aPKG ] := {}
-         req[ _HBMKREQ_aINCPATH ] := {}
-         req[ _HBMKREQ_aINCPATHLOCAL ] := {}
-         req[ _HBMKREQ_lForced ] := .T.
+         dep[ _HBMKDEP_cControl ] := Lower( dep[ _HBMKDEP_cControl ] )
+         dep[ _HBMKDEP_cKeyHeader ] := ""
+         dep[ _HBMKDEP_aPKG ] := {}
+         dep[ _HBMKDEP_aINCPATH ] := {}
+         dep[ _HBMKDEP_aINCPATHLOCAL ] := {}
+         dep[ _HBMKDEP_lForced ] := .T.
          EXIT
       CASE "local"
-         req[ _HBMKREQ_cControl ] := Lower( req[ _HBMKREQ_cControl ] )
-         req[ _HBMKREQ_aINCPATH ] := {}
+         dep[ _HBMKDEP_cControl ] := Lower( dep[ _HBMKDEP_cControl ] )
+         dep[ _HBMKDEP_aINCPATH ] := {}
          EXIT
       CASE "nolocal"
-         req[ _HBMKREQ_cControl ] := Lower( req[ _HBMKREQ_cControl ] )
-         req[ _HBMKREQ_aINCPATHLOCAL ] := {}
+         dep[ _HBMKDEP_cControl ] := Lower( dep[ _HBMKDEP_cControl ] )
+         dep[ _HBMKDEP_aINCPATHLOCAL ] := {}
          EXIT
       CASE "yes" /* do nothing */
          EXIT
       CASE "force"
-         req[ _HBMKREQ_cKeyHeader ] := ""
-         req[ _HBMKREQ_aPKG ] := {}
-         req[ _HBMKREQ_aINCPATH ] := {}
-         req[ _HBMKREQ_aINCPATHLOCAL ] := {}
-         req[ _HBMKREQ_cFound ] := "."
-         req[ _HBMKREQ_lFound ] := .T.
-         req[ _HBMKREQ_lFoundLOCAL ] := .T.
-         req[ _HBMKREQ_lForced ] := .T.
-         AAdd( hbmk[ _HBMK_aOPTC ], "-D" + _HBMK_HAS_PREF + StrToDefine( req:__enumKey() ) )
+         dep[ _HBMKDEP_cKeyHeader ] := ""
+         dep[ _HBMKDEP_aPKG ] := {}
+         dep[ _HBMKDEP_aINCPATH ] := {}
+         dep[ _HBMKDEP_aINCPATHLOCAL ] := {}
+         dep[ _HBMKDEP_cFound ] := "."
+         dep[ _HBMKDEP_lFound ] := .T.
+         dep[ _HBMKDEP_lFoundLOCAL ] := .T.
+         dep[ _HBMKDEP_lForced ] := .T.
+         AAdd( hbmk[ _HBMK_aOPTC ], "-D" + _HBMK_HAS_PREF + StrToDefine( dep:__enumKey() ) )
          EXIT
       ENDSWITCH
    NEXT
 
    RETURN
 
-STATIC PROCEDURE req_postprocess_2( hbmk )
-   LOCAL req
+STATIC PROCEDURE dep_postprocess_2( hbmk )
+   LOCAL dep
 
    /* Create a hash table of dependencies "indexed" by key header,
       for header detection. */
 
-   hbmk[ _HBMK_hREQBYHEADER ] := { => }
+   hbmk[ _HBMK_hDEPBYHEADER ] := { => }
 
    #if defined( __PLATFORM__UNIX )
-      hb_HSetCaseMatch( hbmk[ _HBMK_hREQBYHEADER ], .T. )
+      hb_HSetCaseMatch( hbmk[ _HBMK_hDEPBYHEADER ], .T. )
    #else
-      hb_HSetCaseMatch( hbmk[ _HBMK_hREQBYHEADER ], .F. )
+      hb_HSetCaseMatch( hbmk[ _HBMK_hDEPBYHEADER ], .F. )
    #endif
 
-   FOR EACH req IN hbmk[ _HBMK_hREQ ]
-      IF ! Empty( req[ _HBMKREQ_cKeyHeader ] ) .AND. ;
-         ! req[ _HBMKREQ_lFound ]
-         IF ! Empty( req[ _HBMKREQ_aINCPATH ] ) .OR. ;
-            ! Empty( req[ _HBMKREQ_aINCPATHLOCAL ] )
-            IF req[ _HBMKREQ_cKeyHeader ] $ hbmk[ _HBMK_hREQBYHEADER ]
-               hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Same key header used for multiple dependencies: %1$s in %2$s (found already in: %3$s)" ), req[ _HBMKREQ_cKeyHeader ], req[ _HBMKREQ_cName ], hbmk[ _HBMK_hREQBYHEADER ][ req[ _HBMKREQ_cKeyHeader ] ][ _HBMKREQ_cName ] ) )
+   FOR EACH dep IN hbmk[ _HBMK_hDEP ]
+      IF ! Empty( dep[ _HBMKDEP_cKeyHeader ] ) .AND. ;
+         ! dep[ _HBMKDEP_lFound ]
+         IF ! Empty( dep[ _HBMKDEP_aINCPATH ] ) .OR. ;
+            ! Empty( dep[ _HBMKDEP_aINCPATHLOCAL ] )
+            IF dep[ _HBMKDEP_cKeyHeader ] $ hbmk[ _HBMK_hDEPBYHEADER ]
+               hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Same key header used for multiple dependencies: %1$s in %2$s (found already in: %3$s)" ), dep[ _HBMKDEP_cKeyHeader ], dep[ _HBMKDEP_cName ], hbmk[ _HBMK_hDEPBYHEADER ][ dep[ _HBMKDEP_cKeyHeader ] ][ _HBMKDEP_cName ] ) )
             ELSE
-               hbmk[ _HBMK_hREQBYHEADER ][ req[ _HBMKREQ_cKeyHeader ] ] := req
+               hbmk[ _HBMK_hDEPBYHEADER ][ dep[ _HBMKDEP_cKeyHeader ] ] := dep
             ENDIF
          ELSE
-            hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Key header specified without header search paths: %1$s" ), req[ _HBMKREQ_cKeyHeader ] ) )
+            hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Key header specified without header search paths: %1$s" ), dep[ _HBMKDEP_cKeyHeader ] ) )
          ENDIF
       ENDIF
    NEXT
 
-   hbmk[ _HBMK_lINCPATHDETECT ] := ! Empty( hbmk[ _HBMK_hREQBYHEADER ] )
-
    RETURN
 
-STATIC FUNCTION req_evaluate( hbmk )
-   LOCAL req
+STATIC FUNCTION dep_evaluate( hbmk )
+   LOCAL dep
 
    LOCAL aREQ := {}
    LOCAL aOPT := {}
 
-   FOR EACH req IN hbmk[ _HBMK_hREQ ]
-      IF req[ _HBMKREQ_lFound ]
+   FOR EACH dep IN hbmk[ _HBMK_hDEP ]
+      IF dep[ _HBMKDEP_lFound ]
          IF hbmk[ _HBMK_lInfo ]
             hbmk_OutStd( hbmk, hb_StrFormat( I_( "Dependency '%1$s' found: %2$s%3$s%4$s%5$s" ),;
-               req[ _HBMKREQ_cName ],;
-               req[ _HBMKREQ_cFound ],;
-               iif( Empty( req[ _HBMKREQ_cVersion ] ), "", " (" + req[ _HBMKREQ_cVersion ] + ")" ),;
-               iif( req[ _HBMKREQ_lFoundLOCAL ], " (local)", "" ),;
-               iif( req[ _HBMKREQ_lForced ], " (forced)", "" ) ) )
+               dep[ _HBMKDEP_cName ],;
+               dep[ _HBMKDEP_cFound ],;
+               iif( Empty( dep[ _HBMKDEP_cVersion ] ), "", " (" + dep[ _HBMKDEP_cVersion ] + ")" ),;
+               iif( dep[ _HBMKDEP_lFoundLOCAL ], " (local)", "" ),;
+               iif( dep[ _HBMKDEP_lForced ], " (forced)", "" ) ) )
          ENDIF
       ELSE
-         IF req[ _HBMKREQ_lForced ]
+         IF dep[ _HBMKDEP_lForced ]
             IF hbmk[ _HBMK_lInfo ]
-               hbmk_OutStd( hbmk, hb_StrFormat( I_( "Dependency '%1$s' forcefully disabled" ), req[ _HBMKREQ_cName ] ) )
+               hbmk_OutStd( hbmk, hb_StrFormat( I_( "Dependency '%1$s' forcefully disabled" ), dep[ _HBMKDEP_cName ] ) )
             ENDIF
          ELSE
             IF hbmk[ _HBMK_lDEBUGDEPD ]
-               hbmk_OutStd( hbmk, hb_StrFormat( "debugdepd: REQ %1$s: missing", req[ _HBMKREQ_cName ] ) )
+               hbmk_OutStd( hbmk, hb_StrFormat( "debugdepd: REQ %1$s: missing", dep[ _HBMKDEP_cName ] ) )
             ENDIF
          ENDIF
-         IF req[ _HBMKREQ_lOptional ]
-            AAdd( aOPT, req[ _HBMKREQ_cName ] )
+         IF dep[ _HBMKDEP_lOptional ]
+            AAdd( aOPT, dep[ _HBMKDEP_cName ] )
          ELSE
-            AAdd( aREQ, req[ _HBMKREQ_cName ] )
+            AAdd( aREQ, dep[ _HBMKDEP_cName ] )
          ENDIF
       ENDIF
    NEXT
@@ -6082,7 +6079,7 @@ STATIC FUNCTION req_evaluate( hbmk )
    RETURN .T.
 
 /* Try '*-config' and 'pkg-config *' detection */
-STATIC PROCEDURE pkg_try_detection( hbmk, req )
+STATIC PROCEDURE pkg_try_detection( hbmk, dep )
    LOCAL cStdOut
    LOCAL cErrOut
    LOCAL cItem
@@ -6093,10 +6090,10 @@ STATIC PROCEDURE pkg_try_detection( hbmk, req )
    LOCAL cIncludeDir
    LOCAL cVersion
 
-   FOR EACH cName IN req[ _HBMKREQ_aPKG ]
+   FOR EACH cName IN dep[ _HBMKDEP_aPKG ]
 
       IF ! Empty( cName )
-         IF ! req[ _HBMKREQ_lFound ]
+         IF ! dep[ _HBMKDEP_lFound ]
             cName := AllTrim( cName )
 
             cStdOut := ""
@@ -6117,7 +6114,7 @@ STATIC PROCEDURE pkg_try_detection( hbmk, req )
 
                FOR EACH cItem IN hb_ATokens( cStdOut,, .T. )
                   IF ! Empty( cItem )
-                     req[ _HBMKREQ_lFound ] := .T.
+                     dep[ _HBMKDEP_lFound ] := .T.
                      DO CASE
                      CASE Left( cItem, Len( "-l" ) ) == "-l"
                         cItem := SubStr( cItem, Len( "-l" ) + 1 )
@@ -6138,11 +6135,11 @@ STATIC PROCEDURE pkg_try_detection( hbmk, req )
                      ENDCASE
                   ENDIF
                NEXT
-               IF req[ _HBMKREQ_lFound ]
-                  req[ _HBMKREQ_cVersion ] := cVersion
-                  req[ _HBMKREQ_cFound ] := iif( Empty( cIncludeDir ), "(system)", cIncludeDir )
+               IF dep[ _HBMKDEP_lFound ]
+                  dep[ _HBMKDEP_cVersion ] := cVersion
+                  dep[ _HBMKDEP_cFound ] := iif( Empty( cIncludeDir ), "(system)", cIncludeDir )
                   IF hbmk[ _HBMK_lDEBUGDEPD ]
-                     hbmk_OutStd( hbmk, hb_StrFormat( "debugdepd: REQ %1$s: found as pkg at %2$s (%3$s)", req[ _HBMKREQ_cName ], req[ _HBMKREQ_cFound ], req[ _HBMKREQ_cVersion ] ) )
+                     hbmk_OutStd( hbmk, hb_StrFormat( "debugdepd: REQ %1$s: found as pkg at %2$s (%3$s)", dep[ _HBMKDEP_cName ], dep[ _HBMKDEP_cFound ], dep[ _HBMKDEP_cVersion ] ) )
                   ENDIF
                   AAdd( hbmk[ _HBMK_aOPTC ], "-D" + _HBMK_HAS_PREF + StrToDefine( cName ) )
                   EXIT
@@ -6182,7 +6179,7 @@ STATIC FUNCTION AMerge( aDst, aSrc )
 STATIC FUNCTION FindHeader( hbmk, cFileName, cParentDir, lIncTry, lSystemHeader )
    LOCAL cDir
    LOCAL aINCPATH
-   LOCAL req
+   LOCAL dep
    LOCAL tmp
 
    /* Check in current dir */
@@ -6206,25 +6203,25 @@ STATIC FUNCTION FindHeader( hbmk, cFileName, cParentDir, lIncTry, lSystemHeader 
    /* Check dependency include path list */
    IF lIncTry
       cFileName := StrTran( cFileName, "\", "/" )
-      IF cFileName $ hbmk[ _HBMK_hREQBYHEADER ]
-         req := hbmk[ _HBMK_hREQBYHEADER ][ cFileName ]
-         IF ! req[ _HBMKREQ_lFound ]
-            FOR EACH aINCPATH IN { req[ _HBMKREQ_aINCPATH ],;
-                                   req[ _HBMKREQ_aINCPATHLOCAL ] }
+      IF cFileName $ hbmk[ _HBMK_hDEPBYHEADER ]
+         dep := hbmk[ _HBMK_hDEPBYHEADER ][ cFileName ]
+         IF ! dep[ _HBMKDEP_lFound ]
+            FOR EACH aINCPATH IN { dep[ _HBMKDEP_aINCPATH ],;
+                                   dep[ _HBMKDEP_aINCPATHLOCAL ] }
                FOR EACH cDir IN aINCPATH
                   tmp := DirAddPathSep( PathSepToSelf( cDir ) ) + cFileName
                   IF hb_FileExists( tmp )
-                     req[ _HBMKREQ_cFound ] := tmp
-                     req[ _HBMKREQ_lFound ] := .T.
-                     req[ _HBMKREQ_lFoundLOCAL ] := ( cDir:__enumIndex() == 2 )
+                     dep[ _HBMKDEP_cFound ] := tmp
+                     dep[ _HBMKDEP_lFound ] := .T.
+                     dep[ _HBMKDEP_lFoundLOCAL ] := ( cDir:__enumIndex() == 2 )
                      IF hbmk[ _HBMK_lDEBUGDEPD ]
-                        hbmk_OutStd( hbmk, hb_StrFormat( "debugdepd: REQ %1$s: found as header at %2$s %3$s", req[ _HBMKREQ_cName ], req[ _HBMKREQ_cFound ], iif( req[ _HBMKREQ_lFoundLOCAL ], "(local)", "" ) ) )
+                        hbmk_OutStd( hbmk, hb_StrFormat( "debugdepd: REQ %1$s: found as header at %2$s %3$s", dep[ _HBMKDEP_cName ], dep[ _HBMKDEP_cFound ], iif( dep[ _HBMKDEP_lFoundLOCAL ], "(local)", "" ) ) )
                      ENDIF
                      IF AScan( hbmk[ _HBMK_aINCPATH ], { |tmp| tmp == cDir } ) == 0
                         AAdd( hbmk[ _HBMK_aINCPATH ], DirDelPathSep( PathSepToSelf( cDir ) ) )
                      ENDIF
-                     AAdd( hbmk[ _HBMK_aOPTC ], "-D" + _HBMK_HAS_PREF + StrToDefine( req[ _HBMKREQ_cName ] ) )
-                     hb_HDel( hbmk[ _HBMK_hREQBYHEADER ], cFileName )
+                     AAdd( hbmk[ _HBMK_aOPTC ], "-D" + _HBMK_HAS_PREF + StrToDefine( dep[ _HBMKDEP_cName ] ) )
+                     hb_HDel( hbmk[ _HBMK_hDEPBYHEADER ], cFileName )
                      RETURN tmp
                   ENDIF
                NEXT
@@ -9817,6 +9814,13 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-[no]minipo"        , I_( "do (not) add Harbour version number and source file reference to .po (default: add them)" ) },;
       { "-rebuildpo"         , I_( "recreate .po file, thus removing all obsolete entries in it" ) },;
       NIL,;
+      { "-deppkgname=<d:n>"       , I_( "<d> is the name of the dependecy. <n> name of the package depedency. Can be specified multiple times." ) },;
+      { "-depkeyhead=<d:h>"       , I_( "<d> is the name of the dependecy. <h> is the key header (.h) of the package dependency. Only one can be speficied." ) },;
+      { "-depoptional=<d:f>"      , I_( "<d> is the name of the dependecy. <f> can be 'yes' or 'no', specifies whether the dependency is optional. Default: no" ) },;
+      { "-depcontrol=<d:v>"       , I_( "<d> is the name of the dependecy. <v> is a value that controls how detection is done. Accepted values: no, yes, force, nolocal, local. Default: content of envvar HBMK2_WITH_<d>" ) },;
+      { "-depincpath=<d:i>"       , I_( "<d> is the name of the dependecy. Add <i> to the header detection path list" ) },;
+      { "-depincpathlocal= <d:i>" , I_( "<d> is the name of the dependecy. Add <i> to the header detection path list, where <i> is pointing to a directory local to the project and containing an embedded (or locally hosted) dependency." ) },;
+      NIL,;
       { "-plugin=<.prg|.hrb>", I_( "add plugin (EXPERIMENTAL)" ) },;
       { "-pi=<filename>"     , I_( "pass input file to plugins (EXPERIMENTAL)" ) },;
       { "-pflag=<f>"         , I_( "pass flag to plugins (EXPERIMENTAL)" ) },;
@@ -9905,11 +9909,7 @@ STATIC PROCEDURE OutOpt( hbmk, aOpt )
          nLines := MLCount( aOpt[ 2 ], hbmk[ _HBMK_nMaxCol ] - _OPT_WIDTH )
          FOR nLine := 1 TO nLines
             IF ! Empty( tmp := RTrim( MemoLine( aOpt[ 2 ], hbmk[ _HBMK_nMaxCol ] - _OPT_WIDTH, nLine ) ) )
-               IF nLine == 1
-                  OutStd( PadR( Space( 2 ) + aOpt[ 1 ], _OPT_WIDTH ) )
-               ELSE
-                  OutStd( Space( _OPT_WIDTH ) )
-               ENDIF
+               OutStd( PadR( Space( 2 ) + MemoLine( aOpt[ 1 ], _OPT_WIDTH, nLine ), _OPT_WIDTH ) )
                OutStd( tmp + _OUT_EOL )
             ENDIF
          NEXT

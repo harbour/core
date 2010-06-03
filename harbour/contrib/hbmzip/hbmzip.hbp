@@ -1,0 +1,27 @@
+#
+# $Id$
+#
+
+-hblib
+-inc
+-nohbc
+
+-o${hb_name}
+
+-w3 -es2
+
+hbmzip.c
+
+-depkeyhead=minizip:zip.h
+-depcontrol=minizip:${HB_WITH_MINIZIP}
+-depincpath=minizip:/usr/include
+-depincpath=minizip:/usr/local/include
+-depincpathlocal=minizip:../../external/minizip
+
+# This is a dependency of minizip
+-depkeyhead=zlib:zlib.h
+-depcontrol=zlib:${HB_WITH_ZLIB}
+-depincpath=zlib:/usr/include
+-depincpath=zlib:/usr/local/include
+-depincpath=zlib:/boot/develop/headers/3rdparty
+-depincpathlocal=zlib:../../external/zlib
