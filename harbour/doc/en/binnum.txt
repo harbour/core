@@ -4,7 +4,7 @@
 
 /*
  * The following parts are Copyright of the individual authors.
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  * Copyright 2000 Chen Kedem <niki@actcom.co.il>
  *    Documentation for: BIN2W(), BIN2I(), BIN2L(), BIN2U(), I2BIN(), W2BIN(),

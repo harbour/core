@@ -4,7 +4,7 @@
 
 /*
  * The following are Copyright of the individual authors.
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  * Copyright 2000 Paul Tucker <ptucker@sympatico.ca>
  *    Documentation for: DISKSPACE() and related functions

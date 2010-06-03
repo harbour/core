@@ -7,7 +7,7 @@
  * VistaSoftware's Apollo database driver. See http://www.VistaSoftware.com
  *
  * Copyright 2001 Patrick Mast <email@PatrickMast.com>
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

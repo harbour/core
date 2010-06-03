@@ -7,7 +7,7 @@
  *    ACHOICE() test
  *
  * Copyright 2009 Vladislav Lavrecky <lavr / at / ldz.lv>
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  */
 

@@ -4,7 +4,7 @@
 
 /*
  * The following parts are Copyright of the individual authors.
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  * Copyright 2001-2002 David G. Holm <dholm@jsd-llc.com>
  *    Documentation for: __dbDelim()

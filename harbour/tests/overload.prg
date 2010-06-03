@@ -10,7 +10,7 @@
 // Date : 1999/05/15
 //
 // Written by Eddie Runia <eddie@runia.com>
-// www - http://www.harbour-project.org
+// www - http://harbour-project.org
 //
 // Jfl 2001/11/18 command mode added
 //

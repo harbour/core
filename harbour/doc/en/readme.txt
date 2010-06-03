@@ -26,7 +26,7 @@
  * CA-Cl*pper(r) then it should compile under Harbour. The Harbour-Project
  * web page is:
  *
- *              <b>http://www.harbour-project.org/</b>
+ *              <b>http://harbour-project.org/</b>
  *
  * Status and other information is always available from the web site.
  * There is a Harbour mailing list. Harbour is still at a very early

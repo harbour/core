@@ -7,7 +7,7 @@
  *    demonstration code for FOR EACH overloading
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  */
 

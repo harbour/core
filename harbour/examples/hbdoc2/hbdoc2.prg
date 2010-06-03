@@ -7,7 +7,7 @@
  * Document generator
  *
  * Copyright 2009 April White <april users.sourceforge.net>
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  * Portions of this project are based on hbdoc
  *    Copyright 1999-2003 Luiz Rafael Culik <culikr@uol.com.br>
@@ -994,7 +994,7 @@ PROCEDURE ShowHelp( cExtraMessage, aArgs )
       aHelp = { ;
          cExtraMessage, ;
          "Harbour Document Extractor (hbdoc2) " + HBRawVersion(), ;
-         "Copyright (c) 1999-2009, http://www.harbour-project.org/", ;
+         "Copyright (c) 1999-2009, http://harbour-project.org/", ;
          "", ;
          "Syntax:", ;
          "", ;

@@ -6,7 +6,7 @@
 // Mankala. The first Harbour board game.
 //
 // Written by Eddie Runia <eddie@runia.com>
-// www - http://www.harbour-project.org
+// www - http://harbour-project.org
 //
 // Date : 30/04/1999
 // Time : 14:00

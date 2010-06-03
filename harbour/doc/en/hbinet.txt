@@ -4,7 +4,7 @@
 
 /*
  * The following parts are Copyright of the individual authors.
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  * Copyright (date unknown) Giancarlo Niccolai <gian@niccolai.ws>
  *    Documentation for: Harbour INET API

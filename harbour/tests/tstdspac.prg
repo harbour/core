@@ -16,7 +16,7 @@
  NOTE: Unlike Clipper, these functions return a floating point number!
 
  Written by Paul Tucker {ptucker@sympatico.ca>
- www - http://www.harbour-project.org
+ www - http://harbour-project.org
 
  This test program placed in the public domain
 */

@@ -8,7 +8,7 @@
 // it easier to compare scrolling compatibility. A TONE() is sounded before
 // each INKEY(0) call.
 /* Harbour Project source code
-   http://www.harbour-project.org/
+   http://harbour-project.org/
    Public domain program written by David G. Holm <dholm@jsd-llc.com>
 */
 procedure main()

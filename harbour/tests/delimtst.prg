@@ -5,7 +5,7 @@
 // Test program for COPY TO DELIMITED and APPEND FROM DELIMITED
 // Note: Only COPY TO DELIMITED is fully implemented at this time...
 /* Harbour Project source code
-   http://www.harbour-project.org/
+   http://harbour-project.org/
    Donated to the public domain on 2001-04-18 by David G. Holm <dholm@jsd-llc.com>
 */
 

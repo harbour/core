@@ -4,7 +4,7 @@
 
 // Test program for box and line drawing functions.
 /* Harbour Project source code
-   http://www.harbour-project.org/
+   http://harbour-project.org/
    Donated to the public domain on 2001-08-22 by David G. Holm <dholm@jsd-llc.com>
 */
 

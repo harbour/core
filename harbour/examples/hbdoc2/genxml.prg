@@ -13,7 +13,7 @@ svn propset svn:eol-style native "filename"
  * Document generator - XML output
  *
  * Copyright 2009 April White <april users.sourceforge.net>
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  * Portions of this project are based on hbdoc
  *    Copyright 1999-2003 Luiz Rafael Culik <culikr@uol.com.br>

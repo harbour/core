@@ -7,7 +7,7 @@
  *    demonstration/test code for changing font in X-Window GTs
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  */
 

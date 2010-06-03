@@ -4,7 +4,7 @@
 
 // Testing the VERSION function
 /* Harbour Project source code
-   http://www.harbour-project.org/
+   http://harbour-project.org/
    Donated to the public domain by David G. Holm <dholm@jsd-llc.com>.
 */
 

@@ -7,7 +7,7 @@
  * Preprocessor standalone main module
  *
  * Copyright 1999 Alexander S.Kresin <alex@belacy.belgorod.su>
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -115,7 +115,7 @@ int main( int argc, char * argv[] )
 
   printf( "Harbour Preprocessor (old version) %d.%d.%d\n",
      HB_VER_MAJOR, HB_VER_MINOR, HB_VER_RELEASE );
-  printf( "Copyright (c) 1999-2008, http://www.harbour-project.org/\n" );
+  printf( "Copyright (c) 1999-2008, http://harbour-project.org/\n" );
 
   hb_pp_Table();
   stdef = hb_pp_topDefine;

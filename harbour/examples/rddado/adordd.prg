@@ -8,7 +8,7 @@
  *
  * Copyright 2007 Fernando Mancera <fmancera@viaopen.com> and
  * Antonio Linares <alinares@fivetechsoft.com>
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  * Copyright 2007-2008 Miguel Angel Marchuet <miguelangel@marchuet.net>
  *  ADO_GOTOID( nWA, nRecord )

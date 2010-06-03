@@ -7,7 +7,7 @@
 // which compiler created the program. Both files should be 263,444
 // bytes in size and should be identical.
 /* Harbour Project source code
-   http://www.harbour-project.org/
+   http://harbour-project.org/
    Public domain program written by David G. Holm <dholm@jsd-llc.com>
 */
 

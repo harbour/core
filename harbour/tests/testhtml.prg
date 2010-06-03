@@ -27,7 +27,7 @@ FUNCTION Main()
    oHTML:AddHead( "Harbour Project" )
    oHTML:AddPara( "<B>Harbour</B> is xBase at its best. Have a taste today!", "LEFT" )
    oHTML:AddPara( "<B>L i n k s</B>", "CENTER" )
-   oHTML:AddLink( "http://www.harbour-project.org", "Meet the harbour power!" )
+   oHTML:AddLink( "http://harbour-project.org", "Meet the harbour power!" )
    oHTML:Generate()
 
    // Uncomment the following if you don't have a Web Server to test

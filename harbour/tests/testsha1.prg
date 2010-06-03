@@ -6,7 +6,7 @@
  * Harbour Project source code:
  *
  * Rewritten from C: Viktor Szakats (harbour.01 syenar.hu)
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  */
 
 PROCEDURE Main()

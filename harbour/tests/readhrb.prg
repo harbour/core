@@ -10,7 +10,7 @@
  * ReadHRB <program file>  {No .hrb extension please}
  *
  * Written by Eddie Runia <eddie@runia.com>
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  * Placed in the public domain
  */

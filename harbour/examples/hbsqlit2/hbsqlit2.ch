@@ -8,7 +8,7 @@
  * SQLite DBMS defines
  *
  * Copyright 2003 Alejandro de Garate <alex_degarate@hotmail.com>
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  * 
  */
 
