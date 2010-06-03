@@ -83,7 +83,7 @@
 #include "hbapierr.h"
 
 #include <QtGui/QFont>
-#include <QtGui/QFontmetrics>
+#include <QtGui/QFontMetrics>
 #include <QtGui/QImage>
 #include <QtGui/QPalette>
 #include <QtGui/QApplication>
