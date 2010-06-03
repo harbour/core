@@ -1,0 +1,19 @@
+#
+# $Id$
+#
+
+-hblib
+-inc
+-nohbc
+
+-o${hb_name}
+
+-w3 -es2
+
+-depkeyhead=sqlite3:sqlite3.h
+-depcontrol=sqlite3:${HB_WITH_SQLITE3}
+-depincpath=sqlite3:/usr/include
+-depincpath=sqlite3:/boot/common/include
+-depincpathlocal=sqlite3:../../external/sqlite3
+
+hbsqlit3.c

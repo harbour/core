@@ -15,9 +15,8 @@ tfirebrd.prg
 
 -stop{pocc64|poccarm}
 
--reqheader=ibase.h
-
--inctrypath=${HB_WITH_FIREBIRD}
--inctrypath=/usr/include
--inctrypath=/opt/firebird/include
--inctrypath=/Library/Frameworks/Firebird.framework/Headers
+-depkeyhead=firebird:ibase.h
+-depcontrol=firebird:${HB_WITH_FIREBIRD}
+-depincpath=firebird:/usr/include
+-depincpath=firebird:/opt/firebird/include
+-depincpath=firebird:/Library/Frameworks/Firebird.framework/Headers

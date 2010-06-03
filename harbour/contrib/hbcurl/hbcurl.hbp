@@ -11,9 +11,8 @@
 
 -w3 -es2
 
--reqheader=curl/curl.h
-
--inctrypath=${HB_WITH_CURL}
--inctrypath=/usr/include
+-depkeyhead=curl:curl/curl.h
+-depcontrol=curl:${HB_WITH_CURL}
+-depincpath=curl:/usr/include
 
 hbcurl.c

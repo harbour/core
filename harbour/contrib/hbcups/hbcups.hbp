@@ -10,9 +10,8 @@
 
 -w3 -es2
 
--reqheader=cups/cups.h
-
--inctrypath=${HB_WITH_CUPS}
--inctrypath=/usr/include
+-depkeyhead=cups:cups/cups.h
+-depcontrol=cups:${HB_WITH_CUPS}
+-depincpath=cups:/usr/include
 
 hbcups.c

@@ -1,0 +1,19 @@
+#
+# $Id$
+#
+
+-hblib
+-inc
+-nohbc
+
+-o${hb_name}
+
+-w3 -es2
+
+-depkeyhead=libharu:hpdf.h
+-depcontrol=libharu:${HB_WITH_LIBHARU}
+-depincpath=libharu:/usr/include
+-depincpath=libharu:/usr/local/include
+-depincpathlocal=libharu:../../external/libhpdf
+
+harupdf.c

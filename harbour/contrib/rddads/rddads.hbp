@@ -12,11 +12,10 @@
 
 -stop{dos|os2}
 
--reqheader=ace.h
-
--inctrypath=${HB_WITH_ADS}
--inctrypath=/usr/local/ads/acesdk
--inctrypath=${HOME}/ads/acesdk
+-depkeyhead=ads:ace.h
+-depcontrol=ads:${HB_WITH_ADS}
+-depincpath=ads:/usr/local/ads/acesdk
+-depincpath=ads:${HOME}/ads/acesdk
 
 ads1.c
 adsfunc.c

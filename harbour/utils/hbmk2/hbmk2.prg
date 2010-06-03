@@ -2452,7 +2452,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
       /* Process any package requirements */
       FOR EACH tmp IN hbmk[ _HBMK_hDEP ]
-         pkg_try_detection( hbmk, tmp )
+         dep_try_pkg_detection( hbmk, tmp )
       NEXT
    ENDIF
 
@@ -5984,7 +5984,7 @@ STATIC PROCEDURE dep_postprocess( hbmk )
          dep[ _HBMKDEP_aINCPATHLOCAL ] := {}
          dep[ _HBMKDEP_cFound ] := "."
          dep[ _HBMKDEP_lFound ] := .T.
-         dep[ _HBMKDEP_lFoundLOCAL ] := .T.
+         dep[ _HBMKDEP_lFoundLOCAL ] := .F.
          dep[ _HBMKDEP_lForced ] := .T.
          AAdd( hbmk[ _HBMK_aOPTC ], "-D" + _HBMK_HAS_PREF + StrToDefine( dep:__enumKey() ) )
          EXIT
@@ -6033,7 +6033,7 @@ STATIC FUNCTION dep_evaluate( hbmk )
 
    FOR EACH dep IN hbmk[ _HBMK_hDEP ]
       IF dep[ _HBMKDEP_lFound ]
-         IF hbmk[ _HBMK_lInfo ]
+         IF ! hbmk[ _HBMK_lQuiet ]
             hbmk_OutStd( hbmk, hb_StrFormat( I_( "Dependency '%1$s' found: %2$s%3$s%4$s%5$s" ),;
                dep[ _HBMKDEP_cName ],;
                dep[ _HBMKDEP_cFound ],;
@@ -6079,7 +6079,7 @@ STATIC FUNCTION dep_evaluate( hbmk )
    RETURN .T.
 
 /* Try '*-config' and 'pkg-config *' detection */
-STATIC PROCEDURE pkg_try_detection( hbmk, dep )
+STATIC PROCEDURE dep_try_pkg_detection( hbmk, dep )
    LOCAL cStdOut
    LOCAL cErrOut
    LOCAL cItem
@@ -6183,20 +6183,24 @@ STATIC FUNCTION FindHeader( hbmk, cFileName, cParentDir, lIncTry, lSystemHeader 
    LOCAL tmp
 
    /* Check in current dir */
-   IF ! lSystemHeader .AND. hb_FileExists( cFileName )
-      RETURN cFileName
+   IF ! lSystemHeader .AND. hb_FileExists( PathSepToSelf( cFileName ) )
+      RETURN PathSepToSelf( cFileName )
    ENDIF
 
    /* Check in parent dir */
 
-   IF ! lSystemHeader .AND. hb_FileExists( DirAddPathSep( PathSepToSelf( cParentDir ) ) + cFileName )
-      RETURN DirAddPathSep( PathSepToSelf( cParentDir ) ) + cFileName
+   IF ! lSystemHeader
+      tmp := DirAddPathSep( PathSepToSelf( cParentDir ) ) + PathSepToSelf( cFileName )
+      IF hb_FileExists( tmp )
+         RETURN tmp
+      ENDIF
    ENDIF
 
    /* Check in include path list specified via -incpath options */
    FOR EACH cDir IN hbmk[ _HBMK_aINCPATH ]
-      IF hb_FileExists( DirAddPathSep( PathSepToSelf( cDir ) ) + cFileName )
-         RETURN DirAddPathSep( PathSepToSelf( cDir ) ) + cFileName
+      tmp := DirAddPathSep( PathSepToSelf( cDir ) ) + PathSepToSelf( cFileName )
+      IF hb_FileExists( tmp )
+         RETURN tmp
       ENDIF
    NEXT
 
@@ -6209,9 +6213,9 @@ STATIC FUNCTION FindHeader( hbmk, cFileName, cParentDir, lIncTry, lSystemHeader 
             FOR EACH aINCPATH IN { dep[ _HBMKDEP_aINCPATH ],;
                                    dep[ _HBMKDEP_aINCPATHLOCAL ] }
                FOR EACH cDir IN aINCPATH
-                  tmp := DirAddPathSep( PathSepToSelf( cDir ) ) + cFileName
+                  tmp := DirAddPathSep( PathSepToSelf( cDir ) ) + PathSepToSelf( cFileName )
                   IF hb_FileExists( tmp )
-                     dep[ _HBMKDEP_cFound ] := tmp
+                     dep[ _HBMKDEP_cFound ] := DirDelPathSep( PathSepToSelf( cDir ) )
                      dep[ _HBMKDEP_lFound ] := .T.
                      dep[ _HBMKDEP_lFoundLOCAL ] := ( cDir:__enumIndex() == 2 )
                      IF hbmk[ _HBMK_lDEBUGDEPD ]
@@ -9814,12 +9818,12 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-[no]minipo"        , I_( "do (not) add Harbour version number and source file reference to .po (default: add them)" ) },;
       { "-rebuildpo"         , I_( "recreate .po file, thus removing all obsolete entries in it" ) },;
       NIL,;
-      { "-deppkgname=<d:n>"       , I_( "<d> is the name of the dependecy. <n> name of the package depedency. Can be specified multiple times." ) },;
-      { "-depkeyhead=<d:h>"       , I_( "<d> is the name of the dependecy. <h> is the key header (.h) of the package dependency. Only one can be speficied." ) },;
-      { "-depoptional=<d:f>"      , I_( "<d> is the name of the dependecy. <f> can be 'yes' or 'no', specifies whether the dependency is optional. Default: no" ) },;
-      { "-depcontrol=<d:v>"       , I_( "<d> is the name of the dependecy. <v> is a value that controls how detection is done. Accepted values: no, yes, force, nolocal, local. Default: content of envvar HBMK2_WITH_<d>" ) },;
-      { "-depincpath=<d:i>"       , I_( "<d> is the name of the dependecy. Add <i> to the header detection path list" ) },;
-      { "-depincpathlocal= <d:i>" , I_( "<d> is the name of the dependecy. Add <i> to the header detection path list, where <i> is pointing to a directory local to the project and containing an embedded (or locally hosted) dependency." ) },;
+      { "-deppkgname=<d:n>"       , I_( "<d> is the name of the dependency. <n> name of the package depedency. Can be specified multiple times." ) },;
+      { "-depkeyhead=<d:h>"       , I_( "<d> is the name of the dependency. <h> is the key header (.h) of the package dependency. Only one can be speficied." ) },;
+      { "-depoptional=<d:f>"      , I_( "<d> is the name of the dependency. <f> can be 'yes' or 'no', specifies whether the dependency is optional. Default: no" ) },;
+      { "-depcontrol=<d:v>"       , I_( "<d> is the name of the dependency. <v> is a value that controls how detection is done. Accepted values: no, yes, force, nolocal, local. Default: content of envvar HBMK2_WITH_<d>" ) },;
+      { "-depincpath=<d:i>"       , I_( "<d> is the name of the dependency. Add <i> to the header detection path list" ) },;
+      { "-depincpathlocal= <d:i>" , I_( "<d> is the name of the dependency. Add <i> to the header detection path list, where <i> is pointing to a directory local to the project and containing an embedded (or locally hosted) dependency." ) },;
       NIL,;
       { "-plugin=<.prg|.hrb>", I_( "add plugin (EXPERIMENTAL)" ) },;
       { "-pi=<filename>"     , I_( "pass input file to plugins (EXPERIMENTAL)" ) },;

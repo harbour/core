@@ -10,8 +10,6 @@
 
 -w3 -es2
 
-hbmzip.c
-
 -depkeyhead=minizip:zip.h
 -depcontrol=minizip:${HB_WITH_MINIZIP}
 -depincpath=minizip:/usr/include
@@ -25,3 +23,5 @@ hbmzip.c
 -depincpath=zlib:/usr/local/include
 -depincpath=zlib:/boot/develop/headers/3rdparty
 -depincpathlocal=zlib:../../external/zlib
+
+hbmzip.c

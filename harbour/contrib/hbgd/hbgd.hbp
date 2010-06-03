@@ -10,13 +10,11 @@
 
 -w3 -es2
 
--reqpkg=gd|gd-devel|gd.h
-
--reqheader=gd.h
-
--inctrypath=${HB_WITH_GD}
--inctrypath=/usr/include
--inctrypath=/opt/local/include
+-deppkgname=gd:gd-devel
+-depkeyhead=gd:gd.h
+-depcontrol=gd:${HB_WITH_GD}
+-depincpath=gd:/usr/include
+-depincpath=gd:/opt/local/include
 
 gdwrp.c
 

@@ -14,10 +14,9 @@
 
 -stop{dos|os2|wce}
 
--reqheader=ocilib.h
-
--inctrypath=${HB_WITH_OCILIB}
--inctrypath=/usr/include
--inctrypath=/usr/local/include
+-depkeyhead=ocilib:ocilib.h
+-depcontrol=ocilib:${HB_WITH_OCILIB}
+-depincpath=ocilib:/usr/include
+-depincpath=ocilib:/usr/local/include
 
 sddoci.c

@@ -13,13 +13,12 @@
 
 -w3 -es2
 
--reqheader=openssl/ssl.h
-
--inctrypath=${HB_WITH_OPENSSL}
--inctrypath=/usr/include
--inctrypath=/usr/local/include
--inctrypath=/usr/local/ssl/include
--inctrypath=/boot/common/include
+-depkeyhead=openssl:openssl/ssl.h
+-depcontrol=openssl:${HB_WITH_OPENSSL}
+-depincpath=openssl:/usr/include
+-depincpath=openssl:/usr/local/include
+-depincpath=openssl:/usr/local/ssl/include
+-depincpath=openssl:/boot/common/include
 
 {darwin}-cflag=-DOPENSSL_NO_SHA256
 {darwin}-cflag=-DOPENSSL_NO_SHA512

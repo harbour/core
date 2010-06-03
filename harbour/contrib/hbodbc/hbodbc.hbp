@@ -1,0 +1,25 @@
+#
+# $Id$
+#
+
+-hblib
+-inc
+-nohbc
+
+-o${hb_name}
+
+-w3 -es2
+
+-stop{dos|os2|rsxnt}
+
+-depkeyhead=odbc:sql.h
+{!(win|wce)}-depcontrol=odbc:${HB_WITH_ODBC}
+{(win|wce)&!msvcarm}-depcontrol=odbc:force
+-depincpath=odbc:/usr/include
+-depincpath=odbc:/usr/local/include
+
+odbc.c
+odbcold.c
+
+todbc.prg
+browodbc.prg

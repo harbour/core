@@ -12,16 +12,15 @@
 
 ../rddsql/rddsql.hbc
 
--reqheader=libpq-fe.h
-
--inctrypath=${HB_WITH_PGSQL}
--inctrypath=/usr/include
--inctrypath=/usr/local/pgsql/include
--inctrypath=/usr/local/pgsql/include/libpq
--inctrypath=/usr/include/pgsql
--inctrypath=/usr/include/postgresql
--inctrypath=/postgres/include
--inctrypath=/opt/local/include/postgresql84
--inctrypath=/opt/local/include/postgresql83
+-depkeyhead=pgsql:libpq-fe.h
+-depcontrol=pgsql:${HB_WITH_PGSQL}
+-depincpath=pgsql:/usr/include
+-depincpath=pgsql:/usr/local/pgsql/include
+-depincpath=pgsql:/usr/local/pgsql/include/libpq
+-depincpath=pgsql:/usr/include/pgsql
+-depincpath=pgsql:/usr/include/postgresql
+-depincpath=pgsql:/postgres/include
+-depincpath=pgsql:/opt/local/include/postgresql84
+-depincpath=pgsql:/opt/local/include/postgresql83
 
 sddpg.c

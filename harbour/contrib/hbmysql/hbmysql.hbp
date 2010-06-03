@@ -10,11 +10,10 @@
 
 -w3 -es2
 
--reqheader=mysql.h
-
--inctrypath=${HB_WITH_MYSQL}
--inctrypath=/usr/include/mysql
--inctrypath=/opt/local/include/mysql5/mysql
+-depkeyhead=mysql:mysql.h
+-depcontrol=mysql:${HB_WITH_MYSQL}
+-depincpath=mysql:/usr/include/mysql
+-depincpath=mysql:/opt/local/include/mysql5/mysql
 
 mysql.c
 mysqlold.c

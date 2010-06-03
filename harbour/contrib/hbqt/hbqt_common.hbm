@@ -12,13 +12,15 @@
 
 -plugin=plug_moc.prg
 
-{!darwin|HB_WITH_QT}-reqheader=QtCore/qglobal.h
-{!darwin|HB_WITH_QT}-inctrypath=${HB_WITH_QT}
-{!darwin}-inctrypath=/usr/include/qt4
-{!darwin}-inctrypath=/usr/lib/qt4/include
-{!darwin}-inctrypath=/usr/include
-{!darwin}-inctrypath=/Developer/qt/include
+-depcontrol=qt:${HB_WITH_QT}
 
-{darwin&!HB_WITH_QT}-reqheader=QtCore
-{darwin&!HB_WITH_QT}-inctrypath=/Library/Frameworks/QtCore.framework/Headers
-{darwin&!HB_WITH_QT}-cflag=-I/Library/Frameworks/QtCore.framework/Headers
+{!darwin}-depkeyhead=qt:QtCore/qglobal.h
+{!darwin}-depincpath=qt:/usr/include/qt4
+{!darwin}-depincpath=qt:/usr/lib/qt4/include
+{!darwin}-depincpath=qt:/usr/include
+{!darwin}-depincpath=qt:/Developer/qt/include
+
+# TOFIX: Use the same header for detection on darwin
+{darwin}-depkeyhead=qt:QtCore
+{darwin}-depincpath=qt:/Library/Frameworks/QtCore.framework/Headers
+{darwin}-cflag=-I/Library/Frameworks/QtCore.framework/Headers

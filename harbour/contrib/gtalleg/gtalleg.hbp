@@ -13,11 +13,10 @@
 
 -stop{pocc|pocc64|poccarm|xcc|dmc|watcom|mingwarm|msvcarm}
 
--reqheader=allegro.h
-
--inctrypath=${HB_WITH_ALLEGRO}
--inctrypath=/usr/include
--inctrypath=/opt/local/include
+-depkeyhead=allegro:allegro.h
+-depcontrol=allegro:${HB_WITH_ALLEGRO}
+-depincpath=allegro:/usr/include
+-depincpath=allegro:/opt/local/include
 
 gtalleg.c
 ssf.c

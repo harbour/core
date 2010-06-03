@@ -1,0 +1,20 @@
+#
+# $Id$
+#
+
+-hblib
+-inc
+-nohbc
+
+-o${hb_name}
+
+-w3 -es2
+
+-stop{wce}
+
+-depkeyhead=bzip2:bzlib.h
+-depcontrol=bzip2:${HB_WITH_BZIP2}
+-depincpath=bzip2:/usr/include
+-depincpathlocal=bzip2:../../external/bzip2
+
+hbbz2.c

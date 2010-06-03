@@ -12,11 +12,10 @@
 
 -stop{dos|os2}
 
--reqheader=FreeImage.h
-
--inctrypath=${HB_WITH_FREEIMAGE}
--inctrypath=/usr/include
--inctrypath=/opt/local/include
+-depkeyhead=freeimage:FreeImage.h
+-depcontrol=freeimage:${HB_WITH_FREEIMAGE}
+-depincpath=freeimage:/usr/include
+-depincpath=freeimage:/opt/local/include
 
 -cflag=-DHB_LEGACY_TYPES_OFF
 

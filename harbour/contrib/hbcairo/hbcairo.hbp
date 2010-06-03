@@ -10,11 +10,10 @@
 
 -w3 -es2
 
--reqheader=cairo.h
-
--inctrypath=${HB_WITH_CAIRO}
--inctrypath=/usr/include/cairo
--inctrypath=/opt/local/include/cairo
+-depkeyhead=cairo:cairo.h
+-depcontrol=cairo:${HB_WITH_CAIRO}
+-depincpath=cairo:/usr/include/cairo
+-depincpath=cairo:/opt/local/include/cairo
 
 context.c
 core.c
