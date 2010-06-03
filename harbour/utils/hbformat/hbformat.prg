@@ -202,7 +202,7 @@ STATIC FUNCTION About()
 
    ?? "Harbour Source Formatter " + HBRawVersion()
    ? "Copyright (c) 2009-2010, Alexander S.Kresin"
-   ? "http://www.harbour-project.org/"
+   ? "http://harbour-project.org/"
    ?
    ? "Syntax:  hbformat [options] [@config] file[s]"
    ?

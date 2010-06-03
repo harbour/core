@@ -71,7 +71,7 @@
 %define hb_cmrc   export HB_BUILD_NOGPLLIB=%{?_without_gpllib:yes}
 %define hb_ctrb   export HB_CONTRIBLIBS="hbblink hbbtree hbclipsm hbct hbgt hbmisc hbmzip hbnetio hbtip hbtpathy hbhpdf hbziparc hbfoxpro hbsms hbfship hbxpp xhb rddbmcdx rddsql sddsqlt3 hbnf %{?_with_allegro:gtalleg} %{?_with_cairo:hbcairo} %{?_with_cups:hbcups} %{?_with_curl:hbcurl} %{?_with_firebird:hbfbird sddfb} %{?_with_freeimage:hbfimage} %{?_with_gd:hbgd} %{?_with_mysql:hbmysql sddmy} %{?_with_odbc:hbodbc sddodbc} %{?_with_pgsql:hbpgsql sddpg} %{?_with_qt:hbqt hbxbp} %{?_with_ads:rddads}"
 %define hb_env    %{hb_plat} ; %{hb_cc} ; %{hb_cflag} ; %{hb_lflag} ; %{hb_dflag} ; %{hb_gpm} ; %{hb_crs} ; %{hb_sln} ; %{hb_x11} ; %{hb_local} ; %{hb_bdir} ; %{hb_idir} ; %{hb_ldir} ; %{hb_edir} ; %{hb_ctrb} ; %{hb_cmrc}
-%define hb_host   www.harbour-project.org
+%define hb_host   harbour-project.org
 %define readme    README.RPM
 ######################################################################
 ## Preamble.
@@ -487,7 +487,7 @@ return nil
 
 druzus@uran:~/tmp$ %{hb_pref}cmp foo
 Harbour 1.0.0 Intl. (Rev. 9099)
-Copyright (c) 1999-2008, http://www.harbour-project.org/
+Copyright (c) 1999-2008, http://harbour-project.org/
 Compiling 'foo.prg'...
 Lines 5, Functions/Procedures 2
 Generating C source output to 'foo.c'... Done.
@@ -509,7 +509,7 @@ return nil
 
 druzus@uran:~/tmp$ %{hb_pref}mk foo
 Harbour 1.0.0 Intl. (Rev. 9099)
-Copyright (c) 1999-2008, http://www.harbour-project.org/
+Copyright (c) 1999-2008, http://harbour-project.org/
 Compiling 'foo.prg'...
 Lines 5, Functions/Procedures 2
 Generating C source output to 'foo.c'... Done.

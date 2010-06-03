@@ -58,7 +58,7 @@ return nil
 
 druzus@uran:~/tmp$ hbcmp foo
 Harbour Compiler Alpha build 46.2 (Flex)
-Copyright 1999-2006, http://www.harbour-project.org/
+Copyright 1999-2006, http://harbour-project.org/
 Compiling 'foo.prg'...
 Lines 5, Functions/Procedures 2
 Generating C source output to 'foo.c'... Done.
@@ -80,7 +80,7 @@ return nil
 
 druzus@uran:~/tmp$ hbmk foo
 Harbour Compiler Alpha build 46.2 (Flex)
-Copyright 1999-2006, http://www.harbour-project.org/
+Copyright 1999-2006, http://harbour-project.org/
 Compiling 'foo.prg'...
 Lines 5, Functions/Procedures 2
 Generating C source output to 'foo.c'... Done.

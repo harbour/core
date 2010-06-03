@@ -28,8 +28,8 @@ Content
 =========================================================
 by Viktor Szakats
 
- 1) Read the Harbour FAQ (http://www.harbour-project.org/faq), monitor the
-    mailing-list (http://www.harbour-project.org/faq/harbour34.html),
+ 1) Read the Harbour FAQ (http://harbour-project.org/faq), monitor the
+    mailing-list (http://harbour-project.org/faq/harbour34.html),
     consult with the developers, make contributions. This way your chances
     are high to get a RW access to the repository.
  2) Before uploading anything you'll need Developer (RW) status for the
@@ -133,7 +133,7 @@ by Viktor Szakats
 ================================================================
 
 Please read the following FAQ entry:
-http://www.harbour-project.org/faq/harbour25.html
+http://harbour-project.org/faq/harbour25.html
 
 1.5 Things to do to avoid damaging the SourceForge SVN tree
 ===========================================================

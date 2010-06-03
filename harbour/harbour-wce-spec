@@ -17,7 +17,7 @@
 %define version   2.1.0
 %define releasen  beta1
 %define hb_pref   hbce
-%define hb_host   www.harbour-project.org
+%define hb_host   harbour-project.org
 %define readme    README.RPM
 
 # Workaround for the problem of /usr/bin/strip not handling PE binaries.
@@ -184,7 +184,7 @@ return nil
 
 druzus@uran:~/tmp$ %{hb_pref}cmp foo
 Harbour 1.0.0 Intl. (Rev. 9099)
-Copyright (c) 1999-2008, http://www.harbour-project.org/
+Copyright (c) 1999-2008, http://harbour-project.org/
 Compiling 'foo.prg'...
 Lines 5, Functions/Procedures 2
 Generating C source output to 'foo.c'... Done.
@@ -204,7 +204,7 @@ return nil
 
 druzus@uran:~/tmp$ %{hb_pref}mk foo
 Harbour 1.0.0 Intl. (Rev. 9099)
-Copyright (c) 1999-2008, http://www.harbour-project.org/
+Copyright (c) 1999-2008, http://harbour-project.org/
 Compiling 'foo.prg'...
 Lines 5, Functions/Procedures 2
 Generating C source output to 'foo.c'... Done.

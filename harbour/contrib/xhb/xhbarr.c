@@ -74,22 +74,14 @@ HB_FUNC( ASPLICE )
       }
 
       if( HB_ISNUM( 2 ) )
-      {
          ulStart = ( HB_SIZE ) hb_parnl( 2 );
-      }
       else
-      {
          ulStart = ulLen + ( hb_pcount() > 3 && !HB_ISNUM( 3 ) ? 1 : 0 );
-      }
 
       if( HB_ISNUM( 3 ) )
-      {
          ulRemove = ( HB_SIZE ) hb_parnl( 3 );
-      }
       else
-      {
          ulRemove = ( hb_pcount() > 3 && ulStart == ulLen + 1 ) ? 0 : 1;
-      }
 
       if( ulStart == 0 || ulStart > ulLen )
       {
@@ -101,9 +93,7 @@ HB_FUNC( ASPLICE )
       }
 
       if( ulStart + ulRemove - 1 > ulLen )
-      {
          ulRemove = ulLen - ulStart + 1;
-      }
 
       hb_arrayNew( pReturn, ulRemove );
 
@@ -111,10 +101,8 @@ HB_FUNC( ASPLICE )
       ulStart--;
 
       for( ulIndex = ulStart + 1; ( ulIndex - ulStart ) <= ulRemove; ulIndex++ )
-      {
          hb_itemMove( hb_arrayGetItemPtr( pReturn, ulIndex - ulStart ),
                       hb_arrayGetItemPtr( pArray, ulIndex ) );
-      }
 
       if( hb_pcount() > 3 )
       {
@@ -130,25 +118,19 @@ HB_FUNC( ASPLICE )
 
             /* Shift right BEFORE adding, so that new items will not override existing values. */
             for( ulIndex = ulLen; ulIndex && --ulShift; --ulIndex )
-            {
                hb_itemMove( hb_arrayGetItemPtr( pArray, ulIndex + ulMore ),
                             hb_arrayGetItemPtr( pArray, ulIndex ) );
-            }
 
             /* Now insert new values into emptied space. */
             for( ulIndex = ulStart; ++ulNew <= ulAdd; ulIndex++ )
-            {
                hb_itemMove( hb_arrayGetItemPtr( pArray, ulIndex + 1 ),
                             hb_param( 3 + ulNew, HB_IT_ANY ) );
-            }
          }
          else
          {
             /* Insert over the space emptied by removed items */
             for( ulIndex = ulStart; ++ulNew <= ulAdd; ulIndex++ )
-            {
                hb_itemMove( hb_arrayGetItemPtr( pArray, ulIndex + 1 ), hb_param( 3 + ulNew, HB_IT_ANY ) );
-            }
 
             if( ulRemove > ulAdd )
             {
@@ -156,27 +138,24 @@ HB_FUNC( ASPLICE )
 
                /* Shift left to compact the emptied hole. */
                for( ulIndex = ulStart + ulAdd + 1; ulIndex + ulRemove <= ulLen; ulIndex++ )
-               {
                   hb_itemMove( hb_arrayGetItemPtr( pArray, ulIndex ),
                                hb_arrayGetItemPtr( pArray, ulIndex + ulRemove ) );
-               }
             }
          }
       }
       else
       {
          for( ulIndex = ulStart + 1; ulIndex + ulRemove <= ulLen; ulIndex++ )
-         {
             hb_itemMove( hb_arrayGetItemPtr( pArray, ulIndex ),
                          hb_arrayGetItemPtr( pArray, ulIndex + ulRemove ) );
-         }
 
          hb_arraySize( pArray, ulLen - ulRemove );
       }
    }
 }
 
-/* Synonym of aSplice() Xbase++ compatability (extended with optional replacemenet values) */
+/* TOFIX: Move this to hbxpp library */
+/* Synonym of aSplice() Xbase++ compatibility (extended with optional replacemenet values) */
 HB_FUNC( AREMOVE )
 {
    HB_FUNC_EXEC( ASPLICE )
@@ -207,28 +186,20 @@ HB_FUNC( AMERGE )
 
          /* Shift right BEFORE merging, so that merged items will not override existing values. */
          for( ulIndex = ulLen; ulIndex > ulStart; --ulIndex )
-         {
             hb_itemMove( hb_arrayGetItemPtr( pArray1, ulIndex + ulAdd ),
                          hb_arrayGetItemPtr( pArray1, ulIndex ) );
-         }
       }
       else
-      {
          ulStart = ulLen;
-      }
 
       for( ulIndex = 1; ulIndex <= ulAdd; ulIndex++ )
-      {
          hb_itemCopy( hb_arrayGetItemPtr( pArray1, ulStart + ulIndex ),
                       hb_arrayGetItemPtr( pArray2, ulIndex ) );
-      }
 
       hb_itemCopy( hb_stackReturnItem(), pArray1 );
    }
    else
-   {
       hb_errRT_BASE( EG_ARG, 1003, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-   }
 }
 
 HB_FUNC( XHB_ADEL )
@@ -285,7 +256,6 @@ HB_FUNC( XHB_AINS )
 
       hb_itemReturn( pArray ); /* AIns() returns the array itself */
    }
-
 }
 
 HB_FUNC_EXTERN( HB_RASCAN             ) ; HB_FUNC( RASCAN                   ) { HB_FUNC_EXEC( HB_RASCAN             ); }

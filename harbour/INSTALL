@@ -10,7 +10,7 @@ HARBOUR
     xBase language compiler and the runtime libraries with different
     terminal plugins and different databases (not just DBF)"
 
-                                       http://www.harbour-project.org/
+                                       http://harbour-project.org/
 
 
 1. HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
@@ -1508,7 +1508,7 @@ HARBOUR
 ========================
 
    Homepage:
-      http://www.harbour-project.org/
+      http://harbour-project.org/
 
    User Forums:
       http://sourceforge.net/apps/phpbb/harbour-project/
