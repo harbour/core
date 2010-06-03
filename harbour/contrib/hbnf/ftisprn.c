@@ -143,9 +143,9 @@
 
 /* TOFIX: Has different behaviour depending on platform/parameter. [vszakats] */
 
-HB_FUNC_EXTERN( HB_ISPRINT );
+HB_FUNC_EXTERN( HB_ISPRINTER );
 
 HB_FUNC( FT_ISPRINT )
 {
-   HB_FUNC_EXEC( HB_ISPRINT )
+   HB_FUNC_EXEC( HB_ISPRINTER )
 }

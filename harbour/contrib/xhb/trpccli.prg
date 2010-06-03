@@ -321,7 +321,7 @@ METHOD StartScan()
    // in async mode, just launch the listener
    IF ::lAsyncMode
       HB_MutexLock( ::mtxBusy )
-         ::thUdpAccept := xhb_StartThread( Self, "UDPAccept" )
+         ::thUdpAccept := StartThread( Self, "UDPAccept" )
       HB_MutexUnlock( ::mtxBusy )
    ELSE
       ::UDPAccept()
@@ -632,7 +632,7 @@ METHOD Call( ... ) CLASS tRPCClient
    // in async mode, just launch the listener
       IF ::lAsyncMode
          HB_MutexLock( ::mtxBusy )
-         ::thTCPAccept := xhb_StartThread( Self, "TCPAccept" )
+         ::thTCPAccept := StartThread( Self, "TCPAccept" )
          HB_MutexUnlock( ::mtxBusy )
       ELSE
          ::TCPAccept()

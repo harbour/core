@@ -458,7 +458,7 @@ METHOD Start() CLASS tRPCServeCon
 
    HB_MutexLock( ::mtxBusy )
    IF ::thSelf == NIL
-      ::thSelf := xhb_StartThread( Self, "RUN" )
+      ::thSelf := StartThread( Self, "RUN" )
       lRet := .T.
    ENDIF
    HB_MutexUnlock( ::mtxBusy )
@@ -942,7 +942,7 @@ METHOD LaunchFunction( cFuncName, aParams, nMode, aDesc ) CLASS tRPCServeCon
    ::lCanceled := .F.
    // Set the running status
    ::nStatus := RPCS_STATUS_RUNNING
-   ::thFunction := xhb_StartThread( Self, "FunctionRunner", ;
+   ::thFunction := StartThread( Self, "FunctionRunner", ;
       cFuncName, oFunc, nMode, aParams, aDesc )
    HB_MutexUnlock( ::mtxBusy )
 
@@ -1340,10 +1340,10 @@ METHOD Start( lStartUdp ) CLASS tRPCService
       ::skUdp := hb_inetDGramBind( ::nUdpPort, ::cBindAddress )
    ENDIF
 
-   ::thAccept := xhb_StartThread( Self, "Accept" )
+   ::thAccept := StartThread( Self, "Accept" )
 
    IF lStartUdp != NIL .and. lStartUdp
-      ::thUdp := xhb_StartThread( Self, "UdpListen" )
+      ::thUdp := StartThread( Self, "UdpListen" )
    ELSE
       ::thUdp := NIL
    ENDIF

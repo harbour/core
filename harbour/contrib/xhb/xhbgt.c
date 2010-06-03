@@ -57,4 +57,3 @@ HB_FUNC_EXTERN( HB_GFXPRIMITIVE       ) ; HB_FUNC( GFXPRIMITIVE             ) { 
 HB_FUNC_EXTERN( HB_GFXTEXT            ) ; HB_FUNC( GFXTEXT                  ) { HB_FUNC_EXEC( HB_GFXTEXT            ); }
 HB_FUNC_EXTERN( HB_GTLOCK             ) ; HB_FUNC( HBCONSOLELOCK            ) { HB_FUNC_EXEC( HB_GTLOCK             ); }
 HB_FUNC_EXTERN( HB_GTUNLOCK           ) ; HB_FUNC( HBCONSOLEUNLOCK          ) { HB_FUNC_EXEC( HB_GTUNLOCK           ); }
-HB_FUNC_EXTERN( HB_SETLASTKEY         ) ; HB_FUNC( SETLASTKEY               ) { HB_FUNC_EXEC( HB_SETLASTKEY         ); }
