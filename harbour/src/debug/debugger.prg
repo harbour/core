@@ -7,7 +7,7 @@
  * The Debugger
  *
  * Copyright 1999 Antonio Linares <alinares@fivetechsoft.com>
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  * Copyright 2003-2006 Phil Krylov <phil@newstar.rinet.ru>
  * www - http://www.xharbour.org
@@ -60,7 +60,7 @@
 
 /*
  * The following parts are Copyright of the individual authors.
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *    __dbgCStr()

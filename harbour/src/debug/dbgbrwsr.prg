@@ -7,7 +7,7 @@
  * The Debugger Browser
  *
  * Copyright 2004 Ryszard Glab <rglab@imid.med.pl>
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  * Copyright 2007 Phil Krylov <phil a t newstar.rinet.ru>
  * www - http://xharbour.org
  *

@@ -7,7 +7,7 @@
  * Compiler main file
  *
  * Copyright 1999 Antonio Linares <alinares@fivetechsoft.com>
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@
  * their web site at http://www.gnu.org/).
  *
  * The following parts are Copyright of the individual authors.
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  * Copyright 2000 RonPinkas <Ron@Profit-Master.com>
  *    hb_compPrepareJumps()

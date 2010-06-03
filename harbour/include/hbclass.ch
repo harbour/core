@@ -11,7 +11,7 @@
  * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *    most of rules rewritten
  *
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -56,7 +56,7 @@
 
 /*
  * The following parts are Copyright of the individual authors.
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  * Copyright 2000 ( ->07/2000 ) JF. Lefebvre <jfl@mafact.com> & RA. Cuylen <rac@mafact.com>
  *    Support for Class(y), TopClass and Visual Object compatibility

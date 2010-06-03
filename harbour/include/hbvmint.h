@@ -7,7 +7,7 @@
  * Header files to force macro inlining for HVM build
  *
  * Copyright 2008 Przemyslaw Czerpak <druzus /at/ priv.onet.pl>
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

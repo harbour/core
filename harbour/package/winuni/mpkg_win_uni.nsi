@@ -33,15 +33,15 @@ RequestExecutionLevel user
 
 !ifdef PKG_FULL
    ; The name of the installer
-   Name "Harbour Project 2.0 (full)"
+   Name "Harbour Project 2.1 (full)"
    ; The file to write
    OutFile "harbour-2.1.0-win-full.exe"
 !else
    !ifdef PKG_MINI
-      Name "Harbour Project 2.0 (minimal)"
+      Name "Harbour Project 2.1 (minimal)"
       OutFile "harbour-2.1.0-win-mini.exe"
    !else
-      Name "Harbour Project 2.0"
+      Name "Harbour Project 2.1"
       OutFile "harbour-2.1.0-win.exe"
    !endif
 !endif
@@ -319,18 +319,18 @@ Section "Start Menu and Desktop icons" hb_shortcuts
   ; this will be the working dir for shortcuts
   SetOutPath $INSTDIR
 
-  CreateShortCut     "$DESKTOP\Harbour Project 2.0.lnk" "$INSTDIR" "" "$INSTDIR" 0
-  CreateDirectory "$SMPROGRAMS\Harbour Project 2.0"
-  CreateShortCut  "$SMPROGRAMS\Harbour Project 2.0\Uninstall.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
-  CreateShortCut  "$SMPROGRAMS\Harbour Project 2.0\Harbour Project (Command line).lnk" "cmd.exe" "/k cd $INSTDIR\bin" "cmd.exe" 0
-  CreateShortCut  "$SMPROGRAMS\Harbour Project 2.0\Harbour Project.lnk" "$INSTDIR" "" "$INSTDIR" 0
-  CreateShortCut  "$SMPROGRAMS\Harbour Project 2.0\hbrun.lnk" "$INSTDIR\bin\hbrun.exe" "-v" "$INSTDIR\bin\hbrun.exe" 0
-  CreateDirectory "$SMPROGRAMS\Harbour Project 2.0\Links"
-  WriteINIStr     "$SMPROGRAMS\Harbour Project 2.0\Links\Homepage.url"                   "InternetShortcut" "URL" "http://harbour-project.org/"
-  WriteINIStr     "$SMPROGRAMS\Harbour Project 2.0\Links\Sourceforge Page.url"           "InternetShortcut" "URL" "http://sourceforge.net/projects/harbour-project/"
-  WriteINIStr     "$SMPROGRAMS\Harbour Project 2.0\Links\Users' Mailing List.url"        "InternetShortcut" "URL" "http://groups.google.com/group/harbour-users/"
-  WriteINIStr     "$SMPROGRAMS\Harbour Project 2.0\Links\Developers' Mailing List.url"   "InternetShortcut" "URL" "http://groups.google.com/group/harbour-devel/"
-  WriteINIStr     "$SMPROGRAMS\Harbour Project 2.0\Links\Development Timeline.url"       "InternetShortcut" "URL" "http://sourceforge.net/apps/trac/harbour-project/timeline"
+  CreateShortCut     "$DESKTOP\Harbour Project 2.1.lnk" "$INSTDIR" "" "$INSTDIR" 0
+  CreateDirectory "$SMPROGRAMS\Harbour Project 2.1"
+  CreateShortCut  "$SMPROGRAMS\Harbour Project 2.1\Uninstall.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
+  CreateShortCut  "$SMPROGRAMS\Harbour Project 2.1\Harbour Project (Command line).lnk" "cmd.exe" "/k cd $INSTDIR\bin" "cmd.exe" 0
+  CreateShortCut  "$SMPROGRAMS\Harbour Project 2.1\Harbour Project.lnk" "$INSTDIR" "" "$INSTDIR" 0
+  CreateShortCut  "$SMPROGRAMS\Harbour Project 2.1\hbrun.lnk" "$INSTDIR\bin\hbrun.exe" "-v" "$INSTDIR\bin\hbrun.exe" 0
+  CreateDirectory "$SMPROGRAMS\Harbour Project 2.1\Links"
+  WriteINIStr     "$SMPROGRAMS\Harbour Project 2.1\Links\Homepage.url"                   "InternetShortcut" "URL" "http://harbour-project.org/"
+  WriteINIStr     "$SMPROGRAMS\Harbour Project 2.1\Links\Sourceforge Page.url"           "InternetShortcut" "URL" "http://sourceforge.net/projects/harbour-project/"
+  WriteINIStr     "$SMPROGRAMS\Harbour Project 2.1\Links\Users' Mailing List.url"        "InternetShortcut" "URL" "http://groups.google.com/group/harbour-users/"
+  WriteINIStr     "$SMPROGRAMS\Harbour Project 2.1\Links\Developers' Mailing List.url"   "InternetShortcut" "URL" "http://groups.google.com/group/harbour-devel/"
+  WriteINIStr     "$SMPROGRAMS\Harbour Project 2.1\Links\Development Timeline.url"       "InternetShortcut" "URL" "http://sourceforge.net/apps/trac/harbour-project/timeline"
 
 SectionEnd
 
@@ -432,12 +432,12 @@ Section "Uninstall"
   RMDir /r $INSTDIR
 
   ; Remove directories used
-  Delete "$SMPROGRAMS\Harbour Project 2.0\Links\*.*"
-  RMDir  "$SMPROGRAMS\Harbour Project 2.0\Links"
-  Delete "$SMPROGRAMS\Harbour Project 2.0\*.*"
-  RMDir  "$SMPROGRAMS\Harbour Project 2.0"
+  Delete "$SMPROGRAMS\Harbour Project 2.1\Links\*.*"
+  RMDir  "$SMPROGRAMS\Harbour Project 2.1\Links"
+  Delete "$SMPROGRAMS\Harbour Project 2.1\*.*"
+  RMDir  "$SMPROGRAMS\Harbour Project 2.1"
   RMDir  "$INSTDIR"
 
-  Delete "$DESKTOP\Harbour Project 2.0.lnk"
+  Delete "$DESKTOP\Harbour Project 2.1.lnk"
 
 SectionEnd

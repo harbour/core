@@ -7,7 +7,7 @@
  * Version detection functions
  *
  * Copyright 1999 {list of individual authors and e-mail addresses}
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -52,7 +52,7 @@
 
 /*
  * The following parts are Copyright of the individual authors.
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  * Copyright 1999 Luiz Rafael Culik <culik@sl.conex.net>
  *    hb_verPlatform() (support for determining the Windows version)
