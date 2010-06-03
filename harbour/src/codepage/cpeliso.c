@@ -7,7 +7,7 @@
  * National Collation Support Module ( Greek ISO )
  *
  * Copyright 2004 Pete Dionisopoulos <pete_westg@yahoo.gr>
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  * v1.0 2004 Panayotis (Pete) Dionysopoulos <pete_westg@yahoo.gr>
  *
  * This program is free software; you can redistribute it and/or modify

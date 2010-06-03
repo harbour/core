@@ -7,7 +7,7 @@
  * Windows pcode DLL entry point and VM/RTL routing functions
  *
  * Copyright 2001 Antonio Linares <alinares@fivetech.com>
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  * Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * rewritten

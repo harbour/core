@@ -7,7 +7,7 @@
  * National Collation Support Module ( PLMAZ )
  *
  * Copyright 2002 Alexander S.Kresin <alex@belacy.belgorod.su>
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  * Polish collating sequence (PLMAZ) Mazovia done by Jacek Kubica <kubica@wssk.wroc.pl>
  *
  * This program is free software; you can redistribute it and/or modify

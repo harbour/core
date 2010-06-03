@@ -7,7 +7,7 @@
  * National Collation Support Module ( Italian ISO-8859-1b )
  *
  * Copyright 2002 Alexander S.Kresin <alex@belacy.belgorod.su>
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  * Spanish MS-DOS support by Antonio Linares <alinares@fivetechsoft.com>
  *
  * This program is free software; you can redistribute it and/or modify

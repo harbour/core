@@ -7,7 +7,7 @@
  * National Collation Support Module ( PTISO )
  *
  * Copyright 2002 Alexander S.Kresin <alex@belacy.belgorod.su>
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  * Portuguese collating sequence (PTISO) done
  * by Przemyslaw Czerpak <druzus@polbox.com>
  *

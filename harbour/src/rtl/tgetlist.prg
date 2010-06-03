@@ -7,7 +7,7 @@
  * HBGetList Class
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -52,7 +52,7 @@
 
 /*
  * The following parts are Copyright of the individual authors.
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  * Copyright 2001 Luiz Rafael Culik
  *    Support for CA-Cl*pper 5.3 Getsystem

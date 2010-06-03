@@ -7,7 +7,7 @@
  * OEM <-> ANSI string conversion functions (Windows specific, Xbase++ ext.)
  *
  * Copyright 1999-2010 Viktor Szakats (harbour.01 syenar.hu)
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

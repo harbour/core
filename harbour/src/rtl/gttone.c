@@ -7,7 +7,7 @@
  *    Low level tone code common to some GT drivers
  *
  * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  * the body of TONE function from Windows taken from GTWIN created by
  * the following authors:

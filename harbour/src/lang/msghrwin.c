@@ -9,7 +9,7 @@
  * Copyright 2000 Viktor Szakats (harbour.01 syenar.hu) (English, from msg_tpl.c)
  * Copyright 2000 Davor Siklic <siki@msoft.cz>
  * Copyright 2003 Vladimir Miholic <vmiholic@sk.hinet.hr> (Croatien from msg_hr852.c)
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

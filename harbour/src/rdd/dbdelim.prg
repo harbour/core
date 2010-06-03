@@ -8,7 +8,7 @@
  * Appends the contents of a delimited text file to a database.
  *
  * Copyright 2001-2003 David G. Holm <dholm@jsd-llc.com>
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  * APPEND FROM code submitted by Marco Braida <marcobra@elart.it>
  *
  * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>

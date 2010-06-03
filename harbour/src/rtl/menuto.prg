@@ -7,7 +7,7 @@
  * PROMPT/MENU TO commands
  *
  * Released to Public Domain by Phil Barnett <philb@iag.net>
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  */
 

@@ -10,7 +10,7 @@
  * Copyright 2000 Roman Masek <woodoo@iol.cz>
  * Copyright 2000 Davor Siklic <siki@msoft.cz>
  * Copyright 2006 Vojtech Obrdlik <vobrdlik@centrum.cz>
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

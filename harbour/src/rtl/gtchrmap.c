@@ -7,7 +7,7 @@
  * Video subsystem based on ncurses screen library.
  *
  * Copyright 2003 Przemyslaw Czerpak <druzus@polbox.com>
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  * Special thanks to Marek Paliwoda <paliwoda@inetia.pl>
  * author of gtsln from which I borrowed a lot of code and ideas.
  *

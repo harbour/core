@@ -7,7 +7,7 @@
  * National Collation Support Module ( Latin 850 )
  *
  * Copyright 2002 Alexander S.Kresin <alex@belacy.belgorod.su>
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  * Portuguese collating sequence (PT850) done
  * by Luiz Rafael Culik Guimaraes <culikr@uol.com.br>
  *

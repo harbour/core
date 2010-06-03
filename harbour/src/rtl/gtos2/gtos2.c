@@ -7,7 +7,7 @@
  * Video subsystem for OS/2 compilers
  *
  * Copyright 1999 - 2001 Harbour Project
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -52,7 +52,7 @@
 
 /*
  * The following parts are Copyright of the individual authors.
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
  *    hb_gt_os2_ReadKey()

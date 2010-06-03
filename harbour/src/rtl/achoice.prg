@@ -7,7 +7,7 @@
  * ACHOICE() function
  *
  * Released to Public Domain by Peter Townsend <cephas@tpgi.com.au>
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  */
 

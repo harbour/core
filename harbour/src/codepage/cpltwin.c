@@ -7,7 +7,7 @@
  * National Collation Support Module ( LTWIN )
  *
  * Copyright 2002 Alexander S.Kresin <alex@belacy.belgorod.su>
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  * Lithuanian collation sequence
  * 2003, by Mindaugas Kavaliauskas <dbtopas@dbtopas.lt>
  *

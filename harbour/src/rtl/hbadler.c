@@ -7,7 +7,7 @@
  *    adler32 checksum function
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  * Algorithm taken from adler32.c Copyright (C) 1995-2002 Mark Adler
  *

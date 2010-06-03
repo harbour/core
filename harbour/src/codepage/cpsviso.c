@@ -7,7 +7,7 @@
  * National Collation Support Module (SVISO)
  *
  * Copyright 2008 Viktor Szakats (harbour.01 syenar.hu)
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  * Copyright 2006 Klas Engwall <klas dot engwall at engwall dot com>
  *
  * This program is free software; you can redistribute it and/or modify

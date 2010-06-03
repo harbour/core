@@ -7,7 +7,7 @@
  * National Collation Support Module ( FR850M )
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  * This file is generated automatically by cpinfo.prg
  */

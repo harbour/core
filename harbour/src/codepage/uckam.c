@@ -8,7 +8,7 @@
  *
  * Copyright 2006 Vojtech Obrdlik <vobrdlik@centrum.cz>
  * adapted from David Kozub - http://linux.fjfi.cvut.cz/%7Ezub/cp895/
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

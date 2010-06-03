@@ -7,13 +7,13 @@
  * ALERT(), HB_ALERT() functions
  *
  * Released to Public Domain by Vladimir Kazimirchik <v_kazimirchik@yahoo.com>
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  */
 
 /*
  * The following parts are Copyright of the individual authors.
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  * Copyright 1999-2001 Viktor Szakats (harbour.01 syenar.hu)
  *    Changes for higher Clipper compatibility, console mode, extensions

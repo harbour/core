@@ -7,7 +7,7 @@
  * National Collation Support Module ( HR852 )
  *
  * Copyright 2002 Alexander S.Kresin <alex@belacy.belgorod.su>
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  * 2003 Mitja Podgornik <Mitja.Podgornik@zgs.gov.si>
  * 2003 Vlado Miholic <Vladimir.Miholic@sk.hinet.hr>
  *

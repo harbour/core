@@ -7,7 +7,7 @@
  * National Collation Support Module (ESISO - Modern Spanish)
  *
  * Copyright 2008 Viktor Szakats (harbour.01 syenar.hu)
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  * Spanish Windows support by Antonio Linares <alinares@fivetechsoft.com>
  *
  * This program is free software; you can redistribute it and/or modify

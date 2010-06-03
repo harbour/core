@@ -7,7 +7,7 @@
  * Base Object from which all object finally inherit
  *
  * Copyright 2000 JfL&RaC <jfl@mafact.com>, <rac@mafact.com>
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -52,7 +52,7 @@
 
 /*
  * The following parts are Copyright of the individual authors.
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  * Copyright 2000 J. Lefebvre <jfl@mafact.com> & RA. Cuylen <rac@mafact.com>
  *    1.40 07/13/2000 JFL&RAC

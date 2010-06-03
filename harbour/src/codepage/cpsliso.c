@@ -7,7 +7,7 @@
  * National Collation Support Module ( SLISO )
  *
  * Copyright 2002 Alexander S.Kresin <alex@belacy.belgorod.su>
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  * 2003 Mitja Podgornik <Mitja.Podgornik@zgs.gov.si>
  *
  * This program is free software; you can redistribute it and/or modify

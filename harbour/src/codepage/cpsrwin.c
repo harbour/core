@@ -7,7 +7,7 @@
  * National Collation Support Module (SRWIN)
  *
  * Copyright 2002 Alexander S.Kresin <alex@belacy.belgorod.su>
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  * SERBIAN collating sequence done by Srdjan Dragojlovic <digikv@yahoo.com>
  *
  * This program is free software; you can redistribute it and/or modify

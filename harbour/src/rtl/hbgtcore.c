@@ -7,7 +7,7 @@
  * Harbour Graphic Terminal low level code
  *
  * Copyright 2006 Przemyslaw Czerpak < druzus /at/ priv.onet.pl >
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  * part of the code in hb_gt_def_* functions is based on the code
  * from old hbapi.c copyrighted by:
