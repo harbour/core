@@ -5988,6 +5988,8 @@ STATIC PROCEDURE dep_postprocess( hbmk )
          dep[ _HBMKDEP_lForced ] := .T.
          AAdd( hbmk[ _HBMK_aOPTC ], "-D" + _HBMK_HAS_PREF + StrToDefine( dep:__enumKey() ) )
          EXIT
+      OTHERWISE
+         AAddNew( dep[ _HBMKDEP_aINCPATH ], dep[ _HBMKDEP_cControl ] )
       ENDSWITCH
    NEXT
 
