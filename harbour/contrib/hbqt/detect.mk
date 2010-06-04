@@ -34,13 +34,7 @@ endif
 
 ifneq ($(HB_HAS_QT),)
    ifeq ($(_QT_DARWIN),yes)
-      HB_CFLAGS += -I/Library/Frameworks/QtCore.framework/Headers
-      ifneq ($(filter qtgui,$(_QT_HEADERS)),)
-         HB_CFLAGS += -I/Library/Frameworks/QtGui.framework/Headers
-      endif
-      ifneq ($(filter qtnetwork,$(_QT_HEADERS)),)
-         HB_CFLAGS += -I/Library/Frameworks/QtNetwork.framework/Headers
-      endif
+      HB_CFLAGS += -I/Library/Frameworks
    else
       HB_CFLAGS += $(foreach d,$(HB_HAS_QT),-I$(d))
    endif

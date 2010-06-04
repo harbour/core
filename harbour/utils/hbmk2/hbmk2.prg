@@ -2281,6 +2281,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
            FN_ExtGet( cParamL ) == ".cc" .OR. ;
            FN_ExtGet( cParamL ) == ".cxx" .OR. ;
            FN_ExtGet( cParamL ) == ".cx" .OR. ;
+           FN_ExtGet( cParamL ) == ".m" .OR. ;
            _EXT_IS_UPPER( cParam, ".C" )
 
          FOR EACH cParam IN FN_Expand( PathProc( cParam, aParam[ _PAR_cFileName ] ), Empty( aParam[ _PAR_cFileName ] ) )
@@ -5544,99 +5545,6 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, lSystemHeader, tT
    STATIC s_hRegexInclude := NIL
    STATIC s_hExclStd := NIL
 
-   IF s_hExclStd == NIL
-      s_hExclStd := {;
-         "assert.h"       => NIL ,; /* Standard C */
-         "ctype.h"        => NIL ,;
-         "errno.h"        => NIL ,;
-         "float.h"        => NIL ,;
-         "limits.h"       => NIL ,;
-         "locale.h"       => NIL ,;
-         "math.h"         => NIL ,;
-         "setjmp.h"       => NIL ,;
-         "signal.h"       => NIL ,;
-         "stdarg.h"       => NIL ,;
-         "stddef.h"       => NIL ,;
-         "stdio.h"        => NIL ,;
-         "stdlib.h"       => NIL ,;
-         "string.h"       => NIL ,;
-         "time.h"         => NIL ,;
-         "iso646.h"       => NIL ,; /* ISO C NA1 */
-         "wchar.h"        => NIL ,;
-         "wctype.h"       => NIL ,;
-         "complex.h"      => NIL ,; /* ISO C C99 */
-         "fenv.h"         => NIL ,;
-         "inttypes.h"     => NIL ,;
-         "stdbool.h"      => NIL ,;
-         "stdint.h"       => NIL ,;
-         "tgmath.h"       => NIL ,;
-         "unistd.h"       => NIL ,; /* Standard C POSIX */
-         "aio.h"          => NIL ,;
-         "arpa/inet.h"    => NIL ,;
-         "cpio.h"         => NIL ,;
-         "dirent.h"       => NIL ,;
-         "dlfcn.h"        => NIL ,;
-         "fcntl.h"        => NIL ,;
-         "fmtmsg.h"       => NIL ,;
-         "fnmatch.h"      => NIL ,;
-         "ftw.h"          => NIL ,;
-         "glob.h"         => NIL ,;
-         "grp.h"          => NIL ,;
-         "iconv.h"        => NIL ,;
-         "langinfo.h"     => NIL ,;
-         "libgen.h"       => NIL ,;
-         "monetary.h"     => NIL ,;
-         "mqueue.h"       => NIL ,;
-         "ndbm.h"         => NIL ,;
-         "net/if.h"       => NIL ,;
-         "netdb.h"        => NIL ,;
-         "netinet/in.h"   => NIL ,;
-         "netinet/tcp.h"  => NIL ,;
-         "nl_types.h"     => NIL ,;
-         "poll.h"         => NIL ,;
-         "pthread.h"      => NIL ,;
-         "pwd.h"          => NIL ,;
-         "regex.h"        => NIL ,;
-         "sched.h"        => NIL ,;
-         "search.h"       => NIL ,;
-         "semaphore.h"    => NIL ,;
-         "spawn.h"        => NIL ,;
-         "strings.h"      => NIL ,;
-         "stropts.h"      => NIL ,;
-         "sys/ipc.h"      => NIL ,;
-         "sys/mman.h"     => NIL ,;
-         "sys/msg.h"      => NIL ,;
-         "sys/resource.h" => NIL ,;
-         "sys/select.h"   => NIL ,;
-         "sys/sem.h"      => NIL ,;
-         "sys/shm.h"      => NIL ,;
-         "sys/socket.h"   => NIL ,;
-         "sys/stat.h"     => NIL ,;
-         "sys/statvfs.h"  => NIL ,;
-         "sys/time.h"     => NIL ,;
-         "sys/times.h"    => NIL ,;
-         "sys/types.h"    => NIL ,;
-         "sys/uio.h"      => NIL ,;
-         "sys/un.h"       => NIL ,;
-         "sys/utsname.h"  => NIL ,;
-         "sys/wait.h"     => NIL ,;
-         "syslog.h"       => NIL ,;
-         "tar.h"          => NIL ,;
-         "termios.h"      => NIL ,;
-         "trace.h"        => NIL ,;
-         "ulimit.h"       => NIL ,;
-         "unistd.h"       => NIL ,;
-         "utime.h"        => NIL ,;
-         "utmpx.h"        => NIL ,;
-         "wordexp.h"      => NIL ,;
-         "windows.h"      => NIL ,; /* OS (win) */
-         "winspool.h"     => NIL ,;
-         "shellapi.h"     => NIL ,;
-         "ole2.h"         => NIL ,;
-         "dos.h"          => NIL ,; /* OS (dos) */
-         "os2.h"          => NIL }  /* OS (os2) */
-   ENDIF
-
    DEFAULT nNestingLevel TO 1
    DEFAULT cParentDir TO FN_DirGet( cFileName )
 
@@ -5654,9 +5562,105 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, lSystemHeader, tT
       RETURN .F.
    ENDIF
 
-   /* Don't spend time on known headers */
-   IF StrTran( Lower( cFileName ), "\", "/" ) $ s_hExclStd
-      RETURN .F.
+   /* Don't spend time on known system headers */
+   IF lSystemHeader
+
+      IF s_hExclStd == NIL
+         s_hExclStd := {;
+            "assert.h"       => NIL ,; /* Standard C */
+            "ctype.h"        => NIL ,;
+            "errno.h"        => NIL ,;
+            "float.h"        => NIL ,;
+            "limits.h"       => NIL ,;
+            "locale.h"       => NIL ,;
+            "math.h"         => NIL ,;
+            "setjmp.h"       => NIL ,;
+            "signal.h"       => NIL ,;
+            "stdarg.h"       => NIL ,;
+            "stddef.h"       => NIL ,;
+            "stdio.h"        => NIL ,;
+            "stdlib.h"       => NIL ,;
+            "string.h"       => NIL ,;
+            "time.h"         => NIL ,;
+            "iso646.h"       => NIL ,; /* ISO C NA1 */
+            "wchar.h"        => NIL ,;
+            "wctype.h"       => NIL ,;
+            "complex.h"      => NIL ,; /* ISO C C99 */
+            "fenv.h"         => NIL ,;
+            "inttypes.h"     => NIL ,;
+            "stdbool.h"      => NIL ,;
+            "stdint.h"       => NIL ,;
+            "tgmath.h"       => NIL ,;
+            "unistd.h"       => NIL ,; /* Standard C POSIX */
+            "aio.h"          => NIL ,;
+            "arpa/inet.h"    => NIL ,;
+            "cpio.h"         => NIL ,;
+            "dirent.h"       => NIL ,;
+            "dlfcn.h"        => NIL ,;
+            "fcntl.h"        => NIL ,;
+            "fmtmsg.h"       => NIL ,;
+            "fnmatch.h"      => NIL ,;
+            "ftw.h"          => NIL ,;
+            "glob.h"         => NIL ,;
+            "grp.h"          => NIL ,;
+            "iconv.h"        => NIL ,;
+            "langinfo.h"     => NIL ,;
+            "libgen.h"       => NIL ,;
+            "monetary.h"     => NIL ,;
+            "mqueue.h"       => NIL ,;
+            "ndbm.h"         => NIL ,;
+            "net/if.h"       => NIL ,;
+            "netdb.h"        => NIL ,;
+            "netinet/in.h"   => NIL ,;
+            "netinet/tcp.h"  => NIL ,;
+            "nl_types.h"     => NIL ,;
+            "poll.h"         => NIL ,;
+            "pthread.h"      => NIL ,;
+            "pwd.h"          => NIL ,;
+            "regex.h"        => NIL ,;
+            "sched.h"        => NIL ,;
+            "search.h"       => NIL ,;
+            "semaphore.h"    => NIL ,;
+            "spawn.h"        => NIL ,;
+            "strings.h"      => NIL ,;
+            "stropts.h"      => NIL ,;
+            "sys/ipc.h"      => NIL ,;
+            "sys/mman.h"     => NIL ,;
+            "sys/msg.h"      => NIL ,;
+            "sys/resource.h" => NIL ,;
+            "sys/select.h"   => NIL ,;
+            "sys/sem.h"      => NIL ,;
+            "sys/shm.h"      => NIL ,;
+            "sys/socket.h"   => NIL ,;
+            "sys/stat.h"     => NIL ,;
+            "sys/statvfs.h"  => NIL ,;
+            "sys/time.h"     => NIL ,;
+            "sys/times.h"    => NIL ,;
+            "sys/types.h"    => NIL ,;
+            "sys/uio.h"      => NIL ,;
+            "sys/un.h"       => NIL ,;
+            "sys/utsname.h"  => NIL ,;
+            "sys/wait.h"     => NIL ,;
+            "syslog.h"       => NIL ,;
+            "tar.h"          => NIL ,;
+            "termios.h"      => NIL ,;
+            "trace.h"        => NIL ,;
+            "ulimit.h"       => NIL ,;
+            "unistd.h"       => NIL ,;
+            "utime.h"        => NIL ,;
+            "utmpx.h"        => NIL ,;
+            "wordexp.h"      => NIL ,;
+            "windows.h"      => NIL ,; /* OS (win) */
+            "winspool.h"     => NIL ,;
+            "shellapi.h"     => NIL ,;
+            "ole2.h"         => NIL ,;
+            "dos.h"          => NIL ,; /* OS (dos) */
+            "os2.h"          => NIL }  /* OS (os2) */
+      ENDIF
+
+      IF StrTran( Lower( cFileName ), "\", "/" ) $ s_hExclStd
+         RETURN .F.
+      ENDIF
    ENDIF
 
    IF nNestingLevel > 1
@@ -5817,6 +5821,7 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, lSystemHeader, tT
             http://en.wikipedia.org/wiki/PCRE
             http://www.pcre.org/pcre.txt */
 
+      /* TODO: Add support for #import directive of Objective C */
       DEFAULT s_hRegexInclude TO hb_regexComp( '^[ \t]*#[ \t]*include[ \t]*(\".+?\"|<.+?>)', .F. /* lCaseSensitive */, .T. /* lNewLine */ )
 
       aMatch := hb_regexAll( s_hRegexInclude, cFile, NIL /* lCaseSensitive */, NIL /* lNewLine */, NIL, NIL /* nGetMatch */, .T. /* lOnlyMatch */ )
@@ -6219,17 +6224,15 @@ STATIC FUNCTION FindHeader( hbmk, cFileName, cParentDir, lIncTry, lSystemHeader 
             FOR EACH aINCPATH IN { dep[ _HBMKDEP_aINCPATH ],;
                                    dep[ _HBMKDEP_aINCPATHLOCAL ] }
                FOR EACH cDir IN aINCPATH
-                  tmp := DirAddPathSep( PathSepToSelf( cDir ) ) + PathSepToSelf( cFileName )
-                  IF hb_FileExists( tmp )
+                  tmp := HeaderExists( cDir, cFileName )
+                  IF tmp != NIL
                      dep[ _HBMKDEP_cFound ] := DirDelPathSep( PathSepToSelf( cDir ) )
                      dep[ _HBMKDEP_lFound ] := .T.
                      dep[ _HBMKDEP_lFoundLOCAL ] := ( aINCPATH:__enumIndex() == 2 )
                      IF hbmk[ _HBMK_lDEBUGDEPD ]
                         hbmk_OutStd( hbmk, hb_StrFormat( "debugdepd: REQ %1$s: found by %2$s header at %3$s %4$s", dep[ _HBMKDEP_cName ], PathSepToSelf( cFileName ), dep[ _HBMKDEP_cFound ], iif( dep[ _HBMKDEP_lFoundLOCAL ], "(local)", "" ) ) )
                      ENDIF
-                     IF AScan( hbmk[ _HBMK_aINCPATH ], { |tmp| tmp == cDir } ) == 0
-                        AAdd( hbmk[ _HBMK_aINCPATH ], DirDelPathSep( PathSepToSelf( cDir ) ) )
-                     ENDIF
+                     AAddNew( hbmk[ _HBMK_aINCPATH ], PathSepToTarget( hbmk, DirDelPathSep( PathSepToSelf( cDir ) ) ) )
                      AAdd( hbmk[ _HBMK_aOPTC ], "-D" + _HBMK_HAS_PREF + StrToDefine( dep[ _HBMKDEP_cName ] ) )
                      FOR EACH cFileName IN hbmk[ _HBMK_hDEP ][ dep[ _HBMKDEP_cName ] ][ _HBMKDEP_aKeyHeader ]
                         hb_HDel( hbmk[ _HBMK_hDEPBYHEADER ], cFileName )
@@ -6243,6 +6246,20 @@ STATIC FUNCTION FindHeader( hbmk, cFileName, cParentDir, lIncTry, lSystemHeader 
    ENDIF
 
    RETURN NIL
+
+STATIC FUNCTION HeaderExists( cDir, cFileName )
+   LOCAL tmp
+#if defined( __PLATFORM__DARWIN )
+   LOCAL nPos
+   IF ( nPos := At( "/", cFileName ) ) > 0
+      tmp := DirAddPathSep( PathSepToSelf( cDir ) ) + Left( cFileName, nPos - 1 ) + ".framework" + hb_osPathSeparator() + "Headers" + hb_osPathSeparator() + SubStr( cFileName, nPos + 1 )
+      IF hb_FileExists( tmp )
+         RETURN tmp
+      ENDIF
+   ENDIF
+#endif
+   tmp := DirAddPathSep( PathSepToSelf( cDir ) ) + PathSepToSelf( cFileName )
+   RETURN iif( hb_FileExists( tmp ), tmp, NIL )
 
 /* Replicating logic used by compilers. */
 
@@ -7398,6 +7415,7 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
                     FN_ExtGet( cItemL ) == ".cc" .OR. ;
                     FN_ExtGet( cItemL ) == ".cxx" .OR. ;
                     FN_ExtGet( cItemL ) == ".cx" .OR. ;
+                    FN_ExtGet( cItemL ) == ".m" .OR. ;
                     _EXT_IS_UPPER( cItem, ".C" )
                   AAddNew( hbmk[ _HBMK_aCPP ], PathSepToTarget( hbmk, cItem ) )
                CASE FN_ExtGet( cItemL ) == ".c"
@@ -8076,6 +8094,7 @@ STATIC FUNCTION getFirstFunc( hbmk, cFile )
              Lower( cExt ) == ".cc" .OR. ;
              Lower( cExt ) == ".cxx" .OR. ;
              Lower( cExt ) == ".cx" .OR. ;
+             Lower( cExt ) == ".m" .OR. ;
              _EXT_IS_UPPER( cExt, ".C" )
          /* do nothing */
       ELSEIF ! Empty( cExecNM := FindInPath( hbmk[ _HBMK_cCCPREFIX ] + "nm" ) )

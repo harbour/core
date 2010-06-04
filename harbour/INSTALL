@@ -1312,7 +1312,6 @@ HARBOUR
          http://www.mingw.org/, http://sourceforge.net/projects/mingw/ (official, MSYS home)
       MinGW x64 [win, *nix, free, open-source]
          http://mingw-w64.sourceforge.net/, http://sourceforge.net/projects/mingw-w64/
-         http://www.cadforte.com/
       MinGW CEGCC [win, *nix, free, open-source]
          http://cegcc.sourceforge.net/
       Cygwin [win, free, open-source]

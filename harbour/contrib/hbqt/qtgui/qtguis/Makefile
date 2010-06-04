@@ -12,8 +12,6 @@ vpath %.prg ../
 
 LIBNAME := hbqtguis
 
-_QT_HEADERS = qtgui
-
 include $(TOP)$(ROOT)contrib/hbqt/detect.mk
 
 ifneq ($(HB_HAS_QT),)

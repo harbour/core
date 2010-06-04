@@ -8,8 +8,6 @@ include $(TOP)$(ROOT)config/global.mk
 
 LIBNAME := hbqtnetwork
 
-_QT_HEADERS = qtnetwork
-
 include $(TOP)$(ROOT)contrib/hbqt/detect.mk
 
 ifneq ($(HB_HAS_QT),)

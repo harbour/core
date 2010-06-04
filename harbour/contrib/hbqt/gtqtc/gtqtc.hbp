@@ -10,6 +10,3 @@
 gtqtc.cpp
 
 -pi=gtqtc.h
-
-{darwin&!HB_WITH_QT}-cflag=-I/Library/Frameworks/QtGui.framework/Headers
-

@@ -11,5 +11,3 @@ qtnetwork/*.cpp
 qtnetwork/*.prg
 
 -pi=qtnetwork/*.h
-
-{darwin&!HB_WITH_QT}-cflag=-I/Library/Frameworks/QtNetwork.framework/Headers

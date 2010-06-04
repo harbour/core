@@ -18,7 +18,5 @@
 {!darwin}-depincpath=qt:/usr/include/qt4
 {!darwin}-depincpath=qt:/usr/lib/qt4/include
 {!darwin}-depincpath=qt:/usr/include
-{!darwin}-depincpath=qt:/Developer/qt/include
-
-{darwin}-depincpath=qt:/Library/Frameworks/QtCore.framework/Headers
-{darwin}-cflag=-I/Library/Frameworks/QtCore.framework/Headers
+{darwin}-depincpath=qt:/Developer/qt/include
+{darwin}-depincpath=qt:/Library/Frameworks
