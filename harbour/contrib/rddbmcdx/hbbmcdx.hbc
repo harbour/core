@@ -2,4 +2,4 @@
 # $Id$
 #
 
-libs=hbbmcdx
+libs=${hb_name}

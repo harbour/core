@@ -4,4 +4,4 @@
 
 incpaths=.
 
-libs=hbxpp
+libs=${hb_name}

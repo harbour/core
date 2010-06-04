@@ -6,5 +6,5 @@
 
 incpaths=.
 
-libs=hbfimage
+libs=${hb_name}
 libs=freeimage

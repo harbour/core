@@ -4,6 +4,6 @@
 
 incpaths=.
 
-libs=hbcurl
+libs=${hb_name}
 {!mingw}libs=libcurl
 {mingw}libs=curldll

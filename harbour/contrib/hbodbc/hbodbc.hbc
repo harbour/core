@@ -4,5 +4,5 @@
 
 incpaths=.
 
-libs=hbodbc
+libs=${hb_name}
 {win}libs=odbc32

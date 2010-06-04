@@ -2,4 +2,4 @@
 # $Id$
 #
 
-libs=hbmemio
+libs=${hb_name}

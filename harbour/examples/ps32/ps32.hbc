@@ -5,6 +5,6 @@
 incpaths=.
 libpaths=lib/${hb_plat}/${hb_comp}
 
-libs=ps32
+libs=${hb_name}
 
 libs=..\contrib\hbxpp\hbxpp.hbc

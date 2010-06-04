@@ -4,7 +4,7 @@
 
 incpaths=.
 
-libs=hbcairo
+libs=${hb_name}
 
 {!unix}libs=cairo
 {unix}ldflags="`pkg-config --libs cairo`"

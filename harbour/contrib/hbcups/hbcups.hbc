@@ -4,6 +4,6 @@
 
 incpaths=.
 
-libs=hbcups
+libs=${hb_name}
 
 {unix}libs=cups

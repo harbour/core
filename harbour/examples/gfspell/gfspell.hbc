@@ -5,4 +5,4 @@
 incpaths=.
 libpaths=lib/${hb_plat}/${hb_comp}
 
-libs=gfspell
+libs=${hb_name}

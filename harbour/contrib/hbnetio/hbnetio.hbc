@@ -2,4 +2,4 @@
 # $Id$
 #
 
-libs=hbnetio
+libs=${hb_name}

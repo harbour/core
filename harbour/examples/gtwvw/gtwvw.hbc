@@ -6,5 +6,5 @@
 
 incpaths=.
 
-gt=gtwvw
+gt=${hb_name}
 gui=yes

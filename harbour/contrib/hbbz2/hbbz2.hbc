@@ -4,5 +4,5 @@
 
 incpaths=.
 
-libs=hbbz2
+libs=${hb_name}
 libs=bz2

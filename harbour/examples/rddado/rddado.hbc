@@ -6,5 +6,5 @@
 
 incpaths=.
 
-libs=rddado
+libs=${hb_name}
 libs=../hbwin/hbwin.hbc

@@ -4,4 +4,4 @@
 
 incpaths=.
 
-libs=hbtip
+libs=${hb_name}

@@ -4,6 +4,6 @@
 
 incpaths=.
 
-libs=hbcomm
+libs=${hb_name}
 
 libs=../hbct/hbct.hbc

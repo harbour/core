@@ -4,4 +4,4 @@
 
 incpaths=.
 
-libs=hbct
+libs=${hb_name}

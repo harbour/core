@@ -4,5 +4,5 @@
 
 incpaths=.
 
-libs=hbxbp
+libs=${hb_name}
 libs=../hbqt/hbqt.hbc

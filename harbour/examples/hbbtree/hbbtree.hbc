@@ -4,4 +4,4 @@
 
 incpaths=.
 
-libs=hbbtree
+libs=${hb_name}

@@ -4,4 +4,4 @@
 
 incpaths=.
 
-libs=rddsql
+libs=${hb_name}

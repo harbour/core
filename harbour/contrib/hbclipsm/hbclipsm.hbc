@@ -4,4 +4,4 @@
 
 incpaths=.
 
-libs=hbclipsm
+libs=${hb_name}

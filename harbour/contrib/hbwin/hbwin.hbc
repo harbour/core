@@ -6,6 +6,6 @@
 
 incpaths=.
 
-libs=hbwin
+libs=${hb_name}
 libs=png
 {wce}libs=sms CellCore

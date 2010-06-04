@@ -4,5 +4,5 @@
 
 incpaths=.
 
-libs=hbfbird
+libs=${hb_name}
 libs=fbclient

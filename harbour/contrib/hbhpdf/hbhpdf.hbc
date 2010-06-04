@@ -4,6 +4,6 @@
 
 incpaths=.
 
-libs=hbhpdf
+libs=${hb_name}
 libs=libhpdf
 libs=png

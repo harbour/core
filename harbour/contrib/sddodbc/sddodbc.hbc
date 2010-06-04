@@ -2,7 +2,7 @@
 # $Id$
 #
 
-libs=sddodbc
+libs=${hb_name}
 {win}libs=odbc32
 
 libs=../rddsql/rddsql.hbc

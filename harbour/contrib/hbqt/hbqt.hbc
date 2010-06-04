@@ -6,7 +6,7 @@ incpaths=.
 
 {allwin|os2}libpaths=${HB_WITH_QT}\..\lib
 
-libs=hbqt
+libs=${hb_name}
 libs=hbqtcore hbqtgui hbqtnetwork
 
 {allwin}libs=QtCore4 QtGui4 QtNetwork4 QtUiTools

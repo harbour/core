@@ -2,7 +2,7 @@
 # $Id$
 #
 
-libs=sddsqlt3
+libs=${hb_name}
 libs=sqlite3
 
 libs=../rddsql/rddsql.hbc

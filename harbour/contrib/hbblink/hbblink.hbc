@@ -4,4 +4,4 @@
 
 incpaths=.
 
-libs=hbblink
+libs=${hb_name}

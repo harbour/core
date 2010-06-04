@@ -4,7 +4,7 @@
 
 incpaths=.
 
-libs=hbgd
+libs=${hb_name}
 {win}libs=bgd
 {linux}libs=gdlib png jpeg freetype m
 {darwin}libs=gd

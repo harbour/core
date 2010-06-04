@@ -6,5 +6,5 @@
 
 incpaths=.
 
-libs=rddads
+libs=${hb_name}
 libs=ace32

@@ -2,5 +2,5 @@
 # $Id$
 #
 
-libs=hbziparc
+libs=${hb_name}
 libs=../hbmzip/hbmzip.hbc

@@ -6,5 +6,5 @@
 
 incpaths=.
 
-libs=hbblat
+libs=${hb_name}
 libs=blat

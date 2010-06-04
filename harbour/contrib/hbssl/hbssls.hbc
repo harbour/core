@@ -6,7 +6,7 @@
 
 incpaths=.
 
-libs=hbssls
+libs=${hb_name}
 
 {unix}libs=ssl crypto
 {os2}libs=openssl ssl crypto libosslfips

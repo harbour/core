@@ -2,7 +2,7 @@
 # $Id$
 #
 
-libs=gtalleg
+libs=${hb_name}
 
 {win}libs=alleg42
 {linux}ldflags="`allegro-config --libs 2>/dev/null`"

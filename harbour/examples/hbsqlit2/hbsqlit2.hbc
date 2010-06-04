@@ -5,5 +5,5 @@
 incpaths=.
 libpaths=lib/${hb_plat}/${hb_comp}
 
-libs=hbsqlit2
+libs=${hb_name}
 libs=sqlite2
