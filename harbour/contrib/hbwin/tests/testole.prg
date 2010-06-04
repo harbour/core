@@ -12,7 +12,7 @@
  * Copyright 2008 Viktor Szakats (harbour.01 syenar.hu)
  *    Exm_CDO(), Exm_OOOpen()
  *
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  */
 
@@ -222,7 +222,7 @@ STATIC PROCEDURE Exm_IExplorer()
 
    IF ( oIE := win_oleCreateObject( "InternetExplorer.Application" ) ) != NIL
       oIE:Visible := .T.
-      oIE:Navigate( "http://www.harbour-project.org" )
+      oIE:Navigate( "http://harbour-project.org" )
    ELSE
       ? "Error. IExplorer not available.", win_oleErrorText()
    ENDIF

@@ -7,7 +7,7 @@
  *
  * SAVEGETS(), RESTGETS()
  * Copyright 1999-2001 Viktor Szakats (harbour.01 syenar.hu)
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  * COUNTGETS(), CURRENTGET(), GETFLDROW(), GETFLDCOL(), GETFLDVAR()
  * Copyright 2004 Philip Chee <philip@aleytys.pc.my>

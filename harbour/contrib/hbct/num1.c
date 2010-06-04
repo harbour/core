@@ -17,7 +17,7 @@
  * Documentation and changes concerning error handling Copyright 2001
  *   IntTec GmbH, Freiburg, Germany, Author: Martin Vogel <vogel@inttec.de>
  *
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  *
  * This program is free software; you can redistribute it and/or modify

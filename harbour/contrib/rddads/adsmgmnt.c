@@ -8,7 +8,7 @@
  *
  * Copyright 2008 Viktor Szakats (harbour.01 syenar.hu)
  * Copyright 2001 Brian Hays <bhays@abacuslaw.com>
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

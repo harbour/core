@@ -8,13 +8,13 @@
  *    very simple TCP/IP file server.
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  */
 
 /*
  * The following parts are Copyright of the individual authors.
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  * Copyright 2010 Viktor Szakats (harbour.01 syenar.hu)
  *    ...
@@ -249,7 +249,7 @@ STATIC PROCEDURE HB_Logo()
 
    OutStd( "Harbour NETIO Server " + HBRawVersion() + hb_osNewLine() +;
            "Copyright (c) 2009, Przemyslaw Czerpak" + hb_osNewLine() + ;
-           "http://www.harbour-project.org/" + hb_osNewLine() +;
+           "http://harbour-project.org/" + hb_osNewLine() +;
            hb_osNewLine() )
 
    RETURN

@@ -12,7 +12,7 @@
  * TIP Class oriented Internet protocol library
  *
  * Copyright 2003 Giancarlo Niccolai <gian@niccolai.ws>
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  *    CGI Session Manager Class
  *

@@ -4,7 +4,7 @@
 
 /*
  * The following parts are Copyright of the individual authors.
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  * Copyright 2010 Viktor Szakats (harbour.01 syenar.hu)
  *    ...

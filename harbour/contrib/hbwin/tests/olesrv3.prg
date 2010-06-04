@@ -9,7 +9,7 @@
  *    http://xharbour.com/index.asp?page=add_on_oleserver&show_sub=7&show_i=1
  *
  * Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  */
 

@@ -8,7 +8,7 @@
  * C low level module for *nix serial communication
  *
  * Copyright 2005 - Maurilio Longo <maurilio.longo@libero.it>
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  * Lots of code from http://www.easysw.com/~mike/serial/serial.html
  *

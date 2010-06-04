@@ -9,7 +9,7 @@
  *    with fixed message numbers (DISPIDs)
  *
  * Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  */
 
 #define CLS_Name  "MyOleTimeServer"

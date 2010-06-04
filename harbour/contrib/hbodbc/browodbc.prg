@@ -10,7 +10,7 @@
  * Copyright 1999-2001 Viktor Szakats (harbour.01 syenar.hu) for original FieldBlock function
  * Copyright 1999 Paul Tucker <ptucker@sympatico.ca> for original Skipped function
  * Copyright 2002 Tomaz Zupan <tomaz.zupan@orpo.si> modifications for ODBC
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

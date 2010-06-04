@@ -8,7 +8,7 @@
  * These defines are clipper code level equivalent of mysql.h and mysql_com.h
  *
  * Copyright 2000 Maurilio Longo <maurilio.longo@libero.it>
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

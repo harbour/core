@@ -7,7 +7,7 @@
  *    demonstration/test code for NETIO-RPC OLE server
  *
  * Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  */
 

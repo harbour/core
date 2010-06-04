@@ -8,7 +8,7 @@
  * C low level module for OS/2 serial communication
  *
  * Copyright 2004 - Maurilio Longo <maurilio.longo@libero.it>
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

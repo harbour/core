@@ -7,7 +7,7 @@
  * Header File for Video subsystem for Windows using GUI windows instead of Console
  * Copyright 2003 Peter Rees <peter@rees.co.nz>
  *                Rees Software & Systems Ltd
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

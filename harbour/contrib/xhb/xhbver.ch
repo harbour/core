@@ -7,7 +7,7 @@
  * Header file for version information
  *
  * Copyright 2005 Andi Jahja <xharbour@cbn.net.id>
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

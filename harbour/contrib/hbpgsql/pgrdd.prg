@@ -7,7 +7,7 @@
  *    PostgreSQL RDD
  *
  * Copyright 2006 Lorenzo Fiorini <lorenzo_fiorini / at / teamwork / dot / it>
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  * www - http://www.xharbour.org
  *
  * This program is free software; you can redistribute it and/or modify

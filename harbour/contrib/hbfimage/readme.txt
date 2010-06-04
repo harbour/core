@@ -4,7 +4,7 @@
 
 /*
  * The following parts are Copyright of the individual authors.
- * www - http://www.xharbour.org http://www.harbour-project.org
+ * www - http://www.xharbour.org http://harbour-project.org
  *
  * Copyright 2005 Francesco Saverio Giudice <info@fsgiudice.com>
  *    README file explaining howto compile FreeImage library

@@ -6,7 +6,7 @@
  * Harbour Project source code:
  *
  * Copyright 2009 Viktor Szakats (harbour.01 syenar.hu)
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  */
 
