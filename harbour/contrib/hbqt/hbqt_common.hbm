@@ -14,7 +14,6 @@
 
 -depkeyhead=qt:QtCore/qglobal.h
 -depcontrol=qt:${HB_WITH_QT}
-
 {!darwin}-depincpath=qt:/usr/include/qt4
 {!darwin}-depincpath=qt:/usr/lib/qt4/include
 {!darwin}-depincpath=qt:/usr/include

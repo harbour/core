@@ -377,6 +377,8 @@ REQUEST hbmk_KEYW
 
 #define _HBMK_MAX_              104
 
+#define _HBMK_DEP_CTRL_MARKER   ".control." /* must be an invalid path */
+
 #define _HBMKDEP_cName          1
 #define _HBMKDEP_aPKG           2
 #define _HBMKDEP_aKeyHeader     3
@@ -2135,6 +2137,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          cParam := MacroProc( hbmk, SubStr( cParam, Len( "-depcontrol=" ) + 1 ), aParam[ _PAR_cFileName ] )
          IF dep_split_arg( hbmk, cParam, @cParam, @tmp )
             hbmk[ _HBMK_hDEP ][ cParam ][ _HBMKDEP_cControl ] := AllTrim( tmp )
+            AAddNew( hbmk[ _HBMK_hDEP ][ cParam ][ _HBMKDEP_aINCPATH ], _HBMK_DEP_CTRL_MARKER )
          ENDIF
 
       CASE Left( cParam, Len( "-depincpath=" ) ) == "-depincpath="
@@ -3231,7 +3234,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          CASE hbmk[ _HBMK_cPLAT ] == "os2"   ; cOpt_Dyn := "OP quiet SYS os2v2_dll {FD} {IM} NAME {OD} {LO} {DL} {LL} {LB} {LS}{SCRIPT}"
          ENDCASE
          IF hbmk[ _HBMK_cPLAT ] $ "win|os2" .AND. ! Empty( hbmk[ _HBMK_aDEF ] )
-            /* TODO: Watcom wlink requires a non-standard layout for .def files.
+            /* TODO: Watcom wlink requires a non-standard internal layout for .def files.
                      We will need a converter and implement on-the-fly conversion
                      to a temp file and pass that via {IM}. */
             cDynDefPrefix := "@"
@@ -5950,6 +5953,7 @@ STATIC FUNCTION dep_split_arg( hbmk, cParam, /* @ */ cName, /* @ */ cData )
 
 STATIC PROCEDURE dep_postprocess( hbmk )
    LOCAL dep
+   LOCAL tmp
 
    FOR EACH dep IN hbmk[ _HBMK_hDEP ]
 
@@ -5995,7 +5999,15 @@ STATIC PROCEDURE dep_postprocess( hbmk )
          AAdd( hbmk[ _HBMK_aOPTC ], "-D" + _HBMK_HAS_PREF + StrToDefine( dep:__enumKey() ) )
          EXIT
       OTHERWISE
-         AAddNew( dep[ _HBMKDEP_aINCPATH ], dep[ _HBMKDEP_cControl ] )
+         /* If control is not a recognized control keyword, interpret it
+            as a header search path and add it to the search path list
+            by keeping the position where it was specified. [vszakats] */
+         FOR EACH tmp IN dep[ _HBMKDEP_aINCPATH ]
+            IF tmp == _HBMK_DEP_CTRL_MARKER
+               tmp := dep[ _HBMKDEP_cControl ]
+               EXIT
+            ENDIF
+         NEXT
       ENDSWITCH
    NEXT
 
@@ -6708,6 +6720,14 @@ STATIC FUNCTION AAddNewNotEmpty( array, xItem )
 
    IF ! Empty( xItem ) .AND. AScan( array, {| tmp | tmp == xItem } ) == 0
       AAdd( array, xItem )
+   ENDIF
+
+   RETURN array
+
+STATIC FUNCTION AAddNewAtTop( array, xItem )
+
+   IF AScan( array, {| tmp | tmp == xItem } ) == 0
+      hb_AIns( array, 1, xItem, .T. )
    ENDIF
 
    RETURN array

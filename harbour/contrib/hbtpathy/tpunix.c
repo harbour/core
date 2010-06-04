@@ -114,9 +114,27 @@ HB_FUNC( __TP_INITPORTSPEED )
       case 9600:    baud = B9600;    break;
       case 19200:   baud = B19200;   break;
       case 38400:   baud = B38400;   break;
+#if defined( B57600 )
       case 57600:   baud = B57600;   break;
+#endif
+#if defined( B115200 )
       case 115200:  baud = B115200;  break;
+#endif
+#if defined( B230400 )
       case 230400:  baud = B230400;  break;
+#endif
+#ifdef B460800
+      case 460800:  baud = B460800;  break;
+#endif
+#ifdef B500000
+      case 500000:  baud = B500000;  break;
+#endif
+#ifdef B576000
+      case 576000:  baud = B576000;  break;
+#endif
+#ifdef B921600
+      case 921600:  baud = B921600;  break;
+#endif
    }
 
    cfsetispeed( &options, baud );
