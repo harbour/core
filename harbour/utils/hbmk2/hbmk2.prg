@@ -6124,6 +6124,19 @@ STATIC PROCEDURE dep_try_pkg_detection( hbmk, dep )
             IF Empty( cStdOut )
                hb_processRun( cName + "-config --version --libs --cflags",, @cStdOut, @cErrOut )
             ENDIF
+#if defined( __PLATFORM__DARWIN )
+            /* DarwinPorts */
+            IF Empty( cStdOut )
+               IF hb_FileExists( "/opt/local/bin/pkg-config" )
+                  hb_processRun( "/opt/local/bin/pkg-config --modversion --libs --cflags " + cName,, @cStdOut, @cErrOut )
+               ENDIF
+            ENDIF
+            IF Empty( cStdOut )
+               IF hb_FileExists( "/opt/local/bin/" + cName + "-config" )
+                  hb_processRun( "/opt/local/bin/" + cName + "-config --version --libs --cflags",, @cStdOut, @cErrOut )
+               ENDIF
+            ENDIF
+#endif
 
             IF ! Empty( cStdOut )
 
