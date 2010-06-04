@@ -207,6 +207,7 @@ METHOD IdeProject:new( oIDE, aProps )
 
 CLASS IdeProjManager INHERIT IdeObject
 
+   DATA   cargo
    DATA   cSaveTo
    DATA   aPrjProps                               INIT {}
 
@@ -257,6 +258,7 @@ CLASS IdeProjManager INHERIT IdeObject
    METHOD removeProject( cProjectTitle )
    METHOD closeProject( cProjectTitle )
    METHOD promptForPath( cObjPathName, cTitle, cObjFileName, cObjPath2, cObjPath3 )
+   METHOD buildSource( lExecutable )
    METHOD buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
    METHOD launchProject( cProject, cExe )
    METHOD showOutput( cOutput, mp2, oProcess )
@@ -1209,6 +1211,88 @@ METHOD IdeProjManager:promptForPath( cObjPathName, cTitle, cObjFileName, cObjPat
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeProjManager:buildSource( lExecutable )
+   LOCAL oEdit, cTmp, cExeHbMk2, cCmd, cC, cCmdParams, cBuf
+   LOCAL cbRed    := "<font color=blue>", ceRed := "</font>"
+   LOCAL lRebuild := .T.
+   LOCAL aHbp     := {}
+
+   ::lPPO              := .t.
+   ::lLaunch           := lExecutable
+   ::cProjectInProcess := NIL
+
+   IF !empty( oEdit := ::oEM:getEditorCurrent() )
+      IF ! hbide_isSourcePRG( oEdit:sourceFile )
+         MsgBox( 'Operation not supported for this file type: "' + oEdit:sourceFile + '"' )
+         RETURN Self
+      ENDIF
+   ELSE
+      MsgBox( "No active editing source available !" )
+      RETURN Self
+   ENDIF
+   ::cargo := oEdit
+
+   aadd( aHbp, "-q"         )
+   aadd( aHbp, "-trace"     )
+   aadd( aHbp, "-info"      )
+   aadd( aHbp, "-lang=en"   )
+   aadd( aHbp, "-width=512" )
+   aadd( aHbp, "-rebuild"   )
+   IF lExecutable
+      aadd( aHbp, "-hbexe"  )
+   ELSE
+      aadd( aHbp, "-s"      )
+   ENDIF
+   aadd( aHbp, hbide_pathToOSPath( oEdit:sourceFile ) )
+
+   ::oDockB2:show()
+   ::oOutputResult:oWidget:clear()
+
+   ::oOutputResult:oWidget:append( hbide_outputLine() )
+   cTmp := "Project [ " + oEdit:sourceFile               + " ]    " + ;
+           "Launch [ "  + iif( ::lLaunch , 'Yes', 'No' ) + " ]    " + ;
+           "Rebuild [ " + iif(   lRebuild, 'Yes', 'No' ) + " ]    " + ;
+           "Started [ " + time() + " ]"
+   ::oOutputResult:oWidget:append( cTmp )
+   ::oOutputResult:oWidget:append( hbide_outputLine() )
+
+   ::oIDE:oEV := IdeEnvironments():new():create( ::oIDE )
+   ::cBatch   := ::oEV:prepareBatch( ::cWrkEnvironment )
+   aeval( ::oEV:getHbmk2Commands( ::cWrkEnvironment ), {|e| aadd( aHbp, e ) } )
+
+   cExeHbMk2  := "hbmk2"
+
+   cCmdParams := hbide_array2cmdParams( aHbp )
+
+   ::oProcess := HbpProcess():new()
+   //
+   ::oProcess:output      := {|cOut, mp2, oHbp| ::showOutput( cOut,mp2,oHbp ) }
+   ::oProcess:finished    := {|nEC , nES, oHbp| ::finished( nEC ,nES,oHbp ) }
+   ::oProcess:workingPath := hbide_pathToOSPath( oEdit:cPath )
+   //
+   cCmd := hbide_getShellCommand()
+   cC   := iif( hbide_getOS() == "nix", "", "/C " )
+
+   IF hb_fileExists( ::cBatch )
+      cBuf := memoread( ::cBatch )
+      cBuf += hb_osNewLine() + cExeHbMk2 + " " + cCmdParams + hb_osNewLine()
+      hb_memowrit( ::cBatch, cBuf )
+   ENDIF
+   //
+   ::outputText( cbRed + "Batch File " + iif( hb_fileExists( ::cBatch ), " Exists", " : doesn't Exist" ) + " => " + ceRed + trim( ::cBatch ) )
+   ::outputText( cbRed + "Batch File Contents => " + ceRed )
+   ::outputText( memoread( ::cBatch ) )
+   ::outputText( cbRed + "Command => " + ceRed + cCmd )
+   ::outputText( cbRed + "Arguments => " + ceRed + cC + ::cBatch )
+   ::outputText( hbide_outputLine() )
+   //
+   ::oProcess:addArg( cC + ::cBatch )
+   ::oProcess:start( cCmd )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
    LOCAL cHbpPath, oEdit, cHbpFN, cTmp, cExeHbMk2, aHbp, cCmd, cC, oSource, cCmdParams, cBuf
    LOCAL cbRed := "<font color=blue>", ceRed := "</font>"
@@ -1390,14 +1474,18 @@ METHOD IdeProjManager:finished( nExitCode, nExitStatus, oProcess )
          ENDIF
       ENDIF
 
-      cExe := hbide_PathProc( cExe, hbide_pathToOSPath( ::oProject:location ) )
+      IF empty( ::cProjectInProcess )
+         cExe := hbide_PathProc( cExe, hbide_pathToOSPath( ::cargo:cPath ) )
+      ELSE
+         cExe := hbide_PathProc( cExe, hbide_pathToOSPath( ::oProject:location ) )
+      ENDIF
 
       ::outputText( " " )
       IF empty( cExe )
          ::outputText( "<font color=red>" + "Executable could not been detected from linker output!" + "</font>" )
       ELSE
          cExe := alltrim( cExe )
-         ::outputText( "<font color=blue>" + "Detected exeutable => " + cExe + "</font>" )
+         ::outputText( "<font color=blue>" + "Detected executable => " + cExe + "</font>" )
       ENDIF
       ::outputText( " " )
 

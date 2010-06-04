@@ -666,6 +666,7 @@ METHOD HbIde:execAction( cKey )
    CASE "NewProject"
    CASE "LoadProject"
    CASE "LaunchProject"
+   CASE "BuildSource"
    CASE "Build"
    CASE "BuildLaunch"
    CASE "Rebuild"
@@ -922,6 +923,9 @@ METHOD HbIde:execProjectAction( cKey )
    CASE "LaunchProject"
       ::oPM:launchProject()
       EXIT
+   CASE "BuildSource"
+      ::oPM:buildSource( .t. )
+      EXIT
    CASE "Build"
       ::oPM:buildProject( '', .F., .F. )
       EXIT
@@ -935,7 +939,7 @@ METHOD HbIde:execProjectAction( cKey )
       ::oPM:buildProject( '', .T., .T. )
       EXIT
    CASE "Compile"
-      //
+      ::oPM:buildSource( .f. )
       EXIT
    CASE "CompilePPO"
       ::oPM:buildProject( '', .F., .F., .T., .T. )

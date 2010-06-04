@@ -230,6 +230,7 @@ CLASS IdeEdit INHERIT IdeObject
    METHOD spaces2tabs()
    METHOD removeTrailingSpaces()
    METHOD formatBraces()
+   METHOD findEx( cText, nFlags )
 
    ENDCLASS
 
@@ -1160,12 +1161,16 @@ METHOD IdeEdit:blockConvert( cMode )
 
          DO CASE
          CASE nMode == selectionMode_stream
-            IF i == nT
-               cLine := substr( cLine, 1, nL ) + hbide_convertALine( substr( cLine, nL + 1 ), cMode )
-            ELSEIF i == nB
-               cLine := hbide_convertALine( substr( cLine, 1, nR ), cMode ) + substr( cLine, nR + 1 )
+            IF nT == nB
+               cLine := substr( cLine, 1, nL ) + hbide_convertALine( substr( cLine, nL + 1, nW ), cMode ) + substr( cLine, nL + 1 + nW )
             ELSE
-               cLine := hbide_convertALine( cLine, cMode )
+               IF i == nT
+                  cLine := substr( cLine, 1, nL ) + hbide_convertALine( substr( cLine, nL + 1 ), cMode )
+               ELSEIF i == nB
+                  cLine := hbide_convertALine( substr( cLine, 1, nR ), cMode ) + substr( cLine, nR + 1 )
+               ELSE
+                  cLine := hbide_convertALine( cLine, cMode )
+               ENDIF
             ENDIF
 
          CASE nMode == selectionMode_column
@@ -1459,6 +1464,23 @@ METHOD IdeEdit:find( cText, nPosFrom )
       ::qEdit:setTextCursor( qCursor )
    ELSE
       ::qEdit:centerCursor()
+   ENDIF
+
+   RETURN lFound
+
+/*----------------------------------------------------------------------*/
+/*  nFlags will decide the position, case sensitivity and direction
+ */
+METHOD IdeEdit:findEx( cText, nFlags )
+   LOCAL qCursor, lFound, cT
+
+   IF ( lFound := ::qEdit:find( cText, nFlags ) )
+      ::qEdit:centerCursor()
+      qCursor := ::getCursor()
+      cT      := qCursor:selectedText()
+      ::qEdit:hbSetSelectionInfo( { qCursor:blockNumber(), qCursor:columnNumber() - len( cT ), ;
+                                    qCursor:blockNumber(), qCursor:columnNumber(), 1 } )
+      ::qEdit:setTextCursor( qCursor )
    ENDIF
 
    RETURN lFound

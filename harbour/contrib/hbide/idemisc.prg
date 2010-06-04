@@ -988,7 +988,7 @@ FUNCTION hbide_help( nOption )
       AAdd( txt_, "<b>Harbour Developers Mailing List</b>" )
       AAdd( txt_, "" )
       AAdd( txt_, "Please visit the home page:" )
-      AAdd( txt_, "<a href='http://lists.harbour-project.org/pipermail/harbour/'>http://lists.harbour-project.org/pipermail/harbour/</a>" )
+      AAdd( txt_, "<a href='http://groups.google.com/group/harbour-devel/'>http://groups.google.com/group/harbour-devel/</a>" )
       EXIT
 
    CASE 3
@@ -996,7 +996,7 @@ FUNCTION hbide_help( nOption )
       AAdd( txt_, "<b>Harbour Users Mailing List</b>" )
       AAdd( txt_, "" )
       AAdd( txt_, "Please visit the home page:" )
-      AAdd( txt_, "<a href='http://lists.harbour-project.org/pipermail/harbour/'>http://lists.harbour-project.org/pipermail/harbour/</a>" )
+      AAdd( txt_, "<a href='http://groups.google.com/group/harbour-users/'>http://groups.google.com/group/harbour-users/</a>" )
       EXIT
 
    CASE 4

@@ -381,10 +381,12 @@ void HBQPlainTextEdit::hbGetViewportInfo()
 void HBQPlainTextEdit::hbSetSelectionInfo( PHB_ITEM selectionInfo )
 {
    rowBegins     = hb_arrayGetNI( selectionInfo, 1 );
-   rowEnds       = hb_arrayGetNI( selectionInfo, 2 );
-   columnBegins  = hb_arrayGetNI( selectionInfo, 3 );
+   columnBegins  = hb_arrayGetNI( selectionInfo, 2 );
+   rowEnds       = hb_arrayGetNI( selectionInfo, 3 );
    columnEnds    = hb_arrayGetNI( selectionInfo, 4 );
    selectionMode = hb_arrayGetNI( selectionInfo, 5 );
+
+   emit selectionChanged();
 
    update();
 }
@@ -1209,7 +1211,6 @@ bool HBQPlainTextEdit::hbKeyPressSelection( QKeyEvent * event )
          }
       }
    }
-   selectionState = 0;
    return false;
 
    #if 0

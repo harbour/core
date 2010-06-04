@@ -216,7 +216,7 @@ METHOD IdeDocks:buildDialog()
    ::oDlg:oWidget:setTabPosition( Qt_BottomDockWidgetArea, QTabWidget_South )
    ::oDlg:oWidget:setCorner( Qt_BottomLeftCorner, Qt_LeftDockWidgetArea )
    ::oDlg:oWidget:setCorner( Qt_BottomRightCorner, Qt_RightDockWidgetArea )
-   ::oDlg:oWidget:resize( 868,470 )
+   ::oDlg:oWidget:resize( 900,470 )
 
    ::oIde:oDa := ::oDlg:drawingArea
 
