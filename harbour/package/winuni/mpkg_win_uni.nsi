@@ -96,8 +96,8 @@ Section "Main components" hb_main
   File /nonfatal "$%HB_ROOT%hb21\ChangeLog*"
 
   SetOutPath $INSTDIR\bin
-  File "$%HB_ROOT%hb21\bin\harbour-20.dll"
-  File "$%HB_ROOT%hb21\bin\harbourmt-20.dll"
+  File "$%HB_ROOT%hb21\bin\harbour-21.dll"
+  File "$%HB_ROOT%hb21\bin\harbourmt-21.dll"
   File "$%HB_ROOT%hb21\bin\harbour.exe"
   File "$%HB_ROOT%hb21\bin\hbi18n.exe"
   File "$%HB_ROOT%hb21\bin\hbmk2.exe"
@@ -203,8 +203,8 @@ SectionEnd
 
 Section "Libs for Borland C" hb_lib_bcc
   SetOutPath $INSTDIR\bin
-  File "$%HB_ROOT%hb21\bin\harbour-20-bcc.dll"
-  File "$%HB_ROOT%hb21\bin\harbourmt-20-bcc.dll"
+  File "$%HB_ROOT%hb21\bin\harbour-21-bcc.dll"
+  File "$%HB_ROOT%hb21\bin\harbourmt-21-bcc.dll"
   SetOutPath $INSTDIR\lib\win\bcc
   File "$%HB_ROOT%hb21\lib\win\bcc\*.*"
 SectionEnd
@@ -273,14 +273,14 @@ SectionEnd
 
 Section /o "Dlls for x64" hb_dlls_x64
   SetOutPath $INSTDIR\bin
-  File "$%HB_ROOT%hb21\bin\harbour-20-x64.dll"
-  File "$%HB_ROOT%hb21\bin\harbourmt-20-x64.dll"
+  File "$%HB_ROOT%hb21\bin\harbour-21-x64.dll"
+  File "$%HB_ROOT%hb21\bin\harbourmt-21-x64.dll"
 SectionEnd
 
 Section /o "Dlls for WinCE/ARM" hb_dlls_arm
   SetOutPath $INSTDIR\bin
-  File "$%HB_ROOT%hb21\bin\harbour-20-wce-arm.dll"
-  File "$%HB_ROOT%hb21\bin\harbourmt-20-wce-arm.dll"
+  File "$%HB_ROOT%hb21\bin\harbour-21-wce-arm.dll"
+  File "$%HB_ROOT%hb21\bin\harbourmt-21-wce-arm.dll"
 SectionEnd
 
 !ifdef _NEVER_
