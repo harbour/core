@@ -17,7 +17,7 @@ CFLAGS += -I. -I$(HB_INC_COMPILE)
 CFLAGS += -nologo
 
 # MSVS 2005 SP1 also supports it, but we only enable it for 2008 and upper.
-ifeq ($(filter $(HB_COMPILER_VER),600 700 710 800),)
+ifeq ($(filter $(HB_COMPILER_VER),1200 1300 1310 1400),)
    LDFLAGS += -nxcompat -dynamicbase -fixed:no
    DFLAGS += -nxcompat -dynamicbase
 endif
@@ -40,7 +40,7 @@ else
 endif
 
 ifneq ($(HB_BUILD_OPTIM),no)
-   ifneq ($(filter $(HB_COMPILER_VER),600 700 710),)
+   ifneq ($(filter $(HB_COMPILER_VER),1200 1300 1310),)
       CFLAGS += -Ogt2yb1p -GX- -G6
    else
       CFLAGS += -O2
@@ -53,7 +53,7 @@ ifeq ($(HB_BUILD_DEBUG),yes)
    DFLAGS += -debug
 endif
 
-ifneq ($(filter $(HB_COMPILER_VER),600 700 710),)
+ifneq ($(filter $(HB_COMPILER_VER),1200 1300 1310),)
    ifeq ($(HB_BUILD_DEBUG),yes)
       CFLAGS += -MTd
    else
@@ -65,13 +65,13 @@ RC := rc.exe
 RC_OUT := -fo$(subst x,x, )
 RCFLAGS :=
 # Windows SDK 7.0 also supports it, but we cannot detect it.
-ifeq ($(filter $(HB_COMPILER_VER),600 700 710 800 900),)
+ifeq ($(filter $(HB_COMPILER_VER),1200 1300 1310 1400 1500),)
    RCFLAGS += -nologo
 endif
 
 # # NOTE: -GA flag should be disabled when building MT _.dlls_,
 # #       as it creates bad code according to MS docs [vszakats].
-# ifneq ($(filter $(HB_COMPILER_VER),600),)
+# ifneq ($(filter $(HB_COMPILER_VER),1200),)
 #    CFLAGS += -GA
 # endif
 

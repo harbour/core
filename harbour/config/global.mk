@@ -761,7 +761,7 @@ ifeq ($(HB_COMPILER),)
                                  else
                                     HB_COMP_PATH := $(call find_in_path,clarm)
                                     ifneq ($(HB_COMP_PATH),)
-                                       HB_COMPILER_VER := 710
+                                       HB_COMPILER_VER := 1310
                                        HB_COMPILER := msvcarm
                                        HB_PLATFORM := wce
                                        HB_CPU := arm
@@ -795,15 +795,15 @@ ifeq ($(HB_COMPILER),)
                                                       ifneq ($(HB_COMP_PATH),)
                                                          HB_COMPILER := msvc
                                                          ifneq ($(findstring VC98,$(HB_COMP_PATH)),)
-                                                            HB_COMPILER_VER := 600
+                                                            HB_COMPILER_VER := 1200
                                                          else ifneq ($(findstring 2003,$(HB_COMP_PATH)),)
-                                                            HB_COMPILER_VER := 700
+                                                            HB_COMPILER_VER := 1300
                                                          else ifneq ($(findstring 8/,$(HB_COMP_PATH)),)
-                                                            HB_COMPILER_VER := 800
+                                                            HB_COMPILER_VER := 1400
                                                          else ifneq ($(findstring 9.0,$(HB_COMP_PATH)),)
-                                                            HB_COMPILER_VER := 900
+                                                            HB_COMPILER_VER := 1500
                                                          else ifneq ($(findstring 10.0,$(HB_COMP_PATH)),)
-                                                            HB_COMPILER_VER := 1000
+                                                            HB_COMPILER_VER := 1600
                                                          endif
                                                       else
                                                          HB_COMP_PATH := $(call find_in_path,bcc32)

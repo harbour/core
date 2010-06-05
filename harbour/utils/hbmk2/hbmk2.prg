@@ -1063,7 +1063,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                be created. [vszakats] */
    ENDIF
 
-   nCCompVer := Val( GetEnv( "HB_COMPILER_VER" ) ) /* Format: <09><00>[.<00>] = <major><minor>[.<revision>] */
+   nCCompVer := Val( GetEnv( "HB_COMPILER_VER" ) ) /* Format: <15><00>[.<00>] = <major><minor>[.<revision>] */
 
    /* Autodetect platform */
 
@@ -3420,12 +3420,12 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          IF Empty( nCCompVer )
             /* Compatibility with Harbour GNU Make system */
             IF hbmk[ _HBMK_cCOMP ] == "msvcarm" .AND. ! Empty( FindInPath( "clarm" ) )
-               nCCompVer := 710 /* Visual Studio .NET 2003 */
+               nCCompVer := 1310 /* Visual Studio .NET 2003 */
             ELSE
-               nCCompVer := 800 /* Visual Studio 2005 */
+               nCCompVer := 1400 /* Visual Studio 2005 */
             ENDIF
-            /*  900 : Visual Studio 2008 */
-            /* 1000 : Visual Studio 2010 */
+            /* 1500 : Visual Studio 2008 */
+            /* 1600 : Visual Studio 2010 */
          ENDIF
 
          IF hbmk[ _HBMK_lDEBUG ]
@@ -3456,7 +3456,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             cBin_Dyn := cBin_Link
          ELSE
             cBin_Lib := "lib.exe"
-            IF hbmk[ _HBMK_cCOMP ] == "msvcarm" .AND. nCCompVer < 800
+            IF hbmk[ _HBMK_cCOMP ] == "msvcarm" .AND. nCCompVer < 1400
                cBin_CompC := "clarm.exe"
             ELSE
                cBin_CompC := "cl.exe"
@@ -3471,13 +3471,13 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          cOpt_CompC := "-nologo -c"
          IF hbmk[ _HBMK_lOPTIM ]
             IF hbmk[ _HBMK_cPLAT ] == "wce"
-               IF nCCompVer >= 800
+               IF nCCompVer >= 1400
                   cOpt_CompC += " -Os -Gy"
                ELSE
                   cOpt_CompC += " -Oxsb1 -GF"
                ENDIF
             ELSE
-               IF nCCompVer >= 800
+               IF nCCompVer >= 1400
                   cOpt_CompC += " -O2"
                ELSE
                   cOpt_CompC += " -Ogt2yb1p -GX- -G6"
@@ -3485,7 +3485,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             ENDIF
          ENDIF
          IF hbmk[ _HBMK_cPLAT ] == "win"
-            IF nCCompVer < 800
+            IF nCCompVer < 1400
                IF hbmk[ _HBMK_lDEBUG ]
                   AAdd( hbmk[ _HBMK_aOPTC ], "-MTd" )
                ELSE
@@ -3504,7 +3504,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             SWITCH hbmk[ _HBMK_nWARN ]
             CASE _WARN_MAX ; AAdd( hbmk[ _HBMK_aOPTC ], "-W4" ) ; EXIT
             CASE _WARN_YES
-               IF hbmk[ _HBMK_cCOMP ] == "msvcarm" .AND. nCCompVer < 800
+               IF hbmk[ _HBMK_cCOMP ] == "msvcarm" .AND. nCCompVer < 1400
                   /* Lowered warning level to avoid large amount of warnings in system headers.
                      Maybe this is related to the msvc2003 kit I was using. [vszakats] */
                   AAdd( hbmk[ _HBMK_aOPTC ], "-W3" )
@@ -3556,7 +3556,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             AAdd( hbmk[ _HBMK_aOPTL ], "-nodefaultlib:oldnames.lib" )
             AAdd( hbmk[ _HBMK_aOPTD ], "-nodefaultlib:oldnames.lib" )
             AAdd( hbmk[ _HBMK_aOPTL ], "-nodefaultlib:kernel32.lib" )
-            IF nCCompVer >= 800
+            IF nCCompVer >= 1400
                AAdd( hbmk[ _HBMK_aOPTL ], "-manifest:no" )
             ENDIF
          ENDIF
@@ -3595,7 +3595,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          IF !( hbmk[ _HBMK_cCOMP ] $ "icc|iccia64" )
             cBin_Res := "rc.exe"
             cOpt_Res := "{FR} -fo {OS} {IR}"
-            IF nCCompVer >= 1000
+            IF nCCompVer >= 1600
                cOpt_Res := "-nologo " + cOpt_Res  /* NOTE: Only in MSVC 2010 and upper. [vszakats] */
             ENDIF
             cResExt := ".res"

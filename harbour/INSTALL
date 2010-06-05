@@ -656,7 +656,7 @@ HARBOUR
    - HB_COMPILER_VER=[<ver>]     Set C compiler version. This is used with msvc
                                  and mingw/cygwin targets currently.
                                  <ver> format:
-                                     <9><0>[<0>] = <major><minor>[.<revision>]
+                                     <15><0>[<0>] = <major><minor>[.<revision>]
                                  Default: filled by compiler autodetection or empty
    - HB_USER_LIBS=[<list>]       Add space separated <list> of libs to link process.
                                  Lib names should be without extension and path.

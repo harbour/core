@@ -21,7 +21,7 @@ ifeq ($(HB_COMPILER),poccarm)
 endif
 # NOTE: old msvcarm can't cope with some PP directives. [vszakats]
 ifeq ($(HB_COMPILER),msvcarm)
-   ifneq ($(filter $(HB_COMPILER_VER),600 700 710),)
+   ifneq ($(filter $(HB_COMPILER_VER),1200 1300 1310),)
       HB_SUPPORTED := no
    endif
 endif
