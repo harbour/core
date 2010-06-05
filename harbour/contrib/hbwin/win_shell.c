@@ -110,7 +110,7 @@ HB_FUNC( WIN_SHELLNOTIFYICON )
 
 #if ! defined( HB_OS_WIN_CE )
 
-#if defined( __MINGW32__ )
+#if defined( __MINGW32__ ) && ! defined( __MINGW64__ )
 
 typedef struct _SHNAMEMAPPING
 {
