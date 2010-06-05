@@ -82,8 +82,8 @@ PROCEDURE Main()
       GetEnv( "HB_BUILD_IMPLIB" ) == "yes" .AND. ;
       ! Empty( GetEnv( "HB_HOST_BIN_DIR" ) )
 
-      FOR EACH tmp IN PackageList( "contrib\*", GetEnv( "HB_CONTRIBLIBS" ), GetEnv( "HB_CONTRIB_ADDONS" ) )
-         IF hb_FileExists( "contrib\" + tmp + "\" + tmp + ".hbi" )
+      FOR EACH tmp IN PackageList( "contrib" + _PS_ + "*", GetEnv( "HB_CONTRIBLIBS" ), GetEnv( "HB_CONTRIB_ADDONS" ) )
+         IF hb_FileExists( "contrib" + _PS_ + tmp + _PS_ + tmp + ".hbi" )
             mk_hb_processRun( GetEnv( "HB_HOST_BIN_DIR" ) + _PS_ + "hbmk2" +;
                               " -quiet -lang=en" +;
                               " @contrib/" + tmp + "/" + tmp + ".hbi" +;
@@ -130,11 +130,11 @@ PROCEDURE Main()
 
       OutStd( "! Making shared version of Harbour binaries..." + hb_osNewLine() )
 
-      FOR EACH tmp IN Directory( "utils\*", "D" )
+      FOR EACH tmp IN Directory( "utils" + _PS_ + "*", "D" )
          IF "D" $ tmp[ F_ATTR ] .AND. ;
             !( tmp[ F_NAME ] == "." ) .AND. ;
             !( tmp[ F_NAME ] == ".." ) .AND. ;
-            hb_FileExists( "utils\" + tmp[ F_NAME ] + "\" + tmp[ F_NAME ] + ".hbp" )
+            hb_FileExists( "utils" + _PS_ + tmp[ F_NAME ] + _PS_ + tmp[ F_NAME ] + ".hbp" )
 
             mk_hb_processRun( GetEnv( "HB_HOST_BIN_DIR" ) + _PS_ + "hbmk2" +;
                               " -quiet -lang=en -q0 -shared" + cOptions +;
