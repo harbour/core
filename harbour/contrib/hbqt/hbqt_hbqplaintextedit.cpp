@@ -326,6 +326,8 @@ void HBQPlainTextEdit::hbClearSelection()
    rowEnds      = -1;
    columnBegins = -1;
    columnEnds   = -1;
+
+   emit selectionChanged();
 }
 
 /*----------------------------------------------------------------------*/
@@ -786,6 +788,7 @@ void HBQPlainTextEdit::mouseReleaseEvent( QMouseEvent *event )
    }
    selectionState = 1;
    setCursorWidth( 1 );
+   emit selectionChanged();
 }
 
 /*----------------------------------------------------------------------*/
@@ -858,6 +861,7 @@ void HBQPlainTextEdit::keyReleaseEvent( QKeyEvent * event )
       if( selectionState == 2 )
       {
          selectionState = 1;
+         emit selectionChanged();
       }
    }
 }
@@ -1123,6 +1127,7 @@ bool HBQPlainTextEdit::hbKeyPressSelection( QKeyEvent * event )
             break;
          }
       }
+      emit selectionChanged();
       repaint();
       return true;
    }

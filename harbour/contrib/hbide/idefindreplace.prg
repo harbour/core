@@ -71,6 +71,121 @@
 
 /*----------------------------------------------------------------------*/
 
+CLASS IdeUpDown INHERIT IdeObject
+
+   METHOD new( oIde )
+   METHOD create( oIde )
+   METHOD destroy()
+   METHOD show()
+   METHOD position()
+   METHOD execEvent( cEvent, p )
+
+   ENDCLASS
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeUpDown:new( oIde )
+
+   ::oIde := oIde
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeUpDown:position()
+   LOCAL qRect, qHSBar, qVSBar, qEdit
+
+   IF !empty( qEdit := ::oEM:getEditCurrent() )
+      ::oUI:setParent( qEdit )
+
+      qHSBar := QScrollBar():from( qEdit:horizontalScrollBar() )
+      qVSBar := QScrollBar():from( qEdit:verticalScrollBar() )
+
+      qRect  := QRect():from( qEdit:geometry() )
+
+      ::oUI:move( qRect:width()  - ::oUI:width()  - iif( qVSBar:isVisible(), qVSBar:width() , 0 ), ;
+                  qRect:height() - ::oUI:height() - iif( qHSBar:isVisible(), qHSBar:height(), 0 ) )
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeUpDown:show()
+   LOCAL oEdit
+
+   IF !empty( oEdit := ::oEM:getEditObjectCurrent() )
+      ::position()
+
+      IF !empty( oEdit:getSelectedText() )
+         ::oUI:show()
+      ELSE
+         ::oUI:hide()
+      ENDIF
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeUpDown:create( oIde )
+
+   DEFAULT oIde TO ::oIde
+
+   ::oIde := oIde
+
+   ::oUI := HbQtUI():new( hbide_uic( "updown" ), ::oIde:oDlg:oWidget ):build()
+
+   ::oUI:setWindowFlags( hb_bitOr( Qt_Tool, Qt_FramelessWindowHint ) )
+   ::oUI:setFocusPolicy( Qt_NoFocus )
+   ::oUI:setMaximumWidth( 55 )
+
+   ::oUI:q_buttonUp:setIcon( hbide_image( "previous" ) )
+   ::oUI:q_buttonUp:setToolTip( "Find Previous" )
+   ::oUI:signal( "buttonUp", "clicked()", {|| ::execEvent( "buttonUp_clicked" ) } )
+   ::oUI:q_buttonDown:setIcon( hbide_image( "next" ) )
+   ::oUI:q_buttonDown:setToolTip( "Find Next" )
+   ::oUI:signal( "buttonDown", "clicked()", {|| ::execEvent( "buttonDown_clicked" ) } )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeUpDown:execEvent( cEvent, p )
+   LOCAL cText, oEdit
+
+   HB_SYMBOL_UNUSED( p )
+
+   IF !empty( oEdit := ::oEM:getEditObjectCurrent() )
+      cText := oEdit:getSelectedText()
+   ENDIF
+
+   IF !empty( cText )
+      SWITCH cEvent
+      CASE "buttonUp_clicked"
+         oEdit:findEx( cText, QTextDocument_FindBackward )
+         EXIT
+      CASE "buttonDown_clicked"
+         oEdit:findEx( cText, 0 )
+         EXIT
+      ENDSWITCH
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeUpDown:destroy()
+
+   IF hb_isObject( ::oUI )
+      ::oUI:destroy()
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+//
+/*----------------------------------------------------------------------*/
+
 CLASS IdeSearchReplace INHERIT IdeObject
 
    DATA   oXbp

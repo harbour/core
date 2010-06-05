@@ -472,6 +472,7 @@ METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
       ::dispStatusInfo()
 
       ::oDK:setStatusText( SB_PNL_SELECTEDCHARS, len( ::getSelectedText() ) )
+      ::oUpDn:show()
       EXIT
 
    CASE cursorPositionChanged
@@ -596,6 +597,9 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p, p1 )
    CASE QEvent_Enter
    CASE QEvent_FocusIn
       ::resumePrototype()
+      IF key == QEvent_FocusIn
+         ::oUpDn:show()
+      ENDIF
       EXIT
 
    CASE QEvent_Leave

@@ -137,6 +137,7 @@ CLASS IdeDocks INHERIT IdeObject
    METHOD animateComponents( nMode )
    METHOD buildSourceThumbnail()
    METHOD buildQScintilla()
+   METHOD buildUpDownWidget()
 
    ENDCLASS
 
@@ -284,6 +285,7 @@ METHOD IdeDocks:buildDockWidgets()
    ::buildFunctionsDock()
    ::buildSourceThumbnail()
    ::buildQScintilla()
+   ::buildUpDownWidget()
 
    /* Bottom Docks */
    ::oDlg:oWidget:tabifyDockWidget( ::oDockB:oWidget         , ::oDockB1:oWidget         )
@@ -329,7 +331,6 @@ METHOD IdeDocks:getADockWidget( nAreas, cObjectName, cWindowTitle, nFlags )
    RETURN oDock
 
 /*----------------------------------------------------------------------*/
-
 
 METHOD IdeDocks:execEvent( nMode, p )
 
@@ -486,6 +487,15 @@ METHOD IdeDocks:buildSearchReplaceWidget()
 
    ::oIde:oSearchReplace := IdeSearchReplace():new( ::oIde ):create()
    ::oSearchReplace:oUI:hide()
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeDocks:buildUpDownWidget()
+
+   ::oIde:oUpDn := IdeUpDown():new( ::oIde ):create()
+   ::oUpDn:oUI:hide()
 
    RETURN Self
 
@@ -892,7 +902,7 @@ METHOD IdeDocks:buildStatusBar()
 
    ::oSBar:getItem( SB_PNL_MAIN ):autosize := XBPSTATUSBAR_AUTOSIZE_SPRING
 
-   ::oSBar:addItem( "", , , , "Ready"    ):oWidget:setMinimumWidth(  80 )
+   ::oSBar:addItem( "", , , , "Ready"    ):oWidget:setMinimumWidth(  40 )
    ::oSBar:addItem( "", , , , "Line"     ):oWidget:setMinimumWidth( 110 )
    ::oSBar:addItem( "", , , , "Column"   ):oWidget:setMinimumWidth(  40 )
    ::oSBar:addItem( "", , , , "Ins"      ):oWidget:setMinimumWidth(  20 )
@@ -906,6 +916,7 @@ METHOD IdeDocks:buildStatusBar()
    ::oSBar:addItem( "", , , , "View"     ):oWidget:setMinimumWidth(  20 )
    ::oSBar:addItem( "", , , , "Project"  ):oWidget:setMinimumWidth(  20 )
    ::oSBar:addItem( "", , , , "Theme"    ):oWidget:setMinimumWidth(  20 )
+
 
    FOR i := 1 TO 6
       ::oSBar:oWidget:addWidget( ::getMarkWidget( i ) )

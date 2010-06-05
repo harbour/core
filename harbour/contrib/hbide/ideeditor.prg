@@ -1330,6 +1330,8 @@ METHOD IdeEditor:setDocumentProperties()
          ::connect( ::qTimerSave, "timeout()", {|| ::execEvent( qTimeSave_timeout ) } )
          ::qTimerSave:start()
       ENDIF
+
+      ::oUpDn:show()
    ENDIF
 
    ::nBlock  := qCursor:blockNumber()
@@ -1435,6 +1437,7 @@ METHOD IdeEditor:activateTab( mp1, mp2, oXbp )
       oEdit:qCoEdit:toggleLineNumbers()
       oEdit:qCoEdit:toggleCurrentLineHighlightMode()
       oEdit:qCoEdit:dispStatusInfo()
+      ::oUpDn:show()
       oEdit:changeThumbnail()
    ENDIF
 

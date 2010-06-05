@@ -192,6 +192,7 @@ CLASS IdeObject
    ACCESS oSourceThumbnailDock                    INLINE ::oIde:oSourceThumbnailDock
    ACCESS oQScintillaDock                         INLINE ::oIde:oQScintillaDock
    ACCESS oMainToolbar                            INLINE ::oIde:oMainToolbar
+   ACCESS oUpDn                                   INLINE ::oIde:oUpDn
 
    ACCESS lProjTreeVisible                        INLINE ::oIde:lProjTreeVisible
    ACCESS lDockRVisible                           INLINE ::oIde:lDockRVisible
