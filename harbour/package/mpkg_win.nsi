@@ -95,7 +95,8 @@ Section "Main components" hb_main
   File /r "$%HB_INSTALL_PREFIX%\doc\*.*"
 
   ; Write the installation path into the registry
-; WriteRegStr HKLM "Software\Harbour" "Install_Dir" "$INSTDIR"
+; WriteRegStr HKLM "SOFTWARE\Harbour" "InstallDir" "$INSTDIR"
+  WriteRegStr HKCU "Software\Harbour" "InstallDir" "$INSTDIR"
 
   ; Write the uninstall keys for Windows
 ; WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Harbour" "DisplayName" "Harbour Project"
@@ -168,5 +169,8 @@ Section "Uninstall"
   RMDir  "$INSTDIR"
 
   Delete "$DESKTOP\Harbour Project.lnk"
+
+; DeleteRegKey HKCU "SOFTWARE\Harbour"
+  DeleteRegKey HKCU "Software\Harbour"
 
 SectionEnd
