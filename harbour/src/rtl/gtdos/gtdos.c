@@ -244,22 +244,22 @@ static void hb_gt_dos_GetScreenSize( int * piRows, int * piCols )
 }
 
 #if !defined( __DJGPP__ )
-static char FAR * hb_gt_dos_ScreenAddress( PHB_GT pGT )
+static HB_BYTE FAR * hb_gt_dos_ScreenAddress( PHB_GT pGT )
 {
-   char FAR * ptr;
+   HB_BYTE FAR * ptr;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_dos_ScreenAddress(%p)", pGT));
 
    #if defined( __WATCOMC__ ) && defined( __386__ )
       if( HB_GTSELF_ISCOLOR( pGT ) )
-         ptr = ( char * ) ( 0xB800 << 4 );
+         ptr = ( HB_BYTE * )( 0xB800 << 4 );
       else
-         ptr = ( char * )( 0xB000 << 4 );
+         ptr = ( HB_BYTE * )( 0xB000 << 4 );
    #else
       if( HB_GTSELF_ISCOLOR( pGT ) )
-         ptr = ( char FAR * ) MK_FP( 0xB800, 0x0000 );
+         ptr = ( HB_BYTE FAR * ) MK_FP( 0xB800, 0x0000 );
       else
-         ptr = ( char FAR * ) MK_FP( 0xB000, 0x0000 );
+         ptr = ( HB_BYTE FAR * ) MK_FP( 0xB000, 0x0000 );
    #endif
 
    return ptr;
