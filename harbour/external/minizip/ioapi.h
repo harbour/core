@@ -23,7 +23,8 @@
 
 #if !(defined(_WIN32) || defined(WIN32)) && \
     !(defined(__MSDOS__) || defined(MSDOS)) && \
-    !(defined(OS_2) || defined(__OS2__) || defined(OS2))
+    !(defined(OS_2) || defined(__OS2__) || defined(OS2)) && \
+    !defined(__WATCOMC__)
 
   /* Linux needs this to support file operation on files larger then 4+GB
    * on 32bit platforms
