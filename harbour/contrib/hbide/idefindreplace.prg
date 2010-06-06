@@ -138,14 +138,28 @@ METHOD IdeUpDown:create( oIde )
 
    ::oUI:setWindowFlags( hb_bitOr( Qt_Tool, Qt_FramelessWindowHint ) )
    ::oUI:setFocusPolicy( Qt_NoFocus )
-   ::oUI:setMaximumWidth( 55 )
+   //::oUI:setMaximumWidth( 75 )
+   //::oUI:setMaximumHeight( 25 )
 
-   ::oUI:q_buttonUp:setIcon( hbide_image( "previous" ) )
-   ::oUI:q_buttonUp:setToolTip( "Find Previous" )
-   ::oUI:signal( "buttonUp", "clicked()", {|| ::execEvent( "buttonUp_clicked" ) } )
-   ::oUI:q_buttonDown:setIcon( hbide_image( "next" ) )
-   ::oUI:q_buttonDown:setToolTip( "Find Next" )
-   ::oUI:signal( "buttonDown", "clicked()", {|| ::execEvent( "buttonDown_clicked" ) } )
+   ::oUI:q_buttonPrev:setIcon( hbide_image( "go-prev" ) )
+   ::oUI:q_buttonPrev:setToolTip( "Find Previous" )
+   ::oUI:signal( "buttonPrev", "clicked()", {|| ::execEvent( "buttonPrev_clicked" ) } )
+   //
+   ::oUI:q_buttonNext:setIcon( hbide_image( "go-next" ) )
+   ::oUI:q_buttonNext:setToolTip( "Find Next" )
+   ::oUI:signal( "buttonNext", "clicked()", {|| ::execEvent( "buttonNext_clicked" ) } )
+   //
+   ::oUI:q_buttonFirst:setIcon( hbide_image( "go-first" ) )
+   ::oUI:q_buttonFirst:setToolTip( "Find First" )
+   ::oUI:signal( "buttonFirst", "clicked()", {|| ::execEvent( "buttonFirst_clicked" ) } )
+   //
+   ::oUI:q_buttonLast:setIcon( hbide_image( "go-last" ) )
+   ::oUI:q_buttonLast:setToolTip( "Find Last" )
+   ::oUI:signal( "buttonLast", "clicked()", {|| ::execEvent( "buttonLast_clicked" ) } )
+   //
+   ::oUI:q_buttonAll:setIcon( hbide_image( "hilight-all" ) )
+   ::oUI:q_buttonAll:setToolTip( "Highlight All" )
+   ::oUI:signal( "buttonAll", "clicked()", {|| ::execEvent( "buttonAll_clicked" ) } )
 
    RETURN Self
 
@@ -162,11 +176,20 @@ METHOD IdeUpDown:execEvent( cEvent, p )
 
    IF !empty( cText )
       SWITCH cEvent
-      CASE "buttonUp_clicked"
-         oEdit:findEx( cText, QTextDocument_FindBackward )
+      CASE "buttonPrev_clicked"
+         oEdit:findEx( cText, QTextDocument_FindBackward, 0 )
          EXIT
-      CASE "buttonDown_clicked"
-         oEdit:findEx( cText, 0 )
+      CASE "buttonNext_clicked"
+         oEdit:findEx( cText, 0, 0 )
+         EXIT
+      CASE "buttonFirst_clicked"
+         oEdit:findEx( cText, 0, 1 )
+         EXIT
+      CASE "buttonLast_clicked"
+         oEdit:findEx( cText, QTextDocument_FindBackward, 2 )
+         EXIT
+      CASE "buttonAll_clicked"
+         oEdit:highlightAll( cText )
          EXIT
       ENDSWITCH
    ENDIF

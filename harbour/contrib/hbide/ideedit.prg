@@ -132,6 +132,7 @@ CLASS IdeEdit INHERIT IdeObject
 
    DATA   isColumnSelectionON                     INIT .F.
    DATA   lReadOnly                               INIT .F.
+   DATA   isHighLighted                           INIT .f.
 
    METHOD new( oEditor, nMode )
    METHOD create( oEditor, nMode )
@@ -230,7 +231,9 @@ CLASS IdeEdit INHERIT IdeObject
    METHOD spaces2tabs()
    METHOD removeTrailingSpaces()
    METHOD formatBraces()
-   METHOD findEx( cText, nFlags )
+   METHOD findEx( cText, nFlags, nStart )
+   METHOD highlightAll( cText )
+   METHOD unHighlight()
 
    ENDCLASS
 
@@ -286,6 +289,7 @@ METHOD IdeEdit:create( oEditor, nMode )
    Qt_Events_Connect( ::pEvents, ::qEdit, QEvent_KeyPress           , {|p| ::execKeyEvent( 101, QEvent_KeyPress, p ) } )
    Qt_Events_Connect( ::pEvents, ::qEdit, QEvent_Wheel              , {|p| ::execKeyEvent( 102, QEvent_Wheel   , p ) } )
    Qt_Events_Connect( ::pEvents, ::qEdit, QEvent_FocusIn            , {| | ::execKeyEvent( 104, QEvent_FocusIn     ) } )
+   Qt_Events_Connect( ::pEvents, ::qEdit, QEvent_Resize             , {| | ::execKeyEvent( 106, QEvent_Resize      ) } )
    Qt_Events_Connect( ::pEvents, ::qEdit, QEvent_FocusOut           , {| | ::execKeyEvent( 105, QEvent_FocusOut    ) } )
    Qt_Events_Connect( ::pEvents, ::qEdit, QEvent_MouseButtonDblClick, {|p| ::execKeyEvent( 103, QEvent_MouseButtonDblClick, p ) } )
 
@@ -473,6 +477,8 @@ METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
 
       ::oDK:setStatusText( SB_PNL_SELECTEDCHARS, len( ::getSelectedText() ) )
       ::oUpDn:show()
+      ::unHighlight()
+
       EXIT
 
    CASE cursorPositionChanged
@@ -600,6 +606,10 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p, p1 )
       IF key == QEvent_FocusIn
          ::oUpDn:show()
       ENDIF
+      EXIT
+
+   CASE QEvent_Resize
+      ::oUpDn:show()
       EXIT
 
    CASE QEvent_Leave
@@ -1475,8 +1485,21 @@ METHOD IdeEdit:find( cText, nPosFrom )
 /*----------------------------------------------------------------------*/
 /*  nFlags will decide the position, case sensitivity and direction
  */
-METHOD IdeEdit:findEx( cText, nFlags )
-   LOCAL qCursor, lFound, cT
+METHOD IdeEdit:findEx( cText, nFlags, nStart )
+   LOCAL qCursor, lFound, cT, nPos
+
+   DEFAULT nStart TO 0
+
+   qCursor := ::getCursor()
+   nPos    := qCursor:position()
+
+   IF nStart == 0
+      // No need to move cursor
+   ELSEIF nStart == 1
+      ::qEdit:moveCursor( QTextCursor_Start )
+   ELSEIF nStart == 2
+      ::qEdit:moveCursor( QTextCursor_End )
+   ENDIF
 
    IF ( lFound := ::qEdit:find( cText, nFlags ) )
       ::qEdit:centerCursor()
@@ -1485,9 +1508,72 @@ METHOD IdeEdit:findEx( cText, nFlags )
       ::qEdit:hbSetSelectionInfo( { qCursor:blockNumber(), qCursor:columnNumber() - len( cT ), ;
                                     qCursor:blockNumber(), qCursor:columnNumber(), 1 } )
       ::qEdit:setTextCursor( qCursor )
+   ELSE
+      qCursor:setPosition( nPos )
+      ::qEdit:setTextCursor( qCursor )
    ENDIF
 
    RETURN lFound
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:unHighlight()
+   LOCAL qCursor, nPos, lModified
+
+   IF ::isHighLighted
+      ::isHighLighted := .f.
+      qCursor := ::getCursor()
+      nPos := qCursor:position()
+      lModified := QTextDocument():configure( ::qEdit:document() ):isModified()
+      ::qEdit:undo()
+      IF ! lModified
+         QTextDocument():configure( ::qEdit:document() ):setModified( .f. )
+         ::oEditor:setTabImage( ::qEdit )
+      ENDIF
+      qCursor:setPosition( nPos )
+      ::qEdit:setTextCursor( qCursor )
+      RETURN .t.
+   ENDIF
+
+   RETURN .f.
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:highlightAll( cText )
+   LOCAL qDoc, qFormat, qCursor, qFormatHL, qCur, lModified
+
+   IF ::unHighLight()
+      RETURN Self
+   ENDIF
+
+   ::isHighLighted := .t.
+
+   qDoc := ::oEditor:qDocument
+   lModified := QTextDocument():configure( ::qEdit:document() ):isModified()
+
+   qCur := ::getCursor()
+   qCur:beginEditBlock()
+
+   qCursor   := QTextCursor():new( "QTextDocument", qDoc )
+   qFormat   := QTextCharFormat():from( qCursor:charFormat() )
+   qFormatHL := qFormat
+   qFormatHL:setBackground( QBrush():new( "QColor", QColor():new( Qt_yellow ) ) )
+
+   DO WHILE .t.
+      qCursor := QTextCursor():from( qDoc:find( cText, qCursor, 0 ) )
+      IF qCursor:isNull()
+         EXIT
+      ENDIF
+      qCursor:mergeCharFormat( qFormatHL )
+   ENDDO
+   qCur:endEditBlock()
+
+   IF ! lModified
+      QTextDocument():configure( ::qEdit:document() ):setModified( .f. )
+      ::oEditor:setTabImage( ::qEdit )
+   ENDIF
+
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 

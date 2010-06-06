@@ -112,6 +112,8 @@ CLASS IdeToolsManager INHERIT IdeObject
    METHOD addPanelsMenu( cPrompt )
    METHOD showOutput( cOut, mp2, oHbp )
    METHOD finished( nEC, nES, oHbp )
+   METHOD parseParams( cP )
+   METHOD macro2value( cMacro )
 
    ENDCLASS
 
@@ -405,7 +407,7 @@ METHOD IdeToolsManager:execToolByParams( cCmd, cParams, cStartIn, lCapture, lOpe
    ELSE
       cArg := ""
    ENDIF
-   cArg += cParams
+   cArg += ::parseParams( cParams )
 
    IF lCapture
       IF lOpen
@@ -448,6 +450,7 @@ METHOD IdeToolsManager:execTool( ... )
       cCmd     := hbide_pathToOSPath( aParam[ 1 ] )
       cParams  := aParam[ 2 ]
       cParams  := iif( "http://" $ lower( cParams ), cParams, hbide_pathToOSPath( cParams ) )
+      cParams  := ::parseParams( cParams )
       cStayIn  := hbide_pathToOSPath( aParam[ 3 ] )
       lCapture := iif( hb_isLogical( aParam[ 4 ] ), aParam[ 4 ], aParam[ 4 ] == "YES" )
       lOpen    := iif( hb_isLogical( aParam[ 5 ] ), aParam[ 5 ], aParam[ 5 ] == "YES" )
@@ -483,3 +486,60 @@ METHOD IdeToolsManager:finished( nEC, nES, oHbp )
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeToolsManager:parseParams( cP )
+   LOCAL lHas, n, n1, cMacro
+
+   IF !empty( cP )
+      DO WHILE .t.
+         lHas := .f.
+         IF ( n := at( "{" , cP ) ) > 0
+            IF ( n1 := at( "}" , cP ) ) > 0
+               lHas    := .t.
+               cMacro  := substr( cP, n + 1, n1 - n - 1 )
+               cP      := substr( cP, 1, n - 1 ) + ::macro2value( cMacro ) + substr( cP, n1 + 1 )
+            ENDIF
+         ENDIF
+         IF ! lHas
+            EXIT
+         ENDIF
+      ENDDO
+   ENDIF
+
+   RETURN cP
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeToolsManager:macro2value( cMacro )
+   LOCAL cVal, cMacroL, oEdit, cFile, cPath, cExt
+
+   cMacro  := alltrim( cMacro )
+   cMacroL := lower( cMacro )
+
+   oEdit   := ::oEM:getEditorCurrent()
+   IF !empty( oEdit )
+      hb_fNameSplit( oEdit:sourceFile, @cPath, @cFile, @cExt )
+   ELSE
+      cPath := ""; cFile := ""; cExt := ""
+   ENDIF
+
+   DO CASE
+   CASE cMacroL == "source_fullname"
+      cVal := hbide_pathToOSPath( cPath + cFile + cExt )
+
+   CASE cMacroL == "source_name"
+      cVal := cFile + cExt
+
+   CASE cMacroL == "source_path"
+      cVal := hbide_pathToOSPath( cPath )
+
+   CASE "%" $ cMacro
+      cVal := hb_GetEnv( strtran( cMacro, "%", "" ) )
+
+   OTHERWISE
+      cVal := cMacro
+
+   ENDCASE
+
+   RETURN cVal
+
+/*----------------------------------------------------------------------*/

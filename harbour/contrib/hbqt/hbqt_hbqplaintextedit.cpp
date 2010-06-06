@@ -987,8 +987,11 @@ bool HBQPlainTextEdit::hbKeyPressSelection( QKeyEvent * event )
 
    if( ctrl && event->text().isEmpty() )
    {
+      #if 0
       event->ignore();
       return true;
+      #endif
+      return false;
    }
 
    if( ctrl && ( k == Qt::Key_C || k == Qt::Key_V || k == Qt::Key_X ||
@@ -1248,12 +1251,13 @@ bool HBQPlainTextEdit::hbKeyPressSelection( QKeyEvent * event )
 
 void HBQPlainTextEdit::keyPressEvent( QKeyEvent * event )
 {
+HB_TRACE( HB_TR_ALWAYS, ( "keyPressEvent %i  000", event->key() ) );
    if( hbKeyPressSelection( event ) )
    {
       QApplication::processEvents();
       return;
    }
-
+HB_TRACE( HB_TR_ALWAYS, ( "keyPressEvent %i", event->key() ) );
    if( c && c->popup()->isVisible() )
    {
       // The following keys are forwarded by the completer to the widget
