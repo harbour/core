@@ -492,10 +492,11 @@ METHOD IdeToolsManager:parseParams( cP )
    IF !empty( cP )
       DO WHILE .t.
          lHas := .f.
-         IF ( n := at( "{" , cP ) ) > 0
+
+         IF ( n := at( "${" , cP ) ) > 0
             IF ( n1 := at( "}" , cP ) ) > 0
                lHas    := .t.
-               cMacro  := substr( cP, n + 1, n1 - n - 1 )
+               cMacro  := substr( cP, n + 2, n1 - n - 2 )
                cP      := substr( cP, 1, n - 1 ) + ::macro2value( cMacro ) + substr( cP, n1 + 1 )
             ENDIF
          ENDIF
@@ -532,11 +533,11 @@ METHOD IdeToolsManager:macro2value( cMacro )
    CASE cMacroL == "source_path"
       cVal := hbide_pathToOSPath( cPath )
 
-   CASE "%" $ cMacro
-      cVal := hb_GetEnv( strtran( cMacro, "%", "" ) )
+   CASE cMacroL == "source_ext"
+      cVal := cExt
 
    OTHERWISE
-      cVal := cMacro
+      cVal := hb_GetEnv( cMacro )
 
    ENDCASE
 
