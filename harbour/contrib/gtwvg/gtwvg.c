@@ -1258,8 +1258,12 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
                if( j > 0 )
                {
                   PHB_ITEM pItem = hb_itemPutCLPtr( NULL, sBuffer, j );
+#if defined( UNICODE )
+                  hb_gt_winapi_setClipboard( CF_UNICODETEXT, pItem );
+#else
                   hb_gt_winapi_setClipboard( pWVT->CodePage == OEM_CHARSET ?
                                              CF_OEMTEXT : CF_TEXT, pItem );
+#endif
                   hb_itemRelease( pItem );
                }
                else
@@ -3199,14 +3203,22 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
       case HB_GTI_CLIPBOARDDATA:
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
+#if defined( UNICODE )
+            hb_gt_winapi_setClipboard( CF_UNICODETEXT, pInfo->pNewVal );
+#else
             hb_gt_winapi_setClipboard( pWVT->CodePage == OEM_CHARSET ?
                                        CF_OEMTEXT : CF_TEXT, pInfo->pNewVal );
+#endif
          else
          {
             if( pInfo->pResult == NULL )
                pInfo->pResult = hb_itemNew( NULL );
+#if defined( UNICODE )
+            hb_gt_winapi_getClipboard( CF_UNICODETEXT, pInfo->pResult );
+#else
             hb_gt_winapi_getClipboard( pWVT->CodePage == OEM_CHARSET ?
                                        CF_OEMTEXT : CF_TEXT, pInfo->pResult );
+#endif
          }
          break;
 
