@@ -10,10 +10,4 @@
 
 -w3 -es2
 
-tpcommon.c
-tpunix.c
-tpwin.c
-tpos2.c
-tpdos.c
-
 telepath.prg

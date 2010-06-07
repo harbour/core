@@ -8,7 +8,8 @@
  *
  * Copyright 2000, 2001 Dan Levitt <dan@boba-fett.net>
  * Copyright 2004, 2005 Maurilio Longo <maurilio.longo@libero.it>
- * www - http://www.xharbour.org
+ * Copyright 2010 Viktor Szakats (harbour.01 syenar.hu)
+ * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -57,9 +58,7 @@
    so you can always retrieve them (see CVS docs on how to)
 */
 
-
 #include "common.ch"
-#include "fileio.ch"
 #include "telepath.ch"
 
 
@@ -80,7 +79,9 @@ THREAD STATIC t_nErrorCode := 0      // Error code from last operation, 0 if no 
 
 FUNCTION tp_baud( nPort, nNewBaud )
 
-   DEFAULT nNewBaud TO 0
+   IF ! ISNUMBER( nNewBaud )
+      nNewBaud := 0
+   ENDIF
 
    IF ! isport( nPort ) .OR. Empty( t_aPorts[ nPort, TPFP_NAME ] )
       RETURN TE_NOPORT
@@ -91,12 +92,7 @@ FUNCTION tp_baud( nPort, nNewBaud )
    ENDIF
 
    IF nNewBaud > 0
-      IF __tp_InitPortSpeed( t_aPorts[ nPort, TPFP_HANDLE ] ,;
-                             nNewBaud,;
-                             t_aPorts[ nPort, TPFP_DBITS  ] ,;
-                             t_aPorts[ nPort, TPFP_PARITY ] ,;
-                             t_aPorts[ nPort, TPFP_SBITS  ] ) == 0
-
+      IF com_Init( t_aPorts[ nPort, TPFP_HANDLE ], nNewBaud, t_aPorts[ nPort, TPFP_PARITY ], t_aPorts[ nPort, TPFP_DBITS ], t_aPorts[ nPort, TPFP_SBITS ] )
          t_aPorts[ nPort, TPFP_BAUD ] := nNewBaud
       ELSE
          // set error code
@@ -117,7 +113,9 @@ FUNCTION tp_idle( lNewval )
 
 PROCEDURE tp_delay( nTime )
 
-   DEFAULT nTime TO 0
+   IF ! ISNUMBER( nTime )
+      nTime := 0
+   ENDIF
 
    IF nTime < 0
       RETURN
@@ -131,7 +129,9 @@ PROCEDURE tp_delay( nTime )
 
 FUNCTION tp_close( nPort, nTimeout )
 
-   DEFAULT nTimeout TO 0
+   IF ! ISNUMBER( nTimeout )
+      nTimeout := 0
+   ENDIF
 
    /* Clipper returns 0 even if a port is not open */
    IF ! isopenport( nPort )
@@ -144,7 +144,7 @@ FUNCTION tp_close( nPort, nTimeout )
 
    IF t_aPorts[ nPort, TPFP_HANDLE ] >= 0
 
-      FClose( t_aPorts[ nPort, TPFP_HANDLE ] )
+      com_Close( t_aPorts[ nPort, TPFP_HANDLE ] )
 
       /* Port parameters should stay the same for the case the port
          gets reopened
@@ -174,48 +174,30 @@ FUNCTION tp_reopen( nPort, nInSize, nOutSize )
 
 FUNCTION tp_open( nPort, nInSize, nOutSize, nBaud, nData, cParity, nStop, cPortname )
 
-   LOCAL nRes
-
-   #if defined( __PLATFORM__UNIX )
-   LOCAL lPortExist
-   LOCAL nFileCase
-   LOCAL nDirCase
-   #endif
-
-   DEFAULT nInSize  TO 1536
-   DEFAULT nOutSize TO 1536
-   DEFAULT nBaud    TO 1200
-   DEFAULT nData    TO 8
-   DEFAULT cParity  TO "N"
-   DEFAULT nStop    TO 1
-
-   /* Serial ports name are made up of cPortName + nPort if nPort is not NIL */
-   #if defined( __PLATFORM__UNIX )
-      DEFAULT cPortName TO "/dev/ttyS" + iif( ISNUMBER( nPort ), hb_ntos( nPort - 1 ), "" )
-   #else
-      IF hb_osIsWinNT()
-         DEFAULT cPortName TO "\\.\COM"   + iif( ISNUMBER( nPort ), hb_ntos( nPort ), "" )
-      ELSE
-         DEFAULT cPortName TO "COM"       + iif( ISNUMBER( nPort ), hb_ntos( nPort ), "" )
-      ENDIF
-   #endif
-
-   #if defined( __PLATFORM__UNIX )
-      nFileCase := Set( _SET_FILECASE, 0 )
-      nDirCase := Set( _SET_DIRCASE, 0 )
-
-      lPortExist := File( cPortname ) /* Must be File(), hb_FileExists() won't work */
-
-      Set( _SET_FILECASE, nFileCase )
-      Set( _SET_DIRCASE, nDirCase )
-
-      IF ! lPortExist
-         RETURN TE_NOPORT
-      ENDIF
-   #endif
-
    IF ! isport( nPort )
       RETURN TE_NOPORT
+   ENDIF
+
+   IF ! ISNUMBER( nInSize )
+      nInSize := 1536
+   ENDIF
+   IF ! ISNUMBER( nOutSize )
+      nOutSize := 1536
+   ENDIF
+   IF ! ISNUMBER( nBaud )
+      nBaud := 1200
+   ENDIF
+   IF ! ISNUMBER( nData )
+      nData := 8
+   ENDIF
+   IF ! ISCHARACTER( cParity )
+      cParity := "N"
+   ENDIF
+   IF ! ISNUMBER( nStop )
+      nStop := 1
+   ENDIF
+   IF ISCHARACTER( cPortname )
+      com_DevName( nPort, cPortname )
    ENDIF
 
    t_aPorts[ nPort, TPFP_NAME       ] := cPortname
@@ -226,33 +208,20 @@ FUNCTION tp_open( nPort, nInSize, nOutSize, nBaud, nData, cParity, nStop, cPortn
    t_aPorts[ nPort, TPFP_OC         ] := .F.
    t_aPorts[ nPort, TPFP_INBUF      ] := ""
    t_aPorts[ nPort, TPFP_INBUF_SIZE ] := nInSize
+   t_aPorts[ nPort, TPFP_HANDLE     ] := -1
 
-   // Maybe we should have a __tp_Open() on every platform
-   #if defined( __PLATFORM__UNIX )
-      t_aPorts[ nPort, TPFP_HANDLE ] := __tp_Open( cPortname )
-   #else
-      t_aPorts[ nPort, TPFP_HANDLE ] := FOpen( cPortname, FO_READWRITE ) // FO_EXCLUSIVE
-   #endif
+   IF com_Open( nPort )
 
-   IF t_aPorts[ nPort, TPFP_HANDLE ] != F_ERROR
+      t_aPorts[ nPort, TPFP_HANDLE ] := nPort
 
-      /* low level C functions are prefixed __tp_ */
-      IF ( nRes := __tp_InitPortSpeed( t_aPorts[ nPort, TPFP_HANDLE ] ,;
-                                       t_aPorts[ nPort, TPFP_BAUD   ] ,;
-                                       t_aPorts[ nPort, TPFP_DBITS  ] ,;
-                                       t_aPorts[ nPort, TPFP_PARITY ] ,;
-                                       t_aPorts[ nPort, TPFP_SBITS  ] ) ) == 0
-
+      IF com_Init( t_aPorts[ nPort, TPFP_HANDLE ], t_aPorts[ nPort, TPFP_BAUD ], t_aPorts[ nPort, TPFP_PARITY ], t_aPorts[ nPort, TPFP_DBITS ], t_aPorts[ nPort, TPFP_SBITS ] )
          t_aPorts[ nPort, TPFP_OC ] := .T.
-         RETURN nRes
+         RETURN 0
       ELSE
          tp_Close( t_aPorts[ nPort, TPFP_HANDLE ] )
-         RETURN nRes
+         RETURN TE_PARAM
       ENDIF
    ENDIF
-
-   // set error code to a static var to have tp_error() work as expected
-   //cnHandle := FError()
 
    t_aPorts[ nPort, TPFP_NAME       ] := ""
    t_aPorts[ nPort, TPFP_HANDLE     ] := -1
@@ -264,15 +233,19 @@ FUNCTION tp_open( nPort, nInSize, nOutSize, nBaud, nData, cParity, nStop, cPortn
    t_aPorts[ nPort, TPFP_INBUF      ] := ""
    t_aPorts[ nPort, TPFP_INBUF_SIZE ] := 0
 
-   RETURN TE_CONFL   // maybe should return something different?
+   RETURN TE_CONFL   /* maybe should return something different? */
 
 FUNCTION tp_recv( nPort, nLength, nTimeout )
 
    LOCAL nDone
    LOCAL cRet
 
-   DEFAULT nLength TO t_aPorts[ nPort, TPFP_INBUF_SIZE  ]
-   DEFAULT nTimeout TO 0
+   IF ! ISNUMBER( nLength )
+      nLength := t_aPorts[ nPort, TPFP_INBUF_SIZE ]
+   ENDIF
+   IF ! ISNUMBER( nTimeout )
+      nTimeout := 0
+   ENDIF
 
    FetchChars( nPort )
 
@@ -302,8 +275,12 @@ FUNCTION tp_send( nPort, cString, nTimeout )
 
    LOCAL nWritten, nTotWritten, nDone
 
-   DEFAULT cString TO ""
-   DEFAULT nTimeout TO 0
+   IF ! ISCHARACTER( cString )
+      cString := ""
+   ENDIF
+   IF ! ISNUMBER( nTimeout )
+      nTimeout := 0
+   ENDIF
 
    IF ! isopenport( nPort )
       RETURN 0
@@ -319,7 +296,7 @@ FUNCTION tp_send( nPort, cString, nTimeout )
    DO WHILE nTotWritten < Len( cString ) .AND. ;
          ( nTimeout < 0 .OR. Seconds() <= nDone )
 
-      nWritten := __tp_WritePort( t_aPorts[ nPort, TPFP_HANDLE ], SubStr( cString, nTotWritten + 1 ) )
+      nWritten := com_send( t_aPorts[ nPort, TPFP_HANDLE ], SubStr( cString, nTotWritten + 1 ) )
 
       IF nWritten >= 0
 
@@ -343,8 +320,12 @@ FUNCTION tp_send( nPort, cString, nTimeout )
 
 FUNCTION tp_sendsub( nPort, cString, nStart, nLength, nTimeout )
 
-   DEFAULT nStart TO 1
-   DEFAULT nLength TO Len( cString )
+   IF ! ISNUMBER( nStart )
+      nStart := 1
+   ENDIF
+   IF ! ISNUMBER( nLength )
+      nLength := Len( cString )
+   ENDIF
 
    RETURN tp_send( nPort, SubStr( cString, nStart, nLength ), nTimeout )
 
@@ -364,8 +345,12 @@ FUNCTION tp_recvto( nPort, cDelim, nMaxlen, nTimeout )
       RETURN ""
    ENDIF
 
-   DEFAULT nMaxlen TO 64999      /* dos telepathy def. on xharbour could be higher */
-   DEFAULT nTimeout TO 0
+   IF ! ISNUMBER( nMaxlen )
+      nMaxlen := 64999    /* dos telepathy def. on xharbour could be higher */
+   ENDIF
+   IF ! ISNUMBER( nTimeout )
+      nTimeout := 0
+   ENDIF
 
    FetchChars( nPort )
 
@@ -511,8 +496,12 @@ FUNCTION tp_waitfor( ... )
       RETURN 0
    ENDIF
 
-   // DEFAULT nTimeout TO -1
-   // DEFAULT lIgnorecase TO .F.
+   // IF ! ISNUMBER( nTimeout )
+   //    nTimeout := -1
+   // ENDIF
+   // IF ! ISLOGICAL( lIgnorecase )
+   //    lIgnorecase := .F.
+   // ENDIF
 
    /*
 
@@ -612,7 +601,7 @@ FUNCTION tp_isdcd( nPort )
       RETURN .F.
    ENDIF
 
-   RETURN __tp_isdcd( t_aPorts[ nPort, TPFP_HANDLE ] )
+   RETURN com_DCD( t_aPorts[ nPort, TPFP_HANDLE ] )
 
 FUNCTION tp_isri( nPort )
 
@@ -620,7 +609,7 @@ FUNCTION tp_isri( nPort )
       RETURN .F.
    ENDIF
 
-   RETURN __tp_isri( t_aPorts[ nPort, TPFP_HANDLE ] )
+   RETURN com_Ring( t_aPorts[ nPort, TPFP_HANDLE ] )
 
 FUNCTION tp_isdsr( nPort )
 
@@ -628,7 +617,7 @@ FUNCTION tp_isdsr( nPort )
       RETURN .F.
    ENDIF
 
-   RETURN __tp_isdsr( t_aPorts[ nPort, TPFP_HANDLE ] )
+   RETURN com_DSR( t_aPorts[ nPort, TPFP_HANDLE ] )
 
 FUNCTION tp_iscts( nPort )
 
@@ -636,42 +625,15 @@ FUNCTION tp_iscts( nPort )
       RETURN .F.
    ENDIF
 
-   RETURN __tp_iscts( t_aPorts[ nPort, TPFP_HANDLE ] )
-
-#if defined( __PLATFORM__UNIX )
-// NB: On linux i don't know how to make a drain with a timeout, so here
-//     I'll wait as long as it takes to drain the port.
-FUNCTION tp_flush( nPort, nTimeout )
-
-   //LOCAL nStart := Seconds()
-   LOCAL nRes
-
-   DEFAULT nTimeout TO 0
-
-   IF ! isopenport( nPort )
-      RETURN TE_CLOSED
-   ENDIF
-
-   nRes := __tp_drain( t_aPorts[ nPort, TPFP_HANDLE ] )
-
-   // Sleep rest of timeout
-   /*
-   IF nTimeout > 0 .AND. Seconds() - nStart < nTimeout
-      hb_idleSleep( nTimeout - ( Seconds() - nStart ) )
-   ENDIF
-   */
-
-   // NB: returns timeout on error trying to reach compatibility with other platforms
-   //     to be tested
-   RETURN iif( nRes == 0, 0, TE_TMOUT )
-
-#else
+   RETURN com_CTS( t_aPorts[ nPort, TPFP_HANDLE ] )
 
 FUNCTION tp_flush( nPort, nTimeout )
 
    LOCAL nDone
 
-   DEFAULT nTimeout TO -1
+   IF ! ISNUMBER( nTimeout )
+      nTimeout := -1
+   ENDIF
 
    IF ! isopenport( nPort )
       RETURN TE_CLOSED
@@ -689,7 +651,6 @@ FUNCTION tp_flush( nPort, nTimeout )
    ENDDO
 
    RETURN iif( tp_OutFree( nPort ) > 0, TE_TMOUT, 0 )
-#endif
 
 /*
 
@@ -733,7 +694,7 @@ STATIC FUNCTION FetchChars( nPort )
       RETURN 0
    ENDIF
 
-   cStr := __tp_ReadPort( t_aPorts[ nPort, TPFP_HANDLE ] )
+   cStr := com_read( t_aPorts[ nPort, TPFP_HANDLE ] )
 
    IF Len( cStr ) > 0
       t_aPorts[ nPort, TPFP_INBUF ] += cStr
@@ -806,3 +767,27 @@ FUNCTION tp_debug( nDebugLevel, cString )
 PROCEDURE tp_uninstall()
    /* NOTE: dummy function, solely for compatibility. */
    RETURN
+
+STATIC FUNCTION __TP_INFREE()
+   RETURN -1
+
+STATIC FUNCTION __TP_OUTFREE()
+   RETURN -1
+
+STATIC FUNCTION __TP_CTRLCTS( nPort, nValue )
+   RETURN com_Hard( nPort, iif( ISNUMBER( nValue ), nValue != 0, NIL ), .F. )
+
+STATIC FUNCTION __TP_CTRLDTR( nPort, nValue )
+   RETURN com_Hard( nPort, iif( ISNUMBER( nValue ), nValue != 0, NIL ), .T. )
+
+FUNCTION BIN_AND( ... )
+   RETURN HB_BITAND( ... )
+
+FUNCTION BIN_OR( ... )
+   RETURN HB_BITOR( ... )
+
+FUNCTION BIN_XOR( ... )
+   RETURN HB_BITXOR( ... )
+
+FUNCTION BIN_NOT( ... )
+   RETURN HB_BITNOT( ... )

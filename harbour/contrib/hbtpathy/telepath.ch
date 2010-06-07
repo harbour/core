@@ -53,8 +53,6 @@
 #ifndef TELEPATH_CH_
 #define TELEPATH_CH_
 
-/* NOTE: This file is also used by C code. */
-
 #define TP_MAXPORTS  8
 
 /* Error code definitions */

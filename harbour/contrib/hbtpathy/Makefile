@@ -8,13 +8,6 @@ include $(TOP)$(ROOT)config/global.mk
 
 LIBNAME := hbtpathy
 
-C_SOURCES := \
-   tpcommon.c \
-   tpunix.c \
-   tpwin.c \
-   tpos2.c \
-   tpdos.c \
-
 PRG_SOURCES := \
    telepath.prg \
 
