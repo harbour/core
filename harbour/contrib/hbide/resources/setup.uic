@@ -1,0 +1,135 @@
+/********************************************************************************
+** Form generated from reading UI file 'setup.ui'
+**
+** Created: Sun Jun 6 22:38:08 2010
+**      by: Qt User Interface Compiler version 4.6.2
+**
+** WARNING! All changes made in this file will be lost when recompiling UI file!
+********************************************************************************/
+
+#ifndef SETUP_H
+#define SETUP_H
+
+#include <QtCore/QVariant>
+#include <QtGui/QAction>
+#include <QtGui/QApplication>
+#include <QtGui/QButtonGroup>
+#include <QtGui/QDialog>
+#include <QtGui/QHeaderView>
+#include <QtGui/QLabel>
+#include <QtGui/QPushButton>
+#include <QtGui/QStackedWidget>
+#include <QtGui/QTableWidget>
+#include <QtGui/QTreeWidget>
+#include <QtGui/QWidget>
+
+QT_BEGIN_NAMESPACE
+
+class Ui_DialogSetup
+{
+public:
+    QTreeWidget *treeWidget;
+    QStackedWidget *stackedWidget;
+    QWidget *page;
+    QLabel *label_2;
+    QWidget *page_2;
+    QLabel *label_3;
+    QWidget *page_3;
+    QLabel *label_4;
+    QWidget *page_4;
+    QLabel *label_5;
+    QWidget *page_5;
+    QTableWidget *tableWidget;
+    QLabel *label;
+    QPushButton *buttonClose;
+    QPushButton *buttonCancel;
+    QPushButton *buttonOk;
+
+    void setupUi(QDialog *DialogSetup)
+    {
+        if (DialogSetup->objectName().isEmpty())
+            DialogSetup->setObjectName(QString::fromUtf8("DialogSetup"));
+        DialogSetup->resize(476, 413);
+        treeWidget = new QTreeWidget(DialogSetup);
+        QTreeWidgetItem *__qtreewidgetitem = new QTreeWidgetItem();
+        __qtreewidgetitem->setText(0, QString::fromUtf8("1"));
+        treeWidget->setHeaderItem(__qtreewidgetitem);
+        treeWidget->setObjectName(QString::fromUtf8("treeWidget"));
+        treeWidget->setGeometry(QRect(6, 8, 119, 397));
+        treeWidget->header()->setVisible(false);
+        stackedWidget = new QStackedWidget(DialogSetup);
+        stackedWidget->setObjectName(QString::fromUtf8("stackedWidget"));
+        stackedWidget->setGeometry(QRect(136, 10, 331, 357));
+        page = new QWidget();
+        page->setObjectName(QString::fromUtf8("page"));
+        label_2 = new QLabel(page);
+        label_2->setObjectName(QString::fromUtf8("label_2"));
+        label_2->setGeometry(QRect(2, -2, 46, 14));
+        stackedWidget->addWidget(page);
+        page_2 = new QWidget();
+        page_2->setObjectName(QString::fromUtf8("page_2"));
+        label_3 = new QLabel(page_2);
+        label_3->setObjectName(QString::fromUtf8("label_3"));
+        label_3->setGeometry(QRect(2, -2, 46, 14));
+        stackedWidget->addWidget(page_2);
+        page_3 = new QWidget();
+        page_3->setObjectName(QString::fromUtf8("page_3"));
+        label_4 = new QLabel(page_3);
+        label_4->setObjectName(QString::fromUtf8("label_4"));
+        label_4->setGeometry(QRect(0, -2, 46, 14));
+        stackedWidget->addWidget(page_3);
+        page_4 = new QWidget();
+        page_4->setObjectName(QString::fromUtf8("page_4"));
+        label_5 = new QLabel(page_4);
+        label_5->setObjectName(QString::fromUtf8("label_5"));
+        label_5->setGeometry(QRect(0, -2, 46, 14));
+        stackedWidget->addWidget(page_4);
+        page_5 = new QWidget();
+        page_5->setObjectName(QString::fromUtf8("page_5"));
+        tableWidget = new QTableWidget(page_5);
+        tableWidget->setObjectName(QString::fromUtf8("tableWidget"));
+        tableWidget->setGeometry(QRect(2, 16, 327, 341));
+        label = new QLabel(page_5);
+        label->setObjectName(QString::fromUtf8("label"));
+        label->setGeometry(QRect(4, -4, 121, 16));
+        stackedWidget->addWidget(page_5);
+        buttonClose = new QPushButton(DialogSetup);
+        buttonClose->setObjectName(QString::fromUtf8("buttonClose"));
+        buttonClose->setGeometry(QRect(138, 384, 75, 24));
+        buttonCancel = new QPushButton(DialogSetup);
+        buttonCancel->setObjectName(QString::fromUtf8("buttonCancel"));
+        buttonCancel->setGeometry(QRect(268, 384, 75, 24));
+        buttonOk = new QPushButton(DialogSetup);
+        buttonOk->setObjectName(QString::fromUtf8("buttonOk"));
+        buttonOk->setGeometry(QRect(392, 384, 75, 24));
+
+        retranslateUi(DialogSetup);
+
+        stackedWidget->setCurrentIndex(0);
+
+
+        QMetaObject::connectSlotsByName(DialogSetup);
+    } // setupUi
+
+    void retranslateUi(QDialog *DialogSetup)
+    {
+        DialogSetup->setWindowTitle(QApplication::translate("DialogSetup", "Setup", 0, QApplication::UnicodeUTF8));
+        label_2->setText(QApplication::translate("DialogSetup", "Page 1", 0, QApplication::UnicodeUTF8));
+        label_3->setText(QApplication::translate("DialogSetup", "Page 2", 0, QApplication::UnicodeUTF8));
+        label_4->setText(QApplication::translate("DialogSetup", "Page 3", 0, QApplication::UnicodeUTF8));
+        label_5->setText(QApplication::translate("DialogSetup", "Page 4", 0, QApplication::UnicodeUTF8));
+        label->setText(QApplication::translate("DialogSetup", "Variables:", 0, QApplication::UnicodeUTF8));
+        buttonClose->setText(QApplication::translate("DialogSetup", "Close", 0, QApplication::UnicodeUTF8));
+        buttonCancel->setText(QApplication::translate("DialogSetup", "Cancel", 0, QApplication::UnicodeUTF8));
+        buttonOk->setText(QApplication::translate("DialogSetup", "Ok", 0, QApplication::UnicodeUTF8));
+    } // retranslateUi
+
+};
+
+namespace Ui {
+    class DialogSetup: public Ui_DialogSetup {};
+} // namespace Ui
+
+QT_END_NAMESPACE
+
+#endif // SETUP_H

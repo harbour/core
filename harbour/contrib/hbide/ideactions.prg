@@ -309,6 +309,7 @@ METHOD IdeActions:loadActions()
 
    aadd( aAct, { "GotoFunc"             , "Goto Function"                , "dc_function"    , ""     , "No", "Yes" } )
    aadd( aAct, { "Shortcuts"            , "Keyboard Mappings"            , "keyboardmappings",""     , "No", "Yes" } )
+   aadd( aAct, { "Setup"                , "hbIDE Setup"                  , ""               , ""     , "No", "Yes" } )
  * aadd( aAct, { "Tools"                , "Tools & Utilities"            , "tools"          , ""     , "No", "Yes" } )
 
    RETURN aAct
@@ -596,6 +597,8 @@ METHOD IdeActions:buildMainMenu()
    /*----------------------------------------------------------------------------*/
    oSubMenu := XbpMenu():new( oMenuBar ):create()
    oSubMenu:title := "~Setup"
+   oSubMenu:addItem( { ::getAction( "Setup"               ), {|| oIde:execAction( "Setup"              ) } } )
+   hbide_menuAddSep( oSubMenu )
    oSubMenu:addItem( { ::getAction( "Shortcuts"           ), {|| oIde:execAction( "Shortcuts"          ) } } )
    hbide_menuAddSep( oSubMenu )
    oSubMenu:addItem( { ::getAction( "TB_Tools"            ), {|| oIde:execAction( "Tools"              ) } } )

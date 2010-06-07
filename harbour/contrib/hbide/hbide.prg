@@ -143,6 +143,7 @@ CLASS HbIde
    DATA   oSC                                            /* Shortcuts Manager              */
    DATA   oTM                                            /* Plugin Tools Manager           */
    DATA   oTH                                            /* Themes Manager                 */
+   DATA   oSetup                                         /* Setup Manager                  */
 
    DATA   nRunMode                                INIT   HBIDE_RUN_MODE_INI
    DATA   nAnimantionMode                         INIT   HBIDE_ANIMATION_NONE
@@ -452,6 +453,9 @@ METHOD HbIde:create( aParams )
    /* Home Implementation */
    ::oHM := IdeHome():new():create( Self )
 
+   /* Setup Manager */
+   ::oSetup := IdeSetup():new( Self ):create()
+
    /* Fill various elements of the IDE */
    ::cWrkProject := ::aINI[ INI_HBIDE, CurrentProject ]
    ::oPM:populate()
@@ -486,6 +490,8 @@ METHOD HbIde:create( aParams )
       QApplication():new():processEvents()
    ENDDO
    #endif
+
+   ::oDockB2:hide() /* This widget never contains anything so must be forced to hide */
 
    /* Request Main Window to Appear on the Screen */
    ::oHM:refresh()
@@ -660,6 +666,9 @@ METHOD HbIde:execAction( cKey )
    CASE "Animate"
       ::nAnimantionMode := iif( ::nAnimantionMode == HBIDE_ANIMATION_NONE, HBIDE_ANIMATION_GRADIENT, HBIDE_ANIMATION_NONE )
       ::oDK:animateComponents( ::nAnimantionMode )
+      EXIT
+   CASE "Setup"
+      ::oSetup:show()
       EXIT
    CASE "Shortcuts"
       ::oSC:show()

@@ -99,6 +99,7 @@ CLASS IdeObject
    ACCESS oTM                                     INLINE ::oIde:oTM
    ACCESS oTH                                     INLINE ::oIde:oTH
    ACCESS oFF                                     INLINE ::oIde:oFF
+   ACCESS oSetup                                  INLINE ::oIde:oSetup
 
    ACCESS aMeta                                   INLINE ::oIde:aMeta
    ACCESS aTags                                   INLINE ::oIde:aTags

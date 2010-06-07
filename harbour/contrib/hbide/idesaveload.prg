@@ -66,6 +66,7 @@
 
 #include "hbide.ch"
 #include "common.ch"
+#include "hbclass.ch"
 #include "hbqt.ch"
 
 /*----------------------------------------------------------------------*/
@@ -559,3 +560,76 @@ FUNCTION hbide_saveShortcuts( oIde, a_, cFileShortcuts )
    RETURN hb_fileExists( cFileShortcuts )
 
 /*----------------------------------------------------------------------*/
+//                             Class IdeSetup
+/*----------------------------------------------------------------------*/
+
+CLASS IdeSetup INHERIT IdeObject
+
+   METHOD new( oIde )
+   METHOD create( oIde )
+   METHOD destroy()
+   METHOD show()
+   METHOD execEvent( cEvent, p )
+
+   ENDCLASS
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeSetup:new( oIde )
+   ::oIde := oIde
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeSetup:create( oIde )
+   DEFAULT oIde TO ::oIde
+
+   ::oIde := oIde
+
+   IF .t.
+      ::oUI := HbQtUI():new( hbide_uic( "setup" ), ::oDlg:oWidget ):build()
+
+      ::oUI:setMaximumWidth( ::oUI:width() )
+      ::oUI:setMinimumWidth( ::oUI:width() )
+      ::oUI:setMaximumHeight( ::oUI:height() )
+      ::oUI:setMinimumHeight( ::oUI:height() )
+
+      ::connect( ::oUI:q_buttonClose, "clicked()", {|| ::execEvent( "buttonClose_clicked" ) } )
+
+      ::oUI:hide()
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeSetup:destroy()
+   IF !empty( ::oUI )
+      ::oUI:destroy()
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeSetup:show()
+
+   ::oUI:exec()
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeSetup:execEvent( cEvent, p )
+   HB_SYMBOL_UNUSED( p )
+
+   SWITCH cEvent
+   CASE "buttonClose_clicked"
+      ::oUI:done( 1 )
+      EXIT
+   ENDSWITCH
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
