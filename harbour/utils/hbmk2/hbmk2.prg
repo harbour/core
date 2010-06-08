@@ -5825,7 +5825,7 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, lSystemHeader, tT
 
       IF s_hRegexInclude == NIL
          /* TODO: Add support for #import directive of Objective C */
-         s_hRegexInclude := hb_regexComp( '^[ \t]*#[ \t]*include[ \t]*(\".+?\"|<.+?>)', .F. /* lCaseSensitive */, .T. /* lNewLine */ )
+         s_hRegexInclude := hb_regexComp( '^[[:blank:]]*#[[:blank:]]*include[[:blank:]]*(\".+?\"|<.+?>)', .F. /* lCaseSensitive */, .T. /* lNewLine */ )
          IF Empty( s_hRegexInclude )
             hbmk_OutErr( hbmk, I_( "Internal Error: Regular expression engine missing or unsupported. Please check your Harbour build settings." ) )
             s_hRegexInclude := {} /* To show the error only once by setting to non-NIL empty value */
