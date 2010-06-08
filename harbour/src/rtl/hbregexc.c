@@ -129,24 +129,30 @@ PHB_REGEX hb_regexCompile( const char *szRegEx, HB_SIZE ulLen, int iFlags )
 PHB_REGEX hb_regexGet( PHB_ITEM pRegExItm, int iFlags )
 {
    PHB_REGEX pRegEx = NULL;
+   HB_BOOL fArgError = HB_TRUE;
 
    if( pRegExItm )
    {
       if( HB_IS_POINTER( pRegExItm ) )
       {
          pRegEx = ( PHB_REGEX ) hb_itemGetPtrGC( pRegExItm, &s_gcRegexFuncs );
+         if( pRegEx )
+            fArgError = HB_FALSE;
       }
       else if( HB_IS_STRING( pRegExItm ) )
       {
          HB_SIZE ulLen = hb_itemGetCLen( pRegExItm );
          const char * szRegEx = hb_itemGetCPtr( pRegExItm );
          if( ulLen > 0 )
+         {
+            fArgError = HB_FALSE;
             pRegEx = hb_regexCompile( szRegEx, ulLen, iFlags );
+         }
       }
    }
 
-   if( !pRegEx )
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, "Invalid Regular expression", HB_ERR_FUNCNAME, 1, pRegExItm );
+   if( fArgError )
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, 1, pRegExItm );
 
    return pRegEx;
 }

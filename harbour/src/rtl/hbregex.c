@@ -227,6 +227,11 @@ HB_FUNC( HB_ATX )
          hb_stornl( ulStart, 4 );
          hb_stornl( ulLen, 5 );
       }
+      else
+      {
+         hb_stornl( 0, 4 );
+         hb_stornl( 0, 5 );
+      }
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3013, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -470,16 +475,22 @@ static HB_BOOL hb_regex( int iRequest )
 /* Returns array of Match + Sub-Matches. */
 HB_FUNC( HB_REGEX )
 {
-   hb_regex( 0 );
+   if( ! hb_regex( 0 ) )
+      hb_reta( 0 );
 }
 
 /* Returns just .T. if match found or .F. otherwise. */
 /* NOTE: Deprecated compatibility function.
          Please use HB_REGEXLIKE() and HB_REGEXHAS() instead. */
+
+#if defined( HB_LEGACY_LEVEL4 )
+
 HB_FUNC( HB_REGEXMATCH )
 {
    hb_retl( hb_regex( hb_parl( 5 ) ? 1 /* LIKE */ : 2 /* HAS */ ) );
 }
+
+#endif
 
 HB_FUNC( HB_REGEXLIKE )
 {
@@ -494,13 +505,15 @@ HB_FUNC( HB_REGEXHAS )
 /* Splits the string in an array of matched expressions */
 HB_FUNC( HB_REGEXSPLIT )
 {
-   hb_regex( 3 );
+   if( ! hb_regex( 3 ) )
+      hb_reta( 0 );
 }
 
 /* Returns array of { Match, start, end }, { Sub-Matches, start, end } */
 HB_FUNC( HB_REGEXATX )
 {
-   hb_regex( 4 );
+   if( ! hb_regex( 4 ) )
+      hb_reta( 0 );
 }
 
 /* 2005-12-16 - Francesco Saverio Giudice
@@ -521,7 +534,8 @@ HB_FUNC( HB_REGEXATX )
 
 HB_FUNC( HB_REGEXALL )
 {
-   hb_regex( 5 );
+   if( ! hb_regex( 5 ) )
+      hb_reta( 0 );
 }
 
 #if defined( HB_HAS_PCRE )
