@@ -123,7 +123,7 @@ PROCEDURE Main()
 
    /* Creating shared version of Harbour binaries */
 
-   IF !( GetEnv( "HB_PLATFORM" ) $ "dos|linux" ) .AND. ;
+   IF GetEnv( "HB_PLATFORM" ) $ "win|wce|os2" .AND. ;
       !( GetEnv( "HB_BUILD_DLL" ) == "no" ) .AND. ;
       !( GetEnv( "HB_BUILD_SHARED" ) == "yes" ) .AND. ;
       ! Empty( GetEnv( "HB_HOST_BIN_DIR" ) )
