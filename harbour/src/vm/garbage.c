@@ -798,6 +798,8 @@ HB_FUNC( HB_GCALL )
 #ifdef HB_GC_AUTO
 HB_FUNC( HB_GCSETAUTO )
 {
+   HB_STACK_TLS_PRELOAD
+
    HB_PTRUINT nBlocks, nPrevBlocks;
    HB_BOOL fSet = HB_ISNUM( 1 );
 
