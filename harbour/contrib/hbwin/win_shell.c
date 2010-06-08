@@ -110,7 +110,9 @@ HB_FUNC( WIN_SHELLNOTIFYICON )
 
 #if ! defined( HB_OS_WIN_CE )
 
-#if defined( __MINGW32__ ) && ! defined( __MINGW64__ )
+#if defined( __MINGW32__ )
+#  include <_mingw.h>
+#  if ! defined( __MINGW64_VERSION_MAJOR )
 
 typedef struct _SHNAMEMAPPING
 {
@@ -120,7 +122,8 @@ typedef struct _SHNAMEMAPPING
    int    cchNewPath;
 } SHNAMEMAPPING, * LPSHNAMEMAPPING;
 
-#endif
+#endif   /* End MinGW-w64 detection */
+#endif   /* End MinGW detection */
 
 typedef struct
 {

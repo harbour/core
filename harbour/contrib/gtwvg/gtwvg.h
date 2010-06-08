@@ -58,7 +58,10 @@
 /*----------------------------------------------------------------------*/
 
 #ifndef _WIN32_IE
-   #ifndef __MINGW64__
+   #ifdef __MINGW32__
+      #include <_mingw.h>
+   #endif
+   #ifndef __MINGW64_VERSION_MAJOR
       #define _WIN32_IE 0x0400
    #endif
 #endif
