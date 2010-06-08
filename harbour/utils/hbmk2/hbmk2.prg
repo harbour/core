@@ -5828,7 +5828,7 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, lSystemHeader, tT
          s_hRegexInclude := hb_regexComp( '^[ \t]*#[ \t]*include[ \t]*(\".+?\"|<.+?>)', .F. /* lCaseSensitive */, .T. /* lNewLine */ )
          IF Empty( s_hRegexInclude )
             hbmk_OutErr( hbmk, I_( "Internal Error: Regular expression engine missing or unsupported. Please check your Harbour build settings." ) )
-            s_hRegexInclude := {} /* To show the error only once by setting to non-NIL empty value*/
+            s_hRegexInclude := {} /* To show the error only once by setting to non-NIL empty value */
          ENDIF
       ENDIF
 
@@ -5852,19 +5852,6 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, lSystemHeader, tT
    ENDIF
 
    RETURN headstate[ _HEADSTATE_lAnyNewer ]
-
-/* NOTE: Required for older versions of Harbour where hb_regexComp()
-         is throwing an RTE in case of an invalid regular expression. */
-STATIC FUNCTION hbmk_regexComp( ... )
-   LOCAL hRegex
-
-   BEGIN SEQUENCE WITH {| oError | Break( oError ) }
-      hRegex := hb_regexComp( ... )
-   RECOVER
-      hRegex := NIL
-   END SEQUENCE
-
-   RETURN hRegex
 
 STATIC FUNCTION clpfile_read( cFileName )
    LOCAL cFileBody := MemoRead( cFileName )
