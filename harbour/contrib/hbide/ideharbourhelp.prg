@@ -308,6 +308,8 @@ METHOD IdeHarbourHelp:clear()
    ::aCategory := {}
 
    ::oUI:q_treeDoc:clear()
+   ::oUI:q_treeCategory:clear()
+   ::oUI:q_listIndex:clear()
 
    RETURN Self
 

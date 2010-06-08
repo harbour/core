@@ -552,7 +552,10 @@ METHOD HbIde:create( aParams )
    HB_TRACE( HB_TR_ALWAYS, "======================================================" )
    HB_TRACE( HB_TR_ALWAYS, "Before    ::oDlg:destroy()", memory( 1001 )             )
    HB_TRACE( HB_TR_ALWAYS, "                                                      " )
+
 #if 1
+   ::oSetup:destroy()
+   ::oUpdn:destroy()
    ::oTM:destroy()
    ::oSK:destroy()
    ::oSC:destroy()

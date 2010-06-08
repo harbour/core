@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'setup.ui'
 **
-** Created: Sun Jun 6 22:38:08 2010
+** Created: Mon Jun 7 22:16:57 2010
 **      by: Qt User Interface Compiler version 4.6.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -14,12 +14,16 @@
 #include <QtGui/QAction>
 #include <QtGui/QApplication>
 #include <QtGui/QButtonGroup>
+#include <QtGui/QComboBox>
 #include <QtGui/QDialog>
+#include <QtGui/QGroupBox>
 #include <QtGui/QHeaderView>
 #include <QtGui/QLabel>
 #include <QtGui/QPushButton>
+#include <QtGui/QRadioButton>
 #include <QtGui/QStackedWidget>
 #include <QtGui/QTableWidget>
+#include <QtGui/QToolButton>
 #include <QtGui/QTreeWidget>
 #include <QtGui/QWidget>
 
@@ -31,16 +35,35 @@ public:
     QTreeWidget *treeWidget;
     QStackedWidget *stackedWidget;
     QWidget *page;
-    QLabel *label_2;
+    QGroupBox *groupBox;
     QWidget *page_2;
-    QLabel *label_3;
-    QWidget *page_3;
-    QLabel *label_4;
-    QWidget *page_4;
-    QLabel *label_5;
-    QWidget *page_5;
-    QTableWidget *tableWidget;
+    QGroupBox *groupBox_2;
+    QGroupBox *groupBox_6;
     QLabel *label;
+    QLabel *label_2;
+    QLabel *label_3;
+    QGroupBox *groupBox_7;
+    QRadioButton *radioButton;
+    QRadioButton *radioButton_2;
+    QGroupBox *groupBox_8;
+    QComboBox *comboBox;
+    QComboBox *comboBox_2;
+    QGroupBox *groupBox_9;
+    QRadioButton *radioButton_3;
+    QRadioButton *radioButton_4;
+    QWidget *page_3;
+    QGroupBox *groupBox_3;
+    QWidget *page_4;
+    QGroupBox *groupBox_4;
+    QWidget *page_5;
+    QGroupBox *groupBox_5;
+    QTableWidget *tableVar;
+    QToolButton *buttonAdd;
+    QToolButton *buttonDel;
+    QToolButton *buttonDown;
+    QToolButton *buttonUp;
+    QWidget *page_6;
+    QGroupBox *groupBox_10;
     QPushButton *buttonClose;
     QPushButton *buttonCancel;
     QPushButton *buttonOk;
@@ -55,53 +78,110 @@ public:
         __qtreewidgetitem->setText(0, QString::fromUtf8("1"));
         treeWidget->setHeaderItem(__qtreewidgetitem);
         treeWidget->setObjectName(QString::fromUtf8("treeWidget"));
-        treeWidget->setGeometry(QRect(6, 8, 119, 397));
+        treeWidget->setGeometry(QRect(6, 10, 99, 397));
         treeWidget->header()->setVisible(false);
         stackedWidget = new QStackedWidget(DialogSetup);
         stackedWidget->setObjectName(QString::fromUtf8("stackedWidget"));
-        stackedWidget->setGeometry(QRect(136, 10, 331, 357));
+        stackedWidget->setGeometry(QRect(116, 8, 351, 367));
         page = new QWidget();
         page->setObjectName(QString::fromUtf8("page"));
-        label_2 = new QLabel(page);
-        label_2->setObjectName(QString::fromUtf8("label_2"));
-        label_2->setGeometry(QRect(2, -2, 46, 14));
+        groupBox = new QGroupBox(page);
+        groupBox->setObjectName(QString::fromUtf8("groupBox"));
+        groupBox->setGeometry(QRect(0, 2, 351, 365));
         stackedWidget->addWidget(page);
         page_2 = new QWidget();
         page_2->setObjectName(QString::fromUtf8("page_2"));
-        label_3 = new QLabel(page_2);
+        groupBox_2 = new QGroupBox(page_2);
+        groupBox_2->setObjectName(QString::fromUtf8("groupBox_2"));
+        groupBox_2->setGeometry(QRect(0, 2, 351, 363));
+        groupBox_6 = new QGroupBox(groupBox_2);
+        groupBox_6->setObjectName(QString::fromUtf8("groupBox_6"));
+        groupBox_6->setGeometry(QRect(10, 6, 331, 147));
+        label = new QLabel(groupBox_6);
+        label->setObjectName(QString::fromUtf8("label"));
+        label->setGeometry(QRect(14, 28, 91, 16));
+        label_2 = new QLabel(groupBox_6);
+        label_2->setObjectName(QString::fromUtf8("label_2"));
+        label_2->setGeometry(QRect(14, 66, 91, 16));
+        label_3 = new QLabel(groupBox_6);
         label_3->setObjectName(QString::fromUtf8("label_3"));
-        label_3->setGeometry(QRect(2, -2, 46, 14));
+        label_3->setGeometry(QRect(16, 106, 89, 16));
+        groupBox_7 = new QGroupBox(groupBox_6);
+        groupBox_7->setObjectName(QString::fromUtf8("groupBox_7"));
+        groupBox_7->setGeometry(QRect(132, 20, 189, 33));
+        radioButton = new QRadioButton(groupBox_7);
+        radioButton->setObjectName(QString::fromUtf8("radioButton"));
+        radioButton->setGeometry(QRect(20, 6, 63, 19));
+        radioButton_2 = new QRadioButton(groupBox_7);
+        radioButton_2->setObjectName(QString::fromUtf8("radioButton_2"));
+        radioButton_2->setGeometry(QRect(124, 6, 59, 19));
+        groupBox_8 = new QGroupBox(groupBox_6);
+        groupBox_8->setObjectName(QString::fromUtf8("groupBox_8"));
+        groupBox_8->setGeometry(QRect(132, 60, 189, 33));
+        comboBox = new QComboBox(groupBox_8);
+        comboBox->setObjectName(QString::fromUtf8("comboBox"));
+        comboBox->setGeometry(QRect(18, 6, 74, 22));
+        comboBox_2 = new QComboBox(groupBox_8);
+        comboBox_2->setObjectName(QString::fromUtf8("comboBox_2"));
+        comboBox_2->setGeometry(QRect(106, 6, 74, 22));
+        groupBox_9 = new QGroupBox(groupBox_6);
+        groupBox_9->setObjectName(QString::fromUtf8("groupBox_9"));
+        groupBox_9->setGeometry(QRect(132, 100, 189, 33));
+        radioButton_3 = new QRadioButton(groupBox_9);
+        radioButton_3->setObjectName(QString::fromUtf8("radioButton_3"));
+        radioButton_3->setGeometry(QRect(20, 6, 63, 19));
+        radioButton_4 = new QRadioButton(groupBox_9);
+        radioButton_4->setObjectName(QString::fromUtf8("radioButton_4"));
+        radioButton_4->setGeometry(QRect(124, 6, 59, 19));
         stackedWidget->addWidget(page_2);
         page_3 = new QWidget();
         page_3->setObjectName(QString::fromUtf8("page_3"));
-        label_4 = new QLabel(page_3);
-        label_4->setObjectName(QString::fromUtf8("label_4"));
-        label_4->setGeometry(QRect(0, -2, 46, 14));
+        groupBox_3 = new QGroupBox(page_3);
+        groupBox_3->setObjectName(QString::fromUtf8("groupBox_3"));
+        groupBox_3->setGeometry(QRect(0, 2, 351, 365));
         stackedWidget->addWidget(page_3);
         page_4 = new QWidget();
         page_4->setObjectName(QString::fromUtf8("page_4"));
-        label_5 = new QLabel(page_4);
-        label_5->setObjectName(QString::fromUtf8("label_5"));
-        label_5->setGeometry(QRect(0, -2, 46, 14));
+        groupBox_4 = new QGroupBox(page_4);
+        groupBox_4->setObjectName(QString::fromUtf8("groupBox_4"));
+        groupBox_4->setGeometry(QRect(0, 2, 351, 365));
         stackedWidget->addWidget(page_4);
         page_5 = new QWidget();
         page_5->setObjectName(QString::fromUtf8("page_5"));
-        tableWidget = new QTableWidget(page_5);
-        tableWidget->setObjectName(QString::fromUtf8("tableWidget"));
-        tableWidget->setGeometry(QRect(2, 16, 327, 341));
-        label = new QLabel(page_5);
-        label->setObjectName(QString::fromUtf8("label"));
-        label->setGeometry(QRect(4, -4, 121, 16));
+        groupBox_5 = new QGroupBox(page_5);
+        groupBox_5->setObjectName(QString::fromUtf8("groupBox_5"));
+        groupBox_5->setGeometry(QRect(0, 2, 351, 365));
+        tableVar = new QTableWidget(groupBox_5);
+        tableVar->setObjectName(QString::fromUtf8("tableVar"));
+        tableVar->setGeometry(QRect(6, 32, 337, 327));
+        buttonAdd = new QToolButton(groupBox_5);
+        buttonAdd->setObjectName(QString::fromUtf8("buttonAdd"));
+        buttonAdd->setGeometry(QRect(8, 6, 25, 20));
+        buttonDel = new QToolButton(groupBox_5);
+        buttonDel->setObjectName(QString::fromUtf8("buttonDel"));
+        buttonDel->setGeometry(QRect(42, 6, 25, 20));
+        buttonDown = new QToolButton(groupBox_5);
+        buttonDown->setObjectName(QString::fromUtf8("buttonDown"));
+        buttonDown->setGeometry(QRect(78, 6, 25, 20));
+        buttonUp = new QToolButton(groupBox_5);
+        buttonUp->setObjectName(QString::fromUtf8("buttonUp"));
+        buttonUp->setGeometry(QRect(112, 6, 25, 20));
         stackedWidget->addWidget(page_5);
+        page_6 = new QWidget();
+        page_6->setObjectName(QString::fromUtf8("page_6"));
+        groupBox_10 = new QGroupBox(page_6);
+        groupBox_10->setObjectName(QString::fromUtf8("groupBox_10"));
+        groupBox_10->setGeometry(QRect(0, 2, 351, 365));
+        stackedWidget->addWidget(page_6);
         buttonClose = new QPushButton(DialogSetup);
         buttonClose->setObjectName(QString::fromUtf8("buttonClose"));
-        buttonClose->setGeometry(QRect(138, 384, 75, 24));
+        buttonClose->setGeometry(QRect(218, 384, 75, 24));
         buttonCancel = new QPushButton(DialogSetup);
         buttonCancel->setObjectName(QString::fromUtf8("buttonCancel"));
-        buttonCancel->setGeometry(QRect(268, 384, 75, 24));
+        buttonCancel->setGeometry(QRect(306, 384, 75, 24));
         buttonOk = new QPushButton(DialogSetup);
         buttonOk->setObjectName(QString::fromUtf8("buttonOk"));
-        buttonOk->setGeometry(QRect(392, 384, 75, 24));
+        buttonOk->setGeometry(QRect(394, 384, 75, 24));
 
         retranslateUi(DialogSetup);
 
@@ -114,11 +194,27 @@ public:
     void retranslateUi(QDialog *DialogSetup)
     {
         DialogSetup->setWindowTitle(QApplication::translate("DialogSetup", "Setup", 0, QApplication::UnicodeUTF8));
-        label_2->setText(QApplication::translate("DialogSetup", "Page 1", 0, QApplication::UnicodeUTF8));
-        label_3->setText(QApplication::translate("DialogSetup", "Page 2", 0, QApplication::UnicodeUTF8));
-        label_4->setText(QApplication::translate("DialogSetup", "Page 3", 0, QApplication::UnicodeUTF8));
-        label_5->setText(QApplication::translate("DialogSetup", "Page 4", 0, QApplication::UnicodeUTF8));
-        label->setText(QApplication::translate("DialogSetup", "Variables:", 0, QApplication::UnicodeUTF8));
+        groupBox->setTitle(QString());
+        groupBox_2->setTitle(QString());
+        groupBox_6->setTitle(QApplication::translate("DialogSetup", "Caret after paste operation", 0, QApplication::UnicodeUTF8));
+        label->setText(QApplication::translate("DialogSetup", "Stream Selection:", 0, QApplication::UnicodeUTF8));
+        label_2->setText(QApplication::translate("DialogSetup", "Column Selection:", 0, QApplication::UnicodeUTF8));
+        label_3->setText(QApplication::translate("DialogSetup", "Line Selection:", 0, QApplication::UnicodeUTF8));
+        groupBox_7->setTitle(QString());
+        radioButton->setText(QApplication::translate("DialogSetup", "Begining", 0, QApplication::UnicodeUTF8));
+        radioButton_2->setText(QApplication::translate("DialogSetup", "End", 0, QApplication::UnicodeUTF8));
+        groupBox_8->setTitle(QString());
+        groupBox_9->setTitle(QString());
+        radioButton_3->setText(QApplication::translate("DialogSetup", "Top", 0, QApplication::UnicodeUTF8));
+        radioButton_4->setText(QApplication::translate("DialogSetup", "Bottom", 0, QApplication::UnicodeUTF8));
+        groupBox_3->setTitle(QString());
+        groupBox_4->setTitle(QString());
+        groupBox_5->setTitle(QString());
+        buttonAdd->setText(QApplication::translate("DialogSetup", "...", 0, QApplication::UnicodeUTF8));
+        buttonDel->setText(QApplication::translate("DialogSetup", "...", 0, QApplication::UnicodeUTF8));
+        buttonDown->setText(QApplication::translate("DialogSetup", "...", 0, QApplication::UnicodeUTF8));
+        buttonUp->setText(QApplication::translate("DialogSetup", "...", 0, QApplication::UnicodeUTF8));
+        groupBox_10->setTitle(QString());
         buttonClose->setText(QApplication::translate("DialogSetup", "Close", 0, QApplication::UnicodeUTF8));
         buttonCancel->setText(QApplication::translate("DialogSetup", "Cancel", 0, QApplication::UnicodeUTF8));
         buttonOk->setText(QApplication::translate("DialogSetup", "Ok", 0, QApplication::UnicodeUTF8));

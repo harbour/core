@@ -565,11 +565,15 @@ FUNCTION hbide_saveShortcuts( oIde, a_, cFileShortcuts )
 
 CLASS IdeSetup INHERIT IdeObject
 
+   DATA   aItems                                  INIT {}
+   DATA   aTree                                   INIT { "General", "Selections", "Projects", "Files", "Variables", "Backups" }
+
    METHOD new( oIde )
    METHOD create( oIde )
    METHOD destroy()
    METHOD show()
    METHOD execEvent( cEvent, p )
+   METHOD buildTree()
 
    ENDCLASS
 
@@ -594,7 +598,21 @@ METHOD IdeSetup:create( oIde )
       ::oUI:setMaximumHeight( ::oUI:height() )
       ::oUI:setMinimumHeight( ::oUI:height() )
 
-      ::connect( ::oUI:q_buttonClose, "clicked()", {|| ::execEvent( "buttonClose_clicked" ) } )
+      ::oUI:q_treeWidget:setHeaderHidden( .t. )
+      ::oUI:q_treeWidget:setIconSize( QSize():new( 12,12 ) )
+      ::oUI:q_treeWidget:setIndentation( 12 )
+
+      ::oUI:q_buttonAdd :setIcon( hbide_image( "dc_plus"   ) )
+      ::oUI:q_buttonDel :setIcon( hbide_image( "dc_delete" ) )
+      ::oUI:q_buttonUp  :setIcon( hbide_image( "dc_up"     ) )
+      ::oUI:q_buttonDown:setIcon( hbide_image( "dc_down"   ) )
+
+      ::buildTree()
+
+      ::connect( ::oUI:q_buttonClose, "clicked()"             , {|| ::execEvent( "buttonClose_clicked" ) } )
+      ::connect( ::oUI:q_treeWidget , "itemSelectionChanged()", {|| ::execEvent( "treeWidget_itemSelectionChanged" ) } )
+
+      ::oUI:q_treeWidget:setCurrentItem( ::aItems[ 2 ] ) /* General */
 
       ::oUI:hide()
    ENDIF
@@ -604,7 +622,11 @@ METHOD IdeSetup:create( oIde )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeSetup:destroy()
+
    IF !empty( ::oUI )
+      ::disConnect( ::oUI:q_buttonClose, "clicked()" )
+      ::disConnect( ::oUI:q_treeWidget , "itemSelectionChanged()" )
+
       ::oUI:destroy()
    ENDIF
 
@@ -621,15 +643,52 @@ METHOD IdeSetup:show()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeSetup:execEvent( cEvent, p )
+   LOCAL qItem, nIndex
+
    HB_SYMBOL_UNUSED( p )
 
    SWITCH cEvent
+   CASE "treeWidget_itemSelectionChanged"
+      qItem  := QTreeWidgetItem():from( ::oUI:q_treeWidget:currentItem() )
+      IF ( nIndex := ascan( ::aTree, qItem:text() ) ) > 0
+         ::oUI:q_stackedWidget:setCurrentIndex( nIndex - 1 )
+      ENDIF
+      EXIT
+
    CASE "buttonClose_clicked"
       ::oUI:done( 1 )
       EXIT
+
    ENDSWITCH
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
+
+METHOD IdeSetup:buildTree()
+   LOCAL oRoot, oChild, s
+
+   oRoot := QTreeWidgetItem():new()
+   oRoot:setText( 0, "Parts" )
+// oRoot:setIcon( 0, hbide_image( "dc_home" ) )
+   oRoot:setToolTip( 0, "Parts" )
+
+   ::oUI:q_treeWidget:addTopLevelItem( oRoot )
+
+   aadd( ::aItems, oRoot )
+
+   FOR EACH s IN ::aTree
+      oChild := QTreeWidgetItem():new()
+      oChild:setText( 0, s )
+      oChild:setToolTip( 0, s )
+      oRoot:addChild( oChild )
+      aadd( ::aItems, oChild )
+   NEXT
+
+   oRoot:setExpanded( .t. )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+
 

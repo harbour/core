@@ -309,7 +309,7 @@ METHOD IdeActions:loadActions()
 
    aadd( aAct, { "GotoFunc"             , "Goto Function"                , "dc_function"    , ""     , "No", "Yes" } )
    aadd( aAct, { "Shortcuts"            , "Keyboard Mappings"            , "keyboardmappings",""     , "No", "Yes" } )
-   aadd( aAct, { "Setup"                , "hbIDE Setup"                  , ""               , ""     , "No", "Yes" } )
+   aadd( aAct, { "Setup"                , "hbIDE Setup"                  , "idepreferences" , ""     , "No", "Yes" } )
  * aadd( aAct, { "Tools"                , "Tools & Utilities"            , "tools"          , ""     , "No", "Yes" } )
 
    RETURN aAct
