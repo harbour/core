@@ -2802,6 +2802,16 @@ char * hb_socketResolveAddr( const char * szAddr, int af )
 #if defined( HB_HAS_INET_PTON )
       struct in6_addr sin;
       fTrans = inet_pton( AF_INET6, szAddr, &sin ) > 0;
+      if( fTrans )
+      {
+#  if defined( HB_HAS_INET_NTOP )
+         char buf[ INET6_ADDRSTRLEN ];
+         szAddr = inet_ntop( AF_INET6, &sin, buf, sizeof( buf ) );
+#else
+         int iTODO;
+#  endif
+         szResult = hb_strdup( szAddr );
+      }
 #else
       int iTODO;
       fTrans = HB_FALSE;
