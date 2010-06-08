@@ -373,9 +373,9 @@
 #endif
 
 /* Sub-option inside HB_OS_DARWIN */
-#ifndef HB_OS_IPHONE /* Experimental */
+#ifndef HB_OS_IOS /* Experimental */
    #if defined( HB_OS_DARWIN ) && defined( HB_CPU_ARM )
-      #define HB_OS_IPHONE
+      #define HB_OS_IOS
    #endif
 #endif
 
