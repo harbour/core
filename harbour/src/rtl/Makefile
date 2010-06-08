@@ -96,6 +96,7 @@ C_SOURCES := \
    hbsha2.c \
    hbsha2hm.c \
    hbsocket.c \
+   hbsockhb.c \
    hbstrfmt.c \
    hbstrsh.c \
    hbtoken.c \
