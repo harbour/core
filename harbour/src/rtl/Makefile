@@ -73,6 +73,7 @@ C_SOURCES := \
    hbbit.c \
    hbbyte.c \
    hbcom.c \
+   hbcomhb.c \
    hbcrc.c \
    hbdyn.c \
    hbdynhb.c \

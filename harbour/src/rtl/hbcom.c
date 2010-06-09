@@ -1677,8 +1677,8 @@ long hb_comSend( int iPort, const void * data, long len, HB_MAXINT timeout )
          }
          else
          {
-            timeouts.ReadIntervalTimeout = 0;
-            timeouts.ReadTotalTimeoutMultiplier = 0;
+            timeouts.ReadIntervalTimeout = MAXDWORD;
+            timeouts.ReadTotalTimeoutMultiplier = MAXDWORD;
             timeouts.ReadTotalTimeoutConstant = ( DWORD ) pCom->rdtimeout;
          }
          timeouts.WriteTotalTimeoutMultiplier = 0;
@@ -1735,8 +1735,8 @@ long hb_comRecv( int iPort, void * data, long len, HB_MAXINT timeout )
          }
          else
          {
-            timeouts.ReadIntervalTimeout = 0;
-            timeouts.ReadTotalTimeoutMultiplier = 0;
+            timeouts.ReadIntervalTimeout = MAXDWORD;
+            timeouts.ReadTotalTimeoutMultiplier = MAXDWORD;
             timeouts.ReadTotalTimeoutConstant = ( DWORD ) timeout;
          }
          timeouts.WriteTotalTimeoutMultiplier = 0;
