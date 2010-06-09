@@ -93,6 +93,8 @@
 
 #include "hbextern.ch"   // need this to use with HRB
 
+#include "hbsocket.ch"
+
 #ifdef GD_SUPPORT
    // adding GD support
    REQUEST GDIMAGE, GDIMAGECHAR, GDCHART
@@ -101,14 +103,6 @@
 #else
    #define APP_GD_SUPPORT ""
    #stdout "Lib GD support disabled"
-#endif
-
-#ifdef USE_HB_INET
-   #define APP_INET_SUPPORT "_INET"
-   #stdout "inet socket API"
-#else
-   #define APP_INET_SUPPORT ""
-   #stdout "custom socket API"
 #endif
 
 #ifdef FIXED_THREADS
@@ -121,7 +115,7 @@
 
 #define APP_NAME      "uhttpd"
 #define APP_VER_NUM   "0.4.4"
-#define APP_VERSION   APP_VER_NUM + APP_GD_SUPPORT + APP_INET_SUPPORT + APP_DT_SUPPORT
+#define APP_VERSION   APP_VER_NUM + APP_GD_SUPPORT + APP_DT_SUPPORT
 
 #define AF_INET         2
 
@@ -179,10 +173,6 @@ STATIC s_aRunningThreads := {}
 STATIC s_aServiceThreads := {}
 STATIC s_hHRBModules     := {=>}
 STATIC s_aDirectoryIndex
-
-#ifdef USE_HB_INET
-STATIC s_cLocalAddress, s_nLocalPort
-#endif
 
 STATIC s_hActions          := { ;
                                 /*"default-handler" => @Handler_Default()      ,*/;    // default handler
@@ -542,27 +532,12 @@ FUNCTION MAIN( ... )
    // SOCKET CREATION
    // --------------------------------------------------------------------------
 
-#ifdef USE_HB_INET
-   hListen := hb_InetServer( nPort )
-
-   IF hb_InetErrorCode( hListen ) != 0
-      ? "Bind Error"
-      WAIT
+   hListen := hb_socketOpen()
+   IF ! hb_socketBind( hListen, { AF_INET, "0.0.0.0", nPort } )
+      ? "bind() error", hb_socketGetError()
+   ELSEIF ! hb_socketListen( hListen )
+      ? "listen() error", hb_socketGetError()
    ELSE
-
-      s_nLocalPort    := hb_InetPort( hListen )
-      s_cLocalAddress := hb_InetAddress( hListen )
-
-      hb_InetTimeOut( hListen, 3000 )
-
-#else
-   hListen   := socket_create()
-   IF socket_bind( hListen, { AF_INET, "0.0.0.0", nPort } ) == -1
-      ? "bind() error", socket_error()
-   ELSEIF socket_listen( hListen ) == -1
-      ? "listen() error", socket_error()
-   ELSE
-#endif
       // --------------------------------------------------------------------------------- //
       // Starting Accept connection thread
       // --------------------------------------------------------------------------------- //
@@ -626,27 +601,16 @@ FUNCTION MAIN( ... )
          ENDIF
 
          // Wait a connection
-#ifdef USE_HB_INET
-         IF HB_InetDataReady( hListen, 100 ) > 0
-#else
-         IF socket_select( { hListen },,, 50 ) > 0
-#endif
+         IF hb_socketSelect( { hListen },,,,,, 50 ) > 0
+
             // reset remote values
             aRemote := NIL
 
             // Accept a remote connection
-#ifdef USE_HB_INET
-            hSocket := hb_InetAccept( hListen )
-#else
-            hSocket := socket_accept( hListen, @aRemote )
-#endif
+            hSocket := hb_socketAccept( hListen, @aRemote )
             IF hSocket == NIL
 
-#ifdef USE_HB_INET
-               WriteToConsole( hb_StrFormat( "accept() error" ) )
-#else
-               WriteToConsole( hb_StrFormat( "accept() error: %s", socket_error() ) )
-#endif
+               WriteToConsole( hb_StrFormat( "accept() error: %s", hb_socketGetError() ) )
 
             ELSE
 
@@ -681,11 +645,7 @@ FUNCTION MAIN( ... )
    WriteToConsole( "--- Quitting " + APP_NAME + " ---" )
 
    // Close socket
-#ifdef USE_HB_INET
-   hb_InetClose( hListen )
-#else
-   socket_close( hListen )
-#endif
+   hb_socketClose( hListen )
 
    // Close log files
    FCLOSE( s_hfileLogAccess )
@@ -802,12 +762,8 @@ STATIC FUNCTION AcceptConnections()
          // If I have no more of service threads to use ... (DOS attack ?)
          IF nServiceConnections > nMaxServiceThreads
              // DROP connection
-#ifdef USE_HB_INET
-            hb_InetClose( hSocket )
-#else
-            socket_shutdown( hSocket )
-            socket_close( hSocket )
-#endif
+            hb_socketShutdown( hSocket )
+            hb_socketClose( hSocket )
 
          // If I have no service threads in use ...
          ELSEIF nServiceConnections >= nServiceThreads
@@ -949,11 +905,7 @@ STATIC FUNCTION ProcessConnection()
 #endif
 
          IF nLen == -1
-#ifdef USE_HB_INET
-            ? "recv() error:", hb_InetErrorCode( hSocket ), hb_InetErrorDesc( hSocket )
-#else
-            ? "recv() error:", socket_error()
-#endif
+            ? "recv() error:", hb_socketGetError()
 
          ELSEIF nLen == 0 /* connection closed */
          ELSE
@@ -996,13 +948,8 @@ STATIC FUNCTION ProcessConnection()
       nParseTime := hb_milliseconds() - nMsecs
       WriteToConsole( "Page served in : " + Str( nParseTime/1000, 7, 4 ) + " seconds" )
 
-#ifdef USE_HB_INET
-      hb_InetClose( hSocket )
-      hSocket := NIL
-#else
-      socket_shutdown( hSocket )
-      socket_close( hSocket )
-#endif
+      hb_socketShutdown( hSocket )
+      hb_socketClose( hSocket )
 
       IF hb_mutexLock( s_hmtxBusy )
          s_nConnections--
@@ -1107,11 +1054,7 @@ STATIC FUNCTION ServiceConnection()
          nLen := readRequest( hSocket, @cRequest )
 
          IF nLen == -1
-#ifdef USE_HB_INET
-            ? "recv() error:", hb_InetErrorCode( hSocket ), hb_InetErrorDesc( hSocket )
-#else
-            ? "recv() error:", socket_error()
-#endif
+            ? "recv() error:", hb_socketGetError()
          ELSEIF nLen == 0 /* connection closed */
          ELSE
 
@@ -1149,13 +1092,8 @@ STATIC FUNCTION ServiceConnection()
       nParseTime := hb_milliseconds() - nMsecs
       WriteToConsole( "Page served in : " + Str( nParseTime/1000, 7, 4 ) + " seconds" )
 
-#ifdef USE_HB_INET
-      hb_InetClose( hSocket )
-      hSocket := NIL
-#else
-      socket_shutdown( hSocket )
-      socket_close( hSocket )
-#endif
+      hb_socketShutdown( hSocket )
+      hb_socketClose( hSocket )
 
       IF hb_mutexLock( s_hmtxBusy )
          s_nServiceConnections--
@@ -1690,25 +1628,6 @@ STATIC FUNCTION CGIKill( hProc, hmtxCGIKill )
 
    RETURN nErrorLevel
 
-INIT PROCEDURE SocketInit()
-#ifdef USE_HB_INET
-   hb_InetInit()
-#else
-   IF socket_init() != 0
-      ? "socket_init() error"
-   ENDIF
-#endif
-   RETURN
-
-
-EXIT PROCEDURE SocketExit()
-#ifdef USE_HB_INET
-   hb_InetCleanup()
-#else
-   socket_exit()
-#endif
-   RETURN
-
 
 /********************************************************************
   Public helper functions
@@ -1781,15 +1700,10 @@ STATIC FUNCTION readRequest( hSocket, /* @ */ cRequest )
    LOCAL cBuf, nLen, nPos
 
    /* receive query */
-#ifdef USE_HB_INET
-   cRequest := hb_InetRecvEndBlock( hSocket, CR_LF + CR_LF, @nLen )
-   IF nLen > 0
-      cRequest += CR_LF + CR_LF
-   ENDIF
-#else
    cRequest := ""
    DO WHILE .T.
-      nLen := socket_recv( hSocket, @cBuf )
+      cBuf := Space( 1 )
+      nLen := hb_socketRecv( hSocket, @cBuf )
       IF nLen <= 0
          EXIT
       ENDIF
@@ -1798,7 +1712,6 @@ STATIC FUNCTION readRequest( hSocket, /* @ */ cRequest )
          EXIT
       ENDIF
    ENDDO
-#endif
 
    /* receive CONTENT-LENGTH data */
    IF nLen > 0
@@ -1806,28 +1719,19 @@ STATIC FUNCTION readRequest( hSocket, /* @ */ cRequest )
       IF nPos > 0
          nPos := Val( Substr( cRequest, nPos + 17, 10 ) )
          IF nPos > 0
-#ifdef USE_HB_INET
-            cBuf := Space( nPos )
-            nLen := hb_InetRecvAll( hSocket, @cBuf, nPos )
-            IF nLen < 0
-               nLen := -1
-            ELSE
-               cRequest += Left( cBuf, nLen )
-            ENDIF
-#else
             /* we have to decrease number of bytes to read by already read
              * data after CR_LF + CR_LF
              */
             nPos -= Len( cRequest ) - At( CR_LF + CR_LF, cRequest ) - 3
             WHILE nPos > 0
-               nLen := socket_recv( hSocket, @cBuf, nPos )
+               cBuf := Space( 1 )
+               nLen := hb_socketRecv( hSocket, @cBuf, nPos )
                IF nLen <= 0
                   EXIT
                ENDIF
                cRequest += cBuf
                nPos -= nLen
             ENDDO
-#endif
          ENDIF
       ENDIF
    ENDIF
@@ -1842,55 +1746,32 @@ STATIC FUNCTION sendReply( hSocket, cSend )
    LOCAL nError := 0
    LOCAL nLen
 
-#ifdef USE_HB_INET
    DO WHILE LEN( cSend ) > 0
-      IF ( nLen := hb_InetSendAll( hSocket, cSend ) ) == -1
-         ? "send() error:", hb_InetErrorCode( hSocket ), HB_InetErrorDesc( hSocket )
-         WriteToConsole( hb_StrFormat( "ProcessConnection() - send() error: %s, cSend = %s, hSocket = %s", hb_InetErrorDesc( hSocket ), cSend, hSocket ) )
+      IF ( nLen := hb_socketSend( hSocket, cSend ) ) == -1
+         ? "send() error:", hb_socketGetError()
+         WriteToConsole( hb_StrFormat( "ServiceConnection() - send() error: %s, cSend = %s, hSocket = %s", hb_socketGetError(), cSend, hSocket ) )
          EXIT
       ELSEIF nLen > 0
          cSend := SUBSTR( cSend, nLen + 1 )
       ENDIF
    ENDDO
-#else
-   DO WHILE LEN( cSend ) > 0
-      IF ( nLen := socket_send( hSocket, cSend ) ) == -1
-         ? "send() error:", socket_error()
-         WriteToConsole( hb_StrFormat( "ServiceConnection() - send() error: %s, cSend = %s, hSocket = %s", socket_error(), cSend, hSocket ) )
-         EXIT
-      ELSEIF nLen > 0
-         cSend := SUBSTR( cSend, nLen + 1 )
-      ENDIF
-   ENDDO
-#endif
 
    RETURN nError
 
 STATIC PROCEDURE defineServer( hSocket )
-#ifndef USE_HB_INET
    LOCAL aI
-#endif
 
    // define _SERVER vars (address part)
-#ifdef USE_HB_INET
-   _SERVER[ "REMOTE_ADDR" ] := hb_InetAddress( hSocket )
-   _SERVER[ "REMOTE_HOST" ] := _SERVER[ "REMOTE_ADDR" ]  // no reverse DNS
-   _SERVER[ "REMOTE_PORT" ] := hb_InetPort( hSocket )
-
-   _SERVER[ "SERVER_ADDR" ] := s_cLocalAddress
-   _SERVER[ "SERVER_PORT" ] := LTrim( Str( s_nLocalPort ) )
-#else
-   IF socket_getpeername( hSocket, @aI ) != -1
-      _SERVER[ "REMOTE_ADDR" ] := aI[2]
+   IF ! Empty( aI := hb_socketGetPeerName( hSocket ) )
+      _SERVER[ "REMOTE_ADDR" ] := aI[ HB_SOCKET_ADINFO_ADDRESS ]
       _SERVER[ "REMOTE_HOST" ] := _SERVER[ "REMOTE_ADDR" ]  // no reverse DNS
-      _SERVER[ "REMOTE_PORT" ] := aI[3]
+      _SERVER[ "REMOTE_PORT" ] := aI[ HB_SOCKET_ADINFO_PORT ]
    ENDIF
 
-   IF socket_getsockname( hSocket, @aI ) != -1
-      _SERVER[ "SERVER_ADDR" ] := aI[2]
-      _SERVER[ "SERVER_PORT" ] := LTrim( Str( aI[3] ) )
+   IF ! Empty( aI := hb_socketGetSockName( hSocket ) )
+      _SERVER[ "SERVER_ADDR" ] := aI[ HB_SOCKET_ADINFO_ADDRESS ]
+      _SERVER[ "SERVER_PORT" ] := LTrim( Str( aI[ HB_SOCKET_ADINFO_PORT ] ) )
    ENDIF
-#endif
 
    // add other _SERVER vars
    _SERVER[ "REQUEST_METHOD"       ] := NIL

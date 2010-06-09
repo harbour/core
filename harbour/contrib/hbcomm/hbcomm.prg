@@ -127,6 +127,7 @@ FUNCTION ISWORKING( nPort )
          [vszakats] */
 /* Fetch <nCount> chars into <cString> */
 FUNCTION INCHR( nPort, nCount, /* @ */ cString )
+   cString := iif( ISNUMBER( nCount ), Space( nCount ), "" )
    RETURN hb_comRecv( nPort, @cString, nCount )
 
 /* Send out characters. Returns .t. if successful. */

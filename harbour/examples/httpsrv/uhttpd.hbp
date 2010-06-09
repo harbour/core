@@ -2,6 +2,6 @@
 # $Id$
 #
 
--mt -gui uhttpd.prg cgifunc.prg cookie.prg session.prg socket.c
+-mt -gui uhttpd.prg cgifunc.prg cookie.prg session.prg
 
 -l{win}hbwin
