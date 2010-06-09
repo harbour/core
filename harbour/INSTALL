@@ -1394,7 +1394,7 @@ HARBOUR
          http://get.qt.nokia.com/qt/source/
          Currently supported Windows binary package:
             http://get.qt.nokia.com/qt/source/qt-win-opensource-4.5.3-mingw.exe
-            http://get.qt.nokia.com/qt/source/qt-win-opensource-4.6.2-mingw.exe
+            http://get.qt.nokia.com/qt/source/qt-win-opensource-4.6.3-mingw.exe
          How to create static and MSVC builds:
             http://doc.trolltech.com/4.5/deployment-windows.html
          NOTES:

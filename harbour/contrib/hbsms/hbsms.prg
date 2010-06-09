@@ -61,27 +61,12 @@
 #include "common.ch"
 
 STATIC FUNCTION port_send( h, s )
-   RETURN com_send( h, s )
+   RETURN hb_comSend( h, s )
 
-/* NOTE: EXPERIMENTAL CODE. USE AT YOUR OWN RISK. NO GUARANTEES. */
 STATIC FUNCTION port_rece( h, n, t )
-   LOCAL cString
-   LOCAL nEnd
+   LOCAL cString := ""
 
-   IF ! ISNUMBER( n )
-      n := 64
-   ENDIF
-
-   IF ! ISNUMBER( t )
-      t := 5
-   ENDIF
-
-   cString := ""
-   nEnd := hb_milliSeconds() + ( t * 1000 )
-   DO WHILE Len( cString ) < t .AND. hb_milliSeconds() < nEnd
-      cString += com_read( h, n - Len( cString ) )
-      hb_idleSleep( 0.01 )
-   ENDDO
+   hb_comRecv( h, @cString, n, t )
 
    RETURN cString
 
@@ -128,17 +113,18 @@ FUNCTION smsctx_New( xPort )
       smsctx[ _SMSCTX_cPrevName ] := NIL
    ELSEIF ISCHARACTER( xPort )
       smsctx[ _SMSCTX_xHnd ] := 1
-      smsctx[ _SMSCTX_cPrevName ] := com_DevName( smsctx[ _SMSCTX_xHnd ], xPort )
+      smsctx[ _SMSCTX_cPrevName ] := hb_comGetDevice( smsctx[ _SMSCTX_xHnd ] )
+      hb_comSetDevice( smsctx[ _SMSCTX_xHnd ], xPort )
    ELSE
       smsctx[ _SMSCTX_xHnd ] := NIL
    ENDIF
 
    IF smsctx[ _SMSCTX_xHnd ] != NIL
-      IF com_Open( smsctx[ _SMSCTX_xHnd ] )
-         IF com_Init( smsctx[ _SMSCTX_xHnd ], 9600, "N", 8, 1 )
+      IF hb_comOpen( smsctx[ _SMSCTX_xHnd ] )
+         IF hb_comInit( smsctx[ _SMSCTX_xHnd ], 9600, "N", 8, 1 )
             RETURN smsctx
          ELSE
-            com_Close( smsctx[ _SMSCTX_xHnd ] )
+            hb_comClose( smsctx[ _SMSCTX_xHnd ] )
          ENDIF
       ENDIF
    ENDIF
@@ -151,13 +137,13 @@ FUNCTION smsctx_Close( smsctx )
       RETURN .F.
    ENDIF
 
-   IF ! com_Close( smsctx[ _SMSCTX_xHnd ] )
+   IF ! hb_comClose( smsctx[ _SMSCTX_xHnd ] )
       RETURN .F.
    ENDIF
 
    /* Restore com port name */
    IF smsctx[ _SMSCTX_cPrevName ] != NIL
-      com_DevName( smsctx[ _SMSCTX_xHnd ], smsctx[ _SMSCTX_cPrevName ] )
+      hb_comSetDevice( smsctx[ _SMSCTX_xHnd ], smsctx[ _SMSCTX_cPrevName ] )
    ENDIF
 
    RETURN .T.

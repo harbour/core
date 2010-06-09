@@ -66,7 +66,7 @@ Tool/lib versions used to create this package:
    OCILIB 3.6.0
    OpenSSL 1.0.0
    PostgreSQL 8.4.2-1
-   QT 4.6.2
+   QT 4.6.3
    WATTCP 2.2.10
 
 Changes since previous (2.0.0) release:

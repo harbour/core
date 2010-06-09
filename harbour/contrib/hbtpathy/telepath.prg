@@ -61,6 +61,8 @@
 #include "common.ch"
 #include "telepath.ch"
 
+#include "hbcom.ch"
+
 
 #define TPFP_NAME          1               /* Structure of ports array */
 #define TPFP_HANDLE        2
@@ -92,7 +94,7 @@ FUNCTION tp_baud( nPort, nNewBaud )
    ENDIF
 
    IF nNewBaud > 0
-      IF com_Init( t_aPorts[ nPort, TPFP_HANDLE ], nNewBaud, t_aPorts[ nPort, TPFP_PARITY ], t_aPorts[ nPort, TPFP_DBITS ], t_aPorts[ nPort, TPFP_SBITS ] )
+      IF hb_comInit( t_aPorts[ nPort, TPFP_HANDLE ], nNewBaud, t_aPorts[ nPort, TPFP_PARITY ], t_aPorts[ nPort, TPFP_DBITS ], t_aPorts[ nPort, TPFP_SBITS ] )
          t_aPorts[ nPort, TPFP_BAUD ] := nNewBaud
       ELSE
          // set error code
@@ -144,7 +146,7 @@ FUNCTION tp_close( nPort, nTimeout )
 
    IF t_aPorts[ nPort, TPFP_HANDLE ] >= 0
 
-      com_Close( t_aPorts[ nPort, TPFP_HANDLE ] )
+      hb_comClose( t_aPorts[ nPort, TPFP_HANDLE ] )
 
       /* Port parameters should stay the same for the case the port
          gets reopened
@@ -197,7 +199,7 @@ FUNCTION tp_open( nPort, nInSize, nOutSize, nBaud, nData, cParity, nStop, cPortn
       nStop := 1
    ENDIF
    IF ISCHARACTER( cPortname )
-      com_DevName( nPort, cPortname )
+      hb_comSetDevice( nPort, cPortname )
    ENDIF
 
    t_aPorts[ nPort, TPFP_NAME       ] := cPortname
@@ -210,11 +212,11 @@ FUNCTION tp_open( nPort, nInSize, nOutSize, nBaud, nData, cParity, nStop, cPortn
    t_aPorts[ nPort, TPFP_INBUF_SIZE ] := nInSize
    t_aPorts[ nPort, TPFP_HANDLE     ] := -1
 
-   IF com_Open( nPort )
+   IF hb_comOpen( nPort )
 
       t_aPorts[ nPort, TPFP_HANDLE ] := nPort
 
-      IF com_Init( t_aPorts[ nPort, TPFP_HANDLE ], t_aPorts[ nPort, TPFP_BAUD ], t_aPorts[ nPort, TPFP_PARITY ], t_aPorts[ nPort, TPFP_DBITS ], t_aPorts[ nPort, TPFP_SBITS ] )
+      IF hb_comInit( t_aPorts[ nPort, TPFP_HANDLE ], t_aPorts[ nPort, TPFP_BAUD ], t_aPorts[ nPort, TPFP_PARITY ], t_aPorts[ nPort, TPFP_DBITS ], t_aPorts[ nPort, TPFP_SBITS ] )
          t_aPorts[ nPort, TPFP_OC ] := .T.
          RETURN 0
       ELSE
@@ -273,49 +275,20 @@ FUNCTION tp_recv( nPort, nLength, nTimeout )
 
 FUNCTION tp_send( nPort, cString, nTimeout )
 
-   LOCAL nWritten, nTotWritten, nDone
-
    IF ! ISCHARACTER( cString )
       cString := ""
    ENDIF
    IF ! ISNUMBER( nTimeout )
       nTimeout := 0
    ENDIF
-
    IF ! isopenport( nPort )
       RETURN 0
    ENDIF
-
    IF Len( cString ) == 0
       RETURN 0
    ENDIF
 
-   nDone := Seconds() + iif( nTimeout >= 0, nTimeout, 0)
-   nTotWritten := 0
-
-   DO WHILE nTotWritten < Len( cString ) .AND. ;
-         ( nTimeout < 0 .OR. Seconds() <= nDone )
-
-      nWritten := com_send( t_aPorts[ nPort, TPFP_HANDLE ], SubStr( cString, nTotWritten + 1 ) )
-
-      IF nWritten >= 0
-
-         nTotWritten += nWritten
-
-         IF nTotWritten < Len( cString )
-
-            IF ! tp_idle()
-               hb_idleSleep( 1 )
-            ELSE
-               EXIT
-            ENDIF
-         ENDIF
-      ELSE     // nWritten < 0, error occurred
-         EXIT
-      ENDIF
-   ENDDO
-
-   RETURN nTotWritten
+   RETURN hb_comSend( t_aPorts[ nPort, TPFP_HANDLE ], cString )
 
 
 FUNCTION tp_sendsub( nPort, cString, nStart, nLength, nTimeout )
@@ -554,17 +527,25 @@ FUNCTION tp_waitfor( ... )
 /* We cannot set, well, _I_ think we cannot, CTS without setting RTS flowcontrol, so this
    function and tp_ctrlrts() do the same thing, that is set/reset CRTSCTS flowcontol */
 FUNCTION tp_ctrlcts( nPort, nNewCtrl )
-
    LOCAL nCurValue
+   LOCAL nFlag
 
    IF ! isopenport( nPort )
       RETURN 0
    ENDIF
 
-   IF Valtype( nNewCtrl ) == "U"
-      nCurValue := __tp_ctrlcts( t_aPorts[ nPort, TPFP_HANDLE ] )
-   ELSE
-      nCurValue := __tp_ctrlcts( t_aPorts[ nPort, TPFP_HANDLE ], nNewCtrl )
+   IF hb_comFlowControl( t_aPorts[ nPort, TPFP_HANDLE ], @nCurValue )
+      nFlag := hb_bitOr( HB_COM_FLOW_IRTSCTS, HB_COM_FLOW_ORTSCTS )
+      IF ISNUMBER( nNewCtrl )
+         IF nNewCtrl == 0
+            nNewCtrl := hb_bitAnd( nCurValue, hb_bitNot( nFlag ) )
+         ELSE
+            nNewCtrl := hb_bitOr( nCurValue, nFlag )
+         ENDIF
+
+         hb_comFlowControl( t_aPorts[ nPort, TPFP_HANDLE ], NIL, nNewCtrl )
+      ENDIF
+      nCurValue := iif( hb_bitAnd( nCurValue, nFlag ) != 0, 1, 0 )
    ENDIF
 
    RETURN nCurValue
@@ -575,57 +556,77 @@ FUNCTION tp_ctrlrts( nPort, nNewCtrl )
    RETURN tp_ctrlcts( nPort, nNewCtrl )
 
 
-
-/*
-
 // telepathy says...
 // returns old dtr value 0,1,2
 // sets to 0 = dtr off, 1 dtr on, 2 = dtr flow control autotoggle
 // I don't support 2.  who uses dtr for flow control anyway...
-FUNCTION tp_ctrldtr( nPort, nParamNewval )
-    LOCAL nph, nnewval, noldval
+FUNCTION tp_ctrldtr( nPort, nNewCtrl )
+   LOCAL nCurValue
+   LOCAL nFlag
 
    IF ! isopenport( nPort )
-      RETURN TE_PARAM
+      RETURN 0
    ENDIF
-   nph := t_aPorts[ nPort, TPFP_HANDLE ]
 
-   __tp_ctrldtr( nph, @nnewval, @noldval )
+   IF hb_comFlowControl( t_aPorts[ nPort, TPFP_HANDLE ], @nCurValue )
+      nFlag := hb_bitOr( HB_COM_FLOW_IDTRDSR, HB_COM_FLOW_ODTRDSR )
+      IF ISNUMBER( nNewCtrl )
+         IF nNewCtrl == 0
+            nNewCtrl := hb_bitAnd( nCurValue, hb_bitNot( nFlag ) )
+         ELSE
+            nNewCtrl := hb_bitOr( nCurValue, nFlag )
+         ENDIF
 
-   RETURN noldval
-*/
+         hb_comFlowControl( t_aPorts[ nPort, TPFP_HANDLE ], NIL, nNewCtrl )
+      ENDIF
+      nCurValue := iif( hb_bitAnd( nCurValue, nFlag ) != 0, 1, 0 )
+   ENDIF
+
+   RETURN nCurValue
 
 FUNCTION tp_isdcd( nPort )
+   LOCAL nValue
 
    IF ! isopenport( nPort )
       RETURN .F.
    ENDIF
 
-   RETURN com_DCD( t_aPorts[ nPort, TPFP_HANDLE ] )
+   hb_comMSR( nPort, @nValue )
+
+   RETURN hb_bitAnd( nValue, HB_COM_MSR_DCD ) != 0
 
 FUNCTION tp_isri( nPort )
+   LOCAL nValue
 
    IF ! isopenport( nPort )
       RETURN .F.
    ENDIF
 
-   RETURN com_Ring( t_aPorts[ nPort, TPFP_HANDLE ] )
+   hb_comMSR( nPort, @nValue )
+
+   RETURN hb_bitAnd( nValue, HB_COM_MSR_RI ) != 0
 
 FUNCTION tp_isdsr( nPort )
+   LOCAL nValue
 
    IF ! isopenport( nPort )
       RETURN .F.
    ENDIF
 
-   RETURN com_DSR( t_aPorts[ nPort, TPFP_HANDLE ] )
+   hb_comMSR( nPort, @nValue )
+
+   RETURN hb_bitAnd( nValue, HB_COM_MSR_DSR ) != 0
 
 FUNCTION tp_iscts( nPort )
+   LOCAL nValue
 
    IF ! isopenport( nPort )
       RETURN .F.
    ENDIF
 
-   RETURN com_CTS( t_aPorts[ nPort, TPFP_HANDLE ] )
+   hb_comMSR( nPort, @nValue )
+
+   RETURN hb_bitAnd( nValue, HB_COM_MSR_CTS ) != 0
 
 FUNCTION tp_flush( nPort, nTimeout )
 
@@ -694,11 +695,10 @@ STATIC FUNCTION FetchChars( nPort )
       RETURN 0
    ENDIF
 
-   cStr := com_read( t_aPorts[ nPort, TPFP_HANDLE ] )
+   cStr := ""
+   hb_comRecv( t_aPorts[ nPort, TPFP_HANDLE ], @cStr )
 
-   IF Len( cStr ) > 0
-      t_aPorts[ nPort, TPFP_INBUF ] += cStr
-   ENDIF
+   t_aPorts[ nPort, TPFP_INBUF ] += cStr
 
    RETURN Len( cStr )
 
@@ -773,12 +773,6 @@ STATIC FUNCTION __TP_INFREE()
 
 STATIC FUNCTION __TP_OUTFREE()
    RETURN -1
-
-STATIC FUNCTION __TP_CTRLCTS( nPort, nValue )
-   RETURN com_Hard( nPort, iif( ISNUMBER( nValue ), nValue != 0, NIL ), .F. )
-
-STATIC FUNCTION __TP_CTRLDTR( nPort, nValue )
-   RETURN com_Hard( nPort, iif( ISNUMBER( nValue ), nValue != 0, NIL ), .T. )
 
 FUNCTION BIN_AND( ... )
    RETURN HB_BITAND( ... )

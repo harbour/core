@@ -86,7 +86,7 @@ PROCEDURE Main()
          IF hb_FileExists( "contrib" + _PS_ + tmp + _PS_ + tmp + ".hbi" )
             mk_hb_processRun( GetEnv( "HB_HOST_BIN_DIR" ) + _PS_ + "hbmk2" +;
                               " -quiet -lang=en" +;
-                              " @contrib/" + tmp + "/" + tmp + ".hbi" +;
+                              " contrib/" + tmp + "/" + tmp + ".hbi" +;
                               " -o${HB_LIB_INSTALL}/" )
          ENDIF
       NEXT

@@ -55,7 +55,7 @@
  * HB_COMDISCARDCHAR( nPort, nChar | cChar ) --> lSuccess
  * HB_COMERRORCHAR( nPort, nChar | cChar ) --> lSuccess
  * HB_COMFLOWCHARS( nPort, nXONchar | cXONchar, nXOFFchar | cXOFFchar ) --> lSuccess
- * HB_COMFLOWCONTROL( nPort, @iValue, nFlow ) --> lSuccess
+ * HB_COMFLOWCONTROL( nPort, @nOldFlow, nFlow ) --> lSuccess
  * HB_COMFLOWSET( nPort, nFlow ) --> lSuccess
  * HB_COMFLUSH( nPort, [ nType = HB_COM_IOFLUSH ] ) --> lSuccess
  * HB_COMGETDEVICE( nPort )  --> cDeviceName
@@ -100,7 +100,7 @@ HB_FUNC( HB_COMERRORCHAR )
 
 HB_FUNC( HB_COMFLOWCHARS )
 {
-   hb_retl( hb_comFlowChars( hb_parni( 1 ), HB_ISCHAR( 2 ) ? hb_parc( 2 ) [ 0 ] : hb_parni( 2 ), 
+   hb_retl( hb_comFlowChars( hb_parni( 1 ), HB_ISCHAR( 2 ) ? hb_parc( 2 ) [ 0 ] : hb_parni( 2 ),
                              HB_ISCHAR( 3 ) ? hb_parc( 3 ) [ 0 ] : hb_parni( 3 ) ) == 0 );
 }
 
@@ -125,7 +125,7 @@ HB_FUNC( HB_COMGETDEVICE )
 {
    char buffer[ HB_COM_DEV_NAME_MAX ];
    const char * name = hb_comGetDevice( hb_parni( 1 ), buffer, sizeof( buffer ) );
-   hb_retc( name );   
+   hb_retc( name );
 }
 
 HB_FUNC( HB_COMGETERROR )
@@ -140,7 +140,7 @@ HB_FUNC( HB_COMGETOSERROR )
 
 HB_FUNC( HB_COMINIT )
 {
-   hb_retl( hb_comInit( hb_parni( 1 ), hb_parni( 2 ), HB_ISCHAR( 3 ) ? hb_parc( 3 ) [ 0 ] : 0, 
+   hb_retl( hb_comInit( hb_parni( 1 ), hb_parni( 2 ), HB_ISCHAR( 3 ) ? hb_parc( 3 ) [ 0 ] : 0,
                         hb_parni( 4 ), hb_parni( 5 ) ) == 0 );
 }
 
@@ -170,7 +170,7 @@ HB_FUNC( HB_COMMCR )
 {
    int iValue = 0;
    hb_retl( hb_comMCR( hb_parni( 1 ), &iValue, hb_parni( 3 ), hb_parni( 4 ) ) == 0 );
-   hb_storni( 2, iValue );                                                    
+   hb_storni( 2, iValue );
 }
 
 HB_FUNC( HB_COMMSR )

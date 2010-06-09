@@ -52,6 +52,8 @@
 
 #include "common.ch"
 
+#include "hbcom.ch"
+
 STATIC s_hPort := { => }
 STATIC s_hbcomm_mutex := hb_mutexCreate()
 
@@ -68,10 +70,11 @@ FUNCTION INIT_PORT( cPort, nBaud, nData, nParity, nStop, nBufferSize )
    nPort := Len( s_hPort ) + 1
 
    IF ISCHARACTER( cPort )
-      cOldPortName := com_DevName( nPort, cPort )
+      cOldPortName := hb_comGetDevice( nPort )
+      hb_comSetDevice( nPort, cPort )
    ENDIF
 
-   IF com_Open( nPort )
+   IF hb_comOpen( nPort )
 
       IF ! ISNUMBER( nBaud )
          nBaud := 9600
@@ -93,17 +96,17 @@ FUNCTION INIT_PORT( cPort, nBaud, nData, nParity, nStop, nBufferSize )
 
       HB_SYMBOL_UNUSED( nBufferSize )
 
-      IF com_Init( nPort, nBaud, cParity, nData, nStop )
+      IF hb_comInit( nPort, nBaud, cParity, nData, nStop )
          s_hPort[ nPort ] := cOldPortName
          hb_mutexUnLock( s_hbcomm_mutex )
          RETURN nPort
       ELSE
-         com_Close( nPort )
+         hb_comClose( nPort )
       ENDIF
    ENDIF
 
    IF cOldPortName != NIL
-      com_DevName( nPort, cOldPortName )
+      hb_comSetDevice( nPort, cOldPortName )
    ENDIF
 
    hb_mutexUnLock( s_hbcomm_mutex )
@@ -112,7 +115,7 @@ FUNCTION INIT_PORT( cPort, nBaud, nData, nParity, nStop, nBufferSize )
 
 /* Purge output buffer */
 FUNCTION OUTBUFCLR( nPort )
-   RETURN com_sflush( nPort )
+   RETURN hb_comFlush( nPort, HB_COM_OFLUSH )
 
 /* See if port is opened correctly */
 FUNCTION ISWORKING( nPort )
@@ -124,20 +127,19 @@ FUNCTION ISWORKING( nPort )
          [vszakats] */
 /* Fetch <nCount> chars into <cString> */
 FUNCTION INCHR( nPort, nCount, /* @ */ cString )
-   cString := com_read( nPort, nCount )
-   RETURN Len( cString )
+   RETURN hb_comRecv( nPort, @cString, nCount )
 
 /* Send out characters. Returns .t. if successful. */
 FUNCTION OUTCHR( nPort, cString )
-   RETURN com_send( nPort, cString ) == 0
+   RETURN hb_comSend( nPort, cString ) == Len( cString )
 
 /* Find out how many chars are in input buffer */
 FUNCTION INBUFSIZE( nPort )
-   RETURN com_count( nPort )
+   RETURN hb_comInputCount( nPort )
 
 /* Find out how many characters are in out buf? */
 FUNCTION OUTBUFSIZE( nPort )
-   RETURN com_scount( nPort )
+   RETURN hb_comOutputCount( nPort )
 
 /* Close port and clear handle */
 FUNCTION UNINT_PORT( nPort )
@@ -146,10 +148,10 @@ FUNCTION UNINT_PORT( nPort )
    hb_mutexLock( s_hbcomm_mutex )
 
    IF nPort $ s_hPort
-      IF com_Close( nPort )
+      IF hb_comClose( nPort )
          /* Restore com port name */
          IF s_hPort[ nPort ] != NIL
-            com_DevName( nPort, s_hPort[ nPort ] )
+            hb_comSetDevice( nPort, s_hPort[ nPort ] )
          ENDIF
          hb_HDel( s_hPort, nPort )
          lRetVal := .T.

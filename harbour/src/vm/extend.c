@@ -649,7 +649,7 @@ HB_MAXINT hb_parnintdef( int iParam, HB_MAXINT lDefValue )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_parnint(%d)", iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_parnintdef(%d, %" PFHL "d)", iParam, lDefValue));
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
