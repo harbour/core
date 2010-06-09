@@ -6580,6 +6580,7 @@ STATIC FUNCTION PlugIn_Execute( hbmk, cState )
          "cCCEXT"       => hbmk[ _HBMK_cCCEXT ]       ,;
          "nCmd_Esc"     => hbmk[ _HBMK_nCmd_Esc ]     ,;
          "nScr_Esc"     => hbmk[ _HBMK_nScr_Esc ]     ,;
+         "nFNNotation"  => hbmk[ _HBMK_nFNNotation ]  ,;
          "cWorkDir"     => hbmk[ _HBMK_cWorkDir ]     ,;
          "nErrorLevel"  => hbmk[ _HBMK_nErrorLevel ]  ,;
          s_cSecToken    => hbmk                       }
