@@ -3,7 +3,10 @@
 #
 
 -ouhttpd2
-*.prg
-*.c
+
+app.prg
+uhbext.prg
+umain.prg
+uwidgets.prg
+
 -mt
--gui

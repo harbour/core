@@ -7,6 +7,8 @@
 #include "fileio.ch"
 #include "error.ch"
 
+#include "hbsocket.ch"
+
 #pragma -kM+
 
 /*
@@ -18,7 +20,6 @@
 */
 
 
-#define AF_INET                  2
 #define THREAD_COUNT_PREALLOC    0
 #define THREAD_COUNT_MAX        50
 #define SESSION_TIMEOUT        600
@@ -28,18 +29,6 @@
 THREAD STATIC s_cResult, s_nStatusCode, s_aHeader, s_lSessionDestroy
 
 MEMVAR server, get, post, cookie, session
-
-
-INIT PROC SocketInit()
-  IF socket_init() != 0
-    ? "socket_init() error"
-  ENDIF
-RETURN
-
-
-EXIT PROC Socketxit()
-  socket_exit()
-RETURN
 
 
 CLASS UHttpd
@@ -111,24 +100,24 @@ LOCAL nWaiters
   Self:hmtxLog     := hb_mutexCreate()
   Self:hmtxSession := hb_mutexCreate()
 
-  IF (Self:hListen := socket_create()) == NIL
-    Self:cError :=  "Socket create error " + LTRIM(STR(socket_error()))
+  IF Empty(Self:hListen := hb_socketOpen())
+    Self:cError :=  "Socket create error " + LTRIM(STR(hb_socketGetError()))
     FCLOSE(Self:hErrorLog)
     FCLOSE(Self:hAccessLog)
     RETURN .F.
   ENDIF
 
-  IF socket_bind(Self:hListen, {AF_INET, Self:cBindAddress, Self:nPort}) == -1
-    Self:cError :=  "Bind error " + LTRIM(STR(socket_error()))
-    socket_close(Self:hListen)
+  IF !hb_socketBind(Self:hListen, {HB_SOCKET_AF_INET, Self:cBindAddress, Self:nPort})
+    Self:cError :=  "Bind error " + LTRIM(STR(hb_socketGetError()))
+    hb_socketClose(Self:hListen)
     FCLOSE(Self:hErrorLog)
     FCLOSE(Self:hAccessLog)
     RETURN .F.
   ENDIF
 
-  IF socket_listen(Self:hListen) == -1
-    Self:cError :=  "Listen error " + LTRIM(STR(socket_error()))
-    socket_close(Self:hListen)
+  IF !hb_socketListen(Self:hListen)
+    Self:cError :=  "Listen error " + LTRIM(STR(hb_socketGetError()))
+    hb_socketClose(Self:hListen)
     FCLOSE(Self:hErrorLog)
     FCLOSE(Self:hAccessLog)
     RETURN .F.
@@ -143,10 +132,10 @@ LOCAL nWaiters
   Self:aSession := {=>}
 
   DO WHILE .T.
-    IF (nI := socket_select({Self:hListen},,, 1000)) > 0
-      hSocket := socket_accept(Self:hListen)
+    IF (nI := hb_socketSelect({Self:hListen},,,,,, 1000)) > 0
+      hSocket := hb_socketAccept(Self:hListen)
       IF hSocket == NIL
-        Self:LogError("[error] Accept error " + LTRIM(STR(socket_error())))
+        Self:LogError("[error] Accept error " + LTRIM(STR(hb_socketGetError())))
       ELSE
         hb_mutexQueueInfo( Self:hmtxQueue, @nWaiters )
         ? "New connection", hSocket
@@ -169,7 +158,7 @@ LOCAL nWaiters
       ENDIF
     ENDIF
   ENDDO
-  socket_close(Self:hListen)
+  hb_socketClose(Self:hListen)
 
   // End child threads
   hb_mutexLock(Self:hmtxSession)
@@ -229,8 +218,9 @@ LOCAL hSocket, cRequest, cSend, aI, nLen, nI, nReqLen, cBuf
       cRequest := ""
       nLen := 1
       DO WHILE AT(CR_LF + CR_LF, cRequest) == 0 .AND. nLen > 0
-        IF (nI := socket_select({hSocket},,, 10000)) > 0  /* Timeout */
-          nLen := socket_recv(hSocket, @cBuf)
+        IF (nI := hb_socketSelect({hSocket},,,,,, 10000)) > 0  /* Timeout */
+          cBuf := Space( 1 )
+          nLen := hb_socketRecv(hSocket, @cBuf)
           cRequest += cBuf
         ELSE
           nLen := 0
@@ -239,7 +229,7 @@ LOCAL hSocket, cRequest, cSend, aI, nLen, nI, nReqLen, cBuf
       ENDDO
 
       IF nLen == -1
-        ? "recv() error:", socket_error()
+        ? "recv() error:", hb_socketGetError()
       ELSEIF nLen == 0 /* connection closed */
       ELSE
 
@@ -253,15 +243,15 @@ LOCAL hSocket, cRequest, cSend, aI, nLen, nI, nReqLen, cBuf
         s_aHeader := {}
         s_nStatusCode := 200
 
-        IF socket_getpeername(hSocket, @aI) != -1
-          server["REMOTE_ADDR"] := aI[2]
+        IF !Empty( aI := hb_socketGetPeerName(hSocket))
+          server["REMOTE_ADDR"] := aI[HB_SOCKET_ADINFO_ADDRESS]
           server["REMOTE_HOST"] := server["REMOTE_ADDR"]  // no reverse DNS
-          server["REMOTE_PORT"] := aI[3]
+          server["REMOTE_PORT"] := aI[HB_SOCKET_ADINFO_PORT]
         ENDIF
 
-        IF socket_getsockname(hSocket, @aI) != -1
-          server["SERVER_ADDR"] := aI[2]
-          server["SERVER_PORT"] := aI[3]
+        IF !Empty( aI := hb_socketGetSockName(hSocket))
+          server["SERVER_ADDR"] := aI[HB_SOCKET_ADINFO_ADDRESS]
+          server["SERVER_PORT"] := aI[HB_SOCKET_ADINFO_PORT]
         ENDIF
 
         ? LEFT(cRequest, AT(CR_LF + CR_LF, cRequest) + 1)
@@ -273,12 +263,13 @@ LOCAL hSocket, cRequest, cSend, aI, nLen, nI, nReqLen, cBuf
 
           /* receive query body */
           DO WHILE LEN(cRequest) < nReqLen .AND. nLen > 0
-            nLen :=  socket_recv(hSocket, @cBuf)
+            cBuf := Space( 1 )
+            nLen := hb_socketRecv(hSocket, @cBuf)
             cRequest += cBuf
           ENDDO
 
           IF nLen == -1
-            ? "recv() error:", socket_error()
+            ? "recv() error:", hb_socketGetError()
           ELSEIF nLen == 0 /* connection closed */
           ELSE
             ? cRequest
@@ -315,8 +306,8 @@ LOCAL hSocket, cRequest, cSend, aI, nLen, nI, nReqLen, cBuf
         ENDIF
       ENDIF
       ? "Close connection1", hSocket
-      socket_shutdown(hSocket)
-      socket_close(hSocket)
+      hb_socketShutdown(hSocket)
+      hb_socketClose(hSocket)
     END SEQUENCE
   ENDDO
   DBCLOSEALL()
@@ -402,8 +393,8 @@ LOCAL nI, cMount, cPath, cSID, hmtx, aData, bEval
 
           IF LOWER(UGetHeader("Connection")) == "close" .OR. server["SERVER_PROTOCOL"] == "HTTP/1.0"
             ? "Close connection2", hSocket
-            socket_shutdown(hSocket)
-            socket_close(hSocket)
+            hb_socketShutdown(hSocket)
+            hb_socketClose(hSocket)
           ELSE
             /* pass connection to common queue */
             hb_mutexNotify(oServer:hmtxQueue, {hSocket, cBuffer})
@@ -639,8 +630,8 @@ LOCAL cSend, nLen, cBuf
 //  ? cSend
 
   DO WHILE LEN(cSend) > 0
-    IF (nLen := socket_send(hSocket, cSend)) == -1
-      ? "send() error:", socket_error(), hSocket
+    IF (nLen := hb_socketSend(hSocket, cSend)) == -1
+      ? "send() error:", hb_socketGetError(), hSocket
       EXIT
     ELSEIF nLen > 0
       cSend := SUBSTR(cSend, nLen + 1)

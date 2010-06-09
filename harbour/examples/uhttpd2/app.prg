@@ -92,6 +92,8 @@ LOCAL oServer
       "/app/*"  => {{|x| UProcWidgets(x, s_aMap)}, .T.}, ;
       "/*"      => {{|| URedirect("/app/login")}, .F.}}
 
+  ? "Listening on port:", oServer:nPort
+
   IF ! oServer:Run()
     ? "Server error:", oServer:cError
     RETURN 1

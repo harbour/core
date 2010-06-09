@@ -117,8 +117,6 @@
 #define APP_VER_NUM   "0.4.4"
 #define APP_VERSION   APP_VER_NUM + APP_GD_SUPPORT + APP_DT_SUPPORT
 
-#define AF_INET         2
-
 // default values - they can changes using line command switch or ini file
 
 #define START_RUNNING_THREADS   6             // Start threads to serve connections
@@ -533,7 +531,7 @@ FUNCTION MAIN( ... )
    // --------------------------------------------------------------------------
 
    hListen := hb_socketOpen()
-   IF ! hb_socketBind( hListen, { AF_INET, "0.0.0.0", nPort } )
+   IF ! hb_socketBind( hListen, { HB_SOCKET_AF_INET, "0.0.0.0", nPort } )
       ? "bind() error", hb_socketGetError()
    ELSEIF ! hb_socketListen( hListen )
       ? "listen() error", hb_socketGetError()
