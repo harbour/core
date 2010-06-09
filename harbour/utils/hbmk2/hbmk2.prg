@@ -2969,9 +2969,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          ENDIF
 
       CASE hbmk[ _HBMK_cPLAT ] == "os2" .AND. hbmk[ _HBMK_cCOMP ] $ "gcc|gccomf"
-
          hbmk[ _HBMK_nFNNotation ] := _FNF_BACKSLASH
-
          IF hbmk[ _HBMK_lDEBUG ]
             AAdd( hbmk[ _HBMK_aOPTC ], "-g" )
          ENDIF
@@ -3161,7 +3159,11 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       CASE hbmk[ _HBMK_cCOMP ] == "watcom"
 
          IF hbmk[ _HBMK_cPLAT ] == "win"
-            hbmk[ _HBMK_nCmd_Esc ] := _ESC_DBLQUOTE
+            #if defined( __PLATFORM__UNIX )
+               hbmk[ _HBMK_nCmd_Esc ] := _ESC_NIX
+            #else
+               hbmk[ _HBMK_nCmd_Esc ] := _ESC_DBLQUOTE
+            #endif
             hbmk[ _HBMK_nScr_Esc ] := _ESC_SGLQUOTE_WATCOM
          ENDIF
 
@@ -3335,6 +3337,11 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
       CASE hbmk[ _HBMK_cPLAT ] == "win" .AND. hbmk[ _HBMK_cCOMP ] == "bcc"
          hbmk[ _HBMK_nFNNotation ] := _FNF_BACKSLASH
+         #if defined( __PLATFORM__UNIX )
+            hbmk[ _HBMK_nCmd_Esc ] := _ESC_NIX
+         #else
+            hbmk[ _HBMK_nCmd_Esc ] := _ESC_DBLQUOTE
+         #endif
          IF hbmk[ _HBMK_lDEBUG ]
             AAdd( hbmk[ _HBMK_aOPTC ], "-y -v" )
             AAdd( hbmk[ _HBMK_aOPTL ], "-v" )
@@ -3347,7 +3354,6 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          IF hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ]
             AAdd( hbmk[ _HBMK_aOPTC ], "-P" )
          ENDIF
-         hbmk[ _HBMK_nCmd_Esc ] := _ESC_DBLQUOTE
          cLibPrefix := NIL
          cLibExt := ".lib"
          cObjExt := ".obj"
@@ -3427,6 +3433,11 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
            ( hbmk[ _HBMK_cPLAT ] == "wce" .AND. hbmk[ _HBMK_cCOMP ] == "msvcarm" ) /* NOTE: Cross-platform: wce/ARM on win/x86 */
 
          hbmk[ _HBMK_nFNNotation ] := _FNF_BACKSLASH
+         #if defined( __PLATFORM__UNIX )
+            hbmk[ _HBMK_nCmd_Esc ] := _ESC_NIX
+         #else
+            hbmk[ _HBMK_nCmd_Esc ] := _ESC_DBLQUOTE
+         #endif
 
          /* ; Not enabled yet, because it would cause a lot of 3rd party code to
               break due to sloppy type conversions and other trivial coding mistakes
@@ -3486,7 +3497,6 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             cBin_Dyn := cBin_Link
          ENDIF
          cBin_CompCPP := cBin_CompC
-         hbmk[ _HBMK_nCmd_Esc ] := _ESC_DBLQUOTE
          cOpt_Lib := "-nologo {FA} -out:{OL} {LO}"
          cOpt_Dyn := "-nologo {FD} {IM} -dll -out:{OD} {DL} {LO} {LL} {LB} {LS}"
          cOpt_CompC := "-nologo -c"
@@ -3628,6 +3638,11 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
            ( hbmk[ _HBMK_cPLAT ] == "win" .AND. hbmk[ _HBMK_cCOMP ] == "xcc" )
 
          hbmk[ _HBMK_nFNNotation ] := _FNF_BACKSLASH
+         #if defined( __PLATFORM__UNIX )
+            hbmk[ _HBMK_nCmd_Esc ] := _ESC_NIX
+         #else
+            hbmk[ _HBMK_nCmd_Esc ] := _ESC_DBLQUOTE
+         #endif
 
          IF hbmk[ _HBMK_lGUI ]
             AAdd( hbmk[ _HBMK_aOPTL ], "-subsystem:windows" )
@@ -3637,7 +3652,6 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          IF hbmk[ _HBMK_lDEBUG ]
             AAdd( hbmk[ _HBMK_aOPTC ], "-Zi" )
          ENDIF
-         hbmk[ _HBMK_nCmd_Esc ] := _ESC_DBLQUOTE
          cLibPrefix := NIL
          cLibExt := ".lib"
          cObjExt := ".obj"
@@ -7222,6 +7236,8 @@ STATIC FUNCTION DirUnbuild( cDir )
 
 STATIC FUNCTION FN_Escape( cFileName, nEscapeMode, nFNNotation )
    LOCAL cDir, cName, cExt, cDrive
+   LOCAL cChar
+   LOCAL tmp
 
    DEFAULT nEscapeMode TO _ESC_NONE
 #if defined( __PLATFORM__WINDOWS ) .OR. ;
@@ -7285,7 +7301,14 @@ STATIC FUNCTION FN_Escape( cFileName, nEscapeMode, nFNNotation )
       ENDIF
       EXIT
    CASE _ESC_NIX
-      cFileName := StrTran( cFileName, " ", "\ " )
+      tmp := ""
+      FOR EACH cChar IN cFileName
+         IF cChar $ " \|&;<>()$`'" + Chr( 34 )
+            tmp += "\"
+         ENDIF
+         tmp += cChar
+      NEXT
+      cFileName := tmp
       EXIT
    CASE _ESC_BACKSLASH
       cFileName := StrTran( cFileName, "\", "\\" )
