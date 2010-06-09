@@ -125,19 +125,19 @@
 #define HB_SOCKET_ERR_TYPENOTFOUND        69
 #define HB_SOCKET_ERR_OTHER               70
 
-/* protocol family */
-#define HB_SOCKET_PF_LOCAL                1
-#define HB_SOCKET_PF_INET                 2
-#define HB_SOCKET_PF_IPX                  4
-#define HB_SOCKET_PF_INET6                10
-#define HB_SOCKET_PF_PACKET               17
-
 /* address familly */
-#define HB_SOCKET_AF_LOCAL                HB_SOCKET_PF_LOCAL
-#define HB_SOCKET_AF_INET                 HB_SOCKET_PF_INET
-#define HB_SOCKET_AF_IPX                  HB_SOCKET_PF_IPX
-#define HB_SOCKET_AF_INET6                HB_SOCKET_PF_INET6
-#define HB_SOCKET_AF_PACKET               HB_SOCKET_PF_PACKET
+#define HB_SOCKET_AF_LOCAL                1
+#define HB_SOCKET_AF_INET                 2
+#define HB_SOCKET_AF_IPX                  4
+#define HB_SOCKET_AF_INET6                10
+#define HB_SOCKET_AF_PACKET               17
+
+/* protocol family */
+#define HB_SOCKET_PF_LOCAL                HB_SOCKET_AF_LOCAL
+#define HB_SOCKET_PF_INET                 HB_SOCKET_AF_INET
+#define HB_SOCKET_PF_IPX                  HB_SOCKET_AF_IPX
+#define HB_SOCKET_PF_INET6                HB_SOCKET_AF_INET6
+#define HB_SOCKET_PF_PACKET               HB_SOCKET_AF_PACKET
 
 /* protocol type */
 #define HB_SOCKET_PT_STREAM               1

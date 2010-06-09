@@ -1282,59 +1282,59 @@ static int hb_socketTransDomain( int domain, int *err )
 {
    switch( domain )
    {
-      case HB_SOCKET_PF_INET:
-#if   defined( PF_INET )
-         domain = PF_INET;
-#elif defined( AF_INET )
+      case HB_SOCKET_AF_INET:
+#if   defined( AF_INET )
          domain = AF_INET;
+#elif defined( PF_INET )
+         domain = PF_INET;
 #else
          if( err )
             *err = HB_SOCKET_ERR_PFNOSUPPORT;
 #endif
          break;
 
-      case HB_SOCKET_PF_INET6:
-#if   defined( PF_INET6 )
-         domain = PF_INET6;
-#elif defined( AF_INET6 )
+      case HB_SOCKET_AF_INET6:
+#if   defined( AF_INET6 )
          domain = AF_INET6;
+#elif defined( PF_INET6 )
+         domain = PF_INET6;
 #else
          if( err )
             *err = HB_SOCKET_ERR_PFNOSUPPORT;
 #endif
          break;
 
-      case HB_SOCKET_PF_LOCAL:
-#if   defined( PF_LOCAL )
-         domain = PF_LOCAL;
-#elif defined( AF_LOCAL )
+      case HB_SOCKET_AF_LOCAL:
+#if   defined( AF_LOCAL )
          domain = AF_LOCAL;
-#elif defined( PF_UNIX )
-         domain = PF_UNIX;
 #elif defined( AF_UNIX )
          domain = AF_UNIX;
+#elif defined( PF_LOCAL )
+         domain = PF_LOCAL;
+#elif defined( PF_UNIX )
+         domain = PF_UNIX;
 #else
          if( err )
             *err = HB_SOCKET_ERR_PFNOSUPPORT;
 #endif
          break;
 
-      case HB_SOCKET_PF_PACKET:
-#if   defined( PF_PACKET )
-         domain = PF_PACKET;
-#elif defined( AF_PACKET )
+      case HB_SOCKET_AF_PACKET:
+#if   defined( AF_PACKET )
          domain = AF_PACKET;
+#elif defined( PF_PACKET )
+         domain = PF_PACKET;
 #else
          if( err )
             *err = HB_SOCKET_ERR_PFNOSUPPORT;
 #endif
          break;
 
-      case HB_SOCKET_PF_IPX:
-#if   defined( PF_IPX )
-         domain = PF_IPX;
-#elif defined( AF_IPX )
+      case HB_SOCKET_AF_IPX:
+#if   defined( AF_IPX )
          domain = AF_IPX;
+#elif defined( PF_IPX )
+         domain = PF_IPX;
 #else
          if( err )
             *err = HB_SOCKET_ERR_PFNOSUPPORT;
@@ -1833,22 +1833,22 @@ HB_BOOL hb_socketAddrFromItem( void ** pSockAddr, unsigned * puiLen, PHB_ITEM pA
       {
          switch( hb_arrayGetNI( pAddrItm, 1 ) )
          {
-            case HB_SOCKET_PF_INET:
+            case HB_SOCKET_AF_INET:
                fOK = hb_socketInetAddr( pSockAddr, puiLen,
                                         hb_arrayGetCPtr( pAddrItm, 2 ),
                                         hb_arrayGetNI( pAddrItm, 3 ) );
                break;
-            case HB_SOCKET_PF_INET6:
+            case HB_SOCKET_AF_INET6:
                fOK = hb_socketInet6Addr( pSockAddr, puiLen,
                                          hb_arrayGetCPtr( pAddrItm, 2 ),
                                          hb_arrayGetNI( pAddrItm, 3 ) );
                break;
-            case HB_SOCKET_PF_LOCAL:
+            case HB_SOCKET_AF_LOCAL:
                fOK = hb_socketLocalAddr( pSockAddr, puiLen,
                                          hb_arrayGetCPtr( pAddrItm, 2 ) );
                break;
-            case HB_SOCKET_PF_PACKET:
-            case HB_SOCKET_PF_IPX:
+            case HB_SOCKET_AF_PACKET:
+            case HB_SOCKET_AF_IPX:
                break;
          }
       }
@@ -1881,7 +1881,7 @@ PHB_ITEM hb_socketAddrToItem( const void * pSockAddr, unsigned len )
             if( szAddr )
             {
                pAddrItm = hb_itemArrayNew( 3 );
-               hb_arraySetNI( pAddrItm, 1, HB_SOCKET_PF_INET );
+               hb_arraySetNI( pAddrItm, 1, HB_SOCKET_AF_INET );
                hb_arraySetC( pAddrItm, 2, szAddr );
                hb_arraySetNI( pAddrItm, 3, ntohs( sa->sin_port ) );
             }
@@ -1906,7 +1906,7 @@ PHB_ITEM hb_socketAddrToItem( const void * pSockAddr, unsigned len )
             if( szAddr )
             {
                pAddrItm = hb_itemArrayNew( 3 );
-               hb_arraySetNI( pAddrItm, 1, HB_SOCKET_PF_INET6 );
+               hb_arraySetNI( pAddrItm, 1, HB_SOCKET_AF_INET6 );
                hb_arraySetC( pAddrItm, 2, szAddr );
                hb_arraySetNI( pAddrItm, 3, ntohs( sa->sin6_port ) );
             }
@@ -1923,7 +1923,7 @@ PHB_ITEM hb_socketAddrToItem( const void * pSockAddr, unsigned len )
          {
             struct sockaddr_un * sa = ( struct sockaddr_un * ) pSockAddr;
             pAddrItm = hb_itemArrayNew( 2 );
-            hb_arraySetNI( pAddrItm, 1, HB_SOCKET_PF_LOCAL );
+            hb_arraySetNI( pAddrItm, 1, HB_SOCKET_AF_LOCAL );
             hb_arraySetC( pAddrItm, 2, sa->sun_path );
          }
          break;
@@ -2753,7 +2753,7 @@ char * hb_socketResolveAddr( const char * szAddr, int af )
    if( !szAddr || !*szAddr )
       return NULL;
 
-   if( af == HB_SOCKET_PF_INET )
+   if( af == HB_SOCKET_AF_INET )
    {
       struct in_addr sin;
 #if defined( HB_HAS_INET_PTON )
@@ -2797,7 +2797,7 @@ char * hb_socketResolveAddr( const char * szAddr, int af )
       }
    }
 #if defined( HB_HAS_INET6 )
-   else if( af == HB_SOCKET_PF_INET6 )
+   else if( af == HB_SOCKET_AF_INET6 )
    {
 #if defined( HB_HAS_INET_PTON )
       struct in6_addr sin;
@@ -2902,7 +2902,7 @@ PHB_ITEM hb_socketGetHosts( const char * szAddr, int af )
    }
 #else
 
-   if( af == HB_SOCKET_PF_INET )
+   if( af == HB_SOCKET_AF_INET )
    {
       struct hostent * he = NULL;
       int iCount = 0;
@@ -2950,7 +2950,7 @@ PHB_ITEM hb_socketGetHosts( const char * szAddr, int af )
       }
    }
 #if defined( HB_HAS_INET6 )
-   else if( af == HB_SOCKET_PF_INET6 )
+   else if( af == HB_SOCKET_AF_INET6 )
    {
       int iTODO;
    }
