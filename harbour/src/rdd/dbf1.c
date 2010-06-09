@@ -5058,9 +5058,11 @@ static HB_ERRCODE hb_dbfReadDBHeader( DBFAREAP pArea )
                break;
 
             case 0x03:
+            case 0x07:  /* CA-VO DBFNTX and ANSI CP */
                break;
 
             case 0x83:
+            case 0x87:  /* CA-VO DBFNTX+MEMO and ANSI CP */
                pArea->fHasMemo = HB_TRUE;
                pArea->bMemoType = DB_MEMO_DBT;
                break;
