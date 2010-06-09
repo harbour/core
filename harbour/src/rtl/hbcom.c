@@ -1653,6 +1653,37 @@ int hb_comInputState( int iPort )
    return fResult ? iValue : -1;
 }
 
+static BOOL hb_comSetTimeouts( PHB_COM pCom, HB_MAXINT rdtimeout,
+                                             HB_MAXINT wrtimeout )
+{
+   COMMTIMEOUTS timeouts;
+   BOOL fResult;
+
+   if( rdtimeout == 0 )
+   {
+      timeouts.ReadIntervalTimeout = MAXDWORD;
+      timeouts.ReadTotalTimeoutMultiplier = 0;
+      timeouts.ReadTotalTimeoutConstant = 0;
+   }
+   else
+   {
+      timeouts.ReadIntervalTimeout = MAXDWORD;
+      timeouts.ReadTotalTimeoutMultiplier = MAXDWORD;
+      timeouts.ReadTotalTimeoutConstant = ( DWORD ) rdtimeout;
+   }
+   timeouts.WriteTotalTimeoutMultiplier = 0;
+   timeouts.WriteTotalTimeoutConstant = ( DWORD ) HB_MAX( wrtimeout, 1 );
+
+   fResult = SetCommTimeouts( pCom->hComm, &timeouts );
+   if( fResult )
+   {
+      pCom->rdtimeout = rdtimeout;
+      pCom->wrtimeout = wrtimeout;
+   }
+
+   return fResult;
+}
+
 long hb_comSend( int iPort, const void * data, long len, HB_MAXINT timeout )
 {
    PHB_COM pCom = hb_comGetPort( iPort, HB_COM_OPEN );
@@ -1665,37 +1696,8 @@ long hb_comSend( int iPort, const void * data, long len, HB_MAXINT timeout )
       if( timeout < 0 )
          timeout = 0;
 
-      if( pCom->wrtimeout != timeout )
-      {
-         COMMTIMEOUTS timeouts;
-
-         if( pCom->rdtimeout == 0 )
-         {
-            timeouts.ReadIntervalTimeout = MAXDWORD;
-            timeouts.ReadTotalTimeoutMultiplier = 0;
-            timeouts.ReadTotalTimeoutConstant = 0;
-         }
-         else
-         {
-            timeouts.ReadIntervalTimeout = MAXDWORD;
-            timeouts.ReadTotalTimeoutMultiplier = MAXDWORD;
-            timeouts.ReadTotalTimeoutConstant = ( DWORD ) pCom->rdtimeout;
-         }
-         timeouts.WriteTotalTimeoutMultiplier = 0;
-         timeouts.WriteTotalTimeoutConstant = ( DWORD ) HB_MAX( timeout, 1 );
-
-         if( SetCommTimeouts( pCom->hComm, &timeouts ) )
-         {
-            pCom->wrtimeout = timeout;
-            lSent = 0;
-         }
-         else
-            hb_comSetOsError( pCom, HB_TRUE );
-      }
-      else
-         lSent = 0;
-
-      if( lSent >= 0 )
+      if( pCom->wrtimeout == timeout ||
+          hb_comSetTimeouts( pCom, pCom->rdtimeout, timeout ) )
       {
          DWORD dwWritten = 0;
          BOOL fResult;
@@ -1704,6 +1706,8 @@ long hb_comSend( int iPort, const void * data, long len, HB_MAXINT timeout )
          lSent = fResult ? ( long ) dwWritten : -1;
          hb_comSetOsError( pCom, !fResult );
       }
+      else
+         hb_comSetOsError( pCom, HB_TRUE );
 
       hb_vmLock();
    }
@@ -1723,46 +1727,18 @@ long hb_comRecv( int iPort, void * data, long len, HB_MAXINT timeout )
       if( timeout < 0 )
          timeout = 0;
 
-      if( pCom->rdtimeout != timeout )
+      if( pCom->rdtimeout == timeout ||
+          hb_comSetTimeouts( pCom, timeout, pCom->wrtimeout ) )
       {
-         COMMTIMEOUTS timeouts;
-
-         if( timeout == 0 )
-         {
-            timeouts.ReadIntervalTimeout = MAXDWORD;
-            timeouts.ReadTotalTimeoutMultiplier = 0;
-            timeouts.ReadTotalTimeoutConstant = 0;
-         }
-         else
-         {
-            timeouts.ReadIntervalTimeout = MAXDWORD;
-            timeouts.ReadTotalTimeoutMultiplier = MAXDWORD;
-            timeouts.ReadTotalTimeoutConstant = ( DWORD ) timeout;
-         }
-         timeouts.WriteTotalTimeoutMultiplier = 0;
-         timeouts.WriteTotalTimeoutConstant = ( DWORD ) HB_MAX( pCom->wrtimeout, 1 );
-
-         if( SetCommTimeouts( pCom->hComm, &timeouts ) )
-         {
-            pCom->rdtimeout = timeout;
-            lReceived = 0;
-         }
-         else
-            hb_comSetOsError( pCom, HB_TRUE );
-      }
-      else
-         lReceived = 0;
-
-      if( lReceived >= 0 )
-      {
-         DWORD dwToRead = ( DWORD ) len;
          DWORD dwRead = 0;
          BOOL fResult;
 
-         fResult = ReadFile( pCom->hComm, data, dwToRead, &dwRead, NULL );
+         fResult = ReadFile( pCom->hComm, data, ( DWORD ) len, &dwRead, NULL );
          lReceived = fResult ? ( long ) dwRead : -1;
          hb_comSetOsError( pCom, !fResult );
       }
+      else
+         hb_comSetOsError( pCom, HB_TRUE );
 
       hb_vmLock();
    }
@@ -1859,19 +1835,8 @@ int hb_comInit( int iPort, int iBaud, int iParity, int iSize, int iStop )
 
             fResult = SetCommState( pCom->hComm, &dcb );
             if( fResult )
-            {
-               COMMTIMEOUTS timeouts;
+               fResult = hb_comSetTimeouts( pCom, 0, 0 );
 
-               timeouts.ReadIntervalTimeout = MAXDWORD;
-               timeouts.ReadTotalTimeoutMultiplier = 0;
-               timeouts.ReadTotalTimeoutConstant = 0;
-
-               timeouts.WriteTotalTimeoutMultiplier = 0;
-               timeouts.WriteTotalTimeoutConstant = 1;
-
-               fResult = SetCommTimeouts( pCom->hComm, &timeouts );
-               pCom->rdtimeout = pCom->wrtimeout = 0;
-            }
             hb_comSetOsError( pCom, !fResult );
          }
          else
