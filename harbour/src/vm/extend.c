@@ -645,6 +645,34 @@ HB_MAXINT hb_parnint( int iParam )
    return 0;
 }
 
+HB_MAXINT hb_parnintdef( int iParam, HB_MAXINT lDefValue )
+{
+   HB_STACK_TLS_PRELOAD
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_parnint(%d)", iParam));
+
+   if( iParam >= -1 && iParam <= hb_pcount() )
+   {
+      PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
+
+      if( HB_IS_BYREF( pItem ) )
+         pItem = hb_itemUnRef( pItem );
+
+      if( HB_IS_LONG( pItem ) )
+         return ( HB_MAXINT ) pItem->item.asLong.value;
+      else if( HB_IS_INTEGER( pItem ) )
+         return ( HB_MAXINT ) pItem->item.asInteger.value;
+      else if( HB_IS_DOUBLE( pItem ) )
+#if defined( __GNUC__ )
+         return ( HB_MAXINT ) ( HB_MAXUINT ) pItem->item.asDouble.value;
+#else
+         return ( HB_MAXINT ) pItem->item.asDouble.value;
+#endif
+   }
+
+   return lDefValue;
+}
+
 void * hb_parptr( int iParam )
 {
    HB_STACK_TLS_PRELOAD

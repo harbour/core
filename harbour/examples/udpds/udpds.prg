@@ -89,7 +89,7 @@ RETURN aRet
 FUNC UDPDS_Start( nPort, cName, cVersion )
 LOCAL hSocket
   IF ! EMPTY( hSocket := hb_socketOpen( , HB_SOCKET_PT_DGRAM ) )
-    IF hb_socketBind( hSocket, { HB_SOCKET_AF_INET, "0.0.0.0", nPort } ) == 0
+    IF hb_socketBind( hSocket, { HB_SOCKET_AF_INET, "0.0.0.0", nPort } )
       hb_threadDetach( hb_threadStart( @UDPDS(), hSocket, cName, cVersion ) )
       RETURN hSocket
     ENDIF
@@ -107,9 +107,11 @@ STATIC PROC UDPDS( hSocket, cName, cVersion )
 LOCAL cBuffer, nLen, aAddr
   DO WHILE .T.
     cBuffer := SPACE( 2000 )
-    nLen := hb_socketRecvFrom( hSocket, @cBuffer,,, @aAddr )
-    IF nLen == -1
-      RETURN
+    nLen := hb_socketRecvFrom( hSocket, @cBuffer,,, @aAddr, 1000 )
+    IF nLen == -1 
+      IF hb_socketGetError() != HB_SOCKET_ERR_TIMEOUT
+        RETURN
+      ENDIF
     ELSE
       /* 
        * Communication protocol:
