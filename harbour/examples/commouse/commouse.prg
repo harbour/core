@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 #include "hbcom.ch"
 
 PROC main( cParam )
