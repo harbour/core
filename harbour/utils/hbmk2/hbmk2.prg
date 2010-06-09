@@ -3158,14 +3158,12 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       /* Watcom family */
       CASE hbmk[ _HBMK_cCOMP ] == "watcom"
 
-         IF hbmk[ _HBMK_cPLAT ] == "win"
-            #if defined( __PLATFORM__UNIX )
-               hbmk[ _HBMK_nCmd_Esc ] := _ESC_NIX
-            #else
-               hbmk[ _HBMK_nCmd_Esc ] := _ESC_DBLQUOTE
-            #endif
-            hbmk[ _HBMK_nScr_Esc ] := _ESC_SGLQUOTE_WATCOM
-         ENDIF
+         #if defined( __PLATFORM__UNIX )
+            hbmk[ _HBMK_nCmd_Esc ] := _ESC_NIX
+         #elif defined( __PLATFORM__WINDOWS )
+            hbmk[ _HBMK_nCmd_Esc ] := _ESC_DBLQUOTE
+         #endif
+         hbmk[ _HBMK_nScr_Esc ] := _ESC_SGLQUOTE_WATCOM
 
          cLibPrefix := "LIB "
          cLibExt := ".lib"
