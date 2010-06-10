@@ -7,7 +7,8 @@ incpaths=.
 {allwin|os2}libpaths=${HB_WITH_QT}\..\lib
 
 libs=${hb_name}
-libs=hbqtcores hbqtguis hbqtnetworks
+{allwin}libs=hbqtcores hbqtguis hbqtnetworks
+{linux}libs=hbqtcore hbqtgui hbqtnetwork
 
 {allwin|linux}libs=QtCore QtGui QtNetwork QtUiTools
 {allgcc}libs=supc++

@@ -2,7 +2,7 @@
 # $Id$
 #
 
--stop{!HB_QT_STATIC}
+-stop{!HB_QT_STATIC|!allwin}
 
 hbqtgui.hbp
 

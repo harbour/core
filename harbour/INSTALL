@@ -333,9 +333,9 @@ HARBOUR
    locally hosted copy of these packages, where applicable. 'nolocal' will
    explicitly disable using locally hosted copies.
 
-   Some contribs support build mode in which they can be linkek _statically_
+   Some contribs support build mode in which they can be linked _statically_
    with 3rd party components:
-      HB_QT_STATIC=yes
+      HB_QT_STATIC=yes (only meaningful on Windows platform)
 
    You can override automatic detection of QT 'moc' tool, f.e.:
       HB_QT_MOC_BIN=/opt/qt46/bin/moc
