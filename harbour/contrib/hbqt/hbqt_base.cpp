@@ -54,6 +54,16 @@
 
 #include "hbqt.h"
 
+HB_FUNC( QVERSION )
+{
+   hb_retc( qVersion() );
+}
+
+HB_FUNC( QSHAREDBUILD )
+{
+   hb_retl( qSharedBuild() ? HB_TRUE : HB_FALSE );
+}
+
 HB_FUNC( QT_VERSION )
 {
    hb_retnint( QT_VERSION );
@@ -103,15 +113,6 @@ HB_FUNC( HBQT_ISEQUALGCQTPOINTER )
       else
          hb_retl( HB_FALSE );
    }
-}
-
-HB_FUNC( HBQT_ISSTATICLINK )
-{
-#ifdef QT_NODLL
-   hb_retl( HB_TRUE );
-#else
-   hb_retl( HB_FALSE );
-#endif
 }
 
 #endif                  // #if QT_VERSION >= 0x040500
