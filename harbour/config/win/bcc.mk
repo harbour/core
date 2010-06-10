@@ -39,9 +39,14 @@ endif
 # Hack to autoconfig bcc, and not require properly set .cfg files in its bin dir.
 # It only works if we know compiler location.
 ifneq ($(HB_COMP_PATH_PUB),)
-   HB_CFLAGS += $(subst /,\,-I"$(HB_COMP_PATH_PUB)../Include")
-   LDFLAGS   += $(subst /,\,-L"$(HB_COMP_PATH_PUB)../Lib" -L"$(HB_COMP_PATH_PUB)../Lib/PSDK")
-   DFLAGS    += $(subst /,\,-L"$(HB_COMP_PATH_PUB)../Lib" -L"$(HB_COMP_PATH_PUB)../Lib/PSDK")
+   ifneq ($(HB_HOST_PLAT_UNIX),)
+      BCKSLASH := $(subst /,\,\\)
+   else
+      BCKSLASH := $(subst /,\,\)
+   endif
+   HB_CFLAGS += $(subst /,$(BCKSLASH),-I"$(HB_COMP_PATH_PUB)../Include")
+   LDFLAGS   += $(subst /,$(BCKSLASH),-L"$(HB_COMP_PATH_PUB)../Lib" -L"$(HB_COMP_PATH_PUB)../Lib/PSDK")
+   DFLAGS    += $(subst /,$(BCKSLASH),-L"$(HB_COMP_PATH_PUB)../Lib" -L"$(HB_COMP_PATH_PUB)../Lib/PSDK")
 endif
 
 RC := brcc32.exe

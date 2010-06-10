@@ -232,7 +232,7 @@ REQUEST hbmk_KEYW
 #define _WORKDIR_BASE_          ".hbmk"
 #define _WORKDIR_DEF_           ( _WORKDIR_BASE_ + hb_osPathSeparator() + hbmk[ _HBMK_cPLAT ] + hb_osPathSeparator() + hbmk[ _HBMK_cCOMP ] )
 
-#define _BCC_BIN_DETECT()       FindInPath( "bcc32" )
+#define _BCC_BIN_DETECT()       FindInPath( "bcc32.exe" )
 
 /* Macro to check for uppercase extension on case-sensitive filesystems */
 #if defined( __PLATFORM__DOS )
@@ -1175,26 +1175,26 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       /* Order is significant.
          watcom also keeps a cl.exe in its binary dir. */
 #if ! defined( __PLATFORM__UNIX )
-      aCOMPDET := { { {|| FindInSamePath( "cygstart", "gcc" ) }, "cygwin" },;
+      aCOMPDET := { { {|| FindInSamePath( "cygstart.exe", "gcc" ) }, "cygwin" },;
                     { {|| FindInPath( "gcc-dw2" ) }, "mingw", "", "-dw2" },; /* tdragon DWARF-2 build */
                     { {|| FindInPath( "x86_64-pc-mingw32-gcc" ) }, "mingw64" },; /* Equation Solution build */
                     { {|| FindInPath( hbmk[ _HBMK_cCCPREFIX ] + "gcc" + hbmk[ _HBMK_cCCPOSTFIX ] ) }, "mingw" },;
                     { {|| iif( ! Empty( GetEnv( "WATCOM" ) ),;
                                FindInPath( "wpp386"   ),;
                                NIL )               }, "watcom" },;
-                    { {|| FindInPath( "clarm"    ) }, "msvcarm" },;
-                    { {|| FindInPath( "armasm"   ) }, "msvcarm" },;
-                    { {|| FindInPath( "ml64"     ) }, "msvc64" },;
-                    { {|| FindInPath( "ias"      ) }, "msvcia64" },;
+                    { {|| FindInPath( "clarm.exe"  ) }, "msvcarm" },;
+                    { {|| FindInPath( "armasm.exe" ) }, "msvcarm" },;
+                    { {|| FindInPath( "ml64.exe"   ) }, "msvc64" },;
+                    { {|| FindInPath( "ias.exe"    ) }, "msvcia64" },;
                     { {|| iif( FindInPath( "wpp386"   ) == NIL,;
-                               FindInPath( "cl"       ),;
+                               FindInPath( "cl.exe"   ),;
                                NIL )                      }, "msvc"    },;
                     { {|| _BCC_BIN_DETECT()        }, "bcc"    },;
-                    { {|| iif( FindInPath( "dbgeng.lib", GetEnv( "LIB" ) ) != NIL .AND. ( tmp1 := FindInPath( "pocc" ) ) != NIL, tmp1, NIL ) }, "pocc64"  },;
-                    { {|| FindInPath( "pocc"     ) }, "pocc"   },;
-                    { {|| iif( ( tmp1 := FindInPath( "icl" ) ) != NIL .AND. "itanium" $ Lower( tmp1 ), tmp1, NIL ) }, "iccia64" },;
-                    { {|| FindInPath( "icl"      ) }, "icc"    },;
-                    { {|| FindInPath( "xcc"      ) }, "xcc"    },;
+                    { {|| iif( FindInPath( "dbgeng.lib", GetEnv( "LIB" ) ) != NIL .AND. ( tmp1 := FindInPath( "pocc.exe" ) ) != NIL, tmp1, NIL ) }, "pocc64"  },;
+                    { {|| FindInPath( "pocc.exe" ) }, "pocc"   },;
+                    { {|| iif( ( tmp1 := FindInPath( "icl.exe" ) ) != NIL .AND. "itanium" $ Lower( tmp1 ), tmp1, NIL ) }, "iccia64" },;
+                    { {|| FindInPath( "icl.exe"  ) }, "icc"    },;
+                    { {|| FindInPath( "xCC.exe"  ) }, "xcc"    },;
                     { {|| FindInPath( "i686-w64-mingw32-gcc" ) }, "mingw64", "i686-w64-mingw32-" },; /* mingw-w64 build */
                     { {|| FindInPath( "x86_64-w64-mingw32-gcc" ) }, "mingw64", "x86_64-w64-mingw32-" }} /* mingw-w64 build */
 #endif
@@ -1211,9 +1211,9 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       l_aLIBSYSMISC := { "winspool", "comctl32", "comdlg32", "shell32", "uuid", "ole32", "oleaut32", "mpr", "winmm", "mapi32", "imm32", "msimg32", "wininet" }
    CASE hbmk[ _HBMK_cPLAT ] == "wce"
 #if ! defined( __PLATFORM__UNIX )
-      aCOMPDET := { { {|| FindInPath( "clarm"    ) }, "msvcarm" },;
-                    { {|| FindInPath( "armasm"   ) }, "msvcarm" },;
-                    { {|| FindInPath( "pocc"     ) }, "poccarm" },;
+      aCOMPDET := { { {|| FindInPath( "clarm.exe"  ) }, "msvcarm" },;
+                    { {|| FindInPath( "armasm.exe" ) }, "msvcarm" },;
+                    { {|| FindInPath( "pocc.exe"   ) }, "poccarm" },;
                     { {|| FindInPath( "arm-mingw32ce-gcc"       ) }, "mingwarm", "arm-mingw32ce-" } ,;
                     { {|| FindInPath( "arm-wince-mingw32ce-gcc" ) }, "mingwarm", "arm-wince-mingw32ce-" } ,;
                     { {|| FindInPath( "i386-mingw32ce-gcc"      ) }, "mingw"   , "i386-mingw32ce-" } ,;
@@ -3449,7 +3449,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
          IF Empty( nCCompVer )
             /* Compatibility with Harbour GNU Make system */
-            IF hbmk[ _HBMK_cCOMP ] == "msvcarm" .AND. ! Empty( FindInPath( "clarm" ) )
+            IF hbmk[ _HBMK_cCOMP ] == "msvcarm" .AND. ! Empty( FindInPath( "clarm.exe" ) )
                nCCompVer := 1310 /* Visual Studio .NET 2003 */
             ELSE
                nCCompVer := 1400 /* Visual Studio 2005 */

@@ -57,15 +57,16 @@ ifeq ($(filter $(_make_ver_min),$(firstword $(sort $(MAKE_VERSION) $(_make_ver_m
 endif
 
 find_in_path     = $(strip $(subst $(substpat), ,$(firstword $(subst |, ,$(subst $(subst x, ,x),$(substpat),$(filter-out |,$(foreach dir, $(subst $(PTHSEP), ,$(subst $(subst x, ,x),$(substpat),$(PATH))),|$(wildcard $(subst //,/,$(subst $(substpat),\ ,$(subst \,/,$(dir)))/$(1))$(HB_HOST_BIN_EXT)))))))))
+find_in_path_raw = $(strip $(subst $(substpat), ,$(firstword $(subst |, ,$(subst $(subst x, ,x),$(substpat),$(filter-out |,$(foreach dir, $(subst $(PTHSEP), ,$(subst $(subst x, ,x),$(substpat),$(PATH))),|$(wildcard $(subst //,/,$(subst $(substpat),\ ,$(subst \,/,$(dir)))/$(1))))))))))
 find_in_path_par = $(strip $(subst $(substpat), ,$(firstword $(subst |, ,$(subst $(subst x, ,x),$(substpat),$(filter-out |,$(foreach dir, $(subst $(PTHSEP), ,$(subst $(subst x, ,x),$(substpat),$(2))),|$(wildcard $(subst //,/,$(subst $(substpat),\ ,$(subst \,/,$(dir)))/$(1))$(HB_HOST_BIN_EXT)))))))))
-find_in_path_raw = $(strip $(subst $(substpat), ,$(firstword $(subst |, ,$(subst $(subst x, ,x),$(substpat),$(filter-out |,$(foreach dir, $(subst $(PTHSEP), ,$(subst $(subst x, ,x),$(substpat),$(2))),|$(wildcard $(subst //,/,$(subst $(substpat),\ ,$(subst \,/,$(dir)))/$(1))))))))))
+find_in_path_prw = $(strip $(subst $(substpat), ,$(firstword $(subst |, ,$(subst $(subst x, ,x),$(substpat),$(filter-out |,$(foreach dir, $(subst $(PTHSEP), ,$(subst $(subst x, ,x),$(substpat),$(2))),|$(wildcard $(subst //,/,$(subst $(substpat),\ ,$(subst \,/,$(dir)))/$(1))))))))))
 
 define detect_watcom_platform
-   ifneq ($(call find_in_path_raw,os2.h,$(INCLUDE)),)
+   ifneq ($(call find_in_path_prw,os2.h,$(INCLUDE)),)
       HB_PLATFORM := os2
-   else ifneq ($(call find_in_path_raw,dirent.h,$(INCLUDE)),)
+   else ifneq ($(call find_in_path_prw,dirent.h,$(INCLUDE)),)
       HB_PLATFORM := linux
-   else ifeq ($(call find_in_path_raw,windows.h,$(INCLUDE)),)
+   else ifeq ($(call find_in_path_prw,windows.h,$(INCLUDE)),)
       HB_PLATFORM := dos
    endif
 endef
@@ -705,7 +706,7 @@ ifeq ($(HB_COMPILER),)
                   HB_PLATFORM := wce
                   HB_CCPREFIX := i386-mingw32ce-
                else
-                  HB_COMP_PATH := $(call find_in_path,cygstart)
+                  HB_COMP_PATH := $(call find_in_path_raw,cygstart.exe)
                   ifneq ($(HB_COMP_PATH),)
                      # Check for a gcc executable in the same directory
                      ifeq ($(wildcard $(dir $(HB_COMP_PATH))gcc$(HB_HOST_BIN_EXT)),)
@@ -759,39 +760,39 @@ ifeq ($(HB_COMPILER),)
                                     HB_COMPILER := watcom
                                     $(eval $(call detect_watcom_platform))
                                  else
-                                    HB_COMP_PATH := $(call find_in_path,clarm)
+                                    HB_COMP_PATH := $(call find_in_path_raw,clarm.exe)
                                     ifneq ($(HB_COMP_PATH),)
                                        HB_COMPILER_VER := 1310
                                        HB_COMPILER := msvcarm
                                        HB_PLATFORM := wce
                                        HB_CPU := arm
                                     else
-                                       HB_COMP_PATH := $(call find_in_path,armasm)
+                                       HB_COMP_PATH := $(call find_in_path_raw,armasm.exe)
                                        ifneq ($(HB_COMP_PATH),)
                                           HB_COMPILER := msvcarm
                                           HB_PLATFORM := wce
                                           HB_CPU := arm
                                        else
-                                          HB_COMP_PATH := $(call find_in_path,idis)
+                                          HB_COMP_PATH := $(call find_in_path_raw,idis.exe)
                                           ifneq ($(HB_COMP_PATH),)
                                              HB_COMPILER := iccia64
                                              HB_CPU := ia64
                                           else
-                                             HB_COMP_PATH := $(call find_in_path,icl)
+                                             HB_COMP_PATH := $(call find_in_path_raw,icl.exe)
                                              ifneq ($(HB_COMP_PATH),)
                                                 HB_COMPILER := icc
                                              else
-                                                HB_COMP_PATH := $(call find_in_path,ml64)
+                                                HB_COMP_PATH := $(call find_in_path_raw,ml64.exe)
                                                 ifneq ($(HB_COMP_PATH),)
                                                    HB_COMPILER := msvc64
                                                    HB_CPU := x86_64
                                                 else
-                                                   HB_COMP_PATH := $(call find_in_path,ias)
+                                                   HB_COMP_PATH := $(call find_in_path_raw,ias.exe)
                                                    ifneq ($(HB_COMP_PATH),)
                                                       HB_COMPILER := msvcia64
                                                       HB_CPU := ia64
                                                    else
-                                                      HB_COMP_PATH := $(call find_in_path,cl)
+                                                      HB_COMP_PATH := $(call find_in_path_raw,cl.exe)
                                                       ifneq ($(HB_COMP_PATH),)
                                                          HB_COMPILER := msvc
                                                          ifneq ($(findstring VC98,$(HB_COMP_PATH)),)
@@ -806,18 +807,18 @@ ifeq ($(HB_COMPILER),)
                                                             HB_COMPILER_VER := 1600
                                                          endif
                                                       else
-                                                         HB_COMP_PATH := $(call find_in_path,bcc32)
+                                                         HB_COMP_PATH := $(call find_in_path_raw,bcc32.exe)
                                                          ifneq ($(HB_COMP_PATH),)
                                                             HB_COMPILER := bcc
                                                          else
-                                                            HB_COMP_PATH := $(call find_in_path,pocc)
+                                                            HB_COMP_PATH := $(call find_in_path_raw,pocc.exe)
                                                             ifneq ($(HB_COMP_PATH),)
-                                                               ifneq ($(call find_in_path_raw,coredll.lib,$(LIB)),)
+                                                               ifneq ($(call find_in_path_prw,coredll.lib,$(LIB)),)
                                                                   HB_PLATFORM := wce
                                                                   HB_COMPILER := poccarm
                                                                   HB_CPU := arm
                                                                else
-                                                                  ifneq ($(call find_in_path_raw,dbgeng.lib,$(LIB)),)
+                                                                  ifneq ($(call find_in_path_prw,dbgeng.lib,$(LIB)),)
                                                                      HB_COMPILER := pocc64
                                                                      HB_CPU := x86_64
                                                                   else
@@ -825,7 +826,7 @@ ifeq ($(HB_COMPILER),)
                                                                   endif
                                                                endif
                                                             else
-                                                               HB_COMP_PATH := $(call find_in_path,xcc)
+                                                               HB_COMP_PATH := $(call find_in_path_raw,xCC.exe)
                                                                ifneq ($(HB_COMP_PATH),)
                                                                   HB_COMPILER := xcc
                                                                else
@@ -983,9 +984,9 @@ endif
 # Always autodetect bcc location (hack)
 ifeq ($(HB_COMP_PATH_PUB),)
    ifeq ($(HB_PLATFORM)-$(HB_COMPILER),win-bcc)
-      HB_COMP_PATH := $(call find_in_path,bcc32)
+      HB_COMP_PATH := $(call find_in_path_raw,bcc32.exe)
       ifneq ($(HB_COMP_PATH),)
-         export HB_COMP_PATH_PUB := $(subst $(substpat), ,$(dir $(firstword $(subst $(subst x, ,x),$(substpat),$(HB_COMP_PATH)))))
+         export HB_COMP_PATH_PUB := $(HB_COMP_PATH)
       endif
    endif
 endif
@@ -995,6 +996,8 @@ ifneq ($(filter $(HB_HOST_PLAT),win wce dos os2),)
 else
    HB_HOST_PLAT_UNIX := yes
 endif
+
+export HB_HOST_PLAT_UNIX
 
 ifneq ($(filter $(HB_PLATFORM),win wce dos os2),)
    HB_PLATFORM_UNIX :=
