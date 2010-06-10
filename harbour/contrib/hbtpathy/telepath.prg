@@ -288,7 +288,7 @@ FUNCTION tp_send( nPort, cString, nTimeout )
       RETURN 0
    ENDIF
 
-   RETURN hb_comSend( t_aPorts[ nPort, TPFP_HANDLE ], cString )
+   RETURN hb_comSend( t_aPorts[ nPort, TPFP_HANDLE ], cString,, nTimeout )
 
 
 FUNCTION tp_sendsub( nPort, cString, nStart, nLength, nTimeout )

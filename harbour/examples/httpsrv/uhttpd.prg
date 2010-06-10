@@ -599,32 +599,19 @@ FUNCTION MAIN( ... )
          ENDIF
 
          // Wait a connection
-         IF hb_socketSelect( { hListen },,,,,, 50 ) > 0
-
-            // reset remote values
-            aRemote := NIL
-
-            // Accept a remote connection
-            hSocket := hb_socketAccept( hListen, @aRemote )
-            IF hSocket == NIL
-
-               WriteToConsole( hb_StrFormat( "accept() error: %s", hb_socketGetError() ) )
-
+         IF EMPTY( hSocket := hb_socketAccept( hListen, @aRemote, 50 ) )
+            IF hb_socketGerError() == HB_SOCKET_ERR_TIMEOUT
+               // Checking if I have to quit
+               IF HB_FileExists( FILE_STOP )
+                  FERASE( FILE_STOP )
+                  EXIT
+               ENDIF
             ELSE
-
-               // Send accepted connection to AcceptConnections() thread
-               hb_mutexNotify( s_hmtxQueue, hSocket )
-
+               WriteToConsole( hb_StrFormat( "accept() error: %s", hb_socketGetError() ) )
             ENDIF
-
          ELSE
-
-            // Checking if I have to quit
-            IF HB_FileExists( FILE_STOP )
-               FERASE( FILE_STOP )
-               EXIT
-            ENDIF
-
+            // Send accepted connection to AcceptConnections() thread
+            hb_mutexNotify( s_hmtxQueue, hSocket )
          ENDIF
 
          // Memory release
@@ -1700,12 +1687,12 @@ STATIC FUNCTION readRequest( hSocket, /* @ */ cRequest )
    /* receive query */
    cRequest := ""
    DO WHILE .T.
-      cBuf := Space( 1 )
+      cBuf := Space( 4096 )
       nLen := hb_socketRecv( hSocket, @cBuf )
       IF nLen <= 0
          EXIT
       ENDIF
-      cRequest += cBuf
+      cRequest += LEFT( cBuf, nLen )
       IF CR_LF + CR_LF $ cRequest
          EXIT
       ENDIF
@@ -1722,12 +1709,12 @@ STATIC FUNCTION readRequest( hSocket, /* @ */ cRequest )
              */
             nPos -= Len( cRequest ) - At( CR_LF + CR_LF, cRequest ) - 3
             WHILE nPos > 0
-               cBuf := Space( 1 )
+               cBuf := Space( nPos )
                nLen := hb_socketRecv( hSocket, @cBuf, nPos )
                IF nLen <= 0
                   EXIT
                ENDIF
-               cRequest += cBuf
+               cRequest += LEFT( cBuf, nPos )
                nPos -= nLen
             ENDDO
          ENDIF

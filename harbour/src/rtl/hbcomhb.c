@@ -108,7 +108,7 @@ HB_FUNC( HB_COMFLOWCONTROL )
 {
    int iValue = 0;
    hb_retl( hb_comFlowControl( hb_parni( 1 ), &iValue, hb_parni( 3 ) ) == 0 );
-   hb_storni( 2, iValue );
+   hb_storni( iValue, 2 );
 }
 
 HB_FUNC( HB_COMFLOWSET )
@@ -163,21 +163,21 @@ HB_FUNC( HB_COMLSR )
 {
    int iValue = 0;
    hb_retl( hb_comLSR( hb_parni( 1 ), &iValue ) == 0 );
-   hb_storni( 2, iValue );
+   hb_storni( iValue, 2 );
 }
 
 HB_FUNC( HB_COMMCR )
 {
    int iValue = 0;
    hb_retl( hb_comMCR( hb_parni( 1 ), &iValue, hb_parni( 3 ), hb_parni( 4 ) ) == 0 );
-   hb_storni( 2, iValue );
+   hb_storni( iValue, 2 );
 }
 
 HB_FUNC( HB_COMMSR )
 {
    int iValue = 0;
    hb_retl( hb_comMSR( hb_parni( 1 ), &iValue ) == 0 );
-   hb_storni( 2, iValue );
+   hb_storni( iValue, 2 );
 }
 
 HB_FUNC( HB_COMOPEN )
@@ -237,5 +237,5 @@ HB_FUNC( HB_COMSEND )
       if( lParam >= 0 && lParam < lLen )
          lLen = lParam;
    }
-   hb_retnl( hb_comSend( hb_parni( 1 ), hb_parc( 2 ), lLen, hb_parnint( 5 ) ) );
+   hb_retnl( hb_comSend( hb_parni( 1 ), hb_parc( 2 ), lLen, hb_parnint( 4 ) ) );
 }

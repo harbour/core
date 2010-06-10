@@ -132,30 +132,29 @@ LOCAL nWaiters
   Self:aSession := {=>}
 
   DO WHILE .T.
-    IF (nI := hb_socketSelect({Self:hListen},,,,,, 1000)) > 0
-      hSocket := hb_socketAccept(Self:hListen)
-      IF hSocket == NIL
-        Self:LogError("[error] Accept error " + LTRIM(STR(hb_socketGetError())))
-      ELSE
-        hb_mutexQueueInfo( Self:hmtxQueue, @nWaiters )
-        ? "New connection", hSocket
-        ? "Waiters:", nWaiters
-        IF nWaiters < 2 .AND. LEN(aThreads) < THREAD_COUNT_MAX
-           /*
-              We need two threads in worst case. If first thread becomes a sessioned
-              thread, the second one will continue to serve sessionless requests for
-              the same connection. We create two threads here to avoid free thread count
-              check (and aThreads variable sync) in ProcessRequest().
-           */
-           AADD(aThreads, hb_threadStart(@ProcessConnection(), Self))
-           AADD(aThreads, hb_threadStart(@ProcessConnection(), Self))
+    IF EMPTY( hSocket := hb_socketAccept(Self:hListen,, 1000) )
+      IF hb_socketGetError() == HB_SOCKET_ERR_TIMEOUT
+        EVAL(Self:bIdle, Self)
+        IF Self:lStop;  EXIT
         ENDIF
-        hb_mutexNotify(Self:hmtxQueue, {hSocket, ""})
+      ELSE
+        Self:LogError("[error] Accept error " + LTRIM(STR(hb_socketGetError())))
       ENDIF
     ELSE
-      EVAL(Self:bIdle, Self)
-      IF Self:lStop;  EXIT
+      hb_mutexQueueInfo( Self:hmtxQueue, @nWaiters )
+      ? "New connection", hSocket
+      ? "Waiters:", nWaiters
+      IF nWaiters < 2 .AND. LEN(aThreads) < THREAD_COUNT_MAX
+         /*
+            We need two threads in worst case. If first thread becomes a sessioned
+            thread, the second one will continue to serve sessionless requests for
+            the same connection. We create two threads here to avoid free thread count
+            check (and aThreads variable sync) in ProcessRequest().
+         */
+         AADD(aThreads, hb_threadStart(@ProcessConnection(), Self))
+         AADD(aThreads, hb_threadStart(@ProcessConnection(), Self))
       ENDIF
+      hb_mutexNotify(Self:hmtxQueue, {hSocket, ""})
     ENDIF
   ENDDO
   hb_socketClose(Self:hListen)
@@ -218,13 +217,14 @@ LOCAL hSocket, cRequest, cSend, aI, nLen, nI, nReqLen, cBuf
       cRequest := ""
       nLen := 1
       DO WHILE AT(CR_LF + CR_LF, cRequest) == 0 .AND. nLen > 0
-        IF (nI := hb_socketSelect({hSocket},,,,,, 10000)) > 0  /* Timeout */
-          cBuf := Space( 1 )
-          nLen := hb_socketRecv(hSocket, @cBuf)
-          cRequest += cBuf
+        cBuf := Space( 4096 )
+        IF (nLen := hb_socketRecv(hSocket, @cBuf,,, 10000)) > 0  /* Timeout */
+          cRequest += LEFT(cBuf, nLen)
         ELSE
-          nLen := 0
-          ? "recv() timeout", hSocket
+          IF nLen == -1 .AND. hb_socketGetError() == HB_SOCKET_ERR_TIMEOUT
+            nLen := 0
+            ? "recv() timeout", hSocket
+          ENDIF
         ENDIF
       ENDDO
 
@@ -263,9 +263,10 @@ LOCAL hSocket, cRequest, cSend, aI, nLen, nI, nReqLen, cBuf
 
           /* receive query body */
           DO WHILE LEN(cRequest) < nReqLen .AND. nLen > 0
-            cBuf := Space( 1 )
-            nLen := hb_socketRecv(hSocket, @cBuf)
-            cRequest += cBuf
+            cBuf := Space( 4096 )
+            IF (nLen := hb_socketRecv(hSocket, @cBuf,,, 500)) > 0
+              cRequest += LEFT( cBuf, nLen )
+            ENDIF
           ENDDO
 
           IF nLen == -1

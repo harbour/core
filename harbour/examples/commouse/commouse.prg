@@ -22,12 +22,12 @@ LOCAL nPort, cBuf, cBuffer, nLen, nType, lL, lM, lR, nX, nY
    ENDIF
 
    IF ! hb_comOpen( nPort ) 
-      ? "Unable to open port. Error:", hb_comGetError(), " OS error:", hb_comGetOsError()
+      ? "Unable to open port. Error:", hb_comGetError( nPort ), " OS error:", hb_comGetOsError( nPort )
       RETURN
    ENDIF
 
    IF ! hb_comInit( nPort, 1200, "N", 8, 1 )
-      ? "Unable to initialize port. Error:", hb_comGetError(), " OS error:", hb_comGetOsError()
+      ? "Unable to initialize port. Error:", hb_comGetError( nPort ), " OS error:", hb_comGetOsError( nPort )
       hb_comClose( nPort )
       RETURN
    ENDIF
