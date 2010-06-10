@@ -2,7 +2,7 @@
 # $Id$
 #
 
-# GNU MAKE file for xHarbour.com POCC compiler
+# GNU Make file for xHarbour.com POCC compiler
 
 OBJ_EXT := .obj
 LIB_PREF :=

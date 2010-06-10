@@ -2,7 +2,7 @@
 # $Id$
 #
 
-# GNU MAKE file for Borland/CodeGear C/C++ 32-bit (4.x-)
+# GNU Make file for Borland/CodeGear/Embarcadero C/C++ 32-bit (4.x-)
 
 OBJ_EXT := .obj
 LIB_PREF :=

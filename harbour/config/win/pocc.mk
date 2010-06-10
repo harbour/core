@@ -2,7 +2,7 @@
 # $Id$
 #
 
-# GNU MAKE file for Pelles ISO C Compiler
+# GNU Make file for Pelles ISO C Compiler
 
 OBJ_EXT := .obj
 LIB_PREF :=
