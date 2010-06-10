@@ -68,6 +68,7 @@
 #include "common.ch"
 #include "hbclass.ch"
 #include "xbp.ch"
+#include "appevent.ch"
 #include "hbqt.ch"
 
 /*----------------------------------------------------------------------*/
@@ -86,6 +87,11 @@
 #define dockSourceThumbnail_visibilityChanged     312
 #define dockQScintilla_visibilityChanged          313
 
+#define qTimer_timeOut                            401
+#define qSystemTrayIcon_show                      402
+#define qSystemTrayIcon_close                     403
+#define qSystemTrayIcon_activated                 404
+
 /*----------------------------------------------------------------------*/
 
 CLASS IdeDocks INHERIT IdeObject
@@ -97,6 +103,15 @@ CLASS IdeDocks INHERIT IdeObject
    DATA   oBtnTabClose
 
    DATA   qTBtnClose
+
+   DATA   lChanging                               INIT   .f.
+
+   DATA   qTimer
+   DATA   nPrevWindowState
+   DATA   lSystemTrayAvailable                    INIT   .f.
+   DATA   lMinimizeInSystemTray                   INIT   .t.  // .f.
+   DATA   qAct1
+   DATA   qAct2
 
    METHOD new( oIde )
    METHOD create( oIde )
@@ -138,6 +153,8 @@ CLASS IdeDocks INHERIT IdeObject
    METHOD buildSourceThumbnail()
    METHOD buildQScintilla()
    METHOD buildUpDownWidget()
+   METHOD buildSystemTray()
+   METHOD showDlgBySystemTrayIconCommand()
 
    ENDCLASS
 
@@ -152,6 +169,7 @@ METHOD IdeDocks:new( oIde )
 METHOD IdeDocks:create( oIde )
    DEFAULT oIde TO ::oIde
    ::oIde := oIde
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -183,6 +201,12 @@ METHOD IdeDocks:destroy()
    ::disconnect( ::oDockED:oWidget        , "visibilityChanged(bool)" )
    ::disconnect( ::oDockB2:oWidget        , "visibilityChanged(bool)" )
    #endif
+
+   IF !empty( ::oSys )
+      ::disconnect( ::oSys                , "activated(QSystemTrayIcon::ActivationReason)" )
+      ::disconnect( ::qAct1               , "triggered(bool)"         )
+      ::disconnect( ::qAct2               , "triggered(bool)"         )
+   ENDIF
 
    FOR EACH qTBtn IN ::aPanels
       ::disconnect( qTBtn, "clicked()" )
@@ -258,6 +282,158 @@ METHOD IdeDocks:buildDialog()
 
    ::setView( "Stats" )                  /* Always call with name */
 
+   ::oDlg:connectEvent( ::oDlg:oWidget, QEvent_WindowStateChange, {|e| ::execEvent( QEvent_WindowStateChange, e ) } )
+   ::oDlg:connectEvent( ::oDlg:oWidget, QEvent_Hide             , {|e| ::execEvent( QEvent_Hide, e ) } )
+
+   #if 1
+   ::buildSystemTray()
+   #endif
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeDocks:buildSystemTray()
+
+   IF empty( ::oSys )
+      ::oIde:oSys := QSystemTrayIcon():new( ::oDlg:oWidget )
+      IF ( ::lSystemTrayAvailable := ::oSys:isSystemTrayAvailable() ) .AND. ::lMinimizeInSystemTray
+         ::oSys:setIcon( hbide_image( "hbide" ) )
+         ::connect( ::oSys, "activated(QSystemTrayIcon::ActivationReason)", {|p| ::execEvent( qSystemTrayIcon_activated, p ) } )
+
+         ::oIde:oSysMenu := QMenu():new( ::oDlg:oWidget )
+         ::qAct1 := ::oSysMenu:addAction_1( hbide_image( "fullscreen" ), "&Show" )
+         ::oSysMenu:addSeparator()
+         ::qAct2 := ::oSysMenu:addAction_1( hbide_image( "exit" ), "&Exit" )
+
+         ::connect( ::qAct1, "triggered(bool)", {|| ::execEvent( qSystemTrayIcon_show  ) } )
+         ::connect( ::qAct2, "triggered(bool)", {|| ::execEvent( qSystemTrayIcon_close ) } )
+
+         ::oSys:setContextMenu( ::oSysMenu )
+         ::oSys:hide()
+         ::oSys:setToolTip( "Harbour's Integrated Development Environment (v1.0)" )
+      ENDIF
+   ENDIF
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeDocks:execEvent( nMode, p )
+   LOCAL qEvent
+
+   DO CASE
+
+   CASE nMode == 2  /* HelpWidget:contextMenuRequested(qPoint) */
+      hbide_popupBrwContextMenu( ::qHelpBrw, p )
+
+   CASE nMode == dockQScintilla_visibilityChanged
+      IF p; ::oEM:qscintilla(); ENDIF
+
+   CASE nMode == dockSourceThumbnail_visibilityChanged
+      IF p; ::oEM:showThumbnail(); ENDIF
+
+   /* Left Panel Docks */
+   CASE nMode == dockSkltnsTree_visibilityChanged
+      IF p; ::oSK:showTree(); ENDIF
+
+   /* Right Panel Docks */
+   CASE nMode == dockHelpDock_visibilityChanged
+      IF p; ::oHelpDock:oWidget:raise(); ENDIF
+
+   CASE nMode == dockDocViewer_visibilityChanged
+      IF p; ::oHL:show(); ::oDocViewDock:oWidget:raise(); ENDIF
+
+   CASE nMode == dockDocWriter_visibilityChanged
+      IF p; ::oDW:show(); ::oDocWriteDock:oWidget:raise(); ENDIF
+
+   CASE nMode == oFuncDock_visibilityChanged
+      IF p; ::oFuncDock:oWidget:raise(); ENDIF
+
+   CASE nMode == docFunctions_visibilityChanged
+      IF p; ::oFN:show(); ::oFunctionsDock:oWidget:raise(); ENDIF
+
+   CASE nMode == dockProperties_visibilityChanged
+      IF p; ::oPM:fetchProperties(); ::oPropertiesDock:oWidget:raise(); ENDIF
+
+   CASE nMode == docEnvironments_visibilityChanged
+      IF p; ::oEV:show(); ::oEnvironDock:oWidget:raise(); ENDIF
+
+   CASE nMode == docSkeletons_visibilityChanged
+      IF p; ::oSK:show(); ::oSkeltnDock:oWidget:raise(); ENDIF
+
+   CASE nMode == dockThemes_visibilityChanged
+      IF p; ::oTH:show(); ::oThemesDock:oWidget:raise(); ENDIF
+
+   CASE nMode == dockFindInFiles_visibilityChanged
+      IF p; ::oFF:show(); ::oFindDock:oWidget:raise(); ENDIF
+
+   CASE nMode == QEvent_WindowStateChange
+      qEvent := QWindowStateChangeEvent():from( p )
+      ::nPrevWindowState := qEvent:oldState()
+
+   CASE nMode == QEvent_Hide
+      IF ::lSystemTrayAvailable .AND. ::lMinimizeInSystemTray
+         qEvent := QHideEvent():from( p )
+         IF ! ::lChanging
+            ::lChanging := .t.
+            IF qEvent:spontaneous()
+               IF empty( ::qTimer )
+                  ::qTimer := QTimer():New()
+                  ::qTimer:setSingleShot( .t. )
+                  ::qTimer:setInterval( 250 )
+                  ::connect( ::qTimer, "timeout()", {|| ::execEvent( qTimer_timeOut ) } )
+               ENDIF
+               ::qTimer:start()
+               qEvent:ignore()
+            ENDIF
+            ::lChanging := .f.
+         ENDIF
+      ENDIF
+
+   CASE nMode == qTimer_timeOut
+      ::oDlg:hide()
+      ::oSys:setToolTip( ::oDlg:oWidget:windowTitle() )
+      ::oSys:show()
+
+   CASE nMode == qSystemTrayIcon_close
+      PostAppEvent( xbeP_Close, NIL, NIL, ::oDlg )
+
+   CASE nMode == qSystemTrayIcon_show
+      ::showDlgBySystemTrayIconCommand()
+
+   CASE nMode == qSystemTrayIcon_activated
+      IF     p == QSystemTrayIcon_Trigger
+         ::showDlgBySystemTrayIconCommand()
+
+      ELSEIF p == QSystemTrayIcon_DoubleClick
+
+      ELSEIF p == QSystemTrayIcon_Context
+
+      ELSEIF p == QSystemTrayIcon_MiddleClick
+
+      ENDIF
+
+   ENDCASE
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeDocks:showDlgBySystemTrayIconCommand()()
+
+   ::oSys:hide()
+
+   IF hb_bitAnd( ::nPrevWindowState, Qt_WindowMaximized ) == Qt_WindowMaximized
+      ::oDlg:oWidget:showMaximized()
+   ELSEIF hb_bitAnd( ::nPrevWindowState, Qt_WindowFullScreen ) == Qt_WindowFullScreen
+      ::oDlg:oWidget:showFullScreen()
+   ELSE
+      ::oDlg:oWidget:showNormal()
+   ENDIF
+
+   ::oDlg:oWidget:raise()
+   ::oDlg:oWidget:activateWindow()
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -329,60 +505,6 @@ METHOD IdeDocks:getADockWidget( nAreas, cObjectName, cWindowTitle, nFlags )
    oDock:hide()
 
    RETURN oDock
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeDocks:execEvent( nMode, p )
-
-   DO CASE
-
-   CASE nMode == 2  /* HelpWidget:contextMenuRequested(qPoint) */
-      hbide_popupBrwContextMenu( ::qHelpBrw, p )
-
-   CASE nMode == dockQScintilla_visibilityChanged
-      IF p; ::oEM:qscintilla(); ENDIF
-
-   CASE nMode == dockSourceThumbnail_visibilityChanged
-      IF p; ::oEM:showThumbnail(); ENDIF
-
-   /* Left Panel Docks */
-   CASE nMode == dockSkltnsTree_visibilityChanged
-      IF p; ::oSK:showTree(); ENDIF
-
-   /* Right Panel Docks */
-   CASE nMode == dockHelpDock_visibilityChanged
-      IF p; ::oHelpDock:oWidget:raise(); ENDIF
-
-   CASE nMode == dockDocViewer_visibilityChanged
-      IF p; ::oHL:show(); ::oDocViewDock:oWidget:raise(); ENDIF
-
-   CASE nMode == dockDocWriter_visibilityChanged
-      IF p; ::oDW:show(); ::oDocWriteDock:oWidget:raise(); ENDIF
-
-   CASE nMode == oFuncDock_visibilityChanged
-      IF p; ::oFuncDock:oWidget:raise(); ENDIF
-
-   CASE nMode == docFunctions_visibilityChanged
-      IF p; ::oFN:show(); ::oFunctionsDock:oWidget:raise(); ENDIF
-
-   CASE nMode == dockProperties_visibilityChanged
-      IF p; ::oPM:fetchProperties(); ::oPropertiesDock:oWidget:raise(); ENDIF
-
-   CASE nMode == docEnvironments_visibilityChanged
-      IF p; ::oEV:show(); ::oEnvironDock:oWidget:raise(); ENDIF
-
-   CASE nMode == docSkeletons_visibilityChanged
-      IF p; ::oSK:show(); ::oSkeltnDock:oWidget:raise(); ENDIF
-
-   CASE nMode == dockThemes_visibilityChanged
-      IF p; ::oTH:show(); ::oThemesDock:oWidget:raise(); ENDIF
-
-   CASE nMode == dockFindInFiles_visibilityChanged
-      IF p; ::oFF:show(); ::oFindDock:oWidget:raise(); ENDIF
-
-   ENDCASE
-
-   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
@@ -1160,3 +1282,4 @@ METHOD IdeDocks:animateComponents( nMode )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
+

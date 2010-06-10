@@ -105,4 +105,13 @@ HB_FUNC( HBQT_ISEQUALGCQTPOINTER )
    }
 }
 
+HB_FUNC( HBQT_ISQTSTATICLINK )
+{
+#ifdef QT_NODLL
+   hb_retl( HB_TRUE );
+#else
+   hb_retl( HB_FALSE );
+#endif
+}
+
 #endif                  // #if QT_VERSION >= 0x040500

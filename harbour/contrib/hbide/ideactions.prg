@@ -145,7 +145,7 @@ METHOD IdeActions:buildActions()
          qAction:setCheckable( iif( empty( a_[ ACT_CHECKABLE ] ), .F., upper( a_[ ACT_CHECKABLE ] ) == "YES" ) )
          qAction:setText( strtran( a_[ ACT_TEXT ], "~", "&" ) )
          IF !empty( a_[ ACT_IMAGE ] )
-            qAction:setIcon( ::resPath + a_[ ACT_IMAGE ] + ".png" )
+            qAction:setIcon( hbide_image( a_[ ACT_IMAGE ] ) )
          ENDIF
          #if 0
          IF !empty( a_[ ACT_SHORTCUT ] )

@@ -101,6 +101,7 @@ QGroupBox.qth
 QHBoxLayout.qth
 QHeaderView.qth
 QHelpEvent.qth
+QHideEvent.qth
 QHttp.qth
 QHttpHeader.qth
 QHttpRequestHeader.qth
@@ -183,6 +184,7 @@ QScrollArea.qth
 QScrollBar.qth
 QSessionManager.qth
 QSettings.qth
+QShowEvent.qth
 QSignalMapper.qth
 QSize.qth
 QSizeF.qth
@@ -299,6 +301,7 @@ QWidget.qth
 QWidgetAction.qth
 QWidgetItem.qth
 QWindowsStyle.qth
+QWindowStateChangeEvent.qth
 QWizard.qth
 QWizardPage.qth
 

@@ -2222,6 +2222,12 @@
 #define QToolButton_MenuButtonPopup               1        // In this mode the tool button displays a special arrow to indicate that a menu is present. The menu is displayed when the arrow part of the button is pressed.
 #define QToolButton_InstantPopup                  2        // The menu is displayed, without delay, when the tool button is pressed. In this mode, the button's own action is not triggered.
 
+#define QSystemTrayIcon_Unknown                   0        // Unknown reason
+#define QSystemTrayIcon_Context                   1        // The context menu for the system tray entry was requested
+#define QSystemTrayIcon_DoubleClick               2        // The system tray entry was double clicked
+#define QSystemTrayIcon_Trigger                   3        // The system tray entry was clicked
+#define QSystemTrayIcon_MiddleClick               4        // The system tray entry was clicked with the middle mouse button
+
 /*----------------------------------------------------------------------*/
 
 #define _HBQT_CH

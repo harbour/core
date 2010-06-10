@@ -194,6 +194,8 @@ CLASS IdeObject
    ACCESS oQScintillaDock                         INLINE ::oIde:oQScintillaDock
    ACCESS oMainToolbar                            INLINE ::oIde:oMainToolbar
    ACCESS oUpDn                                   INLINE ::oIde:oUpDn
+   ACCESS oSys                                    INLINE ::oIde:oSys
+   ACCESS oSysMenu                                INLINE ::oIde:oSysMenu
 
    ACCESS lProjTreeVisible                        INLINE ::oIde:lProjTreeVisible
    ACCESS lDockRVisible                           INLINE ::oIde:lDockRVisible

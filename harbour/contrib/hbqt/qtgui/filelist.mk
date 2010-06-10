@@ -75,6 +75,7 @@ CPP_SOURCES := \
    QHBoxLayout.cpp \
    QHeaderView.cpp \
    QHelpEvent.cpp \
+   QHideEvent.cpp \
    QIcon.cpp \
    QInputMethodEvent.cpp \
    QImage.cpp \
@@ -133,6 +134,7 @@ CPP_SOURCES := \
    QScrollArea.cpp \
    QScrollBar.cpp \
    QSessionManager.cpp \
+   QShowEvent.cpp \
    QSizeGrip.cpp \
    QSizePolicy.cpp \
    QSlider.cpp \
@@ -223,6 +225,7 @@ CPP_SOURCES := \
    QWidgetAction.cpp \
    QWidgetItem.cpp \
    QWindowsStyle.cpp \
+   QWindowStateChangeEvent.cpp \
    QWizard.cpp \
    QWizardPage.cpp \
 
@@ -295,6 +298,7 @@ PRG_SOURCES := \
    TQHBoxLayout.prg \
    TQHeaderView.prg \
    TQHelpEvent.prg \
+   TQHideEvent.prg \
    TQIcon.prg \
    TQInputMethodEvent.prg \
    TQImage.prg \
@@ -353,6 +357,7 @@ PRG_SOURCES := \
    TQScrollArea.prg \
    TQScrollBar.prg \
    TQSessionManager.prg \
+   TQShowEvent.prg \
    TQSizeGrip.prg \
    TQSizePolicy.prg \
    TQSlider.prg \
@@ -443,6 +448,7 @@ PRG_SOURCES := \
    TQWidgetAction.prg \
    TQWidgetItem.prg \
    TQWindowsStyle.prg \
+   TQWindowStateChangeEvent.prg \
    TQWizard.prg \
    TQWizardPage.prg \
 

@@ -66,6 +66,7 @@
 #include <QtGui/QTableWidgetItem>
 #include <QtGui/QDockWidget>
 #include <QtGui/QHeaderView>
+#include <QtGui/QSystemTrayIcon>
 
 /*----------------------------------------------------------------------*/
 
@@ -282,6 +283,8 @@ public slots:
    void highlighted( const QModelIndex & index );
    /* QAbstractButton */
    void toggled( bool checked );
+   /* QSystemTrayIcon */
+   void activated( QSystemTrayIcon::ActivationReason reason );
    /* Latest */
 };
 

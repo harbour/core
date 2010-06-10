@@ -289,6 +289,9 @@ CLASS HbIde
    DATA   lClosing                                INIT   .f.
    DATA   lStatusBarVisible                       INIT   .t.
 
+   DATA   oSys
+   DATA   oSysMenu
+
    METHOD new( aParams )
    METHOD create( aParams )
    METHOD destroy()
@@ -1408,3 +1411,4 @@ METHOD HbIde:testPainter( qPainter )
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
+
