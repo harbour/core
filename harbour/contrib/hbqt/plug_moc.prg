@@ -91,8 +91,8 @@ FUNCTION hbmk2_plugin_moc( hbmk2 )
 
             IF lBuildIt
                cCommand := cMOC_BIN +;
-                           " " + hbmk2_FNameEscape( hbmk2_PathSepToTarget( hbmk2, tmp ), hbmk2[ "nCmd_Esc" ], hbmk2[ "nFNNotation" ] ) +;
-                           " -o " + hbmk2_FNameEscape( hbmk2_PathSepToTarget( hbmk2, cDst ), hbmk2[ "nCmd_Esc" ], hbmk2[ "nFNNotation" ] )
+                           " " + hbmk2_FNameEscape( hbmk2_PathSepToTarget( hbmk2, tmp ), hbmk2[ "nCmd_Esc" ], hbmk2[ "nCmd_FNF" ] ) +;
+                           " -o " + hbmk2_FNameEscape( hbmk2_PathSepToTarget( hbmk2, cDst ), hbmk2[ "nCmd_Esc" ], hbmk2[ "nCmd_FNF" ] )
 
                IF hbmk2[ "lTRACE" ]
                   IF ! hbmk2[ "lQUIET" ]

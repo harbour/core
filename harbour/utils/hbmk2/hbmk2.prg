@@ -374,13 +374,14 @@ REQUEST hbmk_KEYW
 #define _HBMK_cWorkDir          99
 #define _HBMK_nCmd_Esc          100
 #define _HBMK_nScr_Esc          101
-#define _HBMK_nFNNotation       102
-#define _HBMK_nErrorLevel       103
+#define _HBMK_nCmd_FNF          102
+#define _HBMK_nScr_FNF          103
+#define _HBMK_nErrorLevel       104
 
-#define _HBMK_cPROGDIR          104
-#define _HBMK_cPROGNAME         105
+#define _HBMK_cPROGDIR          105
+#define _HBMK_cPROGNAME         106
 
-#define _HBMK_MAX_              105
+#define _HBMK_MAX_              106
 
 #define _HBMK_DEP_CTRL_MARKER   ".control." /* must be an invalid path */
 
@@ -708,6 +709,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    LOCAL cBin_Post := NIL
    LOCAL cOpt_Post
    LOCAL nOpt_Esc
+   LOCAL nOpt_FNF
    LOCAL nCCompVer
 
    LOCAL cCommand
@@ -846,7 +848,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
    hbmk[ _HBMK_nCmd_Esc ] := NIL
    hbmk[ _HBMK_nScr_Esc ] := NIL
-   hbmk[ _HBMK_nFNNotation ] := NIL
+   hbmk[ _HBMK_nCmd_FNF ] := NIL
 
    GetUILangCDP( @hbmk[ _HBMK_cUILNG ], @hbmk[ _HBMK_cUICDP ] )
    SetUILang( hbmk )
@@ -2820,9 +2822,9 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
            ( hbmk[ _HBMK_cPLAT ] == "win" .AND. hbmk[ _HBMK_cCOMP ] == "cygwin" )
 
          IF hbmk[ _HBMK_cCOMP ] == "cygwin"
-            hbmk[ _HBMK_nFNNotation ] := _FNF_FWSLASHCYGWIN
+            hbmk[ _HBMK_nCmd_FNF ] := _FNF_FWSLASHCYGWIN
          ELSE
-            hbmk[ _HBMK_nFNNotation ] := _FNF_FWSLASH
+            hbmk[ _HBMK_nCmd_FNF ] := _FNF_FWSLASH
          ENDIF
 
          IF hbmk[ _HBMK_lDEBUG ]
@@ -2968,7 +2970,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          ENDIF
 
       CASE hbmk[ _HBMK_cPLAT ] == "os2" .AND. hbmk[ _HBMK_cCOMP ] $ "gcc|gccomf"
-         hbmk[ _HBMK_nFNNotation ] := _FNF_BACKSLASH
+         hbmk[ _HBMK_nCmd_FNF ] := _FNF_BACKSLASH
          IF hbmk[ _HBMK_lDEBUG ]
             AAdd( hbmk[ _HBMK_aOPTC ], "-g" )
          ENDIF
@@ -3333,7 +3335,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          ENDIF
 
       CASE hbmk[ _HBMK_cPLAT ] == "win" .AND. hbmk[ _HBMK_cCOMP ] == "bcc"
-         hbmk[ _HBMK_nFNNotation ] := _FNF_BACKSLASH
+         hbmk[ _HBMK_nCmd_FNF ] := _FNF_BACKSLASH
          #if defined( __PLATFORM__UNIX )
             hbmk[ _HBMK_nCmd_Esc ] := _ESC_NIX
          #else
@@ -3411,7 +3413,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             AAdd( hbmk[ _HBMK_aOPTD ], "-Gi" )
          ENDIF
          IF ! Empty( hbmk[ _HBMK_cWorkDir ] )
-            AAdd( hbmk[ _HBMK_aOPTC ], "-n" + FN_Escape( hbmk[ _HBMK_cWorkDir ], hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nFNNotation ] ) )
+            AAdd( hbmk[ _HBMK_aOPTC ], "-n" + FN_Escape( hbmk[ _HBMK_cWorkDir ], hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) )
          ELSE
             IF lStopAfterCComp .AND. ! hbmk[ _HBMK_lCreateLib ] .AND. ! hbmk[ _HBMK_lCreateDyn ]
                IF ( Len( hbmk[ _HBMK_aPRG ] ) + Len( hbmk[ _HBMK_aC ] ) + Len( hbmk[ _HBMK_aCPP ] ) ) == 1
@@ -3429,7 +3431,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       CASE ( hbmk[ _HBMK_cPLAT ] == "win" .AND. hbmk[ _HBMK_cCOMP ] $ "msvc|msvc64|msvcia64|icc|iccia64" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "wce" .AND. hbmk[ _HBMK_cCOMP ] == "msvcarm" ) /* NOTE: Cross-platform: wce/ARM on win/x86 */
 
-         hbmk[ _HBMK_nFNNotation ] := _FNF_BACKSLASH
+         hbmk[ _HBMK_nCmd_FNF ] := _FNF_BACKSLASH
          #if defined( __PLATFORM__UNIX )
             hbmk[ _HBMK_nCmd_Esc ] := _ESC_NIX
          #else
@@ -3601,7 +3603,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             ENDIF
          ENDIF
          IF ! Empty( hbmk[ _HBMK_cWorkDir ] )
-            AAdd( hbmk[ _HBMK_aOPTC ], "-Fo" + FN_Escape( DirAddPathSep( hbmk[ _HBMK_cWorkDir ] ), hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nFNNotation ] ) ) /* NOTE: Ending path sep is important. */
+            AAdd( hbmk[ _HBMK_aOPTC ], "-Fo" + FN_Escape( DirAddPathSep( hbmk[ _HBMK_cWorkDir ] ), hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) ) /* NOTE: Ending path sep is important. */
          ELSE
             IF lStopAfterCComp .AND. ! hbmk[ _HBMK_lCreateLib ] .AND. ! hbmk[ _HBMK_lCreateDyn ]
                IF ( Len( hbmk[ _HBMK_aPRG ] ) + Len( hbmk[ _HBMK_aC ] ) + Len( hbmk[ _HBMK_aCPP ] ) ) == 1
@@ -3646,7 +3648,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
            ( hbmk[ _HBMK_cPLAT ] == "wce" .AND. hbmk[ _HBMK_cCOMP ] == "poccarm" ) .OR. ; /* NOTE: Cross-platform: wce/ARM on win/x86 */
            ( hbmk[ _HBMK_cPLAT ] == "win" .AND. hbmk[ _HBMK_cCOMP ] == "xcc" )
 
-         hbmk[ _HBMK_nFNNotation ] := _FNF_BACKSLASH
+         hbmk[ _HBMK_nCmd_FNF ] := _FNF_BACKSLASH
          #if defined( __PLATFORM__UNIX )
             hbmk[ _HBMK_nCmd_Esc ] := _ESC_NIX
          #else
@@ -4116,8 +4118,8 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                AAdd( hbmk[ _HBMK_aOPTPRG ], "-i" + FN_Escape( tmp, hbmk[ _HBMK_nCmd_Esc ] ) )
             ENDIF
             IF ! lStopAfterHarbour
-               AAdd( hbmk[ _HBMK_aOPTC ], StrTran( cOptIncMask, "{DI}", FN_Escape( tmp, hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nFNNotation ] ) ) )
-               AAdd( hbmk[ _HBMK_aOPTRES ], StrTran( cOptIncMask, "{DI}", FN_Escape( tmp, hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nFNNotation ] ) ) )
+               AAdd( hbmk[ _HBMK_aOPTC ], StrTran( cOptIncMask, "{DI}", FN_Escape( tmp, hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) ) )
+               AAdd( hbmk[ _HBMK_aOPTRES ], StrTran( cOptIncMask, "{DI}", FN_Escape( tmp, hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) ) )
             ENDIF
          ENDIF
       NEXT
@@ -4712,17 +4714,18 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          /* Compiling resource */
 
          nOpt_Esc := iif( "{SCRIPT}" $ cOpt_Res, hbmk[ _HBMK_nScr_Esc ], hbmk[ _HBMK_nCmd_Esc ] )
+         nOpt_FNF := iif( "{SCRIPT}" $ cOpt_Res, hbmk[ _HBMK_nScr_FNF ], hbmk[ _HBMK_nCmd_FNF ] )
 
          cOpt_Res := StrTran( cOpt_Res, "{FR}"  , GetEnv( "HB_USER_RESFLAGS" ) + " " + ArrayToList( hbmk[ _HBMK_aOPTRES ] ) )
-         cOpt_Res := StrTran( cOpt_Res, "{DI}"  , FN_Escape( l_cHB_INC_INSTALL, nOpt_Esc, hbmk[ _HBMK_nFNNotation ] ) )
+         cOpt_Res := StrTran( cOpt_Res, "{DI}"  , FN_Escape( l_cHB_INC_INSTALL, nOpt_Esc, nOpt_FNF ) )
 
          IF "{IR}" $ cOpt_Res
 
             FOR EACH tmp IN l_aRESSRC_TODO
 
                cCommand := cOpt_Res
-               cCommand := StrTran( cCommand, "{IR}", FN_Escape( tmp, nOpt_Esc, hbmk[ _HBMK_nFNNotation ] ) )
-               cCommand := StrTran( cCommand, "{OS}", FN_Escape( FN_DirExtSet( tmp, hbmk[ _HBMK_cWorkDir ], cResExt ), nOpt_Esc, hbmk[ _HBMK_nFNNotation ] ) )
+               cCommand := StrTran( cCommand, "{IR}", FN_Escape( tmp, nOpt_Esc, nOpt_FNF ) )
+               cCommand := StrTran( cCommand, "{OS}", FN_Escape( FN_DirExtSet( tmp, hbmk[ _HBMK_cWorkDir ], cResExt ), nOpt_Esc, nOpt_FNF ) )
 
                cCommand := cBin_Res + " " + AllTrim( cCommand )
 
@@ -4745,7 +4748,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                ENDIF
             NEXT
          ELSE
-            cOpt_Res := StrTran( cOpt_Res, "{LR}"  , ArrayToList( l_aRESSRC_TODO,, nOpt_Esc, hbmk[ _HBMK_nFNNotation ] ) )
+            cOpt_Res := StrTran( cOpt_Res, "{LR}"  , ArrayToList( l_aRESSRC_TODO,, nOpt_Esc, nOpt_FNF ) )
 
             cOpt_Res := AllTrim( cOpt_Res )
 
@@ -4847,21 +4850,22 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                   /* Compiling */
 
                   nOpt_Esc := iif( "{SCRIPT}" $ cOpt_CompC, hbmk[ _HBMK_nScr_Esc ], hbmk[ _HBMK_nCmd_Esc ] )
+                  nOpt_FNF := iif( "{SCRIPT}" $ cOpt_CompC, hbmk[ _HBMK_nScr_FNF ], hbmk[ _HBMK_nCmd_FNF ] )
 
                   /* Order is significant */
                   cOpt_CompC := StrTran( cOpt_CompC, "{FC}"  , iif( hbmk[ _HBMK_lBLDFLGC ], hb_Version( HB_VERSION_FLAG_C ) + " ", "" ) +;
                                                                GetEnv( "HB_USER_CFLAGS" ) + " " + ArrayToList( hbmk[ _HBMK_aOPTC ] ) )
-                  cOpt_CompC := StrTran( cOpt_CompC, "{OD}"  , FN_Escape( FN_DirGet( hbmk[ _HBMK_cPROGNAME ] ), nOpt_Esc, hbmk[ _HBMK_nFNNotation ] ) )
-                  cOpt_CompC := StrTran( cOpt_CompC, "{DI}"  , FN_Escape( l_cHB_INC_INSTALL, nOpt_Esc, hbmk[ _HBMK_nFNNotation ] ) )
+                  cOpt_CompC := StrTran( cOpt_CompC, "{OD}"  , FN_Escape( FN_DirGet( hbmk[ _HBMK_cPROGNAME ] ), nOpt_Esc, nOpt_FNF ) )
+                  cOpt_CompC := StrTran( cOpt_CompC, "{DI}"  , FN_Escape( l_cHB_INC_INSTALL, nOpt_Esc, nOpt_FNF ) )
 
                   IF "{IC}" $ cOpt_CompC
 
                      aThreads := {}
                      FOR EACH aTODO IN ArraySplit( l_aCGEN_TODO, l_nJOBS )
                         IF hb_mtvm() .AND. Len( aTODO:__enumBase() ) > 1
-                           AAdd( aThreads, hb_threadStart( @CompileCLoop(), hbmk, aTODO, cBin_CompCGEN, cOpt_CompC, cObjExt, nOpt_Esc, aTODO:__enumIndex(), Len( aTODO:__enumBase() ) ) )
+                           AAdd( aThreads, hb_threadStart( @CompileCLoop(), hbmk, aTODO, cBin_CompCGEN, cOpt_CompC, cObjExt, nOpt_Esc, nOpt_FNF, aTODO:__enumIndex(), Len( aTODO:__enumBase() ) ) )
                         ELSE
-                           IF ! CompileCLoop( hbmk, aTODO, cBin_CompCGEN, cOpt_CompC, cObjExt, nOpt_Esc, 0, 0 )
+                           IF ! CompileCLoop( hbmk, aTODO, cBin_CompCGEN, cOpt_CompC, cObjExt, nOpt_Esc, nOpt_FNF, 0, 0 )
                               IF ! hbmk[ _HBMK_lIGNOREERROR ]
                                  hbmk[ _HBMK_nErrorLevel ] := 6
                                  EXIT
@@ -4881,13 +4885,13 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                         NEXT
                      ENDIF
                   ELSE
-                     cOpt_CompC := StrTran( cOpt_CompC, "{OO}"  , FN_Escape( FN_ExtSet( hbmk[ _HBMK_cPROGNAME ], cObjExt ), nOpt_Esc, hbmk[ _HBMK_nFNNotation ] ) )
-                     cOpt_CompC := StrTran( cOpt_CompC, "{OW}"  , FN_Escape( hbmk[ _HBMK_cWorkDir ], nOpt_Esc, hbmk[ _HBMK_nFNNotation ] ) )
+                     cOpt_CompC := StrTran( cOpt_CompC, "{OO}"  , FN_Escape( FN_ExtSet( hbmk[ _HBMK_cPROGNAME ], cObjExt ), nOpt_Esc, nOpt_FNF ) )
+                     cOpt_CompC := StrTran( cOpt_CompC, "{OW}"  , FN_Escape( hbmk[ _HBMK_cWorkDir ], nOpt_Esc, nOpt_FNF ) )
 
                      aThreads := {}
                      FOR EACH aTODO IN ArraySplit( l_aCGEN_TODO, l_nJOBS )
 
-                        cOpt_CompCLoop := AllTrim( StrTran( cOpt_CompC, "{LC}"  , ArrayToList( aTODO,, nOpt_Esc, hbmk[ _HBMK_nFNNotation ] ) ) )
+                        cOpt_CompCLoop := AllTrim( StrTran( cOpt_CompC, "{LC}"  , ArrayToList( aTODO,, nOpt_Esc, nOpt_FNF ) ) )
 
                         /* Handle moving the whole command line to a script, if requested. */
                         cScriptFile := NIL
@@ -5039,19 +5043,20 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                /* Linking */
 
                nOpt_Esc := iif( "{SCRIPT}" $ cOpt_Link, hbmk[ _HBMK_nScr_Esc ], hbmk[ _HBMK_nCmd_Esc ] )
+               nOpt_FNF := iif( "{SCRIPT}" $ cOpt_Link, hbmk[ _HBMK_nScr_FNF ], hbmk[ _HBMK_nCmd_FNF ] )
 
                /* Order is significant */
                cOpt_Link := StrTran( cOpt_Link, "{FL}"  , iif( hbmk[ _HBMK_lBLDFLGL ], hb_Version( HB_VERSION_FLAG_LINKER ) + " ", "" ) +;
                                                           GetEnv( "HB_USER_LDFLAGS" ) + " " + ArrayToList( hbmk[ _HBMK_aOPTL ] ) )
-               cOpt_Link := StrTran( cOpt_Link, "{LO}"  , ArrayToList( ArrayJoin( l_aOBJ, hbmk[ _HBMK_aOBJUSER ] ),, nOpt_Esc, hbmk[ _HBMK_nFNNotation ], cObjPrefix ) )
-               cOpt_Link := StrTran( cOpt_Link, "{LS}"  , ArrayToList( ArrayJoin( ListDirExt( hbmk[ _HBMK_aRESSRC ], hbmk[ _HBMK_cWorkDir ], cResExt ), hbmk[ _HBMK_aRESCMP ] ),, nOpt_Esc, hbmk[ _HBMK_nFNNotation ], cResPrefix ) )
-               cOpt_Link := StrTran( cOpt_Link, "{LA}"  , ArrayToList( l_aOBJA,, nOpt_Esc, hbmk[ _HBMK_nFNNotation ] ) )
-               cOpt_Link := StrTran( cOpt_Link, "{LL}"  , ArrayToList( l_aLIB,, nOpt_Esc, hbmk[ _HBMK_nFNNotation ], cLibPrefix ) )
-               cOpt_Link := StrTran( cOpt_Link, "{LB}"  , ArrayToList( l_aLIBA,, nOpt_Esc, hbmk[ _HBMK_nFNNotation ] ) )
-               cOpt_Link := StrTran( cOpt_Link, "{OE}"  , FN_Escape( hbmk[ _HBMK_cPROGNAME ], nOpt_Esc, hbmk[ _HBMK_nFNNotation ] ) )
-               cOpt_Link := StrTran( cOpt_Link, "{OM}"  , FN_Escape( FN_ExtSet( hbmk[ _HBMK_cPROGNAME ], ".map" ), nOpt_Esc, hbmk[ _HBMK_nFNNotation ] ) )
-               cOpt_Link := StrTran( cOpt_Link, "{OI}"  , FN_Escape( l_cIMPLIBNAME, nOpt_Esc, hbmk[ _HBMK_nFNNotation ] ) )
-               cOpt_Link := StrTran( cOpt_Link, "{DL}"  , ArrayToList( hbmk[ _HBMK_aLIBPATH ], cLibPathSep, nOpt_Esc, hbmk[ _HBMK_nFNNotation ], cLibPathPrefix ) )
+               cOpt_Link := StrTran( cOpt_Link, "{LO}"  , ArrayToList( ArrayJoin( l_aOBJ, hbmk[ _HBMK_aOBJUSER ] ),, nOpt_Esc, nOpt_FNF, cObjPrefix ) )
+               cOpt_Link := StrTran( cOpt_Link, "{LS}"  , ArrayToList( ArrayJoin( ListDirExt( hbmk[ _HBMK_aRESSRC ], hbmk[ _HBMK_cWorkDir ], cResExt ), hbmk[ _HBMK_aRESCMP ] ),, nOpt_Esc, nOpt_FNF, cResPrefix ) )
+               cOpt_Link := StrTran( cOpt_Link, "{LA}"  , ArrayToList( l_aOBJA,, nOpt_Esc, nOpt_FNF ) )
+               cOpt_Link := StrTran( cOpt_Link, "{LL}"  , ArrayToList( l_aLIB,, nOpt_Esc, nOpt_FNF, cLibPrefix ) )
+               cOpt_Link := StrTran( cOpt_Link, "{LB}"  , ArrayToList( l_aLIBA,, nOpt_Esc, nOpt_FNF ) )
+               cOpt_Link := StrTran( cOpt_Link, "{OE}"  , FN_Escape( hbmk[ _HBMK_cPROGNAME ], nOpt_Esc, nOpt_FNF ) )
+               cOpt_Link := StrTran( cOpt_Link, "{OM}"  , FN_Escape( FN_ExtSet( hbmk[ _HBMK_cPROGNAME ], ".map" ), nOpt_Esc, nOpt_FNF ) )
+               cOpt_Link := StrTran( cOpt_Link, "{OI}"  , FN_Escape( l_cIMPLIBNAME, nOpt_Esc, nOpt_FNF ) )
+               cOpt_Link := StrTran( cOpt_Link, "{DL}"  , ArrayToList( hbmk[ _HBMK_aLIBPATH ], cLibPathSep, nOpt_Esc, nOpt_FNF, cLibPathPrefix ) )
                cOpt_Link := StrTran( cOpt_Link, "{DB}"  , l_cHB_BIN_INSTALL )
 
                cOpt_Link := AllTrim( cOpt_Link )
@@ -5132,18 +5137,19 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                /* Lib creation (dynamic) */
 
                nOpt_Esc := iif( "{SCRIPT}" $ cOpt_Dyn, hbmk[ _HBMK_nScr_Esc ], hbmk[ _HBMK_nCmd_Esc ] )
+               nOpt_FNF := iif( "{SCRIPT}" $ cOpt_Dyn, hbmk[ _HBMK_nScr_FNF ], hbmk[ _HBMK_nCmd_FNF ] )
 
                /* Order is significant */
                cOpt_Dyn := StrTran( cOpt_Dyn, "{FD}"  , GetEnv( "HB_USER_DFLAGS" ) + " " + ArrayToList( hbmk[ _HBMK_aOPTD ] ) )
-               cOpt_Dyn := StrTran( cOpt_Dyn, "{LO}"  , ArrayToList( ArrayJoin( l_aOBJ, hbmk[ _HBMK_aOBJUSER ] ),, nOpt_Esc, hbmk[ _HBMK_nFNNotation ], cDynObjPrefix ) )
-               cOpt_Dyn := StrTran( cOpt_Dyn, "{LS}"  , ArrayToList( ArrayJoin( ListDirExt( hbmk[ _HBMK_aRESSRC ], hbmk[ _HBMK_cWorkDir ], cResExt ), hbmk[ _HBMK_aRESCMP ] ),, nOpt_Esc, hbmk[ _HBMK_nFNNotation ], cResPrefix ) )
-               cOpt_Dyn := StrTran( cOpt_Dyn, "{LL}"  , ArrayToList( l_aLIB,, nOpt_Esc, hbmk[ _HBMK_nFNNotation ], cLibPrefix ) )
-               cOpt_Dyn := StrTran( cOpt_Dyn, "{LB}"  , ArrayToList( l_aLIBA,, nOpt_Esc, hbmk[ _HBMK_nFNNotation ] ) )
-               cOpt_Dyn := StrTran( cOpt_Dyn, "{IM}"  , ArrayToList( hbmk[ _HBMK_aDEF ],, nOpt_Esc, hbmk[ _HBMK_nFNNotation ], cDynDefPrefix ) )
-               cOpt_Dyn := StrTran( cOpt_Dyn, "{OD}"  , FN_Escape( hbmk[ _HBMK_cPROGNAME ], nOpt_Esc, hbmk[ _HBMK_nFNNotation ] ) )
-               cOpt_Dyn := StrTran( cOpt_Dyn, "{OM}"  , FN_Escape( FN_ExtSet( hbmk[ _HBMK_cPROGNAME ], ".map" ), nOpt_Esc, hbmk[ _HBMK_nFNNotation ] ) )
-               cOpt_Dyn := StrTran( cOpt_Dyn, "{OI}"  , FN_Escape( l_cIMPLIBNAME, nOpt_Esc, hbmk[ _HBMK_nFNNotation ] ) )
-               cOpt_Dyn := StrTran( cOpt_Dyn, "{DL}"  , ArrayToList( hbmk[ _HBMK_aLIBPATH ], cLibPathSep, nOpt_Esc, hbmk[ _HBMK_nFNNotation ], cLibPathPrefix ) )
+               cOpt_Dyn := StrTran( cOpt_Dyn, "{LO}"  , ArrayToList( ArrayJoin( l_aOBJ, hbmk[ _HBMK_aOBJUSER ] ),, nOpt_Esc, nOpt_FNF, cDynObjPrefix ) )
+               cOpt_Dyn := StrTran( cOpt_Dyn, "{LS}"  , ArrayToList( ArrayJoin( ListDirExt( hbmk[ _HBMK_aRESSRC ], hbmk[ _HBMK_cWorkDir ], cResExt ), hbmk[ _HBMK_aRESCMP ] ),, nOpt_Esc, nOpt_FNF, cResPrefix ) )
+               cOpt_Dyn := StrTran( cOpt_Dyn, "{LL}"  , ArrayToList( l_aLIB,, nOpt_Esc, nOpt_FNF, cLibPrefix ) )
+               cOpt_Dyn := StrTran( cOpt_Dyn, "{LB}"  , ArrayToList( l_aLIBA,, nOpt_Esc, nOpt_FNF ) )
+               cOpt_Dyn := StrTran( cOpt_Dyn, "{IM}"  , ArrayToList( hbmk[ _HBMK_aDEF ],, nOpt_Esc, nOpt_FNF, cDynDefPrefix ) )
+               cOpt_Dyn := StrTran( cOpt_Dyn, "{OD}"  , FN_Escape( hbmk[ _HBMK_cPROGNAME ], nOpt_Esc, nOpt_FNF ) )
+               cOpt_Dyn := StrTran( cOpt_Dyn, "{OM}"  , FN_Escape( FN_ExtSet( hbmk[ _HBMK_cPROGNAME ], ".map" ), nOpt_Esc, nOpt_FNF ) )
+               cOpt_Dyn := StrTran( cOpt_Dyn, "{OI}"  , FN_Escape( l_cIMPLIBNAME, nOpt_Esc, nOpt_FNF ) )
+               cOpt_Dyn := StrTran( cOpt_Dyn, "{DL}"  , ArrayToList( hbmk[ _HBMK_aLIBPATH ], cLibPathSep, nOpt_Esc, nOpt_FNF, cLibPathPrefix ) )
                cOpt_Dyn := StrTran( cOpt_Dyn, "{DB}"  , l_cHB_BIN_INSTALL )
 
                cOpt_Dyn := AllTrim( cOpt_Dyn )
@@ -5199,14 +5205,15 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                /* Lib creation (static) */
 
                nOpt_Esc := iif( "{SCRIPT}" $ cOpt_Lib, hbmk[ _HBMK_nScr_Esc ], hbmk[ _HBMK_nCmd_Esc ] )
+               nOpt_FNF := iif( "{SCRIPT}" $ cOpt_Lib, hbmk[ _HBMK_nScr_FNF ], hbmk[ _HBMK_nCmd_FNF ] )
 
                /* Order is significant */
                cOpt_Lib := StrTran( cOpt_Lib, "{FA}"  , GetEnv( "HB_USER_AFLAGS" ) + " " + ArrayToList( hbmk[ _HBMK_aOPTA ] ) )
-               cOpt_Lib := StrTran( cOpt_Lib, "{LO}"  , ArrayToList( ArrayJoin( l_aOBJ, hbmk[ _HBMK_aOBJUSER ] ),, nOpt_Esc, hbmk[ _HBMK_nFNNotation ], cLibObjPrefix ) )
-               cOpt_Lib := StrTran( cOpt_Lib, "{LL}"  , ArrayToList( l_aLIB,, nOpt_Esc, hbmk[ _HBMK_nFNNotation ], cLibPrefix ) )
-               cOpt_Lib := StrTran( cOpt_Lib, "{LB}"  , ArrayToList( l_aLIBA,, nOpt_Esc, hbmk[ _HBMK_nFNNotation ] ) )
-               cOpt_Lib := StrTran( cOpt_Lib, "{OL}"  , FN_Escape( hbmk[ _HBMK_cPROGNAME ], nOpt_Esc, hbmk[ _HBMK_nFNNotation ] ) )
-               cOpt_Lib := StrTran( cOpt_Lib, "{DL}"  , ArrayToList( hbmk[ _HBMK_aLIBPATH ], cLibPathSep, nOpt_Esc, hbmk[ _HBMK_nFNNotation ], cLibPathPrefix ) )
+               cOpt_Lib := StrTran( cOpt_Lib, "{LO}"  , ArrayToList( ArrayJoin( l_aOBJ, hbmk[ _HBMK_aOBJUSER ] ),, nOpt_Esc, nOpt_FNF, cLibObjPrefix ) )
+               cOpt_Lib := StrTran( cOpt_Lib, "{LL}"  , ArrayToList( l_aLIB,, nOpt_Esc, nOpt_FNF, cLibPrefix ) )
+               cOpt_Lib := StrTran( cOpt_Lib, "{LB}"  , ArrayToList( l_aLIBA,, nOpt_Esc, nOpt_FNF ) )
+               cOpt_Lib := StrTran( cOpt_Lib, "{OL}"  , FN_Escape( hbmk[ _HBMK_cPROGNAME ], nOpt_Esc, nOpt_FNF ) )
+               cOpt_Lib := StrTran( cOpt_Lib, "{DL}"  , ArrayToList( hbmk[ _HBMK_aLIBPATH ], cLibPathSep, nOpt_Esc, nOpt_FNF, cLibPathPrefix ) )
                cOpt_Lib := StrTran( cOpt_Lib, "{DB}"  , l_cHB_BIN_INSTALL )
 
                cOpt_Lib := AllTrim( cOpt_Lib )
@@ -5474,7 +5481,7 @@ STATIC PROCEDURE DoBeep( lSuccess )
 
    RETURN
 
-STATIC FUNCTION CompileCLoop( hbmk, aTODO, cBin_CompC, cOpt_CompC, cObjExt, nOpt_Esc, nJob, nJobs )
+STATIC FUNCTION CompileCLoop( hbmk, aTODO, cBin_CompC, cOpt_CompC, cObjExt, nOpt_Esc, nOpt_FNF, nJob, nJobs )
    LOCAL lResult := .T.
    LOCAL cCommand
    LOCAL tmp, tmp1
@@ -5489,8 +5496,8 @@ STATIC FUNCTION CompileCLoop( hbmk, aTODO, cBin_CompC, cOpt_CompC, cObjExt, nOpt
       lOutputSpecified := "{OO}" $ cCommand
       cOutputFile := FN_DirExtSet( tmp, hbmk[ _HBMK_cWorkDir ], cObjExt )
 
-      cCommand := StrTran( cCommand, "{IC}", FN_Escape( tmp, nOpt_Esc, hbmk[ _HBMK_nFNNotation ] ) )
-      cCommand := StrTran( cCommand, "{OO}", FN_Escape( cOutputFile, nOpt_Esc, hbmk[ _HBMK_nFNNotation ] ) )
+      cCommand := StrTran( cCommand, "{IC}", FN_Escape( tmp, nOpt_Esc, nOpt_FNF ) )
+      cCommand := StrTran( cCommand, "{OO}", FN_Escape( cOutputFile, nOpt_Esc, nOpt_FNF ) )
 
       cCommand := cBin_CompC + " " + AllTrim( cCommand )
 
@@ -5819,7 +5826,7 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, lSystemHeader, tT
       hb_processRun( cBin_CompC + " -MM" +;
                      " " + iif( hbmk[ _HBMK_lBLDFLGC ], hb_Version( HB_VERSION_FLAG_C ) + " ", "" ) +;
                            GetEnv( "HB_USER_CFLAGS" ) + " " + ArrayToList( hbmk[ _HBMK_aOPTC ] ) +;
-                     " " + FN_Escape( hbmk[ _HBMK_cHB_INC_INSTALL ], hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nFNNotation ] ) +;
+                     " " + FN_Escape( hbmk[ _HBMK_cHB_INC_INSTALL ], hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) +;
                      " " + cFileName,, @tmp )
 
       tmp := StrTran( tmp, Chr( 13 ) )
@@ -6603,7 +6610,8 @@ STATIC FUNCTION PlugIn_Execute( hbmk, cState )
          "cCCEXT"       => hbmk[ _HBMK_cCCEXT ]       ,;
          "nCmd_Esc"     => hbmk[ _HBMK_nCmd_Esc ]     ,;
          "nScr_Esc"     => hbmk[ _HBMK_nScr_Esc ]     ,;
-         "nFNNotation"  => hbmk[ _HBMK_nFNNotation ]  ,;
+         "nCmd_FNF"     => hbmk[ _HBMK_nCmd_FNF ]     ,;
+         "nScr_FNF"     => hbmk[ _HBMK_nScr_FNF ]     ,;
          "cWorkDir"     => hbmk[ _HBMK_cWorkDir ]     ,;
          "nErrorLevel"  => hbmk[ _HBMK_nErrorLevel ]  ,;
          s_cSecToken    => hbmk                       }
@@ -8853,8 +8861,8 @@ STATIC FUNCTION win_implib_command( hbmk, cCommand, cSourceDLL, cTargetLib, cFla
    DEFAULT cFlags TO ""
 
    cCommand := StrTran( cCommand, "{FI}", cFlags )
-   cCommand := StrTran( cCommand, "{ID}", FN_Escape( cSourceDLL, hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nFNNotation ] ) )
-   cCommand := StrTran( cCommand, "{OL}", FN_Escape( cTargetLib, hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nFNNotation ] ) )
+   cCommand := StrTran( cCommand, "{ID}", FN_Escape( cSourceDLL, hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) )
+   cCommand := StrTran( cCommand, "{OL}", FN_Escape( cTargetLib, hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) )
 
    IF hbmk[ _HBMK_lTRACE ]
       IF ! hbmk[ _HBMK_lQuiet ]
@@ -9041,7 +9049,7 @@ STATIC FUNCTION win_implib_command_msvc( hbmk, cCommand, cSourceDLL, cTargetLib,
    ENDIF
 
    cCommandDump := "dumpbin.exe -exports {ID}"
-   cCommandDump := StrTran( cCommandDump, "{ID}", FN_Escape( cSourceDLL, hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nFNNotation ] ) )
+   cCommandDump := StrTran( cCommandDump, "{ID}", FN_Escape( cSourceDLL, hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) )
 
    IF hbmk[ _HBMK_lTRACE ]
       IF ! hbmk[ _HBMK_lQuiet ]
