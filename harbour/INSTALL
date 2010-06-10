@@ -1043,6 +1043,13 @@ HARBOUR
       make "$@"
       ---
 
+      --- Borland C++ 5.5.1
+      export PATH=~/.wine/drive_c/Borland/BCC55/Bin:$PATH
+      export HB_PLATFORM=win
+      export HB_COMPILER=bcc
+      export HB_BUILD_EXTDEF=no
+      ---
+
    for Darwin (Mac OS X) hosts
    ---------------------------
 
@@ -1258,6 +1265,7 @@ HARBOUR
    x linux  -> win/mingw     x86
    x linux  -> win/mingw64   x86-64
    x linux  -> win/watcom    x86
+   x linux  -> win/bcc       x86 (requires WINE)
    x linux  -> os2/watcom    x86
    x linux  -> dos/watcom    x86
    x linux  -> dos/djgpp     x86

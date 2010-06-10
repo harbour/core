@@ -986,7 +986,7 @@ ifeq ($(HB_COMP_PATH_PUB),)
    ifeq ($(HB_PLATFORM)-$(HB_COMPILER),win-bcc)
       HB_COMP_PATH := $(call find_in_path_raw,bcc32.exe)
       ifneq ($(HB_COMP_PATH),)
-         export HB_COMP_PATH_PUB := $(HB_COMP_PATH)
+         export HB_COMP_PATH_PUB := $(subst $(substpat), ,$(dir $(firstword $(subst $(subst x, ,x),$(substpat),$(HB_COMP_PATH)))))
       endif
    endif
 endif

@@ -36,17 +36,24 @@ ifeq ($(HB_BUILD_DEBUG),yes)
    CFLAGS += -y -v
 endif
 
+ifneq ($(HB_HOST_PLAT_UNIX),)
+   BACKSLASH := $(subst /,\,\\)
+else
+   BACKSLASH := $(subst /,\,\)
+endif
+
+ifeq ($(HB_SHELL),sh)
+   ECHOBACKSLASH := $(BACKSLASH)$(BACKSLASH)
+else
+   ECHOBACKSLASH := $(BACKSLASH)
+endif
+
 # Hack to autoconfig bcc, and not require properly set .cfg files in its bin dir.
 # It only works if we know compiler location.
 ifneq ($(HB_COMP_PATH_PUB),)
-   ifneq ($(HB_HOST_PLAT_UNIX),)
-      BCKSLASH := $(subst /,\,\\)
-   else
-      BCKSLASH := $(subst /,\,\)
-   endif
-   HB_CFLAGS += $(subst /,$(BCKSLASH),-I"$(HB_COMP_PATH_PUB)../Include")
-   LDFLAGS   += $(subst /,$(BCKSLASH),-L"$(HB_COMP_PATH_PUB)../Lib" -L"$(HB_COMP_PATH_PUB)../Lib/PSDK")
-   DFLAGS    += $(subst /,$(BCKSLASH),-L"$(HB_COMP_PATH_PUB)../Lib" -L"$(HB_COMP_PATH_PUB)../Lib/PSDK")
+   HB_CFLAGS += $(subst /,$(BACKSLASH),-I"$(HB_COMP_PATH_PUB)../Include")
+   LDFLAGS   += $(subst /,$(BACKSLASH),-L"$(HB_COMP_PATH_PUB)../Lib" -L"$(HB_COMP_PATH_PUB)../Lib/PSDK")
+   DFLAGS    += $(subst /,$(BACKSLASH),-L"$(HB_COMP_PATH_PUB)../Lib" -L"$(HB_COMP_PATH_PUB)../Lib/PSDK")
 endif
 
 RC := brcc32.exe
@@ -54,15 +61,15 @@ RC_OUT := -fo
 RCFLAGS :=
 
 LD := ilink32.exe
-LIBPATHS := $(subst /,\,-L"$(LIB_DIR)")
+LIBPATHS := $(subst /,$(BACKSLASH),-L"$(LIB_DIR)")
 LDFLAGS += $(LIBPATHS) -Gn -Tpe
-LD_RULE = $(LD) $(LDFLAGS) $(HB_LDFLAGS) $(HB_USER_LDFLAGS) c0x32.obj $(filter-out %$(RES_EXT),$(^F)), "$(subst /,\,$(BIN_DIR)/$@)", nul, $(LDLIBS) cw32mt import32,, $(filter %$(RES_EXT),$(^F)) $(LDSTRIP)
+LD_RULE = $(LD) $(LDFLAGS) $(HB_LDFLAGS) $(HB_USER_LDFLAGS) c0x32.obj $(filter-out %$(RES_EXT),$(^F)), "$(subst /,$(BACKSLASH),$(BIN_DIR)/$@)", nul, $(LDLIBS) cw32mt import32,, $(filter %$(RES_EXT),$(^F)) $(LDSTRIP)
 
 LDLIBS := $(strip $(HB_USER_LIBS) $(LIBS) $(SYSLIBS))
 
 AR := tlib.exe
 ARFLAGS += /P128
-AR_RULE = $(AR) $(ARFLAGS) $(HB_AFLAGS) $(HB_USER_AFLAGS) "$(subst /,\,$(LIB_DIR)/$@)" $(foreach file,$(?F),-+$(file))
+AR_RULE = $(AR) $(ARFLAGS) $(HB_AFLAGS) $(HB_USER_AFLAGS) "$(subst /,$(BACKSLASH),$(LIB_DIR)/$@)" $(foreach file,$(?F),-+$(file))
 
 ifneq ($(HB_SHELL),sh)
    ifeq ($(HB_SHELL_XP),)
@@ -79,7 +86,7 @@ ifneq ($(HB_SHELL),sh)
 
       # NOTE: The empty line directly before 'endef' HAVE TO exist!
       define lib_object
-         @$(ECHO) $(ECHOQUOTE)-+$(subst /,\,$(file)) $(LINECONT)$(ECHOQUOTE) >> __lib__.tmp
+         @$(ECHO) $(ECHOQUOTE)-+$(subst /,$(ECHOBACKSLASH),$(file)) $(LINECONT)$(ECHOQUOTE) >> __lib__.tmp
 
       endef
 
@@ -87,7 +94,7 @@ ifneq ($(HB_SHELL),sh)
          $(if $(wildcard __lib__.tmp),@$(RM) __lib__.tmp,)
          $(foreach file,$(?F),$(lib_object))
          @$(ECHO) $(ECHOQUOTE)-+$(ECHOQUOTE)>> __lib__.tmp
-         $(AR) $(ARFLAGS) $(HB_AFLAGS) $(HB_USER_AFLAGS) "$(subst /,\,$(LIB_DIR)/$@)" @__lib__.tmp
+         $(AR) $(ARFLAGS) $(HB_AFLAGS) $(HB_USER_AFLAGS) "$(subst /,$(BACKSLASH),$(LIB_DIR)/$@)" @__lib__.tmp
       endef
 
       AR_RULE = $(create_library)
@@ -104,13 +111,13 @@ DLIBS += $(foreach lib,$(SYSLIBS),$(lib)$(LIB_EXT))
 
 # NOTE: The empty line directly before 'endef' HAVE TO exist!
 define dyn_object
-   @$(ECHO) $(ECHOQUOTE)$(subst /,\,$(file)) +$(ECHOQUOTE) >> __dyn__.tmp
+   @$(ECHO) $(ECHOQUOTE)$(subst /,$(BACKSLASH)$(BACKSLASH),$(file)) +$(ECHOQUOTE) >> __dyn__.tmp
 
 endef
 define create_dynlib
    $(if $(wildcard __dyn__.tmp),@$(RM) __dyn__.tmp,)
    $(foreach file,$^,$(dyn_object))
-   @$(ECHO) $(ECHOQUOTE), $(subst /,\,$(DYN_DIR)/$@),, $(subst /,\,$(DLIBS)) cw32mt.lib import32.lib$(ECHOQUOTE) >> __dyn__.tmp
+   @$(ECHO) $(ECHOQUOTE), $(subst /,$(ECHOBACKSLASH),$(DYN_DIR)/$@),, $(subst /,$(ECHOBACKSLASH),$(DLIBS)) cw32mt.lib import32.lib$(ECHOQUOTE) >> __dyn__.tmp
    $(DY) $(DFLAGS) $(HB_USER_DFLAGS) c0d32.obj @__dyn__.tmp
    @$(CP) $(subst /,$(DIRSEP),$(DYN_DIR)/$(basename $@)$(LIB_EXT)) $(subst /,$(DIRSEP),$(IMP_FILE))
    @$(RM) $(subst /,$(DIRSEP),$(DYN_DIR)/$(basename $@)$(LIB_EXT))

@@ -2469,7 +2469,7 @@ STATIC FUNCTION uhttpd_DefError( oError )
    cCallstack := ""
    n := 1
    DO WHILE ! Empty( ProcName( ++n ) )
-      cCallstack += "Called from " + ProcName( n ) + "(" + hb_NToS( ProcLine( n ) ) + ")  " + cNewLine
+      cCallstack += "Called from " + ProcName( n ) + "(" + hb_NToS( ProcLine( n ) ) + ")  ;"
    ENDDO
 
    // Build buttons
