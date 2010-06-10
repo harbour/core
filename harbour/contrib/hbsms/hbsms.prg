@@ -64,7 +64,17 @@ STATIC FUNCTION port_send( h, s )
    RETURN hb_comSend( h, s )
 
 STATIC FUNCTION port_rece( h, n, t )
-   LOCAL cString := iif( ISNUMBER( n ), Space( n ), "" )
+   LOCAL cString
+
+   IF ! ISNUMBER( n )
+      n := 64
+   ENDIF
+
+   IF ! ISNUMBER( t )
+      t := 5
+   ENDIF
+
+   cString := Space( n )
 
    hb_comRecv( h, @cString,, t )
 

@@ -55,19 +55,19 @@
 #ifndef HB_COM_CH_
 #define HB_COM_CH_
 
-/* HB_COMFLUSH() modes */
+/* hb_comFlush() modes */
 #define HB_COM_IFLUSH               1
 #define HB_COM_OFLUSH               2
 #define HB_COM_IOFLUSH              3
 
-/* HB_COMMCR() parameters */
+/* hb_comMCR() parameters */
 #define HB_COM_MCR_DTR              0x01  /* Data terminal ready (DTR) TIOCM_DTR */
 #define HB_COM_MCR_RTS              0x02  /* Request to send (RTS)     TIOCM_RTS */
 #define HB_COM_MCR_OUT1             0x04  /* OUT 1                     TIOCM_OUT1 */
 #define HB_COM_MCR_OUT2             0x08  /* OUT 2                     TIOCM_OUT2 */
 #define HB_COM_MCR_LOOP             0x10  /* LOOP                      TIOCM_LOOP */
 
-/* HB_COMMSR() parameters */
+/* hb_comMSR() parameters */
 #define HB_COM_MSR_DELTA_CTS        0x01  /* DELTA ready to send (DCTS) */
 #define HB_COM_MSR_DELTA_DSR        0x02  /* DELTA data terminal ready (DDSR) */
 #define HB_COM_MSR_TERI             0x04  /* Trailing edge RING (TERI) */
@@ -77,7 +77,7 @@
 #define HB_COM_MSR_RI               0x40  /* RING indicator (RI)         TIOCM_RI */
 #define HB_COM_MSR_DCD              0x80  /* Data carrier detected (DCD) TIOCM_CD */
 
-/* HB_COMLSR() parameters */
+/* hb_comLSR() parameters */
 #define HB_COM_LSR_DATA_READY       0x01  /* Data ready */
 #define HB_COM_LSR_OVERRUN_ERR      0x02  /* Overflow error */
 #define HB_COM_LSR_PARITY_ERR       0x04  /* Parity error */
@@ -86,7 +86,7 @@
 #define HB_COM_LSR_TRANS_HOLD_EMPTY 0x20  /* Transmission holder register empty */
 #define HB_COM_LSR_TRANS_EMPTY      0x40  /* TX shift register empty */
 
-/* HB_COMFLOWCONTROL() parameters */
+/* hb_comFlowControl() parameters */
 #define HB_COM_FLOW_IRTSCTS         0x01
 #define HB_COM_FLOW_ORTSCTS         0x02
 #define HB_COM_FLOW_IDTRDSR         0x04
@@ -95,7 +95,7 @@
 #define HB_COM_FLOW_XOFF            0x20  /* XON/XOFF on input */
 #define HB_COM_FLOW_XON             0x40  /* XON/XOFF on output */
 
-/* HB_COMFLOWSET() parameters */
+/* hb_comFlowSet() parameters */
 #define HB_COM_FL_OOFF              0x01
 #define HB_COM_FL_OON               0x02
 #define HB_COM_FL_IOFF              0x04
@@ -105,7 +105,7 @@
 #define HB_COM_FL_DTRDSR            0x40
 #define HB_COM_FL_DCD               0x80
 
-/* HB_COMOUTPUTSTATE() return values */
+/* hb_comOutputState() return values */
 #define HB_COM_TX_CTS               0x01
 #define HB_COM_TX_DSR               0x02
 #define HB_COM_TX_DCD               0x04
@@ -113,10 +113,10 @@
 #define HB_COM_TX_EMPTY             0x10
 #define HB_COM_TX_RFLUSH            0x20
 
-/* HB_COMINPUTSTATE() return values */
+/* hb_comInputState() return values */
 #define HB_COM_RX_XOFF              0x01
 
-/* HB_COMGETERROR() return values */
+/* hb_comGetError() return values */
 #define HB_COM_ERR_WRONGPORT        1
 #define HB_COM_ERR_CLOSED           2
 #define HB_COM_ERR_TIMEOUT          3
