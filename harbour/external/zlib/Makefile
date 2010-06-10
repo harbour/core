@@ -31,6 +31,10 @@ C_SOURCES := \
    zutil.c \
 
 ifneq ($(HB_HAS_ZLIB_LOCAL),)
+   # To suppress new warnings in version 1.2.5
+   ifneq ($(filter $(HB_COMPILER),mingw mingw64 mingwarm cygwin),)
+      HB_CFLAGS += -DNO_VIZ
+   endif
    include $(TOP)$(ROOT)config/lib.mk
 else
    HB_SKIP_REASON := unused
