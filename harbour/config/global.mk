@@ -1317,8 +1317,10 @@ export HB_SYSLOC
 ifneq ($(HB_INSTALL_PREFIX),)
 
    ifeq ($(HB_BUILD_SHARED),)
-      ifeq ($(HB_SYSLOC),yes)
-         export HB_BUILD_SHARED := yes
+      ifneq ($(HB_PLATFORM_UNIX),)
+         ifeq ($(HB_SYSLOC),yes)
+            export HB_BUILD_SHARED := yes
+         endif
       endif
    endif
 
