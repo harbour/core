@@ -598,7 +598,7 @@ DECLARE HBClass ;
 
 /* Scalar classes support */
 #command ASSOCIATE CLASS <ClassFuncName> WITH TYPE <type: ;
-   ARRAY, BLOCK, CHARACTER, DATE, HASH, LOGICAL, NIL, NUMERIC, SYMBOL, POINTER> => ;
+   ARRAY, BLOCK, CHARACTER, DATE, HASH, LOGICAL, NIL, NUMERIC, SYMBOL, TIMESTAMP, POINTER> => ;
       __clsAssocType( __clsInstSuper( @<ClassFuncName>() ), #<type> )
 
 #command ENABLE TYPE CLASS <type: ;
