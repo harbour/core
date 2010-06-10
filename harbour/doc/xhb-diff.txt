@@ -852,6 +852,102 @@ command.
 
 
 
+###    PRE/POST INCREMENTATION/DECREMENTATION AND <op>= OPERATORS    ###
+========================================================================
+Clipper compiling PRG code with expressions containing operators like
+pre and post ++ and -- and also <op>= internally translates them to
+normal operators and then generated PCODE for such translated depressions,
+i.e.:
+   a += 10
+   b /= c
+   ++d
+   e--
+   ? --f
+   ? g++
+is translated to:
+   a := a + 10
+   b := b / c
+   d := d + 1
+   e := e - 1
+   ? ( f := f - 1 )
+   ? g ; g := g + 1
+
+As you can see it causes that modified expression is used more then once.
+Usually twice but in some cases (i.e. '? g++' in example above even 3 times.
+For simple expression like variables such internal compile time modification
+is not visible for users and does not create any difference.
+Anyhow if modified expression is complex one which is evaluated and changes
+some states (expression with side effects) then such compiler behavior creates
+very serious problems. In practice in Clipper it's not possible to use code
+like:
+   aValue[ ++i ] += field->QUANTITY       // (*)
+because this line is translated to:
+   aValue[ ++i ] := aValue[ ++i ] + field->QUANTITY
+then to:
+   aValue[ i := i + 1 ] := aValue[ i := i + 1 ] + field->QUANTITY
+for := operator the left side is calculated first so effectively Clipper
+generates code which works like:
+   aValue[ i + 2 ] := aValue[ i + 1 ] + field->QUANTITY
+   i := i + 2
+what is very far from the initial (*) expression.
+In Harbour we decided to fix it and all expressions modified by pre and
+post ++/-- and <op>= operators are evaluated exactly once. It means that
+now Harbour users can safely write code with (*) like expressions.
+Anyhow if someone needs strict Clipper behavior then -kc Harbour compiler
+switch restore it.
+Here is simple code which illustrates it:
+
+   proc main()
+      local a, i, n
+      a := afill( array( 10 ), 100 )
+      i := n := 0
+      while i < len( a )
+         a[ ++i ] -= n++
+      enddo
+      aeval( a, { |x| qout( x ) } )
+   return
+
+This problem is also fixed in xBase++ so it's possible to exchange code
+using such expressions between Harbour and xBase++.
+In xHarbour the behavior of such expressions in in practice undefined.
+In most of cases it behaves like Clipper (i.e. it gives the same wrong
+results in above example) but not always because some not cleanly
+implemented extensions changed above behavior for chosen operators
+executed in some context (i.e. modifying -= to += in above example
+causes that xHarbour generates correct code which give the same results
+as Harbour and xBase++). Additionally so far no one has tried to control
+such things in xHarbour compiler so the behavior of different operators
+and/or context where they behaves differently has been changing few times
+as side effect of some other modifications.
+
+The correct behavior of pre and post ++/-- and <op>= operators is also
+very important for OOP programmers because it guaranties that messages
+are send to exactly the same object. This example illustrates it:
+
+   proc main()
+      local o
+      o := errorNew()
+      ? "assign..."
+      ?? f( o ):cargo := 0
+      ? "predec..."
+      ?? --f( o ):cargo
+      ? "postinc..."
+      ?? f( o ):cargo++
+   return
+   func f( o )
+      ?? " F()"
+   return o
+
+In Harbour and xBase++ function F() is executed only once for each
+expression but in Clipper and xHarbour once for 'assign', then twice for
+'predec' and finaly three times for 'postinc'. In this code function f()
+returns the same object 'o' on each call so it's not a problem but code
+where the expression can return different objects will not work correctly
+so OOP programmers working with Clipper or xHarbour should remember about
+it and not create such code.
+
+
+
 ###    GLOBAL / GLOBAL EXTERNAL (GLOBAL_EXTERN)    ###
 ======================================================
 xHarbour support application wide static variables called GLOBALs.

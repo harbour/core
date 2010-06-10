@@ -1012,8 +1012,8 @@ void hb_dbfPutMemoBlock( DBFAREAP pArea, HB_USHORT uiIndex, HB_ULONG ulBlock )
  * so I left it in DBF.
  */
 HB_ERRCODE hb_dbfGetMemoData( DBFAREAP pArea, HB_USHORT uiIndex,
-                                     HB_ULONG * pulBlock, HB_ULONG * pulSize,
-                                     HB_ULONG * pulType )
+                              HB_ULONG * pulBlock, HB_ULONG * pulSize,
+                              HB_ULONG * pulType )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_dbfGetMemoData(%p, %hu, %p, %p, %p)", pArea, uiIndex, pulBlock, pulSize, pulType));
 
@@ -1082,7 +1082,8 @@ HB_ERRCODE hb_dbfGetMemoData( DBFAREAP pArea, HB_USHORT uiIndex,
  * so I left it in DBF.
  */
 HB_ERRCODE hb_dbfSetMemoData( DBFAREAP pArea, HB_USHORT uiIndex,
-                                     HB_ULONG ulBlock, HB_ULONG ulSize, HB_ULONG ulType )
+                              HB_ULONG ulBlock, HB_ULONG ulSize,
+                              HB_ULONG ulType )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_dbfSetMemoData(%p, %hu, %lu, %lu, %lu)", pArea, uiIndex, ulBlock, ulSize, ulType));
 
@@ -1136,7 +1137,8 @@ HB_ERRCODE hb_dbfSetMemoData( DBFAREAP pArea, HB_USHORT uiIndex,
  * This function is common for different MEMO implementation
  * so I left it in DBF.
  */
-HB_BOOL hb_dbfLockIdxGetData( HB_BYTE bScheme, HB_FOFFSET *ulPos, HB_FOFFSET *ulPool )
+HB_BOOL hb_dbfLockIdxGetData( HB_BYTE bScheme,
+                              HB_FOFFSET *ulPos, HB_FOFFSET *ulPool )
 {
    switch( bScheme )
    {
@@ -1178,7 +1180,8 @@ HB_BOOL hb_dbfLockIdxGetData( HB_BYTE bScheme, HB_FOFFSET *ulPos, HB_FOFFSET *ul
  * This function is common for different MEMO implementation
  * so I left it in DBF.
  */
-HB_BOOL hb_dbfLockIdxFile( PHB_FILE pFile, HB_BYTE bScheme, HB_USHORT usMode, HB_FOFFSET *pPoolPos )
+HB_BOOL hb_dbfLockIdxFile( PHB_FILE pFile, HB_BYTE bScheme, HB_USHORT usMode,
+                           HB_FOFFSET *pPoolPos )
 {
    HB_FOFFSET ulPos, ulPool, ulSize = 1;
    HB_BOOL fRet = HB_FALSE;
@@ -1238,8 +1241,8 @@ HB_BOOL hb_dbfLockIdxFile( PHB_FILE pFile, HB_BYTE bScheme, HB_USHORT usMode, HB
  * Get DBF locking parameters
  */
 static HB_ERRCODE hb_dbfLockData( DBFAREAP pArea,
-                               HB_FOFFSET * ulPos, HB_FOFFSET * ulFlSize,
-                               HB_FOFFSET * ulRlSize, int * iDir )
+                                  HB_FOFFSET * ulPos, HB_FOFFSET * ulFlSize,
+                                  HB_FOFFSET * ulRlSize, int * iDir )
 {
    switch( pArea->bLockType )
    {
