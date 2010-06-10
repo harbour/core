@@ -206,8 +206,7 @@
 #define HB_SOCKET_IFINFO_HWADDR           8     /* hardware address */
 #define HB_SOCKET_IFINFO_LEN              8
 
-/* Socket address array indexes used in
-   HB_SOCKETGETSOCKNAME(), HB_SOCKETGETPEERNAME() return values */
+/* Socket address array indexes */
 #define HB_SOCKET_ADINFO_FAMILY           1
 #define HB_SOCKET_ADINFO_ADDRESS          2     /* HB_SOCKET_AF_INET, HB_SOCKET_AF_INET6 */
 #define HB_SOCKET_ADINFO_PATH             2     /* HB_SOCKET_AF_LOCAL */

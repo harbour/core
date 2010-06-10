@@ -1048,6 +1048,7 @@ HARBOUR
       export HB_PLATFORM=win
       export HB_COMPILER=bcc
       export HB_BUILD_EXTDEF=no
+      make
       ---
 
    for Darwin (Mac OS X) hosts
