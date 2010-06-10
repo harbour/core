@@ -79,7 +79,7 @@
          distribution packages. You can find a few such .hbc examples in
          the 'examples' directory. For Harbour contribs, the recommended
          method is to supply and maintain .hbc files in their respective
-         directories, usually under tests (or utils, samples). As of this
+         directories, usually under tests (or utils, examples). As of this
          writing, most of them has one created.
          Thank you. [vszakats] */
 
@@ -115,8 +115,7 @@
                 - Compilers of native CPU target have higher priority. (extra)
                   On x64 Windows: msvc64, msvc, msvcia64, mingw64, mingw, ...
                   On x86 Windows: msvc, msvc64, msvcia64, mingw, mingw64, ...
-                  On IA64 Windows: msvcia64, msvc, msvc64, mingw, mingw64, ...
-         +1 Add compiler version autodetection for MSVC. */
+                  On IA64 Windows: msvcia64, msvc, msvc64, mingw, mingw64, ... */
 
 #ifndef _HBMK_EMBEDDED_
 
@@ -3452,10 +3451,22 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             IF hbmk[ _HBMK_cCOMP ] == "msvcarm" .AND. ! Empty( FindInPath( "clarm.exe" ) )
                nCCompVer := 1310 /* Visual Studio .NET 2003 */
             ELSE
-               nCCompVer := 1400 /* Visual Studio 2005 */
+               tmp := FindInPath( "cl.exe" )
+               DO CASE
+               CASE "VC98" $ tmp
+                  nCCompVer := 1200
+               CASE "2003" $ tmp
+                  nCCompVer := 1300
+               CASE "8" + hb_osPathSeparator() $ tmp /* Visual Studio 2005 */
+                  nCCompVer := 1400
+               CASE "9.0" $ tmp /* Visual Studio 2008 or Windows SDK 7.0 */
+                  nCCompVer := 1500
+               CASE "10.0" $ tmp /* Visual Studio 2010 or Windows SDK 7.1 */
+                  nCCompVer := 1600
+               OTHERWISE
+                  nCCompVer := 1400
+               ENDCASE
             ENDIF
-            /* 1500 : Visual Studio 2008 */
-            /* 1600 : Visual Studio 2010 */
          ENDIF
 
          IF hbmk[ _HBMK_lDEBUG ]
