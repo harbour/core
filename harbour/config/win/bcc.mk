@@ -111,7 +111,7 @@ DLIBS += $(foreach lib,$(SYSLIBS),$(lib)$(LIB_EXT))
 
 # NOTE: The empty line directly before 'endef' HAVE TO exist!
 define dyn_object
-   @$(ECHO) $(ECHOQUOTE)$(subst /,$(BACKSLASH)$(BACKSLASH),$(file)) +$(ECHOQUOTE) >> __dyn__.tmp
+   @$(ECHO) $(ECHOQUOTE)$(subst /,$(ECHOBACKSLASH),$(file)) +$(ECHOQUOTE) >> __dyn__.tmp
 
 endef
 define create_dynlib
