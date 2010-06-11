@@ -2,4 +2,4 @@
  * $Id$
  */
 
-http://www.ijg.org/files/jpegsr8a.zip
+http://www.ijg.org/files/jpegsr8b.zip
