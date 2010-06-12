@@ -68,9 +68,9 @@ rm -f -r _mk_nightly
 destdir="/home/frs/project/h/ha/harbour-project/source/nightly/"
 
 if [ -d $destdir ]
-   echo cp harbour-nightly-src.zip $destdir
-   echo cp harbour-nightly.tar.bz2 $destdir
-   echo cp harbour-nightly.tar.gz  $destdir
+   cp harbour-nightly-src.zip $destdir
+   cp harbour-nightly.tar.bz2 $destdir
+   cp harbour-nightly.tar.gz  $destdir
 then
    if [ "$HB_SFNET_FRS_PRIVATE_KEY" -a "$HB_SFNET_USER" ]
    then
