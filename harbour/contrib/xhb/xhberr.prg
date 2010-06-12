@@ -131,7 +131,7 @@ STATIC FUNCTION xhb_DefError( oError )
    Endif
 
 
-   If ValType( oError:Args ) == "A"
+   If ISARRAY( oError:Args )
      cMessage += " Arguments: (" + Arguments( oError ) + ")"
    Endif
 
@@ -293,46 +293,46 @@ STATIC FUNCTION LogError( oerr )
      Endif
 
 
-     If nHandle < 3 .and. lower( cLogFile ) != 'error.log'
+     If nHandle < 3 .and. lower( cLogFile ) != "error.log"
         // Force creating error.log in case supplied log file cannot
         // be created for any reason
-        cLogFile := 'error.log'
+        cLogFile := "error.log"
         nHandle := Fcreate( cLogFile, FC_NORMAL )
      Endif
 
      If nHandle < 3
      Else
 
-        FWriteLine( nHandle, Padc( ' xHarbour Error Log ' , 79, '-' ) )
-        FWriteLine( nHandle, '' )
+        FWriteLine( nHandle, Padc( " xHarbour Error Log " , 79, "-" ) )
+        FWriteLine( nHandle, "" )
 
-        FWriteLine( nHandle, 'Date...............: ' + dtoc( date() )  )
-        FWriteLine( nHandle, 'Time...............: ' + time()          )
+        FWriteLine( nHandle, "Date...............: " + dtoc( date() )  )
+        FWriteLine( nHandle, "Time...............: " + time()          )
 
-        FWriteLine( nHandle, '' )
-        FWriteLine( nHandle, 'Application name...: ' + hb_cmdargargv() )
-        FWriteLine( nHandle, 'Workstation name...: ' + netname() )
-        FWriteLine( nHandle, 'Available memory...: ' + strvalue( Memory(0) )  )
-        FWriteLine( nHandle, 'Current disk.......: ' + diskname() )
-        FWriteLine( nHandle, 'Current directory..: ' + curdir() )
-        FWriteLine( nHandle, 'Free disk space....: ' + strvalue( DiskSpace() ) )
-        FWriteLine( nHandle, '' )
-        FWriteLine( nHandle, 'Operating system...: ' + os() )
-        FWriteLine( nHandle, 'xHarbour version...: ' + version() )
-        FWriteLine( nHandle, 'xHarbour built on..: ' + hb_builddate() )
-        FWriteLine( nHandle, 'C/C++ compiler.....: ' + hb_compiler() )
+        FWriteLine( nHandle, "" )
+        FWriteLine( nHandle, "Application name...: " + hb_cmdargargv() )
+        FWriteLine( nHandle, "Workstation name...: " + netname() )
+        FWriteLine( nHandle, "Available memory...: " + strvalue( Memory(0) )  )
+        FWriteLine( nHandle, "Current disk.......: " + diskname() )
+        FWriteLine( nHandle, "Current directory..: " + curdir() )
+        FWriteLine( nHandle, "Free disk space....: " + strvalue( DiskSpace() ) )
+        FWriteLine( nHandle, "" )
+        FWriteLine( nHandle, "Operating system...: " + os() )
+        FWriteLine( nHandle, "xHarbour version...: " + version() )
+        FWriteLine( nHandle, "xHarbour built on..: " + hb_builddate() )
+        FWriteLine( nHandle, "C/C++ compiler.....: " + hb_compiler() )
 
-        FWriteLine( nHandle, 'Multi Threading....: ' + If( hb_mtvm(),"YES","NO" ) )
-        FWriteLine( nHandle, 'VM Optimization....: ' + strvalue( Hb_VmMode() ) )
+        FWriteLine( nHandle, "Multi Threading....: " + If( hb_mtvm(),"YES","NO" ) )
+        FWriteLine( nHandle, "VM Optimization....: " + strvalue( Hb_VmMode() ) )
 
         IF __dynsIsFun( "Select" )
-            FWriteLine( nHandle, '' )
-            FWriteLine( nHandle, 'Current Area ......:' + strvalue( &("Select()") ) )
+            FWriteLine( nHandle, "" )
+            FWriteLine( nHandle, "Current Area ......:" + strvalue( &("Select()") ) )
         ENDIF
 
-        FWriteLine( nHandle, '' )
-        FWriteLine( nHandle, Padc( ' Environmental Information ', 79, '-' ) )
-        FWriteLine( nHandle, '' )
+        FWriteLine( nHandle, "" )
+        FWriteLine( nHandle, Padc( " Environmental Information ", 79, "-" ) )
+        FWriteLine( nHandle, "" )
 
         FWriteLine( nHandle, "SET ALTERNATE......: " + strvalue( Set( _SET_ALTERNATE  ), .T. ) )
         FWriteLine( nHandle, "SET ALTFILE........: " + strvalue( Set( _SET_ALTFILE  )      ) )
@@ -436,9 +436,9 @@ STATIC FUNCTION LogError( oerr )
         FWriteLine( nHandle, "" )
 
         IF nCols > 0
-            FWriteLine( nHandle, Padc( 'Detailed Work Area Items', nCols, '-' ) )
+            FWriteLine( nHandle, Padc( "Detailed Work Area Items", nCols, "-" ) )
         ELSE
-            FWriteLine( nHandle, 'Detailed Work Area Items ' )
+            FWriteLine( nHandle, "Detailed Work Area Items " )
         ENDIF
         FWriteLine( nHandle, "" )
 
@@ -499,22 +499,22 @@ STATIC FUNCTION LogError( oerr )
 
         nCount := 3
         While !Empty( Procname( ++ nCount ) )
-          FWriteLine( nHandle, Padr( Procname( nCount ), 21 ) + ' : ' + Transform( Procline( nCount ), "999,999" ) + " in Module: " + ProcFile( nCount ) )
+          FWriteLine( nHandle, Padr( Procname( nCount ), 21 ) + " : " + Transform( Procline( nCount ), "999,999" ) + " in Module: " + ProcFile( nCount ) )
         Enddo
 
         FWriteLine( nHandle, "" )
         FWriteLine( nHandle, "" )
 
-        IF valtype( cScreen ) == "C"
+        IF ISCHARACTER( cScreen )
             FWriteLine( nHandle, Padc( " Video Screen Dump ", nCols, "#" ) )
             FWriteLine( nHandle, "" )
             //FWriteLine( nHandle, "" )
-            FWriteLine( nHandle, "+" + Replicate( '-', nCols + 1 ) + "+" )
+            FWriteLine( nHandle, "+" + Replicate( "-", nCols + 1 ) + "+" )
             //FWriteLine( nHandle, "" )
             nCellSize := len( Savescreen( 0, 0, 0, 0 ) )
             nRange := ( nCols + 1 ) * nCellSize
             For nCount := 1 To nRows + 1
-               cOutString := ''
+               cOutString := ""
                cSubString := Substr( cScreen, nStart, nRange )
                For nForLoop := 1 To nRange step nCellSize
                   cOutString += Substr( cSubString, nForLoop, 1 )
@@ -522,7 +522,7 @@ STATIC FUNCTION LogError( oerr )
                FWriteLine( nHandle, "|" + cOutString + "|" )
                nStart += nRange
             Next
-            FWriteLine( nHandle, "+" + Replicate( '-', nCols + 1 ) + "+" )
+            FWriteLine( nHandle, "+" + Replicate( "-", nCols + 1 ) + "+" )
             FWriteLine( nHandle, "" )
             FWriteLine( nHandle, "" )
         ELSE
@@ -531,10 +531,10 @@ STATIC FUNCTION LogError( oerr )
 
 
     /*
-     *  FWriteLine( nHandle, padc(" Available Memory Variables ",nCols,'+') )
+     *  FWriteLine( nHandle, padc(" Available Memory Variables ",nCols,"+") )
      *  FWriteLine( nHandle, "" )
      *  Save All Like * To errormem
-     *  nMemHandle := Fopen( 'errormem.mem', FO_READWRITE )
+     *  nMemHandle := Fopen( "errormem.mem", FO_READWRITE )
      *  nMemLength := Fseek( nMemHandle, 0, 2 )
      *  Fseek( nMemHandle, 0 )
      *  nCount := 1
@@ -557,18 +557,18 @@ STATIC FUNCTION LogError( oerr )
      *        Case "N"
      *            nBytes += ( nLenTemp := 9 )
      *            exit
-     *        Case 'L'
+     *        Case "L"
      *            nBytes += ( nLenTemp := 2 )
      *            exit
      *        Case "D"
      *            nBytes += ( nLenTemp := 9 )
      *            exit
      *    End
-     *    Fwrite( nFhandle, "            " + Transform( nLenTemp, '999999' ) + 'bytes -> ' )
+     *    Fwrite( nFhandle, "            " + Transform( nLenTemp, "999999" ) + "bytes -> " )
      *    FWriteLine( nHandle, "      " + cTemp )
      *  Enddo
      *  Fclose( nMemHandle )
-     *  Ferase( 'errormem.mem' )
+     *  Ferase( "errormem.mem" )
      */
         if lAppendLog .and. nHandle2 != -1
 
@@ -599,7 +599,7 @@ Return .f.
 
 STATIC FUNCTION strvalue( c, l )
 
-   LOCAL cr := ''
+   LOCAL cr := ""
 
    DEFAULT l TO .F.
 
@@ -656,19 +656,19 @@ PROCEDURE __MinimalErrorHandler( oError )
 
    LOCAL cError := "Error!" + hb_osNewLine()
 
-   IF ValType( oError:Operation ) == 'C'
+   IF ISCHARACTER( oError:Operation )
       cError += "Operation: " + oError:Operation + hb_osNewLine()
    ENDIF
-   IF ValType( oError:Description ) == 'C'
+   IF ISCHARACTER( oError:Description )
       cError += "Description: " + oError:Description + hb_osNewLine()
    ENDIF
-   IF ValType( oError:ModuleName ) == 'C'
+   IF ISCHARACTER( oError:ModuleName )
       cError += "Source: " + oError:ModuleName + hb_osNewLine()
    ENDIF
-   IF ValType( oError:ProcName ) == 'C'
+   IF ISCHARACTER( oError:ProcName )
       cError += "Procedure: " + oError:ProcName + hb_osNewLine()
    ENDIF
-   IF ValType( oError:ProcLine ) == 'N'
+   IF ISNUMBER( oError:ProcLine )
       cError += "Line: " + hb_ntos( oError:ProcLine ) + hb_osNewLine()
    ENDIF
 

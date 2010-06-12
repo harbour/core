@@ -1057,7 +1057,7 @@ RETURN( cQuery )
 * insert
 * CAMBIA EL MODO INSERT ON /OFF DESDE UN "READ"
 *---------------------------------------------------------------------------
-ins_on := .NOT. ins_on
+ins_on := ! ins_on
 IIF(ins_on, READINSERT(.T.), READINSERT(.F.))
 Ins_stat()
 RETURN

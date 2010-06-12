@@ -19,7 +19,9 @@ ifneq ($(HB_HAS_QT),)
    include $(TOP)$(ROOT)config/lib.mk
 
    ifneq ($(HB_QT_STATIC),)
-      DIRS += qtcores
-      include $(TOP)$(ROOT)config/dir.mk
+      ifneq ($(filter $(HB_PLATFORM),win wce),)
+         DIRS += qtcores
+         include $(TOP)$(ROOT)config/dir.mk
+      endif
    endif
 endif

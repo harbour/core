@@ -55,6 +55,8 @@
 
 #include "hbrpc.ch"
 
+#include "common.ch"
+
 CLASS tRPCClient
 
    DATA aServers
@@ -236,7 +238,7 @@ RETURN .T.
 
 
 METHOD SetEncryption( cKey )
-   IF .not. Empty( cKey )
+   IF ! Empty( cKey )
       ::bEncrypted := .T.
       ::cCryptKey := cKey
    ELSE
@@ -247,7 +249,7 @@ RETURN .T.
 
 METHOD ScanServers(cName) CLASS tRPCClient
    // do not allow asynchronous mode without timeout
-   IF .not. ::lAsyncMode .and. ( ::nTimeout == NIL .or. ::nTimeOut <= 0 )
+   IF ! ::lAsyncMode .and. ( ::nTimeout == NIL .or. ::nTimeOut <= 0 )
       RETURN .F.
    ENDIF
 
@@ -289,7 +291,7 @@ RETURN .F.
 
 METHOD ScanFunctions( cFunc, cSerial ) CLASS tRPCClient
    // do not allow asynchronous mode without timeout
-   IF .not. ::lAsyncMode .and. ( ::nTimeOut == NIL .or. ::nTimeOut <= 0 )
+   IF ! ::lAsyncMode .and. ( ::nTimeOut == NIL .or. ::nTimeOut <= 0 )
       RETURN .F.
    ENDIF
 
@@ -441,7 +443,7 @@ METHOD Connect( cServer, cUserId, cPassword ) CLASS tRPCClient
       ENDIF
 
       IF hb_inetErrorCode( ::skTcp ) == 0
-         IF .not. ::bEncrypted
+         IF ! ::bEncrypted
             hb_inetRecvAll( ::skTcp, @cReply )
             IF hb_inetErrorCode( ::skTcp ) == 0 .and. cReply == "XHBR91OK"
                ::nStatus := RPC_STATUS_LOGGED // Logged in
@@ -544,7 +546,7 @@ METHOD SetLoopMode( nMethod, xData, nEnd, nStep ) CLASS tRPCClient
       RETURN .T.
    ENDIF
 
-   IF ValType( xData ) == "A"
+   IF ISARRAY( xData )
       ::aLoopData := xData
    ELSE
       IF ValType( xData ) == "NI"
@@ -592,12 +594,12 @@ METHOD Call( ... ) CLASS tRPCClient
    ::oResult := NIL
 
    // do not allow asynchronous mode without timeout
-   IF .not. ::lAsyncMode .and. ( ::nTimeOut == NIL .or. ::nTimeOut <= 0 )
+   IF ! ::lAsyncMode .and. ( ::nTimeOut == NIL .or. ::nTimeOut <= 0 )
       RETURN NIL
    ENDIF
 
    oCalling := hb_PValue( 1 )
-   IF ValType( oCalling ) == "A"
+   IF ISARRAY( oCalling )
       cFunction := oCalling[1]
       ADel( oCalling, 1 )
       ASize( oCalling, Len( oCalling ) -1 )
@@ -625,7 +627,7 @@ METHOD Call( ... ) CLASS tRPCClient
    ::nStatus := RPC_STATUS_WAITING // waiting for a reply
 
    // send the call through the socket
-   IF .not. ::SendCall( cFunction, aParams )
+   IF ! ::SendCall( cFunction, aParams )
       RETURN .F.
    ENDIF
 
@@ -655,7 +657,7 @@ METHOD SetPeriodCallback( ... ) CLASS tRPCClient
    ::nTimeLimit := hb_PValue( 2 )
 
    caCalling := hb_PValue( 3 )
-   IF ValType( caCalling ) != "A"
+   IF ! ISARRAY( caCalling )
       caCalling := Array( Pcount() -2 )
       FOR nCount := 3 TO Pcount()
          caCalling[nCount - 2] :=  hb_PValue( nCount )
@@ -813,7 +815,7 @@ METHOD TCPAccept() CLASS tRPCClient
          EXIT
       ENDIF
 
-      IF .not. ::TCPParse( cCode )
+      IF ! ::TCPParse( cCode )
          EXIT
       ENDIF
 
@@ -884,7 +886,7 @@ METHOD TCPParse( cCode ) CLASS tRPCClient
                cData := Space( nDataLen )
                IF hb_inetRecvAll( ::skTCP, @cData ) == nDataLen
                   cData := HB_Uncompress( nOrigLen, ::Decrypt( cData ) )
-                  IF .not. Empty( cData )
+                  IF ! Empty( cData )
                      ::oResult := HB_Deserialize( cData, nDataLen )
                      IF ::oResult != NIL
                         ::OnFunctionReturn( ::oResult )
@@ -932,7 +934,7 @@ METHOD TCPParse( cCode ) CLASS tRPCClient
                   cData := Space( nDataLen )
                   IF hb_inetRecvAll( ::skTCP, @cData ) == nDataLen
                      cData := HB_Uncompress( nOrigLen, cData )
-                     IF .not. Empty( cData )
+                     IF ! Empty( cData )
                         ::oResult := HB_Deserialize( ::Decrypt( cData), nDataLen )
                         IF ::oResult != NIL
                            lContinue := .T.
@@ -953,7 +955,7 @@ RETURN lContinue
 METHOD GetFunctionName( xId ) CLASS tRpcClient
    LOCAL cData, nPos
 
-   IF ValType( xID ) == "A"
+   IF ISARRAY( xID )
       cData := xId[3]
    ELSEIF Len( ::aFunctions ) > 0
       cData := ::aFunctions[xId][3]
@@ -961,7 +963,7 @@ METHOD GetFunctionName( xId ) CLASS tRpcClient
       cData := ""
    ENDIF
 
-   IF .not. Empty(cData)
+   IF ! Empty(cData)
       nPos := At( "(", cData )
       cData := Substr( cData, 1, nPos-1 )
    ENDIF
@@ -972,7 +974,7 @@ RETURN cData
 METHOD GetServerName( xId ) CLASS tRpcClient
    LOCAL cData
 
-   IF ValType( xID ) == "A"
+   IF ISARRAY( xID )
       cData := xId[2]
    ELSE
       IF Len( ::aFunctions ) > 0
@@ -989,12 +991,12 @@ RETURN cData
 METHOD GetServerAddress( xId ) CLASS tRpcClient
    LOCAL cData
 
-   IF ValType( xID ) == "A"
+   IF ISARRAY( xID )
       cData := xId[1]
    ELSE
-      IF .not. Empty( ::aFunctions )
+      IF ! Empty( ::aFunctions )
          cData := ::aFunctions[xId][1]
-      ELSEIF .not. Empty( ::aServers )
+      ELSEIF ! Empty( ::aServers )
          cData := ::aServers[xId][1]
       ELSE
          cData := ""

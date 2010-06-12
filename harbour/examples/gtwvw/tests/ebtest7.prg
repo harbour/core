@@ -721,7 +721,7 @@ Local ol := 0
             CM := SubStr ( Mask , icp+x , 1 )
 
             If !IsDigit(CB) .And. !IsAlpha(CB) .And.;
-               ( ( .Not. CB = ' ' ) .or. ( CB == ' ' .and. CM == ' ' ) )
+               ( !( CB == ' ' ) .or. ( CB == ' ' .and. CM == ' ' ) )
                wvw_ebsetsel(mnwinnum, mnebid, icp+x, icp+x)
             Else
                Exit

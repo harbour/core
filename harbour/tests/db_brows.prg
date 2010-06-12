@@ -186,13 +186,13 @@ PRIVATE str_bar := "-þ"
    SETCOLOR( LI_CLR )
    @ LI_Y1, LI_X1, LI_Y2, LI_X2 BOX "ÚÄ¿³ÙÄÀ³ "
    IF title <> Nil
-      @ LI_Y1, ( LI_X2 - LI_X1 - 1 - LEN( title ) ) / 2 + LI_X1 SAY " " + title + " "         
+      @ LI_Y1, ( LI_X2 - LI_X1 - 1 - LEN( title ) ) / 2 + LI_X1 SAY " " + title + " "
    ENDIF
    IF title <> Nil .AND. LI_NAMES <> Nil
       LI_Y1 ++
    ENDIF
    razmer := LI_Y2 - LI_Y1 - 1
-   IF .NOT. LI_PRFLT
+   IF ! LI_PRFLT
       LI_KOLZ := EVAL( LI_RCOU, mslist )
    ENDIF
    LI_COLPOS := 1
@@ -231,17 +231,17 @@ PRIVATE str_bar := "-þ"
       //
 #ifdef RDD_AX
       @ LI_Y1 + 2, LI_X2, LI_Y2 - 2, LI_X2 BOX LEFT( str_bar, 1 )
-      @ LI_Y1 + 1, LI_X2                                                                                                                  SAY SUBSTR( str_bar, 2, 1 )         
-      @ LI_Y2 - 1, LI_X2                                                                                                                  SAY SUBSTR( str_bar, 2, 1 )         
-      @ LI_Y1 + 2 + INT( IIF( LI_PRFLT, LI_TEKZP, Ax_Keyno() ) * ( LI_Y2 - LI_Y1 - 4 ) / IIF( LI_PRFLT, LI_KOLZ, Ax_KeyCount() ) ), LI_X2 SAY RIGHT( str_bar, 1 )             
+      @ LI_Y1 + 1, LI_X2                                                                                                                  SAY SUBSTR( str_bar, 2, 1 )
+      @ LI_Y2 - 1, LI_X2                                                                                                                  SAY SUBSTR( str_bar, 2, 1 )
+      @ LI_Y1 + 2 + INT( IIF( LI_PRFLT, LI_TEKZP, Ax_Keyno() ) * ( LI_Y2 - LI_Y1 - 4 ) / IIF( LI_PRFLT, LI_KOLZ, Ax_KeyCount() ) ), LI_X2 SAY RIGHT( str_bar, 1 )
 #else
-      IF .NOT. ( TYPE( "Sx_Keyno()" ) == "U" )
+      IF ! ( TYPE( "Sx_Keyno()" ) == "U" )
          @ LI_Y1 + 2, LI_X2, LI_Y2 - 2, LI_X2 BOX LEFT( str_bar, 1 )
-         @ LI_Y1 + 1, LI_X2 SAY SUBSTR( str_bar, 2, 1 )         
-         @ LI_Y2 - 1, LI_X2 SAY SUBSTR( str_bar, 2, 1 )         
+         @ LI_Y1 + 1, LI_X2 SAY SUBSTR( str_bar, 2, 1 )
+         @ LI_Y2 - 1, LI_X2 SAY SUBSTR( str_bar, 2, 1 )
          fbar1 := "Sx_Keyno()"
          fbar2 := "Sx_KeyCount()"
-         @ LI_Y1 + 2 + INT( IIF( LI_PRFLT, LI_TEKZP, &fbar1 ) * ( LI_Y2 - LI_Y1 - 4 ) / IIF( LI_PRFLT, LI_KOLZ, &fbar2 ) ), LI_X2 SAY RIGHT( str_bar, 1 )         
+         @ LI_Y1 + 2 + INT( IIF( LI_PRFLT, LI_TEKZP, &fbar1 ) * ( LI_Y2 - LI_Y1 - 4 ) / IIF( LI_PRFLT, LI_KOLZ, &fbar2 ) ), LI_X2 SAY RIGHT( str_bar, 1 )
       ENDIF
 #endif
       //
@@ -293,7 +293,7 @@ PRIVATE str_bar := "-þ"
       IF xkey < 500
          DO CASE
          CASE xkey == 24                 // Šãàá®à ¢­¨§
-            IF ( LI_KOLZ > 0 .OR. predit == 3 ) .AND. ( LI_KOLZ == 0 .OR. .NOT. EVAL( LI_BEOF, mslist ) )
+            IF ( LI_KOLZ > 0 .OR. predit == 3 ) .AND. ( LI_KOLZ == 0 .OR. ! EVAL( LI_BEOF, mslist ) )
                EVAL( LI_BSKIP, mslist, 1 )
                IF EVAL( LI_BEOF, mslist ) .AND. ( predit < 3 .OR. LI_PRFLT )
                   EVAL( LI_BSKIP, mslist, - 1 )
@@ -426,7 +426,7 @@ PRIVATE str_bar := "-þ"
                ENDIF
                vartmp := READEXIT( .T. )
                varbuf := FIELDGET( fipos )
-               @ LI_NSTR + LI_Y1, LI_XPOS GET varbuf PICTURE Defpict( mslist, fipos, LI_X2 - LI_X1 - 3 )        
+               @ LI_NSTR + LI_Y1, LI_XPOS GET varbuf PICTURE Defpict( mslist, fipos, LI_X2 - LI_X1 - 3 )
                IF LI_VALID <> Nil .AND. LEN( LI_VALID ) >= fipos .AND. LI_VALID[ fipos ] <> Nil
                   Getlist[ 1 ] :postBlock := LI_VALID[ fipos ]
                ENDIF
@@ -436,7 +436,7 @@ PRIVATE str_bar := "-þ"
                      APPEND BLANK
                      LI_KOLZ := EVAL( LI_RCOU, mslist )
                   ELSE
-                     IF .NOT. SET( _SET_EXCLUSIVE )
+                     IF ! SET( _SET_EXCLUSIVE )
                         RLOCK()
                         IF NETERR()
                            LOOP
@@ -447,11 +447,11 @@ PRIVATE str_bar := "-þ"
                      varbuf := EVAL( LI_BDESHOUT, mslist, varbuf )
                   ENDIF
                   FIELDPUT( fipos, varbuf )
-                  IF .NOT. SET( _SET_EXCLUSIVE )
+                  IF ! SET( _SET_EXCLUSIVE )
                      UNLOCK
                   ENDIF
                ENDIF
-               IF ( LASTKEY() == 27 .OR. .NOT. UPDATED() ) .AND. EVAL( LI_BEOF, mslist )
+               IF ( LASTKEY() == 27 .OR. ! UPDATED() ) .AND. EVAL( LI_BEOF, mslist )
                   SETCOLOR( LI_CLR )
                   @ LI_NSTR + LI_Y1, LI_X1 + 1 CLEAR TO LI_NSTR + LI_Y1, LI_X2 - 1
                   LI_NSTR --
@@ -572,7 +572,7 @@ LOCAL i := 1, x, oldc, fif
       // DO MSFNEXT WITH mslist,fif
       DO WHILE i <= LI_NCOLUMNS .AND. fif <= LEN( LI_NAMES )
          IF LI_NAMES[ fif ] <> Nil
-            @ LI_Y1, x SAY LI_NAMES[ fif ]         
+            @ LI_Y1, x SAY LI_NAMES[ fif ]
          ENDIF
          x   := x + MAX( LEN( FLDSTR( mslist, fif ) ), LEN( LI_NAMES[ fif ] ) ) + 1
          fif := IIF( fif == LI_FREEZE, LI_NLEFT, fif + 1 )
@@ -634,10 +634,10 @@ LOCAL x, i, shablon, sviv, fif, fldname
       fldname := SPACE( 8 )
       fif     := IIF( LI_FREEZE > 0, 1, LI_NLEFT )
       IF LI_NLEFT <> LI_LEFTVISIBLE .AND. vybfld == 0
-         @ nstroka, LI_X1 + 1 SAY "<"         
+         @ nstroka, LI_X1 + 1 SAY "<"
       ENDIF
       IF DELETED()
-         @ nstroka, LI_X1 + 1 SAY "*"         
+         @ nstroka, LI_X1 + 1 SAY "*"
       ENDIF
       FOR i := 1 TO LI_NCOLUMNS
          IF i == LI_COLPOS
@@ -647,7 +647,7 @@ LOCAL x, i, shablon, sviv, fif, fldname
             // DO MSFNEXT WITH mslist,fif
             sviv := FLDSTR( mslist, fif )
             sviv := IIF( LEN( sviv ) < LI_X2 - 1 - x, sviv, SUBSTR( sviv, 1, LI_X2 - 1 - x ) )
-            @ nstroka, x SAY sviv         
+            @ nstroka, x SAY sviv
          ELSE
             sviv := FLDSTR( mslist, fif )
             sviv := IIF( LEN( sviv ) < LI_X2 - 1 - x, sviv, SUBSTR( sviv, 1, LI_X2 - 1 - x ) )
@@ -659,9 +659,9 @@ LOCAL x, i, shablon, sviv, fif, fldname
       IF fif <= LI_COLCOUNT .AND. vybfld == 0
          IF LI_X2 - 1 - x > 0
             sviv := FLDSTR( mslist, fif )
-            @ nstroka, x SAY SUBSTR( sviv, 1, LI_X2 - 1 - x )         
+            @ nstroka, x SAY SUBSTR( sviv, 1, LI_X2 - 1 - x )
          ENDIF
-         @ nstroka, LI_X2 - 1 SAY ">"         
+         @ nstroka, LI_X2 - 1 SAY ">"
       ENDIF
    ENDIF
 RETURN

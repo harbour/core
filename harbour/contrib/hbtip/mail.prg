@@ -193,7 +193,7 @@ METHOD GetFieldOption( cPart, cOption ) CLASS TipMail
       cEnc := hb_HValueAt( ::hHeaders, nPos )
       // Case insensitive check
       aMatch := hb_regex( ";\s*" + cOption + "\s*=\s*([^;]*)", cEnc, .F. )
-      IF aMatch != NIL
+      IF ! Empty( aMatch )
          cEnc := aMatch[ 2 ]
       ELSE
          RETURN ""

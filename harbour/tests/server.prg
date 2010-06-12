@@ -53,7 +53,7 @@ Procedure Main( cPort )
          ENDIF
       ENDDO
 
-      IF .not. bCont
+      IF ! bCont
          EXIT
       ENDIF
 

@@ -115,8 +115,8 @@ FUNCTION StringToLiteral( cString )
 
    LOCAL lDouble := .F., lSingle := .F.
 
-   IF hb_RegExHas( "\n|\r", cString ) .OR. ;
-      ( ( lDouble := '"' $ cString ) .AND. ( lSingle := "'" $ cString ) .AND. hb_RegExHas( "\[|\]", cString ) )
+   IF hb_regexHas( "\n|\r", cString ) .OR. ;
+      ( ( lDouble := '"' $ cString ) .AND. ( lSingle := "'" $ cString ) .AND. hb_regexHas( "\[|\]", cString ) )
 
       cString := StrTran( cString, '"', '\"' )
       cString := StrTran( cString, Chr(10), '\n' )

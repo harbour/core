@@ -89,7 +89,7 @@ Procedure Main()
   setKey( K_F9 , {|| k := hb_SetKeySave( NIL ), ;
                      SetKey( K_F9, {|| hb_SetKeySave( k ) } ) } )
   SetKey( K_F8 , {|| SubMain() }, {|| F8Active } )
-  SetKey( K_F7 , {|| F8Active := .not. F8Active } )
+  SetKey( K_F7 , {|| F8Active := ! F8Active } )
 
   read
   ? alpha, bravo, charlie

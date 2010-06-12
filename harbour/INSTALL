@@ -1094,9 +1094,9 @@ HARBOUR
    3.) Harbour nightly sources (updated once a day from source repository)
 
        Download source archive from any of these links and unpack:
-          http://harbour-project.org/harbour-nightly.zip
-          http://harbour-project.org/harbour-nightly.tgz
-          http://harbour-project.org/harbour-nightly.bz2
+          http://sourceforge.net/projects/harbour-project/files/source/nightly/harbour-nightly-src.zip/download
+          http://sourceforge.net/projects/harbour-project/files/source/nightly/harbour-nightly.tar.gz/download
+          http://sourceforge.net/projects/harbour-project/files/source/nightly/harbour-nightly.tar.bz2/download
 
    4.) Harbour source download (stable)
 
@@ -1531,7 +1531,7 @@ HARBOUR
       http://sourceforge.net/apps/trac/harbour-project/timeline/
 
    Bug Tracker:
-      https://sourceforge.net/tracker/?group_id=681
+      http://sourceforge.net/tracker/?group_id=681
 
    Source Repository Browser:
       http://harbour-project.svn.sourceforge.net/viewvc/harbour-project/

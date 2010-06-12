@@ -8,7 +8,7 @@ PROCEDURE Main
    LOCAL oHttp, cHtml, hQuery, aLink, oNode, oDoc
 
    oHttp:= TIpClientHttp():new( "http://www.google.de/search" )
-   
+
    // build the Google query
    hQUery := hb_Hash()
    hb_hSetCaseMatch( hQuery, .F. )
@@ -21,7 +21,7 @@ PROCEDURE Main
    oHttp:oUrl:addGetForm( hQuery )
 
    // Connect to the HTTP server
-   IF .NOT. oHttp:open()
+   IF ! oHttp:open()
       ? "Connection error:", oHttp:lastErrorMessage()
       QUIT
    ENDIF

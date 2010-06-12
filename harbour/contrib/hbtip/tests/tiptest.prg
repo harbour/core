@@ -92,7 +92,7 @@ PROCEDURE MAIN( cUrl, cFile )
    oClient:nConnTimeout := 2000 //:= 20000
 
 
-   oUrl:cUserid := STRTRAN(oUrl:cUserid, "&at;", "@") 
+   oUrl:cUserid := STRTRAN(oUrl:cUserid, "&at;", "@")
 
    @4,5 SAY "Connecting to " + oUrl:cProto + "://" + oUrl:cServer
    IF oClient:Open()
@@ -102,7 +102,7 @@ PROCEDURE MAIN( cUrl, cFile )
          @5,5 SAY "Connection status: " + oClient:cReply
       ENDIF
 
-      IF .not. Empty( cFile ) .and. Left( cFile, 1 ) == '+'
+      IF ! Empty( cFile ) .and. Left( cFile, 1 ) == '+'
          cFile := Substr( cFile, 2 )
          bWrite := .T.
       ENDIF
@@ -120,7 +120,7 @@ PROCEDURE MAIN( cUrl, cFile )
       ELSE
          IF Empty( cFile )
             cData := oClient:Read()
-            IF .not. Empty( cData )
+            IF ! Empty( cData )
                @7,5 SAY "First 80 characters:"
                ? Trim(SubStr( cData, 1, 80 ))
             ELSE
@@ -144,7 +144,7 @@ PROCEDURE MAIN( cUrl, cFile )
       ENDIF
    ELSE
       @5,5 SAY "Can't open URI " + cUrl
-      IF .not. Empty( oClient:cReply )
+      IF ! Empty( oClient:cReply )
          @6,5 SAY oClient:cReply
       ENDIF
    ENDIF

@@ -192,14 +192,14 @@ FUNCTION dbMerge( xSource, lAppend )
 
    // Validate args
    //-------------------------------------------------------------//
-   IF ValType( xSource ) == 'C'
+   IF ISCHARACTER( xSource )
       nArea := Select()
 
       USE ( xSource ) ALIAS MergeSource EXCLUSIVE NEW
       nSource := Select()
 
       SELECT ( nArea )
-   ELSEIF ValType( xSource ) == 'N'
+   ELSEIF ISNUMBER( xSource )
       nSource := xSource
    ELSE
       RETURN .F.

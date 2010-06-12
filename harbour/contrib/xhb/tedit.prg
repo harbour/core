@@ -488,7 +488,7 @@ CLASS THtmlForm
 
    METHOD setwidth( c ) INLINE ::width := c
 
-   METHOD AddControl( o ) INLINE IIF( Valtype( o ) == "O", ( o:nH := ::nH, o:Form := Self ), ),;
+   METHOD AddControl( o ) INLINE IIF( ISOBJECT( o ), ( o:nH := ::nH, o:Form := Self ), ),;
           Aadd( ::aControls, o )
 
    METHOD PutControls() INLINE Aeval( ::aControls, { | e | e:Put() } )
@@ -544,19 +544,19 @@ METHOD Put( lPutControls ) CLASS THtmlForm
 
    DEFAULT lPutControls TO .F.
 
-   IF Valtype( ::width ) != "N"
+   IF ! ISNUMBER( ::width )
       ::width := 90
    ENDIF
 
-   IF Valtype( ::color ) != "C"
+   IF ! ISCHARACTER( ::color )
       ::Color := "#9196A0"
    ENDIF
 
-   IF Valtype( ::fontColor ) != "C"
+   IF ! ISCHARACTER( ::fontColor )
       ::fontColor := "black"
    ENDIF
 
-   IF Valtype( ::CaptionColor ) != "C"
+   IF ! ISCHARACTER( ::CaptionColor )
       ::CaptionColor := "black"
    ENDIF
 
@@ -681,7 +681,7 @@ METHOD Put( lPutControls ) CLASS THtmlForm
 //   Fwrite( ::nH, ::cOutput )
 ::oHtm:cStr += ::cOutput
    IF lPutControls
-      Aeval( ::aControls, { | e | IIF( Valtype( e ) == "O", ;
+      Aeval( ::aControls, { | e | IIF( ISOBJECT( e ), ;
                             e:Put(), ::oHtm:cStr += e  ) } )
    ENDIF
 

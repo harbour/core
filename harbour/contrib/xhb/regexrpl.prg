@@ -65,7 +65,7 @@ FUNCTION hb_RegexReplace( cRegex, cString, cReplace, lCaseSensitive, lNewLine, n
 
    aMatches := HB_RegExAll( cRegEx, cString, lCaseSensitive, lNewLine, nMaxMatches, nGetMatch, .F. )
 
-   IF aMatches != NIL
+   IF ! Empty( aMatches )
       cReturn := cString
       FOR EACH aMatch IN aMatches
           //TraceLog( "ValToPrg( aMatch ), cReturn", ValToPrg( aMatch ), cReturn )

@@ -119,7 +119,7 @@ DBCreate( "test.dbf", ;
                        { "LOG",  "L",  1, 0 }, ;
                        { "MEMO", "M", 10, 0 } } )
 
-if .not. File( "test.dbf" )
+if ! File( "test.dbf" )
     NotifyUser( "Failed to create test.dbf" )
 endif
 
@@ -127,25 +127,25 @@ endif
 
 use test.dbf new shared alias MYTEST
 
-if .not. Alias() == "MYTEST"
+if ! Alias() == "MYTEST"
     NotifyUser( "Failed to open test.dbf" )
 endif
 
 // TEST: RDDName()
 
-if .not. RDDName() == cRDD
+if ! RDDName() == cRDD
     NotifyUser( "Failed to set RDD to " + cRDD )
 endif
 
 // TEST: DBStruct()
 
-if .not. CompareArray( aStruct, DBStruct() )
+if ! CompareArray( aStruct, DBStruct() )
     NotifyUser( "Resulting table structure is not what we asked for" )
 endif
 
 // TEST: Header()
 
-if .not. Header() == 194
+if ! Header() == 194
     NotifyUser( "Header() returned wrong size (" + LTrim( Str( Header() ) ) + " bytes)" )
 endif
 
@@ -173,7 +173,7 @@ enddo
 
 // TEST: LastRec()
 
-if .not. LastRec() == MAX_TEST_RECS
+if ! LastRec() == MAX_TEST_RECS
     NotifyUser( "DbAppend and/or LastRec failed" )
 endif
 
@@ -181,7 +181,7 @@ endif
 
 go bottom
 
-if .not. RecNo() == MAX_TEST_RECS
+if ! RecNo() == MAX_TEST_RECS
     NotifyUser( "DbGoBottom failed" )
 endif
 
@@ -189,22 +189,22 @@ endif
 
 go top
 
-if .not. RecNo() == 1
+if ! RecNo() == 1
     NotifyUser( "DbGoTop failed" )
 endif
 
 // Now check each and every record for accuracy
 
-do while .not. EOF()
+do while ! EOF()
 
     // TEST: Field access
 
-    if .not. Trim( FIELD->CHAR ) == Chr( 65 + Val( SubStr( LTrim( Str( RecNo() ) ), 2, 1 ) ) ) + ;
+    if ! Trim( FIELD->CHAR ) == Chr( 65 + Val( SubStr( LTrim( Str( RecNo() ) ), 2, 1 ) ) ) + ;
                                     " RECORD " + LTrim( Str( RecNo() ) ) .or. ;
-       .not. FIELD->NUM == ( iif( RecNo() % 2 > 0, -1, 1 ) * RecNo() ) + ( RecNo() / 1000 ) .or. ;
-       .not. FIELD->DATE == Date() + Int( FIELD->NUM ) .or. ;
-       .not. FIELD->LOG == ( FIELD->NUM < 0 ) .or. ;
-       .not. FIELD->MEMO == Eval( bMemoText )
+       ! FIELD->NUM == ( iif( RecNo() % 2 > 0, -1, 1 ) * RecNo() ) + ( RecNo() / 1000 ) .or. ;
+       ! FIELD->DATE == Date() + Int( FIELD->NUM ) .or. ;
+       ! FIELD->LOG == ( FIELD->NUM < 0 ) .or. ;
+       ! FIELD->MEMO == Eval( bMemoText )
 
         NotifyUser( "Data in table is incorrect" )
 
@@ -223,68 +223,68 @@ index on INDEX_KEY_LOG  to TESTL additive
 
 // TEST: IndexOrd()
 
-if .not. IndexOrd() == 4
+if ! IndexOrd() == 4
     NotifyUser( "Bad IndexOrd()" )
 endif
 
 // TEST: DBOI_KEYCOUNT
 
 set order to 1
-if .not. DbOrderInfo( DBOI_KEYCOUNT ) == MAX_TEST_RECS
+if ! DbOrderInfo( DBOI_KEYCOUNT ) == MAX_TEST_RECS
     NotifyUser( "Bad DBOI_KEYCOUNT/1" )
 endif
 
 set order to 2
-if .not. DbOrderInfo( DBOI_KEYCOUNT ) == MAX_TEST_RECS
+if ! DbOrderInfo( DBOI_KEYCOUNT ) == MAX_TEST_RECS
     NotifyUser( "Bad DBOI_KEYCOUNT/2" )
 endif
 
 set order to 3
-if .not. DbOrderInfo( DBOI_KEYCOUNT ) == MAX_TEST_RECS
+if ! DbOrderInfo( DBOI_KEYCOUNT ) == MAX_TEST_RECS
     NotifyUser( "Bad DBOI_KEYCOUNT/3" )
 endif
 
 set order to 4
-if .not. DbOrderInfo( DBOI_KEYCOUNT ) == MAX_TEST_RECS
+if ! DbOrderInfo( DBOI_KEYCOUNT ) == MAX_TEST_RECS
     NotifyUser( "Bad DBOI_KEYCOUNT/4" )
 endif
 
 // TEST: Character index
 set order to 1
 go top
-if .not. DbOrderInfo( DBOI_KEYVAL ) == INDEX_KEY_CHAR
+if ! DbOrderInfo( DBOI_KEYVAL ) == INDEX_KEY_CHAR
     NotifyUser( "Bad DBOI_KEYVAL (CHAR)" )
 endif
 
 // TEST: Positive index key
 set order to 2
 locate for FIELD->NUM > 0
-if .not. DbOrderInfo( DBOI_KEYVAL ) == INDEX_KEY_NUM
+if ! DbOrderInfo( DBOI_KEYVAL ) == INDEX_KEY_NUM
     NotifyUser( "Bad DBOI_KEYVAL (NUM)" )
 endif
 
 // TEST: Negative index key
 set order to 2
 locate for FIELD->NUM < 0
-if .not. DbOrderInfo( DBOI_KEYVAL ) == INDEX_KEY_NUM
+if ! DbOrderInfo( DBOI_KEYVAL ) == INDEX_KEY_NUM
     NotifyUser( "Bad DBOI_KEYVAL (NUM)" )
 endif
 
 // TEST: Date index
 set order to 3
 go bottom
-if .not. DbOrderInfo( DBOI_KEYVAL ) == INDEX_KEY_DATE
+if ! DbOrderInfo( DBOI_KEYVAL ) == INDEX_KEY_DATE
     NotifyUser( "Bad DBOI_KEYVAL (DATE)" )
 endif
 
 // TEST: Logical index
 set order to 4
 go top
-if .not. DbOrderInfo( DBOI_KEYVAL ) == INDEX_KEY_LOG
+if ! DbOrderInfo( DBOI_KEYVAL ) == INDEX_KEY_LOG
     NotifyUser( "Bad DBOI_KEYVAL (LOG/1)" )
 endif
 go bottom
-if .not. DbOrderInfo( DBOI_KEYVAL ) == INDEX_KEY_LOG
+if ! DbOrderInfo( DBOI_KEYVAL ) == INDEX_KEY_LOG
     NotifyUser( "Bad DBOI_KEYVAL (LOG/2)" )
 endif
 
@@ -294,7 +294,7 @@ set order to 0
 
 set exact on
 locate for FIELD->CHAR = "J RECORD"
-if .not. EOF()
+if ! EOF()
     NotifyUser( "LOCATE with EXACT ON failed" )
 endif
 
@@ -310,7 +310,7 @@ set exact on
 set order to 0
 count for Trim( FIELD->CHAR ) = "A RECORD 1" to xTemp  // Get proper count
 index on CHAR to TESTE for Trim( FIELD->CHAR ) = "A RECORD 1" additive
-if .not. DbOrderInfo( DBOI_KEYCOUNT ) == xTemp
+if ! DbOrderInfo( DBOI_KEYCOUNT ) == xTemp
     NotifyUser( "Bad conditional index count with EXACT ON" )
 endif
 
@@ -318,7 +318,7 @@ set exact off
 set order to 0
 count for Trim( FIELD->CHAR ) = "A RECORD 1" to xTemp  // Get proper count
 index on CHAR to TESTE for Trim( FIELD->CHAR ) = "A RECORD 1" additive
-if .not. DbOrderInfo( DBOI_KEYCOUNT ) == xTemp
+if ! DbOrderInfo( DBOI_KEYCOUNT ) == xTemp
     NotifyUser( "Bad conditional index count with EXACT OFF" )
 endif
 
@@ -362,7 +362,7 @@ cErr := "Runtime error" + CRLF + ;
         "Call trace:" + CRLF + ;
         CRLF
 
-do while .not. Empty( ProcName( ++i ) )
+do while ! Empty( ProcName( ++i ) )
     cErr += Trim( ProcName( i ) ) + "(" + Ltrim( Str( ProcLine( i ) ) ) + ")" + CRLF
 enddo
 
@@ -375,7 +375,7 @@ static function CompareArray( a1, a2 )
 
 local i, j
 
-if .not. Len( a1 ) == Len( a2 )
+if ! Len( a1 ) == Len( a2 )
     return .f.
 endif
 
@@ -383,7 +383,7 @@ for i := 1 to Len( a1 )
 
     for j := 1 to Len( a1[i] )
 
-        if .not. a1[i,j] == a2[i,j]
+        if ! a1[i,j] == a2[i,j]
             return .f.
         endif
 

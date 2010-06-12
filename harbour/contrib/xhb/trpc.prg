@@ -199,6 +199,7 @@
 
 #include "hbrpc.ch"
 
+#include "common.ch"
 
 /************************************
 * RPC FUNCTION
@@ -260,7 +261,7 @@ METHOD New( cFname, cSerial, nAuthLevel, oExec, oMeth ) CLASS tRPCFunction
    ::CheckParam( ::cReturn )
 
    // Analyze function serial number
-   IF .not. HB_RegexMatch( "[0-9]{8}\..", cSerial )
+   IF ! HB_RegexMatch( "[0-9]{8}\..", cSerial )
       Alert( "Serial value not valid" )
       ErrorLevel( 1 )
       QUIT
@@ -286,7 +287,7 @@ RETURN Self
 
 METHOD SetCallable( oExec, oMeth ) CLASS tRPCFunction
    // If the callable is an object, we need to store the method
-   IF ValType( oExec ) == "O"
+   IF ISOBJECT( oExec )
       ::aCall := Array( Len( ::aParameters ) + 3 )
       ::aCall[2] := oMeth
    ELSE
@@ -300,11 +301,11 @@ RETURN .T.
 METHOD Run( aParams, oClient ) CLASS tRPCFunction
    LOCAL nStart, nCount, xRet
 
-   IF .not. ::CheckTypes( aParams )
+   IF ! ::CheckTypes( aParams )
       RETURN NIL
    ENDIF
 
-   nStart := IIF( ValType( ::aCall[1] ) == "O", 3, 2 )
+   nStart := IIF( ISOBJECT( ::aCall[1] ), 3, 2 )
 
    FOR nCount := 1 TO Len( aParams )
       ::aCall[ nStart ] := aParams[ nCount ]
@@ -318,7 +319,7 @@ RETURN xRet
 
 
 METHOD CheckParam( cParam ) CLASS tRPCFunction
-   IF .not. HB_RegexMatch( ::cPattern, cParam )
+   IF ! HB_RegexMatch( ::cPattern, cParam )
       Alert("tRPCFunction:CheckParam() wrong parameter specification: " + cParam )
       QUIT
    ENDIF
@@ -328,7 +329,7 @@ RETURN .T.
 METHOD CheckTypes( aParams ) CLASS tRPCFunction
    LOCAL oElem, i := 0
 
-   IF ValType( aParams ) != 'A'
+   IF ! ISARRAY( aParams )
       RETURN .F.
    ENDIF
 
@@ -489,7 +490,7 @@ METHOD Run() CLASS tRPCServeCon
    LOCAL aData
    LOCAL nSafeStatus
 
-   DO WHILE hb_inetErrorCode( ::skRemote ) == 0 .and. .not. lBreak
+   DO WHILE hb_inetErrorCode( ::skRemote ) == 0 .and. ! lBreak
 
       /* Get the request code */
       hb_inetRecvAll( ::skRemote, @cCode, 6 )
@@ -511,8 +512,8 @@ METHOD Run() CLASS tRPCServeCon
          /* Read autorization request */
          CASE cCode == "XHBR90"
             IF nSafeStatus == RPCS_STATUS_NONE
-               lBreak := .not. ::RecvAuth( .F. )
-               IF .not. lBreak
+               lBreak := ! ::RecvAuth( .F. )
+               IF ! lBreak
                   nSafeStatus := RPCS_STATUS_LOGGED
                ENDIF
             ELSE
@@ -522,8 +523,8 @@ METHOD Run() CLASS tRPCServeCon
          /* Read encrypted autorization request */
          CASE cCode == "XHBR93"
             IF nSafeStatus == RPCS_STATUS_NONE
-               lBreak := .not. ::RecvAuth( .T. )
-               IF .not. lBreak
+               lBreak := ! ::RecvAuth( .T. )
+               IF ! lBreak
                   nSafeStatus := RPCS_STATUS_CHALLENGE
                ENDIF
             ELSE
@@ -533,8 +534,8 @@ METHOD Run() CLASS tRPCServeCon
          /* Challeng reply */
          CASE cCode == "XHBR95"
             IF nSafeStatus == RPCS_STATUS_CHALLENGE
-               lBreak := .not. ::RecvChallenge( )
-               IF .not. lBreak
+               lBreak := ! ::RecvChallenge( )
+               IF ! lBreak
                   nSafeStatus := RPCS_STATUS_LOGGED
                ENDIF
             ELSE
@@ -551,7 +552,7 @@ METHOD Run() CLASS tRPCServeCon
             IF nSafeStatus == RPCS_STATUS_LOGGED
                aData := ::RecvFunction( .F., .F. )
                IF aData != NIL
-                  lBreak := .not. ::FuncCall( aData[2] )
+                  lBreak := ! ::FuncCall( aData[2] )
                ELSE
                   lBreak := .T.
                ENDIF
@@ -567,7 +568,7 @@ METHOD Run() CLASS tRPCServeCon
             IF nSafeStatus == RPCS_STATUS_LOGGED
                aData := ::RecvFunction( .T., .F. )
                IF aData != NIL
-                  lBreak := .not. ::FuncCall( aData[2] )
+                  lBreak := ! ::FuncCall( aData[2] )
                ELSE
                   lBreak := .T.
                ENDIF
@@ -582,7 +583,7 @@ METHOD Run() CLASS tRPCServeCon
             IF nSafeStatus == RPCS_STATUS_LOGGED
                aData := ::RecvFunction( .F., .T. )
                IF aData != NIL
-                  lBreak := .not. ::FuncLoopCall( aData[1], aData[2] )
+                  lBreak := ! ::FuncLoopCall( aData[1], aData[2] )
                ELSE
                   lBreak := .T.
                ENDIF
@@ -597,7 +598,7 @@ METHOD Run() CLASS tRPCServeCon
             IF nSafeStatus == RPCS_STATUS_LOGGED
                aData := ::RecvFunction( .T., .T. )
                IF aData != NIL
-                  lBreak := .not. ::FuncLoopCall( aData[1], aData[2] )
+                  lBreak := ! ::FuncLoopCall( aData[1], aData[2] )
                ELSE
                   lBreak := .T.
                ENDIF
@@ -612,7 +613,7 @@ METHOD Run() CLASS tRPCServeCon
             IF nSafeStatus == RPCS_STATUS_LOGGED
                aData := ::RecvFunction( .F., .T. )
                IF aData != NIL
-                  lBreak := .not. ::FuncForeachCall( aData[1], aData[2] )
+                  lBreak := ! ::FuncForeachCall( aData[1], aData[2] )
                ELSE
                   lBreak := .T.
                ENDIF
@@ -627,7 +628,7 @@ METHOD Run() CLASS tRPCServeCon
             IF nSafeStatus == RPCS_STATUS_LOGGED
                aData := ::RecvFunction( .T., .T. )
                IF aData  != NIL
-                  lBreak := .not. ::FuncForeachCall( aData[1], aData[2] )
+                  lBreak := ! ::FuncForeachCall( aData[1], aData[2] )
                ELSE
                   lBreak := .T.
                ENDIF
@@ -696,7 +697,7 @@ METHOD RecvAuth( lEncrypt ) CLASS tRPCServeCon
 
    nLen := HB_GetLen8( cLength )
 
-   IF (lEncrypt .and. nLen > 128 ) .or. ( .not. lEncrypt .and. nLen > 37 )
+   IF (lEncrypt .and. nLen > 128 ) .or. ( ! lEncrypt .and. nLen > 37 )
       RETURN .F.
    ENDIF
 
@@ -713,7 +714,7 @@ METHOD RecvAuth( lEncrypt ) CLASS tRPCServeCon
    cUserID := Substr(cReadin, 1, nPos-1 )
    cPassword := Substr( cReadin, nPos+1 )
 
-   IF .not. lEncrypt
+   IF ! lEncrypt
       ::nAuthLevel := ::oServer:Authorize( cUserid, cPassword )
       IF ::nAuthLevel == 0
          hb_inetSendAll( ::skRemote, "XHBR91NO" )
@@ -928,7 +929,7 @@ METHOD LaunchFunction( cFuncName, aParams, nMode, aDesc ) CLASS tRPCServeCon
    ENDIF
 
    //check for parameters
-   IF aParams == NIL .or. .not. oFunc:CheckTypes( aParams )
+   IF aParams == NIL .or. ! oFunc:CheckTypes( aParams )
       // signal error
       ::oServer:OnFunctionError( Self, cFuncName,02 )
       hb_inetSendAll( ::skRemote, "XHBR4002" )
@@ -963,7 +964,7 @@ METHOD FunctionRunner( cFuncName, oFunc, nMode, aParams, aDesc ) CLASS tRPCServe
 
       CASE nMode == 1 // run in loop
          aSubst := AClone( aParams )
-         nSubstPos := AScan( aParams, {|x| ValType( x ) == "C" .and. x == "$."} )
+         nSubstPos := AScan( aParams, {|x| ISCHARACTER( x ) .and. x == "$."} )
 
          SWITCH aDesc[1]
             CASE 'A' // all results
@@ -1016,7 +1017,7 @@ METHOD FunctionRunner( cFuncName, oFunc, nMode, aParams, aDesc ) CLASS tRPCServe
 
       CASE nMode == 2 // Run in a foreach loop
          aSubst := AClone( aParams )
-         nSubstPos := AScan( aParams, {|x| ValType( x ) == "C" .and. x == "$."} )
+         nSubstPos := AScan( aParams, {|x| ISCHARACTER( x ) .and. x == "$."} )
 
          SWITCH aDesc[1]
             CASE 'A' // all results
@@ -1124,7 +1125,7 @@ METHOD SendProgress( nProgress, oData ) CLASS tRPCServeCon
 
    //Ignore if told so
    HB_MutexLock( ::mtxBusy )
-   IF .not. ::lAllowProgress .or. ::lCanceled
+   IF ! ::lAllowProgress .or. ::lCanceled
       HB_MutexUnlock( ::mtxBusy )
       RETURN .T.
    ENDIF
@@ -1260,7 +1261,7 @@ METHOD Add( xFunction, cVersion, nLevel, oExec, oMethod )
    LOCAL nElem, lRet := .F.
    LOCAL oFunction
 
-   IF ValType( xFunction ) == "C"
+   IF ISCHARACTER( xFunction )
       oFunction := TRpcFunction():New( xFunction, cVersion, nLevel, oExec, oMethod )
    ELSE
       oFunction := xFunction
@@ -1451,7 +1452,7 @@ METHOD UDPInterpretRequest( cData, nPacketLen, cRes ) CLASS tRPCService
 
       /* XHRB00 - server scan */
       CASE cCode == "XHBR00"
-         IF .not. ::OnServerScan()
+         IF ! ::OnServerScan()
             RETURN .F.
          ENDIF
          IF nPacketLen > 6
@@ -1466,7 +1467,7 @@ METHOD UDPInterpretRequest( cData, nPacketLen, cRes ) CLASS tRPCService
 
       /* XRB01 - Function scan */
       CASE cCode == "XHBR01"
-         IF .not. ::OnFunctionScan()
+         IF ! ::OnFunctionScan()
             RETURN .F.
          ENDIF
          /* minimal length to be valid */
@@ -1474,7 +1475,7 @@ METHOD UDPInterpretRequest( cData, nPacketLen, cRes ) CLASS tRPCService
             cSerial := HB_DeserialBegin( Substr( cData, 7 ) )
             cMatch := HB_DeserialNext( @cSerial )
             cNumber := NIL
-            IF .not. Empty ( cMatch )
+            IF ! Empty ( cMatch )
                cMatch := HB_RegexComp( cMatch )
                cNumber := HB_DeserialNext( @cSerial )
             ELSE

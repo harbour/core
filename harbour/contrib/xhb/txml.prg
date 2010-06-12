@@ -270,7 +270,7 @@ METHOD MatchCriteria( oFound ) CLASS TXmlIteratorScan
       RETURN .F.
    ENDIF
 
-   IF ::cAttribute != NIL .and. .not. ::cAttribute $ oFound:aAttributes
+   IF ::cAttribute != NIL .and. ! ::cAttribute $ oFound:aAttributes
       RETURN .F.
    ENDIF
 
@@ -303,7 +303,7 @@ RETURN Self
 METHOD MatchCriteria( oFound ) CLASS TXmlIteratorRegex
 
    IF ::cName != NIL .and. ;
-         ( oFound:cName == NIL .or. .not. HB_REGEXLIKE( ::cName, oFound:cName, .t. ) )
+         ( oFound:cName == NIL .or. ! HB_REGEXLIKE( ::cName, oFound:cName, .t. ) )
       RETURN .F.
    ENDIF
 
@@ -318,7 +318,7 @@ METHOD MatchCriteria( oFound ) CLASS TXmlIteratorRegex
    ENDIF
 
    IF ::cData != NIL .and. ;
-         ( oFound:cData == NIL .or. .not. HB_REGEXHAS( ::cData, oFound:cData, .F. ) )
+         ( oFound:cData == NIL .or. ! HB_REGEXHAS( ::cData, oFound:cData, .F. ) )
       RETURN .F.
    ENDIF
 

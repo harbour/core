@@ -1115,7 +1115,7 @@ void hb_setInitialize( PHB_SET_STRUCT pSet )
    pSet->HB_SET_DEFEXTENSIONS = HB_TRUE;
    pSet->HB_SET_EOL = hb_strdup( hb_conNewLine() );
    pSet->HB_SET_TRIMFILENAME = HB_FALSE;
-   pSet->HB_SET_HBOUTLOG = NULL;
+   pSet->HB_SET_HBOUTLOG = hb_strdup( "hb_out.log" );
    pSet->HB_SET_HBOUTLOGINFO = hb_strdup( "" );
    pSet->HB_SET_OSCODEPAGE = NULL;
    pSet->HB_SET_DBCODEPAGE = NULL;

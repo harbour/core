@@ -135,34 +135,34 @@ METHOD Send( nStyle, cMessage, cName, nPriority ) CLASS HB_LogEmail
 
    hb_inetConnect( ::cServer, ::nPort, skCon )
 
-   IF hb_inetErrorCode( skCon ) != 0 .or. .not. ::GetOk( skCon )
+   IF hb_inetErrorCode( skCon ) != 0 .or. ! ::GetOk( skCon )
       RETURN .F.
    ENDIF
 
    hb_inetSendAll( skCon, "HELO " + ::cHelo + hb_inetCRLF() )
-   IF .not. ::GetOk( skCon )
+   IF ! ::GetOk( skCon )
       RETURN .F.
    ENDIF
 
    hb_inetSendAll( skCon, "MAIL FROM: <" + ::cAddress +">" + hb_inetCRLF() )
-   IF .not. ::GetOk( skCon )
+   IF ! ::GetOk( skCon )
       RETURN .F.
    ENDIF
 
    hb_inetSendAll( skCon, "RCPT TO: <" + ::cSendTo +">" + hb_inetCRLF() )
-   IF .not. ::GetOk( skCon )
+   IF ! ::GetOk( skCon )
       RETURN .F.
    ENDIF
 
    hb_inetSendAll( skCon, "DATA" + hb_inetCRLF() )
-   IF .not. ::GetOk( skCon )
+   IF ! ::GetOk( skCon )
       RETURN .F.
    ENDIF
 
    cMessage := ::Prepare( nStyle, cMessage, cName, nPriority )
 
    hb_inetSendAll( skCon,  cMessage + hb_inetCRLF() + "." + hb_inetCRLF() )
-   IF .not. ::GetOk( skCon )
+   IF ! ::GetOk( skCon )
       RETURN .F.
    ENDIF
 
@@ -189,13 +189,13 @@ METHOD Prepare( nStyle, cMessage, cName, nPriority ) CLASS HB_LogEmail
                "TO: " + ::cSendTo + hb_inetCRLF() +;
                "Subject:" + ::cSubject + hb_inetCRLF() + hb_inetCRLF()
 
-   IF .not. Empty( ::cPrefix )
+   IF ! Empty( ::cPrefix )
       cPre += ::cPrefix + hb_inetCRLF() + hb_inetCRLF()
    ENDIF
 
    cPre += ::Format( nStyle, cMessage, cName, nPriority )
 
-   IF .not. Empty( ::cPostfix )
+   IF ! Empty( ::cPostfix )
       cPre += hb_inetCRLF() +hb_inetCRLF() + ::cPostfix + hb_inetCRLF()
    ENDIF
 
@@ -340,7 +340,7 @@ METHOD AcceptCon() CLASS HB_LogInetPort
    LOCAL sk
 
    hb_inetTimeout( ::skIn, 250 )
-   DO WHILE .not. ::bTerminate
+   DO WHILE ! ::bTerminate
       sk := hb_inetAccept( ::skIn )
       // A gentle termination request, or an error
       IF sk != NIL

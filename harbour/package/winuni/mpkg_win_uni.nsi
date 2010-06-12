@@ -119,14 +119,14 @@ Section "Main components" hb_main
   File "$%HB_ROOT%hb21\addons\HARBOUR_README_ADDONS"
 
   ; Write the installation path into the registry
-; WriteRegStr HKLM "SOFTWARE\Harbour" "InstallDir" "$INSTDIR"
-  WriteRegStr HKCU "Software\Harbour" "InstallDir" "$INSTDIR"
+; WriteRegStr HKLM "SOFTWARE\Harbour Project 2.1" "InstallDir" "$INSTDIR"
+  WriteRegStr HKCU "Software\Harbour Project 2.1" "InstallDir" "$INSTDIR"
 
   ; Write the uninstall keys for Windows
-; WriteRegStr HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Harbour" "DisplayName" "Harbour Project"
-; WriteRegStr HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Harbour" "UninstallString" '"$INSTDIR\uninstall.exe"'
-; WriteRegDWORD HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Harbour" "NoModify" 1
-; WriteRegDWORD HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Harbour" "NoRepair" 1
+; WriteRegStr HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Harbour Project 2.1" "DisplayName" "Harbour Project"
+; WriteRegStr HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Harbour Project 2.1" "UninstallString" '"$INSTDIR\uninstall.exe"'
+; WriteRegDWORD HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Harbour Project 2.1" "NoModify" 1
+; WriteRegDWORD HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Harbour Project 2.1" "NoRepair" 1
   WriteUninstaller "uninstall.exe"
 
 SectionEnd
@@ -441,7 +441,7 @@ Section "Uninstall"
 
   Delete "$DESKTOP\Harbour Project 2.1.lnk"
 
-; DeleteRegKey HKLM "SOFTWARE\Harbour"
-  DeleteRegKey HKCU "Software\Harbour"
+; DeleteRegKey HKLM "SOFTWARE\Harbour Project 2.1"
+  DeleteRegKey HKCU "Software\Harbour Project 2.1"
 
 SectionEnd

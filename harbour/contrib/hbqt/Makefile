@@ -22,7 +22,9 @@ ifneq ($(HB_HAS_QT),)
    include $(TOP)$(ROOT)config/lib.mk
 
    ifneq ($(HB_QT_STATIC),)
-      DIRS += hbqts
+      ifneq ($(filter $(HB_PLATFORM),win wce),)
+         DIRS += hbqts
+      endif
    endif
 
    DIRS += \

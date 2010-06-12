@@ -174,10 +174,10 @@ STATIC FUNCTION hb_IniStringLow( hIni, cData, lKeyCaseSens, cSplitters, lAutoMai
    LOCAL cLine
    LOCAL reComment, reInclude, reSection, reSplitters
 
-   reComment := hb_RegexComp( s_cHalfLineComment + "|^[ \t]*" + s_cLineComment )
-   reInclude := hb_RegexComp( "include (.*)" )
-   reSection := hb_RegexComp( "[[](.*)[]]" )
-   reSplitters := hb_RegexComp( cSplitters )
+   reComment := hb_regexComp( s_cHalfLineComment + "|^[ \t]*" + s_cLineComment )
+   reInclude := hb_regexComp( "include (.*)" )
+   reSection := hb_regexComp( "[[](.*)[]]" )
+   reSplitters := hb_regexComp( cSplitters )
 
    /* Always begin with the MAIN section */
    IF lAutoMain
@@ -226,7 +226,7 @@ STATIC FUNCTION hb_IniStringLow( hIni, cData, lKeyCaseSens, cSplitters, lAutoMai
       ENDIF
 
       /* remove eventual comments */
-      aKeyVal := hb_RegexSplit( reComment, cLine )
+      aKeyVal := hb_regexSplit( reComment, cLine )
       IF ! Empty( aKeyVal )
          cLine := AllTrim( aKeyVal[ 1 ] )
       ENDIF
@@ -237,7 +237,7 @@ STATIC FUNCTION hb_IniStringLow( hIni, cData, lKeyCaseSens, cSplitters, lAutoMai
       ENDIF
 
       /* Is it an "INCLUDE" statement ? */
-      aKeyVal := hb_RegEx( reInclude, cLine )
+      aKeyVal := hb_regex( reInclude, cLine )
       IF ! Empty( aKeyVal )
          /* ignore void includes */
          aKeyVal[ 2 ] := AllTrim( aKeyVal[ 2 ] )
@@ -250,7 +250,7 @@ STATIC FUNCTION hb_IniStringLow( hIni, cData, lKeyCaseSens, cSplitters, lAutoMai
       ENDIF
 
       /* Is it a NEW section? */
-      aKeyVal := hb_Regex( reSection, cLine )
+      aKeyVal := hb_regex( reSection, cLine )
       IF ! Empty( aKeyVal )
          cLine := AllTrim( aKeyVal[ 2 ] )
          IF Len( cLine ) != 0
@@ -265,7 +265,7 @@ STATIC FUNCTION hb_IniStringLow( hIni, cData, lKeyCaseSens, cSplitters, lAutoMai
       ENDIF
 
       /* Is it a valid key */
-      aKeyVal := hb_RegexSplit( reSplitters, cLine,,, 2 )
+      aKeyVal := hb_regexSplit( reSplitters, cLine,,, 2 )
       IF Len( aKeyVal ) == 1
          /* TODO: Signal error */
          cLine := ""

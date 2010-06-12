@@ -176,7 +176,7 @@ STATIC FUNCTION DShowProperties( oVar, nScope, lRecursive, nIndent, nRecursionLe
 
    DEFAULT nIndent TO 0
 
-   IF ValType( oVar ) == "O"
+   IF ISOBJECT( oVar )
 //      lOldScope := __SetClassScope( .F. )
       aMethods  := __objGetMsgFullList( oVar, .F., HB_MSGLISTALL, nScope )
       aProps    := __objGetValueFullList( oVar, NIL, nScope )
@@ -215,7 +215,7 @@ STATIC FUNCTION DShowArray( aVar, lRecursive, nIndent, nRecursionLevel, nMaxRecu
 
    //TraceLog( "DShowArray: aVar, lRecursive", aVar, lRecursive )
 
-   IF ValType( aVar ) == "A"
+   IF ISARRAY( aVar )
       nEolLen := Len( CRLF )
       nChar := Len( LTrim( Str( Len( aVar ) ) ) )  // return number of chars to display that value
                                                    // i.e. if Len( aVar ) == 99, then nChar := 2
@@ -364,15 +364,15 @@ STATIC FUNCTION __objGetMsgFullList( oObject, lData, nRange, nScope, nNoScope )
    LOCAL aReturn
    LOCAL nFirstProperty, aMsg
 
-   IF ValType( oObject ) != 'O'
+   IF ! ISOBJECT( oObject )
       __errRT_BASE( EG_ARG, 3101, NIL, ProcName() )
    ENDIF
 
-   IF ValType( lData ) != 'L'
+   IF ! ISLOGICAL( lData )
       lData := .T.
    ENDIF
 
-   IF ValType( nNoScope ) != 'N'
+   IF ! ISNUMBER( nNoScope )
       nNoScope := 0
    ENDIF
 
@@ -408,11 +408,11 @@ STATIC FUNCTION __objGetValueFullList( oObject, aExcept, nScope, nNoScope )
    LOCAL aReturn
    LOCAL aVar
 
-   IF ValType( oObject ) != 'O'
+   IF ! IOBJECT( oObject )
       __errRT_BASE( EG_ARG, 3101, NIL, ProcName( 0 ) )
    ENDIF
 
-   IF ValType( aExcept ) != 'A'
+   IF ! ISARRAY( aExcept )
       aExcept := {}
    ENDIF
 

@@ -57,7 +57,7 @@
 function StartThread( p1, p2, ... )
    if PCount() < 2
       return hb_threadStart( p1 )
-   elseif valtype( p1 ) == "O" .and. ISCHARACTER( p2 )
+   elseif ISOBJECT( p1 ) .and. ISCHARACTER( p2 )
       return hb_threadStart( {|...| p1:&p2( ... ) }, ... )
    endif
    return hb_threadStart( p1, p2, ... )

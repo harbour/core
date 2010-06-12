@@ -417,10 +417,10 @@ METHOD GetSessionVars( aHashVars, cFields, cSeparator ) CLASS uhttpd_Session
    LOCAL cSessVarName
    DEFAULT cSeparator TO "&"
 
-   aFields := HB_RegExSplit( cSeparator, cFields )
+   aFields := hb_regexSplit( cSeparator, cFields )
 
    FOR EACH cField in aFields
-      aField := HB_RegexSplit( "=", cField, 2 )
+      aField := hb_regexSplit( "=", cField, 2 )
       IF Len( aField ) != 2
          LOOP
       ENDIF

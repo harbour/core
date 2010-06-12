@@ -229,7 +229,7 @@ METHOD ReadHeaders( lClear ) CLASS tIPClientHTTP
    aVersion := hb_regex( "^HTTP/(.)\.(.) ([0-9][0-9][0-9]) +(.*)$", cLine )
    ::cReply := cLine
 
-   IF aVersion == NIL
+   IF Empty( aVersion )
       ::nVersion := 0
       ::nSubversion := 9
       ::nReplyCode := 0

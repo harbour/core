@@ -71,8 +71,6 @@
 #include "dbinfo.ch"
 #include "error.ch"
 
-#define COMPILE(c) &("{||" + c + "}")
-
 STATIC saTables := {}
 /* NetWork Functions */
 STATIC snNetDelay    := 30
@@ -153,10 +151,10 @@ FUNCTION NetLock( nType, lReleaseLocks, nSeconds )
    LOCAL nCh
    LOCAL cWord
 
-   IF .not. ( VALTYPE( nType ) == "N" ) .or. ;
-              ( ( .not. ( nType == 1 ) ) .and. ;
-              ( .not. ( nType == 2 ) ) .and. ;
-              ( .not. ( nType == 3 ) ) )
+   IF ! ISNUMBER( nType ) .or. ;
+        ( ( nType != 1 ) .and. ;
+          ( nType != 2 ) .and. ;
+          ( nType != 3 ) )
       ALERT( "Invalid Argument passed to NETLOCK()" )
       RETURN lSuccess
    ENDIF
@@ -291,7 +289,7 @@ FUNCTION NetOpenFiles( aFiles )
       ENDIF
 
       IF NetDbUse( xFile[ 1 ], xFile[ 2 ], snNetDelay, "DBFCDX" )
-         IF VALTYPE( xFile[ 3 ] ) == "A"
+         IF ISARRAY( xFile[ 3 ] )
             FOR EACH cIndex IN xFile[ 3 ]
                IF hb_FileExists( cIndex )
                   ORDLISTADD( cIndex )
@@ -760,7 +758,7 @@ CLASS HBTable
 
    METHOD DBFILTER() INLINE ( ::Alias )->( DBFILTER() )
    METHOD SetFilter( c ) INLINE ;
-   IF( c != NIL, ( ::Alias )->( DBSETFILTER( COMPILE( c ), c ) ), ;
+   IF( c != NIL, ( ::Alias )->( DBSETFILTER( hb_macroBlock( c ), c ) ), ;
    ( ::Alias )->( DBCLEARFILTER() ) )
 
    METHOD AddChild( oChild, cKey )
@@ -1381,10 +1379,9 @@ RETURN ::aOrders[ nPos ]                // returns oOrder
 
 METHOD SetOrder( xTag ) CLASS HBTable
 
-   LOCAL xType   := VALTYPE( xTag )
    LOCAL nOldOrd := ( ::Alias )->( ORDSETFOCUS() )
 
-   SWITCH xType
+   SWITCH VALTYPE( xTag )
    CASE "C"                    // we have an Order-TAG
       ( ::Alias )->( ORDSETFOCUS( xTag ) )
       EXIT
@@ -1420,7 +1417,7 @@ PROCEDURE AddChild( oChild, cKey ) CLASS HBTable                 // ::addChild()
 
    AADD( ::aChildren, { oChild, cKey } )
    oChild:oParent := Self
-   ( ::Alias )->( ORDSETRELATION( oChild:Alias, COMPILE( cKey ), cKey ) )
+   ( ::Alias )->( ORDSETRELATION( oChild:Alias, hb_macroBlock( cKey ), cKey ) )
 RETURN
 
 /****
@@ -1534,9 +1531,9 @@ METHOD New( cTag, cKey, cLabel, cFor, cWhile, lUnique, bEval, nInterval, cOrderB
    ::cKey      := cKey
    ::cFor      := cFor
    ::cWhile    := cWhile
-   ::bKey      := COMPILE( cKey )
-   ::bFor      := COMPILE( cFor )
-   ::bWhile    := COMPILE( cWhile )
+   ::bKey      := hb_macroBlock( cKey )
+   ::bFor      := hb_macroBlock( cFor )
+   ::bWhile    := hb_macroBlock( cWhile )
    ::bEval     := bEval
    ::nInterval := nInterval
    ::Label     := cLabel

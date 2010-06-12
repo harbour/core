@@ -1200,7 +1200,7 @@ cErr := "Runtime error" + CRLF + ;
         CRLF
 
 
-do while .not. Empty( ProcName( ++i ) )
+do while ! Empty( ProcName( ++i ) )
     cErr += Trim( ProcName( i ) ) + "(" + Ltrim( Str( ProcLine( i ) ) ) + ")" + CRLF
 enddo
 
