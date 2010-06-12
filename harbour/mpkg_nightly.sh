@@ -80,3 +80,5 @@ then
       scp -i $HB_SFNET_FRS_PRIVATE_KEY harbour-nightly.tar.gz  $HB_SFNET_USER,$desthost$destdir
    fi
 fi
+
+rm -f harbour-nightly-src.zip harbour-nightly.tar.bz2 harbour-nightly.tar.gz
