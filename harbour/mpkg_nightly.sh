@@ -52,14 +52,14 @@ mkdir _mk_nightly || {
 }
 cd _mk_nightly
 
-svn export --native-eol LF http://harbour-project.svn.sourceforge.net/svnroot/harbour-project/trunk/harbour
+svn export -q --native-eol LF http://harbour-project.svn.sourceforge.net/svnroot/harbour-project/trunk/harbour
 tar -c harbour/* > harbour-nightly.tar
 bzip2 -c -z harbour-nightly.tar > ../harbour-nightly.tar.bz2
 gzip -c harbour-nightly.tar > ../harbour-nightly.tar.gz
 rm harbour-nightly.tar
 
 rm -f -r harbour
-svn export --native-eol CRLF http://harbour-project.svn.sourceforge.net/svnroot/harbour-project/trunk/harbour
+svn export -q --native-eol CRLF http://harbour-project.svn.sourceforge.net/svnroot/harbour-project/trunk/harbour
 zip -X -r -o ../harbour-nightly-src.zip harbour/*
 
 cd ..
