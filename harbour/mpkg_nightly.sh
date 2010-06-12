@@ -43,15 +43,15 @@
 #    http://sourceforge.net/apps/trac/sourceforge/wiki/SSH%20keys
 #
 
-[ -n harbour-nightly-src.zip ] || rm harbour-nightly-src.zip
-[ -n harbour-nightly.tar.bz2 ] || rm harbour-nightly.tar.bz2
-[ -n harbour-nightly.tar.gz ]  || rm harbour-nightly.tar.gz
+rm -f harbour-nightly-src.zip harbour-nightly.tar.bz2 harbour-nightly.tar.gz
 
 rm -f -r _mk_nightly
-mkdir _mk_nightly
+mkdir _mk_nightly || {
+   echo "Failed to create _mk_nightly"
+   exit 1
+}
 cd _mk_nightly
 
-rm -f -r harbour
 svn export --native-eol LF http://harbour-project.svn.sourceforge.net/svnroot/harbour-project/trunk/harbour
 tar -c harbour/* > harbour-nightly.tar
 bzip2 -c -z harbour-nightly.tar > ../harbour-nightly.tar.bz2
@@ -65,6 +65,18 @@ zip -X -r -o ../harbour-nightly-src.zip harbour/*
 cd ..
 rm -f -r _mk_nightly
 
-scp -i $HB_SFNET_FRS_PRIVATE_KEY harbour-nightly-src.zip $HB_SFNET_USER,harbour-project@frs.sourceforge.net:/home/frs/project/h/ha/harbour-project/source/nightly/
-scp -i $HB_SFNET_FRS_PRIVATE_KEY harbour-nightly.tar.bz2 $HB_SFNET_USER,harbour-project@frs.sourceforge.net:/home/frs/project/h/ha/harbour-project/source/nightly/
-scp -i $HB_SFNET_FRS_PRIVATE_KEY harbour-nightly.tar.gz  $HB_SFNET_USER,harbour-project@frs.sourceforge.net:/home/frs/project/h/ha/harbour-project/source/nightly/
+destdir="/home/frs/project/h/ha/harbour-project/source/nightly/"
+
+if [ -d $destdir ]
+   echo cp harbour-nightly-src.zip $destdir
+   echo cp harbour-nightly.tar.bz2 $destdir
+   echo cp harbour-nightly.tar.gz  $destdir
+then
+   if [ "$HB_SFNET_FRS_PRIVATE_KEY" -a "$HB_SFNET_USER" ]
+   then
+      desthost=",harbour-project@frs.sourceforge.net:"
+      scp -i $HB_SFNET_FRS_PRIVATE_KEY harbour-nightly-src.zip $HB_SFNET_USER,$desthost$destdir
+      scp -i $HB_SFNET_FRS_PRIVATE_KEY harbour-nightly.tar.bz2 $HB_SFNET_USER,$desthost$destdir
+      scp -i $HB_SFNET_FRS_PRIVATE_KEY harbour-nightly.tar.gz  $HB_SFNET_USER,$desthost$destdir
+   fi
+fi
