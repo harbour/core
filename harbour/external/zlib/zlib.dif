@@ -1,6 +1,6 @@
-diff -urN zlib.orig/crc32.c zlib/crc32.c
---- zlib.orig/crc32.c	2010-04-19 06:10:07.000000000 +0200
-+++ zlib/crc32.c	2010-06-10 22:22:35.500216640 +0200
+diff -urN zlib-1.2.5.orig/crc32.c zlib/crc32.c
+--- zlib-1.2.5.orig/crc32.c	2010-04-19 06:10:07.000000000 +0200
++++ zlib/crc32.c	2010-06-14 15:45:14.870220420 +0200
 @@ -19,6 +19,8 @@
    one thread to use crc32().
   */
@@ -10,9 +10,9 @@ diff -urN zlib.orig/crc32.c zlib/crc32.c
  #ifdef MAKECRCH
  #  include <stdio.h>
  #  ifndef DYNAMIC_CRC_TABLE
-diff -urN zlib.orig/deflate.c zlib/deflate.c
---- zlib.orig/deflate.c	2010-04-20 06:12:21.000000000 +0200
-+++ zlib/deflate.c	2010-06-10 22:25:04.510219344 +0200
+diff -urN zlib-1.2.5.orig/deflate.c zlib/deflate.c
+--- zlib-1.2.5.orig/deflate.c	2010-04-20 06:12:21.000000000 +0200
++++ zlib/deflate.c	2010-06-14 15:45:14.880217303 +0200
 @@ -51,6 +51,10 @@
  
  #include "deflate.h"
@@ -58,17 +58,21 @@ diff -urN zlib.orig/deflate.c zlib/deflate.c
      Bytef *scan, *strend;   /* scan goes up to strend for length of run */
  
      for (;;) {
-diff -urN zlib.orig/gzguts.h zlib/gzguts.h
---- zlib.orig/gzguts.h	2010-04-18 21:28:32.000000000 +0200
-+++ zlib/gzguts.h	2010-06-10 22:25:53.470219384 +0200
-@@ -31,9 +31,15 @@
+diff -urN zlib-1.2.5.orig/gzguts.h zlib/gzguts.h
+--- zlib-1.2.5.orig/gzguts.h	2010-04-18 21:28:32.000000000 +0200
++++ zlib/gzguts.h	2010-06-14 15:46:20.590631117 +0200
+@@ -31,9 +31,19 @@
  #  define NO_GZCOMPRESS
  #endif
  
 -#ifdef _MSC_VER
 -#  include <io.h>
 -#  define vsnprintf _vsnprintf
-+#if defined(MSDOS) || defined(OS2) || defined(WINDOWS) || defined(WIN32)
++#if defined(MSDOS)
++   /* vsnprintf may exist on some MS-DOS compilers (DJGPP?),
++      but for now we just assume it doesn't. */
++#     define NO_vsnprintf
++#elif defined(OS2) || defined(WINDOWS) || defined(WIN32)
 +#  ifndef _WINCE
 +#     include <io.h>
 +#     if defined(_MSC_VER) && !defined(__XCC__)
@@ -80,9 +84,9 @@ diff -urN zlib.orig/gzguts.h zlib/gzguts.h
  #endif
  
  #ifndef local
-diff -urN zlib.orig/gzread.c zlib/gzread.c
---- zlib.orig/gzread.c	2010-03-28 17:19:33.000000000 +0200
-+++ zlib/gzread.c	2010-06-10 22:27:34.920220335 +0200
+diff -urN zlib-1.2.5.orig/gzread.c zlib/gzread.c
+--- zlib-1.2.5.orig/gzread.c	2010-03-28 17:19:33.000000000 +0200
++++ zlib/gzread.c	2010-06-14 15:45:14.880217303 +0200
 @@ -167,12 +167,12 @@
                  gz_error(state, Z_DATA_ERROR, "unknown header flags set");
                  return -1;
@@ -113,9 +117,9 @@ diff -urN zlib.orig/gzread.c zlib/gzread.c
              }
              /* an unexpected end of file is not checked for here -- it will be
                 noticed on the first request for uncompressed data */
-diff -urN zlib.orig/zconf.h zlib/zconf.h
---- zlib.orig/zconf.h	2010-04-18 19:58:06.000000000 +0200
-+++ zlib/zconf.h	2010-06-10 22:28:55.630499839 +0200
+diff -urN zlib-1.2.5.orig/zconf.h zlib/zconf.h
+--- zlib-1.2.5.orig/zconf.h	2010-04-18 19:58:06.000000000 +0200
++++ zlib/zconf.h	2010-06-14 15:45:14.880217303 +0200
 @@ -140,7 +140,18 @@
  #if defined(_WINDOWS) && !defined(WINDOWS)
  #  define WINDOWS
@@ -136,9 +140,9 @@ diff -urN zlib.orig/zconf.h zlib/zconf.h
  #  ifndef WIN32
  #    define WIN32
  #  endif
-diff -urN zlib.orig/zutil.c zlib/zutil.c
---- zlib.orig/zutil.c	2010-04-19 06:14:13.000000000 +0200
-+++ zlib/zutil.c	2010-06-10 22:29:21.933812944 +0200
+diff -urN zlib-1.2.5.orig/zutil.c zlib/zutil.c
+--- zlib-1.2.5.orig/zutil.c	2010-04-19 06:14:13.000000000 +0200
++++ zlib/zutil.c	2010-06-14 15:45:14.880217303 +0200
 @@ -136,7 +136,7 @@
      return ERR_MSG(err);
  }
@@ -148,9 +152,9 @@ diff -urN zlib.orig/zutil.c zlib/zutil.c
      /* The Microsoft C Run-Time Library for Windows CE doesn't have
       * errno.  We define it as a global variable to simplify porting.
       * Its value is always 0 and should not be used.
-diff -urN zlib.orig/zutil.h zlib/zutil.h
---- zlib.orig/zutil.h	2010-04-18 21:29:24.000000000 +0200
-+++ zlib/zutil.h	2010-06-10 22:31:49.780216511 +0200
+diff -urN zlib-1.2.5.orig/zutil.h zlib/zutil.h
+--- zlib-1.2.5.orig/zutil.h	2010-04-18 21:29:24.000000000 +0200
++++ zlib/zutil.h	2010-06-14 15:45:14.880217303 +0200
 @@ -22,7 +22,7 @@
  #include "zlib.h"
  

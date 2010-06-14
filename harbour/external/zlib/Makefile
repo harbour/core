@@ -32,11 +32,8 @@ C_SOURCES := \
 
 ifneq ($(HB_HAS_ZLIB_LOCAL),)
    # To suppress new warnings in version 1.2.5
-   ifneq ($(filter $(HB_COMPILER),mingw mingw64 mingwarm cygwin),)
+   ifneq ($(filter $(HB_COMPILER),mingw mingw64 mingwarm cygwin djgpp),)
       HB_CFLAGS += -DNO_VIZ
-   endif
-   ifeq ($(HB_COMPILER),djgpp)
-      HB_CFLAGS += -DNO_vsnprintf
    endif
    include $(TOP)$(ROOT)config/lib.mk
 else
