@@ -61,10 +61,14 @@ DIRS += \
 
 ifeq ($(HB_CONTRIBLIBS),no)
    DIRS :=
-else ifeq ($(firstword $(HB_CONTRIBLIBS)),no)
+else
+ifeq ($(firstword $(HB_CONTRIBLIBS)),no)
    DIRS := $(filter-out $(HB_CONTRIBLIBS),$(DIRS))
-else ifneq ($(HB_CONTRIBLIBS),)
+else
+ifneq ($(HB_CONTRIBLIBS),)
    DIRS := $(HB_CONTRIBLIBS)
+endif
+endif
 endif
 
 DIRS += $(HB_CONTRIB_ADDONS)

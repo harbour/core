@@ -472,6 +472,7 @@ HARBOUR
    beos     - BeOS / Haiku
    hpux     - HP-UX
    sunos    - Sun Solaris / OpenSolaris
+   qnx      - QNX
    win      - MS Windows (all flavors)
               (see LINKS section for Win9x requirements)
    wce      - MS Windows CE
@@ -507,6 +508,10 @@ HARBOUR
 
    beos
    ----
+   gcc      - GNU C
+
+   qnx
+   ---
    gcc      - GNU C
 
    sunos
@@ -1285,6 +1290,7 @@ HARBOUR
    x darwin -> win/mingw64   x86-64
    x darwin -> dos/djgpp     x86
      hpux   -> hpux/gcc      (CPU cross-builds possible)
+     qnx    -> qnx/gcc       (CPU cross-builds possible - no tested)
      beos   -> beos/gcc      x86
    x hpux   -> wce/mingwarm  arm
    x hpux   -> wce/mingw     x86

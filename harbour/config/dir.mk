@@ -10,6 +10,11 @@ ifneq ($(HB_COMPILER),)
 ifeq ($(HB_HOST_PLAT),dos)
    # do not use rules for parallel processing in DOS
    JOB_SRV := NO
+else
+   # these make versions does not work correctly with
+   # parallel execution rules below
+   JOB_SRV := $(MAKE_VERSION:3.7%=NO)
+   JOB_SRV := $(JOB_SRV:3.80%=NO)
 endif
 
 ifeq ($(JOB_SRV),NO)

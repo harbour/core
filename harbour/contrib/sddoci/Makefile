@@ -33,8 +33,10 @@ ifneq ($(HB_HAS_OCILIB),)
    endif
    ifneq ($(HB_WITH_OCILIB_WIDE),)
       HB_CFLAGS += -DOCI_CHARSET_UNICODE -DOCI_CHARSET_WIDE
-   else ifneq ($(HB_WITH_OCILIB_MIXED),)
+   else
+   ifneq ($(HB_WITH_OCILIB_MIXED),)
       HB_CFLAGS += -DOCI_CHARSET_MIXED
+   endif
    endif
    include $(TOP)$(ROOT)config/lib.mk
 else

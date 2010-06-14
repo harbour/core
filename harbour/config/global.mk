@@ -52,9 +52,16 @@ substpat := !@!@
 .PHONY: all clean install
 
 _make_ver_min := 3.81
-ifeq ($(filter $(_make_ver_min),$(firstword $(sort $(MAKE_VERSION) $(_make_ver_min)))),)
-   $(error ! Error: GNU Make version $(MAKE_VERSION) found, $(_make_ver_min) or upper needed for Harbour)
+_make_ver_ok := $(filter $(_make_ver_min),$(firstword $(sort $(MAKE_VERSION) $(_make_ver_min))))
+ifeq ($(_make_ver_ok),)
+   ifeq ($(_make_ver_warn),)
+      $(warning ! Warning: GNU Make version $(MAKE_VERSION) found, $(_make_ver_min) or upper recommended for Harbour)
+      export _make_ver_warn := yes
+   endif
 endif
+
+_make_ver_381 := 3.81
+MAKE_381 := $(filter $(_make_ver_381),$(firstword $(sort $(MAKE_VERSION) $(_make_ver_381))))
 
 find_in_path     = $(strip $(subst $(substpat), ,$(firstword $(subst |, ,$(subst $(subst x, ,x),$(substpat),$(filter-out |,$(foreach dir, $(subst $(PTHSEP), ,$(subst $(subst x, ,x),$(substpat),$(PATH))),|$(wildcard $(subst //,/,$(subst $(substpat),\ ,$(subst \,/,$(dir)))/$(1))$(HB_HOST_BIN_EXT)))))))))
 find_in_path_raw = $(strip $(subst $(substpat), ,$(firstword $(subst |, ,$(subst $(subst x, ,x),$(substpat),$(filter-out |,$(foreach dir, $(subst $(PTHSEP), ,$(subst $(subst x, ,x),$(substpat),$(PATH))),|$(wildcard $(subst //,/,$(subst $(substpat),\ ,$(subst \,/,$(dir)))/$(1))))))))))
@@ -64,10 +71,14 @@ find_in_path_prw = $(strip $(subst $(substpat), ,$(firstword $(subst |, ,$(subst
 define detect_watcom_platform
    ifneq ($(call find_in_path_prw,os2.h,$(INCLUDE)),)
       HB_PLATFORM := os2
-   else ifneq ($(call find_in_path_prw,dirent.h,$(INCLUDE)),)
+   else
+   ifneq ($(call find_in_path_prw,dirent.h,$(INCLUDE)),)
       HB_PLATFORM := linux
-   else ifeq ($(call find_in_path_prw,windows.h,$(INCLUDE)),)
+   else
+   ifeq ($(call find_in_path_prw,windows.h,$(INCLUDE)),)
       HB_PLATFORM := dos
+   endif
+   endif
    endif
 endef
 
@@ -75,44 +86,85 @@ define check_host
 
    ifneq ($(findstring MINGW,$(1)),)
       HB_HOST_PLAT := win
-   else ifneq ($(findstring MSys,$(1)),)
+   else
+   ifneq ($(findstring MSys,$(1)),)
       HB_HOST_PLAT := win
-   else ifneq ($(findstring Windows,$(1)),)
+   else
+   ifneq ($(findstring Windows,$(1)),)
       HB_HOST_PLAT := win
-   else ifneq ($(findstring CYGWIN,$(1)),)
+   else
+   ifneq ($(findstring CYGWIN,$(1)),)
       HB_HOST_PLAT := win
-   else ifneq ($(findstring Darwin,$(1)),)
+   else
+   ifneq ($(findstring Darwin,$(1)),)
       HB_HOST_PLAT := darwin
-   else ifneq ($(findstring darwin,$(1)),)
+   else
+   ifneq ($(findstring darwin,$(1)),)
       HB_HOST_PLAT := darwin
-   else ifneq ($(findstring Linux,$(1)),)
+   else
+   ifneq ($(findstring Linux,$(1)),)
       HB_HOST_PLAT := linux
-   else ifneq ($(findstring linux,$(1)),)
+   else
+   ifneq ($(findstring linux,$(1)),)
       HB_HOST_PLAT := linux
-   else ifneq ($(findstring HP-UX,$(1)),)
+   else
+   ifneq ($(findstring HP-UX,$(1)),)
       HB_HOST_PLAT := hpux
-   else ifneq ($(findstring hp-ux,$(1)),)
+   else
+   ifneq ($(findstring hp-ux,$(1)),)
       HB_HOST_PLAT := hpux
-   else ifneq ($(findstring SunOS,$(1)),)
+   else
+   ifneq ($(findstring SunOS,$(1)),)
       HB_HOST_PLAT := sunos
-   else ifneq ($(findstring sunos,$(1)),)
+   else
+   ifneq ($(findstring sunos,$(1)),)
       HB_HOST_PLAT := sunos
-   else ifneq ($(findstring BSD,$(1)),)
+   else
+   ifneq ($(findstring BSD,$(1)),)
       HB_HOST_PLAT := bsd
-   else ifneq ($(findstring bsd,$(1)),)
+   else
+   ifneq ($(findstring bsd,$(1)),)
       HB_HOST_PLAT := bsd
-   else ifneq ($(findstring DragonFly,$(1)),)
+   else
+   ifneq ($(findstring DragonFly,$(1)),)
       HB_HOST_PLAT := bsd
-   else ifneq ($(findstring OS/2,$(1)),)
+   else
+   ifneq ($(findstring OS/2,$(1)),)
       HB_HOST_PLAT := os2
-   else ifneq ($(findstring MS-DOS,$(1)),)
+   else
+   ifneq ($(findstring MS-DOS,$(1)),)
       HB_HOST_PLAT := dos
-   else ifneq ($(findstring msdos,$(1)),)
+   else
+   ifneq ($(findstring msdos,$(1)),)
       HB_HOST_PLAT := dos
-   else ifneq ($(findstring beos,$(1)),)
+   else
+   ifneq ($(findstring beos,$(1)),)
       HB_HOST_PLAT := beos
-   else ifneq ($(findstring Haiku,$(1)),)
+   else
+   ifneq ($(findstring Haiku,$(1)),)
       HB_HOST_PLAT := beos
+   endif
+   ifneq ($(findstring QNX,$(1)),)
+      HB_HOST_PLAT := qnx
+   endif
+   endif
+   endif
+   endif
+   endif
+   endif
+   endif
+   endif
+   endif
+   endif
+   endif
+   endif
+   endif
+   endif
+   endif
+   endif
+   endif
+   endif
+   endif
    endif
 
 endef
@@ -121,34 +173,62 @@ define check_host_cpu
 
    ifneq ($(findstring ppc64,$(1)),)
       HB_HOST_CPU := ppc64
-   else ifneq ($(findstring ppc,$(1)),)
+   else
+   ifneq ($(findstring ppc,$(1)),)
       HB_HOST_CPU := ppc
-   else ifneq ($(findstring Power,$(1)),)
+   else
+   ifneq ($(findstring Power,$(1)),)
       HB_HOST_CPU := ppc
-   else ifneq ($(findstring arm,$(1)),)
+   else
+   ifneq ($(findstring arm,$(1)),)
       HB_HOST_CPU := arm
-   else ifneq ($(findstring ia64,$(1)),)
+   else
+   ifneq ($(findstring ia64,$(1)),)
       HB_HOST_CPU := ia64
-   else ifneq ($(findstring sparc64,$(1)),)
+   else
+   ifneq ($(findstring sparc64,$(1)),)
       HB_HOST_CPU := sparc64
-   else ifneq ($(findstring sparc,$(1)),)
+   else
+   ifneq ($(findstring sparc,$(1)),)
       HB_HOST_CPU := sparc32
-   else ifneq ($(findstring mips,$(1)),)
+   else
+   ifneq ($(findstring mips,$(1)),)
       HB_HOST_CPU := mips
-   else ifneq ($(findstring alpha,$(1)),)
+   else
+   ifneq ($(findstring alpha,$(1)),)
       HB_HOST_CPU := alpha
-   else ifneq ($(findstring 9000,$(1)),)
+   else
+   ifneq ($(findstring 9000,$(1)),)
       HB_HOST_CPU := parisc
-   else ifneq ($(findstring parisc,$(1)),)
+   else
+   ifneq ($(findstring parisc,$(1)),)
       HB_HOST_CPU := parisc
-   else ifneq ($(findstring x86_64,$(1)),)
+   else
+   ifneq ($(findstring x86_64,$(1)),)
       HB_HOST_CPU := x86_64
-   else ifneq ($(findstring 86,$(1)),)
+   else
+   ifneq ($(findstring 86,$(1)),)
       HB_HOST_CPU := x86
-   else ifneq ($(findstring 64,$(1)),)
+   else
+   ifneq ($(findstring 64,$(1)),)
       HB_HOST_CPU := x86_64
-   else ifneq ($(findstring BePC,$(1)),)
+   else
+   ifneq ($(findstring BePC,$(1)),)
       HB_HOST_CPU := x86
+   endif
+   endif
+   endif
+   endif
+   endif
+   endif
+   endif
+   endif
+   endif
+   endif
+   endif
+   endif
+   endif
+   endif
    endif
 
 endef
@@ -160,41 +240,55 @@ ifneq ($(HB_BUILD_NAME),)
       HB_BUILD_OPTIM := yes
       HB_BUILD_UNICODE := no
       HB_BUILD_MODE ?= c
-   else ifeq ($(HB_BUILD_NAME),.ru)
+   else
+   ifeq ($(HB_BUILD_NAME),.ru)
       HB_BUILD_DEBUG := no
       HB_BUILD_OPTIM := yes
       HB_BUILD_UNICODE := yes
       HB_BUILD_MODE ?= c
-   else ifeq ($(HB_BUILD_NAME),.rp)
+   else
+   ifeq ($(HB_BUILD_NAME),.rp)
       HB_BUILD_DEBUG := no
       HB_BUILD_OPTIM := yes
       HB_BUILD_UNICODE := no
       HB_BUILD_MODE ?= cpp
-   else ifeq ($(HB_BUILD_NAME),.rpu)
+   else
+   ifeq ($(HB_BUILD_NAME),.rpu)
       HB_BUILD_DEBUG := no
       HB_BUILD_OPTIM := yes
       HB_BUILD_UNICODE := yes
       HB_BUILD_MODE ?= cpp
-   else ifeq ($(HB_BUILD_NAME),.d)
+   else
+   ifeq ($(HB_BUILD_NAME),.d)
       HB_BUILD_DEBUG := yes
       HB_BUILD_OPTIM := no
       HB_BUILD_UNICODE := no
       HB_BUILD_MODE ?= c
-   else ifeq ($(HB_BUILD_NAME),.du)
+   else
+   ifeq ($(HB_BUILD_NAME),.du)
       HB_BUILD_DEBUG := yes
       HB_BUILD_OPTIM := no
       HB_BUILD_UNICODE := yes
       HB_BUILD_MODE ?= c
-   else ifeq ($(HB_BUILD_NAME),.dp)
+   else
+   ifeq ($(HB_BUILD_NAME),.dp)
       HB_BUILD_DEBUG := yes
       HB_BUILD_OPTIM := no
       HB_BUILD_UNICODE := no
       HB_BUILD_MODE ?= cpp
-   else ifeq ($(HB_BUILD_NAME),.dpu)
+   else
+   ifeq ($(HB_BUILD_NAME),.dpu)
       HB_BUILD_DEBUG := yes
       HB_BUILD_OPTIM := no
       HB_BUILD_UNICODE := yes
       HB_BUILD_MODE ?= cpp
+   endif
+   endif
+   endif
+   endif
+   endif
+   endif
+   endif
    endif
 endif
 
@@ -204,13 +298,21 @@ ifeq ($(HB_INIT_DONE),)
 
    ifeq ($(HB_BUILD_PKG),yes)
 
+      # We need some >= 3.80 GNU Make feature to make this option work
+      ifneq ($(MAKE_381),)
+         export HB_BUILD_PKG := no
+      endif
       # 'clean' and 'install' are required when building a release package
       ifeq ($(filter clean,$(HB_MAKECMDGOALS)),)
          export HB_BUILD_PKG := no
-      else ifeq ($(filter install,$(HB_MAKECMDGOALS)),)
+      else
+      ifeq ($(filter install,$(HB_MAKECMDGOALS)),)
          export HB_BUILD_PKG := no
-      else ifneq ($(ROOT),./)
+      else
+      ifneq ($(ROOT),./)
          export HB_BUILD_PKG := no
+      endif
+      endif
       endif
 
       ifeq ($(HB_BUILD_PKG),no)
@@ -242,12 +344,16 @@ endif
 # Make platform detection
 ifneq ($(findstring COMMAND,$(SHELL)),)
    HB_MAKE_PLAT := dos
-else ifneq ($(findstring sh.exe,$(SHELL)),)
+else
+ifneq ($(findstring sh.exe,$(SHELL)),)
    HB_MAKE_PLAT := win
-else ifneq ($(findstring CMD.EXE,$(SHELL)),)
+else
+ifneq ($(findstring CMD.EXE,$(SHELL)),)
    HB_MAKE_PLAT := os2
 else
    HB_MAKE_PLAT := unix
+endif
+endif
 endif
 
 ifeq ($(HB_INIT_DONE),)
@@ -260,94 +366,96 @@ ifeq ($(HB_INIT_DONE),)
    # Macros:
    #   -DHB_GT_LIB=
 
-   $(info ! Building Harbour $(HB_VER_MAJOR).$(HB_VER_MINOR).$(HB_VER_RELEASE)$(HB_VER_STATUS) from source - http://harbour-project.org)
-   $(info ! MAKE: $(MAKE) $(MAKE_VERSION) $(SHELL) $(HB_MAKECMDGOALS) $(MAKEFLAGS) $(if $(MAKESHELL),MAKESHELL: $(MAKESHELL),))
-   ifneq ($(HB_USER_PRGFLAGS),)
-      $(info ! HB_USER_PRGFLAGS: $(HB_USER_PRGFLAGS))
-   endif
-   ifneq ($(HB_USER_CFLAGS),)
-      $(info ! HB_USER_CFLAGS: $(HB_USER_CFLAGS))
-   endif
-   ifneq ($(HB_USER_LDFLAGS),)
-      $(info ! HB_USER_LDFLAGS: $(HB_USER_LDFLAGS))
-   endif
-   ifneq ($(HB_USER_AFLAGS),)
-      $(info ! HB_USER_AFLAGS: $(HB_USER_AFLAGS))
-   endif
-   ifneq ($(HB_USER_DFLAGS),)
-      $(info ! HB_USER_DFLAGS: $(HB_USER_DFLAGS))
-   endif
-   ifneq ($(HB_USER_LIBS),)
-      $(info ! HB_USER_LIBS: $(HB_USER_LIBS))
-   endif
-   ifneq ($(HB_INSTALL_PREFIX),)
-      $(info ! HB_INSTALL_PREFIX: $(HB_INSTALL_PREFIX))
-   endif
-   ifneq ($(HB_BIN_INSTALL),)
-      $(info ! HB_BIN_INSTALL: $(HB_BIN_INSTALL))
-   endif
-   ifneq ($(HB_LIB_INSTALL),)
-      $(info ! HB_LIB_INSTALL: $(HB_LIB_INSTALL))
-   endif
-   ifneq ($(HB_DYN_INSTALL),)
-      $(info ! HB_DYN_INSTALL: $(HB_DYN_INSTALL))
-   endif
-   ifneq ($(HB_INC_INSTALL),)
-      $(info ! HB_INC_INSTALL: $(HB_INC_INSTALL))
-   endif
-   ifneq ($(HB_DOC_INSTALL),)
-      $(info ! HB_DOC_INSTALL: $(HB_DOC_INSTALL))
-   endif
-   ifneq ($(HB_BUILD_NAME),)
-      $(info ! HB_BUILD_NAME: $(HB_BUILD_NAME))
-   endif
-   ifneq ($(HB_BUILD_PKG),)
-      $(info ! HB_BUILD_PKG: $(HB_BUILD_PKG))
-   endif
-   ifneq ($(HB_BUILD_DLL),)
-      $(info ! HB_BUILD_DLL: $(HB_BUILD_DLL))
-   endif
-   ifneq ($(HB_BUILD_IMPLIB),)
-      $(info ! HB_BUILD_IMPLIB: $(HB_BUILD_IMPLIB))
-   endif
-   ifneq ($(HB_BUILD_SHARED),)
-      $(info ! HB_BUILD_SHARED: $(HB_BUILD_SHARED))
-   endif
-   ifneq ($(HB_BUILD_DEBUG),)
-      $(info ! HB_BUILD_DEBUG: $(HB_BUILD_DEBUG))
-   endif
-   ifneq ($(HB_BUILD_STRIP),)
-      $(info ! HB_BUILD_STRIP: $(HB_BUILD_STRIP))
-   endif
-   ifneq ($(HB_BUILD_OPTIM),)
-      $(info ! HB_BUILD_OPTIM: $(HB_BUILD_OPTIM))
-   endif
-   ifneq ($(HB_BUILD_UNICODE),)
-      $(info ! HB_BUILD_UNICODE: $(HB_BUILD_UNICODE))
-   endif
-   ifneq ($(HB_BUILD_MODE),)
-      $(info ! HB_BUILD_MODE: $(HB_BUILD_MODE))
-   endif
-   ifneq ($(HB_BUILD_EXTDEF),)
-      $(info ! HB_BUILD_EXTDEF: $(HB_BUILD_EXTDEF))
-   endif
-   ifneq ($(HB_BUILD_PARTS),)
-      $(info ! HB_BUILD_PARTS: $(HB_BUILD_PARTS))
-   endif
-   ifneq ($(HB_CONTRIBLIBS),)
-      $(info ! HB_CONTRIBLIBS: $(HB_CONTRIBLIBS))
-   endif
-   ifneq ($(HB_CONTRIB_ADDONS),)
-      $(info ! HB_CONTRIB_ADDONS: $(HB_CONTRIB_ADDONS))
-   endif
-   ifneq ($(HB_EXTERNALLIBS),)
-      $(info ! HB_EXTERNALLIBS: $(HB_EXTERNALLIBS))
-   endif
-   ifneq ($(HB_EXTERNAL_ADDONS),)
-      $(info ! HB_EXTERNAL_ADDONS: $(HB_EXTERNAL_ADDONS))
-   endif
-   ifneq ($(HB_REBUILD_PARSER),)
-      $(info ! HB_REBUILD_PARSER: $(HB_REBUILD_PARSER))
+   ifneq ($(MAKE_381),)
+      $(info ! Building Harbour $(HB_VER_MAJOR).$(HB_VER_MINOR).$(HB_VER_RELEASE)$(HB_VER_STATUS) from source - http://harbour-project.org)
+      $(info ! MAKE: $(MAKE) $(MAKE_VERSION) $(SHELL) $(HB_MAKECMDGOALS) $(MAKEFLAGS) $(if $(MAKESHELL),MAKESHELL: $(MAKESHELL),))
+      ifneq ($(HB_USER_PRGFLAGS),)
+         $(info ! HB_USER_PRGFLAGS: $(HB_USER_PRGFLAGS))
+      endif
+      ifneq ($(HB_USER_CFLAGS),)
+         $(info ! HB_USER_CFLAGS: $(HB_USER_CFLAGS))
+      endif
+      ifneq ($(HB_USER_LDFLAGS),)
+         $(info ! HB_USER_LDFLAGS: $(HB_USER_LDFLAGS))
+      endif
+      ifneq ($(HB_USER_AFLAGS),)
+         $(info ! HB_USER_AFLAGS: $(HB_USER_AFLAGS))
+      endif
+      ifneq ($(HB_USER_DFLAGS),)
+         $(info ! HB_USER_DFLAGS: $(HB_USER_DFLAGS))
+      endif
+      ifneq ($(HB_USER_LIBS),)
+         $(info ! HB_USER_LIBS: $(HB_USER_LIBS))
+      endif
+      ifneq ($(HB_INSTALL_PREFIX),)
+         $(info ! HB_INSTALL_PREFIX: $(HB_INSTALL_PREFIX))
+      endif
+      ifneq ($(HB_BIN_INSTALL),)
+         $(info ! HB_BIN_INSTALL: $(HB_BIN_INSTALL))
+      endif
+      ifneq ($(HB_LIB_INSTALL),)
+         $(info ! HB_LIB_INSTALL: $(HB_LIB_INSTALL))
+      endif
+      ifneq ($(HB_DYN_INSTALL),)
+         $(info ! HB_DYN_INSTALL: $(HB_DYN_INSTALL))
+      endif
+      ifneq ($(HB_INC_INSTALL),)
+         $(info ! HB_INC_INSTALL: $(HB_INC_INSTALL))
+      endif
+      ifneq ($(HB_DOC_INSTALL),)
+         $(info ! HB_DOC_INSTALL: $(HB_DOC_INSTALL))
+      endif
+      ifneq ($(HB_BUILD_NAME),)
+         $(info ! HB_BUILD_NAME: $(HB_BUILD_NAME))
+      endif
+      ifneq ($(HB_BUILD_PKG),)
+         $(info ! HB_BUILD_PKG: $(HB_BUILD_PKG))
+      endif
+      ifneq ($(HB_BUILD_DLL),)
+         $(info ! HB_BUILD_DLL: $(HB_BUILD_DLL))
+      endif
+      ifneq ($(HB_BUILD_IMPLIB),)
+         $(info ! HB_BUILD_IMPLIB: $(HB_BUILD_IMPLIB))
+      endif
+      ifneq ($(HB_BUILD_SHARED),)
+         $(info ! HB_BUILD_SHARED: $(HB_BUILD_SHARED))
+      endif
+      ifneq ($(HB_BUILD_DEBUG),)
+         $(info ! HB_BUILD_DEBUG: $(HB_BUILD_DEBUG))
+      endif
+      ifneq ($(HB_BUILD_STRIP),)
+         $(info ! HB_BUILD_STRIP: $(HB_BUILD_STRIP))
+      endif
+      ifneq ($(HB_BUILD_OPTIM),)
+         $(info ! HB_BUILD_OPTIM: $(HB_BUILD_OPTIM))
+      endif
+      ifneq ($(HB_BUILD_UNICODE),)
+         $(info ! HB_BUILD_UNICODE: $(HB_BUILD_UNICODE))
+      endif
+      ifneq ($(HB_BUILD_MODE),)
+         $(info ! HB_BUILD_MODE: $(HB_BUILD_MODE))
+      endif
+      ifneq ($(HB_BUILD_EXTDEF),)
+         $(info ! HB_BUILD_EXTDEF: $(HB_BUILD_EXTDEF))
+      endif
+      ifneq ($(HB_BUILD_PARTS),)
+         $(info ! HB_BUILD_PARTS: $(HB_BUILD_PARTS))
+      endif
+      ifneq ($(HB_CONTRIBLIBS),)
+         $(info ! HB_CONTRIBLIBS: $(HB_CONTRIBLIBS))
+      endif
+      ifneq ($(HB_CONTRIB_ADDONS),)
+         $(info ! HB_CONTRIB_ADDONS: $(HB_CONTRIB_ADDONS))
+      endif
+      ifneq ($(HB_EXTERNALLIBS),)
+         $(info ! HB_EXTERNALLIBS: $(HB_EXTERNALLIBS))
+      endif
+      ifneq ($(HB_EXTERNAL_ADDONS),)
+         $(info ! HB_EXTERNAL_ADDONS: $(HB_EXTERNAL_ADDONS))
+      endif
+      ifneq ($(HB_REBUILD_PARSER),)
+         $(info ! HB_REBUILD_PARSER: $(HB_REBUILD_PARSER))
+      endif
    endif
 endif
 
@@ -359,7 +467,8 @@ else
    ifeq ($(patsubst /bin/%sh,sh,$(SHELL)),sh)
       HB_SHELL := sh
       SHELL := /bin/sh
-   else ifneq ($(OS2_SHELL),)
+   else
+   ifneq ($(OS2_SHELL),)
       HB_SHELL := os2
       SHELL := $(COMSPEC)
    else
@@ -376,7 +485,8 @@ else
       SHELL := $(COMSPEC)
       ifneq ($(findstring COMMAND,$(COMSPEC)),)
          HB_SHELL := dos
-      else ifneq ($(findstring command,$(COMSPEC)),)
+      else
+      ifneq ($(findstring command,$(COMSPEC)),)
          HB_SHELL := dos
       else
          HB_SHELL := nt
@@ -385,6 +495,8 @@ else
             HB_SHELL_XP := (xp)
          endif
       endif
+      endif
+   endif
    endif
 endif
 
@@ -417,14 +529,21 @@ ifeq ($(PTHSEP),)
 endif
 
 ifeq ($(HB_HOST_PLAT),)
-   $(eval $(call check_host,$(OSTYPE),))
-   ifeq ($(HB_HOST_PLAT),)
-      $(eval $(call check_host,$(MACHTYPE),))
+   ifneq ($(MAKE_381),)
+      $(eval $(call check_host,$(OSTYPE),))
       ifeq ($(HB_HOST_PLAT),)
-         $(eval $(call check_host,$(OS),))
+         $(eval $(call check_host,$(MACHTYPE),))
          ifeq ($(HB_HOST_PLAT),)
-            $(eval $(call check_host,$(shell uname -s),))
+            $(eval $(call check_host,$(OS),))
+            ifeq ($(HB_HOST_PLAT),)
+               $(eval $(call check_host,$(shell uname -s),))
+            endif
          endif
+      endif
+   else
+      # UNFINISHED
+      ifneq ($(findstring QNX,$(1)),)
+         HB_HOST_PLAT := qnx
       endif
    endif
 endif
@@ -432,14 +551,22 @@ endif
 ifeq ($(HB_HOST_PLAT),)
    ifneq ($(OS2_SHELL),)
       HB_HOST_PLAT := os2
-   else ifneq ($(windir),)
+   else
+   ifneq ($(windir),)
       HB_HOST_PLAT := win
-   else ifneq ($(WINDIR),)
+   else
+   ifneq ($(WINDIR),)
       HB_HOST_PLAT := win
-   else ifeq ($(HB_SHELL),dos)
+   else
+   ifeq ($(HB_SHELL),dos)
       HB_HOST_PLAT := dos
-   else ifneq ($(HB_PLATFORM),)
+   else
+   ifneq ($(HB_PLATFORM),)
       HB_HOST_PLAT := $(HB_PLATFORM)
+   endif
+   endif
+   endif
+   endif
    endif
 endif
 
@@ -453,21 +580,34 @@ HB_HOST_CPU :=
 ifeq ($(HB_HOST_PLAT),win)
    ifeq ($(PROCESSOR_ARCHITECTURE),AMD64)
       HB_HOST_CPU := x86_64
-   else ifeq ($(PROCESSOR_ARCHITEW6432),AMD64)
+   else
+   ifeq ($(PROCESSOR_ARCHITEW6432),AMD64)
       HB_HOST_CPU := x86_64
-   else ifeq ($(PROCESSOR_ARCHITECTURE),IA64)
+   else
+   ifeq ($(PROCESSOR_ARCHITECTURE),IA64)
       HB_HOST_CPU := ia64
    else
       HB_HOST_CPU := x86
    endif
-else ifneq ($(filter $(HB_HOST_PLAT),dos os2),)
+   endif
+   endif
+else
+ifneq ($(filter $(HB_HOST_PLAT),dos os2),)
    HB_HOST_CPU := x86
 else
-   $(eval $(call check_host_cpu,$(shell uname -m),))
+   ifneq ($(MAKE_381),)
+      $(eval $(call check_host_cpu,$(shell uname -m),))
+   else
+      # UNFINISHED
+      HB_HOST_CPU :=
+   endif
+endif
 endif
 
 ifeq ($(HB_INIT_DONE),)
-   $(info ! HB_HOST_PLAT: $(HB_HOST_PLAT)$(if $(HB_HOST_CPU), ($(HB_HOST_CPU)),)  HB_SHELL: $(HB_SHELL))
+   ifneq ($(MAKE_381),)
+      $(info ! HB_HOST_PLAT: $(HB_HOST_PLAT)$(if $(HB_HOST_CPU), ($(HB_HOST_CPU)),)  HB_SHELL: $(HB_SHELL))
+   endif
 endif
 
 HB_PLAT_AUTO :=
@@ -476,10 +616,14 @@ ifeq ($(HB_PLATFORM),)
    ifneq ($(HB_COMPILER),)
       ifeq ($(HB_COMPILER),djgpp)
          HB_PLATFORM := dos
-      else ifneq ($(filter $(HB_COMPILER),msvcarm msvcmips msvcsh mingwarm poccarm),)
+      else
+      ifneq ($(filter $(HB_COMPILER),msvcarm msvcmips msvcsh mingwarm poccarm),)
          HB_PLATFORM := wce
-      else ifneq ($(filter $(HB_COMPILER),mingw mingw64 msvc msvc64 msvcia64 bcc xcc pocc pocc64),)
+      else
+      ifneq ($(filter $(HB_COMPILER),mingw mingw64 msvc msvc64 msvcia64 bcc xcc pocc pocc64),)
          HB_PLATFORM := win
+      endif
+      endif
       endif
    endif
    ifneq ($(HB_PLATFORM),)
@@ -577,7 +721,8 @@ ifeq ($(HB_COMPILER),)
                $(error ! Harbour build could not find mingw32 cross-compiler. Please install it, or point HB_CCPATH/HB_CCPREFIX environment variables to it)
             endif
 
-         else ifeq ($(HB_PLATFORM),wce)
+         else
+         ifeq ($(HB_PLATFORM),wce)
 
             # Look for known mingw32ce compilers on HB_CCPATH if it's set
             ifneq ($(HB_CCPATH),)
@@ -641,7 +786,8 @@ ifeq ($(HB_COMPILER),)
                $(error ! Harbour build could not find cegcc cross-compiler. Please install it to /opt/mingw32ce, or point HB_CCPATH/HB_CCPREFIX environment variables to it)
             endif
 
-         else ifeq ($(HB_PLATFORM),dos)
+         else
+         ifeq ($(HB_PLATFORM),dos)
 
             # Look for djgpp compiler on HB_CCPATH if it's set
             ifneq ($(HB_CCPATH),)
@@ -681,6 +827,8 @@ ifeq ($(HB_COMPILER),)
             else
                $(error ! Harbour build could not find djgpp cross-compiler. Please install it to /usr/local/i586-pc-msdosdjgpp, or point HB_CCPATH/HB_CCPREFIX environment variables to it)
             endif
+         endif
+         endif
          endif
       endif
    endif
@@ -747,12 +895,18 @@ ifeq ($(HB_COMPILER),)
                                  HB_COMPILER := mingw
                                  ifneq ($(wildcard $(dir $(HB_COMP_PATH))mingw32-gcc-4.5*),)
                                     HB_COMPILER_VER := 45
-                                 else ifneq ($(wildcard $(dir $(HB_COMP_PATH))mingw32-gcc-4.4*),)
+                                 else
+                                 ifneq ($(wildcard $(dir $(HB_COMP_PATH))mingw32-gcc-4.4*),)
                                     HB_COMPILER_VER := 44
-                                 else ifneq ($(wildcard $(dir $(HB_COMP_PATH))mingw32-gcc-4.3*),)
+                                 else
+                                 ifneq ($(wildcard $(dir $(HB_COMP_PATH))mingw32-gcc-4.3*),)
                                     HB_COMPILER_VER := 43
-                                 else ifneq ($(wildcard $(dir $(HB_COMP_PATH))mingw32-gcc-3.4*),)
+                                 else
+                                 ifneq ($(wildcard $(dir $(HB_COMP_PATH))mingw32-gcc-3.4*),)
                                     HB_COMPILER_VER := 34
+                                 endif
+                                 endif
+                                 endif
                                  endif
                               else
                                  HB_COMP_PATH := $(call find_in_path,wpp386)
@@ -797,14 +951,22 @@ ifeq ($(HB_COMPILER),)
                                                          HB_COMPILER := msvc
                                                          ifneq ($(findstring VC98,$(HB_COMP_PATH)),)
                                                             HB_COMPILER_VER := 1200
-                                                         else ifneq ($(findstring 2003,$(HB_COMP_PATH)),)
+                                                         else
+                                                         ifneq ($(findstring 2003,$(HB_COMP_PATH)),)
                                                             HB_COMPILER_VER := 1300
-                                                         else ifneq ($(findstring 8/,$(HB_COMP_PATH)),)
+                                                         else
+                                                         ifneq ($(findstring 8/,$(HB_COMP_PATH)),)
                                                             HB_COMPILER_VER := 1400
-                                                         else ifneq ($(findstring 9.0,$(HB_COMP_PATH)),)
+                                                         else
+                                                         ifneq ($(findstring 9.0,$(HB_COMP_PATH)),)
                                                             HB_COMPILER_VER := 1500
-                                                         else ifneq ($(findstring 10.0,$(HB_COMP_PATH)),)
+                                                         else
+                                                         ifneq ($(findstring 10.0,$(HB_COMP_PATH)),)
                                                             HB_COMPILER_VER := 1600
+                                                         endif
+                                                         endif
+                                                         endif
+                                                         endif
                                                          endif
                                                       else
                                                          HB_COMP_PATH := $(call find_in_path_raw,bcc32.exe)
@@ -849,8 +1011,10 @@ ifeq ($(HB_COMPILER),)
                                                                            HB_CPU := x86_64
                                                                            ifneq ($(wildcard $(dir $(HB_COMP_PATH))$(HB_CCPREFIX)gcc-4.6*),)
                                                                               HB_COMPILER_VER := 46
-                                                                           else ifneq ($(wildcard $(dir $(HB_COMP_PATH))$(HB_CCPREFIX)gcc-4.5*),)
+                                                                           else
+                                                                           ifneq ($(wildcard $(dir $(HB_COMP_PATH))$(HB_CCPREFIX)gcc-4.5*),)
                                                                               HB_COMPILER_VER := 45
+                                                                           endif
                                                                            endif
                                                                         endif
                                                                      endif
@@ -874,7 +1038,8 @@ ifeq ($(HB_COMPILER),)
                endif
             endif
          endif
-      else ifeq ($(HB_PLATFORM),linux)
+      else
+      ifeq ($(HB_PLATFORM),linux)
          HB_COMP_PATH := $(call find_in_path,wpp386)
          ifneq ($(HB_COMP_PATH),)
             HB_COMPILER := watcom
@@ -895,12 +1060,14 @@ ifeq ($(HB_COMPILER),)
                endif
             endif
          endif
-      else ifneq ($(filter $(HB_PLATFORM),hpux bsd),)
+      else
+      ifneq ($(filter $(HB_PLATFORM),hpux bsd),)
          HB_COMP_PATH := $(call find_in_path,gcc)
          ifneq ($(HB_COMP_PATH),)
             HB_COMPILER := gcc
          endif
-      else ifeq ($(HB_PLATFORM),darwin)
+      else
+      ifeq ($(HB_PLATFORM),darwin)
          HB_COMP_PATH := $(call find_in_path_par,clang,/Developer/usr/bin/)
          ifneq ($(HB_COMP_PATH),)
             HB_CCPREFIX := /Developer/usr/bin/
@@ -916,7 +1083,8 @@ ifeq ($(HB_COMPILER),)
                endif
             endif
          endif
-      else ifeq ($(HB_PLATFORM),sunos)
+      else
+      ifeq ($(HB_PLATFORM),sunos)
          HB_COMP_PATH := $(call find_in_path,suncc)
          ifneq ($(HB_COMP_PATH),)
             HB_COMPILER := sunpro
@@ -926,7 +1094,8 @@ ifeq ($(HB_COMPILER),)
                HB_COMPILER := gcc
             endif
          endif
-      else ifeq ($(HB_PLATFORM),dos)
+      else
+      ifeq ($(HB_PLATFORM),dos)
          HB_COMP_PATH := $(call find_in_path,gcc)
          ifneq ($(HB_COMP_PATH),)
             HB_COMPILER := djgpp
@@ -937,7 +1106,8 @@ ifeq ($(HB_COMPILER),)
                $(eval $(call detect_watcom_platform))
             endif
          endif
-      else ifeq ($(HB_PLATFORM),os2)
+      else
+      ifeq ($(HB_PLATFORM),os2)
          HB_COMP_PATH := $(call find_in_path,gcc)
          ifneq ($(HB_COMP_PATH),)
             HB_COMPILER := gcc
@@ -948,11 +1118,19 @@ ifeq ($(HB_COMPILER),)
                $(eval $(call detect_watcom_platform))
             endif
          endif
-      else ifeq ($(HB_PLATFORM),beos)
+      else
+      ifeq ($(HB_PLATFORM),beos)
          HB_COMP_PATH := $(call find_in_path,gcc)
          ifneq ($(HB_COMP_PATH),)
             HB_COMPILER := gcc
          endif
+      endif
+      endif
+      endif
+      endif
+      endif
+      endif
+      endif
       endif
    endif
    ifneq ($(HB_COMPILER),)
@@ -1033,32 +1211,46 @@ ifeq ($(HB_CPU),)
    ifeq ($(HB_PLATFORM),win)
       ifneq ($(filter $(HB_COMPILER),msvc64 mingw64 pocc64),)
          HB_CPU := x86_64
-      else ifneq ($(filter $(HB_COMPILER),msvcia64 iccia64),)
+      else
+      ifneq ($(filter $(HB_COMPILER),msvcia64 iccia64),)
          HB_CPU := ia64
       else
          HB_CPU := x86
       endif
-   else ifeq ($(HB_PLATFORM),wce)
+      endif
+   else
+   ifeq ($(HB_PLATFORM),wce)
       ifneq ($(filter $(HB_COMPILER),msvcarm mingwarm poccarm),)
          HB_CPU := arm
-      else ifneq ($(filter $(HB_COMPILER),msvcmips),)
+      else
+      ifneq ($(filter $(HB_COMPILER),msvcmips),)
          HB_CPU := mips
-      else ifneq ($(filter $(HB_COMPILER),msvcsh),)
+      else
+      ifneq ($(filter $(HB_COMPILER),msvcsh),)
          HB_CPU := sh
       else
          HB_CPU := x86
       endif
-   else ifneq ($(filter $(HB_PLATFORM),dos os2),)
+      endif
+      endif
+   else
+   ifneq ($(filter $(HB_PLATFORM),dos os2),)
       HB_CPU := x86
-   else ifeq ($(HB_PLATFORM),linux)
+   else
+   ifeq ($(HB_PLATFORM),linux)
       HB_CPU := $(HB_HOST_CPU)
       ifneq ($(filter $(HB_USER_CFLAGS),-m64),)
          HB_CPU := x86_64
-      else ifneq ($(filter $(HB_USER_CFLAGS),-m32),)
+      else
+      ifneq ($(filter $(HB_USER_CFLAGS),-m32),)
          HB_CPU := x86
+      endif
       endif
    else
       HB_CPU := $(HB_HOST_CPU)
+   endif
+   endif
+   endif
    endif
 endif
 
@@ -1083,8 +1275,10 @@ ifeq ($(HB_INIT_DONE),)
          $(warning !          Please use the Windows build of GNU Make.)
       endif
    endif
-   $(info ! HB_PLATFORM: $(HB_PLATFORM)$(if $(HB_CPU), ($(HB_CPU)),) $(HB_PLAT_AUTO))
-   $(info ! HB_COMPILER: $(HB_COMPILER)$(HB_COMP_VER) $(HB_COMP_AUTO))
+   ifneq ($(MAKE_381),)
+      $(info ! HB_PLATFORM: $(HB_PLATFORM)$(if $(HB_CPU), ($(HB_CPU)),) $(HB_PLAT_AUTO))
+      $(info ! HB_COMPILER: $(HB_COMPILER)$(HB_COMP_VER) $(HB_COMP_AUTO))
+   endif
 endif
 
 ifeq ($(HB_HOST_PKGM),)
@@ -1095,21 +1289,27 @@ ifeq ($(HB_HOST_PKGM),)
       ifneq ($(wildcard /opt/local/bin/port),)
          HB_HOST_PKGM += macports
       endif
-   else ifeq ($(HB_PLATFORM),linux)
+   else
+   ifeq ($(HB_PLATFORM),linux)
       ifneq ($(wildcard /etc/debian_version),)
          HB_HOST_PKGM += deb
-      else ifneq ($(wildcard /etc/gentoo-release),)
+      else
+      ifneq ($(wildcard /etc/gentoo-release),)
          HB_HOST_PKGM += portage
       else
          HB_HOST_PKGM += rpm
       endif
+      endif
+   endif
    endif
 endif
 export HB_HOST_PKGM
 
 ifeq ($(HB_INIT_DONE),)
    ifneq ($(HB_HOST_PKGM),)
-      $(info ! HB_HOST_PKGM: $(HB_HOST_PKGM))
+      ifneq ($(MAKE_381),)
+         $(info ! HB_HOST_PKGM: $(HB_HOST_PKGM))
+      endif
    endif
 endif
 
@@ -1156,14 +1356,18 @@ ifneq ($(HB_HOST_PLAT)$(HB_HOST_CPU),$(HB_PLATFORM)$(HB_CPU))
             ifeq ($(HB_BIN_COMPILE),)
                $(warning ! Warning: HB_BIN_COMPILE not specified. Could not find native build.)
             else
-               $(info ! HB_BIN_COMPILE not specified. Automatically set to: $(HB_BIN_COMPILE))
+               ifneq ($(MAKE_381),)
+                  $(info ! HB_BIN_COMPILE not specified. Automatically set to: $(HB_BIN_COMPILE))
+               endif
             endif
          endif
       endif
       export HB_BIN_COMPILE
    else
       ifeq ($(HB_INIT_DONE),)
-         $(info ! HB_BIN_COMPILE: $(HB_BIN_COMPILE))
+         ifneq ($(MAKE_381),)
+            $(info ! HB_BIN_COMPILE: $(HB_BIN_COMPILE))
+         endif
       endif
       HB_CROSS_BUILD := yes
    endif
@@ -1172,30 +1376,50 @@ ifneq ($(HB_HOST_PLAT)$(HB_HOST_CPU),$(HB_PLATFORM)$(HB_CPU))
       HB_PRGFLAGS += -undef:.ARCH.
       ifeq ($(HB_PLATFORM),win)
          HB_PRGFLAGS += -D__PLATFORM__WINDOWS
-      else ifeq ($(HB_PLATFORM),wce)
+      else
+      ifeq ($(HB_PLATFORM),wce)
          HB_PRGFLAGS += -D__PLATFORM__WINDOWS -D__PLATFORM__WINCE
-      else ifeq ($(HB_PLATFORM),dos)
+      else
+      ifeq ($(HB_PLATFORM),dos)
          HB_PRGFLAGS += -D__PLATFORM__DOS
-      else ifeq ($(HB_PLATFORM),os2)
+      else
+      ifeq ($(HB_PLATFORM),os2)
          HB_PRGFLAGS += -D__PLATFORM__OS2
-      else ifeq ($(HB_PLATFORM),linux)
+      else
+      ifeq ($(HB_PLATFORM),linux)
          HB_PRGFLAGS += -D__PLATFORM__LINUX -D__PLATFORM__UNIX
-      else ifeq ($(HB_PLATFORM),darwin)
+      else
+      ifeq ($(HB_PLATFORM),darwin)
          HB_PRGFLAGS += -D__PLATFORM__DARWIN -D__PLATFORM__UNIX
-      else ifeq ($(HB_PLATFORM),bsd)
+      else
+      ifeq ($(HB_PLATFORM),bsd)
          HB_PRGFLAGS += -D__PLATFORM__BSD -D__PLATFORM__UNIX
-      else ifeq ($(HB_PLATFORM),sunos)
+      else
+      ifeq ($(HB_PLATFORM),sunos)
          HB_PRGFLAGS += -D__PLATFORM__SUNOS -D__PLATFORM__UNIX
-      else ifeq ($(HB_PLATFORM),hpux)
+      else
+      ifeq ($(HB_PLATFORM),hpux)
          HB_PRGFLAGS += -D__PLATFORM__HPUX -D__PLATFORM__UNIX
-      else ifeq ($(HB_PLATFORM),beos)
+      else
+      ifeq ($(HB_PLATFORM),beos)
          HB_PRGFLAGS += -D__PLATFORM__BEOS -D__PLATFORM__UNIX
+      endif
+      endif
+      endif
+      endif
+      endif
+      endif
+      endif
+      endif
+      endif
       endif
       ifneq ($(HB_HOST_CPU),$(HB_CPU))
          ifneq ($(filter $(HB_CPU),x86 arm),)
             HB_PRGFLAGS += -D__ARCH32BIT__
-         else ifneq ($(filter $(HB_CPU),x86_64 ia64),)
+         else
+         ifneq ($(filter $(HB_CPU),x86_64 ia64),)
             HB_PRGFLAGS += -D__ARCH64BIT__
+         endif
          endif
       endif
    endif
@@ -1263,11 +1487,14 @@ else
 
       ifeq ($(HB_PLATFORM),beos)
          HB_INSTALL_PREFIX := /boot/common
-      else ifeq ($(HB_PLATFORM_UNIX),)
+      else
+      ifeq ($(HB_PLATFORM_UNIX),)
          HB_INSTALL_PREFIX := $(realpath $(TOP)$(ROOT))
-      else ifneq ($(PREFIX),)
+      else
+      ifneq ($(PREFIX),)
          HB_INSTALL_PREFIX := $(PREFIX)
-      else ifneq ($(DESTDIR),)
+      else
+      ifneq ($(DESTDIR),)
          HB_INSTALL_PREFIX := $(DESTDIR)
       else
          # Stick to *nix customs. I do not like it, it needs admin.
@@ -1276,6 +1503,9 @@ else
          ifneq ($(HB_HOST_PLAT),$(HB_PLATFORM))
             HB_INSTALL_PREFIX += /harbour-$(HB_PLATFORM)-$(HB_COMPILER)
          endif
+      endif
+      endif
+      endif
       endif
 
       HB_INSTALL_PREFIX := $(subst /,$(DIRSEP),$(HB_INSTALL_PREFIX))
@@ -1295,12 +1525,14 @@ endif
 export HB_INSTALL_PREFIX
 
 ifeq ($(HB_INIT_DONE),)
-   ifneq ($(HB_INSTALL_PREFIX_ORI),$(HB_INSTALL_PREFIX))
-      $(info ! HB_INSTALL_PREFIX automatically set to: $(HB_INSTALL_PREFIX))
-   endif
-   ifeq ($(ROOT),./)
-      ifneq ($(call find_in_path,svnversion),)
-         $(info ! REVISION: $(shell svnversion .))
+   ifneq ($(MAKE_381),)
+      ifneq ($(HB_INSTALL_PREFIX_ORI),$(HB_INSTALL_PREFIX))
+         $(info ! HB_INSTALL_PREFIX automatically set to: $(HB_INSTALL_PREFIX))
+      endif
+      ifeq ($(ROOT),./)
+         ifneq ($(call find_in_path,svnversion),)
+            $(info ! REVISION: $(shell svnversion .))
+         endif
       endif
    endif
 endif
@@ -1310,10 +1542,12 @@ ifeq ($(HB_PLATFORM),beos)
    ifneq ($(strip $(foreach dir,/boot/common /boot/system /boot/home/config $(subst :, ,$(LIBRARY_PATH)),$(findstring |$(dir),|$(HB_INSTALL_PREFIX)))),)
       HB_SYSLOC := yes
    endif
-else ifneq ($(HB_PLATFORM_UNIX),)
+else
+ifneq ($(HB_PLATFORM_UNIX),)
    ifneq ($(strip $(foreach dir,/usr/local/bin /usr/bin $(subst :, ,$(LD_LIBRARY_PATH)),$(findstring |$(dir),|$(HB_INSTALL_PREFIX)))),)
       HB_SYSLOC := yes
    endif
+endif
 endif
 export HB_SYSLOC
 
@@ -1334,7 +1568,8 @@ ifneq ($(HB_INSTALL_PREFIX),)
          LIBPOSTFIX := $(DIRSEP)harbour
          INCPOSTFIX := $(DIRSEP)harbour
       endif
-   else ifeq ($(HB_PLATFORM_UNIX),)
+   else
+   ifeq ($(HB_PLATFORM_UNIX),)
       LIBPOSTFIX := $(DIRSEP)$(subst /,$(DIRSEP),$(PLAT_COMP))
    else
       LIBPOSTFIX :=
@@ -1358,6 +1593,7 @@ ifneq ($(HB_INSTALL_PREFIX),)
             LIBPOSTFIX :=
          endif
       endif
+   endif
    endif
 
    # Standard name: BINDIR
@@ -1418,22 +1654,34 @@ ifeq ($(HB_INIT_DONE),)
       ifeq ($(HB_PLATFORM),win)
          ifeq ($(HB_COMPILER),bcc)
             DYNNAME_POST := $(DYNNAME_POST)-bcc
-         else ifeq ($(HB_CPU),x86_64)
+         else
+         ifeq ($(HB_CPU),x86_64)
             DYNNAME_POST := $(DYNNAME_POST)-x64
-         else ifeq ($(HB_CPU),ia64)
+         else
+         ifeq ($(HB_CPU),ia64)
             DYNNAME_POST := $(DYNNAME_POST)-ia64
          endif
-      else ifeq ($(HB_PLATFORM),wce)
+         endif
+         endif
+      else
+      ifeq ($(HB_PLATFORM),wce)
          DYNNAME_POST := $(DYNNAME_POST)-wce
          ifeq ($(HB_CPU),arm)
             DYNNAME_POST := $(DYNNAME_POST)-arm
-         else ifeq ($(HB_CPU),x86)
+         else
+         ifeq ($(HB_CPU),x86)
             DYNNAME_POST := $(DYNNAME_POST)-x86
-         else ifeq ($(HB_CPU),mips)
+         else
+         ifeq ($(HB_CPU),mips)
             DYNNAME_POST := $(DYNNAME_POST)-mips
-         else ifeq ($(HB_CPU),sh)
+         else
+         ifeq ($(HB_CPU),sh)
             DYNNAME_POST := $(DYNNAME_POST)-sh
          endif
+         endif
+         endif
+         endif
+      endif
       endif
 
       ifeq ($(HB_PLATFORM),dos)
@@ -1441,7 +1689,8 @@ ifeq ($(HB_INIT_DONE),)
          HB_DYNLIB_BASE_MT := harbourm
          HB_DYNLIB_ST := $(HB_DYNLIB_BASE_ST)
          HB_DYNLIB_MT := $(HB_DYNLIB_BASE_MT)
-      else ifeq ($(HB_PLATFORM),os2)
+      else
+      ifeq ($(HB_PLATFORM),os2)
          HB_DYNLIB_BASE_ST := harbour
          HB_DYNLIB_BASE_MT := harbourm
          HB_DYNLIB_ST := $(HB_DYNLIB_BASE_ST)
@@ -1451,6 +1700,7 @@ ifeq ($(HB_INIT_DONE),)
          HB_DYNLIB_BASE_MT := harbourmt
          HB_DYNLIB_ST := $(HB_DYNLIB_BASE_ST)$(DYNNAME_POST)
          HB_DYNLIB_MT := $(HB_DYNLIB_BASE_MT)$(DYNNAME_POST)
+      endif
       endif
 
       export HB_DYNLIB_BASE_ST

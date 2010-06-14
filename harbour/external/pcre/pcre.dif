@@ -1,10 +1,22 @@
-diff -u ori_src\pcre_globals.c ori_dst\pcre_globals.c
---- ori_src\pcre_globals.c	Sun Jan 20 19:59:36 2008
-+++ ori_dst\pcre_globals.c	Sun Sep 20 12:53:37 2009
-@@ -53,11 +53,17 @@
- #include "pcre_internal.h"
+diff -urN pcre.orig/pcrefinf.c pcre/pcrefinf.c
+--- pcre.orig/pcrefinf.c	2010-06-13 18:04:52.000000000 +0200
++++ pcre/pcrefinf.c	2010-06-11 04:09:57.000000000 +0200
+@@ -126,7 +126,7 @@
+   case PCRE_INFO_MINLENGTH:
+   *((int *)where) =
+     (study != NULL && (study->flags & PCRE_STUDY_MINLEN) != 0)?
+-      study->minlength : -1;
++      (int)study->minlength : -1;
+   break;
  
- #ifndef VPCOMPAT
+   case PCRE_INFO_LASTLITERAL:
+diff -urN pcre.orig/pcreglob.c pcre/pcreglob.c
+--- pcre.orig/pcreglob.c	2010-06-13 18:04:52.000000000 +0200
++++ pcre/pcreglob.c	2010-06-11 04:09:57.000000000 +0200
+@@ -74,11 +74,17 @@
+ PCRE_EXP_DATA_DEFN int   (*pcre_callout)(pcre_callout_block *) = NULL;
+ 
+ #elif !defined VPCOMPAT
 +#if defined( __cplusplus ) && !defined( __IBMCPP__ )
 +extern "C" {
 +#endif

@@ -729,7 +729,7 @@ static HB_BOOL hb_fsFindNextLow( PHB_FFIND ffind )
          {
             time_t ftime;
             struct tm lt;
-#if defined( HB_USE_LARGEFILE64 )
+#if defined( HB_USE_LARGEFILE64 ) && ! defined( HB_OS_QNX )
             struct stat64 sStat;
             if( stat64( dirname, &sStat ) == 0 )
 #else
@@ -781,7 +781,7 @@ static HB_BOOL hb_fsFindNextLow( PHB_FFIND ffind )
 
       bFound = HB_FALSE;
 
-      hb_fsSetError( ( HB_ERRCODE ) FS_ERROR );
+      hb_fsSetIOError( bFound, 0 );
    }
 
 #endif

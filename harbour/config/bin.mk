@@ -24,17 +24,21 @@ ifeq ($(BUILD_SHARED),yes)
    ifneq ($(filter $(HB_PLATFORM),win wce),)
       ifneq ($(filter $(HB_COMPILER),mingw mingw64 mingwarm),)
          HB_LIBS_TPL += hbmainstd
-      else ifeq ($(HB_COMPILER),watcom)
+      else
+      ifeq ($(HB_COMPILER),watcom)
          HB_LDFLAGS += FILE $(LIB_DIR)/hbmainstd.lib
       else
          HB_LIBS_TPL += hbmainstd hbmainwin
       endif
-   else ifeq ($(HB_PLATFORM),os2)
+      endif
+   else
+   ifeq ($(HB_PLATFORM),os2)
       ifeq ($(HB_COMPILER),watcom)
          HB_LDFLAGS += FILE $(LIB_DIR)/hbmainstd.lib
       else
          HB_LIBS_TPL += hbmainstd
       endif
+   endif
    endif
 
    HB_LIBS_ST_RDD := $(HB_LIBS_TPL) $(HB_DYNLIB_ST)

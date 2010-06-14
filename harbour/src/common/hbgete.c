@@ -215,7 +215,8 @@ HB_BOOL hb_setenv( const char * szName, const char * szValue )
       _XOPEN_SOURCE >= 600 || \
       defined( __WATCOMC__ ) || defined( __DJGPP__ ) || \
       defined( HB_OS_SUNOS ) || defined( HB_OS_BSD ) || \
-      defined( HB_OS_DARWIN ) || defined( HB_OS_BEOS )
+      defined( HB_OS_DARWIN ) || defined( HB_OS_BEOS ) || \
+      defined( HB_OS_QNX )
 
    if( szValue )
       return setenv( szName, szValue, 1 ) == 0;
@@ -229,7 +230,7 @@ HB_BOOL hb_setenv( const char * szName, const char * szValue )
          return setenv( szName, "", 1 ) == 0;
       else
          return HB_TRUE;
-#  elif defined( __OpenBSD__ )
+#  elif defined( __OpenBSD__ ) || defined( HB_OS_QNX )
       unsetenv( szName );
       return HB_TRUE;
 #  else

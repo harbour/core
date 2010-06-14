@@ -43,6 +43,8 @@
 #    http://sourceforge.net/apps/trac/sourceforge/wiki/SSH%20keys
 #
 
+echo Starting Harbour Project nightly source package creation...
+
 rm -f harbour-nightly-src.zip harbour-nightly.tar.bz2 harbour-nightly.tar.gz
 
 rm -f -r _mk_nightly
@@ -52,15 +54,25 @@ mkdir _mk_nightly || {
 }
 cd _mk_nightly
 
+echo Downloading sources with LF line ending...
+
 svn export -q --native-eol LF http://harbour-project.svn.sourceforge.net/svnroot/harbour-project/trunk/harbour
+
+echo Creating bz2, gz packages...
+
 tar -c harbour/* > harbour-nightly.tar
 bzip2 -c -z harbour-nightly.tar > ../harbour-nightly.tar.bz2
 gzip -c harbour-nightly.tar > ../harbour-nightly.tar.gz
 rm harbour-nightly.tar
 
+echo Downloading sources with CRLF line ending...
+
 rm -f -r harbour
 svn export -q --native-eol CRLF http://harbour-project.svn.sourceforge.net/svnroot/harbour-project/trunk/harbour
-zip -X -r -o ../harbour-nightly-src.zip harbour/*
+
+echo Creating zip package...
+
+zip -q -X -r -o ../harbour-nightly-src.zip harbour/*
 
 cd ..
 rm -f -r _mk_nightly
@@ -68,12 +80,18 @@ rm -f -r _mk_nightly
 destdir="/home/frs/project/h/ha/harbour-project/source/nightly/"
 
 if [ -d $destdir ]
+
+   echo Copying packages to sf.net file release area...
+
    cp harbour-nightly-src.zip $destdir
    cp harbour-nightly.tar.bz2 $destdir
    cp harbour-nightly.tar.gz  $destdir
 then
    if [ "$HB_SFNET_FRS_PRIVATE_KEY" -a "$HB_SFNET_USER" ]
    then
+
+      echo Uploading packages to sf.net file release area...
+
       desthost=",harbour-project@frs.sourceforge.net:"
       scp -i $HB_SFNET_FRS_PRIVATE_KEY harbour-nightly-src.zip $HB_SFNET_USER,$desthost$destdir
       scp -i $HB_SFNET_FRS_PRIVATE_KEY harbour-nightly.tar.bz2 $HB_SFNET_USER,$desthost$destdir
@@ -82,3 +100,5 @@ then
 fi
 
 rm -f harbour-nightly-src.zip harbour-nightly.tar.bz2 harbour-nightly.tar.gz
+
+echo Ended Harbour Project nightly source package creation.
