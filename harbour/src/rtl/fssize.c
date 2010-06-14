@@ -52,7 +52,7 @@
  */
 
 #if !defined( _LARGEFILE64_SOURCE )
-#  define _LARGEFILE64_SOURCE
+#  define _LARGEFILE64_SOURCE 1
 #endif
 
 #include "hbapi.h"
@@ -96,7 +96,7 @@ HB_FOFFSET hb_fsFSize( const char * pszFileName, HB_BOOL bUseDirEntry )
          hb_fsFindClose( ffind );
          return size;
       }
-#elif defined( HB_USE_LARGEFILE64 ) && ! defined( HB_OS_QNX )
+#elif defined( HB_USE_LARGEFILE64 )
       char * pszFree;
       HB_BOOL fResult;
       struct stat64 statbuf;

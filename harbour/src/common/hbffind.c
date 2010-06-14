@@ -53,7 +53,7 @@
  */
 
 #if !defined( _LARGEFILE64_SOURCE )
-#  define _LARGEFILE64_SOURCE
+#  define _LARGEFILE64_SOURCE 1
 #endif
 
 #include "hbapi.h"
@@ -729,7 +729,7 @@ static HB_BOOL hb_fsFindNextLow( PHB_FFIND ffind )
          {
             time_t ftime;
             struct tm lt;
-#if defined( HB_USE_LARGEFILE64 ) && ! defined( HB_OS_QNX )
+#if defined( HB_USE_LARGEFILE64 )
             struct stat64 sStat;
             if( stat64( dirname, &sStat ) == 0 )
 #else

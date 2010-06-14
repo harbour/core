@@ -641,7 +641,11 @@ static void set_sig_handler( int iSig )
 
    sigaction( iSig, 0, &act );
    act.sa_handler = sig_handler;
+#if defined( SA_RESTART )
    act.sa_flags = SA_RESTART | ( iSig == SIGCHLD ? SA_NOCLDSTOP : 0 );
+#else
+   act.sa_flags = ( iSig == SIGCHLD ? SA_NOCLDSTOP : 0 );
+#endif
    sigaction( iSig, &act, 0 );
 }
 

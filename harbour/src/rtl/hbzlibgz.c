@@ -276,9 +276,11 @@ HB_FUNC( HB_GZUNGETC )
 {
    if( HB_ISNUM( 1 ) )
    {
+#if ZLIB_VERNUM >= 0x1202
       gzFile gz = hb_gzParam( 2 );
       if( gz )
          hb_retni( gzungetc( hb_parni( 1 ), gz ) );
+#endif
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -372,7 +374,9 @@ HB_FUNC( HB_GZERROR )
  */
 HB_FUNC( HB_GZCLEARERR )
 {
+#if ZLIB_VERNUM >= 0x1202
    gzFile gz = hb_gzParam( 1 );
    if( gz )
       gzclearerr( gz );
+#endif
 }

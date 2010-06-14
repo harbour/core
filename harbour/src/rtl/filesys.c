@@ -95,7 +95,7 @@
 
 /* *nixes */
 #if !defined( _LARGEFILE64_SOURCE )
-#  define _LARGEFILE64_SOURCE
+#  define _LARGEFILE64_SOURCE 1
 #endif
 #if !defined( _GNU_SOURCE )
 #  define _GNU_SOURCE

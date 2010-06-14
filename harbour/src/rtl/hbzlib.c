@@ -56,6 +56,13 @@
 
 #include <zlib.h>
 
+/* Try to figure if we have this function. Z_RLE was introduced in 1.2.0.1,
+   while compressBound() was added in 1.2.0. This means we have to miss
+   compressBound() when using zlib 1.2.0. [vszakats] */
+#if defined( Z_RLE )
+   #define _HB_Z_COMPRESSBOUND
+#endif
+
 static HB_SIZE hb_zlibUncompressedSize( const char * szSrc, HB_SIZE ulLen,
                                         int * piResult )
 {
@@ -112,9 +119,17 @@ HB_FUNC( HB_ZLIBVERSION )
 HB_FUNC( HB_ZCOMPRESSBOUND )
 {
    if( HB_ISCHAR( 1 ) )
+#if defined( _HB_Z_COMPRESSBOUND )
       hb_retnint( compressBound( hb_parclen( 1 ) ) );
+#else
+      hb_retnint( 0 );
+#endif
    else if( HB_ISNUM( 1 ) )
+#if defined( _HB_Z_COMPRESSBOUND )
       hb_retnint( compressBound( ( uLong ) hb_parnint( 1 ) ) );
+#else
+      hb_retnint( 0 );
+#endif
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -172,7 +187,11 @@ HB_FUNC( HB_ZCOMPRESS )
          else
          {
             ulDstLen = HB_ISNUM( 2 ) ? ( uLong ) hb_parnint( 2 ) :
+#if defined( _HB_Z_COMPRESSBOUND )
                                     compressBound( ulLen );
+#else
+                                    0;
+#endif
             pDest = ( char * ) hb_xalloc( ulDstLen + 1 );
          }
 

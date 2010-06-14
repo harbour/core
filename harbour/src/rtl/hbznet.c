@@ -125,9 +125,13 @@ PHB_ZNETSTREAM hb_znetOpen( int level, int strategy )
       level = Z_DEFAULT_COMPRESSION;
 
    if( strategy != Z_FILTERED     &&
-       strategy != Z_HUFFMAN_ONLY &&
+#if defined( Z_RLE )
        strategy != Z_RLE          &&
-       strategy != Z_FIXED )
+#endif
+#if defined( Z_FIXED )
+       strategy != Z_FIXED        &&
+#endif
+       strategy != Z_HUFFMAN_ONLY )
       strategy = Z_DEFAULT_STRATEGY;
 
    if( deflateInit2( &pStream->wr, level,
