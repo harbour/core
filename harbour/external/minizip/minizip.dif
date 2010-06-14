@@ -144,8 +144,8 @@ diff -urN minizip.orig/ioapi.c minizip/ioapi.c
      pzlib_filefunc_def->zread_file = fread_file_func;
 diff -urN minizip.orig/ioapi.h minizip/ioapi.h
 --- minizip.orig/ioapi.h	2010-02-15 04:59:40.000000000 +0100
-+++ minizip/ioapi.h	2010-06-10 20:04:43.560219246 +0200
-@@ -21,29 +21,38 @@
++++ minizip/ioapi.h	2010-06-14 20:35:11.840218016 +0200
+@@ -21,29 +21,39 @@
  #ifndef _ZLIBIOAPI64_H
  #define _ZLIBIOAPI64_H
  
@@ -194,7 +194,8 @@ diff -urN minizip.orig/ioapi.h minizip/ioapi.h
 +    defined( __MINGW32CE__ ) || \
 +    defined( HB_OS_BSD ) || \
 +    defined( HB_OS_DARWIN ) || \
-+    defined( HB_OS_HAIKU )
++    defined( HB_OS_HAIKU ) || \
++    defined( HB_OS_DOS )
 +#  define USE_FILE32API
 +#endif
 +

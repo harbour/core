@@ -49,7 +49,8 @@
     defined( __MINGW32CE__ ) || \
     defined( HB_OS_BSD ) || \
     defined( HB_OS_DARWIN ) || \
-    defined( HB_OS_HAIKU )
+    defined( HB_OS_HAIKU ) || \
+    defined( HB_OS_DOS )
 #  define USE_FILE32API
 #endif
 
