@@ -1,0 +1,136 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Harbour Project source code:
+ * QT Source Generator for Harbour
+ *
+ * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * www - http://www.harbour-project.org
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this software; see the file COPYING.  If not, write to
+ * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
+ * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ *
+ * As a special exception, the Harbour Project gives permission for
+ * additional uses of the text contained in its release of Harbour.
+ *
+ * The exception is that, if you link the Harbour libraries with other
+ * files to produce an executable, this does not by itself cause the
+ * resulting executable to be covered by the GNU General Public License.
+ * Your use of that executable is in no way restricted on account of
+ * linking the Harbour library code into it.
+ *
+ * This exception does not however invalidate any other reasons why
+ * the executable file might be covered by the GNU General Public License.
+ *
+ * This exception applies only to the code released by the Harbour
+ * Project under the name Harbour.  If you copy code from other
+ * Harbour Project or Free Software Foundation releases into a copy of
+ * Harbour, as the General Public License permits, the exception does
+ * not apply to the code that you add in this way.  To avoid misleading
+ * anyone as to the status of such modified files, you must delete
+ * this exception notice from them.
+ *
+ * If you write modifications of your own for Harbour, it is your choice
+ * whether to permit this exception to apply to your modifications.
+ * If you do not wish that, delete this exception notice.
+ *
+ */
+/*----------------------------------------------------------------------*/
+;
+;              Header File to Generate QT Wrapper Sources
+;
+
+<CLASS>
+Inherits = QObject
+Type     = Core
+New      = 
+Destructor = no
+</CLASS>
+
+<CODE>
+#include <QtWebKit/QWebFrame>
+#include <QtWebKit/QWebSecurityOrigin>
+
+/*
+ * 
+ */
+HB_FUNC( QT_QWEBFRAME )
+{
+   // hb_retptr( ( QWebFrame* ) new QWebFrame() );
+}
+</CODE>
+
+<ENUMS>
+</ENUMS>
+
+<PROTOS>
+void addToJavaScriptWindowObject ( const QString & name, QObject * object )
+void addToJavaScriptWindowObject ( const QString & name, QObject * object, QScriptEngine::ValueOwnership own )
+QList<QWebFrame *> childFrames () const
+QSize contentsSize () const
+QString frameName () const
+QRect geometry () const
+QWebHitTestResult hitTestContent ( const QPoint & pos ) const
+QIcon icon () const
+void load ( const QUrl & url )
+// void load ( const QWebNetworkRequest & req )
+QMultiMap<QString, QString> metaData () const
+QWebPage * page () const
+QWebFrame * parentFrame () const
+QPoint pos () const
+void render ( QPainter * painter, const QRegion & clip )
+void render ( QPainter * painter )
+QString renderTreeDump () const
+void scroll ( int dx, int dy )
+int scrollBarMaximum ( Qt::Orientation orientation ) const
+int scrollBarMinimum ( Qt::Orientation orientation ) const
+Qt::ScrollBarPolicy scrollBarPolicy ( Qt::Orientation orientation ) const
+int scrollBarValue ( Qt::Orientation orientation ) const
+QPoint scrollPosition () const
+QWebSecurityOrigin securityOrigin () const
+void setContent ( const QByteArray & data, const QString & mimeType = QString(), const QUrl & baseUrl = QUrl() )
+void setHtml ( const QString & html, const QUrl & baseUrl = QUrl() )
+void setScrollBarPolicy ( Qt::Orientation orientation, Qt::ScrollBarPolicy policy )
+void setScrollBarValue ( Qt::Orientation orientation, int value )
+void setScrollPosition ( const QPoint & pos )
+void setTextSizeMultiplier ( qreal factor )
+void setUrl ( const QUrl & url )
+void setZoomFactor ( qreal factor )
+qreal textSizeMultiplier () const
+QString title () const
+QString toHtml () const
+QString toPlainText () const
+QUrl url () const
+qreal zoomFactor () const
+</PROTOS>
+
+<SLOTS>
+QVariant evaluateJavaScript ( const QString & scriptSource )
+void print ( QPrinter * printer ) const
+</SLOTS>
+
+<SIGNALS>
+void iconChanged ()
+void initialLayoutCompleted ()
+void javaScriptWindowObjectCleared ()
+void titleChanged ( const QString & title )
+void urlChanged ( const QUrl & url )
+</SIGNALS>
+
+
+
+

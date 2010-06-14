@@ -1,0 +1,156 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Harbour Project source code:
+ * QT Source Generator for Harbour
+ *
+ * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * www - http://www.harbour-project.org
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this software; see the file COPYING.  If not, write to
+ * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
+ * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ *
+ * As a special exception, the Harbour Project gives permission for
+ * additional uses of the text contained in its release of Harbour.
+ *
+ * The exception is that, if you link the Harbour libraries with other
+ * files to produce an executable, this does not by itself cause the
+ * resulting executable to be covered by the GNU General Public License.
+ * Your use of that executable is in no way restricted on account of
+ * linking the Harbour library code into it.
+ *
+ * This exception does not however invalidate any other reasons why
+ * the executable file might be covered by the GNU General Public License.
+ *
+ * This exception applies only to the code released by the Harbour
+ * Project under the name Harbour.  If you copy code from other
+ * Harbour Project or Free Software Foundation releases into a copy of
+ * Harbour, as the General Public License permits, the exception does
+ * not apply to the code that you add in this way.  To avoid misleading
+ * anyone as to the status of such modified files, you must delete
+ * this exception notice from them.
+ *
+ * If you write modifications of your own for Harbour, it is your choice
+ * whether to permit this exception to apply to your modifications.
+ * If you do not wish that, delete this exception notice.
+ *
+ */
+/*----------------------------------------------------------------------*/
+;
+;              Header File to Generate QT Wrapper Sources
+;
+
+<CLASS>
+Inherit  = QAbstractItemView
+New      = pParent
+</CLASS>
+
+<CODE>
+#include <QtGui/QHeaderView>
+
+
+/*
+ * QHeaderView ( Qt::Orientation orientation, QWidget * parent = 0 )
+ * virtual ~QHeaderView ()
+ */
+HB_FUNC( QT_QHEADERVIEW )
+{
+   hb_retptr( new QHeaderView( ( Qt::Orientation ) hb_parni( 1 ), hbqt_par_QWidget( 2 ) ) );
+}
+</CODE>
+
+<ENUMS>
+enum ResizeMode { Interactive, Fixed, Stretch, ResizeToContents, Custom }
+</ENUMS>
+
+<PROTOS>
+bool cascadingSectionResizes () const
+int count () const
+Qt::Alignment defaultAlignment () const
+int defaultSectionSize () const
+int hiddenSectionCount () const
+void hideSection ( int logicalIndex )
+bool highlightSections () const
+bool isClickable () const
+bool isMovable () const
+bool isSectionHidden ( int logicalIndex ) const
+bool isSortIndicatorShown () const
+int length () const
+int logicalIndex ( int visualIndex ) const
+int logicalIndexAt ( int position ) const
+int logicalIndexAt ( int x, int y ) const
+int logicalIndexAt ( const QPoint & pos ) const
+int minimumSectionSize () const
+void moveSection ( int from, int to )
+int offset () const
+Qt::Orientation orientation () const
+ResizeMode resizeMode ( int logicalIndex ) const
+void resizeSection ( int logicalIndex, int size )
+void resizeSections ( QHeaderView::ResizeMode mode )
+bool restoreState ( const QByteArray & state )
+QByteArray saveState () const
+int sectionPosition ( int logicalIndex ) const
+int sectionSize ( int logicalIndex ) const
+int sectionSizeHint ( int logicalIndex ) const
+int sectionViewportPosition ( int logicalIndex ) const
+bool sectionsHidden () const
+bool sectionsMoved () const
+void setCascadingSectionResizes ( bool enable )
+void setClickable ( bool clickable )
+void setDefaultAlignment ( Qt::Alignment alignment )
+void setDefaultSectionSize ( int size )
+void setHighlightSections ( bool highlight )
+void setMinimumSectionSize ( int size )
+void setMovable ( bool movable )
+void setResizeMode ( ResizeMode mode )
+void setResizeMode ( int logicalIndex, ResizeMode mode )
+void setSectionHidden ( int logicalIndex, bool hide )
+void setSortIndicator ( int logicalIndex, Qt::SortOrder order )
+void setSortIndicatorShown ( bool show )
+void setStretchLastSection ( bool stretch )
+void showSection ( int logicalIndex )
+virtual QSize sizeHint () const
+Qt::SortOrder sortIndicatorOrder () const
+int sortIndicatorSection () const
+bool stretchLastSection () const
+int stretchSectionCount () const
+void swapSections ( int first, int second )
+int visualIndex ( int logicalIndex ) const
+int visualIndexAt ( int position ) const
+</PROTOS>
+
+<SLOTS>
+void headerDataChanged ( Qt::Orientation orientation, int logicalFirst, int logicalLast )
+void setOffset ( int offset )
+void setOffsetToLastSection ()
+void setOffsetToSectionPosition ( int visualIndex )
+</SLOTS>
+
+<SIGNALS>
+void geometriesChanged ()
+void sectionAutoResize ( int logicalIndex, QHeaderView::ResizeMode mode )
+void sectionClicked ( int logicalIndex )
+void sectionCountChanged ( int oldCount, int newCount )
+void sectionDoubleClicked ( int logicalIndex )
+void sectionEntered ( int logicalIndex )
+void sectionHandleDoubleClicked ( int logicalIndex )
+void sectionMoved ( int logicalIndex, int oldVisualIndex, int newVisualIndex )
+void sectionPressed ( int logicalIndex )
+void sectionResized ( int logicalIndex, int oldSize, int newSize )
+void sortIndicatorChanged ( int logicalIndex, Qt::SortOrder order )
+</SIGNALS>
+

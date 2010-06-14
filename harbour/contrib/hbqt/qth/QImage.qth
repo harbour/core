@@ -1,0 +1,209 @@
+
+/*
+ * $Id$
+ */
+
+/*
+ * Harbour Project source code:
+ * QT Source Generator for Harbour
+ *
+ * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * www - http://www.harbour-project.org
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this software; see the file COPYING.  If not, write to
+ * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
+ * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ *
+ * As a special exception, the Harbour Project gives permission for
+ * additional uses of the text contained in its release of Harbour.
+ *
+ * The exception is that, if you link the Harbour libraries with other
+ * files to produce an executable, this does not by itself cause the
+ * resulting executable to be covered by the GNU General Public License.
+ * Your use of that executable is in no way restricted on account of
+ * linking the Harbour library code into it.
+ *
+ * This exception does not however invalidate any other reasons why
+ * the executable file might be covered by the GNU General Public License.
+ *
+ * This exception applies only to the code released by the Harbour
+ * Project under the name Harbour.  If you copy code from other
+ * Harbour Project or Free Software Foundation releases into a copy of
+ * Harbour, as the General Public License permits, the exception does
+ * not apply to the code that you add in this way.  To avoid misleading
+ * anyone as to the status of such modified files, you must delete
+ * this exception notice from them.
+ *
+ * If you write modifications of your own for Harbour, it is your choice
+ * whether to permit this exception to apply to your modifications.
+ * If you do not wish that, delete this exception notice.
+ *
+ */
+/*----------------------------------------------------------------------*/
+;
+;              Header File to Generate QT Wrapper Sources
+;
+
+<CLASS>
+QObject  = no
+Inherits =
+Type     = PlainObject
+New      =
+</CLASS>
+
+<DOC>
+oImage := QImage():new()
+oImage := QImage():new( pQSize, cFormat )
+oImage := QImage():new( iWidth, iHeight, cFormat )
+oImage := QImage():new( @cData, iWidth, iHeight, cFormat )
+oImage := QImage():new( cData , iWidth, iHeight, cFormat )
+oImage := QImage():new( @cData, iWidth, iHeight, iBytesPerLine, cFormat )
+oImage := QImage():new( cData , iWidth, iHeight, iBytesPerLine, cFormat )
+oImage := QImage():new( cFileName [, cFormat ] )
+oImage := QImage():new( pQImage )
+</DOC>
+
+<CODE>
+#include <QtCore/QStringList>
+#include <QtGui/QImage>
+
+
+/*
+ * QImage ()
+ * QImage ( const QSize & size, Format format )
+ * QImage ( int width, int height, Format format )
+ * QImage ( uchar * data, int width, int height, Format format )
+ * QImage ( const uchar * data, int width, int height, Format format )
+ * QImage ( uchar * data, int width, int height, int bytesPerLine, Format format )
+ * QImage ( const uchar * data, int width, int height, int bytesPerLine, Format format )
+ * QImage ( const char * const[] xpm )
+ * QImage ( const QString & fileName, const char * format = 0 )
+ * QImage ( const char * fileName, const char * format = 0 )
+ * QImage ( const QImage & image )
+ * ~QImage ()
+ */
+HB_FUNC( QT_QIMAGE )
+{
+   if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
+   {
+      hb_retptr( ( QImage* ) new QImage( *hbqt_par_QImage( 1 ) ) );
+   }
+   else if( hb_pcount() == 1 && HB_ISCHAR( 1 ) )
+   {
+      hb_retptr( ( QImage* ) new QImage( hbqt_par_QString( 1 ), ( const char * ) 0 ) );
+   }
+   else if( hb_pcount() == 2 && HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) )
+   {
+      hb_retptr( ( QImage* ) new QImage( hbqt_par_QString( 1 ), ( const char * ) hb_parcx( 2 ) ) );
+   }
+   else if( hb_pcount() == 2 && HB_ISPOINTER( 1 ) && HB_ISNUM( 2 ) )
+   {
+      hb_retptr( ( QImage* ) new QImage( *hbqt_par_QSize( 1 ), ( QImage::Format ) hb_parni( 2 ) ) );
+   }
+   else if( hb_pcount() == 3 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) )
+   {
+      hb_retptr( ( QImage* ) new QImage( hb_parni( 1 ), hb_parni( 2 ), ( QImage::Format ) hb_parni( 3 ) ) );
+   }
+   else if( hb_pcount() == 4 && HB_ISCHAR( 1 ) && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) && HB_ISNUM( 4 ) )
+   {
+      hb_retptr( ( QImage* ) new QImage( ( const uchar * ) hb_parc( 1 ), hb_parni( 2 ), hb_parni( 3 ), ( QImage::Format ) hb_parni( 4 ) ) );
+   }
+   else if( hb_pcount() == 5 && HB_ISCHAR( 1 ) && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) && HB_ISNUM( 4 ) && HB_ISNUM( 5 ) )
+   {
+      hb_retptr( ( QImage* ) new QImage( ( const uchar * ) hb_parc( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), ( QImage::Format ) hb_parni( 5 ) ) );
+   }
+   else
+   {
+      hb_retptr( ( QImage* ) new QImage() );
+   }
+}
+</CODE>
+
+<ENUMS>
+enum Format { Format_Invalid, Format_Mono, Format_MonoLSB, Format_Indexed8, ..., Format_ARGB4444_Premultiplied }
+enum InvertMode { InvertRgb, InvertRgba }
+</ENUMS>
+
+<PROTOS>
+bool allGray () const
+QImage alphaChannel () const
+uchar * bits ()
+const uchar * bits () const
+int bytesPerLine () const
+qint64 cacheKey () const
+QRgb color ( int i ) const
+QVector<QRgb> colorTable () const
+QImage convertToFormat ( Format format, Qt::ImageConversionFlags flags = Qt::AutoColor ) const
+QImage convertToFormat ( Format format, const QVector<QRgb> & colorTable, Qt::ImageConversionFlags flags = Qt::AutoColor ) const
+QImage copy ( const QRect & rectangle = QRect() ) const
+QImage copy ( int x, int y, int width, int height ) const
+QImage createAlphaMask ( Qt::ImageConversionFlags flags = Qt::AutoColor ) const
+QImage createHeuristicMask ( bool clipTight = true ) const
+QImage createMaskFromColor ( QRgb color, Qt::MaskMode mode = Qt::MaskInColor ) const
+int depth () const
+int dotsPerMeterX () const
+int dotsPerMeterY () const
+void fill ( uint pixelValue )
+Format format () const
+bool hasAlphaChannel () const
+int height () const
+void invertPixels ( InvertMode mode = InvertRgb )
+bool isGrayscale () const
+bool isNull () const
+bool load ( const QString & fileName, const char * format = 0 )
+bool load ( QIODevice * device, const char * format )
+// bool loadFromData ( const uchar * data, int len, const char * format = 0 )
+bool loadFromData ( const QByteArray & data, const char * format = 0 )
+QImage mirrored ( bool horizontal = false, bool vertical = true ) const
+int numBytes () const
+int numColors () const
+QPoint offset () const
+QRgb pixel ( const QPoint & position ) const
+QRgb pixel ( int x, int y ) const
+int pixelIndex ( const QPoint & position ) const
+int pixelIndex ( int x, int y ) const
+QRect rect () const
+QImage rgbSwapped () const
+bool save ( const QString & fileName, const char * format = 0, int quality = -1 ) const
+bool save ( QIODevice * device, const char * format = 0, int quality = -1 ) const
+QImage scaled ( const QSize & size, Qt::AspectRatioMode aspectRatioMode = Qt::IgnoreAspectRatio, Qt::TransformationMode transformMode = Qt::FastTransformation ) const
+QImage scaled ( int width, int height, Qt::AspectRatioMode aspectRatioMode = Qt::IgnoreAspectRatio, Qt::TransformationMode transformMode = Qt::FastTransformation ) const
+QImage scaledToHeight ( int height, Qt::TransformationMode mode = Qt::FastTransformation ) const
+QImage scaledToWidth ( int width, Qt::TransformationMode mode = Qt::FastTransformation ) const
+uchar * scanLine ( int i )
+const uchar * scanLine ( int i ) const
+void setColor ( int index, QRgb colorValue )
+void setColorTable ( const QVector<QRgb> colors )
+void setDotsPerMeterX ( int x )
+void setDotsPerMeterY ( int y )
+void setNumColors ( int numColors )
+void setOffset ( const QPoint & offset )
+void setPixel ( const QPoint & position, uint index_or_rgb )
+void setPixel ( int x, int y, uint index_or_rgb )
+void setText ( const QString & key, const QString & text )
+QSize size () const
+QString text ( const QString & key = QString() ) const
+QStringList textKeys () const
+QImage transformed ( const QMatrix & matrix, Qt::TransformationMode mode = Qt::FastTransformation ) const
+QImage transformed ( const QTransform & matrix, Qt::TransformationMode mode = Qt::FastTransformation ) const
+bool valid ( const QPoint & pos ) const
+bool valid ( int x, int y ) const
+int width () const
+</PROTOS>
+
+<SLOTS>
+</SLOTS>
+
+<SIGNALS>
+</SIGNALS>

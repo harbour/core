@@ -1,0 +1,170 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Harbour Project source code:
+ * QT Source Generator for Harbour
+ *
+ * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * www - http://www.harbour-project.org
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this software; see the file COPYING.  If not, write to
+ * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
+ * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ *
+ * As a special exception, the Harbour Project gives permission for
+ * additional uses of the text contained in its release of Harbour.
+ *
+ * The exception is that, if you link the Harbour libraries with other
+ * files to produce an executable, this does not by itself cause the
+ * resulting executable to be covered by the GNU General Public License.
+ * Your use of that executable is in no way restricted on account of
+ * linking the Harbour library code into it.
+ *
+ * This exception does not however invalidate any other reasons why
+ * the executable file might be covered by the GNU General Public License.
+ *
+ * This exception applies only to the code released by the Harbour
+ * Project under the name Harbour.  If you copy code from other
+ * Harbour Project or Free Software Foundation releases into a copy of
+ * Harbour, as the General Public License permits, the exception does
+ * not apply to the code that you add in this way.  To avoid misleading
+ * anyone as to the status of such modified files, you must delete
+ * this exception notice from them.
+ *
+ * If you write modifications of your own for Harbour, it is your choice
+ * whether to permit this exception to apply to your modifications.
+ * If you do not wish that, delete this exception notice.
+ *
+ */
+/*----------------------------------------------------------------------*/
+;
+;              Header File to Generate QT Wrapper Sources
+;
+
+<CLASS>
+QObject  = no
+Inherits = 
+Type     = PlainObject
+New      = 
+</CLASS>
+
+<DOC>
+oBrush := QBrush():new()
+oBrush := QBrush():new( pQBrush )
+oBrush := QBrush():new( nQt_GlobalColor )
+oBrush := QBrush():new( nQt_GlobalColor, nQt_BrushStyle ) 
+oBrush := QBrush():new( pQColor, nQt_BrushStyle )         
+oBrush := QBrush():new( pQColor, pQPixmap )
+oBrush := QBrush():new( nQt_GlobalColor, pQPixmap )
+oBrush := QBrush():new( "QPixmap"  , pQPixmap )
+oBrush := QBrush():new( "QImage"   , pQImage )
+oBrush := QBrush():new( "QGradient", pQGradient )
+oBrush := QBrush():new( "QColor"   , pQColor, [ nQt_BrushStyle = Qt_SolidPattern ] )
+</DOC>
+
+<CODE>
+#include <QtGui/QBrush>
+
+
+/*
+ * QBrush ()
+ * QBrush ( Qt::BrushStyle style )
+ * QBrush ( const QColor & color, Qt::BrushStyle style = Qt::SolidPattern )
+ * QBrush ( Qt::GlobalColor color, Qt::BrushStyle style = Qt::SolidPattern )
+ * QBrush ( const QColor & color, const QPixmap & pixmap )
+ * QBrush ( Qt::GlobalColor color, const QPixmap & pixmap )
+ * QBrush ( const QPixmap & pixmap )
+ * QBrush ( const QImage & image )
+ * QBrush ( const QBrush & other )
+ * QBrush ( const QGradient & gradient )
+ * ~QBrush ()
+ */
+HB_FUNC( QT_QBRUSH )
+{
+   if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
+   {
+      hb_retptr( ( QBrush* ) new QBrush( *hbqt_par_QBrush( 1 ) ) );
+   }
+   else if( hb_pcount() == 1 && HB_ISNUM( 1 ) )
+   {
+      hb_retptr( ( QBrush* ) new QBrush( ( Qt::GlobalColor ) hb_parni( 1 ), Qt::SolidPattern ) );
+   }
+   else if( hb_pcount() == 2 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
+   {
+      hb_retptr( ( QBrush* ) new QBrush( ( Qt::GlobalColor ) hb_parni( 1 ), ( Qt::BrushStyle ) hb_parni( 2 ) ) );
+   }
+   else if( hb_pcount() == 2 && HB_ISPOINTER( 1 ) && HB_ISNUM( 2 ) )
+   {
+      hb_retptr( ( QBrush* ) new QBrush( *hbqt_par_QColor( 1 ), ( Qt::BrushStyle ) hb_parni( 2 ) ) );
+   }
+   else if( hb_pcount() == 2 && HB_ISPOINTER( 1 ) && HB_ISPOINTER( 2 ) )
+   {
+      hb_retptr( ( QBrush* ) new QBrush( *hbqt_par_QColor( 1 ), *hbqt_par_QPixmap( 2 ) ) );
+   }
+   else if( hb_pcount() == 2 && HB_ISNUM( 1 ) && HB_ISPOINTER( 2 ) )
+   {
+      hb_retptr( ( QBrush* ) new QBrush( ( Qt::GlobalColor ) hb_parni( 1 ), *hbqt_par_QPixmap( 2 ) ) );
+   }
+   else if( hb_pcount() >= 2 && HB_ISCHAR( 1 ) && HB_ISPOINTER( 2 ) )
+   {
+      QString objName = hbqt_par_QString( 1 );
+
+      if(      objName == ( QString ) "QPixmap" )
+      {
+         hb_retptr( ( QBrush* ) new QBrush( *hbqt_par_QPixmap( 2 ) ) );
+      }
+      else if( objName == ( QString ) "QImage" )
+      {
+         hb_retptr( ( QBrush* ) new QBrush( *hbqt_par_QImage( 2 ) ) );
+      }
+      else if( objName == ( QString ) "QGradient" )
+      {
+         hb_retptr( ( QBrush* ) new QBrush( *hbqt_par_QGradient( 2 ) ) );
+      }
+      else if( objName == ( QString ) "QColor" )
+      {
+         hb_retptr( ( QBrush* ) new QBrush( *hbqt_par_QColor( 2 ), HB_ISNUM( 3 ) ? ( Qt::BrushStyle ) hb_parni( 3 ) : Qt::SolidPattern ) );
+      }
+      else
+      {
+         hb_retptr( ( QBrush* ) new QBrush() );
+      }
+   }
+   else
+   {
+      hb_retptr( ( QBrush* ) new QBrush() );
+   }
+}
+</CODE>
+
+<PROTOS>
+const QColor & color () const
+//const QGradient * gradient () const
+bool isOpaque () const
+const QMatrix & matrix () const
+void setColor ( const QColor & color )
+void setColor ( Qt::GlobalColor color )
+void setMatrix ( const QMatrix & matrix )
+void setStyle ( Qt::BrushStyle style )
+void setTexture ( const QPixmap & pixmap )
+void setTextureImage ( const QImage & image )
+void setTransform ( const QTransform & matrix )
+Qt::BrushStyle style () const
+QPixmap texture () const
+QImage textureImage () const
+QTransform transform () const
+</PROTOS>
+

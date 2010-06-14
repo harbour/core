@@ -1,0 +1,145 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Harbour Project source code:
+ * QT Source Generator for Harbour
+ *
+ * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * www - http://www.harbour-project.org
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this software; see the file COPYING.  If not, write to
+ * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
+ * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ *
+ * As a special exception, the Harbour Project gives permission for
+ * additional uses of the text contained in its release of Harbour.
+ *
+ * The exception is that, if you link the Harbour libraries with other
+ * files to produce an executable, this does not by itself cause the
+ * resulting executable to be covered by the GNU General Public License.
+ * Your use of that executable is in no way restricted on account of
+ * linking the Harbour library code into it.
+ *
+ * This exception does not however invalidate any other reasons why
+ * the executable file might be covered by the GNU General Public License.
+ *
+ * This exception applies only to the code released by the Harbour
+ * Project under the name Harbour.  If you copy code from other
+ * Harbour Project or Free Software Foundation releases into a copy of
+ * Harbour, as the General Public License permits, the exception does
+ * not apply to the code that you add in this way.  To avoid misleading
+ * anyone as to the status of such modified files, you must delete
+ * this exception notice from them.
+ *
+ * If you write modifications of your own for Harbour, it is your choice
+ * whether to permit this exception to apply to your modifications.
+ * If you do not wish that, delete this exception notice.
+ *
+ */
+/*----------------------------------------------------------------------*/
+;
+;              Header File to Generate QT Wrapper Sources
+;
+
+<CLASS>
+QObject  = no
+Inherits =
+Type     = 
+New      =
+Destructor = no
+</CLASS>
+
+<SUBCLASS>
+</SUBCLASS>
+
+<DOC>
+</DOC>
+
+<CODE>
+#include <QtCore/QChar>
+
+
+/*
+ * QChar ()
+ * QChar ( char ch )
+ * QChar ( uchar ch )
+ * QChar ( QLatin1Char ch )
+ * QChar ( uchar cell, uchar row )
+ * QChar ( ushort code )
+ * QChar ( short code )
+ * QChar ( uint code )
+ * QChar ( int code )
+ * QChar ( SpecialCharacter ch )
+ */
+HB_FUNC( QT_QCHAR )
+{
+   hb_retptr( new QChar() );
+}
+</CODE>
+
+<ENUMS>
+enum Category { Mark_NonSpacing, Mark_SpacingCombining, Mark_Enclosing, Number_DecimalDigit, ..., NoCategory }
+enum Decomposition { NoDecomposition, Canonical, Circle, Compat, ..., Wide }
+enum Direction { DirAL, DirAN, DirB, DirBN, ..., DirWS }
+enum Joining { Center, Dual, OtherJoining, Right }
+enum SpecialCharacter { Null, Nbsp, ReplacementCharacter, ObjectReplacementCharacter, ..., LineSeparator }
+enum UnicodeVersion { Unicode_1_1, Unicode_2_0, Unicode_2_1_2, Unicode_3_0, ..., Unicode_Unassigned }
+</ENUMS>
+
+<PROTOS>
+Category category () const
+uchar cell () const
+unsigned char combiningClass () const
+QString decomposition () const
+Decomposition decompositionTag () const
+int digitValue () const
+Direction direction () const
+bool hasMirrored () const
+bool isDigit () const
+bool isHighSurrogate () const
+bool isLetter () const
+bool isLetterOrNumber () const
+bool isLowSurrogate () const
+bool isLower () const
+bool isMark () const
+bool isNull () const
+bool isNumber () const
+bool isPrint () const
+bool isPunct () const
+bool isSpace () const
+bool isSymbol () const
+bool isTitleCase () const
+bool isUpper () const
+Joining joining () const
+QChar mirroredChar () const
+uchar row () const
+char toAscii () const
+QChar toCaseFolded () const
+char toLatin1 () const
+QChar toLower () const
+QChar toTitleCase () const
+QChar toUpper () const
+ushort & unicode ()
+ushort unicode () const
+UnicodeVersion unicodeVersion () const
+
+</PROTOS>
+
+<SLOTS>
+</SLOTS>
+
+<SIGNALS>
+</SIGNALS>
