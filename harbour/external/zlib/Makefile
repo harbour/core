@@ -35,6 +35,9 @@ ifneq ($(HB_HAS_ZLIB_LOCAL),)
    ifneq ($(filter $(HB_COMPILER),mingw mingw64 mingwarm cygwin),)
       HB_CFLAGS += -DNO_VIZ
    endif
+   ifeq ($(HB_COMPILER),djgpp)
+      HB_CFLAGS += -DNO_vsnprintf
+   endif
    include $(TOP)$(ROOT)config/lib.mk
 else
    HB_SKIP_REASON := unused

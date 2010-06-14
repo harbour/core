@@ -84,6 +84,7 @@ define create_library
    @$(ECHO) $(ECHOQUOTE)SAVE$(ECHOQUOTE) >> __lib__.tmp
    @$(ECHO) $(ECHOQUOTE)END$(ECHOQUOTE) >> __lib__.tmp
    $(AR) $(ARFLAGS) $(HB_AFLAGS) $(HB_USER_AFLAGS) -M < __lib__.tmp
+   -$(RANLIB) $(LIB_DIR)/$@
    $(ARSTRIP)
 endef
 
@@ -101,7 +102,8 @@ define link_exe_file
    -$(LD) @__link__.tmp
 endef
 
-AR := ar
+AR := $(HB_CCPATH)$(HB_CCPREFIX)ar
+RANLIB := $(HB_CCPATH)$(HB_CCPREFIX)ranlib
 AR_RULE = $(create_library)
 
 LD_RULE = $(link_exe_file)
