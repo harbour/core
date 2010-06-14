@@ -5047,7 +5047,7 @@ static void hb_pp_preprocessToken( PHB_PP_STATE pState )
             hb_pp_condCompile( pState, pToken->pNext, HB_FALSE );
          }
 #ifndef HB_CLP_STRICT
-         /* xHarbour PP extension */
+         /* Harbour PP extension */
          else if( hb_pp_tokenValueCmp( pToken, "IF", HB_PP_CMP_DBASE ) )
          {
             hb_pp_condCompileIf( pState, pToken );
@@ -5163,7 +5163,7 @@ static void hb_pp_preprocessToken( PHB_PP_STATE pState )
          {
             hb_pp_directiveNew( pState, pToken, HB_PP_CMP_CASE, HB_TRUE, fDirect, HB_FALSE );
          }
-         /* xHarbour PP extensions */
+         /* Harbour PP extensions */
          else if( hb_pp_tokenValueCmp( pToken, "UNTRANSLATE", HB_PP_CMP_DBASE ) )
          {
             hb_pp_directiveNew( pState, pToken, HB_PP_CMP_DBASE, HB_FALSE, fDirect, HB_TRUE );

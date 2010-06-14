@@ -168,7 +168,7 @@
 #define DBOI_AUTOORDER           63  /* When a structural index is opened, the order to be set */
 #define DBOI_AUTOSHARE           64  /* When a network is detected, open the index shared, otherwise open exclusively   */
 
-/* xHarbour extensions */
+/* Harbour extensions */
 #define DBOI_SKIPEVAL           100  /* skip while code block doesn't return TRUE */
 #define DBOI_SKIPEVALBACK       101  /* skip backward while code block doesn't return TRUE */
 #define DBOI_SKIPREGEX          102  /* skip while regular expression on index key doesn't return TRUE */

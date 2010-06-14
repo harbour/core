@@ -1230,7 +1230,7 @@ HB_FUNC( ORDCONDSET )
       /* 19th parameter is CL5.2 USEFILTER parameter which means
          that RDD should respect SET FILTER and SET DELETE flag */
       lpdbOrdCondInfo->fUseFilter    = hb_parl( 19 );
-      /* 20th parameter is xHarbour extenstion and informs RDD that
+      /* 20th parameter is Harbour extenstion and informs RDD that
          index is not shared between other clients */
       lpdbOrdCondInfo->fExclusive    = hb_parl( 20 );
 

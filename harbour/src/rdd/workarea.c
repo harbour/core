@@ -209,7 +209,7 @@ static HB_ERRCODE hb_waSkipFilter( AREAP pArea, HB_LONG lUpDown )
       if( fBottom )
       {
          /* GOTO EOF (phantom) record -
-            this is the only one place where GOTO is used by xHarbour
+            this is the only one place where GOTO is used by Harbour
             directly and RDD which does not operate on numbers should
             serve this method only as SELF_GOEOF() synonym. If it's a
             problem then we can remove this if and always use SELF_GOTOP()

@@ -1,4 +1,3 @@
-/*
  * $Id$
  */
 
@@ -152,8 +151,9 @@ void hb_idleSleep( double dSeconds )
    {
       HB_MAXUINT end_timer = hb_dateMilliSeconds() + ( HB_MAXUINT ) ( dSeconds * 1000 );
 
-      while( hb_dateMilliSeconds() < end_timer && hb_vmRequestQuery() == 0 )
+      do
          hb_idleState();
+      while( hb_dateMilliSeconds() < end_timer && hb_vmRequestQuery() == 0 );
 
       hb_idleReset();
    }

@@ -2294,7 +2294,6 @@ static HB_ERRCODE hb_dbfPutValue( DBFAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pI
          else
             errCode = EDBF_DATATYPE;
       }
-      /* Must precede HB_IS_NUMERIC() because a DATE is also a NUMERIC. (xHarbour) */
       else if( HB_IS_DATETIME( pItem ) )
       {
          if( pField->uiType == HB_FT_DATE )

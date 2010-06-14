@@ -133,7 +133,7 @@ typedef struct _CTXTAGITEM    /* TAG item in compound NTX (CTX) header */
 } CTXTAGITEM;
 typedef CTXTAGITEM * LPCTXTAGITEM;
 
-typedef struct _CTXHEADER     /* Header of xHarbour CTX file */
+typedef struct _CTXHEADER     /* Header of Harbour CTX file */
 {
    HB_BYTE  type[ 2 ];     /* 0x9591 LE */
    HB_BYTE  ntags[ 2 ];    /* number of tag entries MAX63 */
@@ -147,7 +147,7 @@ typedef CTXHEADER * LPCTXHEADER;
 #if 0
 /* original CLIP CTX file header - for information only it's binary
    compatible so both RDD can read the same file but it's not safe
-   to use CLIP for writing when the file is open by xHarbour.
+   to use CLIP for writing when the file is open by Harbour.
    In spare time I'll update CLIP to respect my extensions and send
    patches to Rust - hope they will be included in CLIP.
 */
