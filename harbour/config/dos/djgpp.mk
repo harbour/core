@@ -99,7 +99,7 @@ define link_exe_file
    $(foreach file,$(^F),$(link_file))
    $(foreach file,$(LIBPATHS),$(link_file))
    $(foreach file,$(LDLIBS),$(link_file))
-   -$(LD) @__link__.tmp
+   $(LD) @__link__.tmp
 endef
 
 AR := $(HB_CCPATH)$(HB_CCPREFIX)ar
