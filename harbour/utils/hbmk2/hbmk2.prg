@@ -2751,7 +2751,9 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             IF !( hbmk[ _HBMK_cPLAT ] == "beos" )
                AAdd( l_aLIBSYS, "m" )
                IF hbmk[ _HBMK_lMT ]
-                  AAdd( l_aLIBSYS, "pthread" )
+                  IF !( hbmk[ _HBMK_cPLAT ] == "qnx" )
+                     AAdd( l_aLIBSYS, "pthread" )
+                  ENDIF
                ENDIF
             ENDIF
             DO CASE
@@ -2769,6 +2771,8 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                AAdd( hbmk[ _HBMK_aLIBPATH ], "/system/lib" )
                AAdd( l_aLIBSYS, "root" )
                AAdd( l_aLIBSYS, "network" )
+            CASE hbmk[ _HBMK_cPLAT ] == "qnx"
+               AAdd( l_aLIBSYS, "socket" )
             ENDCASE
 
             IF ! Empty( cLIB_BASE_PCRE ) .AND. ! hb_FileExists( _HBLIB_FULLPATH( cLIB_BASE_PCRE ) )

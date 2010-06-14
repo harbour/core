@@ -133,8 +133,8 @@ HARBOUR
       $ ./hello
       You should see 'Hello world!' on screen.
 
-   on BSD/HP-UX/Solaris/BeOS/Haiku/*nix hosts
-   ------------------------------------------
+   on BSD/HP-UX/Solaris/BeOS/Haiku/QNX/*nix hosts
+   ----------------------------------------------
    (possible cross-build targets: Windows, Windows CE, MS-DOS)
 
       $ gmake install [HB_PLATFORM=<...>]
