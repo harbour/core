@@ -18,29 +18,29 @@ export PROJECT=harbour
 
 test_reqrpm()
 {
-    rpm -q --whatprovides "$1" &> /dev/null
+   rpm -q --whatprovides "$1" &> /dev/null
 }
 
 TOINST_LST=""
 for i in subversion make gcc binutils bash
 do
-    test_reqrpm "$i" || TOINST_LST="${TOINST_LST} $i"
+   test_reqrpm "$i" || TOINST_LST="${TOINST_LST} $i"
 done
 
 if [ -z "${TOINST_LST}" ] || [ "$1" = "--force" ]
 then
-    cd
-    mkdir -p SVN
-    cd SVN
-    if svn co "${SVNURL}"; then
-        cd "${PROJECT}"
-        ./mpkg_rpm.sh "$*"
-    fi
+   cd
+   mkdir -p SVN
+   cd SVN
+   if svn co "${SVNURL}"; then
+      cd "${PROJECT}"
+      ./mpkg_rpm.sh "$*"
+   fi
 else
-    echo "If you want to build Harbour compilers"
-    echo "you have to install the following RPM files:"
-    echo "${TOINST_LST}"
-    echo ""
-    echo "If you want to force installation run this script with --force parameter:"
-    echo "$0 --force"
+   echo "If you want to build Harbour compilers"
+   echo "you have to install the following RPM files:"
+   echo "${TOINST_LST}"
+   echo ""
+   echo "If you want to force installation run this script with --force parameter:"
+   echo "$0 --force"
 fi

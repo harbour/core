@@ -32,18 +32,18 @@ if [ -z "$TMPDIR" ]; then TMPDIR="/tmp"; fi
 HB_INST_PKGPREF="$TMPDIR/$name.bin.$USER.$$"
 
 if [ -z "$HB_PLATFORM" ]; then
-    if [ "$OSTYPE" = "msdosdjgpp" ]; then
-        hb_plat="dos"
-    else
-        hb_plat=`uname -s | tr -d "[-]" | tr '[A-Z]' '[a-z]' 2>/dev/null`
-        case "$hb_plat" in
-            *windows*|*mingw32*|msys*) hb_plat="win" ;;
-            *os/2*)                    hb_plat="os2" ;;
-            *dos)                      hb_plat="dos" ;;
-            *bsd)                      hb_plat="bsd" ;;
-        esac
-    fi
-    export HB_PLATFORM="$hb_plat"
+   if [ "$OSTYPE" = "msdosdjgpp" ]; then
+      hb_plat="dos"
+   else
+      hb_plat=`uname -s | tr -d "[-]" | tr '[A-Z]' '[a-z]' 2>/dev/null`
+      case "$hb_plat" in
+         *windows*|*mingw32*|msys*) hb_plat="win" ;;
+         *os/2*)                    hb_plat="os2" ;;
+         *dos)                      hb_plat="dos" ;;
+         *bsd)                      hb_plat="bsd" ;;
+      esac
+   fi
+   export HB_PLATFORM="$hb_plat"
 fi
 
 ETC="/etc"
@@ -52,40 +52,40 @@ ETC="/etc"
 HB_INSTALL_OWNER="root"
 HB_INSTALL_GROUP="root"
 case "$HB_PLATFORM" in
-    darwin)
-        [ -z "$HB_INSTALL_PREFIX" ] && HB_INSTALL_PREFIX="/usr/local"
-        HB_INSTALL_GROUP="wheel"
-        ETC="/private/etc"
-        ;;
-    bsd)
-        [ -z "$HB_INSTALL_PREFIX" ] && HB_INSTALL_PREFIX="/usr/local"
-        HB_INSTALL_GROUP="wheel"
-        ;;
-    linux)
-        [ -z "$HB_INSTALL_PREFIX" ] && HB_INSTALL_PREFIX="/usr/local"
-        ;;
-    sunos)
-        [ -z "$HB_INSTALL_PREFIX" ] && HB_INSTALL_PREFIX="/opt"
-        ;;
-    haiku)
-        [ -z "$HB_INSTALL_PREFIX" ] && HB_INSTALL_PREFIX="/boot/common"
-        ;;
-    win)
-        [ -z "$HB_INSTALL_PREFIX" ] && HB_INSTALL_PREFIX="/usr/local"
-        HB_INSTALL_GROUP="0"
-        hb_sysdir="no"
-        hb_instfile=""
-        ;;
-    dos)
-        [ -z "$HB_INSTALL_PREFIX" ] && HB_INSTALL_PREFIX="/${name}"
-        hb_sysdir="no"
-        hb_instfile=""
-        hb_archfile="${name}.tgz"
-        HB_INST_PKGPREF="$TMPDIR/hb-$$"
-        ;;
-    *)
-        [ -z "$HB_INSTALL_PREFIX" ] && HB_INSTALL_PREFIX="/usr/local"
-        ;;
+   darwin)
+      [ -z "$HB_INSTALL_PREFIX" ] && HB_INSTALL_PREFIX="/usr/local"
+      HB_INSTALL_GROUP="wheel"
+      ETC="/private/etc"
+      ;;
+   bsd)
+      [ -z "$HB_INSTALL_PREFIX" ] && HB_INSTALL_PREFIX="/usr/local"
+      HB_INSTALL_GROUP="wheel"
+      ;;
+   linux)
+      [ -z "$HB_INSTALL_PREFIX" ] && HB_INSTALL_PREFIX="/usr/local"
+      ;;
+   sunos)
+      [ -z "$HB_INSTALL_PREFIX" ] && HB_INSTALL_PREFIX="/opt"
+      ;;
+   haiku)
+      [ -z "$HB_INSTALL_PREFIX" ] && HB_INSTALL_PREFIX="/boot/common"
+      ;;
+   win)
+      [ -z "$HB_INSTALL_PREFIX" ] && HB_INSTALL_PREFIX="/usr/local"
+      HB_INSTALL_GROUP="0"
+      hb_sysdir="no"
+      hb_instfile=""
+      ;;
+   dos)
+      [ -z "$HB_INSTALL_PREFIX" ] && HB_INSTALL_PREFIX="/${name}"
+      hb_sysdir="no"
+      hb_instfile=""
+      hb_archfile="${name}.tgz"
+      HB_INST_PKGPREF="$TMPDIR/hb-$$"
+      ;;
+   *)
+      [ -z "$HB_INSTALL_PREFIX" ] && HB_INSTALL_PREFIX="/usr/local"
+      ;;
 esac
 
 export HB_INST_PKGPREF
@@ -95,20 +95,20 @@ MAKE=make
 TAR=tar
 hb_gnutar=yes
 if gtar --version >/dev/null 2>&1; then
-    TAR=gtar
+   TAR=gtar
 elif ! tar --version >/dev/null 2>&1; then
-    hb_gnutar=no
-    echo "Warning!!! Cannot find GNU TAR"
+   hb_gnutar=no
+   echo "Warning!!! Cannot find GNU TAR"
 else
-    # tar is mapped to bsdtar starting OS X 10.6
-    case `tar --version` in
-        *bsdtar*) hb_gnutar=no ;;
-    esac
+   # tar is mapped to bsdtar starting OS X 10.6
+   case `tar --version` in
+      *bsdtar*) hb_gnutar=no ;;
+   esac
 fi
 if gmake --version >/dev/null 2>&1; then
-    MAKE=gmake
+   MAKE=gmake
 elif ! make --version >/dev/null 2>&1; then
-    echo "Warning!!! Cannot find GNU MAKE"
+   echo "Warning!!! Cannot find GNU MAKE"
 fi
 
 # build
@@ -120,56 +120,56 @@ rm -fR "${HB_INST_PKGPREF}"
 $MAKE install "$@" || exit
 
 if [ "${hb_sysdir}" = "yes" ]; then
-    mkdir -p $HB_INST_PKGPREF$ETC/harbour
-    cp -f src/rtl/gtcrs/hb-charmap.def $HB_INST_PKGPREF$ETC/harbour/hb-charmap.def
-    chmod 644 $HB_INST_PKGPREF$ETC/harbour/hb-charmap.def
+   mkdir -p $HB_INST_PKGPREF$ETC/harbour
+   cp -f src/rtl/gtcrs/hb-charmap.def $HB_INST_PKGPREF$ETC/harbour/hb-charmap.def
+   chmod 644 $HB_INST_PKGPREF$ETC/harbour/hb-charmap.def
 fi
 
 CURDIR=$(pwd)
 if [ $hb_gnutar = yes ]; then
-    (cd "${HB_INST_PKGPREF}"; $TAR czvf "${CURDIR}/${hb_archfile}" --owner=${HB_INSTALL_OWNER} --group=${HB_INSTALL_GROUP} .)
-    UNTAR_OPT=xvpf
+   (cd "${HB_INST_PKGPREF}"; $TAR czvf "${CURDIR}/${hb_archfile}" --owner=${HB_INSTALL_OWNER} --group=${HB_INSTALL_GROUP} .)
+   UNTAR_OPT=xvpf
 elif [ $TAR = bsdtar ]; then
-    (cd "${HB_INST_PKGPREF}"; $TAR czvf "${CURDIR}/${hb_archfile}" .)
-    UNTAR_OPT=xvpf
+   (cd "${HB_INST_PKGPREF}"; $TAR czvf "${CURDIR}/${hb_archfile}" .)
+   UNTAR_OPT=xvpf
 else
-    (cd "${HB_INST_PKGPREF}"; $TAR covf - . | gzip > "${CURDIR}/${hb_archfile}")
-    UNTAR_OPT=xvf
+   (cd "${HB_INST_PKGPREF}"; $TAR covf - . | gzip > "${CURDIR}/${hb_archfile}")
+   UNTAR_OPT=xvf
 fi
 rm -fR "${HB_INST_PKGPREF}"
 
 if [ -n "${hb_instfile}" ]; then
 
-    if [ "${HB_PLATFORM}" = linux ]; then
-        DO_LDCONFIG="&& ldconfig"
-    else
-        DO_LDCONFIG=""
-    fi
-    # In the generated script use tar instead of $TAR because we can't be sure
-    # if $TAR exists in the installation environment
-    size=`wc -c "${hb_archfile}"|(read size file; echo $size)`
-    cat > "${hb_instfile}" <<EOF
+   if [ "${HB_PLATFORM}" = linux ]; then
+      DO_LDCONFIG="&& ldconfig"
+   else
+      DO_LDCONFIG=""
+   fi
+   # In the generated script use tar instead of $TAR because we can't be sure
+   # if $TAR exists in the installation environment
+   size=`wc -c "${hb_archfile}"|(read size file; echo $size)`
+   cat > "${hb_instfile}" <<EOF
 #!/bin/sh
 [ "\$BASH" ] || exec bash \`which \$0\` \${1+"\$@"}
 if [ "\$1" = "--extract" ]; then
-    tail -c $size "\$0" > "${hb_archfile}"
-    exit
+   tail -c $size "\$0" > "${hb_archfile}"
+   exit
 fi
 if [ \`id -u\` != 0 ]; then
-    echo "This package has to be installed from root account."
-    exit 1
+   echo "This package has to be installed from root account."
+   exit 1
 fi
 echo "Do you want to install ${name} (y/n)"
 read ASK
 if [ "\${ASK}" != "y" ] && [ "\${ASK}" != "Y" ]; then
-    exit 1
+   exit 1
 fi
 (tail -c $size "\$0" | gzip -cd | (cd /;tar ${UNTAR_OPT} -)) ${DO_LDCONFIG}
 exit \$?
 HB_INST_EOF
 EOF
-    cat "${hb_archfile}" >> "${hb_instfile}"
-    chmod +x "${hb_instfile}"
-    rm -f "${hb_archfile}"
+   cat "${hb_archfile}" >> "${hb_instfile}"
+   chmod +x "${hb_instfile}"
+   rm -f "${hb_archfile}"
 
 fi
