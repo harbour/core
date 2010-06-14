@@ -111,7 +111,7 @@ HB_FUNC( HB_ZLIBVERSION )
       hb_retc_const( ZLIB_VERSION );
    else
 #if defined( HB_OS_QNX )
-      /* NOTE: Hack to avoid "undefined reference to 'zlibVersion' when linking hbrun. */
+      /* NOTE: Hack to avoid "undefined reference to 'zlibVersion' when linking hbrun on QNX 6.2.1. */
       hb_retc_null();
 #else
       hb_retc( zlibVersion() );
@@ -300,7 +300,7 @@ HB_FUNC( HB_ZUNCOMPRESS )
 HB_FUNC( HB_ZERROR )
 {
 #if defined( HB_OS_QNX )
-      /* NOTE: Hack to avoid "undefined reference to 'zlibVersion' when linking hbrun. */
+   /* NOTE: Hack to avoid "undefined reference to 'zlibVersion' when linking hbrun on QNX 6.2.1. */
    hb_retc_null();
 #else
    hb_retc( zError( hb_parni( 1 ) ) );

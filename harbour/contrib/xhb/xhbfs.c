@@ -51,6 +51,31 @@
  */
 
 #include "hbapi.h"
+#include "hbapifs.h"
 
-HB_FUNC_EXTERN( HB_DIREXISTS          ) ; HB_FUNC( ISDIRECTORY              ) { HB_FUNC_EXEC( HB_DIREXISTS          ); }
+HB_FUNC( ISDIRECTORY )
+{
+   HB_BOOL bRetVal;
+
+#if defined( __PLATFORM__WINDOWS )
+   bRetVal = hb_fsDirExists( hb_parcx( 1 ) );
+#else
+   {
+      PHB_FFIND ffind = hb_fsFindFirst( hb_parcx( 1 ), HB_FA_DIRECTORY );
+
+      if( ffind )
+      {
+         bRetVal = ( ffind->attr & HB_FA_DIRECTORY );
+         hb_fsFindClose( ffind );
+      }
+      else
+         bRetVal = HB_FALSE;
+   }
+#endif
+
+   hb_fsSetError( 0 );
+
+   hb_retl( bRetVal );
+}
+
 HB_FUNC_EXTERN( HB_DISABLEWAITLOCKS   ) ; HB_FUNC( DISABLEWAITLOCKS         ) { HB_FUNC_EXEC( HB_DISABLEWAITLOCKS   ); }
