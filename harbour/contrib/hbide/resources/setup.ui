@@ -48,7 +48,7 @@
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>2</y>
+       <y>0</y>
        <width>351</width>
        <height>365</height>
       </rect>
@@ -56,6 +56,299 @@
      <property name="title">
       <string/>
      </property>
+     <widget class="QGroupBox" name="groupBox_11">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>2</y>
+        <width>331</width>
+        <height>265</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string> Source </string>
+      </property>
+      <widget class="QCheckBox" name="checkBox">
+       <property name="geometry">
+        <rect>
+         <x>14</x>
+         <y>18</y>
+         <width>301</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Trim trailing blanks while source is saved ?</string>
+       </property>
+      </widget>
+      <widget class="QGroupBox" name="groupBox_12">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>120</y>
+         <width>147</width>
+         <height>135</height>
+        </rect>
+       </property>
+       <property name="title">
+        <string> Line ending mode </string>
+       </property>
+       <widget class="QRadioButton" name="radioButton_5">
+        <property name="geometry">
+         <rect>
+          <x>8</x>
+          <y>42</y>
+          <width>99</width>
+          <height>19</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Auto detected</string>
+        </property>
+       </widget>
+       <widget class="QRadioButton" name="radioButton_6">
+        <property name="geometry">
+         <rect>
+          <x>8</x>
+          <y>64</y>
+          <width>99</width>
+          <height>19</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>OS dependent</string>
+        </property>
+       </widget>
+       <widget class="QRadioButton" name="radioButton_7">
+        <property name="geometry">
+         <rect>
+          <x>8</x>
+          <y>20</y>
+          <width>131</width>
+          <height>19</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>CRLF (0D+0A) default</string>
+        </property>
+       </widget>
+       <widget class="QRadioButton" name="radioButton_8">
+        <property name="geometry">
+         <rect>
+          <x>8</x>
+          <y>86</y>
+          <width>82</width>
+          <height>19</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>CR (0D)</string>
+        </property>
+       </widget>
+       <widget class="QRadioButton" name="radioButton_9">
+        <property name="geometry">
+         <rect>
+          <x>8</x>
+          <y>110</y>
+          <width>82</width>
+          <height>19</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>LF (0A)</string>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QGroupBox" name="groupBox_13">
+       <property name="geometry">
+        <rect>
+         <x>172</x>
+         <y>120</y>
+         <width>149</width>
+         <height>135</height>
+        </rect>
+       </property>
+       <property name="title">
+        <string> TABS - Indents</string>
+       </property>
+       <widget class="QCheckBox" name="checkBox_2">
+        <property name="geometry">
+         <rect>
+          <x>8</x>
+          <y>18</y>
+          <width>131</width>
+          <height>19</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Convert TAB to spaces</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_4">
+        <property name="geometry">
+         <rect>
+          <x>8</x>
+          <y>42</y>
+          <width>85</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Spaces for a TAB</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="lineEdit">
+        <property name="geometry">
+         <rect>
+          <x>98</x>
+          <y>42</y>
+          <width>39</width>
+          <height>20</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QCheckBox" name="checkBox_11">
+        <property name="geometry">
+         <rect>
+          <x>8</x>
+          <y>64</y>
+          <width>89</width>
+          <height>19</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Auto indent</string>
+        </property>
+       </widget>
+       <widget class="QCheckBox" name="checkBox_6">
+        <property name="geometry">
+         <rect>
+          <x>8</x>
+          <y>86</y>
+          <width>87</width>
+          <height>19</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Smart indent</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_5">
+        <property name="geometry">
+         <rect>
+          <x>8</x>
+          <y>108</y>
+          <width>59</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Indent size</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="lineEdit_2">
+        <property name="geometry">
+         <rect>
+          <x>98</x>
+          <y>104</y>
+          <width>39</width>
+          <height>20</height>
+         </rect>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QCheckBox" name="checkBox_10">
+       <property name="geometry">
+        <rect>
+         <x>14</x>
+         <y>42</y>
+         <width>301</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Save source before compiling process starts ?</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox_7">
+       <property name="geometry">
+        <rect>
+         <x>14</x>
+         <y>66</y>
+         <width>301</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Supress convertion to uppcase of Harbour keywords ?</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox_8">
+       <property name="geometry">
+        <rect>
+         <x>14</x>
+         <y>92</y>
+         <width>301</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Convert tabs to spaces when a source is loaded ?</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_14">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>272</y>
+        <width>157</width>
+        <height>83</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string> Display </string>
+      </property>
+      <widget class="QCheckBox" name="checkBox_3">
+       <property name="geometry">
+        <rect>
+         <x>12</x>
+         <y>16</y>
+         <width>143</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Show horizontal ruler</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox_4">
+       <property name="geometry">
+        <rect>
+         <x>12</x>
+         <y>36</y>
+         <width>151</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Show line numbers</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox_5">
+       <property name="geometry">
+        <rect>
+         <x>12</x>
+         <y>58</y>
+         <width>149</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Highlight current line</string>
+       </property>
+      </widget>
+     </widget>
     </widget>
    </widget>
    <widget class="QWidget" name="page_2">

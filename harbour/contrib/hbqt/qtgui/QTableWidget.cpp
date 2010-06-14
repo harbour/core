@@ -66,7 +66,7 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 46/53 [ 86.79% ] ]
+ *  Constructed[ 46/54 [ 85.19% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
@@ -74,6 +74,7 @@
  *  QList<QTableWidgetItem *> findItems ( const QString & text, Qt::MatchFlags flags ) const
  *  QList<QTableWidgetItem *> selectedItems ()
  *  QList<QTableWidgetSelectionRange> selectedRanges () const
+ *  }
  *  }
  *  }
  *  }
@@ -527,12 +528,14 @@ HB_FUNC( QT_QTABLEWIDGET_SETHORIZONTALHEADERLABELS )
  */
 HB_FUNC( QT_QTABLEWIDGET_SETITEM )
 {
-   QTableWidget * p = hbqt_par_QTableWidget( 1 );
-   if( p )
-      ( p )->setItem( hb_parni( 2 ), hb_parni( 3 ), hbqt_par_QTableWidgetItem( 4 ) );
-   else
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   QGC_POINTER * q = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 4 );
+   HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QTABLEWIDGET_SETITEM()" ) );
+   if( p && p->ph && q && q->ph )
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_SETITEM FP=( p )->setItem( hb_parni( 2 ), hb_parni( 3 ), hbqt_par_QTableWidgetItem( 4 ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "QT_QTABLEWIDGET_SETITEM() Qt object: %p is attached to: %p", p->ph, q->ph ) );
+      q->bNew = HB_FALSE;
+      hbqt_par_QTableWidget( 1 )->setItem( hb_parni( 2 ), hb_parni( 3 ), hbqt_par_QTableWidgetItem( 4 ) );
    }
 }
 

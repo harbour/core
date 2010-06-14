@@ -244,6 +244,7 @@ CLASS HbIde
    DATA   lTabCloseRequested                      INIT   .f.
    DATA   isColumnSelectionEnabled                INIT   .f.
    DATA   lLineNumbersVisible                     INIT   .t.
+   DATA   lHorzRulerVisible                       INIT   .t.
    DATA   lCurrentLineHighlightEnabled            INIT   .t.
 
    DATA   cWrkFolderLast                          INIT   ""
@@ -284,6 +285,7 @@ CLASS HbIde
    DATA   aLines                                  INIT   {}
    DATA   aComments                               INIT   {}
    DATA   aProjects                               INIT   {}
+   DATA   aUserDict                               INIT   {}
 
    DATA   aMarkTBtns                              INIT   array( 6 )
    DATA   lClosing                                INIT   .f.
@@ -388,6 +390,9 @@ METHOD HbIde:create( aParams )
       hbide_loadINI( Self, ::cProjIni )
    ENDIF
 
+   /* Load User Dictionaries */
+   hbide_loadUserDictionaries( Self )
+
    /* Shortcuts */
    ::oSC := IdeShortcuts():new( Self ):create()
 
@@ -397,14 +402,17 @@ METHOD HbIde:create( aParams )
    aeval( ::aSrcOnCmdLine, {|e| aadd( ::aINI[ INI_FILES    ], hbide_parseSourceComponents( e ) ) } )
 
    /* Set variables from last session */
-   ::cWrkTheme       := ::aINI[ INI_HBIDE, CurrentTheme       ]
-   ::cWrkCodec       := ::aINI[ INI_HBIDE, CurrentCodec       ]
-   ::cWrkEnvironment := ::aINI[ INI_HBIDE, CurrentEnvironment ]
-   ::cWrkFind        := ::aINI[ INI_HBIDE, CurrentFind        ]
-   ::cWrkFolderFind  := ::aINI[ INI_HBIDE, CurrentFolderFind  ]
-   ::cWrkReplace     := ::aINI[ INI_HBIDE, CurrentReplace     ]
-   ::cWrkView        := ::aINI[ INI_HBIDE, CurrentView        ]
-   ::cWrkHarbour     := ::aINI[ INI_HBIDE, CurrentHarbour     ]
+   ::cWrkTheme                    := ::aINI[ INI_HBIDE, CurrentTheme             ]
+   ::cWrkCodec                    := ::aINI[ INI_HBIDE, CurrentCodec             ]
+   ::cWrkEnvironment              := ::aINI[ INI_HBIDE, CurrentEnvironment       ]
+   ::cWrkFind                     := ::aINI[ INI_HBIDE, CurrentFind              ]
+   ::cWrkFolderFind               := ::aINI[ INI_HBIDE, CurrentFolderFind        ]
+   ::cWrkReplace                  := ::aINI[ INI_HBIDE, CurrentReplace           ]
+   ::cWrkView                     := ::aINI[ INI_HBIDE, CurrentView              ]
+   ::cWrkHarbour                  := ::aINI[ INI_HBIDE, CurrentHarbour           ]
+   ::lCurrentLineHighlightEnabled := iif( ::aINI[ INI_HBIDE, CurrentLineHighlightMode ] == "NO", .f., .t. )
+   ::lLineNumbersVisible          := iif( ::aINI[ INI_HBIDE, LineNumbersDisplayMode   ] == "NO", .f., .t. )
+   ::lHorzRulerVisible            := iif( ::aINI[ INI_HBIDE, HorzRulerDisplayMode     ] == "NO", .f., .t. )
 
    /* Store to restore when all preliminary operations are completed */
    cView := ::cWrkView
@@ -607,6 +615,8 @@ METHOD HbIde:parseParams()
          CASE cExt == ".hbp"
             aadd( ::aHbpOnCmdLine, s )
          CASE cExt $ ".prg.cpp"
+            aadd( ::aSrcOnCmdLine, s )
+         CASE hbide_isValidText( s )
             aadd( ::aSrcOnCmdLine, s )
          ENDCASE
       ENDCASE

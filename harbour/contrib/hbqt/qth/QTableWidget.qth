@@ -140,7 +140,19 @@ void setHorizontalHeaderItem ( int column, QTableWidgetItem * item ){
 }
 
 void setHorizontalHeaderLabels ( const QStringList & labels )
-void setItem ( int row, int column, QTableWidgetItem * item )
+
+void setItem ( int row, int column, QTableWidgetItem * item ){
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   QGC_POINTER * q = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 4 );
+   HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QTABLEWIDGET_SETITEM()" ) );
+   if( p && p->ph && q && q->ph )
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "QT_QTABLEWIDGET_SETITEM() Qt object: %p is attached to: %p", p->ph, q->ph ) );
+      q->bNew = HB_FALSE;
+      hbqt_par_QTableWidget( 1 )->setItem( hb_parni( 2 ), hb_parni( 3 ), hbqt_par_QTableWidgetItem( 4 ) );
+   }
+}
+
 void setItemPrototype ( const QTableWidgetItem * item )
 void setRangeSelected ( const QTableWidgetSelectionRange & range, bool select )
 void setRowCount ( int rows )

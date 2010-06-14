@@ -89,6 +89,7 @@ public:
    void hbSetRule( QString name, QString pattern, const QTextCharFormat & format );
    void hbSetFormat( QString name, const QTextCharFormat & format );
    void hbSetFormatColumnSelection( int start, int count, const QColor & color );
+   void hbSetRuleWithRegExp( QString name, const QRegExp & reg, const QTextCharFormat & format );
 
 protected:
    void highlightBlock( const QString &text );

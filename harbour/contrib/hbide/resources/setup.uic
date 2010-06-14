@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'setup.ui'
 **
-** Created: Mon Jun 7 22:16:57 2010
+** Created: Sun Jun 13 18:46:20 2010
 **      by: Qt User Interface Compiler version 4.6.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -14,11 +14,13 @@
 #include <QtGui/QAction>
 #include <QtGui/QApplication>
 #include <QtGui/QButtonGroup>
+#include <QtGui/QCheckBox>
 #include <QtGui/QComboBox>
 #include <QtGui/QDialog>
 #include <QtGui/QGroupBox>
 #include <QtGui/QHeaderView>
 #include <QtGui/QLabel>
+#include <QtGui/QLineEdit>
 #include <QtGui/QPushButton>
 #include <QtGui/QRadioButton>
 #include <QtGui/QStackedWidget>
@@ -36,6 +38,29 @@ public:
     QStackedWidget *stackedWidget;
     QWidget *page;
     QGroupBox *groupBox;
+    QGroupBox *groupBox_11;
+    QCheckBox *checkBox;
+    QGroupBox *groupBox_12;
+    QRadioButton *radioButton_5;
+    QRadioButton *radioButton_6;
+    QRadioButton *radioButton_7;
+    QRadioButton *radioButton_8;
+    QRadioButton *radioButton_9;
+    QGroupBox *groupBox_13;
+    QCheckBox *checkBox_2;
+    QLabel *label_4;
+    QLineEdit *lineEdit;
+    QCheckBox *checkBox_11;
+    QCheckBox *checkBox_6;
+    QLabel *label_5;
+    QLineEdit *lineEdit_2;
+    QCheckBox *checkBox_10;
+    QCheckBox *checkBox_7;
+    QCheckBox *checkBox_8;
+    QGroupBox *groupBox_14;
+    QCheckBox *checkBox_3;
+    QCheckBox *checkBox_4;
+    QCheckBox *checkBox_5;
     QWidget *page_2;
     QGroupBox *groupBox_2;
     QGroupBox *groupBox_6;
@@ -87,7 +112,76 @@ public:
         page->setObjectName(QString::fromUtf8("page"));
         groupBox = new QGroupBox(page);
         groupBox->setObjectName(QString::fromUtf8("groupBox"));
-        groupBox->setGeometry(QRect(0, 2, 351, 365));
+        groupBox->setGeometry(QRect(0, 0, 351, 365));
+        groupBox_11 = new QGroupBox(groupBox);
+        groupBox_11->setObjectName(QString::fromUtf8("groupBox_11"));
+        groupBox_11->setGeometry(QRect(10, 2, 331, 265));
+        checkBox = new QCheckBox(groupBox_11);
+        checkBox->setObjectName(QString::fromUtf8("checkBox"));
+        checkBox->setGeometry(QRect(14, 18, 301, 19));
+        groupBox_12 = new QGroupBox(groupBox_11);
+        groupBox_12->setObjectName(QString::fromUtf8("groupBox_12"));
+        groupBox_12->setGeometry(QRect(10, 120, 147, 135));
+        radioButton_5 = new QRadioButton(groupBox_12);
+        radioButton_5->setObjectName(QString::fromUtf8("radioButton_5"));
+        radioButton_5->setGeometry(QRect(8, 42, 99, 19));
+        radioButton_6 = new QRadioButton(groupBox_12);
+        radioButton_6->setObjectName(QString::fromUtf8("radioButton_6"));
+        radioButton_6->setGeometry(QRect(8, 64, 99, 19));
+        radioButton_7 = new QRadioButton(groupBox_12);
+        radioButton_7->setObjectName(QString::fromUtf8("radioButton_7"));
+        radioButton_7->setGeometry(QRect(8, 20, 131, 19));
+        radioButton_8 = new QRadioButton(groupBox_12);
+        radioButton_8->setObjectName(QString::fromUtf8("radioButton_8"));
+        radioButton_8->setGeometry(QRect(8, 86, 82, 19));
+        radioButton_9 = new QRadioButton(groupBox_12);
+        radioButton_9->setObjectName(QString::fromUtf8("radioButton_9"));
+        radioButton_9->setGeometry(QRect(8, 110, 82, 19));
+        groupBox_13 = new QGroupBox(groupBox_11);
+        groupBox_13->setObjectName(QString::fromUtf8("groupBox_13"));
+        groupBox_13->setGeometry(QRect(172, 120, 149, 135));
+        checkBox_2 = new QCheckBox(groupBox_13);
+        checkBox_2->setObjectName(QString::fromUtf8("checkBox_2"));
+        checkBox_2->setGeometry(QRect(8, 18, 131, 19));
+        label_4 = new QLabel(groupBox_13);
+        label_4->setObjectName(QString::fromUtf8("label_4"));
+        label_4->setGeometry(QRect(8, 42, 85, 16));
+        lineEdit = new QLineEdit(groupBox_13);
+        lineEdit->setObjectName(QString::fromUtf8("lineEdit"));
+        lineEdit->setGeometry(QRect(98, 42, 39, 20));
+        checkBox_11 = new QCheckBox(groupBox_13);
+        checkBox_11->setObjectName(QString::fromUtf8("checkBox_11"));
+        checkBox_11->setGeometry(QRect(8, 64, 89, 19));
+        checkBox_6 = new QCheckBox(groupBox_13);
+        checkBox_6->setObjectName(QString::fromUtf8("checkBox_6"));
+        checkBox_6->setGeometry(QRect(8, 86, 87, 19));
+        label_5 = new QLabel(groupBox_13);
+        label_5->setObjectName(QString::fromUtf8("label_5"));
+        label_5->setGeometry(QRect(8, 108, 59, 16));
+        lineEdit_2 = new QLineEdit(groupBox_13);
+        lineEdit_2->setObjectName(QString::fromUtf8("lineEdit_2"));
+        lineEdit_2->setGeometry(QRect(98, 104, 39, 20));
+        checkBox_10 = new QCheckBox(groupBox_11);
+        checkBox_10->setObjectName(QString::fromUtf8("checkBox_10"));
+        checkBox_10->setGeometry(QRect(14, 42, 301, 19));
+        checkBox_7 = new QCheckBox(groupBox_11);
+        checkBox_7->setObjectName(QString::fromUtf8("checkBox_7"));
+        checkBox_7->setGeometry(QRect(14, 66, 301, 19));
+        checkBox_8 = new QCheckBox(groupBox_11);
+        checkBox_8->setObjectName(QString::fromUtf8("checkBox_8"));
+        checkBox_8->setGeometry(QRect(14, 92, 301, 19));
+        groupBox_14 = new QGroupBox(groupBox);
+        groupBox_14->setObjectName(QString::fromUtf8("groupBox_14"));
+        groupBox_14->setGeometry(QRect(10, 272, 157, 83));
+        checkBox_3 = new QCheckBox(groupBox_14);
+        checkBox_3->setObjectName(QString::fromUtf8("checkBox_3"));
+        checkBox_3->setGeometry(QRect(12, 16, 143, 19));
+        checkBox_4 = new QCheckBox(groupBox_14);
+        checkBox_4->setObjectName(QString::fromUtf8("checkBox_4"));
+        checkBox_4->setGeometry(QRect(12, 36, 151, 19));
+        checkBox_5 = new QCheckBox(groupBox_14);
+        checkBox_5->setObjectName(QString::fromUtf8("checkBox_5"));
+        checkBox_5->setGeometry(QRect(12, 58, 149, 19));
         stackedWidget->addWidget(page);
         page_2 = new QWidget();
         page_2->setObjectName(QString::fromUtf8("page_2"));
@@ -195,6 +289,27 @@ public:
     {
         DialogSetup->setWindowTitle(QApplication::translate("DialogSetup", "Setup", 0, QApplication::UnicodeUTF8));
         groupBox->setTitle(QString());
+        groupBox_11->setTitle(QApplication::translate("DialogSetup", " Source ", 0, QApplication::UnicodeUTF8));
+        checkBox->setText(QApplication::translate("DialogSetup", "Trim trailing blanks while source is saved ?", 0, QApplication::UnicodeUTF8));
+        groupBox_12->setTitle(QApplication::translate("DialogSetup", " Line ending mode ", 0, QApplication::UnicodeUTF8));
+        radioButton_5->setText(QApplication::translate("DialogSetup", "Auto detected", 0, QApplication::UnicodeUTF8));
+        radioButton_6->setText(QApplication::translate("DialogSetup", "OS dependent", 0, QApplication::UnicodeUTF8));
+        radioButton_7->setText(QApplication::translate("DialogSetup", "CRLF (0D+0A) default", 0, QApplication::UnicodeUTF8));
+        radioButton_8->setText(QApplication::translate("DialogSetup", "CR (0D)", 0, QApplication::UnicodeUTF8));
+        radioButton_9->setText(QApplication::translate("DialogSetup", "LF (0A)", 0, QApplication::UnicodeUTF8));
+        groupBox_13->setTitle(QApplication::translate("DialogSetup", " TABS - Indents", 0, QApplication::UnicodeUTF8));
+        checkBox_2->setText(QApplication::translate("DialogSetup", "Convert TAB to spaces", 0, QApplication::UnicodeUTF8));
+        label_4->setText(QApplication::translate("DialogSetup", "Spaces for a TAB", 0, QApplication::UnicodeUTF8));
+        checkBox_11->setText(QApplication::translate("DialogSetup", "Auto indent", 0, QApplication::UnicodeUTF8));
+        checkBox_6->setText(QApplication::translate("DialogSetup", "Smart indent", 0, QApplication::UnicodeUTF8));
+        label_5->setText(QApplication::translate("DialogSetup", "Indent size", 0, QApplication::UnicodeUTF8));
+        checkBox_10->setText(QApplication::translate("DialogSetup", "Save source before compiling process starts ?", 0, QApplication::UnicodeUTF8));
+        checkBox_7->setText(QApplication::translate("DialogSetup", "Supress convertion to uppcase of Harbour keywords ?", 0, QApplication::UnicodeUTF8));
+        checkBox_8->setText(QApplication::translate("DialogSetup", "Convert tabs to spaces when a source is loaded ?", 0, QApplication::UnicodeUTF8));
+        groupBox_14->setTitle(QApplication::translate("DialogSetup", " Display ", 0, QApplication::UnicodeUTF8));
+        checkBox_3->setText(QApplication::translate("DialogSetup", "Show horizontal ruler", 0, QApplication::UnicodeUTF8));
+        checkBox_4->setText(QApplication::translate("DialogSetup", "Show line numbers", 0, QApplication::UnicodeUTF8));
+        checkBox_5->setText(QApplication::translate("DialogSetup", "Highlight current line", 0, QApplication::UnicodeUTF8));
         groupBox_2->setTitle(QString());
         groupBox_6->setTitle(QApplication::translate("DialogSetup", "Caret after paste operation", 0, QApplication::UnicodeUTF8));
         label->setText(QApplication::translate("DialogSetup", "Stream Selection:", 0, QApplication::UnicodeUTF8));

@@ -70,11 +70,8 @@
 
 #include "hbqt_hbqsyntaxhighlighter.h"
 
-#define HORZRULER_HEIGHT 20
-
 class LineNumberArea;
 class HorzRuler;
-
 
 class HBQPlainTextEdit : public QPlainTextEdit
 {
@@ -116,6 +113,8 @@ public:
    void           hbHighlightCurrentLine( bool b ) { highlightCurLine = b; update(); };
    bool           hbHighlightCurrentLine()         { return highlightCurLine; };
    void           hbSetEventBlock( PHB_ITEM pBlock );
+   int            horzRulerHeight;
+   void           hbUpdateHorzRulerHeight( int height );
 
 private:
    QVector<int>   bookMark;
@@ -206,6 +205,7 @@ public slots:
    void           hbApplyKey( int key, Qt::KeyboardModifiers modifiers = 0, const QString & txt = "" );
    void           hbHighlightArea( int, int, int, int, int );
    void           hbTogglePersistentSelection();
+   void           hbHorzRulerVisible( bool visible ) { hbUpdateHorzRulerHeight( visible ? 20 : 0 ); };
 
 private slots:
    void           hbSlotCursorPositionChanged();
@@ -258,7 +258,7 @@ public:
 protected:
    QSize sizeHint() const
    {
-       return QSize( codeEditor->viewport()->width(), HORZRULER_HEIGHT );
+       return QSize( codeEditor->viewport()->width(), codeEditor->horzRulerHeight );
    }
 
 private:

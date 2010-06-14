@@ -660,7 +660,12 @@ METHOD IdeDocks:buildToolBarPanels()
    aadd( aBtns, { "deleteline"      , "Delete Current Line"        , {|| ::oEM:deleteLine()    } } )
    aadd( aBtns, { "duplicateline"   , "Duplicate Current Line"     , {|| ::oEM:duplicateLine() } } )
    aadd( aBtns, {} )
+   #if 0
    aadd( aBtns, { "togglelinenumber", "Toggle Line Numbers"        , {|| ::oEM:toggleLineNumbers() } } )
+   aadd( aBtns, { "curlinehilight"  , "Toggle Current Line Hilight", {|| ::oEM:toggleCurrentLineHighlightMode() } } )
+   #endif
+   aadd( aBtns, { "togglelinenumber", "Toggle Line Numbers"        , {|| ::oEM:toggleLineNumbers() } } )
+   aadd( aBtns, { "horzruler"       , "Toggle Horizontal Ruler"    , {|| ::oEM:toggleHorzRuler() } } )
    aadd( aBtns, { "curlinehilight"  , "Toggle Current Line Hilight", {|| ::oEM:toggleCurrentLineHighlightMode() } } )
    FOR EACH a_ IN aBtns
       IF empty( a_ )
@@ -671,8 +676,8 @@ METHOD IdeDocks:buildToolBarPanels()
          qTBtn:setIcon( hbide_image( a_[ 1 ] ) )
          qTBtn:setMaximumWidth( 20 )
          qTBtn:setMaximumHeight( 20 )
-         IF a_[ 1 ] == "togglelinenumber"
-            qTBtn:setCheckable( .t. )
+         IF a_[ 1 ] $ "togglelinenumber,curlinehilight,horzruler"
+            //qTBtn:setCheckable( .t. )
          ENDIF
          ::connect( qTBtn, "clicked()", a_[ 3 ] )
          ::qTBarLines:addWidget( qTBtn )
@@ -700,7 +705,7 @@ METHOD IdeDocks:buildToolBarPanels()
       ELSE
          qTBtn := QToolButton():new()
          qTBtn:setTooltip( a_[ 2 ] )
-         qTBtn:setIcon( ::resPath + a_[ 1 ] + ".png" )
+         qTBtn:setIcon( hbide_image( a_[ 1 ] ) )
          qTBtn:setMaximumWidth( 20 )
          qTBtn:setMaximumHeight( 20 )
          ::connect( qTBtn, "clicked()", a_[ 3 ] )
@@ -717,7 +722,7 @@ METHOD IdeDocks:buildToolBarPanels()
    ::qTBarDocks:setWindowTitle( "ToolBar: Dockable Widgets" )
    ::qTBarDocks:setIconSize( QSize():new( 16,16 ) )
    ::qTBarDocks:setToolButtonStyle( Qt_ToolButtonIconOnly )
-   ::qTBarPanels:setAllowedAreas( Qt_LeftToolBarArea + Qt_RightToolBarArea + Qt_TopToolBarArea + Qt_BottomToolBarArea )
+   ::qTBarDocks:setAllowedAreas( Qt_LeftToolBarArea + Qt_RightToolBarArea + Qt_TopToolBarArea + Qt_BottomToolBarArea )
 
    aBtns := {}
    aadd( aBtns, { ::oDockPT        , "projtree"      } )
@@ -749,6 +754,9 @@ METHOD IdeDocks:buildToolBarPanels()
    NEXT
 
    ::oDlg:oWidget:addToolBar( Qt_RightToolBarArea, ::qTBarDocks )
+
+   /* User defined toolbars via Tools & Utilities */
+   ::oTM:buildUserToolbars()
 
    RETURN Self
 

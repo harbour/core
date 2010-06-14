@@ -112,6 +112,7 @@ HBQPlainTextEdit::HBQPlainTextEdit( QWidget * parent ) : QPlainTextEdit( parent 
    selectionDisplay         = selectionDisplay_none;
    isColumnSelectionON      = false;
    isLineSelectionON        = false;
+   horzRulerHeight          = 20;
    horzRuler                = new HorzRuler( this );
    caretState               = 0;
    isSelectionByApplication = false;
@@ -1251,13 +1252,13 @@ bool HBQPlainTextEdit::hbKeyPressSelection( QKeyEvent * event )
 
 void HBQPlainTextEdit::keyPressEvent( QKeyEvent * event )
 {
-HB_TRACE( HB_TR_ALWAYS, ( "keyPressEvent %i  000", event->key() ) );
+//HB_TRACE( HB_TR_ALWAYS, ( "keyPressEvent %i  000", event->key() ) );
    if( hbKeyPressSelection( event ) )
    {
       QApplication::processEvents();
       return;
    }
-HB_TRACE( HB_TR_ALWAYS, ( "keyPressEvent %i", event->key() ) );
+//HB_TRACE( HB_TR_ALWAYS, ( "keyPressEvent %i", event->key() ) );
    if( c && c->popup()->isVisible() )
    {
       // The following keys are forwarded by the completer to the widget
@@ -1343,9 +1344,9 @@ void HBQPlainTextEdit::resizeEvent( QResizeEvent *e )
    QPlainTextEdit::resizeEvent( e );
 
    QRect cr = contentsRect();
-   lineNumberArea->setGeometry( QRect( cr.left(), cr.top() + HORZRULER_HEIGHT, hbLineNumberAreaWidth(), cr.height() ) );
+   lineNumberArea->setGeometry( QRect( cr.left(), cr.top() + horzRulerHeight, hbLineNumberAreaWidth(), cr.height() ) );
 
-   horzRuler->setGeometry( QRect( cr.left(), cr.top(), cr.width(), HORZRULER_HEIGHT ) );
+   horzRuler->setGeometry( QRect( cr.left(), cr.top(), cr.width(), horzRulerHeight ) );
 }
 
 /*----------------------------------------------------------------------*/
@@ -1858,15 +1859,23 @@ int HBQPlainTextEdit::hbLineNumberAreaWidth()
 
 /*----------------------------------------------------------------------*/
 
+void HBQPlainTextEdit::hbUpdateHorzRulerHeight( int height )
+{
+   horzRulerHeight = height;
+   setViewportMargins( hbLineNumberAreaWidth(), horzRulerHeight, 0, 0 );
+}
+
+/*----------------------------------------------------------------------*/
+
 void HBQPlainTextEdit::hbUpdateLineNumberAreaWidth( int )
 {
    if( numberBlock )
    {
-      setViewportMargins( hbLineNumberAreaWidth(), HORZRULER_HEIGHT, 0, 0 );
+      setViewportMargins( hbLineNumberAreaWidth(), horzRulerHeight, 0, 0 );
    }
    else
    {
-      setViewportMargins( 0, HORZRULER_HEIGHT, 0, 0 );
+      setViewportMargins( 0, horzRulerHeight, 0, 0 );
    }
 }
 

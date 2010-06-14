@@ -155,6 +155,7 @@ CLASS IdeObject
    ACCESS aTabs                                   INLINE ::oIde:aTabs
    ACCESS aViews                                  INLINE ::oIde:aViews
    ACCESS aSkltns                                 INLINE ::oIde:aSkltns
+   ACCESS aUserDict                               INLINE ::oIde:aUserDict
 
    ACCESS nTabSpaces                              INLINE ::oIde:nTabSpaces
    ACCESS cTabSpaces                              INLINE ::oIde:cTabSpaces
@@ -203,6 +204,7 @@ CLASS IdeObject
    ACCESS lTabCloseRequested                      INLINE ::oIde:lTabCloseRequested
    ACCESS isColumnSelectionEnabled                INLINE ::oIde:isColumnSelectionEnabled
    ACCESS lLineNumbersVisible                     INLINE ::oIde:lLineNumbersVisible
+   ACCESS lHorzRulerVisible                       INLINE ::oIde:lHorzRulerVisible
    ACCESS lStatusBarVisible                       INLINE ::oIde:lStatusBarVisible
    ACCESS lCurrentLineHighlightEnabled            INLINE ::oIde:lCurrentLineHighlightEnabled
 

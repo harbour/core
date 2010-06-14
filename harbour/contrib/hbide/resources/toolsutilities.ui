@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>280</width>
+    <width>602</width>
     <height>425</height>
    </rect>
   </property>
@@ -319,6 +319,300 @@ p, li { white-space: pre-wrap; }
    <property name="text">
     <string>Open Output Console ?</string>
    </property>
+  </widget>
+  <widget class="QGroupBox" name="groupBox">
+   <property name="geometry">
+    <rect>
+     <x>284</x>
+     <y>164</y>
+     <width>307</width>
+     <height>111</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string> Toolbars: </string>
+   </property>
+   <widget class="QComboBox" name="comboInitPos">
+    <property name="geometry">
+     <rect>
+      <x>114</x>
+      <y>32</y>
+      <width>93</width>
+      <height>22</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="checkDockTop">
+    <property name="geometry">
+     <rect>
+      <x>246</x>
+      <y>28</y>
+      <width>53</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Top</string>
+    </property>
+   </widget>
+   <widget class="QListWidget" name="listToolbars">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>18</y>
+      <width>93</width>
+      <height>83</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="checkDockRight">
+    <property name="geometry">
+     <rect>
+      <x>246</x>
+      <y>82</y>
+      <width>53</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Right</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_4">
+    <property name="geometry">
+     <rect>
+      <x>246</x>
+      <y>12</y>
+      <width>53</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Dockable:</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="checkDockBottom">
+    <property name="geometry">
+     <rect>
+      <x>246</x>
+      <y>64</y>
+      <width>53</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Bottom</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="checkDockLeft">
+    <property name="geometry">
+     <rect>
+      <x>246</x>
+      <y>46</y>
+      <width>53</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Left</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>116</x>
+      <y>14</y>
+      <width>89</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Iniitial Position:</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="checkFloatable">
+    <property name="geometry">
+     <rect>
+      <x>114</x>
+      <y>60</y>
+      <width>71</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Floatable</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="checkInactive">
+    <property name="geometry">
+     <rect>
+      <x>114</x>
+      <y>82</y>
+      <width>71</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Inactive</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="buttonUserToolbarUpd">
+    <property name="geometry">
+     <rect>
+      <x>182</x>
+      <y>63</y>
+      <width>55</width>
+      <height>37</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Update</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QGroupBox" name="groupBox_2">
+   <property name="geometry">
+    <rect>
+     <x>284</x>
+     <y>284</y>
+     <width>307</width>
+     <height>131</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string> Toolbar Buttons: </string>
+   </property>
+   <widget class="QTableWidget" name="tableButtons">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>16</y>
+      <width>253</width>
+      <height>107</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QToolButton" name="buttonBtnDown">
+    <property name="geometry">
+     <rect>
+      <x>272</x>
+      <y>16</y>
+      <width>25</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>...</string>
+    </property>
+   </widget>
+   <widget class="QToolButton" name="buttonBtnUp">
+    <property name="geometry">
+     <rect>
+      <x>272</x>
+      <y>46</y>
+      <width>25</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>...</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QGroupBox" name="groupBox_3">
+   <property name="geometry">
+    <rect>
+     <x>284</x>
+     <y>8</y>
+     <width>307</width>
+     <height>147</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string> Current Tools Assignment to Toolbar: </string>
+   </property>
+   <widget class="QComboBox" name="comboToolbarAsgnd">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>20</y>
+      <width>199</width>
+      <height>22</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="editImage">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>66</y>
+      <width>249</width>
+      <height>20</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>12</x>
+      <y>48</y>
+      <width>81</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Image:</string>
+    </property>
+   </widget>
+   <widget class="QToolButton" name="buttonSetImage">
+    <property name="geometry">
+     <rect>
+      <x>270</x>
+      <y>66</y>
+      <width>25</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>...</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_5">
+    <property name="geometry">
+     <rect>
+      <x>12</x>
+      <y>98</y>
+      <width>57</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Tooltip:</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="editTooltip">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>116</y>
+      <width>249</width>
+      <height>20</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="checkToolActive">
+    <property name="geometry">
+     <rect>
+      <x>246</x>
+      <y>22</y>
+      <width>57</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Active</string>
+    </property>
+   </widget>
   </widget>
  </widget>
  <resources/>

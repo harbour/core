@@ -217,6 +217,20 @@ HB_FUNC( QT_HBQSYNTAXHIGHLIGHTER_HBSETFORMATCOLUMNSELECTION )
    }
 }
 
+/*
+ * void hbSetRuleWithRegExp( QString name, const QRegExp & reg, const QTextCharFormat & format )
+ */
+HB_FUNC( QT_HBQSYNTAXHIGHLIGHTER_HBSETRULEWITHREGEXP )
+{
+   HBQSyntaxHighlighter * p = hbqt_par_HBQSyntaxHighlighter( 1 );
+   if( p )
+      ( p )->hbSetRuleWithRegExp( HBQSyntaxHighlighter::tr( hb_parc( 2 ) ), *hbqt_par_QRegExp( 3 ), *hbqt_par_QTextCharFormat( 4 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQSYNTAXHIGHLIGHTER_HBSETRULEWITHREGEXP FP=( p )->hbSetRuleWithRegExp( HBQSyntaxHighlighter::tr( hb_parc( 2 ) ), *hbqt_par_QRegExp( 3 ), *hbqt_par_QTextCharFormat( 4 ) ); p is NULL" ) );
+   }
+}
+
 
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */

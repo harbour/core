@@ -137,7 +137,7 @@ CLASS IdeThemes INHERIT IdeObject
    METHOD setQuotesRule( qHiliter, cTheme )
    METHOD setMultiLineCommentRule( qHiliter, cTheme )
    METHOD setSingleLineCommentRule( qHiliter, cTheme )
-   METHOD setSyntaxRule( qHiliter, cName, cPattern, aAttr )
+   METHOD setSyntaxRule( qHiliter, cName, cPattern, lCaseSensitive, aAttr )
    METHOD setSyntaxFormat( qHiliter, cName, aAttr )
    METHOD setSyntaxHilighting( qEdit, cTheme, lNew )
    METHOD show()
@@ -152,6 +152,7 @@ CLASS IdeThemes INHERIT IdeObject
    METHOD parseINI( lAppend )
    METHOD updateLineNumbersBkColor()
    METHOD updateCurrentLineColor()
+   METHOD mergeUserDictionaries( qHiliter, cTheme )
 
    ENDCLASS
 
@@ -186,8 +187,8 @@ METHOD IdeThemes:create( oIde, cIniFile )
 
    /* Compiler Directives */
    b_:= { "include","define","ifndef","ifdef","else","endif","command","xcommand","translate","xtranslate" }
-   s := ""; aeval( b_, {|e| s += iif( empty( s ), "", "|" ) + "#" + upper( e ) + "\b|#" + e + "\b" } )
-   aadd( ::aPatterns, { "PreprocessorDirectives", s } )
+   s := ""; aeval( b_, {|e| s += iif( empty( s ), "", "|" ) + "#" + e + "\b" } )
+   aadd( ::aPatterns, { "PreprocessorDirectives", s, .f. } )
 
    /* Harbour Keywords */
    b_:= { 'function','return','static','local','default', ;
@@ -202,8 +203,8 @@ METHOD IdeThemes:create( oIde, cIniFile )
           'inherit','init','create','virtual','message', 'from', 'setget',;
           'begin','sequence','try','catch','always','recover','hb_symbol_unused', ;
           'error','handler' }
-   s := ""; aeval( b_, {|e| s += iif( empty( s ), "", "|" ) + "\b" + upper( e ) + "\b|\b" + e + "\b" } )
-   aadd( ::aPatterns, { "HarbourKeywords"   , s } )
+   s := ""; aeval( b_, {|e| s += iif( empty( s ), "", "|" ) + "\b" + e + "\b" } )
+   aadd( ::aPatterns, { "HarbourKeywords"   , s, .f. } )
 
    /* C Language Keywords - Only for C or CPP sources - mutually exclusive with Harbour Sources */
    b_:= { "char", "class", "const", "double", "enum", "explicit", "friend", "inline", ;
@@ -211,16 +212,16 @@ METHOD IdeThemes:create( oIde, cIniFile )
           "short", "signals", "signed", "slots", "static", "struct", "template", ;
           "typedef", "typename", "union", "unsigned", "virtual", "void", "volatile" }
    s := ""; aeval( b_, {|e| s += iif( empty( s ), "", "|" ) + "\b" + e + "\b" } )
-   aadd( ::aPatterns, { "CLanguageKeywords" , s                       } )
+   aadd( ::aPatterns, { "CLanguageKeywords" , s                       , .t. } )
 
    s := "\:\=|\:|\+|\-|\\|\*|\ IN\ |\ in\ |\=|\>|\<|\^|\%|\$|\&|\@|\.or\.|\.and\.|\.OR\.|\.AND\.|\!"
-   aadd( ::aPatterns, { "Operators"         , s                       } )
+   aadd( ::aPatterns, { "Operators"         , s                       , .f. } )
 
-   aadd( ::aPatterns, { "NumericalConstants", "\b[0-9.]+\b"           } )
+   aadd( ::aPatterns, { "NumericalConstants", "\b[0-9.]+\b"           , .f. } )
 
-   aadd( ::aPatterns, { "BracketsAndBraces" , "\(|\)|\{|\}|\[|\]|\|"  } )
+   aadd( ::aPatterns, { "BracketsAndBraces" , "\(|\)|\{|\}|\[|\]|\|"  , .f. } )
 
-   aadd( ::aPatterns, { "FunctionsBody"     , "\b[A-Za-z0-9_]+(?=\()" } )
+   aadd( ::aPatterns, { "FunctionsBody"     , "\b[A-Za-z0-9_]+(?=\()" , .f. } )
 
    RETURN Self
 
@@ -370,7 +371,7 @@ METHOD IdeThemes:buildSyntaxFormat( aAttr )
    LOCAL qFormat
 
    qFormat := QTextCharFormat():new()
-   //
+
    qFormat:setFontItalic( aAttr[ THM_ATR_ITALIC ] )
    IF aAttr[ THM_ATR_BOLD ]
       qFormat:setFontWeight( 1000 )
@@ -430,9 +431,13 @@ METHOD IdeThemes:setMultiLineCommentRule( qHiliter, cTheme )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeThemes:setSyntaxRule( qHiliter, cName, cPattern, aAttr )
+METHOD IdeThemes:setSyntaxRule( qHiliter, cName, cPattern, lCaseSensitive, aAttr )
+   LOCAL qRegExp := QRegExp():new()
 
-   qHiliter:hbSetRule( cName, cPattern, ::buildSyntaxFormat( aAttr ) )
+   qRegExp:setCaseSensitivity( lCaseSensitive )
+   qRegExp:setPattern( cPattern )
+
+   qHiliter:hbSetRuleWithRegExp( cName, qRegExp, ::buildSyntaxFormat( aAttr ) )
 
    RETURN Self
 
@@ -465,9 +470,12 @@ METHOD IdeThemes:setSyntaxHilighting( qEdit, cTheme, lNew )
 
    FOR EACH a_ IN ::aPatterns
       IF !empty( aAttr := ::getThemeAttribute( a_[ 1 ], cTheme ) )
-         ::setSyntaxRule( qHiliter, a_[ 1 ], a_[ 2 ], aAttr )
+         ::setSyntaxRule( qHiliter, a_[ 1 ], a_[ 2 ], a_[ 3 ], aAttr )
       ENDIF
    NEXT
+
+   ::mergeUserDictionaries( qHiliter, cTheme )
+
    ::setMultiLineCommentRule( qHiliter, cTheme )
    ::setSingleLineCommentRule( qHiliter, cTheme )
    ::setQuotesRule( qHiliter, cTheme )
@@ -486,6 +494,45 @@ METHOD IdeThemes:setSyntaxHilighting( qEdit, cTheme, lNew )
    qHiliter:setDocument( qEdit:document() )
 
    RETURN qHiliter
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeThemes:mergeUserDictionaries( qHiliter, cTheme )
+   LOCAL oDict, s, aAttr, qFormat, qRegExp, cName, a_, aDict
+
+   aDict := ::oIde:aUserDict
+   FOR EACH oDict IN aDict
+      IF !empty( oDict:aItems )
+         cName := "UserDictionary" + hb_ntos( oDict:__enumIndex() )
+
+         s := ""
+         FOR EACH a_ IN oDict:aItems
+            s += "\b" + a_[ 1 ] + "\b|"
+         NEXT
+         s := substr( s, 1, len( s ) - 1 )
+
+         qRegExp := QRegExp():new()
+         qRegExp:setCaseSensitivity( oDict:lCaseSensitive )
+         qRegExp:setPattern( s )
+
+         aAttr := ::getThemeAttribute( "UserDictionary", cTheme )  // cName after slots are implemented
+
+         qFormat := QTextCharFormat():new()
+         qFormat:setFontItalic( aAttr[ THM_ATR_ITALIC ] )
+         IF aAttr[ THM_ATR_BOLD ]
+            qFormat:setFontWeight( 1000 )
+         ENDIF
+         qFormat:setFontUnderline( aAttr[ THM_ATR_ULINE ] )
+         qFormat:setForeground( QBrush():new( "QColor", QColor():new( aAttr[ THM_ATR_R ], aAttr[ THM_ATR_G ], aAttr[ THM_ATR_B ] ) ) )
+         IF !empty( oDict:qBgColor )
+            qFormat:setBackground( QBrush():new( "QColor", oDict:qBgColor ) )
+         ENDIF
+
+         qHiliter:hbSetRuleWithRegExp( cName, qRegExp, qFormat )
+      ENDIF
+   NEXT
+
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 

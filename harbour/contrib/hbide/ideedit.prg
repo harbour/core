@@ -173,6 +173,7 @@ CLASS IdeEdit INHERIT IdeObject
    METHOD goto( nLine )
    METHOD gotoFunction()
    METHOD toggleLineNumbers()
+   METHOD toggleHorzRuler()
 
    METHOD toggleSelectionMode()
    METHOD toggleStreamSelectionMode()
@@ -268,12 +269,13 @@ METHOD IdeEdit:create( oEditor, nMode )
 
    ::setFont()
 
-   ::qEdit:hbHighlightCurrentLine( .t. )              /* Via user-setup */
    ::qEdit:hbSetSpaces( ::nTabSpaces )
 
    ::qEdit:hbSetCompleter( ::qCompleter )
 
+   ::toggleCurrentLineHighlightMode()
    ::toggleLineNumbers()
+   ::toggleHorzRuler()
 
    FOR EACH nBlock IN ::aBookMarks
       ::qEdit:hbBookMarks( nBlock )
@@ -471,8 +473,9 @@ METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
       ::relayMarkButtons()
       ::updateTitleBar()
 
-      ::toggleLineNumbers()
       ::toggleCurrentLineHighlightMode()
+      ::toggleLineNumbers()
+      ::toggleHorzRuler()
       ::dispStatusInfo()
 
       ::oDK:setStatusText( SB_PNL_SELECTEDCHARS, len( ::getSelectedText() ) )
@@ -1295,8 +1298,20 @@ METHOD IdeEdit:presentSkeletons()
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeEdit:toggleCurrentLineHighlightMode()
+   ::qEdit:hbHighlightCurrentLine( ::lCurrentLineHighlightEnabled )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeEdit:toggleLineNumbers()
    ::qEdit:hbNumberBlockVisible( ::lLineNumbersVisible )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:toggleHorzRuler()
+   ::qEdit:hbHorzRulerVisible( ::lHorzRulerVisible )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1334,12 +1349,6 @@ METHOD IdeEdit:clearSelection()
 
 METHOD IdeEdit:togglePersistentSelection()
    ::qEdit:hbTogglePersistentSelection()
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeEdit:toggleCurrentLineHighlightMode()
-   ::qEdit:hbHighlightCurrentLine( ::lCurrentLineHighlightEnabled )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -2213,21 +2222,44 @@ FUNCTION hbide_getFrontSpacesAndWord( cText, cWord )
 /*----------------------------------------------------------------------*/
 
 FUNCTION hbide_isStartingKeyword( cWord )
-   STATIC s_b_ := { ;
+   STATIC s_b_
+
+   IF empty( s_b_ )
+      IF empty( hb_getEnv( "HBIDE_RETURN_ATBEGINING" ) )
+         s_b_ := { ;
                     'function' => NIL,;
                     'class' => NIL,;
                     'method' => NIL }
+      ELSE
+         s_b_ := { ;
+                    'function' => NIL,;
+                    'class' => NIL,;
+                    'return' => NIL,;
+                    'method' => NIL }
+      ENDIF
+   ENDIF
 
    RETURN Lower( cWord ) $ s_b_
 
 /*----------------------------------------------------------------------*/
 
 FUNCTION hbide_isMinimumIndentableKeyword( cWord )
-   STATIC s_b_ := { ;
+   STATIC s_b_
+
+   IF empty( s_b_ )
+      IF empty( hb_getEnv( "HBIDE_RETURN_ATBEGINING" ) )
+         s_b_ := { ;
                     'local' => NIL,;
                     'static' => NIL,;
                     'return' => NIL,;
                     'default' => NIL }
+      ELSE
+         s_b_ := { ;
+                    'local' => NIL,;
+                    'static' => NIL,;
+                    'default' => NIL }
+      ENDIF
+   ENDIF
 
    RETURN Lower( cWord ) $ s_b_
 

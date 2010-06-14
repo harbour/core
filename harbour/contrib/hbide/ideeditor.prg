@@ -145,6 +145,7 @@ CLASS IdeEditsManager INHERIT IdeObject
    METHOD toggleLineSelectionMode()
 
    METHOD toggleLineNumbers()
+   METHOD toggleHorzRuler()
    METHOD toggleCurrentLineHighlightMode()
 
    METHOD getText()
@@ -612,13 +613,10 @@ METHOD IdeEditsManager:toggleLineSelectionMode()
 
 METHOD IdeEditsManager:toggleCurrentLineHighlightMode()
    LOCAL oEdit
-
    ::oIde:lCurrentLineHighlightEnabled := ! ::lCurrentLineHighlightEnabled
-
    IF !empty( oEdit := ::getEditObjectCurrent() )
       oEdit:toggleCurrentLineHighlightMode()
    ENDIF
-
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -628,6 +626,16 @@ METHOD IdeEditsManager:toggleLineNumbers()
    ::oIde:lLineNumbersVisible := ! ::lLineNumbersVisible
    IF !empty( oEdit := ::getEditObjectCurrent() )
       oEdit:toggleLineNumbers()
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:toggleHorzRuler()
+   LOCAL oEdit
+   ::oIde:lHorzRulerVisible := ! ::lHorzRulerVisible
+   IF !empty( oEdit := ::getEditObjectCurrent() )
+      oEdit:toggleHorzRuler()
    ENDIF
    RETURN Self
 
@@ -1435,6 +1443,7 @@ METHOD IdeEditor:activateTab( mp1, mp2, oXbp )
       oEdit:setDocumentProperties()
       oEdit:qCoEdit:relayMarkButtons()
       oEdit:qCoEdit:toggleLineNumbers()
+      oEdit:qCoEdit:toggleHorzRuler()
       oEdit:qCoEdit:toggleCurrentLineHighlightMode()
       oEdit:qCoEdit:dispStatusInfo()
       ::oUpDn:show()

@@ -33,6 +33,7 @@
         :hbSetRule( cName, cPattern, pFormat )              -> NIL
         :hbSetFormat( cName, pFormat )                      -> NIL
         :hbSetFormatColumnSelection( nStart, nCount, pColor )  -> NIL
+        :hbSetRuleWithRegExp( cName, pReg, pFormat )        -> NIL
 
     $DESCRIPTION$
 

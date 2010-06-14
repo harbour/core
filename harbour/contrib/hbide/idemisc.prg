@@ -342,6 +342,19 @@ FUNCTION hbide_evalAsString( cExp )
 
 /*----------------------------------------------------------------------*/
 
+FUNCTION hbide_evalAsIs( cExp )
+   LOCAL xValue
+
+   BEGIN SEQUENCE WITH { || break() }
+      xValue := eval( &( "{|| " + cExp + "}" ) )
+   RECOVER
+      xValue := cExp
+   END SEQUENCE
+
+   RETURN xValue
+
+/*----------------------------------------------------------------------*/
+
 FUNCTION hbide_setupMetaKeys( a_ )
    LOCAL s, n, cKey, cVal
    LOCAL a4_1 := {}
@@ -1925,6 +1938,15 @@ FUNCTION FN_DirExtSet( cFileName, cDirNew, cExtNew )
 
 /*----------------------------------------------------------------------*/
 
+FUNCTION hbide_array2string( a_, cDlm )
+   LOCAL s := ""
+
+   aeval( a_, {|e| s += e + cDlm } )
+
+   RETURN s
+
+/*----------------------------------------------------------------------*/
+
 FUNCTION hbide_nArray2string( a_ )
    LOCAL cString := ""
    LOCAL n
@@ -1979,23 +2001,55 @@ FUNCTION hbide_parseSourceComponents( cCompositeSource )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION hbide_parseToolComponents( cCompositeTool )
+FUNCTION hbide_parseUserToolbarComponents( cCompositeTool )
    LOCAL a_
 
    a_:= hb_atokens( cCompositeTool, "," )
-   asize( a_, 6 )
+   asize( a_, 7 )
    DEFAULT a_[ 1 ] TO ""
    DEFAULT a_[ 2 ] TO ""
    DEFAULT a_[ 3 ] TO ""
    DEFAULT a_[ 4 ] TO ""
    DEFAULT a_[ 5 ] TO ""
    DEFAULT a_[ 6 ] TO ""
+   DEFAULT a_[ 7 ] TO ""
    a_[ 1 ] := alltrim( a_[ 1 ] )
    a_[ 2 ] := alltrim( a_[ 2 ] )
    a_[ 3 ] := alltrim( a_[ 3 ] )
    a_[ 4 ] := alltrim( a_[ 4 ] )
    a_[ 5 ] := alltrim( a_[ 5 ] )
    a_[ 6 ] := alltrim( a_[ 6 ] )
+   a_[ 7 ] := alltrim( a_[ 7 ] )
+
+   RETURN a_
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION hbide_parseToolComponents( cCompositeTool )
+   LOCAL a_
+
+   a_:= hb_atokens( cCompositeTool, "," )
+   asize( a_, 10 )
+   DEFAULT a_[ 1 ] TO ""
+   DEFAULT a_[ 2 ] TO ""
+   DEFAULT a_[ 3 ] TO ""
+   DEFAULT a_[ 4 ] TO ""
+   DEFAULT a_[ 5 ] TO ""
+   DEFAULT a_[ 6 ] TO ""
+   DEFAULT a_[ 7 ] TO "-1"
+   DEFAULT a_[ 8 ] TO "YES"
+   DEFAULT a_[ 9 ] TO ""
+   DEFAULT a_[10 ] TO ""
+   a_[ 1 ] := alltrim( a_[ 1 ] )
+   a_[ 2 ] := alltrim( a_[ 2 ] )
+   a_[ 3 ] := alltrim( a_[ 3 ] )
+   a_[ 4 ] := alltrim( a_[ 4 ] )
+   a_[ 5 ] := alltrim( a_[ 5 ] )
+   a_[ 6 ] := alltrim( a_[ 6 ] )
+   a_[ 7 ] := alltrim( a_[ 7 ] )
+   a_[ 8 ] := alltrim( a_[ 8 ] )
+   a_[ 9 ] := alltrim( a_[ 9 ] )
+   a_[10 ] := alltrim( a_[10 ] )
 
    RETURN a_
 

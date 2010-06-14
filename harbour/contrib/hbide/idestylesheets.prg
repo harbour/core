@@ -149,7 +149,7 @@ FUNCTION GetStyleSheet( cWidget, nMode )
       ENDIF
       aadd( txt_, 'QMenuBar::item {                                                             ' )
       aadd( txt_, '    spacing      : 3px; /* spacing between menu bar items */                 ' )
-      aadd( txt_, '    padding      : 1px 4px;                                                  ' )
+      aadd( txt_, '    padding      : 1px 10px;                                                 ' )
       aadd( txt_, '    background   : transparent;                                              ' )
       aadd( txt_, '    border-radius: 4px;                                                      ' )
       aadd( txt_, '    color        : #000000;                                                  ' )

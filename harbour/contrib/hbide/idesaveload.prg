@@ -139,6 +139,11 @@ HB_TRACE( HB_TR_ALWAYS, "hbide_saveINI( oIde )", 0, oIde:nRunMode, oIde:cProjIni
    aadd( txt_, "CurrentShortcuts="          + oIde:cPathShortcuts                               )
    aadd( txt_, "TextFileExtensions="        + oIde:cTextExtensions                              )
    aadd( txt_, "FindInFilesDialogGeometry=" + oIde:aIni[ INI_HBIDE, FindInFilesDialogGeometry ] )
+   aadd( txt_, "FindInFilesDialogGeometry=" + oIde:aIni[ INI_HBIDE, FindInFilesDialogGeometry ] )
+   aadd( txt_, "CurrentLineHighlightMode="  + iif( oIde:lCurrentLineHighlightEnabled, "YES", "NO" ) )
+   aadd( txt_, "LineNumbersDisplayMode="    + iif( oIde:lLineNumbersVisible, "YES", "NO" )      )
+   aadd( txt_, "HorzRulerDisplayMode="      + iif( oIde:lHorzRulerVisible, "YES", "NO" )        )
+   aadd( txt_, "ToolsDialogGeometry="       + oIde:aIni[ INI_HBIDE, ToolsDialogGeometry ]       )
    aadd( txt_, " " )
 
    aadd( txt_, "[PROJECTS]" )
@@ -221,22 +226,34 @@ HB_TRACE( HB_TR_ALWAYS, "hbide_saveINI( oIde )", 0, oIde:nRunMode, oIde:cProjIni
    FOR n := 1 TO len( oIde:aIni[ INI_VIEWS ] )
       aadd( txt_, "view_" + hb_ntos( n ) + "=" + oIde:aIni[ INI_VIEWS, n ] )
    NEXT
+   aadd( txt_, " " )
 
    aadd( txt_, "[TAGGEDPROJECTS]" )
    aadd( txt_, " " )
    FOR n := 1 TO len( oIde:aIni[ INI_TAGGEDPROJECTS ] )
       aadd( txt_, "taggedproject_" + hb_ntos( n ) + "=" + oIde:aIni[ INI_TAGGEDPROJECTS, n ] )
    NEXT
+   aadd( txt_, " " )
 
    aadd( txt_, "[TOOLS]" )
    aadd( txt_, " " )
    FOR n := 1 TO len( oIde:aIni[ INI_TOOLS ] )
       s := oIde:aIni[ INI_TOOLS, n, 1 ] + "," + oIde:aIni[ INI_TOOLS, n, 2 ] + "," + oIde:aIni[ INI_TOOLS, n, 3 ] + "," + ;
-           oIde:aIni[ INI_TOOLS, n, 4 ] + "," + oIde:aIni[ INI_TOOLS, n, 5 ] + "," + oIde:aIni[ INI_TOOLS, n, 6 ] + ","
+           oIde:aIni[ INI_TOOLS, n, 4 ] + "," + oIde:aIni[ INI_TOOLS, n, 5 ] + "," + oIde:aIni[ INI_TOOLS, n, 6 ] + "," + ;
+           oIde:aIni[ INI_TOOLS, n, 7 ] + "," + oIde:aIni[ INI_TOOLS, n, 8 ] + "," + oIde:aIni[ INI_TOOLS, n, 9 ] + "," + ;
+           oIde:aIni[ INI_TOOLS, n, 10 ]
       aadd( txt_, "tool_" + hb_ntos( n ) + "=" + s )
    NEXT
-
    aadd( txt_, " " )
+
+   aadd( txt_, "[USERTOOLBARS]" )
+   aadd( txt_, " " )
+   FOR n := 1 TO len( oIde:aIni[ INI_USERTOOLBARS ] )
+      s := hbide_array2string( oIde:aIni[ INI_USERTOOLBARS, n ], "," )
+      aadd( txt_, "usertoolbars_" + hb_ntos( n ) + "=" + s )
+   NEXT
+   aadd( txt_, " " )
+
    aadd( txt_, "[General]" )
    aadd( txt_, " " )
 
@@ -280,7 +297,11 @@ FUNCTION hbide_loadINI( oIde, cHbideIni )
                       "currentcodec"       , "pathmk2"             , "pathenv"            , ;
                       "currentenvironment" , "findinfilesdialoggeometry", "currentfind"   , ;
                       "currentreplace"     , "currentfolderfind"   , "currentview"        , ;
-                      "currentharbour"     , "currentshortcuts"    , "textfileextensions"   }
+                      "currentharbour"     , "currentshortcuts"    , "textfileextensions" , ;
+                      "currentlinehighlightmode", "linenumbersdisplaymode", "horzrulerdisplaymode", ;
+                      "toolsdialoggeometry" ;
+                    }
+
    #if 0
    IF empty( cHbideIni )
       IF hb_fileExists( "hbide.ini" )
@@ -346,6 +367,9 @@ FUNCTION hbide_loadINI( oIde, cHbideIni )
                EXIT
             CASE "[TOOLS]"
                nPart := INI_TOOLS
+               EXIT
+            CASE "[USERTOOLBARS]"
+               nPart := INI_USERTOOLBARS
                EXIT
             OTHERWISE
                 /*
@@ -424,6 +448,12 @@ FUNCTION hbide_loadINI( oIde, cHbideIni )
                CASE nPart == INI_TOOLS
                   IF hbide_parseKeyValPair( s, @cKey, @cVal )
                      a_:= hbide_parseToolComponents( cVal )
+                     aadd( oIde:aIni[ nPart ], a_ )
+                  ENDIF
+
+               CASE nPart == INI_USERTOOLBARS
+                  IF hbide_parseKeyValPair( s, @cKey, @cVal )
+                     a_:= hbide_parseUserToolbarComponents( cVal )
                      aadd( oIde:aIni[ nPart ], a_ )
                   ENDIF
 

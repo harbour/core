@@ -77,6 +77,7 @@
         :hbApplyKey( nKey, nModifiers, cTxt )               -> NIL
         :hbHighlightArea( nTop, nLeft, nBottom, nRight, nMode )  -> NIL
         :hbTogglePersistentSelection()                      -> NIL
+        :hbHorzRulerVisible( lVisible )                     -> NIL
 
     $DESCRIPTION$
 

@@ -80,8 +80,9 @@
 #define INI_TAGGEDPROJECTS                        10
 #define INI_GENERAL                               11
 #define INI_TOOLS                                 12
+#define INI_USERTOOLBARS                          13
 
-#define INI_SECTIONS_COUNT                        12
+#define INI_SECTIONS_COUNT                        13
 
 
 /* INI_HBIDE */
@@ -109,8 +110,13 @@
 #define CurrentHarbour                            22
 #define CurrentShortcuts                          23
 #define TextFileExtensions                        24
+#define CurrentLineHighlightMode                  25
+#define LineNumbersDisplayMode                    26
+#define HorzRulerDisplayMode                      27
+#define ToolsDialogGeometry                       28
 
-#define INI_HBIDE_VRBLS                           24
+
+#define INI_HBIDE_VRBLS                           28
 
 /* .hbi structure constants */
 #define PRJ_PRP_PROPERTIES                        1

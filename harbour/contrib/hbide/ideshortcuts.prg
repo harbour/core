@@ -121,6 +121,7 @@ CLASS IdeShortcuts INHERIT IdeObject
    METHOD evalMacro( cString )
    METHOD test( cString, lWarn )
    METHOD execKey( oEdit, nKey, lAlt, lCtrl, lShift )
+   METHOD execMacroByName( cName )
    METHOD mergeMacros( a_ )
 
    METHOD loadDftSCuts()
@@ -138,6 +139,7 @@ CLASS IdeShortcuts INHERIT IdeObject
    METHOD array2controls( nRow )
    METHOD array2table( nRow, a_ )
    METHOD vrbls2array( nRow )
+   METHOD getMacrosList()
 
    /* Public API Methods */
    METHOD getWord( lSelect )
@@ -773,7 +775,7 @@ METHOD IdeShortcuts:execKey( oEdit, nKey, lAlt, lCtrl, lShift )
 
       cKey := ::aKeys[ n, 2 ]
 
-      n := ascan( ::aDftSCuts, {|e_| e_[ 2 ] == cKey .AND. ;
+      n := ascan( ::aDftSCuts, {|e_| e_[ 2 ] == cKey                       .AND. ;
                                      e_[ 3 ] == iif( lAlt  , "YES", "NO" ) .AND. ;
                                      e_[ 4 ] == iif( lCtrl , "YES", "NO" ) .AND. ;
                                      e_[ 5 ] == iif( lShift, "YES", "NO" )  } )
@@ -787,6 +789,29 @@ METHOD IdeShortcuts:execKey( oEdit, nKey, lAlt, lCtrl, lShift )
    ENDIF
 
    RETURN lExecuted
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeShortcuts:execMacroByName( cName )
+   LOCAL n, lExecuted := .f.
+
+   IF ( n := ascan( ::aDftSCuts, {|e_| e_[ 1 ] == cName } ) ) > 0
+      ::oEdit := ::oEM:getEditObjectCurrent()
+      IF ! empty( ::aDftSCuts[ n, 7 ] )
+         lExecuted := ::evalMacro( ::aDftSCuts[ n, 7 ] )
+      ENDIF
+   ENDIF
+
+   RETURN lExecuted
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeShortcuts:getMacrosList()
+   LOCAL aList := {}
+
+   aeval( ::aDftSCuts, {|e_| aadd( aList, e_[ 1 ] ) } )
+
+   RETURN aList
 
 /*----------------------------------------------------------------------*/
 
@@ -1648,3 +1673,4 @@ METHOD IdeShortcuts:mergeMacros( a_ )
    ENDSWITCH
    #endif
 /*----------------------------------------------------------------------*/
+

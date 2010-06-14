@@ -846,6 +846,20 @@ HB_FUNC( QT_HBQPLAINTEXTEDIT_HBTOGGLEPERSISTENTSELECTION )
    }
 }
 
+/*
+ * void           hbHorzRulerVisible( bool visible )
+ */
+HB_FUNC( QT_HBQPLAINTEXTEDIT_HBHORZRULERVISIBLE )
+{
+   HBQPlainTextEdit * p = hbqt_par_HBQPlainTextEdit( 1 );
+   if( p )
+      ( p )->hbHorzRulerVisible( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQPLAINTEXTEDIT_HBHORZRULERVISIBLE FP=( p )->hbHorzRulerVisible( hb_parl( 2 ) ); p is NULL" ) );
+   }
+}
+
 
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */

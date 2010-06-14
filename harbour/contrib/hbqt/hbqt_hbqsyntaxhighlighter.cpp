@@ -106,6 +106,10 @@ void HBQSyntaxHighlighter::hbSetRule( QString name, QString pattern, const QText
    else
       HighlightingRules.remove( name );
 }
+void HBQSyntaxHighlighter::hbSetRuleWithRegExp( QString name, const QRegExp & reg, const QTextCharFormat & format )
+{
+   HighlightingRules.insert( name, HighlightingRule( reg, format ) );
+}
 void HBQSyntaxHighlighter::hbSetFormat( QString name, const QTextCharFormat & format )
 {
    if( ( QString ) "TerminatedStrings" == name )
@@ -118,7 +122,6 @@ void HBQSyntaxHighlighter::hbSetFormat( QString name, const QTextCharFormat & fo
       {
          HighlightingRule rule = HighlightingRules.value( name );
          QRegExp reg = rule.pattern;
-
          HighlightingRules.insert( name, HighlightingRule( reg, format ) );
       }
       else
@@ -168,6 +171,7 @@ void HBQSyntaxHighlighter::highlightBlock( const QString &text )
 
    foreach( const HighlightingRule &rule, HighlightingRules )
    {
+      #if 0
       QRegExp expression( rule.pattern );
       index = expression.indexIn( text );
       while( index >= 0 )
@@ -175,6 +179,14 @@ void HBQSyntaxHighlighter::highlightBlock( const QString &text )
          int length = expression.matchedLength();
          setFormat( index, length, rule.format );
          index = expression.indexIn( text, index + length );
+      }
+      #endif
+      index = rule.pattern.indexIn( text );
+      while( index >= 0 )
+      {
+         int length = rule.pattern.matchedLength();
+         setFormat( index, length, rule.format );
+         index = rule.pattern.indexIn( text, index + length );
       }
    }
 
