@@ -24,7 +24,7 @@ ifneq ($(HB_HAS_ZLIB),)
    _DET_FLT_PLAT :=
    _DET_FLT_COMP :=
    _DET_INC_DEFP := /usr/include /usr/local/include
-   _DET_INC_LOCL := $(realpath $(TOP)$(ROOT)external/minizip)
+   _DET_INC_LOCL := external/minizip
    _DET_INC_HEAD := /zip.h
    include $(TOP)$(ROOT)config/detfun.mk
 

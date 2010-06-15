@@ -44,7 +44,7 @@ ifeq ($(HB_SUPPORTED),yes)
    _DET_FLT_PLAT :=
    _DET_FLT_COMP :=
    _DET_INC_DEFP := /usr/include
-   _DET_INC_LOCL := $(realpath $(TOP)$(ROOT)external/sqlite3)
+   _DET_INC_LOCL := external/sqlite3
    _DET_INC_HEAD := /sqlite3.h
    include $(TOP)$(ROOT)config/detfun.mk
 

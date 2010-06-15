@@ -20,7 +20,7 @@ _DET_VAR_HAS_ := HB_HAS_SQLITE3
 _DET_FLT_PLAT :=
 _DET_FLT_COMP :=
 _DET_INC_DEFP := /usr/include /boot/common/include
-_DET_INC_LOCL := $(realpath $(TOP)$(ROOT)external/sqlite3)
+_DET_INC_LOCL := external/sqlite3
 _DET_INC_HEAD := /sqlite3.h
 include $(TOP)$(ROOT)config/detfun.mk
 

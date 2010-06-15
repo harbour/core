@@ -20,7 +20,7 @@
 #       _DET_INC_DEFP - default location to look at. Not effective in 'HB_BUILD_EXTDEF=no' mode.
 #                       (you must use absolute paths only.)
 #       _DET_INC_LOCL - embedded location to look at.
-#                       (you must use absolute paths only.)
+#                       (you must use paths relative to Harbour source tree root.)
 #       _DET_INC_HEAD - header filename to look for. Unless looking for a directory, prefix with forward slash.
 #       - variable name specified by _DET_VAR_INC_ (typically "HB_WITH_*") containing:
 #          (empty) or yes - will enable external component if found on default locations.
@@ -51,6 +51,12 @@ endif
 # preparing switch to HB_WITH_* variables from HB_INC_*
 ifneq ($($(subst HB_INC_,HB_WITH_,$(_DET_VAR_INC_))),)
    $(_DET_VAR_INC_) := $($(subst HB_INC_,HB_WITH_,$(_DET_VAR_INC_)))
+endif
+
+ifneq ($(HB_ROOT),)
+   _DET_INC_LOCL := $(HB_ROOT)/$(_DET_INC_LOCL)
+else
+   _DET_INC_LOCL := $(realpath $(TOP)$(ROOT)$(_DET_INC_LOCL))
 endif
 
 _DET_RES_TEXT :=
