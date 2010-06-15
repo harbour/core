@@ -63,13 +63,13 @@ endif
 _make_ver_381 := 3.81
 MAKE_381 := $(filter $(_make_ver_381),$(firstword $(sort $(MAKE_VERSION) $(_make_ver_381))))
 
-# Users must specify HB_ROOT only for pre-3.81 GNU Make versions
+# Users must specify HB_SRC_ROOTPATH only for pre-3.81 GNU Make versions
 # (without '$(realpath)' function). For newer ones we clear it
 # to avoid messing things up.
 ifneq ($(MAKE_381),)
-   HB_ROOT :=
+   HB_SRC_ROOTPATH :=
 else
-   HB_ROOT := $(subst \,/,$(HB_ROOT))
+   HB_SRC_ROOTPATH := $(subst \,/,$(HB_SRC_ROOTPATH))
 endif
 
 find_in_path     = $(strip $(subst $(substpat), ,$(firstword $(subst |, ,$(subst $(subst x, ,x),$(substpat),$(filter-out |,$(foreach dir, $(subst $(PTHSEP), ,$(subst $(subst x, ,x),$(substpat),$(PATH))),|$(wildcard $(subst //,/,$(subst $(substpat),\ ,$(subst \,/,$(dir)))/$(1))$(HB_HOST_BIN_EXT)))))))))
@@ -1498,8 +1498,8 @@ else
          HB_INSTALL_PREFIX := /boot/common
       else
       ifeq ($(HB_PLATFORM_UNIX),)
-         ifneq ($(HB_ROOT),)
-            HB_INSTALL_PREFIX := $(HB_ROOT)$(TOP)$(ROOT)
+         ifneq ($(HB_SRC_ROOTPATH),)
+            HB_INSTALL_PREFIX := $(HB_SRC_ROOTPATH)$(TOP)$(ROOT)
          else
             HB_INSTALL_PREFIX := $(realpath $(TOP)$(ROOT))
          endif
