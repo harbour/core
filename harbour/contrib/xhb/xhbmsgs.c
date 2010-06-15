@@ -133,6 +133,10 @@ HB_FUNC( XHB_EEQUAL )
       double dValue = hb_itemGetND( pValue );
       hb_retl( ( double ) uc == dValue );
    }
+   else if( HB_IS_BLOCK( pSelf ) && HB_IS_BLOCK( pValue ) )
+   {
+      hb_retl( hb_codeblockId( pSelf ) == hb_codeblockId( pValue ) );
+   }
    else
    {
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1070, NULL, "==", 2, pSelf, pValue );
@@ -158,6 +162,10 @@ HB_FUNC( XHB_EQUAL )
       double dValue = hb_itemGetND( pValue );
       hb_retl( ( double ) uc == dValue );
    }
+   else if( HB_IS_HASH( pSelf ) && HB_IS_HASH( pValue ) )
+   {
+      hb_retl( hb_hashId( pSelf ) == hb_hashId( pValue ) );
+   }
    else
    {
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1071, NULL, "=", 2, pSelf, pValue );
@@ -182,6 +190,10 @@ HB_FUNC( XHB_NOTEQUAL )
       HB_UCHAR uc = ( HB_UCHAR ) hb_itemGetCPtr( pSelf )[ 0 ];
       double dValue = hb_itemGetND( pValue );
       hb_retl( ( double ) uc != dValue );
+   }
+   else if( HB_IS_HASH( pSelf ) && HB_IS_HASH( pValue ) )
+   {
+      hb_retl( hb_hashId( pSelf ) != hb_hashId( pValue ) );
    }
    else
    {
