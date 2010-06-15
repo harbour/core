@@ -81,15 +81,15 @@ mk_hblibso()
       linker_options="-lm"
    fi
    linker_mtoptions=""
-   if [ "${HB_USER_CFLAGS//-DHB_POSIX_REGEX/}" != "${HB_USER_CFLAGS}" ]; then
-      hb_libs="${hb_libs//hbpcre/}"
+   if echo ${HB_USER_CFLAGS} | grep -q -- -DHB_POSIX_REGEX ; then
+      hb_libs="$( echo ${hb_libs} | sed 's!hbpcre!!g' )"
    elif [ -z "${HB_HAS_PCRE_LOCAL}" ]; then
       linker_options="-lpcre ${linker_options}"
-      hb_libs="${hb_libs//hbpcre/}"
+      hb_libs="$( echo ${hb_libs} | sed 's!hbpcre!!g' )"
    fi
    if [ -z "${HB_HAS_ZLIB_LOCAL}" ]; then
       linker_options="-lz ${linker_options}"
-      hb_libs="${hb_libs//hbzlib/}"
+      hb_libs="$( echo ${hb_libs} | sed 's!hbzlib!!g' )"
    fi
    if [ "${HB_COMPILER}" = "mingw" ] || [ "${HB_COMPILER}" = "mingw64" ]; then
       linker_options="${linker_options} -luser32 -lwinspool -lgdi32 -lcomctl32 -ladvapi32 -lcomdlg32 -lole32 -loleaut32 -luuid -lws2_32"
