@@ -1,5 +1,4 @@
 #!/bin/sh
-[ "$BASH" ] || exec bash $0 "$@"
 #
 # $Id$
 #
