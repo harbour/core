@@ -1407,14 +1407,16 @@ HARBOUR
       HB_WITH_QT - Nokia QT (GUI) [win, wce, os2, darwin, linux, free, open-source]
          http://qt.nokia.com/products/
          http://get.qt.nokia.com/qt/source/
+         Recommended OS X binary package:
+            http://get.qt.nokia.com/qt/source/qt-mac-cocoa-opensource-4.6.3.dmg
          Currently supported Windows binary package:
             http://get.qt.nokia.com/qt/source/qt-win-opensource-4.5.3-mingw.exe
             http://get.qt.nokia.com/qt/source/qt-win-opensource-4.6.3-mingw.exe
-         How to create static and MSVC builds:
+         How to create Windows static and MSVC builds:
             http://doc.trolltech.com/4.5/deployment-windows.html
          NOTES:
-            - QT 4.5.x requires MinGW builds with SJLJ stack frame unwinding.
-            - QT 4.6.x requires MinGW builds with DWARF-2 stack frame unwinding.
+            - Windows QT 4.5.x requires MinGW builds with SJLJ stack frame unwinding.
+            - Windows QT 4.6.x requires MinGW builds with DWARF-2 stack frame unwinding.
               (mingw official 4.4.0 or upper, or mingw tdm with dwarf update)
       HB_WITH_SQLITE3 - sqlite3 [multiplatform, free, open-source]
          http://www.sqlite.org/

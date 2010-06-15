@@ -224,7 +224,7 @@ HB_FUNC( MYSQL_GET_SERVER_VERSION ) /* long mysql_get_server_version( MYSQL * ) 
 
    if( mysql )
    {
-#if MYSQL_VERSION_ID > 32399
+#if MYSQL_VERSION_ID >= 40100
       hb_retnl( ( long ) mysql_get_server_version( mysql ) );
 #else
       const char * szVer = mysql_get_server_info( mysql );

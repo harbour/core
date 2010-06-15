@@ -7259,8 +7259,6 @@ STATIC FUNCTION DirUnbuild( cDir )
 
 STATIC FUNCTION FN_Escape( cFileName, nEscapeMode, nFNNotation )
    LOCAL cDir, cName, cExt, cDrive
-   LOCAL cChar
-   LOCAL tmp
 
    DEFAULT nEscapeMode TO _ESC_NONE
 #if defined( __PLATFORM__WINDOWS ) .OR. ;
@@ -7324,14 +7322,7 @@ STATIC FUNCTION FN_Escape( cFileName, nEscapeMode, nFNNotation )
       ENDIF
       EXIT
    CASE _ESC_NIX
-      tmp := ""
-      FOR EACH cChar IN cFileName
-         IF cChar $ " \|&;<>()$`'" + Chr( 34 )
-            tmp += "\"
-         ENDIF
-         tmp += cChar
-      NEXT
-      cFileName := tmp
+      cFileName := "'" + StrTran( cFileName, "'", "'\''" ) + "'"
       EXIT
    CASE _ESC_BACKSLASH
       cFileName := StrTran( cFileName, "\", "\\" )
@@ -8210,7 +8201,8 @@ STATIC FUNCTION getFirstFunc( hbmk, cFile )
          /* do nothing */
       ELSEIF ! Empty( cExecNM := FindInPath( hbmk[ _HBMK_cCCPREFIX ] + "nm" ) )
          cFuncList := ""
-         hb_processRun( cExecNM + " " + cFile + " -g -n" + iif( hbmk[ _HBMK_cCOMP ] == "darwin", "", " --defined-only -C" ),, @cFuncList )
+         hb_processRun( cExecNM + " " + FN_Escape( cFile, hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) + ;
+            " -g -n" + iif( hbmk[ _HBMK_cCOMP ] == "darwin", "", " --defined-only -C" ),, @cFuncList )
          IF ( n := At( " T HB_FUN_", cFuncList ) ) != 0
             n += 10
          ELSEIF ( n := At( " T _HB_FUN_", cFuncList ) ) != 0
