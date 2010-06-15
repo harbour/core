@@ -91,6 +91,7 @@ void hbSetSingleLineCommentFormat( const QTextCharFormat & format )
 void hbSetRule( QString name, QString pattern, QTextCharFormat & format )
 void hbSetFormat( QString name, const QTextCharFormat & format )
 void hbSetFormatColumnSelection( int start, int count, const QColor & color )
+void hbSetRuleWithRegExp( QString name, const QRegExp & reg, const QTextCharFormat & format )
 
 # QTextBlock currentBlock () const
 # int currentBlockState () const
