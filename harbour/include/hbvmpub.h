@@ -91,7 +91,7 @@ struct _HB_SYMB;
                   } \
                } while( 0 )
 
-#  if HB_INT_MAX >= LONG_MAX
+#  if HB_VMINT_MAX >= LONG_MAX
 #     define HB_ITEM_PUT_LONGRAW( p, v )  \
                do { \
                   (p)->type = HB_IT_INTEGER; \

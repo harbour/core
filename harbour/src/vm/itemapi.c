@@ -976,7 +976,7 @@ PHB_ITEM hb_itemPutNLL( PHB_ITEM pItem, HB_LONGLONG llNumber )
    else
       pItem = hb_itemNew( NULL );
 
-#if HB_LONG_MAX >= LONGLONG_MAX
+#if HB_VMLONG_MAX >= LONGLONG_MAX
    pItem->type = HB_IT_LONG;
    pItem->item.asLong.value = ( HB_MAXINT ) llNumber;
    pItem->item.asLong.length = HB_LONG_LENGTH( llNumber );
@@ -1181,7 +1181,7 @@ PHB_ITEM hb_itemPutNLLen( PHB_ITEM pItem, long lNumber, int iWidth )
    else
       pItem = hb_itemNew( NULL );
 
-#if HB_INT_MAX == LONG_MAX
+#if HB_VMINT_MAX == LONG_MAX
    if( iWidth <= 0 || iWidth > 99 )
       iWidth = HB_INT_LENGTH( lNumber );
 
@@ -1213,7 +1213,7 @@ PHB_ITEM hb_itemPutNLLLen( PHB_ITEM pItem, HB_LONGLONG llNumber, int iWidth )
    else
       pItem = hb_itemNew( NULL );
 
-#if HB_LONG_MAX >= LONGLONG_MAX
+#if HB_VMLONG_MAX >= LONGLONG_MAX
    if( iWidth <= 0 || iWidth > 99 )
       iWidth = HB_LONG_LENGTH( llNumber );
 

@@ -951,8 +951,8 @@ HB_EXPR_PTR hb_compExprReduceNegate( HB_EXPR_PTR pSelf, HB_COMP_DECL )
       }
       else
       {
-#if -HB_LONG_MAX > HB_LONG_MIN
-         if( pExpr->value.asNum.val.l < -HB_LONG_MAX )
+#if -HB_VMLONG_MAX > HB_VMLONG_MIN
+         if( pExpr->value.asNum.val.l < -HB_VMLONG_MAX )
          {
             pExpr->value.asNum.NumType = HB_ET_DOUBLE;
             pExpr->value.asNum.val.d = - ( double ) pExpr->value.asNum.val.l;

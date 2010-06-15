@@ -89,7 +89,7 @@
 #define HB_TASK_STACK_MIN           16384
 #define HB_TASK_STACK_ALIGN         16
 #define HB_TASK_NO_DELAY            0
-#define HB_TASK_INFINITE_DELAY      HB_LONG_MAX
+#define HB_TASK_INFINITE_DELAY      HB_VMLONG_MAX
 
 
 #undef HB_TASK_STACK_INIT

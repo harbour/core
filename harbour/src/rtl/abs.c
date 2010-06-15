@@ -71,9 +71,9 @@ HB_FUNC( ABS )
 
          if( iNumber >= 0 )
             hb_retnilen( iNumber, iWidth );
-#if -HB_INT_MAX > HB_INT_MIN
-         else if( iNumber < -HB_INT_MAX )
-#if HB_LONG_MAX > HB_INT_MAX
+#if -HB_VMINT_MAX > HB_VMINT_MIN
+         else if( iNumber < -INT_MAX )
+#if HB_VMLONG_MAX > HB_VMINT_MAX
             hb_retnint( - ( HB_MAXINT ) iNumber );
 #else
             hb_retndlen( - ( double ) iNumber, 0, iDec );
@@ -88,8 +88,8 @@ HB_FUNC( ABS )
 
          if( lNumber >= 0 )
             hb_retnintlen( lNumber, iWidth );
-#if -HB_LONG_MAX > HB_LONG_MIN
-         else if( lNumber < -HB_LONG_MAX )
+#if -HB_VMLONG_MAX > HB_VMLONG_MIN
+         else if( lNumber < -HB_VMLONG_MAX )
             hb_retndlen( - ( double ) lNumber, 0, iDec );
 #endif
          else

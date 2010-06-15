@@ -180,7 +180,7 @@ static void    hb_vmPushHBLong( HB_MAXINT lNumber ); /* pushes a HB_MAXINT numbe
 #if !defined( HB_LONG_LONG_OFF )
    static void hb_vmPushLongLongConst( HB_LONGLONG lNumber );  /* Pushes a long long constant (pcode) */
 #endif
-#if HB_INT_MAX >= INT32_MAX
+#if HB_VMINT_MAX >= INT32_MAX
 static void    hb_vmPushIntegerConst( int iNumber );  /* Pushes a int constant (pcode) */
 #else
 static void    hb_vmPushLongConst( long lNumber );    /* Pushes a long constant (pcode) */
@@ -2100,7 +2100,7 @@ void hb_vmExecute( const HB_BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_PUSHLONG:
             HB_TRACE( HB_TR_DEBUG, ("(HB_P_PUSHLONG)") );
-#if HB_INT_MAX >= INT32_MAX
+#if HB_VMINT_MAX >= INT32_MAX
             hb_vmPushIntegerConst( ( int ) HB_PCODE_MKLONG( &pCode[ 1 ] ) );
 #else
             hb_vmPushLongConst( ( long ) HB_PCODE_MKLONG( &pCode[ 1 ] ) );
@@ -3002,10 +3002,10 @@ static void hb_vmNegate( void )
 
    if( HB_IS_INTEGER( pItem ) )
    {
-#if -HB_INT_MAX > HB_INT_MIN
-      if( pItem->item.asInteger.value < -HB_INT_MAX )
+#if -HB_VMINT_MAX > HB_VMINT_MIN
+      if( pItem->item.asInteger.value < -HB_VMINT_MAX )
       {
-#if HB_LONG_MAX > HB_INT_MAX
+#if HB_VMLONG_MAX > HB_VMINT_MAX
          HB_MAXINT lValue = ( HB_MAXINT ) pItem->item.asInteger.value;
          pItem->type = HB_IT_LONG;
          pItem->item.asLong.value = -lValue;
@@ -3028,8 +3028,8 @@ static void hb_vmNegate( void )
    }
    else if( HB_IS_LONG( pItem ) )
    {
-#if -HB_LONG_MAX > HB_LONG_MIN
-      if( pItem->item.asLong.value < -HB_LONG_MAX )
+#if -HB_VMLONG_MAX > HB_VMLONG_MIN
+      if( pItem->item.asLong.value < -HB_VMLONG_MAX )
       {
          double dValue = ( double ) pItem->item.asLong.value;
          pItem->type = HB_IT_DOUBLE;
@@ -3351,8 +3351,8 @@ static void hb_vmMult( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pIte
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmMult(%p,%p,%p)", pResult, pItem1, pItem2));
 
-#if HB_LONG_MAX / HB_INT_MAX >= HB_INT_MAX && \
-    HB_LONG_MIN / HB_INT_MIN >= HB_INT_MIN && 1
+#if HB_VMLONG_MAX / HB_VMINT_MAX >= HB_VMINT_MAX && \
+    HB_VMLONG_MIN / HB_VMINT_MIN >= -HB_VMINT_MIN && 1
    if( HB_IS_INTEGER( pItem1 ) && HB_IS_INTEGER( pItem2 ) )
    {
       HB_MAXINT lResult = ( HB_MAXINT ) pItem1->item.asInteger.value *
@@ -3535,7 +3535,7 @@ static void hb_vmInc( PHB_ITEM pItem )
    {
       if( HB_IS_INTEGER( pItem ) )
       {
-         if( pItem->item.asInteger.value < HB_INT_MAX )
+         if( pItem->item.asInteger.value < HB_VMINT_MAX )
          {
             pItem->type = HB_IT_INTEGER;
             pItem->item.asInteger.value++;
@@ -3543,7 +3543,7 @@ static void hb_vmInc( PHB_ITEM pItem )
          }
          else
          {
-#if HB_INT_MAX < HB_LONG_MAX
+#if HB_VMINT_MAX < HB_VMLONG_MAX
             pItem->type = HB_IT_LONG;
             pItem->item.asLong.value = ( HB_MAXINT ) pItem->item.asInteger.value + 1;
             pItem->item.asLong.length = HB_LONG_EXPLENGTH( pItem->item.asLong.value );
@@ -3555,7 +3555,7 @@ static void hb_vmInc( PHB_ITEM pItem )
 #endif
          }
       }
-      else if( pItem->item.asLong.value < HB_LONG_MAX )
+      else if( pItem->item.asLong.value < HB_VMLONG_MAX )
       {
          pItem->type = HB_IT_LONG;
          pItem->item.asLong.value++;
@@ -3600,7 +3600,7 @@ static void hb_vmDec( PHB_ITEM pItem )
    {
       if( HB_IS_INTEGER( pItem ) )
       {
-         if( pItem->item.asInteger.value > HB_INT_MIN )
+         if( pItem->item.asInteger.value > HB_VMINT_MIN )
          {
             pItem->type = HB_IT_INTEGER;
             pItem->item.asInteger.value--;
@@ -3608,7 +3608,7 @@ static void hb_vmDec( PHB_ITEM pItem )
          }
          else
          {
-#if HB_INT_MIN > HB_LONG_MIN
+#if HB_VMINT_MIN > HB_VMLONG_MIN
             pItem->type = HB_IT_LONG;
             pItem->item.asLong.value = ( HB_MAXINT ) pItem->item.asInteger.value - 1;
             pItem->item.asLong.length = HB_LONG_EXPLENGTH( pItem->item.asLong.value );
@@ -3620,7 +3620,7 @@ static void hb_vmDec( PHB_ITEM pItem )
 #endif
          }
       }
-      else if( pItem->item.asLong.value > HB_LONG_MIN )
+      else if( pItem->item.asLong.value > HB_VMLONG_MIN )
       {
          pItem->type = HB_IT_LONG;
          pItem->item.asLong.value--;
@@ -6598,7 +6598,7 @@ void hb_vmPushInteger( int iNumber )
    pItem->item.asInteger.length = HB_INT_LENGTH( iNumber );
 }
 
-#if HB_INT_MAX >= INT32_MAX
+#if HB_VMINT_MAX >= INT32_MAX
 static void hb_vmPushIntegerConst( int iNumber )
 {
    HB_STACK_TLS_PRELOAD

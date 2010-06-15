@@ -567,7 +567,7 @@ static HB_ERRCODE ocilibGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
             case HB_FT_LONG:
             case HB_FT_INTEGER:
                if( pField->uiDec == 0 )
-#if HB_LONG_MAX == INT32_MAX || defined( HB_LONG_LONG_OFF )
+#if HB_VMLONG_MAX == INT32_MAX || defined( HB_LONG_LONG_OFF )
                   pItem = hb_itemPutNIntLen( NULL, OCI_GetInt( rs, ui ), pField->uiLen );
 #else
                   pItem = hb_itemPutNIntLen( NULL, OCI_GetBigInt( rs, ui ), pField->uiLen );

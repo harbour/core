@@ -387,7 +387,7 @@ static void hb_oleItemToVariantRef( VARIANT* pVariant, PHB_ITEM pItem,
          break;
 
       case HB_IT_LONG:
-#if HB_LONG_MAX == INT32_MAX || defined( HB_LONG_LONG_OFF )
+#if HB_VMLONG_MAX == INT32_MAX || defined( HB_LONG_LONG_OFF )
          pVariant->n1.n2.vt = VT_I4;
          pVariant->n1.n2.n3.lVal = hb_itemGetNL( pItem );
          if( pVarRef )
@@ -708,7 +708,7 @@ void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
          break;
 
       case VT_I8:
-#if HB_LONG_MAX == INT32_MAX || defined( HB_LONG_LONG_OFF )
+#if HB_VMLONG_MAX == INT32_MAX || defined( HB_LONG_LONG_OFF )
          hb_itemPutNInt( pItem, ( HB_MAXINT ) pVariant->n1.n2.n3.lVal );
 #elif defined( HB_OLE_NO_LL )
          /* workaround for wrong OLE variant structure definition */
@@ -719,7 +719,7 @@ void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
          break;
 
       case VT_I8 | VT_BYREF:
-#if HB_LONG_MAX == INT32_MAX || defined( HB_LONG_LONG_OFF )
+#if HB_VMLONG_MAX == INT32_MAX || defined( HB_LONG_LONG_OFF )
          hb_itemPutNInt( pItem, ( HB_MAXINT ) *pVariant->n1.n2.n3.plVal );
 #elif defined( HB_OLE_NO_LLREF )
          /* workaround for wrong OLE variant structure definition */
@@ -755,7 +755,7 @@ void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
 
       case VT_UI8:
          /* TODO: sign is lost. Convertion to double will lose significant digits. */
-#if HB_LONG_MAX == INT32_MAX || defined( HB_LONG_LONG_OFF )
+#if HB_VMLONG_MAX == INT32_MAX || defined( HB_LONG_LONG_OFF )
          hb_itemPutNInt( pItem, ( HB_MAXINT ) pVariant->n1.n2.n3.ulVal );
 #elif defined( HB_OLE_NO_LL )
          /* workaround for wrong OLE variant structure definition */
@@ -767,7 +767,7 @@ void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
 
       case VT_UI8 | VT_BYREF:
          /* TODO: sign is lost. Convertion to double will lose significant digits. */
-#if HB_LONG_MAX == INT32_MAX || defined( HB_LONG_LONG_OFF )
+#if HB_VMLONG_MAX == INT32_MAX || defined( HB_LONG_LONG_OFF )
          hb_itemPutNInt( pItem, ( HB_MAXINT ) *pVariant->n1.n2.n3.pulVal );
 #elif defined( HB_OLE_NO_LLREF )
          /* workaround for wrong OLE variant structure definition */
@@ -994,7 +994,7 @@ void hb_oleVariantUpdate( VARIANT* pVariant, PHB_ITEM pItem,
          break;
 
       case VT_I8 | VT_BYREF:
-#if HB_LONG_MAX == INT32_MAX || defined( HB_LONG_LONG_OFF )
+#if HB_VMLONG_MAX == INT32_MAX || defined( HB_LONG_LONG_OFF )
          *pVariant->n1.n2.n3.plVal = ( long ) hb_itemGetNInt( pItem );
 #elif defined( HB_OLE_NO_LLREF )
          /* workaround for wrong OLE variant structure definition */
@@ -1017,7 +1017,7 @@ void hb_oleVariantUpdate( VARIANT* pVariant, PHB_ITEM pItem,
          break;
 
       case VT_UI8 | VT_BYREF:
-#if HB_LONG_MAX == INT32_MAX || defined( HB_LONG_LONG_OFF )
+#if HB_VMLONG_MAX == INT32_MAX || defined( HB_LONG_LONG_OFF )
          *pVariant->n1.n2.n3.pulVal = ( unsigned long ) hb_itemGetNInt( pItem );
 #elif defined( HB_OLE_NO_LLREF )
          /* workaround for wrong OLE variant structure definition */

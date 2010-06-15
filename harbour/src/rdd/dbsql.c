@@ -363,7 +363,7 @@ HB_FUNC( __DBSQL )
       const char * szSep      = hb_parcx( 13 );
       const char * szDelim    = hb_parcx( 14 );
       const char * szEsc      = hb_parcx( 15 );
-      HB_MAXINT llNext        = HB_LONG_MAX;
+      HB_MAXINT llNext        = HB_VMLONG_MAX;
       HB_FHANDLE hFile;
       HB_ERRCODE errCode;
 

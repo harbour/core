@@ -477,28 +477,28 @@ typedef HB_UCHAR            HB_BYTE;
 #endif
 
 #if defined( HB_CLIPPER_INT_ITEMS )
-#  define HB_INT_MAX             SHRT_MAX
-#  define HB_INT_MIN             SHRT_MIN
-#  define HB_LONG_MAX            LONG_MAX
-#  define HB_LONG_MIN            LONG_MIN
-#  define HB_ULONG_MAX           ULONG_MAX
+#  define HB_VMINT_MAX           SHRT_MAX
+#  define HB_VMINT_MIN           SHRT_MIN
+#  define HB_VMLONG_MAX          LONG_MAX
+#  define HB_VMLONG_MIN          LONG_MIN
+#  define HB_VMULONG_MAX         ULONG_MAX
    typedef long                  HB_MAXINT;
    typedef unsigned long         HB_MAXUINT;
 #  define PFHL                   "l"
 #elif !defined( HB_LONG_LONG_OFF ) && ULONG_MAX == UINT_MAX
-#  define HB_INT_MAX             INT_MAX
-#  define HB_INT_MIN             INT_MIN
-#  define HB_LONG_MAX            LONGLONG_MAX
-#  define HB_LONG_MIN            LONGLONG_MIN
-#  define HB_ULONG_MAX           ULONGLONG_MAX
+#  define HB_VMINT_MAX           INT_MAX
+#  define HB_VMINT_MIN           INT_MIN
+#  define HB_VMLONG_MAX          LONGLONG_MAX
+#  define HB_VMLONG_MIN          LONGLONG_MIN
+#  define HB_VMULONG_MAX         ULONGLONG_MAX
    typedef HB_LONGLONG           HB_MAXINT;
    typedef HB_ULONGLONG          HB_MAXUINT;
 #else
-#  define HB_INT_MAX             INT_MAX
-#  define HB_INT_MIN             INT_MIN
-#  define HB_LONG_MAX            LONG_MAX
-#  define HB_LONG_MIN            LONG_MIN
-#  define HB_ULONG_MAX           ULONG_MAX
+#  define HB_VMINT_MAX           INT_MAX
+#  define HB_VMINT_MIN           INT_MIN
+#  define HB_VMLONG_MAX          LONG_MAX
+#  define HB_VMLONG_MIN          LONG_MIN
+#  define HB_VMULONG_MAX         ULONG_MAX
    typedef long                  HB_MAXINT;
    typedef unsigned long         HB_MAXUINT;
 #  define PFHL                   "l"
@@ -507,10 +507,10 @@ typedef HB_UCHAR            HB_BYTE;
 typedef HB_MAXINT    HB_VMMAXINT;
 typedef HB_MAXUINT   HB_VMMAXUINT;
 
-#define HB_DBL_LIM_INT(d)     ( HB_INT_MIN <= (d) && (d) <= HB_INT_MAX )
-#define HB_DBL_LIM_LONG(d)    ( (HB_MAXDBL) HB_LONG_MIN <= (HB_MAXDBL) (d) && (HB_MAXDBL) (d) <= (HB_MAXDBL) HB_LONG_MAX )
-#define HB_LIM_INT(l)         ( HB_INT_MIN <= (l) && (l) <= HB_INT_MAX )
-#define HB_LIM_LONG(l)        ( HB_LONG_MIN <= (l) && (l) <= HB_LONG_MAX )
+#define HB_DBL_LIM_INT(d)     ( HB_VMINT_MIN <= (d) && (d) <= HB_VMINT_MAX )
+#define HB_DBL_LIM_LONG(d)    ( (HB_MAXDBL) HB_VMLONG_MIN <= (HB_MAXDBL) (d) && (HB_MAXDBL) (d) <= (HB_MAXDBL) HB_VMLONG_MAX )
+#define HB_LIM_INT(l)         ( HB_VMINT_MIN <= (l) && (l) <= HB_VMINT_MAX )
+#define HB_LIM_LONG(l)        ( HB_VMLONG_MIN <= (l) && (l) <= HB_VMLONG_MAX )
 
 #define HB_DBL_LIM_INT8(d)    ( -128 <= (d) && (d) <= 127 )
 #define HB_DBL_LIM_INT16(d)   ( INT16_MIN <= (d) && (d) <= INT16_MAX )
@@ -559,21 +559,21 @@ typedef HB_MAXUINT   HB_VMMAXUINT;
  *       intentionally replicated. I think we should keep it
  *       only in strict compatibility mode. [druzus]
  */
-#if HB_INT_MIN < -999999999
+#if HB_VMINT_MIN < -999999999
 #  define HB_INT_LENGTH( i )        ( ( (i) < -999999999 || (i) > 999999999 ) ? 20 : 10 )
 #else
 #  define HB_INT_LENGTH( i )        10
 #  define HB_INT_EXPLENGTH( i )     10
-#  if HB_LONG_MIN < -999999999
+#  if HB_VMLONG_MIN < -999999999
 #     define HB_LONG_LENGTH( i )    ( ( (i) < -999999999 || (i) > 999999999 ) ? 20 : 10 )
 #  endif
 #endif
 
 #if !defined( HB_LONG_LONG_OFF )
-#  if HB_LONG_MAX > HB_LL( 9999999999 )
+#  if HB_VMLONG_MAX > HB_LL( 9999999999 )
 #     define HB_LONG_LENGTH( l )    ( ( (l) < -999999999 || (l) > HB_LL( 9999999999 ) ) ? 20 : 10 )
 #  endif
-#  if HB_INT_MAX > HB_LL( 9999999999 )
+#  if HB_VMINT_MAX > HB_LL( 9999999999 )
 #     define HB_INT_EXPLENGTH( i )  HB_LONG_LENGTH( i )
 #  endif
 #endif
