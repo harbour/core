@@ -589,7 +589,6 @@ METHOD IdeDocks:buildViewWidget( cObjectName )
       ::connect( qTBtnClose, "clicked()", {|| ::oSM:closeSource() } )
       oFrame:oTabWidget:qCornerWidget := qTBtnClose
       oFrame:oTabWidget:oWidget:setCornerWidget( qTBtnClose, Qt_TopRightCorner )
-      oFrame:oTabWidget:oWidget:setStyleSheet( GetStyleSheet( "QTabWidget", ::nAnimantionMode ) )
    ENDIF
 
    oFrame:oTabWidget:oWidget:setUsesScrollButtons( .t. )
@@ -1286,7 +1285,7 @@ METHOD IdeDocks:animateComponents( nMode )
    ::oFindDock:oWidget:setStyleSheet( cStyle )
    ::oDockB2:oWidget:setStyleSheet( cStyle )
 
-   #if 0
+   #if 1
    // should be iteration
    ::qTabWidget:setStyleSheet( GetStyleSheet( "QTabWidget", nMode ) )
    #endif

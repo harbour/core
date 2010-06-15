@@ -97,7 +97,7 @@
         <property name="geometry">
          <rect>
           <x>8</x>
-          <y>42</y>
+          <y>108</y>
           <width>99</width>
           <height>19</height>
          </rect>
@@ -110,7 +110,7 @@
         <property name="geometry">
          <rect>
           <x>8</x>
-          <y>64</y>
+          <y>86</y>
           <width>99</width>
           <height>19</height>
          </rect>
@@ -136,7 +136,7 @@
         <property name="geometry">
          <rect>
           <x>8</x>
-          <y>86</y>
+          <y>42</y>
           <width>82</width>
           <height>19</height>
          </rect>
@@ -149,7 +149,7 @@
         <property name="geometry">
          <rect>
           <x>8</x>
-          <y>110</y>
+          <y>64</y>
           <width>82</width>
           <height>19</height>
          </rect>
@@ -261,7 +261,7 @@
        <property name="geometry">
         <rect>
          <x>14</x>
-         <y>42</y>
+         <y>36</y>
          <width>301</width>
          <height>19</height>
         </rect>
@@ -274,7 +274,7 @@
        <property name="geometry">
         <rect>
          <x>14</x>
-         <y>66</y>
+         <y>56</y>
          <width>301</width>
          <height>19</height>
         </rect>
@@ -287,7 +287,7 @@
        <property name="geometry">
         <rect>
          <x>14</x>
-         <y>92</y>
+         <y>96</y>
          <width>301</width>
          <height>19</height>
         </rect>
@@ -296,13 +296,26 @@
         <string>Convert tabs to spaces when a source is loaded ?</string>
        </property>
       </widget>
+      <widget class="QCheckBox" name="checkBox_9">
+       <property name="geometry">
+        <rect>
+         <x>14</x>
+         <y>76</y>
+         <width>301</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Keyword RETURN be treated as AT-BEGINGING type ?</string>
+       </property>
+      </widget>
      </widget>
      <widget class="QGroupBox" name="groupBox_14">
       <property name="geometry">
        <rect>
         <x>10</x>
         <y>272</y>
-        <width>157</width>
+        <width>331</width>
         <height>83</height>
        </rect>
       </property>
@@ -346,6 +359,19 @@
        </property>
        <property name="text">
         <string>Highlight current line</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox_12">
+       <property name="geometry">
+        <rect>
+         <x>184</x>
+         <y>16</y>
+         <width>133</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Animated Display</string>
        </property>
       </widget>
      </widget>
