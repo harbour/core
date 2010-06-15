@@ -77,7 +77,7 @@ cleanup()
    [ -z "${OTMPDIR}" ] || rm -fR "${OTMPDIR}"
 }
 
-trap cleanup EXIT &>/dev/null
+trap cleanup EXIT >/dev/null 2>&1
 
 if [ "${SLIB_EXT}" != ".dylib" ]; then
 

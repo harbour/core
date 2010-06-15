@@ -12,7 +12,7 @@
 
 test_reqrpm()
 {
-   rpm -q --whatprovides "$1" &> /dev/null
+   rpm -q --whatprovides "$1" >/dev/null 2>&1
 }
 
 get_rpmmacro()
@@ -91,7 +91,7 @@ then
       sed -e "s/^%define version .*$/%define version   ${hb_ver}/g" \
           -e "s/^%define releasen .*$/%define releasen  ${hb_verstat}/g" \
          harbour-wce-spec > ${RPMDIR}/SPECS/harbour-wce.spec
-      if which rpmbuild &>/dev/null
+      if which rpmbuild >/dev/null 2>&1
       then
          RPMBLD="rpmbuild"
       else

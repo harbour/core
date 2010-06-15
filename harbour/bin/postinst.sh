@@ -300,7 +300,7 @@ then
       chmod 755 "${hb_mkdyn}"
    elif [ "${HB_PLATFORM}" = "sunos" ] || \
         [ "${HB_PLATFORM}" = "hpux" ] || \
-        ! which install &>/dev/null; then
+        ! which install >/dev/null 2>&1; then
       hb_mkdyn="${HB_INST_PKGPREF}${HB_BIN_INSTALL}/hb-mkdyn"
       rm -f "${hb_mkdyn}"
       cp "${hb_root}/bin/hb-mkdyn.sh" "${hb_mkdyn}" && \

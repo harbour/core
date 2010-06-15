@@ -12,7 +12,7 @@
 
 test_reqpkg()
 {
-   dpkg -l "$1" 2> /dev/null | grep '^ii' &> /dev/null
+   dpkg -l "$1" 2>/dev/null | grep '^ii' >/dev/null 2>&1
    status="$?"
    if [ -n "$2" ] && [ $status -eq 0 ]
    then

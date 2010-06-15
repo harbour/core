@@ -18,7 +18,7 @@ export PROJECT=harbour
 
 test_reqrpm()
 {
-   rpm -q --whatprovides "$1" &> /dev/null
+   rpm -q --whatprovides "$1" >/dev/null 2>&1
 }
 
 TOINST_LST=""

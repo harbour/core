@@ -1451,7 +1451,7 @@ HB_FUNC( CURL_EASY_SETOPT )
             {
                hb_curl_file_ul_free( hb_curl );
 
-               if( HB_ISNUMBER( 3 ) )
+               if( HB_ISNUM( 3 ) )
                {
                   hb_curl->ul_name = NULL;
                   hb_curl->ul_handle = hb_numToHandle( hb_parnint( 3 ) );
@@ -1486,7 +1486,7 @@ HB_FUNC( CURL_EASY_SETOPT )
             {
                hb_curl_file_dl_free( hb_curl );
 
-               if( HB_ISNUMBER( 3 ) )
+               if( HB_ISNUM( 3 ) )
                {
                   hb_curl->dl_name = NULL;
                   hb_curl->dl_handle = hb_numToHandle( hb_parnint( 3 ) );

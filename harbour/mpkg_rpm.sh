@@ -12,7 +12,7 @@
 
 test_reqrpm()
 {
-   rpm -q --whatprovides "$1" &> /dev/null
+   rpm -q --whatprovides "$1" >/dev/null 2>&1
 }
 
 get_rpmmacro()
@@ -187,7 +187,7 @@ then
          cp ${hb_filename} ${RPMDIR}/SOURCES
          cp harbour.spec ${RPMDIR}/SPECS
       fi
-      if which rpmbuild &>/dev/null
+      if which rpmbuild >/dev/null 2>&1
       then
          RPMBLD="rpmbuild"
       else

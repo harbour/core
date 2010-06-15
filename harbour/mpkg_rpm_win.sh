@@ -12,7 +12,7 @@
 
 test_reqrpm()
 {
-   rpm -q --whatprovides "$1" &> /dev/null
+   rpm -q --whatprovides "$1" >/dev/null 2>&1
 }
 
 get_rpmmacro()
@@ -115,7 +115,7 @@ then
           -e "s|^%define hb_ccpath .*$|%define hb_ccpath ${HB_CCPATH}|g" \
           -e "s|^%define hb_ccpref .*$|%define hb_ccpref ${HB_CCPREFIX}|g" \
          harbour-win-spec > ${RPMDIR}/SPECS/harbour-win.spec
-      if which rpmbuild &>/dev/null
+      if which rpmbuild >/dev/null 2>&1
       then
          RPMBLD="rpmbuild"
       else
