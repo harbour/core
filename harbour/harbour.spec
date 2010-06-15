@@ -52,7 +52,6 @@
 %define dname     Harbour
 %define version   2.1.0
 %define releasen  beta1
-%define hb_pref   hb
 %define hb_etcdir /etc/%{name}
 %define hb_plat   export HB_PLATFORM=linux
 %define hb_cc     export HB_COMPILER=gcc
@@ -435,25 +434,11 @@ rm -f $HB_INST_PKGPREF$HB_BIN_INSTALL/hbtest
 # Create a README file for people using this RPM.
 cat > doc/%{readme} <<EOF
 This RPM distribution of %{dname} includes extra commands to make compiling
-and linking with %{dname} a little easier. There are compiler and linker
-wrappers called "%{hb_pref}cc", "%{hb_pref}cmp", "%{hb_pref}lnk" and "%{hb_pref}mk".
+and linking with %{dname} a little easier. It includes hbmk2 to build
+projects easily.
 
-"%{hb_pref}cc" is a wrapper to the C compiler only. It sets all flags
-and paths necessary to compile .c files which include %{dname} header
-files. The result of its work is an object file.
-
-Use "%{hb_pref}cmp" exactly as you would use the harbour compiler itself.
-The main difference with %{hb_pref}cmp is that it results in an object file,
-not a C file that needs compiling down to an object. %{hb_pref}cmp also
-ensures that the harbour include directory is seen by the harbour compiler.
-
-"%{hb_pref}lnk" simply takes a list of object files and links them together
-with the harbour virtual machine and run-time library to produce an
-executable. The executable will be given the basename of the first object
-file if not directly set by the "-o" command line switch.
-
-"%{hb_pref}mk" tries to produce an executable from your .prg file. It's a simple
-equivalent of cl.bat from the CA-Cl*pper distribution.
+hbmk2 tries to produce an executable from your .prg file. It's similar
+to cl.bat from the CA-Cl*pper distribution.
 
 All these scripts accept command line switches:
 -o<outputfilename>      # output file name
@@ -474,10 +459,6 @@ All these scripts accept command line switches:
                         # exist the name of first public function/procedure
                         # in first linked object module (link)
 
-Link options work only with "%{hb_pref}lnk" and "%{hb_pref}mk" and have no effect
-in "%{hb_pref}cc" and "%{hb_pref}cmp".
-Other options are passed to %{dname}/C compiler/linker.
-
 An example compile/link session looks like:
 ----------------------------------------------------------------------
 druzus@uran:~/tmp$ cat foo.prg
@@ -485,31 +466,9 @@ function main()
 ? "Hello, World!"
 return nil
 
-druzus@uran:~/tmp$ %{hb_pref}cmp foo
-Harbour 1.0.0 Intl. (Rev. 9099)
-Copyright (c) 1999-2008, http://harbour-project.org/
-Compiling 'foo.prg'...
-Lines 5, Functions/Procedures 2
-Generating C source output to 'foo.c'... Done.
-
-druzus@uran:~/tmp$ %{hb_pref}lnk foo.o
-
-druzus@uran:~/tmp$ strip foo
-
-druzus@uran:~/tmp$ ls -l foo
--rwxrwxr-x    1 druzus   druzus       3824 maj 17 02:46 foo
-----------------------------------------------------------------------
-
-or using %{hb_pref}mk only:
-----------------------------------------------------------------------
-druzus@uran:~/tmp$ cat foo.prg
-function main()
-? "Hello, World!"
-return nil
-
-druzus@uran:~/tmp$ %{hb_pref}mk foo
-Harbour 1.0.0 Intl. (Rev. 9099)
-Copyright (c) 1999-2008, http://harbour-project.org/
+druzus@uran:~/tmp$ hbmk2 foo
+Harbour 2.1.0beta1 (Rev. 14701)
+Copyright (c) 1999-2010, http://harbour-project.org/
 Compiling 'foo.prg'...
 Lines 5, Functions/Procedures 2
 Generating C source output to 'foo.c'... Done.
@@ -517,7 +476,6 @@ Generating C source output to 'foo.c'... Done.
 druzus@uran:~/tmp$ ls -l foo
 -rwxrwxr-x    1 druzus   druzus       3824 maj 17 02:46 foo
 ----------------------------------------------------------------------
-
 
 In this RPM you will find additional wonderful tools: /usr/bin/hbrun
 You can run clipper/xbase compatible source files with it if you only
@@ -581,11 +539,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/harbour
 %{_bindir}/hbpp
 %{_bindir}/hb-mkdyn
-%{_bindir}/%{hb_pref}-build
-%{_bindir}/%{hb_pref}cc
-%{_bindir}/%{hb_pref}cmp
-%{_bindir}/%{hb_pref}lnk
-%{_bindir}/%{hb_pref}mk
 #%{_bindir}/hbtest
 %{_bindir}/hbrun
 %{_bindir}/hbi18n
@@ -748,7 +701,7 @@ rm -rf $RPM_BUILD_ROOT
 - 0.82 version set
 
 * Wed Apr 30 2003 Przemyslaw Czerpak <druzus@polbox.com>
-- new tool "%{hb_pref}-build" (%{hb_pref}cmp, %{hb_pref}lnk, %{hb_pref}mk) added -
+- new tool "hb-build" (hbcmp, hblnk, hbmk) added -
   compiler/linker wrapper.
 - new tool "hb-mkdyn" (build shared libraries from static ones and object
   files).

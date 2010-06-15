@@ -122,23 +122,37 @@ FUNCTION ISWORKING( nPort )
    RETURN nPort $ s_hPort
 
 /* NOTE: INCOMPATIBILITY.
-         In contratry to original HBCOMM, here <cString> must be passed by reference.
+         In contratry to original HBCOMM, here <cData> must be passed by reference.
          HBCOMM could corrupt HVM because of its buggy way of returning data.
          [vszakats] */
-/* Fetch <nCount> chars into <cString> */
-FUNCTION INCHR( nPort, nCount, /* @ */ cString )
-   cString := iif( ISNUMBER( nCount ), Space( nCount ), "" )
-   RETURN hb_comRecv( nPort, @cString, nCount )
+/* Fetch <nCount> chars into <cData> */
+FUNCTION INCHR( nPort, nCount, /* @ */ cData )
+   cData := iif( ISNUMBER( nCount ), Space( nCount ), "" )
+   RETURN hb_comRecv( nPort, @cData, nCount )
 
-/* Send out characters. Returns .t. if successful. */
-FUNCTION OUTCHR( nPort, cString )
-   RETURN hb_comSend( nPort, cString ) == Len( cString )
+/* Send out characters. Returns .T. if successful. */
+FUNCTION OUTCHR( nPort, cData )
+   LOCAL nLen
+
+   DO WHILE Len( cData ) > 0
+
+      /* I expect at least some data to be sent in a second */
+      nLen := hb_comSend( nPort, cData,, 1000 )
+
+      IF nLen <= 0
+         RETURN .F.
+      ENDIF
+
+      cData := SubStr( cData, nLen + 1 )
+   ENDDO
+
+   RETURN .T.
 
 /* Find out how many chars are in input buffer */
 FUNCTION INBUFSIZE( nPort )
    RETURN hb_comInputCount( nPort )
 
-/* Find out how many characters are in out buf? */
+/* Find out how many characters are in output buffer */
 FUNCTION OUTBUFSIZE( nPort )
    RETURN hb_comOutputCount( nPort )
 
