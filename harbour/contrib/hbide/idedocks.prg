@@ -589,6 +589,7 @@ METHOD IdeDocks:buildViewWidget( cObjectName )
       ::connect( qTBtnClose, "clicked()", {|| ::oSM:closeSource() } )
       oFrame:oTabWidget:qCornerWidget := qTBtnClose
       oFrame:oTabWidget:oWidget:setCornerWidget( qTBtnClose, Qt_TopRightCorner )
+      oFrame:oTabWidget:oWidget:setStyleSheet( GetStyleSheet( "QTabWidget", ::nAnimantionMode ) )
    ENDIF
 
    oFrame:oTabWidget:oWidget:setUsesScrollButtons( .t. )
@@ -1029,6 +1030,7 @@ METHOD IdeDocks:buildStatusBar()
    ::oIde:oSBar := XbpStatusBar():new()
    ::oSBar:create( ::oDlg, , { 0,0 }, { ::oDlg:currentSize()[ 1 ], 30 } )
    ::oSBar:oWidget:showMessage( "" )
+   ::oSBar:oWidget:setStyleSheet( GetStyleSheet( "QStatusBar", ::nAnimantionMode ) )
 
    ::oSBar:getItem( SB_PNL_MAIN ):autosize := XBPSTATUSBAR_AUTOSIZE_SPRING
 
@@ -1264,6 +1266,8 @@ METHOD IdeDocks:animateComponents( nMode )
    ::qTBarDocks:setStyleSheet( GetStyleSheet( "QToolBarLR5", nMode ) )
 
    ::oMainToolbar:setStyleSheet( GetStyleSheet( "QToolBar", nMode ) )
+   ::oSBar:oWidget:setStyleSheet( GetStyleSheet( "QStatusBar", nMode ) )
+
 
    cStyle := GetStyleSheet( "QDockWidget", nMode )
 
