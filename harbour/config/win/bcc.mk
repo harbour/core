@@ -58,7 +58,6 @@ endif
 
 RC := brcc32.exe
 RC_OUT := -fo
-RCFLAGS :=
 
 LD := ilink32.exe
 LIBPATHS := $(subst /,$(BACKSLASH),-L"$(LIB_DIR)")

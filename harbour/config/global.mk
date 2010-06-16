@@ -1248,6 +1248,7 @@ HB_CFLAGS_STA :=
 HB_CFLAGS_DYN :=
 
 CFLAGS :=
+RCFLAGS :=
 ARFLAGS :=
 LDFLAGS :=
 DFLAGS :=
@@ -1322,6 +1323,9 @@ ifneq ($(HB_HOST_PLAT)$(HB_HOST_CPU),$(HB_PLATFORM)$(HB_CPU))
       else
       ifeq ($(HB_PLATFORM),beos)
          HB_PRGFLAGS += -D__PLATFORM__BEOS -D__PLATFORM__UNIX
+      endif
+      ifeq ($(HB_PLATFORM),qnx)
+         HB_PRGFLAGS += -D__PLATFORM__QNX -D__PLATFORM__UNIX
       endif
       endif
       endif

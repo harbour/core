@@ -59,7 +59,7 @@ endif
 
 RC := wrc
 RC_OUT := -fo=
-RCFLAGS := -q -r -zm -bt=os2
+RCFLAGS += -q -r -zm -bt=os2
 
 LD := wlink
 ifeq ($(HB_BUILD_DEBUG),yes)

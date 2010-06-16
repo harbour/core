@@ -41,7 +41,6 @@ endif
 
 RC := xRC.exe
 RC_OUT := -fo$(subst x,x, )
-RCFLAGS :=
 
 LD := xLink.exe
 LD_OUT := -out:
