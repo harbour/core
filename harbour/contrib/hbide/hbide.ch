@@ -114,9 +114,11 @@
 #define LineNumbersDisplayMode                    26
 #define HorzRulerDisplayMode                      27
 #define ToolsDialogGeometry                       28
+#define IdeTheme                                  29
+#define IdeAnimated                               30
 
 
-#define INI_HBIDE_VRBLS                           28
+#define INI_HBIDE_VRBLS                           30
 
 /* .hbi structure constants */
 #define PRJ_PRP_PROPERTIES                        1

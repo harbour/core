@@ -43,7 +43,7 @@
    <property name="currentIndex">
     <number>0</number>
    </property>
-   <widget class="QWidget" name="page">
+   <widget class="QWidget" name="pageGeneral">
     <widget class="QGroupBox" name="groupBox">
      <property name="geometry">
       <rect>
@@ -68,7 +68,7 @@
       <property name="title">
        <string> Source </string>
       </property>
-      <widget class="QCheckBox" name="checkBox">
+      <widget class="QCheckBox" name="checkTrimLines">
        <property name="geometry">
         <rect>
          <x>14</x>
@@ -93,7 +93,7 @@
        <property name="title">
         <string> Line ending mode </string>
        </property>
-       <widget class="QRadioButton" name="radioButton_5">
+       <widget class="QRadioButton" name="radioLineEndAuto">
         <property name="geometry">
          <rect>
           <x>8</x>
@@ -106,7 +106,7 @@
          <string>Auto detected</string>
         </property>
        </widget>
-       <widget class="QRadioButton" name="radioButton_6">
+       <widget class="QRadioButton" name="radioLineEndOS">
         <property name="geometry">
          <rect>
           <x>8</x>
@@ -119,7 +119,7 @@
          <string>OS dependent</string>
         </property>
        </widget>
-       <widget class="QRadioButton" name="radioButton_7">
+       <widget class="QRadioButton" name="radioLineEndCRLF">
         <property name="geometry">
          <rect>
           <x>8</x>
@@ -132,7 +132,7 @@
          <string>CRLF (0D+0A) default</string>
         </property>
        </widget>
-       <widget class="QRadioButton" name="radioButton_8">
+       <widget class="QRadioButton" name="radioLineEndCR">
         <property name="geometry">
          <rect>
           <x>8</x>
@@ -145,7 +145,7 @@
          <string>CR (0D)</string>
         </property>
        </widget>
-       <widget class="QRadioButton" name="radioButton_9">
+       <widget class="QRadioButton" name="radioLineEndLF">
         <property name="geometry">
          <rect>
           <x>8</x>
@@ -171,7 +171,7 @@
        <property name="title">
         <string> TABS - Indents</string>
        </property>
-       <widget class="QCheckBox" name="checkBox_2">
+       <widget class="QCheckBox" name="checkTab2Spc">
         <property name="geometry">
          <rect>
           <x>8</x>
@@ -197,7 +197,7 @@
          <string>Spaces for a TAB</string>
         </property>
        </widget>
-       <widget class="QLineEdit" name="lineEdit">
+       <widget class="QLineEdit" name="editSpcPerTab">
         <property name="geometry">
          <rect>
           <x>98</x>
@@ -207,7 +207,7 @@
          </rect>
         </property>
        </widget>
-       <widget class="QCheckBox" name="checkBox_11">
+       <widget class="QCheckBox" name="checkAutoIndent">
         <property name="geometry">
          <rect>
           <x>8</x>
@@ -220,7 +220,7 @@
          <string>Auto indent</string>
         </property>
        </widget>
-       <widget class="QCheckBox" name="checkBox_6">
+       <widget class="QCheckBox" name="checkSmartIndent">
         <property name="geometry">
          <rect>
           <x>8</x>
@@ -246,7 +246,7 @@
          <string>Indent size</string>
         </property>
        </widget>
-       <widget class="QLineEdit" name="lineEdit_2">
+       <widget class="QLineEdit" name="editIndentSize">
         <property name="geometry">
          <rect>
           <x>98</x>
@@ -257,7 +257,7 @@
         </property>
        </widget>
       </widget>
-      <widget class="QCheckBox" name="checkBox_10">
+      <widget class="QCheckBox" name="checkSaveSrcOnComp">
        <property name="geometry">
         <rect>
          <x>14</x>
@@ -270,7 +270,7 @@
         <string>Save source before compiling process starts ?</string>
        </property>
       </widget>
-      <widget class="QCheckBox" name="checkBox_7">
+      <widget class="QCheckBox" name="checkNoHBKeysCaseConv">
        <property name="geometry">
         <rect>
          <x>14</x>
@@ -283,7 +283,7 @@
         <string>Supress convertion to uppcase of Harbour keywords ?</string>
        </property>
       </widget>
-      <widget class="QCheckBox" name="checkBox_8">
+      <widget class="QCheckBox" name="checkConvTabsOnLoad">
        <property name="geometry">
         <rect>
          <x>14</x>
@@ -296,7 +296,7 @@
         <string>Convert tabs to spaces when a source is loaded ?</string>
        </property>
       </widget>
-      <widget class="QCheckBox" name="checkBox_9">
+      <widget class="QCheckBox" name="checkReturnAtBegin">
        <property name="geometry">
         <rect>
          <x>14</x>
@@ -322,7 +322,7 @@
       <property name="title">
        <string> Display </string>
       </property>
-      <widget class="QCheckBox" name="checkBox_3">
+      <widget class="QCheckBox" name="checkHorzRuler">
        <property name="geometry">
         <rect>
          <x>12</x>
@@ -335,7 +335,7 @@
         <string>Show horizontal ruler</string>
        </property>
       </widget>
-      <widget class="QCheckBox" name="checkBox_4">
+      <widget class="QCheckBox" name="checkLineNumbers">
        <property name="geometry">
         <rect>
          <x>12</x>
@@ -348,7 +348,7 @@
         <string>Show line numbers</string>
        </property>
       </widget>
-      <widget class="QCheckBox" name="checkBox_5">
+      <widget class="QCheckBox" name="checkHilightLine">
        <property name="geometry">
         <rect>
          <x>12</x>
@@ -361,23 +361,46 @@
         <string>Highlight current line</string>
        </property>
       </widget>
-      <widget class="QCheckBox" name="checkBox_12">
+      <widget class="QCheckBox" name="checkAnimated">
        <property name="geometry">
         <rect>
-         <x>184</x>
-         <y>16</y>
+         <x>182</x>
+         <y>58</y>
          <width>133</width>
          <height>19</height>
         </rect>
        </property>
        <property name="text">
-        <string>Animated Display</string>
+        <string>Animated ?</string>
+       </property>
+      </widget>
+      <widget class="QComboBox" name="comboStyle">
+       <property name="geometry">
+        <rect>
+         <x>182</x>
+         <y>28</y>
+         <width>135</width>
+         <height>22</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_6">
+       <property name="geometry">
+        <rect>
+         <x>184</x>
+         <y>12</y>
+         <width>46</width>
+         <height>14</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Style:</string>
        </property>
       </widget>
      </widget>
     </widget>
    </widget>
-   <widget class="QWidget" name="page_2">
+   <widget class="QWidget" name="pageSelections">
     <widget class="QGroupBox" name="groupBox_2">
      <property name="geometry">
       <rect>
@@ -555,7 +578,7 @@
      </widget>
     </widget>
    </widget>
-   <widget class="QWidget" name="page_3">
+   <widget class="QWidget" name="pageFontEtc">
     <widget class="QGroupBox" name="groupBox_3">
      <property name="geometry">
       <rect>
@@ -568,9 +591,81 @@
      <property name="title">
       <string/>
      </property>
+     <widget class="QGroupBox" name="groupBox_15">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>4</y>
+        <width>331</width>
+        <height>81</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string> Font </string>
+      </property>
+      <widget class="QLabel" name="label_7">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>18</y>
+         <width>41</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Name:</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="editFontName">
+       <property name="geometry">
+        <rect>
+         <x>52</x>
+         <y>16</y>
+         <width>195</width>
+         <height>20</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_8">
+       <property name="geometry">
+        <rect>
+         <x>130</x>
+         <y>52</y>
+         <width>57</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>PointSize:</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="editPointSize">
+       <property name="geometry">
+        <rect>
+         <x>190</x>
+         <y>52</y>
+         <width>57</width>
+         <height>20</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QToolButton" name="buttonSelFont">
+       <property name="geometry">
+        <rect>
+         <x>274</x>
+         <y>16</y>
+         <width>25</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>...</string>
+       </property>
+      </widget>
+     </widget>
     </widget>
    </widget>
-   <widget class="QWidget" name="page_4">
+   <widget class="QWidget" name="pagePaths">
     <widget class="QGroupBox" name="groupBox_4">
      <property name="geometry">
       <rect>
@@ -581,11 +676,227 @@
       </rect>
      </property>
      <property name="title">
-      <string/>
+      <string> Paths </string>
      </property>
+     <widget class="QLabel" name="label_9">
+      <property name="geometry">
+       <rect>
+        <x>14</x>
+        <y>72</y>
+        <width>89</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>hbMK2.exe</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="editPathHbmk2">
+      <property name="geometry">
+       <rect>
+        <x>14</x>
+        <y>88</y>
+        <width>259</width>
+        <height>20</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_10">
+      <property name="geometry">
+       <rect>
+        <x>14</x>
+        <y>122</y>
+        <width>139</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Snippets ( hbide.skl )</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="editPathSnippets">
+      <property name="geometry">
+       <rect>
+        <x>14</x>
+        <y>140</y>
+        <width>259</width>
+        <height>20</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_11">
+      <property name="geometry">
+       <rect>
+        <x>14</x>
+        <y>176</y>
+        <width>197</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Environments ( hbide.env )</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="editPathEnv">
+      <property name="geometry">
+       <rect>
+        <x>14</x>
+        <y>194</y>
+        <width>261</width>
+        <height>20</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_12">
+      <property name="geometry">
+       <rect>
+        <x>14</x>
+        <y>18</y>
+        <width>99</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>hbIDE.ini</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="editPathIni">
+      <property name="geometry">
+       <rect>
+        <x>14</x>
+        <y>34</y>
+        <width>259</width>
+        <height>20</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_13">
+      <property name="geometry">
+       <rect>
+        <x>14</x>
+        <y>232</y>
+        <width>143</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Shortcuts ( hbide.scu )</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="editPathShortcuts">
+      <property name="geometry">
+       <rect>
+        <x>14</x>
+        <y>250</y>
+        <width>261</width>
+        <height>20</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_14">
+      <property name="geometry">
+       <rect>
+        <x>14</x>
+        <y>290</y>
+        <width>183</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Syntax Themes ( hbide.thm )</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="editPathThemes">
+      <property name="geometry">
+       <rect>
+        <x>14</x>
+        <y>308</y>
+        <width>261</width>
+        <height>20</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QToolButton" name="buttonPathIni">
+      <property name="geometry">
+       <rect>
+        <x>308</x>
+        <y>34</y>
+        <width>25</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>...</string>
+      </property>
+     </widget>
+     <widget class="QToolButton" name="buttonPathHbmk2">
+      <property name="geometry">
+       <rect>
+        <x>308</x>
+        <y>88</y>
+        <width>25</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>...</string>
+      </property>
+     </widget>
+     <widget class="QToolButton" name="buttonPathSnippets">
+      <property name="geometry">
+       <rect>
+        <x>308</x>
+        <y>140</y>
+        <width>25</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>...</string>
+      </property>
+     </widget>
+     <widget class="QToolButton" name="buttonPathEnv">
+      <property name="geometry">
+       <rect>
+        <x>308</x>
+        <y>194</y>
+        <width>25</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>...</string>
+      </property>
+     </widget>
+     <widget class="QToolButton" name="buttonPathShortcuts">
+      <property name="geometry">
+       <rect>
+        <x>308</x>
+        <y>250</y>
+        <width>25</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>...</string>
+      </property>
+     </widget>
+     <widget class="QToolButton" name="buttonPathThemes">
+      <property name="geometry">
+       <rect>
+        <x>308</x>
+        <y>308</y>
+        <width>25</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>...</string>
+      </property>
+     </widget>
     </widget>
    </widget>
-   <widget class="QWidget" name="page_5">
+   <widget class="QWidget" name="pageVariables">
     <widget class="QGroupBox" name="groupBox_5">
      <property name="geometry">
       <rect>
@@ -662,19 +973,413 @@
      </widget>
     </widget>
    </widget>
-   <widget class="QWidget" name="page_6">
+   <widget class="QWidget" name="pageDictionaries">
     <widget class="QGroupBox" name="groupBox_10">
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>2</y>
+       <y>-2</y>
        <width>351</width>
-       <height>365</height>
+       <height>369</height>
       </rect>
      </property>
      <property name="title">
-      <string/>
+      <string> Keywords Dictionaries </string>
      </property>
+     <widget class="QListWidget" name="listDictNames">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>16</y>
+        <width>243</width>
+        <height>79</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="buttonDictAdd">
+      <property name="geometry">
+       <rect>
+        <x>268</x>
+        <y>16</y>
+        <width>75</width>
+        <height>24</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Add</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="buttonDictDelete">
+      <property name="geometry">
+       <rect>
+        <x>268</x>
+        <y>44</y>
+        <width>75</width>
+        <height>24</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Delete</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_16">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>104</y>
+        <width>33</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Path:</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="editDictPath">
+      <property name="geometry">
+       <rect>
+        <x>44</x>
+        <y>104</y>
+        <width>237</width>
+        <height>20</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QToolButton" name="buttonDictPath">
+      <property name="geometry">
+       <rect>
+        <x>316</x>
+        <y>104</y>
+        <width>25</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>...</string>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="checkDictActive">
+      <property name="geometry">
+       <rect>
+        <x>268</x>
+        <y>78</y>
+        <width>71</width>
+        <height>19</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Active</string>
+      </property>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_16">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>168</y>
+        <width>331</width>
+        <height>35</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string> Auto case convertion ?</string>
+      </property>
+      <widget class="QRadioButton" name="radioDictToLower">
+       <property name="geometry">
+        <rect>
+         <x>62</x>
+         <y>12</y>
+         <width>69</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>To Lower</string>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="radioDictToUpper">
+       <property name="geometry">
+        <rect>
+         <x>142</x>
+         <y>12</y>
+         <width>69</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>To Upper</string>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="radioButton_7">
+       <property name="geometry">
+        <rect>
+         <x>226</x>
+         <y>12</y>
+         <width>97</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>As in dictionary</string>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="radioDictConvNone">
+       <property name="geometry">
+        <rect>
+         <x>8</x>
+         <y>12</y>
+         <width>63</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>No</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QPlainTextEdit" name="plainKeywords">
+      <property name="geometry">
+       <rect>
+        <x>146</x>
+        <y>218</y>
+        <width>193</width>
+        <height>143</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_17">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>126</y>
+        <width>331</width>
+        <height>37</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string> Apply to </string>
+      </property>
+      <widget class="QCheckBox" name="checkDictToTxt">
+       <property name="geometry">
+        <rect>
+         <x>246</x>
+         <y>14</y>
+         <width>43</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Txt</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkDictToHbp">
+       <property name="geometry">
+        <rect>
+         <x>286</x>
+         <y>14</y>
+         <width>43</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Hbp</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkDictToPrg">
+       <property name="geometry">
+        <rect>
+         <x>6</x>
+         <y>14</y>
+         <width>43</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Prg</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkDictToC">
+       <property name="geometry">
+        <rect>
+         <x>46</x>
+         <y>14</y>
+         <width>39</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>C</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkDictToIni">
+       <property name="geometry">
+        <rect>
+         <x>206</x>
+         <y>14</y>
+         <width>43</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Ini</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkDictToH">
+       <property name="geometry">
+        <rect>
+         <x>166</x>
+         <y>14</y>
+         <width>43</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>H</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkDictToCpp">
+       <property name="geometry">
+        <rect>
+         <x>80</x>
+         <y>14</y>
+         <width>43</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Cpp</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkDictToCh">
+       <property name="geometry">
+        <rect>
+         <x>126</x>
+         <y>14</y>
+         <width>43</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Ch</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_18">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>212</y>
+        <width>123</width>
+        <height>149</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string> Colors / Fonts </string>
+      </property>
+      <widget class="QCheckBox" name="checkDictCaseSens">
+       <property name="geometry">
+        <rect>
+         <x>8</x>
+         <y>16</y>
+         <width>101</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Case sensitive ?</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkDictBold">
+       <property name="geometry">
+        <rect>
+         <x>8</x>
+         <y>36</y>
+         <width>71</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Bold</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkDictItalic">
+       <property name="geometry">
+        <rect>
+         <x>8</x>
+         <y>56</y>
+         <width>71</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Italics</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkDictULine">
+       <property name="geometry">
+        <rect>
+         <x>8</x>
+         <y>78</y>
+         <width>71</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Underline</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkDictColorText">
+       <property name="geometry">
+        <rect>
+         <x>8</x>
+         <y>100</y>
+         <width>71</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Text color</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkDictColorBack">
+       <property name="geometry">
+        <rect>
+         <x>8</x>
+         <y>124</y>
+         <width>75</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Background</string>
+       </property>
+      </widget>
+      <widget class="QToolButton" name="buttonDictColorText">
+       <property name="geometry">
+        <rect>
+         <x>88</x>
+         <y>98</y>
+         <width>25</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>...</string>
+       </property>
+      </widget>
+      <widget class="QToolButton" name="buttonDictColorBack">
+       <property name="geometry">
+        <rect>
+         <x>88</x>
+         <y>124</y>
+         <width>25</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>...</string>
+       </property>
+      </widget>
+     </widget>
     </widget>
    </widget>
   </widget>

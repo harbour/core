@@ -144,6 +144,8 @@ HB_TRACE( HB_TR_ALWAYS, "hbide_saveINI( oIde )", 0, oIde:nRunMode, oIde:cProjIni
    aadd( txt_, "LineNumbersDisplayMode="    + iif( oIde:lLineNumbersVisible, "YES", "NO" )      )
    aadd( txt_, "HorzRulerDisplayMode="      + iif( oIde:lHorzRulerVisible, "YES", "NO" )        )
    aadd( txt_, "ToolsDialogGeometry="       + oIde:aIni[ INI_HBIDE, ToolsDialogGeometry ]       )
+   aadd( txt_, "IdeTheme="                  + oIde:aIni[ INI_HBIDE, IdeTheme            ]       )
+   aadd( txt_, "IdeAnimated="               + oIde:aIni[ INI_HBIDE, IdeAnimated         ]       )
    aadd( txt_, " " )
 
    aadd( txt_, "[PROJECTS]" )
@@ -299,7 +301,7 @@ FUNCTION hbide_loadINI( oIde, cHbideIni )
                       "currentreplace"     , "currentfolderfind"   , "currentview"        , ;
                       "currentharbour"     , "currentshortcuts"    , "textfileextensions" , ;
                       "currentlinehighlightmode", "linenumbersdisplaymode", "horzrulerdisplaymode", ;
-                      "toolsdialoggeometry" ;
+                      "toolsdialoggeometry", "idetheme"            , "ideanimated"        ;
                     }
 
    #if 0
@@ -596,7 +598,9 @@ FUNCTION hbide_saveShortcuts( oIde, a_, cFileShortcuts )
 CLASS IdeSetup INHERIT IdeObject
 
    DATA   aItems                                  INIT {}
-   DATA   aTree                                   INIT { "General", "Selections", "Projects", "Files", "Variables", "Backups" }
+   DATA   aTree                                   INIT { "General", "Selections", "Font", "Paths", "Variables", "Dictionaries" }
+   DATA   aStyles                                 INIT { "default", "cleanlooks", "windows", "windowsxp", ;
+                                                         "windowsvista", "cde", "motif", "plastique", "macintosh" }
 
    METHOD new( oIde )
    METHOD create( oIde )
@@ -604,6 +608,7 @@ CLASS IdeSetup INHERIT IdeObject
    METHOD show()
    METHOD execEvent( cEvent, p )
    METHOD buildTree()
+   METHOD setSystemStyle( cStyle )
 
    ENDCLASS
 
@@ -616,6 +621,8 @@ METHOD IdeSetup:new( oIde )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeSetup:create( oIde )
+   LOCAL cStyle
+
    DEFAULT oIde TO ::oIde
 
    ::oIde := oIde
@@ -637,12 +644,29 @@ METHOD IdeSetup:create( oIde )
       ::oUI:q_buttonUp  :setIcon( hbide_image( "dc_up"     ) )
       ::oUI:q_buttonDown:setIcon( hbide_image( "dc_down"   ) )
 
+
+      ::oUI:q_buttonPathIni      :setIcon( hbide_image( "open" ) )
+      ::oUI:q_buttonPathHbmk2    :setIcon( hbide_image( "open" ) )
+      ::oUI:q_buttonPathSnippets :setIcon( hbide_image( "open" ) )
+      ::oUI:q_buttonPathEnv      :setIcon( hbide_image( "open" ) )
+      ::oUI:q_buttonPathShortcuts:setIcon( hbide_image( "open" ) )
+      ::oUI:q_buttonPathThemes   :setIcon( hbide_image( "open" ) )
+
       ::buildTree()
 
       ::connect( ::oUI:q_buttonClose, "clicked()"             , {|| ::execEvent( "buttonClose_clicked" ) } )
       ::connect( ::oUI:q_treeWidget , "itemSelectionChanged()", {|| ::execEvent( "treeWidget_itemSelectionChanged" ) } )
 
       ::oUI:q_treeWidget:setCurrentItem( ::aItems[ 2 ] ) /* General */
+
+      FOR EACH cStyle IN ::aStyles
+         ::oUI:q_comboStyle:addItem( cStyle )
+      NEXT
+      ::oUI:q_comboStyle:setCurrentIndex( 0 )
+      ::connect( ::oUI:q_comboStyle, "currentIndexChanged(int)", {|p| ::execEvent( "comboStyle_currentIndexChanged", p ) } )
+
+      ::oUI:q_checkAnimated:setChecked( val( ::oIde:aINI[ INI_HBIDE, IdeAnimated ] ) > 0 )
+      ::connect( ::oUI:q_checkAnimated, "stateChanged(int)", {|i| ::execEvent( "checkAnimated_stateChanged", i ) } )
 
       ::oUI:hide()
    ENDIF
@@ -654,8 +678,9 @@ METHOD IdeSetup:create( oIde )
 METHOD IdeSetup:destroy()
 
    IF !empty( ::oUI )
-      ::disConnect( ::oUI:q_buttonClose, "clicked()" )
-      ::disConnect( ::oUI:q_treeWidget , "itemSelectionChanged()" )
+      ::disConnect( ::oUI:q_buttonClose, "clicked()"                )
+      ::disConnect( ::oUI:q_treeWidget , "itemSelectionChanged()"   )
+      ::disconnect( ::oUI:q_comboStyle , "currentIndexChanged(int)" )
 
       ::oUI:destroy()
    ENDIF
@@ -675,9 +700,10 @@ METHOD IdeSetup:show()
 METHOD IdeSetup:execEvent( cEvent, p )
    LOCAL qItem, nIndex
 
-   HB_SYMBOL_UNUSED( p )
-
    SWITCH cEvent
+   CASE "checkAnimated_stateChanged"
+      ::oDK:animateComponents( iif( p == 0, 0, 1 ) )
+      EXIT
    CASE "treeWidget_itemSelectionChanged"
       qItem  := QTreeWidgetItem():from( ::oUI:q_treeWidget:currentItem() )
       IF ( nIndex := ascan( ::aTree, qItem:text() ) ) > 0
@@ -689,6 +715,12 @@ METHOD IdeSetup:execEvent( cEvent, p )
       ::oUI:done( 1 )
       EXIT
 
+   CASE "comboStyle_currentIndexChanged"
+      IF ( nIndex := ::oUI:q_comboStyle:currentIndex() ) > -1
+         ::oIde:aINI[ INI_HBIDE, IdeTheme ] := ::aStyles[ nIndex + 1 ]
+         ::setSystemStyle( ::aStyles[ nIndex + 1 ] )
+      ENDIF
+      EXIT
    ENDSWITCH
 
    RETURN Self
@@ -720,5 +752,17 @@ METHOD IdeSetup:buildTree()
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeSetup:setSystemStyle( cStyle )
+   LOCAL oApp, qFactory
+
+   IF !empty( cStyle )
+      oApp     := QApplication():new()
+      qFactory := QStyleFactory():new()
+      oApp:setStyle( qFactory:create( cStyle ) )
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
 
 

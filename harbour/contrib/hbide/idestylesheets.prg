@@ -333,7 +333,7 @@ FUNCTION GetStyleSheet( cWidget, nMode )
       IF nMode == HBIDE_ANIMATION_GRADIENT
 
       aadd( txt_, 'QTabWidget::pane { /* The tab widget frame */                                ' )
-      aadd( txt_, '    border-top: 0px solid #C2C7CB;                                           ' )
+      aadd( txt_, '    border-top: 2px solid #C2C7CB;                                           ' )
       aadd( txt_, '}                                                                            ' )
       aadd( txt_, 'QTabWidget::tab-bar {                                                        ' )
       aadd( txt_, '    background: qlineargradient(x1:0, y1:1, x2:0, y2:0,                      ' )
@@ -367,7 +367,7 @@ FUNCTION GetStyleSheet( cWidget, nMode )
       ELSE
 
       aadd( txt_, 'QTabWidget::pane { /* The tab widget frame */                                ' )
-      aadd( txt_, '    border-top: 0px solid #C2C7CB;                                           ' )
+      aadd( txt_, '    border-top: 2px solid #C2C7CB;                                           ' )
       aadd( txt_, '}                                                                            ' )
       aadd( txt_, 'QTabWidget::tab-bar {                                                        ' )
       aadd( txt_, '    /* left: 5px; move to the right by 5px */                                ' )

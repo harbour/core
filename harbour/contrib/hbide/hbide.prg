@@ -506,6 +506,10 @@ METHOD HbIde:create( aParams )
 
    /* Request Main Window to Appear on the Screen */
    ::oHM:refresh()
+
+   ::oDK:animateComponents( val( ::aINI[ INI_HBIDE, IdeAnimated ] ) )
+   ::oSetup:setSystemStyle( ::aINI[ INI_HBIDE, IdeTheme ] )
+
    ::oDlg:Show()
    IF ::nRunMode == HBIDE_RUN_MODE_PRG
       ::oDockPT:hide()
@@ -680,8 +684,7 @@ METHOD HbIde:execAction( cKey )
       ::oDK:setView( "Stats" )
       EXIT
    CASE "Animate"
-      ::nAnimantionMode := iif( ::nAnimantionMode == HBIDE_ANIMATION_NONE, HBIDE_ANIMATION_GRADIENT, HBIDE_ANIMATION_NONE )
-      ::oDK:animateComponents( ::nAnimantionMode )
+      ::oDK:animateComponents() // ::nAnimantionMode )
       EXIT
    CASE "Setup"
       ::oSetup:show()
