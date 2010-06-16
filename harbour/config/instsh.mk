@@ -13,7 +13,15 @@ ifeq ($(INSTALL_DIR),) # Empty install dir
    INSTALL_RULE := @$(ECHO) $(ECHOQUOTE)! Can't install, install dir isn't set$(ECHOQUOTE)
 else
 
-ifeq ($(realpath $(INSTALL_DIR)),$(realpath .))
+_SAME_DIR :=
+# Check if $(abspath)/$(realpath) functions are supported
+ifneq ($(abspath .),)
+   ifeq ($(realpath $(INSTALL_DIR)),$(realpath .))
+      _SAME_DIR := yes
+   endif
+endif
+
+ifeq ($(_SAME_DIR),yes)
    INSTALL_RULE := @$(ECHO) $(ECHOQUOTE)! Skip install, destination dir '$(INSTALL_DIR)' is the same as source$(ECHOQUOTE)
 else
 

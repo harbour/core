@@ -1328,11 +1328,10 @@ HARBOUR
 
    C/C++ Compilers/Shells:
 
-      MinGW [win, *nix, free, open-soource]
-         http://www.tdragon.net/recentgcc/, http://sourceforge.net/projects/tdm-gcc/ (unofficial, recommended)
-         http://www.mingw.org/, http://sourceforge.net/projects/mingw/ (official, MSYS home)
-      MinGW x64 [win, *nix, free, open-source]
-         http://mingw-w64.sourceforge.net/, http://sourceforge.net/projects/mingw-w64/
+      MinGW/MinGW-64 [win, *nix, free, open-soource]
+         http://www.mingw.org/, http://sourceforge.net/projects/mingw/ (official 32-bit, MSYS home)
+         http://mingw-w64.sourceforge.net/, http://sourceforge.net/projects/mingw-w64/ (official 64-bit, MSYS home)
+         http://www.tdragon.net/recentgcc/, http://sourceforge.net/projects/tdm-gcc/ (unofficial)
       MinGW CEGCC [win, *nix, free, open-source]
          http://cegcc.sourceforge.net/
       Cygwin [win, free, open-source]
@@ -1419,10 +1418,11 @@ HARBOUR
             http://get.qt.nokia.com/qt/source/qt-win-opensource-4.5.3-mingw.exe
             http://get.qt.nokia.com/qt/source/qt-win-opensource-4.6.3-mingw.exe
          How to create Windows static and MSVC builds:
-            http://doc.trolltech.com/4.5/deployment-windows.html
+            http://doc.trolltech.com/4.6/deployment-windows.html
          NOTES:
-            - Windows QT 4.5.x requires MinGW builds with SJLJ stack frame unwinding.
-            - Windows QT 4.6.x requires MinGW builds with DWARF-2 stack frame unwinding.
+            - QT 4.5.x for Windows requires MinGW builds with SJLJ stack frame unwinding.
+              (mingw official 3.4.x, or mingw tdm)
+            - QT 4.6.x for Windows requires MinGW builds with DWARF-2 stack frame unwinding.
               (mingw official 4.4.0 or upper, or mingw tdm with dwarf update)
       HB_WITH_SQLITE3 - sqlite3 [multiplatform, free, open-source]
          http://www.sqlite.org/
