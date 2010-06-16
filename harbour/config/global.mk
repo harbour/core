@@ -971,7 +971,7 @@ ifeq ($(HB_COMPILER),)
             endif
          endif
       else
-      ifneq ($(filter $(HB_PLATFORM),hpux bsd),)
+      ifneq ($(filter $(HB_PLATFORM),hpux bsd beos qnx),)
          HB_COMP_PATH := $(call find_in_path,gcc)
          ifneq ($(HB_COMP_PATH),)
             HB_COMPILER := gcc
@@ -1026,13 +1026,6 @@ ifeq ($(HB_COMPILER),)
                HB_COMPILER := watcom
             endif
          endif
-      else
-      ifeq ($(HB_PLATFORM),beos)
-         HB_COMP_PATH := $(call find_in_path,gcc)
-         ifneq ($(HB_COMP_PATH),)
-            HB_COMPILER := gcc
-         endif
-      endif
       endif
       endif
       endif
