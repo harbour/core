@@ -86,93 +86,6 @@ find_in_path_raw = $(strip $(subst $(substpat), ,$(firstword $(subst |, ,$(subst
 find_in_path_par = $(strip $(subst $(substpat), ,$(firstword $(subst |, ,$(subst $(subst x, ,x),$(substpat),$(filter-out |,$(foreach dir, $(subst $(PTHSEP), ,$(subst $(subst x, ,x),$(substpat),$(2))),|$(wildcard $(subst //,/,$(subst $(substpat),\ ,$(subst \,/,$(dir)))/$(1))$(HB_HOST_BIN_EXT)))))))))
 find_in_path_prw = $(strip $(subst $(substpat), ,$(firstword $(subst |, ,$(subst $(subst x, ,x),$(substpat),$(filter-out |,$(foreach dir, $(subst $(PTHSEP), ,$(subst $(subst x, ,x),$(substpat),$(2))),|$(wildcard $(subst //,/,$(subst $(substpat),\ ,$(subst \,/,$(dir)))/$(1))))))))))
 
-define check_host
-
-   ifneq ($(findstring MINGW,$(1)),)
-      HB_HOST_PLAT := win
-   else
-   ifneq ($(findstring MSys,$(1)),)
-      HB_HOST_PLAT := win
-   else
-   ifneq ($(findstring Windows,$(1)),)
-      HB_HOST_PLAT := win
-   else
-   ifneq ($(findstring CYGWIN,$(1)),)
-      HB_HOST_PLAT := win
-   else
-   ifneq ($(findstring Darwin,$(1)),)
-      HB_HOST_PLAT := darwin
-   else
-   ifneq ($(findstring darwin,$(1)),)
-      HB_HOST_PLAT := darwin
-   else
-   ifneq ($(findstring Linux,$(1)),)
-      HB_HOST_PLAT := linux
-   else
-   ifneq ($(findstring linux,$(1)),)
-      HB_HOST_PLAT := linux
-   else
-   ifneq ($(findstring HP-UX,$(1)),)
-      HB_HOST_PLAT := hpux
-   else
-   ifneq ($(findstring hp-ux,$(1)),)
-      HB_HOST_PLAT := hpux
-   else
-   ifneq ($(findstring SunOS,$(1)),)
-      HB_HOST_PLAT := sunos
-   else
-   ifneq ($(findstring sunos,$(1)),)
-      HB_HOST_PLAT := sunos
-   else
-   ifneq ($(findstring BSD,$(1)),)
-      HB_HOST_PLAT := bsd
-   else
-   ifneq ($(findstring bsd,$(1)),)
-      HB_HOST_PLAT := bsd
-   else
-   ifneq ($(findstring DragonFly,$(1)),)
-      HB_HOST_PLAT := bsd
-   else
-   ifneq ($(findstring OS/2,$(1)),)
-      HB_HOST_PLAT := os2
-   else
-   ifneq ($(findstring MS-DOS,$(1)),)
-      HB_HOST_PLAT := dos
-   else
-   ifneq ($(findstring msdos,$(1)),)
-      HB_HOST_PLAT := dos
-   else
-   ifneq ($(findstring beos,$(1)),)
-      HB_HOST_PLAT := beos
-   else
-   ifneq ($(findstring Haiku,$(1)),)
-      HB_HOST_PLAT := beos
-   endif
-   ifneq ($(findstring QNX,$(1)),)
-      HB_HOST_PLAT := qnx
-   endif
-   endif
-   endif
-   endif
-   endif
-   endif
-   endif
-   endif
-   endif
-   endif
-   endif
-   endif
-   endif
-   endif
-   endif
-   endif
-   endif
-   endif
-   endif
-   endif
-
-endef
-
 # Some presets based on HB_BUILD_NAME
 ifneq ($(HB_BUILD_NAME),)
    ifeq ($(HB_BUILD_NAME),.r)
@@ -475,18 +388,24 @@ ifeq ($(PTHSEP),)
    endif
 endif
 
-# TOFIX: For < 3.80 GNU Make versions
 ifeq ($(HB_HOST_PLAT),)
-   $(eval $(call check_host,$(OSTYPE),))
+   # Using "quasi-functions" instead of $(eval) solution to stay compatible
+   # with < 3.80 GNU Make versions
+   _DETPLAT_STR := $(OSTYPE)
+   include $(TOP)$(ROOT)config/detplat.mk
    ifeq ($(HB_HOST_PLAT),)
-      $(eval $(call check_host,$(MACHTYPE),))
+      _DETPLAT_STR := $(MACHTYPE)
+      include $(TOP)$(ROOT)config/detplat.mk
       ifeq ($(HB_HOST_PLAT),)
-         $(eval $(call check_host,$(OS),))
+         _DETPLAT_STR := $(OS)
+         include $(TOP)$(ROOT)config/detplat.mk
          ifeq ($(HB_HOST_PLAT),)
-            $(eval $(call check_host,$(shell uname -s),))
+            _DETPLAT_STR := $(shell uname -s)
+            include $(TOP)$(ROOT)config/detplat.mk
          endif
       endif
    endif
+   _DETPLAT_STR :=
 endif
 
 ifeq ($(HB_HOST_PLAT),)
