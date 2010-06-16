@@ -48,7 +48,7 @@ rm -f harbour-nightly-src.zip harbour-nightly.tar.bz2 harbour-nightly.tar.gz
 
 rm -f -r _mk_nightly
 mkdir _mk_nightly || {
-   echo "Failed to create _mk_nightly"
+   echo "Failed to create directory _mk_nightly"
    exit 1
 }
 cd _mk_nightly
