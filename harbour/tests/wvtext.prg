@@ -16,6 +16,7 @@
 
 #include "hbgtinfo.ch"
 #include "inkey.ch"
+#include "setcurs.ch"
 
 #define RGB(r,g,b) ( r + ( g * 256 ) + ( b * 256 * 256 ) )
 
@@ -27,19 +28,18 @@ STATIC s_nColorIndex := 1
 
 //----------------------------------------------------------------------//
 
-FUNCTION Main()
-   Local nKey, lMark, lResize, lClose
-   Local nHeight := 20
-   Local nWidth  := Int( nHeight/2 )
-   Local cFont
+PROCEDURE Main()
+   LOCAL nKey, lMark, lResize, lClose
+   LOCAL nHeight := 20
+   LOCAL nWidth  := Int( nHeight / 2 )
+   LOCAL cFont
 
    LOCAL nMSec
 
    Hb_GtInfo( HB_GTI_FONTNAME , cFont   )
    Hb_GtInfo( HB_GTI_FONTWIDTH, nWidth  )
    Hb_GtInfo( HB_GTI_FONTSIZE , nHeight )
-   SetCursor( 0 )
-   SetColor( "n/w" )
+   SetCursor( SC_NONE )
 
    HB_GtInfo( HB_GTI_CLOSABLE, .F. )
 
@@ -86,8 +86,16 @@ FUNCTION Main()
       CASE nKey == K_F8
          Alert( "Menu text changed. Was: " + hb_GtInfo( HB_GTI_SELECTCOPY, DToS(Date()) + " " + Time() ) )
 
+      CASE nKey == K_F9
+         hb_GTInfo( HB_GTI_RESIZEMODE, iif( hb_GTInfo( HB_GTI_RESIZEMODE ) == HB_GTI_RESIZEMODE_ROWS, HB_GTI_RESIZEMODE_FONT, HB_GTI_RESIZEMODE_ROWS ) )
+
       CASE nKey == K_F10
          hb_threadStart( @thFunc() )
+
+      CASE nKey == HB_K_RESIZE
+         DispScreen()
+         DispOutAt( maxrow(), 33, "Resized      ", "B/G*" )
+         nMSec := hb_milliSeconds()
 
       CASE nKey == HB_K_GOTFOCUS
          DispOutAt( maxrow(), 33, "We got focus ", "B/G*" )
@@ -105,39 +113,41 @@ FUNCTION Main()
       ENDCASE
    ENDDO
 
-   RETURN NIL
+   RETURN
 
 //----------------------------------------------------------------------//
 
-STATIC FUNCTION DispScreen()
-   Local nRow := 12, nCol := 28
-   Local cColor := "N/W"
-   Local nMaxCol := MaxCol()+1
+STATIC PROCEDURE DispScreen()
+   LOCAL nRow := 11, nCol := 28
+   LOCAL cColor := "N/W"
+   LOCAL nMaxCol := MaxCol() + 1
 
    DispBegin()
 
+   SetColor( "N/W" )
    CLS
-   DispOutAt( 0, 0,padc( "Harbour GT - New Features", maxcol()+1 ), "N/GR*" )
+   DispOutAt( 0, 0, PadC( "Harbour GT - New Features", nMaxCol ), "N/GR*" )
 
    // Contributed by Massimo Belgrano
-   DispOutAt( 2, 0, padc( "______  __             ______________________                        ",nMaxCol ), "W+/W" )
-   DispOutAt( 3, 0, padc( "___  / / /_____ ___________ /___________  _________    __  ____/____/",nMaxCol ), "W+/W" )
-   DispOutAt( 4, 0, padc( "__  /_/ /_  __ `/_  ___/_  __ \  __ \  / / /_  ___/    _  / __ __/   ",nMaxCol ), "W+/W" )
-   DispOutAt( 5, 0, padc( "_  __  / / /_/ /_  /   _  /_/ / /_/ / /_/ /_  /        / /_/ / _  /  ",nMaxCol ), "W+/W" )
-   DispOutAt( 6, 0, padc( "/_/ /_/  \__,_/ /_/    /_.___/\____/\__,_/ /_/         \____/  /_/   ",nMaxCol ), "W+/W" )
+   DispOutAt( 2, 0, PadC( "______  __             ______________________                        ", nMaxCol ), "W+/W" )
+   DispOutAt( 3, 0, PadC( "___  / / /_____ ___________ /___________  _________    __  ____/____/", nMaxCol ), "W+/W" )
+   DispOutAt( 4, 0, PadC( "__  /_/ /_  __ `/_  ___/_  __ \  __ \  / / /_  ___/    _  / __ __/   ", nMaxCol ), "W+/W" )
+   DispOutAt( 5, 0, PadC( "_  __  / / /_/ /_  /   _  /_/ / /_/ / /_/ /_  /        / /_/ / _  /  ", nMaxCol ), "W+/W" )
+   DispOutAt( 6, 0, PadC( "/_/ /_/  \__,_/ /_/    /_.___/\____/\__,_/ /_/         \____/  /_/   ", nMaxCol ), "W+/W" )
 
-   DispOutAt( ++nRow, nCol, "< F2 MarkCopy    Toggle >", cColor )
-   DispOutAt( ++nRow, nCol, "< F3 Resize      Toggle >", cColor )
-   DispOutAt( ++nRow, nCol, "< F4 Closable    Toggle >", cColor )
-   DispOutAt( ++nRow, nCol, "< F5 Palette L   Repeat >", cColor )
-   DispOutAt( ++nRow, nCol, "< F6 Palette D   Repeat >", cColor )
-   DispOutAt( ++nRow, nCol, "< F7 Palette By Index R >", cColor )
-   DispOutAt( ++nRow, nCol, "< F8 MarkCopy menu text >", cColor )
-   DispOutAt( ++nRow, nCol, "<    Click Other Window >", cColor )
-   DispOutAt( ++nRow, nCol, "<    Click X Button     >", cColor )
-   DispOutAt( ++nRow, nCol, "< F10 Open New Window   >", cColor )
+   DispOutAt( ++nRow, 0, PadC( "< F2 MarkCopy    Toggle >", nMaxCol ), cColor )
+   DispOutAt( ++nRow, 0, PadC( "< F3 Resize      Toggle >", nMaxCol ), cColor )
+   DispOutAt( ++nRow, 0, PadC( "< F4 Closable    Toggle >", nMaxCol ), cColor )
+   DispOutAt( ++nRow, 0, PadC( "< F5 Palette L   Repeat >", nMaxCol ), cColor )
+   DispOutAt( ++nRow, 0, PadC( "< F6 Palette D   Repeat >", nMaxCol ), cColor )
+   DispOutAt( ++nRow, 0, PadC( "< F7 Palette By Index R >", nMaxCol ), cColor )
+   DispOutAt( ++nRow, 0, PadC( "< F8 MarkCopy menu text >", nMaxCol ), cColor )
+   DispOutAt( ++nRow, 0, PadC( "<    Click Other Window >", nMaxCol ), cColor )
+   DispOutAt( ++nRow, 0, PadC( "<    Click X Button     >", nMaxCol ), cColor )
+   DispOutAt( ++nRow, 0, PadC( "< F9 Resize Mode Toggle >", nMaxCol ), cColor )
+   DispOutAt( ++nRow, 0, PadC( "< F10 Open New Window   >", nMaxCol ), cColor )
 
-   DispOutAt( maxrow(), 0, Space( maxcol()+1 ), "N/G*" )
+   DispOutAt( maxrow(), 0, Space( MaxCol() + 1 ), "N/G*" )
 
    DispOutAt( 0, 0                  , "TL", "N/GR*" )
    DispOutAt( 0, MaxCol() - 1       , "TR", "N/GR*" )
@@ -145,7 +155,7 @@ STATIC FUNCTION DispScreen()
    DispOutAt( MaxRow(), MaxCol() - 1, "BR", "N/G*"  )
 
    DispEnd()
-   RETURN NIL
+   RETURN
 
 //----------------------------------------------------------------------//
 
@@ -157,19 +167,19 @@ PROCEDURE HB_GTSYS()
 //----------------------------------------------------------------------//
 
 FUNCTION SetPalette( nMode )
-   Local aPalette := Hb_GtInfo( HB_GTI_PALETTE )
+   LOCAL aPalette := Hb_GtInfo( HB_GTI_PALETTE )
 
-   static nR := 198
-   static nG := 198
-   static nB := 198
+   STATIC s_nR := 198
+   STATIC s_nG := 198
+   STATIC s_nB := 198
 
-   nR += iif( nMode == 0, -5, 5 )
-   nG += iif( nMode == 0, -5, 5 )
-   nB += iif( nMode == 0, -5, 5 )
+   s_nR += iif( nMode == 0, -5, 5 )
+   s_nG += iif( nMode == 0, -5, 5 )
+   s_nB += iif( nMode == 0, -5, 5 )
 
    // Change "W" to slightly gray everytime you press F5
    //
-   aPalette[ 8 ] := RGB( nR, nG, nB )
+   aPalette[ 8 ] := RGB( s_nR, s_nG, s_nB )
 
    Hb_GtInfo( HB_GTI_PALETTE, aPalette )
    DispScreen()
@@ -187,12 +197,12 @@ FUNCTION SetPaletteIndex()
 //----------------------------------------------------------------------//
 
 PROCEDURE thFunc()
-   Local cTitle, oBrowse, lEnd, nKey, i, aStruct
-   Local aColor := { 'W+/N', 'W+/B', 'W+/G', 'W+/BG', 'W+/N*', 'W+/RB', 'N/W*', 'N/GR*' }
+   LOCAL cTitle, oBrowse, lEnd, nKey, i, aStruct
+   LOCAL aColor := { 'W+/N', 'W+/B', 'W+/G', 'W+/BG', 'W+/N*', 'W+/RB', 'N/W*', 'N/GR*' }
 
-   static nBrowser := 0
-   static nZx := 0
-   static nZy := 0
+   STATIC nBrowser := 0
+   STATIC nZx := 0
+   STATIC nZy := 0
 
    nBrowser++
    nZx += 20
@@ -202,17 +212,17 @@ PROCEDURE thFunc()
    hb_gtReload( 'WVT' )
    Hb_GtInfo( HB_GTI_PALETTE, 8, RGB( 120, 200, 240 ) )
 
-   if ( nBrowser % 2 ) != 0
+   IF ( nBrowser % 2 ) != 0
       Hb_GtInfo( HB_GTI_RESIZEMODE, HB_GTI_RESIZEMODE_ROWS )
-   endif
-   Hb_GtInfo( HB_GTI_WINTITLE, 'test.dbf    ['+if( ( nBrowser % 2 ) != 0, 'RESIZABLE_BY_ROWS', 'RESIZABLE_BY_FONT' )+']' )
+   ENDIF
+   Hb_GtInfo( HB_GTI_WINTITLE, 'test.dbf    [' + iif( ( nBrowser % 2 ) != 0, 'RESIZABLE_BY_ROWS', 'RESIZABLE_BY_FONT' ) + ']' )
 
-   SetCursor( 0 )
+   SetCursor( SC_NONE )
 
    s_nColorIndex++
-   if s_nColorIndex > len( aColor )
+   IF s_nColorIndex > len( aColor )
       s_nColorIndex := 1
-   endif
+   ENDIF
 
    s_nRows++
    s_nCols += 2
@@ -222,9 +232,9 @@ PROCEDURE thFunc()
    Hb_GtInfo( HB_GTI_WINTITLE, cTitle )
    Hb_GtInfo( HB_GTI_SETPOS_XY, nZx, nZy )
 
-   cTitle := 'New Window with '+ltrim( str( MaxRow() ) )+;
-                          ' Rows and '+ltrim( str( MaxCol() ) )+' Columns'
-   DispOutAt( 0, 0, padc( cTitle, maxcol()+1 ), 'N/GR*' )
+   cTitle := 'New Window with '+ hb_ntos( MaxRow() ) +;
+                          ' Rows and ' + hb_ntos( MaxCol() ) + ' Columns'
+   DispOutAt( 0, 0, padc( cTitle, maxcol() + 1 ), 'N/GR*' )
 
    use test shared
    aStruct := DbStruct()
@@ -235,7 +245,7 @@ PROCEDURE thFunc()
    oBrowse:HeadSep       := "ÄÂÄ"
    oBrowse:GoTopBlock    := { || dbGoTop() }
    oBrowse:GoBottomBlock := { || dbGoBottom() }
-   oBrowse:SkipBlock     := { | nSkip | dbSkipBlock( nSkip,oBrowse ) }
+   oBrowse:SkipBlock     := { | nSkip | dbSkipBlock( nSkip, oBrowse ) }
 
    for i := 1 to len( aStruct )
       oBrowse:AddColumn( TBColumnNew( aStruct[ i,1 ], BlockField( i ) ) )
@@ -243,16 +253,16 @@ PROCEDURE thFunc()
 
    oBrowse:configure()
 
-   lEnd := .f.
-   While !lEnd
+   lEnd := .F.
+   DO WHILE ! lEnd
       oBrowse:ForceStable()
 
       nKey := InKey( 0, INKEY_ALL + HB_INKEY_GTEVENT )
 
-      if BrwHandleKey( oBrowse, nKey, @lEnd )
+      IF BrwHandleKey( oBrowse, nKey, @lEnd )
          //
-      else
-         if nKey == HB_K_RESIZE
+      ELSE
+         IF nKey == HB_K_RESIZE
             cTitle := 'New Window with '+ltrim( str( MaxRow() ) )+;
                           ' Rows and '+ltrim( str( MaxCol() ) )+' Columns'
             DispOutAt( 0, 0, padc( cTitle, maxcol()+1 ), 'N/GR*' )
@@ -261,9 +271,9 @@ PROCEDURE thFunc()
             oBrowse:nRight := MaxCol()
             oBrowse:Configure()
             oBrowse:RefreshAll()
-         endif
-      endif
-   end
+         ENDIF
+      ENDIF
+   ENDDO
 
    DbCloseArea()
 
@@ -286,7 +296,7 @@ STATIC FUNCTION DbSkipBlock( n, oTbr )
       enddo
    endif
 
-   RETURN  nSkipped
+   RETURN nSkipped
 //-------------------------------------------------------------------//
 STATIC FUNCTION TBNext( oTbr )
 
@@ -322,67 +332,68 @@ STATIC FUNCTION BlockField( i )
    RETURN  {|| fieldget( i ) }
 //-------------------------------------------------------------------//
 STATIC FUNCTION BrwHandleKey( oBrowse, nKey, lEnd )
-   LOCAL lRet := .t.
+   LOCAL lRet := .T.
 
-   do case
-   case nKey == K_ESC
-      lEnd := .t.
+   DO CASE
+   CASE nKey == K_ESC
+      lEnd := .T.
 
-   case nKey == K_ENTER
-      lEnd := .t.
+   CASE nKey == K_ENTER
+      lEnd := .T.
 
-   case nKey == K_DOWN
+   CASE nKey == K_DOWN
       oBrowse:Down()
 
-   case nKey == K_UP
+   CASE nKey == K_UP
       oBrowse:Up()
 
-   case nKey == K_LEFT
+   CASE nKey == K_LEFT
       oBrowse:Left()
 
-   case nKey == K_RIGHT
+   CASE nKey == K_RIGHT
       oBrowse:Right()
 
-   case nKey == K_PGDN
+   CASE nKey == K_PGDN
       oBrowse:pageDown()
 
-   case nKey == K_PGUP
+   CASE nKey == K_PGUP
       oBrowse:pageUp()
 
-   case nKey == K_CTRL_PGUP
+   CASE nKey == K_CTRL_PGUP
       oBrowse:goTop()
 
-   case nKey == K_CTRL_PGDN
+   CASE nKey == K_CTRL_PGDN
       oBrowse:goBottom()
 
-   case nKey == K_HOME
+   CASE nKey == K_HOME
       oBrowse:home()
 
-   case nKey == K_END
+   CASE nKey == K_END
       oBrowse:end()
 
-   case nKey == K_CTRL_LEFT
+   CASE nKey == K_CTRL_LEFT
       oBrowse:panLeft()
 
-   case nKey == K_CTRL_RIGHT
+   CASE nKey == K_CTRL_RIGHT
       oBrowse:panRight()
 
-   case nKey == K_CTRL_HOME
+   CASE nKey == K_CTRL_HOME
       oBrowse:panHome()
 
-   case nKey == K_CTRL_END
+   CASE nKey == K_CTRL_END
       oBrowse:panEnd()
 
-   case nKey == K_MWBACKWARD
+   CASE nKey == K_MWBACKWARD
       oBrowse:down()
 
-   case nKey == K_MWFORWARD
+   CASE nKey == K_MWFORWARD
       oBrowse:up()
 
-   otherwise
-      lRet := .f.
+   OTHERWISE
+      lRet := .F.
 
-   endcase
+   ENDCASE
 
    RETURN lRet
+
 //-------------------------------------------------------------------//

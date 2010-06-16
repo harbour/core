@@ -153,7 +153,7 @@ ifeq ($(HB_INIT_DONE),)
 
       # We need some >= 3.81 GNU Make feature to make this option work,
       # or we need HB_SRC_ROOTPATH to be specified by user.
-      ifneq ($(_MAKE_COMPAT_381),)
+      ifeq ($(_MAKE_COMPAT_381),)
          ifeq ($(HB_SRC_ROOTPATH),)
             export HB_BUILD_PKG := no
          endif

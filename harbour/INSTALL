@@ -725,7 +725,7 @@ HARBOUR
       Build Harbour with:
          HB_USER_CFLAGS=-DHB_FM_STATISTICS
 
-   Valgrind (on linux and darwin targets only)
+   Valgrind (on linux and darwin targets)
    --------
       Build Harbour with:
          HB_USER_DEBUG=yes
