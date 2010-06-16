@@ -764,5 +764,75 @@ METHOD IdeSetup:setSystemStyle( cStyle )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+//
+//                            Class IdeINI
+//
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
 
+CLASS IdeINI INHERIT IdeObject
+
+   DATA   aINI                                    INIT {}
+
+   DATA   vMainWindowGeometry                     INIT  ""
+   DATA   vProjectTreeVisible                     INIT  ""
+   DATA   vFunctionListVisible                    INIT  ""
+   DATA   vRecentTabIndex                         INIT  ""
+   DATA   vCurrentProject                         INIT  ""
+   DATA   vGotoDialogGeometry                     INIT  ""
+   DATA   vFindDialogGeometry                     INIT  ""
+   DATA   vCurrentTheme                           INIT  ""
+   DATA   vCurrentCodec                           INIT  ""
+   DATA   vPathMk2                                INIT  ""
+   DATA   vPathEnv                                INIT  ""
+   DATA   vCurrentEnvironment                     INIT  ""
+   DATA   vCurrentFind                            INIT  ""
+   DATA   vCurrentFolderFind                      INIT  ""
+   DATA   vCurrentReplace                         INIT  ""
+   DATA   vCurrentView                            INIT  ""
+   DATA   vCurrentHarbour                         INIT  ""
+   DATA   vCurrentShortcuts                       INIT  ""
+   DATA   vTextFileExtensions                     INIT  ""
+   DATA   vFindInFilesDialogGeometry              INIT  ""
+   DATA   vCurrentLineHighlightMode               INIT  ""
+   DATA   vLineNumbersDisplayMode                 INIT  ""
+   DATA   vHorzRulerDisplayMode                   INIT  ""
+   DATA   vToolsDialogGeometry                    INIT  ""
+   DATA   vIdeTheme                               INIT  ""
+   DATA   vIdeAnimated                            INIT  ""
+
+   DATA   aProjects                               INIT  {}
+   DATA   aFiles                                  INIT  {}
+   DATA   aFind                                   INIT  {}
+   DATA   aReplace                                INIT  {}
+   DATA   aRecentProjects                         INIT  {}
+   DATA   aRecentFiles                            INIT  {}
+   DATA   aFolders                                INIT  {}
+   DATA   aViews                                  INIT  {}
+   DATA   aTaggedProjects                         INIT  {}
+   DATA   aTools                                  INIT  {}
+   DATA   aUserToolbars                           INIT  {}
+
+   METHOD new( oIde )
+   METHOD create( oIde )
+
+   ENDCLASS
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeINI:new( oIde )
+   ::oIde := oIde
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeINI:create( oIde )
+   DEFAULT oIde TO ::oIde
+   ::oIde := oIde
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
 
