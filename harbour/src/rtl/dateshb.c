@@ -238,7 +238,7 @@ HB_FUNC( HB_DTOT )
       const char * szTime = hb_parc( 2 );
       if( szTime )
          hb_timeStampStrGetDT( szTime, &lDate2, &lTime );
-      else if( ISNUM( 2 ) )
+      else if( HB_ISNUM( 2 ) )
       {
          lTime = ( long ) ( hb_parnd( 2 ) * 1000 );
          if( lTime < 0 )
@@ -259,7 +259,7 @@ HB_FUNC( HB_TTOD )
    if( hb_partdt( &lDate, &lTime, 1 ) )
    {
       hb_retdl( lDate );
-      if( ISBYREF( 2 ) )
+      if( HB_ISBYREF( 2 ) )
       {
          const char * szTimeFormat = hb_parc( 3 );
          if( szTimeFormat )

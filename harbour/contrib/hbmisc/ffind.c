@@ -88,7 +88,7 @@ HB_FUNC( FILEFINDFIRST )
    {
       void ** ph = ( void ** ) hb_gcAllocate( sizeof( PHB_FFIND ), &s_gcPHB_FFIND_funcs );
 
-      PHB_FFIND ffind = hb_fsFindFirst( pszFileName, HB_ISNUM( 3 ) ? hb_parnl( 3 ) : HB_FA_ALL );
+      PHB_FFIND ffind = hb_fsFindFirst( pszFileName, hb_parnldef( 3, HB_FA_ALL ) );
 
       * ph = ( void * ) ffind;
 

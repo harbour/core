@@ -245,7 +245,7 @@ HB_EXTERN_BEGIN
 #define HB_ISDATETIME( n )    ( hb_param( n, HB_IT_DATETIME ) != NULL )    /* Not available in CA-Cl*pper. */
 
 /* Compatibility #defines, deprecated */
-#ifdef HB_LEGACY_LEVEL3
+#if ! defined( HB_LEGACY_TYPES_OFF ) && defined( HB_LEGACY_LEVEL3 )
    #define ISNIL( n )            HB_ISNIL( n )
    #define ISCHAR( n )           HB_ISCHAR( n )
    #define ISNUM( n )            HB_ISNUM( n )

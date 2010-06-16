@@ -195,7 +195,7 @@ HB_FUNC( HB_ATX )
       {
          HB_SIZE ulLen = hb_itemGetCLen( pString );
          HB_SIZE ulStart = hb_parnl( 4 );
-         HB_SIZE ulEnd = ISNUM( 5 ) ? ( HB_SIZE ) hb_parnl( 5 ) : ulLen;
+         HB_SIZE ulEnd = ( HB_SIZE ) hb_parnldef( 5, ulLen );
 
          if( ulLen && ulStart <= ulLen && ulStart <= ulEnd )
          {

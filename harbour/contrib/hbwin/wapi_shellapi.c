@@ -72,7 +72,7 @@ HB_FUNC( WAPI_SHELLEXECUTE )
                                             HB_PARSTRDEF( 3, &hFile, NULL ),
                                             HB_PARSTR( 4, &hParameters, NULL ),
                                             HB_PARSTR( 5, &hDirectory, NULL ),
-                                            HB_ISNUM( 6 ) ? hb_parni( 6 ) : SW_SHOWNORMAL /* nShowCmd */ ) );
+                                            hb_parnidef( 6, SW_SHOWNORMAL ) /* nShowCmd */ ) );
 
    hb_strfree( hOperation  );
    hb_strfree( hFile       );

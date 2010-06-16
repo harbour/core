@@ -153,7 +153,7 @@ HB_FUNC( HB_ZIPOPEN )
    if( szFileName )
    {
       zipcharpc pszGlobalComment = NULL;
-      zipFile hZip = zipOpen2( szFileName, HB_ISNUM( 2 ) ? hb_parni( 2 ) : APPEND_STATUS_CREATE,
+      zipFile hZip = zipOpen2( szFileName, hb_parnidef( 2, APPEND_STATUS_CREATE ),
                                &pszGlobalComment, NULL );
       if( hZip )
       {
@@ -202,8 +202,8 @@ HB_FUNC( HB_ZIPFILECREATE )
 
       if( hZip )
       {
-         int iMethod = HB_ISNUM( 7 ) ? hb_parni( 7 ) : Z_DEFLATED;
-         int iLevel = HB_ISNUM( 8 ) ? hb_parni( 8 ) : Z_DEFAULT_COMPRESSION;
+         int iMethod = hb_parnidef( 7, Z_DEFLATED );
+         int iLevel = hb_parnidef( 8, Z_DEFAULT_COMPRESSION );
          long lJulian, lMillisec;
          int iY, iM, iD;
 

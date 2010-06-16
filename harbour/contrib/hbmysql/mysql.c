@@ -176,8 +176,8 @@ HB_FUNC( MYSQL_REAL_CONNECT ) /* MYSQL * mysql_real_connect( MYSQL *, char * hos
 
 #if MYSQL_VERSION_ID > 32200
    MYSQL * mysql;
-   unsigned int port  = HB_ISNUM( 4 ) ? ( unsigned int ) hb_parni( 4 ) : MYSQL_PORT;
-   unsigned int flags = HB_ISNUM( 5 ) ? ( unsigned int ) hb_parni( 5 ) : 0;
+   unsigned int port  = ( unsigned int ) hb_parnidef( 4, MYSQL_PORT );
+   unsigned int flags = ( unsigned int ) hb_parnidef( 5, 0 );
 
    if( ( mysql = mysql_init( ( MYSQL * ) NULL ) ) != NULL )
    {

@@ -3,7 +3,7 @@
  */
 
 /*
- * xHarbour Project source code:
+ * Harbour Project source code:
  * Firebird RDBMS low level (client api) interface code.
  *
  * Copyright 2003 Rodrigo Moreno rodrigo_moreno@yahoo.com
@@ -324,7 +324,7 @@ HB_FUNC( FBQUERY )
       XSQLVAR *        var;
 
       char             sel_str[ 256 ];
-      unsigned short   dialect = HB_ISNUM( 3 ) ? ( unsigned short ) hb_parni( 3 ) : SQL_DIALECT_V5;
+      unsigned short   dialect = ( unsigned short ) hb_parnidef( 3, SQL_DIALECT_V5 );
       int              i;
       int              num_cols;
 

@@ -303,7 +303,7 @@ HB_FUNC_EXTERN( NETNAME );
 
 HB_FUNC( XHB_NETNAME )
 {
-   if( ISNUM( 1 ) && hb_parni( 1 ) == 1 )
+   if( HB_ISNUM( 1 ) && hb_parni( 1 ) == 1 )
       HB_FUNC_EXEC( HB_USERNAME )
    else
       HB_FUNC_EXEC( NETNAME )
@@ -314,7 +314,7 @@ HB_FUNC_EXTERN( MEMOWRIT );
 
 HB_FUNC( XHB_MEMOWRIT )
 {
-   if( ISLOG( 3 ) && ! hb_parl( 3 ) )
+   if( HB_ISLOG( 3 ) && ! hb_parl( 3 ) )
       HB_FUNC_EXEC( HB_MEMOWRIT )
    else
       HB_FUNC_EXEC( MEMOWRIT )

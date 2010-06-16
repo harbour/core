@@ -123,9 +123,9 @@ HB_FUNC( SSL_CTX_NEW )
    void ** ph = ( void ** ) hb_gcAllocate( sizeof( SSL_CTX * ), &s_gcSSL_CTX_funcs );
 
 #if OPENSSL_VERSION_NUMBER < 0x10000000L
-   SSL_CTX * ctx = SSL_CTX_new( ( SSL_METHOD * ) hb_ssl_method_id_to_ptr( HB_ISNUM( 1 ) ? hb_parni( 1 ) : HB_SSL_CTX_NEW_METHOD_DEFAULT ) );
+   SSL_CTX * ctx = SSL_CTX_new( ( SSL_METHOD * ) hb_ssl_method_id_to_ptr( hb_parnidef( 1, HB_SSL_CTX_NEW_METHOD_DEFAULT ) ) );
 #else
-   SSL_CTX * ctx = SSL_CTX_new( hb_ssl_method_id_to_ptr( HB_ISNUM( 1 ) ? hb_parni( 1 ) : HB_SSL_CTX_NEW_METHOD_DEFAULT ) );
+   SSL_CTX * ctx = SSL_CTX_new( hb_ssl_method_id_to_ptr( hb_parnidef( 1, HB_SSL_CTX_NEW_METHOD_DEFAULT ) ) );
 #endif
 
    * ph = ( void * ) ctx;

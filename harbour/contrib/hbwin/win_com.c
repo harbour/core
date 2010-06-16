@@ -662,11 +662,11 @@ HB_FUNC( WIN_COMSETTIMEOUTS )
       DCB CurDCB;
       COMMTIMEOUTS Timeouts;
 
-      Timeouts.ReadIntervalTimeout         = HB_ISNUM( 2 ) ? ( DWORD ) hb_parnl( 2 ) : ( DWORD ) -1;
-      Timeouts.ReadTotalTimeoutMultiplier  = HB_ISNUM( 3 ) ? ( DWORD ) hb_parnl( 3 ) : ( DWORD ) -1;
-      Timeouts.ReadTotalTimeoutConstant    = HB_ISNUM( 4 ) ? ( DWORD ) hb_parnl( 4 ) : ( DWORD ) -1;
-      Timeouts.WriteTotalTimeoutMultiplier = HB_ISNUM( 5 ) ? ( DWORD ) hb_parnl( 5 ) : ( DWORD ) -1;
-      Timeouts.WriteTotalTimeoutConstant   = HB_ISNUM( 6 ) ? ( DWORD ) hb_parnl( 6 ) : ( DWORD ) -1;
+      Timeouts.ReadIntervalTimeout         = ( DWORD ) hb_parnldef( 2, -1 );
+      Timeouts.ReadTotalTimeoutMultiplier  = ( DWORD ) hb_parnldef( 3, -1 );
+      Timeouts.ReadTotalTimeoutConstant    = ( DWORD ) hb_parnldef( 4, -1 );
+      Timeouts.WriteTotalTimeoutMultiplier = ( DWORD ) hb_parnldef( 5, -1 );
+      Timeouts.WriteTotalTimeoutConstant   = ( DWORD ) hb_parnldef( 6, -1 );
 
       s_PortData[ iPort ].iFunction = HB_WIN_COM_FUN_GETCOMMSTATE;
       s_PortData[ iPort ].dwError = 0;
@@ -744,7 +744,7 @@ HB_FUNC( WIN_COMDEBUGDCB )
 
    if( iPort >= 0 && iPort < ( int ) HB_SIZEOFARRAY( s_PortData ) && ( hCommPort = s_PortData[ iPort ].hPort ) != INVALID_HANDLE_VALUE )
    {
-      int iDebugLevel = HB_ISNUM( 2 ) ? hb_parni( 2 ) : HB_WIN_COM_DBGBASIC;
+      int iDebugLevel = hb_parnidef( 2, HB_WIN_COM_DBGBASIC );
       DCB CurDCB;
       COMMTIMEOUTS CurCOMMTIMEOUTS;
       COMMPROP CurCOMMPROP;

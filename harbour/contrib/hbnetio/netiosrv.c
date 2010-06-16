@@ -599,7 +599,7 @@ HB_FUNC( NETIO_ACCEPT )
 
    if( lsd && lsd->sd != HB_NO_SOCKET && !lsd->stop )
    {
-      HB_MAXINT timeout = HB_ISNUM( 2 ) ? hb_parnint( 2 ) : -1;
+      HB_MAXINT timeout = hb_parnintdef( 2, -1 );
       HB_SOCKET connsd;
       int iLevel, iStrategy, keylen = ( int ) hb_parclen( 3 );
 

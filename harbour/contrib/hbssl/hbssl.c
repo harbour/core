@@ -66,9 +66,9 @@ HB_FUNC( HB_SSL_READ_ALL )
 
       if( ssl )
       {
-         int iMax = ISNUM( 3 ) ? hb_parni( 3 ) : INT_MAX;
-         int iTimeout = ISNUM( 4 ) ? hb_parni( 4 ) : -1;
-         int iBufferSize = HB_ISNUM( 5 ) ? hb_parni( 5 ) : 80;
+         int iMax = hb_parnidef( 3, INT_MAX );
+         int iTimeout = hb_parnidef( 4, -1 );
+         int iBufferSize = hb_parnidef( 5, 80 );
 
          int iPos = 0;
          int iAllocated = 0;
@@ -135,9 +135,9 @@ HB_FUNC( HB_SSL_READ_LINE )
 
       if( ssl )
       {
-         int iMax = ISNUM( 3 ) ? hb_parni( 3 ) : INT_MAX;
-         int iTimeout = ISNUM( 4 ) ? hb_parni( 4 ) : -1;
-         int iBufferSize = HB_ISNUM( 5 ) ? hb_parni( 5 ) : 80;
+         int iMax = hb_parnidef( 3, INT_MAX );
+         int iTimeout = hb_parnidef( 4, -1 );
+         int iBufferSize = hb_parnidef( 5, 80 );
 
          int iPos = 0;
          int iAllocated = 0;

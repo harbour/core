@@ -207,7 +207,7 @@ HB_FUNC( BIO_SET_FD )
    BIO * bio = hb_BIO_par( 1 );
 
    if( bio )
-      hb_retni( BIO_set_fd( bio, hb_parnl( 2 ), HB_ISNUM( 3 ) ? hb_parni( 3 ) : BIO_NOCLOSE ) );
+      hb_retni( BIO_set_fd( bio, hb_parnl( 2 ), hb_parnidef( 3, BIO_NOCLOSE ) ) );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -387,7 +387,7 @@ HB_FUNC( BIO_SET_CLOSE )
    BIO * bio = hb_BIO_par( 1 );
 
    if( bio )
-      hb_retni( BIO_set_close( bio, HB_ISNUM( 2 ) ? hb_parni( 2 ) : BIO_NOCLOSE ) );
+      hb_retni( BIO_set_close( bio, hb_parnidef( 2, BIO_NOCLOSE ) ) );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -405,7 +405,7 @@ HB_FUNC( BIO_GET_CLOSE )
 HB_FUNC( BIO_NEW_SOCKET )
 {
    if( HB_ISNUM( 1 ) )
-      hb_retptr( BIO_new_socket( hb_parni( 1 ), HB_ISNUM( 2 ) ? hb_parni( 2 ) : BIO_NOCLOSE ) );
+      hb_retptr( BIO_new_socket( hb_parni( 1 ), hb_parnidef( 2, BIO_NOCLOSE ) ) );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -414,7 +414,7 @@ HB_FUNC( BIO_NEW_DGRAM )
 {
 #ifndef OPENSSL_NO_DGRAM
    if( HB_ISNUM( 1 ) )
-      hb_retptr( BIO_new_dgram( hb_parni( 1 ), HB_ISNUM( 2 ) ? hb_parni( 2 ) : BIO_NOCLOSE ) );
+      hb_retptr( BIO_new_dgram( hb_parni( 1 ), hb_parnidef( 2, BIO_NOCLOSE ) ) );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 #else
@@ -425,7 +425,7 @@ HB_FUNC( BIO_NEW_DGRAM )
 HB_FUNC( BIO_NEW_FD )
 {
    if( HB_ISNUM( 1 ) )
-      hb_retptr( BIO_new_fd( hb_parnl( 1 ), HB_ISNUM( 2 ) ? hb_parni( 2 ) : BIO_NOCLOSE ) );
+      hb_retptr( BIO_new_fd( hb_parnl( 1 ), hb_parnidef( 2, BIO_NOCLOSE ) ) );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
