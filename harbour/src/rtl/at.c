@@ -64,8 +64,8 @@ HB_FUNC( HB_AT )
    if( pText && pSub )
    {
       HB_SIZE nTextLength = hb_itemGetCLen( pText );
-      HB_SIZE nStart = HB_ISNUM( 3 ) ? hb_parnl( 3 ) : 1;
-      HB_SIZE nEnd = HB_ISNUM( 4 ) ? ( HB_SIZE ) hb_parnl( 4 ) : nTextLength;
+      HB_SIZE nStart = hb_parnldef( 3, 1 );
+      HB_SIZE nEnd = ( HB_SIZE ) hb_parnldef( 4, nTextLength );
       HB_SIZE nPos;
 
       if( nStart > nTextLength || nEnd < nStart )

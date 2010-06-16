@@ -77,7 +77,7 @@ HB_FUNC( STRTRAN )
          const char * szReplace;
          HB_SIZE nStart;
 
-         nStart = ( HB_ISNUM( 4 ) ? hb_parnl( 4 ) : 1 );
+         nStart = hb_parnldef( 4, 1 );
 
          if( nStart == 0 )
          {

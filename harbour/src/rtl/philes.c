@@ -65,7 +65,7 @@ HB_FUNC( FOPEN )
    if( szFile )
    {
       hb_retnint( ( HB_NHANDLE ) hb_fsOpen( szFile,
-                  HB_ISNUM( 2 ) ? ( HB_USHORT ) hb_parni( 2 ) : FO_READ | FO_COMPAT ) );
+                  ( HB_USHORT ) hb_parnidef( 2, FO_READ | FO_COMPAT ) ) );
       hb_fsSetFError( hb_fsError() );
    }
    else
@@ -82,7 +82,7 @@ HB_FUNC( FCREATE )
    if( szFile )
    {
       hb_retnint( ( HB_NHANDLE ) hb_fsCreate( szFile,
-                  HB_ISNUM( 2 ) ? hb_parni( 2 ) : FC_NORMAL ) );
+                  hb_parnidef( 2, FC_NORMAL ) ) );
       hb_fsSetFError( hb_fsError() );
    }
    else
@@ -98,8 +98,8 @@ HB_FUNC( HB_FCREATE )
    if( szFile )
    {
       hb_retnint( ( HB_NHANDLE ) hb_fsCreateEx( szFile,
-                  HB_ISNUM( 2 ) ? hb_parni( 2 ) : FC_NORMAL,
-                  HB_ISNUM( 3 ) ? ( HB_USHORT ) hb_parni( 3 ) : FO_COMPAT ) );
+                  hb_parnidef( 2, FC_NORMAL ),
+                  ( HB_USHORT ) hb_parnidef( 3, FO_COMPAT ) ) );
       hb_fsSetFError( hb_fsError() );
    }
    else
@@ -222,7 +222,7 @@ HB_FUNC( FSEEK )
    {
       hb_retnint( hb_fsSeekLarge( hb_numToHandle( hb_parnint( 1 ) ),
                                   hb_parnint( 2 ),
-                                  HB_ISNUM( 3 ) ? ( HB_USHORT ) hb_parni( 3 ) : FS_SET ) );
+                                  ( HB_USHORT ) hb_parnidef( 3, FS_SET ) ) );
       uiError = hb_fsError();
    }
    else

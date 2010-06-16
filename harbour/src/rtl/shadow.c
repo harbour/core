@@ -60,7 +60,7 @@ HB_FUNC( HB_SHADOW )
                        hb_parni( 2 ),
                        hb_parni( 3 ),
                        hb_parni( 4 ),
-                       HB_ISNUM( 5 ) ? hb_parni( 5 ) : 7 );
+                       hb_parnidef( 5, 7 ) );
 }
 
 HB_FUNC( HB_CLRAREA )

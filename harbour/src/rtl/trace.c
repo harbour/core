@@ -87,12 +87,12 @@ static void hb_trace_message( char * buffer, HB_SIZE ulSize, int iParam, int iCo
 
 HB_FUNC( HB_TRACESTATE )
 {
-   hb_retni( hb_tracestate( HB_ISNUM( 1 ) ? hb_parni( 1 ) : -1 ) );
+   hb_retni( hb_tracestate( hb_parnidef( 1, -1 ) ) );
 }
 
 HB_FUNC( HB_TRACELEVEL )
 {
-   hb_retni( hb_tracelevel( HB_ISNUM( 1 ) ? hb_parni( 1 ) : -1 ) );
+   hb_retni( hb_tracelevel( hb_parnidef( 1, -1 ) ) );
 }
 
 HB_FUNC( HB_TRACELOGLEVEL )

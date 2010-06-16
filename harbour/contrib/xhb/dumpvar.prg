@@ -408,7 +408,7 @@ STATIC FUNCTION __objGetValueFullList( oObject, aExcept, nScope, nNoScope )
    LOCAL aReturn
    LOCAL aVar
 
-   IF ! IOBJECT( oObject )
+   IF ! ISOBJECT( oObject )
       __errRT_BASE( EG_ARG, 3101, NIL, ProcName( 0 ) )
    ENDIF
 

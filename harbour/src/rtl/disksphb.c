@@ -77,7 +77,7 @@ HB_FUNC( HB_DISKSPACE )
 {
    char szPathBuf[ 4 ];
    const char * szPath = hb_parc( 1 );
-   HB_USHORT uiType = HB_ISNUM( 2 ) ? ( HB_USHORT ) hb_parni( 2 ) : HB_DISK_AVAIL;
+   HB_USHORT uiType = ( HB_USHORT ) hb_parnidef( 2, HB_DISK_AVAIL );
    double dSpace = 0.0;
 
    if( uiType > HB_DISK_TOTAL )

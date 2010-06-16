@@ -90,7 +90,7 @@ HB_FUNC( DISKSPACE )
 
 #if defined( HB_OS_DOS )
    {
-      int iDrive = HB_ISNUM( 1 ) ? hb_parni( 1 ) : 0;
+      int iDrive = hb_parni( 1 ); /* defaults to 0 */
 
       if( iDrive >= 0 )
       {
@@ -210,7 +210,7 @@ HB_FUNC( DISKSPACE )
    }
 #elif defined( HB_OS_OS2 )
    {
-      USHORT uiDrive = HB_ISNUM( 1 ) ? hb_parni( 1 ) : 0;
+      USHORT uiDrive = hb_parni( 1 ); /* defaults to 0 */
       struct _FSALLOCATE fsa;
 
       /* Query level 1 info from filesystem */

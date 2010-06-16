@@ -244,10 +244,22 @@ HB_FUNC( HB_KEYINS )
 
 HB_FUNC( NEXTKEY )
 {
+   /* TOFIX: Dirty extension. Clipper accepts no parameter here. */
    hb_retni( hb_inkeyNext( HB_ISNUM( 1 ) ? hb_parni( 1 ) : hb_setGetEventMask() ) );
 }
 
 HB_FUNC( LASTKEY )
+{
+   /* TOFIX: Dirty extension. Clipper accepts no parameter here. */
+   hb_retni( hb_inkeyLast( HB_ISNUM( 1 ) ? hb_parni( 1 ) : INKEY_ALL ) );
+}
+
+HB_FUNC( HB_KEYNEXT )
+{
+   hb_retni( hb_inkeyNext( HB_ISNUM( 1 ) ? hb_parni( 1 ) : hb_setGetEventMask() ) );
+}
+
+HB_FUNC( HB_KEYLAST )
 {
    hb_retni( hb_inkeyLast( HB_ISNUM( 1 ) ? hb_parni( 1 ) : INKEY_ALL ) );
 }

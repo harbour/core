@@ -293,7 +293,7 @@ HB_FUNC( HB_GZFLUSH )
 {
    gzFile gz = hb_gzParam( 1 );
    if( gz )
-      hb_retni( gzflush( gz, HB_ISNUM( 2 ) ? hb_parni( 2 ) : Z_SYNC_FLUSH ) );
+      hb_retni( gzflush( gz, hb_parnidef( 2, Z_SYNC_FLUSH ) ) );
 }
 
 /*
@@ -305,8 +305,7 @@ HB_FUNC( HB_GZSEEK )
    {
       gzFile gz = hb_gzParam( 1 );
       if( gz )
-         hb_retnint( gzseek( gz, ( z_off_t ) hb_parnint( 2 ), HB_ISNUM( 3 ) ?
-                             hb_parni( 3 ) : SEEK_SET ) );
+         hb_retnint( gzseek( gz, ( z_off_t ) hb_parnint( 2 ), hb_parnidef( 3, SEEK_SET ) ) );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );

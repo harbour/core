@@ -948,7 +948,7 @@ HB_FUNC( HB_INETDATAREADY )
          iVal = 1;
       else
       {
-         iVal = hb_socketSelectRead( socket->sd, HB_ISNUM( 2 ) ? hb_parnint( 2 ) : 0 );
+         iVal = hb_socketSelectRead( socket->sd, hb_parnint( 2 ) /* default to 0 */ );
          if( iVal < 0 )
             socket->iError = hb_socketGetError();
       }

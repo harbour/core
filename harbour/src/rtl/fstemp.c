@@ -446,7 +446,7 @@ HB_FUNC( HB_FTEMPCREATE )
 
    hb_retnint( ( HB_NHANDLE ) hb_fsCreateTemp( hb_parc( 1 ),
                                                hb_parc( 2 ),
-                                               ( HB_FATTR ) ( HB_ISNUM( 3 ) ? hb_parnl( 3 ) : FC_NORMAL ),
+                                               ( HB_FATTR ) hb_parnldef( 3, FC_NORMAL ),
                                                szName ) );
 
    hb_storc( szName, 4 );
@@ -460,7 +460,7 @@ HB_FUNC( HB_FTEMPCREATEEX )
                                                  hb_parc( 2 ),
                                                  hb_parc( 3 ),
                                                  hb_parc( 4 ),
-                                                 ( HB_FATTR ) ( HB_ISNUM( 5 ) ? hb_parnl( 5 ) : FC_NORMAL ) ) );
+                                                 ( HB_FATTR ) hb_parnldef( 5, FC_NORMAL ) ) );
 
    hb_storc( szName, 1 );
 }

@@ -62,13 +62,13 @@ static void hb_getScreenRange( int * piMin, int * piMax,
    {
       iMax  = hb_gtMaxRow();
       iFrom = hb_parni( 1 );
-      iTo   = HB_ISNUM( 3 ) ? hb_parni( 3 ) : iMax;
+      iTo   = hb_parnidef( 3, iMax );
    }
    else
    {
       iMax  = hb_gtMaxCol();
       iFrom = hb_parni( 2 );
-      iTo   = HB_ISNUM( 4 ) ? hb_parni( 4 ) : iMax;
+      iTo   = hb_parnidef( 4, iMax );
    }
 
    if( iFrom < 0 )
