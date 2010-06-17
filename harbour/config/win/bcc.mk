@@ -84,14 +84,14 @@ ifneq ($(HB_SHELL),sh)
       #       limit is 2047 chars. [vszakats]
 
       # NOTE: The empty line directly before 'endef' HAVE TO exist!
-      define lib_object
+      define library_object
          @$(ECHO) $(ECHOQUOTE)-+$(subst /,$(ECHOBACKSLASH),$(file)) $(LINECONT)$(ECHOQUOTE) >> __lib__.tmp
 
       endef
 
       define create_library
          $(if $(wildcard __lib__.tmp),@$(RM) __lib__.tmp,)
-         $(foreach file,$(?F),$(lib_object))
+         $(foreach file,$(?F),$(library_object))
          @$(ECHO) $(ECHOQUOTE)-+$(ECHOQUOTE)>> __lib__.tmp
          $(AR) $(ARFLAGS) $(HB_AFLAGS) $(HB_USER_AFLAGS) "$(subst /,$(BACKSLASH),$(LIB_DIR)/$@)" @__lib__.tmp
       endef
@@ -109,13 +109,13 @@ DLIBS += $(foreach lib,$(LIBS),$(LIB_DIR)/$(lib)$(LIB_EXT))
 DLIBS += $(foreach lib,$(SYSLIBS),$(lib)$(LIB_EXT))
 
 # NOTE: The empty line directly before 'endef' HAVE TO exist!
-define dyn_object
+define dynlib_object
    @$(ECHO) $(ECHOQUOTE)$(subst /,$(ECHOBACKSLASH),$(file)) +$(ECHOQUOTE) >> __dyn__.tmp
 
 endef
 define create_dynlib
    $(if $(wildcard __dyn__.tmp),@$(RM) __dyn__.tmp,)
-   $(foreach file,$^,$(dyn_object))
+   $(foreach file,$^,$(dynlib_object))
    @$(ECHO) $(ECHOQUOTE), $(subst /,$(ECHOBACKSLASH),$(DYN_DIR)/$@),, $(subst /,$(ECHOBACKSLASH),$(DLIBS)) cw32mt.lib import32.lib$(ECHOQUOTE) >> __dyn__.tmp
    $(DY) $(DFLAGS) $(HB_USER_DFLAGS) c0d32.obj @__dyn__.tmp
    @$(CP) $(subst /,$(DIRSEP),$(DYN_DIR)/$(basename $@)$(LIB_EXT)) $(subst /,$(DIRSEP),$(IMP_FILE))

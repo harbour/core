@@ -118,7 +118,7 @@ DY_OUT := $(LD_OUT)
 DLIBS := $(foreach lib,$(HB_USER_LIBS) $(LIBS) $(SYSLIBS),-l$(lib))
 
 # NOTE: The empty line directly before 'endef' HAS TO exist!
-define dyn_object
+define dynlib_object
    @$(ECHO) $(subst $(DIRSEP),/,$(file))>> __dyn__.tmp
    @emxexp $(file)>> __dyn__.def
 
@@ -132,7 +132,7 @@ define create_dynlib
    @$(ECHO) $(ECHOQUOTE)CODE PRELOAD MOVEABLE DISCARDABLE$(ECHOQUOTE) >> __dyn__.def
    @$(ECHO) $(ECHOQUOTE)DATA PRELOAD MOVEABLE MULTIPLE NONSHARED$(ECHOQUOTE) >> __dyn__.def
    @$(ECHO) $(ECHOQUOTE)EXPORTS$(ECHOQUOTE) >> __dyn__.def
-   $(foreach file,$^,$(dyn_object))
+   $(foreach file,$^,$(dynlib_object))
    $(DY) $(DFLAGS) $(HB_USER_DFLAGS) $(DY_OUT)$(DYN_DIR)/$@ -Wl,@__dyn__.tmp __dyn__.def $(DLIBS) $(DYSTRIP)
    emximp -o $(IMP_FILE) $(DYN_DIR)/$@
 endef

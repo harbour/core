@@ -121,7 +121,7 @@ ifeq ($(HB_BUILD_DLL),dostest)
    DLIBS :=
 
    # NOTE: The empty line directly before 'endef' HAVE TO exist!
-   define dyn_object
+   define dynlib_object
       @$(ECHO) $(ECHOQUOTE)$(subst \,/,$(file))$(ECHOQUOTE) >> __dyn__.tmp
 
    endef
@@ -129,7 +129,7 @@ ifeq ($(HB_BUILD_DLL),dostest)
       @$(ECHO) $(ECHOQUOTE)$(DFLAGS) $(HB_USER_DFLAGS)$(ECHOQUOTE) > __dyn__.tmp
       @$(ECHO) $(ECHOQUOTE)$(DY_OUT)$(DYN_DIR)/$@$(ECHOQUOTE) >> __dyn__.tmp
       @$(ECHO) $(ECHOQUOTE)-Y $(IMP_FILE) -U $(DYSTRIP)$(ECHOQUOTE) >> __dyn__.tmp
-      $(foreach file,$^,$(dyn_object))
+      $(foreach file,$^,$(dynlib_object))
       @$(ECHO) $(ECHOQUOTE)$(DLIBS)$(ECHOQUOTE) >> __dyn__.tmp
       $(DY) @__dyn__.tmp
    endef

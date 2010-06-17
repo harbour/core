@@ -81,13 +81,13 @@ else
 endif
 
 # NOTE: The empty line directly before 'endef' HAVE TO exist!
-define dyn_object
+define dynlib_object
    @$(ECHO) $(ECHOQUOTE)FILE '$(file)'$(ECHOQUOTE) >> __dyn__.tmp
 
 endef
 define create_dynlib
    $(if $(wildcard __dyn__.tmp),@$(RM) __dyn__.tmp,)
-   $(foreach file,$^,$(dyn_object))
+   $(foreach file,$^,$(dynlib_object))
    $(DY) $(DFLAGS) $(HB_USER_DFLAGS) NAME '$(subst /,$(DIRSEP),$(DYN_DIR)/$@)' OP implib='$(IMP_FILE)' @__dyn__.tmp $(DLIBS_COMMA)
 endef
 
