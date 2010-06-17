@@ -194,7 +194,7 @@ HB_FUNC( HB_KEYPUT )
       HB_SIZE ulIndex;
       HB_SIZE ulElements = hb_arrayLen( pArray );
 
-      for( ulIndex = 1; ulIndex <= ulElements; ulIndex++ )
+      for( ulIndex = 1; ulIndex <= ulElements; ++ulIndex )
       {
          HB_TYPE type = hb_arrayGetType( pArray, ulIndex );
 
@@ -226,7 +226,7 @@ HB_FUNC( HB_KEYINS )
       HB_SIZE ulIndex;
       HB_SIZE ulElements = hb_arrayLen( pArray );
 
-      for( ulIndex = 1; ulIndex <= ulElements; ulIndex++ )
+      for( ulIndex = 1; ulIndex <= ulElements; ++ulIndex )
       {
          HB_TYPE type = hb_arrayGetType( pArray, ulIndex );
 
@@ -244,24 +244,17 @@ HB_FUNC( HB_KEYINS )
 
 HB_FUNC( NEXTKEY )
 {
-   /* TOFIX: Dirty extension. Clipper accepts no parameter here. */
+#if defined( HB_LEGACY_LEVEL3 )
+   /* NOTE: Dirty extension. Clipper accepts no parameter here. Deprecated */
    hb_retni( hb_inkeyNext( HB_ISNUM( 1 ) ? hb_parni( 1 ) : hb_setGetEventMask() ) );
+#else
+   hb_retni( hb_inkeyNext( hb_setGetEventMask() ) );
+#endif
 }
 
 HB_FUNC( LASTKEY )
 {
-   /* TOFIX: Dirty extension. Clipper accepts no parameter here. */
-   hb_retni( hb_inkeyLast( HB_ISNUM( 1 ) ? hb_parni( 1 ) : INKEY_ALL ) );
-}
-
-HB_FUNC( HB_KEYNEXT )
-{
-   hb_retni( hb_inkeyNext( HB_ISNUM( 1 ) ? hb_parni( 1 ) : hb_setGetEventMask() ) );
-}
-
-HB_FUNC( HB_KEYLAST )
-{
-   hb_retni( hb_inkeyLast( HB_ISNUM( 1 ) ? hb_parni( 1 ) : INKEY_ALL ) );
+   hb_retni( hb_inkeyLast( INKEY_ALL ) );
 }
 
 HB_FUNC( HB_SETLASTKEY )

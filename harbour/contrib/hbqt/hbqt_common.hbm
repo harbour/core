@@ -8,7 +8,7 @@
 
 -w3 -es2
 
--stop{dos|mingw64|watcom|bcc|pocc|pocc64|poccarm|msvcia64}
+-stop{dos|watcom|bcc|pocc|pocc64|poccarm|msvcia64}
 
 -plugin=plug_moc.prg
 
