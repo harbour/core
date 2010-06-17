@@ -203,24 +203,39 @@ static void hb_hrbInit( PHRB_BODY pHrbBody, int iPCount, PHB_ITEM * pParams )
       if( hb_vmRequestReenter() )
       {
          HB_ULONG ul;
+         HB_BOOL fRepeat, fClipInit = HB_TRUE;
          int i;
 
          pHrbBody->fInit = HB_FALSE;
          pHrbBody->fExit = HB_TRUE;
 
-         for( ul = 0; ul < pHrbBody->ulSymbols; ul++ )    /* Check INIT functions */
+         do
          {
-            if( ( pHrbBody->pSymRead[ ul ].scope.value & HB_FS_INITEXIT ) == HB_FS_INIT )
+            fRepeat = HB_FALSE;
+            ul = pHrbBody->ulSymbols;
+            while( ul-- )
             {
-               hb_vmPushSymbol( pHrbBody->pSymRead + ul );
-               hb_vmPushNil();
-               for( i = 0; i < iPCount; i++ )
-                  hb_vmPush( pParams[ i ] );
-               hb_vmProc( ( HB_USHORT ) iPCount );
-               if( hb_vmRequestQuery() != 0 )
-                  break;
+               /* Check INIT functions */
+               if( ( pHrbBody->pSymRead[ ul ].scope.value & HB_FS_INITEXIT ) == HB_FS_INIT )
+               {
+                  if( strcmp( pHrbBody->pSymRead[ ul ].szName, "CLIPINIT$" ) ?
+                      !fClipInit : fClipInit )
+                  {
+                     hb_vmPushSymbol( pHrbBody->pSymRead + ul );
+                     hb_vmPushNil();
+                     for( i = 0; i < iPCount; i++ )
+                        hb_vmPush( pParams[ i ] );
+                     hb_vmProc( ( HB_USHORT ) iPCount );
+                     if( hb_vmRequestQuery() != 0 )
+                        break;
+                  }
+                  else if( fClipInit )
+                     fRepeat = HB_TRUE;
+               }
             }
+            fClipInit = HB_FALSE;
          }
+         while( fRepeat && hb_vmRequestQuery() == 0 );
 
          hb_vmRequestRestore();
       }

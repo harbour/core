@@ -206,7 +206,7 @@ static void    hb_vmPopStatic( HB_USHORT uiStatic ); /* pops the stack latest va
 
 /* misc */
 static void    hb_vmDoInitStatics( void );        /* executes all _INITSTATICS functions */
-static void    hb_vmDoInitFunctions( void );      /* executes all defined PRGs INIT functions */
+static void    hb_vmDoInitFunctions( HB_BOOL );   /* executes all defined PRGs INIT functions */
 static void    hb_vmDoExitFunctions( void );      /* executes all defined PRGs EXIT functions */
 static void    hb_vmReleaseLocalSymbols( void );  /* releases the memory of the local symbols linked list */
 
@@ -373,7 +373,9 @@ static void hb_vmDoModuleQuitFunctions( void )
 }
 
 
-/* call CLIPINIT function to initialize ErrorBlock() and __SetHelpK() */
+/* call CLIPINIT function to initialize GETLIST public variable
+ * and set ErrorBlock() by ERRORSYS() function
+ */
 static void hb_vmDoInitClip( void )
 {
    PHB_DYNS pDynSym = hb_dynsymFind( "CLIPINIT" );
@@ -383,6 +385,23 @@ static void hb_vmDoInitClip( void )
       hb_vmPushSymbol( pDynSym->pSymbol );
       hb_vmPushNil();
       hb_vmProc( 0 );
+   }
+}
+
+/* call __SetHelpK() if HELP() function is linked */
+static void hb_vmDoInitHelp( void )
+{
+   PHB_DYNS pDynSym = hb_dynsymFind( "HELP" );
+
+   if( pDynSym && pDynSym->pSymbol->value.pFunPtr )
+   {
+      pDynSym = hb_dynsymFind( "__SETHELPK" );
+      if( pDynSym && pDynSym->pSymbol->value.pFunPtr )
+      {
+         hb_vmPushSymbol( pDynSym->pSymbol );
+         hb_vmPushNil();
+         hb_vmProc( 0 );
+      }
    }
 }
 
@@ -793,8 +812,8 @@ void hb_vmThreadInit( void * Cargo )
 
       if( s_fHVMActive )
       {
-         /* call CLIPINIT function to initialize GetList PUBLIC variables
-          * ErrorBlock() and __SetHelpK()
+         /* call CLIPINIT function to initialize GETLIST public variable
+          * and set ErrorBlock() by ERRORSYS() function
           */
          hb_vmDoInitClip();
       }
@@ -979,18 +998,27 @@ void hb_vmInit( HB_BOOL bStartMainProc )
     * because INIT function can use static variables
     */
    hb_vmDoInitStatics();
-   /* call CLIPINIT function to initialize GetList PUBLIC variables
-    * ErrorBlock() and __SetHelpK()
+
+   /* call CLIPINIT function to initialize GETLIST public variable
+    * and set ErrorBlock() by ERRORSYS() function
     * Because on some platform the execution order of init functions
     * is out of Harbour control then this function has to be called
     * explicitly in VM initialization process before hb_vmDoInitFunctions()
     * and not depends on INIT clause.
     */
    hb_vmDoInitClip();
-   hb_clsDoInit();                  /* initialize Classy .prg functions */
 
-   hb_vmDoModuleInitFunctions();    /* process AtInit registered functions */
-   hb_vmDoInitFunctions();          /* process defined INIT functions */
+   hb_clsDoInit();                     /* initialize Class(y) .prg functions */
+
+   hb_vmDoModuleInitFunctions();       /* process AtInit registered functions */
+   hb_vmDoInitFunctions( HB_TRUE );    /* process registered CLIPINIT INIT procedures */
+   hb_vmDoInitFunctions( HB_FALSE );   /* process registered other INIT procedures */
+
+   /* Call __SetHelpK() function to redirect K_F1 to HELP() function
+    * if it is linked. CA-Cl*pper calls it after INIT PROCEDURes and
+    * before executing the application entry function.
+    */
+   hb_vmDoInitHelp();
 
    /* This is undocumented CA-Cl*pper, if there's a function called _APPMAIN
       it will be executed first. [vszakats] */
@@ -7676,33 +7704,45 @@ void hb_vmInitSymbolGroup( void * hNewDynLib, int argc, const char * argv[] )
 
       if( fFound )
       {
-         pLastSymbols = s_pSymbols;
-         while( pLastSymbols )
-         {
-            if( pLastSymbols->hDynLib == hNewDynLib )
-            {
-               if( pLastSymbols->fActive && ( pLastSymbols->hScope & HB_FS_INIT ) != 0 )
-               {
-                  for( ui = 0; ui < pLastSymbols->uiModuleSymbols; ui++ )
-                  {
-                     HB_SYMBOLSCOPE scope = ( pLastSymbols->pModuleSymbols + ui )->scope.value & HB_FS_INITEXIT;
+         HB_BOOL fClipInit = HB_TRUE;
 
-                     if( scope == HB_FS_INIT )
+         do
+         {
+            pLastSymbols = s_pSymbols;
+            while( pLastSymbols && hb_vmRequestQuery() == 0 )
+            {
+               if( pLastSymbols->hDynLib == hNewDynLib )
+               {
+                  if( pLastSymbols->fActive && ( pLastSymbols->hScope & HB_FS_INIT ) != 0 )
+                  {
+                     ui = pLastSymbols->uiModuleSymbols;
+                     while( ui-- )
                      {
-                        int i;
-                        hb_vmPushSymbol( pLastSymbols->pModuleSymbols + ui );
-                        hb_vmPushNil();
-                        for( i = 0; i < argc; ++i )
+                        HB_SYMBOLSCOPE scope = ( pLastSymbols->pModuleSymbols + ui )->scope.value & HB_FS_INITEXIT;
+
+                        if( scope == HB_FS_INIT &&
+                            ( strcmp( ( pLastSymbols->pModuleSymbols + ui )->szName,
+                                      "CLIPINIT$" ) == 0 ? fClipInit : !fClipInit ) )
                         {
-                           hb_vmPushString( argv[i], strlen( argv[i] ) );
+                           int i;
+                           hb_vmPushSymbol( pLastSymbols->pModuleSymbols + ui );
+                           hb_vmPushNil();
+                           for( i = 0; i < argc; ++i )
+                           {
+                              hb_vmPushString( argv[i], strlen( argv[i] ) );
+                           }
+                           hb_vmProc( ( HB_USHORT ) argc );
+                           if( hb_vmRequestQuery() != 0 )
+                              break;
                         }
-                        hb_vmProc( ( HB_USHORT ) argc );
                      }
                   }
                }
+               pLastSymbols = pLastSymbols->pNext;
             }
-            pLastSymbols = pLastSymbols->pNext;
+            fClipInit = !fClipInit;
          }
+         while( !fClipInit );
       }
    }
 }
@@ -7995,7 +8035,7 @@ static void hb_vmDoInitStatics( void )
 
          for( ui = 0; ui < pLastSymbols->uiModuleSymbols; ui++ )
          {
-            HB_SYMBOLSCOPE scope = ( pLastSymbols->pModuleSymbols + ui )->scope.value & ( HB_FS_EXIT | HB_FS_INIT );
+            HB_SYMBOLSCOPE scope = ( pLastSymbols->pModuleSymbols + ui )->scope.value & HB_FS_INITEXIT;
 
             if( scope == HB_FS_INITEXIT )
             {
@@ -8010,24 +8050,26 @@ static void hb_vmDoInitStatics( void )
    }
 }
 
-static void hb_vmDoInitFunctions( void )
+static void hb_vmDoInitFunctions( HB_BOOL fClipInit )
 {
    PHB_SYMBOLS pLastSymbols = s_pSymbols;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_vmDoInitFunctions()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmDoInitFunctions(%d)", fClipInit));
 
-   while( pLastSymbols )
+   while( pLastSymbols && hb_vmRequestQuery() == 0 )
    {
       /* only if module contains some INIT functions */
-      if( pLastSymbols->fActive && pLastSymbols->hScope & HB_FS_INIT )
+      if( pLastSymbols->fActive && ( pLastSymbols->hScope & HB_FS_INIT ) != 0 )
       {
-         HB_USHORT ui;
+         HB_USHORT ui = pLastSymbols->uiModuleSymbols;
 
-         for( ui = 0; ui < pLastSymbols->uiModuleSymbols; ui++ )
+         while( ui-- )
          {
-            HB_SYMBOLSCOPE scope = ( pLastSymbols->pModuleSymbols + ui )->scope.value & ( HB_FS_EXIT | HB_FS_INIT );
+            HB_SYMBOLSCOPE scope = ( pLastSymbols->pModuleSymbols + ui )->scope.value & HB_FS_INITEXIT;
 
-            if( scope == HB_FS_INIT )
+            if( scope == HB_FS_INIT &&
+                ( strcmp( ( pLastSymbols->pModuleSymbols + ui )->szName,
+                          "CLIPINIT$" ) == 0 ? fClipInit : !fClipInit ) )
             {
                int argc = hb_cmdargARGC();
                char ** argv = hb_cmdargARGV();
@@ -8049,6 +8091,8 @@ static void hb_vmDoInitFunctions( void )
                }
 
                hb_vmProc( ( HB_USHORT ) iArgCount );
+               if( hb_vmRequestQuery() != 0 )
+                  break;
             }
          }
       }
@@ -8078,7 +8122,7 @@ static void hb_vmDoExitFunctions( void )
 
             for( ui = 0; ui < pLastSymbols->uiModuleSymbols; ui++ )
             {
-               HB_SYMBOLSCOPE scope = ( pLastSymbols->pModuleSymbols + ui )->scope.value & ( HB_FS_EXIT | HB_FS_INIT );
+               HB_SYMBOLSCOPE scope = ( pLastSymbols->pModuleSymbols + ui )->scope.value & HB_FS_INITEXIT;
 
                if( scope == HB_FS_EXIT )
                {
