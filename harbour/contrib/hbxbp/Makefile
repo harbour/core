@@ -54,7 +54,7 @@ PRG_HEADERS := \
 # Try to be in sync with hbqt, but not too hard, since this
 # lib doesn't need QT external component directly.
 ifeq ($(filter $(HB_PLATFORM),dos),)
-   ifeq ($(filter $(HB_COMPILER),mingw64 watcom bcc pocc pocc64 poccarm),)
+   ifeq ($(filter $(HB_COMPILER),watcom bcc pocc pocc64 poccarm msvcia64),)
       ifneq ($(HB_WITH_QT),no)
 
          HB_INC_DEPEND := -I$(TOP)$(ROOT)contrib/hbqt

@@ -90,7 +90,11 @@ PROCEDURE Main()
          hb_GTInfo( HB_GTI_RESIZEMODE, iif( hb_GTInfo( HB_GTI_RESIZEMODE ) == HB_GTI_RESIZEMODE_ROWS, HB_GTI_RESIZEMODE_FONT, HB_GTI_RESIZEMODE_ROWS ) )
 
       CASE nKey == K_F10
-         hb_threadStart( @thFunc() )
+         IF hb_MTVM()
+            hb_threadStart( @thFunc() )
+         ELSE
+            Alert( "MT mode not available. Rebuild this program with -mt switch and try again." )
+         ENDIF
 
       CASE nKey == HB_K_RESIZE
          DispScreen()
@@ -236,7 +240,7 @@ PROCEDURE thFunc()
                           ' Rows and ' + hb_ntos( MaxCol() ) + ' Columns'
    DispOutAt( 0, 0, padc( cTitle, maxcol() + 1 ), 'N/GR*' )
 
-   use test shared
+   USE test SHARED
    aStruct := DbStruct()
 
    oBrowse := TBrowse():New( 1, 0, maxrow(), maxcol() )
@@ -329,71 +333,32 @@ STATIC FUNCTION TBPrev( oTbr )
    RETURN lMoved
 //-------------------------------------------------------------------//
 STATIC FUNCTION BlockField( i )
-   RETURN  {|| fieldget( i ) }
+   RETURN {|| fieldget( i ) }
 //-------------------------------------------------------------------//
 STATIC FUNCTION BrwHandleKey( oBrowse, nKey, lEnd )
    LOCAL lRet := .T.
 
    DO CASE
-   CASE nKey == K_ESC
-      lEnd := .T.
-
-   CASE nKey == K_ENTER
-      lEnd := .T.
-
-   CASE nKey == K_DOWN
-      oBrowse:Down()
-
-   CASE nKey == K_UP
-      oBrowse:Up()
-
-   CASE nKey == K_LEFT
-      oBrowse:Left()
-
-   CASE nKey == K_RIGHT
-      oBrowse:Right()
-
-   CASE nKey == K_PGDN
-      oBrowse:pageDown()
-
-   CASE nKey == K_PGUP
-      oBrowse:pageUp()
-
-   CASE nKey == K_CTRL_PGUP
-      oBrowse:goTop()
-
-   CASE nKey == K_CTRL_PGDN
-      oBrowse:goBottom()
-
-   CASE nKey == K_HOME
-      oBrowse:home()
-
-   CASE nKey == K_END
-      oBrowse:end()
-
-   CASE nKey == K_CTRL_LEFT
-      oBrowse:panLeft()
-
-   CASE nKey == K_CTRL_RIGHT
-      oBrowse:panRight()
-
-   CASE nKey == K_CTRL_HOME
-      oBrowse:panHome()
-
-   CASE nKey == K_CTRL_END
-      oBrowse:panEnd()
-
-   CASE nKey == K_MWBACKWARD
-      oBrowse:down()
-
-   CASE nKey == K_MWFORWARD
-      oBrowse:up()
-
-   OTHERWISE
-      lRet := .F.
-
+   CASE nKey == K_ESC        ; lEnd := .T.
+   CASE nKey == K_ENTER      ; lEnd := .T.
+   CASE nKey == K_DOWN       ; oBrowse:Down()
+   CASE nKey == K_UP         ; oBrowse:Up()
+   CASE nKey == K_LEFT       ; oBrowse:Left()
+   CASE nKey == K_RIGHT      ; oBrowse:Right()
+   CASE nKey == K_PGDN       ; oBrowse:pageDown()
+   CASE nKey == K_PGUP       ; oBrowse:pageUp()
+   CASE nKey == K_CTRL_PGUP  ; oBrowse:goTop()
+   CASE nKey == K_CTRL_PGDN  ; oBrowse:goBottom()
+   CASE nKey == K_HOME       ; oBrowse:home()
+   CASE nKey == K_END        ; oBrowse:end()
+   CASE nKey == K_CTRL_LEFT  ; oBrowse:panLeft()
+   CASE nKey == K_CTRL_RIGHT ; oBrowse:panRight()
+   CASE nKey == K_CTRL_HOME  ; oBrowse:panHome()
+   CASE nKey == K_CTRL_END   ; oBrowse:panEnd()
+   CASE nKey == K_MWBACKWARD ; oBrowse:down()
+   CASE nKey == K_MWFORWARD  ; oBrowse:up()
+   OTHERWISE                 ; lRet := .F.
    ENDCASE
 
    RETURN lRet
-
 //-------------------------------------------------------------------//
