@@ -57,7 +57,19 @@ LDLIBS := $(foreach lib,$(HB_USER_LIBS) $(LIBS) $(SYSLIBS),-l$(lib))
 LDFLAGS += $(LIBPATHS)
 
 AR := $(HB_CCPATH)$(HB_CCPREFIX)ar
-AR_RULE = ( $(AR) $(ARFLAGS) $(HB_AFLAGS) $(HB_USER_AFLAGS) rcs $(LIB_DIR)/$@ $(^F) $(ARSTRIP) ) || $(RM) $(subst /,$(DIRSEP),$(LIB_DIR)/$@)
+
+# NOTE: The empty line directly before 'endef' HAVE TO exist!
+define lib_object
+   @$(ECHO) $(ECHOQUOTE)$(subst \,/,$(file))$(ECHOQUOTE) >> __lib__.tmp
+
+endef
+define create_library
+   $(if $(wildcard __lib__.tmp),@$(RM) __lib__.tmp,)
+   $(foreach file,$^,$(lib_object))
+   ( $(AR) $(ARFLAGS) $(HB_AFLAGS) $(HB_USER_AFLAGS) rcs $(LIB_DIR)/$@ @__lib__.tmp $(ARSTRIP) ) || $(RM) $(subst /,$(DIRSEP),$(LIB_DIR)/$@)
+endef
+
+AR_RULE = $(create_library)
 
 DY := $(CC)
 DFLAGS += -shared $(LIBPATHS)
