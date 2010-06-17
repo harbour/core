@@ -1,10 +1,10 @@
 /********************************************************************************
-** Form generated from reading ui file 'setup.ui'
+** Form generated from reading UI file 'setup.ui'
 **
-** Created: Tue Jun 15 17:29:54 2010
-**      by: Qt User Interface Compiler version 4.5.3
+** Created: Thu Jun 17 09:21:50 2010
+**      by: Qt User Interface Compiler version 4.6.2
 **
-** WARNING! All changes made in this file will be lost when recompiling ui file!
+** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
 
 #ifndef SETUP_H
@@ -90,6 +90,14 @@ public:
     QLabel *label_8;
     QLineEdit *editPointSize;
     QToolButton *buttonSelFont;
+    QGroupBox *groupBox_19;
+    QLabel *label_15;
+    QLineEdit *lineEdit;
+    QLabel *label_17;
+    QLineEdit *editBackupPath;
+    QToolButton *buttonBackupPath;
+    QLabel *label_18;
+    QLineEdit *editBackupSuffix;
     QWidget *pagePaths;
     QGroupBox *groupBox_4;
     QLabel *label_9;
@@ -110,6 +118,10 @@ public:
     QToolButton *buttonPathEnv;
     QToolButton *buttonPathShortcuts;
     QToolButton *buttonPathThemes;
+    QToolButton *toolButton;
+    QToolButton *buttonViewSnippets;
+    QToolButton *buttonViewEnv;
+    QToolButton *buttonViewThemes;
     QWidget *pageVariables;
     QGroupBox *groupBox_5;
     QTableWidget *tableVar;
@@ -324,6 +336,30 @@ public:
         buttonSelFont = new QToolButton(groupBox_15);
         buttonSelFont->setObjectName(QString::fromUtf8("buttonSelFont"));
         buttonSelFont->setGeometry(QRect(274, 16, 25, 20));
+        groupBox_19 = new QGroupBox(groupBox_3);
+        groupBox_19->setObjectName(QString::fromUtf8("groupBox_19"));
+        groupBox_19->setGeometry(QRect(12, 94, 329, 155));
+        label_15 = new QLabel(groupBox_19);
+        label_15->setObjectName(QString::fromUtf8("label_15"));
+        label_15->setGeometry(QRect(10, 20, 177, 16));
+        lineEdit = new QLineEdit(groupBox_19);
+        lineEdit->setObjectName(QString::fromUtf8("lineEdit"));
+        lineEdit->setGeometry(QRect(190, 18, 59, 20));
+        label_17 = new QLabel(groupBox_19);
+        label_17->setObjectName(QString::fromUtf8("label_17"));
+        label_17->setGeometry(QRect(12, 48, 235, 16));
+        editBackupPath = new QLineEdit(groupBox_19);
+        editBackupPath->setObjectName(QString::fromUtf8("editBackupPath"));
+        editBackupPath->setGeometry(QRect(12, 70, 239, 20));
+        buttonBackupPath = new QToolButton(groupBox_19);
+        buttonBackupPath->setObjectName(QString::fromUtf8("buttonBackupPath"));
+        buttonBackupPath->setGeometry(QRect(276, 70, 25, 20));
+        label_18 = new QLabel(groupBox_19);
+        label_18->setObjectName(QString::fromUtf8("label_18"));
+        label_18->setGeometry(QRect(14, 102, 235, 16));
+        editBackupSuffix = new QLineEdit(groupBox_19);
+        editBackupSuffix->setObjectName(QString::fromUtf8("editBackupSuffix"));
+        editBackupSuffix->setGeometry(QRect(12, 120, 239, 20));
         stackedWidget->addWidget(pageFontEtc);
         pagePaths = new QWidget();
         pagePaths->setObjectName(QString::fromUtf8("pagePaths"));
@@ -368,22 +404,34 @@ public:
         editPathThemes->setGeometry(QRect(14, 308, 261, 20));
         buttonPathIni = new QToolButton(groupBox_4);
         buttonPathIni->setObjectName(QString::fromUtf8("buttonPathIni"));
-        buttonPathIni->setGeometry(QRect(308, 34, 25, 20));
+        buttonPathIni->setGeometry(QRect(284, 34, 25, 20));
         buttonPathHbmk2 = new QToolButton(groupBox_4);
         buttonPathHbmk2->setObjectName(QString::fromUtf8("buttonPathHbmk2"));
-        buttonPathHbmk2->setGeometry(QRect(308, 88, 25, 20));
+        buttonPathHbmk2->setGeometry(QRect(284, 88, 25, 20));
         buttonPathSnippets = new QToolButton(groupBox_4);
         buttonPathSnippets->setObjectName(QString::fromUtf8("buttonPathSnippets"));
-        buttonPathSnippets->setGeometry(QRect(308, 140, 25, 20));
+        buttonPathSnippets->setGeometry(QRect(284, 140, 25, 20));
         buttonPathEnv = new QToolButton(groupBox_4);
         buttonPathEnv->setObjectName(QString::fromUtf8("buttonPathEnv"));
-        buttonPathEnv->setGeometry(QRect(308, 194, 25, 20));
+        buttonPathEnv->setGeometry(QRect(284, 194, 25, 20));
         buttonPathShortcuts = new QToolButton(groupBox_4);
         buttonPathShortcuts->setObjectName(QString::fromUtf8("buttonPathShortcuts"));
-        buttonPathShortcuts->setGeometry(QRect(308, 250, 25, 20));
+        buttonPathShortcuts->setGeometry(QRect(284, 250, 25, 20));
         buttonPathThemes = new QToolButton(groupBox_4);
         buttonPathThemes->setObjectName(QString::fromUtf8("buttonPathThemes"));
-        buttonPathThemes->setGeometry(QRect(308, 308, 25, 20));
+        buttonPathThemes->setGeometry(QRect(284, 308, 25, 20));
+        toolButton = new QToolButton(groupBox_4);
+        toolButton->setObjectName(QString::fromUtf8("toolButton"));
+        toolButton->setGeometry(QRect(314, 34, 25, 20));
+        buttonViewSnippets = new QToolButton(groupBox_4);
+        buttonViewSnippets->setObjectName(QString::fromUtf8("buttonViewSnippets"));
+        buttonViewSnippets->setGeometry(QRect(314, 140, 25, 21));
+        buttonViewEnv = new QToolButton(groupBox_4);
+        buttonViewEnv->setObjectName(QString::fromUtf8("buttonViewEnv"));
+        buttonViewEnv->setGeometry(QRect(314, 194, 25, 20));
+        buttonViewThemes = new QToolButton(groupBox_4);
+        buttonViewThemes->setObjectName(QString::fromUtf8("buttonViewThemes"));
+        buttonViewThemes->setGeometry(QRect(314, 308, 25, 20));
         stackedWidget->addWidget(pagePaths);
         pageVariables = new QWidget();
         pageVariables->setObjectName(QString::fromUtf8("pageVariables"));
@@ -517,7 +565,7 @@ public:
 
         retranslateUi(DialogSetup);
 
-        stackedWidget->setCurrentIndex(5);
+        stackedWidget->setCurrentIndex(3);
 
 
         QMetaObject::connectSlotsByName(DialogSetup);
@@ -568,6 +616,11 @@ public:
         label_7->setText(QApplication::translate("DialogSetup", "Name:", 0, QApplication::UnicodeUTF8));
         label_8->setText(QApplication::translate("DialogSetup", "PointSize:", 0, QApplication::UnicodeUTF8));
         buttonSelFont->setText(QApplication::translate("DialogSetup", "...", 0, QApplication::UnicodeUTF8));
+        groupBox_19->setTitle(QApplication::translate("DialogSetup", " Backups ", 0, QApplication::UnicodeUTF8));
+        label_15->setText(QApplication::translate("DialogSetup", "Transitory temp backup period:", 0, QApplication::UnicodeUTF8));
+        label_17->setText(QApplication::translate("DialogSetup", "Permanent backup path:", 0, QApplication::UnicodeUTF8));
+        buttonBackupPath->setText(QApplication::translate("DialogSetup", "...", 0, QApplication::UnicodeUTF8));
+        label_18->setText(QApplication::translate("DialogSetup", "Permanent backup suffix:", 0, QApplication::UnicodeUTF8));
         groupBox_4->setTitle(QApplication::translate("DialogSetup", " Paths ", 0, QApplication::UnicodeUTF8));
         label_9->setText(QApplication::translate("DialogSetup", "hbMK2.exe", 0, QApplication::UnicodeUTF8));
         label_10->setText(QApplication::translate("DialogSetup", "Snippets ( hbide.skl )", 0, QApplication::UnicodeUTF8));
@@ -581,6 +634,10 @@ public:
         buttonPathEnv->setText(QApplication::translate("DialogSetup", "...", 0, QApplication::UnicodeUTF8));
         buttonPathShortcuts->setText(QApplication::translate("DialogSetup", "...", 0, QApplication::UnicodeUTF8));
         buttonPathThemes->setText(QApplication::translate("DialogSetup", "...", 0, QApplication::UnicodeUTF8));
+        toolButton->setText(QApplication::translate("DialogSetup", "...", 0, QApplication::UnicodeUTF8));
+        buttonViewSnippets->setText(QApplication::translate("DialogSetup", "...", 0, QApplication::UnicodeUTF8));
+        buttonViewEnv->setText(QApplication::translate("DialogSetup", "...", 0, QApplication::UnicodeUTF8));
+        buttonViewThemes->setText(QApplication::translate("DialogSetup", "...", 0, QApplication::UnicodeUTF8));
         groupBox_5->setTitle(QString());
         buttonAdd->setText(QApplication::translate("DialogSetup", "...", 0, QApplication::UnicodeUTF8));
         buttonDel->setText(QApplication::translate("DialogSetup", "...", 0, QApplication::UnicodeUTF8));
@@ -618,7 +675,6 @@ public:
         buttonClose->setText(QApplication::translate("DialogSetup", "Close", 0, QApplication::UnicodeUTF8));
         buttonCancel->setText(QApplication::translate("DialogSetup", "Cancel", 0, QApplication::UnicodeUTF8));
         buttonOk->setText(QApplication::translate("DialogSetup", "Ok", 0, QApplication::UnicodeUTF8));
-        Q_UNUSED(DialogSetup);
     } // retranslateUi
 
 };
