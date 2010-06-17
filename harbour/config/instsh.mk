@@ -39,7 +39,7 @@ ifeq ($(HB_SHELL),sh)
       if [ ! -d "$(INSTALL_DIR_OS)" ]; \
       then \
          $(ECHO) "! Can't install, path not found: '$(INSTALL_DIR_OS)'" 1>&2; \
-         false; \
+         $(FALSE); \
       else \
          for i in $(INSTALL_FILES); \
          do \

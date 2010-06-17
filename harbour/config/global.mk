@@ -389,33 +389,32 @@ ifeq ($(PTHSEP),)
 endif
 
 ifeq ($(HB_HOST_PLAT),)
-   # Using "quasi-functions" instead of $(eval) solution to stay compatible
-   # with < 3.80 GNU Make versions
-   _DETPLAT_STR := $(OSTYPE)
-   include $(TOP)$(ROOT)config/detplat.mk
-   ifeq ($(HB_HOST_PLAT),)
-      _DETPLAT_STR := $(MACHTYPE)
+   ifeq ($(windir)$(WINDIR),)
+      # Using "quasi-functions" instead of $(eval) solution to stay compatible
+      # with < 3.80 GNU Make versions
+      _DETPLAT_STR := $(OSTYPE)
       include $(TOP)$(ROOT)config/detplat.mk
       ifeq ($(HB_HOST_PLAT),)
-         _DETPLAT_STR := $(OS)
+         _DETPLAT_STR := $(MACHTYPE)
          include $(TOP)$(ROOT)config/detplat.mk
          ifeq ($(HB_HOST_PLAT),)
-            _DETPLAT_STR := $(shell uname -s)
+            _DETPLAT_STR := $(OS)
             include $(TOP)$(ROOT)config/detplat.mk
+            ifeq ($(HB_HOST_PLAT),)
+               _DETPLAT_STR := $(shell uname -s)
+               include $(TOP)$(ROOT)config/detplat.mk
+            endif
          endif
       endif
+      _DETPLAT_STR :=
    endif
-   _DETPLAT_STR :=
 endif
 
 ifeq ($(HB_HOST_PLAT),)
    ifneq ($(OS2_SHELL),)
       HB_HOST_PLAT := os2
    else
-   ifneq ($(windir),)
-      HB_HOST_PLAT := win
-   else
-   ifneq ($(WINDIR),)
+   ifneq ($(windir)$(WINDIR),)
       HB_HOST_PLAT := win
    else
    ifeq ($(HB_SHELL),dos)
@@ -423,7 +422,6 @@ ifeq ($(HB_HOST_PLAT),)
    else
    ifneq ($(HB_PLATFORM),)
       HB_HOST_PLAT := $(HB_PLATFORM)
-   endif
    endif
    endif
    endif
