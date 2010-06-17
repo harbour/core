@@ -101,7 +101,7 @@ MDP := mkdir
 ECHO := echo
 ECHOQUOTE :=
 TRUE := $(ECHO) > nul
-FALSE :=
+FALSE := $(MD) . 2> nul
 
 dirbase::
 	-@if not exist "$(OBJ_DIR_OS)" $(MDP) "$(OBJ_DIR_OS)"
@@ -155,7 +155,7 @@ MDP := $(TOOL_DIR)os2mkdir -p
 ECHO := echo
 ECHOQUOTE :=
 TRUE := $(ECHO) > nul
-FALSE :=
+FALSE := $(TRUE)
 
 dirbase::
 	-@$(MDP) $(OBJ_DIR)
@@ -205,7 +205,7 @@ MDP := $(TOOL_DIR)dosmkdir -p
 ECHO := $(TOOL_DIR)dosecho
 ECHOQUOTE := "
 TRUE := $(ECHO) > nul
-FALSE :=
+FALSE := $(TRUE)
 
 dirbase::
 	-@$(MDP) $(OBJ_DIR_OS)
