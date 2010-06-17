@@ -416,6 +416,15 @@ ifeq ($(HB_HOST_PLAT),)
    else
    ifneq ($(windir)$(WINDIR),)
       HB_HOST_PLAT := win
+      ifeq ($(OS),)
+         HB_HOST_PLAT_WIN9X := yes
+         ifeq ($(HB_BIN_COMPILE),)
+            ifneq ($(HB_BUILD_UNICODE),no)
+               export HB_BUILD_UNICODE := no
+               $(info ! Win9x/ME host detected: HB_BUILD_UNICODE forced to 'no')
+            endif
+         endif
+      endif
    else
    ifeq ($(HB_SHELL),dos)
       HB_HOST_PLAT := dos

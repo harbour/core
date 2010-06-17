@@ -132,78 +132,82 @@ void hb_fsFreeSearchPath( HB_PATHNAMES * pSearchList )
 PHB_FNAME hb_fsFNameSplit( const char * pszFileName )
 {
    PHB_FNAME pFileName;
-   char * pszPos, cDirSep;
-   int iSize, iPos;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsFNameSplit(%s)", pszFileName));
 
    HB_TRACE(HB_TR_INFO, ("hb_fsFNameSplit: Filename: |%s|\n", pszFileName));
 
-   iPos = iSize = hb_strnlen( pszFileName, HB_PATH_MAX - 1 );
-   cDirSep = ( char ) hb_setGetDirSeparator();
-
    /* Grab memory, set defaults */
    pFileName = ( PHB_FNAME ) hb_xgrab( sizeof( HB_FNAME ) );
-
-   pszPos = pFileName->szBuffer;
 
    pFileName->szPath = pFileName->szName = pFileName->szExtension =
    pFileName->szDrive = NULL;
 
-   /* Find the end of the path part, and find out where the
-      name+ext starts */
-
-   while( --iPos >= 0 )
+   if( pszFileName )
    {
-      if( pszFileName[ iPos ] == cDirSep ||
-          strchr( HB_OS_PATH_DELIM_CHR_LIST, pszFileName[ iPos ] ) )
+      char * pszPos, cDirSep;
+      int iSize, iPos;
+
+      iPos = iSize = hb_strnlen( pszFileName, HB_PATH_MAX - 1 );
+      cDirSep = ( char ) hb_setGetDirSeparator();
+
+      pszPos = pFileName->szBuffer;
+
+      /* Find the end of the path part, and find out where the
+         name+ext starts */
+
+      while( --iPos >= 0 )
       {
-         pFileName->szPath = pszPos;
-         hb_strncpy( pszPos, pszFileName, iPos + 1 );
-         pszPos += iPos + 2;
-         pszFileName += iPos + 1;
-         iSize -= iPos + 1;
-         break;
-      }
-   }
-
-   /* From this point pszFileName will point to the name+ext part of the path */
-   /* Split the filename part to name and extension */
-   iPos = iSize;
-   while( --iPos > 0 )
-   {
-      if( pszFileName[ iPos ] == '.' )
-      {
-         pFileName->szExtension = pszPos;
-         hb_strncpy( pszPos, pszFileName + iPos, iSize - iPos );
-         pszPos += iSize - iPos + 1;
-         iSize = iPos;
-         break;
-      }
-   }
-   if( iSize )
-   {
-      pFileName->szName = pszPos;
-      hb_strncpy( pszPos, pszFileName, iSize );
-      pszPos += iSize + 1;
-   }
-
-   /* Duplicate the drive letter from the path for easy access on
-      platforms where applicable. Note that the drive info is always
-      present also in the path itself. */
-
-   if( pFileName->szPath )
-   {
-      iPos = 0;
-      while( iPos < HB_MAX_DRIVE_LENGTH && pFileName->szPath[ iPos ] != '\0' )
-      {
-         if( pFileName->szPath[ iPos ] == ':' )
+         if( pszFileName[ iPos ] == cDirSep ||
+             strchr( HB_OS_PATH_DELIM_CHR_LIST, pszFileName[ iPos ] ) )
          {
-            pFileName->szDrive = pszPos;
-            hb_strncpy( pszPos, pFileName->szPath, iPos );
+            pFileName->szPath = pszPos;
+            hb_strncpy( pszPos, pszFileName, iPos + 1 );
+            pszPos += iPos + 2;
+            pszFileName += iPos + 1;
+            iSize -= iPos + 1;
             break;
          }
-         ++iPos;
+      }
+
+      /* From this point pszFileName will point to the name+ext part of the path */
+      /* Split the filename part to name and extension */
+      iPos = iSize;
+      while( --iPos > 0 )
+      {
+         if( pszFileName[ iPos ] == '.' )
+         {
+            pFileName->szExtension = pszPos;
+            hb_strncpy( pszPos, pszFileName + iPos, iSize - iPos );
+            pszPos += iSize - iPos + 1;
+            iSize = iPos;
+            break;
+         }
+      }
+      if( iSize )
+      {
+         pFileName->szName = pszPos;
+         hb_strncpy( pszPos, pszFileName, iSize );
+         pszPos += iSize + 1;
+      }
+
+      /* Duplicate the drive letter from the path for easy access on
+         platforms where applicable. Note that the drive info is always
+         present also in the path itself. */
+
+      if( pFileName->szPath )
+      {
+         iPos = 0;
+         while( iPos < HB_MAX_DRIVE_LENGTH && pFileName->szPath[ iPos ] != '\0' )
+         {
+            if( pFileName->szPath[ iPos ] == ':' )
+            {
+               pFileName->szDrive = pszPos;
+               hb_strncpy( pszPos, pFileName->szPath, iPos );
+               break;
+            }
+            ++iPos;
+         }
       }
    }
 
@@ -224,61 +228,64 @@ PHB_FNAME hb_fsFNameSplit( const char * pszFileName )
 /* This function joins path, name and extension into a string with a filename */
 char * hb_fsFNameMerge( char * pszFileName, PHB_FNAME pFileName )
 {
-   const char * pszName;
-   char cDirSep;
-
    HB_TRACE(HB_TR_DEBUG, ("hb_fsFNameMerge(%p, %p)", pszFileName, pFileName));
 
-   /* dir separator set by user */
-   cDirSep = ( char ) hb_setGetDirSeparator();
-
-   /* Set the result to an empty string */
-   pszFileName[ 0 ] = '\0';
-
-   /* Strip preceding path separators from the filename */
-   pszName = pFileName->szName;
-   if( pszName && pszName[ 0 ] != '\0' && ( pszName[ 0 ] == cDirSep ||
-       strchr( HB_OS_PATH_DELIM_CHR_LIST, pszName[ 0 ] ) != NULL ) )
-      pszName++;
-
-   /* Add path if specified */
-   if( pFileName->szPath )
-      hb_strncat( pszFileName, pFileName->szPath, HB_PATH_MAX - 1 - 1 );
-
-   /* If we have a path, append a path separator to the path if there
-      was none. */
-   if( pszFileName[ 0 ] != '\0' && ( pszName || pFileName->szExtension ) )
+   if( pszFileName && pFileName )
    {
-      int iLen = ( int ) strlen( pszFileName ) - 1;
+      const char * pszName;
+      char cDirSep;
 
-      if( iLen < HB_PATH_MAX - 1 - 2 && pszFileName[ iLen ] != cDirSep &&
-          strchr( HB_OS_PATH_DELIM_CHR_LIST, pszFileName[ iLen ] ) == NULL )
+      /* dir separator set by user */
+      cDirSep = ( char ) hb_setGetDirSeparator();
+
+      /* Set the result to an empty string */
+      pszFileName[ 0 ] = '\0';
+
+      /* Strip preceding path separators from the filename */
+      pszName = pFileName->szName;
+      if( pszName && pszName[ 0 ] != '\0' && ( pszName[ 0 ] == cDirSep ||
+          strchr( HB_OS_PATH_DELIM_CHR_LIST, pszName[ 0 ] ) != NULL ) )
+         pszName++;
+
+      /* Add path if specified */
+      if( pFileName->szPath )
+         hb_strncat( pszFileName, pFileName->szPath, HB_PATH_MAX - 1 - 1 );
+
+      /* If we have a path, append a path separator to the path if there
+         was none. */
+      if( pszFileName[ 0 ] != '\0' && ( pszName || pFileName->szExtension ) )
       {
-         pszFileName[ iLen + 1 ] = HB_OS_PATH_DELIM_CHR;
-         pszFileName[ iLen + 2 ] = '\0';
+         int iLen = ( int ) strlen( pszFileName ) - 1;
+
+         if( iLen < HB_PATH_MAX - 1 - 2 && pszFileName[ iLen ] != cDirSep &&
+             strchr( HB_OS_PATH_DELIM_CHR_LIST, pszFileName[ iLen ] ) == NULL )
+         {
+            pszFileName[ iLen + 1 ] = HB_OS_PATH_DELIM_CHR;
+            pszFileName[ iLen + 2 ] = '\0';
+         }
       }
+
+      /* Add filename (without extension) if specified */
+      if( pszName )
+         hb_strncat( pszFileName, pszName, HB_PATH_MAX - 1 - 1 );
+
+      /* Add extension if specified */
+      if( pFileName->szExtension )
+      {
+         /* Add a dot if the extension doesn't have it */
+         if( pFileName->szExtension[ 0 ] != '\0' &&
+             pFileName->szExtension[ 0 ] != '.' )
+            hb_strncat( pszFileName, ".", HB_PATH_MAX - 1 - 1 );
+
+         hb_strncat( pszFileName, pFileName->szExtension, HB_PATH_MAX - 1 - 1 );
+      }
+
+      HB_TRACE(HB_TR_INFO, ("hb_fsFNameMerge:   szPath: |%s|\n", pFileName->szPath));
+      HB_TRACE(HB_TR_INFO, ("hb_fsFNameMerge:   szName: |%s|\n", pFileName->szName));
+      HB_TRACE(HB_TR_INFO, ("hb_fsFNameMerge:    szExt: |%s|\n", pFileName->szExtension));
+      HB_TRACE(HB_TR_INFO, ("hb_fsFNameMerge:  szDrive: |%s|\n", pFileName->szDrive));
+      HB_TRACE(HB_TR_INFO, ("hb_fsFNameMerge: Filename: |%s|\n", pszFileName));
    }
-
-   /* Add filename (without extension) if specified */
-   if( pszName )
-      hb_strncat( pszFileName, pszName, HB_PATH_MAX - 1 - 1 );
-
-   /* Add extension if specified */
-   if( pFileName->szExtension )
-   {
-      /* Add a dot if the extension doesn't have it */
-      if( pFileName->szExtension[ 0 ] != '\0' &&
-          pFileName->szExtension[ 0 ] != '.' )
-         hb_strncat( pszFileName, ".", HB_PATH_MAX - 1 - 1 );
-
-      hb_strncat( pszFileName, pFileName->szExtension, HB_PATH_MAX - 1 - 1 );
-   }
-
-   HB_TRACE(HB_TR_INFO, ("hb_fsFNameMerge:   szPath: |%s|\n", pFileName->szPath));
-   HB_TRACE(HB_TR_INFO, ("hb_fsFNameMerge:   szName: |%s|\n", pFileName->szName));
-   HB_TRACE(HB_TR_INFO, ("hb_fsFNameMerge:    szExt: |%s|\n", pFileName->szExtension));
-   HB_TRACE(HB_TR_INFO, ("hb_fsFNameMerge:  szDrive: |%s|\n", pFileName->szDrive));
-   HB_TRACE(HB_TR_INFO, ("hb_fsFNameMerge: Filename: |%s|\n", pszFileName));
 
    return pszFileName;
 }

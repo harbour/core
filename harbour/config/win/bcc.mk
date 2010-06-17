@@ -104,9 +104,8 @@ endif
 DY := ilink32.exe
 DFLAGS += -q -Gn -C -aa -Tpd -Gi -x
 DY_OUT :=
-DLIBS := $(foreach lib,$(HB_USER_LIBS),$(lib)$(LIB_EXT))
-DLIBS += $(foreach lib,$(LIBS),$(LIB_DIR)/$(lib)$(LIB_EXT))
-DLIBS += $(foreach lib,$(SYSLIBS),$(lib)$(LIB_EXT))
+# NOTE: .lib extension not added to keep line short enough to work on Win9x/ME
+DLIBS := $(HB_USER_LIBS) $(LIBS) $(SYSLIBS) cw32mt import32
 
 # NOTE: The empty line directly before 'endef' HAVE TO exist!
 define dynlib_object
@@ -116,7 +115,7 @@ endef
 define create_dynlib
    $(if $(wildcard __dyn__.tmp),@$(RM) __dyn__.tmp,)
    $(foreach file,$^,$(dynlib_object))
-   @$(ECHO) $(ECHOQUOTE), $(subst /,$(ECHOBACKSLASH),$(DYN_DIR)/$@),, $(subst /,$(ECHOBACKSLASH),$(DLIBS)) cw32mt.lib import32.lib$(ECHOQUOTE) >> __dyn__.tmp
+   @$(ECHO) $(ECHOQUOTE), $(subst /,$(ECHOBACKSLASH),$(DYN_DIR)/$@),, $(subst /,$(ECHOBACKSLASH),$(DLIBS))$(ECHOQUOTE) >> __dyn__.tmp
    $(DY) $(DFLAGS) $(HB_USER_DFLAGS) c0d32.obj @__dyn__.tmp
    @$(CP) $(subst /,$(DIRSEP),$(DYN_DIR)/$(basename $@)$(LIB_EXT)) $(subst /,$(DIRSEP),$(IMP_FILE))
    @$(RM) $(subst /,$(DIRSEP),$(DYN_DIR)/$(basename $@)$(LIB_EXT))
