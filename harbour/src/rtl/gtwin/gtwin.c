@@ -707,7 +707,7 @@ static void hb_gt_win_xInitScreenParam( PHB_GT pGT )
    }
 }
 
-#if defined( NTDDI_VERSION ) && NTDDI_VERSION >= NTDDI_VISTA
+#if defined( NTDDI_VERSION ) && defined( NTDDI_VISTA ) && NTDDI_VERSION >= NTDDI_VISTA
 
 static void hb_gt_win_SetPalette_Vista( HB_BOOL bSet, COLORREF * colors )
 {
@@ -752,7 +752,7 @@ static void hb_gt_win_SetPalette_Vista( HB_BOOL bSet, COLORREF * colors )
 
 static void hb_gt_win_SetPalette( HB_BOOL bSet, COLORREF * colors )
 {
-#if defined( NTDDI_VERSION ) && NTDDI_VERSION >= NTDDI_VISTA
+#if defined( NTDDI_VERSION ) && defined( NTDDI_VISTA ) && NTDDI_VERSION >= NTDDI_VISTA
    hb_gt_win_SetPalette_Vista( bSet, colors );
 #else
    if( ! bSet )

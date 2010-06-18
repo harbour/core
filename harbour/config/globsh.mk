@@ -155,6 +155,7 @@ MDP := $(TOOL_DIR)os2mkdir -p
 ECHO := echo
 ECHOQUOTE :=
 TRUE := $(ECHO) > nul
+# TODO
 FALSE := $(TRUE)
 
 dirbase::
@@ -205,6 +206,7 @@ MDP := $(TOOL_DIR)dosmkdir -p
 ECHO := $(TOOL_DIR)dosecho
 ECHOQUOTE := "
 TRUE := $(ECHO) > nul
+# TODO
 FALSE := $(TRUE)
 
 dirbase::
