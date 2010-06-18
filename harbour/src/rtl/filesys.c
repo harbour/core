@@ -2060,8 +2060,8 @@ void hb_fsCommit( HB_FHANDLE hFileHandle )
 #endif
 }
 
-HB_BOOL hb_fsLock( HB_FHANDLE hFileHandle, HB_SIZE ulStart,
-                   HB_SIZE ulLength, HB_USHORT uiMode )
+HB_BOOL hb_fsLock( HB_FHANDLE hFileHandle, HB_ULONG ulStart,
+                   HB_ULONG ulLength, HB_USHORT uiMode )
 {
    HB_BOOL fResult;
 
@@ -2150,7 +2150,7 @@ HB_BOOL hb_fsLock( HB_FHANDLE hFileHandle, HB_SIZE ulStart,
    }
 #elif defined( _MSC_VER ) || defined( __DMC__ )
    {
-      HB_SIZE ulOldPos;
+      HB_ULONG ulOldPos;
 
       hb_vmUnlock();
       ulOldPos = lseek( hFileHandle, 0L, SEEK_CUR );
@@ -2174,7 +2174,7 @@ HB_BOOL hb_fsLock( HB_FHANDLE hFileHandle, HB_SIZE ulStart,
    }
 #elif defined( __MINGW32__ )
    {
-      HB_SIZE ulOldPos;
+      HB_ULONG ulOldPos;
 
       hb_vmUnlock();
       ulOldPos = lseek( hFileHandle, 0L, SEEK_CUR );
@@ -2378,9 +2378,9 @@ HB_BOOL hb_fsLockLarge( HB_FHANDLE hFileHandle, HB_FOFFSET ulStart,
    return fResult;
 }
 
-HB_SIZE hb_fsSeek( HB_FHANDLE hFileHandle, HB_ISIZ lOffset, HB_USHORT uiFlags )
+HB_ULONG hb_fsSeek( HB_FHANDLE hFileHandle, HB_LONG lOffset, HB_USHORT uiFlags )
 {
-   HB_SIZE ulPos;
+   HB_ULONG ulPos;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsSeek(%p, %ld, %hu)", ( void * ) ( HB_PTRDIFF ) hFileHandle, lOffset, uiFlags));
 
@@ -2405,6 +2405,7 @@ HB_SIZE hb_fsSeek( HB_FHANDLE hFileHandle, HB_ISIZ lOffset, HB_USHORT uiFlags )
          /* TODO: what we should do with this error code? Is it DOS compatible? */
          hb_fsSetError( ( HB_ERRCODE ) ret );
       }
+
       if( ret != 0 )
       {
          /* FIXME: it should work if DosSetFilePtr is lseek compatible
@@ -2418,35 +2419,35 @@ HB_SIZE hb_fsSeek( HB_FHANDLE hFileHandle, HB_ISIZ lOffset, HB_USHORT uiFlags )
       /* This DOS hack creates 2GB file size limit, Druzus */
       if( lOffset < 0 && Flags == SEEK_SET )
       {
-         ulPos = ( HB_SIZE ) INVALID_SET_FILE_POINTER;
+         ulPos = ( HB_ULONG ) INVALID_SET_FILE_POINTER;
          hb_fsSetError( 25 ); /* 'Seek Error' */
       }
       else
       {
-         ulPos = ( DWORD ) SetFilePointer( DosToWinHandle( hFileHandle ), lOffset, NULL, ( DWORD ) Flags );
-         hb_fsSetIOError( ( DWORD ) ulPos != INVALID_SET_FILE_POINTER, 0 );
+         ulPos = ( ULONG ) SetFilePointer( DosToWinHandle( hFileHandle ), lOffset, NULL, ( DWORD ) Flags );
+         hb_fsSetIOError( ulPos != ( ULONG ) INVALID_SET_FILE_POINTER, 0 );
       }
 
-      if( ( DWORD ) ulPos == INVALID_SET_FILE_POINTER )
-      {
-         ulPos = ( DWORD ) SetFilePointer( DosToWinHandle( hFileHandle ), 0, NULL, SEEK_CUR );
-      }
+      if( ulPos == ( ULONG ) INVALID_SET_FILE_POINTER )
+         ulPos = ( ULONG ) SetFilePointer( DosToWinHandle( hFileHandle ), 0, NULL, SEEK_CUR );
+
    #else
       /* This DOS hack creates 2GB file size limit, Druzus */
       if( lOffset < 0 && Flags == SEEK_SET )
       {
-         ulPos = ( HB_SIZE ) -1;
+         ulPos = ( HB_ULONG ) -1;
          hb_fsSetError( 25 ); /* 'Seek Error' */
       }
       else
       {
          ulPos = lseek( hFileHandle, lOffset, Flags );
-         hb_fsSetIOError( ulPos != ( HB_SIZE ) -1, 0 );
+         hb_fsSetIOError( ulPos != ( HB_ULONG ) -1, 0 );
       }
-      if( ulPos == ( HB_SIZE ) -1 )
+
+      if( ulPos == ( HB_ULONG ) -1 )
       {
          ulPos = lseek( hFileHandle, 0L, SEEK_CUR );
-         if( ulPos == ( HB_SIZE ) -1 )
+         if( ulPos == ( HB_ULONG ) -1 )
             ulPos = 0;
       }
    #endif
