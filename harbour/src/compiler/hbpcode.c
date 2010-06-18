@@ -673,7 +673,7 @@ void hb_compGenPCode4( HB_BYTE byte1, HB_BYTE byte2, HB_BYTE byte3, HB_BYTE byte
    pFunc->pCode[ pFunc->lPCodePos++ ] = byte4;
 }
 
-void hb_compGenPCodeN( const HB_BYTE * pBuffer, HB_ULONG ulSize, HB_COMP_DECL )
+void hb_compGenPCodeN( const HB_BYTE * pBuffer, HB_SIZE ulSize, HB_COMP_DECL )
 {
    PFUNCTION pFunc = HB_COMP_PARAM->functions.pLast;   /* get the currently defined Clipper function */
 

@@ -3016,9 +3016,14 @@ void hb_compGenPushString( const char * szText, HB_SIZE ulStrLen, HB_COMP_DECL )
       char * szTemp;
       --ulStrLen;
       szTemp = hb_compEncodeString( HB_COMP_PARAM->iHidden, szText, &ulStrLen );
-      hb_compGenPCode4( HB_P_PUSHSTRHIDDEN, ( HB_BYTE ) HB_COMP_PARAM->iHidden,
-                        HB_LOBYTE( ulStrLen ), HB_HIBYTE( ulStrLen ), HB_COMP_PARAM );
-      hb_compGenPCodeN( ( HB_BYTE * ) szTemp, ulStrLen, HB_COMP_PARAM );
+      if( ulStrLen > UINT16_MAX )
+         hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_STRING_TOO_LONG, NULL, NULL );
+      else
+      {
+         hb_compGenPCode4( HB_P_PUSHSTRHIDDEN, ( HB_BYTE ) HB_COMP_PARAM->iHidden,
+                           HB_LOBYTE( ulStrLen ), HB_HIBYTE( ulStrLen ), HB_COMP_PARAM );
+         hb_compGenPCodeN( ( HB_BYTE * ) szTemp, ulStrLen, HB_COMP_PARAM );
+      }
       hb_xfree( szTemp );
    }
    else
