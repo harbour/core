@@ -72,7 +72,11 @@
 FUNCTION GetStyleSheet( cWidget, nMode )
    LOCAL txt_:= {}
    LOCAL s   := ""
-
+   #if 0
+   IF .t.
+      RETURN ""
+   ENDIF
+   #endif
    DEFAULT nMode TO HBIDE_ANIMATION_NONE
 
    DO CASE
@@ -434,8 +438,12 @@ FUNCTION hbide_cssColorString( cPart )
 
    SWITCH lower( cPart )
    CASE "bg-std"
-      RETURN ' background-color: rgb(212,208,200);'
-
+      RETURN ' background-color: ' + hbide_rgbString( 212,208,200 ) + ';'              // Gray - original wondows
+   #if 0
+   // RETURN ' background-color: ' + hbide_rgbString( 199,212,231 ) + ';'
+      RETURN  '    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0, ' + ;
+                 hbide_buildGradientString( hbide_loadIdeTheme( 2 ) ) + "); "
+   #endif
    ENDSWITCH
 
    RETURN cStr
@@ -464,6 +472,8 @@ STATIC FUNCTION hbide_loadIdeTheme( nTheme )
    DO CASE
    CASE nTheme == 1
       RETURN { {0,255,255,255}, {0.25,219,230,244}, {0.5,201,217,237}, {0.75,231,242,255} }
+   CASE nTheme == 2
+      RETURN { {0,173,185,207}, {1,199,212,231} }
    ENDCASE
 
    RETURN NIL

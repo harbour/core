@@ -144,6 +144,7 @@ CLASS HbIde
    DATA   oTM                                            /* Plugin Tools Manager           */
    DATA   oTH                                            /* Themes Manager                 */
    DATA   oSetup                                         /* Setup Manager                  */
+   DATA   oINI                                           /* INI Manager                    */
 
    DATA   nRunMode                                INIT   HBIDE_RUN_MODE_INI
    DATA   nAnimantionMode                         INIT   HBIDE_ANIMATION_NONE
@@ -385,7 +386,12 @@ METHOD HbIde:create( aParams )
    /* Initialte Project Manager */
    ::oPM := IdeProjManager():new( Self ):create()
 
-   /* Load IDE Settings */
+   /* INI Manager - array base to be removed later */
+   ::oINI := IdeINI():new( Self ):create()
+   IF ::nRunMode == HBIDE_RUN_MODE_INI
+      ::oINI:load( ::cProjIni )
+   ENDIF
+   /* Load IDE Settings */                                     /* TODO: delete */
    IF ::nRunMode == HBIDE_RUN_MODE_INI
       hbide_loadINI( Self, ::cProjIni )
    ENDIF
@@ -416,6 +422,10 @@ METHOD HbIde:create( aParams )
 
    /* Store to restore when all preliminary operations are completed */
    cView := ::cWrkView
+
+   /* Setup Manager */
+   ::oSetup := IdeSetup():new( Self ):create()
+   ::oSetup:setBaseColor()
 
    /* Load Code Skeletons */
    hbide_loadSkltns( Self )
@@ -463,9 +473,6 @@ METHOD HbIde:create( aParams )
 
    /* Home Implementation */
    ::oHM := IdeHome():new():create( Self )
-
-   /* Setup Manager */
-   ::oSetup := IdeSetup():new( Self ):create()
 
    /* Fill various elements of the IDE */
    ::cWrkProject := ::aINI[ INI_HBIDE, CurrentProject ]
@@ -538,13 +545,13 @@ METHOD HbIde:create( aParams )
 
       IF ::nEvent == xbeP_Quit
          HB_TRACE( HB_TR_ALWAYS, "---------------- xbeP_Quit" )
-         hbide_saveINI( Self )
+         hbide_saveINI( Self ) ;  ::oINI:save()
          EXIT
       ENDIF
 
       IF ::nEvent == xbeP_Close
          HB_TRACE( HB_TR_ALWAYS, "================ xbeP_Close" )
-         hbide_saveINI( Self )
+         hbide_saveINI( Self )  ; ::oINI:save()
          ::oSM:closeAllSources()
          EXIT
 

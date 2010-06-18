@@ -577,7 +577,8 @@ METHOD IdeDocks:buildViewWidget( cObjectName )
    ::oStackedWidget:addChild( oFrame )
 
    oFrame:hbLayout := HBPLAYOUT_TYPE_VERTBOX
-   oFrame:qLayout:setContentsMargins( 2, 2, 2, 2 )
+   //oFrame:qLayout:setContentsMargins( 2, 2, 2, 2 )
+   oFrame:qLayout:setContentsMargins( 0,0,0,0 )
 
    oFrame:oTabWidget := XbpTabWidget():new():create( oFrame, , {0,0}, {200,200}, , .t. )
 

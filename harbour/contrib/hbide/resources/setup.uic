@@ -1,10 +1,10 @@
 /********************************************************************************
-** Form generated from reading UI file 'setup.ui'
+** Form generated from reading ui file 'setup.ui'
 **
-** Created: Thu Jun 17 09:21:50 2010
-**      by: Qt User Interface Compiler version 4.6.2
+** Created: Thu Jun 17 17:04:10 2010
+**      by: Qt User Interface Compiler version 4.5.3
 **
-** WARNING! All changes made in this file will be lost when recompiling UI file!
+** WARNING! All changes made in this file will be lost when recompiling ui file!
 ********************************************************************************/
 
 #ifndef SETUP_H
@@ -98,6 +98,10 @@ public:
     QToolButton *buttonBackupPath;
     QLabel *label_18;
     QLineEdit *editBackupSuffix;
+    QGroupBox *groupBox_20;
+    QListWidget *listTextExt;
+    QToolButton *buttonAddTextExt;
+    QToolButton *buttonDelTextExt;
     QWidget *pagePaths;
     QGroupBox *groupBox_4;
     QLabel *label_9;
@@ -338,7 +342,7 @@ public:
         buttonSelFont->setGeometry(QRect(274, 16, 25, 20));
         groupBox_19 = new QGroupBox(groupBox_3);
         groupBox_19->setObjectName(QString::fromUtf8("groupBox_19"));
-        groupBox_19->setGeometry(QRect(12, 94, 329, 155));
+        groupBox_19->setGeometry(QRect(12, 94, 329, 135));
         label_15 = new QLabel(groupBox_19);
         label_15->setObjectName(QString::fromUtf8("label_15"));
         label_15->setGeometry(QRect(10, 20, 177, 16));
@@ -347,19 +351,31 @@ public:
         lineEdit->setGeometry(QRect(190, 18, 59, 20));
         label_17 = new QLabel(groupBox_19);
         label_17->setObjectName(QString::fromUtf8("label_17"));
-        label_17->setGeometry(QRect(12, 48, 235, 16));
+        label_17->setGeometry(QRect(12, 42, 235, 16));
         editBackupPath = new QLineEdit(groupBox_19);
         editBackupPath->setObjectName(QString::fromUtf8("editBackupPath"));
-        editBackupPath->setGeometry(QRect(12, 70, 239, 20));
+        editBackupPath->setGeometry(QRect(12, 60, 239, 20));
         buttonBackupPath = new QToolButton(groupBox_19);
         buttonBackupPath->setObjectName(QString::fromUtf8("buttonBackupPath"));
-        buttonBackupPath->setGeometry(QRect(276, 70, 25, 20));
+        buttonBackupPath->setGeometry(QRect(276, 60, 25, 20));
         label_18 = new QLabel(groupBox_19);
         label_18->setObjectName(QString::fromUtf8("label_18"));
-        label_18->setGeometry(QRect(14, 102, 235, 16));
+        label_18->setGeometry(QRect(14, 86, 235, 16));
         editBackupSuffix = new QLineEdit(groupBox_19);
         editBackupSuffix->setObjectName(QString::fromUtf8("editBackupSuffix"));
-        editBackupSuffix->setGeometry(QRect(12, 120, 239, 20));
+        editBackupSuffix->setGeometry(QRect(12, 104, 239, 20));
+        groupBox_20 = new QGroupBox(groupBox_3);
+        groupBox_20->setObjectName(QString::fromUtf8("groupBox_20"));
+        groupBox_20->setGeometry(QRect(12, 236, 151, 119));
+        listTextExt = new QListWidget(groupBox_20);
+        listTextExt->setObjectName(QString::fromUtf8("listTextExt"));
+        listTextExt->setGeometry(QRect(12, 16, 77, 93));
+        buttonAddTextExt = new QToolButton(groupBox_20);
+        buttonAddTextExt->setObjectName(QString::fromUtf8("buttonAddTextExt"));
+        buttonAddTextExt->setGeometry(QRect(112, 18, 25, 20));
+        buttonDelTextExt = new QToolButton(groupBox_20);
+        buttonDelTextExt->setObjectName(QString::fromUtf8("buttonDelTextExt"));
+        buttonDelTextExt->setGeometry(QRect(112, 44, 25, 20));
         stackedWidget->addWidget(pageFontEtc);
         pagePaths = new QWidget();
         pagePaths->setObjectName(QString::fromUtf8("pagePaths"));
@@ -565,7 +581,7 @@ public:
 
         retranslateUi(DialogSetup);
 
-        stackedWidget->setCurrentIndex(3);
+        stackedWidget->setCurrentIndex(2);
 
 
         QMetaObject::connectSlotsByName(DialogSetup);
@@ -621,6 +637,9 @@ public:
         label_17->setText(QApplication::translate("DialogSetup", "Permanent backup path:", 0, QApplication::UnicodeUTF8));
         buttonBackupPath->setText(QApplication::translate("DialogSetup", "...", 0, QApplication::UnicodeUTF8));
         label_18->setText(QApplication::translate("DialogSetup", "Permanent backup suffix:", 0, QApplication::UnicodeUTF8));
+        groupBox_20->setTitle(QApplication::translate("DialogSetup", " Text files extensions ", 0, QApplication::UnicodeUTF8));
+        buttonAddTextExt->setText(QApplication::translate("DialogSetup", "...", 0, QApplication::UnicodeUTF8));
+        buttonDelTextExt->setText(QApplication::translate("DialogSetup", "...", 0, QApplication::UnicodeUTF8));
         groupBox_4->setTitle(QApplication::translate("DialogSetup", " Paths ", 0, QApplication::UnicodeUTF8));
         label_9->setText(QApplication::translate("DialogSetup", "hbMK2.exe", 0, QApplication::UnicodeUTF8));
         label_10->setText(QApplication::translate("DialogSetup", "Snippets ( hbide.skl )", 0, QApplication::UnicodeUTF8));
@@ -675,6 +694,7 @@ public:
         buttonClose->setText(QApplication::translate("DialogSetup", "Close", 0, QApplication::UnicodeUTF8));
         buttonCancel->setText(QApplication::translate("DialogSetup", "Cancel", 0, QApplication::UnicodeUTF8));
         buttonOk->setText(QApplication::translate("DialogSetup", "Ok", 0, QApplication::UnicodeUTF8));
+        Q_UNUSED(DialogSetup);
     } // retranslateUi
 
 };

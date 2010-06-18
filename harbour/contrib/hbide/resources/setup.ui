@@ -41,7 +41,7 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>3</number>
+    <number>2</number>
    </property>
    <widget class="QWidget" name="pageGeneral">
     <widget class="QGroupBox" name="groupBox">
@@ -669,7 +669,7 @@
         <x>12</x>
         <y>94</y>
         <width>329</width>
-        <height>155</height>
+        <height>135</height>
        </rect>
       </property>
       <property name="title">
@@ -702,7 +702,7 @@
        <property name="geometry">
         <rect>
          <x>12</x>
-         <y>48</y>
+         <y>42</y>
          <width>235</width>
          <height>16</height>
         </rect>
@@ -715,7 +715,7 @@
        <property name="geometry">
         <rect>
          <x>12</x>
-         <y>70</y>
+         <y>60</y>
          <width>239</width>
          <height>20</height>
         </rect>
@@ -725,7 +725,7 @@
        <property name="geometry">
         <rect>
          <x>276</x>
-         <y>70</y>
+         <y>60</y>
          <width>25</width>
          <height>20</height>
         </rect>
@@ -738,7 +738,7 @@
        <property name="geometry">
         <rect>
          <x>14</x>
-         <y>102</y>
+         <y>86</y>
          <width>235</width>
          <height>16</height>
         </rect>
@@ -751,10 +751,59 @@
        <property name="geometry">
         <rect>
          <x>12</x>
-         <y>120</y>
+         <y>104</y>
          <width>239</width>
          <height>20</height>
         </rect>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_20">
+      <property name="geometry">
+       <rect>
+        <x>12</x>
+        <y>236</y>
+        <width>151</width>
+        <height>119</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string> Text files extensions </string>
+      </property>
+      <widget class="QListWidget" name="listTextExt">
+       <property name="geometry">
+        <rect>
+         <x>12</x>
+         <y>16</y>
+         <width>77</width>
+         <height>93</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QToolButton" name="buttonAddTextExt">
+       <property name="geometry">
+        <rect>
+         <x>112</x>
+         <y>18</y>
+         <width>25</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>...</string>
+       </property>
+      </widget>
+      <widget class="QToolButton" name="buttonDelTextExt">
+       <property name="geometry">
+        <rect>
+         <x>112</x>
+         <y>44</y>
+         <width>25</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>...</string>
        </property>
       </widget>
      </widget>

@@ -1391,6 +1391,9 @@ METHOD IdeEditor:relay( oEdit )
       //
       oEdt:qHLayout:removeWidget( oEdt:qEdit )
       oEdt:qHLayout := QHBoxLayout():new()
+      oEdt:qHLayout:setContentsMargins( 0,0,0,0 )
+      oEdt:qHLayout:setSpacing( 0 )
+
       oEdt:qHLayout:addWidget( oEdt:qEdit )
    NEXT
 

@@ -282,6 +282,7 @@ METHOD IdeEdit:create( oEditor, nMode )
    NEXT
 
    ::qHLayout := QHBoxLayout():new()
+   ::qHLayout:setContentsMargins( 0,0,0,0 )
    ::qHLayout:setSpacing( 0 )
 
    ::qHLayout:addWidget( ::qEdit )
