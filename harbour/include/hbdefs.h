@@ -170,86 +170,21 @@
 
 #endif
 
-/* Native Harbour types */
-
-#define HB_FALSE 0
-#define HB_TRUE  (!0)
-
-typedef int                 HB_BOOL;
-typedef signed char         HB_SCHAR;
-typedef unsigned char       HB_UCHAR;
-typedef short               HB_SHORT;
-typedef unsigned short      HB_USHORT;
-typedef long                HB_LONG;           /* WARNING: These types have a new size in Harbour 2.1.x and upper. */
-typedef unsigned long       HB_ULONG;          /* WARNING: These types have a new size in Harbour 2.1.x and upper. */
-typedef int                 HB_INT;
-typedef unsigned int        HB_UINT;
-typedef unsigned long       HB_SIZE;           /* TODO: Currently 'unsigned long', to be changed to HB_LONGLONG on win64, long on other systems */
-typedef long                HB_ISIZ;           /* TODO: Change to HB_SIZE, after HB_SIZE has been converted to signed type. TEMPORARY type. */
-
-/* Guaranteed 8-bit types */
-typedef HB_SCHAR            HB_I8;
-typedef HB_UCHAR            HB_U8;
-
-/* Convenience */
-typedef HB_UCHAR            HB_BYTE;
-
-#if ! defined( HB_LEGACY_TYPES_OFF ) && defined( HB_LEGACY_LEVEL3 )
-   #if ! defined( HB_DONT_DEFINE_BASIC_TYPES )
-
-      #if ! defined( HB_DONT_DEFINE_BOOL )
-         #undef BOOL                         /* boolean */
-         typedef int BOOL;
-      #endif
-
-      #undef FALSE
-      #define FALSE  0
-      #undef TRUE
-      #define TRUE   (!0)
-
-      #undef UINT                            /* varies with platform */
-      typedef unsigned int UINT;
-
-      #undef SCHAR                           /* 1 byte signed */
-      typedef signed char SCHAR;
-
-      #undef UCHAR                           /* 1 byte unsigned */
-      typedef unsigned char UCHAR;
-
-      #if ! defined( HB_DONT_DEFINE_BYTE )
-         #undef BYTE                            /* 1 byte unsigned */
-         typedef unsigned char BYTE;
-      #endif
-
-      #undef SHORT                           /* 2 bytes signed */
-      typedef signed short int SHORT;
-
-      #undef USHORT                          /* 2 bytes unsigned */
-      typedef unsigned short int USHORT;
-
-      #if ! defined( HB_DONT_DEFINE_LONG )
-         #undef LONG                         /* 4 or 8 bytes signed */
-         typedef long LONG;
-      #endif
-
-      #undef ULONG                           /* 4 or 8 bytes unsigned */
-      typedef unsigned long ULONG;
-
-   #else  /* HB_DONT_DEFINE_BASIC_TYPES */
-
-      /*
-       * if HB_DONT_DEFINE_BASIC_TYPES excluded some types which are not
-       * defined in included platform dependent header files then please
-       * add necessary definitions here.
-       */
-
-      /* SCHAR is needed using GCC on OS/2 */
-      #if ! defined( SCHAR )
-         typedef signed char SCHAR;          /* 1 byte signed */
-      #endif
-
-   #endif /* HB_DONT_DEFINE_BASIC_TYPES */
+/*
+ * below are some hacks which don't have to be true on some machines
+ * please update it if necessary
+ */
+#if defined( HB_OS_WIN_64 )
+#  define HB_ARCH_64BIT
+#elif ULONG_MAX > UINT_MAX && UINT_MAX > USHRT_MAX
+#  define HB_ARCH_64BIT
+#elif ULONG_MAX == UINT_MAX && UINT_MAX > USHRT_MAX
+#  define HB_ARCH_32BIT
+#elif ULONG_MAX > UINT_MAX && UINT_MAX == USHRT_MAX
+#  define HB_ARCH_16BIT
 #endif
+
+/* Native Harbour types */
 
 #ifndef HB_LONG_LONG_OFF
 
@@ -259,25 +194,6 @@ typedef HB_UCHAR            HB_BYTE;
    #else
       typedef signed long long   HB_LONGLONG;
       typedef unsigned long long HB_ULONGLONG;
-   #endif
-
-   #if ! defined( HB_LEGACY_TYPES_OFF ) && defined( HB_LEGACY_LEVEL3 )
-      #if ! defined( HB_DONT_DEFINE_BASIC_TYPES ) && ! defined( _WINNT_H )
-         #if !defined( LONGLONG )
-            #if defined( HB_OS_WIN ) && !defined( __GNUC__ )
-               typedef __int64 LONGLONG;
-            #else
-               typedef signed long long LONGLONG;
-            #endif
-         #endif
-         #if !defined( ULONGLONG )
-            #if defined( HB_OS_WIN ) && !defined( __GNUC__ )
-               typedef unsigned __int64 ULONGLONG;
-            #else
-               typedef unsigned long long ULONGLONG;
-            #endif
-         #endif
-      #endif
    #endif
 
    #if !defined( ULONGLONG_MAX )
@@ -316,34 +232,35 @@ typedef HB_UCHAR            HB_BYTE;
 
 #endif /* HB_LONG_LONG_OFF */
 
-/*
- * below are some hacks which don't have to be true on some machines
- * please update it if necessary
- */
-#if defined( HB_OS_WIN_64 )
-#  define HB_ARCH_64BIT
-#elif ULONG_MAX > UINT_MAX && UINT_MAX > USHRT_MAX
-#  define HB_ARCH_64BIT
-#elif ULONG_MAX == UINT_MAX && UINT_MAX > USHRT_MAX
-#  define HB_ARCH_32BIT
-#elif ULONG_MAX > UINT_MAX && UINT_MAX == USHRT_MAX
-#  define HB_ARCH_16BIT
-#endif
+#define HB_FALSE 0
+#define HB_TRUE  (!0)
 
+typedef int                 HB_BOOL;
+typedef signed char         HB_SCHAR;
+typedef unsigned char       HB_UCHAR;
+typedef short               HB_SHORT;
+typedef unsigned short      HB_USHORT;
+typedef long                HB_LONG;           /* WARNING: These types have a new size in Harbour 2.1.x and upper. */
+typedef unsigned long       HB_ULONG;          /* WARNING: These types have a new size in Harbour 2.1.x and upper. */
+typedef int                 HB_INT;
+typedef unsigned int        HB_UINT;
+typedef unsigned long       HB_SIZE;           /* TODO: Currently 'unsigned long', to be changed to HB_LONGLONG on win64, long on other systems */
+typedef long                HB_ISIZ;           /* TODO: Change to HB_SIZE, after HB_SIZE has been converted to signed type. TEMPORARY type. */
+
+/* Convenience */
+typedef HB_UCHAR            HB_BYTE;
+
+/* Guaranteed 8-bit types */
+typedef HB_SCHAR            HB_I8;
+typedef HB_UCHAR            HB_U8;
+
+/* Guaranteed 16-bit types */
 #if USHRT_MAX == 0xFFFF
    typedef signed short int    HB_I16;
    typedef unsigned short int  HB_U16;
    #define HB_I16_MIN          SHRT_MIN
    #define HB_I16_MAX          SHRT_MAX
    #define HB_U16_MAX          USHRT_MAX
-#  if ! defined( HB_LEGACY_TYPES_OFF ) && defined( HB_LEGACY_LEVEL3 )
-#     if !defined( UINT16 )
-         typedef HB_U16        UINT16;
-#     endif
-#     if !defined( INT16 )
-         typedef HB_I16        INT16;
-#     endif
-#  endif
 #  if !defined( UINT16_MAX )
 #     define UINT16_MAX    USHRT_MAX
 #  endif
@@ -361,20 +278,13 @@ typedef HB_UCHAR            HB_BYTE;
    #define HB_U16_MAX          USHRT_MAX
 #endif
 
+/* Guaranteed 32-bit types */
 #if UINT_MAX == 0xFFFFFFFF
    typedef signed int          HB_I32;
    typedef unsigned int        HB_U32;
    #define HB_I32_MIN          INT_MIN
    #define HB_I32_MAX          INT_MAX
    #define HB_U32_MAX          UINT_MAX
-#  if ! defined( HB_LEGACY_TYPES_OFF ) && defined( HB_LEGACY_LEVEL3 )
-#     if !defined( UINT32 )
-         typedef HB_U32        UINT32;
-#     endif
-#     if !defined( INT32 )
-         typedef HB_I32        INT32;
-#     endif
-#  endif
 #  if !defined( UINT32_MAX )
 #     define UINT32_MAX    UINT_MAX
 #  endif
@@ -390,14 +300,6 @@ typedef HB_UCHAR            HB_BYTE;
    #define HB_I32_MIN          LONG_MIN
    #define HB_I32_MAX          LONG_MAX
    #define HB_U32_MAX          ULONG_MAX
-#  if ! defined( HB_LEGACY_TYPES_OFF ) && defined( HB_LEGACY_LEVEL3 )
-#     if !defined( UINT32 )
-         typedef HB_U32        UINT32;
-#     endif
-#     if !defined( INT32 )
-         typedef HB_I32        INT32;
-#     endif
-#  endif
 #  if !defined( UINT32_MAX )
 #     define UINT32_MAX    ULONG_MAX
 #  endif
@@ -422,20 +324,13 @@ typedef HB_UCHAR            HB_BYTE;
 #  define INT24_MIN     -8388608L
 #endif
 
+/* Guaranteed 64-bit types */
 #if defined( HB_ARCH_64BIT ) && !defined( HB_OS_WIN_64 )
    typedef signed long         HB_I64;
    typedef unsigned long       HB_U64;
    #define HB_I64_MIN          LONG_MIN
    #define HB_I64_MAX          LONG_MAX
    #define HB_U64_MAX          ULONG_MAX
-#  if ! defined( HB_LEGACY_TYPES_OFF ) && defined( HB_LEGACY_LEVEL3 )
-#     if !defined( UINT64 )
-         typedef HB_U64        UINT64;
-#     endif
-#     if !defined( INT64 )
-         typedef HB_I64        INT64;
-#     endif
-#  endif
 #  if !defined( UINT64_MAX )
 #     define UINT64_MAX    ULONG_MAX
 #  endif
@@ -451,14 +346,6 @@ typedef HB_UCHAR            HB_BYTE;
    #define HB_I64_MIN          LONGLONG_MIN
    #define HB_I64_MAX          LONGLONG_MAX
    #define HB_U64_MAX          ULONGLONG_MAX
-#  if ! defined( HB_LEGACY_TYPES_OFF ) && defined( HB_LEGACY_LEVEL3 )
-#     if !defined( UINT64 )
-         typedef HB_U64        UINT64;
-#     endif
-#     if !defined( INT64 )
-         typedef HB_I64        INT64;
-#     endif
-#  endif
 #  if !defined( UINT64_MAX )
 #     define UINT64_MAX     ULONGLONG_MAX
 #  endif
@@ -468,6 +355,94 @@ typedef HB_UCHAR            HB_BYTE;
 #  if !defined( INT64_MIN )
 #     define INT64_MIN      LONGLONG_MIN
 #  endif
+#endif
+
+/* Legacy Windows/Clipper-style types */
+
+#if ! defined( _HB_LEGACY_TYPES_OFF ) && defined( HB_LEGACY_LEVEL3 )
+   #if ! defined( HB_DONT_DEFINE_BASIC_TYPES )
+
+      #if ! defined( HB_DONT_DEFINE_BOOL )
+         #undef BOOL                         /* boolean */
+         typedef HB_BOOL BOOL;
+      #endif
+
+      #undef FALSE
+      #define FALSE  0
+      #undef TRUE
+      #define TRUE   (!0)
+
+      #undef UINT                            /* varies with platform */
+      typedef HB_UINT UINT;
+
+      #undef SCHAR                           /* 1 byte signed */
+      typedef HB_SCHAR SCHAR;
+
+      #undef UCHAR                           /* 1 byte unsigned */
+      typedef HB_UCHAR UCHAR;
+
+      #if ! defined( HB_DONT_DEFINE_BYTE )
+         #undef BYTE                            /* 1 byte unsigned */
+         typedef HB_UCHAR BYTE;
+      #endif
+
+      #undef SHORT                           /* 2 bytes signed */
+      typedef HB_SHORT SHORT;
+
+      #undef USHORT                          /* 2 bytes unsigned */
+      typedef HB_USHORT USHORT;
+
+      #if ! defined( HB_DONT_DEFINE_LONG )
+         #undef LONG                         /* 4 or 8 bytes signed */
+         typedef HB_LONG LONG;
+      #endif
+
+      #undef ULONG                           /* 4 or 8 bytes unsigned */
+      typedef HB_ULONG ULONG;
+
+      #if ! defined( _WINNT_H )
+         #if ! defined( LONGLONG )
+            typedef HB_LONGLONG LONGLONG;
+         #endif
+         #if ! defined( ULONGLONG )
+            typedef HB_ULONGLONG ULONGLONG;
+         #endif
+      #endif
+
+   #else  /* HB_DONT_DEFINE_BASIC_TYPES */
+
+      /*
+       * if HB_DONT_DEFINE_BASIC_TYPES excluded some types which are not
+       * defined in included platform dependent header files then please
+       * add necessary definitions here.
+       */
+
+      /* SCHAR is needed using GCC on OS/2 */
+      #if ! defined( SCHAR )
+         typedef HB_SCHAR SCHAR;          /* 1 byte signed */
+      #endif
+
+   #endif /* HB_DONT_DEFINE_BASIC_TYPES */
+
+   #if ! defined( UINT16 )
+       typedef HB_U16        UINT16;
+   #endif
+   #if ! defined( INT16 )
+       typedef HB_I16        INT16;
+   #endif
+   #if ! defined( UINT32 )
+       typedef HB_U32        UINT32;
+   #endif
+   #if ! defined( INT32 )
+       typedef HB_I32        INT32;
+   #endif
+   #if ! defined( UINT64 )
+       typedef HB_U64        UINT64;
+   #endif
+   #if ! defined( INT64 )
+       typedef HB_I64        INT64;
+   #endif
+
 #endif
 
 #ifndef HB_LONG_DOUBLE_OFF
