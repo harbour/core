@@ -232,6 +232,7 @@
 
 #endif /* HB_LONG_LONG_OFF */
 
+/* Basic types */
 #define HB_FALSE 0
 #define HB_TRUE  (!0)
 
@@ -244,8 +245,15 @@ typedef long                HB_LONG;           /* WARNING: These types have a ne
 typedef unsigned long       HB_ULONG;          /* WARNING: These types have a new size in Harbour 2.1.x and upper. */
 typedef int                 HB_INT;
 typedef unsigned int        HB_UINT;
-typedef unsigned long       HB_SIZE;           /* TODO: Currently 'unsigned long', to be changed to HB_LONGLONG on win64, long on other systems */
-typedef long                HB_ISIZ;           /* TODO: Change to HB_SIZE, after HB_SIZE has been converted to signed type. TEMPORARY type. */
+
+/* Harbour size type */
+#if defined( HB_OS_WIN_64 )
+   typedef HB_ULONGLONG        HB_SIZE;           /* TODO: Currently 'unsigned', to be changed 'signed' */
+   typedef HB_LONGLONG         HB_ISIZ;           /* TODO: Change to HB_SIZE, after HB_SIZE has been converted to signed type. TEMPORARY type. */
+#else
+   typedef HB_ULONG            HB_SIZE;           /* TODO: Currently 'unsigned', to be changed 'signed' */
+   typedef HB_LONG             HB_ISIZ;           /* TODO: Change to HB_SIZE, after HB_SIZE has been converted to signed type. TEMPORARY type. */
+#endif
 
 /* Convenience */
 typedef HB_UCHAR            HB_BYTE;
