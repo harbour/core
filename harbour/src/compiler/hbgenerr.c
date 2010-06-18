@@ -269,7 +269,7 @@ void hb_compErrorCodeblock( HB_COMP_DECL, const char * szBlock )
    HB_COMP_PARAM->fError = fError; /* restore error flag for this line */
 }
 
-void hb_compErrorMacro( HB_COMP_DECL, const char *szText )
+void hb_compErrorMacro( HB_COMP_DECL, const char * szText )
 {
    hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_BAD_MACRO, szText, NULL );
 }

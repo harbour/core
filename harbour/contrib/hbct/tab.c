@@ -340,7 +340,7 @@ HB_FUNC( TABPACK )
       else
       {
          pcNewLine = hb_conNewLine();
-         sNewLineLen = ( HB_SIZE ) strlen( pcNewLine );
+         sNewLineLen = strlen( pcNewLine );
       }
       if( sNewLineLen > 0 )
          cCR = *( pcNewLine );

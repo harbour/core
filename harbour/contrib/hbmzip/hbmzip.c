@@ -705,7 +705,7 @@ static int hb_zipStoreFile( zipFile hZip, const char* szFileName, const char* sz
       /* change path separators to '/' */
       szZipName = hb_strdup( szName );
 
-      ulLen = ( HB_SIZE ) strlen( szZipName );
+      ulLen = strlen( szZipName );
       pString = szZipName;
       while( ulLen-- )
       {
@@ -718,7 +718,7 @@ static int hb_zipStoreFile( zipFile hZip, const char* szFileName, const char* sz
       /* get file name */
       szZipName = hb_strdup( szFileName );
 
-      ulLen = ( HB_SIZE ) strlen( szZipName );
+      ulLen = strlen( szZipName );
       pString = szZipName;
 
       while( ulLen-- )
@@ -980,7 +980,7 @@ static int hb_zipStoreFileHandle( zipFile hZip, HB_FHANDLE hFile, const char * s
    /* change path separators to '/' */
    szZipName = hb_strdup( szName );
 
-   ulLen = ( HB_SIZE ) strlen( szZipName );
+   ulLen = strlen( szZipName );
    while( ulLen-- )
    {
       if( szZipName[ ulLen ] == '\\' )
@@ -1065,7 +1065,7 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, const char* szFileName, c
    if( szFileName )
       hb_strncpy( szName, szFileName, sizeof( szName ) - 1 );
 
-   ulLen = ( HB_SIZE ) strlen( szName );
+   ulLen = strlen( szName );
 
    /* Test shows that files in subfolders can be stored to zip file without
       explicitly adding folder. So, let's create a required path */

@@ -289,7 +289,7 @@ PHB_ITEM hb_strFormat( PHB_ITEM pItemReturn, PHB_ITEM pItemFormat, int iCount, P
                   for( i = iSize + iExtra; i < iWidth; i++ )
                      bufadd( &buffer, "0", 1 );
 
-                  bufadd( &buffer, pStr2, ( HB_SIZE ) strlen( pStr2 ) );
+                  bufadd( &buffer, pStr2, strlen( pStr2 ) );
                }
                else
                {
@@ -403,7 +403,7 @@ PHB_ITEM hb_strFormat( PHB_ITEM pItemReturn, PHB_ITEM pItemFormat, int iCount, P
                   for( i = iSize + iExtra; i < iWidth; i++ )
                      bufadd( &buffer, "0", 1 );
 
-                  bufadd( &buffer, pStr2, ( HB_SIZE ) strlen( pStr2 ) );
+                  bufadd( &buffer, pStr2, strlen( pStr2 ) );
                }
                else
                {

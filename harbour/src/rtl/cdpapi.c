@@ -1694,7 +1694,7 @@ const char * hb_cdpnDup3( const char * pSrc, HB_SIZE nSrc,
 
 char * hb_cdpDup( const char * pszSrc, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut )
 {
-   HB_SIZE nLen = ( HB_SIZE ) strlen( pszSrc );
+   HB_SIZE nLen = strlen( pszSrc );
    return hb_cdpnDup( pszSrc, &nLen, cdpIn, cdpOut );
 }
 

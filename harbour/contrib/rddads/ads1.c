@@ -3280,7 +3280,7 @@ static HB_ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
       if( u32RetVal == AE_SUCCESS )
       {
 #ifdef ADS_USE_OEM_TRANSLATION
-         char * szSQL = hb_adsOemToAnsi( szFile, ( HB_SIZE ) strlen( szFile ) );
+         char * szSQL = hb_adsOemToAnsi( szFile, strlen( szFile ) );
 #endif
 #if ADS_LIB_VERSION >= 900
          if( pArea->iFileType == ADS_CDX ||

@@ -76,7 +76,7 @@ static void hb_trace_message( char * buffer, HB_SIZE ulSize, int iParam, int iCo
       }
       pszString = hb_itemString( hb_param( iParam, HB_IT_ANY ), &nLen, &fFree );
       hb_strncpy( buffer, pszString, ulSize );
-      nLen = ( HB_SIZE ) strlen( buffer );
+      nLen = strlen( buffer );
       ulSize -= nLen;
       buffer += nLen;
       if( fFree )

@@ -789,7 +789,7 @@ static void hb_dbgAddStopLines( PHB_ITEM pItem )
          const char * szName = hb_dbgStripModuleName( szModule );
 
          if( szName != szModule )
-            hb_arraySetCLPtr( pEntry, 1, hb_strdup( szName ), ( HB_SIZE ) strlen( szName ) );
+            hb_arraySetCLPtr( pEntry, 1, hb_strdup( szName ), strlen( szName ) );
       }
    }
 
@@ -1000,7 +1000,7 @@ static PHB_ITEM hb_dbgEvalMacro( const char * szExpr, PHB_ITEM pItem )
    if( ( !strcmp( type, "U" ) || !strcmp( type, "UE" ) ) )
       return NULL;
 
-   hb_vmPushString( szExpr, ( HB_SIZE ) strlen( szExpr ) );
+   hb_vmPushString( szExpr, strlen( szExpr ) );
    hb_macroGetValue( hb_stackItemFromTop( -1 ), 0, HB_SM_RT_MACRO );
    hb_itemMove( pItem, hb_stackItemFromTop( -1 ) );
    hb_stackPop();
@@ -1028,13 +1028,13 @@ static int hb_dbgEvalSubstituteVar( HB_WATCHPOINT * watch, char * szWord, int nS
    else
       hb_xfree( szWord );
 
-   t = ( char * ) hb_xgrab( ( HB_SIZE ) strlen( watch->szExpr ) - nLen + 9 + 1 );
+   t = ( char * ) hb_xgrab( strlen( watch->szExpr ) - nLen + 9 + 1 );
    memmove( t, watch->szExpr, nStart );
    memmove( t + nStart, "__dbg[", 6 );
    t[ nStart + 6 ] = '0' + ( char ) ( ( j + 1 ) / 10 );
    t[ nStart + 7 ] = '0' + ( char ) ( ( j + 1 ) % 10 );
    t[ nStart + 8 ] = ']';
-   hb_strncpy( t + nStart + 9, watch->szExpr + nStart + nLen, ( HB_SIZE ) strlen( watch->szExpr ) - nLen - nStart );
+   hb_strncpy( t + nStart + 9, watch->szExpr + nStart + nLen, strlen( watch->szExpr ) - nLen - nStart );
    hb_xfree( watch->szExpr );
    watch->szExpr = t;
    return nStart + 9;
@@ -1632,7 +1632,7 @@ static void hb_dbgVarSet( HB_VARINFO * scope, PHB_ITEM xNewValue )
          {
             hb_vmPushDynSym( pDynSym );
             hb_vmPushNil();
-            hb_vmPushString( scope->szName, ( HB_SIZE ) strlen( scope->szName ) );
+            hb_vmPushString( scope->szName, strlen( scope->szName ) );
             hb_vmPush( xNewValue );
             hb_vmDo( 2 );
          }

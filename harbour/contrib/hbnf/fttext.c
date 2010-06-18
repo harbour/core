@@ -1982,7 +1982,7 @@ static int _writeLine( const char * theData, HB_SIZE iDataLen )
 static HB_BOOL _writeeol( HB_FHANDLE fhnd )
 {
    const char * crlf = hb_conNewLine();
-   HB_SIZE len = ( HB_SIZE ) strlen( crlf );
+   HB_SIZE len = strlen( crlf );
 
    return hb_fsWriteLarge( fhnd, crlf, len ) == len;
 }

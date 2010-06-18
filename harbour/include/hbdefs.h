@@ -367,7 +367,7 @@ typedef HB_UCHAR            HB_U8;
 
 /* Legacy Windows/Clipper-style types */
 
-#if ! defined( _HB_LEGACY_TYPES_OFF ) && defined( HB_LEGACY_LEVEL3 )
+#if ! defined( HB_LEGACY_TYPES_OFF ) && defined( HB_LEGACY_LEVEL3 )
    #if ! defined( HB_DONT_DEFINE_BASIC_TYPES )
 
       #if ! defined( HB_DONT_DEFINE_BOOL )

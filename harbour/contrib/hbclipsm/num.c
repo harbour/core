@@ -162,7 +162,7 @@ HB_FUNC( NUMASCURRENCY )
    char * szCurrency;
    HB_SIZE ulLen;
 
-   ulLen = ( HB_SIZE ) strlen( ptr );
+   ulLen = strlen( ptr );
    szCurrency = ( char * ) hb_xgrab( ulLen + ulSymbolLen );
 
    if( hb_parni( 3 ) < 0 )
@@ -170,7 +170,7 @@ HB_FUNC( NUMASCURRENCY )
       while( HB_ISSPACE( *ptr ) )
          ptr++;
 
-      ulLen = ( HB_SIZE ) strlen( ptr );
+      ulLen = strlen( ptr );
 
       memcpy( szCurrency, hb_parc( 2 ), ulSymbolLen );
       memcpy( szCurrency + ulSymbolLen, ptr, ulLen );

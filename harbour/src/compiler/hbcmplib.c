@@ -57,7 +57,7 @@ static void hb_compGenArgList( int iFirst, int iLast,
                                int * pArgC, const char *** pArgV )
 {
    PHB_ITEM pParam;
-   HB_ULONG ul, ulLen;
+   HB_SIZE ul, ulLen;
    int argc = 1, i;
    const char ** argv;
 
@@ -123,7 +123,7 @@ HB_FUNC( HB_COMPILEBUF )
    int iResult, argc;
    const char ** argv;
    HB_BYTE * pBuffer;
-   HB_ULONG ulLen;
+   HB_SIZE ulLen;
 
    hb_compGenArgList( 1, hb_pcount(), &argc, &argv );
    iResult = hb_compMain( argc, argv, &pBuffer, &ulLen, NULL );
@@ -138,7 +138,7 @@ HB_FUNC( HB_COMPILEFROMBUF )
    const char ** argv;
    const char * szSource;
    HB_BYTE * pBuffer;
-   HB_ULONG ulLen;
+   HB_SIZE ulLen;
 
    szSource = hb_parc( 1 );
    if( szSource )

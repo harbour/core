@@ -217,7 +217,7 @@ static void hb_gt_std_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    hb_gt_std_setKeyTrans( pGTSTD, NULL, NULL );
 
    pGTSTD->szCrLf = hb_strdup( hb_conNewLine() );
-   pGTSTD->ulCrLf = ( HB_SIZE ) strlen( pGTSTD->szCrLf );
+   pGTSTD->ulCrLf = strlen( pGTSTD->szCrLf );
 
    hb_fsSetDevMode( pGTSTD->hStdout, FD_BINARY );
    HB_GTSUPER_INIT( pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr );

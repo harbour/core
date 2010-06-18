@@ -215,7 +215,7 @@ PHB_ITEM hb_itemPutC( PHB_ITEM pItem, const char * szText )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_itemPutC(%p, %s)", pItem, szText));
 
-   ulLen = szText ? ( HB_SIZE ) strlen( szText ) : 0;
+   ulLen = szText ? strlen( szText ) : 0;
    if( ulLen > 1 )
    {
       ulAlloc = ulLen + 1;
@@ -304,7 +304,7 @@ PHB_ITEM hb_itemPutCConst( PHB_ITEM pItem, const char * szText )
    else
    {
       pItem->item.asString.value  = ( char * ) szText;
-      pItem->item.asString.length = ( HB_SIZE ) strlen( szText );
+      pItem->item.asString.length = strlen( szText );
    }
 
    return pItem;
@@ -350,7 +350,7 @@ PHB_ITEM hb_itemPutCPtr( PHB_ITEM pItem, char * szText )
    else
       pItem = hb_itemNew( NULL );
 
-   ulLen = szText ? ( HB_SIZE ) strlen( szText ) : 0;
+   ulLen = szText ? strlen( szText ) : 0;
 
    pItem->type = HB_IT_STRING;
    pItem->item.asString.length = ulLen;
@@ -2507,7 +2507,7 @@ char * hb_itemString( PHB_ITEM pItem, HB_SIZE * ulLen, HB_BOOL * bFreeReq )
 
          buffer = ( char * ) hb_xgrab( 11 );
          hb_dateFormat( szDate, buffer, hb_stackSetStruct()->HB_SET_DATEFORMAT );
-         * ulLen = ( HB_SIZE ) strlen( buffer );
+         * ulLen = strlen( buffer );
          * bFreeReq = HB_TRUE;
          break;
       }
@@ -2524,7 +2524,7 @@ char * hb_itemString( PHB_ITEM pItem, HB_SIZE * ulLen, HB_BOOL * bFreeReq )
                              pItem->item.asDateTime.time );
 
          buffer = hb_strdup( szDateTime );
-         * ulLen = ( HB_SIZE ) strlen( buffer );
+         * ulLen = strlen( buffer );
          * bFreeReq = HB_TRUE;
          break;
       }
@@ -2545,7 +2545,7 @@ char * hb_itemString( PHB_ITEM pItem, HB_SIZE * ulLen, HB_BOOL * bFreeReq )
             buffer = hb_itemStr( pItem, NULL, NULL );
          if( buffer )
          {
-            * ulLen = ( HB_SIZE ) strlen( buffer );
+            * ulLen = strlen( buffer );
             * bFreeReq = HB_TRUE;
          }
          else

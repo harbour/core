@@ -83,7 +83,7 @@ static long hb_TimeStrToSec( const char * pszTime )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_TimeStrToSec(%s)", pszTime));
 
-   ulLen = ( HB_SIZE ) strlen( pszTime );
+   ulLen = strlen( pszTime );
 
    if( ulLen >= 1 )
       lTime += ( long ) hb_strVal( pszTime, ulLen ) * 3600;

@@ -213,7 +213,7 @@ HB_FUNC( TRANSFORM )
          {
             hb_dateFormat( "XXXXXXXX", szPicDate, hb_setGetDateFormat() );
             szPic = szPicDate;
-            ulPicLen = ( HB_SIZE ) strlen( szPicDate );
+            ulPicLen = strlen( szPicDate );
          }
 
          szResult = ( char * ) hb_xgrab( ulExpLen + ulPicLen + 1 );
@@ -419,7 +419,7 @@ HB_FUNC( TRANSFORM )
          {
             hb_dateFormat( "99999999", szPicDate, hb_setGetDateFormat() );
             szPic = szPicDate;
-            ulPicLen = ( HB_SIZE ) strlen( szPicDate );
+            ulPicLen = strlen( szPicDate );
          }
 
          for( i = iWidth = iDec = 0; i < ulPicLen; i++ )
@@ -708,7 +708,7 @@ HB_FUNC( TRANSFORM )
 #endif
 
          hb_dateFormat( hb_itemGetDS( pValue, szDate ), szResult, szDateFormat );
-         ulResultPos = ( HB_SIZE ) strlen( szResult );
+         ulResultPos = strlen( szResult );
 
 #ifdef HB_CLP_STRICT
          if( uiPicFlags & PF_BRITISH )
@@ -737,7 +737,7 @@ HB_FUNC( TRANSFORM )
             /* Here we also respect the date format modified for @E [druzus]
              */
             hb_dateFormat( "99999999", szPicDate, szDateFormat );
-            ulPicLen = ( HB_SIZE ) strlen( szPicDate );
+            ulPicLen = strlen( szPicDate );
 
             for( nFor = 0; nFor < ulPicLen; nFor++ )
             {
@@ -824,7 +824,7 @@ HB_FUNC( TRANSFORM )
             char szDate[ 9 ];
             hb_dateFormat( hb_dateDecStr( szDate, lDate ), szResult, szDateFormat );
          }
-         ulResultPos = ( HB_SIZE ) strlen( szResult );
+         ulResultPos = strlen( szResult );
 
 #ifdef HB_CLP_STRICT
          if( uiPicFlags & PF_BRITISH )
@@ -853,7 +853,7 @@ HB_FUNC( TRANSFORM )
             /* Here we also respect the date format modified for @E [druzus]
              */
             hb_dateFormat( "99999999", szPicDate, szDateFormat );
-            ulPicLen = ( HB_SIZE ) strlen( szPicDate );
+            ulPicLen = strlen( szPicDate );
 
             for( nFor = 0; nFor < ulPicLen; nFor++ )
             {
@@ -882,7 +882,7 @@ HB_FUNC( TRANSFORM )
          {
             hb_dateFormat( "99999999", szPicDate, hb_setGetDateFormat() );
             szPic = szPicDate;
-            ulPicLen = ( HB_SIZE ) strlen( szPicDate );
+            ulPicLen = strlen( szPicDate );
          }
 
          ulResultPos = 0;

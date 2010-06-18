@@ -70,7 +70,7 @@ static HB_BOOL hb_IsLegacyDevice( const char * pszPrinterName )
 
    for( i = 0; s_pszPrnDev[ i ]; ++i )
    {
-      if( hb_strnicmp( pszPrinterName, s_pszPrnDev[ i ], ( HB_SIZE ) strlen( s_pszPrnDev[ i ] ) ) == 0 )
+      if( hb_strnicmp( pszPrinterName, s_pszPrnDev[ i ], strlen( s_pszPrnDev[ i ] ) ) == 0 )
          return HB_TRUE;
    }
 
@@ -353,7 +353,7 @@ HB_FUNC( WIN_PRINTERPORTTONAME )
                HB_ITEMPUTSTR( pTemp, pPrinterEnum->pPortName );
 
                if( bSubStr )
-                  bFound = ( hb_strnicmp( hb_itemGetCPtr( pTemp ), pszPortNameFind, ( HB_SIZE ) strlen( pszPortNameFind ) ) == 0 );
+                  bFound = ( hb_strnicmp( hb_itemGetCPtr( pTemp ), pszPortNameFind, strlen( pszPortNameFind ) ) == 0 );
                else
                   bFound = ( hb_stricmp( hb_itemGetCPtr( pTemp ), pszPortNameFind ) == 0 );
 

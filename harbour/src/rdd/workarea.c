@@ -1811,14 +1811,14 @@ static HB_ERRCODE hb_waRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ulCo
          {
             hb_setSetItem( HB_SET_MFILEEXT, pItem );
             if( szResult )
-               hb_itemPutCLPtr( pItem, szResult, ( HB_SIZE ) strlen( szResult ) );
+               hb_itemPutCLPtr( pItem, szResult, strlen( szResult ) );
             else
                hb_itemPutC( pItem, NULL );
             break;
          }
          else if( szResult )
          {
-            hb_itemPutCLPtr( pItem, szResult, ( HB_SIZE ) strlen( szResult ) );
+            hb_itemPutCLPtr( pItem, szResult, strlen( szResult ) );
             break;
          }
          /* no break - return HB_FAILURE */

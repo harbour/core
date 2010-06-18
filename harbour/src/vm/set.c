@@ -2675,7 +2675,7 @@ const char * hb_osEncodeCP( const char * szName, char ** pszFree, HB_SIZE * pulS
             if( pszFree == NULL )
             {
                pszFree = ( char ** ) &szName;
-               ulSize = ( HB_SIZE ) strlen( szName );
+               ulSize = strlen( szName );
             }
             pszBuf = *pszFree;
             if( pulSize == NULL )
@@ -2683,7 +2683,7 @@ const char * hb_osEncodeCP( const char * szName, char ** pszFree, HB_SIZE * pulS
             else if( *pulSize > 0 )
                ulSize = *pulSize - 1;
 
-            szName = hb_cdpnDup3( szName, ( HB_SIZE ) strlen( szName ),
+            szName = hb_cdpnDup3( szName, strlen( szName ),
                                   pszBuf, &ulSize, pszFree, pulSize,
                                   cdpHost, cdpOS );
          }
@@ -2713,7 +2713,7 @@ const char * hb_osDecodeCP( const char * szName, char ** pszFree, HB_SIZE * pulS
             if( pszFree == NULL )
             {
                pszFree = ( char ** ) &szName;
-               ulSize = ( HB_SIZE ) strlen( szName );
+               ulSize = strlen( szName );
             }
             pszBuf = *pszFree;
             if( pulSize == NULL )
@@ -2721,7 +2721,7 @@ const char * hb_osDecodeCP( const char * szName, char ** pszFree, HB_SIZE * pulS
             else if( *pulSize > 0 )
                ulSize = *pulSize - 1;
 
-            szName = hb_cdpnDup3( szName, ( HB_SIZE ) strlen( szName ),
+            szName = hb_cdpnDup3( szName, strlen( szName ),
                                   pszBuf, &ulSize, pszFree, pulSize,
                                   cdpOS, cdpHost );
          }

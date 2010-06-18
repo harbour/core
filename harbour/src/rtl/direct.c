@@ -140,7 +140,7 @@ HB_FUNC( DIRECTORY )
             /* CA-Cl*pper compatible behavior - add all file mask when
              * last character is directory or drive separator
              */
-            HB_SIZE nLen = ( HB_SIZE ) strlen( szDirSpec ) - 1;
+            HB_SIZE nLen = strlen( szDirSpec ) - 1;
 #ifdef HB_OS_HAS_DRIVE_LETTER
             if( szDirSpec[ nLen ] == HB_OS_PATH_DELIM_CHR ||
                 szDirSpec[ nLen ] == HB_OS_DRIVE_DELIM_CHR )

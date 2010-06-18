@@ -802,7 +802,7 @@ HB_FUNC( PQCMDTUPLES )
 HB_FUNC( PQESCAPESTRING )
 {
    const char * source = hb_parcx( 1 );
-   HB_SIZE size = ( HB_SIZE ) strlen( source );
+   HB_SIZE size = strlen( source );
    char * dest = ( char * ) hb_xgrab( size * 2 + 1 );
 
    PQescapeString( dest, source, ( size_t ) size );

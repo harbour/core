@@ -540,7 +540,7 @@ typedef struct __INLINE
 {
    const char * szName;                   /* name of a inline function */
    HB_BYTE *    pCode;                    /* pointer to a memory block where pcode is stored */
-   HB_ULONG     lPCodeSize;               /* total memory size for pcode */
+   HB_SIZE      lPCodeSize;               /* total memory size for pcode */
    const char * szFileName;               /* Source file name */
    int          iLine;                    /* Source line number */
    struct __INLINE * pNext;               /* pointer to the next defined inline */
@@ -776,7 +776,7 @@ typedef struct _HB_COMP
    void              ( * outErrFunc ) ( void *, const char* );
    void *            cargo;
 
-   HB_ULONG          ulOutBufSize;        /* memory output buffer size */
+   HB_SIZE           ulOutBufSize;        /* memory output buffer size */
    HB_BYTE *         pOutBuf;             /* memory output buffer address */
 
    HB_ULONG          lastLinePos;         /* position of last opcode with line number */

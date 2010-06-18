@@ -129,7 +129,7 @@ HB_BOOL hb_getenv_buffer( const char * szName, char * szBuffer, int nSize )
       TCHAR name[ 128 ];
       TCHAR buffer[ 128 ];
       LPTSTR lpName, lpBuffer;
-      HB_SIZE nLen = ( HB_SIZE ) strlen( szName ) + 1;
+      HB_SIZE nLen = strlen( szName ) + 1;
 
       if( nLen <= HB_SIZEOFARRAY( name ) )
          lpName = name;

@@ -406,7 +406,7 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
       hb_itemRelease( pName );
       if( strlen( szOurName ) > MAX_FIELD_NAME )
          szOurName[ MAX_FIELD_NAME ] = '\0';
-      pFieldInfo.atomName = hb_strUpper( szOurName, ( HB_SIZE ) strlen( szOurName ) );
+      pFieldInfo.atomName = hb_strUpper( szOurName, strlen( szOurName ) );
 
       /* 
          We do mapping of many SQL types to one Harbour field type here, so, we need store

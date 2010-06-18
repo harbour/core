@@ -308,7 +308,7 @@ static HB_ERRCODE sqlite3Open( SQLBASEAREAP pArea )
       hb_itemRelease( pName );
       if( strlen( szOurName ) > MAX_FIELD_NAME )
          szOurName[ MAX_FIELD_NAME ] = '\0';
-      pFieldInfo.atomName = hb_strUpper( szOurName, ( HB_SIZE ) strlen( szOurName ) );
+      pFieldInfo.atomName = hb_strUpper( szOurName, strlen( szOurName ) );
 
       iDataType = sqlite3_column_type( st, uiIndex );
 

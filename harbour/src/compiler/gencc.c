@@ -70,7 +70,7 @@ typedef HB_GENC_FUNC_ * HB_GENC_FUNC_PTR;
                                  fprintf( cargo->yyc, "\t#error: \"" s "\"\n" ); \
                               } while( 0 )
 
-void hb_compGenCString( FILE * yyc, const HB_BYTE * pText, HB_ULONG ulLen )
+void hb_compGenCString( FILE * yyc, const HB_BYTE * pText, HB_SIZE ulLen )
 {
    HB_ULONG ulPos;
 

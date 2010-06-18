@@ -60,7 +60,7 @@ static HB_BOOL hb_compRegisterFunc( HB_COMP_DECL, PFUNCTION pFunc, HB_BOOL fErro
 /* ************************************************************************* */
 
 int hb_compMain( int argc, const char * const argv[],
-                 HB_BYTE ** pBufPtr, HB_ULONG * pulSize, const char * szSource )
+                 HB_BYTE ** pBufPtr, HB_SIZE * pulSize, const char * szSource )
 {
    HB_COMP_DECL;
    int iStatus = EXIT_SUCCESS;
@@ -883,10 +883,10 @@ int hb_compVariableScope( HB_COMP_DECL, const char * szVarName )
    return iScope;
 }
 
-HB_BOOL hb_compIsValidMacroText( HB_COMP_DECL, const char * szText, HB_ULONG ulLen )
+HB_BOOL hb_compIsValidMacroText( HB_COMP_DECL, const char * szText, HB_SIZE ulLen )
 {
    HB_BOOL fFound = HB_FALSE;
-   HB_ULONG ul = 0;
+   HB_SIZE ul = 0;
 
    while( ul < ulLen )
    {
@@ -3009,7 +3009,7 @@ void hb_compGenPushTimeStamp( long lDate, long lTime, HB_COMP_DECL )
 }
 
 /* generates the pcode to push a string on the virtual machine stack */
-void hb_compGenPushString( const char * szText, HB_ULONG ulStrLen, HB_COMP_DECL )
+void hb_compGenPushString( const char * szText, HB_SIZE ulStrLen, HB_COMP_DECL )
 {
    if( HB_COMP_PARAM->iHidden )
    {
@@ -3446,7 +3446,7 @@ void hb_compCodeBlockEnd( HB_COMP_DECL )
    PFUNCTION pCodeblock;   /* pointer to the current codeblock */
    PFUNCTION pFunc;        /* pointer to a function that owns a codeblock */
    const char * pFuncName;
-   HB_ULONG ulSize;
+   HB_SIZE ulSize;
    HB_USHORT wLocals = 0;  /* number of referenced local variables */
    HB_USHORT wLocalsCnt, wLocalsLen;
    HB_USHORT wPos;
@@ -4237,8 +4237,8 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, const char * szBuff
             hb_compLineNumberDefStart( HB_COMP_PARAM );
             do
             {
-               HB_ULONG ulSkip = pInfo->ulFirstLine >> 3;
-               HB_ULONG ulLen = ( ( pInfo->ulLastLine + 7 ) >> 3 ) - ulSkip;
+               HB_SIZE ulSkip = pInfo->ulFirstLine >> 3;
+               HB_SIZE ulLen = ( ( pInfo->ulLastLine + 7 ) >> 3 ) - ulSkip;
 
                hb_compGenPushString( pInfo->pszModuleName, strlen( pInfo->pszModuleName ) + 1, HB_COMP_PARAM );
                hb_compGenPushLong( ulSkip << 3, HB_COMP_PARAM );

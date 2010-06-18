@@ -213,7 +213,7 @@ void hb_conOutStd( const char * szStr, HB_SIZE nLen )
    HB_TRACE(HB_TR_DEBUG, ("hb_conOutStd(%s, %lu)", szStr, nLen));
 
    if( nLen == 0 )
-      nLen = ( HB_SIZE ) strlen( szStr );
+      nLen = strlen( szStr );
 
    if( nLen > 0 )
       hb_gtOutStd( szStr, nLen );
@@ -225,7 +225,7 @@ void hb_conOutErr( const char * szStr, HB_SIZE nLen )
    HB_TRACE(HB_TR_DEBUG, ("hb_conOutErr(%s, %lu)", szStr, nLen));
 
    if( nLen == 0 )
-      nLen = ( HB_SIZE ) strlen( szStr );
+      nLen = strlen( szStr );
 
    if( nLen > 0 )
       hb_gtOutErr( szStr, nLen );

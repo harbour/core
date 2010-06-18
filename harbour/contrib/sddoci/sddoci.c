@@ -367,7 +367,7 @@ static HB_ERRCODE ocilibOpen( SQLBASEAREAP pArea )
       hb_itemRelease( pName );
       if( strlen( szOurName ) > MAX_FIELD_NAME )
          szOurName[ MAX_FIELD_NAME ] = '\0';
-      pFieldInfo.atomName = hb_strUpper( szOurName, ( HB_SIZE ) strlen( szOurName ) );
+      pFieldInfo.atomName = hb_strUpper( szOurName, strlen( szOurName ) );
 
       uiDataType = OCI_ColumnGetType( col );
       uiSize = OCI_ColumnGetSize( col );

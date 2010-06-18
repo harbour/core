@@ -120,7 +120,7 @@ static void AddToArray( PHB_ITEM pItem, PHB_ITEM pReturn, HB_SIZE ulPos )
 
       if( pArrayItem )
       {
-         HB_SIZE ulLen = ( HB_SIZE ) strlen( pItem->item.asSymbol.value->szName ) + 2;
+         HB_SIZE ulLen = strlen( pItem->item.asSymbol.value->szName ) + 2;
          char * szBuff = ( char * ) hb_xgrab( ulLen + 1 );
 
          hb_snprintf( szBuff, ulLen + 1, "[%s]", pItem->item.asSymbol.value->szName );

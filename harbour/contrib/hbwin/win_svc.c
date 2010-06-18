@@ -120,7 +120,7 @@ static VOID WINAPI hbwin_SvcMainFunction( DWORD dwArgc, LPTSTR * lpszArgv )
 
                if( ! hb_cmdargIsInternal( pszArg, NULL ) )
                {
-                  hb_vmPushString( pszArg, ( HB_SIZE ) strlen( pszArg ) );
+                  hb_vmPushString( pszArg, strlen( pszArg ) );
                   ++iArgCount;
                }
 

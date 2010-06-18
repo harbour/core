@@ -1126,7 +1126,7 @@ static const char * s_netio_params( int iParam, int iMsg, const char * pszName, 
    char * data = NULL, * itmData;
    HB_SIZE size, itmSize;
 
-   size = ( HB_SIZE ) strlen( pszName ) + 1;
+   size = strlen( pszName ) + 1;
 
    while( ++iParam <= iPCount )
    {
