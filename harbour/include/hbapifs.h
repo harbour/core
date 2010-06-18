@@ -185,9 +185,9 @@ extern HB_EXPORT HB_BOOL    hb_fsLockLarge   ( HB_FHANDLE hFileHandle, HB_FOFFSE
                                                HB_FOFFSET ulLength, HB_USHORT uiMode ); /* request a lock on a portion of a file using 64bit API */
 extern HB_EXPORT HB_BOOL    hb_fsMkDir       ( const char * pszDirName ); /* create a directory */
 extern HB_EXPORT HB_FHANDLE hb_fsOpen        ( const char * pszFileName, HB_USHORT uiFlags ); /* open a file */
-extern HB_EXPORT HB_USHORT  hb_fsRead        ( HB_FHANDLE hFileHandle, void * pBuff, HB_USHORT ulCount ); /* read contents of a file into a buffer (<=64K) */
-extern HB_EXPORT HB_SIZE    hb_fsReadLarge   ( HB_FHANDLE hFileHandle, void * pBuff, HB_SIZE ulCount ); /* read contents of a file into a buffer (>64K) */
-extern HB_EXPORT HB_SIZE    hb_fsReadAt      ( HB_FHANDLE hFileHandle, void * pBuff, HB_SIZE ulCount, HB_FOFFSET llOffset ); /* read from given offset contents of a file into a buffer (>64K) */
+extern HB_EXPORT HB_USHORT  hb_fsRead        ( HB_FHANDLE hFileHandle, void * pBuff, HB_USHORT uiCount ); /* read contents of a file into a buffer (<=64K) */
+extern HB_EXPORT HB_SIZE    hb_fsReadLarge   ( HB_FHANDLE hFileHandle, void * pBuff, HB_SIZE nCount ); /* read contents of a file into a buffer (>64K) */
+extern HB_EXPORT HB_SIZE    hb_fsReadAt      ( HB_FHANDLE hFileHandle, void * pBuff, HB_SIZE nCount, HB_FOFFSET llOffset ); /* read from given offset contents of a file into a buffer (>64K) */
 extern HB_EXPORT HB_BOOL    hb_fsRmDir       ( const char * pszDirName ); /* remove a directory */
 extern HB_EXPORT HB_BOOL    hb_fsRename      ( const char * pszOldName, const char * pszNewName ); /* rename a file */
 extern HB_EXPORT HB_ULONG   hb_fsSeek        ( HB_FHANDLE hFileHandle, HB_LONG lOffset, HB_USHORT uiMode ); /* reposition an open file */
@@ -201,9 +201,9 @@ extern HB_EXPORT HB_BOOL    hb_fsSetAttr     ( const char * pszFileName, HB_FATT
 extern HB_EXPORT void       hb_fsSetError    ( HB_ERRCODE uiError ); /* set the file system DOS error number */
 extern HB_EXPORT void       hb_fsSetIOError  ( HB_BOOL fResult, HB_USHORT uiOperation ); /* set the file system error number after IO operation */
 extern HB_EXPORT HB_BOOL    hb_fsTruncAt     ( HB_FHANDLE hFileHandle, HB_FOFFSET llOffset ); /* truncate file to given size */
-extern HB_EXPORT HB_USHORT  hb_fsWrite       ( HB_FHANDLE hFileHandle, const void * pBuff, HB_USHORT ulCount ); /* write to an open file from a buffer (<=64K) */
-extern HB_EXPORT HB_SIZE    hb_fsWriteLarge  ( HB_FHANDLE hFileHandle, const void * pBuff, HB_SIZE ulCount ); /* write to an open file from a buffer (>64K) */
-extern HB_EXPORT HB_SIZE    hb_fsWriteAt     ( HB_FHANDLE hFileHandle, const void * pBuff, HB_SIZE ulCount, HB_FOFFSET llOffset ); /* write to an open file at given offset from a buffer (>64K) */
+extern HB_EXPORT HB_USHORT  hb_fsWrite       ( HB_FHANDLE hFileHandle, const void * pBuff, HB_USHORT uiCount ); /* write to an open file from a buffer (<=64K) */
+extern HB_EXPORT HB_SIZE    hb_fsWriteLarge  ( HB_FHANDLE hFileHandle, const void * pBuff, HB_SIZE nCount ); /* write to an open file from a buffer (>64K) */
+extern HB_EXPORT HB_SIZE    hb_fsWriteAt     ( HB_FHANDLE hFileHandle, const void * pBuff, HB_SIZE nCount, HB_FOFFSET llOffset ); /* write to an open file at given offset from a buffer (>64K) */
 extern HB_EXPORT HB_FHANDLE hb_fsPOpen       ( const char * pFilename, const char * pMode );
 extern HB_EXPORT HB_FHANDLE hb_fsGetOsHandle ( HB_FHANDLE hFileHandle );
 extern HB_EXPORT HB_ERRCODE hb_fsGetFError   ( void ); /* get FERROR() flag */

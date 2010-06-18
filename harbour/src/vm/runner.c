@@ -419,6 +419,8 @@ static PHRB_BODY hb_hrbLoad( const char * szHrbBody, HB_SIZE ulBodySize, HB_USHO
 
          for( ul = 0; ul < pHrbBody->ulFuncs; ul++ )
          {
+            HB_ULONG ulValue;
+
             /* Read name of function */
             pDynFunc[ ul ].szName = hb_hrbReadId( szHrbBody, ulBodySize, &ulBodyOffset );
             if( pDynFunc[ ul ].szName == NULL )
