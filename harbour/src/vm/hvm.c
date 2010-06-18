@@ -373,12 +373,12 @@ static void hb_vmDoModuleQuitFunctions( void )
 }
 
 
-/* call CLIPINIT function to initialize GETLIST public variable
- * and set ErrorBlock() by ERRORSYS() function
+/* call __HBVMINIT function to initialize GETLIST public variable
+ * and set ErrorBlock() by ErrorSys() function
  */
-static void hb_vmDoInitClip( void )
+static void hb_vmDoInitHVM( void )
 {
-   PHB_DYNS pDynSym = hb_dynsymFind( "CLIPINIT" );
+   PHB_DYNS pDynSym = hb_dynsymFind( "__HBVMINIT" );
 
    if( pDynSym && pDynSym->pSymbol->value.pFunPtr )
    {
@@ -812,10 +812,10 @@ void hb_vmThreadInit( void * Cargo )
 
       if( s_fHVMActive )
       {
-         /* call CLIPINIT function to initialize GETLIST public variable
-          * and set ErrorBlock() by ERRORSYS() function
+         /* call __HBVMINIT function to initialize GETLIST public variable
+          * and set ErrorBlock() by ErrorSys() function
           */
-         hb_vmDoInitClip();
+         hb_vmDoInitHVM();
       }
 
       if( pState->pMemvars )
@@ -999,14 +999,10 @@ void hb_vmInit( HB_BOOL bStartMainProc )
     */
    hb_vmDoInitStatics();
 
-   /* call CLIPINIT function to initialize GETLIST public variable
-    * and set ErrorBlock() by ERRORSYS() function
-    * Because on some platform the execution order of init functions
-    * is out of Harbour control then this function has to be called
-    * explicitly in VM initialization process before hb_vmDoInitFunctions()
-    * and not depends on INIT clause.
+   /* call __HBVMINIT function to initialize GETLIST public variable
+    * and set ErrorBlock() by ErrorSys() function.
     */
-   hb_vmDoInitClip();
+   hb_vmDoInitHVM();
 
    hb_clsDoInit();                     /* initialize Class(y) .prg functions */
 
