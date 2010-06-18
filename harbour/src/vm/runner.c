@@ -322,6 +322,7 @@ static PHRB_BODY hb_hrbLoad( const char * szHrbBody, HB_SIZE ulBodySize, HB_USHO
       HB_SIZE ulBodyOffset = 0;
       HB_SIZE ulSize;                              /* Size of function */
       HB_SIZE ulPos;
+      HB_ULONG ulValue;
       HB_ULONG ul;
       char * buffer, ch;
       HB_USHORT usBind = ( usMode & HB_HRB_BIND_MODEMASK );
@@ -424,8 +425,12 @@ static PHRB_BODY hb_hrbLoad( const char * szHrbBody, HB_SIZE ulBodySize, HB_USHO
                break;
 
             /* Read size of function */
-            if( ! hb_hrbReadValue( szHrbBody, ulBodySize, &ulBodyOffset, &ulSize ) ||
-                ulBodyOffset + ulSize > ulBodySize )
+            if( ! hb_hrbReadValue( szHrbBody, ulBodySize, &ulBodyOffset, &ulValue ) )
+               break;
+
+            ulSize = ( HB_SIZE ) ulValue;
+
+            if( ulBodyOffset + ulSize > ulBodySize )
                break;
 
             /* Copy function body */
