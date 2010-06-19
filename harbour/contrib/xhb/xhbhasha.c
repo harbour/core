@@ -97,7 +97,7 @@ HB_FUNC( HAAGETKEYAT )
       s_errRT_hashAA();
    else
    {
-      PHB_ITEM pItem = hb_hashGetKeyAt( pHash, hb_itemGetNL( pPos ) );
+      PHB_ITEM pItem = hb_hashGetKeyAt( pHash, hb_itemGetNS( pPos ) );
       if( pItem )
          hb_itemReturn( pItem );
       else
@@ -117,7 +117,7 @@ HB_FUNC( HAAGETVALUEAT )
       s_errRT_hashAA();
    else
    {
-      PHB_ITEM pItem = hb_hashGetValueAt( pHash, hb_itemGetNL( pPos ) );
+      PHB_ITEM pItem = hb_hashGetValueAt( pHash, hb_itemGetNS( pPos ) );
       if( pItem )
          hb_itemReturn( pItem );
       else
@@ -138,7 +138,7 @@ HB_FUNC( HAASETVALUEAT )
       s_errRT_hashAA();
    else
    {
-      PHB_ITEM pItem = hb_hashGetValueAt( pHash, hb_itemGetNL( pPos ) );
+      PHB_ITEM pItem = hb_hashGetValueAt( pHash, hb_itemGetNS( pPos ) );
       if( pItem )
          hb_itemCopy( pItem, pValue );
       else
@@ -156,7 +156,7 @@ HB_FUNC( HAADELAT )
       s_errRT_hashArg();
    else if( !s_isHashAA( pHash ) )
       s_errRT_hashAA();
-   else if( !hb_hashDelAt( pHash, hb_itemGetNL( pPos ) ) )
+   else if( !hb_hashDelAt( pHash, hb_itemGetNS( pPos ) ) )
       s_errRT_hashBound();
 }
 
@@ -185,10 +185,10 @@ HB_FUNC( HAAGETREALPOS )
 
    if( pHash )
    {
-      HB_SIZE nPos = hb_parnl( 2 );
+      HB_SIZE nPos = hb_parns( 2 );
 
-      hb_retl( s_isHashAA( pHash ) &&
-               nPos > 0 && nPos <= hb_hashLen( pHash ) ? nPos : 0 );
+      hb_retns( s_isHashAA( pHash ) &&
+                nPos > 0 && nPos <= hb_hashLen( pHash ) ? nPos : 0 );
    }
    else
       s_errRT_hashArg();
@@ -205,7 +205,7 @@ HB_FUNC( HGETVAAPOS )
       PHB_ITEM pArray = hb_itemArrayNew( nLen );
 
       for( n = 1; n <= nLen; ++n )
-         hb_arraySetNL( pArray, n, n );
+         hb_arraySetNS( pArray, n, n );
       hb_itemReturnRelease( pArray );
    }
    else

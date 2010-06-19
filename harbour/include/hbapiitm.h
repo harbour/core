@@ -97,7 +97,7 @@ extern HB_EXPORT double       hb_itemGetND     ( PHB_ITEM pItem );
 extern HB_EXPORT double       hb_itemGetNDDec  ( PHB_ITEM pItem, int * piDec );
 extern HB_EXPORT int          hb_itemGetNI     ( PHB_ITEM pItem );
 extern HB_EXPORT long         hb_itemGetNL     ( PHB_ITEM pItem );
-extern HB_EXPORT HB_SIZE      hb_itemGetNS     ( PHB_ITEM pItem );
+extern HB_EXPORT HB_ISIZ      hb_itemGetNS     ( PHB_ITEM pItem );
 extern HB_EXPORT HB_MAXINT    hb_itemGetNInt   ( PHB_ITEM pItem );
 extern HB_EXPORT void         hb_itemGetNLen   ( PHB_ITEM pItem, int * piWidth, int * piDec );
 extern HB_EXPORT void *       hb_itemGetPtr    ( PHB_ITEM pItem );
@@ -124,7 +124,7 @@ extern HB_EXPORT PHB_ITEM     hb_itemPutL      ( PHB_ITEM pItem, HB_BOOL bValue 
 extern HB_EXPORT PHB_ITEM     hb_itemPutND     ( PHB_ITEM pItem, double dNumber );
 extern HB_EXPORT PHB_ITEM     hb_itemPutNI     ( PHB_ITEM pItem, int iNumber );
 extern HB_EXPORT PHB_ITEM     hb_itemPutNL     ( PHB_ITEM pItem, long lNumber );
-extern HB_EXPORT PHB_ITEM     hb_itemPutNS     ( PHB_ITEM pItem, HB_SIZE nNumber );
+extern HB_EXPORT PHB_ITEM     hb_itemPutNS     ( PHB_ITEM pItem, HB_ISIZ nNumber );
 extern HB_EXPORT PHB_ITEM     hb_itemPutNInt   ( PHB_ITEM pItem, HB_MAXINT lNumber );
 extern HB_EXPORT PHB_ITEM     hb_itemPutNIntLen( PHB_ITEM pItem, HB_MAXINT lNumber, int iWidth );
 extern HB_EXPORT PHB_ITEM     hb_itemPutNLen   ( PHB_ITEM pItem, double dNumber, int iWidth, int iDec );

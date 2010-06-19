@@ -587,7 +587,7 @@ long  hb_parnldef( int iParam, long lDefValue )
    return lDefValue;
 }
 
-HB_SIZE hb_parns( int iParam )
+HB_ISIZ hb_parns( int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -601,17 +601,17 @@ HB_SIZE hb_parns( int iParam )
          pItem = hb_itemUnRef( pItem );
 
       if( HB_IS_LONG( pItem ) )
-         return ( HB_SIZE ) pItem->item.asLong.value;
+         return ( HB_ISIZ ) pItem->item.asLong.value;
       else if( HB_IS_INTEGER( pItem ) )
-         return ( HB_SIZE ) pItem->item.asInteger.value;
+         return ( HB_ISIZ ) pItem->item.asInteger.value;
       else if( HB_IS_DOUBLE( pItem ) )
-         return ( HB_SIZE ) pItem->item.asDouble.value;
+         return ( HB_ISIZ ) pItem->item.asDouble.value;
    }
 
    return 0;
 }
 
-HB_SIZE hb_parnsdef( int iParam, HB_SIZE nDefValue )
+HB_ISIZ hb_parnsdef( int iParam, HB_ISIZ nDefValue )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -625,11 +625,11 @@ HB_SIZE hb_parnsdef( int iParam, HB_SIZE nDefValue )
          pItem = hb_itemUnRef( pItem );
 
       if( HB_IS_LONG( pItem ) )
-         return ( HB_SIZE ) pItem->item.asLong.value;
+         return ( HB_ISIZ ) pItem->item.asLong.value;
       else if( HB_IS_INTEGER( pItem ) )
-         return ( HB_SIZE ) pItem->item.asInteger.value;
+         return ( HB_ISIZ ) pItem->item.asInteger.value;
       else if( HB_IS_DOUBLE( pItem ) )
-         return ( HB_SIZE ) pItem->item.asDouble.value;
+         return ( HB_ISIZ ) pItem->item.asDouble.value;
    }
 
    return nDefValue;
@@ -1220,7 +1220,7 @@ long  hb_parvnl( int iParam, ... )
    return 0;
 }
 
-HB_SIZE hb_parvns( int iParam, ... )
+HB_ISIZ hb_parvns( int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -1234,11 +1234,11 @@ HB_SIZE hb_parvns( int iParam, ... )
          pItem = hb_itemUnRef( pItem );
 
       if( HB_IS_LONG( pItem ) )
-         return ( HB_SIZE ) pItem->item.asLong.value;
+         return ( HB_ISIZ ) pItem->item.asLong.value;
       else if( HB_IS_INTEGER( pItem ) )
-         return ( HB_SIZE ) pItem->item.asInteger.value;
+         return ( HB_ISIZ ) pItem->item.asInteger.value;
       else if( HB_IS_DOUBLE( pItem ) )
-         return ( HB_SIZE ) pItem->item.asDouble.value;
+         return ( HB_ISIZ ) pItem->item.asDouble.value;
       else if( HB_IS_ARRAY( pItem ) )
       {
          va_list va;
@@ -1578,7 +1578,7 @@ void hb_retnl( long lNumber )
 }
 
 #undef hb_retns
-void hb_retns( HB_SIZE nNumber )
+void hb_retns( HB_ISIZ nNumber )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -1968,7 +1968,7 @@ int hb_stornl( long lValue, int iParam )
    return 0;
 }
 
-int hb_storns( HB_SIZE nValue, int iParam )
+int hb_storns( HB_ISIZ nValue, int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -2456,7 +2456,7 @@ int hb_storvnl( long lValue, int iParam, ... )
    return 0;
 }
 
-int hb_storvns( HB_SIZE nValue, int iParam, ... )
+int hb_storvns( HB_ISIZ nValue, int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 

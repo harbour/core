@@ -705,7 +705,7 @@ HB_FUNC( CURL_EASY_SEND )
 
          res = curl_easy_send( hb_curl->curl, hb_parcx( 2 ), ( size_t ) hb_parclen( 2 ), &size );
 
-         hb_stornl( size, 3 );
+         hb_storns( size, 3 );
       }
 #endif
       hb_retnl( ( long ) res );

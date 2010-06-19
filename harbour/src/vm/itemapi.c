@@ -647,20 +647,20 @@ long hb_itemGetNL( PHB_ITEM pItem )
    return 0;
 }
 
-HB_SIZE hb_itemGetNS( PHB_ITEM pItem )
+HB_ISIZ hb_itemGetNS( PHB_ITEM pItem )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemGetNS(%p)", pItem));
 
    if( pItem )
    {
       if( HB_IS_LONG( pItem ) )
-         return ( HB_SIZE ) pItem->item.asLong.value;
+         return ( HB_ISIZ ) pItem->item.asLong.value;
 
       else if( HB_IS_INTEGER( pItem ) )
-         return ( HB_SIZE ) pItem->item.asInteger.value;
+         return ( HB_ISIZ ) pItem->item.asInteger.value;
 
       else if( HB_IS_DOUBLE( pItem ) )
-         return ( HB_SIZE ) pItem->item.asDouble.value;
+         return ( HB_ISIZ ) pItem->item.asDouble.value;
    }
 
    return 0;
@@ -978,7 +978,7 @@ PHB_ITEM hb_itemPutNL( PHB_ITEM pItem, long lNumber )
    return pItem;
 }
 
-PHB_ITEM hb_itemPutNS( PHB_ITEM pItem, HB_SIZE nNumber )
+PHB_ITEM hb_itemPutNS( PHB_ITEM pItem, HB_ISIZ nNumber )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemPutNS(%p, %" HB_PFS "d)", pItem, nNumber));
 

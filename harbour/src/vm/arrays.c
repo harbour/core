@@ -584,7 +584,7 @@ long hb_arrayGetNL( PHB_ITEM pArray, HB_SIZE ulIndex )
       return 0;
 }
 
-HB_SIZE hb_arrayGetNS( PHB_ITEM pArray, HB_SIZE ulIndex )
+HB_ISIZ hb_arrayGetNS( PHB_ITEM pArray, HB_SIZE ulIndex )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetNS(%p, %lu)", pArray, ulIndex));
 
@@ -798,7 +798,7 @@ HB_BOOL hb_arraySetNL( PHB_ITEM pArray, HB_SIZE ulIndex, long lNumber )
       return HB_FALSE;
 }
 
-HB_BOOL hb_arraySetNS( PHB_ITEM pArray, HB_SIZE ulIndex, HB_SIZE nNumber )
+HB_BOOL hb_arraySetNS( PHB_ITEM pArray, HB_SIZE ulIndex, HB_ISIZ nNumber )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_arraySetNS(%p, %lu, %" HB_PFS "d)", pArray, ulIndex, nNumber));
 
