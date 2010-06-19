@@ -673,11 +673,11 @@ HB_MAXINT hb_parnintdef( int iParam, HB_MAXINT lDefValue )
    return lDefValue;
 }
 
-HB_SIZE hb_parnsize( int iParam )
+HB_SIZE hb_parns( int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_parnsize(%d)", iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_parns(%d)", iParam));
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -695,6 +695,30 @@ HB_SIZE hb_parnsize( int iParam )
    }
 
    return 0;
+}
+
+HB_SIZE hb_parnsdef( int iParam, HB_SIZE nDefValue )
+{
+   HB_STACK_TLS_PRELOAD
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_parnsdef(%d, %" HB_PFS "d)", iParam, nDefValue));
+
+   if( iParam >= -1 && iParam <= hb_pcount() )
+   {
+      PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
+
+      if( HB_IS_BYREF( pItem ) )
+         pItem = hb_itemUnRef( pItem );
+
+      if( HB_IS_LONG( pItem ) )
+         return ( HB_SIZE ) pItem->item.asLong.value;
+      else if( HB_IS_INTEGER( pItem ) )
+         return ( HB_SIZE ) pItem->item.asInteger.value;
+      else if( HB_IS_DOUBLE( pItem ) )
+         return ( HB_SIZE ) pItem->item.asDouble.value;
+   }
+
+   return nDefValue;
 }
 
 void * hb_parptr( int iParam )
@@ -1540,12 +1564,12 @@ void hb_retnint( HB_MAXINT lNumber )
    hb_itemPutNInt( hb_stackReturnItem(), lNumber );
 }
 
-#undef hb_retnsize
-void hb_retnsize( HB_SIZE nNumber )
+#undef hb_retns
+void hb_retns( HB_SIZE nNumber )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_retnsize(%" HB_PFS "d )", nNumber));
+   HB_TRACE(HB_TR_DEBUG, ("hb_retns(%" HB_PFS "d )", nNumber));
 
    hb_itemPutNInt( hb_stackReturnItem(), nNumber );
 }
@@ -1961,11 +1985,11 @@ int hb_stornint( HB_MAXINT lValue, int iParam )
    return 0;
 }
 
-int hb_stornsize( HB_SIZE nValue, int iParam )
+int hb_storns( HB_SIZE nValue, int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_stornsize(%" HB_PFS "d, %d)", nValue, iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_storns(%" HB_PFS "d, %d)", nValue, iParam));
 
    if( iParam == -1 )
    {
