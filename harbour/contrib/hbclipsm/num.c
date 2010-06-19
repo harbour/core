@@ -124,7 +124,7 @@ HB_FUNC( NUMGETLEN )
          hb_xfree( szBuffer );
    }
 
-   hb_retnl( ulLen );
+   hb_retns( ulLen );
 }
 
 /* RtoD( <nRadians> ) --> nDegrees

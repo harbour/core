@@ -131,7 +131,7 @@ HB_FUNC( HB_ZCOMPRESSBOUND )
 #endif
    else if( HB_ISNUM( 1 ) )
 #if defined( _HB_Z_COMPRESSBOUND )
-      hb_retnint( compressBound( ( uLong ) hb_parnint( 1 ) ) );
+      hb_retnint( compressBound( ( uLong ) hb_parns( 1 ) ) );
 #else
       hb_retnint( 0 );
 #endif
@@ -193,7 +193,7 @@ HB_FUNC( HB_ZCOMPRESS )
          }
          else
          {
-            ulDstLen = HB_ISNUM( 2 ) ? ( uLong ) hb_parnint( 2 ) :
+            ulDstLen = HB_ISNUM( 2 ) ? ( uLong ) hb_parns( 2 ) :
 #if defined( _HB_Z_COMPRESSBOUND )
                                     compressBound( ( uLong ) ulLen );
 #else
@@ -262,8 +262,8 @@ HB_FUNC( HB_ZUNCOMPRESS )
          }
          else
          {
-            ulDstLen = HB_ISNUM( 2 ) ? ( uLong ) hb_parnint( 2 ) :
-                           hb_zlibUncompressedSize( szData, ulLen, &iResult );
+            ulDstLen = ( uLong ) ( HB_ISNUM( 2 ) ? hb_parns( 2 ) :
+                          hb_zlibUncompressedSize( szData, ulLen, &iResult ) );
             if( iResult == Z_OK )
             {
                pDest = ( char * ) hb_xalloc( ulDstLen + 1 );

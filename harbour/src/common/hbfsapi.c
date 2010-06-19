@@ -146,7 +146,7 @@ PHB_FNAME hb_fsFNameSplit( const char * pszFileName )
    if( pszFileName )
    {
       char * pszPos, cDirSep;
-      int iSize, iPos;
+      HB_ISIZ iSize, iPos;
 
       iPos = iSize = hb_strnlen( pszFileName, HB_PATH_MAX - 1 );
       cDirSep = ( char ) hb_setGetDirSeparator();

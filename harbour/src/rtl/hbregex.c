@@ -105,7 +105,7 @@ static int hb_regexec( PHB_REGEX pRegEx, const char * szString, HB_SIZE ulLen,
    int iResult, i;
 
    iResult = pcre_exec( pRegEx->re_pcre, NULL /* pcre_extra */,
-                        szString, ulLen, 0 /* startoffset */,
+                        szString, ( int ) ulLen, 0 /* startoffset */,
                         pRegEx->iEFlags, aMatches, HB_REGMATCH_SIZE( iMatches ) );
    if( iResult == 0 )
    {
@@ -194,8 +194,8 @@ HB_FUNC( HB_ATX )
       if( pRegEx )
       {
          HB_SIZE ulLen = hb_itemGetCLen( pString );
-         HB_SIZE ulStart = hb_parnl( 4 );
-         HB_SIZE ulEnd = ( HB_SIZE ) hb_parnldef( 5, ulLen );
+         HB_SIZE ulStart = hb_parns( 4 );
+         HB_SIZE ulEnd = hb_parnsdef( 5, ulLen );
 
          if( ulLen && ulStart <= ulLen && ulStart <= ulEnd )
          {
@@ -224,13 +224,13 @@ HB_FUNC( HB_ATX )
 
          hb_regexFree( pRegEx );
 
-         hb_stornl( ulStart, 4 );
-         hb_stornl( ulLen, 5 );
+         hb_storns( ulStart, 4 );
+         hb_storns( ulLen, 5 );
       }
       else
       {
-         hb_stornl( 0, 4 );
-         hb_stornl( 0, 5 );
+         hb_storns( 0, 4 );
+         hb_storns( 0, 5 );
       }
    }
    else
@@ -337,15 +337,15 @@ static HB_BOOL hb_regex( int iRequest )
                   /* matched string */
                   hb_arraySetCL( pMatch, 1, pszString + iSO, iEO - iSO );
                   /* begin of match */
-                  hb_arraySetNI( pMatch, 2, iSO + 1 );
+                  hb_arraySetNS( pMatch, 2, iSO + 1 );
                   /* End of match */
-                  hb_arraySetNI( pMatch, 3, iEO );
+                  hb_arraySetNS( pMatch, 3, iEO );
                }
                else
                {
                   hb_arraySetCL( pMatch, 1, NULL, 0 );
-                  hb_arraySetNI( pMatch, 2, 0 );
-                  hb_arraySetNI( pMatch, 3, 0 );
+                  hb_arraySetNS( pMatch, 2, 0 );
+                  hb_arraySetNS( pMatch, 3, 0 );
                }
             }
             hb_itemReturnRelease( pRetArray );
@@ -384,15 +384,15 @@ static HB_BOOL hb_regex( int iRequest )
                            /* matched string */
                            hb_arraySetCL( pMatch, 1, pszString + iSO, iEO - iSO );
                            /* begin of match */
-                           hb_arraySetNI( pMatch, 2, ulOffSet + iSO + 1 );
+                           hb_arraySetNS( pMatch, 2, ulOffSet + iSO + 1 );
                            /* End of match */
-                           hb_arraySetNI( pMatch, 3, ulOffSet + iEO );
+                           hb_arraySetNS( pMatch, 3, ulOffSet + iEO );
                         }
                         else
                         {
                            hb_arraySetCL( pMatch, 1, NULL, 0 );
-                           hb_arraySetNI( pMatch, 2, 0 );
-                           hb_arraySetNI( pMatch, 3, 0 );
+                           hb_arraySetNS( pMatch, 2, 0 );
+                           hb_arraySetNS( pMatch, 3, 0 );
                         }
                      }
                      else
@@ -421,15 +421,15 @@ static HB_BOOL hb_regex( int iRequest )
                         /* matched string */
                         hb_arraySetCL( pMatch, 1, pszString + iSO, iEO - iSO );
                         /* begin of match */
-                        hb_arraySetNI( pMatch, 2, ulOffSet + iSO + 1 );
+                        hb_arraySetNS( pMatch, 2, ulOffSet + iSO + 1 );
                         /* End of match */
-                        hb_arraySetNI( pMatch, 3, ulOffSet + iEO );
+                        hb_arraySetNS( pMatch, 3, ulOffSet + iEO );
                      }
                      else
                      {
                         hb_arraySetCL( pMatch, 1, NULL, 0 );
-                        hb_arraySetNI( pMatch, 2, 0 );
-                        hb_arraySetNI( pMatch, 3, 0 );
+                        hb_arraySetNS( pMatch, 2, 0 );
+                        hb_arraySetNS( pMatch, 3, 0 );
                      }
                   }
                   else

@@ -105,7 +105,7 @@ HB_FUNC( CHARRELA )
       /* check for empty strings */
       if( ( sStrToMatchLen1 == 0 ) || ( sStrToMatchLen2 == 0 ) )
       {
-         hb_retni( 0 );
+         hb_retns( 0 );
          return;
       }
 
@@ -126,7 +126,7 @@ HB_FUNC( CHARRELA )
             if( pc1 - pcString1 == pc2 - pcString2 )
             {
                /* correlation found */
-               hb_retnl( ( pc1 - pcString1 ) + 1 );
+               hb_retns( ( pc1 - pcString1 ) + 1 );
                return;
             }
             else
@@ -143,7 +143,7 @@ HB_FUNC( CHARRELA )
          }
       }
 
-      hb_retni( 0 );
+      hb_retns( 0 );
    }
    else  /* HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) && HB_ISCHAR( 3 ) && HB_ISCHAR( 4 ) */
    {
@@ -160,7 +160,7 @@ HB_FUNC( CHARRELA )
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );
       else
-         hb_retni( 0 );
+         hb_retns( 0 );
    }
 }
 

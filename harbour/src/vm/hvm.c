@@ -5614,7 +5614,7 @@ static void hb_vmPushAParams( void )
          pCount = hb_stackAllocItem();
          hb_itemCopy( pCount, pArray->item.asArray.value->pItems );
          hb_itemMove( pArray, pCount );
-         hb_itemPutNL( pCount, ulLen );
+         hb_itemPutNS( pCount, ulLen );
       }
       else
          hb_itemPutNL( pArray, 0 );

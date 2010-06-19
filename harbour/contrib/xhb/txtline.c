@@ -195,7 +195,7 @@ HB_FUNC( HB_TABEXPAND )
 {
    const char * szText = hb_parcx( 1 );
    HB_ISIZ lStrLen = hb_parclen( 1 );
-   HB_SIZE uiTabLen = hb_parnl( 2 );
+   HB_SIZE uiTabLen = hb_parns( 2 );
    HB_SIZE uiTabCount = 0;
    HB_ISIZ lPos, lSize;
    char * szRet;
@@ -247,7 +247,7 @@ HB_FUNC( HB_READLINE )
    ulTextLen = hb_parclen(1);
    uiTabLen  = hb_parclen(4);
 
-   ulStartOffset = hb_parnl( 6 );
+   ulStartOffset = hb_parns( 6 );
 
    if( ! ( HB_ISARRAY( 2 ) || HB_ISCHAR( 2 ) ) )
    {
@@ -297,8 +297,8 @@ HB_FUNC( HB_READLINE )
 
    hb_storl( bFound, 7 );
    hb_storl( bEOF, 8 );
-   hb_stornl( lEnd + ulStartOffset + 1, 9 );
-   hb_stornl( ulEndOffset + ulStartOffset + 1, 10 );
+   hb_storns( lEnd + ulStartOffset + 1, 9 );
+   hb_storns( ulEndOffset + ulStartOffset + 1, 10 );
 
    if( bAlloc_Term1 )
       hb_itemRelease( pTerm1 );

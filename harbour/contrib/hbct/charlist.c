@@ -160,7 +160,7 @@ static void do_list( int iSwitch )
             PHB_ITEM pArray = hb_itemArrayNew( 256 );
 
             for( sCnt = 0; sCnt < 256; sCnt++ )
-               hb_arraySetNL( pArray, sCnt + 1, asCharCnt[sCnt] );
+               hb_arraySetNS( pArray, sCnt + 1, asCharCnt[sCnt] );
             hb_itemReturnRelease( pArray );
             break;
          }

@@ -241,9 +241,9 @@ HB_FUNC( HB_TOKENCOUNT )
    int iFlags;
 
    if( hb_tokenParam( 2, 0, &szLine, &ulLen, &szDelim, &ulDelim, &iFlags ) )
-      hb_retnint( hb_tokenCount( szLine, ulLen, szDelim, ulDelim, iFlags ) );
+      hb_retns( hb_tokenCount( szLine, ulLen, szDelim, ulDelim, iFlags ) );
    else
-      hb_retni( 0 );
+      hb_retns( 0 );
 }
 
 HB_FUNC( HB_TOKENGET )
@@ -255,7 +255,7 @@ HB_FUNC( HB_TOKENGET )
    if( hb_tokenParam( 3, 0, &szLine, &ulLen, &szDelim, &ulDelim, &iFlags ) )
    {
       szLine = hb_tokenGet( szLine, ulLen, szDelim, ulDelim, iFlags,
-                            hb_parnl( 2 ), &ulLen );
+                            hb_parns( 2 ), &ulLen );
       hb_retclen( szLine, ulLen );
    }
    else
@@ -272,7 +272,7 @@ HB_FUNC( HB_TOKENPTR )
    HB_SIZE ulLen, ulDelim, ulSkip, ulToken;
    int iFlags;
 
-   if( hb_tokenParam( 3, hb_parnl( 2 ), &szLine, &ulLen, &szDelim, &ulDelim, &iFlags ) )
+   if( hb_tokenParam( 3, hb_parns( 2 ), &szLine, &ulLen, &szDelim, &ulDelim, &iFlags ) )
    {
       szToken = hb_tokenGet( szLine, ulLen, szDelim, ulDelim, iFlags,
                              1, &ulToken );
@@ -282,13 +282,13 @@ HB_FUNC( HB_TOKENPTR )
          ulSkip = hb_parclen( 1 ) + 1;
 
       /* return position to start next search from */
-      hb_stornl( ulSkip, 2 );
+      hb_storns( ulSkip, 2 );
       /* return token */
       hb_retclen( szToken, ulToken );
    }
    else
    {
-      hb_stornl( 0, 2 );
+      hb_storns( 0, 2 );
       hb_retc_null();
    }
 }

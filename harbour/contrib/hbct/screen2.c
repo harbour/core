@@ -316,7 +316,7 @@ HB_FUNC( SCREENSTR )
 {
    int iRow, iCol, iMaxRow, iMaxCol, iC;
    char * pBuffer, * szText;
-   HB_SIZE ulSize, ulCount = ULONG_MAX;
+   HB_SIZE ulSize, ulCount = HB_SIZE_MAX;
 
    hb_gtGetPos( &iRow, &iCol );
    if( HB_ISNUM( 1 ) )
@@ -324,7 +324,7 @@ HB_FUNC( SCREENSTR )
    if( HB_ISNUM( 2 ) )
       iCol = hb_parni( 2 );
    if( HB_ISNUM( 3 ) )
-      ulCount = hb_parnl( 3 );
+      ulCount = hb_parns( 3 );
    iMaxRow = hb_gtMaxRow();
    iMaxCol = hb_gtMaxCol();
 

@@ -80,7 +80,7 @@ static void do_atnum( int iSwitch )
 
       /* eventually ignore some characters */
       if( HB_ISNUM( 4 ) )
-         sIgnore = ( HB_SIZE ) hb_parnl( 4 );
+         sIgnore = hb_parns( 4 );
       else
          sIgnore = 0;
 
@@ -124,7 +124,7 @@ static void do_atnum( int iSwitch )
                   ct_error( ( HB_USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_ATNUM, NULL, HB_ERR_FUNCNAME, 0,
                             EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
                }
-               hb_retni( 0 );
+               hb_retns( 0 );
                break;
             }
          }
@@ -137,7 +137,7 @@ static void do_atnum( int iSwitch )
       }
 
       /* nth match or last match ? */
-      if( HB_ISNUM( 3 ) && ( ulCounter = hb_parnl( 3 ) ) != 0 )
+      if( HB_ISNUM( 3 ) && ( ulCounter = hb_parns( 3 ) ) != 0 )
       {
          /* find the <ulCounter>th match */
          const char *pcSubStr;
@@ -180,7 +180,7 @@ static void do_atnum( int iSwitch )
 
                   case DO_ATNUM_ATNUM:
                      /* ATNUM */
-                     hb_retni( 0 );
+                     hb_retns( 0 );
                      break;
                }
                return;
@@ -194,7 +194,7 @@ static void do_atnum( int iSwitch )
             sSubStrLen = sStrLen - ( pcSubStr - pcString );
          }
       }
-      else /* ( HB_ISNUM( 3 ) && ( ulCounter = hb_parnl( 3 ) ) != 0 ) */
+      else /* ( HB_ISNUM( 3 ) && ( ulCounter = hb_parns( 3 ) ) != 0 ) */
       {
          /* we have to find the last match and return the
             string after that last match */
@@ -227,7 +227,7 @@ static void do_atnum( int iSwitch )
 
                case DO_ATNUM_ATNUM:
                   /* ATNUM */
-                  hb_retni( 0 );
+                  hb_retns( 0 );
                   break;
             }
             return;
@@ -254,9 +254,9 @@ static void do_atnum( int iSwitch )
 #if defined( __POCC__ ) && ( __POCC__ >= 500 ) && defined( HB_OS_WIN_64 )
             /* NOTE: Workaround for Pelles C 5.00.13 AMD64 mode internal error:
                      'fatal error: Internal error: reduce_tree()' [vszakats]. */
-            hb_retnl( pc - pcString + sIgnore + 1 );
+            hb_retns( pc - pcString + sIgnore + 1 );
 #else
-            hb_retnl( pc - ( pcString - sIgnore ) + 1 );
+            hb_retns( pc - ( pcString - sIgnore ) + 1 );
 #endif
             break;
       }
@@ -303,7 +303,7 @@ static void do_atnum( int iSwitch )
             if( pSubst != NULL )
                hb_itemReturnRelease( pSubst );
             else
-               hb_retni( 0 );
+               hb_retns( 0 );
             break;
          }
       }

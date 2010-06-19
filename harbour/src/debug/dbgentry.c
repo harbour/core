@@ -714,7 +714,7 @@ static void hb_dbgAddStatic( HB_DEBUGINFO * info, const char * szName, int nInde
 
 static void hb_dbgAddStopLines( PHB_ITEM pItem )
 {
-   int i, nLinesLen;
+   HB_ISIZ i, nLinesLen;
 
    HB_DBGCOMMON_LOCK
 
@@ -724,8 +724,8 @@ static void hb_dbgAddStopLines( PHB_ITEM pItem )
    }
    else
    {
-      int j;
-      int nItemLen = hb_itemSize( pItem );
+      HB_ISIZ j;
+      HB_ISIZ nItemLen = hb_itemSize( pItem );
 
       nLinesLen = hb_itemSize( s_common.pStopLines );
 
@@ -743,17 +743,17 @@ static void hb_dbgAddStopLines( PHB_ITEM pItem )
             if( !strcmp( hb_arrayGetCPtr( pLines, 1 ), szModule ) )
             {
                /* Merge stopline info */
-               int nOrigMin = hb_arrayGetNL( pLines, 2 );
-               int nNewMin = hb_arrayGetNL( pEntry, 2 );
-               int nOrigLen = hb_arrayGetCLen( pLines, 3 );
-               int nNewLen = hb_arrayGetCLen( pEntry, 3 );
-               int nMin = HB_MIN( nNewMin, nOrigMin );
-               int nMax = HB_MAX( nNewMin + ( nNewLen << 3 ) - 1,
-                                  nOrigMin + ( nOrigLen << 3 ) - 1 );
+               HB_ISIZ nOrigMin = hb_arrayGetNS( pLines, 2 );
+               HB_ISIZ nNewMin = hb_arrayGetNS( pEntry, 2 );
+               HB_ISIZ nOrigLen = hb_arrayGetCLen( pLines, 3 );
+               HB_ISIZ nNewLen = hb_arrayGetCLen( pEntry, 3 );
+               HB_ISIZ nMin = HB_MIN( nNewMin, nOrigMin );
+               HB_ISIZ nMax = HB_MAX( nNewMin + ( nNewLen << 3 ) - 1,
+                                      nOrigMin + ( nOrigLen << 3 ) - 1 );
                const char * pOrigBuffer = hb_arrayGetCPtr( pLines, 3 );
                const char * pNewBuffer = hb_arrayGetCPtr( pEntry, 3 );
-               int nLen = ( ( nMax - nMin ) >> 3 ) + 1;
-               int k;
+               HB_ISIZ nLen = ( ( nMax - nMin ) >> 3 ) + 1;
+               HB_ISIZ k;
                char * pBuffer = ( char * ) hb_xgrab( nLen + 1 );
 
                hb_xmemset( pBuffer, 0, nLen );
@@ -766,7 +766,7 @@ static void hb_dbgAddStopLines( PHB_ITEM pItem )
                for( k = 0; k < nOrigLen; k++ )
                   pBuffer[ nOrigMin + k ] |= pOrigBuffer[ k ];
 
-               hb_arraySetNL( pLines, 2, nMin );
+               hb_arraySetNS( pLines, 2, nMin );
                if( !hb_arraySetCLPtr( pLines, 3, pBuffer, nLen ) )
                   hb_xfree( pBuffer );
                bFound = HB_TRUE;
@@ -1047,7 +1047,7 @@ static PHB_ITEM hb_dbgEvalMakeBlock( HB_WATCHPOINT * watch )
    PHB_ITEM pBlock;
    HB_BOOL bAfterId = HB_FALSE;
    char * s;
-   int buffsize;
+   HB_ISIZ buffsize;
 
    watch->nVars = 0;
    while( watch->szExpr[ i ] )
@@ -1350,8 +1350,8 @@ PHB_ITEM hb_dbgGetExpressionValue( void * handle, const char *expression )
 PHB_ITEM hb_dbgGetSourceFiles( void * handle )
 {
    PHB_ITEM ret;
-   int nModules;
-   int i;
+   HB_ISIZ nModules;
+   HB_ISIZ i;
 
    /* HB_DEBUGINFO * info = ( HB_DEBUGINFO * ) handle; */
    HB_SYMBOL_UNUSED( handle );
@@ -1403,8 +1403,8 @@ static HB_BOOL hb_dbgIsBreakPoint( HB_DEBUGINFO * info, const char * szModule, i
 HB_BOOL hb_dbgIsValidStopLine( void * handle, const char * szModule, int nLine )
 {
    HB_BOOL fResult = HB_FALSE;
-   int nModules;
-   int i;
+   HB_ISIZ nModules;
+   HB_ISIZ i;
 
    /* HB_DEBUGINFO * info = ( HB_DEBUGINFO * ) handle; */
    HB_SYMBOL_UNUSED( handle );

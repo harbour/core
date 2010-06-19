@@ -26,7 +26,7 @@ HB_FUNC( GT_ASCPOS )
 
   if (HB_ISCHAR(1) && HB_ISNUM(2)) {
     s = hb_parc(1);
-    p = hb_parnl(2);
+    p = hb_parns(2);
     p--;                            /* decrement p to adjust for c strings */
                                     /* starting at position 0 */
 

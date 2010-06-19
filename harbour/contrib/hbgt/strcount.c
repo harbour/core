@@ -48,8 +48,8 @@ HB_FUNC( GT_STRCOUNT )
         count++;
     }
 
-    hb_retnl(count);                  /* return result */
+    hb_retns(count);                  /* return result */
   } else {
-    hb_retnl(-1);                     /* parameter mismatch - error -1 */
+    hb_retns(-1);                     /* parameter mismatch - error -1 */
   }
 }

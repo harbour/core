@@ -178,7 +178,7 @@ HB_FUNC( HB_GZREAD )
             if( ulLim < ulLen )
                ulLen = ulLim;
          }
-         hb_retni( gzread( gz, szBuffer, ulLen ) );
+         hb_retni( gzread( gz, szBuffer, ( unsigned ) ulLen ) );
       }
    }
    else
@@ -195,8 +195,8 @@ HB_FUNC( HB_GZWRITE )
    {
       gzFile gz = hb_gzParam( 1 );
       if( gz )
-         hb_retni( gzwrite( gz, szData, HB_ISNUM( 3 ) ?
-                            ( HB_SIZE ) hb_parnl( 3 ) : hb_parclen( 2 ) ) );
+         hb_retni( gzwrite( gz, szData,
+                            ( unsigned ) ( HB_ISNUM( 3 ) ? hb_parns( 3 ) : hb_parclen( 2 ) ) ) );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );

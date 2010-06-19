@@ -39,9 +39,9 @@ HB_FUNC( GT_STRLEFT )
       if (p2 == l2)
          break;
     }
-    hb_retnl(p1);
+    hb_retns(p1);
 
   } else {
-    hb_retnl(-1);               /* parameter mismatch - error NullStr */
+    hb_retns(-1);               /* parameter mismatch - error NullStr */
   }
 }

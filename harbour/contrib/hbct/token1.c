@@ -104,14 +104,14 @@ static void do_token1( int iSwitch )
       HB_SIZE sStrLen = hb_parclen( 1 );
       const char *pcSeparatorStr;
       HB_SIZE sSeparatorStrLen;
-      HB_ULONG ulTokenCounter = 0;
-      HB_ULONG ulSkip;
+      HB_SIZE ulTokenCounter = 0;
+      HB_SIZE ulSkip;
       const char *pcSubStr;
       char *pcRet = NULL;
       HB_SIZE sSubStrLen;
       HB_SIZE sRetStrLen = 0;
-      HB_ULONG ulToken = 0;
-      HB_ULONG ulSkipCnt;
+      HB_SIZE ulToken = 0;
+      HB_SIZE ulSkipCnt;
       const char *pc;
 
       /* separator string */
@@ -126,27 +126,27 @@ static void do_token1( int iSwitch )
 
       /* token counter */
       if( iSwitch != DO_TOKEN1_NUMTOKEN )
-         ulTokenCounter = hb_parnl( 3 );
+         ulTokenCounter = hb_parns( 3 );
       if( ulTokenCounter == 0 )
-         ulTokenCounter = ULONG_MAX;
+         ulTokenCounter = HB_SIZE_MAX;
 
       /* skip width */
       if( iSwitch == DO_TOKEN1_NUMTOKEN )
       {
          if( HB_ISNUM( 3 ) )
-            ulSkip = hb_parnl( 3 );
+            ulSkip = hb_parns( 3 );
          else
-            ulSkip = ULONG_MAX;
+            ulSkip = HB_SIZE_MAX;
       }
       else
       {
          if( HB_ISNUM( 4 ) )
-            ulSkip = hb_parnl( 4 );
+            ulSkip = hb_parns( 4 );
          else
-            ulSkip = ULONG_MAX;
+            ulSkip = HB_SIZE_MAX;
       }
       if( ulSkip == 0 )
-         ulSkip = ULONG_MAX;
+         ulSkip = HB_SIZE_MAX;
 
       /* prepare return value for TOKENUPPER/TOKENLOWER */
       if( iSwitch == DO_TOKEN1_TOKENLOWER || iSwitch == DO_TOKEN1_TOKENUPPER )
@@ -154,7 +154,7 @@ static void do_token1( int iSwitch )
          if( sStrLen == 0 )
          {
             if( iNoRef )
-               hb_retl( 0 );
+               hb_retl( HB_FALSE );
             else
                hb_retc_null();
             return;
@@ -219,11 +219,11 @@ static void do_token1( int iSwitch )
                   break;
                }
                case DO_TOKEN1_NUMTOKEN:
-                  hb_retnl( ulToken );
+                  hb_retns( ulToken );
                   break;
 
                case DO_TOKEN1_ATTOKEN:
-                  hb_retni( 0 );
+                  hb_retns( 0 );
                   break;
 
                case DO_TOKEN1_TOKENLOWER:
@@ -234,7 +234,7 @@ static void do_token1( int iSwitch )
                   if( iNoRef )
                   {
                      hb_xfree( pcRet );
-                     hb_retl( 0 );
+                     hb_retl( HB_FALSE );
                   }
                   else
                      hb_retclen_buffer( pcRet, sRetStrLen );
@@ -326,15 +326,15 @@ static void do_token1( int iSwitch )
             break;
          }
          case DO_TOKEN1_NUMTOKEN:
-            hb_retnl( ulToken );
+            hb_retns( ulToken );
             break;
 
          case DO_TOKEN1_ATTOKEN:
             if( ( ulTokenCounter == 0xFFFFFFFFUL ) ||
                 ( ulToken == ulTokenCounter ) )
-               hb_retnl( pcSubStr - pcString + 1 );
+               hb_retns( pcSubStr - pcString + 1 );
             else
-               hb_retni( 0 );
+               hb_retns( 0 );
             break;
 
          case DO_TOKEN1_TOKENLOWER:
@@ -345,7 +345,7 @@ static void do_token1( int iSwitch )
             if( iNoRef )
             {
                hb_xfree( pcRet );
-               hb_retl( 0 );
+               hb_retl( HB_FALSE );
             }
             else
                hb_retclen_buffer( pcRet, sRetStrLen );
@@ -386,7 +386,7 @@ static void do_token1( int iSwitch )
             else if( !iNoRef )
                hb_retc_null();
             else
-               hb_retl( 0 );
+               hb_retl( HB_FALSE );
             break;
          }
          case DO_TOKEN1_TOKENLOWER:
@@ -409,7 +409,7 @@ static void do_token1( int iSwitch )
             else if( !iNoRef )
                hb_retc_null();
             else
-               hb_retl( 0 );
+               hb_retl( HB_FALSE );
             break;
          }
          case DO_TOKEN1_NUMTOKEN:
@@ -429,7 +429,7 @@ static void do_token1( int iSwitch )
             if( pSubst != NULL )
                hb_itemReturnRelease( pSubst );
             else
-               hb_retni( 0 );
+               hb_retns( 0 );
             break;
          }
       }

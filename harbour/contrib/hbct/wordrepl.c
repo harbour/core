@@ -206,7 +206,7 @@ HB_FUNC( WORDREPL )
 
       if( iNoRet )
       {
-         hb_retl( 0 );
+         hb_retl( HB_FALSE );
          hb_xfree( pcRet );
       }
       else
@@ -230,7 +230,7 @@ HB_FUNC( WORDREPL )
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );
       else if( iNoRet )
-         hb_retl( 0 );
+         hb_retl( HB_FALSE );
       else if( HB_ISCHAR( 2 ) )
          hb_retclen( hb_parc( 2 ), hb_parclen( 2 ) );
       else

@@ -535,7 +535,7 @@ double hb_numDecConv( double dNum, int iDec )
       return hb_numRound( dNum, 0 );
 }
 
-static HB_BOOL hb_str2number( HB_BOOL fPCode, const char* szNum, HB_SIZE ulLen, HB_MAXINT * lVal, double * dVal, int * piDec, int * piWidth )
+static HB_BOOL hb_str2number( HB_BOOL fPCode, const char * szNum, HB_SIZE ulLen, HB_MAXINT * lVal, double * dVal, int * piDec, int * piWidth )
 {
    HB_BOOL fDbl = HB_FALSE, fDec = HB_FALSE, fNeg, fHex = HB_FALSE;
    HB_SIZE ulPos = 0;

@@ -330,7 +330,7 @@ HB_FUNC( SQL_SPRINTF )
                }  /* f == Index % of n */
                if( f < i ){
                   i -= 2;  /* i == strlen(cParFrm) */
-                  hb_itemPutNL( pItmPar, ulResPos + f );
+                  hb_itemPutNS( pItmPar, ulResPos + f );
                }else{
                   iErrorPar = 1; break;
                }

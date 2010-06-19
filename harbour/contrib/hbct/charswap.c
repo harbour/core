@@ -148,7 +148,7 @@ static void do_charswap( int iSwitch )
       }
 
       if( iNoRet )
-         hb_retl( 0 );
+         hb_retl( HB_FALSE );
       else
          hb_retclen( pcRet, sRetIndex );
       hb_xfree( pcRet );
@@ -179,7 +179,7 @@ static void do_charswap( int iSwitch )
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );
       else if( iNoRet )
-         hb_retl( 0 );
+         hb_retl( HB_FALSE );
       else
          hb_retc_null();
    }

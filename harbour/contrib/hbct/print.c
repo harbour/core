@@ -214,11 +214,11 @@ HB_FUNC( PRINTSEND )
          hb_fsClose( hFile );
       }
    }
-   hb_retnl( usRet );
+   hb_retns( usRet );
 
 #else
 
-   hb_retnl( 0 );
+   hb_retns( 0 );
 
 #endif
 }

@@ -375,7 +375,7 @@ HB_FUNC( TOKENINIT )
       HB_SIZE sStrLen = hb_parclen( 1 );
       const char *pcSeparatorStr;
       HB_SIZE sSeparatorStrLen;
-      HB_ULONG ulSkipCnt, ulSkip;
+      HB_SIZE ulSkipCnt, ulSkip;
       const char *pcSubStr, *pc;
       HB_SIZE sSubStrLen;
       TOKEN_ENVIRONMENT sTokenEnvironment;
@@ -393,11 +393,11 @@ HB_FUNC( TOKENINIT )
 
       /* skip width */
       if( HB_ISNUM( 3 ) )
-         ulSkip = hb_parnl( 3 );
+         ulSkip = hb_parns( 3 );
       else
-         ulSkip = ULONG_MAX;
+         ulSkip = HB_SIZE_MAX;
       if( ulSkip == 0 )
-         ulSkip = ULONG_MAX;
+         ulSkip = HB_SIZE_MAX;
 
       /* allocate new token environment */
       if( ( sTokenEnvironment = sTokEnvNew() ) == NULL )
@@ -410,7 +410,7 @@ HB_FUNC( TOKENINIT )
                       NULL, HB_ERR_FUNCNAME, 0, EF_CANDEFAULT,
                       HB_ERR_ARGS_BASEPARAMS );
          }
-         hb_retl( 0 );
+         hb_retl( HB_FALSE );
          return;
       }
 
@@ -456,7 +456,7 @@ HB_FUNC( TOKENINIT )
                          HB_ERR_ARGS_BASEPARAMS );
             }
             sTokEnvDel( sTokenEnvironment );
-            hb_retl( 0 );
+            hb_retl( HB_FALSE );
             return;
          }
 
@@ -474,7 +474,7 @@ HB_FUNC( TOKENINIT )
       {
          sTokSet( sTokenEnvironment );
       }
-      hb_retl( 1 );
+      hb_retl( HB_TRUE );
    }
    else  /* HB_ISCHAR( 1 ) */
    {
@@ -509,7 +509,7 @@ HB_FUNC( TOKENINIT )
          if( pSubst != NULL )
             hb_itemReturnRelease( pSubst );
          else
-            hb_retl( 0 );
+            hb_retl( HB_FALSE );
       }
    }
 }
@@ -626,7 +626,7 @@ HB_FUNC( TOKENNEXT )
       /* nth token or next token ?  */
       if( HB_ISNUM( 2 ) )
       {
-         psTokenPosition = sTokEnvGetPosIndex( sTokenEnvironment, hb_parnl( 2 ) - 1 );
+         psTokenPosition = sTokEnvGetPosIndex( sTokenEnvironment, hb_parns( 2 ) - 1 );
          /* no increment here */
       }
       else
@@ -734,7 +734,7 @@ HB_FUNC( TOKENNUM )
       sTokenEnvironment = s_sTokenEnvironment;
 
    if( ( void * ) sTokenEnvironment != NULL )
-      hb_retnl( sTokEnvGetCnt( sTokenEnvironment ) );
+      hb_retns( sTokEnvGetCnt( sTokenEnvironment ) );
    else
    {
       PHB_ITEM pSubst = NULL;
@@ -749,7 +749,7 @@ HB_FUNC( TOKENNUM )
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );
       else
-         hb_retni( 0 );
+         hb_retns( 0 );
    }
 }
 
@@ -823,7 +823,7 @@ HB_FUNC( TOKENEND )
          hb_itemReturnRelease( pSubst );
       else
          /* it is CTIII behaviour to return .T. if there's no string TOKENINIT'ed */
-         hb_retl( 1 );
+         hb_retl( HB_TRUE );
    }
 }
 
@@ -871,10 +871,10 @@ HB_FUNC( TOKENEXIT )
    if( s_sTokenEnvironment != NULL )
    {
       sTokExit( NULL );
-      hb_retl( 1 );
+      hb_retl( HB_TRUE );
    }
    else
-      hb_retl( 0 );
+      hb_retl( HB_FALSE );
 }
 
 
@@ -958,12 +958,12 @@ HB_FUNC( TOKENAT )
          ct_error( ( HB_USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_TOKENAT,
                    NULL, HB_ERR_FUNCNAME, 0, EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
       }
-      hb_retni( 0 );
+      hb_retns( 0 );
       return;
    }
 
    if( HB_ISNUM( 2 ) )
-      sCurrentIndex = hb_parnl( 2 ) - 1;
+      sCurrentIndex = hb_parns( 2 ) - 1;
    else
       sCurrentIndex = sTokEnvGetPtr( sTokenEnvironment );
 
@@ -977,14 +977,14 @@ HB_FUNC( TOKENAT )
          ct_error( ( HB_USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_TOKENAT, NULL,
                    HB_ERR_FUNCNAME, 0, EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
       }
-      hb_retni( 0 );
+      hb_retns( 0 );
       return;
    }
 
    if( iSeparatorPos )
-      hb_retnl( psTokenPosition->sEndPos + 1 );
+      hb_retns( psTokenPosition->sEndPos + 1 );
    else
-      hb_retnl( psTokenPosition->sStartPos + 1 );
+      hb_retns( psTokenPosition->sStartPos + 1 );
 }
 
 

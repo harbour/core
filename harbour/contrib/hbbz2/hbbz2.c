@@ -89,7 +89,7 @@ static int hb_bz2Compress( const char * szSrc, HB_SIZE nSrc,
    stream.avail_in  = ( unsigned int ) nSrc;
 
    stream.next_out  = szDst;
-   stream.avail_out = *pnDst;
+   stream.avail_out = ( unsigned int ) *pnDst;
 
    stream.bzalloc   = hb_bz2Alloc;
    stream.bzfree    = hb_bz2Free;
@@ -177,7 +177,7 @@ static int hb_bz2Uncompress( const char * szSrc, HB_SIZE nSrc,
    stream.avail_in  = ( unsigned int ) nSrc;
 
    stream.next_out  = szDst;
-   stream.avail_out = *pnDst;
+   stream.avail_out = ( unsigned int ) *pnDst;
 
    stream.bzalloc   = hb_bz2Alloc;
    stream.bzfree    = hb_bz2Free;

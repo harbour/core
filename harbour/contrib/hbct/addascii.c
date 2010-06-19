@@ -152,7 +152,7 @@ HB_FUNC( ADDASCII )
          }
          /* return string unchanged */
          if( iNoRet )
-            hb_retl( 0 );
+            hb_retl( HB_FALSE );
          else
             hb_retclen( pcSource, sLen );
          return;
@@ -195,7 +195,7 @@ HB_FUNC( ADDASCII )
 
       if( iNoRet )
       {
-         hb_retl( 0 );
+         hb_retl( HB_FALSE );
          hb_xfree( pcResult );
       }
       else
@@ -215,7 +215,7 @@ HB_FUNC( ADDASCII )
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );
       else if( iNoRet )
-         hb_retl( 0 );
+         hb_retl( HB_FALSE );
       else
          hb_retc_null();
    }

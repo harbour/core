@@ -63,9 +63,9 @@ HB_FUNC( MDY )
    char szDate[ 9 ];
    char szFormatted[ 11 ];
    char * szReturn;
-   int iBufferLen;
-   int iYearLen;
-   int iLen;
+   HB_ISIZ iBufferLen;
+   HB_ISIZ iYearLen;
+   HB_ISIZ iLen;
 
    hb_dateDecode( hb_pardl( 1 ), &iYear, &iMonth, &iDay );
    hb_dateFormat( hb_pardsbuff( szDate, 1 ), szFormatted, "MM/DD/YYYY" );
@@ -93,9 +93,9 @@ HB_FUNC( DMY )
    char szDate[ 9 ];
    char szFormatted[ 11 ];
    char * szReturn;
-   int iBufferLen;
-   int iYearLen;
-   int iLen;
+   HB_ISIZ iBufferLen;
+   HB_ISIZ iYearLen;
+   HB_ISIZ iLen;
 
    hb_dateDecode( hb_pardl( 1 ), &iYear, &iMonth, &iDay );
    hb_dateFormat( hb_pardsbuff( szDate, 1 ), szFormatted, "MM/DD/YYYY" );

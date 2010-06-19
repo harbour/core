@@ -143,7 +143,7 @@ HB_FUNC( ATREPL )
       HB_SIZE nRetStrLen;
 
       /* eventually ignore some characters */
-      nIgnore = ( HB_SIZE ) hb_parnl( 6 );
+      nIgnore = hb_parns( 6 );
 
       if( nIgnore >= nStrLen )
       {
@@ -166,11 +166,11 @@ HB_FUNC( ATREPL )
       iReplaceMode = hb_parl( 5 );
 
       /* n-th match or last match ? */
-      ulCounter = hb_parnl( 4 );
+      ulCounter = hb_parns( 4 );
 
       /* little trick: */
       if( iReplaceMode == 0 && ulCounter == 0 )
-         ulCounter = ULONG_MAX;
+         ulCounter = HB_SIZE_MAX;
 
       if( ulCounter != 0 )
       {

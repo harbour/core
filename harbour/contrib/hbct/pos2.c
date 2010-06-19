@@ -103,11 +103,11 @@ HB_FUNC( POSCHAR )
          if( HB_ISCHAR( 2 ) )
             cReplace = *( hb_parc( 2 ) );
          else
-            cReplace = ( char ) ( hb_parnl( 2 ) % 256 );
+            cReplace = ( char ) ( hb_parns( 2 ) % 256 );
 
          if( HB_ISNUM( 3 ) )
          {
-            sPosition = hb_parnl( 3 );
+            sPosition = hb_parns( 3 );
             if( sPosition == 0 )
                sPosition = sStrLen;
          }
@@ -209,13 +209,13 @@ HB_FUNC( POSDEL )
       char *pcRet;
 
       if( HB_ISNUM( 3 ) )
-         sDelLen = hb_parnl( 3 );
+         sDelLen = hb_parns( 3 );
       else
          sDelLen = 1;           /* set new standard behavior */
 
       if( HB_ISNUM( 2 ) )
       {
-         sStartPos = hb_parnl( 2 );
+         sStartPos = hb_parns( 2 );
          if( sStartPos == 0 || sStartPos > sStrLen - sDelLen + 1 )
             sStartPos = sStrLen - sDelLen + 1;
       }
@@ -311,7 +311,7 @@ HB_FUNC( POSINS )
 
          if( HB_ISNUM( 3 ) )
          {
-            sStartPos = hb_parnl( 3 );
+            sStartPos = hb_parns( 3 );
             if( sStartPos == 0 )
                sStartPos = sStrLen;
          }
@@ -426,7 +426,7 @@ HB_FUNC( POSREPL )
 
          if( HB_ISNUM( 3 ) )
          {
-            sStartPos = hb_parnl( 3 );
+            sStartPos = hb_parns( 3 );
             if( sStartPos == 0 )
             {
                if( sReplLen > sStrLen )

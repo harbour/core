@@ -185,7 +185,7 @@ HB_FUNC( HB_HKEYAT )
 
    if( pHash && pPos )
    {
-      PHB_ITEM pKey = hb_hashGetKeyAt( pHash, hb_itemGetNL( pPos ) );
+      PHB_ITEM pKey = hb_hashGetKeyAt( pHash, hb_itemGetNS( pPos ) );
       if( pKey )
          hb_itemReturn( pKey );
       else
@@ -203,7 +203,7 @@ HB_FUNC( HB_HVALUEAT )
 
    if( pHash && pPos )
    {
-      PHB_ITEM pItem = hb_hashGetValueAt( pHash, hb_itemGetNL( pPos ) );
+      PHB_ITEM pItem = hb_hashGetValueAt( pHash, hb_itemGetNS( pPos ) );
       if( pItem )
       {
          if( pValue )
@@ -226,8 +226,8 @@ HB_FUNC( HB_HPAIRAT )
 
    if( pHash && pPos )
    {
-      PHB_ITEM pKey = hb_hashGetKeyAt( pHash, hb_itemGetNL( pPos ) );
-      PHB_ITEM pValue = hb_hashGetValueAt( pHash, hb_itemGetNL( pPos ) );
+      PHB_ITEM pKey = hb_hashGetKeyAt( pHash, hb_itemGetNS( pPos ) );
+      PHB_ITEM pValue = hb_hashGetValueAt( pHash, hb_itemGetNS( pPos ) );
       if( pKey && pValue )
       {
          PHB_ITEM pDstKey = hb_param( 3, HB_IT_BYREF );
@@ -259,7 +259,7 @@ HB_FUNC( HB_HDELAT )
 
    if( pHash && pPos )
    {
-      if( hb_hashDelAt( pHash, hb_itemGetNL( pPos ) ) )
+      if( hb_hashDelAt( pHash, hb_itemGetNS( pPos ) ) )
          hb_itemReturn( pHash );
       else
          hb_errRT_BASE( EG_BOUND, 1133, NULL, hb_langDGetErrorDesc( EG_ARRASSIGN ), 2, pHash, pPos );
@@ -327,10 +327,10 @@ HB_FUNC( HB_HCOPY )
    {
       HB_SIZE ulLen = hb_hashLen( pSource ), ulStart, ulCount;
 
-      ulStart = hb_parnl( 3 );
+      ulStart = hb_parns( 3 );
       if( !ulStart )
          ++ulStart;
-      ulCount = HB_ISNUM( 4 ) ? ( HB_SIZE ) hb_parnl( 4 ) : ulLen - ulStart + 1;
+      ulCount = HB_ISNUM( 4 ) ? ( HB_SIZE ) hb_parns( 4 ) : ulLen - ulStart + 1;
 
       while( ulCount-- )
       {
@@ -400,10 +400,10 @@ HB_FUNC( HB_HEVAL )
    {
       HB_SIZE ulLen = hb_hashLen( pHash ), ulStart, ulCount;
 
-      ulStart = hb_parnl( 3 );
+      ulStart = hb_parns( 3 );
       if( !ulStart )
          ++ulStart;
-      ulCount = HB_ISNUM( 4 ) ? ( HB_SIZE ) hb_parnl( 4 ) : ulLen - ulStart + 1;
+      ulCount = HB_ISNUM( 4 ) ? ( HB_SIZE ) hb_parns( 4 ) : ulLen - ulStart + 1;
 
       while( ulCount-- )
       {
@@ -439,10 +439,10 @@ HB_FUNC( HB_HSCAN )
       HB_BOOL fExact = hb_parl( 5 ), fFound = HB_FALSE;
       HB_SIZE ulLen = hb_hashLen( pHash ), ulStart, ulCount;
 
-      ulStart = hb_parnl( 3 );
+      ulStart = hb_parns( 3 );
       if( !ulStart )
          ++ulStart;
-      ulCount = HB_ISNUM( 4 ) ? ( HB_SIZE ) hb_parnl( 4 ) : ulLen - ulStart + 1;
+      ulCount = HB_ISNUM( 4 ) ? ( HB_SIZE ) hb_parns( 4 ) : ulLen - ulStart + 1;
 
       if( HB_IS_BLOCK( pValue ) )
       {
@@ -770,7 +770,7 @@ HB_FUNC( HB_HALLOCATE )
 
    if( pHash && pValue )
    {
-      HB_ISIZ lMem = hb_itemGetNL( pValue );
+      HB_ISIZ lMem = hb_itemGetNS( pValue );
       if( lMem >= 0 )
          hb_hashPreallocate( pHash, lMem );
    }

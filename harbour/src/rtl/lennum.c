@@ -70,5 +70,5 @@ HB_FUNC( LENNUM )
       }
    }
 
-   hb_retnl( ulLen );
+   hb_retns( ulLen );
 }

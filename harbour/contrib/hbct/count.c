@@ -100,7 +100,7 @@ static void do_count( int iSwitch )
             break;
       }
 
-      hb_retnl( sRetVal );
+      hb_retns( sRetVal );
    }
    else  /* if( HB_ISCHAR( 1 ) ) */
    {
@@ -119,7 +119,7 @@ static void do_count( int iSwitch )
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );
       else
-         hb_retni( 0 );
+         hb_retns( 0 );
    }
 }
 

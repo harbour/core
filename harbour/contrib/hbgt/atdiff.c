@@ -40,10 +40,10 @@ HB_FUNC( GT_ATDIFF )
       pos++;
 
     if (pos > len)                  /* strings match exactly!!! */
-      hb_retnl(0);
+      hb_retns(0);
     else
-      hb_retnl(pos);
+      hb_retns(pos);
   } else {
-    hb_retni(-1);                     /* parameter mismatch - error -1 */
+    hb_retns(-1);                     /* parameter mismatch - error -1 */
   }
 }

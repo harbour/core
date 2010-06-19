@@ -835,7 +835,7 @@ static void hb_gt_pca_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
                                                s_sTransBuf, &ulLen,
                                                &s_sTransBuf, &s_ulTransBufSize,
                                                s_cdpHost, s_cdpTerm );
-            hb_gt_pca_AnsiPutStr( iRow, iCol, iColor2, buffer, ulLen );
+            hb_gt_pca_AnsiPutStr( iRow, iCol, iColor2, buffer, ( int ) ulLen );
          }
          else
             hb_gt_pca_AnsiPutStr( iRow, iCol, iColor2, s_sLineBuf, iLen );
@@ -857,7 +857,7 @@ static void hb_gt_pca_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
                                             s_sTransBuf, &ulLen,
                                             &s_sTransBuf, &s_ulTransBufSize,
                                             s_cdpHost, s_cdpTerm );
-         hb_gt_pca_AnsiPutStr( iRow, iCol, iColor2, buffer, ulLen );
+         hb_gt_pca_AnsiPutStr( iRow, iCol, iColor2, buffer, ( int ) ulLen );
       }
       else
          hb_gt_pca_AnsiPutStr( iRow, iCol, iColor2, s_sLineBuf, iLen );

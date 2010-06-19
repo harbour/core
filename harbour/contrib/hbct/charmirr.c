@@ -132,7 +132,7 @@ HB_FUNC( CHARMIRR )
                       HB_ERR_FUNCNAME, 0, EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
          }
          if( iNoRet )
-            hb_retl( 0 );
+            hb_retl( HB_FALSE );
          else
             hb_retc_null();
          return;
@@ -165,7 +165,7 @@ HB_FUNC( CHARMIRR )
 
       if( iNoRet )
       {
-         hb_retl( 0 );
+         hb_retl( HB_FALSE );
          hb_xfree( pcRet );
       }
       else
@@ -186,7 +186,7 @@ HB_FUNC( CHARMIRR )
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );
       else if( iNoRet )
-         hb_retl( 0 );
+         hb_retl( HB_FALSE );
       else
          hb_retc_null();
    }

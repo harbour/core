@@ -84,7 +84,7 @@ static void do_pos1( int iSwitch )
 
          if( hb_parclen( 1 ) == 0 )
          {
-            hb_retni( 0 );
+            hb_retns( 0 );
             return;
          }
          else
@@ -94,7 +94,7 @@ static void do_pos1( int iSwitch )
 
          if( hb_parclen( 2 ) == 0 )
          {
-            hb_retni( 0 );
+            hb_retns( 0 );
             return;
          }
          else
@@ -114,7 +114,7 @@ static void do_pos1( int iSwitch )
          iMode = 0;
 
       if( HB_ISNUM( iParamShift + 3 ) )
-         sIgnore = ( HB_SIZE ) hb_parnl( iParamShift + 3 );
+         sIgnore = hb_parns( iParamShift + 3 );
       else
          sIgnore = 0;
 
@@ -143,11 +143,11 @@ static void do_pos1( int iSwitch )
 
          if( ( iMode && !iDoRet ) || ( !iMode && iDoRet ) )
          {
-            hb_retnl( puc - pcString + 1 );
+            hb_retns( puc - pcString + 1 );
             return;
          }
       }
-      hb_retni( 0 );
+      hb_retns( 0 );
    }
    else                         /* ISCHAR (1) etc. */
    {
@@ -183,7 +183,7 @@ static void do_pos1( int iSwitch )
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );
       else
-         hb_retni( 0 );
+         hb_retns( 0 );
    }
 }
 

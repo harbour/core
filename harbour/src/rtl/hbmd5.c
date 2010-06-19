@@ -259,7 +259,7 @@ void hb_md5( const void * data, HB_SIZE ulLen, char * digest )
    const unsigned char * ucdata = ( const unsigned char * ) data;
    HB_UCHAR buf[ 128 ];
    MD5_BUF md5;
-   int i, n;
+   HB_ISIZ i, n;
 
    /* perform startup procedures */
    hb_md5accinit( md5.accum );

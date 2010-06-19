@@ -625,7 +625,11 @@ typedef HB_U32 HB_FATTR;
 #endif
 
 /* maximum index size */
-#define HB_SIZE_MAX     ULONG_MAX
+#if defined( HB_OS_WIN_64 )
+#  define HB_SIZE_MAX    ULONGLONG_MAX
+#else
+#  define HB_SIZE_MAX    ULONG_MAX
+#endif
 
 /* maximum length of double number in decimal representation:
    log10(2^1024) ~ 308.25 */

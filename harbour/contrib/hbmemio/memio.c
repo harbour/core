@@ -732,7 +732,7 @@ static PHB_FILE s_fileOpen( const char * szName, const char * szDefExt, HB_USHOR
    HB_FHANDLE hFile;
    char       szNameNew[ HB_PATH_MAX + 1 ];
    HB_USHORT  uiFlags;
-   HB_ULONG   ulLen;
+   HB_SIZE    ulLen;
 
    HB_SYMBOL_UNUSED( pPaths );
    HB_SYMBOL_UNUSED( pError );

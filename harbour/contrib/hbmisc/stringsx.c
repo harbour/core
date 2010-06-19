@@ -58,7 +58,7 @@ static const char *hb_strtoken(const char *szText,
 HB_FUNC( STRTOKEN )
 {
   const char *szText;
-  HB_ISIZ lIndex = hb_parnl(2);
+  HB_ISIZ lIndex = hb_parns(2);
   char cDelimiter = *hb_parc(3);
   HB_ISIZ lLen;
 
@@ -67,7 +67,7 @@ HB_FUNC( STRTOKEN )
 
   szText = hb_strtoken(hb_parc(1), hb_parclen(1), lIndex, cDelimiter, &lLen);
 
-  hb_stornl(lLen, 4);
+  hb_storns(lLen, 4);
   hb_retclen(szText, lLen);
 }
 

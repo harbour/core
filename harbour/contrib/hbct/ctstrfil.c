@@ -59,7 +59,7 @@
 #include "ctstrfil.h"
 
 static int s_iFileAttr = HB_FA_NORMAL;
-static HB_BOOL s_bSafety = 0;
+static HB_BOOL s_bSafety = HB_FALSE;
 
 void ct_setfcreate( int iFileAttr )
 {
@@ -95,10 +95,10 @@ HB_BOOL ct_getsafety( void )
 
 HB_FUNC( CSETSAFETY )
 {
-   hb_retni( ct_getsafety() );
+   hb_retl( ct_getsafety() );
 
    if( HB_ISLOG( 1 ) )
-      ct_setsafety( hb_parnl( 1 ) );
+      ct_setsafety( hb_parl( 1 ) );
 }
 
 static HB_SIZE ct_StrFile( const char * pFileName, const char * pcStr, HB_SIZE ulLen, HB_BOOL bOverwrite, HB_FOFFSET lOffset,
@@ -139,12 +139,12 @@ HB_FUNC( STRFILE )
 {
    if( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) )
    {
-      hb_retnl( ct_StrFile( hb_parc( 2 ), hb_parc( 1 ),
+      hb_retns( ct_StrFile( hb_parc( 2 ), hb_parc( 1 ),
                             hb_parclen( 1 ), hb_parl( 3 ),
                             ( HB_FOFFSET ) hb_parnint( 4 ), hb_parl( 5 ) ) );
    }
    else
-      hb_retni( 0 );
+      hb_retns( 0 );
 }
 
 HB_FUNC( FILESTR )
@@ -163,7 +163,7 @@ HB_FUNC( FILESTR )
 
          if( HB_ISNUM( 2 ) )
          {
-            lLength = hb_parnl( 2 );
+            lLength = hb_parns( 2 );
             if( lLength > ( HB_ISIZ ) ( lFileSize - lPos ) )
                lLength = ( HB_ISIZ ) ( lFileSize - lPos );
          }
@@ -203,13 +203,13 @@ HB_FUNC( SCREENFILE )
 
       hb_gtSave( 0, 0, hb_gtMaxRow(), hb_gtMaxCol(), pBuffer );
 
-      hb_retnl( ct_StrFile( hb_parc( 1 ), pBuffer,
+      hb_retns( ct_StrFile( hb_parc( 1 ), pBuffer,
                             ulSize, hb_parl( 2 ),
                             ( HB_FOFFSET ) hb_parnint( 3 ), hb_parl( 4 ) ) );
       hb_xfree( pBuffer );
    }
    else
-      hb_retni( 0 );
+      hb_retns( 0 );
 }
 
 HB_FUNC( FILESCREEN )
@@ -236,11 +236,11 @@ HB_FUNC( FILESCREEN )
          hb_xfree( pBuffer );
 
          hb_fsClose( hFile );
-         hb_retnl( lLength );
+         hb_retns( lLength );
       }
       else
-         hb_retni( 0 );
+         hb_retns( 0 );
    }
    else
-      hb_retni( 0 );
+      hb_retns( 0 );
 }

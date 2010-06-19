@@ -100,7 +100,7 @@ HB_FUNC( NUMAT )
 
       /* eventually ignore some characters */
       if( HB_ISNUM( 3 ) )
-         sIgnore = ( HB_SIZE ) hb_parnl( 3 );
+         sIgnore = hb_parns( 3 );
       else
          sIgnore = 0;
 
@@ -153,7 +153,7 @@ HB_FUNC( NUMAT )
       }
       while( pc != NULL );
 
-      hb_retnl( ulCounter - 1 );
+      hb_retns( ulCounter - 1 );
    }
    else  /* ( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) ) */
    {

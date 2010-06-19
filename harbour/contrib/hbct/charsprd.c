@@ -70,7 +70,7 @@ HB_FUNC( CHARSPREAD )
       {
          const char * szText = hb_parc( 1 );
          char * szDest, cDelim = ' ';
-         int iTokens = 0, iRepl, iRest, iFirst, i;
+         HB_ISIZ iTokens = 0, iRepl, iRest, iFirst, i;
          HB_SIZE ul, ulDst, ulRest;
 
          if( HB_ISCHAR( 3 ) )

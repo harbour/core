@@ -96,7 +96,7 @@ HB_FUNC( POSDIFF )
       HB_SIZE sIgnore;
 
       if( HB_ISNUM( 3 ) )
-         sIgnore = hb_parnl( 3 );
+         sIgnore = hb_parns( 3 );
       else
          sIgnore = 0;
 
@@ -109,7 +109,7 @@ HB_FUNC( POSDIFF )
             ct_error( ( HB_USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_POSDIFF, NULL,
                       HB_ERR_FUNCNAME, 0, EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
          }
-         hb_retni( 0 );
+         hb_retns( 0 );
          return;
       }
 
@@ -120,7 +120,7 @@ HB_FUNC( POSDIFF )
       {
          if( *pc1 != *pc2 )
          {
-            hb_retnl( ( pc1 - pcString1 ) + 1 );
+            hb_retns( ( pc1 - pcString1 ) + 1 );
             return;
          }
          pc1++;
@@ -128,9 +128,9 @@ HB_FUNC( POSDIFF )
       }
 
       if( sStrLen1 != sStrLen2 )
-         hb_retnl( ( sStrLen1 < sStrLen2 ? sStrLen1 : sStrLen2 ) + 1 );
+         hb_retns( ( sStrLen1 < sStrLen2 ? sStrLen1 : sStrLen2 ) + 1 );
       else
-         hb_retni( 0 );
+         hb_retns( 0 );
    }
    else  /* ( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) ) */
    {
@@ -147,9 +147,9 @@ HB_FUNC( POSDIFF )
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );
       else if( HB_ISCHAR( 1 ) || HB_ISCHAR( 2 ) )
-         hb_retnl( 1 );
+         hb_retns( 1 );
       else
-         hb_retni( 0 );
+         hb_retns( 0 );
    }
 }
 
@@ -194,12 +194,12 @@ HB_FUNC( POSEQUAL )
       HB_SIZE sIgnore, sCompare, sCompareCnt, sRet = 0;
 
       if( HB_ISNUM( 4 ) )
-         sIgnore = hb_parnl( 4 );
+         sIgnore = hb_parns( 4 );
       else
          sIgnore = 0;
 
       if( HB_ISNUM( 3 ) )
-         sCompare = hb_parnl( 3 );
+         sCompare = hb_parns( 3 );
       else
          sCompare = ( sStrLen1 < sStrLen2 ? sStrLen1 : sStrLen2 ) - sIgnore;
 
@@ -212,7 +212,7 @@ HB_FUNC( POSEQUAL )
             ct_error( ( HB_USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_POSEQUAL, NULL,
                       HB_ERR_FUNCNAME, 0, EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
          }
-         hb_retni( 0 );
+         hb_retns( 0 );
          return;
       }
 
@@ -225,7 +225,7 @@ HB_FUNC( POSEQUAL )
             ct_error( ( HB_USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_POSEQUAL, NULL,
                       HB_ERR_FUNCNAME, 0, EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
          }
-         hb_retni( 0 );
+         hb_retns( 0 );
          return;
       }
 
@@ -244,7 +244,7 @@ HB_FUNC( POSEQUAL )
             sCompareCnt++;
             if( sCompareCnt == sCompare )
             {
-               hb_retnl( sRet );
+               hb_retns( sRet );
                return;
             }
          }
@@ -256,7 +256,7 @@ HB_FUNC( POSEQUAL )
          pc1++;
          pc2++;
       }
-      hb_retni( 0 );
+      hb_retns( 0 );
    }
    else  /* ( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) ) */
    {
@@ -273,6 +273,6 @@ HB_FUNC( POSEQUAL )
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );
       else
-         hb_retni( 0 );
+         hb_retns( 0 );
    }
 }
