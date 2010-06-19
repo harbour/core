@@ -174,7 +174,7 @@ HB_FUNC( HAAGETPOS )
    {
       HB_SIZE ulPos;
       hb_hashScan( pHash, pKey, &ulPos );
-      hb_retnint( ulPos );
+      hb_retns( ulPos );
    }
 }
 

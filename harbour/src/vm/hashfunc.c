@@ -103,7 +103,7 @@ HB_FUNC( HB_HPOS )
    {
       HB_SIZE ulPos;
       hb_hashScan( pHash, pKey, &ulPos );
-      hb_retnint( ulPos );
+      hb_retns( ulPos );
    }
    else
       hb_errRT_BASE( EG_ARG, 1123, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -624,7 +624,7 @@ HB_FUNC( HB_HSCAN )
          }
       }
 
-      hb_retnint( fFound ? ulStart : 0 );
+      hb_retns( fFound ? ulStart : 0 );
    }
    else
       hb_errRT_BASE( EG_ARG, 1123, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );

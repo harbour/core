@@ -262,8 +262,8 @@ HB_FUNC( HB_ZUNCOMPRESS )
          }
          else
          {
-            ulDstLen = ( uLong ) ( HB_ISNUM( 2 ) ? hb_parns( 2 ) :
-                          hb_zlibUncompressedSize( szData, ulLen, &iResult ) );
+            ulDstLen = HB_ISNUM( 2 ) ? ( uLong ) hb_parns( 2 ) :
+                          ( uLong ) hb_zlibUncompressedSize( szData, ulLen, &iResult );
             if( iResult == Z_OK )
             {
                pDest = ( char * ) hb_xalloc( ulDstLen + 1 );

@@ -137,7 +137,7 @@ HB_FUNC( ADDASCII )
       int iCarryOver;
 
       if( HB_ISNUM( 3 ) )
-         sPos = hb_parnl( 3 );
+         sPos = hb_parns( 3 );
       else
          sPos = sLen;
 
@@ -174,7 +174,7 @@ HB_FUNC( ADDASCII )
 
          for( sCurrent = sPos; sCurrent > 0 && lValue != 0; sCurrent-- )
          {
-            lResult = ( HB_LONG ) pcSource[sCurrent - 1] + ( lValue % 256 );
+            lResult = ( HB_LONG ) pcSource[ sCurrent - 1 ] + ( lValue % 256 );
 
             lValue /= 256;
             if( lResult > 255 )
@@ -182,12 +182,12 @@ HB_FUNC( ADDASCII )
             else if( lResult < 0 )
                lValue--;
 
-            pcResult[sCurrent - 1] = ( char ) ( lResult % 256 );
+            pcResult[ sCurrent - 1 ] = ( char ) ( lResult % 256 );
          }
       }
       else
       {
-         pcResult[sPos - 1] = ( char ) ( ( ( HB_LONG ) pcResult[sPos - 1] + lValue ) % 256 );
+         pcResult[ sPos - 1 ] = ( char ) ( ( ( HB_LONG ) pcResult[ sPos - 1 ] + lValue ) % 256 );
       }
 
       if( HB_ISBYREF( 1 ) )

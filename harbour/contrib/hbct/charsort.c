@@ -191,27 +191,27 @@ HB_FUNC( CHARSORT )
       int iDescend;
 
       if( HB_ISNUM( 2 ) )
-         sElementLen = hb_parnl( 2 );
+         sElementLen = hb_parns( 2 );
       else
          sElementLen = 1;
 
       if( HB_ISNUM( 3 ) )
-         s_sCompareLen = hb_parnl( 3 );
+         s_sCompareLen = hb_parns( 3 );
       else
          s_sCompareLen = sElementLen;
 
       if( HB_ISNUM( 4 ) )
-         sIgnore = hb_parnl( 4 );
+         sIgnore = hb_parns( 4 );
       else
          sIgnore = 0;
 
       if( HB_ISNUM( 5 ) )
-         s_sElementPos = hb_parnl( 5 );
+         s_sElementPos = hb_parns( 5 );
       else
          s_sElementPos = 0;
 
       if( HB_ISNUM( 6 ) )
-         sSortLen = hb_parnl( 6 );
+         sSortLen = hb_parns( 6 );
       else
          sSortLen = sStrLen - sIgnore;
 

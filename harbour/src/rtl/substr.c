@@ -62,8 +62,8 @@ HB_FUNC( SUBSTR )
 
    if( pText && HB_ISNUM( 2 ) )
    {
-      HB_ISIZ lPos = hb_parnl( 2 );
-      HB_ISIZ lSize = ( HB_ISIZ ) hb_itemGetCLen( pText );
+      HB_ISIZ lPos = hb_parns( 2 );
+      HB_ISIZ lSize = hb_itemGetCLen( pText );
 
       if( lPos < 0 )
       {
@@ -84,7 +84,7 @@ HB_FUNC( SUBSTR )
          {
             if( HB_ISNUM( 3 ) )
             {
-               lLen = hb_parnl( 3 );
+               lLen = hb_parns( 3 );
 
                if( lLen > lSize - lPos )
                   lLen = lSize - lPos;

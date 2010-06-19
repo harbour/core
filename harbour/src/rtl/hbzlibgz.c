@@ -174,7 +174,7 @@ HB_FUNC( HB_GZREAD )
       {
          if( HB_ISNUM( 3 ) )
          {
-            HB_SIZE ulLim = ( HB_SIZE ) hb_parnl( 3 );
+            HB_SIZE ulLim = hb_parns( 3 );
             if( ulLim < ulLen )
                ulLen = ulLim;
          }
@@ -196,7 +196,7 @@ HB_FUNC( HB_GZWRITE )
       gzFile gz = hb_gzParam( 1 );
       if( gz )
          hb_retni( gzwrite( gz, szData,
-                            ( unsigned ) ( HB_ISNUM( 3 ) ? hb_parns( 3 ) : hb_parclen( 2 ) ) ) );
+                            HB_ISNUM( 3 ) ? ( unsigned ) hb_parns( 3 ) : ( unsigned ) hb_parclen( 2 ) ) );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );

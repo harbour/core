@@ -69,7 +69,7 @@ HB_FUNC( HB_AT )
       HB_SIZE nPos;
 
       if( nStart > nTextLength || nEnd < nStart )
-         hb_retnl( 0 );
+         hb_retns( 0 );
       else
       {
          if( nEnd > nTextLength )

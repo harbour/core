@@ -104,7 +104,7 @@ HB_FUNC( STRTRAN )
 
             if( HB_ISNUM( 5 ) )
             {
-               nCount = hb_parnl( 5 );
+               nCount = hb_parns( 5 );
                bAll = HB_FALSE;
             }
             else

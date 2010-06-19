@@ -169,7 +169,7 @@ HB_FUNC( HB_FREADLINE )
    const char ** Term;
    char * pBuffer;
    HB_ISIZ * iTermSizes;
-   HB_ISIZ lSize = hb_parnl( 4 );
+   HB_ISIZ lSize = hb_parns( 4 );
    HB_ISIZ i, iTerms;
    HB_BOOL bFound, bEOF;
 
@@ -235,7 +235,7 @@ HB_FUNC( HB_FREADLINE )
 
    if( ! hb_storclen_buffer( pBuffer, lSize, 2 ) )
       hb_xfree( pBuffer );
-   hb_retnl( bEOF ? -1 : 0 );
+   hb_retns( bEOF ? -1 : 0 );
    hb_xfree( ( void * ) Term );
    hb_xfree( iTermSizes );
 }

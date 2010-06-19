@@ -59,8 +59,8 @@ HB_FUNC( STUFF )
    {
       const char * szText = hb_parc( 1 );
       HB_SIZE ulText = hb_parclen( 1 );
-      HB_SIZE ulPos = hb_parnl( 2 );
-      HB_SIZE ulDel = hb_parnl( 3 );
+      HB_SIZE ulPos = hb_parns( 2 );
+      HB_SIZE ulDel = hb_parns( 3 );
       HB_SIZE ulInsert = hb_parclen( 4 );
 
       HB_SIZE ulTotalLen;

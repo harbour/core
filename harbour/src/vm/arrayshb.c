@@ -65,7 +65,7 @@ static void hb_arrayNewRagged( PHB_ITEM pArray, int iDimension )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_arrayNewRagged(%p, %d)", pArray, iDimension));
 
-   ulElements = ( HB_SIZE ) hb_parnl( iDimension );
+   ulElements = hb_parns( iDimension );
 
    /* create an array */
    hb_arrayNew( pArray, ulElements );
@@ -96,7 +96,7 @@ HB_FUNC( ARRAY )
             break;
          }
 
-         if( hb_parnl( iParam ) < 0 ) /* || hb_parnl( iParam ) <= 4096 */
+         if( hb_parns( iParam ) < 0 ) /* || hb_parns( iParam ) <= 4096 */
          {
 #ifdef HB_CLP_STRICT
             hb_errRT_BASE( EG_BOUND, 1131, NULL, hb_langDGetErrorDesc( EG_ARRDIMENSION ), 0 );
@@ -259,10 +259,10 @@ HB_FUNC( ASCAN )
       HB_SIZE ulStart = hb_parns( 3 );
       HB_SIZE ulCount = hb_parns( 4 );
 
-      hb_retnint( hb_arrayScan( pArray, pValue,
-                                HB_ISNUM( 3 ) ? &ulStart : NULL,
-                                HB_ISNUM( 4 ) ? &ulCount : NULL,
-                                HB_FALSE ) );
+      hb_retns( hb_arrayScan( pArray, pValue,
+                              HB_ISNUM( 3 ) ? &ulStart : NULL,
+                              HB_ISNUM( 4 ) ? &ulCount : NULL,
+                              HB_FALSE ) );
    }
    else
       hb_retni( 0 );
@@ -279,10 +279,10 @@ HB_FUNC( HB_ASCAN )
       HB_SIZE ulStart = hb_parns( 3 );
       HB_SIZE ulCount = hb_parns( 4 );
 
-      hb_retnint( hb_arrayScan( pArray, pValue,
-                                HB_ISNUM( 3 ) ? &ulStart : NULL,
-                                HB_ISNUM( 4 ) ? &ulCount : NULL,
-                                hb_parl( 5 ) ) );
+      hb_retns( hb_arrayScan( pArray, pValue,
+                              HB_ISNUM( 3 ) ? &ulStart : NULL,
+                              HB_ISNUM( 4 ) ? &ulCount : NULL,
+                              hb_parl( 5 ) ) );
    }
    else
       hb_retni( 0 );
@@ -298,10 +298,10 @@ HB_FUNC( HB_RASCAN )
       HB_SIZE ulStart = hb_parns( 3 );
       HB_SIZE ulCount = hb_parns( 4 );
 
-      hb_retnint( hb_arrayRevScan( pArray, pValue,
-                                   HB_ISNUM( 3 ) ? &ulStart : NULL,
-                                   HB_ISNUM( 4 ) ? &ulCount : NULL,
-                                   hb_parl( 5 ) ) );
+      hb_retns( hb_arrayRevScan( pArray, pValue,
+                                 HB_ISNUM( 3 ) ? &ulStart : NULL,
+                                 HB_ISNUM( 4 ) ? &ulCount : NULL,
+                                 hb_parl( 5 ) ) );
    }
    else
       hb_retni( 0 );

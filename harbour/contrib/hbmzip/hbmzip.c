@@ -256,8 +256,8 @@ HB_FUNC( HB_ZIPFILEWRITE )
       zipFile hZip = hb_zipfileParam( 1 );
       HB_SIZE ulLen = hb_parclen( 2 );
 
-      if( HB_ISNUM( 3 ) && ( HB_SIZE ) hb_parnl( 3 ) < ulLen )
-         ulLen = ( HB_SIZE ) hb_parnl( 3 );
+      if( HB_ISNUM( 3 ) && hb_parns( 3 ) < ulLen )
+         ulLen = hb_parns( 3 );
 
       if( hZip )
          hb_retni( zipWriteInFileInZip( hZip, (void*) pData, ( unsigned ) ulLen ) );
@@ -441,8 +441,8 @@ HB_FUNC( HB_UNZIPFILEINFO )
          hb_stornl( ufi.internal_fa, 5 );
          hb_stornl( ufi.external_fa, 6 );
          hb_stornl( ufi.compression_method, 7 );
-         hb_stornl( ufi.uncompressed_size, 8 );
-         hb_stornl( ufi.compressed_size, 9 );
+         hb_storns( ufi.uncompressed_size, 8 );
+         hb_storns( ufi.compressed_size, 9 );
          hb_storl( ( ufi.flag & 1 ) != 0, 10 );
          hb_stornint( ufi.crc, 12 );
 
@@ -470,8 +470,8 @@ HB_FUNC( HB_UNZIPFILEINFO )
          hb_stornl( 0, 5 );
          hb_stornl( 0, 6 );
          hb_stornl( 0, 7 );
-         hb_stornl( 0, 8 );
-         hb_stornl( 0, 9 );
+         hb_storns( 0, 8 );
+         hb_storns( 0, 9 );
          hb_storl( HB_FALSE, 10 );
          hb_storc( NULL, 11 );
       }
@@ -507,7 +507,7 @@ HB_FUNC( HB_UNZIPFILEREAD )
 
          if( HB_ISNUM( 3 ) )
          {
-            HB_SIZE ulRead = ( HB_SIZE ) hb_parnl( 3 );
+            HB_SIZE ulRead = hb_parns( 3 );
             if( ulRead < ulSize )
                ulSize = ulRead;
          }

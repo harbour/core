@@ -72,7 +72,7 @@ static void do_ascpos( int iSwitch )
       HB_SIZE sPos;
 
       if( HB_ISNUM( 2 ) )
-         sPos = hb_parnl( 2 );
+         sPos = hb_parns( 2 );
       else
          sPos = sStrSize;
 
@@ -85,13 +85,13 @@ static void do_ascpos( int iSwitch )
          if( iSwitch == DO_ASCPOS_VALPOS )
          {
             if( HB_ISDIGIT( ( HB_UCHAR ) pcString[ sPos - 1 ] ) )
-               hb_retnl( pcString[ sPos - 1 ] - 48 );
+               hb_retni( pcString[ sPos - 1 ] - '0' );
             else
                hb_retni( 0 );
          }
          else                   /* iSwitch == DO_ASCPOS_ASCPOS */
          {
-            hb_retnl( pcString[sPos - 1] );
+            hb_retni( pcString[ sPos - 1 ] );
          }
       }
    }

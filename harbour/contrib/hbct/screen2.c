@@ -66,7 +66,7 @@ HB_FUNC( SAYDOWN )
       int iRow, iCol, iMaxRow, iMaxCol;
       long lDelay;
 
-      lDelay = HB_ISNUM( 2 ) ? hb_parnl( 2 ) : 4;
+      lDelay = hb_parnldef( 2, 4 );
 
       hb_gtGetPos( &iRow, &iCol );
       if( HB_ISNUM( 3 ) )
@@ -112,7 +112,7 @@ HB_FUNC( SAYSPREAD )
       int iRow, iCol, iMaxRow, iMaxCol;
       long lDelay;
 
-      lDelay = HB_ISNUM( 2 ) ? hb_parnl( 2 ) : 4;
+      lDelay = hb_parnldef( 2, 4 );
 
       iMaxRow = hb_gtMaxRow();
       iMaxCol = hb_gtMaxCol();
@@ -169,7 +169,7 @@ HB_FUNC( SAYMOVEIN )
       long lDelay;
       HB_BOOL fBack;
 
-      lDelay = HB_ISNUM( 2 ) ? hb_parnl( 2 ) : 4;
+      lDelay = hb_parnldef( 2, 4 );
       fBack = hb_parl( 5 );
 
       iMaxRow = hb_gtMaxRow();

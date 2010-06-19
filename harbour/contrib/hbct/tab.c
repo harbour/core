@@ -123,14 +123,14 @@ HB_FUNC( TABEXPAND )
       HB_SIZE sTabCnt = 0;
 
       if( HB_ISNUM( 2 ) )
-         sTabWidth = hb_parnl( 2 );
-      if( ( signed ) sTabWidth <= 0 )
+         sTabWidth = hb_parns( 2 );
+      if( ( HB_ISIZ ) sTabWidth <= 0 )
          sTabWidth = 8;
 
       if( HB_ISNUM( 3 ) )
          cFill = ( char ) ( hb_parnl( 3 ) % 256 );
       else if( hb_parclen( 3 ) > 0 )
-         cFill = hb_parc( 3 )[0];
+         cFill = hb_parc( 3 )[ 0 ];
       else
          cFill = 0x20;
 
@@ -154,7 +154,7 @@ HB_FUNC( TABEXPAND )
       if( HB_ISNUM( 5 ) )
          cTab = ( char ) ( hb_parnl( 5 ) % 256 );
       else if( hb_parclen( 5 ) > 0 )
-         cTab = hb_parc( 5 )[0];
+         cTab = hb_parc( 5 )[ 0 ];
       else
          cTab = 0x09;
 
@@ -323,14 +323,14 @@ HB_FUNC( TABPACK )
       HB_SIZE sIndex, sTabIndex, sFillCount;
 
       if( HB_ISNUM( 2 ) )
-         sTabWidth = hb_parnl( 2 );
-      if( ( signed ) sTabWidth <= 0 )
+         sTabWidth = hb_parns( 2 );
+      if( ( HB_ISIZ ) sTabWidth <= 0 )
          sTabWidth = 8;
 
       if( HB_ISNUM( 3 ) )
          cFill = ( char ) ( hb_parnl( 3 ) % 256 );
       else if( hb_parclen( 3 ) > 0 )
-         cFill = hb_parc( 3 )[0];
+         cFill = hb_parc( 3 )[ 0 ];
       else
          cFill = 0x20;
 
@@ -350,7 +350,7 @@ HB_FUNC( TABPACK )
       if( HB_ISNUM( 5 ) )
          cTab = ( char ) ( hb_parnl( 5 ) % 256 );
       else if( hb_parclen( 5 ) > 0 )
-         cTab = hb_parc( 5 )[0];
+         cTab = hb_parc( 5 )[ 0 ];
       else
          cTab = 0x09;
 

@@ -70,7 +70,7 @@ static void do_pad( int iSwitch )
       HB_SIZE sRetLen;
       char cFill;
 
-      lRetLen = hb_parnl( 2 );
+      lRetLen = hb_parns( 2 );
       if( lRetLen <= 0 )
       {
          int iArgErrorMode = ct_getargerrormode();

@@ -81,11 +81,11 @@ HB_FUNC( HB_POINTER2STRING )
    PHB_ITEM pLen     = hb_param( 2, HB_IT_NUMERIC );
 
    if( HB_IS_POINTER( pPointer ) && pLen )
-      hb_retclen_const( ( char * ) hb_itemGetPtr( pPointer ), ( HB_SIZE ) hb_itemGetNL( pLen ) );
+      hb_retclen_const( ( char * ) hb_itemGetPtr( pPointer ), hb_itemGetNS( pLen ) );
    else if( HB_IS_INTEGER( pPointer ) && pLen )
-      hb_retclen_const( ( char * ) hb_itemGetNI( pPointer ), ( HB_SIZE ) hb_itemGetNL( pLen ) );
+      hb_retclen_const( ( char * ) hb_itemGetNI( pPointer ), hb_itemGetNS( pLen ) );
    else if( HB_IS_LONG( pPointer ) && pLen )
-      hb_retclen_const( ( char * ) hb_itemGetNL( pPointer ), ( HB_SIZE ) hb_itemGetNL( pLen ) );
+      hb_retclen_const( ( char * ) hb_itemGetNL( pPointer ), hb_itemGetNS( pLen ) );
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, HB_ERR_FUNCNAME, 2, hb_paramError( 1 ), hb_paramError( 2 ) );
 }

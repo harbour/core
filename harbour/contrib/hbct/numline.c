@@ -55,14 +55,14 @@
 
 HB_FUNC( NUMLINE )
 {
-   HB_LONG lLines = 0;
+   HB_ISIZ lLines = 0;
 
    if( HB_ISCHAR( 1 ) )
    {
       const char * pcString = hb_parc( 1 );
       const char * pBuffer;
       HB_ISIZ lStrLen = hb_parclen( 1 );
-      HB_ISIZ lLength = HB_ISNUM( 2 ) ? hb_parnl( 2 ) : 80;
+      HB_ISIZ lLength = hb_parnsdef( 2, 80 );
 
       while( lStrLen > 0 )
       {
@@ -84,5 +84,5 @@ HB_FUNC( NUMLINE )
       }
    }
 
-   hb_retnl( lLines );
+   hb_retns( lLines );
 }

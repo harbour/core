@@ -256,8 +256,8 @@ HB_FUNC( ASORT )
 
    if( pArray && ! hb_arrayIsObject( pArray ) )
    {
-      HB_SIZE ulStart = hb_parnl( 2 );
-      HB_SIZE ulCount = hb_parnl( 3 );
+      HB_SIZE ulStart = hb_parns( 2 );
+      HB_SIZE ulCount = hb_parns( 3 );
 
       hb_arraySort( pArray,
                     HB_ISNUM( 2 ) ? &ulStart : NULL,

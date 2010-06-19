@@ -252,8 +252,8 @@ HB_FUNC( HB_UTF8SUBSTR )
    {
       char * szDest = NULL;
       HB_SIZE nLen = hb_parclen( 1 ), nDest = 0;
-      HB_ISIZ lFrom = hb_parnl( 2 );
-      HB_ISIZ lCount = iPCount < 3 ? ( HB_ISIZ ) nLen : hb_parnl( 3 );
+      HB_ISIZ lFrom = hb_parns( 2 );
+      HB_ISIZ lCount = iPCount < 3 ? ( HB_ISIZ ) nLen : hb_parns( 3 );
 
       if( lFrom < 0 )
       {
@@ -282,7 +282,7 @@ HB_FUNC( HB_UTF8LEFT )
 
    if( szString && HB_ISNUM( 2 ) )
    {
-      HB_ISIZ lLenReq = hb_parnl( 2 );
+      HB_ISIZ lLenReq = hb_parns( 2 );
       HB_SIZE nDest = 0;
       char * szDest = NULL;
 
@@ -305,7 +305,7 @@ HB_FUNC( HB_UTF8RIGHT )
 
    if( szString && HB_ISNUM( 2 ) )
    {
-      HB_ISIZ lLenReq = hb_parnl( 2 ), lFrom;
+      HB_ISIZ lLenReq = hb_parns( 2 ), lFrom;
       HB_SIZE nLen = hb_parclen( 1 ), nDest = 0;
       char * szDest = NULL;
 
@@ -333,7 +333,7 @@ HB_FUNC( HB_UTF8PEEK )
 
    if( szString && HB_ISNUM( 2 ) )
    {
-      HB_SIZE nPos = hb_parnl( 2 );
+      HB_SIZE nPos = hb_parns( 2 );
       HB_SIZE nLen = hb_parclen( 1 );
 
       if( nPos > 0 && nPos <= nLen )
@@ -354,7 +354,7 @@ HB_FUNC( HB_UTF8POKE )
       const char * szString = hb_itemGetCPtr( pText );
       HB_SIZE nLen = hb_parclen( 1 ), nPos;
 
-      nPos = utf8pos( szString, nLen, hb_parnl( 2 ) );
+      nPos = utf8pos( szString, nLen, hb_parns( 2 ) );
       if( nPos )
       {
          HB_WCHAR uc, uc2;
@@ -402,8 +402,8 @@ HB_FUNC( HB_UTF8STUFF )
    if( szString && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) && HB_ISCHAR( 4 ) )
    {
       HB_SIZE nLen = hb_parclen( 1 );
-      HB_SIZE nPos = hb_parnl( 2 );
-      HB_SIZE nDel = hb_parnl( 3 );
+      HB_SIZE nPos = hb_parns( 2 );
+      HB_SIZE nDel = hb_parns( 3 );
       HB_SIZE nIns = hb_parclen( 4 );
       HB_SIZE nTot;
 

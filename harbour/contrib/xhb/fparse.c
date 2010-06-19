@@ -412,9 +412,7 @@ HB_FUNC( FPARSE )
 
       /* add parsed text to array */
       for( iToken = 0; tokens[ iToken ]; iToken++ )
-      {
          hb_arraySetC( pItem, iToken + 1, tokens[ iToken ] );
-      }
 
       /* add array containing parsed text to main array */
       hb_arrayAddForward( pArray, pItem );
@@ -437,7 +435,7 @@ HB_FUNC( FPARSE )
 /*----------------------------------------------------------------------------*/
 HB_FUNC( FPARSEEX )
 {
-   FILE *inFile ;
+   FILE *inFile;
    PHB_ITEM pSrc = hb_param( 1, HB_IT_STRING );
    PHB_ITEM pDelim = hb_param( 2, HB_IT_STRING );
    PHB_ITEM pArray;
@@ -510,18 +508,18 @@ HB_FUNC( FWORDCOUNT )
    char **tokens;
    int iCharCount = 0;
    HB_BYTE nByte = ' ';
-   HB_ULONG ulWordCount = 0;
+   HB_SIZE ulWordCount = 0;
 
    /* file parameter correctly passed */
    if( !pSrc )
    {
-      hb_retni( 0 );
+      hb_retns( 0 );
       return;
    }
 
    if( hb_itemGetCLen( pSrc ) == 0 )
    {
-      hb_retni( 0 );
+      hb_retns( 0 );
       return;
    }
 
@@ -531,7 +529,7 @@ HB_FUNC( FWORDCOUNT )
    /* return 0 on failure */
    if( !inFile )
    {
-      hb_retni( 0 );
+      hb_retns( 0 );
       return;
    }
 
@@ -554,7 +552,7 @@ HB_FUNC( FWORDCOUNT )
    }
 
    /* return number of words */
-   hb_retnl( ulWordCount );
+   hb_retns( ulWordCount );
 
    /* clean up */
    hb_xfree( string );
@@ -566,19 +564,19 @@ HB_FUNC( FLINECOUNT )
 {
    FILE *inFile ;
    PHB_ITEM pSrc = hb_param( 1, HB_IT_STRING );
-   HB_ULONG ulLineCount = 0;
+   HB_SIZE ulLineCount = 0;
    int ch;
 
    /* file parameter correctly passed */
    if( !pSrc )
    {
-      hb_retni( 0 );
+      hb_retns( 0 );
       return;
    }
 
    if( hb_itemGetCLen( pSrc ) == 0 )
    {
-      hb_retni( 0 );
+      hb_retns( 0 );
       return;
    }
 
@@ -588,7 +586,7 @@ HB_FUNC( FLINECOUNT )
    /* return 0 on failure */
    if( !inFile )
    {
-      hb_retni( 0 );
+      hb_retns( 0 );
       return;
    }
 
@@ -602,7 +600,7 @@ HB_FUNC( FLINECOUNT )
    }
 
    /* return number of lines */
-   hb_retnl( ulLineCount );
+   hb_retns( ulLineCount );
 
    /* clean up */
    fclose( inFile );
@@ -613,19 +611,19 @@ HB_FUNC( FCHARCOUNT )
 {
    FILE *inFile ;
    PHB_ITEM pSrc = hb_param( 1, HB_IT_STRING );
-   HB_ULONG ulResult = 0;
+   HB_SIZE ulResult = 0;
    int ch;
 
    /* file parameter correctly passed */
    if( !pSrc )
    {
-      hb_retni( 0 );
+      hb_retns( 0 );
       return;
    }
 
    if( hb_itemGetCLen( pSrc ) == 0 )
    {
-      hb_retni( 0 );
+      hb_retns( 0 );
       return;
    }
 
@@ -635,7 +633,7 @@ HB_FUNC( FCHARCOUNT )
    /* return 0 on failure */
    if( !inFile )
    {
-      hb_retni( 0 );
+      hb_retns( 0 );
       return;
    }
 
@@ -655,7 +653,7 @@ HB_FUNC( FCHARCOUNT )
    }
 
    /* return number of characters */
-   hb_retnl( ulResult );
+   hb_retns( ulResult );
 
    /* clean up */
    fclose( inFile );
@@ -665,7 +663,7 @@ HB_FUNC( FCHARCOUNT )
 HB_FUNC( FPARSELINE )
 {
    PHB_ITEM pArray;
-   int iWords = 0;
+   HB_ISIZ nWords = 0;
    const char * szText;
 
    pArray = hb_itemArrayNew( 0 );
@@ -674,9 +672,11 @@ HB_FUNC( FPARSELINE )
    if( szText )
    {
       const char * szDelim = hb_parc( 2 );
+      int iWords;
       hb_ParseLine( pArray, szText, szDelim ? ( unsigned char ) *szDelim : ',', &iWords );
+      nWords = iWords;
    }
 
    hb_itemReturnRelease( pArray );
-   hb_stornl( iWords, 3 );
+   hb_storns( nWords, 3 );
 }

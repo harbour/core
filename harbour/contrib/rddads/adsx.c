@@ -1169,7 +1169,7 @@ static HB_ERRCODE adsxOrderInfo( ADSXAREAP pArea, HB_USHORT uiIndex, LPDBORDERIN
          {
             HB_ULONG ulPos;
 
-            ulPos = hb_itemGetNL( pOrderInfo->itmNewVal ) ;
+            ulPos = hb_itemGetNL( pOrderInfo->itmNewVal );
 
             if( ulPos > 0 && ulPos <= pTag->ulRecCount )
                SELF_GOTO( ( AREAP ) pArea, pTag->pKeys[ ulPos - 1 ]->rec );

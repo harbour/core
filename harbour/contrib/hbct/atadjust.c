@@ -106,7 +106,7 @@ HB_FUNC( ATADJUST )
       HB_SIZE sStrToMatchLen = hb_parclen( 1 );
       const char *pcString = hb_parc( 2 );
       HB_SIZE sStrLen = hb_parclen( 2 );
-      HB_SIZE sAdjustPosition = hb_parnl( 3 );
+      HB_SIZE sAdjustPosition = hb_parns( 3 );
 
       int iMultiPass = ct_getatmupa();
       int iAtLike = ct_getatlike();
@@ -122,7 +122,7 @@ HB_FUNC( ATADJUST )
 
       /* eventually ignore some characters */
       if( HB_ISNUM( 5 ) )
-         sIgnore = ( HB_SIZE ) hb_parnl( 5 );
+         sIgnore = hb_parns( 5 );
       else
          sIgnore = 0;
 
@@ -161,7 +161,7 @@ HB_FUNC( ATADJUST )
          sAdjustPosition--;     /* makes live easier since C indices start at zero ! */
 
       /* nth match or last match ? */
-      if( HB_ISNUM( 4 ) && ( ulCounter = hb_parnl( 4 ) ) != 0 )
+      if( HB_ISNUM( 4 ) && ( ulCounter = hb_parns( 4 ) ) != 0 )
       {
          /* find the <ulCounter>th match */
          const char *pcSubStr;
@@ -205,7 +205,7 @@ HB_FUNC( ATADJUST )
             sSubStrLen = sStrLen - ( pcSubStr - pcString );
          }
       }
-      else /* ( HB_ISNUM( 4 ) && ( (ulCounter = hb_parnl( 4 ) ) != 0 ) */
+      else /* ( HB_ISNUM( 4 ) && ( (ulCounter = hb_parns( 4 ) ) != 0 ) */
       {
          /* we have to find the last match */
          switch ( iAtLike )

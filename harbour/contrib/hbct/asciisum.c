@@ -101,12 +101,12 @@ HB_FUNC( ASCIISUM )
       const char * pcString = hb_parc( 1 );
       HB_SIZE sStrSize = hb_parclen( 1 );
       HB_SIZE sPos;
-      HB_ULONG ulResult = 0;
+      HB_MAXUINT ulResult = 0;
 
       for( sPos = 0; sPos < sStrSize; sPos++ )
-         ulResult += ( HB_ULONG ) pcString[ sPos ];
+         ulResult += ( HB_MAXUINT ) pcString[ sPos ];
 
-      hb_retnl( ulResult );
+      hb_retnint( ulResult );
    }
    else
    {
@@ -123,6 +123,6 @@ HB_FUNC( ASCIISUM )
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );
       else
-         hb_retni( 0 );
+         hb_retnint( 0 );
    }
 }
