@@ -74,12 +74,12 @@ HB_FUNC( ASPLICE )
       }
 
       if( HB_ISNUM( 2 ) )
-         ulStart = ( HB_SIZE ) hb_parnl( 2 );
+         ulStart = hb_parns( 2 );
       else
          ulStart = ulLen + ( hb_pcount() > 3 && !HB_ISNUM( 3 ) ? 1 : 0 );
 
       if( HB_ISNUM( 3 ) )
-         ulRemove = ( HB_SIZE ) hb_parnl( 3 );
+         ulRemove = hb_parns( 3 );
       else
          ulRemove = ( hb_pcount() > 3 && ulStart == ulLen + 1 ) ? 0 : 1;
 
@@ -177,7 +177,7 @@ HB_FUNC( AMERGE )
 
       if( HB_ISNUM( 3 ) )
       {
-         ulStart = hb_parnl( 3 ) - 1;
+         ulStart = hb_parns( 3 ) - 1;
          if( ulStart > ulLen )
          {
             hb_errRT_BASE( EG_ARG, 1003, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -208,7 +208,7 @@ HB_FUNC( XHB_ADEL )
 
    if( pArray )
    {
-      HB_ISIZ lPos = hb_parnl( 2 );
+      HB_ISIZ lPos = hb_parns( 2 );
 
       if( lPos == 0 )
          lPos = 1;
@@ -231,7 +231,7 @@ HB_FUNC( XHB_AINS )
 
    if( pArray )
    {
-      HB_ISIZ lPos = hb_parnl( 2 );
+      HB_ISIZ lPos = hb_parns( 2 );
 
       if( hb_parl( 4 ) )
       {

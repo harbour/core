@@ -60,7 +60,7 @@ HB_FUNC( REPLICATE )
 {
    if( HB_ISCHAR( 1 ) && HB_ISNUM( 2 ) )
    {
-      HB_ISIZ lTimes = hb_parnl( 2 );
+      HB_ISIZ lTimes = hb_parns( 2 );
 
       if( lTimes > 0 )
       {

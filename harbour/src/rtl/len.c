@@ -66,17 +66,17 @@ HB_FUNC( LEN )
    {
       if( HB_IS_STRING( pItem ) )
       {
-         hb_retnl( hb_itemGetCLen( pItem ) );
+         hb_retns( hb_itemGetCLen( pItem ) );
          return;
       }
       else if( HB_IS_ARRAY( pItem ) )
       {
-         hb_retnl( hb_arrayLen( pItem ) );
+         hb_retns( hb_arrayLen( pItem ) );
          return;
       }
       else if( HB_IS_HASH( pItem ) )
       {
-         hb_retnl( hb_hashLen( pItem ) );
+         hb_retns( hb_hashLen( pItem ) );
          return;
       }
    }

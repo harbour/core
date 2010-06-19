@@ -139,7 +139,7 @@ HB_FUNC( ASIZE )
 
    if( pArray && HB_ISNUM( 2 ) )
    {
-      HB_ISIZ lSize = hb_parnl( 2 );
+      HB_ISIZ lSize = hb_parns( 2 );
 
       hb_arraySize( pArray, HB_MAX( lSize, 0 ) );
 
@@ -169,7 +169,7 @@ HB_FUNC( AINS )
 
    if( pArray )
    {
-      HB_ISIZ lPos = hb_parnl( 2 );
+      HB_ISIZ lPos = hb_parns( 2 );
 
       if( lPos == 0 )
          lPos = 1;
@@ -186,7 +186,7 @@ HB_FUNC( ADEL )
 
    if( pArray )
    {
-      HB_ISIZ lPos = hb_parnl( 2 );
+      HB_ISIZ lPos = hb_parns( 2 );
 
       if( lPos == 0 )
          lPos = 1;
@@ -210,7 +210,7 @@ HB_FUNC( AFILL )
       if( pValue )
       {
          HB_SIZE ulStart, ulCount;
-         HB_ISIZ lStart = hb_parnl( 3 ), lCount = hb_parnl( 4 );
+         HB_ISIZ lStart = hb_parns( 3 ), lCount = hb_parns( 4 );
 
          /* Explicy lCount of 0 - Nothing to do! */
          if( HB_ISNUM( 4 ) && lCount == 0 )
@@ -256,8 +256,8 @@ HB_FUNC( ASCAN )
 
    if( pArray && pValue )
    {
-      HB_SIZE ulStart = hb_parnl( 3 );
-      HB_SIZE ulCount = hb_parnl( 4 );
+      HB_SIZE ulStart = hb_parns( 3 );
+      HB_SIZE ulCount = hb_parns( 4 );
 
       hb_retnint( hb_arrayScan( pArray, pValue,
                                 HB_ISNUM( 3 ) ? &ulStart : NULL,
@@ -276,8 +276,8 @@ HB_FUNC( HB_ASCAN )
 
    if( pArray && pValue )
    {
-      HB_SIZE ulStart = hb_parnl( 3 );
-      HB_SIZE ulCount = hb_parnl( 4 );
+      HB_SIZE ulStart = hb_parns( 3 );
+      HB_SIZE ulCount = hb_parns( 4 );
 
       hb_retnint( hb_arrayScan( pArray, pValue,
                                 HB_ISNUM( 3 ) ? &ulStart : NULL,
@@ -295,8 +295,8 @@ HB_FUNC( HB_RASCAN )
 
    if( pArray && pValue )
    {
-      HB_SIZE ulStart = hb_parnl( 3 );
-      HB_SIZE ulCount = hb_parnl( 4 );
+      HB_SIZE ulStart = hb_parns( 3 );
+      HB_SIZE ulCount = hb_parns( 4 );
 
       hb_retnint( hb_arrayRevScan( pArray, pValue,
                                    HB_ISNUM( 3 ) ? &ulStart : NULL,
@@ -313,7 +313,7 @@ HB_FUNC( HB_AINS )
 
    if( pArray )
    {
-      HB_ISIZ lPos = hb_parnl( 2 );
+      HB_ISIZ lPos = hb_parns( 2 );
 
       if( lPos == 0 )
          lPos = 1;
@@ -341,7 +341,7 @@ HB_FUNC( HB_ADEL )
 
    if( pArray )
    {
-      HB_ISIZ lPos = hb_parnl( 2 );
+      HB_ISIZ lPos = hb_parns( 2 );
 
       if( lPos == 0 )
          lPos = 1;
@@ -366,8 +366,8 @@ HB_FUNC( AEVAL )
 
    if( pArray && pBlock )
    {
-      HB_SIZE ulStart = hb_parnl( 3 );
-      HB_SIZE ulCount = hb_parnl( 4 );
+      HB_SIZE ulStart = hb_parns( 3 );
+      HB_SIZE ulCount = hb_parns( 4 );
 
       hb_arrayEval( pArray,
                     pBlock,
@@ -390,9 +390,9 @@ HB_FUNC( ACOPY )
       /* CA-Cl*pper works this way. */
       if( ! hb_arrayIsObject( pSrcArray ) && ! hb_arrayIsObject( pDstArray ) )
       {
-         HB_SIZE ulStart = hb_parnl( 3 );
-         HB_SIZE ulCount = hb_parnl( 4 );
-         HB_SIZE ulTarget = hb_parnl( 5 );
+         HB_SIZE ulStart = hb_parns( 3 );
+         HB_SIZE ulCount = hb_parns( 4 );
+         HB_SIZE ulTarget = hb_parns( 5 );
 
          hb_arrayCopy( pSrcArray,
                        pDstArray,
