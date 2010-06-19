@@ -73,14 +73,14 @@ HB_FUNC( RAT )
             lPos--;
          }
 
-         hb_retnl( bFound ? lPos + 2 : 0 );
+         hb_retns( bFound ? lPos + 2 : 0 );
       }
       else
-         hb_retnl( 0 );
+         hb_retns( 0 );
    }
    else
       /* This function never seems to raise an error */
-      hb_retnl( 0 );
+      hb_retns( 0 );
 }
 
 HB_FUNC( HB_RAT )
@@ -100,7 +100,7 @@ HB_FUNC( HB_RAT )
 
          if( HB_ISNUM( 3 ) )
          {
-            lStart = hb_parnl( 3 );
+            lStart = hb_parns( 3 );
             if( lStart >= 1 )
                --lStart;
             else
@@ -111,7 +111,7 @@ HB_FUNC( HB_RAT )
 
          if( HB_ISNUM( 4 ) )
          {
-            HB_ISIZ lEnd = hb_parnl( 4 ) - 1;
+            HB_ISIZ lEnd = hb_parns( 4 ) - 1;
 
             if( lEnd < lPos )
                lPos = lEnd;
@@ -124,12 +124,12 @@ HB_FUNC( HB_RAT )
             lPos--;
          }
 
-         hb_retnl( bFound ? lPos + 2 : 0 );
+         hb_retns( bFound ? lPos + 2 : 0 );
       }
       else
-         hb_retnl( 0 );
+         hb_retns( 0 );
    }
    else
       /* This function never seems to raise an error */
-      hb_retnl( 0 );
+      hb_retns( 0 );
 }

@@ -120,7 +120,7 @@ HB_FUNC( FREAD )
       char * buffer;
       HB_SIZE ulSize;
 
-      ulRead = hb_parnl( 3 );
+      ulRead = hb_parns( 3 );
 
       /* NOTE: CA-Cl*pper determines the maximum size by calling _parcsiz()
                instead of _parclen(), this means that the maximum read length
@@ -151,12 +151,12 @@ HB_FUNC( FWRITE )
 
       if( HB_ISNUM( 3 ) )
       {
-         HB_SIZE nWrite = ( HB_SIZE ) hb_parnl( 3 );
+         HB_SIZE nWrite = hb_parns( 3 );
          if( nWrite < nLen )
             nLen = nWrite;
       }
 
-      hb_retnl( hb_fsWriteLarge( hb_numToHandle( hb_parnint( 1 ) ), hb_parc( 2 ), nLen ) );
+      hb_retns( hb_fsWriteLarge( hb_numToHandle( hb_parnint( 1 ) ), hb_parc( 2 ), nLen ) );
       uiError = hb_fsError();
    }
    else
@@ -237,7 +237,7 @@ HB_FUNC( FREADSTR )
 
    if( HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
    {
-      HB_SIZE ulToRead = ( HB_SIZE ) hb_parnl( 2 );
+      HB_SIZE ulToRead = hb_parns( 2 );
 
       if( ulToRead > 0 )
       {

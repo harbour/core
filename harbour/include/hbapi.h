@@ -639,10 +639,10 @@ extern HB_EXPORT int          hb_parni( int iParam ); /* retrieve a numeric para
 extern HB_EXPORT int          hb_parnidef( int iParam, int iDefValue ); /* retrieve a numeric parameter as a integer, return default value if parameter isn't numeric */
 extern HB_EXPORT long         hb_parnl( int iParam ); /* retrieve a numeric parameter as a long */
 extern HB_EXPORT long         hb_parnldef( int iParam, long lDefValue ); /* retrieve a numeric parameter as a long, return default value if parameter isn't numeric */
-extern HB_EXPORT HB_MAXINT    hb_parnint( int iParam ); /* retrieve a numeric parameter as a HB_MAXINT */
-extern HB_EXPORT HB_MAXINT    hb_parnintdef( int iParam, HB_MAXINT lDefValue ); /* retrieve a numeric parameter as a HB_MAXINT, return default value if parameter isn't numeric */
 extern HB_EXPORT HB_SIZE      hb_parns( int iParam ); /* retrieve a numeric parameter as a HB_SIZE */
 extern HB_EXPORT HB_SIZE      hb_parnsdef( int iParam, HB_SIZE nDefValue ); /* retrieve a numeric parameter as a HB_SIZE, return default value if parameter isn't numeric */
+extern HB_EXPORT HB_MAXINT    hb_parnint( int iParam ); /* retrieve a numeric parameter as a HB_MAXINT */
+extern HB_EXPORT HB_MAXINT    hb_parnintdef( int iParam, HB_MAXINT lDefValue ); /* retrieve a numeric parameter as a HB_MAXINT, return default value if parameter isn't numeric */
 extern HB_EXPORT void *       hb_parptr( int iParam ); /* retrieve a parameter as a pointer */
 extern HB_EXPORT void *       hb_parptrGC( const HB_GC_FUNCS * pFuncs, int iParam ); /* retrieve a parameter as a pointer if it's a pointer to GC allocated block */
 #ifndef HB_LONG_LONG_OFF
@@ -662,6 +662,7 @@ extern HB_EXPORT int          hb_parvl( int iParam, ... ); /* retrieve a logical
 extern HB_EXPORT double       hb_parvnd( int iParam, ... ); /* retrieve a numeric parameter as a double */
 extern HB_EXPORT int          hb_parvni( int iParam, ... ); /* retrieve a numeric parameter as a integer */
 extern HB_EXPORT long         hb_parvnl( int iParam, ... ); /* retrieve a numeric parameter as a long */
+extern HB_EXPORT HB_SIZE      hb_parvns( int iParam, ... ); /* retrieve a numeric parameter as a HB_SIZE */
 extern HB_EXPORT HB_MAXINT    hb_parvnint( int iParam, ... ); /* retrieve a numeric parameter as a HB_MAXINT */
 extern HB_EXPORT void *       hb_parvptr( int iParam, ... ); /* retrieve a parameter as a pointer */
 extern HB_EXPORT void *       hb_parvptrGC( const HB_GC_FUNCS * pFuncs, int iParam, ... ); /* retrieve a parameter as a pointer if it's a pointer to GC allocated block */
@@ -686,8 +687,8 @@ extern HB_EXPORT void   hb_retl( int iTrueFalse );  /* returns a logical integer
 extern HB_EXPORT void   hb_retnd( double dNumber ); /* returns a double */
 extern HB_EXPORT void   hb_retni( int iNumber );    /* returns a integer number */
 extern HB_EXPORT void   hb_retnl( long lNumber );/* returns a long number */
-extern HB_EXPORT void   hb_retnint( HB_MAXINT lNumber );/* returns a long number */
 extern HB_EXPORT void   hb_retns( HB_SIZE nNumber );/* returns a size */
+extern HB_EXPORT void   hb_retnint( HB_MAXINT lNumber );/* returns a long number */
 extern HB_EXPORT void   hb_retnlen( double dNumber, int iWidth, int iDec ); /* returns a double, with specific width and decimals */
 extern HB_EXPORT void   hb_retndlen( double dNumber, int iWidth, int iDec ); /* returns a double, with specific width and decimals */
 extern HB_EXPORT void   hb_retnilen( int iNumber, int iWidth ); /* returns a integer number, with specific width */
@@ -724,6 +725,7 @@ extern HB_EXPORT void   hb_retnlllen( HB_LONGLONG lNumber, int iWidth ); /* retu
 #define hb_retnd( dNumber )                  hb_itemPutND( hb_stackReturnItem(), dNumber )
 #define hb_retni( iNumber )                  hb_itemPutNI( hb_stackReturnItem(), iNumber )
 #define hb_retnl( lNumber )                  hb_itemPutNL( hb_stackReturnItem(), lNumber )
+#define hb_retns( nNumber )                  hb_itemPutNS( hb_stackReturnItem(), nNumber )
 #define hb_retnll( lNumber )                 hb_itemPutNLL( hb_stackReturnItem(), lNumber )
 #define hb_retnlen( dNumber, iWidth, iDec )  hb_itemPutNLen( hb_stackReturnItem(), dNumber, iWidth, iDec )
 #define hb_retndlen( dNumber, iWidth, iDec ) hb_itemPutNDLen( hb_stackReturnItem(), dNumber, iWidth, iDec )
@@ -731,7 +733,6 @@ extern HB_EXPORT void   hb_retnlllen( HB_LONGLONG lNumber, int iWidth ); /* retu
 #define hb_retnllen( lNumber, iWidth )       hb_itemPutNLLen( hb_stackReturnItem(), lNumber, iWidth )
 #define hb_retnlllen( lNumber, iWidth )      hb_itemPutNLLLen( hb_stackReturnItem(), lNumber, iWidth )
 #define hb_retnint( iNumber )                hb_itemPutNInt( hb_stackReturnItem(), iNumber )
-#define hb_retns( nNumber )                  hb_itemPutNS( hb_stackReturnItem(), nNumber )
 #define hb_retnintlen( lNumber, iWidth )     hb_itemPutNIntLen( hb_stackReturnItem(), lNumber, iWidth )
 #define hb_retptr( pointer )                 hb_itemPutPtr( hb_stackReturnItem(), pointer )
 #define hb_retptrGC( pointer )               hb_itemPutPtrGC( hb_stackReturnItem(), pointer )
@@ -750,9 +751,9 @@ extern HB_EXPORT int    hb_stortdt( long lJulian, long lMilliSec, int iParam ); 
 extern HB_EXPORT int    hb_storl( int iLogical, int iParam ); /* stores a logical integer on a variable by reference */
 extern HB_EXPORT int    hb_storni( int iValue, int iParam ); /* stores an integer on a variable by reference */
 extern HB_EXPORT int    hb_stornl( long lValue, int iParam ); /* stores a long on a variable by reference */
+extern HB_EXPORT int    hb_storns( HB_SIZE nValue, int iParam ); /* stores a HB_SIZE on a variable by reference */
 extern HB_EXPORT int    hb_stornd( double dValue, int iParam ); /* stores a double on a variable by reference */
 extern HB_EXPORT int    hb_stornint( HB_MAXINT lValue, int iParam ); /* stores a HB_MAXINT on a variable by reference */
-extern HB_EXPORT int    hb_storns( HB_SIZE nValue, int iParam ); /* stores a HB_SIZE on a variable by reference */
 extern HB_EXPORT int    hb_storptr( void * pointer, int iParam ); /* stores a pointer on a variable by reference */
 extern HB_EXPORT int    hb_storptrGC( void * pointer, int iParam ); /* stores a pointer to GC block on a variable by reference */
 #ifndef HB_LONG_LONG_OFF
@@ -769,6 +770,7 @@ extern HB_EXPORT int    hb_storvtdt( long lJulian, long lMilliSec, int iParam, .
 extern HB_EXPORT int    hb_storvl( int iLogical, int iParam, ... ); /* stores a logical integer on a variable by reference */
 extern HB_EXPORT int    hb_storvni( int iValue, int iParam, ... ); /* stores an integer on a variable by reference */
 extern HB_EXPORT int    hb_storvnl( long lValue, int iParam, ... ); /* stores a long on a variable by reference */
+extern HB_EXPORT int    hb_storvns( HB_SIZE lValue, int iParam, ... ); /* stores a HB_SIZE on a variable by reference */
 extern HB_EXPORT int    hb_storvnd( double dValue, int iParam, ... ); /* stores a double on a variable by reference */
 extern HB_EXPORT int    hb_storvnint( HB_MAXINT lValue, int iParam, ... ); /* stores a HB_MAXINT on a variable by reference */
 extern HB_EXPORT int    hb_storvptr( void * pointer, int iParam, ... ); /* stores a pointer on a variable by reference */
@@ -802,8 +804,8 @@ extern HB_EXPORT PHB_SYMB     hb_arrayGetSymbol( PHB_ITEM pArray, HB_SIZE ulInde
 extern HB_EXPORT HB_BOOL      hb_arrayGetL( PHB_ITEM pArray, HB_SIZE ulIndex ); /* retrieves the logical value contained on an array element */
 extern HB_EXPORT int          hb_arrayGetNI( PHB_ITEM pArray, HB_SIZE ulIndex ); /* retrieves the int value contained on an array element */
 extern HB_EXPORT long         hb_arrayGetNL( PHB_ITEM pArray, HB_SIZE ulIndex ); /* retrieves the long numeric value contained on an array element */
-extern HB_EXPORT HB_MAXINT    hb_arrayGetNInt( PHB_ITEM pArray, HB_SIZE ulIndex ); /* retrieves the HB_MAXINT value contained on an array element */
 extern HB_EXPORT HB_SIZE      hb_arrayGetNS( PHB_ITEM pArray, HB_SIZE ulIndex ); /* retrieves the HB_SIZE value contained on an array element */
+extern HB_EXPORT HB_MAXINT    hb_arrayGetNInt( PHB_ITEM pArray, HB_SIZE ulIndex ); /* retrieves the HB_MAXINT value contained on an array element */
 extern HB_EXPORT double       hb_arrayGetND( PHB_ITEM pArray, HB_SIZE ulIndex ); /* retrieves the double value contained on an array element */
 extern HB_EXPORT char *       hb_arrayGetDS( PHB_ITEM pArray, HB_SIZE ulIndex, char * szDate ); /* retrieves the date value contained in an array element */
 extern HB_EXPORT long         hb_arrayGetDL( PHB_ITEM pArray, HB_SIZE ulIndex ); /* retrieves the date value contained in an array element, as a long integer */
@@ -819,11 +821,11 @@ extern HB_EXPORT HB_BOOL      hb_arraySetTDT( PHB_ITEM pArray, HB_SIZE ulIndex, 
 extern HB_EXPORT HB_BOOL      hb_arraySetL( PHB_ITEM pArray, HB_SIZE ulIndex, HB_BOOL fValue );
 extern HB_EXPORT HB_BOOL      hb_arraySetNI( PHB_ITEM pArray, HB_SIZE ulIndex, int iNumber );
 extern HB_EXPORT HB_BOOL      hb_arraySetNL( PHB_ITEM pArray, HB_SIZE ulIndex, long lNumber );
+extern HB_EXPORT HB_BOOL      hb_arraySetNS( PHB_ITEM pArray, HB_SIZE ulIndex, HB_SIZE nNumber );
 #ifndef HB_LONG_LONG_OFF
 extern HB_EXPORT HB_BOOL      hb_arraySetNLL( PHB_ITEM pArray, HB_SIZE ulIndex, HB_LONGLONG llNumber );
 #endif
 extern HB_EXPORT HB_BOOL      hb_arraySetNInt( PHB_ITEM pArray, HB_SIZE ulIndex, HB_MAXINT lNumber );
-extern HB_EXPORT HB_BOOL      hb_arraySetNS( PHB_ITEM pArray, HB_SIZE ulIndex, HB_SIZE nNumber );
 extern HB_EXPORT HB_BOOL      hb_arraySetND( PHB_ITEM pArray, HB_SIZE ulIndex, double dNumber );
 extern HB_EXPORT HB_BOOL      hb_arraySetC( PHB_ITEM pArray, HB_SIZE ulIndex, const char * szText );
 extern HB_EXPORT HB_BOOL      hb_arraySetCL( PHB_ITEM pArray, HB_SIZE ulIndex, const char * szText, HB_SIZE ulLen );
