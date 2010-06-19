@@ -1849,9 +1849,10 @@ HB_SIZE hb_fsReadAt( HB_FHANDLE hFileHandle, void * pBuff, HB_SIZE nCount, HB_FO
 
 #if defined( HB_FS_FILE_IO )
 
+   hb_vmUnlock();
+
 #  if defined( HB_OS_UNIX ) && !defined( __WATCOMC__ )
    {
-      hb_vmUnlock();
 #     if defined( HB_USE_LARGEFILE64 )
       nRead = pread64( hFileHandle, pBuff, nCount, llOffset );
 #     else
@@ -1860,18 +1861,16 @@ HB_SIZE hb_fsReadAt( HB_FHANDLE hFileHandle, void * pBuff, HB_SIZE nCount, HB_FO
       hb_fsSetIOError( nRead != ( HB_SIZE ) -1, 0 );
       if( nRead == ( HB_SIZE ) -1 )
          nRead = 0;
-      hb_vmLock();
    }
 #  else
       nRead = 0;
-      hb_vmUnlock();
 #     if defined( HB_OS_WIN )
       {
 #        if defined( HB_OS_WIN_64 )
          {
             HANDLE hWFileHandle = DosToWinHandle( hFileHandle );
             OVERLAPPED Overlapped;
-            BOOL bResult = HB_FALSE;
+            BOOL bResult = TRUE;
 
             memset( &Overlapped, 0, sizeof( Overlapped ) );
             Overlapped.Offset     = ( DWORD ) ( llOffset & 0xFFFFFFFF );
@@ -1966,8 +1965,10 @@ HB_SIZE hb_fsReadAt( HB_FHANDLE hFileHandle, void * pBuff, HB_SIZE nCount, HB_FO
       if( hb_fsSeekLarge( hFileHandle, llOffset, FS_SET ) == llOffset )
          nRead = hb_fsReadLarge( hFileHandle, pBuff, nCount );
 #     endif
-      hb_vmLock();
 #  endif
+
+      hb_vmLock();
+
 #else
 
    nRead = 0;
@@ -1986,9 +1987,10 @@ HB_SIZE hb_fsWriteAt( HB_FHANDLE hFileHandle, const void * pBuff, HB_SIZE nCount
 
 #if defined( HB_FS_FILE_IO )
 
+   hb_vmUnlock();
+
 #  if defined( HB_OS_UNIX ) && !defined( __WATCOMC__ )
    {
-      hb_vmUnlock();
 #     if defined( HB_USE_LARGEFILE64 )
       nWritten = pwrite64( hFileHandle, pBuff, nCount, llOffset );
 #     else
@@ -1997,18 +1999,16 @@ HB_SIZE hb_fsWriteAt( HB_FHANDLE hFileHandle, const void * pBuff, HB_SIZE nCount
       hb_fsSetIOError( nWritten != ( HB_SIZE ) -1, 0 );
       if( nWritten == ( HB_SIZE ) -1 )
          nWritten = 0;
-      hb_vmLock();
    }
 #  else
       nWritten = 0;
-      hb_vmUnlock();
 #     if defined( HB_OS_WIN )
       {
 #        if defined( HB_OS_WIN_64 )
          {
             HANDLE hWFileHandle = DosToWinHandle( hFileHandle );
             OVERLAPPED Overlapped;
-            BOOL bResult = HB_FALSE;
+            BOOL bResult = TRUE;
 
             memset( &Overlapped, 0, sizeof( Overlapped ) );
             Overlapped.Offset     = ( DWORD ) ( llOffset & 0xFFFFFFFF );
@@ -2104,8 +2104,9 @@ HB_SIZE hb_fsWriteAt( HB_FHANDLE hFileHandle, const void * pBuff, HB_SIZE nCount
       if( hb_fsSeekLarge( hFileHandle, llOffset, FS_SET ) == llOffset )
          nWritten = hb_fsWriteLarge( hFileHandle, pBuff, nCount );
 #     endif
-      hb_vmLock();
 #  endif
+
+   hb_vmLock();
 
 #else
 
@@ -2218,7 +2219,7 @@ void hb_fsCommit( HB_FHANDLE hFileHandle )
       pointed by this descriptor are removed. It doesn't matter they
       were done using different descriptor. It means that we now clean
       all locks on hFileHandle with the code below if the OS is POSIX
-      compilant. I vote to disable it.
+      compilant. I vote to disable it. [druzus]
     */
    {
       int dup_handle;
