@@ -80,7 +80,7 @@
 
 long buffoffset;            /* offset into buffer of current line  */
 long fsize;                 /* file size in bytes                  */
-int  bufftop, buffbot;      /* first and last character in buffer  */
+HB_ISIZ bufftop, buffbot;   /* first and last character in buffer  */
 int  wintop, winbot;        /* first and last character in window  */
 int  winrow, wincol;        /* row and column of window highlight  */
 int  sline, eline;          /* start and end line of window        */

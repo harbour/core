@@ -802,6 +802,7 @@ extern HB_EXPORT HB_BOOL      hb_arrayGetL( PHB_ITEM pArray, HB_SIZE ulIndex ); 
 extern HB_EXPORT int          hb_arrayGetNI( PHB_ITEM pArray, HB_SIZE ulIndex ); /* retrieves the int value contained on an array element */
 extern HB_EXPORT long         hb_arrayGetNL( PHB_ITEM pArray, HB_SIZE ulIndex ); /* retrieves the long numeric value contained on an array element */
 extern HB_EXPORT HB_MAXINT    hb_arrayGetNInt( PHB_ITEM pArray, HB_SIZE ulIndex ); /* retrieves the HB_MAXINT value contained on an array element */
+extern HB_EXPORT HB_SIZE      hb_arrayGetNSize( PHB_ITEM pArray, HB_SIZE ulIndex ); /* retrieves the HB_SIZE value contained on an array element */
 extern HB_EXPORT double       hb_arrayGetND( PHB_ITEM pArray, HB_SIZE ulIndex ); /* retrieves the double value contained on an array element */
 extern HB_EXPORT char *       hb_arrayGetDS( PHB_ITEM pArray, HB_SIZE ulIndex, char * szDate ); /* retrieves the date value contained in an array element */
 extern HB_EXPORT long         hb_arrayGetDL( PHB_ITEM pArray, HB_SIZE ulIndex ); /* retrieves the date value contained in an array element, as a long integer */
@@ -821,6 +822,7 @@ extern HB_EXPORT HB_BOOL      hb_arraySetNL( PHB_ITEM pArray, HB_SIZE ulIndex, l
 extern HB_EXPORT HB_BOOL      hb_arraySetNLL( PHB_ITEM pArray, HB_SIZE ulIndex, HB_LONGLONG llNumber );
 #endif
 extern HB_EXPORT HB_BOOL      hb_arraySetNInt( PHB_ITEM pArray, HB_SIZE ulIndex, HB_MAXINT lNumber );
+extern HB_EXPORT HB_BOOL      hb_arraySetNSize( PHB_ITEM pArray, HB_SIZE ulIndex, HB_SIZE nNumber );
 extern HB_EXPORT HB_BOOL      hb_arraySetND( PHB_ITEM pArray, HB_SIZE ulIndex, double dNumber );
 extern HB_EXPORT HB_BOOL      hb_arraySetC( PHB_ITEM pArray, HB_SIZE ulIndex, const char * szText );
 extern HB_EXPORT HB_BOOL      hb_arraySetCL( PHB_ITEM pArray, HB_SIZE ulIndex, const char * szText, HB_SIZE ulLen );

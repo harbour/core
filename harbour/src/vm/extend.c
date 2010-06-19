@@ -673,7 +673,7 @@ HB_MAXINT hb_parnintdef( int iParam, HB_MAXINT lDefValue )
    return lDefValue;
 }
 
-HB_MAXINT hb_parnsize( int iParam )
+HB_SIZE hb_parnsize( int iParam )
 {
    HB_STACK_TLS_PRELOAD
 

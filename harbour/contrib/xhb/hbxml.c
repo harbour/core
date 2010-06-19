@@ -104,11 +104,11 @@ static  MXML_STATUS mxml_attribute_write( MXML_OUTPUT *out, PHBXML_ATTRIBUTE att
 
 /* Refil routines */
 /* Currently not used
-static MXML_REFIL *mxml_refil_new( MXML_REFIL_FUNC func, char *buf, int buflen, int bufsize );
+static MXML_REFIL *mxml_refil_new( MXML_REFIL_FUNC func, char *buf, HB_ISIZ buflen, HB_ISIZ bufsize );
 static void mxml_refil_destory( MXML_REFIL *ref );
 */
 static MXML_STATUS mxml_refil_setup( MXML_REFIL *ref, MXML_REFIL_FUNC func,
-            char *buf, int buflen, int bufsize );
+            char *buf, HB_ISIZ buflen, HB_ISIZ bufsize );
 
 static int mxml_refil_getc( MXML_REFIL *ref );
 #define mxml_refil_ungetc( ref, ch )  ref->sparechar = ch
@@ -128,22 +128,19 @@ static MXML_STATUS mxml_output_string( MXML_OUTPUT *out, const char *s );
 
 static MXML_STATUS mxml_output_setup( MXML_OUTPUT *out, MXML_OUTPUT_FUNC func, int node_count);
 static MXML_STATUS mxml_output_char( MXML_OUTPUT *out, int c );
-static MXML_STATUS mxml_output_string_len( MXML_OUTPUT *out, const char *s, int len );
+static MXML_STATUS mxml_output_string_len( MXML_OUTPUT *out, const char *s, HB_ISIZ len );
 static MXML_STATUS mxml_output_string_escape( MXML_OUTPUT *out, const char *s );
 static MXML_STATUS mxml_output_string( MXML_OUTPUT *out, const char *s );
 
-/* Currently not used
-static void mxml_output_func_to_stream( MXML_OUTPUT *out, char *s, int len );
-*/
-static void mxml_output_func_to_handle( MXML_OUTPUT *out, const char *s, int len );
-static void mxml_output_func_to_sgs( MXML_OUTPUT *out, const char *s, int len );
+static void mxml_output_func_to_handle( MXML_OUTPUT *out, const char *s, HB_ISIZ len );
+static void mxml_output_func_to_sgs( MXML_OUTPUT *out, const char *s, HB_ISIZ len );
 
 /* Self growing string routines */
 static MXML_SGS *mxml_sgs_new( void );
 static void mxml_sgs_destroy( MXML_SGS *sgs );
 static char *mxml_sgs_extract( MXML_SGS *sgs );
 static MXML_STATUS mxml_sgs_append_char( MXML_SGS *sgs, char c );
-static MXML_STATUS mxml_sgs_append_string_len( MXML_SGS *sgs, const char *s, int slen );
+static MXML_STATUS mxml_sgs_append_string_len( MXML_SGS *sgs, const char *s, HB_ISIZ slen );
 /* Currently not used
 static MXML_STATUS mxml_sgs_append_string( MXML_SGS *sgs, char *s );
 */
@@ -208,8 +205,8 @@ static MXML_STATUS mxml_attribute_read( MXML_REFIL *ref, PHB_ITEM pDoc, PHB_ITEM
    MXML_SGS *buf_name;
    MXML_SGS *buf_attrib;
    int iStatus = 0;
-   int iPosAmper = 0;
-   int iLenName, iLenAttrib;
+   HB_ISIZ iPosAmper = 0;
+   HB_ISIZ iLenName, iLenAttrib;
 
    buf_name = mxml_sgs_new();
    buf_attrib = mxml_sgs_new();
@@ -359,7 +356,7 @@ static MXML_STATUS mxml_attribute_read( MXML_REFIL *ref, PHB_ITEM pDoc, PHB_ITEM
          case 5:
             if ( chr == ';' )
             {
-               int iAmpLen = buf_attrib->length - iPosAmper - 2;
+               HB_ISIZ iAmpLen = buf_attrib->length - iPosAmper - 2;
                /* Taking the address of a sgs buffer is legal */
                char *bp = buf_attrib->buffer + iPosAmper + 1;
 
@@ -1412,9 +1409,9 @@ static void mxml_node_read_cdata( MXML_REFIL *ref, PHB_ITEM pNode, PHB_ITEM pDoc
 static int mxml_node_read_closing( MXML_REFIL *ref, PHB_ITEM pNode, PHB_ITEM doc )
 {
    char *buf;
-   int iPos = 0;
+   HB_ISIZ iPos = 0;
    int chr;
-   int iLen;
+   HB_ISIZ iLen;
 
    hb_objSendMsg( pNode,"CNAME", 0 );
    iLen = hb_parclen( -1 ) + 1;
@@ -1899,7 +1896,7 @@ static MXML_STATUS mxml_output_char( MXML_OUTPUT *out, int c )
    return out->status;
 }
 
-static MXML_STATUS mxml_output_string_len( MXML_OUTPUT *out, const char *s, int len )
+static MXML_STATUS mxml_output_string_len( MXML_OUTPUT *out, const char *s, HB_ISIZ len )
 {
    out->output_func( out, s, len );
    return out->status;
@@ -1940,32 +1937,12 @@ static MXML_STATUS mxml_output_string_escape( MXML_OUTPUT *out, const char *s )
 }
 
 /**
-* Useful function to output to streams
-*/
-/* Currently not used
-static void mxml_output_func_to_stream( MXML_OUTPUT *out, const char *s, int len )
-{
-   FILE *fp = (FILE *) out->data;
-
-   if ( len == 1 )
-      fputc( *s, fp );
-   else
-      fwrite( s, 1, len, fp );
-
-   if ( ferror( fp ) ) {
-      out->status = MXML_STATUS_ERROR;
-      out->error = MXML_ERROR_IO;
-   }
-}
-*/
-
-/**
 * Useful function to output to file handles
 */
-static void mxml_output_func_to_handle( MXML_OUTPUT *out, const char *s, int len )
+static void mxml_output_func_to_handle( MXML_OUTPUT *out, const char *s, HB_ISIZ len )
 {
    HB_FHANDLE fh = out->u.hFile;
-   int olen;
+   HB_ISIZ olen;
 
    olen = hb_fsWriteLarge( fh, s, len );
 
@@ -1979,7 +1956,7 @@ static void mxml_output_func_to_handle( MXML_OUTPUT *out, const char *s, int len
 /**
 * Useful function to output to self growing strings
 */
-static void mxml_output_func_to_sgs( MXML_OUTPUT *out, const char *s, int len )
+static void mxml_output_func_to_sgs( MXML_OUTPUT *out, const char *s, HB_ISIZ len )
 {
    MXML_SGS *sgs = (MXML_SGS *) out->u.vPtr;
 
@@ -2013,8 +1990,8 @@ static void mxml_output_func_to_sgs( MXML_OUTPUT *out, const char *s, int len )
 * retunrs NULL.
 */
 /* Currently unused
-static MXML_REFIL *mxml_refil_new( MXML_REFIL_FUNC func, char *buf, int buflen,
-   int bufsize )
+static MXML_REFIL *mxml_refil_new( MXML_REFIL_FUNC func, char *buf, HB_ISIZ buflen,
+   HB_ISIZ bufsize )
 {
    MXML_REFIL * ret = (MXML_REFIL* ) MXML_ALLOCATOR( sizeof( MXML_REFIL ) );
 
@@ -2042,7 +2019,7 @@ static MXML_REFIL *mxml_refil_new( MXML_REFIL_FUNC func, char *buf, int buflen,
 */
 
 static MXML_STATUS mxml_refil_setup( MXML_REFIL *ref, MXML_REFIL_FUNC func,
-   char *buf, int buflen, int bufsize )
+   char *buf, HB_ISIZ buflen, HB_ISIZ bufsize )
 {
 
    if ( buf == NULL && func == NULL )
@@ -2120,7 +2097,7 @@ void mxml_refil_ungetc( MXML_REFIL *ref, int chr )
 static void mxml_refill_from_handle_func( MXML_REFIL *ref )
 {
    HB_FHANDLE fh = ( HB_FHANDLE ) ref->u.hFile;
-   int len;
+   HB_ISIZ len;
 
    len = hb_fsReadLarge( fh, ref->buffer, ref->bufsize );
 
@@ -2194,7 +2171,7 @@ static MXML_STATUS mxml_sgs_append_char( MXML_SGS *sgs, char c )
    return MXML_STATUS_OK;
 }
 
-static MXML_STATUS mxml_sgs_append_string_len( MXML_SGS *sgs, const char *s, int slen )
+static MXML_STATUS mxml_sgs_append_string_len( MXML_SGS *sgs, const char *s, HB_ISIZ slen )
 {
    char *buf;
 
@@ -2202,7 +2179,7 @@ static MXML_STATUS mxml_sgs_append_string_len( MXML_SGS *sgs, const char *s, int
    {
       if ( sgs->length + slen >= sgs->allocated )
       {
-         int blklen = ( ( sgs->length + slen ) / MXML_ALLOC_BLOCK + 1) * MXML_ALLOC_BLOCK;
+         HB_ISIZ blklen = ( ( sgs->length + slen ) / MXML_ALLOC_BLOCK + 1) * MXML_ALLOC_BLOCK;
          buf = (char *) MXML_REALLOCATOR( sgs->buffer, blklen );
 
          if ( buf == NULL )
@@ -2300,7 +2277,7 @@ HB_FUNC( HBXML_DATAREAD )
    int iStyle = hb_parni(3);
    PHB_ITEM pRoot;
    MXML_REFIL refil;
-   char buffer[512], * buf;
+   char buffer[ 512 ], * buf;
    HB_SIZE ulLen;
 
    if( pDoc == NULL || pParam == NULL ||
@@ -2378,7 +2355,7 @@ HB_FUNC( HBXML_NODE_TO_STRING )
 
    if( mxml_node_write( &out, pNode, iStyle ) == MXML_STATUS_OK )
    {
-      int iLen = sgs->length;
+      HB_ISIZ iLen = sgs->length;
       char *buffer = mxml_sgs_extract( sgs );
       hb_retclen_buffer( buffer, iLen );
    }

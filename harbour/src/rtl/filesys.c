@@ -1867,57 +1867,53 @@ HB_SIZE hb_fsReadAt( HB_FHANDLE hFileHandle, void * pBuff, HB_SIZE nCount, HB_FO
       hb_vmUnlock();
 #     if defined( HB_OS_WIN )
       {
-         OVERLAPPED Overlapped;
-         memset( &Overlapped, 0, sizeof( Overlapped ) );
-         Overlapped.Offset     = ( DWORD ) ( llOffset & 0xFFFFFFFF );
-         Overlapped.OffsetHigh = ( DWORD ) ( llOffset >> 32 );
-
 #        if defined( HB_OS_WIN_64 )
          {
             HANDLE hWFileHandle = DosToWinHandle( hFileHandle );
-            HB_SIZE nLeftToRead = nCount;
-            HB_UCHAR * pPtr = ( HB_UCHAR * ) pBuff;
+            OVERLAPPED Overlapped;
+            BOOL bResult = HB_FALSE;
 
-            nRead = 0;
+            memset( &Overlapped, 0, sizeof( Overlapped ) );
+            Overlapped.Offset     = ( DWORD ) ( llOffset & 0xFFFFFFFF );
+            Overlapped.OffsetHigh = ( DWORD ) ( llOffset >> 32 );
 
-            while( nLeftToRead )
+            while( nCount )
             {
                DWORD dwToRead;
                DWORD dwRead;
-               BOOL bResult;
 
-               /* Determine how much to read this time */
-               if( nLeftToRead > ( HB_SIZE ) HB_U32_MAX )
+               if( nCount > ( HB_SIZE ) HB_U32_MAX )
                {
                   dwToRead = HB_U32_MAX;
-                  nLeftToRead -= ( HB_SIZE ) dwToRead;
+                  nCount -= ( HB_SIZE ) dwToRead;
                }
                else
                {
-                  dwToRead = ( DWORD ) nLeftToRead;
-                  nLeftToRead = 0;
+                  dwToRead = ( DWORD ) nCount;
+                  nCount = 0;
                }
 
-               bResult = ReadFile( hWFileHandle, pPtr, dwToRead, &dwRead, nRead == 0 ? &Overlapped : NULL );
+               bResult = ReadFile( hWFileHandle, ( HB_UCHAR * ) pBuff + nRead,
+                                   dwToRead, &dwRead, &Overlapped );
 
                if( ! bResult )
-               {
-                  dwRead = 0;
-                  break;
-               }
-
-               if( dwRead == 0 )
                   break;
 
                nRead += ( HB_SIZE ) dwRead;
-               pPtr += dwRead;
+
+               if( dwRead != dwToRead )
+                  break;
             }
-            hb_fsSetIOError( nLeftToRead == 0, 0 );
+            hb_fsSetIOError( bResult, 0 );
          }
 #        else
          {
             if( hb_iswinnt() )
             {
+               OVERLAPPED Overlapped;
+               memset( &Overlapped, 0, sizeof( Overlapped ) );
+               Overlapped.Offset     = ( DWORD ) ( llOffset & 0xFFFFFFFF );
+               Overlapped.OffsetHigh = ( DWORD ) ( llOffset >> 32 );
                hb_fsSetIOError( ReadFile( DosToWinHandle( hFileHandle ),
                                           pBuff, nCount, &nRead, &Overlapped ), 0 );
             }
@@ -2008,57 +2004,53 @@ HB_SIZE hb_fsWriteAt( HB_FHANDLE hFileHandle, const void * pBuff, HB_SIZE nCount
       hb_vmUnlock();
 #     if defined( HB_OS_WIN )
       {
-         OVERLAPPED Overlapped;
-         memset( &Overlapped, 0, sizeof( Overlapped ) );
-         Overlapped.Offset     = ( DWORD ) ( llOffset & 0xFFFFFFFF );
-         Overlapped.OffsetHigh = ( DWORD ) ( llOffset >> 32 );
-
 #        if defined( HB_OS_WIN_64 )
          {
             HANDLE hWFileHandle = DosToWinHandle( hFileHandle );
-            HB_SIZE nLeftToWrite = nCount;
-            const HB_UCHAR * pPtr = ( const HB_UCHAR * ) pBuff;
+            OVERLAPPED Overlapped;
+            BOOL bResult = HB_FALSE;
 
-            nWritten = 0;
+            memset( &Overlapped, 0, sizeof( Overlapped ) );
+            Overlapped.Offset     = ( DWORD ) ( llOffset & 0xFFFFFFFF );
+            Overlapped.OffsetHigh = ( DWORD ) ( llOffset >> 32 );
 
-            while( nLeftToWrite )
+            while( nCount )
             {
                DWORD dwToWrite;
                DWORD dwWritten;
-               BOOL bResult;
 
-               /* Determine how much to write this time */
-               if( nLeftToWrite > ( HB_SIZE ) HB_U32_MAX )
+               if( nCount > ( HB_SIZE ) HB_U32_MAX )
                {
                   dwToWrite = HB_U32_MAX;
-                  nLeftToWrite -= ( HB_SIZE ) dwToWrite;
+                  nCount -= ( HB_SIZE ) dwToWrite;
                }
                else
                {
-                  dwToWrite = ( DWORD ) nLeftToWrite;
-                  nLeftToWrite = 0;
+                  dwToWrite = ( DWORD ) nCount;
+                  nCount = 0;
                }
 
-               bResult = WriteFile( hWFileHandle, pPtr, dwToWrite, &dwWritten, nWritten == 0 ? &Overlapped : NULL );
+               bResult = WriteFile( hWFileHandle, ( HB_UCHAR * ) pBuff + nWritten,
+                                    dwToWrite, &dwWritten, &Overlapped );
 
                if( ! bResult )
-               {
-                  dwWritten = 0;
-                  break;
-               }
-
-               if( dwWritten == 0 )
                   break;
 
                nWritten += ( HB_SIZE ) dwWritten;
-               pPtr += dwWritten;
+
+               if( dwWritten != dwToWrite )
+                  break;
             }
-            hb_fsSetIOError( nLeftToWrite == 0, 0 );
+            hb_fsSetIOError( bResult, 0 );
          }
 #        else
          {
             if( hb_iswinnt() )
             {
+               OVERLAPPED Overlapped;
+               memset( &Overlapped, 0, sizeof( Overlapped ) );
+               Overlapped.Offset     = ( DWORD ) ( llOffset & 0xFFFFFFFF );
+               Overlapped.OffsetHigh = ( DWORD ) ( llOffset >> 32 );
                hb_fsSetIOError( WriteFile( DosToWinHandle( hFileHandle ),
                                            pBuff, nCount, &nWritten, &Overlapped ), 0 );
             }

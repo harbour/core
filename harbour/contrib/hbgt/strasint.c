@@ -11,11 +11,11 @@
 
 #include "hbapi.h"
 
-int _GT_Internal_StringAsInt(char *String, int Start, int End)
+int _GT_Internal_StringAsInt(char *String, HB_ISIZ Start, HB_ISIZ End)
 {
-   int  Decimal = 1;
-   int  Digit;
-   int  Value   = 0;
+   int Decimal = 1;
+   int Value   = 0;
+   HB_ISIZ Digit;
 
    HB_TRACE(HB_TR_DEBUG, ("_GT_Internal_StringAsInt(%s, %d, %d)", String, Start, End));
 

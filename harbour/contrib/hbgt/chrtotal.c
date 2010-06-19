@@ -22,7 +22,7 @@
 HB_FUNC( GT_CHRTOTAL )
 {
   const char *s1, *s2;
-  int count, p1, p2, l2, l1;
+  HB_ISIZ count, p1, p2, l2, l1;
 
   if (HB_ISCHAR(1) && HB_ISCHAR(2)) {
     s1  = hb_parc(1);
@@ -35,8 +35,8 @@ HB_FUNC( GT_CHRTOTAL )
         if (s1[p1] == s2[p2])
           count++;                    /* increment counter */
 
-    hb_retni(count);                  /* return result */
+    hb_retnl(count);                  /* return result */
   } else {
-    hb_retni(-1);                     /* parameter mismatch - error -1 */
+    hb_retnl(-1);                     /* parameter mismatch - error -1 */
   }
 }

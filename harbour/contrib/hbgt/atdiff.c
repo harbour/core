@@ -22,7 +22,7 @@
 HB_FUNC( GT_ATDIFF )
 {
   const char *s1, *s2;
-  int pos, len;
+  HB_ISIZ pos, len;
 
   if (HB_ISCHAR(1) && HB_ISCHAR(2)) {
     s1  = hb_parc(1);
@@ -40,9 +40,9 @@ HB_FUNC( GT_ATDIFF )
       pos++;
 
     if (pos > len)                  /* strings match exactly!!! */
-      hb_retni(0);
+      hb_retnl(0);
     else
-      hb_retni(pos);
+      hb_retnl(pos);
   } else {
     hb_retni(-1);                     /* parameter mismatch - error -1 */
   }

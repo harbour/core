@@ -159,9 +159,9 @@ HB_FUNC( SAYSPREAD )
 
 HB_FUNC( SAYMOVEIN )
 {
-   HB_SIZE ulLen = hb_parclen( 1 );
+   int iLen = ( int ) hb_parclen( 1 );
 
-   if( ulLen )
+   if( iLen )
    {
       const char * szText = hb_parc( 1 );
       HB_SIZE ulChars, ul;
@@ -183,11 +183,11 @@ HB_FUNC( SAYMOVEIN )
       {
          int iColor = hb_gtGetCurrColor();
 
-         iNewCol = iCol + ( int ) ulLen;
+         iNewCol = iCol + iLen;
          if( fBack )
-            iCol += ulLen - 1;
+            iCol += iLen - 1;
          else
-            szText += ulLen - 1;
+            szText += iLen - 1;
          ulChars = 1;
 
          hb_gtBeginWrite();
@@ -218,7 +218,7 @@ HB_FUNC( SAYMOVEIN )
                hb_gtBeginWrite();
             }
          }
-         while( --ulLen );
+         while( --iLen );
          hb_gtSetPos( iRow, iNewCol );
          hb_gtEndWrite();
       }

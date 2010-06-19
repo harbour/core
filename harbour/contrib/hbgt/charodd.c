@@ -23,7 +23,7 @@ HB_FUNC( GT_CHARODD )
 {
   const char *s1;
   char *s2;
-  int len, i;
+  HB_ISIZ len, i;
 
   if (HB_ISCHAR(1)) {
     s1  = hb_parc(1);
@@ -37,6 +37,6 @@ HB_FUNC( GT_CHARODD )
     hb_retclen(s2, len);
     hb_xfree(s2);                     /* free alloc'ed mem */
   } else {
-    hb_retc((char *) NULL);           /* parameter mismatch - error NullStr */
+    hb_retc_null();                   /* parameter mismatch - error NullStr */
   }
 }

@@ -23,8 +23,8 @@ HB_FUNC( GT_CHRFIRST )
 {
   const char *string;
   const char *cset;
-  int l1, l2;
-  int p1, p2;
+  HB_ISIZ l1, l2;
+  HB_ISIZ p1, p2;
 
   if (HB_ISCHAR(1) && HB_ISCHAR(2)) {
     string = hb_parc(2);

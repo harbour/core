@@ -22,7 +22,7 @@
 HB_FUNC( GT_STRDIFF )
 {
   const char *s1, *s2;
-  int pos, len;
+  HB_ISIZ pos, len;
 
   if (HB_ISCHAR(1) && HB_ISCHAR(2)) {
     s1  = hb_parc(1);
@@ -40,7 +40,7 @@ HB_FUNC( GT_STRDIFF )
       pos++;
 
     if (pos > len)                  /* strings match exactly!!! */
-      hb_retc((char *) NULL);
+      hb_retc_null();
     else
       hb_retc(s2);
   } else {

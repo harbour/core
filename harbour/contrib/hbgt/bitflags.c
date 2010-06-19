@@ -58,7 +58,7 @@ HB_FUNC( GT_NEWFLAG )
         }
         else
         {
-                hb_retc(NULL);
+                hb_retc_null();
         }
 }
 
@@ -101,7 +101,7 @@ HB_FUNC( GT_SETFLAG )
         }
         else
         {
-                hb_retc(NULL);
+                hb_retc_null();
         }
 }
 
@@ -144,7 +144,7 @@ HB_FUNC( GT_CLRFLAG )
         }
         else
         {
-                hb_retc(NULL);
+                hb_retc_null();
         }
 }
 

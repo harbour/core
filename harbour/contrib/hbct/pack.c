@@ -48,37 +48,33 @@
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
  *
- *
- * See COPYING for licensing terms.
- *
  */
 
 #include "hbapi.h"
 
-
 HB_FUNC( CHARPACK )
 {
-   unsigned len = hb_parclen( 1 );
-   unsigned char *in = ( unsigned char * ) hb_parcx( 1 );
+   HB_SIZE len = hb_parclen( 1 );
+   HB_UCHAR * in = ( HB_UCHAR * ) hb_parcx( 1 );
 
    if( hb_parni( 2 ) == 0 )
    {
-      unsigned char *out = ( unsigned char * ) hb_xgrab( len * 3 + 2 );
-      unsigned n_in = 0, n_out = 0;
+      HB_UCHAR * out = ( HB_UCHAR * ) hb_xgrab( len * 3 + 2 );
+      HB_SIZE n_in = 0, n_out = 0;
 
-      out[n_out++] = 158;
-      out[n_out++] = 158;
+      out[ n_out++ ] = 158;
+      out[ n_out++ ] = 158;
 
       while( n_in < len )
       {
-         int n_count = 1, n_max = HB_MIN( 255, len - n_in );
-         unsigned char c = in[n_in];
+         HB_ISIZ n_count = 1, n_max = HB_MIN( 255, len - n_in );
+         HB_UCHAR c = in[ n_in ];
 
-         while( n_count < n_max && in[n_in + n_count] == c )
+         while( n_count < n_max && in[ n_in + n_count ] == c )
             n_count++;
-         out[n_out++] = 0;
-         out[n_out++] = ( unsigned char ) n_count;
-         out[n_out++] = c;
+         out[ n_out++ ] = 0;
+         out[ n_out++ ] = ( HB_UCHAR ) n_count;
+         out[ n_out++ ] = c;
          n_in += n_count;
       }
       if( n_out < len )
@@ -90,47 +86,46 @@ HB_FUNC( CHARPACK )
    hb_retclen( ( char * ) in, len );
 }
 
-
-static unsigned char *buf_append( unsigned char *buf, unsigned *buf_size, unsigned count,
-                                  unsigned char c, unsigned *buf_len )
+static HB_UCHAR * buf_append( HB_UCHAR * buf, HB_SIZE * buf_size, HB_SIZE count,
+                              HB_UCHAR c, HB_SIZE * buf_len )
 {
    if( *buf_len + count > *buf_size )
    {
       *buf_size = HB_MAX( *buf_len + count, *buf_size + 32768 );
-      buf = ( unsigned char * ) hb_xrealloc( buf, *buf_size );
+      buf = ( HB_UCHAR * ) hb_xrealloc( buf, *buf_size );
    }
    memset( buf + *buf_len, c, count );
    *buf_len += count;
    return buf;
 }
 
-
 HB_FUNC( CHARUNPACK )
 {
-   unsigned buf_size = 32768;
-   unsigned len = hb_parclen( 1 );
-   unsigned out_len = 0;
-   unsigned char *in = ( unsigned char * ) hb_parcx( 1 );
-   unsigned char *out;
-   unsigned i;
+   HB_SIZE len = hb_parclen( 1 );
+   HB_UCHAR * in = ( HB_UCHAR * ) hb_parcx( 1 );
 
    if( hb_parni( 2 ) == 0 )
    {
-      if( !( in[0] == 158 && in[1] == 158 ) )
+      HB_UCHAR * out;
+      HB_SIZE out_len = 0;
+      HB_SIZE buf_size = 32768;
+      HB_SIZE i;
+
+      if( !( in[ 0 ] == 158 && in[ 1 ] == 158 ) )
       {
          hb_retclen( ( char * ) in, len );
          return;
       }
-      out = ( unsigned char * ) hb_xgrab( buf_size );
+      out = ( HB_UCHAR * ) hb_xgrab( buf_size );
       for( i = 2; i <= len - 3; i += 3 )
       {
-         if( in[i] != 0 )
+         if( in[ i ] != 0 )
          {
             hb_xfree( out );
             hb_retclen( ( char * ) in, len );
             return;
          }
-         out = buf_append( out, &buf_size, in[i + 1], in[i + 2], &out_len );
+         out = buf_append( out, &buf_size, in[ i + 1 ], in[ i + 2 ], &out_len );
       }
       hb_retclen( ( char * ) out, out_len );
       hb_xfree( out );

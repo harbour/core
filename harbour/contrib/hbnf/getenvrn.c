@@ -176,7 +176,7 @@ HB_FUNC( FT_GETE )
       LPTCH lpEnviron = GetEnvironmentStrings();
       char *sCurEnv;
       int x;
-      int buffsize = 0;
+      HB_ISIZ buffsize = 0;
       int rettype = NORETURN;
 
       char * szEnviron = HB_TCHAR_CONVFROM( lpEnviron );

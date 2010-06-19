@@ -142,7 +142,7 @@ struct tag_mxml_refil;
 struct tag_mxml_output;
 
 typedef void (*MXML_REFIL_FUNC)( struct tag_mxml_refil *ref );
-typedef void (*MXML_OUTPUT_FUNC)( struct tag_mxml_output *out, const char *data, int len );
+typedef void (*MXML_OUTPUT_FUNC)( struct tag_mxml_output *out, const char *data, HB_ISIZ len );
 
 /*************************************************
    Structures holding the XML data
@@ -159,9 +159,9 @@ typedef struct tag_mxml_refil
 
    /* buffer for reading data */
    unsigned char *buffer;
-   int bufsize;  /* size of the whole buffer */
-   int buflen;   /* valid characters in the current buffer */
-   int bufpos;   /* current position */
+   HB_ISIZ bufsize;  /* size of the whole buffer */
+   HB_ISIZ buflen;   /* valid characters in the current buffer */
+   HB_ISIZ bufpos;   /* current position */
 
    /* lenght of the stream for implementing progress indicators */
    HB_ISIZ streampos;
@@ -208,9 +208,9 @@ typedef struct tag_mxml_output
 
 typedef struct tag_mxml_self_growing_string
 {
-   char *buffer;
-   int allocated;
-   int length;
+   char * buffer;
+   HB_ISIZ allocated;
+   HB_ISIZ length;
 } MXML_SGS;
 
 typedef struct _hbxml_attribute {

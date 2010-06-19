@@ -19,16 +19,13 @@
 
 HB_FUNC( GT_ASCIISUM )
 {
-   const char *str;
-   int  len, i;
-   long ascSum = 0;
+   const char * str = hb_parcx( 1 );
+   HB_ISIZ len = hb_parclen( 1 );
+   HB_ISIZ i;
+   HB_ULONG ascSum = 0;
 
-   str = hb_parc(1);
-   len = hb_parclen(1);
-
-   for (i = 0; i <= len; i++,str++) {
+   for( i = 0; i <= len; i++, str++ )
       ascSum += *str;
-   }
 
-   hb_retnl(ascSum);
+   hb_retnint( ascSum );
 }

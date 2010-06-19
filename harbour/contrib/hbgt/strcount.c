@@ -22,7 +22,7 @@
 HB_FUNC( GT_STRCOUNT )
 {
   const char *s1, *s2;
-  int count, p1, p2, l1, l2;
+  HB_ISIZ count, p1, p2, l1, l2;
   int match;
 
   if (HB_ISCHAR(1) && HB_ISCHAR(2)) {
@@ -48,8 +48,8 @@ HB_FUNC( GT_STRCOUNT )
         count++;
     }
 
-    hb_retni(count);                  /* return result */
+    hb_retnl(count);                  /* return result */
   } else {
-    hb_retni(-1);                     /* parameter mismatch - error -1 */
+    hb_retnl(-1);                     /* parameter mismatch - error -1 */
   }
 }

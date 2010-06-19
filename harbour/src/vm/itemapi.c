@@ -642,12 +642,6 @@ long hb_itemGetNL( PHB_ITEM pItem )
 #else
          return ( long ) pItem->item.asDouble.value;
 #endif
-
-#if defined( HB_LEGACY_LEVEL3 )
-      /* DATETIME TODO: remove it */
-      else if( HB_IS_DATETIME( pItem ) )
-         return ( long ) pItem->item.asDateTime.julian;
-#endif
    }
 
    return 0;
@@ -1070,7 +1064,7 @@ PHB_ITEM hb_itemPutNSize( PHB_ITEM pItem, HB_SIZE nNumber )
    else
       pItem = hb_itemNew( NULL );
 
-   if( HB_LIM_INT( lNumber ) )
+   if( HB_LIM_INT( nNumber ) )
    {
       pItem->type = HB_IT_INTEGER;
       pItem->item.asInteger.value = ( int ) nNumber;

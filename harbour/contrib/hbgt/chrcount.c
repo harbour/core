@@ -22,7 +22,7 @@
 HB_FUNC( GT_CHRCOUNT )
 {
   const char *s1, *s2;
-  int count, pos2, len;
+  HB_ISIZ count, pos2, len;
 
   if (HB_ISCHAR(1) && HB_ISCHAR(2)) {
     s1  = hb_parc(1);
@@ -35,8 +35,8 @@ HB_FUNC( GT_CHRCOUNT )
       if (*s1 == *s2)               /* character matches s1 */
         count++;                    /* increment counter */
 
-    hb_retni(count);                  /* return result */
+    hb_retnl(count);                  /* return result */
   } else {
-    hb_retni(-1);                     /* parameter mismatch - error -1 */
+    hb_retnl(-1);                     /* parameter mismatch - error -1 */
   }
 }

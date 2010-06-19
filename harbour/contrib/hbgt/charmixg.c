@@ -23,7 +23,7 @@ HB_FUNC( GT_CHARMIX )
 {
   const char *s1, *s2;
   char *s3;
-  int l1, l2, i, pos3;
+  HB_ISIZ l1, l2, i, pos3;
 
   if (HB_ISCHAR(1) && HB_ISCHAR(2)) {
     s1  = hb_parc(1);
@@ -49,6 +49,6 @@ HB_FUNC( GT_CHARMIX )
     hb_retclen(s3, l1 + l2);
     hb_xfree(s3);                     /* free alloc'ed mem */
   } else {
-    hb_retc((char *) NULL);           /* parameter mismatch - error NullStr */
+    hb_retc_null();                   /* parameter mismatch - error NullStr */
   }
 }

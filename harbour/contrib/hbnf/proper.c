@@ -99,10 +99,10 @@ static HB_BOOL _ftIsAlpha( char c )
 
 HB_FUNC( FT_PROPER )
 {
-  int iLen = hb_parclen(1);
+  HB_ISIZ iLen = hb_parclen(1);
   const char *cStr;
   char *cDst = NULL;
-  int i; /*, iPos = 0; */
+  HB_ISIZ i; /*, iPos = 0; */
   HB_BOOL fCap = HB_TRUE;
 
   hb_storc( NULL, 1 );
