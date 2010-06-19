@@ -292,9 +292,9 @@ METHOD IdeShortcuts:show()
    IF empty( ::oUI )
       ::buildUI()
       ::populateData( 1 )
-      ::oIde:setPosAndSizeByIni( ::oUI:oWidget, FindInFilesDialogGeometry )
    ENDIF
 
+   ::oIde:setPosAndSizeByIniEx( ::oUI:oWidget, ::oINI:cShortcutsDialogGeometry )
    ::oUI:show()
    ::oUI:raise()
 
@@ -557,7 +557,7 @@ METHOD IdeShortcuts:buildUI()
 
    ::oUI:oWidget:installEventFilter( ::pEvents )
 
-   Qt_Events_Connect( ::pEvents, ::oUI:oWidget, QEvent_Close, {|| ::oIde:aIni[ INI_HBIDE, FindInFilesDialogGeometry ] := hbide_posAndSize( ::oUI:oWidget ) } )
+   Qt_Events_Connect( ::pEvents, ::oUI:oWidget, QEvent_Close, {|| ::oIde:oINI:cShortcutsDialogGeometry := hbide_posAndSize( ::oUI:oWidget ) } )
 
    oTbl := ::oUI:q_tableMacros                              /* Build Table Header */
    QHeaderView():from( oTbl:verticalHeader() ):hide()

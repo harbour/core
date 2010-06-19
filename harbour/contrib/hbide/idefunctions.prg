@@ -488,7 +488,7 @@ METHOD IdeFunctions:buildTags()
       FOR EACH cProjectTitle IN a_
          ::tagProject( cProjectTitle )
       NEXT
-      ::oIde:aINI[ INI_TAGGEDPROJECTS ] := a_
+      ::oIde:oINI:aTaggedProjects := a_
       ::clearProjects()
    ENDIF
 

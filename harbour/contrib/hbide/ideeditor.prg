@@ -947,9 +947,9 @@ METHOD IdeEditsManager:goto( nLine )
          qGo:setLabelText( "Goto Line Number [1-" + hb_ntos( nRows ) + "]" )
          qGo:setWindowTitle( "Harbour" )
 
-         ::setPosByIni( qGo, GotoDialogGeometry )
+         ::oIde:setPosByIniEx( qGo, ::oINI:cGotoDialogGeometry )
          qGo:exec()
-         ::aIni[ INI_HBIDE, GotoDialogGeometry ] := hbide_posAndSize( qGo )
+         ::oIde:oINI:cGotoDialogGeometry := hbide_posAndSize( qGo )
          nLine := qGo:intValue()
       ENDIF
 

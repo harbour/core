@@ -460,8 +460,8 @@ METHOD IdeFindReplace:create( oIde )
    ::oUI := HbQtUI():new( hbide_uic( "finddialog" ), ::oIde:oDlg:oWidget ):build()
    ::oUI:setWindowFlags( Qt_Sheet )
 
-   aeval( ::oIde:aIni[ INI_FIND    ], {|e| ::oUI:q_comboFindWhat:addItem( e ) } )
-   aeval( ::oIde:aIni[ INI_REPLACE ], {|e| ::oUI:q_comboReplaceWith:addItem( e ) } )
+   aeval( ::oINI:aFind   , {|e| ::oUI:q_comboFindWhat:addItem( e ) } )
+   aeval( ::oINI:aReplace, {|e| ::oUI:q_comboReplaceWith:addItem( e ) } )
 
    ::oUI:q_radioFromCursor:setChecked( .t. )
    ::oUI:q_radioDown:setChecked( .t. )
@@ -469,8 +469,7 @@ METHOD IdeFindReplace:create( oIde )
    ::oUI:signal( "buttonFind"   , "clicked()", {|| ::onClickFind() } )
    ::oUI:signal( "buttonReplace", "clicked()", {|| ::onClickReplace() } )
    ::oUI:signal( "buttonClose"  , "clicked()", ;
-         {|| ::oIde:aIni[ INI_HBIDE, FindDialogGeometry ] := hbide_posAndSize( ::oUI:oWidget ), ;
-              ::oUI:hide() } )
+         {|| ::oIde:oINI:cFindDialogGeometry := hbide_posAndSize( ::oUI:oWidget ), ::oUI:hide() } )
 
    ::oUI:signal( "comboFindWhat", "editTextChanged(QString)", {|| ::oUI:q_radioEntire:setChecked( .t. ) } )
 
@@ -495,7 +494,7 @@ METHOD IdeFindReplace:show()
    ::oUI:q_checkGlobal:setEnabled( .f. )
    ::oUI:q_checkNoPrompting:setEnabled( .f. )
    ::oUI:q_checkListOnly:setChecked( .f. )
-   ::oIde:setPosByIni( ::oUI:oWidget, FindDialogGeometry )
+   ::oIde:setPosByIniEx( ::oUI:oWidget, ::oINI:cFindDialogGeometry )
    ::oUI:q_comboFindWhat:setFocus()
 
    IF !empty( cText := ::oEM:getSelectedText() )
@@ -636,8 +635,8 @@ METHOD IdeFindReplace:updateFindReplaceData( cMode )
    IF cMode == "find"
       cData := QLineEdit():configure( ::oUI:q_comboFindWhat:lineEdit() ):text()
       IF !empty( cData )
-         IF ascan( ::oIde:aIni[ INI_FIND ], {|e| e == cData } ) == 0
-            hb_ains( ::oIde:aIni[ INI_FIND ], 1, cData, .t. )
+         IF ascan( ::oINI:aFind, {|e| e == cData } ) == 0
+            hb_ains( ::oINI:aFind, 1, cData, .t. )
             ::oUI:q_comboFindWhat:insertItem( 0, cData )
          ENDIF
       ENDIF
@@ -646,8 +645,8 @@ METHOD IdeFindReplace:updateFindReplaceData( cMode )
    ELSE
       cData := QLineEdit():configure( ::oUI:q_comboReplaceWith:lineEdit() ):text()
       IF !empty( cData )
-         IF ascan( ::oIde:aIni[ INI_REPLACE ], cData ) == 0
-            hb_ains( ::oIde:aIni[ INI_REPLACE ], 1, cData, .t. )
+         IF ascan( ::oINI:aReplace, cData ) == 0
+            hb_ains( ::oINI:aReplace, 1, cData, .t. )
             ::oUI:q_comboReplaceWith:insertItem( 0, cData )
          ENDIF
       ENDIF
@@ -777,17 +776,17 @@ METHOD IdeFindInFiles:buildUI()
 
    ::oUI:q_buttonFolder:setIcon( ::resPath + "folder.png" )
 
-   aeval( ::oIde:aIni[ INI_FIND    ], {|e| ::oUI:q_comboExpr:addItem( e ) } )
-   aeval( ::oIde:aIni[ INI_REPLACE ], {|e| ::oUI:q_comboRepl:addItem( e ) } )
-   aeval( ::oIde:aIni[ INI_FOLDERS ], {|e| ::oUI:q_comboFolder:addItem( e ) } )
+   aeval( ::oINI:aFind   , {|e| ::oUI:q_comboExpr:addItem( e ) } )
+   aeval( ::oINI:aReplace, {|e| ::oUI:q_comboRepl:addItem( e ) } )
+   aeval( ::oINI:aFolders, {|e| ::oUI:q_comboFolder:addItem( e ) } )
 
-   n := ascan( ::oIde:aIni[ INI_FIND    ], {|e| e == ::cWrkFind } )
+   n := ascan( ::oINI:aFind, {|e| e == ::cWrkFind } )
    ::oUI:q_comboExpr:setCurrentIndex( n-1 )
 
-   n := ascan( ::oIde:aIni[ INI_REPLACE ], {|e| e == ::cWrkReplace } )
+   n := ascan( ::oINI:aReplace, {|e| e == ::cWrkReplace } )
    ::oUI:q_comboRepl:setCurrentIndex( n - 1 )
 
-   n := ascan( ::oIde:aIni[ INI_FOLDERS ], {|e| e == ::cWrkFolderFind } )
+   n := ascan( ::oIni:aFolders, {|e| e == ::cWrkFolderFind } )
    ::oUI:q_comboFolder:setCurrentIndex( n - 1 )
    ::oUI:q_comboFolder:setEnabled( .f. )
    ::oUI:q_checkFolders:setChecked( .f. )
@@ -895,8 +894,8 @@ METHOD IdeFindInFiles:execEvent( cEvent, p )
 
          qLineEdit := QLineEdit():configure( ::oUI:q_comboFolder:lineEdit() )
          qLineEdit:setText( cPath )
-         IF ascan( ::oIde:aIni[ INI_FOLDERS ], {|e| e == cPath } ) == 0
-            hb_ains( ::oIde:aIni[ INI_FOLDERS ], 1, cPath, .t. )
+         IF ascan( ::oINI:aFolders, {|e| e == cPath } ) == 0
+            hb_ains( ::oINI:aFolders, 1, cPath, .t. )
          ENDIF
          ::oUI:q_comboFolder:insertItem( 0, cPath )
       ENDIF
@@ -1185,8 +1184,8 @@ METHOD IdeFindInFiles:find()
    ::oUI:q_buttonFind:setEnabled( .t. )
 
    IF ::nFounds > 0
-      IF ascan( ::oIde:aIni[ INI_FIND ], {|e| e == ::cOrigExpr } ) == 0
-         hb_ains( ::oIde:aIni[ INI_FIND ], 1, ::cOrigExpr, .t. )
+      IF ascan( ::oINI:aFind, {|e| e == ::cOrigExpr } ) == 0
+         hb_ains( ::oINI:aFind, 1, ::cOrigExpr, .t. )
          ::oUI:q_comboFolder:insertItem( 0, ::cOrigExpr )
       ENDIF
       ::oIde:cWrkFind := ::cOrigExpr

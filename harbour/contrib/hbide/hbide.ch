@@ -68,58 +68,6 @@
 #define HBIDE_RUN_MODE_HBP                        2
 #define HBIDE_RUN_MODE_PRG                        3
 
-#define INI_HBIDE                                 1
-#define INI_PROJECTS                              2
-#define INI_FILES                                 3
-#define INI_FIND                                  4
-#define INI_REPLACE                               5
-#define INI_RECENTFILES                           6
-#define INI_RECENTPROJECTS                        7
-#define INI_FOLDERS                               8
-#define INI_VIEWS                                 9
-#define INI_TAGGEDPROJECTS                        10
-#define INI_GENERAL                               11
-#define INI_TOOLS                                 12
-#define INI_USERTOOLBARS                          13
-
-#define INI_SECTIONS_COUNT                        13
-
-
-/* INI_HBIDE */
-#define MainWindowGeometry                        1
-#define ProjectTreeVisible                        2
-#define ProjectTreeGeometry                       3
-#define FunctionListVisible                       4
-#define FunctionListGeometry                      5
-#define RecentTabIndex                            6
-#define CurrentProject                            7
-#define GotoDialogGeometry                        8
-#define PropsDialogGeometry                       9
-#define FindDialogGeometry                        10
-#define ThemesDialogGeometry                      11
-#define CurrentTheme                              12
-#define CurrentCodec                              13
-#define PathMk2                                   14
-#define PathEnv                                   15
-#define CurrentEnvironment                        16
-#define FindInFilesDialogGeometry                 17
-#define CurrentFind                               18
-#define CurrentFolderFind                         19
-#define CurrentReplace                            20
-#define CurrentView                               21
-#define CurrentHarbour                            22
-#define CurrentShortcuts                          23
-#define TextFileExtensions                        24
-#define CurrentLineHighlightMode                  25
-#define LineNumbersDisplayMode                    26
-#define HorzRulerDisplayMode                      27
-#define ToolsDialogGeometry                       28
-#define IdeTheme                                  29
-#define IdeAnimated                               30
-
-
-#define INI_HBIDE_VRBLS                           30
-
 /* .hbi structure constants */
 #define PRJ_PRP_PROPERTIES                        1
 #define PRJ_PRP_FLAGS                             2

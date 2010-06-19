@@ -407,11 +407,11 @@ METHOD IdeActions:buildMainMenu()
    hbide_menuAddSep( oSubMenu )
 
    oSubMenu2 := XbpMenu():new( oSubMenu ):create()
-   oSubMenu2:itemSelected := {| nIndex, cFile | cFile := oIde:aIni[ INI_RECENTFILES, nIndex ], ;
+   oSubMenu2:itemSelected := {| nIndex, cFile | cFile := oIde:oIni:aRecentFiles[ nIndex ], ;
                                                 oIde:oEM:editSource( cFile ) }
-   IF !empty( oIde:aIni[ INI_RECENTFILES ] )
-      FOR n := 1 TO Len( oIde:aIni[ INI_RECENTFILES ] )
-         f := hbide_pathNormalized( oIde:aIni[ INI_RECENTFILES, n ], .F. )
+   IF !empty( oIde:oIni:aRecentFiles )
+      FOR n := 1 TO Len( oIde:oIni:aRecentFiles )
+         f := hbide_pathNormalized( oIde:oIni:aRecentFiles[ n ], .F. )
          oSubMenu2:addItem( { _T( '~' + hb_NumToHex(n) + '. ' + f ), nil } )
          IF !hb_FileExists( f )
             oSubMenu2:disableItem( n )
@@ -424,11 +424,11 @@ METHOD IdeActions:buildMainMenu()
    oMenuBar:addItem( { oSubMenu2,  _T( "Recent Files" ) } )
 
    oSubMenu2 := XbpMenu():new( oSubMenu ):create()
-   oSubMenu2:itemSelected := {| nIndex, cFile | cFile := oIde:aIni[ INI_RECENTPROJECTS, nIndex ], ;
+   oSubMenu2:itemSelected := {| nIndex, cFile | cFile := oIde:oIni:aRecentProjects[ nIndex ], ;
                                                 ::oPM:loadProperties( cFile, .F., .F., .T. ) }
-   IF !empty( oIde:aIni[ INI_RECENTPROJECTS ] )
-      FOR n := 1 TO Len( oIde:aIni[ INI_RECENTPROJECTS ] )
-          f := hbide_pathNormalized( oIde:aIni[ INI_RECENTPROJECTS, n ], .F. )
+   IF !empty( oIde:oIni:aRecentProjects )
+      FOR n := 1 TO Len( oIde:oIni:aRecentProjects )
+          f := hbide_pathNormalized( oIde:oIni:aRecentProjects[ n ], .F. )
           oSubMenu2:addItem( { _T( '~' + hb_NumToHex( n ) + '. ' + f )   , nil } )
           IF !hb_FileExists( f )
              oSubMenu2:disableItem( n )
@@ -768,30 +768,31 @@ STATIC FUNCTION mnuNormalizeItem( cCaption )
  * Add a file name to MRU menu item.
  * 02/01/2010 - 23:23:22 - vailtom
  */
-FUNCTION hbide_mnuAddFileToMRU( oIde, cFileName, nType )
-   LOCAL nPos, cFileNormal
-
-   IF nType != INI_RECENTPROJECTS .AND. nType != INI_RECENTFILES
-      RETURN nil
-   ENDIF
+FUNCTION hbide_mnuAddFileToMRU( oIde, cFileName, cType )
+   LOCAL nPos, cFileNormal, a_
 
    cFileNormal := hbide_pathNormalized( cFileName )
 
-   IF ( nPos := aScan( oIde:aIni[ nType ], {|f| hbide_pathNormalized( f ) == cFileNormal } ) ) > 0
-      hb_aDel( oIde:aIni[ nType ], nPos, .T. )
+   IF cType == "recent_projects"
+      a_:= oIde:oINI:aRecentProjects
+   ELSE
+      a_:= oIde:oINI:aRecentFiles
    ENDIF
 
-   ASize( oIde:aIni[ nType ], len( oIde:aIni[ nType ] ) + 1 )
-   AIns( oIde:aIni[ nType ], 1 )
+   IF ( nPos := aScan( a_, {|f| hbide_pathNormalized( f ) == cFileNormal } ) ) > 0
+      hb_aDel( a_, nPos, .T. )
+   ENDIF
 
-   oIde:aIni[ nType,1 ] := cFileName
+   ASize( a_, len( a_ ) + 1 )
+   AIns( a_, 1 )
+   a_[ 1 ] := cFileName
 
-   IF Len( oIde:aIni[ nType ] ) > 25
-      aSize( oIde:aIni[ nType ], 25 )
+   IF Len( a_ ) > 25
+      aSize( a_, 25 )
    ENDIF
 
    IF nPos == 0
-      hbide_mnuUpdateMRUpopup( oIde, nType )
+      hbide_mnuUpdateMRUpopup( oIde, cType )
    ENDIF
    RETURN nil
 
@@ -801,16 +802,22 @@ FUNCTION hbide_mnuAddFileToMRU( oIde, cFileName, nType )
  */
 #define QMF_POPUP  1
 
-STATIC FUNCTION hbide_mnuUpdateMRUpopup( oIde, nType )
-   LOCAL oMenuBar, oItem, cFindStr, nPos, n, c
+STATIC FUNCTION hbide_mnuUpdateMRUpopup( oIde, cType )
+   LOCAL oMenuBar, oItem, cFindStr, nPos, n, c, a_
 
    IF Empty( oIde:oDlg )
       RETURN NIL
    ENDIF
 
+   IF cType == "recent_projects"
+      a_:= oIde:oINI:aRecentProjects
+   ELSE
+      a_:= oIde:oINI:aRecentFiles
+   ENDIF
+
    oMenuBar := oIde:oDlg:MenuBar()
    nPos     := 0
-   cFindStr := iif( nType == INI_RECENTFILES, 'RECENT FILES', 'RECENT PROJECTS' )
+   cFindStr := iif( cType == "recent_files", 'RECENT FILES', 'RECENT PROJECTS' )
 
    FOR n := 1 TO oMenuBar:numItems()
        IF oMenuBar:aMenuItems[ n, 1 ] != QMF_POPUP
@@ -834,9 +841,9 @@ STATIC FUNCTION hbide_mnuUpdateMRUpopup( oIde, nType )
 
    oItem[ 4 ]:delAllItems()
 
-   IF !empty( oIde:aIni[ nType ] )
-      FOR n := 1 TO Len( oIde:aIni[ nType ] )
-          c := hbide_pathNormalized( oIde:aIni[ nType, n ], .F. )
+   IF !empty( a_ )
+      FOR n := 1 TO Len( a_ )
+          c := hbide_pathNormalized( a_[ n ], .F. )
 
           oItem[ 4 ]:addItem( { _T( '~' + hb_NumToHex( n ) + '. ' + c ), nil } )
 
@@ -845,7 +852,7 @@ STATIC FUNCTION hbide_mnuUpdateMRUpopup( oIde, nType )
           ENDIF
       NEXT
    ELSE
-      IF nType == INI_RECENTFILES
+      IF cType == "recent_files"
          oItem[ 4 ]:addAction( "** No recent files found **" )
       ELSE
          oItem[ 4 ]:addAction( "** No recent projects found **" )

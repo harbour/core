@@ -113,13 +113,13 @@ METHOD IdeSourcesManager:create( oIde )
 METHOD IdeSourcesManager:loadSources()
    LOCAL a_
 
-   IF !empty( ::aIni[ INI_FILES ] )
-      FOR EACH a_ IN ::aIni[ INI_FILES ]
+   IF !empty( ::oIni:aFiles )
+      FOR EACH a_ IN ::oIni:aFiles
          /*            File     nPos     nVPos    nHPos    cTheme  cView lAlert lVisible, aBookMarks */
          ::editSource( a_[ 1 ], a_[ 2 ], a_[ 3 ], a_[ 4 ], a_[ 5 ], a_[ 6 ], .t., .f., a_[ 7 ] )
       NEXT
       ::oDK:setView( ::cWrkView )
-      ::oEM:setSourceVisibleByIndex( max( 0, val( ::aIni[ INI_HBIDE, RecentTabIndex ] ) ) )
+      ::oEM:setSourceVisibleByIndex( max( 0, val( ::oIni:cRecentTabIndex ) ) )
    ENDIF
 
    RETURN Self
@@ -275,7 +275,7 @@ METHOD IdeSourcesManager:editSource( cSourceFile, nPos, nHPos, nVPos, cTheme, cV
    ENDIF
 
    IF !Empty( cSourceFile ) .AND. !hbide_isSourcePPO( cSourceFile )
-      hbide_mnuAddFileToMRU( Self, cSourceFile, INI_RECENTFILES )
+      hbide_mnuAddFileToMRU( Self, cSourceFile, "recent_files" )
    ENDIF
 
    RETURN .t.

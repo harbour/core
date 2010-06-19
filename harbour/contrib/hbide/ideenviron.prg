@@ -119,7 +119,7 @@ METHOD IdeEnvironments:create( oIDE, cEnvFile )
    ::cEnvFile := cEnvFile
 
    IF empty( ::cEnvFile )
-      cFile := ::oIde:aINI[ INI_HBIDE, PathEnv ]
+      cFile := ::oINI:cPathEnv
       cFile := iif( empty( cFile ), cFile, hbide_pathAppendLastSlash( cFile ) )
       IF empty( cFile )
          cFile := oIde:cProjIni
@@ -130,7 +130,7 @@ METHOD IdeEnvironments:create( oIDE, cEnvFile )
 
    hb_fNameSplit( ::cEnvFile, @cPath )
    ::oIDE:cWrkPathEnv := hbide_pathNormalized( cPath, .f. )
-   ::oIde:aINI[ INI_HBIDE, PathEnv ] := ::oIDE:cWrkPathEnv
+   ::oIde:oINI:cPathEnv := ::oIDE:cWrkPathEnv
 
    IF !empty( ::cEnvFile ) .AND. hb_fileExists( ::cEnvFile )
       ::parse( ::cEnvFile )
@@ -257,9 +257,9 @@ METHOD IdeEnvironments:show()
       #endif
    ENDIF
 
-   ::oUI:q_editPathMk2  :setText( ::aINI[ INI_HBIDE, PathMk2 ] )
-   ::oUI:q_editPathEnv  :setText( ::aINI[ INI_HBIDE, PathEnv ] )
-   ::oUI:q_editCompilers:setPlainText( hb_memoread( hbide_pathFile( ::aINI[ INI_HBIDE, PathEnv ], "hbide.env" ) ) )
+   ::oUI:q_editPathMk2  :setText( ::oINI:cPathMk2 )
+   ::oUI:q_editPathEnv  :setText( ::oINI:cPathEnv )
+   ::oUI:q_editCompilers:setPlainText( hb_memoread( hbide_pathFile( ::oINI:cPathEnv, "hbide.env" ) ) )
 
    RETURN Self
 
@@ -305,8 +305,8 @@ METHOD IdeEnvironments:saveEnv()
    cPathMk2 := oUIEnv:q_editPathMk2:text()
    cPathEnv := oUIEnv:q_editPathEnv:text()
 
-   ::oIDE:aINI[ INI_HBIDE, PathMk2 ] := cPathMk2
-   ::oIDE:aINI[ INI_HBIDE, PathEnv ] := cPathEnv
+   ::oIDE:oINI:cPathMk2 := cPathMk2
+   ::oIDE:oINI:cPathEnv := cPathEnv
    //
    ::oIDE:cWrkPathMk2 := cPathMk2
    ::oIDE:cWrkPathEnv := cPathEnv

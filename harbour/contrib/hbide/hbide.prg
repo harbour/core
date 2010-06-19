@@ -156,7 +156,6 @@ CLASS HbIde
    DATA   mp1, mp2, oXbp, nEvent
 
    DATA   aTabs                                   INIT   {}
-   DATA   aINI                                    INIT   {}
    DATA   aViews                                  INIT   {}
    DATA   aProjData                               INIT   {}
    DATA   aPrpObjs                                INIT   {}
@@ -298,9 +297,10 @@ CLASS HbIde
    METHOD new( aParams )
    METHOD create( aParams )
    METHOD destroy()
-   METHOD setPosAndSizeByIni( qWidget, nPart )
-   METHOD setPosByIni( qWidget, nPart )
-   METHOD setSizeByIni( qWidget, nPart )
+   //
+   METHOD setPosAndSizeByIniEx( qWidget, cParams )
+   METHOD setPosByIniEx( qWidget, cParams )
+   //
    METHOD manageFocusInEditor()
    METHOD removeProjectTree( aPrj )
    METHOD updateProjectTree( aPrj )
@@ -347,7 +347,7 @@ METHOD HbIde:new( aParams )
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:create( aParams )
-   LOCAL qPixmap, qSplash, n, cView
+   LOCAL qPixmap, qSplash, cView
 
    qPixmap := QPixmap():new( hb_dirBase() + "resources" + hb_osPathSeparator() + "hbidesplash.png" )
    qSplash := QSplashScreen():new()
@@ -356,14 +356,6 @@ METHOD HbIde:create( aParams )
    qSplash:show()
    ::showApplicationCursor( Qt_BusyCursor )
    QApplication():new():processEvents()
-
-   /* Initiate the place holders */
-   ::aINI := array( INI_SECTIONS_COUNT )
-   ::aINI[ 1 ] := afill( array( INI_HBIDE_VRBLS ), "" )
-   //
-   FOR n := 2 TO INI_SECTIONS_COUNT
-      ::aIni[ n ] := array( 0 )
-   NEXT
 
    DEFAULT aParams TO ::aParams
    ::aParams := aParams
@@ -391,10 +383,12 @@ METHOD HbIde:create( aParams )
    IF ::nRunMode == HBIDE_RUN_MODE_INI
       ::oINI:load( ::cProjIni )
    ENDIF
+   #if 0
    /* Load IDE Settings */                                     /* TODO: delete */
    IF ::nRunMode == HBIDE_RUN_MODE_INI
       hbide_loadINI( Self, ::cProjIni )
    ENDIF
+   #endif
 
    /* Load User Dictionaries */
    hbide_loadUserDictionaries( Self )
@@ -403,22 +397,11 @@ METHOD HbIde:create( aParams )
    ::oSC := IdeShortcuts():new( Self ):create()
 
    /* Insert command line projects */
-   aeval( ::aHbpOnCmdLine, {|e| aadd( ::aINI[ INI_PROJECTS ], e ) } )
+//   aeval( ::aHbpOnCmdLine, {|e| aadd( ::aINI[ INI_PROJECTS ], e ) } )
+   aeval( ::aHbpOnCmdLine, {|e| aadd( ::oINI:aProjFiles, e ) } )
    /* Insert command line sources */
-   aeval( ::aSrcOnCmdLine, {|e| aadd( ::aINI[ INI_FILES    ], hbide_parseSourceComponents( e ) ) } )
-
-   /* Set variables from last session */
-   ::cWrkTheme                    := ::aINI[ INI_HBIDE, CurrentTheme             ]
-   ::cWrkCodec                    := ::aINI[ INI_HBIDE, CurrentCodec             ]
-   ::cWrkEnvironment              := ::aINI[ INI_HBIDE, CurrentEnvironment       ]
-   ::cWrkFind                     := ::aINI[ INI_HBIDE, CurrentFind              ]
-   ::cWrkFolderFind               := ::aINI[ INI_HBIDE, CurrentFolderFind        ]
-   ::cWrkReplace                  := ::aINI[ INI_HBIDE, CurrentReplace           ]
-   ::cWrkView                     := ::aINI[ INI_HBIDE, CurrentView              ]
-   ::cWrkHarbour                  := ::aINI[ INI_HBIDE, CurrentHarbour           ]
-   ::lCurrentLineHighlightEnabled := iif( ::aINI[ INI_HBIDE, CurrentLineHighlightMode ] == "NO", .f., .t. )
-   ::lLineNumbersVisible          := iif( ::aINI[ INI_HBIDE, LineNumbersDisplayMode   ] == "NO", .f., .t. )
-   ::lHorzRulerVisible            := iif( ::aINI[ INI_HBIDE, HorzRulerDisplayMode     ] == "NO", .f., .t. )
+//   aeval( ::aSrcOnCmdLine, {|e| aadd( ::aINI[ INI_FILES    ], hbide_parseSourceComponents( e ) ) } )
+   aeval( ::aSrcOnCmdLine, {|e| aadd( ::oINI:aFiles, hbide_parseSourceComponents( e ) ) } )
 
    /* Store to restore when all preliminary operations are completed */
    cView := ::cWrkView
@@ -475,13 +458,12 @@ METHOD HbIde:create( aParams )
    ::oHM := IdeHome():new():create( Self )
 
    /* Fill various elements of the IDE */
-   ::cWrkProject := ::aINI[ INI_HBIDE, CurrentProject ]
    ::oPM:populate()
    ::oSM:loadSources()
    #if 0
    ::oDK:setView( ::cWrkView )
-   IF !empty( ::aIni[ INI_FILES ] )
-      ::oEM:setSourceVisibleByIndex( max( 0, val( ::aIni[ INI_HBIDE, RecentTabIndex ] ) )
+   IF !empty( ::oIni:aFiles )
+      ::oEM:setSourceVisibleByIndex( max( 0, val( ::oIni:cRecentTabIndex ) )
    ENDIF
    #endif
 
@@ -514,8 +496,8 @@ METHOD HbIde:create( aParams )
    /* Request Main Window to Appear on the Screen */
    ::oHM:refresh()
 
-   ::oDK:animateComponents( val( ::aINI[ INI_HBIDE, IdeAnimated ] ) )
-   ::oSetup:setSystemStyle( ::aINI[ INI_HBIDE, IdeTheme ] )
+   ::oDK:animateComponents( val( ::oINI:cIdeAnimated ) )
+   ::oSetup:setSystemStyle( ::oINI:cIdeTheme )
 
    ::oDlg:Show()
    IF ::nRunMode == HBIDE_RUN_MODE_PRG
@@ -534,7 +516,7 @@ METHOD HbIde:create( aParams )
    qSplash:close()
 
    /* Load tags last tagged projects */
-   ::oFN:loadTags( ::aINI[ INI_TAGGEDPROJECTS ] )
+   ::oFN:loadTags( ::oINI:aTaggedProjects )
 
    #if 0   /* Can be controlled through setup */
    hbide_loadPlugins( Self, "1.0" )
@@ -545,13 +527,15 @@ METHOD HbIde:create( aParams )
 
       IF ::nEvent == xbeP_Quit
          HB_TRACE( HB_TR_ALWAYS, "---------------- xbeP_Quit" )
-         hbide_saveINI( Self ) ;  ::oINI:save()
+         //hbide_saveINI( Self ) ;  ::oINI:save()
+         ::oINI:save()
          EXIT
       ENDIF
 
       IF ::nEvent == xbeP_Close
          HB_TRACE( HB_TR_ALWAYS, "================ xbeP_Close" )
-         hbide_saveINI( Self )  ; ::oINI:save()
+         //hbide_saveINI( Self )  ; ::oINI:save()
+         ::oINI:save()
          ::oSM:closeAllSources()
          EXIT
 
@@ -994,11 +978,11 @@ METHOD HbIde:execProjectAction( cKey )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbIde:setPosAndSizeByIni( qWidget, nPart )
+METHOD HbIde:setPosAndSizeByIniEx( qWidget, cParams )
    LOCAL aRect
 
-   IF !empty( ::aIni[ INI_HBIDE, nPart ] )
-      aRect := hb_atokens( ::aIni[ INI_HBIDE, nPart ], "," )
+   IF !empty( cParams )
+      aRect := hb_atokens( cParams, "," )
       aeval( aRect, {|e,i| aRect[ i ] := val( e ) } )
 
       qWidget:move( aRect[ 1 ], aRect[ 2 ] )
@@ -1009,27 +993,14 @@ METHOD HbIde:setPosAndSizeByIni( qWidget, nPart )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbIde:setPosByIni( qWidget, nPart )
+METHOD HbIde:setPosByIniEx( qWidget, cParams )
    LOCAL aRect
 
-   IF !empty( ::aIni[ INI_HBIDE, nPart ] )
-      aRect := hb_atokens( ::aIni[ INI_HBIDE, nPart ], "," )
+   IF !empty( cParams )
+      aRect := hb_atokens( cParams, "," )
       aeval( aRect, {|e,i| aRect[ i ] := val( e ) } )
 
       qWidget:move( aRect[ 1 ], aRect[ 2 ] )
-   ENDIF
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbIde:setSizeByIni( qWidget, nPart )
-   LOCAL aRect
-
-   IF !empty( ::aIni[ INI_HBIDE, nPart ] )
-      aRect := hb_atokens( ::aIni[ INI_HBIDE, nPart ], "," )
-      aeval( aRect, {|e,i| aRect[ i ] := val( e ) } )
-      qWidget:resize( aRect[ 3 ], aRect[ 4 ] )
    ENDIF
 
    RETURN Self

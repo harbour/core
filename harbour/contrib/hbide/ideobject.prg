@@ -149,7 +149,6 @@ CLASS IdeObject
    ACCESS nAnimantionMode                         INLINE ::oIde:nAnimantionMode
 
    ACCESS aProjects                               INLINE ::oIde:aProjects
-   ACCESS aINI                                    INLINE ::oIde:aINI
    ACCESS aSources                                INLINE ::oIde:aSources
    ACCESS aEditorPath                             INLINE ::oIde:aEditorPath
    ACCESS aProjData                               INLINE ::oIde:aProjData

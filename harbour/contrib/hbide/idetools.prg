@@ -85,8 +85,8 @@ CLASS IdeToolsManager INHERIT IdeObject
    DATA   aBtns                                   INIT   {}
    DATA   aToolbars                               INIT   { NIL,NIL,NIL,NIL,NIL }
 
-   ACCESS aTools                                  INLINE ::aINI[ INI_TOOLS ]
-   ACCESS aUserToolBars                           INLINE ::aINI[ INI_USERTOOLBARS ]
+   ACCESS aTools                                  INLINE ::oINI:aTools
+   ACCESS aUserToolBars                           INLINE ::oINI:aUserToolbars
 
    METHOD new( oIde )
    METHOD create( oIde )
@@ -132,13 +132,13 @@ METHOD IdeToolsManager:create( oIde )
       oAct:setMenu( QMenu():new() )
    ENDIF
 
-   IF empty( ::aINI[ INI_USERTOOLBARS ] )
-      asize( ::aINI[ INI_USERTOOLBARS ], 5 )
-      DEFAULT ::aINI[ INI_USERTOOLBARS, 1 ] TO { "","YES","","","YES","YES","YES" }
-      DEFAULT ::aINI[ INI_USERTOOLBARS, 2 ] TO { "","YES","","","YES","YES","YES" }
-      DEFAULT ::aINI[ INI_USERTOOLBARS, 3 ] TO { "","YES","","","YES","YES","YES" }
-      DEFAULT ::aINI[ INI_USERTOOLBARS, 4 ] TO { "","YES","","","YES","YES","YES" }
-      DEFAULT ::aINI[ INI_USERTOOLBARS, 5 ] TO { "","YES","","","YES","YES","YES" }
+   IF empty( ::oINI:aUserToolbars )
+      asize( ::oINI:aUserToolbars, 5 )
+      DEFAULT ::oINI:aUserToolbars[ 1 ] TO { "","YES","","","YES","YES","YES" }
+      DEFAULT ::oINI:aUserToolbars[ 2 ] TO { "","YES","","","YES","YES","YES" }
+      DEFAULT ::oINI:aUserToolbars[ 3 ] TO { "","YES","","","YES","YES","YES" }
+      DEFAULT ::oINI:aUserToolbars[ 4 ] TO { "","YES","","","YES","YES","YES" }
+      DEFAULT ::oINI:aUserToolbars[ 5 ] TO { "","YES","","","YES","YES","YES" }
    ENDIF
 
    RETURN Self
@@ -274,9 +274,9 @@ METHOD IdeToolsManager:show()
    ENDIF
 
    ::clearList()
-   ::populateList( ::aINI[ INI_TOOLS ] )
+   ::populateList( ::oINI:aTools )
    ::oUI:q_listNames:setCurrentRow( 0 )
-   ::oIde:setPosByIni( ::oUI:oWidget, ToolsDialogGeometry )
+   ::oIde:setPosByIniEx( ::oUI:oWidget, ::oINI:cToolsDialogGeometry )
    ::oUI:show()
 
    RETURN Nil
@@ -285,7 +285,7 @@ METHOD IdeToolsManager:show()
 
 METHOD IdeToolsManager:execEvent( cMode, p )
    LOCAL cFile, cFileName, nIndex, qItem, cName, nRow
-   LOCAL aTools := ::aINI[ INI_TOOLS ]
+   LOCAL aTools := ::oINI:aTools
 
    HB_SYMBOL_UNUSED( p )
 
@@ -337,7 +337,7 @@ METHOD IdeToolsManager:execEvent( cMode, p )
          qItem := QListWidgetItem():from( ::oUI:q_listNames:currentItem() )
          cName := qItem:text()
          IF ( nIndex := ascan( aTools, {|e_| e_[ 1 ] == cName } ) ) > 0
-            hb_adel( ::aINI[ INI_TOOLS ], nIndex, .t. )
+            hb_adel( ::oINI:aTools, nIndex, .t. )
             ::clearList()
             ::populateList()
          ENDIF
@@ -379,7 +379,7 @@ METHOD IdeToolsManager:execEvent( cMode, p )
       ENDIF
       EXIT
    CASE "buttonClose_clicked"
-      ::oIde:aIni[ INI_HBIDE, ToolsDialogGeometry ] := hbide_posAndSize( ::oUI:oWidget )
+      ::oIde:oINI:cToolsDialogGeometry := hbide_posAndSize( ::oUI:oWidget )
       ::oUI:done( 1 )
       EXIT
    CASE "User_Toolbar_clicked"
@@ -557,11 +557,11 @@ METHOD IdeToolsManager:ini2controls( nIndex )
 METHOD IdeToolsManager:controls2ini( nIndex )
 
    IF empty( nIndex )
-      aadd( ::aINI[ INI_TOOLS ], {} )
-      nIndex := len( ::aINI[ INI_TOOLS ] )
+      aadd( ::oINI:aTools, {} )
+      nIndex := len( ::oINI:aTools )
    ENDIF
 
-   ::aINI[ INI_TOOLS, nIndex ] := { ::oUI:q_editName:text()   , ;
+   ::oINI:aTools[ nIndex ] := { ::oUI:q_editName:text()   , ;
                                     hbide_pathNormalized( ::oUI:q_editCmdLine:text() ), ;
                                     hbide_pathNormalized( ::oUI:q_editParams:text()  ), ;
                                     hbide_pathNormalized( ::oUI:q_editStayIn:text()  ), ;
@@ -588,7 +588,7 @@ METHOD IdeToolsManager:clearList()
 METHOD IdeToolsManager:populateList( aList )
    LOCAL a_
 
-   DEFAULT aList TO ::aINI[ INI_TOOLS ]
+   DEFAULT aList TO ::oINI:aTools
 
    FOR EACH a_ IN aList
       ::oUI:q_listNames:addItem( a_[ 1 ] )
@@ -624,7 +624,7 @@ METHOD IdeToolsManager:buildPanelsButton()
 
    ::qPanelsMenu := QMenu():new()
    ::addPanelsMenu( "Main" )
-   FOR EACH cView IN ::aINI[ INI_VIEWS ]
+   FOR EACH cView IN ::oINI:aViews
       ::addPanelsMenu( cView )
    NEXT
    ::qPanelsButton := QToolButton():new()

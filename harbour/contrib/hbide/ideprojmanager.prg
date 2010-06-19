@@ -182,11 +182,11 @@ METHOD IdeProject:new( oIDE, aProps )
       ::dotHbp         := ""
       ::compilers      := ""
 
-      IF !empty( oIDE:aINI[ INI_HBIDE, PathMk2 ] )
-         ::cPathMk2 := oIDE:aINI[ INI_HBIDE, PathMk2 ]
+      IF !empty( oIDE:oINI:cPathMk2 )
+         ::cPathMk2 := oIDE:oINI:cPathMk2
       ENDIF
-      IF !empty( oIDE:aINI[ INI_HBIDE, PathEnv ] )
-         ::cPathEnv := oIDE:aINI[ INI_HBIDE, PathEnv ]
+      IF !empty( oIDE:oINI:cPathEnv )
+         ::cPathEnv := oIDE:oINI:cPathEnv
       ENDIF
 
       FOR EACH cSource IN ::sources
@@ -305,7 +305,7 @@ METHOD IdeProjManager:destroy()
 METHOD IdeProjManager:populate()
    LOCAL cProject
 
-   FOR EACH cProject IN ::aINI[ INI_PROJECTS ]
+   FOR EACH cProject IN ::oINI:aProjFiles
       ::loadProperties( cProject, .f., .f., .T. )
    NEXT
 
@@ -389,7 +389,7 @@ METHOD IdeProjManager:loadProperties( cProjFileName, lNew, lFetch, lUpdateTree )
             IF lUpdateTree
                ::oIDE:updateProjectTree( ::aPrjProps )
             ENDIF
-            hbide_mnuAddFileToMRU( ::oIDE, cProjFileName, INI_RECENTPROJECTS )
+            hbide_mnuAddFileToMRU( ::oIDE, cProjFileName, "recent_projects" )
          ELSE
             ::aProjects[ nAlready, 3 ] := aclone( ::aPrjProps )
             IF lUpdateTree
@@ -579,7 +579,7 @@ METHOD IdeProjManager:save( lCanClose )
          IF ::lUpdateTree
             ::oIDE:updateProjectTree( ::aPrjProps )
          ENDIF
-         hbide_mnuAddFileToMRU( ::oIDE, ::cSaveTo, INI_RECENTPROJECTS )
+         hbide_mnuAddFileToMRU( ::oIDE, ::cSaveTo, "recent_projects" )
       ELSE
          ::aProjects[ nAlready, 3 ] := aclone( ::aPrjProps )
          IF ::lUpdateTree
@@ -1137,7 +1137,7 @@ METHOD IdeProjManager:removeProject( cProjectTitle )
       nPos := ascan( ::aProjects, {|e_| e_[ 2 ] == cProjFileName } )
       IF nPos > 0
          hb_adel( ::aProjects, nPos, .T. )
-         hbide_saveINI( ::oIDE )
+         ::oINI:save()
       ENDIF
    ENDIF
 

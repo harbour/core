@@ -251,9 +251,7 @@ METHOD IdeDocks:buildDialog()
    aSize := AppDesktop():currentSize()
    ::oDlg:setPos( { ( aSize[ 1 ] - ::oDlg:currentSize()[ 1 ] ) / 2, ;
                     ( aSize[ 2 ] - ::oDlg:currentSize()[ 2 ] ) / 2 } )
-
-   ::oIde:setPosAndSizeByIni( ::oDlg:oWidget, MainWindowGeometry )
-   //::oDlg:Show()
+   ::oIde:setPosAndSizeByIniEx( ::oDlg:oWidget, ::oINI:cMainWindowGeometry )
 
    /* StatusBar */
    ::buildStatusBar()
@@ -276,7 +274,7 @@ METHOD IdeDocks:buildDialog()
    /* View Panels */
    ::buildViewWidget( "Stats" )          /* At stayrtup displaying various statistics */
    ::buildViewWidget( "Main"  )          /* Main Panel to hold editor tabs */
-   FOR EACH s IN ::aINI[ INI_VIEWS ]
+   FOR EACH s IN ::oINI:aViews
       ::buildViewWidget( s )             /* All other panels user created */
    NEXT
 
@@ -516,10 +514,10 @@ METHOD IdeDocks:setView( cView )
    CASE "New..."
       cView := hbide_fetchAString( ::qViewsCombo, cView, "Name the View", "New View" )
       IF cView != "New..." .AND. cView != "Stats" .AND. cView != "Main"
-         IF ascan( ::aINI[ INI_VIEWS ], {|e| e == cView } ) > 0
+         IF ascan( ::oINI:aViews, {|e| e == cView } ) > 0
             MsgBox( "View: " + cView + ", already exists" )
          ELSE
-            aadd( ::aINI[ INI_VIEWS ], cView )
+            aadd( ::oIde:oINI:aViews, cView )
             ::oTM:addPanelsMenu( cView )
             ::buildViewWidget( cView )
             ::addPanelButton( cView )
@@ -640,7 +638,7 @@ METHOD IdeDocks:buildToolBarPanels()
    ::oDlg:oWidget:addToolBar( Qt_LeftToolBarArea, ::qTBarPanels )
 
    ::addPanelButton( "Main" )
-   FOR EACH s IN ::aINI[ INI_VIEWS ]
+   FOR EACH s IN ::oINI:aViews
       ::addPanelButton( s )
    NEXT
 
@@ -1264,7 +1262,7 @@ METHOD IdeDocks:animateComponents( nMode )
       nMode := ::nAnimantionMode
    ENDIF
    ::oIde:nAnimantionMode := nMode
-   ::oIde:aINI[ INI_HBIDE, IdeAnimated ] := hb_ntos( ::nAnimantionMode )
+   ::oIde:oINI:cIdeAnimated := hb_ntos( ::nAnimantionMode )
 
    ::oDlg:menubar():setStyleSheet( GetStyleSheet( "QMenuBar", nMode ) )
 
