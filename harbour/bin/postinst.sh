@@ -11,10 +11,42 @@
 # See COPYING for licensing terms.
 # ---------------------------------------------------------------
 
+if [ -z "${__running_in_posix_sh__}" ]
+then
+   __running_in_posix_sh__=1
+   export __running_in_posix_sh__
+
+   [ -x /usr/bin/posix/sh ] && \
+      exec /usr/bin/posix/sh "$0" ${1+"$@"}
+   [ -x /usr/xpg4/bin/sh ] && \
+      exec /usr/xpg4/bin/sh "$0" ${1+"$@"}
+
+   exec /bin/sh "$0" ${1+"$@"}
+fi
+
+unset __running_in_posix_sh__
+
+__builtin_which()
+{
+   what="$1"
+   ret=1
+   oIFS="$IFS"
+   IFS=:
+   for pathcomp in $PATH
+   do
+      if [ -x "${pathcomp}"/"${what}" ]
+      then
+         ret=0
+         echo "${pathcomp}"/"${what}"
+         break
+      fi
+   done
+   IFS="$oIFS"
+   return $ret
+}
+
 get_solibname()
 {
-   local name
-
    name="${HB_SHAREDLIB_NAME}"
    [ -z "${name}" ] && name="harbour"
    echo "${name}"
@@ -22,27 +54,22 @@ get_solibname()
 
 get_hbver_so()
 {
-   local hb_ver hb_rootdir
-
-   hb_rootdir="${1-.}"
    if [ "${HB_PLATFORM}" = "win" ] || \
       [ "${HB_PLATFORM}" = "wce" ]; then
-      hb_ver=`get_hbver_win "${hb_rootdir}"`
+      hb_ver_so=`get_hbver_win "${1-.}"`
       if [ "${HB_COMPILER}" = "mingw64" ]; then
-         hb_ver="${hb_ver}-x64"
+         hb_ver_so="${hb_ver_so}-x64"
       elif [ "${HB_COMPILER}" = "mingwarm" ]; then
-         hb_ver="${hb_ver}-wce-arm"
+         hb_ver_so="${hb_ver_so}-wce-arm"
       fi
    else
-      hb_ver=`get_hbver "${hb_rootdir}"`
+      hb_ver_so=`get_hbver "${1-.}"`
    fi
-   echo "${hb_ver}"
+   echo "${hb_ver_so}"
 }
 
 mk_hbgetlibs()
 {
-   local libs
-
    if [ -z "$@" ]
    then
       libs=""
@@ -58,13 +85,10 @@ mk_hbgetlibs()
 
 mk_hblibso()
 {
-   local LIBS LIBSMT l lm ll ld dir hb_rootdir hb_ver hb_libs full_lib_name full_lib_name_mt linker_options linker_mtoptions gpm lib_ext lib_pref lib_suff
-
    dir=`pwd`
    name=`get_solibname`
-   hb_rootdir="${1-.}"
 
-   hb_ver=`get_hbver_so "${hb_rootdir}"`
+   hb_ver=`get_hbver_so "${1-.}"`
    hb_libs=`mk_hbgetlibs "$2"`
    if [ -n "${HB_USER_DLL_ADDONS}" ]; then
       hb_libs="${hb_libs} ${HB_USER_DLL_ADDONS}"
@@ -82,14 +106,14 @@ mk_hblibso()
    fi
    linker_mtoptions=""
    if echo ${HB_USER_CFLAGS} | grep -q -- -DHB_POSIX_REGEX ; then
-      hb_libs="$( echo ${hb_libs} | sed 's!hbpcre!!g' )"
+      hb_libs="` echo ${hb_libs} | sed 's!hbpcre!!g' `"
    elif [ -z "${HB_HAS_PCRE_LOCAL}" ]; then
       linker_options="-lpcre ${linker_options}"
-      hb_libs="$( echo ${hb_libs} | sed 's!hbpcre!!g' )"
+      hb_libs="` echo ${hb_libs} | sed 's!hbpcre!!g' `"
    fi
    if [ -z "${HB_HAS_ZLIB_LOCAL}" ]; then
       linker_options="-lz ${linker_options}"
-      hb_libs="$( echo ${hb_libs} | sed 's!hbzlib!!g' )"
+      hb_libs="` echo ${hb_libs} | sed 's!hbzlib!!g' `"
    fi
    if [ "${HB_COMPILER}" = "mingw" ] || [ "${HB_COMPILER}" = "mingw64" ]; then
       linker_options="${linker_options} -luser32 -lwinspool -lgdi32 -lcomctl32 -ladvapi32 -lcomdlg32 -lole32 -loleaut32 -luuid -lws2_32"
@@ -191,7 +215,7 @@ mk_hblibso()
    do
       if [ -f $l ]
       then
-         ll=${l%${lib_suff}}${lib_ext}
+         ll="` echo $l | sed 's!'${lib_suff}'$!!' `${lib_ext}"
          ln -sf $l $ll
          if [ "${HB_PLATFORM}" = "win" ] || \
             [ "${HB_PLATFORM}" = "wce" ]; then
@@ -259,6 +283,8 @@ fi
 
 . ${hb_root}/bin/hb-func.sh
 
+__install="` __builtin_which install `"
+
 # chmod 644 ${HB_INST_PKGPREF}${HB_INC_INSTALL}/*
 
 if [ "$HB_COMPILER" = "gcc" ] || \
@@ -300,7 +326,7 @@ then
       chmod 755 "${hb_mkdyn}"
    elif [ "${HB_PLATFORM}" = "sunos" ] || \
         [ "${HB_PLATFORM}" = "hpux" ] || \
-        ! which install >/dev/null 2>&1; then
+        [ -z "${__install}" ]; then
       hb_mkdyn="${HB_INST_PKGPREF}${HB_BIN_INSTALL}/hb-mkdyn"
       rm -f "${hb_mkdyn}"
       cp "${hb_root}/bin/hb-mkdyn.sh" "${hb_mkdyn}" && \
@@ -308,7 +334,7 @@ then
    elif [ "${HB_PLATFORM}" != "dos" ]; then
       hb_mkdyn="${HB_INST_PKGPREF}${HB_BIN_INSTALL}/hb-mkdyn"
       # Without -c some OSes _move_ the file instead of copying it!
-      install -c -m 755 "${hb_root}/bin/hb-mkdyn.sh" "${hb_mkdyn}"
+      ${__install} -c -m 755 "${hb_root}/bin/hb-mkdyn.sh" "${hb_mkdyn}"
    fi
 
    if [ "${HB_PLATFORM}" != "dos" ]; then

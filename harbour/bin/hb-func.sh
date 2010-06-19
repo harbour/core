@@ -13,8 +13,6 @@
 
 get_hbplatform()
 {
-   local id
-
    if [ "$OSTYPE" = "msdosdjgpp" ]; then
       id="djgpp"
    else
@@ -41,8 +39,6 @@ get_hbplatform()
 
 get_hbver()
 {
-   local FVER MAJOR MINOR RELEA hb_rootdir
-
    hb_rootdir="${1-.}"
    FVER="${hb_rootdir}/include/hbver.h"
    MAJOR=`sed -e '/HB_VER_MAJOR/   !d' -e 's/[^0-9]*\([^ ]*\).*/\1/g' "${FVER}"`
@@ -53,8 +49,6 @@ get_hbver()
 
 get_hbver_win()
 {
-   local FVER MAJOR MINOR hb_rootdir
-
    hb_rootdir="${1-.}"
    FVER="${hb_rootdir}/include/hbver.h"
    MAJOR=`sed -e '/HB_VER_MAJOR/   !d' -e 's/[^0-9]*\([^ ]*\).*/\1/g' "${FVER}"`
@@ -64,8 +58,6 @@ get_hbver_win()
 
 get_hbverstat()
 {
-   local FVER VERSTAT hb_rootdir
-
    hb_rootdir="${1-.}"
    FVER="${hb_rootdir}/include/hbver.h"
    VERSTAT=`sed -e '/HB_VER_STATUS/ !d' -e 's/[^\"]*\"\([^\"]*\).*/\1/g' "${FVER}"`
