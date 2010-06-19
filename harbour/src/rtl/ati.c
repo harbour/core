@@ -96,12 +96,12 @@ HB_FUNC( HB_ATI )
    if( pText && pSub )
    {
       HB_SIZE ulTextLength = hb_itemGetCLen( pText );
-      HB_SIZE ulStart = hb_parnldef( 3, 1 );
-      HB_SIZE ulEnd = ( HB_SIZE ) hb_parnldef( 4, ulTextLength );
+      HB_SIZE ulStart = hb_parnsdef( 3, 1 );
+      HB_SIZE ulEnd = ( HB_SIZE ) hb_parnsdef( 4, ulTextLength );
       HB_SIZE nPos;
 
       if( ulStart > ulTextLength || ulEnd < ulStart )
-         hb_retnl( 0 );
+         hb_retns( 0 );
       else
       {
          if( ulEnd > ulTextLength )
@@ -113,7 +113,7 @@ HB_FUNC( HB_ATI )
          if( nPos > 0 )
             nPos += ( ulStart - 1 );
 
-         hb_retnl( nPos );
+         hb_retns( nPos );
       }
    }
    else

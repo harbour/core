@@ -142,7 +142,7 @@ HB_FUNC( ATSKIPSTRINGS ) /* cFind, cWhere, nStart */
 
    if( pFind && pWhere )
    {
-      HB_SIZE ulStart = ( HB_SIZE ) hb_parnl(3);
+      HB_SIZE ulStart = ( HB_SIZE ) hb_parns( 3 );
 
       if( ulStart > 0 )
          ulStart--;
@@ -156,13 +156,13 @@ HB_FUNC( ATSKIPSTRINGS ) /* cFind, cWhere, nStart */
 
          if( ulRet )
          {
-            hb_retnl( ulRet + ulStart );
+            hb_retns( ulRet + ulStart );
             return;
          }
       }
    }
 
-   hb_retnl( 0 );
+   hb_retns( 0 );
 }
 
 /* Case insensitive hb_strAt() function */
@@ -229,12 +229,12 @@ HB_FUNC( ATI )
 
       /* Stop searching if starting past beyond end. */
       if( lStart >= lEnd )
-         hb_retnl( 0 );
+         hb_retns( 0 );
       else
       {
          ulPos = hb_strAtI( hb_itemGetCPtr( pSub ), hb_itemGetCLen( pSub ),
                             hb_itemGetCPtr( pText ) + lStart, lEnd - lStart );
-         hb_retnl( ulPos ? ulPos + lStart : 0 );
+         hb_retns( ulPos ? ulPos + lStart : 0 );
       }
    }
    else

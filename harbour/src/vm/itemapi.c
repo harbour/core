@@ -670,9 +670,9 @@ HB_MAXINT hb_itemGetNInt( PHB_ITEM pItem )
    return 0;
 }
 
-HB_SIZE hb_itemGetNSize( PHB_ITEM pItem )
+HB_SIZE hb_itemGetNS( PHB_ITEM pItem )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_itemGetNSize(%p)", pItem));
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemGetNS(%p)", pItem));
 
    if( pItem )
    {
@@ -1052,9 +1052,9 @@ PHB_ITEM hb_itemPutNIntLen( PHB_ITEM pItem, HB_MAXINT lNumber, int iWidth )
    }
 }
 
-PHB_ITEM hb_itemPutNSize( PHB_ITEM pItem, HB_SIZE nNumber )
+PHB_ITEM hb_itemPutNS( PHB_ITEM pItem, HB_SIZE nNumber )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_itemPutNSize(%p, %" HB_PFS "d)", pItem, nNumber));
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemPutNS(%p, %" HB_PFS "d)", pItem, nNumber));
 
    if( pItem )
    {
