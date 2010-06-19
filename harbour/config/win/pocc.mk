@@ -18,6 +18,10 @@ CFLAGS += -I. -I$(HB_INC_COMPILE)
 
 CFLAGS += -Ze -Go -MT
 
+ifeq ($(HB_COMPILER),pocc64)
+   CFLAGS += -Tamd64-coff
+endif
+
 ifneq ($(HB_BUILD_WARN),no)
    CFLAGS += -W1
 endif
