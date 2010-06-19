@@ -1993,7 +1993,7 @@ int hb_storns( HB_SIZE nValue, int iParam )
 
    if( iParam == -1 )
    {
-      hb_itemPutNSize( hb_stackReturnItem(), nValue );
+      hb_itemPutNS( hb_stackReturnItem(), nValue );
       return 1;
    }
    else if( iParam >= 0 && iParam <= hb_pcount() )
@@ -2002,7 +2002,7 @@ int hb_storns( HB_SIZE nValue, int iParam )
 
       if( HB_IS_BYREF( pItem ) )
       {
-         hb_itemPutNSize( hb_itemUnRef( pItem ), nValue );
+         hb_itemPutNS( hb_itemUnRef( pItem ), nValue );
          return 1;
       }
    }

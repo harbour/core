@@ -1967,7 +1967,7 @@ HB_SIZE hb_fsReadAt( HB_FHANDLE hFileHandle, void * pBuff, HB_SIZE nCount, HB_FO
 #     endif
 #  endif
 
-      hb_vmLock();
+   hb_vmLock();
 
 #else
 
