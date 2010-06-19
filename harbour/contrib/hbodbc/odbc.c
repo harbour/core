@@ -353,7 +353,7 @@ HB_FUNC( SQLDESCRIBECOL ) /* hStmt, nCol, @cName, nLen, @nBufferLen, @nDataType,
 
 HB_FUNC( SQLCOLATTRIBUTE ) /* hStmt, nCol, nField, @cName, nLen, @nBufferLen, @nAttribute --> nRetCode */
 {
-   void *      bBuffer   = hb_xgrab( hb_parnl( 5 ) );
+   void *      bBuffer   = hb_xgrab( ( SQLUSMALLINT ) hb_parni( 5 ) );
    SQLSMALLINT wBufLen   = ( SQLUSMALLINT ) hb_parni( 6 );
    SQLRETURN   result;
 #if ODBCVER >= 0x0300
@@ -419,7 +419,7 @@ HB_FUNC( SQLFETCHSCROLL )
 {
 #if ODBCVER >= 0x0300
    hb_retni( SQLFetchScroll( ( SQLHSTMT ) hb_parptr( 1 ),
-                             ( SQLSMALLINT ) hb_parnl( 2 ),
+                             ( SQLSMALLINT ) hb_parni( 2 ),
                              ( SQLLEN ) hb_parnint( 3 ) ) );
 #else
    hb_retni( SQL_ERROR );
@@ -463,7 +463,7 @@ HB_FUNC( SQLGETINFO ) /* hDbc, nType, @cResult */
    char bBuffer[ 512 ];
    SQLSMALLINT wLen;
    SQLRETURN result = SQLGetInfo( ( SQLHDBC ) hb_parptr( 1 ),
-                                  ( SQLUSMALLINT ) hb_parnl( 2 ),
+                                  ( SQLUSMALLINT ) hb_parni( 2 ),
                                   ( SQLPOINTER ) bBuffer,
                                   ( SQLSMALLINT ) sizeof( bBuffer ),
                                   ( SQLSMALLINT * ) &wLen );
@@ -481,7 +481,7 @@ HB_FUNC( SQLSETCONNECTATTR ) /* hDbc, nOption, uOption */
                                 HB_ISCHAR( 3 ) ? ( SQLINTEGER ) hb_parclen( 3 ) : ( SQLINTEGER ) SQL_IS_INTEGER ) );
 #else
    hb_retni( SQLSetConnectOption( ( SQLHDBC ) hb_parptr( 1 ),
-                                  ( SQLUSMALLINT ) hb_parnl( 2 ),
+                                  ( SQLUSMALLINT ) hb_parni( 2 ),
                                   ( SQLULEN ) HB_ISCHAR( 3 ) ? ( SQLULEN ) hb_parc( 3 ) : hb_parnl( 3 ) ) );
 #endif
 }
@@ -495,7 +495,7 @@ HB_FUNC( SQLSETSTMTATTR ) /* hStmt, nOption, uOption --> nRetCode */
                              HB_ISCHAR( 3 ) ? ( SQLINTEGER ) hb_parclen( 3 ) : ( SQLINTEGER ) SQL_IS_INTEGER ) );
 #else
    hb_retni( SQLSetStmtOption( ( SQLHSTMT ) hb_parptr( 1 ),
-                               ( SQLUSMALLINT ) hb_parnl( 2 ),
+                               ( SQLUSMALLINT ) hb_parni( 2 ),
                                ( SQLULEN ) HB_ISCHAR( 3 ) ? ( SQLULEN ) hb_parc( 3 ) : hb_parnl( 3 ) ) );
 #endif
 }

@@ -75,7 +75,7 @@ mk_hbgetlibs()
       libs=""
       if [ "$HB_PLATFORM" != "wce" ]
       then
-          libs="$libs gtwin"
+         libs="$libs gtwin"
       fi
       echo "hbextern hbvm hbpp hbrtl hbrdd rddfpt rddcdx rddnsx rddntx hbhsx hbsix hbusrrdd hbmacro hbcommon hblang hbcpage gtcrs gtsln gtxvt gtxwc gtcgi gtstd gtpca gttrm $libs gtwvt gtgui gtdos gtos2 hbdebug profiler hbcplr hbpcre hbzlib"
    else

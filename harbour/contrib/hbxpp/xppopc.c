@@ -73,7 +73,7 @@ HB_FUNC( XPP_INDEX )
       PHB_ITEM pValue = hb_param( 2, HB_IT_ANY );
       if( HB_IS_NUMERIC( pIndex ) )
       {
-         HB_SIZE ulIndex = hb_itemGetNL( pIndex );
+         HB_SIZE ulIndex = hb_itemGetNS( pIndex );
          if( HB_IS_ARRAY( pSelf ) )
          {
             HB_SIZE ulLen = hb_arrayLen( pSelf );
@@ -114,7 +114,7 @@ HB_FUNC( XPP_INDEX )
    {  /* ACCESS */
       if( HB_IS_NUMERIC( pIndex ) )
       {
-         HB_SIZE ulIndex = hb_itemGetNL( pIndex );
+         HB_SIZE ulIndex = hb_itemGetNS( pIndex );
          if( HB_IS_ARRAY( pSelf ) )
          {
             HB_SIZE ulLen = hb_arrayLen( pSelf );

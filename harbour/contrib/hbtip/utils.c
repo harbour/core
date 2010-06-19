@@ -95,7 +95,7 @@ HB_FUNC( TIP_TIMESTAMP )
    /* For compatibility */
    if( HB_ISNUM( 2 ) )
    {
-      HB_SIZE ulHour = hb_parnl( 2 );
+      HB_ULONG ulHour = hb_parnl( 2 );
 
       iHour   = ( int )   ( ulHour / 3600 );
       iMinute = ( int ) ( ( ulHour % 3600 ) / 60 );
@@ -569,7 +569,7 @@ HB_FUNC( PSTRCOMPI )
       const char * pcBase = hb_itemGetCPtr( pString );
       const char * pcSub  = hb_itemGetCPtr( pSubstr );
       HB_SIZE uSublen = hb_itemGetCLen( pSubstr );
-      HB_SIZE uStart  = hb_itemGetNL( pStart );
+      HB_SIZE uStart  = hb_itemGetNS( pStart );
 
       hb_retl( hb_strnicmp( pcBase + uStart - 1, pcSub, uSublen ) == 0 );
    }
