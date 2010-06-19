@@ -643,9 +643,11 @@ long hb_itemGetNL( PHB_ITEM pItem )
          return ( long ) pItem->item.asDouble.value;
 #endif
 
+#if defined( HB_LEGACY_LEVEL3 )
       /* DATETIME TODO: remove it */
       else if( HB_IS_DATETIME( pItem ) )
          return ( long ) pItem->item.asDateTime.julian;
+#endif
    }
 
    return 0;
@@ -669,6 +671,25 @@ HB_MAXINT hb_itemGetNInt( PHB_ITEM pItem )
 #else
          return ( HB_MAXINT ) pItem->item.asDouble.value;
 #endif
+   }
+
+   return 0;
+}
+
+HB_SIZE hb_itemGetNSize( PHB_ITEM pItem )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemGetNSize(%p)", pItem));
+
+   if( pItem )
+   {
+      if( HB_IS_LONG( pItem ) )
+         return ( HB_SIZE ) pItem->item.asLong.value;
+
+      else if( HB_IS_INTEGER( pItem ) )
+         return ( HB_SIZE ) pItem->item.asInteger.value;
+
+      else if( HB_IS_DOUBLE( pItem ) )
+         return ( HB_SIZE ) pItem->item.asDouble.value;
    }
 
    return 0;
@@ -1035,6 +1056,35 @@ PHB_ITEM hb_itemPutNIntLen( PHB_ITEM pItem, HB_MAXINT lNumber, int iWidth )
       return hb_itemPutNLLLen( pItem, ( HB_LONGLONG ) lNumber, iWidth );
 #endif
    }
+}
+
+PHB_ITEM hb_itemPutNSize( PHB_ITEM pItem, HB_SIZE nNumber )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemPutNSize(%p, %" HB_PFS "d)", pItem, nNumber));
+
+   if( pItem )
+   {
+      if( HB_IS_COMPLEX( pItem ) )
+         hb_itemClear( pItem );
+   }
+   else
+      pItem = hb_itemNew( NULL );
+
+   if( HB_LIM_INT( lNumber ) )
+   {
+      pItem->type = HB_IT_INTEGER;
+      pItem->item.asInteger.value = ( int ) nNumber;
+      /* EXP limit used intentionally */
+      pItem->item.asInteger.length = HB_INT_EXPLENGTH( nNumber );
+   }
+   else
+   {
+      pItem->type = HB_IT_LONG;
+      pItem->item.asLong.value = nNumber;
+      pItem->item.asLong.length = HB_LONG_LENGTH( nNumber );
+   }
+
+   return pItem;
 }
 
 PHB_ITEM hb_itemPutNLen( PHB_ITEM pItem, double dNumber, int iWidth, int iDec )

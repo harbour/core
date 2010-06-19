@@ -965,7 +965,7 @@ HB_FUNC( SQLITE3_BIND_BLOB )
 
    if( pStmt )
    {
-      hb_retni( sqlite3_bind_blob(pStmt, hb_parni(2), hb_parcx(3), hb_parcsiz(3) - 1, SQLITE_TRANSIENT) );
+      hb_retni( sqlite3_bind_blob(pStmt, hb_parni(2), hb_parcx(3), ( int ) hb_parcsiz(3) - 1, SQLITE_TRANSIENT) );
    }
    else
    {
@@ -1036,7 +1036,7 @@ HB_FUNC( SQLITE3_BIND_TEXT )
 
    if( pStmt )
    {
-      hb_retni( sqlite3_bind_text(pStmt, hb_parni(2), hb_parc(3), hb_parclen(3), SQLITE_TRANSIENT) );
+      hb_retni( sqlite3_bind_text(pStmt, hb_parni(2), hb_parc(3), ( int ) hb_parclen(3), SQLITE_TRANSIENT) );
    }
    else
    {
@@ -1691,7 +1691,7 @@ HB_FUNC( SQLITE3_BLOB_WRITE )
 
       if( iLen == 0 )
       {
-         iLen = hb_parcsiz( 2 ) - 1;
+         iLen = ( int ) hb_parcsiz( 2 ) - 1;
       }
 
       hb_retni( sqlite3_blob_write(pBlob, hb_parcx(2), iLen, hb_parni(4)) );
@@ -1809,8 +1809,8 @@ HB_FUNC( SQLITE3_FILE_TO_BUFF )
       char *buffer;
       HB_SIZE iSize;
 
-      iSize = ( int ) hb_fsSeek( handle, 0, FS_END );
-      iSize -= ( int ) hb_fsSeek( handle, 0, FS_SET );
+      iSize = hb_fsSeek( handle, 0, FS_END );
+      hb_fsSeek( handle, 0, FS_SET );
       buffer = ( char * ) hb_xgrab( iSize + 1 );
       iSize = hb_fsReadLarge( handle, buffer, iSize );
       buffer[iSize] = '\0';

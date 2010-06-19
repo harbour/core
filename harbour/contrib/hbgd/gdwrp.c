@@ -280,7 +280,7 @@ static void * LoadImageFromFile( const char *szFile, int *sz )
    if( ( fhandle = hb_fsOpen( szFile, FO_READ ) ) != FS_ERROR )
    {
       /* get lenght */
-      *sz = hb_fsSeek( fhandle, 0, FS_END );
+      *sz = ( int ) hb_fsSeek( fhandle, 0, FS_END );
       /* rewind */
       hb_fsSeek( fhandle, 0, FS_SET );
 
@@ -928,7 +928,7 @@ HB_FUNC( GDIMAGEPOLYGON ) /* original: void gdImagePolygon(gdImagePtr im, gdPoin
 
       /* Retrieve point array */
       pPoints     = hb_param( 2, HB_IT_ARRAY );
-      pointsTotal = hb_arrayLen( pPoints );
+      pointsTotal = ( int ) hb_arrayLen( pPoints );
 
       for( i = 0; i < pointsTotal; i ++ )
       {
@@ -944,7 +944,7 @@ HB_FUNC( GDIMAGEPOLYGON ) /* original: void gdImagePolygon(gdImagePtr im, gdPoin
       color = hb_parni( 3 );
 
       /* Draw a polygon */
-      gdImagePolygon( im, (gdPointPtr) points, pointsTotal, color );
+      gdImagePolygon( im, ( gdPointPtr ) points, pointsTotal, color );
 
    }
    else
@@ -981,7 +981,7 @@ HB_FUNC( GDIMAGEOPENPOLYGON ) /* original: void gdImageOpenPolygon(gdImagePtr im
 
       /* Retrieve point array */
       pPoints     = hb_param( 2, HB_IT_ARRAY );
-      pointsTotal = hb_arrayLen( pPoints );
+      pointsTotal = ( int ) hb_arrayLen( pPoints );
 
       for( i = 0; i < pointsTotal; i ++ )
       {
@@ -997,7 +997,7 @@ HB_FUNC( GDIMAGEOPENPOLYGON ) /* original: void gdImageOpenPolygon(gdImagePtr im
       color = hb_parni( 3 );
 
       /* Draw a polygon */
-      gdImageOpenPolygon( im, (gdPointPtr) points, pointsTotal, color );
+      gdImageOpenPolygon( im, ( gdPointPtr ) points, pointsTotal, color );
 
    }
    else
@@ -1077,7 +1077,7 @@ HB_FUNC( GDIMAGEFILLEDPOLYGON ) /* original: void gdImageFilledPolygon(gdImagePt
 
       /* Retrieve point array */
       pPoints     = hb_param( 2, HB_IT_ARRAY );
-      pointsTotal = hb_arrayLen( pPoints );
+      pointsTotal = ( int ) hb_arrayLen( pPoints );
 
       for( i = 0; i < pointsTotal; i ++ )
       {
@@ -1093,7 +1093,7 @@ HB_FUNC( GDIMAGEFILLEDPOLYGON ) /* original: void gdImageFilledPolygon(gdImagePt
       color = hb_parni( 3 );
 
       /* Draw a filled polygon */
-      gdImageFilledPolygon( im, (gdPointPtr) points, pointsTotal, color );
+      gdImageFilledPolygon( im, ( gdPointPtr ) points, pointsTotal, color );
 
    }
    else
@@ -1549,7 +1549,7 @@ HB_FUNC( GDIMAGESETSTYLE ) /* original: void gdImageSetStyle(gdImagePtr im, int 
 
       /* Retrieve style array */
       pStyles     = hb_param( 2, HB_IT_ARRAY );
-      styleLength = hb_arrayLen( pStyles );
+      styleLength = ( int ) hb_arrayLen( pStyles );
 
       for( i = 0; i < styleLength; i ++ )
       {
@@ -1557,7 +1557,7 @@ HB_FUNC( GDIMAGESETSTYLE ) /* original: void gdImageSetStyle(gdImagePtr im, int 
       }
 
       /* Set style */
-      gdImageSetStyle( im, (int *) styles, styleLength);
+      gdImageSetStyle( im, ( int * ) styles, styleLength);
    }
    else
    {

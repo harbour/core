@@ -145,7 +145,7 @@ static int hbwin_bitmapIsSupported( HDC hDC, int iType, const void * pImgBuf, HB
          iRes = ExtEscape( hDC, QUERYESCSUPPORT, sizeof( iRes ), ( LPCSTR ) &iRes, 0, 0 );
          if( iRes > 0 )
          {
-            if( ExtEscape( hDC, iType, nSize, ( LPCSTR ) pImgBuf, sizeof( iRes ), ( LPSTR ) &iRes ) > 0 )
+            if( ExtEscape( hDC, iType, ( int ) nSize, ( LPCSTR ) pImgBuf, sizeof( iRes ), ( LPSTR ) &iRes ) > 0 )
             {
                if( iRes == 1 )
                   return 0;

@@ -185,7 +185,7 @@ static HB_ERRCODE mysqlExecute( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
    HB_ULONG     ulAffectedRows;
    PHB_ITEM     pNewID = NULL;
 
-   if ( mysql_real_query( pMySql, hb_itemGetCPtr( pItem ), hb_itemGetCLen( pItem ) ) )
+   if ( mysql_real_query( pMySql, hb_itemGetCPtr( pItem ), ( unsigned long ) hb_itemGetCLen( pItem ) ) )
    {
       hb_rddsqlSetError( mysql_errno( pMySql ), mysql_error( pMySql ), hb_itemGetCPtr( pItem ), NULL, 0 );
       return HB_FAILURE;
@@ -238,7 +238,7 @@ static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
    pArea->pSDDData = memset( hb_xgrab( sizeof( SDDDATA ) ), 0, sizeof( SDDDATA ) );
    pSDDData = ( SDDDATA * ) pArea->pSDDData;
 
-   if ( mysql_real_query( pMySql, pArea->szQuery, strlen( pArea->szQuery ) ) )
+   if ( mysql_real_query( pMySql, pArea->szQuery, ( unsigned long ) strlen( pArea->szQuery ) ) )
    {
       hb_errRT_MySQLDD( EG_OPEN, ESQLDD_INVALIDQUERY, ( char * ) mysql_error( pMySql ), pArea->szQuery,
                         mysql_errno( pMySql ) );

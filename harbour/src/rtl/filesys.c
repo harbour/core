@@ -1575,10 +1575,10 @@ HB_SIZE hb_fsReadLarge( HB_FHANDLE hFileHandle, void * pBuff, HB_SIZE nCount )
 
    #if defined( HB_OS_WIN )
    {
-      HANDLE hWFileHandle = DosToWinHandle( hFileHandle );
       hb_vmUnlock();
       #if defined( HB_OS_WIN_64 )
       {
+         HANDLE hWFileHandle = DosToWinHandle( hFileHandle );
          HB_SIZE nLeftToRead = nCount;
          HB_UCHAR * pPtr = ( HB_UCHAR * ) pBuff;
 
@@ -1620,7 +1620,7 @@ HB_SIZE hb_fsReadLarge( HB_FHANDLE hFileHandle, void * pBuff, HB_SIZE nCount )
       }
       #else
       {
-         hb_fsSetIOError( ReadFile( hWFileHandle, pBuff, nCount, &nRead, NULL ), 0 );
+         hb_fsSetIOError( ReadFile( DosToWinHandle( hFileHandle ), pBuff, nCount, &nRead, NULL ), 0 );
       }
       #endif
       hb_vmLock();
@@ -1701,13 +1701,13 @@ HB_SIZE hb_fsWriteLarge( HB_FHANDLE hFileHandle, const void * pBuff, HB_SIZE nCo
 
    #if defined( HB_OS_WIN )
    {
-      HANDLE hWFileHandle = DosToWinHandle( hFileHandle );
       nWritten = 0;
       hb_vmUnlock();
       if( nCount )
       {
          #if defined( HB_OS_WIN_64 )
          {
+            HANDLE hWFileHandle = DosToWinHandle( hFileHandle );
             HB_SIZE nLeftToWrite = nCount;
             const HB_UCHAR * pPtr = ( const HB_UCHAR * ) pBuff;
 
@@ -1751,12 +1751,12 @@ HB_SIZE hb_fsWriteLarge( HB_FHANDLE hFileHandle, const void * pBuff, HB_SIZE nCo
          }
          #else
          {
-            hb_fsSetIOError( WriteFile( hWFileHandle, pBuff, nCount, &nWritten, NULL ), 0 );
+            hb_fsSetIOError( WriteFile( DosToWinHandle( hFileHandle ), pBuff, nCount, &nWritten, NULL ), 0 );
          }
          #endif
       }
       else
-         hb_fsSetIOError( SetEndOfFile( hWFileHandle ), 0 );
+         hb_fsSetIOError( SetEndOfFile( DosToWinHandle( hFileHandle ) ), 0 );
       hb_vmLock();
    }
    #else
@@ -1866,31 +1866,79 @@ HB_SIZE hb_fsReadAt( HB_FHANDLE hFileHandle, void * pBuff, HB_SIZE nCount, HB_FO
       nRead = 0;
       hb_vmUnlock();
 #     if defined( HB_OS_WIN )
-      if( hb_iswinnt() )
       {
          OVERLAPPED Overlapped;
          memset( &Overlapped, 0, sizeof( Overlapped ) );
-         Overlapped.Offset     = ( DWORD ) ( llOffset & 0xFFFFFFFF ),
-         Overlapped.OffsetHigh = ( DWORD ) ( llOffset >> 32 ),
-         hb_fsSetIOError( ReadFile( DosToWinHandle( hFileHandle ),
-                                    pBuff, nCount, &nRead, &Overlapped ), 0 );
-      }
-      else
-      {
-         HB_FOFFSET llPos;
-         ULONG ulOffsetLow  = ( ULONG ) ( llOffset & ULONG_MAX ),
-               ulOffsetHigh = ( ULONG ) ( llOffset >> 32 );
-         ulOffsetLow = SetFilePointer( DosToWinHandle( hFileHandle ),
-                                       ulOffsetLow, ( PLONG ) &ulOffsetHigh,
-                                       SEEK_SET );
-         llPos = ( ( HB_FOFFSET ) ulOffsetHigh << 32 ) | ulOffsetLow;
-         if( llPos == ( HB_FOFFSET ) INVALID_SET_FILE_POINTER )
-            hb_fsSetIOError( HB_FALSE, 0 );
-         else
-            hb_fsSetIOError( ReadFile( DosToWinHandle( hFileHandle ),
-                                       pBuff, nCount, &nRead, NULL ), 0 );
-      }
+         Overlapped.Offset     = ( DWORD ) ( llOffset & 0xFFFFFFFF );
+         Overlapped.OffsetHigh = ( DWORD ) ( llOffset >> 32 );
 
+#        if defined( HB_OS_WIN_64 )
+         {
+            HANDLE hWFileHandle = DosToWinHandle( hFileHandle );
+            HB_SIZE nLeftToRead = nCount;
+            HB_UCHAR * pPtr = ( HB_UCHAR * ) pBuff;
+
+            nRead = 0;
+
+            while( nLeftToRead )
+            {
+               DWORD dwToRead;
+               DWORD dwRead;
+               BOOL bResult;
+
+               /* Determine how much to read this time */
+               if( nLeftToRead > ( HB_SIZE ) HB_U32_MAX )
+               {
+                  dwToRead = HB_U32_MAX;
+                  nLeftToRead -= ( HB_SIZE ) dwToRead;
+               }
+               else
+               {
+                  dwToRead = ( DWORD ) nLeftToRead;
+                  nLeftToRead = 0;
+               }
+
+               bResult = ReadFile( hWFileHandle, pPtr, dwToRead, &dwRead, nRead == 0 ? &Overlapped : NULL );
+
+               if( ! bResult )
+               {
+                  dwRead = 0;
+                  break;
+               }
+
+               if( dwRead == 0 )
+                  break;
+
+               nRead += ( HB_SIZE ) dwRead;
+               pPtr += dwRead;
+            }
+            hb_fsSetIOError( nLeftToRead == 0, 0 );
+         }
+#        else
+         {
+            if( hb_iswinnt() )
+            {
+               hb_fsSetIOError( ReadFile( DosToWinHandle( hFileHandle ),
+                                          pBuff, nCount, &nRead, &Overlapped ), 0 );
+            }
+            else
+            {
+               HB_FOFFSET llPos;
+               ULONG ulOffsetLow  = ( ULONG ) ( llOffset & ULONG_MAX ),
+                     ulOffsetHigh = ( ULONG ) ( llOffset >> 32 );
+               ulOffsetLow = SetFilePointer( DosToWinHandle( hFileHandle ),
+                                             ulOffsetLow, ( PLONG ) &ulOffsetHigh,
+                                             SEEK_SET );
+               llPos = ( ( HB_FOFFSET ) ulOffsetHigh << 32 ) | ulOffsetLow;
+               if( llPos == ( HB_FOFFSET ) INVALID_SET_FILE_POINTER )
+                  hb_fsSetIOError( HB_FALSE, 0 );
+               else
+                  hb_fsSetIOError( ReadFile( DosToWinHandle( hFileHandle ),
+                                             pBuff, nCount, &nRead, NULL ), 0 );
+            }
+         }
+#        endif
+      }
       /* TOFIX: this is not atom operation. It has to be fixed for RDD
        *        file access with shared file handles in aliased work areas
        */
@@ -1924,7 +1972,6 @@ HB_SIZE hb_fsReadAt( HB_FHANDLE hFileHandle, void * pBuff, HB_SIZE nCount, HB_FO
 #     endif
       hb_vmLock();
 #  endif
-
 #else
 
    nRead = 0;
@@ -1960,29 +2007,78 @@ HB_SIZE hb_fsWriteAt( HB_FHANDLE hFileHandle, const void * pBuff, HB_SIZE nCount
       nWritten = 0;
       hb_vmUnlock();
 #     if defined( HB_OS_WIN )
-      if( hb_iswinnt() )
       {
          OVERLAPPED Overlapped;
          memset( &Overlapped, 0, sizeof( Overlapped ) );
-         Overlapped.Offset     = ( DWORD ) ( llOffset & 0xFFFFFFFF ),
-         Overlapped.OffsetHigh = ( DWORD ) ( llOffset >> 32 ),
-         hb_fsSetIOError( WriteFile( DosToWinHandle( hFileHandle ),
-                                     pBuff, nCount, &nWritten, &Overlapped ), 0 );
-      }
-      else
-      {
-         HB_FOFFSET llPos;
-         ULONG ulOffsetLow  = ( ULONG ) ( llOffset & ULONG_MAX ),
-               ulOffsetHigh = ( ULONG ) ( llOffset >> 32 );
-         ulOffsetLow = SetFilePointer( DosToWinHandle( hFileHandle ),
-                                       ulOffsetLow, ( PLONG ) &ulOffsetHigh,
-                                       SEEK_SET );
-         llPos = ( ( HB_FOFFSET ) ulOffsetHigh << 32 ) | ulOffsetLow;
-         if( llPos == ( HB_FOFFSET ) INVALID_SET_FILE_POINTER )
-            hb_fsSetIOError( HB_FALSE, 0 );
-         else
-            hb_fsSetIOError( WriteFile( DosToWinHandle( hFileHandle ),
-                                        pBuff, nCount, &nWritten, NULL ), 0 );
+         Overlapped.Offset     = ( DWORD ) ( llOffset & 0xFFFFFFFF );
+         Overlapped.OffsetHigh = ( DWORD ) ( llOffset >> 32 );
+
+#        if defined( HB_OS_WIN_64 )
+         {
+            HANDLE hWFileHandle = DosToWinHandle( hFileHandle );
+            HB_SIZE nLeftToWrite = nCount;
+            const HB_UCHAR * pPtr = ( const HB_UCHAR * ) pBuff;
+
+            nWritten = 0;
+
+            while( nLeftToWrite )
+            {
+               DWORD dwToWrite;
+               DWORD dwWritten;
+               BOOL bResult;
+
+               /* Determine how much to write this time */
+               if( nLeftToWrite > ( HB_SIZE ) HB_U32_MAX )
+               {
+                  dwToWrite = HB_U32_MAX;
+                  nLeftToWrite -= ( HB_SIZE ) dwToWrite;
+               }
+               else
+               {
+                  dwToWrite = ( DWORD ) nLeftToWrite;
+                  nLeftToWrite = 0;
+               }
+
+               bResult = WriteFile( hWFileHandle, pPtr, dwToWrite, &dwWritten, nWritten == 0 ? &Overlapped : NULL );
+
+               if( ! bResult )
+               {
+                  dwWritten = 0;
+                  break;
+               }
+
+               if( dwWritten == 0 )
+                  break;
+
+               nWritten += ( HB_SIZE ) dwWritten;
+               pPtr += dwWritten;
+            }
+            hb_fsSetIOError( nLeftToWrite == 0, 0 );
+         }
+#        else
+         {
+            if( hb_iswinnt() )
+            {
+               hb_fsSetIOError( WriteFile( DosToWinHandle( hFileHandle ),
+                                           pBuff, nCount, &nWritten, &Overlapped ), 0 );
+            }
+            else
+            {
+               HB_FOFFSET llPos;
+               ULONG ulOffsetLow  = ( ULONG ) ( llOffset & ULONG_MAX ),
+                     ulOffsetHigh = ( ULONG ) ( llOffset >> 32 );
+               ulOffsetLow = SetFilePointer( DosToWinHandle( hFileHandle ),
+                                             ulOffsetLow, ( PLONG ) &ulOffsetHigh,
+                                             SEEK_SET );
+               llPos = ( ( HB_FOFFSET ) ulOffsetHigh << 32 ) | ulOffsetLow;
+               if( llPos == ( HB_FOFFSET ) INVALID_SET_FILE_POINTER )
+                  hb_fsSetIOError( HB_FALSE, 0 );
+               else
+                  hb_fsSetIOError( WriteFile( DosToWinHandle( hFileHandle ),
+                                              pBuff, nCount, &nWritten, NULL ), 0 );
+            }
+         }
+#        endif
       }
 
       /* TOFIX: this is not atom operation. It has to be fixed for RDD

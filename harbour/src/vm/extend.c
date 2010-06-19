@@ -673,6 +673,30 @@ HB_MAXINT hb_parnintdef( int iParam, HB_MAXINT lDefValue )
    return lDefValue;
 }
 
+HB_MAXINT hb_parnsize( int iParam )
+{
+   HB_STACK_TLS_PRELOAD
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_parnsize(%d)", iParam));
+
+   if( iParam >= -1 && iParam <= hb_pcount() )
+   {
+      PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
+
+      if( HB_IS_BYREF( pItem ) )
+         pItem = hb_itemUnRef( pItem );
+
+      if( HB_IS_LONG( pItem ) )
+         return ( HB_SIZE ) pItem->item.asLong.value;
+      else if( HB_IS_INTEGER( pItem ) )
+         return ( HB_SIZE ) pItem->item.asInteger.value;
+      else if( HB_IS_DOUBLE( pItem ) )
+         return ( HB_SIZE ) pItem->item.asDouble.value;
+   }
+
+   return 0;
+}
+
 void * hb_parptr( int iParam )
 {
    HB_STACK_TLS_PRELOAD
@@ -1516,6 +1540,16 @@ void hb_retnint( HB_MAXINT lNumber )
    hb_itemPutNInt( hb_stackReturnItem(), lNumber );
 }
 
+#undef hb_retnsize
+void hb_retnsize( HB_SIZE nNumber )
+{
+   HB_STACK_TLS_PRELOAD
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_retnsize(%" HB_PFS "d )", nNumber));
+
+   hb_itemPutNInt( hb_stackReturnItem(), nNumber );
+}
+
 #undef hb_retnlen
 void hb_retnlen( double dNumber, int iWidth, int iDec )
 {
@@ -1920,6 +1954,31 @@ int hb_stornint( HB_MAXINT lValue, int iParam )
       if( HB_IS_BYREF( pItem ) )
       {
          hb_itemPutNInt( hb_itemUnRef( pItem ), lValue );
+         return 1;
+      }
+   }
+
+   return 0;
+}
+
+int hb_stornsize( HB_SIZE nValue, int iParam )
+{
+   HB_STACK_TLS_PRELOAD
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_stornsize(%" HB_PFS "d, %d)", nValue, iParam));
+
+   if( iParam == -1 )
+   {
+      hb_itemPutNSize( hb_stackReturnItem(), nValue );
+      return 1;
+   }
+   else if( iParam >= 0 && iParam <= hb_pcount() )
+   {
+      PHB_ITEM pItem = hb_stackItemFromBase( iParam );
+
+      if( HB_IS_BYREF( pItem ) )
+      {
+         hb_itemPutNSize( hb_itemUnRef( pItem ), nValue );
          return 1;
       }
    }

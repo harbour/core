@@ -72,51 +72,51 @@
 #define NXS_MAX_KEYLEN 256
 
 void nxs_crypt(
-   const unsigned char *source, HB_SIZE srclen,
-   const unsigned char *key, HB_SIZE keylen,
-   unsigned char *cipher );
+   const unsigned char * source, HB_SIZE srclen,
+   const unsigned char * key, HB_SIZE keylen,
+   unsigned char * cipher );
 
 void nxs_decrypt(
-   const unsigned char *cipher, HB_SIZE cypherlen,
-   const unsigned char *key, HB_SIZE keylen,
-   unsigned char *result );
+   const unsigned char * cipher, HB_SIZE cypherlen,
+   const unsigned char * key, HB_SIZE keylen,
+   unsigned char * result );
 
 void nxs_scramble(
-      const unsigned char *source, HB_SIZE srclen,
-      const unsigned char *key, HB_SIZE keylen,
-      unsigned char *cipher );
+   const unsigned char * source, HB_SIZE srclen,
+   const unsigned char * key, HB_SIZE keylen,
+   unsigned char * cipher );
 
 void nxs_partial_scramble(
-   const unsigned char *source, unsigned char *cipher,
-   int *scramble,
+   const unsigned char * source, unsigned char * cipher,
+   HB_ISIZ * scramble,
    HB_SIZE len, HB_SIZE keylen );
 
 void nxs_partial_unscramble(
-   unsigned char *cipher,
-   int *scramble,
+   unsigned char * cipher,
+   HB_ISIZ * scramble,
    HB_SIZE len, HB_SIZE keylen );
 
 void nxs_unscramble(
-      unsigned char *cipher, HB_SIZE cypherlen,
-      const unsigned char *key, HB_SIZE keylen);
+   unsigned char * cipher, HB_SIZE cypherlen,
+   const unsigned char * key, HB_SIZE keylen);
 
 void nxs_xorcode(
-   unsigned char *cipher, HB_SIZE cipherlen,
-   const unsigned char *key, HB_SIZE keylen );
+   unsigned char * cipher, HB_SIZE cipherlen,
+   const unsigned char * key, HB_SIZE keylen );
 
 void nxs_xordecode(
-   unsigned char *cipher, HB_SIZE cipherlen,
-   const unsigned char *key, HB_SIZE keylen );
+   unsigned char * cipher, HB_SIZE cipherlen,
+   const unsigned char * key, HB_SIZE keylen );
 
 void nxs_xorcyclic(
-   unsigned char *cipher, HB_SIZE cipherlen,
-   const unsigned char *key, HB_SIZE keylen );
+   unsigned char * cipher, HB_SIZE cipherlen,
+   const unsigned char * key, HB_SIZE keylen );
 
 HB_U32 nxs_cyclic_sequence( HB_U32 input );
 
 void nxs_make_scramble(
-   int *scramble,
-   const unsigned char *key,
+   HB_ISIZ * scramble,
+   const unsigned char * key,
    HB_SIZE keylen );
 
 #endif

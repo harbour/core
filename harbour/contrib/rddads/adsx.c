@@ -179,7 +179,6 @@ static HB_ERRCODE hb_adsUpdateAreaFlags( ADSXAREAP pArea )
 static LPMIXKEY mixKeyNew( PHB_ITEM pItem, HB_ULONG ulRecNo, HB_BYTE bType, HB_USHORT uiLen )
 {
    LPMIXKEY    pKey;
-   HB_ULONG    ul;
    double      dbl;
    HB_BYTE     buf[ 8 ];
 
@@ -189,14 +188,15 @@ static LPMIXKEY mixKeyNew( PHB_ITEM pItem, HB_ULONG ulRecNo, HB_BYTE bType, HB_U
    switch ( bType )
    {
       case 'C':
-         ul = hb_itemGetCLen( pItem );
-         if( ul > ( HB_ULONG ) uiLen )
+      {
+         HB_SIZE ul = hb_itemGetCLen( pItem );
+         if( ul > ( HB_SIZE ) uiLen )
             ul = uiLen;
          memcpy( pKey->val, hb_itemGetCPtr( pItem ), ul );
-         if( ul < ( HB_ULONG ) uiLen )
-            memset( pKey->val + ul, ' ', ( HB_ULONG ) uiLen - ul );
+         if( ul < ( HB_SIZE ) uiLen )
+            memset( pKey->val + ul, ' ', ( HB_SIZE ) uiLen - ul );
          break;
-
+      }
       case 'N':
          dbl = hb_itemGetND( pItem );
          HB_DBL2ORD( &dbl, buf );

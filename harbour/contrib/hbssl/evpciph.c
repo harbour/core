@@ -582,14 +582,14 @@ HB_FUNC( EVP_ENCRYPTUPDATE )
 
       if( ctx )
       {
-         int size = hb_parclen( 3 ) + EVP_CIPHER_CTX_block_size( ctx ) - 1;
+         int size = ( int ) hb_parclen( 3 ) + EVP_CIPHER_CTX_block_size( ctx ) - 1;
          unsigned char * buffer = ( unsigned char * ) hb_xgrab( size + 1 );
 
          hb_retni( EVP_EncryptUpdate( ctx,
                                       buffer,
                                       &size,
                                       ( const unsigned char * ) hb_parcx( 3 ),
-                                      ( size_t ) hb_parclen( 3 ) ) );
+                                      ( int ) hb_parclen( 3 ) ) );
 
          if( size > 0 )
          {
@@ -710,14 +710,14 @@ HB_FUNC( EVP_DECRYPTUPDATE )
 
       if( ctx )
       {
-         int size = hb_parclen( 3 ) + EVP_CIPHER_CTX_block_size( ctx );
+         int size = ( int ) hb_parclen( 3 ) + EVP_CIPHER_CTX_block_size( ctx );
          unsigned char * buffer = ( unsigned char * ) hb_xgrab( size + 1 );
 
          hb_retni( EVP_DecryptUpdate( ctx,
                                       buffer,
                                       &size,
                                       ( const unsigned char * ) hb_parcx( 3 ),
-                                      ( size_t ) hb_parclen( 3 ) ) );
+                                      ( int ) hb_parclen( 3 ) ) );
 
          if( size > 0 )
          {
@@ -840,14 +840,14 @@ HB_FUNC( EVP_CIPHERUPDATE )
 
       if( ctx )
       {
-         int size = hb_parclen( 3 ) + EVP_CIPHER_CTX_block_size( ctx ) - 1;
+         int size = ( int ) hb_parclen( 3 ) + EVP_CIPHER_CTX_block_size( ctx ) - 1;
          unsigned char * buffer = ( unsigned char * ) hb_xgrab( size + 1 );
 
          hb_retni( EVP_CipherUpdate( ctx,
                                      buffer,
                                      &size,
                                      ( const unsigned char * ) hb_parcx( 3 ),
-                                     ( size_t ) hb_parclen( 3 ) ) );
+                                     ( int ) hb_parclen( 3 ) ) );
 
          if( size > 0 )
          {
@@ -1004,14 +1004,14 @@ HB_FUNC( EVP_SEALUPDATE )
 
       if( ctx )
       {
-         int size = hb_parclen( 3 ) + EVP_CIPHER_CTX_block_size( ctx ) - 1;
+         int size = ( int ) hb_parclen( 3 ) + EVP_CIPHER_CTX_block_size( ctx ) - 1;
          unsigned char * buffer = ( unsigned char * ) hb_xgrab( size + 1 );
 
          hb_retni( EVP_SealUpdate( ctx,
                                    buffer,
                                    &size,
                                    ( const unsigned char * ) hb_parcx( 3 ),
-                                   ( size_t ) hb_parclen( 3 ) ) );
+                                   ( int ) hb_parclen( 3 ) ) );
 
          if( size > 0 )
          {
@@ -1071,7 +1071,7 @@ HB_FUNC( EVP_OPENINIT )
          hb_retni( EVP_OpenInit( ctx,
                                  cipher,
                                  ( const unsigned char * ) hb_parcx( 3 ),
-                                 hb_parclen( 3 ),
+                                 ( int ) hb_parclen( 3 ),
                                  ( HB_ISCHAR( 4 ) && ( int ) hb_parclen( 4 ) == EVP_CIPHER_iv_length( cipher ) ) ? ( const unsigned char * ) hb_parc( 4 ) : NULL,
                                  priv ) );
    }
@@ -1087,14 +1087,14 @@ HB_FUNC( EVP_OPENUPDATE )
 
       if( ctx )
       {
-         int size = hb_parclen( 3 ) + EVP_CIPHER_CTX_block_size( ctx ) - 1;
+         int size = ( int ) hb_parclen( 3 ) + EVP_CIPHER_CTX_block_size( ctx ) - 1;
          unsigned char * buffer = ( unsigned char * ) hb_xgrab( size + 1 );
 
          hb_retni( EVP_OpenUpdate( ctx,
                                    buffer,
                                    &size,
                                    ( const unsigned char * ) hb_parcx( 3 ),
-                                   ( size_t ) hb_parclen( 3 ) ) );
+                                   ( int ) hb_parclen( 3 ) ) );
 
          if( size > 0 )
          {

@@ -107,7 +107,7 @@ HB_FUNC( EVP_BYTESTOKEY )
                                 md,
                                 ( const unsigned char * ) hb_parc( 3 ) /* salt */,
                                 ( const unsigned char * ) hb_parcx( 4 ) /* data */,
-                                hb_parclen( 4 ),
+                                ( int ) hb_parclen( 4 ),
                                 hb_parni( 5 ) /* count */,
                                 key,
                                 iv ) );

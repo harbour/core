@@ -1470,11 +1470,12 @@ HB_FUNC( WVG_OBJECT )
 static void hb_wvg_GridVert( PHB_GTWVT pWVT, PHB_ITEM pArray, RECT *uRect )
 {
    PHB_ITEM pCols = hb_arrayGetItemPtr( pArray, 3 );
-   int iTabs = hb_arrayLen( pCols );
+   HB_ISIZ iTabs = hb_arrayLen( pCols );
 
-   if(  iTabs > 0 )
+   if( iTabs > 0 )
    {
-      int x, i, iTop, iBottom;
+      int x, iTop, iBottom;
+      HB_ISIZ i;
 
       iTop    = ( hb_arrayGetNI( pArray, 1 ) * ( int ) pWVT->PTEXTSIZE.y );
       iBottom = ( ( hb_arrayGetNI( pArray, 2 ) + 1 ) * ( int ) pWVT->PTEXTSIZE.y ) - 1;
@@ -1484,9 +1485,9 @@ static void hb_wvg_GridVert( PHB_GTWVT pWVT, PHB_ITEM pArray, RECT *uRect )
       {
          HDC hdc = pWVT->hGuiDC;
          SelectObject( hdc, pWVT->currentPen );
-         for ( i = 1; i <= iTabs; i++ )
+         for( i = 1; i <= iTabs; i++ )
          {
-            x = ( hb_arrayGetNI( pCols, i ) * pWVT->PTEXTSIZE.x );
+            x = hb_arrayGetNI( pCols, i ) * pWVT->PTEXTSIZE.x;
             MoveToEx( hdc, x, iTop, NULL );
             LineTo( hdc, x, iBottom );
          }
@@ -1497,9 +1498,9 @@ static void hb_wvg_GridVert( PHB_GTWVT pWVT, PHB_ITEM pArray, RECT *uRect )
           */
          hdc = pWVT->hdc;
          SelectObject( hdc, pWVT->currentPen );
-         for ( i = 1; i <= iTabs; i++ )
+         for( i = 1; i <= iTabs; i++ )
          {
-            x = ( hb_arrayGetNI( pCols, i ) * pWVT->PTEXTSIZE.x );
+            x = hb_arrayGetNI( pCols, i ) * pWVT->PTEXTSIZE.x;
             MoveToEx( hdc, x, iTop, NULL );
             LineTo( hdc, x, iBottom );
          }

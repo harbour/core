@@ -210,7 +210,7 @@ HB_FUNC( WIN_TEXTOUT )
          }
          else if( ExtTextOut( hDC, iRow, iCol, 0, NULL, lpData, ( UINT ) nLen, NULL ) )
          {
-            GetTextExtentPoint32( hDC, lpData, nLen, &sSize ); /* Get the length of the text in device size */
+            GetTextExtentPoint32( hDC, lpData, ( int ) nLen, &sSize ); /* Get the length of the text in device size */
             lResult = ( long ) sSize.cx; /* return the width so we can update the current pen position (::PosY) */
          }
       }

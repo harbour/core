@@ -59,12 +59,12 @@
 #include "hbvm.h"
 
 /* Escaping delimited strings. Need to be cleaned/optimized/improved */
-static char * hb_strescape( const char * szInput, int lLen, const char * cDelim )
+static char * hb_strescape( const char * szInput, HB_ISIZ lLen, const char * cDelim )
 {
-   int     lCnt = 0;
+   HB_ISIZ lCnt = 0;
    const char * szChr;
-   char  * szEscape;
-   char  * szReturn;
+   char * szEscape;
+   char * szReturn;
 
    szReturn = szEscape = ( char * ) hb_xgrab( lLen * 2 + 4 );
 
@@ -168,7 +168,7 @@ HB_FUNC( DBF2TEXT )
 
    /* Export DBF content to text file */
 
-   int iSepLen;
+   HB_ISIZ iSepLen;
    HB_USHORT uiFields = 0;
    HB_USHORT ui;
    PHB_ITEM pTmp;

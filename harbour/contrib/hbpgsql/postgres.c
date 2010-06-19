@@ -498,8 +498,8 @@ HB_FUNC( PQEXECPARAMS )
 
    if( conn && aParam )
    {
-      HB_ISIZ n = hb_arrayLen( aParam );
-      HB_ISIZ i;
+      int n = ( int ) hb_arrayLen( aParam );
+      int i;
 
       const char ** paramvalues = ( const char ** ) hb_xgrab( sizeof( char * ) * n );
 

@@ -322,7 +322,6 @@ static PHRB_BODY hb_hrbLoad( const char * szHrbBody, HB_SIZE ulBodySize, HB_USHO
       HB_SIZE ulBodyOffset = 0;
       HB_SIZE ulSize;                              /* Size of function */
       HB_SIZE ulPos;
-      HB_ULONG ulValue;
       HB_ULONG ul;
       char * buffer, ch;
       HB_USHORT usBind = ( usMode & HB_HRB_BIND_MODEMASK );

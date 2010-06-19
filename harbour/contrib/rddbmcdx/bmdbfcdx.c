@@ -498,7 +498,7 @@ static HB_BYTE hb_cdxItemTypeCmp( HB_BYTE bType )
 static LPCDXKEY hb_cdxKeyPutItem( LPCDXKEY pKey, PHB_ITEM pItem, HB_ULONG ulRec, LPCDXTAG pTag, HB_BOOL fTrans, int iMode )
 {
    HB_BYTE buf[ CDX_MAXKEY ], *ptr;
-   HB_ULONG ulLen = 0;
+   HB_SIZE ulLen = 0;
    double d;
 
    ptr = &buf[0];
@@ -507,9 +507,9 @@ static LPCDXKEY hb_cdxKeyPutItem( LPCDXKEY pKey, PHB_ITEM pItem, HB_ULONG ulRec,
    {
       case 'C':
          ulLen = hb_itemGetCLen( pItem );
-         if( ulLen > ( HB_ULONG ) pTag->uiLen )
+         if( ulLen > ( HB_SIZE ) pTag->uiLen )
             ulLen = pTag->uiLen;
-         if( iMode == CDX_CMP_EXACT && ulLen < ( HB_ULONG ) pTag->uiLen )
+         if( iMode == CDX_CMP_EXACT && ulLen < ( HB_SIZE ) pTag->uiLen )
          {
             memcpy( ptr, hb_itemGetCPtr( pItem ), ulLen );
             memset( ptr + ulLen, pTag->bTrail, pTag->uiLen - ulLen );
@@ -1069,7 +1069,7 @@ static void hb_cdxIndexPutAvailPage( LPCDXINDEX pIndex, HB_ULONG ulPos, HB_BOOL 
 static void hb_cdxIndexFlushAvailPage( LPCDXINDEX pIndex )
 {
    LPCDXLIST pLst = pIndex->freeLst;
-   HB_BYTE byPageBuf[CDX_PAGELEN];
+   HB_BYTE byPageBuf[ CDX_PAGELEN ];
    HB_ULONG ulPos;
    HB_BOOL fClean = HB_TRUE;
 
@@ -1127,7 +1127,7 @@ static void hb_cdxIndexPageWrite( LPCDXINDEX pIndex, HB_ULONG ulPos, HB_BYTE * p
    if( pIndex->fShared && !pIndex->lockWrite )
       hb_errInternal( 9102, "hb_cdxIndexPageWrite on not locked index file.", NULL, NULL );
 
-   if( hb_fileWriteAt( pIndex->pFile, pBuffer, uiSize, ulPos ) != ( HB_ULONG ) uiSize )
+   if( hb_fileWriteAt( pIndex->pFile, pBuffer, uiSize, ulPos ) != ( HB_SIZE ) uiSize )
       hb_errInternal( EDBF_WRITE, "Write in index page failed.", NULL, NULL );
    pIndex->fChanged = HB_TRUE;
 #ifdef HB_CDX_DBGUPDT
@@ -1144,7 +1144,7 @@ static void hb_cdxIndexPageRead( LPCDXINDEX pIndex, HB_ULONG ulPos, HB_BYTE * pB
    if( pIndex->fShared && !( pIndex->lockRead || pIndex->lockWrite ) )
       hb_errInternal( 9103, "hb_cdxIndexPageRead on not locked index file.", NULL, NULL );
 
-   if( hb_fileReadAt( pIndex->pFile, pBuffer, uiSize, ulPos ) != ( HB_ULONG ) uiSize )
+   if( hb_fileReadAt( pIndex->pFile, pBuffer, uiSize, ulPos ) != ( HB_SIZE ) uiSize )
       hb_errInternal( EDBF_READ, "hb_cdxIndexPageRead: Read index page failed.", NULL, NULL );
 #ifdef HB_CDX_DBGUPDT
    cdxReadNO++;
@@ -5581,7 +5581,7 @@ static HB_BOOL hb_cdxDBOISkipWild( CDXAREAP pArea, LPCDXTAG pTag, HB_BOOL fForwa
 static HB_BOOL hb_cdxRegexMatch( CDXAREAP pArea, PHB_REGEX pRegEx, LPCDXKEY pKey )
 {
    char * szKey = ( char * ) pKey->val;
-   HB_ULONG ulLen = pKey->len;
+   HB_SIZE ulLen = pKey->len;
    char szBuff[ CDX_MAXKEY + 1 ];
 
    if( pArea->dbfarea.area.cdPage != hb_vmCDP() )
@@ -9567,7 +9567,7 @@ static void hb_cdxSortAddNodeKey( LPCDXSORTINFO pSort, int iLevel, HB_BYTE *pKey
 
 static void hb_cdxSortWritePage( LPCDXSORTINFO pSort )
 {
-   HB_ULONG ulSize = pSort->ulKeys * ( pSort->keyLen + 4 );
+   HB_SIZE ulSize = pSort->ulKeys * ( pSort->keyLen + 4 );
 
    hb_cdxSortSortPage( pSort );
 
@@ -9599,7 +9599,7 @@ static void hb_cdxSortGetPageKey( LPCDXSORTINFO pSort, HB_ULONG ulPage,
    if( pSort->pSwapPage[ ulPage ].ulKeyBuf == 0 )
    {
       HB_ULONG ulKeys = HB_MIN( pSort->ulPgKeys, pSort->pSwapPage[ ulPage ].ulKeys );
-      HB_ULONG ulSize = ulKeys * ( iLen + 4 );
+      HB_SIZE ulSize = ulKeys * ( iLen + 4 );
 
       if( hb_fsSeekLarge( pSort->hTempFile, pSort->pSwapPage[ ulPage ].nOffset, FS_SET ) != pSort->pSwapPage[ ulPage ].nOffset ||
            hb_fsReadLarge( pSort->hTempFile, pSort->pSwapPage[ ulPage ].pKeyPool, ulSize ) != ulSize )

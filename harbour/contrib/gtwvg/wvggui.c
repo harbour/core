@@ -2061,7 +2061,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       {
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_ARRAY )
          {
-            int iParam = hb_arrayLen( pInfo->pNewVal );
+            HB_SIZE iParam = hb_arrayLen( pInfo->pNewVal );
             if( iParam == HB_GTI_PP_SIZE )
             {
                PHB_ITEM pSome;

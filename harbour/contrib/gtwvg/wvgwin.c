@@ -154,7 +154,7 @@ HB_FUNC( WVG_SENDDLGITEMMESSAGE )
 {
    PHB_ITEM pText = hb_param( 5, HB_IT_STRING );
    char *   cText = NULL;
-   int      iLen = 0;
+   HB_ISIZ  iLen = 0;
 
    if( pText )
    {
@@ -764,11 +764,11 @@ HB_FUNC( WVG_CREATEPOPUPMENU )
 
 HB_FUNC( WVG_APPENDMENU )
 {
-   LPTSTR  buffer;
-   int     i, iLen;
-
    if( HB_ISCHAR( 4 ) )
    {
+      LPTSTR buffer;
+      HB_ISIZ i, iLen;
+
       iLen = hb_parclen( 4 );
       if( iLen > 0 && iLen < 256 )   /* Translate '~' to '&' */
       {

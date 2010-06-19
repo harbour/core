@@ -130,7 +130,7 @@ HB_FUNC( EVP_ENCODEUPDATE )
                            buffer,
                            &size,
                            ( const unsigned char * ) hb_parcx( 3 ),
-                           ( size_t ) hb_parclen( 3 ) );
+                           ( int ) hb_parclen( 3 ) );
 
          if( size > 0 )
          {
@@ -205,7 +205,7 @@ HB_FUNC( EVP_DECODEUPDATE )
                            buffer,
                            &size,
                            ( const unsigned char * ) hb_parcx( 3 ),
-                           ( size_t ) hb_parclen( 3 ) );
+                           ( int ) hb_parclen( 3 ) );
 
          if( size > 0 )
          {

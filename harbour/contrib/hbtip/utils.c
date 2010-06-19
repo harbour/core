@@ -116,7 +116,7 @@ HB_FUNC( TIP_TIMESTAMP )
 
 typedef struct tag_mime
 {
-   int pos;                   /* Position in stream from which the match begins */
+   HB_ISIZ pos;               /* Position in stream from which the match begins */
    const char * pattern;      /* String to match */
    const char * mime_type;    /* Mimetype if complete */
    int next;                  /* following entry to determine a mimetype, relative to current position (or 0) */
@@ -331,11 +331,11 @@ static const char * s_findExtMimeType( const char * cExt )
    return NULL;
 }
 
-static const char * s_findMimeStringInTree( const char * cData, int iLen, int iElem )
+static const char * s_findMimeStringInTree( const char * cData, HB_ISIZ iLen, int iElem )
 {
    MIME_ENTRY * elem = s_mimeTable + iElem;
-   int iPos = elem->pos;
-   int iDataLen = strlen( elem->pattern );
+   HB_ISIZ iPos = elem->pos;
+   HB_ISIZ iDataLen = strlen( elem->pattern );
 
    /* allow \0 to be used for matches */
    if( iDataLen == 0 )
@@ -347,7 +347,7 @@ static const char * s_findMimeStringInTree( const char * cData, int iLen, int iE
          cData[ iPos ] == ' ' || cData[ iPos ] == '\r' || cData[ iPos ] == '\n' ) ) ||
          ( ( elem->flags & MIME_FLAG_TRIMTABS ) == MIME_FLAG_TRIMSPACES && cData[ iPos ] == '\t' ) ) )
    {
-      iPos ++;
+      iPos++;
    }
 
    if( ( iPos < iLen ) && ( iLen - iPos >= iDataLen ) )
@@ -382,7 +382,7 @@ static const char * s_findMimeStringInTree( const char * cData, int iLen, int iE
    return NULL;  /* total giveup */
 }
 
-static const char * s_findStringMimeType( const char * cData, int iLen )
+static const char * s_findStringMimeType( const char * cData, HB_ISIZ iLen )
 {
    int iCount;
    HB_BOOL bFormFeed;
@@ -390,8 +390,8 @@ static const char * s_findStringMimeType( const char * cData, int iLen )
    for( iCount = 0; iCount < MIME_TABLE_SIZE; iCount++ )
    {
       MIME_ENTRY * elem = s_mimeTable + iCount;
-      int iPos = elem->pos;
-      int iDataLen = strlen( elem->pattern );
+      HB_ISIZ iPos = elem->pos;
+      HB_ISIZ iDataLen = strlen( elem->pattern );
 
       if( ( elem->flags & MIME_FLAG_CONTINUE ) == MIME_FLAG_CONTINUE )
          continue;
@@ -402,7 +402,7 @@ static const char * s_findStringMimeType( const char * cData, int iLen )
              cData[ iPos ] == ' ' || cData[ iPos ] == '\r' || cData[ iPos ] == '\n' ) ) ||
            ( ( elem->flags & MIME_FLAG_TRIMTABS ) == MIME_FLAG_TRIMSPACES && cData[ iPos ] == '\t' ) ) )
       {
-         iPos ++;
+         iPos++;
       }
 
       if( iPos >= iLen )
@@ -477,15 +477,15 @@ static const char * s_findFileMimeType( HB_FHANDLE fileIn )
 {
    char buf[ 512 ];
    int iLen;
-   HB_SIZE ulPos;
+   HB_FOFFSET ulPos;
 
-   ulPos = hb_fsSeek( fileIn, 0, FS_RELATIVE );
+   ulPos = hb_fsSeekLarge( fileIn, 0, FS_RELATIVE );
    hb_fsSeek( fileIn, 0, FS_SET );
    iLen = hb_fsRead( fileIn, buf, sizeof( buf ) );
 
    if( iLen > 0 )
    {
-      hb_fsSeek( fileIn, ulPos, FS_SET );
+      hb_fsSeekLarge( fileIn, ulPos, FS_SET );
       return s_findStringMimeType( buf, iLen );
    }
 
@@ -506,7 +506,7 @@ HB_FUNC( TIP_FILEMIMETYPE )
       {
          /* decode the extension */
          const char * fname = hb_itemGetCPtr( pFile );
-         int iPos = strlen( fname ) - 1;
+         HB_ISIZ iPos = strlen( fname ) - 1;
 
          while( iPos >= 0 && fname[ iPos ] != '.' )
             iPos--;
@@ -583,13 +583,13 @@ HB_FUNC( TIP_HTMLSPECIALCHARS )
 
    if( cData )
    {
-      int nLen = hb_parclen( 1 );
+      HB_ISIZ nLen = hb_parclen( 1 );
 
       if( nLen )
       {
          /* Giving maximum final length possible */
          char * cRet = ( char * ) hb_xgrab( nLen * 6 + 1 );
-         int nPos = 0, nPosRet = 0;
+         HB_ISIZ nPos = 0, nPosRet = 0;
          HB_BYTE cElem;
 
          while( nPos < nLen )

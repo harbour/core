@@ -342,7 +342,7 @@ HB_FUNC( FI_LOADFROMMEM )
       flags    = hb_parni( 3 );
 
       /* run function */
-      stream = FreeImage_OpenMemory( ( BYTE * ) szImage, hb_parclen( 2 ) );
+      stream = FreeImage_OpenMemory( ( BYTE * ) szImage, ( DWORD ) hb_parclen( 2 ) );
       dib = FreeImage_LoadFromMemory( fif, stream, flags );
       FreeImage_CloseMemory( stream );
 
@@ -773,7 +773,7 @@ HB_FUNC( FI_GETFILETYPE )
 
       /* Retrieve parameters */
       filename   = hb_parcx( 1 );
-      size       = hb_parclen( 1 );
+      size       = ( int ) hb_parclen( 1 );
 
       /* run function & return value */
       hb_retni( FreeImage_GetFileType(filename, size) );
@@ -804,7 +804,7 @@ HB_FUNC( FI_GETFILETYPEFROMMEM )
 
       /* Retrieve parameters */
       szImage = hb_parcx( 1 );
-      stream  = FreeImage_OpenMemory( ( BYTE * ) szImage, hb_parclen( 1 ) );
+      stream  = FreeImage_OpenMemory( ( BYTE * ) szImage, ( int ) hb_parclen( 1 ) );
       size    = hb_parni( 1 );
 
       /* run function & return value */

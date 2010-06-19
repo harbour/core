@@ -59,12 +59,12 @@
 
 HB_FUNC( RAND_SEED )
 {
-   RAND_seed( hb_parcx( 1 ), hb_parclen( 1 ) );
+   RAND_seed( hb_parcx( 1 ), ( int ) hb_parclen( 1 ) );
 }
 
 HB_FUNC( RAND_ADD )
 {
-   RAND_add( hb_parcx( 1 ), hb_parclen( 1 ), hb_parnd( 2 ) );
+   RAND_add( hb_parcx( 1 ), ( int ) hb_parclen( 1 ), hb_parnd( 2 ) );
 }
 
 HB_FUNC( RAND_STATUS )

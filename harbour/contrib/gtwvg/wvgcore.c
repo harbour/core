@@ -164,7 +164,7 @@ IPicture * hb_wvt_gtLoadPictureFromResource( LPCSTR cResource, LPCSTR cSection )
       IStream *iStream  = NULL;
       HGLOBAL mem       = LoadResource( GetModuleHandle( NULL ), res );
       void    *data     = LockResource( mem );
-      size_t  nFileSize = SizeofResource( GetModuleHandle( NULL ), res );
+      LONG    nFileSize = ( LONG ) SizeofResource( GetModuleHandle( NULL ), res );
       HGLOBAL hGlobal   = GlobalAlloc( GMEM_MOVEABLE, nFileSize );
       LPVOID  pvData    = GlobalLock( hGlobal );
 

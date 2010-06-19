@@ -125,7 +125,7 @@ HB_FUNC( HB_ZCOMPRESSBOUND )
 {
    if( HB_ISCHAR( 1 ) )
 #if defined( _HB_Z_COMPRESSBOUND )
-      hb_retnint( compressBound( hb_parclen( 1 ) ) );
+      hb_retnint( compressBound( ( uLong ) hb_parclen( 1 ) ) );
 #else
       hb_retnint( 0 );
 #endif
@@ -186,14 +186,16 @@ HB_FUNC( HB_ZCOMPRESS )
 
          if( pBuffer )
          {
-            if( !hb_itemGetWriteCL( pBuffer, &pDest, &ulDstLen ) )
+            HB_SIZE nDstLen;
+            if( !hb_itemGetWriteCL( pBuffer, &pDest, &nDstLen ) )
                pDest = NULL;
+            ulDstLen = ( uLong ) nDstLen;
          }
          else
          {
             ulDstLen = HB_ISNUM( 2 ) ? ( uLong ) hb_parnint( 2 ) :
 #if defined( _HB_Z_COMPRESSBOUND )
-                                    compressBound( ulLen );
+                                    compressBound( ( uLong ) ulLen );
 #else
                                     0;
 #endif
@@ -203,9 +205,9 @@ HB_FUNC( HB_ZCOMPRESS )
          if( pDest )
          {
             if( HB_ISNUM( 4 ) )
-               iResult = compress2( ( Bytef * ) pDest, &ulDstLen, ( Bytef * ) szData, ulLen, hb_parni( 4 ) );
+               iResult = compress2( ( Bytef * ) pDest, &ulDstLen, ( Bytef * ) szData, ( uLong ) ulLen, hb_parni( 4 ) );
             else
-               iResult = compress( ( Bytef * ) pDest, &ulDstLen, ( Bytef * ) szData, ulLen );
+               iResult = compress( ( Bytef * ) pDest, &ulDstLen, ( Bytef * ) szData, ( uLong ) ulLen );
 
             if( !pBuffer )
             {
@@ -253,8 +255,10 @@ HB_FUNC( HB_ZUNCOMPRESS )
 
          if( pBuffer )
          {
-            if( !hb_itemGetWriteCL( pBuffer, &pDest, &ulDstLen ) )
+            HB_SIZE nDstLen;
+            if( !hb_itemGetWriteCL( pBuffer, &pDest, &nDstLen ) )
                iResult = Z_MEM_ERROR;
+            ulDstLen = ( uLong ) nDstLen;
          }
          else
          {
@@ -270,7 +274,7 @@ HB_FUNC( HB_ZUNCOMPRESS )
 
          if( iResult == Z_OK )
          {
-            iResult = uncompress( ( Bytef * ) pDest, &ulDstLen, ( Bytef * ) szData, ulLen );
+            iResult = uncompress( ( Bytef * ) pDest, &ulDstLen, ( Bytef * ) szData, ( uLong ) ulLen );
 
             if( !pBuffer )
             {

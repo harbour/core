@@ -442,7 +442,7 @@ HB_FUNC( BIO_NEW_MEM_BUF )
 {
    if( HB_ISCHAR( 1 ) )
       /* NOTE: Discarding 'const' */
-      hb_retptr( BIO_new_mem_buf( ( char * ) hb_parc( 1 ), hb_parclen( 1 ) ) );
+      hb_retptr( BIO_new_mem_buf( ( char * ) hb_parc( 1 ), ( int ) hb_parclen( 1 ) ) );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }

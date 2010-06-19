@@ -731,6 +731,11 @@ typedef HB_U32 HB_FATTR;
 #  define PFHL    PFLL
 #endif
 
+#if defined( HB_OS_WIN_64 )
+#  define HB_PFS  PFLL
+#else
+#  define HB_PFS  "l"
+#endif
 
 #define HB_SWAP_UINT64( w )      ( ( HB_U64 ) ( ( ( ( HB_U64 ) ( w ) & HB_LL( 0x00000000000000FF ) ) << 56 ) | \
                                                 ( ( ( HB_U64 ) ( w ) & HB_LL( 0x000000000000FF00 ) ) << 40 ) | \

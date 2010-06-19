@@ -512,7 +512,7 @@ HB_FUNC( HB_UNZIPFILEREAD )
                ulSize = ulRead;
          }
 
-         iResult = unzReadCurrentFile( hUnzip, buffer, ulSize );
+         iResult = unzReadCurrentFile( hUnzip, buffer, ( unsigned ) ulSize );
          hb_retnl( iResult );
       }
    }
@@ -552,7 +552,7 @@ static HB_BOOL hb_zipGetFileInfoFromHandle( HB_FHANDLE hFile, HB_U32 * pulCRC, H
          ulRead = hb_fsReadLarge( hFile, pString, HB_Z_IOBUF_SIZE );
          if( ulRead > 0 )
          {
-            ulCRC = crc32( ulCRC, pString, ulRead );
+            ulCRC = crc32( ulCRC, pString, ( uInt ) ulRead );
             if( fText )
             {
                for( u = 0; u < ulRead; ++u )
@@ -605,7 +605,7 @@ static HB_BOOL hb_zipGetFileInfo( const char * szFileName, HB_U32 * pulCRC, HB_B
          ulRead = hb_fsReadLarge( hFile, pString, HB_Z_IOBUF_SIZE );
          if( ulRead > 0 )
          {
-            ulCRC = crc32( ulCRC, pString, ulRead );
+            ulCRC = crc32( ulCRC, pString, ( uInt ) ulRead );
             if( fText )
             {
                for( u = 0; u < ulRead; ++u )

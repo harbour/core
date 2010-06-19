@@ -557,7 +557,7 @@ HB_FUNC( MYSQL_REAL_ESCAPE_STRING ) /* unsigned long STDCALL mysql_real_escape_s
    if( mysql )
    {
       const char * from = hb_parcx( 1 );
-      unsigned long nSize = hb_parclen( 1 );
+      unsigned long nSize = ( unsigned long ) hb_parclen( 1 );
       char * buffer = ( char * ) hb_xgrab( nSize * 2 + 1 );
       nSize = mysql_real_escape_string( mysql, buffer, from, nSize );
       hb_retclen_buffer( ( char * ) buffer, nSize );
@@ -569,7 +569,7 @@ HB_FUNC( MYSQL_REAL_ESCAPE_STRING ) /* unsigned long STDCALL mysql_real_escape_s
 HB_FUNC( MYSQL_ESCAPE_STRING )
 {
    const char * from = hb_parcx( 1 );
-   unsigned long nSize = hb_parclen( 1 );
+   unsigned long nSize = ( unsigned long ) hb_parclen( 1 );
    char * buffer = ( char * ) hb_xgrab( nSize * 2 + 1 );
    nSize = mysql_escape_string( buffer, from, nSize );
    hb_retclen_buffer( ( char * ) buffer, nSize );
@@ -582,10 +582,10 @@ static char * filetoBuff( const char * fname, unsigned long * size )
 
    if( handle != FS_ERROR )
    {
-      *size = ( unsigned long ) hb_fsSeekLarge( handle, 0, FS_END );
+      *size = hb_fsSeek( handle, 0, FS_END );
       hb_fsSeek( handle, 0, FS_SET );
       buffer = ( char * ) hb_xgrab( *size + 1 );
-      *size = hb_fsReadLarge( handle, buffer, *size );
+      *size = ( unsigned long ) hb_fsReadLarge( handle, buffer, *size );
       buffer[ *size ] = '\0';
       hb_fsClose( handle );
    }

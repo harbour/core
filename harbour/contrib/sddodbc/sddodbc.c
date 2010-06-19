@@ -275,7 +275,7 @@ static HB_ERRCODE odbcDisconnect( SQLDDCONNECTION * pConnection )
    SQLDisconnect( pSDDConn->hConn );
    SQLFreeHandle( SQL_HANDLE_DBC, pSDDConn->hConn );
    SQLFreeHandle( SQL_HANDLE_ENV, pSDDConn->hEnv );
-   hb_xfree( pSDDConn ); 
+   hb_xfree( pSDDConn );
    return HB_SUCCESS;
 }
 
@@ -297,7 +297,9 @@ static HB_ERRCODE odbcExecute( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
       return HB_FAILURE;
    }
 
-   if ( SQL_SUCCEEDED( SQLExecDirect( hStmt, ( SQLTCHAR * ) O_HB_ITEMGETSTR( pItem, &hStatement, NULL ), hb_itemGetCLen( pItem ) ) ) )
+   if ( SQL_SUCCEEDED( SQLExecDirect( hStmt,
+                                      ( SQLTCHAR * ) O_HB_ITEMGETSTR( pItem, &hStatement, NULL ),
+                                      ( SQLINTEGER ) hb_itemGetCLen( pItem ) ) ) )
    {
       hb_strfree( hStatement );
 
@@ -346,7 +348,9 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
 
    pItem = hb_itemPutC( NULL, pArea->szQuery );
 
-   if ( ! SQL_SUCCEEDED( SQLExecDirect( hStmt, ( SQLTCHAR * ) O_HB_ITEMGETSTR( pItem, &hQuery, NULL ), hb_itemGetCLen( pItem ) ) ) )
+   if ( ! SQL_SUCCEEDED( SQLExecDirect( hStmt,
+                                        ( SQLTCHAR * ) O_HB_ITEMGETSTR( pItem, &hQuery, NULL ),
+                                        ( SQLINTEGER ) hb_itemGetCLen( pItem ) ) ) )
    {
       hb_strfree( hQuery );
       hb_itemRelease( pItem );
@@ -408,16 +412,16 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
          szOurName[ MAX_FIELD_NAME ] = '\0';
       pFieldInfo.atomName = hb_strUpper( szOurName, strlen( szOurName ) );
 
-      /* 
+      /*
          We do mapping of many SQL types to one Harbour field type here, so, we need store
-         real SQL type in uiTypeExtended. SQL types are signed, so, HB_USHORT type casting 
+         real SQL type in uiTypeExtended. SQL types are signed, so, HB_USHORT type casting
          is a little hacky. We need to remember use this casting also in expressions like
          this:
             if( pField->uiTypeExtended == ( HB_USHORT ) SQL_BIGINT )
          or introduce our own unsigned SQL types.
          [Mindaugas]
       */
-      pFieldInfo.uiTypeExtended = ( HB_USHORT ) iDataType; 
+      pFieldInfo.uiTypeExtended = ( HB_USHORT ) iDataType;
       pFieldInfo.uiLen = ( HB_USHORT ) uiSize;
       pFieldInfo.uiDec = iDec;
 

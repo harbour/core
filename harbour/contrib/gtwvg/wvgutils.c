@@ -1487,7 +1487,7 @@ HB_FUNC( WVT__GETOPENFILENAME )
 {
    OPENFILENAME ofn;
    LPTSTR lpFileName, lpstrTitle, lpstrFilter, lpstrInitialDir, lpstrDefExt;
-   int size = hb_parclen( 2 );
+   DWORD size = ( DWORD ) hb_parclen( 2 );
 
    size += size ? 1 : 1024;
    lpFileName = ( LPTSTR ) hb_xgrab( size * sizeof( TCHAR ) );
@@ -1515,7 +1515,7 @@ HB_FUNC( WVT__GETOPENFILENAME )
    {
       char * szFileName = HB_TCHAR_CONVFROM( lpFileName );
       hb_stornl( ofn.nFilterIndex, 8 );
-      hb_storclen( szFileName, size, 2 ) ;
+      hb_storclen( szFileName, size, 2 );
       hb_retc( szFileName );
       HB_TCHAR_FREE( szFileName );
    }

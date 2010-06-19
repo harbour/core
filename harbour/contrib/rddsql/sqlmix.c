@@ -144,7 +144,6 @@ static PMIXKEY hb_mixKeyNew( PMIXTAG pTag )
 
 static PMIXKEY hb_mixKeyPutItem( PMIXKEY pKey, PHB_ITEM pItem, HB_ULONG ulRecNo, PMIXTAG pTag )
 {
-   HB_ULONG    ul;
    double      dbl;
    HB_BYTE     buf[ 8 ];
 
@@ -158,18 +157,19 @@ static PMIXKEY hb_mixKeyPutItem( PMIXKEY pKey, PHB_ITEM pItem, HB_ULONG ulRecNo,
    switch ( pTag->bType )
    {
       case 'C':
-         ul = hb_itemGetCLen( pItem );
+      {
+         HB_SIZE ul = hb_itemGetCLen( pItem );
 
-         if ( ul > ( HB_ULONG ) pTag->uiKeyLen )
+         if ( ul > ( HB_SIZE ) pTag->uiKeyLen )
             ul = pTag->uiKeyLen;
 
          memcpy( pKey->val, hb_itemGetCPtr( pItem ), ul );
 
-         if ( ul < ( HB_ULONG ) pTag->uiKeyLen )
-            memset( pKey->val + ul, ' ', ( HB_ULONG ) pTag->uiKeyLen - ul );
+         if ( ul < ( HB_SIZE ) pTag->uiKeyLen )
+            memset( pKey->val + ul, ' ', ( HB_SIZE ) pTag->uiKeyLen - ul );
 
          break;
-
+      }
       case 'N':
          dbl = hb_itemGetND( pItem );
          HB_DBL2ORD( &dbl, buf );
@@ -264,7 +264,7 @@ static int hb_mixKeyCompare( PMIXTAG pTag, PMIXKEY pKey1, PMIXKEY pKey2, unsigne
 
    if ( pTag->pCodepage )
    {
-      i = hb_cdpcmp( ( const char * ) pKey1->val, ( HB_ULONG ) uiSize, ( const char * ) pKey2->val, ( HB_ULONG ) uiSize, pTag->pCodepage, 0 );
+      i = hb_cdpcmp( ( const char * ) pKey1->val, ( HB_SIZE ) uiSize, ( const char * ) pKey2->val, ( HB_SIZE ) uiSize, pTag->pCodepage, 0 );
    }
    else
    {
@@ -353,7 +353,7 @@ static void hb_mixTagPrintNode( PMIXTAG pTag, PMIXNODE pNode, int iLevel )
 static PMIXNODE hb_mixTagCreateNode( PMIXTAG pTag, HB_BOOL fLeaf )
 {
    PMIXNODE    pNode;
-   HB_ULONG    ulSize;
+   HB_SIZE     ulSize;
 
    ulSize = ( fLeaf ? sizeof( MIXNODELEAF ) : sizeof( MIXNODE ) ) + MIX_NODE_ORDER * pTag->uiTotalLen;
 

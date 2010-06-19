@@ -174,7 +174,7 @@ HB_FUNC( WAPI_DRAWTEXT )
 
       wapi_ret_NI( DrawText( hDC,
                              lpText,
-                             nTextLen,
+                             ( int ) nTextLen,
                              &rect,
                              wapi_par_UINT( 4 ) ) );
 

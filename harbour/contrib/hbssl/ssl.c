@@ -1428,7 +1428,7 @@ HB_FUNC( SSL_USE_RSAPRIVATEKEY_ASN1 )
          /* 'const' not used in 2nd param because ssh.h misses it, too.
              Bug report sent: #1988
              [vszakats] */
-         hb_retni( SSL_use_RSAPrivateKey_ASN1( ssl, ( unsigned char * ) hb_parc( 2 ), hb_parclen( 2 ) ) );
+         hb_retni( SSL_use_RSAPrivateKey_ASN1( ssl, ( unsigned char * ) hb_parc( 2 ), ( int ) hb_parclen( 2 ) ) );
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -1441,7 +1441,7 @@ HB_FUNC( SSL_USE_PRIVATEKEY_ASN1 )
       SSL * ssl = hb_SSL_par( 2 );
 
       if( ssl )
-         hb_retni( SSL_use_PrivateKey_ASN1( hb_parni( 1 ), ssl, ( const unsigned char * ) hb_parc( 3 ), hb_parclen( 3 ) ) );
+         hb_retni( SSL_use_PrivateKey_ASN1( hb_parni( 1 ), ssl, ( const unsigned char * ) hb_parc( 3 ), ( int ) hb_parclen( 3 ) ) );
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -1454,7 +1454,7 @@ HB_FUNC( SSL_USE_CERTIFICATE_ASN1 )
       SSL * ssl = hb_SSL_par( 1 );
 
       if( ssl )
-         hb_retni( SSL_use_certificate_ASN1( ssl, ( const unsigned char * ) hb_parc( 2 ), hb_parclen( 2 ) ) );
+         hb_retni( SSL_use_certificate_ASN1( ssl, ( const unsigned char * ) hb_parc( 2 ), ( int ) hb_parclen( 2 ) ) );
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );

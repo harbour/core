@@ -1518,7 +1518,7 @@ static HB_ERRCODE adsCreateFields( ADSAREAP pArea, PHB_ITEM pStruct )
       uiDec = ( HB_USHORT ) iData;
       dbFieldInfo.uiDec = 0;
       szFieldType = hb_arrayGetCPtr( pFieldDesc, 2 );
-      iNameLen = strlen( szFieldType );
+      iNameLen = ( int ) strlen( szFieldType );
       iData = HB_TOUPPER( szFieldType[ 0 ] );
 
       switch( iData )
@@ -2587,7 +2587,7 @@ static HB_ERRCODE adsPutValue( ADSAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem
          {
             long lDate = hb_itemGetDL( pItem );
 
-            /* ADS does not support dates before 0001-01-01. It generates corructed 
+            /* ADS does not support dates before 0001-01-01. It generates corructed
                DBF records and fires ADS error 5095 on FIELDGET() later. [Mindaugas] */
             if( pField->uiLen != 4 && lDate < 1721426 )  /* 1721426 ~= 0001-01-01 */
                lDate = 0;
@@ -2611,7 +2611,7 @@ static HB_ERRCODE adsPutValue( ADSAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem
       case HB_FT_IMAGE:
          if( HB_IS_STRING( pItem ) )
          {
-            HB_ULONG ulLen;
+            HB_SIZE ulLen;
 
             bTypeError = HB_FALSE;
             ulLen = hb_itemGetCLen( pItem );
@@ -2628,18 +2628,22 @@ static HB_ERRCODE adsPutValue( ADSAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem
 #ifdef ADS_USE_OEM_TRANSLATION
                char * szRet = hb_adsOemToAnsi( hb_itemGetCPtr( pItem ), ulLen );
                u32RetVal = AdsSetString( pArea->hTable, ADSFIELD( uiIndex ),
-                                         ( UNSIGNED8 * ) szRet, ulLen );
+                                         ( UNSIGNED8 * ) szRet,
+                                         ( UNSIGNED32 ) ulLen );
                hb_adsOemAnsiFree( szRet );
 #else
                u32RetVal = AdsSetString( pArea->hTable, ADSFIELD( uiIndex ),
-                                         ( UNSIGNED8 * ) hb_itemGetCPtr( pItem ), ulLen );
+                                         ( UNSIGNED8 * ) hb_itemGetCPtr( pItem ),
+                                         ( UNSIGNED32 ) ulLen );
 #endif
             }
             else
             {
                u32RetVal = AdsSetBinary( pArea->hTable, ADSFIELD( uiIndex ),
-                  pField->uiTypeExtended, ulLen, 0,
-                  ( UNSIGNED8 * ) hb_itemGetCPtr( pItem ), ulLen );
+                  pField->uiTypeExtended,
+                  ( UNSIGNED32 ) ulLen, 0,
+                  ( UNSIGNED8 * ) hb_itemGetCPtr( pItem ),
+                  ( UNSIGNED32 ) ulLen );
             }
          }
          break;
@@ -5340,7 +5344,7 @@ HB_FUNC( ADSCUSTOMIZEAOF )
          ulRecord = hb_parnl( 1 );
       }
       else if( HB_ISARRAY( 1 ) )           /* convert array of recnos to C array */
-         u32NumRecs = hb_parinfa( 1, 0 );
+         u32NumRecs = ( UNSIGNED32 ) hb_parinfa( 1, 0 );
 
       if( u32NumRecs )
       {

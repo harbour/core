@@ -73,7 +73,7 @@ static int hb_ssl_pem_password_cb( char * buf, int size, int rwflag, void * user
 
       buf[ 0 ] = '\0';
 
-      retsize = hb_itemGetCLen( r );
+      retsize = ( int ) hb_itemGetCLen( r );
 
       if( retsize > 0 )
       {

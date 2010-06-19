@@ -223,7 +223,7 @@ HB_FUNC( WIN_REGSETVALUEEX )
                               0,
                               dwType,
                               ( const BYTE * ) hb_parc( 5 ) /* cValue */,
-                              hb_parclen( 5 ) + 1 ) == ERROR_SUCCESS );
+                              ( DWORD ) hb_parclen( 5 ) + 1 ) == ERROR_SUCCESS );
 
    hb_strfree( hKey );
 }

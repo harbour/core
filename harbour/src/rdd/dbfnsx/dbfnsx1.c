@@ -643,7 +643,7 @@ static LPKEYINFO hb_nsxKeyPutItem( LPKEYINFO pKey, PHB_ITEM pItem, HB_ULONG ulRe
                                    LPTAGINFO pTag, HB_BOOL fTrans, HB_USHORT *puiLen )
 {
    double d;
-   HB_ULONG len;
+   HB_SIZE len;
 
    if( !pKey )
       pKey = hb_nsxKeyNew( pTag->KeyLength );
@@ -669,11 +669,11 @@ static LPKEYINFO hb_nsxKeyPutItem( LPKEYINFO pKey, PHB_ITEM pItem, HB_ULONG ulRe
          else
          {
             len = hb_itemGetCLen( pItem );
-            if( len > ( HB_ULONG ) pTag->KeyLength )
+            if( len > ( HB_SIZE ) pTag->KeyLength )
                len = pTag->KeyLength;
             memcpy( pKey->val, hb_itemGetCPtr( pItem ), len );
          }
-         if( len < ( HB_ULONG ) pTag->KeyLength )
+         if( len < ( HB_SIZE ) pTag->KeyLength )
          {
             memset( pKey->val + len, pTag->TrailChar, pTag->KeyLength - len );
             if( puiLen )
@@ -724,7 +724,7 @@ static PHB_ITEM hb_nsxKeyGetItem( PHB_ITEM pItem, LPKEYINFO pKey,
          case 'C':
             if( fTrans )
             {
-               HB_ULONG ulLen = pTag->KeyLength;
+               HB_SIZE ulLen = pTag->KeyLength;
                char * pszVal = hb_cdpnDup( ( const char * ) pKey->val, &ulLen,
                                            pTag->pIndex->pArea->dbfarea.area.cdPage, hb_vmCDP() );
                pItem = hb_itemPutCLPtr( pItem, pszVal, ulLen );
@@ -860,8 +860,8 @@ static int hb_nsxValCompare( LPTAGINFO pTag, HB_UCHAR * val1, int len1,
       if( iLimit > 0 )
       {
          if( pTag->pIndex->pArea->dbfarea.area.cdPage->sort )
-            iResult = hb_cdpcmp( ( const char * ) val1, ( HB_ULONG ) iLimit,
-                                 ( const char * ) val2, ( HB_ULONG ) iLimit,
+            iResult = hb_cdpcmp( ( const char * ) val1, ( HB_SIZE ) iLimit,
+                                 ( const char * ) val2, ( HB_SIZE ) iLimit,
                                  pTag->pIndex->pArea->dbfarea.area.cdPage, 0 );
          else
             iResult = memcmp( val1, val2, iLimit );
@@ -4720,7 +4720,7 @@ static HB_BOOL hb_nsxOrdSkipWild( LPTAGINFO pTag, HB_BOOL fForward, PHB_ITEM pWi
 
 static HB_BOOL hb_nsxRegexMatch( LPTAGINFO pTag, PHB_REGEX pRegEx, const char * szKey )
 {
-   HB_ULONG ulLen = pTag->KeyLength;
+   HB_SIZE ulLen = pTag->KeyLength;
    char szBuff[ NSX_MAXKEYLEN + 1 ];
 
    if( pTag->pIndex->pArea->dbfarea.area.cdPage != hb_vmCDP() )
@@ -5216,7 +5216,7 @@ static void hb_nsxSortAddNodeKey( LPNSXSORTINFO pSort, HB_UCHAR *pKeyVal, HB_ULO
 
 static void hb_nsxSortWritePage( LPNSXSORTINFO pSort )
 {
-   HB_ULONG ulSize = pSort->ulKeys * ( pSort->keyLen + 4 );
+   HB_SIZE ulSize = pSort->ulKeys * ( pSort->keyLen + 4 );
 
    hb_nsxSortSortPage( pSort );
 
@@ -5253,7 +5253,7 @@ static void hb_nsxSortGetPageKey( LPNSXSORTINFO pSort, HB_ULONG ulPage,
    if( pSort->pSwapPage[ ulPage ].ulKeyBuf == 0 )
    {
       HB_ULONG ulKeys = HB_MIN( pSort->ulPgKeys, pSort->pSwapPage[ ulPage ].ulKeys );
-      HB_ULONG ulSize = ulKeys * ( iLen + 4 );
+      HB_SIZE ulSize = ulKeys * ( iLen + 4 );
 
       if( pSort->hTempFile != FS_ERROR &&
          ( hb_fsSeekLarge( pSort->hTempFile, pSort->pSwapPage[ ulPage ].nOffset, FS_SET ) != pSort->pSwapPage[ ulPage ].nOffset ||

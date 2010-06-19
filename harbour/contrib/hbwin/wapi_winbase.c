@@ -109,18 +109,18 @@ HB_FUNC( WAPI_WAITFORSINGLEOBJECTEX )
 HB_FUNC( WAPI_WAITFORMULTIPLEOBJECTS )
 {
    PHB_ITEM pArray = hb_param( 2, HB_IT_ARRAY );
-   HB_SIZE nLen = pArray ? hb_arrayLen( pArray ) : 0;
+   DWORD nCount = pArray ? ( DWORD ) hb_arrayLen( pArray ) : 0;
 
-   if( nLen > 0 && nLen <= MAXIMUM_WAIT_OBJECTS )
+   if( nCount > 0 && nCount <= MAXIMUM_WAIT_OBJECTS )
    {
-      HANDLE * handles = ( HANDLE * ) hb_xgrab( nLen * sizeof( HANDLE ) );
-      HB_SIZE nPos;
+      HANDLE * handles = ( HANDLE * ) hb_xgrab( nCount * sizeof( HANDLE ) );
+      DWORD nPos;
       DWORD dwResult;
 
-      for( nPos = 0; nPos < nLen; ++nPos )
+      for( nPos = 0; nPos < nCount; ++nPos )
          handles[ nPos ] = hb_arrayGetPtr( pArray, nPos + 1 );
 
-      dwResult = WaitForMultipleObjects( nLen, handles, hb_parl( 3 ), ( DWORD ) hb_parnl( 4 ) );
+      dwResult = WaitForMultipleObjects( nCount, handles, hb_parl( 3 ), ( DWORD ) hb_parnl( 4 ) );
 
       hbwapi_SetLastError( GetLastError() );
       hb_retnl( dwResult );
@@ -135,18 +135,18 @@ HB_FUNC( WAPI_WAITFORMULTIPLEOBJECTSEX )
 {
 #if ! defined( HB_OS_WIN_CE )
    PHB_ITEM pArray = hb_param( 2, HB_IT_ARRAY );
-   HB_SIZE nLen = pArray ? hb_arrayLen( pArray ) : 0;
+   DWORD nCount = pArray ? ( DWORD ) hb_arrayLen( pArray ) : 0;
 
-   if( nLen > 0 && nLen <= MAXIMUM_WAIT_OBJECTS )
+   if( nCount > 0 && nCount <= MAXIMUM_WAIT_OBJECTS )
    {
-      HANDLE * handles = ( HANDLE * ) hb_xgrab( nLen * sizeof( HANDLE ) );
-      HB_SIZE nPos;
+      HANDLE * handles = ( HANDLE * ) hb_xgrab( nCount * sizeof( HANDLE ) );
+      DWORD nPos;
       DWORD dwResult;
 
-      for( nPos = 0; nPos < nLen; ++nPos )
+      for( nPos = 0; nPos < nCount; ++nPos )
          handles[ nPos ] = hb_arrayGetPtr( pArray, nPos + 1 );
 
-      dwResult = WaitForMultipleObjectsEx( nLen, handles, hb_parl( 3 ), ( DWORD ) hb_parnl( 4 ), hb_parl( 5 ) );
+      dwResult = WaitForMultipleObjectsEx( nCount, handles, hb_parl( 3 ), ( DWORD ) hb_parnl( 4 ), hb_parl( 5 ) );
 
       hbwapi_SetLastError( GetLastError() );
       hb_retnl( dwResult );

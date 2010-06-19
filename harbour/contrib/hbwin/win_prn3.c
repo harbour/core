@@ -182,7 +182,7 @@ static HB_BOOL hb_SetDefaultPrinter( LPCTSTR lpPrinterName )
       }
       else /* NT4.0 or earlier */
       {
-         int nStrLen;
+         HB_ISIZ nStrLen;
 
          /* Open this printer so you can get information about it. */
          bFlag = OpenPrinter( ( LPTSTR ) lpPrinterName, &hPrinter, NULL );

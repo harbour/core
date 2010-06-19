@@ -176,7 +176,7 @@ HB_FUNC( HPDF_GETSTREAMSIZE )
 */
 HB_FUNC( HPDF_READFROMSTREAM )
 {
-   HPDF_UINT32 size = hb_parclen( 2 );
+   HPDF_UINT32 size = ( HPDF_UINT32 ) hb_parclen( 2 );
    HPDF_BYTE * buffer;
 
    if( size < 1024 )

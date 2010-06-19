@@ -1893,7 +1893,7 @@ HB_FUNC( CURL_EASY_ESCAPE )
 
       if( hb_curl )
       {
-         char * buffer = curl_easy_escape( hb_curl->curl, hb_parcx( 2 ), hb_parclen( 2 ) );
+         char * buffer = curl_easy_escape( hb_curl->curl, hb_parcx( 2 ), ( int ) hb_parclen( 2 ) );
          hb_retc( buffer );
          curl_free( buffer );
       }
@@ -1915,7 +1915,7 @@ HB_FUNC( CURL_EASY_UNESCAPE )
       if( hb_curl )
       {
          int nLen = 0;
-         char * buffer = curl_easy_unescape( hb_curl->curl, hb_parcx( 2 ), hb_parclen( 2 ), &nLen );
+         char * buffer = curl_easy_unescape( hb_curl->curl, hb_parcx( 2 ), ( int ) hb_parclen( 2 ), &nLen );
          hb_retclen( buffer, nLen );
          curl_free( buffer );
       }
@@ -2021,7 +2021,7 @@ HB_FUNC( CURL_ESCAPE )
 {
    if( HB_ISCHAR( 1 ) )
    {
-      char * buffer = curl_escape( hb_parc( 1 ), hb_parclen( 1 ) );
+      char * buffer = curl_escape( hb_parc( 1 ), ( int ) hb_parclen( 1 ) );
       hb_retc( buffer );
       curl_free( buffer );
    }
@@ -2034,7 +2034,7 @@ HB_FUNC( CURL_UNESCAPE )
 {
    if( HB_ISCHAR( 1 ) )
    {
-      char * buffer = curl_unescape( hb_parc( 1 ), hb_parclen( 1 ) );
+      char * buffer = curl_unescape( hb_parc( 1 ), ( int ) hb_parclen( 1 ) );
       hb_retc( buffer );
       curl_free( buffer );
    }

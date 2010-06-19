@@ -545,7 +545,7 @@ HB_FUNC( WAPI_TEXTOUT )
       hb_retl( TextOut( hDC, hb_parni( 2 ) /* iRow */,
                              hb_parni( 3 ) /* iCol */,
                              lpData,
-                             nDataLen ) );
+                             ( int ) nDataLen ) );
 #else
       /* Emulating TextOut() using ExtTextOut(). [vszakats] */
       hb_retl( ExtTextOut( hDC, hb_parni( 2 ) /* iRow */,
@@ -576,21 +576,21 @@ HB_FUNC( WAPI_EXTTEXTOUT )
       LPCTSTR lpData = HB_PARSTR( 6, &hData, &nDataLen );
       RECT rect;
       PHB_ITEM pFontWidths = hb_param( 7, HB_IT_ARRAY );
-      int * lpFontWidths;
+      INT * lpFontWidths;
 
       if( pFontWidths )
       {
          HB_SIZE nFontWidthsLen = hb_arrayLen( pFontWidths );
          HB_SIZE tmp;
-         int iWidth = 0;
+         INT iWidth = 0;
 
-         lpFontWidths = ( int * ) hb_xgrab( nDataLen * sizeof( int ) );
+         lpFontWidths = ( INT * ) hb_xgrab( nDataLen * sizeof( INT ) );
 
          for( tmp = 0; tmp < nDataLen; ++tmp )
          {
             /* Pad width array with last known value if passed array was smaller than length of the string. */
             if( tmp < nFontWidthsLen )
-               iWidth = hb_arrayGetNI( pFontWidths, tmp + 1 );
+               iWidth = ( INT ) hb_arrayGetNI( pFontWidths, tmp + 1 );
 
             lpFontWidths[ tmp ] = iWidth;
          }
@@ -604,7 +604,7 @@ HB_FUNC( WAPI_EXTTEXTOUT )
                                 ( UINT ) hb_parni( 4 ) /* fuOptions */,
                                 hbwapi_par_RECT( &rect, 5, HB_FALSE ),
                                 lpData,
-                                nDataLen,
+                                ( UINT ) nDataLen,
                                 lpFontWidths ) );
 
       if( lpFontWidths )
