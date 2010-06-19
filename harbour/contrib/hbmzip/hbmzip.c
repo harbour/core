@@ -249,18 +249,18 @@ HB_FUNC( HB_ZIPFILECREATE )
 /*  HB_ZipFileWrite( hZip, cData [, nLen ] ) --> nError */
 HB_FUNC( HB_ZIPFILEWRITE )
 {
-   const char* pData = hb_parc( 2 );
+   const char * pData = hb_parc( 2 );
 
    if( pData )
    {
       zipFile hZip = hb_zipfileParam( 1 );
-      HB_SIZE ulLen = hb_parclen( 2 );
+      HB_ISIZ nLen = hb_parclen( 2 );
 
-      if( HB_ISNUM( 3 ) && hb_parns( 3 ) < ulLen )
-         ulLen = hb_parns( 3 );
+      if( HB_ISNUM( 3 ) && hb_parns( 3 ) < nLen )
+         nLen = hb_parns( 3 );
 
       if( hZip )
-         hb_retni( zipWriteInFileInZip( hZip, (void*) pData, ( unsigned ) ulLen ) );
+         hb_retni( zipWriteInFileInZip( hZip, (void*) pData, ( unsigned ) nLen ) );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );

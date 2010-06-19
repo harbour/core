@@ -186,10 +186,10 @@
 #define VALLOC_FLAG   0
 
 /* routines internal to this module */
-static int _findeol( char * buf, int buf_len );
-static int _findbol( char * buf, int buf_len );
-static int _ins_buff( int bytes );
-static int _del_buff( int bytes );
+static HB_ISIZ _findeol( char * buf, HB_ISIZ buf_len );
+static HB_ISIZ _findbol( char * buf, HB_ISIZ buf_len );
+static int _ins_buff( HB_ISIZ bytes );
+static int _del_buff( HB_ISIZ bytes );
 static long _ft_skip( long recs );
 static int _writeLine( const char * theData, HB_SIZE iDataLen );
 static HB_BOOL _writeeol( HB_FHANDLE fhnd );
@@ -715,8 +715,8 @@ HB_FUNC( FT_FSKIP )
 static long _ft_skip( long iRecs )
 {
 
-   int          iByteCount;
-   int          iBytesRead, iBytesRemaining;
+   HB_ISIZ      iByteCount;
+   HB_ISIZ      iBytesRead, iBytesRemaining;
    char *       cPtr;
    long         iSkipped = 0;
 
@@ -892,7 +892,7 @@ static long _ft_skip( long iRecs )
       }
    }
 
-   hb_xfree( ( void * ) cBuff );
+   hb_xfree( cBuff );
    return iSkipped;
 }
 
@@ -955,28 +955,26 @@ static long _ft_skip( long iRecs )
 HB_FUNC( FT_FREADLN )
 {
 
-   int        iByteCount;
-   int        iBytesRead;
+   HB_ISIZ    iByteCount;
+   HB_ISIZ    iBytesRead;
    char *     cPtr = ( char * ) hb_xgrab( BUFFSIZE );
 
    hb_fsSeekLarge( handles[area], offset[area], FS_SET );
-   iBytesRead = (int) hb_fsReadLarge( handles[area], cPtr, BUFFSIZE );
+   iBytesRead = hb_fsReadLarge( handles[area], cPtr, BUFFSIZE );
 
    error[area] = 0;
 
    if( !iBytesRead )
-   {
       error[area] = hb_fsError();
-   }
 
    iByteCount = _findeol( cPtr, iBytesRead );
 
    if( iByteCount )
-      hb_retclen( ( char * ) cPtr, iByteCount-2 );
+      hb_retclen( cPtr, iByteCount-2 );
    else
-      hb_retclen( ( char * ) cPtr, iBytesRead );
+      hb_retclen( cPtr, iBytesRead );
 
-   hb_xfree( ( void * ) cPtr );
+   hb_xfree( cPtr );
 }
 
 /*  $DOC$
@@ -1024,7 +1022,7 @@ HB_FUNC( FT_FREADLN )
 
 HB_FUNC( FT_FDELETE )
 {
-   int    iBytesRead ;
+   int    iBytesRead;
    HB_FOFFSET srcPtr;
    HB_FOFFSET destPtr;
    long   cur_rec  = recno[area];
@@ -1071,7 +1069,7 @@ HB_FUNC( FT_FDELETE )
    if( recno[area] != last_rec[area] )
       isEof[area]  = HB_FALSE;
 
-   hb_xfree( ( void * ) Buff );
+   hb_xfree( Buff );
 
    hb_retl( error[area] ? 0 : 1 );
 }
@@ -1127,9 +1125,9 @@ HB_FUNC( FT_FDELETE )
 
 HB_FUNC( FT_FINSERT )
 {
-   int   no_lines = ( HB_ISNUM( 1 ) ? hb_parni( 1 ) : 1 );
-   int   no_bytes = no_lines * 2 ;
-   int   err = 1;
+   int no_lines = hb_parnidef( 1, 1 );
+   HB_ISIZ no_bytes = no_lines * 2 ;
+   int err = 1;
 
    if( _ins_buff( no_bytes ) )
       err = 0;
@@ -1209,9 +1207,9 @@ HB_FUNC( FT_FINSERT )
 
 HB_FUNC( FT_FAPPEND )
 {
-   int   no_lines = ( HB_ISNUM( 1 ) ? hb_parni( 1 ) : 1 );
-   int   iRead;
-   int   iByteCount;
+   int no_lines = hb_parnidef( 1, 1 );
+   HB_ISIZ iRead;
+   HB_ISIZ iByteCount;
 
    char  * buff = ( char * ) hb_xgrab( BUFFSIZE );
 
@@ -1261,7 +1259,7 @@ HB_FUNC( FT_FAPPEND )
    /* force recalc of last record/offset */
    last_rec[area] = 0;
 
-   hb_xfree( ( void * ) buff );
+   hb_xfree( buff );
 
    hb_retl( error[area] ? 0 : 1 );
 
@@ -1332,11 +1330,11 @@ HB_FUNC( FT_FAPPEND )
 HB_FUNC( FT_FWRITELN )
 {
    const char * theData  = hb_parc( 1 );
-   int      iDataLen = hb_parclen( 1 );
-   int      lInsert  = hb_parl( 2 );
+   HB_ISIZ  iDataLen = hb_parclen( 1 );
+   HB_BOOL  bInsert  = hb_parl( 2 );
    int      err;
-   int      iLineLen = 0;
-   int      iRead, iEOL;
+   HB_ISIZ  iLineLen = 0;
+   HB_ISIZ  iRead, iEOL;
 
    char *   buffer;
 
@@ -1344,7 +1342,7 @@ HB_FUNC( FT_FWRITELN )
    /* position file pointer to insertion point */
    hb_fsSeekLarge( handles[area], offset[area], FS_SET );
 
-   if( lInsert )
+   if( bInsert )
    {
       /* insert mode, insert the length of new string + crlf */
       err = _ins_buff( iDataLen + 2 );
@@ -1376,7 +1374,7 @@ HB_FUNC( FT_FWRITELN )
          }
       } while( iRead == BUFFSIZE );
 
-          hb_xfree( ( void * ) buffer );
+      hb_xfree( buffer );
 
       if( (iDataLen+2) <= iLineLen )
       {
@@ -1653,9 +1651,9 @@ HB_FUNC( FT_FGOTO )
                   line is longer than buffer end)
 
 ------------------------------------------------------------------------*/
-static int _findeol( char * buf, int buf_len )
+static HB_ISIZ _findeol( char * buf, HB_ISIZ buf_len )
 {
-   int tmp;
+   HB_ISIZ tmp;
 
    for( tmp = 0; tmp < buf_len; tmp++ )
    {
@@ -1712,9 +1710,9 @@ _feoldone:
                    the preceding CRLF pair (beginning of line).
 
 ------------------------------------------------------------------------*/
-static int _findbol( char * buf, int buf_len )
+static HB_ISIZ _findbol( char * buf, HB_ISIZ buf_len )
 {
-   int tmp = buf_len - 1;
+   HB_ISIZ tmp = buf_len - 1;
 
    if( tmp != 0 )
    {
@@ -1808,16 +1806,16 @@ _fbolerr:
 /* inserts xxx bytes into the current file, beginning at the current record */
 /* the contents of the inserted bytes are indeterminate, i.e. you'll have to
      write to them before they mean anything */
-static int _ins_buff( int iLen )
+static int _ins_buff( HB_ISIZ iLen )
 {
 
-   char *   ReadBuff    = ( char * ) hb_xgrab( BUFFSIZE );
-   char *   WriteBuff   = ( char * ) hb_xgrab( BUFFSIZE );
-   char *   SaveBuff;
+   char * ReadBuff    = ( char * ) hb_xgrab( BUFFSIZE );
+   char * WriteBuff   = ( char * ) hb_xgrab( BUFFSIZE );
+   char * SaveBuff;
    HB_FOFFSET fpRead, fpWrite;
-   int      WriteLen, ReadLen;
-   int      SaveLen;
-   int      iLenRemaining = iLen;
+   HB_ISIZ WriteLen, ReadLen;
+   HB_ISIZ SaveLen;
+   HB_ISIZ iLenRemaining = iLen;
 
    /* set target move distance, this allows iLen to be greater than
       BUFFSIZE */
@@ -1892,8 +1890,8 @@ static int _ins_buff( int iLen )
    last_rec[area] = 0L;
    hb_fsSeekLarge( handles[area], offset[area], FS_SET );
 
-   hb_xfree( ( void * ) ReadBuff  );
-   hb_xfree( ( void * ) WriteBuff );
+   hb_xfree( ReadBuff  );
+   hb_xfree( WriteBuff );
 
    return error[area];
 }
@@ -1903,12 +1901,12 @@ static int _ins_buff( int iLen )
 
 /*--------------------------------------------------------------------------*/
 /* deletes xxx bytes from the current file, beginning at the current record */
-static int _del_buff( int iLen )
+static int _del_buff( HB_ISIZ iLen )
 {
-   char *   WriteBuff   = ( char * ) hb_xgrab( BUFFSIZE );
+   char * WriteBuff = ( char * ) hb_xgrab( BUFFSIZE );
    HB_FOFFSET fpRead, fpWrite;
-   int      WriteLen;
-   int      SaveLen;
+   HB_ISIZ WriteLen;
+   HB_ISIZ SaveLen;
 
    /* initialize file pointers */
    fpWrite = offset[area];
@@ -1952,7 +1950,7 @@ static int _del_buff( int iLen )
    last_rec[area] = 0L;
    hb_fsSeekLarge( handles[area], offset[area], FS_SET );
 
-   hb_xfree( ( void * ) WriteBuff );
+   hb_xfree( WriteBuff );
 
    return error[area];
 }

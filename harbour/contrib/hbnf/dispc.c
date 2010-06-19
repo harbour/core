@@ -57,11 +57,6 @@
 
 #include "inkey.ch"
 
-#define OFF 0
-#define ON  1
-#define NO  0
-#define YES 1
-#define OK  0
 #define K_STRING   0
 #define K_LIST     (!K_STRING)
 
@@ -78,28 +73,28 @@
 
 #define TABSET  8
 
-long buffoffset;            /* offset into buffer of current line  */
-long fsize;                 /* file size in bytes                  */
+HB_FOFFSET buffoffset;      /* offset into buffer of current line  */
+HB_FOFFSET fsize;           /* file size in bytes                  */
 HB_ISIZ bufftop, buffbot;   /* first and last character in buffer  */
 int  wintop, winbot;        /* first and last character in window  */
 int  winrow, wincol;        /* row and column of window highlight  */
 int  sline, eline;          /* start and end line of window        */
 int  scol, ecol;            /* start and end col of window         */
 int  height, width;         /* height and width of window          */
-int  infile;                /* input file handle                   */
+HB_FHANDLE infile;          /* input file handle                   */
 int  maxlin;                /* line size                           */
-int  buffsize;              /* buffer size                         */
+HB_ISIZ buffsize;           /* buffer size                         */
 int  hlight;                /* highlight attribute                 */
 int  norm;                  /* normal attribute                    */
-int  kcount;                /* number of keys in terminate key list*/
+HB_ISIZ kcount;             /* number of keys in terminate key list*/
 int  colinc;                /* col increment amount                */
-int  brows;                 /* browse flag                         */
-char refresh;               /* YES means refresh screen            */
+HB_BOOL bBrowse;            /* browse flag                         */
+HB_BOOL bRefresh;           /* HB_TRUE means refresh screen        */
 char kstr[25];              /* terminate key string                */
 int  keylist[24];           /* terminate key list                  */
 int  keytype;               /* K_STRING or K_LIST                  */
 
-int isallocated;            /* if buffers were allocated           */
+HB_BOOL bIsAllocated;       /* if buffers were allocated           */
 char *buffer;               /* file buffer pointer                 */
 char *lbuff;                /* line buffer pointer                 */
 char *vseg;                 /* video segment variable              */
@@ -107,9 +102,8 @@ char *vseg;                 /* video segment variable              */
     /* prototypes */
 
 
-static int           keyin(void);
 static void          chattr(int x, int y, int len, int attr);
-static long          getblock(long offset);
+static HB_FOFFSET    getblock( HB_FOFFSET offset );
 static void          buff_align(void);
 static void          win_align(void);
 static void          disp_update(int offset);
@@ -119,7 +113,6 @@ static void          linedown(void);
 static void          lineup(void);
 static void          filetop(void);
 static void          filebot(void);
-static void          strcpyn(char *dest, const char *source, int len);
 
 
 
@@ -155,7 +148,7 @@ static void chattr(int x, int y, int len, int attr)
  *
  */
 
-static long getblock(long offset)
+static HB_FOFFSET getblock( HB_FOFFSET offset )
 {
       /*
           set the file pointer to the proper offset
@@ -166,7 +159,7 @@ static long getblock(long offset)
           the beginning of the file.
       */
 
-    hb_fsSeek( infile, offset, FS_SET );
+    hb_fsSeekLarge( infile, offset, FS_SET );
 
         /* read in the file and set the buffer bottom variable equal */
         /*  to the number of bytes actually read in.                 */
@@ -178,16 +171,16 @@ static long getblock(long offset)
     if (( buffbot != buffsize ) && ( fsize > buffsize ))
     {
         if ( offset > 0 )
-            hb_fsSeek( infile, (long) -buffsize, FS_END );
+            hb_fsSeekLarge( infile, -buffsize, FS_END );
         else
-            hb_fsSeek( infile, (long) buffsize, FS_SET );
+            hb_fsSeekLarge( infile, buffsize, FS_SET );
 
         buffbot = hb_fsReadLarge( infile, buffer, buffsize );
     }
 
         /* return the actual file position */
 
-    return hb_fsSeek( infile, 0L, FS_RELATIVE ) - buffbot;
+    return hb_fsSeekLarge( infile, 0, FS_RELATIVE ) - buffbot;
 }
 
 
@@ -203,12 +196,12 @@ static long getblock(long offset)
 
 static void buff_align()
 {
-    int i;
+    HB_ISIZ i;
 
     bufftop = 0;
     buffbot = buffsize;
 
-    if ( buffoffset != 0L )     /* if the buffoffset is otherthan 0      */
+    if ( buffoffset != 0 )      /* if the buffoffset is otherthan 0      */
     {
         i = bufftop;            /* start at the top of the file and scan */
                                 /* forward until a CR is reached.        */
@@ -222,7 +215,7 @@ static void buff_align()
         /* if the buffer offset is not a complete */
         /* buffer's length away from the file end */
 
-    if ( buffoffset + ((long) buffbot) != fsize )
+    if ( buffoffset + buffbot != fsize )
     {
           /*
              if the file position of the last byte
@@ -233,8 +226,8 @@ static void buff_align()
               the last character of the file.
           */
 
-        if ( buffoffset + ((long) buffbot) > fsize )
-            buffbot = (int) (fsize - buffoffset);
+        if ( buffoffset + buffbot > fsize )
+            buffbot = ( HB_ISIZ ) ( fsize - buffoffset );
 
         i = buffbot;            /* point the end of the buffer to a valid */
                                 /* complete text line.                    */
@@ -312,7 +305,7 @@ static void disp_update(int offset)
     char *vmem;
 
 
-    refresh  = NO;
+    bRefresh = HB_FALSE;
     line     = 0;
 
     while ( line < height )
@@ -373,11 +366,11 @@ static void disp_update(int offset)
 
 static void winup()
 {
-    int  k;
-    long i, j;
+    int k;
+    HB_FOFFSET i, j;
 
-    refresh = YES;
-    k       = wintop - 3;
+    bRefresh = HB_TRUE;
+    k        = wintop - 3;
 
     while (( buffer[k] != CR ) && ( k > bufftop ))
         k--;
@@ -395,10 +388,10 @@ static void winup()
         winbot = k + 2;
     }
     else
-        if ( ((long) bufftop) + buffoffset > 0 && fsize > buffsize )
+        if ( bufftop + buffoffset > 0 && fsize > buffsize )
         {
             i = buffoffset + wintop;
-            j = buffoffset - ((long) (buffsize / 2));
+            j = buffoffset - (buffsize / 2);
 
             if ( j < 0 )
                 j = 0;
@@ -424,11 +417,11 @@ static void winup()
 
 static void windown()
 {
-    int  k;
-    long i, j;
+    int k;
+    HB_FOFFSET i, j;
 
-    refresh = YES;
-    k       = winbot;
+    bRefresh = HB_TRUE;
+    k        = winbot;
 
     while (( buffer[k] != CR ) && ( k <= buffbot ))
         k++;
@@ -444,13 +437,13 @@ static void windown()
         wintop = k + 2;
     }
     else
-        if ( (((long) buffbot) + buffoffset) < fsize && fsize > buffsize)
+        if ( (buffbot + buffoffset) < fsize && fsize > buffsize)
         {
             i = buffoffset + wintop;
             j = i;
 
             if ( j > fsize )
-                j = fsize - ((long) buffsize);
+                j = fsize - buffsize;
 
             buffoffset = getblock(j);
 
@@ -502,13 +495,13 @@ static void filetop()
 {
     if ( buffoffset != 0 )
     {
-        buffoffset = getblock(0L);
+        buffoffset = getblock(0);
 
         buff_align();
     }
 
-    refresh = YES;
-    wintop  = (int) buffoffset;
+    bRefresh = HB_TRUE;
+    wintop  = ( int ) buffoffset;
     winrow  = sline;
     wincol  = 0;
 
@@ -523,15 +516,15 @@ static void filetop()
 
 static void filebot()
 {
-    if ( (((long) buffbot) + buffoffset) < fsize && fsize > buffsize )
+    if( ( buffbot + buffoffset) < fsize && fsize > buffsize )
     {
         buffoffset = getblock(fsize + 1);
 
         buff_align();
     }
 
-    refresh = YES;
-    wintop  = buffbot - 3;
+    bRefresh = HB_TRUE;
+    wintop  = ( int ) buffbot - 3;
     winrow  = eline;
     wincol  = 0;
 
@@ -541,7 +534,9 @@ static void filebot()
 
 HB_FUNC( _FT_DFINIT )
 {
-    int rval, i, j;
+    int rval;
+    HB_ISIZ j;
+    HB_ISIZ i;
     HB_SIZE ulSize;
 
     rval = 0;
@@ -560,15 +555,15 @@ HB_FUNC( _FT_DFINIT )
        hb_gtSave( sline, scol, eline, ecol, vseg );
 
     maxlin   = hb_parni(12);
-    buffsize = hb_parni(13);                  /* yes - load value */
+    buffsize = hb_parns(13);                  /* yes - load value */
 
     buffer = (char *) hb_xalloc(buffsize);    /* allocate memory  */
     lbuff  = (char *) hb_xalloc(maxlin + 1);  /*  for buffers     */
 
 
-    isallocated = !(buffer == NULL || lbuff == NULL || vseg == NULL);
+    bIsAllocated = !(buffer == NULL || lbuff == NULL || vseg == NULL);
                                               /* memory allocated? */
-    if (!isallocated)
+    if (!bIsAllocated)
     {
         rval = 8;                   /* return error code 8 (memory) */
         if (buffer != NULL) hb_xfree(buffer);
@@ -577,10 +572,10 @@ HB_FUNC( _FT_DFINIT )
     }
     else                            /* get parameters               */
     {
-        infile = hb_parni(1);                 /* file handle               */
-        j      = hb_parni(6);                 /* starting line value       */
-        norm   = hb_parni(7);                 /* normal color attribute    */
-        hlight = hb_parni(8);                 /* highlight color attribute */
+        infile = hb_numToHandle( hb_parnint( 1 ) ); /* file handle               */
+        j      = hb_parni(6);                       /* starting line value       */
+        norm   = hb_parni(7);                       /* normal color attribute    */
+        hlight = hb_parni(8);                       /* highlight color attribute */
 
         if( HB_ISARRAY( 9 ) )
         {
@@ -595,12 +590,12 @@ HB_FUNC( _FT_DFINIT )
         {
            keytype = K_STRING;
            kcount  = hb_parclen( 9 );
-           if (kcount > 24)
+           if( kcount > 24 )
               kcount = 24;
-           strcpyn(kstr, hb_parcx(9), kcount);    /* get exit key string */
+           hb_strncpy(kstr, hb_parcx( 9 ), kcount - 1);    /* get exit key string */
         }
 
-        brows = hb_parl(10);                  /* get browse flag   */
+        bBrowse = hb_parl(10);                  /* get browse flag   */
 
         colinc = hb_parni(11);                /* column skip value */
 
@@ -618,20 +613,20 @@ HB_FUNC( _FT_DFINIT )
 
             /* get file size */
 
-        fsize = hb_fsSeek( infile, 0L, FS_END ) - 1;
+        fsize = hb_fsSeek( infile, 0, FS_END ) - 1;
 
             /* get the first block */
 
-        hb_fsSeek( infile, 0L, FS_SET );
+        hb_fsSeek( infile, 0, FS_SET );
 
             /* if block less than buffsize */
 
-        if ( fsize < ((long) buffbot) )
+        if ( fsize < buffbot )
             buffbot = (int) fsize;          /* then set buffer bottom */
 
             /* set the current lines buffer offset pointer */
 
-        buffoffset = getblock((long) bufftop);
+        buffoffset = getblock( bufftop );
 
             /* align buffer and window pointer to valid values */
 
@@ -652,7 +647,7 @@ HB_FUNC( _FT_DFINIT )
 
 HB_FUNC ( _FT_DFCLOS )
 {
-  if (isallocated)
+  if (bIsAllocated)
     {
       if (buffer != NULL) hb_xfree(buffer); /* free up allocated buffer memory */
       if (lbuff != NULL)  hb_xfree(lbuff);
@@ -723,17 +718,18 @@ HB_FUNC ( _FT_DFCLOS )
 
 HB_FUNC( FT_DISPFILE )
 {
-    int  i, done;
+    int  i;
     char rval[2];
+    HB_BOOL bDone;
 
     int ch;
 
 
     /* make sure buffers were allocated and file was opened */
-    if (isallocated && infile > 0)
+    if (bIsAllocated && infile > 0)
       {
-        done    = NO;
-        refresh = YES;
+        bDone = HB_FALSE;
+        bRefresh = HB_TRUE;
 
         /* draw inside of window with normal color attribute */
 
@@ -746,25 +742,25 @@ HB_FUNC( FT_DISPFILE )
 
         do
         {
-            if ( refresh == YES )           /* redraw window contents? */
+            if( bRefresh )                  /* redraw window contents? */
                 disp_update(wintop);
 
                 hb_gtRest( sline, scol, eline, ecol, vseg );
 
                 /* if not browse, highlight the current line */
 
-            if ( brows == NO )
+            if( ! bBrowse )
                 chattr(0, winrow - sline, width, hlight);
 
             hb_gtRest( sline, scol, eline, ecol, vseg );
 
             hb_gtSetPos( winrow, scol );
 
-            ch = keyin();                   /* get user key press */
+            ch = hb_inkey( HB_TRUE, 0.0, INKEY_ALL );
 
                 /* if not browse, then un-highlight current line */
 
-            if ( brows == NO )
+            if( ! bBrowse )
                 chattr(0, winrow - sline, width, norm);
 
             hb_gtRest( sline, scol, eline, ecol, vseg );
@@ -773,20 +769,20 @@ HB_FUNC( FT_DISPFILE )
 
             switch (ch)
             {
-               case K_DOWN :  if ( brows == YES )          /* if browse flag */
+               case K_DOWN :  if( bBrowse )                /* if browse flag */
                                   winrow = eline;          /* is set, force  */
                                                            /* active line to */
                               linedown();                  /* be last line   */
                               break;
 
-               case K_UP   :  if ( brows == YES )          /* if browse flag */
+               case K_UP   :  if( bBrowse )                /* if browse flag */
                                   winrow = sline;          /* is set, force  */
                                                            /* active line to */
                               lineup();                    /* be first line  */
                               break;
 
                case K_LEFT :  wincol -= colinc;            /* move cursor    */
-                              refresh = YES;               /* to the left    */
+                              bRefresh = HB_TRUE;          /* to the left    */
 
                               if ( wincol < 0 )
                                   wincol = 0;
@@ -794,7 +790,7 @@ HB_FUNC( FT_DISPFILE )
                               break;
 
                case K_RIGHT : wincol += colinc;            /* move cursor  */
-                              refresh = YES;               /* to the right */
+                              bRefresh = HB_TRUE;          /* to the right */
 
                               if ( wincol > (maxlin - width) )
                                   wincol = maxlin - width;
@@ -802,19 +798,19 @@ HB_FUNC( FT_DISPFILE )
                               break;
 
                case K_HOME :  wincol  = 0;                 /* move cursor  */
-                              refresh = YES;               /* to first col */
+                              bRefresh = HB_TRUE;          /* to first col */
 
                               break;
 
                     /* move cursor to last col */
 
                case K_END  :  wincol  = maxlin - width;
-                              refresh = YES;
+                              bRefresh = HB_TRUE;
 
                               break;
 
                case K_CTRL_LEFT  : wincol -= 16;           /* move cursor    */
-                              refresh = YES;               /* 16 col to left */
+                              bRefresh = HB_TRUE;          /* 16 col to left */
 
                               if ( wincol < 0 )
                                   wincol = 0;
@@ -822,7 +818,7 @@ HB_FUNC( FT_DISPFILE )
                               break;
 
                case K_CTRL_RIGHT  : wincol += 16;          /* move cursor     */
-                              refresh = YES;               /* 16 col to right */
+                              bRefresh = HB_TRUE;          /* 16 col to right */
 
                               if ( wincol > (maxlin - width) )
                                   wincol = maxlin - width;
@@ -845,11 +841,11 @@ HB_FUNC( FT_DISPFILE )
                case K_CTRL_PGDN : filebot();                /* move cursor to */
                               break;                        /* to bot of file */
 
-               case K_ENTER : done = YES;                   /* carriage return */
+               case K_ENTER : bDone = HB_TRUE;              /* carriage return */
                               break;                        /* terminates      */
 
-               case K_ESC  : done = YES;                    /* escape key */
-                              break;                        /* terminates */
+               case K_ESC  : bDone = HB_TRUE;               /* escape key */
+                             break;                         /* terminates */
 
                     /* scan key list and see if key pressed is there */
 
@@ -858,18 +854,18 @@ HB_FUNC( FT_DISPFILE )
                                for (i = 0; i <= kcount; i++)
                                    if ((ch > 0) && (ch < 256))
                                       if ( (int) kstr[i] == ch )
-                                         done = YES;
+                                         bDone = HB_TRUE;
                                break;                      /* if so terminate */
                              }
                              else
                              {
                                for (i = 0; i < kcount; i++)
                                   if ( keylist[i] == ch )
-                                     done = YES;
+                                     bDone = HB_TRUE;
                                break;
                              }
             }
-        } while ( done == NO );
+        } while( ! bDone );
       }
     else
       ch = 0;
@@ -879,7 +875,7 @@ HB_FUNC( FT_DISPFILE )
 
         /* return key value to caller */
 
-    if (keytype == K_STRING)
+    if( keytype == K_STRING )
     {
        rval[0] = (char) ch;
        rval[1] = '\0';
@@ -887,32 +883,4 @@ HB_FUNC( FT_DISPFILE )
     }
     else
        hb_retni( ch );
-}
-
-
-
-/*
- *  keyin() gets the next key typed and does any translation needed.
- *  Some keys are converted to a common name - like the up arrow is
- *  converted to the UP value which also is the Ctrl-E value.  This
- *  allows the Wordstar-like control keys to be used.  Only extended
- *  keys are translated - the values of the defines were chosen to
- *  match up with the non-extended key codes.
- *
- */
-
-static int keyin()
-{
-    return hb_inkey( HB_TRUE, 0.0, INKEY_ALL );
-}
-
-
-static void strcpyn( char *dest, const char *source, int len )
-{
-   int i;
-
-   for (i = 0; i < len; i++)
-      dest[i] = source[i];
-
-   dest[len+1] = 0x00;
 }

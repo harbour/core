@@ -54,8 +54,8 @@
 
 #include "hbapifs.h"
 
-#define b_size     4096
-#define c_size     4096
+#define _B_SIZE     4096
+#define _C_SIZE     4096
 
 static long       last_rec[ 10 ];
 static long       recno[ 10 ];
@@ -74,23 +74,24 @@ HB_FUNC( HB_FUSE )
    PHB_ITEM arg2_it = hb_param( 2, HB_IT_NUMERIC );
    int open_flags;
 
-   if ( arg1_it ) {
-
-     if( arg2_it )
+   if( arg1_it )
+   {
+      if( arg2_it )
          open_flags = hb_parni( 2 );
-     else
+      else
          open_flags = 0;
 
       handles[area]  = hb_fsOpen( hb_parc( 1 ), ( HB_USHORT ) open_flags );
       offset[area]   = 0;
       recno[area]    = 1;
-      b              = ( char * ) hb_xgrab( b_size );
-      c              = ( char * ) hb_xgrab( c_size );
+      b              = ( char * ) hb_xgrab( _B_SIZE );
+      c              = ( char * ) hb_xgrab( _C_SIZE );
       lastbyte[area] = hb_fsSeekLarge( handles[ area ], 0, FS_END );
       isEof[area] = ( lastbyte[ area ] == 0 );
       hb_retnint( handles[ area ] );
    }
-   else {
+   else
+   {
       hb_fsClose( handles[area] );
       hb_xfree( b );
       hb_xfree( c );
@@ -114,23 +115,32 @@ HB_FUNC( HB_FRECNO )
 
 static long hb_hbfskip( int recs )
 {
-   long read_pos;
-   long read_len;
-   long x, y;
+   HB_FOFFSET read_pos;
+   HB_ISIZ read_len;
+   HB_ISIZ x;
+   int y;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_hbskip(%d)", recs));
 
-   if ( recs > 0 ) {
-      for (y = 0; y < recs; y++ ) {
+   if( recs > 0 )
+   {
+      for( y = 0; y < recs; ++y )
+      {
          hb_fsSeekLarge( handles[area], offset[area], FS_SET );
-         read_len = hb_fsReadLarge( handles[area], b, b_size );
-         for (x = 0; x < read_len; x++ ) {
-            if ( ((*(b + x) == 13) && (*(b + x + 1) == 10)) ||
-                 ((*(b + x) == 10) && (*(b + x + 1) == 13)) ) {
+
+         read_len = hb_fsReadLarge( handles[area], b, _B_SIZE );
+
+         for( x = 0; x < read_len; ++x )
+         {
+            if( ((*(b + x) == 13) && (*(b + x + 1) == 10)) ||
+                ((*(b + x) == 10) && (*(b + x + 1) == 13)) )
+            {
                break;
             }
          }
-         if ( (offset[area] + x + 2) < lastbyte[area] ) {
+
+         if( (offset[area] + x + 2) < lastbyte[area] )
+         {
             isEof[area] = HB_FALSE;
             offset[area] += (x + 2);
             recno[area] += 1;
@@ -139,37 +149,45 @@ static long hb_hbfskip( int recs )
             isEof[area] = HB_TRUE;
       }
    }
-   else {
+   else
+   {
       recs = -recs;
       isEof[area] = HB_FALSE;
 
-      if ( (recno[area] - recs) < 1 )
+      if( ( recno[area] - recs ) < 1 )
          return( 1 );
 
-      for (y = recs; y > 0; y-- ) {
-         if ( offset[area] - b_size < 0 ) {
+      for( y = recs; y > 0; y-- )
+      {
+         if( offset[area] - _B_SIZE < 0 )
+         {
             read_pos = 0;
             read_len = (size_t)offset[area];
          }
-         else {
-            read_pos = (size_t)(offset[area] - b_size);
-            read_len = b_size;
+         else
+         {
+            read_pos = (size_t)(offset[area] - _B_SIZE);
+            read_len = _B_SIZE;
          }
 
          hb_fsSeekLarge( handles[area], read_pos, FS_SET );
          read_len = hb_fsReadLarge( handles[area], b, read_len );
 
-         for (x = read_len - 4; x >= 0; x-- ) {
-            if ( ((*(b + x) == 13) && (*(b + x + 1) == 10)) ||
-                 ((*(b + x) == 10) && (*(b + x + 1) == 13)) ) {
+         for( x = read_len - 4; x >= 0; x-- )
+         {
+            if( ((*(b + x) == 13) && (*(b + x + 1) == 10)) ||
+                ((*(b + x) == 10) && (*(b + x + 1) == 13)) )
+            {
                break;
             }
          }
-         if ( x < 0 ) {
+         if( x < 0 )
+         {
             offset[area] = 0;
             recno[area] = 1;
          }
-         else {
+         else
+         {
             offset[area] = read_pos + x + 2;
             recno[area]--;
          }
@@ -186,21 +204,24 @@ HB_FUNC( HB_FSKIP )
 
 HB_FUNC( HB_FREADLN )
 {
-   int x;
-   long read;
+   HB_ISIZ x;
+   HB_ISIZ read;
 
    hb_fsSeekLarge( handles[area], offset[area], FS_SET );
-   read = hb_fsReadLarge( handles[area], b, b_size );
 
-   for ( x = 0; x < b_size; x++ ) {
-      if ( ((*(b + x) == 13) && (*(b + x + 1) == 10)) ||
-           ((*(b + x) == 10) && (*(b + x + 1) == 13)) ||
-           (*(b + x) == 26) || ( x >= (int)read) ) {
+   read = hb_fsReadLarge( handles[area], b, _B_SIZE );
+
+   for( x = 0; x < _B_SIZE; ++x )
+   {
+      if( ((*(b + x) == 13) && (*(b + x + 1) == 10)) ||
+          ((*(b + x) == 10) && (*(b + x + 1) == 13)) ||
+           (*(b + x) == 26) || ( x >= read) )
+      {
          break;
       }
    }
-   hb_retclen( b, x );
 
+   hb_retclen( b, x );
 }
 
 HB_FUNC( HB_FEOF )
@@ -215,19 +236,23 @@ HB_FUNC( HB_FGOTO )
 
    target = hb_parnl( 1 );
 
-   if ( recno[area] > target ) {
-      while ( recno[area] != target )   {
+   if( recno[area] > target )
+   {
+      while( recno[area] != target )
+      {
          last = recno[area];
-         hb_hbfskip(-1);
-         if ( recno[area] == last )
+         hb_hbfskip( -1 );
+         if( recno[area] == last )
             break;
       }
    }
-   else {
-      while ( recno[area] != target ) {
-         last = recno[area];
-         hb_hbfskip(1);
-         if ( recno[area] == last )
+   else
+   {
+      while( recno[area] != target )
+      {
+         last = recno[ area ];
+         hb_hbfskip( 1 );
+         if( recno[area] == last )
             break;
       }
    }
@@ -235,36 +260,39 @@ HB_FUNC( HB_FGOTO )
 
 HB_FUNC( HB_FGOBOTTOM )
 {
-   int x;
-   int len;
-   long loc;
-   HB_FOFFSET last;
-
-   if ( last_rec[area] != 0 ) {
+   if( last_rec[area] != 0 )
+   {
       recno[area] = last_rec[area];
       offset[area] = last_off[area];
    }
-   else {
+   else
+   {
+      HB_ISIZ loc = 0;
+      HB_ISIZ len;
+      HB_FOFFSET last = offset[area];
 
-      loc = 0;
+      do
+      {
+         HB_ISIZ x;
 
-      last = offset[area];
-      do {
          hb_fsSeekLarge( handles[area], offset[area], FS_SET );
-         len = hb_fsReadLarge(  handles[area], c, c_size );
-         for ( x = 0; x < len; x++ ) {
-            if ( ((*(c + x) == 13) && (*(c + x + 1) == 10)) ||
-                 ((*(c + x) == 10) && (*(c + x + 1) == 13)) ||
-                 ( x - loc > b_size ) ) {
+         len = hb_fsReadLarge( handles[area], c, _C_SIZE );
+
+         for( x = 0; x < len; ++x )
+         {
+            if( ((*(c + x) == 13) && (*(c + x + 1) == 10)) ||
+                ((*(c + x) == 10) && (*(c + x + 1) == 13)) ||
+                ( x - loc > _B_SIZE ) )
+            {
                last = offset[area] + loc;
                recno[area]++;
-               x++;
+               ++x;
                loc = x + 1;
             }
          }
          offset[area] += loc;
 
-      } while ( len == c_size );
+      } while ( len == _C_SIZE );
 
       last_rec[area] = --recno[area];
       last_off[area] = last;
@@ -332,26 +360,28 @@ HB_FUNC( HB_FREADANDSKIP )
    sequentially with just this function.
    -BH
  --------------------------------------------------*/
-   long x =  0;
-   long read;
+   HB_ISIZ x = 0;
+   HB_ISIZ read;
    HB_BOOL bInField = HB_FALSE, bHasCRLF = HB_FALSE;
 
    hb_fsSeekLarge( handles[area], offset[area], FS_SET );
-   read = hb_fsReadLarge( handles[area], b, b_size );
+   read = hb_fsReadLarge( handles[area], b, _B_SIZE );
 
-   while (  x < read )
+   while( x < read )
    {
-      if ( *(b + x) == '"' )
+      if( *(b + x) == '"' )
       {
          bInField = !bInField ;
-         x++;
+         ++x;
          continue;
       }
-      if ( bInField )
+
+      if( bInField )
       {
-         x++;
+         ++x;
          continue;
       }
+
       if(  ((*(b + x) == 13) && x < read-1 && (*(b + x + 1) == 10)) ||
            ((*(b + x) == 10) && x < read-1 && (*(b + x + 1) == 13)) )
       {
@@ -359,13 +389,13 @@ HB_FUNC( HB_FREADANDSKIP )
          bHasCRLF = HB_TRUE;
          break;
       }
-      x++;
+      ++x;
    }
 
    offset[area] = offset[area] + x;
    recno[area] += 1;
    /* See if there's more to read */
-   if ( !isEof[area] )
+   if( !isEof[area] )
       isEof[area] = (lastbyte[area] <= offset[area] + 1) ;
 
    hb_retclen( b, x - (bHasCRLF ? 2 : 0) );
