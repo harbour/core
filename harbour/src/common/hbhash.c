@@ -68,7 +68,7 @@ static void hb_hashItemDelete( HB_HASH_TABLE_PTR pTable, HB_HASH_ITEM_PTR pItem 
 {
    if( pTable->pDeleteItemFunc )
       ( pTable->pDeleteItemFunc )( pTable, pItem->KeyPtr, pItem->ValPtr );
-   hb_xfree( ( void * ) pItem );
+   hb_xfree( pItem );
 }
 
 /* create a new  hash table
@@ -121,8 +121,8 @@ void hb_hashTableKill( HB_HASH_TABLE_PTR pTable )
       }
       ++ulSize;
    }
-   hb_xfree( ( void * ) pTable->pItems );
-   hb_xfree( ( void * ) pTable );
+   hb_xfree( pTable->pItems );
+   hb_xfree( pTable );
 }
 
 /* resize table */
@@ -172,8 +172,8 @@ HB_HASH_TABLE_PTR hb_hashTableResize( HB_HASH_TABLE_PTR pTable, HB_SIZE ulNewSiz
       }
       ++ulSize;
    }
-   hb_xfree( ( void * ) pTable->pItems );
-   hb_xfree( ( void * ) pTable );
+   hb_xfree( pTable->pItems );
+   hb_xfree( pTable );
 
    return pNew;
 }

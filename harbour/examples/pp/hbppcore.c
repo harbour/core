@@ -278,7 +278,7 @@ void hb_pp_SetRules_( HB_INCLUDE_FUNC_PTR pIncludeFunc, HB_BOOL bQuiet )
                hb_comp_files.pLast = NULL;
                hb_comp_files.iFiles = 0;
 
-               hb_xfree( ( void * ) hb_comp_pFileName );
+               hb_xfree( hb_comp_pFileName );
                hb_comp_pFileName = NULL;
             }
             else
@@ -353,7 +353,7 @@ void hb_pp_Free( void )
    }
    if( hb_pp_aCondCompile )
    {
-      hb_xfree( ( void * ) hb_pp_aCondCompile );
+      hb_xfree( hb_pp_aCondCompile );
       hb_pp_aCondCompile = NULL;
    }
    hb_pp_InternalFree();
@@ -962,7 +962,7 @@ static void ParseCommand( char *sLine, HB_BOOL com_or_xcom, HB_BOOL com_or_tra )
    if( !ipos )
    {
 #if defined(HB_PP_DEBUG_MEMORY)
-      hb_xfree( ( void * ) mpatt );
+      hb_xfree( mpatt );
 #endif
       return;
    }
@@ -1046,7 +1046,7 @@ static void ParseCommand( char *sLine, HB_BOOL com_or_xcom, HB_BOOL com_or_tra )
       hb_compGenError( NULL, hb_pp_szErrors, 'F', HB_PP_ERR_COMMAND_DEFINITION, cmdname, sLine );
    }
 #if defined(HB_PP_DEBUG_MEMORY)
-   hb_xfree( ( void * ) mpatt );
+   hb_xfree( mpatt );
 #endif
 }
 
@@ -1673,7 +1673,7 @@ int hb_pp_ParseExpression( char *sLine, char *sOutLine, HB_BOOL bSplitLines )
    }
 
 #if defined(HB_PP_DEBUG_MEMORY)
-   hb_xfree( ( void * ) rpatt );
+   hb_xfree( rpatt );
 #endif
    return 0;
 }
@@ -2242,7 +2242,7 @@ static int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres, HB_B
                if( s_numBrackets )
                {
 #if defined(HB_PP_DEBUG_MEMORY)
-                  hb_xfree( ( void * ) exppatt );
+                  hb_xfree( exppatt );
 #endif
                   return 0;
                }
@@ -2280,7 +2280,7 @@ static int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres, HB_B
                if( s_numBrackets )
                {
 #if defined(HB_PP_DEBUG_MEMORY)
-                  hb_xfree( ( void * ) exppatt );
+                  hb_xfree( exppatt );
 #endif
                   return 0;
                }
@@ -2296,7 +2296,7 @@ static int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres, HB_B
          if( s_numBrackets )
          {
 #if defined(HB_PP_DEBUG_MEMORY)
-            hb_xfree( ( void * ) exppatt );
+            hb_xfree( exppatt );
 #endif
             return 0;
          }
@@ -2419,7 +2419,7 @@ static int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres, HB_B
                         else
                         {
 #if defined(HB_PP_DEBUG_MEMORY)
-                           hb_xfree( ( void * ) exppatt );
+                           hb_xfree( exppatt );
 #endif
                            *ptri = ptrmacro; /* restore '&' char */
                            return 0;
@@ -2429,7 +2429,7 @@ static int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres, HB_B
                   else
                   {
 #if defined(HB_PP_DEBUG_MEMORY)
-                     hb_xfree( ( void * ) exppatt );
+                     hb_xfree( exppatt );
 #endif
                      *ptri -= 1; /* restore '&' char */
                      return 0;
@@ -2472,7 +2472,7 @@ static int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres, HB_B
       {
          /* If restricted match marker doesn't correspond to real parameter */
 #if defined(HB_PP_DEBUG_MEMORY)
-         hb_xfree( ( void * ) exppatt );
+         hb_xfree( exppatt );
 #endif
          return 0;
       }
@@ -2491,7 +2491,7 @@ static int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres, HB_B
       else
       {
 #if defined(HB_PP_DEBUG_MEMORY)
-         hb_xfree( ( void * ) exppatt );
+         hb_xfree( exppatt );
 #endif
          return 0;
       }
@@ -2515,14 +2515,14 @@ static int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres, HB_B
       else
       {
 #if defined(HB_PP_DEBUG_MEMORY)
-         hb_xfree( ( void * ) exppatt );
+         hb_xfree( exppatt );
 #endif
          return 0;
       }
    }
 
 #if defined(HB_PP_DEBUG_MEMORY)
-   hb_xfree( ( void * ) exppatt );
+   hb_xfree( exppatt );
 #endif
    return 1;
 }

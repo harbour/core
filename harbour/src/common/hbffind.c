@@ -931,9 +931,9 @@ void hb_fsFindClose( PHB_FFIND ffind )
 
          hb_vmLock();
 
-         hb_xfree( ( void * ) ffind->info );
+         hb_xfree( ffind->info );
       }
 
-      hb_xfree( ( void * ) ffind );
+      hb_xfree( ffind );
    }
 }

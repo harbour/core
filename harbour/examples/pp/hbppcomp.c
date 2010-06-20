@@ -92,28 +92,28 @@ void hb_pp_InternalFree( void )
 #if defined(HB_PP_DEBUG_MEMORY)
    if( s_szLine )
    {
-      hb_xfree( (void *)s_szLine );
+      hb_xfree( s_szLine );
       s_szLine = NULL;
    }
    if( s_szOutLine )
    {
-      hb_xfree( (void *)s_szOutLine );
+      hb_xfree( s_szOutLine );
       s_szOutLine = NULL;
    }
 #endif
    if( s_TextOutFunc )
    {
-      hb_xfree( (void *)s_TextOutFunc );
+      hb_xfree( s_TextOutFunc );
       s_TextOutFunc = NULL;
    }
    if( s_TextEndFunc )
    {
-      hb_xfree( (void *)s_TextEndFunc );
+      hb_xfree( s_TextEndFunc );
       s_TextEndFunc = NULL;
    }
    if( s_TextStartFunc )
    {
-      hb_xfree( (void *)s_TextStartFunc );
+      hb_xfree( s_TextStartFunc );
       s_TextStartFunc = NULL;
    }
 }
@@ -433,7 +433,7 @@ static void pp_TextBlockFinish( void )
    if( s_TextEndFunc )
    {
       hb_strncpy( s_szLine, s_TextEndFunc, sizeof( s_szLine ) - 1 );
-      hb_xfree( (void *)s_TextEndFunc );
+      hb_xfree( s_TextEndFunc );
       s_TextEndFunc = NULL;
    }
    else
@@ -442,12 +442,12 @@ static void pp_TextBlockFinish( void )
    }
    if( s_TextOutFunc )
    {
-      hb_xfree( (void *)s_TextOutFunc );
+      hb_xfree( s_TextOutFunc );
       s_TextOutFunc = NULL;
    }
    if( s_TextStartFunc )
    {
-      hb_xfree( (void *)s_TextStartFunc );
+      hb_xfree( s_TextStartFunc );
       s_TextStartFunc = NULL;
    }
    hb_pp_NestedLiteralString = HB_FALSE;
@@ -525,7 +525,7 @@ static void pp_StreamBlockFinish( void )
    if( s_TextStartFunc )
    {
       hb_strncat( s_szLine, s_TextStartFunc, sizeof( s_szLine ) - 1 );
-      hb_xfree( (void *)s_TextStartFunc );
+      hb_xfree( s_TextStartFunc );
       s_TextStartFunc = NULL;
    }
    hb_strncat( s_szLine, "[", sizeof( s_szLine ) - 1 );
@@ -534,12 +534,12 @@ static void pp_StreamBlockFinish( void )
    if( s_TextEndFunc )
    {
       hb_strncat( s_szLine, s_TextEndFunc, sizeof( s_szLine ) - 1 );
-      hb_xfree( (void *)s_TextEndFunc );
+      hb_xfree( s_TextEndFunc );
       s_TextEndFunc = NULL;
    }
    if( s_TextOutFunc )
    {
-      hb_xfree( (void *)s_TextOutFunc );
+      hb_xfree( s_TextOutFunc );
       s_TextOutFunc = NULL;
    }
    hb_pp_NestedLiteralString = HB_TRUE;

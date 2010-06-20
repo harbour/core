@@ -1841,42 +1841,42 @@ static PFUNCTION hb_compFunctionKill( HB_COMP_DECL, PFUNCTION pFunc )
    {
       pVar = pFunc->pLocals;
       pFunc->pLocals = pVar->pNext;
-      hb_xfree( ( void * ) pVar );
+      hb_xfree( pVar );
    }
 
    while( pFunc->pStatics )
    {
       pVar = pFunc->pStatics;
       pFunc->pStatics = pVar->pNext;
-      hb_xfree( ( void * ) pVar );
+      hb_xfree( pVar );
    }
 
    while( pFunc->pFields )
    {
       pVar = pFunc->pFields;
       pFunc->pFields = pVar->pNext;
-      hb_xfree( ( void * ) pVar );
+      hb_xfree( pVar );
    }
 
    while( pFunc->pMemvars )
    {
       pVar = pFunc->pMemvars;
       pFunc->pMemvars = pVar->pNext;
-      hb_xfree( ( void * ) pVar );
+      hb_xfree( pVar );
    }
 
    while( pFunc->pDetached )
    {
       pVar = pFunc->pDetached;
       pFunc->pDetached = pVar->pNext;
-      hb_xfree( ( void * ) pVar );
+      hb_xfree( pVar );
    }
 
    while( pFunc->pPrivates )
    {
       pVar = pFunc->pPrivates;
       pFunc->pPrivates = pVar->pNext;
-      hb_xfree( ( void * ) pVar );
+      hb_xfree( pVar );
    }
 
    while( pFunc->pEnum )
@@ -1888,14 +1888,14 @@ static PFUNCTION hb_compFunctionKill( HB_COMP_DECL, PFUNCTION pFunc )
 
    /* Release the NOOP array. */
    if( pFunc->pNOOPs )
-      hb_xfree( ( void * ) pFunc->pNOOPs );
+      hb_xfree( pFunc->pNOOPs );
 
    /* Release the Jumps array. */
    if( pFunc->pJumps )
-      hb_xfree( ( void * ) pFunc->pJumps );
+      hb_xfree( pFunc->pJumps );
 
-   hb_xfree( ( void * ) pFunc->pCode );
-   hb_xfree( ( void * ) pFunc );
+   hb_xfree( pFunc->pCode );
+   hb_xfree( pFunc );
 
    return pNext;
 }
@@ -2227,7 +2227,7 @@ static void hb_compExternGen( HB_COMP_DECL )
       }
       pDelete = HB_COMP_PARAM->externs;
       HB_COMP_PARAM->externs = HB_COMP_PARAM->externs->pNext;
-      hb_xfree( ( void * ) pDelete );
+      hb_xfree( pDelete );
    }
 }
 
@@ -3661,14 +3661,14 @@ void hb_compCodeBlockRewind( HB_COMP_DECL )
    /* Release the NOOP array. */
    if( pCodeblock->pNOOPs )
    {
-      hb_xfree( ( void * ) pCodeblock->pNOOPs );
+      hb_xfree( pCodeblock->pNOOPs );
       pCodeblock->pNOOPs = NULL;
       pCodeblock->iNOOPs = 0;
    }
    /* Release the Jumps array. */
    if( pCodeblock->pJumps )
    {
-      hb_xfree( ( void * ) pCodeblock->pJumps );
+      hb_xfree( pCodeblock->pJumps );
       pCodeblock->pJumps = NULL;
       pCodeblock->iJumps = 0;
    }
@@ -3874,7 +3874,7 @@ void hb_compCompileEnd( HB_COMP_DECL )
       HB_COMP_PARAM->inlines.pFirst = pInline->pNext;
       if( pInline->pCode )
          hb_xfree( pInline->pCode );
-      hb_xfree( ( void * ) pInline );
+      hb_xfree( pInline );
    }
 
    while( HB_COMP_PARAM->pFirstDeclared )
@@ -3882,10 +3882,10 @@ void hb_compCompileEnd( HB_COMP_DECL )
       PCOMDECLARED pDeclared = HB_COMP_PARAM->pFirstDeclared;
       HB_COMP_PARAM->pFirstDeclared = pDeclared->pNext;
       if( pDeclared->cParamTypes )
-         hb_xfree( ( void * ) pDeclared->cParamTypes );
+         hb_xfree( pDeclared->cParamTypes );
       if( pDeclared->pParamClasses )
-         hb_xfree( ( void * ) pDeclared->pParamClasses );
-      hb_xfree( ( void * ) pDeclared );
+         hb_xfree( pDeclared->pParamClasses );
+      hb_xfree( pDeclared );
    }
    HB_COMP_PARAM->pLastDeclared = NULL;
 
@@ -3898,12 +3898,12 @@ void hb_compCompileEnd( HB_COMP_DECL )
          PCOMDECLARED pDeclared = pClass->pMethod;
          pClass->pMethod = pDeclared->pNext;
          if( pDeclared->cParamTypes )
-            hb_xfree( ( void * ) pDeclared->cParamTypes );
+            hb_xfree( pDeclared->cParamTypes );
          if( pDeclared->pParamClasses )
-            hb_xfree( ( void * ) pDeclared->pParamClasses );
-         hb_xfree( ( void * ) pDeclared );
+            hb_xfree( pDeclared->pParamClasses );
+         hb_xfree( pDeclared );
       }
-      hb_xfree( ( void * ) pClass );
+      hb_xfree( pClass );
    }
    HB_COMP_PARAM->pLastClass = NULL;
 
@@ -3911,7 +3911,7 @@ void hb_compCompileEnd( HB_COMP_DECL )
    {
       PCOMSYMBOL pSym = HB_COMP_PARAM->symbols.pFirst;
       HB_COMP_PARAM->symbols.pFirst = pSym->pNext;
-      hb_xfree( ( void * ) pSym );
+      hb_xfree( pSym );
    }
 }
 

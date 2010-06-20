@@ -155,7 +155,7 @@ HB_FUNC( HPDF_SAVETOFILE )
    hb_retnl( ( long ) HPDF_SaveToFile( HPDF_Doc_par( 1 ), pszFileName ) );
 
    if( pszFree )
-      hb_xfree( ( void * ) pszFree );
+      hb_xfree( pszFree );
 }
 /*----------------------------------------------------------------------*/
 /* HPdf_SaveToStream( hDoc ) -> hStatus

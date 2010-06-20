@@ -1164,7 +1164,7 @@ extern HB_EXPORT const char * hb_osDecodeCP( const char * szName, char ** pszFre
 
 /* environment variables access */
 extern HB_BOOL hb_getenv_buffer( const char * szName, char * szBuffer, int nSize );
-/* WARNING: This returned pointer must be freed if not NULL using hb_xfree( ( void * ) ptr ); */
+/* WARNING: This returned pointer must be freed if not NULL using hb_xfree( ptr ); */
 extern char *  hb_getenv( const char * name );
 extern HB_BOOL hb_setenv( const char * szName, const char * szValue ); /* set or delete (szValue==NULL) environment variable */
 extern char *  hb_netname( void );

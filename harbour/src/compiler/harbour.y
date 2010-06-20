@@ -2146,7 +2146,7 @@ static void hb_compLoopHere( HB_COMP_DECL )
          hb_compGenJumpHere( pLoop->ulOffset + 1, HB_COMP_PARAM );
          pFree = pLoop;
          pLoop = pLoop->pLoopList;
-         hb_xfree( ( void * ) pFree );
+         hb_xfree( pFree );
       }
       pLast->pLoopList = NULL;
    }
@@ -2174,13 +2174,13 @@ static void hb_compLoopEnd( HB_COMP_DECL )
          hb_compGenJumpHere( pExit->ulOffset + 1, HB_COMP_PARAM );
          pFree = pExit;
          pExit = pExit->pExitList;
-         hb_xfree( ( void * ) pFree );
+         hb_xfree( pFree );
       }
 
       pLast->pNext = NULL;
       if( pLoop == pFunc->pLoops )
          pFunc->pLoops = NULL;
-      hb_xfree( ( void * ) pLoop );
+      hb_xfree( pLoop );
    }
 }
 
@@ -2195,16 +2195,16 @@ void hb_compLoopKill( PFUNCTION pFunc )
       {
          pFree = pLoop->pExitList;
          pLoop->pExitList = pFree->pExitList;
-         hb_xfree( ( void * ) pFree );
+         hb_xfree( pFree );
       }
       while( pLoop->pLoopList )
       {
          pFree = pLoop->pLoopList;
          pLoop->pLoopList = pFree->pLoopList;
-         hb_xfree( ( void * ) pFree );
+         hb_xfree( pFree );
       }
       pFunc->pLoops = pLoop->pNext;
-      hb_xfree( ( void * ) pLoop );
+      hb_xfree( pLoop );
    }
 }
 

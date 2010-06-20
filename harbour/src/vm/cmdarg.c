@@ -233,7 +233,7 @@ void hb_cmdargUpdate( void )
                   hb_strncat( s_szAppName, pFName->szPath, HB_PATH_MAX - 1 );
                   pFName->szPath = hb_strdup( s_szAppName );
                   hb_fsFNameMerge( s_szAppName, pFName );
-                  hb_xfree( ( void * ) pFName->szPath );
+                  hb_xfree( pFName->szPath );
                   s_argv[ 0 ] = s_szAppName;
                }
             }
@@ -309,7 +309,7 @@ static char * hb_cmdargGet( const char * pszName, HB_BOOL bRetValue )
    if( !pszEnvVar || pszEnvVar[ 0 ] == '\0' )
    {
       if( pszEnvVar )
-         hb_xfree( ( void * ) pszEnvVar );
+         hb_xfree( pszEnvVar );
 
       pszEnvVar = hb_getenv( "CLIPPER" );
    }
@@ -370,7 +370,7 @@ static char * hb_cmdargGet( const char * pszName, HB_BOOL bRetValue )
    }
 
    if( pszEnvVar )
-      hb_xfree( ( void * ) pszEnvVar );
+      hb_xfree( pszEnvVar );
 
    return pszRetVal;
 }

@@ -115,7 +115,7 @@ HB_FUNC( HB_COMPILE )
    hb_compGenArgList( 1, hb_pcount(), &argc, &argv );
 
    hb_retni( hb_compMain( argc, argv, NULL, NULL, NULL ) );
-   hb_xfree( ( void * ) argv );
+   hb_xfree( argv );
 }
 
 HB_FUNC( HB_COMPILEBUF )
@@ -127,7 +127,7 @@ HB_FUNC( HB_COMPILEBUF )
 
    hb_compGenArgList( 1, hb_pcount(), &argc, &argv );
    iResult = hb_compMain( argc, argv, &pBuffer, &ulLen, NULL );
-   hb_xfree( ( void * ) argv );
+   hb_xfree( argv );
    if( iResult == EXIT_SUCCESS && pBuffer )
       hb_retclen_buffer( ( char * ) pBuffer, ulLen );
 }
@@ -145,7 +145,7 @@ HB_FUNC( HB_COMPILEFROMBUF )
    {
       hb_compGenArgList( 2, hb_pcount(), &argc, &argv );
       iResult = hb_compMain( argc, argv, &pBuffer, &ulLen, szSource );
-      hb_xfree( ( void * ) argv );
+      hb_xfree( argv );
       if( iResult == EXIT_SUCCESS && pBuffer )
          hb_retclen_buffer( ( char * ) pBuffer, ulLen );
    }

@@ -136,7 +136,7 @@ int hb_tr_level( void )
          s_fp = stderr;
 
       if( env )
-         hb_xfree( ( void * ) env );
+         hb_xfree( env );
 
       /* ; */
 
@@ -157,7 +157,7 @@ int hb_tr_level( void )
       }
 
       if( env )
-         hb_xfree( ( void * ) env );
+         hb_xfree( env );
 
       /* ; */
 
@@ -168,7 +168,7 @@ int hb_tr_level( void )
          s_sysout = 0;
 
       if( env )
-         hb_xfree( ( void * ) env );
+         hb_xfree( env );
 
       /* ; */
 
@@ -179,7 +179,7 @@ int hb_tr_level( void )
          s_flush = 0;
 
       if( env )
-         hb_xfree( ( void * ) env );
+         hb_xfree( env );
    }
 
    return s_level;

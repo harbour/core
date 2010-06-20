@@ -486,7 +486,7 @@ HB_MEMFS_EXPORT void hb_memfsClose( HB_FHANDLE hFile )
       pInode->uiDeny ^= pFile->uiFlags & FOX_DENYFLAGS;
    }
    HB_MEMFSMT_UNLOCK
-   hb_xfree( ( void * ) pFile );
+   hb_xfree( pFile );
 }
 
 

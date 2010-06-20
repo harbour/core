@@ -403,7 +403,7 @@ HB_BOOL hb_fsFileExists( const char * pszFileName )
 #endif
 
    if( pszFree )
-      hb_xfree( ( void * ) pszFree );
+      hb_xfree( pszFree );
 
    return fExist;
 }
@@ -465,7 +465,7 @@ HB_BOOL hb_fsDirExists( const char * pszDirName )
 #endif
 
    if( pszFree )
-      hb_xfree( ( void * ) pszFree );
+      hb_xfree( pszFree );
 
    return fExist;
 }

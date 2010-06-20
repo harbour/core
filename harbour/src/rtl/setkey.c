@@ -88,7 +88,7 @@ static void hb_setkeyRelease( void * cargo )
          hb_itemRelease( sk_list->pIsActive );
       sk_list_tmp = sk_list;
       sk_list = sk_list->next;
-      hb_xfree( ( void * ) sk_list_tmp );
+      hb_xfree( sk_list_tmp );
    }
 
    ( ( PHB_SK_DATA ) cargo )->sk_list = NULL;
