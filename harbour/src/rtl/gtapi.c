@@ -588,7 +588,7 @@ HB_ERRCODE hb_gtRepChar( int iRow, int iCol, HB_USHORT usChar, HB_SIZE ulCount )
 {
    PHB_GT pGT;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gtRepChar(%d, %d, %hu, %lu)", iRow, iCol, usChar, ulCount));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtRepChar(%d, %d, %hu, %" HB_PFS "u)", iRow, iCol, usChar, ulCount));
 
    pGT = hb_gt_Base();
    if( pGT )
@@ -759,7 +759,7 @@ HB_ERRCODE hb_gtPutText( int iRow, int iCol,
 {
    PHB_GT pGT;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gtPutText(%d, %d, %p, %lu, %d)", iRow, iCol, szStr, ulLength, iColor));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtPutText(%d, %d, %p, %" HB_PFS "u, %d)", iRow, iCol, szStr, ulLength, iColor));
 
    pGT = hb_gt_Base();
    if( pGT )
@@ -780,7 +780,7 @@ HB_ERRCODE hb_gtWriteAt( int iRow, int iCol, const char * szStr, HB_SIZE ulLengt
 {
    PHB_GT pGT;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gtWriteAt(%d, %d, %p, %lu)", iRow, iCol, szStr, ulLength));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtWriteAt(%d, %d, %p, %" HB_PFS "u)", iRow, iCol, szStr, ulLength));
 
    pGT = hb_gt_Base();
    if( pGT )
@@ -797,7 +797,7 @@ HB_ERRCODE hb_gtWrite( const char * szStr, HB_SIZE ulLength )
 {
    PHB_GT pGT;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gtWrite(%p, %lu)", szStr, ulLength));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtWrite(%p, %" HB_PFS "u)", szStr, ulLength));
 
    pGT = hb_gt_Base();
    if( pGT )
@@ -814,7 +814,7 @@ HB_ERRCODE hb_gtWriteCon( const char * szStr, HB_SIZE ulLength )
 {
    PHB_GT pGT;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gtWriteCon(%p, %lu)", szStr, ulLength));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtWriteCon(%p, %" HB_PFS "u)", szStr, ulLength));
 
    pGT = hb_gt_Base();
    if( pGT )
@@ -967,7 +967,7 @@ HB_ERRCODE hb_gtOutStd( const char * szStr, HB_SIZE ulLen )
 {
    PHB_GT pGT;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gtOutStd(%p, %lu)", szStr, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtOutStd(%p, %" HB_PFS "u)", szStr, ulLen));
 
    pGT = hb_gt_Base();
    if( pGT )
@@ -985,7 +985,7 @@ HB_ERRCODE hb_gtOutErr( const char * szStr, HB_SIZE ulLen )
 {
    PHB_GT pGT;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gtOutErr(%p, %lu)", szStr, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtOutErr(%p, %" HB_PFS "u)", szStr, ulLen));
 
    pGT = hb_gt_Base();
    if( pGT )

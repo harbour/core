@@ -61,7 +61,7 @@ HB_SIZE hb_AtSkipStrings( const char * szSub, HB_SIZE ulSubLen, const char * szT
 {
    char cLastChar = ' ';
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_AtSkipStrings(%s, %lu, %s, %lu)", szSub, ulSubLen, szText, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_AtSkipStrings(%s, %" HB_PFS "u, %s, %" HB_PFS "u)", szSub, ulSubLen, szText, ulLen));
 
    if( ulSubLen > 0 && ulLen >= ulSubLen )
    {
@@ -168,7 +168,7 @@ HB_FUNC( ATSKIPSTRINGS ) /* cFind, cWhere, nStart */
 /* Case insensitive hb_strAt() function */
 static HB_SIZE hb_strAtI( const char * szSub, HB_SIZE ulSubLen, const char * szText, HB_SIZE ulLen )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_strAtI(%s, %lu, %s, %lu)", szSub, ulSubLen, szText, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_strAtI(%s, %" HB_PFS "u, %s, %" HB_PFS "u)", szSub, ulSubLen, szText, ulLen));
 
    if( ulSubLen > 0 && ulLen >= ulSubLen )
    {

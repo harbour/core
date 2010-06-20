@@ -546,7 +546,7 @@ static HB_DYNS_PTR hb_memvarFindSymbol( const char * szArg, HB_SIZE ulLen )
 {
    HB_DYNS_PTR pDynSym = NULL;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_memvarFindSymbol(%p,%lu)", szArg, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_memvarFindSymbol(%p,%" HB_PFS "u)", szArg, ulLen));
 
    if( ulLen && szArg && *szArg )
    {
@@ -806,7 +806,7 @@ int hb_memvarScope( const char * szVarName, HB_SIZE ulLength )
 {
    PHB_DYNS pDynVar;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_memvarScope(%s, %lu)", szVarName, ulLength));
+   HB_TRACE(HB_TR_DEBUG, ("hb_memvarScope(%s, %" HB_PFS "u)", szVarName, ulLength));
 
    pDynVar = hb_memvarFindSymbol( szVarName, ulLength );
 

@@ -83,7 +83,7 @@ const char * hb_szAscii[ 256 ] = { "\x00", "\x01", "\x02", "\x03", "\x04", "\x05
 
 HB_SIZE hb_strAt( const char * szSub, HB_SIZE ulSubLen, const char * szText, HB_SIZE ulLen )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_strAt(%s, %lu, %s, %lu)", szSub, ulSubLen, szText, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_strAt(%s, %" HB_PFS "u, %s, %" HB_PFS "u)", szSub, ulSubLen, szText, ulLen));
 
    if( ulSubLen > 0 && ulLen >= ulSubLen )
    {
@@ -116,7 +116,7 @@ HB_SIZE hb_strAt( const char * szSub, HB_SIZE ulSubLen, const char * szText, HB_
 
 HB_BOOL hb_strEmpty( const char * szText, HB_SIZE ulLen )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_strEmpty(%s, %lu)", szText, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_strEmpty(%s, %" HB_PFS "u)", szText, ulLen));
 
    while( ulLen-- )
    {
@@ -156,9 +156,11 @@ char * hb_strlow( char * pszText )
 char * hb_strdup( const char * pszText )
 {
    char * pszDup;
-   HB_SIZE ulLen = strlen( pszText ) + 1;
+   HB_SIZE ulLen;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_strdup(%s, %ld)", pszText, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_strdup(%s)", pszText));
+
+   ulLen = strlen( pszText ) + 1;
 
    pszDup = ( char * ) hb_xgrab( ulLen );
    memcpy( pszDup, pszText, ulLen );
@@ -171,7 +173,7 @@ char * hb_strndup( const char * pszText, HB_SIZE ulLen )
    char * pszDup;
    HB_SIZE ul;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_strndup(%.*s, %ld)", ( int ) ulLen, pszText, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_strndup(%.*s, %" HB_PFS "d)", ( int ) ulLen, pszText, ulLen));
 
    ul = 0;
    pszDup = ( char * ) pszText;
@@ -189,7 +191,7 @@ HB_SIZE hb_strnlen( const char * pszText, HB_SIZE ulLen )
 {
    HB_SIZE ul = 0;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_strnlen(%.*s, %ld)", ( int ) ulLen, pszText, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_strnlen(%.*s, %" HB_PFS "d)", ( int ) ulLen, pszText, ulLen));
 
    while( ulLen-- && *pszText++ )
       ++ul;
@@ -267,7 +269,7 @@ int hb_strnicmp( const char * s1, const char * s2, HB_SIZE count )
    HB_SIZE ulCount;
    int rc = 0;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_strnicmp(%.*s, %s, %lu)", ( int ) count, s1, s2, count));
+   HB_TRACE(HB_TR_DEBUG, ("hb_strnicmp(%.*s, %s, %" HB_PFS "u)", ( int ) count, s1, s2, count));
 
    for( ulCount = 0; ulCount < count; ulCount++ )
    {
@@ -541,7 +543,7 @@ static HB_BOOL hb_str2number( HB_BOOL fPCode, const char * szNum, HB_SIZE ulLen,
    HB_SIZE ulPos = 0;
    int c, iWidth, iDec = 0, iDecR = 0;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_str2number(%d, %p, %lu, %p, %p, %p, %p)", (int) fPCode, szNum, ulLen, lVal, dVal, piDec, piWidth ));
+   HB_TRACE(HB_TR_DEBUG, ("hb_str2number(%d, %p, %" HB_PFS "u, %p, %p, %p, %p)", (int) fPCode, szNum, ulLen, lVal, dVal, piDec, piWidth ));
 
    while( ulPos < ulLen && HB_ISSPACE( szNum[ulPos] ) )
       ulPos++;
@@ -702,13 +704,13 @@ static HB_BOOL hb_str2number( HB_BOOL fPCode, const char * szNum, HB_SIZE ulLen,
 
 HB_BOOL hb_compStrToNum( const char* szNum, HB_SIZE ulLen, HB_MAXINT * plVal, double * pdVal, int * piDec, int * piWidth )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_compStrToNum( %s, %lu, %p, %p, %p, %p)", szNum, ulLen, plVal, pdVal, piDec, piWidth ));
+   HB_TRACE(HB_TR_DEBUG, ("hb_compStrToNum( %s, %" HB_PFS "u, %p, %p, %p, %p)", szNum, ulLen, plVal, pdVal, piDec, piWidth ));
    return hb_str2number( HB_TRUE, szNum, ulLen, plVal, pdVal, piDec, piWidth );
 }
 
 HB_BOOL hb_valStrnToNum( const char* szNum, HB_SIZE ulLen, HB_MAXINT * plVal, double * pdVal, int * piDec, int * piWidth )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_valStrnToNum( %s, %lu, %p, %p, %p, %p)", szNum, ulLen, plVal, pdVal, piDec, piWidth ));
+   HB_TRACE(HB_TR_DEBUG, ("hb_valStrnToNum( %s, %" HB_PFS "u, %p, %p, %p, %p)", szNum, ulLen, plVal, pdVal, piDec, piWidth ));
    return hb_str2number( HB_FALSE, szNum, ulLen, plVal, pdVal, piDec, piWidth );
 }
 
@@ -720,7 +722,7 @@ HB_BOOL hb_strToNum( const char* szNum, HB_MAXINT * plVal, double * pdVal )
 
 HB_BOOL hb_strnToNum( const char* szNum, HB_SIZE ulLen, HB_MAXINT * plVal, double * pdVal )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_strnToNum(%.*s, %lu, %p, %p)", ( int ) ulLen, szNum, ulLen, plVal, pdVal ));
+   HB_TRACE(HB_TR_DEBUG, ("hb_strnToNum(%.*s, %" HB_PFS "u, %p, %p)", ( int ) ulLen, szNum, ulLen, plVal, pdVal ));
    return hb_str2number( HB_FALSE, szNum, ulLen, plVal, pdVal, NULL, NULL );
 }
 
@@ -730,7 +732,7 @@ double hb_strVal( const char * szText, HB_SIZE ulLen )
    HB_MAXINT lVal;
    double dVal;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_strVal(%.*s, %lu)", ( int ) ulLen, szText, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_strVal(%.*s, %" HB_PFS "u)", ( int ) ulLen, szText, ulLen));
 
    if( ! hb_str2number( HB_FALSE, szText, ulLen, &lVal, &dVal, NULL, NULL ) )
       dVal = ( double ) lVal;
@@ -758,7 +760,7 @@ char * hb_numToStr( char * szBuf, HB_SIZE ulSize, HB_MAXINT lNumber )
    int iPos = ( int ) ulSize;
    HB_BOOL fNeg = HB_FALSE;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_numToStr(%p, %lu, %" PFHL "i)", szBuf, ulSize, lNumber));
+   HB_TRACE(HB_TR_DEBUG, ("hb_numToStr(%p, %" HB_PFS "u, %" PFHL "i)", szBuf, ulSize, lNumber));
 
    szBuf[ --iPos ] = '\0';
    if( lNumber < 0 )
@@ -797,7 +799,7 @@ char * hb_strncpy( char * pDest, const char * pSource, HB_SIZE ulLen )
 {
    char * pBuf = pDest;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_strncpy(%p, %.*s, %lu)", pDest, ( int ) ulLen, pSource, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_strncpy(%p, %.*s, %" HB_PFS "u)", pDest, ( int ) ulLen, pSource, ulLen));
 
    pDest[ ulLen ] = '\0';
 
@@ -816,7 +818,7 @@ char * hb_strncat( char * pDest, const char * pSource, HB_SIZE ulLen )
 {
    char * pBuf = pDest;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_strncat(%p, %.*s, %lu)", pDest, ( int ) ulLen, pSource, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_strncat(%p, %.*s, %" HB_PFS "u)", pDest, ( int ) ulLen, pSource, ulLen));
 
    pDest[ ulLen ] = '\0';
 
@@ -843,7 +845,7 @@ char * hb_strncpyLower( char * pDest, const char * pSource, HB_SIZE ulLen )
 {
    char * pBuf = pDest;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_strncpyLower(%p, %.*s, %lu)", pDest, ( int ) ulLen, pSource, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_strncpyLower(%p, %.*s, %" HB_PFS "u)", pDest, ( int ) ulLen, pSource, ulLen));
 
    pDest[ ulLen ] = '\0';
 
@@ -867,7 +869,7 @@ char * hb_strncpyUpper( char * pDest, const char * pSource, HB_SIZE ulLen )
 {
    char * pBuf = pDest;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_strncpyUpper(%p, %.*s, %lu)", pDest, ( int ) ulLen, pSource, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_strncpyUpper(%p, %.*s, %" HB_PFS "u)", pDest, ( int ) ulLen, pSource, ulLen));
 
    pDest[ ulLen ] = '\0';
 
@@ -892,7 +894,7 @@ char * hb_strncpyUpperTrim( char * pDest, const char * pSource, HB_SIZE ulLen )
    char * pBuf = pDest;
    HB_SIZE ulSLen;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_strncpyUpperTrim(%p, %.*s, %lu)", pDest, ( int ) ulLen, pSource, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_strncpyUpperTrim(%p, %.*s, %" HB_PFS "u)", pDest, ( int ) ulLen, pSource, ulLen));
 
    ulSLen = 0;
    while( ulSLen < ulLen && pSource[ ulSLen ] )
@@ -924,7 +926,7 @@ char * hb_strncpyTrim( char * pDest, const char * pSource, HB_SIZE ulLen )
    char * pBuf = pDest;
    HB_SIZE ulSLen;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_strncpyTrim(%p, %.*s, %lu)", pDest, ( int ) ulLen, pSource, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_strncpyTrim(%p, %.*s, %" HB_PFS "u)", pDest, ( int ) ulLen, pSource, ulLen));
 
    ulSLen = 0;
    while( ulSLen < ulLen && pSource[ ulSLen ] )

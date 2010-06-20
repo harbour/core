@@ -176,7 +176,7 @@ PHB_ITEM hb_itemArrayNew( HB_SIZE ulLen )
 {
    PHB_ITEM pItem;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_itemArrayNew(%lu)", ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemArrayNew(%" HB_PFS "u)", ulLen));
 
    pItem = hb_itemNew( NULL );
 
@@ -189,7 +189,7 @@ PHB_ITEM hb_itemArrayGet( PHB_ITEM pArray, HB_SIZE ulIndex )
 {
    PHB_ITEM pItem;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_itemArrayGet(%p, %lu)", pArray, ulIndex));
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemArrayGet(%p, %" HB_PFS "u)", pArray, ulIndex));
 
    pItem = hb_itemNew( NULL );
 
@@ -201,7 +201,7 @@ PHB_ITEM hb_itemArrayGet( PHB_ITEM pArray, HB_SIZE ulIndex )
 
 PHB_ITEM hb_itemArrayPut( PHB_ITEM pArray, HB_SIZE ulIndex, PHB_ITEM pItem )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_itemArrayPut(%p, %lu, %p)", pArray, ulIndex, pItem));
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemArrayPut(%p, %" HB_PFS "u, %p)", pArray, ulIndex, pItem));
 
    if( pArray )
       hb_arraySet( pArray, ulIndex, pItem );
@@ -247,7 +247,7 @@ PHB_ITEM hb_itemPutCL( PHB_ITEM pItem, const char * szText, HB_SIZE ulLen )
 {
    HB_SIZE ulAlloc;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_itemPutCL(%p, %.*s, %lu)", pItem, ( int ) ulLen, szText, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemPutCL(%p, %.*s, %" HB_PFS "u)", pItem, ( int ) ulLen, szText, ulLen));
 
    if( ulLen > 1 )
    {
@@ -312,7 +312,7 @@ PHB_ITEM hb_itemPutCConst( PHB_ITEM pItem, const char * szText )
 
 PHB_ITEM hb_itemPutCLConst( PHB_ITEM pItem, const char * szText, HB_SIZE ulLen )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_itemPutCLConst(%p, %.*s, %lu)", pItem, ( int ) ulLen, szText, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemPutCLConst(%p, %.*s, %" HB_PFS "u)", pItem, ( int ) ulLen, szText, ulLen));
 
    if( pItem )
    {
@@ -379,7 +379,7 @@ PHB_ITEM hb_itemPutCPtr( PHB_ITEM pItem, char * szText )
 
 PHB_ITEM hb_itemPutCLPtr( PHB_ITEM pItem, char * szText, HB_SIZE ulLen )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_itemPutCLPtr(%p, %.*s, %lu)", pItem, ( int ) ulLen, szText, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemPutCLPtr(%p, %.*s, %" HB_PFS "u)", pItem, ( int ) ulLen, szText, ulLen));
 
    if( pItem )
    {
@@ -462,7 +462,7 @@ HB_SIZE hb_itemGetCLen( PHB_ITEM pItem )
 
 HB_SIZE hb_itemCopyC( PHB_ITEM pItem, char * szBuffer, HB_SIZE ulLen )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_itemCopyC(%p, %s, %lu)", pItem, szBuffer, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemCopyC(%p, %s, %" HB_PFS "u)", pItem, szBuffer, ulLen));
 
    if( pItem && HB_IS_STRING( pItem ) )
    {
@@ -1976,7 +1976,7 @@ PHB_ITEM hb_itemUnRefRefer( PHB_ITEM pItem )
 
 PHB_ITEM hb_itemReSizeString( PHB_ITEM pItem, HB_SIZE ulSize )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_itemReSizeString(%p,%lu)", pItem, ulSize));
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemReSizeString(%p,%" HB_PFS "u)", pItem, ulSize));
 
    if( pItem->item.asString.allocated == 0 )
    {

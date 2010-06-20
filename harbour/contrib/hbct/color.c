@@ -194,16 +194,14 @@ HB_FUNC( COLORTON )
 HB_FUNC( NTOCOLOR )
 {
    char szColorString[ 10 ];
-   int iColor;
-
-   iColor = HB_ISNUM( 1 ) ? hb_parni( 1 ) : -1;
+   int iColor = hb_parnidef( 1, -1 );
 
    if( iColor >= 0x00 && iColor <= 0xff )
    {
       if( hb_parl( 2 ) )
-         hb_gtColorsToString( &iColor, 1, szColorString, 10 );
+         hb_gtColorsToString( &iColor, 1, szColorString, sizeof( szColorString ) );
       else
-         hb_snprintf( szColorString, 10, "%02d/%02d", iColor & 0x0f, iColor >> 4 );
+         hb_snprintf( szColorString, sizeof( szColorString ), "%02d/%02d", iColor & 0x0f, iColor >> 4 );
       hb_retc( szColorString );
    }
    else

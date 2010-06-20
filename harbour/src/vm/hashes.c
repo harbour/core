@@ -519,7 +519,7 @@ HB_SIZE hb_hashLen( PHB_ITEM pHash )
 
 void hb_hashPreallocate( PHB_ITEM pHash, HB_SIZE ulNewSize )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_hashPreallocate(%p,%lu)", pHash, ulNewSize));
+   HB_TRACE(HB_TR_DEBUG, ("hb_hashPreallocate(%p,%" HB_PFS "u)", pHash, ulNewSize));
 
    if( HB_IS_HASH( pHash ) )
       hb_hashResize( pHash->item.asHash.value, ulNewSize );
@@ -810,7 +810,7 @@ HB_BOOL hb_hashAddNew( PHB_ITEM pHash, PHB_ITEM pKey, PHB_ITEM pValue )
 
 PHB_ITEM hb_hashGetKeyAt( PHB_ITEM pHash, HB_SIZE ulPos )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_hashGetKeyAt(%p,%lu)", pHash, ulPos));
+   HB_TRACE(HB_TR_DEBUG, ("hb_hashGetKeyAt(%p,%" HB_PFS "u)", pHash, ulPos));
 
    if( HB_IS_HASH( pHash ) && ulPos > 0 && ulPos <= pHash->item.asHash.value->ulLen )
       return &pHash->item.asHash.value->pPairs[ ulPos - 1 ].key;
@@ -820,7 +820,7 @@ PHB_ITEM hb_hashGetKeyAt( PHB_ITEM pHash, HB_SIZE ulPos )
 
 PHB_ITEM hb_hashGetValueAt( PHB_ITEM pHash, HB_SIZE ulPos )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_hashGetValueAt(%p,%lu)", pHash, ulPos));
+   HB_TRACE(HB_TR_DEBUG, ("hb_hashGetValueAt(%p,%" HB_PFS "u)", pHash, ulPos));
 
    if( HB_IS_HASH( pHash ) && ulPos > 0 && ulPos <= pHash->item.asHash.value->ulLen )
    {
@@ -833,7 +833,7 @@ PHB_ITEM hb_hashGetValueAt( PHB_ITEM pHash, HB_SIZE ulPos )
 
 HB_BOOL hb_hashDelAt( PHB_ITEM pHash, HB_SIZE ulPos )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_hashDelAt(%p,%lu)", pHash, ulPos));
+   HB_TRACE(HB_TR_DEBUG, ("hb_hashDelAt(%p,%" HB_PFS "u)", pHash, ulPos));
 
    if( HB_IS_HASH( pHash ) && ulPos > 0 && ulPos <= pHash->item.asHash.value->ulLen )
    {

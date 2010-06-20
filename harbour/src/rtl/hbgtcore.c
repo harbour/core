@@ -2517,7 +2517,7 @@ static int hb_gt_def_InkeySetLast( PHB_GT pGT, int iKey )
 /* Set text into inkey buffer */
 static void hb_gt_def_InkeySetText( PHB_GT pGT, const char * szText, HB_SIZE ulLen )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_def_InkeySetText(%p,%s,%lu)", pGT, szText, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_def_InkeySetText(%p,%s,%" HB_PFS "u)", pGT, szText, ulLen));
 
    if( pGT->StrBuffer )
    {

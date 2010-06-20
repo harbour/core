@@ -162,7 +162,7 @@ void hb_inkeySetText( const char * szText, HB_SIZE ulLen )
 {
    PHB_GT pGT;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_inkeySetText(%s,%lu)", szText, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_inkeySetText(%s,%" HB_PFS "u)", szText, ulLen));
 
    pGT = hb_gt_Base();
    if( pGT )

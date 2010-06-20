@@ -149,7 +149,7 @@ HB_CODEBLOCK_PTR hb_codeblockNew( const HB_BYTE * pBuffer,
    PHB_ITEM pLocals, pBase;
    HB_BYTE * pCode;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_codeblockNew(%p, %hu, %p, %p, %lu)", pBuffer, uiLocals, pLocalPosTable, pSymbols, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_codeblockNew(%p, %hu, %p, %p, %" HB_PFS "u)", pBuffer, uiLocals, pLocalPosTable, pSymbols, ulLen));
 
    /*
     * allocate memory for code block body and detach items hb_gcAllocRaw()
@@ -261,7 +261,7 @@ HB_CODEBLOCK_PTR hb_codeblockMacroNew( const HB_BYTE * pBuffer, HB_SIZE ulLen )
    PHB_ITEM pBase;
    HB_BYTE * pCode;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_codeblockMacroNew(%p, %lu)", pBuffer, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_codeblockMacroNew(%p, %" HB_PFS "u)", pBuffer, ulLen));
 
    /*
     * The codeblock pcode is stored in dynamically allocated memory that

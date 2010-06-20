@@ -91,7 +91,7 @@
 
 HB_FUNC( PRINTSTAT )
 {
-   HB_USHORT uiPort = HB_ISNUM( 1 ) ? ( HB_USHORT ) hb_parni( 1 ) : 1;
+   HB_USHORT uiPort = ( HB_USHORT ) hb_parnidef( 1, 1 );
    int Status = 0;
 
 #if defined( HB_OS_DOS )
@@ -144,7 +144,7 @@ HB_FUNC( PRINTREADY )
 {
    char szLPT[ 8 ];
 
-   hb_snprintf( szLPT, sizeof( szLPT ), "LPT%hu", HB_ISNUM( 1 ) ? ( HB_USHORT ) hb_parni( 1 ) : 1 );
+   hb_snprintf( szLPT, sizeof( szLPT ), "LPT%hu", ( HB_USHORT ) hb_parnidef( 1, 1 ) );
 
    hb_retl( hb_printerIsReady( szLPT ) );
 }

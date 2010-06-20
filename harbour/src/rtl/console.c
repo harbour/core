@@ -210,7 +210,7 @@ HB_FUNC( HB_OSNEWLINE )
 /* Output an item to STDOUT */
 void hb_conOutStd( const char * szStr, HB_SIZE nLen )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_conOutStd(%s, %lu)", szStr, nLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_conOutStd(%s, %" HB_PFS "u)", szStr, nLen));
 
    if( nLen == 0 )
       nLen = strlen( szStr );
@@ -222,7 +222,7 @@ void hb_conOutStd( const char * szStr, HB_SIZE nLen )
 /* Output an item to STDERR */
 void hb_conOutErr( const char * szStr, HB_SIZE nLen )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_conOutErr(%s, %lu)", szStr, nLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_conOutErr(%s, %" HB_PFS "u)", szStr, nLen));
 
    if( nLen == 0 )
       nLen = strlen( szStr );
@@ -236,7 +236,7 @@ void hb_conOutAlt( const char * szStr, HB_SIZE nLen )
 {
    HB_FHANDLE hFile;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_conOutAlt(%s, %lu)", szStr, nLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_conOutAlt(%s, %" HB_PFS "u)", szStr, nLen));
 
    if( hb_setGetConsole() )
       hb_gtWriteCon( szStr, nLen );
@@ -266,7 +266,7 @@ static void hb_conOutDev( const char * szStr, HB_SIZE nLen )
 {
    HB_FHANDLE hFile;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_conOutDev(%s, %lu)", szStr, nLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_conOutDev(%s, %" HB_PFS "u)", szStr, nLen));
 
    if( ( hFile = hb_setGetPrinterHandle( HB_SET_PRN_DEV ) ) != FS_ERROR )
    {

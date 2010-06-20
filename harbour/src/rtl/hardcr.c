@@ -57,7 +57,7 @@ static char * hb_strHardCR( char * pszString, HB_SIZE ulStringLen )
 {
    HB_SIZE ulStringPos;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_strHardCR(%s, %lu)", pszString, ulStringLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_strHardCR(%s, %" HB_PFS "u)", pszString, ulStringLen));
 
    for( ulStringPos = 0; ulStringPos < ulStringLen; ulStringPos++ )
    {

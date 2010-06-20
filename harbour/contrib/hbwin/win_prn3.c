@@ -61,7 +61,7 @@ static TCHAR * hb_tstrncat( TCHAR * pDest, const TCHAR * pSource, HB_SIZE nLen )
 {
    TCHAR * pBuf = pDest;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_tstrncat(%p, %p, %lu)", pDest, pSource, nLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_tstrncat(%p, %p, %" HB_PFS "u)", pDest, pSource, nLen));
 
    pDest[ nLen ] = TEXT( '\0' );
 

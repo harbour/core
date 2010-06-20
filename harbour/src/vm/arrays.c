@@ -185,7 +185,7 @@ HB_BOOL hb_arrayNew( PHB_ITEM pItem, HB_SIZE ulLen ) /* creates a new array */
    PHB_ITEM pItems;
    HB_SIZE ulPos;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_arrayNew(%p, %lu)", pItem, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_arrayNew(%p, %" HB_PFS "u)", pItem, ulLen));
 
    if( HB_IS_COMPLEX( pItem ) )
       hb_itemClear( pItem );
@@ -218,7 +218,7 @@ HB_BOOL hb_arrayNew( PHB_ITEM pItem, HB_SIZE ulLen ) /* creates a new array */
 
 HB_BOOL hb_arraySize( PHB_ITEM pArray, HB_SIZE ulLen )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_arraySize(%p, %lu)", pArray, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_arraySize(%p, %" HB_PFS "u)", pArray, ulLen));
 
    if( HB_IS_ARRAY( pArray ) )
    {
@@ -365,7 +365,7 @@ HB_BOOL hb_arrayAddForward( PHB_ITEM pArray, PHB_ITEM pValue )
 
 HB_BOOL hb_arrayDel( PHB_ITEM pArray, HB_SIZE ulIndex )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_arrayDel(%p, %lu)", pArray, ulIndex));
+   HB_TRACE(HB_TR_DEBUG, ("hb_arrayDel(%p, %" HB_PFS "u)", pArray, ulIndex));
 
    if( HB_IS_ARRAY( pArray ) )
    {
@@ -395,7 +395,7 @@ HB_BOOL hb_arrayDel( PHB_ITEM pArray, HB_SIZE ulIndex )
 
 HB_BOOL hb_arrayIns( PHB_ITEM pArray, HB_SIZE ulIndex )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_arrayIns(%p, %lu)", pArray, ulIndex));
+   HB_TRACE(HB_TR_DEBUG, ("hb_arrayIns(%p, %" HB_PFS "u)", pArray, ulIndex));
 
    if( HB_IS_ARRAY( pArray ) )
    {
@@ -425,7 +425,7 @@ HB_BOOL hb_arrayIns( PHB_ITEM pArray, HB_SIZE ulIndex )
 
 HB_BOOL hb_arraySet( PHB_ITEM pArray, HB_SIZE ulIndex, PHB_ITEM pItem )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_arraySet(%p, %lu, %p)", pArray, ulIndex, pItem));
+   HB_TRACE(HB_TR_DEBUG, ("hb_arraySet(%p, %" HB_PFS "u, %p)", pArray, ulIndex, pItem));
 
    if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
    {
@@ -438,7 +438,7 @@ HB_BOOL hb_arraySet( PHB_ITEM pArray, HB_SIZE ulIndex, PHB_ITEM pItem )
 
 HB_BOOL hb_arraySetForward( PHB_ITEM pArray, HB_SIZE ulIndex, PHB_ITEM pItem )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetForward(%p, %lu, %p)", pArray, ulIndex, pItem));
+   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetForward(%p, %" HB_PFS "u, %p)", pArray, ulIndex, pItem));
 
    if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
    {
@@ -454,7 +454,7 @@ HB_BOOL hb_arraySetForward( PHB_ITEM pArray, HB_SIZE ulIndex, PHB_ITEM pItem )
 
 HB_BOOL hb_arrayGet( PHB_ITEM pArray, HB_SIZE ulIndex, PHB_ITEM pItem )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_arrayGet(%p, %lu, %p)", pArray, ulIndex, pItem));
+   HB_TRACE(HB_TR_DEBUG, ("hb_arrayGet(%p, %" HB_PFS "u, %p)", pArray, ulIndex, pItem));
 
    if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
    {
@@ -470,7 +470,7 @@ HB_BOOL hb_arrayGet( PHB_ITEM pArray, HB_SIZE ulIndex, PHB_ITEM pItem )
 
 HB_BOOL hb_arrayGetItemRef( PHB_ITEM pArray, HB_SIZE ulIndex, PHB_ITEM pItem )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetItemRef(%p, %lu, %p)", pArray, ulIndex, pItem));
+   HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetItemRef(%p, %" HB_PFS "u, %p)", pArray, ulIndex, pItem));
 
    if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
    {
@@ -499,7 +499,7 @@ HB_BOOL hb_arrayGetItemRef( PHB_ITEM pArray, HB_SIZE ulIndex, PHB_ITEM pItem )
  */
 PHB_ITEM hb_arrayGetItemPtr( PHB_ITEM pArray, HB_SIZE ulIndex )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetItemPtr(%p, %lu)", pArray, ulIndex));
+   HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetItemPtr(%p, %" HB_PFS "u)", pArray, ulIndex));
 
    if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
       return pArray->item.asArray.value->pItems + ulIndex - 1;
@@ -509,7 +509,7 @@ PHB_ITEM hb_arrayGetItemPtr( PHB_ITEM pArray, HB_SIZE ulIndex )
 
 char * hb_arrayGetDS( PHB_ITEM pArray, HB_SIZE ulIndex, char * szDate )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetDS(%p, %lu, %s)", pArray, ulIndex, szDate));
+   HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetDS(%p, %" HB_PFS "u, %s)", pArray, ulIndex, szDate));
 
    if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
       return hb_itemGetDS( pArray->item.asArray.value->pItems + ulIndex - 1, szDate );
@@ -521,7 +521,7 @@ char * hb_arrayGetDS( PHB_ITEM pArray, HB_SIZE ulIndex, char * szDate )
 
 long hb_arrayGetDL( PHB_ITEM pArray, HB_SIZE ulIndex )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetDL(%p, %lu)", pArray, ulIndex ));
+   HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetDL(%p, %" HB_PFS "u)", pArray, ulIndex ));
 
    if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
       return hb_itemGetDL( pArray->item.asArray.value->pItems + ulIndex - 1 );
@@ -533,7 +533,7 @@ long hb_arrayGetDL( PHB_ITEM pArray, HB_SIZE ulIndex )
 
 double hb_arrayGetTD( PHB_ITEM pArray, HB_SIZE ulIndex )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetTD(%p, %lu)", pArray, ulIndex ));
+   HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetTD(%p, %" HB_PFS "u)", pArray, ulIndex ));
 
    if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
       return hb_itemGetTD( pArray->item.asArray.value->pItems + ulIndex - 1 );
@@ -543,7 +543,7 @@ double hb_arrayGetTD( PHB_ITEM pArray, HB_SIZE ulIndex )
 
 HB_BOOL hb_arrayGetTDT( PHB_ITEM pArray, HB_SIZE ulIndex, long * plJulian, long * plMilliSec )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetTDT(%p, %lu, %p, %p)", pArray, ulIndex, plJulian, plMilliSec));
+   HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetTDT(%p, %" HB_PFS "u, %p, %p)", pArray, ulIndex, plJulian, plMilliSec));
 
    if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
       return hb_itemGetTDT( pArray->item.asArray.value->pItems + ulIndex - 1, plJulian, plMilliSec );
@@ -556,7 +556,7 @@ HB_BOOL hb_arrayGetTDT( PHB_ITEM pArray, HB_SIZE ulIndex, long * plJulian, long 
 
 HB_BOOL hb_arrayGetL( PHB_ITEM pArray, HB_SIZE ulIndex )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetL(%p, %lu)", pArray, ulIndex));
+   HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetL(%p, %" HB_PFS "u)", pArray, ulIndex));
 
    if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
       return hb_itemGetL( pArray->item.asArray.value->pItems + ulIndex - 1 );
@@ -566,7 +566,7 @@ HB_BOOL hb_arrayGetL( PHB_ITEM pArray, HB_SIZE ulIndex )
 
 int hb_arrayGetNI( PHB_ITEM pArray, HB_SIZE ulIndex )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetNI(%p, %lu)", pArray, ulIndex));
+   HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetNI(%p, %" HB_PFS "u)", pArray, ulIndex));
 
    if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
       return hb_itemGetNI( pArray->item.asArray.value->pItems + ulIndex - 1 );
@@ -576,7 +576,7 @@ int hb_arrayGetNI( PHB_ITEM pArray, HB_SIZE ulIndex )
 
 long hb_arrayGetNL( PHB_ITEM pArray, HB_SIZE ulIndex )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetNL(%p, %lu)", pArray, ulIndex));
+   HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetNL(%p, %" HB_PFS "u)", pArray, ulIndex));
 
    if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
       return hb_itemGetNL( pArray->item.asArray.value->pItems + ulIndex - 1 );
@@ -586,7 +586,7 @@ long hb_arrayGetNL( PHB_ITEM pArray, HB_SIZE ulIndex )
 
 HB_ISIZ hb_arrayGetNS( PHB_ITEM pArray, HB_SIZE ulIndex )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetNS(%p, %lu)", pArray, ulIndex));
+   HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetNS(%p, %" HB_PFS "u)", pArray, ulIndex));
 
    if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
       return hb_itemGetNS( pArray->item.asArray.value->pItems + ulIndex - 1 );
@@ -597,7 +597,7 @@ HB_ISIZ hb_arrayGetNS( PHB_ITEM pArray, HB_SIZE ulIndex )
 #ifndef HB_LONG_LONG_OFF
 HB_LONGLONG hb_arrayGetNLL( PHB_ITEM pArray, HB_SIZE ulIndex )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetNLL(%p, %lu)", pArray, ulIndex));
+   HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetNLL(%p, %" HB_PFS "u)", pArray, ulIndex));
 
    if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
       return hb_itemGetNLL( pArray->item.asArray.value->pItems + ulIndex - 1 );
@@ -608,7 +608,7 @@ HB_LONGLONG hb_arrayGetNLL( PHB_ITEM pArray, HB_SIZE ulIndex )
 
 HB_MAXINT hb_arrayGetNInt( PHB_ITEM pArray, HB_SIZE ulIndex )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetNInt(%p, %lu)", pArray, ulIndex));
+   HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetNInt(%p, %" HB_PFS "u)", pArray, ulIndex));
 
    if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
       return hb_itemGetNInt( pArray->item.asArray.value->pItems + ulIndex - 1 );
@@ -618,7 +618,7 @@ HB_MAXINT hb_arrayGetNInt( PHB_ITEM pArray, HB_SIZE ulIndex )
 
 double hb_arrayGetND( PHB_ITEM pArray, HB_SIZE ulIndex )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetND(%p, %lu)", pArray, ulIndex));
+   HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetND(%p, %" HB_PFS "u)", pArray, ulIndex));
 
    if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
       return hb_itemGetND( pArray->item.asArray.value->pItems + ulIndex - 1 );
@@ -628,7 +628,7 @@ double hb_arrayGetND( PHB_ITEM pArray, HB_SIZE ulIndex )
 
 HB_SIZE hb_arrayCopyC( PHB_ITEM pArray, HB_SIZE ulIndex, char * szBuffer, HB_SIZE ulLen )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_arrayCopyC(%p, %lu, %s, %lu)", pArray, ulIndex, szBuffer, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_arrayCopyC(%p, %" HB_PFS "u, %s, %" HB_PFS "u)", pArray, ulIndex, szBuffer, ulLen));
 
    if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
       return hb_itemCopyC( pArray->item.asArray.value->pItems + ulIndex - 1, szBuffer, ulLen );
@@ -638,7 +638,7 @@ HB_SIZE hb_arrayCopyC( PHB_ITEM pArray, HB_SIZE ulIndex, char * szBuffer, HB_SIZ
 
 char * hb_arrayGetC( PHB_ITEM pArray, HB_SIZE ulIndex )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetC(%p, %lu)", pArray, ulIndex));
+   HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetC(%p, %" HB_PFS "u)", pArray, ulIndex));
 
    if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
       return hb_itemGetC( pArray->item.asArray.value->pItems + ulIndex - 1 );
@@ -648,7 +648,7 @@ char * hb_arrayGetC( PHB_ITEM pArray, HB_SIZE ulIndex )
 
 const char * hb_arrayGetCPtr( PHB_ITEM pArray, HB_SIZE ulIndex )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetCPtr(%p, %lu)", pArray, ulIndex));
+   HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetCPtr(%p, %" HB_PFS "u)", pArray, ulIndex));
 
    if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
       return hb_itemGetCPtr( pArray->item.asArray.value->pItems + ulIndex - 1 );
@@ -658,7 +658,7 @@ const char * hb_arrayGetCPtr( PHB_ITEM pArray, HB_SIZE ulIndex )
 
 HB_SIZE hb_arrayGetCLen( PHB_ITEM pArray, HB_SIZE ulIndex )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetCLen(%p, %lu)", pArray, ulIndex));
+   HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetCLen(%p, %" HB_PFS "u)", pArray, ulIndex));
 
    if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
       return hb_itemGetCLen( pArray->item.asArray.value->pItems + ulIndex - 1 );
@@ -668,7 +668,7 @@ HB_SIZE hb_arrayGetCLen( PHB_ITEM pArray, HB_SIZE ulIndex )
 
 void * hb_arrayGetPtr( PHB_ITEM pArray, HB_SIZE ulIndex )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetPtr(%p, %lu)", pArray, ulIndex));
+   HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetPtr(%p, %" HB_PFS "u)", pArray, ulIndex));
 
    if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
       return hb_itemGetPtr( pArray->item.asArray.value->pItems + ulIndex - 1 );
@@ -678,7 +678,7 @@ void * hb_arrayGetPtr( PHB_ITEM pArray, HB_SIZE ulIndex )
 
 void * hb_arrayGetPtrGC( PHB_ITEM pArray, HB_SIZE ulIndex, const HB_GC_FUNCS * pFuncs )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetPtrGC(%p, %lu, %p)", pArray, ulIndex, pFuncs));
+   HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetPtrGC(%p, %" HB_PFS "u, %p)", pArray, ulIndex, pFuncs));
 
    if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
       return hb_itemGetPtrGC( pArray->item.asArray.value->pItems + ulIndex - 1, pFuncs );
@@ -688,7 +688,7 @@ void * hb_arrayGetPtrGC( PHB_ITEM pArray, HB_SIZE ulIndex, const HB_GC_FUNCS * p
 
 PHB_SYMB hb_arrayGetSymbol( PHB_ITEM pArray, HB_SIZE ulIndex )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetSymbol(%p, %lu)", pArray, ulIndex));
+   HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetSymbol(%p, %" HB_PFS "u)", pArray, ulIndex));
 
    if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
       return hb_itemGetSymbol( pArray->item.asArray.value->pItems + ulIndex - 1 );
@@ -699,7 +699,7 @@ PHB_SYMB hb_arrayGetSymbol( PHB_ITEM pArray, HB_SIZE ulIndex )
 
 HB_TYPE hb_arrayGetType( PHB_ITEM pArray, HB_SIZE ulIndex )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetType(%p, %lu)", pArray, ulIndex));
+   HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetType(%p, %" HB_PFS "u)", pArray, ulIndex));
 
    if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
       return hb_itemType( pArray->item.asArray.value->pItems + ulIndex - 1 );
@@ -709,7 +709,7 @@ HB_TYPE hb_arrayGetType( PHB_ITEM pArray, HB_SIZE ulIndex )
 
 HB_BOOL hb_arraySetDS( PHB_ITEM pArray, HB_SIZE ulIndex, const char * szDate )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetDS(%p, %lu, %s)", pArray, ulIndex, szDate));
+   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetDS(%p, %" HB_PFS "u, %s)", pArray, ulIndex, szDate));
 
    if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
    {
@@ -722,7 +722,7 @@ HB_BOOL hb_arraySetDS( PHB_ITEM pArray, HB_SIZE ulIndex, const char * szDate )
 
 HB_BOOL hb_arraySetDL( PHB_ITEM pArray, HB_SIZE ulIndex, long lDate )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetDL(%p, %lu, %ld)", pArray, ulIndex, lDate));
+   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetDL(%p, %" HB_PFS "u, %ld)", pArray, ulIndex, lDate));
 
    if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
    {
@@ -735,7 +735,7 @@ HB_BOOL hb_arraySetDL( PHB_ITEM pArray, HB_SIZE ulIndex, long lDate )
 
 HB_BOOL hb_arraySetTD( PHB_ITEM pArray, HB_SIZE ulIndex, double dTimeStamp )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetTD(%p, %lu, %lf)", pArray, ulIndex, dTimeStamp));
+   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetTD(%p, %" HB_PFS "u, %lf)", pArray, ulIndex, dTimeStamp));
 
    if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
    {
@@ -748,7 +748,7 @@ HB_BOOL hb_arraySetTD( PHB_ITEM pArray, HB_SIZE ulIndex, double dTimeStamp )
 
 HB_BOOL hb_arraySetTDT( PHB_ITEM pArray, HB_SIZE ulIndex, long lJulian, long lMilliSec )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetTDT(%p, %lu, %lu, %lu)", pArray, ulIndex, lJulian, lMilliSec));
+   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetTDT(%p, %" HB_PFS "u, %lu, %lu)", pArray, ulIndex, lJulian, lMilliSec));
 
    if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
    {
@@ -761,7 +761,7 @@ HB_BOOL hb_arraySetTDT( PHB_ITEM pArray, HB_SIZE ulIndex, long lJulian, long lMi
 
 HB_BOOL hb_arraySetL( PHB_ITEM pArray, HB_SIZE ulIndex, HB_BOOL fValue )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetL(%p, %lu, %d)", pArray, ulIndex, fValue));
+   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetL(%p, %" HB_PFS "u, %d)", pArray, ulIndex, fValue));
 
    if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
    {
@@ -774,7 +774,7 @@ HB_BOOL hb_arraySetL( PHB_ITEM pArray, HB_SIZE ulIndex, HB_BOOL fValue )
 
 HB_BOOL hb_arraySetNI( PHB_ITEM pArray, HB_SIZE ulIndex, int iNumber )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetNI(%p, %lu, %d)", pArray, ulIndex, iNumber));
+   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetNI(%p, %" HB_PFS "u, %d)", pArray, ulIndex, iNumber));
 
    if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
    {
@@ -787,7 +787,7 @@ HB_BOOL hb_arraySetNI( PHB_ITEM pArray, HB_SIZE ulIndex, int iNumber )
 
 HB_BOOL hb_arraySetNL( PHB_ITEM pArray, HB_SIZE ulIndex, long lNumber )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetNL(%p, %lu, %lu)", pArray, ulIndex, lNumber));
+   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetNL(%p, %" HB_PFS "u, %lu)", pArray, ulIndex, lNumber));
 
    if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
    {
@@ -800,7 +800,7 @@ HB_BOOL hb_arraySetNL( PHB_ITEM pArray, HB_SIZE ulIndex, long lNumber )
 
 HB_BOOL hb_arraySetNS( PHB_ITEM pArray, HB_SIZE ulIndex, HB_ISIZ nNumber )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetNS(%p, %lu, %" HB_PFS "d)", pArray, ulIndex, nNumber));
+   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetNS(%p, %" HB_PFS "u, %" HB_PFS "d)", pArray, ulIndex, nNumber));
 
    if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
    {
@@ -814,7 +814,7 @@ HB_BOOL hb_arraySetNS( PHB_ITEM pArray, HB_SIZE ulIndex, HB_ISIZ nNumber )
 #ifndef HB_LONG_LONG_OFF
 HB_BOOL hb_arraySetNLL( PHB_ITEM pArray, HB_SIZE ulIndex, HB_LONGLONG llNumber )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetNLL(%p, %lu, %" PFLL "d)", pArray, ulIndex, llNumber));
+   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetNLL(%p, %" HB_PFS "u, %" PFLL "d)", pArray, ulIndex, llNumber));
 
    if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
    {
@@ -828,7 +828,7 @@ HB_BOOL hb_arraySetNLL( PHB_ITEM pArray, HB_SIZE ulIndex, HB_LONGLONG llNumber )
 
 HB_BOOL hb_arraySetNInt( PHB_ITEM pArray, HB_SIZE ulIndex, HB_MAXINT lNumber )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetNInt(%p, %lu, %" PFHL "d)", pArray, ulIndex, lNumber));
+   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetNInt(%p, %" HB_PFS "u, %" PFHL "d)", pArray, ulIndex, lNumber));
 
    if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
    {
@@ -841,7 +841,7 @@ HB_BOOL hb_arraySetNInt( PHB_ITEM pArray, HB_SIZE ulIndex, HB_MAXINT lNumber )
 
 HB_BOOL hb_arraySetND( PHB_ITEM pArray, HB_SIZE ulIndex, double dNumber )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetND(%p, %lu, %lf)", pArray, ulIndex, dNumber));
+   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetND(%p, %" HB_PFS "u, %lf)", pArray, ulIndex, dNumber));
 
    if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
    {
@@ -854,7 +854,7 @@ HB_BOOL hb_arraySetND( PHB_ITEM pArray, HB_SIZE ulIndex, double dNumber )
 
 HB_BOOL hb_arraySetC( PHB_ITEM pArray, HB_SIZE ulIndex, const char * szText )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetC(%p, %lu, %p)", pArray, ulIndex, szText));
+   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetC(%p, %" HB_PFS "u, %p)", pArray, ulIndex, szText));
 
    if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
    {
@@ -867,7 +867,7 @@ HB_BOOL hb_arraySetC( PHB_ITEM pArray, HB_SIZE ulIndex, const char * szText )
 
 HB_BOOL hb_arraySetCL( PHB_ITEM pArray, HB_SIZE ulIndex, const char * szText, HB_SIZE ulLen )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetC(%p, %lu, %p, %lu)", pArray, ulIndex, szText, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetC(%p, %" HB_PFS "u, %p, %" HB_PFS "u)", pArray, ulIndex, szText, ulLen));
 
    if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
    {
@@ -880,7 +880,7 @@ HB_BOOL hb_arraySetCL( PHB_ITEM pArray, HB_SIZE ulIndex, const char * szText, HB
 
 HB_BOOL hb_arraySetCLPtr( PHB_ITEM pArray, HB_SIZE ulIndex, char * szText, HB_SIZE ulLen )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetCLPtr(%p, %lu, %p, %lu)", pArray, ulIndex, szText, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetCLPtr(%p, %" HB_PFS "u, %p, %" HB_PFS "u)", pArray, ulIndex, szText, ulLen));
 
    if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
    {
@@ -893,7 +893,7 @@ HB_BOOL hb_arraySetCLPtr( PHB_ITEM pArray, HB_SIZE ulIndex, char * szText, HB_SI
 
 HB_BOOL hb_arraySetPtr( PHB_ITEM pArray, HB_SIZE ulIndex, void * pValue )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetPtr(%p, %lu, %p)", pArray, ulIndex, pValue));
+   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetPtr(%p, %" HB_PFS "u, %p)", pArray, ulIndex, pValue));
 
    if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
    {
@@ -906,7 +906,7 @@ HB_BOOL hb_arraySetPtr( PHB_ITEM pArray, HB_SIZE ulIndex, void * pValue )
 
 HB_BOOL hb_arraySetPtrGC( PHB_ITEM pArray, HB_SIZE ulIndex, void * pValue )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetPtrGC(%p, %lu, %p)", pArray, ulIndex, pValue));
+   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetPtrGC(%p, %" HB_PFS "u, %p)", pArray, ulIndex, pValue));
 
    if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
    {
@@ -919,7 +919,7 @@ HB_BOOL hb_arraySetPtrGC( PHB_ITEM pArray, HB_SIZE ulIndex, void * pValue )
 
 HB_BOOL hb_arraySetSymbol( PHB_ITEM pArray, HB_SIZE ulIndex, PHB_SYMB pSymbol )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetSymbol(%p, %lu, %p)", pArray, ulIndex, pSymbol));
+   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetSymbol(%p, %" HB_PFS "u, %p)", pArray, ulIndex, pSymbol));
 
    if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
    {

@@ -1326,7 +1326,7 @@ static void hb_ctw_gt_WriteCon( PHB_GT pGT, const char * pText, HB_SIZE ulLength
    int iRow, iCol, iMaxRow, iMaxCol;
    char szString[ WRITECON_BUFFER_SIZE ];
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_ctw_gt_WriteCon(%p,%p,%lu)", pGT, pText, ulLength));
+   HB_TRACE(HB_TR_DEBUG, ("hb_ctw_gt_WriteCon(%p,%p,%" HB_PFS "u)", pGT, pText, ulLength));
 
    iMaxRow = HB_GTSELF_MAXROW( pGT );
    iMaxCol = HB_GTSELF_MAXCOL( pGT );

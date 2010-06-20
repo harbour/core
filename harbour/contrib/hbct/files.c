@@ -196,8 +196,7 @@ HB_FUNC( SETFATTR )
 {
    int iResult;
 
-   if( hb_fsSetAttr( hb_parcx( 1 ),
-                     HB_ISNUM( 2 ) ? hb_parnl( 2 ) : HB_FA_ARCHIVE ) )
+   if( hb_fsSetAttr( hb_parcx( 1 ), hb_parnldef( 2, HB_FA_ARCHIVE ) ) )
       iResult = 0;
    else
       iResult = -1;

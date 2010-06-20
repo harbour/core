@@ -572,7 +572,7 @@ void * hb_xalloc( HB_SIZE ulSize )         /* allocates fixed memory, returns NU
 {
    PHB_MEMINFO pMem;
 
-   HB_TRACE_FM(HB_TR_DEBUG, ("hb_xalloc(%lu)", ulSize));
+   HB_TRACE_FM(HB_TR_DEBUG, ("hb_xalloc(%" HB_PFS "u)", ulSize));
 
    if( ulSize == 0 )
       hb_errInternal( HB_EI_XALLOCNULLSIZE, NULL, NULL, NULL );
@@ -658,7 +658,7 @@ void * hb_xgrab( HB_SIZE ulSize )         /* allocates fixed memory, exits on fa
 {
    PHB_MEMINFO pMem;
 
-   HB_TRACE_FM(HB_TR_DEBUG, ("hb_xgrab(%lu)", ulSize));
+   HB_TRACE_FM(HB_TR_DEBUG, ("hb_xgrab(%" HB_PFS "u)", ulSize));
 
    if( ulSize == 0 )
       hb_errInternal( HB_EI_XGRABNULLSIZE, NULL, NULL, NULL );
@@ -742,7 +742,7 @@ void * hb_xgrab( HB_SIZE ulSize )         /* allocates fixed memory, exits on fa
 
 void * hb_xrealloc( void * pMem, HB_SIZE ulSize )       /* reallocates memory */
 {
-   HB_TRACE_FM(HB_TR_DEBUG, ("hb_xrealloc(%p, %lu)", pMem, ulSize));
+   HB_TRACE_FM(HB_TR_DEBUG, ("hb_xrealloc(%p, %" HB_PFS "u)", pMem, ulSize));
 
 #if 0
    /* disabled to make hb_xrealloc() ANSI-C realloc() compatible */

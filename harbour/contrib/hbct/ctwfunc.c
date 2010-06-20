@@ -384,17 +384,13 @@ HB_FUNC( WSHOW )
 /* Harbour extension */
 HB_FUNC( WSHADOW )
 {
-   int iAttr;
-
-   iAttr = HB_ISNUM( 1 ) ? hb_parni( 1 ) : HB_CTW_SHADOW_UNDEF;
-   hb_retni( hb_ctwSetWindowShadow( hb_ctwCurrentWindow(), iAttr ) );
+   hb_retni( hb_ctwSetWindowShadow( hb_ctwCurrentWindow(),
+                                    hb_parnidef( 1, HB_CTW_SHADOW_UNDEF ) /* nAttr */ ) );
 }
 
 /* Harbour extension */
 HB_FUNC( WLEVEL )
 {
-   int iLevel;
-
-   iLevel = HB_ISNUM( 1 ) ? hb_parni( 1 ) : HB_CTW_UNDEF;
-   hb_retni( hb_ctwSetWindowLevel( hb_ctwCurrentWindow(), iLevel ) );
+   hb_retni( hb_ctwSetWindowLevel( hb_ctwCurrentWindow(),
+                                   hb_parnidef( 1, HB_CTW_UNDEF ) /* nLevel */ ) );
 }

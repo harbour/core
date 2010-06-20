@@ -5325,7 +5325,7 @@ static void hb_vmArrayGen( HB_SIZE ulElements ) /* generates an ulElements Array
    PHB_ITEM pArray;
    HB_SIZE ulPos;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_vmArrayGen(%lu)", ulElements));
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmArrayGen(%" HB_PFS "u)", ulElements));
 
    /* create new array on HVM stack */
    pArray = hb_stackAllocItem();
@@ -5409,7 +5409,7 @@ static void hb_vmHashGen( HB_SIZE ulElements ) /* generates an ulElements Hash a
    HB_STACK_TLS_PRELOAD
    PHB_ITEM pHash, pKey, pVal;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_vmHashGen(%lu)", ulElements));
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmHashGen(%" HB_PFS "u)", ulElements));
 
    /* create new hash item */
    pHash = hb_hashNew( NULL );
@@ -6771,7 +6771,7 @@ void hb_vmPushString( const char * szText, HB_SIZE length )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_vmPushString(%s, %lu)", szText, length));
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmPushString(%s, %" HB_PFS "u)", szText, length));
 
    hb_itemPutCL( hb_stackAllocItem(), szText, length );
 }
@@ -6781,7 +6781,7 @@ void hb_vmPushStringPcode( const char * szText, HB_SIZE length )
    HB_STACK_TLS_PRELOAD
    PHB_ITEM pItem = hb_stackAllocItem();
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_vmPushStringPcode(%s, %lu)", szText, length));
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmPushStringPcode(%s, %" HB_PFS "u)", szText, length));
 
    pItem->type = HB_IT_STRING;
    pItem->item.asString.length    = length;
@@ -6839,7 +6839,7 @@ static void hb_vmPushBlock( const HB_BYTE * pCode, PHB_SYMB pSymbols, HB_SIZE ul
    HB_USHORT uiLocals;
    PHB_ITEM pItem = hb_stackAllocItem();
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_vmPushBlock(%p,%p,%lu)", pCode, pSymbols, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmPushBlock(%p,%p,%" HB_PFS "u)", pCode, pSymbols, ulLen));
 
    uiLocals = HB_PCODE_MKUSHORT( &pCode[ 2 ] );
 
@@ -6875,7 +6875,7 @@ static void hb_vmPushBlockShort( const HB_BYTE * pCode, PHB_SYMB pSymbols, HB_SI
    HB_STACK_TLS_PRELOAD
    PHB_ITEM pItem = hb_stackAllocItem();
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_vmPushBlockShort(%p,%p,%lu)", pCode, pSymbols, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmPushBlockShort(%p,%p,%" HB_PFS "u)", pCode, pSymbols, ulLen));
 
    pItem->item.asBlock.value =
          hb_codeblockNew( pCode,                    /* pcode buffer         */
@@ -6908,7 +6908,7 @@ static void hb_vmPushMacroBlock( const HB_BYTE * pCode, HB_SIZE ulSize, HB_USHOR
    HB_STACK_TLS_PRELOAD
    PHB_ITEM pItem = hb_stackAllocItem();
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_vmPushMacroBlock(%p,%lu,%hu)", pCode, ulSize, usParams));
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmPushMacroBlock(%p,%" HB_PFS "u,%hu)", pCode, ulSize, usParams));
 
    pItem->item.asBlock.value = hb_codeblockMacroNew( pCode, ulSize );
    pItem->type = HB_IT_BLOCK;
@@ -7984,8 +7984,8 @@ PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, HB_USHORT uiModuleSymbols,
 }
 
 PHB_SYMB hb_vmProcessDynLibSymbols( PHB_SYMB pSymbols, HB_USHORT uiModuleSymbols,
-                                              const char * szModuleName, HB_ULONG ulID,
-                                              HB_USHORT uiPCodeVer )
+                                    const char * szModuleName, HB_ULONG ulID,
+                                    HB_USHORT uiPCodeVer )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmProcessDynLibSymbols(%p,%hu,%s,%lu,%hu)", pSymbols, uiModuleSymbols, szModuleName, ulID, uiPCodeVer));
 
@@ -10935,14 +10935,14 @@ void hb_xvmArrayDim( HB_USHORT uiDimensions )
 
 void hb_xvmArrayGen( HB_SIZE ulElements )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_xvmArrayGen(%lu)", ulElements));
+   HB_TRACE(HB_TR_DEBUG, ("hb_xvmArrayGen(%" HB_PFS "u)", ulElements));
 
    hb_vmArrayGen( ulElements );
 }
 
 void hb_xvmHashGen( HB_SIZE ulElements )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_xvmHashGen(%lu)", ulElements));
+   HB_TRACE(HB_TR_DEBUG, ("hb_xvmHashGen(%" HB_PFS "u)", ulElements));
 
    hb_vmHashGen( ulElements );
 }
@@ -10952,7 +10952,7 @@ static void hb_vmArrayItemPush( HB_SIZE ulIndex )
    HB_STACK_TLS_PRELOAD
    PHB_ITEM pArray;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_vmArrayItemPush(%lu)", ulIndex));
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmArrayItemPush(%" HB_PFS "u)", ulIndex));
 
    pArray = hb_stackItemFromTop( -1 );
 
@@ -11028,7 +11028,7 @@ static void hb_vmArrayItemPop( HB_SIZE ulIndex )
    PHB_ITEM pValue;
    PHB_ITEM pArray;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_vmArrayItemPop(%lu", ulIndex));
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmArrayItemPop(%" HB_PFS "u)", ulIndex));
 
    pValue = hb_stackItemFromTop( -2 );
    pArray = hb_stackItemFromTop( -1 );
@@ -11144,7 +11144,7 @@ HB_BOOL hb_xvmArrayItemPush( HB_SIZE ulIndex )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_xvmArrayItemPush(%lu)", ulIndex));
+   HB_TRACE(HB_TR_DEBUG, ("hb_xvmArrayItemPush(%" HB_PFS "u)", ulIndex));
 
    hb_vmArrayItemPush( ulIndex );
 
@@ -11166,7 +11166,7 @@ HB_BOOL hb_xvmArrayItemPop( HB_SIZE ulIndex )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_xvmArrayItemPop(%lu)", ulIndex));
+   HB_TRACE(HB_TR_DEBUG, ("hb_xvmArrayItemPop(%" HB_PFS "u)", ulIndex));
 
    hb_vmArrayItemPop( ulIndex );
 
@@ -11201,7 +11201,7 @@ void hb_xvmPushStringHidden( int iMethod, const char * szText, HB_SIZE ulSize )
    HB_STACK_TLS_PRELOAD
    char * szString;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_xvmPushStringHidden(%d, %s, %lu)", iMethod, szText, ulSize));
+   HB_TRACE(HB_TR_DEBUG, ("hb_xvmPushStringHidden(%d, %s, %" HB_PFS "u)", iMethod, szText, ulSize));
 
    szString = hb_compDecodeString( iMethod, szText, &ulSize );
    hb_itemPutCLPtr( hb_stackAllocItem(), szString, ulSize );

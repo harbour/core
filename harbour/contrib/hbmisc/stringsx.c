@@ -14,7 +14,7 @@ static const char *hb_strtoken(const char *szText,
   HB_ISIZ wEnd = 0;
   HB_ISIZ wCounter = 0;
 
-  HB_TRACE(HB_TR_DEBUG, ("hb_strtoken(%s, %ld, %ld, %d, %p)", szText, lText, lIndex, (int) cDelimiter, lLen));
+  HB_TRACE(HB_TR_DEBUG, ("hb_strtoken(%s, %" HB_PFS "d, %" HB_PFS "d, %d, %p)", szText, lText, lIndex, (int) cDelimiter, lLen));
 
   do
     {

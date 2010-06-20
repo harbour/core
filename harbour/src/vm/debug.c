@@ -112,7 +112,7 @@
  * $End$ */
 static void AddToArray( PHB_ITEM pItem, PHB_ITEM pReturn, HB_SIZE ulPos )
 {
-   HB_TRACE(HB_TR_DEBUG, ("AddToArray(%p, %p, %lu)", pItem, pReturn, ulPos));
+   HB_TRACE(HB_TR_DEBUG, ("AddToArray(%p, %p, %" HB_PFS "u)", pItem, pReturn, ulPos));
 
    if( HB_IS_SYMBOL( pItem ) )
    {                                            /* Symbol is pushed as text */

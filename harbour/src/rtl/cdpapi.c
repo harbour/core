@@ -223,7 +223,7 @@ int hb_charUpper( int iChar )
 
 char * hb_strLower( char * szText, HB_SIZE nLen )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_strLower(%s, %lu)", szText, nLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_strLower(%s, %" HB_PFS "u)", szText, nLen));
 
    {
       PHB_CODEPAGE cdp = hb_vmCDP();
@@ -242,7 +242,7 @@ char * hb_strLower( char * szText, HB_SIZE nLen )
 
 char * hb_strUpper( char * szText, HB_SIZE nLen )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_strUpper(%s, %lu)", szText, nLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_strUpper(%s, %" HB_PFS "u)", szText, nLen));
 
    {
       PHB_CODEPAGE cdp = hb_vmCDP();

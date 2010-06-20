@@ -944,7 +944,7 @@ int hb_fsProcessRun( const char * pszFilename,
    char * pszFree = NULL;
    int iResult;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsProcessRun(%s, %p, %lu, %p, %p, %p, %p, %d)", pStdInBuf, pStdInBuf, ulStdInLen, pStdOutPtr, pulStdOut, pStdErrPtr, pulStdErr, fDetach));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsProcessRun(%s, %p, %" HB_PFS "u, %p, %p, %p, %p, %d)", pStdInBuf, pStdInBuf, ulStdInLen, pStdOutPtr, pulStdOut, pStdErrPtr, pulStdErr, fDetach));
 
    pszFilename = hb_osEncodeCP( pszFilename, &pszFree, NULL );
 

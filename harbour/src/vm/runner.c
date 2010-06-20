@@ -103,7 +103,7 @@ static int hb_hrbReadHead( const char * szBody, HB_SIZE ulBodySize, HB_SIZE * pu
 {
    const char * pVersion;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_hrbReadHead(%p,%lu,%p)", szBody, ulBodySize, pulBodyOffset ));
+   HB_TRACE(HB_TR_DEBUG, ("hb_hrbReadHead(%p,%" HB_PFS "u,%p)", szBody, ulBodySize, pulBodyOffset ));
 
    if( ulBodySize < 6 || memcmp( s_szHead, szBody, 4 ) )
       return 0;
@@ -116,7 +116,7 @@ static int hb_hrbReadHead( const char * szBody, HB_SIZE ulBodySize, HB_SIZE * pu
 
 static HB_BOOL hb_hrbReadValue( const char * szBody, HB_SIZE ulBodySize, HB_SIZE * pulBodyOffset, HB_ULONG * pulValue )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_hrbReadValue(%p,%lu,%p,%p)", szBody, ulBodySize, pulBodyOffset, pulValue));
+   HB_TRACE(HB_TR_DEBUG, ("hb_hrbReadValue(%p,%" HB_PFS "u,%p,%p)", szBody, ulBodySize, pulBodyOffset, pulValue));
 
    if( *pulBodyOffset + 4 < ulBodySize )
    {
@@ -136,7 +136,7 @@ static char * hb_hrbReadId( const char * szBody, HB_SIZE ulBodySize, HB_SIZE * u
 {
    const char * szIdx;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_hrbReadId(%p,%lu,%p)", szBody, ulBodySize, ulBodyOffset));
+   HB_TRACE(HB_TR_DEBUG, ("hb_hrbReadId(%p,%" HB_PFS "u,%p)", szBody, ulBodySize, ulBodyOffset));
 
    szIdx = &szBody[ *ulBodyOffset ];
 

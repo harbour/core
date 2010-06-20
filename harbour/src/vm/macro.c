@@ -140,7 +140,7 @@ void hb_macroDelete( HB_MACRO_PTR pMacro )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_macroDelete(%p)", pMacro));
 
-   hb_xfree( ( void * ) pMacro->pCodeInfo->pCode );
+   hb_xfree( pMacro->pCodeInfo->pCode );
    if( pMacro->pError )
       hb_errRelease( pMacro->pError );
    if( pMacro->Flags & HB_MACRO_DEALLOCATE )
@@ -263,16 +263,16 @@ static char * hb_macroTextSubst( const char * szString, HB_SIZE * pulStringLen )
    char * pHead;
    char * pTail;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_macroTextSubst(%s, %li)", szString, *pulStringLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_macroTextSubst(%s, %" HB_PFS "u)", szString, *pulStringLen));
 
-   pHead = (char *) memchr( (void *) szString, '&', *pulStringLen );
+   pHead = ( char * ) memchr( szString, '&', *pulStringLen );
    if( pHead == NULL )
       return ( char * ) szString;  /* no more processing is required */
 
    /* initial length of the string and the result buffer (it can contain null bytes) */
    ulResBufLen = ulResStrLen = *pulStringLen;
    /* initial buffer for return value */
-   szResult = (char *) hb_xgrab( ulResBufLen + 1 );
+   szResult = ( char * ) hb_xgrab( ulResBufLen + 1 );
 
    /* copy the input string with trailing zero byte
     */
@@ -380,7 +380,7 @@ static char * hb_macroTextSubst( const char * szString, HB_SIZE * pulStringLen )
       }
       ulCharsLeft = ulResStrLen - ( pHead - szResult );
    }
-   while( ulCharsLeft && ( pHead = (char *) memchr( (void *)pHead, '&', ulCharsLeft ) ) != NULL );
+   while( ulCharsLeft && ( pHead = ( char * ) memchr( pHead, '&', ulCharsLeft ) ) != NULL );
 
    if( ulResStrLen < ulResBufLen )
    {
@@ -694,7 +694,7 @@ char * hb_macroExpandString( const char *szString, HB_SIZE ulLength, HB_BOOL *pf
 {
    char *szResultString;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_macroExpandString(%s,%lu,%p)", szString, ulLength, pfNewString));
+   HB_TRACE(HB_TR_DEBUG, ("hb_macroExpandString(%s,%" HB_PFS "u,%p)", szString, ulLength, pfNewString));
 
    if( szString )
       szResultString = hb_macroTextSubst( szString, &ulLength );
@@ -708,7 +708,7 @@ char * hb_macroTextSymbol( const char *szString, HB_SIZE ulLength, HB_BOOL *pfNe
 {
    char *szResult = NULL;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_macroTextSymbol(%s,%lu,%p)", szString, ulLength, pfNewString));
+   HB_TRACE(HB_TR_DEBUG, ("hb_macroTextSymbol(%s,%" HB_PFS "u,%p)", szString, ulLength, pfNewString));
 
    if( szString )
    {
@@ -944,7 +944,7 @@ const char * hb_macroGetType( HB_ITEM_PTR pItem )
          {
             /* Clipper ignores any undeclared symbols or UDFs if the
              * compiled expression is a valid codeblock
-            */
+             */
             szType = "B";
          }
          else if( struMacro.status & HB_MACRO_UNKN_SYM )
@@ -1005,9 +1005,7 @@ const char * hb_macroGetType( HB_ITEM_PTR pItem )
             }
          }
          else
-         {
             szType = "UE";
-         }
       }
       else
          szType = "UE";  /* syntax error during compilation */
@@ -1702,6 +1700,6 @@ void hb_macroCodeBlockEnd( HB_COMP_DECL )
    hb_macroGenPCode1( HB_P_ENDBLOCK, HB_COMP_PARAM ); /* finish the codeblock */
 
    /* free memory allocated for a codeblock */
-   hb_xfree( ( void * ) pCodeblock->pCode );
-   hb_xfree( ( void * ) pCodeblock );
+   hb_xfree( pCodeblock->pCode );
+   hb_xfree( pCodeblock );
 }

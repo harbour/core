@@ -63,7 +63,7 @@
 
 static PHB_ITEM hb_itemPutCRaw( PHB_ITEM pItem, const char * szText, HB_SIZE ulLen )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_itemPutCRaw(%p, %s, %lu)", pItem, szText, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemPutCRaw(%p, %s, %" HB_PFS "u)", pItem, szText, ulLen));
 
    if( pItem )
    {
@@ -92,7 +92,7 @@ static PHB_ITEM hb_itemPutCRaw( PHB_ITEM pItem, const char * szText, HB_SIZE ulL
 #endif
 static PHB_ITEM hb_itemPutCRawStatic( PHB_ITEM pItem, const char * szText, HB_SIZE ulLen )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_itemPutCRawStatic(%p, %s, %lu)", pItem, szText, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemPutCRawStatic(%p, %s, %" HB_PFS "u)", pItem, szText, ulLen));
 
    if( pItem )
    {
@@ -251,7 +251,7 @@ static unsigned int SizeOfCStructure( PHB_ITEM aDef, unsigned int uiAlign )
 
       uiSize += uiMemberSize;
 
-      /* printf( "#%lu Size: %u Align: %u Pad: %u Shift %i Size: %u\n", ulIndex, uiMemberSize, uiAlign, uiPad, cShift, uiSize ); */
+      /* printf( "#%" HB_PFS "u Size: %u Align: %u Pad: %u Shift %i Size: %u\n", ulIndex, uiMemberSize, uiAlign, uiPad, cShift, uiSize ); */
 
    }
 
@@ -260,7 +260,7 @@ static unsigned int SizeOfCStructure( PHB_ITEM aDef, unsigned int uiAlign )
       uiSize += ( uiAlign - cShift );
    }
 
-   /* printf( "#%lu Size: %u Align: %u Pad: %u Shift %i Size: %u\n", ulIndex, uiMemberSize, uiAlign, uiPad, cShift, uiSize ); */
+   /* printf( "#%" HB_PFS "u Size: %u Align: %u Pad: %u Shift %i Size: %u\n", ulIndex, uiMemberSize, uiAlign, uiPad, cShift, uiSize ); */
 
    return uiSize;
 }

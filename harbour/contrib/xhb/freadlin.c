@@ -58,17 +58,17 @@
 
 #define READING_BLOCK      4096
 
-char * hb_fsReadLine( HB_FHANDLE hFileHandle, HB_ISIZ * plBuffLen, const char ** Term, HB_ISIZ * iTermSizes, HB_ISIZ iTerms, HB_BOOL * bFound, HB_BOOL * bEOF )
+char * hb_fsReadLine( HB_FHANDLE hFileHandle, HB_ISIZ * plBuffLen, const char ** pTerm, HB_ISIZ * piTermSizes, HB_ISIZ iTerms, HB_BOOL * pbFound, HB_BOOL * pbEOF )
 {
    HB_ISIZ iPosTerm = 0, iPos, iPosition;
    int nTries;
    HB_ISIZ lRead = 0, lOffset, lSize;
    char * pBuff;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsReadLine(%p, %ld, %p, %p, %ld, %p, %p)", ( void * ) ( HB_PTRDIFF ) hFileHandle, *plBuffLen, Term, iTermSizes, ( long ) iTerms, bFound, bEOF ));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsReadLine(%p, %" HB_PFS "d, %p, %p, %" HB_PFS "d, %p, %p)", ( void * ) ( HB_PTRDIFF ) hFileHandle, *plBuffLen, pTerm, piTermSizes, iTerms, pbFound, pbEOF ));
 
-   *bFound  = HB_FALSE;
-   *bEOF    = HB_FALSE;
+   *pbFound = HB_FALSE;
+   *pbEOF   = HB_FALSE;
    nTries   = 0;
    lOffset  = 0;
    lSize    = *plBuffLen;
@@ -100,31 +100,31 @@ char * hb_fsReadLine( HB_FHANDLE hFileHandle, HB_ISIZ * plBuffLen, const char **
             for( iPosTerm = 0; iPosTerm < iTerms; iPosTerm++ )
             {
                /* Compare with the LAST terminator byte */
-               if( pBuff[lOffset+iPos] == Term[iPosTerm][iTermSizes[iPosTerm]-1] && (iTermSizes[iPosTerm]-1) <= (iPos+lOffset) )
+               if( pBuff[lOffset+iPos] == pTerm[iPosTerm][piTermSizes[iPosTerm]-1] && (piTermSizes[iPosTerm]-1) <= (iPos+lOffset) )
                {
-                  *bFound = HB_TRUE;
+                  *pbFound = HB_TRUE;
 
-                  for(iPosition=0; iPosition < (iTermSizes[iPosTerm]-1); iPosition++)
+                  for(iPosition=0; iPosition < (piTermSizes[iPosTerm]-1); iPosition++)
                   {
-                     if(Term[iPosTerm][iPosition] != pBuff[ lOffset+(iPos-iTermSizes[iPosTerm])+iPosition+1 ])
+                     if(pTerm[iPosTerm][iPosition] != pBuff[ lOffset+(iPos-piTermSizes[iPosTerm])+iPosition+1 ])
                      {
-                        *bFound = HB_FALSE;
+                        *pbFound = HB_FALSE;
                         break;
                      }
                   }
 
-                  if( *bFound )
+                  if( *pbFound )
                      break;
                }
             }
 
-            if( *bFound )
+            if( *pbFound )
                break;
          }
 
-         if( *bFound )
+         if( *pbFound )
          {
-            *plBuffLen = lOffset + iPos - iTermSizes[ iPosTerm ] + 1;
+            *plBuffLen = lOffset + iPos - piTermSizes[ iPosTerm ] + 1;
 
             pBuff[ *plBuffLen ] = '\0';
 
@@ -136,7 +136,7 @@ char * hb_fsReadLine( HB_FHANDLE hFileHandle, HB_ISIZ * plBuffLen, const char **
       }
       else
       {
-         if( ! *bFound )
+         if( ! *pbFound )
          {
             if( nTries == 0 )
             {
@@ -149,13 +149,13 @@ char * hb_fsReadLine( HB_FHANDLE hFileHandle, HB_ISIZ * plBuffLen, const char **
                *plBuffLen = lOffset + lRead;
             }
 
-            *bEOF = HB_TRUE;
+            *pbEOF = HB_TRUE;
          }
       }
 
       nTries++;
    }
-   while( ( ! *bFound ) && lRead > 0 );
+   while( ( ! *pbFound ) && lRead > 0 );
 
    return pBuff;
 }
@@ -168,7 +168,7 @@ HB_FUNC( HB_FREADLINE )
    HB_FHANDLE hFileHandle  = ( HB_FHANDLE ) hb_parnint( 1 );
    const char ** Term;
    char * pBuffer;
-   HB_ISIZ * iTermSizes;
+   HB_ISIZ * piTermSizes;
    HB_ISIZ lSize = hb_parns( 4 );
    HB_ISIZ i, iTerms;
    HB_BOOL bFound, bEOF;
@@ -201,41 +201,41 @@ HB_FUNC( HB_FREADLINE )
          }
 
          Term = ( const char ** ) hb_xgrab( sizeof( char * ) * iTerms );
-         iTermSizes = ( HB_ISIZ * ) hb_xgrab( sizeof( HB_ISIZ ) * iTerms );
+         piTermSizes = ( HB_ISIZ * ) hb_xgrab( sizeof( HB_ISIZ ) * iTerms );
 
          for( i = 0; i < iTerms; i++ )
          {
-            Term[ i ]       = hb_arrayGetCPtr( pTerm1, i + 1 );
-            iTermSizes[ i ] = hb_arrayGetCLen( pTerm1, i + 1 );
+            Term[ i ]        = hb_arrayGetCPtr( pTerm1, i + 1 );
+            piTermSizes[ i ] = hb_arrayGetCLen( pTerm1, i + 1 );
          }
       }
       else
       {
-         pTerm1          = hb_param( 3, HB_IT_STRING );
-         Term            = ( const char ** ) hb_xgrab( sizeof( char * ) );
-         iTermSizes      = ( HB_ISIZ * ) hb_xgrab( sizeof( HB_ISIZ ) );
-         Term[ 0 ]       = hb_itemGetCPtr( pTerm1 );
-         iTermSizes[ 0 ] = hb_itemGetCLen( pTerm1 );
-         iTerms          = 1;
+         pTerm1           = hb_param( 3, HB_IT_STRING );
+         Term             = ( const char ** ) hb_xgrab( sizeof( char * ) );
+         piTermSizes      = ( HB_ISIZ * ) hb_xgrab( sizeof( HB_ISIZ ) );
+         Term[ 0 ]        = hb_itemGetCPtr( pTerm1 );
+         piTermSizes[ 0 ] = hb_itemGetCLen( pTerm1 );
+         iTerms           = 1;
       }
    }
    else
    {
-      Term            = ( const char ** ) hb_xgrab( sizeof( char * ) );
-      iTermSizes      = ( HB_ISIZ * ) hb_xgrab( sizeof( HB_ISIZ ) );
-      Term[ 0 ]       = "\r\n";    /* Should be preplaced with the default EOL sequence */
-      iTerms          = 1;
-      iTermSizes[ 0 ] = 2;
+      Term             = ( const char ** ) hb_xgrab( sizeof( char * ) );
+      piTermSizes      = ( HB_ISIZ * ) hb_xgrab( sizeof( HB_ISIZ ) );
+      Term[ 0 ]        = "\r\n";    /* Should be preplaced with the default EOL sequence */
+      iTerms           = 1;
+      piTermSizes[ 0 ] = 2;
    }
 
    if( lSize == 0 )
       lSize = READING_BLOCK;
 
-   pBuffer = hb_fsReadLine( hFileHandle, &lSize, Term, iTermSizes, iTerms, &bFound, &bEOF );
+   pBuffer = hb_fsReadLine( hFileHandle, &lSize, Term, piTermSizes, iTerms, &bFound, &bEOF );
 
    if( ! hb_storclen_buffer( pBuffer, lSize, 2 ) )
       hb_xfree( pBuffer );
    hb_retns( bEOF ? -1 : 0 );
-   hb_xfree( ( void * ) Term );
-   hb_xfree( iTermSizes );
+   hb_xfree( Term );
+   hb_xfree( piTermSizes );
 }
