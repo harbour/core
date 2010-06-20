@@ -199,10 +199,10 @@ HB_FUNC( TABEXPAND )
             sTabCnt--;
             sIndex++;
          }
-         else if( ( unsigned char ) cChar == 141 )
+         else if( ( unsigned char ) cChar == HB_CHAR_SOFT1 )
          {
             /* soft carriage return */
-            *( pcRet + sRetLen ) = ( char ) 141;
+            *( pcRet + sRetLen ) = HB_CHAR_SOFT1;
             sRetLen++;
             sIndex++;
             if( iIgnore141 )
@@ -405,7 +405,7 @@ HB_FUNC( TABPACK )
             sTabIndex = 0;
             sIndex++;
          }
-         else if( ( unsigned char ) cChar == 141 && !iIgnore141 )
+         else if( ( unsigned char ) cChar == HB_CHAR_SOFT1 && !iIgnore141 )
          {
             /* soft carriage return */
 
@@ -416,7 +416,7 @@ HB_FUNC( TABPACK )
                *( pcRet + sRetLen ) = cFill;
                sRetLen++;
             }
-            *( pcRet + sRetLen ) = ( char ) 141;
+            *( pcRet + sRetLen ) = HB_CHAR_SOFT1;
             sRetLen++;
             sTabIndex = 0;
             sIndex++;

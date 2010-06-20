@@ -694,8 +694,8 @@ static void hb_pp_readLine( PHB_PP_STATE pState )
          if( iBOM && ch == 0xBF && hb_membufLen( pState->pBuffer ) == 3 )
          {
             iBOM = 0;
-            if( hb_membufPtr( pState->pBuffer )[ 0 ] == ( char ) 0xEF &&
-                hb_membufPtr( pState->pBuffer )[ 1 ] == ( char ) 0xBB )
+            if( hb_membufPtr( pState->pBuffer )[ 0 ] == '\xEF' &&
+                hb_membufPtr( pState->pBuffer )[ 1 ] == '\xBB' )
                hb_membufFlush( pState->pBuffer );
          }
       }

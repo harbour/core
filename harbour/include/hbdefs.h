@@ -1649,11 +1649,11 @@ typedef int           HB_COLOR;
 
 /* Harbour specific character constants */
 
-#define HB_CHAR_HARD1           ( ( char ) HB_CHAR_CR )
-#define HB_CHAR_HARD2           ( ( char ) HB_CHAR_LF )
+#define HB_CHAR_HARD1           HB_CHAR_CR
+#define HB_CHAR_HARD2           HB_CHAR_LF
 
-#define HB_CHAR_SOFT1           ( ( char ) 141 )
-#define HB_CHAR_SOFT2           ( ( char ) HB_CHAR_LF )
+#define HB_CHAR_SOFT1           '\x8D'  /* 141 */
+#define HB_CHAR_SOFT2           HB_CHAR_LF
 
 #define HB_ISUPPER( c )         ( ( c ) >= 'A' && ( c ) <= 'Z' )
 #define HB_ISLOWER( c )         ( ( c ) >= 'a' && ( c ) <= 'z' )
