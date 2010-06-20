@@ -64,10 +64,10 @@ HB_FUNC( __DEFPATH )
    {
       /* Leave enough space to append a path delimiter */
       hb_strncpy( buffer, szDefault, sizeof( buffer ) - 1 );
-      size = strlen( buffer );
+      size = ( int ) strlen( buffer );
    }
 
-   HB_TRACE(HB_TR_INFO, ("HB_DEFPATH: buffer is |%s|, size is %d, last char is |%c|", buffer, size, buffer[ size - 1]));
+   HB_TRACE(HB_TR_INFO, ("HB_DEFPATH: buffer is |%s|, size is %d, last char is |%c|", buffer, size, buffer[ size - 1 ]));
    HB_TRACE(HB_TR_INFO, ("HB_DEFPATH: HB_OS_PATH_DELIM_CHR is |%c| and HB_OS_PATH_LIST_SEP_CHR is |%c|", HB_OS_PATH_DELIM_CHR, HB_OS_PATH_LIST_SEP_CHR));
 
    /* If the path is not empty and it doesn't end with a drive or path

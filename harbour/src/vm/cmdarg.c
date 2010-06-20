@@ -324,7 +324,7 @@ static char * hb_cmdargGet( const char * pszName, HB_BOOL bRetValue )
                chars at all, Harbour is more strict/standard in this respect,
                it requires the switches to be separated. */
 
-      i = strlen( pszName );
+      i = ( int ) strlen( pszName );
       while( *pszNext )
       {
          static const char * s_szSeparator = " ;,\t";

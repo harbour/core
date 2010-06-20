@@ -370,7 +370,7 @@ HB_FUNC( HB_HMERGE )
                hb_vmPush( pAction );
                hb_vmPush( pKey );
                hb_vmPush( pValue );
-               hb_vmPushLong( ulPos );
+               hb_vmPushSize( ulPos );
                hb_vmSend( 3 );
                {
                   PHB_ITEM pReturn = hb_stackReturnItem();
@@ -415,7 +415,7 @@ HB_FUNC( HB_HEVAL )
             hb_vmPush( pBlock );
             hb_vmPush( pKey );
             hb_vmPush( pValue );
-            hb_vmPushLong( ulStart );
+            hb_vmPushSize( ulStart );
             hb_vmSend( 3 );
          }
          else
@@ -456,7 +456,7 @@ HB_FUNC( HB_HSCAN )
                hb_vmPush( pValue );
                hb_vmPush( pKey );
                hb_vmPush( pVal );
-               hb_vmPushLong( ulStart );
+               hb_vmPushSize( ulStart );
                hb_vmSend( 3 );
                {
                   PHB_ITEM pReturn = hb_stackReturnItem();

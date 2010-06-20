@@ -50,15 +50,25 @@
  *
  */
 
+/* NOTE: To avoid warnings with MSVC. For our purpose fopen_s() is not a good
+         alternative because it only opens files in non-shared mode. [vszakats] */
+#ifndef _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS
+#endif
+
 #include "hbapifs.h"
 
-FILE * hb_fopen( const char *path, const char *mode )
+FILE * hb_fopen( const char * path, const char * mode )
 {
    char * pszFree = NULL;
    FILE * file;
 
    path = hb_fsNameConv( path, &pszFree );
+#if defined( _MSC_VER ) && _MSC_VER >= 1400 && ! defined( _CRT_SECURE_NO_WARNINGS )
+   fopen_s( &file, path, mode );
+#else
    file = fopen( path, mode );
+#endif
    if( pszFree )
       hb_xfree( pszFree );
 

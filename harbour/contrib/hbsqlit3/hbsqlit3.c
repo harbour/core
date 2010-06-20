@@ -51,6 +51,12 @@
  *
  */
 
+/* NOTE: To avoid warnings with MSVC. For our purpose fopen_s() is not a good
+         alternative because it only opens files in non-shared mode. [vszakats] */
+#ifndef _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS
+#endif
+
 #include "sqlite3.h"
 
 #include "hbvm.h"

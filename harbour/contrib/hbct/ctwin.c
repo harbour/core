@@ -1919,11 +1919,11 @@ static int hb_ctw_gt_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
       if( fScreen )
       {
          PHB_GTCTW pCTW = HB_GTCTW_GET( pGT );
-         HB_SIZE ulWidth = 0, ulCurrWidth = 0, ul = 0, ul2, ulMaxWidth, ulLast;
+         HB_UINT ulWidth = 0, ulCurrWidth = 0, ul = 0, ul2, ulMaxWidth, ulLast;
          int iKey, iDspCount, iLines = 0, iTop, iLeft, iBottom, iRight,
              iMnuCol, iPos, iClr, iWnd, iPrevWnd, i;
          const char * szMessage = hb_itemGetCPtr( pMessage );
-         HB_SIZE ulLen = hb_itemGetCLen( pMessage );
+         HB_UINT ulLen = ( HB_UINT ) hb_itemGetCLen( pMessage );
 
          ulMaxWidth = iCols - 4;
          while( ul < ulLen )
@@ -1946,7 +1946,7 @@ static int hb_ctw_gt_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
          ulCurrWidth = 0;
          for( i = 1; i <= iOptions; ++i )
          {
-            ulCurrWidth += hb_arrayGetCLen( pOptions, i ) + ( i > 1 ? 3 : 0 );
+            ulCurrWidth += ( HB_UINT ) hb_arrayGetCLen( pOptions, i ) + ( i > 1 ? 3 : 0 );
          }
          if( ulCurrWidth > ulWidth )
             ulWidth = ulCurrWidth;
@@ -2007,7 +2007,7 @@ static int hb_ctw_gt_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
             for( i = 1; i <= iOptions; ++i )
             {
                iClr = i == iPos ? iClrHigh : iClrNorm;
-               ulLen = hb_arrayGetCLen( pOptions, i );
+               ulLen = ( HB_UINT ) hb_arrayGetCLen( pOptions, i );
                HB_GTSELF_PUTTEXT( pGT, iLines + 1, iMnuCol, iClr,
                                   hb_arrayGetCPtr( pOptions, i ), ulLen );
                iMnuCol += ulLen + 3;
@@ -2047,7 +2047,7 @@ static int hb_ctw_gt_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
                   iMnuCol = ( ( ulWidth - ulCurrWidth ) >> 1 ) + 1;
                   for( i = 1; i <= iOptions; ++i )
                   {
-                     ulLen = hb_arrayGetCLen( pOptions, i );
+                     ulLen = ( HB_UINT ) hb_arrayGetCLen( pOptions, i );
                      if( iMCol >= iMnuCol && iMCol < iMnuCol + ( int ) ulLen )
                      {
                         iRet = i;

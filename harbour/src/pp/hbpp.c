@@ -79,7 +79,7 @@ static void hb_pp_writeToken( FILE * fout, PHB_PP_TOKEN pToken,
    {
       int iOptional = hb_pp_writeTokenCount( pToken->pMTokens ), i;
 
-      i = strlen( szName );
+      i = ( int ) strlen( szName );
       if( pToken->pNext )
          fprintf( fout, "   { %s +%2d", szName, iToken + iOptional + 1 );
       else
@@ -89,7 +89,7 @@ static void hb_pp_writeToken( FILE * fout, PHB_PP_TOKEN pToken,
       else
          fprintf( fout, ", NULL%*s", i, "" );
 
-      i = 16 - strlen( pToken->value );
+      i = 16 - ( int ) strlen( pToken->value );
       fprintf( fout, ", \"%s\", %*s %2d,%2d, 0x%04x, %d }%s\n",
                pToken->value,
                i < 0 ? 0 : i, "",
@@ -561,7 +561,7 @@ static int hb_pp_parseChangelog( PHB_PP_STATE pState, const char * pszFileName,
                 szLine[ 10 ] == ' ' && szLine[ 13 ] == ':' )
             {
                hb_strncpy( szLog, szLine, sizeof( szLog ) - 1 );
-               iLen = strlen( szLog );
+               iLen = ( int ) strlen( szLog );
                while( iLen-- && HB_ISSPACE( szLog[ iLen ] ) )
                   szLog[ iLen ] = '\0';
             }
@@ -581,14 +581,14 @@ static int hb_pp_parseChangelog( PHB_PP_STATE pState, const char * pszFileName,
       {
          *szLine = '"';
          hb_strncpy( szLine + 1, szLog, sizeof( szLine ) - 3 );
-         iLen = strlen( szLine );
+         iLen = ( int ) strlen( szLine );
          szLine[ iLen ] = '"';
          szLine[ ++iLen ] = '\0';
          hb_pp_addDefine( pState, "HB_VER_LENTRY", szLine );
          *pszLastEntry = hb_strdup( szLog );
 
          hb_strncpy( szLine + 1, szId, sizeof( szLine ) - 3 );
-         iLen = strlen( szLine );
+         iLen = ( int ) strlen( szLine );
          szLine[ iLen ] = '"';
          szLine[ ++iLen ] = '\0';
          hb_pp_addDefine( pState, "HB_VER_CHLID", szLine );

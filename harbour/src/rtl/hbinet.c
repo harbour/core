@@ -917,7 +917,7 @@ HB_FUNC( HB_INETRECVENDBLOCK )
       else
       {
          patterns[ 0 ]     = s_inetCRLF;
-         patternsizes[ 0 ] = strlen( s_inetCRLF );
+         patternsizes[ 0 ] = ( int ) strlen( s_inetCRLF );
       }
       iPatternsCount = 1;
    }

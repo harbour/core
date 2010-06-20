@@ -147,15 +147,14 @@ HB_FUNC( __DBGVMSTKGCOUNT )
 HB_FUNC( __DBGVMSTKGLIST )
 {
    PHB_ITEM pReturn;
-   HB_SIZE ulLen = hb_stackTopOffset();
-   HB_SIZE ulPos;
+   HB_LONG ulLen = hb_stackTopOffset();
+   HB_LONG ulPos;
 
    pReturn = hb_itemArrayNew( ulLen );           /* Create a transfer array  */
 
    for( ulPos = 0; ulPos < ulLen; ++ulPos )
-   {
       AddToArray( hb_stackItem( ulPos ), pReturn, ulPos + 1 );
-   }
+
    hb_itemReturnRelease( pReturn );
 }
 
@@ -207,7 +206,7 @@ HB_FUNC( __DBGVMSTKLCOUNT )
 HB_FUNC( __DBGVMSTKLLIST )
 {
    PHB_ITEM pReturn;
-   HB_SIZE ulLen, ul;
+   HB_LONG ulLen, ul;
    HB_LONG lBaseOffset, lPrevOffset;
 
    lBaseOffset = hb_stackBaseOffset();

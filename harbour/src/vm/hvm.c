@@ -6659,6 +6659,14 @@ void hb_vmPushLong( long lNumber )
    HB_ITEM_PUT_LONGRAW( pItem, lNumber );
 }
 
+void hb_vmPushSize( HB_ISIZ nNumber )
+{
+   if( HB_LIM_INT( nNumber ) )
+      hb_vmPushInteger( ( int ) nNumber );
+   else
+      hb_vmPushHBLong( nNumber );
+}
+
 static void hb_vmPushHBLong( HB_MAXINT lNumber )
 {
    HB_STACK_TLS_PRELOAD

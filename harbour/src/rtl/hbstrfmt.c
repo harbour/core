@@ -224,7 +224,7 @@ PHB_ITEM hb_strFormat( PHB_ITEM pItemReturn, PHB_ITEM pItemFormat, int iCount, P
                hb_itemStrBuf( pStr, pItem, iSize, 0 );
                while( *pStr2 == ' ' )
                   pStr2++;
-               iSize = strlen( pStr2 );
+               iSize = ( int ) strlen( pStr2 );
                if( *pStr2 == '-' )
                {
                   fSign = 1;
@@ -350,7 +350,7 @@ PHB_ITEM hb_strFormat( PHB_ITEM pItemReturn, PHB_ITEM pItemFormat, int iCount, P
                }
                while( *pStr2 == ' ' )
                   pStr2++;
-               iSize = strlen( pStr2 );
+               iSize = ( int ) strlen( pStr2 );
             }
             else
             {
