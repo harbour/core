@@ -15,7 +15,7 @@
  * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -722,10 +722,10 @@ HB_FUNC( QT_QINPUTDIALOG_GETDOUBLE )
    bool iOk = 0;
 
    if( p )
-      hb_retnd( ( p )->getDouble( hbqt_par_QWidget( 2 ), QInputDialog::tr( hb_parc( 3 ) ), QInputDialog::tr( hb_parc( 4 ) ), hb_parnd( 5 ), hb_parnd( 6 ), hb_parnd( 7 ), ( HB_ISNUM( 8 ) ? hb_parni( 8 ) : 1 ), &iOk, ( Qt::WindowFlags ) hb_parni( 10 ) ) );
+      hb_retnd( ( p )->getDouble( hbqt_par_QWidget( 2 ), QInputDialog::tr( hb_parc( 3 ) ), QInputDialog::tr( hb_parc( 4 ) ), hb_parnd( 5 ), hb_parnd( 6 ), hb_parnd( 7 ), hb_parnidef( 8, 1 ), &iOk, ( Qt::WindowFlags ) hb_parni( 10 ) ) );
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINPUTDIALOG_GETDOUBLE FP=hb_retnd( ( p )->getDouble( hbqt_par_QWidget( 2 ), QInputDialog::tr( hb_parc( 3 ) ), QInputDialog::tr( hb_parc( 4 ) ), hb_parnd( 5 ), hb_parnd( 6 ), hb_parnd( 7 ), ( HB_ISNUM( 8 ) ? hb_parni( 8 ) : 1 ), &iOk, ( Qt::WindowFlags ) hb_parni( 10 ) ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINPUTDIALOG_GETDOUBLE FP=hb_retnd( ( p )->getDouble( hbqt_par_QWidget( 2 ), QInputDialog::tr( hb_parc( 3 ) ), QInputDialog::tr( hb_parc( 4 ) ), hb_parnd( 5 ), hb_parnd( 6 ), hb_parnd( 7 ), hb_parnidef( 8, 1 ), &iOk, ( Qt::WindowFlags ) hb_parni( 10 ) ) ); p is NULL" ) );
    }
 
    hb_stornl( iOk, 9 );
@@ -740,10 +740,10 @@ HB_FUNC( QT_QINPUTDIALOG_GETINT )
    bool iOk = 0;
 
    if( p )
-      hb_retni( ( p )->getInt( hbqt_par_QWidget( 2 ), QInputDialog::tr( hb_parc( 3 ) ), QInputDialog::tr( hb_parc( 4 ) ), hb_parni( 5 ), ( HB_ISNUM( 6 ) ? hb_parni( 6 ) : -2147483647 ), ( HB_ISNUM( 7 ) ? hb_parni( 7 ) : 2147483647 ), ( HB_ISNUM( 8 ) ? hb_parni( 8 ) : 1 ), &iOk, ( Qt::WindowFlags ) hb_parni( 10 ) ) );
+      hb_retni( ( p )->getInt( hbqt_par_QWidget( 2 ), QInputDialog::tr( hb_parc( 3 ) ), QInputDialog::tr( hb_parc( 4 ) ), hb_parni( 5 ), hb_parnidef( 6, -2147483647 ), hb_parnidef( 7, 2147483647 ), hb_parnidef( 8, 1 ), &iOk, ( Qt::WindowFlags ) hb_parni( 10 ) ) );
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINPUTDIALOG_GETINT FP=hb_retni( ( p )->getInt( hbqt_par_QWidget( 2 ), QInputDialog::tr( hb_parc( 3 ) ), QInputDialog::tr( hb_parc( 4 ) ), hb_parni( 5 ), ( HB_ISNUM( 6 ) ? hb_parni( 6 ) : -2147483647 ), ( HB_ISNUM( 7 ) ? hb_parni( 7 ) : 2147483647 ), ( HB_ISNUM( 8 ) ? hb_parni( 8 ) : 1 ), &iOk, ( Qt::WindowFlags ) hb_parni( 10 ) ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINPUTDIALOG_GETINT FP=hb_retni( ( p )->getInt( hbqt_par_QWidget( 2 ), QInputDialog::tr( hb_parc( 3 ) ), QInputDialog::tr( hb_parc( 4 ) ), hb_parni( 5 ), hb_parnidef( 6, -2147483647 ), hb_parnidef( 7, 2147483647 ), hb_parnidef( 8, 1 ), &iOk, ( Qt::WindowFlags ) hb_parni( 10 ) ) ); p is NULL" ) );
    }
 
    hb_stornl( iOk, 9 );

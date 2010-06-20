@@ -15,7 +15,7 @@
  * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -154,10 +154,10 @@ HB_FUNC( QT_QDESKTOPWIDGET_AVAILABLEGEOMETRY )
 {
    QDesktopWidget * p = hbqt_par_QDesktopWidget( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->availableGeometry( ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : -1 ) ) ), true ) );
+      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->availableGeometry( hb_parnidef( 2, -1 ) ) ), true ) );
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDESKTOPWIDGET_AVAILABLEGEOMETRY FP=hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->availableGeometry( ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : -1 ) ) ), true ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDESKTOPWIDGET_AVAILABLEGEOMETRY FP=hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->availableGeometry( hb_parnidef( 2, -1 ) ) ), true ) ); p is NULL" ) );
    }
 }
 
@@ -238,10 +238,10 @@ HB_FUNC( QT_QDESKTOPWIDGET_SCREEN )
 {
    QDesktopWidget * p = hbqt_par_QDesktopWidget( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->screen( ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : -1 ) ), false ) );
+      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->screen( hb_parnidef( 2, -1 ) ), false ) );
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDESKTOPWIDGET_SCREEN FP=hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->screen( ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : -1 ) ), false ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDESKTOPWIDGET_SCREEN FP=hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->screen( hb_parnidef( 2, -1 ) ), false ) ); p is NULL" ) );
    }
 }
 
@@ -252,10 +252,10 @@ HB_FUNC( QT_QDESKTOPWIDGET_SCREENGEOMETRY )
 {
    QDesktopWidget * p = hbqt_par_QDesktopWidget( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->screenGeometry( ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : -1 ) ) ), true ) );
+      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->screenGeometry( hb_parnidef( 2, -1 ) ) ), true ) );
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDESKTOPWIDGET_SCREENGEOMETRY FP=hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->screenGeometry( ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : -1 ) ) ), true ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDESKTOPWIDGET_SCREENGEOMETRY FP=hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->screenGeometry( hb_parnidef( 2, -1 ) ) ), true ) ); p is NULL" ) );
    }
 }
 

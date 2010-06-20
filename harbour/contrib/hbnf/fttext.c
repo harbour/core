@@ -298,7 +298,7 @@ HB_FUNC( FT_FOFFSET )
 
 HB_FUNC( FT_FUSE )
 {
-   int attr = HB_ISNUM( 2 ) ? hb_parni( 2 ) : FO_READWRITE | FO_DENYNONE;
+   int attr = hb_parnidef( 2, FO_READWRITE | FO_DENYNONE );
 
    error[area] = 0;
 
@@ -1030,10 +1030,10 @@ HB_FUNC( FT_FDELETE )
    char * Buff     = ( char * ) hb_xgrab( BUFFSIZE );
 
    /* save address to current record ( first record to be deleted ) */
-   destPtr = offset[area] ;
+   destPtr = offset[area];
 
    /* skip over deleted records, point to first 'to be retained' record */
-   _ft_skip( ( HB_ISNUM( 1 ) ? hb_parni( 1 ) : 1 ) ) ;
+   _ft_skip( hb_parnldef( 1, 1 ) );
    srcPtr = hb_fsSeekLarge( handles[area], offset[area], FS_SET );
 
    /* buffer read retained data, write atop old data */

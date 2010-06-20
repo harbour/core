@@ -239,8 +239,8 @@ HB_FUNC( CLEARSLOW )
 
    iTop    = hb_parni( 2 );
    iLeft   = hb_parni( 3 );
-   iBottom = HB_ISNUM( 4 ) ? hb_parni( 4 ) : iMaxRow;
-   iRight  = HB_ISNUM( 5 ) ? hb_parni( 5 ) : iMaxCol;
+   iBottom = hb_parnidef( 4, iMaxRow );
+   iRight  = hb_parnidef( 5, iMaxCol );
 
    if( HB_ISNUM( 6 ) )
       ucChar = ( HB_UCHAR ) hb_parni( 6 );

@@ -15,7 +15,7 @@
  * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -271,10 +271,10 @@ HB_FUNC( QT_QCOMBOBOX_FINDDATA )
 {
    QComboBox * p = hbqt_par_QComboBox( 1 );
    if( p )
-      hb_retni( ( p )->findData( *hbqt_par_QVariant( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : Qt::UserRole ), ( HB_ISNUM( 4 ) ? ( Qt::MatchFlags ) hb_parni( 4 ) : ( Qt::MatchFlags ) Qt::MatchExactly | Qt::MatchCaseSensitive ) ) );
+      hb_retni( ( p )->findData( *hbqt_par_QVariant( 2 ), hb_parnidef( 3, Qt::UserRole ), ( HB_ISNUM( 4 ) ? ( Qt::MatchFlags ) hb_parni( 4 ) : ( Qt::MatchFlags ) Qt::MatchExactly | Qt::MatchCaseSensitive ) ) );
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOMBOBOX_FINDDATA FP=hb_retni( ( p )->findData( *hbqt_par_QVariant( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : Qt::UserRole ), ( HB_ISNUM( 4 ) ? ( Qt::MatchFlags ) hb_parni( 4 ) : ( Qt::MatchFlags ) Qt::MatchExactly | Qt::MatchCaseSensitive ) ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOMBOBOX_FINDDATA FP=hb_retni( ( p )->findData( *hbqt_par_QVariant( 2 ), hb_parnidef( 3, Qt::UserRole ), ( HB_ISNUM( 4 ) ? ( Qt::MatchFlags ) hb_parni( 4 ) : ( Qt::MatchFlags ) Qt::MatchExactly | Qt::MatchCaseSensitive ) ) ); p is NULL" ) );
    }
 }
 
@@ -425,10 +425,10 @@ HB_FUNC( QT_QCOMBOBOX_ITEMDATA )
 {
    QComboBox * p = hbqt_par_QComboBox( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( ( p )->itemData( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : Qt::UserRole ) ) ), true ) );
+      hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( ( p )->itemData( hb_parni( 2 ), hb_parnidef( 3, Qt::UserRole ) ) ), true ) );
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOMBOBOX_ITEMDATA FP=hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( ( p )->itemData( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : Qt::UserRole ) ) ), true ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOMBOBOX_ITEMDATA FP=hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( ( p )->itemData( hb_parni( 2 ), hb_parnidef( 3, Qt::UserRole ) ) ), true ) ); p is NULL" ) );
    }
 }
 
@@ -677,10 +677,10 @@ HB_FUNC( QT_QCOMBOBOX_SETITEMDATA )
 {
    QComboBox * p = hbqt_par_QComboBox( 1 );
    if( p )
-      ( p )->setItemData( hb_parni( 2 ), *hbqt_par_QVariant( 3 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : Qt::UserRole ) );
+      ( p )->setItemData( hb_parni( 2 ), *hbqt_par_QVariant( 3 ), hb_parnidef( 4, Qt::UserRole ) );
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOMBOBOX_SETITEMDATA FP=( p )->setItemData( hb_parni( 2 ), *hbqt_par_QVariant( 3 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : Qt::UserRole ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOMBOBOX_SETITEMDATA FP=( p )->setItemData( hb_parni( 2 ), *hbqt_par_QVariant( 3 ), hb_parnidef( 4, Qt::UserRole ) ); p is NULL" ) );
    }
 }
 

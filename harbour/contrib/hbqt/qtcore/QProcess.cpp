@@ -15,7 +15,7 @@
  * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -480,10 +480,10 @@ HB_FUNC( QT_QPROCESS_WAITFORFINISHED )
 {
    QProcess * p = hbqt_par_QProcess( 1 );
    if( p )
-      hb_retl( ( p )->waitForFinished( ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : 30000 ) ) );
+      hb_retl( ( p )->waitForFinished( hb_parnidef( 2, 30000 ) ) );
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPROCESS_WAITFORFINISHED FP=hb_retl( ( p )->waitForFinished( ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : 30000 ) ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPROCESS_WAITFORFINISHED FP=hb_retl( ( p )->waitForFinished( hb_parnidef( 2, 30000 ) ) ); p is NULL" ) );
    }
 }
 
@@ -494,10 +494,10 @@ HB_FUNC( QT_QPROCESS_WAITFORSTARTED )
 {
    QProcess * p = hbqt_par_QProcess( 1 );
    if( p )
-      hb_retl( ( p )->waitForStarted( ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : 30000 ) ) );
+      hb_retl( ( p )->waitForStarted( hb_parnidef( 2, 30000 ) ) );
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPROCESS_WAITFORSTARTED FP=hb_retl( ( p )->waitForStarted( ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : 30000 ) ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPROCESS_WAITFORSTARTED FP=hb_retl( ( p )->waitForStarted( hb_parnidef( 2, 30000 ) ) ); p is NULL" ) );
    }
 }
 

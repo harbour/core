@@ -171,7 +171,7 @@ HB_FUNC( ORDSKIPRAW )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
    if( pArea )
-      SELF_SKIPRAW( pArea, HB_ISNUM( 1 ) ? hb_parnl( 1 ) : 1 );
+      SELF_SKIPRAW( pArea, hb_parnldef( 1, 1 ) );
    else
       hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, HB_ERR_FUNCNAME );
 }

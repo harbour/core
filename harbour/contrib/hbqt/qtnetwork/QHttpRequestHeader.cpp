@@ -15,7 +15,7 @@
  * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -200,10 +200,10 @@ HB_FUNC( QT_QHTTPREQUESTHEADER_SETREQUEST )
 {
    QHttpRequestHeader * p = hbqt_par_QHttpRequestHeader( 1 );
    if( p )
-      ( p )->setRequest( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : 1 ), ( HB_ISNUM( 5 ) ? hb_parni( 5 ) : 1 ) );
+      ( p )->setRequest( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ), hb_parnidef( 4, 1 ), hb_parnidef( 5, 1 ) );
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHTTPREQUESTHEADER_SETREQUEST FP=( p )->setRequest( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : 1 ), ( HB_ISNUM( 5 ) ? hb_parni( 5 ) : 1 ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHTTPREQUESTHEADER_SETREQUEST FP=( p )->setRequest( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ), hb_parnidef( 4, 1 ), hb_parnidef( 5, 1 ) ); p is NULL" ) );
    }
 }
 

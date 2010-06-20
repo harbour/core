@@ -15,7 +15,7 @@
  * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -427,10 +427,10 @@ HB_FUNC( QT_QBYTEARRAY_FILL )
 {
    QByteArray * p = hbqt_par_QByteArray( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->fill( ( char ) hb_parni( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : -1 ) ) ), true ) );
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->fill( ( char ) hb_parni( 2 ), hb_parnidef( 3, -1 ) ) ), true ) );
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_FILL FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->fill( ( char ) hb_parni( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : -1 ) ) ), true ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_FILL FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->fill( ( char ) hb_parni( 2 ), hb_parnidef( 3, -1 ) ) ), true ) ); p is NULL" ) );
    }
 }
 
@@ -581,10 +581,10 @@ HB_FUNC( QT_QBYTEARRAY_LASTINDEXOF )
 {
    QByteArray * p = hbqt_par_QByteArray( 1 );
    if( p )
-      hb_retni( ( p )->lastIndexOf( *hbqt_par_QByteArray( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : -1 ) ) );
+      hb_retni( ( p )->lastIndexOf( *hbqt_par_QByteArray( 2 ), hb_parnidef( 3, -1 ) ) );
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_LASTINDEXOF FP=hb_retni( ( p )->lastIndexOf( *hbqt_par_QByteArray( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : -1 ) ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_LASTINDEXOF FP=hb_retni( ( p )->lastIndexOf( *hbqt_par_QByteArray( 2 ), hb_parnidef( 3, -1 ) ) ); p is NULL" ) );
    }
 }
 
@@ -595,10 +595,10 @@ HB_FUNC( QT_QBYTEARRAY_LASTINDEXOF_1 )
 {
    QByteArray * p = hbqt_par_QByteArray( 1 );
    if( p )
-      hb_retni( ( p )->lastIndexOf( hbqt_par_QString( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : -1 ) ) );
+      hb_retni( ( p )->lastIndexOf( hbqt_par_QString( 2 ), hb_parnidef( 3, -1 ) ) );
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_LASTINDEXOF_1 FP=hb_retni( ( p )->lastIndexOf( hbqt_par_QString( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : -1 ) ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_LASTINDEXOF_1 FP=hb_retni( ( p )->lastIndexOf( hbqt_par_QString( 2 ), hb_parnidef( 3, -1 ) ) ); p is NULL" ) );
    }
 }
 
@@ -609,10 +609,10 @@ HB_FUNC( QT_QBYTEARRAY_LASTINDEXOF_2 )
 {
    QByteArray * p = hbqt_par_QByteArray( 1 );
    if( p )
-      hb_retni( ( p )->lastIndexOf( hbqt_par_char( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : -1 ) ) );
+      hb_retni( ( p )->lastIndexOf( hbqt_par_char( 2 ), hb_parnidef( 3, -1 ) ) );
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_LASTINDEXOF_2 FP=hb_retni( ( p )->lastIndexOf( hbqt_par_char( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : -1 ) ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_LASTINDEXOF_2 FP=hb_retni( ( p )->lastIndexOf( hbqt_par_char( 2 ), hb_parnidef( 3, -1 ) ) ); p is NULL" ) );
    }
 }
 
@@ -623,10 +623,10 @@ HB_FUNC( QT_QBYTEARRAY_LASTINDEXOF_3 )
 {
    QByteArray * p = hbqt_par_QByteArray( 1 );
    if( p )
-      hb_retni( ( p )->lastIndexOf( ( char ) hb_parni( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : -1 ) ) );
+      hb_retni( ( p )->lastIndexOf( ( char ) hb_parni( 2 ), hb_parnidef( 3, -1 ) ) );
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_LASTINDEXOF_3 FP=hb_retni( ( p )->lastIndexOf( ( char ) hb_parni( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : -1 ) ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_LASTINDEXOF_3 FP=hb_retni( ( p )->lastIndexOf( ( char ) hb_parni( 2 ), hb_parnidef( 3, -1 ) ) ); p is NULL" ) );
    }
 }
 
@@ -679,10 +679,10 @@ HB_FUNC( QT_QBYTEARRAY_MID )
 {
    QByteArray * p = hbqt_par_QByteArray( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->mid( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : -1 ) ) ), true ) );
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->mid( hb_parni( 2 ), hb_parnidef( 3, -1 ) ) ), true ) );
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_MID FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->mid( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : -1 ) ) ), true ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_MID FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->mid( hb_parni( 2 ), hb_parnidef( 3, -1 ) ) ), true ) ); p is NULL" ) );
    }
 }
 
@@ -1085,10 +1085,10 @@ HB_FUNC( QT_QBYTEARRAY_SETNUM )
 {
    QByteArray * p = hbqt_par_QByteArray( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->setNum( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) ), true ) );
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->setNum( hb_parni( 2 ), hb_parnidef( 3, 10 ) ) ), true ) );
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_SETNUM FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->setNum( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) ), true ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_SETNUM FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->setNum( hb_parni( 2 ), hb_parnidef( 3, 10 ) ) ), true ) ); p is NULL" ) );
    }
 }
 
@@ -1099,10 +1099,10 @@ HB_FUNC( QT_QBYTEARRAY_SETNUM_1 )
 {
    QByteArray * p = hbqt_par_QByteArray( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->setNum( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) ), true ) );
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->setNum( hb_parni( 2 ), hb_parnidef( 3, 10 ) ) ), true ) );
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_SETNUM_1 FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->setNum( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) ), true ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_SETNUM_1 FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->setNum( hb_parni( 2 ), hb_parnidef( 3, 10 ) ) ), true ) ); p is NULL" ) );
    }
 }
 
@@ -1113,10 +1113,10 @@ HB_FUNC( QT_QBYTEARRAY_SETNUM_2 )
 {
    QByteArray * p = hbqt_par_QByteArray( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->setNum( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) ), true ) );
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->setNum( hb_parni( 2 ), hb_parnidef( 3, 10 ) ) ), true ) );
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_SETNUM_2 FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->setNum( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) ), true ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_SETNUM_2 FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->setNum( hb_parni( 2 ), hb_parnidef( 3, 10 ) ) ), true ) ); p is NULL" ) );
    }
 }
 
@@ -1127,10 +1127,10 @@ HB_FUNC( QT_QBYTEARRAY_SETNUM_3 )
 {
    QByteArray * p = hbqt_par_QByteArray( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->setNum( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) ), true ) );
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->setNum( hb_parni( 2 ), hb_parnidef( 3, 10 ) ) ), true ) );
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_SETNUM_3 FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->setNum( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) ), true ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_SETNUM_3 FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->setNum( hb_parni( 2 ), hb_parnidef( 3, 10 ) ) ), true ) ); p is NULL" ) );
    }
 }
 
@@ -1141,10 +1141,10 @@ HB_FUNC( QT_QBYTEARRAY_SETNUM_4 )
 {
    QByteArray * p = hbqt_par_QByteArray( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->setNum( ( qlonglong ) hb_parnint( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) ), true ) );
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->setNum( ( qlonglong ) hb_parnint( 2 ), hb_parnidef( 3, 10 ) ) ), true ) );
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_SETNUM_4 FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->setNum( ( qlonglong ) hb_parnint( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) ), true ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_SETNUM_4 FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->setNum( ( qlonglong ) hb_parnint( 2 ), hb_parnidef( 3, 10 ) ) ), true ) ); p is NULL" ) );
    }
 }
 
@@ -1155,10 +1155,10 @@ HB_FUNC( QT_QBYTEARRAY_SETNUM_5 )
 {
    QByteArray * p = hbqt_par_QByteArray( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->setNum( ( qulonglong ) hb_parnint( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) ), true ) );
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->setNum( ( qulonglong ) hb_parnint( 2 ), hb_parnidef( 3, 10 ) ) ), true ) );
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_SETNUM_5 FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->setNum( ( qulonglong ) hb_parnint( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) ), true ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_SETNUM_5 FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->setNum( ( qulonglong ) hb_parnint( 2 ), hb_parnidef( 3, 10 ) ) ), true ) ); p is NULL" ) );
    }
 }
 
@@ -1169,10 +1169,10 @@ HB_FUNC( QT_QBYTEARRAY_SETNUM_6 )
 {
    QByteArray * p = hbqt_par_QByteArray( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->setNum( hb_parnd( 2 ), ( char ) hb_parni( 3 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : 6 ) ) ), true ) );
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->setNum( hb_parnd( 2 ), ( char ) hb_parni( 3 ), hb_parnidef( 4, 6 ) ) ), true ) );
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_SETNUM_6 FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->setNum( hb_parnd( 2 ), ( char ) hb_parni( 3 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : 6 ) ) ), true ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_SETNUM_6 FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->setNum( hb_parnd( 2 ), ( char ) hb_parni( 3 ), hb_parnidef( 4, 6 ) ) ), true ) ); p is NULL" ) );
    }
 }
 
@@ -1183,10 +1183,10 @@ HB_FUNC( QT_QBYTEARRAY_SETNUM_7 )
 {
    QByteArray * p = hbqt_par_QByteArray( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->setNum( hb_parnd( 2 ), ( char ) hb_parni( 3 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : 6 ) ) ), true ) );
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->setNum( hb_parnd( 2 ), ( char ) hb_parni( 3 ), hb_parnidef( 4, 6 ) ) ), true ) );
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_SETNUM_7 FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->setNum( hb_parnd( 2 ), ( char ) hb_parni( 3 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : 6 ) ) ), true ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_SETNUM_7 FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->setNum( hb_parnd( 2 ), ( char ) hb_parni( 3 ), hb_parnidef( 4, 6 ) ) ), true ) ); p is NULL" ) );
    }
 }
 
@@ -1347,10 +1347,10 @@ HB_FUNC( QT_QBYTEARRAY_TOINT )
    bool iOk = 0;
 
    if( p )
-      hb_retni( ( p )->toInt( &iOk, ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) );
+      hb_retni( ( p )->toInt( &iOk, hb_parnidef( 3, 10 ) ) );
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_TOINT FP=hb_retni( ( p )->toInt( &iOk, ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_TOINT FP=hb_retni( ( p )->toInt( &iOk, hb_parnidef( 3, 10 ) ) ); p is NULL" ) );
    }
 
    hb_stornl( iOk, 2 );
@@ -1365,10 +1365,10 @@ HB_FUNC( QT_QBYTEARRAY_TOLONG )
    bool iOk = 0;
 
    if( p )
-      hb_retnint( ( p )->toLong( &iOk, ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) );
+      hb_retnint( ( p )->toLong( &iOk, hb_parnidef( 3, 10 ) ) );
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_TOLONG FP=hb_retnint( ( p )->toLong( &iOk, ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_TOLONG FP=hb_retnint( ( p )->toLong( &iOk, hb_parnidef( 3, 10 ) ) ); p is NULL" ) );
    }
 
    hb_stornl( iOk, 2 );
@@ -1383,10 +1383,10 @@ HB_FUNC( QT_QBYTEARRAY_TOLONGLONG )
    bool iOk = 0;
 
    if( p )
-      hb_retnint( ( p )->toLongLong( &iOk, ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) );
+      hb_retnint( ( p )->toLongLong( &iOk, hb_parnidef( 3, 10 ) ) );
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_TOLONGLONG FP=hb_retnint( ( p )->toLongLong( &iOk, ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_TOLONGLONG FP=hb_retnint( ( p )->toLongLong( &iOk, hb_parnidef( 3, 10 ) ) ); p is NULL" ) );
    }
 
    hb_stornl( iOk, 2 );
@@ -1429,10 +1429,10 @@ HB_FUNC( QT_QBYTEARRAY_TOSHORT )
    bool iOk = 0;
 
    if( p )
-      hb_retni( ( p )->toShort( &iOk, ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) );
+      hb_retni( ( p )->toShort( &iOk, hb_parnidef( 3, 10 ) ) );
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_TOSHORT FP=hb_retni( ( p )->toShort( &iOk, ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_TOSHORT FP=hb_retni( ( p )->toShort( &iOk, hb_parnidef( 3, 10 ) ) ); p is NULL" ) );
    }
 
    hb_stornl( iOk, 2 );
@@ -1447,10 +1447,10 @@ HB_FUNC( QT_QBYTEARRAY_TOUINT )
    bool iOk = 0;
 
    if( p )
-      hb_retni( ( p )->toUInt( &iOk, ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) );
+      hb_retni( ( p )->toUInt( &iOk, hb_parnidef( 3, 10 ) ) );
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_TOUINT FP=hb_retni( ( p )->toUInt( &iOk, ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_TOUINT FP=hb_retni( ( p )->toUInt( &iOk, hb_parnidef( 3, 10 ) ) ); p is NULL" ) );
    }
 
    hb_stornl( iOk, 2 );
@@ -1465,10 +1465,10 @@ HB_FUNC( QT_QBYTEARRAY_TOULONG )
    bool iOk = 0;
 
    if( p )
-      hb_retnint( ( p )->toULong( &iOk, ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) );
+      hb_retnint( ( p )->toULong( &iOk, hb_parnidef( 3, 10 ) ) );
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_TOULONG FP=hb_retnint( ( p )->toULong( &iOk, ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_TOULONG FP=hb_retnint( ( p )->toULong( &iOk, hb_parnidef( 3, 10 ) ) ); p is NULL" ) );
    }
 
    hb_stornl( iOk, 2 );
@@ -1483,10 +1483,10 @@ HB_FUNC( QT_QBYTEARRAY_TOULONGLONG )
    bool iOk = 0;
 
    if( p )
-      hb_retnint( ( p )->toULongLong( &iOk, ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) );
+      hb_retnint( ( p )->toULongLong( &iOk, hb_parnidef( 3, 10 ) ) );
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_TOULONGLONG FP=hb_retnint( ( p )->toULongLong( &iOk, ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_TOULONGLONG FP=hb_retnint( ( p )->toULongLong( &iOk, hb_parnidef( 3, 10 ) ) ); p is NULL" ) );
    }
 
    hb_stornl( iOk, 2 );
@@ -1501,10 +1501,10 @@ HB_FUNC( QT_QBYTEARRAY_TOUSHORT )
    bool iOk = 0;
 
    if( p )
-      hb_retni( ( p )->toUShort( &iOk, ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) );
+      hb_retni( ( p )->toUShort( &iOk, hb_parnidef( 3, 10 ) ) );
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_TOUSHORT FP=hb_retni( ( p )->toUShort( &iOk, ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 10 ) ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_TOUSHORT FP=hb_retni( ( p )->toUShort( &iOk, hb_parnidef( 3, 10 ) ) ); p is NULL" ) );
    }
 
    hb_stornl( iOk, 2 );

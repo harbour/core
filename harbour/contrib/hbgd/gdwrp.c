@@ -461,7 +461,7 @@ static void GDImageSaveTo( int nType )
       if( nType == IMAGE_JPEG )
       {
          /* check range */
-         level = ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : -1 );
+         level = hb_parnidef( 3, -1 );
          if( !( level >= -1 && level <= 95 ) )
          {
             hb_errRT_BASE_SubstR( EG_ARG, 0,
@@ -474,7 +474,7 @@ static void GDImageSaveTo( int nType )
       else if( nType == IMAGE_PNG )
       {
          /* check range */
-         level = ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : -1 );
+         level = hb_parnidef( 3, -1 );
          if( !( level >= -1 && level <= 9 ) )
          {
             hb_errRT_BASE_SubstR( EG_ARG, 0,
@@ -1225,7 +1225,7 @@ HB_FUNC( GDIMAGEFILLEDARC ) /* void gdImageFilledArc(gdImagePtr im, int cx, int 
       color = hb_parni( 8 );
 
       /* Retrieve style value */
-      style = ( HB_ISNUM( 9 ) ? hb_parni( 9 ) : gdNoFill );
+      style = hb_parnidef( 9, gdNoFill );
 
       /* Draw a filled arc */
       gdImageFilledArc( im, cx, cy, w, h, s, e, color, style);

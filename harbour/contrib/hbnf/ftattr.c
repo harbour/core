@@ -177,8 +177,8 @@ HB_FUNC( FT_SAVEATT )
    int iLeft   = hb_parni( 2 ); /* Defaults to zero on bad type */
    int iMaxRow = hb_gtMaxRow();
    int iMaxCol = hb_gtMaxCol();
-   int iBottom = HB_ISNUM( 3 ) ? hb_parni( 3 ) : iMaxRow;
-   int iRight  = HB_ISNUM( 4 ) ? hb_parni( 4 ) : iMaxRow;
+   int iBottom = hb_parnidef( 3, iMaxRow );
+   int iRight  = hb_parnidef( 4, iMaxRow );
 
    HB_SIZE ulSize;
    char * pBuffer;
@@ -395,8 +395,8 @@ HB_FUNC( FT_RESTATT )
       int iLeft   = hb_parni( 2 ); /* Defaults to zero on bad type */
       int iMaxRow = hb_gtMaxRow();
       int iMaxCol = hb_gtMaxCol();
-      int iBottom = HB_ISNUM( 3 ) ? hb_parni( 3 ) : iMaxRow;
-      int iRight  = HB_ISNUM( 4 ) ? hb_parni( 4 ) : iMaxCol;
+      int iBottom = hb_parnidef( 3, iMaxRow );
+      int iRight  = hb_parnidef( 4, iMaxCol );
       const char * pAttrib  = hb_parc( 5 );
 
       if( iTop < 0 )

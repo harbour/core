@@ -15,7 +15,7 @@
  * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -312,10 +312,10 @@ HB_FUNC( QT_QCOLOR_DARKER )
 {
    QColor * p = hbqt_par_QColor( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->darker( ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : 200 ) ) ), true ) );
+      hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->darker( hb_parnidef( 2, 200 ) ) ), true ) );
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOLOR_DARKER FP=hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->darker( ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : 200 ) ) ), true ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOLOR_DARKER FP=hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->darker( hb_parnidef( 2, 200 ) ) ), true ) ); p is NULL" ) );
    }
 }
 
@@ -544,10 +544,10 @@ HB_FUNC( QT_QCOLOR_LIGHTER )
 {
    QColor * p = hbqt_par_QColor( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->lighter( ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : 150 ) ) ), true ) );
+      hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->lighter( hb_parnidef( 2, 150 ) ) ), true ) );
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOLOR_LIGHTER FP=hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->lighter( ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : 150 ) ) ), true ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOLOR_LIGHTER FP=hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->lighter( hb_parnidef( 2, 150 ) ) ), true ) ); p is NULL" ) );
    }
 }
 
@@ -740,10 +740,10 @@ HB_FUNC( QT_QCOLOR_SETCMYK )
 {
    QColor * p = hbqt_par_QColor( 1 );
    if( p )
-      ( p )->setCmyk( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), ( HB_ISNUM( 6 ) ? hb_parni( 6 ) : 255 ) );
+      ( p )->setCmyk( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), hb_parnidef( 6, 255 ) );
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOLOR_SETCMYK FP=( p )->setCmyk( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), ( HB_ISNUM( 6 ) ? hb_parni( 6 ) : 255 ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOLOR_SETCMYK FP=( p )->setCmyk( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), hb_parnidef( 6, 255 ) ); p is NULL" ) );
    }
 }
 
@@ -796,10 +796,10 @@ HB_FUNC( QT_QCOLOR_SETHSV )
 {
    QColor * p = hbqt_par_QColor( 1 );
    if( p )
-      ( p )->setHsv( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), ( HB_ISNUM( 5 ) ? hb_parni( 5 ) : 255 ) );
+      ( p )->setHsv( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parnidef( 5, 255 ) );
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOLOR_SETHSV FP=( p )->setHsv( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), ( HB_ISNUM( 5 ) ? hb_parni( 5 ) : 255 ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOLOR_SETHSV FP=( p )->setHsv( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parnidef( 5, 255 ) ); p is NULL" ) );
    }
 }
 
@@ -880,10 +880,10 @@ HB_FUNC( QT_QCOLOR_SETRGB_1 )
 {
    QColor * p = hbqt_par_QColor( 1 );
    if( p )
-      ( p )->setRgb( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), ( HB_ISNUM( 5 ) ? hb_parni( 5 ) : 255 ) );
+      ( p )->setRgb( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parnidef( 5, 255 ) );
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOLOR_SETRGB_1 FP=( p )->setRgb( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), ( HB_ISNUM( 5 ) ? hb_parni( 5 ) : 255 ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOLOR_SETRGB_1 FP=( p )->setRgb( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parnidef( 5, 255 ) ); p is NULL" ) );
    }
 }
 
@@ -1048,10 +1048,10 @@ HB_FUNC( QT_QCOLOR_FROMCMYK )
 {
    QColor * p = hbqt_par_QColor( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->fromCmyk( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), ( HB_ISNUM( 6 ) ? hb_parni( 6 ) : 255 ) ) ), true ) );
+      hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->fromCmyk( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), hb_parnidef( 6, 255 ) ) ), true ) );
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOLOR_FROMCMYK FP=hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->fromCmyk( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), ( HB_ISNUM( 6 ) ? hb_parni( 6 ) : 255 ) ) ), true ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOLOR_FROMCMYK FP=hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->fromCmyk( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), hb_parnidef( 6, 255 ) ) ), true ) ); p is NULL" ) );
    }
 }
 
@@ -1076,10 +1076,10 @@ HB_FUNC( QT_QCOLOR_FROMHSV )
 {
    QColor * p = hbqt_par_QColor( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->fromHsv( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), ( HB_ISNUM( 5 ) ? hb_parni( 5 ) : 255 ) ) ), true ) );
+      hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->fromHsv( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parnidef( 5, 255 ) ) ), true ) );
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOLOR_FROMHSV FP=hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->fromHsv( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), ( HB_ISNUM( 5 ) ? hb_parni( 5 ) : 255 ) ) ), true ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOLOR_FROMHSV FP=hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->fromHsv( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parnidef( 5, 255 ) ) ), true ) ); p is NULL" ) );
    }
 }
 
@@ -1118,10 +1118,10 @@ HB_FUNC( QT_QCOLOR_FROMRGB_1 )
 {
    QColor * p = hbqt_par_QColor( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->fromRgb( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), ( HB_ISNUM( 5 ) ? hb_parni( 5 ) : 255 ) ) ), true ) );
+      hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->fromRgb( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parnidef( 5, 255 ) ) ), true ) );
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOLOR_FROMRGB_1 FP=hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->fromRgb( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), ( HB_ISNUM( 5 ) ? hb_parni( 5 ) : 255 ) ) ), true ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOLOR_FROMRGB_1 FP=hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->fromRgb( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parnidef( 5, 255 ) ) ), true ) ); p is NULL" ) );
    }
 }
 

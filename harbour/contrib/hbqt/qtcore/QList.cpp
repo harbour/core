@@ -15,7 +15,7 @@
  * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -311,10 +311,10 @@ HB_FUNC( QT_QLIST_LASTINDEXOF )
 {
    QList< void *> * p = hbqt_par_QList( 1 );
    if( p )
-      hb_retni( ( p )->lastIndexOf( hb_param( 2, HB_IT_ANY ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : -1 ) ) );
+      hb_retni( ( p )->lastIndexOf( hb_param( 2, HB_IT_ANY ), hb_parnidef( 3, -1 ) ) );
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLIST_LASTINDEXOF FP=hb_retni( ( p )->lastIndexOf( hb_param( 2, HB_IT_ANY ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : -1 ) ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLIST_LASTINDEXOF FP=hb_retni( ( p )->lastIndexOf( hb_param( 2, HB_IT_ANY ), hb_parnidef( 3, -1 ) ) ); p is NULL" ) );
    }
 }
 

@@ -296,7 +296,7 @@ HB_FUNC( SX_CLRSCOPE )
 
       if( hb_sxOrdParam( &Info ) )
       {
-         int iScope = HB_ISNUM( 1 ) ? hb_parni( 1 ) : 2;
+         int iScope = hb_parnidef( 1, 2 );
          Info.itmResult = hb_itemNew( NULL );
          if( iScope )
             SELF_ORDINFO( pArea, DBOI_SCOPEBOTTOMCLEAR, &Info );
@@ -559,7 +559,7 @@ HB_FUNC( SX_KEYSKIP )
 
    if( pArea )
    {
-      if( SELF_SKIPRAW( pArea, HB_ISNUM( 1 ) ? hb_parnl( 1 ) : 1 ) == HB_SUCCESS )
+      if( SELF_SKIPRAW( pArea, hb_parnldef( 1, 1 ) ) == HB_SUCCESS )
       {
          if( SELF_EOF( pArea, &fBEof ) == HB_SUCCESS && !fBEof )
             fResult = SELF_BOF( pArea, &fBEof ) == HB_SUCCESS && !fBEof;
@@ -618,7 +618,7 @@ HB_FUNC( SX_KEYGOTO )
       DBORDERINFO Info;
       if( hb_sxOrdParam( &Info ) )
       {
-         Info.itmNewVal = hb_param( 3 , HB_IT_NUMERIC );
+         Info.itmNewVal = hb_param( 3, HB_IT_NUMERIC );
          Info.itmResult = hb_itemNew( NULL );
          SELF_ORDINFO( pArea, DBOI_POSITION, &Info );
          fResult = hb_itemGetL( Info.itmResult );

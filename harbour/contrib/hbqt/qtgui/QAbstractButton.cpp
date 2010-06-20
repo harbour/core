@@ -15,7 +15,7 @@
  * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -418,10 +418,10 @@ HB_FUNC( QT_QABSTRACTBUTTON_ANIMATECLICK )
 {
    QAbstractButton * p = hbqt_par_QAbstractButton( 1 );
    if( p )
-      ( p )->animateClick( ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : 100 ) );
+      ( p )->animateClick( hb_parnidef( 2, 100 ) );
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTBUTTON_ANIMATECLICK FP=( p )->animateClick( ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : 100 ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTBUTTON_ANIMATECLICK FP=( p )->animateClick( hb_parnidef( 2, 100 ) ); p is NULL" ) );
    }
 }
 

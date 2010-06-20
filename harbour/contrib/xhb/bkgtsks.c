@@ -464,7 +464,7 @@ HB_FUNC( HB_BACKGROUNDTIME )
    if( s_pBackgroundTasks && HB_ISNUM( 1 ) )
    {
       /* TODO: access to pointers from harbour code */
-      nOldMillisec = hb_backgroundTime( hb_parnl( 1 ), HB_ISNUM( 2 ) ? hb_parni( 2 ) : 1000 );
+      nOldMillisec = hb_backgroundTime( hb_parnl( 1 ), hb_parnidef( 2, 1000 ) );
    }
 
    hb_retni( nOldMillisec ); /* return old millisecond value */

@@ -958,38 +958,34 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_, lList, fB
                aA[ PRT_DOC  ] := '@n' + cDocNM
 
             CASE aA[ PRT_CAST ] $ cInt
-               s := 'hb_parni( ' + cHBIdx + ' )'
                IF !empty( aA[ PRT_DEFAULT ] ) .AND. !( aA[ PRT_DEFAULT ] == "0" )
-                  aA[ PRT_BODY ] := '( HB_ISNUM( ' + cHBIdx + ' ) ? ' + s + ' : ' + aA[ PRT_DEFAULT ] + ' )'
+                  aA[ PRT_BODY ] := 'hb_parnidef( ' + cHBIdx + ", " + aA[ PRT_DEFAULT ] + ' )'
                ELSE
-                  aA[ PRT_BODY ] := s
+                  aA[ PRT_BODY ] := 'hb_parni( ' + cHBIdx + ' )'
                ENDIF
                aA[ PRT_DOC  ] := 'n' + cDocNM
 
             CASE aA[ PRT_CAST ] $ cIntLong
-               s := 'hb_parnl( ' + cHBIdx + ' )'
                IF !empty( aA[ PRT_DEFAULT ] ) .AND. !( aA[ PRT_DEFAULT ] == "0" )
-                  aA[ PRT_BODY ] := '( HB_ISNUM( ' + cHBIdx + ' ) ? ' + s + ' : ' + aA[ PRT_DEFAULT ] + ' )'
+                  aA[ PRT_BODY ] := 'hb_parnldef( ' + cHBIdx + ", " + aA[ PRT_DEFAULT ] + ' )'
                ELSE
-                  aA[ PRT_BODY ] := s
+                  aA[ PRT_BODY ] := 'hb_parnl( ' + cHBIdx + ' )'
                ENDIF
                aA[ PRT_DOC  ] := 'n' + cDocNM
 
             CASE aA[ PRT_CAST ] $ "qlonglong,qulonglong"
-               s := '( ' + aA[ PRT_CAST ] + ' ) hb_parnint( ' + cHBIdx + ' )'
                IF !empty( aA[ PRT_DEFAULT ] ) .AND. !( aA[ PRT_DEFAULT ] == "0" )
-                  aA[ PRT_BODY ] := '( HB_ISNUM( ' + cHBIdx + ' ) ? ' + s + ' : ' + aA[ PRT_DEFAULT ] + ' )'
+                  aA[ PRT_BODY ] := '( ' + aA[ PRT_CAST ] + ' ) hb_parnintdef( ' + cHBIdx + ", " + aA[ PRT_DEFAULT ] + ' )'
                ELSE
-                  aA[ PRT_BODY ] := s
+                  aA[ PRT_BODY ] := '( ' + aA[ PRT_CAST ] + ' ) hb_parnint( ' + cHBIdx + ' )'
                ENDIF
                aA[ PRT_DOC  ] := 'n' + cDocNM
 
             CASE aA[ PRT_CAST ] $ cIntLongLong
-               s := 'hb_parnint( ' + cHBIdx + ' )'
                IF !empty( aA[ PRT_DEFAULT ] ) .AND. !( aA[ PRT_DEFAULT ] == "0" )
-                  aA[ PRT_BODY ] := '( HB_ISNUM( ' + cHBIdx + ' ) ? ' + s + ' : ' + aA[ PRT_DEFAULT ] + ' )'
+                  aA[ PRT_BODY ] := 'hb_parnintdef( ' + cHBIdx + ", " + aA[ PRT_DEFAULT ] + ' )'
                ELSE
-                  aA[ PRT_BODY ] := s
+                  aA[ PRT_BODY ] := 'hb_parnint( ' + cHBIdx + ' )'
                ENDIF
                aA[ PRT_DOC  ] := 'n' + cDocNM
 

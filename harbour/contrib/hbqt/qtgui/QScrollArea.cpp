@@ -15,7 +15,7 @@
  * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -168,10 +168,10 @@ HB_FUNC( QT_QSCROLLAREA_ENSUREVISIBLE )
 {
    QScrollArea * p = hbqt_par_QScrollArea( 1 );
    if( p )
-      ( p )->ensureVisible( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : 50 ), ( HB_ISNUM( 5 ) ? hb_parni( 5 ) : 50 ) );
+      ( p )->ensureVisible( hb_parni( 2 ), hb_parni( 3 ), hb_parnidef( 4, 50 ), hb_parnidef( 5, 50 ) );
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCROLLAREA_ENSUREVISIBLE FP=( p )->ensureVisible( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : 50 ), ( HB_ISNUM( 5 ) ? hb_parni( 5 ) : 50 ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCROLLAREA_ENSUREVISIBLE FP=( p )->ensureVisible( hb_parni( 2 ), hb_parni( 3 ), hb_parnidef( 4, 50 ), hb_parnidef( 5, 50 ) ); p is NULL" ) );
    }
 }
 
@@ -182,10 +182,10 @@ HB_FUNC( QT_QSCROLLAREA_ENSUREWIDGETVISIBLE )
 {
    QScrollArea * p = hbqt_par_QScrollArea( 1 );
    if( p )
-      ( p )->ensureWidgetVisible( hbqt_par_QWidget( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 50 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : 50 ) );
+      ( p )->ensureWidgetVisible( hbqt_par_QWidget( 2 ), hb_parnidef( 3, 50 ), hb_parnidef( 4, 50 ) );
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCROLLAREA_ENSUREWIDGETVISIBLE FP=( p )->ensureWidgetVisible( hbqt_par_QWidget( 2 ), ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : 50 ), ( HB_ISNUM( 4 ) ? hb_parni( 4 ) : 50 ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCROLLAREA_ENSUREWIDGETVISIBLE FP=( p )->ensureWidgetVisible( hbqt_par_QWidget( 2 ), hb_parnidef( 3, 50 ), hb_parnidef( 4, 50 ) ); p is NULL" ) );
    }
 }
 
