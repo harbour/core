@@ -1206,9 +1206,9 @@ void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
 
 #endif
 
-HB_ULONG hb_xquery( int iMode )
+HB_SIZE hb_xquery( int iMode )
 {
-   HB_ULONG ulResult;
+   HB_SIZE ulResult;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_xquery(%d)", iMode));
 

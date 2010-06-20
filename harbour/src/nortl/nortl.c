@@ -226,9 +226,9 @@ void hb_xfree( void * pMem )            /* frees fixed memory */
       hb_errInternal( HB_EI_XFREENULL, "hb_xfree called with a NULL pointer", NULL, NULL );
 }
 
-HB_ULONG hb_xquery( int iMode )
+HB_SIZE hb_xquery( int iMode )
 {
-   HB_ULONG ulResult = 0;
+   HB_SIZE ulResult = 0;
 
 #ifdef HB_FM_STATISTICS
    switch( iMode )
