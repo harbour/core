@@ -540,42 +540,44 @@ double hb_numDecConv( double dNum, int iDec )
 static HB_BOOL hb_str2number( HB_BOOL fPCode, const char * szNum, HB_SIZE ulLen, HB_MAXINT * lVal, double * dVal, int * piDec, int * piWidth )
 {
    HB_BOOL fDbl = HB_FALSE, fDec = HB_FALSE, fNeg, fHex = HB_FALSE;
-   HB_SIZE ulPos = 0;
+   int iLen, iPos = 0;
    int c, iWidth, iDec = 0, iDecR = 0;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_str2number(%d, %p, %" HB_PFS "u, %p, %p, %p, %p)", (int) fPCode, szNum, ulLen, lVal, dVal, piDec, piWidth ));
+   HB_TRACE(HB_TR_DEBUG, ("hb_str2number(%d, %p, %" HB_PFS "u, %p, %p, %p, %p)", ( int ) fPCode, szNum, ulLen, lVal, dVal, piDec, piWidth ));
 
-   while( ulPos < ulLen && HB_ISSPACE( szNum[ulPos] ) )
-      ulPos++;
+   iLen = ( int ) ulLen;
 
-   if( ulPos >= ulLen )
+   while( iPos < iLen && HB_ISSPACE( szNum[ iPos ] ) )
+      iPos++;
+
+   if( iPos >= iLen )
    {
       fNeg = HB_FALSE;
    }
-   else if( szNum[ ulPos ] == '-' )
+   else if( szNum[ iPos ] == '-' )
    {
       fNeg = HB_TRUE;
-      ulPos++;
+      iPos++;
    }
    else
    {
       fNeg = HB_FALSE;
-      if( szNum[ ulPos ] == '+' )
-         ulPos++;
+      if( szNum[ iPos ] == '+' )
+         iPos++;
    }
 
    *lVal = 0;
 
    /* Hex Number */
-   if( fPCode && ulPos + 1 < ulLen && szNum[ ulPos ] == '0' &&
-       ( szNum[ ulPos + 1 ] == 'X' || szNum[ ulPos + 1 ] == 'x' ) )
+   if( fPCode && iPos + 1 < iLen && szNum[ iPos ] == '0' &&
+       ( szNum[ iPos + 1 ] == 'X' || szNum[ iPos + 1 ] == 'x' ) )
    {
-      ulPos += 2;
+      iPos += 2;
       iWidth = HB_DEFAULT_WIDTH;
       fHex = HB_TRUE;
-      for( ; ulPos < ulLen; ulPos++ )
+      for( ; iPos < iLen; iPos++ )
       {
-         c = szNum[ ulPos ];
+         c = szNum[ iPos ];
          if( c >= '0' && c <= '9' )
             c -= '0';
          else if( c >= 'A' && c <= 'F' )
@@ -595,11 +597,11 @@ static HB_BOOL hb_str2number( HB_BOOL fPCode, const char * szNum, HB_SIZE ulLen,
       lLimV = HB_VMLONG_MAX / 10;
       iLimC = ( int ) ( HB_VMLONG_MAX % 10 );
 
-      iWidth = ulPos;
+      iWidth = iPos;
 
-      for( ; ulPos < ulLen; ulPos++ )
+      for( ; iPos < iLen; iPos++ )
       {
-         c = szNum[ ulPos ];
+         c = szNum[ iPos ];
          if( c >= '0' && c <= '9' )
          {
             if( fDbl )
@@ -626,15 +628,15 @@ static HB_BOOL hb_str2number( HB_BOOL fPCode, const char * szNum, HB_SIZE ulLen,
          }
          else
          {
-            while( !fDec && ulPos < ulLen )
+            while( !fDec && iPos < iLen )
             {
-               if( szNum[ ulPos++ ] == '.' )
+               if( szNum[ iPos++ ] == '.' )
                   fDec = HB_TRUE;
                else
                   iWidth++;
             }
             if( fDec )
-               iDecR = ulLen - ulPos;
+               iDecR = iLen - iPos;
             break;
          }
       }
@@ -688,7 +690,7 @@ static HB_BOOL hb_str2number( HB_BOOL fPCode, const char * szNum, HB_SIZE ulLen,
          else
          {
             if( iDec + iDecR == 0 )
-               *piWidth = ( int ) ulLen;
+               *piWidth = iLen;
             else if( iWidth == 0 )
                *piWidth = 1;
             else if( fNeg && iWidth == 1 && *dVal != 0 )

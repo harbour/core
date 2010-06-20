@@ -1544,9 +1544,9 @@ int hb_comFlowChars( int iPort, int iXONchar, int iXOFFchar )
          if( fResult )
          {
             if( iXONchar >= 0 )
-               dcb.XonChar = iXONchar;
+               dcb.XonChar = ( char ) iXONchar;
             if( iXOFFchar >= 0 )
-               dcb.XoffChar = iXOFFchar;
+               dcb.XoffChar = ( char ) iXOFFchar;
             fResult = SetCommState( pCom->hComm, &dcb );
          }
       }
@@ -1588,7 +1588,7 @@ int hb_comErrorChar( int iPort, int iChar )
          if( iChar >= 0 )
          {
             dcb.fErrorChar = TRUE;
-            dcb.ErrorChar = iChar;
+            dcb.ErrorChar = ( char ) iChar;
          }
          else
             dcb.fErrorChar = FALSE;
