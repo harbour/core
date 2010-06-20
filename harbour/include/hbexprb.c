@@ -5443,7 +5443,7 @@ static HB_EXPR_PTR hb_compExprReduceAliasString( HB_EXPR_PTR pExpr, HB_EXPR_PTR 
 
 static HB_BOOL hb_compExprIsMemvarAlias( const char *szAlias )
 {
-   int iLen = strlen( szAlias );
+   int iLen = ( int ) strlen( szAlias );
    /* @M-> @MEMVAR-> or @MEMVA-> or @MEMV-> */
    return ( iLen == 1 || ( iLen >= 4 && iLen <= 6 ) ) &&
           memcmp( szAlias, "MEMVAR", iLen ) == 0;

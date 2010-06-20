@@ -1290,7 +1290,7 @@ DecData    : IdentName { HB_COMP_PARAM->pLastMethod = hb_compMethodAdd( HB_COMP_
                   else
                      pClass = NULL;
 
-                  iLen = strlen( $1 );
+                  iLen = ( int ) strlen( $1 );
                   if( iLen >= HB_SYMBOL_NAME_LEN )
                      iLen = HB_SYMBOL_NAME_LEN - 1;
                   szSetData[ 0 ] = '_';

@@ -1647,7 +1647,7 @@ static int hb_gt_def_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
    if( HB_IS_STRING( pMessage ) && iOptions > 0 )
    {
       const char * szMessage = hb_itemGetCPtr( pMessage );
-      HB_SIZE ulLen = hb_itemGetCLen( pMessage );
+      HB_UINT ulLen = ( HB_UINT ) hb_itemGetCLen( pMessage );
       HB_BOOL fScreen = HB_FALSE, fKeyBoard = HB_FALSE;
       int iKey = 0, i, iDspCount, iStyle, iRows, iCols,
           iRow, iCol, iTop, iLeft, iBottom, iRight, iMnuCol, iPos, iClr;
@@ -1673,7 +1673,7 @@ static int hb_gt_def_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
 
       if( fScreen )
       {
-         HB_SIZE ulLines = 0, ulWidth = 0, ulCurrWidth = 0, ul = 0, ulDst = 0,
+         HB_UINT ulLines = 0, ulWidth = 0, ulCurrWidth = 0, ul = 0, ulDst = 0,
                ulLast = 0, ulSpace1 = 0, ulSpace2 = 0, ulDefWidth, ulMaxWidth;
          char * szMsgDsp;
 
@@ -1765,7 +1765,7 @@ static int hb_gt_def_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
          ulCurrWidth = 0;
          for( i = 1; i <= iOptions; ++i )
          {
-            ulCurrWidth += hb_arrayGetCLen( pOptions, i ) + 4;
+            ulCurrWidth += ( HB_UINT ) hb_arrayGetCLen( pOptions, i ) + 4;
          }
          if( ulCurrWidth > ulMaxWidth )
             ulCurrWidth = ulMaxWidth;
@@ -1832,7 +1832,7 @@ static int hb_gt_def_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
             for( i = 1; i <= iOptions; ++i )
             {
                iClr = i == iPos ? iClrHigh : iClrNorm;
-               ulLen = hb_arrayGetCLen( pOptions, i );
+               ulLen = ( HB_UINT ) hb_arrayGetCLen( pOptions, i );
                HB_GTSELF_PUTTEXT( pGT, iBottom - 1, iMnuCol, iClr, " ", 1 );
                HB_GTSELF_PUTTEXT( pGT, iBottom - 1, iMnuCol + 1, iClr,
                                   hb_arrayGetCPtr( pOptions, i ), ulLen );
@@ -1873,7 +1873,7 @@ static int hb_gt_def_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
                   iMnuCol = iLeft + ( ( ulWidth - ulCurrWidth ) >> 1 ) + 4;
                   for( i = 1; i <= iOptions; ++i )
                   {
-                     ulLen = hb_arrayGetCLen( pOptions, i );
+                     ulLen = ( HB_UINT ) hb_arrayGetCLen( pOptions, i );
                      if( iMCol >= iMnuCol && iMCol < iMnuCol + ( int ) ulLen )
                      {
                         iRet = i;

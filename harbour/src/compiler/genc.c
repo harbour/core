@@ -259,7 +259,7 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
       hb_strncpyUpper( szFileName, pFileName->szName, sizeof( szFileName ) - 1 );
       /* replace non ID characters in name of local symbol table by '_' */
       {
-         int iLen = strlen( szFileName ), i;
+         int iLen = ( int ) strlen( szFileName ), i;
 
          for( i = 0; i < iLen; i++ )
          {

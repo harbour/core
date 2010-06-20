@@ -80,7 +80,7 @@ static void hb_delimInitArea( DELIMAREAP pArea, char * szFileName )
    if( !szEol || !szEol[ 0 ] )
       szEol = hb_conNewLine();
    pArea->szEol = hb_strdup( szEol );
-   pArea->uiEolLen = strlen( pArea->szEol );
+   pArea->uiEolLen = ( HB_USHORT ) strlen( pArea->szEol );
 
    /* allocate record buffer, one additional byte is for deleted flag */
    pArea->pRecord = ( HB_BYTE * ) hb_xgrab( pArea->uiRecordLen + 1 );

@@ -323,7 +323,7 @@ typedef struct _HSXINFO
    char *     szFileName;       /* file name */
    HB_BOOL    fShared;          /* Shared file */
    HB_BOOL    fReadonly;        /* Read only file */
-   HB_SIZE    ulBufSize;        /* size of buffer in records */
+   HB_ULONG   ulBufSize;        /* size of buffer in records */
    HB_ULONG   ulBufRec;         /* number of record in buffer */
    HB_ULONG   ulFirstRec;       /* first record in the buffer */
    HB_BYTE *  pBuffer;          /* the buffer pointer */
@@ -1387,7 +1387,7 @@ static int hb_hsxCreate( const char * szFile, int iBufSize, int iKeySize,
    char szFileName[ HB_PATH_MAX ];
    const char * szExpr = NULL;
    PHB_ITEM pKeyExpr = NULL;
-   HB_SIZE ulBufSize;
+   HB_ULONG ulBufSize;
    HB_USHORT uiRecordSize;
    LPHSXINFO pHSX;
    PHB_FILE pFile;
@@ -1476,7 +1476,7 @@ static int hb_hsxOpen( const char * szFile, int iBufSize, int iMode )
    char szFileName[ HB_PATH_MAX ];
    HB_BOOL fShared, fReadonly;
    PHB_FILE pFile;
-   HB_SIZE ulBufSize;
+   HB_ULONG ulBufSize;
    HB_USHORT uiFlags;
    LPHSXINFO pHSX;
    int iRetVal, iRet;
@@ -1601,7 +1601,7 @@ static int hb_hsxIndex( const char * szFile, PHB_ITEM pExpr, int iKeySize,
    return hb_hsxOpen( szFile, iBufSize, iMode );
 }
 
-static int hb_hsxFilter( int iHandle, const char * pSeek, HB_ULONG ulSeek,
+static int hb_hsxFilter( int iHandle, const char * pSeek, HB_SIZE ulSeek,
                          PHB_ITEM pVerify, int iVerifyType )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();

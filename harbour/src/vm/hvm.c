@@ -8613,7 +8613,7 @@ void hb_vmRequestCancel( void )
 
       while( hb_procinfo( iLevel++, buffer, &uiLine, file ) )
       {
-         l = strlen( buffer );
+         l = ( int ) strlen( buffer );
          hb_snprintf( buffer + l, sizeof( buffer ) - l, " (%hu)%s%s", uiLine, *file ? HB_I_(" in ") : "", file );
 
          hb_conOutErr( buffer, 0 );

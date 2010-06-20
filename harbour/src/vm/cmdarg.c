@@ -233,7 +233,7 @@ void hb_cmdargUpdate( void )
                   hb_strncat( s_szAppName, pFName->szPath, HB_PATH_MAX - 1 );
                   pFName->szPath = hb_strdup( s_szAppName );
                   hb_fsFNameMerge( s_szAppName, pFName );
-                  hb_xfree( pFName->szPath );
+                  hb_xfree( ( void * ) pFName->szPath );
                   s_argv[ 0 ] = s_szAppName;
                }
             }

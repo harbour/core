@@ -1370,7 +1370,7 @@ void hb_macroGenPopAliasedVar( const char * szVarName,
    {
       if( szAlias )
       {
-         int iLen = strlen( szAlias );
+         int iLen = ( int ) strlen( szAlias );
 
          if( szAlias[ 0 ] == 'M' && ( iLen == 1 ||
              ( iLen >= 4 && iLen <= 6 && strncmp( szAlias, "MEMVAR", iLen ) == 0 ) ) )
@@ -1466,7 +1466,7 @@ void hb_macroGenPushAliasedVar( const char * szVarName,
          * FIELD->var
          * MEMVAR->var
          */
-         int iLen = strlen( szAlias );
+         int iLen = ( int ) strlen( szAlias );
 
          if( szAlias[ 0 ] == 'M' && ( iLen == 1 ||
              ( iLen >= 4 && iLen <= 6 && strncmp( szAlias, "MEMVAR", iLen ) == 0 ) ) )

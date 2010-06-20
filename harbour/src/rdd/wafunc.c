@@ -244,9 +244,7 @@ HB_USHORT hb_rddFieldExpIndex( AREAP pArea, const char * szField )
    int n;
 
    while( HB_ISSPACE( *szField ) )
-   {
       ++szField;
-   }
 
    if( strchr( szField, '>' ) != NULL )
    {
@@ -255,7 +253,7 @@ HB_USHORT hb_rddFieldExpIndex( AREAP pArea, const char * szField )
 
       n = 0;
       if( SELF_ALIAS( pArea, szAlias ) == HB_SUCCESS )
-         l = strlen( szAlias );
+         l = ( int ) strlen( szAlias );
       else
          l = 0;
 
@@ -314,14 +312,11 @@ HB_ERRCODE hb_rddGetAliasNumber( const char * szAlias, int * iArea )
    HB_TRACE(HB_TR_DEBUG, ("hb_rddGetAliasNumber(%s, %p)", szAlias, iArea));
 
    while( *szAlias == ' ' )
-   {
       szAlias++;
-   }
+
    c = szAlias[ 0 ];
    if( c >= 'a' && c <= 'z' )
-   {
       c -= 'a' - 'A';
-   }
 
    fOneLetter = c && ( szAlias[ 1 ] == 0 || szAlias[ 1 ] == ' ' );
 
@@ -343,9 +338,7 @@ HB_ERRCODE hb_rddGetAliasNumber( const char * szAlias, int * iArea )
 
       *iArea = pSymAlias ? ( int ) hb_dynsymAreaHandle( pSymAlias ) : 0;
       if( *iArea == 0 )
-      {
          return HB_FAILURE;
-      }
    }
 
    return HB_SUCCESS;

@@ -80,7 +80,7 @@ static void hb_sdfInitArea( SDFAREAP pArea, char * szFileName )
    if( !szEol || !szEol[ 0 ] )
       szEol = hb_conNewLine();
    pArea->szEol = hb_strdup( szEol );
-   pArea->uiEolLen = strlen( pArea->szEol );
+   pArea->uiEolLen = ( HB_USHORT ) strlen( pArea->szEol );
 
    /* Alloc buffer */
    pArea->pRecord = ( HB_BYTE * ) hb_xgrab( pArea->uiRecordLen + pArea->uiEolLen + 3 );
@@ -105,8 +105,8 @@ static HB_ERRCODE hb_sdfReadRecord( SDFAREAP pArea )
    HB_TRACE(HB_TR_DEBUG, ("hb_sdfReadRecord(%p)", pArea));
 
    uiToRead = pArea->uiRecordLen + pArea->uiEolLen + 2;
-   uiRead = hb_fileReadAt( pArea->pFile, pArea->pRecord, uiToRead,
-                           pArea->ulRecordOffset );
+   uiRead = ( HB_USHORT ) hb_fileReadAt( pArea->pFile, pArea->pRecord, uiToRead,
+                                         pArea->ulRecordOffset );
    if( uiRead > 0 && uiRead < uiToRead && pArea->pRecord[ uiRead - 1 ] == '\032' )
       --uiRead;
 
@@ -169,8 +169,8 @@ static HB_ERRCODE hb_sdfNextRecord( SDFAREAP pArea )
 
          do
          {
-            uiRead = hb_fileReadAt( pArea->pFile, pArea->pRecord + uiRest,
-                                    uiToRead - uiRest, ulOffset + uiRest ) + uiRest;
+            uiRead = ( HB_USHORT ) hb_fileReadAt( pArea->pFile, pArea->pRecord + uiRest,
+                                                  uiToRead - uiRest, ulOffset + uiRest ) + uiRest;
             if( uiRead > 0 && uiRead < uiToRead &&
                 pArea->pRecord[ uiRead - 1 ] == '\032' )
                --uiRead;

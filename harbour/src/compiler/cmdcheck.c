@@ -805,7 +805,7 @@ void hb_compChkCompilerSwitch( HB_COMP_DECL, int iArg, const char * const Args[]
                         hb_compChkEnvironVar( HB_COMP_PARAM, szSwitch );
 
                         /* Accept rest as part of #define and continue with next Args[]. */
-                        j = strlen( szSwitch );
+                        j = ( int ) strlen( szSwitch );
                         continue;
 
                      case 'e':
@@ -833,7 +833,7 @@ void hb_compChkCompilerSwitch( HB_COMP_DECL, int iArg, const char * const Args[]
                         {
                            szSwitch += ( j - 1 );
                            hb_compChkEnvironVar( HB_COMP_PARAM, szSwitch );
-                           j = strlen( szSwitch );
+                           j = ( int ) strlen( szSwitch );
                         }
                         else
                         {
@@ -867,14 +867,14 @@ void hb_compChkCompilerSwitch( HB_COMP_DECL, int iArg, const char * const Args[]
                         hb_compChkEnvironVar( HB_COMP_PARAM, szSwitch );
 
                         /* Accept rest as IncludePath and continue with next Args[]. */
-                        j = strlen( szSwitch );
+                        j = ( int ) strlen( szSwitch );
                         continue;
 
                      case 'j':
                      case 'J':
                         szSwitch += ( j - 1 );
                         hb_compChkEnvironVar( HB_COMP_PARAM, szSwitch );
-                        j = strlen( szSwitch );
+                        j = ( int ) strlen( szSwitch );
                         continue;
 
                      case 'k':
@@ -883,7 +883,7 @@ void hb_compChkCompilerSwitch( HB_COMP_DECL, int iArg, const char * const Args[]
                         hb_compChkEnvironVar( HB_COMP_PARAM, szSwitch );
 
                         /* Accept rest as part of #define and continue with next Args[]. */
-                        j = strlen( szSwitch );
+                        j = ( int ) strlen( szSwitch );
                         continue;
 
                      case 'n':
@@ -911,7 +911,7 @@ void hb_compChkCompilerSwitch( HB_COMP_DECL, int iArg, const char * const Args[]
                         hb_compChkEnvironVar( HB_COMP_PARAM, szSwitch );
 
                         /* Accept rest as OutputPath and continue with next Args[]. */
-                        j = strlen( szSwitch );
+                        j = ( int ) strlen( szSwitch );
                         continue;
 
                      case 'p':
@@ -922,7 +922,7 @@ void hb_compChkCompilerSwitch( HB_COMP_DECL, int iArg, const char * const Args[]
                            hb_compChkEnvironVar( HB_COMP_PARAM, szSwitch );
 
                            /* Accept rest as PPOPath and continue with next Args[]. */
-                           j += strlen( szSwitch ) - 1;
+                           j += ( int ) strlen( szSwitch ) - 1;
                         }
                         else
                         {
@@ -955,7 +955,7 @@ void hb_compChkCompilerSwitch( HB_COMP_DECL, int iArg, const char * const Args[]
                      case 'r':
                      case 'R':
                         hb_compChkEnvironVar( HB_COMP_PARAM, szSwitch );
-                        j = strlen( szSwitch ) - 1;
+                        j = ( int ) strlen( szSwitch ) - 1;
                         break;
 
                      case 's':
@@ -977,7 +977,7 @@ void hb_compChkCompilerSwitch( HB_COMP_DECL, int iArg, const char * const Args[]
                         hb_compChkEnvironVar( HB_COMP_PARAM, szSwitch );
 
                         /* Accept rest as part of .ch Path or "undef:<id>" and continue with next Args[]. */
-                        j = strlen( szSwitch );
+                        j = ( int ) strlen( szSwitch );
                         continue;
 
                      case 'w':
@@ -1006,7 +1006,7 @@ void hb_compChkCompilerSwitch( HB_COMP_DECL, int iArg, const char * const Args[]
                         hb_compChkEnvironVar( HB_COMP_PARAM, szSwitch );
 
                         /* Accept rest as INIT Symbol and continue with next Args[]. */
-                        j = strlen( szSwitch );
+                        j = ( int ) strlen( szSwitch );
                         continue;
 
                      case '-':

@@ -415,7 +415,7 @@ HB_BOOL hb_setSetCentury( HB_BOOL new_century_setting )
       /* Convert to upper case and determine where year is */
       y_start = y_stop = -1;
       szDateFormat = pSet->HB_SET_DATEFORMAT;
-      size = strlen( szDateFormat );
+      size = ( int ) strlen( szDateFormat );
       for( count = 0; count < size; count++ )
       {
          digit = HB_TOUPPER( ( HB_UCHAR ) szDateFormat[ count ] );
@@ -453,7 +453,7 @@ HB_BOOL hb_setSetCentury( HB_BOOL new_century_setting )
          hb_strncat( szNewFormat, "YY", size );
          if( new_century_setting )
             hb_strncat( szNewFormat, "YY", size );
-         format_len = strlen( szDateFormat );
+         format_len = ( int ) strlen( szDateFormat );
          if( y_stop < format_len )
             hb_strncat( szNewFormat, szDateFormat + y_stop, size );
          /* DATE FORMAT is under direct control of SET, so notify when it

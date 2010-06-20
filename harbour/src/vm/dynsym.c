@@ -178,7 +178,7 @@ static PHB_SYMB hb_symbolAlloc( const char * szName )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_symbolAlloc(%s)", szName));
 
-   iLen = strlen( szName );
+   iLen = ( int ) strlen( szName );
    pHolder = ( PHB_SYM_HOLDER ) hb_xgrab( sizeof( HB_SYM_HOLDER ) + iLen );
    memcpy( pHolder->szName, szName, iLen + 1 );
    pHolder->pNext = s_pAllocSyms;

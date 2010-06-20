@@ -57,7 +57,7 @@
 
 static void STAItm( PHB_ITEM pItmPar )
 {
-   HB_SIZE i, ulItmPar = hb_itemGetCLen( pItmPar );
+   HB_UINT i, ulItmPar = ( HB_UINT ) hb_itemGetCLen( pItmPar );
    const char *cItmPar = hb_itemGetCPtr( pItmPar ), *c;
    char *cRes;
 
@@ -74,9 +74,9 @@ static void STAItm( PHB_ITEM pItmPar )
    hb_itemPutCLPtr( pItmPar, cRes, i );
 }
 
-static HB_SIZE SCItm( char *cBuffer, HB_SIZE ulMaxBuf, char *cParFrm, int iCOut, int IsIndW, int iIndWidth, int IsIndP, int iIndPrec, PHB_ITEM pItmPar )
+static HB_UINT SCItm( char *cBuffer, HB_UINT ulMaxBuf, char *cParFrm, int iCOut, int IsIndW, int iIndWidth, int IsIndP, int iIndPrec, PHB_ITEM pItmPar )
 {
-   HB_SIZE s;
+   HB_UINT s;
 
    /* NOTE: In DJGPP (4.2.3) hb_snprintf() will be preprocessed to sprintf(), which
             makes ulMaxBuf unused, and this in turn causes a warning, so we're
@@ -186,7 +186,7 @@ static HB_SIZE SCItm( char *cBuffer, HB_SIZE ulMaxBuf, char *cParFrm, int iCOut,
 
 HB_FUNC( SQL_SPRINTF )
 {
-   HB_SIZE ulItmFrm;
+   HB_UINT ulItmFrm;
    const char *cItmFrm;
    char *cRes;
    int argc = hb_pcount() - 1;
@@ -194,7 +194,7 @@ HB_FUNC( SQL_SPRINTF )
 
    if( !pItmFrm || (cItmFrm = hb_itemGetCPtr( pItmFrm )) == NULL ){
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
-   }else if( (ulItmFrm = hb_itemGetCLen( pItmFrm )) == 0 ){
+   }else if( (ulItmFrm = ( HB_UINT ) hb_itemGetCLen( pItmFrm )) == 0 ){
       hb_retc_null();
    }else if( !argc ){
       cRes = (char *)hb_xgrab( ulItmFrm + sizeof(char) );
@@ -205,7 +205,7 @@ HB_FUNC( SQL_SPRINTF )
       char *cIntMod, *cBuffer, *cParFrm;
       const char *c;
       int p, arg, iCOut, IsType, IsIndW, IsIndP, iIndWidth, iIndPrec, iErrorPar = 0;
-      HB_SIZE s, f, i, ulWidth, ulParPos = 0, ulResPos = 0, ulMaxBuf = DK_INCBUF, ulMaxRes = DK_INCRES;
+      HB_UINT s, f, i, ulWidth, ulParPos = 0, ulResPos = 0, ulMaxBuf = DK_INCBUF, ulMaxRes = DK_INCRES;
       static char cToken[] = "stTcdiouxXaAeEfgGpnSC";
 
       cIntMod = NULL;
@@ -375,7 +375,7 @@ HB_FUNC( SQL_SPRINTF )
                   else
                      STAItm( pItmPar );
                }
-               f = hb_itemGetCLen( pItmPar );
+               f = ( HB_UINT ) hb_itemGetCLen( pItmPar );
                if( (f = i + HB_MAX(ulWidth, f)) > ulMaxBuf ){
                   ulMaxBuf += f + DK_INCBUF;
                   cBuffer = (char *)hb_xrealloc( cBuffer, ulMaxBuf );
@@ -448,7 +448,9 @@ HB_FUNC( SQL_SPRINTF )
                const char *cTrimStr;
 
                if( cStr ){
-                  f = strlen( cStr ); cTrimStr = hb_strLTrim( cStr, &f );
+                  HB_SIZE nLen = strlen( cStr );
+                  cTrimStr = hb_strLTrim( cStr, &nLen );
+                  f = ( HB_UINT ) nLen;
                   if( (f = i + HB_MAX(ulWidth, f)) > ulMaxBuf ){
                      ulMaxBuf += f + DK_INCBUF;
                      cBuffer = (char *)hb_xrealloc( cBuffer, ulMaxBuf );
@@ -479,7 +481,7 @@ HB_FUNC( SQL_SPRINTF )
          }
          hb_strncpy( cRes + ulResPos, cBuffer, s ); ulResPos += s;
 
-         if( (ulParPos = c - cItmFrm) >= ulItmFrm ){
+         if( (ulParPos = ( HB_UINT ) ( c - cItmFrm ) ) >= ulItmFrm ){
             break;   /* No more Par Format */
          }
       }
