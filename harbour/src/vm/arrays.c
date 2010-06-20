@@ -1023,7 +1023,7 @@ HB_SIZE hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, HB_SIZE * pulStart, HB_S
                   hb_vmPushEvalSym();
                   hb_vmPush( pValue );
                   hb_vmPush( pBaseArray->pItems + ulStart );
-                  hb_vmPushLong( ++ulStart );
+                  hb_vmPushSize( ++ulStart );
                   hb_vmEval( 2 );
 
                   if( HB_IS_LOGICAL( hb_stackReturnItem() ) && hb_stackReturnItem()->item.asLogical.value )
@@ -1190,7 +1190,7 @@ HB_SIZE hb_arrayRevScan( PHB_ITEM pArray, PHB_ITEM pValue, HB_SIZE * pulStart, H
                      hb_vmPush( pBaseArray->pItems + ulStart );
                   else
                      hb_vmPushNil();
-                  hb_vmPushLong( ulStart + 1 );
+                  hb_vmPushSize( ulStart + 1 );
                   hb_vmEval( 2 );
 
                   if( HB_IS_LOGICAL( hb_stackReturnItem() ) && hb_stackReturnItem()->item.asLogical.value )
@@ -1348,7 +1348,7 @@ HB_BOOL hb_arrayEval( PHB_ITEM pArray, PHB_ITEM bBlock, HB_SIZE * pulStart, HB_S
                hb_vmPushEvalSym();
                hb_vmPush( bBlock );
                hb_vmPush( pBaseArray->pItems + ulStart );
-               hb_vmPushLong( ulStart + 1 );
+               hb_vmPushSize( ulStart + 1 );
                hb_vmEval( 2 );
             }
             while( --ulCount > 0 && ++ulStart < pBaseArray->ulLen );
