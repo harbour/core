@@ -6,9 +6,7 @@
  * Harbour Project source code:
  *   CT3 string functions
  *     - CHARLIST()
- *     - CHARSLIST()  (NEW)
  *     - CHARNOLIST()
- *     - CHARHIST()  (NEW)
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -58,109 +56,77 @@
 
 #include "ct.h"
 
-/* defines */
-#define DO_LIST_CHARLIST        0
-#define DO_LIST_CHARNOLIST      1
-#define DO_LIST_CHARHIST        2
-#define DO_LIST_CHARSLIST       3
-
 /* helper function for the list function */
-static void do_list( int iSwitch )
+void ct_charlist( int iMode )
 {
-   const char *pcString;
-   HB_SIZE sStrLen;
+   const char * pcString = hb_parcx( 1 );
+   HB_SIZE sStrLen = hb_parclen( 1 );
 
-   HB_SIZE asCharCnt[256];
+   HB_SIZE asCharCnt[ 256 ];
    HB_SIZE sCnt;
 
    /* init asCharCnt */
-   for( sCnt = 0; sCnt < 256; sCnt++ )
-   {
-      asCharCnt[sCnt] = 0;
-   }
-
-   /* init params */
-   if( HB_ISCHAR( 1 ) )
-   {
-      pcString = hb_parc( 1 );
-      sStrLen = hb_parclen( 1 );
-   }
-   else
-   {
-      pcString = "";
-      sStrLen = 0;
-   }
+   for( sCnt = 0; sCnt < HB_SIZEOFARRAY( asCharCnt ); ++sCnt )
+      asCharCnt[ sCnt ] = 0;
 
    /* count characters */
-   if( iSwitch == DO_LIST_CHARLIST )
+   if( iMode == CT_CHARLIST_CHARLIST )
    {
-      char pcRet[256];
+      char pcRet[ 256 ];
       HB_SIZE sRetStrLen = 0;
 
-      for( sCnt = 0; sCnt < sStrLen; sCnt++ )
+      for( sCnt = 0; sCnt < sStrLen; ++sCnt )
       {
-         if( asCharCnt[( HB_SIZE ) ( pcString[sCnt] )] == 0 )
+         if( asCharCnt[ ( HB_UCHAR ) pcString[ sCnt ] ] == 0 )
          {
-            pcRet[sRetStrLen++] = pcString[sCnt];
-            asCharCnt[( HB_SIZE ) ( pcString[sCnt] )] = 1;
+            pcRet[ sRetStrLen++ ] = pcString[ sCnt ];
+            asCharCnt[ ( HB_UCHAR ) pcString[ sCnt ] ] = 1;
          }
       }
       hb_retclen( pcRet, sRetStrLen );
    }
    else
    {
-      for( sCnt = 0; sCnt < sStrLen; sCnt++ )
-      {
-         HB_SIZE sIndex = ( HB_SIZE ) ( unsigned char ) ( *( pcString + sCnt ) );
-         asCharCnt[sIndex] = asCharCnt[sIndex] + 1;
-      }
+      for( sCnt = 0; sCnt < sStrLen; ++sCnt )
+         asCharCnt[ ( HB_UCHAR ) pcString[ sCnt ] ]++;
 
-      switch ( iSwitch )
+      switch( iMode )
       {
-         case DO_LIST_CHARSLIST:
+         case CT_CHARLIST_CHARSLIST:
          {
-            char *pcRet;
+            char * pcRet = ( char * ) hb_xgrab( HB_SIZEOFARRAY( asCharCnt ) );
             HB_SIZE sRetStrLen = 0;
 
-            pcRet = ( char * ) hb_xgrab( 256 );
-
-            for( sCnt = 0; sCnt < 256; sCnt++ )
+            for( sCnt = 0; sCnt < HB_SIZEOFARRAY( asCharCnt ); ++sCnt )
             {
-               if( asCharCnt[sCnt] != 0 )
-                  pcRet[ sRetStrLen++ ] = ( unsigned char ) sCnt;
+               if( asCharCnt[ sCnt ] != 0 )
+                  pcRet[ sRetStrLen++ ] = ( HB_UCHAR ) sCnt;
             }
 
-            hb_retclen( pcRet, sRetStrLen );
-            hb_xfree( pcRet );
+            hb_retclen_buffer( pcRet, sRetStrLen );
             break;
          }
-
-         case DO_LIST_CHARNOLIST:
+         case CT_CHARLIST_CHARNOLIST:
          {
-            char *pcRet;
+            char * pcRet = ( char * ) hb_xgrab( HB_SIZEOFARRAY( asCharCnt ) );
             HB_SIZE sRetStrLen = 0;
 
-            pcRet = ( char * ) hb_xgrab( 256 );
-
-            for( sCnt = 0; sCnt < 256; sCnt++ )
+            for( sCnt = 0; sCnt < HB_SIZEOFARRAY( asCharCnt ); ++sCnt )
             {
-               if( asCharCnt[sCnt] == 0 )
-               {
-                  *( pcRet + sRetStrLen ) = ( unsigned char ) sCnt;
-                  sRetStrLen++;
-               }
+               if( asCharCnt[ sCnt ] == 0 )
+                  pcRet[ sRetStrLen++ ] = ( HB_UCHAR ) sCnt;
             }
 
-            hb_retclen( pcRet, sRetStrLen );
-            hb_xfree( pcRet );
+            hb_retclen_buffer( pcRet, sRetStrLen );
             break;
          }
-         case DO_LIST_CHARHIST:
+         case CT_CHARLIST_CHARHIST:
          {
-            PHB_ITEM pArray = hb_itemArrayNew( 256 );
+            PHB_ITEM pArray = hb_itemArrayNew( HB_SIZEOFARRAY( asCharCnt ) );
 
-            for( sCnt = 0; sCnt < 256; sCnt++ )
-               hb_arraySetNS( pArray, sCnt + 1, asCharCnt[sCnt] );
+            for( sCnt = 0; sCnt < HB_SIZEOFARRAY( asCharCnt ); ++sCnt )
+               hb_arraySetNS( pArray, sCnt + 1, asCharCnt[ sCnt ] );
+
             hb_itemReturnRelease( pArray );
             break;
          }
@@ -209,52 +175,7 @@ static void do_list( int iSwitch )
 
 HB_FUNC( CHARLIST )
 {
-   do_list( DO_LIST_CHARLIST );
-}
-
-
-/*  $DOC$
- *  $FUNCNAME$
- *      CHARSLIST()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Generates a sorted list of all characters in a string
- *  $SYNTAX$
- *      CHARSLIST ([<cString>]) -> cSortedCharacterList
- *  $ARGUMENTS$
- *      [<cString>]       is the string for whom the function generates a
- *                        sorted list of all characters
- *                        Default: "" (empty string)
- *  $RETURNS$
- *      <cSortedCharacterList>  a sorted list of the characters in <cString>
- *  $DESCRIPTION$
- *      The CHARLIST() function generates a sorted list of those characters that
- *      are contained in <cString>. This list can contain each character
- *      only once, so that its maximum length is 256. The function
- *      gives the same result as CHARSORT(CHARLIST(<cString>))
- *  $EXAMPLES$
- *      ? charslist ("Hello World !") --> " !HWdelor"
- *  $TESTS$
- *      charslist ("Hello World !") == " !HWdelor"
- *      charslist ("Hello World !") == charsort (charlist ("Hello World !"))
- *      charslist (nil) == ""
- *  $STATUS$
- *      Ready
- *  $COMPLIANCE$
- *      CHARSLIST() is only available in Harbour's CT3 library.
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is charlist.c, library is libct.
- *  $SEEALSO$
- *      CHARNOLIST(),CHARLIST(),CHARHIST()
- *  $END$
- */
-
-HB_FUNC( CHARSLIST )
-{
-   do_list( DO_LIST_CHARSLIST );
+   ct_charlist( CT_CHARLIST_CHARLIST );
 }
 
 
@@ -298,50 +219,5 @@ HB_FUNC( CHARSLIST )
 
 HB_FUNC( CHARNOLIST )
 {
-   do_list( DO_LIST_CHARNOLIST );
-}
-
-
-/*  $DOC$
- *  $FUNCNAME$
- *      CHARHIST()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Generates a character histogram of a string
- *  $SYNTAX$
- *      CHARHIST ([<cString>]) -> aCharacterCount
- *  $ARGUMENTS$
- *      [<cString>]       is the string for whom the function generates a
- *                        character histogram
- *                        Default: "" (empty string)
- *  $RETURNS$
- *      <aCharacterCount> an array with 256 elements where the nth element
- *                        contains the count of character #(n-1) in cString
- *  $DESCRIPTION$
- *      The CHARHIST() function generates a character histogram of those
- *      characters that are contained in <cString>. This histogram is stored
- *      in an 256-element array where the nth element contains the count
- *      of ASCII character #(n-1) in <cString>.
- *  $EXAMPLES$
- *      ? charhist ("Hello World !")[109] --> 3  // chr(108)=="l"
- *  $TESTS$
- *      charhist ("Hello World !")[109] == 3
- *      eval ({||aeval (charhist ("Hello World !"),{|x|nTotal+=x}),nTotal==len("Hello World !")}
- *  $STATUS$
- *      Ready
- *  $COMPLIANCE$
- *      CHARHIST() is only available in Harbour's CT3 library.
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is charlist.c, library is libct.
- *  $SEEALSO$
- *      CHARLIST(),CHARNOLIST(),CHARSLIST()
- *  $END$
- */
-
-HB_FUNC( CHARHIST )
-{
-   do_list( DO_LIST_CHARHIST );
+   ct_charlist( CT_CHARLIST_CHARNOLIST );
 }

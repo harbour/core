@@ -77,6 +77,14 @@
 
 HB_EXTERN_BEGIN
 
+/* ct_charlist() modes */
+#define CT_CHARLIST_CHARLIST    0
+#define CT_CHARLIST_CHARNOLIST  1
+#define CT_CHARLIST_CHARHIST    2
+#define CT_CHARLIST_CHARSLIST   3
+
+extern void ct_charlist( int iMode );
+
 /* CT subsystem error throwing functions */
 extern HB_USHORT ct_error( HB_USHORT uiSeverity, HB_ERRCODE ulGenCode, HB_ERRCODE ulSubCode,
                            const char *szDescription, const char *szOperation, HB_ERRCODE uiOsCode, HB_USHORT uiFlags, HB_ULONG uiArgCount, ... );

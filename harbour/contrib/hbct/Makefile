@@ -16,6 +16,7 @@ C_SOURCES := \
    bitnum.c \
    blank.c \
    charevod.c \
+   charlish.c \
    charlist.c \
    charmirr.c \
    charmix.c \
