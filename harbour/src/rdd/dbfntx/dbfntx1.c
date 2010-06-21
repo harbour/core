@@ -2380,7 +2380,7 @@ static HB_BOOL hb_ntxTagNextKey( LPTAGINFO pTag )
       pPage = hb_ntxPageLoad( pTag, pTag->stack[ iLevel ].page );
       if( ! pPage )
          return HB_FALSE;
-      if( pTag->stack[ iLevel ].ikey < pPage->uiKeys )
+      if( pTag->stack[ iLevel ].ikey < ( HB_SHORT ) pPage->uiKeys )
          ulPage = hb_ntxGetKeyPage( pPage, pTag->stack[ iLevel ].ikey + 1 );
       if( ulPage || pTag->stack[ iLevel ].ikey + 1 < pPage->uiKeys )
       {
@@ -2401,7 +2401,7 @@ static HB_BOOL hb_ntxTagNextKey( LPTAGINFO pTag )
             pPage = hb_ntxPageLoad( pTag, pTag->stack[ iLevel ].page );
             if( ! pPage )
                return HB_FALSE;
-            if( pTag->stack[ iLevel ].ikey < pPage->uiKeys )
+            if( pTag->stack[ iLevel ].ikey < ( HB_SHORT ) pPage->uiKeys )
                break;
          }
          if( iLevel < 0 )
@@ -2517,7 +2517,7 @@ static int hb_ntxPageKeyFind( LPTAGINFO pTag, LPPAGEINFO pPage,
          iEnd = i - 1;
       }
    }
-   return iLast >= 0 ? iLast : pPage->uiKeys;
+   return iLast >= 0 ? iLast : ( int ) pPage->uiKeys;
 }
 
 /*
@@ -2938,7 +2938,7 @@ static HB_BOOL hb_ntxTagKeyAdd( LPTAGINFO pTag, LPKEYINFO pKey )
          if( ! pPage )
             return HB_FALSE;
          iLevel = pTag->stackLevel - 1;
-         if( pTag->stack[ iLevel ].ikey < pPage->uiKeys )
+         if( pTag->stack[ iLevel ].ikey < ( HB_SHORT ) pPage->uiKeys )
             pTag->stack[ iLevel ].ikey++;
       }
    }

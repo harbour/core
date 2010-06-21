@@ -803,9 +803,9 @@ static void hb_gt_sln_Tone( PHB_GT pGT, double dFrequency, double dDuration )
       char escstr[ 64 ];
 
       dFrequency = HB_MIN( HB_MAX( 0.0, dFrequency ), 32767.0 );
-      hb_snprintf( escstr, 63, "\033[10;%hd]", ( int )dFrequency );
+      hb_snprintf( escstr, 63, "\033[10;%d]", ( int ) dFrequency );
       SLtt_write_string( escstr );
-      hb_snprintf( escstr, 63, "\033[11;%hd]", ( int )( dDuration * 1000.0 / 18.2 ) );
+      hb_snprintf( escstr, 63, "\033[11;%d]", ( int ) ( dDuration * 1000.0 / 18.2 ) );
       SLtt_write_string( escstr );
       SLtt_flush_output();
    }

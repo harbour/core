@@ -261,7 +261,7 @@ void hb_ParseLine( PHB_ITEM pReturn, const char * szText, int iDelimiter, int * 
 }
 
 /*----------------------------------------------------------------------------*/
-static char ** hb_tokensplit( char * string, HB_BYTE delimiter, int iCharCount, int * iWord )
+static char ** hb_tokensplit( const char * string, HB_BYTE delimiter, int iCharCount, int * iWord )
 {
    char *buffer, *bufptr;
    char **token_list;
@@ -274,9 +274,9 @@ static char ** hb_tokensplit( char * string, HB_BYTE delimiter, int iCharCount, 
 
    while( *string )
    {
-      if( *string == delimiter )
+      if( ( HB_BYTE ) *string == delimiter )
       {
-         while( *string == delimiter )
+         while( ( HB_BYTE ) *string == delimiter )
          {
             string++;
          }

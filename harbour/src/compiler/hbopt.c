@@ -1397,7 +1397,7 @@ static void hb_compPCodeEnumAssignedUnused( HB_COMP_DECL, PFUNCTION pFunc, PHB_O
          }
       }
 
-      if( fCheck && ( isLocal = hb_compLocalGetNumber( &pFunc->pCode[ ulPos ] ) ) > pFunc->wParamCount )
+      if( fCheck && ( isLocal = hb_compLocalGetNumber( &pFunc->pCode[ ulPos ] ) ) > ( HB_SHORT ) pFunc->wParamCount )
       {
          PVAR     pVar = pFunc->pLocals;
          HB_SHORT is;
@@ -1507,7 +1507,8 @@ static void hb_compPCodeEnumRenumberLocals( PFUNCTION pFunc, PHB_OPT_LOCAL pLoca
          case HB_P_PUSHBLOCKLARGE:
          {
             HB_BYTE * pVar = &pFunc->pCode[ ulPos + 5 ];
-            HB_USHORT usVarCount, isVar;
+            HB_USHORT usVarCount;
+            HB_SHORT isVar;
 
             if( pFunc->pCode[ ulPos ] == HB_P_PUSHBLOCKLARGE )
                pVar++;

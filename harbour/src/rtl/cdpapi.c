@@ -1748,8 +1748,8 @@ static PHB_CODEPAGE hb_buildCodePage( const char * id, const char * info,
             ucLo = ( HB_UCHAR ) *plo;
 
             if( ( ucUp != ' ' || ucLo != ' ' ) &&
-                ( ucUp == *pup || ( ucUp != ' ' && *pup != ' ' ) ) &&
-                ( ucLo == *plo || ( ucLo != ' ' && *plo != ' ' ) ) )
+                ( ucUp == ( HB_UCHAR ) *pup || ( ucUp != ' ' && *pup != ' ' ) ) &&
+                ( ucLo == ( HB_UCHAR ) *plo || ( ucLo != ' ' && *plo != ' ' ) ) )
             {
                if( ucUp != ' ' )
                   ++iSortLo;

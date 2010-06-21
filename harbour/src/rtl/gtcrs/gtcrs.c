@@ -1339,7 +1339,7 @@ static void disp_cursor( InOutBase * ioBase )
       {
          if ( ioBase->terminal_type == TERM_LINUX )
          {
-            hb_snprintf( escseq, sizeof( escseq ), "\033[?25%c\033[?%hdc",
+            hb_snprintf( escseq, sizeof( escseq ), "\033[?25%c\033[?%dc",
                          ioBase->cursor == SC_NONE ? 'l' : 'h', lcurs );
             write_ttyseq( ioBase, escseq );
          }
@@ -1703,7 +1703,7 @@ static void gt_tone( InOutBase * ioBase, double dFrequency, double dDuration )
 
    if ( ioBase->terminal_type == TERM_LINUX && ioBase->beep != NULL )
    {
-      hb_snprintf( escseq, sizeof( escseq ), "\033[10;%hd]\033[11;%hd]%s",
+      hb_snprintf( escseq, sizeof( escseq ), "\033[10;%d]\033[11;%d]%s",
                    ( int ) dFrequency,
                    ( int ) ( dDuration * 1000.0 / 18.2 ), ioBase->beep );
       write_ttyseq( ioBase, escseq );
@@ -1814,7 +1814,7 @@ static int gt_setsize( InOutBase * ioBase, int rows, int cols )
 
    if ( ioBase->terminal_type == TERM_XTERM )
    {
-      hb_snprintf( escseq, sizeof( escseq ), "\033[8;%hd;%hdt", rows, cols );
+      hb_snprintf( escseq, sizeof( escseq ), "\033[8;%d;%dt", rows, cols );
       write_ttyseq( ioBase, escseq );
       /* dirty hack - wait for SIGWINCH */
       if ( gt_getsize( ioBase, &r, &c ) > 0 )

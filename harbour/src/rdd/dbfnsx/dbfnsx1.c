@@ -2624,7 +2624,7 @@ static HB_BOOL hb_nsxTagNextKey( LPTAGINFO pTag )
             pPage = hb_nsxPageLoad( pTag, pTag->stack[ iLevel ].page );
             if( ! pPage )
                return HB_FALSE;
-            if( pPage->uiKeys && pTag->stack[ iLevel ].ikey < pPage->uiKeys )
+            if( pPage->uiKeys && pTag->stack[ iLevel ].ikey < ( HB_SHORT ) pPage->uiKeys )
             {
                if( !pTag->stack[ iLevel ].value )
                   pTag->stack[ iLevel ].value = ( HB_UCHAR * ) hb_xgrab( pTag->KeyLength );
@@ -3232,7 +3232,7 @@ static HB_BOOL hb_nsxTagKeyAdd( LPTAGINFO pTag, LPKEYINFO pKey )
       pPage = hb_nsxPageBottomMove( pTag, ulPage );
       if( ! pPage )
          return HB_FALSE;
-      if( pTag->stack[ pTag->stackLevel - 1 ].ikey < pPage->uiKeys )
+      if( pTag->stack[ pTag->stackLevel - 1 ].ikey < ( HB_SHORT ) pPage->uiKeys )
          pTag->stack[ pTag->stackLevel - 1 ].ikey++;
    }
 
