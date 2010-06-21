@@ -1514,7 +1514,7 @@ HB_SIZE hb_fsReadLarge( HB_FHANDLE hFileHandle, void * pBuff, HB_SIZE nCount )
    {
 #  if defined( HB_OS_WIN_64 )
       HANDLE hWFileHandle = DosToWinHandle( hFileHandle );
-      BOOL bfResult = TRUE;
+      BOOL bResult = TRUE;
 
       nRead = 0;
 
