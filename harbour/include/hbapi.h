@@ -355,7 +355,7 @@ struct hb_struRefer
       struct _HB_ITEM ** *itemsbasePtr;   /* local variables */
    } BasePtr;
    HB_LONG offset;                        /* 0 for static variables */
-   HB_LONG value;
+   HB_ISIZ value;
 };
 
 struct hb_struEnum
