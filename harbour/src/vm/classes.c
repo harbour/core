@@ -3903,7 +3903,7 @@ HB_FUNC( __CLS_CNTCLSDATA )
    HB_USHORT uiClass = ( HB_USHORT ) hb_parni( 1 );
 
    hb_retni( uiClass && uiClass <= s_uiClasses ?
-                  hb_arrayLen( s_pClasses[ uiClass ]->pClassDatas ) : 0 );
+                  ( HB_USHORT ) hb_arrayLen( s_pClasses[ uiClass ]->pClassDatas ) : 0 );
 }
 
 /*
@@ -3917,7 +3917,7 @@ HB_FUNC( __CLS_CNTSHRDATA )
    HB_USHORT uiClass = ( HB_USHORT ) hb_parni( 1 );
 
    hb_retni( uiClass && uiClass <= s_uiClasses ?
-                  hb_arrayLen( s_pClasses[ uiClass ]->pSharedDatas ) : 0 );
+                  ( HB_USHORT ) hb_arrayLen( s_pClasses[ uiClass ]->pSharedDatas ) : 0 );
 }
 
 /*
@@ -4236,7 +4236,7 @@ HB_FUNC_STATIC( msgClassSel )
       HB_USHORT nParam, nScope;
       HB_BOOL lFull;
 
-      nParam = hb_parnidef( 1, HB_MSGLISTALL );
+      nParam = ( HB_USHORT ) hb_parnidef( 1, HB_MSGLISTALL );
       nScope = ( HB_USHORT ) hb_parni( 2 );
       lFull = hb_parl( 3 );
       pReturn = hb_itemArrayNew( pClass->uiMethods );

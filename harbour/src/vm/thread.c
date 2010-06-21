@@ -957,7 +957,7 @@ static HB_THREAD_STARTFUNC( hb_threadStartVM )
 
    hb_vmThreadInit( ( void * ) pThread );
 
-   ulPCount = hb_arrayLen( pThread->pParams );
+   ulPCount = ( HB_ULONG ) hb_arrayLen( pThread->pParams );
    if( ulPCount > 0 )
    {
       PHB_ITEM pStart = hb_arrayGetItemPtr( pThread->pParams, 1 );
@@ -1123,7 +1123,7 @@ HB_FUNC( HB_THREADSTART )
       pThread->pSet      = hb_setClone( hb_stackSetStruct() );
       pThread->pParams   = hb_arrayBaseParams();
 
-      ulPCount = hb_arrayLen( pThread->pParams );
+      ulPCount = ( HB_ULONG ) hb_arrayLen( pThread->pParams );
       /* remove thread attributes */
       if( ulStart > 1 )
       {
@@ -1744,7 +1744,7 @@ void hb_threadMutexSyncSignal( PHB_ITEM pItemMtx )
          }
          else
          {
-            HB_ULONG ulLen = hb_arrayLen( pMutex->events );
+            HB_ULONG ulLen = ( HB_ULONG ) hb_arrayLen( pMutex->events );
             iCount -= ulLen;
             if( iCount > 0 )
                hb_arraySize( pMutex->events, ulLen + iCount );
@@ -2088,7 +2088,7 @@ void hb_threadMutexNotify( PHB_ITEM pItem, PHB_ITEM pNotifier, HB_BOOL fWaiting 
 
          if( pMutex->events )
          {
-            ulLen = hb_arrayLen( pMutex->events );
+            ulLen = ( HB_ULONG ) hb_arrayLen( pMutex->events );
             iCount -= ulLen;
             if( iCount > 0 )
                hb_arraySize( pMutex->events, ulLen + iCount );
@@ -2135,7 +2135,7 @@ void hb_threadMutexNotify( PHB_ITEM pItem, PHB_ITEM pNotifier, HB_BOOL fWaiting 
 
          if( pMutex->events )
          {
-            ulLen = hb_arrayLen( pMutex->events );
+            ulLen = ( HB_ULONG ) hb_arrayLen( pMutex->events );
             iCount -= ulLen;
             if( iCount > 0 )
                hb_arraySize( pMutex->events, ulLen + iCount );
@@ -2509,7 +2509,7 @@ HB_FUNC( HB_MUTEXQUEUEINFO )
       if( pMutex )
       {
          hb_storni( pMutex->waiters, 2 );
-         hb_stornl( pMutex->events ? hb_arrayLen( pMutex->events ) : 0, 3 );
+         hb_stornl( pMutex->events ? ( long ) hb_arrayLen( pMutex->events ) : 0, 3 );
          hb_retl( HB_TRUE );
          return;
       }
