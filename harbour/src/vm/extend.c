@@ -1584,7 +1584,7 @@ void hb_retns( HB_ISIZ nNumber )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_retns(%" HB_PFS "d )", nNumber));
 
-   hb_itemPutNInt( hb_stackReturnItem(), nNumber );
+   hb_itemPutNS( hb_stackReturnItem(), nNumber );
 }
 
 #ifndef HB_LONG_LONG_OFF
