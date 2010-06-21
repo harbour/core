@@ -62,13 +62,13 @@ const char * hb_compIdentifierNew( HB_COMP_DECL, const char * szName, int iType 
 }
 
 /* returns a hash key */
-static HB_HASH_FUNC( hb_comp_IdentKey )    /* HB_ULONG func (void *Value, void *Cargo) */
+static HB_HASH_FUNC( hb_comp_IdentKey )    /* HB_SIZE func (void *Value, void *Cargo) */
 {
-   HB_ULONG ulSum = 0;
+   HB_SIZE ulSum = 0;
    const char * szName = ( char * )Value;
 
    while( *szName )
-     ulSum += *szName++;
+      ulSum += *szName++;
 
    HB_SYMBOL_UNUSED( HashPtr );
    HB_SYMBOL_UNUSED( Cargo );

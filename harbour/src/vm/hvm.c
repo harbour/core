@@ -7518,9 +7518,9 @@ static void hb_vmStaticsRelease( void )
    }
 }
 
-static HB_ULONG hb_vmStaticsCount( void )
+static HB_SIZE hb_vmStaticsCount( void )
 {
-   HB_ULONG ulStatics = 0;
+   HB_SIZE ulStatics = 0;
 
    if( hb_vmLockModuleSymbols() )
    {
@@ -7824,18 +7824,18 @@ PHB_SYMBOLS hb_vmRegisterSymbols( PHB_SYMB pModuleSymbols, HB_USHORT uiSymbols,
 
       if( fClone )
       {
-         HB_ULONG ulSymSize = ( HB_ULONG ) uiSymbols * sizeof( HB_SYMB ), ulSize;
+         HB_SIZE ulSymSize = ( HB_ULONG ) uiSymbols * sizeof( HB_SYMB ), ulSize;
          char * buffer;
 
          ulSize = ulSymSize;
          for( ui = 0; ui < uiSymbols; ui++ )
-            ulSize += ( HB_ULONG ) strlen( pModuleSymbols[ ui ].szName ) + 1;
+            ulSize += strlen( pModuleSymbols[ ui ].szName ) + 1;
          buffer = ( char * ) memcpy( hb_xgrab( ulSize ), pModuleSymbols, ulSymSize );
          pModuleSymbols = ( PHB_SYMB ) buffer;
          for( ui = 0; ui < uiSymbols; ui++ )
          {
             buffer += ulSymSize;
-            ulSymSize = ( HB_ULONG ) strlen( pModuleSymbols[ ui ].szName ) + 1;
+            ulSymSize = strlen( pModuleSymbols[ ui ].szName ) + 1;
             memcpy( buffer, pModuleSymbols[ ui ].szName, ulSymSize );
             pModuleSymbols[ ui ].szName = buffer;
          }

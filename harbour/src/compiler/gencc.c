@@ -61,7 +61,7 @@ typedef HB_GENC_FUNC_ * HB_GENC_FUNC_PTR;
 #define HB_GENC_GETLABEL(l)   ( (l) < pFunc->lPCodePos ? cargo->pulLabels[ (l) ] : 0 )
 
 #define HB_GENC_LABEL()       do { \
-                                 HB_ULONG ulLab = HB_GENC_GETLABEL( lPCodePos ); \
+                                 HB_SIZE ulLab = HB_GENC_GETLABEL( lPCodePos ); \
                                  if( ulLab != 0 ) \
                                     fprintf( cargo->yyc, "lab%05ld: ;\n", ulLab ); \
                               } while( 0 )
@@ -72,7 +72,7 @@ typedef HB_GENC_FUNC_ * HB_GENC_FUNC_PTR;
 
 void hb_compGenCString( FILE * yyc, const HB_BYTE * pText, HB_SIZE ulLen )
 {
-   HB_ULONG ulPos;
+   HB_SIZE ulPos;
 
    fputc( '"', yyc );
    for( ulPos = 0; ulPos < ulLen; ulPos++ )
@@ -108,12 +108,12 @@ static void hb_gencc_copyLocals( FILE * yyc, int iLocal1, int iLocal2 )
       fprintf( yyc, "\thb_xvmCopyLocals( %d, %d );\n", iLocal1, iLocal2 );
 }
 
-static int hb_gencc_checkJumpCondAhead( HB_LONG lValue, PFUNCTION pFunc, HB_ULONG lPCodePos, PHB_LABEL_INFO cargo,
+static int hb_gencc_checkJumpCondAhead( HB_ISIZ lValue, PFUNCTION pFunc, HB_SIZE lPCodePos, PHB_LABEL_INFO cargo,
                                         const char * szFunc )
 {
    if( HB_GENC_GETLABEL( lPCodePos + 1 ) == 0 )
    {
-      HB_LONG lOffset = 0;
+      HB_ISIZ lOffset = 0;
       HB_BOOL fNot = HB_FALSE;
       int iSize = 0;
 
@@ -167,7 +167,7 @@ static int hb_gencc_checkJumpCondAhead( HB_LONG lValue, PFUNCTION pFunc, HB_ULON
    return 1;
 }
 
-static int hb_gencc_checkNumAhead( HB_LONG lValue, PFUNCTION pFunc, HB_ULONG lPCodePos, PHB_LABEL_INFO cargo )
+static int hb_gencc_checkNumAhead( HB_ISIZ lValue, PFUNCTION pFunc, HB_SIZE lPCodePos, PHB_LABEL_INFO cargo )
 {
    if( HB_GENC_GETLABEL( lPCodePos ) == 0 )
    {
@@ -256,7 +256,7 @@ static int hb_gencc_checkNumAhead( HB_LONG lValue, PFUNCTION pFunc, HB_ULONG lPC
    return 0;
 }
 
-static int hb_gencc_checkPlusAhead( PFUNCTION pFunc, HB_ULONG lPCodePos, PHB_LABEL_INFO cargo )
+static int hb_gencc_checkPlusAhead( PFUNCTION pFunc, HB_SIZE lPCodePos, PHB_LABEL_INFO cargo )
 {
    if( HB_GENC_GETLABEL( lPCodePos ) == 0 )
    {
@@ -537,7 +537,7 @@ static HB_GENC_FUNC( hb_p_instring )
 
 static HB_GENC_FUNC( hb_p_jumpnear )
 {
-   HB_LONG lOffset = ( signed char ) ( pFunc->pCode[ lPCodePos + 1 ] );
+   HB_ISIZ lOffset = ( signed char ) ( pFunc->pCode[ lPCodePos + 1 ] );
 
    HB_GENC_LABEL();
 
@@ -548,7 +548,7 @@ static HB_GENC_FUNC( hb_p_jumpnear )
 
 static HB_GENC_FUNC( hb_p_jump )
 {
-   HB_LONG lOffset = HB_PCODE_MKSHORT( &pFunc->pCode[ lPCodePos + 1 ] );
+   HB_ISIZ lOffset = HB_PCODE_MKSHORT( &pFunc->pCode[ lPCodePos + 1 ] );
 
    HB_GENC_LABEL();
 
@@ -559,7 +559,7 @@ static HB_GENC_FUNC( hb_p_jump )
 
 static HB_GENC_FUNC( hb_p_jumpfar )
 {
-   HB_LONG lOffset = HB_PCODE_MKINT24( &pFunc->pCode[ lPCodePos + 1 ] );
+   HB_ISIZ lOffset = HB_PCODE_MKINT24( &pFunc->pCode[ lPCodePos + 1 ] );
 
    HB_GENC_LABEL();
 
@@ -570,7 +570,7 @@ static HB_GENC_FUNC( hb_p_jumpfar )
 
 static HB_GENC_FUNC( hb_p_jumpfalsenear )
 {
-   HB_LONG lOffset = ( signed char ) ( pFunc->pCode[ lPCodePos + 1 ] );
+   HB_ISIZ lOffset = ( signed char ) ( pFunc->pCode[ lPCodePos + 1 ] );
 
    HB_GENC_LABEL();
 
@@ -581,7 +581,7 @@ static HB_GENC_FUNC( hb_p_jumpfalsenear )
 
 static HB_GENC_FUNC( hb_p_jumpfalse )
 {
-   HB_LONG lOffset = HB_PCODE_MKSHORT( &( pFunc->pCode[ lPCodePos + 1 ] ) );
+   HB_ISIZ lOffset = HB_PCODE_MKSHORT( &( pFunc->pCode[ lPCodePos + 1 ] ) );
 
    HB_GENC_LABEL();
 
@@ -592,7 +592,7 @@ static HB_GENC_FUNC( hb_p_jumpfalse )
 
 static HB_GENC_FUNC( hb_p_jumpfalsefar )
 {
-   HB_LONG lOffset = HB_PCODE_MKINT24( &( pFunc->pCode[ lPCodePos + 1 ] ) );
+   HB_ISIZ lOffset = HB_PCODE_MKINT24( &( pFunc->pCode[ lPCodePos + 1 ] ) );
 
    HB_GENC_LABEL();
 
@@ -603,7 +603,7 @@ static HB_GENC_FUNC( hb_p_jumpfalsefar )
 
 static HB_GENC_FUNC( hb_p_jumptruenear )
 {
-   HB_LONG lOffset = ( signed char ) ( pFunc->pCode[ lPCodePos + 1 ] );
+   HB_ISIZ lOffset = ( signed char ) ( pFunc->pCode[ lPCodePos + 1 ] );
 
    HB_GENC_LABEL();
 
@@ -614,7 +614,7 @@ static HB_GENC_FUNC( hb_p_jumptruenear )
 
 static HB_GENC_FUNC( hb_p_jumptrue )
 {
-   HB_LONG lOffset = HB_PCODE_MKSHORT( &pFunc->pCode[ lPCodePos + 1 ] );
+   HB_ISIZ lOffset = HB_PCODE_MKSHORT( &pFunc->pCode[ lPCodePos + 1 ] );
 
    HB_GENC_LABEL();
 
@@ -625,7 +625,7 @@ static HB_GENC_FUNC( hb_p_jumptrue )
 
 static HB_GENC_FUNC( hb_p_jumptruefar )
 {
-   HB_LONG lOffset = HB_PCODE_MKINT24( &( pFunc->pCode[ lPCodePos + 1 ] ) );
+   HB_ISIZ lOffset = HB_PCODE_MKINT24( &( pFunc->pCode[ lPCodePos + 1 ] ) );
 
    HB_GENC_LABEL();
 
@@ -1089,7 +1089,7 @@ static HB_GENC_FUNC( hb_p_pushblock )
 
 static HB_GENC_FUNC( hb_p_pushblocklarge )
 {
-   HB_ULONG ulSize, ul;
+   HB_SIZE ulSize, ul;
 
    HB_GENC_LABEL();
 
@@ -1238,7 +1238,7 @@ static HB_GENC_FUNC( hb_p_pushlocalref )
 
 static HB_GENC_FUNC( hb_p_pushlong )
 {
-   HB_LONG lVal = HB_PCODE_MKLONG( &pFunc->pCode[ lPCodePos + 1 ] ), iSkip;
+   HB_ISIZ lVal = HB_PCODE_MKLONG( &pFunc->pCode[ lPCodePos + 1 ] ), iSkip;
 
    HB_GENC_LABEL();
 
@@ -1372,7 +1372,7 @@ static HB_GENC_FUNC( hb_p_pushstr )
 
 static HB_GENC_FUNC( hb_p_pushstrlarge )
 {
-   HB_ULONG ulLen = HB_PCODE_MKUINT24( &pFunc->pCode[ lPCodePos + 1 ] ) - 1;
+   HB_SIZE ulLen = HB_PCODE_MKUINT24( &pFunc->pCode[ lPCodePos + 1 ] ) - 1;
 
    HB_GENC_LABEL();
 
@@ -1582,7 +1582,7 @@ static HB_GENC_FUNC( hb_p_seqbegin )
 
 static HB_GENC_FUNC( hb_p_seqend )
 {
-   HB_LONG lOffset = HB_PCODE_MKINT24( &pFunc->pCode[ lPCodePos + 1 ] );
+   HB_ISIZ lOffset = HB_PCODE_MKINT24( &pFunc->pCode[ lPCodePos + 1 ] );
 
    HB_GENC_LABEL();
 
@@ -1640,12 +1640,12 @@ static HB_GENC_FUNC( hb_p_staticname )
 static HB_GENC_FUNC( hb_p_threadstatics )
 {
    HB_USHORT w;
-   HB_ULONG ulSize, ul;
+   HB_SIZE ulSize, ul;
 
    HB_GENC_LABEL();
 
    w = HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] );
-   ulSize = ( HB_ULONG ) w << 1;
+   ulSize = ( HB_SIZE ) w << 1;
 
    fprintf( cargo->yyc, "\t{\n\t\tstatic const HB_BYTE statics[ %lu ] = {", ulSize );
 
@@ -1754,7 +1754,7 @@ static HB_GENC_FUNC( hb_p_enumend )
 static HB_GENC_FUNC( hb_p_switch )
 {
    HB_USHORT usCases = HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] ), us;
-   HB_ULONG ulStart = lPCodePos, ulNewPos;
+   HB_SIZE ulStart = lPCodePos, ulNewPos;
    HB_BOOL fNum = HB_FALSE, fStr = HB_FALSE, fDefault = HB_FALSE;
 
    HB_GENC_LABEL();
@@ -2357,8 +2357,8 @@ void hb_compGenCRealCode( HB_COMP_DECL, PFUNCTION pFunc, FILE * yyc )
       label_info.pulLabels = NULL;
    else
    {
-      label_info.pulLabels = ( HB_ULONG * ) hb_xgrab( pFunc->lPCodePos * sizeof( HB_ULONG ) );
-      memset( label_info.pulLabels, 0, pFunc->lPCodePos * sizeof( HB_ULONG ) );
+      label_info.pulLabels = ( HB_SIZE * ) hb_xgrab( pFunc->lPCodePos * sizeof( HB_SIZE ) );
+      memset( label_info.pulLabels, 0, pFunc->lPCodePos * sizeof( HB_SIZE ) );
       hb_compGenLabelTable( pFunc, &label_info );
    }
 

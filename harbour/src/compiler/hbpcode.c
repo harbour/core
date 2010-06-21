@@ -79,7 +79,7 @@ static HB_PSIZE_FUNC( hb_p_pushblocklarge )
 
 static HB_PSIZE_FUNC( hb_p_localname )
 {
-   HB_ULONG ulStart = lPCodePos;
+   HB_SIZE ulStart = lPCodePos;
 
    HB_SYMBOL_UNUSED( cargo );
    lPCodePos += 3;
@@ -90,7 +90,7 @@ static HB_PSIZE_FUNC( hb_p_localname )
 
 static HB_PSIZE_FUNC( hb_p_modulename )
 {
-   HB_ULONG ulStart = lPCodePos;
+   HB_SIZE ulStart = lPCodePos;
 
    HB_SYMBOL_UNUSED( cargo );
    lPCodePos += 3;
@@ -101,7 +101,7 @@ static HB_PSIZE_FUNC( hb_p_modulename )
 
 static HB_PSIZE_FUNC( hb_p_staticname )
 {
-   HB_ULONG ulStart = lPCodePos;
+   HB_SIZE ulStart = lPCodePos;
 
    HB_SYMBOL_UNUSED( cargo );
    lPCodePos += 4;
@@ -113,7 +113,7 @@ static HB_PSIZE_FUNC( hb_p_staticname )
 static HB_PSIZE_FUNC( hb_p_threadstatics )
 {
    HB_SYMBOL_UNUSED( cargo );
-   return 3 + ( ( HB_ULONG ) HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] ) << 1 );
+   return 3 + ( ( HB_SIZE ) HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] ) << 1 );
 }
 
 const HB_BYTE hb_comp_pcode_len[] = {
@@ -495,9 +495,9 @@ static HB_PCODE_FUNC_PTR s_psize_table[] =
    NULL                        /* HB_P_PUSHAPARAMS           */
 };
 
-HB_LONG hb_compPCodeSize( PFUNCTION pFunc, HB_ULONG ulOffset )
+HB_ISIZ hb_compPCodeSize( PFUNCTION pFunc, HB_SIZE ulOffset )
 {
-   HB_LONG lSize = 0;
+   HB_ISIZ lSize = 0;
    HB_BYTE opcode = pFunc->pCode[ ulOffset ];
 
    if( opcode < HB_P_LAST_PCODE )
@@ -517,8 +517,8 @@ HB_LONG hb_compPCodeSize( PFUNCTION pFunc, HB_ULONG ulOffset )
 
 void hb_compPCodeEval( PFUNCTION pFunc, const HB_PCODE_FUNC_PTR * pFunctions, void * cargo )
 {
-   HB_ULONG ulPos = 0;
-   HB_ULONG ulSkip;
+   HB_SIZE ulPos = 0;
+   HB_SIZE ulSkip;
    HB_BYTE opcode;
 
    /* Make sure that table is correct */
@@ -577,7 +577,7 @@ void hb_compPCodeEval( PFUNCTION pFunc, const HB_PCODE_FUNC_PTR * pFunctions, vo
 
 void hb_compPCodeTrace( PFUNCTION pFunc, const HB_PCODE_FUNC_PTR * pFunctions, void * cargo )
 {
-   HB_ULONG ulPos = 0;
+   HB_SIZE ulPos = 0;
 
    /* Make sure that table is correct */
    assert( sizeof( hb_comp_pcode_len ) == HB_P_LAST_PCODE );

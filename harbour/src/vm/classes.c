@@ -1790,9 +1790,9 @@ PHB_SYMB hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage,
              */
             if( pMsg == s___msgEnumIndex.pDynSym )
             {
-               hb_itemPutNL( hb_stackReturnItem(), pEnum->item.asEnum.offset );
+               hb_itemPutNS( hb_stackReturnItem(), pEnum->item.asEnum.offset );
                if( hb_pcount() > 0 && HB_ISNUM( 1 ) )
-                  pEnum->item.asEnum.offset = hb_itemGetNL( hb_param( 1, HB_IT_ANY ) );
+                  pEnum->item.asEnum.offset = hb_itemGetNS( hb_param( 1, HB_IT_ANY ) );
                return &s___msgEnumIndex;
             }
             else if( pMsg == s___msgEnumKey.pDynSym )

@@ -918,7 +918,7 @@ static HB_EXPR_FUNC( hb_compExprUseIIF )
       {
          /* this is called if all three parts of IIF expression should be generated
          */
-         HB_LONG lPosFalse, lPosEnd;
+         HB_ISIZ lPosFalse, lPosEnd;
          HB_EXPR_PTR pExpr = pSelf->value.asList.pExprList;
 
          HB_EXPR_USE( pExpr, HB_EA_PUSH_PCODE );
@@ -938,7 +938,7 @@ static HB_EXPR_FUNC( hb_compExprUseIIF )
       {
          /* this is called if all three parts of IIF expression should be generated
          */
-         HB_LONG lPosFalse, lPosEnd;
+         HB_ISIZ lPosFalse, lPosEnd;
          HB_EXPR_PTR pExpr = pSelf->value.asList.pExprList;
 
          HB_EXPR_USE( pExpr, HB_EA_PUSH_PCODE );
@@ -962,7 +962,7 @@ static HB_EXPR_FUNC( hb_compExprUseIIF )
          HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
          HB_GEN_FUNC1( PCode1, HB_P_POP );  /* remove a value if used in statement */
 #else
-         HB_ULONG ulPosFalse, ulPosEnd;
+         HB_SIZE ulPosFalse, ulPosEnd;
          HB_EXPR_PTR pExpr = pSelf->value.asList.pExprList;
 
          HB_EXPR_USE( pExpr, HB_EA_PUSH_PCODE );
@@ -1312,16 +1312,16 @@ static HB_EXPR_FUNC( hb_compExprUseArrayAt )
          if( pIdx->ExprType == HB_ET_NUMERIC )
          {
             HB_EXPR_PTR pExpr = pSelf->value.asList.pExprList; /* the expression that holds an array */
-            HB_LONG lIndex;
+            HB_ISIZ lIndex;
 
             if( pIdx->value.asNum.NumType == HB_ET_LONG )
-               lIndex = ( HB_LONG ) pIdx->value.asNum.val.l;
+               lIndex = ( HB_ISIZ ) pIdx->value.asNum.val.l;
             else
-               lIndex = ( HB_LONG ) pIdx->value.asNum.val.d;
+               lIndex = ( HB_ISIZ ) pIdx->value.asNum.val.d;
 
             if( pExpr->ExprType == HB_ET_ARRAY )   /* is it a literal array */
             {
-               HB_ULONG ulSize = hb_compExprParamListCheck( HB_COMP_PARAM, pExpr );
+               HB_SIZE ulSize = hb_compExprParamListCheck( HB_COMP_PARAM, pExpr );
 
                if( pExpr->ExprType == HB_ET_MACROARGLIST )
                   /* restore original expression type */
@@ -2552,7 +2552,7 @@ static HB_EXPR_FUNC( hb_compExprUseSetGet )
          break;
       case HB_EA_PUSH_PCODE:
       {
-         HB_LONG lPosFalse, lPosEnd;
+         HB_ISIZ lPosFalse, lPosEnd;
 
          /* <pVar>==NIL */
          HB_EXPR_USE( pSelf->value.asSetGet.pVar, HB_EA_PUSH_PCODE );
@@ -2588,7 +2588,7 @@ static HB_EXPR_FUNC( hb_compExprUseSetGet )
       case HB_EA_PUSH_POP:
       case HB_EA_STATEMENT:
       {
-         HB_LONG lPosFalse, lPosEnd;
+         HB_ISIZ lPosFalse, lPosEnd;
 
          /* <pVar>==NIL */
          HB_EXPR_USE( pSelf->value.asSetGet.pVar, HB_EA_PUSH_PCODE );
@@ -3183,7 +3183,7 @@ static HB_EXPR_FUNC( hb_compExprUseOr )
       case HB_EA_PUSH_PCODE:
          if( HB_COMP_ISSUPPORTED( HB_COMPFLAG_SHORTCUTS ) )
          {
-            HB_LONG lEndPos;
+            HB_ISIZ lEndPos;
 
             HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
             HB_GEN_FUNC1( PCode1, HB_P_DUPLICATE );
@@ -3206,7 +3206,7 @@ static HB_EXPR_FUNC( hb_compExprUseOr )
       case HB_EA_PUSH_POP:
          if( HB_COMP_ISSUPPORTED( HB_COMPFLAG_SHORTCUTS ) )
          {
-            HB_LONG lEndPos;
+            HB_ISIZ lEndPos;
             HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
             lEndPos = HB_GEN_FUNC1( JumpTrue, 0 );
             /* NOTE: This will not generate a runtime error if incompatible
@@ -3268,7 +3268,7 @@ static HB_EXPR_FUNC( hb_compExprUseAnd )
       case HB_EA_PUSH_PCODE:
          if( HB_COMP_ISSUPPORTED( HB_COMPFLAG_SHORTCUTS ) )
          {
-            HB_LONG lEndPos;
+            HB_ISIZ lEndPos;
 
             HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
             HB_GEN_FUNC1( PCode1, HB_P_DUPLICATE );
@@ -3291,7 +3291,7 @@ static HB_EXPR_FUNC( hb_compExprUseAnd )
       case HB_EA_PUSH_POP:
          if( HB_COMP_ISSUPPORTED( HB_COMPFLAG_SHORTCUTS ) )
          {
-            HB_LONG lEndPos;
+            HB_ISIZ lEndPos;
             HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
             lEndPos = HB_GEN_FUNC1( JumpFalse, 0 );
             /* NOTE: This will not generate a runtime error if incompatible
@@ -5407,7 +5407,7 @@ static HB_EXPR_PTR hb_compExprReduceAliasString( HB_EXPR_PTR pExpr, HB_EXPR_PTR 
 
    if( HB_ISFIRSTIDCHAR( *szAlias ) )
    {
-      HB_ULONG ulLen = pAlias->ulLength;
+      HB_SIZE ulLen = pAlias->ulLength;
       if( ulLen <= HB_SYMBOL_NAME_LEN )
       {
          HB_BOOL fLower = HB_FALSE;

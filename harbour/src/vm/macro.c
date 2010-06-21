@@ -1108,7 +1108,7 @@ HB_BOOL hb_macroIsValidMacroText( const char * szText, HB_SIZE ulLen )
    return HB_FALSE;
 }
 
-HB_ULONG hb_macroGenJump( HB_LONG lOffset, HB_COMP_DECL )
+HB_SIZE hb_macroGenJump( HB_ISIZ lOffset, HB_COMP_DECL )
 {
    if( lOffset == 0 )
       hb_macroGenPCode4( HB_P_JUMPFAR, 0, 0, 0, HB_COMP_PARAM );
@@ -1124,7 +1124,7 @@ HB_ULONG hb_macroGenJump( HB_LONG lOffset, HB_COMP_DECL )
    return HB_PCODE_DATA->lPCodePos - 3;
 }
 
-HB_ULONG hb_macroGenJumpFalse( HB_LONG lOffset, HB_COMP_DECL )
+HB_SIZE hb_macroGenJumpFalse( HB_ISIZ lOffset, HB_COMP_DECL )
 {
    if( lOffset == 0 )
       hb_macroGenPCode4( HB_P_JUMPFALSEFAR, 0, 0, 0, HB_COMP_PARAM );
@@ -1140,7 +1140,7 @@ HB_ULONG hb_macroGenJumpFalse( HB_LONG lOffset, HB_COMP_DECL )
    return HB_PCODE_DATA->lPCodePos - 3;
 }
 
-HB_ULONG hb_macroGenJumpTrue( HB_LONG lOffset, HB_COMP_DECL )
+HB_SIZE hb_macroGenJumpTrue( HB_ISIZ lOffset, HB_COMP_DECL )
 {
    if( lOffset == 0 )
       hb_macroGenPCode4( HB_P_JUMPTRUEFAR, 0, 0, 0, HB_COMP_PARAM );
@@ -1156,10 +1156,10 @@ HB_ULONG hb_macroGenJumpTrue( HB_LONG lOffset, HB_COMP_DECL )
    return HB_PCODE_DATA->lPCodePos - 3;
 }
 
-void hb_macroGenJumpThere( HB_ULONG ulFrom, HB_ULONG ulTo, HB_COMP_DECL )
+void hb_macroGenJumpThere( HB_SIZE ulFrom, HB_SIZE ulTo, HB_COMP_DECL )
 {
    HB_BYTE * pCode = HB_PCODE_DATA->pCode;
-   HB_LONG lOffset = ulTo - ulFrom + 1;
+   HB_ISIZ lOffset = ulTo - ulFrom + 1;
 
    if( HB_LIM_INT24( lOffset ) )
       HB_PUT_LE_UINT24( &pCode[ ulFrom ], lOffset );
@@ -1167,7 +1167,7 @@ void hb_macroGenJumpThere( HB_ULONG ulFrom, HB_ULONG ulTo, HB_COMP_DECL )
       hb_macroError( HB_MACRO_TOO_COMPLEX, HB_COMP_PARAM );
 }
 
-void hb_macroGenJumpHere( HB_ULONG ulOffset, HB_COMP_DECL )
+void hb_macroGenJumpHere( HB_SIZE ulOffset, HB_COMP_DECL )
 {
    hb_macroGenJumpThere( ulOffset, HB_PCODE_DATA->lPCodePos, HB_COMP_PARAM );
 }
@@ -1602,7 +1602,7 @@ void hb_macroGenPCode4( HB_BYTE byte1, HB_BYTE byte2, HB_BYTE byte3, HB_BYTE byt
    pFunc->pCode[ pFunc->lPCodePos++ ] = byte4;
 }
 
-void hb_macroGenPCodeN( HB_BYTE * pBuffer, HB_ULONG ulSize, HB_COMP_DECL )
+void hb_macroGenPCodeN( HB_BYTE * pBuffer, HB_SIZE ulSize, HB_COMP_DECL )
 {
    HB_PCODE_INFO_PTR pFunc = HB_PCODE_DATA;
 
@@ -1651,7 +1651,7 @@ void hb_macroCodeBlockStart( HB_COMP_DECL )
 void hb_macroCodeBlockEnd( HB_COMP_DECL )
 {
    HB_PCODE_INFO_PTR pCodeblock;   /* pointer to the current codeblock */
-   HB_ULONG ulSize;
+   HB_SIZE ulSize;
    HB_USHORT wParms = 0;   /* number of codeblock parameters */
    HB_CBVAR_PTR pVar;
 
@@ -1677,13 +1677,13 @@ void hb_macroCodeBlockEnd( HB_COMP_DECL )
       ++wParms;
    }
 
-   /*NOTE:  6 = HB_P_MPUSHBLOCK + HB_USHORT( size ) + HB_USHORT( wParams ) + _ENDBLOCK
+   /* NOTE: 6 = HB_P_MPUSHBLOCK + HB_USHORT( size ) + HB_USHORT( wParams ) + _ENDBLOCK
     * runtime compiled codeblock cannot reference local variables defined in a
     * function
     */
-   ulSize = ( HB_ULONG ) pCodeblock->lPCodePos + 6;
+   ulSize = pCodeblock->lPCodePos + 6;
 
-   /*NOTE: HB_P_MPUSHBLOCK differs from HB_P_PUSHBLOCK - the pcode
+   /* NOTE: HB_P_MPUSHBLOCK differs from HB_P_PUSHBLOCK - the pcode
     * is stored in dynamic memory pool instead of static memory
     */
    if( ulSize <= USHRT_MAX )

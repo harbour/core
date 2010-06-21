@@ -18,28 +18,28 @@ YACC_HEADERS := \
 
 C_SOURCES := \
    cmdcheck.c \
+   compi18n.c \
+   complex.c \
+   expropta.c \
+   exproptb.c \
    genc.c \
    gencc.c \
    genhrb.c \
    hbcmplib.c \
    hbcomp.c \
    hbdbginf.c \
+   hbdead.c \
+   hbfix.c \
    hbfunchk.c \
    hbgenerr.c \
-   hbpcode.c \
-   hbfix.c \
-   hbdead.c \
+   hbident.c \
    hblbl.c \
+   hbmain.c \
    hbopt.c \
+   hbpcode.c \
    hbstripl.c \
    hbusage.c \
-   hbident.c \
    ppcomp.c \
-   expropta.c \
-   exproptb.c \
-   complex.c \
-   compi18n.c \
-   hbmain.c \
 
 LIBNAME := hbcplr
 

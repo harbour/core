@@ -223,7 +223,7 @@ const char * hb_compExprAsString( HB_EXPR_PTR pExpr )
    return NULL;
 }
 
-int hb_compExprAsStringLen( HB_EXPR_PTR pExpr )
+HB_SIZE hb_compExprAsStringLen( HB_EXPR_PTR pExpr )
 {
    if( pExpr->ExprType == HB_ET_STRING )
       return pExpr->ulLength;
@@ -361,7 +361,7 @@ HB_EXPR_PTR hb_compExprNewTimeStamp( long lDate, long lTime, HB_COMP_DECL )
    return pExpr;
 }
 
-HB_EXPR_PTR hb_compExprNewString( const char *szValue, HB_ULONG ulLen, HB_BOOL fDealloc, HB_COMP_DECL )
+HB_EXPR_PTR hb_compExprNewString( const char *szValue, HB_SIZE ulLen, HB_BOOL fDealloc, HB_COMP_DECL )
 {
    HB_EXPR_PTR pExpr;
 
@@ -456,7 +456,7 @@ HB_EXPR_PTR hb_compExprNewHash( HB_EXPR_PTR pHashList, HB_COMP_DECL )
    return pHashList;
 }
 
-HB_EXPR_PTR hb_compExprNewCodeBlock( char *string, HB_ULONG ulLen, int iFlags, HB_COMP_DECL )
+HB_EXPR_PTR hb_compExprNewCodeBlock( char *string, HB_SIZE ulLen, int iFlags, HB_COMP_DECL )
 {
    HB_EXPR_PTR pExpr;
 
@@ -1321,38 +1321,9 @@ HB_ULONG hb_compExprParamListLen( HB_EXPR_PTR pExpr )
    return ulLen;
 }
 
-/*  Return a number of macro group elements on the linked list
- */
-HB_ULONG hb_compExprMacroListLen( HB_EXPR_PTR pExpr )
+HB_SIZE hb_compExprParamListCheck( HB_COMP_DECL, HB_EXPR_PTR pExpr )
 {
-   HB_ULONG ulLen = 0, ulItems = 0;
-
-   pExpr = pExpr->value.asList.pExprList;
-   while( pExpr )
-   {
-      if( pExpr->ExprType == HB_ET_MACRO &&
-          ( pExpr->value.asMacro.SubType & HB_ET_MACRO_LIST ) )
-      {
-         if( ulItems )
-         {
-            ulItems = 0;
-            ++ulLen;
-         }
-         ++ulLen;
-      }
-      else
-         ++ulItems;
-      pExpr = pExpr->pNext;
-   }
-   if( ulItems )
-      ++ulLen;
-
-   return ulLen;
-}
-
-HB_ULONG hb_compExprParamListCheck( HB_COMP_DECL, HB_EXPR_PTR pExpr )
-{
-   HB_ULONG ulLen = 0, ulItems = 0;
+   HB_SIZE ulLen = 0, ulItems = 0;
    if( pExpr )
    {
       HB_EXPR_PTR pElem;

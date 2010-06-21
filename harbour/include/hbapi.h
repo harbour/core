@@ -362,7 +362,7 @@ struct hb_struEnum
 {
    struct _HB_ITEM * basePtr;             /* base item pointer */
    struct _HB_ITEM * valuePtr;            /* value item pointer */
-   HB_LONG offset;
+   HB_ISIZ offset;
 };
 
 struct hb_struExtRef

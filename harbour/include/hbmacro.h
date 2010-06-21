@@ -121,13 +121,13 @@ extern void hb_macroGenPCode1( HB_BYTE byte, HB_COMP_DECL );
 extern void hb_macroGenPCode2( HB_BYTE byte1, HB_BYTE byte2, HB_COMP_DECL );
 extern void hb_macroGenPCode3( HB_BYTE byte1, HB_BYTE byte2, HB_BYTE byte3, HB_COMP_DECL );
 extern void hb_macroGenPCode4( HB_BYTE byte1, HB_BYTE byte2, HB_BYTE byte3, HB_BYTE byte4, HB_COMP_DECL );
-extern void hb_macroGenPCodeN( HB_BYTE * pBuffer, HB_ULONG ulSize, HB_COMP_DECL );
+extern void hb_macroGenPCodeN( HB_BYTE * pBuffer, HB_SIZE ulSize, HB_COMP_DECL );
 
-extern HB_ULONG hb_macroGenJump( HB_LONG lOffset, HB_COMP_DECL );
-extern HB_ULONG hb_macroGenJumpFalse( HB_LONG lOffset, HB_COMP_DECL );
-extern void hb_macroGenJumpThere( HB_ULONG ulFrom, HB_ULONG ulTo, HB_COMP_DECL );
-extern void hb_macroGenJumpHere( HB_ULONG ulOffset, HB_COMP_DECL );
-extern HB_ULONG hb_macroGenJumpTrue( HB_LONG lOffset, HB_COMP_DECL );
+extern HB_SIZE hb_macroGenJump( HB_ISIZ lOffset, HB_COMP_DECL );
+extern HB_SIZE hb_macroGenJumpFalse( HB_ISIZ lOffset, HB_COMP_DECL );
+extern void hb_macroGenJumpThere( HB_SIZE ulFrom, HB_SIZE ulTo, HB_COMP_DECL );
+extern void hb_macroGenJumpHere( HB_SIZE ulOffset, HB_COMP_DECL );
+extern HB_SIZE hb_macroGenJumpTrue( HB_ISIZ lOffset, HB_COMP_DECL );
 
 extern void hb_macroGenPushSymbol( const char * szSymbolName, HB_BOOL bFunction, HB_COMP_DECL );
 extern void hb_macroGenPushLong( HB_MAXINT lNumber, HB_COMP_DECL );
@@ -158,7 +158,7 @@ extern void hb_macroGenPushString( const char * szText, HB_SIZE ulStrLen, HB_COM
 extern void hb_macroCodeBlockStart( HB_COMP_DECL );
 extern void hb_macroCodeBlockEnd( HB_COMP_DECL );
 
-extern int  hb_macroLocalVarGetPos( const char * szVarName, HB_COMP_DECL );
+extern int hb_macroLocalVarGetPos( const char * szVarName, HB_COMP_DECL );
 extern HB_BOOL hb_macroIsValidMacroText( const char * szText, HB_SIZE ulLen );
 
 #endif /* HB_MACRO_SUPPORT */

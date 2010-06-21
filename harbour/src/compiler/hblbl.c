@@ -62,7 +62,7 @@ typedef HB_LABEL_FUNC_ * PHB_LABEL_FUNC;
  */
 static HB_LABEL_FUNC( hb_p_jumpnear )
 {
-   HB_ULONG ulNewPos = lPCodePos + ( signed char ) pFunc->pCode[ lPCodePos + 1 ];
+   HB_SIZE ulNewPos = lPCodePos + ( signed char ) pFunc->pCode[ lPCodePos + 1 ];
 
    cargo->pulLabels[ ulNewPos ]++;
    return 2;
@@ -71,7 +71,7 @@ static HB_LABEL_FUNC( hb_p_jumpnear )
 static HB_LABEL_FUNC( hb_p_jump )
 {
    HB_BYTE * pAddr = &pFunc->pCode[ lPCodePos + 1 ];
-   HB_ULONG ulNewPos = lPCodePos + HB_PCODE_MKSHORT( pAddr );
+   HB_SIZE ulNewPos = lPCodePos + HB_PCODE_MKSHORT( pAddr );
 
    cargo->pulLabels[ ulNewPos ]++;
    return 3;
@@ -80,7 +80,7 @@ static HB_LABEL_FUNC( hb_p_jump )
 static HB_LABEL_FUNC( hb_p_jumpfar )
 {
    HB_BYTE * pAddr = &pFunc->pCode[ lPCodePos + 1 ];
-   HB_ULONG ulNewPos = lPCodePos + HB_PCODE_MKINT24( pAddr );
+   HB_SIZE ulNewPos = lPCodePos + HB_PCODE_MKINT24( pAddr );
 
    cargo->pulLabels[ ulNewPos ]++;
    return 4;
@@ -88,7 +88,7 @@ static HB_LABEL_FUNC( hb_p_jumpfar )
 
 static HB_LABEL_FUNC( hb_p_jumpfalsenear )
 {
-   HB_ULONG ulNewPos = lPCodePos + ( signed char ) pFunc->pCode[ lPCodePos + 1 ];
+   HB_SIZE ulNewPos = lPCodePos + ( signed char ) pFunc->pCode[ lPCodePos + 1 ];
 
    cargo->fCondJump = HB_TRUE;
    cargo->pulLabels[ ulNewPos ]++;
@@ -98,7 +98,7 @@ static HB_LABEL_FUNC( hb_p_jumpfalsenear )
 static HB_LABEL_FUNC( hb_p_jumpfalse )
 {
    HB_BYTE * pAddr = &pFunc->pCode[ lPCodePos + 1 ];
-   HB_ULONG ulNewPos = lPCodePos + HB_PCODE_MKSHORT( pAddr );
+   HB_SIZE ulNewPos = lPCodePos + HB_PCODE_MKSHORT( pAddr );
 
    cargo->fCondJump = HB_TRUE;
    cargo->pulLabels[ ulNewPos ]++;
@@ -108,7 +108,7 @@ static HB_LABEL_FUNC( hb_p_jumpfalse )
 static HB_LABEL_FUNC( hb_p_jumpfalsefar )
 {
    HB_BYTE * pAddr = &pFunc->pCode[ lPCodePos + 1 ];
-   HB_ULONG ulNewPos = lPCodePos + HB_PCODE_MKINT24( pAddr );
+   HB_SIZE ulNewPos = lPCodePos + HB_PCODE_MKINT24( pAddr );
 
    cargo->fCondJump = HB_TRUE;
    cargo->pulLabels[ ulNewPos ]++;
@@ -117,7 +117,7 @@ static HB_LABEL_FUNC( hb_p_jumpfalsefar )
 
 static HB_LABEL_FUNC( hb_p_jumptruenear )
 {
-   HB_ULONG ulNewPos = lPCodePos + ( signed char ) pFunc->pCode[ lPCodePos + 1 ];
+   HB_SIZE ulNewPos = lPCodePos + ( signed char ) pFunc->pCode[ lPCodePos + 1 ];
 
    cargo->fCondJump = HB_TRUE;
    cargo->pulLabels[ ulNewPos ]++;
@@ -127,7 +127,7 @@ static HB_LABEL_FUNC( hb_p_jumptruenear )
 static HB_LABEL_FUNC( hb_p_jumptrue )
 {
    HB_BYTE * pAddr = &pFunc->pCode[ lPCodePos + 1 ];
-   HB_ULONG ulNewPos = lPCodePos + HB_PCODE_MKSHORT( pAddr );
+   HB_SIZE ulNewPos = lPCodePos + HB_PCODE_MKSHORT( pAddr );
 
    cargo->fCondJump = HB_TRUE;
    cargo->pulLabels[ ulNewPos ]++;
@@ -137,7 +137,7 @@ static HB_LABEL_FUNC( hb_p_jumptrue )
 static HB_LABEL_FUNC( hb_p_jumptruefar )
 {
    HB_BYTE * pAddr = &pFunc->pCode[ lPCodePos + 1 ];
-   HB_ULONG ulNewPos = lPCodePos + HB_PCODE_MKINT24( pAddr );
+   HB_SIZE ulNewPos = lPCodePos + HB_PCODE_MKINT24( pAddr );
 
    cargo->fCondJump = HB_TRUE;
    cargo->pulLabels[ ulNewPos ]++;
@@ -147,7 +147,7 @@ static HB_LABEL_FUNC( hb_p_jumptruefar )
 static HB_LABEL_FUNC( hb_p_seqalways )
 {
    HB_BYTE * pAddr = &pFunc->pCode[ lPCodePos + 1 ];
-   HB_ULONG ulAlwaysPos = lPCodePos + HB_PCODE_MKINT24( pAddr );
+   HB_SIZE ulAlwaysPos = lPCodePos + HB_PCODE_MKINT24( pAddr );
 
    if( cargo->fSetSeqBegin )
       cargo->pulLabels[ ulAlwaysPos ]++;
@@ -157,7 +157,7 @@ static HB_LABEL_FUNC( hb_p_seqalways )
 static HB_LABEL_FUNC( hb_p_alwaysbegin )
 {
    HB_BYTE * pAddr = &pFunc->pCode[ lPCodePos + 1 ];
-   HB_ULONG ulAlwaysEndPos = lPCodePos + HB_PCODE_MKINT24( pAddr );
+   HB_SIZE ulAlwaysEndPos = lPCodePos + HB_PCODE_MKINT24( pAddr );
 
    if( cargo->fSetSeqBegin )
       cargo->pulLabels[ ulAlwaysEndPos ]++;
@@ -167,7 +167,7 @@ static HB_LABEL_FUNC( hb_p_alwaysbegin )
 static HB_LABEL_FUNC( hb_p_seqbegin )
 {
    HB_BYTE * pAddr = &pFunc->pCode[ lPCodePos + 1 ];
-   HB_ULONG ulRecoverPos = lPCodePos + HB_PCODE_MKINT24( pAddr );
+   HB_SIZE ulRecoverPos = lPCodePos + HB_PCODE_MKINT24( pAddr );
 
    if( cargo->fSetSeqBegin )
       cargo->pulLabels[ ulRecoverPos ]++;
@@ -177,8 +177,8 @@ static HB_LABEL_FUNC( hb_p_seqbegin )
 static HB_LABEL_FUNC( hb_p_seqend )
 {
    HB_BYTE * pAddr = &pFunc->pCode[ lPCodePos + 1 ];
-   HB_LONG lOffset = HB_PCODE_MKINT24( pAddr );
-   HB_ULONG ulNewPos = lPCodePos + lOffset;
+   HB_ISIZ lOffset = HB_PCODE_MKINT24( pAddr );
+   HB_SIZE ulNewPos = lPCodePos + lOffset;
 
    if( cargo->fSetSeqBegin || lOffset != 4 )
       cargo->pulLabels[ ulNewPos ]++;
@@ -379,7 +379,7 @@ static const PHB_LABEL_FUNC s_GenLabelFuncTable[] =
 void hb_compGenLabelTable( PFUNCTION pFunc, PHB_LABEL_INFO label_info )
 {
    const PHB_LABEL_FUNC * pFuncTable = s_GenLabelFuncTable;
-   HB_ULONG ulLabel = 0, ul;
+   HB_SIZE ulLabel = 0, ul;
 
    assert( HB_P_LAST_PCODE == sizeof( s_GenLabelFuncTable ) / sizeof( PHB_LABEL_FUNC ) );
 
