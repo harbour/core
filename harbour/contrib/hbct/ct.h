@@ -85,6 +85,20 @@ HB_EXTERN_BEGIN
 
 extern void ct_charlist( int iMode );
 
+/* ct_charop() modes */
+#define CT_CHAROP_CHARADD       0
+#define CT_CHAROP_CHARSUB       1  /* new: character subtraction */
+#define CT_CHAROP_CHARAND       2
+#define CT_CHAROP_CHARNOT       3
+#define CT_CHAROP_CHAROR        4
+#define CT_CHAROP_CHARXOR       5
+#define CT_CHAROP_CHARSHL       6  /* new: shift left */
+#define CT_CHAROP_CHARSHR       7  /* new: shift right */
+#define CT_CHAROP_CHARRLL       8  /* new: left rotation */
+#define CT_CHAROP_CHARRLR       9  /* new: right rotation */
+
+extern void ct_charop( int iMode );
+
 /* CT subsystem error throwing functions */
 extern HB_USHORT ct_error( HB_USHORT uiSeverity, HB_ERRCODE ulGenCode, HB_ERRCODE ulSubCode,
                            const char *szDescription, const char *szOperation, HB_ERRCODE uiOsCode, HB_USHORT uiFlags, HB_ULONG uiArgCount, ... );

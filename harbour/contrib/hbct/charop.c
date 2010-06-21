@@ -6,15 +6,10 @@
  * Harbour Project source code:
  *   CT3 string functions
  *     - CHARADD()
- *     - CHARSUB()  (NEW)
  *     - CHARAND()
  *     - CHARNOT()
  *     - CHAROR()
  *     - CHARXOR()
- *     - CHARSHL()  (NEW)
- *     - CHARSHR()  (NEW)
- *     - CHARRLL()  (NEW)
- *     - CHARRLR()  (NEW)
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -64,145 +59,128 @@
 
 #include "ct.h"
 
-#define DO_CHAROP_CHARADD      0
-#define DO_CHAROP_CHARSUB      1        /* new: character subtraction */
-#define DO_CHAROP_CHARAND      2
-#define DO_CHAROP_CHARNOT      3
-#define DO_CHAROP_CHAROR       4
-#define DO_CHAROP_CHARXOR      5
-#define DO_CHAROP_CHARSHL      6        /* new: shift left */
-#define DO_CHAROP_CHARSHR      7        /* new: shift right */
-#define DO_CHAROP_CHARRLL      8        /* new: left rotation */
-#define DO_CHAROP_CHARRLR      9        /* new: right rotation */
-
 /* helper function */
-static void do_charop( int iSwitch )
+void ct_charop( int iMode )
 {
-
-   int iNoRet;
-
    /* suppressing return value ? */
-   iNoRet = ct_getref() && HB_ISBYREF( 1 );
+   int iNoRet = ct_getref() && HB_ISBYREF( 1 );
 
    if( HB_ISCHAR( 1 ) )
    {
-
       HB_SIZE sStrLen = hb_parclen( 1 );
       HB_SIZE sPos;
-      unsigned char *pucString = ( unsigned char * ) hb_parc( 1 );
-      unsigned char *pucResult;
+      unsigned char * pucString = ( unsigned char * ) hb_parc( 1 );
+      unsigned char * pucResult;
 
       if( sStrLen == 0 )
       {
          if( iNoRet )
-         {
             hb_ret();
-         }
          else
-         {
             hb_retc_null();
-         }
          return;
       }
 
       pucResult = ( unsigned char * ) hb_xgrab( sStrLen + 1 );
 
-      switch ( iSwitch )
+      switch ( iMode )
       {
          /* NOT */
-         case DO_CHAROP_CHARNOT:
-            for( sPos = 0; sPos < sStrLen; sPos++ )
-               pucResult[sPos] = ~pucString[sPos];
+         case CT_CHAROP_CHARNOT:
+            for( sPos = 0; sPos < sStrLen; ++sPos )
+               pucResult[ sPos ] = ~pucString[ sPos ];
             break;
 
          /* SHL */
-         case DO_CHAROP_CHARSHL:
+         case CT_CHAROP_CHARSHL:
          {
-            int iSHL = ( hb_parni( 2 ) ) % 8;   /* defaults to 0 */
+            int iSHL = hb_parni( 2 ) % 8;   /* defaults to 0 */
 
             if( iSHL == 0 )
                hb_xmemcpy( pucResult, pucString, sStrLen );
             else
-               for( sPos = 0; sPos < sStrLen; sPos++ )
-                  pucResult[sPos] = pucString[sPos] << iSHL;
+               for( sPos = 0; sPos < sStrLen; ++sPos )
+                  pucResult[ sPos ] = pucString[ sPos ] << iSHL;
             break;
          }
 
          /* SHR */
-         case DO_CHAROP_CHARSHR:
+         case CT_CHAROP_CHARSHR:
          {
-            int iSHR = ( hb_parni( 2 ) ) % 8;   /* defaults to 0 */
+            int iSHR = hb_parni( 2 ) % 8;   /* defaults to 0 */
 
             if( iSHR == 0 )
                hb_xmemcpy( pucResult, pucString, sStrLen );
             else
-               for( sPos = 0; sPos < sStrLen; sPos++ )
-                  pucResult[sPos] = pucString[sPos] >> iSHR;
+               for( sPos = 0; sPos < sStrLen; ++sPos )
+                  pucResult[ sPos ] = pucString[ sPos ] >> iSHR;
             break;
          }
 
          /* RLL */
-         case DO_CHAROP_CHARRLL:
+         case CT_CHAROP_CHARRLL:
          {
-            int iRLL = ( hb_parni( 2 ) ) % 8;   /* defaults to 0 */
+            int iRLL = hb_parni( 2 ) % 8;   /* defaults to 0 */
 
             hb_xmemcpy( pucResult, pucString, sStrLen );
 
             if( iRLL != 0 )
-               for( sPos = 0; sPos < sStrLen; sPos++ )
+               for( sPos = 0; sPos < sStrLen; ++sPos )
                {
                   int iRLLCnt;
 
                   for( iRLLCnt = 0; iRLLCnt < iRLL; iRLLCnt++ )
-                     if( pucResult[sPos] & 0x80 )  /* most left bit set -> roll over */
+                     if( pucResult[ sPos ] & 0x80 )  /* most left bit set -> roll over */
                      {
-                        pucResult[sPos] <<= 1;
-                        pucResult[sPos] |= 0x01;
+                        pucResult[ sPos ] <<= 1;
+                        pucResult[ sPos ] |= 0x01;
                      }
                      else
                      {
-                        pucResult[sPos] <<= 1;
+                        pucResult[ sPos ] <<= 1;
                      }
                }
             break;
          }
 
          /* RLR */
-         case DO_CHAROP_CHARRLR:
+         case CT_CHAROP_CHARRLR:
          {
-            int iRLR = ( hb_parni( 2 ) ) % 8;   /* defaults to 0 */
+            int iRLR = hb_parni( 2 ) % 8;   /* defaults to 0 */
 
             hb_xmemcpy( pucResult, pucString, sStrLen );
 
             if( iRLR != 0 )
-               for( sPos = 0; sPos < sStrLen; sPos++ )
+            {
+               for( sPos = 0; sPos < sStrLen; ++sPos )
                {
                   int iRLRCnt;
 
                   for( iRLRCnt = 0; iRLRCnt < iRLR; iRLRCnt++ )
-                     if( pucResult[sPos] & 0x01 )  /* most right bit set -> roll over */
+                  {
+                     if( pucResult[ sPos ] & 0x01 )  /* most right bit set -> roll over */
                      {
-                        pucResult[sPos] >>= 1;
-                        pucResult[sPos] |= 0x80;
+                        pucResult[ sPos ] >>= 1;
+                        pucResult[ sPos ] |= 0x80;
                      }
                      else
-                     {
-                        pucResult[sPos] >>= 1;
-                     }
+                        pucResult[ sPos ] >>= 1;
+                  }
                }
+            }
             break;
          }
 
          /* ADD */
-         case DO_CHAROP_CHARADD:
+         case CT_CHAROP_CHARADD:
          {
             if( HB_ISCHAR( 2 ) )
             {
-               const char *pucString2 = hb_parc( 2 );
+               const char * pucString2 = hb_parc( 2 );
                HB_SIZE sStrLen2 = hb_parclen( 2 );
 
-               for( sPos = 0; sPos < sStrLen; sPos++ )
-                  pucResult[sPos] = ( char ) ( pucString[sPos] + pucString2[ sStrLen2 ? ( sPos % sStrLen2 ) : 0 ] );
+               for( sPos = 0; sPos < sStrLen; ++sPos )
+                  pucResult[ sPos ] = ( char ) ( pucString[ sPos ] + pucString2[ sStrLen2 ? ( sPos % sStrLen2 ) : 0 ] );
             }
             else
             {
@@ -220,15 +198,15 @@ static void do_charop( int iSwitch )
          }
 
          /* SUB */
-         case DO_CHAROP_CHARSUB:
+         case CT_CHAROP_CHARSUB:
          {
             if( HB_ISCHAR( 2 ) )
             {
-               const char *pucString2 = hb_parc( 2 );
+               const char * pucString2 = hb_parc( 2 );
                HB_SIZE sStrLen2 = hb_parclen( 2 );
 
-               for( sPos = 0; sPos < sStrLen; sPos++ )
-                  pucResult[sPos] = ( char ) ( pucString[sPos] - pucString2[ sStrLen2 ? ( sPos % sStrLen2 ) : 0 ] );
+               for( sPos = 0; sPos < sStrLen; ++sPos )
+                  pucResult[ sPos ] = ( char ) ( pucString[ sPos ] - pucString2[ sStrLen2 ? ( sPos % sStrLen2 ) : 0 ] );
             }
             else
             {
@@ -246,15 +224,15 @@ static void do_charop( int iSwitch )
          }
 
          /* AND */
-         case DO_CHAROP_CHARAND:
+         case CT_CHAROP_CHARAND:
          {
             if( HB_ISCHAR( 2 ) )
             {
-               const char *pucString2 = hb_parc( 2 );
+               const char * pucString2 = hb_parc( 2 );
                HB_SIZE sStrLen2 = hb_parclen( 2 );
 
-               for( sPos = 0; sPos < sStrLen; sPos++ )
-                  pucResult[sPos] = ( char ) ( pucString[sPos] & pucString2[ sStrLen2 ? ( sPos % sStrLen2 ) : 0 ] );
+               for( sPos = 0; sPos < sStrLen; ++sPos )
+                  pucResult[ sPos ] = ( char ) ( pucString[ sPos ] & pucString2[ sStrLen2 ? ( sPos % sStrLen2 ) : 0 ] );
             }
             else
             {
@@ -271,15 +249,15 @@ static void do_charop( int iSwitch )
          }
 
          /* OR */
-         case DO_CHAROP_CHAROR:
+         case CT_CHAROP_CHAROR:
          {
             if( HB_ISCHAR( 2 ) )
             {
-               const char *pucString2 = hb_parc( 2 );
+               const char * pucString2 = hb_parc( 2 );
                HB_SIZE sStrLen2 = hb_parclen( 2 );
 
-               for( sPos = 0; sPos < sStrLen; sPos++ )
-                  pucResult[sPos] = ( char ) ( pucString[sPos] | pucString2[ sStrLen2 ? ( sPos % sStrLen2 ) : 0 ] );
+               for( sPos = 0; sPos < sStrLen; ++sPos )
+                  pucResult[ sPos ] = ( char ) ( pucString[ sPos ] | pucString2[ sStrLen2 ? ( sPos % sStrLen2 ) : 0 ] );
             }
             else
             {
@@ -296,15 +274,15 @@ static void do_charop( int iSwitch )
          }
 
          /* XOR */
-         case DO_CHAROP_CHARXOR:
+         case CT_CHAROP_CHARXOR:
          {
             if( HB_ISCHAR( 2 ) )
             {
-               const char *pucString2 = hb_parc( 2 );
+               const char * pucString2 = hb_parc( 2 );
                HB_SIZE sStrLen2 = hb_parclen( 2 );
 
-               for( sPos = 0; sPos < sStrLen; sPos++ )
-                  pucResult[sPos] = ( char ) ( pucString[sPos] ^ pucString2[ sStrLen2 ? ( sPos % sStrLen2 ) : 0 ] );
+               for( sPos = 0; sPos < sStrLen; ++sPos )
+                  pucResult[ sPos ] = ( char ) ( pucString[ sPos ] ^ pucString2[ sStrLen2 ? ( sPos % sStrLen2 ) : 0 ] );
             }
             else
             {
@@ -319,7 +297,7 @@ static void do_charop( int iSwitch )
             }
             break;
          }
-      }  /* endswitch( iSwitch ) */
+      }  /* endswitch( iMode ) */
 
       if( HB_ISBYREF( 1 ) )
          hb_storclen( ( char * ) pucResult, sStrLen, 1 );
@@ -332,49 +310,50 @@ static void do_charop( int iSwitch )
    else  /* if( HB_ISCHAR( 1 ) ) */
    {
       PHB_ITEM pSubst = NULL;
-      int iArgErrorMode = ct_getargerrormode(), iError = 0;
+      int iArgErrorMode = ct_getargerrormode();
+      int iError = 0;
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
-         switch ( iSwitch )
+         switch ( iMode )
          {
-            case DO_CHAROP_CHARADD:
+            case CT_CHAROP_CHARADD:
                iError = CT_ERROR_CHARADD;
                break;
 
-            case DO_CHAROP_CHARSUB:
+            case CT_CHAROP_CHARSUB:
                iError = CT_ERROR_CHARSUB;
                break;
 
-            case DO_CHAROP_CHARAND:
+            case CT_CHAROP_CHARAND:
                iError = CT_ERROR_CHARAND;
                break;
 
-            case DO_CHAROP_CHARNOT:
+            case CT_CHAROP_CHARNOT:
                iError = CT_ERROR_CHARNOT;
                break;
 
-            case DO_CHAROP_CHAROR:
+            case CT_CHAROP_CHAROR:
                iError = CT_ERROR_CHAROR;
                break;
 
-            case DO_CHAROP_CHARXOR:
+            case CT_CHAROP_CHARXOR:
                iError = CT_ERROR_CHARXOR;
                break;
 
-            case DO_CHAROP_CHARSHL:
+            case CT_CHAROP_CHARSHL:
                iError = CT_ERROR_CHARSHL;
                break;
 
-            case DO_CHAROP_CHARSHR:
+            case CT_CHAROP_CHARSHR:
                iError = CT_ERROR_CHARSHR;
                break;
 
-            case DO_CHAROP_CHARRLL:
+            case CT_CHAROP_CHARRLL:
                iError = CT_ERROR_CHARRLL;
                break;
 
-            case DO_CHAROP_CHARRLR:
+            case CT_CHAROP_CHARRLR:
                iError = CT_ERROR_CHARRLR;
                break;
          }
@@ -443,63 +422,7 @@ static void do_charop( int iSwitch )
 
 HB_FUNC( CHARADD )
 {
-   do_charop( DO_CHAROP_CHARADD );
-}
-
-
-/*  $DOC$
- *  $FUNCNAME$
- *      CHARSUB()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Subtracts corresponding ASCII value of two strings
- *  $SYNTAX$
- *      CHARSUB (<[@]cString1>, <cString2>) --> cSubString
- *  $ARGUMENTS$
- *      <[@]cString1>   first string
- *      <cString2>      second string
- *  $RETURNS$
- *      <cSubString>    string with subtracted ASCII values
- *  $DESCRIPTION$
- *      The CHARSUB() function constructs a new string from the two strings
- *      passed as parameters. To do this, it subtracts the ASCII values of the
- *      corresponding characters of both strings and places a character in
- *      the resulting string whose ASCII value equals to that difference (modulo 256).
- *      If the first string is passed by reference, the resulting string is
- *      stored in <cString1>, too. By setting the CSETREF()-switch to .T.,
- *      the return value can be omitted.
- *      If <cString2> is shorter than <cString1> and the last character of
- *      <cString2> has been processed, the function restarts with the first
- *      character of <cString2>.
- *  $EXAMPLES$
- *      ? charsub ("012345678", chr(1)) --> "/01234567"
- *      ? charsub ("123456789", chr(255)) --> "23456789:"
- *      ? charsub ("9999", chr(0)+chr(1)+chr(2)+chr(3)) --> "9876"
- *  $TESTS$
- *      charsub ("123456789", chr(1)) == "012345678"
- *      charsub ("123456789", chr(1)+chr(2)) == "002244668"
- *      charsub ("012345678", chr(255)) == "123456789"
- *      charsub ("012345678", chr(255)+chr(254)) == "133557799"
- *  $STATUS$
- *      Ready
- *  $COMPLIANCE$
- *      CHARSUB() is a new function that is only available in Harbour's CT3 lib.
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is charop.c, library is ct3.
- *  $SEEALSO$
- *      CHARADD()   CHARAND()   CHARNOT()
- *      CHAROR()    CHARXOR()   CHARSHL()
- *      CHARSHR()   CHARRLL()   CHARRLR()
- *      CSETREF()
- *  $END$
- */
-
-HB_FUNC( CHARSUB )
-{
-   do_charop( DO_CHAROP_CHARSUB );
+   ct_charop( CT_CHAROP_CHARADD );
 }
 
 
@@ -554,7 +477,7 @@ HB_FUNC( CHARSUB )
 
 HB_FUNC( CHARAND )
 {
-   do_charop( DO_CHAROP_CHARAND );
+   ct_charop( CT_CHAROP_CHARAND );
 }
 
 
@@ -605,7 +528,7 @@ HB_FUNC( CHARAND )
 
 HB_FUNC( CHARNOT )
 {
-   do_charop( DO_CHAROP_CHARNOT );
+   ct_charop( CT_CHAROP_CHARNOT );
 }
 
 
@@ -660,7 +583,7 @@ HB_FUNC( CHARNOT )
 
 HB_FUNC( CHAROR )
 {
-   do_charop( DO_CHAROP_CHAROR );
+   ct_charop( CT_CHAROP_CHAROR );
 }
 
 
@@ -713,213 +636,5 @@ HB_FUNC( CHAROR )
 
 HB_FUNC( CHARXOR )
 {
-   do_charop( DO_CHAROP_CHARXOR );
-}
-
-
-/*  $DOC$
- *  $FUNCNAME$
- *      CHARSHL()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Process each character in a string with bitwise SHIFT LEFT operation
- *  $SYNTAX$
- *      CHARSHL (<[@]cString>, <nBitsToSHL> ) --> cSHLString
- *  $ARGUMENTS$
- *      <[@]cString>    string to be processed
- *      <nBitsToSHL>    number of bit positions to be shifted to the left
- *  $RETURNS$
- *      <cSHLString>    string with bitwise shifted left characters
- *  $DESCRIPTION$
- *      The CHARSHL() function constructs a new string from the string
- *      passed as parameter. To do this, it performs a bitwise SHIFT LEFT
- *      (SHL) operation to the characters of the string and places a character in
- *      the resulting string whose ASCII value equals to the result of that
- *      operation.
- *      Be aware that bits shifted out of the byte are lost. If you need
- *      a bit rotation, use the CHARRLL() function instead.
- *      If the string is passed by reference, the resulting string is
- *      stored in <cString>, too. By setting the CSETREF()-switch to .T.,
- *      the return value can be omitted.
- *  $EXAMPLES$
- *      ? charshl (chr(1)+chr(2)+chr(4)+chr(8)+chr(16)+chr(32)+chr(64)+chr(128), 3)
- *        --> chr(8)+chr(16)+chr(32)+chr(64)+chr(128)+chr(0)+chr(0)+chr(0)
- *  $TESTS$
- *      charshl (chr(1)+chr(2)+chr(4)+chr(8)+chr(16)+chr(32)+chr(64)+chr(128), 3) == chr(8)+chr(16)+chr(32)+chr(64)+chr(128)+chr(0)+chr(0)+chr(0)
- *  $STATUS$
- *      Ready
- *  $COMPLIANCE$
- *      CHARSHL() is a new function that is only available in Harbour's CT3 lib.
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is charop.c, library is ct3.
- *  $SEEALSO$
- *      CHARADD()   CHARSUB()   CHARAND()
- *      CHAROR()    CHARXOR()   CHARNOT()
- *      CHARSHR()   CHARRLL()   CHARRLR()
- *      CSETREF()
- *  $END$
- */
-
-HB_FUNC( CHARSHL )
-{
-   do_charop( DO_CHAROP_CHARSHL );
-}
-
-
-/*  $DOC$
- *  $FUNCNAME$
- *      CHARSHR()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Process each character in a string with bitwise SHIFT RIGHT operation
- *  $SYNTAX$
- *      CHARSHR (<[@]cString>, <nBitsToSHR> ) --> cSHRString
- *  $ARGUMENTS$
- *      <[@]cString>    string to be processed
- *      <nBitsToSHR>    number of bit positions to be shifted to the right
- *  $RETURNS$
- *      <cSHRString>    string with bitwise shifted right characters
- *  $DESCRIPTION$
- *      The CHARSHR() function constructs a new string from the string
- *      passed as parameter. To do this, it performs a bitwise SHIFT RIGHT
- *      (SHR) operation to the characters of the string and places a character in
- *      the resulting string whose ASCII value equals to the result of that
- *      operation.
- *      Be aware that bits shifted out of the byte are lost. If you need
- *      a bit rotation, use the CHARRLR() function instead.
- *      If the string is passed by reference, the resulting string is
- *      stored in <cString>, too. By setting the CSETREF()-switch to .T.,
- *      the return value can be omitted.
- *  $EXAMPLES$
- *      ? charshr (chr(1)+chr(2)+chr(4)+chr(8)+chr(16)+chr(32)+chr(64)+chr(128), 3)
- *        --> chr(0)+chr(0)+chr(0)+chr(1)+chr(2)+chr(4)+chr(8)+chr(16)
- *  $TESTS$
- *      charshr (chr(1)+chr(2)+chr(4)+chr(8)+chr(16)+chr(32)+chr(64)+chr(128), 3) == chr(0)+chr(0)+chr(0)+chr(1)+chr(2)+chr(4)+chr(8)+chr(16)
- *  $STATUS$
- *      Ready
- *  $COMPLIANCE$
- *      CHARSHR() is a new function that is only available in Harbour's CT3 lib.
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is charop.c, library is ct3.
- *  $SEEALSO$
- *      CHARADD()   CHARSUB()   CHARAND()
- *      CHAROR()    CHARXOR()   CHARNOT()
- *      CHARSHL()   CHARRLL()   CHARRLR()
- *      CSETREF()
- *  $END$
- */
-
-HB_FUNC( CHARSHR )
-{
-   do_charop( DO_CHAROP_CHARSHR );
-}
-
-
-/*  $DOC$
- *  $FUNCNAME$
- *      CHARRLL()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Process each character in a string with bitwise ROLL LEFT operation
- *  $SYNTAX$
- *      CHARRLL (<[@]cString>, <nBitsToRLL> ) --> cRLLString
- *  $ARGUMENTS$
- *      <[@]cString>    string to be processed
- *      <nBitsToRLL>    number of bit positions to be rolled to the left
- *  $RETURNS$
- *      <cRLLString>    string with bitwise rolled left characters
- *  $DESCRIPTION$
- *      The CHARRLL() function constructs a new string from the string
- *      passed as parameter. To do this, it performs a bitwise ROLL LEFT
- *      (RLL) operation to the characters of the string and places a character in
- *      the resulting string whose ASCII value equals to the result of that
- *      operation.
- *      Be aware that, in contrast to CHARSHL(), bits rolled out on
- *      the left are put in again on the right.
- *      If the string is passed by reference, the resulting string is
- *      stored in <cString>, too. By setting the CSETREF()-switch to .T.,
- *      the return value can be omitted.
- *  $EXAMPLES$
- *      ? charrll (chr(1)+chr(2)+chr(4)+chr(8)+chr(16)+chr(32)+chr(64)+chr(128), 3)
- *        --> chr(8)+chr(16)+chr(32)+chr(64)+chr(128)+chr(1)+chr(2)+chr(4)
- *  $TESTS$
- *      charrll (chr(1)+chr(2)+chr(4)+chr(8)+chr(16)+chr(32)+chr(64)+chr(128), 3) == chr(8)+chr(16)+chr(32)+chr(64)+chr(128)+chr(1)+chr(2)+chr(4)
- *  $STATUS$
- *      Ready
- *  $COMPLIANCE$
- *      CHARRLL() is a new function that is only available in Harbour's CT3 lib.
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is charop.c, library is ct3.
- *  $SEEALSO$
- *      CHARADD()   CHARSUB()   CHARAND()
- *      CHAROR()    CHARXOR()   CHARNOT()
- *      CHARSHL()   CHARSHR()   CHARRLR()
- *      CSETREF()
- *  $END$
- */
-
-HB_FUNC( CHARRLL )
-{
-   do_charop( DO_CHAROP_CHARRLL );
-}
-
-
-/*  $DOC$
- *  $FUNCNAME$
- *      CHARRLR()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Process each character in a string with bitwise ROLL RIGHT operation
- *  $SYNTAX$
- *      CHARRLR (<[@]cString>, <nBitsToRLR> ) --> cRLRString
- *  $ARGUMENTS$
- *      <[@]cString>    string to be processed
- *      <nBitsToRLR>    number of bit positions to be rolled to the right
- *  $RETURNS$
- *      <cRLRString>    string with bitwise rolled right characters
- *  $DESCRIPTION$
- *      The CHARRLR() function constructs a new string from the string
- *      passed as parameter. To do this, it performs a bitwise ROLL RIGHT
- *      (RLR) operation to the characters of the string and places a character in
- *      the resulting string whose ASCII value equals to the result of that
- *      operation.
- *      Be aware that, in contrast to CHARSHR(), bits rolled out on
- *      the right are put in again on the left.
- *      If the string is passed by reference, the resulting string is
- *      stored in <cString>, too. By setting the CSETREF()-switch to .T.,
- *      the return value can be omitted.
- *  $EXAMPLES$
- *      ? charrlr (chr(1)+chr(2)+chr(4)+chr(8)+chr(16)+chr(32)+chr(64)+chr(128), 3)
- *        --> chr(32)+chr(64)+chr(128)+chr(1)+chr(2)+chr(4)+chr(8)+chr(16)
- *  $TESTS$
- *      charrlr (chr(1)+chr(2)+chr(4)+chr(8)+chr(16)+chr(32)+chr(64)+chr(128), 3) == chr(32)+chr(64)+chr(128)+chr(1)+chr(2)+chr(4)+chr(8)+chr(16)
- *  $STATUS$
- *      Ready
- *  $COMPLIANCE$
- *      CHARRLR() is a new function that is only available in Harbour's CT3 lib.
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is charop.c, library is ct3.
- *  $SEEALSO$
- *      CHARADD()   CHARSUB()   CHARAND()
- *      CHAROR()    CHARXOR()   CHARNOT()
- *      CHARSHL()   CHARSHR()   CHARRLL()
- *      CSETREF()
- *  $END$
- */
-
-HB_FUNC( CHARRLR )
-{
-   do_charop( DO_CHAROP_CHARRLR );
+   ct_charop( CT_CHAROP_CHARXOR );
 }

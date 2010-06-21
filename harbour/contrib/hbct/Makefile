@@ -16,13 +16,14 @@ C_SOURCES := \
    bitnum.c \
    blank.c \
    charevod.c \
-   charlish.c \
+   charlihb.c \
    charlist.c \
    charmirr.c \
    charmix.c \
    charone.c \
    charonly.c \
    charop.c \
+   charophb.c \
    charrepl.c \
    charsort.c \
    charsprd.c \
