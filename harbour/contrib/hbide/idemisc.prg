@@ -98,6 +98,17 @@ PROCEDURE hbide_justACall()
 
 /*----------------------------------------------------------------------*/
 
+FUNCTION hbide_setIde( oIde )
+   LOCAL oldIde
+   STATIC ide
+   oldIde := ide
+   IF hb_isObject( oIde )
+      ide := oIde
+   ENDIF
+   RETURN oldIde
+
+/*----------------------------------------------------------------------*/
+
 FUNCTION hbide_execPopup( aPops, aqPos, qParent )
    LOCAL i, qPop, qPoint, qAct, cAct, xRet, pAct, a_, qSub, b_
 
@@ -314,6 +325,23 @@ FUNCTION hbide_fetchADir( oWnd, cTitle, cDftDir )
 
 /*----------------------------------------------------------------------*/
 
+FUNCTION hbide_getEol( cBuffer )
+   LOCAL cStyle
+
+   IF     chr( 13 ) + chr( 10 ) $ cBuffer
+      cStyle := chr( 13 ) + chr( 10 )
+   ELSEIF chr( 13 ) $ cBuffer
+      cStyle := chr( 13 )
+   ELSEIF chr( 10 ) $ cBuffer
+      cStyle := chr( 10 )
+   ELSE
+      cStyle := ""
+   ENDIF
+
+   RETURN cStyle
+
+/*----------------------------------------------------------------------*/
+
 FUNCTION hbide_readSource( cTxtFile )
    LOCAL cFileBody := hb_MemoRead( cTxtFile )
 
@@ -511,8 +539,7 @@ FUNCTION hbide_isValidText( cSourceFile )
 
    hb_fNameSplit( cSourceFile, , , @cExt )
 
-   RETURN ( lower( cExt ) $ ".c,.cpp,.prg,.h,.ch,.txt,.log,.ini,.env,.ppo," + ;
-                            ".cc,.hbc,.hbp,.hbm,.xml,.bat,.sh,.rc,.ui,.uic,.bak,.fmg,.qth,.qtp" )
+   RETURN ( lower( cExt ) $ hbide_setIde():oINI:cTextFileExtensions )
 
 /*----------------------------------------------------------------------*/
 
@@ -2050,6 +2077,20 @@ FUNCTION hbide_parseToolComponents( cCompositeTool )
    a_[ 8 ] := alltrim( a_[ 8 ] )
    a_[ 9 ] := alltrim( a_[ 9 ] )
    a_[10 ] := alltrim( a_[10 ] )
+
+   RETURN a_
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION hbide_parseKeywordsComponents( cStr )
+   LOCAL a_
+
+   a_:= hb_atokens( cStr, "~" )
+   asize( a_, 2 )
+   DEFAULT a_[ 1 ] TO ""
+   DEFAULT a_[ 2 ] TO ""
+   a_[ 1 ] := alltrim( a_[ 1 ] )
+   a_[ 2 ] := alltrim( a_[ 2 ] )
 
    RETURN a_
 

@@ -84,8 +84,9 @@
 #define INI_GENERAL                               11
 #define INI_TOOLS                                 12
 #define INI_USERTOOLBARS                          13
+#define INI_KEYWORDS                              14
 
-#define INI_SECTIONS_COUNT                        13
+#define INI_SECTIONS_COUNT                        14
 #define INI_HBIDE_VRBLS                           30
 
 /*----------------------------------------------------------------------*/
@@ -105,10 +106,6 @@ CLASS IdeINI INHERIT IdeObject
    DATA   cSetupDialogGeometry                    INIT  ""
    DATA   cShortcutsDialogGeometry                INIT  ""
    //
-   DATA   cCurrentLineHighlightMode               INIT  ""
-   DATA   cLineNumbersDisplayMode                 INIT  ""
-   DATA   cHorzRulerDisplayMode                   INIT  ""
-   //
    DATA   cRecentTabIndex                         INIT  ""
    //
    DATA   cIdeTheme                               INIT  ""
@@ -116,6 +113,7 @@ CLASS IdeINI INHERIT IdeObject
    //
    DATA   cPathMk2                                INIT  ""
    DATA   cPathEnv                                INIT  ""
+   // /* Not used yet but planned for future */
    DATA   cCurrentProject                         INIT  ""
    DATA   cCurrentTheme                           INIT  ""
    DATA   cCurrentCodec                           INIT  ""
@@ -127,8 +125,8 @@ CLASS IdeINI INHERIT IdeObject
    DATA   cCurrentHarbour                         INIT  ""
    DATA   cCurrentShortcuts                       INIT  ""
    //
-   DATA   cTextFileExtensions                     INIT  ""
-
+   DATA   cTextFileExtensions                     INIT  ".c,.cpp,.prg,.h,.ch,.txt,.log,.ini,.env,.ppo," + ;
+                                                        ".cc,.hbc,.hbp,.hbm,.xml,.bat,.sh,.rc,.ui,.uic,.bak,.fmg,.qth,.qtp"
    DATA   aProjFiles                              INIT  {}
    DATA   aFiles                                  INIT  {}
    DATA   aFind                                   INIT  {}
@@ -140,6 +138,26 @@ CLASS IdeINI INHERIT IdeObject
    DATA   aTaggedProjects                         INIT  {}
    DATA   aTools                                  INIT  {}
    DATA   aUserToolbars                           INIT  {}
+   DATA   aKeywords                               INIT  {}
+
+   DATA   cFontName                               INIT  "Courier New"
+   DATA   nPointSize                              INIT  10
+   DATA   cLineEndingMode                         INIT  ""
+
+   DATA   lTrimTrailingBlanks                     INIT  .t.
+   DATA   lSaveSourceWhenComp                     INIT  .t.
+   DATA   lSupressHbKWordsToUpper                 INIT  .f.
+   DATA   lReturnAsBeginKeyword                   INIT  .f.
+   DATA   lConvTabToSpcWhenLoading                INIT  .f.
+   DATA   lAutoIndent                             INIT  .t.
+   DATA   lSmartIndent                            INIT  .t.
+   DATA   lTabToSpcInEdits                        INIT  .t.
+ //DATA   nTabSpaces                              INIT  ::oIde:nTabSpaces
+   DATA   nIndentSpaces                           INIT  3
+
+   DATA   nTmpBkpPrd                              INIT  60
+   DATA   cBkpPath                                INIT  ""
+   DATA   cBkpSuffix                              INIT  ".bkp"
 
    METHOD new( oIde )
    METHOD create( oIde )
@@ -159,191 +177,6 @@ METHOD IdeINI:new( oIde )
 METHOD IdeINI:create( oIde )
    DEFAULT oIde TO ::oIde
    ::oIde := oIde
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeINI:load( cHbideIni )
-   LOCAL aElem, s, nPart, cKey, cVal, a_
-
-   ::oIde:cProjIni := hbide_getIniPath( cHbideIni )
-
-   IF hb_FileExists( ::oIde:cProjIni )
-      aElem := hbide_readSource( ::oIde:cProjIni )
-
-      FOR EACH s IN aElem
-
-         s := alltrim( s )
-         IF !empty( s )
-            SWITCH Upper( s )
-
-            CASE "[GENERAL]"
-               nPart := INI_GENERAL
-               EXIT
-            CASE "[HBIDE]"
-               nPart := INI_HBIDE
-               EXIT
-            CASE "[PROJECTS]"
-               nPart := INI_PROJECTS
-               EXIT
-            CASE "[FILES]"
-               nPart := INI_FILES
-               EXIT
-            CASE "[FIND]"
-               nPart := INI_FIND
-               EXIT
-            CASE "[REPLACE]"
-               nPart := INI_REPLACE
-               EXIT
-            CASE "[RECENTFILES]"
-               nPart := INI_RECENTFILES
-               EXIT
-            CASE "[RECENTPROJECTS]"
-               nPart := INI_RECENTPROJECTS
-               EXIT
-            CASE "[FOLDERS]"
-               nPart := INI_FOLDERS
-               EXIT
-            CASE "[VIEWS]"
-               nPart := INI_VIEWS
-               EXIT
-            CASE "[TAGGEDPROJECTS]"
-               nPart := INI_TAGGEDPROJECTS
-               EXIT
-            CASE "[TOOLS]"
-               nPart := INI_TOOLS
-               EXIT
-            CASE "[USERTOOLBARS]"
-               nPart := INI_USERTOOLBARS
-               EXIT
-            OTHERWISE
-               DO CASE
-               CASE Left( s, 1 ) $ '#['
-                  * Nothing todo!
-
-               CASE nPart == INI_GENERAL
-                  * Qt Setttings, do nothing.
-
-               CASE nPart == INI_HBIDE
-                  IF hbide_parseKeyValPair( s, @cKey, @cVal )
-
-                     SWITCH cKey
-
-                     CASE "MainWindowGeometry"          ; ::cMainWindowGeometry          := cVal ; EXIT
-                     CASE "GotoDialogGeometry"          ; ::cGotoDialogGeometry          := cVal ; EXIT
-                     CASE "FindDialogGeometry"          ; ::cFindDialogGeometry          := cVal ; EXIT
-                     CASE "ToolsDialogGeometry"         ; ::cToolsDialogGeometry         := cVal ; EXIT
-                     CASE "SetupDialogGeometry"         ; ::cSetupDialogGeometry         := cVal ; EXIT
-                     CASE "ShortcutsDialogGeometry"     ; ::cShortcutsDialogGeometry     := cVal ; EXIT
-                     //
-                     CASE "CurrentLineHighlightMode"    ; ::cCurrentLineHighlightMode    := cVal ; EXIT
-                     CASE "LineNumbersDisplayMode"      ; ::cLineNumbersDisplayMode      := cVal ; EXIT
-                     CASE "HorzRulerDisplayMode"        ; ::cHorzRulerDisplayMode        := cVal ; EXIT
-                     //
-                     CASE "RecentTabIndex"              ; ::cRecentTabIndex              := cVal ; EXIT
-                     //
-                     CASE "IdeTheme"                    ; ::cIdeTheme                    := cVal ; EXIT
-                     CASE "IdeAnimated"                 ; ::cIdeAnimated                 := cVal ; EXIT
-                     //          /* Subject to be identified under this object only */
-                     CASE "PathMk2"                     ; ::cPathMk2                     := cVal ; EXIT
-                     CASE "PathEnv"                     ; ::cPathEnv                     := cVal ; EXIT
-                     //
-                     CASE "CurrentProject"              ; ::oIde:cWrkProject             := cVal ; EXIT
-                     CASE "CurrentTheme"                ; ::oIde:cWrkTheme               := cVal ; EXIT
-                     CASE "CurrentCodec"                ; ::oIde:cWrkCodec               := cVal ; EXIT
-                     CASE "CurrentEnvironment"          ; ::oIde:cWrkEnvironment         := cVal ; EXIT
-                     CASE "CurrentFind"                 ; ::oIde:cWrkFind                := cVal ; EXIT
-                     CASE "CurrentFolderFind"           ; ::oIde:cWrkFolderFind          := cVal ; EXIT
-                     CASE "CurrentReplace"              ; ::oIde:cWrkReplace             := cVal ; EXIT
-                     CASE "CurrentView"                 ; ::oIde:cWrkView                := cVal ; EXIT
-                     CASE "CurrentHarbour"              ; ::oIde:cWrkHarbour             := cVal ; EXIT
-                     CASE "CurrentShortcuts"            ; ::oIde:cPathShortcuts          := cVal ; EXIT
-                     CASE "TextFileExtensions"          ; ::oIde:cTextExtensions         := cVal ; EXIT
-
-                     ENDSWITCH
-                  ENDIF
-
-               CASE nPart == INI_PROJECTS
-                  IF hbide_parseKeyValPair( s, @cKey, @cVal )
-                     aadd( ::aProjFiles, cVal )
-                  ENDIF
-
-               CASE nPart == INI_FILES
-                  IF hbide_parseKeyValPair( s, @cKey, @cVal )
-                     a_:= hbide_parseSourceComponents( cVal )
-                     IF !Empty( a_[ 1 ] )
-                        aadd( ::aFiles, a_ )
-                     ENDIF
-                  ENDIF
-
-               CASE nPart == INI_FIND
-                  IF hbide_parseKeyValPair( s, @cKey, @cVal )
-                     aadd( ::aFind, cVal )
-                  ENDIF
-
-               CASE nPart == INI_REPLACE
-                  IF hbide_parseKeyValPair( s, @cKey, @cVal )
-                     aadd( ::aReplace, cVal )
-                  ENDIF
-
-               CASE nPart == INI_RECENTPROJECTS
-                  IF hbide_parseKeyValPair( s, @cKey, @cVal )
-                     IF Len( ::aRecentProjects ) < 25
-                        cVal := hbide_pathNormalized( cVal, .f. )
-                        IF aScan( ::aRecentProjects, {|e| hbide_pathNormalized( e, .f. ) == cVal } ) == 0
-                           AAdd( ::aRecentProjects, cVal )
-                        ENDIF
-                     ENDIF
-                  ENDIF
-
-               CASE nPart == INI_RECENTFILES
-                  IF hbide_parseKeyValPair( s, @cKey, @cVal )
-                     IF Len( ::aRecentFiles ) < 25
-                        cVal := hbide_pathNormalized( cVal, .f. )
-                        IF aScan( ::aRecentFiles, {|e| hbide_pathNormalized( e, .f. ) == cVal } ) == 0
-                           AAdd( ::aRecentFiles, cVal )
-                        ENDIF
-                     ENDIF
-                  ENDIF
-
-               CASE nPart == INI_FOLDERS
-                  IF hbide_parseKeyValPair( s, @cKey, @cVal )
-                     aadd( ::aFolders, cVal )
-                  ENDIF
-
-               CASE nPart == INI_VIEWS
-                  IF hbide_parseKeyValPair( s, @cKey, @cVal )
-                     aadd( ::aViews, cVal )
-                  ENDIF
-
-               CASE nPart == INI_TAGGEDPROJECTS
-                  IF hbide_parseKeyValPair( s, @cKey, @cVal )
-                     aadd(::aTaggedProjects, cVal )
-                  ENDIF
-
-               CASE nPart == INI_TOOLS
-                  IF hbide_parseKeyValPair( s, @cKey, @cVal )
-                     a_:= hbide_parseToolComponents( cVal )
-                     aadd( ::aTools, a_ )
-                  ENDIF
-
-               CASE nPart == INI_USERTOOLBARS
-                  IF hbide_parseKeyValPair( s, @cKey, @cVal )
-                     a_:= hbide_parseUserToolbarComponents( cVal )
-                     aadd( ::aUserToolbars, a_ )
-                  ENDIF
-
-               ENDCASE
-               EXIT
-            ENDSWITCH
-         ENDIF
-      NEXT
-   ENDIF
-
-   ::oIde:lCurrentLineHighlightEnabled := iif( ::oINI:cCurrentLineHighlightMode == "NO", .f., .t. )
-   ::oIde:lLineNumbersVisible          := iif( ::oINI:cLineNumbersDisplayMode   == "NO", .f., .t. )
-   ::oIde:lHorzRulerVisible            := iif( ::oINI:cHorzRulerDisplayMode     == "NO", .f., .t. )
-
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -393,9 +226,27 @@ METHOD IdeINI:save( cHbideIni )
    aadd( txt_, "CurrentView"               + "=" +   ::oIde:cWrkView                                    )
    aadd( txt_, "CurrentHarbour"            + "=" +   ::oIde:cWrkHarbour                                 )
    aadd( txt_, "CurrentShortcuts"          + "=" +   ::oIde:cPathShortcuts                              )
-   aadd( txt_, "TextFileExtensions"        + "=" +   ::oIde:cTextExtensions                             )
+   aadd( txt_, "TextFileExtensions"        + "=" +   ::oINI:cTextFileExtensions                         )
+   //
+   aadd( txt_, "FontName"                  + "=" +   ::cFontName                                        )
+   aadd( txt_, "PointSize"                 + "=" +   hb_ntos( ::nPointSize )                            )
+   aadd( txt_, "LineEndingMode"            + "=" +   ::cLineEndingMode                                  )
+// aadd( txt_, ""        + "=" +   ::c                             )
    //
    aadd( txt_, " " )
+   aadd( txt_, "TrimTrailingBlanks"        + "=" +   iif( ::lTrimTrailingBlanks     , "YES", "NO" )     )
+   aadd( txt_, "SaveSourceWhenComp"        + "=" +   iif( ::lSaveSourceWhenComp     , "YES", "NO" )     )
+   aadd( txt_, "SupressHbKWordsToUpper"    + "=" +   iif( ::lSupressHbKWordsToUpper , "YES", "NO" )     )
+   aadd( txt_, "ReturnAsBeginKeyword"      + "=" +   iif( ::lReturnAsBeginKeyword   , "YES", "NO" )     )
+   aadd( txt_, "ConvTabToSpcWhenLoading"   + "=" +   iif( ::lConvTabToSpcWhenLoading, "YES", "NO" )     )
+   aadd( txt_, "AutoIndent"                + "=" +   iif( ::lAutoIndent             , "YES", "NO" )     )
+   aadd( txt_, "SmartIndent"               + "=" +   iif( ::lSmartIndent            , "YES", "NO" )     )
+   aadd( txt_, "TabToSpcInEdits"           + "=" +   iif( ::lTabToSpcInEdits        , "YES", "NO" )     )
+   aadd( txt_, "TabSpaces"                 + "=" +   hb_ntos( ::oIde:nTabSpaces )                       )
+   aadd( txt_, "IndentSpaces"              + "=" +   hb_ntos( ::nIndentSpaces )                         )
+   aadd( txt_, "TmpBkpPrd"                 + "=" +   hb_ntos( ::nTmpBkpPrd )                            )
+   aadd( txt_, "BkpPath"                   + "=" +   ::cBkpPath                                         )
+   aadd( txt_, "BkpSuffix"                 + "=" +   ::cBkpSuffix                                       )
 
    aadd( txt_, "[PROJECTS]" )
    aadd( txt_, " " )
@@ -499,12 +350,224 @@ METHOD IdeINI:save( cHbideIni )
    NEXT
    aadd( txt_, " " )
 
+   aadd( txt_, "[KEYWORDS]" )
+   aadd( txt_, " " )
+   FOR n := 1 TO len( ::aKeywords )
+      aadd( txt_, "keyword_" + hb_ntos( n ) + "=" + hbide_array2string( ::aKeywords[ n ], "~" ) )
+   NEXT
+   aadd( txt_, " " )
+
    aadd( txt_, "[General]" )
    aadd( txt_, " " )
 
    hbide_createTarget( ::oIde:cProjIni, txt_ )
 
    RETURN hbide_saveSettings( ::oIde )
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeINI:load( cHbideIni )
+   LOCAL aElem, s, nPart, cKey, cVal, a_
+
+   ::oIde:cProjIni := hbide_getIniPath( cHbideIni )
+
+   IF hb_FileExists( ::oIde:cProjIni )
+      aElem := hbide_readSource( ::oIde:cProjIni )
+
+      FOR EACH s IN aElem
+
+         s := alltrim( s )
+         IF !empty( s )
+            SWITCH Upper( s )
+
+            CASE "[GENERAL]"
+               nPart := INI_GENERAL
+               EXIT
+            CASE "[HBIDE]"
+               nPart := INI_HBIDE
+               EXIT
+            CASE "[PROJECTS]"
+               nPart := INI_PROJECTS
+               EXIT
+            CASE "[FILES]"
+               nPart := INI_FILES
+               EXIT
+            CASE "[FIND]"
+               nPart := INI_FIND
+               EXIT
+            CASE "[REPLACE]"
+               nPart := INI_REPLACE
+               EXIT
+            CASE "[RECENTFILES]"
+               nPart := INI_RECENTFILES
+               EXIT
+            CASE "[RECENTPROJECTS]"
+               nPart := INI_RECENTPROJECTS
+               EXIT
+            CASE "[FOLDERS]"
+               nPart := INI_FOLDERS
+               EXIT
+            CASE "[VIEWS]"
+               nPart := INI_VIEWS
+               EXIT
+            CASE "[TAGGEDPROJECTS]"
+               nPart := INI_TAGGEDPROJECTS
+               EXIT
+            CASE "[TOOLS]"
+               nPart := INI_TOOLS
+               EXIT
+            CASE "[USERTOOLBARS]"
+               nPart := INI_USERTOOLBARS
+               EXIT
+            CASE "[KEYWORDS]"
+               nPart := INI_KEYWORDS
+               EXIT
+            OTHERWISE
+               DO CASE
+               CASE Left( s, 1 ) $ '#['
+                  * Nothing todo!
+
+               CASE nPart == INI_GENERAL
+                  * Qt Setttings, do nothing.
+
+               CASE nPart == INI_HBIDE
+                  IF hbide_parseKeyValPair( s, @cKey, @cVal )
+
+                     SWITCH cKey
+
+                     CASE "MainWindowGeometry"          ; ::cMainWindowGeometry               := cVal ; EXIT
+                     CASE "GotoDialogGeometry"          ; ::cGotoDialogGeometry               := cVal ; EXIT
+                     CASE "FindDialogGeometry"          ; ::cFindDialogGeometry               := cVal ; EXIT
+                     CASE "ToolsDialogGeometry"         ; ::cToolsDialogGeometry              := cVal ; EXIT
+                     CASE "SetupDialogGeometry"         ; ::cSetupDialogGeometry              := cVal ; EXIT
+                     CASE "ShortcutsDialogGeometry"     ; ::cShortcutsDialogGeometry          := cVal ; EXIT
+                     //
+                     CASE "CurrentLineHighlightMode"    ; ::oIde:lCurrentLineHighlightEnabled := ( cVal != "NO" ); EXIT
+                     CASE "LineNumbersDisplayMode"      ; ::oIde:lLineNumbersVisible          := ( cVal != "NO" ); EXIT
+                     CASE "HorzRulerDisplayMode"        ; ::oIde:lHorzRulerVisible            := ( cVal != "NO" ); EXIT
+                     //
+                     CASE "RecentTabIndex"              ; ::cRecentTabIndex                   := cVal ; EXIT
+                     //
+                     CASE "IdeTheme"                    ; ::cIdeTheme                         := cVal ; EXIT
+                     CASE "IdeAnimated"                 ; ::cIdeAnimated                      := cVal ; EXIT
+                     //          /* Subject to be identified under this object only */
+                     CASE "PathMk2"                     ; ::cPathMk2                          := cVal ; EXIT
+                     CASE "PathEnv"                     ; ::cPathEnv                          := cVal ; EXIT
+                     //
+                     CASE "CurrentProject"              ; ::oIde:cWrkProject                  := cVal ; EXIT
+                     CASE "CurrentTheme"                ; ::oIde:cWrkTheme                    := cVal ; EXIT
+                     CASE "CurrentCodec"                ; ::oIde:cWrkCodec                    := cVal ; EXIT
+                     CASE "CurrentEnvironment"          ; ::oIde:cWrkEnvironment              := cVal ; EXIT
+                     CASE "CurrentFind"                 ; ::oIde:cWrkFind                     := cVal ; EXIT
+                     CASE "CurrentFolderFind"           ; ::oIde:cWrkFolderFind               := cVal ; EXIT
+                     CASE "CurrentReplace"              ; ::oIde:cWrkReplace                  := cVal ; EXIT
+                     CASE "CurrentView"                 ; ::oIde:cWrkView                     := cVal ; EXIT
+                     CASE "CurrentHarbour"              ; ::oIde:cWrkHarbour                  := cVal ; EXIT
+                     CASE "CurrentShortcuts"            ; ::oIde:cPathShortcuts               := cVal ; EXIT
+                     CASE "TextFileExtensions"          ; ::oINI:cTextFileExtensions          := cVal ; EXIT
+                     //
+                     CASE "FontName"                    ; ::cFontName                         := cVal ; EXIT
+                     CASE "PointSize"                   ; ::nPointSize                        := val( cVal ); EXIT
+                     CASE "LineEndingMode"              ; ::cLineEndingMode                   := cVal ; EXIT
+                     //
+                     CASE "TrimTrailingBlanks"          ; ::oINI:lTrimTrailingBlanks          := cVal != "NO" ; EXIT
+                     CASE "SaveSourceWhenComp"          ; ::oINI:lSaveSourceWhenComp          := cVal != "NO" ; EXIT
+                     CASE "SupressHbKWordsToUpper"      ; ::oINI:lSupressHbKWordsToUpper      := cVal != "NO" ; EXIT
+                     CASE "ReturnAsBeginKeyword"        ; ::oINI:lReturnAsBeginKeyword        := cVal != "NO" ; EXIT
+                     CASE "ConvTabToSpcWhenLoading"     ; ::oINI:lConvTabToSpcWhenLoading     := cVal != "NO" ; EXIT
+                     CASE "AutoIndent"                  ; ::oINI:lAutoIndent                  := cVal != "NO" ; EXIT
+                     CASE "SmartIndent"                 ; ::oINI:lSmartIndent                 := cVal != "NO" ; EXIT
+                     CASE "TabToSpcInEdits"             ; ::oINI:lTabToSpcInEdits             := cVal != "NO" ; EXIT
+                     CASE "TabSpaces"                   ; ::oIde:nTabSpaces                   := val( cVal )  ; EXIT
+                     CASE "IndentSpaces"                ; ::oINI:nIndentSpaces                := val( cVal )  ; EXIT
+                     CASE "TmpBkpPrd"                   ; ::oINI:nTmpBkpPrd                   := val( cVal )  ; EXIT
+                     CASE "BkpPath"                     ; ::oINI:cBkpPath                     := cVal ; EXIT
+                     CASE "BkpSuffix"                   ; ::oINI:cBkpSuffix                   := cVal ; EXIT
+
+                     ENDSWITCH
+                  ENDIF
+
+               CASE nPart == INI_PROJECTS
+                  IF hbide_parseKeyValPair( s, @cKey, @cVal )
+                     aadd( ::aProjFiles, cVal )
+                  ENDIF
+
+               CASE nPart == INI_FILES
+                  IF hbide_parseKeyValPair( s, @cKey, @cVal )
+                     a_:= hbide_parseSourceComponents( cVal )
+                     IF !Empty( a_[ 1 ] )
+                        aadd( ::aFiles, a_ )
+                     ENDIF
+                  ENDIF
+
+               CASE nPart == INI_FIND
+                  IF hbide_parseKeyValPair( s, @cKey, @cVal )
+                     aadd( ::aFind, cVal )
+                  ENDIF
+
+               CASE nPart == INI_REPLACE
+                  IF hbide_parseKeyValPair( s, @cKey, @cVal )
+                     aadd( ::aReplace, cVal )
+                  ENDIF
+
+               CASE nPart == INI_RECENTPROJECTS
+                  IF hbide_parseKeyValPair( s, @cKey, @cVal )
+                     IF Len( ::aRecentProjects ) < 25
+                        cVal := hbide_pathNormalized( cVal, .f. )
+                        IF aScan( ::aRecentProjects, {|e| hbide_pathNormalized( e, .f. ) == cVal } ) == 0
+                           AAdd( ::aRecentProjects, cVal )
+                        ENDIF
+                     ENDIF
+                  ENDIF
+
+               CASE nPart == INI_RECENTFILES
+                  IF hbide_parseKeyValPair( s, @cKey, @cVal )
+                     IF Len( ::aRecentFiles ) < 25
+                        cVal := hbide_pathNormalized( cVal, .f. )
+                        IF aScan( ::aRecentFiles, {|e| hbide_pathNormalized( e, .f. ) == cVal } ) == 0
+                           AAdd( ::aRecentFiles, cVal )
+                        ENDIF
+                     ENDIF
+                  ENDIF
+
+               CASE nPart == INI_FOLDERS
+                  IF hbide_parseKeyValPair( s, @cKey, @cVal )
+                     aadd( ::aFolders, cVal )
+                  ENDIF
+
+               CASE nPart == INI_VIEWS
+                  IF hbide_parseKeyValPair( s, @cKey, @cVal )
+                     aadd( ::aViews, cVal )
+                  ENDIF
+
+               CASE nPart == INI_TAGGEDPROJECTS
+                  IF hbide_parseKeyValPair( s, @cKey, @cVal )
+                     aadd(::aTaggedProjects, cVal )
+                  ENDIF
+
+               CASE nPart == INI_TOOLS
+                  IF hbide_parseKeyValPair( s, @cKey, @cVal )
+                     aadd( ::aTools, hbide_parseToolComponents( cVal ) )
+                  ENDIF
+
+               CASE nPart == INI_USERTOOLBARS
+                  IF hbide_parseKeyValPair( s, @cKey, @cVal )
+                     aadd( ::aUserToolbars, hbide_parseUserToolbarComponents( cVal ) )
+                  ENDIF
+
+               CASE nPart == INI_KEYWORDS
+                  IF hbide_parseKeyValPair( s, @cKey, @cVal )
+                     aadd( ::aKeywords, hbide_parseKeywordsComponents( cVal ) )
+                  ENDIF
+
+               ENDCASE
+               EXIT
+            ENDSWITCH
+         ENDIF
+      NEXT
+   ENDIF
+
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
@@ -698,11 +761,13 @@ FUNCTION hbide_saveShortcuts( oIde, a_, cFileShortcuts )
 
 CLASS IdeSetup INHERIT IdeObject
 
+   DATA   oINI
    DATA   qOrgPalette
    DATA   aItems                                  INIT {}
    DATA   aTree                                   INIT { "General", "Selections", "Font", "Paths", "Variables", "Dictionaries" }
-   DATA   aStyles                                 INIT { "default", "cleanlooks", "windows", "windowsxp", ;
+   DATA   aStyles                                 INIT { "cleanlooks", "windows", "windowsxp", ;
                                                          "windowsvista", "cde", "motif", "plastique", "macintosh" }
+   DATA   aKeyItems                               INIT {}
 
    METHOD new( oIde )
    METHOD create( oIde )
@@ -712,6 +777,14 @@ CLASS IdeSetup INHERIT IdeObject
    METHOD buildTree()
    METHOD setSystemStyle( cStyle )
    METHOD setBaseColor()
+   METHOD connectSlots()
+   METHOD disConnectSlots()
+   METHOD setIcons()
+   METHOD populate()
+   METHOD retrieve()
+   METHOD eol()
+   METHOD buildKeywords()
+   METHOD populateKeyTableRow( nRow, cTxtCol1, cTxtCol2 )
 
    ENDCLASS
 
@@ -726,6 +799,7 @@ METHOD IdeSetup:new( oIde )
 METHOD IdeSetup:create( oIde )
    DEFAULT oIde TO ::oIde
    ::oIde := oIde
+   ::oINI := ::oIde:oINI
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -733,13 +807,191 @@ METHOD IdeSetup:create( oIde )
 METHOD IdeSetup:destroy()
 
    IF !empty( ::oUI )
-      ::disConnect( ::oUI:q_buttonClose, "clicked()"                )
-      ::disConnect( ::oUI:q_treeWidget , "itemSelectionChanged()"   )
-      ::disconnect( ::oUI:q_comboStyle , "currentIndexChanged(int)" )
-
+      ::disConnectSlots()
       ::oUI:destroy()
    ENDIF
 
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeSetup:eol()
+   RETURN iif( ::oINI:cLineEndingMode == "CRLF", CRLF, iif( ::oINI:cLineEndingMode == "CR", chr( 13 ), ;
+                                                         iif( ::oINI:cLineEndingMode == "LF", chr( 10 ), CRLF ) ) )
+/*----------------------------------------------------------------------*/
+
+METHOD IdeSetup:setIcons()
+
+   ::oUI:q_buttonAddTextExt    : setIcon( hbide_image( "dc_plus"   ) )
+   ::oUI:q_buttonDelTextExt    : setIcon( hbide_image( "dc_delete" ) )
+
+   ::oUI:q_buttonKeyAdd        : setIcon( hbide_image( "dc_plus"   ) )
+   ::oUI:q_buttonKeyDel        : setIcon( hbide_image( "dc_delete" ) )
+   ::oUI:q_buttonKeyUp         : setIcon( hbide_image( "dc_up"     ) )
+   ::oUI:q_buttonKeyDown       : setIcon( hbide_image( "dc_down"   ) )
+
+   ::oUI:q_buttonPathIni       : setIcon( hbide_image( "open"      ) )
+   ::oUI:q_buttonPathHbmk2     : setIcon( hbide_image( "open"      ) )
+   ::oUI:q_buttonPathSnippets  : setIcon( hbide_image( "open"      ) )
+   ::oUI:q_buttonPathEnv       : setIcon( hbide_image( "open"      ) )
+   ::oUI:q_buttonPathShortcuts : setIcon( hbide_image( "open"      ) )
+   ::oUI:q_buttonPathThemes    : setIcon( hbide_image( "open"      ) )
+
+   ::oUI:q_buttonSelFont       : setIcon( hbide_image( "font"      ) )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeSetup:disConnectSlots()
+
+   ::disconnect( ::oUI:q_buttonAddTextExt, "clicked()"                )
+   ::disconnect( ::oUI:q_buttonDelTextExt, "clicked()"                )
+
+   ::disconnect( ::oUI:q_buttonKeyAdd    , "clicked()"                )
+   ::disconnect( ::oUI:q_buttonKeyDel    , "clicked()"                )
+   ::disconnect( ::oUI:q_buttonKeyUp     , "clicked()"                )
+   ::disconnect( ::oUI:q_buttonKeyDown   , "clicked()"                )
+
+   ::disconnect( ::oUI:q_tableVar        , QEvent_KeyPress            )
+
+   ::disconnect( ::oUI:q_buttonSelFont   , "clicked()"                )
+   ::disConnect( ::oUI:q_buttonClose     , "clicked()"                )
+   ::disConnect( ::oUI:q_buttonOK        , "clicked()"                )
+   ::disConnect( ::oUI:q_buttonCancel    , "clicked()"                )
+   ::disConnect( ::oUI:q_treeWidget      , "itemSelectionChanged()"   )
+   ::disconnect( ::oUI:q_comboStyle      , "currentIndexChanged(int)" )
+
+   ::disconnect( ::oUI:q_checkAnimated   , "stateChanged(int)"        )
+
+   ::disconnect( ::oUI:q_checkHilightLine, "stateChanged(int)"        )
+   ::disconnect( ::oUI:q_checkHorzRuler  , "stateChanged(int)"        )
+   ::disconnect( ::oUI:q_checkLineNumbers, "stateChanged(int)"        )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeSetup:connectSlots()
+
+   ::connect( ::oUI:q_buttonAddTextExt, "clicked()"               , {| | ::execEvent( "buttonAddTextext_clicked"          ) } )
+   ::connect( ::oUI:q_buttonDelTextExt, "clicked()"               , {| | ::execEvent( "buttonDelTextext_clicked"          ) } )
+
+   ::connect( ::oUI:q_buttonKeyAdd    , "clicked()"               , {| | ::execEvent( "buttonKeyAdd_clicked"              ) } )
+   ::connect( ::oUI:q_buttonKeyDel    , "clicked()"               , {| | ::execEvent( "buttonKeyDel_clicked"              ) } )
+   ::connect( ::oUI:q_buttonKeyUp     , "clicked()"               , {| | ::execEvent( "buttonKeyUp_clicked"               ) } )
+   ::connect( ::oUI:q_buttonKeyDown   , "clicked()"               , {| | ::execEvent( "buttonKeyDown_clicked"             ) } )
+
+   ::connect( ::oUI:q_tableVar        , QEvent_KeyPress           , {|p| ::execEvent( "tableVar_keyPress", p              ) } )
+//   ::connect( ::oUI:q_tableVar        , "itemActivated(QTblWItem)"  , {|p| ::execEvent( "tableVar_keyPress", p              ) } )
+
+   ::connect( ::oUI:q_buttonSelFont   , "clicked()"               , {| | ::execEvent( "buttonSelFont_clicked"             ) } )
+   ::connect( ::oUI:q_buttonClose     , "clicked()"               , {| | ::execEvent( "buttonClose_clicked"               ) } )
+   ::connect( ::oUI:q_buttonOk        , "clicked()"               , {| | ::execEvent( "buttonOk_clicked"                  ) } )
+   ::connect( ::oUI:q_buttonCancel    , "clicked()"               , {| | ::execEvent( "buttonCancel_clicked"              ) } )
+   ::connect( ::oUI:q_treeWidget      , "itemSelectionChanged()"  , {| | ::execEvent( "treeWidget_itemSelectionChanged"   ) } )
+   ::connect( ::oUI:q_comboStyle      , "currentIndexChanged(int)", {|i| ::execEvent( "comboStyle_currentIndexChanged", i ) } )
+
+   ::connect( ::oUI:q_checkAnimated   , "stateChanged(int)"       , {|i| ::execEvent( "checkAnimated_stateChanged", i     ) } )
+
+   ::connect( ::oUI:q_checkHilightLine, "stateChanged(int)"       , {|i| ::execEvent( "checkHilightLine_stateChanged", i  ) } )
+   ::connect( ::oUI:q_checkHorzRuler  , "stateChanged(int)"       , {|i| ::execEvent( "checkHorzRuler_stateChanged"  , i  ) } )
+   ::connect( ::oUI:q_checkLineNumbers, "stateChanged(int)"       , {|i| ::execEvent( "checkLineNumbers_stateChanged", i  ) } )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeSetup:retrieve()
+   LOCAL a_, i, s, qItm
+
+   ::oINI:cLineEndingMode := iif( ::oUI:q_radioLineEndCRLF : isChecked(), "CRLF", ;
+                             iif( ::oUI:q_radioLineEndCR   : isChecked(), "CR"  , ;
+                             iif( ::oUI:q_radioLineEndLF   : isChecked(), "LF"  , ;
+                             iif( ::oUI:q_radioLineEndOS   : isChecked(), "OS"  , ;
+                             iif( ::oUI:q_radioLineEndAuto : isChecked(), "AUTO", "CRLF" ) ) ) ) )
+
+   ::oINI:lTrimTrailingBlanks      := ::oUI:q_checkTrimTrailingBlanks      : isChecked()
+   ::oINI:lSaveSourceWhenComp      := ::oUI:q_checkSaveSourceWhenComp      : isChecked()
+   ::oINI:lSupressHbKWordsToUpper  := ::oUI:q_checkSupressHbKWordsToUpper  : isChecked()
+   ::oINI:lReturnAsBeginKeyword    := ::oUI:q_checkReturnAsBeginKeyword    : isChecked()
+   ::oINI:lConvTabToSpcWhenLoading := ::oUI:q_checkConvTabToSpcWhenLoading : isChecked()
+   ::oINI:lTabToSpcInEdits         := ::oUI:q_checkTabToSpcInEdits         : isChecked()
+   ::oINI:lAutoIndent              := ::oUI:q_checkAutoIndent              : isChecked()
+   ::oINI:lSmartIndent             := ::oUI:q_checkSmartIndent             : isChecked()
+   ::oIde:nTabSpaces               := val( ::oUI:q_editTabSpaces           : text() )
+   ::oINI:nIndentSpaces            := val( ::oUI:q_editIndentSpaces        : text() )
+
+   ::oINI:aKeywords := {}
+   FOR EACH a_ IN ::aKeyItems
+      aadd( ::oINI:aKeywords, { alltrim( ::aKeyItems[ a_:__enumIndex(),1 ]:text() ), alltrim( ::aKeyItems[ a_:__enumIndex(),2 ]:text() ) } )
+   NEXT
+
+   s := ""
+   FOR i := 1 TO ::oUI:q_listTextExt:count()
+      qItm := QListWidgetItem():from( ::oUI:q_listTextExt:item( i - 1 ) )
+      s += "." + qItm:text() + ","
+   NEXT
+   s := substr( s, 1, len( s ) - 1 )
+   ::oINI:cTextFileExtensions := s
+
+   ::oINI:nTmpBkpPrd := val( ::oUI:q_editTmpBkpPrd : text() )
+   ::oINI:cBkpPath   := ::oUI:q_editBkpPath   : text()
+   ::oINI:cBkpSuffix := ::oUI:q_editBkpSuffix : text()
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeSetup:populate()
+   LOCAL s, a_
+
+   ::disconnectSlots()
+
+   ::oUI:q_checkAnimated                : setChecked( val( ::oINI:cIdeAnimated ) > 0      )
+
+   ::oUI:q_checkHilightLine             : setChecked( ::oIde:lCurrentLineHighlightEnabled )
+   ::oUI:q_checkHorzRuler               : setChecked( ::oIde:lHorzRulerVisible            )
+   ::oUI:q_checkLineNumbers             : setChecked( ::oIde:lLineNumbersVisible          )
+
+   /* Line Ending Mode */
+   s := ::oINI:cLineEndingMode
+   //
+   ::oUI:q_radioLineEndCRLF             : setChecked( s == "CRLF" .OR. empty( s )         )
+   ::oUI:q_radioLineEndCR               : setChecked( s == "CR"                           )
+   ::oUI:q_radioLineEndLF               : setChecked( s == "LF"                           )
+   ::oUI:q_radioLineEndOS               : setChecked( s == "OS"                           )
+   ::oUI:q_radioLineEndAuto             : setChecked( s == "AUTO"                         )
+
+   ::oUI:q_checkTrimTrailingBlanks      : setChecked( ::oINI:lTrimTrailingBlanks          )
+   ::oUI:q_checkSaveSourceWhenComp      : setChecked( ::oINI:lSaveSourceWhenComp          )
+   ::oUI:q_checkSupressHbKWordsToUpper  : setChecked( ::oINI:lSupressHbKWordsToUpper      )
+   ::oUI:q_checkReturnAsBeginKeyword    : setChecked( ::oINI:lReturnAsBeginKeyword        )
+   ::oUI:q_checkConvTabToSpcWhenLoading : setChecked( ::oINI:lConvTabToSpcWhenLoading     )
+   ::oUI:q_checkTabToSpcInEdits         : setChecked( ::oINI:lTabToSpcInEdits             )
+   ::oUI:q_checkAutoIndent              : setChecked( ::oINI:lAutoIndent                  )
+   ::oUI:q_checkSmartIndent             : setChecked( ::oINI:lSmartIndent                 )
+   ::oUI:q_editTabSpaces                : setText( hb_ntos( ::oIde:nTabSpaces    )        )
+   ::oUI:q_editIndentSpaces             : setText( hb_ntos( ::oINI:nIndentSpaces )        )
+
+   ::oUI:q_tableVar:clearContents()
+   ::aKeyItems := {}
+   FOR EACH a_ IN ::oINI:aKeywords
+      ::populateKeyTableRow( a_:__enumIndex(), a_[ 1 ], a_[ 2 ] )
+   NEXT
+
+   a_:= hb_atokens( ::oINI:cTextFileExtensions, ",." )
+   FOR EACH s IN a_
+      ::oUI:q_listTextExt:addItem( strtran( s, "." ) )
+   NEXT
+   ::oUI:q_listTextExt:setSortingEnabled( .t. )
+   ::oUI:q_listTextExt:sortItems()
+
+   ::oUI:q_editTmpBkpPrd : setText( hb_ntos( ::oINI:nTmpBkpPrd ) )
+   ::oUI:q_editBkpPath   : setText( ::oINI:cBkpPath   )
+   ::oUI:q_editBkpSuffix : setText( ::oINI:cBkpSuffix )
+
+   ::connectSlots()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -755,42 +1007,24 @@ METHOD IdeSetup:show()
       ::oUI:setMaximumHeight( ::oUI:height() )
       ::oUI:setMinimumHeight( ::oUI:height() )
 
-      ::oUI:q_treeWidget:setHeaderHidden( .t. )
-      ::oUI:q_treeWidget:setIconSize( QSize():new( 12,12 ) )
-      ::oUI:q_treeWidget:setIndentation( 12 )
-
-      ::oUI:q_buttonAdd :setIcon( hbide_image( "dc_plus"   ) )
-      ::oUI:q_buttonDel :setIcon( hbide_image( "dc_delete" ) )
-      ::oUI:q_buttonUp  :setIcon( hbide_image( "dc_up"     ) )
-      ::oUI:q_buttonDown:setIcon( hbide_image( "dc_down"   ) )
-
-
-      ::oUI:q_buttonPathIni      :setIcon( hbide_image( "open" ) )
-      ::oUI:q_buttonPathHbmk2    :setIcon( hbide_image( "open" ) )
-      ::oUI:q_buttonPathSnippets :setIcon( hbide_image( "open" ) )
-      ::oUI:q_buttonPathEnv      :setIcon( hbide_image( "open" ) )
-      ::oUI:q_buttonPathShortcuts:setIcon( hbide_image( "open" ) )
-      ::oUI:q_buttonPathThemes   :setIcon( hbide_image( "open" ) )
-
       ::buildTree()
+      ::buildKeywords()
 
-      ::connect( ::oUI:q_buttonClose, "clicked()"             , {|| ::execEvent( "buttonClose_clicked" ) } )
-      ::connect( ::oUI:q_treeWidget , "itemSelectionChanged()", {|| ::execEvent( "treeWidget_itemSelectionChanged" ) } )
-
-      ::oUI:q_treeWidget:setCurrentItem( ::aItems[ 2 ] ) /* General */
+      ::oUI:q_editFontName:setText( ::oINI:cFontName )
+      ::oUI:q_editPointSize:setText( hb_ntos( ::oINI:nPointSize ) )
 
       FOR EACH cStyle IN ::aStyles
          ::oUI:q_comboStyle:addItem( cStyle )
       NEXT
-      ::oUI:q_comboStyle:setCurrentIndex( 0 )
-      ::connect( ::oUI:q_comboStyle, "currentIndexChanged(int)", {|p| ::execEvent( "comboStyle_currentIndexChanged", p ) } )
+      ::oUI:q_comboStyle:setCurrentIndex( ascan( ::aStyles, {|e| e == ::oINI:cIdeTheme } ) - 1 )
 
-      ::oUI:q_checkAnimated:setChecked( val( ::oIde:oINI:cIdeAnimated ) > 0 )
-      ::connect( ::oUI:q_checkAnimated, "stateChanged(int)", {|i| ::execEvent( "checkAnimated_stateChanged", i ) } )
+      ::setIcons()
+      ::connectSlots()
 
       ::oUI:hide()
    ENDIF
 
+   ::populate()
    ::oIde:setPosByIniEx( ::oUI:oWidget, ::oINI:cSetupDialogGeometry )
    ::oUI:exec()
 
@@ -799,11 +1033,40 @@ METHOD IdeSetup:show()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeSetup:execEvent( cEvent, p )
-   LOCAL qItem, nIndex
+   LOCAL qItem, nIndex, qFontDlg, qFont, nOK, nRow, qEvent, b_, q0, q1, nCol, w0, w1
 
    SWITCH cEvent
+   CASE "buttonSelFont_clicked"
+      qFont := QFont():new( ::oINI:cFontName, ::oINI:nPointSize )
+      qFont:setFixedPitch( .t. )
+      qFontDlg := QFontDialog():new( ::oUI )
+      qFontDlg:setCurrentFont( qFont )
+      nOK := qFontDlg:exec()
+      IF nOK == 1
+         qFont := QFont():from( qFontDlg:currentFont() )
+
+         ::oUI:q_editFontName:setText( qFont:family() )
+         ::oUI:q_editPointSize:setText( hb_ntos( qFont:pointSize() ) )
+
+         ::oINI:cFontName  := ::oUI:q_editFontName:text()
+         ::oINI:nPointSize := val( ::oUI:q_editPointSize:text() )
+      ENDIF
+      EXIT
+
    CASE "checkAnimated_stateChanged"
       ::oDK:animateComponents( iif( p == 0, 0, 1 ) )
+      EXIT
+
+   CASE "checkHilightLine_stateChanged"
+      ::oEM:toggleCurrentLineHighlightMode()
+      EXIT
+
+   CASE "checkHorzRuler_stateChanged"
+      ::oEM:toggleHorzRuler()
+      EXIT
+
+   CASE "checkLineNumbers_stateChanged"
+      ::oEM:toggleLineNumbers()
       EXIT
 
    CASE "treeWidget_itemSelectionChanged"
@@ -813,18 +1076,167 @@ METHOD IdeSetup:execEvent( cEvent, p )
       ENDIF
       EXIT
 
-   CASE "buttonClose_clicked"
+   CASE "buttonCancel_clicked"
       ::oIde:oINI:cSetupDialogGeometry := hbide_posAndSize( ::oUI:oWidget )
+      ::oUI:done( 0 )
+      EXIT
+
+   CASE "buttonClose_clicked"
+   CASE "buttonOk_clicked"
+      ::oIde:oINI:cSetupDialogGeometry := hbide_posAndSize( ::oUI:oWidget )
+      ::retrieve()
       ::oUI:done( 1 )
       EXIT
 
    CASE "comboStyle_currentIndexChanged"
       IF ( nIndex := ::oUI:q_comboStyle:currentIndex() ) > -1
-         ::oIde:oINI:cIdeTheme := ::aStyles[ nIndex + 1 ]
+         ::oINI:cIdeTheme := ::aStyles[ nIndex + 1 ]
          ::setSystemStyle( ::aStyles[ nIndex + 1 ] )
       ENDIF
       EXIT
+
+   CASE "buttonAddTextext_clicked"
+      q0 := hbide_fetchAString( ::oUI, "", "Text File Extension" )
+      IF !empty( q0 )
+         ::oUI:q_listTextExt:addItem( lower( strtran( q0, "." ) ) )
+      ENDIF
+      EXIT
+
+   CASE "buttonDelTextext_clicked"
+      IF ::oUI:q_listTextExt:currentRow() >= 0
+         ::oUI:q_listTextExt:takeItem( ::oUI:q_listTextExt:currentRow() )
+      ENDIF
+      EXIT
+
+   CASE "buttonKeyAdd_clicked"
+      ::populateKeyTableRow( len( ::aKeyItems ) + 1, "", "" )
+      ::oUI:q_tableVar:setCurrentItem( ::aKeyItems[ len( ::aKeyItems ), 1 ] )
+      EXIT
+
+   CASE "buttonKeyDel_clicked"
+      IF ( nRow := ::oUI:q_tableVar:currentRow() ) >= 0
+         ::oUI:q_tableVar:removeRow( nRow )
+         hb_adel( ::aKeyItems     , nRow + 1, .t. )
+         hb_adel( ::oINI:aKeywords, nRow + 1, .t. )
+      ENDIF
+      EXIT
+
+   CASE "buttonKeyUp_clicked"
+      IF ( nRow := ::oUI:q_tableVar:currentRow() ) >= 1
+         nCol := ::oUI:q_tableVar:currentColumn()
+
+         b_ := ::aKeyItems[ nRow+1 ]
+         q0 := QTableWidgetItem():new(); q0:setText( b_[ 1 ]:text() )
+         q1 := QTableWidgetItem():new(); q1:setText( b_[ 2 ]:text() )
+
+         b_ := ::aKeyItems[ nRow+0 ]
+         w0 := QTableWidgetItem():new(); w0:setText( b_[ 1 ]:text() )
+         w1 := QTableWidgetItem():new(); w1:setText( b_[ 2 ]:text() )
+
+         ::oUI:q_tableVar:setItem( nRow-0, 0, w0 )
+         ::oUI:q_tableVar:setItem( nRow-0, 1, w1 )
+
+         ::oUI:q_tableVar:setItem( nRow-1, 0, q0 )
+         ::oUI:q_tableVar:setItem( nRow-1, 1, q1 )
+
+         ::aKeyItems[ nRow+1 ] := { w0,w1 }
+         ::aKeyItems[ nRow+0 ] := { q0,q1 }
+
+         ::oUI:q_tableVar:setCurrentItem( iif( nCol == 0, q0, q1 ) )
+      ENDIF
+      EXIT
+
+   CASE "buttonKeyDown_clicked"
+      nRow := ::oUI:q_tableVar:currentRow()
+      IF nRow >= 0 .AND. nRow + 1 < len( ::aKeyItems )
+
+         nCol := ::oUI:q_tableVar:currentColumn()
+
+         b_ := ::aKeyItems[ nRow + 1 ]
+         q0 := QTableWidgetItem():new(); q0:setText( b_[ 1 ]:text() )
+         q1 := QTableWidgetItem():new(); q1:setText( b_[ 2 ]:text() )
+
+         b_ := ::aKeyItems[ nRow + 2 ]
+         w0 := QTableWidgetItem():new(); w0:setText( b_[ 1 ]:text() )
+         w1 := QTableWidgetItem():new(); w1:setText( b_[ 2 ]:text() )
+
+         ::oUI:q_tableVar:setItem( nRow, 0, w0 )
+         ::oUI:q_tableVar:setItem( nRow, 1, w1 )
+
+         ::oUI:q_tableVar:setItem( nRow+1, 0, q0 )
+         ::oUI:q_tableVar:setItem( nRow+1, 1, q1 )
+
+         ::aKeyItems[ nRow + 1 ] := { w0,w1 }
+         ::aKeyItems[ nRow + 2 ] := { q0,q1 }
+
+         ::oUI:q_tableVar:setCurrentItem( iif( nCol == 0, q0, q1 ) )
+      ENDIF
+      EXIT
+
+   CASE "tableVar_keyPress"
+      IF ( nRow := ::oUI:q_tableVar:currentRow() ) >= 0
+         qEvent := QKeyEvent():from( p )
+HB_TRACE( HB_TR_ALWAYS, "RECEIVING ENTER KEY", qEvent:key() )
+         IF qEvent:key() == Qt_Key_Enter .OR. qEvent:key() == Qt_Key_Return
+HB_TRACE( HB_TR_ALWAYS, "RECEIVING ENTER KEY", 1 )
+         ENDIF
+      ENDIF
+
    ENDSWITCH
+
+   RETURN nRow //Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeSetup:populateKeyTableRow( nRow, cTxtCol1, cTxtCol2 )
+   LOCAL lAppend := len( ::aKeyItems ) < nRow
+   LOCAL q0, q1
+
+   IF lAppend
+      ::oUI:q_tableVar:setRowCount( nRow )
+
+      q0 := QTableWidgetItem():new()
+      q0:setText( cTxtCol1 )
+      ::oUI:q_tableVar:setItem( nRow-1, 0, q0 )
+
+      q1 := QTableWidgetItem():new()
+      q1:setText( cTxtCol2 )
+      ::oUI:q_tableVar:setItem( nRow-1, 1, q1 )
+
+      aadd( ::aKeyItems, { q0, q1 } )
+
+      ::oUI:q_tableVar:setRowHeight( nRow-1, 16 )
+
+   ELSE
+      ::aKeyItems[ nRow, 1 ]:setText( cTxtCol1 )
+      ::aKeyItems[ nRow, 2 ]:setText( cTxtCol2 )
+
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeSetup:buildKeywords()
+   LOCAL hdr_:= { { "Keyword", 100 }, { "Value", 230 } }
+   LOCAL oTbl, n, qItm
+
+   oTbl := ::oUI:q_tableVar
+
+   QHeaderView():from( oTbl:verticalHeader() ):hide()
+   QHeaderView():from( oTbl:horizontalHeader() ):stretchLastSection( .t. )
+
+   oTbl:setAlternatingRowColors( .t. )
+   oTbl:setColumnCount( len( hdr_ ) )
+   oTbl:setShowGrid( .t. )
+   //oTbl:setSelectionMode( QAbstractItemView_SingleSelection )
+   //oTbl:setSelectionBehavior( QAbstractItemView_SelectRows )
+   FOR n := 1 TO len( hdr_ )
+      qItm := QTableWidgetItem():new()
+      qItm:setText( hdr_[ n,1 ] )
+      oTbl:setHorizontalHeaderItem( n-1, qItm )
+      oTbl:setColumnWidth( n-1, hdr_[ n,2 ] )
+   NEXT
 
    RETURN Self
 
@@ -833,9 +1245,12 @@ METHOD IdeSetup:execEvent( cEvent, p )
 METHOD IdeSetup:buildTree()
    LOCAL oRoot, oChild, s
 
+   ::oUI:q_treeWidget:setHeaderHidden( .t. )
+   ::oUI:q_treeWidget:setIconSize( QSize():new( 12,12 ) )
+   ::oUI:q_treeWidget:setIndentation( 12 )
+
    oRoot := QTreeWidgetItem():new()
    oRoot:setText( 0, "Parts" )
-// oRoot:setIcon( 0, hbide_image( "dc_home" ) )
    oRoot:setToolTip( 0, "Parts" )
 
    ::oUI:q_treeWidget:addTopLevelItem( oRoot )
@@ -851,6 +1266,8 @@ METHOD IdeSetup:buildTree()
    NEXT
 
    oRoot:setExpanded( .t. )
+   ::oUI:q_treeWidget:setCurrentItem( ::aItems[ 2 ] ) /* General */
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/

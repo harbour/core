@@ -1230,6 +1230,10 @@ METHOD IdeProjManager:buildSource( lExecutable )
       MsgBox( "No active editing source available !" )
       RETURN Self
    ENDIF
+   IF ::oINI:lSaveSourceWhenComp
+      ::oSM:saveNamedSource( oEdit:sourceFile )
+   ENDIF
+
    ::cargo := oEdit
 
    aadd( aHbp, "-q"         )
@@ -1324,9 +1328,11 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
 
    ::oProject := ::getProjectByTitle( cProject )
    // attempt to save the sources if are open in editors       should it be controlled by some option ?
-   FOR EACH oSource IN ::oProject:hSources
-      ::oSM:saveNamedSource( oSource:original )
-   NEXT
+   IF ::oINI:lSaveSourceWhenComp
+      FOR EACH oSource IN ::oProject:hSources
+         ::oSM:saveNamedSource( oSource:original )
+      NEXT
+   ENDIF
 
    cHbpFN     := hbide_pathFile( ::oProject:location, iif( empty( ::oProject:outputName ), "_temp", ::oProject:outputName ) )
    cHbpPath   := cHbpFN + iif( ::lPPO, '_tmp', "" ) + ".hbp"

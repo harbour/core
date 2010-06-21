@@ -1092,6 +1092,7 @@ CLASS IdeEditor INHERIT IdeObject
    DATA   pathNormalized
    DATA   qLayout
    DATA   lLoaded                                 INIT   .F.
+   DATA   lInitLoad                               INIT   .t.
 
    DATA   qThumbnail
    DATA   qTNFont
@@ -1121,6 +1122,8 @@ CLASS IdeEditor INHERIT IdeObject
    DATA   qEvents
    DATA   lReadOnly                               INIT  .F.
 
+   DATA   cEol                                    INIT  ""
+
    METHOD new( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView )
    METHOD create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView, aBookMarks )
    METHOD split( nOrient, oEditP )
@@ -1137,6 +1140,8 @@ CLASS IdeEditor INHERIT IdeObject
    METHOD changeThumbnail()
    METHOD scrollThumbnail()
    METHOD qscintilla()
+   METHOD prepareBufferToLoad( cBuffer )
+   METHOD prepareBufferToSave( cBuffer )
 
    ENDCLASS
 
@@ -1217,7 +1222,7 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView, a
    //
    ::oTab:oWidget:setLayout( ::qLayout )
 
-   ::oEdit   := IdeEdit():new( Self, 0 )
+   ::oEdit   := IdeEdit():new( ::oIde, Self, 0 )
    ::oEdit:aBookMarks := aBookMarks
    ::oEdit:create()
    ::qEdit   := ::oEdit:qEdit
@@ -1313,13 +1318,57 @@ METHOD IdeEditor:destroy()
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeEditor:prepareBufferToSave( cBuffer )
+   LOCAL cE, cEOL, a_, s
+
+   cE := ::oSetup:eol()
+
+   // here we can extercise user settings via Setup
+   //
+   cEOL := iif( ::cEOL == "", cE, ::cEOL )
+   IF cEOL <> cE
+      // MsgBox( "Difference in set EOL and current file EOL mode, saving with original mode!" )
+   ENDIF
+
+   cBuffer := strtran( cBuffer, chr( 13 ) )
+   IF cEOL != chr( 10 )
+      cBuffer := strtran( cBuffer, chr( 10 ), cEOL )
+   ENDIF
+   IF ::oINI:lTrimTrailingBlanks
+      a_:= hb_atokens( cBuffer, cEOL )
+      FOR EACH s IN a_
+         s := trim( s )
+      NEXT
+      cBuffer := ""
+      aeval( a_, {|e| cBuffer += e + cEOL } )
+      cBuffer := substr( cBuffer, 1, len( cBuffer ) - len( cEOL ) )
+   ENDIF
+
+   RETURN cBuffer
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditor:prepareBufferToLoad( cBuffer )
+   LOCAL cSpaces
+
+   ::cEOL := hbide_getEol( @cBuffer )
+
+   IF ::oINI:lConvTabToSpcWhenLoading
+      cSpaces := space( ::nTabSpaces )
+      cBuffer := strtran( cBuffer, chr( 9 ), cSpaces )
+   ENDIF
+
+   RETURN cBuffer
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeEditor:setDocumentProperties()
    LOCAL qCursor
 
    qCursor := QTextCursor():configure( ::qEdit:textCursor() )
 
    IF !( ::lLoaded )       /* First Time */
-      ::qEdit:setPlainText( hb_memoRead( ::sourceFile ) )
+      ::qEdit:setPlainText( ::prepareBufferToLoad( hb_memoread( ::sourceFile ) ) )
       qCursor:setPosition( ::nPos )
       ::qEdit:setTextCursor( qCursor )
 
@@ -1334,7 +1383,7 @@ METHOD IdeEditor:setDocumentProperties()
 
       IF ::cType $ "PRG,C,CPP,H,CH"
          ::qTimerSave := QTimer():New()
-         ::qTimerSave:setInterval( 60000 )  // 1 minutes
+         ::qTimerSave:setInterval( max( 30000, ::oINI:nTmpBkpPrd * 1000 ) )
          ::connect( ::qTimerSave, "timeout()", {|| ::execEvent( qTimeSave_timeout ) } )
          ::qTimerSave:start()
       ENDIF
@@ -1426,7 +1475,7 @@ METHOD IdeEditor:split( nOrient, oEditP )
 
    HB_SYMBOL_UNUSED( oEditP  )
 
-   oEdit := IdeEdit():new( Self, 1 ):create()
+   oEdit := IdeEdit():new( ::oIde, Self, 1 ):create()
    oEdit:qEdit:setDocument( ::qDocument )
    oEdit:nOrient := nOrient
 
@@ -1470,7 +1519,6 @@ METHOD IdeEditor:buildTabPage( cSource )
 
    ::oTab:create()
 
-   ::qTabWidget:setCurrentIndex( ::qTabWidget:indexOf( ::oTab:oWidget ) )
    ::qTabWidget:setTabTooltip( ::qTabWidget:indexOf( ::oTab:oWidget ), cSource )
    //::connect( ::oTab:oWidget, "customContextMenuRequested(QPoint)", {|p| ::execEvent( qTab_contextMenu, p ) } )
    //::oTab:hbContextMenu := {|| ::execEvent( qTab_contextMenu, p ) }
@@ -1548,7 +1596,7 @@ METHOD IdeEditor:applyTheme( cTheme )
 METHOD IdeEditor:showThumbnail()
 
    IF empty( ::qThumbnail )
-      ::qThumbnail := IdeEdit():new( Self, 0 ):create()
+      ::qThumbnail := IdeEdit():new( ::oIde, Self, 0 ):create()
       ::qThumbnail:currentPointSize := 4
       ::qThumbnail:fontFamily := "Courier New"
       ::qThumbnail:setFont()

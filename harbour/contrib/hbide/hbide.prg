@@ -347,7 +347,7 @@ METHOD HbIde:new( aParams )
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:create( aParams )
-   LOCAL qPixmap, qSplash, cView
+   LOCAL qPixmap, qSplash, cView, cV
 
    qPixmap := QPixmap():new( hb_dirBase() + "resources" + hb_osPathSeparator() + "hbidesplash.png" )
    qSplash := QSplashScreen():new()
@@ -363,6 +363,9 @@ METHOD HbIde:create( aParams )
 
    /* Setup GUI Error Reporting System*/
    hbqt_errorsys()
+
+   /* Post self to set/get function - object variables may be needed on functions level */
+   hbide_setIde( Self )
 
    /* Editor's Font - TODO: User Managed Interface */
    ::oFont := XbpFont():new()
@@ -383,12 +386,6 @@ METHOD HbIde:create( aParams )
    IF ::nRunMode == HBIDE_RUN_MODE_INI
       ::oINI:load( ::cProjIni )
    ENDIF
-   #if 0
-   /* Load IDE Settings */                                     /* TODO: delete */
-   IF ::nRunMode == HBIDE_RUN_MODE_INI
-      hbide_loadINI( Self, ::cProjIni )
-   ENDIF
-   #endif
 
    /* Load User Dictionaries */
    hbide_loadUserDictionaries( Self )
@@ -397,10 +394,8 @@ METHOD HbIde:create( aParams )
    ::oSC := IdeShortcuts():new( Self ):create()
 
    /* Insert command line projects */
-//   aeval( ::aHbpOnCmdLine, {|e| aadd( ::aINI[ INI_PROJECTS ], e ) } )
    aeval( ::aHbpOnCmdLine, {|e| aadd( ::oINI:aProjFiles, e ) } )
    /* Insert command line sources */
-//   aeval( ::aSrcOnCmdLine, {|e| aadd( ::aINI[ INI_FILES    ], hbide_parseSourceComponents( e ) ) } )
    aeval( ::aSrcOnCmdLine, {|e| aadd( ::oINI:aFiles, hbide_parseSourceComponents( e ) ) } )
 
    /* Store to restore when all preliminary operations are completed */
@@ -499,6 +494,13 @@ METHOD HbIde:create( aParams )
    ::oDK:animateComponents( val( ::oINI:cIdeAnimated ) )
    ::oSetup:setSystemStyle( ::oINI:cIdeTheme )
 
+   FOR EACH cV IN ::oINI:aViews
+      ::oDK:setView( cV )
+      ::qTabWidget:setCurrentIndex( 0 )
+      ::qTabWidget:setCurrentIndex( ::qTabWidget:count() - 1 )
+      ::qTabWidget:setCurrentIndex( 0 )
+   NEXT
+
    ::oDlg:Show()
    IF ::nRunMode == HBIDE_RUN_MODE_PRG
       ::oDockPT:hide()
@@ -511,6 +513,10 @@ METHOD HbIde:create( aParams )
       ::oDK:setView( "Stats" )
       ::oDK:setView( cView )
    ENDIF
+   ::qTabWidget:setCurrentIndex( -1 )
+   ::qTabWidget:setCurrentIndex( 0 )
+   ::qTabWidget:setCurrentIndex( ::qTabWidget:count() - 1 )
+   ::qTabWidget:setCurrentIndex( val( ::oINI:cRecentTabIndex ) )
 
    ::showApplicationCursor()
    qSplash:close()
@@ -527,14 +533,12 @@ METHOD HbIde:create( aParams )
 
       IF ::nEvent == xbeP_Quit
          HB_TRACE( HB_TR_ALWAYS, "---------------- xbeP_Quit" )
-         //hbide_saveINI( Self ) ;  ::oINI:save()
          ::oINI:save()
          EXIT
       ENDIF
 
       IF ::nEvent == xbeP_Close
          HB_TRACE( HB_TR_ALWAYS, "================ xbeP_Close" )
-         //hbide_saveINI( Self )  ; ::oINI:save()
          ::oINI:save()
          ::oSM:closeAllSources()
          EXIT

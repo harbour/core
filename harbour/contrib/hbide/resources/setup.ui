@@ -41,7 +41,7 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>2</number>
+    <number>0</number>
    </property>
    <widget class="QWidget" name="pageGeneral">
     <widget class="QGroupBox" name="groupBox">
@@ -68,7 +68,7 @@
       <property name="title">
        <string> Source </string>
       </property>
-      <widget class="QCheckBox" name="checkTrimLines">
+      <widget class="QCheckBox" name="checkTrimTrailingBlanks">
        <property name="geometry">
         <rect>
          <x>14</x>
@@ -171,7 +171,7 @@
        <property name="title">
         <string> TABS - Indents</string>
        </property>
-       <widget class="QCheckBox" name="checkTab2Spc">
+       <widget class="QCheckBox" name="checkTabToSpcInEdits">
         <property name="geometry">
          <rect>
           <x>8</x>
@@ -197,7 +197,7 @@
          <string>Spaces for a TAB</string>
         </property>
        </widget>
-       <widget class="QLineEdit" name="editSpcPerTab">
+       <widget class="QLineEdit" name="editTabSpaces">
         <property name="geometry">
          <rect>
           <x>98</x>
@@ -246,7 +246,7 @@
          <string>Indent size</string>
         </property>
        </widget>
-       <widget class="QLineEdit" name="editIndentSize">
+       <widget class="QLineEdit" name="editIndentSpaces">
         <property name="geometry">
          <rect>
           <x>98</x>
@@ -257,7 +257,7 @@
         </property>
        </widget>
       </widget>
-      <widget class="QCheckBox" name="checkSaveSrcOnComp">
+      <widget class="QCheckBox" name="checkSaveSourceWhenComp">
        <property name="geometry">
         <rect>
          <x>14</x>
@@ -270,7 +270,7 @@
         <string>Save source before compiling process starts ?</string>
        </property>
       </widget>
-      <widget class="QCheckBox" name="checkNoHBKeysCaseConv">
+      <widget class="QCheckBox" name="checkSupressHbKWordsToUpper">
        <property name="geometry">
         <rect>
          <x>14</x>
@@ -283,7 +283,7 @@
         <string>Supress convertion to uppcase of Harbour keywords ?</string>
        </property>
       </widget>
-      <widget class="QCheckBox" name="checkConvTabsOnLoad">
+      <widget class="QCheckBox" name="checkConvTabToSpcWhenLoading">
        <property name="geometry">
         <rect>
          <x>14</x>
@@ -296,7 +296,7 @@
         <string>Convert tabs to spaces when a source is loaded ?</string>
        </property>
       </widget>
-      <widget class="QCheckBox" name="checkReturnAtBegin">
+      <widget class="QCheckBox" name="checkReturnAsBeginKeyword">
        <property name="geometry">
         <rect>
          <x>14</x>
@@ -688,7 +688,7 @@
         <string>Transitory temp backup period:</string>
        </property>
       </widget>
-      <widget class="QLineEdit" name="lineEdit">
+      <widget class="QLineEdit" name="editTmpBkpPrd">
        <property name="geometry">
         <rect>
          <x>190</x>
@@ -711,7 +711,7 @@
         <string>Permanent backup path:</string>
        </property>
       </widget>
-      <widget class="QLineEdit" name="editBackupPath">
+      <widget class="QLineEdit" name="editBkpPath">
        <property name="geometry">
         <rect>
          <x>12</x>
@@ -721,7 +721,7 @@
         </rect>
        </property>
       </widget>
-      <widget class="QToolButton" name="buttonBackupPath">
+      <widget class="QToolButton" name="buttonBkpPath">
        <property name="geometry">
         <rect>
          <x>276</x>
@@ -747,7 +747,7 @@
         <string>Permanent backup suffix:</string>
        </property>
       </widget>
-      <widget class="QLineEdit" name="editBackupSuffix">
+      <widget class="QLineEdit" name="editBkpSuffix">
        <property name="geometry">
         <rect>
          <x>12</x>
@@ -1115,7 +1115,7 @@
        </rect>
       </property>
      </widget>
-     <widget class="QToolButton" name="buttonAdd">
+     <widget class="QToolButton" name="buttonKeyAdd">
       <property name="geometry">
        <rect>
         <x>8</x>
@@ -1128,7 +1128,7 @@
        <string>...</string>
       </property>
      </widget>
-     <widget class="QToolButton" name="buttonDel">
+     <widget class="QToolButton" name="buttonKeyDel">
       <property name="geometry">
        <rect>
         <x>42</x>
@@ -1141,7 +1141,7 @@
        <string>...</string>
       </property>
      </widget>
-     <widget class="QToolButton" name="buttonDown">
+     <widget class="QToolButton" name="buttonKeyDown">
       <property name="geometry">
        <rect>
         <x>78</x>
@@ -1154,7 +1154,7 @@
        <string>...</string>
       </property>
      </widget>
-     <widget class="QToolButton" name="buttonUp">
+     <widget class="QToolButton" name="buttonKeyUp">
       <property name="geometry">
        <rect>
         <x>112</x>
@@ -1591,6 +1591,9 @@
    <property name="text">
     <string>Close</string>
    </property>
+   <property name="autoDefault">
+    <bool>false</bool>
+   </property>
   </widget>
   <widget class="QPushButton" name="buttonCancel">
    <property name="geometry">
@@ -1604,6 +1607,9 @@
    <property name="text">
     <string>Cancel</string>
    </property>
+   <property name="autoDefault">
+    <bool>false</bool>
+   </property>
   </widget>
   <widget class="QPushButton" name="buttonOk">
    <property name="geometry">
@@ -1616,6 +1622,9 @@
    </property>
    <property name="text">
     <string>Ok</string>
+   </property>
+   <property name="autoDefault">
+    <bool>false</bool>
    </property>
   </widget>
  </widget>

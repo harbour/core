@@ -1849,7 +1849,7 @@ int HBQPlainTextEdit::hbLineNumberAreaWidth()
       max /= 10;
       ++digits;
    }
-   int width  = fontMetrics().width( QLatin1Char( '9' ) );
+   int width  = lineNumberArea->fontMetrics().width( QLatin1Char( '9' ) );
    int iM     = fontMetrics().height() / 2;
    int iMark  = bookMarksGoto.size() > 0 ? ( 5 + iM + 2 ) : 0;
    int space  = iMark + ( width * digits ) + 2;

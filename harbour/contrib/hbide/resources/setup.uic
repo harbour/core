@@ -1,10 +1,10 @@
 /********************************************************************************
-** Form generated from reading ui file 'setup.ui'
+** Form generated from reading UI file 'setup.ui'
 **
-** Created: Thu Jun 17 17:04:10 2010
-**      by: Qt User Interface Compiler version 4.5.3
+** Created: Sun Jun 20 22:12:35 2010
+**      by: Qt User Interface Compiler version 4.6.2
 **
-** WARNING! All changes made in this file will be lost when recompiling ui file!
+** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
 
 #ifndef SETUP_H
@@ -41,7 +41,7 @@ public:
     QWidget *pageGeneral;
     QGroupBox *groupBox;
     QGroupBox *groupBox_11;
-    QCheckBox *checkTrimLines;
+    QCheckBox *checkTrimTrailingBlanks;
     QGroupBox *groupBox_12;
     QRadioButton *radioLineEndAuto;
     QRadioButton *radioLineEndOS;
@@ -49,17 +49,17 @@ public:
     QRadioButton *radioLineEndCR;
     QRadioButton *radioLineEndLF;
     QGroupBox *groupBox_13;
-    QCheckBox *checkTab2Spc;
+    QCheckBox *checkTabToSpcInEdits;
     QLabel *label_4;
-    QLineEdit *editSpcPerTab;
+    QLineEdit *editTabSpaces;
     QCheckBox *checkAutoIndent;
     QCheckBox *checkSmartIndent;
     QLabel *label_5;
-    QLineEdit *editIndentSize;
-    QCheckBox *checkSaveSrcOnComp;
-    QCheckBox *checkNoHBKeysCaseConv;
-    QCheckBox *checkConvTabsOnLoad;
-    QCheckBox *checkReturnAtBegin;
+    QLineEdit *editIndentSpaces;
+    QCheckBox *checkSaveSourceWhenComp;
+    QCheckBox *checkSupressHbKWordsToUpper;
+    QCheckBox *checkConvTabToSpcWhenLoading;
+    QCheckBox *checkReturnAsBeginKeyword;
     QGroupBox *groupBox_14;
     QCheckBox *checkHorzRuler;
     QCheckBox *checkLineNumbers;
@@ -92,12 +92,12 @@ public:
     QToolButton *buttonSelFont;
     QGroupBox *groupBox_19;
     QLabel *label_15;
-    QLineEdit *lineEdit;
+    QLineEdit *editTmpBkpPrd;
     QLabel *label_17;
-    QLineEdit *editBackupPath;
-    QToolButton *buttonBackupPath;
+    QLineEdit *editBkpPath;
+    QToolButton *buttonBkpPath;
     QLabel *label_18;
-    QLineEdit *editBackupSuffix;
+    QLineEdit *editBkpSuffix;
     QGroupBox *groupBox_20;
     QListWidget *listTextExt;
     QToolButton *buttonAddTextExt;
@@ -129,10 +129,10 @@ public:
     QWidget *pageVariables;
     QGroupBox *groupBox_5;
     QTableWidget *tableVar;
-    QToolButton *buttonAdd;
-    QToolButton *buttonDel;
-    QToolButton *buttonDown;
-    QToolButton *buttonUp;
+    QToolButton *buttonKeyAdd;
+    QToolButton *buttonKeyDel;
+    QToolButton *buttonKeyDown;
+    QToolButton *buttonKeyUp;
     QWidget *pageDictionaries;
     QGroupBox *groupBox_10;
     QListWidget *listDictNames;
@@ -193,9 +193,9 @@ public:
         groupBox_11 = new QGroupBox(groupBox);
         groupBox_11->setObjectName(QString::fromUtf8("groupBox_11"));
         groupBox_11->setGeometry(QRect(10, 2, 331, 265));
-        checkTrimLines = new QCheckBox(groupBox_11);
-        checkTrimLines->setObjectName(QString::fromUtf8("checkTrimLines"));
-        checkTrimLines->setGeometry(QRect(14, 18, 301, 19));
+        checkTrimTrailingBlanks = new QCheckBox(groupBox_11);
+        checkTrimTrailingBlanks->setObjectName(QString::fromUtf8("checkTrimTrailingBlanks"));
+        checkTrimTrailingBlanks->setGeometry(QRect(14, 18, 301, 19));
         groupBox_12 = new QGroupBox(groupBox_11);
         groupBox_12->setObjectName(QString::fromUtf8("groupBox_12"));
         groupBox_12->setGeometry(QRect(10, 120, 147, 135));
@@ -217,15 +217,15 @@ public:
         groupBox_13 = new QGroupBox(groupBox_11);
         groupBox_13->setObjectName(QString::fromUtf8("groupBox_13"));
         groupBox_13->setGeometry(QRect(172, 120, 149, 135));
-        checkTab2Spc = new QCheckBox(groupBox_13);
-        checkTab2Spc->setObjectName(QString::fromUtf8("checkTab2Spc"));
-        checkTab2Spc->setGeometry(QRect(8, 18, 131, 19));
+        checkTabToSpcInEdits = new QCheckBox(groupBox_13);
+        checkTabToSpcInEdits->setObjectName(QString::fromUtf8("checkTabToSpcInEdits"));
+        checkTabToSpcInEdits->setGeometry(QRect(8, 18, 131, 19));
         label_4 = new QLabel(groupBox_13);
         label_4->setObjectName(QString::fromUtf8("label_4"));
         label_4->setGeometry(QRect(8, 42, 85, 16));
-        editSpcPerTab = new QLineEdit(groupBox_13);
-        editSpcPerTab->setObjectName(QString::fromUtf8("editSpcPerTab"));
-        editSpcPerTab->setGeometry(QRect(98, 42, 39, 20));
+        editTabSpaces = new QLineEdit(groupBox_13);
+        editTabSpaces->setObjectName(QString::fromUtf8("editTabSpaces"));
+        editTabSpaces->setGeometry(QRect(98, 42, 39, 20));
         checkAutoIndent = new QCheckBox(groupBox_13);
         checkAutoIndent->setObjectName(QString::fromUtf8("checkAutoIndent"));
         checkAutoIndent->setGeometry(QRect(8, 64, 89, 19));
@@ -235,21 +235,21 @@ public:
         label_5 = new QLabel(groupBox_13);
         label_5->setObjectName(QString::fromUtf8("label_5"));
         label_5->setGeometry(QRect(8, 108, 59, 16));
-        editIndentSize = new QLineEdit(groupBox_13);
-        editIndentSize->setObjectName(QString::fromUtf8("editIndentSize"));
-        editIndentSize->setGeometry(QRect(98, 104, 39, 20));
-        checkSaveSrcOnComp = new QCheckBox(groupBox_11);
-        checkSaveSrcOnComp->setObjectName(QString::fromUtf8("checkSaveSrcOnComp"));
-        checkSaveSrcOnComp->setGeometry(QRect(14, 36, 301, 19));
-        checkNoHBKeysCaseConv = new QCheckBox(groupBox_11);
-        checkNoHBKeysCaseConv->setObjectName(QString::fromUtf8("checkNoHBKeysCaseConv"));
-        checkNoHBKeysCaseConv->setGeometry(QRect(14, 56, 301, 19));
-        checkConvTabsOnLoad = new QCheckBox(groupBox_11);
-        checkConvTabsOnLoad->setObjectName(QString::fromUtf8("checkConvTabsOnLoad"));
-        checkConvTabsOnLoad->setGeometry(QRect(14, 96, 301, 19));
-        checkReturnAtBegin = new QCheckBox(groupBox_11);
-        checkReturnAtBegin->setObjectName(QString::fromUtf8("checkReturnAtBegin"));
-        checkReturnAtBegin->setGeometry(QRect(14, 76, 301, 19));
+        editIndentSpaces = new QLineEdit(groupBox_13);
+        editIndentSpaces->setObjectName(QString::fromUtf8("editIndentSpaces"));
+        editIndentSpaces->setGeometry(QRect(98, 104, 39, 20));
+        checkSaveSourceWhenComp = new QCheckBox(groupBox_11);
+        checkSaveSourceWhenComp->setObjectName(QString::fromUtf8("checkSaveSourceWhenComp"));
+        checkSaveSourceWhenComp->setGeometry(QRect(14, 36, 301, 19));
+        checkSupressHbKWordsToUpper = new QCheckBox(groupBox_11);
+        checkSupressHbKWordsToUpper->setObjectName(QString::fromUtf8("checkSupressHbKWordsToUpper"));
+        checkSupressHbKWordsToUpper->setGeometry(QRect(14, 56, 301, 19));
+        checkConvTabToSpcWhenLoading = new QCheckBox(groupBox_11);
+        checkConvTabToSpcWhenLoading->setObjectName(QString::fromUtf8("checkConvTabToSpcWhenLoading"));
+        checkConvTabToSpcWhenLoading->setGeometry(QRect(14, 96, 301, 19));
+        checkReturnAsBeginKeyword = new QCheckBox(groupBox_11);
+        checkReturnAsBeginKeyword->setObjectName(QString::fromUtf8("checkReturnAsBeginKeyword"));
+        checkReturnAsBeginKeyword->setGeometry(QRect(14, 76, 301, 19));
         groupBox_14 = new QGroupBox(groupBox);
         groupBox_14->setObjectName(QString::fromUtf8("groupBox_14"));
         groupBox_14->setGeometry(QRect(10, 272, 331, 83));
@@ -346,24 +346,24 @@ public:
         label_15 = new QLabel(groupBox_19);
         label_15->setObjectName(QString::fromUtf8("label_15"));
         label_15->setGeometry(QRect(10, 20, 177, 16));
-        lineEdit = new QLineEdit(groupBox_19);
-        lineEdit->setObjectName(QString::fromUtf8("lineEdit"));
-        lineEdit->setGeometry(QRect(190, 18, 59, 20));
+        editTmpBkpPrd = new QLineEdit(groupBox_19);
+        editTmpBkpPrd->setObjectName(QString::fromUtf8("editTmpBkpPrd"));
+        editTmpBkpPrd->setGeometry(QRect(190, 18, 59, 20));
         label_17 = new QLabel(groupBox_19);
         label_17->setObjectName(QString::fromUtf8("label_17"));
         label_17->setGeometry(QRect(12, 42, 235, 16));
-        editBackupPath = new QLineEdit(groupBox_19);
-        editBackupPath->setObjectName(QString::fromUtf8("editBackupPath"));
-        editBackupPath->setGeometry(QRect(12, 60, 239, 20));
-        buttonBackupPath = new QToolButton(groupBox_19);
-        buttonBackupPath->setObjectName(QString::fromUtf8("buttonBackupPath"));
-        buttonBackupPath->setGeometry(QRect(276, 60, 25, 20));
+        editBkpPath = new QLineEdit(groupBox_19);
+        editBkpPath->setObjectName(QString::fromUtf8("editBkpPath"));
+        editBkpPath->setGeometry(QRect(12, 60, 239, 20));
+        buttonBkpPath = new QToolButton(groupBox_19);
+        buttonBkpPath->setObjectName(QString::fromUtf8("buttonBkpPath"));
+        buttonBkpPath->setGeometry(QRect(276, 60, 25, 20));
         label_18 = new QLabel(groupBox_19);
         label_18->setObjectName(QString::fromUtf8("label_18"));
         label_18->setGeometry(QRect(14, 86, 235, 16));
-        editBackupSuffix = new QLineEdit(groupBox_19);
-        editBackupSuffix->setObjectName(QString::fromUtf8("editBackupSuffix"));
-        editBackupSuffix->setGeometry(QRect(12, 104, 239, 20));
+        editBkpSuffix = new QLineEdit(groupBox_19);
+        editBkpSuffix->setObjectName(QString::fromUtf8("editBkpSuffix"));
+        editBkpSuffix->setGeometry(QRect(12, 104, 239, 20));
         groupBox_20 = new QGroupBox(groupBox_3);
         groupBox_20->setObjectName(QString::fromUtf8("groupBox_20"));
         groupBox_20->setGeometry(QRect(12, 236, 151, 119));
@@ -457,18 +457,18 @@ public:
         tableVar = new QTableWidget(groupBox_5);
         tableVar->setObjectName(QString::fromUtf8("tableVar"));
         tableVar->setGeometry(QRect(6, 32, 337, 327));
-        buttonAdd = new QToolButton(groupBox_5);
-        buttonAdd->setObjectName(QString::fromUtf8("buttonAdd"));
-        buttonAdd->setGeometry(QRect(8, 6, 25, 20));
-        buttonDel = new QToolButton(groupBox_5);
-        buttonDel->setObjectName(QString::fromUtf8("buttonDel"));
-        buttonDel->setGeometry(QRect(42, 6, 25, 20));
-        buttonDown = new QToolButton(groupBox_5);
-        buttonDown->setObjectName(QString::fromUtf8("buttonDown"));
-        buttonDown->setGeometry(QRect(78, 6, 25, 20));
-        buttonUp = new QToolButton(groupBox_5);
-        buttonUp->setObjectName(QString::fromUtf8("buttonUp"));
-        buttonUp->setGeometry(QRect(112, 6, 25, 20));
+        buttonKeyAdd = new QToolButton(groupBox_5);
+        buttonKeyAdd->setObjectName(QString::fromUtf8("buttonKeyAdd"));
+        buttonKeyAdd->setGeometry(QRect(8, 6, 25, 20));
+        buttonKeyDel = new QToolButton(groupBox_5);
+        buttonKeyDel->setObjectName(QString::fromUtf8("buttonKeyDel"));
+        buttonKeyDel->setGeometry(QRect(42, 6, 25, 20));
+        buttonKeyDown = new QToolButton(groupBox_5);
+        buttonKeyDown->setObjectName(QString::fromUtf8("buttonKeyDown"));
+        buttonKeyDown->setGeometry(QRect(78, 6, 25, 20));
+        buttonKeyUp = new QToolButton(groupBox_5);
+        buttonKeyUp->setObjectName(QString::fromUtf8("buttonKeyUp"));
+        buttonKeyUp->setGeometry(QRect(112, 6, 25, 20));
         stackedWidget->addWidget(pageVariables);
         pageDictionaries = new QWidget();
         pageDictionaries->setObjectName(QString::fromUtf8("pageDictionaries"));
@@ -572,16 +572,19 @@ public:
         buttonClose = new QPushButton(DialogSetup);
         buttonClose->setObjectName(QString::fromUtf8("buttonClose"));
         buttonClose->setGeometry(QRect(218, 384, 75, 24));
+        buttonClose->setAutoDefault(false);
         buttonCancel = new QPushButton(DialogSetup);
         buttonCancel->setObjectName(QString::fromUtf8("buttonCancel"));
         buttonCancel->setGeometry(QRect(306, 384, 75, 24));
+        buttonCancel->setAutoDefault(false);
         buttonOk = new QPushButton(DialogSetup);
         buttonOk->setObjectName(QString::fromUtf8("buttonOk"));
         buttonOk->setGeometry(QRect(394, 384, 75, 24));
+        buttonOk->setAutoDefault(false);
 
         retranslateUi(DialogSetup);
 
-        stackedWidget->setCurrentIndex(2);
+        stackedWidget->setCurrentIndex(0);
 
 
         QMetaObject::connectSlotsByName(DialogSetup);
@@ -592,7 +595,7 @@ public:
         DialogSetup->setWindowTitle(QApplication::translate("DialogSetup", "Setup", 0, QApplication::UnicodeUTF8));
         groupBox->setTitle(QString());
         groupBox_11->setTitle(QApplication::translate("DialogSetup", " Source ", 0, QApplication::UnicodeUTF8));
-        checkTrimLines->setText(QApplication::translate("DialogSetup", "Trim trailing blanks while source is saved ?", 0, QApplication::UnicodeUTF8));
+        checkTrimTrailingBlanks->setText(QApplication::translate("DialogSetup", "Trim trailing blanks while source is saved ?", 0, QApplication::UnicodeUTF8));
         groupBox_12->setTitle(QApplication::translate("DialogSetup", " Line ending mode ", 0, QApplication::UnicodeUTF8));
         radioLineEndAuto->setText(QApplication::translate("DialogSetup", "Auto detected", 0, QApplication::UnicodeUTF8));
         radioLineEndOS->setText(QApplication::translate("DialogSetup", "OS dependent", 0, QApplication::UnicodeUTF8));
@@ -600,15 +603,15 @@ public:
         radioLineEndCR->setText(QApplication::translate("DialogSetup", "CR (0D)", 0, QApplication::UnicodeUTF8));
         radioLineEndLF->setText(QApplication::translate("DialogSetup", "LF (0A)", 0, QApplication::UnicodeUTF8));
         groupBox_13->setTitle(QApplication::translate("DialogSetup", " TABS - Indents", 0, QApplication::UnicodeUTF8));
-        checkTab2Spc->setText(QApplication::translate("DialogSetup", "Convert TAB to spaces", 0, QApplication::UnicodeUTF8));
+        checkTabToSpcInEdits->setText(QApplication::translate("DialogSetup", "Convert TAB to spaces", 0, QApplication::UnicodeUTF8));
         label_4->setText(QApplication::translate("DialogSetup", "Spaces for a TAB", 0, QApplication::UnicodeUTF8));
         checkAutoIndent->setText(QApplication::translate("DialogSetup", "Auto indent", 0, QApplication::UnicodeUTF8));
         checkSmartIndent->setText(QApplication::translate("DialogSetup", "Smart indent", 0, QApplication::UnicodeUTF8));
         label_5->setText(QApplication::translate("DialogSetup", "Indent size", 0, QApplication::UnicodeUTF8));
-        checkSaveSrcOnComp->setText(QApplication::translate("DialogSetup", "Save source before compiling process starts ?", 0, QApplication::UnicodeUTF8));
-        checkNoHBKeysCaseConv->setText(QApplication::translate("DialogSetup", "Supress convertion to uppcase of Harbour keywords ?", 0, QApplication::UnicodeUTF8));
-        checkConvTabsOnLoad->setText(QApplication::translate("DialogSetup", "Convert tabs to spaces when a source is loaded ?", 0, QApplication::UnicodeUTF8));
-        checkReturnAtBegin->setText(QApplication::translate("DialogSetup", "Keyword RETURN be treated as AT-BEGINGING type ?", 0, QApplication::UnicodeUTF8));
+        checkSaveSourceWhenComp->setText(QApplication::translate("DialogSetup", "Save source before compiling process starts ?", 0, QApplication::UnicodeUTF8));
+        checkSupressHbKWordsToUpper->setText(QApplication::translate("DialogSetup", "Supress convertion to uppcase of Harbour keywords ?", 0, QApplication::UnicodeUTF8));
+        checkConvTabToSpcWhenLoading->setText(QApplication::translate("DialogSetup", "Convert tabs to spaces when a source is loaded ?", 0, QApplication::UnicodeUTF8));
+        checkReturnAsBeginKeyword->setText(QApplication::translate("DialogSetup", "Keyword RETURN be treated as AT-BEGINGING type ?", 0, QApplication::UnicodeUTF8));
         groupBox_14->setTitle(QApplication::translate("DialogSetup", " Display ", 0, QApplication::UnicodeUTF8));
         checkHorzRuler->setText(QApplication::translate("DialogSetup", "Show horizontal ruler", 0, QApplication::UnicodeUTF8));
         checkLineNumbers->setText(QApplication::translate("DialogSetup", "Show line numbers", 0, QApplication::UnicodeUTF8));
@@ -635,7 +638,7 @@ public:
         groupBox_19->setTitle(QApplication::translate("DialogSetup", " Backups ", 0, QApplication::UnicodeUTF8));
         label_15->setText(QApplication::translate("DialogSetup", "Transitory temp backup period:", 0, QApplication::UnicodeUTF8));
         label_17->setText(QApplication::translate("DialogSetup", "Permanent backup path:", 0, QApplication::UnicodeUTF8));
-        buttonBackupPath->setText(QApplication::translate("DialogSetup", "...", 0, QApplication::UnicodeUTF8));
+        buttonBkpPath->setText(QApplication::translate("DialogSetup", "...", 0, QApplication::UnicodeUTF8));
         label_18->setText(QApplication::translate("DialogSetup", "Permanent backup suffix:", 0, QApplication::UnicodeUTF8));
         groupBox_20->setTitle(QApplication::translate("DialogSetup", " Text files extensions ", 0, QApplication::UnicodeUTF8));
         buttonAddTextExt->setText(QApplication::translate("DialogSetup", "...", 0, QApplication::UnicodeUTF8));
@@ -658,10 +661,10 @@ public:
         buttonViewEnv->setText(QApplication::translate("DialogSetup", "...", 0, QApplication::UnicodeUTF8));
         buttonViewThemes->setText(QApplication::translate("DialogSetup", "...", 0, QApplication::UnicodeUTF8));
         groupBox_5->setTitle(QString());
-        buttonAdd->setText(QApplication::translate("DialogSetup", "...", 0, QApplication::UnicodeUTF8));
-        buttonDel->setText(QApplication::translate("DialogSetup", "...", 0, QApplication::UnicodeUTF8));
-        buttonDown->setText(QApplication::translate("DialogSetup", "...", 0, QApplication::UnicodeUTF8));
-        buttonUp->setText(QApplication::translate("DialogSetup", "...", 0, QApplication::UnicodeUTF8));
+        buttonKeyAdd->setText(QApplication::translate("DialogSetup", "...", 0, QApplication::UnicodeUTF8));
+        buttonKeyDel->setText(QApplication::translate("DialogSetup", "...", 0, QApplication::UnicodeUTF8));
+        buttonKeyDown->setText(QApplication::translate("DialogSetup", "...", 0, QApplication::UnicodeUTF8));
+        buttonKeyUp->setText(QApplication::translate("DialogSetup", "...", 0, QApplication::UnicodeUTF8));
         groupBox_10->setTitle(QApplication::translate("DialogSetup", " Keywords Dictionaries ", 0, QApplication::UnicodeUTF8));
         buttonDictAdd->setText(QApplication::translate("DialogSetup", "Add", 0, QApplication::UnicodeUTF8));
         buttonDictDelete->setText(QApplication::translate("DialogSetup", "Delete", 0, QApplication::UnicodeUTF8));
@@ -694,7 +697,6 @@ public:
         buttonClose->setText(QApplication::translate("DialogSetup", "Close", 0, QApplication::UnicodeUTF8));
         buttonCancel->setText(QApplication::translate("DialogSetup", "Cancel", 0, QApplication::UnicodeUTF8));
         buttonOk->setText(QApplication::translate("DialogSetup", "Ok", 0, QApplication::UnicodeUTF8));
-        Q_UNUSED(DialogSetup);
     } // retranslateUi
 
 };

@@ -242,11 +242,16 @@ CLASS IdeObject
 
 METHOD IdeObject:connect( qWidget, cSlot, bBlock )
 
-   IF !( Qt_Slots_Connect( ::pSlots, qWidget, cSlot, bBlock ) )
-      HB_TRACE( HB_TR_ALWAYS, "Connection FAILED:", cSlot )
-      RETURN .f.
+   IF hb_isNumeric( cSlot )
+      IF !( Qt_Events_Connect( ::pEvents, qWidget, cSlot, bBlock ) )
+         HB_TRACE( HB_TR_ALWAYS, "Connection FAILED:", cSlot )
+         RETURN .f.
+      ENDIF
    ELSE
-//      HB_TRACE( HB_TR_ALWAYS, "Connection SUCCEEDED:", cSlot )
+      IF !( Qt_Slots_Connect( ::pSlots, qWidget, cSlot, bBlock ) )
+         HB_TRACE( HB_TR_ALWAYS, "Connection FAILED:", cSlot )
+         RETURN .f.
+      ENDIF
    ENDIF
 
    RETURN .t.
@@ -255,11 +260,16 @@ METHOD IdeObject:connect( qWidget, cSlot, bBlock )
 
 METHOD IdeObject:disConnect( qWidget, cSlot )
 
-   IF !( Qt_Slots_disConnect( ::pSlots, qWidget, cSlot ) )
-      HB_TRACE( HB_TR_ALWAYS, "Dis-Connection FAILED:", cSlot )
-      RETURN .f.
+   IF hb_isNumeric( cSlot )
+      IF !( Qt_Events_disConnect( ::pSlots, qWidget, cSlot ) )
+         HB_TRACE( HB_TR_ALWAYS, "Dis-Connection FAILED:", cSlot )
+         RETURN .f.
+      ENDIF
    ELSE
-//      HB_TRACE( HB_TR_ALWAYS, "Dis-Connection SUCCEEDED:", cSlot )
+      IF !( Qt_Slots_disConnect( ::pSlots, qWidget, cSlot ) )
+         HB_TRACE( HB_TR_ALWAYS, "Dis-Connection FAILED:", cSlot )
+         RETURN .f.
+      ENDIF
    ENDIF
 
    RETURN .t.

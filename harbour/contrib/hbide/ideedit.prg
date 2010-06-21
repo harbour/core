@@ -121,9 +121,9 @@ CLASS IdeEdit INHERIT IdeObject
    DATA   nProtoCol                               INIT -1
    DATA   isSuspended                             INIT .F.
 
-   DATA   fontFamily                              INIT "Courier New"
-   DATA   pointSize                               INIT 10
-   DATA   currentPointSize                        INIT 10
+   DATA   fontFamily
+   DATA   pointSize
+   DATA   currentPointSize
    DATA   qFont
    DATA   aBlockCopyContents                      INIT {}
    DATA   isLineSelectionON                       INIT .F.
@@ -134,8 +134,8 @@ CLASS IdeEdit INHERIT IdeObject
    DATA   lReadOnly                               INIT .F.
    DATA   isHighLighted                           INIT .f.
 
-   METHOD new( oEditor, nMode )
-   METHOD create( oEditor, nMode )
+   METHOD new( oIde, oEditor, nMode )
+   METHOD create( oIde, oEditor, nMode )
    METHOD destroy()
    METHOD execEvent( nMode, oEdit, p, p1 )
    METHOD execKeyEvent( nMode, nEvent, p, p1 )
@@ -240,24 +240,31 @@ CLASS IdeEdit INHERIT IdeObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeEdit:new( oEditor, nMode )
+METHOD IdeEdit:new( oIde, oEditor, nMode )
 
+   ::oIde    := oIde
    ::oEditor := oEditor
    ::nMode   := nMode
+
+   ::fontFamily       := ::oINI:cFontName
+   ::pointSize        := ::oINI:nPointSize
+   ::currentPointSize := ::oINI:nPointSize
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeEdit:create( oEditor, nMode )
+METHOD IdeEdit:create( oIde, oEditor, nMode )
    LOCAL nBlock
 
+   DEFAULT oIde    TO ::oIde
    DEFAULT oEditor TO ::oEditor
    DEFAULT nMode   TO ::nMode
 
+   ::oIde    := oIde
    ::oEditor := oEditor
    ::nMode   := nMode
-   ::oIde    := ::oEditor:oIde
+   //::oIde    := ::oEditor:oIde
 
    ::qEdit   := HBQPlainTextEdit():new()
    //
@@ -1949,13 +1956,13 @@ METHOD IdeEdit:handlePreviousWord( lUpdatePrevWord )
    nSpace := iif( substr( cText, nCol, 1 ) == " ", 1, 0 )
    cWord  := hbide_getPreviousWord( cText, nCol + 1 )
 
-   IF !empty( cWord ) .AND. hbide_isHarbourKeyword( cWord )
+   IF !empty( cWord ) .AND. hbide_isHarbourKeyword( cWord, ::oIde )
       lPrevOnly := left( lower( ltrim( cText ) ), len( cWord ) ) == lower( cWord )
 
       nL := len( cWord ) + nSpace
       nB := qCursor:position() - nL
 
-      IF ::oEditor:cExt $ ".prg"
+      IF ::oEditor:cExt $ ".prg" .AND. ! ::oINI:lSupressHbKWordsToUpper
          qCursor:beginEditBlock()
          qCursor:setPosition( nB )
          qCursor:movePosition( QTextCursor_NextCharacter, QTextCursor_KeepAnchor, nL )
@@ -1965,7 +1972,7 @@ METHOD IdeEdit:handlePreviousWord( lUpdatePrevWord )
          qEdit:setTextCursor( qCursor )
       ENDIF
 
-      IF hbide_isStartingKeyword( cWord )
+      IF hbide_isStartingKeyword( cWord, ::oIde )
          IF lPrevOnly
             qCursor:setPosition( nB )
             IF ( nCol := qCursor:columnNumber() ) > 0
@@ -1979,7 +1986,7 @@ METHOD IdeEdit:handlePreviousWord( lUpdatePrevWord )
             ENDIF
          ENDIF
 
-      ELSEIF hbide_isMinimumIndentableKeyword( cWord )
+      ELSEIF hbide_isMinimumIndentableKeyword( cWord, ::oIde ) .AND. ::oINI:lAutoIndent
          IF lPrevOnly
             qCursor:setPosition( nB )
             IF ( nCol := qCursor:columnNumber() ) >= 0
@@ -1994,7 +2001,7 @@ METHOD IdeEdit:handlePreviousWord( lUpdatePrevWord )
             ENDIF
          ENDIF
 
-      ELSEIF hbide_isIndentableKeyword( cWord )
+      ELSEIF hbide_isIndentableKeyword( cWord, ::oIde ) .AND. ::oINI:lAutoIndent
          IF lPrevOnly
             nSpaces := hbide_getFrontSpacesAndWord( cText )
             IF nSpaces > 0 .AND. ( nOff := nSpaces % ::nTabSpaces ) > 0
@@ -2029,7 +2036,7 @@ METHOD IdeEdit:findLastIndent()
       IF !empty( cText := qTextBlock:text() )
          nSpaces := hbide_getFrontSpacesAndWord( cText, @cWord )
          IF !empty( cWord )
-            IF hbide_isIndentableKeyword( cWord )
+            IF ::oINI:lSmartIndent .AND. hbide_isIndentableKeyword( cWord, ::oIde )
                nSpaces += ::nTabSpaces
             ENDIF
             EXIT
@@ -2222,11 +2229,11 @@ FUNCTION hbide_getFrontSpacesAndWord( cText, cWord )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION hbide_isStartingKeyword( cWord )
-   STATIC s_b_
+FUNCTION hbide_isStartingKeyword( cWord, oIde )
+   LOCAL s_b_
 
    IF empty( s_b_ )
-      IF empty( hb_getEnv( "HBIDE_RETURN_ATBEGINING" ) )
+      IF ! oIde:oINI:lReturnAsBeginKeyword
          s_b_ := { ;
                     'function' => NIL,;
                     'class' => NIL,;
@@ -2244,11 +2251,11 @@ FUNCTION hbide_isStartingKeyword( cWord )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION hbide_isMinimumIndentableKeyword( cWord )
-   STATIC s_b_
+FUNCTION hbide_isMinimumIndentableKeyword( cWord, oIde )
+   LOCAL s_b_
 
    IF empty( s_b_ )
-      IF empty( hb_getEnv( "HBIDE_RETURN_ATBEGINING" ) )
+      IF ! oIde:oINI:lReturnAsBeginKeyword
          s_b_ := { ;
                     'local' => NIL,;
                     'static' => NIL,;
@@ -2266,7 +2273,7 @@ FUNCTION hbide_isMinimumIndentableKeyword( cWord )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION hbide_isIndentableKeyword( cWord )
+FUNCTION hbide_isIndentableKeyword( cWord, oIde )
    STATIC s_b_ := { ;
                     'if' => NIL,;
                     'else' => NIL,;
@@ -2287,11 +2294,13 @@ FUNCTION hbide_isIndentableKeyword( cWord )
                     'recover' => NIL,;
                     'finally' => NIL }
 
+   HB_SYMBOL_UNUSED( oIde )
+
    RETURN Lower( cWord ) $ s_b_
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION hbide_isHarbourKeyword( cWord )
+FUNCTION hbide_isHarbourKeyword( cWord, oIde )
    STATIC s_b_ := { ;
                     'function' => NIL,;
                     'return' => NIL,;
@@ -2346,6 +2355,8 @@ FUNCTION hbide_isHarbourKeyword( cWord )
                     'nil' => NIL,;
                     'or' => NIL,;
                     'and' => NIL }
+
+   HB_SYMBOL_UNUSED( oIde )
 
    RETURN Lower( cWord ) $ s_b_
 

@@ -390,8 +390,13 @@ METHOD IdeThemes:setForeBackGround( qEdit, cTheme )
    IF !empty( aAttr := ::getThemeAttribute( "Background", cTheme ) )
       s := 'QPlainTextEdit { background-color: rgba( ' + Attr2StrRGB( aAttr ) +", 255 ); "
       aAttr := ::getThemeAttribute( "UnrecognizedText", cTheme )
-      s += ' color: rgba( ' +  Attr2StrRGB( aAttr ) + ", 255 ); }"
+      s += ' color:   rgba( ' +  Attr2StrRGB( aAttr ) + ", 255 ); "
+      s += ' border:  0px; '
+      s += ' padding: 0px; '
+      s += ' margin:  0px; }'
       qEdit:setStyleSheet( s )
+      //qEdit:setFrameStyle( hb_bitOR( QFrame_NoFrame, QFrame_Plain ) )
+      //qEdit:setFrameStyle( QFrame_Sunken )
    ENDIF
 
    RETURN Self

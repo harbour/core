@@ -118,8 +118,6 @@ METHOD IdeSourcesManager:loadSources()
          /*            File     nPos     nVPos    nHPos    cTheme  cView lAlert lVisible, aBookMarks */
          ::editSource( a_[ 1 ], a_[ 2 ], a_[ 3 ], a_[ 4 ], a_[ 5 ], a_[ 6 ], .t., .f., a_[ 7 ] )
       NEXT
-      ::oDK:setView( ::cWrkView )
-      ::oEM:setSourceVisibleByIndex( max( 0, val( ::oIni:cRecentTabIndex ) ) )
    ENDIF
 
    RETURN Self
@@ -127,7 +125,7 @@ METHOD IdeSourcesManager:loadSources()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeSourcesManager:saveNamedSource( cSource )
-   LOCAL lSaved, oEditor, a_
+   LOCAL lSaved, oEditor, a_, cBuffer
 
    cSource := hbide_pathNormalized( cSource, .t. )
 
@@ -137,7 +135,9 @@ METHOD IdeSourcesManager:saveNamedSource( cSource )
          IF hbide_pathNormalized( oEditor:sourceFile, .t. ) == cSource
             IF oEditor:lLoaded
                IF oEditor:qDocument:isModified()
-                  IF ( lSaved := hb_memowrit( hbide_pathToOSPath( cSource ), oEditor:qEdit:toPlainText() ) )
+                  cBuffer := oEditor:prepareBufferToSave( oEditor:qEdit:toPlainText() )
+
+                  IF ( lSaved := hb_memowrit( hbide_pathToOSPath( cSource ), cBuffer ) )
                      oEditor:qDocument:setModified( .f. )
                      oEditor:setTabImage()
                   ENDIF
@@ -187,7 +187,8 @@ METHOD IdeSourcesManager:saveSource( nTab, lCancel, lAs )
        * If the burn process fails, we should change the name of the previous file.
        * 01/01/2010 - 21:24:41 - vailtom
        */
-      cBuffer := oEdit:qEdit:toPlainText()
+      //cBuffer := oEdit:qEdit:toPlainText()
+      cBuffer := oEdit:prepareBufferToSave( oEdit:qEdit:toPlainText() )
       //
       IF !hb_memowrit( cFileToSave, cBuffer )
          MsgBox( "Error saving the file " + oEdit:sourceFile + ".",, 'Error saving file!' )
