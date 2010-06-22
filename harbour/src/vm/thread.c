@@ -2509,14 +2509,14 @@ HB_FUNC( HB_MUTEXQUEUEINFO )
       if( pMutex )
       {
          hb_storni( pMutex->waiters, 2 );
-         hb_stornl( pMutex->events ? ( long ) hb_arrayLen( pMutex->events ) : 0, 3 );
+         hb_storns( pMutex->events ? hb_arrayLen( pMutex->events ) : 0, 3 );
          hb_retl( HB_TRUE );
          return;
       }
    }
 
    hb_storni( 0, 2 );
-   hb_stornl( 0, 3 );
+   hb_storns( 0, 3 );
    hb_retl( HB_FALSE );
 }
 
