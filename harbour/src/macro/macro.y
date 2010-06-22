@@ -141,7 +141,7 @@
    struct
    {
       const char * string;
-      int      length;
+      HB_SIZE      length;
    } valChar;
    struct
    {

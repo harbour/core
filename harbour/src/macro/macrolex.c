@@ -228,7 +228,7 @@ static int hb_lexStringExtCopy( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro,
          ulLen = pLex->pDst - yylval_ptr->valChar.string;
          *pLex->pDst++ = '\0';
          hb_strRemEscSeq( ( char * ) yylval_ptr->valChar.string, &ulLen );
-         yylval_ptr->valChar.length = ( int ) ulLen;
+         yylval_ptr->valChar.length = ulLen;
          return LITERAL;
       }
       *pLex->pDst++ = ch;
@@ -236,7 +236,7 @@ static int hb_lexStringExtCopy( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro,
    ulLen = pLex->pDst - yylval_ptr->valChar.string;
    *pLex->pDst++ = '\0';
    hb_strRemEscSeq( ( char * ) yylval_ptr->valChar.string, &ulLen );
-   yylval_ptr->valChar.length = ( int ) ulLen;
+   yylval_ptr->valChar.length = ulLen;
    hb_macroError( EG_SYNTAX, pMacro );
    return LITERAL;
 }
