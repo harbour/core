@@ -196,20 +196,6 @@ void HBQPlainTextEdit::hbRefresh()
 
 /*----------------------------------------------------------------------*/
 
-void HBQPlainTextEdit::hbUpdateCaret()
-{
-   if( caretState == 0 )
-      caretState = 1;
-   else
-      caretState = 0;
-
-   QRect r( cursorRect() );
-   r.setX( r.x() + 100 );
-   repaint( r );
-}
-
-/*----------------------------------------------------------------------*/
-
 void HBQPlainTextEdit::hbShowPrototype( const QString & tip )
 {
    if( tip == ( QString ) "" )
@@ -1402,18 +1388,8 @@ void HBQPlainTextEdit::paintEvent( QPaintEvent * event )
    this->hbPaintSelection( event );
    this->hbPaintHighlight( event );
 
-   #if 0
-   {
-      QPainter p( viewport() );
-      caretState = caretState == 0 ? 1 : 0;
-      QRect r( cursorRect() );
-      r.setX( r.x() + 100 );
-      r.setWidth( 1 );
-      p.fillRect( r, QBrush( QColor( caretState == 1 ? Qt::red : Qt::white ) ) );
-   }
-   #endif
+//   this->hbDrawCursor( event );
 
-   painter.end();
    QPlainTextEdit::paintEvent( event );
 
    #if 0
@@ -1472,6 +1448,36 @@ void HBQPlainTextEdit::paintEvent( QPaintEvent * event )
    QPlainTextEdit::paintEvent( event );
    #endif
 }
+/*----------------------------------------------------------------------*/
+
+void HBQPlainTextEdit::hbDrawCursor( QPaintEvent *event )
+{
+   QAbstractTextDocumentLayout::PaintContext pc = getPaintContext();
+   {
+      if( caretState == 1 )
+      {
+         QRect r( cursorRect( textCursor() ) );
+         r.setLeft( r.left() + 100 );
+         r.setRight( r.right() + 100 );
+
+         QPainter p( viewport() );
+         p.fillRect( r, QBrush( QColor( caretState == 1 ? Qt::red : Qt::blue ) ) );
+      }
+   }
+}
+
+/*----------------------------------------------------------------------*/
+
+void HBQPlainTextEdit::hbUpdateCaret()
+{
+   caretState = caretState == 0 ? 1 : 0;
+
+   QRect r( cursorRect( textCursor() ) );
+   r.setX( 0 );
+   r.setWidth( viewport()->width() );
+   repaint( r );
+}
+
 /*----------------------------------------------------------------------*/
 
 void HBQPlainTextEdit::horzRulerPaintEvent( QPaintEvent *event )

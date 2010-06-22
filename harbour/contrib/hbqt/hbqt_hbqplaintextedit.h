@@ -219,6 +219,7 @@ private slots:
    void           hbHitTest( const QPoint & );
    bool           hbKeyPressSelectionByApplication( QKeyEvent * event );
    int            hbFirstVisibleColumn();
+   void           hbDrawCursor( QPaintEvent * );
 };
 
 

@@ -853,7 +853,7 @@ METHOD IdeSetup:disConnectSlots()
    ::disconnect( ::oUI:q_buttonKeyUp     , "clicked()"                )
    ::disconnect( ::oUI:q_buttonKeyDown   , "clicked()"                )
 
-   ::disconnect( ::oUI:q_tableVar        , QEvent_KeyPress            )
+   ::disconnect( ::oUI:q_tableVar        , "itemActivated(QTblWItem)" )
 
    ::disconnect( ::oUI:q_buttonSelFont   , "clicked()"                )
    ::disConnect( ::oUI:q_buttonClose     , "clicked()"                )
@@ -882,8 +882,7 @@ METHOD IdeSetup:connectSlots()
    ::connect( ::oUI:q_buttonKeyUp     , "clicked()"               , {| | ::execEvent( "buttonKeyUp_clicked"               ) } )
    ::connect( ::oUI:q_buttonKeyDown   , "clicked()"               , {| | ::execEvent( "buttonKeyDown_clicked"             ) } )
 
-   ::connect( ::oUI:q_tableVar        , QEvent_KeyPress           , {|p| ::execEvent( "tableVar_keyPress", p              ) } )
-//   ::connect( ::oUI:q_tableVar        , "itemActivated(QTblWItem)"  , {|p| ::execEvent( "tableVar_keyPress", p              ) } )
+   ::connect( ::oUI:q_tableVar        , "itemActivated(QTblWItem)", {|p| ::execEvent( "tableVar_keyPress", p              ) } )
 
    ::connect( ::oUI:q_buttonSelFont   , "clicked()"               , {| | ::execEvent( "buttonSelFont_clicked"             ) } )
    ::connect( ::oUI:q_buttonClose     , "clicked()"               , {| | ::execEvent( "buttonClose_clicked"               ) } )
@@ -1033,7 +1032,8 @@ METHOD IdeSetup:show()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeSetup:execEvent( cEvent, p )
-   LOCAL qItem, nIndex, qFontDlg, qFont, nOK, nRow, qEvent, b_, q0, q1, nCol, w0, w1
+   LOCAL qItem, nIndex, qFontDlg, qFont, nOK, nRow, b_, q0, q1, nCol, w0, w1
+//   LOCAL qEvent
 
    SWITCH cEvent
    CASE "buttonSelFont_clicked"
@@ -1175,11 +1175,13 @@ METHOD IdeSetup:execEvent( cEvent, p )
 
    CASE "tableVar_keyPress"
       IF ( nRow := ::oUI:q_tableVar:currentRow() ) >= 0
-         qEvent := QKeyEvent():from( p )
-HB_TRACE( HB_TR_ALWAYS, "RECEIVING ENTER KEY", qEvent:key() )
-         IF qEvent:key() == Qt_Key_Enter .OR. qEvent:key() == Qt_Key_Return
-HB_TRACE( HB_TR_ALWAYS, "RECEIVING ENTER KEY", 1 )
+         HB_TRACE( HB_TR_ALWAYS, "RECEIVING ENTER KEY" )
+         ::oUI:q_tableVar:editItem( p )
+         #if 0
+         IF ::oUI:q_tableVar:currentColumn() == 0
+            ::oUI:q_tableVar:setCurrentCell( ::oUI:q_tableVar:currentRow(), 1 )
          ENDIF
+         #endif
       ENDIF
 
    ENDSWITCH
@@ -1229,8 +1231,6 @@ METHOD IdeSetup:buildKeywords()
    oTbl:setAlternatingRowColors( .t. )
    oTbl:setColumnCount( len( hdr_ ) )
    oTbl:setShowGrid( .t. )
-   //oTbl:setSelectionMode( QAbstractItemView_SingleSelection )
-   //oTbl:setSelectionBehavior( QAbstractItemView_SelectRows )
    FOR n := 1 TO len( hdr_ )
       qItm := QTableWidgetItem():new()
       qItm:setText( hdr_[ n,1 ] )

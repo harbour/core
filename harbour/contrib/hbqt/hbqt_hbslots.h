@@ -205,14 +205,6 @@ public slots:
    void buttonReleased( int id );
    void linkActivated( const QString & link );
    void linkHovered( const QString & link );
-   /* QTableWidget */
-   void cellActivated( int row, int column );
-   void cellChanged( int row, int column );
-   void cellClicked( int row, int column );
-   void cellDoubleClicked( int row, int column );
-   void cellEntered( int row, int column );
-   void cellPressed( int row, int column );
-   void currentCellChanged( int currentRow, int currentColumn, int previousRow, int previousColumn );;
    void tabCloseRequested( int index );
    void paintRequested( QPrinter * printer );
    /* QIODevice */
@@ -258,6 +250,13 @@ public slots:
    void itemEntered( QListWidgetItem * item );
    void itemPressed( QListWidgetItem * item );
    /* QTableWidget */
+   void cellActivated( int row, int column );
+   void cellChanged( int row, int column );
+   void cellClicked( int row, int column );
+   void cellDoubleClicked( int row, int column );
+   void cellEntered( int row, int column );
+   void cellPressed( int row, int column );
+   void currentCellChanged( int currentRow, int currentColumn, int previousRow, int previousColumn );
    void currentItemChanged( QTableWidgetItem * current, QTableWidgetItem * previous );
    void itemActivated( QTableWidgetItem * item );
    void itemChanged( QTableWidgetItem * item );
