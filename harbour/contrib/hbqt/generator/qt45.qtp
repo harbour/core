@@ -115,6 +115,10 @@ QImageWriter.qth
 QInputDialog.qth
 QInputEvent.qth
 QIODevice.qth
+QItemDelegate.qth
+;   QItemEditorCreator.qth
+QItemEditorCreatorBase.qth
+QItemEditorFactory.qth
 QItemSelection.qth
 QItemSelectionModel.qth
 QKeyEvent.qth

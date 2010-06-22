@@ -83,6 +83,9 @@ CPP_SOURCES := \
    QImageWriter.cpp \
    QInputDialog.cpp \
    QInputEvent.cpp \
+   QItemDelegate.cpp \
+   QItemEditorCreatorBase.cpp \
+   QItemEditorFactory.cpp \
    QItemSelection.cpp \
    QItemSelectionModel.cpp \
    QKeyEvent.cpp \
@@ -306,6 +309,9 @@ PRG_SOURCES := \
    TQImageWriter.prg \
    TQInputDialog.prg \
    TQInputEvent.prg \
+   TQItemDelegate.prg \
+   TQItemEditorCreatorBase.prg \
+   TQItemEditorFactory.prg \
    TQItemSelection.prg \
    TQItemSelectionModel.prg \
    TQKeyEvent.prg \
