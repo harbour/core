@@ -81,6 +81,8 @@ CLASS HbQtUI
    DATA     oWidget
    DATA     cMainWidgetName
 
+   DATA     cLoadingMode                          INIT ""
+
    DATA     qObj                                  INIT hb_hash()
    DATA     widgets                               INIT {}
    DATA     aCommands                             INIT {}
@@ -97,6 +99,7 @@ CLASS HbQtUI
 
    METHOD   event( cWidget, nEvent, bBlock )
    METHOD   signal( cWidget, cSignal, bBlock )
+   METHOD   connect( cWidget, cSignal, bBlock )
    METHOD   loadWidgets()
    METHOD   loadContents( cUiFull )
    METHOD   loadUI( cUiFull, qParent )
@@ -119,6 +122,7 @@ METHOD HbQtUI:new( cFile, qParent )
 /*----------------------------------------------------------------------*/
 
 METHOD HbQtUI:create( cFile, qParent )
+   LOCAL cExt
 
    DEFAULT cFile   TO ::cFile
    DEFAULT qParent TO ::qParent
@@ -127,14 +131,24 @@ METHOD HbQtUI:create( cFile, qParent )
    ::qParent := qParent
 
    IF !empty( ::cFile ) .AND. hb_fileExists( ::cFile )
-      hb_hCaseMatch( ::qObj, .f. )
+      hb_fNameSplit( cFile, , , @cExt )
 
-      ::loadContents( ::cFile, ::qParent )
+      IF lower( cExt ) == ".uic"
+         ::cLoadingMode := "uic"
+         ::build( ::cFile, ::qParent )
 
-      ::oWidget := ::loadUI( ::cFile, ::qParent )
+      ELSE
+         ::cLoadingMode := "ui"
 
-      IF !empty( ::oWidget )
-         ::loadWidgets()
+         hb_hCaseMatch( ::qObj, .f. )
+
+         ::loadContents( ::cFile, ::qParent )
+
+         ::oWidget := ::loadUI( ::cFile, ::qParent )
+
+         IF !empty( ::oWidget )
+            ::loadWidgets()
+         ENDIF
       ENDIF
    ENDIF
 
@@ -161,7 +175,6 @@ METHOD HbQtUI:destroy()
       i := a_:__enumIndex()
       IF i > 0
          IF type( a_[ 3 ] ) == "UI"
-//HB_TRACE( HB_TR_ALWAYS, 400, i, pad( a_[ 1 ], 20 ), pad( a_[ 2 ], 20 ), iif( i > 1, pad( ::widgets[ i - 1, 1 ],20 ), NIL ), i, len( ::widgets ) )
             ::qObj[ a_[ 2 ] ] := NIL
          ENDIF
       ENDIF
@@ -183,6 +196,12 @@ METHOD HbQtUI:event( cWidget, nEvent, bBlock )
    ENDIF
 
    RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbQtUI:connect( cWidget, cSignal, bBlock )
+
+   RETURN ::signal( cWidget, cSignal, bBlock )
 
 /*----------------------------------------------------------------------*/
 
@@ -299,7 +318,11 @@ METHOD HbQtUI:OnError( ... )
    ENDIF
 
    IF left( cMsg, 2 ) == "Q_"
-      xReturn := ::qObj[ substr( cMsg, 3 ) ]
+      IF hb_hHasKey( ::qObj, substr( cMsg, 3 ) )
+         xReturn := ::qObj[ substr( cMsg, 3 ) ]
+      ELSE
+         MsgBox( "Control < " + substr( cMsg, 3 ) + " > does not exists!" )
+      ENDIF
    ELSE
       xReturn := ::oWidget:&cMsg( ... )
    ENDIF
@@ -318,6 +341,8 @@ METHOD HbQtUI:build( cFileOrBuffer, qParent )
 
    ::cFile   := cFileOrBuffer
    ::qParent := qParent
+
+   ::cLoadingMode := "uic"
 
    IF empty( ::cFile )
       RETURN Self
@@ -347,7 +372,7 @@ METHOD HbQtUI:build( cFileOrBuffer, qParent )
    hbq_stripFront( @cMCls, "(" )
    hbq_stripRear( @cMNam, ")" )
    //
-//   HB_TRACE( HB_TR_ALWAYS, "Widget   ", pad( cMNam, 20 ), pad( cMCls, 20 ), cMCls+"():new()" )
+   //   HB_TRACE( HB_TR_ALWAYS, "Widget   ", pad( cMNam, 20 ), pad( cMCls, 20 ), cMCls+"():new()" )
    //                               Validator   Constructor
    aadd( ::widgets, { cMCls, cMNam, cMCls+"()", cMCls+"():new()" } )
 
@@ -541,7 +566,7 @@ METHOD HbQtUI:build( cFileOrBuffer, qParent )
 
          ELSE
             cBlock := "{|o,v| o[v]:" + cCmd + "}"
-//HB_TRACE( HB_TR_ALWAYS, pad( a_[ 1 ], 20 ), cBlock )
+            *  HB_TRACE( HB_TR_ALWAYS, pad( a_[ 1 ], 20 ), cBlock, 0, cNam )
             bBlock := &( cBlock )
             eval( bBlock, ::qObj, cNam )
 
