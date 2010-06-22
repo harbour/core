@@ -118,23 +118,6 @@ static HB_BOOL s_bMouseEnable = HB_TRUE;
 
 /* *********************************************************************** */
 
-#if defined( __IBMCPP__ )
-   #undef WORD                            /* 2 bytes unsigned */
-   typedef unsigned short int WORD;
-#else
-   #if ! defined( HB_DONT_DEFINE_BASIC_TYPES )
-      #undef WORD                            /* 2 bytes unsigned */
-      typedef unsigned short int WORD;
-
-      #undef DWORD                           /* 4 bytes unsigned */
-      typedef unsigned long int DWORD;
-   #endif
-#endif
-
-#if ! defined( __GNUC__ ) && defined( __CYGWIN__ )
-   typedef WORD far * LPWORD;
-#endif
-
 #if defined( __RSXNT__ )
    #ifndef FROM_LEFT_1ST_BUTTON_PRESSED
       #define FROM_LEFT_1ST_BUTTON_PRESSED    0x0001
@@ -149,7 +132,6 @@ static HB_BOOL s_bMouseEnable = HB_TRUE;
       #define DOUBLE_CLICK                    0x0002
    #endif
 #endif
-
 
 /* *********************************************************************** */
 
