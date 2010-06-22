@@ -1096,7 +1096,7 @@ static HB_GENC_FUNC( hb_p_pushblocklarge )
    ulSize = HB_PCODE_MKUINT24( &pFunc->pCode[ lPCodePos + 1 ] ) - 4;
    lPCodePos += 4;
 
-   fprintf( cargo->yyc, "\t{\n\t\tstatic const HB_BYTE codeblock[ %lu ] = {", ulSize );
+   fprintf( cargo->yyc, "\t{\n\t\tstatic const HB_BYTE codeblock[ %" HB_PFS "u ] = {", ulSize );
 
    for( ul = 0; ul < ulSize; ++ul )
    {
@@ -1378,7 +1378,7 @@ static HB_GENC_FUNC( hb_p_pushstrlarge )
 
    fprintf( cargo->yyc, "\thb_xvmPushStringConst( " );
    hb_compGenCString( cargo->yyc, &pFunc->pCode[ lPCodePos + 4 ], ulLen );
-   fprintf( cargo->yyc, ", %lu );\n", ulLen );
+   fprintf( cargo->yyc, ", %" HB_PFS "u );\n", ulLen );
 
    return 5 + ulLen;
 }
@@ -1647,7 +1647,7 @@ static HB_GENC_FUNC( hb_p_threadstatics )
    w = HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] );
    ulSize = ( HB_SIZE ) w << 1;
 
-   fprintf( cargo->yyc, "\t{\n\t\tstatic const HB_BYTE statics[ %lu ] = {", ulSize );
+   fprintf( cargo->yyc, "\t{\n\t\tstatic const HB_BYTE statics[ %" HB_PFS "u ] = {", ulSize );
 
    for( ul = 0; ul < ulSize; ++ul )
    {

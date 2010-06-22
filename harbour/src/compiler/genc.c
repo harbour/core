@@ -1749,7 +1749,7 @@ static HB_GENC_FUNC( hb_p_pushstrlarge )
             pFunc->pCode[ lPCodePos + 3 ] );
 
    if( cargo->bVerbose )
-         fprintf( cargo->yyc, "\t/* %lu */", ulLen );
+         fprintf( cargo->yyc, "\t/* %" HB_PFS "u */", ulLen );
 
    if( ulLen > 0 )
    {

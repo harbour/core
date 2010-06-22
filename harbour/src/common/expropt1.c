@@ -460,7 +460,7 @@ HB_EXPR_PTR hb_compExprNewCodeBlock( char *string, HB_SIZE ulLen, int iFlags, HB
 {
    HB_EXPR_PTR pExpr;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewCodeBlock(%s,%lu,%d,%p)",string, ulLen, iFlags, HB_COMP_PARAM));
+   HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewCodeBlock(%s,%" HB_PFS "u,%d,%p)",string, ulLen, iFlags, HB_COMP_PARAM));
 
    pExpr = HB_COMP_EXPR_NEW( HB_ET_CODEBLOCK );
 
