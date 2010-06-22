@@ -307,10 +307,10 @@ typedef struct _HB_MEMINFO
 
 static HB_BOOL s_fStatistic = HB_FALSE;
 
-static long s_lMemoryBlocks = 0;      /* memory blocks used */
-static long s_lMemoryMaxBlocks = 0;   /* maximum number of used memory blocks */
-static long s_lMemoryMaxConsumed = 0; /* memory size consumed */
-static long s_lMemoryConsumed = 0;    /* memory max size consumed */
+static HB_ISIZ s_lMemoryBlocks = 0;      /* memory blocks used */
+static HB_ISIZ s_lMemoryMaxBlocks = 0;   /* maximum number of used memory blocks */
+static HB_ISIZ s_lMemoryMaxConsumed = 0; /* memory size consumed */
+static HB_ISIZ s_lMemoryConsumed = 0;    /* memory max size consumed */
 
 static PHB_MEMINFO s_pFirstBlock = NULL;
 static PHB_MEMINFO s_pLastBlock = NULL;

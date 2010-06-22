@@ -2317,7 +2317,7 @@ PHB_ITEM hb_objSendMessage( PHB_ITEM pObject, PHB_DYNS pMsgSym, HB_ULONG ulArg, 
 
       if( ulArg )
       {
-         unsigned long i;
+         HB_ULONG i;
          va_list ap;
 
          va_start( ap, ulArg );
@@ -2344,7 +2344,7 @@ PHB_ITEM hb_objSendMsg( PHB_ITEM pObject, const char *sMsg, HB_ULONG ulArg, ... 
    hb_vmPush( pObject );
    if( ulArg )
    {
-      unsigned long i;
+      HB_ULONG i;
       va_list ap;
 
       va_start( ap, ulArg );
