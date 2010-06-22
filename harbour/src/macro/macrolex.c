@@ -251,15 +251,15 @@ static int hb_lexNumConv( YYSTYPE *yylval_ptr, PHB_MACRO_LEX pLex, HB_SIZE ulLen
                         &lNumber, &dNumber, &iDec, &iWidth ) )
    {
       yylval_ptr->valDouble.dNumber = dNumber;
-      yylval_ptr->valDouble.bDec = iDec;
-      yylval_ptr->valDouble.bWidth = iWidth;
+      yylval_ptr->valDouble.bDec = ( HB_UCHAR ) iDec;
+      yylval_ptr->valDouble.bWidth = ( HB_UCHAR ) iWidth;
       pLex->ulSrc += ulLen;
       return NUM_DOUBLE;
    }
    else
    {
       yylval_ptr->valLong.lNumber = lNumber;
-      yylval_ptr->valLong.bWidth = iWidth;
+      yylval_ptr->valLong.bWidth = ( HB_UCHAR ) iWidth;
       pLex->ulSrc += ulLen;
       return NUM_LONG;
    }
