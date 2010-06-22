@@ -766,19 +766,19 @@ HB_FUNC( DBSELECTAREA )
    }
    else
    {
-      HB_LONG lNewArea = hb_parnl( 1 );
+      int iNewArea = hb_parni( 1 );
 
       /*
        * NOTE: lNewArea >= HB_RDD_MAX_AREA_NUM used intentionally
        * In Clipper area 65535 is reserved for "M" alias [druzus]
        */
-      if( lNewArea < 1 || lNewArea >= HB_RDD_MAX_AREA_NUM )
+      if( iNewArea < 1 || iNewArea >= HB_RDD_MAX_AREA_NUM )
       {
          hb_rddSelectFirstAvailable();
       }
       else
       {
-         hb_rddSelectWorkAreaNumber( lNewArea );
+         hb_rddSelectWorkAreaNumber( iNewArea );
       }
    }
 
