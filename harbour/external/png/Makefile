@@ -8,6 +8,8 @@ include $(TOP)$(ROOT)config/global.mk
 
 LIBNAME := png
 
+# URL: http://sourceforge.net/projects/libpng/files/01-libpng-master/1.4.2/lpng142.zip/download
+
 HB_BUILD_WARN := no
 HB_BUILD_MODE := c
 

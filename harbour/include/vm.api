@@ -64,9 +64,9 @@
 #include "hbapi.h"
 
 /* Standard */
-#define _xvalloc( size, flags )      hb_xvalloc( ( ULONG ) size, flags )
+#define _xvalloc( size, flags )      hb_xvalloc( size, flags )
 #define _xvfree( h )                 hb_xvfree( h )
-#define _xvrealloc( h, size, flags ) hb_xvrealloc( h, ( ULONG ) size, flags )
+#define _xvrealloc( h, size, flags ) hb_xvrealloc( h, size, flags )
 #define _xvlock( h )                 hb_xvlock( h )
 #define _xvunlock( h )               hb_xvunlock( h )
 
@@ -79,12 +79,12 @@
 #define _xvsize( h )                 hb_xvsize( h )
 
 /* Heap */
-#define _xvheapnew( size )           hb_xvheapnew( ( ULONG ) size )
+#define _xvheapnew( size )           hb_xvheapnew( size )
 #define _xvheapdestroy( h )          hb_xvheapdestroy( h )
-#define _xvheapresize( h, size )     hb_xvheapresize( h, ( ULONG ) size )
-#define _xvheapalloc( h, size )      hb_xvheapalloc( h, ( ULONG ) size )
-#define _xvheapfree( h, offset )     hb_xvheapfree( h, ( ULONG ) offset )
-#define _xvheaplock( h, offset )     hb_xvheaplock( h, ( ULONG ) offset )
-#define _xvheapunlock( h, offset )   hb_xvheapunlock( h, ( ULONG ) offset )
+#define _xvheapresize( h, size )     hb_xvheapresize( h, size )
+#define _xvheapalloc( h, size )      hb_xvheapalloc( h, size )
+#define _xvheapfree( h, offset )     hb_xvheapfree( h, offset )
+#define _xvheaplock( h, offset )     hb_xvheaplock( h, offset )
+#define _xvheapunlock( h, offset )   hb_xvheapunlock( h, offset )
 
 #endif /* _VM_API */

@@ -20,9 +20,11 @@
 
 #pragma warninglevel=3
 
+#define _REN_PREFIX "# RENAME "
+
 PROCEDURE Main( cMode )
    LOCAL files := {}
-   LOCAL cFile := MemoRead( "ren_sfn.txt" )
+   LOCAL cFile := MemoRead( "Makefile" )
    LOCAL cLine
 
    IF ! Empty( cFile )
@@ -31,7 +33,8 @@ PROCEDURE Main( cMode )
       cFile := StrTran( cFile, Chr( 9 ), " " )
 
       FOR EACH cLine IN hb_ATokens( cFile, Chr( 10 ) )
-         IF ! Empty( cLine ) .AND. ! ( Left( AllTrim( cLine ), 1 ) == "#" )
+         IF ! Empty( cLine ) .AND. Left( AllTrim( cLine ), Len( _REN_PREFIX ) ) == _REN_PREFIX
+            cLine := SubStr( cLine, Len( _REN_PREFIX ) + 1 )
             IF Len( hb_ATokens( cLine ) ) == 2
                AAdd( files, hb_ATokens( cLine ) )
             ELSEIF Len( hb_ATokens( cLine ) ) == 1

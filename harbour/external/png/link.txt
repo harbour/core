@@ -1,5 +1,0 @@
-/*
- * $Id$
- */
-
-http://sourceforge.net/project/showfiles.php?group_id=5624&package_id=5683

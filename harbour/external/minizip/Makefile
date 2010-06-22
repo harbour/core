@@ -8,6 +8,8 @@ include $(TOP)$(ROOT)config/global.mk
 
 LIBNAME := minizip
 
+# URL: http://zlib.net/zlib125.zip
+
 HB_BUILD_WARN := no
 HB_BUILD_MODE := c
 

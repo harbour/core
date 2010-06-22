@@ -1,5 +1,0 @@
-/*
- * $Id$
- */
-
-http://www.ijg.org/files/jpegsr8b.zip

@@ -8,6 +8,8 @@ include $(TOP)$(ROOT)config/global.mk
 
 LIBNAME := sqlite3
 
+# URL: http://www.sqlite.org/sqlite-amalgamation-3_6_23_1.zip
+
 HB_BUILD_WARN := no
 HB_BUILD_MODE := c
 

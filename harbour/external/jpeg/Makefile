@@ -8,6 +8,8 @@ include $(TOP)$(ROOT)config/global.mk
 
 LIBNAME := jpeg
 
+# URL: http://www.ijg.org/files/jpegsr8b.zip
+
 HB_BUILD_WARN := no
 HB_BUILD_MODE := c
 
