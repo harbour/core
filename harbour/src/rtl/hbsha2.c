@@ -60,7 +60,35 @@ HB_FUNC( HB_SHA224 )
    sha224_ctx ctx;
 
    sha224_init( &ctx );
-   sha224_update( &ctx, hb_parcx( 1 ), hb_parclen( 1 ) );
+   #if HB_SIZE_MAX > UINT_MAX
+   {
+      const char * buffer = hb_parcx( 1 );
+      HB_SIZE nCount = hb_parclen( 1 );
+      HB_SIZE nDone = 0;
+
+      while( nCount )
+      {
+         unsigned int uiChunk;
+
+         if( nCount > ( HB_SIZE ) UINT_MAX )
+         {
+            uiChunk = UINT_MAX;
+            nCount -= ( HB_SIZE ) uiChunk;
+         }
+         else
+         {
+            uiChunk = ( unsigned int ) nCount;
+            nCount = 0;
+         }
+
+         sha224_update( &ctx, buffer + nDone, uiChunk );
+
+         nDone += ( HB_SIZE ) uiChunk;
+      }
+   }
+   #else
+      sha224_update( &ctx, hb_parcx( 1 ), hb_parclen( 1 ) );
+   #endif
    sha224_final( &ctx, digest );
 
    if( ! hb_parl( 2 ) )
@@ -79,7 +107,35 @@ HB_FUNC( HB_SHA256 )
    sha256_ctx ctx;
 
    sha256_init( &ctx );
-   sha256_update( &ctx, hb_parcx( 1 ), hb_parclen( 1 ) );
+   #if HB_SIZE_MAX > UINT_MAX
+   {
+      const char * buffer = hb_parcx( 1 );
+      HB_SIZE nCount = hb_parclen( 1 );
+      HB_SIZE nDone = 0;
+
+      while( nCount )
+      {
+         unsigned int uiChunk;
+
+         if( nCount > ( HB_SIZE ) UINT_MAX )
+         {
+            uiChunk = UINT_MAX;
+            nCount -= ( HB_SIZE ) uiChunk;
+         }
+         else
+         {
+            uiChunk = ( unsigned int ) nCount;
+            nCount = 0;
+         }
+
+         sha256_update( &ctx, buffer + nDone, uiChunk );
+
+         nDone += ( HB_SIZE ) uiChunk;
+      }
+   }
+   #else
+      sha256_update( &ctx, hb_parcx( 1 ), hb_parclen( 1 ) );
+   #endif
    sha256_final( &ctx, digest );
 
    if( ! hb_parl( 2 ) )
@@ -98,7 +154,35 @@ HB_FUNC( HB_SHA384 )
    sha384_ctx ctx;
 
    sha384_init( &ctx );
-   sha384_update( &ctx, hb_parcx( 1 ), hb_parclen( 1 ) );
+   #if HB_SIZE_MAX > UINT_MAX
+   {
+      const char * buffer = hb_parcx( 1 );
+      HB_SIZE nCount = hb_parclen( 1 );
+      HB_SIZE nDone = 0;
+
+      while( nCount )
+      {
+         unsigned int uiChunk;
+
+         if( nCount > ( HB_SIZE ) UINT_MAX )
+         {
+            uiChunk = UINT_MAX;
+            nCount -= ( HB_SIZE ) uiChunk;
+         }
+         else
+         {
+            uiChunk = ( unsigned int ) nCount;
+            nCount = 0;
+         }
+
+         sha384_update( &ctx, buffer + nDone, uiChunk );
+
+         nDone += ( HB_SIZE ) uiChunk;
+      }
+   }
+   #else
+      sha384_update( &ctx, hb_parcx( 1 ), hb_parclen( 1 ) );
+   #endif
    sha384_final( &ctx, digest );
 
    if( ! hb_parl( 2 ) )
@@ -117,7 +201,35 @@ HB_FUNC( HB_SHA512 )
    sha512_ctx ctx;
 
    sha512_init( &ctx );
-   sha512_update( &ctx, hb_parcx( 1 ), hb_parclen( 1 ) );
+   #if HB_SIZE_MAX > UINT_MAX
+   {
+      const char * buffer = hb_parcx( 1 );
+      HB_SIZE nCount = hb_parclen( 1 );
+      HB_SIZE nDone = 0;
+
+      while( nCount )
+      {
+         unsigned int uiChunk;
+
+         if( nCount > ( HB_SIZE ) UINT_MAX )
+         {
+            uiChunk = UINT_MAX;
+            nCount -= ( HB_SIZE ) uiChunk;
+         }
+         else
+         {
+            uiChunk = ( unsigned int ) nCount;
+            nCount = 0;
+         }
+
+         sha512_update( &ctx, buffer + nDone, uiChunk );
+
+         nDone += ( HB_SIZE ) uiChunk;
+      }
+   }
+   #else
+      sha512_update( &ctx, hb_parcx( 1 ), hb_parclen( 1 ) );
+   #endif
    sha512_final( &ctx, digest );
 
    if( ! hb_parl( 2 ) )
