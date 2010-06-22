@@ -133,9 +133,9 @@ HB_PRIVATE_ITEM, * PHB_PRIVATE_ITEM;
 typedef struct
 {
    PHB_PRIVATE_ITEM stack;
-   HB_ULONG         size;
-   HB_ULONG         count;
-   HB_ULONG         base;
+   HB_SIZE          size;
+   HB_SIZE          count;
+   HB_SIZE          base;
 }
 HB_PRIVATE_STACK, * PHB_PRIVATE_STACK;
 
@@ -156,9 +156,9 @@ typedef struct
    PHB_ITEM * pItems;         /* pointer to the stack items */
    PHB_ITEM * pBase;          /* stack frame position for the current function call */
    HB_ITEM    Return;         /* latest returned value */
-   HB_LONG    wItems;         /* total items that may be holded on the stack */
-   HB_LONG    lWithObject;    /* stack offset to base current WITH OBJECT item */
-   HB_LONG    lRecoverBase;   /* current SEQUENCE envelope offset or 0 if no SEQUENCE is active */
+   HB_ISIZ    wItems;         /* total items that may be held on the stack */
+   HB_ISIZ    lWithObject;    /* stack offset to base current WITH OBJECT item */
+   HB_ISIZ    lRecoverBase;   /* current SEQUENCE envelope offset or 0 if no SEQUENCE is active */
    HB_USHORT  uiActionRequest;/* request for some action - stop processing of opcodes */
    HB_USHORT  uiQuitState;    /* HVM is quiting */
    HB_STACK_STATE state;      /* first (default) stack state frame */
@@ -287,19 +287,19 @@ extern HB_EXPORT void        hb_stackPop( void );        /* pops an item from th
 extern void        hb_stackPush( void );                 /* pushes an item on to the stack */
 extern void        hb_stackPushReturn( void );
 extern void        hb_stackPopReturn( void );
-extern void        hb_stackRemove( HB_LONG lUntilPos );
+extern void        hb_stackRemove( HB_ISIZ lUntilPos );
 
-extern HB_LONG     hb_stackTopOffset( void );
-extern HB_LONG     hb_stackBaseOffset( void );
-extern HB_LONG     hb_stackTotalItems( void );
-extern HB_ITEM_PTR hb_stackItem( long iItemPos );
+extern HB_ISIZ     hb_stackTopOffset( void );
+extern HB_ISIZ     hb_stackBaseOffset( void );
+extern HB_ISIZ     hb_stackTotalItems( void );
+extern HB_ITEM_PTR hb_stackItem( HB_ISIZ iItemPos );
 extern char *      hb_stackDateBuffer( void );
 
 /* stack management functions */
 extern HB_EXPORT int         hb_stackCallDepth( void );
 extern HB_EXPORT void        hb_stackBaseProcInfo( char * szProcName, HB_USHORT * puiProcLine ); /* get current .prg function name and line number */
 
-extern HB_LONG    hb_stackBaseProcOffset( int iLevel );
+extern HB_ISIZ    hb_stackBaseProcOffset( int iLevel );
 extern void       hb_stackDispCall( void );
 extern void       hb_stackFree( void );       /* releases all memory used by the stack */
 extern void       hb_stackInit( void );       /* initializes the stack */
@@ -319,7 +319,7 @@ extern PHB_STACKRDD hb_stackRDD( void );
 extern void **      hb_stackDebugInfo( void );
 
 #ifdef _HB_API_INTERNAL_
-extern void        hb_stackDecrease( HB_ULONG ulItems );
+extern void        hb_stackDecrease( HB_SIZE ulItems );
 extern HB_ITEM_PTR hb_stackNewFrame( PHB_STACK_STATE pFrame, HB_USHORT uiParams );
 extern void        hb_stackOldFrame( PHB_STACK_STATE pFrame );
 extern void        hb_stackClearMemvarsBase( void );
@@ -327,8 +327,8 @@ extern void        hb_stackClearMemvarsBase( void );
 extern HB_ITEM_PTR hb_stackLocalVariable( int *piFromBase );
 extern PHB_ITEM ** hb_stackItemBasePtr( void );
 
-extern HB_LONG     hb_stackGetRecoverBase( void );
-extern void        hb_stackSetRecoverBase( HB_LONG lBase );
+extern HB_ISIZ     hb_stackGetRecoverBase( void );
+extern void        hb_stackSetRecoverBase( HB_ISIZ lBase );
 extern HB_USHORT   hb_stackGetActionRequest( void );
 extern void        hb_stackSetActionRequest( HB_USHORT uiAction );
 
@@ -336,8 +336,8 @@ extern void        hb_stackSetStaticsBase( void * pBase );
 extern void *      hb_stackGetStaticsBase( void );
 
 extern PHB_ITEM    hb_stackWithObjectItem( void );
-extern HB_LONG     hb_stackWithObjectOffset( void );
-extern void        hb_stackWithObjectSetOffset( HB_LONG );
+extern HB_ISIZ     hb_stackWithObjectOffset( void );
+extern void        hb_stackWithObjectSetOffset( HB_ISIZ );
 
 extern int *       hb_stackKeyPolls( void );
 extern HB_BOOL *   hb_stackDebugRequest( void );
@@ -385,7 +385,7 @@ extern void        hb_stackUpdateAllocator( void *, PHB_ALLOCUPDT_FUNC, int );
 /* #define hb_stackTotalItems( )       ( hb_stack.wItems ) */
 #define hb_stackBaseItem( )         ( * hb_stack.pBase )
 #define hb_stackSelfItem( )         ( * ( hb_stack.pBase + 1 ) )
-#define hb_stackItem( iItemPos )    ( * ( hb_stack.pItems + ( long ) ( iItemPos ) ) )
+#define hb_stackItem( iItemPos )    ( * ( hb_stack.pItems + ( HB_ISIZ ) ( iItemPos ) ) )
 #define hb_stackReturnItem( )       ( &hb_stack.Return )
 #define hb_stackDateBuffer( )       ( hb_stack.szDate )
 #define hb_stackItemBasePtr( )      ( &hb_stack.pItems )
@@ -417,7 +417,7 @@ extern void        hb_stackUpdateAllocator( void *, PHB_ALLOCUPDT_FUNC, int );
 #endif
 
 #define hb_stackAllocItem( )        ( ( ++hb_stack.pPos == hb_stack.pEnd ? \
-                                        hb_stackIncrease() : (void) 0 ), \
+                                        hb_stackIncrease() : ( void ) 0 ), \
                                       * ( hb_stack.pPos - 1 ) )
 
 #ifdef HB_STACK_SAFEMACROS

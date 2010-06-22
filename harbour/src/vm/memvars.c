@@ -96,7 +96,7 @@ struct mv_memvarArray_info
 {
    PHB_ITEM pArray;
    PHB_DYNS * pDyns;
-   HB_ULONG ulCount;
+   HB_SIZE ulCount;
    int iScope;
 };
 
@@ -238,7 +238,7 @@ static void hb_memvarAddPrivate( PHB_DYNS pDynSym, PHB_ITEM pValue )
     */
    if( pMemvar )
    {
-      HB_ULONG ulCount = pPrivateStack->count;
+      HB_SIZE ulCount = pPrivateStack->count;
       while( ulCount > pPrivateStack->base )
       {
          if( pDynSym == pPrivateStack->stack[ ulCount - 1 ].pDynSym )
@@ -291,10 +291,10 @@ static void hb_memvarAddPrivate( PHB_DYNS pDynSym, PHB_ITEM pValue )
 /*
  * This function returns current PRIVATE variables stack base
  */
-HB_ULONG hb_memvarGetPrivatesBase( void )
+HB_SIZE hb_memvarGetPrivatesBase( void )
 {
    HB_STACK_TLS_PRELOAD
-   HB_ULONG ulBase;
+   HB_SIZE ulBase;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_memvarGetPrivatesBase()"));
 
@@ -306,12 +306,12 @@ HB_ULONG hb_memvarGetPrivatesBase( void )
 /*
  * This function releases PRIVATE variables created after passed base
  */
-void hb_memvarSetPrivatesBase( HB_ULONG ulBase )
+void hb_memvarSetPrivatesBase( HB_SIZE ulBase )
 {
    HB_STACK_TLS_PRELOAD
    PHB_PRIVATE_STACK pPrivateStack;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_memvarSetPrivatesBase(%lu)", ulBase));
+   HB_TRACE(HB_TR_DEBUG, ("hb_memvarSetPrivatesBase(%" HB_PFS "u)", ulBase));
 
    pPrivateStack = hb_stackGetPrivateStack();
 
@@ -712,7 +712,7 @@ static void hb_memvarRelease( HB_ITEM_PTR pMemvar )
       if( pDynSymbol && hb_dynsymGetMemvar( pDynSymbol ) )
       {
          HB_STACK_TLS_PRELOAD
-         HB_ULONG ulBase = hb_stackGetPrivateStack()->count;
+         HB_SIZE ulBase = hb_stackGetPrivateStack()->count;
 
          /* Find the variable with a requested name that is currently visible
           * Start from the top of the stack.
@@ -749,7 +749,7 @@ static void hb_memvarRelease( HB_ITEM_PTR pMemvar )
 static void hb_memvarReleaseWithMask( const char *szMask, HB_BOOL bInclude )
 {
    HB_STACK_TLS_PRELOAD
-   HB_ULONG ulBase, ulCount;
+   HB_SIZE ulBase, ulCount;
    PHB_DYNS pDynVar;
    PHB_ITEM pMemvar;
 
@@ -784,7 +784,7 @@ static int hb_memvarScopeGet( PHB_DYNS pDynVar )
    else
    {
       HB_STACK_TLS_PRELOAD
-      HB_ULONG ulBase = hb_stackGetPrivateStack()->count;    /* start from the top of the stack */
+      HB_SIZE ulBase = hb_stackGetPrivateStack()->count;    /* start from the top of the stack */
 
       while( ulBase )
       {
@@ -865,7 +865,7 @@ static HB_DYNS_FUNC( hb_memvarCountPublics )
    return HB_TRUE;
 }
 
-static HB_ULONG hb_memvarGetBaseOffset( int iProcLevel )
+static HB_SIZE hb_memvarGetBaseOffset( int iProcLevel )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -874,7 +874,7 @@ static HB_ULONG hb_memvarGetBaseOffset( int iProcLevel )
       int iLevel = hb_stackCallDepth();
       if( iProcLevel < iLevel )
       {
-         HB_LONG lOffset = hb_stackBaseProcOffset( iLevel - iProcLevel - 1 );
+         HB_ISIZ lOffset = hb_stackBaseProcOffset( iLevel - iProcLevel - 1 );
          if( lOffset > 0 )
             return hb_stackItem( lOffset )->item.asSymbol.stackstate->ulPrivateBase;
       }
@@ -885,7 +885,7 @@ static HB_ULONG hb_memvarGetBaseOffset( int iProcLevel )
 
 /* Count the number of variables with given scope
  */
-static int hb_memvarCount( int iScope, int iLevel )
+static HB_ISIZ hb_memvarCount( int iScope, int iLevel )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_memvarCount(%d,%d)", iScope, iLevel));
 
@@ -964,7 +964,7 @@ static HB_ITEM_PTR hb_memvarDebugVariable( int iScope, int iPos, const char ** p
       else
       {
          HB_STACK_TLS_PRELOAD
-         if( ( HB_ULONG ) iPos < hb_stackGetPrivateStack()->count )
+         if( ( HB_SIZE ) iPos < hb_stackGetPrivateStack()->count )
          {
             HB_DYNS_PTR pDynSym = hb_stackGetPrivateStack()->stack[ iPos ].pDynSym;
 
@@ -1216,7 +1216,7 @@ HB_FUNC( __MVDBGINFO )
    int iCount = hb_pcount();
 
    if( iCount == 1 || iCount == 2 )          /* request for a number of variables */
-      hb_retni( hb_memvarCount( hb_parni( 1 ), hb_parni( 2 ) ) );
+      hb_retns( hb_memvarCount( hb_parni( 1 ), hb_parni( 2 ) ) );
 
    else if( iCount > 2 )     /* request for a value of variable */
    {
@@ -1730,7 +1730,7 @@ HB_FUNC( __MVRESTORE )
 HB_FUNC( __MVSETBASE )
 {
    HB_STACK_TLS_PRELOAD
-   long lOffset = hb_stackBaseProcOffset( 0 );
+   HB_ISIZ lOffset = hb_stackBaseProcOffset( 0 );
 
    if( lOffset > 0 )
       hb_stackItem( lOffset )->item.asSymbol.stackstate->ulPrivateBase =

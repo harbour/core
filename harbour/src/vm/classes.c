@@ -1482,9 +1482,9 @@ const char * hb_objGetRealClsName( PHB_ITEM pObject, const char * szName )
 }
 
 #if defined( HB_CLASSY_BLOCK_SCOPE )
-static HB_LONG hb_clsSenderOffset( void )
+static HB_ISIZ hb_clsSenderOffset( void )
 {
-   HB_LONG lOffset = hb_stackBaseProcOffset( 1 );
+   HB_ISIZ lOffset = hb_stackBaseProcOffset( 1 );
 
    if( lOffset > 0 )
    {
@@ -1510,7 +1510,7 @@ static HB_LONG hb_clsSenderOffset( void )
 #if 0
 static HB_USHORT hb_clsSenderClasss( void )
 {
-   HB_LONG lOffset = hb_clsSenderOffset();
+   HB_ISIZ lOffset = hb_clsSenderOffset();
 
    if( lOffset > 0 )
       return hb_stackItem( lOffset )->item.asSymbol.stackstate->uiClass;
@@ -1521,7 +1521,7 @@ static HB_USHORT hb_clsSenderClasss( void )
 
 static HB_USHORT hb_clsSenderMethodClasss( void )
 {
-   HB_LONG lOffset = hb_clsSenderOffset();
+   HB_ISIZ lOffset = hb_clsSenderOffset();
 
    if( lOffset > 0 )
    {
@@ -1538,7 +1538,7 @@ static HB_USHORT hb_clsSenderMethodClasss( void )
 static PHB_SYMB hb_clsSenderSymbol( void )
 {
    PHB_SYMB pSym = NULL;
-   HB_LONG lOffset = hb_clsSenderOffset();
+   HB_ISIZ lOffset = hb_clsSenderOffset();
 
    if( lOffset > 0 )
    {
@@ -1559,7 +1559,7 @@ static PHB_SYMB hb_clsSenderSymbol( void )
 
 static HB_USHORT hb_clsSenderObjectClasss( void )
 {
-   HB_LONG lOffset = hb_clsSenderOffset();
+   HB_ISIZ lOffset = hb_clsSenderOffset();
 
    if( lOffset > 0 )
    {
@@ -2421,7 +2421,7 @@ void hb_dbg_objSendMessage( int iProcLevel, PHB_ITEM pObject, PHB_ITEM pMessage,
          int iLevel = hb_stackCallDepth();
          if( iProcLevel < iLevel )
          {
-            HB_LONG lOffset = hb_stackBaseProcOffset( iLevel - iProcLevel );
+            HB_ISIZ lOffset = hb_stackBaseProcOffset( iLevel - iProcLevel );
             if( lOffset > 0 )
             {
                PHB_ITEM pItem = hb_stackItem( lOffset );
@@ -4053,7 +4053,7 @@ HB_FUNC( __CLSPARENT )
 HB_FUNC( __SENDER )
 {
    HB_STACK_TLS_PRELOAD
-   HB_LONG lOffset = hb_stackBaseProcOffset( 2 );
+   HB_ISIZ lOffset = hb_stackBaseProcOffset( 2 );
 
    if( lOffset > 0 )
    {
@@ -4087,7 +4087,7 @@ HB_FUNC( __CLSSYNCWAIT )
    HB_STACK_TLS_PRELOAD
    PHB_ITEM pMutex = NULL;
    HB_ULONG ulMilliSec = HB_THREAD_INFINITE_WAIT;
-   HB_LONG lOffset = hb_stackBaseProcOffset( 2 );
+   HB_ISIZ lOffset = hb_stackBaseProcOffset( 2 );
 
    if( lOffset > 0 )
    {
@@ -5082,7 +5082,7 @@ void hb_clsAssociate( HB_USHORT usClassH )
  */
 const char * hb_clsRealMethodName( void )
 {
-   HB_LONG lOffset = hb_stackBaseProcOffset( 1 );
+   HB_ISIZ lOffset = hb_stackBaseProcOffset( 1 );
    const char * szName = NULL;
 
    if( lOffset > 0 )

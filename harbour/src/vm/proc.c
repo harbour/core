@@ -89,7 +89,7 @@ HB_FUNC( PROCNAME )
 
 HB_FUNC( PROCLINE )
 {
-   long lOffset = hb_stackBaseProcOffset( hb_parni( 1 ) + 1 );
+   HB_ISIZ lOffset = hb_stackBaseProcOffset( hb_parni( 1 ) + 1 );
 
    if( lOffset > 0 )
       hb_retni( hb_stackItem( lOffset )->item.asSymbol.stackstate->uiLineNo );
@@ -120,7 +120,7 @@ HB_FUNC( PROCFILE )
    }
    else
    {
-      long lOffset = hb_stackBaseProcOffset( hb_parni( 1 ) + 1 );
+      HB_ISIZ lOffset = hb_stackBaseProcOffset( hb_parni( 1 ) + 1 );
 
       if( lOffset > 0 )
       {
@@ -153,7 +153,7 @@ HB_FUNC( PROCFILE )
 #define HB_PROCBUF_LEN  ( HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 4 )
 char * hb_procname( int iLevel, char * szName, HB_BOOL fMethodName )
 {
-   long lOffset = hb_stackBaseProcOffset( iLevel );
+   HB_ISIZ lOffset = hb_stackBaseProcOffset( iLevel );
 
    szName[ 0 ] = '\0';
    if( lOffset > 0 )
@@ -167,7 +167,7 @@ char * hb_procname( int iLevel, char * szName, HB_BOOL fMethodName )
           pBase->item.asSymbol.value == &hb_symEval &&
           pBase->item.asSymbol.stackstate->uiClass )
       {
-         long lPrevOffset = hb_stackItem( lOffset )->item.asSymbol.stackstate->lBaseItem;
+         HB_ISIZ lPrevOffset = hb_stackItem( lOffset )->item.asSymbol.stackstate->lBaseItem;
 
          if( hb_stackItem( lPrevOffset )->item.asSymbol.stackstate->uiClass ==
              pBase->item.asSymbol.stackstate->uiClass &&
@@ -223,7 +223,7 @@ char * hb_procname( int iLevel, char * szName, HB_BOOL fMethodName )
  */
 HB_BOOL hb_procinfo( int iLevel, char * szName, HB_USHORT * puiLine, char * szFile )
 {
-   long lOffset = hb_stackBaseProcOffset( iLevel );
+   HB_ISIZ lOffset = hb_stackBaseProcOffset( iLevel );
 
    if( lOffset > 0 )
    {

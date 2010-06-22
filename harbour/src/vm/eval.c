@@ -350,42 +350,42 @@ void hb_evalBlock( PHB_ITEM pCodeBlock, ... )
 
 HB_FUNC( HB_FORNEXT ) /* nStart, nEnd | bEnd, bCode, nStep */
 {
-   HB_LONG lStart = hb_parnl( 1 ), lEnd;
+   HB_MAXINT nStart = hb_parnint( 1 ), nEnd;
    PHB_ITEM pEndBlock = hb_param( 2, HB_IT_BLOCK );
    PHB_ITEM pCodeBlock = hb_param( 3, HB_IT_BLOCK );
-   HB_LONG lStep = ( hb_pcount() > 3 ) ? hb_parnl( 4 ) : 1;
+   HB_MAXINT nStep = ( hb_pcount() > 3 ) ? hb_parnint( 4 ) : 1;
 
    if( pCodeBlock )
    {
       if( pEndBlock )
       {
          hb_evalBlock0( pEndBlock );
-         lEnd = hb_parnl( -1 );
+         nEnd = hb_parnint( -1 );
 
-         while( lStart <= lEnd )
+         while( nStart <= nEnd )
          {
             hb_vmPushEvalSym();
             hb_vmPush( pCodeBlock );
-            hb_vmPushLong( lStart );
+            hb_vmPushNumInt( nStart );
             hb_vmSend( 1 );
 
-            lStart += lStep;
+            nStart += nStep;
 
             hb_evalBlock0( pEndBlock );
-            lEnd = hb_parnl( -1 );
+            nEnd = hb_parnint( -1 );
          }
       }
       else
       {
-         lEnd = hb_parnl( 2 );
-         while( lStart <= lEnd )
+         nEnd = hb_parnint( 2 );
+         while( nStart <= nEnd )
          {
             hb_vmPushEvalSym();
             hb_vmPush( pCodeBlock );
-            hb_vmPushLong( lStart );
+            hb_vmPushNumInt( nStart );
             hb_vmSend( 1 );
 
-            lStart += lStep;
+            nStart += nStep;
          }
       }
    }

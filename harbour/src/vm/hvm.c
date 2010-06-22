@@ -4438,7 +4438,7 @@ static void hb_vmSeqBlock( void )
 static HB_GARBAGE_FUNC( hb_withObjectDestructor )
 {
    HB_STACK_TLS_PRELOAD
-   HB_LONG * plWithObjectBase = ( HB_LONG * ) Cargo;
+   HB_ISIZ * plWithObjectBase = ( HB_ISIZ * ) Cargo;
    hb_stackWithObjectSetOffset( * plWithObjectBase );
 }
 
@@ -4452,13 +4452,13 @@ static const HB_GC_FUNCS s_gcWithObjectFuncs =
 static void hb_vmWithObjectStart( void )
 {
    HB_STACK_TLS_PRELOAD
-   HB_LONG * plWithObjectBase;
+   HB_ISIZ * plWithObjectBase;
    PHB_ITEM pItem;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmWithObjectStart()"));
 
    pItem = hb_stackAllocItem();
-   plWithObjectBase = ( HB_LONG * ) hb_gcAllocRaw( sizeof( HB_LONG ),
+   plWithObjectBase = ( HB_ISIZ * ) hb_gcAllocRaw( sizeof( HB_ISIZ ),
                                                 &s_gcWithObjectFuncs );
    * plWithObjectBase = hb_stackWithObjectOffset();
    pItem->type = HB_IT_POINTER;
@@ -5527,7 +5527,7 @@ static HB_LONG hb_vmArgsJoin( HB_LONG lLevel, HB_USHORT uiArgSets )
 static void hb_vmMacroDo( HB_USHORT uiArgSets )
 {
    HB_STACK_TLS_PRELOAD
-   HB_LONG lArgs;
+   HB_ISIZ lArgs;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmMacroDo(%hu)", uiArgSets));
 
@@ -5539,7 +5539,7 @@ static void hb_vmMacroDo( HB_USHORT uiArgSets )
 static void hb_vmMacroFunc( HB_USHORT uiArgSets )
 {
    HB_STACK_TLS_PRELOAD
-   HB_LONG lArgs;
+   HB_ISIZ lArgs;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmMacroFunc(%hu)", uiArgSets));
 
@@ -5553,7 +5553,7 @@ static void hb_vmMacroFunc( HB_USHORT uiArgSets )
 static void hb_vmMacroSend( HB_USHORT uiArgSets )
 {
    HB_STACK_TLS_PRELOAD
-   HB_LONG lArgs;
+   HB_ISIZ lArgs;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmMacroSend(%hu)", uiArgSets));
 
@@ -5567,7 +5567,7 @@ static void hb_vmMacroSend( HB_USHORT uiArgSets )
 static void hb_vmMacroArrayGen( HB_USHORT uiArgSets )
 {
    HB_STACK_TLS_PRELOAD
-   HB_LONG lArgs;
+   HB_ISIZ lArgs;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmMacroArrayGen(%hu)", uiArgSets));
 
@@ -8541,7 +8541,7 @@ void hb_vmRequestEndProc( void )
 void hb_vmRequestBreak( PHB_ITEM pItem )
 {
    HB_STACK_TLS_PRELOAD
-   long lRecoverBase;
+   HB_ISIZ lRecoverBase;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmRequestBreak(%p)", pItem));
 
@@ -11783,7 +11783,7 @@ HB_FUNC( __QUITCANCEL )
    if( !hb_stackQuitState() )
 #endif
    {
-      long lRecoverBase = hb_stackGetRecoverBase();
+      HB_ISIZ lRecoverBase = hb_stackGetRecoverBase();
 
       if( lRecoverBase )
       {

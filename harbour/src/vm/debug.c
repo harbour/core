@@ -137,7 +137,7 @@ static void AddToArray( PHB_ITEM pItem, PHB_ITEM pReturn, HB_SIZE ulPos )
  * $End$ */
 HB_FUNC( __DBGVMSTKGCOUNT )
 {
-   hb_retnl( hb_stackTopOffset() );
+   hb_retns( hb_stackTopOffset() );
 }
 
 /* $Doc$
@@ -147,8 +147,8 @@ HB_FUNC( __DBGVMSTKGCOUNT )
 HB_FUNC( __DBGVMSTKGLIST )
 {
    PHB_ITEM pReturn;
-   HB_LONG ulLen = hb_stackTopOffset();
-   HB_LONG ulPos;
+   HB_ISIZ ulLen = hb_stackTopOffset();
+   HB_ISIZ ulPos;
 
    pReturn = hb_itemArrayNew( ulLen );           /* Create a transfer array  */
 
@@ -162,9 +162,9 @@ HB_FUNC( __DBGVMSTKGLIST )
  * $FuncName$     <nVars> hb_stackLen( <nProcLevel> )
  * $Description$  Returns params plus locals amount of the nProcLevel function
  * $End$ */
-static HB_LONG hb_stackLen( int iLevel )
+static HB_ISIZ hb_stackLen( int iLevel )
 {
-   HB_LONG lBaseOffset, lPrevOffset, lLen;
+   HB_ISIZ lBaseOffset, lPrevOffset, lLen;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_stackLen()"));
 
@@ -189,7 +189,7 @@ static HB_LONG hb_stackLen( int iLevel )
  * $End$ */
 HB_FUNC( __DBGVMSTKLCOUNT )
 {
-   hb_retnl( hb_stackLen( hb_parni( 1 ) + 1 ) );
+   hb_retns( hb_stackLen( hb_parni( 1 ) + 1 ) );
 }
 
 /* $Doc$
@@ -206,8 +206,8 @@ HB_FUNC( __DBGVMSTKLCOUNT )
 HB_FUNC( __DBGVMSTKLLIST )
 {
    PHB_ITEM pReturn;
-   HB_LONG ulLen, ul;
-   HB_LONG lBaseOffset, lPrevOffset;
+   HB_ISIZ ulLen, ul;
+   HB_ISIZ lBaseOffset, lPrevOffset;
 
    lBaseOffset = hb_stackBaseOffset();
    lPrevOffset = hb_stackItem( lBaseOffset - 1 )->item.asSymbol.stackstate->lBaseItem;
@@ -223,7 +223,7 @@ HB_FUNC( __DBGVMSTKLLIST )
 HB_FUNC( __DBGVMLOCALLIST )
 {
    PHB_ITEM pArray;
-   HB_LONG lBaseOffset, lPrevOffset, lLen, l;
+   HB_ISIZ lBaseOffset, lPrevOffset, lLen, l;
    int iLevel = hb_parni( 1 ) + 1;
 
    lBaseOffset = hb_stackBaseOffset();
@@ -259,7 +259,7 @@ HB_FUNC( __DBGVMPARLLIST )
 PHB_ITEM hb_dbg_vmVarLGet( int iLevel, int iLocal )
 {
    PHB_ITEM pLocal = NULL;
-   HB_LONG lBaseOffset;
+   HB_ISIZ lBaseOffset;
 
    lBaseOffset = hb_stackBaseOffset();
    while( iLevel-- > 0 && lBaseOffset > 1 )
@@ -309,7 +309,7 @@ HB_FUNC( __DBGVMVARLSET )
 {
    int iLevel = hb_parni( 1 ) + 1;
    int iLocal = hb_parni( 2 );
-   HB_LONG lBaseOffset;
+   HB_ISIZ lBaseOffset;
    PHB_ITEM pLocal;
 
    lBaseOffset = hb_stackBaseOffset();

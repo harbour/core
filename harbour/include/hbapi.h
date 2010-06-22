@@ -274,8 +274,8 @@ struct _HB_EXTREF;
 
 typedef struct _HB_STACK_STATE
 {
-   HB_LONG   lBaseItem;        /* stack base offset of previous func/proc */
-   HB_ULONG  ulPrivateBase;    /* memvars base offset of previous func/proc */
+   HB_ISIZ   lBaseItem;        /* stack base offset of previous func/proc */
+   HB_SIZE   ulPrivateBase;    /* memvars base offset of previous func/proc */
    void *    pStatics;         /* statics frame of previous func/proc */
    HB_USHORT uiClass;          /* class when message is sent */
    HB_USHORT uiMethod;         /* number of class method */
@@ -389,7 +389,7 @@ struct hb_struSymbol
 struct hb_struRecover
 {
    const HB_BYTE * recover;    /* address of recover code */
-   HB_ULONG        base;       /* previous recover base */
+   HB_SIZE         base;       /* previous recover base */
    HB_USHORT       flags;      /* previous recovery state and recover type */
    HB_USHORT       request;    /* requested action */
 };
@@ -1042,8 +1042,8 @@ extern HB_EXPORT void       hb_memvarSetValue( PHB_SYMB pMemvarSymb, HB_ITEM_PTR
 extern HB_EXPORT HB_ERRCODE hb_memvarGet( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb ); /* copy an symbol value into an item */
 extern void       hb_memvarGetValue( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb ); /* copy an symbol value into an item, with error trapping */
 extern void       hb_memvarGetRefer( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb ); /* copy a reference to a symbol value into an item, with error trapping */
-extern HB_ULONG   hb_memvarGetPrivatesBase( void ); /* retrieve current PRIVATE variables stack base */
-extern void       hb_memvarSetPrivatesBase( HB_ULONG ulBase ); /* release PRIVATE variables created after specified base */
+extern HB_SIZE    hb_memvarGetPrivatesBase( void ); /* retrieve current PRIVATE variables stack base */
+extern void       hb_memvarSetPrivatesBase( HB_SIZE ulBase ); /* release PRIVATE variables created after specified base */
 extern void       hb_memvarUpdatePrivatesBase( void ); /* Update PRIVATE base ofsset so they will not be removed when function return */
 extern void       hb_memvarNewParameter( PHB_SYMB pSymbol, PHB_ITEM pValue );
 extern char *     hb_memvarGetStrValuePtr( char * szVarName, HB_SIZE * pulLen );

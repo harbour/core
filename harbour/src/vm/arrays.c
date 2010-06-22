@@ -1567,7 +1567,7 @@ PHB_ITEM hb_arrayFromParams( int iLevel )
    HB_STACK_TLS_PRELOAD
    PHB_ITEM pArray;
    HB_USHORT uiPos, uiPCount;
-   HB_LONG lBaseOffset;
+   HB_ISIZ lBaseOffset;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_arrayFromParams(%d)", iLevel));
 

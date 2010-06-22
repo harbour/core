@@ -164,7 +164,7 @@ static HB_SYMB s_initSymbol = { "hb_stackInit", { HB_FS_STATIC }, { NULL }, NULL
 
 static void hb_stack_init( PHB_STACK pStack )
 {
-   HB_LONG i;
+   HB_ISIZ i;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_stack_init(%p)", pStack));
 
@@ -216,7 +216,7 @@ static void hb_stack_destroy_TSD( PHB_STACK pStack )
 
 static void hb_stack_free( PHB_STACK pStack )
 {
-   HB_LONG i;
+   HB_ISIZ i;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_stack_free(%p)", pStack));
 
@@ -290,7 +290,7 @@ void * hb_stackGetTSD( PHB_TSD pTSD )
 #else
    if( pTSD->iHandle == 0 )
    {
-      HB_ULONG ulSize = ( hb_stack.iTSD + 2 ) * sizeof( HB_TSD_HOLDER );
+      HB_SIZE ulSize = ( hb_stack.iTSD + 2 ) * sizeof( HB_TSD_HOLDER );
       if( hb_stack.iTSD == 0 )
       {
          hb_stack.pTSD = ( PHB_TSD_HOLDER ) hb_xgrab( ulSize );
@@ -583,7 +583,7 @@ void hb_stackDec( void )
 }
 
 #undef hb_stackDecrease
-void hb_stackDecrease( HB_ULONG ulItems )
+void hb_stackDecrease( HB_SIZE ulItems )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -635,9 +635,9 @@ void hb_stackPushReturn( void )
 void hb_stackIncrease( void )
 {
    HB_STACK_TLS_PRELOAD
-   HB_LONG BaseIndex;   /* index of stack base */
-   HB_LONG CurrIndex;   /* index of current top item */
-   HB_LONG EndIndex;    /* index of current top item */
+   HB_ISIZ BaseIndex;   /* index of stack base */
+   HB_ISIZ CurrIndex;   /* index of current top item */
+   HB_ISIZ EndIndex;    /* index of current top item */
 
    HB_TRACE(HB_TR_DEBUG, ("hb_stackIncrease()"));
 
@@ -663,7 +663,7 @@ void hb_stackIncrease( void )
    while( ++EndIndex < hb_stack.wItems );
 }
 
-void hb_stackRemove( HB_LONG lUntilPos )
+void hb_stackRemove( HB_ISIZ lUntilPos )
 {
    HB_STACK_TLS_PRELOAD
    HB_ITEM_PTR * pEnd = hb_stack.pItems + lUntilPos;
@@ -827,7 +827,7 @@ void hb_stackOldFrame( PHB_STACK_STATE pFrame )
 }
 
 #undef hb_stackItem
-HB_ITEM_PTR hb_stackItem( long iItemPos )
+HB_ITEM_PTR hb_stackItem( HB_ISIZ iItemPos )
 {
    HB_STACK_TLS_PRELOAD
    if( iItemPos < 0 )
@@ -907,7 +907,7 @@ HB_ITEM_PTR hb_stackReturnItem( void )
 }
 
 #undef hb_stackTopOffset
-HB_LONG hb_stackTopOffset( void )
+HB_ISIZ hb_stackTopOffset( void )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -915,7 +915,7 @@ HB_LONG hb_stackTopOffset( void )
 }
 
 #undef hb_stackBaseOffset
-HB_LONG hb_stackBaseOffset( void )
+HB_ISIZ hb_stackBaseOffset( void )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -923,7 +923,7 @@ HB_LONG hb_stackBaseOffset( void )
 }
 
 #undef hb_stackTotalItems
-HB_LONG hb_stackTotalItems( void )
+HB_ISIZ hb_stackTotalItems( void )
 {
 #if defined( HB_MT_VM )
    if( hb_stack_ready() )
@@ -1032,14 +1032,14 @@ void hb_stackSetStaticsBase( void * pBase )
 }
 
 #undef hb_stackGetRecoverBase
-HB_LONG hb_stackGetRecoverBase( void )
+HB_ISIZ hb_stackGetRecoverBase( void )
 {
    HB_STACK_TLS_PRELOAD
    return hb_stack.lRecoverBase;
 }
 
 #undef hb_stackSetRecoverBase
-void hb_stackSetRecoverBase( HB_LONG lBase )
+void hb_stackSetRecoverBase( HB_ISIZ lBase )
 {
    HB_STACK_TLS_PRELOAD
    hb_stack.lRecoverBase = lBase;
@@ -1068,14 +1068,14 @@ PHB_ITEM hb_stackWithObjectItem( void )
 }
 
 #undef hb_stackWithObjectOffset
-HB_LONG hb_stackWithObjectOffset( void )
+HB_ISIZ hb_stackWithObjectOffset( void )
 {
    HB_STACK_TLS_PRELOAD
    return hb_stack.lWithObject;
 }
 
 #undef hb_stackWithObjectSetOffset
-void hb_stackWithObjectSetOffset( HB_LONG lOffset )
+void hb_stackWithObjectSetOffset( HB_ISIZ lOffset )
 {
    HB_STACK_TLS_PRELOAD
    hb_stack.lWithObject = lOffset;
@@ -1149,7 +1149,7 @@ void hb_stackClearMemvarsBase( void )
 int hb_stackCallDepth( void )
 {
    HB_STACK_TLS_PRELOAD
-   HB_LONG lOffset = hb_stack.pBase - hb_stack.pItems;
+   HB_ISIZ lOffset = hb_stack.pBase - hb_stack.pItems;
    int iLevel = 0;
 
    while( lOffset > 0 )
@@ -1161,10 +1161,10 @@ int hb_stackCallDepth( void )
    return iLevel;
 }
 
-HB_LONG hb_stackBaseProcOffset( int iLevel )
+HB_ISIZ hb_stackBaseProcOffset( int iLevel )
 {
    HB_STACK_TLS_PRELOAD
-   HB_LONG lOffset = hb_stack.pBase - hb_stack.pItems;
+   HB_ISIZ lOffset = hb_stack.pBase - hb_stack.pItems;
 
    while( iLevel-- > 0 && lOffset > 0 )
       lOffset = ( * ( hb_stack.pItems + lOffset ) )->item.asSymbol.stackstate->lBaseItem;
@@ -1255,7 +1255,7 @@ static void hb_stackIsMemvarRef( PHB_STACK pStack )
 {
    /* 1. Mark all hidden memvars (PRIVATEs and PUBLICs) */
    PHB_PRIVATE_STACK pPrivateStack = &pStack->privates;
-   HB_ULONG ulCount = pPrivateStack->count;
+   HB_SIZE ulCount = pPrivateStack->count;
 
    while( ulCount )
    {
@@ -1304,7 +1304,7 @@ static void hb_stackIsTsdRef( PHB_STACK pStack, PHB_TSD_FUNC pCleanFunc )
 void hb_stackIsStackRef( void * pStackId, PHB_TSD_FUNC pCleanFunc )
 {
    PHB_STACK pStack;
-   long lCount;
+   HB_ISIZ lCount;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_stackIsStackRef()"));
 

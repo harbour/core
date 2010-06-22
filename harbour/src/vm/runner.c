@@ -439,7 +439,7 @@ static PHRB_BODY hb_hrbLoad( const char * szHrbBody, HB_SIZE ulBodySize, HB_USHO
             memcpy( ( char * ) pDynFunc[ ul ].pCode, szHrbBody + ulBodyOffset, ulSize );
             ulBodyOffset += ulSize;
 
-            pDynFunc[ ul ].pCodeFunc = (PHB_PCODEFUNC) hb_xgrab( sizeof( HB_PCODEFUNC ) );
+            pDynFunc[ ul ].pCodeFunc = ( PHB_PCODEFUNC ) hb_xgrab( sizeof( HB_PCODEFUNC ) );
             pDynFunc[ ul ].pCodeFunc->pCode    = pDynFunc[ ul ].pCode;
             pDynFunc[ ul ].pCodeFunc->pSymbols = pSymRead;
          }
