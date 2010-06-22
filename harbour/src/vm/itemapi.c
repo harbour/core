@@ -1831,7 +1831,7 @@ PHB_ITEM hb_itemUnRefOnce( PHB_ITEM pItem )
             if( hb_vmRequestQuery() == 0 )
             {
                HB_STACK_TLS_PRELOAD
-               hb_itemPutNInt( hb_stackAllocItem(), pItem->item.asEnum.offset );
+               hb_itemPutNS( hb_stackAllocItem(), pItem->item.asEnum.offset );
                hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ),
                               2, pItem->item.asEnum.basePtr, hb_stackItemFromTop( -1 ) );
                hb_stackPop();
@@ -1860,7 +1860,7 @@ PHB_ITEM hb_itemUnRefOnce( PHB_ITEM pItem )
                {
                   HB_STACK_TLS_PRELOAD
                   hb_arrayPushBase( pItem->item.asRefer.BasePtr.array );
-                  hb_itemPutNInt( hb_stackAllocItem(), pItem->item.asRefer.value + 1 );
+                  hb_itemPutNS( hb_stackAllocItem(), pItem->item.asRefer.value + 1 );
                   hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ),
                                  2, hb_stackItemFromTop( -2 ), hb_stackItemFromTop( -1 ) );
                   hb_stackPop();
