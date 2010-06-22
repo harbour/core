@@ -270,6 +270,7 @@ typedef union YYSTYPE
 {
    char *  string;      /* to hold a string returned by lex */
    int     iNumber;     /* to hold a temporary integer number */
+   HB_SIZE sNumber;     /* to hold a temporary HB_SIZE values */
    HB_MAXINT lNumber;   /* to hold a temporary long number */
    HB_BOOL bTrue;
    HB_EXPR_PTR asExpr;
@@ -305,7 +306,7 @@ typedef union YYSTYPE
    PHB_VARTYPE asVarType;
 }
 /* Line 1496 of yacc.c.  */
-#line 309 "harboury.h"
+#line 310 "harboury.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
