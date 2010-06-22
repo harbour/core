@@ -51,12 +51,6 @@
  *
  */
 
-/* NOTE: To avoid warnings with MSVC. For our purpose fopen_s() is not a good
-         alternative because it only opens files in non-shared mode. [vszakats] */
-#ifndef _CRT_SECURE_NO_WARNINGS
-#define _CRT_SECURE_NO_WARNINGS
-#endif
-
 #include "sqlite3.h"
 
 #include "hbvm.h"
@@ -1750,7 +1744,7 @@ static void SQL3ProfileLog( void *sFile, const char *sProfileMsg, sqlite3_uint64
 {
    if( sProfileMsg )
    {
-      FILE  *hFile = fopen( sFile ? ( const char * ) sFile : "hbsq3_pr.log", "a" );
+      FILE  *hFile = hb_fopen( sFile ? ( const char * ) sFile : "hbsq3_pr.log", "a" );
 
       if( hFile )
       {
@@ -1764,7 +1758,7 @@ static void SQL3TraceLog( void *sFile, const char *sTraceMsg )
 {
    if( sTraceMsg )
    {
-      FILE  *hFile = fopen( sFile ? ( const char * ) sFile : "hbsq3_tr.log", "a" );
+      FILE  *hFile = hb_fopen( sFile ? ( const char * ) sFile : "hbsq3_tr.log", "a" );
 
       if( hFile )
       {
