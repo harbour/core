@@ -354,7 +354,7 @@ struct hb_struRefer
       struct _HB_ITEM * itemPtr;          /* item pointer  */
       struct _HB_ITEM ** *itemsbasePtr;   /* local variables */
    } BasePtr;
-   HB_LONG offset;                        /* 0 for static variables */
+   HB_ISIZ offset;                        /* 0 for static variables */
    HB_ISIZ value;
 };
 
@@ -537,12 +537,12 @@ extern void *     hb_xRefResize( void * pMem, HB_SIZE ulSave, HB_SIZE ulSize, HB
    and only on 16bit platforms, so the below condition seems to be
    more reasonable. */
 #if UINT_MAX > USHRT_MAX
-   /* NOTE: memcpy/memset can work with HB_ULONG data blocks */
+   /* NOTE: memcpy/memset can work with HB_SIZE data blocks */
    #define  hb_xmemcpy  memcpy
    #define  hb_xmemset  memset
 #else
    /* NOTE: otherwise, the hb_xmemcpy and hb_xmemset functions
-            will be used to copy and/or set HB_ULONG data blocks */
+            will be used to copy and/or set HB_SIZE data blocks */
 extern HB_EXPORT void * hb_xmemcpy( void * pDestArg, void * pSourceArg, HB_SIZE ulLen ); /* copy more than memcpy() can */
 extern HB_EXPORT void * hb_xmemset( void * pDestArg, int iFill, HB_SIZE ulLen ); /* set more than memset() can */
 #endif
@@ -702,7 +702,7 @@ extern HB_EXPORT void   hb_retnll( HB_LONGLONG lNumber );/* returns a long long 
 extern HB_EXPORT void   hb_retnlllen( HB_LONGLONG lNumber, int iWidth ); /* returns a long long number, with specific width */
 #endif
 
-#define HB_IS_VALID_INDEX( idx, max )  ( (idx) > 0 && ( HB_ULONG ) (idx) <= (max) )
+#define HB_IS_VALID_INDEX( idx, max )  ( (idx) > 0 && ( HB_SIZE ) (idx) <= (max) )
 
 #ifdef _HB_API_MACROS_
 

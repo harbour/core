@@ -1966,9 +1966,9 @@ static PHB_CODEPAGE hb_buildCodePage( const char * id, const char * info,
                {
                   if( iAcc && nACSort != HB_CDP_ACSORT_NONE )
                      ++iAccUp;
-                  sort[ ucUp ] = ++iSortUp - iAccUp;
+                  sort[ ucUp ] = ( HB_UCHAR ) ( ++iSortUp - iAccUp );
                   if( acc )
-                     acc[ ucUp ] = iSortUp;
+                     acc[ ucUp ] = ( HB_UCHAR ) iSortUp;
                   if( ucUp2 > ucUp )
                      ucUp2 = ucUp;
                }
@@ -1989,9 +1989,9 @@ static PHB_CODEPAGE hb_buildCodePage( const char * id, const char * info,
                {
                   if( iAcc && nACSort != HB_CDP_ACSORT_NONE )
                      ++iAccLo;
-                  sort[ ucLo ] = ++iSortLo - iAccLo;
+                  sort[ ucLo ] = ( HB_UCHAR ) ( ++iSortLo - iAccLo );
                   if( acc )
-                     acc[ ucLo ] = iSortLo;
+                     acc[ ucLo ] = ( HB_UCHAR ) iSortLo;
                   if( ucLo2 > ucLo )
                      ucLo2 = ucLo;
                }
@@ -2043,9 +2043,9 @@ static PHB_CODEPAGE hb_buildCodePage( const char * id, const char * info,
          else
             iAdd = iUp + iLo;
 
-         sort[ i ] += iAdd;
+         sort[ i ] += ( HB_UCHAR ) iAdd;
          if( acc )
-            acc[ i ] += iAdd;
+            acc[ i ] += ( HB_UCHAR ) iAdd;
       }
    }
 

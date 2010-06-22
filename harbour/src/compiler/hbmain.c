@@ -288,7 +288,7 @@ static PCOMSYMBOL hb_compSymbolAdd( HB_COMP_DECL, const char * szSymbolName, HB_
    HB_COMP_PARAM->symbols.iCount++;
 
    if( pwPos )
-      *pwPos = HB_COMP_PARAM->symbols.iCount -1; /* position number starts form 0 */
+      *pwPos = ( HB_USHORT ) ( HB_COMP_PARAM->symbols.iCount - 1 ); /* position number starts form 0 */
 
    return pSym;
 }
@@ -1657,13 +1657,13 @@ static void hb_compOptimizeFrames( HB_COMP_DECL, PFUNCTION pFunc )
             pFunc->pCode[ 0 ] = HB_P_LARGEFRAME;
             pFunc->pCode[ 1 ] = HB_LOBYTE( iLocals );
             pFunc->pCode[ 2 ] = HB_HIBYTE( iLocals );
-            pFunc->pCode[ 3 ] = ( HB_BYTE )( pFunc->wParamCount );
+            pFunc->pCode[ 3 ] = ( HB_BYTE ) pFunc->wParamCount;
             iOffset = 1;
          }
          else
          {
-            pFunc->pCode[ 1 ] = ( HB_BYTE )( iLocals );
-            pFunc->pCode[ 2 ] = ( HB_BYTE )( pFunc->wParamCount );
+            pFunc->pCode[ 1 ] = ( HB_BYTE ) iLocals;
+            pFunc->pCode[ 2 ] = ( HB_BYTE ) pFunc->wParamCount;
          }
          bSkipFRAME = HB_FALSE;
       }
@@ -1690,7 +1690,7 @@ static void hb_compOptimizeFrames( HB_COMP_DECL, PFUNCTION pFunc )
       else
       {
          if( pFunc->fVParams )
-            pFunc->pCode[ 0 ] = iOffset ? HB_P_LARGEVFRAME : HB_P_VFRAME;
+            pFunc->pCode[ 0 ] = ( HB_BYTE ) ( iOffset ? HB_P_LARGEVFRAME : HB_P_VFRAME );
 
          if( bSkipSFRAME )
          {

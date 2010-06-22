@@ -59,7 +59,7 @@ HB_EXTERN_BEGIN
 
 struct HB_HASH_TABLE_;
 
-#define HB_HASH_FUNC( hbfunc )   HB_ULONG hbfunc( struct HB_HASH_TABLE_ * HashPtr, const void * Value, const void * Cargo )
+#define HB_HASH_FUNC( hbfunc )   HB_SIZE hbfunc( struct HB_HASH_TABLE_ * HashPtr, const void * Value, const void * Cargo )
 typedef HB_HASH_FUNC( HB_HASH_FUNC_ );
 typedef HB_HASH_FUNC_ * HB_HASH_FUNC_PTR;
 
@@ -67,7 +67,7 @@ typedef struct HB_HASH_ITEM_
 {
    const void * ValPtr;          /* value stored in the hash table */
    const void * KeyPtr;
-   HB_ULONG key;
+   HB_SIZE key;
    struct HB_HASH_ITEM_ *next;
 } HB_HASH_ITEM, * HB_HASH_ITEM_PTR;
 
