@@ -60,7 +60,37 @@ HB_FUNC( HB_SHA1 )
    SHA_CTX ctx;
 
    SHA1_Init( &ctx );
-   SHA1_Update( &ctx, hb_parcx( 1 ), hb_parclen( 1 ) );
+
+   #if HB_SIZE_MAX > UINT_MAX
+   {
+      const char * buffer = hb_parcx( 1 );
+      HB_SIZE nCount = hb_parclen( 1 );
+      HB_SIZE nDone = 0;
+
+      while( nCount )
+      {
+         unsigned int uiChunk;
+
+         if( nCount > ( HB_SIZE ) UINT_MAX )
+         {
+            uiChunk = UINT_MAX;
+            nCount -= ( HB_SIZE ) uiChunk;
+         }
+         else
+         {
+            uiChunk = ( unsigned int ) nCount;
+            nCount = 0;
+         }
+
+         SHA1_Update( &ctx, buffer + nDone, uiChunk );
+
+         nDone += ( HB_SIZE ) uiChunk;
+      }
+   }
+   #else
+      SHA1_Update( &ctx, hb_parcx( 1 ), hb_parclen( 1 ) );
+   #endif
+
    SHA1_Final( digest, &ctx );
 
    if( ! hb_parl( 2 ) )
