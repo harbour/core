@@ -10696,7 +10696,7 @@ HB_BOOL hb_xvmModulusByInt( HB_LONG lDivisor )
          }
       }
       else if( HB_IS_NUMINT( pValue ) )
-         hb_itemPutND( pValue, HB_ITEM_GET_NUMINTRAW( pValue ) % lDivisor );
+         hb_itemPutND( pValue, ( double ) ( HB_ITEM_GET_NUMINTRAW( pValue ) % lDivisor ) );
       else
          hb_itemPutND( pValue, fmod( hb_itemGetND( pValue ), lDivisor ) );
 

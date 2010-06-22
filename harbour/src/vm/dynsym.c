@@ -511,7 +511,7 @@ void hb_dynsymSetAreaHandle( PHB_DYNS pDynSym, int iArea )
    hb_dynsymHandles( pDynSym )->uiArea = ( HB_USHORT ) iArea;
 }
 
-static PHB_DYNS hb_dynsymGetByIndex( long lIndex )
+static PHB_DYNS hb_dynsymGetByIndex( HB_LONG lIndex )
 {
    PHB_DYNS pDynSym = NULL;
 
@@ -525,7 +525,7 @@ static PHB_DYNS hb_dynsymGetByIndex( long lIndex )
    return pDynSym;
 }
 
-long hb_dynsymCount( void )
+HB_LONG hb_dynsymCount( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_dynsymCount()"));
 

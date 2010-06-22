@@ -386,7 +386,7 @@ double hb_partd( int iParam )
    return 0;
 }
 
-HB_BOOL hb_partdt( long * plJulian, long * plMilliSec , int iParam )
+HB_BOOL hb_partdt( long * plJulian, long * plMilliSec, int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -1031,7 +1031,7 @@ double hb_parvtd( int iParam, ... )
    return 0;
 }
 
-HB_BOOL hb_parvtdt( long * plJulian, long * plMilliSec , int iParam, ... )
+HB_BOOL hb_parvtdt( long * plJulian, long * plMilliSec, int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
