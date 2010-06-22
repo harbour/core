@@ -462,6 +462,7 @@ typedef HB_UCHAR            HB_U8;
 #if defined( HB_CLIPPER_INT_ITEMS )
 #  define HB_VMINT_MAX           SHRT_MAX
 #  define HB_VMINT_MIN           SHRT_MIN
+#  define HB_VMUINT_MAX          USHRT_MAX
 #  define HB_VMLONG_MAX          LONG_MAX
 #  define HB_VMLONG_MIN          LONG_MIN
 #  define HB_VMULONG_MAX         ULONG_MAX
@@ -471,6 +472,7 @@ typedef HB_UCHAR            HB_U8;
 #elif !defined( HB_LONG_LONG_OFF ) && ULONG_MAX == UINT_MAX
 #  define HB_VMINT_MAX           INT_MAX
 #  define HB_VMINT_MIN           INT_MIN
+#  define HB_VMUINT_MAX          UINT_MAX
 #  define HB_VMLONG_MAX          LONGLONG_MAX
 #  define HB_VMLONG_MIN          LONGLONG_MIN
 #  define HB_VMULONG_MAX         ULONGLONG_MAX
@@ -479,6 +481,7 @@ typedef HB_UCHAR            HB_U8;
 #else
 #  define HB_VMINT_MAX           INT_MAX
 #  define HB_VMINT_MIN           INT_MIN
+#  define HB_VMUINT_MAX          UINT_MAX
 #  define HB_VMLONG_MAX          LONG_MAX
 #  define HB_VMLONG_MIN          LONG_MIN
 #  define HB_VMULONG_MAX         ULONG_MAX

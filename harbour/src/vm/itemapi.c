@@ -990,6 +990,12 @@ PHB_ITEM hb_itemPutNS( PHB_ITEM pItem, HB_ISIZ nNumber )
    else
       pItem = hb_itemNew( NULL );
 
+#if HB_SIZE_MAX <= HB_VMUINT_MAX
+   pItem->type = HB_IT_INTEGER;
+   pItem->item.asInteger.value = nNumber;
+   /* EXP limit used intentionally */
+   pItem->item.asInteger.length = HB_INT_EXPLENGTH( nNumber );
+#else
    if( HB_LIM_INT( nNumber ) )
    {
       pItem->type = HB_IT_INTEGER;
@@ -1003,6 +1009,7 @@ PHB_ITEM hb_itemPutNS( PHB_ITEM pItem, HB_ISIZ nNumber )
       pItem->item.asLong.value = nNumber;
       pItem->item.asLong.length = HB_LONG_LENGTH( nNumber );
    }
+#endif
 
    return pItem;
 }

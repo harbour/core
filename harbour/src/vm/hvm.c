@@ -6661,10 +6661,14 @@ void hb_vmPushLong( long lNumber )
 
 void hb_vmPushSize( HB_ISIZ nNumber )
 {
+#if HB_SIZE_MAX <= HB_VMUINT_MAX
+   hb_vmPushInteger( ( int ) nNumber );
+#else
    if( HB_LIM_INT( nNumber ) )
       hb_vmPushInteger( ( int ) nNumber );
    else
       hb_vmPushHBLong( nNumber );
+#endif
 }
 
 static void hb_vmPushHBLong( HB_MAXINT lNumber )
