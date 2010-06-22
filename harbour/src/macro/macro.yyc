@@ -2116,7 +2116,7 @@ yyreduce:
 
   case 7:
 #line 283 "macro.y"
-    { (yyval.asExpr) = hb_compExprNewDate( (yyvsp[(1) - (1)].valLong).lNumber, HB_COMP_PARAM ); ;}
+    { (yyval.asExpr) = hb_compExprNewDate( ( long ) (yyvsp[(1) - (1)].valLong).lNumber, HB_COMP_PARAM ); ;}
     break;
 
   case 8:
@@ -3408,4 +3408,3 @@ int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
 }
 
 #endif /* HB_MACRO_PPLEX */
-
