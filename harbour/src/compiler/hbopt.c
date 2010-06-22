@@ -996,7 +996,7 @@ static HB_SHORT hb_compLocalGetNumber( HB_BYTE * pCode )
       case HB_P_POPLOCALNEAR:
       case HB_P_PUSHLOCALNEAR:
       case HB_P_LOCALNEARADDINT:
-         return * ( (signed char*) pCode + 1 );
+         return * ( ( signed char* ) pCode + 1 );
 
       case HB_P_POPLOCAL:
       case HB_P_PUSHLOCAL:
