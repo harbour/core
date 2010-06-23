@@ -28,7 +28,7 @@
 #define _STABILIZE_UP           1
 #define _STABILIZE_DOWN         0
 
-#define _MAX_LINE_LEN           254
+#define _MAX_LINE_LEN           4096
 
 
 typedef struct
@@ -156,7 +156,7 @@ static HB_ISIZ Next( PHB_EDITOR pEd, HB_ISIZ adres )
    tmp = strchr( pEd->begin + adres, '\n' );
 
    if( tmp && tmp[ 1 ] )
-      return ( HB_ISIZ ) ( ++tmp - pEd->begin );
+      return ++tmp - pEd->begin;
    else
       return -1;
 }
@@ -198,10 +198,11 @@ HB_FUNC( ED_NEW )
 {
    PHB_EDITOR pEd;
 
-   int ll, tab;
+   HB_ISIZ ll;
+   int tab;
    HB_ISIZ bufferSize;
 
-   ll = hb_parni( 1 );
+   ll = hb_parns( 1 );
    if( ll > _MAX_LINE_LEN )
       ll = _MAX_LINE_LEN;
    tab = hb_parni( 2 );
@@ -250,7 +251,7 @@ static void FormatText( PHB_EDITOR pEd )
       j = wsk - pEd->begin;
 
       MoveText( pEd, j, j + pEd->tab_size - 1,
-                     ( HB_ISIZ ) ( pEd->buffer_size - j - pEd->tab_size + 1 ) );
+                     pEd->buffer_size - j - pEd->tab_size + 1 );
 
       for( i = 0; i < pEd->tab_size; i++, wsk++ )
          *wsk = ' ';
@@ -451,7 +452,7 @@ static HB_ISIZ InsText( PHB_EDITOR pEd, char * adres, HB_ISIZ line )
       else
          off = 0;
 
-      if( ( HB_ISIZ ) ( dl + dl1 ) < ( pEd->buffer_size - 10 ) )
+      if( ( dl + dl1 ) < ( pEd->buffer_size - 10 ) )
       {
          /* there is enough free room in text buffer
           */
@@ -525,7 +526,7 @@ HB_FUNC( ED_INSTEXT )
       HB_ISIZ linia = hb_parns( 3 );
 
       dl = InsText( pEd, adres, linia );
-      pEd->last_line = Prev( pEd, ( HB_ISIZ ) strlen( pEd->begin ) );
+      pEd->last_line = Prev( pEd, strlen( pEd->begin ) );
 
       hb_retns( dl );
 
@@ -925,7 +926,7 @@ HB_FUNC( ED_STABILIZE )
                * as color escape codes
                */
                adres[ nLen++ ] =*cPtr;
-               if( pEd->escape && ( char ) *cPtr == pEd->escape )
+               if( pEd->escape && *cPtr == pEd->escape )
                   nEscLen += 2;
             }
             j = nLen - nEscLen;    /* length of printable text */
@@ -947,7 +948,7 @@ HB_FUNC( ED_STABILIZE )
                {
                   for( i = 0; i < ( pEd->first_col + e ); i++ )
                   {
-                     if( ( char ) adres[ i ] == pEd->escape )
+                     if( adres[ i ] == pEd->escape )
                      {
                         adres[ 0 ] = adres[ i ];
                         adres[ 1 ] = adres[ ++i ];
@@ -959,7 +960,7 @@ HB_FUNC( ED_STABILIZE )
                if( e )
                {
                   nLen -= ( i - 2 );
-                  if( ( char ) adres[ i - 1 ] == pEd->escape )
+                  if( adres[ i - 1 ] == pEd->escape )
                      i++, nLen--;
                   strncpy( adres + 2, adres + i, nLen - 2 );
                   nEscLen -= ( e - 2 );
@@ -1007,7 +1008,7 @@ HB_FUNC( ED_STABILIZE )
 
                   for( ; i < nLen && nLeft <= pEd->right; i++ )
                   {
-                     if( ( char ) adres[ i ] == pEd->escape )
+                     if( adres[ i ] == pEd->escape )
                         hb_gtColorSelect( ( adres[ ++i ] & 0x0F ) - 1 );
                      else
                         hb_gtWriteAt( nTop, nLeft++, adres + i, 1 );
@@ -1673,7 +1674,7 @@ static void FormatParagraph( PHB_EDITOR pEd )
 
       while( tmp )
       {
-         source = pEd->current_line + ( HB_ISIZ ) ( tmp - pom - 1 );
+         source = pEd->current_line + ( tmp - pom - 1 );
          MoveText( pEd, source + 2, source + 1, pEd->buffer_size - source + 2 );
          pEd->begin[ source + 1 ] = ' ';
 
@@ -1729,11 +1730,11 @@ static void DelChar( PHB_EDITOR pEd )
    if( ccc <= GetLineLength( pEd, pEd->current_line, &rdl ) )
    {
       if( pEd->escape )
-         while( ( char ) pEd->begin[ pEd->current_line + ccc ] == pEd->escape )
+         while( pEd->begin[ pEd->current_line + ccc ] == pEd->escape )
             ccc += 2;
-      MoveText( pEd, pEd->current_line + ( HB_ISIZ ) ( ccc + 1 ),
-                   pEd->current_line + ( HB_ISIZ ) ccc,
-                   ( pEd->buffer_size - ( pEd->current_line + ( HB_ISIZ ) ( ccc + 1 ) ) ) );
+      MoveText( pEd, pEd->current_line + ccc + 1,
+                   pEd->current_line + ccc,
+                   ( pEd->buffer_size - ( pEd->current_line + ccc + 1 ) ) );
 
       pEd->fStable        = HB_FALSE;
       pEd->next_stabil    = pEd->current_line;
@@ -1861,7 +1862,7 @@ static void BackSpace( PHB_EDITOR pEd, HB_BOOL fInsert )
             /* find the first space in current line (the new line will
              * be wrapped eventually at this position) */
             if( ( w = strchr ( tmp, ' ') ) != 0 )
-               ww = ( HB_ISIZ ) ( w - tmp );
+               ww = w - tmp;
             else
                ww = nLen + rdl;
 
@@ -2162,7 +2163,7 @@ static int format_line( PHB_EDITOR pEd, char Karetka, HB_ISIZ LineDl )
          jj   = 1;
       }
 
-      j = ( HB_ISIZ ) ( pEd->current_line + podz );
+      j = pEd->current_line + podz;
       MoveText( pEd, j, j + 2, pEd->buffer_size - j - 2 );
 
       /* replace with separators */
@@ -2550,8 +2551,8 @@ static void Return( PHB_EDITOR pEd, HB_BOOL fInsert )
          {
             if( ( pEd->first_col + pEd->cursor_col ) > nLen + 1 )
                End( pEd );
-            ii = pEd->current_line + ( HB_ISIZ ) pEd->first_col +
-                                     ( HB_ISIZ ) pEd->cursor_col;
+            ii = pEd->current_line + pEd->first_col +
+                                     pEd->cursor_col;
             MoveText( pEd, ii, ii + 2, pEd->buffer_size - ii - 2 );
 
             pEd->begin[ ii + 0 ] = '\r';
