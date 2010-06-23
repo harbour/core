@@ -323,7 +323,7 @@ static void hb_hrbUnLoad( PHRB_BODY pHrbBody )
 
 
 
-static PHRB_BODY hb_hrbLoad( const char * szHrbBody, HB_SIZE ulBodySize, HB_USHORT usMode )
+static PHRB_BODY hb_hrbLoad( const char * szHrbBody, HB_SIZE ulBodySize, HB_USHORT usMode, const char * szFileName )
 {
    PHRB_BODY pHrbBody = NULL;
 
@@ -549,7 +549,7 @@ static PHRB_BODY hb_hrbLoad( const char * szHrbBody, HB_SIZE ulBodySize, HB_USHO
          }
 
          pHrbBody->pModuleSymbols = hb_vmRegisterSymbols( pHrbBody->pSymRead,
-                  ( HB_USHORT ) pHrbBody->ulSymbols, "pcode.hrb", 0, HB_TRUE, HB_FALSE );
+                  ( HB_USHORT ) pHrbBody->ulSymbols, szFileName ? szFileName : "pcode.hrb", 0, HB_TRUE, HB_FALSE );
 
          if( pHrbBody->pModuleSymbols->pModuleSymbols != pSymRead )
          {
@@ -624,7 +624,7 @@ static PHRB_BODY hb_hrbLoadFromFile( const char * szHrb, HB_USHORT usMode )
          hb_fsReadLarge( hFile, pbyBuffer, ulBodySize );
          pbyBuffer[ ulBodySize ] = '\0';
 
-         pHrbBody = hb_hrbLoad( ( const char * ) pbyBuffer, ulBodySize, usMode );
+         pHrbBody = hb_hrbLoad( ( const char * ) pbyBuffer, ulBodySize, usMode, szFileName );
          hb_xfree( pbyBuffer );
       }
       hb_fsClose( hFile );
@@ -723,7 +723,7 @@ HB_FUNC( HB_HRBRUN )
       PHRB_BODY pHrbBody;
 
       if( hb_hrbCheckSig( fileOrBody, ulLen ) != 0 )
-         pHrbBody = hb_hrbLoad( fileOrBody, ulLen, usMode );
+         pHrbBody = hb_hrbLoad( fileOrBody, ulLen, usMode, NULL );
       else
          pHrbBody = hb_hrbLoadFromFile( fileOrBody, usMode );
 
@@ -773,7 +773,7 @@ HB_FUNC( HB_HRBLOAD )
       PHRB_BODY pHrbBody;
 
       if( hb_hrbCheckSig( fileOrBody, ulLen ) != 0 )
-         pHrbBody = hb_hrbLoad( fileOrBody, ulLen, usMode );
+         pHrbBody = hb_hrbLoad( fileOrBody, ulLen, usMode, NULL );
       else
          pHrbBody = hb_hrbLoadFromFile( fileOrBody, usMode );
 

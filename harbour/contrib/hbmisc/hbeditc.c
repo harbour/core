@@ -2187,7 +2187,7 @@ static int format_line( PHB_EDITOR pEd, char Karetka, HB_ISIZ LineDl )
 
 /* Appends the character at the end of line
  */
-static int AppendChar( PHB_EDITOR pEd, int znak, int podz )
+static int AppendChar( PHB_EDITOR pEd, char znak, char podz )
 {
    int status;
    HB_ISIZ diff;
@@ -2209,9 +2209,9 @@ static int AppendChar( PHB_EDITOR pEd, int znak, int podz )
 
    /* move the CRLF characters after the appended character */
    cNew  = pEd->begin + iPos + diff;
-   *cNew++ = ( char ) znak;
+   *cNew++ = znak;
    if( *cNew != '\r' )
-      *cNew = ( char ) podz; /* insert requested soft/hard carriage */
+      *cNew = podz; /* insert requested soft/hard carriage */
    *++cNew = '\n';
 
    /* the last line always have to end with the hard carriage return */
@@ -2255,7 +2255,7 @@ static void SetLastLine( PHB_EDITOR pEd )
 
 /* Insert or replace the new character into the text buffer
  */
-static void PutChar( PHB_EDITOR pEd, HB_BOOL fInsert, int znak )
+static void PutChar( PHB_EDITOR pEd, HB_BOOL fInsert, char znak )
 {
    HB_ISIZ i, jj, cc;
    HB_ISIZ rdl;
@@ -2278,7 +2278,7 @@ static void PutChar( PHB_EDITOR pEd, HB_BOOL fInsert, int znak )
              */
             i = pEd->current_line + cc;
             MoveText( pEd, i, i + 1, pEd->buffer_size - pEd->current_line - cc - 1 );
-            pEd->begin[ i ] = ( char ) znak;
+            pEd->begin[ i ] = znak;
 
             jj = format_line( pEd, HB_CHAR_SOFT1, 0 );
 
@@ -2308,7 +2308,7 @@ static void PutChar( PHB_EDITOR pEd, HB_BOOL fInsert, int znak )
    {
       if( cc < GetLineLength( pEd, pEd->current_line, &rdl ) )
       {
-         pEd->begin[ pEd->current_line + cc ] = ( char ) znak;
+         pEd->begin[ pEd->current_line + cc ] = znak;
          jj = 0;
          Right( pEd );
       }
