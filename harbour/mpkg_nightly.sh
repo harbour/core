@@ -79,13 +79,13 @@ rm -f -r _mk_nightly
 destdir="/home/frs/project/h/ha/harbour-project/source/nightly/"
 
 if [ -d $destdir ]
-
+then
    echo Copying packages to sf.net file release area...
 
    cp harbour-nightly-src.zip $destdir
    cp harbour-nightly.tar.bz2 $destdir
    cp harbour-nightly.tar.gz  $destdir
-then
+else
    if [ "$HB_SFNET_FRS_PRIVATE_KEY" -a "$HB_SFNET_USER" ]
    then
 
