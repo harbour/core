@@ -90,7 +90,7 @@ typedef struct
    PHB_SYMBOLS    pModuleSymbols;
 } HRB_BODY, * PHRB_BODY;
 
-static const char s_szHead[ 4 ] = { '\300', 'H', 'R', 'B' };
+static const char s_szHead[ 4 ] = { '\xC0', 'H', 'R', 'B' };
 
 
 #define SYM_NOLINK   0              /* symbol does not have to be linked */

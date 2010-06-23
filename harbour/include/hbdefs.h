@@ -258,7 +258,7 @@ typedef unsigned int        HB_UINT;
 #endif
 
 /* Harbour abstract types */
-typedef HB_RECNO            HB_ULONG;
+/* ...add them here... */
 
 /* Convenience */
 typedef HB_UCHAR            HB_BYTE;
