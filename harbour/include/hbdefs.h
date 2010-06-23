@@ -250,9 +250,11 @@ typedef unsigned int        HB_UINT;
 #if defined( HB_OS_WIN_64 )
    typedef HB_ULONGLONG        HB_SIZE;           /* TODO: Currently 'unsigned', to be changed 'signed' */
    typedef HB_LONGLONG         HB_ISIZ;           /* TODO: Change to HB_SIZE, after HB_SIZE has been converted to signed type. TEMPORARY type. */
+   typedef HB_ULONGLONG        HB_USIZ;           /* TEMPORARY type. Do not use it. */
 #else
    typedef HB_ULONG            HB_SIZE;           /* TODO: Currently 'unsigned', to be changed 'signed' */
    typedef HB_LONG             HB_ISIZ;           /* TODO: Change to HB_SIZE, after HB_SIZE has been converted to signed type. TEMPORARY type. */
+   typedef HB_ULONG            HB_USIZ;           /* TEMPORARY type. Do not use it. */
 #endif
 
 /* Harbour abstract types */
