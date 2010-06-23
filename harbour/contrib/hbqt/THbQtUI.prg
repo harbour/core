@@ -333,7 +333,7 @@ METHOD HbQtUI:OnError( ... )
 
 METHOD HbQtUI:build( cFileOrBuffer, qParent )
    LOCAL s, n, n1, cCls, cNam, lCreateFinished, cMCls, cMNam, cText
-   LOCAL cCmd, aReg, aCommands, aConst, cBlock, bBlock, x, a_
+   LOCAL cCmd, aReg, aCommands, aConst, cBlock, bBlock, x, a_, prg_
    LOCAL regEx := hb_regexComp( "\bQ[A-Za-z_]+ \b" )
 
    DEFAULT cFileOrBuffer TO ::cFile
@@ -485,24 +485,40 @@ METHOD HbQtUI:build( cFileOrBuffer, qParent )
       ENDIF
    NEXT
 
-   /* Platform is ready */
+   #define STRINGIFY( cStr )    '"' + cStr + '"'
+   #define PAD_30( cStr )       pad( cStr, max( len( cStr ), 15 ) )
 
+   prg_:={}
+   aadd( prg_, "FUNCTION ui_Shortcuts( qParent )" )
+   aadd( prg_, "   LOCAL oWidget" )
+   aadd( prg_, "   LOCAL qObj := {=>}" )
+   aadd( prg_, " " )
+   aadd( prg_, "   hb_hCaseMatch( qObj, .f. )" )
+   aadd( prg_, " " )
+
+   /* Platform is ready */
    ::cMainWidgetName := cMNam
 
    SWITCH cMCls
    CASE "QDialog"
       ::oWidget := QDialog():new( ::qParent )
+      aadd( prg_, "   oWidget := QDialog():new( qParent )" )
       EXIT
    CASE "QWidget"
       ::oWidget := QWidget():new( ::qParent )
+      aadd( prg_, "   oWidget := QWidget():new( qParent )" )
       EXIT
    CASE "QMainWindow"
       ::oWidget := QMainWindow():new( ::qParent )
+      aadd( prg_, "   oWidget := QMainWindow():new( qParent )" )
       EXIT
    ENDSWITCH
    ::oWidget:setObjectName( cMNam )
+   aadd( prg_, "   oWidget:setObjectName( " + STRINGIFY( cMNam ) + " )" )
 
    ::qObj[ cMNam ] := ::oWidget
+   aadd( prg_, "   qObj[ " + STRINGIFY( cMNam ) + " ] := oWidget" )
+   aadd( prg_, "  " )
 
    FOR EACH a_ IN ::widgets
       IF a_:__enumIndex() > 1
@@ -518,8 +534,11 @@ METHOD HbQtUI:build( cFileOrBuffer, qParent )
          ELSE
 
          ENDIF
+
+         aadd( prg_, "   qObj[ " + PAD_30( STRINGIFY( a_[ 2 ] ) ) + " ] := " + strtran( a_[ 4 ], "o[", "qObj[" ) )
       ENDIF
    NEXT
+   aadd( prg_, "   " )
 
    ::aCommands := aCommands
 
@@ -544,22 +563,27 @@ METHOD HbQtUI:build( cFileOrBuffer, qParent )
          IF "setToolTip(" $ cCmd
             s := hbq_pullToolTip( cCmd )
             ::qObj[ cNam ]:setToolTip( s )
+            aadd( prg_, "   qObj[ " + PAD_30( STRINGIFY( cNam ) ) + " ]:setToolTip( [" + s + "] )" )
 
          ELSEIF "setPlainText(" $ cCmd
             s := hbq_pullToolTip( cCmd )
             ::qObj[ cNam ]:setPlainText( s )
+            aadd( prg_, "   qObj[ " + PAD_30( STRINGIFY( cNam ) ) + " ]:setPlainText( [" + s + "] )" )
 
          ELSEIF "setStyleSheet(" $ cCmd
             s := hbq_pullToolTip( cCmd )
             ::qObj[ cNam ]:setStyleSheet( s )
+            aadd( prg_, "   qObj[ " + PAD_30( STRINGIFY( cNam ) ) + " ]:setStyleSheet( [" + s + "] )" )
 
          ELSEIF "setText(" $ cCmd
             s := hbq_pullToolTip( cCmd )
             ::qObj[ cNam ]:setText( s )
+            aadd( prg_, "   qObj[ " + PAD_30( STRINGIFY( cNam ) ) + " ]:setText( [" + s + "] )" )
 
          ELSEIF "setWhatsThis(" $ cCmd
             s := hbq_pullToolTip( cCmd )
             ::qObj[ cNam ]:setWhatsThis( s )
+            aadd( prg_, "   qObj[ " + PAD_30( STRINGIFY( cNam ) ) + " ]:setWhatsThis( [" + s + "] )" )
 
          ELSEIF "header()->" $ cCmd
             // TODO: how to handle : __qtreeviewitem->header()->setVisible( .f. )
@@ -570,10 +594,14 @@ METHOD HbQtUI:build( cFileOrBuffer, qParent )
             bBlock := &( cBlock )
             eval( bBlock, ::qObj, cNam )
 
+            aadd( prg_, "   qObj[ " + PAD_30( STRINGIFY( cNam ) ) + " ]:" + strtran( cCmd, "o[", "qObj[" ) )
+
          ENDIF
       ENDIF
    NEXT
-   //::oWidget:exec()
+
+ * aeval( prg_, {|e| HB_TRACE( HB_TR_ALWAYS, e ) } )
+ * HB_TRACE( HB_TR_ALWAYS, ".............." )
 
    RETURN Self
 
