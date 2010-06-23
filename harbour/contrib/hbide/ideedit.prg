@@ -486,7 +486,12 @@ METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
       ::toggleHorzRuler()
       ::dispStatusInfo()
 
-      ::oDK:setStatusText( SB_PNL_SELECTEDCHARS, len( ::getSelectedText() ) )
+      ::qEdit:hbGetSelectionInfo()
+      IF ::aSelectionInfo[ 1 ] > -1 .AND. ::aSelectionInfo[ 1 ] == ::aSelectionInfo[ 3 ]
+         ::oDK:setStatusText( SB_PNL_SELECTEDCHARS, len( ::getSelectedText() ) )
+      ELSE
+         ::oDK:setStatusText( SB_PNL_SELECTEDCHARS, 0 )
+      ENDIF
       ::oUpDn:show()
       ::unHighlight()
 
@@ -787,6 +792,8 @@ STATIC FUNCTION hbide_qCursorDownInsert( qCursor )
 METHOD IdeEdit:copyBlockContents( aCord )
    LOCAL nT, nL, nB, nR, nW, i, cLine, nMode, qClip, oLine
    LOCAL cClip := ""
+
+   HB_TRACE( HB_TR_DEBUG, "IdeEdit:copyBlockContents( aCord )" )
 
    hbide_normalizeRect( aCord, @nT, @nL, @nB, @nR )
    nMode := aCord[ 5 ]
@@ -1218,6 +1225,8 @@ METHOD IdeEdit:blockConvert( cMode )
 
 METHOD IdeEdit:getSelectedText()
    LOCAL nT, nL, nB, nR, nW, i, cLine, nMode, cClip := "", aCord
+
+   HB_TRACE( HB_TR_DEBUG, "IdeEdit:getSelectedText()", ProcName( 1 ), procName( 2 ) )
 
    ::qEdit:hbGetSelectionInfo(); aCord := ::aSelectionInfo
    hbide_normalizeRect( aCord, @nT, @nL, @nB, @nR )

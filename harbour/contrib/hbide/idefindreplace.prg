@@ -117,7 +117,8 @@ METHOD IdeUpDown:show()
    IF !empty( oEdit := ::oEM:getEditObjectCurrent() )
       ::position()
 
-      IF !empty( oEdit:getSelectedText() )
+      oEdit:qEdit:hbGetSelectionInfo()
+      IF oEdit:aSelectionInfo[ 1 ] > -1
          ::oUI:show()
       ELSE
          ::oUI:hide()

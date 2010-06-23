@@ -1241,7 +1241,7 @@ void HBQPlainTextEdit::keyPressEvent( QKeyEvent * event )
 //HB_TRACE( HB_TR_ALWAYS, ( "keyPressEvent %i  000", event->key() ) );
    if( hbKeyPressSelection( event ) )
    {
-      QApplication::processEvents();
+//      QApplication::processEvents();
       return;
    }
 //HB_TRACE( HB_TR_ALWAYS, ( "keyPressEvent %i", event->key() ) );
@@ -1614,6 +1614,7 @@ void HBQPlainTextEdit::hbPaintSelection( QPaintEvent * event )
          int top = ( ( rb <= t ) ? 0 : ( ( rb - t ) * fontHeight ) );
          int btm = ( ( re - t + 1 ) * fontHeight ) - top;
          btm = btm > viewport()->height() ? viewport()->height() : btm;
+         QBrush br( m_selectionColor );
 
          if( selectionMode == selectionMode_column )
          {
@@ -1621,7 +1622,7 @@ void HBQPlainTextEdit::hbPaintSelection( QPaintEvent * event )
             int w = ( cb == ce ? 1 : ( ( ce - cb ) * fontWidth ) );
 
             QRect r( x, top, w, btm );
-            p.fillRect( r, QBrush( m_selectionColor ) );
+            p.fillRect( r, br );
          }
          else if( selectionMode == selectionMode_stream )
          {
@@ -1683,7 +1684,7 @@ void HBQPlainTextEdit::hbPaintSelection( QPaintEvent * event )
                      r = QRect( 0, top, width, fontHeight );
                   }
                }
-               p.fillRect( r, QBrush( m_selectionColor ) );
+               p.fillRect( r, br );
                top += fontHeight;
             }
          }
