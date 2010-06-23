@@ -451,6 +451,33 @@ HB_FUNC( HB_ARGV )
    hb_retc( ( argc >= 0 && argc < s_argc ) ? s_argv[ argc ] : NULL );
 }
 
+HB_FUNC( HB_ARGSHIFT )
+{
+   int iArg = 1;
+
+   if( hb_parl( 1 ) )
+   {
+      while( iArg < s_argc )
+      {
+         if( !hb_cmdargIsInternal( s_argv[ iArg ], NULL ) )
+         {
+            s_argv[ 0 ] = s_argv[ iArg ];
+            break;
+         }
+         ++iArg;
+      }
+   }
+   if( iArg < s_argc )
+   {
+      --s_argc;
+      while( iArg < s_argc )
+      {
+         s_argv[ iArg ] = s_argv[ iArg + 1 ];
+         ++iArg;
+      }
+   }
+}
+
 HB_FUNC( HB_CMDLINE )
 {
    char** argv = hb_cmdargARGV();

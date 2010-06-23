@@ -90,7 +90,7 @@ typedef struct
    PHB_SYMBOLS    pModuleSymbols;
 } HRB_BODY, * PHRB_BODY;
 
-static const HB_BYTE s_szHead[ 4 ] = { 192, 'H', 'R', 'B' };
+static const char s_szHead[ 4 ] = { '\300', 'H', 'R', 'B' };
 
 
 #define SYM_NOLINK   0              /* symbol does not have to be linked */
@@ -99,17 +99,27 @@ static const HB_BYTE s_szHead[ 4 ] = { 192, 'H', 'R', 'B' };
 #define SYM_DEFERRED 3              /* lately bound function             */
 #define SYM_NOT_FOUND 0xFFFFFFFFUL  /* Symbol not found.                 */
 
+static HB_SIZE hb_hrbCheckSig( const char * szBody, HB_SIZE ulBodySize )
+{
+   return ( ulBodySize > sizeof( s_szHead ) &&
+               memcmp( s_szHead, szBody, sizeof( s_szHead ) ) == 0 ) ?
+            sizeof( s_szHead ) : 0;
+}
+
 static int hb_hrbReadHead( const char * szBody, HB_SIZE ulBodySize, HB_SIZE * pulBodyOffset )
 {
    const char * pVersion;
+   HB_SIZE nSigSize;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_hrbReadHead(%p,%" HB_PFS "u,%p)", szBody, ulBodySize, pulBodyOffset ));
 
-   if( ulBodySize < 6 || memcmp( s_szHead, szBody, 4 ) )
+   nSigSize = hb_hrbCheckSig( szBody, ulBodySize );
+
+   if( nSigSize == 0 || ulBodySize - nSigSize < 2 )
       return 0;
 
-   pVersion = szBody + 4;
-   *pulBodyOffset += 6;
+   pVersion = szBody + nSigSize;
+   *pulBodyOffset += nSigSize + 2;
 
    return HB_PCODE_MKSHORT( pVersion );
 }
@@ -712,7 +722,7 @@ HB_FUNC( HB_HRBRUN )
       const char * fileOrBody = hb_parc( nParam );
       PHRB_BODY pHrbBody;
 
-      if( ulLen > 4 && memcmp( s_szHead, fileOrBody, 4 ) == 0 )
+      if( hb_hrbCheckSig( fileOrBody, ulLen ) != 0 )
          pHrbBody = hb_hrbLoad( fileOrBody, ulLen, usMode );
       else
          pHrbBody = hb_hrbLoadFromFile( fileOrBody, usMode );
@@ -762,7 +772,7 @@ HB_FUNC( HB_HRBLOAD )
       const char * fileOrBody = hb_parc( nParam );
       PHRB_BODY pHrbBody;
 
-      if( ulLen > 4 && memcmp( s_szHead, fileOrBody, 4 ) == 0 )
+      if( hb_hrbCheckSig( fileOrBody, ulLen ) != 0 )
          pHrbBody = hb_hrbLoad( fileOrBody, ulLen, usMode );
       else
          pHrbBody = hb_hrbLoadFromFile( fileOrBody, usMode );
@@ -858,4 +868,9 @@ HB_FUNC( HB_HRBGETFUNSYM )
    }
    else
       hb_errRT_BASE( EG_ARG, 6106, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( HB_HRBSIGNATURE )
+{
+   hb_retclen( s_szHead, sizeof( s_szHead ) );
 }

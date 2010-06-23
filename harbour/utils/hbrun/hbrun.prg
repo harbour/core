@@ -53,6 +53,7 @@
 #include "common.ch"
 #include "inkey.ch"
 #include "setcurs.ch"
+#include "fileio.ch"
 
 /* NOTE: use hbextern library instead of #include "hbextern.ch"
  *       in dynamic builds it will greatly reduce the size because
@@ -106,25 +107,54 @@ PROCEDURE _APPMAIN( cFile, ... )
             EXIT
          OTHERWISE
             hb_FNameSplit( cFile, NIL, NIL, @cExt )
-            IF Lower( cExt ) == ".prg"
-               cFile := HB_COMPILEBUF( HB_ARGV( 0 ), "-n2", "-w", "-es2", "-q0", ;
-                                       s_aIncDir, cFile )
-               IF cFile == NIL
-                  ERRORLEVEL( 1 )
-               ELSE
+            cExt := lower( cExt )
+            SWITCH cExt
+               CASE ".prg"
+               CASE ".hrb"
+               CASE ".dbf"
+                  EXIT
+               OTHERWISE
+                  cExt := HB_DotFileSig( cFile )
+            ENDSWITCH
+            SWITCH cExt
+               CASE ".dbf"
+                  HB_DotPrompt( "USE " + cFile )
+                  EXIT
+               CASE ".prg"
+                  cFile := HB_COMPILEBUF( HB_ARGV( 0 ), "-n2", "-w", "-es2", "-q0", ;
+                                          s_aIncDir, cFile )
+                  IF cFile == NIL
+                     ERRORLEVEL( 1 )
+                  ENDIF
+               OTHERWISE
+                  hb_argShift( .T. )
                   hb_hrbRun( cFile, ... )
-               ENDIF
-            ELSEIF Lower( cExt ) == ".dbf"
-               HB_DotPrompt( "USE " + cFile )
-            ELSE
-               hb_hrbRun( cFile, ... )
-            ENDIF
+                  EXIT
+            ENDSWITCH
       ENDSWITCH
    ELSE
       HB_DotPrompt()
    ENDIF
 
    RETURN
+
+STATIC FUNCTION HB_DotFileSig( cFile )
+   LOCAL hFile
+   LOCAL cBuff, cSig, cExt
+
+   cExt := ".prg"
+   hFile := FOpen( cFile, FO_READ )
+   IF hFile != F_ERROR
+      cSig := hb_hrbSignature()
+      cBuff := Space( Len( cSig ) )
+      FRead( hFile, @cBuff, Len( cSig ) )
+      FClose( hFile )
+      IF cBuff == cSig
+         cExt := ".hrb"
+      ENDIF
+   ENDIF
+
+   RETURN cExt
 
 STATIC PROCEDURE HB_DotPrompt( cCommand )
    LOCAL GetList
