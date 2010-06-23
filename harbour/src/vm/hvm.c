@@ -276,14 +276,14 @@ static void * s_main_thread = NULL;
 
 /* Various compatibility flags
 */
-static HB_ULONG   s_VMFlags = HB_VMFLAG_HARBOUR;
+static HB_U32 s_VMFlags = HB_VMFLAG_HARBOUR;
 #undef hb_vmFlagEnabled
-#define hb_vmFlagEnabled(flag)      (s_VMFlags & (flag))
+#define hb_vmFlagEnabled( flag )      ( s_VMFlags & ( flag ) )
 
 /* Keycodes to stop virtual machine
 */
-static int        s_VMCancelKey = K_ALT_C;
-static int        s_VMCancelKeyEx = HB_K_ALT_C;
+static int s_VMCancelKey = K_ALT_C;
+static int s_VMCancelKeyEx = HB_K_ALT_C;
 
 /* SEQUENCE envelope items position from stack top active
  */
@@ -11464,17 +11464,17 @@ void hb_xvmWithObjectMessage( PHB_SYMB pSymbol )
 
 
 #undef hb_vmFlagEnabled
-HB_ULONG hb_vmFlagEnabled( HB_ULONG flags )
+HB_U32 hb_vmFlagEnabled( HB_U32 flags )
 {
    return s_VMFlags & flags;
 }
 
-void hb_vmFlagSet( HB_ULONG flags )
+void hb_vmFlagSet( HB_U32 flags )
 {
    s_VMFlags |= flags;
 }
 
-void hb_vmFlagClear( HB_ULONG flags )
+void hb_vmFlagClear( HB_U32 flags )
 {
    s_VMFlags &= ~flags;
 }

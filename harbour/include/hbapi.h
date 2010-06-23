@@ -1024,7 +1024,7 @@ extern HB_BOOL       hb_cmdargIsInternal( const char * szArg, int * piLen ); /* 
 extern HB_BOOL       hb_cmdargCheck( const char * pszName ); /* Check if a given internal switch (like //INFO) was set */
 extern char *        hb_cmdargString( const char * pszName ); /* Returns the string value of an internal switch (like //TEMPPATH:"C:\") */
 extern int           hb_cmdargNum( const char * pszName ); /* Returns the numeric value of an internal switch (like //F:90) */
-extern HB_ULONG      hb_cmdargProcessVM( int*, int* ); /* Check for command line internal arguments */
+extern HB_U32        hb_cmdargProcessVM( int * pCancelKey, int * pCancelKeyEx ); /* Check for command line internal arguments */
 #if defined( HB_OS_WIN )
 extern HB_EXPORT HB_BOOL hb_winmainArgGet( void * phInstance, void * phPrevInstance, int * piCmdShow ); /* Retrieve WinMain() parameters */
 #endif

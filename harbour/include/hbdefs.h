@@ -255,6 +255,9 @@ typedef unsigned int        HB_UINT;
    typedef HB_LONG             HB_ISIZ;           /* TODO: Change to HB_SIZE, after HB_SIZE has been converted to signed type. TEMPORARY type. */
 #endif
 
+/* Harbour abstract types */
+typedef HB_RECNO            HB_ULONG;
+
 /* Convenience */
 typedef HB_UCHAR            HB_BYTE;
 
