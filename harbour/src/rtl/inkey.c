@@ -126,9 +126,7 @@ HB_FUNC( INKEY )
    hb_retni( iKey );
 }
 
-/* temporary disabled */
-#if 0
-HB_FUNC( HB_SETINKEYBEFOREBLOCK )
+HB_FUNC( HB_INKEYSETPREBLOCK )
 {
    PHB_INKEYBLOCK pInkeyBlock = ( PHB_INKEYBLOCK ) hb_stackGetTSD( &s_inkeyBlock );
 
@@ -145,7 +143,7 @@ HB_FUNC( HB_SETINKEYBEFOREBLOCK )
    }
 }
 
-HB_FUNC( HB_SETINKEYAFTERBLOCK )
+HB_FUNC( HB_INKEYSETPOSTBLOCK )
 {
    PHB_INKEYBLOCK pInkeyBlock = ( PHB_INKEYBLOCK ) hb_stackGetTSD( &s_inkeyBlock );
 
@@ -161,8 +159,6 @@ HB_FUNC( HB_SETINKEYAFTERBLOCK )
       pInkeyBlock->after = pBlock ? hb_itemNew( pBlock ) : pBlock;
    }
 }
-
-#endif
 
 HB_FUNC( __KEYBOARD )
 {
@@ -262,3 +258,4 @@ HB_FUNC( HB_SETLASTKEY )
    if( HB_ISNUM( 1 ) )
       hb_retni( hb_inkeySetLast( hb_parni( 1 ) ) );
 }
+
