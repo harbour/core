@@ -907,7 +907,7 @@ HB_FUNC( NETIO_SERVER )
                      errCode = NETIO_ERR_WRONG_FILE_HANDLE;
                   else
                   {
-                     len = hb_fileReadAt( pFile, msg + NETIO_MSGLEN, size, llOffset );
+                     len = ( long ) hb_fileReadAt( pFile, msg + NETIO_MSGLEN, size, llOffset );
                      errFsCode = hb_fsError();
                      HB_PUT_LE_UINT32( &msg[ 0 ], NETIO_READ );
                      HB_PUT_LE_UINT32( &msg[ 4 ], len );
@@ -936,7 +936,7 @@ HB_FUNC( NETIO_SERVER )
                         errCode = NETIO_ERR_WRONG_FILE_HANDLE;
                      else
                      {
-                        size = hb_fileWriteAt( pFile, msg, size, llOffset );
+                        size = ( long ) hb_fileWriteAt( pFile, msg, size, llOffset );
                         errFsCode = hb_fsError();
                         HB_PUT_LE_UINT32( &msg[ 0 ], NETIO_WRITE );
                         HB_PUT_LE_UINT32( &msg[ 4 ], size );
@@ -1190,7 +1190,7 @@ HB_FUNC( NETIO_SERVER )
                                     }
                                     memcpy( msg + NETIO_MSGLEN, itmData, itmSize );
                                     hb_xfree( itmData );
-                                    len = itmSize;
+                                    len = ( long ) itmSize;
                                     if( iStreamID && hb_itemGetNI( pResult ) == iStreamID )
                                     {
                                        hb_threadMutexUnlock( conn->mutex );
@@ -1275,17 +1275,19 @@ HB_FUNC( NETIO_SRVSENDITEM )
    {
       char * itmData, * msg;
       HB_SIZE nLen;
+      long lLen;
 
       itmData = hb_itemSerialize( pItem, HB_TRUE, &nLen );
-      msg = ( char * ) hb_xgrab( nLen + NETIO_MSGLEN );
+      lLen = ( long ) nLen;
+      msg = ( char * ) hb_xgrab( lLen + NETIO_MSGLEN );
       HB_PUT_LE_UINT32( &msg[ 0 ], NETIO_SRVITEM );
       HB_PUT_LE_UINT32( &msg[ 4 ], iStreamID );
-      HB_PUT_LE_UINT32( &msg[ 8 ], nLen );
+      HB_PUT_LE_UINT32( &msg[ 8 ], lLen );
       memset( msg + 12, '\0', NETIO_MSGLEN - 12 );
-      memcpy( msg + NETIO_MSGLEN, itmData, nLen );
+      memcpy( msg + NETIO_MSGLEN, itmData, lLen );
       hb_xfree( itmData );
 
-      nLen += NETIO_MSGLEN;
+      lLen += NETIO_MSGLEN;
       if( hb_threadMutexLock( conn->mutex ) )
       {
          PHB_CONSTREAM stream = conn->streams;
@@ -1296,7 +1298,7 @@ HB_FUNC( NETIO_SRVSENDITEM )
             stream = stream->next;
          }
          if( stream && stream->type == NETIO_SRVITEM )
-            fResult = s_srvSendAll( conn, msg, nLen ) == ( long ) nLen;
+            fResult = s_srvSendAll( conn, msg, lLen ) == lLen;
          hb_threadMutexUnlock( conn->mutex );
       }
       hb_xfree( msg );
@@ -1310,22 +1312,22 @@ HB_FUNC( NETIO_SRVSENDDATA )
 {
    PHB_CONSRV conn = s_consrvParam( 1 );
    int iStreamID = hb_parni( 2 );
-   HB_SIZE nLen = hb_parclen( 3 );
+   long lLen = ( long ) hb_parclen( 3 );
    HB_BOOL fResult = HB_FALSE;
 
    if( conn && conn->sd != HB_NO_SOCKET && !conn->stop && conn->mutex &&
-       iStreamID && nLen > 0 )
+       iStreamID && lLen > 0 )
    {
       char * msg;
 
-      msg = ( char * ) hb_xgrab( nLen + NETIO_MSGLEN );
+      msg = ( char * ) hb_xgrab( lLen + NETIO_MSGLEN );
       HB_PUT_LE_UINT32( &msg[ 0 ], NETIO_SRVDATA );
       HB_PUT_LE_UINT32( &msg[ 4 ], iStreamID );
-      HB_PUT_LE_UINT32( &msg[ 8 ], nLen );
+      HB_PUT_LE_UINT32( &msg[ 8 ], lLen );
       memset( msg + 12, '\0', NETIO_MSGLEN - 12 );
-      memcpy( msg + NETIO_MSGLEN, hb_parc( 3 ), nLen );
+      memcpy( msg + NETIO_MSGLEN, hb_parc( 3 ), lLen );
 
-      nLen += NETIO_MSGLEN;
+      lLen += NETIO_MSGLEN;
       if( hb_threadMutexLock( conn->mutex ) )
       {
          PHB_CONSTREAM stream = conn->streams;
@@ -1336,7 +1338,7 @@ HB_FUNC( NETIO_SRVSENDDATA )
             stream = stream->next;
          }
          if( stream && stream->type == NETIO_SRVDATA )
-            fResult = s_srvSendAll( conn, msg, nLen ) == ( long ) nLen;
+            fResult = s_srvSendAll( conn, msg, lLen ) == lLen;
          hb_threadMutexUnlock( conn->mutex );
       }
       hb_xfree( msg );

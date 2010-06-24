@@ -341,7 +341,7 @@ static HB_BOOL s_fileRecvSrvData( PHB_CONCLI conn, long len, int iStreamID, int 
             }
             else if( iType == NETIO_SRVDATA )
             {
-               long lmax = pSrvData->maxsize - pSrvData->size;
+               long lmax = ( long ) ( pSrvData->maxsize - pSrvData->size );
 
                if( len > lmax )
                   len = lmax;
@@ -1638,7 +1638,7 @@ static HB_SIZE s_fileReadAt( PHB_FILE pFile, void * data, HB_SIZE ulSize,
                hb_errRT_NETIO( EG_DATAWIDTH, 1009, 0, NULL, HB_ERR_FUNCNAME );
                ulResult = 0;
             }
-            else if( ( HB_SIZE ) s_fileRecvAll( pFile->conn, data, ulResult ) != ulResult )
+            else if( s_fileRecvAll( pFile->conn, data, ( long ) ulResult ) != ( long ) ulResult )
             {
                pFile->conn->errcode = hb_socketGetError();
                errCode = NETIO_ERR_READ;
@@ -1664,11 +1664,11 @@ static HB_SIZE s_fileWriteAt( PHB_FILE pFile, const void * data, HB_SIZE ulSize,
 
       HB_PUT_LE_UINT32( &msgbuf[  0 ], NETIO_WRITE );
       HB_PUT_LE_UINT16( &msgbuf[  4 ], pFile->fd );
-      HB_PUT_LE_UINT32( &msgbuf[  6 ], ulSize );
+      HB_PUT_LE_UINT32( &msgbuf[  6 ], ( long ) ulSize );
       HB_PUT_LE_UINT64( &msgbuf[ 10 ], llOffset );
       memset( msgbuf + 18, '\0', sizeof( msgbuf ) - 18 );
 
-      if( s_fileSendMsg( pFile->conn, msgbuf, data, ulSize, HB_TRUE, HB_FALSE ) )
+      if( s_fileSendMsg( pFile->conn, msgbuf, data, ( long ) ulSize, HB_TRUE, HB_FALSE ) )
       {
          ulResult = HB_GET_LE_UINT32( &msgbuf[ 4 ] );
          hb_fsSetError( ( HB_ERRCODE ) HB_GET_LE_UINT32( &msgbuf[ 8 ] ) );
