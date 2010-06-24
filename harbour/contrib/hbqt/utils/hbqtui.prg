@@ -421,8 +421,6 @@ METHOD HbUIGen:create( cFile )
    aadd( prg_, "" )
    aadd( prg_, "   RETURN oUI" )
    aadd( prg_, "" )
-   aadd( prg_, "/*----------------------------------------------------------------------*/" )
-   aadd( prg_, "" )
 
    RETURN prg_
 
@@ -517,7 +515,7 @@ STATIC FUNCTION hbq_pullToolTip( cCmd )
 
 /*----------------------------------------------------------------------*/
 
-STATIC FUNCTION hbq_replaceConstants( s, hConst )
+STATIC PROCEDURE hbq_replaceConstants( s, hConst )
    LOCAL a_, regDefine, cConst, cCmdB, cCmdE, cOR, n
    LOCAL g := s
    LOCAL b_:= {}
@@ -560,7 +558,7 @@ STATIC FUNCTION hbq_replaceConstants( s, hConst )
       ENDDO
    ENDIF
 
-   RETURN NIL
+   RETURN
 
 /*----------------------------------------------------------------------*/
 
@@ -754,22 +752,18 @@ STATIC FUNCTION hbq_getConstants()
 
 /*----------------------------------------------------------------------*/
 
-STATIC FUNCTION hbq_addCopyRight( prg_ )
+STATIC PROCEDURE hbq_addCopyRight( prg_ )
 
    aadd( prg_, "/*" )
    aadd( prg_, " * " + "$" + "Id" + "$" )
    aadd( prg_, " */" )
    aadd( prg_, "" )
-   aadd( prg_, "/* -------------------------------------------------------------------- */" )
    aadd( prg_, "/* WARNING: Automatically generated source file. DO NOT EDIT!           */" )
    aadd( prg_, "/*          Instead, edit corresponding .ui file,                       */" )
    aadd( prg_, "/*          with Qt Generator, and run hbqtui.exe.                      */" )
-   aadd( prg_, "/* -------------------------------------------------------------------- */" )
    aadd( prg_, "/*                                                                      */" )
-   aadd( prg_, "/*               Pritpal Bedi <bedipritpal@hotmail.com>                 */" )
-   aadd( prg_, "/*                                                                      */" )
-   aadd( prg_, "/* -------------------------------------------------------------------- */" )
+   aadd( prg_, "/*          Pritpal Bedi <bedipritpal@hotmail.com>                      */" )
 
-   RETURN NIL
+   RETURN
 
 /*----------------------------------------------------------------------*/

@@ -9,7 +9,6 @@
   2) NextWord() doesn't work correctly
   3) If text contains color escape codes then deleting or inserting
      of characters doesn't work correctly in the line that contains it
-  4) Uses unsafe string function: strcpy(), strncpy()
 
   To fix:
   ------
@@ -317,12 +316,12 @@ static void AddText( PHB_EDITOR pEd, const char * adres )
    {
       /* there is enough room in text buffer
        */
-      strcpy( pEd->begin + dlold, adres );
+      hb_strncpy( pEd->begin + dlold, adres, dl );
       pEd->text_length += dl;
    }
    else
    {
-      strncpy( pEd->begin + dlold, adres, pEd->buffer_size - 10 - dlold );
+      hb_strncpy( pEd->begin + dlold, adres, pEd->buffer_size - 10 - dlold );
       pEd->text_length = pEd->buffer_size - 10;
    }
 
@@ -457,7 +456,7 @@ static HB_ISIZ InsText( PHB_EDITOR pEd, char * adres, HB_ISIZ line )
             dl += 2;
          }
          MoveText( pEd, off, off + dl, pEd->buffer_size - ( off - 1 ) - dl );
-         strncpy( pEd->begin + off, adres, dl );
+         hb_strncpy( pEd->begin + off, adres, dl );
       }
       else
       {
@@ -474,7 +473,7 @@ static HB_ISIZ InsText( PHB_EDITOR pEd, char * adres, HB_ISIZ line )
             dl += 2;
          }
          MoveText( pEd, off, off + dl, pEd->buffer_size - ( off - 1 ) - dl );
-         strncpy( pEd->begin + off, adres, dl );
+         hb_strncpy( pEd->begin + off, adres, dl );
       }
 
       if( addCRLF )
@@ -748,7 +747,6 @@ HB_FUNC( ED_GETLINE )
    {
       HB_ISIZ l, j;
       HB_ISIZ tmp;
-      char * buffer;
       HB_ISIZ dl;
       HB_ISIZ rdl;
       HB_ISIZ i;
@@ -770,13 +768,8 @@ HB_FUNC( ED_GETLINE )
       if( l == linia )
       {
          dl = GetLineLength( pEd, tmp, &rdl );
-         dl++;
-         buffer = ( char * ) hb_xgrab( dl );
 
-         strncpy( buffer, pEd->begin + tmp, dl - 1 );
-         buffer[ dl - 1 ] = '\0';
-
-         hb_retc_buffer( buffer );
+         hb_retclen( pEd->begin + tmp, dl );
       }
       else
          hb_retc_null();
@@ -794,21 +787,16 @@ HB_FUNC( ED_GETNEXT )
 
    if( pEd )
    {
-      char * buffer;
       HB_ISIZ rdl;
       HB_ISIZ dl;
 
       if( pEd->next_line > 0 )
       {
          dl = GetLineLength( pEd, pEd->next_line, &rdl );
-         dl++;
-         buffer = ( char * ) hb_xgrab( dl );
 
-         strncpy( buffer, pEd->begin + pEd->next_line, dl - 1 );
-         buffer[ dl - 1 ] = '\0';
+         hb_retclen( pEd->begin + pEd->next_line, dl );
+
          pEd->next_line = Next( pEd, pEd->next_line );
-
-         hb_retc_buffer( buffer );
       }
       else
          hb_ret();
@@ -852,13 +840,14 @@ HB_FUNC( ED_READTEXT )
       HB_BOOL lSuccess = HB_FALSE;
       HB_FHANDLE nFile;
       HB_ISIZ nSize;
-      HB_ISIZ nSeek, nRead;
+      HB_FOFFSET nRead;
+      HB_FOFFSET nSeek;
 
       KillText( pEd );
       New( pEd, pEd->tab_size, pEd->line_length, pEd->buffer_size );
 
       nFile = hb_numToHandle( hb_parnint( 2 ) );
-      nSeek = hb_parns( 3 );
+      nSeek = hb_parnint( 3 );
       nSize = hb_parns( 4 );
 
       nRead = hb_fsSeekLarge( nFile, nSeek, FS_SET );
@@ -868,9 +857,9 @@ HB_FUNC( ED_READTEXT )
             nSize = pEd->buffer_size - 10;
 
          nSize = hb_fsReadLarge( nFile, pEd->begin, nSize );
-         pEd->begin[ nSize ] ='\0';
+         pEd->begin[ nSize ] = '\0';
 
-         pEd->text_length =nSize;
+         pEd->text_length = nSize;
 
          NewText( pEd );
 
@@ -954,13 +943,13 @@ HB_FUNC( ED_STABILIZE )
                   nLen -= ( i - 2 );
                   if( adres[ i - 1 ] == pEd->escape )
                      i++, nLen--;
-                  strncpy( adres + 2, adres + i, nLen - 2 );
+                  hb_strncpy( adres + 2, adres + i, nLen - 2 );
                   nEscLen -= ( e - 2 );
                }
                else
                {
                   nLen -= pEd->first_col;
-                  strncpy( adres, adres + pEd->first_col, nLen );
+                  hb_strncpy( adres, adres + pEd->first_col, nLen );
                }
                adres[ nLen ] = '\0';
             }
@@ -1651,7 +1640,7 @@ static void FormatParagraph( PHB_EDITOR pEd )
 */
    {
       dl = GetLineLength( pEd, pEd->current_line, &rdl );
-      strncpy( pom, pEd->begin + pEd->current_line, dl + rdl + 10 );
+      hb_strncpy( pom, pEd->begin + pEd->current_line, dl + rdl + 10 );
       pom[ pEd->line_length + rdl + 1 ] = '\0';
       tmp = strchr( pom, '\n' );
       if( tmp && ( *( tmp - 1 ) == HB_CHAR_SOFT1 ) )
@@ -1675,7 +1664,7 @@ static void FormatParagraph( PHB_EDITOR pEd )
 
          pEd->current_line = Next( pEd, pEd->current_line );
          dl = GetLineLength( pEd, pEd->current_line, &rdl );
-         strncpy( pom, pEd->begin + pEd->current_line, dl + rdl + 10 );
+         hb_strncpy( pom, pEd->begin + pEd->current_line, dl + rdl + 10 );
          pom[ pEd->line_length + rdl + 1 ] = '\0';
          tmp = strchr( pom, '\n' );
          if( tmp && ( * ( tmp - 1 ) == HB_CHAR_SOFT1 ) )
@@ -1850,8 +1839,7 @@ static void BackSpace( PHB_EDITOR pEd, HB_BOOL fInsert )
                   pEd->last_line = Prev( pEd, pEd->last_line );
 
             /* copy the last line into temporary buffer */
-            strncpy( tmp, pEd->begin + pEd->current_line, nLen+rdl );
-            tmp[ nLen + rdl ] = '\0';
+            hb_strncpy( tmp, pEd->begin + pEd->current_line, nLen + rdl );
 
             /* find the first space in current line (the new line will
              * be wrapped eventually at this position) */
@@ -1863,8 +1851,7 @@ static void BackSpace( PHB_EDITOR pEd, HB_BOOL fInsert )
             /* go to the previous line */
             j = Prev( pEd, pEd->current_line );
             kk = GetLineLength( pEd, j, &rdl );
-            strncpy( tmp1, pEd->begin + j, kk + rdl );
-            tmp1[ kk + rdl ] = '\0';
+            hb_strncpy( tmp1, pEd->begin + j, kk + rdl );
             Up( pEd );
             End( pEd );
 
@@ -1981,9 +1968,8 @@ static void NextWord( PHB_EDITOR pEd )
    else
    {
       *tmp ='\0';
-      strncpy( tmp, pEd->begin + pEd->current_line + ccc,
-                     nLen - pEd->cursor_col - pEd->first_col );
-      tmp[ nLen - pEd->cursor_col - pEd->first_col ] = '\0';
+      hb_strncpy( tmp, pEd->begin + pEd->current_line + ccc,
+                  nLen - pEd->cursor_col - pEd->first_col );
       if( (adr = strchr( tmp, ' ' ) ) == NULL )
       {
          GotoNextNonEmptyLine( pEd );
@@ -2138,8 +2124,8 @@ static HB_BOOL format_line( PHB_EDITOR pEd, char Karetka, HB_ISIZ LineDl )
       status = HB_TRUE; /* the line will be splitted */
 
       /* copy maximum allowed bytes form the line into temporary buffer */
-      strncpy( pom, pEd->begin + pEd->current_line,
-               pEd->line_length + 10 + rdl );
+      hb_strncpy( pom, pEd->begin + pEd->current_line,
+                  pEd->line_length + 10 + rdl );
       pom[ pEd->line_length + rdl ] = '\0';
 
       /* find the last space where the line can be splitted */
