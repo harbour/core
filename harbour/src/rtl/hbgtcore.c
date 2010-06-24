@@ -167,6 +167,10 @@ static void hb_gt_def_Free( PHB_GT pGT )
 
    if( pGT->pNotifierBlock )
       hb_itemRelease( pGT->pNotifierBlock );
+   if( pGT->pInkeyFilterBlock )
+      hb_itemRelease( pGT->pInkeyFilterBlock );
+   if( pGT->pInkeyReadBlock )
+      hb_itemRelease( pGT->pInkeyReadBlock );
    if( pGT->pCargo )
       hb_itemRelease( pGT->pCargo );
 
@@ -183,6 +187,10 @@ static void hb_gt_def_Mark( PHB_GT pGT )
 {
    if( pGT->pNotifierBlock )
       hb_gcMark( pGT->pNotifierBlock );
+   if( pGT->pInkeyFilterBlock )
+      hb_gcMark( pGT->pInkeyFilterBlock );
+   if( pGT->pInkeyReadBlock )
+      hb_gcMark( pGT->pInkeyReadBlock );
    if( pGT->pCargo )
       hb_gcMark( pGT->pCargo );
    if( pGT->pMutex )
@@ -1460,6 +1468,30 @@ static HB_BOOL hb_gt_def_SetKeyCP( PHB_GT pGT, const char * pszTermCDP, const ch
    return HB_FALSE;
 }
 
+static void hb_gt_def_SetBlock( PHB_ITEM * pItemPtr, PHB_GT_INFO pInfo )
+{
+   if( *pItemPtr )
+   {
+      if( pInfo->pResult )
+         hb_itemCopy( pInfo->pResult, *pItemPtr );
+      else
+         pInfo->pResult = hb_itemNew( *pItemPtr );
+   }
+   if( pInfo->pNewVal )
+   {
+      if( *pItemPtr )
+      {
+         hb_itemRelease( *pItemPtr );
+         *pItemPtr = NULL;
+      }
+      if( hb_itemType( pInfo->pNewVal ) & HB_IT_BLOCK )
+      {
+         *pItemPtr = hb_itemNew( pInfo->pNewVal );
+         hb_gcUnlock( *pItemPtr );
+      }
+   }
+}
+
 static HB_BOOL hb_gt_def_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 {
    switch( iType )
@@ -1585,26 +1617,15 @@ static HB_BOOL hb_gt_def_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          break;
 
       case HB_GTI_NOTIFIERBLOCK:
-         if( pGT->pNotifierBlock )
-         {
-            if( pInfo->pResult )
-               hb_itemCopy( pInfo->pResult, pGT->pNotifierBlock );
-            else
-               pInfo->pResult = hb_itemNew( pGT->pNotifierBlock );
-         }
-         if( pInfo->pNewVal )
-         {
-            if( pGT->pNotifierBlock )
-            {
-               hb_itemRelease( pGT->pNotifierBlock );
-               pGT->pNotifierBlock = NULL;
-            }
-            if( hb_itemType( pInfo->pNewVal ) & HB_IT_BLOCK )
-            {
-               pGT->pNotifierBlock = hb_itemNew( pInfo->pNewVal );
-               hb_gcUnlock( pGT->pNotifierBlock );
-            }
-         }
+         hb_gt_def_SetBlock( &pGT->pNotifierBlock, pInfo );
+         break;
+
+      case HB_GTI_INKEYFILTER:
+         hb_gt_def_SetBlock( &pGT->pInkeyFilterBlock, pInfo );
+         break;
+
+      case HB_GTI_INKEYREAD:
+         hb_gt_def_SetBlock( &pGT->pInkeyReadBlock, pInfo );
          break;
 
       case HB_GTI_CARGO:
@@ -2452,9 +2473,22 @@ static int hb_gt_def_InkeyNext( PHB_GT pGT, int iEventMask )
 static int hb_gt_def_InkeyGet( PHB_GT pGT, HB_BOOL fWait, double dSeconds, int iEventMask )
 {
    HB_MAXUINT end_timer;
+   PHB_ITEM pKey;
    HB_BOOL fPop;
+   int iKey;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_def_InkeyGet(%p,%d,%f,%d)", pGT, (int) fWait, dSeconds, iEventMask));
+
+   pKey = NULL;
+
+   if( pGT->pInkeyReadBlock )
+   {
+      HB_GTSELF_UNLOCK( pGT );
+      iKey = hb_itemGetNI( hb_vmEvalBlock( pGT->pInkeyReadBlock ) );
+      HB_GTSELF_LOCK( pGT );
+      if( iKey != 0 )
+         return iKey;
+   }
 
    /* Wait forever ?, Use fixed value 100 for strict Clipper compatibility */
    if( fWait && dSeconds * 100 >= 1 )
@@ -2468,11 +2502,21 @@ static int hb_gt_def_InkeyGet( PHB_GT pGT, HB_BOOL fWait, double dSeconds, int i
       fPop = hb_gt_def_InkeyNextCheck( pGT, iEventMask, &pGT->inkeyLast );
 
       if( fPop )
-         break;
+      {
+         hb_gt_def_InkeyPop( pGT );
+         if( !pGT->pInkeyFilterBlock )
+            break;
+         pKey = hb_itemPutNI( pKey, pGT->inkeyLast );
+         HB_GTSELF_UNLOCK( pGT );
+         pGT->inkeyLast = hb_itemGetNI( hb_vmEvalBlockV( pGT->pInkeyFilterBlock, 1, pKey ) );
+         HB_GTSELF_LOCK( pGT );
+         if( pGT->inkeyLast != 0 )
+            break;
+      }
 
       /* immediately break if a VM request is pending. */
       if( !fWait || hb_vmRequestQuery() != 0 )
-         return 0;
+         break;
 
       HB_GTSELF_UNLOCK( pGT );
       hb_idleState();
@@ -2480,15 +2524,12 @@ static int hb_gt_def_InkeyGet( PHB_GT pGT, HB_BOOL fWait, double dSeconds, int i
    }
    while( end_timer == 0 || end_timer > hb_dateMilliSeconds() );
 
+   if( pKey )
+      hb_itemRelease( pKey );
+
    hb_idleReset();
 
-   if( fPop )
-   {
-      hb_gt_def_InkeyPop( pGT );
-      return pGT->inkeyLast;
-   }
-
-   return 0;
+   return fPop ? pGT->inkeyLast : 0;
 }
 
 /* Return the value of the last key that was extracted */

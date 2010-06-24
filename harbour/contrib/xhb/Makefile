@@ -81,6 +81,7 @@ PRG_SOURCES := \
    xhbcomp.prg \
    xhberr.prg \
    xhbfunp.prg \
+   xhbinkey.prg \
    xhbmt.prg \
    xhbver.prg \
    xthrow.prg \

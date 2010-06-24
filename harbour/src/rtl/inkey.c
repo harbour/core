@@ -77,87 +77,12 @@
 #include "hbstack.h"
 #include "hbvm.h"
 
-typedef struct
-{
-   PHB_ITEM before;
-   PHB_ITEM after;
-} HB_INKEYBLOCK, * PHB_INKEYBLOCK;
-
-static void hb_inkeyBlockRelease( void * cargo )
-{
-   PHB_INKEYBLOCK pInkeyBlock = ( PHB_INKEYBLOCK ) cargo;
-
-   if( pInkeyBlock->before )
-      hb_itemRelease( pInkeyBlock->before );
-   if( pInkeyBlock->after )
-      hb_itemRelease( pInkeyBlock->after );
-}
-
-static HB_TSD_NEW( s_inkeyBlock, sizeof( HB_INKEYBLOCK ), NULL, hb_inkeyBlockRelease );
-
 HB_FUNC( INKEY )
 {
-   PHB_INKEYBLOCK pInkeyBlock = ( PHB_INKEYBLOCK ) hb_stackTestTSD( &s_inkeyBlock );
    int iPCount = hb_pcount();
-   PHB_ITEM pKey = NULL;
-   int iKey;
 
-   if( pInkeyBlock && pInkeyBlock->before )
-      hb_vmEvalBlock( pInkeyBlock->before );
-
-   do
-   {
-      iKey = hb_inkey( iPCount == 1 || ( iPCount > 1 && HB_ISNUM( 1 ) ),
-                       hb_parnd( 1 ),
-                       HB_ISNUM( 2 ) ? hb_parni( 2 ) : hb_setGetEventMask() );
-
-      if( iKey == 0 || !pInkeyBlock || !pInkeyBlock->after )
-         break;
-
-      pKey = hb_itemPutNI( pKey, iKey );
-      iKey = hb_itemGetNI( hb_vmEvalBlockV( pInkeyBlock->after, 1, pKey ) );
-      hb_inkeySetLast( iKey );
-   }
-   while( iKey == 0 );
-
-   if( pKey )
-      hb_itemRelease( pKey );
-
-   hb_retni( iKey );
-}
-
-HB_FUNC( HB_INKEYSETPREBLOCK )
-{
-   PHB_INKEYBLOCK pInkeyBlock = ( PHB_INKEYBLOCK ) hb_stackGetTSD( &s_inkeyBlock );
-
-   if( pInkeyBlock->before )
-      hb_itemReturn( pInkeyBlock->before );
-
-   if( hb_pcount() > 0 )
-   {
-      PHB_ITEM pBlock = hb_param( 1, HB_IT_BLOCK );
-
-      if( pInkeyBlock->before )
-         hb_itemRelease( pInkeyBlock->before );
-      pInkeyBlock->before = pBlock ? hb_itemNew( pBlock ) : pBlock;
-   }
-}
-
-HB_FUNC( HB_INKEYSETPOSTBLOCK )
-{
-   PHB_INKEYBLOCK pInkeyBlock = ( PHB_INKEYBLOCK ) hb_stackGetTSD( &s_inkeyBlock );
-
-   if( pInkeyBlock->after )
-      hb_itemReturn( pInkeyBlock->after );
-
-   if( hb_pcount() > 0 )
-   {
-      PHB_ITEM pBlock = hb_param( 1, HB_IT_BLOCK );
-
-      if( pInkeyBlock->after )
-         hb_itemRelease( pInkeyBlock->after );
-      pInkeyBlock->after = pBlock ? hb_itemNew( pBlock ) : pBlock;
-   }
+   hb_retni( hb_inkey( iPCount == 1 || ( iPCount > 1 && HB_ISNUM( 1 ) ),
+                       hb_parnd( 1 ), hb_parnidef( 2, hb_setGetEventMask() ) ) );
 }
 
 HB_FUNC( __KEYBOARD )

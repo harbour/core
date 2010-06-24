@@ -333,6 +333,8 @@ typedef struct _HB_GT_BASE
    HB_SIZE        StrBufferPos;
 
    PHB_ITEM       pNotifierBlock;
+   PHB_ITEM       pInkeyFilterBlock;
+   PHB_ITEM       pInkeyReadBlock;
    PHB_ITEM       pCargo;
 
    void *         pGTData[ HB_GT_MAX_ ];    /* local GT data */
