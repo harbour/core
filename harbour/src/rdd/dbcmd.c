@@ -392,7 +392,7 @@ HB_FUNC( DBCREATE )
    }
 
    hb_retl( hb_rddCreateTable( szFileName, szDriver,
-                               fCurrArea ? hb_rddGetCurrentWorkAreaNumber() : 0,
+                               fCurrArea ? ( HB_AREANO ) hb_rddGetCurrentWorkAreaNumber() : 0,
                                szAlias, fKeepOpen,
                                szCpId, ulConnection,
                                pStruct, pDelim ) == HB_SUCCESS );
@@ -510,7 +510,7 @@ HB_FUNC( __DBOPENSDF )
    }
 
    errCode = hb_rddOpenTable( szFileName, szDriver,
-                              fCurrArea ? hb_rddGetCurrentWorkAreaNumber() : 0,
+                              fCurrArea ? ( HB_AREANO ) hb_rddGetCurrentWorkAreaNumber() : 0,
                               szAlias, HB_TRUE, HB_TRUE,
                               szCpId, ulConnection,
                               pStruct, pDelim );
@@ -894,7 +894,7 @@ HB_FUNC( DBUNLOCKALL )
 HB_FUNC( DBUSEAREA )
 {
    hb_retl( hb_rddOpenTable( hb_parc( 3 ), hb_parc( 2 ),
-         hb_parl( 1 ) ? 0 : hb_rddGetCurrentWorkAreaNumber(),
+         hb_parl( 1 ) ? 0 : ( HB_AREANO ) hb_rddGetCurrentWorkAreaNumber(),
          hb_parc( 4 ), HB_ISLOG( 5 ) ? hb_parl( 5 ) : !hb_setGetExclusive(),
          hb_parl( 6 ), hb_parc( 7 ), hb_parnl( 8 ), NULL, NULL ) == HB_SUCCESS );
 }
@@ -943,7 +943,7 @@ HB_FUNC( FIELDGET )
 {
    PHB_ITEM pItem = hb_itemNew( NULL );
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
-   HB_USHORT uiField = hb_parni( 1 );
+   HB_USHORT uiField = ( HB_FIELDNO ) hb_parni( 1 );
 
    if( pArea && uiField )
    {
@@ -957,7 +957,7 @@ HB_FUNC( FIELDNAME )
 {
    char * szName;
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
-   HB_USHORT uiFields, uiIndex = hb_parni( 1 );
+   HB_USHORT uiFields, uiIndex = ( HB_FIELDNO ) hb_parni( 1 );
 
    if( pArea && uiIndex )
    {
@@ -994,7 +994,7 @@ HB_FUNC( FIELDPUT )
 
    if( pArea )
    {
-      HB_USHORT uiIndex = hb_parni( 1 );
+      HB_USHORT uiIndex = ( HB_FIELDNO ) hb_parni( 1 );
       if( uiIndex > 0 )
       {
          PHB_ITEM pItem = hb_param( 2, HB_IT_ANY );
@@ -1540,7 +1540,7 @@ HB_FUNC( ORDSETFOCUS )
 
 HB_FUNC( RDDLIST )
 {
-   hb_itemReturnRelease( hb_rddList( hb_parni( 1 ) ) );
+   hb_itemReturnRelease( hb_rddList( ( HB_USHORT ) hb_parni( 1 ) ) );
 }
 
 HB_FUNC( RDDNAME )
@@ -1577,7 +1577,7 @@ HB_FUNC( RDDREGISTER )
        * 1: RDD already registerd
        * > 1: error
        */
-      if( hb_rddRegister( szDriver, hb_parni( 2 ) ) > 1 )
+      if( hb_rddRegister( szDriver, ( HB_USHORT ) hb_parni( 2 ) ) > 1 )
       {
          hb_errInternal( HB_EI_RDDINVALID, NULL, NULL, NULL );
       }
@@ -1747,7 +1747,7 @@ HB_FUNC( DBRSELECT )  /* (<nRelation>) --> nWorkArea */
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
 
    if( pArea )
-      SELF_RELAREA( pArea, hb_parni(1), &uiWorkArea );
+      SELF_RELAREA( pArea, hb_parni( 1 ), &uiWorkArea );
 
    hb_retni( uiWorkArea );
 }
@@ -1779,7 +1779,7 @@ HB_FUNC( DBSETRELATION )
 
       if( hb_parinfo( 1 ) & HB_IT_NUMERIC )
       {
-         uiChildArea = hb_parni( 1 );
+         uiChildArea = ( HB_AREANO ) hb_parni( 1 );
       }
       else
       {
@@ -1788,7 +1788,7 @@ HB_FUNC( DBSETRELATION )
          hb_rddSelectWorkAreaAlias( hb_parcx( 1 ) );
          if( hb_vmRequestQuery() )
             return;
-         uiChildArea = hb_rddGetCurrentWorkAreaNumber();
+         uiChildArea = ( HB_AREANO ) hb_rddGetCurrentWorkAreaNumber();
          hb_rddSelectWorkAreaNumber( iArea );
       }
 
@@ -1828,7 +1828,7 @@ HB_FUNC( __DBARRANGE )
 
       memset( &dbSortInfo, 0, sizeof( dbSortInfo ) );
       dbSortInfo.dbtri.uiFlags = DBTF_PUTREC;
-      uiNewArea = hb_parni( 1 );
+      uiNewArea = ( HB_AREANO ) hb_parni( 1 );
 
       /* Fields structure of source WorkArea */
       pStruct = hb_param( 2 , HB_IT_ARRAY );
@@ -1951,9 +1951,9 @@ HB_FUNC( __DBTRANS )
       HB_USHORT uiSrcArea, uiDstArea;
       AREAP pSrcArea, pDstArea;
 
-      uiSrcArea = hb_rddGetCurrentWorkAreaNumber();
+      uiSrcArea = ( HB_AREANO ) hb_rddGetCurrentWorkAreaNumber();
       pSrcArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
-      uiDstArea = hb_parni( 1 );
+      uiDstArea = ( HB_AREANO ) hb_parni( 1 );
       hb_rddSelectWorkAreaNumber( uiDstArea );
       pDstArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
 
@@ -2171,7 +2171,7 @@ HB_FUNC( HB_FIELDLEN )
    {
       HB_USHORT uiIndex;
 
-      if( ( uiIndex = hb_parni( 1 ) ) > 0 )
+      if( ( uiIndex = ( HB_FIELDNO ) hb_parni( 1 ) ) > 0 )
       {
          PHB_ITEM pItem = hb_itemNew( NULL );
 
@@ -2195,7 +2195,7 @@ HB_FUNC( HB_FIELDDEC )
    {
       HB_USHORT uiIndex;
 
-      if( ( uiIndex = hb_parni( 1 ) ) > 0 )
+      if( ( uiIndex = ( HB_FIELDNO ) hb_parni( 1 ) ) > 0 )
       {
          PHB_ITEM pItem = hb_itemNew( NULL );
 
@@ -2219,7 +2219,7 @@ HB_FUNC( HB_FIELDTYPE )
    {
       HB_USHORT uiIndex;
 
-      if( ( uiIndex = hb_parni( 1 ) ) > 0 )
+      if( ( uiIndex = ( HB_FIELDNO ) hb_parni( 1 ) ) > 0 )
       {
          PHB_ITEM pItem = hb_itemNew( NULL );
 

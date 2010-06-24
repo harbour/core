@@ -304,7 +304,7 @@ void hb_rddCloseAll( void )
 void hb_rddFlushAll( void )
 {
    PHB_STACKRDD pRddInfo = hb_stackRDD();
-   HB_USHORT uiArea = hb_rddGetCurrentWorkAreaNumber(), uiIndex;
+   HB_USHORT uiArea = ( HB_AREANO ) hb_rddGetCurrentWorkAreaNumber(), uiIndex;
 
    for( uiIndex = 1; uiIndex < pRddInfo->uiWaMax; ++uiIndex )
    {
@@ -317,7 +317,7 @@ void hb_rddFlushAll( void )
 void hb_rddUnLockAll( void )
 {
    PHB_STACKRDD pRddInfo = hb_stackRDD();
-   HB_USHORT uiArea = hb_rddGetCurrentWorkAreaNumber(), uiIndex;
+   HB_USHORT uiArea = ( HB_AREANO ) hb_rddGetCurrentWorkAreaNumber(), uiIndex;
 
    for( uiIndex = 1; uiIndex < pRddInfo->uiWaMax; ++uiIndex )
    {
@@ -451,7 +451,7 @@ HB_ERRCODE hb_rddSelectWorkAreaNumber( int iArea )
    if( iArea < 1 || iArea > HB_RDD_MAX_AREA_NUM )
       HB_SET_WA( 0 );
    else
-      HB_SET_WA( iArea );
+      HB_SET_WA( ( HB_AREANO ) iArea );
 
    return ( pRddInfo->pCurrArea == NULL ) ? HB_FAILURE : HB_SUCCESS;
 }

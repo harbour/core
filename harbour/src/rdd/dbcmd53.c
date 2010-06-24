@@ -387,7 +387,7 @@ HB_FUNC( DBFIELDINFO )
       PHB_ITEM pType;
 
       pType = hb_param( 1 , HB_IT_NUMERIC );
-      uiIndex = hb_parni( 2 );
+      uiIndex = ( HB_FIELDNO ) hb_parni( 2 );
       if( pType && SELF_FIELDCOUNT( pArea, &uiFields ) == HB_SUCCESS &&
           uiIndex > 0 && uiIndex <= uiFields )
       {
@@ -443,7 +443,7 @@ HB_FUNC( DBFILEGET )
       if( szField )
          uiIndex = hb_rddFieldIndex( pArea, szField );
       else
-         uiIndex = hb_parni( 1 );
+         uiIndex = ( HB_FIELDNO ) hb_parni( 1 );
 
       pMode = hb_param( 3, HB_IT_NUMERIC );
       if( uiIndex > 0 && pMode && hb_parclen( 2 ) > 0 &&
@@ -475,7 +475,7 @@ HB_FUNC( DBFILEPUT )
       if( szField )
          uiIndex = hb_rddFieldIndex( pArea, szField );
       else
-         uiIndex = hb_parni( 1 );
+         uiIndex = ( HB_FIELDNO ) hb_parni( 1 );
       if( uiIndex > 0 && hb_parclen( 2 ) > 0 &&
           SELF_FIELDCOUNT( pArea, &uiFields ) == HB_SUCCESS &&
           uiIndex <= uiFields )

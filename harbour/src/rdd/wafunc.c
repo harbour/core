@@ -690,7 +690,7 @@ HB_ERRCODE hb_rddCreateTable( const char * szFileName, const char * szDriver,
    else
       szDriver = hb_rddDefaultDrv( NULL );
 
-   uiPrevArea = hb_rddGetCurrentWorkAreaNumber();
+   uiPrevArea = ( HB_AREANO ) hb_rddGetCurrentWorkAreaNumber();
 
    /* 0 means chose first available in hb_rddInsertAreaNode() */
    hb_rddSelectWorkAreaNumber( uiArea );
@@ -757,7 +757,7 @@ HB_ERRCODE hb_rddCreateTableTemp( const char * szDriver,
    else
       szDriver = hb_rddDefaultDrv( NULL );
 
-   uiPrevArea = hb_rddGetCurrentWorkAreaNumber();
+   uiPrevArea = ( HB_AREANO ) hb_rddGetCurrentWorkAreaNumber();
 
    /* 0 means chose first available in hb_rddInsertAreaNode() */
    hb_rddSelectWorkAreaNumber( 0 );
@@ -820,7 +820,7 @@ static void hb_fldStructure( AREAP pArea, HB_USHORT uiField, HB_USHORT uiSize,
    hb_arrayNew( pField, uiSize );
    for( uiCount = 0; uiCount < uiSize; ++uiCount )
    {
-      SELF_FIELDINFO( pArea, uiField, s_uiActions[uiCount],
+      SELF_FIELDINFO( pArea, uiField, s_uiActions[ uiCount ],
                       hb_arrayGetItemPtr( pField, uiCount + 1 ) );
    }
 }
@@ -1078,7 +1078,7 @@ HB_ERRCODE hb_rddTransRecords( AREAP pArea,
    HB_ERRCODE errCode;
 
    memset( &dbTransInfo, 0, sizeof( dbTransInfo ) );
-   uiPrevArea = hb_rddGetCurrentWorkAreaNumber();
+   uiPrevArea = ( HB_AREANO ) hb_rddGetCurrentWorkAreaNumber();
 
    if( szDriver == NULL )
       /* szDriver = SELF_RDDNODE( pArea )->szName; */
@@ -1119,10 +1119,10 @@ HB_ERRCODE hb_rddTransRecords( AREAP pArea,
          dbTransInfo.lpaDest = dbTransInfo.lpaSource;
          for( uiCount = 0; uiCount < dbTransInfo.uiItemCount; ++uiCount )
          {
-            uiSwap = dbTransInfo.lpTransItems[uiCount].uiSource;
-            dbTransInfo.lpTransItems[uiCount].uiSource =
-                                    dbTransInfo.lpTransItems[uiCount].uiDest;
-            dbTransInfo.lpTransItems[uiCount].uiDest = uiSwap;
+            uiSwap = dbTransInfo.lpTransItems[ uiCount ].uiSource;
+            dbTransInfo.lpTransItems[ uiCount ].uiSource =
+                                    dbTransInfo.lpTransItems[ uiCount ].uiDest;
+            dbTransInfo.lpTransItems[ uiCount ].uiDest = uiSwap;
          }
 
          if( errCode == HB_SUCCESS )
@@ -1226,7 +1226,7 @@ HB_ERRCODE hb_rddCloseAllParentRelations( AREAP pArea )
 
    if( pArea->uiParents > 0 )
    {
-      HB_USHORT uiArea = hb_rddGetCurrentWorkAreaNumber();
+      HB_USHORT uiArea = ( HB_AREANO ) hb_rddGetCurrentWorkAreaNumber();
       errCode = hb_rddIterateWorkAreas( hb_rddCloseParentRel, pArea );
       hb_rddSelectWorkAreaNumber( uiArea );
    }
@@ -1255,7 +1255,7 @@ HB_ERRCODE hb_rddEvalWA( PHB_ITEM pBlock )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_rddEvalWA(%p)", pBlock));
 
-   uiArea = hb_rddGetCurrentWorkAreaNumber();
+   uiArea = ( HB_AREANO ) hb_rddGetCurrentWorkAreaNumber();
    errCode = hb_rddIterateWorkAreas( hb_rddEvalWABlock, pBlock );
    hb_rddSelectWorkAreaNumber( uiArea );
 

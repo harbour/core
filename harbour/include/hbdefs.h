@@ -259,6 +259,8 @@ typedef unsigned int        HB_UINT;
 
 /* Harbour abstract types */
 /* ...add them here... */
+#define HB_AREANO           HB_USHORT
+#define HB_FIELDNO          HB_USHORT
 
 /* Convenience */
 typedef HB_UCHAR            HB_BYTE;
