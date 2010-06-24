@@ -77,14 +77,13 @@
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION Main( ... )
+PROCEDURE Main( ... )
    LOCAL s, cL, cExt, cPath, cFile
    LOCAL oGen, prg_, cCmd, cUic, cPrg, cUiFile
    LOCAL cPathOut := ""
    LOCAL aUI :={}, a_, aUiFiles := {}
-   LOCAL lPrefix := .t.
    LOCAL lToPath := .f.
-   LOCAL lDelUic := .f.
+   LOCAL lDelUic := .t.
 
    FOR EACH s IN hb_aParams()
       cL := lower( alltrim( s ) )
@@ -95,14 +94,14 @@ FUNCTION Main( ... )
 
       CASE left( cL, 2 ) == "-o"
          cPathOut := alltrim( substr( s, 3 ) )
+         cPathOut := strtran( cPathOut, "\", "/" )
+         lToPath  := right( cPathOut, 1 ) == "/" )
 
-      CASE cL == "-noprefix"
-         lPrefix := .f.
-
-      CASE cL == "-deluic"
-         lDelUic := .t.
+      CASE cL == "-nodeluic"
+         lDelUic := .f.
 
       OTHERWISE
+         s := StrTran( s, "\", "/" )
          hb_fNameSplit( s, , , @cExt )
          IF lower( cExt ) == ".ui"
             aadd( aUI, s )
@@ -115,24 +114,24 @@ FUNCTION Main( ... )
       a_:= hb_ATokens( StrTran( hb_MemoRead( cUiFile ), Chr( 13 ) ), Chr( 10 ) )
       FOR EACH s IN a_
          s := alltrim( s )
-         IF left( s, 1 ) $ "#;"
-            LOOP
-         ENDIF
-         IF ! empty( s ) .AND. hb_fileExists( s )
-            aadd( aUI, s )
+         IF ! Empty( s )
+            IF left( s, 1 ) $ "#;"
+               LOOP
+            ENDIF
+            s := StrTran( s, "/", hb_osPathSeparator() )
+            s := StrTran( s, "\", hb_osPathSeparator() )
+            IF hb_fileExists( s )
+               aadd( aUI, StrTran( s, "\", "/" ) )
+            ENDIF
          ENDIF
       NEXT
    NEXT
-
-   cPathOut := strtran( cPathOut, "/", hb_osPathSeparator() )
-   cPathOut := strtran( cPathOut, "\", hb_osPathSeparator() )
-   lToPath  := right( cPathOut, 1 ) == hb_osPathSeparator()
 
    FOR EACH s IN aUI
       hb_fNameSplit( s, @cPath, @cFile, @cExt )
 
       cUic := cPath + cFile + ".uic" /* always to be created along .ui */
-      cPrg := iif( lToPath, cPathOut, cPath ) + iif( lPrefix, "ui_", "" ) + cFile + ".prg"
+      cPrg := iif( lToPath, cPathOut + cFile + ".uip", cPathOut )
       cCmd := "uic -o " + cUic + " " + s
 
       hb_processRun( cCmd )
@@ -141,15 +140,15 @@ FUNCTION Main( ... )
       oGen:cFuncName := "ui" + upper( left( cFile, 1 ) ) + lower( substr( cFile, 2 ) )
 
       s := ""
-      aeval( oGen:create(), {|e| s += e + chr( 13 ) + chr( 10 ) } )
-      hb_memowrit( cPrg, s )
+      aeval( oGen:create(), {|e| s += e + hb_osNewLine() } )
+      hb_memowrit( StrTran( cPrg, "/", hb_osPathSeparator() ), s )
 
       IF lDelUic
          ferase( cUic )
       ENDIF
    NEXT
 
-   RETURN {cPathOut}
+   RETURN
 
 /*----------------------------------------------------------------------*/
 
@@ -755,7 +754,7 @@ STATIC FUNCTION hbq_getConstants()
 STATIC FUNCTION hbq_addCopyRight( prg_ )
 
    aadd( prg_, "/*" )
-   aadd( prg_, " * $Id$" )
+   aadd( prg_, " * " + "$" + "Id" + "$" )
    aadd( prg_, " */" )
    aadd( prg_, "" )
    aadd( prg_, "/* -------------------------------------------------------------------- */" )
@@ -771,4 +770,3 @@ STATIC FUNCTION hbq_addCopyRight( prg_ )
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
-

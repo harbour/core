@@ -9,6 +9,7 @@
   2) NextWord() doesn't work correctly
   3) If text contains color escape codes then deleting or inserting
      of characters doesn't work correctly in the line that contains it
+  4) Uses unsafe string function: strcpy(), strncpy()
 
   To fix:
   ------
@@ -72,7 +73,7 @@ static void BackSpace( PHB_EDITOR pEd, HB_BOOL fInsert );
 static void NextWord( PHB_EDITOR pEd );
 static void Return( PHB_EDITOR pEd, HB_BOOL fInsert );
 static void GoTo( PHB_EDITOR pEd, HB_ISIZ line );
-static int  format_line( PHB_EDITOR pEd, char Karetka, HB_ISIZ LineDl );
+static HB_BOOL format_line( PHB_EDITOR pEd, char Karetka, HB_ISIZ LineDl );
 static void MoveText( PHB_EDITOR pEd, HB_ISIZ source, HB_ISIZ dest, HB_ISIZ ilb );
 static HB_ISIZ GetLineLength( PHB_EDITOR pEd, HB_ISIZ off, HB_ISIZ * wsk );
 
@@ -196,36 +197,27 @@ static void New( PHB_EDITOR pEd, int tab, HB_ISIZ ll, HB_ISIZ bufferSize )
 /* Creates new editor and returns index into internal editors table */
 HB_FUNC( ED_NEW )
 {
-   PHB_EDITOR pEd;
+   PHB_EDITOR pEd = ( PHB_EDITOR ) hb_xgrab( sizeof( HB_EDITOR ) );
 
    HB_ISIZ ll;
-   int tab;
+   int tab = hb_parni( 2 );
    HB_ISIZ bufferSize;
 
    ll = hb_parns( 1 );
    if( ll > _MAX_LINE_LEN )
       ll = _MAX_LINE_LEN;
-   tab = hb_parni( 2 );
-   pEd = ( PHB_EDITOR ) hb_xgrab( sizeof( HB_EDITOR ) );
 
-   if( pEd )
-   {
-      bufferSize = HB_ISNUM( 3 ) ? hb_parns( 3 ) + 10 : 32767;
+   bufferSize = HB_ISNUM( 3 ) ? hb_parns( 3 ) + 10 : 32767;
+   if( bufferSize <= 0 )
+      bufferSize = 32767;
 
-      if( bufferSize <= 0 )
-         bufferSize = 32767;
+   pEd->escape = ( char ) hb_parni( 4 );
+   pEd->begin = ( char * ) hb_xgrab( bufferSize + 100 );
+   memset( pEd->begin, '\0', bufferSize );
 
-      pEd->escape = ( char ) hb_parni( 4 );
+   New( pEd, tab, ll, bufferSize );
 
-      pEd->begin = ( char * ) hb_xgrab( bufferSize + 100 );
-      memset( pEd->begin, '\0', bufferSize );
-
-      New( pEd, tab, ll, bufferSize );
-
-      PHB_EDITOR_ret( pEd );
-   }
-   else
-      hb_retptr( NULL );
+   PHB_EDITOR_ret( pEd );
 }
 
 /* Replaces TAB with spaces and removes spaces from the end of line
@@ -433,10 +425,10 @@ static HB_ISIZ GetLineLength( PHB_EDITOR pEd, HB_ISIZ off, HB_ISIZ * wsk )
 static HB_ISIZ InsText( PHB_EDITOR pEd, char * adres, HB_ISIZ line )
 {
    HB_ISIZ dl, off, il, dl1;
-   int addCRLF;
+   HB_BOOL addCRLF;
    HB_ISIZ cc;
 
-   addCRLF = 0;
+   addCRLF = HB_FALSE;
    dl  = strlen( adres );    /* length of text to insert */
    dl1 = pEd->text_length;      /* length of text that is currently in the buffer */
 
@@ -461,7 +453,7 @@ static HB_ISIZ InsText( PHB_EDITOR pEd, char * adres, HB_ISIZ line )
             /* There is no CRLF at the end of inserted text -
              * we have to add CRLF to separate it from existing text
              */
-            addCRLF = 1;
+            addCRLF = HB_TRUE;
             dl += 2;
          }
          MoveText( pEd, off, off + dl, pEd->buffer_size - ( off - 1 ) - dl );
@@ -478,7 +470,7 @@ static HB_ISIZ InsText( PHB_EDITOR pEd, char * adres, HB_ISIZ line )
 
          if( ( adres[ dl - 1 ] != '\n' ) && ( adres[ dl - 2 ] != '\r' ) )
          {
-            addCRLF = 1;
+            addCRLF = HB_TRUE;
             dl += 2;
          }
          MoveText( pEd, off, off + dl, pEd->buffer_size - ( off - 1 ) - dl );
@@ -722,20 +714,20 @@ HB_FUNC( ED_GETTEXT )
       char * buffer;
       char * help;
 
-      int mietka = hb_parni( 2 );
+      char mietka = ( char ) hb_parni( 2 );
 
       dl = strlen( pEd->begin ) + 3;
 
-      buffer = ( char * ) hb_xgrab( dl );
+      buffer = ( char * ) hb_xgrab( dl + 3 );
 
-      strcpy( buffer, pEd->begin );
+      hb_strncpy( buffer, pEd->begin, dl - 1 );
 
       help = buffer;
       if( mietka != HB_CHAR_SOFT1 )
       {
          while( help !=NULL )
          {
-            help = strstr( buffer, "\n" );   /* CHR(141)+CHR(10) */
+            help = strstr( buffer, "\x8D\n" );   /* CHR(141)+CHR(10) */
             if( help )
                help[ 0 ] = '\r';
          }
@@ -1613,7 +1605,7 @@ static void End( PHB_EDITOR pEd )
    {
       /* scroll text to the right  */
       pEd->cursor_col     = pEd->right - pEd->left;
-      pEd->first_col      = ( int ) ( ll - ( pEd->right - pEd->left ) );
+      pEd->first_col      = ll - ( pEd->right - pEd->left );
       pEd->fStable        = HB_FALSE;
       pEd->next_stabil    = pEd->first_display;
       pEd->stabil         = pEd->bottom - pEd->top + 1;
@@ -1621,7 +1613,7 @@ static void End( PHB_EDITOR pEd )
       pEd->current_stabil = 0;
    }
    else
-      pEd->cursor_col = ( int ) ( ll - pEd->first_col );
+      pEd->cursor_col = ll - pEd->first_col;
 }
 
 
@@ -1730,8 +1722,10 @@ static void DelChar( PHB_EDITOR pEd )
    if( ccc <= GetLineLength( pEd, pEd->current_line, &rdl ) )
    {
       if( pEd->escape )
+      {
          while( pEd->begin[ pEd->current_line + ccc ] == pEd->escape )
             ccc += 2;
+      }
       MoveText( pEd, pEd->current_line + ccc + 1,
                    pEd->current_line + ccc,
                    ( pEd->buffer_size - ( pEd->current_line + ccc + 1 ) ) );
@@ -2003,7 +1997,7 @@ static void NextWord( PHB_EDITOR pEd )
       }
       else
       {
-         pEd->cursor_col = ( int ) ( adr - tmp + 1 + pEd->cursor_col + pEd->first_col );
+         pEd->cursor_col = adr - tmp + 1 + pEd->cursor_col + pEd->first_col;
 
          if( pEd->cursor_col > ( pEd->right - pEd->left ) )
          {
@@ -2123,25 +2117,25 @@ HB_FUNC( ED_PWORD )
 
 /* Format given line - returns it the line has changed
  */
-static int format_line( PHB_EDITOR pEd, char Karetka, HB_ISIZ LineDl )
+static HB_BOOL format_line( PHB_EDITOR pEd, char Karetka, HB_ISIZ LineDl )
 {
    char pom[ _MAX_LINE_LEN * 2 ];
    char * p;
-   HB_ISIZ podz, jj;
-   int status, i;
+   HB_ISIZ podz, jj, i;
+   HB_BOOL status;
    HB_ISIZ j;
    HB_ISIZ rdl = 0;
 
    if( ! LineDl )
       LineDl = GetLineLength( pEd, pEd->current_line, &rdl );
 
-   status = 0; /* the line is not splitted yet */
+   status = HB_FALSE; /* the line is not splitted yet */
    if( LineDl > pEd->line_length )
    {
       /* the line is longer then maximal allowed length  -
        * wrap the line
        */
-      status = 1; /* the line will be splitted */
+      status = HB_TRUE; /* the line will be splitted */
 
       /* copy maximum allowed bytes form the line into temporary buffer */
       strncpy( pom, pEd->begin + pEd->current_line,
@@ -2176,7 +2170,7 @@ static int format_line( PHB_EDITOR pEd, char Karetka, HB_ISIZ LineDl )
          Home( pEd );
          Down( pEd );
          for( i = 0; i < jj; i++ )
-         Right( pEd );
+            Right( pEd );
       }
       else
          Right( pEd );
@@ -2187,9 +2181,9 @@ static int format_line( PHB_EDITOR pEd, char Karetka, HB_ISIZ LineDl )
 
 /* Appends the character at the end of line
  */
-static int AppendChar( PHB_EDITOR pEd, char znak, char podz )
+static HB_BOOL AppendChar( PHB_EDITOR pEd, char znak, char podz )
 {
-   int status;
+   HB_BOOL status;
    HB_ISIZ diff;
    HB_ISIZ rdl;
    HB_ISIZ iPos, nLen;
@@ -2199,7 +2193,7 @@ static int AppendChar( PHB_EDITOR pEd, char znak, char podz )
 
    nLen = GetLineLength( pEd, pEd->current_line, &rdl );
    iPos = pEd->current_line + nLen;
-   diff = pEd->cursor_col + pEd->first_col - ( int ) nLen;
+   diff = pEd->cursor_col + pEd->first_col - nLen;
 
    /* the cursor is positioned 'diff' columns after the last character
     * in the line - fill the gap with spaces before appending the character
@@ -2235,12 +2229,12 @@ static int AppendChar( PHB_EDITOR pEd, char znak, char podz )
 
 /* Checks if there is enough free room in the text buffer
  */
-static int Check_length( PHB_EDITOR pEd, int iRequested )
+static HB_BOOL Check_length( PHB_EDITOR pEd, HB_ISIZ iRequested )
 {
    if( ( pEd->text_length + iRequested ) <= ( pEd->buffer_size - 8 ) )
-      return 1;
+      return HB_TRUE;
    else
-      return 0;
+      return HB_FALSE;
 }
 
 
@@ -2257,12 +2251,13 @@ static void SetLastLine( PHB_EDITOR pEd )
  */
 static void PutChar( PHB_EDITOR pEd, HB_BOOL fInsert, char znak )
 {
-   HB_ISIZ i, jj, cc;
+   HB_BOOL jj;
+   HB_ISIZ i, cc;
    HB_ISIZ rdl;
    HB_ISIZ cl;
    HB_ISIZ ccol, fcol;
 
-   jj = 0;
+   jj = HB_FALSE;
    cc = pEd->cursor_col + pEd->first_col;   /* currnt position in the line */
    if( fInsert )
    {
@@ -2298,7 +2293,7 @@ static void PutChar( PHB_EDITOR pEd, HB_BOOL fInsert, char znak )
          else  /* the cursor is located after the last character in the line */
             jj = AppendChar( pEd, znak, HB_CHAR_SOFT1 );
 
-         if( !jj )
+         if( ! jj )
             Right( pEd );
          else
             SetLastLine( pEd );
@@ -2309,7 +2304,7 @@ static void PutChar( PHB_EDITOR pEd, HB_BOOL fInsert, char znak )
       if( cc < GetLineLength( pEd, pEd->current_line, &rdl ) )
       {
          pEd->begin[ pEd->current_line + cc ] = znak;
-         jj = 0;
+         jj = HB_FALSE;
          Right( pEd );
       }
       else
@@ -2326,7 +2321,7 @@ static void PutChar( PHB_EDITOR pEd, HB_BOOL fInsert, char znak )
    if( ! jj )
    {
       if( ( pEd->cursor_col + pEd->first_col ) > ( pEd->right - pEd->left ) )
-         jj = 1;
+         jj = HB_TRUE;
    }
 
    if( jj )
@@ -2355,7 +2350,7 @@ HB_FUNC( ED_PUTCHAR )
    if( pEd )
       PutChar( pEd,
                hb_parl( 3 ),    /* current INSERT state */
-               hb_parni( 2 ) ); /* character to paste */
+               ( char ) hb_parni( 2 ) ); /* character to paste */
    else
       hb_errRT_BASE( EG_ARG, 3001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
