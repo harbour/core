@@ -6632,7 +6632,7 @@ STATIC FUNCTION PlugIn_Execute( hbmk, cState )
                ENDIF
             ENDIF
          RECOVER USING oError
-            IF hbmk[ _HBMK_lInfo ]
+            IF ! hbmk[ _HBMK_lQuiet ]
                hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Executing plugin: %1$s at %3$s(%4$s)\n'%2$s'" ), hrb:__enumKey(), hbmk_ErrorMessage( oError ), oError:cargo[ 1 ], hb_ntos( oError:cargo[ 2 ] ) ) )
             ENDIF
          END SEQUENCE

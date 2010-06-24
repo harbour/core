@@ -77,9 +77,12 @@
 
 /*----------------------------------------------------------------------*/
 
+ANNOUNCE HB_GTSYS
+REQUEST HB_GT_CGI_DEFAULT
+
 PROCEDURE Main( ... )
    LOCAL s, cL, cExt, cPath, cFile
-   LOCAL oGen, prg_, cCmd, cUic, cPrg, cUiFile
+   LOCAL oGen, cCmd, cUic, cPrg, cUiFile
    LOCAL cPathOut := ""
    LOCAL aUI :={}, a_, aUiFiles := {}
    LOCAL lToPath := .f.
@@ -95,7 +98,7 @@ PROCEDURE Main( ... )
       CASE left( cL, 2 ) == "-o"
          cPathOut := alltrim( substr( s, 3 ) )
          cPathOut := strtran( cPathOut, "\", "/" )
-         lToPath  := right( cPathOut, 1 ) == "/" )
+         lToPath  := right( cPathOut, 1 ) == "/"
 
       CASE cL == "-nodeluic"
          lDelUic := .f.

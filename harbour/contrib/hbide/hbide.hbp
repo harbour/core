@@ -50,25 +50,5 @@ ideedit.prg
 ideplugins.prg
 idedict.prg
 
-docviewgenerator.uip
-docwriter.uip
-environ.uip
-environments.uip
-finddialog.uip
-findinfilesex.uip
-findinfiles.uip
-findsource.uip
-funclist.uip
-mainwindow.uip
-projectpropertiesex.uip
-searchreplace.uip
-searchreplacepanel.uip
-selectionlist.uip
-selectproject.uip
-setup.uip
-shortcuts.uip
-skeletons.uip
-themes.uip
-themesex.uip
-toolsutilities.uip
-updown.uip
+-pi=resources/*.ui
+-plugin=resources/hbmk2_plugin_uip.prg
