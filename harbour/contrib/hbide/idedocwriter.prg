@@ -214,7 +214,7 @@ METHOD IdeDocWriter:destroy()
 METHOD IdeDocWriter:show()
 
    IF empty( ::oUI )
-      ::oUI := HbQtUI():new( hbide_uic( "docwriter" ) ):build()
+      ::oUI := hbide_getUI( "docwriter" )
 
       ::oDocWriteDock:oWidget:setWidget( ::oUI )
 

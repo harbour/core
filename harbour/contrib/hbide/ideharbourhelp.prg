@@ -200,7 +200,7 @@ METHOD IdeHarbourHelp:create( oIde )
 METHOD IdeHarbourHelp:show()
 
    IF empty( ::oUI )
-      ::oUI := HbQtUI():new( hbide_uic( "docviewgenerator" ) ):build()
+      ::oUI := hbide_getUI( "docviewgenerator" )
 
       ::oDocViewDock:oWidget:setWidget( ::oUI )
 

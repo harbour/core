@@ -147,6 +147,7 @@ CLASS IdeObject
    ACCESS pathSep                                 INLINE ::oIde:pathSep
    ACCESS cLastFileOpenPath                       INLINE ::oIde:cLastFileOpenPath
    ACCESS nAnimantionMode                         INLINE ::oIde:nAnimantionMode
+   ACCESS nModeUI                                 INLINE ::oIde:nModeUI
 
    ACCESS aProjects                               INLINE ::oIde:aProjects
    ACCESS aSources                                INLINE ::oIde:aSources

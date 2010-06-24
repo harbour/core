@@ -550,7 +550,7 @@ METHOD IdeShortcuts:buildUI()
    LOCAL oTbl, n, qItm
    LOCAL hdr_:= { { "Img", 30 }, { "Name", 190 }, { "Key", 50 }, { "Alt", 30 }, { "Ctrl", 30 }, { "Shift", 30 } }
 
-   ::oUI := HbQtUI():new( hbide_uic( "shortcuts" ) ):build()
+   ::oUI := hbide_getUI( "shortcuts" )
    ::oUI:setWindowIcon( hbide_image( "hbide" ) )
    ::oUI:setParent( ::oDlg:oWidget )
    ::oUI:setWindowFlags( Qt_Sheet )

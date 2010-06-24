@@ -55,6 +55,14 @@
 
 #include "hbtrace.ch"
 
+//#define __VIA_UIC__
+//#define __VIA_UI__
+#define __VIA_FUNC__
+
+#define UI_MODE_UIC                               0
+#define UI_MODE_FUNC                              1
+#define UI_MODE_UI                                2
+
 #define CRLF                                      hb_osNewLine()
 #define _EOL                                      Chr( 10 )
 

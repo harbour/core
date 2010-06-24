@@ -713,7 +713,8 @@ METHOD IdeProjManager:fetchProperties()
 METHOD IdeProjManager:buildInterface()
    LOCAL cLukupPng
 
-   ::oUI := HbQtUI():new( hbide_uic( "projectpropertiesex" ) ):build()
+   ::oUI := hbide_getUI( "projectpropertiesex" )
+
    ::oPropertiesDock:oWidget:setWidget( ::oUI )
 
    ::oUI:q_comboPrjType:addItem( "Executable" )
@@ -1020,7 +1021,7 @@ METHOD IdeProjManager:selectCurrentProject()
       RETURN ::cWrkProject
    ENDIF
 
-   oDlg := HbQtUI():new( ::oIDE:resPath + "selectproject.uic", ::oDlg:oWidget ):build()
+   oDlg := hbide_getUI( "selectproject", ::oDlg:oWidget )
 
    FOR EACH p IN ::aProjects
       IF !empty( t := p[ 3, PRJ_PRP_PROPERTIES, 2, E_oPrjTtl ] )

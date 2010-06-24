@@ -147,6 +147,7 @@ METHOD IdeActions:buildActions()
          IF !empty( a_[ ACT_IMAGE ] )
             qAction:setIcon( hbide_image( a_[ ACT_IMAGE ] ) )
          ENDIF
+
          #if 0
          IF !empty( a_[ ACT_SHORTCUT ] )
             k := a_[ ACT_SHORTCUT ]
@@ -326,13 +327,8 @@ METHOD IdeActions:buildToolBar()
    oTBar:create( , , { 0, ::oDlg:currentSize()[ 2 ]-60 }, { ::oDlg:currentSize()[ 1 ], 60 } )
    oTBar:setStyleSheet( GetStyleSheet( "QToolBar", ::nAnimantionMode ) )
    //oTBar:oWidget:setMaximumHeight( 28 )
-   #if 0
-   oTBar:oWidget:setAllowedAreas( Qt_TopToolBarArea )
-   oTBar:oWidget:setMovable( .f. )
-   oTBar:oWidget:setFloatable( .f. )
-   #else
    oTBar:oWidget:setAllowedAreas( Qt_LeftToolBarArea + Qt_RightToolBarArea + Qt_TopToolBarArea + Qt_BottomToolBarArea )
-   #endif
+   oTBar:oWidget:setFocusPolicy( Qt_NoFocus )
 
    oTBar:buttonClick := {|oButton| ::oIde:execAction( oButton:key ) }
 

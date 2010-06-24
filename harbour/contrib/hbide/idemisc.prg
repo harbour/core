@@ -1589,6 +1589,18 @@ FUNCTION hbide_uic( cName )
 
 /*----------------------------------------------------------------------*/
 
+FUNCTION hbide_ui( cName )
+   LOCAL tmp
+   DEFAULT cName TO ""
+   tmp := hbide_pathToOsPath( hb_DirBase() + "resources" + "/" + cName + ".ui" )
+   IF ! hb_FileExists( tmp )
+      MsgBox( "Error: File " + tmp + " is missing. Please check your installation." )
+      QUIT
+   ENDIF
+   RETURN tmp
+
+/*----------------------------------------------------------------------*/
+
 FUNCTION hbide_isPrevParent( cRoot, cPath )
    LOCAL cLRoot, cLPath
 
@@ -2112,3 +2124,77 @@ FUNCTION hbide_SetWrkFolderLast( cPathFile )
    RETURN cOldPath
 
 /*----------------------------------------------------------------------*/
+
+FUNCTION hbide_getUI( cUI, qParent )
+   LOCAL nModeUI := hbide_setIde():nModeUI
+   LOCAL oUI
+
+   cUI := lower( cUI )
+
+   SWITCH cUI
+   CASE "findinfilesex"
+      oUI := iif( nModeUI == UI_MODE_FUNC, uiFindinfilesex( qParent ), NIL )
+      EXIT
+   CASE "updown"
+      oUI := iif( nModeUI == UI_MODE_FUNC, uiUpDown( qParent ), NIL )
+      EXIT
+   CASE "searchreplace"
+      oUI := iif( nModeUI == UI_MODE_FUNC, uiSearchReplace( qParent ), NIL )
+      EXIT
+   CASE "finddialog"
+      oUI := iif( nModeUI == UI_MODE_FUNC, uiFindDialog( qParent ), NIL )
+      EXIT
+   CASE "environments"
+      oUI := iif( nModeUI == UI_MODE_FUNC, uiEnvironments( qParent ), NIL )
+      EXIT
+   CASE "environ"
+      oUI := iif( nModeUI == UI_MODE_FUNC, uiEnviron( qParent ), NIL )
+      EXIT
+   CASE "shortcuts"
+      oUI := iif( nModeUI == UI_MODE_FUNC, uiShortcuts( qParent ), NIL )
+      EXIT
+   CASE "docwriter"
+      oUI := iif( nModeUI == UI_MODE_FUNC, uiDocwriter( qParent ), NIL )
+      EXIT
+   CASE "toolsutilities"
+      oUI := iif( nModeUI == UI_MODE_FUNC, uiToolsutilities( qParent ), NIL )
+      EXIT
+   CASE "funclist"
+      oUI := iif( nModeUI == UI_MODE_FUNC, uiFunclist( qParent ), NIL )
+      EXIT
+   CASE "docviewgenerator"
+      oUI := iif( nModeUI == UI_MODE_FUNC, uiDocviewgenerator( qParent ), NIL )
+      EXIT
+   CASE "selectproject"
+      oUI := iif( nModeUI == UI_MODE_FUNC, uiSelectproject( qParent ), NIL )
+      EXIT
+   CASE "projectpropertiesex"
+      oUI := iif( nModeUI == UI_MODE_FUNC, uiProjectpropertiesex( qParent ), NIL )
+      EXIT
+   CASE "selectionlist"
+      oUI := iif( nModeUI == UI_MODE_FUNC, uiSelectionlist( qParent ), NIL )
+      EXIT
+   CASE "themesex"
+      oUI := iif( nModeUI == UI_MODE_FUNC, uiThemesex( qParent ), NIL )
+      EXIT
+   CASE "setup"
+      oUI := iif( nModeUI == UI_MODE_FUNC, uiSetup( qParent ), NIL )
+      EXIT
+   CASE "mainwindow"
+      oUI := iif( nModeUI == UI_MODE_FUNC, uiMainwindow( qParent ), NIL )
+      EXIT
+   ENDSWITCH
+HB_TRACE( HB_TR_ALWAYS, nModeUI, 0 )
+   IF empty( oUI )
+HB_TRACE( HB_TR_ALWAYS, nModeUI, 1 )
+      IF nModeUI == UI_MODE_UI
+         oUI := HbQtUI():new( hbide_ui( cUI ), qParent ):create()
+      ELSE
+         oUI := HbQtUI():new( hbide_uic( cUI ), qParent ):create()
+      ENDIF
+   ENDIF
+
+   RETURN oUI
+
+/*----------------------------------------------------------------------*/
+

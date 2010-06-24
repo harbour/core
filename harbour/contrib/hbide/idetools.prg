@@ -188,7 +188,8 @@ METHOD IdeToolsManager:show()
    LOCAL oTbl, hdr_, n, qItm
 
    IF empty( ::oUI )
-      ::oUI := HbQtUI():new( hbide_uic( "toolsutilities" ), ::oDlg:oWidget ):build()
+      ::oUI := hbide_getUI( "toolsutilities", ::oDlg:oWidget )
+
       ::oUI:setWindowFlags( Qt_Sheet )
 
       ::oUI:setWindowIcon( hbide_image( "hbide" ) )

@@ -999,7 +999,8 @@ METHOD IdeSetup:show()
    LOCAL cStyle
 
    IF empty( ::oUI )
-      ::oUI := HbQtUI():new( hbide_uic( "setup" ), ::oDlg:oWidget ):build()
+
+      ::oUI := hbide_getUI( "setup", ::oDlg:oWidget )
 
       ::oUI:setMaximumWidth( ::oUI:width() )
       ::oUI:setMinimumWidth( ::oUI:width() )

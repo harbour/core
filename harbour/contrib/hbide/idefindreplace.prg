@@ -135,7 +135,7 @@ METHOD IdeUpDown:create( oIde )
 
    ::oIde := oIde
 
-   ::oUI := HbQtUI():new( hbide_uic( "updown" ), ::oIde:oDlg:oWidget ):build()
+   ::oUI := hbide_getUI( "updown", ::oIde:oDlg:oWidget )
 
    ::oUI:setWindowFlags( hb_bitOr( Qt_Tool, Qt_FramelessWindowHint ) )
    ::oUI:setFocusPolicy( Qt_NoFocus )
@@ -244,7 +244,7 @@ METHOD IdeSearchReplace:create( oIde )
 
    ::oIde := oIde
 
-   ::oUI := HbQtUI():new( hbide_uic( "searchreplace" ) ):build()
+   ::oUI := hbide_getUI( "searchreplace" )
 
    ::oUI:setFocusPolicy( Qt_StrongFocus )
 
@@ -458,7 +458,8 @@ METHOD IdeFindReplace:create( oIde )
 
    ::oIde := oIde
 
-   ::oUI := HbQtUI():new( hbide_uic( "finddialog" ), ::oIde:oDlg:oWidget ):build()
+   ::oUI := hbide_getUI( "finddialog", ::oIde:oDlg:oWidget )
+
    ::oUI:setWindowFlags( Qt_Sheet )
 
    aeval( ::oINI:aFind   , {|e| ::oUI:q_comboFindWhat:addItem( e ) } )
@@ -771,7 +772,7 @@ METHOD IdeFindInFiles:destroy()
 METHOD IdeFindInFiles:buildUI()
    LOCAL cText, qLineEdit, aProjList, cProj, qItem, n
 
-   ::oUI := HbQtUI():new( ::oIde:resPath + "findinfilesex.uic" ):build()
+   ::oUI := hbide_getUI( "findinfilesex" )
 
    ::oFindDock:oWidget:setWidget( ::oUI )
 

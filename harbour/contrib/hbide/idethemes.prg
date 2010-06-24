@@ -195,7 +195,7 @@ METHOD IdeThemes:create( oIde, cIniFile )
           'if','else','elseif','endif','end', ;
           'docase','case','endcase','otherwise', ;
           'switch','endswitch', ;
-          'do','while','exit','enddo',;
+          'do','while','exit','enddo','loop',;
           'for','each','next','step','to','in',;
           'with','object','endwith',;
           'nil','and','or','self',;
@@ -546,7 +546,8 @@ METHOD IdeThemes:show()
    IF empty( ::oUI )
       ::lCreating := .t.
 
-      ::oUI := HbQtUI():new( hbide_uic( "themesex" ) ):build()
+      ::oUI := hbide_getUI( "themesex" )
+
       ::oThemesDock:oWidget:setWidget( ::oUI )
 
       ::oUI:signal( "listThemes"   , "currentRowChanged(int)"   , {|i| ::execEvent( listThemes_currentRowChanged, i ) } )
@@ -753,7 +754,8 @@ METHOD IdeThemes:selectTheme()
    LOCAL oStrList, oStrModel, a_, nDone
 
    IF empty( ::oSL )
-      ::oSL := HbQtUI():new( hbide_uic( "selectionlist" ), ::oIde:oDlg:oWidget ):build()
+      ::oSL := hbide_getUI( "selectionlist", ::oIde:oDlg:oWidget )
+
       ::oSL:setWindowTitle( "Available Themes" )
 
       ::connect( ::oSL:qObj[ "listOptions"  ], "doubleClicked(QModelIndex)", {|p| ::selectThemeProc( 1, p ) } )

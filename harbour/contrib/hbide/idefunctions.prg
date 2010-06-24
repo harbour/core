@@ -141,7 +141,7 @@ METHOD IdeFunctions:create( oIde )
    DEFAULT oIde TO ::oIde
    ::oIde := oIde
 
-   ::oUI := HbQtUI():new( hbide_uic( "funclist" ) ):build()
+   ::oUI := hbide_getUI( "funclist" )
 
    ::buildHeader()
 
