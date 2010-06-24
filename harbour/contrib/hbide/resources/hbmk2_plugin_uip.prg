@@ -39,7 +39,7 @@ FUNCTION hbmk2_plugin_uip( hbmk2 )
          ENDIF
       NEXT
 
-      IF ! Empty( aUI + 100 )
+      IF ! Empty( aUI )
 
          /* Execute 'hbqtui' commands on input files */
 
