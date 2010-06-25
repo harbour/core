@@ -73,7 +73,7 @@ endif
 # URL    http://sourceforge.net/projects/libpng/files/01-libpng-master/1.4.2/lpng142.zip/download
 # DIFF
 #
-# MAP    LICENCE
+# MAP    LICENSE
 # MAP    png.c
 # MAP    pngconf.h
 # MAP    pngerror.c

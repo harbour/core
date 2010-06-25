@@ -748,13 +748,14 @@ METHOD LoadData( nPos ) CLASS TODBC
         CASE SQL_DOUBLE
         CASE SQL_TINYINT
         CASE SQL_SMALLINT
+        CASE SQL_BIGINT
         CASE SQL_INTEGER
         CASE SQL_FLOAT
         CASE SQL_REAL
 
            IF ISCHARACTER( uData )
               uData := StrTran( uData, ",", "." )
-              uData := Round( Val( uData ), ::Fields[ i ]:DataSize )
+              uData := Round( Val( uData ), ::Fields[ i ]:DataDecs )
            ENDIF
            uData := SQLNumSetLen( uData, ::Fields[ i ]:DataSize, ::Fields[ i ]:DataDecs )
            EXIT
