@@ -278,7 +278,7 @@ PROCEDURE Main( ... )
    cFile := MemoRead( "Makefile" )
    cDiffFile := NIL        /* default to `no local diff' */
 
-   FOR EACH cMemoLine IN hb_ATokens( cFile, OSNL )
+   FOR EACH cMemoLine IN hb_ATokens( StrTran( cFile, Chr( 13 ) ), Chr( 10 ) )
 
       cMemoLine := AllTrim( cMemoLine )
 
