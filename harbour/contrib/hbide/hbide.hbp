@@ -50,5 +50,5 @@ ideedit.prg
 ideplugins.prg
 idedict.prg
 
--pi=resources/*.ui
+-pi=*.ui
 -plugin=resources/hbmk2_plugin_uip.prg
