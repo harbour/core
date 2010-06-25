@@ -340,7 +340,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
       CASE nKey == K_CTRL_END
 
          IF nPos == nLastItem
-            IF nAtTop == Min( nPos, nItems - nNumRows + 1 )
+            IF nAtTop == Min( nPos, nItems - nNumRows + 1 ) .OR. nPos == nItems
                nMode := AC_HITBOTTOM
             ELSE
                nAtTop := Min( nPos, nItems - nNumRows + 1 )
@@ -383,6 +383,10 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
                      nAtTop--
                   ENDDO
                   nAtTop := Max( 1, nAtTop )
+                  IF nAtTop < nNumRows .AND. nPos < nNumRows
+                     nPos := nNumRows
+                     nAtTop := 1
+                  ENDIF
                ENDIF
             ENDIF
             DispPage( acItems, alSelect, nTop, nLeft, nRight, nNumRows, nPos, nAtTop, nItems )
