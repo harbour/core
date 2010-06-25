@@ -114,7 +114,7 @@ HB_FUNC( WIN_REPORTEVENT )
             hb_strfree( hStrings[ --wNumStrings ] );
 
          hb_xfree( hStrings );
-         hb_xfree( lpStrings );
+         hb_xfree( ( void * ) lpStrings );
       }
 
       DeregisterEventSource( hEventLog );

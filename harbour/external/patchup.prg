@@ -110,7 +110,14 @@
  * If patchup is called with the `-rediff' command line argument, it switches
  * to a `local diff refresh' mode. This mode is used to refresh the local diff
  * after Harbour-specific modifications have been made to the component's
- * source.
+ * source. In order to help with the initial diff creation, patchup will proceed
+ * even if no `DIFF' is specified amongst the meta data, and defaults to
+ * creating a diff named `$(component).dif').
+ *
+ * If no differences between the original and the Harbour trees were found,
+ * a possibly pre-existing diff file is removed. Following this change up
+ * in the component's Makefile is left for the operator -- patchup will communicate
+ * if there is a likely need to perform this action.
  *
  * It is strongly advised not to try to mix the two modes. If there are any
  * pending local modifications, a rediff should be done before a component
@@ -332,11 +339,6 @@ PROCEDURE Main( ... )
       ENDIF
    NEXT
 
-   IF lRediff .AND. cDiffFile == NIL
-      OutStd( "Requested rediff mode with no local diff, nothing to do." + OSNL )
-      QUIT
-   ENDIF
-
    IF Empty( s_aChangeMap ) .AND. cDiffFile == NIL
       OutStd( "No file name changes and no local diff, nothing to do." + OSNL )
       QUIT
@@ -358,6 +360,11 @@ PROCEDURE Main( ... )
    MakeDir( CombinePath( s_cTempDir, cThisComponent ) )
    MakeDir( CombinePath( s_cTempDir, cThisComponent + ".orig" ) )
    MakeDir( CombinePath( s_cTempDir, "root" ) )
+
+   IF lRediff .AND. cDiffFile == NIL
+      OutStd( "Requested rediff mode with no existing local diff, attempting to create one." + OSNL )
+      cDiffFile := cThisComponent + ".dif"
+   ENDIF
 
    IF ! FetchAndExtract( cArchiveURL )
       OutStd( "E: Fetching or extracting the source archive failed." + OSNL )
@@ -435,9 +442,18 @@ PROCEDURE Main( ... )
 
       SaveLog( "diff", NIL, cStdErr )
 
-      nDiffFD := FCreate( cDiffFile )
-      FWrite( nDiffFD, cDiffText )
-      FClose( nDiffFD )
+      IF Len( cDiffText ) > 0
+         nDiffFD := FCreate( cDiffFile )
+         FWrite( nDiffFD, cDiffText )
+         FClose( nDiffFD )
+         OutStd( "Local changes saved to `" + cDiffFile + "'; you may need to adjust `DIFF'." + OSNL )
+      ELSE
+         OutStd( "No local changes; you may need to adjust `DIFF'." + OSNL )
+         IF hb_FileExists( cDiffFile )
+            FErase( cDiffFile )
+            OutStd( "Removed existing `" + cDiffFile + "'." + OSNL )
+         ENDIF
+      ENDIF
 
    ENDIF
 

@@ -229,7 +229,7 @@ HB_FUNC( WAPI_GETPROCADDRESS )
                   hb_parc( 2 ) : ( LPCSTR ) ( HB_PTRDIFF ) hb_parnint( 2 ) );
    dwLastError = GetLastError();
    hbwapi_SetLastError( dwLastError );
-   hb_retptr( ( void * ) pProc );
+   hb_retptr( ( void * ) ( HB_PTRDIFF ) pProc );
 }
 
 /* HMODULE WINAPI GetModuleHandle( __in_opt LPCTSTR lpModuleName ); */
