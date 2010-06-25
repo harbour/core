@@ -238,50 +238,50 @@ typedef BOOL ( WINAPI *wvtSetLayeredWindowAttributes )(
 
 typedef struct
 {
-   int            iTop      ;
-   int            iLeft     ;
-   int            iBottom   ;
-   int            iRight    ;
+   int            iTop;
+   int            iLeft;
+   int            iBottom;
+   int            iRight;
 } HB_GOBJ_OFFSET ;
 
 
 typedef struct _tag_GOBJS
 {
-   int            iObjType      ;
-   int            iHandle       ;
-   int            iState        ;
-   int            iTop          ;
-   int            iLeft         ;
-   int            iBottom       ;
-   int            iRight        ;
-   HB_GOBJ_OFFSET aOffset       ;
-   int            iHeight       ;
-   int            iWidth        ;      /* iThick */
-   int            iOrient       ;
-   int            iAlign        ;
-   int            iAlignVert    ;
-   int            iFormat       ;
-   int            iStyle        ;      /* iShape */
-   int            iData         ;      /* iSlot, etc */
-   COLORREF       crRGB         ;
-   COLORREF       crRGBText     ;
-   COLORREF       crRGBBk       ;
-   HFONT          hFont         ;
-   HPEN           hPen          ;
-   HBRUSH         hBrush        ;
+   int            iObjType;
+   int            iHandle;
+   int            iState;
+   int            iTop;
+   int            iLeft;
+   int            iBottom;
+   int            iRight;
+   HB_GOBJ_OFFSET aOffset;
+   int            iHeight;
+   int            iWidth;       /* iThick */
+   int            iOrient;
+   int            iAlign;
+   int            iAlignVert;
+   int            iFormat;
+   int            iStyle;       /* iShape */
+   int            iData;        /* iSlot, etc */
+   COLORREF       crRGB;
+   COLORREF       crRGBText;
+   COLORREF       crRGBBk;
+   HFONT          hFont;
+   HPEN           hPen;
+   HBRUSH         hBrush;
 #if ! defined( HB_OS_WIN_CE )
-   IPicture     * iPicture      ;
+   IPicture     * iPicture;
 #endif
-   HB_BOOL        bDestroyFont  ;
-   HB_BOOL        bDestroyPen   ;
-   HB_BOOL        bDestroyBrush ;
-   HB_BOOL        bDestroyPicture ;
-   TRIVERTEX      vert[ 2 ]     ;
-   LPTSTR         lpText        ;
-   PHB_ITEM       bBlock        ;
-   struct _tag_GOBJS * gObjNext ;
+   HB_BOOL        bDestroyFont;
+   HB_BOOL        bDestroyPen;
+   HB_BOOL        bDestroyBrush;
+   HB_BOOL        bDestroyPicture;
+   TRIVERTEX      vert[ 2 ];
+   LPTSTR         lpText;
+   PHB_ITEM       bBlock;
+   struct _tag_GOBJS * gObjNext;
 
-} HB_GOBJS, * PHB_GOBJS         ;
+} HB_GOBJS, * PHB_GOBJS;
 
 typedef struct
 {
@@ -312,7 +312,7 @@ typedef struct
 #if ! defined( HB_OS_WIN_CE )
    IPicture  *iPicture[ WVT_PICTURES_MAX ]; /* Array to hold the Picture Streams to avoid recurring loading and unloading */
 #endif
-   HFONT     hUserFonts[ WVT_FONTS_MAX ] ;  /* User defined font handles                                                  */
+   HFONT     hUserFonts[ WVT_FONTS_MAX ];   /* User defined font handles                                                  */
    HPEN      hUserPens[ WVT_PENS_MAX ];     /* User defined pens                                                          */
    HINSTANCE hMSImg32;                      /* Handle to the loaded library msimg32.dll                                   */
    wvtGradientFill pfnGF;                   /* Pointer to Address of the GradientFill function in MSImg32.dll             */

@@ -553,7 +553,7 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
             {
                TRACKMOUSEEVENT tmi;
                tmi.cbSize = sizeof( TRACKMOUSEEVENT );
-               tmi.dwFlags = TME_LEAVE | TME_HOVER ;
+               tmi.dwFlags = TME_LEAVE | TME_HOVER;
                tmi.hwndTrack = pWVT->hWnd;
                tmi.dwHoverTime = 1;
                pWVT->bTracking = _TrackMouseEvent( &tmi );
@@ -1029,8 +1029,8 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
       {
          if( lParam == WM_RBUTTONUP )
          {
-            NOTIFYICONDATA tnid ;
-            tnid.cbSize           = sizeof( NOTIFYICONDATA ) ;
+            NOTIFYICONDATA tnid;
+            tnid.cbSize           = sizeof( NOTIFYICONDATA );
             tnid.hWnd             = hWnd;
             tnid.uID              = HB_ID_NOTIFYICON;
             tnid.uCallbackMessage = HB_MSG_NOTIFYICON;
@@ -1933,7 +1933,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                   int            mode = hb_arrayGetNI( pInfo->pNewVal2, 1 );
                   int            iIconType = hb_arrayGetNI( pInfo->pNewVal2, 2 );
                   HICON          hIcon = 0;
-                  NOTIFYICONDATA tnid ;
+                  NOTIFYICONDATA tnid;
 
                   if( iIconType == 0 )
                   {
@@ -1954,16 +1954,16 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                                           MAKEINTRESOURCE( ( HB_MAXINT )
                                                       hb_arrayGetNInt( pInfo->pNewVal2, 3 ) ) );
                   }
-                  tnid.cbSize           = sizeof( NOTIFYICONDATA ) ;
+                  tnid.cbSize           = sizeof( NOTIFYICONDATA );
                   tnid.hWnd             = pWVT->hWnd;
                   tnid.uID              = HB_ID_NOTIFYICON;
                   tnid.uFlags           = NIF_MESSAGE | NIF_ICON | NIF_TIP;
                   tnid.uCallbackMessage = HB_MSG_NOTIFYICON;
-                  tnid.hIcon            = hIcon ;
+                  tnid.hIcon            = hIcon;
 
                   HB_TCHAR_COPYTO( tnid.szTip, hb_arrayGetCPtr( pInfo->pNewVal2, 4 ), HB_SIZEOFARRAY( tnid.szTip ) - 1 );
 
-                  Shell_NotifyIcon( mode, &tnid ) ;
+                  Shell_NotifyIcon( mode, &tnid );
 
                   if( hIcon )
                      DestroyIcon( hIcon );

@@ -860,21 +860,21 @@ static void hb_wvg_Line( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int iTop, in
    HPEN hPen, hOldPen;
 
    int iOffset;
-   int x       = iLeft ;
-   int y       = iTop ;
+   int x       = iLeft;
+   int y       = iTop;
 
    switch ( gObj->iAlign )
    {
       case 0:                  /* Center */
          if ( gObj->iOrient == 0 )   /* Horizontal  */
          {
-            iOffset = ( ( iBottom - iTop ) / 2 ) ;
-            y       = iTop + iOffset ;
+            iOffset = ( ( iBottom - iTop ) / 2 );
+            y       = iTop + iOffset;
          }
          else
          {
-            iOffset = ( ( iRight - iLeft ) / 2 ) ;
-            x       = iLeft + iOffset ;
+            iOffset = ( ( iRight - iLeft ) / 2 );
+            x       = iLeft + iOffset;
          }
          break;
 
@@ -1156,7 +1156,7 @@ HB_FUNC( WVG_SHADEDRECT )
       gObj->aOffset.iBottom  = hb_parvni( 5,3 );
       gObj->aOffset.iRight   = hb_parvni( 5,4 );
 
-      gObj->iData            = !HB_ISNUM( 6 ) ? GRADIENT_FILL_RECT_H : hb_parni( 6 ) ;
+      gObj->iData            = !HB_ISNUM( 6 ) ? GRADIENT_FILL_RECT_H : hb_parni( 6 );
 
       gObj->vert[ 0 ].x      = 0;
       gObj->vert[ 0 ].y      = 0;
