@@ -740,7 +740,7 @@ STATIC FUNCTION URL_GetFileName( cURL )
    ENDIF
 
    cName := aComponents[ nIdx ]
-   cName := Left( cName, At( "?", cName ) - 1 ) /* strip params */
+   cName := iif( "?" $ cName, Left( cName, At( "?", cName ) - 1 ), cName ) /* strip params */
 
    DO WHILE !( "." $ cName )
       cName := aComponents[ --nIdx ]
