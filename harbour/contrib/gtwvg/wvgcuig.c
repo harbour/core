@@ -283,7 +283,7 @@ HB_FUNC( WVG_SETGOBJDATA )
                   bSuccess = HB_FALSE;
                break;
             case GOBJ_OBJDATA_COLORBK:
-               gObj->crRGBBk = HB_ISNUM( 3 ) ? ( COLORREF ) ( HB_PTRDIFF ) hb_parnint( 3 ) : ( COLORREF ) 0;
+               gObj->crRGBBk = ( COLORREF ) ( HB_PTRDIFF ) hb_parnint( 3 );
                break;
             case GOBJ_OBJDATA_BLOCK:
                if( gObj->bBlock )
@@ -585,19 +585,19 @@ HB_FUNC( WVG_LABEL )
    LOGFONT   lf;
    HFONT     hFont;
 
-   lf.lfEscapement        = ( !HB_ISNUM(  6 ) ? 0 : ( hb_parni( 6 ) * 10 ) );
+   lf.lfEscapement        = hb_parni( 6 ) * 10;
    lf.lfOrientation       = 0;
-   lf.lfWeight            = ( !HB_ISNUM( 12 ) ? 0 : hb_parni( 12 ) );
-   lf.lfItalic            = ( !HB_ISNUM( 15 ) ? 0 : ( BYTE ) hb_parl( 15 ) );
-   lf.lfUnderline         = ( !HB_ISNUM( 16 ) ? 0 : ( BYTE ) hb_parl( 16 ) );
-   lf.lfStrikeOut         = ( !HB_ISNUM( 17 ) ? 0 : ( BYTE ) hb_parl( 17 ) );
-   lf.lfCharSet           = ( !HB_ISNUM( 14 ) ? ( BYTE ) pWVT->CodePage : ( BYTE ) hb_parni( 14 ) );
+   lf.lfWeight            = hb_parni( 12 );
+   lf.lfItalic            = ( BYTE ) hb_parl( 15 );
+   lf.lfUnderline         = ( BYTE ) hb_parl( 16 );
+   lf.lfStrikeOut         = ( BYTE ) hb_parl( 17 );
+   lf.lfCharSet           = ( BYTE ) hb_parnidef( 14, pWVT->CodePage );
    lf.lfOutPrecision      = 0;
    lf.lfClipPrecision     = 0;
-   lf.lfQuality           = ( !HB_ISNUM( 13 ) ? DEFAULT_QUALITY : ( BYTE ) hb_parni( 13 ) );
+   lf.lfQuality           = ( BYTE ) hb_parnidef( 13, DEFAULT_QUALITY );
    lf.lfPitchAndFamily    = FF_DONTCARE;
-   lf.lfHeight            = ( !HB_ISNUM( 10 ) ? pWVT->fontHeight : hb_parni( 10 ) );
-   lf.lfWidth             = ( !HB_ISNUM( 11 ) ? (pWVT->fontWidth < 0 ? -pWVT->fontWidth : pWVT->fontWidth ) : hb_parni( 11 ) );
+   lf.lfHeight            = hb_parnidef( 10, pWVT->fontHeight );
+   lf.lfWidth             = hb_parnidef( 11, pWVT->fontWidth < 0 ? -pWVT->fontWidth : pWVT->fontWidth );
 
    HB_TCHAR_COPYTO( lf.lfFaceName, ( !HB_ISCHAR( 9 ) ? pWVT->fontFace : hb_parc( 9 ) ), HB_SIZEOFARRAY( lf.lfFaceName ) - 1 );
 
@@ -624,9 +624,9 @@ HB_FUNC( WVG_LABEL )
       gObj->lpText           = hb_strdup( hb_parcx( 4 ) );
 #endif
 
-      gObj->iAlign           = HB_ISNUM( 5 ) ? hb_parni( 5 ) : TA_LEFT;
+      gObj->iAlign           = hb_parnidef( 5, TA_LEFT );
       gObj->crRGBText        = ( COLORREF ) hb_parnint( 7 );
-      gObj->crRGBBk          = HB_ISNUM( 8 ) ? ( COLORREF ) hb_parnint( 8 ) : ( COLORREF ) 0;
+      gObj->crRGBBk          = ( COLORREF ) hb_parnint( 8 );
       gObj->hFont            = hFont;
       gObj->bDestroyFont     = HB_TRUE;
 
@@ -661,9 +661,9 @@ HB_FUNC( WVG_LABELEX )
    gObj->lpText           = hb_strdup( hb_parcx( 4 ) );
 #endif
 
-   gObj->iAlign           = HB_ISNUM( 5 ) ? hb_parni( 5 ) : TA_LEFT;
+   gObj->iAlign           = hb_parnidef( 5, TA_LEFT );
    gObj->crRGBText        = ( COLORREF ) hb_parnint( 6 );
-   gObj->crRGBBk          = HB_ISNUM( 7 ) ? ( COLORREF ) hb_parnint( 7 ) : ( COLORREF ) 0;
+   gObj->crRGBBk          = ( COLORREF ) hb_parnint( 7 );
 
    gObj->hFont            = pWVT->pGUI->hUserFonts[ hb_parni( 8 ) - 1 ];
    gObj->bDestroyFont     = HB_FALSE;
@@ -717,7 +717,7 @@ HB_FUNC( WVG_OUTLINE )
 
    gObj->iWidth           = hb_parni( 6 );  /* iThick */
    gObj->iStyle           = hb_parni( 7 );  /* iShape */
-   gObj->crRGB            = !HB_ISNUM( 8 ) ? 0 : ( COLORREF ) hb_parnl( 8 );
+   gObj->crRGB            = ( COLORREF ) hb_parnl( 8 );
 
    if ( gObj->iWidth > 0 )
    {
@@ -1156,7 +1156,7 @@ HB_FUNC( WVG_SHADEDRECT )
       gObj->aOffset.iBottom  = hb_parvni( 5,3 );
       gObj->aOffset.iRight   = hb_parvni( 5,4 );
 
-      gObj->iData            = !HB_ISNUM( 6 ) ? GRADIENT_FILL_RECT_H : hb_parni( 6 );
+      gObj->iData            = hb_parnidef( 6, GRADIENT_FILL_RECT_H );
 
       gObj->vert[ 0 ].x      = 0;
       gObj->vert[ 0 ].y      = 0;
@@ -1235,7 +1235,7 @@ HB_FUNC( WVG_TEXTBOX )
    gObj->iAlign           = iAlignH;
 
    gObj->crRGBText        = ( COLORREF ) hb_parnint( 9 );
-   gObj->crRGBBk          = HB_ISNUM( 10 ) ? ( COLORREF ) hb_parnint( 10 ) : ( COLORREF ) 0;
+   gObj->crRGBBk          = ( COLORREF ) hb_parnint( 10 );
 
    gObj->hFont            = ( HFONT ) ( HB_PTRDIFF ) hb_parnint( 11 );
    gObj->bDestroyFont     = HB_FALSE;

@@ -166,7 +166,7 @@ HB_FUNC( WVG_SENDDLGITEMMESSAGE )
    hb_retnl( ( long ) SendDlgItemMessage( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ) ,
                                           ( int )  hb_parni( 2 ) ,
                                           ( UINT ) hb_parni( 3 ) ,
-                                          ( HB_ISNUM( 4 ) ? ( WPARAM ) hb_parnint( 4 ) : 0 ),
+                                          ( WPARAM ) hb_parnint( 4 ),
                                           ( cText ? ( LPARAM ) cText : ( LPARAM ) hb_parnint( 5 ) )
                                         ) );
 
@@ -299,7 +299,7 @@ HB_FUNC( WVG_GETDLGITEMTEXT )
 HB_FUNC( WVG_CHECKDLGBUTTON )
 {
    hb_retl( CheckDlgButton( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ),
-                            ( UINT )( HB_ISNUM( 3 ) ? hb_parni( 3 ) : hb_parl( 3 ) ) ) );
+                            ( UINT ) ( HB_ISNUM( 3 ) ? hb_parni( 3 ) : hb_parl( 3 ) ) ) );
 }
 
 /*----------------------------------------------------------------------*/
@@ -335,7 +335,7 @@ HB_FUNC( WVG_MESSAGEBOX )
    LPTSTR lpMsg = HB_TCHAR_CONVTO( hb_parcx( 2 ) );
    LPTSTR lpTitle = HB_TCHAR_CONVTO( HB_ISCHAR( 3 ) ? hb_parc( 3 ) : "Info" );
 
-   hb_retni( MessageBox( hWnd, lpMsg, lpTitle, HB_ISNUM( 4 ) ? hb_parni( 4 ) : MB_OK  ) );
+   hb_retni( MessageBox( hWnd, lpMsg, lpTitle, hb_parnidef( 4, MB_OK ) ) );
 
    HB_TCHAR_FREE( lpTitle );
    HB_TCHAR_FREE( lpMsg );
@@ -460,7 +460,7 @@ HB_FUNC( WVG_CREATEBRUSH )
    LOGBRUSH lb = { 0,0,0 };
 
    lb.lbStyle = hb_parni( 1 );
-   lb.lbColor = HB_ISNUM( 2 ) ? ( COLORREF ) hb_parnl( 2 ) : RGB( 0, 0, 0 );
+   lb.lbColor = ( COLORREF ) hb_parnldef( 2, RGB( 0, 0, 0 ) );
    lb.lbHatch = hb_parni( 3 );
 #if ! defined( HB_OS_WIN_CE )
    hb_retnint( ( HB_PTRDIFF ) CreateBrushIndirect( &lb ) );
@@ -645,7 +645,7 @@ HB_FUNC( WVG_NOT )
 HB_FUNC( WVG_TRACKPOPUPMENU )
 {
    HMENU hMenu  = ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 );
-   UINT  uFlags = HB_ISNUM( 2 ) ? hb_parnl( 2 ) : TPM_CENTERALIGN | TPM_RETURNCMD;
+   UINT  uFlags = hb_parnldef( 2, TPM_CENTERALIGN | TPM_RETURNCMD );
    int   x      = hb_parni( 3 );
    int   y      = hb_parni( 4 );
    HWND  hWnd   = HB_ISNUM( 5 ) ? ( HWND ) ( HB_PTRDIFF ) hb_parnint( 5 ) : GetActiveWindow();
@@ -678,9 +678,9 @@ HB_FUNC( WVG_CHOOSECOLOR )
 
    cc.lStructSize   = sizeof( CHOOSECOLOR );
    cc.hwndOwner     = HB_ISNUM( 4 ) ? ( HWND ) ( HB_PTRDIFF ) hb_parnint( 4 ) : NULL;
-   cc.rgbResult     = ( COLORREF ) ( HB_ISNUM( 1 ) ? hb_parnl( 1 ) : 0 );
+   cc.rgbResult     = ( COLORREF ) hb_parnl( 1 );
    cc.lpCustColors  = crCustClr;
-   cc.Flags         = ( WORD ) ( HB_ISNUM( 3 ) ? hb_parnl( 3 ) : CC_ANYCOLOR | CC_RGBINIT | CC_FULLOPEN );
+   cc.Flags         = ( WORD ) hb_parnldef( 3, CC_ANYCOLOR | CC_RGBINIT | CC_FULLOPEN );
 
    if( ChooseColor( &cc ) )
       hb_retnl( cc.rgbResult );

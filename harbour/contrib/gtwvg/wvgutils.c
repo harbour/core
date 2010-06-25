@@ -143,11 +143,11 @@ HB_FUNC( WVT_CHOOSEFONT )
    lf.lfHeight         = PointSize;
    lf.lfWidth          = hb_parni( 3 );
    lf.lfWeight         = hb_parni( 4 );
-   lf.lfItalic         = !HB_ISNUM( 6 ) ? 0 : ( BYTE ) hb_parl( 6 );
-   lf.lfUnderline      = !HB_ISNUM( 7 ) ? 0 : ( BYTE ) hb_parl( 7 );
-   lf.lfStrikeOut      = !HB_ISNUM( 8 ) ? 0 : ( BYTE ) hb_parl( 8 );
+   lf.lfItalic         = HB_ISNUM( 6 ) ? ( BYTE ) hb_parni( 6 ) : ( BYTE ) hb_parl( 6 );
+   lf.lfUnderline      = HB_ISNUM( 7 ) ? ( BYTE ) hb_parni( 7 ) : ( BYTE ) hb_parl( 7 );
+   lf.lfStrikeOut      = HB_ISNUM( 8 ) ? ( BYTE ) hb_parni( 8 ) : ( BYTE ) hb_parl( 8 );
    lf.lfCharSet        = DEFAULT_CHARSET;
-   lf.lfQuality        = !HB_ISNUM( 5 ) ? DEFAULT_QUALITY : ( BYTE ) hb_parni( 5 );
+   lf.lfQuality        = ( BYTE ) hb_parnidef( 5, DEFAULT_QUALITY );
    lf.lfPitchAndFamily = FF_DONTCARE;
    if ( HB_ISCHAR( 1 ) )
    {
@@ -226,9 +226,9 @@ HB_FUNC( WVT_CHOOSECOLOR )
 
    cc.lStructSize   = sizeof( CHOOSECOLOR );
    cc.hwndOwner     = _s->hWnd;
-   cc.rgbResult     = HB_ISNUM( 1 ) ?  ( COLORREF ) hb_parnl( 1 ) : 0;
+   cc.rgbResult     = ( COLORREF ) hb_parnl( 1 );
    cc.lpCustColors  = crCustClr;
-   cc.Flags         = ( WORD ) ( HB_ISNUM( 3 ) ? hb_parnl( 3 ) : CC_ANYCOLOR | CC_RGBINIT | CC_FULLOPEN );
+   cc.Flags         = ( WORD ) hb_parnldef( 3, CC_ANYCOLOR | CC_RGBINIT | CC_FULLOPEN );
 
    if ( ChooseColor( &cc ) )
    {
@@ -250,7 +250,7 @@ HB_FUNC( WVT_MESSAGEBOX )
 
    LPTSTR title = HB_TCHAR_CONVTO( hb_parc( 1 ) );
    LPTSTR msg = HB_TCHAR_CONVTO( hb_parc( 2 ) );
-   hb_retni( MessageBox( _s->hWnd, title, msg, HB_ISNUM( 3 ) ? hb_parni( 3 ) : MB_OK ) );
+   hb_retni( MessageBox( _s->hWnd, title, msg, hb_parnidef( 3, MB_OK ) ) );
    HB_TCHAR_FREE( title );
    HB_TCHAR_FREE( msg );
 }
@@ -1505,7 +1505,7 @@ HB_FUNC( WVT__GETOPENFILENAME )
    ofn.hwndOwner        = HB_ISNUM( 1 ) ? ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ) : GetActiveWindow();
    ofn.lpstrTitle       = lpstrTitle;
    ofn.lpstrFilter      = lpstrFilter;
-   ofn.Flags            = HB_ISNUM( 5 ) ? hb_parnl( 5 ) : OFN_SHOWHELP|OFN_NOCHANGEDIR;
+   ofn.Flags            = hb_parnldef( 5, OFN_SHOWHELP | OFN_NOCHANGEDIR );
    ofn.lpstrInitialDir  = lpstrInitialDir;
    ofn.lpstrDefExt      = lpstrDefExt;
    ofn.nFilterIndex     = hb_parni( 8 );
@@ -1552,7 +1552,7 @@ HB_FUNC( WVT__GETSAVEFILENAME )
    ofn.hwndOwner       = HB_ISNUM( 1 ) ? ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ) : GetActiveWindow();
    ofn.lpstrTitle      = lpstrTitle;
    ofn.lpstrFilter     = lpstrFilter;
-   ofn.Flags           = ( HB_ISNUM( 5 ) ? hb_parnl( 5 ) : OFN_FILEMUSTEXIST|OFN_EXPLORER|OFN_NOCHANGEDIR );
+   ofn.Flags           = hb_parnldef( 5, OFN_FILEMUSTEXIST | OFN_EXPLORER | OFN_NOCHANGEDIR );
    ofn.lpstrInitialDir = lpstrInitialDir;
    ofn.lpstrDefExt     = lpstrDefExt;
    ofn.nFilterIndex    = hb_parni(8);

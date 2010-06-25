@@ -415,10 +415,10 @@ HB_FUNC( WVG_AXCREATEWINDOW ) /* ( hWndContainer, CLSID, menuID=0, x, y, w, h, s
    LPTSTR cCaption = HB_TCHAR_CONVTO( hb_parcx( 2 ) );
 
    hb_retptr( ( void * ) ( HB_PTRDIFF ) CreateWindowEx(
-               HB_ISNUM( 9 ) ? hb_parnl( 9 ) : 0 /* Exstyle */,
+               hb_parnl( 9 ) /* Exstyle */,
                TEXT( "ATLAXWin" ),
                cCaption,
-               HB_ISNUM( 8 ) ? hb_parni( 8 ) : WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS /* Style */,
+               hb_parnidef( 8, WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS ) /* Style */,
                hb_parni( 4 ) /* x */,
                hb_parni( 5 ) /* y */,
                hb_parni( 6 ) /* w */,

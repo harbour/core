@@ -523,7 +523,7 @@ HB_FUNC( WVG_STATUSBARSETTEXT )
 
    if( hWndSB && IsWindow( hWndSB ) )
    {
-      int    iPart = HB_ISNUM( 2 ) ? hb_parni( 2 ) : 1;
+      int    iPart = hb_parnidef( 2, 1 );
       TCHAR  szText[ 1024 ];
       int    iFlags;
       TCHAR  *szCaption;
