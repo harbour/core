@@ -140,7 +140,7 @@ endif
 # ORIGIN http://libharu.org/
 # VER    2.1.0
 # URL    http://libharu.org/files/libharu-2.1.0.tar.gz
-# DIFF
+# DIFF   libhpdf.dif
 #
 # MAP    README
 # MAP    src/hpdf_annotation.c          hpdfanno.c

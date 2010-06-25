@@ -1,0 +1,24 @@
+diff -urN libhpdf.orig/hpdf.h libhpdf/hpdf.h
+--- libhpdf.orig/hpdf.h	2010-06-25 10:49:11.777329891 +0200
++++ libhpdf/hpdf.h	2010-06-25 10:49:11.777329891 +0200
+@@ -17,7 +17,7 @@
+ #ifndef _HPDF_H
+ #define _HPDF_H
+ 
+-#include "hpdf_config.h"
++#include "hpdfcfg.h"
+ #include "hpdfvers.h"
+ 
+ #ifdef HPDF_DLL_MAKE
+diff -urN libhpdf.orig/hpdfutil.h libhpdf/hpdfutil.h
+--- libhpdf.orig/hpdfutil.h	2010-06-25 10:49:12.057330264 +0200
++++ libhpdf/hpdfutil.h	2010-06-25 10:49:12.057330264 +0200
+@@ -18,7 +18,7 @@
+ #ifndef _HPDF_UTILS_H
+ #define _HPDF_UTILS_H
+ 
+-#include "hpdf_config.h"
++#include "hpdfcfg.h"
+ #include "hpdftype.h"
+ 
+ #ifdef __cplusplus

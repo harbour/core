@@ -756,6 +756,8 @@ STATIC FUNCTION hb_FileTran( cFileName )
    LOCAL cFileContent
    LOCAL cTransformedContent
    LOCAL aChange
+   LOCAL cChangeFrom
+   LOCAL cChangeTo
 
    cFileContent := hb_MemoRead( cFileName )
 
@@ -766,15 +768,22 @@ STATIC FUNCTION hb_FileTran( cFileName )
    cTransformedContent := StrTran( cTransformedContent, Chr( 10 ), OSNL )
 
    FOR EACH aChange IN s_aChangeMap
+
+      /* This is a shot in the dark. Haru works with this transform,
+       * but other components may very well need different handling. */
+      cChangeFrom := FN_NameExtGet( aChange[ 1 ] )
+      cChangeTo := aChange[ 2 ]
+
       /* Local-style includes */
       cTransformedContent := StrTran( cTransformedContent,                                ;
-                                      Chr( 34 ) + aChange[ 1 ] + Chr( 34 ),               ;
-                                      Chr( 34 ) + aChange[ 2 ] + Chr( 34 ) )
+                                      Chr( 34 ) + cChangeFrom + Chr( 34 ),                ;
+                                      Chr( 34 ) + cChangeTo + Chr( 34 ) ) 
 
       /* System-style include */
       cTransformedContent := StrTran( cTransformedContent,                                ;
-                                      "<" + aChange[ 1 ] + ">",                           ;
-                                      "<" + aChange[ 2 ] + ">" )
+                                      "<" + cChangeFrom + ">",                            ;
+                                      "<" + cChangeTo + ">" )
+
    NEXT
 
    RETURN hb_MemoWrit( cFileName, cTransformedContent )
