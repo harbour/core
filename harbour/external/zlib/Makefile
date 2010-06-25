@@ -8,8 +8,6 @@ include $(TOP)$(ROOT)config/global.mk
 
 LIBNAME := hbzlib
 
-# URL: http://zlib.net/zlib125.zip
-
 HB_BUILD_WARN := no
 HB_BUILD_MODE := c
 
@@ -45,3 +43,36 @@ else
    HB_SKIP_REASON := unused
    include $(TOP)$(ROOT)config/none.mk
 endif
+
+# ORIGIN http://www.zlib.net/
+# VER    1.2.5
+# URL    http://zlib.net/zlib125.zip
+# DIFF   zlib.dif
+#
+# MAP    README
+# MAP    adler32.c
+# MAP    compress.c
+# MAP    crc32.c
+# MAP    crc32.h
+# MAP    deflate.c
+# MAP    deflate.h
+# MAP    gzclose.c
+# MAP    gzguts.h
+# MAP    gzlib.c
+# MAP    gzread.c
+# MAP    gzwrite.c
+# MAP    infback.c
+# MAP    inffast.c
+# MAP    inffast.h
+# MAP    inffixed.h
+# MAP    inflate.c
+# MAP    inflate.h
+# MAP    inftrees.c
+# MAP    inftrees.h
+# MAP    trees.c
+# MAP    trees.h
+# MAP    uncompr.c
+# MAP    zconf.h
+# MAP    zlib.h
+# MAP    zutil.c
+# MAP    zutil.h

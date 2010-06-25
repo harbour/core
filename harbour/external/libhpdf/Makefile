@@ -11,9 +11,6 @@ HB_BUILD_MODE := c
 
 LIBNAME := libhpdf
 
-# URL (stable): http://libharu.org/files/libharu-2.1.0.tar.gz
-# URL (unstable): git clone http://git.libharu.org/libharu.git
-
 C_SOURCES := \
    _hbhbpdf.c \
    hpdfanno.c \
@@ -140,86 +137,89 @@ else
    include $(TOP)$(ROOT)config/none.mk
 endif
 
-# Use with 'hbrun <root>/config/ren_sfn.prg [F|T]'
+# ORIGIN http://libharu.org/
+# VER    2.1.0
+# URL    http://libharu.org/files/libharu-2.1.0.tar.gz
+# DIFF   libhpdf.dif
 #
-# RENAME README     README
-# RENAME hpdfanno.c hpdf_annotation.c
-# RENAME hpdfarra.c hpdf_array.c
-# RENAME hpdfbina.c hpdf_binary.c
-# RENAME hpdfbool.c hpdf_boolean.c
-# RENAME hpdfcata.c hpdf_catalog.c
-# RENAME hpdfdest.c hpdf_destination.c
-# RENAME hpdfdict.c hpdf_dict.c
-# RENAME hpdfdoc.c  hpdf_doc.c
-# RENAME hpdfdocp.c hpdf_doc_png.c
-# RENAME hpdfenco.c hpdf_encoder.c
-# RENAME hpdfencc.c hpdf_encoder_cns.c
-# RENAME hpdfencn.c hpdf_encoder_cnt.c
-# RENAME hpdfencj.c hpdf_encoder_jp.c
-# RENAME hpdfenck.c hpdf_encoder_kr.c
-# RENAME hpdfecy.c  hpdf_encrypt.c
-# RENAME hpdfecyd.c hpdf_encryptdict.c
-# RENAME hpdferro.c hpdf_error.c
-# RENAME hpdfextg.c hpdf_ext_gstate.c
-# RENAME hpdffont.c hpdf_font.c
-# RENAME hpdffonc.c hpdf_font_cid.c
-# RENAME hpdffott.c hpdf_font_tt.c
-# RENAME hpdffon1.c hpdf_font_type1.c
-# RENAME hpdffdf.c  hpdf_fontdef.c
-# RENAME hpdffdfb.c hpdf_fontdef_base14.c
-# RENAME hpdffdfi.c hpdf_fontdef_cid.c
-# RENAME hpdffdfc.c hpdf_fontdef_cns.c
-# RENAME hpdffdfn.c hpdf_fontdef_cnt.c
-# RENAME hpdffdfj.c hpdf_fontdef_jp.c
-# RENAME hpdffdfk.c hpdf_fontdef_kr.c
-# RENAME hpdffdft.c hpdf_fontdef_tt.c
-# RENAME hpdffdf1.c hpdf_fontdef_type1.c
-# RENAME hpdfgsta.c hpdf_gstate.c
-# RENAME hpdfimag.c hpdf_image.c
-# RENAME hpdfimap.c hpdf_image_png.c
-# RENAME hpdfinfo.c hpdf_info.c
-# RENAME hpdflist.c hpdf_list.c
-# RENAME hpdfmmgr.c hpdf_mmgr.c
-# RENAME hpdfname.c hpdf_name.c
-# RENAME hpdfnull.c hpdf_null.c
-# RENAME hpdfnumb.c hpdf_number.c
-# RENAME hpdfobje.c hpdf_objects.c
-# RENAME hpdfoutl.c hpdf_outline.c
-# RENAME hpdfpage.c hpdf_page_label.c
-# RENAME hpdfpago.c hpdf_page_operator.c
-# RENAME hpdfpags.c hpdf_pages.c
-# RENAME hpdfreal.c hpdf_real.c
-# RENAME hpdfstre.c hpdf_streams.c
-# RENAME hpdfstri.c hpdf_string.c
-# RENAME hpdfu3d.c  hpdf_u3d.c
-# RENAME hpdfutil.c hpdf_utils.c
-# RENAME hpdfxref.c hpdf_xref.c
-# RENAME hpdf.h     hpdf.h
-# RENAME hpdfanno.h hpdf_annotation.h
-# RENAME hpdfcata.h hpdf_catalog.h
-# RENAME hpdfconf.h hpdf_conf.h
-# RENAME hpdfcfg.h  hpdf_config.h
-# RENAME hpdfcons.h hpdf_consts.h
-# RENAME hpdfdest.h hpdf_destination.h
-# RENAME hpdfdoc.h  hpdf_doc.h
-# RENAME hpdfenco.h hpdf_encoder.h
-# RENAME hpdfencr.h hpdf_encrypt.h
-# RENAME hpdfency.h hpdf_encryptdict.h
-# RENAME hpdferro.h hpdf_error.h
-# RENAME hpdfextg.h hpdf_ext_gstate.h
-# RENAME hpdffont.h hpdf_font.h
-# RENAME hpdffond.h hpdf_fontdef.h
-# RENAME hpdfgsta.h hpdf_gstate.h
-# RENAME hpdfimag.h hpdf_image.h
-# RENAME hpdfinfo.h hpdf_info.h
-# RENAME hpdflist.h hpdf_list.h
-# RENAME hpdfmmgr.h hpdf_mmgr.h
-# RENAME hpdfobje.h hpdf_objects.h
-# RENAME hpdfoutl.h hpdf_outline.h
-# RENAME hpdfpage.h hpdf_page_label.h
-# RENAME hpdfpags.h hpdf_pages.h
-# RENAME hpdfstre.h hpdf_streams.h
-# RENAME hpdftype.h hpdf_types.h
-# RENAME hpdfu3d.h  hpdf_u3d.h
-# RENAME hpdfutil.h hpdf_utils.h
-# RENAME hpdfvers.h hpdf_version.h
+# MAP    README
+# MAP    hpdf_annotation.c      hpdfanno.c
+# MAP    hpdf_array.c           hpdfarra.c
+# MAP    hpdf_binary.c          hpdfbina.c
+# MAP    hpdf_boolean.c         hpdfbool.c
+# MAP    hpdf_catalog.c         hpdfcata.c
+# MAP    hpdf_destination.c     hpdfdest.c
+# MAP    hpdf_dict.c            hpdfdict.c
+# MAP    hpdf_doc.c             hpdfdoc.c
+# MAP    hpdf_doc_png.c         hpdfdocp.c
+# MAP    hpdf_encoder.c         hpdfenco.c
+# MAP    hpdf_encoder_cns.c     hpdfencc.c
+# MAP    hpdf_encoder_cnt.c     hpdfencn.c
+# MAP    hpdf_encoder_jp.c      hpdfencj.c
+# MAP    hpdf_encoder_kr.c      hpdfenck.c
+# MAP    hpdf_encrypt.c         hpdfecy.c
+# MAP    hpdf_encryptdict.c     hpdfecyd.c
+# MAP    hpdf_error.c           hpdferro.c
+# MAP    hpdf_ext_gstate.c      hpdfextg.c
+# MAP    hpdf_font.c            hpdffont.c
+# MAP    hpdf_font_cid.c        hpdffonc.c
+# MAP    hpdf_font_tt.c         hpdffott.c
+# MAP    hpdf_font_type1.c      hpdffon1.c
+# MAP    hpdf_fontdef.c         hpdffdf.c
+# MAP    hpdf_fontdef_base14.c  hpdffdfb.c
+# MAP    hpdf_fontdef_cid.c     hpdffdfi.c
+# MAP    hpdf_fontdef_cns.c     hpdffdfc.c
+# MAP    hpdf_fontdef_cnt.c     hpdffdfn.c
+# MAP    hpdf_fontdef_jp.c      hpdffdfj.c
+# MAP    hpdf_fontdef_kr.c      hpdffdfk.c
+# MAP    hpdf_fontdef_tt.c      hpdffdft.c
+# MAP    hpdf_fontdef_type1.c   hpdffdf1.c
+# MAP    hpdf_gstate.c          hpdfgsta.c
+# MAP    hpdf_image.c           hpdfimag.c
+# MAP    hpdf_image_png.c       hpdfimap.c
+# MAP    hpdf_info.c            hpdfinfo.c
+# MAP    hpdf_list.c            hpdflist.c
+# MAP    hpdf_mmgr.c            hpdfmmgr.c
+# MAP    hpdf_name.c            hpdfname.c
+# MAP    hpdf_null.c            hpdfnull.c
+# MAP    hpdf_number.c          hpdfnumb.c
+# MAP    hpdf_objects.c         hpdfobje.c
+# MAP    hpdf_outline.c         hpdfoutl.c
+# MAP    hpdf_page_label.c      hpdfpage.c
+# MAP    hpdf_page_operator.c   hpdfpago.c
+# MAP    hpdf_pages.c           hpdfpags.c
+# MAP    hpdf_real.c            hpdfreal.c
+# MAP    hpdf_streams.c         hpdfstre.c
+# MAP    hpdf_string.c          hpdfstri.c
+# MAP    hpdf_u3d.c             hpdfu3d.c
+# MAP    hpdf_utils.c           hpdfutil.c
+# MAP    hpdf_xref.c            hpdfxref.c
+# MAP    hpdf.h
+# MAP    hpdf_annotation.h      hpdfanno.h
+# MAP    hpdf_catalog.h         hpdfcata.h
+# MAP    hpdf_conf.h            hpdfconf.h
+# MAP    hpdf_config.h          hpdfcfg.h
+# MAP    hpdf_consts.h          hpdfcons.h
+# MAP    hpdf_destination.h     hpdfdest.h
+# MAP    hpdf_doc.h             hpdfdoc.h
+# MAP    hpdf_encoder.h         hpdfenco.h
+# MAP    hpdf_encrypt.h         hpdfencr.h
+# MAP    hpdf_encryptdict.h     hpdfency.h
+# MAP    hpdf_error.h           hpdferro.h
+# MAP    hpdf_ext_gstate.h      hpdfextg.h
+# MAP    hpdf_font.h            hpdffont.h
+# MAP    hpdf_fontdef.h         hpdffond.h
+# MAP    hpdf_gstate.h          hpdfgsta.h
+# MAP    hpdf_image.h           hpdfimag.h
+# MAP    hpdf_info.h            hpdfinfo.h
+# MAP    hpdf_list.h            hpdflist.h
+# MAP    hpdf_mmgr.h            hpdfmmgr.h
+# MAP    hpdf_objects.h         hpdfobje.h
+# MAP    hpdf_outline.h         hpdfoutl.h
+# MAP    hpdf_page_label.h      hpdfpage.h
+# MAP    hpdf_pages.h           hpdfpags.h
+# MAP    hpdf_streams.h         hpdfstre.h
+# MAP    hpdf_types.h           hpdftype.h
+# MAP    hpdf_u3d.h             hpdfu3d.h
+# MAP    hpdf_utils.h           hpdfutil.h
+# MAP    hpdf_version.h         hpdfvers.h

@@ -8,8 +8,6 @@ include $(TOP)$(ROOT)config/global.mk
 
 LIBNAME := png
 
-# URL: http://sourceforge.net/projects/libpng/files/01-libpng-master/1.4.2/lpng142.zip/download
-
 HB_BUILD_WARN := no
 HB_BUILD_MODE := c
 
@@ -69,3 +67,28 @@ else
    HB_SKIP_REASON := compiler not supported
    include $(TOP)$(ROOT)config/none.mk
 endif
+
+# ORIGIN http://www.libpng.org/pub/png/libpng.html
+# VER    1.4.2
+# URL    http://sourceforge.net/projects/libpng/files/01-libpng-master/1.4.2/lpng142.zip/download
+# DIFF
+#
+# MAP    LICENCE
+# MAP    png.c
+# MAP    pngconf.h
+# MAP    pngerror.c
+# MAP    pngget.c
+# MAP    png.h
+# MAP    pngmem.c
+# MAP    pngpread.c
+# MAP    pngpriv.h
+# MAP    pngread.c
+# MAP    pngrio.c
+# MAP    pngrtran.c
+# MAP    pngrutil.c
+# MAP    pngset.c
+# MAP    pngtrans.c
+# MAP    pngwio.c
+# MAP    pngwrite.c
+# MAP    pngwtran.c
+# MAP    pngwutil.c

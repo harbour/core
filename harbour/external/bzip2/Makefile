@@ -42,15 +42,18 @@ else
    include $(TOP)$(ROOT)config/none.mk
 endif
 
-# Use with 'hbrun <root>/config/ren_sfn.prg [F|T]'
-# ------------------------------------------------
-# RENAME LICENSE    LICENSE
-# RENAME blocksor.c blocksort.c
-# RENAME bzlib.c    bzlib.c
-# RENAME compress.c compress.c
-# RENAME crctable.c crctable.c
-# RENAME decompre.c decompress.c
-# RENAME huffman.c  huffman.c
-# RENAME randtabl.c randtable.c
-# RENAME bzlib.h    bzlib.h
-# RENAME bzlib_pr.h bzlib_private.h
+# ORIGIN http://www.bzip.org/
+# VER    1.0.5
+# URL    http://www.bzip.org/1.0.5/bzip2-1.0.5.tar.gz
+# DIFF
+#
+# MAP    LICENSE
+# MAP    blocksort.c            blocksor.c 
+# MAP    bzlib.c
+# MAP    bzlib.h
+# MAP    bzlib_private.h        bzlib_pr.h 
+# MAP    compress.c
+# MAP    crctable.c
+# MAP    decompress.c           decompre.c 
+# MAP    huffman.c
+# MAP    randtable.c            randtabl.c 

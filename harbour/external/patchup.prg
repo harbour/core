@@ -186,6 +186,8 @@
  *
  */
 
+#pragma warninglevel=3
+
 #if 0
    #include "directry.ch"
 #else
@@ -283,7 +285,8 @@ PROCEDURE Main( ... )
       IF ! Empty( aRegexMatch := hb_regex( hRegexTake1Line, cMemoLine ) )
          /* Process one-arg keywords */
          IF aRegexMatch[ ONEARG_KW ] == "DIFF"
-            cDiffFile := AllTrim( aRegexMatch[ ONEARG_ARG ] )
+            cDiffFile := iif( Empty( AllTrim( aRegexMatch[ ONEARG_ARG ] ) ), NIL,         ;
+                              AllTrim( aRegexMatch[ ONEARG_ARG ] ) )
          ELSEIF aRegexMatch[ ONEARG_KW ] == "URL"
             cArchiveURL := AllTrim( aRegexMatch[ ONEARG_ARG ] )
          ENDIF
@@ -339,7 +342,7 @@ PROCEDURE Main( ... )
       QUIT
    ENDIF
 
-   IF cDiffFile != NIL .AND. ! hb_FileExists( cDiffFile )
+   IF ! lRediff .AND. cDiffFile != NIL .AND. ! hb_FileExists( cDiffFile )
       OutStd( "E: `" + cDiffFile + "' does not exist" + OSNL )
       ErrorLevel( 2 )
       QUIT
@@ -427,7 +430,7 @@ PROCEDURE Main( ... )
 
       DirChange( s_cTempDir )
       TRACE( "Running " + cCommand )
-      nRunResult := hb_processRun( cCommand, , @cDiffText, @cStdErr, .F. )
+      hb_processRun( cCommand, , @cDiffText, @cStdErr, .F. )
       DirChange( cCWD )
 
       SaveLog( "diff", NIL, cStdErr )
@@ -540,7 +543,8 @@ STATIC FUNCTION WalkAndFind( cTop, cLookFor )
             cRetVal := cTop
             EXIT
          ENDIF
-      ELSEIF !( aDirEntry[ F_NAME ] == "." ) .AND. !( aDirEntry[ F_NAME ] == ".." )
+      ELSEIF !( aDirEntry[ F_NAME ] == "." ) .AND. ;
+             !( aDirEntry[ F_NAME ] == ".." )
          cRetVal := WalkAndFind( cTop + aDirEntry[ F_NAME ], cLookFor )
          IF ! Empty( cRetVal )
             EXIT

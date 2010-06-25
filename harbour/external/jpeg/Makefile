@@ -8,8 +8,6 @@ include $(TOP)$(ROOT)config/global.mk
 
 LIBNAME := jpeg
 
-# URL: http://www.ijg.org/files/jpegsr8b.zip
-
 HB_BUILD_WARN := no
 HB_BUILD_MODE := c
 
@@ -105,3 +103,84 @@ else
    HB_SKIP_REASON := compiler not supported
    include $(TOP)$(ROOT)config/none.mk
 endif
+
+# ORIGIN http://www.ijg.org/
+# VER    8b
+# URL    http://www.ijg.org/files/jpegsr8b.zip
+# DIFF
+#
+# MAP    README
+# MAP    cderror.h
+# MAP    cdjpeg.h
+# MAP    jaricom.c
+# MAP    jcapimin.c
+# MAP    jcapistd.c
+# MAP    jcarith.c
+# MAP    jccoefct.c
+# MAP    jccolor.c
+# MAP    jcdctmgr.c
+# MAP    jchuff.c
+# MAP    jcinit.c
+# MAP    jcmainct.c
+# MAP    jcmarker.c
+# MAP    jcmaster.c
+# MAP    jcomapi.c
+# MAP    jcparam.c
+# MAP    jcprepct.c
+# MAP    jcsample.c
+# MAP    jctrans.c
+# MAP    jdapimin.c
+# MAP    jdapistd.c
+# MAP    jdarith.c
+# MAP    jdatadst.c
+# MAP    jdatasrc.c
+# MAP    jdcoefct.c
+# MAP    jdcolor.c
+# MAP    jdct.h
+# MAP    jddctmgr.c
+# MAP    jdhuff.c
+# MAP    jdinput.c
+# MAP    jdmainct.c
+# MAP    jdmarker.c
+# MAP    jdmaster.c
+# MAP    jdmerge.c
+# MAP    jdpostct.c
+# MAP    jdsample.c
+# MAP    jdtrans.c
+# MAP    jerror.c
+# MAP    jerror.h
+# MAP    jfdctflt.c
+# MAP    jfdctfst.c
+# MAP    jfdctint.c
+# MAP    jidctflt.c
+# MAP    jidctfst.c
+# MAP    jidctint.c
+# MAP    jinclude.h
+# MAP    jmemansi.c
+# MAP    jmemdos.c
+# MAP    jmemmac.c
+# MAP    jmemmgr.c
+# MAP    jmemname.c
+# MAP    jmemnobs.c
+# MAP    jmemsys.h
+# MAP    jmorecfg.h
+# MAP    jpegint.h
+# MAP    jpeglib.h
+# MAP    jquant1.c
+# MAP    jquant2.c
+# MAP    jutils.c
+# MAP    jversion.h
+# MAP    rdbmp.c
+# MAP    rdcolmap.c
+# MAP    rdgif.c
+# MAP    rdppm.c
+# MAP    rdrle.c
+# MAP    rdswitch.c
+# MAP    rdtarga.c
+# MAP    transupp.c
+# MAP    transupp.h
+# MAP    wrbmp.c
+# MAP    wrgif.c
+# MAP    wrppm.c
+# MAP    wrrle.c
+# MAP    wrtarga.c

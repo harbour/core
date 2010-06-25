@@ -96,7 +96,7 @@ void hb_inkeyIns( int iKey )
    }
 }
 
-int  hb_inkeyLast( int iEventMask )
+int hb_inkeyLast( int iEventMask )
 {
    int iKey = 0;
    PHB_GT pGT;
@@ -112,7 +112,7 @@ int  hb_inkeyLast( int iEventMask )
    return iKey;
 }
 
-int  hb_inkeyNext( int iEventMask )
+int hb_inkeyNext( int iEventMask )
 {
    int iKey = 0;
    PHB_GT pGT;
@@ -132,7 +132,7 @@ void hb_inkeyPoll( void )
 {
    PHB_GT pGT;
 
-   HB_TRACE( HB_TR_DEBUG, ("hb_inkeyPoll()") );
+   HB_TRACE(HB_TR_DEBUG, ("hb_inkeyPoll()"));
 
    pGT = hb_gt_Base();
    if( pGT )
