@@ -3,7 +3,7 @@
  */
 
 /*
- * Copyright 2009 Viktor Szakats (harbour.01 syenar.hu)
+ * Copyright 2010 Viktor Szakats (harbour.01 syenar.hu)
  * See COPYING for licensing terms.
  */
 
@@ -11,8 +11,7 @@
      1. error handling / reporting / feedback
      2. copy headers and other stuff (hbide)
      3. add .dll generation for contrib libs
-     4. first do all the clean's
-     5. hbmk2 fix to create work dir before calling out plugin
+     4. first do all the 'clean's
 */
 
 #pragma warninglevel=3
@@ -47,7 +46,29 @@ PROCEDURE Main( ... )
       "sddoci/sddoci.hbi"          ,;
       "sddpg/sddpg.hbi"            }
 
-   LOCAL aLibPass1 := {;
+   LOCAL aLibsPass1 := {;
+      "hbblink/hbblink.hbp"        ,;
+      "hbbz2/hbbz2.hbp"            ,;
+      "hbclipsm/hbclipsm.hbp"      ,;
+      "hbcomm/hbcomm.hbp"          ,;
+      "hbct/hbct.hbp"              ,;
+      "hbfoxpro/hbfoxpro.hbp"      ,;
+      "hbfship/hbfship.hbp"        ,;
+      "hbgt/hbgt.hbp"              ,;
+      "hbmemio/hbmemio.hbp"        ,;
+      "hbmisc/hbmisc.hbp"          ,;
+      "hbmzip/hbmzip.hbp"          ,;
+      "hbnetio/hbnetio.hbp"        ,;
+      "hbnf/hbnf.hbp"              ,;
+      "hbodbc/hbodbc.hbp"          ,;
+      "hbsms/hbsms.hbp"            ,;
+      "hbsqlit3/hbsqlit3.hbp"      ,;
+      "hbtpathy/hbtpathy.hbp"      ,;
+      "hbwin/hbwin.hbp"            ,;
+      "hbxpp/hbxpp.hbp"            ,;
+      "rddbmcdx/hbbmcdx.hbp"       }
+
+   LOCAL aLibsPass2 := {;
       "gtalleg/gtalleg.hbp"        ,;
       "gtalleg/gtallegs.hbp"       ,;
       "hbblat/hbblat.hbp"          ,;
@@ -81,48 +102,30 @@ PROCEDURE Main( ... )
       "sddpg/sddpg.hbp"            ,; /* uses: rddsql */
       "sddsqlt3/sddsqlt3.hbp"      }  /* uses: rddsql */
 
-   LOCAL aLibsPass2 := {;
-      "hbblink/hbblink.hbp"        ,;
-      "hbbz2/hbbz2.hbp"            ,;
-      "hbclipsm/hbclipsm.hbp"      ,;
-      "hbcomm/hbcomm.hbp"          ,;
-      "hbct/hbct.hbp"              ,;
-      "hbfoxpro/hbfoxpro.hbp"      ,;
-      "hbfship/hbfship.hbp"        ,;
-      "hbgt/hbgt.hbp"              ,;
-      "hbmemio/hbmemio.hbp"        ,;
-      "hbmisc/hbmisc.hbp"          ,;
-      "hbmzip/hbmzip.hbp"          ,;
-      "hbnetio/hbnetio.hbp"        ,;
-      "hbnf/hbnf.hbp"              ,;
-      "hbodbc/hbodbc.hbp"          ,;
-      "hbsms/hbsms.hbp"            ,;
-      "hbsqlit3/hbsqlit3.hbp"      ,;
+   LOCAL aLibsPass3 := {;
+      "gtwvg/gtwvg.hbp"            ,; /* uses: hbwin */
       "hbtip/hbtip.hbp"            ,;
       "hbtip/hbtipssl.hbp"         ,; /* uses: hbssl */
-      "hbtpathy/hbtpathy.hbp"      ,;
-      "hbwin/hbwin.hbp"            ,;
-      "hbxpp/hbxpp.hbp"            ,;
       "hbziparc/hbziparc.hbp"      ,; /* uses: hbmzip */
-      "rddbmcdx/hbbmcdx.hbp"       ,;
-      "xhb/xhb.hbp"                ,; /* uses: hbct, hbtip, hbwin */
-      "gtwvg/gtwvg.hbp"            }  /* uses: hbwin */
+      "xhb/xhb.hbp"                }  /* uses: hbct, hbtip, hbwin */
 
    LOCAL aUtils := {;
       "hbnetio/utils/netiosrv.hbp" ,; /* uses: hbnetio */
-      "hbqt/utils/hbqtui.hbp"      ,;
+      "hbqt/utils/hbqtui.hbp"      ,; /* uses: hbqt */
       "hbide/hbide.hbp"            }  /* uses: hbxbp, hbqt */
 
    LOCAL aAll := {;
       aImpLibs ,;
       aLibsPass1 ,;
       aLibsPass2 ,;
+      aLibsPass3 ,;
       aUtils,;
       hb_ATokens( GetEnv( "HB_ADDONS_LIB" ),, .T. ),;
       hb_ATokens( GetEnv( "HB_ADDONS_BIN" ),, .T. ) }
 
    LOCAL aAllType := {;
       "implib" ,;
+      "lib" ,;
       "lib" ,;
       "lib" ,;
       "bin" ,;

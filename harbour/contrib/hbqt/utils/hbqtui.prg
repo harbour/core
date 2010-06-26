@@ -68,6 +68,8 @@
 #include "hbclass.ch"
 #include "common.ch"
 
+#include "hbqt.ch"
+
 /*----------------------------------------------------------------------*/
 
 #define STRINGIFY( cStr )    '"' + cStr + '"'
