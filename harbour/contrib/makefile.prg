@@ -156,6 +156,8 @@ PROCEDURE Main( ... )
       RETURN
    ENDIF
 
+   SetCancel( .F. )
+
    /* Converting build options to hbmk2 options */
 
    IF GetEnv( "HB_BUILD_MODE" ) == "cpp"
@@ -222,11 +224,13 @@ PROCEDURE Main( ... )
                   ! Empty( GetEnv( cInstallDirVar ) ) .AND. ;
                   ( ! ( cType == "implib" ) .OR. GetEnv( "HB_BUILD_IMPLIB" ) == "yes" )
                   call_hbmk2( cBase + cProject, cTargetDir, cOptions + " -instpath=${" + cInstallDirVar + "}", .F. )
-               ELSE
+               ELSEIF !( Len( aParams ) == 1 .AND. aParams[ 1 ] == "clean" )
                   call_hbmk2( cBase + cProject, cTargetDir, cOptions + " -inc", .F. )
                ENDIF
 
-               IF cType == "lib" .AND. GetEnv( "HB_BUILD_CONTRIB_DLL" ) == "yes"
+               IF cType == "lib" .AND. GetEnv( "HB_BUILD_CONTRIB_DLL" ) == "yes" .AND. ;
+                  hb_FileExists( FN_ExtSet( cBase + cProject, ".hbc" ) )
+
                   IF AScan( aParams, "clean" ) > 0
                      call_hbmk2( cBase + cProject, cTargetDir, cOptions + " -clean", .T. )
                   ENDIF
@@ -234,7 +238,7 @@ PROCEDURE Main( ... )
                      ! Empty( GetEnv( cInstallDirVar ) ) .AND. ;
                      ( ! ( cType == "implib" ) .OR. GetEnv( "HB_BUILD_IMPLIB" ) == "yes" )
                      call_hbmk2( cBase + cProject, cTargetDir, cOptions + " -instpath=${" + cInstallDirVar + "}", .T. )
-                  ELSE
+                  ELSEIF !( Len( aParams ) == 1 .AND. aParams[ 1 ] == "clean" )
                      call_hbmk2( cBase + cProject, cTargetDir, cOptions + " -inc", .T. )
                   ENDIF
                ENDIF

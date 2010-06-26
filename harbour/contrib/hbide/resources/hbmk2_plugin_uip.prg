@@ -14,7 +14,7 @@
 FUNCTION hbmk2_plugin_uip( hbmk2 )
    LOCAL cRetVal := ""
 
-   LOCAL cHBQTUI_BIN := "hbqtui"
+   LOCAL cHBQTUI_BIN
    LOCAL aUI
    LOCAL aUI_Dst
 
@@ -41,6 +41,25 @@ FUNCTION hbmk2_plugin_uip( hbmk2 )
 
       IF ! Empty( aUI )
 
+         /* Detect 'hbqtui' tool location */
+
+         IF Empty( GetEnv( "HBQTUI_BIN" ) )
+            cHBQTUI_BIN := hbmk2_FindInPath( "hbqtui", GetEnv( "PATH" ) )
+            IF Empty( cHBQTUI_BIN )
+               hbmk2_OutErr( hbmk2, "HBQTUI_BIN not set, could not autodetect" )
+               RETURN NIL
+            ENDIF
+            hbmk2_OutStd( hbmk2, "Using 'hbqtui' executable: " + cHBQTUI_BIN + " (autodetected)" )
+         ELSE
+            IF hb_FileExists( GetEnv( "HBQTUI_BIN" ) )
+               cHBQTUI_BIN := GetEnv( "HBQTUI_BIN" )
+               hbmk2_OutStd( hbmk2, "Using 'hbqtui' executable: " + cHBQTUI_BIN )
+            ELSE
+               hbmk2_OutErr( hbmk2, "HBQTUI_BIN points to non-existent file. Make sure to set it to full path and filename of hbqtui executable." )
+               RETURN NIL
+            ENDIF
+         ENDIF
+
          /* Execute 'hbqtui' commands on input files */
 
          FOR EACH tmp IN aUI
@@ -55,7 +74,7 @@ FUNCTION hbmk2_plugin_uip( hbmk2 )
                lBuildIt := .T.
             ENDIF
 
-            IF lBuildIt
+            IF lBuildIt .AND. ! hbmk2[ "lCLEAN" ]
 
                cCommand := cHBQTUI_BIN +;
                            " " + hbmk2_FNameEscape( hbmk2_PathSepToTarget( hbmk2, tmp ), hbmk2[ "nCmd_Esc" ], hbmk2[ "nCmd_FNF" ] ) +;

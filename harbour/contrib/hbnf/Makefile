@@ -16,6 +16,7 @@ C_SOURCES := \
    dispc.c \
    ftattr.c \
    ftidle.c \
+   ftint86.c \
    ftisprn.c \
    fttext.c \
    ftshadow.c \

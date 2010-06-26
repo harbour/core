@@ -88,6 +88,8 @@ PROCEDURE Main( ... )
    LOCAL lToPath := .f.
    LOCAL lDelUic := .t.
 
+   LOCAL aResult
+
    FOR EACH s IN hb_aParams()
       cL := lower( alltrim( s ) )
 
@@ -142,12 +144,15 @@ PROCEDURE Main( ... )
       oGen := HbUIGen():new( hb_memoread( cUic ) )
       oGen:cFuncName := "ui" + upper( left( cFile, 1 ) ) + lower( substr( cFile, 2 ) )
 
-      s := ""
-      aeval( oGen:create(), {|e| s += e + hb_osNewLine() } )
-      hb_memowrit( StrTran( cPrg, "/", hb_osPathSeparator() ), s )
+      aResult := oGen:create()
+      IF ISARRAY( aResult )
+         s := ""
+         aeval( aResult, {|e| s += e + hb_osNewLine() } )
+         hb_memowrit( StrTran( cPrg, "/", hb_osPathSeparator() ), s )
+      ENDIF
 
       IF lDelUic
-         ferase( cUic )
+         FErase( cUic )
       ENDIF
    NEXT
 
@@ -175,7 +180,7 @@ CLASS HbUIGen
 
 METHOD HbUIGen:new( cFile )
 
-   ::cFile   := cFile
+   ::cFile := cFile
 
    RETURN Self
 
@@ -191,14 +196,14 @@ METHOD HbUIGen:create( cFile )
    ::cFile   := cFile
 
    IF empty( ::cFile )
-      RETURN Self
+      RETURN NIL
    ENDIF
    IF hb_fileExists( ::cFile )
       ::org := hb_ATokens( StrTran( hb_MemoRead( ::cFile ), Chr( 13 ) ), Chr( 10 ) )
    ELSEIF len( ::cFile ) > 256
       ::org := hb_ATokens( StrTran( ::cFile, Chr( 13 ) ), Chr( 10 ) )
    ELSE
-      RETURN Self  /* RTE will be generated on appln level */
+      RETURN NIL
    ENDIF
 
    aCommands := {}
@@ -207,7 +212,7 @@ METHOD HbUIGen:create( cFile )
    /* Pullout the widget */
    n := ascan( ::org, {|e| "void setupUi" $ e } )
    IF n == 0
-      RETURN Self
+      RETURN NIL
    ENDIF
    s     := alltrim( ::org[ n ] )
    n     := at( "*", s )
@@ -329,9 +334,9 @@ METHOD HbUIGen:create( cFile )
       ENDIF
    NEXT
 
-   prg_:={}
+   prg_ := {}
 
-   hbq_addCopyRight( @prg_ )
+   hbq_addCopyRight( prg_ )
 
    aadd( prg_, "" )
    aadd( prg_, "FUNCTION " + ::cFuncName + "( qParent )" )
@@ -364,7 +369,7 @@ METHOD HbUIGen:create( cFile )
          aadd( prg_, "   qObj[ " + PAD_30( STRINGIFY( a_[ 2 ] ) ) + " ] := " + strtran( a_[ 4 ], "o[", "qObj[" ) )
       ENDIF
    NEXT
-   aadd( prg_, "   " )
+   aadd( prg_, "" )
 
    FOR EACH a_ IN aCommands
       cNam := a_[ 1 ]
