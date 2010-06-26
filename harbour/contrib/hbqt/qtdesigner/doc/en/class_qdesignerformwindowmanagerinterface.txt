@@ -1,0 +1,79 @@
+/*
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for Qt v4.5.3+
+ *  Please do not modify this document as it is subject to change in future.
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
+ */
+
+/*  $DOC$
+    $TEMPLATE$
+        Class
+    $NAME$
+        QDesignerFormWindowManagerInterface()
+    $CATEGORY$
+        Harbour Bindings for Qt
+    $SUBCATEGORY$
+        GUI
+    $EXTERNALLINK$
+        http://doc.trolltech.com/4.5/qdesignerformwindowmanagerinterface.html
+    $ONELINER$
+        Creates a new QDesignerFormWindowManagerInterface object.
+    $INHERITS$
+        QObject
+    $SYNTAX$
+        QDesignerFormWindowManagerInterface():new( ... )
+        QDesignerFormWindowManagerInterface():from( pPtr_OR_oObj_of_type_QDesignerFormWindowManagerInterface )
+        QDesignerFormWindowManagerInterface():configure( pPtr_OR_oObj_of_type_QDesignerFormWindowManagerInterface )
+    $ARGUMENTS$
+
+    $RETURNS$
+        An instance of the object of type QDesignerFormWindowManagerInterface
+    $METHODS$
+        :actionAdjustSize()                                 -> pQAction
+        :actionBreakLayout()                                -> pQAction
+        :actionCopy()                                       -> pQAction
+        :actionCut()                                        -> pQAction
+        :actionDelete()                                     -> pQAction
+        :actionFormLayout()                                 -> pQAction
+        :actionGridLayout()                                 -> pQAction
+        :actionHorizontalLayout()                           -> pQAction
+        :actionLower()                                      -> pQAction
+        :actionPaste()                                      -> pQAction
+        :actionRaise()                                      -> pQAction
+        :actionRedo()                                       -> pQAction
+        :actionSelectAll()                                  -> pQAction
+        :actionSimplifyLayout()                             -> pQAction
+        :actionSplitHorizontal()                            -> pQAction
+        :actionSplitVertical()                              -> pQAction
+        :actionUndo()                                       -> pQAction
+        :actionVerticalLayout()                             -> pQAction
+        :activeFormWindow()                                 -> pQDesignerFormWindowInterface
+        :core()                                             -> pQDesignerFormEditorInterface
+        :createFormWindow( pParent, nFlags )                -> pQDesignerFormWindowInterface
+        :formWindow( nIndex )                               -> pQDesignerFormWindowInterface
+        :formWindowCount()                                  -> nInt
+        :addFormWindow( pFormWindow )                       -> NIL
+        :removeFormWindow( pFormWindow )                    -> NIL
+        :setActiveFormWindow( pFormWindow )                 -> NIL
+
+    $DESCRIPTION$
+
+    $EXAMPLES$
+
+    $TESTS$
+
+    $STATUS$
+        R
+    $COMPLIANCE$
+        Not Clipper Compatible
+    $PLATFORMS$
+        Windows, Linux, MacOS, OS2
+    $VERSION$
+        4.5.3
+    $FILES$
+        Prg Source   : contrib/hbqt/TQDesignerFormWindowManagerInterface.prg
+        C++ Wrappers : contrib/hbqt/QDesignerFormWindowManagerInterface.cpp
+        Library      : hb
+    $SEEALSO$
+        QObject
+    $END$
+ */

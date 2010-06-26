@@ -1,0 +1,157 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Harbour Project source code:
+ * QT Source Generator for Harbour
+ *
+ * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * www - http://www.harbour-project.org
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this software; see the file COPYING.  If not, write to
+ * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
+ * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ *
+ * As a special exception, the Harbour Project gives permission for
+ * additional uses of the text contained in its release of Harbour.
+ *
+ * The exception is that, if you link the Harbour libraries with other
+ * files to produce an executable, this does not by itself cause the
+ * resulting executable to be covered by the GNU General Public License.
+ * Your use of that executable is in no way restricted on account of
+ * linking the Harbour library code into it.
+ *
+ * This exception does not however invalidate any other reasons why
+ * the executable file might be covered by the GNU General Public License.
+ *
+ * This exception applies only to the code released by the Harbour
+ * Project under the name Harbour.  If you copy code from other
+ * Harbour Project or Free Software Foundation releases into a copy of
+ * Harbour, as the General Public License permits, the exception does
+ * not apply to the code that you add in this way.  To avoid misleading
+ * anyone as to the status of such modified files, you must delete
+ * this exception notice from them.
+ *
+ * If you write modifications of your own for Harbour, it is your choice
+ * whether to permit this exception to apply to your modifications.
+ * If you do not wish that, delete this exception notice.
+ *
+ */
+/*----------------------------------------------------------------------*/
+;
+;              Header File to Generate QT Wrapper Sources
+;
+
+<CLASS>
+QObject  =
+Inherits = QWidget
+Type     =
+New      =
+folder   = hbqtdesigner
+</CLASS>
+
+<SUBCLASS>
+</SUBCLASS>
+
+<DOC>
+</DOC>
+
+<CODE>
+#include <QtDesigner/QDesignerFormWindowInterface>
+#include "hbqt_garbage.h"
+#include "hbqt_local.h"
+
+
+/*
+ * QDesignerFormWindowInterface ( QWidget * parent = 0, Qt::WindowFlags flags = 0 )
+ * ~QDesignerFormWindowInterface ()
+ *
+ */
+HB_FUNC( QT_QDESIGNERFORMWINDOWINTERFACE )
+{
+   //hb_retptr( new QDesignerFormWindowInterface() );
+}
+</CODE>
+
+<ENUMS>
+flags Feature
+enum FeatureFlag { EditFeature, GridFeature, TabOrderFeature, DefaultFeature }
+</ENUMS>
+
+<PROTOS>
+//virtual QDir absoluteDir () const = 0
+virtual void addResourceFile ( const QString & path ) = 0
+virtual QString author () const = 0
+virtual QString comment () const = 0
+virtual QString contents () const = 0
+virtual QDesignerFormEditorInterface * core () const
+virtual QDesignerFormWindowCursorInterface * cursor () const = 0
+virtual void emitSelectionChanged () = 0
+virtual QString exportMacro () const = 0
+virtual Feature features () const = 0
+virtual QString fileName () const = 0
+virtual QPoint grid () const = 0
+virtual bool hasFeature ( Feature feature ) const = 0
+virtual QStringList includeHints () const = 0
+virtual bool isDirty () const = 0
+virtual bool isManaged ( QWidget * widget ) const = 0
+virtual void layoutDefault ( int * margin, int * spacing ) = 0
+//virtual void layoutFunction ( QString * margin, QString * spacing ) = 0
+virtual QWidget * mainContainer () const = 0
+virtual QString pixmapFunction () const = 0
+virtual void removeResourceFile ( const QString & path ) = 0
+virtual QStringList resourceFiles () const = 0
+virtual void setAuthor ( const QString & author ) = 0
+virtual void setComment ( const QString & comment ) = 0
+virtual void setContents ( QIODevice * device ) = 0
+virtual void setExportMacro ( const QString & exportMacro ) = 0
+virtual void setIncludeHints ( const QStringList & includeHints ) = 0
+virtual void setLayoutDefault ( int margin, int spacing ) = 0
+//virtual void setLayoutFunction ( const QString & margin, const QString & spacing ) = 0
+virtual void setMainContainer ( QWidget * mainContainer ) = 0
+virtual void setPixmapFunction ( const QString & pixmapFunction ) = 0
+
+QDesignerFormWindowInterface * findFormWindow ( QWidget * widget )
+QDesignerFormWindowInterface * findFormWindow ( QObject * object )
+</PROTOS>
+
+<SLOTS>
+virtual void clearSelection ( bool update = true ) = 0
+virtual void manageWidget ( QWidget * widget ) = 0
+virtual void selectWidget ( QWidget * widget, bool select = true ) = 0
+virtual void setContents ( const QString & contents ) = 0
+virtual void setDirty ( bool dirty ) = 0
+virtual void setFeatures ( Feature features ) = 0
+virtual void setFileName ( const QString & fileName ) = 0
+virtual void setGrid ( const QPoint & grid ) = 0
+virtual void unmanageWidget ( QWidget * widget ) = 0
+</SLOTS>
+
+<SIGNALS>
+void aboutToUnmanageWidget ( QWidget * widget )
+void activated ( QWidget * widget )
+void changed ()
+void featureChanged ( Feature feature )
+void fileNameChanged ( const QString & fileName )
+void geometryChanged ()
+void mainContainerChanged ( QWidget * mainContainer )
+void objectRemoved ( QObject * object )
+void resourceFilesChanged ()
+void selectionChanged ()
+void widgetManaged ( QWidget * widget )
+void widgetRemoved ( QWidget * widget )
+void widgetUnmanaged ( QWidget * widget )
+</SIGNALS>
+
