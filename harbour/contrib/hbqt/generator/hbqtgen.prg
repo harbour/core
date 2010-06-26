@@ -398,8 +398,8 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
    code_:= old_
 
    /* Mark to which sub library class belongs to */
-   IF "<QtWebKit/" $ cQth
-      aadd( aWebkit, cWidget )
+   IF "<QtWebKit/" $ cQth .OR. "<QtDesigner/" $ cQth
+      //aadd( aWebkit, cWidget )
    ELSEIF "<QtNetwork/" $ cQth
       aadd( aNetwork, cWidget )
    ELSEIF "<QtGui/" $ cQth

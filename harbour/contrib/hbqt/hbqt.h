@@ -380,18 +380,6 @@ extern void * hbqt_pPtrFromItem( PHB_ITEM pObj );
 #define hbqt_par_QVariant( n )                      ( ( QVariant                    * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QVBoxLayout( n )                   ( ( QVBoxLayout                 * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QVector( n )                       ( ( QVector                     * ) hbqt_gcpointer( n ) )
-#define hbqt_par_QWebFrame( n )                     ( ( QWebFrame                   * ) hbqt_gcpointer( n ) )
-#define hbqt_par_QWebHistory( n )                   ( ( QWebHistory                 * ) hbqt_gcpointer( n ) )
-#define hbqt_par_QWebHistoryInterface( n )          ( ( QWebHistoryInterface        * ) hbqt_gcpointer( n ) )
-#define hbqt_par_QWebHistoryItem( n )               ( ( QWebHistoryItem             * ) hbqt_gcpointer( n ) )
-#define hbqt_par_QWebHitTestResult( n )             ( ( QWebHitTestResult           * ) hbqt_gcpointer( n ) )
-#define hbqt_par_QWebNetworkRequest( n )            ( ( QWebNetworkRequest          * ) hbqt_gcpointer( n ) )
-#define hbqt_par_QWebPage( n )                      ( ( QWebPage                    * ) hbqt_gcpointer( n ) )
-#define hbqt_par_QWebPage( n )                      ( ( QWebPage                    * ) hbqt_gcpointer( n ) )
-#define hbqt_par_QWebPluginFactory( n )             ( ( QWebPluginFactory           * ) hbqt_gcpointer( n ) )
-#define hbqt_par_QWebSecurityOrigin( n )            ( ( QWebSecurityOrigin          * ) hbqt_gcpointer( n ) )
-#define hbqt_par_QWebSettings( n )                  ( ( QWebSettings                * ) hbqt_gcpointer( n ) )
-#define hbqt_par_QWebView( n )                      ( ( QWebView                    * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QWheelEvent( n )                   ( ( QWheelEvent                 * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QWidget( n )                       ( ( QWidget                     * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QWidgetAction( n )                 ( ( QWidgetAction               * ) hbqt_gcpointer( n ) )
@@ -419,3 +407,4 @@ extern void * hbqt_pPtrFromItem( PHB_ITEM pObj );
 #define hbqt_par_char( n )                          ( hb_parcx( n ) )
 
 #endif /* __HBQT_H */
+
