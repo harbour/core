@@ -921,6 +921,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                option processing loop. */
       DO CASE
       CASE cParamL             == "-quiet"     ; hbmk[ _HBMK_lQuiet ] := .T. ; hbmk[ _HBMK_lInfo ] := .F.
+      CASE cParamL             == "-quiet-"    ; hbmk[ _HBMK_lQuiet ] := .F.
       CASE Left( cParamL, 6 )  == "-comp="     ; ParseCOMPPLAT( hbmk, SubStr( cParam, 7 ), _TARG_COMP )
       CASE Left( cParamL, 10 ) == "-compiler=" ; ParseCOMPPLAT( hbmk, SubStr( cParam, 11 ), _TARG_COMP )
       CASE Left( cParamL, 6 )  == "-plat="     ; ParseCOMPPLAT( hbmk, SubStr( cParam, 7 ), _TARG_PLAT )
@@ -1692,6 +1693,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          /* Simply ignore. They were already processed in the first pass. */
 
       CASE cParamL == "-quiet"           ; hbmk[ _HBMK_lQuiet ] := .T. ; hbmk[ _HBMK_lInfo ] := .F.
+      CASE cParamL == "-quiet-"          ; hbmk[ _HBMK_lQuiet ] := .F.
       CASE cParamL == "-info"            ; hbmk[ _HBMK_lInfo ] := .T.
       CASE cParamL == "-pause"           ; lPause := .T.
       CASE cParamL == "-hbexe"           ; hbmk[ _HBMK_lInfo ] := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .F. ; hbmk[ _HBMK_lCreateLib ] := .F. ; hbmk[ _HBMK_lCreateDyn ] := .F.
@@ -9926,7 +9928,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-echo=<text>"       , I_( "echo text on screen" ) },;
       { "-pause"             , I_( "force waiting for a key on exit in case of failure (with alternate GTs only)" ) },;
       { "-info"              , I_( "turn on informational messages" ) },;
-      { "-quiet"             , I_( "suppress all screen messages" ) },;
+      { "-quiet[-]"          , I_( "suppress all screen messages" ) },;
       NIL,;
       { "-bldf[-]"           , I_( "inherit all/no (default) flags from Harbour build" ) },;
       { "-bldf=[p][c][l]"    , I_( "inherit .prg/.c/linker flags (or none) from Harbour build" ) },;

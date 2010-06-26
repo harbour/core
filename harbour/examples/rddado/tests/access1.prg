@@ -7,8 +7,11 @@
 REQUEST ADORDD
 
 PROCEDURE Main()
-? hb_dirBase() + "test.mdb"
-   USE ( hb_dirBase() + "test.mdb" ) VIA "ADORDD" TABLE "Tabla1"
+
+   SET DATE ANSI
+   SET CENTURY ON
+
+   USE ( hb_dirBase() + "test.mdb" ) VIA "ADORDD" TABLE "Table1"
 
    Browse()
 

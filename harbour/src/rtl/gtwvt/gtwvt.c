@@ -1924,23 +1924,31 @@ static HB_BOOL hb_gt_wvt_SetMode( PHB_GT pGT, int iRow, int iCol )
 
    pWVT = HB_GTWVT_GET( pGT );
 
-   if( pWVT->hWnd ) /* Is the window already open */
+   if( pWVT->hWnd ) /* Is the window already open? */
    {
-      HFONT hFont = hb_gt_wvt_GetFont( pWVT->fontFace, pWVT->fontHeight, pWVT->fontWidth,
-                                       pWVT->fontWeight, pWVT->fontQuality, pWVT->CodePage );
-
-      if( hFont )
+      if( pWVT->bResizable )
       {
-         /*
-          * make sure that the mode selected along with the current
-          * font settings will fit in the window
-          */
-         if( hb_gt_wvt_ValidWindowSize( pWVT->hWnd, iRow, iCol, hFont, pWVT->fontWidth ) )
-            fResult = hb_gt_wvt_InitWindow( pWVT, iRow, iCol, hFont );
-         else
-            DeleteObject( hFont );
-
+         fResult = hb_gt_wvt_InitWindow( pWVT, iRow, iCol, NULL );
          HB_GTSELF_REFRESH( pGT );
+      }
+      else
+      {
+         HFONT hFont = hb_gt_wvt_GetFont( pWVT->fontFace, pWVT->fontHeight, pWVT->fontWidth,
+                                          pWVT->fontWeight, pWVT->fontQuality, pWVT->CodePage );
+
+         if( hFont )
+         {
+            /*
+             * make sure that the mode selected along with the current
+             * font settings will fit in the window
+             */
+            if( hb_gt_wvt_ValidWindowSize( pWVT->hWnd, iRow, iCol, hFont, pWVT->fontWidth ) )
+               fResult = hb_gt_wvt_InitWindow( pWVT, iRow, iCol, hFont );
+            else
+               DeleteObject( hFont );
+
+            HB_GTSELF_REFRESH( pGT );
+         }
       }
    }
    else
@@ -1971,7 +1979,7 @@ static const char * hb_gt_wvt_Version( PHB_GT pGT, int iType )
 static int hb_gt_wvt_ReadKey( PHB_GT pGT, int iEventMask )
 {
    PHB_GTWVT pWVT;
-   int  c = 0;
+   int c = 0;
    HB_BOOL fKey;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_ReadKey(%p,%d)", pGT, iEventMask ) );
@@ -1980,7 +1988,7 @@ static int hb_gt_wvt_ReadKey( PHB_GT pGT, int iEventMask )
 
    pWVT = HB_GTWVT_GET( pGT );
 
-   if( pWVT->hWnd ) /* Is the window already open */
+   if( pWVT->hWnd ) /* Is the window already open? */
       hb_gt_wvt_ProcessMessages();
 
    fKey = hb_gt_wvt_GetCharFromInputQueue( pWVT, &c );
