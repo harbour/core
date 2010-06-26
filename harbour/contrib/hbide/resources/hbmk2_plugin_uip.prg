@@ -49,11 +49,15 @@ FUNCTION hbmk2_plugin_uip( hbmk2 )
                hbmk2_OutErr( hbmk2, "HBQTUI_BIN not set, could not autodetect" )
                RETURN NIL
             ENDIF
-            hbmk2_OutStd( hbmk2, "Using 'hbqtui' executable: " + cHBQTUI_BIN + " (autodetected)" )
+            IF hbmk2[ "lINFO" ]
+               hbmk2_OutStd( hbmk2, "Using 'hbqtui' executable: " + cHBQTUI_BIN + " (autodetected)" )
+            ENDIF
          ELSE
             IF hb_FileExists( GetEnv( "HBQTUI_BIN" ) )
                cHBQTUI_BIN := GetEnv( "HBQTUI_BIN" )
-               hbmk2_OutStd( hbmk2, "Using 'hbqtui' executable: " + cHBQTUI_BIN )
+               IF hbmk2[ "lINFO" ]
+                  hbmk2_OutStd( hbmk2, "Using 'hbqtui' executable: " + cHBQTUI_BIN )
+               ENDIF
             ELSE
                hbmk2_OutErr( hbmk2, "HBQTUI_BIN points to non-existent file. Make sure to set it to full path and filename of hbqtui executable." )
                RETURN NIL

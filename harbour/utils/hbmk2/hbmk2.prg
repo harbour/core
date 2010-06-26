@@ -3923,14 +3923,18 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                DEFAULT tmp1 TO FN_NameGet( cMakeImpLibDLL )
                tmp := FN_CookLib( hb_FNameMerge( hbmk[ _HBMK_cPROGDIR ], tmp1 ), cLibLibPrefix, cLibLibExt )
 
-               SWITCH Eval( bBlk_ImpLib, cMakeImpLibDLL, tmp, ArrayToList( hbmk[ _HBMK_aOPTI ] ) )
-               CASE _HBMK_IMPLIB_OK
-                  hbmk_OutStd( hbmk, hb_StrFormat( I_( "Created import library: %1$s <= %2$s" ), tmp, cMakeImpLibDLL ) )
-                  EXIT
-               CASE _HBMK_IMPLIB_FAILED
-                  hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Failed creating import library %1$s from %2$s." ), tmp, cMakeImpLibDLL ) )
-                  EXIT
-               ENDSWITCH
+               IF hbmk[ _HBMK_lCLEAN ]
+                  FErase( tmp )
+               ELSE
+                  SWITCH Eval( bBlk_ImpLib, cMakeImpLibDLL, tmp, ArrayToList( hbmk[ _HBMK_aOPTI ] ) )
+                  CASE _HBMK_IMPLIB_OK
+                     hbmk_OutStd( hbmk, hb_StrFormat( I_( "Created import library: %1$s <= %2$s" ), tmp, cMakeImpLibDLL ) )
+                     EXIT
+                  CASE _HBMK_IMPLIB_FAILED
+                     hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Failed creating import library %1$s from %2$s." ), tmp, cMakeImpLibDLL ) )
+                     EXIT
+                  ENDSWITCH
+               ENDIF
             NEXT
          ELSE
             IF hbmk[ _HBMK_lInfo ]

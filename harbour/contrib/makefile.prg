@@ -263,7 +263,7 @@ STATIC FUNCTION call_hbmk2( cProject, cTargetDir, cOptions, lDyn )
    /* TOFIX: Add -implib option. It collides with static lib so needs to be resolved. */
 
    nErrorLevel := mk_hb_processRun( GetEnv( "HB_HOST_BIN_DIR" ) + _PS_ + "hbmk2" +;
-                                    " -quiet -lang=en -q0" + cOptions +;
+                                    " -quiet -lang=en -width=1000 -q0" + cOptions +;
                                     " " + cProject +;
                                     iif( lDyn, " -hbdyn -nohblib- " + FN_ExtSet( cProject, ".hbc" ), "" ) +;
                                     " -workdir=" + cTargetDir + "/${hb_work}/" + cName + iif( lDyn, "_dyn", "" ) +;
