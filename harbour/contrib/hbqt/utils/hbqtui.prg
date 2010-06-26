@@ -67,12 +67,11 @@
 
 #include "hbclass.ch"
 #include "common.ch"
-#include "hbqt.ch"
 
 /*----------------------------------------------------------------------*/
 
 #define STRINGIFY( cStr )    '"' + cStr + '"'
-#define PAD_30( cStr )       pad( cStr, max( len( cStr ), 20 ) )
+#define PAD_30( cStr )       padr( cStr, max( len( cStr ), 20 ) )
 #define STRIP_SQ( cStr )     strtran( strtran( strtran( strtran( s, "[", " " ), "]", " " ), "\n", " " ), chr( 10 ), " " )
 
 /*----------------------------------------------------------------------*/

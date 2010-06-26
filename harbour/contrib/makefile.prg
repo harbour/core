@@ -29,67 +29,6 @@ PROCEDURE Main( ... )
 
    LOCAL cBase := "contrib/"
 
-   LOCAL aLibs := {;
-      "gtwvg/gtwvg.hbp"            ,;
-      "hbblink/hbblink.hbp"        ,;
-      "hbbz2/hbbz2.hbp"            ,;
-      "hbclipsm/hbclipsm.hbp"      ,;
-      "hbcomm/hbcomm.hbp"          ,;
-      "hbct/hbct.hbp"              ,;
-      "hbfoxpro/hbfoxpro.hbp"      ,;
-      "hbfship/hbfship.hbp"        ,;
-      "hbgt/hbgt.hbp"              ,;
-      "hbmemio/hbmemio.hbp"        ,;
-      "hbmisc/hbmisc.hbp"          ,;
-      "hbmzip/hbmzip.hbp"          ,;
-      "hbnetio/hbnetio.hbp"        ,;
-      "hbnf/hbnf.hbp"              ,;
-      "hbodbc/hbodbc.hbp"          ,;
-      "hbsms/hbsms.hbp"            ,;
-      "hbsqlit3/hbsqlit3.hbp"      ,;
-      "hbtip/hbtip.hbp"            ,;
-      "hbtip/hbtipssl.hbp"         ,;
-      "hbtpathy/hbtpathy.hbp"      ,;
-      "hbwin/hbwin.hbp"            ,;
-      "hbxpp/hbxpp.hbp"            ,;
-      "hbziparc/hbziparc.hbp"      ,;
-      "rddbmcdx/hbbmcdx.hbp"       ,;
-      "xhb/xhb.hbp"                }
-
-   LOCAL aLibDeps := {;
-      "gtalleg/gtalleg.hbp"        ,;
-      "gtalleg/gtallegs.hbp"       ,;
-      "hbblat/hbblat.hbp"          ,;
-      "hbcairo/hbcairo.hbp"        ,;
-      "hbcups/hbcups.hbp"          ,;
-      "hbcurl/hbcurl.hbp"          ,;
-      "hbcurl/hbcurls.hbp"         ,;
-      "hbfbird/hbfbird.hbp"        ,;
-      "hbfimage/hbfimage.hbp"      ,;
-      "hbgd/hbgd.hbp"              ,;
-      "hbhpdf/hbhpdf.hbp"          ,;
-      "hbmysql/hbmysql.hbp"        ,;
-      "hbpgsql/hbpgsql.hbp"        ,;
-      "hbqt/hbqt.hbp"              ,;
-      "hbqt/hbqtcore.hbp"          ,;
-      "hbqt/hbqtcores.hbp"         ,;
-      "hbqt/hbqtgui.hbp"           ,;
-      "hbqt/hbqtguis.hbp"          ,;
-      "hbqt/hbqtnetwork.hbp"       ,;
-      "hbqt/hbqtnetworks.hbp"      ,;
-      "hbqt/hbqts.hbp"             ,;
-      "hbssl/hbssl.hbp"            ,;
-      "hbssl/hbssls.hbp"           ,;
-      "hbxbp/hbxbp.hbp"            ,;
-      "rddads/rddads.hbp"          ,;
-      "rddsql/rddsql.hbp"          ,;
-      "sddfb/sddfb.hbp"            ,;
-      "sddmy/sddmy.hbp"            ,;
-      "sddoci/sddoci.hbp"          ,;
-      "sddodbc/sddodbc.hbp"        ,;
-      "sddpg/sddpg.hbp"            ,;
-      "sddsqlt3/sddsqlt3.hbp"      }
-
    LOCAL aImpLibs := {;
       "gtalleg/gtalleg.hbi"        ,;
       "hbblat/hbblat.hbi"          ,;
@@ -108,15 +47,76 @@ PROCEDURE Main( ... )
       "sddoci/sddoci.hbi"          ,;
       "sddpg/sddpg.hbi"            }
 
+   LOCAL aLibPass1 := {;
+      "gtalleg/gtalleg.hbp"        ,;
+      "gtalleg/gtallegs.hbp"       ,;
+      "hbblat/hbblat.hbp"          ,;
+      "hbcairo/hbcairo.hbp"        ,;
+      "hbcups/hbcups.hbp"          ,;
+      "hbcurl/hbcurl.hbp"          ,;
+      "hbcurl/hbcurls.hbp"         ,;
+      "hbfbird/hbfbird.hbp"        ,;
+      "hbfimage/hbfimage.hbp"      ,;
+      "hbgd/hbgd.hbp"              ,; /* uses: hbct */
+      "hbhpdf/hbhpdf.hbp"          ,;
+      "hbmysql/hbmysql.hbp"        ,;
+      "hbpgsql/hbpgsql.hbp"        ,;
+      "hbqt/hbqt.hbp"              ,;
+      "hbqt/hbqtcore.hbp"          ,;
+      "hbqt/hbqtcores.hbp"         ,;
+      "hbqt/hbqtgui.hbp"           ,;
+      "hbqt/hbqtguis.hbp"          ,;
+      "hbqt/hbqtnetwork.hbp"       ,;
+      "hbqt/hbqtnetworks.hbp"      ,;
+      "hbqt/hbqts.hbp"             ,;
+      "hbssl/hbssl.hbp"            ,;
+      "hbssl/hbssls.hbp"           ,;
+      "hbxbp/hbxbp.hbp"            ,; /* uses: hbqt */
+      "rddads/rddads.hbp"          ,;
+      "rddsql/rddsql.hbp"          ,;
+      "sddfb/sddfb.hbp"            ,; /* uses: rddsql */
+      "sddmy/sddmy.hbp"            ,; /* uses: rddsql */
+      "sddoci/sddoci.hbp"          ,; /* uses: rddsql */
+      "sddodbc/sddodbc.hbp"        ,; /* uses: rddsql */
+      "sddpg/sddpg.hbp"            ,; /* uses: rddsql */
+      "sddsqlt3/sddsqlt3.hbp"      }  /* uses: rddsql */
+
+   LOCAL aLibsPass2 := {;
+      "hbblink/hbblink.hbp"        ,;
+      "hbbz2/hbbz2.hbp"            ,;
+      "hbclipsm/hbclipsm.hbp"      ,;
+      "hbcomm/hbcomm.hbp"          ,;
+      "hbct/hbct.hbp"              ,;
+      "hbfoxpro/hbfoxpro.hbp"      ,;
+      "hbfship/hbfship.hbp"        ,;
+      "hbgt/hbgt.hbp"              ,;
+      "hbmemio/hbmemio.hbp"        ,;
+      "hbmisc/hbmisc.hbp"          ,;
+      "hbmzip/hbmzip.hbp"          ,;
+      "hbnetio/hbnetio.hbp"        ,;
+      "hbnf/hbnf.hbp"              ,;
+      "hbodbc/hbodbc.hbp"          ,;
+      "hbsms/hbsms.hbp"            ,;
+      "hbsqlit3/hbsqlit3.hbp"      ,;
+      "hbtip/hbtip.hbp"            ,;
+      "hbtip/hbtipssl.hbp"         ,; /* uses: hbssl */
+      "hbtpathy/hbtpathy.hbp"      ,;
+      "hbwin/hbwin.hbp"            ,;
+      "hbxpp/hbxpp.hbp"            ,;
+      "hbziparc/hbziparc.hbp"      ,; /* uses: hbmzip */
+      "rddbmcdx/hbbmcdx.hbp"       ,;
+      "xhb/xhb.hbp"                ,; /* uses: hbct, hbtip, hbwin */
+      "gtwvg/gtwvg.hbp"            }  /* uses: hbwin */
+
    LOCAL aUtils := {;
-      "hbnetio/utils/netiosrv.hbp" ,;
+      "hbnetio/utils/netiosrv.hbp" ,; /* uses: hbnetio */
       "hbqt/utils/hbqtui.hbp"      ,;
-      "hbide/hbide.hbp"            }
+      "hbide/hbide.hbp"            }  /* uses: hbxbp, hbqt */
 
    LOCAL aAll := {;
       aImpLibs ,;
-      aLibs ,;
-      aLibDeps ,;
+      aLibsPass1 ,;
+      aLibsPass2 ,;
       aUtils,;
       hb_ATokens( GetEnv( "HB_ADDONS_LIB" ),, .T. ),;
       hb_ATokens( GetEnv( "HB_ADDONS_BIN" ),, .T. ) }
