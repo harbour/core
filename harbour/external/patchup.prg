@@ -56,9 +56,18 @@
  *   patchup can currently unpack only `tar.gz', `tar.bz2', `tgz', `tbz',
  *   `tbz2' or `zip' archives -- one of these must be chosen.
  *
+ *   patchup will also use the URL parameter to figure out what type of
+ *   file it is working with, so a URL containing this sort if information must
+ *   be picked. As an example, SourceForge-style distributed download URLs like
+ *   `http://sourceforge.net/projects/libpng/files/01-libpng-master/1.4.2/lpng142.zip/download'
+ *   are OK, but `http://example.com/download/latest' is not, even if latter
+ *   would ultimately result (perhaps by the server using Content-Disposition
+ *   or similar headers) in a file named `example-pkg-54.tar.gz'.
+ *
  * DIFF
  *   Takes one argument, the file name of the diff file containing local changes
- *   needed by Harbour.
+ *   needed by Harbour. In `rediff' mode, this parameter is optional; if not
+ *   specified, defaults to `$(component).dif'.
  *   Example: for PCRE, it is `pcre.dif'.
  *
  * MAP
@@ -78,6 +87,7 @@
  *      to the Harbour tree unchanged. In case of PCRE, `MAP LICENCE' being the
  *      first `MAP' line also means that patchup will use the directory
  *      containing this file as a base for all other files occurring later.
+ *      Accordingly, the first `MAP' entry must be flat even on the source side.
  *
  *   # MAP config.h.generic config.h
  *
@@ -240,6 +250,7 @@ PROCEDURE Main( ... )
    LOCAL cFile             /* memoized Makefile */
    LOCAL aRegexMatch       /* regex match results */
    LOCAL cMemoLine         /* MemoLine */
+   LOCAL nMemoLine         /* Line number */
    LOCAL cDiffFile         /* Local modifications */
    LOCAL cCWD
    LOCAL cThisComponent    /* component being processed */
@@ -285,9 +296,12 @@ PROCEDURE Main( ... )
    cFile := MemoRead( "Makefile" )
    cDiffFile := NIL        /* default to `no local diff' */
 
+   nMemoLine := 0
+
    FOR EACH cMemoLine IN hb_ATokens( StrTran( cFile, Chr( 13 ) ), Chr( 10 ) )
 
       cMemoLine := AllTrim( cMemoLine )
+      nMemoLine++
 
       IF ! Empty( aRegexMatch := hb_regex( hRegexTake1Line, cMemoLine ) )
          /* Process one-arg keywords */
@@ -303,14 +317,16 @@ PROCEDURE Main( ... )
          IF aRegexMatch[ TWOARG_KW ] == "MAP"
             /* Do not allow implicit destination with non-flat source spec */
             IF Empty( aRegexMatch[ TWOARG_ARG1 ] ) .AND. "/" $ aRegexMatch[ TWOARG_ARG2 ]
-               OutStd( "E: Non-flat source spec with implicit destination, offending line:" + OSNL )
+               OutStd( hb_strFormat( "E: Non-flat source spec with implicit " +           ;
+                                     "destination, offending line %d:%s:", nMemoLine, OSNL ) )
                OutStd( aRegexMatch[ 1 ] + OSNL )
                ErrorLevel( 2 )
                QUIT
             ENDIF
             /* Do not allow tree spec in the destination ever */
             IF "/" $ aRegexMatch[ TWOARG_ARG2 ]
-               OutStd( "E: Non-flat destination, offending line:" + OSNL )
+               OutStd( hb_strFormat( "E: Non-flat destination, offending line %d:%s",     ;
+                                     nMemoLine, OSNL ) )
                OutStd( aRegexMatch[ 1 ] + OSNL )
                ErrorLevel( 2 )
                QUIT
@@ -320,20 +336,36 @@ PROCEDURE Main( ... )
             IF "/" $ aRegexMatch[ TWOARG_ARG1 ]
                aRegexMatch[ TWOARG_ARG1 ] := StrTran( aRegexMatch[ TWOARG_ARG1 ], "/", OSPS )
             ENDIF
+            /* The destination argument must fit in the 8+3 scheme */
+            IF Len( FN_NameGet( aRegexMatch[ TWOARG_ARG2 ] ) ) > 8 .OR.                   ;
+                  Len( FN_ExtGet( aRegexMatch[ TWOARG_ARG2 ] ) ) > 3
+               OutStd( hb_strFormat( "E: Destination does not fit 8+3, offending "+       ;
+                                     "line %d:%s", nMemoLine, OSNL ) )
+               OutStd( aRegexMatch[ 1 ] + OSNL )
+               ErrorLevel( 2 )
+               QUIT
+            ENDIF
             /* In case the priginal and the HB file names are identical, the
              * second argument to `MAP' is optional. Due to the way the regex is
              * constructed, in this case the last backref will contain the only
              * file name, so shuffle arguments around accordingly
              */
-            AAdd( s_aChangeMap, {                                                   ;
-               iif( Empty( aRegexMatch[ TWOARG_ARG1 ] ),                            ;
-                     aRegexMatch[ TWOARG_ARG2 ],                                    ;
-                     aRegexMatch[ TWOARG_ARG1 ] ), aRegexMatch[ TWOARG_ARG2 ]       ;
+            AAdd( s_aChangeMap, {                                                         ;
+               iif( Empty( aRegexMatch[ TWOARG_ARG1 ] ),                                  ;
+                     aRegexMatch[ TWOARG_ARG2 ],                                          ;
+                     aRegexMatch[ TWOARG_ARG1 ] ), aRegexMatch[ TWOARG_ARG2 ]             ;
             } )
             /* If this is the first MAP entry, treat the original part as the
              * source tree root indicator */
             IF Len( s_aChangeMap ) == 1
                cTopIndicator := s_aChangeMap[ 1 ][ FN_ORIG ]
+               IF "/" $ cTopIndicator
+                  OutStd( hb_strFormat( "E: First `MAP' entry is not flat, offending " +  ;
+                                        "line %d:%s", nMemoLine, OSNL ) )
+                  OutStd( aRegexMatch[ 1 ] + OSNL )
+                  ErrorLevel( 2 )
+                  QUIT
+               ENDIF
             ENDIF
          ENDIF
       ENDIF

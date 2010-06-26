@@ -56,6 +56,8 @@
 #include "hbcom.ch"
 #include "hbapi.h"
 
+HB_EXTERN_BEGIN
+
 #define HB_COM_PORT_MAX       256
 
 #define HB_COM_DEV_NAME_MAX   64
@@ -65,29 +67,31 @@
 #define HB_COM_ENABLED        1
 #define HB_COM_OPEN           2
 
-extern int  hb_comLastNum( void );
-extern int  hb_comOpen( int iPort );
-extern int  hb_comClose( int iPort );
-extern int  hb_comInit( int iPort, int iBaud, int iParity, int iSize, int iStop );
-extern long hb_comSend( int iPort, const void * data, long len, HB_MAXINT timeout );
-extern long hb_comRecv( int iPort, void * data, long len, HB_MAXINT timeout );
-extern int  hb_comGetError( int iPort );
-extern int  hb_comGetOsError( int iPort );
-extern int  hb_comInputCount( int iPort );
-extern int  hb_comOutputCount( int iPort );
-extern int  hb_comFlush( int iPort, int iType );
-extern int  hb_comMCR( int iPort, int * piValue, int iClr, int iSet );
-extern int  hb_comMSR( int iPort, int * piValue );
-extern int  hb_comLSR( int iPort, int * piValue );
-extern int  hb_comSendBreak( int iPort, int iDurationInMilliSecs );
-extern int  hb_comFlowControl( int iPort, int *piFlow, int iFlow );
-extern int  hb_comFlowSet( int iPort, int iFlow );
-extern int  hb_comFlowChars( int iPort, int iXONchar, int iXOFFchar );
-extern int  hb_comDiscardChar( int iPort, int iChar );
-extern int  hb_comErrorChar( int iPort, int iChar );
-extern int  hb_comOutputState( int iPort );
-extern int  hb_comInputState( int iPort );
-extern int  hb_comSetDevice( int iPort, const char * szDevName );
-extern const char * hb_comGetDevice( int iPort, char * buffer, int size );
+extern HB_EXPORT int  hb_comLastNum( void );
+extern HB_EXPORT int  hb_comOpen( int iPort );
+extern HB_EXPORT int  hb_comClose( int iPort );
+extern HB_EXPORT int  hb_comInit( int iPort, int iBaud, int iParity, int iSize, int iStop );
+extern HB_EXPORT long hb_comSend( int iPort, const void * data, long len, HB_MAXINT timeout );
+extern HB_EXPORT long hb_comRecv( int iPort, void * data, long len, HB_MAXINT timeout );
+extern HB_EXPORT int  hb_comGetError( int iPort );
+extern HB_EXPORT int  hb_comGetOsError( int iPort );
+extern HB_EXPORT int  hb_comInputCount( int iPort );
+extern HB_EXPORT int  hb_comOutputCount( int iPort );
+extern HB_EXPORT int  hb_comFlush( int iPort, int iType );
+extern HB_EXPORT int  hb_comMCR( int iPort, int * piValue, int iClr, int iSet );
+extern HB_EXPORT int  hb_comMSR( int iPort, int * piValue );
+extern HB_EXPORT int  hb_comLSR( int iPort, int * piValue );
+extern HB_EXPORT int  hb_comSendBreak( int iPort, int iDurationInMilliSecs );
+extern HB_EXPORT int  hb_comFlowControl( int iPort, int *piFlow, int iFlow );
+extern HB_EXPORT int  hb_comFlowSet( int iPort, int iFlow );
+extern HB_EXPORT int  hb_comFlowChars( int iPort, int iXONchar, int iXOFFchar );
+extern HB_EXPORT int  hb_comDiscardChar( int iPort, int iChar );
+extern HB_EXPORT int  hb_comErrorChar( int iPort, int iChar );
+extern HB_EXPORT int  hb_comOutputState( int iPort );
+extern HB_EXPORT int  hb_comInputState( int iPort );
+extern HB_EXPORT int  hb_comSetDevice( int iPort, const char * szDevName );
+extern HB_EXPORT const char * hb_comGetDevice( int iPort, char * buffer, int size );
+
+HB_EXTERN_END
 
 #endif /* HB_APICOM_H_ */
