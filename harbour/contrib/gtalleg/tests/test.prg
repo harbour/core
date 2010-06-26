@@ -1,0 +1,13 @@
+/*
+ * $Id$
+ */
+
+REQUEST HB_GT_ALLEG_DEFAULT
+ANNOUNCE HB_GTSYS
+
+PROCEDURE Main()
+
+   CLS
+   ALERT( "Hello world!" )
+
+   RETURN

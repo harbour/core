@@ -6,4 +6,8 @@
 -olib/${hb_plat}/${hb_comp}/rddado
 -inc
 
+-w3 -es2
+
+-stop{!win}
+
 adordd.prg

@@ -18,7 +18,7 @@ _DET_DSP_NAME := allegro
 _DET_VAR_INC_ := HB_INC_ALLEGRO
 _DET_VAR_HAS_ := HB_HAS_ALLEGRO
 _DET_FLT_PLAT :=
-_DET_FLT_COMP := !pocc !pocc64 !poccarm !xcc !dmc !watcom !mingwarm
+_DET_FLT_COMP := msvc pocc
 _DET_INC_DEFP := /usr/include /opt/local/include
 _DET_INC_HEAD := /allegro.h
 include $(TOP)$(ROOT)config/detfun.mk
