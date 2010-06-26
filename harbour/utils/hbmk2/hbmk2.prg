@@ -372,16 +372,17 @@ REQUEST hbmk_KEYW
 #define _HBMK_cCCEXT            98
 
 #define _HBMK_cWorkDir          99
-#define _HBMK_nCmd_Esc          100
-#define _HBMK_nScr_Esc          101
-#define _HBMK_nCmd_FNF          102
-#define _HBMK_nScr_FNF          103
-#define _HBMK_nErrorLevel       104
+#define _HBMK_cWorkDirDynSub    100
+#define _HBMK_nCmd_Esc          101
+#define _HBMK_nScr_Esc          102
+#define _HBMK_nCmd_FNF          103
+#define _HBMK_nScr_FNF          104
+#define _HBMK_nErrorLevel       105
 
-#define _HBMK_cPROGDIR          105
-#define _HBMK_cPROGNAME         106
+#define _HBMK_cPROGDIR          106
+#define _HBMK_cPROGNAME         107
 
-#define _HBMK_MAX_              106
+#define _HBMK_MAX_              107
 
 #define _HBMK_DEP_CTRL_MARKER   ".control." /* must be an invalid path */
 
@@ -2412,8 +2413,10 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                   IMPORTANT: Keep this condition in sync with setting -DHB_DYNLIB C compiler flag */
          IF hbmk[ _HBMK_lCreateDyn ] .AND. !( hbmk[ _HBMK_cCOMP ] $ "mingw|mingw64|mingwarm|cygwin" )
             DEFAULT hbmk[ _HBMK_cWorkDir ] TO FN_DirGet( hbmk[ _HBMK_cPROGNAME ] ) + _WORKDIR_DEF_ + hb_osPathSeparator() + "hbdyn"
+            hbmk[ _HBMK_cWorkDirDynSub ] := "/hbdyn"
          ELSE
             DEFAULT hbmk[ _HBMK_cWorkDir ] TO FN_DirGet( hbmk[ _HBMK_cPROGNAME ] ) + _WORKDIR_DEF_
+            hbmk[ _HBMK_cWorkDirDynSub ] := ""
          ENDIF
          IF ! Empty( hbmk[ _HBMK_cWorkDir ] )
             IF ! DirBuild( hbmk[ _HBMK_cWorkDir ] )
@@ -4835,6 +4838,8 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
       IF ! hbmk[ _HBMK_lCLEAN ]
 
+         PlugIn_Execute( hbmk, "pre_c" )
+
          FOR EACH tmp3 IN { _CCOMP_PASS_C, _CCOMP_PASS_CPP }
 
             IF tmp3 == _CCOMP_PASS_C
@@ -4848,8 +4853,6 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             IF hbmk[ _HBMK_nErrorLevel ] == 0 .AND. Len( l_aCGEN_TODO ) > 0
 
                IF ! Empty( cBin_CompCGEN )
-
-                  PlugIn_Execute( hbmk, "pre_c" )
 
                   IF hbmk[ _HBMK_lINC ] .AND. ! hbmk[ _HBMK_lQuiet ]
                      IF tmp3 == _CCOMP_PASS_C
@@ -8098,6 +8101,8 @@ STATIC FUNCTION MacroProc( hbmk, cString, cFileName, cMacroPrefix )
          cMacro := hbmk_CPU( hbmk ) ; EXIT
       CASE "HB_WORK"
          cMacro := _WORKDIR_BASE_ ; EXIT
+      CASE "HB_WORKDYNSUB"
+         cMacro := hbmk[ _HBMK_cWorkDirDynSub ] ; EXIT
       CASE "HB_MAJOR"
          cMacro := hb_ntos( hb_Version( HB_VERSION_MAJOR ) ) ; EXIT
       CASE "HB_MINOR"

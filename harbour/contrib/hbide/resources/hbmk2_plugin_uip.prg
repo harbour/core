@@ -15,31 +15,45 @@ FUNCTION hbmk2_plugin_uip( hbmk2 )
    LOCAL cRetVal := ""
 
    LOCAL cHBQTUI_BIN
+
    LOCAL aUI
    LOCAL aUI_Dst
 
-   LOCAL cCommand
+   LOCAL cSrc
    LOCAL cDst
-   LOCAL nError
-   LOCAL tmp, tmp1, tmp2
+   LOCAL tSrc
+   LOCAL tDst
 
+   LOCAL cCommand
+   LOCAL nError
    LOCAL lBuildIt
+
+   LOCAL tmp
 
    SWITCH hbmk2[ "cSTATE" ]
    CASE "pre_all"
 
-      aUI_Dst := {}
-
       /* Gather input parameters */
 
       aUI := {}
+      aUI_Dst := {}
+
       FOR EACH tmp IN hbmk2[ "params" ]
          IF Lower( hbmk2_FNameExtGet( tmp ) ) == ".ui"
             AAdd( aUI, tmp )
+            AAdd( aUI_Dst, cDst := hbmk2_FNameDirExtSet( hbmk2_FNameNameGet( cSrc ), hbmk2[ "cWorkDir" ], ".uip" ) )
+            hbmk2_AddInput_PRG( hbmk2, cDst )
          ENDIF
       NEXT
 
-      IF ! Empty( aUI )
+      hbmk2[ "vars" ][ "aUI" ] := aUI
+      hbmk2[ "vars" ][ "aUI_Dst" ] := aUI_Dst
+
+      EXIT
+
+   CASE "pre_prg"
+
+      IF ! Empty( hbmk2[ "vars" ][ "aUI" ] )
 
          /* Detect 'hbqtui' tool location */
 
@@ -66,22 +80,20 @@ FUNCTION hbmk2_plugin_uip( hbmk2 )
 
          /* Execute 'hbqtui' commands on input files */
 
-         FOR EACH tmp IN aUI
-
-            cDst := hbmk2_FNameDirExtSet( hbmk2_FNameNameGet( tmp ), hbmk2[ "cWorkDir" ], ".uip" )
+         FOR EACH cSrc, cDst IN hbmk2[ "vars" ][ "aUI" ], hbmk2[ "vars" ][ "aUI_Dst" ]
 
             IF hbmk2[ "lINC" ] .AND. ! hbmk2[ "lREBUILD" ]
-               lBuildIt := ! hb_FGetDateTime( cDst, @tmp2 ) .OR. ;
-                           ! hb_FGetDateTime( tmp, @tmp1 ) .OR. ;
-                           tmp1 > tmp2
+               lBuildIt := ! hb_FGetDateTime( cDst, @tDst ) .OR. ;
+                           ! hb_FGetDateTime( cSrc, @tSrc ) .OR. ;
+                           tSrc > tDst
             ELSE
                lBuildIt := .T.
             ENDIF
 
-            IF lBuildIt .AND. ! hbmk2[ "lCLEAN" ]
+            IF lBuildIt
 
                cCommand := cHBQTUI_BIN +;
-                           " " + hbmk2_FNameEscape( hbmk2_PathSepToTarget( hbmk2, tmp ), hbmk2[ "nCmd_Esc" ], hbmk2[ "nCmd_FNF" ] ) +;
+                           " " + hbmk2_FNameEscape( hbmk2_PathSepToTarget( hbmk2, cSrc ), hbmk2[ "nCmd_Esc" ], hbmk2[ "nCmd_FNF" ] ) +;
                            " -o" + hbmk2_FNameEscape( hbmk2_PathSepToTarget( hbmk2, cDst ), hbmk2[ "nCmd_Esc" ], hbmk2[ "nCmd_FNF" ] )
 
                IF hbmk2[ "lTRACE" ]
@@ -100,18 +112,10 @@ FUNCTION hbmk2_plugin_uip( hbmk2 )
                      cRetVal := "error"
                      EXIT
                   ENDIF
-               ELSE
-                  hbmk2_AddInput_PRG( hbmk2, cDst )
-                  AAdd( aUI_Dst, cDst )
                ENDIF
-            ELSE
-               hbmk2_AddInput_PRG( hbmk2, cDst )
-               AAdd( aUI_Dst, cDst )
             ENDIF
          NEXT
       ENDIF
-
-      hbmk2[ "vars" ][ "aUI_Dst" ] := aUI_Dst
 
       EXIT
 

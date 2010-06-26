@@ -15,32 +15,46 @@ FUNCTION hbmk2_plugin_moc( hbmk2 )
    LOCAL cRetVal := ""
 
    LOCAL cMOC_BIN
+
    LOCAL aMOC
    LOCAL aMOC_Dst
 
-   LOCAL cCommand
+   LOCAL cSrc
    LOCAL cDst
-   LOCAL nError
-   LOCAL tmp, tmp1, tmp2
+   LOCAL tSrc
+   LOCAL tDst
 
+   LOCAL cCommand
+   LOCAL nError
    LOCAL lBuildIt
+
+   LOCAL tmp
 
    SWITCH hbmk2[ "cSTATE" ]
    CASE "pre_all"
 
-      aMOC_Dst := {}
-
       /* Gather input parameters */
 
       aMOC := {}
+      aMOC_Dst := {}
+
       FOR EACH tmp IN hbmk2[ "params" ]
          IF Lower( hbmk2_FNameExtGet( tmp ) ) == ".h" .OR. ;
             Lower( hbmk2_FNameExtGet( tmp ) ) == ".hpp"
             AAdd( aMOC, tmp )
+            AAdd( aMOC_Dst, cDst := hbmk2_FNameDirExtSet( "moc_" + hbmk2_FNameNameGet( tmp ), hbmk2[ "cWorkDir" ], ".cpp" ) )
+            hbmk2_AddInput_CPP( hbmk2, cDst )
          ENDIF
       NEXT
 
-      IF ! Empty( aMOC )
+      hbmk2[ "vars" ][ "aMOC" ] := aMOC
+      hbmk2[ "vars" ][ "aMOC_Dst" ] := aMOC_Dst
+
+      EXIT
+
+   CASE "pre_c"
+
+      IF ! Empty( hbmk2[ "vars" ][ "aMOC" ] )
 
          /* Detect 'moc' tool location */
 
@@ -85,21 +99,20 @@ FUNCTION hbmk2_plugin_moc( hbmk2 )
 
          /* Execute 'moc' commands on input files */
 
-         FOR EACH tmp IN aMOC
-
-            cDst := hbmk2_FNameDirExtSet( "moc_" + hbmk2_FNameNameGet( tmp ), hbmk2[ "cWorkDir" ], ".cpp" )
+         FOR EACH cSrc, cDst IN hbmk2[ "vars" ][ "aMOC" ], hbmk2[ "vars" ][ "aMOC_Dst" ]
 
             IF hbmk2[ "lINC" ] .AND. ! hbmk2[ "lREBUILD" ]
-               lBuildIt := ! hb_FGetDateTime( cDst, @tmp2 ) .OR. ;
-                           ! hb_FGetDateTime( tmp, @tmp1 ) .OR. ;
-                           tmp1 > tmp2
+               lBuildIt := ! hb_FGetDateTime( cDst, @tDst ) .OR. ;
+                           ! hb_FGetDateTime( cSrc, @tSrc ) .OR. ;
+                           tSrc > tDst
             ELSE
                lBuildIt := .T.
             ENDIF
 
-            IF lBuildIt .AND. ! hbmk2[ "lCLEAN" ]
+            IF lBuildIt
+
                cCommand := cMOC_BIN +;
-                           " " + hbmk2_FNameEscape( hbmk2_PathSepToTarget( hbmk2, tmp ), hbmk2[ "nCmd_Esc" ], hbmk2[ "nCmd_FNF" ] ) +;
+                           " " + hbmk2_FNameEscape( hbmk2_PathSepToTarget( hbmk2, cSrc ), hbmk2[ "nCmd_Esc" ], hbmk2[ "nCmd_FNF" ] ) +;
                            " -o " + hbmk2_FNameEscape( hbmk2_PathSepToTarget( hbmk2, cDst ), hbmk2[ "nCmd_Esc" ], hbmk2[ "nCmd_FNF" ] )
 
                IF hbmk2[ "lTRACE" ]
@@ -118,18 +131,10 @@ FUNCTION hbmk2_plugin_moc( hbmk2 )
                      cRetVal := "error"
                      EXIT
                   ENDIF
-               ELSE
-                  hbmk2_AddInput_CPP( hbmk2, cDst )
-                  AAdd( aMOC_Dst, cDst )
                ENDIF
-            ELSE
-               hbmk2_AddInput_CPP( hbmk2, cDst )
-               AAdd( aMOC_Dst, cDst )
             ENDIF
          NEXT
       ENDIF
-
-      hbmk2[ "vars" ][ "aMOC_Dst" ] := aMOC_Dst
 
       EXIT
 

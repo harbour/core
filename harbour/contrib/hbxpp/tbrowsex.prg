@@ -82,7 +82,7 @@ METHOD viewArea() CLASS xpp_TBrowse
    // TOFIX
 
    nWidth := nFrozenWidth := _TBR_COORD( ::n_Right ) - _TBR_COORD( ::n_Left ) + 1
-   _MAXFREEZE( ::nFrozen, ::aColData, @nWidth )
+   /* _MAXFREEZE( ::nFrozen, ::aColData, @nWidth ) */
    nFrozenWidth -= nWidth
 
    RETURN { ::n_Top + ::nHeadHeight + iif( ::lHeadSep, 1, 0 ),;

@@ -1452,6 +1452,8 @@ void HBQPlainTextEdit::paintEvent( QPaintEvent * event )
 
 void HBQPlainTextEdit::hbDrawCursor( QPaintEvent *event )
 {
+   HB_SYMBOL_UNUSED( event );
+
    QAbstractTextDocumentLayout::PaintContext pc = getPaintContext();
    {
       if( caretState == 1 )

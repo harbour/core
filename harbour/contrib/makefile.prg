@@ -11,7 +11,8 @@
      1. error handling / reporting / feedback
      2. copy headers and other stuff (hbide)
      3. add .dll generation for contrib libs
-     4. first do all the 'clean's
+     4. first do all the clean's
+     5. hbmk2 fix to create work dir before calling out plugin
 */
 
 #pragma warninglevel=3
@@ -136,6 +137,7 @@ PROCEDURE Main( ... )
    LOCAL cTargetDir
 
    LOCAL cOptions := ""
+   LOCAL lBuildName
 
    LOCAL cFilter := GetEnv( "HB_CONTRIBLIBS" )
    LOCAL aFilter
@@ -167,6 +169,12 @@ PROCEDURE Main( ... )
    ENDIF
    IF GetEnv( "HB_BUILD_DEBUG" ) == "yes"
       cOptions += " -debug"
+   ENDIF
+   IF ! Empty( GetEnv( "HB_BUILD_NAME" ) )
+      cOptions += " -build=" + GetEnv( "HB_BUILD_NAME" )
+      lBuildName := .T.
+   ELSE
+      lBuildName := .F.
    ENDIF
 
    FOR EACH tmp IN aParams
@@ -208,11 +216,11 @@ PROCEDURE Main( ... )
                SWITCH cType
                CASE "lib"
                CASE "implib"
-                  cTargetDir := "lib/" + GetEnv( "HB_PLATFORM" ) + "/" + GetEnv( "HB_COMPILER" ) + iif( Empty( GetEnv( "HB_BUILD_NAME" ) ), "", "/" + GetEnv( "HB_BUILD_NAME" ) )
+                  cTargetDir := "lib/${hb_plat}/${hb_comp}" + iif( lBuildName, "/${hb_build}", "" )
                   cInstallDirVar := "HB_LIB_INSTALL_"
                   EXIT
                CASE "bin"
-                  cTargetDir := "bin/" + GetEnv( "HB_PLATFORM" ) + "/" + GetEnv( "HB_COMPILER" ) + iif( Empty( GetEnv( "HB_BUILD_NAME" ) ), "", "/" + GetEnv( "HB_BUILD_NAME" ) )
+                  cTargetDir := "bin/${hb_plat}/${hb_comp}" + iif( lBuildName, "/${hb_build}", "" )
                   cInstallDirVar := "HB_BIN_INSTALL_"
                   EXIT
                ENDSWITCH
@@ -266,7 +274,7 @@ STATIC FUNCTION call_hbmk2( cProject, cTargetDir, cOptions, lDyn )
                                     " -quiet -lang=en -width=1000 -q0" + cOptions +;
                                     " " + cProject +;
                                     iif( lDyn, " -hbdyn -nohblib- " + FN_ExtSet( cProject, ".hbc" ), "" ) +;
-                                    " -workdir=" + cTargetDir + "/${hb_work}/" + cName + iif( lDyn, "_dyn", "" ) +;
+                                    " -workdir=" + cTargetDir + "/${hb_work}/" + cName + "${hb_workdynsub}" +;
                                     " -o" + cTargetDir + "/" )
    IF nErrorLevel != 0
       OutStd( hb_StrFormat( "'%s' returned status: %s" + hb_osNewLine(), cProject, hb_ntos( nErrorLevel ) ) )
