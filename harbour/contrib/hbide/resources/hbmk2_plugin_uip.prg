@@ -41,7 +41,7 @@ FUNCTION hbmk2_plugin_uip( hbmk2 )
       FOR EACH tmp IN hbmk2[ "params" ]
          IF Lower( hbmk2_FNameExtGet( tmp ) ) == ".ui"
             AAdd( aUI, tmp )
-            AAdd( aUI_Dst, cDst := hbmk2_FNameDirExtSet( hbmk2_FNameNameGet( cSrc ), hbmk2[ "cWorkDir" ], ".uip" ) )
+            AAdd( aUI_Dst, cDst := hbmk2_FNameDirExtSet( hbmk2_FNameNameGet( tmp ), hbmk2[ "cWorkDir" ], ".uip" ) )
             hbmk2_AddInput_PRG( hbmk2, cDst )
          ENDIF
       NEXT
