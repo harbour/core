@@ -68,8 +68,8 @@ else
 endif
 
 # ORIGIN http://www.pcre.org/
-# VER    8.02
-# URL    http://sourceforge.net/projects/pcre/files/pcre/8.02/pcre-8.02.zip/download
+# VER    8.10
+# URL    http://sourceforge.net/projects/pcre/files/pcre/8.10/pcre-8.10.zip/download
 # DIFF   pcre.dif
 #
 # MAP    LICENCE
