@@ -121,7 +121,8 @@ PROCEDURE Main()
       NEXT
    ENDIF
 
-   /* Creating shared version of Harbour binaries */
+   /* Creating shared version of Harbour binaries
+      (except one which have shared versions build by default and hbmk2) */
 
    IF GetEnv( "HB_PLATFORM" ) $ "win|wce|os2" .AND. ;
       !( GetEnv( "HB_BUILD_DLL" ) == "no" ) .AND. ;
@@ -134,6 +135,7 @@ PROCEDURE Main()
          IF "D" $ tmp[ F_ATTR ] .AND. ;
             !( tmp[ F_NAME ] == "." ) .AND. ;
             !( tmp[ F_NAME ] == ".." ) .AND. ;
+            !( tmp[ F_NAME ] $ "hbformat|hbi18n|hbtest|hbmk2" ) .AND. ;
             hb_FileExists( "utils" + _PS_ + tmp[ F_NAME ] + _PS_ + tmp[ F_NAME ] + ".hbp" )
 
             mk_hb_processRun( GetEnv( "HB_HOST_BIN_DIR" ) + _PS_ + "hbmk2" +;

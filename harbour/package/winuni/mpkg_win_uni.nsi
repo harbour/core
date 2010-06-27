@@ -104,6 +104,7 @@ Section "Main components" hb_main
   File "$%HB_ROOT%hb21\bin\hbmk2.*.hbl"
   File "$%HB_ROOT%hb21\bin\hbpp.exe"
   File "$%HB_ROOT%hb21\bin\hbrun.exe"
+  File "$%HB_ROOT%hb21\bin\hbrun-dll.exe"
   File "$%HB_ROOT%hb21\bin\hbtest.exe"
   File "$%HB_ROOT%hb21\bin\hbformat.exe"
   File "$%HB_ROOT%hb21\bin\hbmk.cfg"
@@ -131,22 +132,14 @@ Section "Main components" hb_main
 
 SectionEnd
 
-Section /o "Shared tools" hb_main_dll
-  SetOutPath $INSTDIR\bin
-  File "$%HB_ROOT%hb21\bin\hbi18n-dll.exe"
-  File "$%HB_ROOT%hb21\bin\hbmk2-dll.exe"
-  File "$%HB_ROOT%hb21\bin\hbrun-dll.exe"
-  File "$%HB_ROOT%hb21\bin\hbtest-dll.exe"
-  File "$%HB_ROOT%hb21\bin\hbformat-dll.exe"
-SectionEnd
-
-Section /o "Shared x64 tools" hb_main_x64
+Section /o "x64 tools" hb_main_x64
   SetOutPath $INSTDIR\bin
   File "$%HB_ROOT%hb21\bin\harbour-x64.exe"
   File "$%HB_ROOT%hb21\bin\hbi18n-x64.exe"
   File "$%HB_ROOT%hb21\bin\hbmk2-x64.exe"
   File "$%HB_ROOT%hb21\bin\hbpp-x64.exe"
   File "$%HB_ROOT%hb21\bin\hbrun-x64.exe"
+  File "$%HB_ROOT%hb21\bin\hbrun-x64-dll.exe"
   File "$%HB_ROOT%hb21\bin\hbtest-x64.exe"
   File "$%HB_ROOT%hb21\bin\hbformat-x64.exe"
 SectionEnd
@@ -342,8 +335,7 @@ SectionEnd
   LangString DESC_hb_main         ${LANG_ENGLISH} "Harbour main components"
   LangString DESC_hb_shortcuts    ${LANG_ENGLISH} "Add icons to Start Menu and Desktop"
   LangString DESC_hb_examples     ${LANG_ENGLISH} "Harbour samples and tests"
-  LangString DESC_hb_main_dll     ${LANG_ENGLISH} "Harbour shared tools"
-  LangString DESC_hb_main_x64     ${LANG_ENGLISH} "Harbour shared x64 tools"
+  LangString DESC_hb_main_x64     ${LANG_ENGLISH} "Harbour x64 tools"
   LangString DESC_hb_dlls_x64     ${LANG_ENGLISH} "Harbour dlls for x64"
   LangString DESC_hb_dlls_arm     ${LANG_ENGLISH} "Harbour dlls for WinCE/ARM"
 !ifdef _NEVER_
@@ -389,7 +381,6 @@ SectionEnd
     !insertmacro MUI_DESCRIPTION_TEXT ${hb_main}         $(DESC_hb_main)
     !insertmacro MUI_DESCRIPTION_TEXT ${hb_shortcuts}    $(DESC_hb_shortcuts)
     !insertmacro MUI_DESCRIPTION_TEXT ${hb_examples}     $(DESC_hb_examples)
-    !insertmacro MUI_DESCRIPTION_TEXT ${hb_main_dll}     $(DESC_hb_main_dll)
     !insertmacro MUI_DESCRIPTION_TEXT ${hb_main_x64}     $(DESC_hb_main_x64)
     !insertmacro MUI_DESCRIPTION_TEXT ${hb_dlls_x64}     $(DESC_hb_dlls_x64)
     !insertmacro MUI_DESCRIPTION_TEXT ${hb_dlls_arm}     $(DESC_hb_dlls_arm)
