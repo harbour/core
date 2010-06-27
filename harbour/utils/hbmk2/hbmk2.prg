@@ -1568,7 +1568,6 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    l_cHB_ADD_INSTALL := PathNormalize( l_cHB_BIN_INSTALL + hb_osPathSeparator() + ".." )
    AAdd( hbmk[ _HBMK_aLIBPATH ], l_cHB_ADD_INSTALL + hb_osPathSeparator() + "contrib" + hb_osPathSeparator() + "%{hb_name}" )
    AAdd( hbmk[ _HBMK_aLIBPATH ], l_cHB_ADD_INSTALL + hb_osPathSeparator() + "addons" + hb_osPathSeparator() + "%{hb_name}" )
-   AAdd( hbmk[ _HBMK_aLIBPATH ], l_cHB_ADD_INSTALL + hb_osPathSeparator() + "examples" + hb_osPathSeparator() + "%{hb_name}" )
 
    /* Build with shared libs by default, if we're installed to default system locations. */
 
