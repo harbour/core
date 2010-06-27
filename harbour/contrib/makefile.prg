@@ -242,6 +242,8 @@ PROCEDURE Main( ... )
                IF cType == "lib" .AND. GetEnv( "HB_BUILD_CONTRIB_DLL" ) == "yes" .AND. ;
                   hb_FileExists( FN_ExtSet( cBase + cProject, ".hbc" ) )
 
+                  cInstallDirVar := "HB_BIN_INSTALL_"
+
                   IF AScan( aParams, "clean" ) > 0
                      call_hbmk2( cBase + cProject, cTargetDir, cOptions + " -clean", .T. )
                   ENDIF

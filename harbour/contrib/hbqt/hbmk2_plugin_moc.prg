@@ -28,8 +28,6 @@ FUNCTION hbmk2_plugin_moc( hbmk2 )
    LOCAL nError
    LOCAL lBuildIt
 
-   LOCAL tmp
-
    SWITCH hbmk2[ "cSTATE" ]
    CASE "pre_all"
 
@@ -38,11 +36,12 @@ FUNCTION hbmk2_plugin_moc( hbmk2 )
       aMOC := {}
       aMOC_Dst := {}
 
-      FOR EACH tmp IN hbmk2[ "params" ]
-         IF Lower( hbmk2_FNameExtGet( tmp ) ) == ".h" .OR. ;
-            Lower( hbmk2_FNameExtGet( tmp ) ) == ".hpp"
-            AAdd( aMOC, tmp )
-            AAdd( aMOC_Dst, cDst := hbmk2_FNameDirExtSet( "moc_" + hbmk2_FNameNameGet( tmp ), hbmk2[ "cWorkDir" ], ".cpp" ) )
+      FOR EACH cSrc IN hbmk2[ "params" ]
+         IF Lower( hbmk2_FNameExtGet( cSrc ) ) == ".h" .OR. ;
+            Lower( hbmk2_FNameExtGet( cSrc ) ) == ".hpp"
+            cDst := hbmk2_FNameDirExtSet( "moc_" + hbmk2_FNameNameGet( cSrc ), hbmk2[ "cWorkDir" ], ".cpp" )
+            AAdd( aMOC, cSrc )
+            AAdd( aMOC_Dst, cDst )
             hbmk2_AddInput_CPP( hbmk2, cDst )
          ENDIF
       NEXT

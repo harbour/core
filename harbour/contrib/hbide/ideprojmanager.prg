@@ -1354,7 +1354,7 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
    aadd( aHbp, "-info"       )
    aadd( aHbp, "-lang=en"    )
    aadd( aHbp, "-width=512"  )
-   aadd( aHbp, "-plugin=" + hb_dirBase() + "resources/hbmk2_plugin_uip.prg" )
+   aadd( aHbp, "-plugin=" + hb_dirBase() + "resources/hbmk2_plugin_ui.prg" )
    IF lRebuild
       aadd( aHbp, "-rebuild" )
    ENDIF

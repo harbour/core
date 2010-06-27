@@ -28,8 +28,6 @@ FUNCTION hbmk2_plugin_uip( hbmk2 )
    LOCAL nError
    LOCAL lBuildIt
 
-   LOCAL tmp
-
    SWITCH hbmk2[ "cSTATE" ]
    CASE "pre_all"
 
@@ -38,10 +36,11 @@ FUNCTION hbmk2_plugin_uip( hbmk2 )
       aUI := {}
       aUI_Dst := {}
 
-      FOR EACH tmp IN hbmk2[ "params" ]
-         IF Lower( hbmk2_FNameExtGet( tmp ) ) == ".ui"
-            AAdd( aUI, tmp )
-            AAdd( aUI_Dst, cDst := hbmk2_FNameDirExtSet( hbmk2_FNameNameGet( tmp ), hbmk2[ "cWorkDir" ], ".uip" ) )
+      FOR EACH cSrc IN hbmk2[ "params" ]
+         IF Lower( hbmk2_FNameExtGet( cSrc ) ) == ".ui"
+            cDst := hbmk2_FNameDirExtSet( hbmk2_FNameNameGet( cSrc ), hbmk2[ "cWorkDir" ], ".uip" )
+            AAdd( aUI, cSrc )
+            AAdd( aUI_Dst, cDst )
             hbmk2_AddInput_PRG( hbmk2, cDst )
          ENDIF
       NEXT

@@ -10,6 +10,8 @@
 
 -w3 -es2
 
+-stop{win|wce|dos}
+
 -depkeyhead=cups:cups/cups.h
 -depcontrol=cups:${HB_WITH_CUPS}
 -depincpath=cups:/usr/include
