@@ -637,6 +637,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    LOCAL l_cHB_LIB_INSTALL
    LOCAL l_cHB_DYN_INSTALL
    LOCAL l_cHB_INC_INSTALL
+   LOCAL l_cHB_ADD_INSTALL
 
    LOCAL l_aPRG_TODO
    LOCAL l_aC_TODO
@@ -736,7 +737,6 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    LOCAL cScriptFile
    LOCAL fhnd
    LOCAL cFile
-   LOCAL lNOHBC
    LOCAL lSysLoc
    LOCAL cPrefix
    LOCAL cPostfix
@@ -1564,6 +1564,12 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    /* Add main Harbour header dir to header path list */
    AAddNotEmpty( hbmk[ _HBMK_aINCPATH ], l_cHB_INC_INSTALL )
 
+   /* Add default search paths for .hbc files */
+   l_cHB_ADD_INSTALL := PathNormalize( l_cHB_BIN_INSTALL + hb_osPathSeparator() + ".." )
+   AAdd( hbmk[ _HBMK_aLIBPATH ], l_cHB_ADD_INSTALL + hb_osPathSeparator() + "contrib" + hb_osPathSeparator() + "%{hb_name}" )
+   AAdd( hbmk[ _HBMK_aLIBPATH ], l_cHB_ADD_INSTALL + hb_osPathSeparator() + "addons" + hb_osPathSeparator() + "%{hb_name}" )
+   AAdd( hbmk[ _HBMK_aLIBPATH ], l_cHB_ADD_INSTALL + hb_osPathSeparator() + "examples" + hb_osPathSeparator() + "%{hb_name}" )
+
    /* Build with shared libs by default, if we're installed to default system locations. */
 
    IF lSysLoc .AND. ( hbmk[ _HBMK_cPLAT ] $ "bsd|hpux|sunos|beos|qnx|linux" .OR. hbmk[ _HBMK_cPLAT ] == "darwin" )
@@ -1648,16 +1654,8 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       ENDCASE
    NEXT
 
-   /* Process command line (1st pass) */
-   lNOHBC := .F.
-   FOR EACH aParam IN aParams
-      IF Lower( aParam[ _PAR_cParam ] ) == "-nohbc"
-         lNOHBC := .T.
-      ENDIF
-   NEXT
-
    /* Process automatic control files. */
-   HBC_ProcessAll( hbmk, lNOHBC )
+   HBC_ProcessAll( hbmk )
 
    /* Process command line (2nd pass) */
    FOR EACH aParam IN aParams
@@ -1682,7 +1680,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
            cParamL             == "-hbcmp" .OR. ;
            cParamL             == "-hbcc"  .OR. ;
            cParamL             == "-hblnk" .OR. ;
-           cParamL             == "-nohbc" .OR. ;
+           cParamL             == "-nohbc" .OR. ; /* Ignore it for compatibility */
            cParamL             == "-xhb" .OR. ;
            cParamL             == "-hb10" .OR. ;
            cParamL             == "-hbc" .OR. ;
@@ -7434,8 +7432,7 @@ STATIC FUNCTION FN_HasWildcard( cFileName )
    RETURN "?" $ cFileName .OR. ;
           "*" $ cFileName
 
-STATIC PROCEDURE HBC_ProcessAll( hbmk, lConfigOnly )
-   LOCAL aFile
+STATIC PROCEDURE HBC_ProcessAll( hbmk )
    LOCAL cDir
    LOCAL cFileName
 
@@ -7460,18 +7457,6 @@ STATIC PROCEDURE HBC_ProcessAll( hbmk, lConfigOnly )
          EXIT
       ENDIF
    NEXT
-
-   IF ! lConfigOnly
-      FOR EACH aFile IN Directory( "*" + ".hbc" )
-         cFileName := aFile[ F_NAME ]
-         IF !( cFileName == _HBMK_CFG_NAME ) .AND. Lower( FN_ExtGet( cFileName ) ) == ".hbc"
-            IF ! hbmk[ _HBMK_lQuiet ]
-               hbmk_OutStd( hbmk, hb_StrFormat( I_( "Processing: %1$s" ), cFileName ) )
-            ENDIF
-            HBC_ProcessOne( hbmk, cFileName, 1 )
-         ENDIF
-      NEXT
-   ENDIF
 
    RETURN
 
@@ -9932,7 +9917,6 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-tshead=<file>"     , I_( "generate .ch header file with timestamp information. Generated header will define macros _HBMK_BUILD_DATE_, _HBMK_BUILD_TIME_, _HBMK_BUILD_TIMESTAMP_ with the date/time of build" ) },;
       { "-icon=<file>"       , I_( "set <file> as application icon. <file> should be a supported format on the target platform" ) },;
       { "-instpath=<path>"   , I_( "copy target to <path>. if <path> is a directory, it should end with path separator. can be specified multiple times" ) },;
-      { "-nohbc"             , I_( "do not process .hbc files in current directory" ) },;
       { "-stop"              , I_( "stop without doing anything" ) },;
       { "-echo=<text>"       , I_( "echo text on screen" ) },;
       { "-pause"             , I_( "force waiting for a key on exit in case of failure (with alternate GTs only)" ) },;

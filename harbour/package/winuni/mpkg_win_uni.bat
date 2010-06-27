@@ -38,7 +38,7 @@ echo "hb21\bin\hbi18n-x64.exe"                    >> _hbfiles
 echo "hb21\bin\hbmk2-x64.exe"                     >> _hbfiles
 echo "hb21\bin\hbpp-x64.exe"                      >> _hbfiles
 echo "hb21\bin\hbrun-x64.exe"                     >> _hbfiles
-echo "hb21\bin\hbrun-x64-dll.exe"                 >> _hbfiles
+echo "hb21\bin\hbrun-dll-x64.exe"                 >> _hbfiles
 echo "hb21\bin\hbtest-x64.exe"                    >> _hbfiles
 echo "hb21\bin\hbformat-x64.exe"                  >> _hbfiles
 echo "hb21\lib\win\mingw\*.*"                     >> _hbfiles

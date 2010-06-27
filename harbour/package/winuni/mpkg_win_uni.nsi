@@ -139,7 +139,7 @@ Section /o "x64 tools" hb_main_x64
   File "$%HB_ROOT%hb21\bin\hbmk2-x64.exe"
   File "$%HB_ROOT%hb21\bin\hbpp-x64.exe"
   File "$%HB_ROOT%hb21\bin\hbrun-x64.exe"
-  File "$%HB_ROOT%hb21\bin\hbrun-x64-dll.exe"
+  File "$%HB_ROOT%hb21\bin\hbrun-dll-x64.exe"
   File "$%HB_ROOT%hb21\bin\hbtest-x64.exe"
   File "$%HB_ROOT%hb21\bin\hbformat-x64.exe"
 SectionEnd
