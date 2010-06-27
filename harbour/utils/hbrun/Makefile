@@ -14,7 +14,7 @@ RC_SOURCES := \
 
 PRG_MAIN := hbrun.prg
 
-LIBS = hbcplr hbpp hbcommon $(HB_LIBS_ST_RDD)
+LIBS = hbcplr hbpp hbcommon $(HB_LIBS_MT_RDD)
 
 ifeq ($(_DEFAULT_INC_DIR),)
    ifneq ($(HB_INC_INSTALL),)
