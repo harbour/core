@@ -166,12 +166,7 @@ FUNCTION hbmk2_plugin_ui( hbmk2 )
 
    RETURN cRetVal
 
-/*
- * Copyright 2010 Pritpal Bedi <bedipritpal@hotmail.com>
- * www - http://harbour-project.org
- *
- * See COPYING for licensing terms.
- */
+/* ----------------------------------------------------------------------- */
 
 STATIC FUNCTION ui_to_prg( cFileNameSrc, cFileNameDst, cOriSrc )
    LOCAL aLinesPRG
@@ -208,7 +203,7 @@ STATIC FUNCTION hbq_create( cFile, cFuncName )
    lCreateFinished := .F.
 
    /* Pullout the widget */
-   n := AScan( aLines, {|e| "void setupUi" $ e } )
+   n := AScan( aLines, {| e | "void setupUi" $ e } )
    IF n == 0
       RETURN NIL
    ENDIF
@@ -233,81 +228,81 @@ STATIC FUNCTION hbq_create( cFile, cFuncName )
    NEXT
 
    FOR EACH s IN aLines
-      IF Empty( s )
-         LOOP
-      ENDIF
 
-      /* Replace Qt::* with actual values */
-      hbq_replaceConstants( @s )
+      IF ! Empty( s )
 
-      IF ( "setupUi" $ s )
-         lCreateFinished := .T.
+         /* Replace Qt::* with actual values */
+         hbq_replaceConstants( @s )
 
-      ELSEIF Left( s, 1 ) == "Q" .AND. !( lCreateFinished ) .AND. ( n := At( "*", s ) ) > 0
-         // We eill deal later - just skip
+         IF "setupUi" $ s
+            lCreateFinished := .T.
 
-      ELSEIF hbq_notAString( s ) .AND. ! Empty( aReg := hb_regex( regEx, s ) )
-         cCls := RTrim( aReg[ 1 ] )
-         s := AllTrim( StrTran( s, cCls, "",, 1 ) )
-         IF ( n := At( "(", s ) ) > 0
+         ELSEIF Left( s, 1 ) == "Q" .AND. ! lCreateFinished .AND. ( n := At( "*", s ) ) > 0
+            // We eill deal later - just skip
+
+         ELSEIF hbq_notAString( s ) .AND. ! Empty( aReg := hb_regex( regEx, s ) )
+            cCls := RTrim( aReg[ 1 ] )
+            s := AllTrim( StrTran( s, cCls, "",, 1 ) )
+            IF ( n := At( "(", s ) ) > 0
+               cNam := SubStr( s, 1, n - 1 )
+               AAdd( aWidgets, { cCls, cNam, cCls + "()", cCls + "():new" + SubStr( s, n ) } )
+            ELSE
+               cNam := s
+               AAdd( aWidgets, { cCls, cNam, cCls + "()", cCls + "():new()" } )
+            ENDIF
+
+         ELSEIF hbq_isObjectNameSet( s )
+            // Skip - we already know the object name and will set after construction
+
+         ELSEIF ! Empty( cText := hbq_pullSetToolTip( aLines, s:__enumIndex() ) )
+            n := At( "->", cText )
+            cNam := AllTrim( SubStr( cText, 1, n - 1 ) )
+            cCmd := hbq_formatCommand( SubStr( cText, n + 2 ), .T., aWidgets )
+            AAdd( aCommands, { cNam, cCmd } )
+
+         ELSEIF ! Empty( cText := hbq_pullText( aLines, s:__enumIndex() ) )
+            n := At( "->", cText )
+            cNam := AllTrim( SubStr( cText, 1, n - 1 ) )
+            cCmd := hbq_formatCommand( SubStr( cText, n + 2 ), .T., aWidgets )
+            AAdd( aCommands, { cNam, cCmd } )
+
+         ELSEIF hbq_isValidCmdLine( s ) .AND. !( "->" $ s ) .AND. ( ( n := At( ".", s ) ) > 0  )  /* Assignment to objects on stack */
             cNam := SubStr( s, 1, n - 1 )
-            AAdd( aWidgets, { cCls, cNam, cCls + "()", cCls + "():new" + SubStr( s, n ) } )
-         ELSE
-            cNam := s
-            AAdd( aWidgets, { cCls, cNam, cCls + "()", cCls + "():new()" } )
+            cCmd := SubStr( s, n + 1 )
+            cCmd := hbq_formatCommand( cCmd, .F., aWidgets )
+            cCmd := hbq_setObjects( cCmd, aWidgets )
+            cCmd := hbq_setObjects( cCmd, aWidgets )
+            AAdd( aCommands, { cNam, cCmd } )
+
+         ELSEIF !( Left( s, 1 ) $ '#/*"' ) .AND. ;          /* Assignment with properties from objects */
+                        ( n := At( ".", s ) ) > 0 .AND. ;
+                        At( "->", s ) > n
+            cNam := SubStr( s, 1, n - 1 )
+            cCmd := SubStr( s, n + 1 )
+            cCmd := hbq_formatCommand( cCmd, .F., aWidgets )
+            cCmd := hbq_setObjects( cCmd, aWidgets )
+            cCmd := hbq_setObjects( cCmd, aWidgets )
+            AAdd( aCommands, { cNam, cCmd } )
+
+         ELSEIF ( n := At( "->", s ) ) > 0                  /* Assignments or calls to objects on heap */
+            cNam := SubStr( s, 1, n - 1 )
+            cCmd := hbq_formatCommand( SubStr( s, n + 2 ), .F., aWidgets )
+            cCmd := hbq_setObjects( cCmd, aWidgets )
+            AAdd( aCommands, { cNam, cCmd } )
+
+         ELSEIF ( n := At( "= new", s ) ) > 0
+            IF ( n1 := At( "*", s ) ) > 0 .AND. n1 < n
+               s := AllTrim( SubStr( s, n1 + 1 ) )
+            ENDIF
+            n    := At( "= new", s )
+            cNam := AllTrim( SubStr( s, 1, n - 1 ) )
+            cCmd := AllTrim( SubStr( s, n + Len( "= new" ) ) )
+            cCmd := hbq_setObjects( cCmd, aWidgets )
+            n := At( "(", cCmd )
+            cCls := SubStr( cCmd, 1, n - 1 )
+            AAdd( aWidgets, { cCls, cNam, cCls + "()", cCls + "():new" + SubStr( cCmd, n ) } )
+
          ENDIF
-
-      ELSEIF hbq_isObjectNameSet( s )
-         // Skip - we already know the object name and will set after construction
-
-      ELSEIF ! Empty( cText := hbq_pullSetToolTip( aLines, s:__enumIndex() ) )
-         n := At( "->", cText )
-         cNam := AllTrim( SubStr( cText, 1, n - 1 ) )
-         cCmd := hbq_formatCommand( SubStr( cText, n + 2 ), .T., aWidgets )
-         AAdd( aCommands, { cNam, cCmd } )
-
-      ELSEIF ! Empty( cText := hbq_pullText( aLines, s:__enumIndex() ) )
-         n := At( "->", cText )
-         cNam := AllTrim( SubStr( cText, 1, n - 1 ) )
-         cCmd := hbq_formatCommand( SubStr( cText, n + 2 ), .T., aWidgets )
-         AAdd( aCommands, { cNam, cCmd } )
-
-      ELSEIF hbq_isValidCmdLine( s ) .AND. !( "->" $ s ) .AND. ( ( n := At( ".", s ) ) > 0  )  /* Assignment to objects on stack */
-         cNam := SubStr( s, 1, n - 1 )
-         cCmd := SubStr( s, n + 1 )
-         cCmd := hbq_formatCommand( cCmd, .F., aWidgets )
-         cCmd := hbq_setObjects( cCmd, aWidgets )
-         cCmd := hbq_setObjects( cCmd, aWidgets )
-         AAdd( aCommands, { cNam, cCmd } )
-
-      ELSEIF !( Left( s, 1 ) $ '#/*"' ) .AND. ;          /* Assignment with properties from objects */
-                     ( ( n := At( ".", s ) ) > 0  ) .AND. ;
-                     ( At( "->", s ) > n )
-         cNam := SubStr( s, 1, n - 1 )
-         cCmd := SubStr( s, n + 1 )
-         cCmd := hbq_formatCommand( cCmd, .F., aWidgets )
-         cCmd := hbq_setObjects( cCmd, aWidgets )
-         cCmd := hbq_setObjects( cCmd, aWidgets )
-         AAdd( aCommands, { cNam, cCmd } )
-
-      ELSEIF ( n := At( "->", s ) ) > 0                  /* Assignments or calls to objects on heap */
-         cNam := SubStr( s, 1, n - 1 )
-         cCmd := hbq_formatCommand( SubStr( s, n + 2 ), .F., aWidgets )
-         cCmd := hbq_setObjects( cCmd, aWidgets )
-         AAdd( aCommands, { cNam, cCmd } )
-
-      ELSEIF ( n := At( "= new", s ) ) > 0
-         IF ( n1 := At( "*", s ) ) > 0 .AND. n1 < n
-            s := AllTrim( SubStr( s, n1 + 1 ) )
-         ENDIF
-         n    := At( "= new", s )
-         cNam := AllTrim( SubStr( s, 1, n - 1 ) )
-         cCmd := AllTrim( SubStr( s, n + Len( "= new" ) ) )
-         cCmd := hbq_setObjects( cCmd, aWidgets )
-         n := At( "(", cCmd )
-         cCls := SubStr( cCmd, 1, n - 1 )
-         AAdd( aWidgets, { cCls, cNam, cCls+"()", cCls+"():new"+SubStr(cCmd,n) } )
-
       ENDIF
    NEXT
 
@@ -448,78 +443,82 @@ STATIC FUNCTION hbq_formatCommand( cCmd, lText, widgets )
 
    RETURN cCmd
 
-STATIC FUNCTION hbq_isObjectNameSet( s )
-   RETURN "objectName" $ s .OR. "ObjectName" $ s
+STATIC FUNCTION hbq_isObjectNameSet( cString )
+   RETURN "objectName" $ cString .OR. ;
+          "ObjectName" $ cString
 
-STATIC FUNCTION hbq_isValidCmdLine( s )
-   RETURN !( Left( s, 1 ) $ '#/*"' )
+STATIC FUNCTION hbq_isValidCmdLine( cString )
+   RETURN !( Left( cString, 1 ) $ '#/*"' )
 
-STATIC FUNCTION hbq_notAString( s )
-   RETURN !( Left( s, 1 ) == '"' )
+STATIC FUNCTION hbq_notAString( cString )
+   RETURN !( Left( cString, 1 ) == '"' )
 
-STATIC FUNCTION hbq_occurs( s, c )
-   LOCAL i
-   LOCAL n
-   LOCAL nLen := Len( s )
+STATIC FUNCTION hbq_occurs( cString, cCharToFind )
+   LOCAL cChar
+   LOCAL nCount
 
-   n := 0
-   FOR i := 1 TO nLen
-      IF SubStr( s, i, 1 ) == c
-         n++
+   nCount := 0
+   FOR EACH cChar IN cString
+      IF cChar == cCharToFind
+         ++nCount
       ENDIF
    NEXT
-   RETURN n
+
+   RETURN nCount
 
 STATIC FUNCTION hbq_pullToolTip( cCmd )
    LOCAL n
-   LOCAL s := ""
+   LOCAL cString := ""
 
    IF ( n := At( ', "', cCmd ) ) > 0
-      s := AllTrim( SubStr( cCmd, n + 2 ) )
-      IF ( n := At( '", 0', s ) ) > 0
-         s := AllTrim( SubStr( s, 1, n ) )
-         s := StrTran( s, '\"', '"' )
-         s := StrTran( s, '""', "" )
-         s := SubStr( s, 2, Len( s ) - 2 )
+      cString := AllTrim( SubStr( cCmd, n + 2 ) )
+      IF ( n := At( '", 0', cString ) ) > 0
+         cString := AllTrim( SubStr( cString, 1, n ) )
+         cString := StrTran( cString, '\"', '"' )
+         cString := StrTran( cString, '""', "" )
+         cString := SubStr( cString, 2, Len( cString ) - 2 )
       ENDIF
    ENDIF
 
-   RETURN s
+   RETURN cString
 
-STATIC PROCEDURE hbq_replaceConstants( s )
-   LOCAL aResult, cConst, cCmdB, cCmdE, cOR, n
-   LOCAL g := s
-   LOCAL b_
-   LOCAL nOrs := hbq_occurs( s, "|" )
+STATIC PROCEDURE hbq_replaceConstants( cString )
+   LOCAL aResult
+   LOCAL cConst
+   LOCAL cCmdB
+   LOCAL cCmdE
+   LOCAL cOR
+   LOCAL n
 
    LOCAL regDefine := hb_regexComp( "\b[A-Za-z_]+\:\:[A-Za-z_]+\b" )
 
-   IF nOrs > 0
-      b_ := hb_regexAll( regDefine, g )
+   IF hbq_occurs( cString, "|" ) > 0
 
-      IF ! Empty( b_ )
+      aResult := hb_regexAll( regDefine, cString )
+
+      IF ! Empty( aResult )
          cOR := "hb_bitOR("
-         FOR n := 1 TO Len( b_ )
-            cOR += b_[ n ][ 1 ]
-            IF n < Len( b_ )
+         FOR n := 1 TO Len( aResult )
+            cOR += aResult[ n ][ 1 ]
+            IF n < Len( aResult )
                cOR += ","
             ENDIF
          NEXT
          cOR += ")"
-         cCmdB  := SubStr( s, 1, At( b_[ 1 ][ 1 ], s ) - 1 )
-         cConst := b_[ Len( b_ ) ][ 1 ]
-         cCmdE  := SubStr( s, At( cConst, s ) + Len( cConst ) )
-         s      := cCmdB + cOR + cCmdE
+         cCmdB   := SubStr( cString, 1, At( aResult[ 1 ][ 1 ], cString ) - 1 )
+         cConst  := aResult[ Len( aResult ) ][ 1 ]
+         cCmdE   := SubStr( cString, At( cConst, cString ) + Len( cConst ) )
+         cString := cCmdB + cOR + cCmdE
       ENDIF
    ENDIF
 
-   IF "::" $ s
+   IF "::" $ cString
       DO WHILE .T.
-         aResult := hb_regex( regDefine, s )
+         aResult := hb_regex( regDefine, cString )
          IF Empty( aResult )
             EXIT
          ENDIF
-         s := StrTran( s, aResult[ 1 ], StrTran( aResult[ 1 ], "::", "_" ) )
+         cString := StrTran( cString, aResult[ 1 ], StrTran( aResult[ 1 ], "::", "_" ) )
       ENDDO
    ENDIF
 
@@ -531,17 +530,17 @@ STATIC FUNCTION hbq_setObjects( cCmd, aWidgets )
 
    IF ( n := AScan( aWidgets, {| tmp | ( tmp[ 2 ] + "," ) $ cCmd } ) ) > 0
       cObj := aWidgets[ n ][ 2 ]
-      cCmd := StrTran( cCmd, ( cObj + "," ), 'o[ "' + cObj + '" ],' )
+      cCmd := StrTran( cCmd, cObj + ",", 'o[ "' + cObj + '" ],' )
    ENDIF
 
    IF ( n := AScan( aWidgets, {| tmp | ( tmp[ 2 ] + ")" ) $ cCmd } ) ) > 0
       cObj := aWidgets[ n ][ 2 ]
-      cCmd := StrTran( cCmd, ( cObj + ")" ), 'o[ "' + cObj + '" ])' )
+      cCmd := StrTran( cCmd, cObj + ")", 'o[ "' + cObj + '" ])' )
    ENDIF
 
    IF ( n := AScan( aWidgets, {| tmp | ( tmp[ 2 ] + "->" ) $ cCmd } ) ) > 0
       cObj := aWidgets[ n ][ 2 ]
-      cCmd := StrTran( cCmd, ( cObj + "->" ), 'o[ "' + cObj + '" ]:' )
+      cCmd := StrTran( cCmd, cObj + "->", 'o[ "' + cObj + '" ]:' )
    ENDIF
 
    RETURN cCmd
@@ -567,7 +566,7 @@ STATIC FUNCTION hbq_pullText( aLines, nFrom )
    RETURN s
 
 STATIC FUNCTION hbq_pullSetToolTip( aLines, nFrom )
-   LOCAL s := ""
+   LOCAL cString := ""
    LOCAL nLen := Len( aLines )
 
    IF "#ifndef QT_NO_TOOLTIP" $ aLines[ nFrom ]
@@ -576,29 +575,30 @@ STATIC FUNCTION hbq_pullSetToolTip( aLines, nFrom )
          IF "#endif // QT_NO_TOOLTIP" $ aLines[ nFrom ]
             EXIT
          ENDIF
-         s += aLines[ nFrom ]
+         cString += aLines[ nFrom ]
          aLines[ nFrom ] := ""
          nFrom++
       ENDDO
    ENDIF
-   RETURN s
 
-STATIC FUNCTION hbq_stripFront( s, cTkn )
+   RETURN cString
+
+STATIC FUNCTION hbq_stripFront( cString, cTkn )
    LOCAL n
    LOCAL nLen := Len( cTkn )
 
-   IF ( n := At( cTkn, s ) ) > 0
-      s := SubStr( s, n + nLen )
+   IF ( n := At( cTkn, cString ) ) > 0
+      cString := SubStr( cString, n + nLen )
       RETURN .T.
    ENDIF
 
    RETURN .F.
 
-STATIC FUNCTION hbq_stripRear( s, cTkn )
+STATIC FUNCTION hbq_stripRear( cString, cTkn )
    LOCAL n
 
-   IF ( n := RAt( cTkn, s ) ) > 0
-      s := SubStr( s, 1, n - 1 )
+   IF ( n := RAt( cTkn, cString ) ) > 0
+      cString := SubStr( cString, 1, n - 1 )
       RETURN .T.
    ENDIF
 
