@@ -11,7 +11,7 @@
 
 #define I_( x )                 hb_i18n_gettext( x )
 
-FUNCTION hbmk2_plugin_uip( hbmk2 )
+FUNCTION hbmk2_plugin_ui( hbmk2 )
    LOCAL cRetVal := ""
 
    LOCAL cHBQTUI_BIN
@@ -38,7 +38,7 @@ FUNCTION hbmk2_plugin_uip( hbmk2 )
 
       FOR EACH cSrc IN hbmk2[ "params" ]
          IF Lower( hbmk2_FNameExtGet( cSrc ) ) == ".ui"
-            cDst := hbmk2_FNameDirExtSet( hbmk2_FNameNameGet( cSrc ), hbmk2[ "cWorkDir" ], ".uip" )
+            cDst := hbmk2_FNameDirExtSet( "ui_" + hbmk2_FNameNameGet( cSrc ), hbmk2[ "cWorkDir" ], ".prg" )
             AAdd( aUI, cSrc )
             AAdd( aUI_Dst, cDst )
             hbmk2_AddInput_PRG( hbmk2, cDst )

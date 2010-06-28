@@ -10,4 +10,5 @@
 *.cpp
 *.prg
 
-#-pi=*.h
+-pi=*.hpp
+

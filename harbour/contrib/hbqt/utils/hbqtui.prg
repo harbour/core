@@ -65,10 +65,7 @@
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 
-#include "hbclass.ch"
 #include "common.ch"
-
-#include "hbqt.ch"
 
 /*----------------------------------------------------------------------*/
 
@@ -83,11 +80,10 @@ REQUEST HB_GT_CGI_DEFAULT
 
 PROCEDURE Main( ... )
    LOCAL s, cL, cExt, cPath, cFile
-   LOCAL oGen, cCmd, cUic, cPrg, cUiFile
+   LOCAL cCmd, cUic, cPrg, cUiFile
    LOCAL cPathOut := ""
    LOCAL aUI :={}, a_, aUiFiles := {}
    LOCAL lToPath := .f.
-   LOCAL lDelUic := .t.
 
    LOCAL aResult
 
@@ -102,9 +98,6 @@ PROCEDURE Main( ... )
          cPathOut := alltrim( substr( s, 3 ) )
          cPathOut := strtran( cPathOut, "\", "/" )
          lToPath  := right( cPathOut, 1 ) == "/"
-
-      CASE cL == "-nodeluic"
-         lDelUic := .f.
 
       OTHERWISE
          s := StrTran( s, "\", "/" )
@@ -137,27 +130,25 @@ PROCEDURE Main( ... )
       hb_fNameSplit( s, @cPath, @cFile, @cExt )
 
       cUic := cPath + cFile + ".uic" /* always to be created along .ui */
-      cPrg := iif( lToPath, cPathOut + cFile + ".uip", cPathOut )
+      cPrg := iif( lToPath, cPathOut + "ui_" + cFile + ".prg", cPathOut )
       cCmd := "uic -o " + cUic + " " + s
 
-      hb_processRun( cCmd )
+      IF hb_processRun( cCmd ) == 0
+         IF hb_FileExists( cUic )
 
-      IF hb_FileExists( cUic )
-         oGen := HbUIGen():new( hb_memoread( cUic ) )
-         oGen:cFuncName := "ui" + upper( left( cFile, 1 ) ) + lower( substr( cFile, 2 ) )
+            aResult := hbq_create( hb_memoread( cUic ), "ui" + upper( left( cFile, 1 ) ) + lower( substr( cFile, 2 ) ) )
+            IF ISARRAY( aResult )
+               s := ""
+               aeval( aResult, {|e| s += e + hb_osNewLine() } )
+               hb_memowrit( StrTran( cPrg, "/", hb_osPathSeparator() ), s )
+            ENDIF
 
-         aResult := oGen:create()
-         IF ISARRAY( aResult )
-            s := ""
-            aeval( aResult, {|e| s += e + hb_osNewLine() } )
-            hb_memowrit( StrTran( cPrg, "/", hb_osPathSeparator() ), s )
-         ENDIF
-
-         IF lDelUic
             FErase( cUic )
+         ELSE
+            OutStd( "hbqtui: Warning: Intermediate .uic file not found: " + cUic + hb_osNewLine() )
          ENDIF
       ELSE
-         OutStd( "hbqtui: Warning: Intermediate .uic file not found: " + cUic + hb_osNewLine() )
+         OutStd( "hbqtui: Error: Running 'uic' tool" + hb_osNewLine() )
       ENDIF
    NEXT
 
@@ -165,77 +156,34 @@ PROCEDURE Main( ... )
 
 /*----------------------------------------------------------------------*/
 
-CLASS HbUIGen
-
-   DATA     cFile
-   DATA     org
-   DATA     cFuncName
-
-   DATA     qObj                                  INIT hb_hash()
-   DATA     widgets                               INIT {}
-   DATA     aCommands                             INIT {}
-
-   METHOD   new( cFile )
-   METHOD   create( cFile )
-   METHOD   formatCommand( cCmd, lText )
-
-   ENDCLASS
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbUIGen:new( cFile )
-
-   ::cFile := cFile
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbUIGen:create( cFile )
+FUNCTION hbq_create( cFile, cFuncName )
    LOCAL s, n, n1, cCls, cNam, lCreateFinished, cMCls, cMNam, cText
-   LOCAL cCmd, aReg, aCommands, aConst, a_, prg_
+   LOCAL cCmd, aReg, a_, prg_
    LOCAL regEx := hb_regexComp( "\bQ[A-Za-z_]+ \b" )
 
-   DEFAULT cFile TO ::cFile
+   LOCAL aLines := hb_ATokens( StrTran( cFile, Chr( 13 ) ), Chr( 10 ) )
 
-   ::cFile   := cFile
+   LOCAL aWidgets := {}
+   LOCAL aCommands := {}
 
-   IF empty( ::cFile )
-      RETURN NIL
-   ENDIF
-   IF hb_fileExists( ::cFile )
-      ::org := hb_ATokens( StrTran( hb_MemoRead( ::cFile ), Chr( 13 ) ), Chr( 10 ) )
-   ELSEIF len( ::cFile ) > 256
-      ::org := hb_ATokens( StrTran( ::cFile, Chr( 13 ) ), Chr( 10 ) )
-   ELSE
-      RETURN NIL
-   ENDIF
-
-   aCommands := {}
    lCreateFinished := .f.
 
    /* Pullout the widget */
-   n := ascan( ::org, {|e| "void setupUi" $ e } )
+   n := ascan( aLines, {|e| "void setupUi" $ e } )
    IF n == 0
       RETURN NIL
    ENDIF
-   s     := alltrim( ::org[ n ] )
+   s     := alltrim( aLines[ n ] )
    n     := at( "*", s )
    cMCls := alltrim( substr( s, 1, n - 1 ) )
    cMNam := alltrim( substr( s, n + 1 ) )
    hbq_stripFront( @cMCls, "(" )
    hbq_stripRear( @cMNam, ")" )
-   //
-   //   HB_TRACE( HB_TR_ALWAYS, "Widget   ", pad( cMNam, 20 ), pad( cMCls, 20 ), cMCls+"():new()" )
-   //                               Validator   Constructor
-   aadd( ::widgets, { cMCls, cMNam, cMCls+"()", cMCls+"():new()" } )
 
-   /* Replace Qt #define constants with values */
-   aConst := hbq_getConstants()
+   aadd( aWidgets, { cMCls, cMNam, cMCls+"()", cMCls+"():new()" } )
 
    /* Normalize */
-   FOR EACH s IN ::org
-      s := alltrim( s )
+   FOR EACH s IN aLines
       s := alltrim( s )
       IF right( s, 1 ) == ";"
          s := substr( s, 1, len( s ) - 1 )
@@ -245,13 +193,13 @@ METHOD HbUIGen:create( cFile )
       ENDIF
    NEXT
 
-   FOR EACH s IN ::org
+   FOR EACH s IN aLines
       IF empty( s )
          LOOP
       ENDIF
 
       /* Replace Qt::* with actual values */
-      hbq_replaceConstants( @s, aConst )
+      hbq_replaceConstants( @s )
 
       IF ( "setupUi" $ s )
          lCreateFinished := .t.
@@ -261,67 +209,53 @@ METHOD HbUIGen:create( cFile )
 
       ELSEIF hbq_notAString( s ) .AND. !empty( aReg := hb_Regex( regEx, s ) )
          cCls := trim( aReg[ 1 ] )
-         s := alltrim( strtran( s, cCls, "" ) )
+         s := alltrim( strtran( s, cCls, "",, 1 ) )
          IF ( n := at( "(", s ) ) > 0
             cNam := substr( s, 1, n - 1 )
-            aadd( ::widgets, { cCls, cNam, cCls+"()", cCls+"():new"+substr( s, n ) } )
-            //
-         *  HB_TRACE( HB_TR_ALWAYS, "Object   ", pad( cNam, 20 ), pad( cCls, 20 ), cCls+"():new"+substr( s, n ) )
+            aadd( aWidgets, { cCls, cNam, cCls+"()", cCls+"():new"+substr( s, n ) } )
          ELSE
             cNam := s
-            aadd( ::widgets, { cCls, cNam, cCls+"()", cCls+"():new()" } )
-            //
-         *  HB_TRACE( HB_TR_ALWAYS, "Object   ", pad( cNam, 20 ), pad( cCls,20 ), cCls+"():new()" )
+            aadd( aWidgets, { cCls, cNam, cCls+"()", cCls+"():new()" } )
          ENDIF
 
       ELSEIF hbq_isObjectNameSet( s )
          // Skip - we already know the object name and will set after construction
 
-      ELSEIF !empty( cText := hbq_pullSetToolTip( ::org, s:__enumIndex() ) )
+      ELSEIF !empty( cText := hbq_pullSetToolTip( aLines, s:__enumIndex() ) )
          n := at( "->", cText )
          cNam := alltrim( substr( cText, 1, n - 1 ) )
-         cCmd := ::formatCommand( substr( cText, n + 2 ), .t. )
+         cCmd := hbq_formatCommand( substr( cText, n + 2 ), .t., aWidgets )
          aadd( aCommands, { cNam, cCmd } )
-         //
-      *  HB_TRACE( HB_TR_ALWAYS, "Command  ", pad( cNam, 20 ), cCmd )
 
-      ELSEIF !empty( cText := hbq_pullText( ::org, s:__enumIndex() ) )
+      ELSEIF !empty( cText := hbq_pullText( aLines, s:__enumIndex() ) )
          n := at( "->", cText )
          cNam := alltrim( substr( cText, 1, n - 1 ) )
-         cCmd := ::formatCommand( substr( cText, n + 2 ), .t. )
+         cCmd := hbq_formatCommand( substr( cText, n + 2 ), .t., aWidgets )
          aadd( aCommands, { cNam, cCmd } )
-         //
-      *  HB_TRACE( HB_TR_ALWAYS, "Command  ", pad( cNam, 20 ), cCmd )
 
       ELSEIF hbq_isValidCmdLine( s ) .AND. !( "->" $ s ) .AND. ( ( n := at( ".", s ) ) > 0  )  /* Assignment to objects on stack */
          cNam := substr( s, 1, n - 1 )
          cCmd := substr( s, n + 1 )
-         cCmd := ::formatCommand( cCmd, .f. )
-         cCmd := hbq_setObjects( cCmd, ::widgets )
-         cCmd := hbq_setObjects( cCmd, ::widgets )
+         cCmd := hbq_formatCommand( cCmd, .f., aWidgets )
+         cCmd := hbq_setObjects( cCmd, aWidgets )
+         cCmd := hbq_setObjects( cCmd, aWidgets )
          aadd( aCommands, { cNam, cCmd } )
-         //
-      *  HB_TRACE( HB_TR_ALWAYS, "Command  ", pad( cNam, 20 ), cCmd )
 
       ELSEIF !( left( s, 1 ) $ '#/*"' ) .AND. ;          /* Assignment with properties from objects */
                      ( ( n := at( ".", s ) ) > 0  ) .AND. ;
                      ( at( "->", s ) > n )
          cNam := substr( s, 1, n - 1 )
          cCmd := substr( s, n + 1 )
-         cCmd := ::formatCommand( cCmd, .f. )
-         cCmd := hbq_setObjects( cCmd, ::widgets )
-         cCmd := hbq_setObjects( cCmd, ::widgets )
+         cCmd := hbq_formatCommand( cCmd, .f., aWidgets )
+         cCmd := hbq_setObjects( cCmd, aWidgets )
+         cCmd := hbq_setObjects( cCmd, aWidgets )
          aadd( aCommands, { cNam, cCmd } )
-         //
-      *  HB_TRACE( HB_TR_ALWAYS, "Command  ", pad( cNam, 20 ), cCmd )
 
       ELSEIF ( n := at( "->", s ) ) > 0                  /* Assignments or calls to objects on heap */
          cNam := substr( s, 1, n - 1 )
-         cCmd := ::formatCommand( substr( s, n + 2 ), .f. )
-         cCmd := hbq_setObjects( cCmd, ::widgets )
+         cCmd := hbq_formatCommand( substr( s, n + 2 ), .f., aWidgets )
+         cCmd := hbq_setObjects( cCmd, aWidgets )
          aadd( aCommands, { cNam, cCmd } )
-         //
-      *  HB_TRACE( HB_TR_ALWAYS, "Command  ", pad( cNam, 20 ), cCmd )
 
       ELSEIF ( n := at( "= new", s ) ) > 0
          IF ( n1 := at( "*", s ) ) > 0 .AND. n1 < n
@@ -330,11 +264,10 @@ METHOD HbUIGen:create( cFile )
          n    := at( "= new", s )
          cNam := alltrim( substr( s, 1, n - 1 ) )
          cCmd := alltrim( substr( s, n + len( "= new" ) ) )
-         cCmd := hbq_setObjects( cCmd, ::widgets )
+         cCmd := hbq_setObjects( cCmd, aWidgets )
          n := at( "(", cCmd )
          cCls := substr( cCmd, 1, n - 1 )
-         aadd( ::widgets, { cCls, cNam, cCls+"()", cCls+"():new"+substr(cCmd,n) } )
-      *  HB_TRACE( HB_TR_ALWAYS, "new      ", pad( cNam, 20 ), cCmd )
+         aadd( aWidgets, { cCls, cNam, cCls+"()", cCls+"():new"+substr(cCmd,n) } )
 
       ENDIF
    NEXT
@@ -344,7 +277,7 @@ METHOD HbUIGen:create( cFile )
    hbq_addCopyRight( prg_ )
 
    aadd( prg_, "" )
-   aadd( prg_, "FUNCTION " + ::cFuncName + "( qParent )" )
+   aadd( prg_, "FUNCTION " + cFuncName + "( qParent )" )
    aadd( prg_, "   LOCAL oUI" )
    aadd( prg_, "   LOCAL oWidget" )
    aadd( prg_, "   LOCAL qObj := {=>}" )
@@ -369,7 +302,7 @@ METHOD HbUIGen:create( cFile )
    aadd( prg_, "   qObj[ " + PAD_30( STRINGIFY( cMNam ) ) + " ] := oWidget" )
    aadd( prg_, "  " )
 
-   FOR EACH a_ IN ::widgets
+   FOR EACH a_ IN aWidgets
       IF a_:__enumIndex() > 1
          aadd( prg_, "   qObj[ " + PAD_30( STRINGIFY( a_[ 2 ] ) ) + " ] := " + strtran( a_[ 4 ], "o[", "qObj[" ) )
       ENDIF
@@ -436,14 +369,14 @@ METHOD HbUIGen:create( cFile )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbUIGen:formatCommand( cCmd, lText )
+FUNCTION hbq_formatCommand( cCmd, lText, widgets )
    LOCAL regDefine, aDefine, n, n1, cNam, cCmd1
 
    STATIC nn := 100
 
    DEFAULT lText TO .t.
 
-   cCmd := strtran( cCmd, "QApplication::translate"  , "q__tr"        )
+   cCmd := strtran( cCmd, "QApplication_translate"   , "q__tr"        )
    cCmd := strtran( cCmd, "QApplication::UnicodeUTF8", '"UTF8"'       )
    cCmd := strtran( cCmd, "QString()"                , '""'           )
    cCmd := strtran( cCmd, "QSize("                   , "QSize():new(" )
@@ -464,9 +397,9 @@ METHOD HbUIGen:formatCommand( cCmd, lText )
          cNam := "__qsizePolicy" + hb_ntos( ++nn )
          n    := at( "(", cCmd )
          n1   := at( ".", cCmd )
-         cCmd1 := hbq_setObjects( substr( cCmd, n + 1, n1 - n - 1 ), ::widgets )
+         cCmd1 := hbq_setObjects( substr( cCmd, n + 1, n1 - n - 1 ), widgets )
          cCmd1 := strtran( cCmd1, "->", ":" )
-         aadd( ::widgets, { "QSizePolicy", cNam, "QSizePolicy()", "QSizePolicy():configure(" + cCmd1 + ")" } )
+         aadd( widgets, { "QSizePolicy", cNam, "QSizePolicy()", "QSizePolicy():configure(" + cCmd1 + ")" } )
          cCmd := 'setHeightForWidth(o[ "' + cNam + '" ]:' + substr( cCmd, n1 + 1 )
 
       ELSE
@@ -525,12 +458,101 @@ STATIC FUNCTION hbq_pullToolTip( cCmd )
 
 /*----------------------------------------------------------------------*/
 
-STATIC PROCEDURE hbq_replaceConstants( s, hConst )
+STATIC PROCEDURE hbq_replaceConstants( s )
    LOCAL a_, regDefine, cConst, cCmdB, cCmdE, cOR, n
    LOCAL g := s
    LOCAL b_:= {}
    LOCAL nOrs := hbq_occurs( s, "|" )
-
+#if 0
+   STATIC hConst := ;
+      { ;
+         "QSizePolicy_Fixed"                      => NIL, ;
+         "QSizePolicy_Minimum"                    => NIL, ;
+         "QSizePolicy_Maximum"                    => NIL, ;
+         "QSizePolicy_Preferred"                  => NIL, ;
+         "QSizePolicy_Expanding"                  => NIL, ;
+         "QSizePolicy_MinimumExpanding"           => NIL, ;
+         "QSizePolicy_Ignored"                    => NIL, ;
+         ;
+         "Qt_AlignLeft"                           => NIL, ;
+         "Qt_AlignRight"                          => NIL, ;
+         "Qt_AlignHCenter"                        => NIL, ;
+         "Qt_AlignJustify"                        => NIL, ;
+         "Qt_AlignTop"                            => NIL, ;
+         "Qt_AlignBottom"                         => NIL, ;
+         "Qt_AlignVCenter"                        => NIL, ;
+         "Qt_AlignCenter"                         => NIL, ;
+         "Qt_AlignAbsolute"                       => NIL, ;
+         "Qt_AlignLeading"                        => NIL, ;
+         "Qt_AlignTrailing"                       => NIL, ;
+         ;
+         "QPlainTextEdit_NoWrap"                  => NIL, ;
+         "QPlainTextEdit_WidgetWidth"             => NIL, ;
+         ;
+         "QTabWidget_North"                       => NIL, ;
+         "QTabWidget_South"                       => NIL, ;
+         "QTabWidget_West"                        => NIL, ;
+         "QTabWidget_East"                        => NIL, ;
+         "QTabWidget_Rounded"                     => NIL, ;
+         "QTabWidget_Triangular"                  => NIL, ;
+         "QMainWindow_AnimatedDocks"              => NIL, ;
+         "QMainWindow_AllowNestedDocks"           => NIL, ;
+         "QMainWindow_AllowTabbedDocks"           => NIL, ;
+         "QMainWindow_ForceTabbedDocks"           => NIL, ;
+         "QMainWindow_VerticalTabs"               => NIL, ;
+         ;
+         "QLayout_SetDefaultConstraint"           => NIL, ;
+         "QLayout_SetFixedSize"                   => NIL, ;
+         "QLayout_SetMinimumSize"                 => NIL, ;
+         "QLayout_SetMaximumSize"                 => NIL, ;
+         "QLayout_SetMinAndMaxSize"               => NIL, ;
+         "QLayout_SetNoConstraint"                => NIL, ;
+         ;
+         "QFrame_Plain"                           => NIL, ;
+         "QFrame_Raised"                          => NIL, ;
+         "QFrame_Sunken"                          => NIL, ;
+         "QFrame_NoFrame"                         => NIL, ;
+         "QFrame_Box"                             => NIL, ;
+         "QFrame_Panel"                           => NIL, ;
+         "QFrame_StyledPanel"                     => NIL, ;
+         "QFrame_HLine"                           => NIL, ;
+         "QFrame_VLine"                           => NIL, ;
+         "QFrame_WinPanel"                        => NIL, ;
+         "QFrame_Shadow_Mask"                     => NIL, ;
+         "QFrame_Shape_Mask"                      => NIL, ;
+         ;
+         "QAbstractItemView_NoEditTriggers"       => NIL, ;
+         "QAbstractItemView_CurrentChanged"       => NIL, ;
+         "QAbstractItemView_DoubleClicked"        => NIL, ;
+         "QAbstractItemView_SelectedClicked"      => NIL, ;
+         "QAbstractItemView_EditKeyPressed"       => NIL, ;
+         "QAbstractItemView_AnyKeyPressed"        => NIL, ;
+         "QAbstractItemView_AllEditTriggers"      => NIL, ;
+         "QAbstractItemView_NoSelection"          => NIL, ;
+         "QAbstractItemView_MultiSelection"       => NIL, ;
+         "QAbstractItemView_SingleSelection"      => NIL, ;
+         "QAbstractItemView_ContiguousSelection"  => NIL, ;
+         "QAbstractItemView_ExtendedSelection"    => NIL, ;
+         ;
+         "QTextEdit_NoWrap"                       => NIL, ;
+         "QTextEdit_WidgetWidth"                  => NIL, ;
+         "QTextEdit_FixedPixelWidth"              => NIL, ;
+         "QTextEdit_FixedColumnWidth"             => NIL, ;
+         ;
+         "Qt_ScrollBarAsNeeded"                   => NIL, ;
+         "Qt_ScrollBarAlwaysOff"                  => NIL, ;
+         "Qt_ScrollBarAlwaysOn"                   => NIL, ;
+         ;
+         "Qt_Horizontal"                          => NIL, ;
+         "Qt_Vertical"                            => NIL, ;
+         ;
+         "Qt_TabFocus"                            => NIL, ;
+         "Qt_ClickFocus"                          => NIL, ;
+         "Qt_StrongFocus"                         => NIL, ;
+         "Qt_WheelFocus"                          => NIL, ;
+         "Qt_NoFocus"                             => NIL  ;
+      }
+#endif
    regDefine := hb_RegexComp( "\b[A-Za-z_]+\:\:[A-Za-z_]+\b" )
 
    IF nOrs > 0
@@ -561,10 +583,12 @@ STATIC PROCEDURE hbq_replaceConstants( s, hConst )
             EXIT
          ENDIF
          cConst := strtran( a_[ 1 ], "::", "_" )
+#if 0
          IF !( cConst $ hConst )
             EXIT
          ENDIF
-         s := strtran( s, a_[ 1 ], hb_ntos( hConst[ cConst ] ) )
+#endif
+         s := strtran( s, a_[ 1 ], cConst )
       ENDDO
    ENDIF
 
@@ -664,115 +688,15 @@ STATIC FUNCTION hbq_stripRear( s, cTkn )
 
 /*----------------------------------------------------------------------*/
 
-STATIC FUNCTION hbq_getConstants()
-   STATIC h_
-
-   IF empty( h_ )
-      h_:= ;
-      { ;
-         "QSizePolicy_Fixed"                      => QSizePolicy_Fixed                     , ;
-         "QSizePolicy_Minimum"                    => QSizePolicy_Minimum                   , ;
-         "QSizePolicy_Maximum"                    => QSizePolicy_Maximum                   , ;
-         "QSizePolicy_Preferred"                  => QSizePolicy_Preferred                 , ;
-         "QSizePolicy_Expanding"                  => QSizePolicy_Expanding                 , ;
-         "QSizePolicy_MinimumExpanding"           => QSizePolicy_MinimumExpanding          , ;
-         "QSizePolicy_Ignored"                    => QSizePolicy_Ignored                   , ;
-         ;
-         "Qt_AlignLeft"                           => Qt_AlignLeft                          , ;
-         "Qt_AlignRight"                          => Qt_AlignRight                         , ;
-         "Qt_AlignHCenter"                        => Qt_AlignHCenter                       , ;
-         "Qt_AlignJustify"                        => Qt_AlignJustify                       , ;
-         "Qt_AlignTop"                            => Qt_AlignTop                           , ;
-         "Qt_AlignBottom"                         => Qt_AlignBottom                        , ;
-         "Qt_AlignVCenter"                        => Qt_AlignVCenter                       , ;
-         "Qt_AlignCenter"                         => Qt_AlignCenter                        , ;
-         "Qt_AlignAbsolute"                       => Qt_AlignAbsolute                      , ;
-         "Qt_AlignLeading"                        => Qt_AlignLeading                       , ;
-         "Qt_AlignTrailing"                       => Qt_AlignTrailing                      , ;
-         ;
-         "QPlainTextEdit_NoWrap"                  => QPlainTextEdit_NoWrap                 , ;
-         "QPlainTextEdit_WidgetWidth"             => QPlainTextEdit_WidgetWidth            , ;
-         ;
-         "QTabWidget_North"                       => QTabWidget_North                      , ;
-         "QTabWidget_South"                       => QTabWidget_South                      , ;
-         "QTabWidget_West"                        => QTabWidget_West                       , ;
-         "QTabWidget_East"                        => QTabWidget_East                       , ;
-         "QTabWidget_Rounded"                     => QTabWidget_Rounded                    , ;
-         "QTabWidget_Triangular"                  => QTabWidget_Triangular                 , ;
-         "QMainWindow_AnimatedDocks"              => QMainWindow_AnimatedDocks             , ;
-         "QMainWindow_AllowNestedDocks"           => QMainWindow_AllowNestedDocks          , ;
-         "QMainWindow_AllowTabbedDocks"           => QMainWindow_AllowTabbedDocks          , ;
-         "QMainWindow_ForceTabbedDocks"           => QMainWindow_ForceTabbedDocks          , ;
-         "QMainWindow_VerticalTabs"               => QMainWindow_VerticalTabs              , ;
-         ;
-         "QLayout_SetDefaultConstraint"           => QLayout_SetDefaultConstraint          , ;
-         "QLayout_SetFixedSize"                   => QLayout_SetFixedSize                  , ;
-         "QLayout_SetMinimumSize"                 => QLayout_SetMinimumSize                , ;
-         "QLayout_SetMaximumSize"                 => QLayout_SetMaximumSize                , ;
-         "QLayout_SetMinAndMaxSize"               => QLayout_SetMinAndMaxSize              , ;
-         "QLayout_SetNoConstraint"                => QLayout_SetNoConstraint               , ;
-         ;
-         "QFrame_Plain"                           => QFrame_Plain                          , ;
-         "QFrame_Raised"                          => QFrame_Raised                         , ;
-         "QFrame_Sunken"                          => QFrame_Sunken                         , ;
-         "QFrame_NoFrame"                         => QFrame_NoFrame                        , ;
-         "QFrame_Box"                             => QFrame_Box                            , ;
-         "QFrame_Panel"                           => QFrame_Panel                          , ;
-         "QFrame_StyledPanel"                     => QFrame_StyledPanel                    , ;
-         "QFrame_HLine"                           => QFrame_HLine                          , ;
-         "QFrame_VLine"                           => QFrame_VLine                          , ;
-         "QFrame_WinPanel"                        => QFrame_WinPanel                       , ;
-         "QFrame_Shadow_Mask"                     => QFrame_Shadow_Mask                    , ;
-         "QFrame_Shape_Mask"                      => QFrame_Shape_Mask                     , ;
-         ;
-         "QAbstractItemView_NoEditTriggers"       => QAbstractItemView_NoEditTriggers      , ;
-         "QAbstractItemView_CurrentChanged"       => QAbstractItemView_CurrentChanged      , ;
-         "QAbstractItemView_DoubleClicked"        => QAbstractItemView_DoubleClicked       , ;
-         "QAbstractItemView_SelectedClicked"      => QAbstractItemView_SelectedClicked     , ;
-         "QAbstractItemView_EditKeyPressed"       => QAbstractItemView_EditKeyPressed      , ;
-         "QAbstractItemView_AnyKeyPressed"        => QAbstractItemView_AnyKeyPressed       , ;
-         "QAbstractItemView_AllEditTriggers"      => QAbstractItemView_AllEditTriggers     , ;
-         "QAbstractItemView_NoSelection"          => QAbstractItemView_NoSelection         , ;
-         "QAbstractItemView_MultiSelection"       => QAbstractItemView_MultiSelection      , ;
-         "QAbstractItemView_SingleSelection"      => QAbstractItemView_SingleSelection     , ;
-         "QAbstractItemView_ContiguousSelection"  => QAbstractItemView_ContiguousSelection , ;
-         "QAbstractItemView_ExtendedSelection"    => QAbstractItemView_ExtendedSelection   , ;
-         ;
-         "QTextEdit_NoWrap"                       => QTextEdit_NoWrap                      , ;
-         "QTextEdit_WidgetWidth"                  => QTextEdit_WidgetWidth                 , ;
-         "QTextEdit_FixedPixelWidth"              => QTextEdit_FixedPixelWidth             , ;
-         "QTextEdit_FixedColumnWidth"             => QTextEdit_FixedColumnWidth            , ;
-         ;
-         "Qt_ScrollBarAsNeeded"                   => Qt_ScrollBarAsNeeded                  , ;
-         "Qt_ScrollBarAlwaysOff"                  => Qt_ScrollBarAlwaysOff                 , ;
-         "Qt_ScrollBarAlwaysOn"                   => Qt_ScrollBarAlwaysOn                  , ;
-         ;
-         "Qt_Horizontal"                          => Qt_Horizontal                         , ;
-         "Qt_Vertical"                            => Qt_Vertical                           , ;
-         ;
-         "Qt_TabFocus"                            => Qt_TabFocus                           , ;
-         "Qt_ClickFocus"                          => Qt_ClickFocus                         , ;
-         "Qt_StrongFocus"                         => Qt_StrongFocus                        , ;
-         "Qt_WheelFocus"                          => Qt_WheelFocus                         , ;
-         "Qt_NoFocus"                             => Qt_NoFocus                              ;
-      }
-   ENDIF
-
-   RETURN h_
-
-/*----------------------------------------------------------------------*/
-
 STATIC PROCEDURE hbq_addCopyRight( prg_ )
 
-   aadd( prg_, "/*" )
-   aadd( prg_, " * " + "$" + "Id" + "$" )
-   aadd( prg_, " */" )
-   aadd( prg_, "" )
    aadd( prg_, "/* WARNING: Automatically generated source file. DO NOT EDIT!           */" )
    aadd( prg_, "/*          Instead, edit corresponding .ui file,                       */" )
    aadd( prg_, "/*          with Qt Generator, and run hbqtui.exe.                      */" )
    aadd( prg_, "/*                                                                      */" )
    aadd( prg_, "/*          Pritpal Bedi <bedipritpal@hotmail.com>                      */" )
+   aadd( prg_, "" )
+   aadd( prg_, '#include "hbqt.ch"' )
 
    RETURN
 
