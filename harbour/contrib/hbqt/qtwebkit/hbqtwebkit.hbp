@@ -1,49 +1,13 @@
--3rd=hbide_version=1.0
--3rd=hbide_type=Lib
--3rd=hbide_title=qtwebkit
--3rd=hbide_workingfolder=
--3rd=hbide_destinationfolder=
--3rd=hbide_output=qtwebkit
--3rd=hbide_launchparams=
--3rd=hbide_launchprogram=
--3rd=hbide_backupfolder=
--3rd=hbide_xhb=NO
--3rd=hbide_xpp=NO
--3rd=hbide_clp=NO
+#
+# $Id$
+#
 
--info
--trace
--inc
--w2
--es2
--hblib
--incpath=../
--incpath=${HB_WITH_QT}
--incpath=${HB_WITH_QT}/QtWebKit
+../hbqt_common.hbm
 
--ohbqtwebkit
+-o${hb_name}
+-workdir=${hb_work}/${hb_plat}/${hb_comp}/${hb_name}
 
--plugin=../../../utils/hbmk2/examples/plug_moc.prg
+*.cpp
+*.prg
 
-
-QWebFrame.cpp
-QWebHistory.cpp
-QWebHistoryInterface.cpp
-QWebHistoryItem.cpp
-QWebHitTestResult.cpp
-QWebPage.cpp
-QWebPluginFactory.cpp
-QWebSecurityOrigin.cpp
-QWebSettings.cpp
-QWebView.cpp
-
-TQWebFrame.prg
-TQWebHistory.prg
-TQWebHistoryInterface.prg
-TQWebHistoryItem.prg
-TQWebHitTestResult.prg
-TQWebPage.prg
-TQWebPluginFactory.prg
-TQWebSecurityOrigin.prg
-TQWebSettings.prg
-TQWebView.prg
+#-pi=*.h
