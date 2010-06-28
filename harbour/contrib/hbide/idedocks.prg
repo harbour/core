@@ -326,7 +326,11 @@ METHOD IdeDocks:execEvent( nMode, p )
       hbide_popupBrwContextMenu( ::qHelpBrw, p )
 
    CASE nMode == dockQScintilla_visibilityChanged
-      IF p; ::oEM:qscintilla(); ENDIF
+      IF p
+         ::oEM:qscintilla()
+      ELSE
+         ::oBM:destroy()
+      ENDIF
 
    CASE nMode == dockSourceThumbnail_visibilityChanged
       IF p; ::oEM:showThumbnail(); ENDIF
@@ -1167,7 +1171,7 @@ METHOD IdeDocks:buildSourceThumbnail()
 METHOD IdeDocks:buildQScintilla()
    LOCAL nAreas := Qt_LeftDockWidgetArea + Qt_RightDockWidgetArea + Qt_TopDockWidgetArea + Qt_BottomDockWidgetArea
 
-   ::oIde:oQScintillaDock := ::getADockWidget( nAreas, "dockQScintilla", "QScintilla Widget", QDockWidget_DockWidgetFloatable )
+   ::oIde:oQScintillaDock := ::getADockWidget( nAreas, "dockQScintilla", "Browser Widget", QDockWidget_DockWidgetFloatable )
    ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oQScintillaDock:oWidget, Qt_Horizontal )
 
    ::connect( ::oQScintillaDock:oWidget, "visibilityChanged(bool)", {|p| ::execEvent( dockQScintilla_visibilityChanged, p ) } )

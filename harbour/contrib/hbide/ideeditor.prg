@@ -1640,15 +1640,14 @@ METHOD IdeEditor:scrollThumbnail()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-//                            QScintilla Test
+//                            Generic Tests
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEditor:qscintilla()
 
- //  hbide_browseSome( Self )
+   hbide_browseSome( ::oIde )
 
- //  hbide_qtDesigner()
-
+   //  hbide_qtDesigner()
 
    #ifdef HB_WITH_QSCINTILLA
    #include "hbqscintilla.ch"

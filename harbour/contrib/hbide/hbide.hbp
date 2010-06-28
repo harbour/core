@@ -48,6 +48,7 @@ ideshortcuts.prg
 ideedit.prg
 ideplugins.prg
 idedict.prg
+idebrowse.prg
 
 -pi=*.ui
 -plugin=resources/hbmk2_plugin_ui.prg

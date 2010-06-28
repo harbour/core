@@ -547,9 +547,8 @@ METHOD IdeActions:buildMainMenu()
    oSubMenu:oWidget:addAction_4( ::oThemesDock:oWidget:toggleViewAction()     )
    oSubMenu:oWidget:addAction_4( ::oFindDock:oWidget:toggleViewAction()       )
    oSubMenu:oWidget:addAction_4( ::oSourceThumbnailDock:oWidget:toggleViewAction() )
-   #ifdef QT_WITH_SCINTILLA
    oSubMenu:oWidget:addAction_4( ::oQScintillaDock:oWidget:toggleViewAction() )
-   #endif
+
    oSubMenu:oWidget:addSeparator()
    oSubMenu:oWidget:addAction_4( ::oDockB2:oWidget:toggleViewAction()         )
  * oSubMenu:oWidget:addAction_4( ::oDockB1:oWidget:toggleViewAction()         )

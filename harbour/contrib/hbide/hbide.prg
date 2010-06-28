@@ -85,6 +85,9 @@
 
 REQUEST HB_QT
 
+REQUEST DBFCDX
+REQUEST DBFNTX
+
 STATIC s_resPath
 STATIC s_pathSep
 
@@ -130,6 +133,7 @@ CLASS HbIde
    DATA   cProjIni
 
    DATA   oAC                                            /* Actions Manager                */
+   DATA   oBM                                            /* Database Browser Manager       */
    DATA   oDK                                            /* Main Window Components Manager */
    DATA   oDW                                            /* Document Writer Manager        */
    DATA   oEM                                            /* Editor Tabs Manager            */
@@ -465,6 +469,9 @@ METHOD HbIde:create( aParams )
 
    /* Home Implementation */
    ::oHM := IdeHome():new():create( Self )
+
+   /* Browser Manager */
+   ::oBM := IdeBrowseManager():new():create( Self )
 
    /* Fill various elements of the IDE */
    ::oPM:populate()

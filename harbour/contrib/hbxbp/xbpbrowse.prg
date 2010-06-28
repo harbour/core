@@ -663,6 +663,8 @@ METHOD XbpBrowse:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    /* Viewport */
    ::oViewport:configure( ::oTableView:viewport() )
 
+   ::oFooterView:hide()
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/

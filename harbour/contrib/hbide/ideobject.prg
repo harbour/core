@@ -84,6 +84,7 @@ CLASS IdeObject
    DATA   qContextMenu
 
    ACCESS oFR                                     INLINE ::oIde:oFR
+   ACCESS oBM                                     INLINE ::oIde:oBM
    ACCESS oEM                                     INLINE ::oIde:oEM
    ACCESS oPM                                     INLINE ::oIde:oPM
    ACCESS oDK                                     INLINE ::oIde:oDK
