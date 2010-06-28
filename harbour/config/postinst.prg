@@ -39,8 +39,6 @@ PROCEDURE Main()
 
    /* Creating hbmk.cfg */
 
-   OutStd( "! Making " + GetEnv( "HB_BIN_INSTALL" ) + _PS_ + "hbmk.cfg..." + hb_osNewLine() )
-
    lContent := .F.
    cFile := ""
    cFile += "# hbmk2 configuration" + hb_osNewLine()
@@ -63,6 +61,7 @@ PROCEDURE Main()
    ENDIF
 
    IF lContent
+      OutStd( "! Making " + GetEnv( "HB_BIN_INSTALL" ) + _PS_ + "hbmk.cfg..." + hb_osNewLine() )
       hb_MemoWrit( GetEnv( "HB_BIN_INSTALL" ) + _PS_ + "hbmk.cfg", cFile )
    ELSE
       FErase( GetEnv( "HB_BIN_INSTALL" ) + _PS_ + "hbmk.cfg" )
@@ -72,6 +71,8 @@ PROCEDURE Main()
 
    IF GetEnv( "HB_PLATFORM" ) $ "win|wce|os2|dos" .AND. ;
       ! Empty( GetEnv( "HB_INSTALL_PREFIX" ) )
+
+      OutStd( "! Copying root documents..." + hb_osNewLine() )
 
       FOR EACH aFile IN Directory( "Change*" )
          hb_FCopy( aFile[ F_NAME ], GetEnv( "HB_INSTALL_PREFIX" ) + _PS_ + iif( GetEnv( "HB_PLATFORM" ) == "dos", "CHANGES", aFile[ F_NAME ] ) )

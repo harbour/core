@@ -21,6 +21,7 @@
 -icon={allwin}hbide.ico
 
 ../hbxbp/hbxbp.hbc
+
 ideparseexpr.c
 hbide.prg
 ideobject.prg
@@ -51,4 +52,3 @@ idedict.prg
 idebrowse.prg
 
 -pi=*.ui
--plugin=resources/hbmk2_plugin_ui.prg
