@@ -74,6 +74,8 @@ FUNCTION INIT_PORT( cPort, nBaud, nData, nParity, nStop, nBufferSize )
       hb_comSetDevice( nPort, cPort )
    ENDIF
 
+   hb_comClose( nPort ) 
+
    IF hb_comOpen( nPort )
 
       IF ! ISNUMBER( nBaud )
