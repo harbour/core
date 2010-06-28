@@ -110,6 +110,7 @@ PROCEDURE _APPMAIN( cFile, ... )
             cExt := lower( cExt )
             SWITCH cExt
                CASE ".prg"
+               CASE ".hbs"
                CASE ".hrb"
                CASE ".dbf"
                   EXIT
@@ -121,6 +122,7 @@ PROCEDURE _APPMAIN( cFile, ... )
                   HB_DotPrompt( "USE " + cFile )
                   EXIT
                CASE ".prg"
+               CASE ".hbs"
                   cFile := HB_COMPILEBUF( HB_ARGV( 0 ), "-n2", "-w", "-es2", "-q0", ;
                                           s_aIncDir, cFile )
                   IF cFile == NIL
