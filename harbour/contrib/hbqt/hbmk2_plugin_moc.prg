@@ -81,13 +81,13 @@ FUNCTION hbmk2_plugin_moc( hbmk2 )
                   ENDIF
                ENDIF
                IF hbmk2[ "lINFO" ]
-                  hbmk2_OutStd( hbmk2, "Using QT 'moc' executable: " + cMOC_BIN + " (autodetected)" )
+                  hbmk2_OutStd( hbmk2, hb_StrFormat( "Using QT 'moc' executable: %1$s (autodetected)", cMOC_BIN ) )
                ENDIF
             ELSE
                IF hb_FileExists( GetEnv( "HB_QT_MOC_BIN" ) )
                   cMOC_BIN := GetEnv( "HB_QT_MOC_BIN" )
                   IF hbmk2[ "lINFO" ]
-                     hbmk2_OutStd( hbmk2, "Using QT 'moc' executable: " + cMOC_BIN )
+                     hbmk2_OutStd( hbmk2, hb_StrFormat( "Using QT 'moc' executable: %1$s", cMOC_BIN ) )
                   ENDIF
                ELSE
                   hbmk2_OutErr( hbmk2, "HB_QT_MOC_BIN points to non-existent file. Make sure to set it to full path and filename of 'moc' executable." )

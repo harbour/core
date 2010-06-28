@@ -111,7 +111,6 @@ PROCEDURE Main( ... )
 
    LOCAL aUtils := {;
       "hbnetio/utils/netiosrv.hbp" ,; /* uses: hbnetio */
-      "hbqt/utils/hbqtui.hbp"      ,; /* uses: hbqt */
       "hbide/hbide.hbp"            }  /* uses: hbxbp, hbqt */
 
    LOCAL aAll := {;

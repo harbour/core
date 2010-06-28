@@ -83,13 +83,13 @@ FUNCTION hbmk2_plugin_ui( hbmk2 )
                   ENDIF
                ENDIF
                IF hbmk2[ "lINFO" ]
-                  hbmk2_OutStd( hbmk2, "Using QT 'uic' executable: " + cUIC_BIN + " (autodetected)" )
+                  hbmk2_OutStd( hbmk2, hb_StrFormat( "Using QT 'uic' executable: %1$s (autodetected)", cUIC_BIN ) )
                ENDIF
             ELSE
                IF hb_FileExists( GetEnv( "HB_QT_UIC_BIN" ) )
                   cUIC_BIN := GetEnv( "HB_QT_UIC_BIN" )
                   IF hbmk2[ "lINFO" ]
-                     hbmk2_OutStd( hbmk2, "Using QT 'uic' executable: " + cUIC_BIN )
+                     hbmk2_OutStd( hbmk2, hb_StrFormat( "Using QT 'uic' executable: %1$s", cUIC_BIN ) )
                   ENDIF
                ELSE
                   hbmk2_OutErr( hbmk2, "HB_QT_UIC_BIN points to non-existent file. Make sure to set it to full path and filename of 'uic' executable." )
@@ -137,8 +137,7 @@ FUNCTION hbmk2_plugin_ui( hbmk2 )
                         EXIT
                      ENDIF
                   ELSE
-                     IF ! ui_to_prg( cTmp, cDst, cSrc )
-                        hbmk2_OutErr( hbmk2, I_( "Error: Converting 'uic' output to .prg format." ) )
+                     IF ! ui_to_prg( hbmk2, cTmp, cDst, cSrc )
                         IF ! hbmk2[ "lIGNOREERROR" ]
                            FErase( cTmp )
                            cRetVal := "error"
@@ -168,19 +167,29 @@ FUNCTION hbmk2_plugin_ui( hbmk2 )
 
 /* ----------------------------------------------------------------------- */
 
-STATIC FUNCTION ui_to_prg( cFileNameSrc, cFileNameDst, cOriSrc )
+STATIC FUNCTION ui_to_prg( hbmk2, cFileNameSrc, cFileNameDst, cOriSrc )
    LOCAL aLinesPRG
    LOCAL cFile
    LOCAL cName
 
-   hb_FNameSplit( cOriSrc,, @cName )
+   IF hb_FileExists( cFileNameSrc )
+      hb_FNameSplit( cOriSrc,, @cName )
 
-   aLinesPRG := hbq_create( hb_MemoRead( cFileNameSrc ), "ui" + Upper( Left( cName, 1 ) ) + Lower( SubStr( cName, 2 ) ) )
+      aLinesPRG := hbq_create( hb_MemoRead( cFileNameSrc ), "ui" + Upper( Left( cName, 1 ) ) + Lower( SubStr( cName, 2 ) ) )
 
-   IF ! Empty( aLinesPRG )
-      cFile := ""
-      AEval( aLinesPRG, {| cLine | cFile += cLine + hb_osNewLine() } )
-      RETURN hb_MemoWrit( cFileNameDst, cFile )
+      IF ! Empty( aLinesPRG )
+         cFile := ""
+         AEval( aLinesPRG, {| cLine | cFile += cLine + hb_osNewLine() } )
+         IF hb_MemoWrit( cFileNameDst, cFile )
+            RETURN .T.
+         ELSE
+            hbmk2_OutErr( hbmk2, hb_StrFormat( "Error: Cannot write file: %1$s", cFileNameDst ) )
+         ENDIF
+      ELSE
+         hbmk2_OutErr( hbmk2, hb_StrFormat( "Error: Intermediate file (%1$s) is not an .uic file.", cFileNameSrc ) )
+      ENDIF
+   ELSE
+      hbmk2_OutErr( hbmk2, hb_StrFormat( "Error: Cannot find intermediate file: %1$s", cFileNameSrc ) )
    ENDIF
 
    RETURN .F.
@@ -190,8 +199,19 @@ STATIC FUNCTION ui_to_prg( cFileNameSrc, cFileNameDst, cOriSrc )
 #define STRIP_SQ( cStr )     StrTran( StrTran( StrTran( StrTran( s, "[", " " ), "]", " " ), "\n", " " ), Chr( 10 ), " " )
 
 STATIC FUNCTION hbq_create( cFile, cFuncName )
-   LOCAL s, n, n1, cCls, cNam, lCreateFinished, cMCls, cMNam, cText
-   LOCAL cCmd, aReg, item, aLinesPRG
+   LOCAL s
+   LOCAL n
+   LOCAL n1
+   LOCAL cCls
+   LOCAL cNam
+   LOCAL lCreateFinished
+   LOCAL cMCls
+   LOCAL cMNam
+   LOCAL cText
+   LOCAL cCmd
+   LOCAL aReg
+   LOCAL item
+   LOCAL aLinesPRG
 
    LOCAL regEx := hb_regexComp( "\bQ[A-Za-z_]+ \b" )
 
@@ -403,7 +423,12 @@ STATIC FUNCTION hbq_create( cFile, cFuncName )
    RETURN aLinesPRG
 
 STATIC FUNCTION hbq_formatCommand( cCmd, lText, widgets )
-   LOCAL regDefine, aDefine, n, n1, cNam, cCmd1
+   LOCAL regDefine
+   LOCAL aDefine
+   LOCAL n
+   LOCAL n1
+   LOCAL cNam
+   LOCAL cCmd1
 
    STATIC s_nn := 100
 
@@ -497,7 +522,7 @@ STATIC PROCEDURE hbq_replaceConstants( cString )
       aResult := hb_regexAll( regDefine, cString )
 
       IF ! Empty( aResult )
-         cOR := "hb_bitOR("
+         cOR := "hb_bitOr("
          FOR n := 1 TO Len( aResult )
             cOR += aResult[ n ][ 1 ]
             IF n < Len( aResult )
