@@ -2068,7 +2068,7 @@ FUNCTION hbide_parseToolComponents( cCompositeTool )
    LOCAL a_
 
    a_:= hb_atokens( cCompositeTool, "," )
-   asize( a_, 10 )
+   asize( a_, 12 )
    DEFAULT a_[ 1 ] TO ""
    DEFAULT a_[ 2 ] TO ""
    DEFAULT a_[ 3 ] TO ""
@@ -2079,6 +2079,8 @@ FUNCTION hbide_parseToolComponents( cCompositeTool )
    DEFAULT a_[ 8 ] TO "YES"
    DEFAULT a_[ 9 ] TO ""
    DEFAULT a_[10 ] TO ""
+   DEFAULT a_[11 ] TO ""
+   DEFAULT a_[12 ] TO ""
    a_[ 1 ] := alltrim( a_[ 1 ] )
    a_[ 2 ] := alltrim( a_[ 2 ] )
    a_[ 3 ] := alltrim( a_[ 3 ] )
@@ -2089,6 +2091,8 @@ FUNCTION hbide_parseToolComponents( cCompositeTool )
    a_[ 8 ] := alltrim( a_[ 8 ] )
    a_[ 9 ] := alltrim( a_[ 9 ] )
    a_[10 ] := alltrim( a_[10 ] )
+   a_[11 ] := alltrim( a_[11 ] )
+   a_[12 ] := alltrim( a_[12 ] )
 
    RETURN a_
 
@@ -2184,9 +2188,8 @@ FUNCTION hbide_getUI( cUI, qParent )
       oUI := iif( nModeUI == UI_MODE_FUNC, uiMainwindow( qParent ), NIL )
       EXIT
    ENDSWITCH
-HB_TRACE( HB_TR_ALWAYS, nModeUI, 0 )
+
    IF empty( oUI )
-HB_TRACE( HB_TR_ALWAYS, nModeUI, 1 )
       IF nModeUI == UI_MODE_UI
          oUI := HbQtUI():new( hbide_ui( cUI ), qParent ):create()
       ELSE
@@ -2198,3 +2201,316 @@ HB_TRACE( HB_TR_ALWAYS, nModeUI, 1 )
 
 /*----------------------------------------------------------------------*/
 
+FUNCTION hbide_request()
+
+   REQUEST HBDbfModel
+   REQUEST HBEvents
+   REQUEST HBQMainWindow
+   REQUEST HBQPlainTextEdit
+   REQUEST HBQSyntaxHighlighter
+   REQUEST HBQTableView
+   REQUEST HBQTextBlockUserData
+   REQUEST HBSlots
+   REQUEST QAbstractButton
+   REQUEST QAbstractItemDelegate
+   REQUEST QAbstractItemModel
+   REQUEST QAbstractItemView
+   REQUEST QAbstractListModel
+   REQUEST QAbstractProxyModel
+   REQUEST QAbstractPrintDialog
+   REQUEST QAbstractScrollArea
+   REQUEST QAbstractSlider
+   REQUEST QAbstractSpinBox
+   REQUEST QAbstractTableModel
+   REQUEST QAbstractTextDocumentLayout
+   REQUEST QAction
+   REQUEST QActionGroup
+   REQUEST QApplication
+   REQUEST QBitArray
+   REQUEST QBitmap
+   REQUEST QBoxLayout
+   REQUEST QBrush
+   REQUEST QBuffer
+   REQUEST QButtonGroup
+   REQUEST QByteArray
+   REQUEST QCalendarWidget
+   REQUEST QChar
+   REQUEST QCheckBox
+   REQUEST QClipboard
+   REQUEST QColor
+   REQUEST QColorDialog
+   REQUEST QComboBox
+   REQUEST QCommandLinkButton
+   REQUEST QCommonStyle
+   REQUEST QCompleter
+   REQUEST QConicalGradient
+   REQUEST QContextMenuEvent
+   REQUEST QCoreApplication
+   REQUEST QCursor
+   REQUEST QDataStream
+   REQUEST QDate
+   REQUEST QDateEdit
+   REQUEST QDateTime
+   REQUEST QDateTimeEdit
+   REQUEST QDesktopWidget
+   REQUEST QDial
+   REQUEST QDialog
+   REQUEST QDir
+   REQUEST QDirModel
+   REQUEST QDockWidget
+   REQUEST QDoubleSpinBox
+   REQUEST QDropEvent
+   REQUEST QDragMoveEvent
+   REQUEST QDragEnterEvent
+   REQUEST QDragLeaveEvent
+   REQUEST QErrorMessage
+   REQUEST QEvent
+   REQUEST QEventLoop
+   REQUEST QFile
+   REQUEST QFileDialog
+   REQUEST QFileInfo
+   REQUEST QFileIconProvider
+   REQUEST QFileSystemModel
+   REQUEST QFocusEvent
+   REQUEST QFocusFrame
+   REQUEST QFont
+   REQUEST QFontComboBox
+   REQUEST QFontDatabase
+   REQUEST QFontDialog
+   REQUEST QFontInfo
+   REQUEST QFontMetrics
+   REQUEST QFontMetricsF
+   REQUEST QFormLayout
+   REQUEST QFrame
+   REQUEST QFtp
+   REQUEST QGradient
+   REQUEST QGridLayout
+   REQUEST QGroupBox
+   REQUEST QHBoxLayout
+   REQUEST QHeaderView
+   REQUEST QHelpEvent
+   REQUEST QHideEvent
+   REQUEST QHttp
+   REQUEST QHttpHeader
+   REQUEST QHttpRequestHeader
+   REQUEST QHttpResponseHeader
+   REQUEST QIcon
+   REQUEST QInputMethodEvent
+   REQUEST QImage
+   REQUEST QImageReader
+   REQUEST QImageWriter
+   REQUEST QInputDialog
+   REQUEST QInputEvent
+   REQUEST QIODevice
+   REQUEST QItemDelegate
+   REQUEST QItemEditorCreatorBase
+   REQUEST QItemEditorFactory
+   REQUEST QItemSelection
+   REQUEST QItemSelectionModel
+   REQUEST QKeyEvent
+   REQUEST QKeySequence
+   REQUEST QLabel
+   REQUEST QLatin1Char
+   REQUEST QLatin1String
+   REQUEST QLayout
+   REQUEST QLayoutItem
+   REQUEST QLCDNumber
+   REQUEST QLine
+   REQUEST QLineF
+   REQUEST QLinearGradient
+   REQUEST QLineEdit
+   REQUEST QList
+   REQUEST QListView
+   REQUEST QListWidget
+   REQUEST QListWidgetItem
+   REQUEST QLocale
+   REQUEST QMainWindow
+   REQUEST QMatrix
+   REQUEST QMdiArea
+   REQUEST QMdiSubWindow
+   REQUEST QMenu
+   REQUEST QMenuBar
+   REQUEST QMessageBox
+   REQUEST QMimeData
+   REQUEST QModelIndex
+   REQUEST QMouseEvent
+   REQUEST QMoveEvent
+   REQUEST QMovie
+   REQUEST QNetworkRequest
+   REQUEST QObject
+   REQUEST QPageSetupDialog
+   REQUEST QPaintDevice
+   REQUEST QPaintEngine
+   REQUEST QPainter
+   REQUEST QPainterPath
+   REQUEST QPaintEvent
+   REQUEST QPalette
+   REQUEST QPen
+   REQUEST QPicture
+   REQUEST QPixmap
+   REQUEST QPlainTextDocumentLayout
+   REQUEST QPlainTextEdit
+   REQUEST QPoint
+   REQUEST QPointF
+   REQUEST QPolygon
+   REQUEST QPolygonF
+   REQUEST QPrintDialog
+   REQUEST QPrintEngine
+   REQUEST QPrinter
+   REQUEST QPrintPreviewDialog
+   REQUEST QProcess
+   REQUEST QProgressBar
+   REQUEST QProgressDialog
+   REQUEST QPushButton
+   REQUEST QRadialGradient
+   REQUEST QRadioButton
+   REQUEST QRect
+   REQUEST QRectF
+   REQUEST QRegion
+   REQUEST QRegExp
+   REQUEST QResizeEvent
+   REQUEST QResource
+   REQUEST QScrollArea
+   REQUEST QScrollBar
+   REQUEST QSessionManager
+   REQUEST QSettings
+   REQUEST QShowEvent
+   REQUEST QSignalMapper
+   REQUEST QSize
+   REQUEST QSizeF
+   REQUEST QSizeGrip
+   REQUEST QSizePolicy
+   REQUEST QSlider
+   REQUEST QSound
+   REQUEST QSpacerItem
+   REQUEST QSpinBox
+   REQUEST QSplashScreen
+   REQUEST QSplitter
+   REQUEST QStackedWidget
+   REQUEST QStandardItem
+   REQUEST QStandardItemModel
+   REQUEST QStatusBar
+   REQUEST QStringList
+   REQUEST QStringListModel
+   REQUEST QStyle
+   REQUEST QStyledItemDelegate
+   REQUEST QStyleFactory
+   REQUEST QStyleHintReturn
+   REQUEST QStyleHintReturnMask
+   REQUEST QStyleHintReturnVariant
+   REQUEST QStyleOption
+   REQUEST QStyleOptionButton
+   REQUEST QStyleOptionComboBox
+   REQUEST QStyleOptionComplex
+   REQUEST QStyleOptionDockWidget
+   REQUEST QStyleOptionFocusRect
+   REQUEST QStyleOptionFrame
+   REQUEST QStyleOptionGroupBox
+   REQUEST QStyleOptionHeader
+   REQUEST QStyleOptionMenuItem
+   REQUEST QStyleOptionProgressBar
+   REQUEST QStyleOptionSizeGrip
+   REQUEST QStyleOptionSlider
+   REQUEST QStyleOptionSpinBox
+   REQUEST QStyleOptionTab
+   REQUEST QStyleOptionTabBarBase
+   REQUEST QStyleOptionTabWidgetFrame
+   REQUEST QStyleOptionTitleBar
+   REQUEST QStyleOptionToolBar
+   REQUEST QStyleOptionToolBox
+   REQUEST QStyleOptionToolButton
+   REQUEST QStyleOptionViewItem
+   REQUEST QStylePainter
+   REQUEST QSyntaxHighlighter
+   REQUEST QSystemTrayIcon
+   REQUEST QTabBar
+   REQUEST QTableView
+   REQUEST QTableWidget
+   REQUEST QTableWidgetItem
+   REQUEST QTabWidget
+   REQUEST QTableWidgetSelectionRange
+   REQUEST QTextBlock
+   REQUEST QTextBlockFormat
+   REQUEST QTextBlockGroup
+   REQUEST QTextBrowser
+   REQUEST QTextBoundaryFinder
+   REQUEST QTextCharFormat
+   REQUEST QTextCodec
+   REQUEST QTextCursor
+   REQUEST QTextDecoder
+   REQUEST QTextDocument
+   REQUEST QTextDocumentFragment
+   REQUEST QTextDocumentWriter
+   REQUEST QTextEdit
+   REQUEST QTextEncoder
+   REQUEST QTextFormat
+   REQUEST QTextFragment
+   REQUEST QTextFrame
+   REQUEST QTextFrameFormat
+   REQUEST QTextImageFormat
+   REQUEST QTextInlineObject
+   REQUEST QTextItem
+   REQUEST QTextLayout
+   REQUEST QTextLength
+   REQUEST QTextLine
+   REQUEST QTextList
+   REQUEST QTextListFormat
+   REQUEST QTextObject
+   REQUEST QTextOption
+   REQUEST QTextStream
+   REQUEST QTextTableFormat
+   REQUEST QThread
+   REQUEST QTime
+   REQUEST QTimeEdit
+   REQUEST QTimer
+   REQUEST QToolBar
+   REQUEST QToolBox
+   REQUEST QToolButton
+   REQUEST QTransform
+   REQUEST QTranslator
+   REQUEST QTreeView
+   REQUEST QTreeWidget
+   REQUEST QTreeWidgetItem
+   REQUEST QUiLoader
+   REQUEST QUrl
+   REQUEST QValidator
+   REQUEST QVariant
+   REQUEST QVBoxLayout
+   REQUEST QWheelEvent
+   REQUEST QWidget
+   REQUEST QWidgetAction
+   REQUEST QWidgetItem
+   REQUEST QWindowsStyle
+   REQUEST QWindowStateChangeEvent
+   REQUEST QWizard
+   REQUEST QWizardPage
+
+   REQUEST Xbp3State
+   REQUEST XbpBitmap
+   REQUEST XbpBrowse
+   REQUEST XbpCheckBox
+   REQUEST XbpClipBoard
+   REQUEST XbpComboBox
+   REQUEST XbpDataRef
+   REQUEST XbpDialog
+   REQUEST XbpFileDialog
+   REQUEST XbpFontDialog
+   REQUEST XbpHtmlViewer
+   REQUEST XbpListBox
+   REQUEST XbpMenuBar
+   REQUEST XbpMLE
+   REQUEST XbpPresSpace
+   REQUEST XbpPrintDialog
+   REQUEST XbpPrinter
+   REQUEST XbpPushButton
+   REQUEST XbpRadioButton
+   REQUEST XbpRtf
+   REQUEST XbpScrollBar
+   REQUEST XbpTabPage
+   REQUEST XbpToolBar
+   REQUEST XbpTreeView
+   REQUEST XbpWindow
+
+   RETURN NIL
+
+/*----------------------------------------------------------------------*/

@@ -756,7 +756,7 @@ HBSlots::~HBSlots()
    {
       if( listBlock[ i ] != NULL )
       {
-HB_TRACE( HB_TR_ALWAYS, ( "......HBSlots::~HBSlots()...... [ Un-disConnected Slot ]" ) );
+//HB_TRACE( HB_TR_ALWAYS, ( "......HBSlots::~HBSlots()...... [ Un-disConnected Slot ]" ) );
          hb_itemRelease( listBlock.at( i ) );
          listBlock[ i ] = NULL;
       }

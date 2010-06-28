@@ -186,7 +186,7 @@ METHOD IdeThemes:create( oIde, cIniFile )
    /* These are the supported patterns - rest will be ignore until implemented */
 
    /* Compiler Directives */
-   b_:= { "include","define","ifndef","ifdef","else","endif","command","xcommand","translate","xtranslate" }
+   b_:= { "include","define","if","ifndef","ifdef","else","endif","command","xcommand","translate","xtranslate" }
    s := ""; aeval( b_, {|e| s += iif( empty( s ), "", "|" ) + "#" + e + "\b" } )
    aadd( ::aPatterns, { "PreprocessorDirectives", s, .f. } )
 
@@ -197,7 +197,7 @@ METHOD IdeThemes:create( oIde, cIniFile )
           'switch','endswitch', ;
           'do','while','exit','enddo','loop',;
           'for','each','next','step','to','in',;
-          'with','object','endwith',;
+          'with','object','endwith','request',;
           'nil','and','or','self',;
           'class','endclass','method','data','var','destructor','inline','assign','access',;
           'inherit','init','create','virtual','message', 'from', 'setget',;

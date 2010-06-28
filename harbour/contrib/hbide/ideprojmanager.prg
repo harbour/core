@@ -269,6 +269,7 @@ CLASS IdeProjManager INHERIT IdeObject
    METHOD pullHbpData( cHbp )
    METHOD synchronizeAlienProject( cProjFileName )
    METHOD outputText( cText )
+   METHOD runAsScript()
 
    ENDCLASS
 
@@ -1566,6 +1567,17 @@ METHOD IdeProjManager:launchProject( cProject, cExe )
    ENDIF
 
    ::oOutputResult:oWidget:append( cTmp )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeProjManager:runAsScript()
+   LOCAL oEdit
+
+   IF !empty( oEdit := ::oEM:getEditorCurrent() )
+      hbide_runAScript( oEdit:qEdit:toPlainText() )
+   ENDIF
 
    RETURN Self
 

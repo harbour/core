@@ -78,28 +78,17 @@ STATIC s_aLoaded  := { { "", .f. } }
 /*----------------------------------------------------------------------*/
 
 FUNCTION hbide_loadPlugins( oIde, cVer )
-   LOCAL cPath := hb_dirBase() + hb_osPathSeparator() + "plugins" + hb_osPathSeparator()
-   LOCAL dir_, a_, cFile, pHrb, bBlock
+   LOCAL a_, cPlugin
 
-   dir_:= directory( cPath + "*.hrb" )
+   FOR EACH a_ IN oIde:oINI:aTools
+      IF a_[ 12 ] == "YES"
+         hb_fNameSplit( a_[ 11 ], , @cPlugin )
 
-   FOR EACH a_ IN dir_
-      hb_fNameSplit( a_[ 1 ], , @cFile )
-      pHrb := hb_hrbLoad( HB_HRB_BIND_OVERLOAD, cPath + cFile )
-
-      IF ! Empty( pHrb ) .AND. ! Empty( hb_hrbGetFunSym( pHrb, cFile + "_init" ) )
-         bBlock := &( "{|...| " + cFile + "_init(...) }" )
-
-         IF eval( bBlock, oIde, cVer )
-            IF ! Empty( hb_hrbGetFunSym( pHrb, cFile + "_exec" ) )
-               aadd( s_aPlugins, { lower( cFile ), &( "{|...| " + cFile + "_exec(...) }" ), pHrb } )
-
-            ENDIF
-         ENDIF
+         RETURN hbide_loadAPlugin( cPlugin, oIde, cVer )
       ENDIF
    NEXT
 
-   RETURN bBlock
+   RETURN .f.
 
 /*----------------------------------------------------------------------*/
 
@@ -124,18 +113,27 @@ FUNCTION hbide_execPlugin( cPlugin, oIde, ... )
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION hbide_loadAPlugin( cPlugin, oIde, cVer )
-   LOCAL cPath, pHrb, bBlock, lLoaded
+   LOCAL pHrb, bBlock, lLoaded, cFileName, cFile
 
-   cPath := hb_dirBase() + hb_osPathSeparator() + "plugins" + hb_osPathSeparator() + cPlugin + ".hrb"
+   cFileName := hb_dirBase() + hb_osPathSeparator() + "plugins" + hb_osPathSeparator() + cPlugin + ".hrb"
+   IF hb_fileExists( cFileName )
+      pHrb := hb_hrbLoad( HB_HRB_BIND_OVERLOAD, cFileName )
+   ELSE
+      cFileName := hb_dirBase() + hb_osPathSeparator() + "plugins" + hb_osPathSeparator() + cPlugin + ".prg"
+      IF hb_fileExists( cFileName )
+         cFile := hb_memoread( cFileName )
+         cFile := hb_compileFromBuf( cFile, "-n2", "-w3", "-es2", "-q0" )
+         IF ! Empty( cFile )
+            pHrb := hb_hrbLoad( HB_HRB_BIND_OVERLOAD, cFile )
+         ENDIF
+      ENDIF
+   ENDIF
 
-   IF ( lLoaded := hb_fileExists( cPath ) )
-      pHrb := hb_hrbLoad( HB_HRB_BIND_OVERLOAD, cPath )
-
-      IF ! Empty( pHrb ) .AND. ! Empty( hb_hrbGetFunSym( pHrb, cPlugin + "_init" ) )
+   IF ( lLoaded := ! empty( pHrb ) )
+      IF ! Empty( hb_hrbGetFunSym( pHrb, cPlugin + "_init" ) )
          bBlock := &( "{|...| " + cPlugin + "_init(...) }" )
 
          IF eval( bBlock, oIde, cVer )
-
             IF ! Empty( hb_hrbGetFunSym( pHrb, cPlugin + "_exec" ) )
                aadd( s_aPlugins, { cPlugin, &( "{|...| " + cPlugin + "_exec(...) }" ), pHrb } )
                lLoaded := .t.
@@ -151,3 +149,33 @@ STATIC FUNCTION hbide_loadAPlugin( cPlugin, oIde, cVer )
 
 /*----------------------------------------------------------------------*/
 
+FUNCTION hbide_runAScript( cBuffer, cCompFlags )
+   LOCAL cFile, pHrb, oErr
+   LOCAL bError := ErrorBlock( {|o| break( o ) } )
+   LOCAL lError := .f.
+
+   HB_SYMBOL_UNUSED( cCompFlags )
+
+   BEGIN SEQUENCE
+      cFile := hb_compileFromBuf( cBuffer, cCompFlags ) //, "-n2", "-w3", "-es2", "-q0" )
+      IF ! Empty( cFile )
+         pHrb := hb_hrbLoad( HB_HRB_BIND_FORCELOCAL, cFile )
+      ENDIF
+   RECOVER USING oErr
+      MsgBox( oErr:description )
+      lError := .t.
+   END SEQUENCE
+
+   IF ! lError .AND. !empty( pHrb )
+      BEGIN SEQUENCE
+         hb_hrbDo( pHrb )
+      RECOVER USING oErr
+         MsgBox( oErr:description )
+      END SEQUENCE
+   ENDIF
+
+   ErrorBlock( bError )
+
+   RETURN NIL
+
+/*----------------------------------------------------------------------*/

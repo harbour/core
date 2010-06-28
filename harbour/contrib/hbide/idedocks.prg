@@ -232,7 +232,7 @@ METHOD IdeDocks:buildDialog()
    ::oDlg:icon := hbide_image( "hbide" )
    ::oDlg:title := "Harbour IDE"
 //   ::oDlg:qtObject := HbQtUI():new( hbide_uic( "mainwindow" ) ):build()
-   ::oUI := hbide_getUI( "mainwindow" )
+   ::oDlg:qtObject := hbide_getUI( "mainwindow" )
    ::oDlg:create( , , , , , .f. )
 
    ::oDlg:setStyleSheet( GetStyleSheet( "QMainWindow", ::nAnimantionMode ) )

@@ -1644,6 +1644,12 @@ METHOD IdeEditor:scrollThumbnail()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEditor:qscintilla()
+
+ //  hbide_browseSome( Self )
+
+ //  hbide_qtDesigner()
+
+
    #ifdef HB_WITH_QSCINTILLA
    #include "hbqscintilla.ch"
 
@@ -1712,10 +1718,11 @@ METHOD IdeEditor:qscintilla()
       oSci:setAutoCompletionShowSingle( .t. )
       oSci:setAutoCompletionFillupsEnabled( .t. )
 
-HB_TRACE( HB_TR_ALWAYS, time() )
+      HB_TRACE( HB_TR_ALWAYS, time() )
       oSci:setText( hb_memoread( "c:\harbour\contrib\hbide\idemisc.prg" ) )
    // oSci:setText( hb_memoread( "c:\harbour\contrib\hbide\ideparseexpr.c" ) )
-HB_TRACE( HB_TR_ALWAYS, time(), "after" )
+      HB_TRACE( HB_TR_ALWAYS, time(), "after" )
+
       c1 := QColor():new( 0,0,255 )
       c2 := QColor():new( 0,12,133 )
       c3 := QColor():new( 20,122,144 )
@@ -1749,8 +1756,8 @@ HB_TRACE( HB_TR_ALWAYS, time(), "after" )
 
       qLexer:setColor( QColor():new( 255, 127,  67 ), SCE_FS_KEYWORD  )
       qLexer:setColor( QColor():new( 255,   0, 127 ), SCE_FS_KEYWORD2 )
-      qLexer:setColor( QColor():new( 127, 67 , 255 ), SCE_FS_OPERATOR )
-      qLexer:setColor( QColor():new( 255, 0  ,   0 ), SCE_FS_BRACE    )
+      qLexer:setColor( QColor():new( 127,  67, 255 ), SCE_FS_OPERATOR )
+      qLexer:setColor( QColor():new( 255,   0,   0 ), SCE_FS_BRACE    )
 
       qApis := QsciAPIs():new( qLexer )
       qApis:load( "c:/temp/cpp.api" )
@@ -1767,4 +1774,38 @@ HB_TRACE( HB_TR_ALWAYS, time(), "after" )
 
 /*----------------------------------------------------------------------*/
 
+STATIC FUNCTION hbide_qtDesigner()
+
+   #ifdef __DESIGNER__
+   LOCAL n
+   STATIC oEdt, oWM
+
+   oEdt := QDesignerFormEditorInterface():new( ::oDlg:oWidget )
+   HB_TRACE( HB_TR_ALWAYS, 1 )
+   oWM := QDesignerFormWindowManagerInterface():from( oEdt:formWindowManager() )
+   HB_TRACE( HB_TR_ALWAYS, 2 )
+   oWM:createFormWindow( ::oQScintillaDock:oWidget )
+   HB_TRACE( HB_TR_ALWAYS, 3 )
+   ::oQScintillaDock:oWidget:show()
+   HB_TRACE( HB_TR_ALWAYS, 4 )
+   n := oWM:formWindowCount()
+   HB_TRACE( HB_TR_ALWAYS, n )
+
+   /*
+   QDesignerActionEditorInterface * actionEditor () const
+   QDesignerFormWindowManagerInterface * formWindowManager () const
+   QDesignerObjectInspectorInterface * objectInspector () const
+   QDesignerPropertyEditorInterface * propertyEditor () const
+   void setActionEditor ( QDesignerActionEditorInterface * actionEditor )
+   void setObjectInspector ( QDesignerObjectInspectorInterface * objectInspector )
+   void setPropertyEditor ( QDesignerPropertyEditorInterface * propertyEditor )
+   void setWidgetBox ( QDesignerWidgetBoxInterface * widgetBox )
+   QWidget * topLevel () const
+   QDesignerWidgetBoxInterface * widgetBox () const
+   */
+
+   #endif
+   RETURN NIL
+
+/*----------------------------------------------------------------------*/
 

@@ -93,6 +93,8 @@ STATIC s_pathSep
 PROCEDURE Main( ... )
    LOCAL oIde
 
+   hbide_request()
+
    #ifdef HB_IDE_DISTRO
       LOCAL cSep := hb_osPathSeparator()
       LOCAL cBse := hb_dirBase() + ".."
@@ -536,9 +538,8 @@ METHOD HbIde:create( aParams )
    /* Load tags last tagged projects */
    ::oFN:loadTags( ::oINI:aTaggedProjects )
 
-   #if 0   /* Can be controlled through setup */
+   /* Initialize plugins  */
    hbide_loadPlugins( Self, "1.0" )
-   #endif
 
    DO WHILE .t.
       ::nEvent := AppEvent( @::mp1, @::mp2, @::oXbp )
@@ -702,6 +703,7 @@ METHOD HbIde:execAction( cKey )
    CASE "NewProject"
    CASE "LoadProject"
    CASE "LaunchProject"
+   CASE "RunAsScript"
    CASE "BuildSource"
    CASE "Build"
    CASE "BuildLaunch"
@@ -958,6 +960,9 @@ METHOD HbIde:execProjectAction( cKey )
       EXIT
    CASE "LaunchProject"
       ::oPM:launchProject()
+      EXIT
+   CASE "RunAsScript"
+      ::oPM:runAsScript( .t. )
       EXIT
    CASE "BuildSource"
       ::oPM:buildSource( .t. )

@@ -84,6 +84,7 @@ CLASS IdeToolsManager INHERIT IdeObject
    DATA   aHdr                                    INIT   {}
    DATA   aBtns                                   INIT   {}
    DATA   aToolbars                               INIT   { NIL,NIL,NIL,NIL,NIL }
+   DATA   aPlugins                                INIT   {}
 
    ACCESS aTools                                  INLINE ::oINI:aTools
    ACCESS aUserToolBars                           INLINE ::oINI:aUserToolbars
@@ -109,6 +110,7 @@ CLASS IdeToolsManager INHERIT IdeObject
    METHOD ini2toolbarControls( nIndex, nMode )
    METHOD populateButtonsTable( nIndex )
    METHOD buildUserToolbars()
+   METHOD populatePlugins( lClear )
 
    ENDCLASS
 
@@ -274,6 +276,7 @@ METHOD IdeToolsManager:show()
       ::oUI:q_listToolbars:setCurrentRow( 0 )
    ENDIF
 
+   ::populatePlugins( .t. )
    ::clearList()
    ::populateList( ::oINI:aTools )
    ::oUI:q_listNames:setCurrentRow( 0 )
@@ -534,6 +537,8 @@ METHOD IdeToolsManager:ini2controls( nIndex )
       ::oUI:q_buttonSetImage   :setIcon( iif( empty( ::aTools[ nIndex, 9 ] ), hbide_image( "open" ), ;
                                                                hbide_pathToOsPath( ::aTools[ nIndex, 9 ] ) ) )
       ::oUI:q_editTooltip      :setText( ::aTools[ nIndex, 10 ] )
+      ::oUI:q_comboPlugin      :setCurrentIndex( ascan( ::aPlugins, {|e| ::aTools[ nIndex, 11 ] == e } ) - 1 )
+      ::oUI:q_checkPlugInit    :setChecked( ::aTools[ nIndex, 12 ] == "YES" )
 
    ELSE
       ::oUI:q_editName         :setText( "" )
@@ -548,6 +553,8 @@ METHOD IdeToolsManager:ini2controls( nIndex )
       ::oUI:q_editImage        :setText( "" )
       ::oUI:q_buttonSetImage   :setIcon( hbide_image( "open" ) )
       ::oUI:q_editTooltip      :setText( "" )
+      ::oUI:q_comboPlugin      :setCurrentIndex( -1 )
+      ::oUI:q_checkPlugInit    :setChecked( .f. )
 
    ENDIF
 
@@ -566,14 +573,16 @@ METHOD IdeToolsManager:controls2ini( nIndex )
                                     hbide_pathNormalized( ::oUI:q_editCmdLine:text() ), ;
                                     hbide_pathNormalized( ::oUI:q_editParams:text()  ), ;
                                     hbide_pathNormalized( ::oUI:q_editStayIn:text()  ), ;
-                                    iif( ::oUI:q_checkCapture:isChecked(), "YES", "" ), ;
+                                    iif( ::oUI:q_checkCapture :isChecked(), "YES", "" ), ;
                                     iif( ::oUI:q_checkOpenCons:isChecked(), "YES", "" ), ;
                                     ;
                                     hb_ntos( ::oUI:q_comboToolbarAsgnd:currentIndex() ), ;
                                     iif( ::oUI:q_checkToolActive:isChecked(), "YES", "NO" ), ;
                                     ::oUI:q_editImage:text(), ;
-                                    ::oUI:q_editTooltip:text() ;
-                                  }
+                                    ::oUI:q_editTooltip:text(), ;
+                                    ::oUI:q_comboPlugin:currentText(), ;
+                                    iif( ::oUI:q_checkPlugInit:isChecked(), "YES", "NO" ) ;
+                              }
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -594,6 +603,28 @@ METHOD IdeToolsManager:populateList( aList )
    FOR EACH a_ IN aList
       ::oUI:q_listNames:addItem( a_[ 1 ] )
    NEXT
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeToolsManager:populatePlugins( lClear )
+   LOCAL cDir, aDir, aFile
+
+   IF lClear
+      ::oUI:q_comboPlugin:clear()
+   ENDIF
+   ::aPlugins := {}
+
+   cDir := hb_dirBase() + "plugins" + hb_osPathSeparator()
+   aDir := directory( cDir + "*" )
+   IF !empty( aDir )
+      FOR EACH aFile IN aDir
+         ::oUI:q_comboPlugin:addItem( aFile[ 1 ] )
+         aadd( ::aPlugins, aFile[ 1 ] )
+      NEXT
+      ::oUI:q_comboPlugin:setCurrentIndex( -1 )
+   ENDIF
 
    RETURN Self
 
@@ -688,18 +719,23 @@ METHOD IdeToolsManager:execToolByParams( cCmd, cParams, cStartIn, lCapture, lOpe
 /*----------------------------------------------------------------------*/
 
 METHOD IdeToolsManager:execTool( ... )
-   LOCAL nIndex, cCmd, cParams, cStayIn, lCapture, lOpen, aParam
+   LOCAL nIndex, cCmd, cParams, cStayIn, lCapture, lOpen, aParam, cPlugin, a_
 
    aParam := hb_aParams()
    IF len( aParam ) == 1
       IF ( nIndex := ascan( ::aTools, {|e_| e_[ 1 ] == aParam[ 1 ] } ) ) > 0
+         hb_fNameSplit( ::aTools[ nIndex, 11 ], , @cPlugin )
+
          cCmd     := hbide_pathToOSPath( ::aTools[ nIndex, 2 ] )
          cParams  := ::aTools[ nIndex, 3 ]
-         cParams  := iif( "http://" $ lower( cParams ), cParams, hbide_pathToOSPath( cParams ) )
+         cParams  := iif( "http://" $ lower( cParams ) .OR. !empty( cPlugin ), cParams, hbide_pathToOSPath( cParams ) )
+         cParams  := ::parseParams( cParams )
          cStayIn  := hbide_pathToOSPath( ::aTools[ nIndex, 4 ] )
          lCapture := ::aTools[ nIndex, 5 ] == "YES"
          lOpen    := ::aTools[ nIndex, 6 ] == "YES"
+
       ENDIF
+
    ELSEIF len( aParam ) > 1
       asize( aParam, 5 )
 
@@ -716,10 +752,21 @@ METHOD IdeToolsManager:execTool( ... )
       cStayIn  := hbide_pathToOSPath( aParam[ 3 ] )
       lCapture := iif( hb_isLogical( aParam[ 4 ] ), aParam[ 4 ], aParam[ 4 ] == "YES" )
       lOpen    := iif( hb_isLogical( aParam[ 5 ] ), aParam[ 5 ], aParam[ 5 ] == "YES" )
+
    ENDIF
 
    IF hb_isLogical( lCapture )
-      ::execToolByParams( cCmd, cParams, cStayIn, lCapture, lOpen )
+      IF !empty( cPlugin )
+         a_:= hb_aTokens( cParams, " " )
+         FOR EACH cParams IN a_
+            cParams := hbide_evalAsis( cParams )
+         NEXT
+         hbide_execPlugin( cPlugin, ::oIde, hb_arrayToParams( a_ ) )
+
+      ELSE
+         ::execToolByParams( cCmd, cParams, cStayIn, lCapture, lOpen )
+
+      ENDIF
    ENDIF
 
    RETURN Self
@@ -809,3 +856,4 @@ METHOD IdeToolsManager:macro2value( cMacro )
    RETURN cVal
 
 /*----------------------------------------------------------------------*/
+

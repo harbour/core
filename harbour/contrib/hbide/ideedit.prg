@@ -2313,6 +2313,7 @@ FUNCTION hbide_isHarbourKeyword( cWord, oIde )
    STATIC s_b_ := { ;
                     'function' => NIL,;
                     'return' => NIL,;
+                    'request' => NIL,;
                     'static' => NIL,;
                     'local' => NIL,;
                     'default' => NIL,;

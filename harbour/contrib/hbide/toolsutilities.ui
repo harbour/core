@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>602</width>
-    <height>425</height>
+    <height>478</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -74,7 +74,7 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>12</x>
-     <y>392</y>
+     <y>448</y>
      <width>149</width>
      <height>24</height>
     </rect>
@@ -87,7 +87,7 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>12</x>
-     <y>278</y>
+     <y>334</y>
      <width>79</width>
      <height>16</height>
     </rect>
@@ -149,7 +149,7 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>12</x>
-     <y>376</y>
+     <y>432</y>
      <width>253</width>
      <height>16</height>
     </rect>
@@ -175,7 +175,7 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>12</x>
-     <y>296</y>
+     <y>352</y>
      <width>253</width>
      <height>20</height>
     </rect>
@@ -209,7 +209,7 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>172</x>
-     <y>392</y>
+     <y>448</y>
      <width>95</width>
      <height>24</height>
     </rect>
@@ -245,7 +245,7 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>14</x>
-     <y>320</y>
+     <y>376</y>
      <width>95</width>
      <height>16</height>
     </rect>
@@ -257,9 +257,9 @@ p, li { white-space: pre-wrap; }
   <widget class="QLineEdit" name="editStayIn">
    <property name="geometry">
     <rect>
-     <x>14</x>
-     <y>338</y>
-     <width>251</width>
+     <x>12</x>
+     <y>394</y>
+     <width>253</width>
      <height>20</height>
     </rect>
    </property>
@@ -277,7 +277,7 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>14</x>
-     <y>362</y>
+     <y>418</y>
      <width>109</width>
      <height>19</height>
     </rect>
@@ -300,7 +300,7 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>134</x>
-     <y>362</y>
+     <y>418</y>
      <width>131</width>
      <height>19</height>
     </rect>
@@ -476,7 +476,7 @@ p, li { white-space: pre-wrap; }
      <x>284</x>
      <y>284</y>
      <width>307</width>
-     <height>131</height>
+     <height>187</height>
     </rect>
    </property>
    <property name="title">
@@ -488,7 +488,7 @@ p, li { white-space: pre-wrap; }
       <x>10</x>
       <y>16</y>
       <width>253</width>
-      <height>107</height>
+      <height>161</height>
      </rect>
     </property>
    </widget>
@@ -611,6 +611,42 @@ p, li { white-space: pre-wrap; }
     </property>
     <property name="text">
      <string>Active</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QGroupBox" name="groupBox_4">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>280</y>
+     <width>257</width>
+     <height>47</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string> Plugin </string>
+   </property>
+   <widget class="QComboBox" name="comboPlugin">
+    <property name="geometry">
+     <rect>
+      <x>12</x>
+      <y>16</y>
+      <width>139</width>
+      <height>22</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="checkPlugInit">
+    <property name="geometry">
+     <rect>
+      <x>160</x>
+      <y>18</y>
+      <width>93</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Init on startup</string>
     </property>
    </widget>
   </widget>
