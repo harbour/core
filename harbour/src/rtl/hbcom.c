@@ -1187,9 +1187,10 @@ int hb_comOpen( int iPort )
    if( pCom )
    {
       if( pCom->status & HB_COM_OPEN )
-         hb_comClose( iPort );
-
-      if( ( pCom->status & HB_COM_OPEN ) == 0 )
+      {
+         hb_comSetError( pCom, HB_COM_ERR_ALREADYOPEN );
+      }
+      else
       {
          char buffer[ HB_COM_DEV_NAME_MAX ];
          const char * name = hb_comGetName( pCom, buffer, sizeof( buffer ) );
@@ -1874,9 +1875,10 @@ int hb_comOpen( int iPort )
    if( pCom )
    {
       if( pCom->status & HB_COM_OPEN )
-         hb_comClose( iPort );
-
-      if( ( pCom->status & HB_COM_OPEN ) == 0 )
+      {
+         hb_comSetError( pCom, HB_COM_ERR_ALREADYOPEN );
+      }
+      else
       {
          char buffer[ HB_COM_DEV_NAME_MAX ];
          const char * szName = hb_comGetName( pCom, buffer, sizeof( buffer ) );
@@ -2659,9 +2661,10 @@ int hb_comOpen( int iPort )
    if( pCom )
    {
       if( pCom->status & HB_COM_OPEN )
-         hb_comClose( iPort );
-
-      if( ( pCom->status & HB_COM_OPEN ) == 0 )
+      {
+         hb_comSetError( pCom, HB_COM_ERR_ALREADYOPEN );
+      }
+      else
       {
          char buffer[ HB_COM_DEV_NAME_MAX ];
          const char * pszName = hb_comGetName( pCom, buffer, sizeof( buffer ) );
