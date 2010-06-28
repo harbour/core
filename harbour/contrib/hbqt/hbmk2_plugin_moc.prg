@@ -66,7 +66,7 @@ FUNCTION hbmk2_plugin_moc( hbmk2 )
                   ELSE
                      cMOC_BIN := GetEnv( "HB_WITH_QT" ) + "\..\bin\moc.exe"
                      IF ! hb_FileExists( cMOC_BIN )
-                        hbmk2_OutErr( hbmk2, "HB_WITH_QT points to incomplete QT installation. moc executable not found." )
+                        hbmk2_OutErr( hbmk2, "HB_WITH_QT points to incomplete QT installation. 'moc' executable not found." )
                         RETURN NIL
                      ENDIF
                   ENDIF
@@ -90,7 +90,7 @@ FUNCTION hbmk2_plugin_moc( hbmk2 )
                      hbmk2_OutStd( hbmk2, "Using QT 'moc' executable: " + cMOC_BIN )
                   ENDIF
                ELSE
-                  hbmk2_OutErr( hbmk2, "HB_QT_MOC_BIN points to non-existent file. Make sure to set it to full path and filename of moc executable." )
+                  hbmk2_OutErr( hbmk2, "HB_QT_MOC_BIN points to non-existent file. Make sure to set it to full path and filename of 'moc' executable." )
                   RETURN NIL
                ENDIF
             ENDIF

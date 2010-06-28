@@ -405,6 +405,9 @@ REQUEST hbmk_KEYW
 #define hb_DirCreate( d )       MakeDir( d )
 #define hb_DirDelete( d )       DirRemove( d )
 
+/* Request some functions for plugins */
+REQUEST HB_REGEX
+
 /* NOTE: Security token to protect against plugins accessing our
          internal structures referenced from context variable */
 STATIC s_cSecToken := NIL
