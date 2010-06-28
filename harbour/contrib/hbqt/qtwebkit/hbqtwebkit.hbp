@@ -1,7 +1,6 @@
 -3rd=hbide_version=1.0
 -3rd=hbide_type=Lib
 -3rd=hbide_title=qtwebkit
--3rd=hbide_location=C:/harbour/contrib/hbqt/qtwebkit/
 -3rd=hbide_workingfolder=
 -3rd=hbide_destinationfolder=
 -3rd=hbide_output=qtwebkit
@@ -13,7 +12,7 @@
 -3rd=hbide_clp=NO
 
 -info
--trace 
+-trace
 -inc
 -w2
 -es2
@@ -48,4 +47,3 @@ TQWebPluginFactory.prg
 TQWebSecurityOrigin.prg
 TQWebSettings.prg
 TQWebView.prg
-
