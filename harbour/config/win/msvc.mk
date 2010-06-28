@@ -80,7 +80,7 @@ LD_OUT := -out:
 LIBPATHS := -libpath:$(LIB_DIR)
 LDLIBS := $(foreach lib,$(HB_USER_LIBS) $(LIBS) $(SYSLIBS),$(lib)$(LIB_EXT))
 
-LDFLAGS += -nologo $(LIBPATHS)
+LDFLAGS += -nologo -subsystem:console $(LIBPATHS)
 
 AR := lib.exe
 AR_RULE = $(AR) $(ARFLAGS) $(HB_AFLAGS) $(HB_USER_AFLAGS) -nologo -out:$(LIB_DIR)/$@ $(^F)
