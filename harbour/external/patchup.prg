@@ -1,4 +1,4 @@
-#!/usr/bin/hbrun //gt:cgi
+#!/usr/bin/hbrun --hb:gtcgi
 /*
  * $Id$
  */
@@ -825,7 +825,7 @@ STATIC FUNCTION hb_FileTran( cFileName )
       /* Local-style includes */
       cTransformedContent := StrTran( cTransformedContent,                                ;
                                       Chr( 34 ) + cChangeFrom + Chr( 34 ),                ;
-                                      Chr( 34 ) + cChangeTo + Chr( 34 ) ) 
+                                      Chr( 34 ) + cChangeTo + Chr( 34 ) )
 
       /* System-style include */
       cTransformedContent := StrTran( cTransformedContent,                                ;

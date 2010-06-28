@@ -78,3 +78,6 @@ ifneq ($(DIRS),)
 else
    include $(TOP)$(ROOT)config/none.mk
 endif
+
+all:
+	$(if $(wildcard $(HB_HOST_BIN_DIR)/hbrun$(HB_HOST_BIN_EXT)),+$(HB_HOST_BIN_DIR)/hbrun$(HB_HOST_BIN_EXT) --hb:gtcgi $(TOP)$(ROOT)contrib/makefile.prg TEST,)

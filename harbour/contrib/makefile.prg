@@ -149,6 +149,12 @@ PROCEDURE Main( ... )
    LOCAL aParams := hb_AParams()
    LOCAL tmp
 
+   IF Len( aParams ) == 1 .AND. aParams[ 1 ] == "TEST"
+      OutStd( "! New contrib make orchestrator test run: OK" + hb_osNewLine() )
+      ErrorLevel( 0 )
+      RETURN
+   ENDIF
+
    IF Empty( GetEnv( "HB_PLATFORM" ) ) .OR. ;
       Empty( GetEnv( "HB_COMPILER" ) ) .OR. ;
       Empty( GetEnv( "HB_HOST_BIN_DIR" ) )

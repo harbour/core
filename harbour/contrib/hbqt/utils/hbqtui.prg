@@ -142,18 +142,22 @@ PROCEDURE Main( ... )
 
       hb_processRun( cCmd )
 
-      oGen := HbUIGen():new( hb_memoread( cUic ) )
-      oGen:cFuncName := "ui" + upper( left( cFile, 1 ) ) + lower( substr( cFile, 2 ) )
+      IF hb_FileExists( cUic )
+         oGen := HbUIGen():new( hb_memoread( cUic ) )
+         oGen:cFuncName := "ui" + upper( left( cFile, 1 ) ) + lower( substr( cFile, 2 ) )
 
-      aResult := oGen:create()
-      IF ISARRAY( aResult )
-         s := ""
-         aeval( aResult, {|e| s += e + hb_osNewLine() } )
-         hb_memowrit( StrTran( cPrg, "/", hb_osPathSeparator() ), s )
-      ENDIF
+         aResult := oGen:create()
+         IF ISARRAY( aResult )
+            s := ""
+            aeval( aResult, {|e| s += e + hb_osNewLine() } )
+            hb_memowrit( StrTran( cPrg, "/", hb_osPathSeparator() ), s )
+         ENDIF
 
-      IF lDelUic
-         FErase( cUic )
+         IF lDelUic
+            FErase( cUic )
+         ENDIF
+      ELSE
+         OutStd( "hbqtui: Warning: Intermediate .uic file not found: " + cUic + hb_osNewLine() )
       ENDIF
    NEXT
 
