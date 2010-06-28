@@ -77,17 +77,6 @@
 
 /*----------------------------------------------------------------------*/
 
-STATIC FUNCTION hbide_getNewAlias( cTable )
-   LOCAL cFile
-
-   STATIC n := 0
-   n++
-   hb_fNameSplit( cTable, , @cFile )
-
-   RETURN cFile + "_" + hb_ntos( n )
-
-/*----------------------------------------------------------------------*/
-
 FUNCTION hbide_browseSome( oIde )
    LOCAL cTable, cPath
 
@@ -136,12 +125,15 @@ METHOD IdeBrowseManager:create( oIde )
 
    ::qLayout := QVBoxLayout():new()
    ::oPanel:setLayout( ::qLayout )
+   ::qLayout:setContentsMargins( 0,0,0,0 )
+   ::qLayout:setSpacing( 2 )
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeBrowseManager:destroy()
+   #if 0
    LOCAL oBrw
 
    // Close tables and clear variables
@@ -150,7 +142,7 @@ METHOD IdeBrowseManager:destroy()
       DbCloseArea()
    NEXT
    ::aItems := {}
-
+   #endif
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -224,6 +216,7 @@ CLASS IdeBrowse INHERIT IdeObject
    METHOD lastRec()
    METHOD next()
    METHOD previous()
+   METHOD activated()
 
    ENDCLASS
 
@@ -299,6 +292,14 @@ METHOD IdeBrowse:create( oIde )
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeBrowse:activated()
+
+   ::oQScintillaDock:oWidget:setWindowTitle( ::cTable )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeBrowse:buildBrowser()
    LOCAL qLayout, oWnd, oXbpBrowse
 
@@ -309,6 +310,8 @@ METHOD IdeBrowse:buildBrowser()
 
    qLayout := QVBoxLayout():new()
    oWnd:oWidget:setLayout( qLayout )
+   qLayout:setContentsMargins( 0,0,0,0 )
+   qLayout:setSpacing( 2 )
 
    oXbpBrowse := XbpBrowse():new():create( oWnd, , { 0,0 }, oWnd:currentSize() )
    oXbpBrowse:setFontCompoundName( "10.Courier" )
@@ -328,6 +331,9 @@ METHOD IdeBrowse:buildBrowser()
    oXbpBrowse:goPosBlock    := {|n| ::goto( n )      }
    oXbpBrowse:phyPosBlock   := {| | ::recNo()        }
 
+   //oXbpBrowse:connectEvent( oXbpBrowse:oWidget, QEvent_FocusIn, {|| ::execE} )
+   oXbpBrowse:setInputFocus := {|| ::activated() }
+
    ::qLayout := qLayout
    ::oWnd    := oWnd
    ::oBrw    := oXbpBrowse
@@ -340,7 +346,7 @@ METHOD IdeBrowse:dataLink( nField )
    LOCAL bBlock
 
    IF ::nType == BRW_TYPE_DBF
-      bBlock := {|| (::cAlias)->( fieldget( nField ) ) }
+      bBlock := {|| ( ::cAlias )->( fieldget( nField ) ) }
    ELSE
       bBlock := {|| ::aData[ ::nIndex, nField ] }
    ENDIF
@@ -402,7 +408,7 @@ METHOD IdeBrowse:skipBlock( nHowMany )
 
    IF ::nType == BRW_TYPE_DBF
       IF nHowMany == 0
-         DBSkip( 0 )
+         ( ::cAlias )->( DBSkip( 0 ) )
 
       ELSEIF nHowMany > 0
          DO WHILE nSkipped != nHowMany .AND. ::next()
@@ -447,7 +453,7 @@ METHOD IdeBrowse:skipBlock( nHowMany )
 METHOD IdeBrowse:goTop()
 
    IF ::nType == BRW_TYPE_DBF
-      DbGotop()
+      ( ::cAlias )->( DbGotop() )
    ELSE
       ::nIndex := 1
    ENDIF
@@ -458,7 +464,7 @@ METHOD IdeBrowse:goTop()
 METHOD IdeBrowse:goBottom()
 
    IF ::nType == BRW_TYPE_DBF
-      DbGoBottom()
+      ( ::cAlias )->( DbGoBottom() )
    ELSE
       ::nIndex := len( ::aData )
    ENDIF
@@ -470,7 +476,7 @@ METHOD IdeBrowse:goBottom()
 METHOD IdeBrowse:recNo()
 
    IF ::nType == BRW_TYPE_DBF
-      RETURN RecNo()
+      RETURN ( ::cAlias )->( RecNo() )
    ELSE
       RETURN ::nIndex
    ENDIF
@@ -482,7 +488,7 @@ METHOD IdeBrowse:recNo()
 METHOD IdeBrowse:lastRec()
 
    IF ::nType == BRW_TYPE_DBF
-      RETURN LastRec()
+      RETURN ( ::cAlias )->( LastRec() )
    ELSE
       RETURN len( ::aData )
    ENDIF
@@ -494,7 +500,7 @@ METHOD IdeBrowse:lastRec()
 METHOD IdeBrowse:goTo( nRec )
 
    IF ::nType == BRW_TYPE_DBF
-      DbGoto( nRec )
+      ( ::cAlias )->( DbGoto( nRec ) )
    ELSE
       ::nIndex := nRec
    ENDIF
@@ -507,13 +513,13 @@ METHOD IdeBrowse:next()
    LOCAL nSaveRecNum := recno()
    LOCAL lMoved := .T.
 
-   IF Eof()
+   IF ( ::cAlias )->( Eof() )
       lMoved := .F.
    ELSE
-      DBSkip( 1 )
+      ( ::cAlias )->( DBSkip( 1 ) )
       IF Eof()
          lMoved := .F.
-         DBGoTo( nSaveRecNum )
+         ( ::cAlias )->( DBGoTo( nSaveRecNum ) )
       ENDIF
    ENDIF
 
@@ -525,10 +531,10 @@ METHOD IdeBrowse:previous()
    LOCAL nSaveRecNum := Recno()
    LOCAL lMoved := .T.
 
-   DBSkip( -1 )
+   ( ::cAlias )->( DBSkip( -1 ) )
 
    IF Bof()
-      DBGoTo( nSaveRecNum )
+      ( ::cAlias )->( DBGoTo( nSaveRecNum ) )
       lMoved := .F.
    ENDIF
 

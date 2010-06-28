@@ -507,7 +507,12 @@ METHOD HbIde:create( aParams )
    ENDDO
    #endif
 
+   IF empty( ::cWrkFolderLast )
+      ::cWrkFolderLast := hb_dirBase() + "projects" + hb_osPathSeparator()
+   ENDIF
+
    ::oDockB2:hide() /* This widget never contains anything so must be forced to hide */
+   ::oQScintillaDock:hide()
 
    /* Request Main Window to Appear on the Screen */
    ::oHM:refresh()
