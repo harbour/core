@@ -137,7 +137,7 @@ CLASS IdeProject
    DATA   dotHbp                                  INIT ""
    DATA   compilers                               INIT ""
    DATA   cPathMk2                                INIT hb_getenv( "HBIDE_DIR_HBMK2" )
-   DATA   cPathEnv                                INIT hb_DirBase() + "resources"
+   DATA   cPathEnv                                INIT hb_DirBase()
    DATA   hSources                                INIT {=>}
    DATA   hPaths                                  INIT {=>}
    DATA   lPathAbs                                INIT .F.  // Lets try relative paths first . xhp and hbp will be relative anyway

@@ -9,7 +9,7 @@
 
 -stop{dos|watcom|bcc|pocc|pocc64|poccarm|msvcia64}
 
--plugin=hbmk2_plugin_moc.prg
+-plugin=hbmk2_plugin_qt.prg
 
 -depkeyhead=qt:QtCore/qglobal.h
 -depcontrol=qt:${HB_WITH_QT}

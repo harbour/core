@@ -325,64 +325,63 @@ REQUEST hbmk_KEYW
 #define _HBMK_lHBCPPMM          59
 #define _HBMK_aVAR              60
 #define _HBMK_hDEP              61
-#define _HBMK_hDEPBYHEADER      62
 
-#define _HBMK_lCreateLib        63
-#define _HBMK_lCreateDyn        64
-#define _HBMK_lCreateImpLib     65
+#define _HBMK_lCreateLib        62
+#define _HBMK_lCreateDyn        63
+#define _HBMK_lCreateImpLib     64
 
-#define _HBMK_lDynVM            66
+#define _HBMK_lDynVM            65
 
-#define _HBMK_lBLDFLGP          67
-#define _HBMK_lBLDFLGC          68
-#define _HBMK_lBLDFLGL          69
+#define _HBMK_lBLDFLGP          66
+#define _HBMK_lBLDFLGC          67
+#define _HBMK_lBLDFLGL          68
 
-#define _HBMK_cFIRST            70
-#define _HBMK_aPRG              71
-#define _HBMK_aC                72
-#define _HBMK_aCPP              73
-#define _HBMK_aRESSRC           74
-#define _HBMK_aRESCMP           75
-#define _HBMK_aOBJUSER          76
-#define _HBMK_aICON             77
-#define _HBMK_aIMPLIBSRC        78
-#define _HBMK_aDEF              79
-#define _HBMK_hDEPTS            80
+#define _HBMK_cFIRST            69
+#define _HBMK_aPRG              70
+#define _HBMK_aC                71
+#define _HBMK_aCPP              72
+#define _HBMK_aRESSRC           73
+#define _HBMK_aRESCMP           74
+#define _HBMK_aOBJUSER          75
+#define _HBMK_aICON             76
+#define _HBMK_aIMPLIBSRC        77
+#define _HBMK_aDEF              78
+#define _HBMK_hDEPTS            79
 
-#define _HBMK_aPO               81
-#define _HBMK_cHBL              82
-#define _HBMK_cHBLDir           83
-#define _HBMK_aLNG              84
-#define _HBMK_cPO               85
+#define _HBMK_aPO               80
+#define _HBMK_cHBL              81
+#define _HBMK_cHBLDir           82
+#define _HBMK_aLNG              83
+#define _HBMK_cPO               84
 
-#define _HBMK_aPLUGIN           86
-#define _HBMK_hPLUGINHRB        87
-#define _HBMK_hPLUGINVars       88
-#define _HBMK_aPLUGINPars       89
+#define _HBMK_aPLUGIN           85
+#define _HBMK_hPLUGINHRB        86
+#define _HBMK_hPLUGINVars       87
+#define _HBMK_aPLUGINPars       88
 
-#define _HBMK_lDEBUGTIME        90
-#define _HBMK_lDEBUGINC         91
-#define _HBMK_lDEBUGSTUB        92
-#define _HBMK_lDEBUGI18N        93
-#define _HBMK_lDEBUGDEPD        94
+#define _HBMK_lDEBUGTIME        89
+#define _HBMK_lDEBUGINC         90
+#define _HBMK_lDEBUGSTUB        91
+#define _HBMK_lDEBUGI18N        92
+#define _HBMK_lDEBUGDEPD        93
 
-#define _HBMK_cCCPATH           95
-#define _HBMK_cCCPREFIX         96
-#define _HBMK_cCCPOSTFIX        97
-#define _HBMK_cCCEXT            98
+#define _HBMK_cCCPATH           94
+#define _HBMK_cCCPREFIX         95
+#define _HBMK_cCCPOSTFIX        96
+#define _HBMK_cCCEXT            97
 
-#define _HBMK_cWorkDir          99
-#define _HBMK_cWorkDirDynSub    100
-#define _HBMK_nCmd_Esc          101
-#define _HBMK_nScr_Esc          102
-#define _HBMK_nCmd_FNF          103
-#define _HBMK_nScr_FNF          104
-#define _HBMK_nErrorLevel       105
+#define _HBMK_cWorkDir          98
+#define _HBMK_cWorkDirDynSub    99
+#define _HBMK_nCmd_Esc          100
+#define _HBMK_nScr_Esc          101
+#define _HBMK_nCmd_FNF          102
+#define _HBMK_nScr_FNF          103
+#define _HBMK_nErrorLevel       104
 
-#define _HBMK_cPROGDIR          106
-#define _HBMK_cPROGNAME         107
+#define _HBMK_cPROGDIR          105
+#define _HBMK_cPROGNAME         106
 
-#define _HBMK_MAX_              107
+#define _HBMK_MAX_              106
 
 #define _HBMK_DEP_CTRL_MARKER   ".control." /* must be an invalid path */
 
@@ -2468,11 +2467,11 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          /usr/local/include                          (FHS)
       */
 
-      dep_postprocess_2( hbmk )
-
       /* Process any package requirements */
       FOR EACH tmp IN hbmk[ _HBMK_hDEP ]
-         dep_try_pkg_detection( hbmk, tmp )
+         IF ! dep_try_pkg_detection( hbmk, tmp )
+            dep_try_header_detection( hbmk, tmp )
+         ENDIF
       NEXT
    ENDIF
 
@@ -4034,19 +4033,12 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             IF ! hb_FGetDateTime( FN_DirExtSet( tmp, hbmk[ _HBMK_cWorkDir ], cObjExt ), @tmp2 ) .OR. ;
                ! hb_FGetDateTime( tmp, @tmp1 ) .OR. ;
                tmp1 > tmp2 .OR. ;
-               ( hbmk[ _HBMK_nHEAD ] != _HEAD_OFF .AND. FindNewerHeaders( hbmk, tmp, NIL, .F., tmp2, ! Empty( hbmk[ _HBMK_hDEPBYHEADER ] ), .T., cBin_CompC, @headstate ) )
+               ( hbmk[ _HBMK_nHEAD ] != _HEAD_OFF .AND. FindNewerHeaders( hbmk, tmp, NIL, .F., tmp2, .T., cBin_CompC, @headstate ) )
                AAdd( l_aC_TODO, tmp )
             ENDIF
          NEXT
       ELSE
          l_aC_TODO := AClone( hbmk[ _HBMK_aC ] )
-      ENDIF
-
-      /* Header dir detection if needed and if FindNewerHeaders() wasn't called yet. */
-      IF ! Empty( hbmk[ _HBMK_hDEPBYHEADER ] ) .AND. ! Empty( l_aC_TODO ) .AND. headstate == NIL
-         FOR EACH tmp IN l_aC_TODO
-            FindNewerHeaders( hbmk, tmp, NIL, .F., NIL, .T., .T., cBin_CompC, @headstate )
-         NEXT
       ENDIF
    ENDIF
 
@@ -4065,19 +4057,12 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             IF ! hb_FGetDateTime( FN_DirExtSet( tmp, hbmk[ _HBMK_cWorkDir ], cObjExt ), @tmp2 ) .OR. ;
                ! hb_FGetDateTime( tmp, @tmp1 ) .OR. ;
                tmp1 > tmp2 .OR. ;
-               ( hbmk[ _HBMK_nHEAD ] != _HEAD_OFF .AND. FindNewerHeaders( hbmk, tmp, NIL, .F., tmp2, ! Empty( hbmk[ _HBMK_hDEPBYHEADER ] ), .T., cBin_CompCPP, @headstate ) )
+               ( hbmk[ _HBMK_nHEAD ] != _HEAD_OFF .AND. FindNewerHeaders( hbmk, tmp, NIL, .F., tmp2, .T., cBin_CompCPP, @headstate ) )
                AAdd( l_aCPP_TODO, tmp )
             ENDIF
          NEXT
       ELSE
          l_aCPP_TODO := AClone( hbmk[ _HBMK_aCPP ] )
-      ENDIF
-
-      /* Header dir detection if needed and if FindNewerHeaders() wasn't called yet. */
-      IF ! Empty( hbmk[ _HBMK_hDEPBYHEADER ] ) .AND. ! Empty( l_aCPP_TODO ) .AND. headstate == NIL
-         FOR EACH tmp IN l_aCPP_TODO
-            FindNewerHeaders( hbmk, tmp, NIL, .F., NIL, .T., .T., cBin_CompCPP, @headstate )
-         NEXT
       ENDIF
    ENDIF
 
@@ -4086,9 +4071,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    IF ( ! lSkipBuild .AND. ! lStopAfterInit .AND. ! lStopAfterHarbour .AND. hbmk[ _HBMK_nHBMODE ] != _HBMODE_RAW_C ) .OR. ;
       ( nHarbourPPO >= 2 .AND. lStopAfterHarbour ) /* or in preprocessor mode */
 
-      IF ! hbmk[ _HBMK_lCLEAN ]
-         PlugIn_Execute( hbmk, "pre_prg" )
-      ENDIF
+      PlugIn_Execute( hbmk, "pre_prg" )
 
       /* Incremental */
 
@@ -4114,7 +4097,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             IF ! hb_FGetDateTime( FN_DirExtSet( tmp3, cHarbourOutputDir, cHarbourOutputExt ), @tmp2 ) .OR. ;
                ! hb_FGetDateTime( tmp3, @tmp1 ) .OR. ;
                tmp1 > tmp2 .OR. ;
-               ( hbmk[ _HBMK_nHEAD ] != _HEAD_OFF .AND. FindNewerHeaders( hbmk, tmp, NIL, .F., tmp2, .F., .F., cBin_CompC, @headstate ) )
+               ( hbmk[ _HBMK_nHEAD ] != _HEAD_OFF .AND. FindNewerHeaders( hbmk, tmp, NIL, .F., tmp2, .F., cBin_CompC, @headstate ) )
                AAdd( l_aPRG_TODO, tmp )
             ENDIF
          NEXT
@@ -4632,7 +4615,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             IF ! hb_FGetDateTime( FN_DirExtSet( tmp, hbmk[ _HBMK_cWorkDir ], cResExt ), @tmp2 ) .OR. ;
                ! hb_FGetDateTime( tmp, @tmp1 ) .OR. ;
                tmp1 > tmp2 .OR. ;
-               ( hbmk[ _HBMK_nHEAD ] != _HEAD_OFF .AND. FindNewerHeaders( hbmk, tmp, NIL, .F., tmp2, .F., .T., cBin_CompC, @headstate ) )
+               ( hbmk[ _HBMK_nHEAD ] != _HEAD_OFF .AND. FindNewerHeaders( hbmk, tmp, NIL, .F., tmp2, .T., cBin_CompC, @headstate ) )
                AAdd( l_aRESSRC_TODO, tmp )
             ENDIF
          NEXT
@@ -4838,9 +4821,9 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          ENDIF
       ENDIF
 
-      IF ! hbmk[ _HBMK_lCLEAN ]
+      PlugIn_Execute( hbmk, "pre_c" )
 
-         PlugIn_Execute( hbmk, "pre_c" )
+      IF ! hbmk[ _HBMK_lCLEAN ]
 
          FOR EACH tmp3 IN { _CCOMP_PASS_C, _CCOMP_PASS_CPP }
 
@@ -5601,7 +5584,7 @@ STATIC FUNCTION SetupForGT( cGT_New, /* @ */ cGT, /* @ */ lGUI )
 #define _HEADSTATE_lAnyNewer    2
 #define _HEADSTATE_MAX_         2
 
-STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, lSystemHeader, tTimeParent, lIncTry, lCMode, cBin_CompC, /* @ */ headstate, nNestingLevel )
+STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, lSystemHeader, tTimeParent, lCMode, cBin_CompC, /* @ */ headstate, nNestingLevel )
    LOCAL cFile
    LOCAL fhnd
    LOCAL tTimeSelf
@@ -5625,7 +5608,7 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, lSystemHeader, tT
       headstate[ _HEADSTATE_lAnyNewer ] := .F.
    ENDIF
 
-   IF ! lIncTry .AND. hbmk[ _HBMK_nHEAD ] == _HEAD_OFF
+   IF hbmk[ _HBMK_nHEAD ] == _HEAD_OFF
       RETURN .F.
    ENDIF
 
@@ -5735,7 +5718,7 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, lSystemHeader, tT
    ENDIF
 
    IF nNestingLevel > 1
-      cFileName := FindHeader( hbmk, cFileName, cParentDir, lIncTry, lSystemHeader )
+      cFileName := FindHeader( hbmk, cFileName, cParentDir, lSystemHeader )
       IF Empty( cFileName )
          RETURN .F.
       ENDIF
@@ -5752,10 +5735,7 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, lSystemHeader, tT
 
    IF tTimeParent != NIL .AND. hb_FGetDateTime( cFileName, @tTimeSelf ) .AND. tTimeSelf > tTimeParent
       headstate[ _HEADSTATE_lAnyNewer ] := .T.
-      /* Let it continue if we want to scan for header locations */
-      IF ! lIncTry
-         RETURN .T.
-      ENDIF
+      RETURN .T.
    ENDIF
 
    cExt := Lower( FN_ExtGet( cFileName ) )
@@ -5770,9 +5750,7 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, lSystemHeader, tT
       FOR EACH cDependency IN hbmk[ _HBMK_hDEPTS ][ cFileName ]
          IF hb_FGetDateTime( cDependency, @tTimeDependency ) .AND. tTimeDependency > tTimeParent
             headstate[ _HEADSTATE_lAnyNewer ] := .T.
-            IF ! lIncTry
-               RETURN .T.
-            ENDIF
+            RETURN .T.
          ENDIF
       NEXT
 
@@ -5808,9 +5786,7 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, lSystemHeader, tT
                   ENDIF
                   IF hb_FGetDateTime( cDependency, @tTimeDependency ) .AND. tTimeDependency > tTimeParent
                      headstate[ _HEADSTATE_lAnyNewer ] := .T.
-                     IF ! lIncTry
-                        RETURN .T.
-                     ENDIF
+                     RETURN .T.
                   ENDIF
                ENDIF
             NEXT
@@ -5826,9 +5802,7 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, lSystemHeader, tT
             ENDIF
             IF hb_FGetDateTime( cDependency, @tTimeDependency ) .AND. tTimeDependency > tTimeParent
                headstate[ _HEADSTATE_lAnyNewer ] := .T.
-               IF ! lIncTry
-                  RETURN .T.
-               ENDIF
+               RETURN .T.
             ENDIF
          ENDIF
       NEXT
@@ -5859,9 +5833,7 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, lSystemHeader, tT
                   ENDIF
                   IF hb_FGetDateTime( cDependency, @tTimeDependency ) .AND. tTimeDependency > tTimeParent
                      headstate[ _HEADSTATE_lAnyNewer ] := .T.
-                     IF ! lIncTry
-                        RETURN .T.
-                     ENDIF
+                     RETURN .T.
                   ENDIF
                ENDIF
             NEXT
@@ -5877,7 +5849,7 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, lSystemHeader, tT
                .prg, .c and .res sources. Please try to keep it simple,
                as speed and maintainability is also important. [vszakats] */
 
-      IF lIncTry .OR. hbmk[ _HBMK_nHEAD ] == _HEAD_FULL
+      IF hbmk[ _HBMK_nHEAD ] == _HEAD_FULL
          cFile := MemoRead( cFileName )
       ELSE
          IF ( fhnd := FOpen( cFileName, FO_READ + FO_SHARED ) ) == F_ERROR
@@ -5909,12 +5881,10 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, lSystemHeader, tT
             lSystemHeader := ( Left( cHeader, 1 ) == "<" )
             cHeader := SubStr( cHeader, 2, Len( cHeader ) - 2 )
 
-            IF FindNewerHeaders( hbmk, cHeader, iif( lCMode, FN_DirGet( cFileName ), cParentDir ), lSystemHeader, tTimeParent, lIncTry, lCMode, cBin_CompC, @headstate, nNestingLevel + 1 )
+            IF FindNewerHeaders( hbmk, cHeader, iif( lCMode, FN_DirGet( cFileName ), cParentDir ), lSystemHeader, tTimeParent, lCMode, cBin_CompC, @headstate, nNestingLevel + 1 )
                headstate[ _HEADSTATE_lAnyNewer ] := .T.
                /* Let it continue if we want to scan for header locations */
-               IF ! lIncTry
-                  RETURN .T.
-               ENDIF
+               RETURN .T.
             ENDIF
          NEXT
       ENDIF
@@ -6086,41 +6056,6 @@ STATIC PROCEDURE dep_postprocess( hbmk )
 
    RETURN
 
-STATIC PROCEDURE dep_postprocess_2( hbmk )
-   LOCAL dep
-   LOCAL tmp
-
-   /* Create a hash table of dependencies "indexed" by key header,
-      for header detection. */
-
-   hbmk[ _HBMK_hDEPBYHEADER ] := { => }
-
-   #if defined( __PLATFORM__UNIX )
-      hb_HSetCaseMatch( hbmk[ _HBMK_hDEPBYHEADER ], .T. )
-   #else
-      hb_HSetCaseMatch( hbmk[ _HBMK_hDEPBYHEADER ], .F. )
-   #endif
-
-   FOR EACH dep IN hbmk[ _HBMK_hDEP ]
-      IF ! Empty( dep[ _HBMKDEP_aKeyHeader ] ) .AND. ;
-         ! dep[ _HBMKDEP_lFound ]
-         IF ! Empty( dep[ _HBMKDEP_aINCPATH ] ) .OR. ;
-            ! Empty( dep[ _HBMKDEP_aINCPATHLOCAL ] )
-            FOR EACH tmp IN dep[ _HBMKDEP_aKeyHeader ]
-               IF tmp $ hbmk[ _HBMK_hDEPBYHEADER ]
-                  hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Same key header used for multiple dependencies: %1$s in %2$s (found already in: %3$s)" ), tmp, dep[ _HBMKDEP_cName ], hbmk[ _HBMK_hDEPBYHEADER ][ tmp ][ _HBMKDEP_cName ] ) )
-               ELSE
-                  hbmk[ _HBMK_hDEPBYHEADER ][ tmp ] := dep
-               ENDIF
-            NEXT
-         ELSE
-            hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Key header specified without header search paths: %1$s" ), dep[ _HBMKDEP_cName ] ) )
-         ENDIF
-      ENDIF
-   NEXT
-
-   RETURN
-
 STATIC FUNCTION dep_evaluate( hbmk )
    LOCAL dep
 
@@ -6175,7 +6110,7 @@ STATIC FUNCTION dep_evaluate( hbmk )
    RETURN .T.
 
 /* Try '*-config' and 'pkg-config *' detection */
-STATIC PROCEDURE dep_try_pkg_detection( hbmk, dep )
+STATIC FUNCTION dep_try_pkg_detection( hbmk, dep )
    LOCAL cStdOut
    LOCAL cErrOut
    LOCAL cItem
@@ -6251,14 +6186,45 @@ STATIC PROCEDURE dep_try_pkg_detection( hbmk, dep )
                      hbmk_OutStd( hbmk, hb_StrFormat( "debugdepd: REQ %1$s: found as pkg at %2$s (%3$s)", dep[ _HBMKDEP_cName ], dep[ _HBMKDEP_cFound ], dep[ _HBMKDEP_cVersion ] ) )
                   ENDIF
                   AAdd( hbmk[ _HBMK_aOPTC ], "-D" + _HBMK_HAS_PREF + StrToDefine( cName ) )
-                  EXIT
+                  RETURN .T.
                ENDIF
             ENDIF
          ENDIF
       ENDIF
    NEXT
 
-   RETURN
+   RETURN .F.
+
+/* Try detection by header */
+STATIC FUNCTION dep_try_header_detection( hbmk, dep )
+   LOCAL aINCPATH
+   LOCAL cDir
+   LOCAL cFileName
+
+   /* Check dependency include path list */
+
+   IF ! dep[ _HBMKDEP_lFound ]
+      FOR EACH aINCPATH IN { dep[ _HBMKDEP_aINCPATH ],;
+                             dep[ _HBMKDEP_aINCPATHLOCAL ] }
+         FOR EACH cDir IN aINCPATH
+            FOR EACH cFileName IN dep[ _HBMKDEP_aKeyHeader ]
+               IF HeaderExists( cDir, cFileName ) != NIL
+                  dep[ _HBMKDEP_cFound ] := DirDelPathSep( PathSepToSelf( cDir ) )
+                  dep[ _HBMKDEP_lFound ] := .T.
+                  dep[ _HBMKDEP_lFoundLOCAL ] := ( aINCPATH:__enumIndex() == 2 )
+                  IF hbmk[ _HBMK_lDEBUGDEPD ]
+                     hbmk_OutStd( hbmk, hb_StrFormat( "debugdepd: REQ %1$s: found by %2$s header at %3$s %4$s", dep[ _HBMKDEP_cName ], PathSepToSelf( cFileName ), dep[ _HBMKDEP_cFound ], iif( dep[ _HBMKDEP_lFoundLOCAL ], "(local)", "" ) ) )
+                  ENDIF
+                  AAddNew( hbmk[ _HBMK_aINCPATH ], DirDelPathSep( PathSepToSelf( cDir ) ) )
+                  AAdd( hbmk[ _HBMK_aOPTC ], "-D" + _HBMK_HAS_PREF + StrToDefine( dep[ _HBMKDEP_cName ] ) )
+                  RETURN .T.
+               ENDIF
+            NEXT
+         NEXT
+      NEXT
+   ENDIF
+
+   RETURN .F.
 
 STATIC FUNCTION StrToDefine( cString )
    LOCAL cDefine := ""
@@ -6285,10 +6251,8 @@ STATIC FUNCTION AMerge( aDst, aSrc )
 
    RETURN aDst
 
-STATIC FUNCTION FindHeader( hbmk, cFileName, cParentDir, lIncTry, lSystemHeader )
+STATIC FUNCTION FindHeader( hbmk, cFileName, cParentDir, lSystemHeader )
    LOCAL cDir
-   LOCAL aINCPATH
-   LOCAL dep
    LOCAL tmp
 
    /* Check in current dir */
@@ -6312,36 +6276,6 @@ STATIC FUNCTION FindHeader( hbmk, cFileName, cParentDir, lIncTry, lSystemHeader 
          RETURN tmp
       ENDIF
    NEXT
-
-   /* Check dependency include path list */
-   IF lIncTry
-      cFileName := StrTran( cFileName, "\", "/" )
-      IF cFileName $ hbmk[ _HBMK_hDEPBYHEADER ]
-         dep := hbmk[ _HBMK_hDEPBYHEADER ][ cFileName ]
-         IF ! dep[ _HBMKDEP_lFound ]
-            FOR EACH aINCPATH IN { dep[ _HBMKDEP_aINCPATH ],;
-                                   dep[ _HBMKDEP_aINCPATHLOCAL ] }
-               FOR EACH cDir IN aINCPATH
-                  tmp := HeaderExists( cDir, cFileName )
-                  IF tmp != NIL
-                     dep[ _HBMKDEP_cFound ] := DirDelPathSep( PathSepToSelf( cDir ) )
-                     dep[ _HBMKDEP_lFound ] := .T.
-                     dep[ _HBMKDEP_lFoundLOCAL ] := ( aINCPATH:__enumIndex() == 2 )
-                     IF hbmk[ _HBMK_lDEBUGDEPD ]
-                        hbmk_OutStd( hbmk, hb_StrFormat( "debugdepd: REQ %1$s: found by %2$s header at %3$s %4$s", dep[ _HBMKDEP_cName ], PathSepToSelf( cFileName ), dep[ _HBMKDEP_cFound ], iif( dep[ _HBMKDEP_lFoundLOCAL ], "(local)", "" ) ) )
-                     ENDIF
-                     AAddNew( hbmk[ _HBMK_aINCPATH ], DirDelPathSep( PathSepToSelf( cDir ) ) )
-                     AAdd( hbmk[ _HBMK_aOPTC ], "-D" + _HBMK_HAS_PREF + StrToDefine( dep[ _HBMKDEP_cName ] ) )
-                     FOR EACH cFileName IN hbmk[ _HBMK_hDEP ][ dep[ _HBMKDEP_cName ] ][ _HBMKDEP_aKeyHeader ]
-                        hb_HDel( hbmk[ _HBMK_hDEPBYHEADER ], cFileName )
-                     NEXT
-                     RETURN tmp
-                  ENDIF
-               NEXT
-            NEXT
-         ENDIF
-      ENDIF
-   ENDIF
 
    RETURN NIL
 

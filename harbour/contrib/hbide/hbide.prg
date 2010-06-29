@@ -252,7 +252,7 @@ CLASS HbIde
    DATA   cWrkTheme                               INIT   ""
    DATA   cWrkCodec                               INIT   ""
    DATA   cWrkPathMk2                             INIT   hb_getenv( "HBIDE_DIR_HBMK2" )
-   DATA   cWrkPathEnv                             INIT   hb_DirBase() + "resources"
+   DATA   cWrkPathEnv                             INIT   hb_DirBase()
    DATA   cWrkEnvironment                         INIT   ""
    DATA   cWrkFind                                INIT   ""
    DATA   cWrkFolderFind                          INIT   ""
