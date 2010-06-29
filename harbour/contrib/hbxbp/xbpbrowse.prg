@@ -436,6 +436,7 @@ EXPORTED:
    DATA     nRightFrozen                            INIT   0
 
    METHOD   destroy()
+   METHOD   countRows()
 
    ENDCLASS
 
@@ -556,6 +557,7 @@ METHOD XbpBrowse:buildRightFreeze()
 /*----------------------------------------------------------------------*/
 
 METHOD XbpBrowse:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   LOCAL qRect
 
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -660,10 +662,16 @@ METHOD XbpBrowse:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ENDIF
    ::oParent:AddChild( SELF )
 
+   ::oFooterView:hide()
+
    /* Viewport */
    ::oViewport:configure( ::oTableView:viewport() )
 
-   ::oFooterView:hide()
+   ::oWidget:installEventFilter( ::pEvents )
+   ::connectEvent( ::oWidget, QEvent_Resize, {|| ::execSlot( 2001 ) } )
+
+   qRect := QRect():from( ::oWidget:geometry() )
+   ::oWidget:setGeometry( qRect )
 
    RETURN Self
 
@@ -897,6 +905,12 @@ METHOD XbpBrowse:execSlot( nEvent, p1, p2, p3 )
 
    CASE nEvent == 122                 /* Footer Section Resized */
       ::oHeaderView:resizeSection( p1, p3 )
+
+   CASE nEvent == 2001
+      ::oHeaderView:resizeSection( 0, ::oHeaderView:sectionSize( 0 )+1 )
+      ::oHeaderView:resizeSection( 0, ::oHeaderView:sectionSize( 0 )-1 )
+      ::nConfigure := 9
+      ::doConfigure()
 
    ENDCASE
 
@@ -1341,6 +1355,37 @@ METHOD XbpBrowse:setLeftFrozen( aColFrozens )
 
 /*----------------------------------------------------------------------*/
 
+METHOD countRows() CLASS XbpBrowse
+   LOCAL nHHdr, nHFtr, nHCell, nHView, nHAvl
+
+   nHHdr := nHFtr := nHCell := 0
+HB_TRACE( HB_TR_ALWAYS, 0, ::nRowsInView )
+   IF .t.
+      nHView := ::oViewport:height()
+
+      IF ::oHeaderView:isVisible()
+         aeval( ::columns, {|o| nHHdr := max( nHHdr, o:hHeight ) } )
+      ENDIF
+
+      IF ::oFooterView:isVisible()
+         aeval( ::columns, {|o| nHFtr := max( nHFtr, o:fHeight ) } )
+      ENDIF
+
+      /* Data Rows */
+      aeval( ::columns, {|o| nHCell := max( nHCell, o:dHeight ) } )
+
+      nHAvl := nHView - nHHdr - nHFtr
+
+      ::nRowsInView := Int( nHAvl / nHCell )
+      IF ( nHAvl % nHCell ) > ( nHCell / 2 )
+         ::nRowsInView++
+      ENDIF
+   ENDIF
+HB_TRACE( HB_TR_ALWAYS, 1, ::nRowsInView )
+   RETURN ::nRowsInView
+
+/*----------------------------------------------------------------------*/
+
 METHOD doConfigure() CLASS XbpBrowse
    LOCAL oCol
    LOCAL aCol, aVal, aValA
@@ -1378,28 +1423,6 @@ METHOD doConfigure() CLASS XbpBrowse
          nWidth := 256
       ENDIF
 
-      #if 0
-      cColSep  := oCol:colSep
-      IF cColSep == NIL
-         cColSep := ::cColSep
-      ENDIF
-
-      cHeadSep := oCol:headSep
-      IF !ISCHARACTER( cHeadSep ) .OR. cHeadSep == ""
-         cHeadSep := ::cHeadSep
-         IF !ISCHARACTER( cHeadSep )
-            cHeadSep := ""
-         ENDIF
-      ENDIF
-
-      cFootSep := oCol:footSep
-      IF !ISCHARACTER( cFootSep ) .OR. cFootSep == ""
-         cFootSep := ::cFootSep
-         IF !ISCHARACTER( cFootSep )
-            cFootSep := ""
-         ENDIF
-      ENDIF
-      #endif
       cColSep  := ""
       cHeadSep := ""
       cFootSep := ""
@@ -1499,62 +1522,6 @@ METHOD doConfigure() CLASS XbpBrowse
          aCol[ _TBCI_FOOTSEP ] := " "
       ENDIF
    NEXT
-
-   nRowCount := ::rowCount
-   IF nRowCount == 0
-      _GENLIMITRTE()
-   ENDIF
-
-   /* create new record buffer */
-   ASize( ::aCellStatus , nRowCount )
-   ASize( ::aDispStatus , nRowCount )
-   ASize( ::aCellValues , nRowCount )
-   ASize( ::aCellValuesA, nRowCount )
-   ASize( ::aCellColors , nRowCount )
-   AFill( ::aCellStatus , .F. )
-   AFill( ::aDispStatus , .T. )
-   FOR EACH aVal, aValA, aCol IN ::aCellValues, ::aCellValuesA, ::aCellColors
-      IF aVal == NIL
-         aVal := Array( nColCount )
-      ELSE
-         ASize( aVal, nColCount )
-      ENDIF
-      IF aValA == NIL
-         aValA := Array( nColCount )
-      ELSE
-         ASize( aValA, nColCount )
-      ENDIF
-      IF aCol == NIL
-         aCol := Array( nColCount )
-      ELSE
-         ASize( aCol, nColCount )
-      ENDIF
-   NEXT
-
-   ::lStable := .F.
-   ::lFrames := .T.
-
-   /* Clipper does not set refreshAll flag in Configure */
-   /* ::lRefresh := .T. */
-
-   ::nLastRow := nRowCount
-   ::nLastScroll := 0
-
-   /* CA-Cl*pper update visible columns here but without
-    * colPos repositioning. [druzus]
-    */
-   #if 0
-   _SETVISIBLE( ::aColData, _TBR_COORD( ::n_Right ) - _TBR_COORD( ::n_Left ) + 1, ;
-                @::nFrozen, @::nLeftVisible, @::nRightVisible )
-   #endif
-
-   ::nLastPos := 0
-
-   IF ::nRowPos > nRowCount
-      ::nRowPos := nRowCount
-   ELSEIF ::nRowPos < 1
-      ::nRowPos := 1
-   ENDIF
 
    /* Qt Specifics follows */
    //
@@ -1690,6 +1657,50 @@ METHOD doConfigure() CLASS XbpBrowse
          ::oFooterView:setSectionHidden( i - 1, .f. )
       ENDIF
    NEXT
+
+
+   nRowCount := ::rowCount
+   IF nRowCount == 0
+      _GENLIMITRTE()
+   ENDIF
+
+   /* create new record buffer */
+   ASize( ::aCellStatus , nRowCount )
+   ASize( ::aDispStatus , nRowCount )
+   ASize( ::aCellValues , nRowCount )
+   ASize( ::aCellValuesA, nRowCount )
+   ASize( ::aCellColors , nRowCount )
+   AFill( ::aCellStatus , .F. )
+   AFill( ::aDispStatus , .T. )
+   FOR EACH aVal, aValA, aCol IN ::aCellValues, ::aCellValuesA, ::aCellColors
+      IF aVal == NIL
+         aVal := Array( nColCount )
+      ELSE
+         ASize( aVal, nColCount )
+      ENDIF
+      IF aValA == NIL
+         aValA := Array( nColCount )
+      ELSE
+         ASize( aValA, nColCount )
+      ENDIF
+      IF aCol == NIL
+         aCol := Array( nColCount )
+      ELSE
+         ASize( aCol, nColCount )
+      ENDIF
+   NEXT
+
+   ::lStable := .F.
+   ::lFrames := .T.
+   ::nLastRow := nRowCount
+   ::nLastScroll := 0
+   ::nLastPos := 0
+   IF ::nRowPos > nRowCount
+      ::nRowPos := nRowCount
+   ELSEIF ::nRowPos < 1
+      ::nRowPos := 1
+   ENDIF
+
 
    ::setHorzScrollBarRange()
 

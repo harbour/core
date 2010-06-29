@@ -95,6 +95,7 @@ CLASS IdeBrowseManager INHERIT IdeObject
    DATA   aItems                                  INIT  {}
    DATA   oPanel
    DATA   qLayout
+   DATA   qVSplitter
 
    METHOD new( oIde )
    METHOD create( oIde )
@@ -127,6 +128,10 @@ METHOD IdeBrowseManager:create( oIde )
    ::oPanel:setLayout( ::qLayout )
    ::qLayout:setContentsMargins( 0,0,0,0 )
    ::qLayout:setSpacing( 2 )
+
+   ::qVSplitter := QSplitter():new()
+   ::qVSplitter:setOrientation( Qt_Vertical )
+   ::qLayout:addWidget( ::qVSplitter )
 
    RETURN Self
 
@@ -169,7 +174,7 @@ METHOD IdeBrowseManager:addTable( cFileDBF, cAlias, nRow, nCol )
    oBrw:cAlias := cAlias
    oBrw:create()
 
-   ::qLayout:addWidget( oBrw:oWnd:oWidget )
+   ::qVSplitter:addWidget( oBrw:oWnd:oWidget )
 
    aadd( ::aItems, oBrw )
 
@@ -186,6 +191,10 @@ CLASS IdeBrowse INHERIT IdeObject
    DATA   oWnd
    DATA   oBrw
    DATA   qLayout
+   DATA   qForm
+   DATA   qFLayout
+   DATA   qSplitter
+   DATA   aForm                                   INIT  {}
 
    DATA   nType                                   INIT  BRW_TYPE_DBF
    DATA   cAlias                                  INIT  ""
@@ -217,6 +226,7 @@ CLASS IdeBrowse INHERIT IdeObject
    METHOD next()
    METHOD previous()
    METHOD activated()
+   METHOD buildForm()
 
    ENDCLASS
 
@@ -287,6 +297,10 @@ METHOD IdeBrowse:create( oIde )
 
    ::buildBrowser()
    ::buildColumns()
+   ::buildForm()
+
+   ::oBrw:configure()
+   ::oBrw:forceStable()
 
    RETURN Self
 
@@ -294,6 +308,7 @@ METHOD IdeBrowse:create( oIde )
 
 METHOD IdeBrowse:activated()
 
+HB_TRACE( HB_TR_ALWAYS, "ACTIVATED" )
    ::oQScintillaDock:oWidget:setWindowTitle( ::cTable )
 
    RETURN Self
@@ -305,18 +320,24 @@ METHOD IdeBrowse:buildBrowser()
 
    oWnd := XbpWindow():new()
    oWnd:oWidget := QWidget():new()
-   //oWnd:oWidget:resize( 600,300 )
-   //oWnd:oWidget:setWindowFlags( Qt_Sheet )
 
-   qLayout := QVBoxLayout():new()
+   qLayout := QHBoxLayout():new()
    oWnd:oWidget:setLayout( qLayout )
    qLayout:setContentsMargins( 0,0,0,0 )
    qLayout:setSpacing( 2 )
 
+   ::qSplitter := QSplitter():new()
+   ::qSplitter:setOrientation( Qt_Horizontal )
+
+   qLayout:addWidget( ::qSplitter )
+
+   /* Browse View */
    oXbpBrowse := XbpBrowse():new():create( oWnd, , { 0,0 }, oWnd:currentSize() )
    oXbpBrowse:setFontCompoundName( "10.Courier" )
 
-   qLayout:addWidget( oXbpBrowse:oWidget )
+   ::qSplitter:addWidget( oXbpBrowse:oWidget )
+
+   //qLayout:addWidget( oXbpBrowse:oWidget )
 
    oXbpBrowse:cursorMode    := ::nCursorType
 
@@ -331,12 +352,37 @@ METHOD IdeBrowse:buildBrowser()
    oXbpBrowse:goPosBlock    := {|n| ::goto( n )      }
    oXbpBrowse:phyPosBlock   := {| | ::recNo()        }
 
-   //oXbpBrowse:connectEvent( oXbpBrowse:oWidget, QEvent_FocusIn, {|| ::execE} )
    oXbpBrowse:setInputFocus := {|| ::activated() }
+
+   /* Form View */
+   ::qForm := QWidget():new()
+   ::qFLayout := QFormLayout():new()
+   ::qForm:setLayout( ::qFLayout )
+
+   ::qSplitter:addWidget( ::qForm )
 
    ::qLayout := qLayout
    ::oWnd    := oWnd
    ::oBrw    := oXbpBrowse
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeBrowse:buildForm()
+   LOCAL a_, qLbl, qEdit
+
+   IF ::nType == BRW_TYPE_DBF
+      FOR EACH a_ IN ::aStruct
+         qLbl := QLabel():new()
+         qLbl:setText( a_[ 1 ] )
+         qEdit := QLineEdit():new()
+         ::qFLayout:addRow( qLbl, qEdit )
+         aadd( ::aForm, { qLbl, qEdit } )
+      NEXT
+   ELSE
+
+   ENDIF
 
    RETURN Self
 
