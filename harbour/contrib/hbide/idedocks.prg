@@ -325,9 +325,7 @@ METHOD IdeDocks:execEvent( nMode, p )
       hbide_popupBrwContextMenu( ::qHelpBrw, p )
 
    CASE nMode == dockQScintilla_visibilityChanged
-      IF p
-         ::oEM:qscintilla()
-      ELSE
+      IF ! p
          ::oBM:destroy()
       ENDIF
 

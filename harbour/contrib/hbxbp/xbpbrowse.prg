@@ -436,7 +436,6 @@ EXPORTED:
    DATA     nRightFrozen                            INIT   0
 
    METHOD   destroy()
-   METHOD   countRows()
 
    ENDCLASS
 
@@ -748,7 +747,7 @@ METHOD XbpBrowse:destroy()
 /*----------------------------------------------------------------------*/
 
 METHOD XbpBrowse:execSlot( nEvent, p1, p2, p3 )
-   LOCAL oWheelEvent, oMouseEvent, i, nRow, nRowPos, nCol, nColPos, oPoint
+   LOCAL oWheelEvent, oMouseEvent, i, nCol, nColPos, oPoint
 
    HB_SYMBOL_UNUSED( p2 )
 //HB_TRACE( HB_TR_DEBUG, "   XbpBrowse:execSlot:", nEvent, 0, memory( 1001 ) )
@@ -764,36 +763,10 @@ METHOD XbpBrowse:execSlot( nEvent, p1, p2, p3 )
 
       oPoint := QPoint():new( oMouseEvent:x(), oMouseEvent:y() )
       ::oModelIndex:configure( ::oTableView:indexAt( oPoint ) )
+      IF ::oModelIndex:isValid()      /* Reposition the record pointer */
+         SetAppEvent( xbeBRW_Navigate, XBPBRW_Navigate_Skip, ( ::oModelIndex:row() + 1 ) - ::rowPos, Self )
 
-      /* Reposition the record pointer */
-      IF ::oModelIndex:isValid()
-         nRow    := ::oModelIndex:row() + 1
-         nRowPos := ::rowPos
-         //
-         IF nRow < ::rowPos
-            FOR i := 1 TO nRowPos - nRow
-               ::up()
-            NEXT
-         ELSEIF nRow > ::rowPos
-            FOR i := 1 TO nRow - nRowPos
-               ::down()
-            NEXT
-         ENDIF
-
-         nCol    := ::oModelIndex:column() + 1
-         nColPos := ::colPos
-         //
-         IF nCol < nColPos
-            DO WHILE nCol != ::colPos
-               ::left()
-            ENDDO
-
-         ELSEIF nCol > nColPos
-            DO WHILE nCol != ::colPos
-               ::right()
-            ENDDO
-
-         ENDIF
+         SetAppEvent( xbeBRW_Navigate, XBPBRW_Navigate_SkipCols, ( ::oModelIndex:column() + 1 ) - ::colPos, Self )
       ENDIF
 
       IF oMouseEvent:button() == Qt_LeftButton
@@ -919,9 +892,8 @@ METHOD XbpBrowse:execSlot( nEvent, p1, p2, p3 )
 /*----------------------------------------------------------------------*/
 
 METHOD handleEvent( nEvent, mp1, mp2 ) CLASS XbpBrowse
-
-   HB_SYMBOL_UNUSED( mp1 )
-   HB_SYMBOL_UNUSED( mp2 )
+   LOCAL i
+   LOCAL lNavgt := .t.
 
    DO CASE
    CASE nEvent == xbeP_Keyboard
@@ -960,8 +932,14 @@ METHOD handleEvent( nEvent, mp1, mp2 ) CLASS XbpBrowse
       CASE xbeK_ENTER
          ::itemSelected( mp1, mp2 )
          EXIT
-
+      OTHERWISE
+         lNavgt := .f.
+         EXIT
       ENDSWITCH
+
+      IF lNavgt
+         ::navigate( mp1, mp2 )
+      ENDIF
 
    CASE nEvent == xbeBRW_ItemSelected
       ::itemSelected( mp1, mp2 )
@@ -996,17 +974,58 @@ METHOD handleEvent( nEvent, mp1, mp2 ) CLASS XbpBrowse
       CASE mp1 == XBPBRW_Navigate_GoTop
       CASE mp1 == XBPBRW_Navigate_GoBottom
       CASE mp1 == XBPBRW_Navigate_Skip
+         IF mp2 < 0
+            FOR i := 1 TO abs( mp2 )
+               ::up()
+            NEXT
+         ELSEIF mp2 > 0
+            FOR i := 1 TO mp2
+               ::down()
+            NEXT
+         ENDIF
       CASE mp1 == XBPBRW_Navigate_NextCol
       CASE mp1 == XBPBRW_Navigate_PrevCol
       CASE mp1 == XBPBRW_Navigate_FirstCol
       CASE mp1 == XBPBRW_Navigate_LastCol
       CASE mp1 == XBPBRW_Navigate_GoPos
       CASE mp1 == XBPBRW_Navigate_SkipCols
+         IF mp2 < 0
+            FOR i := 1 TO abs( mp2 )
+               ::left()
+            NEXT
+         ELSEIF mp2 > 0
+            FOR i := 1 TO mp2
+               ::right()
+            NEXT
+         ENDIF
+
       CASE mp1 == XBPBRW_Navigate_GotoItem
       CASE mp1 == XBPBRW_Navigate_GotoRecord
+      OTHERWISE
+         lNavgt := .f.
       ENDCASE
 
+      IF lNavgt
+         ::navigate( mp1, mp2 )
+      ENDIF
    ENDCASE
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD navigate( p1, p2 ) CLASS XbpBrowse
+
+   IF hb_isBlock( p1 )
+      ::sl_xbeBRW_Navigate := p1
+
+   ELSEIF hb_isNumeric( p1 )
+      /* ::handleEvent( xbeBRW_Navigate, p1, p2 ) */
+
+      IF hb_isBlock( ::sl_xbeBRW_Navigate )
+         eval( ::sl_xbeBRW_Navigate, p1, p2, self )
+      ENDIF
+   ENDIF
 
    RETURN Self
 
@@ -1352,37 +1371,6 @@ METHOD XbpBrowse:setLeftFrozen( aColFrozens )
    ENDIF
 
    RETURN aFrozen
-
-/*----------------------------------------------------------------------*/
-
-METHOD countRows() CLASS XbpBrowse
-   LOCAL nHHdr, nHFtr, nHCell, nHView, nHAvl
-
-   nHHdr := nHFtr := nHCell := 0
-HB_TRACE( HB_TR_ALWAYS, 0, ::nRowsInView )
-   IF .t.
-      nHView := ::oViewport:height()
-
-      IF ::oHeaderView:isVisible()
-         aeval( ::columns, {|o| nHHdr := max( nHHdr, o:hHeight ) } )
-      ENDIF
-
-      IF ::oFooterView:isVisible()
-         aeval( ::columns, {|o| nHFtr := max( nHFtr, o:fHeight ) } )
-      ENDIF
-
-      /* Data Rows */
-      aeval( ::columns, {|o| nHCell := max( nHCell, o:dHeight ) } )
-
-      nHAvl := nHView - nHHdr - nHFtr
-
-      ::nRowsInView := Int( nHAvl / nHCell )
-      IF ( nHAvl % nHCell ) > ( nHCell / 2 )
-         ::nRowsInView++
-      ENDIF
-   ENDIF
-HB_TRACE( HB_TR_ALWAYS, 1, ::nRowsInView )
-   RETURN ::nRowsInView
 
 /*----------------------------------------------------------------------*/
 
@@ -1767,47 +1755,32 @@ METHOD itemRbDown( p1, p2 ) CLASS XbpBrowse
 /*----------------------------------------------------------------------*/
 
 METHOD itemSelected( p1 ) CLASS XbpBrowse
+
    IF hb_isBlock( p1 )
       ::sl_xbeBRW_ItemSelected := p1
-      RETURN Self
-   ENDIF
-   IF hb_isBlock( ::sl_xbeBRW_ItemSelected )
+
+   ELSEIF hb_isBlock( ::sl_xbeBRW_ItemSelected )
       eval( ::sl_xbeBRW_ItemSelected, NIL, NIL, self )
+
    ENDIF
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD pan( p1 ) CLASS XbpBrowse
-   LOCAL xRet
+
    IF hb_isBlock( p1 )
       ::sl_xbeBRW_Pan := p1
-   ENDIF
-   IF hb_isNumeric( p1 ) .and. hb_isBlock( ::sl_xbeBRW_Pan )
-      xRet := eval( ::sl_xbeBRW_Pan, p1, NIL, self )
-      IF xRet != NIL
-         ::handleEvent( xbeBRW_Pan, p1, NIL )
-      ENDIF
+
    ELSEIF hb_isNumeric( p1 )
       ::handleEvent( xbeBRW_Pan, p1, NIL )
-   ENDIF
-   RETURN Self
 
-/*----------------------------------------------------------------------*/
-
-METHOD navigate( p1, p2 ) CLASS XbpBrowse
-   LOCAL xRet
-   IF hb_isBlock( p1 )
-      ::sl_xbeBRW_Navigate := p1
-   ENDIF
-   IF hb_isNumeric( p1 ) .and. hb_isBlock( ::sl_xbeBRW_Navigate )
-      xRet := eval( ::sl_xbeBRW_Navigate, p1, p2, self )
-      IF xRet != NIL
-         ::handleEvent( xbeBRW_Navigate, p1, p2 )
+      IF hb_isBlock( ::sl_xbeBRW_Pan )
+         eval( ::sl_xbeBRW_Pan, p1, NIL, self )
       ENDIF
-   ELSEIF hb_isNumeric( p1 )
-      ::handleEvent( xbeBRW_Navigate, p1, p2 )
    ENDIF
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/

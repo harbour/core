@@ -1645,8 +1645,6 @@ METHOD IdeEditor:scrollThumbnail()
 
 METHOD IdeEditor:qscintilla()
 
-   hbide_browseSome( ::oIde )
-
    //  hbide_qtDesigner()
 
    #ifdef HB_WITH_QSCINTILLA

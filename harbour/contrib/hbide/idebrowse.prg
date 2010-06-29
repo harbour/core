@@ -77,29 +77,23 @@
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION hbide_browseSome( oIde )
-   LOCAL cTable, cPath
-
-   IF !empty( cTable := hbide_fetchAFile( oIde:oDlg, "Select a Table", { { "Database File", "*.dbf" } }, oIde:cWrkFolderLast ) )
-      hb_fNameSplit( cTable, @cPath )
-      oIde:cWrkFolderLast := cPath
-      oIde:oBM:addTable( cTable )
-   ENDIF
-
-   RETURN NIL
-
-/*----------------------------------------------------------------------*/
-
 CLASS IdeBrowseManager INHERIT IdeObject
 
-   DATA   aItems                                  INIT  {}
+   DATA   oStack
    DATA   oPanel
+   DATA   oMain
    DATA   qLayout
    DATA   qVSplitter
+   DATA   qToolBar
+   DATA   qLayMain
+
+   DATA   aToolBtns                               INIT  {}
+   DATA   aItems                                  INIT  {}
 
    METHOD new( oIde )
    METHOD create( oIde )
    METHOD destroy()
+   METHOD execEvent( cEvent, p )
    METHOD addTable( cFileDBF, cAlias, nRow, nCol )
    METHOD addArray( aData, aAttr, nRow, nCol )
 
@@ -110,28 +104,6 @@ CLASS IdeBrowseManager INHERIT IdeObject
 METHOD IdeBrowseManager:new( oIde )
 
    ::oIde := oIde
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeBrowseManager:create( oIde )
-
-   DEFAULT oIde TO ::oIde
-   ::oIde := oIde
-
-   ::oPanel := QWidget():new()
-
-   ::oIde:oEM:oQScintillaDock:oWidget:setWidget( ::oPanel )
-
-   ::qLayout := QVBoxLayout():new()
-   ::oPanel:setLayout( ::qLayout )
-   ::qLayout:setContentsMargins( 0,0,0,0 )
-   ::qLayout:setSpacing( 2 )
-
-   ::qVSplitter := QSplitter():new()
-   ::qVSplitter:setOrientation( Qt_Vertical )
-   ::qLayout:addWidget( ::qVSplitter )
 
    RETURN Self
 
@@ -152,12 +124,67 @@ METHOD IdeBrowseManager:destroy()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeBrowseManager:addArray( aData, aAttr, nRow, nCol )
+METHOD IdeBrowseManager:create( oIde )
+   LOCAL oDock, qBtn
 
-   HB_SYMBOL_UNUSED( aData )
-   HB_SYMBOL_UNUSED( aAttr )
-   HB_SYMBOL_UNUSED( nRow  )
-   HB_SYMBOL_UNUSED( nCol  )
+   DEFAULT oIde TO ::oIde
+   ::oIde := oIde
+
+   oDock := ::oIde:oEM:oQScintillaDock:oWidget
+
+   ::oPanel := QWidget():new()
+   oDock:setWidget( ::oPanel )
+
+   ::qLayout := QVBoxLayout():new() ; ::oPanel:setLayout( ::qLayout )
+   ::qLayout:setContentsMargins( 0,0,0,0 )
+   ::qLayout:setSpacing( 2 )
+
+   ::qToolbar := QToolbar():new()
+   ::qLayout:addWidget( ::qToolbar )
+   ::qToolbar:setIconSize( QSize():new( 16,16 ) )
+
+   ::oStack := QStackedWidget():new()
+   ::qLayout:addWidget( ::oStack )
+
+   ::oMain := QWidget():new()
+   ::oStack:addWidget( ::oMain )
+
+   ::qLayMain := QHBoxLayout():new(); ::oMain:setLayout( ::qLayMain )
+   ::qLayMain:setContentsMargins( 0,0,0,0 )
+   ::qLayMain:setSpacing( 2 )
+
+   ::qVSplitter := QSplitter():new()
+   ::qVSplitter:setOrientation( Qt_Vertical )
+   ::qLayMain:addWidget( ::qVSplitter )
+
+   qBtn := QToolButton():new()
+   qBtn:setTooltip( "Open a Table" )
+   qBtn:setAutoRaise( .t. )
+   qBtn:setIcon( hbide_image( "open" ) )
+   ::connect( qBtn, "clicked()", {|| ::execEvent( "buttonOpen_clicked" ) } )
+   aadd( ::aToolBtns, qBtn )
+
+   ::qToolBar:addWidget( qBtn )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeBrowseManager:execEvent( cEvent, p )
+   LOCAL cTable, cPath
+
+   HB_SYMBOL_UNUSED( p )
+
+   SWITCH cEvent
+   CASE "buttonOpen_clicked"
+      IF !empty( cTable := hbide_fetchAFile( ::oIde:oDlg, "Select a Table", { { "Database File", "*.dbf" } }, ::oIde:cWrkFolderLast ) )
+         hb_fNameSplit( cTable, @cPath )
+         ::oIde:cWrkFolderLast := cPath
+         ::addTable( cTable )
+      ENDIF
+
+      EXIT
+   ENDSWITCH
 
    RETURN Self
 
@@ -177,6 +204,17 @@ METHOD IdeBrowseManager:addTable( cFileDBF, cAlias, nRow, nCol )
    ::qVSplitter:addWidget( oBrw:oWnd:oWidget )
 
    aadd( ::aItems, oBrw )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeBrowseManager:addArray( aData, aAttr, nRow, nCol )
+
+   HB_SYMBOL_UNUSED( aData )
+   HB_SYMBOL_UNUSED( aAttr )
+   HB_SYMBOL_UNUSED( nRow  )
+   HB_SYMBOL_UNUSED( nCol  )
 
    RETURN Self
 
@@ -212,6 +250,7 @@ CLASS IdeBrowse INHERIT IdeObject
    METHOD new( oIde )
    METHOD create( oIde )
    METHOD destroy()
+   METHOD execEvent( cEvent, p, p1 )
    METHOD buildBrowser()
    METHOD buildColumns()
    METHOD dataLink( nField )
@@ -227,6 +266,7 @@ CLASS IdeBrowse INHERIT IdeObject
    METHOD previous()
    METHOD activated()
    METHOD buildForm()
+   METHOD populateForm()
 
    ENDCLASS
 
@@ -302,6 +342,24 @@ METHOD IdeBrowse:create( oIde )
    ::oBrw:configure()
    ::oBrw:forceStable()
 
+   ::oBrw:navigate := {|mp1,mp2| ::execEvent( "browse_navigate", mp1, mp2 ) }
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeBrowse:execEvent( cEvent, p, p1 )
+
+   HB_SYMBOL_UNUSED( p  )
+   HB_SYMBOL_UNUSED( p1 )
+
+   SWITCH cEvent
+   CASE "browse_navigate"
+      ::populateForm()
+      EXIT
+
+   ENDSWITCH
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -352,7 +410,7 @@ METHOD IdeBrowse:buildBrowser()
    oXbpBrowse:goPosBlock    := {|n| ::goto( n )      }
    oXbpBrowse:phyPosBlock   := {| | ::recNo()        }
 
-   oXbpBrowse:setInputFocus := {|| ::activated() }
+   oXbpBrowse:setInputFocus := {|| ::activated()     }
 
    /* Form View */
    ::qForm := QWidget():new()
@@ -365,6 +423,35 @@ METHOD IdeBrowse:buildBrowser()
    ::oWnd    := oWnd
    ::oBrw    := oXbpBrowse
 
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION hbide_xtosForForm( xVrb )
+   LOCAL cType := valtype( xVrb )
+
+   DO CASE
+   CASE cType == "N" ; RETURN ltrim( str( xVrb ) )
+   CASE cType == "L" ; RETURN iif( xVrb, "YES", "NO" )
+   CASE cType == "D" ; RETURN dtos( xVrb )
+   CASE cType == "C" ; RETURN trim( xVrb )
+   ENDCASE
+
+   RETURN ""
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeBrowse:populateForm()
+   LOCAL a_, oCol
+
+   IF ::nType == BRW_TYPE_DBF
+      FOR EACH a_ IN ::aForm
+         oCol := ::oBrw:getColumn( a_:__enumIndex() )
+         ::aForm[ a_:__enumIndex(), 2 ]:setText( hbide_xtosForForm( eval( oCol:block ) ) )
+      NEXT
+   ELSE
+
+   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
