@@ -1066,7 +1066,7 @@ METHOD IdeHarbourHelp:populateRootInfo()
    aadd( aHtm, '  <h2><font color=blue>' + ::cPathInstall + '</font></h2>' )
    aadd( aHtm, '  <br>&nbsp;</br>' )
    aadd( aHtm, '  <br>&nbsp;</br>' )
-   aadd( aHtm, '  <img src="' + 'resources/harbour.png' + '" width="300" height="200"</img></br>' )
+   aadd( aHtm, '  <img src="' + ':/resources/harbour.png' + '" width="300" height="200"</img></br>' )
    aadd( aHtm, " </body>" )
    aadd( aHtm, "</html>" )
 

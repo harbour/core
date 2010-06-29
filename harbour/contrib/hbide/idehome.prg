@@ -260,7 +260,7 @@ METHOD IdeHome:paintRequested( pPrinter )
 
 METHOD IdeHome:setStyleSheetTextBrowser( qBrw )
 
-   qBrw:setStyleSheet( 'QTextBrowser { background-image: url(resources/hbidesplashwatermark.png); ' + ;
+   qBrw:setStyleSheet( 'QTextBrowser { background-image: url(:/resources/hbidesplashwatermark.png); ' + ;
           'background-attachment: scroll; background-repeat:no-repeat; background-position:center; ' + ;
           'background-color: rgb(255,255,255); }' )
 
@@ -308,7 +308,7 @@ METHOD IdeHome:refresh()
    aadd( aHtm, '  <table cols="7" width="95%">'            )
    aadd( aHtm, '   <tr>'                                   )
    aadd( aHtm, '    <td align="left" valign="center" colspan="5">'       )
-   aadd( aHtm, '     <img src="resources/project.png"' + '</img>' + '&nbsp;' + '&nbsp;' + '&nbsp;'        )
+   aadd( aHtm, '     <img src=":/resources/project.png"' + '</img>' + '&nbsp;' + '&nbsp;' + '&nbsp;'        )
    aadd( aHtm, '     <font face="Times New Roman" color="#FF4719" size="7"><b><U>Projects</u></b></font>' )
    aadd( aHtm, '     &nbsp;' + '&nbsp;' + '&nbsp;'         )
    aadd( aHtm, '     <font face="Times New Roman" size="5">' + '( ' + ::oIde:cProjIni + ' )' + '</font>'  )
@@ -354,7 +354,7 @@ METHOD IdeHome:addProjectsInfo( aHtm )
 
          aadd( aHtm, '   <tr height="1">'     )
          aadd( aHtm, '    <td><b>' )
-         aadd( aHtm, '   ' + hbide_htmlImgAnchor( 'prj-' + prp_[ PRJ_PRP_TITLE ], 'resources/' + cIcon + '.png' ) + '&nbsp;' )
+         aadd( aHtm, '   ' + hbide_htmlImgAnchor( 'prj-' + prp_[ PRJ_PRP_TITLE ], ':/resources/' + cIcon + '.png' ) + '&nbsp;' )
          aadd( aHtm, '   ' + hbide_htmlAnchor( 'prj-' + prp_[ PRJ_PRP_TITLE ], prp_[ PRJ_PRP_TITLE ], a_[ 1 ] ) )
          aadd( aHtm, '    </b></td>' )
          aadd( aHtm, '    <td align=center>'  )
@@ -419,7 +419,7 @@ METHOD IdeHome:buildSourcesInfo( cProjectTitle, aSrcInfo )
    aadd( aHtm, ' <body align=center valign=center>'      )
    aadd( aHtm, '  <table cols="7" width="95%">'          )
    aadd( aHtm, '   <tr><td align=left>'                  )
-   aadd( aHtm, '    <img src="' + 'resources/' + cIcon + '.png' + '"' + '</img>' + '&nbsp;' + '&nbsp;' + '&nbsp;' )
+   aadd( aHtm, '    <img src="' + ':/resources/' + cIcon + '.png' + '"' + '</img>' + '&nbsp;' + '&nbsp;' + '&nbsp;' )
    aadd( aHtm, '    <font color="#FF4719" size=5><u>' + cProjectTitle + '</u></font>' )
    aadd( aHtm, '   </td>'                                )
    aadd( aHtm, '   <tr bgcolor="#F0F0F5">'               )
@@ -450,7 +450,7 @@ METHOD IdeHome:formatSourceInfo( aHtm, aSrc )
 
    aadd( aHtm, '   <tr>'     )
    aadd( aHtm, '    <td><b>' )
-   aadd( aHtm, '   ' + hbide_htmlImgAnchor( 'fle-' + aSrc[ 1 ], 'resources/' + aSrc[ 5 ] + '.png' ) + '&nbsp;' )
+   aadd( aHtm, '   ' + hbide_htmlImgAnchor( 'fle-' + aSrc[ 1 ], ':/resources/' + aSrc[ 5 ] + '.png' ) + '&nbsp;' )
    aadd( aHtm, '   ' + hbide_htmlAnchor( 'fle-' + aSrc[ 1 ], aSrc[ 3 ], aSrc[ 1 ] ) )
    aadd( aHtm, '    </b></td>' )
    aadd( aHtm, '    <td>'    )
@@ -540,7 +540,7 @@ STATIC FUNCTION hbide_getFaqs()
              'All you have to do is to enter different environment settings in _ONE_ hbide.env file which ' + ;
              'resides alongside hbide.ini. hbIDE provides the interface to manipulate this .env settings ' + ;
              'which can be invoked from right-toolbar icon "Compiler Environments". Follow the input fields. ' + ;
-             'A template is provided in "resources/hbide.env", inspect it and you are through. Once hbide.env ' + ;
+             'A template is provided in "hbide.env", inspect it and you are through. Once hbide.env ' + ;
              'is ready, you will simply need to switch over the other environment which can be invoked ' + ;
              'via right-click on a project node in "Projects" tree and point to "Select an environment" ' + ;
              'and click on listed options. Next step is just to build the project.' )

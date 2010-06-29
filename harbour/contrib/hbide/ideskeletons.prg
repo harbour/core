@@ -156,7 +156,8 @@ METHOD IdeSkeletons:destroy()
 METHOD IdeSkeletons:show()
 
    IF empty( ::oUI )
-      ::oUI := HbQtUI():new( hbide_uic( "skeletons" ) ):build()
+//    ::oUI := HbQtUI():new( hbide_uic( "skeletons" ) ):build()
+      ::oUI := uiSkeletons()
 
       ::oSkeltnDock:oWidget:setWidget( ::oUI:oWidget )
 
@@ -549,4 +550,3 @@ METHOD IdeSkeletons:clearTree()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-
