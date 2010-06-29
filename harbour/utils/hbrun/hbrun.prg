@@ -124,7 +124,7 @@ PROCEDURE _APPMAIN( cFile, ... )
                CASE ".prg"
                CASE ".hbs"
                   cFile := HB_COMPILEBUF( HB_ARGV( 0 ), "-n2", "-w", "-es2", "-q0", ;
-                                          s_aIncDir, cFile )
+                                          s_aIncDir, "-D" + "__HBSCRIPT__HBRUN", cFile )
                   IF cFile == NIL
                      ERRORLEVEL( 1 )
                   ENDIF

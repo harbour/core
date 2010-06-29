@@ -217,6 +217,7 @@ REQUEST hbmk_KEYW
 
 #define _HBMK_WITH_PREF         "HBMK_WITH_"
 #define _HBMK_HAS_PREF          "HBMK_HAS_"
+#define _HBMK_SCRIPT            "__HBSCRIPT__HBMK"
 
 #define _HBMK_NEST_MAX          10
 #define _HBMK_HEAD_NEST_MAX     10
@@ -6438,7 +6439,7 @@ STATIC PROCEDURE PlugIn_Load( hbmk )
          ENDIF
          IF ! lOK .AND. !( Lower( cExt ) == ".hrb" ) /* Optimization: Don't try to load it as .prg if the extension is .hrb */
             cType := I_( "(source)" )
-            cFile := hb_compileFromBuf( cFile, "-n2", "-w3", "-es2", "-q0" )
+            cFile := hb_compileFromBuf( cFile, "-n2", "-w3", "-es2", "-q0", "-D" + _HBMK_SCRIPT )
             IF ! Empty( cFile )
                hrb := hb_hrbLoad( HB_HRB_BIND_FORCELOCAL, cFile )
             ENDIF

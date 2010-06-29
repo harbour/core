@@ -12,6 +12,8 @@
 
 #define I_( x )                 hb_i18n_gettext( x )
 
+#if defined( __HBSCRIPT__HBMK )
+
 FUNCTION hbmk2_plugin_qt( hbmk2 )
    LOCAL cRetVal := ""
 
@@ -35,21 +37,21 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
 
       /* Gather input parameters */
 
-      hbmk2[ "vars" ][ "aMOC" ] := {}
-      hbmk2[ "vars" ][ "aUIC" ] := {}
-      hbmk2[ "vars" ][ "aQRC" ] := {}
+      hbmk2[ "vars" ][ "aMOC_Src" ] := {}
+      hbmk2[ "vars" ][ "aUIC_Src" ] := {}
+      hbmk2[ "vars" ][ "aQRC_Src" ] := {}
 
       FOR EACH cSrc IN hbmk2[ "params" ]
          SWITCH Lower( hbmk2_FNameExtGet( cSrc ) )
          CASE ".hpp"
          CASE ".h"
-            AAdd( hbmk2[ "vars" ][ "aMOC" ], cSrc )
+            AAdd( hbmk2[ "vars" ][ "aMOC_Src" ], cSrc )
             EXIT
          CASE ".ui"
-            AAdd( hbmk2[ "vars" ][ "aUIC" ], cSrc )
+            AAdd( hbmk2[ "vars" ][ "aUIC_Src" ], cSrc )
             EXIT
          CASE ".qrc"
-            AAdd( hbmk2[ "vars" ][ "aQRC" ], cSrc )
+            AAdd( hbmk2[ "vars" ][ "aQRC_Src" ], cSrc )
             EXIT
          ENDSWITCH
       NEXT
@@ -60,19 +62,19 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
       hbmk2[ "vars" ][ "aUIC_Dst" ] := {}
       hbmk2[ "vars" ][ "aQRC_Dst" ] := {}
 
-      FOR EACH cSrc IN hbmk2[ "vars" ][ "aMOC" ]
+      FOR EACH cSrc IN hbmk2[ "vars" ][ "aMOC_Src" ]
          cDst := hbmk2_FNameDirExtSet( "moc_" + hbmk2_FNameNameGet( cSrc ), hbmk2[ "cWorkDir" ], ".cpp" )
          AAdd( hbmk2[ "vars" ][ "aMOC_Dst" ], cDst )
          hbmk2_AddInput_CPP( hbmk2, cDst )
       NEXT
 
-      FOR EACH cSrc IN hbmk2[ "vars" ][ "aUIC" ]
+      FOR EACH cSrc IN hbmk2[ "vars" ][ "aUIC_Src" ]
          cDst := hbmk2_FNameDirExtSet( "uic_" + hbmk2_FNameNameGet( cSrc ), hbmk2[ "cWorkDir" ], ".prg" )
          AAdd( hbmk2[ "vars" ][ "aUIC_Dst" ], cDst )
          hbmk2_AddInput_PRG( hbmk2, cDst )
       NEXT
 
-      FOR EACH cSrc IN hbmk2[ "vars" ][ "aQRC" ]
+      FOR EACH cSrc IN hbmk2[ "vars" ][ "aQRC_Src" ]
          cDst := hbmk2_FNameDirExtSet( "rcc_" + hbmk2_FNameNameGet( cSrc ), hbmk2[ "cWorkDir" ], ".cpp" )
          AAdd( hbmk2[ "vars" ][ "aQRC_Dst" ], cDst )
          hbmk2_AddInput_CPP( hbmk2, cDst )
@@ -82,7 +84,7 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
 
    CASE "pre_prg"
 
-      IF ! hbmk2[ "lCLEAN" ] .AND. ! Empty( hbmk2[ "vars" ][ "aUIC" ] )
+      IF ! hbmk2[ "lCLEAN" ] .AND. ! Empty( hbmk2[ "vars" ][ "aUIC_Src" ] )
 
          /* Detect 'uic' tool location */
 
@@ -92,7 +94,7 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
 
             /* Execute 'uic' commands on input files */
 
-            FOR EACH cSrc, cDst IN hbmk2[ "vars" ][ "aUIC" ], hbmk2[ "vars" ][ "aUIC_Dst" ]
+            FOR EACH cSrc, cDst IN hbmk2[ "vars" ][ "aUIC_Src" ], hbmk2[ "vars" ][ "aUIC_Dst" ]
 
                IF hbmk2[ "lINC" ] .AND. ! hbmk2[ "lREBUILD" ]
                   lBuildIt := ! hb_FGetDateTime( cDst, @tDst ) .OR. ;
@@ -148,7 +150,7 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
 
    CASE "pre_c"
 
-      IF ! hbmk2[ "lCLEAN" ] .AND. ! Empty( hbmk2[ "vars" ][ "aMOC" ] )
+      IF ! hbmk2[ "lCLEAN" ] .AND. ! Empty( hbmk2[ "vars" ][ "aMOC_Src" ] )
 
          /* Detect 'moc' tool location */
 
@@ -158,7 +160,7 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
 
             /* Execute 'moc' commands on input files */
 
-            FOR EACH cSrc, cDst IN hbmk2[ "vars" ][ "aMOC" ], hbmk2[ "vars" ][ "aMOC_Dst" ]
+            FOR EACH cSrc, cDst IN hbmk2[ "vars" ][ "aMOC_Src" ], hbmk2[ "vars" ][ "aMOC_Dst" ]
 
                IF hbmk2[ "lINC" ] .AND. ! hbmk2[ "lREBUILD" ]
                   lBuildIt := ! hb_FGetDateTime( cDst, @tDst ) .OR. ;
@@ -196,7 +198,7 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
          ENDIF
       ENDIF
 
-      IF ! hbmk2[ "lCLEAN" ] .AND. ! Empty( hbmk2[ "vars" ][ "aQRC" ] )
+      IF ! hbmk2[ "lCLEAN" ] .AND. ! Empty( hbmk2[ "vars" ][ "aQRC_Src" ] )
 
          /* Detect 'rcc' tool location */
 
@@ -206,7 +208,7 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
 
             /* Execute 'rcc' commands on input files */
 
-            FOR EACH cSrc, cDst IN hbmk2[ "vars" ][ "aQRC" ], hbmk2[ "vars" ][ "aQRC_Dst" ]
+            FOR EACH cSrc, cDst IN hbmk2[ "vars" ][ "aQRC_Src" ], hbmk2[ "vars" ][ "aQRC_Dst" ]
 
                IF hbmk2[ "lINC" ] .AND. ! hbmk2[ "lREBUILD" ]
                   lBuildIt := ! hb_FGetDateTime( cDst, @tDst ) .OR. ;
@@ -303,6 +305,43 @@ STATIC FUNCTION qt_tool_detect( hbmk2, cEnvQT, cEnvHB, cName )
    ENDIF
 
    RETURN cBIN
+
+#else
+
+/* Standalone test code for .uic to .prg conversion ) */
+PROCEDURE Main( cSrc, cDst )
+   LOCAL cTmp
+   LOCAL nError
+
+   IF cSrc != NIL .AND. ;
+      cDst != NIL
+
+      FClose( hb_FTempCreateEx( @cTmp ) )
+
+      IF ( nError := hb_processRun( "uic " + cSrc + " -o " + cTmp ) ) == 0
+         IF uic_to_prg( NIL, cTmp, cDst, cSrc )
+            RETURN
+         ENDIF
+      ELSE
+         OutErr( "Error: Calling 'uic' tool: " + hb_ntos( nError ) + hb_osNewLine() )
+      ENDIF
+   ELSE
+      OutErr( "Missing parameter. Call with: <.ui> <.prg>" + hb_osNewLine() )
+   ENDIF
+
+   ErrorLevel( 1 )
+
+   RETURN
+
+STATIC FUNCTION hbmk2_OutStd( hbmk2, ... )
+   HB_SYMBOL_UNUSED( hbmk2 )
+   RETURN OutStd( ... )
+
+STATIC FUNCTION hbmk2_OutErr( hbmk2, ... )
+   HB_SYMBOL_UNUSED( hbmk2 )
+   RETURN OutErr( ... )
+
+#endif
 
 /* ----------------------------------------------------------------------- */
 

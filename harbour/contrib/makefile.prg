@@ -9,9 +9,9 @@
 
 /* TODO:
      1. error handling / reporting / feedback
-     2. copy headers and other stuff (hbide)
+     2. copy headers (or solve .hbc search path in universal way)
      3. add .dll generation for contrib libs
-     4. first do all the 'clean's
+     4. avoid long cmdlines to make ms-dos hosts happy
 */
 
 #pragma warninglevel=3
