@@ -832,7 +832,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>hbMK2.exe</string>
+       <string>hbmk2 executable</string>
       </property>
      </widget>
      <widget class="QLineEdit" name="editPathHbmk2">
@@ -901,7 +901,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>hbIDE.ini</string>
+       <string>hbide.ini</string>
       </property>
      </widget>
      <widget class="QLineEdit" name="editPathIni">

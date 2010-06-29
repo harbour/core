@@ -4086,6 +4086,10 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    IF ( ! lSkipBuild .AND. ! lStopAfterInit .AND. ! lStopAfterHarbour .AND. hbmk[ _HBMK_nHBMODE ] != _HBMODE_RAW_C ) .OR. ;
       ( nHarbourPPO >= 2 .AND. lStopAfterHarbour ) /* or in preprocessor mode */
 
+      IF ! hbmk[ _HBMK_lCLEAN ]
+         PlugIn_Execute( hbmk, "pre_prg" )
+      ENDIF
+
       /* Incremental */
 
       IF hbmk[ _HBMK_lINC ] .AND. ! hbmk[ _HBMK_lREBUILD ]
@@ -4154,8 +4158,6 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    /* Harbour compilation */
 
    IF ! lSkipBuild .AND. ! lStopAfterInit .AND. Len( l_aPRG_TODO ) > 0 .AND. ! hbmk[ _HBMK_lCLEAN ] .AND. hbmk[ _HBMK_nHBMODE ] != _HBMODE_RAW_C
-
-      PlugIn_Execute( hbmk, "pre_prg" )
 
       IF hbmk[ _HBMK_lINC ] .AND. ! hbmk[ _HBMK_lQuiet ]
          hbmk_OutStd( hbmk, I_( "Compiling Harbour sources..." ) )

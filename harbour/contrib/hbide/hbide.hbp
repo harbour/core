@@ -51,4 +51,25 @@ ideplugins.prg
 idedict.prg
 idebrowse.prg
 
--pi=*.ui
+-pi=docviewgenerator.ui
+-pi=docwriter.ui
+-pi=environ.ui
+-pi=environments.ui
+-pi=finddialog.ui
+-pi=findinfiles.ui
+-pi=findinfilesex.ui
+-pi=findsource.ui
+-pi=funclist.ui
+-pi=mainwindow.ui
+-pi=projectpropertiesex.ui
+-pi=searchreplace.ui
+-pi=searchreplacepanel.ui
+-pi=selectionlist.ui
+-pi=selectproject.ui
+-pi=setup.ui
+-pi=shortcuts.ui
+-pi=skeletons.ui
+-pi=themes.ui
+-pi=themesex.ui
+-pi=toolsutilities.ui
+-pi=updown.ui

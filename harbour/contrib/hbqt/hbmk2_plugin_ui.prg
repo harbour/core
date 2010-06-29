@@ -507,7 +507,7 @@ STATIC FUNCTION hbq_pullToolTip( cCmd )
 
    RETURN cString
 
-STATIC PROCEDURE hbq_replaceConstants( cString )
+STATIC PROCEDURE hbq_replaceConstants( /* @ */ cString )
    LOCAL aResult
    LOCAL cConst
    LOCAL cCmdB
@@ -571,24 +571,24 @@ STATIC FUNCTION hbq_setObjects( cCmd, aWidgets )
    RETURN cCmd
 
 STATIC FUNCTION hbq_pullText( aLines, nFrom )
-   LOCAL s := ""
+   LOCAL cString := ""
    LOCAL nLen := Len( aLines )
    LOCAL aKeyword := { "setText(", "setPlainText(", "setStyleSheet(", "setWhatsThis(" }
 
    IF AScan( aKeyword, {| tmp | tmp $ aLines[ nFrom ] } ) > 0
-      s := aLines[ nFrom ]
+      cString := aLines[ nFrom ]
       nFrom++
       DO WHILE nFrom <= nLen
          IF !( Left( aLines[ nFrom ], 1 ) == '"' )
             EXIT
          ENDIF
-         s += aLines[ nFrom ]
+         cString += aLines[ nFrom ]
          aLines[ nFrom ] := ""
          nFrom++
       ENDDO
    ENDIF
 
-   RETURN s
+   RETURN cString
 
 STATIC FUNCTION hbq_pullSetToolTip( aLines, nFrom )
    LOCAL cString := ""
@@ -608,7 +608,7 @@ STATIC FUNCTION hbq_pullSetToolTip( aLines, nFrom )
 
    RETURN cString
 
-STATIC FUNCTION hbq_stripFront( cString, cTkn )
+STATIC FUNCTION hbq_stripFront( /* @ */ cString, cTkn )
    LOCAL n
    LOCAL nLen := Len( cTkn )
 
@@ -619,7 +619,7 @@ STATIC FUNCTION hbq_stripFront( cString, cTkn )
 
    RETURN .F.
 
-STATIC FUNCTION hbq_stripRear( cString, cTkn )
+STATIC FUNCTION hbq_stripRear( /* @ */ cString, cTkn )
    LOCAL n
 
    IF ( n := RAt( cTkn, cString ) ) > 0

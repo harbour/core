@@ -148,10 +148,10 @@ PROCEDURE Main( ... )
    LOCAL aParams := hb_AParams()
    LOCAL tmp
 
-   IF Len( aParams ) == 1 .AND. aParams[ 1 ] == "TEST"
-      OutStd( "! New contrib make orchestrator test run: OK" + hb_osNewLine() )
-      ErrorLevel( 0 )
-      RETURN
+   s_lTest := AScan( aParams, "test" ) > 0
+
+   IF s_lTest
+      OutStd( "! New contrib make orchestrator test run." + iif( AScan( aParams, "clean" ) > 0, " CLEAN", "" ) + iif( AScan( aParams, "install" ) > 0, " INSTALL", "" ) + hb_osNewLine() )
    ENDIF
 
    IF Empty( GetEnv( "HB_PLATFORM" ) ) .OR. ;
@@ -189,8 +189,6 @@ PROCEDURE Main( ... )
       tmp := Lower( tmp )
    NEXT
 
-   s_lTest := AScan( aParams, "test" ) > 0
-
    /* Parse filter */
 
    aFilter := iif( Empty( cFilter ), {}, hb_ATokens( cFilter,, .T. ) )
@@ -225,38 +223,38 @@ PROCEDURE Main( ... )
                CASE "lib"
                CASE "implib"
                   cTargetDir := "lib/${hb_plat}/${hb_comp}" + iif( lBuildName, "/${hb_build}", "" )
-                  cInstallDirVar := "HB_LIB_INSTALL_"
+                  cInstallDirVar := "HB_LIB_INSTALL"
                   EXIT
                CASE "bin"
                   cTargetDir := "bin/${hb_plat}/${hb_comp}" + iif( lBuildName, "/${hb_build}", "" )
-                  cInstallDirVar := "HB_BIN_INSTALL_"
+                  cInstallDirVar := "HB_BIN_INSTALL"
                   EXIT
                ENDSWITCH
 
                IF AScan( aParams, "clean" ) > 0
                   call_hbmk2( cBase + cProject, cTargetDir, cOptions + " -clean", .F. )
-               ENDIF
-               IF AScan( aParams, "install" ) > 0 .AND. ;
-                  ! Empty( GetEnv( cInstallDirVar ) ) .AND. ;
-                  ( ! ( cType == "implib" ) .OR. GetEnv( "HB_BUILD_IMPLIB" ) == "yes" )
-                  call_hbmk2( cBase + cProject, cTargetDir, cOptions + " -instpath=${" + cInstallDirVar + "}", .F. )
-               ELSEIF !( Len( aParams ) == 1 .AND. aParams[ 1 ] == "clean" )
+               ELSEIF AScan( aParams, "install" ) > 0
+                  IF ! Empty( GetEnv( cInstallDirVar ) ) .AND. ;
+                     ( ! ( cType == "implib" ) .OR. GetEnv( "HB_BUILD_IMPLIB" ) == "yes" )
+                     call_hbmk2( cBase + cProject, cTargetDir, cOptions + " -instpath=${" + cInstallDirVar + "}", .F. )
+                  ENDIF
+               ELSE
                   call_hbmk2( cBase + cProject, cTargetDir, cOptions + " -inc", .F. )
                ENDIF
 
                IF cType == "lib" .AND. GetEnv( "HB_BUILD_CONTRIB_DLL" ) == "yes" .AND. ;
                   hb_FileExists( FN_ExtSet( cBase + cProject, ".hbc" ) )
 
-                  cInstallDirVar := "HB_BIN_INSTALL_"
+                  cInstallDirVar := "HB_BIN_INSTALL"
 
                   IF AScan( aParams, "clean" ) > 0
                      call_hbmk2( cBase + cProject, cTargetDir, cOptions + " -clean", .T. )
-                  ENDIF
-                  IF AScan( aParams, "install" ) > 0 .AND. ;
-                     ! Empty( GetEnv( cInstallDirVar ) ) .AND. ;
-                     ( ! ( cType == "implib" ) .OR. GetEnv( "HB_BUILD_IMPLIB" ) == "yes" )
-                     call_hbmk2( cBase + cProject, cTargetDir, cOptions + " -instpath=${" + cInstallDirVar + "}", .T. )
-                  ELSEIF !( Len( aParams ) == 1 .AND. aParams[ 1 ] == "clean" )
+                  ELSEIF AScan( aParams, "install" ) > 0
+                     IF ! Empty( GetEnv( cInstallDirVar ) ) .AND. ;
+                        ( ! ( cType == "implib" ) .OR. GetEnv( "HB_BUILD_IMPLIB" ) == "yes" )
+                        call_hbmk2( cBase + cProject, cTargetDir, cOptions + " -instpath=${" + cInstallDirVar + "}", .T. )
+                     ENDIF
+                  ELSE
                      call_hbmk2( cBase + cProject, cTargetDir, cOptions + " -inc", .T. )
                   ENDIF
                ENDIF
