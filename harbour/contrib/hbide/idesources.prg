@@ -166,66 +166,69 @@ METHOD IdeSourcesManager:saveSource( nTab, lCancel, lAs )
       nIndex  := ::qTabWidget:indexOf( oEdit:oTab:oWidget )
       cSource := oEdit:sourceFile
 
-      lNew := Empty( cSource ) .OR. lAs
-      IF lNew
-         cNewFile := ::selectSource( 'save', ;
-                                    iif( !Empty( cSource ), cSource, hb_dirBase() + "projects\" ),;
-                                           "Save " + oEdit:oTab:caption + " as..." )
-         IF empty( cNewFile )
-            // will check later what decision to take
-            RETURN .f.
-         ENDIF
-         IF hbide_pathNormalized( cNewFile ) == hbide_pathNormalized( cSource )
-            lNew := .f.
-         ENDIF
-      ENDIF
+      IF !Empty( oEdit:sourceFile ) .AND. oEdit:lLoaded .AND. oEdit:qDocument:isModified()
 
-      cFileToSave := iif( lNew, cNewFile, cSource )
-      qDocument := oEdit:qDocument
-
-      /*
-       * If the burn process fails, we should change the name of the previous file.
-       * 01/01/2010 - 21:24:41 - vailtom
-       */
-      //cBuffer := oEdit:qEdit:toPlainText()
-      cBuffer := oEdit:prepareBufferToSave( oEdit:qEdit:toPlainText() )
-      //
-      IF !hb_memowrit( cFileToSave, cBuffer )
-         MsgBox( "Error saving the file " + oEdit:sourceFile + ".",, 'Error saving file!' )
-         lCancel := .T.
-         RETURN .F.
-      ENDIF
-
-      hb_fNameSplit( cFileToSave, , @cFile, @cExt )
-
-      IF lNew
-         oEdit:sourceFile := cFileToSave
-
-         oEdit:oTab:Caption := cFile + cExt
-
-         ::qTabWidget:setTabText( nIndex, cFile + cExt )
-         ::qTabWidget:setTabTooltip( nIndex, cFileToSave )
-
-         IF empty( cSource )
-            /* The file is not populated in editors tree. Inject */
-            ::oEM:addSourceInTree( oEdit:sourceFile )
-         ELSEIF lAs
-            /* Rename the existing nodes in tree */
-            IF !empty( oItem := hbide_findProjTreeItem( ::oIde, oEdit:sourceFile, "Opened Source" ) )
-               oItem:oWidget:caption := cFile + cExt
+         lNew := Empty( cSource ) .OR. lAs
+         IF lNew
+            cNewFile := ::selectSource( 'save', ;
+                                       iif( !Empty( cSource ), cSource, hb_dirBase() + "projects\" ),;
+                                              "Save " + oEdit:oTab:caption + " as..." )
+            IF empty( cNewFile )
+               // will check later what decision to take
+               RETURN .f.
+            ENDIF
+            IF hbide_pathNormalized( cNewFile ) == hbide_pathNormalized( cSource )
+               lNew := .f.
             ENDIF
          ENDIF
+
+         cFileToSave := iif( lNew, cNewFile, cSource )
+         qDocument := oEdit:qDocument
+
+         /*
+          * If the burn process fails, we should change the name of the previous file.
+          * 01/01/2010 - 21:24:41 - vailtom
+          */
+         //cBuffer := oEdit:qEdit:toPlainText()
+         cBuffer := oEdit:prepareBufferToSave( oEdit:qEdit:toPlainText() )
+         //
+         IF !hb_memowrit( cFileToSave, cBuffer )
+            MsgBox( "Error saving the file " + oEdit:sourceFile + ".",, 'Error saving file!' )
+            lCancel := .T.
+            RETURN .F.
+         ENDIF
+
+         hb_fNameSplit( cFileToSave, , @cFile, @cExt )
+
+         IF lNew
+            oEdit:sourceFile := cFileToSave
+
+            oEdit:oTab:Caption := cFile + cExt
+
+            ::qTabWidget:setTabText( nIndex, cFile + cExt )
+            ::qTabWidget:setTabTooltip( nIndex, cFileToSave )
+
+            IF empty( cSource )
+               /* The file is not populated in editors tree. Inject */
+               ::oEM:addSourceInTree( oEdit:sourceFile )
+            ELSEIF lAs
+               /* Rename the existing nodes in tree */
+               IF !empty( oItem := hbide_findProjTreeItem( ::oIde, oEdit:sourceFile, "Opened Source" ) )
+                  oItem:oWidget:caption := cFile + cExt
+               ENDIF
+            ENDIF
+         ENDIF
+
+         qDocument:setModified( .f. )
+         ::oIde:aSources := { oEdit:sourceFile }
+         ::createTags()
+         ::updateFuncList()
+         ::qTabWidget:setTabIcon( nIndex, ::resPath + "tabunmodified.png" )
+         ::oDK:setStatusText( SB_PNL_MODIFIED, " " )
+
+         cFileTemp := hbide_pathToOSPath( oEdit:cPath + oEdit:cFile + oEdit:cExt + ".tmp" )
+         ferase( cFileTemp )
       ENDIF
-
-      qDocument:setModified( .f. )
-      ::oIde:aSources := { oEdit:sourceFile }
-      ::createTags()
-      ::updateFuncList()
-      ::qTabWidget:setTabIcon( nIndex, ::resPath + "tabunmodified.png" )
-      ::oDK:setStatusText( SB_PNL_MODIFIED, " " )
-
-      cFileTemp := hbide_pathToOSPath( oEdit:cPath + oEdit:cFile + oEdit:cExt + ".tmp" )
-      ferase( cFileTemp )
    ENDIF
 
    RETURN .T.

@@ -501,7 +501,7 @@ METHOD IdeActions:buildMainMenu()
    oSubMenu2:addItem( { ::getAction( "InsertSeparator"    ), {|| oIde:execAction( "InsertSeparator"    ) } } )
    hbide_menuAddSep( oSubMenu )
    oSubMenu2:addItem( { ::getAction( "InsertDateTime"     ), {|| oIde:execAction( "InsertDateTime"     ) } } )
-   oSubMenu2:addItem( { ::getAction( "InsertRandomName"   ), {|| oIde:execAction( "InsertRandomName"   ) } } )
+// oSubMenu2:addItem( { ::getAction( "InsertRandomName"   ), {|| oIde:execAction( "InsertRandomName"   ) } } )
    oSubMenu2:addItem( { ::getAction( "InsertExternalFile" ), {|| oIde:execAction( "InsertExternalFile" ) } } )
    oMenuBar:addItem( { oSubMenu2,  _T( "~Insert" ) } )
 
