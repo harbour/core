@@ -550,17 +550,39 @@ METHOD IdeProjManager:save( lCanClose )
    txt_:= {}
    //
    aadd( txt_, c3rd + "hbide_version="           + "1.0" )
-   aadd( txt_, c3rd + "hbide_type="              + { "Executable", "Lib", "Dll" }[ ::oUI:q_comboPrjType:currentIndex() + 1 ] )
-   aadd( txt_, c3rd + "hbide_title="             + hbide_space2amp( ::oUI:q_editPrjTitle    :text() ) )
-   aadd( txt_, c3rd + "hbide_workingfolder="     + hbide_space2amp( ::oUI:q_editWrkFolder   :text() ) )
-   aadd( txt_, c3rd + "hbide_destinationfolder=" + hbide_space2amp( ::oUI:q_editDstFolder   :text() ) )
-   aadd( txt_, c3rd + "hbide_output="            + hbide_space2amp( ::oUI:q_editOutName     :text() ) )
-   aadd( txt_, c3rd + "hbide_launchparams="      + hbide_space2amp( ::oUI:q_editLaunchParams:text() ) )
-   aadd( txt_, c3rd + "hbide_launchprogram="     + hbide_space2amp( ::oUI:q_editLaunchExe   :text() ) )
-   aadd( txt_, c3rd + "hbide_backupfolder="      + hbide_space2amp( ::oUI:q_editBackup      :text() ) )
-   aadd( txt_, c3rd + "hbide_xhb="               + iif( ::oUI:q_checkXhb:isChecked(), "YES", "NO" )   )
-   aadd( txt_, c3rd + "hbide_xpp="               + iif( ::oUI:q_checkXpp:isChecked(), "YES", "NO" )   )
-   aadd( txt_, c3rd + "hbide_clp="               + iif( ::oUI:q_checkClp:isChecked(), "YES", "NO" )   )
+   IF ::oUI:q_comboPrjType:currentIndex() != 0
+      aadd( txt_, c3rd + "hbide_type="              + { "Executable", "Lib", "Dll" }[ ::oUI:q_comboPrjType:currentIndex() + 1 ] )
+   ENDIF
+   IF ! Empty( ::oUI:q_editPrjTitle    :text() )
+      aadd( txt_, c3rd + "hbide_title="             + hbide_space2amp( ::oUI:q_editPrjTitle    :text() ) )
+   ENDIF
+   IF ! Empty( ::oUI:q_editWrkFolder   :text() )
+      aadd( txt_, c3rd + "hbide_workingfolder="     + hbide_space2amp( ::oUI:q_editWrkFolder   :text() ) )
+   ENDIF
+   IF ! Empty( ::oUI:q_editDstFolder   :text() )
+      aadd( txt_, c3rd + "hbide_destinationfolder=" + hbide_space2amp( ::oUI:q_editDstFolder   :text() ) )
+   ENDIF
+   IF ! Empty( ::oUI:q_editOutName     :text() )
+      aadd( txt_, c3rd + "hbide_output="            + hbide_space2amp( ::oUI:q_editOutName     :text() ) )
+   ENDIF
+   IF ! Empty( ::oUI:q_editLaunchParams:text() )
+      aadd( txt_, c3rd + "hbide_launchparams="      + hbide_space2amp( ::oUI:q_editLaunchParams:text() ) )
+   ENDIF
+   IF ! Empty( ::oUI:q_editLaunchExe   :text() )
+      aadd( txt_, c3rd + "hbide_launchprogram="     + hbide_space2amp( ::oUI:q_editLaunchExe   :text() ) )
+   ENDIF
+   IF ! Empty( ::oUI:q_editBackup      :text() )
+      aadd( txt_, c3rd + "hbide_backupfolder="      + hbide_space2amp( ::oUI:q_editBackup      :text() ) )
+   ENDIF
+   IF ::oUI:q_checkXhb:isChecked()
+      aadd( txt_, c3rd + "hbide_xhb="               + iif( ::oUI:q_checkXhb:isChecked(), "YES", "NO" )   )
+   ENDIF
+   IF ::oUI:q_checkXpp:isChecked()
+      aadd( txt_, c3rd + "hbide_xpp="               + iif( ::oUI:q_checkXpp:isChecked(), "YES", "NO" )   )
+   ENDIF
+   IF ::oUI:q_checkClp:isChecked()
+      aadd( txt_, c3rd + "hbide_clp="               + iif( ::oUI:q_checkClp:isChecked(), "YES", "NO" )   )
+   ENDIF
    aadd( txt_, " " )
    a_:= hbide_memoToArray( ::oUI:q_editFlags:toPlainText() )   ; aeval( a_, {|e| aadd( txt_, e ) } )
    aadd( txt_, " " )

@@ -1,15 +1,5 @@
 -3rd=hbide_version=1.0
--3rd=hbide_type=Executable
 -3rd=hbide_title=hbide
--3rd=hbide_workingfolder=
--3rd=hbide_destinationfolder=
--3rd=hbide_output=hbide
--3rd=hbide_launchparams=
--3rd=hbide_launchprogram=
--3rd=hbide_backupfolder=
--3rd=hbide_xhb=NO
--3rd=hbide_xpp=NO
--3rd=hbide_clp=NO
 
 -inc
 -w3
