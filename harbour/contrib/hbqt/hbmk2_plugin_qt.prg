@@ -10,9 +10,11 @@
  * See COPYING for licensing terms.
  */
 
+#pragma warninglevel=3
+
 #define I_( x )                 hb_i18n_gettext( x )
 
-#if defined( __HBSCRIPT__HBMK )
+#if ! defined( __HBSCRIPT__HBRUN )
 
 FUNCTION hbmk2_plugin_qt( hbmk2 )
    LOCAL cRetVal := ""
@@ -88,7 +90,7 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
 
          /* Detect 'uic' tool location */
 
-         cUIC_BIN := qt_tool_detect( hbmk2, "UIC_BIN", "HB_QT_UIC_BIN", "uic" )
+         cUIC_BIN := qt_tool_detect( hbmk2, "uic", "UIC_BIN" )
 
          IF ! Empty( cUIC_BIN )
 
@@ -154,7 +156,7 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
 
          /* Detect 'moc' tool location */
 
-         cMOC_BIN := qt_tool_detect( hbmk2, "MOC_BIN", "HB_QT_MOC_BIN", "moc" )
+         cMOC_BIN := qt_tool_detect( hbmk2, "moc", "MOC_BIN", "HB_QT_MOC_BIN" )
 
          IF ! Empty( cMOC_BIN )
 
@@ -202,7 +204,7 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
 
          /* Detect 'rcc' tool location */
 
-         cRCC_BIN := qt_tool_detect( hbmk2, "RCC_BIN", "HB_QT_RCC_BIN", "rcc" )
+         cRCC_BIN := qt_tool_detect( hbmk2, "rcc", "RCC_BIN" )
 
          IF ! Empty( cRCC_BIN )
 
@@ -262,28 +264,30 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
 
    RETURN cRetVal
 
-STATIC FUNCTION qt_tool_detect( hbmk2, cEnvQT, cEnvHB, cName )
+STATIC FUNCTION qt_tool_detect( hbmk2, cName, cEnvQT, cEnvHB )
    LOCAL cBIN
 
    cBIN := GetEnv( cEnvQT )
    IF Empty( cBIN )
-      IF Empty( GetEnv( cEnvHB ) )
-         IF hbmk2[ "cPLAT" ] == "win"
-            IF GetEnv( "HB_WITH_QT" ) == "no"
-               RETURN NIL
-            ELSE
-               cBIN := GetEnv( "HB_WITH_QT" ) + "\..\bin\" + cName + ".exe"
-               IF ! hb_FileExists( cBIN )
-                  hbmk2_OutErr( hbmk2, hb_StrFormat( "HB_WITH_QT points to incomplete QT installation. '%1$s' executable not found.", cName ) )
+      IF Empty( cEnvHB ) .OR. Empty( GetEnv( cEnvHB ) )
+         cName += GetEnv( "HB_QTPOSTFIX" )
+         IF Empty( GetEnv( "HB_QTPATH" ) ) .OR. ;
+            ! hb_FileExists( cBIN := GetEnv( "HB_QTPATH" ) + cName )
+
+            IF hbmk2[ "cPLAT" ] == "win"
+               IF GetEnv( "HB_WITH_QT" ) == "no"
                   RETURN NIL
+               ELSE
+                  cBIN := GetEnv( "HB_WITH_QT" ) + "\..\bin\" + cName + ".exe"
+                  IF ! hb_FileExists( cBIN )
+                     hbmk2_OutErr( hbmk2, hb_StrFormat( "HB_WITH_QT points to incomplete QT installation. '%1$s' executable not found.", cName ) )
+                     RETURN NIL
+                  ENDIF
                ENDIF
-            ENDIF
-         ELSE
-            cBIN := hbmk2_FindInPath( cName, GetEnv( "PATH" ) + hb_osPathListSeparator() + "/opt/qtsdk/qt/bin" )
-            IF Empty( cBIN )
-               cBIN := hbmk2_FindInPath( cName + "-qt4", GetEnv( "PATH" ) + hb_osPathListSeparator() + "/opt/qtsdk/qt/bin" )
+            ELSE
+               cBIN := hbmk2_FindInPath( cName, GetEnv( "PATH" ) + hb_osPathListSeparator() + "/opt/qtsdk/qt/bin" )
                IF Empty( cBIN )
-                  hbmk2_OutErr( hbmk2, hb_StrFormat( "%1$s not set, could not autodetect", cEnvHB ) )
+                  hbmk2_OutErr( hbmk2, hb_StrFormat( "HB_QTPATH, HB_QTPOSTFIX, %1$s not set, could not autodetect", cEnvHB ) )
                   RETURN NIL
                ENDIF
             ENDIF
@@ -292,6 +296,7 @@ STATIC FUNCTION qt_tool_detect( hbmk2, cEnvQT, cEnvHB, cName )
             hbmk2_OutStd( hbmk2, hb_StrFormat( "Using QT '%1$s' executable: %2$s (autodetected)", cName, cBIN ) )
          ENDIF
       ELSE
+         /* kept for compatibility */
          IF hb_FileExists( GetEnv( cEnvHB ) )
             cBIN := GetEnv( cEnvHB )
             IF hbmk2[ "lINFO" ]
@@ -319,17 +324,20 @@ PROCEDURE Main( cSrc, cDst )
       FClose( hb_FTempCreateEx( @cTmp ) )
 
       IF ( nError := hb_processRun( "uic " + cSrc + " -o " + cTmp ) ) == 0
-         IF uic_to_prg( NIL, cTmp, cDst, cSrc )
-            RETURN
+         IF ! uic_to_prg( NIL, cTmp, cDst, cSrc )
+            nError := 9
          ENDIF
       ELSE
          OutErr( "Error: Calling 'uic' tool: " + hb_ntos( nError ) + hb_osNewLine() )
       ENDIF
+
+      FErase( cTmp )
    ELSE
       OutErr( "Missing parameter. Call with: <.ui> <.prg>" + hb_osNewLine() )
+      nError := 8
    ENDIF
 
-   ErrorLevel( 1 )
+   ErrorLevel( nError )
 
    RETURN
 
@@ -373,7 +381,7 @@ STATIC FUNCTION uic_to_prg( hbmk2, cFileNameSrc, cFileNameDst, cOriSrc )
    RETURN .F.
 
 #define STRINGIFY( cStr )    '"' + cStr + '"'
-#define PAD_30( cStr )       PadR( cStr, Max( Len( cStr ), 20 ) )
+#define PAD_30( cStr )       PadR( cStr, Max( Len( cStr ), 35 ) )
 #define STRIP_SQ( cStr )     StrTran( StrTran( StrTran( StrTran( s, "[", " " ), "]", " " ), "\n", " " ), Chr( 10 ), " " )
 
 STATIC FUNCTION hbq_create( cFile, cFuncName )
@@ -514,7 +522,7 @@ STATIC FUNCTION hbq_create( cFile, cFuncName )
    AAdd( aLinesPRG, "FUNCTION " + cFuncName + "( qParent )" )
    AAdd( aLinesPRG, "   LOCAL oUI" )
    AAdd( aLinesPRG, "   LOCAL oWidget" )
-   AAdd( aLinesPRG, "   LOCAL qObj := {=>}" )
+   AAdd( aLinesPRG, "   LOCAL qObj := { => }" )
    AAdd( aLinesPRG, "" )
    AAdd( aLinesPRG, "   hb_hCaseMatch( qObj, .F. )" )
    AAdd( aLinesPRG, "" )
@@ -592,7 +600,7 @@ STATIC FUNCTION hbq_create( cFile, cFuncName )
    NEXT
    AAdd( aLinesPRG, "" )
    AAdd( aLinesPRG, "   oUI         := HbQtUI():new()" )
-   AAdd( aLinesPRG, "   oUI:qObj    := qObj"    )
+   AAdd( aLinesPRG, "   oUI:qObj    := qObj" )
    AAdd( aLinesPRG, "   oUI:oWidget := oWidget" )
    AAdd( aLinesPRG, "" )
    AAdd( aLinesPRG, "   RETURN oUI" )
@@ -700,14 +708,14 @@ STATIC PROCEDURE hbq_replaceConstants( /* @ */ cString )
       aResult := hb_regexAll( regDefine, cString )
 
       IF ! Empty( aResult )
-         cOR := "hb_bitOr("
+         cOR := "hb_bitOr( "
          FOR n := 1 TO Len( aResult )
             cOR += aResult[ n ][ 1 ]
             IF n < Len( aResult )
                cOR += ","
             ENDIF
          NEXT
-         cOR += ")"
+         cOR += " )"
          cCmdB   := SubStr( cString, 1, At( aResult[ 1 ][ 1 ], cString ) - 1 )
          cConst  := aResult[ Len( aResult ) ][ 1 ]
          cCmdE   := SubStr( cString, At( cConst, cString ) + Len( cConst ) )

@@ -337,10 +337,10 @@ HARBOUR
    with 3rd party components:
       HB_QT_STATIC=yes (only meaningful on Windows platform)
 
-   You can override automatic detection of QT 'moc', 'rcc' and 'uic' tools, f.e.:
-      HB_QT_MOC_BIN=/opt/qt46/bin/moc
-      HB_QT_RCC_BIN=/opt/qt46/bin/rcc
-      HB_QT_UIC_BIN=/opt/qt46/bin/uic
+   You can override automatic detection of QT 'moc', 'rcc' and 'uic' tools
+   by using HB_QTPATH and optionally HB_QTPOSTFIX envvars, f.e.:
+      HB_QTPATH=/opt/qt46/bin/
+      HB_QTPOSTFIX=-qt4
 
    NOTES: - You need to use native path format to your shell/OS.
           - Spaces in directory names aren't currently supported.

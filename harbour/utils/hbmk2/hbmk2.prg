@@ -7783,6 +7783,54 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
             ENDIF
          ENDIF
 
+      CASE Lower( Left( cLine, Len( "deppkgname="   ) ) ) == "deppkgname="   ; cLine := SubStr( cLine, Len( "deppkgname="   ) + 1 )
+
+         IF dep_split_arg( hbmk, cLine, @cLine, @tmp )
+            tmp := MacroProc( hbmk, tmp, cFileName )
+            AAddNewNotEmpty( hbmk[ _HBMK_hDEP ][ cLine ][ _HBMKDEP_aPKG ], StrStripQuote( AllTrim( tmp ) ) )
+         ENDIF
+
+      CASE Lower( Left( cLine, Len( "depkeyhead="   ) ) ) == "depkeyhead="   ; cLine := SubStr( cLine, Len( "depkeyhead="   ) + 1 )
+
+         IF dep_split_arg( hbmk, cLine, @cLine, @tmp )
+            FOR EACH cItem IN hb_ATokens( tmp,, .T. )
+               AAddNewNotEmpty( hbmk[ _HBMK_hDEP ][ cLine ][ _HBMKDEP_aKeyHeader ], AllTrim( StrTran( MacroProc( hbmk, cItem, cFileName ), "\", "/" ) ) )
+            NEXT
+         ENDIF
+
+      CASE Lower( Left( cLine, Len( "depoptional="  ) ) ) == "depoptional="  ; cLine := SubStr( cLine, Len( "depoptional="  ) + 1 )
+
+         IF dep_split_arg( hbmk, cLine, @cLine, @tmp )
+            tmp := MacroProc( hbmk, tmp, cFileName )
+            DO CASE
+            CASE Lower( tmp ) == "yes" ; hbmk[ _HBMK_hDEP ][ cLine ][ _HBMKDEP_lOptional ] := .T.
+            CASE Lower( tmp ) == "no"  ; hbmk[ _HBMK_hDEP ][ cLine ][ _HBMKDEP_lOptional ] := .F.
+            ENDCASE
+         ENDIF
+
+      CASE Lower( Left( cLine, Len( "depcontrol="   ) ) ) == "depcontrol="   ; cLine := SubStr( cLine, Len( "depcontrol="   ) + 1 )
+
+         IF dep_split_arg( hbmk, cLine, @cLine, @tmp )
+            hbmk[ _HBMK_hDEP ][ cLine ][ _HBMKDEP_cControl ] := AllTrim( MacroProc( hbmk, tmp, cFileName ) )
+            AAddNew( hbmk[ _HBMK_hDEP ][ cLine ][ _HBMKDEP_aINCPATH ], _HBMK_DEP_CTRL_MARKER )
+         ENDIF
+
+      CASE Lower( Left( cLine, Len( "depincpath="   ) ) ) == "depincpath="   ; cLine := SubStr( cLine, Len( "depincpath="   ) + 1 )
+
+         IF dep_split_arg( hbmk, cLine, @cLine, @tmp )
+            FOR EACH cItem IN hb_ATokens( tmp,, .T. )
+               AAddNewNotEmpty( hbmk[ _HBMK_hDEP ][ cLine ][ _HBMKDEP_aINCPATH ], PathNormalize( PathProc( PathSepToSelf( MacroProc( hbmk, cItem, cFileName ) ), FN_DirGet( cFileName ) ) ) )
+            NEXT
+         ENDIF
+
+      CASE Lower( Left( cLine, Len( "depincpathlocal=" ) ) ) == "depincpathlocal=" ; cLine := SubStr( cLine, Len( "depincpathlocal=" ) + 1 )
+
+         IF dep_split_arg( hbmk, cLine, @cLine, @tmp )
+            FOR EACH cItem IN hb_ATokens( tmp,, .T. )
+               AAddNewNotEmpty( hbmk[ _HBMK_hDEP ][ cLine ][ _HBMKDEP_aINCPATHLOCAL ], PathNormalize( PathProc( PathSepToSelf( MacroProc( hbmk, cItem, cFileName ) ), FN_DirGet( cFileName ) ) ) )
+            NEXT
+         ENDIF
+
       /* .hbc identification strings. Similar to pkgconfig ones. */
       CASE Lower( Left( cLine, Len( "name="         ) ) ) == "name="         ; cLine := SubStr( cLine, Len( "name="         ) + 1 )
 

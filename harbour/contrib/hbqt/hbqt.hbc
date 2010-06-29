@@ -22,5 +22,12 @@ libs=hbqtcore hbqtgui hbqtnetwork
 
 {win|os2}hbcppmm=yes
 
+# Required for compilation of the .cpp files converted from .qrc
+# TODO: Create .cpp to .prg converter for resources to fully get around int
+depkeyhead=qt:QtCore/qglobal.h
+depcontrol=qt:${HB_WITH_QT}
+{!darwin}depincpath=qt:/usr/include/qt4 /usr/lib/qt4/include /usr/include
+{darwin}depincpath=qt:/Developer/qt/include /Library/Frameworks
+
 gui=yes
 gt=gtnul

@@ -75,14 +75,3 @@ idebrowse.prg
 -pi=updown.ui
 
 -pi=hbide.qrc
-
-# Required for compilation of the .cpp files converted from .qrc
-# TOFIX: Move this to hbqt.hbc
-# TODO: Create .cpp to .prg converter for resources to fully get around int
--depkeyhead=qt:QtCore/qglobal.h
--depcontrol=qt:${HB_WITH_QT}
-{!darwin}-depincpath=qt:/usr/include/qt4
-{!darwin}-depincpath=qt:/usr/lib/qt4/include
-{!darwin}-depincpath=qt:/usr/include
-{darwin}-depincpath=qt:/Developer/qt/include
-{darwin}-depincpath=qt:/Library/Frameworks
