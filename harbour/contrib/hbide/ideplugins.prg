@@ -126,6 +126,15 @@ STATIC FUNCTION hbide_loadAPlugin( cPlugin, oIde, cVer )
          IF ! Empty( cFile )
             pHrb := hb_hrbLoad( HB_HRB_BIND_OVERLOAD, cFile )
          ENDIF
+      ELSE
+         cFileName := hb_dirBase() + hb_osPathSeparator() + "plugins" + hb_osPathSeparator() + cPlugin + ".hbs"
+         IF hb_fileExists( cFileName )
+            cFile := hb_memoread( cFileName )
+            cFile := hb_compileFromBuf( cFile, "-n2", "-w3", "-es2", "-q0" )
+            IF ! Empty( cFile )
+               pHrb := hb_hrbLoad( HB_HRB_BIND_OVERLOAD, cFile )
+            ENDIF
+         ENDIF
       ENDIF
    ENDIF
 
