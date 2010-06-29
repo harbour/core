@@ -88,9 +88,6 @@ REQUEST HB_QT
 REQUEST DBFCDX
 REQUEST DBFNTX
 
-STATIC s_resPath
-STATIC s_pathSep
-
 /*----------------------------------------------------------------------*/
 
 PROCEDURE Main( ... )
@@ -113,9 +110,6 @@ PROCEDURE Main( ... )
 
    SET CENTURY ON
    SET EPOCH TO 1970
-
-   s_resPath := hb_DirBase() + "resources" + hb_OsPathSeparator()
-   s_pathSep := hb_OsPathSeparator()
 
    oIde := HbIde():new( hb_aParams() ):create()
    oIde:destroy()
@@ -273,7 +267,7 @@ CLASS HbIde
    DATA   cPathSkltns                             INIT   ""
    DATA   cSaveTo                                 INIT   ""
    DATA   oOpenedSources
-   DATA   resPath                                 INIT   hb_DirBase() + "resources" + hb_OsPathSeparator()
+   DATA   resPath                                 INIT   ":/resources" + hb_OsPathSeparator()
    DATA   pathSep                                 INIT   hb_OsPathSeparator()
    DATA   cLastFileOpenPath                       INIT   hb_DirBase() + "projects"
    DATA   cProcessInfo
@@ -367,7 +361,7 @@ METHOD HbIde:create( aParams )
    ::nModeUI := UI_MODE_UI
    #endif
 
-   qPixmap := QPixmap():new( hb_dirBase() + "resources" + hb_osPathSeparator() + "hbidesplash.png" )
+   qPixmap := QPixmap():new( ":/resources" + hb_osPathSeparator() + "hbidesplash.png" )
    qSplash := QSplashScreen():new()
  * qSplash:setWindowFlags( hb_bitOr( Qt_WindowStaysOnTopHint, qSplash:windowFlags() ) )
    qSplash:setPixmap( qPixmap )
@@ -1435,4 +1429,3 @@ METHOD HbIde:testPainter( qPainter )
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
-

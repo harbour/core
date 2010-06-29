@@ -726,13 +726,12 @@ STATIC FUNCTION mnuNormalizeItem( cCaption )
       cCaption := Substr( cCaption, 1, p - 1 )
       cCaption := Alltrim( cCaption )
 
-    * cIco := s_resPath + Alltrim( cIco ) ---> "s_resPath" is need here!
       IF !Empty( cIco )
          cIco := StrTran( cIco, '/', hb_OsPathSeparator() )
          cIco := StrTran( cIco, '\', hb_OsPathSeparator() )
 
          IF !( hb_OsPathSeparator() $ cIco )
-            cIco := hb_DirBase() + "resources" + hb_OsPathSeparator() + cIco + "|"
+            cIco := ":/resources" + hb_OsPathSeparator() + cIco + "|"
          ELSE
             cIco := cIco + "|"
          Endif

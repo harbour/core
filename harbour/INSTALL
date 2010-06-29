@@ -337,8 +337,9 @@ HARBOUR
    with 3rd party components:
       HB_QT_STATIC=yes (only meaningful on Windows platform)
 
-   You can override automatic detection of QT 'moc' and 'uic' tools, f.e.:
+   You can override automatic detection of QT 'moc', 'rcc' and 'uic' tools, f.e.:
       HB_QT_MOC_BIN=/opt/qt46/bin/moc
+      HB_QT_RCC_BIN=/opt/qt46/bin/rcc
       HB_QT_UIC_BIN=/opt/qt46/bin/uic
 
    NOTES: - You need to use native path format to your shell/OS.

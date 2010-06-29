@@ -1573,7 +1573,7 @@ FUNCTION hbide_fetchSubPaths( aPaths, cRootPath, lSubs )
 
 FUNCTION hbide_image( cName )
    DEFAULT cName TO ""
-   RETURN hbide_pathToOsPath( hb_DirBase() + "resources" + "/" + cName + ".png" )
+   RETURN hbide_pathToOsPath( ":/resources" + "/" + cName + ".png" )
 
 /*----------------------------------------------------------------------*/
 

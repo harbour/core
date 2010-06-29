@@ -4,7 +4,7 @@
 
 incpaths=.
 
-plugins=hbmk2_plugin_ui.prg
+plugins=hbmk2_plugin_qt.prg
 
 {allwin|os2}libpaths=${HB_WITH_QT}\..\lib
 
