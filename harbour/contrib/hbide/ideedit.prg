@@ -95,7 +95,6 @@ CLASS IdeEdit INHERIT IdeObject
    DATA   oEditor
 
    DATA   qEdit
-   DATA   qHLayout
    DATA   nOrient                                 INIT  0
 
    DATA   nMode                                   INIT  0
@@ -264,7 +263,6 @@ METHOD IdeEdit:create( oIde, oEditor, nMode )
    ::oIde    := oIde
    ::oEditor := oEditor
    ::nMode   := nMode
-   //::oIde    := ::oEditor:oIde
 
    ::qEdit   := HBQPlainTextEdit():new()
    //
@@ -287,12 +285,6 @@ METHOD IdeEdit:create( oIde, oEditor, nMode )
    FOR EACH nBlock IN ::aBookMarks
       ::qEdit:hbBookMarks( nBlock )
    NEXT
-
-   ::qHLayout := QHBoxLayout():new()
-   ::qHLayout:setContentsMargins( 0,0,0,0 )
-   ::qHLayout:setSpacing( 0 )
-
-   ::qHLayout:addWidget( ::qEdit )
 
    ::connectEditSignals( Self )
 
@@ -359,6 +351,9 @@ METHOD IdeEdit:setFont()
 
 METHOD IdeEdit:destroy()
 
+   ::oUpDn:oUI:setParent( ::oDlg:oWidget )
+   ::oSourceThumbnailDock:oWidget:hide()
+
    ::disconnect( ::qTimer, "timeout()" )
    IF ::qTimer:isActive()
       ::qTimer:stop()
@@ -373,11 +368,7 @@ METHOD IdeEdit:destroy()
 
    ::disconnectEditSignals( Self )
 
-   ::oEditor:qLayout:removeItem( ::qHLayout )
-   //
-   ::qHLayout:removeWidget( ::qEdit )
    ::qEdit    := NIL
-   ::qHLayout := NIL
    ::qFont    := NIL
 
    RETURN Self
@@ -448,10 +439,10 @@ METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
             ::oEditor:split( 2, oEdit )
          CASE qAct:text() == "Close Split Window"
             IF ( n := ascan( ::oEditor:aEdits, {|o| o == oEdit } ) ) > 0  /* 1 == Main Edit */
+               ::oUpDn:oUI:setParent( ::oEditor:oEdit:qEdit )
                oo := ::oEditor:aEdits[ n ]
                hb_adel( ::oEditor:aEdits, n, .t. )
                oo:destroy()
-               ::oEditor:relay()
                ::oEditor:qCqEdit := ::oEditor:qEdit
                ::oEditor:qCoEdit := ::oEditor:oEdit
                ::oIde:manageFocusInEditor()
@@ -1864,7 +1855,26 @@ METHOD IdeEdit:getWord( lSelect )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:goto( nLine )
+   LOCAL nRows, qGo
    LOCAL qCursor := QTextCursor():configure( ::qEdit:textCursor() )
+
+   IF empty( nLine )
+      nRows := ::qEdit:blockCount()
+      nLine := qCursor:blockNumber()
+
+      qGo := QInputDialog():new( ::oDlg:oWidget )
+      qGo:setInputMode( 1 )
+      qGo:setIntMinimum( 1 )
+      qGo:setIntMaximum( nRows )
+      qGo:setIntValue( nLine + 1 )
+      qGo:setLabelText( "Goto Line Number [1-" + hb_ntos( nRows ) + "]" )
+      qGo:setWindowTitle( "Harbour" )
+
+      ::oIde:setPosByIniEx( qGo, ::oINI:cGotoDialogGeometry )
+      qGo:exec()
+      ::oIde:oINI:cGotoDialogGeometry := hbide_posAndSize( qGo )
+      nLine := qGo:intValue()
+   ENDIF
 
    qCursor:movePosition( QTextCursor_Start )
    qCursor:movePosition( QTextCursor_Down, QTextCursor_MoveAnchor, nLine - 1 )

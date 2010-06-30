@@ -882,7 +882,7 @@ METHOD IdeEditsManager:zoom( nKey )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-////
+
 METHOD IdeEditsManager:printPreview()
    LOCAL oEdit
    IF !empty( oEdit := ::getEditObjectCurrent() )
@@ -928,35 +928,12 @@ METHOD IdeEditsManager:gotoMark( nIndex )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEditsManager:goto( nLine )
-   LOCAL qGo, qCursor, nRows, oEdit
-
+   LOCAL oEdit
    IF ! empty( oEdit := ::oEM:getEditObjectCurrent() )
-      qCursor := QTextCursor():configure( oEdit:qEdit:textCursor() )
-      nRows   := oEdit:qEdit:blockCount()
-
-      IF hb_isNumeric( nLine ) .AND. nLine >= 0 .AND. nLine <= nRows
-         //
-      ELSE
-         nLine   := qCursor:blockNumber()
-
-         qGo := QInputDialog():new( ::oDlg:oWidget )
-         qGo:setInputMode( 1 )
-         qGo:setIntMinimum( 1 )
-         qGo:setIntMaximum( nRows )
-         qGo:setIntValue( nLine + 1 )
-         qGo:setLabelText( "Goto Line Number [1-" + hb_ntos( nRows ) + "]" )
-         qGo:setWindowTitle( "Harbour" )
-
-         ::oIde:setPosByIniEx( qGo, ::oINI:cGotoDialogGeometry )
-         qGo:exec()
-         ::oIde:oINI:cGotoDialogGeometry := hbide_posAndSize( qGo )
-         nLine := qGo:intValue()
-      ENDIF
-
       oEdit:goto( nLine )
    ENDIF
+   RETURN Self
 
-   RETURN nLine
 /*----------------------------------------------------------------------*/
 //                            Navigation
 /*----------------------------------------------------------------------*/
@@ -1097,6 +1074,8 @@ CLASS IdeEditor INHERIT IdeObject
    DATA   qThumbnail
    DATA   qTNFont
    DATA   qTNHiliter
+   DATA   qHSpltr
+   DATA   qVSpltr
 
    DATA   aEdits                                  INIT   {}   /* Hold IdeEdit Objects */
    DATA   oEdit
@@ -1123,6 +1102,8 @@ CLASS IdeEditor INHERIT IdeObject
    DATA   lReadOnly                               INIT  .F.
 
    DATA   cEol                                    INIT  ""
+   DATA   nSplOrient                              INIT  -1
+   DATA   qSplitter
 
    METHOD new( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView )
    METHOD create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView, aBookMarks )
@@ -1215,12 +1196,16 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView, a
 
    ::buildTabPage( ::sourceFile )
 
-   ::qLayout := QGridLayout():new()
+   ::qLayout := QBoxLayout():new()
    ::qLayout:setContentsMargins( 0,0,0,0 )
-   ::qLayout:setHorizontalSpacing( 5 )
-   ::qLayout:setVerticalSpacing( 5 )
    //
    ::oTab:oWidget:setLayout( ::qLayout )
+
+   ::qHSpltr := QSplitter():new()
+   ::qHSpltr:setOrientation( Qt_Horizontal )
+
+   ::qVSpltr := QSplitter():new()
+   ::qVSpltr:setOrientation( Qt_Vertical )
 
    ::oEdit   := IdeEdit():new( ::oIde, Self, 0 )
    ::oEdit:aBookMarks := aBookMarks
@@ -1228,6 +1213,8 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView, a
    ::qEdit   := ::oEdit:qEdit
    ::qCqEdit := ::oEdit:qEdit
    ::qCoEdit := ::oEdit
+
+   ::qLayout:addWidget( ::oEdit:qEdit )
 
    ::connect( ::oEdit:qEdit, "updateRequest(QRect,int)", {|| ::scrollThumbnail() } )
 
@@ -1239,8 +1226,6 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView, a
       ::qHiliter := ::oTH:SetSyntaxHilighting( ::oEdit:qEdit, @::cTheme )
    ENDIF
    ::qCursor := QTextCursor():configure( ::qEdit:textCursor() )
-
-   ::qLayout:addLayout( ::oEdit:qHLayout, 0, 0 )
 
    /* Populate Tabs Array */
    aadd( ::aTabs, { ::oTab, Self } )
@@ -1254,6 +1239,59 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView, a
       ::qEdit:setTextInteractionFlags( Qt_TextSelectableByMouse + Qt_TextSelectableByKeyboard )
    ENDIF
    ::setTabImage()
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditor:relay( oEdit )
+   LOCAL oEdt
+
+   IF len( ::aEdits ) == 0
+      IF ::nSplOrient > -1
+         ::nSplOrient := -1
+         ::qLayout:removeWidget( ::qSplitter )
+         ::qLayout:addWidget( ::oEdit:qEdit )
+      ENDIF
+   ENDIF
+
+   IF hb_isObject( oEdit )
+      aadd( ::aEdits, oEdit )
+   ENDIF
+
+   IF ::nSplOrient == -1
+      ::nSplOrient := oEdit:nOrient
+
+      IF oEdit:nOrient == 1
+         ::qSplitter := QSplitter():new( Qt_Horizontal )
+      ELSE
+         ::qSplitter := QSplitter():new( Qt_Vertical )
+      ENDIF
+
+      ::qLayout:removeWidget( ::oEdit:qEdit )
+      ::qLayout:addWidget( ::qSplitter )
+
+      ::qSplitter:addWidget( ::oEdit:qEdit )
+   ENDIF
+
+   FOR EACH oEdt IN ::aEdits
+      ::qSplitter:addWidget( oEdt:qEdit )
+   NEXT
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditor:split( nOrient, oEditP )
+   LOCAL oEdit
+
+   HB_SYMBOL_UNUSED( oEditP  )
+
+   oEdit := IdeEdit():new( ::oIde, Self, 1 ):create()
+   oEdit:qEdit:setDocument( ::qDocument )
+   oEdit:nOrient := nOrient
+
+   ::relay( oEdit )
 
    RETURN Self
 
@@ -1426,60 +1464,6 @@ HB_TRACE( HB_TR_ALWAYS, "IdeEditor:execEvent( nMode, p )" )
       hbide_ExecPopup( aPops, p, ::oTab:oWidget )
 
    ENDSWITCH
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeEditor:relay( oEdit )
-   LOCAL nCols, oEdt, nR, nC
-
-   ::qLayout:removeItem( ::oEdit:qHLayout )
-   FOR EACH oEdt IN ::aEdits
-      ::qLayout:removeItem( oEdt:qHLayout )
-      //
-      oEdt:qHLayout:removeWidget( oEdt:qEdit )
-      oEdt:qHLayout := QHBoxLayout():new()
-      oEdt:qHLayout:setContentsMargins( 0,0,0,0 )
-      oEdt:qHLayout:setSpacing( 0 )
-
-      oEdt:qHLayout:addWidget( oEdt:qEdit )
-   NEXT
-
-   IF hb_isObject( oEdit )
-      aadd( ::aEdits, oEdit )
-   ENDIF
-   ::qLayout:addLayout( ::oEdit:qHLayout, 0, 0 )
-
-   nR := 0 ; nC := 0
-   FOR EACH oEdt IN ::aEdits
-      IF oEdt:nOrient == 1     // Horiz
-         nC++
-         ::qLayout:addLayout_1( oEdt:qHLayout, 0, nC, 1, 1, Qt_Vertical )
-      ENDIF
-   NEXT
-   nCols := ::qLayout:columnCount()
-   FOR EACH oEdt IN ::aEdits
-      IF oEdt:nOrient == 2     // Verti
-         nR++
-         ::qLayout:addLayout_1( oEdt:qHLayout, nR, 0, 1, nCols, Qt_Horizontal )
-      ENDIF
-   NEXT
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeEditor:split( nOrient, oEditP )
-   LOCAL oEdit
-
-   HB_SYMBOL_UNUSED( oEditP  )
-
-   oEdit := IdeEdit():new( ::oIde, Self, 1 ):create()
-   oEdit:qEdit:setDocument( ::qDocument )
-   oEdit:nOrient := nOrient
-
-   ::relay( oEdit )
 
    RETURN Self
 

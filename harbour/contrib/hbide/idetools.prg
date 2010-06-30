@@ -364,7 +364,7 @@ METHOD IdeToolsManager:execEvent( cMode, p )
    CASE "buttonBrowse_clicked"
       IF !empty( cFile := hbide_fetchAFile( ::oDlg, "Select a Tool" ) )
          hb_fNameSplit( cFile, , @cFileName )
-         ::ini2controls()
+         //::ini2controls()
          ::oUI:q_editName    : setText( cFileName )
          ::oUI:q_editCmdLine : setText( cFile )
       ENDIF
