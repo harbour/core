@@ -74,6 +74,8 @@ REQUEST HB_GT_STD
 STATIC s_nRow := 2
 STATIC s_nCol := 0
 STATIC s_aIncDir := {}
+STATIC s_aHistory := {}
+STATIC s_lPreserveHistory := .T.
 
 /* ********************************************************************** */
 
@@ -99,11 +101,16 @@ PROCEDURE _APPMAIN( cFile, ... )
          CASE "--help"
          CASE "/?"
          CASE "/h"
-            HB_DotUsage()
+            hbrun_Usage()
             EXIT
          CASE "-v"
          CASE "/v"
-            HB_DotPrompt( "? hb_version()" )
+            hbrun_Prompt( "? hb_version()" )
+            EXIT
+         CASE "-p"
+         CASE "/p"
+            s_lPreserveHistory := .F.
+            hbrun_Prompt()
             EXIT
          OTHERWISE
             hb_FNameSplit( cFile, NIL, NIL, @cExt )
@@ -115,11 +122,11 @@ PROCEDURE _APPMAIN( cFile, ... )
                CASE ".dbf"
                   EXIT
                OTHERWISE
-                  cExt := HB_DotFileSig( cFile )
+                  cExt := hbrun_FileSig( cFile )
             ENDSWITCH
             SWITCH cExt
                CASE ".dbf"
-                  HB_DotPrompt( "USE " + cFile )
+                  hbrun_Prompt( "USE " + cFile )
                   EXIT
                CASE ".prg"
                CASE ".hbs"
@@ -135,12 +142,18 @@ PROCEDURE _APPMAIN( cFile, ... )
             ENDSWITCH
       ENDSWITCH
    ELSE
-      HB_DotPrompt()
+      hbrun_Prompt()
    ENDIF
 
    RETURN
 
-STATIC FUNCTION HB_DotFileSig( cFile )
+EXIT PROCEDURE hbrun_exit()
+
+   hbrun_HistorySave()
+
+   RETURN
+
+STATIC FUNCTION hbrun_FileSig( cFile )
    LOCAL hFile
    LOCAL cBuff, cSig, cExt
 
@@ -158,23 +171,26 @@ STATIC FUNCTION HB_DotFileSig( cFile )
 
    RETURN cExt
 
-STATIC PROCEDURE HB_DotPrompt( cCommand )
+STATIC PROCEDURE hbrun_Prompt( cCommand )
    LOCAL GetList
    LOCAL cLine
    LOCAL nMaxRow, nMaxCol
-   LOCAL aHistory, nHistIndex
+   LOCAL nHistIndex
    LOCAL bKeyUP, bKeyDown, bKeyIns
 
    CLEAR SCREEN
    SET SCOREBOARD OFF
    GetList := {}
-   aHistory := { padr( "quit", HB_LINE_LEN ) }
-   nHistIndex := 2
+
+   hbrun_HistoryLoad()
+
+   AADD( s_aHistory, padr( "quit", HB_LINE_LEN ) )
+   nHistIndex := Len( s_aHistory ) + 1
 
    IF ISCHARACTER( cCommand )
-      AADD( aHistory, PadR( cCommand, HB_LINE_LEN ) )
-      HB_DotInfo( cCommand )
-      HB_DotExec( cCommand )
+      AADD( s_aHistory, PadR( cCommand, HB_LINE_LEN ) )
+      hbrun_Info( cCommand )
+      hbrun_Exec( cCommand )
    ELSE
       cCommand := ""
    ENDIF
@@ -185,7 +201,7 @@ STATIC PROCEDURE HB_DotPrompt( cCommand )
          cLine := Space( HB_LINE_LEN )
       ENDIF
 
-      HB_DotInfo( cCommand )
+      hbrun_Info( cCommand )
 
       nMaxRow := MaxRow()
       nMaxCol := MaxCol()
@@ -199,12 +215,12 @@ STATIC PROCEDURE HB_DotPrompt( cCommand )
          {|| SetCursor( IIF( ReadInsert( !ReadInsert() ), ;
                           SC_NORMAL, SC_INSERT ) ) } )
       bKeyUp   := SetKey( K_UP, ;
-         {|| IIF( nHistIndex >  1, ;
-                  cLine := aHistory[ --nHistIndex ], ) } )
+         {|| IIF( nHistIndex > 1, ;
+                  cLine := s_aHistory[ --nHistIndex ], ) } )
       bKeyDown := SetKey( K_DOWN, ;
-         {|| cLine := IIF( nHistIndex < LEN( aHistory ), ;
-             aHistory[ ++nHistIndex ], ;
-             ( nHistIndex := LEN( aHistory ) + 1, Space( HB_LINE_LEN ) ) ) } )
+         {|| cLine := IIF( nHistIndex < LEN( s_aHistory ), ;
+             s_aHistory[ ++nHistIndex ], ;
+             ( nHistIndex := LEN( s_aHistory ) + 1, Space( HB_LINE_LEN ) ) ) } )
 
       READ
 
@@ -220,22 +236,22 @@ STATIC PROCEDURE HB_DotPrompt( cCommand )
          LOOP
       ENDIF
 
-      IF EMPTY( aHistory ) .OR. ! ATAIL( aHistory ) == cLine
-         IF LEN( aHistory ) < HB_HISTORY_LEN
-            AADD( aHistory, cLine )
+      IF EMPTY( s_aHistory ) .OR. ! ATAIL( s_aHistory ) == cLine
+         IF LEN( s_aHistory ) < HB_HISTORY_LEN
+            AADD( s_aHistory, cLine )
          ELSE
-            ADEL( aHistory, 1 )
-            aHistory[ LEN( aHistory ) ] := cLine
+            ADEL( s_aHistory, 1 )
+            s_aHistory[ LEN( s_aHistory ) ] := cLine
          ENDIF
       ENDIF
-      nHistIndex := LEN( aHistory ) + 1
+      nHistIndex := LEN( s_aHistory ) + 1
 
       cCommand := AllTrim( cLine, " " )
       cLine := NIL
       @ nMaxRow, 0 CLEAR
-      HB_DotInfo( cCommand )
+      hbrun_Info( cCommand )
 
-      HB_DotExec( cCommand )
+      hbrun_Exec( cCommand )
 
       IF s_nRow >= MaxRow()
          Scroll( 2, 0, MaxRow(), MaxCol(), 1 )
@@ -248,7 +264,7 @@ STATIC PROCEDURE HB_DotPrompt( cCommand )
 
 /* ********************************************************************** */
 
-STATIC PROCEDURE HB_DotUsage()
+STATIC PROCEDURE hbrun_Usage()
 
    OutStd( 'Harbour "DOt Prompt" Console / runner ' + HBRawVersion() + HB_OSNewLine() +;
            "Copyright (c) 1999-2010, Przemyslaw Czerpak" + HB_OSNewLine() + ;
@@ -260,7 +276,7 @@ STATIC PROCEDURE HB_DotUsage()
 
 /* ********************************************************************** */
 
-STATIC PROCEDURE HB_DotInfo( cCommand )
+STATIC PROCEDURE hbrun_Info( cCommand )
 
    LOCAL r := Row(), c := Col()
 
@@ -291,7 +307,7 @@ STATIC PROCEDURE HB_DotInfo( cCommand )
 
 /* ********************************************************************** */
 
-STATIC PROCEDURE HB_DotErr( oErr, cCommand )
+STATIC PROCEDURE hbrun_Err( oErr, cCommand )
 
    LOCAL xArg, cMessage
 
@@ -315,7 +331,7 @@ STATIC PROCEDURE HB_DotErr( oErr, cCommand )
 
 /* ********************************************************************** */
 
-STATIC PROCEDURE HB_DotExec( cCommand )
+STATIC PROCEDURE hbrun_Exec( cCommand )
    LOCAL pHRB, cHRB, cFunc, bBlock, cEol
 
    cEol := hb_osNewLine()
@@ -325,7 +341,7 @@ STATIC PROCEDURE HB_DotExec( cCommand )
             "   RETURN __MVSETBASE()" + cEol + ;
             "}" + cEol
 
-   BEGIN SEQUENCE WITH {|oErr| HB_DotErr( oErr, cCommand ) }
+   BEGIN SEQUENCE WITH {|oErr| hbrun_Err( oErr, cCommand ) }
 
       cHRB := HB_COMPILEFROMBUF( cFunc, HB_ARGV( 0 ), "-n", "-q2", s_aIncDir )
       IF cHRB == NIL
@@ -354,3 +370,70 @@ STATIC FUNCTION HBRawVersion()
    RETURN StrTran( Version(), "Harbour " )
 
 /* ********************************************************************** */
+
+#define _HISTORY_DISABLE_LINE  "no"
+#define _HISTORY_SAVE_LINE_MAX 500
+
+STATIC PROCEDURE hbrun_HistoryLoad()
+   LOCAL cHistory
+   LOCAL cLine
+
+   IF s_lPreserveHistory
+      cHistory := StrTran( MemoRead( hbrun_HistoryFileName() ), Chr( 13 ) )
+      IF Left( cHistory, Len( _HISTORY_DISABLE_LINE + Chr( 10 ) ) ) == _HISTORY_DISABLE_LINE + Chr( 10 )
+         s_lPreserveHistory := .F.
+      ELSE
+         FOR EACH cLine IN hb_ATokens( StrTran( cHistory, Chr( 13 ) ), Chr( 10 ) )
+            IF ! Empty( cLine )
+               AAdd( s_aHistory, PadR( cLine, HB_LINE_LEN ) )
+            ENDIF
+         NEXT
+      ENDIF
+   ENDIF
+
+   RETURN
+
+STATIC PROCEDURE hbrun_HistorySave()
+   LOCAL cHistory
+   LOCAL tmp
+
+   IF s_lPreserveHistory
+      cHistory := ""
+      FOR tmp := Max( 1, Len( s_aHistory ) - _HISTORY_SAVE_LINE_MAX ) TO Len( s_aHistory )
+         IF !( Lower( AllTrim( s_aHistory[ tmp ] ) ) == "quit" )
+            cHistory += AllTrim( s_aHistory[ tmp ] ) + hb_osNewLine()
+         ENDIF
+      NEXT
+      hb_MemoWrit( hbrun_HistoryFileName(), cHistory )
+   ENDIF
+
+   RETURN
+
+STATIC FUNCTION hbrun_HistoryFileName()
+   LOCAL cEnvVar
+   LOCAL cDir
+   LOCAL cFileName
+
+#if defined( __PLATFORM__WINDOWS )
+   cEnvVar := "APPDATA"
+#else
+   cEnvVar := "HOME"
+#endif
+
+#if defined( __PLATFORM__DOS )
+   cFileName := "hbrunhst.ini"
+#else
+   cFileName := ".hbrun_history"
+#endif
+
+   IF ! Empty( GetEnv( cEnvVar ) )
+      cDir := GetEnv( cEnvVar ) + hb_osPathSeparator() + ".harbour"
+   ELSE
+      cDir := hb_dirBase()
+   ENDIF
+
+   IF ! hb_dirExists( cDir )
+      MakeDir( cDir )
+   ENDIF
+
+   RETURN cDir + hb_osPathSeparator() + cFileName

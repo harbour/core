@@ -77,7 +77,7 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
       NEXT
 
       FOR EACH cSrc IN hbmk2[ "vars" ][ "aQRC_Src" ]
-#if __OWN_QRC_GENERATOR__
+#ifdef __OWN_QRC_GENERATOR__
          cDst := hbmk2_FNameDirExtSet( "rcc_" + hbmk2_FNameNameGet( cSrc ), hbmk2[ "cWorkDir" ], ".c" )
          AAdd( hbmk2[ "vars" ][ "aQRC_Dst" ], cDst )
          hbmk2_AddInput_C( hbmk2, cDst )
@@ -228,7 +228,7 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
 
                IF lBuildIt
 
-#if __OWN_QRC_GENERATOR__
+#ifdef __OWN_QRC_GENERATOR__
                   FClose( hb_FTempCreateEx( @cTmp ) )
 
                   cCommand := cRCC_BIN +;

@@ -192,12 +192,12 @@ REQUEST hbmk_KEYW
 #define _ESC_DBLQUOTE           1
 #define _ESC_SGLQUOTE_WATCOM    2
 #define _ESC_NIX                3
-#define _ESC_BACKSLASH          4
+#define _ESC_BCKSLASH           4
 
-#define _FNF_BACKSLASH          0
-#define _FNF_FWSLASH            1
-#define _FNF_FWSLASHCYGWIN      2
-#define _FNF_FWSLASHMSYS        3
+#define _FNF_BCKSLASH           0
+#define _FNF_FWDSLASH           1
+#define _FNF_FWDSLASHCYGWIN     2
+#define _FNF_FWDSLASHMSYS       3
 
 #define _MACRO_NO_PREFIX        ""
 #define _MACRO_NORM_PREFIX      "$"
@@ -2833,9 +2833,9 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
            ( hbmk[ _HBMK_cPLAT ] == "win" .AND. hbmk[ _HBMK_cCOMP ] == "cygwin" )
 
          IF hbmk[ _HBMK_cCOMP ] == "cygwin"
-            hbmk[ _HBMK_nCmd_FNF ] := _FNF_FWSLASHCYGWIN
+            hbmk[ _HBMK_nCmd_FNF ] := _FNF_FWDSLASHCYGWIN
          ELSE
-            hbmk[ _HBMK_nCmd_FNF ] := _FNF_FWSLASH
+            hbmk[ _HBMK_nCmd_FNF ] := _FNF_FWDSLASH
          ENDIF
 
          IF hbmk[ _HBMK_lDEBUG ]
@@ -2981,7 +2981,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          ENDIF
 
       CASE hbmk[ _HBMK_cPLAT ] == "os2" .AND. hbmk[ _HBMK_cCOMP ] $ "gcc|gccomf"
-         hbmk[ _HBMK_nCmd_FNF ] := _FNF_BACKSLASH
+         hbmk[ _HBMK_nCmd_FNF ] := _FNF_BCKSLASH
          IF hbmk[ _HBMK_lDEBUG ]
             AAdd( hbmk[ _HBMK_aOPTC ], "-g" )
          ENDIF
@@ -3346,7 +3346,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          ENDIF
 
       CASE hbmk[ _HBMK_cPLAT ] == "win" .AND. hbmk[ _HBMK_cCOMP ] == "bcc"
-         hbmk[ _HBMK_nCmd_FNF ] := _FNF_BACKSLASH
+         hbmk[ _HBMK_nCmd_FNF ] := _FNF_BCKSLASH
          #if defined( __PLATFORM__UNIX )
             hbmk[ _HBMK_nCmd_Esc ] := _ESC_NIX
          #else
@@ -3442,7 +3442,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       CASE ( hbmk[ _HBMK_cPLAT ] == "win" .AND. hbmk[ _HBMK_cCOMP ] $ "msvc|msvc64|msvcia64|icc|iccia64" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "wce" .AND. hbmk[ _HBMK_cCOMP ] == "msvcarm" ) /* NOTE: Cross-platform: wce/ARM on win/x86 */
 
-         hbmk[ _HBMK_nCmd_FNF ] := _FNF_BACKSLASH
+         hbmk[ _HBMK_nCmd_FNF ] := _FNF_BCKSLASH
          #if defined( __PLATFORM__UNIX )
             hbmk[ _HBMK_nCmd_Esc ] := _ESC_NIX
          #else
@@ -3659,7 +3659,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
            ( hbmk[ _HBMK_cPLAT ] == "wce" .AND. hbmk[ _HBMK_cCOMP ] == "poccarm" ) .OR. ; /* NOTE: Cross-platform: wce/ARM on win/x86 */
            ( hbmk[ _HBMK_cPLAT ] == "win" .AND. hbmk[ _HBMK_cCOMP ] == "xcc" )
 
-         hbmk[ _HBMK_nCmd_FNF ] := _FNF_BACKSLASH
+         hbmk[ _HBMK_nCmd_FNF ] := _FNF_BCKSLASH
          #if defined( __PLATFORM__UNIX )
             hbmk[ _HBMK_nCmd_Esc ] := _ESC_NIX
          #else
@@ -7213,19 +7213,19 @@ STATIC FUNCTION FN_Escape( cFileName, nEscapeMode, nFNNotation )
 #if defined( __PLATFORM__WINDOWS ) .OR. ;
     defined( __PLATFORM__DOS ) .OR. ;
     defined( __PLATFORM__OS2 )
-   DEFAULT nFNNotation TO _FNF_BACKSLASH
+   DEFAULT nFNNotation TO _FNF_BCKSLASH
 #else
-   DEFAULT nFNNotation TO _FNF_FWSLASH
+   DEFAULT nFNNotation TO _FNF_FWDSLASH
 #endif
 
    SWITCH nFNNotation
-   CASE _FNF_BACKSLASH
+   CASE _FNF_BCKSLASH
       cFileName := StrTran( cFileName, "/", "\" )
       EXIT
-   CASE _FNF_FWSLASH
+   CASE _FNF_FWDSLASH
       cFileName := StrTran( cFileName, "\", "/" )
       EXIT
-   CASE _FNF_FWSLASHCYGWIN
+   CASE _FNF_FWDSLASHCYGWIN
       hb_FNameSplit( cFileName, @cDir, @cName, @cExt, @cDrive )
       IF ! Empty( cDrive )
          cDir := SubStr( cDir, Len( cDrive + hb_osDriveSeparator() ) + 1 )
@@ -7237,7 +7237,7 @@ STATIC FUNCTION FN_Escape( cFileName, nEscapeMode, nFNNotation )
       ENDIF
       cFileName := StrTran( cFileName, "\", "/" )
       EXIT
-   CASE _FNF_FWSLASHMSYS
+   CASE _FNF_FWDSLASHMSYS
       hb_FNameSplit( cFileName, @cDir, @cName, @cExt, @cDrive )
       IF ! Empty( cDrive )
          cDir := SubStr( cDir, Len( cDrive + hb_osDriveSeparator() ) + 1 )
@@ -7273,7 +7273,7 @@ STATIC FUNCTION FN_Escape( cFileName, nEscapeMode, nFNNotation )
    CASE _ESC_NIX
       cFileName := "'" + StrTran( cFileName, "'", "'\''" ) + "'"
       EXIT
-   CASE _ESC_BACKSLASH
+   CASE _ESC_BCKSLASH
       cFileName := StrTran( cFileName, "\", "\\" )
       EXIT
    ENDSWITCH
@@ -7416,10 +7416,10 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
 
    cFile := MemoRead( cFileName ) /* NOTE: Intentionally using MemoRead() which handles EOF char. */
 
-   IF ! hb_osNewLine() == _CHR_EOL
+   IF !( hb_osNewLine() == _CHR_EOL )
       cFile := StrTran( cFile, hb_osNewLine(), _CHR_EOL )
    ENDIF
-   IF ! hb_osNewLine() == Chr( 13 ) + Chr( 10 )
+   IF !( hb_osNewLine() == Chr( 13 ) + Chr( 10 ) )
       cFile := StrTran( cFile, Chr( 13 ) + Chr( 10 ), _CHR_EOL )
    ENDIF
 
@@ -7879,10 +7879,10 @@ STATIC PROCEDURE HBM_Load( hbmk, aParams, cFileName, nNestingLevel )
 
       cFile := MemoRead( cFileName ) /* NOTE: Intentionally using MemoRead() which handles EOF char. */
 
-      IF ! hb_osNewLine() == _CHR_EOL
+      IF !( hb_osNewLine() == _CHR_EOL )
          cFile := StrTran( cFile, hb_osNewLine(), _CHR_EOL )
       ENDIF
-      IF ! hb_osNewLine() == Chr( 13 ) + Chr( 10 )
+      IF !( hb_osNewLine() == Chr( 13 ) + Chr( 10 ) )
          cFile := StrTran( cFile, Chr( 13 ) + Chr( 10 ), _CHR_EOL )
       ENDIF
 
@@ -8370,7 +8370,7 @@ STATIC PROCEDURE PlatformPRGFlags( hbmk, aOPTPRG )
 #define RTLNK_MODE_SKIPNEXT     7
 
 STATIC PROCEDURE rtlnk_libtrans( aLibList )
-   STATIC hTrans := { ;
+   STATIC s_hTrans := { ;
       "CT"        => "hbct"   , ;
       "CTP"       => "hbct"   , ;
       "CLASSY"    => NIL      , ;
@@ -8402,8 +8402,8 @@ STATIC PROCEDURE rtlnk_libtrans( aLibList )
       IF Lower( Right( cLib, 4 ) ) == ".lib"
          cLib := Left( cLib, Len( cLib ) - 4 )
       ENDIF
-      IF Upper( cLib ) $ hTrans
-         cLib := hTrans[ Upper( cLib ) ]
+      IF Upper( cLib ) $ s_hTrans
+         cLib := s_hTrans[ Upper( cLib ) ]
          IF cLib == NIL
             hb_ADel( aLibList, cLib:__enumIndex(), .T. )
          ENDIF
@@ -8413,7 +8413,7 @@ STATIC PROCEDURE rtlnk_libtrans( aLibList )
    RETURN
 
 STATIC PROCEDURE rtlnk_filetrans( aFileList )
-   STATIC hTrans := { ;
+   STATIC s_hTrans := { ;
       "CTUS"      => NIL      , ;
       "CTUSP"     => NIL      , ;
       "CTINT"     => NIL      , ;
@@ -8441,8 +8441,8 @@ STATIC PROCEDURE rtlnk_filetrans( aFileList )
       IF Lower( Right( cFile, 4 ) ) == ".obj"
          cFile := Left( cFile, Len( cFile ) - 4 )
       ENDIF
-      IF Upper( cFile ) $ hTrans
-         cFile := hTrans[ Upper( cFile ) ]
+      IF Upper( cFile ) $ s_hTrans
+         cFile := s_hTrans[ Upper( cFile ) ]
          IF cFile == NIL
             hb_ADel( aFileList, cFile:__enumIndex(), .T. )
          ENDIF
