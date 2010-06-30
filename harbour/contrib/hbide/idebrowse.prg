@@ -79,142 +79,347 @@
 
 CLASS IdeBrowseManager INHERIT IdeObject
 
-   DATA   oStack
-   DATA   oPanel
-   DATA   oMain
+   DATA   qDbu
+   DATA   qStack
    DATA   qLayout
    DATA   qVSplitter
    DATA   qToolBar
-   DATA   qLayMain
 
+   DATA   aPanels                                 INIT  {}
    DATA   aToolBtns                               INIT  {}
-   DATA   aItems                                  INIT  {}
+   DATA   aButtons                                INIT  {}
+
+   DATA   oCurBrw
+   DATA   oCurPanel
 
    METHOD new( oIde )
    METHOD create( oIde )
+   METHOD show()
    METHOD destroy()
+   METHOD buildToolbar()
    METHOD execEvent( cEvent, p )
-   METHOD addTable( cFileDBF, cAlias, nRow, nCol )
-   METHOD addArray( aData, aAttr, nRow, nCol )
+   METHOD addTable( cFileDBF, cAlias )
+   METHOD addArray( aData, aAttr )
+   METHOD getPanelNames()
+   METHOD getPanelsInfo()
+   METHOD addPanels()
+   METHOD addPanel( cPanel )
+   METHOD showPanel( cPanel )
+   METHOD isPanel( cPanel )
+   METHOD loadTables()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeBrowseManager:new( oIde )
-
    ::oIde := oIde
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeBrowseManager:getPanelNames()
+   LOCAL aNames := {}
+   aeval( ::aPanels, {|e| aadd( aNames, e:cPanel ) } )
+   RETURN aNames
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeBrowseManager:getPanelsInfo()
+   LOCAL oBrw, oPanel
+   LOCAL aInfo := {}
+
+   FOR EACH oPanel IN ::aPanels
+      FOR EACH oBrw IN oPanel:aItems
+         IF oBrw:nType == BRW_TYPE_DBF
+            aadd( aInfo, oPanel:cPanel + "," + oBrw:cTable + "," + oBrw:cAlias + "," + oBrw:cDriver + "," + ;
+                         hb_ntos( oBrw:nOrder ) + "," + hb_ntos( oBrw:recNo() ) + hb_ntos( oBrw:nCursorType ) )
+         ENDIF
+      NEXT
+   NEXT
+
+   RETURN aInfo
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeBrowseManager:destroy()
+   LOCAL oPanel, oBrw
+
+   FOR EACH oPanel IN ::aPanels
+      FOR EACH oBrw IN oPanel:aItems
+         oBrw:destroy()
+         oBrw := NIL
+      NEXT
+      oPanel:aItems := NIL
+      oPanel := NIL
+   NEXT
+   ::aPanels := NIL
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeBrowseManager:destroy()
-   #if 0
-   LOCAL oBrw
+METHOD IdeBrowseManager:show()
 
-   // Close tables and clear variables
-   FOR EACH oBrw IN ::aItems
-      Select( oBrw:cAlias )
-      DbCloseArea()
-   NEXT
-   ::aItems := {}
-   #endif
+   ::qToolbar:setStyleSheet( GetStyleSheet( "QToolBar", ::nAnimantionMode ) )
+   ::oQScintillaDock:oWidget:raise()
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeBrowseManager:create( oIde )
-   LOCAL oDock, qBtn
 
    DEFAULT oIde TO ::oIde
    ::oIde := oIde
 
-   oDock := ::oIde:oEM:oQScintillaDock:oWidget
+   ::qDbu := QWidget():new()
+   ::oIde:oEM:oQScintillaDock:oWidget:setWidget( ::qDbu )
 
-   ::oPanel := QWidget():new()
-   oDock:setWidget( ::oPanel )
-
-   ::qLayout := QVBoxLayout():new() ; ::oPanel:setLayout( ::qLayout )
+   /* Layout applied to dbu widget */
+   ::qLayout := QVBoxLayout():new()
    ::qLayout:setContentsMargins( 0,0,0,0 )
    ::qLayout:setSpacing( 2 )
 
-   ::qToolbar := QToolbar():new()
+   ::qDbu:setLayout( ::qLayout )
+
+   /* Toolbar */
+   ::buildToolbar()
    ::qLayout:addWidget( ::qToolbar )
+
+   /* Stacked widget */
+   ::qStack := QStackedWidget():new()
+   ::qLayout:addWidget( ::qStack )
+
+   /* Panels on the stacked widget */
+   ::addPanels()
+
+   /* Spread tables onto panels */
+   ::loadTables()
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeBrowseManager:buildToolbar()
+   LOCAL qBtn, aBtn
+
+   ::qToolbar := QToolbar():new()
    ::qToolbar:setIconSize( QSize():new( 16,16 ) )
+   ::qToolbar:setStyleSheet( GetStyleSheet( "QToolBar", ::nAnimantionMode ) )
 
-   ::oStack := QStackedWidget():new()
-   ::qLayout:addWidget( ::oStack )
+   aadd( ::aButtons, { "Open a table"       , "open"       , "clicked()", {|| ::execEvent( "buttonOpen_clicked"     ) }, .f. } )
+   aadd( ::aButtons, { "Close current table", "close"      , "clicked()", {|| ::execEvent( "buttonClose_clicked"    ) }, .f. } )
+   aadd( ::aButtons, { "Show/hide form view", "fullscreen" , "clicked()", {|| ::execEvent( "buttonShowForm_clicked" ) }, .t. } )
 
-   ::oMain := QWidget():new()
-   ::oStack:addWidget( ::oMain )
+   FOR EACH aBtn IN ::aButtons
+      qBtn := QToolButton():new()
+      qBtn:setTooltip( aBtn[ 1 ] )
+      qBtn:setAutoRaise( .t. )
+      qBtn:setIcon( hbide_image( aBtn[ 2 ] ) )
+      IF aBtn[ 5 ]
+         qBtn:setCheckable( .t. )
+      ENDIF
 
-   ::qLayMain := QHBoxLayout():new(); ::oMain:setLayout( ::qLayMain )
-   ::qLayMain:setContentsMargins( 0,0,0,0 )
-   ::qLayMain:setSpacing( 2 )
+      ::connect( qBtn, aBtn[ 3 ],  aBtn[ 4 ] )
 
-   ::qVSplitter := QSplitter():new()
-   ::qVSplitter:setOrientation( Qt_Vertical )
-   ::qLayMain:addWidget( ::qVSplitter )
+      ::qToolBar:addWidget( qBtn )
 
-   qBtn := QToolButton():new()
-   qBtn:setTooltip( "Open a Table" )
-   qBtn:setAutoRaise( .t. )
-   qBtn:setIcon( hbide_image( "open" ) )
-   ::connect( qBtn, "clicked()", {|| ::execEvent( "buttonOpen_clicked" ) } )
-   aadd( ::aToolBtns, qBtn )
+      aadd( ::aToolBtns, qBtn )
+   NEXT
 
-   ::qToolBar:addWidget( qBtn )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeBrowseManager:addPanels()
+   LOCAL cPanel, aPanel
+
+   ::addPanel( "Main" )           /* The default one */
+
+   FOR EACH cPanel IN ::oINI:aDbuPanelsInfo
+      aPanel := hb_aTokens( cPanel )
+      IF aPanel[ 1 ] != "Main"
+         ::addPanel( aPanel[ 1 ] )
+      ENDIF
+   NEXT
+
+   ::qStack:setCurrentWidget( ::aPanels[ 1 ] )  /* Always start with main */
+   ::oCurPanel := ::aPanels[ 1 ]
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeBrowseManager:addPanel( cPanel )
+   LOCAL qPanel
+
+   qPanel := IdeBrowsePanel():new( ::oIde, cPanel )
+
+   ::qStack:addWidget( qPanel:qWidget )
+
+   aadd( ::aPanels, qPanel )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeBrowseManager:isPanel( cPanel )
+   RETURN ascan( ::aPanels, {|o| o:qWidget:objectName() == cPanel } ) > 0
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeBrowseManager:showPanel( cPanel )
+   LOCAL n
+
+   IF ( n := ascan( ::aPanels, {|o| o:qWidget:objectName() == cPanel } ) ) > 0
+      ::qStack:setCurrentWidget( ::aPanels[ n ] )
+      ::oCurPanel := ::aPanels[ n ]
+   ENDIF
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeBrowseManager:execEvent( cEvent, p )
-   LOCAL cTable, cPath
+   LOCAL cTable, cPath, n, oBrw
 
    HB_SYMBOL_UNUSED( p )
 
    SWITCH cEvent
+   CASE "buttonShowForm_clicked"
+      IF !empty( ::oCurBrw )
+         IF ::oCurBrw:qForm:isHidden()
+            ::oCurBrw:qForm:show()
+            ::aToolBtns[ 3 ]:setChecked( .t. )
+         ELSE
+            ::oCurBrw:qForm:hide()
+            ::aToolBtns[ 3 ]:setChecked( .f. )
+         ENDIF
+      ENDIF
+      EXIT
+
+   CASE "buttonClose_clicked"
+      IF !empty( ::oCurBrw )
+         IF ( n := ascan( ::aItems, {|oBrw| oBrw == ::oCurBrw } ) ) > 0
+            hb_adel( ::aItems, n, .t. )
+            ::oCurBrw:destroy()
+            FOR EACH oBrw IN ::aItems
+               oBrw:oBrw:configure()
+            NEXT
+         ENDIF
+      ENDIF
+      EXIT
+
    CASE "buttonOpen_clicked"
       IF !empty( cTable := hbide_fetchAFile( ::oIde:oDlg, "Select a Table", { { "Database File", "*.dbf" } }, ::oIde:cWrkFolderLast ) )
          hb_fNameSplit( cTable, @cPath )
          ::oIde:cWrkFolderLast := cPath
          ::addTable( cTable )
       ENDIF
-
       EXIT
+
    ENDSWITCH
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeBrowseManager:addTable( cFileDBF, cAlias, nRow, nCol )
-   LOCAL oBrw
+METHOD IdeBrowseManager:loadTables()
+   LOCAL cInfo, aPanel, oCurPanel, cTable
 
-   HB_SYMBOL_UNUSED( nRow     )
-   HB_SYMBOL_UNUSED( nCol     )
+   oCurPanel := ::oCurPanel
 
-   oBrw := IdeBrowse():new()
-   oBrw:cTable := cFileDBF
-   oBrw:cAlias := cAlias
-   oBrw:create()
+   FOR EACH cInfo IN ::oINI:aDbuPanelsInfo
+      aPanel := hb_aTokens( cInfo, "," )
+      IF ::isPanel( aPanel[ 1 ] )
+         IF hb_fileExists( cTable := hbide_pathToOSPath( aPanel[ 2 ] ) )
+            ::showPanel( aPanel[ 1 ] )
+            ::addTable( cTable )
+         ENDIF
+      ENDIF
+   NEXT
 
-   ::qVSplitter:addWidget( oBrw:oWnd:oWidget )
-
-   aadd( ::aItems, oBrw )
+   ::qStack:setCurrentWidget( oCurPanel )
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeBrowseManager:addArray( aData, aAttr, nRow, nCol )
+METHOD IdeBrowseManager:addTable( cFileDBF, cAlias )
+   LOCAL oBrw
+
+   oBrw := IdeBrowse():new()
+   oBrw:cTable   := cFileDBF
+   oBrw:cAlias   := cAlias
+   oBrw:oManager := Self
+
+   oBrw:create()
+
+   ::oCurPanel:addBrowser( oBrw )
+
+   aadd( ::oCurPanel:aItems, oBrw )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeBrowseManager:addArray( aData, aAttr )
 
    HB_SYMBOL_UNUSED( aData )
    HB_SYMBOL_UNUSED( aAttr )
-   HB_SYMBOL_UNUSED( nRow  )
-   HB_SYMBOL_UNUSED( nCol  )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+//
+//                         Class IdeBrowsePanel
+//
+/*----------------------------------------------------------------------*/
+
+CLASS IdeBrowsePanel INHERIT IdeObject
+
+   DATA   cPanel                                   INIT  ""
+
+   DATA   qWidget
+   DATA   qLayout
+   DATA   qVSplitter
+
+   DATA   aItems                                  INIT  {}
+
+   METHOD new( oIde, cPanel )
+   METHOD addBrowser( oBrw )
+
+   ENDCLASS
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeBrowsePanel:new( oIde, cPanel )
+
+   ::oIde  := oIde
+   ::cPanel := cPanel
+
+   ::qWidget := QWidget():new()
+   ::qWidget:setObjectName( ::cPanel )
+
+   ::qLayout := QHBoxLayout():new()
+   ::qLayout:setContentsMargins( 0,0,0,0 )
+   ::qLayout:setSpacing( 2 )
+
+   ::qVSplitter := QSplitter():new()
+   ::qVSplitter:setOrientation( Qt_Vertical )
+
+   ::qLayout:addWidget( ::qVSplitter )
+
+   ::qWidget:setLayout( ::qLayout )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeBrowsePanel:addBrowser( oBrw )
+
+   ::qVSplitter:addWidget( oBrw:oWnd:oWidget )
 
    RETURN Self
 
@@ -233,6 +438,7 @@ CLASS IdeBrowse INHERIT IdeObject
    DATA   qFLayout
    DATA   qSplitter
    DATA   aForm                                   INIT  {}
+   DATA   oManager
 
    DATA   nType                                   INIT  BRW_TYPE_DBF
    DATA   cAlias                                  INIT  ""
@@ -246,6 +452,7 @@ CLASS IdeBrowse INHERIT IdeObject
    DATA   nOrder                                  INIT  0
    DATA   nArea                                   INIT  0
    DATA   nCursorType                             INIT  XBPBRW_CURSOR_CELL
+   DATA   lOpened                                 INIT  .f.
 
    METHOD new( oIde )
    METHOD create( oIde )
@@ -311,6 +518,7 @@ METHOD IdeBrowse:create( oIde )
          IF empty( ::cAlias )
             ::cAlias := alias()
          ENDIF
+         ::lOpened := .t.
       ENDIF
 
       ::aStruct := DbStruct()
@@ -348,27 +556,16 @@ METHOD IdeBrowse:create( oIde )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeBrowse:execEvent( cEvent, p, p1 )
-
-   HB_SYMBOL_UNUSED( p  )
-   HB_SYMBOL_UNUSED( p1 )
-
-   SWITCH cEvent
-   CASE "browse_navigate"
-      ::populateForm()
-      EXIT
-
-   ENDSWITCH
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeBrowse:activated()
-
-HB_TRACE( HB_TR_ALWAYS, "ACTIVATED" )
-   ::oQScintillaDock:oWidget:setWindowTitle( ::cTable )
-
+METHOD IdeBrowse:destroy()
+   IF !empty( ::oWnd )
+      ::qLayout:removeWidget( ::qSplitter )
+      ::oWnd:destroy()
+      ::qForm := NIL
+      IF ::lOpened
+         ( ::cAlias )->( dbCloseArea() )
+      ENDIF
+      ::oManager:oCurBrw := NIL
+   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -395,8 +592,6 @@ METHOD IdeBrowse:buildBrowser()
 
    ::qSplitter:addWidget( oXbpBrowse:oWidget )
 
-   //qLayout:addWidget( oXbpBrowse:oWidget )
-
    oXbpBrowse:cursorMode    := ::nCursorType
 
    oXbpBrowse:skipBlock     := {|n| ::skipBlock( n ) }
@@ -419,9 +614,38 @@ METHOD IdeBrowse:buildBrowser()
 
    ::qSplitter:addWidget( ::qForm )
 
+   ::qForm:hide()  /* Form view defaults to hidden */
+
    ::qLayout := qLayout
    ::oWnd    := oWnd
    ::oBrw    := oXbpBrowse
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeBrowse:execEvent( cEvent, p, p1 )
+
+   HB_SYMBOL_UNUSED( p  )
+   HB_SYMBOL_UNUSED( p1 )
+
+   SWITCH cEvent
+   CASE "browse_navigate"
+      ::populateForm()
+      ::oManager:oCurBrw := Self
+      ::oManager:aToolBtns[ 3 ]:setChecked( ! ::qForm:isHidden() )
+      EXIT
+
+   ENDSWITCH
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeBrowse:activated()
+
+HB_TRACE( HB_TR_ALWAYS, "ACTIVATED" )
+   ::oQScintillaDock:oWidget:setWindowTitle( ::cTable )
 
    RETURN Self
 
@@ -461,8 +685,7 @@ METHOD IdeBrowse:buildForm()
 
    IF ::nType == BRW_TYPE_DBF
       FOR EACH a_ IN ::aStruct
-         qLbl := QLabel():new()
-         qLbl:setText( a_[ 1 ] )
+         qLbl := QLabel():new(); qLbl:setText( a_[ 1 ] )
          qEdit := QLineEdit():new()
          ::qFLayout:addRow( qLbl, qEdit )
          aadd( ::aForm, { qLbl, qEdit } )
@@ -524,14 +747,6 @@ METHOD IdeBrowse:getPP( aStruct )
    aadd( aPresParam, { XBP_PP_COL_DA_ROWHEIGHT    , 20            } )
 
    RETURN aPresParam
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeBrowse:destroy()
-   IF !empty( ::oWnd )
-      ::oWnd:destroy()
-   ENDIF
-   RETURN Self
 
 /*----------------------------------------------------------------------*/
 

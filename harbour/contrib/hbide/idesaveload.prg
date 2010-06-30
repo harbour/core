@@ -70,7 +70,7 @@
 #include "hbqt.ch"
 
 /*----------------------------------------------------------------------*/
-
+#if 0
 #define INI_HBIDE                                 1
 #define INI_PROJECTS                              2
 #define INI_FILES                                 3
@@ -85,6 +85,7 @@
 #define INI_TOOLS                                 12
 #define INI_USERTOOLBARS                          13
 #define INI_KEYWORDS                              14
+#endif
 
 #define INI_SECTIONS_COUNT                        14
 #define INI_HBIDE_VRBLS                           30
@@ -139,6 +140,8 @@ CLASS IdeINI INHERIT IdeObject
    DATA   aTools                                  INIT  {}
    DATA   aUserToolbars                           INIT  {}
    DATA   aKeywords                               INIT  {}
+   DATA   aDbuPanelNames                          INIT  {}
+   DATA   aDbuPanelsInfo                          INIT  {}
 
    DATA   cFontName                               INIT  "Courier New"
    DATA   nPointSize                              INIT  10
@@ -182,7 +185,7 @@ METHOD IdeINI:create( oIde )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeINI:save( cHbideIni )
-   LOCAL j, nTab, pTab, n, txt_, oEdit, nTabs, nn, a_
+   LOCAL j, nTab, pTab, n, txt_, oEdit, nTabs, nn, a_, s
 
    DEFAULT cHbideIni TO ::oIde:cProjIni
 
@@ -357,6 +360,20 @@ METHOD IdeINI:save( cHbideIni )
    NEXT
    aadd( txt_, " " )
 
+   aadd( txt_, "[DBUPANELS]" )
+   aadd( txt_, " " )
+   FOR EACH s IN ::oBM:getPanelNames()
+      aadd( txt_, "dbupanel_" + hb_ntos( s:__enumIndex() ) + "=" + s )
+   NEXT
+   aadd( txt_, " " )
+
+   aadd( txt_, "[DBUPANELSINFO]" )
+   aadd( txt_, " " )
+   FOR EACH s IN ::oBM:getPanelsInfo()
+      aadd( txt_, "dbupanelinfo_" + hb_ntos( s:__enumIndex() ) + "=" + s )
+   NEXT
+   aadd( txt_, " " )
+
    aadd( txt_, "[General]" )
    aadd( txt_, " " )
 
@@ -381,56 +398,62 @@ METHOD IdeINI:load( cHbideIni )
             SWITCH Upper( s )
 
             CASE "[GENERAL]"
-               nPart := INI_GENERAL
+               nPart := "INI_GENERAL"
                EXIT
             CASE "[HBIDE]"
-               nPart := INI_HBIDE
+               nPart := "INI_HBIDE"
                EXIT
             CASE "[PROJECTS]"
-               nPart := INI_PROJECTS
+               nPart := "INI_PROJECTS"
                EXIT
             CASE "[FILES]"
-               nPart := INI_FILES
+               nPart := "INI_FILES"
                EXIT
             CASE "[FIND]"
-               nPart := INI_FIND
+               nPart := "INI_FIND"
                EXIT
             CASE "[REPLACE]"
-               nPart := INI_REPLACE
+               nPart := "INI_REPLACE"
                EXIT
             CASE "[RECENTFILES]"
-               nPart := INI_RECENTFILES
+               nPart := "INI_RECENTFILES"
                EXIT
             CASE "[RECENTPROJECTS]"
-               nPart := INI_RECENTPROJECTS
+               nPart := "INI_RECENTPROJECTS"
                EXIT
             CASE "[FOLDERS]"
-               nPart := INI_FOLDERS
+               nPart := "INI_FOLDERS"
                EXIT
             CASE "[VIEWS]"
-               nPart := INI_VIEWS
+               nPart := "INI_VIEWS"
                EXIT
             CASE "[TAGGEDPROJECTS]"
-               nPart := INI_TAGGEDPROJECTS
+               nPart := "INI_TAGGEDPROJECTS"
                EXIT
             CASE "[TOOLS]"
-               nPart := INI_TOOLS
+               nPart := "INI_TOOLS"
                EXIT
             CASE "[USERTOOLBARS]"
-               nPart := INI_USERTOOLBARS
+               nPart := "INI_USERTOOLBARS"
                EXIT
             CASE "[KEYWORDS]"
-               nPart := INI_KEYWORDS
+               nPart := "INI_KEYWORDS"
+               EXIT
+            CASE "[DBUPANELS]"
+               nPart := "INI_DBUPANELS"
+               EXIT
+            CASE "[DBUPANELSINFO]"
+               nPart := "INI_DBUPANELSINFO"
                EXIT
             OTHERWISE
                DO CASE
                CASE Left( s, 1 ) $ '#['
                   * Nothing todo!
 
-               CASE nPart == INI_GENERAL
+               CASE nPart == "INI_GENERAL"
                   * Qt Setttings, do nothing.
 
-               CASE nPart == INI_HBIDE
+               CASE nPart == "INI_HBIDE"
                   IF hbide_parseKeyValPair( s, @cKey, @cVal )
 
                      SWITCH cKey
@@ -487,12 +510,12 @@ METHOD IdeINI:load( cHbideIni )
                      ENDSWITCH
                   ENDIF
 
-               CASE nPart == INI_PROJECTS
+               CASE nPart == "INI_PROJECTS"
                   IF hbide_parseKeyValPair( s, @cKey, @cVal )
                      aadd( ::aProjFiles, cVal )
                   ENDIF
 
-               CASE nPart == INI_FILES
+               CASE nPart == "INI_FILES"
                   IF hbide_parseKeyValPair( s, @cKey, @cVal )
                      a_:= hbide_parseSourceComponents( cVal )
                      IF !Empty( a_[ 1 ] )
@@ -500,17 +523,17 @@ METHOD IdeINI:load( cHbideIni )
                      ENDIF
                   ENDIF
 
-               CASE nPart == INI_FIND
+               CASE nPart == "INI_FIND"
                   IF hbide_parseKeyValPair( s, @cKey, @cVal )
                      aadd( ::aFind, cVal )
                   ENDIF
 
-               CASE nPart == INI_REPLACE
+               CASE nPart == "INI_REPLACE"
                   IF hbide_parseKeyValPair( s, @cKey, @cVal )
                      aadd( ::aReplace, cVal )
                   ENDIF
 
-               CASE nPart == INI_RECENTPROJECTS
+               CASE nPart == "INI_RECENTPROJECTS"
                   IF hbide_parseKeyValPair( s, @cKey, @cVal )
                      IF Len( ::aRecentProjects ) < 25
                         cVal := hbide_pathNormalized( cVal, .f. )
@@ -520,7 +543,7 @@ METHOD IdeINI:load( cHbideIni )
                      ENDIF
                   ENDIF
 
-               CASE nPart == INI_RECENTFILES
+               CASE nPart == "INI_RECENTFILES"
                   IF hbide_parseKeyValPair( s, @cKey, @cVal )
                      IF Len( ::aRecentFiles ) < 25
                         cVal := hbide_pathNormalized( cVal, .f. )
@@ -530,34 +553,44 @@ METHOD IdeINI:load( cHbideIni )
                      ENDIF
                   ENDIF
 
-               CASE nPart == INI_FOLDERS
+               CASE nPart == "INI_FOLDERS"
                   IF hbide_parseKeyValPair( s, @cKey, @cVal )
                      aadd( ::aFolders, cVal )
                   ENDIF
 
-               CASE nPart == INI_VIEWS
+               CASE nPart == "INI_VIEWS"
                   IF hbide_parseKeyValPair( s, @cKey, @cVal )
                      aadd( ::aViews, cVal )
                   ENDIF
 
-               CASE nPart == INI_TAGGEDPROJECTS
+               CASE nPart == "INI_TAGGEDPROJECTS"
                   IF hbide_parseKeyValPair( s, @cKey, @cVal )
                      aadd(::aTaggedProjects, cVal )
                   ENDIF
 
-               CASE nPart == INI_TOOLS
+               CASE nPart == "INI_TOOLS"
                   IF hbide_parseKeyValPair( s, @cKey, @cVal )
                      aadd( ::aTools, hbide_parseToolComponents( cVal ) )
                   ENDIF
 
-               CASE nPart == INI_USERTOOLBARS
+               CASE nPart == "INI_USERTOOLBARS"
                   IF hbide_parseKeyValPair( s, @cKey, @cVal )
                      aadd( ::aUserToolbars, hbide_parseUserToolbarComponents( cVal ) )
                   ENDIF
 
-               CASE nPart == INI_KEYWORDS
+               CASE nPart == "INI_KEYWORDS"
                   IF hbide_parseKeyValPair( s, @cKey, @cVal )
                      aadd( ::aKeywords, hbide_parseKeywordsComponents( cVal ) )
+                  ENDIF
+
+               CASE nPart == "INI_DBUPANELS"
+                  IF hbide_parseKeyValPair( s, @cKey, @cVal )
+                     aadd( ::aDbuPanelNames, cVal )
+                  ENDIF
+
+               CASE nPart == "INI_DBUPANELSINFO"
+                  IF hbide_parseKeyValPair( s, @cKey, @cVal )
+                     aadd( ::aDbuPanelsInfo, cVal )
                   ENDIF
 
                ENDCASE

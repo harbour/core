@@ -1385,10 +1385,10 @@ void HBQPlainTextEdit::paintEvent( QPaintEvent * event )
       bottom = top + height;
       ++blockNumber;
    }
-   this->hbPaintSelection( event );
    this->hbPaintHighlight( event );
+   this->hbPaintSelection( event );
 
-//   this->hbDrawCursor( event );
+// this->hbDrawCursor( event );
 
    QPlainTextEdit::paintEvent( event );
 
