@@ -732,15 +732,18 @@ void HBQPlainTextEdit::mousePressEvent( QMouseEvent *event )
    }
    else
    {
-      setCursorWidth( 1 );
-      if( ! isSelectionPersistent )
+      if( event->buttons() & Qt::LeftButton )
       {
-         selectionState = 0;
-         hbClearSelection();
-      }
-      else
-      {
-         selectionState = 1;
+         setCursorWidth( 1 );
+         if( ! isSelectionPersistent )
+         {
+            selectionState = 0;
+            hbClearSelection();
+         }
+         else
+         {
+            selectionState = 1;
+         }
       }
       QPlainTextEdit::mousePressEvent( event );
    }
