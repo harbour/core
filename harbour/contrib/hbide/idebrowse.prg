@@ -301,10 +301,10 @@ METHOD IdeBrowseManager:execEvent( cEvent, p )
 
    CASE "buttonClose_clicked"
       IF !empty( ::oCurBrw )
-         IF ( n := ascan( ::aItems, {|oBrw| oBrw == ::oCurBrw } ) ) > 0
-            hb_adel( ::aItems, n, .t. )
+         IF ( n := ascan( ::oCurPanel:aItems, {|o| o == ::oCurBrw } ) )  > 0
+            hb_adel( ::oCurPanel:aItems, n, .t. )
             ::oCurBrw:destroy()
-            FOR EACH oBrw IN ::aItems
+            FOR EACH oBrw IN ::oCurPanel:aItems
                oBrw:oBrw:configure()
             NEXT
          ENDIF
