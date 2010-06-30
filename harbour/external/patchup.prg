@@ -265,6 +265,7 @@ PROCEDURE Main( ... )
    LOCAL cStdErr
    LOCAL lRediff := .F.    /* whether or not operating as rediff */
    LOCAL aArgv
+   LOCAL cRoot := NIL
 
    LOCAL hRegexTake1Line := hb_regexComp( "^#[[:blank:]]*(ORIGIN|VER|URL|DIFF)[[:blank:]]+(.+?)[[:blank:]]*$" )
    LOCAL hRegexTake2Line := hb_regexComp( "^#[[:blank:]]*(MAP)[[:blank:]]+(.+?)[[:blank:]]+(.+?)[[:blank:]]*$" )
@@ -382,11 +383,16 @@ PROCEDURE Main( ... )
       QUIT
    ENDIF
 
-   FClose( hb_FTempCreateEx( @s_cTempDir, NIL, FN_NameGet( hb_ProgName() ) + "_" ) )
+   cCWD := hb_CurDrive() + hb_osDriveSeparator() + OSPS + CurDir()
+
+   #if defined( _CURDIR )
+      cRoot := cCWD + OSPS
+   #endif
+
+   FClose( hb_FTempCreateEx( @s_cTempDir, cRoot, FN_NameGet( hb_ProgName() ) + "_" ) )
    FErase( s_cTempDir )
    MakeDir( s_cTempDir )
 
-   cCWD := hb_CurDrive() + hb_osDriveSeparator() + OSPS + CurDir()
    cThisComponent := FN_NameGet( cCWD )
 
    MakeDir( CombinePath( s_cTempDir, cThisComponent ) )
@@ -617,6 +623,7 @@ STATIC FUNCTION FetchAndExtract( cArchiveURL )
    LOCAL cMatchedPattern
    LOCAL cFileName
    LOCAL cFrag
+   LOCAL cCWD
 
    /* Any given package is surely available in at least one of these formats,
     * pick one of these, refrain from the more exotic ones. */
@@ -627,21 +634,21 @@ STATIC FUNCTION FetchAndExtract( cArchiveURL )
          'ExtractorArgs'      => '-d',                                                    ;
          'ExtractedFile'      => '.tar',                                                  ;
          'Archiver'           => 'tar',                                                   ;
-         'ArchiverArgs'       => '-C %s -xvf'                                             ;
+         'ArchiverArgs'       => '--force-local -xvf'                                     ;
       },                                                                                  ;
       '.tar.bz2|.tbz|.tbz2' => {                                                          ;
          'Extractor'          => 'bzip2',                                                 ;
          'ExtractorArgs'      => '-d',                                                    ;
          'ExtractedFile'      => '.tar',                                                  ;
          'Archiver'           => 'tar',                                                   ;
-         'ArchiverArgs'       => '-C %s -xvf'                                             ;
+         'ArchiverArgs'       => '--force-local -xvf'                                     ;
       },                                                                                  ;
       '.zip' => {                                                                         ;
          'Extractor'          => NIL,                                                     ;
          'ExtractorArgs'      => NIL,                                                     ;
          'ExtractedFile'      => NIL,                                                     ;
          'Archiver'           => 'unzip',                                                 ;
-         'ArchiverArgs'       => '-d %s'                                                  ;
+         'ArchiverArgs'       => ''                                                       ;
       }                                                                                   ;
    }
 
@@ -700,10 +707,12 @@ STATIC FUNCTION FetchAndExtract( cArchiveURL )
 
       /* Unarchive */
       cCommand := hb_strFormat( "%s " + cArchiverArgs + " %s",                            ;
-                  cArchiver, CombinePath( s_cTempDir, "root" ),                           ;
-                  CombinePath( s_cTempDir, cExtractedFileName ) )
+                  cArchiver, CombinePath( s_cTempDir, cExtractedFileName ) )
       TRACE( "Running " + cCommand )
+      cCWD := hb_CurDrive() + hb_osDriveSeparator() + OSPS + CurDir()
+      DirChange( CombinePath( s_cTempDir, "root" ) )
       nResult := hb_processRun( cCommand, , @cStdOut, @cStdErr, .F. )
+      DirChange( cCWD )
       SaveLog( "archive", cStdOut, cStdErr )
       IF nResult != 0
          OutStd( "E: Error unarchiving " + cFileName + OSNL )

@@ -8,8 +8,6 @@ include $(TOP)$(ROOT)config/global.mk
 
 LIBNAME := bz2
 
-# URL: http://www.bzip.org/1.0.5/bzip2-1.0.5.tar.gz
-
 HB_BUILD_WARN := no
 HB_BUILD_MODE := c
 
@@ -48,12 +46,12 @@ endif
 # DIFF
 #
 # MAP    LICENSE
-# MAP    blocksort.c            blocksor.c 
+# MAP    blocksort.c            blocksor.c
 # MAP    bzlib.c
 # MAP    bzlib.h
-# MAP    bzlib_private.h        bzlib_pr.h 
+# MAP    bzlib_private.h        bzlib_pr.h
 # MAP    compress.c
 # MAP    crctable.c
-# MAP    decompress.c           decompre.c 
+# MAP    decompress.c           decompre.c
 # MAP    huffman.c
-# MAP    randtable.c            randtabl.c 
+# MAP    randtable.c            randtabl.c
