@@ -2137,55 +2137,55 @@ FUNCTION hbide_getUI( cUI, qParent )
 
    SWITCH cUI
    CASE "findinfilesex"
-      oUI := iif( nModeUI == UI_MODE_FUNC, uiFindinfilesex( qParent ), NIL )
+      oUI := iif( nModeUI == UI_MODE_FUNC, hbqtui_Findinfilesex( qParent ), NIL )
       EXIT
    CASE "updown"
-      oUI := iif( nModeUI == UI_MODE_FUNC, uiUpDown( qParent ), NIL )
+      oUI := iif( nModeUI == UI_MODE_FUNC, hbqtui_UpDown( qParent ), NIL )
       EXIT
    CASE "searchreplace"
-      oUI := iif( nModeUI == UI_MODE_FUNC, uiSearchReplace( qParent ), NIL )
+      oUI := iif( nModeUI == UI_MODE_FUNC, hbqtui_SearchReplace( qParent ), NIL )
       EXIT
    CASE "finddialog"
-      oUI := iif( nModeUI == UI_MODE_FUNC, uiFindDialog( qParent ), NIL )
+      oUI := iif( nModeUI == UI_MODE_FUNC, hbqtui_FindDialog( qParent ), NIL )
       EXIT
    CASE "environments"
-      oUI := iif( nModeUI == UI_MODE_FUNC, uiEnvironments( qParent ), NIL )
+      oUI := iif( nModeUI == UI_MODE_FUNC, hbqtui_Environments( qParent ), NIL )
       EXIT
    CASE "environ"
-      oUI := iif( nModeUI == UI_MODE_FUNC, uiEnviron( qParent ), NIL )
+      oUI := iif( nModeUI == UI_MODE_FUNC, hbqtui_Environ( qParent ), NIL )
       EXIT
    CASE "shortcuts"
-      oUI := iif( nModeUI == UI_MODE_FUNC, uiShortcuts( qParent ), NIL )
+      oUI := iif( nModeUI == UI_MODE_FUNC, hbqtui_Shortcuts( qParent ), NIL )
       EXIT
    CASE "docwriter"
-      oUI := iif( nModeUI == UI_MODE_FUNC, uiDocwriter( qParent ), NIL )
+      oUI := iif( nModeUI == UI_MODE_FUNC, hbqtui_Docwriter( qParent ), NIL )
       EXIT
    CASE "toolsutilities"
-      oUI := iif( nModeUI == UI_MODE_FUNC, uiToolsutilities( qParent ), NIL )
+      oUI := iif( nModeUI == UI_MODE_FUNC, hbqtui_Toolsutilities( qParent ), NIL )
       EXIT
    CASE "funclist"
-      oUI := iif( nModeUI == UI_MODE_FUNC, uiFunclist( qParent ), NIL )
+      oUI := iif( nModeUI == UI_MODE_FUNC, hbqtui_Funclist( qParent ), NIL )
       EXIT
    CASE "docviewgenerator"
-      oUI := iif( nModeUI == UI_MODE_FUNC, uiDocviewgenerator( qParent ), NIL )
+      oUI := iif( nModeUI == UI_MODE_FUNC, hbqtui_Docviewgenerator( qParent ), NIL )
       EXIT
    CASE "selectproject"
-      oUI := iif( nModeUI == UI_MODE_FUNC, uiSelectproject( qParent ), NIL )
+      oUI := iif( nModeUI == UI_MODE_FUNC, hbqtui_Selectproject( qParent ), NIL )
       EXIT
    CASE "projectpropertiesex"
-      oUI := iif( nModeUI == UI_MODE_FUNC, uiProjectpropertiesex( qParent ), NIL )
+      oUI := iif( nModeUI == UI_MODE_FUNC, hbqtui_Projectpropertiesex( qParent ), NIL )
       EXIT
    CASE "selectionlist"
-      oUI := iif( nModeUI == UI_MODE_FUNC, uiSelectionlist( qParent ), NIL )
+      oUI := iif( nModeUI == UI_MODE_FUNC, hbqtui_Selectionlist( qParent ), NIL )
       EXIT
    CASE "themesex"
-      oUI := iif( nModeUI == UI_MODE_FUNC, uiThemesex( qParent ), NIL )
+      oUI := iif( nModeUI == UI_MODE_FUNC, hbqtui_Themesex( qParent ), NIL )
       EXIT
    CASE "setup"
-      oUI := iif( nModeUI == UI_MODE_FUNC, uiSetup( qParent ), NIL )
+      oUI := iif( nModeUI == UI_MODE_FUNC, hbqtui_Setup( qParent ), NIL )
       EXIT
    CASE "mainwindow"
-      oUI := iif( nModeUI == UI_MODE_FUNC, uiMainwindow( qParent ), NIL )
+      oUI := iif( nModeUI == UI_MODE_FUNC, hbqtui_Mainwindow( qParent ), NIL )
       EXIT
    ENDSWITCH
 

@@ -1406,7 +1406,7 @@ void * hb_parvptrGC( const HB_GC_FUNCS * pFuncs, int iParam, ... )
 }
 
 #undef hb_ret
-void  hb_ret( void )
+void hb_ret( void )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -1416,7 +1416,7 @@ void  hb_ret( void )
 }
 
 #undef hb_reta
-void  hb_reta( HB_SIZE ulLen )  /* undocumented hb_reta() */
+void hb_reta( HB_SIZE ulLen )  /* undocumented hb_reta() */
 {
    HB_STACK_TLS_PRELOAD
 
@@ -1466,7 +1466,7 @@ void hb_retc_const( const char * szText )
 }
 
 #undef hb_retclen
-void  hb_retclen( const char * szText, HB_SIZE ulLen )
+void hb_retclen( const char * szText, HB_SIZE ulLen )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -1476,13 +1476,23 @@ void  hb_retclen( const char * szText, HB_SIZE ulLen )
 }
 
 #undef hb_retclen_buffer
-void  hb_retclen_buffer( char * szText, HB_SIZE ulLen )
+void hb_retclen_buffer( char * szText, HB_SIZE ulLen )
 {
    HB_STACK_TLS_PRELOAD
 
    HB_TRACE(HB_TR_DEBUG, ("hb_retclen_buffer(%.*s, %" HB_PFS "u)", ( int ) ulLen, szText, ulLen));
 
    hb_itemPutCLPtr( hb_stackReturnItem(), szText, ulLen );
+}
+
+#undef hb_retclen_const
+void hb_retclen_const( const char * szText, HB_SIZE ulLen )
+{
+   HB_STACK_TLS_PRELOAD
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_retclen_const(%.*s, %" HB_PFS "u)", ( int ) ulLen, szText, ulLen));
+
+   hb_itemPutCLConst( hb_stackReturnItem(), szText, ulLen );
 }
 
 /* szDate must have YYYYMMDD format */

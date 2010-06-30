@@ -678,6 +678,7 @@ extern HB_EXPORT void   hb_retc_buffer( char * szText ); /* sames as above, but 
 extern HB_EXPORT void   hb_retc_const( const char * szText ); /* returns a string as a pcode based string */
 extern HB_EXPORT void   hb_retclen( const char * szText, HB_SIZE ulLen ); /* returns a string with a specific length */
 extern HB_EXPORT void   hb_retclen_buffer( char * szText, HB_SIZE ulLen ); /* sames as above, but accepts an allocated buffer */
+extern HB_EXPORT void   hb_retclen_const( const char * szText, HB_SIZE ulLen ); /* returns a string with a specific length formed from a constant buffer */
 extern HB_EXPORT void   hb_retds( const char * szDate );  /* returns a date, must use YYYYMMDD format */
 extern HB_EXPORT void   hb_retd( int iYear, int iMonth, int iDay ); /* returns a date */
 extern HB_EXPORT void   hb_retdl( long lJulian );   /* returns a long value as a julian date */
@@ -716,6 +717,7 @@ extern HB_EXPORT void   hb_retnlllen( HB_LONGLONG lNumber, int iWidth ); /* retu
 #define hb_retc_const( szText )              hb_itemPutCConst( hb_stackReturnItem(), szText )
 #define hb_retclen( szText, ulLen )          hb_itemPutCL( hb_stackReturnItem(), szText, ulLen )
 #define hb_retclen_buffer( szText, ulLen )   hb_itemPutCLPtr( hb_stackReturnItem(), szText, ulLen )
+#define hb_retclen_const( szText, ulLen )    hb_itemPutCLConst( hb_stackReturnItem(), szText, ulLen )
 #define hb_retds( szDate )                   hb_itemPutDS( hb_stackReturnItem(), szDate )
 #define hb_retd( iYear, iMonth, iDay )       hb_itemPutD( hb_stackReturnItem(), iYear, iMonth, iDay )
 #define hb_retdl( lJulian )                  hb_itemPutDL( hb_stackReturnItem(), lJulian )

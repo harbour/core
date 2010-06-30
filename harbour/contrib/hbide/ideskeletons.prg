@@ -157,7 +157,7 @@ METHOD IdeSkeletons:show()
 
    IF empty( ::oUI )
 //    ::oUI := HbQtUI():new( hbide_uic( "skeletons" ) ):build()
-      ::oUI := uiSkeletons()
+      ::oUI := hbqtui_Skeletons()
 
       ::oSkeltnDock:oWidget:setWidget( ::oUI:oWidget )
 

@@ -4,7 +4,7 @@
 
 /*
  * Copyright 2010 Viktor Szakats (harbour.01 syenar.hu) (plugin)
- * Copyright 2010 Pritpal Bedi <bedipritpal@hotmail.com> (uic to prg converter)
+ * Copyright 2010 Pritpal Bedi <bedipritpal@hotmail.com> (hbq_gen_ui_prg())
  * www - http://harbour-project.org
  *
  * See COPYING for licensing terms.
@@ -77,9 +77,15 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
       NEXT
 
       FOR EACH cSrc IN hbmk2[ "vars" ][ "aQRC_Src" ]
+#if __OWN_QRC_GENERATOR__
+         cDst := hbmk2_FNameDirExtSet( "rcc_" + hbmk2_FNameNameGet( cSrc ), hbmk2[ "cWorkDir" ], ".c" )
+         AAdd( hbmk2[ "vars" ][ "aQRC_Dst" ], cDst )
+         hbmk2_AddInput_C( hbmk2, cDst )
+#else
          cDst := hbmk2_FNameDirExtSet( "rcc_" + hbmk2_FNameNameGet( cSrc ), hbmk2[ "cWorkDir" ], ".cpp" )
          AAdd( hbmk2[ "vars" ][ "aQRC_Dst" ], cDst )
          hbmk2_AddInput_CPP( hbmk2, cDst )
+#endif
       NEXT
 
       EXIT
@@ -133,7 +139,7 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
                            EXIT
                         ENDIF
                      ELSE
-                        IF ! uic_to_prg( hbmk2, cTmp, cDst, cSrc )
+                        IF ! uic_to_prg( hbmk2, cTmp, cDst, hbmk2_FNameToSymbol( hbmk2_FNameNameGet( cSrc ) ) )
                            IF ! hbmk2[ "lIGNOREERROR" ]
                               FErase( cTmp )
                               cRetVal := "error"
@@ -222,6 +228,44 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
 
                IF lBuildIt
 
+#if __OWN_QRC_GENERATOR__
+                  FClose( hb_FTempCreateEx( @cTmp ) )
+
+                  cCommand := cRCC_BIN +;
+                              " -binary" +;
+                              " " + hbmk2_FNameEscape( hbmk2_PathSepToTarget( hbmk2, cSrc ), hbmk2[ "nCmd_Esc" ], hbmk2[ "nCmd_FNF" ] ) +;
+                              " -o " + hbmk2_FNameEscape( cTmp, hbmk2[ "nCmd_Esc" ], hbmk2[ "nCmd_FNF" ] )
+
+                  IF hbmk2[ "lTRACE" ]
+                     IF ! hbmk2[ "lQUIET" ]
+                        hbmk2_OutStd( hbmk2, I_( "'rcc' command:" ) )
+                     ENDIF
+                     hbmk2_OutStdRaw( cCommand )
+                  ENDIF
+
+                  IF ! hbmk2[ "lDONTEXEC" ]
+                     IF ( nError := hb_processRun( cCommand ) ) != 0
+                        hbmk2_OutErr( hbmk2, hb_StrFormat( I_( "Error: Running 'rcc' executable. %1$s" ), hb_ntos( nError ) ) )
+                        IF ! hbmk2[ "lQUIET" ]
+                           hbmk2_OutErrRaw( cCommand )
+                        ENDIF
+                        IF ! hbmk2[ "lIGNOREERROR" ]
+                           FErase( cTmp )
+                           cRetVal := "error"
+                           EXIT
+                        ENDIF
+                     ELSE
+                        IF ! qrc_bin_to_c( hbmk2, cTmp, cDst, hbmk2_FNameToSymbol( hbmk2_FNameNameGet( cSrc ) ) )
+                           IF ! hbmk2[ "lIGNOREERROR" ]
+                              FErase( cTmp )
+                              cRetVal := "error"
+                              EXIT
+                           ENDIF
+                        ENDIF
+                     ENDIF
+                  ENDIF
+                  FErase( cTmp )
+#else
                   cCommand := cRCC_BIN +;
                               " " + hbmk2_FNameEscape( hbmk2_PathSepToTarget( hbmk2, cSrc ), hbmk2[ "nCmd_Esc" ], hbmk2[ "nCmd_FNF" ] ) +;
                               " -o " + hbmk2_FNameEscape( hbmk2_PathSepToTarget( hbmk2, cDst ), hbmk2[ "nCmd_Esc" ], hbmk2[ "nCmd_FNF" ] )
@@ -243,6 +287,7 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
                         EXIT
                      ENDIF
                   ENDIF
+#endif
                ENDIF
             NEXT
          ENDIF
@@ -313,27 +358,48 @@ STATIC FUNCTION qt_tool_detect( hbmk2, cName, cEnvQT, cEnvHB )
 
 #else
 
-/* Standalone test code for .uic to .prg conversion ) */
+/* Standalone test code conversions ) */
 PROCEDURE Main( cSrc, cDst )
    LOCAL cTmp
    LOCAL nError
+   LOCAL cExt
+
+   LOCAL cName
 
    IF cSrc != NIL .AND. ;
       cDst != NIL
 
       FClose( hb_FTempCreateEx( @cTmp ) )
 
-      IF ( nError := hb_processRun( "uic " + cSrc + " -o " + cTmp ) ) == 0
-         IF ! uic_to_prg( NIL, cTmp, cDst, cSrc )
-            nError := 9
+      cName := "TEST"
+
+      hb_FNameSplit( cSrc,,, @cExt )
+
+      SWITCH Lower( cExt )
+      CASE ".qrc"
+         IF ( nError := hb_processRun( "rcc " + cSrc + " -binary -o " + cTmp ) ) == 0
+            IF ! qrc_bin_to_c( NIL, cTmp, cDst, cName )
+               nError := 9
+            ENDIF
+         ELSE
+            OutErr( "Error: Calling 'rcc' tool: " + hb_ntos( nError ) + hb_osNewLine() )
          ENDIF
-      ELSE
-         OutErr( "Error: Calling 'uic' tool: " + hb_ntos( nError ) + hb_osNewLine() )
-      ENDIF
+         EXIT
+
+      CASE ".ui"
+         IF ( nError := hb_processRun( "uic " + cSrc + " -o " + cTmp ) ) == 0
+            IF ! uic_to_prg( NIL, cTmp, cDst, cName )
+               nError := 9
+            ENDIF
+         ELSE
+            OutErr( "Error: Calling 'uic' tool: " + hb_ntos( nError ) + hb_osNewLine() )
+         ENDIF
+         EXIT
+      ENDSWITCH
 
       FErase( cTmp )
    ELSE
-      OutErr( "Missing parameter. Call with: <.ui> <.prg>" + hb_osNewLine() )
+      OutErr( "Missing parameter. Call with: <.ui|.qrc> <.prg>" + hb_osNewLine() )
       nError := 8
    ENDIF
 
@@ -351,17 +417,62 @@ STATIC FUNCTION hbmk2_OutErr( hbmk2, ... )
 
 #endif
 
-/* ----------------------------------------------------------------------- */
-
-STATIC FUNCTION uic_to_prg( hbmk2, cFileNameSrc, cFileNameDst, cOriSrc )
-   LOCAL aLinesPRG
+STATIC FUNCTION qrc_bin_to_c( hbmk2, cFileNameSrc, cFileNameDst, cName )
    LOCAL cFile
-   LOCAL cName
+   LOCAL cChar
+   LOCAL cOutput
+   LOCAL cLine
 
    IF hb_FileExists( cFileNameSrc )
-      hb_FNameSplit( cOriSrc,, @cName )
 
-      aLinesPRG := hbq_create( hb_MemoRead( cFileNameSrc ), "ui" + Upper( Left( cName, 1 ) ) + Lower( SubStr( cName, 2 ) ) )
+      cFile := hb_MemoRead( cFileNameSrc )
+
+      IF ! Empty( cFile )
+
+         cOutput := "/* WARNING: Automatically generated source file. DO NOT EDIT! */" + hb_osNewLine()
+         cOutput += hb_osNewLine()
+         cOutput += '#include "hbapi.h"' + hb_osNewLine()
+         cOutput += hb_osNewLine()
+         cOutput += "HB_FUNC( " + Upper( "hbqtres_" + cName ) + " )" + hb_osNewLine()
+         cOutput += "{" + hb_osNewLine()
+         cOutput += Chr( 9 ) + "static const char s_res_data[] =" + hb_osNewLine()
+         cOutput += Chr( 9 ) + "{" + hb_osNewLine()
+
+         cLine := Chr( 9 ) + Chr( 9 )
+         FOR EACH cChar IN cFile
+            cLine += "0x" + hb_NumToHex( Asc( cChar ) ) + ","
+            IF Len( cLine ) >= 74
+               cOutput += cLine + hb_osNewLine()
+               cLine := Chr( 9 ) + Chr( 9 )
+            ENDIF
+         NEXT
+
+         cOutput += Chr( 9 ) + "};" + hb_osNewLine()
+         cOutput += hb_osNewLine()
+         cOutput += Chr( 9 ) + "hb_retclen_const( s_res_data, sizeof( s_res_data ) );" + hb_osNewLine()
+         cOutput += "}" + hb_osNewLine()
+
+         IF hb_MemoWrit( cFileNameDst, cOutput )
+            RETURN .T.
+         ELSE
+            hbmk2_OutErr( hbmk2, hb_StrFormat( "Error: Cannot create file: %1$s", cFileNameDst ) )
+         ENDIF
+      ELSE
+         hbmk2_OutErr( hbmk2, hb_StrFormat( "Error: Empty intermediate file: %1$s", cFileNameSrc ) )
+      ENDIF
+   ELSE
+      hbmk2_OutErr( hbmk2, hb_StrFormat( "Error: Cannot find intermediate file: %1$s", cFileNameSrc ) )
+   ENDIF
+
+   RETURN .F.
+
+STATIC FUNCTION uic_to_prg( hbmk2, cFileNameSrc, cFileNameDst, cName )
+   LOCAL aLinesPRG
+   LOCAL cFile
+
+   IF hb_FileExists( cFileNameSrc )
+
+      aLinesPRG := hbq_gen_ui_prg( hb_MemoRead( cFileNameSrc ), "hbqtui_" + cName )
 
       IF ! Empty( aLinesPRG )
          cFile := ""
@@ -369,7 +480,7 @@ STATIC FUNCTION uic_to_prg( hbmk2, cFileNameSrc, cFileNameDst, cOriSrc )
          IF hb_MemoWrit( cFileNameDst, cFile )
             RETURN .T.
          ELSE
-            hbmk2_OutErr( hbmk2, hb_StrFormat( "Error: Cannot write file: %1$s", cFileNameDst ) )
+            hbmk2_OutErr( hbmk2, hb_StrFormat( "Error: Cannot create file: %1$s", cFileNameDst ) )
          ENDIF
       ELSE
          hbmk2_OutErr( hbmk2, hb_StrFormat( "Error: Intermediate file (%1$s) is not an .uic file.", cFileNameSrc ) )
@@ -380,11 +491,13 @@ STATIC FUNCTION uic_to_prg( hbmk2, cFileNameSrc, cFileNameDst, cOriSrc )
 
    RETURN .F.
 
+/* ----------------------------------------------------------------------- */
+
 #define STRINGIFY( cStr )    '"' + cStr + '"'
 #define PAD_30( cStr )       PadR( cStr, Max( Len( cStr ), 35 ) )
 #define STRIP_SQ( cStr )     StrTran( StrTran( StrTran( StrTran( s, "[", " " ), "]", " " ), "\n", " " ), Chr( 10 ), " " )
 
-STATIC FUNCTION hbq_create( cFile, cFuncName )
+STATIC FUNCTION hbq_gen_ui_prg( cFile, cFuncName )
    LOCAL s
    LOCAL n
    LOCAL n1
