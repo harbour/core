@@ -79,7 +79,6 @@ STATIC s_nCol := 0
 STATIC s_aIncDir := {}
 STATIC s_aHistory := {}
 STATIC s_lPreserveHistory := .T.
-STATIC s_lResize := .F.
 
 /* ********************************************************************** */
 
@@ -181,6 +180,7 @@ STATIC PROCEDURE hbrun_Prompt( cCommand )
    LOCAL nMaxRow, nMaxCol
    LOCAL nHistIndex
    LOCAL bKeyUP, bKeyDown, bKeyIns, bKeyResize
+   LOCAL lResize := .F.
 
    CLEAR SCREEN
    SET SCOREBOARD OFF
@@ -230,7 +230,7 @@ STATIC PROCEDURE hbrun_Prompt( cCommand )
              s_aHistory[ ++nHistIndex ], ;
              ( nHistIndex := LEN( s_aHistory ) + 1, Space( HB_LINE_LEN ) ) ) } )
       bKeyResize := SetKey( HB_K_RESIZE,;
-         {|| s_lResize := .T., hb_KeyPut( K_ENTER ) } )
+         {|| lResize := .T., hb_KeyPut( K_ENTER ) } )
 
       READ
 
@@ -240,9 +240,9 @@ STATIC PROCEDURE hbrun_Prompt( cCommand )
       SetKey( HB_K_RESIZE, bKeyResize )
 
       IF LastKey() == K_ESC .OR. EMPTY( cLine ) .OR. ;
-         ( s_lResize .AND. LastKey() ==  K_ENTER )
-         IF s_lResize
-            s_lResize := .F.
+         ( lResize .AND. LastKey() ==  K_ENTER )
+         IF lResize
+            lResize := .F.
          ELSE
             cLine := NIL
          ENDIF

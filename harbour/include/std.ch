@@ -280,6 +280,13 @@
 #command SAVE TO <(f)> ALL EXCEPT <p>  => __MVSave( <(f)>, <(p)>, .f. )
 #command SAVE [TO <(f)>] [ALL]         => __MVSave( <(f)>, "*", .t. )
 
+#command RESTORE HBV [FROM <(f)>] [<a:ADDITIVE>] => hb_MVRestore( <(f)>, <.a.> )
+#command SAVE HBV TO <(f)> ALL LIKE <p>    => hb_MVSave( <(f)>, <(p)>, .t. )
+#command SAVE HBV ALL LIKE <p> TO <(f)>    => hb_MVSave( <(f)>, <(p)>, .t. )
+#command SAVE HBV ALL EXCEPT <p> TO <(f)>  => hb_MVSave( <(f)>, <(p)>, .f. )
+#command SAVE HBV TO <(f)> ALL EXCEPT <p>  => hb_MVSave( <(f)>, <(p)>, .f. )
+#command SAVE HBV [TO <(f)>] [ALL]         => hb_MVSave( <(f)>, "*", .t. )
+
 #command ERASE <(f)>                   => FErase( <(f)> )
 #command DELETE FILE <(f)>             => FErase( <(f)> )
 #command RENAME <(old)> TO <(new)>     => FRename( <(old)>, <(new)> )
