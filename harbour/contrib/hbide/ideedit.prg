@@ -352,7 +352,9 @@ METHOD IdeEdit:setFont()
 METHOD IdeEdit:destroy()
 
    ::oUpDn:oUI:setParent( ::oDlg:oWidget )
-   ::oSourceThumbnailDock:oWidget:hide()
+   IF Self == ::oEditor:oEdit
+      ::oSourceThumbnailDock:oWidget:hide()
+   ENDIF
 
    ::disconnect( ::qTimer, "timeout()" )
    IF ::qTimer:isActive()
@@ -429,6 +431,12 @@ METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
    CASE customContextMenuRequested
       QAction():from( ::oEM:aActions[ 17, 2 ] ):setEnabled( !empty( qCursor:selectedText() ) )
 
+      n := ascan( ::oEditor:aEdits, {|o| o == oEdit } )
+
+      QAction():from( ::oEM:aActions[ 18, 2 ] ):setEnabled( ::oEditor:nSplOrient == -1 .OR. ::oEditor:nSplOrient == 1 )
+      QAction():from( ::oEM:aActions[ 19, 2 ] ):setEnabled( ::oEditor:nSplOrient == -1 .OR. ::oEditor:nSplOrient == 2 )
+      QAction():from( ::oEM:aActions[ 21, 2 ] ):setEnabled( n > 0 )
+
       pAct := ::oEM:qContextMenu:exec_1( qEdit:mapToGlobal( p ) )
       IF !hbqt_isEmptyQtPointer( pAct )
          qAct := QAction():configure( pAct )
@@ -438,11 +446,11 @@ METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
          CASE qAct:text() == "Split Vertically"
             ::oEditor:split( 2, oEdit )
          CASE qAct:text() == "Close Split Window"
-            IF ( n := ascan( ::oEditor:aEdits, {|o| o == oEdit } ) ) > 0  /* 1 == Main Edit */
+            IF n > 0  /* 1 == Main Edit */
                ::oUpDn:oUI:setParent( ::oEditor:oEdit:qEdit )
                oo := ::oEditor:aEdits[ n ]
                hb_adel( ::oEditor:aEdits, n, .t. )
-               oo:destroy()
+               oo:destroy( .f. )
                ::oEditor:qCqEdit := ::oEditor:qEdit
                ::oEditor:qCoEdit := ::oEditor:oEdit
                ::oIde:manageFocusInEditor()
