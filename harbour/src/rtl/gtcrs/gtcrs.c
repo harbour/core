@@ -142,7 +142,7 @@ typedef struct InOutBase {
    int lTIOsaved;
    struct termios saved_TIO, curr_TIO;
 
-   unsigned char stdin_buf[STDIN_BUFLEN];
+   unsigned char stdin_buf[ STDIN_BUFLEN ];
    int stdin_ptr_l;
    int stdin_ptr_r;
    int stdin_inbuf;
@@ -156,21 +156,21 @@ typedef struct InOutBase {
    WINDOW *stdscr;
    FILE *basein;
    FILE *baseout;
-   chtype std_chmap[256];
-   chtype box_chmap[256];
-   chtype attr_map[256];
+   chtype std_chmap[ 256 ];
+   chtype box_chmap[ 256 ];
+   chtype attr_map[ 256 ];
    chtype attr_mask;
 } InOutBase;
 
-static InOutBase *s_ioBase = NULL;
+static InOutBase * s_ioBase = NULL;
 
-static InOutBase **s_ioBaseTab = NULL;
+static InOutBase ** s_ioBaseTab = NULL;
 static int s_iSize_ioBaseTab = 0;
 static int s_iActive_ioBase = -1;
 
-static void set_tmevt(unsigned char *cMBuf, mouseEvent *);
-static int getMouseKey(mouseEvent *);
-static void destroy_ioBase(InOutBase *ioBase);
+static void set_tmevt( unsigned char * cMBuf, mouseEvent * );
+static int getMouseKey( mouseEvent * );
+static void destroy_ioBase( InOutBase * ioBase );
 static void set_sig_handler( int iSig );
 
 static void curs_wrkaround( void );
@@ -327,22 +327,22 @@ static int getClipKey( int nKey )
 {
    int nRet = 0, nFlag = 0, n;
 
-   if ( IS_CLIPKEY( nKey ) )
+   if( IS_CLIPKEY( nKey ) )
       nRet = GET_CLIPKEY( nKey );
    else
    {
       nFlag = GET_KEYMASK( nKey );
       nKey = CLR_KEYMASK( nKey );
-      if ( nFlag & KEY_EXTDMASK )
+      if( nFlag & KEY_EXTDMASK )
       {
-         if ( nKey >= 0 && nKey < NO_EXTDKEYS )
+         if( nKey >= 0 && nKey < NO_EXTDKEYS )
          {
-            if ( ( nFlag & KEY_ALTMASK ) && ( nFlag & KEY_CTRLMASK ) &&
+            if( ( nFlag & KEY_ALTMASK ) && ( nFlag & KEY_CTRLMASK ) &&
                  extdKeyTab[nKey].shift_key != 0 )
                nRet = extdKeyTab[nKey].shift_key;
-            else if ( ( nFlag & KEY_ALTMASK ) && extdKeyTab[nKey].alt_key != 0 )
+            else if( ( nFlag & KEY_ALTMASK ) && extdKeyTab[nKey].alt_key != 0 )
                nRet = extdKeyTab[nKey].alt_key;
-            else if ( ( nFlag & KEY_CTRLMASK )
+            else if( ( nFlag & KEY_CTRLMASK )
                       && extdKeyTab[nKey].ctrl_key != 0 )
                nRet = extdKeyTab[nKey].ctrl_key;
             else
@@ -351,20 +351,20 @@ static int getClipKey( int nKey )
       }
       else
       {
-         if ( nKey > 0 && nKey < 32 )
+         if( nKey > 0 && nKey < 32 )
          {
             nFlag |= KEY_CTRLMASK;
             nKey += ( 'A' - 1 );
          }
          n = nKey - 32;
-         if ( n >= 0 && n < NO_STDKEYS )
+         if( n >= 0 && n < NO_STDKEYS )
          {
-            if ( ( nFlag & KEY_ALTMASK ) && ( nFlag & KEY_CTRLMASK ) &&
+            if( ( nFlag & KEY_ALTMASK ) && ( nFlag & KEY_CTRLMASK ) &&
                  stdKeyTab[n].shift_key != 0 )
                nRet = stdKeyTab[n].shift_key;
-            else if ( ( nFlag & KEY_ALTMASK ) && stdKeyTab[n].alt_key != 0 )
+            else if( ( nFlag & KEY_ALTMASK ) && stdKeyTab[n].alt_key != 0 )
                nRet = stdKeyTab[n].alt_key;
-            else if ( ( nFlag & KEY_CTRLMASK ) && stdKeyTab[n].ctrl_key != 0 )
+            else if( ( nFlag & KEY_CTRLMASK ) && stdKeyTab[n].ctrl_key != 0 )
                nRet = stdKeyTab[n].ctrl_key;
             else
                nRet = stdKeyTab[n].key;
@@ -384,19 +384,19 @@ static void sig_handler( int signo )
 {
    int e = errno;
 
-   if ( signo < MAX_SIGNO )
+   if( signo < MAX_SIGNO )
    {
       s_SignalTable[signo] = HB_TRUE;
       s_SignalFlag = HB_TRUE;
    }
 
-   switch ( signo )
+   switch( signo )
    {
       case SIGCHLD:
       {
          int stat;
          pid_t pid;
-         while ( ( pid = waitpid( -1, &stat, WNOHANG ) ) > 0 ) ;
+         while( ( pid = waitpid( -1, &stat, WNOHANG ) ) > 0 ) ;
          break;
       }
       case SIGWINCH:
@@ -423,7 +423,7 @@ static void set_signals( void )
    int i, sigs[] = { SIGINT, SIGQUIT, SIGTSTP, SIGWINCH, SIGCHLD, 0 };
 
    s_SignalFlag = HB_FALSE;
-   for ( i = 1; i < MAX_SIGNO; ++i )
+   for( i = 1; i < MAX_SIGNO; ++i )
    {
       s_SignalTable[i] = HB_FALSE;
    }
@@ -431,7 +431,7 @@ static void set_signals( void )
    /* Ignore SIGPIPEs so they don't kill us. */
    signal( SIGPIPE, SIG_IGN );
 
-   for ( i = 0; sigs[i]; ++i )
+   for( i = 0; sigs[i]; ++i )
    {
       set_sig_handler( sigs[i] );
    }
@@ -443,14 +443,14 @@ static void sig_handler( int signo )
    int e = errno;
    char *pszSig;
 
-   switch ( signo )
+   switch( signo )
    {
       case SIGCHLD:
       {
          int stat;
          pid_t pid;
          pszSig = "SIGCHLD";
-         while ( ( pid = waitpid( -1, &stat, WNOHANG ) ) > 0 ) ;
+         while( ( pid = waitpid( -1, &stat, WNOHANG ) ) > 0 ) ;
          break;
       }
       case SIGWINCH:
@@ -494,7 +494,7 @@ static void set_signals( void )
    int i;
 
    s_SignalFlag = HB_FALSE;
-   for ( i = 1; i < MAX_SIGNO; ++i )
+   for( i = 1; i < MAX_SIGNO; ++i )
    {
       s_SignalTable[i] = HB_FALSE;
       set_sig_handler( i );
@@ -529,22 +529,22 @@ static int add_efds( InOutBase * ioBase, int fd, int mode,
    struct evtFD *pefd = NULL;
    int i, fl;
 
-   if ( eventFunc == NULL && mode != O_RDONLY )
+   if( eventFunc == NULL && mode != O_RDONLY )
       return -1;
 
-   if ( ( fl = fcntl( fd, F_GETFL, 0 ) ) == -1 )
+   if( ( fl = fcntl( fd, F_GETFL, 0 ) ) == -1 )
       return -1;
 
    fl &= O_ACCMODE;
-   if ( ( fl == O_RDONLY && mode == O_WRONLY ) ||
-        ( fl == O_WRONLY && mode == O_RDONLY ) )
+   if( ( fl == O_RDONLY && mode == O_WRONLY ) ||
+       ( fl == O_WRONLY && mode == O_RDONLY ) )
       return -1;
 
-   for ( i = 0; i < ioBase->efds_no && !pefd; i++ )
-      if ( ioBase->event_fds[i]->fd == fd )
+   for( i = 0; i < ioBase->efds_no && !pefd; i++ )
+      if( ioBase->event_fds[i]->fd == fd )
          pefd = ioBase->event_fds[i];
 
-   if ( pefd )
+   if( pefd )
    {
       pefd->mode = mode;
       pefd->data = data;
@@ -553,9 +553,9 @@ static int add_efds( InOutBase * ioBase, int fd, int mode,
    }
    else
    {
-      if ( ioBase->efds_size <= ioBase->efds_no )
+      if( ioBase->efds_size <= ioBase->efds_no )
       {
-         if ( ioBase->event_fds == NULL )
+         if( ioBase->event_fds == NULL )
             ioBase->event_fds = ( evtFD ** )
                hb_xgrab( ( ioBase->efds_size += 10 ) * sizeof( evtFD * ) );
          else
@@ -580,15 +580,15 @@ static void del_efds( InOutBase * ioBase, int fd )
 {
    int i, n = -1;
 
-   for ( i = 0; i < ioBase->efds_no && n == -1; i++ )
-      if ( ioBase->event_fds[i]->fd == fd )
+   for( i = 0; i < ioBase->efds_no && n == -1; i++ )
+      if( ioBase->event_fds[i]->fd == fd )
          n = i;
 
-   if ( n != -1 )
+   if( n != -1 )
    {
       hb_xfree( ioBase->event_fds[n] );
       ioBase->efds_no--;
-      for ( i = n; i < ioBase->efds_no; i++ )
+      for( i = n; i < ioBase->efds_no; i++ )
          ioBase->event_fds[i] = ioBase->event_fds[i + 1];
    }
 }
@@ -597,9 +597,9 @@ static void del_all_efds( InOutBase * ioBase )
 {
    int i;
 
-   if ( ioBase->event_fds != NULL )
+   if( ioBase->event_fds != NULL )
    {
-      for ( i = 0; i < ioBase->efds_no; i++ )
+      for( i = 0; i < ioBase->efds_no; i++ )
          hb_xfree( ioBase->event_fds[i] );
 
       hb_xfree( ioBase->event_fds );
@@ -617,78 +617,78 @@ static int get_inch( InOutBase * ioBase, int milisec )
    struct evtFD *pefd = NULL;
    fd_set rfds, wfds;
 
-   if ( milisec == 0 )
+   if( milisec == 0 )
       ptv = NULL;
    else
    {
-      if ( milisec < 0 )
+      if( milisec < 0 )
          milisec = 0;
       tv.tv_sec = ( milisec / 1000 );
       tv.tv_usec = ( milisec % 1000 ) * 1000;
       ptv = &tv;
    }
 
-   while ( nRet == 0 && lRead == 0 )
+   while( nRet == 0 && lRead == 0 )
    {
       n = -1;
       FD_ZERO( &rfds );
       FD_ZERO( &wfds );
-      for ( i = 0; i < ioBase->efds_no; i++ )
+      for( i = 0; i < ioBase->efds_no; i++ )
       {
-         if ( ioBase->event_fds[i]->status == EVTFDSTAT_RUN )
+         if( ioBase->event_fds[i]->status == EVTFDSTAT_RUN )
          {
-            if ( ioBase->event_fds[i]->mode == O_RDWR
-                 || ioBase->event_fds[i]->mode == O_RDONLY )
+            if( ioBase->event_fds[i]->mode == O_RDWR
+                || ioBase->event_fds[i]->mode == O_RDONLY )
             {
                FD_SET( ioBase->event_fds[i]->fd, &rfds );
-               if ( n < ioBase->event_fds[i]->fd )
+               if( n < ioBase->event_fds[i]->fd )
                   n = ioBase->event_fds[i]->fd;
             }
-            if ( ioBase->event_fds[i]->mode == O_RDWR
-                 || ioBase->event_fds[i]->mode == O_WRONLY )
+            if( ioBase->event_fds[i]->mode == O_RDWR
+                || ioBase->event_fds[i]->mode == O_WRONLY )
             {
                FD_SET( ioBase->event_fds[i]->fd, &wfds );
-               if ( n < ioBase->event_fds[i]->fd )
+               if( n < ioBase->event_fds[i]->fd )
                   n = ioBase->event_fds[i]->fd;
             }
          }
       }
 
       counter = ioBase->key_counter;
-      if ( select( n + 1, &rfds, &wfds, NULL, ptv ) > 0 )
+      if( select( n + 1, &rfds, &wfds, NULL, ptv ) > 0 )
       {
-         for ( i = 0; i < ioBase->efds_no; i++ )
+         for( i = 0; i < ioBase->efds_no; i++ )
          {
             n = ( FD_ISSET( ioBase->event_fds[i]->fd, &rfds ) ? 1 : 0 ) |
                 ( FD_ISSET( ioBase->event_fds[i]->fd, &wfds ) ? 2 : 0 );
-            if ( n != 0 )
+            if( n != 0 )
             {
-               if ( ioBase->event_fds[i]->eventFunc == NULL )
+               if( ioBase->event_fds[i]->eventFunc == NULL )
                {
                   lRead = 1;
-                  if ( STDIN_BUFLEN > ioBase->stdin_inbuf )
+                  if( STDIN_BUFLEN > ioBase->stdin_inbuf )
                   {
                      unsigned char buf[STDIN_BUFLEN];
 
                      n = read( ioBase->event_fds[i]->fd, buf,
                                STDIN_BUFLEN - ioBase->stdin_inbuf );
-                     if ( n == 0 )
+                     if( n == 0 )
                         ioBase->event_fds[i]->status = EVTFDSTAT_STOP;
                      else
-                        for ( i = 0; i < n; i++ )
+                        for( i = 0; i < n; i++ )
                         {
                            ioBase->stdin_buf[ioBase->stdin_ptr_r++] = buf[i];
-                           if ( ioBase->stdin_ptr_r == STDIN_BUFLEN )
+                           if( ioBase->stdin_ptr_r == STDIN_BUFLEN )
                               ioBase->stdin_ptr_r = 0;
                            ioBase->stdin_inbuf++;
                         }
                   }
                }
-               else if ( nRet == 0 && counter == ioBase->key_counter )
+               else if( nRet == 0 && counter == ioBase->key_counter )
                {
-                  if ( n == 3 )
+                  if( n == 3 )
                      mode = O_RDWR;
-                  else if ( n == 2 )
+                  else if( n == 2 )
                      mode = O_WRONLY;
                   else
                      mode = O_RDONLY;
@@ -699,20 +699,20 @@ static int get_inch( InOutBase * ioBase, int milisec )
                                                             ioBase->
                                                             event_fds[i]->
                                                             data );
-                  if ( IS_EVTFDSTAT( n ) )
+                  if( IS_EVTFDSTAT( n ) )
                   {
                      ioBase->event_fds[i]->status = n;
-                     if ( nchk > i )
+                     if( nchk > i )
                         nchk = i;
                   }
                   else
                   {
                      ioBase->event_fds[i]->status = EVTFDSTAT_RUN;
-                     if ( IS_CLIPKEY( n ) )
+                     if( IS_CLIPKEY( n ) )
                      {
                         nRet = n;
                         npfd = ioBase->event_fds[i]->fd;
-                        if ( nchk > i )
+                        if( nchk > i )
                            nchk = i;
                      }
                   }
@@ -724,20 +724,20 @@ static int get_inch( InOutBase * ioBase, int milisec )
          lRead = 1;
    }
 
-   for ( i = n = nchk; i < ioBase->efds_no; i++ )
+   for( i = n = nchk; i < ioBase->efds_no; i++ )
    {
-      if ( ioBase->event_fds[i]->status == EVTFDSTAT_DEL )
+      if( ioBase->event_fds[i]->status == EVTFDSTAT_DEL )
          hb_xfree( ioBase->event_fds[i] );
-      else if ( ioBase->event_fds[i]->fd == npfd )
+      else if( ioBase->event_fds[i]->fd == npfd )
          pefd = ioBase->event_fds[i];
       else
       {
-         if ( i > n )
+         if( i > n )
             ioBase->event_fds[n] = ioBase->event_fds[i];
          n++;
       }
    }
-   if ( pefd )
+   if( pefd )
       ioBase->event_fds[n++] = pefd;
    ioBase->efds_no = n;
 
@@ -748,7 +748,7 @@ static int test_bufch( InOutBase * ioBase, int n, int delay )
 {
    int nKey = 0;
 
-   if ( ioBase->stdin_inbuf == n )
+   if( ioBase->stdin_inbuf == n )
       nKey = get_inch( ioBase, delay );
 
    return IS_CLIPKEY( nKey ) ? nKey :
@@ -758,7 +758,7 @@ static int test_bufch( InOutBase * ioBase, int n, int delay )
 
 static void free_bufch( InOutBase * ioBase, int n )
 {
-   if ( n > ioBase->stdin_inbuf )
+   if( n > ioBase->stdin_inbuf )
       n = ioBase->stdin_inbuf;
    ioBase->stdin_ptr_l = ( ioBase->stdin_ptr_l + n ) % STDIN_BUFLEN;
    ioBase->stdin_inbuf -= n;
@@ -769,7 +769,7 @@ static int wait_key( InOutBase * ioBase, int milisec )
    int nKey, esc, n, i, ch, counter;
    struct keyTab *ptr;
 
-   if ( s_WinSizeChangeFlag )
+   if( s_WinSizeChangeFlag )
    {
       s_WinSizeChangeFlag = HB_FALSE;
       return K_RESIZE;
@@ -779,39 +779,39 @@ static int wait_key( InOutBase * ioBase, int milisec )
    counter = ++( ioBase->key_counter );
    nKey = esc = n = i = 0;
  again:
-   if ( ( nKey = getMouseKey( &ioBase->mLastEvt ) ) != 0 )
+   if( ( nKey = getMouseKey( &ioBase->mLastEvt ) ) != 0 )
       return nKey;
 
    ch = test_bufch( ioBase, i,
                     ioBase->nTermMouseChars ? ioBase->esc_delay : milisec );
-   if ( counter != ioBase->key_counter )
+   if( counter != ioBase->key_counter )
       goto restart;
 
-   if ( ch >= 0 && ch <= 255 )
+   if( ch >= 0 && ch <= 255 )
    {
       ++i;
-      if ( ioBase->nTermMouseChars )
+      if( ioBase->nTermMouseChars )
       {
          ioBase->cTermMouseBuf[3 - ioBase->nTermMouseChars] = ch;
          free_bufch( ioBase, i );
          i = 0;
-         if ( --ioBase->nTermMouseChars == 0 )
+         if( --ioBase->nTermMouseChars == 0 )
             set_tmevt( ioBase->cTermMouseBuf, &ioBase->mLastEvt );
          goto again;
       }
 
       nKey = ch;
       ptr = ioBase->pKeyTab;
-      if ( i == 1 && nKey == K_ESC && esc == 0 )
+      if( i == 1 && nKey == K_ESC && esc == 0 )
          esc = 1;
-      while ( ch >= 0 && ch <= 255 && ptr != NULL )
+      while( ch >= 0 && ch <= 255 && ptr != NULL )
       {
-         if ( ptr->ch == ch )
+         if( ptr->ch == ch )
          {
-            if ( ptr->key != K_UNDEF )
+            if( ptr->key != K_UNDEF )
             {
                nKey = ptr->key;
-               switch ( nKey )
+               switch( nKey )
                {
                   case K_METAALT:
                      ioBase->key_flag |= KEY_ALTMASK;
@@ -828,70 +828,70 @@ static int wait_key( InOutBase * ioBase, int milisec )
                   default:
                      n = i;
                }
-               if ( n != i )
+               if( n != i )
                {
                   free_bufch( ioBase, i );
                   i = n = nKey = 0;
-                  if ( esc == 2 )
+                  if( esc == 2 )
                      break;
                   esc = 0;
                   goto again;
                }
             }
             ptr = ptr->nextCh;
-            if ( ptr )
-               if ( ( ch = test_bufch( ioBase, i, ioBase->esc_delay ) ) != -1 )
+            if( ptr )
+               if( ( ch = test_bufch( ioBase, i, ioBase->esc_delay ) ) != -1 )
                   ++i;
-            if ( counter != ioBase->key_counter )
+            if( counter != ioBase->key_counter )
                goto restart;
          }
          else
             ptr = ptr->otherCh;
       }
    }
-   if ( ch == -1 && ioBase->nTermMouseChars )
+   if( ch == -1 && ioBase->nTermMouseChars )
       ioBase->nTermMouseChars = 0;
 
-   if ( ch != -1 && IS_CLIPKEY( ch ) )
+   if( ch != -1 && IS_CLIPKEY( ch ) )
       nKey = GET_CLIPKEY( ch );
    else
    {
-      if ( esc == 1 && n == 0 && ( ch != -1 || i >= 2 ) )
+      if( esc == 1 && n == 0 && ( ch != -1 || i >= 2 ) )
       {
          nKey = 0;
          esc = 2;
          i = n = 1;
          goto again;
       }
-      if ( esc == 2 )
+      if( esc == 2 )
       {
-         if ( nKey != 0 )
+         if( nKey != 0 )
             ioBase->key_flag |= KEY_ALTMASK;
          else
             nKey = K_ESC;
-         if ( n == 1 && i > 1 )
+         if( n == 1 && i > 1 )
             n = 2;
       }
-      else if ( n == 0 && i > 0 )
+      else if( n == 0 && i > 0 )
          n = 1;
 
-      if ( n > 0 )
+      if( n > 0 )
          free_bufch( ioBase, n );
 
-      if ( ioBase->key_flag != 0 && nKey != 0 )
+      if( ioBase->key_flag != 0 && nKey != 0 )
       {
          nKey |= ioBase->key_flag;
          ioBase->key_flag = 0;
       }
 
-      if ( ioBase->nation_transtbl && ioBase->nation_mode &&
+      if( ioBase->nation_transtbl && ioBase->nation_mode &&
            nKey >= 32 && nKey < 128 && ioBase->nation_transtbl[nKey] )
          nKey = ioBase->nation_transtbl[nKey];
-      if ( ioBase->in_transtbl && nKey >= 0 && nKey <= 255
+      if( ioBase->in_transtbl && nKey >= 0 && nKey <= 255
            && ioBase->in_transtbl[nKey] )
          nKey = ioBase->in_transtbl[nKey];
 
-      if ( nKey )
+      if( nKey )
          nKey = getClipKey( nKey );
    }
 
@@ -902,7 +902,7 @@ static HB_BOOL write_ttyseq( InOutBase * ioBase, const char *seq )
 {
    HB_BOOL success;
 
-   if ( ioBase->baseout != NULL )
+   if( ioBase->baseout != NULL )
    {
       size_t seqlen = strlen( seq );
       success = ( fwrite( seq, seqlen, 1, ioBase->baseout ) == seqlen );
@@ -922,15 +922,15 @@ static int addKeyMap( InOutBase * ioBase, int nKey, const char *cdesc )
    int ret = K_UNDEF, i = 0, c;
    struct keyTab **ptr;
 
-   if ( cdesc == NULL )
+   if( cdesc == NULL )
       return ret;
 
    c = ( unsigned char ) cdesc[i++];
    ptr = &ioBase->pKeyTab;
 
-   while ( c )
+   while( c )
    {
-      if ( *ptr == NULL )
+      if( *ptr == NULL )
       {
          *ptr = ( struct keyTab * ) hb_xgrab( sizeof( struct keyTab ) );
          ( *ptr )->ch = c;
@@ -938,10 +938,10 @@ static int addKeyMap( InOutBase * ioBase, int nKey, const char *cdesc )
          ( *ptr )->nextCh = NULL;
          ( *ptr )->otherCh = NULL;
       }
-      if ( ( *ptr )->ch == c )
+      if( ( *ptr )->ch == c )
       {
          c = ( unsigned char ) cdesc[i++];
-         if ( c )
+         if( c )
             ptr = &( ( *ptr )->nextCh );
          else
          {
@@ -963,16 +963,16 @@ static int removeKeyMap( InOutBase * ioBase, const char *cdesc )
    c = ( unsigned char ) cdesc[i++];
    ptr = &ioBase->pKeyTab;
 
-   while ( c && *ptr != NULL )
+   while( c && *ptr != NULL )
    {
-      if ( ( *ptr )->ch == c )
+      if( ( *ptr )->ch == c )
       {
          c = ( unsigned char ) cdesc[i++];
-         if ( !c )
+         if( !c )
          {
             ret = ( *ptr )->key;
             ( *ptr )->key = K_UNDEF;
-            if ( ( *ptr )->nextCh == NULL && ( *ptr )->otherCh == NULL )
+            if( ( *ptr )->nextCh == NULL && ( *ptr )->otherCh == NULL )
             {
                hb_xfree( *ptr );
                *ptr = NULL;
@@ -989,9 +989,9 @@ static int removeKeyMap( InOutBase * ioBase, const char *cdesc )
 
 static void removeAllKeyMap( struct keyTab **ptr )
 {
-   if ( ( *ptr )->nextCh != NULL )
+   if( ( *ptr )->nextCh != NULL )
       removeAllKeyMap( &( ( *ptr )->nextCh ) );
-   if ( ( *ptr )->otherCh != NULL )
+   if( ( *ptr )->otherCh != NULL )
       removeAllKeyMap( &( ( *ptr )->otherCh ) );
 
    hb_xfree( *ptr );
@@ -1002,19 +1002,19 @@ static int getMouseKey( mouseEvent * mEvt )
 {
    int nKey = 0;
 
-   if ( mEvt->lbuttons != mEvt->buttonstate )
+   if( mEvt->lbuttons != mEvt->buttonstate )
    {
-      if ( mEvt->buttonstate & M_CURSOR_MOVE )
+      if( mEvt->buttonstate & M_CURSOR_MOVE )
       {
          nKey = K_MOUSEMOVE;
          mEvt->buttonstate &= ~M_CURSOR_MOVE;
       }
-      else if ( mEvt->buttonstate & M_BUTTON_WHEELUP )
+      else if( mEvt->buttonstate & M_BUTTON_WHEELUP )
       {
          nKey = K_MWFORWARD;
          mEvt->buttonstate &= ~M_BUTTON_WHEELUP;
       }
-      else if ( mEvt->buttonstate & M_BUTTON_WHEELDOWN )
+      else if( mEvt->buttonstate & M_BUTTON_WHEELDOWN )
       {
          nKey = K_MWBACKWARD;
          mEvt->buttonstate &= ~M_BUTTON_WHEELDOWN;
@@ -1023,9 +1023,9 @@ static int getMouseKey( mouseEvent * mEvt )
       {
          int butt = mEvt->lbuttons ^ mEvt->buttonstate;
 
-         if ( butt & M_BUTTON_LEFT )
+         if( butt & M_BUTTON_LEFT )
          {
-            if ( mEvt->buttonstate & M_BUTTON_LEFT )
+            if( mEvt->buttonstate & M_BUTTON_LEFT )
             {
                mEvt->lbdn_row = mEvt->row;
                mEvt->lbdn_col = mEvt->col;
@@ -1041,9 +1041,9 @@ static int getMouseKey( mouseEvent * mEvt )
             mEvt->lbuttons ^= M_BUTTON_LEFT;
             mEvt->buttonstate &= ~M_BUTTON_LDBLCK;
          }
-         else if ( butt & M_BUTTON_RIGHT )
+         else if( butt & M_BUTTON_RIGHT )
          {
-            if ( mEvt->buttonstate & M_BUTTON_RIGHT )
+            if( mEvt->buttonstate & M_BUTTON_RIGHT )
             {
                mEvt->rbdn_row = mEvt->row;
                mEvt->rbdn_col = mEvt->col;
@@ -1059,9 +1059,9 @@ static int getMouseKey( mouseEvent * mEvt )
             mEvt->lbuttons ^= M_BUTTON_RIGHT;
             mEvt->buttonstate &= ~M_BUTTON_RDBLCK;
          }
-         else if ( butt & M_BUTTON_MIDDLE )
+         else if( butt & M_BUTTON_MIDDLE )
          {
-            if ( mEvt->buttonstate & M_BUTTON_MIDDLE )
+            if( mEvt->buttonstate & M_BUTTON_MIDDLE )
             {
                mEvt->mbdn_row = mEvt->row;
                mEvt->mbdn_col = mEvt->col;
@@ -1089,26 +1089,26 @@ static void chk_mevtdblck( mouseEvent * mEvt )
 {
    int newbuttons = ( mEvt->buttonstate & ~mEvt->lbuttons ) & M_BUTTON_KEYMASK;
 
-   if ( newbuttons != 0 )
+   if( newbuttons != 0 )
    {
       struct timeval tv;
 
       TIMEVAL_GET( tv );
-      if ( newbuttons & M_BUTTON_LEFT )
+      if( newbuttons & M_BUTTON_LEFT )
       {
-         if ( TIMEVAL_LESS( tv, mEvt->BL_time ) )
+         if( TIMEVAL_LESS( tv, mEvt->BL_time ) )
             mEvt->buttonstate |= M_BUTTON_LDBLCK;
          TIMEVAL_ADD( mEvt->BL_time, tv, mEvt->click_delay );
       }
-      if ( newbuttons & M_BUTTON_MIDDLE )
+      if( newbuttons & M_BUTTON_MIDDLE )
       {
-         if ( TIMEVAL_LESS( tv, mEvt->BM_time ) )
+         if( TIMEVAL_LESS( tv, mEvt->BM_time ) )
             mEvt->buttonstate |= M_BUTTON_MDBLCK;
          TIMEVAL_ADD( mEvt->BM_time, tv, mEvt->click_delay );
       }
-      if ( newbuttons & M_BUTTON_RIGHT )
+      if( newbuttons & M_BUTTON_RIGHT )
       {
-         if ( TIMEVAL_LESS( tv, mEvt->BR_time ) )
+         if( TIMEVAL_LESS( tv, mEvt->BR_time ) )
             mEvt->buttonstate |= M_BUTTON_RDBLCK;
          TIMEVAL_ADD( mEvt->BR_time, tv, mEvt->click_delay );
       }
@@ -1168,28 +1168,28 @@ static int set_gpmevt( int fd, int mode, void *data )
 
    mEvt = ( mouseEvent * ) data;
 
-   if ( Gpm_GetEvent( &gEvt ) > 0 )
+   if( Gpm_GetEvent( &gEvt ) > 0 )
    {
       mEvt->row = gEvt.y;
       mEvt->col = gEvt.x;
-      if ( gEvt.type & GPM_MOVE )
+      if( gEvt.type & GPM_MOVE )
          mEvt->buttonstate |= M_CURSOR_MOVE;
-      if ( gEvt.type & GPM_DOWN )
+      if( gEvt.type & GPM_DOWN )
       {
-         if ( gEvt.buttons & GPM_B_LEFT )
+         if( gEvt.buttons & GPM_B_LEFT )
             mEvt->buttonstate |= M_BUTTON_LEFT;
-         if ( gEvt.buttons & GPM_B_MIDDLE )
+         if( gEvt.buttons & GPM_B_MIDDLE )
             mEvt->buttonstate |= M_BUTTON_MIDDLE;
-         if ( gEvt.buttons & GPM_B_RIGHT )
+         if( gEvt.buttons & GPM_B_RIGHT )
             mEvt->buttonstate |= M_BUTTON_RIGHT;
       }
-      else if ( gEvt.type & GPM_UP )
+      else if( gEvt.type & GPM_UP )
       {
-         if ( gEvt.buttons & GPM_B_LEFT )
+         if( gEvt.buttons & GPM_B_LEFT )
             mEvt->buttonstate &= ~M_BUTTON_LEFT;
-         if ( gEvt.buttons & GPM_B_MIDDLE )
+         if( gEvt.buttons & GPM_B_MIDDLE )
             mEvt->buttonstate &= ~M_BUTTON_MIDDLE;
-         if ( gEvt.buttons & GPM_B_RIGHT )
+         if( gEvt.buttons & GPM_B_RIGHT )
             mEvt->buttonstate &= ~M_BUTTON_RIGHT;
       }
    }
@@ -1201,7 +1201,7 @@ static int set_gpmevt( int fd, int mode, void *data )
 
 static void flush_gpmevt( mouseEvent * mEvt )
 {
-   if ( gpm_fd >= 0 )
+   if( gpm_fd >= 0 )
    {
       struct timeval tv = { 0, 0 };
       fd_set rfds;
@@ -1209,10 +1209,10 @@ static void flush_gpmevt( mouseEvent * mEvt )
       FD_ZERO( &rfds );
       FD_SET( gpm_fd, &rfds );
 
-      while ( select( gpm_fd + 1, &rfds, NULL, NULL, &tv ) > 0 )
+      while( select( gpm_fd + 1, &rfds, NULL, NULL, &tv ) > 0 )
          set_gpmevt( gpm_fd, O_RDONLY, ( void * ) mEvt );
 
-      while ( getMouseKey( mEvt ) ) ;
+      while( getMouseKey( mEvt ) ) ;
    }
    return;
 }
@@ -1221,7 +1221,7 @@ static void flush_gpmevt( mouseEvent * mEvt )
 static void disp_mousecursor( InOutBase * ioBase )
 {
 #if defined( HB_HAS_GPM )
-   if ( ioBase->mouse_type == MOUSE_GPM && gpm_visiblepointer )
+   if( ioBase->mouse_type == MOUSE_GPM && gpm_visiblepointer )
    {
       Gpm_DrawPointer( ioBase->mLastEvt.col, ioBase->mLastEvt.row,
                        gpm_consolefd );
@@ -1233,7 +1233,7 @@ static void disp_mousecursor( InOutBase * ioBase )
 
 static void mouse_init( InOutBase * ioBase )
 {
-   if ( ioBase->terminal_type == TERM_XTERM )
+   if( ioBase->terminal_type == TERM_XTERM )
    {
       /* save old hilit tracking & enable mouse tracking */
       write_ttyseq( ioBase, "\033[?1001s\033[?1002h" );
@@ -1242,11 +1242,11 @@ static void mouse_init( InOutBase * ioBase )
       ioBase->mLastEvt.click_delay = DBLCLK_DELAY;
       /* curses mouse buttons check */
       ioBase->mButtons = tigetnum( ( char * ) "btns" );
-      if ( ioBase->mButtons < 1 )
+      if( ioBase->mButtons < 1 )
          ioBase->mButtons = 3;
    }
 #if defined( HB_HAS_GPM )
-   else if ( ioBase->terminal_type == TERM_LINUX )
+   else if( ioBase->terminal_type == TERM_LINUX )
    {
       ioBase->Conn.eventMask =
          GPM_MOVE | GPM_DRAG | GPM_UP | GPM_DOWN | GPM_DOUBLE;
@@ -1256,11 +1256,11 @@ static void mouse_init( InOutBase * ioBase )
       ioBase->Conn.minMod = ioBase->Conn.maxMod = 0;
       gpm_zerobased = 1;
       gpm_visiblepointer = 0;
-      if ( Gpm_Open( &ioBase->Conn, 0 ) >= 0 && gpm_fd >= 0 )
+      if( Gpm_Open( &ioBase->Conn, 0 ) >= 0 && gpm_fd >= 0 )
       {
          int flags;
 
-         if ( ( flags = fcntl( gpm_fd, F_GETFL, 0 ) ) != -1 )
+         if( ( flags = fcntl( gpm_fd, F_GETFL, 0 ) ) != -1 )
             fcntl( gpm_fd, F_SETFL, flags | O_NONBLOCK );
 
          ioBase->mouse_type = MOUSE_GPM;
@@ -1286,13 +1286,13 @@ static void mouse_init( InOutBase * ioBase )
 
 static void mouse_exit( InOutBase * ioBase )
 {
-   if ( ioBase->mouse_type == MOUSE_XTERM )
+   if( ioBase->mouse_type == MOUSE_XTERM )
    {
       /* disable mouse tracking & restore old hilit tracking */
       write_ttyseq( ioBase, "\033[?1002l\033[?1001r" );
    }
 #if defined( HB_HAS_GPM )
-   else if ( ioBase->mouse_type == MOUSE_GPM && gpm_fd >= 0 )
+   else if( ioBase->mouse_type == MOUSE_GPM && gpm_fd >= 0 )
    {
       del_efds( ioBase, gpm_fd );
       Gpm_Close();
@@ -1302,12 +1302,12 @@ static void mouse_exit( InOutBase * ioBase )
 
 static void disp_cursor( InOutBase * ioBase )
 {
-   if ( ioBase->cursor != ioBase->lcursor )
+   if( ioBase->cursor != ioBase->lcursor )
    {
       int lcurs = -1;
       char escseq[64], *cv = NULL;
 
-      switch ( ioBase->cursor )
+      switch( ioBase->cursor )
       {
          case SC_NONE:
             lcurs = 1;
@@ -1335,15 +1335,15 @@ static void disp_cursor( InOutBase * ioBase )
             break;
       }
 
-      if ( lcurs != -1 )
+      if( lcurs != -1 )
       {
-         if ( ioBase->terminal_type == TERM_LINUX )
+         if( ioBase->terminal_type == TERM_LINUX )
          {
             hb_snprintf( escseq, sizeof( escseq ), "\033[?25%c\033[?%dc",
                          ioBase->cursor == SC_NONE ? 'l' : 'h', lcurs );
             write_ttyseq( ioBase, escseq );
          }
-         else if ( cv != NULL )
+         else if( cv != NULL )
             /* curses cursor shape set */
             /* curs_set( ncurs ); */
             write_ttyseq( ioBase, cv );
@@ -1356,7 +1356,7 @@ static void disp_cursor( InOutBase * ioBase )
 
 static void set_cursor( InOutBase * ioBase, int style )
 {
-   switch ( style )
+   switch( style )
    {
       case SC_NONE:
       case SC_NORMAL:
@@ -1371,15 +1371,15 @@ static void set_cursor( InOutBase * ioBase, int style )
 
 static void gt_refresh( InOutBase * ioBase )
 {
-   if ( ioBase->disp_count == 0 )
+   if( ioBase->disp_count == 0 )
    {
 /*
-   if (ioBase->cursor == SC_NONE)
+   if(ioBase->cursor == SC_NONE)
        leaveok( ioBase->stdscr, HB_TRUE );
    else
        leaveok( ioBase->stdscr, HB_FALSE );
 */
-/* if (ioBase->cursor != SC_NONE) */
+/* if(ioBase->cursor != SC_NONE) */
       wmove( ioBase->stdscr, ioBase->row, ioBase->col );
       wrefresh( ioBase->stdscr );
       disp_cursor( ioBase );
@@ -1389,13 +1389,13 @@ static void gt_refresh( InOutBase * ioBase )
 
 static void gt_ttyset( InOutBase * ioBase )
 {
-   if ( isatty( ioBase->base_infd ) )
+   if( isatty( ioBase->base_infd ) )
       tcsetattr( ioBase->base_infd, TCSANOW, &ioBase->curr_TIO );
 }
 
 static void gt_ttyrestore( InOutBase * ioBase )
 {
-   if ( ioBase->lTIOsaved )
+   if( ioBase->lTIOsaved )
       tcsetattr( ioBase->base_infd, TCSANOW, &ioBase->saved_TIO );
 }
 
@@ -1406,13 +1406,13 @@ static HB_BOOL gt_outstr( InOutBase * ioBase, int fd, const char *str,
    int i;
    HB_BOOL success;
 
-   if ( ioBase->out_transtbl != NULL )
+   if( ioBase->out_transtbl != NULL )
    {
       buf = ( unsigned char * ) hb_xgrab( len );
-      for ( i = 0; i < len; ++i )
+      for( i = 0; i < len; ++i )
       {
          c = str[i];
-         if ( c != 9 && c != 10 && c != 13 && ioBase->out_transtbl[c] )
+         if( c != 9 && c != 10 && c != 13 && ioBase->out_transtbl[c] )
             buf[i] = ioBase->out_transtbl[c];
          else
             buf[i] = c;
@@ -1441,11 +1441,11 @@ static char *tiGetS( const char *capname )
    char *ptr;
 
    ptr = tigetstr( ( char * ) capname );
-   if ( ptr )
+   if( ptr )
    {
-      if ( ptr == ( char * ) -1 )
+      if( ptr == ( char * ) -1 )
          ptr = NULL;
-      else if ( !ptr[0] )
+      else if( !ptr[0] )
          ptr = NULL;
    }
    return ptr;
@@ -1455,15 +1455,15 @@ static void get_acsc( InOutBase * ioBase, unsigned char c, chtype * pch )
 {
    unsigned char *ptr;
 
-   if ( ioBase->acsc != NULL )
-      for ( ptr = ( unsigned char * ) ioBase->acsc; *ptr && *( ptr + 1 ); ptr += 2 )
-         if ( *ptr == c )
+   if( ioBase->acsc != NULL )
+      for( ptr = ( unsigned char * ) ioBase->acsc; *ptr && *( ptr + 1 ); ptr += 2 )
+         if( *ptr == c )
          {
             *pch = *( ptr + 1 ) | A_ALTCHARSET;
             return;
          }
 
-   switch ( c )
+   switch( c )
    {
       case '.':
          *pch = 'v' | A_NORMAL;
@@ -1701,7 +1701,7 @@ static void gt_tone( InOutBase * ioBase, double dFrequency, double dDuration )
 {
    char escseq[64];
 
-   if ( ioBase->terminal_type == TERM_LINUX && ioBase->beep != NULL )
+   if( ioBase->terminal_type == TERM_LINUX && ioBase->beep != NULL )
    {
       hb_snprintf( escseq, sizeof( escseq ), "\033[10;%d]\033[11;%d]%s",
                    ( int ) dFrequency,
@@ -1710,34 +1710,34 @@ static void gt_tone( InOutBase * ioBase, double dFrequency, double dDuration )
    }
    else
       /* curses beep() */
-   if ( ioBase->beep != NULL )
+   if( ioBase->beep != NULL )
       write_ttyseq( ioBase, ioBase->beep );
-   else if ( ioBase->flash != NULL )
+   else if( ioBase->flash != NULL )
       write_ttyseq( ioBase, ioBase->flash );
 }
 
 static void set_sig_keys( InOutBase * ioBase, int key_int, int key_brk,
                           int key_stp )
 {
-   if ( isatty( ioBase->base_infd ) )
+   if( isatty( ioBase->base_infd ) )
    {
 
       /* set SIGINT character, default ^C */
-      if ( key_int >= 0 && key_int <= 255 )
+      if( key_int >= 0 && key_int <= 255 )
          ioBase->curr_TIO.c_cc[VINTR] = key_int;
 
       /* set SIGQUIT character, default ^D */
-      if ( key_brk >= 0 && key_brk <= 255 )
+      if( key_brk >= 0 && key_brk <= 255 )
          ioBase->curr_TIO.c_cc[VQUIT] = key_brk;
 
       /* set SIGTSTP character, default ^Z */
-      if ( key_stp >= 0 && key_stp <= 255 )
+      if( key_stp >= 0 && key_stp <= 255 )
          ioBase->curr_TIO.c_cc[VSUSP] = key_stp;
 
       /* enable siganls from terminal device */
-      if ( ioBase->curr_TIO.c_cc[VINTR] != 0 ||
-           ioBase->curr_TIO.c_cc[VQUIT] != 0 ||
-           ioBase->curr_TIO.c_cc[VSUSP] != 0 )
+      if( ioBase->curr_TIO.c_cc[VINTR] != 0 ||
+          ioBase->curr_TIO.c_cc[VQUIT] != 0 ||
+          ioBase->curr_TIO.c_cc[VSUSP] != 0 )
          ioBase->curr_TIO.c_lflag |= ISIG;
 
       /* ioctl( ioBase->base_infd, TIOCSCTTY, 0 ); */
@@ -1752,11 +1752,11 @@ static int gt_getsize( InOutBase * ioBase, int *rows, int *cols )
    *rows = *cols = 0;
 
 #if defined( TIOCGWINSZ )
-   if ( isatty( ioBase->base_outfd ) )
+   if( isatty( ioBase->base_outfd ) )
    {
       struct winsize win;
 
-      if ( ioctl( ioBase->base_outfd, TIOCGWINSZ, ( char * ) &win ) != -1 )
+      if( ioctl( ioBase->base_outfd, TIOCGWINSZ, ( char * ) &win ) != -1 )
       {
          *rows = win.ws_row;
          *cols = win.ws_col;
@@ -1764,16 +1764,16 @@ static int gt_getsize( InOutBase * ioBase, int *rows, int *cols )
    }
 #endif
 
-   if ( *rows <= 0 || *cols <= 0 )
+   if( *rows <= 0 || *cols <= 0 )
    {
       char *env;
 
-      if ( ( env = getenv( "COLUMNS" ) ) )
+      if( ( env = getenv( "COLUMNS" ) ) )
          *cols = atoi( env );
-      if ( ( env = getenv( "LINES" ) ) )
+      if( ( env = getenv( "LINES" ) ) )
          *rows = atoi( env );
    }
-   if ( *rows > 0 && *cols > 0 )
+   if( *rows > 0 && *cols > 0 )
       ret = ( ioBase->maxrow == *rows && ioBase->maxcol == *cols ) ? 0 : 1;
 
    return ret;
@@ -1784,7 +1784,7 @@ static int gt_resize( InOutBase * ioBase )
    int ret = -1;
    int rows = 0, cols = 0;
 
-   if ( gt_getsize( ioBase, &rows, &cols ) >= 0 )
+   if( gt_getsize( ioBase, &rows, &cols ) >= 0 )
    {
 /*
 #if defined( NCURSES_VERSION )
@@ -1796,7 +1796,7 @@ static int gt_resize( InOutBase * ioBase )
       ret = 0;
 /*
 #if defined( NCURSES_VERSION )
-        if ( resize_term( rows, cols ) == OK ) {
+        if( resize_term( rows, cols ) == OK ) {
        ret = 0;
             gt_refresh( ioBase );
    }
@@ -1812,25 +1812,25 @@ static int gt_setsize( InOutBase * ioBase, int rows, int cols )
    int ret = -1, r, c;
    char escseq[64];
 
-   if ( ioBase->terminal_type == TERM_XTERM )
+   if( ioBase->terminal_type == TERM_XTERM )
    {
       hb_snprintf( escseq, sizeof( escseq ), "\033[8;%d;%dt", rows, cols );
       write_ttyseq( ioBase, escseq );
       /* dirty hack - wait for SIGWINCH */
-      if ( gt_getsize( ioBase, &r, &c ) > 0 )
+      if( gt_getsize( ioBase, &r, &c ) > 0 )
          sleep( 3 );
 
-      if ( s_WinSizeChangeFlag )
+      if( s_WinSizeChangeFlag )
       {
          s_WinSizeChangeFlag = HB_FALSE;
          ret = gt_resize( ioBase );
       }
 #if defined( TIOCGWINSZ )
-      else if ( isatty( ioBase->base_outfd ) )
+      else if( isatty( ioBase->base_outfd ) )
       {
          struct winsize win;
 
-         if ( ioctl( ioBase->base_outfd, TIOCGWINSZ, ( char * ) &win ) != -1 )
+         if( ioctl( ioBase->base_outfd, TIOCGWINSZ, ( char * ) &win ) != -1 )
          {
             win.ws_row = rows;
             win.ws_col = cols;
@@ -1848,15 +1848,15 @@ static void setKeyTrans( InOutBase * ioBase, PHB_CODEPAGE cdpTerm, PHB_CODEPAGE 
 {
    int i;
 
-   if ( cdpTerm && cdpHost && cdpTerm != cdpHost )
+   if( cdpTerm && cdpHost && cdpTerm != cdpHost )
    {
-      if ( ioBase->in_transtbl == NULL )
+      if( ioBase->in_transtbl == NULL )
          ioBase->in_transtbl = ( unsigned char * ) hb_xgrab( 256 );
 
-      for ( i = 0; i < 256; ++i )
+      for( i = 0; i < 256; ++i )
          ioBase->in_transtbl[i] = hb_cdpTranslateChar( i, HB_FALSE, cdpTerm, cdpHost );
    }
-   else if ( ioBase->in_transtbl != NULL )
+   else if( ioBase->in_transtbl != NULL )
    {
       hb_xfree( ioBase->in_transtbl );
       ioBase->in_transtbl = NULL;
@@ -1870,10 +1870,10 @@ static void setDispTrans( InOutBase * ioBase, PHB_CODEPAGE cdpHost, PHB_CODEPAGE
 
    aSet = ( cdpHost && cdpTerm );
 
-   for ( i = 0; i < 256; i++ )
+   for( i = 0; i < 256; i++ )
    {
       ch = ioBase->charmap[i] & 0xffff;
-      switch ( ( ioBase->charmap[i] >> 16 ) & 0xff )
+      switch( ( ioBase->charmap[i] >> 16 ) & 0xff )
       {
          case 1:
             ioBase->std_chmap[i] = ioBase->box_chmap[i] = A_NORMAL;
@@ -1901,10 +1901,10 @@ static void setDispTrans( InOutBase * ioBase, PHB_CODEPAGE cdpHost, PHB_CODEPAGE
       ioBase->std_chmap[i] |= ch;
       ioBase->box_chmap[i] |= ch;
 
-      if ( i != ( int ) ( ch & A_CHARTEXT ) &&
-           ( ioBase->std_chmap[i] & A_ALTCHARSET ) == 0 )
+      if( i != ( int ) ( ch & A_CHARTEXT ) &&
+          ( ioBase->std_chmap[i] & A_ALTCHARSET ) == 0 )
       {
-         if ( ioBase->out_transtbl == NULL )
+         if( ioBase->out_transtbl == NULL )
          {
             ioBase->out_transtbl = ( unsigned char * ) hb_xgrab( 256 );
             memset( ioBase->out_transtbl, 0, 256 );
@@ -1912,7 +1912,7 @@ static void setDispTrans( InOutBase * ioBase, PHB_CODEPAGE cdpHost, PHB_CODEPAGE
          ioBase->out_transtbl[i] = ch & A_CHARTEXT;
       }
    }
-   if ( aSet )
+   if( aSet )
    {
       for( i = 0; i < 256; ++i )
       {
@@ -1949,26 +1949,26 @@ static InOutBase *create_ioBase( char *term, int infd, int outfd, int errfd,
    ioBase = ( InOutBase * ) hb_xgrab( sizeof( InOutBase ) );
    memset( ioBase, 0, sizeof( InOutBase ) );
 
-   if ( !term || !*term )
+   if( !term || !*term )
       term = getenv( "HB_TERM" );
-   if ( !term || !*term )
+   if( !term || !*term )
       term = getenv( "TERM" );
 
-   if ( term && *term )
+   if( term && *term )
    {
-      if ( strncmp( term, "linux", 5 ) == 0 )
+      if( strncmp( term, "linux", 5 ) == 0 )
          ioBase->terminal_type = TERM_LINUX;
-      else if ( strstr( term, "xterm" ) != NULL ||
-                strncmp( term, "rxvt", 4 ) == 0 ||
-                strstr( term, "putty" ) == 0 )
+      else if( strstr( term, "xterm" ) != NULL ||
+               strncmp( term, "rxvt", 4 ) == 0 ||
+               strstr( term, "putty" ) == 0 )
          ioBase->terminal_type = TERM_XTERM;
 
-      if ( ( ptr = strchr( term, '/' ) ) != NULL )
+      if( ( ptr = strchr( term, '/' ) ) != NULL )
       {
-         if ( ( i = ptr - term ) >= sizeof( buf ) )
+         if( ( i = ptr - term ) >= sizeof( buf ) )
             i = sizeof( buf ) - 1;
          hb_strncpy( buf, term, i );
-         if ( i )
+         if( i )
             crsterm = buf;
       }
       else
@@ -1983,15 +1983,15 @@ static InOutBase *create_ioBase( char *term, int infd, int outfd, int errfd,
    ioBase->termpid = termpid;
    ioBase->cursor = ioBase->lcursor = SC_UNDEF;
 
-   if ( !isatty( ioBase->base_outfd ) && isatty( ioBase->base_infd ) )
+   if( !isatty( ioBase->base_outfd ) && isatty( ioBase->base_infd ) )
       ioBase->base_outfd = ioBase->base_infd;
 
-   if ( isatty( ioBase->stdoutfd ) )
+   if( isatty( ioBase->stdoutfd ) )
       ioBase->stdoutfd = -1;
-   if ( isatty( ioBase->stderrfd ) )
+   if( isatty( ioBase->stderrfd ) )
       ioBase->stderrfd = -1;
 
-   if ( isatty( ioBase->base_infd ) )
+   if( isatty( ioBase->base_infd ) )
    {
       tcgetattr( ioBase->base_infd, &ioBase->curr_TIO ); /* save current terminal settings */
       memcpy( &ioBase->saved_TIO, &ioBase->curr_TIO, sizeof( struct termios ) );
@@ -2010,12 +2010,12 @@ static InOutBase *create_ioBase( char *term, int infd, int outfd, int errfd,
 
 
    /* curses SCREEN initialisation */
-   if ( ioBase->base_infd == fileno( stdin ) )
+   if( ioBase->base_infd == fileno( stdin ) )
       ioBase->basein = stdin;
    else
       ioBase->basein = fdopen( dup( ioBase->base_infd ), "r" );
 
-   if ( ioBase->base_outfd == fileno( stdout ) )
+   if( ioBase->base_outfd == fileno( stdout ) )
       ioBase->baseout = stdout;
    else
       ioBase->baseout = fdopen( dup( ioBase->base_outfd ), "w" );
@@ -2029,7 +2029,7 @@ static InOutBase *create_ioBase( char *term, int infd, int outfd, int errfd,
    */
    curs_wrkaround();
 
-   if ( ioBase->basescr == NULL )
+   if( ioBase->basescr == NULL )
    {
       destroy_ioBase( ioBase );
       return NULL;
@@ -2042,7 +2042,7 @@ static InOutBase *create_ioBase( char *term, int infd, int outfd, int errfd,
    ioBase->civis = tiGetS( "civis" );
    ioBase->cnorm = tiGetS( "cnorm" );
    ioBase->cvvis = tiGetS( "cvvis" );
-   if ( ioBase->cvvis == NULL )
+   if( ioBase->cvvis == NULL )
       ioBase->cvvis = ioBase->cnorm;
    ioBase->acsc = tiGetS( "acsc" );
 
@@ -2051,7 +2051,7 @@ static InOutBase *create_ioBase( char *term, int infd, int outfd, int errfd,
    setDispTrans( ioBase, NULL, NULL, 0 );
 
    ioBase->attr_mask = ( chtype ) -1;
-   if ( has_colors() )
+   if( has_colors() )
    {
       /*  DOS->CURSES color maping
          DOS              -> curses
@@ -2097,40 +2097,40 @@ static InOutBase *create_ioBase( char *term, int infd, int outfd, int errfd,
                 init_pair( i, color_map[ fg ], color_map[ bg ] );
        }
 */
-      for ( i = 0; i < 256; i++ )
+      for( i = 0; i < 256; i++ )
       {
          bg = ( i >> 4 ) & 0x07; /* extract background color bits 4-6 */
          fg = ( i & 0x07 );     /* extract forground color bits 0-2 */
          n = bg * 8 + fg;
          /* n = bg * COLORS + fg */
-         if ( n == 0 )
+         if( n == 0 )
             n = 7;
-         else if ( n == 7 )
+         else if( n == 7 )
             n = 0;
-         if ( ( i & 0x88 ) == 0 )
+         if( ( i & 0x88 ) == 0 )
             init_pair( n, color_map[fg], color_map[bg] );
          ioBase->attr_map[i] = COLOR_PAIR( n );
-         if ( i & 0x08 )        /* highlight forground bit 3 */
+         if( i & 0x08 )        /* highlight forground bit 3 */
             ioBase->attr_map[i] |= A_BOLD;
-         if ( i & 0x80 )        /* blink/highlight background bit 7 */
+         if( i & 0x80 )        /* blink/highlight background bit 7 */
             ioBase->attr_map[i] |= A_BLINK;
       }
       ioBase->is_color = 1;
    }
    else
    {
-      for ( i = 0; i < 256; i++ )
+      for( i = 0; i < 256; i++ )
       {
          bg = ( i >> 4 ) & 0x07; /* extract background color bits 4-6 */
          fg = ( i & 0x07 );     /* extract forground color bits 0-2 */
          ioBase->attr_map[i] = 0;
-         if ( fg < bg )
+         if( fg < bg )
             ioBase->attr_map[i] |= A_REVERSE;
-         if ( fg == 1 )         /* underline? */
+         if( fg == 1 )         /* underline? */
             ioBase->attr_map[i] |= A_UNDERLINE;
-         if ( i & 0x08 )        /* highlight forground bit 3 */
+         if( i & 0x08 )        /* highlight forground bit 3 */
             ioBase->attr_map[i] |= A_BOLD;
-         if ( i & 0x80 )        /* blink/highlight background bit 7 */
+         if( i & 0x80 )        /* blink/highlight background bit 7 */
             ioBase->attr_map[i] |= A_BLINK;
          ioBase->is_color = 0;
       }
@@ -2179,51 +2179,51 @@ static void destroy_ioBase( InOutBase * ioBase )
    mouse_exit( ioBase );
    del_all_efds( ioBase );
 
-   if ( ioBase->terminal_type == TERM_LINUX )
+   if( ioBase->terminal_type == TERM_LINUX )
    {
       /* restore a standard bell frequency and duration */
       write_ttyseq( ioBase, "\033[10]\033[11]" );
    }
 
    /* curses SCREEN delete */
-   if ( ioBase->stdscr != NULL )
+   if( ioBase->stdscr != NULL )
    {
       ioBase->disp_count = 0;
       /* on exit restore a cursor share and leave it visible
          Marek's NOTE: This is incompatible with Clipper */
-      if ( ioBase->cursor != SC_UNDEF )
+      if( ioBase->cursor != SC_UNDEF )
          set_cursor( ioBase, SC_NORMAL );
       gt_refresh( ioBase );
       endwin();
    }
-   if ( ioBase->basescr != NULL )
+   if( ioBase->basescr != NULL )
       delscreen( ioBase->basescr );
-   if ( ioBase->basein != NULL && ioBase->basein != stdin )
+   if( ioBase->basein != NULL && ioBase->basein != stdin )
       fclose( ioBase->basein );
-   if ( ioBase->baseout != NULL && ioBase->baseout != stdout )
+   if( ioBase->baseout != NULL && ioBase->baseout != stdout )
       fclose( ioBase->baseout );
 
    /* free allocated memory */
-   if ( ioBase->charmap != NULL )
+   if( ioBase->charmap != NULL )
       hb_xfree( ioBase->charmap );
 
-   if ( ioBase->in_transtbl != NULL )
+   if( ioBase->in_transtbl != NULL )
       hb_xfree( ioBase->in_transtbl );
 
-   if ( ioBase->out_transtbl != NULL )
+   if( ioBase->out_transtbl != NULL )
       hb_xfree( ioBase->out_transtbl );
 
-   if ( ioBase->nation_transtbl != NULL )
+   if( ioBase->nation_transtbl != NULL )
       hb_xfree( ioBase->nation_transtbl );
 
-   if ( ioBase->pKeyTab != NULL )
+   if( ioBase->pKeyTab != NULL )
       removeAllKeyMap( &ioBase->pKeyTab );
 
    /* restore terminal settings */
    gt_ttyrestore( ioBase );
 
    /* kill terminal proces if any */
-   if ( ioBase->termpid > 0 )
+   if( ioBase->termpid > 0 )
    {
       kill( ioBase->termpid, SIGTERM );
       waitpid( ioBase->termpid, NULL, 0 );
@@ -2240,24 +2240,24 @@ static InOutBase *create_newXterm( void )
    pid_t termpid;
    char ptyname[64], buf[64], *ptr;
 
-   if ( !getenv( "DISPLAY" ) )
+   if( !getenv( "DISPLAY" ) )
       return NULL;
 
-   if ( openpty( &masterfd, &slavefd, ptyname, NULL, NULL ) == -1 )
+   if( openpty( &masterfd, &slavefd, ptyname, NULL, NULL ) == -1 )
       return NULL;
 
    tcsetpgrp( masterfd, getpgrp() );
 
-   if ( ( termpid = fork() ) == -1 )
+   if( ( termpid = fork() ) == -1 )
    {
       close( masterfd );
       close( slavefd );
       return NULL;
    }
 
-   if ( termpid == 0 )
+   if( termpid == 0 )
    {
-      if ( ( ptr = strrchr( ptyname, '/' ) ) )
+      if( ( ptr = strrchr( ptyname, '/' ) ) )
          ++ptr;
       else
          ptr = ptyname;
@@ -2276,8 +2276,8 @@ static InOutBase *create_newXterm( void )
       fd = open("/dev/null", O_WRONLY);
       dup2(fd, 2);
 */
-      for ( fd = 3; fd < MAXFD; ++fd )
-         if ( fd != masterfd )
+      for( fd = 3; fd < MAXFD; ++fd )
+         if( fd != masterfd )
             close( fd );
 
       setuid( getuid() );
@@ -2298,7 +2298,7 @@ static int set_active_ioBase( int iNO_ioBase )
 {
    int iPrev = s_iActive_ioBase;
 
-   if ( iNO_ioBase >= 0 && iNO_ioBase < s_iSize_ioBaseTab )
+   if( iNO_ioBase >= 0 && iNO_ioBase < s_iSize_ioBaseTab )
    {
       s_iActive_ioBase = iNO_ioBase;
       s_ioBase = s_ioBaseTab[s_iActive_ioBase];
@@ -2312,27 +2312,27 @@ static int add_new_ioBase( InOutBase * ioBase )
 {
    int i, n, add = 0;
 
-   for ( i = 0; i < s_iSize_ioBaseTab && !add; ++i )
-      if ( !s_ioBaseTab[i] )
+   for( i = 0; i < s_iSize_ioBaseTab && !add; ++i )
+      if( !s_ioBaseTab[i] )
       {
          s_ioBaseTab[i] = ioBase;
          add = 1;
       }
 
-   if ( !add )
+   if( !add )
    {
-      if ( s_ioBaseTab == NULL )
+      if( s_ioBaseTab == NULL )
          s_ioBaseTab = ( InOutBase ** ) hb_xgrab(
                         ( s_iSize_ioBaseTab += 10 ) * sizeof( InOutBase * ) );
       else
          s_ioBaseTab = ( InOutBase ** ) hb_xrealloc( s_ioBaseTab,
                         ( s_iSize_ioBaseTab += 10 ) * sizeof( InOutBase * ) );
       s_ioBaseTab[i] = ioBase;
-      for ( n = i + 1; n < s_iSize_ioBaseTab; n++ )
+      for( n = i + 1; n < s_iSize_ioBaseTab; n++ )
          s_ioBaseTab[n] = NULL;
    }
 
-   if ( !s_ioBase )
+   if( !s_ioBase )
       set_active_ioBase( i );
 
    return i;
@@ -2342,16 +2342,16 @@ static int del_ioBase( int iNO_ioBase )
 {
    int i;
 
-   if ( iNO_ioBase >= 0 && iNO_ioBase < s_iSize_ioBaseTab )
+   if( iNO_ioBase >= 0 && iNO_ioBase < s_iSize_ioBaseTab )
    {
       destroy_ioBase( s_ioBaseTab[iNO_ioBase] );
       s_ioBaseTab[iNO_ioBase] = NULL;
-      if ( s_iActive_ioBase == iNO_ioBase )
+      if( s_iActive_ioBase == iNO_ioBase )
       {
          s_iActive_ioBase = -1;
          s_ioBase = NULL;
-         for ( i = 0; i < s_iSize_ioBaseTab && !s_ioBase; ++i )
-            if ( s_ioBaseTab[i] )
+         for( i = 0; i < s_iSize_ioBaseTab && !s_ioBase; ++i )
+            if( s_ioBaseTab[i] )
                set_active_ioBase( i );
       }
    }
@@ -2363,10 +2363,10 @@ static void del_all_ioBase( void )
 {
    int i;
 
-   if ( s_ioBaseTab )
+   if( s_ioBaseTab )
    {
-      for ( i = 0; i < s_iSize_ioBaseTab; ++i )
-         if ( s_ioBaseTab[i] )
+      for( i = 0; i < s_iSize_ioBaseTab; ++i )
+         if( s_ioBaseTab[i] )
             destroy_ioBase( s_ioBaseTab[i] );
       hb_xfree( s_ioBaseTab );
       s_ioBaseTab = NULL;
@@ -2397,7 +2397,7 @@ int HB_GT_FUNC( gt_NewXTerm( void ) )
    int iHandle = -1;
 
    ioBase = create_newXterm();
-   if ( ioBase )
+   if( ioBase )
    {
       set_sig_keys( ioBase, 'C' - ( 'A' - 1 ), 'D' - ( 'A' - 1 ),
                             'Z' - ( 'A' - 1 ) );
@@ -2454,7 +2454,7 @@ HB_BOOL HB_GT_FUNC( gt_GetSignalFlag( int iSig ) )
 {
    HB_BOOL bRetVal = HB_FALSE;
 
-   if ( iSig > 0 && iSig < MAX_SIGNO && s_SignalTable[iSig] )
+   if( iSig > 0 && iSig < MAX_SIGNO && s_SignalTable[iSig] )
    {
       bRetVal = HB_TRUE;
       s_SignalTable[iSig] = HB_FALSE;
@@ -2815,7 +2815,7 @@ static int hb_gt_crs_ReadKey( PHB_GT pGT, int iEventMask )
    {
       gt_resize( s_ioBase );
       HB_GTSELF_RESIZE( pGT, s_ioBase->maxrow, s_ioBase->maxcol );
-      iKey = 0;
+      iKey = HB_K_RESIZE;
    }
 
    return iKey;
@@ -2865,7 +2865,7 @@ static HB_BOOL hb_gt_crs_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
    if( s_ioBase )
    {
-      switch ( iType )
+      switch( iType )
       {
          case HB_GTI_FULLSCREEN:
          case HB_GTI_KBDSUPPORT:
