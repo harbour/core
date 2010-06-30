@@ -7,6 +7,7 @@
  *    "DOt Prompt" Console and .prg/.hrb runner for the Harbour Language
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
+ * Copyright 2008-2010 Viktor Szakats (harbour.01 syenar.hu)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -51,9 +52,11 @@
  */
 
 #include "common.ch"
+#include "fileio.ch"
 #include "inkey.ch"
 #include "setcurs.ch"
-#include "fileio.ch"
+
+#include "hbgtinfo.ch"
 
 /* NOTE: use hbextern library instead of #include "hbextern.ch"
  *       in dynamic builds it will greatly reduce the size because
@@ -76,6 +79,7 @@ STATIC s_nCol := 0
 STATIC s_aIncDir := {}
 STATIC s_aHistory := {}
 STATIC s_lPreserveHistory := .T.
+STATIC s_lResize := .F.
 
 /* ********************************************************************** */
 
@@ -176,7 +180,7 @@ STATIC PROCEDURE hbrun_Prompt( cCommand )
    LOCAL cLine
    LOCAL nMaxRow, nMaxCol
    LOCAL nHistIndex
-   LOCAL bKeyUP, bKeyDown, bKeyIns
+   LOCAL bKeyUP, bKeyDown, bKeyIns, bKeyResize
 
    CLEAR SCREEN
    SET SCOREBOARD OFF
@@ -194,6 +198,10 @@ STATIC PROCEDURE hbrun_Prompt( cCommand )
    ELSE
       cCommand := ""
    ENDIF
+
+   hb_gtInfo( HB_GTI_RESIZEMODE, HB_GTI_RESIZEMODE_ROWS )
+
+   Set( _SET_EVENTMASK, hb_bitOr( INKEY_KEYBOARD, HB_INKEY_GTEVENT ) )
 
    DO WHILE .T.
 
@@ -221,15 +229,23 @@ STATIC PROCEDURE hbrun_Prompt( cCommand )
          {|| cLine := IIF( nHistIndex < LEN( s_aHistory ), ;
              s_aHistory[ ++nHistIndex ], ;
              ( nHistIndex := LEN( s_aHistory ) + 1, Space( HB_LINE_LEN ) ) ) } )
+      bKeyResize := SetKey( HB_K_RESIZE,;
+         {|| s_lResize := .T., hb_KeyPut( K_ENTER ) } )
 
       READ
 
       SetKey( K_DOWN, bKeyDown )
-      SetKey( K_UP,   bKeyUp   )
-      SetKey( K_INS,  bKeyIns  )
+      SetKey( K_UP, bKeyUp )
+      SetKey( K_INS, bKeyIns )
+      SetKey( HB_K_RESIZE, bKeyResize )
 
-      IF LastKey() == K_ESC .OR. EMPTY( cLine )
-         cLine := NIL
+      IF LastKey() == K_ESC .OR. EMPTY( cLine ) .OR. ;
+         ( s_lResize .AND. LastKey() ==  K_ENTER )
+         IF s_lResize
+            s_lResize := .F.
+         ELSE
+            cLine := NIL
+         ENDIF
          IF nMaxRow != MaxRow() .OR. nMaxCol != MaxCol()
             @ nMaxRow, 0 CLEAR
          ENDIF
@@ -278,14 +294,12 @@ STATIC PROCEDURE hbrun_Usage()
 
 STATIC PROCEDURE hbrun_Info( cCommand )
 
-   LOCAL r := Row(), c := Col()
-
    IF cCommand != NIL
-      DispOutAt( 0, 0, "PP: " )
-      DispOutAt( 0, 4, PadR( cCommand, MaxCol() - 3 ), "N/R" )
+      hb_DispOutAt( 0, 0, "PP: " )
+      hb_DispOutAt( 0, 4, PadR( cCommand, MaxCol() - 3 ), "N/R" )
    ENDIF
    IF Used()
-      DispOutAt( 1, 0, ;
+      hb_DispOutAt( 1, 0, ;
          PadR( "RDD: " + PadR( RddName(), 6 ) + ;
                " | Area:" + Str( Select(), 3 ) + ;
                " | Dbf: " + PadR( Alias(), 10 ) + ;
@@ -293,7 +307,7 @@ STATIC PROCEDURE hbrun_Info( cCommand )
                " | # " + Str( RecNo(), 7 ) + "/" + Str( RecCount(), 7 ), ;
                MaxCol() + 1 ), "N/BG" )
    ELSE
-      DispOutAt( 1, 0, ;
+      hb_DispOutAt( 1, 0, ;
          PadR( "RDD: " + Space( 6 ) + ;
                " | Area:" + Space( 3 ) + ;
                " | Dbf: " + Space( 10 ) + ;
@@ -301,7 +315,9 @@ STATIC PROCEDURE hbrun_Info( cCommand )
                " | # " + Space( 7 ) + "/" + Space( 7 ), ;
                MaxCol() + 1 ), "N/BG" )
    ENDIF
-   SetPos( r, c )
+   IF s_lPreserveHistory
+      hb_DispOutAt( 1, MaxCol(), "o", "R/BG" )
+   ENDIF
 
    RETURN
 

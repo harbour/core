@@ -3292,8 +3292,12 @@ static int hb_gt_trm_ReadKey( PHB_GT pGT, int iEventMask )
       int iRows, iCols;
 
       if( hb_gt_trm_getSize( HB_GTTRM_GET( pGT ), &iRows, &iCols ) )
+      {
          HB_GTSELF_RESIZE( pGT, iRows, iCols );
-      iKey = 0;
+         iKey = HB_K_RESIZE;
+      }
+      else
+         iKey = 0;
    }
 
    return iKey;
