@@ -344,7 +344,10 @@ static HRESULT STDMETHODCALLTYPE Invoke( IDispatch* lpThis, DISPID dispid, REFII
       PHB_ITEM pKey = hb_itemPutNL( hb_stackAllocItem(), ( long ) dispid );
 
       if( pAction && HB_IS_HASH( pAction ) )
+      {
          pAction = hb_hashGetItemPtr( pAction, pKey, 0 );
+         pKey = NULL;
+      }
 
       if( pAction &&  hb_oleDispInvoke( NULL, pAction, pKey,
                                         pParams, pVarResult, NULL ) )

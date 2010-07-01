@@ -397,18 +397,16 @@ static HRESULT STDMETHODCALLTYPE Invoke( IDispatch* lpThis, DISPID dispid, REFII
       }
       else if( HB_IS_HASH( pAction ) )
       {
-         PHB_ITEM pKey, pItem;
+         PHB_ITEM pItem;
 
          if( ( ( IHbOleServer * ) lpThis )->fGuids )
          {
-            pKey = hb_itemPutNL( hb_stackAllocItem(), ( long ) dispid );
+            PHB_ITEM pKey = hb_itemPutNL( hb_stackAllocItem(), ( long ) dispid );
             pItem = hb_hashGetItemPtr( pAction, pKey, 0 );
+            hb_stackPop();
          }
          else
-         {
-            pKey = NULL;
             pItem = hb_hashGetValueAt( pAction, ( HB_SIZE ) dispid );
-         }
 
          if( pItem )
          {
@@ -417,7 +415,7 @@ static HRESULT STDMETHODCALLTYPE Invoke( IDispatch* lpThis, DISPID dispid, REFII
                if( ( wFlags & DISPATCH_METHOD ) != 0 )
                {
                   PHB_SYMB pSym = hb_itemGetSymbol( pItem );
-                  fResult = hb_oleDispInvoke( pSym, pSym ? pAction : pItem, pKey,
+                  fResult = hb_oleDispInvoke( pSym, pSym ? pAction : pItem, NULL,
                                               pParams, pVarResult, s_objItemToVariant );
                }
             }
@@ -435,8 +433,6 @@ static HRESULT STDMETHODCALLTYPE Invoke( IDispatch* lpThis, DISPID dispid, REFII
                fResult = HB_TRUE;
             }
          }
-         if( pKey )
-            hb_stackPop();
       }
       else if( HB_IS_OBJECT( pAction ) )
       {

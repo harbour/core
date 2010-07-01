@@ -68,6 +68,9 @@
 #define YYENABLE_NLS          0
 #define YYLTYPE_IS_TRIVIAL    0
 
+/* NOTE: increase the maximum size of bison stack size */
+#define YYMAXDEPTH 100000
+
 static void hb_compLoopStart( HB_COMP_DECL, HB_BOOL );
 static void hb_compLoopEnd( HB_COMP_DECL );
 static void hb_compLoopLoop( HB_COMP_DECL );

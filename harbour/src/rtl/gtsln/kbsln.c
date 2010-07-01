@@ -332,6 +332,7 @@ int hb_gt_sln_ReadKey( PHB_GT pGT, int iEventMask )
       /* TODO: we need here some kind of screen redrawing */
       /*SLsmg_refresh();*/
       HB_GTSELF_RESIZE( pGT, SLtt_Screen_Rows, SLtt_Screen_Cols );
+      return HB_K_RESIZE;
    }
 
    fInput = SLang_input_pending( 0 ) != 0;

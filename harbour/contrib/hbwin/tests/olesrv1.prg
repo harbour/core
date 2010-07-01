@@ -100,7 +100,7 @@ PROCEDURE DllMain()
     *       WIN_OleServerInit( cClassID, cServerName, @netio_funcExec(), .T. )
     *    endif
     * initialize OLE server which redirects all messages to default netio
-    * connection establish by netio_connect().
+    * connection established by netio_connect().
     *
     * If 3-rd parameter is not given then all HVM functions becomes
     * OLE methods and HVM memvars (public and private variables) are
