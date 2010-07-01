@@ -55,7 +55,18 @@
 #include "error.ch"
 #include "fileio.ch"
 
-#define _HBMEM_EXT ".hbv"
+/*
+ * 'H', 'B', 'V' followed two-byte version number in network byte order (BE).
+ * Corresponding magic(5) rule:
+ *    0       string          \xC0HBV
+ *    0x04    beshort x       Harbour memory file version %d
+ * Until such time that the serialized format changes, and handling of
+ * previously-saved files is required, only a naive approach of using
+ * version 0 is taken.
+ */
+#define _HBMEM_SIGNATURE e"\xC0HBV" + Chr( 0 ) + Chr( 0 )
+
+#define _HBMEM_EXT       ".hbv"
 
 FUNCTION HB_MVSAVE( cFileName, cMask, lIncludeMask )
    LOCAL nCount
@@ -133,6 +144,7 @@ FUNCTION HB_MVSAVE( cFileName, cMask, lIncludeMask )
       ENDDO
 
       IF fhnd != F_ERROR
+         FWrite( fhnd, _HBMEM_SIGNATURE )
          FWrite( fhnd, hb_serialize( aVars ) )
          FClose( fhnd )
       ENDIF
@@ -223,33 +235,40 @@ FUNCTION HB_MVRESTORE( cFileName, lAdditive, cMask, lIncludeMask )
          RETURN .F.
       ENDIF
 
-      cBuffer := Space( FSeek( fhnd, 0, FS_END ) )
-      FSeek( fhnd, 0, FS_SET )
-      FRead( fhnd, @cBuffer, Len( cBuffer ) )
-      FClose( fhnd )
-
-      aVars := hb_deserialize( cBuffer )
-      cBuffer := NIL
-
       xValue := NIL
 
-      IF ISARRAY( aVars )
-         FOR EACH item IN aVars
-            IF ISARRAY( item ) .AND. Len( item ) == 2 .AND. ;
-               ISCHARACTER( item[ 1 ] ) .AND. ;
-               ! Empty( item[ 1 ] )
+      cBuffer := Space( Len( _HBMEM_SIGNATURE ) )
+      FRead( fhnd, @cBuffer, Len( cBuffer ) )
+      IF cBuffer == _HBMEM_SIGNATURE
 
-               cName := item[ 1 ]
-               lMatch := hb_WildMatchI( cMask, cName )
-               IF iif( lIncludeMask, lMatch, ! lMatch )
-                  IF xValue == NIL
-                     xValue := item[ 2 ]
+         cBuffer := Space( FSeek( fhnd, 0, FS_END ) - Len( _HBMEM_SIGNATURE ) )
+         FSeek( fhnd, Len( _HBMEM_SIGNATURE ), FS_SET )
+         FRead( fhnd, @cBuffer, Len( cBuffer ) )
+         FClose( fhnd )
+
+         aVars := hb_deserialize( cBuffer )
+         cBuffer := NIL
+
+         IF ISARRAY( aVars )
+            FOR EACH item IN aVars
+               IF ISARRAY( item ) .AND. Len( item ) == 2 .AND. ;
+                  ISCHARACTER( item[ 1 ] ) .AND. ;
+                  ! Empty( item[ 1 ] )
+
+                  cName := item[ 1 ]
+                  lMatch := hb_WildMatchI( cMask, cName )
+                  IF iif( lIncludeMask, lMatch, ! lMatch )
+                     IF xValue == NIL
+                        xValue := item[ 2 ]
+                     ENDIF
+                     &cName := item[ 2 ]
                   ENDIF
-                  &cName := item[ 2 ]
                ENDIF
-            ENDIF
-         NEXT
-         __MVSETBASE()
+            NEXT
+            __MVSETBASE()
+         ENDIF
+      ELSE
+         FClose( fhnd )
       ENDIF
 
       RETURN xValue

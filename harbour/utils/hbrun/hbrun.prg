@@ -201,6 +201,8 @@ STATIC PROCEDURE hbrun_Prompt( cCommand )
 
    hb_gtInfo( HB_GTI_RESIZEMODE, HB_GTI_RESIZEMODE_ROWS )
 
+   SetKey( K_ALT_V, {|| hb_gtInfo( HB_GTI_CLIPBOARDPASTE ) } )
+
    Set( _SET_EVENTMASK, hb_bitOr( INKEY_KEYBOARD, HB_INKEY_GTEVENT ) )
 
    DO WHILE .T.
@@ -240,7 +242,7 @@ STATIC PROCEDURE hbrun_Prompt( cCommand )
       SetKey( HB_K_RESIZE, bKeyResize )
 
       IF LastKey() == K_ESC .OR. EMPTY( cLine ) .OR. ;
-         ( lResize .AND. LastKey() ==  K_ENTER )
+         ( lResize .AND. LastKey() == K_ENTER )
          IF lResize
             lResize := .F.
          ELSE
@@ -286,7 +288,7 @@ STATIC PROCEDURE hbrun_Usage()
            "Copyright (c) 1999-2010, Przemyslaw Czerpak" + HB_OSNewLine() + ;
            "http://harbour-project.org/" + HB_OSNewLine() +;
            HB_OSNewLine() +;
-           "Syntax:  hbrun [<hrbfile[.prg|.hrb]> [<parameters,...>]]" + HB_OSNewLine() )
+           "Syntax:  hbrun [<file[.prg|.hbs|.hrb]> [<parameters,...>]]" + HB_OSNewLine() )
 
    RETURN
 

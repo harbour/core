@@ -111,7 +111,7 @@ PROCEDURE Main( ... )
    SET CENTURY ON
    SET EPOCH TO 1970
 
-   /* TODO: activate */ hbqtres_HbIde()
+   /* TODO: activate */ /* hbqtres_HbIde() */
 
    oIde := HbIde():new( hb_aParams() ):create()
    oIde:destroy()

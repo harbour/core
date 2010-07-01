@@ -9944,9 +9944,9 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-depincpath=<d:i>"       , I_( "<d> is the name of the dependency. Add <i> to the header detection path list" ) },;
       { "-depincpathlocal= <d:i>" , I_( "<d> is the name of the dependency. Add <i> to the header detection path list, where <i> is pointing to a directory local to the project and containing an embedded (or locally hosted) dependency." ) },;
       NIL,;
-      { "-plugin=<.prg|.hrb>", I_( "add plugin (EXPERIMENTAL)" ) },;
-      { "-pi=<filename>"     , I_( "pass input file to plugins (EXPERIMENTAL)" ) },;
-      { "-pflag=<f>"         , I_( "pass flag to plugins (EXPERIMENTAL)" ) },;
+      { "-plugin= <.prg|.hbs|.hrb>", I_( "add plugin" ) },;
+      { "-pi=<filename>"     , I_( "pass input file to plugins" ) },;
+      { "-pflag=<f>"         , I_( "pass flag to plugins" ) },;
       NIL,;
       { "Options below are available on command line only:" },;
       NIL,;
@@ -10022,19 +10022,17 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
 STATIC PROCEDURE OutOpt( hbmk, aOpt )
    LOCAL nLine
    LOCAL nLines
-   LOCAL tmp
 
    IF Empty( aOpt )
       OutStd( _OUT_EOL )
    ELSE
       IF Len( aOpt ) > 1
          aOpt[ 2 ] := StrTran( aOpt[ 2 ], "\n", hb_osNewLine() )
-         nLines := MLCount( aOpt[ 2 ], hbmk[ _HBMK_nMaxCol ] - _OPT_WIDTH )
+         nLines := Max( MLCount( aOpt[ 2 ], hbmk[ _HBMK_nMaxCol ] - _OPT_WIDTH ),;
+                        MLCount( aOpt[ 1 ], _OPT_WIDTH ) )
          FOR nLine := 1 TO nLines
-            IF ! Empty( tmp := RTrim( MemoLine( aOpt[ 2 ], hbmk[ _HBMK_nMaxCol ] - _OPT_WIDTH, nLine ) ) )
-               OutStd( PadR( Space( 2 ) + MemoLine( aOpt[ 1 ], _OPT_WIDTH, nLine ), _OPT_WIDTH ) )
-               OutStd( tmp + _OUT_EOL )
-            ENDIF
+            OutStd( PadR( Space( 2 ) + MemoLine( aOpt[ 1 ], _OPT_WIDTH, nLine ), _OPT_WIDTH ) )
+            OutStd( RTrim( MemoLine( aOpt[ 2 ], hbmk[ _HBMK_nMaxCol ] - _OPT_WIDTH, nLine ) ) + _OUT_EOL )
          NEXT
       ELSE
          OutStd( Space( 2 ) + aOpt[ 1 ] + _OUT_EOL )
