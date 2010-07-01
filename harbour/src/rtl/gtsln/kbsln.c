@@ -109,14 +109,14 @@ static int s_hb_sln_Abort_key = 28;
 
 /* DeadKey definition's ENVVAR name. This EnvVar contains */
 /* an ASCII value of a key, which serves as a DeadKey */
-static const char *hb_DeadKeyEnvName = "HRBNATIONDEADKEY";
+static const char * s_DeadKeyEnvName = "HB_GTSLN_NATIONDEADKEY";
 
 /* a table for Keys work with a Dead key. The first
    element contains a number of defined keys */
 unsigned char hb_sln_convKDeadKeys[ 257 ];  /* it should be allocated by hb_xalloc() */
 
 /* contains an integer value of a DeadKey or -1 */
-int hb_DeadKey = -1;
+static int s_iDeadKey = -1;
 
 /* escape key delay */
 #ifdef HB_SLANG_ONE_ESC
@@ -258,13 +258,13 @@ int hb_sln_Init_Terminal( int phase )
 #endif
 
       /* get Dead key definition */
-      p = ( unsigned char * ) hb_getenv( hb_DeadKeyEnvName );
+      p = ( unsigned char * ) hb_getenv( s_DeadKeyEnvName );
 
       if( p && p[ 0 ] != '\0' )
       {
          int len = strlen( ( char * ) p );
          if( len > 0 )
-            hb_DeadKey = ( int ) *p;
+            s_iDeadKey = ( int ) *p;
       }
       if( p )
          hb_xfree( ( void * ) p );
@@ -367,7 +367,7 @@ int hb_gt_sln_ReadKey( PHB_GT pGT, int iEventMask )
    }
 
    /* user AbortKey break */
-   if( (int) ch == s_hb_sln_Abort_key )
+   if( ( int ) ch == s_hb_sln_Abort_key )
       return HB_BREAK_FLAG;
 
    SLang_ungetkey( ch );
@@ -383,18 +383,18 @@ int hb_gt_sln_ReadKey( PHB_GT pGT, int iEventMask )
    if( InDeadState )
    {
       InDeadState = HB_FALSE;
-      if( (int) ch == hb_DeadKey ) /* double press Dead key */
+      if( ( int ) ch == s_iDeadKey ) /* double press Dead key */
          return ch;
       if( ch < 256 )  /* is this needed ??? */
       {
          int i;
-         for( i=0; i < ( int ) hb_sln_convKDeadKeys[ 0 ]; i++ )
-            if( ( int ) hb_sln_convKDeadKeys[ 2 * i + 1 ] == (int) ch )
+         for( i = 0; i < ( int ) hb_sln_convKDeadKeys[ 0 ]; i++ )
+            if( ( int ) hb_sln_convKDeadKeys[ 2 * i + 1 ] == ( int ) ch )
                return ( int ) hb_sln_convKDeadKeys[ 2 * i + 2 ];
       }
       return 0;
    }
-   else if( (int) ch == hb_DeadKey )
+   else if( ( int ) ch == s_iDeadKey )
    {
       /* entering Dead key state */
       InDeadState = HB_TRUE;
@@ -424,27 +424,27 @@ int hb_gt_sln_ReadKey( PHB_GT pGT, int iEventMask )
    }
 
 #if ( defined( HB_SLN_UTF8 ) || defined( HB_SLN_UNICODE ) )
-   if ( hb_sln_Is_Unicode && ch < 256 )
+   if( hb_sln_Is_Unicode && ch < 256 )
    {
       int n = 0;
       HB_USHORT uc = 0;
 
-      if ( hb_cdpGetFromUTF8( hb_sln_cdpIN, HB_FALSE, ( HB_BYTE ) ch, &n, &uc ) )
+      if( hb_cdpGetFromUTF8( hb_sln_cdpIN, HB_FALSE, ( HB_BYTE ) ch, &n, &uc ) )
       {
          unsigned int buf[ 10 ], i = 0;
 
-         while ( n > 0 )
+         while( n > 0 )
          {
             if( SLang_input_pending( hb_sln_escDelay == 0 ? -100 :
                                          - HB_MAX( hb_sln_escDelay, 0 ) ) == 0 )
                break;
             buf[ i++ ] = SLang_getkey();
-            if ( !hb_cdpGetFromUTF8( hb_sln_cdpIN, HB_FALSE, ( HB_BYTE ) buf[ i - 1 ], &n, &uc ) )
+            if( !hb_cdpGetFromUTF8( hb_sln_cdpIN, HB_FALSE, ( HB_BYTE ) buf[ i - 1 ], &n, &uc ) )
                break;
          }
-         if ( n > 0 )
+         if( n > 0 )
          {
-            while ( i > 0 )
+            while( i > 0 )
                SLang_ungetkey( buf[ --i ] );
          }
          else
