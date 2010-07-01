@@ -70,7 +70,7 @@ REQUEST HB_GT_CGI
 REQUEST HB_GT_PCA
 REQUEST HB_GT_STD
 
-#define HB_HISTORY_LEN 32
+#define HB_HISTORY_LEN 128
 #define HB_LINE_LEN    256
 #define HB_PROMPT      "."
 
@@ -387,8 +387,7 @@ STATIC FUNCTION HBRawVersion()
 
 /* ********************************************************************** */
 
-#define _HISTORY_DISABLE_LINE  "no"
-#define _HISTORY_SAVE_LINE_MAX 500
+#define _HISTORY_DISABLE_LINE "no"
 
 STATIC PROCEDURE hbrun_HistoryLoad()
    LOCAL cHistory
@@ -411,13 +410,13 @@ STATIC PROCEDURE hbrun_HistoryLoad()
 
 STATIC PROCEDURE hbrun_HistorySave()
    LOCAL cHistory
-   LOCAL tmp
+   LOCAL cLine
 
    IF s_lPreserveHistory
       cHistory := ""
-      FOR tmp := Max( 1, Len( s_aHistory ) - _HISTORY_SAVE_LINE_MAX ) TO Len( s_aHistory )
-         IF !( Lower( AllTrim( s_aHistory[ tmp ] ) ) == "quit" )
-            cHistory += AllTrim( s_aHistory[ tmp ] ) + hb_osNewLine()
+      FOR EACH cLine IN s_aHistory
+         IF !( Lower( AllTrim( cLine ) ) == "quit" )
+            cHistory += AllTrim( cLine ) + hb_osNewLine()
          ENDIF
       NEXT
       hb_MemoWrit( hbrun_HistoryFileName(), cHistory )

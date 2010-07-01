@@ -303,13 +303,13 @@ static void hb_sln_setACSCtrans( void )
       }
 
       HB_SLN_BUILD_RAWCHAR( SLch, 0, 0 );
-      for ( i = 0; i < 3 && !HB_SLN_IS_CHAR( SLch ); i++ )
+      for( i = 0; i < 3 && !HB_SLN_IS_CHAR( SLch ); i++ )
          SLch = chBoard[ i ];
-      if ( !HB_SLN_IS_CHAR( SLch ) )
+      if( !HB_SLN_IS_CHAR( SLch ) )
          HB_SLN_BUILD_RAWCHAR( SLch, '#', 0 );
-      for ( i = 0; i < 3; i++ )
+      for( i = 0; i < 3; i++ )
       {
-         if ( !HB_SLN_IS_CHAR( chBoard[ i ] ) )
+         if( !HB_SLN_IS_CHAR( chBoard[ i ] ) )
             chBoard[ i ] = SLch;
       }
       s_outputTab[ 176 ] = chBoard[ 0 ];
@@ -332,7 +332,7 @@ static void hb_sln_setACSCtrans( void )
        * Below it's a hack for this version of slang which fix the
        * problem.
        */
-      if ( SLSMG_UTEE_CHAR_TERM == 'v' )
+      if( SLSMG_UTEE_CHAR_TERM == 'v' )
       {
          SLch = s_outputTab[ 193 ];
          s_outputTab[ 193 ] = s_outputTab[ 194 ];
@@ -413,7 +413,7 @@ static void hb_sln_setKeyTrans( PHB_CODEPAGE cdpHost, PHB_CODEPAGE cdpTerm )
    char *p;
    int i;
 
-   for ( i = 0; i < 256; i++ )
+   for( i = 0; i < 256; i++ )
       hb_sln_inputTab[ i ] = ( unsigned char )
                            hb_cdpTranslateChar( i, HB_FALSE, cdpTerm, cdpHost );
    hb_sln_cdpIN = cdpTerm ? cdpTerm : cdpHost;
@@ -831,7 +831,7 @@ static const char * hb_gt_sln_Version( PHB_GT pGT, int iType )
 
    HB_SYMBOL_UNUSED( pGT );
 
-   if ( iType == 0 )
+   if( iType == 0 )
       return HB_GT_DRVNAME( HB_GT_NAME );
 
    return "Harbour Terminal: Slang";
@@ -907,7 +907,7 @@ static HB_BOOL hb_gt_sln_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_sln_Info(%p,%d,%p)", pGT, iType, pInfo ) );
 
-   switch ( iType )
+   switch( iType )
    {
       case HB_GTI_FULLSCREEN:
       case HB_GTI_KBDSUPPORT:
@@ -941,12 +941,12 @@ static HB_BOOL hb_gt_sln_SetDispCP( PHB_GT pGT, const char * pszTermCDP, const c
    {
       PHB_CODEPAGE cdpTerm = NULL, cdpHost = NULL;
 
-      if ( pszHostCDP )
+      if( pszHostCDP )
          cdpHost = hb_cdpFind( pszHostCDP );
-      if ( ! cdpHost )
+      if( ! cdpHost )
          cdpHost = hb_vmCDP();
 
-      if ( pszTermCDP )
+      if( pszTermCDP )
          cdpTerm = hb_cdpFind( pszTermCDP );
 
       hb_sln_setCharTrans( cdpHost, cdpTerm, fBox );
@@ -964,12 +964,12 @@ static HB_BOOL hb_gt_sln_SetKeyCP( PHB_GT pGT, const char * pszTermCDP, const ch
    {
       PHB_CODEPAGE cdpTerm = NULL, cdpHost = NULL;
 
-      if ( pszHostCDP )
+      if( pszHostCDP )
          cdpHost = hb_cdpFind( pszHostCDP );
-      if ( ! cdpHost )
+      if( ! cdpHost )
          cdpHost = hb_vmCDP();
 
-      if ( pszTermCDP )
+      if( pszTermCDP )
          cdpTerm = hb_cdpFind( pszTermCDP );
 
       hb_sln_setKeyTrans( cdpHost, cdpTerm );

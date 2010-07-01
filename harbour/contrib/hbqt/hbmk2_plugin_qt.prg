@@ -255,7 +255,7 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
                            EXIT
                         ENDIF
                      ELSE
-                        IF ! qrc_bin_to_c( hbmk2, cTmp, cDst, hbmk2_FNameToSymbol( hbmk2_FNameNameGet( cSrc ) ) )
+                        IF ! qrc_bin_to_src( hbmk2, cTmp, cDst, hbmk2_FNameToSymbol( hbmk2_FNameNameGet( cSrc ) ) )
                            IF ! hbmk2[ "lIGNOREERROR" ]
                               FErase( cTmp )
                               cRetVal := "error"
@@ -378,7 +378,7 @@ PROCEDURE Main( cSrc, cDst )
       SWITCH Lower( cExt )
       CASE ".qrc"
          IF ( nError := hb_processRun( "rcc " + cSrc + " -binary -o " + cTmp ) ) == 0
-            IF ! qrc_bin_to_c( NIL, cTmp, cDst, cName )
+            IF ! qrc_bin_to_src( NIL, cTmp, cDst, cName )
                nError := 9
             ENDIF
          ELSE
@@ -417,11 +417,12 @@ STATIC FUNCTION hbmk2_OutErr( hbmk2, ... )
 
 #endif
 
-STATIC FUNCTION qrc_bin_to_c( hbmk2, cFileNameSrc, cFileNameDst, cName )
+STATIC FUNCTION qrc_bin_to_src( hbmk2, cFileNameSrc, cFileNameDst, cName )
    LOCAL cFile
    LOCAL cChar
    LOCAL cOutput
    LOCAL cLine
+   LOCAL cExt
 
    IF hb_FileExists( cFileNameSrc )
 
@@ -429,28 +430,58 @@ STATIC FUNCTION qrc_bin_to_c( hbmk2, cFileNameSrc, cFileNameDst, cName )
 
       IF ! Empty( cFile )
 
+         cName := "hbqtres_" + cName
+
+         hb_FNameSplit( cFileNameDst,,, @cExt )
+
          cOutput := "/* WARNING: Automatically generated source file. DO NOT EDIT! */" + hb_osNewLine()
          cOutput += hb_osNewLine()
-         cOutput += '#include "hbapi.h"' + hb_osNewLine()
-         cOutput += hb_osNewLine()
-         cOutput += "HB_FUNC( " + Upper( "hbqtres_" + cName ) + " )" + hb_osNewLine()
-         cOutput += "{" + hb_osNewLine()
-         cOutput += Chr( 9 ) + "static const char s_res_data[] =" + hb_osNewLine()
-         cOutput += Chr( 9 ) + "{" + hb_osNewLine()
 
-         cLine := Chr( 9 ) + Chr( 9 )
-         FOR EACH cChar IN cFile
-            cLine += "0x" + hb_NumToHex( Asc( cChar ) ) + ","
-            IF Len( cLine ) >= 74
-               cOutput += cLine + hb_osNewLine()
-               cLine := Chr( 9 ) + Chr( 9 )
-            ENDIF
-         NEXT
+         SWITCH Lower( cExt )
+         CASE ".c"
 
-         cOutput += Chr( 9 ) + "};" + hb_osNewLine()
-         cOutput += hb_osNewLine()
-         cOutput += Chr( 9 ) + "hb_retclen_const( s_res_data, sizeof( s_res_data ) );" + hb_osNewLine()
-         cOutput += "}" + hb_osNewLine()
+            cOutput += '#include "hbapi.h"' + hb_osNewLine()
+            cOutput += hb_osNewLine()
+            cOutput += "HB_FUNC( " + Upper( cName ) + " )" + hb_osNewLine()
+            cOutput += "{" + hb_osNewLine()
+            cOutput += Chr( 9 ) + "static const char s_res_data[] =" + hb_osNewLine()
+            cOutput += Chr( 9 ) + "{" + hb_osNewLine()
+
+            cOutput += Chr( 9 ) + Chr( 9 )
+            FOR EACH cChar IN cFile
+               cOutput += "0x" + hb_NumToHex( Asc( cChar ) ) + ","
+            NEXT
+
+            cOutput += hb_osNewLine()
+
+            cOutput += Chr( 9 ) + "};" + hb_osNewLine()
+            cOutput += hb_osNewLine()
+            cOutput += Chr( 9 ) + "hb_retclen_const( s_res_data, sizeof( s_res_data ) );" + hb_osNewLine()
+            cOutput += "}" + hb_osNewLine()
+
+            EXIT
+
+         CASE ".prg"
+
+            cOutput += "#pragma -km+" + hb_osNewLine()
+            cOutput += hb_osNewLine()
+            cOutput += "FUNCTION " + cName + "()" + hb_osNewLine()
+            cOutput += Chr( 9 ) + "RETURN ;" + hb_osNewLine()
+
+            cLine := Chr( 9 ) + Chr( 9 ) + "e" + Chr( 34 )
+            FOR EACH cChar IN cFile
+               cLine += "\x" + hb_NumToHex( Asc( cChar ), 2 )
+               IF Len( cLine ) >= 1024
+                  cOutput += cLine + Chr( 34 ) + " +;" + hb_osNewLine()
+                  cLine := Chr( 9 ) + Chr( 9 ) + "e" + Chr( 34 )
+               ENDIF
+            NEXT
+
+            cOutput += cLine + Chr( 34 ) + hb_osNewLine()
+
+            EXIT
+
+         ENDSWITCH
 
          IF hb_MemoWrit( cFileNameDst, cOutput )
             RETURN .T.
