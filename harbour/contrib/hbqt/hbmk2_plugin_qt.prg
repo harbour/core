@@ -336,6 +336,8 @@ PROCEDURE Main( cSrc, cDst )
 
    LOCAL cName
 
+   OutStd( "Test mode", hb_osNewLine() )
+
    IF cSrc != NIL .AND. ;
       cDst != NIL
 
@@ -391,7 +393,6 @@ STATIC FUNCTION qrc_bin_to_src( hbmk2, cFileNameSrc, cFileNameDst, cName )
    LOCAL cFile
    LOCAL cChar
    LOCAL cOutput
-   LOCAL cLine
    LOCAL cExt
 
    IF hb_FileExists( cFileNameSrc )
@@ -416,14 +417,11 @@ STATIC FUNCTION qrc_bin_to_src( hbmk2, cFileNameSrc, cFileNameDst, cName )
             cOutput += "{" + hb_osNewLine()
             cOutput += Chr( 9 ) + "static const char s_res_data[] =" + hb_osNewLine()
             cOutput += Chr( 9 ) + "{" + hb_osNewLine()
-
             cOutput += Chr( 9 ) + Chr( 9 )
             FOR EACH cChar IN cFile
                cOutput += "0x" + hb_NumToHex( Asc( cChar ) ) + ","
             NEXT
-
             cOutput += hb_osNewLine()
-
             cOutput += Chr( 9 ) + "};" + hb_osNewLine()
             cOutput += hb_osNewLine()
             cOutput += Chr( 9 ) + "hb_retclen_const( s_res_data, sizeof( s_res_data ) );" + hb_osNewLine()
@@ -436,18 +434,11 @@ STATIC FUNCTION qrc_bin_to_src( hbmk2, cFileNameSrc, cFileNameDst, cName )
             cOutput += "#pragma -km+" + hb_osNewLine()
             cOutput += hb_osNewLine()
             cOutput += "FUNCTION " + cName + "()" + hb_osNewLine()
-            cOutput += Chr( 9 ) + "RETURN ;" + hb_osNewLine()
-
-            cLine := Chr( 9 ) + Chr( 9 ) + "e" + Chr( 34 )
+            cOutput += Chr( 9 ) + "RETURN e" + Chr( 34 )
             FOR EACH cChar IN cFile
-               cLine += "\x" + hb_NumToHex( Asc( cChar ), 2 )
-               IF Len( cLine ) >= 1024
-                  cOutput += cLine + Chr( 34 ) + " +;" + hb_osNewLine()
-                  cLine := Chr( 9 ) + Chr( 9 ) + "e" + Chr( 34 )
-               ENDIF
+               cOutput += "\x" + hb_NumToHex( Asc( cChar ), 2 )
             NEXT
-
-            cOutput += cLine + Chr( 34 ) + hb_osNewLine()
+            cOutput += Chr( 34 ) + hb_osNewLine()
 
             EXIT
 

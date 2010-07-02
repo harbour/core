@@ -1873,7 +1873,7 @@ static void hb_pp_defineDel( PHB_PP_STATE pState, PHB_PP_TOKEN pToken )
 
 static PHB_PP_FILE hb_pp_FileNew( PHB_PP_STATE pState, const char * szFileName,
                                   HB_BOOL fSysFile, HB_BOOL * pfNested, FILE * file_in,
-                                  HB_BOOL fSearchPath, PHB_PP_OPEN_FUNC pOpenFunc )
+                                  HB_BOOL fSearchPath, PHB_PP_OPEN_FUNC pOpenFunc, HB_BOOL fBinary )
 {
    char szFileNameBuf[ HB_PATH_MAX ];
    PHB_PP_FILE pFile;
@@ -1915,7 +1915,7 @@ static PHB_PP_FILE hb_pp_FileNew( PHB_PP_STATE pState, const char * szFileName,
                }
             }
 
-            file_in = hb_fopen( szFileName, "r" );
+            file_in = hb_fopen( szFileName, fBinary ? "rb" : "r" );
             fNested = file_in == NULL && hb_fsMaxFilesError();
          }
 
@@ -1934,7 +1934,7 @@ static PHB_PP_FILE hb_pp_FileNew( PHB_PP_STATE pState, const char * szFileName,
                {
                   pFileName->szPath = pPath->szPath;
                   hb_fsFNameMerge( szFileNameBuf, pFileName );
-                  file_in = hb_fopen( szFileNameBuf, "r" );
+                  file_in = hb_fopen( szFileNameBuf, fBinary ? "rb" : "r" );
                   pPath = pPath->pNext;
                }
             }
@@ -2135,22 +2135,26 @@ static HB_BOOL hb_pp_pragmaStream( PHB_PP_STATE pState, PHB_PP_TOKEN pToken )
 }
 
 #define MAX_STREAM_SIZE       0xFFF0
+#define MAX_STREAM_SIZE_BIN   0xFFFF00
 
-static void hb_pp_pragmaStreamFile( PHB_PP_STATE pState, const char * szFileName )
+static void hb_pp_pragmaStreamFile( PHB_PP_STATE pState, const char * szFileName, HB_BOOL fBinary )
 {
    PHB_PP_FILE pFile = hb_pp_FileNew( pState, szFileName, HB_FALSE, NULL, NULL,
-                                      HB_TRUE, pState->pOpenFunc );
+                                      HB_TRUE, pState->pOpenFunc, fBinary );
    if( pFile )
    {
-      char * pBuffer = ( char * ) hb_xgrab( MAX_STREAM_SIZE + 1 );
+      char * pBuffer;
       HB_SIZE nSize;
+      HB_SIZE nMaxSize = pState->iStreamDump == HB_PP_STREAM_BINARY ? MAX_STREAM_SIZE_BIN : MAX_STREAM_SIZE;
+
+      pBuffer = ( char * ) hb_xgrab( nMaxSize + 1 );
 
       if( ! pState->pStreamBuffer )
          pState->pStreamBuffer = hb_membufNew();
 
-      nSize = ( HB_SIZE ) fread( pBuffer, sizeof( char ), MAX_STREAM_SIZE + 1, pFile->file_in );
+      nSize = ( HB_SIZE ) fread( pBuffer, sizeof( char ), nMaxSize + 1, pFile->file_in );
       hb_pp_FileFree( pState, pFile, pState->pCloseFunc );
-      if( nSize <= MAX_STREAM_SIZE )
+      if( nSize <= nMaxSize )
       {
          if( pState->iStreamDump == HB_PP_STREAM_C )
             hb_strRemEscSeq( pBuffer, &nSize );
@@ -2468,7 +2472,7 @@ static void hb_pp_pragmaNew( PHB_PP_STATE pState, PHB_PP_TOKEN pToken )
             if( !fError )
             {
                pState->iStreamDump = HB_PP_STREAM_PRG;
-               hb_pp_pragmaStreamFile( pState, pToken->pNext->value );
+               hb_pp_pragmaStreamFile( pState, pToken->pNext->value, HB_FALSE );
                pState->iStreamDump = HB_PP_STREAM_OFF;
             }
          }
@@ -2483,7 +2487,22 @@ static void hb_pp_pragmaNew( PHB_PP_STATE pState, PHB_PP_TOKEN pToken )
             if( !fError )
             {
                pState->iStreamDump = HB_PP_STREAM_C;
-               hb_pp_pragmaStreamFile( pState, pToken->pNext->value );
+               hb_pp_pragmaStreamFile( pState, pToken->pNext->value, HB_FALSE );
+               pState->iStreamDump = HB_PP_STREAM_OFF;
+            }
+         }
+         else
+            fError = HB_TRUE;
+      }
+      else if( hb_pp_tokenValueCmp( pToken, "__binarystreaminclude", HB_PP_CMP_DBASE ) )
+      {
+         if( pToken->pNext && HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_STRING )
+         {
+            fError = hb_pp_pragmaStream( pState, pToken->pNext->pNext );
+            if( !fError )
+            {
+               pState->iStreamDump = HB_PP_STREAM_BINARY;
+               hb_pp_pragmaStreamFile( pState, pToken->pNext->value, HB_TRUE );
                pState->iStreamDump = HB_PP_STREAM_OFF;
             }
          }
@@ -4934,7 +4953,7 @@ static void hb_pp_includeFile( PHB_PP_STATE pState, const char * szFileName, HB_
    {
       HB_BOOL fNested = HB_FALSE;
       PHB_PP_FILE pFile = hb_pp_FileNew( pState, szFileName, fSysFile, &fNested,
-                                         NULL, HB_TRUE, pState->pOpenFunc );
+                                         NULL, HB_TRUE, pState->pOpenFunc, HB_FALSE );
       if( pFile )
       {
 #if defined( HB_PP_STRICT_LINEINFO_TOKEN )
@@ -5550,7 +5569,7 @@ void hb_pp_readRules( PHB_PP_STATE pState, const char * szRulesFile )
    hb_xfree( pFileName );
 
    pState->pFile = hb_pp_FileNew( pState, szFileName, HB_FALSE, NULL, NULL,
-                                  HB_TRUE, pState->pOpenFunc );
+                                  HB_TRUE, pState->pOpenFunc, HB_FALSE );
    if( !pState->pFile )
    {
       pState->pFile = pFile;
@@ -5601,7 +5620,7 @@ HB_BOOL hb_pp_inFile( PHB_PP_STATE pState, const char * szFileName,
    pState->fError = HB_FALSE;
 
    pState->pFile = hb_pp_FileNew( pState, ( char * ) szFileName, HB_FALSE, NULL,
-                                  file_in, fSearchPath, NULL );
+                                  file_in, fSearchPath, NULL, HB_FALSE );
    if( pState->pFile )
    {
       pState->iFiles++;

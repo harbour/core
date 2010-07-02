@@ -72,6 +72,7 @@ HB_EXTERN_BEGIN
 #define HB_PP_STREAM_PRG      4 /* TEXT/ENDTEXT lines joined with LF */
 #define HB_PP_STREAM_C        5 /* TEXT/ENDTEXT lines joined and ESC seq processed */
 #define HB_PP_STREAM_INLINE_C 6 /* hb_inLIne() {...} data, should not be preprocessed */
+#define HB_PP_STREAM_BINARY   7 /* __binarystreaminclude */
 
 /* hb_inLine() states */
 #define HB_PP_INLINE_OFF      0
