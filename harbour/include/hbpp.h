@@ -390,8 +390,8 @@ typedef struct _HB_PP_TOKEN
    struct _HB_PP_TOKEN * pMTokens;  /* restrict or optional marker token(s) */
 
    const char * value;              /* token value */
-   HB_USHORT len;                   /* token value length */
-   HB_USHORT spaces;                /* leading spaces for stringify */
+   HB_SIZE   len;                   /* token value length */
+   HB_SIZE   spaces;                /* leading spaces for stringify */
    HB_USHORT type;                  /* token type, see HB_PP_TOKEN_* */
    HB_USHORT index;                 /* index to match marker or 0 */
 }
@@ -530,8 +530,8 @@ HB_PP_OPERATOR, * PHB_PP_OPERATOR;
 typedef struct
 {
    char *   pBufPtr;
-   HB_SIZE  ulLen;
-   HB_SIZE  ulAllocated;
+   HB_SIZE  nLen;
+   HB_SIZE  nAllocated;
 }
 HB_MEM_BUFFER, * PHB_MEM_BUFFER;
 
@@ -548,7 +548,7 @@ typedef struct _HB_PP_FILE
    HB_BOOL  fEof;                  /* the end of file reached */
 
    const char * pLineBuf;          /* buffer for parsing external lines */
-   HB_SIZE  ulLineBufLen;          /* size of external line buffer */
+   HB_SIZE  nLineBufLen;          /* size of external line buffer */
 
    struct _HB_PP_FILE * pPrev;     /* previous file, the one which included this file */
 }
@@ -599,9 +599,9 @@ typedef struct
 
    /* used to divide line per tokens and tokens manipulations */
    PHB_MEM_BUFFER pBuffer;          /* buffer for input and output line */
-   int       iSpaces;               /* leading spaces for next token */
-   int       iSpacesNL;             /* leading spaces ';' token (fCanNextLine) if it will not be line concatenator */
-   int       iSpacesMin;            /* minimal number of leading spaces for next token */
+   HB_SIZE   nSpaces;               /* leading spaces for next token */
+   HB_SIZE   nSpacesNL;             /* leading spaces ';' token (fCanNextLine) if it will not be line concatenator */
+   HB_SIZE   nSpacesMin;            /* minimal number of leading spaces for next token */
    HB_USHORT usLastType;            /* last token type */
    HB_BOOL   fCanNextLine;          /* ';' token found and we do not know yet if it's command separator or line concatenator */
    HB_BOOL   fDirective;            /* # directives is parsed */
@@ -659,7 +659,7 @@ extern void    hb_pp_setStdRules( PHB_PP_STATE pState );
 extern void    hb_pp_setStdBase( PHB_PP_STATE pState );
 extern void    hb_pp_setStream( PHB_PP_STATE pState, int iMode );
 extern void    hb_pp_addSearchPath( PHB_PP_STATE pState, const char * szPath, HB_BOOL fReplace );
-extern HB_BOOL hb_pp_inBuffer( PHB_PP_STATE pState, const char * pBuffer, HB_SIZE ulLen );
+extern HB_BOOL hb_pp_inBuffer( PHB_PP_STATE pState, const char * pBuffer, HB_SIZE nLen );
 extern HB_BOOL hb_pp_inFile( PHB_PP_STATE pState, const char * szFileName, HB_BOOL fSearchPath, FILE * file_in, HB_BOOL fError );
 extern HB_BOOL hb_pp_outFile( PHB_PP_STATE pState, const char * szOutFileName, FILE * file_out );
 extern HB_BOOL hb_pp_traceFile( PHB_PP_STATE pState, const char * szTraceFileName, FILE * file_trace );
@@ -669,8 +669,8 @@ extern HB_BOOL hb_pp_eof( PHB_PP_STATE pState );
 extern int     hb_pp_lineTot( PHB_PP_STATE pState );
 extern char *  hb_pp_outFileName( PHB_PP_STATE pState );
 extern char *  hb_pp_traceFileName( PHB_PP_STATE pState );
-extern char *  hb_pp_nextLine( PHB_PP_STATE pState, HB_SIZE * pulLen );
-extern char *  hb_pp_parseLine( PHB_PP_STATE pState, const char * pLine, HB_SIZE * pulLen );
+extern char *  hb_pp_nextLine( PHB_PP_STATE pState, HB_SIZE * pnLen );
+extern char *  hb_pp_parseLine( PHB_PP_STATE pState, const char * pLine, HB_SIZE * pnLen );
 extern void    hb_pp_addDefine( PHB_PP_STATE pState, const char * szDefName, const char * szDefValue );
 extern void    hb_pp_delDefine( PHB_PP_STATE pState, const char * szDefName );
 extern HB_BOOL hb_pp_lasterror( PHB_PP_STATE pState );
@@ -680,7 +680,7 @@ extern HB_BOOL hb_pp_eof( PHB_PP_STATE pState );
 extern void    hb_pp_tokenUpper( PHB_PP_TOKEN pToken );
 extern void    hb_pp_tokenToString( PHB_PP_STATE pState, PHB_PP_TOKEN pToken );
 extern char *  hb_pp_tokenBlockString( PHB_PP_STATE pState, PHB_PP_TOKEN pToken, int * piType, int * piLen );
-extern PHB_PP_STATE hb_pp_lexNew( const char * pString, HB_SIZE ulLen );
+extern PHB_PP_STATE hb_pp_lexNew( const char * pString, HB_SIZE nLen );
 extern PHB_PP_TOKEN hb_pp_lexGet( PHB_PP_STATE pState );
 extern PHB_PP_TOKEN hb_pp_tokenGet( PHB_PP_STATE pState );
 extern HB_BOOL hb_pp_tokenNextExp( PHB_PP_TOKEN * pTokenPtr );

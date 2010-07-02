@@ -93,7 +93,7 @@ static void hb_pp_writeToken( FILE * fout, PHB_PP_TOKEN pToken,
       fprintf( fout, ", \"%s\", %*s %2d,%2d, 0x%04x, %d }%s\n",
                pToken->value,
                i < 0 ? 0 : i, "",
-               pToken->len, pToken->spaces,
+               ( int ) pToken->len, ( int ) pToken->spaces,
                pToken->type | HB_PP_TOKEN_STATIC | HB_PP_TOKEN_PREDEFINED,
                pToken->index,
                fLast && !pToken->pNext && iOptional == 0 ? "" : "," );
@@ -260,9 +260,9 @@ static void hb_pp_undefCompilerRules( PHB_PP_STATE pState )
 static int hb_pp_preprocesfile( PHB_PP_STATE pState, const char * szRuleFile )
 {
    int iResult = 0;
-   HB_SIZE ulLen;
+   HB_SIZE nLen;
 
-   while( hb_pp_nextLine( pState, &ulLen ) != NULL && ulLen ) {};
+   while( hb_pp_nextLine( pState, &nLen ) != NULL && nLen ) {};
 
    if( szRuleFile )
    {

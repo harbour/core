@@ -100,8 +100,8 @@
 typedef struct
 {
    const char *   value;      /* keyword name */
-   int            minlen;     /* minimal length */
-   int            maxlen;     /* maximal length */
+   HB_SIZE        minlen;     /* minimal length */
+   HB_SIZE        maxlen;     /* maximal length */
    int            type;       /* terminal symbol code */
 }
 HB_LEX_KEY;
@@ -221,7 +221,7 @@ static int hb_comp_asType( PHB_PP_TOKEN pToken, HB_BOOL fArray )
    if( pToken && HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_KEYWORD )
    {
       const HB_LEX_KEY * pKey = s_typetable;
-      int i = sizeof( s_typetable ) / sizeof( HB_LEX_KEY );
+      int i = HB_SIZEOFARRAY( s_typetable );
 
       hb_pp_tokenUpper( pToken );
       do
@@ -239,7 +239,7 @@ static int hb_comp_asType( PHB_PP_TOKEN pToken, HB_BOOL fArray )
 static int hb_comp_keywordType( PHB_PP_TOKEN pToken )
 {
    const HB_LEX_KEY * pKey = s_keytable;
-   int i = sizeof( s_keytable ) / sizeof( HB_LEX_KEY );
+   int i = HB_SIZEOFARRAY( s_keytable );
 
    do
    {

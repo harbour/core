@@ -242,6 +242,28 @@ HB_FUNC( ADSUNLOCKRECORD )
    hb_retl( pArea && AdsUnlockRecord( pArea->hTable, ( UNSIGNED32 ) hb_parnl( 1 ) ) == AE_SUCCESS );
 }
 
+HB_FUNC( ADSGETMEMODATATYPE )
+{
+   UNSIGNED8 * pszFieldName = ( UNSIGNED8 * ) hb_parc( 1 );
+
+   if( !pszFieldName )
+      pszFieldName = ADSFIELD( hb_parni( 1 ) );
+
+   if( pszFieldName )
+   {
+      ADSAREAP pArea = hb_adsGetWorkAreaPointer();
+      UNSIGNED16 u16Type = 0;
+
+      if( pArea && AdsGetMemoDataType( pArea->hTable, pszFieldName,
+                                       &u16Type ) == AE_SUCCESS )
+         hb_retni( u16Type );
+      else
+         hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, HB_ERR_FUNCNAME );
+   }
+   else
+      hb_errRT_DBCMD( EG_ARG, 1014, NULL, HB_ERR_FUNCNAME );
+}
+
 HB_FUNC( ADSGETTABLECONTYPE )
 {
    UNSIGNED16 pusConnectType = 0;

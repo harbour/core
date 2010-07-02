@@ -229,20 +229,20 @@ HB_FUNC( __PP_ADDRULE )
    if( pState )
    {
       const char * szText = hb_parc( 2 );
-      HB_SIZE ulLen = hb_parclen( 2 );
+      HB_SIZE nLen = hb_parclen( 2 );
 
       if( szText )
       {
-         while( ulLen && ( szText[ 0 ] == ' ' || szText[ 0 ] == '\t' ) )
+         while( nLen && ( szText[ 0 ] == ' ' || szText[ 0 ] == '\t' ) )
          {
             ++szText;
-            --ulLen;
+            --nLen;
          }
       }
 
-      if( szText && ulLen && szText[ 0 ] == '#' )
+      if( szText && nLen && szText[ 0 ] == '#' )
       {
-         hb_pp_parseLine( pState, szText, &ulLen );
+         hb_pp_parseLine( pState, szText, &nLen );
 
          /* probably for parsing #included files the old code was making
             sth like that */
@@ -270,12 +270,12 @@ HB_FUNC( __PP_PROCESS )
 
    if( pState )
    {
-      HB_SIZE ulLen = hb_parclen( 2 );
+      HB_SIZE nLen = hb_parclen( 2 );
 
-      if( ulLen )
+      if( nLen )
       {
-         char * szText = hb_pp_parseLine( pState, hb_parc( 2 ), &ulLen );
-         hb_retclen( szText, ulLen );
+         char * szText = hb_pp_parseLine( pState, hb_parc( 2 ), &nLen );
+         hb_retclen( szText, nLen );
          return;
       }
    }
