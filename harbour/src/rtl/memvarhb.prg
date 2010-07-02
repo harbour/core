@@ -59,7 +59,7 @@
  * 0xC0, 'H', 'B', 'V' followed two-byte version number in Little Endian order.
  * Corresponding magic(5) rule:
  *
- *    0       string          \xc0HBV         Harbour memory file
+ *    0       string          \xc0HBV         Harbour variable dump file
  *    >4      leshort         x               version %d
  *
  * Until such time that the serialized format changes, and handling of

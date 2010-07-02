@@ -277,6 +277,20 @@ HB_FUNC( QT_QRESOURCE_REGISTERRESOURCE )
 }
 
 /*
+ * bool registerResource ( const uchar * rccData, const QString & mapRoot = QString() )
+ */
+HB_FUNC( QT_QRESOURCE_REGISTERRESOURCE_1 )
+{
+   QResource * p = hbqt_par_QResource( 1 );
+   if( p )
+      hb_retl( ( p )->registerResource( hbqt_par_uchar( 2 ), hbqt_par_QString( 3 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRESOURCE_REGISTERRESOURCE_1 FP=hb_retl( ( p )->registerResource( hbqt_par_uchar( 2 ), hbqt_par_QString( 3 ) ) ); p is NULL" ) );
+   }
+}
+
+/*
  * QStringList searchPaths ()
  */
 HB_FUNC( QT_QRESOURCE_SEARCHPATHS )
@@ -301,6 +315,20 @@ HB_FUNC( QT_QRESOURCE_UNREGISTERRESOURCE )
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRESOURCE_UNREGISTERRESOURCE FP=hb_retl( ( p )->unregisterResource( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ) ); p is NULL" ) );
+   }
+}
+
+/*
+ * bool unregisterResource ( const uchar * rccData, const QString & mapRoot = QString() )
+ */
+HB_FUNC( QT_QRESOURCE_UNREGISTERRESOURCE_1 )
+{
+   QResource * p = hbqt_par_QResource( 1 );
+   if( p )
+      hb_retl( ( p )->unregisterResource( hbqt_par_uchar( 2 ), hbqt_par_QString( 3 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRESOURCE_UNREGISTERRESOURCE_1 FP=hb_retl( ( p )->unregisterResource( hbqt_par_uchar( 2 ), hbqt_par_QString( 3 ) ) ); p is NULL" ) );
    }
 }
 

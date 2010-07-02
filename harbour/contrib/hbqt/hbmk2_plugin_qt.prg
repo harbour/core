@@ -77,15 +77,9 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
       NEXT
 
       FOR EACH cSrc IN hbmk2[ "vars" ][ "aQRC_Src" ]
-#ifdef __OWN_QRC_GENERATOR__
          cDst := hbmk2_FNameDirExtSet( "rcc_" + hbmk2_FNameNameGet( cSrc ), hbmk2[ "cWorkDir" ], ".c" )
          AAdd( hbmk2[ "vars" ][ "aQRC_Dst" ], cDst )
          hbmk2_AddInput_C( hbmk2, cDst )
-#else
-         cDst := hbmk2_FNameDirExtSet( "rcc_" + hbmk2_FNameNameGet( cSrc ), hbmk2[ "cWorkDir" ], ".cpp" )
-         AAdd( hbmk2[ "vars" ][ "aQRC_Dst" ], cDst )
-         hbmk2_AddInput_CPP( hbmk2, cDst )
-#endif
       NEXT
 
       EXIT
@@ -228,7 +222,6 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
 
                IF lBuildIt
 
-#ifdef __OWN_QRC_GENERATOR__
                   FClose( hb_FTempCreateEx( @cTmp ) )
 
                   cCommand := cRCC_BIN +;
@@ -265,29 +258,6 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
                      ENDIF
                   ENDIF
                   FErase( cTmp )
-#else
-                  cCommand := cRCC_BIN +;
-                              " " + hbmk2_FNameEscape( hbmk2_PathSepToTarget( hbmk2, cSrc ), hbmk2[ "nCmd_Esc" ], hbmk2[ "nCmd_FNF" ] ) +;
-                              " -o " + hbmk2_FNameEscape( hbmk2_PathSepToTarget( hbmk2, cDst ), hbmk2[ "nCmd_Esc" ], hbmk2[ "nCmd_FNF" ] )
-
-                  IF hbmk2[ "lTRACE" ]
-                     IF ! hbmk2[ "lQUIET" ]
-                        hbmk2_OutStd( hbmk2, I_( "'rcc' command:" ) )
-                     ENDIF
-                     hbmk2_OutStdRaw( cCommand )
-                  ENDIF
-
-                  IF ! hbmk2[ "lDONTEXEC" ] .AND. ( nError := hb_processRun( cCommand ) ) != 0
-                     hbmk2_OutErr( hbmk2, hb_StrFormat( I_( "Error: Running 'rcc' executable. %1$s" ), hb_ntos( nError ) ) )
-                     IF ! hbmk2[ "lQUIET" ]
-                        hbmk2_OutErrRaw( cCommand )
-                     ENDIF
-                     IF ! hbmk2[ "lIGNOREERROR" ]
-                        cRetVal := "error"
-                        EXIT
-                     ENDIF
-                  ENDIF
-#endif
                ENDIF
             NEXT
          ENDIF

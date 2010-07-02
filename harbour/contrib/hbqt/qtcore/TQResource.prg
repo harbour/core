@@ -77,8 +77,10 @@ CREATE CLASS QResource INHERIT HbQtObjectHandler
    METHOD  setLocale( pLocale )
    METHOD  size()
    METHOD  registerResource( cRccFileName, cMapRoot )
+   METHOD  registerResource_1( pRccData, cMapRoot )
    METHOD  searchPaths()
    METHOD  unregisterResource( cRccFileName, cMapRoot )
+   METHOD  unregisterResource_1( pRccData, cMapRoot )
 
    ENDCLASS
 
@@ -132,10 +134,18 @@ METHOD QResource:registerResource( cRccFileName, cMapRoot )
    RETURN Qt_QResource_registerResource( ::pPtr, cRccFileName, cMapRoot )
 
 
+METHOD QResource:registerResource_1( pRccData, cMapRoot )
+   RETURN Qt_QResource_registerResource_1( ::pPtr, hbqt_ptr( pRccData ), cMapRoot )
+
+
 METHOD QResource:searchPaths()
    RETURN Qt_QResource_searchPaths( ::pPtr )
 
 
 METHOD QResource:unregisterResource( cRccFileName, cMapRoot )
    RETURN Qt_QResource_unregisterResource( ::pPtr, cRccFileName, cMapRoot )
+
+
+METHOD QResource:unregisterResource_1( pRccData, cMapRoot )
+   RETURN Qt_QResource_unregisterResource_1( ::pPtr, hbqt_ptr( pRccData ), cMapRoot )
 

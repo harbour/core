@@ -402,9 +402,9 @@ extern void * hbqt_pPtrFromItem( PHB_ITEM pObj );
 #define hbqt_par_HBSlots( n )                       ( ( HBSlots                     * ) hbqt_gcpointer( n ) )
 
 #define hbqt_par_QString( n )                       ( ( QString ) hb_parcx( n ) )
+#define hbqt_par_uchar( n )                         ( ( uchar * ) hb_parcx( n ) )
 #define hbqt_par_QRgb( n )                          ( hb_parnint( n ) )
 #define hbqt_par_Bool( n )                          ( hb_parl( n ) )
 #define hbqt_par_char( n )                          ( hb_parcx( n ) )
 
 #endif /* __HBQT_H */
-

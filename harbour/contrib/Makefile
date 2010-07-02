@@ -7,9 +7,7 @@ ROOT := ../
 # contribs _without_ external dependencies
 DIRS := \
    gtwvg \
-   hbblink \
    hbbz2 \
-   hbclipsm \
    hbcomm \
    hbct \
    hbfoxpro \
@@ -28,8 +26,12 @@ DIRS := \
    hbwin \
    hbxpp \
    hbziparc \
-   rddbmcdx \
    xhb \
+
+# under testing in makefile.prg
+#  hbblink \
+#  hbclipsm \
+#  rddbmcdx \
 
 # contribs _with_ external dependencies
 DIRS += \

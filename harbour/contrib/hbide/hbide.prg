@@ -92,6 +92,7 @@ REQUEST DBFNTX
 
 PROCEDURE Main( ... )
    LOCAL oIde
+   LOCAL oResource
 
    hbide_request()
 
@@ -107,11 +108,11 @@ PROCEDURE Main( ... )
       hb_setEnv( "HB_IDE_INSTALL", cBse )
    #endif
 
-
    SET CENTURY ON
    SET EPOCH TO 1970
 
-   /* TODO: activate */ /* hbqtres_HbIde() */
+   oResource := QResource():New()
+   oResource:registerResource_1( hbqtres_HbIde(), ":/resource" )
 
    oIde := HbIde():new( hb_aParams() ):create()
    oIde:destroy()

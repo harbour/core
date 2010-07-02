@@ -998,7 +998,11 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_, lList, fB
                aA[ PRT_BODY ] := 'hb_parnd( ' + cHBIdx + ' )'
                aA[ PRT_DOC  ] := 'n' + cDocNM
 
-            CASE aA[ PRT_CAST ] == 'uchar'
+            CASE aA[ PRT_CAST ] == 'uchar' .and. aA[ PRT_L_FAR ] .and. !( aA[ PRT_L_CONST ] )
+               aA[ PRT_BODY ] := '( char * ) hb_parc( ' + cHBIdx + ' )'
+               aA[ PRT_DOC  ] := 'c' + cDocNM
+
+            CASE aA[ PRT_CAST ] == 'uchar' .and. !( aA[ PRT_L_FAR ] ) .and. !( aA[ PRT_L_CONST ] )
                aA[ PRT_BODY ] := '( char ) hb_parni( ' + cHBIdx + ' )'
                aA[ PRT_DOC  ] := 'n' + cDocNM
 
@@ -1568,9 +1572,9 @@ STATIC FUNCTION DispLogo()
    LOCAL cHlp := ''
 
    cHlp += ''                                                        + s_NewLine
-   cHlp += "Harbour Source Gennerator for QT " + HBRawVersion()      + s_NewLine
+   cHlp += "Harbour Source Generator for QT " + HBRawVersion()       + s_NewLine
    cHlp += "Copyright (c) 2009, Pritpal Bedi <pritpal@vouchcac.com>" + s_NewLine
-   cHlp += "http://harbour-project.org/"                         + s_NewLine
+   cHlp += "http://harbour-project.org/"                             + s_NewLine
    cHlp += ''                                                        + s_NewLine
 
    OutStd( cHlp )

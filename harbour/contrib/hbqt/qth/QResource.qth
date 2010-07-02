@@ -90,10 +90,10 @@ void setLocale ( const QLocale & locale )
 qint64 size () const
 
 bool registerResource ( const QString & rccFileName, const QString & mapRoot = QString() )
-//bool registerResource ( const uchar * rccData, const QString & mapRoot = QString() )
+bool registerResource ( const uchar * rccData, const QString & mapRoot = QString() )
 QStringList searchPaths ()
 bool unregisterResource ( const QString & rccFileName, const QString & mapRoot = QString() )
-//bool unregisterResource ( const uchar * rccData, const QString & mapRoot = QString() )
+bool unregisterResource ( const uchar * rccData, const QString & mapRoot = QString() )
 </PROTOS>
 
 <SLOTS>

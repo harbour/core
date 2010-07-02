@@ -2298,7 +2298,6 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
            FN_ExtGet( cParamL ) == ".cc" .OR. ;
            FN_ExtGet( cParamL ) == ".cxx" .OR. ;
            FN_ExtGet( cParamL ) == ".cx" .OR. ;
-           FN_ExtGet( cParamL ) == ".m" .OR. ;
            _EXT_IS_UPPER( cParam, ".C" )
 
          FOR EACH cParam IN FN_Expand( PathProc( PathSepToSelf( cParam ), aParam[ _PAR_cFileName ] ), Empty( aParam[ _PAR_cFileName ] ) )
@@ -2306,7 +2305,8 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             DEFAULT hbmk[ _HBMK_cFIRST ] TO cParam
          NEXT
 
-      CASE FN_ExtGet( cParamL ) == ".c"
+      CASE FN_ExtGet( cParamL ) == ".c" .OR. ;
+           FN_ExtGet( cParamL ) == ".m"
 
          FOR EACH cParam IN FN_Expand( PathProc( PathSepToSelf( cParam ), aParam[ _PAR_cFileName ] ), Empty( aParam[ _PAR_cFileName ] ) )
             AAdd( hbmk[ _HBMK_aC ], cParam )
@@ -5866,8 +5866,8 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, lSystemHeader, tT
             http://www.pcre.org/pcre.txt */
 
       IF s_hRegexInclude == NIL
-         /* TODO: Add support for #import directive of Objective C */
-         s_hRegexInclude := hb_regexComp( '^[[:blank:]]*#[[:blank:]]*include[[:blank:]]*(\".+?\"|<.+?>)', .F. /* lCaseSensitive */, .T. /* lNewLine */ )
+         /* NOTE: #import is Objective C specific directive */
+         s_hRegexInclude := hb_regexComp( '^[[:blank:]]*#[[:blank:]]*(include|import)[[:blank:]]*(\".+?\"|<.+?>)', .F. /* lCaseSensitive */, .T. /* lNewLine */ )
          IF Empty( s_hRegexInclude )
             hbmk_OutErr( hbmk, I_( "Internal Error: Regular expression engine missing or unsupported. Please check your Harbour build settings." ) )
             s_hRegexInclude := {} /* To show the error only once by setting to non-NIL empty value */
@@ -5878,7 +5878,7 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, lSystemHeader, tT
 
          FOR EACH tmp IN hb_regexAll( s_hRegexInclude, cFile, NIL /* lCaseSensitive */, NIL /* lNewLine */, NIL, NIL /* nGetMatch */, .T. /* lOnlyMatch */ )
 
-            cHeader := tmp[ 2 ] /* First match marker */
+            cHeader := tmp[ 3 ] /* First match marker */
             lSystemHeader := ( Left( cHeader, 1 ) == "<" )
             cHeader := SubStr( cHeader, 2, Len( cHeader ) - 2 )
 
@@ -7452,10 +7452,10 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
                     FN_ExtGet( cItemL ) == ".cc" .OR. ;
                     FN_ExtGet( cItemL ) == ".cxx" .OR. ;
                     FN_ExtGet( cItemL ) == ".cx" .OR. ;
-                    FN_ExtGet( cItemL ) == ".m" .OR. ;
                     _EXT_IS_UPPER( cItem, ".C" )
                   AAddNew( hbmk[ _HBMK_aCPP ], cItem )
-               CASE FN_ExtGet( cItemL ) == ".c"
+               CASE FN_ExtGet( cItemL ) == ".c" .OR. ;
+                    FN_ExtGet( cItemL ) == ".m"
                   AAddNew( hbmk[ _HBMK_aC ], cItem )
                CASE FN_ExtGet( cItemL ) == ".d"
                   deplst_read( hbmk, hbmk[ _HBMK_hDEPTS ], cItem )
@@ -8182,7 +8182,6 @@ STATIC FUNCTION getFirstFunc( hbmk, cFile )
              Lower( cExt ) == ".cc" .OR. ;
              Lower( cExt ) == ".cxx" .OR. ;
              Lower( cExt ) == ".cx" .OR. ;
-             Lower( cExt ) == ".m" .OR. ;
              _EXT_IS_UPPER( cExt, ".C" )
          /* do nothing */
       ELSEIF ! Empty( cExecNM := FindInPath( hbmk[ _HBMK_cCCPREFIX ] + "nm" ) )

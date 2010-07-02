@@ -62,7 +62,7 @@
 #include "hbinit.h"
 #include "hbdate.h"
 
-#if defined( HB_OS_UNIX ) && !defined( __WATCOMC__) /* || defined( __DJGPP__ ) */
+#if defined( HB_OS_UNIX ) && !defined( __WATCOMC__ ) /* || defined( __DJGPP__ ) */
 #  if !defined( HB_HAS_TERMIOS )
 #     define HB_HAS_TERMIOS
 #  endif

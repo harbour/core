@@ -152,6 +152,16 @@ PROCEDURE Main( ... )
 
    IF s_lTest
       OutStd( "! New contrib make orchestrator test run." + iif( AScan( aParams, "clean" ) > 0, " CLEAN", "" ) + iif( AScan( aParams, "install" ) > 0, " INSTALL", "" ) + hb_osNewLine() )
+
+      /* testing with a limited set of contribs */
+      aLibsPass1 := {;
+         "hbblink/hbblink.hbp"        ,;
+         "hbclipsm/hbclipsm.hbp"      ,;
+         "rddbmcdx/hbbmcdx.hbp"       }
+      aLibsPass2 := {}
+      aLibsPass3 := {}
+      aUtils := {;
+         "hbnetio/utils/netiosrv.hbp" }
    ENDIF
 
    IF Empty( GetEnv( "HB_PLATFORM" ) ) .OR. ;
@@ -278,7 +288,7 @@ STATIC FUNCTION call_hbmk2( cProject, cTargetDir, cOptions, lDyn )
 
    /* TOFIX: Add -implib option. It collides with static lib so needs to be resolved. */
 
-   nErrorLevel := mk_hb_processRun( GetEnv( "HB_HOST_BIN_DIR" ) + _PS_ + "hbmk2" +;
+								   nErrorLevel := mk_hb_processRun( GetEnv( "HB_HOST_BIN_DIR" ) + _PS_ + "hbmk2" +;
                                     " -quiet -lang=en -width=1000 -q0" + cOptions +;
                                     " " + cProject +;
                                     iif( lDyn, " -hbdyn -nohblib- " + FN_ExtSet( cProject, ".hbc" ), "" ) +;
