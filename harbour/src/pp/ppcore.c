@@ -1873,7 +1873,8 @@ static void hb_pp_defineDel( PHB_PP_STATE pState, PHB_PP_TOKEN pToken )
 
 static PHB_PP_FILE hb_pp_FileNew( PHB_PP_STATE pState, const char * szFileName,
                                   HB_BOOL fSysFile, HB_BOOL * pfNested, FILE * file_in,
-                                  HB_BOOL fSearchPath, PHB_PP_OPEN_FUNC pOpenFunc, HB_BOOL fBinary )
+                                  HB_BOOL fSearchPath, PHB_PP_OPEN_FUNC pOpenFunc,
+                                  HB_BOOL fBinary )
 {
    char szFileNameBuf[ HB_PATH_MAX ];
    PHB_PP_FILE pFile;
@@ -2134,8 +2135,7 @@ static HB_BOOL hb_pp_pragmaStream( PHB_PP_STATE pState, PHB_PP_TOKEN pToken )
    return fError;
 }
 
-#define MAX_STREAM_SIZE       0xFFF0
-#define MAX_STREAM_SIZE_BIN   0xFFFF00
+#define MAX_STREAM_SIZE       0x1000000
 
 static void hb_pp_pragmaStreamFile( PHB_PP_STATE pState, const char * szFileName, HB_BOOL fBinary )
 {
@@ -2143,22 +2143,26 @@ static void hb_pp_pragmaStreamFile( PHB_PP_STATE pState, const char * szFileName
                                       HB_TRUE, pState->pOpenFunc, fBinary );
    if( pFile )
    {
-      char * pBuffer;
       HB_SIZE nSize;
-      HB_SIZE nMaxSize = pState->iStreamDump == HB_PP_STREAM_BINARY ? MAX_STREAM_SIZE_BIN : MAX_STREAM_SIZE;
 
-      pBuffer = ( char * ) hb_xgrab( nMaxSize + 1 );
+      (void) fseek( pFile->file_in, 0L, SEEK_END );
+      nSize = ftell( pFile->file_in );
+      (void) fseek( pFile->file_in, 0L, SEEK_SET );
 
-      if( ! pState->pStreamBuffer )
-         pState->pStreamBuffer = hb_membufNew();
-
-      nSize = ( HB_SIZE ) fread( pBuffer, sizeof( char ), nMaxSize + 1, pFile->file_in );
-      hb_pp_FileFree( pState, pFile, pState->pCloseFunc );
-      if( nSize <= nMaxSize )
+      if( nSize <= MAX_STREAM_SIZE )
       {
+         char * pBuffer = ( char * ) hb_xgrab( nSize );
+         nSize = ( HB_SIZE ) fread( pBuffer, sizeof( char ), nSize, pFile->file_in );
+         hb_pp_FileFree( pState, pFile, pState->pCloseFunc );
+
          if( pState->iStreamDump == HB_PP_STREAM_C )
             hb_strRemEscSeq( pBuffer, &nSize );
+
+         if( ! pState->pStreamBuffer )
+            pState->pStreamBuffer = hb_membufNew();
          hb_membufAddData( pState->pStreamBuffer, pBuffer, nSize );
+         hb_xfree( pBuffer );
+
          if( pState->pFuncOut )
             hb_pp_tokenAddStreamFunc( pState, pState->pFuncOut,
                                       hb_membufPtr( pState->pStreamBuffer ),
@@ -2181,7 +2185,6 @@ static void hb_pp_pragmaStreamFile( PHB_PP_STATE pState, const char * szFileName
       }
       else
          hb_pp_error( pState, 'F', HB_PP_ERR_FILE_TOO_LONG, szFileName );
-      hb_xfree( pBuffer );
    }
    else
       hb_pp_error( pState, 'F', HB_PP_ERR_CANNOT_OPEN_FILE, szFileName );
