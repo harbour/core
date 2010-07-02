@@ -19,9 +19,9 @@
 FUNCTION hbmk2_plugin_qt( hbmk2 )
    LOCAL cRetVal := ""
 
-   LOCAL cMOC_BIN
-   LOCAL cUIC_BIN
    LOCAL cRCC_BIN
+   LOCAL cUIC_BIN
+   LOCAL cMOC_BIN
 
    LOCAL cSrc
    LOCAL cDst
@@ -29,6 +29,7 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
    LOCAL tDst
 
    LOCAL cTmp
+   LOCAL cPRG
 
    LOCAL cCommand
    LOCAL nError
@@ -39,35 +40,38 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
 
       /* Gather input parameters */
 
-      hbmk2[ "vars" ][ "aMOC_Src" ] := {}
-      hbmk2[ "vars" ][ "aUIC_Src" ] := {}
       hbmk2[ "vars" ][ "aQRC_Src" ] := {}
+      hbmk2[ "vars" ][ "aUIC_Src" ] := {}
+      hbmk2[ "vars" ][ "aMOC_Src" ] := {}
 
       FOR EACH cSrc IN hbmk2[ "params" ]
          SWITCH Lower( hbmk2_FNameExtGet( cSrc ) )
-         CASE ".hpp"
-         CASE ".h"
-            AAdd( hbmk2[ "vars" ][ "aMOC_Src" ], cSrc )
+         CASE ".qrc"
+            AAdd( hbmk2[ "vars" ][ "aQRC_Src" ], cSrc )
             EXIT
          CASE ".ui"
             AAdd( hbmk2[ "vars" ][ "aUIC_Src" ], cSrc )
             EXIT
-         CASE ".qrc"
-            AAdd( hbmk2[ "vars" ][ "aQRC_Src" ], cSrc )
+         CASE ".hpp"
+         CASE ".h"
+            AAdd( hbmk2[ "vars" ][ "aMOC_Src" ], cSrc )
             EXIT
          ENDSWITCH
       NEXT
 
       /* Create output file lists */
 
-      hbmk2[ "vars" ][ "aMOC_Dst" ] := {}
-      hbmk2[ "vars" ][ "aUIC_Dst" ] := {}
       hbmk2[ "vars" ][ "aQRC_Dst" ] := {}
+      hbmk2[ "vars" ][ "aQRC_PRG" ] := {}
+      hbmk2[ "vars" ][ "aUIC_Dst" ] := {}
+      hbmk2[ "vars" ][ "aMOC_Dst" ] := {}
 
-      FOR EACH cSrc IN hbmk2[ "vars" ][ "aMOC_Src" ]
-         cDst := hbmk2_FNameDirExtSet( "moc_" + hbmk2_FNameNameGet( cSrc ), hbmk2[ "cWorkDir" ], ".cpp" )
-         AAdd( hbmk2[ "vars" ][ "aMOC_Dst" ], cDst )
-         hbmk2_AddInput_CPP( hbmk2, cDst )
+      FOR EACH cSrc IN hbmk2[ "vars" ][ "aQRC_Src" ]
+         cDst := hbmk2_FNameDirExtSet( "rcc_" + hbmk2_FNameNameGet( cSrc ), hbmk2[ "cWorkDir" ], ".qrb" )
+         AAdd( hbmk2[ "vars" ][ "aQRC_Dst" ], cDst )
+         cDst := hbmk2_FNameDirExtSet( "rcc_" + hbmk2_FNameNameGet( cSrc ), hbmk2[ "cWorkDir" ], ".prg" )
+         AAdd( hbmk2[ "vars" ][ "aQRC_PRG" ], cDst )
+         hbmk2_AddInput_PRG( hbmk2, cDst )
       NEXT
 
       FOR EACH cSrc IN hbmk2[ "vars" ][ "aUIC_Src" ]
@@ -76,15 +80,82 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
          hbmk2_AddInput_PRG( hbmk2, cDst )
       NEXT
 
-      FOR EACH cSrc IN hbmk2[ "vars" ][ "aQRC_Src" ]
-         cDst := hbmk2_FNameDirExtSet( "rcc_" + hbmk2_FNameNameGet( cSrc ), hbmk2[ "cWorkDir" ], ".c" )
-         AAdd( hbmk2[ "vars" ][ "aQRC_Dst" ], cDst )
-         hbmk2_AddInput_C( hbmk2, cDst )
+      FOR EACH cSrc IN hbmk2[ "vars" ][ "aMOC_Src" ]
+         cDst := hbmk2_FNameDirExtSet( "moc_" + hbmk2_FNameNameGet( cSrc ), hbmk2[ "cWorkDir" ], ".cpp" )
+         AAdd( hbmk2[ "vars" ][ "aMOC_Dst" ], cDst )
+         hbmk2_AddInput_CPP( hbmk2, cDst )
       NEXT
 
       EXIT
 
    CASE "pre_prg"
+
+      IF ! hbmk2[ "lCLEAN" ] .AND. ! Empty( hbmk2[ "vars" ][ "aQRC_Src" ] )
+
+         /* Detect 'rcc' tool location */
+
+         cRCC_BIN := qt_tool_detect( hbmk2, "rcc", "RCC_BIN" )
+
+         IF ! Empty( cRCC_BIN )
+
+            /* Execute 'rcc' commands on input files */
+
+            FOR EACH cSrc, cDst, cPRG IN hbmk2[ "vars" ][ "aQRC_Src" ], hbmk2[ "vars" ][ "aQRC_Dst" ], hbmk2[ "vars" ][ "aQRC_PRG" ]
+
+               IF hbmk2[ "lINC" ] .AND. ! hbmk2[ "lREBUILD" ]
+                  lBuildIt := ! hb_FGetDateTime( cDst, @tDst ) .OR. ;
+                              ! hb_FGetDateTime( cSrc, @tSrc ) .OR. ;
+                              tSrc > tDst
+               ELSE
+                  lBuildIt := .T.
+               ENDIF
+
+               IF lBuildIt
+
+                  cCommand := cRCC_BIN +;
+                              " -binary" +;
+                              " " + hbmk2_FNameEscape( hbmk2_PathSepToTarget( hbmk2, cSrc ), hbmk2[ "nCmd_Esc" ], hbmk2[ "nCmd_FNF" ] ) +;
+                              " -o " + hbmk2_FNameEscape( hbmk2_PathSepToTarget( hbmk2, cDst ), hbmk2[ "nCmd_Esc" ], hbmk2[ "nCmd_FNF" ] )
+
+                  IF hbmk2[ "lTRACE" ]
+                     IF ! hbmk2[ "lQUIET" ]
+                        hbmk2_OutStd( hbmk2, I_( "'rcc' command:" ) )
+                     ENDIF
+                     hbmk2_OutStdRaw( cCommand )
+                  ENDIF
+
+                  IF ! hbmk2[ "lDONTEXEC" ]
+                     IF ( nError := hb_processRun( cCommand ) ) != 0
+                        hbmk2_OutErr( hbmk2, hb_StrFormat( I_( "Error: Running 'rcc' executable. %1$s" ), hb_ntos( nError ) ) )
+                        IF ! hbmk2[ "lQUIET" ]
+                           hbmk2_OutErrRaw( cCommand )
+                        ENDIF
+                        IF ! hbmk2[ "lIGNOREERROR" ]
+                           cRetVal := "error"
+                           EXIT
+                        ENDIF
+                     ELSE
+                        /* Create little .prg stub which includes the binary */
+                        cTmp := "/* WARNING: Automatically generated source file. DO NOT EDIT! */" + hb_osNewLine() +;
+                                hb_osNewLine() +;
+                                "#pragma -km+" + hb_osNewLine() +;
+                                hb_osNewLine() +;
+                                "FUNCTION hbqtres_" + hbmk2_FNameToSymbol( hbmk2_FNameNameGet( cSrc ) ) + "()" + hb_osNewLine() +;
+                                "   #pragma __binarystreaminclude " + Chr( 34 ) + hbmk2_FNameNameExtGet( cDst ) + Chr( 34 ) + "|RETURN %s" + hb_osNewLine()
+
+                        IF ! hb_MemoWrit( cPRG, cTmp )
+                           hbmk2_OutErr( hbmk2, hb_StrFormat( "Error: Cannot create file: %1$s", cPRG ) )
+                           IF ! hbmk2[ "lIGNOREERROR" ]
+                              cRetVal := "error"
+                              EXIT
+                           ENDIF
+                        ENDIF
+                     ENDIF
+                  ENDIF
+               ENDIF
+            NEXT
+         ENDIF
+      ENDIF
 
       IF ! hbmk2[ "lCLEAN" ] .AND. ! Empty( hbmk2[ "vars" ][ "aUIC_Src" ] )
 
@@ -200,77 +271,15 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
          ENDIF
       ENDIF
 
-      IF ! hbmk2[ "lCLEAN" ] .AND. ! Empty( hbmk2[ "vars" ][ "aQRC_Src" ] )
-
-         /* Detect 'rcc' tool location */
-
-         cRCC_BIN := qt_tool_detect( hbmk2, "rcc", "RCC_BIN" )
-
-         IF ! Empty( cRCC_BIN )
-
-            /* Execute 'rcc' commands on input files */
-
-            FOR EACH cSrc, cDst IN hbmk2[ "vars" ][ "aQRC_Src" ], hbmk2[ "vars" ][ "aQRC_Dst" ]
-
-               IF hbmk2[ "lINC" ] .AND. ! hbmk2[ "lREBUILD" ]
-                  lBuildIt := ! hb_FGetDateTime( cDst, @tDst ) .OR. ;
-                              ! hb_FGetDateTime( cSrc, @tSrc ) .OR. ;
-                              tSrc > tDst
-               ELSE
-                  lBuildIt := .T.
-               ENDIF
-
-               IF lBuildIt
-
-                  FClose( hb_FTempCreateEx( @cTmp ) )
-
-                  cCommand := cRCC_BIN +;
-                              " -binary" +;
-                              " " + hbmk2_FNameEscape( hbmk2_PathSepToTarget( hbmk2, cSrc ), hbmk2[ "nCmd_Esc" ], hbmk2[ "nCmd_FNF" ] ) +;
-                              " -o " + hbmk2_FNameEscape( cTmp, hbmk2[ "nCmd_Esc" ], hbmk2[ "nCmd_FNF" ] )
-
-                  IF hbmk2[ "lTRACE" ]
-                     IF ! hbmk2[ "lQUIET" ]
-                        hbmk2_OutStd( hbmk2, I_( "'rcc' command:" ) )
-                     ENDIF
-                     hbmk2_OutStdRaw( cCommand )
-                  ENDIF
-
-                  IF ! hbmk2[ "lDONTEXEC" ]
-                     IF ( nError := hb_processRun( cCommand ) ) != 0
-                        hbmk2_OutErr( hbmk2, hb_StrFormat( I_( "Error: Running 'rcc' executable. %1$s" ), hb_ntos( nError ) ) )
-                        IF ! hbmk2[ "lQUIET" ]
-                           hbmk2_OutErrRaw( cCommand )
-                        ENDIF
-                        IF ! hbmk2[ "lIGNOREERROR" ]
-                           FErase( cTmp )
-                           cRetVal := "error"
-                           EXIT
-                        ENDIF
-                     ELSE
-                        IF ! qrc_bin_to_src( hbmk2, cTmp, cDst, hbmk2_FNameToSymbol( hbmk2_FNameNameGet( cSrc ) ) )
-                           IF ! hbmk2[ "lIGNOREERROR" ]
-                              FErase( cTmp )
-                              cRetVal := "error"
-                              EXIT
-                           ENDIF
-                        ENDIF
-                     ENDIF
-                  ENDIF
-                  FErase( cTmp )
-               ENDIF
-            NEXT
-         ENDIF
-      ENDIF
-
       EXIT
 
    CASE "post_all"
 
       IF ! hbmk2[ "lINC" ] .OR. hbmk2[ "lCLEAN" ]
-         AEval( hbmk2[ "vars" ][ "aMOC_Dst" ], {| tmp | FErase( tmp ) } )
-         AEval( hbmk2[ "vars" ][ "aUIC_Dst" ], {| tmp | FErase( tmp ) } )
          AEval( hbmk2[ "vars" ][ "aQRC_Dst" ], {| tmp | FErase( tmp ) } )
+         AEval( hbmk2[ "vars" ][ "aQRC_PRG" ], {| tmp | FErase( tmp ) } )
+         AEval( hbmk2[ "vars" ][ "aUIC_Dst" ], {| tmp | FErase( tmp ) } )
+         AEval( hbmk2[ "vars" ][ "aMOC_Dst" ], {| tmp | FErase( tmp ) } )
       ENDIF
 
       EXIT
@@ -328,15 +337,13 @@ STATIC FUNCTION qt_tool_detect( hbmk2, cName, cEnvQT, cEnvHB )
 
 #else
 
-/* Standalone test code conversions ) */
+/* Standalone test code conversions */
 PROCEDURE Main( cSrc, cDst )
    LOCAL cTmp
    LOCAL nError
    LOCAL cExt
 
    LOCAL cName
-
-   OutStd( "Test mode", hb_osNewLine() )
 
    IF cSrc != NIL .AND. ;
       cDst != NIL
@@ -348,16 +355,6 @@ PROCEDURE Main( cSrc, cDst )
       hb_FNameSplit( cSrc,,, @cExt )
 
       SWITCH Lower( cExt )
-      CASE ".qrc"
-         IF ( nError := hb_processRun( "rcc " + cSrc + " -binary -o " + cTmp ) ) == 0
-            IF ! qrc_bin_to_src( NIL, cTmp, cDst, cName )
-               nError := 9
-            ENDIF
-         ELSE
-            OutErr( "Error: Calling 'rcc' tool: " + hb_ntos( nError ) + hb_osNewLine() )
-         ENDIF
-         EXIT
-
       CASE ".ui"
          IF ( nError := hb_processRun( "uic " + cSrc + " -o " + cTmp ) ) == 0
             IF ! uic_to_prg( NIL, cTmp, cDst, cName )
@@ -388,75 +385,6 @@ STATIC FUNCTION hbmk2_OutErr( hbmk2, ... )
    RETURN OutErr( ... )
 
 #endif
-
-STATIC FUNCTION qrc_bin_to_src( hbmk2, cFileNameSrc, cFileNameDst, cName )
-   LOCAL cFile
-   LOCAL cChar
-   LOCAL cOutput
-   LOCAL cExt
-
-   IF hb_FileExists( cFileNameSrc )
-
-      cFile := hb_MemoRead( cFileNameSrc )
-
-      IF ! Empty( cFile )
-
-         cName := "hbqtres_" + cName
-
-         hb_FNameSplit( cFileNameDst,,, @cExt )
-
-         cOutput := "/* WARNING: Automatically generated source file. DO NOT EDIT! */" + hb_osNewLine()
-         cOutput += hb_osNewLine()
-
-         SWITCH Lower( cExt )
-         CASE ".c"
-
-            cOutput += '#include "hbapi.h"' + hb_osNewLine()
-            cOutput += hb_osNewLine()
-            cOutput += "HB_FUNC( " + Upper( cName ) + " )" + hb_osNewLine()
-            cOutput += "{" + hb_osNewLine()
-            cOutput += Chr( 9 ) + "static const char s_res_data[] =" + hb_osNewLine()
-            cOutput += Chr( 9 ) + "{" + hb_osNewLine()
-            cOutput += Chr( 9 ) + Chr( 9 )
-            FOR EACH cChar IN cFile
-               cOutput += "0x" + hb_NumToHex( Asc( cChar ) ) + ","
-            NEXT
-            cOutput += hb_osNewLine()
-            cOutput += Chr( 9 ) + "};" + hb_osNewLine()
-            cOutput += hb_osNewLine()
-            cOutput += Chr( 9 ) + "hb_retclen_const( s_res_data, sizeof( s_res_data ) );" + hb_osNewLine()
-            cOutput += "}" + hb_osNewLine()
-
-            EXIT
-
-         CASE ".prg"
-
-            cOutput += "#pragma -km+" + hb_osNewLine()
-            cOutput += hb_osNewLine()
-            cOutput += "FUNCTION " + cName + "()" + hb_osNewLine()
-            cOutput += Chr( 9 ) + "RETURN e" + Chr( 34 )
-            FOR EACH cChar IN cFile
-               cOutput += "\x" + hb_NumToHex( Asc( cChar ), 2 )
-            NEXT
-            cOutput += Chr( 34 ) + hb_osNewLine()
-
-            EXIT
-
-         ENDSWITCH
-
-         IF hb_MemoWrit( cFileNameDst, cOutput )
-            RETURN .T.
-         ELSE
-            hbmk2_OutErr( hbmk2, hb_StrFormat( "Error: Cannot create file: %1$s", cFileNameDst ) )
-         ENDIF
-      ELSE
-         hbmk2_OutErr( hbmk2, hb_StrFormat( "Error: Empty intermediate file: %1$s", cFileNameSrc ) )
-      ENDIF
-   ELSE
-      hbmk2_OutErr( hbmk2, hb_StrFormat( "Error: Cannot find intermediate file: %1$s", cFileNameSrc ) )
-   ENDIF
-
-   RETURN .F.
 
 STATIC FUNCTION uic_to_prg( hbmk2, cFileNameSrc, cFileNameDst, cName )
    LOCAL aLinesPRG
