@@ -56,15 +56,17 @@
 #include "fileio.ch"
 
 /*
- * 'H', 'B', 'V' followed two-byte version number in network byte order (BE).
+ * 0xC0, 'H', 'B', 'V' followed two-byte version number in Little Endian order.
  * Corresponding magic(5) rule:
- *    0       string          \xC0HBV
- *    0x04    beshort x       Harbour memory file version %d
+ *
+ *    0       string          \xc0HBV         Harbour memory file
+ *    >4      leshort         x               version %d
+ *
  * Until such time that the serialized format changes, and handling of
  * previously-saved files is required, only a naive approach of using
- * version 0 is taken.
+ * version 1 is taken.
  */
-#define _HBMEM_SIGNATURE e"\xC0HBV" + Chr( 0 ) + Chr( 0 )
+#define _HBMEM_SIGNATURE e"\xC0HBV" + Chr( 1 ) + Chr( 0 )
 
 #define _HBMEM_EXT       ".hbv"
 

@@ -105,7 +105,7 @@ mk_hblibso()
       linker_options="-lm"
    fi
    linker_mtoptions=""
-   if echo ${HB_USER_CFLAGS} | grep -q -- -DHB_POSIX_REGEX ; then
+   if echo ${HB_USER_CFLAGS} | grep -- -DHB_POSIX_REGEX >/dev/null 2>&1 ; then
       hb_libs="` echo ${hb_libs} | sed 's!hbpcre!!g' `"
    elif [ -z "${HB_HAS_PCRE_LOCAL}" ]; then
       linker_options="-lpcre ${linker_options}"

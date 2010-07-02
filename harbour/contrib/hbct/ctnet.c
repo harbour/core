@@ -174,72 +174,7 @@ HB_FUNC( NETREDIR )
    hb_strfree( hSharedRes );
    hb_strfree( hPassword  );
 
-   if( dwResult == NO_ERROR )
-      hb_retl( HB_TRUE );
-   else
-   {
-      /* NOTE: Hidden extension (Added by xhb project) */
-
-      /* TOFIX: Is this really needed? Consider converting it
-                to HB_TRACE() call or a wrapper to WNetGetLastError() API.
-                [vszakats] */
-
-      if( hb_parl( 4 ) /* lShowError */ )
-      {
-         PHB_ITEM pError;
-
-         if( dwResult != ERROR_EXTENDED_ERROR )
-         {
-            char szFunction[ 128 ];
-
-            hb_snprintf( szFunction, sizeof( szFunction ), "NETREDIR( \"%s\", \"%s\", \"%s\" )",
-                         hb_parcx( 1 ), hb_parcx( 2 ), hb_parcx( 3 ) );
-
-            pError = hb_errRT_New( ES_ERROR,
-                                   "CT",
-                                   9001,
-                                   0,
-                                   "Windows Network operation failed",
-                                   szFunction, ( HB_ERRCODE ) dwResult, EF_NONE );
-            hb_errLaunch( pError );
-            hb_itemRelease( pError );
-         }
-         else
-         {
-            DWORD dwLastError = 0;
-            TCHAR lpDescription[ 256 ];
-            TCHAR lpProvider[ 256 ];
-
-            dwResult = WNetGetLastError( &dwLastError,
-                                         lpDescription, HB_SIZEOFARRAY( lpDescription ),
-                                         lpProvider, HB_SIZEOFARRAY( lpProvider ) );
-
-            if( dwResult != NO_ERROR )
-            {
-               pError = hb_errRT_New( ES_ERROR, "CT", 9002, 0,
-                                      "WNetGetLastError failed", "see OS error",
-                                      ( HB_ERRCODE ) dwResult, EF_NONE );
-               hb_errLaunch( pError );
-               hb_itemRelease( pError );
-            }
-            else
-            {
-               char * szDescription = HB_TCHAR_CONVFROM( lpDescription );
-               char * szProvider = HB_TCHAR_CONVFROM( lpProvider );
-               pError = hb_errRT_New( ES_ERROR, "CT", 9003, 0,
-                                      szDescription, szProvider,
-                                      ( HB_ERRCODE ) dwLastError, EF_NONE );
-               HB_TCHAR_FREE( szDescription );
-               HB_TCHAR_FREE( szProvider );
-
-               hb_errLaunch( pError );
-               hb_itemRelease( pError );
-            }
-         }
-      }
-
-      hb_retl( HB_FALSE );
-   }
+   hb_retl( dwResult == NO_ERROR );
 #else
    hb_retl( HB_FALSE );
 #endif

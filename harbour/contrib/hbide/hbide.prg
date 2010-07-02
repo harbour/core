@@ -100,7 +100,7 @@ PROCEDURE Main( ... )
       LOCAL cBse := hb_dirBase() + ".."
 
       /* Set the path env variable to Qt's run-time which is used to compile Harbour binaries */
-      hb_setEnv( "PATH", cBse + cSep + "Qt" + cSep + "4.6.2" + cSep + "lib" + ;
+      hb_setEnv( "PATH", cBse + cSep + "qt" + cSep + "lib" + ;
                                       hb_osPathListSeparator() + hb_getEnv( "PATH" ) )
 
       /* Variable is used in hbide.env */
