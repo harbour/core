@@ -1,26 +1,15 @@
--3rd=hbide_version=1.0
--3rd=hbide_type=Lib
--3rd=hbide_title=qscintilla
--3rd=hbide_output=qscintilla
+#
+# $Id$
+#
 
--info
--trace
--inc
--w2
--es2
--hblib
--incpath=../
+../hbqt_common.hbm
+
+-o${hb_name}
+-workdir=${hb_work}/${hb_plat}/${hb_comp}/${hb_name}
+
 -incpath=${HB_WITH_QSCINTILLA}/qt
--incpath=${HB_WITH_QT}
--incpath=${HB_WITH_QT}/QtCore
--incpath=${HB_WITH_QT}/QtGui
 
--ohbqscintilla
-
--plugin=../../../utils/hbmk2/examples/plug_moc.prg
-
--pi=hbqt_hbqsciscintilla.h
-
+hbqt_hbqsciscintilla.h
 hbqt_hbqsciscintilla.cpp
 
 HBQsciScintilla.cpp

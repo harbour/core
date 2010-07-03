@@ -36,6 +36,15 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
    LOCAL lBuildIt
 
    SWITCH hbmk2[ "cSTATE" ]
+   CASE "init"
+
+      hbmk2_Register_Input_File_Extension( hbmk2, ".qrc" )
+      hbmk2_Register_Input_File_Extension( hbmk2, ".ui" )
+      hbmk2_Register_Input_File_Extension( hbmk2, ".hpp" )
+      hbmk2_Register_Input_File_Extension( hbmk2, ".h" )
+
+      EXIT
+
    CASE "pre_all"
 
       /* Gather input parameters */

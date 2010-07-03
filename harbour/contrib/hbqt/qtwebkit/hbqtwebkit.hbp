@@ -9,6 +9,4 @@
 
 *.cpp
 *.prg
-
--pi=*.hpp
-
+*.hpp

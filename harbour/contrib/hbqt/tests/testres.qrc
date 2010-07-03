@@ -1,0 +1,6 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource prefix="/">
+   <file>harbour-icon.png</file>
+   <file>harbour-logo.png</file>
+</qresource>
+</RCC>

@@ -21,13 +21,13 @@ hbqt_misc.prg
 hbqt_errorsys.prg
 THbQtUI.prg
 
--pi=hbqt_hbdbfmodel.h
--pi=hbqt_hbevents.h
--pi=hbqt_hbqmainwindow.h
--pi=hbqt_hbqplaintextedit.h
--pi=hbqt_hbqsyntaxhighlighter.h
--pi=hbqt_hbqtableview.h
--pi=hbqt_hbslots.h
+hbqt_hbdbfmodel.h
+hbqt_hbevents.h
+hbqt_hbqmainwindow.h
+hbqt_hbqplaintextedit.h
+hbqt_hbqsyntaxhighlighter.h
+hbqt_hbqtableview.h
+hbqt_hbslots.h
 
 {darwin&!HB_WITH_QT}-cflag=-I/Library/Frameworks/QtGui.framework/Headers
 {darwin&!HB_WITH_QT}-cflag=-I/Library/Frameworks/QtNetwork.framework/Headers

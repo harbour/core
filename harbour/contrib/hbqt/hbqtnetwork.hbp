@@ -9,5 +9,4 @@ hbqt_common.hbm
 
 qtnetwork/*.cpp
 qtnetwork/*.prg
-
--pi=qtnetwork/*.h
+qtnetwork/*.h

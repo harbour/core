@@ -9,5 +9,4 @@ hbqt_common.hbm
 
 qtcore/*.cpp
 qtcore/*.prg
-
--pi=qtcore/*.h
+qtcore/*.h

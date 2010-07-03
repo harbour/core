@@ -9,5 +9,4 @@ hbqt_common.hbm
 
 qtgui/*.cpp
 qtgui/*.prg
-
--pi=qtgui/*.h
+qtgui/*.h

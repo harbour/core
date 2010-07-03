@@ -359,30 +359,31 @@ REQUEST hbmk_KEYW
 #define _HBMK_hPLUGINHRB        86
 #define _HBMK_hPLUGINVars       87
 #define _HBMK_aPLUGINPars       88
+#define _HBMK_hPLUGINExt        89
 
-#define _HBMK_lDEBUGTIME        89
-#define _HBMK_lDEBUGINC         90
-#define _HBMK_lDEBUGSTUB        91
-#define _HBMK_lDEBUGI18N        92
-#define _HBMK_lDEBUGDEPD        93
+#define _HBMK_lDEBUGTIME        90
+#define _HBMK_lDEBUGINC         91
+#define _HBMK_lDEBUGSTUB        92
+#define _HBMK_lDEBUGI18N        93
+#define _HBMK_lDEBUGDEPD        94
 
-#define _HBMK_cCCPATH           94
-#define _HBMK_cCCPREFIX         95
-#define _HBMK_cCCPOSTFIX        96
-#define _HBMK_cCCEXT            97
+#define _HBMK_cCCPATH           95
+#define _HBMK_cCCPREFIX         96
+#define _HBMK_cCCPOSTFIX        97
+#define _HBMK_cCCEXT            98
 
-#define _HBMK_cWorkDir          98
-#define _HBMK_cWorkDirDynSub    99
-#define _HBMK_nCmd_Esc          100
-#define _HBMK_nScr_Esc          101
-#define _HBMK_nCmd_FNF          102
-#define _HBMK_nScr_FNF          103
-#define _HBMK_nErrorLevel       104
+#define _HBMK_cWorkDir          99
+#define _HBMK_cWorkDirDynSub    100
+#define _HBMK_nCmd_Esc          101
+#define _HBMK_nScr_Esc          102
+#define _HBMK_nCmd_FNF          103
+#define _HBMK_nScr_FNF          104
+#define _HBMK_nErrorLevel       105
 
-#define _HBMK_cPROGDIR          105
-#define _HBMK_cPROGNAME         106
+#define _HBMK_cPROGDIR          106
+#define _HBMK_cPROGNAME         107
 
-#define _HBMK_MAX_              106
+#define _HBMK_MAX_              107
 
 #define _HBMK_DEP_CTRL_MARKER   ".control." /* must be an invalid path */
 
@@ -841,8 +842,12 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    hbmk[ _HBMK_lBLDFLGL ] := .F.
 
    hbmk[ _HBMK_aPLUGIN ] := {}
+   hbmk[ _HBMK_hPLUGINHRB ] := { => }
    hbmk[ _HBMK_hPLUGINVars ] := { => }
    hbmk[ _HBMK_aPLUGINPars ] := {}
+   hbmk[ _HBMK_hPLUGINExt ] := { => }
+
+   hb_HSetCaseMatch( hbmk[ _HBMK_hPLUGINExt ], .F. )
 
    hbmk[ _HBMK_lDEBUGTIME ] := .F.
    hbmk[ _HBMK_lDEBUGINC ] := .F.
@@ -2101,6 +2106,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          cParam := PathProc( PathSepToSelf( MacroProc( hbmk, SubStr( cParam, Len( "-plugin=" ) + 1 ), aParam[ _PAR_cFileName ] ) ), aParam[ _PAR_cFileName ] )
          IF ( tmp := FindInPathPlugIn( cParam ) ) != NIL
             AAdd( hbmk[ _HBMK_aPLUGIN ], tmp )
+            PlugIn_Load( hbmk, tmp )
          ELSE
             IF hbmk[ _HBMK_lInfo ]
                hbmk_OutStd( hbmk, hb_StrFormat( I_( "Warning: Plugin not found: %1$s" ), cParam ) )
@@ -2240,6 +2246,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          cParam := PathProc( PathSepToSelf( MacroProc( hbmk, cParam, aParam[ _PAR_cFileName ] ) ), aParam[ _PAR_cFileName ] )
          IF ( tmp := FindInPathPlugIn( cParam ) ) != NIL
             AAdd( hbmk[ _HBMK_aPLUGIN ], tmp )
+            PlugIn_Load( hbmk, tmp )
          ELSE
             IF hbmk[ _HBMK_lInfo ]
                hbmk_OutStd( hbmk, hb_StrFormat( I_( "Warning: Plugin not found: %1$s" ), cParam ) )
@@ -2330,6 +2337,13 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
          hbmk[ _HBMK_cHBL ] := PathSepToSelf( cParam )
          hbmk[ _HBMK_cHBLDir ] := FN_DirGet( aParam[ _PAR_cFileName ] )
+
+      CASE FN_ExtGet( cParamL ) $ hbmk[ _HBMK_hPLUGINExt ]
+
+         cParam := PathSepToSelf( MacroProc( hbmk, cParam, aParam[ _PAR_cFileName ] ) )
+         FOR EACH cParam IN FN_Expand( PathProc( cParam, aParam[ _PAR_cFileName ] ), Empty( aParam[ _PAR_cFileName ] ) )
+            AAdd( hbmk[ _HBMK_aPLUGINPars ], cParam )
+         NEXT
 
       OTHERWISE
 
@@ -3909,10 +3923,9 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       ENDIF
    ENDIF
 
-   /* Prepare plugins */
+   /* Call plugins */
 
-   PlugIn_Load( hbmk )
-   PlugIn_Execute( hbmk, "pre_all" )
+   PlugIn_Execute_All( hbmk, "pre_all" )
 
    /* ; */
 
@@ -4072,7 +4085,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    IF ( ! lSkipBuild .AND. ! lStopAfterInit .AND. ! lStopAfterHarbour .AND. hbmk[ _HBMK_nHBMODE ] != _HBMODE_RAW_C ) .OR. ;
       ( nHarbourPPO >= 2 .AND. lStopAfterHarbour ) /* or in preprocessor mode */
 
-      PlugIn_Execute( hbmk, "pre_prg" )
+      PlugIn_Execute_All( hbmk, "pre_prg" )
 
       /* Incremental */
 
@@ -4706,7 +4719,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
       IF Len( l_aRESSRC_TODO ) > 0 .AND. ! Empty( cBin_Res ) .AND. ! hbmk[ _HBMK_lCLEAN ]
 
-         PlugIn_Execute( hbmk, "pre_res" )
+         PlugIn_Execute_All( hbmk, "pre_res" )
 
          IF hbmk[ _HBMK_lINC ] .AND. ! hbmk[ _HBMK_lQuiet ]
             hbmk_OutStd( hbmk, I_( "Compiling resources..." ) )
@@ -4822,7 +4835,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          ENDIF
       ENDIF
 
-      PlugIn_Execute( hbmk, "pre_c" )
+      PlugIn_Execute_All( hbmk, "pre_c" )
 
       IF ! hbmk[ _HBMK_lCLEAN ]
 
@@ -5035,7 +5048,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             DO CASE
             CASE ! lStopAfterCComp .AND. ! Empty( cBin_Link )
 
-               PlugIn_Execute( hbmk, "pre_link" )
+               PlugIn_Execute_All( hbmk, "pre_link" )
 
                IF ( hbmk[ _HBMK_lINC ] .AND. ! hbmk[ _HBMK_lQuiet ] ) .OR. hbmk[ _HBMK_lInfo ]
                   hbmk_OutStd( hbmk, hb_StrFormat( I_( "Linking... %1$s" ), hbmk[ _HBMK_cPROGNAME ] ) )
@@ -5129,7 +5142,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
             CASE lStopAfterCComp .AND. hbmk[ _HBMK_lCreateDyn ] .AND. ! Empty( cBin_Dyn )
 
-               PlugIn_Execute( hbmk, "pre_link" )
+               PlugIn_Execute_All( hbmk, "pre_link" )
 
                IF ( hbmk[ _HBMK_lINC ] .AND. ! hbmk[ _HBMK_lQuiet ] ) .OR. hbmk[ _HBMK_lInfo ]
                   hbmk_OutStd( hbmk, hb_StrFormat( I_( "Creating dynamic library... %1$s" ), hbmk[ _HBMK_cPROGNAME ] ) )
@@ -5197,7 +5210,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
             CASE lStopAfterCComp .AND. hbmk[ _HBMK_lCreateLib ] .AND. ! Empty( cBin_Lib )
 
-               PlugIn_Execute( hbmk, "pre_lib" )
+               PlugIn_Execute_All( hbmk, "pre_lib" )
 
                IF ( hbmk[ _HBMK_lINC ] .AND. ! hbmk[ _HBMK_lQuiet ] ) .OR. hbmk[ _HBMK_lInfo ]
                   hbmk_OutStd( hbmk, hb_StrFormat( I_( "Creating static library... %1$s" ), hbmk[ _HBMK_cPROGNAME ] ) )
@@ -5265,7 +5278,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
       /* Cleanup */
 
-      PlugIn_Execute( hbmk, "pre_cleanup" )
+      PlugIn_Execute_All( hbmk, "pre_cleanup" )
 
       IF ! Empty( l_cCSTUB )
          FErase( l_cCSTUB )
@@ -5413,10 +5426,10 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          ENDIF
       ENDIF
 
-      PlugIn_Execute( hbmk, "post_build" )
+      PlugIn_Execute_All( hbmk, "post_build" )
    ENDIF
 
-   PlugIn_Execute( hbmk, "post_all" )
+   PlugIn_Execute_All( hbmk, "post_all" )
 
    IF hbmk[ _HBMK_lDEBUGTIME ]
       hbmk_OutStd( hbmk, hb_StrFormat( I_( "Running time: %1$ss" ), hb_ntos( TimeElapsed( nStart, Seconds() ) ) ) )
@@ -6408,56 +6421,50 @@ STATIC FUNCTION FindInSamePath( cFileName, cFileName2, cPath )
 
    RETURN NIL
 
-STATIC PROCEDURE PlugIn_Load( hbmk )
-   LOCAL cFileName
+STATIC PROCEDURE PlugIn_Load( hbmk, cFileName )
    LOCAL cFile
    LOCAL cExt
    LOCAL lOK
    LOCAL cType
-   LOCAL hrb
+   LOCAL hrb := NIL
 
-   hbmk[ _HBMK_hPLUGINHRB ] := { => }
+   hb_FNameSplit( cFileName, NIL, NIL, @cExt )
 
-   FOR EACH cFileName IN hbmk[ _HBMK_aPLUGIN ]
+   cFile := hb_MemoRead( cFileName )
 
-      hb_FNameSplit( cFileName, NIL, NIL, @cExt )
-
-      hrb := NIL
-
-      cFile := hb_MemoRead( cFileName )
-
-      IF ! Empty( cFile )
-         lOK := .F.
-         /* Optimization: Don't try to load it as .hrb if the extension is .prg or .hbs (Harbour script) */
-         IF !( Lower( cExt ) == ".prg" ) .AND. ;
-            !( Lower( cExt ) == ".hbs" )
-            BEGIN SEQUENCE WITH {| oError | Break( oError ) }
-               hrb := hb_hrbLoad( HB_HRB_BIND_FORCELOCAL, cFile )
-               cType := I_( "(compiled)" )
-               lOK := .T.
-            END SEQUENCE
-         ENDIF
-         IF ! lOK .AND. !( Lower( cExt ) == ".hrb" ) /* Optimization: Don't try to load it as .prg if the extension is .hrb */
-            cType := I_( "(source)" )
-            cFile := hb_compileFromBuf( cFile, "-n2", "-w3", "-es2", "-q0", "-D" + _HBMK_SCRIPT )
-            IF ! Empty( cFile )
-               hrb := hb_hrbLoad( HB_HRB_BIND_FORCELOCAL, cFile )
-            ENDIF
+   IF ! Empty( cFile )
+      lOK := .F.
+      /* Optimization: Don't try to load it as .hrb if the extension is .prg or .hbs (Harbour script) */
+      IF !( Lower( cExt ) == ".prg" ) .AND. ;
+         !( Lower( cExt ) == ".hbs" )
+         BEGIN SEQUENCE WITH {| oError | Break( oError ) }
+            hrb := hb_hrbLoad( HB_HRB_BIND_FORCELOCAL, cFile )
+            cType := I_( "(compiled)" )
+            lOK := .T.
+         END SEQUENCE
+      ENDIF
+      IF ! lOK .AND. !( Lower( cExt ) == ".hrb" ) /* Optimization: Don't try to load it as .prg if the extension is .hrb */
+         cType := I_( "(source)" )
+         cFile := hb_compileFromBuf( cFile, "-n2", "-w3", "-es2", "-q0", "-D" + _HBMK_SCRIPT )
+         IF ! Empty( cFile )
+            hrb := hb_hrbLoad( HB_HRB_BIND_FORCELOCAL, cFile )
          ENDIF
       ENDIF
+   ENDIF
 
-      IF ! Empty( hrb )
-         hbmk[ _HBMK_hPLUGINHRB ][ cFileName ] := hrb
+   IF ! Empty( hrb )
+      hbmk[ _HBMK_hPLUGINHRB ][ cFileName ] := hrb
 
-         IF hbmk[ _HBMK_lTRACE ]
-            hbmk_OutStd( hbmk, hb_StrFormat( I_( "Loaded plugin #%1$s: %2$s %3$s" ), hb_ntos( cFileName:__enumIndex() ), cFileName, cType ) )
-         ENDIF
-      ELSE
-         IF hbmk[ _HBMK_lInfo ]
-            hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Loading plugin: %1$s" ), cFileName ) )
-         ENDIF
+      IF hbmk[ _HBMK_lTRACE ]
+         hbmk_OutStd( hbmk, hb_StrFormat( I_( "Loaded plugin: %1$s %2$s" ), cFileName, cType ) )
       ENDIF
-   NEXT
+
+      PlugIn_call_low( hbmk, cFileName, hrb, PlugIn_make_ctx( hbmk, "init" ) )
+   ELSE
+      IF hbmk[ _HBMK_lInfo ]
+         hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Loading plugin: %1$s" ), cFileName ) )
+      ENDIF
+   ENDIF
 
    RETURN
 
@@ -6486,57 +6493,91 @@ FUNCTION hbmk2_StrStripQuote( ... )    ; RETURN StrStripQuote( ... )
 FUNCTION hbmk2_OutStdRaw( ... )        ; RETURN ( OutStd( ... ), OutStd( _OUT_EOL ) )
 FUNCTION hbmk2_OutErrRaw( ... )        ; RETURN ( OutErr( ... ), OutErr( _OUT_EOL ) )
 
+STATIC FUNCTION ctx_to_hbmk( ctx )
+   LOCAL hbmk
+   IF hb_isHash( ctx ) .AND. s_cSecToken $ ctx
+      hbmk := ctx[ s_cSecToken ]
+      IF ISARRAY( hbmk ) .AND. Len( hbmk ) == _HBMK_MAX_
+         RETURN hbmk
+      ENDIF
+   ENDIF
+   RETURN NIL
+
 FUNCTION hbmk2_Macro( ctx, cString )
-   LOCAL hbmk := ctx[ s_cSecToken ]
-   RETURN MacroProc( hbmk, cString )
+   LOCAL hbmk := ctx_to_hbmk( ctx )
+   IF hbmk != NIL
+      RETURN MacroProc( hbmk, cString )
+   ENDIF
+   RETURN ""
 
 FUNCTION hbmk2_OutStd( ctx, cText )
-   LOCAL hbmk := ctx[ s_cSecToken ]
-   RETURN hbmk_OutStd( hbmk, hb_StrFormat( I_( "plugin: %1$s" ), cText ) )
+   LOCAL hbmk := ctx_to_hbmk( ctx )
+   IF hbmk != NIL
+      RETURN hbmk_OutStd( hbmk, hb_StrFormat( I_( "plugin: %1$s" ), cText ) )
+   ENDIF
+   RETURN NIL
 
 FUNCTION hbmk2_OutErr( ctx, cText )
-   LOCAL hbmk := ctx[ s_cSecToken ]
-   RETURN hbmk_OutErr( hbmk, hb_StrFormat( I_( "plugin: %1$s" ), cText ) )
+   LOCAL hbmk := ctx_to_hbmk( ctx )
+   IF hbmk != NIL
+      RETURN hbmk_OutErr( hbmk, hb_StrFormat( I_( "plugin: %1$s" ), cText ) )
+   ENDIF
+   RETURN NIL
 
 FUNCTION hbmk2_PathSepToTarget( ctx, ... )
-   LOCAL hbmk := ctx[ s_cSecToken ]
-   RETURN PathSepToTarget( hbmk, ... )
+   LOCAL hbmk := ctx_to_hbmk( ctx )
+   IF hbmk != NIL
+      RETURN PathSepToTarget( hbmk, ... )
+   ENDIF
+   RETURN ""
 
 FUNCTION hbmk2_AddInput_PRG( ctx, cFileName )
-   LOCAL hbmk := ctx[ s_cSecToken ]
-   AAdd( hbmk[ _HBMK_aPRG ], PathSepToSelf( cFileName ) )
-   DEFAULT hbmk[ _HBMK_cFIRST ] TO PathSepToSelf( cFileName )
+   LOCAL hbmk := ctx_to_hbmk( ctx )
+   IF hbmk != NIL .AND. ISCHARACTER( cFileName )
+      AAdd( hbmk[ _HBMK_aPRG ], PathSepToSelf( cFileName ) )
+      DEFAULT hbmk[ _HBMK_cFIRST ] TO PathSepToSelf( cFileName )
+   ENDIF
    RETURN NIL
 
 FUNCTION hbmk2_AddInput_C( ctx, cFileName )
-   LOCAL hbmk := ctx[ s_cSecToken ]
-   AAdd( hbmk[ _HBMK_aC ], PathSepToSelf( cFileName ) )
-   DEFAULT hbmk[ _HBMK_cFIRST ] TO PathSepToSelf( cFileName )
+   LOCAL hbmk := ctx_to_hbmk( ctx )
+   IF hbmk != NIL .AND. ISCHARACTER( cFileName )
+      AAdd( hbmk[ _HBMK_aC ], PathSepToSelf( cFileName ) )
+      DEFAULT hbmk[ _HBMK_cFIRST ] TO PathSepToSelf( cFileName )
+   ENDIF
    RETURN NIL
 
 FUNCTION hbmk2_AddInput_CPP( ctx, cFileName )
-   LOCAL hbmk := ctx[ s_cSecToken ]
-   AAdd( hbmk[ _HBMK_aCPP ], PathSepToSelf( cFileName ) )
-   DEFAULT hbmk[ _HBMK_cFIRST ] TO PathSepToSelf( cFileName )
+   LOCAL hbmk := ctx_to_hbmk( ctx )
+   IF hbmk != NIL .AND. ISCHARACTER( cFileName )
+      AAdd( hbmk[ _HBMK_aCPP ], PathSepToSelf( cFileName ) )
+      DEFAULT hbmk[ _HBMK_cFIRST ] TO PathSepToSelf( cFileName )
+   ENDIF
    RETURN NIL
 
 FUNCTION hbmk2_AddInput_RC( ctx, cFileName )
-   LOCAL hbmk := ctx[ s_cSecToken ]
-   AAdd( hbmk[ _HBMK_aRESSRC ], PathSepToSelf( cFileName ) )
+   LOCAL hbmk := ctx_to_hbmk( ctx )
+   IF hbmk != NIL .AND. ISCHARACTER( cFileName )
+      AAdd( hbmk[ _HBMK_aRESSRC ], PathSepToSelf( cFileName ) )
+   ENDIF
+   RETURN NIL
+
+FUNCTION hbmk2_Register_Input_File_Extension( ctx, cExt )
+   LOCAL hbmk := ctx_to_hbmk( ctx )
+   IF hbmk != NIL .AND. ISCHARACTER( cExt )
+      IF ! Empty( cExt )
+         IF !( Left( cExt, 1 ) == "." )
+            cExt := "." + cExt
+         ENDIF
+         hbmk[ _HBMK_hPLUGINExt ][ Lower( cExt ) ] := NIL
+      ENDIF
+   ENDIF
    RETURN NIL
 
 /* ; */
 
-STATIC FUNCTION PlugIn_Execute( hbmk, cState )
-   LOCAL hrb
-   LOCAL ctx
-   LOCAL xResult
-
-   LOCAL oError
-
-   IF ! Empty( hbmk[ _HBMK_hPLUGINHRB ] )
-
-      ctx := {;
+STATIC FUNCTION PlugIn_make_ctx( hbmk, cState )
+   RETURN {;
          "cSTATE"       => cState                     ,;
          "params"       => hbmk[ _HBMK_aPLUGINPars ]  ,;
          "vars"         => hbmk[ _HBMK_hPLUGINVars ]  ,;
@@ -6571,24 +6612,37 @@ STATIC FUNCTION PlugIn_Execute( hbmk, cState )
          "nErrorLevel"  => hbmk[ _HBMK_nErrorLevel ]  ,;
          s_cSecToken    => hbmk                       }
 
-      FOR EACH hrb IN hbmk[ _HBMK_hPLUGINHRB ]
+STATIC PROCEDURE PlugIn_call_low( hbmk, cName, hrb, ctx )
+   LOCAL xResult
+   LOCAL oError
 
-         BEGIN SEQUENCE WITH {| oError | oError:cargo := { ProcName( 1 ), ProcLine( 1 ) }, Break( oError ) }
-            xResult := hb_hrbDo( hrb, ctx )
-            IF ! Empty( xResult )
-               IF hbmk[ _HBMK_lInfo ]
-                  hbmk_OutStd( hbmk, hb_StrFormat( I_( "Plugin %1$s returned: '%2$s'" ), hrb:__enumKey(), xResult ) )
-               ENDIF
-            ENDIF
-         RECOVER USING oError
-            IF ! hbmk[ _HBMK_lQuiet ]
-               hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Executing plugin: %1$s at %3$s(%4$s)\n'%2$s'" ), hrb:__enumKey(), hbmk_ErrorMessage( oError ), oError:cargo[ 1 ], hb_ntos( oError:cargo[ 2 ] ) ) )
-            ENDIF
-         END SEQUENCE
+   BEGIN SEQUENCE WITH {| oError | oError:cargo := { ProcName( 1 ), ProcLine( 1 ) }, Break( oError ) }
+      xResult := hb_hrbDo( hrb, ctx )
+      IF ! Empty( xResult )
+         IF hbmk[ _HBMK_lInfo ]
+            hbmk_OutStd( hbmk, hb_StrFormat( I_( "Plugin %1$s returned: '%2$s'" ), cName, xResult ) )
+         ENDIF
+      ENDIF
+   RECOVER USING oError
+      IF ! hbmk[ _HBMK_lQuiet ]
+         hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Executing plugin: %1$s at %3$s(%4$s)\n'%2$s'" ), cName, hbmk_ErrorMessage( oError ), oError:cargo[ 1 ], hb_ntos( oError:cargo[ 2 ] ) ) )
+      ENDIF
+   END SEQUENCE
+
+   RETURN
+
+STATIC PROCEDURE PlugIn_Execute_All( hbmk, cState )
+   LOCAL hrb
+   LOCAL ctx
+
+   IF ! Empty( hbmk[ _HBMK_hPLUGINHRB ] )
+      ctx := PlugIn_make_ctx( hbmk, cState )
+      FOR EACH hrb IN hbmk[ _HBMK_hPLUGINHRB ]
+         PlugIn_call_low( hbmk, hrb:__enumKey(), hrb, ctx )
       NEXT
    ENDIF
 
-   RETURN NIL
+   RETURN
 
 STATIC FUNCTION hbmk_ErrorMessage( oError )
    /* start error message */
@@ -7483,6 +7537,10 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
                         AAddNew( hbmk[ _HBMK_aRESCMP ], tmp )
                      NEXT
                   ENDIF
+               CASE FN_ExtGet( cItemL ) $ hbmk[ _HBMK_hPLUGINExt ]
+                  FOR EACH tmp IN FN_Expand( cItem, .F. )
+                     AAddNew( hbmk[ _HBMK_aPLUGINPars ], tmp )
+                  NEXT
                OTHERWISE /* .prg */
                   IF Empty( FN_ExtGet( cItem ) )
                      cItem := FN_ExtSet( cItem, ".prg" )
@@ -7746,6 +7804,7 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
          cLine := PathNormalize( PathProc( PathSepToSelf( MacroProc( hbmk, cLine, cFileName ) ), FN_DirGet( cFileName ) ) )
          IF ( tmp := FindInPathPlugIn( cLine ) ) != NIL
             AAdd( hbmk[ _HBMK_aPLUGIN ], tmp )
+            PlugIn_Load( hbmk, tmp )
          ELSE
             IF hbmk[ _HBMK_lInfo ]
                hbmk_OutStd( hbmk, hb_StrFormat( I_( "Warning: Plugin not found: %1$s" ), cLine ) )
