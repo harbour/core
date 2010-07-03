@@ -14,7 +14,7 @@
      4. avoid long cmdlines to make ms-dos hosts happy
 */
 
-#pragma warninglevel=3
+/* #pragma warninglevel=3 */
 
 /* TOFIX: Ugly hack to avoid #include "directry.ch" */
 #define F_NAME          1       /* File name */
