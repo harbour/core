@@ -50,6 +50,9 @@ PROCEDURE Main( ... )
       "sddoci/sddoci.hbi"          ,;
       "sddpg/sddpg.hbi"            }
 
+   /* external libs hosted locally */
+   LOCAL aLibsPass0 := {}
+
    LOCAL aLibsPass1 := {;
       "hbblink/hbblink.hbp"        ,;
       "hbbz2/hbbz2.hbp"            ,; /* uses: bz2 (external) */
@@ -114,7 +117,7 @@ PROCEDURE Main( ... )
       "xhb/xhb.hbp"                }  /* uses: hbct, hbtip, hbwin */
 
    LOCAL aUtils := {;
-      "hbnetio/utils/netiosrv.hbp" ,; /* uses: hbnetio */
+      "hbnetio/utils/hbnetio.hbp"  ,; /* uses: hbnetio */
       "hbide/hbide.hbp"            }  /* uses: hbxbp, hbqt */
 
    LOCAL aAll
@@ -125,7 +128,9 @@ PROCEDURE Main( ... )
    LOCAL cInstallDirVar
    LOCAL cTargetDir
 
-   LOCAL cOptions := ""
+   LOCAL cBaseOptions := ""
+   LOCAL cOptionsPre
+   LOCAL cOptionsPost
    LOCAL lBuildName
 
    LOCAL cFilter := GetEnv( "HB_CONTRIBLIBS" )
@@ -148,7 +153,7 @@ PROCEDURE Main( ... )
       aLibsPass2 := {}
       aLibsPass3 := {}
       aUtils := {;
-         "hbnetio/utils/netiosrv.hbp" }
+         "hbnetio/utils/hbnetio.hbp"  }
    ENDIF
 
    IF Empty( GetEnv( "HB_PLATFORM" ) ) .OR. ;
@@ -168,15 +173,15 @@ PROCEDURE Main( ... )
    /* Converting build options to hbmk2 options */
 
    IF GetEnv( "HB_BUILD_MODE" ) == "cpp"
-      cOptions += " -cpp=yes"
+      cBaseOptions += " -cpp=yes"
    ELSEIF GetEnv( "HB_BUILD_MODE" ) == "c"
-      cOptions += " -cpp=no"
+      cBaseOptions += " -cpp=no"
    ENDIF
    IF GetEnv( "HB_BUILD_DEBUG" ) == "yes"
-      cOptions += " -debug"
+      cBaseOptions += " -debug"
    ENDIF
    IF ! Empty( GetEnv( "HB_BUILD_NAME" ) )
-      cOptions += " -build=" + GetEnv( "HB_BUILD_NAME" )
+      cBaseOptions += " -build=" + GetEnv( "HB_BUILD_NAME" )
       lBuildName := .T.
    ELSE
       lBuildName := .F.
@@ -200,6 +205,7 @@ PROCEDURE Main( ... )
 
    aAll := {;
       { "type" => "implib", "list" => aImpLibs },;
+      { "type" => "lib"   , "list" => aLibsPass0 },;
       { "type" => "lib"   , "list" => aLibsPass1 },;
       { "type" => "lib"   , "list" => aLibsPass2 },;
       { "type" => "lib"   , "list" => aLibsPass3 },;
@@ -225,6 +231,9 @@ PROCEDURE Main( ... )
                   AScan( aFilter, {| tmp | tmp == cProjectDir } ) == 0,;
                   AScan( aFilter, {| tmp | tmp == cProjectDir } ) > 0 )
 
+               cOptionsPre := cBaseOptions
+               cOptionsPost := ""
+
                SWITCH hItem[ "type" ]
                CASE "lib"
                CASE "implib"
@@ -234,18 +243,21 @@ PROCEDURE Main( ... )
                CASE "bin"
                   cTargetDir := cRoot + "bin/${hb_plat}/${hb_comp}" + iif( lBuildName, "/${hb_build}", "" )
                   cInstallDirVar := "HB_BIN_INSTALL"
+                  IF GetEnv( "HB_BUILD_SHARED" ) == "yes"
+                     cOptionsPre += " -shared"
+                  ENDIF
                   EXIT
                ENDSWITCH
 
                IF AScan( aParams, "clean" ) > 0
-                  call_hbmk2( cBase + cProject, cTargetDir, cOptions + " -clean", .F. )
+                  call_hbmk2( cBase + cProject, cTargetDir, cOptionsPre + " -clean", cOptionsPost )
                ELSEIF AScan( aParams, "install" ) > 0
                   IF ! Empty( GetEnv( cInstallDirVar ) ) .AND. ;
                      ( ! ( hItem[ "type" ] == "implib" ) .OR. GetEnv( "HB_BUILD_IMPLIB" ) == "yes" )
-                     call_hbmk2( cBase + cProject, cTargetDir, cOptions + " -instpath=${" + cInstallDirVar + "}/", .F. )
+                     call_hbmk2( cBase + cProject, cTargetDir, cOptionsPre + " -inc -instpath=${" + cInstallDirVar + "}/", cOptionsPost )
                   ENDIF
                ELSE
-                  call_hbmk2( cBase + cProject, cTargetDir, cOptions + " -inc", .F. )
+                  call_hbmk2( cBase + cProject, cTargetDir, cOptionsPre + " -inc", cOptionsPost )
                ENDIF
 
                /* Highly experimental */
@@ -253,16 +265,18 @@ PROCEDURE Main( ... )
                   hb_FileExists( FN_ExtSet( cBase + cProject, ".hbc" ) )
 
                   cInstallDirVar := "HB_BIN_INSTALL"
+                  /* TOFIX: Add -implib option. It collides with static lib so needs to be resolved. */
+                  cOptionsPost := " -hbdyn -nohblib- -shared " + FN_ExtSet( cProject, ".hbc" )
 
                   IF AScan( aParams, "clean" ) > 0
-                     call_hbmk2( cBase + cProject, cTargetDir, cOptions + " -clean", .T. )
+                     call_hbmk2( cBase + cProject, cTargetDir, cOptionsPre + " -clean", cOptionsPost )
                   ELSEIF AScan( aParams, "install" ) > 0
                      IF ! Empty( GetEnv( cInstallDirVar ) ) .AND. ;
                         ( ! ( hItem[ "type" ] == "implib" ) .OR. GetEnv( "HB_BUILD_IMPLIB" ) == "yes" )
-                        call_hbmk2( cBase + cProject, cTargetDir, cOptions + " -instpath=${" + cInstallDirVar + "}/", .T. )
+                        call_hbmk2( cBase + cProject, cTargetDir, cOptionsPre + " -inc -instpath=${" + cInstallDirVar + "}/", cOptionsPost )
                      ENDIF
                   ELSE
-                     call_hbmk2( cBase + cProject, cTargetDir, cOptions + " -inc", .T. )
+                     call_hbmk2( cBase + cProject, cTargetDir, cOptionsPre + " -inc", cOptionsPost )
                   ENDIF
                ENDIF
             ELSE
@@ -276,19 +290,17 @@ PROCEDURE Main( ... )
 
    RETURN
 
-STATIC FUNCTION call_hbmk2( cProject, cTargetDir, cOptions, lDyn )
+STATIC FUNCTION call_hbmk2( cProject, cTargetDir, cOptionsPre, cOptionsPost )
    LOCAL nErrorLevel
 
    LOCAL cDir, cName
 
    hb_FNameSplit( cProject, @cDir, @cName )
 
-   /* TOFIX: Add -implib option. It collides with static lib so needs to be resolved. */
-
    nErrorLevel := mk_hb_processRun( PathSepToSelf( GetEnv( "HB_HOST_BIN_DIR" ) ) + _PS_ + "hbmk2" +;
-                                    " -quiet -lang=en -width=1000 -q0" + cOptions +;
+                                    " -quiet -lang=en -width=1000 -q0" + cOptionsPre +;
                                     " " + cProject +;
-                                    iif( lDyn, " -hbdyn -nohblib- " + FN_ExtSet( cProject, ".hbc" ), "" ) +;
+                                    cOptionsPost +;
                                     " -workdir=" + cTargetDir + "/${hb_work}/" + cName + "${hb_workdynsub}" +;
                                     " -o" + cTargetDir + "/" )
    IF nErrorLevel != 0
