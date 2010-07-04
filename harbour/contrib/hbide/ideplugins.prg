@@ -191,17 +191,19 @@ FUNCTION hbide_runAScript( cBuffer, cCompFlags, xParam )
 /*----------------------------------------------------------------------*/
 
 FUNCTION hbide_execAutoScripts()
-   LOCAL cPath, cMask, a_, dir_, cFileName, cBuffer
+   LOCAL cPath, a_, dir_, cFileName, cBuffer
 
    cPath := hb_dirBase() + hb_osPathSeparator() + "plugins" + hb_osPathSeparator()
-   cMask := "auto_*.prg"
 
-   dir_:= directory( cPath + cMask )
-   FOR EACH a_ IN dir_
-      cFileName := a_[ 1 ]
+   a_:= {}
+   dir_:= directory( cPath + "auto_*.prg" )
+   aeval( dir_, {|e_| aadd( a_, e_[ 1 ] ) } )
+   dir_:= directory( cPath + "auto_*.hbs" )
+   aeval( dir_, {|e_| aadd( a_, e_[ 1 ] ) } )
+
+   FOR EACH cFileName IN a_
       IF !empty( cBuffer := hb_memoRead( cPath + cFileName ) )
          HB_TRACE( HB_TR_ALWAYS, cFileName )
-
          hbide_runAScript( cBuffer, /* No Compiler Flag */, hbide_setIde() )
       ENDIF
    NEXT
