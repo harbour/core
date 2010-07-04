@@ -6620,7 +6620,7 @@ STATIC PROCEDURE PlugIn_call_low( hbmk, cName, hrb, ctx )
       xResult := hb_hrbDo( hrb, ctx )
       IF ! Empty( xResult )
          IF hbmk[ _HBMK_lInfo ]
-            hbmk_OutStd( hbmk, hb_StrFormat( I_( "Plugin %1$s returned: '%2$s'" ), cName, xResult ) )
+            hbmk_OutStd( hbmk, hb_StrFormat( I_( "Plugin %1$s returned: '%2$s'" ), cName, hb_cstr( xResult ) ) )
          ENDIF
       ENDIF
    RECOVER USING oError

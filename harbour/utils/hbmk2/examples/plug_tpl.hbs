@@ -3,16 +3,36 @@
  */
 
 /*
- * hbmk2 plugin sample
+ * hbmk2 plugin example
  *
  * Copyright 2010 Viktor Szakats (harbour.01 syenar.hu)
- * See COPYING for licensing terms.
+ * www - http://harbour-project.org
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
+ * their web site at http://www.gnu.org/).
+ *
  */
 
-FUNCTION hbmk2_plugin_tpl( hbmk2 )
-   LOCAL cMOC_BIN
+#pragma warninglevel=3
 
+FUNCTION hbmk2_plugin_tpl( hbmk2 )
    LOCAL tmp
+
+   IF hbmk2[ "lTRACE" ]
+      hbmk2_OutStd( hbmk2, "@@ Entered plugin: " + hbmk2[ "cSTATE" ] )
+   ENDIF
 
    SWITCH hbmk2[ "cSTATE" ]
    CASE "pre_all"
@@ -20,52 +40,16 @@ FUNCTION hbmk2_plugin_tpl( hbmk2 )
       FOR EACH tmp IN hbmk2[ "params" ]
          hbmk2_OutStd( hbmk2, hb_StrFormat( "Parameter #%1$s: '%2$s'", hb_ntos( tmp:__enumIndex() ), tmp ) )
       NEXT
-
-      hbmk2_AddInput_C( hbmk2, "hello.c" )
       EXIT
 
    CASE "pre_c"
-
-      cMOC_BIN := GetEnv( "MOC_BIN" )
-      IF Empty( cMOC_BIN )
-         IF Empty( GetEnv( "HB_QT_MOC_BIN" ) )
-            IF hbmk2[ "cPLAT" ] == "win"
-               cMOC_BIN := GetEnv( "HB_WITH_QT" ) + "\..\bin\moc.exe"
-               IF ! hb_FileExists( cMOC_BIN )
-                  hbmk2_OutErr( hbmk2, "HB_WITH_QT points to incomplete QT installation. moc executable not found." )
-                  RETURN NIL
-               ENDIF
-            ELSE
-               cMOC_BIN := hbmk2_FindInPath( "moc", "/opt/qtsdk/qt/bin" )
-               IF Empty( cMOC_BIN )
-                  cMOC_BIN := hbmk2_FindInPath( "moc", "/opt/qtsdk/qt/bin" )
-                  IF Empty( cMOC_BIN )
-                     hbmk2_OutErr( hbmk2, "HB_QT_MOC_BIN not set, could not autodetect" )
-                     RETURN NIL
-                  ENDIF
-               ENDIF
-            ENDIF
-            hbmk2_OutStd( hbmk2, "Using QT 'moc' executable: " + cMOC_BIN + " (autodetected)" )
-         ELSE
-            IF hb_FileExists( GetEnv( "HB_QT_MOC_BIN" ) )
-               cMOC_BIN := GetEnv( "HB_QT_MOC_BIN" )
-               hbmk2_OutStd( hbmk2, "Using QT 'moc' executable: " + cMOC_BIN )
-            ELSE
-               hbmk2_OutErr( hbmk2, "HB_QT_MOC_BIN points to non-existent file. Make sure to set it to full path and filename of moc executable." )
-               RETURN NIL
-            ENDIF
-         ENDIF
-      ENDIF
-
-      hbmk2[ "vars" ][ "MOC_BIN" ] := cMOC_BIN
-
+      hbmk2[ "vars" ][ "MyVar" ] := "Hello world!"
       EXIT
+
    CASE "post_all"
-      hbmk2_OutStd( hbmk2, "POST_ALL: " + hbmk2[ "vars" ][ "MOC_BIN" ] )
-   OTHERWISE
-      IF hbmk2[ "lTRACE" ]
-         hbmk2_OutStd( hbmk2, "@@ Entered plugin: " + hbmk2[ "cSTATE" ] )
-      ENDIF
+      hbmk2_OutStd( hbmk2, "POST_ALL: " + hbmk2[ "vars" ][ "MyVar" ] )
+      EXIT
+
    ENDSWITCH
 
    RETURN NIL
