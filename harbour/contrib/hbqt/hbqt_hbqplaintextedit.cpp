@@ -1602,10 +1602,12 @@ void HBQPlainTextEdit::hbPaintSelection( QPaintEvent * event )
       int rb = rowBegins    <= rowEnds    ? rowBegins    : rowEnds;
       int re = rowBegins    <= rowEnds    ? rowEnds      : rowBegins;
 
+      int       ttop = ( int ) blockBoundingGeometry( firstVisibleBlock() ).translated( contentOffset() ).top();
+
       int          t = firstVisibleBlock().blockNumber();
       int          c = hbFirstVisibleColumn();
       int fontHeight = fontMetrics().height();
-      int          b = t + ( viewport()->height() / fontHeight ) + 1;
+      int          b = t + ( ( viewport()->height() - ttop ) / fontHeight ) + 1;
 
       re = re > b ? b : re;
 
@@ -1616,7 +1618,7 @@ void HBQPlainTextEdit::hbPaintSelection( QPaintEvent * event )
          int marginX = ( c > 0 ? 0 : contentsRect().left() ) + 2 ;
          int fontWidth = fontMetrics().averageCharWidth();
 
-         int top = ( ( rb <= t ) ? 0 : ( ( rb - t ) * fontHeight ) );
+         int top = ( ( rb <= t ) ? 0 : ( ( rb - t ) * fontHeight ) ) + ttop;
          int btm = ( ( re - t + 1 ) * fontHeight ) - top;
          btm = btm > viewport()->height() ? viewport()->height() : btm;
          QBrush br( m_selectionColor );
