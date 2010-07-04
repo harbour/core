@@ -107,7 +107,7 @@ Section "Main components" hb_main
   File "$%HB_ROOT%hb21\bin\hbrun-dll.exe"
   File "$%HB_ROOT%hb21\bin\hbtest.exe"
   File "$%HB_ROOT%hb21\bin\hbformat.exe"
-  File /nonfatal "$%HB_ROOT%hb21\bin\hbmk.cfg"
+  File /nonfatal "$%HB_ROOT%hb21\bin\hbmk.hbc"
   File "$%HB_ROOT%hb21\bin\upx*.*"
 
   SetOutPath $INSTDIR\include

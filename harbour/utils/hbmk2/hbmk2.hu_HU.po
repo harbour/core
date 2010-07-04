@@ -242,11 +242,6 @@ msgstr "A kapcsolók megadhatók %1$s környezeti változóban is"
 msgid "ignore errors when running compiler tools (default: off)"
 msgstr "külsõ parancsok hibáinak figyelmen hagyása (alapértelmezés: ki)"
 
-#: hbmk2.prg:7959
-#, c-format
-msgid ".hbc config files in current dir are automatically processed."
-msgstr "Az aktuális könyvtárban található .hbc állományok automatikusan feldolgozásra kerülnek."
-
 #: hbmk2.prg:1805 hbmk2.prg:6017
 #, c-format
 msgid "%1$s"
@@ -584,11 +579,6 @@ msgstr ""
 
 #: hbmk2.prg:7941
 #, c-format
-msgid "do not process .hbc files in current directory"
-msgstr "aktuális könyvtárban levõ .hbc fájlokat ne dolgozza fel"
-
-#: hbmk2.prg:7941
-#, c-format
 msgid "pass flag to resource compiler (Windows only)"
 msgstr "továbbítsa a kapcsolót az erõforrás fordítónak (csak Windows-on)"
 
@@ -709,8 +699,8 @@ msgstr ""
 
 #: hbmk2.prg:7959
 #, c-format
-msgid "%1$s option file in hbmk2 directory is always processed if it exists. On *nix platforms ~/.harbour, /etc/harbour, <base>/etc/harbour, <base>/etc are checked (in that order) before the hbmk2 directory. The file format is the same as .hbc."
-msgstr "%1$s opció fájl a hbmk2 könyvtárában mindig feldolgozásra kerül amennyiben létezik. *nix platformokon a fájl a ~/.harbour, /etc/harbour, <base>/etc/harbour, <base>/etc könyvtárak (ebben a sorrendben) szintén ellenõrzésre kerülnek. Az fájl formátuma megegyezik a .hbc-vel."
+msgid "%1$s option file in hbmk2 directory is always processed if it exists. On *nix platforms ~/.harbour, /etc/harbour, <base>/etc/harbour, <base>/etc are checked (in that order) before the hbmk2 directory."
+msgstr "%1$s opció fájl a hbmk2 könyvtárában mindig feldolgozásra kerül amennyiben létezik. *nix platformokon a fájl a ~/.harbour, /etc/harbour, <base>/etc/harbour, <base>/etc könyvtárak (ebben a sorrendben) szintén ellenõrzésre kerülnek."
 
 #: hbmk2.prg:5806
 #, c-format

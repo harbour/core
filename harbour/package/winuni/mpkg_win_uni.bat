@@ -30,7 +30,7 @@ echo "hb21\bin\hbrun.exe"                         >> _hbfiles
 echo "hb21\bin\hbrun-dll.exe"                     >> _hbfiles
 echo "hb21\bin\hbtest.exe"                        >> _hbfiles
 echo "hb21\bin\hbformat.exe"                      >> _hbfiles
-if exist "hb21\bin\hbmk.cfg" echo "hb21\bin\hbmk.cfg" >> _hbfiles
+if exist "hb21\bin\hbmk.hbc" echo "hb21\bin\hbmk.hbc" >> _hbfiles
 echo "hb21\bin\upx*.*"                            >> _hbfiles
 echo "hb21\include\*.*"                           >> _hbfiles
 echo "hb21\bin\harbour-x64.exe"                   >> _hbfiles

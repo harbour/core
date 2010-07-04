@@ -40,7 +40,7 @@ PROCEDURE Main()
       RETURN
    ENDIF
 
-   /* Creating hbmk.cfg */
+   /* Creating hbmk.hbc */
 
    lContent := .F.
    cFile := ""
@@ -64,10 +64,10 @@ PROCEDURE Main()
    ENDIF
 
    IF lContent
-      OutStd( "! Making " + GetEnv( "HB_BIN_INSTALL" ) + _PS_ + "hbmk.cfg..." + hb_osNewLine() )
-      hb_MemoWrit( GetEnv( "HB_BIN_INSTALL" ) + _PS_ + "hbmk.cfg", cFile )
+      OutStd( "! Making " + GetEnv( "HB_BIN_INSTALL" ) + _PS_ + "hbmk.hbc..." + hb_osNewLine() )
+      hb_MemoWrit( GetEnv( "HB_BIN_INSTALL" ) + _PS_ + "hbmk.hbc", cFile )
    ELSE
-      FErase( GetEnv( "HB_BIN_INSTALL" ) + _PS_ + "hbmk.cfg" )
+      FErase( GetEnv( "HB_BIN_INSTALL" ) + _PS_ + "hbmk.hbc" )
    ENDIF
 
    /* Installing some misc files */

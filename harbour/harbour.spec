@@ -544,7 +544,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/hbi18n
 %{_bindir}/hbformat
 %{_bindir}/hbmk2
-%verify(not md5 mtime) %config %{_bindir}/hbmk.cfg
+%verify(not md5 mtime) %config %{_bindir}/hbmk.hbc
 %{_mandir}/man1/*.1*
 %dir %{_includedir}/%{name}
 %attr(644,root,root) %{_includedir}/%{name}/*
