@@ -7,7 +7,9 @@ ROOT := ../../
 include $(TOP)$(ROOT)config/global.mk
 
 ifneq ($(HB_PLATFORM),wce)
-   HB_PRGFLAGS := -gc3
+   ifneq ($(HB_COMPILER),pcc)
+      HB_PRGFLAGS := -gc3
+   endif
 endif
 
 C_SOURCES := \

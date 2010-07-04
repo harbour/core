@@ -740,6 +740,19 @@ char * hb_verCompiler( void )
       iVerPatch = 0;
    #endif
 
+#elif defined( __PCC__ )
+
+   pszName = "Portable C Compiler";
+
+   iVerMajor = __PCC__;
+   iVerMinor = __PCC_MINOR__;
+   iVerPatch = __PCC_MINORMINOR__;
+
+   #if defined( __GCC__ )
+      hb_strncpy( szSub, "(with GCC %d.%d.%d emulation)",
+                  __GNUC__, __GNUC_MINOR__, __GNUC_PATCHLEVEL__ )
+   #endif
+
 #elif defined( __GNUC__ )
 
    #if defined( __DJGPP__ )

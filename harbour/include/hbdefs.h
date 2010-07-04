@@ -839,7 +839,7 @@ typedef HB_U32 HB_FATTR;
 #if defined( __GNUC__ )
 
 #  if ( __GNUC__ > 4 || ( __GNUC__ == 4 && __GNUC_MINOR__ >= 3 ) ) && \
-      ! defined( __ICC ) && !defined( __OPENCC__ )
+      ! defined( __ICC ) && !defined( __OPENCC__ ) && !defined( __PCC__ )
 #     define HB_BUILTIN_BSWAP 1
 #  else
 #     define HB_BUILTIN_BSWAP 0

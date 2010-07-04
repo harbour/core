@@ -9,7 +9,9 @@ YACC_FLAGS := -d $(YACC_FLAGS)
 ifeq ($(HB_BUILD_DEBUG),yes)
    HB_CFLAGS := -DHB_TR_LEVEL_DEBUG $(HB_CFLAGS)
 else
-   HB_PRGFLAGS := -l $(HB_PRGFLAGS)
+   ifneq ($(HB_COMPILER),pcc)
+      HB_PRGFLAGS := -l $(HB_PRGFLAGS)
+   endif
 endif
 
 HB_CFLAGS := -DHB_LEGACY_TYPES_OFF $(HB_CFLAGS)
