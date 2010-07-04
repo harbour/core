@@ -148,6 +148,8 @@ CLASS xbpMenuBar INHERIT xbpWindow
    METHOD   setStyle()
    METHOD   numItems()                            INLINE len( ::aMenuItems )
 
+   METHOD   setStyleSheet( cCSS, cCSSPops )
+
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
@@ -180,9 +182,8 @@ METHOD xbpMenuBar:create( oParent, aPresParams, lVisible )
 
    ::xbpWindow:create( ::oParent, , , , ::aPresParams, ::visible )
 
-   ::oWidget := QMenuBar():new( ::oParent:pWidget )
-
-   ::oParent:oWidget:setMenuBar( ::pWidget )
+   ::oWidget := QMenuBar():new()
+   ::oParent:oWidget:setMenuBar( ::oWidget )
 
    if !empty( ::oWidget )
       ::oParent:oMenu := Self
@@ -541,15 +542,15 @@ METHOD xbpMenuBar:execSlot( cSlot, p )
          ELSE
             ::itemSelected( nIndex )
          ENDIF
-      ENDIF 
-         
-   ELSEIF cSlot == "hovered()" 
-      IF !empty( p ) 
+      ENDIF
+
+   ELSEIF cSlot == "hovered()"
+      IF !empty( p )
          IF ( nIndex := ascan( ::aMenuItems, {|e_| iif( hb_isNumeric( e_[ 2 ] ), e_[ 2 ] == p, .f. ) } ) ) > 0
-            ::itemMarked( nIndex )            
+            ::itemMarked( nIndex )
          ENDIF
-      ENDIF  
-             
+      ENDIF
+
    ENDIF
 
    RETURN nil
@@ -562,7 +563,7 @@ METHOD xbpMenuBar:beginMenu( ... )
       ::sl_beginMenu := a_[ 1 ]
    ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_beginMenu )
       eval( ::sl_beginMenu, NIL, NIL, Self )
-   ENDIF 
+   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -573,7 +574,7 @@ METHOD XbpMenuBar:endMenu( ... )
       ::sl_endMenu := a_[ 1 ]
    ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_endMenu )
       eval( ::sl_endMenu, NIL, NIL, Self )
-   ENDIF 
+   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -584,31 +585,31 @@ METHOD XbpMenuBar:itemMarked( ... )
       ::sl_itemMarked := a_[ 1 ]
    ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_itemMarked )
       eval( ::sl_itemMarked, a_[ 1 ], NIL, Self )
-   ENDIF 
+   ENDIF
    RETURN Self
-   
+
 /*----------------------------------------------------------------------*/
-   
+
 METHOD XbpMenuBar:itemSelected( ... )
    LOCAL a_:= hb_aParams()
    IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
       ::sl_itemSelected := a_[ 1 ]
    ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_itemSelected )
       eval( ::sl_itemSelected, a_[ 1 ], NIL, Self )
-   ENDIF 
+   ENDIF
    RETURN Self
-   
+
 /*----------------------------------------------------------------------*/
-   
+
 METHOD XbpMenuBar:drawItem( ... )
    LOCAL a_:= hb_aParams()
    IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
       ::sl_drawItem := a_[ 1 ]
    ELSEIF len( a_ ) >= 2 .AND. hb_isBlock( ::sl_drawItem )
       eval( ::sl_drawItem, a_[ 1 ], a_[ 2 ], Self )
-   ENDIF 
+   ENDIF
    RETURN Self
-   
+
 /*----------------------------------------------------------------------*/
 
 METHOD XbpMenuBar:measureItem( ... )
@@ -617,9 +618,9 @@ METHOD XbpMenuBar:measureItem( ... )
       ::sl_measureItem := a_[ 1 ]
    ELSEIF len( a_ ) >= 2 .AND. hb_isBlock( ::sl_measureItem )
       eval( ::sl_measureItem, a_[ 1 ], a_[ 2 ], Self )
-   ENDIF 
+   ENDIF
    RETURN Self
-   
+
 /*----------------------------------------------------------------------*/
 
 METHOD XbpMenuBar:onMenuKey( ... )
@@ -628,10 +629,31 @@ METHOD XbpMenuBar:onMenuKey( ... )
       ::sl_onMenuKey := a_[ 1 ]
    ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_onMenuKey )
       eval( ::sl_onMenuKey, a_[ 1 ], NIL, Self )
-   ENDIF 
+   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
+
+METHOD xbpMenuBar:setStyleSheet( cCSS, cCSSPops )
+   #if 0
+   LOCAL aChild
+
+   FOR EACH aChild IN ::aItems
+      IF hb_isObject( aChild[ 1 ] == QMF_POPUP )
+         aChild[ 2 ]:setStyleSheet( cCSSPops )
+      ENDIF
+   NEXT
+   #endif
+   LOCAL oMenu
+
+   FOR EACH oMenu IN ::aChildren
+      oMenu:setStyleSheet( cCSSPops )
+   NEXT
+   ::oWidget:setStyleSheet( cCSS )
+
+   RETURN Self
+
+/*------------------------------------------------------------------------*/
 
 METHOD xbpMenuBar:setStyle()
    LOCAL txt_:={}
@@ -646,6 +668,7 @@ METHOD xbpMenuBar:setStyle()
    aadd( txt_, '    spacing: 3px; /* spacing between menu bar items */                    ' )
    aadd( txt_, '    padding: 1px 4px;                                                     ' )
    aadd( txt_, '    background: transparent;                                              ' )
+   aadd( txt_, '    color: #a8a8a8;                                                       ' )
    aadd( txt_, '    border-radius: 4px;                                                   ' )
    aadd( txt_, '}                                                                         ' )
    aadd( txt_, '                                                                          ' )
@@ -684,6 +707,7 @@ CLASS xbpMenu INHERIT xbpMenuBar
    METHOD   setTitle( cTitle )
    METHOD   popUp( oXbp, aPos, nDefaultItem, nControl )
    METHOD   setStyle()
+   METHOD   setStyleSheet( cCSS )
 
    ENDCLASS
 
@@ -747,6 +771,18 @@ METHOD xbpMenu:popUp( oXbp, aPos, nDefaultItem, nControl )
    RETURN 0
 
 /*----------------------------------------------------------------------*/
+
+METHOD xbpMenu:setStyleSheet( cCSS )
+   LOCAL oMenu
+
+   FOR EACH oMenu IN ::aChildren
+      oMenu:setStyleSheet( cCSS )
+   NEXT
+   ::oWidget:setStyleSheet( cCSS )
+
+   RETURN Self
+
+/*------------------------------------------------------------------------*/
 
 METHOD xbpMenu:setStyle()
    LOCAL s, txt_:={}
