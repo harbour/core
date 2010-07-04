@@ -944,6 +944,8 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          tmp := Val( SubStr( cParam, 8 ) )
          IF tmp > 40
             hbmk[ _HBMK_nMaxCol ] := tmp
+         ELSEIF tmp == 0
+            hbmk[ _HBMK_nMaxCol ] := 65535
          ENDIF
 
       CASE cParamL             == "-hbrun"     ; lSkipBuild := .T. ; hbmk[ _HBMK_lRUN ] := .T.
@@ -10039,7 +10041,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-comp[iler]=<comp>" , I_( "select C compiler.\nSpecial value:\n - bld: use original build settings (default on *nix)" ) },;
       { "-build=<name>"      , I_( "use a specific build name" ) },;
       { "-lang=<lang>"       , I_( "override default language. Similar to HB_LANG envvar." ) },;
-      { "-width=<n>"         , I_( "set output width to <n> characters." ) },;
+      { "-width=<n>"         , I_( "set output width to <n> characters (0=unlimited)." ) },;
       { "--version"          , I_( "display version header only" ) } }
 
    LOCAL aText_Notes := {;

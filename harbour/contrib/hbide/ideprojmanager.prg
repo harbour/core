@@ -1263,7 +1263,7 @@ METHOD IdeProjManager:buildSource( lExecutable )
    aadd( aHbp, "-trace"     )
    aadd( aHbp, "-info"      )
    aadd( aHbp, "-lang=en"   )
-   aadd( aHbp, "-width=512" )
+   aadd( aHbp, "-width=0"   )
    aadd( aHbp, "-rebuild"   )
    IF lExecutable
       aadd( aHbp, "-hbexe"  )

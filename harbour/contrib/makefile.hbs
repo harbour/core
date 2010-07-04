@@ -298,7 +298,7 @@ STATIC FUNCTION call_hbmk2( cProject, cTargetDir, cOptionsPre, cOptionsPost )
    hb_FNameSplit( cProject, @cDir, @cName )
 
    nErrorLevel := mk_hb_processRun( PathSepToSelf( GetEnv( "HB_HOST_BIN_DIR" ) ) + _PS_ + "hbmk2" +;
-                                    " -quiet -lang=en -width=1000 -q0" + cOptionsPre +;
+                                    " -quiet -lang=en -width=0 -q0" + cOptionsPre +;
                                     " " + cProject +;
                                     cOptionsPost +;
                                     " -workdir=" + cTargetDir + "/${hb_work}/" + cName + "${hb_workdynsub}" +;
