@@ -2513,6 +2513,8 @@ FUNCTION hbide_request()
    REQUEST XbpTreeView
    REQUEST XbpWindow
 
+   #include "hbextern.ch"   /* Link all Harbour Functions : needed to run auto scripts */
+
    RETURN NIL
 
 /*----------------------------------------------------------------------*/

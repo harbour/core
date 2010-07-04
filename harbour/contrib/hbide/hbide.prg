@@ -473,12 +473,6 @@ METHOD HbIde:create( aParams )
    /* Fill various elements of the IDE */
    ::oPM:populate()
    ::oSM:loadSources()
-   #if 0
-   ::oDK:setView( ::cWrkView )
-   IF !empty( ::oIni:aFiles )
-      ::oEM:setSourceVisibleByIndex( max( 0, val( ::oIni:cRecentTabIndex ) )
-   ENDIF
-   #endif
 
    ::updateTitleBar()
    /* Set some last settings */
@@ -548,6 +542,9 @@ METHOD HbIde:create( aParams )
 
    /* Load tags last tagged projects */
    ::oFN:loadTags( ::oINI:aTaggedProjects )
+
+   /* Run Auto Scripts */
+   hbide_execAutoScripts()
 
    /* Initialize plugins  */
    hbide_loadPlugins( Self, "1.0" )

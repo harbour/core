@@ -158,12 +158,13 @@ STATIC FUNCTION hbide_loadAPlugin( cPlugin, oIde, cVer )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION hbide_runAScript( cBuffer, cCompFlags )
+FUNCTION hbide_runAScript( cBuffer, cCompFlags, xParam )
    LOCAL cFile, pHrb, oErr
    LOCAL bError := ErrorBlock( {|o| break( o ) } )
    LOCAL lError := .f.
 
    HB_SYMBOL_UNUSED( cCompFlags )
+   HB_SYMBOL_UNUSED( xParam )
 
    BEGIN SEQUENCE
       cFile := hb_compileFromBuf( cBuffer, cCompFlags ) //, "-n2", "-w3", "-es2", "-q0" )
@@ -177,9 +178,9 @@ FUNCTION hbide_runAScript( cBuffer, cCompFlags )
 
    IF ! lError .AND. !empty( pHrb )
       BEGIN SEQUENCE
-         hb_hrbDo( pHrb )
+         hb_hrbDo( pHrb, xParam )
       RECOVER USING oErr
-         MsgBox( oErr:description )
+         MsgBox( "XXX" + oErr:description )
       END SEQUENCE
    ENDIF
 
@@ -188,3 +189,23 @@ FUNCTION hbide_runAScript( cBuffer, cCompFlags )
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
+
+FUNCTION hbide_execAutoScripts()
+   LOCAL cPath, cMask, a_, dir_, cFileName, cBuffer
+
+   cPath := hb_dirBase() + hb_osPathSeparator() + "plugins" + hb_osPathSeparator()
+   cMask := "auto_*.prg"
+
+   dir_:= directory( cPath + cMask )
+   FOR EACH a_ IN dir_
+      cFileName := a_[ 1 ]
+      IF !empty( cBuffer := hb_memoRead( cPath + cFileName ) )
+         HB_TRACE( HB_TR_ALWAYS, cFileName )
+
+         hbide_runAScript( cBuffer, /* No Compiler Flag */, hbide_setIde() )
+      ENDIF
+   NEXT
+
+   RETURN NIL
+
+/*------------------------------------------------------------------------*/
