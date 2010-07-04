@@ -1619,7 +1619,7 @@ void HBQPlainTextEdit::hbPaintSelection( QPaintEvent * event )
          int fontWidth = fontMetrics().averageCharWidth();
 
          int top = ( ( rb <= t ) ? 0 : ( ( rb - t ) * fontHeight ) ) + ttop;
-         int btm = ( ( re - t + 1 ) * fontHeight ) - top;
+         int btm = ( ( re - t + 1 ) * fontHeight ) - top + ttop;
          btm = btm > viewport()->height() ? viewport()->height() : btm;
          QBrush br( m_selectionColor );
 
