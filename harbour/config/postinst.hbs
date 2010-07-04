@@ -24,7 +24,6 @@ PROCEDURE Main()
    LOCAL aFile
 
    LOCAL tmp
-   LOCAL cOptions
    LOCAL cOldDir
 
    LOCAL lContent
@@ -88,43 +87,6 @@ PROCEDURE Main()
       /* public Harbour scripts */
       FOR EACH tmp IN { "hbxpatch.hbs" }
          hb_FCopy( "bin" + _PS_ + tmp, GetEnv( "HB_BIN_INSTALL" ) + _PS_ + tmp )
-      NEXT
-   ENDIF
-
-   /* Converting build options to hbmk2 options */
-
-   cOptions := ""
-   IF GetEnv( "HB_BUILD_MODE" ) == "cpp"
-      cOptions += " -cpp=yes"
-   ELSEIF GetEnv( "HB_BUILD_MODE" ) == "c"
-      cOptions += " -cpp=no"
-   ENDIF
-   IF GetEnv( "HB_BUILD_DEBUG" ) == "yes"
-      cOptions += " -debug"
-   ENDIF
-
-   /* Creating shared version of Harbour binaries
-      (except one which have shared versions build by default and hbmk2) */
-
-   IF GetEnv( "HB_PLATFORM" ) $ "win|wce|os2" .AND. ;
-      !( GetEnv( "HB_BUILD_DLL" ) == "no" ) .AND. ;
-      !( GetEnv( "HB_BUILD_SHARED" ) == "yes" ) .AND. ;
-      ! Empty( GetEnv( "HB_HOST_BIN_DIR" ) )
-
-      OutStd( "! Making shared version of Harbour binaries..." + hb_osNewLine() )
-
-      FOR EACH tmp IN Directory( "utils" + _PS_ + hb_osFileMask(), "D" )
-         IF "D" $ tmp[ F_ATTR ] .AND. ;
-            !( tmp[ F_NAME ] == "." ) .AND. ;
-            !( tmp[ F_NAME ] == ".." ) .AND. ;
-            !( tmp[ F_NAME ] $ "hbformat|hbi18n|hbtest|hbmk2" ) .AND. ;
-            hb_FileExists( "utils" + _PS_ + tmp[ F_NAME ] + _PS_ + tmp[ F_NAME ] + ".hbp" )
-
-            mk_hb_processRun( PathSepToSelf( GetEnv( "HB_HOST_BIN_DIR" ) ) + _PS_ + "hbmk2" +;
-                              " -quiet -lang=en -q0 -shared" + cOptions +;
-                              " utils/" + tmp[ F_NAME ] + "/" + tmp[ F_NAME ] + ".hbp" +;
-                              " -o${HB_BIN_INSTALL}/" + tmp[ F_NAME ] + "-dll" )
-         ENDIF
       NEXT
    ENDIF
 

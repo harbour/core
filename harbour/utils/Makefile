@@ -17,6 +17,4 @@ ifneq ($(HB_BUILD_PARTS),compiler)
 
 endif
 
-DIRS += $(HB_UTIL_ADDONS)
-
 include $(ROOT)config/dir.mk

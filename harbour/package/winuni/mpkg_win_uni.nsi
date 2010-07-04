@@ -104,9 +104,9 @@ Section "Main components" hb_main
   File "$%HB_ROOT%hb21\bin\hbmk2.*.hbl"
   File "$%HB_ROOT%hb21\bin\hbpp.exe"
   File "$%HB_ROOT%hb21\bin\hbrun.exe"
-  File "$%HB_ROOT%hb21\bin\hbrun-dll.exe"
   File "$%HB_ROOT%hb21\bin\hbtest.exe"
   File "$%HB_ROOT%hb21\bin\hbformat.exe"
+  File "$%HB_ROOT%hb21\bin\hbnetio.exe"
   File /nonfatal "$%HB_ROOT%hb21\bin\hbmk.hbc"
   File "$%HB_ROOT%hb21\bin\upx*.*"
 
@@ -139,9 +139,9 @@ Section /o "x64 tools" hb_main_x64
   File "$%HB_ROOT%hb21\bin\hbmk2-x64.exe"
   File "$%HB_ROOT%hb21\bin\hbpp-x64.exe"
   File "$%HB_ROOT%hb21\bin\hbrun-x64.exe"
-  File "$%HB_ROOT%hb21\bin\hbrun-dll-x64.exe"
   File "$%HB_ROOT%hb21\bin\hbtest-x64.exe"
   File "$%HB_ROOT%hb21\bin\hbformat-x64.exe"
+  File "$%HB_ROOT%hb21\bin\hbnetio-x64.exe"
 SectionEnd
 
 !ifndef PKG_NO_MINGW

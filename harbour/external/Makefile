@@ -4,7 +4,6 @@
 
 ROOT := ../
 
-# standalone contribs
 DIRS := \
    sqlite3 \
    bzip2 \
@@ -22,8 +21,6 @@ ifneq ($(HB_EXTERNALLIBS),)
    DIRS := $(HB_EXTERNALLIBS)
 endif
 endif
-
-DIRS += $(HB_EXTERNAL_ADDONS)
 
 ifneq ($(DIRS),)
    include $(TOP)$(ROOT)config/dir.mk

@@ -27,9 +27,9 @@ echo "hb21\bin\hbmk2.exe"                         >> _hbfiles
 echo "hb21\bin\hbmk2.*.hbl"                       >> _hbfiles
 echo "hb21\bin\hbpp.exe"                          >> _hbfiles
 echo "hb21\bin\hbrun.exe"                         >> _hbfiles
-echo "hb21\bin\hbrun-dll.exe"                     >> _hbfiles
 echo "hb21\bin\hbtest.exe"                        >> _hbfiles
 echo "hb21\bin\hbformat.exe"                      >> _hbfiles
+echo "hb21\bin\hbnetio.exe"                       >> _hbfiles
 if exist "hb21\bin\hbmk.hbc" echo "hb21\bin\hbmk.hbc" >> _hbfiles
 echo "hb21\bin\upx*.*"                            >> _hbfiles
 echo "hb21\include\*.*"                           >> _hbfiles
@@ -38,9 +38,9 @@ echo "hb21\bin\hbi18n-x64.exe"                    >> _hbfiles
 echo "hb21\bin\hbmk2-x64.exe"                     >> _hbfiles
 echo "hb21\bin\hbpp-x64.exe"                      >> _hbfiles
 echo "hb21\bin\hbrun-x64.exe"                     >> _hbfiles
-echo "hb21\bin\hbrun-dll-x64.exe"                 >> _hbfiles
 echo "hb21\bin\hbtest-x64.exe"                    >> _hbfiles
 echo "hb21\bin\hbformat-x64.exe"                  >> _hbfiles
+echo "hb21\bin\hbnetio-x64.exe"                   >> _hbfiles
 echo "hb21\lib\win\mingw\*.*"                     >> _hbfiles
 echo "hb21\lib\win\mingw64\*.*"                   >> _hbfiles
 echo "hb21\lib\wce\mingwarm\*.*"                  >> _hbfiles

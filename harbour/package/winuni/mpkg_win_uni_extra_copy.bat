@@ -44,8 +44,8 @@ rem ; Using msvc64 because mingw64 .dll handling is broken.
  copy /y       ..\..\pkg\win\msvc64\harbour-2.1.0-win-msvc64\bin\hbi18n.exe        F:\hb\hb21\bin\hbi18n-x64.exe
  copy /y       ..\..\pkg\win\msvc64\harbour-2.1.0-win-msvc64\bin\hbmk2.exe         F:\hb\hb21\bin\hbmk2-x64.exe
  copy /y       ..\..\pkg\win\msvc64\harbour-2.1.0-win-msvc64\bin\hbrun.exe         F:\hb\hb21\bin\hbrun-x64.exe
- copy /y       ..\..\pkg\win\msvc64\harbour-2.1.0-win-msvc64\bin\hbrun-dll.exe     F:\hb\hb21\bin\hbrun-dll-x64.exe
  copy /y       ..\..\pkg\win\msvc64\harbour-2.1.0-win-msvc64\bin\hbtest.exe        F:\hb\hb21\bin\hbtest-x64.exe
+ copy /y       ..\..\pkg\win\msvc64\harbour-2.1.0-win-msvc64\bin\hbnetio.exe       F:\hb\hb21\bin\hbnetio-x64.exe
 
 xcopy /y       "%HB_DIR_UPX%upx.exe"                                               F:\hb\hb21\bin\
  copy /y       "%HB_DIR_UPX%LICENSE"                                               F:\hb\hb21\bin\upx_LICENSE.txt
