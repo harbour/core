@@ -111,6 +111,7 @@ CLASS IdeToolsManager INHERIT IdeObject
    METHOD populateButtonsTable( nIndex )
    METHOD buildUserToolbars()
    METHOD populatePlugins( lClear )
+   METHOD setStyleSheet( cCSS )
 
    ENDCLASS
 
@@ -123,6 +124,21 @@ METHOD IdeToolsManager:new( oIde )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
+
+METHOD IdeToolsManager:setStyleSheet( cCSS )
+   LOCAL oToolbar
+
+   FOR EACH oToolbar IN ::aToolbars
+      IF !empty( oToolbar )
+         oToolbar:setStyleSheet( cCSS )
+      ENDIF
+   NEXT
+   ::qToolsMenu:setStyleSheet( GetStyleSheet( "QMenuPop", ::nAnimantionMode ) )
+   ::qPanelsMenu:setStyleSheet( GetStyleSheet( "QMenuPop", ::nAnimantionMode ) )
+
+   RETURN Self
+
+/*------------------------------------------------------------------------*/
 
 METHOD IdeToolsManager:create( oIde )
    LOCAL oAct
@@ -634,6 +650,7 @@ METHOD IdeToolsManager:buildToolsButton()
    LOCAL a_, qAct
 
    ::qToolsMenu := QMenu():new()
+   ::qToolsMenu:setStyleSheet( GetStyleSheet( "QMenuPop", ::nAnimantionMode ) )
    FOR EACH a_ IN ::aTools
       qAct := ::qToolsMenu:addAction( a_[ 1 ] )
       ::connect( qAct, "triggered(bool)", {|| ::execTool( a_[ 1 ] ) } )
@@ -655,6 +672,7 @@ METHOD IdeToolsManager:buildPanelsButton()
    LOCAL cView
 
    ::qPanelsMenu := QMenu():new()
+   ::qPanelsMenu:setStyleSheet( GetStyleSheet( "QMenuPop", ::nAnimantionMode ) )
    ::addPanelsMenu( "Main" )
    FOR EACH cView IN ::oINI:aViews
       ::addPanelsMenu( cView )

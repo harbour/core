@@ -382,14 +382,17 @@ METHOD IdeActions:buildToolBar()
 METHOD IdeActions:buildMainMenu()
    LOCAL oMenuBar, oSubMenu, oSubMenu2, n, f
    LOCAL oIde := ::oIde
+   // LOCAL cTheme := "QMenuPop"
 
    oMenuBar := ::oDlg:MenuBar()
-   oMenuBar:setStyleSheet( GetStyleSheet( "QMenuBar", ::nAnimantionMode ) )
+   //oMenuBar:setStyleSheet( GetStyleSheet( "QMenuBar", ::nAnimantionMode ) )
 
    /*----------------------------------------------------------------------------*/
    /*                                   File                                     */
    /*----------------------------------------------------------------------------*/
    oSubMenu := XbpMenu():new( oMenuBar ):create()
+   //oSubMenu:oWidget:setStyleSheet( GetStyleSheet( cTheme ) )
+
    oSubMenu:title := "~File"
 
    oSubMenu2 := XbpMenu():new( oSubMenu ):create()
@@ -523,36 +526,37 @@ METHOD IdeActions:buildMainMenu()
    oSubMenu := XbpMenu():new( oMenuBar ):create()
    oSubMenu:title := "~View"
    oMenuBar:addItem( { oSubMenu, NIL } )
+   //oSubMenu:oWidget:setStyleSheet( GetStyleSheet( cTheme ) )
 
-   oSubMenu:addItem( { "Toggle Animation", {|| oIde:execAction( "Animate" ) } } )
+   oSubMenu:addItem( { "Toggle Animation", {|| oIde:execAction( "Animate" ) } }         )
    oSubMenu:oWidget:addSeparator()
-   oSubMenu:oWidget:addAction_4( ::oIde:oMainToolbar:oWidget:toggleViewAction() )
-   oSubMenu:oWidget:addAction_4( ::qTBarPanels:toggleViewAction()             )
-   oSubMenu:oWidget:addAction_4( ::qTBarLines:toggleViewAction()              )
-   oSubMenu:oWidget:addAction_4( ::qTBarDocks:toggleViewAction()              )
+   oSubMenu:oWidget:addAction_4( ::oIde:oMainToolbar:oWidget:toggleViewAction()         )
+   oSubMenu:oWidget:addAction_4( ::qTBarPanels:toggleViewAction()                       )
+   oSubMenu:oWidget:addAction_4( ::qTBarLines:toggleViewAction()                        )
+   oSubMenu:oWidget:addAction_4( ::qTBarDocks:toggleViewAction()                        )
    oSubMenu:addItem( { "Toggle Statusbar", {|| oIde:execAction( "ToggleStatusBar" ) } } )
    oSubMenu:oWidget:addSeparator()
-   oSubMenu:oWidget:addAction_4( ::oDockPT:oWidget:toggleViewAction()         )
-   oSubMenu:oWidget:addAction_4( ::oDockED:oWidget:toggleViewAction()         )
-   oSubMenu:oWidget:addAction_4( ::oSkltnsTreeDock:oWidget:toggleViewAction() )
+   oSubMenu:oWidget:addAction_4( ::oDockPT:oWidget:toggleViewAction()                   )
+   oSubMenu:oWidget:addAction_4( ::oDockED:oWidget:toggleViewAction()                   )
+   oSubMenu:oWidget:addAction_4( ::oSkltnsTreeDock:oWidget:toggleViewAction()           )
    oSubMenu:oWidget:addSeparator()
-   oSubMenu:oWidget:addAction_4( ::oHelpDock:oWidget:toggleViewAction()       )
-   oSubMenu:oWidget:addAction_4( ::oDocViewDock:oWidget:toggleViewAction()    )
-   oSubMenu:oWidget:addAction_4( ::oDocWriteDock:oWidget:toggleViewAction()   )
-   oSubMenu:oWidget:addAction_4( ::oFuncDock:oWidget:toggleViewAction()       )
-   oSubMenu:oWidget:addAction_4( ::oFunctionsDock:oWidget:toggleViewAction()  )
-   oSubMenu:oWidget:addAction_4( ::oPropertiesDock:oWidget:toggleViewAction() )
-   oSubMenu:oWidget:addAction_4( ::oEnvironDock:oWidget:toggleViewAction()    )
-   oSubMenu:oWidget:addAction_4( ::oSkeltnDock:oWidget:toggleViewAction()     )
-   oSubMenu:oWidget:addAction_4( ::oThemesDock:oWidget:toggleViewAction()     )
-   oSubMenu:oWidget:addAction_4( ::oFindDock:oWidget:toggleViewAction()       )
-   oSubMenu:oWidget:addAction_4( ::oSourceThumbnailDock:oWidget:toggleViewAction() )
-   oSubMenu:oWidget:addAction_4( ::oQScintillaDock:oWidget:toggleViewAction() )
+   oSubMenu:oWidget:addAction_4( ::oHelpDock:oWidget:toggleViewAction()                 )
+   oSubMenu:oWidget:addAction_4( ::oDocViewDock:oWidget:toggleViewAction()              )
+   oSubMenu:oWidget:addAction_4( ::oDocWriteDock:oWidget:toggleViewAction()             )
+   oSubMenu:oWidget:addAction_4( ::oFuncDock:oWidget:toggleViewAction()                 )
+   oSubMenu:oWidget:addAction_4( ::oFunctionsDock:oWidget:toggleViewAction()            )
+   oSubMenu:oWidget:addAction_4( ::oPropertiesDock:oWidget:toggleViewAction()           )
+   oSubMenu:oWidget:addAction_4( ::oEnvironDock:oWidget:toggleViewAction()              )
+   oSubMenu:oWidget:addAction_4( ::oSkeltnDock:oWidget:toggleViewAction()               )
+   oSubMenu:oWidget:addAction_4( ::oThemesDock:oWidget:toggleViewAction()               )
+   oSubMenu:oWidget:addAction_4( ::oFindDock:oWidget:toggleViewAction()                 )
+   oSubMenu:oWidget:addAction_4( ::oSourceThumbnailDock:oWidget:toggleViewAction()      )
+   oSubMenu:oWidget:addAction_4( ::oQScintillaDock:oWidget:toggleViewAction()           )
 
    oSubMenu:oWidget:addSeparator()
-   oSubMenu:oWidget:addAction_4( ::oDockB2:oWidget:toggleViewAction()         )
- * oSubMenu:oWidget:addAction_4( ::oDockB1:oWidget:toggleViewAction()         )
- * oSubMenu:oWidget:addAction_4( ::oDockB:oWidget:toggleViewAction()          )
+   oSubMenu:oWidget:addAction_4( ::oDockB2:oWidget:toggleViewAction()                   )
+ * oSubMenu:oWidget:addAction_4( ::oDockB1:oWidget:toggleViewAction()                   )
+ * oSubMenu:oWidget:addAction_4( ::oDockB:oWidget:toggleViewAction()                    )
 
    /*----------------------------------------------------------------------------*/
    /*                                   Project                                  */

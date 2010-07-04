@@ -113,6 +113,7 @@ FUNCTION hbide_execPopup( aPops, aqPos, qParent )
    LOCAL i, qPop, qPoint, qAct, cAct, xRet, pAct, a_, qSub, b_
 
    qPop := QMenu():new( iif( hb_isObject( qParent ), qParent, NIL ) )
+   qPop:setStyleSheet( GetStyleSheet( "QMenuPop", hbide_setIde():nAnimantionMode ) )
 
    FOR i := 1 TO len( aPops )
       IF empty( aPops[ i,1 ] )
@@ -122,6 +123,7 @@ FUNCTION hbide_execPopup( aPops, aqPos, qParent )
             qPop:addAction_4( aPops[ i, 1 ] )
          ELSEIF hb_isArray( aPops[ i, 1 ] )     /* Sub-menu */
             qSub := QMenu():new( qPop )
+            qSub:setStyleSheet( GetStyleSheet( "QMenuPop", hbide_setIde():nAnimantionMode ) )
             FOR EACH a_ IN aPops[ i, 1 ]
                qSub:addAction( a_[ 1 ] )
             NEXT

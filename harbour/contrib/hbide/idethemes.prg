@@ -551,21 +551,21 @@ METHOD IdeThemes:show()
       ::oThemesDock:oWidget:setWidget( ::oUI )
 
       ::oUI:signal( "listThemes"   , "currentRowChanged(int)"   , {|i| ::execEvent( listThemes_currentRowChanged, i ) } )
-      ::oUI:signal( "listItems"    , "currentRowChanged(int)"   , {|i| ::execEvent( listItems_currentRowChanged, i ) } )
+      ::oUI:signal( "listItems"    , "currentRowChanged(int)"   , {|i| ::execEvent( listItems_currentRowChanged, i )  } )
 
-      ::oUI:signal( "buttonColor"   , "clicked()"               , {|| ::updateColor() } )
-      ::oUI:signal( "buttonSave"    , "clicked()"               , {|| ::save( .f. ) } )
-      ::oUI:signal( "buttonSaveAs"  , "clicked()"               , {|| ::save( .t. ) } )
-      ::oUI:signal( "buttonCopy"    , "clicked()"               , {|| ::copy( .t. ) } )
-      ::oUI:signal( "buttonApply"   , "clicked()"               , {|| ::execEvent( applyMenu_triggered_applyToCurrentTab ) } )
-      ::oUI:signal( "buttonApplyAll", "clicked()"               , {|| ::execEvent( applyMenu_triggered_applyToAllTabs    ) } )
-      ::oUI:signal( "buttonDefault" , "clicked()"               , {|| ::execEvent( applyMenu_triggered_setAsDefault      ) } )
+      ::oUI:signal( "buttonColor"   , "clicked()"               , {| | ::updateColor() } )
+      ::oUI:signal( "buttonSave"    , "clicked()"               , {| | ::save( .f. )   } )
+      ::oUI:signal( "buttonSaveAs"  , "clicked()"               , {| | ::save( .t. )   } )
+      ::oUI:signal( "buttonCopy"    , "clicked()"               , {| | ::copy( .t. )   } )
+      ::oUI:signal( "buttonApply"   , "clicked()"               , {| | ::execEvent( applyMenu_triggered_applyToCurrentTab ) } )
+      ::oUI:signal( "buttonApplyAll", "clicked()"               , {| | ::execEvent( applyMenu_triggered_applyToAllTabs    ) } )
+      ::oUI:signal( "buttonDefault" , "clicked()"               , {| | ::execEvent( applyMenu_triggered_setAsDefault      ) } )
 
       ::oUI:signal( "checkItalic"   , "stateChanged(int)"       , {|i| ::updateAttribute( THM_ATR_ITALIC, i ) } )
       ::oUI:signal( "checkBold"     , "stateChanged(int)"       , {|i| ::updateAttribute( THM_ATR_BOLD  , i ) } )
       ::oUI:signal( "checkUnderline", "stateChanged(int)"       , {|i| ::updateAttribute( THM_ATR_ULINE , i ) } )
 
-      ::oUI:signal( "buttonClose"   , "clicked()"               , {||  ::oThemesDock:hide() } )
+      ::oUI:signal( "buttonClose"   , "clicked()"               , {| | ::oThemesDock:hide() } )
 
       /* Fill Themes Dialog Values */
       ::oUI:setWindowTitle( GetKeyValue( ::aControls, "dialogTitle" ) )
@@ -584,7 +584,7 @@ METHOD IdeThemes:show()
       ::oUI:qObj[ "buttonCopy"     ]:setText( GetKeyValue( ::aControls, "buttonCopy"    , "Copy"      ) )
 
       aeval( ::aThemes, {|e_| ::oUI:q_listThemes:addItem( e_[ 1 ] ) } )
-      aeval( ::aItems , {|e_| ::oUI:q_listItems:addItem( e_[ 2 ] ) } )
+      aeval( ::aItems , {|e_| ::oUI:q_listItems:addItem( e_[ 2 ] )  } )
 
       ::qEdit := ::oUI:q_plainThemeText
       ::qEdit:setPlainText( GetSource() )

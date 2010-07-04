@@ -2228,6 +2228,19 @@
 #define QSystemTrayIcon_Trigger                   3        // The system tray entry was clicked
 #define QSystemTrayIcon_MiddleClick               4        // The system tray entry was clicked with the middle mouse button
 
+/* QMdiArea */
+#define QMdiArea_SubWindowView                    0
+#define QMdiArea_TabbedView                       1
+
+#define QMdiArea_CreationOrder                    0
+#define QMdiArea_StackingOrder                    1
+#define QMdiArea_ActivationHistoryOrder           2
+
+#define QMdiArea_DontMaximizeSubWindowOnActivation  1
+
+#define QMdiSubWindow_RubberBandResize            0x04
+#define QMdiSubWindow_RubberBandMove              0x08
+
 /*----------------------------------------------------------------------*/
 
 #define _HBQT_CH

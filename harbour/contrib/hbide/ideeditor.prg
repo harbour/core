@@ -87,6 +87,7 @@
 CLASS IdeEditsManager INHERIT IdeObject
 
    DATA   qContextMenu
+   DATA   qContextSub
    DATA   aActions                                INIT  {}
 
    METHOD new( oIde )
@@ -173,6 +174,7 @@ CLASS IdeEditsManager INHERIT IdeObject
    METHOD changeThumbnail()
    METHOD spaces2tabs()
    METHOD qscintilla()
+   METHOD setStyleSheet( nMode )
 
    ENDCLASS
 
@@ -186,8 +188,16 @@ METHOD IdeEditsManager:new( oIde )
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeEditsManager:setStyleSheet( nMode )
+
+   ::qContextMenu:setStyleSheet( GetStyleSheet( "QMenuPop", nMode ) )
+   ::qContextSub:setStyleSheet( GetStyleSheet( "QMenuPop", nMode ) )
+
+   RETURN Self
+
+/*------------------------------------------------------------------------*/
+
 METHOD IdeEditsManager:create( oIde )
-   LOCAL oSub
 
    DEFAULT oIde TO ::oIde
 
@@ -213,12 +223,12 @@ METHOD IdeEditsManager:create( oIde )
    aadd( ::aActions, { "Apply Theme"  , ::qContextMenu:addAction( "Apply Theme"                        ) } )
    aadd( ::aActions, { "Save as Skltn", ::qContextMenu:addAction( "Save as Skeleton..."                ) } )
 
-   oSub := QMenu():configure( ::qContextMenu:addMenu_1( "Split" ) )
+   ::qContextSub := QMenu():configure( ::qContextMenu:addMenu_1( "Split" ) )
    //
-   aadd( ::aActions, { "Split H"      , oSub:addAction( "Split Horizontally" ) } )
-   aadd( ::aActions, { "Split V"      , oSub:addAction( "Split Vertically"   ) } )
-   aadd( ::aActions, { ""             , oSub:addSeparator() } )
-   aadd( ::aActions, { "Close Split"  , oSub:addAction( "Close Split Window" ) } )
+   aadd( ::aActions, { "Split H"      , ::qContextSub:addAction( "Split Horizontally" ) } )
+   aadd( ::aActions, { "Split V"      , ::qContextSub:addAction( "Split Vertically"   ) } )
+   aadd( ::aActions, { ""             , ::qContextSub:addSeparator() } )
+   aadd( ::aActions, { "Close Split"  , ::qContextSub:addAction( "Close Split Window" ) } )
 
    ::oIde:qProtoList := QStringList():new()
    ::oIde:qCompModel := QStringListModel():new()
@@ -1233,7 +1243,7 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView, a
    /* Populate right at creation */
    ::oEM:addSourceInTree( ::sourceFile, ::cView )
 
-   ::qTabWidget:setStyleSheet( GetStyleSheet( "QTabWidget", ::nAnimantionMode ) )
+   //::qTabWidget:setStyleSheet( GetStyleSheet( "QTabWidget", ::nAnimantionMode ) )
    IF ::lReadOnly
       ::oEdit:setReadOnly( .t. )
       ::qEdit:setTextInteractionFlags( Qt_TextSelectableByMouse + Qt_TextSelectableByKeyboard )

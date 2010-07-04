@@ -499,7 +499,6 @@ METHOD IdeSkeletons:showTree()
       ::oTree:hasButtons := .T.
       ::oTree:create( ::oSkltnsTreeDock, , { 0,0 }, { 10,10 }, , .t. )
 
-      ::oTree:setStyleSheet( GetStyleSheet( "QTreeWidgetHB", ::nAnimantionMode ) )
       ::oTree:oWidget:setMinimumWidth( 100 )
       ::oTree:oWidget:setSizePolicy_1( QSizePolicy_MinimumExpanding, QSizePolicy_Preferred )
       ::oTree:oWidget:setIconSize( QSize():new( 12,12 ) )
@@ -516,6 +515,8 @@ METHOD IdeSkeletons:showTree()
 
       ::oSkltnsTreeDock:oWidget:setWidget( ::oTree:oWidget )
    ENDIF
+
+   ::oTree:setStyleSheet( GetStyleSheet( "QTreeWidgetHB", ::nAnimantionMode ) )
 
    RETURN Self
 

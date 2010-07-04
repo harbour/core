@@ -509,7 +509,6 @@ METHOD HbIde:create( aParams )
    ENDIF
 
    ::oDockB2:hide() /* This widget never contains anything so must be forced to hide */
-   ::oQScintillaDock:hide()
 
    /* Request Main Window to Appear on the Screen */
    ::oHM:refresh()
@@ -523,6 +522,9 @@ METHOD HbIde:create( aParams )
       ::qTabWidget:setCurrentIndex( ::qTabWidget:count() - 1 )
       ::qTabWidget:setCurrentIndex( 0 )
    NEXT
+
+   /* Refresh Stylesheet for all components at once */
+   ::oDK:animateComponents( ::nAnimantionMode )
 
    ::oDlg:Show()
    IF ::nRunMode == HBIDE_RUN_MODE_PRG

@@ -696,22 +696,24 @@ METHOD IdeDocks:buildToolBarPanels()
    ::qTBarDocks:setAllowedAreas( Qt_LeftToolBarArea + Qt_RightToolBarArea + Qt_TopToolBarArea + Qt_BottomToolBarArea )
 
    aBtns := {}
-   aadd( aBtns, { ::oDockPT        , "projtree"      } )
-   aadd( aBtns, { ::oDockED        , "editstree"     } )
-   aadd( aBtns, { ::oSkltnsTreeDock, "projtree"      } )
+   aadd( aBtns, { ::oDockPT             , "projtree"      } )
+   aadd( aBtns, { ::oDockED             , "editstree"     } )
+   aadd( aBtns, { ::oSkltnsTreeDock     , "projtree"      } )
    aadd( aBtns, {} )
-   aadd( aBtns, { ::oHelpDock      , "help"          } )
-   aadd( aBtns, { ::oDocViewDock   , "harbourhelp"   } )
-   aadd( aBtns, { ::oDocWriteDock  , "docwriter"     } )
-   aadd( aBtns, { ::oFuncDock      , "dc_function"   } )
-   aadd( aBtns, { ::oFunctionsDock , "ffn"           } )
-   aadd( aBtns, { ::oPropertiesDock, "properties"    } )
-   aadd( aBtns, { ::oEnvironDock   , "envconfig"     } )
-   aadd( aBtns, { ::oSkeltnDock    , "codeskeletons" } )
-   aadd( aBtns, { ::oThemesDock    , "syntaxhiliter" } )
-   aadd( aBtns, { ::oFindDock      , "search"        } )
+   aadd( aBtns, { ::oHelpDock           , "help"          } )
+   aadd( aBtns, { ::oDocViewDock        , "harbourhelp"   } )
+   aadd( aBtns, { ::oDocWriteDock       , "docwriter"     } )
+   aadd( aBtns, { ::oFuncDock           , "dc_function"   } )
+   aadd( aBtns, { ::oFunctionsDock      , "ffn"           } )
+   aadd( aBtns, { ::oPropertiesDock     , "properties"    } )
+   aadd( aBtns, { ::oEnvironDock        , "envconfig"     } )
+   aadd( aBtns, { ::oSkeltnDock         , "codeskeletons" } )
+   aadd( aBtns, { ::oThemesDock         , "syntaxhiliter" } )
+   aadd( aBtns, { ::oFindDock           , "search"        } )
+   aadd( aBtns, { ::oSourceThumbnailDock, "thumbnail"     } )
+   aadd( aBtns, { ::oQScintillaDock     , "browser"       } )
    aadd( aBtns, {} )
-   aadd( aBtns, { ::oDockB2        , "builderror"    } )
+   aadd( aBtns, { ::oDockB2             , "builderror"    } )
 
    FOR EACH a_ IN aBtns
       IF empty( a_ )
@@ -1227,7 +1229,7 @@ METHOD IdeDocks:getMarkWidget( nIndex )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeDocks:animateComponents( nMode )
-   LOCAL cStyle
+   LOCAL cStyle, oView
 
    IF nMode == NIL
       ::oIde:nAnimantionMode := iif( ::nAnimantionMode == HBIDE_ANIMATION_NONE, HBIDE_ANIMATION_GRADIENT, HBIDE_ANIMATION_NONE )
@@ -1236,38 +1238,53 @@ METHOD IdeDocks:animateComponents( nMode )
    ::oIde:nAnimantionMode := nMode
    ::oIde:oINI:cIdeAnimated := hb_ntos( ::nAnimantionMode )
 
-   ::oDlg:menubar():setStyleSheet( GetStyleSheet( "QMenuBar", nMode ) )
+   /* Main Window */
+   ::oDlg:setStyleSheet( GetStyleSheet( "QMainWindow", ::nAnimantionMode ) )
 
-   ::qTBarPanels:setStyleSheet( GetStyleSheet( "QToolBarLR5", nMode ) )
-   ::qTBarLines:setStyleSheet( GetStyleSheet( "QToolBarLR5", nMode ) )
-   ::qTBarDocks:setStyleSheet( GetStyleSheet( "QToolBarLR5", nMode ) )
+   /* Main Menu Bar with all its submenus */
+   ::oDlg:menubar():setStyleSheet( GetStyleSheet( "QMenuBar", nMode ), GetStyleSheet( "QMenuPop", nMode ) )
 
-   ::oMainToolbar:setStyleSheet( GetStyleSheet( "QToolBar", nMode ) )
+   /* Toolbars */
+   ::oMainToolbar:setStyleSheet( GetStyleSheet( "QToolBar"   , nMode ) )
+   ::qTBarPanels :setStyleSheet( GetStyleSheet( "QToolBarLR5", nMode ) )
+   ::qTBarLines  :setStyleSheet( GetStyleSheet( "QToolBarLR5", nMode ) )
+   ::qTBarDocks  :setStyleSheet( GetStyleSheet( "QToolBarLR5", nMode ) )
+
+   /* User defined toolbars */
+   ::oTM:setStyleSheet( GetStyleSheet( "QToolBarLR5", nMode ) )
+
+   ::oEM:setStyleSheet( nMode )
+   ::oBM:setStyleSheet( nMode )
+
+   /* Statusbar */
    ::oSBar:oWidget:setStyleSheet( GetStyleSheet( "QStatusBar", nMode ) )
 
+   /* Docking Widgets */
    cStyle := GetStyleSheet( "QDockWidget", nMode )
+   //
+   ::oDockPT:oWidget              : setStyleSheet( cStyle )
+   ::oDockED:oWidget              : setStyleSheet( cStyle )
+   ::oSkltnsTreeDock:oWidget      : setStyleSheet( cStyle )
+   ::oHelpDock:oWidget            : setStyleSheet( cStyle )
+   ::oDocViewDock:oWidget         : setStyleSheet( cStyle )
+   ::oDocWriteDock:oWidget        : setStyleSheet( cStyle )
+   ::oFuncDock:oWidget            : setStyleSheet( cStyle )
+   ::oFunctionsDock:oWidget       : setStyleSheet( cStyle )
+   ::oPropertiesDock:oWidget      : setStyleSheet( cStyle )
+   ::oEnvironDock:oWidget         : setStyleSheet( cStyle )
+   ::oSkeltnDock:oWidget          : setStyleSheet( cStyle )
+   ::oThemesDock:oWidget          : setStyleSheet( cStyle )
+   ::oFindDock:oWidget            : setStyleSheet( cStyle )
+   ::oDockB2:oWidget              : setStyleSheet( cStyle )
+   ::oQScintillaDock:oWidget      : setStyleSheet( cStyle )
+   ::oSourceThumbnailDock:oWidget : setStyleSheet( cStyle )
 
-   ::oDockPT:oWidget        :setStyleSheet( cStyle )
-   ::oDockED:oWidget        :setStyleSheet( cStyle )
-   ::oSkltnsTreeDock:oWidget:setStyleSheet( cStyle )
-   ::oHelpDock:oWidget      :setStyleSheet( cStyle )
-   ::oDocViewDock:oWidget   :setStyleSheet( cStyle )
-   ::oDocWriteDock:oWidget  :setStyleSheet( cStyle )
-   ::oFuncDock:oWidget      :setStyleSheet( cStyle )
-   ::oFunctionsDock:oWidget :setStyleSheet( cStyle )
-   ::oPropertiesDock:oWidget:setStyleSheet( cStyle )
-   ::oEnvironDock:oWidget   :setStyleSheet( cStyle )
-   ::oSkeltnDock:oWidget    :setStyleSheet( cStyle )
-   ::oThemesDock:oWidget    :setStyleSheet( cStyle )
-   ::oFindDock:oWidget      :setStyleSheet( cStyle )
-   ::oDockB2:oWidget        :setStyleSheet( cStyle )
-   ::oQScintillaDock:oWidget:setStyleSheet( cStyle )
-   ::oSourceThumbnailDock:oWidget:setStyleSheet( cStyle )
+   ::oProjTree:setStyleSheet( GetStyleSheet( "QTreeWidgetHB", ::nAnimantionMode ) )
 
-   #if 1
-   // should be iteration
-   ::qTabWidget:setStyleSheet( GetStyleSheet( "QTabWidget", nMode ) )
-   #endif
+   /* Edior Tab Widget */
+   FOR EACH oView IN ::aViews
+      oView:oTabWidget:oWidget:setStyleSheet( GetStyleSheet( "QTabWidget", nMode ) )
+   NEXT
 
    RETURN Self
 

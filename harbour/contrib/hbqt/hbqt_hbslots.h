@@ -67,6 +67,7 @@
 #include <QtGui/QDockWidget>
 #include <QtGui/QHeaderView>
 #include <QtGui/QSystemTrayIcon>
+#include <QtGui/QMdiSubWindow>
 
 /*----------------------------------------------------------------------*/
 
@@ -284,6 +285,11 @@ public slots:
    void toggled( bool checked );
    /* QSystemTrayIcon */
    void activated( QSystemTrayIcon::ActivationReason reason );
+   /* QMdiArea */
+   void subWindowActivated( QMdiSubWindow * window );
+   /* QMdiSubWindow */
+   void aboutToActivate();
+   void windowStateChanged( Qt::WindowStates oldState, Qt::WindowStates newState );
    /* Latest */
 };
 

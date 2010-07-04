@@ -234,6 +234,11 @@ static bool connect_signal( QString signal, QObject * object, HBSlots * t_slots 
    if( signal == ( QString ) "toggled(bool)"                                  ) return object->connect( object, SIGNAL( toggled( bool )                                                   ), t_slots, SLOT( toggled( bool )                                                    ), Qt::AutoConnection );
    /* QSystemTrayIcon */
    if( signal == ( QString ) "activated(QSystemTrayIcon::ActivationReason)"   ) return object->connect( object, SIGNAL( activated( QSystemTrayIcon::ActivationReason )                    ), t_slots, SLOT( activated( QSystemTrayIcon::ActivationReason )                     ), Qt::AutoConnection );
+   /* QMdiArea */
+   if( signal == ( QString ) "subWindowActivated(QMdiSubWindow)"              ) return object->connect( object, SIGNAL( subWindowActivated( QMdiSubWindow * )                             ), t_slots, SLOT( subWindowActivated( QMdiSubWindow * )                              ), Qt::AutoConnection );
+   /* QMdiSubWindow */
+   if( signal == ( QString ) "aboutToActivate()"                              ) return object->connect( object, SIGNAL( aboutToActivate()                                                 ), t_slots, SLOT( aboutToActivate()                                                  ), Qt::AutoConnection );
+   if( signal == ( QString ) "windowStateChanged(Qt::WindowStates,Qt::WindowStates)" ) return object->connect( object, SIGNAL( windowStateChanged( Qt::WindowStates, Qt::WindowStates )   ), t_slots, SLOT( windowStateChanged( Qt::WindowStates, Qt::WindowStates )           ), Qt::AutoConnection );
    /* New */
    return false;
 }
@@ -405,6 +410,11 @@ static bool disconnect_signal( QObject * object, const char * signal )
    if( signal == ( QString ) "toggled(bool)"                                  ) return object->disconnect( SIGNAL( toggled( bool )                                                   ) );
    /* QSystemTrayIcon */
    if( signal == ( QString ) "activated(QSystemTrayIcon::ActivationReason)"   ) return object->disconnect( SIGNAL( activated( QSystemTrayIcon::ActivationReason )                    ) );
+   /* QMdiArea */
+   if( signal == ( QString ) "subWindowActivated(QMdiSubWindow)"              ) return object->disconnect( SIGNAL( subWindowActivated( QMdiSubWindow * )                             ) );
+   /* QMdiSubWindow */
+   if( signal == ( QString ) "aboutToActivate()"                              ) return object->disconnect( SIGNAL( aboutToActivate()                                                 ) );
+   if( signal == ( QString ) "windowStateChanged(Qt::WindowStates,Qt::WindowStates)" ) return object->disconnect( SIGNAL( windowStateChanged( Qt::WindowStates, Qt::WindowStates )   ) );
    /* new */
 
    return false;
@@ -1030,6 +1040,11 @@ void HBSlots::highlighted( const QModelIndex & index )                          
 void HBSlots::toggled( bool checked )                                                                      { hbqt_SlotsExecBool(           this, qobject_cast<QObject *>( sender() ), "toggled(bool)", checked                                          ); }
 /* QSystemTrayIcon */
 void HBSlots::activated( QSystemTrayIcon::ActivationReason reason )                                        { hbqt_SlotsExecInt(            this, qobject_cast<QObject *>( sender() ), "activated(QSystemTrayIcon::ActivationReason)", reason            ); }
+/* QMdiArea */
+void HBSlots::subWindowActivated( QMdiSubWindow * window )                                                 { hbqt_SlotsExecPointer(        this, qobject_cast<QObject *>( sender() ), "subWindowActivated(QMdiSubWindow)", window                       ); }
+/* QMdiSubWindow */
+void HBSlots::aboutToActivate()                                                                            { hbqt_SlotsExec(               this, qobject_cast<QObject *>( sender() ), "aboutToActivate()"                                               ); }
+void HBSlots::windowStateChanged( Qt::WindowStates oldState, Qt::WindowStates newState )                   { hbqt_SlotsExecIntInt(         this, qobject_cast<QObject *>( sender() ), "windowStateChanged(Qt::WindowStates,Qt::WindowStates)", oldState, newState ); }
 /* Latest */
 
 /*----------------------------------------------------------------------*/

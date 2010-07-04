@@ -4,6 +4,7 @@
 <file>resources/blockcomment.png</file>
 <file>resources/blockindentl.png</file>
 <file>resources/blockindentr.png</file>
+<file>resources/browser.png</file>
 <file>resources/build.png</file>
 <file>resources/builderror.png</file>
 <file>resources/buildlaunch.png</file>
@@ -67,6 +68,7 @@
 <file>resources/fl_txt.png</file>
 <file>resources/folder.png</file>
 <file>resources/font.png</file>
+<file>resources/formview.png</file>
 <file>resources/fullscreen.png</file>
 <file>resources/go-bottom.png</file>
 <file>resources/go-down.png</file>
@@ -174,6 +176,7 @@
 <file>resources/tabunmodified.png</file>
 <file>resources/tests.png</file>
 <file>resources/text.png</file>
+<file>resources/thumbnail.png</file>
 <file>resources/togglelinenumber.png</file>
 <file>resources/tolower.png</file>
 <file>resources/tools.png</file>
@@ -183,6 +186,10 @@
 <file>resources/unload_1.png</file>
 <file>resources/up.png</file>
 <file>resources/up16.png</file>
+<file>resources/view_cascaded.png</file>
+<file>resources/view_organized.png</file>
+<file>resources/view_tabbed.png</file>
+<file>resources/view_tiled.png</file>
 <file>resources/vr-16x16.png</file>
 <file>resources/vr.png</file>
 <file>resources/xmate.png</file>

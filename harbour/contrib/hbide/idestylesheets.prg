@@ -81,6 +81,17 @@ FUNCTION GetStyleSheet( cWidget, nMode )
 
    DO CASE
 
+   CASE cWidget == "QMenuPop"
+      IF nMode == HBIDE_ANIMATION_GRADIENT
+      aadd( txt_, 'QMenu {                                                                   ' )
+      aadd( txt_,      hbide_ideThemeColorCSS( "MenuPop", 1 ) )
+      aadd( txt_, '}                                                                            ' )
+      ELSE
+      aadd( txt_, 'QMenu {                                                                   ' )
+      aadd( txt_,      hbide_cssColorString( "bg-std" ) )
+      aadd( txt_, '}                                                                            ' )
+      ENDIF
+
    CASE cWidget == "QMenu"
 
       aadd( txt_, ' QMenu {                                                                     ' )
@@ -486,6 +497,9 @@ STATIC FUNCTION hbide_ideThemeColorCSS( cPart, nTheme )
    cPart := lower( cPart )
 
    DO CASE
+   CASE cPart == "menupop"
+      cCSS := '    background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0, ' + ;
+              hbide_buildGradientString( hbide_loadIdeTheme( nTheme ) ) + "); "
    CASE cPart == "menubartop"
       cCSS := '    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, ' + ;
               hbide_buildGradientString( hbide_loadIdeTheme( nTheme ) ) + "); "

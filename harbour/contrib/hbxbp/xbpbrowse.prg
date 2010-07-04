@@ -365,7 +365,6 @@ PROTECTED:
    DATA     lFirst                                INIT      .t.
    DATA     nRowsInView                           INIT      1
 
-   METHOD   setCurrentIndex( lReset )
    METHOD   setHorzOffset()
    METHOD   setVertScrollBarRange( lPageStep )
    METHOD   setHorzScrollBarRange( lPageStep )
@@ -435,7 +434,12 @@ EXPORTED:
    DATA     nLeftFrozen                             INIT   0
    DATA     nRightFrozen                            INIT   0
 
+   DATA     gridStyle                               INIT   Qt_SolidLine
+
    METHOD   destroy()
+   DATA     nCellHeight                             INIT   20
+   METHOD   setCellHeight( nCellHeight )
+   METHOD   setCurrentIndex( lReset )
 
    ENDCLASS
 
@@ -469,7 +473,7 @@ METHOD XbpBrowse:buildLeftFreeze()
    ::oLeftView:setVerticalScrollBarPolicy( Qt_ScrollBarAlwaysOff )
    ::oLeftView:setTabKeyNavigation( .t. )
    ::oLeftView:setShowGrid( .t. )
-   ::oLeftView:setGridStyle( Qt_DotLine )   /* to be based on column definition */
+   ::oLeftView:setGridStyle( ::gridStyle )   /* to be based on column definition */
    ::oLeftView:setSelectionMode( QAbstractItemView_SingleSelection )
    ::oLeftView:setSelectionBehavior( IF( ::cursorMode == XBPBRW_CURSOR_ROW, QAbstractItemView_SelectRows, QAbstractItemView_SelectItems ) )
    //
@@ -519,7 +523,7 @@ METHOD XbpBrowse:buildRightFreeze()
    ::oRightView:setVerticalScrollBarPolicy( Qt_ScrollBarAlwaysOff )
    ::oRightView:setTabKeyNavigation( .t. )
    ::oRightView:setShowGrid( .t. )
-   ::oRightView:setGridStyle( Qt_DotLine )   /* to be based on column definition */
+   ::oRightView:setGridStyle( ::gridStyle )   /* to be based on column definition */
    ::oRightView:setSelectionMode( QAbstractItemView_SingleSelection )
    ::oRightView:setSelectionBehavior( IF( ::cursorMode == XBPBRW_CURSOR_ROW, QAbstractItemView_SelectRows, QAbstractItemView_SelectItems ) )
    //
@@ -572,7 +576,7 @@ METHOD XbpBrowse:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    /* Some parameters */
    ::oTableView:setTabKeyNavigation( .t. )
    ::oTableView:setShowGrid( .t. )
-   ::oTableView:setGridStyle( Qt_DotLine )   /* to be based on column definition */
+   ::oTableView:setGridStyle( ::gridStyle )   /* to be based on column definition */
    ::oTableView:setSelectionMode( QAbstractItemView_SingleSelection )
    ::oTableView:setSelectionBehavior( IF( ::cursorMode == XBPBRW_CURSOR_ROW, QAbstractItemView_SelectRows, QAbstractItemView_SelectItems ) )
 
@@ -747,10 +751,11 @@ METHOD XbpBrowse:destroy()
 /*----------------------------------------------------------------------*/
 
 METHOD XbpBrowse:execSlot( nEvent, p1, p2, p3 )
-   LOCAL oWheelEvent, oMouseEvent, i, nCol, nColPos, oPoint
+   LOCAL oWheelEvent, oMouseEvent, oPoint // i, nCol, nColPos
 
    HB_SYMBOL_UNUSED( p2 )
-//HB_TRACE( HB_TR_DEBUG, "   XbpBrowse:execSlot:", nEvent, 0, memory( 1001 ) )
+   // HB_TRACE( HB_TR_DEBUG, "   XbpBrowse:execSlot:", nEvent, 0, memory( 1001 ) )
+
    DO CASE
    CASE nEvent == 1                   /* Keypress Event */
       SetAppEvent( xbeP_Keyboard, XbpQKeyEventToAppEvent( p1 ), NIL, self )
@@ -787,15 +792,15 @@ METHOD XbpBrowse:execSlot( nEvent, p1, p2, p3 )
       oWheelEvent := QWheelEvent():configure( p1 )
       IF oWheelEvent:orientation() == Qt_Vertical
          IF oWheelEvent:delta() > 0
-            ::up()
+            SetAppEvent( xbeBRW_Navigate, XBPBRW_Navigate_Skip, -1, Self )
          ELSE
-            ::down()
+            SetAppEvent( xbeBRW_Navigate, XBPBRW_Navigate_Skip, 1, Self )
          ENDIF
       ELSE
          IF oWheelEvent:delta() > 0
-            ::right()
+            SetAppEvent( xbeBRW_Navigate, XBPBRW_Navigate_SkipCols, 1, Self )
          ELSE
-            ::left()
+            SetAppEvent( xbeBRW_Navigate, XBPBRW_Navigate_SkipCols, -1, Self )
          ENDIF
       ENDIF
 
@@ -809,27 +814,27 @@ METHOD XbpBrowse:execSlot( nEvent, p1, p2, p3 )
       CASE QAbstractSlider_SliderNoAction
          RETURN NIL
       CASE QAbstractSlider_SliderSingleStepAdd
-         ::down()
+         SetAppEvent( xbeBRW_Navigate, XBPBRW_Navigate_Skip, 1, Self )
          ::updateVertScrollBar()
          EXIT
       CASE QAbstractSlider_SliderSingleStepSub
-         ::up()
+         SetAppEvent( xbeBRW_Navigate, XBPBRW_Navigate_Skip, -1, Self )
          ::updateVertScrollBar()
          EXIT
       CASE QAbstractSlider_SliderPageStepAdd
-         ::pageDown()
+         SetAppEvent( xbeBRW_Navigate, XBPBRW_Navigate_NextPage, 1, Self )
          ::updateVertScrollBar()
          EXIT
       CASE QAbstractSlider_SliderPageStepSub
-         ::pageUp()
+         SetAppEvent( xbeBRW_Navigate, XBPBRW_Navigate_PrevPage, 1, Self )
          ::updateVertScrollBar()
          EXIT
       CASE QAbstractSlider_SliderToMinimum
-         ::goTop()
+         SetAppEvent( xbeBRW_Navigate, XBPBRW_Navigate_GoTop, 1, Self )
          ::updateVertScrollBar()
          EXIT
       CASE QAbstractSlider_SliderToMaximum
-         ::goBottom()
+         SetAppEvent( xbeBRW_Navigate, XBPBRW_Navigate_GoBottom, 1, Self )
          ::updateVertScrollBar()
          EXIT
       CASE QAbstractSlider_SliderMove
@@ -843,31 +848,11 @@ METHOD XbpBrowse:execSlot( nEvent, p1, p2, p3 )
       ::oTableView:setFocus()
 
    CASE nEvent == 103                 /* Horizontal Scrollbar: Slider moved */
-      nCol    := ::oHScrollBar:value()+1
-      nColPos := ::colPos
-      IF nCol < nColPos
-         FOR i := 1 TO ( nColPos - nCol )
-            ::left()
-         NEXT
-      ELSEIF nCol > nColPos
-         FOR i := 1 TO ( nCol - nColPos )
-            ::right()
-         NEXT
-      ENDIF
+      SetAppEvent( xbeBRW_Navigate, XBPBRW_Navigate_SkipCols, ( ::oHScrollBar:value() + 1 ) - ::colPos, Self )
       ::oTableView:setFocus()
 
    CASE nEvent == 104                 /* Horizontal Scrollbar: Slider Released */
-      nCol    := ::oHScrollBar:value()+1
-      nColPos := ::colPos
-      IF nCol < nColPos
-         FOR i := 1 TO ( nColPos - nCol )
-            ::left()
-         NEXT
-      ELSEIF nCol > nColPos
-         FOR i := 1 TO ( nCol - nColPos )
-            ::right()
-         NEXT
-      ENDIF
+      SetAppEvent( xbeBRW_Navigate, XBPBRW_Navigate_SkipCols, ( ::oHScrollBar:value() + 1 ) - ::colPos, Self )
       ::oTableView:setFocus()
 
    CASE nEvent == 111                 /* Column Header Pressed */
@@ -968,11 +953,17 @@ METHOD handleEvent( nEvent, mp1, mp2 ) CLASS XbpBrowse
    CASE nEvent == xbeBRW_Navigate
       DO CASE
       CASE mp1 == XBPBRW_Navigate_NextLine
+         ::down()
       CASE mp1 == XBPBRW_Navigate_PrevLine
+         ::up()
       CASE mp1 == XBPBRW_Navigate_NextPage
+         ::pageDown()
       CASE mp1 == XBPBRW_Navigate_PrevPage
+         ::pageUp()
       CASE mp1 == XBPBRW_Navigate_GoTop
+         ::goTop()
       CASE mp1 == XBPBRW_Navigate_GoBottom
+         ::goBottom()
       CASE mp1 == XBPBRW_Navigate_Skip
          IF mp2 < 0
             FOR i := 1 TO abs( mp2 )
@@ -984,10 +975,15 @@ METHOD handleEvent( nEvent, mp1, mp2 ) CLASS XbpBrowse
             NEXT
          ENDIF
       CASE mp1 == XBPBRW_Navigate_NextCol
+         ::right()
       CASE mp1 == XBPBRW_Navigate_PrevCol
+         ::left()
       CASE mp1 == XBPBRW_Navigate_FirstCol
+         ::firstCol()
       CASE mp1 == XBPBRW_Navigate_LastCol
+         ::lastCol()
       CASE mp1 == XBPBRW_Navigate_GoPos
+         //
       CASE mp1 == XBPBRW_Navigate_SkipCols
          IF mp2 < 0
             FOR i := 1 TO abs( mp2 )
@@ -1000,7 +996,9 @@ METHOD handleEvent( nEvent, mp1, mp2 ) CLASS XbpBrowse
          ENDIF
 
       CASE mp1 == XBPBRW_Navigate_GotoItem
+         //
       CASE mp1 == XBPBRW_Navigate_GotoRecord
+         //
       OTHERWISE
          lNavgt := .f.
       ENDCASE
@@ -1153,7 +1151,7 @@ METHOD fetchColumnInfo( nInfo, nArea, nRow, nCol ) CLASS XbpBrowse
       RETURN oCol:dAlignment
 
    CASE HBQT_BRW_DATHEIGHT
-      RETURN oCol:dHeight
+      RETURN ::nCellHeight //oCol:dHeight
 
    CASE HBQT_BRW_CELLDECORATION
       IF oCol:type == XBPCOL_TYPE_FILEICON
@@ -1173,7 +1171,7 @@ METHOD fetchColumnInfo( nInfo, nArea, nRow, nCol ) CLASS XbpBrowse
       IF nArea == 0                    /* Header Area */
          SWITCH nInfo
          CASE HBQT_BRW_COLHEIGHT
-            RETURN oCol:hHeight
+            RETURN ::nCellHeight //oCol:hHeight
          CASE HBQT_BRW_COLHEADER
             RETURN oCol:heading
          CASE HBQT_BRW_COLALIGN
@@ -1186,7 +1184,7 @@ METHOD fetchColumnInfo( nInfo, nArea, nRow, nCol ) CLASS XbpBrowse
       ELSE                             /* Footer Area */
          SWITCH nInfo
          CASE HBQT_BRW_COLHEIGHT
-            RETURN oCol:fHeight
+            RETURN ::nCellHeight //oCol:fHeight
          CASE HBQT_BRW_COLHEADER
             RETURN oCol:footing
          CASE HBQT_BRW_COLALIGN
@@ -1374,6 +1372,22 @@ METHOD XbpBrowse:setLeftFrozen( aColFrozens )
 
 /*----------------------------------------------------------------------*/
 
+METHOD setCellHeight( nCellHeight ) CLASS XbpBrowse
+   LOCAL i
+
+   FOR i := 1 TO ::nRowsInView
+      ::oTableView : setRowHeight( i-1, nCellHeight )
+      IF !empty( ::oLeftView )
+         ::oLeftView  : setRowHeight( i-1, nCellHeight )
+      ENDIF
+      IF !empty( ::oRightView )
+         ::oRightView : setRowHeight( i-1, nCellHeight )
+      ENDIF
+   NEXT
+   RETURN Self
+
+/*------------------------------------------------------------------------*/
+
 METHOD doConfigure() CLASS XbpBrowse
    LOCAL oCol
    LOCAL aCol, aVal, aValA
@@ -1548,18 +1562,15 @@ METHOD doConfigure() CLASS XbpBrowse
       nMaxCellH := 0
       aeval( ::columns, {|o| nMaxCellH := max( nMaxCellH, o:dHeight ) } )
       //
-      nViewH := ::oViewport:height()
+      nViewH := ::oViewport:height() //- ::oHeaderView:height()
       ::nRowsInView := Int( nViewH / nMaxCellH )
       IF ( nViewH % nMaxCellH ) > ( nMaxCellH / 2 )
          ::nRowsInView++
       ENDIF
 
       /* Probably this is the appropriate time to update row heights */
-      FOR i := 1 TO ::nRowsInView
-         ::oTableView:setRowHeight( i-1, nMaxCellH )
-         ::oLeftView:setRowHeight( i-1, nMaxCellH )
-         ::oRightView:setRowHeight( i-1, nMaxCellH )
-      NEXT
+      ::nCellHeight := nMaxCellH
+      ::setCellHeight( nMaxCellH )
 
       /* Implement Column Resizing Mode */
       ::oHeaderView:setResizeMode( IF( ::lSizeCols, QHeaderView_Interactive, QHeaderView_Fixed ) )
@@ -1621,17 +1632,17 @@ METHOD doConfigure() CLASS XbpBrowse
 
    ENDIF
 
-   IF ::nLeftFrozen == 0 .and. hb_isObject( ::oLeftView )
+   IF ::nLeftFrozen == 0 .AND. hb_isObject( ::oLeftView )
       ::oLeftView:hide()
       ::oLeftFooterView:hide()
-   ELSEIF ::nLeftFrozen > 0 .and. hb_isObject( ::oLeftView )
+   ELSEIF ::nLeftFrozen > 0 .AND. hb_isObject( ::oLeftView )
       ::oLeftView:show()
       ::oLeftFooterView:show()
    ENDIF
-   IF ::nRightFrozen == 0 .and. hb_isObject( ::oRightView )
+   IF ::nRightFrozen == 0 .AND. hb_isObject( ::oRightView )
       ::oRightView:hide()
       ::oRightFooterView:hide()
-   ELSEIF ::nRightFrozen > 0 .and. hb_isObject( ::oRightView )
+   ELSEIF ::nRightFrozen > 0 .AND. hb_isObject( ::oRightView )
       ::oRightView:show()
       ::oRightFooterView:show()
    ENDIF
@@ -1689,8 +1700,9 @@ METHOD doConfigure() CLASS XbpBrowse
       ::nRowPos := 1
    ENDIF
 
-
    ::setHorzScrollBarRange()
+
+   ::setCellHeight( ::nCellHeight )
 
    /* Inform Qt about number of rows and columns browser implements */
    ::oDbfModel:hbSetRowColumns( ::rowCount - 1, ::colCount - 1 )
