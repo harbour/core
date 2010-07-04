@@ -146,8 +146,8 @@ CLASS TableManager
     METHOD Close()          INLINE IIF( ::lOpened, ( table->( dbCloseArea() ), ::lOpened := FALSE ), )
     METHOD Read()
     METHOD getLastRec()     INLINE table->( LastRec() )
-    METHOD getXmlData()
-    METHOD getXmlCount()
+    METHOD getXmlData( page )
+    METHOD getXmlCount( ncount )
     METHOD xmlEncode( input )
 ENDCLASS
 
