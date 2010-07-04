@@ -341,6 +341,7 @@ extern HB_EXPORT PHB_CODEPAGE hb_cdpSelect( PHB_CODEPAGE cdp );
 extern HB_EXPORT const char * hb_cdpSelectID( const char * id );
 extern HB_EXPORT PHB_CODEPAGE hb_cdpFind( const char * id );
 extern HB_EXPORT PHB_CODEPAGE hb_cdpFindExt( const char * id );
+extern HB_EXPORT const char ** hb_cdpList( void ); /* Caller must release the pointer */
 
 extern HB_EXPORT HB_BOOL      hb_cdpIsDigit( PHB_CODEPAGE cdp, int iChar );
 extern HB_EXPORT HB_BOOL      hb_cdpIsAlpha( PHB_CODEPAGE cdp, int iChar );

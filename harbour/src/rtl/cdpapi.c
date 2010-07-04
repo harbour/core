@@ -2208,11 +2208,14 @@ const char * hb_cdpSelectID( const char * id )
    return cdp ? cdp->id : NULL;
 }
 
-/* TOFIX: Move this to cdpapihb.c */
-HB_FUNC( HB_CDPLIST )
+/* Caller must release the pointer */
+const char ** hb_cdpList( void )
 {
    PHB_CODEPAGE cdp;
    int iCount;
+   const char ** list;
+
+   HB_CDP_LOCK
 
    cdp = s_cdpList;
    iCount = 0;
@@ -2222,12 +2225,18 @@ HB_FUNC( HB_CDPLIST )
       cdp = cdp->next;
    }
 
-   hb_reta( iCount );
+   list = ( const char ** ) hb_xgrab( ( iCount + 1 ) * sizeof( char * ) );
+
    cdp = s_cdpList;
    iCount = 0;
    while( cdp )
    {
-      hb_storvc( cdp->id, -1, ++iCount );
+      list[ iCount++ ] = cdp->id;
       cdp = cdp->next;
    }
+   list[ iCount ] = NULL;
+
+   HB_CDP_UNLOCK
+
+   return list;
 }

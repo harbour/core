@@ -377,7 +377,7 @@ PROCEDURE Main( cSrc, cDst )
 
       FErase( cTmp )
    ELSE
-      OutErr( "Missing parameter. Call with: <.ui|.qrc> <.prg>" + hb_osNewLine() )
+      OutErr( "Missing parameter. Call with: <input> <output>" + hb_osNewLine() )
       nError := 8
    ENDIF
 

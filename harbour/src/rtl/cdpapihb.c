@@ -116,6 +116,27 @@ HB_FUNC( HB_CDPINFO )
    hb_retc( cdp ? cdp->info : NULL );
 }
 
+HB_FUNC( HB_CDPLIST )
+{
+   const char ** list = hb_cdpList();
+   HB_ISIZ nPos;
+
+   nPos = 0;
+   while( list[ nPos ] )
+      ++nPos;
+
+   hb_reta( nPos );
+
+   nPos = 0;
+   while( list[ nPos ] )
+   {
+      hb_storvc( list[ nPos ], -1, nPos + 1 );
+      ++nPos;
+   }
+
+   hb_xfree( ( void * ) list );
+}
+
 HB_FUNC( __NATSORTVER )
 {
    /* NOTE: CA-Cl*pper 5.2e Intl. will return: "NATSORT v1.2i x14 19/Mar/93" */
