@@ -1178,6 +1178,13 @@ bool HBQPlainTextEdit::hbKeyPressSelection( QKeyEvent * event )
       event->accept();
       return true;
    }
+   else if( ! ctrl && k >= ' ' && k < 127 && columnBegins >= 0 && selectionMode == selectionMode_stream ) //selectionState > 0
+   {
+      hbCut( Qt::Key_Delete );
+      hbClearSelection();
+      repaint();
+      selectionState = 0;
+   }
    else if( isNavableKey( k ) || ( k >= ' ' && k < 127 ) )
    {
       bClear = true;
@@ -1646,7 +1653,7 @@ void HBQPlainTextEdit::hbPaintSelection( QPaintEvent * event )
                      if( rb == re )
                      {
                         int x = ( ( cb - c ) * fontWidth ) + marginX;
-                        int w = ( ce - cb ) * fontWidth;
+                        int w = ( ce - cb ) * fontWidth + marginX ;
                         r = QRect( x, top, w, fontHeight );
                      }
                      else
@@ -1672,7 +1679,7 @@ void HBQPlainTextEdit::hbPaintSelection( QPaintEvent * event )
                      if( rb == re )
                      {
                         int x = ( ( cb - c ) * fontWidth ) + marginX;
-                        int w = ( ce - cb ) * fontWidth;
+                        int w = ( ce - cb ) * fontWidth + marginX;
                         r = QRect( x, top, w, fontHeight );
                      }
                      else

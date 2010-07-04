@@ -1530,9 +1530,10 @@ METHOD IdeEdit:findEx( cText, nFlags, nStart )
       ::qEdit:centerCursor()
       qCursor := ::getCursor()
       cT      := qCursor:selectedText()
+      //qCursor:clearSelection()
       ::qEdit:hbSetSelectionInfo( { qCursor:blockNumber(), qCursor:columnNumber() - len( cT ), ;
                                     qCursor:blockNumber(), qCursor:columnNumber(), 1 } )
-      ::qEdit:setTextCursor( qCursor )
+      //::qEdit:setTextCursor( qCursor )
    ELSE
       qCursor:setPosition( nPos )
       ::qEdit:setTextCursor( qCursor )

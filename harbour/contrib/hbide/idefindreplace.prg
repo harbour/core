@@ -251,15 +251,15 @@ METHOD IdeSearchReplace:create( oIde )
    ::oUI:q_frameFind:setStyleSheet( "" )
    ::oUI:q_frameReplace:setStyleSheet( "" )
 
-   ::oUI:q_buttonClose:setIcon( ::resPath + "closetab.png" )
+   ::oUI:q_buttonClose:setIcon( hbide_image( "closetab" ) )
    ::oUI:q_buttonClose:setToolTip( "Close" )
    ::oUI:signal( "buttonClose", "clicked()", {|| ::oUI:hide() } )
 
-   ::oUI:q_buttonNext:setIcon( ::resPath + "next.png"     )
+   ::oUI:q_buttonNext:setIcon( hbide_image( "next" ) )
    ::oUI:q_buttonNext:setToolTip( "Find Next" )
    ::oUI:signal( "buttonNext", "clicked()", {|| ::find( ::cFind ), ::oIde:manageFocusInEditor() } )
 
-   ::oUI:q_buttonPrev:setIcon( ::resPath + "previous.png" )
+   ::oUI:q_buttonPrev:setIcon( hbide_image( "previous" ) )
    ::oUI:q_buttonPrev:setToolTip( "Find Previous" )
    ::oUI:signal( "buttonPrev", "clicked()", {|| ::find( ::cFind, .t. ), ::oIde:manageFocusInEditor() } )
 
@@ -483,7 +483,6 @@ METHOD IdeFindReplace:create( oIde )
                                    iif( p == 1, ::oUI:q_buttonReplace:setEnabled( .f. ), NIL ) } )
 
    ::qLineEdit := QLineEdit():configure( ::oUI:q_comboFindWhat:lineEdit() )
-   ::connect( ::qLineEdit, "returnPressed()", {|| ::onClickFind() } )
 
    RETURN Self
 
