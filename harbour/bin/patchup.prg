@@ -24,7 +24,7 @@
  *   tested)
  *
  * patchup requires several meta data (in the form of specially formatted lines)
- * in the component's Makefile. Formatting rules are as follows:
+ * in the component's Makefile or .hbp file. Formatting rules are as follows:
  *
  * - The first character on the line is a hash mark (`#'), followed by any number
  *   of white spaces.
@@ -126,8 +126,8 @@
  *
  * If no differences between the original and the Harbour trees were found,
  * a possibly pre-existing diff file is removed. Following this change up
- * in the component's Makefile is left for the operator -- patchup will communicate
- * if there is a likely need to perform this action.
+ * in the component's Makefile (or .hbp file) is left for the operator -- patchup
+ * will communicate if there is a likely need to perform this action.
  *
  * It is strongly advised not to try to mix the two modes. If there are any
  * pending local modifications, a rediff should be done before a component
@@ -247,7 +247,9 @@ STATIC s_aTools := {             ;
 
 PROCEDURE Main( ... )
 
-   LOCAL cFile             /* memoized Makefile */
+   LOCAL cFileName
+   LOCAL cFile             /* memorized input make file */
+   LOCAL aDir
    LOCAL aRegexMatch       /* regex match results */
    LOCAL cMemoLine         /* MemoLine */
    LOCAL nMemoLine         /* Line number */
@@ -286,15 +288,20 @@ PROCEDURE Main( ... )
       ENDSWITCH
    ENDIF
 
-   IF ! hb_FileExists( "Makefile" )
-      OutStd( "No `Makefile' in the current directory." + OSNL )
-      ErrorLevel( 1 )
-      QUIT
+   IF ! hb_FileExists( cFileName := "Makefile" )
+      IF Empty( aDir := Directory( "*.hbp" ) )
+         OutStd( "No `Makefile' or '*.hbp' file in the current directory." + OSNL )
+         ErrorLevel( 1 )
+         QUIT
+      ELSE
+         ASort( aDir,,, { | tmp, tmp1 | tmp[ F_NAME ] < tmp1[ F_NAME ] } )
+         cFileName := aDir[ 1 ][ F_NAME ]
+      ENDIF
    ENDIF
 
    SetupTools()
 
-   cFile := MemoRead( "Makefile" )
+   cFile := MemoRead( cFileName )
    cDiffFile := NIL        /* default to `no local diff' */
 
    nMemoLine := 0
@@ -515,7 +522,7 @@ PROCEDURE Main( ... )
    ENDIF
 
    IF ! lRediff
-      OutStd( "Don't forget to update Makefile with the new version and URL information." + OSNL )
+      OutStd( "Don't forget to update `" + cFileName + "' with the new version and URL information." + OSNL )
    ENDIF
    OutStd( "The temporary directory `" + s_cTempDir + "' has not been removed." +OSNL )
 
