@@ -600,7 +600,7 @@ FUNCTION MAIN( ... )
 
          // Wait a connection
          IF EMPTY( hSocket := hb_socketAccept( hListen, @aRemote, 50 ) )
-            IF hb_socketGerError() == HB_SOCKET_ERR_TIMEOUT
+            IF hb_socketGetError() == HB_SOCKET_ERR_TIMEOUT
                // Checking if I have to quit
                IF HB_FileExists( FILE_STOP )
                   FERASE( FILE_STOP )
