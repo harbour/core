@@ -5506,6 +5506,8 @@ STATIC PROCEDURE DoInstCopy( hbmk )
    LOCAL cDestFileName
    LOCAL nCopied
 
+   LOCAL tSrc, tDst
+
    IF ! Empty( hbmk[ _HBMK_aINSTPATH ] )
 
       FOR EACH aInstPath IN hbmk[ _HBMK_aINSTPATH ]
@@ -5532,15 +5534,22 @@ STATIC PROCEDURE DoInstCopy( hbmk )
                      cDestFileName := cInstPath
                   ENDIF
                ENDIF
-               IF DirBuild( FN_DirGet( cDestFileName ) )
-                  ++nCopied
-                  IF hb_FCopy( cInstFile, cDestFileName ) == F_ERROR
-                     hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Copying %1$s to %2$s failed with %3$s." ), cInstFile, cDestFileName, hb_ntos( FError() ) ) )
-                  ELSEIF hbmk[ _HBMK_lInfo ]
-                     hbmk_OutStd( hbmk, hb_StrFormat( I_( "Copied %1$s to %2$s" ), cInstFile, cDestFileName ) )
+
+               IF ! hbmk[ _HBMK_lINC ] .OR. ;
+                  ! hb_FGetDateTime( cDestFileName, @tDst ) .OR. ;
+                  ! hb_FGetDateTime( cInstFile, @tSrc ) .OR. ;
+                  tSrc > tDst
+
+                  IF DirBuild( FN_DirGet( cDestFileName ) )
+                     ++nCopied
+                     IF hb_FCopy( cInstFile, cDestFileName ) == F_ERROR
+                        hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Copying %1$s to %2$s failed with %3$s." ), cInstFile, cDestFileName, hb_ntos( FError() ) ) )
+                     ELSEIF hbmk[ _HBMK_lInfo ]
+                        hbmk_OutStd( hbmk, hb_StrFormat( I_( "Copied %1$s to %2$s" ), cInstFile, cDestFileName ) )
+                     ENDIF
+                  ELSE
+                     hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Cannot create install directory for install target %1$s." ), cDestFileName ) )
                   ENDIF
-               ELSE
-                  hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Cannot create install directory for install target %1$s." ), cDestFileName ) )
                ENDIF
             ENDIF
          NEXT

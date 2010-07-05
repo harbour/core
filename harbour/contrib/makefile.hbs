@@ -214,7 +214,7 @@ PROCEDURE Main( ... )
 
    /* Converting build options to hbmk2 options */
 
-   cBaseOptions := " -info -trace"
+   cBaseOptions := ""
 
    IF GetEnv( "HB_BUILD_MODE" ) == "cpp"
       cBaseOptions += " -cpp=yes"
