@@ -68,14 +68,23 @@ CREATE CLASS QList INHERIT HbQtObjectHandler
    METHOD  new( ... )
 
    METHOD  append( xValue )
+   METHOD  at( nI )
+   METHOD  back()
+   METHOD  back_1()
    METHOD  clear()
    METHOD  count( xValue )
    METHOD  count_1()
    METHOD  empty()
    METHOD  endsWith( xValue )
+   METHOD  first()
+   METHOD  first_1()
+   METHOD  front()
+   METHOD  front_1()
    METHOD  indexOf( xValue, nFrom )
    METHOD  insert( nI, xValue )
    METHOD  isEmpty()
+   METHOD  last()
+   METHOD  last_1()
    METHOD  lastIndexOf( xValue, nFrom )
    METHOD  length()
    METHOD  move( nFrom, nTo )
@@ -93,6 +102,11 @@ CREATE CLASS QList INHERIT HbQtObjectHandler
    METHOD  size()
    METHOD  startsWith( xValue )
    METHOD  swap( nI, nJ )
+   METHOD  takeAt( nI )
+   METHOD  takeFirst()
+   METHOD  takeLast()
+   METHOD  value( nI )
+   METHOD  value_1( nI, xDefaultValue )
 
    ENDCLASS
 
@@ -108,6 +122,18 @@ METHOD QList:new( ... )
 
 METHOD QList:append( xValue )
    RETURN Qt_QList_append( ::pPtr, xValue )
+
+
+METHOD QList:at( nI )
+   RETURN Qt_QList_at( ::pPtr, nI )
+
+
+METHOD QList:back()
+   RETURN Qt_QList_back( ::pPtr )
+
+
+METHOD QList:back_1()
+   RETURN Qt_QList_back_1( ::pPtr )
 
 
 METHOD QList:clear()
@@ -130,6 +156,22 @@ METHOD QList:endsWith( xValue )
    RETURN Qt_QList_endsWith( ::pPtr, xValue )
 
 
+METHOD QList:first()
+   RETURN Qt_QList_first( ::pPtr )
+
+
+METHOD QList:first_1()
+   RETURN Qt_QList_first_1( ::pPtr )
+
+
+METHOD QList:front()
+   RETURN Qt_QList_front( ::pPtr )
+
+
+METHOD QList:front_1()
+   RETURN Qt_QList_front_1( ::pPtr )
+
+
 METHOD QList:indexOf( xValue, nFrom )
    RETURN Qt_QList_indexOf( ::pPtr, xValue, nFrom )
 
@@ -140,6 +182,14 @@ METHOD QList:insert( nI, xValue )
 
 METHOD QList:isEmpty()
    RETURN Qt_QList_isEmpty( ::pPtr )
+
+
+METHOD QList:last()
+   RETURN Qt_QList_last( ::pPtr )
+
+
+METHOD QList:last_1()
+   RETURN Qt_QList_last_1( ::pPtr )
 
 
 METHOD QList:lastIndexOf( xValue, nFrom )
@@ -208,4 +258,24 @@ METHOD QList:startsWith( xValue )
 
 METHOD QList:swap( nI, nJ )
    RETURN Qt_QList_swap( ::pPtr, nI, nJ )
+
+
+METHOD QList:takeAt( nI )
+   RETURN Qt_QList_takeAt( ::pPtr, nI )
+
+
+METHOD QList:takeFirst()
+   RETURN Qt_QList_takeFirst( ::pPtr )
+
+
+METHOD QList:takeLast()
+   RETURN Qt_QList_takeLast( ::pPtr )
+
+
+METHOD QList:value( nI )
+   RETURN Qt_QList_value( ::pPtr, nI )
+
+
+METHOD QList:value_1( nI, xDefaultValue )
+   RETURN Qt_QList_value_1( ::pPtr, nI, xDefaultValue )
 

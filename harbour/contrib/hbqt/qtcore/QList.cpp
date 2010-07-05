@@ -66,20 +66,18 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 26/55 [ 47.27% ] ]
+ *  Constructed[ 40/55 [ 72.73% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
  *
  *  void append ( const QList<T> & value )
+ *  QList<T> mid ( int pos, int length = -1 ) const
  *  QSet<T> toSet () const
  *  QVector<T> toVector () const
  *
  *  *** Commented out protos which construct fine but do not compile ***
  *
- *  // const T & at ( int i ) const
- *  // T & back ()
- *  // const T & back () const
  *  //iterator begin ()
  *  //const_iterator begin () const
  *  //const_iterator constBegin () const
@@ -89,20 +87,8 @@
  *  //const_iterator end () const
  *  //iterator erase ( iterator pos )
  *  //iterator erase ( iterator begin, iterator end )
- *  // T & first ()
- *  // const T & first () const
- *  // T & front ()
- *  // const T & front () const
  *  //iterator insert ( iterator before, const T & value )
- *  // T & last ()
- *  // const T & last () const
- *  // QList<T> mid ( int pos, int length = -1 ) const
- *  // T takeAt ( int i )
- *  // T takeFirst ()
- *  // T takeLast ()
  *  //std::list<T> toStdList () const
- *  // T value ( int i ) const
- *  // T value ( int i, const T & defaultValue ) const
  */
 
 #include <QtCore/QPointer>
@@ -193,6 +179,48 @@ HB_FUNC( QT_QLIST_APPEND )
 }
 
 /*
+ * const T & at ( int i ) const
+ */
+HB_FUNC( QT_QLIST_AT )
+{
+   QList< void *> * p = hbqt_par_QList( 1 );
+   if( p )
+      hb_retptr( ( p )->at( hb_parni( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLIST_AT FP=hb_retptr( ( p )->at( hb_parni( 2 ) ) ); p is NULL" ) );
+   }
+}
+
+/*
+ * T & back ()
+ */
+HB_FUNC( QT_QLIST_BACK )
+{
+   QList< void *> * p = hbqt_par_QList( 1 );
+   if( p )
+      hb_retptr( ( p )->back() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLIST_BACK FP=hb_retptr( ( p )->back() ); p is NULL" ) );
+   }
+}
+
+/*
+ * const T & back () const
+ */
+HB_FUNC( QT_QLIST_BACK_1 )
+{
+   QList< void *> * p = hbqt_par_QList( 1 );
+   if( p )
+      hb_retptr( ( p )->back() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLIST_BACK_1 FP=hb_retptr( ( p )->back() ); p is NULL" ) );
+   }
+}
+
+/*
  * void clear ()
  */
 HB_FUNC( QT_QLIST_CLEAR )
@@ -263,6 +291,62 @@ HB_FUNC( QT_QLIST_ENDSWITH )
 }
 
 /*
+ * T & first ()
+ */
+HB_FUNC( QT_QLIST_FIRST )
+{
+   QList< void *> * p = hbqt_par_QList( 1 );
+   if( p )
+      hb_retptr( ( p )->first() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLIST_FIRST FP=hb_retptr( ( p )->first() ); p is NULL" ) );
+   }
+}
+
+/*
+ * const T & first () const
+ */
+HB_FUNC( QT_QLIST_FIRST_1 )
+{
+   QList< void *> * p = hbqt_par_QList( 1 );
+   if( p )
+      hb_retptr( ( p )->first() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLIST_FIRST_1 FP=hb_retptr( ( p )->first() ); p is NULL" ) );
+   }
+}
+
+/*
+ * T & front ()
+ */
+HB_FUNC( QT_QLIST_FRONT )
+{
+   QList< void *> * p = hbqt_par_QList( 1 );
+   if( p )
+      hb_retptr( ( p )->front() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLIST_FRONT FP=hb_retptr( ( p )->front() ); p is NULL" ) );
+   }
+}
+
+/*
+ * const T & front () const
+ */
+HB_FUNC( QT_QLIST_FRONT_1 )
+{
+   QList< void *> * p = hbqt_par_QList( 1 );
+   if( p )
+      hb_retptr( ( p )->front() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLIST_FRONT_1 FP=hb_retptr( ( p )->front() ); p is NULL" ) );
+   }
+}
+
+/*
  * int indexOf ( const T & value, int from = 0 ) const
  */
 HB_FUNC( QT_QLIST_INDEXOF )
@@ -301,6 +385,34 @@ HB_FUNC( QT_QLIST_ISEMPTY )
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLIST_ISEMPTY FP=hb_retl( ( p )->isEmpty() ); p is NULL" ) );
+   }
+}
+
+/*
+ * T & last ()
+ */
+HB_FUNC( QT_QLIST_LAST )
+{
+   QList< void *> * p = hbqt_par_QList( 1 );
+   if( p )
+      hb_retptr( ( p )->last() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLIST_LAST FP=hb_retptr( ( p )->last() ); p is NULL" ) );
+   }
+}
+
+/*
+ * const T & last () const
+ */
+HB_FUNC( QT_QLIST_LAST_1 )
+{
+   QList< void *> * p = hbqt_par_QList( 1 );
+   if( p )
+      hb_retptr( ( p )->last() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLIST_LAST_1 FP=hb_retptr( ( p )->last() ); p is NULL" ) );
    }
 }
 
@@ -539,6 +651,76 @@ HB_FUNC( QT_QLIST_SWAP )
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLIST_SWAP FP=( p )->swap( hb_parni( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+   }
+}
+
+/*
+ * T takeAt ( int i )
+ */
+HB_FUNC( QT_QLIST_TAKEAT )
+{
+   QList< void *> * p = hbqt_par_QList( 1 );
+   if( p )
+      hb_retptr( ( p )->takeAt( hb_parni( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLIST_TAKEAT FP=hb_retptr( ( p )->takeAt( hb_parni( 2 ) ) ); p is NULL" ) );
+   }
+}
+
+/*
+ * T takeFirst ()
+ */
+HB_FUNC( QT_QLIST_TAKEFIRST )
+{
+   QList< void *> * p = hbqt_par_QList( 1 );
+   if( p )
+      hb_retptr( ( p )->takeFirst() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLIST_TAKEFIRST FP=hb_retptr( ( p )->takeFirst() ); p is NULL" ) );
+   }
+}
+
+/*
+ * T takeLast ()
+ */
+HB_FUNC( QT_QLIST_TAKELAST )
+{
+   QList< void *> * p = hbqt_par_QList( 1 );
+   if( p )
+      hb_retptr( ( p )->takeLast() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLIST_TAKELAST FP=hb_retptr( ( p )->takeLast() ); p is NULL" ) );
+   }
+}
+
+/*
+ * T value ( int i ) const
+ */
+HB_FUNC( QT_QLIST_VALUE )
+{
+   QList< void *> * p = hbqt_par_QList( 1 );
+   if( p )
+      hb_retptr( ( p )->value( hb_parni( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLIST_VALUE FP=hb_retptr( ( p )->value( hb_parni( 2 ) ) ); p is NULL" ) );
+   }
+}
+
+/*
+ * T value ( int i, const T & defaultValue ) const
+ */
+HB_FUNC( QT_QLIST_VALUE_1 )
+{
+   QList< void *> * p = hbqt_par_QList( 1 );
+   if( p )
+      hb_retptr( ( p )->value( hb_parni( 2 ), hb_param( 3, HB_IT_ANY ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLIST_VALUE_1 FP=hb_retptr( ( p )->value( hb_parni( 2 ), hb_param( 3, HB_IT_ANY ) ) ); p is NULL" ) );
    }
 }
 

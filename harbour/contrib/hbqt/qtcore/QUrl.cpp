@@ -164,7 +164,18 @@ HB_FUNC( QT_QURL )
 {
    QUrl * pObj = NULL;
 
-   pObj = new QUrl( hbqt_par_QString( 1 ) ) ;
+   if( hb_pcount() == 1 && HB_ISCHAR( 1 ) )
+   {
+      pObj = new QUrl( hbqt_par_QString( 1 ) ) ;
+   }
+   else if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
+   {
+      pObj = new QUrl( *hbqt_par_QUrl( 1 ) ) ;
+   }
+   else
+   {
+      pObj = new QUrl() ;
+   }
 
    hb_retptrGC( hbqt_gcAllocate_QUrl( ( void * ) pObj, true ) );
 }

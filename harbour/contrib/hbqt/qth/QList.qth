@@ -84,9 +84,9 @@ HB_FUNC( QT_QLIST )
 <PROTOS>
 void append ( const T & value )
 void append ( const QList<T> & value )
-// const T & at ( int i ) const
-// T & back ()
-// const T & back () const
+const T & at ( int i ) const
+T & back ()
+const T & back () const
 //iterator begin ()
 //const_iterator begin () const
 void clear ()
@@ -101,19 +101,19 @@ bool empty () const
 bool endsWith ( const T & value ) const
 //iterator erase ( iterator pos )
 //iterator erase ( iterator begin, iterator end )
-// T & first ()
-// const T & first () const
-// T & front ()
-// const T & front () const
+T & first ()
+const T & first () const
+T & front ()
+const T & front () const
 int indexOf ( const T & value, int from = 0 ) const
 void insert ( int i, const T & value )
 //iterator insert ( iterator before, const T & value )
 bool isEmpty () const
-// T & last ()
-// const T & last () const
+T & last ()
+const T & last () const
 int lastIndexOf ( const T & value, int from = -1 ) const
 int length () const
-// QList<T> mid ( int pos, int length = -1 ) const
+QList<T> mid ( int pos, int length = -1 ) const
 void move ( int from, int to )
 void pop_back ()
 void pop_front ()
@@ -129,14 +129,14 @@ void replace ( int i, const T & value )
 int size () const
 bool startsWith ( const T & value ) const
 void swap ( int i, int j )
-// T takeAt ( int i )
-// T takeFirst ()
-// T takeLast ()
+T takeAt ( int i )
+T takeFirst ()
+T takeLast ()
 QSet<T> toSet () const
 //std::list<T> toStdList () const
 QVector<T> toVector () const
-// T value ( int i ) const
-// T value ( int i, const T & defaultValue ) const
+T value ( int i ) const
+T value ( int i, const T & defaultValue ) const
 </PROTOS>
 
 <SLOTS>
