@@ -1706,11 +1706,11 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       CASE cParamL == "-quiet-"          ; hbmk[ _HBMK_lQuiet ] := .F.
       CASE cParamL == "-info"            ; hbmk[ _HBMK_lInfo ] := .T.
       CASE cParamL == "-pause"           ; lPause := .T.
-      CASE cParamL == "-hbexe"           ; hbmk[ _HBMK_lInfo ] := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .F. ; hbmk[ _HBMK_lCreateLib ] := .F. ; hbmk[ _HBMK_lCreateDyn ] := .F.
-      CASE cParamL == "-hblib"           ; hbmk[ _HBMK_lInfo ] := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T. ; hbmk[ _HBMK_lCreateLib ] := .T. ; hbmk[ _HBMK_lCreateDyn ] := .F.
-      CASE cParamL == "-hbdyn"           ; hbmk[ _HBMK_lInfo ] := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T. ; hbmk[ _HBMK_lCreateLib ] := .F. ; hbmk[ _HBMK_lCreateDyn ] := .T. ; hbmk[ _HBMK_lDynVM ] := .F. ; l_lNOHBLIB := .T.
-      CASE cParamL == "-hbdynvm"         ; hbmk[ _HBMK_lInfo ] := .F. ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T. ; hbmk[ _HBMK_lCreateLib ] := .F. ; hbmk[ _HBMK_lCreateDyn ] := .T. ; hbmk[ _HBMK_lDynVM ] := .T. ; l_lNOHBLIB := .F.
-      CASE cParamL == "-hbimplib"        ; hbmk[ _HBMK_lInfo ] := .F. ; lStopAfterInit := .T. ; hbmk[ _HBMK_lCreateImpLib ] := .T. ; lAcceptIFlag := .T.
+      CASE cParamL == "-hbexe"           ; lStopAfterHarbour := .F. ; lStopAfterCComp := .F. ; hbmk[ _HBMK_lCreateLib ] := .F. ; hbmk[ _HBMK_lCreateDyn ] := .F.
+      CASE cParamL == "-hblib"           ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T. ; hbmk[ _HBMK_lCreateLib ] := .T. ; hbmk[ _HBMK_lCreateDyn ] := .F.
+      CASE cParamL == "-hbdyn"           ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T. ; hbmk[ _HBMK_lCreateLib ] := .F. ; hbmk[ _HBMK_lCreateDyn ] := .T. ; hbmk[ _HBMK_lDynVM ] := .F. ; l_lNOHBLIB := .T.
+      CASE cParamL == "-hbdynvm"         ; lStopAfterHarbour := .F. ; lStopAfterCComp := .T. ; hbmk[ _HBMK_lCreateLib ] := .F. ; hbmk[ _HBMK_lCreateDyn ] := .T. ; hbmk[ _HBMK_lDynVM ] := .T. ; l_lNOHBLIB := .F.
+      CASE cParamL == "-hbimplib"        ; lStopAfterInit := .T. ; hbmk[ _HBMK_lCreateImpLib ] := .T. ; lAcceptIFlag := .T.
       CASE cParamL == "-gui" .OR. ;
            cParamL == "-mwindows"        ; hbmk[ _HBMK_lGUI ]       := .T. /* Compatibility */
       CASE cParamL == "-std" .OR. ;
@@ -5290,6 +5290,8 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                ENDIF
 
             ENDCASE
+
+            hb_AIns( hbmk[ _HBMK_aINSTFILE ], 1, { "", hbmk[ _HBMK_cPROGNAME ] }, .T. )
          ENDIF
       ENDIF
 
@@ -5429,8 +5431,10 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                ENDIF
             ENDIF
          ENDIF
+      ENDIF
 
-         hb_AIns( hbmk[ _HBMK_aINSTFILE ], 1, { "", FN_NameExtGet( hbmk[ _HBMK_cPROGNAME ] ) }, .T. )
+      IF hbmk[ _HBMK_nErrorLevel ] == 0 .AND. ! hbmk[ _HBMK_lCLEAN ] .AND. ;
+         ( ! lStopAfterCComp .OR. hbmk[ _HBMK_lCreateLib ] .OR. hbmk[ _HBMK_lCreateDyn ] )
 
          DoInstCopy( hbmk )
       ENDIF
@@ -5492,7 +5496,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
 #define _INST_cGroup            1
 #define _INST_cData             2
-                 #pragma linenumber=on
+
 STATIC PROCEDURE DoInstCopy( hbmk )
    LOCAL aInstPath
    LOCAL aInstFile
@@ -5515,7 +5519,7 @@ STATIC PROCEDURE DoInstCopy( hbmk )
 
             IF aInstPath[ _INST_cGroup ] == aInstFile[ _INST_cGroup ]
                IF Empty( FN_NameExtGet( cInstPath ) )
-                  cDestFileName := DirAddPathSep( cInstPath ) + cInstFile
+                  cDestFileName := DirAddPathSep( cInstPath ) + FN_NameExtGet( cInstFile )
                ELSE
                   /* If destination is a full name, don't copy the extra files, only the first one.
                      (for the empty group name, this will be the build target) */
