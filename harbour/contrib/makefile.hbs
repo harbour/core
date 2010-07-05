@@ -246,14 +246,6 @@ PROCEDURE Main( ... )
 
    hb_setenv( "HBMK_OPTIONS" )
 
-   /* compatibility ones. */
-   hb_setenv( "HB_MT" )
-   hb_setenv( "HB_GUI" )
-   hb_setenv( "HB_SHARED" )
-   hb_setenv( "HB_DEBUG" )
-   hb_setenv( "HB_NULRDD" )
-   hb_setenv( "HB_GT" )
-
    /* Parse filter */
 
    aFilter := iif( Empty( cFilter ), {}, hb_ATokens( cFilter,, .T. ) )

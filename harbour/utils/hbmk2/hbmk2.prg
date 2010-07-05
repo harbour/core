@@ -875,34 +875,6 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
    /* Compatibility */
 
-   IF ValueIsT( GetEnv( "HB_MT" ) ) .OR. Lower( GetEnv( "HB_MT" ) ) == "mt"
-      cEnv += " -mt"
-   ELSEIF ValueIsF( GetEnv( "HB_MT" ) )
-      cEnv += " -st"
-   ENDIF
-   IF ValueIsT( GetEnv( "HB_GUI" ) )
-      cEnv += " -gui"
-   ELSEIF ValueIsF( GetEnv( "HB_GUI" ) )
-      cEnv += " -std"
-   ENDIF
-   IF ValueIsT( GetEnv( "HB_SHARED" ) )
-      cEnv += " -shared"
-   ELSEIF ValueIsF( GetEnv( "HB_SHARED" ) )
-      cEnv += " -static"
-   ENDIF
-   IF ValueIsT( GetEnv( "HB_DEBUG" ) )
-      cEnv += " -debug"
-   ELSEIF ValueIsF( GetEnv( "HB_DEBUG" ) )
-      cEnv += " -debug-"
-   ENDIF
-   IF ValueIsT( GetEnv( "HB_NULRDD" ) )
-      cEnv += " -nulrdd"
-   ELSEIF ValueIsF( GetEnv( "HB_NULRDD" ) )
-      cEnv += " -nulrdd-"
-   ENDIF
-   IF Lower( Left( GetEnv( "HB_GT" ), 2 ) ) == "gt"
-      cEnv += " -" + GetEnv( "HB_GT" )
-   ENDIF
    FOR EACH tmp IN ListToArray( PathSepToSelf( GetEnv( "HB_USER_LIBPATHS" ) ) )
       cEnv += " -L" + tmp
    NEXT
