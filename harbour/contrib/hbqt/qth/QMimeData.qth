@@ -101,6 +101,21 @@ void setText ( const QString & text )
 void setUrls ( const QList<QUrl> & urls )
 QString text () const
 QList<QUrl> urls () const
+
+#          Harbour Callable Function Till QList<QUrl> is not resolved        
+#
+QStringList * hbUrlList() const{
+   QMimeData * p = hbqt_par_QMimeData( 1 );
+   if( p )
+   {
+      QStringList strList;
+      foreach ( QUrl url, ( p )->urls() )
+      {
+         strList << ( QString ) url.toString().toAscii().data();
+      }
+      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( strList ), true ) );
+   }
+}
 </PROTOS>
 
 <SLOTS>

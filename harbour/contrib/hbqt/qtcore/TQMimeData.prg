@@ -87,6 +87,7 @@ CREATE CLASS QMimeData INHERIT HbQtObjectHandler, QObject
    METHOD  setText( cText )
    METHOD  text()
    METHOD  urls()
+   METHOD  hbUrlList()
 
    ENDCLASS
 
@@ -178,4 +179,8 @@ METHOD QMimeData:text()
 
 METHOD QMimeData:urls()
    RETURN Qt_QMimeData_urls( ::pPtr )
+
+
+METHOD QMimeData:hbUrlList()
+   RETURN Qt_QMimeData_hbUrlList( ::pPtr )
 

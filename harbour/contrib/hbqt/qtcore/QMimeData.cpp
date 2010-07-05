@@ -66,12 +66,13 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 20/21 [ 95.24% ] ]
+ *  Constructed[ 21/23 [ 91.30% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
  *
  *  void setUrls ( const QList<QUrl> & urls )
+ *  }
  */
 
 #include <QtCore/QPointer>
@@ -433,6 +434,23 @@ HB_FUNC( QT_QMIMEDATA_URLS )
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMIMEDATA_URLS FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QUrl>( ( p )->urls() ), true ) ); p is NULL" ) );
+   }
+}
+
+/*
+ * QStringList * hbUrlList() const
+ */
+HB_FUNC( QT_QMIMEDATA_HBURLLIST )
+{
+   QMimeData * p = hbqt_par_QMimeData( 1 );
+   if( p )
+   {
+      QStringList strList;
+      foreach ( QUrl url, ( p )->urls() )
+      {
+         strList << ( QString ) url.toString().toAscii().data();
+      }
+      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( strList ), true ) );
    }
 }
 

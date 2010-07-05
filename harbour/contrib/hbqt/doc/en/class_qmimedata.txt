@@ -48,6 +48,7 @@
         :setText( cText )                                   -> NIL
         :text()                                             -> cQString
         :urls()                                             -> pQList<QUrl>
+        :hbUrlList()                                        -> pQStringList
 
     $DESCRIPTION$
 
