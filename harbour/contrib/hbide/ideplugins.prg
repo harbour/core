@@ -203,7 +203,6 @@ FUNCTION hbide_execAutoScripts()
 
    FOR EACH cFileName IN a_
       IF !empty( cBuffer := hb_memoRead( cPath + cFileName ) )
-         HB_TRACE( HB_TR_ALWAYS, cFileName )
          hbide_runAScript( cBuffer, /* No Compiler Flag */, hbide_setIde() )
       ENDIF
    NEXT

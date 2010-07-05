@@ -553,13 +553,13 @@ METHOD HbIde:create( aParams )
       ::nEvent := AppEvent( @::mp1, @::mp2, @::oXbp )
 
       IF ::nEvent == xbeP_Quit
-         HB_TRACE( HB_TR_ALWAYS, "---------------- xbeP_Quit" )
+//         HB_TRACE( HB_TR_ALWAYS, "---------------- xbeP_Quit" )
          ::oINI:save()
          EXIT
       ENDIF
 
       IF ::nEvent == xbeP_Close
-         HB_TRACE( HB_TR_ALWAYS, "================ xbeP_Close" )
+//         HB_TRACE( HB_TR_ALWAYS, "================ xbeP_Close" )
          ::oINI:save()
          ::oSM:closeAllSources()
          EXIT
@@ -579,12 +579,13 @@ METHOD HbIde:create( aParams )
       ::oXbp:handleEvent( ::nEvent, ::mp1, ::mp2 )
    ENDDO
 
+#if 0
+
    /* Very important - destroy resources */
    HB_TRACE( HB_TR_ALWAYS, "======================================================" )
    HB_TRACE( HB_TR_ALWAYS, "Before    ::oDlg:destroy()", memory( 1001 )             )
    HB_TRACE( HB_TR_ALWAYS, "                                                      " )
 
-#if 0
    ::oSetup:destroy()
    ::oUpdn:destroy()
    ::oTM:destroy()
@@ -607,10 +608,11 @@ METHOD HbIde:create( aParams )
 
    ::oFont := NIL
    qSplash := NIL
-#endif
+
    HB_TRACE( HB_TR_ALWAYS, "                                                      " )
    HB_TRACE( HB_TR_ALWAYS, "After     ::oDlg:destroy()", memory( 1001 )             )
    HB_TRACE( HB_TR_ALWAYS, "======================================================" )
+#endif
 
    RETURN self
 

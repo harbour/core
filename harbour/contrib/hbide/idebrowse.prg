@@ -222,12 +222,21 @@ METHOD IdeBrowseManager:show()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeBrowseManager:create( oIde )
+   LOCAL qDock
 
    DEFAULT oIde TO ::oIde
    ::oIde := oIde
 
+   qDock := ::oIde:oEM:oQScintillaDock:oWidget
+
    ::qDbu := QWidget():new()
-   ::oIde:oEM:oQScintillaDock:oWidget:setWidget( ::qDbu )
+
+   qDock:setWidget( ::qDbu )
+
+   qDock:setAcceptDrops( .t. )
+   qDock:installEventFilter( ::pEvents )
+   ::connect( qDock, QEvent_DragEnter, {|p| ::execEvent( "dockDbu_dragEnterEvent", p ) } )
+   ::connect( qDock, QEvent_Drop     , {|p| ::execEvent( "dockDbu_dropEvent"     , p ) } )
 
    /* Layout applied to dbu widget */
    ::qLayout := QVBoxLayout():new()
@@ -379,12 +388,33 @@ METHOD IdeBrowseManager:setPanel( cPanel )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeBrowseManager:execEvent( cEvent, p, p1 )
-   LOCAL cTable, cPath, cPanel
+   LOCAL cTable, cPath, cPanel, qEvent, qMime, qList, i, cExt, qUrl
 
    HB_SYMBOL_UNUSED( p )
    HB_SYMBOL_UNUSED( p1 )
 
    SWITCH cEvent
+   CASE "dockDbu_dragEnterEvent"
+      qEvent := QDragEnterEvent():from( p )
+      qEvent:acceptProposedAction()
+      EXIT
+
+   CASE "dockDbu_dropEvent"
+      qEvent := QDropEvent():from( p )
+      qMime := QMimeData():from( qEvent:mimeData() )
+      IF qMime:hasUrls()
+         qList := QStringList():from( qMime:hbUrlList() )
+         FOR i := 0 TO qList:size() - 1
+            qUrl := QUrl():new( qList:at( i ) )
+            hb_fNameSplit( qUrl:toLocalFile(), @cPath, @cTable, @cExt )
+            IF lower( cExt ) == ".dbf"
+               ::addTable( hbide_pathToOSPath( cPath + cTable + cExt ) )
+            ENDIF
+            HB_TRACE( HB_TR_ALWAYS, cPath, cTable, cExt )
+         NEXT
+      ENDIF
+      EXIT
+
    CASE "buttonShowForm_clicked"
       IF !empty( ::oCurBrw )
          IF ::oCurBrw:qForm:isHidden()

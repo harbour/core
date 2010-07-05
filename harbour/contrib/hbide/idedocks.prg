@@ -296,56 +296,84 @@ METHOD IdeDocks:buildSystemTray()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeDocks:execEvent( cEvent, p )
-   LOCAL qEvent
+   LOCAL qEvent, qMime, qList, qUrl, i
 
-   DO CASE
-   CASE cEvent == "qHelpBrw_contextMenuRequested"
+   SWITCH cEvent
+
+   CASE "qHelpBrw_contextMenuRequested"
       hbide_popupBrwContextMenu( ::qHelpBrw, p )
-
-   CASE cEvent == "dockQScintilla_visibilityChanged"
-      IF p ; ::oBM:show() ; ENDIF
-
-   CASE cEvent == "dockSourceThumbnail_visibilityChanged"
+      EXIT
+   CASE "dockQScintilla_topLevelChanged"
+   CASE "dockQScintilla_dockLocationChanged"
+   CASE "dockQScintilla_allowedAreasChanged"
+   CASE "dockQScintilla_featuresChanged"
+      EXIT
+   CASE "dockQScintilla_visibilityChanged"
+      IF p; ::oBM:show() ; ENDIF
+      //::oQScintillaDock:oWidget:raise()
+      EXIT
+   CASE "dockSourceThumbnail_visibilityChanged"
       IF p; ::oEM:showThumbnail(); ENDIF
-
-   CASE cEvent == "dockSkltnsTree_visibilityChanged"
+      //::oSourceThumbnailDock:oWidget:raise()
+      EXIT
+   CASE "dockSkltnsTree_visibilityChanged"
       IF p; ::oSK:showTree(); ENDIF
+      //::oSkltnsTreeDock:oWidget:raise()
+      EXIT
+   CASE "dockHelpDock_visibilityChanged"
+      //::oHelpDock:oWidget:raise()
+      EXIT
 
-   CASE cEvent == "dockHelpDock_visibilityChanged"
-      IF p; ::oHelpDock:oWidget:raise(); ENDIF
+   CASE "dockDocViewer_visibilityChanged"
+      IF p; ::oHL:show(); ENDIF
+      //::oDocViewDock:oWidget:raise()
+      EXIT
 
-   CASE cEvent == "dockDocViewer_visibilityChanged"
-      IF p; ::oHL:show(); ::oDocViewDock:oWidget:raise(); ENDIF
+   CASE "dockDocWriter_visibilityChanged"
+      IF p; ::oDW:show(); ENDIF
+      //::oDocWriteDock:oWidget:raise()
+      EXIT
 
-   CASE cEvent == "dockDocWriter_visibilityChanged"
-      IF p; ::oDW:show(); ::oDocWriteDock:oWidget:raise(); ENDIF
+   CASE "oFuncDock_visibilityChanged"
+      //::oFuncDock:oWidget:raise()
+      EXIT
 
-   CASE cEvent == "oFuncDock_visibilityChanged"
-      IF p; ::oFuncDock:oWidget:raise(); ENDIF
+   CASE "docFunctions_visibilityChanged"
+      IF p; ::oFN:show(); ENDIF
+      //::oFunctionsDock:oWidget:raise()
+      EXIT
 
-   CASE cEvent == "docFunctions_visibilityChanged"
-      IF p; ::oFN:show(); ::oFunctionsDock:oWidget:raise(); ENDIF
+   CASE "dockProperties_visibilityChanged"
+      IF p; ::oPM:fetchProperties(); ENDIF
+      //::oPropertiesDock:oWidget:raise()
+      EXIT
 
-   CASE cEvent == "dockProperties_visibilityChanged"
-      IF p; ::oPM:fetchProperties(); ::oPropertiesDock:oWidget:raise(); ENDIF
+   CASE "docEnvironments_visibilityChanged"
+      IF p; ::oEV:show(); ENDIF
+      //::oEnvironDock:oWidget:raise()
+      EXIT
 
-   CASE cEvent == "docEnvironments_visibilityChanged"
-      IF p; ::oEV:show(); ::oEnvironDock:oWidget:raise(); ENDIF
+   CASE "docSkeletons_visibilityChanged"
+      IF p; ::oSK:show(); ENDIF
+      //::oSkeltnDock:oWidget:raise()
+      EXIT
 
-   CASE cEvent == "docSkeletons_visibilityChanged"
-      IF p; ::oSK:show(); ::oSkeltnDock:oWidget:raise(); ENDIF
+   CASE "dockThemes_visibilityChanged"
+      IF p; ::oTH:show(); ENDIF
+      //::oThemesDock:oWidget:raise()
+      EXIT
 
-   CASE cEvent == "dockThemes_visibilityChanged"
-      IF p; ::oTH:show(); ::oThemesDock:oWidget:raise(); ENDIF
+   CASE "dockFindInFiles_visibilityChanged"
+      IF p; ::oFF:show(); ENDIF
+      //::oFindDock:oWidget:raise()
+      EXIT
 
-   CASE cEvent == "dockFindInFiles_visibilityChanged"
-      IF p; ::oFF:show(); ::oFindDock:oWidget:raise(); ENDIF
-
-   CASE cEvent == "QEvent_WindowStateChange"
+   CASE "QEvent_WindowStateChange"
       qEvent := QWindowStateChangeEvent():from( p )
       ::nPrevWindowState := qEvent:oldState()
+      EXIT
 
-   CASE cEvent == "QEvent_Hide"
+   CASE "QEvent_Hide"
       IF ::lSystemTrayAvailable .AND. ::lMinimizeInSystemTray
          qEvent := QHideEvent():from( p )
          IF ! ::lChanging
@@ -363,27 +391,51 @@ METHOD IdeDocks:execEvent( cEvent, p )
             ::lChanging := .f.
          ENDIF
       ENDIF
+      EXIT
 
-   CASE cEvent == "qTimer_timeOut"
+   CASE "qTimer_timeOut"
       ::oDlg:hide()
       ::oSys:setToolTip( ::oDlg:oWidget:windowTitle() )
       ::oSys:show()
+      EXIT
 
-   CASE cEvent == "qSystemTrayIcon_close"
+   CASE "qSystemTrayIcon_close"
       PostAppEvent( xbeP_Close, NIL, NIL, ::oDlg )
+      EXIT
 
-   CASE cEvent == "qSystemTrayIcon_show"
+   CASE "qSystemTrayIcon_show"
       ::showDlgBySystemTrayIconCommand()
+      EXIT
 
-   CASE cEvent == "qSystemTrayIcon_activated"
+   CASE "qSystemTrayIcon_activated"
       IF     p == QSystemTrayIcon_Trigger
          ::showDlgBySystemTrayIconCommand()
       ELSEIF p == QSystemTrayIcon_DoubleClick
       ELSEIF p == QSystemTrayIcon_Context
       ELSEIF p == QSystemTrayIcon_MiddleClick
       ENDIF
+      EXIT
 
-   ENDCASE
+   CASE "editWidget_dragEnterEvent"
+      qEvent := QDragEnterEvent():from( p )
+      qEvent:acceptProposedAction()
+      EXIT
+
+   CASE "editWidget_dropEvent"
+      qEvent := QDropEvent():from( p )
+      qMime := QMimeData():from( qEvent:mimeData() )
+      IF qMime:hasUrls()
+         qList := QStringList():from( qMime:hbUrlList() )
+         FOR i := 0 TO qList:size() - 1
+            qUrl := QUrl():new( qList:at( i ) )
+            IF hbide_isValidText( qUrl:toLocalFile() )
+               ::oSM:editSource( hbide_pathToOSPath( qUrl:toLocalFile() ) )
+            ENDIF
+         NEXT
+      ENDIF
+      EXIT
+
+   ENDSWITCH
 
    RETURN Self
 
@@ -434,21 +486,21 @@ METHOD IdeDocks:buildDockWidgets()
    ::buildUpDownWidget()
 
    /* Bottom Docks */
-   ::oDlg:oWidget:tabifyDockWidget( ::oDockB:oWidget         , ::oDockB1:oWidget         )
-   ::oDlg:oWidget:tabifyDockWidget( ::oDockB1:oWidget        , ::oDockB2:oWidget         )
+   ::oDlg:oWidget:tabifyDockWidget( ::oDockB:oWidget              , ::oDockB1:oWidget              )
+   ::oDlg:oWidget:tabifyDockWidget( ::oDockB1:oWidget             , ::oDockB2:oWidget              )
 
    /* Right Docks */
-   ::oDlg:oWidget:tabifyDockWidget( ::oHelpDock:oWidget      , ::oDocViewDock:oWidget    )
-   ::oDlg:oWidget:tabifyDockWidget( ::oDocViewDock:oWidget   , ::oFuncDock:oWidget       )
-   ::oDlg:oWidget:tabifyDockWidget( ::oFuncDock:oWidget      , ::oFunctionsDock:oWidget  )
-   ::oDlg:oWidget:tabifyDockWidget( ::oFunctionsDock:oWidget , ::oPropertiesDock:oWidget )
-   ::oDlg:oWidget:tabifyDockWidget( ::oPropertiesDock:oWidget, ::oEnvironDock:oWidget    )
-   ::oDlg:oWidget:tabifyDockWidget( ::oEnvironDock:oWidget   , ::oSkeltnDock:oWidget     )
-   ::oDlg:oWidget:tabifyDockWidget( ::oSkeltnDock:oWidget    , ::oThemesDock:oWidget     )
-   ::oDlg:oWidget:tabifyDockWidget( ::oThemesDock:oWidget    , ::oFindDock:oWidget       )
-   ::oDlg:oWidget:tabifyDockWidget( ::oFindDock:oWidget      , ::oDocWriteDock:oWidget   )
-   ::oDlg:oWidget:tabifyDockWidget( ::oDocWriteDock:oWidget  , ::oSourceThumbnailDock:oWidget   )
-   ::oDlg:oWidget:tabifyDockWidget( ::oSourceThumbnailDock:oWidget, ::oQScintillaDock:oWidget   )
+   ::oDlg:oWidget:tabifyDockWidget( ::oHelpDock:oWidget           , ::oDocViewDock:oWidget         )
+   ::oDlg:oWidget:tabifyDockWidget( ::oDocViewDock:oWidget        , ::oFuncDock:oWidget            )
+   ::oDlg:oWidget:tabifyDockWidget( ::oFuncDock:oWidget           , ::oFunctionsDock:oWidget       )
+   ::oDlg:oWidget:tabifyDockWidget( ::oFunctionsDock:oWidget      , ::oPropertiesDock:oWidget      )
+   ::oDlg:oWidget:tabifyDockWidget( ::oPropertiesDock:oWidget     , ::oEnvironDock:oWidget         )
+   ::oDlg:oWidget:tabifyDockWidget( ::oEnvironDock:oWidget        , ::oSkeltnDock:oWidget          )
+   ::oDlg:oWidget:tabifyDockWidget( ::oSkeltnDock:oWidget         , ::oThemesDock:oWidget          )
+   ::oDlg:oWidget:tabifyDockWidget( ::oThemesDock:oWidget         , ::oFindDock:oWidget            )
+   ::oDlg:oWidget:tabifyDockWidget( ::oFindDock:oWidget           , ::oDocWriteDock:oWidget        )
+   ::oDlg:oWidget:tabifyDockWidget( ::oDocWriteDock:oWidget       , ::oSourceThumbnailDock:oWidget )
+   ::oDlg:oWidget:tabifyDockWidget( ::oSourceThumbnailDock:oWidget, ::oQScintillaDock:oWidget      )
 
    ::buildToolBarPanels()
 
@@ -539,7 +591,7 @@ METHOD IdeDocks:buildStackedWidget()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeDocks:buildViewWidget( cObjectName )
-   LOCAL oFrame, qTBtnClose
+   LOCAL oFrame, qTBtnClose, qDrop
 
    oFrame := XbpWindow():new( ::oStackedWidget )
    oFrame:oWidget := QWidget():new( ::oStackedWidget:oWidget )
@@ -560,6 +612,14 @@ METHOD IdeDocks:buildViewWidget( cObjectName )
       ::connect( qTBtnClose, "clicked()", {|| ::oSM:closeSource() } )
       oFrame:oTabWidget:qCornerWidget := qTBtnClose
       oFrame:oTabWidget:oWidget:setCornerWidget( qTBtnClose, Qt_TopRightCorner )
+
+      qDrop := oFrame:oTabWidget:oWidget
+
+      qDrop:setAcceptDrops( .t. )
+      qDrop:installEventFilter( ::pEvents )
+      ::connect( qDrop, QEvent_DragEnter, {|p| ::execEvent( "editWidget_dragEnterEvent", p ) } )
+      ::connect( qDrop, QEvent_Drop     , {|p| ::execEvent( "editWidget_dropEvent"     , p ) } )
+
    ENDIF
 
    oFrame:oTabWidget:oWidget:setUsesScrollButtons( .t. )
@@ -626,17 +686,17 @@ METHOD IdeDocks:buildToolBarPanels()
    ::oDlg:oWidget:addToolBar( Qt_LeftToolBarArea, ::qTBarLines )
 
    aBtns := {}
-   aadd( aBtns, { "movelineup"      , "Move Current Line Up"       , {|| ::oEM:moveLine( -1 )  } } )
-   aadd( aBtns, { "movelinedown"    , "Move Current Line Down"     , {|| ::oEM:moveLine(  1 )  } } )
-   aadd( aBtns, { "deleteline"      , "Delete Current Line"        , {|| ::oEM:deleteLine()    } } )
-   aadd( aBtns, { "duplicateline"   , "Duplicate Current Line"     , {|| ::oEM:duplicateLine() } } )
+   aadd( aBtns, { "movelineup"      , "Move Current Line Up"       , {|| ::oEM:moveLine( -1 )                   } } )
+   aadd( aBtns, { "movelinedown"    , "Move Current Line Down"     , {|| ::oEM:moveLine(  1 )                   } } )
+   aadd( aBtns, { "deleteline"      , "Delete Current Line"        , {|| ::oEM:deleteLine()                     } } )
+   aadd( aBtns, { "duplicateline"   , "Duplicate Current Line"     , {|| ::oEM:duplicateLine()                  } } )
    aadd( aBtns, {} )
    #if 0
-   aadd( aBtns, { "togglelinenumber", "Toggle Line Numbers"        , {|| ::oEM:toggleLineNumbers() } } )
+   aadd( aBtns, { "togglelinenumber", "Toggle Line Numbers"        , {|| ::oEM:toggleLineNumbers()              } } )
    aadd( aBtns, { "curlinehilight"  , "Toggle Current Line Hilight", {|| ::oEM:toggleCurrentLineHighlightMode() } } )
    #endif
-   aadd( aBtns, { "togglelinenumber", "Toggle Line Numbers"        , {|| ::oEM:toggleLineNumbers() } } )
-   aadd( aBtns, { "horzruler"       , "Toggle Horizontal Ruler"    , {|| ::oEM:toggleHorzRuler()   } } )
+   aadd( aBtns, { "togglelinenumber", "Toggle Line Numbers"        , {|| ::oEM:toggleLineNumbers()              } } )
+   aadd( aBtns, { "horzruler"       , "Toggle Horizontal Ruler"    , {|| ::oEM:toggleHorzRuler()                } } )
    aadd( aBtns, { "curlinehilight"  , "Toggle Current Line Hilight", {|| ::oEM:toggleCurrentLineHighlightMode() } } )
    FOR EACH a_ IN aBtns
       IF empty( a_ )
@@ -1143,7 +1203,11 @@ METHOD IdeDocks:buildQScintilla()
    ::oIde:oQScintillaDock := ::getADockWidget( nAreas, "dockQScintilla", "ideDBU", QDockWidget_DockWidgetFloatable )
    ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oQScintillaDock:oWidget, Qt_Horizontal )
 
-   ::connect( ::oQScintillaDock:oWidget, "visibilityChanged(bool)", {|p| ::execEvent( "dockQScintilla_visibilityChanged", p ) } )
+   ::connect( ::oQScintillaDock:oWidget, "visibilityChanged(bool)"  , {|p| ::execEvent( "dockQScintilla_visibilityChanged"  , p ) } )
+   ::connect( ::oQScintillaDock:oWidget, "topLevelChanged(bool)"    , {|p| ::execEvent( "dockQScintilla_topLevelChanged"    , p ) } )
+   ::connect( ::oQScintillaDock:oWidget, "dockLocationChanged(int)" , {|p| ::execEvent( "dockQScintilla_dockLocationChanged", p ) } )
+   ::connect( ::oQScintillaDock:oWidget, "allowedAreasChanged(int)" , {|p| ::execEvent( "dockQScintilla_allowedAreasChanged", p ) } )
+   ::connect( ::oQScintillaDock:oWidget, "featuresChanged(int)"     , {|p| ::execEvent( "dockQScintilla_featuresChanged"    , p ) } )
 
    RETURN Self
 
