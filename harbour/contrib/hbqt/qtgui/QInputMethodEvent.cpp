@@ -69,15 +69,6 @@
  *  enum AttributeType { TextFormat, Cursor, Language, Ruby }
  */
 
-/*
- *  Constructed[ 5/6 [ 83.33% ] ]
- *
- *  *** Unconvered Prototypes ***
- *  -----------------------------
- *
- *  const QList<Attribute> & attributes () const
- */
-
 #include <QtCore/QPointer>
 
 #include <QtGui/QInputMethodEvent>

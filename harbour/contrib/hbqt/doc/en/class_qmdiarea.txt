@@ -42,6 +42,7 @@
         :setTabPosition( nPosition )                        -> NIL
         :setTabShape( nShape )                              -> NIL
         :setViewMode( nMode )                               -> NIL
+        :subWindowList( nOrder )                            -> pQList<QMdiSubWindow *>
         :tabPosition()                                      -> nQTabWidget::TabPosition
         :tabShape()                                         -> nQTabWidget::TabShape
         :testOption( nOption )                              -> lBool

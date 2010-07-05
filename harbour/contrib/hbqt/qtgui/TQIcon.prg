@@ -70,6 +70,7 @@ CREATE CLASS QIcon INHERIT HbQtObjectHandler
    METHOD  actualSize( pSize, nMode, nState )
    METHOD  addFile( cFileName, pSize, nMode, nState )
    METHOD  addPixmap( pPixmap, nMode, nState )
+   METHOD  availableSizes( nMode, nState )
    METHOD  cacheKey()
    METHOD  isNull()
    METHOD  paint( pPainter, pRect, nAlignment, nMode, nState )
@@ -100,6 +101,10 @@ METHOD QIcon:addFile( cFileName, pSize, nMode, nState )
 
 METHOD QIcon:addPixmap( pPixmap, nMode, nState )
    RETURN Qt_QIcon_addPixmap( ::pPtr, hbqt_ptr( pPixmap ), nMode, nState )
+
+
+METHOD QIcon:availableSizes( nMode, nState )
+   RETURN Qt_QIcon_availableSizes( ::pPtr, nMode, nState )
 
 
 METHOD QIcon:cacheKey()

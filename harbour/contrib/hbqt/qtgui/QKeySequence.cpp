@@ -71,15 +71,6 @@
  *  enum StandardKey { AddTab, Back, Bold, Close, ..., ZoomOut }
  */
 
-/*
- *  Constructed[ 6/7 [ 85.71% ] ]
- *
- *  *** Unconvered Prototypes ***
- *  -----------------------------
- *
- *  QList<QKeySequence> keyBindings ( StandardKey key )
- */
-
 #include <QtCore/QPointer>
 
 #include <QtGui/QKeySequence>
@@ -229,6 +220,20 @@ HB_FUNC( QT_QKEYSEQUENCE_FROMSTRING )
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QKEYSEQUENCE_FROMSTRING FP=hb_retptrGC( hbqt_gcAllocate_QKeySequence( new QKeySequence( ( p )->fromString( hbqt_par_QString( 2 ), ( HB_ISNUM( 3 ) ? ( QKeySequence::SequenceFormat ) hb_parni( 3 ) : ( QKeySequence::SequenceFormat ) QKeySequence::PortableText ) ) ), true ) ); p is NULL" ) );
+   }
+}
+
+/*
+ * QList<QKeySequence> keyBindings ( StandardKey key )
+ */
+HB_FUNC( QT_QKEYSEQUENCE_KEYBINDINGS )
+{
+   QKeySequence * p = hbqt_par_QKeySequence( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QKeySequence>( ( p )->keyBindings( ( QKeySequence::StandardKey ) hb_parni( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QKEYSEQUENCE_KEYBINDINGS FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QKeySequence>( ( p )->keyBindings( ( QKeySequence::StandardKey ) hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
    }
 }
 

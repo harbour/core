@@ -72,12 +72,11 @@
  */
 
 /*
- *  Constructed[ 69/75 [ 92.00% ] ]
+ *  Constructed[ 70/75 [ 93.33% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
  *
- *  QList<QByteArray> allEncodedQueryItemValues ( const QByteArray & key ) const
  *  QList<QPair<QByteArray, QByteArray> > encodedQueryItems () const
  *  QList<QPair<QString, QString> > queryItems () const
  *  void setEncodedQueryItems ( const QList<QPair<QByteArray, QByteArray> > & query )
@@ -195,6 +194,20 @@ HB_FUNC( QT_QURL_ADDQUERYITEM )
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QURL_ADDQUERYITEM FP=( p )->addQueryItem( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ); p is NULL" ) );
+   }
+}
+
+/*
+ * QList<QByteArray> allEncodedQueryItemValues ( const QByteArray & key ) const
+ */
+HB_FUNC( QT_QURL_ALLENCODEDQUERYITEMVALUES )
+{
+   QUrl * p = hbqt_par_QUrl( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QByteArray>( ( p )->allEncodedQueryItemValues( *hbqt_par_QByteArray( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QURL_ALLENCODEDQUERYITEMVALUES FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QByteArray>( ( p )->allEncodedQueryItemValues( *hbqt_par_QByteArray( 2 ) ) ), true ) ); p is NULL" ) );
    }
 }
 

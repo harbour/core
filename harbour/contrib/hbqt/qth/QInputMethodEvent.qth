@@ -81,7 +81,7 @@ enum AttributeType { TextFormat, Cursor, Language, Ruby }
 </ENUMS>
 
 <PROTOS>
-const QList<Attribute> & attributes () const
+// const QList<Attribute> & attributes () const
 const QString & commitString () const
 const QString & preeditString () const
 int replacementLength () const

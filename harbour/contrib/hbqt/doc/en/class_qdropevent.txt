@@ -31,6 +31,7 @@
         :acceptProposedAction()                             -> NIL
         :dropAction()                                       -> nQt::DropAction
         :keyboardModifiers()                                -> nQt::KeyboardModifiers
+        :mimeData()                                         -> pQMimeData
         :mouseButtons()                                     -> nQt::MouseButtons
         :pos()                                              -> pQPoint
         :possibleActions()                                  -> nQt::DropActions

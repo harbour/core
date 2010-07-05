@@ -77,8 +77,11 @@
  *  *** Unconvered Prototypes ***
  *  -----------------------------
  *
- *  QList<ExtraSelection> extraSelections () const
  *  void setExtraSelections ( const QList<ExtraSelection> & selections )
+ *
+ *  *** Commented out protos which construct fine but do not compile ***
+ *
+ *  // QList<ExtraSelection> extraSelections () const
  */
 
 #include <QtCore/QPointer>

@@ -74,6 +74,10 @@
         :slopeAtPercent( nT )                               -> nQreal
         :toFillPolygon( pMatrix )                           -> pQPolygonF
         :toFillPolygon_1( pMatrix )                         -> pQPolygonF
+        :toFillPolygons( pMatrix )                          -> pQList<QPolygonF>
+        :toFillPolygons_1( pMatrix )                        -> pQList<QPolygonF>
+        :toSubpathPolygons( pMatrix )                       -> pQList<QPolygonF>
+        :toSubpathPolygons_1( pMatrix )                     -> pQList<QPolygonF>
 
     $DESCRIPTION$
 

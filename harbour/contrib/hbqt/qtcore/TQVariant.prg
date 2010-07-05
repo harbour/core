@@ -84,6 +84,7 @@ CREATE CLASS QVariant INHERIT HbQtObjectHandler
    METHOD  toInt( lOk )
    METHOD  toLine()
    METHOD  toLineF()
+   METHOD  toList()
    METHOD  toLocale()
    METHOD  toLongLong( lOk )
    METHOD  toPoint()
@@ -183,6 +184,10 @@ METHOD QVariant:toLine()
 
 METHOD QVariant:toLineF()
    RETURN Qt_QVariant_toLineF( ::pPtr )
+
+
+METHOD QVariant:toList()
+   RETURN Qt_QVariant_toList( ::pPtr )
 
 
 METHOD QVariant:toLocale()

@@ -132,6 +132,8 @@ CREATE CLASS QStandardItem INHERIT HbQtObjectHandler
    METHOD  sortChildren( nColumn, nOrder )
    METHOD  statusTip()
    METHOD  takeChild( nRow, nColumn )
+   METHOD  takeColumn( nColumn )
+   METHOD  takeRow( nRow )
    METHOD  text()
    METHOD  textAlignment()
    METHOD  toolTip()
@@ -409,6 +411,14 @@ METHOD QStandardItem:statusTip()
 
 METHOD QStandardItem:takeChild( nRow, nColumn )
    RETURN Qt_QStandardItem_takeChild( ::pPtr, nRow, nColumn )
+
+
+METHOD QStandardItem:takeColumn( nColumn )
+   RETURN Qt_QStandardItem_takeColumn( ::pPtr, nColumn )
+
+
+METHOD QStandardItem:takeRow( nRow )
+   RETURN Qt_QStandardItem_takeRow( ::pPtr, nRow )
 
 
 METHOD QStandardItem:text()

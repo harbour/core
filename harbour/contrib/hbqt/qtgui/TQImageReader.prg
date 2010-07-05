@@ -105,6 +105,7 @@ CREATE CLASS QImageReader INHERIT HbQtObjectHandler
    METHOD  textKeys()
    METHOD  imageFormat_1( cFileName )
    METHOD  imageFormat_2( pDevice )
+   METHOD  supportedImageFormats()
 
    ENDCLASS
 
@@ -268,4 +269,8 @@ METHOD QImageReader:imageFormat_1( cFileName )
 
 METHOD QImageReader:imageFormat_2( pDevice )
    RETURN Qt_QImageReader_imageFormat_2( ::pPtr, hbqt_ptr( pDevice ) )
+
+
+METHOD QImageReader:supportedImageFormats()
+   RETURN Qt_QImageReader_supportedImageFormats( ::pPtr )
 

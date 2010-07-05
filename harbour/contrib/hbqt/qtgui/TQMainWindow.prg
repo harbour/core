@@ -108,6 +108,7 @@ CREATE CLASS QMainWindow INHERIT HbQtObjectHandler, QWidget
    METHOD  statusBar()
    METHOD  tabPosition( nArea )
    METHOD  tabShape()
+   METHOD  tabifiedDockWidgets( pDockwidget )
    METHOD  tabifyDockWidget( pFirst, pSecond )
    METHOD  toolBarArea( pToolbar )
    METHOD  toolBarBreak( pToolbar )
@@ -290,6 +291,10 @@ METHOD QMainWindow:tabPosition( nArea )
 
 METHOD QMainWindow:tabShape()
    RETURN Qt_QMainWindow_tabShape( ::pPtr )
+
+
+METHOD QMainWindow:tabifiedDockWidgets( pDockwidget )
+   RETURN Qt_QMainWindow_tabifiedDockWidgets( ::pPtr, hbqt_ptr( pDockwidget ) )
 
 
 METHOD QMainWindow:tabifyDockWidget( pFirst, pSecond )

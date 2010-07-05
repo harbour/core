@@ -70,15 +70,6 @@
  *  enum State { Off, On }
  */
 
-/*
- *  Constructed[ 10/11 [ 90.91% ] ]
- *
- *  *** Unconvered Prototypes ***
- *  -----------------------------
- *
- *  QList<QSize> availableSizes ( Mode mode = Normal, State state = Off ) const
- */
-
 #include <QtCore/QPointer>
 
 #include <QtGui/QIcon>
@@ -205,6 +196,20 @@ HB_FUNC( QT_QICON_ADDPIXMAP )
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QICON_ADDPIXMAP FP=( p )->addPixmap( *hbqt_par_QPixmap( 2 ), ( HB_ISNUM( 3 ) ? ( QIcon::Mode ) hb_parni( 3 ) : ( QIcon::Mode ) QIcon::Normal ), ( HB_ISNUM( 4 ) ? ( QIcon::State ) hb_parni( 4 ) : ( QIcon::State ) QIcon::Off ) ); p is NULL" ) );
+   }
+}
+
+/*
+ * QList<QSize> availableSizes ( Mode mode = Normal, State state = Off ) const
+ */
+HB_FUNC( QT_QICON_AVAILABLESIZES )
+{
+   QIcon * p = hbqt_par_QIcon( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QSize>( ( p )->availableSizes( ( HB_ISNUM( 2 ) ? ( QIcon::Mode ) hb_parni( 2 ) : ( QIcon::Mode ) QIcon::Normal ), ( HB_ISNUM( 3 ) ? ( QIcon::State ) hb_parni( 3 ) : ( QIcon::State ) QIcon::Off ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QICON_AVAILABLESIZES FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QSize>( ( p )->availableSizes( ( HB_ISNUM( 2 ) ? ( QIcon::Mode ) hb_parni( 2 ) : ( QIcon::Mode ) QIcon::Normal ), ( HB_ISNUM( 3 ) ? ( QIcon::State ) hb_parni( 3 ) : ( QIcon::State ) QIcon::Off ) ) ), true ) ); p is NULL" ) );
    }
 }
 

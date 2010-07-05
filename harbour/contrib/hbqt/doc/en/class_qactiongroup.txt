@@ -28,6 +28,7 @@
     $RETURNS$
         An instance of the object of type QActionGroup
     $METHODS$
+        :actions()                                          -> pQList<QAction *>
         :addAction( pAction )                               -> pQAction
         :addAction_1( cText )                               -> pQAction
         :addAction_2( cIcon, cText )                        -> pQAction

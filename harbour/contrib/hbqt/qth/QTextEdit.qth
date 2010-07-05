@@ -99,7 +99,7 @@ int cursorWidth () const
 QTextDocument * document () const
 QString documentTitle () const
 void ensureCursorVisible ()
-QList<ExtraSelection> extraSelections () const
+// QList<ExtraSelection> extraSelections () const
 bool find ( const QString & exp, QTextDocument::FindFlags options = 0 )
 QString fontFamily () const
 bool fontItalic () const

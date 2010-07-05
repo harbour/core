@@ -69,6 +69,7 @@ CREATE CLASS QStandardItemModel INHERIT HbQtObjectHandler, QAbstractItemModeL
 
    METHOD  appendRow( pItem )
    METHOD  clear()
+   METHOD  findItems( cText, nFlags, nColumn )
    METHOD  horizontalHeaderItem( nColumn )
    METHOD  indexFromItem( pItem )
    METHOD  insertColumn( nColumn, pParent )
@@ -88,8 +89,10 @@ CREATE CLASS QStandardItemModel INHERIT HbQtObjectHandler, QAbstractItemModeL
    METHOD  setVerticalHeaderItem( nRow, pItem )
    METHOD  setVerticalHeaderLabels( pLabels )
    METHOD  sortRole()
+   METHOD  takeColumn( nColumn )
    METHOD  takeHorizontalHeaderItem( nColumn )
    METHOD  takeItem( nRow, nColumn )
+   METHOD  takeRow( nRow )
    METHOD  takeVerticalHeaderItem( nRow )
    METHOD  verticalHeaderItem( nRow )
 
@@ -111,6 +114,10 @@ METHOD QStandardItemModel:appendRow( pItem )
 
 METHOD QStandardItemModel:clear()
    RETURN Qt_QStandardItemModel_clear( ::pPtr )
+
+
+METHOD QStandardItemModel:findItems( cText, nFlags, nColumn )
+   RETURN Qt_QStandardItemModel_findItems( ::pPtr, cText, nFlags, nColumn )
 
 
 METHOD QStandardItemModel:horizontalHeaderItem( nColumn )
@@ -189,12 +196,20 @@ METHOD QStandardItemModel:sortRole()
    RETURN Qt_QStandardItemModel_sortRole( ::pPtr )
 
 
+METHOD QStandardItemModel:takeColumn( nColumn )
+   RETURN Qt_QStandardItemModel_takeColumn( ::pPtr, nColumn )
+
+
 METHOD QStandardItemModel:takeHorizontalHeaderItem( nColumn )
    RETURN Qt_QStandardItemModel_takeHorizontalHeaderItem( ::pPtr, nColumn )
 
 
 METHOD QStandardItemModel:takeItem( nRow, nColumn )
    RETURN Qt_QStandardItemModel_takeItem( ::pPtr, nRow, nColumn )
+
+
+METHOD QStandardItemModel:takeRow( nRow )
+   RETURN Qt_QStandardItemModel_takeRow( ::pPtr, nRow )
 
 
 METHOD QStandardItemModel:takeVerticalHeaderItem( nRow )

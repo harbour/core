@@ -75,13 +75,12 @@
  */
 
 /*
- *  Constructed[ 45/51 [ 88.24% ] ]
+ *  Constructed[ 46/51 [ 90.20% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
  *
  *  void setSidebarUrls ( const QList<QUrl> & urls )
- *  QList<QUrl> sidebarUrls () const
  *
  *  *** Commented out protos which construct fine but do not compile ***
  *
@@ -94,7 +93,7 @@
 #include <QtCore/QPointer>
 
 #include <QtGui/QFileDialog>
-
+#include <QtCore/QUrl>
 
 /*
  * QFileDialog ( QWidget * parent, Qt::WindowFlags flags )
@@ -770,6 +769,20 @@ HB_FUNC( QT_QFILEDIALOG_SETVIEWMODE )
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEDIALOG_SETVIEWMODE FP=( p )->setViewMode( ( QFileDialog::ViewMode ) hb_parni( 2 ) ); p is NULL" ) );
+   }
+}
+
+/*
+ * QList<QUrl> sidebarUrls () const
+ */
+HB_FUNC( QT_QFILEDIALOG_SIDEBARURLS )
+{
+   QFileDialog * p = hbqt_par_QFileDialog( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QUrl>( ( p )->sidebarUrls() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEDIALOG_SIDEBARURLS FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QUrl>( ( p )->sidebarUrls() ), true ) ); p is NULL" ) );
    }
 }
 

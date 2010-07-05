@@ -30,6 +30,7 @@
     $METHODS$
         :addEncodedQueryItem( pKey, pValue )                -> NIL
         :addQueryItem( cKey, cValue )                       -> NIL
+        :allEncodedQueryItemValues( pKey )                  -> pQList<QByteArray>
         :allQueryItemValues( cKey )                         -> pQStringList
         :authority()                                        -> cQString
         :clear()                                            -> NIL

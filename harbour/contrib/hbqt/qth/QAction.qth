@@ -92,7 +92,7 @@ enum MenuRole { NoRole, TextHeuristicRole, ApplicationSpecificRole, AboutQtRole,
 <PROTOS>
 QActionGroup * actionGroup () const
 void activate ( ActionEvent event )
-QList<QGraphicsWidget *> associatedGraphicsWidgets () const
+//QList<QGraphicsWidget *> associatedGraphicsWidgets () const
 QList<QWidget *> associatedWidgets () const
 bool autoRepeat () const
 QVariant data () const

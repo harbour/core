@@ -65,7 +65,7 @@ Destructor =
 <CODE>
 #include <QtCore/QMimeData>
 #include <QtCore/QStringList>
-
+#include <QtCore/QUrl>
 
 /* QMimeData ()
  * ~QMimeData ()

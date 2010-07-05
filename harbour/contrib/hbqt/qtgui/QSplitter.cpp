@@ -66,13 +66,12 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 20/23 [ 86.96% ] ]
+ *  Constructed[ 21/23 [ 91.30% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
  *
  *  void setSizes ( const QList<int> & list )
- *  QList<int> sizes () const
  *
  *  *** Commented out protos which construct fine but do not compile ***
  *
@@ -434,6 +433,20 @@ HB_FUNC( QT_QSPLITTER_SETSTRETCHFACTOR )
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSPLITTER_SETSTRETCHFACTOR FP=( p )->setStretchFactor( hb_parni( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+   }
+}
+
+/*
+ * QList<int> sizes () const
+ */
+HB_FUNC( QT_QSPLITTER_SIZES )
+{
+   QSplitter * p = hbqt_par_QSplitter( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<int>( ( p )->sizes() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSPLITTER_SIZES FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<int>( ( p )->sizes() ), true ) ); p is NULL" ) );
    }
 }
 

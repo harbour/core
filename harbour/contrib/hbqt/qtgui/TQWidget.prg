@@ -68,6 +68,7 @@ CREATE CLASS QWidget INHERIT HbQtObjectHandler, QObject, QPaintDevice
    METHOD  new( ... )
 
    METHOD  acceptDrops()
+   METHOD  actions()
    METHOD  activateWindow()
    METHOD  addAction( pAction )
    METHOD  adjustSize()
@@ -287,6 +288,10 @@ METHOD QWidget:new( ... )
 
 METHOD QWidget:acceptDrops()
    RETURN Qt_QWidget_acceptDrops( ::pPtr )
+
+
+METHOD QWidget:actions()
+   RETURN Qt_QWidget_actions( ::pPtr )
 
 
 METHOD QWidget:activateWindow()

@@ -67,6 +67,7 @@ CREATE CLASS QTextFrame INHERIT HbQtObjectHandler, QTextObject
 
    METHOD  new( ... )
 
+   METHOD  childFrames()
    METHOD  firstCursorPosition()
    METHOD  firstPosition()
    METHOD  frameFormat()
@@ -85,6 +86,10 @@ METHOD QTextFrame:new( ... )
    NEXT
    ::pPtr := Qt_QTextFrame( ... )
    RETURN Self
+
+
+METHOD QTextFrame:childFrames()
+   RETURN Qt_QTextFrame_childFrames( ::pPtr )
 
 
 METHOD QTextFrame:firstCursorPosition()

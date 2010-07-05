@@ -61,7 +61,7 @@ New      = pParent, nFlags
 
 <CODE>
 #include <QtGui/QFileDialog>
-
+#include <QtCore/QUrl>
 
 /*
  * QFileDialog ( QWidget * parent, Qt::WindowFlags flags )

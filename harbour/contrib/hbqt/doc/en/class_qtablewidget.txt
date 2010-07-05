@@ -36,6 +36,7 @@
         :currentItem()                                      -> Item
         :currentRow()                                       -> nInt
         :editItem( pItem )                                  -> NIL
+        :findItems( cText, nFlags )                         -> pQList<QTableWidgetItem *>
         :horizontalHeaderItem( nColumn )                    -> Item
         :item( nRow, nColumn )                              -> Item
         :itemAt( pPoint )                                   -> Item
@@ -45,6 +46,8 @@
         :removeCellWidget( nRow, nColumn )                  -> NIL
         :row( pItem )                                       -> nInt
         :rowCount()                                         -> nInt
+        :selectedItems()                                    -> pQList<QTableWidgetItem *>
+        :selectedRanges()                                   -> pQList<QTableWidgetSelectionRange>
         :setCellWidget( nRow, nColumn, pWidget )            -> NIL
         :setColumnCount( nColumns )                         -> NIL
         :setCurrentCell( nRow, nColumn )                    -> NIL

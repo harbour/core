@@ -69,6 +69,7 @@ CREATE CLASS QUrl INHERIT HbQtObjectHandler, QWidget
 
    METHOD  addEncodedQueryItem( pKey, pValue )
    METHOD  addQueryItem( cKey, cValue )
+   METHOD  allEncodedQueryItemValues( pKey )
    METHOD  allQueryItemValues( cKey )
    METHOD  authority()
    METHOD  clear()
@@ -155,6 +156,10 @@ METHOD QUrl:addEncodedQueryItem( pKey, pValue )
 
 METHOD QUrl:addQueryItem( cKey, cValue )
    RETURN Qt_QUrl_addQueryItem( ::pPtr, cKey, cValue )
+
+
+METHOD QUrl:allEncodedQueryItemValues( pKey )
+   RETURN Qt_QUrl_allEncodedQueryItemValues( ::pPtr, hbqt_ptr( pKey ) )
 
 
 METHOD QUrl:allQueryItemValues( cKey )

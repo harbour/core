@@ -94,8 +94,8 @@ QString styleString ( const QFont & font )
 QString styleString ( const QFontInfo & fontInfo )
 QStringList styles ( const QString & family ) const
 int weight ( const QString & family, const QString & style ) const
-QList<WritingSystem> writingSystems () const
-QList<WritingSystem> writingSystems ( const QString & family ) const
+//QList<WritingSystem> writingSystems () const
+//QList<WritingSystem> writingSystems ( const QString & family ) const
 
 
 int addApplicationFont ( const QString & fileName )

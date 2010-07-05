@@ -71,15 +71,16 @@
  */
 
 /*
- *  Constructed[ 48/52 [ 92.31% ] ]
+ *  Constructed[ 50/52 [ 96.15% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
  *
- *  QList<QGraphicsWidget *> associatedGraphicsWidgets () const
- *  QList<QWidget *> associatedWidgets () const
  *  void setShortcuts ( const QList<QKeySequence> & shortcuts )
- *  QList<QKeySequence> shortcuts () const
+ *
+ *  *** Commented out protos which construct fine but do not compile ***
+ *
+ *  //QList<QGraphicsWidget *> associatedGraphicsWidgets () const
  */
 
 #include <QtCore/QPointer>
@@ -196,6 +197,20 @@ HB_FUNC( QT_QACTION_ACTIVATE )
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QACTION_ACTIVATE FP=( p )->activate( ( QAction::ActionEvent ) hb_parni( 2 ) ); p is NULL" ) );
+   }
+}
+
+/*
+ * QList<QWidget *> associatedWidgets () const
+ */
+HB_FUNC( QT_QACTION_ASSOCIATEDWIDGETS )
+{
+   QAction * p = hbqt_par_QAction( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QWidget *>( ( p )->associatedWidgets() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QACTION_ASSOCIATEDWIDGETS FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QWidget *>( ( p )->associatedWidgets() ), true ) ); p is NULL" ) );
    }
 }
 
@@ -672,6 +687,20 @@ HB_FUNC( QT_QACTION_SHORTCUTCONTEXT )
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QACTION_SHORTCUTCONTEXT FP=hb_retni( ( Qt::ShortcutContext ) ( p )->shortcutContext() ); p is NULL" ) );
+   }
+}
+
+/*
+ * QList<QKeySequence> shortcuts () const
+ */
+HB_FUNC( QT_QACTION_SHORTCUTS )
+{
+   QAction * p = hbqt_par_QAction( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QKeySequence>( ( p )->shortcuts() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QACTION_SHORTCUTS FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QKeySequence>( ( p )->shortcuts() ), true ) ); p is NULL" ) );
    }
 }
 

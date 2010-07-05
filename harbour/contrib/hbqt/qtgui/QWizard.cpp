@@ -74,14 +74,12 @@
  */
 
 /*
- *  Constructed[ 33/36 [ 91.67% ] ]
+ *  Constructed[ 35/36 [ 97.22% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
  *
- *  QList<int> pageIds () const
  *  void setButtonLayout ( const QList<WizardButton> & layout )
- *  QList<int> visitedPages () const
  */
 
 #include <QtCore/QPointer>
@@ -304,6 +302,20 @@ HB_FUNC( QT_QWIZARD_PAGE )
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIZARD_PAGE FP=hb_retptrGC( hbqt_gcAllocate_QWizardPage( ( p )->page( hb_parni( 2 ) ), false ) ); p is NULL" ) );
+   }
+}
+
+/*
+ * QList<int> pageIds () const
+ */
+HB_FUNC( QT_QWIZARD_PAGEIDS )
+{
+   QWizard * p = hbqt_par_QWizard( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<int>( ( p )->pageIds() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIZARD_PAGEIDS FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<int>( ( p )->pageIds() ), true ) ); p is NULL" ) );
    }
 }
 
@@ -570,6 +582,20 @@ HB_FUNC( QT_QWIZARD_VALIDATECURRENTPAGE )
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIZARD_VALIDATECURRENTPAGE FP=hb_retl( ( p )->validateCurrentPage() ); p is NULL" ) );
+   }
+}
+
+/*
+ * QList<int> visitedPages () const
+ */
+HB_FUNC( QT_QWIZARD_VISITEDPAGES )
+{
+   QWizard * p = hbqt_par_QWizard( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<int>( ( p )->visitedPages() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIZARD_VISITEDPAGES FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<int>( ( p )->visitedPages() ), true ) ); p is NULL" ) );
    }
 }
 

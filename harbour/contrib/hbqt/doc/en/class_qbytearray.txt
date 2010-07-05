@@ -62,6 +62,7 @@
         :reserve( nSize )                                   -> NIL
         :resize( nSize )                                    -> NIL
         :size()                                             -> nInt
+        :split( cSep )                                      -> pQList<QByteArray>
         :squeeze()                                          -> NIL
         :startsWith( pBa )                                  -> lBool
         :startsWith_1( pStr )                               -> lBool

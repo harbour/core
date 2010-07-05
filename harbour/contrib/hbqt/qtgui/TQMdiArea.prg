@@ -81,6 +81,7 @@ CREATE CLASS QMdiArea INHERIT HbQtObjectHandler, QAbstractScrollArea
    METHOD  setTabPosition( nPosition )
    METHOD  setTabShape( nShape )
    METHOD  setViewMode( nMode )
+   METHOD  subWindowList( nOrder )
    METHOD  tabPosition()
    METHOD  tabShape()
    METHOD  testOption( nOption )
@@ -159,6 +160,10 @@ METHOD QMdiArea:setTabShape( nShape )
 
 METHOD QMdiArea:setViewMode( nMode )
    RETURN Qt_QMdiArea_setViewMode( ::pPtr, nMode )
+
+
+METHOD QMdiArea:subWindowList( nOrder )
+   RETURN Qt_QMdiArea_subWindowList( ::pPtr, nOrder )
 
 
 METHOD QMdiArea:tabPosition()

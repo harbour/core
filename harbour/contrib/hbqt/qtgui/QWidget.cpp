@@ -72,12 +72,11 @@
  */
 
 /*
- *  Constructed[ 205/230 [ 89.13% ] ]
+ *  Constructed[ 206/230 [ 89.57% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
  *
- *  QList<QAction *> actions () const
  *  }
  *  void addActions ( QList<QAction *> actions )
  *  void insertActions ( QAction * before, QList<QAction *> actions )
@@ -203,6 +202,20 @@ HB_FUNC( QT_QWIDGET_ACCEPTDROPS )
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIDGET_ACCEPTDROPS FP=hb_retl( ( p )->acceptDrops() ); p is NULL" ) );
+   }
+}
+
+/*
+ * QList<QAction *> actions () const
+ */
+HB_FUNC( QT_QWIDGET_ACTIONS )
+{
+   QWidget * p = hbqt_par_QWidget( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QAction *>( ( p )->actions() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIDGET_ACTIONS FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QAction *>( ( p )->actions() ), true ) ); p is NULL" ) );
    }
 }
 

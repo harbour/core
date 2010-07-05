@@ -71,13 +71,12 @@
  */
 
 /*
- *  Constructed[ 48/50 [ 96.00% ] ]
+ *  Constructed[ 49/50 [ 98.00% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
  *
  *  }
- *  QList<QDockWidget *> tabifiedDockWidgets ( QDockWidget * dockwidget ) const
  */
 
 #include <QtCore/QPointer>
@@ -759,6 +758,20 @@ HB_FUNC( QT_QMAINWINDOW_TABSHAPE )
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMAINWINDOW_TABSHAPE FP=hb_retni( ( QTabWidget::TabShape ) ( p )->tabShape() ); p is NULL" ) );
+   }
+}
+
+/*
+ * QList<QDockWidget *> tabifiedDockWidgets ( QDockWidget * dockwidget ) const
+ */
+HB_FUNC( QT_QMAINWINDOW_TABIFIEDDOCKWIDGETS )
+{
+   QMainWindow * p = hbqt_par_QMainWindow( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QDockWidget *>( ( p )->tabifiedDockWidgets( hbqt_par_QDockWidget( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMAINWINDOW_TABIFIEDDOCKWIDGETS FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QDockWidget *>( ( p )->tabifiedDockWidgets( hbqt_par_QDockWidget( 2 ) ) ), true ) ); p is NULL" ) );
    }
 }
 

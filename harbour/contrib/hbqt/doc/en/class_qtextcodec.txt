@@ -28,6 +28,7 @@
     $RETURNS$
         An instance of the object of type QTextCodec
     $METHODS$
+        :aliases()                                          -> pQList<QByteArray>
         :canEncode( pCh )                                   -> lBool
         :canEncode_1( cS )                                  -> lBool
         :fromUnicode( cStr )                                -> pQByteArray

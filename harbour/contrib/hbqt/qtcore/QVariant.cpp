@@ -70,13 +70,12 @@
  */
 
 /*
- *  Constructed[ 37/42 [ 88.10% ] ]
+ *  Constructed[ 38/42 [ 90.48% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
  *
  *  QHash<QString, QVariant> toHash () const
- *  QList<QVariant> toList () const
  *  QMap<QString, QVariant> toMap () const
  *
  *  *** Commented out protos which construct fine but do not compile ***
@@ -441,6 +440,20 @@ HB_FUNC( QT_QVARIANT_TOLINEF )
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QVARIANT_TOLINEF FP=hb_retptrGC( hbqt_gcAllocate_QLineF( new QLineF( ( p )->toLineF() ), true ) ); p is NULL" ) );
+   }
+}
+
+/*
+ * QList<QVariant> toList () const
+ */
+HB_FUNC( QT_QVARIANT_TOLIST )
+{
+   QVariant * p = hbqt_par_QVariant( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QVariant>( ( p )->toList() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QVARIANT_TOLIST FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QVariant>( ( p )->toList() ), true ) ); p is NULL" ) );
    }
 }
 

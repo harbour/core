@@ -70,6 +70,7 @@ CREATE CLASS QDropEvent INHERIT HbQtObjectHandler, QEvent
    METHOD  acceptProposedAction()
    METHOD  dropAction()
    METHOD  keyboardModifiers()
+   METHOD  mimeData()
    METHOD  mouseButtons()
    METHOD  pos()
    METHOD  possibleActions()
@@ -99,6 +100,10 @@ METHOD QDropEvent:dropAction()
 
 METHOD QDropEvent:keyboardModifiers()
    RETURN Qt_QDropEvent_keyboardModifiers( ::pPtr )
+
+
+METHOD QDropEvent:mimeData()
+   RETURN Qt_QDropEvent_mimeData( ::pPtr )
 
 
 METHOD QDropEvent:mouseButtons()

@@ -66,15 +66,13 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 30/34 [ 88.24% ] ]
+ *  Constructed[ 32/34 [ 94.12% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
  *
  *  }
- *  QList<QListWidgetItem *> findItems ( const QString & text, Qt::MatchFlags flags ) const
  *  }
- *  QList<QListWidgetItem *> selectedItems () const
  */
 
 #include <QtCore/QPointer>
@@ -274,6 +272,20 @@ HB_FUNC( QT_QLISTWIDGET_EDITITEM )
 }
 
 /*
+ * QList<QListWidgetItem *> findItems ( const QString & text, Qt::MatchFlags flags ) const
+ */
+HB_FUNC( QT_QLISTWIDGET_FINDITEMS )
+{
+   QListWidget * p = hbqt_par_QListWidget( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QListWidgetItem *>( ( p )->findItems( QListWidget::tr( hb_parc( 2 ) ), ( Qt::MatchFlags ) hb_parni( 3 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTWIDGET_FINDITEMS FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QListWidgetItem *>( ( p )->findItems( QListWidget::tr( hb_parc( 2 ) ), ( Qt::MatchFlags ) hb_parni( 3 ) ) ), true ) ); p is NULL" ) );
+   }
+}
+
+/*
  * void insertItem ( int row, QListWidgetItem * item )
  */
 HB_FUNC( QT_QLISTWIDGET_INSERTITEM )
@@ -426,6 +438,20 @@ HB_FUNC( QT_QLISTWIDGET_ROW )
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTWIDGET_ROW FP=hb_retni( ( p )->row( hbqt_par_QListWidgetItem( 2 ) ) ); p is NULL" ) );
+   }
+}
+
+/*
+ * QList<QListWidgetItem *> selectedItems () const
+ */
+HB_FUNC( QT_QLISTWIDGET_SELECTEDITEMS )
+{
+   QListWidget * p = hbqt_par_QListWidget( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QListWidgetItem *>( ( p )->selectedItems() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTWIDGET_SELECTEDITEMS FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QListWidgetItem *>( ( p )->selectedItems() ), true ) ); p is NULL" ) );
    }
 }
 

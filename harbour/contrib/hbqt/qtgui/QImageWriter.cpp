@@ -69,15 +69,6 @@
  *  enum ImageWriterError { DeviceError, UnsupportedFormatError, UnknownError }
  */
 
-/*
- *  Constructed[ 18/19 [ 94.74% ] ]
- *
- *  *** Unconvered Prototypes ***
- *  -----------------------------
- *
- *  QList<QByteArray> supportedImageFormats ()
- */
-
 #include <QtCore/QPointer>
 
 #include <QtGui/QImageWriter>
@@ -400,6 +391,20 @@ HB_FUNC( QT_QIMAGEWRITER_WRITE )
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QIMAGEWRITER_WRITE FP=hb_retl( ( p )->write( *hbqt_par_QImage( 2 ) ) ); p is NULL" ) );
+   }
+}
+
+/*
+ * QList<QByteArray> supportedImageFormats ()
+ */
+HB_FUNC( QT_QIMAGEWRITER_SUPPORTEDIMAGEFORMATS )
+{
+   QImageWriter * p = hbqt_par_QImageWriter( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QByteArray>( ( p )->supportedImageFormats() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QIMAGEWRITER_SUPPORTEDIMAGEFORMATS FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QByteArray>( ( p )->supportedImageFormats() ), true ) ); p is NULL" ) );
    }
 }
 

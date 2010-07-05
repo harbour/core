@@ -109,6 +109,7 @@ CREATE CLASS QFileDialog INHERIT HbQtObjectHandler, QDialog
    METHOD  setReadOnly( lEnabled )
    METHOD  setResolveSymlinks( lEnabled )
    METHOD  setViewMode( nMode )
+   METHOD  sidebarUrls()
    METHOD  testOption( nOption )
    METHOD  viewMode()
    METHOD  getExistingDirectory( pParent, cCaption, cDir, nOptions )
@@ -291,6 +292,10 @@ METHOD QFileDialog:setResolveSymlinks( lEnabled )
 
 METHOD QFileDialog:setViewMode( nMode )
    RETURN Qt_QFileDialog_setViewMode( ::pPtr, nMode )
+
+
+METHOD QFileDialog:sidebarUrls()
+   RETURN Qt_QFileDialog_sidebarUrls( ::pPtr )
 
 
 METHOD QFileDialog:testOption( nOption )

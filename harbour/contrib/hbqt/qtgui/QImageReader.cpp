@@ -69,15 +69,6 @@
  *  enum ImageReaderError { FileNotFoundError, DeviceError, UnsupportedFormatError, InvalidDataError, UnknownError }
  */
 
-/*
- *  Constructed[ 38/39 [ 97.44% ] ]
- *
- *  *** Unconvered Prototypes ***
- *  -----------------------------
- *
- *  QList<QByteArray> supportedImageFormats ()
- */
-
 #include <QtCore/QPointer>
 
 #include <QtGui/QColor>
@@ -681,6 +672,20 @@ HB_FUNC( QT_QIMAGEREADER_IMAGEFORMAT_2 )
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QIMAGEREADER_IMAGEFORMAT_2 FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->imageFormat( hbqt_par_QIODevice( 2 ) ) ), true ) ); p is NULL" ) );
+   }
+}
+
+/*
+ * QList<QByteArray> supportedImageFormats ()
+ */
+HB_FUNC( QT_QIMAGEREADER_SUPPORTEDIMAGEFORMATS )
+{
+   QImageReader * p = hbqt_par_QImageReader( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QByteArray>( ( p )->supportedImageFormats() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QIMAGEREADER_SUPPORTEDIMAGEFORMATS FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QByteArray>( ( p )->supportedImageFormats() ), true ) ); p is NULL" ) );
    }
 }
 

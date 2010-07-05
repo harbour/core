@@ -86,6 +86,7 @@ CREATE CLASS QSplitter INHERIT HbQtObjectHandler, QFrame
    METHOD  setOpaqueResize( lOpaque )
    METHOD  setOrientation( nQt_Orientation )
    METHOD  setStretchFactor( nIndex, nStretch )
+   METHOD  sizes()
    METHOD  widget( nIndex )
 
    ENDCLASS
@@ -174,6 +175,10 @@ METHOD QSplitter:setOrientation( nQt_Orientation )
 
 METHOD QSplitter:setStretchFactor( nIndex, nStretch )
    RETURN Qt_QSplitter_setStretchFactor( ::pPtr, nIndex, nStretch )
+
+
+METHOD QSplitter:sizes()
+   RETURN Qt_QSplitter_sizes( ::pPtr )
 
 
 METHOD QSplitter:widget( nIndex )

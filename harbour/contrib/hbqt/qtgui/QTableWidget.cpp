@@ -66,14 +66,11 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 46/54 [ 85.19% ] ]
+ *  Constructed[ 49/54 [ 90.74% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
  *
- *  QList<QTableWidgetItem *> findItems ( const QString & text, Qt::MatchFlags flags ) const
- *  QList<QTableWidgetItem *> selectedItems ()
- *  QList<QTableWidgetSelectionRange> selectedRanges () const
  *  }
  *  }
  *  }
@@ -280,6 +277,20 @@ HB_FUNC( QT_QTABLEWIDGET_EDITITEM )
 }
 
 /*
+ * QList<QTableWidgetItem *> findItems ( const QString & text, Qt::MatchFlags flags ) const
+ */
+HB_FUNC( QT_QTABLEWIDGET_FINDITEMS )
+{
+   QTableWidget * p = hbqt_par_QTableWidget( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QTableWidgetItem *>( ( p )->findItems( QTableWidget::tr( hb_parc( 2 ) ), ( Qt::MatchFlags ) hb_parni( 3 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_FINDITEMS FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QTableWidgetItem *>( ( p )->findItems( QTableWidget::tr( hb_parc( 2 ) ), ( Qt::MatchFlags ) hb_parni( 3 ) ) ), true ) ); p is NULL" ) );
+   }
+}
+
+/*
  * QTableWidgetItem * horizontalHeaderItem ( int column ) const
  */
 HB_FUNC( QT_QTABLEWIDGET_HORIZONTALHEADERITEM )
@@ -402,6 +413,34 @@ HB_FUNC( QT_QTABLEWIDGET_ROWCOUNT )
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_ROWCOUNT FP=hb_retni( ( p )->rowCount() ); p is NULL" ) );
+   }
+}
+
+/*
+ * QList<QTableWidgetItem *> selectedItems ()
+ */
+HB_FUNC( QT_QTABLEWIDGET_SELECTEDITEMS )
+{
+   QTableWidget * p = hbqt_par_QTableWidget( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QTableWidgetItem *>( ( p )->selectedItems() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_SELECTEDITEMS FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QTableWidgetItem *>( ( p )->selectedItems() ), true ) ); p is NULL" ) );
+   }
+}
+
+/*
+ * QList<QTableWidgetSelectionRange> selectedRanges () const
+ */
+HB_FUNC( QT_QTABLEWIDGET_SELECTEDRANGES )
+{
+   QTableWidget * p = hbqt_par_QTableWidget( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QTableWidgetSelectionRange>( ( p )->selectedRanges() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_SELECTEDRANGES FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QTableWidgetSelectionRange>( ( p )->selectedRanges() ), true ) ); p is NULL" ) );
    }
 }
 

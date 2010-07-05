@@ -121,6 +121,7 @@ CREATE CLASS QPrinter INHERIT HbQtObjectHandler, QPaintDevice
    METHOD  setPrintRange( nRange )
    METHOD  setPrinterName( cName )
    METHOD  setResolution( nDpi )
+   METHOD  supportedResolutions()
    METHOD  toPage()
 
    ENDCLASS
@@ -349,6 +350,10 @@ METHOD QPrinter:setPrinterName( cName )
 
 METHOD QPrinter:setResolution( nDpi )
    RETURN Qt_QPrinter_setResolution( ::pPtr, nDpi )
+
+
+METHOD QPrinter:supportedResolutions()
+   RETURN Qt_QPrinter_supportedResolutions( ::pPtr )
 
 
 METHOD QPrinter:toPage()

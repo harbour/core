@@ -65,6 +65,15 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+/*
+ *  Constructed[ 10/11 [ 90.91% ] ]
+ *
+ *  *** Unconvered Prototypes ***
+ *  -----------------------------
+ *
+ *  }
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QDropEvent>
@@ -156,6 +165,14 @@ HB_FUNC( QT_QDROPEVENT_KEYBOARDMODIFIERS )
    {
       HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDROPEVENT_KEYBOARDMODIFIERS FP=hb_retni( ( Qt::KeyboardModifiers ) ( p )->keyboardModifiers() ); p is NULL" ) );
    }
+}
+
+/*
+ * const QMimeData * mimeData () const
+ */
+HB_FUNC( QT_QDROPEVENT_MIMEDATA )
+{
+   hb_retptrGC( hbqt_gcAllocate_QMimeData( ( void* ) hbqt_par_QDropEvent( 1 )->mimeData(), false ) );
 }
 
 /*

@@ -65,15 +65,6 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
-/*
- *  Constructed[ 12/13 [ 92.31% ] ]
- *
- *  *** Unconvered Prototypes ***
- *  -----------------------------
- *
- *  QList<QAction *> actions () const
- */
-
 #include <QtCore/QPointer>
 
 #include <QtGui/QActionGroup>
@@ -156,6 +147,20 @@ HB_FUNC( QT_QACTIONGROUP )
    }
 
    hb_retptrGC( hbqt_gcAllocate_QActionGroup( ( void * ) pObj, true ) );
+}
+
+/*
+ * QList<QAction *> actions () const
+ */
+HB_FUNC( QT_QACTIONGROUP_ACTIONS )
+{
+   QActionGroup * p = hbqt_par_QActionGroup( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QAction *>( ( p )->actions() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QACTIONGROUP_ACTIONS FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QAction *>( ( p )->actions() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*

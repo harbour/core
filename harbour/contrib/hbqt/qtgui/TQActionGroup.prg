@@ -67,6 +67,7 @@ CREATE CLASS QActionGroup INHERIT HbQtObjectHandler, QObject
 
    METHOD  new( ... )
 
+   METHOD  actions()
    METHOD  addAction( pAction )
    METHOD  addAction_1( cText )
    METHOD  addAction_2( cIcon, cText )
@@ -90,6 +91,10 @@ METHOD QActionGroup:new( ... )
    NEXT
    ::pPtr := Qt_QActionGroup( ... )
    RETURN Self
+
+
+METHOD QActionGroup:actions()
+   RETURN Qt_QActionGroup_actions( ::pPtr )
 
 
 METHOD QActionGroup:addAction( pAction )

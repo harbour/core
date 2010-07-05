@@ -77,6 +77,7 @@ CREATE CLASS QWizard INHERIT HbQtObjectHandler, QDialog
    METHOD  nextId()
    METHOD  options()
    METHOD  page( nId )
+   METHOD  pageIds()
    METHOD  pixmap( nWhich )
    METHOD  removePage( nId )
    METHOD  setButton( nWhich, pButton )
@@ -96,6 +97,7 @@ CREATE CLASS QWizard INHERIT HbQtObjectHandler, QDialog
    METHOD  testOption( nOption )
    METHOD  titleFormat()
    METHOD  validateCurrentPage()
+   METHOD  visitedPages()
    METHOD  wizardStyle()
    METHOD  back()
    METHOD  next()
@@ -151,6 +153,10 @@ METHOD QWizard:options()
 
 METHOD QWizard:page( nId )
    RETURN Qt_QWizard_page( ::pPtr, nId )
+
+
+METHOD QWizard:pageIds()
+   RETURN Qt_QWizard_pageIds( ::pPtr )
 
 
 METHOD QWizard:pixmap( nWhich )
@@ -227,6 +233,10 @@ METHOD QWizard:titleFormat()
 
 METHOD QWizard:validateCurrentPage()
    RETURN Qt_QWizard_validateCurrentPage( ::pPtr )
+
+
+METHOD QWizard:visitedPages()
+   RETURN Qt_QWizard_visitedPages( ::pPtr )
 
 
 METHOD QWizard:wizardStyle()

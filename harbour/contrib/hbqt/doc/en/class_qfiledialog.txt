@@ -70,6 +70,7 @@
         :setReadOnly( lEnabled )                            -> NIL
         :setResolveSymlinks( lEnabled )                     -> NIL
         :setViewMode( nMode )                               -> NIL
+        :sidebarUrls()                                      -> pQList<QUrl>
         :testOption( nOption )                              -> lBool
         :viewMode()                                         -> nViewMode
         :getExistingDirectory( pParent, cCaption, cDir, nOptions )  -> cQString

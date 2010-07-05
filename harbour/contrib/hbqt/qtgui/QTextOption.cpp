@@ -74,15 +74,17 @@
  */
 
 /*
- *  Constructed[ 12/16 [ 75.00% ] ]
+ *  Constructed[ 13/16 [ 81.25% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
  *
  *  void setTabArray ( QList<qreal> tabStops )
  *  void setTabs ( QList<Tab> tabStops )
- *  QList<qreal> tabArray () const
- *  QList<Tab> tabs () const
+ *
+ *  *** Commented out protos which construct fine but do not compile ***
+ *
+ *  //QList<Tab> tabs () const
  */
 
 #include <QtCore/QPointer>
@@ -266,6 +268,20 @@ HB_FUNC( QT_QTEXTOPTION_SETWRAPMODE )
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTOPTION_SETWRAPMODE FP=( p )->setWrapMode( ( QTextOption::WrapMode ) hb_parni( 2 ) ); p is NULL" ) );
+   }
+}
+
+/*
+ * QList<qreal> tabArray () const
+ */
+HB_FUNC( QT_QTEXTOPTION_TABARRAY )
+{
+   QTextOption * p = hbqt_par_QTextOption( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<qreal>( ( p )->tabArray() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTOPTION_TABARRAY FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<qreal>( ( p )->tabArray() ), true ) ); p is NULL" ) );
    }
 }
 

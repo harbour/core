@@ -36,6 +36,7 @@
         :setTextDirection( nDirection )                     -> NIL
         :setUseDesignMetrics( lEnable )                     -> NIL
         :setWrapMode( nMode )                               -> NIL
+        :tabArray()                                         -> pQList<qreal>
         :tabStop()                                          -> nQreal
         :textDirection()                                    -> nQt::LayoutDirection
         :useDesignMetrics()                                 -> lBool

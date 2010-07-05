@@ -471,10 +471,13 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
       nFuncs++
 
       /* Lists - Later */
+      #if 0
       IF '<' $ s
          aadd( dummy_, cOrg )
          LOOP
       ENDIF
+      #endif
+
       fBody_:={}
       IF right( s, 1 ) == "{"
          fBody_:= PullOutFuncBody( protos_, s:__enumIndex() )
@@ -813,6 +816,7 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_, lList, fB
    LOCAL cInt         := 'int,qint16,quint16,short,ushort,unsigned'
    LOCAL cIntLong     := 'qint32,quint32,QRgb'
    LOCAL cIntLongLong := 'qint64,quint64,qlonglong,qulonglong,ulong'
+   LOCAL lRetIsList
 
    cParas := ''
    cDocs  := ''
@@ -826,6 +830,8 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_, lList, fB
          cPre := alltrim( substr( cProto,   1, n-1    ) )
          cPar := alltrim( substr( cProto, n+1, nn-1-n ) )
          cPas := alltrim( substr( cProto, nn+1        ) )
+
+         lRetIsList := "<" $ cPre
 
          /* parse cPre, it has two components */
          n := rat( ' ', cPre )
@@ -845,20 +851,26 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_, lList, fB
          aRet[ PRT_L_VIRT       ] := 'virtual' $ cRet
          aRet[ PRT_L_CONST_LAST ] := 'const'   $ cPas
 
-         cRet := strtran( cRet, 'const '  , '' )
-         cRet := strtran( cRet, '& '      , '' )
-         cRet := strtran( cRet, '&'       , '' )
-         cRet := strtran( cRet, '* '      , '' )
-         cRet := strtran( cRet, '*'       , '' )
          cRet := strtran( cRet, 'virtual ', '' )
+         cRet := strtran( cRet, 'const '  , '' )
+         IF ! lRetIsList
+            cRet := strtran( cRet, '& '      , '' )
+            cRet := strtran( cRet, '&'       , '' )
+            cRet := strtran( cRet, '* '      , '' )
+            cRet := strtran( cRet, '*'       , '' )
+         ENDIF
 
          /* Normalize */
          cRet := alltrim( cRet )
-         n := at( ' ', cRet )
-         IF n > 0
-            aRet[ PRT_CAST ] := substr( cRet, 1, n-1 )
-         ELSE
+         IF lRetIsList
             aRet[ PRT_CAST ] := cRet
+         ELSE
+            n := at( ' ', cRet )
+            IF n > 0
+               aRet[ PRT_CAST ] := substr( cRet, 1, n-1 )
+            ELSE
+               aRet[ PRT_CAST ] := cRet
+            ENDIF
          ENDIF
          aRet[ PRT_NAME ] := aRet[ PRT_CAST ]
 
@@ -904,6 +916,7 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_, lList, fB
             cPre := strtran( cPre, '  '      , ' ' )
 
             cPre := alltrim( cPre )
+
             /* left may be two elements, name and cast */
             n := at( ' ', cPre )
             IF n > 0
@@ -1105,7 +1118,34 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_, lList, fB
             cCmn   := cWdg + cFun + cParas
             cDocNM := THIS_PROPER( aA[ PRT_NAME ] )
 
+// hb_retptrGC( hbqt_gcAllocate_QList( new QList<QUrl>( ( p )->urls() ), true ) );
+// QList<QUrl> urls () const
+
             DO CASE
+            CASE "<" $ aA[ PRT_CAST ]
+               DO CASE
+               CASE ! ( "QList" $ aA[ PRT_CAST ] )
+                  cCmd := ""
+                  cPrgRet := ""
+
+               CASE "::" $ aA[ PRT_CAST ]
+                  cCmd := ""
+                  cPrgRet := ""
+
+               CASE "<T>" $ aA[ PRT_CAST ]
+                  cCmd := ""
+                  cPrgRet := ""
+
+               CASE "QPair" $ aA[ PRT_CAST ]
+                  cCmd := ""
+                  cPrgRet := ""
+
+               OTHERWISE
+                  cCmd := 'hb_retptrGC( hbqt_gcAllocate_QList( new ' + aA[ PRT_CAST ] + '( ' + cCmn + ' ), true ) )'
+                  cPrgRet := 'p' + cDocNM
+
+               ENDCASE
+
             CASE aA[ PRT_CAST ] == 'T'
                cCmd := 'hb_retptr( ' + cCmn + ' )'
                cPrgRet := 'p' + cDocNM
@@ -1218,6 +1258,11 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_, lList, fB
                ENDIF
 
             ENDCASE
+
+            /* Lists to be disabled in parameters - TODO */
+            IF "<" $ cPar
+               cCmd := ""
+            ENDIF
 
             IF ! Empty( cCmd )
                cCmd := StrTran( cCmd, '(  )', '()' ) + ';'

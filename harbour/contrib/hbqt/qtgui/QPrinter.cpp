@@ -79,23 +79,6 @@
  *  enum Unit { Millimeter, Point, Inch, Pica, ..., DevicePixel }
  */
 
-/*
- *  Constructed[ 55/61 [ 90.16% ] ]
- *
- *  *** Unconvered Prototypes ***
- *  -----------------------------
- *
- *  QList<PaperSource> supportedPaperSources () const
- *  QList<int> supportedResolutions () const
- *
- *  *** Commented out protos which construct fine but do not compile ***
- *
- *  // QString printerSelectionOption () const
- *  // void setPrinterSelectionOption ( const QString & option )
- *  // void setWinPageSize ( int pageSize )
- *  // int winPageSize () const
- */
-
 #include <QtCore/QPointer>
 
 #include <QtGui/QPrinter>
@@ -931,6 +914,20 @@ HB_FUNC( QT_QPRINTER_SETRESOLUTION )
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTER_SETRESOLUTION FP=( p )->setResolution( hb_parni( 2 ) ); p is NULL" ) );
+   }
+}
+
+/*
+ * QList<int> supportedResolutions () const
+ */
+HB_FUNC( QT_QPRINTER_SUPPORTEDRESOLUTIONS )
+{
+   QPrinter * p = hbqt_par_QPrinter( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<int>( ( p )->supportedResolutions() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTER_SUPPORTEDRESOLUTIONS FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<int>( ( p )->supportedResolutions() ), true ) ); p is NULL" ) );
    }
 }
 

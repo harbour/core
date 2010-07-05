@@ -89,6 +89,8 @@
         :sizeHint()                                         -> pQSize
         :sortChildren( nColumn, nOrder )                    -> NIL
         :statusTip()                                        -> cQString
+        :takeColumn( nColumn )                              -> pQList<QStandardItem *>
+        :takeRow( nRow )                                    -> pQList<QStandardItem *>
         :text()                                             -> cQString
         :textAlignment()                                    -> nQt::Alignment
         :toolTip()                                          -> cQString

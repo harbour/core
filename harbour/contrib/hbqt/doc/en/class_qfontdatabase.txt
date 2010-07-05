@@ -36,6 +36,8 @@
         :isScalable( cFamily, cStyle )                      -> lBool
         :isSmoothlyScalable( cFamily, cStyle )              -> lBool
         :italic( cFamily, cStyle )                          -> lBool
+        :pointSizes( cFamily, cStyle )                      -> pQList<int>
+        :smoothSizes( cFamily, cStyle )                     -> pQList<int>
         :styleString( pFont )                               -> cQString
         :styleString_1( pFontInfo )                         -> cQString
         :styles( cFamily )                                  -> pQStringList
@@ -45,6 +47,7 @@
         :applicationFontFamilies( nId )                     -> pQStringList
         :removeAllApplicationFonts()                        -> lBool
         :removeApplicationFont( nId )                       -> lBool
+        :standardSizes()                                    -> pQList<int>
         :supportsThreadedFontRendering()                    -> lBool
         :writingSystemName( nWritingSystem )                -> cQString
         :writingSystemSample( nWritingSystem )              -> cQString

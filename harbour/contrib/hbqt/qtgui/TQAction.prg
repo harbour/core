@@ -69,6 +69,7 @@ CREATE CLASS QAction INHERIT HbQtObjectHandler, QObject
 
    METHOD  actionGroup()
    METHOD  activate( nEvent )
+   METHOD  associatedWidgets()
    METHOD  autoRepeat()
    METHOD  data()
    METHOD  font()
@@ -103,6 +104,7 @@ CREATE CLASS QAction INHERIT HbQtObjectHandler, QObject
    METHOD  setWhatsThis( cWhat )
    METHOD  shortcut()
    METHOD  shortcutContext()
+   METHOD  shortcuts()
    METHOD  showStatusText( pWidget )
    METHOD  statusTip()
    METHOD  text()
@@ -134,6 +136,10 @@ METHOD QAction:actionGroup()
 
 METHOD QAction:activate( nEvent )
    RETURN Qt_QAction_activate( ::pPtr, nEvent )
+
+
+METHOD QAction:associatedWidgets()
+   RETURN Qt_QAction_associatedWidgets( ::pPtr )
 
 
 METHOD QAction:autoRepeat()
@@ -270,6 +276,10 @@ METHOD QAction:shortcut()
 
 METHOD QAction:shortcutContext()
    RETURN Qt_QAction_shortcutContext( ::pPtr )
+
+
+METHOD QAction:shortcuts()
+   RETURN Qt_QAction_shortcuts( ::pPtr )
 
 
 METHOD QAction:showStatusText( pWidget )

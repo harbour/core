@@ -66,20 +66,19 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 19/21 [ 90.48% ] ]
+ *  Constructed[ 20/21 [ 95.24% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
  *
  *  void setUrls ( const QList<QUrl> & urls )
- *  QList<QUrl> urls () const
  */
 
 #include <QtCore/QPointer>
 
 #include <QtCore/QMimeData>
 #include <QtCore/QStringList>
-
+#include <QtCore/QUrl>
 
 /* QMimeData ()
  * ~QMimeData ()
@@ -420,6 +419,20 @@ HB_FUNC( QT_QMIMEDATA_TEXT )
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMIMEDATA_TEXT FP=hb_retc( ( p )->text().toAscii().data() ); p is NULL" ) );
+   }
+}
+
+/*
+ * QList<QUrl> urls () const
+ */
+HB_FUNC( QT_QMIMEDATA_URLS )
+{
+   QMimeData * p = hbqt_par_QMimeData( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QUrl>( ( p )->urls() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMIMEDATA_URLS FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QUrl>( ( p )->urls() ), true ) ); p is NULL" ) );
    }
 }
 

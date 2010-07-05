@@ -66,12 +66,11 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 28/35 [ 80.00% ] ]
+ *  Constructed[ 29/35 [ 82.86% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
  *
- *  QList<QByteArray> dynamicPropertyNames () const
  *  QList<T> findChildren ( const QString & name = QString() ) const
  *  QList<T> findChildren ( const QRegExp & regExp ) const
  *  const QMetaObject staticMetaObject
@@ -246,6 +245,20 @@ HB_FUNC( QT_QOBJECT_DUMPOBJECTTREE )
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QOBJECT_DUMPOBJECTTREE FP=( p )->dumpObjectTree(); p is NULL" ) );
+   }
+}
+
+/*
+ * QList<QByteArray> dynamicPropertyNames () const
+ */
+HB_FUNC( QT_QOBJECT_DYNAMICPROPERTYNAMES )
+{
+   QObject * p = hbqt_par_QObject( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QByteArray>( ( p )->dynamicPropertyNames() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QOBJECT_DYNAMICPROPERTYNAMES FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QByteArray>( ( p )->dynamicPropertyNames() ), true ) ); p is NULL" ) );
    }
 }
 

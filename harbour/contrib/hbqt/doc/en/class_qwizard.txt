@@ -38,6 +38,7 @@
         :nextId()                                           -> nInt
         :options()                                          -> nWizardOptions
         :page( nId )                                        -> Page
+        :pageIds()                                          -> pQList<int>
         :pixmap( nWhich )                                   -> pQPixmap
         :removePage( nId )                                  -> NIL
         :setButton( nWhich, pButton )                       -> NIL
@@ -57,6 +58,7 @@
         :testOption( nOption )                              -> lBool
         :titleFormat()                                      -> nQt::TextFormat
         :validateCurrentPage()                              -> lBool
+        :visitedPages()                                     -> pQList<int>
         :wizardStyle()                                      -> nWizardStyle
         :back()                                             -> NIL
         :next()                                             -> NIL

@@ -66,12 +66,11 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 35/42 [ 83.33% ] ]
+ *  Constructed[ 36/42 [ 85.71% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
  *
- *  QList<QString> mid ( int pos, int length = -1 ) const
  *  QSet<QString> toSet () const
  *  std::list<QString> toStdList () const
  *  QVector<QString> toVector () const
@@ -475,6 +474,20 @@ HB_FUNC( QT_QSTRINGLIST_LAST_1 )
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGLIST_LAST_1 FP=hb_retc( ( p )->last().toAscii().data() ); p is NULL" ) );
+   }
+}
+
+/*
+ * QList<QString> mid ( int pos, int length = -1 ) const
+ */
+HB_FUNC( QT_QSTRINGLIST_MID )
+{
+   QStringList * p = hbqt_par_QStringList( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QString>( ( p )->mid( hb_parni( 2 ), hb_parnidef( 3, -1 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGLIST_MID FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QString>( ( p )->mid( hb_parni( 2 ), hb_parnidef( 3, -1 ) ) ), true ) ); p is NULL" ) );
    }
 }
 

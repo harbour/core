@@ -65,21 +65,6 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
-/*
- *  Constructed[ 97/101 [ 96.04% ] ]
- *
- *  *** Unconvered Prototypes ***
- *  -----------------------------
- *
- *  QList<QByteArray> split ( char sep ) const
- *
- *  *** Commented out protos which construct fine but do not compile ***
- *
- *  // bool contains ( const QByteArray & ba ) const
- *  // bool contains ( const char * str ) const
- *  // bool contains ( char ch ) const
- */
-
 #include <QtCore/QPointer>
 
 #include <QtCore/QByteArray>
@@ -1215,6 +1200,20 @@ HB_FUNC( QT_QBYTEARRAY_SIZE )
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_SIZE FP=hb_retni( ( p )->size() ); p is NULL" ) );
+   }
+}
+
+/*
+ * QList<QByteArray> split ( char sep ) const
+ */
+HB_FUNC( QT_QBYTEARRAY_SPLIT )
+{
+   QByteArray * p = hbqt_par_QByteArray( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QByteArray>( ( p )->split( ( char ) hb_parni( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBYTEARRAY_SPLIT FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QByteArray>( ( p )->split( ( char ) hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
    }
 }
 

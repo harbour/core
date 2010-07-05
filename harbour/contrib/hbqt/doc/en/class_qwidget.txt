@@ -29,6 +29,7 @@
         An instance of the object of type QWidget
     $METHODS$
         :acceptDrops()                                      -> lBool
+        :actions()                                          -> pQList<QAction *>
         :activateWindow()                                   -> NIL
         :addAction( pAction )                               -> NIL
         :adjustSize()                                       -> NIL

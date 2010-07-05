@@ -116,7 +116,11 @@ CREATE CLASS QPainterPath INHERIT HbQtObjectHandler
    METHOD  subtracted( pP )
    METHOD  toFillPolygon( pMatrix )
    METHOD  toFillPolygon_1( pMatrix )
+   METHOD  toFillPolygons( pMatrix )
+   METHOD  toFillPolygons_1( pMatrix )
    METHOD  toReversed()
+   METHOD  toSubpathPolygons( pMatrix )
+   METHOD  toSubpathPolygons_1( pMatrix )
    METHOD  united( pP )
 
    ENDCLASS
@@ -327,8 +331,24 @@ METHOD QPainterPath:toFillPolygon_1( pMatrix )
    RETURN Qt_QPainterPath_toFillPolygon_1( ::pPtr, hbqt_ptr( pMatrix ) )
 
 
+METHOD QPainterPath:toFillPolygons( pMatrix )
+   RETURN Qt_QPainterPath_toFillPolygons( ::pPtr, hbqt_ptr( pMatrix ) )
+
+
+METHOD QPainterPath:toFillPolygons_1( pMatrix )
+   RETURN Qt_QPainterPath_toFillPolygons_1( ::pPtr, hbqt_ptr( pMatrix ) )
+
+
 METHOD QPainterPath:toReversed()
    RETURN Qt_QPainterPath_toReversed( ::pPtr )
+
+
+METHOD QPainterPath:toSubpathPolygons( pMatrix )
+   RETURN Qt_QPainterPath_toSubpathPolygons( ::pPtr, hbqt_ptr( pMatrix ) )
+
+
+METHOD QPainterPath:toSubpathPolygons_1( pMatrix )
+   RETURN Qt_QPainterPath_toSubpathPolygons_1( ::pPtr, hbqt_ptr( pMatrix ) )
 
 
 METHOD QPainterPath:united( pP )

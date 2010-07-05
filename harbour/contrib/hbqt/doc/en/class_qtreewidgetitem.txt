@@ -70,6 +70,7 @@
         :sizeHint( nColumn )                                -> pQSize
         :sortChildren( nColumn, nOrder )                    -> NIL
         :statusTip( nColumn )                               -> cQString
+        :takeChildren()                                     -> pQList<QTreeWidgetItem *>
         :text( nColumn )                                    -> cQString
         :textAlignment( nColumn )                           -> nInt
         :toolTip( nColumn )                                 -> cQString

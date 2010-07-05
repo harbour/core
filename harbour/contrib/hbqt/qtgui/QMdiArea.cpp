@@ -72,15 +72,6 @@
  *  enum WindowOrder { CreationOrder, StackingOrder, ActivationHistoryOrder }
  */
 
-/*
- *  Constructed[ 25/26 [ 96.15% ] ]
- *
- *  *** Unconvered Prototypes ***
- *  -----------------------------
- *
- *  QList<QMdiSubWindow *> subWindowList ( WindowOrder order = CreationOrder ) const
- */
-
 #include <QtCore/QPointer>
 
 #include <QtGui/QMdiArea>
@@ -364,6 +355,20 @@ HB_FUNC( QT_QMDIAREA_SETVIEWMODE )
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMDIAREA_SETVIEWMODE FP=( p )->setViewMode( ( QMdiArea::ViewMode ) hb_parni( 2 ) ); p is NULL" ) );
+   }
+}
+
+/*
+ * QList<QMdiSubWindow *> subWindowList ( WindowOrder order = CreationOrder ) const
+ */
+HB_FUNC( QT_QMDIAREA_SUBWINDOWLIST )
+{
+   QMdiArea * p = hbqt_par_QMdiArea( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QMdiSubWindow *>( ( p )->subWindowList( ( HB_ISNUM( 2 ) ? ( QMdiArea::WindowOrder ) hb_parni( 2 ) : ( QMdiArea::WindowOrder ) QMdiArea::CreationOrder ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMDIAREA_SUBWINDOWLIST FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QMdiSubWindow *>( ( p )->subWindowList( ( HB_ISNUM( 2 ) ? ( QMdiArea::WindowOrder ) hb_parni( 2 ) : ( QMdiArea::WindowOrder ) QMdiArea::CreationOrder ) ) ), true ) ); p is NULL" ) );
    }
 }
 

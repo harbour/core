@@ -71,20 +71,6 @@
  *  enum KnownHeaders { ContentTypeHeader, ContentLengthHeader, LocationHeader, LastModifiedHeader, CookieHeader, SetCookieHeader }
  */
 
-/*
- *  Constructed[ 9/12 [ 75.00% ] ]
- *
- *  *** Unconvered Prototypes ***
- *  -----------------------------
- *
- *  QList<QByteArray> rawHeaderList () const
- *
- *  *** Commented out protos which construct fine but do not compile ***
- *
- *  // void setSslConfiguration ( const QSslConfiguration & config )
- *  // QSslConfiguration sslConfiguration () const
- */
-
 #include <QtCore/QPointer>
 
 #include <QtNetwork/QNetworkRequest>
@@ -209,6 +195,20 @@ HB_FUNC( QT_QNETWORKREQUEST_RAWHEADER )
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QNETWORKREQUEST_RAWHEADER FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->rawHeader( *hbqt_par_QByteArray( 2 ) ) ), true ) ); p is NULL" ) );
+   }
+}
+
+/*
+ * QList<QByteArray> rawHeaderList () const
+ */
+HB_FUNC( QT_QNETWORKREQUEST_RAWHEADERLIST )
+{
+   QNetworkRequest * p = hbqt_par_QNetworkRequest( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QByteArray>( ( p )->rawHeaderList() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QNETWORKREQUEST_RAWHEADERLIST FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QByteArray>( ( p )->rawHeaderList() ), true ) ); p is NULL" ) );
    }
 }
 

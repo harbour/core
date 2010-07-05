@@ -45,6 +45,7 @@
         :toInt( @lOk )                                      -> nInt
         :toLine()                                           -> pQLine
         :toLineF()                                          -> pQLineF
+        :toList()                                           -> pQList<QVariant>
         :toLocale()                                         -> pQLocale
         :toLongLong( @lOk )                                 -> nQlonglong
         :toPoint()                                          -> pQPoint

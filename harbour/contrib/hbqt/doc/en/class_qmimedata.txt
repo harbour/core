@@ -47,6 +47,7 @@
         :setImageData( pImage )                             -> NIL
         :setText( cText )                                   -> NIL
         :text()                                             -> cQString
+        :urls()                                             -> pQList<QUrl>
 
     $DESCRIPTION$
 

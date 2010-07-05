@@ -71,7 +71,7 @@
  */
 
 /*
- *  Constructed[ 52/56 [ 92.86% ] ]
+ *  Constructed[ 53/56 [ 94.64% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
@@ -79,7 +79,6 @@
  *  }
  *  void addChildren ( const QList<QTreeWidgetItem *> & children )
  *  void insertChildren ( int index, const QList<QTreeWidgetItem *> & children )
- *  QList<QTreeWidgetItem *> takeChildren ()
  */
 
 #include <QtCore/QPointer>
@@ -812,6 +811,20 @@ HB_FUNC( QT_QTREEWIDGETITEM_TAKECHILD )
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGETITEM_TAKECHILD FP=hb_retptrGC( hbqt_gcAllocate_QTreeWidgetItem( ( p )->takeChild( hb_parni( 2 ) ), false ) ); p is NULL" ) );
+   }
+}
+
+/*
+ * QList<QTreeWidgetItem *> takeChildren ()
+ */
+HB_FUNC( QT_QTREEWIDGETITEM_TAKECHILDREN )
+{
+   QTreeWidgetItem * p = hbqt_par_QTreeWidgetItem( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QTreeWidgetItem *>( ( p )->takeChildren() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGETITEM_TAKECHILDREN FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QTreeWidgetItem *>( ( p )->takeChildren() ), true ) ); p is NULL" ) );
    }
 }
 

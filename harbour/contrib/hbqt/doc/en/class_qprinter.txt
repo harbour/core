@@ -82,6 +82,7 @@
         :setPrintRange( nRange )                            -> NIL
         :setPrinterName( cName )                            -> NIL
         :setResolution( nDpi )                              -> NIL
+        :supportedResolutions()                             -> pQList<int>
         :toPage()                                           -> nInt
 
     $DESCRIPTION$

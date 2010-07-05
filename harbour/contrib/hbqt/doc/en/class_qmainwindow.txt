@@ -69,6 +69,7 @@
         :statusBar()                                        -> pQStatusBar
         :tabPosition( nArea )                               -> nQTabWidget::TabPosition
         :tabShape()                                         -> nQTabWidget::TabShape
+        :tabifiedDockWidgets( pDockwidget )                 -> pQList<QDockWidget *>
         :tabifyDockWidget( pFirst, pSecond )                -> NIL
         :toolBarArea( pToolbar )                            -> nQt::ToolBarArea
         :toolBarBreak( pToolbar )                           -> lBool

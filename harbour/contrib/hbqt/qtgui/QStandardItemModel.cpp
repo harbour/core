@@ -66,18 +66,15 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 25/33 [ 75.76% ] ]
+ *  Constructed[ 28/33 [ 84.85% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
  *
  *  void appendColumn ( const QList<QStandardItem *> & items )
  *  void appendRow ( const QList<QStandardItem *> & items )
- *  QList<QStandardItem *> findItems ( const QString & text, Qt::MatchFlags flags = Qt::MatchExactly, int column = 0 ) const
  *  void insertColumn ( int column, const QList<QStandardItem *> & items )
  *  void insertRow ( int row, const QList<QStandardItem *> & items )
- *  QList<QStandardItem *> takeColumn ( int column )
- *  QList<QStandardItem *> takeRow ( int row )
  *
  *  *** Commented out protos which construct fine but do not compile ***
  *
@@ -192,6 +189,20 @@ HB_FUNC( QT_QSTANDARDITEMMODEL_CLEAR )
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEMMODEL_CLEAR FP=( p )->clear(); p is NULL" ) );
+   }
+}
+
+/*
+ * QList<QStandardItem *> findItems ( const QString & text, Qt::MatchFlags flags = Qt::MatchExactly, int column = 0 ) const
+ */
+HB_FUNC( QT_QSTANDARDITEMMODEL_FINDITEMS )
+{
+   QStandardItemModel * p = hbqt_par_QStandardItemModel( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QStandardItem *>( ( p )->findItems( QStandardItemModel::tr( hb_parc( 2 ) ), ( HB_ISNUM( 3 ) ? ( Qt::MatchFlags ) hb_parni( 3 ) : ( Qt::MatchFlags ) Qt::MatchExactly ), hb_parni( 4 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEMMODEL_FINDITEMS FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QStandardItem *>( ( p )->findItems( QStandardItemModel::tr( hb_parc( 2 ) ), ( HB_ISNUM( 3 ) ? ( Qt::MatchFlags ) hb_parni( 3 ) : ( Qt::MatchFlags ) Qt::MatchExactly ), hb_parni( 4 ) ) ), true ) ); p is NULL" ) );
    }
 }
 
@@ -462,6 +473,20 @@ HB_FUNC( QT_QSTANDARDITEMMODEL_SORTROLE )
 }
 
 /*
+ * QList<QStandardItem *> takeColumn ( int column )
+ */
+HB_FUNC( QT_QSTANDARDITEMMODEL_TAKECOLUMN )
+{
+   QStandardItemModel * p = hbqt_par_QStandardItemModel( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QStandardItem *>( ( p )->takeColumn( hb_parni( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEMMODEL_TAKECOLUMN FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QStandardItem *>( ( p )->takeColumn( hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
+   }
+}
+
+/*
  * QStandardItem * takeHorizontalHeaderItem ( int column )
  */
 HB_FUNC( QT_QSTANDARDITEMMODEL_TAKEHORIZONTALHEADERITEM )
@@ -486,6 +511,20 @@ HB_FUNC( QT_QSTANDARDITEMMODEL_TAKEITEM )
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEMMODEL_TAKEITEM FP=hb_retptrGC( hbqt_gcAllocate_QStandardItem( ( p )->takeItem( hb_parni( 2 ), hb_parni( 3 ) ), false ) ); p is NULL" ) );
+   }
+}
+
+/*
+ * QList<QStandardItem *> takeRow ( int row )
+ */
+HB_FUNC( QT_QSTANDARDITEMMODEL_TAKEROW )
+{
+   QStandardItemModel * p = hbqt_par_QStandardItemModel( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QStandardItem *>( ( p )->takeRow( hb_parni( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEMMODEL_TAKEROW FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QStandardItem *>( ( p )->takeRow( hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
    }
 }
 

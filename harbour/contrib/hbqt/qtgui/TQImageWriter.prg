@@ -85,6 +85,7 @@ CREATE CLASS QImageWriter INHERIT HbQtObjectHandler
    METHOD  setText( cKey, cText )
    METHOD  supportsOption( nOption )
    METHOD  write( pImage )
+   METHOD  supportedImageFormats()
 
    ENDCLASS
 
@@ -168,4 +169,8 @@ METHOD QImageWriter:supportsOption( nOption )
 
 METHOD QImageWriter:write( pImage )
    RETURN Qt_QImageWriter_write( ::pPtr, hbqt_ptr( pImage ) )
+
+
+METHOD QImageWriter:supportedImageFormats()
+   RETURN Qt_QImageWriter_supportedImageFormats( ::pPtr )
 

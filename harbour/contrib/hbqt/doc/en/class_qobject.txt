@@ -34,6 +34,7 @@
         :disconnect_1( pReceiver, pMethod )                 -> lBool
         :dumpObjectInfo()                                   -> NIL
         :dumpObjectTree()                                   -> NIL
+        :dynamicPropertyNames()                             -> pQList<QByteArray>
         :event( pE )                                        -> lBool
         :eventFilter( pWatched, pEvent )                    -> lBool
         :inherits( pClassName )                             -> lBool

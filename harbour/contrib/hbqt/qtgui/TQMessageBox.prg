@@ -72,6 +72,7 @@ CREATE CLASS QMessageBox INHERIT HbQtObjectHandler, QDialog
    METHOD  addButton_2( nButton )
    METHOD  button( nWhich )
    METHOD  buttonRole( pButton )
+   METHOD  buttons()
    METHOD  clickedButton()
    METHOD  defaultButton()
    METHOD  detailedText()
@@ -136,6 +137,10 @@ METHOD QMessageBox:button( nWhich )
 
 METHOD QMessageBox:buttonRole( pButton )
    RETURN Qt_QMessageBox_buttonRole( ::pPtr, hbqt_ptr( pButton ) )
+
+
+METHOD QMessageBox:buttons()
+   RETURN Qt_QMessageBox_buttons( ::pPtr )
 
 
 METHOD QMessageBox:clickedButton()

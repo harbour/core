@@ -31,6 +31,7 @@
         :addButton( pButton )                               -> NIL
         :addButton_1( pButton, nId )                        -> NIL
         :button( nId )                                      -> pQAbstractButton
+        :buttons()                                          -> pQList<QAbstractButton *>
         :checkedButton()                                    -> pQAbstractButton
         :checkedId()                                        -> nInt
         :exclusive()                                        -> lBool

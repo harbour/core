@@ -70,6 +70,7 @@ CREATE CLASS QButtonGroup INHERIT HbQtObjectHandler, QObject
    METHOD  addButton( pButton )
    METHOD  addButton_1( pButton, nId )
    METHOD  button( nId )
+   METHOD  buttons()
    METHOD  checkedButton()
    METHOD  checkedId()
    METHOD  exclusive()
@@ -100,6 +101,10 @@ METHOD QButtonGroup:addButton_1( pButton, nId )
 
 METHOD QButtonGroup:button( nId )
    RETURN Qt_QButtonGroup_button( ::pPtr, nId )
+
+
+METHOD QButtonGroup:buttons()
+   RETURN Qt_QButtonGroup_buttons( ::pPtr )
 
 
 METHOD QButtonGroup:checkedButton()

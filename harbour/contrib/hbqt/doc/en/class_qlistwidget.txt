@@ -36,6 +36,7 @@
         :currentItem()                                      -> Item
         :currentRow()                                       -> nInt
         :editItem( pItem )                                  -> NIL
+        :findItems( cText, nFlags )                         -> pQList<QListWidgetItem *>
         :insertItem( nRow, pItem )                          -> NIL
         :insertItem_1( nRow, cLabel )                       -> NIL
         :insertItems( nRow, pLabels )                       -> NIL
@@ -47,6 +48,7 @@
         :openPersistentEditor( pItem )                      -> NIL
         :removeItemWidget( pItem )                          -> NIL
         :row( pItem )                                       -> nInt
+        :selectedItems()                                    -> pQList<QListWidgetItem *>
         :setCurrentItem( pItem )                            -> NIL
         :setCurrentItem_1( pItem, nCommand )                -> NIL
         :setCurrentRow( nRow )                              -> NIL

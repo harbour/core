@@ -33,6 +33,7 @@
         :addButton_2( nButton )                             -> pQPushButton
         :button( nWhich )                                   -> pQAbstractButton
         :buttonRole( pButton )                              -> nButtonRole
+        :buttons()                                          -> pQList<QAbstractButton *>
         :clickedButton()                                    -> pQAbstractButton
         :defaultButton()                                    -> pQPushButton
         :detailedText()                                     -> cQString

@@ -73,6 +73,7 @@ CREATE CLASS QObject INHERIT HbQtObjectHandler
    METHOD  disconnect_1( pReceiver, pMethod )
    METHOD  dumpObjectInfo()
    METHOD  dumpObjectTree()
+   METHOD  dynamicPropertyNames()
    METHOD  event( pE )
    METHOD  eventFilter( pWatched, pEvent )
    METHOD  inherits( pClassName )
@@ -130,6 +131,10 @@ METHOD QObject:dumpObjectInfo()
 
 METHOD QObject:dumpObjectTree()
    RETURN Qt_QObject_dumpObjectTree( ::pPtr )
+
+
+METHOD QObject:dynamicPropertyNames()
+   RETURN Qt_QObject_dynamicPropertyNames( ::pPtr )
 
 
 METHOD QObject:event( pE )

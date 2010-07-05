@@ -65,15 +65,6 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
-/*
- *  Constructed[ 10/11 [ 90.91% ] ]
- *
- *  *** Unconvered Prototypes ***
- *  -----------------------------
- *
- *  QList<QAbstractButton *> buttons () const
- */
-
 #include <QtCore/QPointer>
 
 #include <QtGui/QButtonGroup>
@@ -202,6 +193,20 @@ HB_FUNC( QT_QBUTTONGROUP_BUTTON )
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBUTTONGROUP_BUTTON FP=hb_retptrGC( hbqt_gcAllocate_QAbstractButton( ( p )->button( hb_parni( 2 ) ), false ) ); p is NULL" ) );
+   }
+}
+
+/*
+ * QList<QAbstractButton *> buttons () const
+ */
+HB_FUNC( QT_QBUTTONGROUP_BUTTONS )
+{
+   QButtonGroup * p = hbqt_par_QButtonGroup( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QAbstractButton *>( ( p )->buttons() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBUTTONGROUP_BUTTONS FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QAbstractButton *>( ( p )->buttons() ), true ) ); p is NULL" ) );
    }
 }
 

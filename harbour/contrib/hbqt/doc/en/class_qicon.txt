@@ -31,6 +31,7 @@
         :actualSize( pSize, nMode, nState )                 -> pQSize
         :addFile( cFileName, pSize, nMode, nState )         -> NIL
         :addPixmap( pPixmap, nMode, nState )                -> NIL
+        :availableSizes( nMode, nState )                    -> pQList<QSize>
         :cacheKey()                                         -> nQint64
         :isNull()                                           -> lBool
         :paint( pPainter, pRect, nAlignment, nMode, nState )  -> NIL

@@ -46,6 +46,7 @@
         :setText( cKey, cText )                             -> NIL
         :supportsOption( nOption )                          -> lBool
         :write( pImage )                                    -> lBool
+        :supportedImageFormats()                            -> pQList<QByteArray>
 
     $DESCRIPTION$
 

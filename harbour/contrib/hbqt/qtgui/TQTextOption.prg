@@ -75,6 +75,7 @@ CREATE CLASS QTextOption INHERIT HbQtObjectHandler
    METHOD  setTextDirection( nDirection )
    METHOD  setUseDesignMetrics( lEnable )
    METHOD  setWrapMode( nMode )
+   METHOD  tabArray()
    METHOD  tabStop()
    METHOD  textDirection()
    METHOD  useDesignMetrics()
@@ -122,6 +123,10 @@ METHOD QTextOption:setUseDesignMetrics( lEnable )
 
 METHOD QTextOption:setWrapMode( nMode )
    RETURN Qt_QTextOption_setWrapMode( ::pPtr, nMode )
+
+
+METHOD QTextOption:tabArray()
+   RETURN Qt_QTextOption_tabArray( ::pPtr )
 
 
 METHOD QTextOption:tabStop()

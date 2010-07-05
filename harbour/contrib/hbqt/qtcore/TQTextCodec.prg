@@ -67,6 +67,7 @@ CREATE CLASS QTextCodec INHERIT HbQtObjectHandler
 
    METHOD  new( ... )
 
+   METHOD  aliases()
    METHOD  canEncode( pCh )
    METHOD  canEncode_1( cS )
    METHOD  fromUnicode( cStr )
@@ -98,6 +99,10 @@ METHOD QTextCodec:new( ... )
    NEXT
    ::pPtr := Qt_QTextCodec( ... )
    RETURN Self
+
+
+METHOD QTextCodec:aliases()
+   RETURN Qt_QTextCodec_aliases( ::pPtr )
 
 
 METHOD QTextCodec:canEncode( pCh )

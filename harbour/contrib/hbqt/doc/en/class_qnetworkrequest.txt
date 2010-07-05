@@ -32,6 +32,7 @@
         :hasRawHeader( pHeaderName )                        -> lBool
         :header( nHeader )                                  -> pQVariant
         :rawHeader( pHeaderName )                           -> pQByteArray
+        :rawHeaderList()                                    -> pQList<QByteArray>
         :setAttribute( nCode, pValue )                      -> NIL
         :setHeader( nHeader, pValue )                       -> NIL
         :setRawHeader( pHeaderName, pHeaderValue )          -> NIL

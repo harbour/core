@@ -113,6 +113,7 @@ CREATE CLASS QTreeWidgetItem INHERIT HbQtObjectHandler
    METHOD  sortChildren( nColumn, nOrder )
    METHOD  statusTip( nColumn )
    METHOD  takeChild( nIndex )
+   METHOD  takeChildren()
    METHOD  text( nColumn )
    METHOD  textAlignment( nColumn )
    METHOD  toolTip( nColumn )
@@ -314,6 +315,10 @@ METHOD QTreeWidgetItem:statusTip( nColumn )
 
 METHOD QTreeWidgetItem:takeChild( nIndex )
    RETURN Qt_QTreeWidgetItem_takeChild( ::pPtr, nIndex )
+
+
+METHOD QTreeWidgetItem:takeChildren()
+   RETURN Qt_QTreeWidgetItem_takeChildren( ::pPtr )
 
 
 METHOD QTreeWidgetItem:text( nColumn )

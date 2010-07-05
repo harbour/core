@@ -66,6 +66,7 @@
         :textKeys()                                         -> pQStringList
         :imageFormat_1( cFileName )                         -> pQByteArray
         :imageFormat_2( pDevice )                           -> pQByteArray
+        :supportedImageFormats()                            -> pQList<QByteArray>
 
     $DESCRIPTION$
 

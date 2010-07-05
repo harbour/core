@@ -143,6 +143,7 @@ CREATE CLASS QByteArray INHERIT HbQtObjectHandler
    METHOD  setNum_7( nN, cF, nPrec )
    METHOD  simplified()
    METHOD  size()
+   METHOD  split( cSep )
    METHOD  squeeze()
    METHOD  startsWith( pBa )
    METHOD  startsWith_1( pStr )
@@ -479,6 +480,10 @@ METHOD QByteArray:simplified()
 
 METHOD QByteArray:size()
    RETURN Qt_QByteArray_size( ::pPtr )
+
+
+METHOD QByteArray:split( cSep )
+   RETURN Qt_QByteArray_split( ::pPtr, cSep )
 
 
 METHOD QByteArray:squeeze()

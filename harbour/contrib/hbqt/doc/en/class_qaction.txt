@@ -30,6 +30,7 @@
     $METHODS$
         :actionGroup()                                      -> Group
         :activate( nEvent )                                 -> NIL
+        :associatedWidgets()                                -> pQList<QWidget *>
         :autoRepeat()                                       -> lBool
         :data()                                             -> pQVariant
         :font()                                             -> pQFont
@@ -64,6 +65,7 @@
         :setWhatsThis( cWhat )                              -> NIL
         :shortcut()                                         -> pQKeySequence
         :shortcutContext()                                  -> nQt::ShortcutContext
+        :shortcuts()                                        -> pQList<QKeySequence>
         :showStatusText( pWidget )                          -> lBool
         :statusTip()                                        -> cQString
         :text()                                             -> cQString

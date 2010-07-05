@@ -32,6 +32,7 @@
         :isEmpty()                                          -> lBool
         :matches( pSeq )                                    -> nSequenceMatch
         :toString( nFormat )                                -> cQString
+        :keyBindings( nKey )                                -> pQList<QKeySequence>
 
     $DESCRIPTION$
 

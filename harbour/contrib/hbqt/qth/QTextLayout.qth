@@ -82,7 +82,7 @@ enum CursorMode { SkipCharacters, SkipWords }
 </ENUMS>
 
 <PROTOS>
-QList<FormatRange> additionalFormats () const
+//QList<FormatRange> additionalFormats () const
 void beginLayout ()
 QRectF boundingRect () const
 bool cacheEnabled () const

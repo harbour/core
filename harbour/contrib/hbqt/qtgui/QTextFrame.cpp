@@ -65,20 +65,6 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
-/*
- *  Constructed[ 7/10 [ 70.00% ] ]
- *
- *  *** Unconvered Prototypes ***
- *  -----------------------------
- *
- *  QList<QTextFrame *> childFrames () const
- *
- *  *** Commented out protos which construct fine but do not compile ***
- *
- *  //iterator begin () const
- *  //iterator end () const
- */
-
 #include <QtCore/QPointer>
 
 #include <QtGui/QTextFrame>
@@ -160,6 +146,20 @@ HB_FUNC( QT_QTEXTFRAME )
    pObj =  new QTextFrame( hbqt_par_QTextDocument( 1 ) ) ;
 
    hb_retptrGC( hbqt_gcAllocate_QTextFrame( ( void * ) pObj, true ) );
+}
+
+/*
+ * QList<QTextFrame *> childFrames () const
+ */
+HB_FUNC( QT_QTEXTFRAME_CHILDFRAMES )
+{
+   QTextFrame * p = hbqt_par_QTextFrame( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QTextFrame *>( ( p )->childFrames() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTFRAME_CHILDFRAMES FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QTextFrame *>( ( p )->childFrames() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*

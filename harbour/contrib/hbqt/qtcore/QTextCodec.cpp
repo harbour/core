@@ -70,20 +70,6 @@
  *  flags ConversionFlags
  */
 
-/*
- *  Constructed[ 20/23 [ 86.96% ] ]
- *
- *  *** Unconvered Prototypes ***
- *  -----------------------------
- *
- *  virtual QList<QByteArray> aliases () const
- *
- *  *** Commented out protos which construct fine but do not compile ***
- *
- *  //QByteArray fromUnicode ( const QChar * input, int number, ConverterState * state = 0 ) const
- *  // QString toUnicode ( const char * input, int size, ConverterState * state = 0 ) const
- */
-
 #include <QtCore/QPointer>
 
 #include <QtCore/QTextCodec>
@@ -134,6 +120,20 @@ void * hbqt_gcAllocate_QTextCodec( void * pObj, bool bNew )
 HB_FUNC( QT_QTEXTCODEC )
 {
    //hb_retptr( ( QTextCodec* ) new QTextCodec() );
+}
+
+/*
+ * virtual QList<QByteArray> aliases () const
+ */
+HB_FUNC( QT_QTEXTCODEC_ALIASES )
+{
+   QTextCodec * p = hbqt_par_QTextCodec( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QByteArray>( ( p )->aliases() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTCODEC_ALIASES FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QByteArray>( ( p )->aliases() ), true ) ); p is NULL" ) );
+   }
 }
 
 /*

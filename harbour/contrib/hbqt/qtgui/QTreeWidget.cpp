@@ -66,15 +66,13 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 37/45 [ 82.22% ] ]
+ *  Constructed[ 39/45 [ 86.67% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
  *
  *  void addTopLevelItems ( const QList<QTreeWidgetItem *> & items )
- *  QList<QTreeWidgetItem *> findItems ( const QString & text, Qt::MatchFlags flags, int column = 0 ) const
  *  void insertTopLevelItems ( int index, const QList<QTreeWidgetItem *> & items )
- *  QList<QTreeWidgetItem *> selectedItems () const
  *  }
  *  }
  *  }
@@ -248,6 +246,20 @@ HB_FUNC( QT_QTREEWIDGET_EDITITEM )
 }
 
 /*
+ * QList<QTreeWidgetItem *> findItems ( const QString & text, Qt::MatchFlags flags, int column = 0 ) const
+ */
+HB_FUNC( QT_QTREEWIDGET_FINDITEMS )
+{
+   QTreeWidget * p = hbqt_par_QTreeWidget( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QTreeWidgetItem *>( ( p )->findItems( QTreeWidget::tr( hb_parc( 2 ) ), ( Qt::MatchFlags ) hb_parni( 3 ), hb_parni( 4 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGET_FINDITEMS FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QTreeWidgetItem *>( ( p )->findItems( QTreeWidget::tr( hb_parc( 2 ) ), ( Qt::MatchFlags ) hb_parni( 3 ), hb_parni( 4 ) ) ), true ) ); p is NULL" ) );
+   }
+}
+
+/*
  * QTreeWidgetItem * headerItem () const
  */
 HB_FUNC( QT_QTREEWIDGET_HEADERITEM )
@@ -412,6 +424,20 @@ HB_FUNC( QT_QTREEWIDGET_REMOVEITEMWIDGET )
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGET_REMOVEITEMWIDGET FP=( p )->removeItemWidget( hbqt_par_QTreeWidgetItem( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+   }
+}
+
+/*
+ * QList<QTreeWidgetItem *> selectedItems () const
+ */
+HB_FUNC( QT_QTREEWIDGET_SELECTEDITEMS )
+{
+   QTreeWidget * p = hbqt_par_QTreeWidget( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QTreeWidgetItem *>( ( p )->selectedItems() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGET_SELECTEDITEMS FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QTreeWidgetItem *>( ( p )->selectedItems() ), true ) ); p is NULL" ) );
    }
 }
 

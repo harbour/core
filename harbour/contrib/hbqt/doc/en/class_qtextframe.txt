@@ -28,6 +28,7 @@
     $RETURNS$
         An instance of the object of type QTextFrame
     $METHODS$
+        :childFrames()                                      -> pQList<QTextFrame *>
         :firstCursorPosition()                              -> pQTextCursor
         :firstPosition()                                    -> nInt
         :frameFormat()                                      -> Format

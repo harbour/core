@@ -30,6 +30,7 @@
     $METHODS$
         :appendRow( pItem )                                 -> NIL
         :clear()                                            -> NIL
+        :findItems( cText, nFlags, nColumn )                -> pQList<QStandardItem *>
         :horizontalHeaderItem( nColumn )                    -> pQStandardItem
         :indexFromItem( pItem )                             -> pQModelIndex
         :insertColumn( nColumn, pParent )                   -> lBool
@@ -49,8 +50,10 @@
         :setVerticalHeaderItem( nRow, pItem )               -> NIL
         :setVerticalHeaderLabels( pLabels )                 -> NIL
         :sortRole()                                         -> nInt
+        :takeColumn( nColumn )                              -> pQList<QStandardItem *>
         :takeHorizontalHeaderItem( nColumn )                -> pQStandardItem
         :takeItem( nRow, nColumn )                          -> pQStandardItem
+        :takeRow( nRow )                                    -> pQList<QStandardItem *>
         :takeVerticalHeaderItem( nRow )                     -> pQStandardItem
         :verticalHeaderItem( nRow )                         -> pQStandardItem
 

@@ -71,6 +71,7 @@ CREATE CLASS QNetworkRequest INHERIT HbQtObjectHandler
    METHOD  hasRawHeader( pHeaderName )
    METHOD  header( nHeader )
    METHOD  rawHeader( pHeaderName )
+   METHOD  rawHeaderList()
    METHOD  setAttribute( nCode, pValue )
    METHOD  setHeader( nHeader, pValue )
    METHOD  setRawHeader( pHeaderName, pHeaderValue )
@@ -103,6 +104,10 @@ METHOD QNetworkRequest:header( nHeader )
 
 METHOD QNetworkRequest:rawHeader( pHeaderName )
    RETURN Qt_QNetworkRequest_rawHeader( ::pPtr, hbqt_ptr( pHeaderName ) )
+
+
+METHOD QNetworkRequest:rawHeaderList()
+   RETURN Qt_QNetworkRequest_rawHeaderList( ::pPtr )
 
 
 METHOD QNetworkRequest:setAttribute( nCode, pValue )

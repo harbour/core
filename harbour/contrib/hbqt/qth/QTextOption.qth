@@ -98,7 +98,7 @@ void setUseDesignMetrics ( bool enable )
 void setWrapMode ( WrapMode mode )
 QList<qreal> tabArray () const
 qreal tabStop () const
-QList<Tab> tabs () const
+//QList<Tab> tabs () const
 Qt::LayoutDirection textDirection () const
 bool useDesignMetrics () const
 WrapMode wrapMode () const

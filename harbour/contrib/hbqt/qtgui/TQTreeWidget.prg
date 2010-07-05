@@ -73,6 +73,7 @@ CREATE CLASS QTreeWidget INHERIT HbQtObjectHandler, QTreeView
    METHOD  currentColumn()
    METHOD  currentItem()
    METHOD  editItem( pItem, nColumn )
+   METHOD  findItems( cText, nFlags, nColumn )
    METHOD  headerItem()
    METHOD  indexOfTopLevelItem( pItem )
    METHOD  insertTopLevelItem( nIndex, pItem )
@@ -85,6 +86,7 @@ CREATE CLASS QTreeWidget INHERIT HbQtObjectHandler, QTreeView
    METHOD  itemWidget( pItem, nColumn )
    METHOD  openPersistentEditor( pItem, nColumn )
    METHOD  removeItemWidget( pItem, nColumn )
+   METHOD  selectedItems()
    METHOD  setColumnCount( nColumns )
    METHOD  setCurrentItem( pItem )
    METHOD  setCurrentItem_1( pItem, nColumn )
@@ -141,6 +143,10 @@ METHOD QTreeWidget:editItem( pItem, nColumn )
    RETURN Qt_QTreeWidget_editItem( ::pPtr, hbqt_ptr( pItem ), nColumn )
 
 
+METHOD QTreeWidget:findItems( cText, nFlags, nColumn )
+   RETURN Qt_QTreeWidget_findItems( ::pPtr, cText, nFlags, nColumn )
+
+
 METHOD QTreeWidget:headerItem()
    RETURN Qt_QTreeWidget_headerItem( ::pPtr )
 
@@ -187,6 +193,10 @@ METHOD QTreeWidget:openPersistentEditor( pItem, nColumn )
 
 METHOD QTreeWidget:removeItemWidget( pItem, nColumn )
    RETURN Qt_QTreeWidget_removeItemWidget( ::pPtr, hbqt_ptr( pItem ), nColumn )
+
+
+METHOD QTreeWidget:selectedItems()
+   RETURN Qt_QTreeWidget_selectedItems( ::pPtr )
 
 
 METHOD QTreeWidget:setColumnCount( nColumns )

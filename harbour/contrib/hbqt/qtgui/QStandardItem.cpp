@@ -70,7 +70,7 @@
  */
 
 /*
- *  Constructed[ 71/79 [ 89.87% ] ]
+ *  Constructed[ 73/79 [ 92.41% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
@@ -81,8 +81,6 @@
  *  void insertColumn ( int column, const QList<QStandardItem *> & items )
  *  void insertRow ( int row, const QList<QStandardItem *> & items )
  *  void insertRows ( int row, const QList<QStandardItem *> & items )
- *  QList<QStandardItem *> takeColumn ( int column )
- *  QList<QStandardItem *> takeRow ( int row )
  */
 
 #include <QtCore/QPointer>
@@ -1066,6 +1064,34 @@ HB_FUNC( QT_QSTANDARDITEM_TAKECHILD )
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_TAKECHILD FP=hb_retptrGC( hbqt_gcAllocate_QStandardItem( ( p )->takeChild( hb_parni( 2 ), hb_parni( 3 ) ), false ) ); p is NULL" ) );
+   }
+}
+
+/*
+ * QList<QStandardItem *> takeColumn ( int column )
+ */
+HB_FUNC( QT_QSTANDARDITEM_TAKECOLUMN )
+{
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QStandardItem *>( ( p )->takeColumn( hb_parni( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_TAKECOLUMN FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QStandardItem *>( ( p )->takeColumn( hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
+   }
+}
+
+/*
+ * QList<QStandardItem *> takeRow ( int row )
+ */
+HB_FUNC( QT_QSTANDARDITEM_TAKEROW )
+{
+   QStandardItem * p = hbqt_par_QStandardItem( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QStandardItem *>( ( p )->takeRow( hb_parni( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTANDARDITEM_TAKEROW FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QStandardItem *>( ( p )->takeRow( hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
    }
 }
 

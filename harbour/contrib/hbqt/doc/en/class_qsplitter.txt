@@ -47,6 +47,7 @@
         :setOpaqueResize( lOpaque )                         -> NIL
         :setOrientation( nQt::Orientation )                 -> NIL
         :setStretchFactor( nIndex, nStretch )               -> NIL
+        :sizes()                                            -> pQList<int>
         :widget( nIndex )                                   -> pQWidget
 
     $DESCRIPTION$

@@ -75,6 +75,8 @@ CREATE CLASS QFontDatabase INHERIT HbQtObjectHandler
    METHOD  isScalable( cFamily, cStyle )
    METHOD  isSmoothlyScalable( cFamily, cStyle )
    METHOD  italic( cFamily, cStyle )
+   METHOD  pointSizes( cFamily, cStyle )
+   METHOD  smoothSizes( cFamily, cStyle )
    METHOD  styleString( pFont )
    METHOD  styleString_1( pFontInfo )
    METHOD  styles( cFamily )
@@ -84,6 +86,7 @@ CREATE CLASS QFontDatabase INHERIT HbQtObjectHandler
    METHOD  applicationFontFamilies( nId )
    METHOD  removeAllApplicationFonts()
    METHOD  removeApplicationFont( nId )
+   METHOD  standardSizes()
    METHOD  supportsThreadedFontRendering()
    METHOD  writingSystemName( nWritingSystem )
    METHOD  writingSystemSample( nWritingSystem )
@@ -132,6 +135,14 @@ METHOD QFontDatabase:italic( cFamily, cStyle )
    RETURN Qt_QFontDatabase_italic( ::pPtr, cFamily, cStyle )
 
 
+METHOD QFontDatabase:pointSizes( cFamily, cStyle )
+   RETURN Qt_QFontDatabase_pointSizes( ::pPtr, cFamily, cStyle )
+
+
+METHOD QFontDatabase:smoothSizes( cFamily, cStyle )
+   RETURN Qt_QFontDatabase_smoothSizes( ::pPtr, cFamily, cStyle )
+
+
 METHOD QFontDatabase:styleString( pFont )
    RETURN Qt_QFontDatabase_styleString( ::pPtr, hbqt_ptr( pFont ) )
 
@@ -166,6 +177,10 @@ METHOD QFontDatabase:removeAllApplicationFonts()
 
 METHOD QFontDatabase:removeApplicationFont( nId )
    RETURN Qt_QFontDatabase_removeApplicationFont( ::pPtr, nId )
+
+
+METHOD QFontDatabase:standardSizes()
+   RETURN Qt_QFontDatabase_standardSizes( ::pPtr )
 
 
 METHOD QFontDatabase:supportsThreadedFontRendering()

@@ -90,6 +90,7 @@ CREATE CLASS QStringList INHERIT HbQtObjectHandler, QList
    METHOD  insert( nI, cValue )
    METHOD  last()
    METHOD  last_1()
+   METHOD  mid( nPos, nLength )
    METHOD  prepend( cValue )
    METHOD  push_back( cValue )
    METHOD  push_front( cValue )
@@ -205,6 +206,10 @@ METHOD QStringList:last()
 
 METHOD QStringList:last_1()
    RETURN Qt_QStringList_last_1( ::pPtr )
+
+
+METHOD QStringList:mid( nPos, nLength )
+   RETURN Qt_QStringList_mid( ::pPtr, nPos, nLength )
 
 
 METHOD QStringList:prepend( cValue )

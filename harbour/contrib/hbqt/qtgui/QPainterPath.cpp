@@ -69,22 +69,6 @@
  *  enum ElementType { MoveToElement, LineToElement, CurveToElement, CurveToDataElement }
  */
 
-/*
- *  Constructed[ 51/56 [ 91.07% ] ]
- *
- *  *** Unconvered Prototypes ***
- *  -----------------------------
- *
- *  QList<QPolygonF> toFillPolygons ( const QTransform & matrix ) const
- *  QList<QPolygonF> toFillPolygons ( const QMatrix & matrix = QMatrix() ) const
- *  QList<QPolygonF> toSubpathPolygons ( const QTransform & matrix ) const
- *  QList<QPolygonF> toSubpathPolygons ( const QMatrix & matrix = QMatrix() ) const
- *
- *  *** Commented out protos which construct fine but do not compile ***
- *
- *  // const QPainterPath::Element & elementAt ( int index ) const
- */
-
 #include <QtCore/QPointer>
 
 #include <QtGui/QPainterPath>
@@ -844,6 +828,34 @@ HB_FUNC( QT_QPAINTERPATH_TOFILLPOLYGON_1 )
 }
 
 /*
+ * QList<QPolygonF> toFillPolygons ( const QTransform & matrix ) const
+ */
+HB_FUNC( QT_QPAINTERPATH_TOFILLPOLYGONS )
+{
+   QPainterPath * p = hbqt_par_QPainterPath( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QPolygonF>( ( p )->toFillPolygons( *hbqt_par_QTransform( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPAINTERPATH_TOFILLPOLYGONS FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QPolygonF>( ( p )->toFillPolygons( *hbqt_par_QTransform( 2 ) ) ), true ) ); p is NULL" ) );
+   }
+}
+
+/*
+ * QList<QPolygonF> toFillPolygons ( const QMatrix & matrix = QMatrix() ) const
+ */
+HB_FUNC( QT_QPAINTERPATH_TOFILLPOLYGONS_1 )
+{
+   QPainterPath * p = hbqt_par_QPainterPath( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QPolygonF>( ( p )->toFillPolygons( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QMatrix( 2 ) : QMatrix() ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPAINTERPATH_TOFILLPOLYGONS_1 FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QPolygonF>( ( p )->toFillPolygons( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QMatrix( 2 ) : QMatrix() ) ) ), true ) ); p is NULL" ) );
+   }
+}
+
+/*
  * QPainterPath toReversed () const
  */
 HB_FUNC( QT_QPAINTERPATH_TOREVERSED )
@@ -854,6 +866,34 @@ HB_FUNC( QT_QPAINTERPATH_TOREVERSED )
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPAINTERPATH_TOREVERSED FP=hb_retptrGC( hbqt_gcAllocate_QPainterPath( new QPainterPath( ( p )->toReversed() ), true ) ); p is NULL" ) );
+   }
+}
+
+/*
+ * QList<QPolygonF> toSubpathPolygons ( const QTransform & matrix ) const
+ */
+HB_FUNC( QT_QPAINTERPATH_TOSUBPATHPOLYGONS )
+{
+   QPainterPath * p = hbqt_par_QPainterPath( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QPolygonF>( ( p )->toSubpathPolygons( *hbqt_par_QTransform( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPAINTERPATH_TOSUBPATHPOLYGONS FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QPolygonF>( ( p )->toSubpathPolygons( *hbqt_par_QTransform( 2 ) ) ), true ) ); p is NULL" ) );
+   }
+}
+
+/*
+ * QList<QPolygonF> toSubpathPolygons ( const QMatrix & matrix = QMatrix() ) const
+ */
+HB_FUNC( QT_QPAINTERPATH_TOSUBPATHPOLYGONS_1 )
+{
+   QPainterPath * p = hbqt_par_QPainterPath( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QPolygonF>( ( p )->toSubpathPolygons( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QMatrix( 2 ) : QMatrix() ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPAINTERPATH_TOSUBPATHPOLYGONS_1 FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QPolygonF>( ( p )->toSubpathPolygons( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QMatrix( 2 ) : QMatrix() ) ) ), true ) ); p is NULL" ) );
    }
 }
 

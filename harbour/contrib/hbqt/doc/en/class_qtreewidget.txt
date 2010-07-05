@@ -34,6 +34,7 @@
         :currentColumn()                                    -> nInt
         :currentItem()                                      -> Item
         :editItem( pItem, nColumn )                         -> NIL
+        :findItems( cText, nFlags, nColumn )                -> pQList<QTreeWidgetItem *>
         :headerItem()                                       -> Item
         :indexOfTopLevelItem( pItem )                       -> nInt
         :insertTopLevelItem( nIndex, pItem )                -> NIL
@@ -46,6 +47,7 @@
         :itemWidget( pItem, nColumn )                       -> pQWidget
         :openPersistentEditor( pItem, nColumn )             -> NIL
         :removeItemWidget( pItem, nColumn )                 -> NIL
+        :selectedItems()                                    -> pQList<QTreeWidgetItem *>
         :setColumnCount( nColumns )                         -> NIL
         :setCurrentItem( pItem )                            -> NIL
         :setCurrentItem_1( pItem, nColumn )                 -> NIL

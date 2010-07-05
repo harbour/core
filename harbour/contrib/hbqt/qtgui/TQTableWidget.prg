@@ -75,6 +75,7 @@ CREATE CLASS QTableWidget INHERIT HbQtObjectHandler, QTableView
    METHOD  currentItem()
    METHOD  currentRow()
    METHOD  editItem( pItem )
+   METHOD  findItems( cText, nFlags )
    METHOD  horizontalHeaderItem( nColumn )
    METHOD  item( nRow, nColumn )
    METHOD  itemAt( pPoint )
@@ -84,6 +85,8 @@ CREATE CLASS QTableWidget INHERIT HbQtObjectHandler, QTableView
    METHOD  removeCellWidget( nRow, nColumn )
    METHOD  row( pItem )
    METHOD  rowCount()
+   METHOD  selectedItems()
+   METHOD  selectedRanges()
    METHOD  setCellWidget( nRow, nColumn, pWidget )
    METHOD  setColumnCount( nColumns )
    METHOD  setCurrentCell( nRow, nColumn )
@@ -158,6 +161,10 @@ METHOD QTableWidget:editItem( pItem )
    RETURN Qt_QTableWidget_editItem( ::pPtr, hbqt_ptr( pItem ) )
 
 
+METHOD QTableWidget:findItems( cText, nFlags )
+   RETURN Qt_QTableWidget_findItems( ::pPtr, cText, nFlags )
+
+
 METHOD QTableWidget:horizontalHeaderItem( nColumn )
    RETURN Qt_QTableWidget_horizontalHeaderItem( ::pPtr, nColumn )
 
@@ -192,6 +199,14 @@ METHOD QTableWidget:row( pItem )
 
 METHOD QTableWidget:rowCount()
    RETURN Qt_QTableWidget_rowCount( ::pPtr )
+
+
+METHOD QTableWidget:selectedItems()
+   RETURN Qt_QTableWidget_selectedItems( ::pPtr )
+
+
+METHOD QTableWidget:selectedRanges()
+   RETURN Qt_QTableWidget_selectedRanges( ::pPtr )
 
 
 METHOD QTableWidget:setCellWidget( nRow, nColumn, pWidget )

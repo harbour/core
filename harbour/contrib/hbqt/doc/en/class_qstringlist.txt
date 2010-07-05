@@ -49,6 +49,7 @@
         :insert( nI, cValue )                               -> NIL
         :last()                                             -> cQString
         :last_1()                                           -> cQString
+        :mid( nPos, nLength )                               -> pQList<QString>
         :prepend( cValue )                                  -> NIL
         :push_back( cValue )                                -> NIL
         :push_front( cValue )                               -> NIL

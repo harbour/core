@@ -72,6 +72,7 @@ CREATE CLASS QKeySequence INHERIT HbQtObjectHandler
    METHOD  matches( pSeq )
    METHOD  toString( nFormat )
    METHOD  fromString( cStr, nFormat )
+   METHOD  keyBindings( nKey )
    METHOD  mnemonic( cText )
 
    ENDCLASS
@@ -104,6 +105,10 @@ METHOD QKeySequence:toString( nFormat )
 
 METHOD QKeySequence:fromString( cStr, nFormat )
    RETURN Qt_QKeySequence_fromString( ::pPtr, cStr, nFormat )
+
+
+METHOD QKeySequence:keyBindings( nKey )
+   RETURN Qt_QKeySequence_keyBindings( ::pPtr, nKey )
 
 
 METHOD QKeySequence:mnemonic( cText )

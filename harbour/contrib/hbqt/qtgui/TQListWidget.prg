@@ -75,6 +75,7 @@ CREATE CLASS QListWidget INHERIT HbQtObjectHandler, QListView
    METHOD  currentItem()
    METHOD  currentRow()
    METHOD  editItem( pItem )
+   METHOD  findItems( cText, nFlags )
    METHOD  insertItem( nRow, pItem )
    METHOD  insertItem_1( nRow, cLabel )
    METHOD  insertItems( nRow, pLabels )
@@ -86,6 +87,7 @@ CREATE CLASS QListWidget INHERIT HbQtObjectHandler, QListView
    METHOD  openPersistentEditor( pItem )
    METHOD  removeItemWidget( pItem )
    METHOD  row( pItem )
+   METHOD  selectedItems()
    METHOD  setCurrentItem( pItem )
    METHOD  setCurrentItem_1( pItem, nCommand )
    METHOD  setCurrentRow( nRow )
@@ -142,6 +144,10 @@ METHOD QListWidget:editItem( pItem )
    RETURN Qt_QListWidget_editItem( ::pPtr, hbqt_ptr( pItem ) )
 
 
+METHOD QListWidget:findItems( cText, nFlags )
+   RETURN Qt_QListWidget_findItems( ::pPtr, cText, nFlags )
+
+
 METHOD QListWidget:insertItem( nRow, pItem )
    RETURN Qt_QListWidget_insertItem( ::pPtr, nRow, hbqt_ptr( pItem ) )
 
@@ -184,6 +190,10 @@ METHOD QListWidget:removeItemWidget( pItem )
 
 METHOD QListWidget:row( pItem )
    RETURN Qt_QListWidget_row( ::pPtr, hbqt_ptr( pItem ) )
+
+
+METHOD QListWidget:selectedItems()
+   RETURN Qt_QListWidget_selectedItems( ::pPtr )
 
 
 METHOD QListWidget:setCurrentItem( pItem )

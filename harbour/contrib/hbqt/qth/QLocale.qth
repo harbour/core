@@ -139,7 +139,7 @@ ushort toUShort ( const QString & s, bool * ok = 0, int base = 0 ) const
 QChar zeroDigit () const
 
 QLocale c ()
-QList<Country> countriesForLanguage ( Language language )
+//QList<Country> countriesForLanguage ( Language language )
 QString countryToString ( Country country )
 QString languageToString ( Language language )
 void setDefault ( const QLocale & locale )

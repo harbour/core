@@ -72,15 +72,6 @@
  *  flags StandardButtons
  */
 
-/*
- *  Constructed[ 38/39 [ 97.44% ] ]
- *
- *  *** Unconvered Prototypes ***
- *  -----------------------------
- *
- *  QList<QAbstractButton *> buttons () const
- */
-
 #include <QtCore/QPointer>
 
 #include <QtGui/QMessageBox>
@@ -231,6 +222,20 @@ HB_FUNC( QT_QMESSAGEBOX_BUTTONROLE )
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMESSAGEBOX_BUTTONROLE FP=hb_retni( ( QMessageBox::ButtonRole ) ( p )->buttonRole( hbqt_par_QAbstractButton( 2 ) ) ); p is NULL" ) );
+   }
+}
+
+/*
+ * QList<QAbstractButton *> buttons () const
+ */
+HB_FUNC( QT_QMESSAGEBOX_BUTTONS )
+{
+   QMessageBox * p = hbqt_par_QMessageBox( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QAbstractButton *>( ( p )->buttons() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMESSAGEBOX_BUTTONS FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QAbstractButton *>( ( p )->buttons() ), true ) ); p is NULL" ) );
    }
 }
 

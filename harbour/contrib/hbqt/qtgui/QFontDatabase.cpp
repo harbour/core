@@ -69,19 +69,6 @@
  *  enum WritingSystem { Any, Latin, Greek, Cyrillic, ..., Runic }
  */
 
-/*
- *  Constructed[ 20/25 [ 80.00% ] ]
- *
- *  *** Unconvered Prototypes ***
- *  -----------------------------
- *
- *  QList<int> pointSizes ( const QString & family, const QString & style = QString() )
- *  QList<int> smoothSizes ( const QString & family, const QString & style )
- *  QList<WritingSystem> writingSystems () const
- *  QList<WritingSystem> writingSystems ( const QString & family ) const
- *  QList<int> standardSizes ()
- */
-
 #include <QtCore/QPointer>
 
 #include <QtCore/QStringList>
@@ -266,6 +253,34 @@ HB_FUNC( QT_QFONTDATABASE_ITALIC )
 }
 
 /*
+ * QList<int> pointSizes ( const QString & family, const QString & style = QString() )
+ */
+HB_FUNC( QT_QFONTDATABASE_POINTSIZES )
+{
+   QFontDatabase * p = hbqt_par_QFontDatabase( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<int>( ( p )->pointSizes( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONTDATABASE_POINTSIZES FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<int>( ( p )->pointSizes( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ) ), true ) ); p is NULL" ) );
+   }
+}
+
+/*
+ * QList<int> smoothSizes ( const QString & family, const QString & style )
+ */
+HB_FUNC( QT_QFONTDATABASE_SMOOTHSIZES )
+{
+   QFontDatabase * p = hbqt_par_QFontDatabase( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<int>( ( p )->smoothSizes( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONTDATABASE_SMOOTHSIZES FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<int>( ( p )->smoothSizes( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ) ), true ) ); p is NULL" ) );
+   }
+}
+
+/*
  * QString styleString ( const QFont & font )
  */
 HB_FUNC( QT_QFONTDATABASE_STYLESTRING )
@@ -388,6 +403,20 @@ HB_FUNC( QT_QFONTDATABASE_REMOVEAPPLICATIONFONT )
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONTDATABASE_REMOVEAPPLICATIONFONT FP=hb_retl( ( p )->removeApplicationFont( hb_parni( 2 ) ) ); p is NULL" ) );
+   }
+}
+
+/*
+ * QList<int> standardSizes ()
+ */
+HB_FUNC( QT_QFONTDATABASE_STANDARDSIZES )
+{
+   QFontDatabase * p = hbqt_par_QFontDatabase( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<int>( ( p )->standardSizes() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONTDATABASE_STANDARDSIZES FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<int>( ( p )->standardSizes() ), true ) ); p is NULL" ) );
    }
 }
 
