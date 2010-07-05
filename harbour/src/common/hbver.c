@@ -748,9 +748,9 @@ char * hb_verCompiler( void )
    iVerMinor = __PCC_MINOR__;
    iVerPatch = __PCC_MINORMINOR__;
 
-   #if defined( __GCC__ )
-      hb_strncpy( szSub, "(with GCC %d.%d.%d emulation)",
-                  __GNUC__, __GNUC_MINOR__, __GNUC_PATCHLEVEL__ )
+   #if defined( __GNUC__ )
+      hb_snprintf( szSub, sizeof( szSub ), " (GCC %d.%d.%d emul.)",
+                   __GNUC__, __GNUC_MINOR__, __GNUC_PATCHLEVEL__ );
    #endif
 
 #elif defined( __GNUC__ )

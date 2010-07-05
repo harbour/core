@@ -775,7 +775,7 @@ static void hb_gt_dos_mouse_GetBounds( PHB_GT pGT, int * piTop, int * piLeft, in
 
 static void hb_gt_dos_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFilenoStdout, HB_FHANDLE hFilenoStderr )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_dos_Init(%p,%p,%p,%p)", pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_dos_Init(%p,%d,%d,%d)", pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr));
 
    s_bBreak = HB_FALSE;
 

@@ -80,10 +80,10 @@ else
 endif
 
 clean::
-	$(if $(wildcard $(HB_HOST_BIN_DIR)/hbrun$(HB_HOST_BIN_EXT)),+$(HB_HOST_BIN_DIR)/hbrun$(HB_HOST_BIN_EXT) --hb:gtcgi $(TOP)$(ROOT)contrib/makefile.hbs clean migr,)
+	$(if $(wildcard $(HB_HOST_BIN_DIR)/hbrun$(HB_HOST_BIN_EXT)),+$(HB_HOST_BIN_DIR)/hbrun$(HB_HOST_BIN_EXT) --hb:gtcgi $(TOP)$(ROOT)contrib/makefile.hbs clean migr,@$(ECHO) $(ECHOQUOTE)! Warning: hbrun not found, contrib/makefile.hbs not run.$(ECHOQUOTE))
 
 install::
-	$(if $(wildcard $(HB_HOST_BIN_DIR)/hbrun$(HB_HOST_BIN_EXT)),+$(HB_HOST_BIN_DIR)/hbrun$(HB_HOST_BIN_EXT) --hb:gtcgi $(TOP)$(ROOT)contrib/makefile.hbs install migr,)
+	$(if $(wildcard $(HB_HOST_BIN_DIR)/hbrun$(HB_HOST_BIN_EXT)),+$(HB_HOST_BIN_DIR)/hbrun$(HB_HOST_BIN_EXT) --hb:gtcgi $(TOP)$(ROOT)contrib/makefile.hbs install migr,@$(ECHO) $(ECHOQUOTE)! Warning: hbrun not found, contrib/makefile.hbs not run.$(ECHOQUOTE))
 
 all:
-	$(if $(wildcard $(HB_HOST_BIN_DIR)/hbrun$(HB_HOST_BIN_EXT)),+$(HB_HOST_BIN_DIR)/hbrun$(HB_HOST_BIN_EXT) --hb:gtcgi $(TOP)$(ROOT)contrib/makefile.hbs all migr,)
+	$(if $(wildcard $(HB_HOST_BIN_DIR)/hbrun$(HB_HOST_BIN_EXT)),+$(HB_HOST_BIN_DIR)/hbrun$(HB_HOST_BIN_EXT) --hb:gtcgi $(TOP)$(ROOT)contrib/makefile.hbs all migr,@$(ECHO) $(ECHOQUOTE)! Warning: hbrun not found, contrib/makefile.hbs not run.$(ECHOQUOTE))

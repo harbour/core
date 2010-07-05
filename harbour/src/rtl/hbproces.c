@@ -242,7 +242,7 @@ static int hb_fsProcessExec( const char * pszFilename,
 {
    int iResult = FS_ERROR;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsProcessExec(%s, %p, %p, %p, %d, %p)", pszFilename, ( void * ) ( HB_PTRDIFF ) hStdin, ( void * ) ( HB_PTRDIFF ) hStdout, ( void * ) ( HB_PTRDIFF ) hStderr));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsProcessExec(%s, %p, %p, %p)", pszFilename, ( void * ) ( HB_PTRDIFF ) hStdin, ( void * ) ( HB_PTRDIFF ) hStdout, ( void * ) ( HB_PTRDIFF ) hStderr));
 
 #if defined( HB_OS_WIN_CE )
 {
@@ -968,6 +968,10 @@ int hb_fsProcessRun( const char * pszFilename,
    char sTmpIn[ HB_PATH_MAX ];
    char sTmpOut[ HB_PATH_MAX ];
    char sTmpErr[ HB_PATH_MAX ];
+
+   HB_SYMBOL_UNUSED( phStdin );
+   HB_SYMBOL_UNUSED( ulOutSize );
+   HB_SYMBOL_UNUSED( ulErrSize );
 
    sTmpIn[ 0 ] = sTmpOut[ 0 ] = sTmpErr[ 0 ] = '\0';
    if( pStdInBuf )

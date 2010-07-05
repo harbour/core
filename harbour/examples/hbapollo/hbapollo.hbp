@@ -17,7 +17,7 @@
 
 {HB_WITH_APOLLO_VER61}-cflags=-DHB_WITH_APOLLO_VER61
 
--instfile=apollo.ch
+-instfile=inc:apollo.ch
 
 apollo.c
 apollo1.prg

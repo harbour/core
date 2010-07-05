@@ -1964,17 +1964,19 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
       CASE Left( cParamL, Len( "-instfile=" ) ) == "-instfile="
 
-         cParam := PathSepToSelf( MacroProc( hbmk, SubStr( cParam, Len( "-instfile=" ) + 1 ), aParam[ _PAR_cFileName ] ) )
+         cParam := MacroProc( hbmk, SubStr( cParam, Len( "-instfile=" ) + 1 ), aParam[ _PAR_cFileName ] )
+         inst_split_arg( cParam, @tmp, @cParam )
          FOR EACH cParam IN FN_Expand( PathProc( cParam, aParam[ _PAR_cFileName ] ), Empty( aParam[ _PAR_cFileName ] ) )
-            AAdd( hbmk[ _HBMK_aINSTFILE ], cParam )
+            AAddNewINST( hbmk[ _HBMK_aINSTFILE ], { tmp, cParam } )
          NEXT
 
       CASE Left( cParamL, Len( "-instpath=" ) ) == "-instpath=" .AND. ;
            Len( cParamL ) > Len( "-instpath=" )
 
          cParam := MacroProc( hbmk, SubStr( cParam, Len( "-instpath=" ) + 1 ), aParam[ _PAR_cFileName ] )
+         inst_split_arg( cParam, @tmp, @cParam )
          IF ! Empty( cParam )
-            AAddNew( hbmk[ _HBMK_aINSTPATH ], PathNormalize( PathProc( PathSepToSelf( cParam ), aParam[ _PAR_cFileName ] ) ) )
+            AAddNewINST( hbmk[ _HBMK_aINSTPATH ], { tmp, PathNormalize( PathProc( PathSepToSelf( cParam ), aParam[ _PAR_cFileName ] ) ) } )
          ENDIF
 
       CASE Left( cParamL, Len( "-incpath=" ) ) == "-incpath=" .AND. ;
@@ -3113,7 +3115,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       CASE hbmk[ _HBMK_cPLAT ] == "dos" .AND. hbmk[ _HBMK_cCOMP ] == "djgpp"
 
          IF hbmk[ _HBMK_lDEBUG ]
-            AAdd( hbmk[ _HBMK_aOPTC ], "-g" )
+            AAdd( hbmk[ _HBMK_aOPTC ], "-gstabs+" )
          ENDIF
          cLibLibPrefix := "lib"
          cLibPrefix := "-l"
@@ -5291,6 +5293,13 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
       PlugIn_Execute_All( hbmk, "pre_cleanup" )
 
+      IF hbmk[ _HBMK_lCLEAN ]
+         FErase( hbmk[ _HBMK_cPROGNAME ] )
+         IF lStopAfterCComp .AND. hbmk[ _HBMK_lCreateLib ]
+            /* bcc is known to create it for static libs */
+            FErase( FN_ExtSet( hbmk[ _HBMK_cPROGNAME ], ".bak" ) )
+         ENDIF
+      ENDIF
       IF ! Empty( l_cCSTUB )
          FErase( l_cCSTUB )
          FErase( FN_DirExtSet( l_cCSTUB, hbmk[ _HBMK_cWorkDir ], cObjExt ) )
@@ -5417,37 +5426,9 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             ENDIF
          ENDIF
 
-         IF ! Empty( hbmk[ _HBMK_aINSTPATH ] )
+         hb_AIns( hbmk[ _HBMK_aINSTFILE ], 1, { "", FN_NameExtGet( hbmk[ _HBMK_cPROGNAME ] ) }, .T. )
 
-            hb_AIns( hbmk[ _HBMK_aINSTFILE ], 1, FN_NameExtGet( hbmk[ _HBMK_cPROGNAME ] ), .T. )
-
-            FOR EACH tmp IN hbmk[ _HBMK_aINSTPATH ]
-               FOR EACH tmp2 IN hbmk[ _HBMK_aINSTFILE ]
-                  IF Empty( FN_NameExtGet( tmp ) )
-                     tmp1 := DirAddPathSep( tmp ) + tmp2
-                  ELSE
-                     /* If destination is a full name, don't copy the extra files, only the target */
-                     IF tmp2:__enumIndex() > 1
-                        IF hbmk[ _HBMK_lInfo ]
-                           hbmk_OutStd( hbmk, hb_StrFormat( I_( "Warning: Install path not a directory (%1$s). Extra install files not copied." ), tmp ) )
-                        ENDIF
-                        EXIT
-                     ELSE
-                        tmp1 := tmp
-                     ENDIF
-                  ENDIF
-                  IF DirBuild( FN_DirGet( tmp1 ) )
-                     IF hb_FCopy( tmp2, tmp1 ) == F_ERROR
-                        hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Copying %1$s to %2$s failed with %3$s." ), tmp2, tmp1, hb_ntos( FError() ) ) )
-                     ELSEIF hbmk[ _HBMK_lInfo ]
-                        hbmk_OutStd( hbmk, hb_StrFormat( I_( "Copied %1$s to %2$s" ), tmp2, tmp1 ) )
-                     ENDIF
-                  ELSE
-                     hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Cannot create install directory for install target %1$s." ), tmp1 ) )
-                  ENDIF
-               NEXT
-            NEXT
-         ENDIF
+         DoInstCopy( hbmk )
       ENDIF
 
       PlugIn_Execute_All( hbmk, "post_build" )
@@ -5504,6 +5485,61 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    ENDIF
 
    RETURN hbmk[ _HBMK_nErrorLevel ]
+
+#define _INST_cGroup            1
+#define _INST_cData             2
+                 #pragma linenumber=on
+STATIC PROCEDURE DoInstCopy( hbmk )
+   LOCAL aInstPath
+   LOCAL aInstFile
+   LOCAL cInstPath
+   LOCAL cInstFile
+
+   LOCAL cDestFileName
+   LOCAL nCopied
+
+   IF ! Empty( hbmk[ _HBMK_aINSTPATH ] )
+
+      FOR EACH aInstPath IN hbmk[ _HBMK_aINSTPATH ]
+
+         cInstPath := aInstPath[ _INST_cData ]
+
+         nCopied := 0 /* file copied */
+         FOR EACH aInstFile IN hbmk[ _HBMK_aINSTFILE ]
+
+            cInstFile := aInstFile[ _INST_cData ]
+
+            IF aInstPath[ _INST_cGroup ] == aInstFile[ _INST_cGroup ]
+               IF Empty( FN_NameExtGet( cInstPath ) )
+                  cDestFileName := DirAddPathSep( cInstPath ) + cInstFile
+               ELSE
+                  /* If destination is a full name, don't copy the extra files, only the first one.
+                     (for the empty group name, this will be the build target) */
+                  IF nCopied > 0
+                     IF hbmk[ _HBMK_lInfo ]
+                        hbmk_OutStd( hbmk, hb_StrFormat( I_( "Warning: Install path not a directory (%1$s). Extra install files not copied." ), cInstPath ) )
+                     ENDIF
+                     EXIT
+                  ELSE
+                     cDestFileName := cInstPath
+                  ENDIF
+               ENDIF
+               IF DirBuild( FN_DirGet( cDestFileName ) )
+                  ++nCopied
+                  IF hb_FCopy( cInstFile, cDestFileName ) == F_ERROR
+                     hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Copying %1$s to %2$s failed with %3$s." ), cInstFile, cDestFileName, hb_ntos( FError() ) ) )
+                  ELSEIF hbmk[ _HBMK_lInfo ]
+                     hbmk_OutStd( hbmk, hb_StrFormat( I_( "Copied %1$s to %2$s" ), cInstFile, cDestFileName ) )
+                  ENDIF
+               ELSE
+                  hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Cannot create install directory for install target %1$s." ), cDestFileName ) )
+               ENDIF
+            ENDIF
+         NEXT
+      NEXT
+   ENDIF
+
+   RETURN
 
 STATIC PROCEDURE DoBeep( lSuccess )
    LOCAL nRepeat := iif( lSuccess, 1, 2 )
@@ -5997,6 +6033,24 @@ STATIC FUNCTION deplst_add( hDeps, cList )
    ENDIF
 
    RETURN .T.
+
+STATIC PROCEDURE inst_split_arg( cParam, /* @ */ cName, /* @ */ cData )
+   LOCAL nPos
+
+   /* separate install group from install file or path.
+      install group must be at least 2 chars, otherwise it's considered as drive letter */
+
+   IF ( nPos := At( ":", cParam ) ) > 2
+      cName := Left( cParam, nPos - 1 )
+      cData := SubStr( cParam, nPos + 1 )
+   ELSE
+      cName := ""
+      cData := cParam
+   ENDIF
+
+   cData := PathSepToSelf( cData )
+
+   RETURN
 
 STATIC FUNCTION dep_split_arg( hbmk, cParam, /* @ */ cName, /* @ */ cData )
    LOCAL nPos
@@ -6586,10 +6640,13 @@ FUNCTION hbmk2_AddInput_RC( ctx, cFileName )
    ENDIF
    RETURN NIL
 
-FUNCTION hbmk2_AddInput_INSTFILE( ctx, cFileName )
+FUNCTION hbmk2_AddInput_INSTFILE( ctx, cFileName, cGroup )
    LOCAL hbmk := ctx_to_hbmk( ctx )
    IF hbmk != NIL .AND. ISCHARACTER( cFileName )
-      AAdd( hbmk[ _HBMK_aINSTFILE ], PathSepToSelf( cFileName ) )
+      IF ! ISCHARACTER( cGroup )
+         cGroup := ""
+      ENDIF
+      AAddNewINST( hbmk[ _HBMK_aINSTFILE ], { cGroup, PathSepToSelf( cFileName ) } )
    ENDIF
    RETURN NIL
 
@@ -6846,6 +6903,14 @@ STATIC FUNCTION AAddNewAtTop( array, xItem )
 STATIC FUNCTION AAddNew( array, xItem )
 
    IF AScan( array, {| tmp | tmp == xItem } ) == 0
+      AAdd( array, xItem )
+   ENDIF
+
+   RETURN array
+
+STATIC FUNCTION AAddNewINST( array, xItem )
+
+   IF AScan( array, {| tmp | tmp[ 2 ] == xItem[ 2 ] } ) == 0
       AAdd( array, xItem )
    ENDIF
 
@@ -7492,6 +7557,7 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
    LOCAL cLine
    LOCAL cItem
    LOCAL cItemL
+   LOCAL cName
    LOCAL tmp
 
    IF ! hb_FileExists( cFileName )
@@ -7664,19 +7730,25 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
             ENDIF
          NEXT
 
-      CASE Lower( Left( cLine, Len( "instpaths="    ) ) ) == "instpaths="    ; cLine := SubStr( cLine, Len( "instpaths="    ) + 1 )
+      CASE Lower( Left( cLine, Len( "instfiles="    ) ) ) == "instfiles="    ; cLine := SubStr( cLine, Len( "instfiles="    ) + 1 )
+
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
             cItem := MacroProc( hbmk, StrStripQuote( cItem ), cFileName )
+            inst_split_arg( cItem, @cName, @cItem )
             IF ! Empty( cItem )
-               AAddNew( hbmk[ _HBMK_aINSTPATH ], PathNormalize( PathProc( PathSepToSelf( cItem ), FN_DirGet( cFileName ) ) ) )
+               cItem := PathNormalize( PathProc( cItem, FN_DirGet( cFileName ) ) )
+               FOR EACH tmp IN FN_Expand( cItem, .F. )
+                  AAddNewINST( hbmk[ _HBMK_aINSTFILE ], { cName, tmp } )
+               NEXT
             ENDIF
          NEXT
 
-      CASE Lower( Left( cLine, Len( "instfiles="    ) ) ) == "instfiles="    ; cLine := SubStr( cLine, Len( "instfiles="    ) + 1 )
+      CASE Lower( Left( cLine, Len( "instpaths="    ) ) ) == "instpaths="    ; cLine := SubStr( cLine, Len( "instpaths="    ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
             cItem := MacroProc( hbmk, StrStripQuote( cItem ), cFileName )
+            inst_split_arg( cItem, @cName, @cItem )
             IF ! Empty( cItem )
-               AAddNew( hbmk[ _HBMK_aINSTFILE ], PathNormalize( PathProc( PathSepToSelf( cItem ), FN_DirGet( cFileName ) ) ) )
+               AAddNewINST( hbmk[ _HBMK_aINSTPATH ], { cName, PathNormalize( PathProc( PathSepToSelf( cItem ), FN_DirGet( cFileName ) ) ) } )
             ENDIF
          NEXT
 
@@ -7884,49 +7956,49 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
 
       CASE Lower( Left( cLine, Len( "deppkgname="   ) ) ) == "deppkgname="   ; cLine := SubStr( cLine, Len( "deppkgname="   ) + 1 )
 
-         IF dep_split_arg( hbmk, cLine, @cLine, @tmp )
-            tmp := MacroProc( hbmk, tmp, cFileName )
-            AAddNewNotEmpty( hbmk[ _HBMK_hDEP ][ cLine ][ _HBMKDEP_aPKG ], StrStripQuote( AllTrim( tmp ) ) )
+         IF dep_split_arg( hbmk, cLine, @cName, @cLine )
+            cLine := MacroProc( hbmk, cLine, cFileName )
+            AAddNewNotEmpty( hbmk[ _HBMK_hDEP ][ cName ][ _HBMKDEP_aPKG ], StrStripQuote( AllTrim( cLine ) ) )
          ENDIF
 
       CASE Lower( Left( cLine, Len( "depkeyhead="   ) ) ) == "depkeyhead="   ; cLine := SubStr( cLine, Len( "depkeyhead="   ) + 1 )
 
-         IF dep_split_arg( hbmk, cLine, @cLine, @tmp )
-            FOR EACH cItem IN hb_ATokens( tmp,, .T. )
-               AAddNewNotEmpty( hbmk[ _HBMK_hDEP ][ cLine ][ _HBMKDEP_aKeyHeader ], AllTrim( StrTran( MacroProc( hbmk, cItem, cFileName ), "\", "/" ) ) )
+         IF dep_split_arg( hbmk, cLine, @cName, @cLine )
+            FOR EACH cItem IN hb_ATokens( cLine,, .T. )
+               AAddNewNotEmpty( hbmk[ _HBMK_hDEP ][ cName ][ _HBMKDEP_aKeyHeader ], AllTrim( StrTran( MacroProc( hbmk, cItem, cFileName ), "\", "/" ) ) )
             NEXT
          ENDIF
 
       CASE Lower( Left( cLine, Len( "depoptional="  ) ) ) == "depoptional="  ; cLine := SubStr( cLine, Len( "depoptional="  ) + 1 )
 
-         IF dep_split_arg( hbmk, cLine, @cLine, @tmp )
-            tmp := MacroProc( hbmk, tmp, cFileName )
+         IF dep_split_arg( hbmk, cLine, @cName, @cLine )
+            cLine := MacroProc( hbmk, cLine, cFileName )
             DO CASE
-            CASE Lower( tmp ) == "yes" ; hbmk[ _HBMK_hDEP ][ cLine ][ _HBMKDEP_lOptional ] := .T.
-            CASE Lower( tmp ) == "no"  ; hbmk[ _HBMK_hDEP ][ cLine ][ _HBMKDEP_lOptional ] := .F.
+            CASE Lower( cLine ) == "yes" ; hbmk[ _HBMK_hDEP ][ cName ][ _HBMKDEP_lOptional ] := .T.
+            CASE Lower( cLine ) == "no"  ; hbmk[ _HBMK_hDEP ][ cName ][ _HBMKDEP_lOptional ] := .F.
             ENDCASE
          ENDIF
 
       CASE Lower( Left( cLine, Len( "depcontrol="   ) ) ) == "depcontrol="   ; cLine := SubStr( cLine, Len( "depcontrol="   ) + 1 )
 
-         IF dep_split_arg( hbmk, cLine, @cLine, @tmp )
-            hbmk[ _HBMK_hDEP ][ cLine ][ _HBMKDEP_cControl ] := AllTrim( MacroProc( hbmk, tmp, cFileName ) )
-            AAddNew( hbmk[ _HBMK_hDEP ][ cLine ][ _HBMKDEP_aINCPATH ], _HBMK_DEP_CTRL_MARKER )
+         IF dep_split_arg( hbmk, cLine, @cName, @cLine )
+            hbmk[ _HBMK_hDEP ][ cName ][ _HBMKDEP_cControl ] := AllTrim( MacroProc( hbmk, cLine, cFileName ) )
+            AAddNew( hbmk[ _HBMK_hDEP ][ cName ][ _HBMKDEP_aINCPATH ], _HBMK_DEP_CTRL_MARKER )
          ENDIF
 
       CASE Lower( Left( cLine, Len( "depincpath="   ) ) ) == "depincpath="   ; cLine := SubStr( cLine, Len( "depincpath="   ) + 1 )
 
-         IF dep_split_arg( hbmk, cLine, @cLine, @tmp )
-            FOR EACH cItem IN hb_ATokens( tmp,, .T. )
-               AAddNewNotEmpty( hbmk[ _HBMK_hDEP ][ cLine ][ _HBMKDEP_aINCPATH ], PathNormalize( PathProc( PathSepToSelf( MacroProc( hbmk, cItem, cFileName ) ), FN_DirGet( cFileName ) ) ) )
+         IF dep_split_arg( hbmk, cLine, @cName, @cLine )
+            FOR EACH cItem IN hb_ATokens( cLine,, .T. )
+               AAddNewNotEmpty( hbmk[ _HBMK_hDEP ][ cName ][ _HBMKDEP_aINCPATH ], PathNormalize( PathProc( PathSepToSelf( MacroProc( hbmk, cItem, cFileName ) ), FN_DirGet( cFileName ) ) ) )
             NEXT
          ENDIF
 
       CASE Lower( Left( cLine, Len( "depincpathlocal=" ) ) ) == "depincpathlocal=" ; cLine := SubStr( cLine, Len( "depincpathlocal=" ) + 1 )
 
-         IF dep_split_arg( hbmk, cLine, @cLine, @tmp )
-            FOR EACH cItem IN hb_ATokens( tmp,, .T. )
-               AAddNewNotEmpty( hbmk[ _HBMK_hDEP ][ cLine ][ _HBMKDEP_aINCPATHLOCAL ], PathNormalize( PathProc( PathSepToSelf( MacroProc( hbmk, cItem, cFileName ) ), FN_DirGet( cFileName ) ) ) )
+         IF dep_split_arg( hbmk, cLine, @cName, @cLine )
+            FOR EACH cItem IN hb_ATokens( cLine,, .T. )
+               AAddNewNotEmpty( hbmk[ _HBMK_hDEP ][ cName ][ _HBMKDEP_aINCPATHLOCAL ], PathNormalize( PathProc( PathSepToSelf( MacroProc( hbmk, cItem, cFileName ) ), FN_DirGet( cFileName ) ) ) )
             NEXT
          ENDIF
 
@@ -10003,8 +10075,8 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-vcshead=<file>"    , I_( "generate .ch header file with local repository information. SVN, CVS, Git, Mercurial, Bazaar and Fossil are currently supported. Generated header will define macro _HBMK_VCS_TYPE_ with the name of detected VCS and _HBMK_VCS_ID_ with the unique ID of local repository" ) },;
       { "-tshead=<file>"     , I_( "generate .ch header file with timestamp information. Generated header will define macros _HBMK_BUILD_DATE_, _HBMK_BUILD_TIME_, _HBMK_BUILD_TIMESTAMP_ with the date/time of build" ) },;
       { "-icon=<file>"       , I_( "set <file> as application icon. <file> should be a supported format on the target platform" ) },;
-      { "-instfile=<file>"   , I_( "add <file> to the list of files to be copied to path specified by -instpath option" ) },;
-      { "-instpath=<path>"   , I_( "copy target to <path>. if <path> is a directory, it should end with path separatorm, in this case files specified by -instfile option will also be copied. can be specified multiple times" ) },;
+      { "-instfile=<g:file>" , I_( "add <file> in to the list of files to be copied to path specified by -instpath option. <g> is an optional copy group, it must be at least two characters long." ) },;
+      { "-instpath=<g:path>" , I_( "copy target to <path>. if <path> is a directory, it should end with path separatorm, in this case files specified by -instfile option will also be copied. can be specified multiple times. <g> is an optional copy group, it must be at least two characters long. Build target will be automatically copied to default (empty) copy group." ) },;
       { "-stop"              , I_( "stop without doing anything" ) },;
       { "-echo=<text>"       , I_( "echo text on screen" ) },;
       { "-pause"             , I_( "force waiting for a key on exit in case of failure (with alternate GTs only)" ) },;

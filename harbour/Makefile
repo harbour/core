@@ -14,14 +14,34 @@ ifeq ($(HB_BUILD_PARTS),compiler)
 
 else
 
+   # When doing a plain clean, we must not clean hbrun and hbmk2
+   # before calling it to clean the contrib area.
+   _CONTRIB_FIRST :=
+   ifneq ($(filter clean,$(HB_MAKECMDGOALS)),)
+      ifeq ($(filter install,$(HB_MAKECMDGOALS)),)
+         _CONTRIB_FIRST := yes
+      endif
+   endif
+
    DIRS := \
       doc \
       include \
       external \
-      src{external} \
-      utils{src} \
-      contrib{src} \
+      src{external}
 
+   ifeq ($(_CONTRIB_FIRST),yes)
+
+      DIRS += \
+         contrib{src} \
+         utils{contrib} \
+
+   else
+
+      DIRS += \
+         utils{src} \
+         contrib{utils} \
+
+   endif
 endif
 
 include $(ROOT)config/dir.mk
@@ -37,5 +57,5 @@ else
 endif
 
 install::
-	$(if $(wildcard $(HB_HOST_BIN_DIR)/hbrun$(HB_HOST_BIN_EXT)),+$(HB_HOST_BIN_DIR)/hbrun$(HB_HOST_BIN_EXT) --hb:gtcgi $(TOP)$(ROOT)config/postinst.hbs,)
+	$(if $(wildcard $(HB_HOST_BIN_DIR)/hbrun$(HB_HOST_BIN_EXT)),+$(HB_HOST_BIN_DIR)/hbrun$(HB_HOST_BIN_EXT) --hb:gtcgi $(TOP)$(ROOT)config/postinst.hbs,@$(ECHO) $(ECHOQUOTE)! Warning: hbrun not found, config/postinst.hbs not run.$(ECHOQUOTE))
 	$(if $(wildcard $(HB_POSTINST)),+$(HB_POSTINST),)

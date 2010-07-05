@@ -30,7 +30,7 @@ ifneq ($(HB_BUILD_OPTIM),no)
 endif
 
 ifeq ($(HB_BUILD_DEBUG),yes)
-   CFLAGS += -g
+   CFLAGS += -gstabs+
 endif
 
 ifneq ($(filter $(HB_BUILD_STRIP),all lib),)
