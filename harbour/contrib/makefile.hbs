@@ -239,8 +239,8 @@ PROCEDURE Main( ... )
    hb_setenv( "_HB_INC_INSTALL", GetEnv( "HB_INC_INSTALL" ) )
 
    hb_setenv( "HB_INSTALL_PREFIX", cRoot )
-   hb_setenv( "HB_BIN_INSTALL", cRoot + "bin/${hb_plat}/${hb_comp}" + iif( lBuildName, "/${hb_build}", "" ) )
-   hb_setenv( "HB_LIB_INSTALL", cRoot + "lib/${hb_plat}/${hb_comp}" + iif( lBuildName, "/${hb_build}", "" ) )
+   hb_setenv( "HB_BIN_INSTALL", cRoot + "bin/" + GetEnv( "HB_PLATFORM" ) + "/" + GetEnv( "HB_COMPILER" ) + iif( lBuildName, "/" + GetEnv( "HB_BUILD_NAME" ), "" ) )
+   hb_setenv( "HB_LIB_INSTALL", cRoot + "lib/" + GetEnv( "HB_PLATFORM" ) + "/" + GetEnv( "HB_COMPILER" ) + iif( lBuildName, "/" + GetEnv( "HB_BUILD_NAME" ), "" ) )
    hb_setenv( "HB_DYN_INSTALL" )
    hb_setenv( "HB_INC_INSTALL", cRoot + "include" )
 

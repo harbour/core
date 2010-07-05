@@ -3958,6 +3958,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                   SWITCH Eval( bBlk_ImpLib, cMakeImpLibDLL, tmp, ArrayToList( hbmk[ _HBMK_aOPTI ] ) )
                   CASE _HBMK_IMPLIB_OK
                      hbmk_OutStd( hbmk, hb_StrFormat( I_( "Created import library: %1$s <= %2$s" ), tmp, cMakeImpLibDLL ) )
+                     AAddNewINST( hbmk[ _HBMK_aINSTFILE ], { "", tmp }, .T. )
                      EXIT
                   CASE _HBMK_IMPLIB_FAILED
                      hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Failed creating import library %1$s from %2$s." ), tmp, cMakeImpLibDLL ) )
@@ -3965,6 +3966,9 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                   ENDSWITCH
                ENDIF
             NEXT
+            IF ! hbmk[ _HBMK_lCLEAN ]
+               DoInstCopy( hbmk )
+            ENDIF
          ELSE
             IF hbmk[ _HBMK_lInfo ]
                hbmk_OutErr( hbmk, I_( "Warning: No import library source was specified" ) )
@@ -6908,10 +6912,14 @@ STATIC FUNCTION AAddNew( array, xItem )
 
    RETURN array
 
-STATIC FUNCTION AAddNewINST( array, xItem )
+STATIC FUNCTION AAddNewINST( array, xItem, lToTop )
 
    IF AScan( array, {| tmp | tmp[ 2 ] == xItem[ 2 ] } ) == 0
-      AAdd( array, xItem )
+      IF lToTop != NIL .AND. lToTop
+         hb_AIns( array, 1, xItem, .T. )
+      ELSE
+         AAdd( array, xItem )
+      ENDIF
    ENDIF
 
    RETURN array
