@@ -2,13 +2,11 @@
 # $Id$
 #
 
--q0
--w3
--es2
+-w3 -es2
 
 -nulrdd
 
--gtstd
+-gtcgi
 
 hbdoc2.prg
 gentpl.prg

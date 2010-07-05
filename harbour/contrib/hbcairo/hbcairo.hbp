@@ -14,6 +14,8 @@
 -depincpath=cairo:/usr/include/cairo
 -depincpath=cairo:/opt/local/include/cairo
 
+-instfile=hbcairo.ch
+
 context.c
 core.c
 image.c

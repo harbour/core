@@ -23,4 +23,6 @@
 -depincpath=zlib:/boot/develop/headers/3rdparty
 -depincpathlocal=zlib:../../external/zlib
 
+-instfile=hbmzip.ch
+
 hbmzip.c

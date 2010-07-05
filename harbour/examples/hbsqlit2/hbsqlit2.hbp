@@ -3,12 +3,20 @@
 #
 
 -hblib
--olib/${hb_plat}/${hb_comp}/hbsqlit2
 -inc
--q0 -w3 -es2 -l
--i${HB_WITH_SQLITE2}
+
+-o${hb_name}
+
+-w3 -es2
 
 "-echo={dos}This library doesn't build on DOS."
 -stop{dos}
+
+-depkeyhead=sqlite2:sqlite.h
+-depcontrol=sqlite2:${HB_WITH_SQLITE2}
+-depincpath=sqlite2:/usr/include
+-depincpath=sqlite2:/boot/common/include
+
+-instfile=hbsqlit2.ch
 
 hbsqlit2.c

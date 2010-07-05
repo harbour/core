@@ -347,43 +347,44 @@ REQUEST hbmk_KEYW
 #define _HBMK_aICON             76
 #define _HBMK_aIMPLIBSRC        77
 #define _HBMK_aDEF              78
-#define _HBMK_hDEPTS            79
+#define _HBMK_aINSTFILE         79
+#define _HBMK_hDEPTS            80
 
-#define _HBMK_aPO               80
-#define _HBMK_cHBL              81
-#define _HBMK_cHBLDir           82
-#define _HBMK_aLNG              83
-#define _HBMK_cPO               84
+#define _HBMK_aPO               81
+#define _HBMK_cHBL              82
+#define _HBMK_cHBLDir           83
+#define _HBMK_aLNG              84
+#define _HBMK_cPO               85
 
-#define _HBMK_aPLUGIN           85
-#define _HBMK_hPLUGINHRB        86
-#define _HBMK_hPLUGINVars       87
-#define _HBMK_aPLUGINPars       88
-#define _HBMK_hPLUGINExt        89
+#define _HBMK_aPLUGIN           86
+#define _HBMK_hPLUGINHRB        87
+#define _HBMK_hPLUGINVars       88
+#define _HBMK_aPLUGINPars       89
+#define _HBMK_hPLUGINExt        90
 
-#define _HBMK_lDEBUGTIME        90
-#define _HBMK_lDEBUGINC         91
-#define _HBMK_lDEBUGSTUB        92
-#define _HBMK_lDEBUGI18N        93
-#define _HBMK_lDEBUGDEPD        94
+#define _HBMK_lDEBUGTIME        91
+#define _HBMK_lDEBUGINC         92
+#define _HBMK_lDEBUGSTUB        93
+#define _HBMK_lDEBUGI18N        94
+#define _HBMK_lDEBUGDEPD        95
 
-#define _HBMK_cCCPATH           95
-#define _HBMK_cCCPREFIX         96
-#define _HBMK_cCCPOSTFIX        97
-#define _HBMK_cCCEXT            98
+#define _HBMK_cCCPATH           96
+#define _HBMK_cCCPREFIX         97
+#define _HBMK_cCCPOSTFIX        98
+#define _HBMK_cCCEXT            99
 
-#define _HBMK_cWorkDir          99
-#define _HBMK_cWorkDirDynSub    100
-#define _HBMK_nCmd_Esc          101
-#define _HBMK_nScr_Esc          102
-#define _HBMK_nCmd_FNF          103
-#define _HBMK_nScr_FNF          104
-#define _HBMK_nErrorLevel       105
+#define _HBMK_cWorkDir          100
+#define _HBMK_cWorkDirDynSub    101
+#define _HBMK_nCmd_Esc          102
+#define _HBMK_nScr_Esc          103
+#define _HBMK_nCmd_FNF          104
+#define _HBMK_nScr_FNF          105
+#define _HBMK_nErrorLevel       106
 
-#define _HBMK_cPROGDIR          106
-#define _HBMK_cPROGNAME         107
+#define _HBMK_cPROGDIR          107
+#define _HBMK_cPROGNAME         108
 
-#define _HBMK_MAX_              107
+#define _HBMK_MAX_              108
 
 #define _HBMK_DEP_CTRL_MARKER   ".control." /* must be an invalid path */
 
@@ -1613,6 +1614,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    hbmk[ _HBMK_aICON ] := {}
    hbmk[ _HBMK_aIMPLIBSRC ] := {}
    hbmk[ _HBMK_aDEF ] := {}
+   hbmk[ _HBMK_aINSTFILE ] := {}
    l_aOBJA := {}
    hbmk[ _HBMK_cPROGDIR ] := NIL
    hbmk[ _HBMK_cPROGNAME ] := NIL
@@ -1959,6 +1961,13 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          IF ! Empty( cParam )
             AAdd( hbmk[ _HBMK_aLIBPATH ], DirDelPathSep( PathProc( PathSepToSelf( cParam ), aParam[ _PAR_cFileName ] ) ) )
          ENDIF
+
+      CASE Left( cParamL, Len( "-instfile=" ) ) == "-instfile="
+
+         cParam := PathSepToSelf( MacroProc( hbmk, SubStr( cParam, Len( "-instfile=" ) + 1 ), aParam[ _PAR_cFileName ] ) )
+         FOR EACH cParam IN FN_Expand( PathProc( cParam, aParam[ _PAR_cFileName ] ), Empty( aParam[ _PAR_cFileName ] ) )
+            AAdd( hbmk[ _HBMK_aINSTFILE ], cParam )
+         NEXT
 
       CASE Left( cParamL, Len( "-instpath=" ) ) == "-instpath=" .AND. ;
            Len( cParamL ) > Len( "-instpath=" )
@@ -5409,21 +5418,34 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          ENDIF
 
          IF ! Empty( hbmk[ _HBMK_aINSTPATH ] )
+
+            hb_AIns( hbmk[ _HBMK_aINSTFILE ], 1, FN_NameExtGet( hbmk[ _HBMK_cPROGNAME ] ), .T. )
+
             FOR EACH tmp IN hbmk[ _HBMK_aINSTPATH ]
-               IF Empty( FN_NameExtGet( tmp ) )
-                  tmp1 := DirAddPathSep( tmp ) + FN_NameExtGet( hbmk[ _HBMK_cPROGNAME ] )
-               ELSE
-                  tmp1 := tmp
-               ENDIF
-               IF DirBuild( FN_DirGet( tmp1 ) )
-                  IF hb_FCopy( hbmk[ _HBMK_cPROGNAME ], tmp1 ) == F_ERROR
-                     hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Copying target to %1$s failed with %2$s." ), tmp1, hb_ntos( FError() ) ) )
-                  ELSEIF hbmk[ _HBMK_lInfo ]
-                     hbmk_OutStd( hbmk, hb_StrFormat( I_( "Copied target to %1$s" ), tmp1 ) )
+               FOR EACH tmp2 IN hbmk[ _HBMK_aINSTFILE ]
+                  IF Empty( FN_NameExtGet( tmp ) )
+                     tmp1 := DirAddPathSep( tmp ) + tmp2
+                  ELSE
+                     /* If destination is a full name, don't copy the extra files, only the target */
+                     IF tmp2:__enumIndex() > 1
+                        IF hbmk[ _HBMK_lInfo ]
+                           hbmk_OutStd( hbmk, hb_StrFormat( I_( "Warning: Install path not a directory (%1$s). Extra install files not copied." ), tmp ) )
+                        ENDIF
+                        EXIT
+                     ELSE
+                        tmp1 := tmp
+                     ENDIF
                   ENDIF
-               ELSE
-                  hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Cannot create install directory for target %1$s." ), tmp1 ) )
-               ENDIF
+                  IF DirBuild( FN_DirGet( tmp1 ) )
+                     IF hb_FCopy( tmp2, tmp1 ) == F_ERROR
+                        hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Copying %1$s to %2$s failed with %3$s." ), tmp2, tmp1, hb_ntos( FError() ) ) )
+                     ELSEIF hbmk[ _HBMK_lInfo ]
+                        hbmk_OutStd( hbmk, hb_StrFormat( I_( "Copied %1$s to %2$s" ), tmp2, tmp1 ) )
+                     ENDIF
+                  ELSE
+                     hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Cannot create install directory for install target %1$s." ), tmp1 ) )
+                  ENDIF
+               NEXT
             NEXT
          ENDIF
       ENDIF
@@ -6564,6 +6586,13 @@ FUNCTION hbmk2_AddInput_RC( ctx, cFileName )
    ENDIF
    RETURN NIL
 
+FUNCTION hbmk2_AddInput_INSTFILE( ctx, cFileName )
+   LOCAL hbmk := ctx_to_hbmk( ctx )
+   IF hbmk != NIL .AND. ISCHARACTER( cFileName )
+      AAdd( hbmk[ _HBMK_aINSTFILE ], PathSepToSelf( cFileName ) )
+   ENDIF
+   RETURN NIL
+
 FUNCTION hbmk2_Register_Input_File_Extension( ctx, cExt )
    LOCAL hbmk := ctx_to_hbmk( ctx )
    IF hbmk != NIL .AND. ISCHARACTER( cExt )
@@ -7640,6 +7669,14 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
             cItem := MacroProc( hbmk, StrStripQuote( cItem ), cFileName )
             IF ! Empty( cItem )
                AAddNew( hbmk[ _HBMK_aINSTPATH ], PathNormalize( PathProc( PathSepToSelf( cItem ), FN_DirGet( cFileName ) ) ) )
+            ENDIF
+         NEXT
+
+      CASE Lower( Left( cLine, Len( "instfiles="    ) ) ) == "instfiles="    ; cLine := SubStr( cLine, Len( "instfiles="    ) + 1 )
+         FOR EACH cItem IN hb_ATokens( cLine,, .T. )
+            cItem := MacroProc( hbmk, StrStripQuote( cItem ), cFileName )
+            IF ! Empty( cItem )
+               AAddNew( hbmk[ _HBMK_aINSTFILE ], PathNormalize( PathProc( PathSepToSelf( cItem ), FN_DirGet( cFileName ) ) ) )
             ENDIF
          NEXT
 
@@ -9966,7 +10003,8 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-vcshead=<file>"    , I_( "generate .ch header file with local repository information. SVN, CVS, Git, Mercurial, Bazaar and Fossil are currently supported. Generated header will define macro _HBMK_VCS_TYPE_ with the name of detected VCS and _HBMK_VCS_ID_ with the unique ID of local repository" ) },;
       { "-tshead=<file>"     , I_( "generate .ch header file with timestamp information. Generated header will define macros _HBMK_BUILD_DATE_, _HBMK_BUILD_TIME_, _HBMK_BUILD_TIMESTAMP_ with the date/time of build" ) },;
       { "-icon=<file>"       , I_( "set <file> as application icon. <file> should be a supported format on the target platform" ) },;
-      { "-instpath=<path>"   , I_( "copy target to <path>. if <path> is a directory, it should end with path separator. can be specified multiple times" ) },;
+      { "-instfile=<file>"   , I_( "add <file> to the list of files to be copied to path specified by -instpath option" ) },;
+      { "-instpath=<path>"   , I_( "copy target to <path>. if <path> is a directory, it should end with path separatorm, in this case files specified by -instfile option will also be copied. can be specified multiple times" ) },;
       { "-stop"              , I_( "stop without doing anything" ) },;
       { "-echo=<text>"       , I_( "echo text on screen" ) },;
       { "-pause"             , I_( "force waiting for a key on exit in case of failure (with alternate GTs only)" ) },;
@@ -10054,9 +10092,9 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       I_( "Regular Harbour compiler options are also accepted.\n(see them with -harbourhelp option)" ),;
       hb_StrFormat( I_( "%1$s option file in hbmk2 directory is always processed if it exists. On *nix platforms ~/.harbour, /etc/harbour, <base>/etc/harbour, <base>/etc are checked (in that order) before the hbmk2 directory." ), _HBMK_CFG_NAME ),;
       hb_StrFormat( I_( "%1$s make script in current directory is always processed if it exists." ), _HBMK_AUTOHBM_NAME ),;
-      I_( ".hbc options (they should come in separate lines): libs=[<libname[s]>], hbcs=[<.hbc file[s]>], gt=[gtname], syslibs=[<libname[s]>], prgflags=[Harbour flags], cflags=[C compiler flags], resflags=[resource compiler flags], ldflags=[linker flags], pflags=[flags for plugins], libpaths=[paths], sources=[source files], psources=[source files for plugins], incpaths=[paths], instpaths=[paths], plugins=[plugins], gui|mt|shared|nulrdd|debug|opt|map|implib|hbcppmm|strip|run|inc=[yes|no], cpp=[yes|no|def], warn=[max|yes|low|no|def], compr=[yes|no|def|min|max], head=[off|partial|full|native], skip=[yes|no], echo=<text>\nLines starting with '#' char are ignored" ),;
+      I_( ".hbc options (they should come in separate lines): libs=[<libname[s]>], hbcs=[<.hbc file[s]>], gt=[gtname], syslibs=[<libname[s]>], prgflags=[Harbour flags], cflags=[C compiler flags], resflags=[resource compiler flags], ldflags=[linker flags], pflags=[flags for plugins], libpaths=[paths], sources=[source files], psources=[source files for plugins], incpaths=[paths], instfiles=[files], instpaths=[paths], plugins=[plugins], gui|mt|shared|nulrdd|debug|opt|map|implib|hbcppmm|strip|run|inc=[yes|no], cpp=[yes|no|def], warn=[max|yes|low|no|def], compr=[yes|no|def|min|max], head=[off|partial|full|native], skip=[yes|no], echo=<text>\nLines starting with '#' char are ignored" ),;
       I_( "Platform filters are accepted in each .hbc line and with several options.\nFilter format: {[!][<plat>|<comp>|<cpu>|<keyword>]}. Filters can be combined using '&', '|' operators and grouped by parantheses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}, {allwin|allmsvc|allgcc|allmingw|allicc|allpocc|unix}, {x86|x86_64|ia64|arm|mips|sh}, {debug|nodebug|gui|std|mt|st|shared|static|unicode|ascii|xhb}" ),;
-      I_( "Certain .hbc lines (libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, instpaths=, echo=) and corresponding command line parameters will accept macros: ${hb_root}, ${hb_dir}, ${hb_name}, ${hb_plat}, ${hb_comp}, ${hb_build}, ${hb_cpu}, ${hb_bin}, ${hb_lib}, ${hb_dyn}, ${hb_inc}, ${<envvar>}. libpaths= also accepts %{hb_name} which translates to the name of the .hbc file under search." ),;
+      I_( "Certain .hbc lines (libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, instfiles=, instpaths=, echo=) and corresponding command line parameters will accept macros: ${hb_root}, ${hb_dir}, ${hb_name}, ${hb_plat}, ${hb_comp}, ${hb_build}, ${hb_cpu}, ${hb_bin}, ${hb_lib}, ${hb_dyn}, ${hb_inc}, ${<envvar>}. libpaths= also accepts %{hb_name} which translates to the name of the .hbc file under search." ),;
       I_( 'Options accepting macros also support command substitution. Enclose command inside ``, and, if the command contains space, also enclose in double quotes. F.e. "-cflag=`wx-config --cflags`", or ldflags={unix&gcc}"`wx-config --libs`".' ),;
       I_( "Defaults and feature support vary by platform/compiler." ) ,;
       hb_StrFormat( I_( "Options can also be specified in environment variable %1$s" ), _HBMK_ENV_NAME ) }

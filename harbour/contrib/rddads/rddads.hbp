@@ -16,6 +16,9 @@
 -depincpath=ads:/usr/local/ads/acesdk
 -depincpath=ads:${HOME}/ads/acesdk
 
+-instfile=ads.ch
+-instfile=adsextrn.ch
+
 ads1.c
 adsfunc.c
 adsmgmnt.c

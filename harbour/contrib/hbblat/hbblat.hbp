@@ -11,5 +11,7 @@
 
 -stop{!win}
 
+-instfile=hbblat.ch
+
 blatwrp.c
 blatcls.prg

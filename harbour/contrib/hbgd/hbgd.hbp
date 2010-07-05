@@ -15,6 +15,9 @@
 -depincpath=gd:/usr/include
 -depincpath=gd:/opt/local/include
 
+-instfile=gd.ch
+-instfile=gdextern.ch
+
 gdwrp.c
 
 gd.prg

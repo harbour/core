@@ -3,8 +3,13 @@
 #
 
 -hblib
--olib/${hb_plat}/${hb_comp}/hbvpdf
 -inc
+
+-o${hb_name}
+
+-w3 -es2
+
+-instfile=hbvpdf.ch
 
 hbvpdf.prg
 hbvpdft.prg

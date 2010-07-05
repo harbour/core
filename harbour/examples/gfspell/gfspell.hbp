@@ -3,9 +3,13 @@
 #
 
 -hblib
--olib/${hb_plat}/${hb_comp}/gfspell
 -inc
--q0 -w1 -es2 -l
+
+-o${hb_name}
+
+-w1 -es2
+
+-instfile=spell.ch
 
 spell.prg
 spellc.c

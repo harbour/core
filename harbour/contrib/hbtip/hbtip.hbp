@@ -10,6 +10,9 @@
 
 -w3 -es2
 
+-instfile=tip.ch
+-instfile=thtml.ch
+
 encb64c.c
 encurlc.c
 utils.c

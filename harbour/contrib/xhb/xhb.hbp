@@ -9,6 +9,11 @@
 
 -w3 -es2
 
+-instfile=hbcompat.h
+-instfile=xhb.h
+-instfile=hbcompat.ch
+-instfile=xhb.ch
+
 bkgtsks.c
 cstructc.c
 datesxhb.c

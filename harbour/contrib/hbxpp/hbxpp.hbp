@@ -9,6 +9,12 @@
 
 -w3 -es2
 
+-instfile=dll.ch
+-instfile=dmlb.ch
+-instfile=hbxpp.ch
+-instfile=hbxppext.ch
+-instfile=thread.ch
+
 binnumx.c
 dbcmdx.c
 dbdetacx.c

@@ -20,6 +20,8 @@
 -depincpath=pgsql:/opt/local/include/postgresql84
 -depincpath=pgsql:/opt/local/include/postgresql83
 
+-instfile=postgres.ch
+
 postgres.c
 
 tpostgre.prg

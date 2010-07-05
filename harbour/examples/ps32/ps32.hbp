@@ -3,7 +3,14 @@
 #
 
 -hblib
--olib/${hb_plat}/${hb_comp}/ps32
 -inc
+
+-o${hb_name}
+
+-w2 -es2
+
+hbxpp.hbc
+
+-instfile=pscript.ch
 
 tpscript.prg

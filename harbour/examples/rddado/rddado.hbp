@@ -3,11 +3,14 @@
 #
 
 -hblib
--olib/${hb_plat}/${hb_comp}/rddado
 -inc
+
+-o${hb_name}
 
 -w3 -es2
 
 -stop{!win}
+
+-instfile=adordd.ch
 
 adordd.prg

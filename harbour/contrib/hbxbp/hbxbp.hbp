@@ -11,6 +11,11 @@
 
 ../hbqt/hbqt.hbc
 
+-instfile=appevent.ch
+-instfile=gra.ch
+-instfile=xbp.ch
+-instfile=xbpdev.ch
+
 hbpprocess.prg
 xbp3state.prg
 xbpappevent.prg

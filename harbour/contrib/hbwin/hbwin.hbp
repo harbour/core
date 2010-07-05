@@ -19,6 +19,11 @@
 -depincpath=png:/opt/local/include
 -depincpathlocal=png:../../external/png
 
+-instfile=hbwapi.h
+-instfile=hbwin.h
+-instfile=hbwinole.h
+-instfile=hbwin.ch
+
 axcore.c
 legacycd.c
 legacyco.c

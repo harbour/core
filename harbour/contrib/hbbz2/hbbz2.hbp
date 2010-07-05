@@ -16,4 +16,6 @@
 -depincpath=bzip2:/usr/include
 -depincpathlocal=bzip2:../../external/bzip2
 
+-instfile=hbbz2.ch
+
 hbbz2.c

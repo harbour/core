@@ -3,10 +3,21 @@
 #
 
 -hblib
--olib/${hb_plat}/${hb_comp}/hbapollo
 -inc
--q0 -w3 -es2 -l
--i${HB_WITH_APOLLO}
+
+-o${hb_name}
+
+-w3 -es2
+
+{HB_WITH_APOLLO_VER61}-depkeyhead=apollo:Sde61.h
+{!HB_WITH_APOLLO_VER61}-depkeyhead=apollo:Sde7.h
+-depcontrol=apollo:${HB_WITH_APOLLO}
+-depincpath=apollo:/usr/include
+-depincpath=apollo:/boot/common/include
+
+{HB_WITH_APOLLO_VER61}-cflags=-DHB_WITH_APOLLO_VER61
+
+-instfile=apollo.ch
 
 apollo.c
 apollo1.prg
