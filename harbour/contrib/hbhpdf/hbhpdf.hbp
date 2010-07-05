@@ -15,6 +15,6 @@
 -depincpath=libharu:/usr/local/include
 -depincpathlocal=libharu:../../external/libhpdf
 
--instfile=harupdf.ch
+-instfile=inc:harupdf.ch
 
 harupdf.c

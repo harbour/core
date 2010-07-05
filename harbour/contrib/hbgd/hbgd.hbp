@@ -15,8 +15,8 @@
 -depincpath=gd:/usr/include
 -depincpath=gd:/opt/local/include
 
--instfile=gd.ch
--instfile=gdextern.ch
+-instfile=inc:gd.ch
+-instfile=inc:gdextern.ch
 
 gdwrp.c
 

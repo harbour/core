@@ -11,6 +11,6 @@
 
 hbxpp.hbc
 
--instfile=pscript.ch
+-instfile=inc:pscript.ch
 
 tpscript.prg

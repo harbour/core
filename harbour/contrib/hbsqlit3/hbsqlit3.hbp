@@ -15,6 +15,6 @@
 -depincpath=sqlite3:/boot/common/include
 -depincpathlocal=sqlite3:../../external/sqlite3
 
--instfile=hbsqlit3.ch
+-instfile=inc:hbsqlit3.ch
 
 hbsqlit3.c

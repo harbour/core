@@ -17,7 +17,7 @@
 -depincpath=odbc:/usr/include
 -depincpath=odbc:/usr/local/include
 
--instfile=sql.ch
+-instfile=inc:sql.ch
 
 odbc.c
 odbcold.c

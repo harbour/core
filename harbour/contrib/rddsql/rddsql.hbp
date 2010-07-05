@@ -9,7 +9,7 @@
 
 -w3 -es2
 
--instfile=hbrddsql.ch
+-instfile=inc:hbrddsql.ch
 
 sqlbase.c
 sqlmix.c

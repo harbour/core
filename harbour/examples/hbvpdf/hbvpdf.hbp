@@ -9,7 +9,7 @@
 
 -w3 -es2
 
--instfile=hbvpdf.ch
+-instfile=inc:hbvpdf.ch
 
 hbvpdf.prg
 hbvpdft.prg

@@ -29,7 +29,7 @@
 # Patent will expire in 2010/2011
 -cflag=-DOPENSSL_NO_IDEA
 
--instfile=hbssl.ch
+-instfile=inc:hbssl.ch
 
 hbssl.c
 bio.c

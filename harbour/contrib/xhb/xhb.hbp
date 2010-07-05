@@ -9,10 +9,10 @@
 
 -w3 -es2
 
--instfile=hbcompat.h
--instfile=xhb.h
--instfile=hbcompat.ch
--instfile=xhb.ch
+-instfile=inc:hbcompat.h
+-instfile=inc:xhb.h
+-instfile=inc:hbcompat.ch
+-instfile=inc:xhb.ch
 
 bkgtsks.c
 cstructc.c

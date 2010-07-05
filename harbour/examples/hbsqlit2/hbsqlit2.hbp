@@ -17,6 +17,6 @@
 -depincpath=sqlite2:/usr/include
 -depincpath=sqlite2:/boot/common/include
 
--instfile=hbsqlit2.ch
+-instfile=inc:hbsqlit2.ch
 
 hbsqlit2.c

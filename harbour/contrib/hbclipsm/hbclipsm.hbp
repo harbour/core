@@ -9,7 +9,7 @@
 
 -w3 -es2
 
--instfile=time87.ch
+-instfile=inc:time87.ch
 
 date.c
 environ.c

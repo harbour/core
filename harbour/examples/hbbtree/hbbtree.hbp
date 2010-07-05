@@ -9,8 +9,8 @@
 
 -w3 -es2
 
--instfile=hb_btree.ch
--instfile=hb_btree.h
+-instfile=inc:hb_btree.ch
+-instfile=inc:hb_btree.h
 
 hb_btree.c
 tbtree.prg

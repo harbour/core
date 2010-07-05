@@ -11,6 +11,6 @@
 
 -stop{!win}
 
--instfile=adordd.ch
+-instfile=inc:adordd.ch
 
 adordd.prg

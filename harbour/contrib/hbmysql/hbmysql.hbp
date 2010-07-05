@@ -14,7 +14,7 @@
 -depincpath=mysql:/usr/include/mysql
 -depincpath=mysql:/opt/local/include/mysql5/mysql
 
--instfile=mysql.ch
+-instfile=inc:mysql.ch
 
 mysql.c
 mysqlold.c

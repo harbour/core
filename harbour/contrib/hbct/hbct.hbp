@@ -9,18 +9,18 @@
 
 -w3 -es2
 
--instfile=ct.h
--instfile=ctmath.h
--instfile=ctset.h
--instfile=ctstr.h
--instfile=ctstrfil.h
--instfile=ctwin.h
--instfile=ct.ch
--instfile=ctcom.ch
--instfile=ctdisk.ch
--instfile=cterror.ch
--instfile=ctextern.ch
--instfile=ctvideo.ch
+-instfile=inc:ct.h
+-instfile=inc:ctmath.h
+-instfile=inc:ctset.h
+-instfile=inc:ctstr.h
+-instfile=inc:ctstrfil.h
+-instfile=inc:ctwin.h
+-instfile=inc:ct.ch
+-instfile=inc:ctcom.ch
+-instfile=inc:ctdisk.ch
+-instfile=inc:cterror.ch
+-instfile=inc:ctextern.ch
+-instfile=inc:ctvideo.ch
 
 addascii.c
 asciisum.c

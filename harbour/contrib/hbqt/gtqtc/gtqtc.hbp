@@ -7,7 +7,7 @@
 -o${hb_name}
 -workdir=${hb_work}/${hb_plat}/${hb_comp}/${hb_name}
 
--instfile=hbgtqtc.ch
+-instfile=inc:hbgtqtc.ch
 
 gtqtc.cpp
 gtqtc.h
