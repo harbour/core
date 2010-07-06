@@ -1536,18 +1536,18 @@ METHOD IdeProjManager:finished( nExitCode, nExitStatus, oProcess )
  * 03/01/2010 - 09:24:50
  */
 METHOD IdeProjManager:launchProject( cProject, cExe )
-   LOCAL cTargetFN, cTmp, oProject
+   LOCAL cTargetFN, cTmp, oProject, cPath
    LOCAL qProcess, qStr
 
    IF empty( cProject )
       cProject := ::oPM:getCurrentProject()
    ENDIF
-   IF empty( cProject )
-      RETURN Self
+
+   IF !empty( cProject )
+      oProject  := ::getProjectByTitle( cProject )
    ENDIF
 
-   oProject  := ::getProjectByTitle( cProject )
-   IF empty( cExe )
+   IF empty( cExe ) .AND. !empty( oProject )
       cTargetFN := hbide_pathFile( oProject:destination, iif( empty( oProject:outputName ), "_temp", oProject:outputName ) )
       #ifdef __PLATFORM__WINDOWS
       IF oProject:type == "Executable"
@@ -1571,11 +1571,17 @@ METHOD IdeProjManager:launchProject( cProject, cExe )
       if .t.
          qProcess := QProcess():new()
 
-         qStr := QStringList():new()
-         IF !empty( oProject:launchParams )
-            qStr:append( oProject:launchParams )
+         IF !empty( oProject )
+            qStr := QStringList():new()
+            IF !empty( oProject:launchParams )
+               qStr:append( oProject:launchParams )
+            ENDIF
+            qProcess:startDetached( cTargetFN, qStr, hbide_pathToOSPath( oProject:wrkDirectory ) )
+         ELSE
+            hb_fNameSplit( cTargetFN, @cPath )
+            qProcess:startDetached( cTargetFN, qStr, hbide_pathToOSPath( cPath ) )
          ENDIF
-         qProcess:startDetached( cTargetFN, qStr, hbide_pathToOSPath( oProject:wrkDirectory ) )
+
          qProcess:waitForStarted( 3000 )
          qProcess := NIL
 

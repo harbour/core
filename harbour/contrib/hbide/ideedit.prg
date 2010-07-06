@@ -1990,7 +1990,7 @@ METHOD IdeEdit:handlePreviousWord( lUpdatePrevWord )
       nL := len( cWord ) + nSpace
       nB := qCursor:position() - nL
 
-      IF ::oEditor:cExt $ ".prg" .AND. ! ::oINI:lSupressHbKWordsToUpper
+      IF ::oEditor:cExt $ ".prg,.hbs" .AND. ! ::oINI:lSupressHbKWordsToUpper
          qCursor:beginEditBlock()
          qCursor:setPosition( nB )
          qCursor:movePosition( QTextCursor_NextCharacter, QTextCursor_KeepAnchor, nL )

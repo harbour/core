@@ -164,7 +164,7 @@ FUNCTION hbide_runAScript( cBuffer, cCompFlags, xParam )
    LOCAL bError := ErrorBlock( {|o| break( o ) } )
 
    BEGIN SEQUENCE
-      cFile := hb_compileFromBuf( cBuffer, cCompFlags ) //, "-n2", "-w3", "-es2", "-q0" )
+      cFile := hb_compileFromBuf( cBuffer, cCompFlags )
       IF ! Empty( cFile )
          pHrb := hb_hrbLoad( HB_HRB_BIND_FORCELOCAL, cFile )
       ENDIF
@@ -177,7 +177,7 @@ FUNCTION hbide_runAScript( cBuffer, cCompFlags, xParam )
       BEGIN SEQUENCE
          hb_hrbDo( pHrb, xParam )
       RECOVER USING oErr
-         MsgBox( "XXX" + oErr:description )
+         MsgBox( oErr:description, "Error running script" )
       END SEQUENCE
    ENDIF
 

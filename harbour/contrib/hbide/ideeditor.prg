@@ -1202,7 +1202,7 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView, a
    ENDIF
 
    ::cType := upper( strtran( ::cExt, ".", "" ) )
-   ::cType := iif( ::cType $ "PRG,C,CPP,H,CH,PPO", ::cType, "U" )
+   ::cType := iif( ::cType $ "PRG,C,CPP,H,CH,PPO,HBS", ::cType, "U" )
 
    ::buildTabPage( ::sourceFile )
 
