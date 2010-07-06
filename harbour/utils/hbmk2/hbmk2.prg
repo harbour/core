@@ -384,7 +384,10 @@ REQUEST hbmk_KEYW
 #define _HBMK_cPROGDIR          107
 #define _HBMK_cPROGNAME         108
 
-#define _HBMK_MAX_              108
+#define _HBMK_hAUTOHBC          109
+#define _HBMK_hAUTOHBCFOUND     110
+
+#define _HBMK_MAX_              110
 
 #define _HBMK_DEP_CTRL_MARKER   ".control." /* must be an invalid path */
 
@@ -835,6 +838,8 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    hbmk[ _HBMK_lHBCPPMM ] := .F.
    hbmk[ _HBMK_aVAR ] := {}
    hbmk[ _HBMK_hDEP ] := { => }
+   hbmk[ _HBMK_hAUTOHBC ] := { => }
+   hbmk[ _HBMK_hAUTOHBCFOUND ] := { => }
 
    hb_HSetCaseMatch( hbmk[ _HBMK_hDEP ], .F. )
 
@@ -1937,17 +1942,17 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       CASE Left( cParamL, Len( "-instfile=" ) ) == "-instfile="
 
          cParam := MacroProc( hbmk, SubStr( cParam, Len( "-instfile=" ) + 1 ), aParam[ _PAR_cFileName ] )
-         inst_split_arg( cParam, @tmp, @cParam )
-         FOR EACH cParam IN FN_Expand( PathProc( cParam, aParam[ _PAR_cFileName ] ), Empty( aParam[ _PAR_cFileName ] ) )
-            AAddNewINST( hbmk[ _HBMK_aINSTFILE ], { tmp, cParam } )
-         NEXT
+         IF inst_split_arg( cParam, @tmp, @cParam )
+            FOR EACH cParam IN FN_Expand( PathProc( cParam, aParam[ _PAR_cFileName ] ), Empty( aParam[ _PAR_cFileName ] ) )
+               AAddNewINST( hbmk[ _HBMK_aINSTFILE ], { tmp, cParam } )
+            NEXT
+         ENDIF
 
       CASE Left( cParamL, Len( "-instpath=" ) ) == "-instpath=" .AND. ;
            Len( cParamL ) > Len( "-instpath=" )
 
          cParam := MacroProc( hbmk, SubStr( cParam, Len( "-instpath=" ) + 1 ), aParam[ _PAR_cFileName ] )
-         inst_split_arg( cParam, @tmp, @cParam )
-         IF ! Empty( cParam )
+         IF inst_split_arg( cParam, @tmp, @cParam )
             AAddNewINST( hbmk[ _HBMK_aINSTPATH ], { tmp, PathNormalize( PathProc( PathSepToSelf( cParam ), aParam[ _PAR_cFileName ] ) ) } )
          ENDIF
 
@@ -2110,6 +2115,24 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             ELSE
                AAdd( hbmk[ _HBMK_aLIBUSER ], cParam )
             ENDIF
+         ENDIF
+
+      CASE Left( cParam, Len( "-autohbc=" ) ) == "-autohbc="
+
+         cParam := MacroProc( hbmk, SubStr( cParam, Len( "-autohbc=" ) + 1 ), aParam[ _PAR_cFileName ] )
+         IF autohbc_split_arg( cParam, @tmp, @cParam )
+
+            cParam := PathProc( PathSepToSelf( MacroProc( hbmk, cParam, aParam[ _PAR_cFileName ] ) ), aParam[ _PAR_cFileName ] )
+            IF ! hb_FileExists( cParam )
+               FOR EACH tmp IN hbmk[ _HBMK_aLIBPATH ]
+                  IF hb_FileExists( DirAddPathSep( PathSepToSelf( MacroProc( hbmk, tmp, cParam, _MACRO_LATE_PREFIX ) ) ) + FN_NameExtGet( cParam ) )
+                     cParam := DirAddPathSep( PathSepToSelf( MacroProc( hbmk, tmp, cParam, _MACRO_LATE_PREFIX ) ) ) + FN_NameExtGet( cParam )
+                     EXIT
+                  ENDIF
+               NEXT
+            ENDIF
+
+            hbmk[ _HBMK_hAUTOHBC ][ AllTrim( StrTran( tmp, "\", "/" ) ) ] := cParam
          ENDIF
 
       CASE Left( cParam, Len( "-deppkgname=" ) ) == "-deppkgname="
@@ -4105,8 +4128,21 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             ENDIF
          NEXT
       ELSE
+         IF ! Empty( hbmk[ _HBMK_hAUTOHBC ] )
+            FOR EACH tmp IN hbmk[ _HBMK_aPRG ]
+               FindNewerHeaders( hbmk, tmp, NIL, .F., NIL, .F., cBin_CompC, @headstate )
+            NEXT
+         ENDIF
+
          l_aPRG_TODO := hbmk[ _HBMK_aPRG ]
       ENDIF
+
+      FOR EACH tmp IN hbmk[ _HBMK_hAUTOHBCFOUND ]
+         IF hbmk[ _HBMK_lInfo ]
+            hbmk_OutStd( hbmk, hb_StrFormat( I_( "Processing (triggered by '%1$s' header): %2$s" ), tmp:__enumKey(), tmp ) )
+         ENDIF
+         HBC_ProcessOne( hbmk, tmp, 1 )
+      NEXT
    ELSE
       l_aPRG_TODO := hbmk[ _HBMK_aPRG ]
    ENDIF
@@ -5486,7 +5522,7 @@ STATIC PROCEDURE DoInstCopy( hbmk )
 
          cInstPath := aInstPath[ _INST_cData ]
 
-         nCopied := 0 /* file copied */
+         nCopied := 0 /* files copied */
          FOR EACH aInstFile IN hbmk[ _HBMK_aINSTFILE ]
 
             cInstFile := aInstFile[ _INST_cData ]
@@ -5849,7 +5885,13 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, lSystemHeader, tT
                   ENDIF
                   IF hb_FGetDateTime( cDependency, @tTimeDependency ) .AND. tTimeDependency > tTimeParent
                      headstate[ _HEADSTATE_lAnyNewer ] := .T.
-                     RETURN .T.
+                     IF Empty( hbmk[ _HBMK_hAUTOHBC ] )
+                        RETURN .T.
+                     ENDIF
+                  ENDIF
+                  IF cDependency $ hbmk[ _HBMK_hAUTOHBC ]
+                     hbmk[ _HBMK_hAUTOHBCFOUND ][ cDependency ] := hbmk[ _HBMK_hAUTOHBC ][ cDependency ]
+                     hb_HDel( hbmk[ _HBMK_hAUTOHBC ], cDependency )
                   ENDIF
                ENDIF
             NEXT
@@ -5896,7 +5938,7 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, lSystemHeader, tT
                   ENDIF
                   IF hb_FGetDateTime( cDependency, @tTimeDependency ) .AND. tTimeDependency > tTimeParent
                      headstate[ _HEADSTATE_lAnyNewer ] := .T.
-                     RETURN .T.
+                    RETURN .T.
                   ENDIF
                ENDIF
             NEXT
@@ -5946,8 +5988,13 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, lSystemHeader, tT
 
             IF FindNewerHeaders( hbmk, cHeader, iif( lCMode, FN_DirGet( cFileName ), cParentDir ), lSystemHeader, tTimeParent, lCMode, cBin_CompC, @headstate, nNestingLevel + 1 )
                headstate[ _HEADSTATE_lAnyNewer ] := .T.
-               /* Let it continue if we want to scan for header locations */
-               RETURN .T.
+               IF lCMode .OR. Empty( hbmk[ _HBMK_hAUTOHBC ] )
+                  RETURN .T.
+               ENDIF
+            ENDIF
+            IF ! lCMode .AND. cHeader $ hbmk[ _HBMK_hAUTOHBC ]
+               hbmk[ _HBMK_hAUTOHBCFOUND ][ cHeader ] := hbmk[ _HBMK_hAUTOHBC ][ cHeader ]
+               hb_HDel( hbmk[ _HBMK_hAUTOHBC ], cHeader )
             ENDIF
          NEXT
       ENDIF
@@ -6023,7 +6070,7 @@ STATIC FUNCTION deplst_add( hDeps, cList )
 
    RETURN .T.
 
-STATIC PROCEDURE inst_split_arg( cParam, /* @ */ cName, /* @ */ cData )
+STATIC FUNCTION inst_split_arg( cParam, /* @ */ cName, /* @ */ cData )
    LOCAL nPos
 
    /* separate install group from install file or path.
@@ -6039,7 +6086,21 @@ STATIC PROCEDURE inst_split_arg( cParam, /* @ */ cName, /* @ */ cData )
 
    cData := PathSepToSelf( cData )
 
-   RETURN
+   RETURN ! Empty( cData )
+
+STATIC FUNCTION autohbc_split_arg( cParam, /* @ */ cName, /* @ */ cData )
+   LOCAL nPos
+
+   IF ( nPos := At( ":", cParam ) ) > 1
+      cName := Left( cParam, nPos - 1 )
+      cData := SubStr( cParam, nPos + 1 )
+      RETURN ! Empty( cName ) .AND. ! Empty( cData )
+   ENDIF
+
+   cName := NIL
+   cData := NIL
+
+   RETURN .F.
 
 STATIC FUNCTION dep_split_arg( hbmk, cParam, /* @ */ cName, /* @ */ cData )
    LOCAL nPos
@@ -7736,6 +7797,30 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
             ENDIF
          NEXT
 
+      CASE Lower( Left( cLine, Len( "autohbcs="     ) ) ) == "autohbcs="     ; cLine := SubStr( cLine, Len( "autohbcs="     ) + 1 )
+         FOR EACH cItem IN hb_ATokens( cLine,, .T. )
+            cItem := MacroProc( hbmk, StrStripQuote( cItem ), cFileName )
+            IF autohbc_split_arg( cItem, @cName, @cItem )
+
+               cItem := PathProc( PathSepToSelf( MacroProc( hbmk, StrStripQuote( cItem ), cFileName ) ), FN_DirGet( cFileName ) )
+
+               IF Empty( FN_ExtGet( cItem ) )
+                  cItem := FN_ExtSet( cItem, ".hbc" )
+               ENDIF
+
+               IF ! hb_FileExists( cItem )
+                  FOR EACH tmp IN hbmk[ _HBMK_aLIBPATH ]
+                     IF hb_FileExists( DirAddPathSep( PathSepToSelf( MacroProc( hbmk, tmp, cItem, _MACRO_LATE_PREFIX ) ) ) + FN_NameExtGet( cItem ) )
+                        cItem := DirAddPathSep( PathSepToSelf( MacroProc( hbmk, tmp, cItem, _MACRO_LATE_PREFIX ) ) ) + FN_NameExtGet( cItem )
+                        EXIT
+                     ENDIF
+                  NEXT
+               ENDIF
+
+               hbmk[ _HBMK_hAUTOHBC ][ AllTrim( StrTran( cName, "\", "/" ) ) ] := cItem
+            ENDIF
+         NEXT
+
       CASE Lower( Left( cLine, Len( "libpaths="     ) ) ) == "libpaths="     ; cLine := SubStr( cLine, Len( "libpaths="     ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
             cItem := MacroProc( hbmk, StrStripQuote( cItem ), cFileName )
@@ -7753,11 +7838,9 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
          NEXT
 
       CASE Lower( Left( cLine, Len( "instfiles="    ) ) ) == "instfiles="    ; cLine := SubStr( cLine, Len( "instfiles="    ) + 1 )
-
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
             cItem := MacroProc( hbmk, StrStripQuote( cItem ), cFileName )
-            inst_split_arg( cItem, @cName, @cItem )
-            IF ! Empty( cItem )
+            IF inst_split_arg( cItem, @cName, @cItem )
                cItem := PathNormalize( PathProc( cItem, FN_DirGet( cFileName ) ) )
                FOR EACH tmp IN FN_Expand( cItem, .F. )
                   AAddNewINST( hbmk[ _HBMK_aINSTFILE ], { cName, tmp } )
@@ -7768,8 +7851,7 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
       CASE Lower( Left( cLine, Len( "instpaths="    ) ) ) == "instpaths="    ; cLine := SubStr( cLine, Len( "instpaths="    ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
             cItem := MacroProc( hbmk, StrStripQuote( cItem ), cFileName )
-            inst_split_arg( cItem, @cName, @cItem )
-            IF ! Empty( cItem )
+            IF inst_split_arg( cItem, @cName, @cItem )
                AAddNewINST( hbmk[ _HBMK_aINSTPATH ], { cName, PathNormalize( PathProc( PathSepToSelf( cItem ), FN_DirGet( cFileName ) ) ) } )
             ENDIF
          NEXT
@@ -10129,6 +10211,8 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-[no]minipo"        , I_( "do (not) add Harbour version number and source file reference to .po (default: add them)" ) },;
       { "-rebuildpo"         , I_( "recreate .po file, thus removing all obsolete entries in it" ) },;
       NIL,;
+      { "-autohbc=<.ch:.hbc>", I_( "<.ch> is a header file name. <.hbc> is a .hbc filename to be automatically included in case the header is found in any of the compiled sources. EXPERIMENTAL." ) },;
+      NIL,;
       { "-deppkgname=<d:n>"       , I_( "<d> is the name of the dependency. <n> name of the package depedency. Can be specified multiple times." ) },;
       { "-depkeyhead=<d:h>"       , I_( "<d> is the name of the dependency. <h> is the key header (.h) of the package dependency. Multiple alternative headers can be specified." ) },;
       { "-depoptional=<d:f>"      , I_( "<d> is the name of the dependency. <f> can be 'yes' or 'no', specifies whether the dependency is optional. Default: no" ) },;
@@ -10186,7 +10270,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       I_( "Regular Harbour compiler options are also accepted.\n(see them with -harbourhelp option)" ),;
       hb_StrFormat( I_( "%1$s option file in hbmk2 directory is always processed if it exists. On *nix platforms ~/.harbour, /etc/harbour, <base>/etc/harbour, <base>/etc are checked (in that order) before the hbmk2 directory." ), _HBMK_CFG_NAME ),;
       hb_StrFormat( I_( "%1$s make script in current directory is always processed if it exists." ), _HBMK_AUTOHBM_NAME ),;
-      I_( ".hbc options (they should come in separate lines): libs=[<libname[s]>], hbcs=[<.hbc file[s]>], gt=[gtname], syslibs=[<libname[s]>], prgflags=[Harbour flags], cflags=[C compiler flags], resflags=[resource compiler flags], ldflags=[linker flags], pflags=[flags for plugins], libpaths=[paths], sources=[source files], psources=[source files for plugins], incpaths=[paths], instfiles=[files], instpaths=[paths], plugins=[plugins], gui|mt|shared|nulrdd|debug|opt|map|implib|hbcppmm|strip|run|inc=[yes|no], cpp=[yes|no|def], warn=[max|yes|low|no|def], compr=[yes|no|def|min|max], head=[off|partial|full|native], skip=[yes|no], echo=<text>\nLines starting with '#' char are ignored" ),;
+      I_( ".hbc options (they should come in separate lines): libs=[<libname[s]>], hbcs=[<.hbc file[s]>], gt=[gtname], syslibs=[<libname[s]>], prgflags=[Harbour flags], cflags=[C compiler flags], resflags=[resource compiler flags], ldflags=[linker flags], pflags=[flags for plugins], libpaths=[paths], sources=[source files], psources=[source files for plugins], incpaths=[paths], instfiles=[files], instpaths=[paths], autohbcs=[<.ch>:<.hbc>], plugins=[plugins], gui|mt|shared|nulrdd|debug|opt|map|implib|hbcppmm|strip|run|inc=[yes|no], cpp=[yes|no|def], warn=[max|yes|low|no|def], compr=[yes|no|def|min|max], head=[off|partial|full|native], skip=[yes|no], echo=<text>\nLines starting with '#' char are ignored" ),;
       I_( "Platform filters are accepted in each .hbc line and with several options.\nFilter format: {[!][<plat>|<comp>|<cpu>|<keyword>]}. Filters can be combined using '&', '|' operators and grouped by parantheses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}, {allwin|allmsvc|allgcc|allmingw|allicc|allpocc|unix}, {x86|x86_64|ia64|arm|mips|sh}, {debug|nodebug|gui|std|mt|st|shared|static|unicode|ascii|xhb}" ),;
       I_( "Certain .hbc lines (libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, instfiles=, instpaths=, echo=) and corresponding command line parameters will accept macros: ${hb_root}, ${hb_dir}, ${hb_name}, ${hb_plat}, ${hb_comp}, ${hb_build}, ${hb_cpu}, ${hb_bin}, ${hb_lib}, ${hb_dyn}, ${hb_inc}, ${<envvar>}. libpaths= also accepts %{hb_name} which translates to the name of the .hbc file under search." ),;
       I_( 'Options accepting macros also support command substitution. Enclose command inside ``, and, if the command contains space, also enclose in double quotes. F.e. "-cflag=`wx-config --cflags`", or ldflags={unix&gcc}"`wx-config --libs`".' ),;
