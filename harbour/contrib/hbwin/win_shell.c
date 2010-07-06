@@ -75,12 +75,12 @@ HB_FUNC( WIN_SHELLNOTIFYICON )
 
    memset( &tnid, 0, sizeof( tnid ) );
    tnid.cbSize = sizeof( tnid );
-   tnid.hWnd = wapi_par_HWND( 1 );
-   tnid.uID = wapi_par_UINT( 2 );
-   tnid.uCallbackMessage = wapi_par_UINT( 3 );
+   tnid.hWnd = hbwapi_par_raw_HWND( 1 );
+   tnid.uID = hbwapi_par_UINT( 2 );
+   tnid.uCallbackMessage = hbwapi_par_UINT( 3 );
    if( tnid.uCallbackMessage )
       tnid.uFlags = NIF_MESSAGE;
-   tnid.hIcon = wapi_par_HICON( 4 );
+   tnid.hIcon = hbwapi_par_raw_HICON( 4 );
    if( tnid.hIcon )
       tnid.uFlags |= NIF_ICON;
    if( HB_ITEMCOPYSTR( hb_param( 5, HB_IT_ANY ),
@@ -99,8 +99,8 @@ HB_FUNC( WIN_SHELLNOTIFYICON )
    }
    #endif
 
-   wapi_ret_L( Shell_NotifyIcon( HB_ISLOG( 6 ) ?
-               ( hb_parl( 6 ) ? NIM_ADD : NIM_DELETE ) : NIM_MODIFY, &tnid ) );
+   hbwapi_ret_L( Shell_NotifyIcon( HB_ISLOG( 6 ) ?
+                 ( hb_parl( 6 ) ? NIM_ADD : NIM_DELETE ) : NIM_MODIFY, &tnid ) );
 }
 
 /* Details:
@@ -201,7 +201,7 @@ HB_FUNC( WIN_SHFILEOPERATION )
 
    void * hProgressTitle;
 
-   fop.hwnd                  = wapi_par_HWND( 1 );
+   fop.hwnd                  = hbwapi_par_raw_HWND( 1 );
    fop.wFunc                 = ( UINT ) hb_parni( 2 );
    fop.pFrom                 = ( LPCTSTR ) s_StringList( 3 );
    fop.pTo                   = ( LPCTSTR ) s_StringList( 4 );

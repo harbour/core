@@ -129,7 +129,7 @@ static HINSTANCE wvg_hInstance( void )
 
 HB_FUNC( WVG_HINSTANCE )
 {
-   wapi_ret_HANDLE( wvg_hInstance() );
+   hbwapi_ret_raw_HANDLE( wvg_hInstance() );
 }
 
 /*----------------------------------------------------------------------*/
@@ -607,7 +607,7 @@ HB_FUNC( WVG_GETNMMOUSEINFO )
 #if 0
 HB_FUNC( WVG_SETTOOLBARBUTTONTIP )
 {
-   LPNMTBGETINFOTIP lptbgit = ( LPNMTBGETINFOTIP ) wapi_par_LPARAM( 1 );
+   LPNMTBGETINFOTIP lptbgit = ( LPNMTBGETINFOTIP ) hbwapi_par_LPARAM( 1 );
    LPTSTR pszText = HB_TCHAR_CONVTO( hb_parcx( 2 ) );
 
    lptbgit->cchTextMax = strlen( hb_parcx( 2 ) );
@@ -1053,7 +1053,7 @@ HB_FUNC( WVG_ADDTOOLBARBUTTON )
    TBBUTTON    tbb;
    TBADDBITMAP tbab;
    HB_BOOL     bSuccess;
-   HWND        hWndTB = wapi_par_HWND( 1 );
+   HWND        hWndTB = hbwapi_par_raw_HWND( 1 );
    int         iCommand = hb_parni( 4 );
    TCHAR *     szCaption;
 
@@ -1160,7 +1160,7 @@ HB_FUNC( WVG_FILLRECT )
    rc.right  = hb_parvni( 2,3 );
    rc.bottom = hb_parvni( 2,4 );
 
-   FillRect( wapi_par_HDC( 1 ), &rc, wapi_par_HBRUSH( 3 ) );
+   FillRect( hbwapi_par_raw_HDC( 1 ), &rc, hbwapi_par_raw_HBRUSH( 3 ) );
 }
 
 /*----------------------------------------------------------------------*/
@@ -1172,11 +1172,11 @@ HB_FUNC( WVG_BEGINMOUSETRACKING )
 
    tmi.cbSize      = sizeof( TRACKMOUSEEVENT );
    tmi.dwFlags     = TME_LEAVE | TME_HOVER;
-   tmi.hwndTrack   = wapi_par_HWND( 1 );
+   tmi.hwndTrack   = hbwapi_par_raw_HWND( 1 );
    tmi.dwHoverTime = 1;
-   wapi_ret_L( _TrackMouseEvent( &tmi ) );
+   hbwapi_ret_L( _TrackMouseEvent( &tmi ) );
 #else
-   wapi_ret_L( FALSE );
+   hbwapi_ret_L( FALSE );
 #endif
 }
 
@@ -1215,7 +1215,7 @@ LRESULT CALLBACK ControlWindowProcedure( HWND hwnd, UINT msg, WPARAM wParam, LPA
 HB_FUNC( WVG_SETWINDOWPROCBLOCK )
 {
    WNDPROC  oldProc;
-   HWND     hWnd   = wapi_par_HWND( 1 );
+   HWND     hWnd   = hbwapi_par_raw_HWND( 1 );
    PHB_ITEM pBlock = hb_itemNew( hb_param( 2, HB_IT_BLOCK ) );
 
    SetProp( hWnd, TEXT( "BLOCKCALLBACK" ), pBlock );
@@ -1233,7 +1233,7 @@ HB_FUNC( WVG_SETWINDOWPROCBLOCK )
 
 HB_FUNC( WVG_RELEASEWINDOWPROCBLOCK )
 {
-   HWND     hWnd   = wapi_par_HWND( 1 );
+   HWND     hWnd   = hbwapi_par_raw_HWND( 1 );
    PHB_ITEM pBlock = ( PHB_ITEM ) RemoveProp( hWnd, TEXT( "BLOCKCALLBACK" ) );
 
    if( pBlock )

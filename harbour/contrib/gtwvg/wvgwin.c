@@ -1161,8 +1161,8 @@ HB_FUNC( WVG_SETLAYEREDWINDOWATTRIBUTES )
       pfnLayered = ( wvtSetLayeredWindowAttributes ) GetProcAddress( h, "SetLayeredWindowAttributes" );
       if( pfnLayered )
       {
-         HWND hWnd = wapi_par_HWND( 1 );
-         COLORREF cr = HB_ISNUM( 2 ) ? wapi_par_COLORREF( 2 ) : RGB( 255,255,255 );
+         HWND hWnd = hbwapi_par_raw_HWND( 1 );
+         COLORREF cr = HB_ISNUM( 2 ) ? hbwapi_par_COLORREF( 2 ) : RGB( 255,255,255 );
 
          SetWindowLong( hWnd, GWL_EXSTYLE, GetWindowLong( hWnd, GWL_EXSTYLE ) | WS_EX_LAYERED );
 
@@ -1181,8 +1181,8 @@ HB_FUNC( WVG_SETLAYEREDWINDOWATTRIBUTES )
 HB_FUNC( WVG_SENDTOOLBARMESSAGE )
 {
 /* #if ! defined( HB_OS_WIN_CE ) */
-   HWND hTB = wapi_par_HWND( 1 );
-   int  msg = wapi_par_INT( 2 );
+   HWND hTB = hbwapi_par_raw_HWND( 1 );
+   int  msg = hbwapi_par_INT( 2 );
 
    switch( msg )
    {
@@ -1192,25 +1192,25 @@ HB_FUNC( WVG_SENDTOOLBARMESSAGE )
 
          tbab.hInst = NULL;
 #if (_WIN32_IE >= 0x0500)
-         tbab.nID   = ( UINT_PTR ) wapi_par_HBITMAP( 3 );
+         tbab.nID   = ( UINT_PTR ) hbwapi_par_raw_HBITMAP( 3 );
 #else
-         tbab.nID   = ( UINT ) wapi_par_HBITMAP( 3 );
+         tbab.nID   = ( UINT ) hbwapi_par_raw_HBITMAP( 3 );
 #endif
-         wapi_ret_NI( ( int ) SendMessage( hTB, TB_ADDBITMAP, ( WPARAM ) 1, ( LPARAM ) &tbab ) );
+         hbwapi_ret_NI( ( int ) SendMessage( hTB, TB_ADDBITMAP, ( WPARAM ) 1, ( LPARAM ) &tbab ) );
          break;
       }
       case TB_ADDBUTTONS           :
       {
          TBBUTTON tbb;
 
-         tbb.iBitmap   = wapi_par_INT( 3 );
-         tbb.idCommand = wapi_par_INT( 4 );
+         tbb.iBitmap   = hbwapi_par_INT( 3 );
+         tbb.idCommand = hbwapi_par_INT( 4 );
          tbb.fsState   = TBSTATE_ENABLED;
          tbb.fsStyle   = TBSTYLE_BUTTON;
          tbb.dwData    = 0;
-         tbb.iString   = wapi_par_INT( 5 );
+         tbb.iString   = hbwapi_par_INT( 5 );
 
-         wapi_ret_L( SendMessage( hTB, TB_ADDBUTTONS, ( WPARAM ) 1, ( LPARAM ) ( LPTBBUTTON ) &tbb ) );
+         hbwapi_ret_L( SendMessage( hTB, TB_ADDBUTTONS, ( WPARAM ) 1, ( LPARAM ) ( LPTBBUTTON ) &tbb ) );
          break;
       }
       case TB_ADDSTRING            :
@@ -1222,7 +1222,7 @@ HB_FUNC( WVG_SENDTOOLBARMESSAGE )
          iString = ( int ) SendMessage( hTB, TB_ADDSTRING, ( WPARAM ) NULL, ( LPARAM ) szCaption );
          HB_TCHAR_FREE( szCaption );
 
-         wapi_ret_NI( iString );
+         hbwapi_ret_NI( iString );
          break;
       }
       case TB_AUTOSIZE             :
@@ -1269,26 +1269,26 @@ HB_FUNC( WVG_SENDTOOLBARMESSAGE )
          break;
       case TB_SETBITMAPSIZE        :
          SendMessage( hTB, TB_SETBITMAPSIZE, ( WPARAM ) 0,
-                      ( LPARAM ) MAKELONG( wapi_par_INT( 3 ), wapi_par_INT( 4 ) ) );
+                      ( LPARAM ) MAKELONG( hbwapi_par_INT( 3 ), hbwapi_par_INT( 4 ) ) );
          break;
       case TB_SETBUTTONINFO        :
          break;
       case TB_SETBUTTONSIZE        :
          SendMessage( hTB, TB_SETBUTTONSIZE, ( WPARAM ) 0,
-                      ( LPARAM ) MAKELONG( wapi_par_INT( 3 ), wapi_par_INT( 4 ) ) );
+                      ( LPARAM ) MAKELONG( hbwapi_par_INT( 3 ), hbwapi_par_INT( 4 ) ) );
          break;
       case TB_SETBUTTONWIDTH       :
          SendMessage( hTB, TB_SETBUTTONWIDTH, ( WPARAM ) 0,
-                      ( LPARAM ) MAKELONG( wapi_par_INT( 3 ), wapi_par_INT( 4 ) ) );
+                      ( LPARAM ) MAKELONG( hbwapi_par_INT( 3 ), hbwapi_par_INT( 4 ) ) );
          break;
       case TB_SETIMAGELIST         :
-         SendMessage( hTB, TB_SETIMAGELIST, ( WPARAM ) 0, ( LPARAM ) wapi_par_HIMAGELIST( 3 ) );
+         SendMessage( hTB, TB_SETIMAGELIST, ( WPARAM ) 0, ( LPARAM ) hbwapi_par_raw_HIMAGELIST( 3 ) );
          break;
       case TB_SETINDENT            :
-         SendMessage( hTB, TB_SETINDENT, ( WPARAM ) wapi_par_INT( 3 ), ( LPARAM ) 0 );
+         SendMessage( hTB, TB_SETINDENT, ( WPARAM ) hbwapi_par_INT( 3 ), ( LPARAM ) 0 );
          break;
       case TB_SETMAXTEXTROWS       :
-         SendMessage( hTB, TB_SETMAXTEXTROWS, ( WPARAM ) wapi_par_INT( 2 ), ( LPARAM ) 0 );
+         SendMessage( hTB, TB_SETMAXTEXTROWS, ( WPARAM ) hbwapi_par_INT( 2 ), ( LPARAM ) 0 );
          break;
       case TB_SETPARENT            :
       case TB_SETROWS              :
@@ -1319,10 +1319,10 @@ HB_FUNC( WVG_SENDTOOLBARMESSAGE )
 #if ! defined( HB_OS_WIN_CE )
       case TB_SETPADDING           :
          SendMessage( hTB, TB_SETPADDING, ( WPARAM ) 0,
-                           ( LPARAM ) MAKELPARAM( wapi_par_INT( 2 ), wapi_par_INT( 3 ) ) );
+                           ( LPARAM ) MAKELPARAM( hbwapi_par_INT( 2 ), hbwapi_par_INT( 3 ) ) );
          break;
       case TB_MARKBUTTON           :
-         SendMessage( hTB, TB_MARKBUTTON, ( WPARAM ) wapi_par_INT( 3 ), ( LPARAM ) MAKELONG( hb_parl( 4 ),0 ) );
+         SendMessage( hTB, TB_MARKBUTTON, ( WPARAM ) hbwapi_par_INT( 3 ), ( LPARAM ) MAKELONG( hb_parl( 4 ),0 ) );
          break;
       case TB_SETINSERTMARK        :
       case TB_SETINSERTMARKCOLOR   :

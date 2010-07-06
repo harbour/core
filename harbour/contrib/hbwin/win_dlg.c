@@ -247,10 +247,10 @@ static void s_GetFileName( HB_BOOL fSave )
    ofn.hwndOwner = GetActiveWindow();
    ofn.hInstance = GetModuleHandle( NULL );
 
-   ofn.nFilterIndex     = wapi_par_DWORD( 6 );
+   ofn.nFilterIndex     = hbwapi_par_DWORD( 6 );
    ofn.lpstrFilter      = lpstrFilter = s_dialogPairs( 5, &ofn.nFilterIndex );
 
-   ofn.nMaxFile         = wapi_par_DWORD( 7 );
+   ofn.nMaxFile         = hbwapi_par_DWORD( 7 );
    if( ofn.nMaxFile < 0x100 )
       ofn.nMaxFile = ofn.nMaxFile == 0 ? 0x10000 : 0x100;
    ofn.lpstrFile        = ( LPTSTR )
@@ -259,7 +259,7 @@ static void s_GetFileName( HB_BOOL fSave )
 
    ofn.lpstrInitialDir  = HB_PARSTR( 3, &hInitDir, NULL );
    ofn.lpstrTitle       = HB_PARSTR( 2, &hTitle, NULL );
-   ofn.Flags            = HB_ISNUM( 1 ) ? wapi_par_DWORD( 1 ) :
+   ofn.Flags            = HB_ISNUM( 1 ) ? hbwapi_par_DWORD( 1 ) :
                           OFN_EXPLORER | OFN_ALLOWMULTISELECT | OFN_HIDEREADONLY;
    ofn.lpstrDefExt      = HB_PARSTR( 4, &hDefExt, NULL );
    if( ofn.lpstrDefExt && ofn.lpstrDefExt[ 0 ] == '.' )

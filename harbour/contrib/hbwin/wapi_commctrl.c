@@ -69,9 +69,9 @@ int ImageList_Add( HIMAGELIST himl, HBITMAP hbmImage, HBITMAP hbmMask );
 */
 HB_FUNC( WAPI_IMAGELIST_ADD )
 {
-   wapi_ret_NI( ImageList_Add( wapi_par_HIMAGELIST( 1 ),
-                               wapi_par_HBITMAP( 2 ),
-                               wapi_par_HBITMAP( 3 ) ) );
+   hbwapi_ret_NI( ImageList_Add( hbwapi_par_raw_HIMAGELIST( 1 ),
+                                 hbwapi_par_raw_HBITMAP( 2 ),
+                                 hbwapi_par_raw_HBITMAP( 3 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /*
@@ -79,9 +79,9 @@ int ImageList_AddMasked( HIMAGELIST himl, HBITMAP hbmImage, COLORREF crMask );
 */
 HB_FUNC( WAPI_IMAGELIST_ADDMASKED )
 {
-   wapi_ret_NI( ImageList_AddMasked( wapi_par_HIMAGELIST( 1 ),
-                                     wapi_par_HBITMAP( 2 ),
-                                     wapi_par_COLORREF( 3 ) ) );
+   hbwapi_ret_NI( ImageList_AddMasked( hbwapi_par_raw_HIMAGELIST( 1 ),
+                                       hbwapi_par_raw_HBITMAP( 2 ),
+                                       hbwapi_par_COLORREF( 3 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /*
@@ -89,10 +89,10 @@ BOOL ImageList_BeginDrag( HIMAGELIST himlTrack, int iTrack, int dxHotspot, int d
 */
 HB_FUNC( WAPI_IMAGELIST_BEGINDRAG )
 {
-   wapi_ret_L( ImageList_BeginDrag( wapi_par_HIMAGELIST( 1 ),
-                                    wapi_par_INT( 2 ),
-                                    wapi_par_INT( 3 ),
-                                    wapi_par_INT( 4 ) ) );
+   hbwapi_ret_L( ImageList_BeginDrag( hbwapi_par_raw_HIMAGELIST( 1 ),
+                                      hbwapi_par_INT( 2 ),
+                                      hbwapi_par_INT( 3 ),
+                                      hbwapi_par_INT( 4 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /*
@@ -110,13 +110,13 @@ BOOL ImageList_Copy( HIMAGELIST himlDst, int iDst, HIMAGELIST himlSrc, int iSrc,
 HB_FUNC( WAPI_IMAGELIST_COPY )
 {
 #if ( _WIN32_IE >= 0x0300 )
-   wapi_ret_L( ImageList_Copy( wapi_par_HIMAGELIST( 1 ),
-                               wapi_par_INT( 2 ),
-                               wapi_par_HIMAGELIST( 3 ),
-                               wapi_par_INT( 4 ),
-                               wapi_par_UINT( 5 ) ) );
+   hbwapi_ret_L( ImageList_Copy( hbwapi_par_raw_HIMAGELIST( 1 ),
+                                 hbwapi_par_INT( 2 ),
+                                 hbwapi_par_raw_HIMAGELIST( 3 ),
+                                 hbwapi_par_INT( 4 ),
+                                 hbwapi_par_UINT( 5 ) ) );
 #else
-   wapi_ret_L( FALSE );
+   hbwapi_ret_L( FALSE );
 #endif
 }
 /*----------------------------------------------------------------------*/
@@ -125,11 +125,11 @@ HIMAGELIST ImageList_Create( int cx, int cy, UINT flags, int cInitial, int cGrow
 */
 HB_FUNC( WAPI_IMAGELIST_CREATE )
 {
-   wapi_ret_HANDLE( ImageList_Create( wapi_par_INT( 1 ),
-                                      wapi_par_INT( 2 ),
-                                      wapi_par_UINT( 3 ),
-                                      wapi_par_INT( 4 ),
-                                      wapi_par_INT( 5 ) ) );
+   hbwapi_ret_raw_HANDLE( ImageList_Create( hbwapi_par_INT( 1 ),
+                                            hbwapi_par_INT( 2 ),
+                                            hbwapi_par_UINT( 3 ),
+                                            hbwapi_par_INT( 4 ),
+                                            hbwapi_par_INT( 5 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /*
@@ -137,7 +137,7 @@ BOOL ImageList_Destroy( HIMAGELIST himl );
 */
 HB_FUNC( WAPI_IMAGELIST_DESTROY )
 {
-   wapi_ret_L( ImageList_Destroy( wapi_par_HIMAGELIST( 1 ) ) );
+   hbwapi_ret_L( ImageList_Destroy( hbwapi_par_raw_HIMAGELIST( 1 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /*
@@ -145,9 +145,9 @@ BOOL ImageList_DragEnter( HWND hwndLock, int x, int y );
 */
 HB_FUNC( WAPI_IMAGELIST_DRAGENTER )
 {
-   wapi_ret_L( ImageList_DragEnter( wapi_par_HWND( 1 ),
-                                    wapi_par_INT( 2 ),
-                                    wapi_par_INT( 3 ) ) );
+   hbwapi_ret_L( ImageList_DragEnter( hbwapi_par_raw_HWND( 1 ),
+                                      hbwapi_par_INT( 2 ),
+                                      hbwapi_par_INT( 3 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /*
@@ -155,7 +155,7 @@ BOOL ImageList_DragLeave( HWND hwndLock );
 */
 HB_FUNC( WAPI_IMAGELIST_DRAGLEAVE )
 {
-   wapi_ret_L( ImageList_DragLeave( wapi_par_HWND( 1 ) ) );
+   hbwapi_ret_L( ImageList_DragLeave( hbwapi_par_raw_HWND( 1 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /*
@@ -163,7 +163,8 @@ BOOL ImageList_DragMove( int x, int y );
 */
 HB_FUNC( WAPI_IMAGELIST_DRAGMOVE )
 {
-   wapi_ret_L( ImageList_DragMove( wapi_par_INT( 1 ), wapi_par_INT( 2 ) ) );
+   hbwapi_ret_L( ImageList_DragMove( hbwapi_par_INT( 1 ),
+                                     hbwapi_par_INT( 2 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /*
@@ -171,7 +172,7 @@ BOOL ImageList_DragShowNolock( BOOL fShow );
 */
 HB_FUNC( WAPI_IMAGELIST_DRAGSHOWNOLOCK )
 {
-   wapi_ret_L( ImageList_DragShowNolock( hb_parl( 1 ) ) );
+   hbwapi_ret_L( ImageList_DragShowNolock( hb_parl( 1 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /*
@@ -179,12 +180,12 @@ BOOL ImageList_Draw( HIMAGELIST himl, int i, HDC hdcDst, int x, int y, UINT fSty
 */
 HB_FUNC( WAPI_IMAGELIST_DRAW )
 {
-   wapi_ret_L( ImageList_Draw( wapi_par_HIMAGELIST( 1 ),
-                               wapi_par_INT( 1 ),
-                               wapi_par_HDC( 3 ),
-                               wapi_par_INT( 4 ),
-                               wapi_par_INT( 5 ),
-                               wapi_par_UINT( 6 ) ) );
+   hbwapi_ret_L( ImageList_Draw( hbwapi_par_raw_HIMAGELIST( 1 ),
+                                 hbwapi_par_INT( 1 ),
+                                 hbwapi_par_raw_HDC( 3 ),
+                                 hbwapi_par_INT( 4 ),
+                                 hbwapi_par_INT( 5 ),
+                                 hbwapi_par_UINT( 6 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /*
@@ -193,16 +194,16 @@ BOOL ImageList_DrawEx( HIMAGELIST himl, int i, HDC hdcDst, int x, int y, int dx,
 */
 HB_FUNC( WAPI_IMAGELIST_DRAWEX )
 {
-   wapi_ret_L( ImageList_DrawEx( wapi_par_HIMAGELIST( 1 ),
-                                 wapi_par_INT( 2 ),
-                                 wapi_par_HDC( 3 ),
-                                 wapi_par_INT( 4 ),
-                                 wapi_par_INT( 5 ),
-                                 wapi_par_INT( 6 ),
-                                 wapi_par_INT( 7 ),
-                                 wapi_par_COLORREF( 8 ),
-                                 wapi_par_COLORREF( 9 ),
-                                 wapi_par_UINT( 10 ) ) );
+   hbwapi_ret_L( ImageList_DrawEx( hbwapi_par_raw_HIMAGELIST( 1 ),
+                                   hbwapi_par_INT( 2 ),
+                                   hbwapi_par_raw_HDC( 3 ),
+                                   hbwapi_par_INT( 4 ),
+                                   hbwapi_par_INT( 5 ),
+                                   hbwapi_par_INT( 6 ),
+                                   hbwapi_par_INT( 7 ),
+                                   hbwapi_par_COLORREF( 8 ),
+                                   hbwapi_par_COLORREF( 9 ),
+                                   hbwapi_par_UINT( 10 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /*
@@ -220,9 +221,9 @@ HIMAGELIST ImageList_Duplicate( HIMAGELIST himl );
 HB_FUNC( WAPI_IMAGELIST_DUPLICATE )
 {
 #if ( _WIN32_IE >= 0x0400 )
-   wapi_ret_HANDLE( ImageList_Duplicate( wapi_par_HIMAGELIST( 1 ) ) );
+   hbwapi_ret_raw_HANDLE( ImageList_Duplicate( hbwapi_par_raw_HIMAGELIST( 1 ) ) );
 #else
-   wapi_ret_HANDLE( NULL );
+   hbwapi_ret_raw_HANDLE( NULL );
 #endif
 }
 /*----------------------------------------------------------------------*/
@@ -241,7 +242,7 @@ COLORREF ImageList_GetBkColor( HIMAGELIST himl );
 */
 HB_FUNC( WAPI_IMAGELIST_GETBKCOLOR )
 {
-   wapi_ret_COLORREF( ImageList_GetBkColor( wapi_par_HIMAGELIST( 1 ) ) );
+   hbwapi_ret_COLORREF( ImageList_GetBkColor( hbwapi_par_raw_HIMAGELIST( 1 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /*
@@ -258,9 +259,9 @@ HICON ImageList_GetIcon( HIMAGELIST himl, int i, UINT flags );
 */
 HB_FUNC( WAPI_IMAGELIST_GETICON )
 {
-   wapi_ret_HANDLE( ImageList_GetIcon( wapi_par_HIMAGELIST( 1 ),
-                                       wapi_par_INT( 2 ),
-                                       wapi_par_UINT( 3 ) ) );
+   hbwapi_ret_raw_HANDLE( ImageList_GetIcon( hbwapi_par_raw_HIMAGELIST( 1 ),
+                                             hbwapi_par_INT( 2 ),
+                                             hbwapi_par_UINT( 3 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /*
@@ -271,7 +272,7 @@ HB_FUNC( WAPI_IMAGELIST_GETICONSIZE )
    int cx;
    int cy;
 
-   if( ImageList_GetIconSize( wapi_par_HIMAGELIST( 1 ), &cx, &cy ) )
+   if( ImageList_GetIconSize( hbwapi_par_raw_HIMAGELIST( 1 ), &cx, &cy ) )
    {
       hb_storni( cx, 2 );
       hb_storni( cy, 3 );
@@ -286,7 +287,7 @@ int ImageList_GetImageCount( HIMAGELIST himl );
 */
 HB_FUNC( WAPI_IMAGELIST_GETIMAGECOUNT )
 {
-   wapi_ret_NI( ImageList_GetImageCount( wapi_par_HIMAGELIST( 1 ) ) );
+   hbwapi_ret_NI( ImageList_GetImageCount( hbwapi_par_raw_HIMAGELIST( 1 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /*                          T O R E V I E W
@@ -297,7 +298,7 @@ HB_FUNC( WAPI_IMAGELIST_GETIMAGEINFO )
 {
    IMAGEINFO ii;
 
-   if( ImageList_GetImageInfo( wapi_par_HIMAGELIST( 1 ), wapi_par_INT( 2 ), &ii ) )
+   if( ImageList_GetImageInfo( hbwapi_par_raw_HIMAGELIST( 1 ), hbwapi_par_INT( 2 ), &ii ) )
       hb_retclen( ( char * ) &ii, sizeof( IMAGEINFO ) );
    else
       hb_retc_null();
@@ -314,15 +315,15 @@ HB_FUNC( WAPI_IMAGELIST_LOADIMAGE )
    if( HB_ISCHAR( 2 ) )
       image = ( LPCTSTR ) hb_parc( 2 );
    else
-      image = ( LPCTSTR ) MAKEINTRESOURCE( wapi_par_INT( 2 ) );
+      image = ( LPCTSTR ) MAKEINTRESOURCE( hbwapi_par_INT( 2 ) );
 
-   wapi_ret_HANDLE( ImageList_LoadImage( wapi_par_HINSTANCE( 1 ),
-                                         image,
-                                         wapi_par_INT( 3 ),
-                                         wapi_par_INT( 4 ),
-                                         wapi_par_COLORREF( 5 ),
-                                         wapi_par_UINT( 6 ),
-                                         wapi_par_UINT( 7 ) ) );
+   hbwapi_ret_raw_HANDLE( ImageList_LoadImage( hbwapi_par_raw_HINSTANCE( 1 ),
+                                               image,
+                                               hbwapi_par_INT( 3 ),
+                                               hbwapi_par_INT( 4 ),
+                                               hbwapi_par_COLORREF( 5 ),
+                                               hbwapi_par_UINT( 6 ),
+                                               hbwapi_par_UINT( 7 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /*
@@ -330,12 +331,12 @@ HIMAGELIST ImageList_Merge( HIMAGELIST himl1, int i1, HIMAGELIST himl2, int i2, 
 */
 HB_FUNC( WAPI_IMAGELIST_MERGE )
 {
-   wapi_ret_HANDLE( ImageList_Merge( wapi_par_HIMAGELIST( 1 ),
-                                     wapi_par_INT( 2 ),
-                                     wapi_par_HIMAGELIST( 3 ),
-                                     wapi_par_INT( 4 ),
-                                     wapi_par_INT( 5 ),
-                                     wapi_par_INT( 6 ) ) );
+   hbwapi_ret_raw_HANDLE( ImageList_Merge( hbwapi_par_raw_HIMAGELIST( 1 ),
+                                           hbwapi_par_INT( 2 ),
+                                           hbwapi_par_raw_HIMAGELIST( 3 ),
+                                           hbwapi_par_INT( 4 ),
+                                           hbwapi_par_INT( 5 ),
+                                           hbwapi_par_INT( 6 ) ) );
 
 }
 /*----------------------------------------------------------------------*/
@@ -362,8 +363,8 @@ BOOL ImageList_Remove( HIMAGELIST himl, int i );
 */
 HB_FUNC( WAPI_IMAGELIST_REMOVE )
 {
-   wapi_ret_L( ImageList_Remove( wapi_par_HIMAGELIST( 1 ),
-                                 wapi_par_INT( 2 ) ) );
+   hbwapi_ret_L( ImageList_Remove( hbwapi_par_raw_HIMAGELIST( 1 ),
+                                   hbwapi_par_INT( 2 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /*
@@ -371,10 +372,10 @@ BOOL ImageList_Replace( HIMAGELIST himl, int i, HBITMAP hbmImage, HBITMAP hbmMas
 */
 HB_FUNC( WAPI_IMAGELIST_REPLACE )
 {
-   wapi_ret_L( ImageList_Replace( wapi_par_HIMAGELIST( 1 ),
-                                  wapi_par_INT( 2 ),
-                                  wapi_par_HBITMAP( 3 ),
-                                  wapi_par_HBITMAP( 4 ) ) );
+   hbwapi_ret_L( ImageList_Replace( hbwapi_par_raw_HIMAGELIST( 1 ),
+                                    hbwapi_par_INT( 2 ),
+                                    hbwapi_par_raw_HBITMAP( 3 ),
+                                    hbwapi_par_raw_HBITMAP( 4 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /*
@@ -382,9 +383,9 @@ int ImageList_ReplaceIcon( HIMAGELIST himl, int i, HICON hicon );
 */
 HB_FUNC( WAPI_IMAGELIST_REPLACEICON )
 {
-   wapi_ret_NI( ImageList_ReplaceIcon( wapi_par_HIMAGELIST( 1 ),
-                                       wapi_par_INT( 2 ),
-                                       wapi_par_HICON( 3 ) ) );
+   hbwapi_ret_NI( ImageList_ReplaceIcon( hbwapi_par_raw_HIMAGELIST( 1 ),
+                                         hbwapi_par_INT( 2 ),
+                                         hbwapi_par_raw_HICON( 3 ) ) );
 
 }
 /*----------------------------------------------------------------------*/
@@ -393,8 +394,8 @@ COLORREF ImageList_SetBkColor( HIMAGELIST himl, COLORREF clrBk );
 */
 HB_FUNC( WAPI_IMAGELIST_SETBKCOLOR )
 {
-   wapi_ret_COLORREF( ImageList_SetBkColor( wapi_par_HIMAGELIST( 1 ),
-                                            wapi_par_COLORREF( 2 ) ) );
+   hbwapi_ret_COLORREF( ImageList_SetBkColor( hbwapi_par_raw_HIMAGELIST( 1 ),
+                                              hbwapi_par_COLORREF( 2 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /*
@@ -403,9 +404,9 @@ int ImageList_SetColorTable( HIMAGELIST himl, int start, int len, RGBQUAD *prgb 
 #if 0
 HB_FUNC( WAPI_IMAGELIST_SETCOLORTABLE )
 {
-   wapi_ret_NI( ImageList_SetColorTable( wapi_par_HIMAGELIST( 1 ),
-                                         wapi_par_INT( 2 ),
-                                         wapi_par_INT( 3 ),
+   hbwapi_ret_NI( ImageList_SetColorTable( hbwapi_par_raw_HIMAGELIST( 1 ),
+                                           hbwapi_par_INT( 2 ),
+                                           hbwapi_par_INT( 3 ),
 }
 #endif
 /*----------------------------------------------------------------------*/
@@ -414,10 +415,10 @@ BOOL ImageList_SetDragCursorImage( HIMAGELIST himlDrag, int iDrag, int dxHotspot
 */
 HB_FUNC( WAPI_IMAGELIST_SETDRAGCURSORIMAGE )
 {
-   wapi_ret_L( ImageList_SetDragCursorImage( wapi_par_HIMAGELIST( 1 ),
-                                             wapi_par_INT( 2 ),
-                                             wapi_par_INT( 3 ),
-                                             wapi_par_INT( 4 ) ) );
+   hbwapi_ret_L( ImageList_SetDragCursorImage( hbwapi_par_raw_HIMAGELIST( 1 ),
+                                               hbwapi_par_INT( 2 ),
+                                               hbwapi_par_INT( 3 ),
+                                               hbwapi_par_INT( 4 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /*
@@ -425,9 +426,9 @@ BOOL ImageList_SetIconSize( HIMAGELIST himl, int cx, int cy );
 */
 HB_FUNC( WAPI_IMAGELIST_SETICONSIZE )
 {
-   wapi_ret_L( ImageList_SetIconSize( wapi_par_HIMAGELIST( 1 ),
-                                      wapi_par_INT( 2 ),
-                                      wapi_par_INT( 3 ) ) );
+   hbwapi_ret_L( ImageList_SetIconSize( hbwapi_par_raw_HIMAGELIST( 1 ),
+                                        hbwapi_par_INT( 2 ),
+                                        hbwapi_par_INT( 3 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /*
@@ -436,10 +437,10 @@ BOOL ImageList_SetImageCount( HIMAGELIST himl, UINT uNewCount );
 HB_FUNC( WAPI_IMAGELIST_SETIMAGECOUNT )
 {
 #if ( _WIN32_IE >= 0x0400 )
-   wapi_ret_L( ImageList_SetImageCount( wapi_par_HIMAGELIST( 1 ),
-                                        wapi_par_UINT( 2 ) ) );
+   hbwapi_ret_L( ImageList_SetImageCount( hbwapi_par_raw_HIMAGELIST( 1 ),
+                                          hbwapi_par_UINT( 2 ) ) );
 #else
-   wapi_ret_L( FALSE );
+   hbwapi_ret_L( FALSE );
 #endif
 }
 /*----------------------------------------------------------------------*/
@@ -486,10 +487,10 @@ HB_FUNC( WAPI_TABCTRL_INSERTITEM )
    void * hText;
 
    item.mask    = TCIF_TEXT | TCIF_IMAGE;
-   item.iImage  = HB_ISNUM( 4 ) ? wapi_par_INT( 4 ) : -1;
+   item.iImage  = HB_ISNUM( 4 ) ? hbwapi_par_INT( 4 ) : -1;
    item.pszText = ( LPTSTR ) HB_PARSTRDEF( 3, &hText, NULL );
 
-   wapi_ret_NI( TabCtrl_InsertItem( wapi_par_HWND( 1 ), wapi_par_INT( 3 ), &item ) );
+   hbwapi_ret_NI( TabCtrl_InsertItem( hbwapi_par_raw_HWND( 1 ), hbwapi_par_INT( 3 ), &item ) );
 
    hb_strfree( hText );
 }
@@ -497,20 +498,20 @@ HB_FUNC( WAPI_TABCTRL_INSERTITEM )
 
 HB_FUNC( WAPI_TABCTRL_SETCURSEL )
 {
-   wapi_ret_NI( TabCtrl_SetCurSel( wapi_par_HWND( 1 ) , hb_parni( 2 ) ) );
+   hbwapi_ret_NI( TabCtrl_SetCurSel( hbwapi_par_raw_HWND( 1 ) , hb_parni( 2 ) ) );
 }
 /*----------------------------------------------------------------------*/
 
 HB_FUNC( WAPI_TABCTRL_GETCURSEL )
 {
-   wapi_ret_NI( TabCtrl_GetCurSel( wapi_par_HWND( 1 ) ) );
+   hbwapi_ret_NI( TabCtrl_GetCurSel( hbwapi_par_raw_HWND( 1 ) ) );
 }
 /*----------------------------------------------------------------------*/
 
 HB_FUNC( WAPI_TABCTRL_GETITEM )
 {
    TC_ITEM item;
-   hb_retl( TabCtrl_GetItem( wapi_par_HWND( 1 ), wapi_par_INT( 2 ), &item ) );
+   hb_retl( TabCtrl_GetItem( hbwapi_par_raw_HWND( 1 ), hbwapi_par_INT( 2 ), &item ) );
 
    /* assign  item to param 3 */
 }
@@ -518,7 +519,7 @@ HB_FUNC( WAPI_TABCTRL_GETITEM )
 
 HB_FUNC( WAPI_TABCTRL_GETITEMCOUNT )
 {
-   wapi_ret_NI( TabCtrl_GetItemCount( wapi_par_HWND( 1 ) ) );
+   hbwapi_ret_NI( TabCtrl_GetItemCount( hbwapi_par_raw_HWND( 1 ) ) );
 }
 /*----------------------------------------------------------------------*/
 
@@ -527,7 +528,7 @@ HB_FUNC( WAPI_TABCTRL_GETITEMRECT )
    PHB_ITEM aRect = hb_itemArrayNew( 4 );
    RECT rc;
 
-   ( void ) TabCtrl_GetItemRect( wapi_par_HWND( 1 ), wapi_par_INT( 2 ), &rc );
+   ( void ) TabCtrl_GetItemRect( hbwapi_par_raw_HWND( 1 ), hbwapi_par_INT( 2 ), &rc );
 
    hb_arraySetNL( aRect, 1, rc.left );
    hb_arraySetNL( aRect, 2, rc.top );
@@ -540,7 +541,7 @@ HB_FUNC( WAPI_TABCTRL_GETITEMRECT )
 
 HB_FUNC( WAPI_TABCTRL_GETROWCOUNT )
 {
-   wapi_ret_NI( TabCtrl_GetRowCount( wapi_par_HWND( 1 ) ) );
+   hbwapi_ret_NI( TabCtrl_GetRowCount( hbwapi_par_raw_HWND( 1 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /* TabCtrl_GetImageList(hwnd) */
@@ -548,7 +549,7 @@ HB_FUNC( WAPI_TABCTRL_GETROWCOUNT )
 
 HB_FUNC( WAPI_TABCTRL_GETIMAGELIST )
 {
-   wapi_ret_NINT( ( HB_PTRDIFF ) TabCtrl_GetImageList( wapi_par_HWND( 1 ) ) );
+   hbwapi_ret_NINT( ( HB_PTRDIFF ) TabCtrl_GetImageList( hbwapi_par_raw_HWND( 1 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /* #define TabCtrl_SetImageList(hwnd, himl) */
@@ -556,8 +557,8 @@ HB_FUNC( WAPI_TABCTRL_GETIMAGELIST )
 
 HB_FUNC( WAPI_TABCTRL_SETIMAGELIST )
 {
-   wapi_ret_NINT( ( HB_PTRDIFF ) TabCtrl_SetImageList( wapi_par_HWND( 1 ),
-                                                       wapi_par_HIMAGELIST( 2 ) ) );
+   hbwapi_ret_NINT( ( HB_PTRDIFF ) TabCtrl_SetImageList( hbwapi_par_raw_HWND( 1 ),
+                                                         hbwapi_par_raw_HIMAGELIST( 2 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /* Wapi_TabCtrl_SetItem( hWndTab, nInsertPos, cText, iImageListIndex ) */
@@ -570,10 +571,10 @@ HB_FUNC( WAPI_TABCTRL_SETITEM )
    void * hText;
 
    item.mask    = TCIF_TEXT | TCIF_IMAGE;
-   item.iImage  = HB_ISNUM( 4 ) ? wapi_par_INT( 4 ) : -1;
+   item.iImage  = HB_ISNUM( 4 ) ? hbwapi_par_INT( 4 ) : -1;
    item.pszText = ( LPTSTR ) HB_PARSTRDEF( 3, &hText, NULL );
 
-   wapi_ret_L( TabCtrl_SetItem( wapi_par_HWND( 1 ), wapi_par_INT( 2 ), &item ) );
+   hbwapi_ret_L( TabCtrl_SetItem( hbwapi_par_raw_HWND( 1 ), hbwapi_par_INT( 2 ), &item ) );
 
    hb_strfree( hText );
 }
@@ -583,7 +584,7 @@ HB_FUNC( WAPI_TABCTRL_SETITEM )
 
 HB_FUNC( WAPI_TABCTRL_DELETEALLITEMS )
 {
-   wapi_ret_L( TabCtrl_DeleteAllItems( wapi_par_HWND( 1 ) ) );
+   hbwapi_ret_L( TabCtrl_DeleteAllItems( hbwapi_par_raw_HWND( 1 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /* TabCtrl_DeleteItem(hwnd, i) */
@@ -591,7 +592,7 @@ HB_FUNC( WAPI_TABCTRL_DELETEALLITEMS )
 
 HB_FUNC( WAPI_TABCTRL_DELETEITEM )
 {
-   wapi_ret_L( TabCtrl_DeleteItem( wapi_par_HWND( 1 ), ( WPARAM ) wapi_par_INT( 2 ) ) );
+   hbwapi_ret_L( TabCtrl_DeleteItem( hbwapi_par_raw_HWND( 1 ), ( WPARAM ) hbwapi_par_INT( 2 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /* TabCtrl_HitTest(hwndTC, pinfo) */
@@ -603,7 +604,7 @@ HB_FUNC( WAPI_TABCTRL_HITTEST )
 {
    TCHITTESTINFO tcht;
 
-   hb_parni( TabCtrl_HitTest( wapi_par_HWND( 1 ), &tcht ) );
+   hb_parni( TabCtrl_HitTest( hbwapi_par_raw_HWND( 1 ), &tcht ) );
 }
 /*----------------------------------------------------------------------*/
 /* TabCtrl_SetItemExtra(hwndTC, cb) */
@@ -611,7 +612,7 @@ HB_FUNC( WAPI_TABCTRL_HITTEST )
 
 HB_FUNC( WAPI_TABCTRL_SETITEMEXTRA )
 {
-   wapi_ret_L( TabCtrl_SetItemExtra( wapi_par_HWND( 1 ), wapi_par_INT( 2 ) ) );
+   hbwapi_ret_L( TabCtrl_SetItemExtra( hbwapi_par_raw_HWND( 1 ), hbwapi_par_INT( 2 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /* TabCtrl_AdjustRect(hwnd, bLarger, prc) */
@@ -628,7 +629,7 @@ HB_FUNC( WAPI_TABCTRL_ADJUSTRECT )
       rc.right  = hb_parvnl( 3, 3 );
       rc.bottom = hb_parvnl( 3, 4 );
 
-      ( void ) TabCtrl_AdjustRect( wapi_par_HWND( 1 ), wapi_par_BOOL( 2 ), &rc );
+      ( void ) TabCtrl_AdjustRect( hbwapi_par_raw_HWND( 1 ), hbwapi_par_BOOL( 2 ), &rc );
 
       hb_storvnl( rc.left  , 3, 1 );
       hb_storvnl( rc.top   , 3, 2 );
@@ -642,7 +643,7 @@ HB_FUNC( WAPI_TABCTRL_ADJUSTRECT )
 
 HB_FUNC( WAPI_TABCTRL_SETITEMSIZE )
 {
-   wapi_ret_NINT( TabCtrl_SetItemSize( wapi_par_HWND( 1 ), wapi_par_INT( 2 ), wapi_par_INT( 3 ) ) );
+   hbwapi_ret_NINT( TabCtrl_SetItemSize( hbwapi_par_raw_HWND( 1 ), hbwapi_par_INT( 2 ), hbwapi_par_INT( 3 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /* TabCtrl_RemoveImage(hwnd, i) */
@@ -650,7 +651,7 @@ HB_FUNC( WAPI_TABCTRL_SETITEMSIZE )
 
 HB_FUNC( WAPI_TABCTRL_REMOVEIMAGE )
 {
-   TabCtrl_RemoveImage( wapi_par_HWND( 1 ), wapi_par_INT( 2 ) );
+   TabCtrl_RemoveImage( hbwapi_par_raw_HWND( 1 ), hbwapi_par_INT( 2 ) );
 }
 /*----------------------------------------------------------------------*/
 /* TabCtrl_SetPadding(hwnd,  cx, cy) */
@@ -658,7 +659,7 @@ HB_FUNC( WAPI_TABCTRL_REMOVEIMAGE )
 
 HB_FUNC( WAPI_TABCTRL_SETPADDING )
 {
-   TabCtrl_SetPadding( wapi_par_HWND( 1 ), wapi_par_INT( 2 ), wapi_par_INT( 3 ) );
+   TabCtrl_SetPadding( hbwapi_par_raw_HWND( 1 ), hbwapi_par_INT( 2 ), hbwapi_par_INT( 3 ) );
 }
 /*----------------------------------------------------------------------*/
 /* TabCtrl_GetToolTips(hwnd) */
@@ -667,9 +668,9 @@ HB_FUNC( WAPI_TABCTRL_SETPADDING )
 HB_FUNC( WAPI_TABCTRL_GETTOOLTIPS )
 {
 #if ! defined( HB_OS_WIN_CE )
-   wapi_ret_NINT( ( HB_PTRDIFF ) TabCtrl_GetToolTips( wapi_par_HWND( 1 ) ) );
+   hbwapi_ret_NINT( ( HB_PTRDIFF ) TabCtrl_GetToolTips( hbwapi_par_raw_HWND( 1 ) ) );
 #else
-   wapi_ret_NINT( -1 );
+   hbwapi_ret_NINT( -1 );
 #endif
 }
 /*----------------------------------------------------------------------*/
@@ -679,7 +680,7 @@ HB_FUNC( WAPI_TABCTRL_GETTOOLTIPS )
 HB_FUNC( WAPI_TABCTRL_SETTOOLTIPS )
 {
 #if ! defined( HB_OS_WIN_CE )
-   TabCtrl_SetToolTips( wapi_par_HWND( 1 ), wapi_par_HWND( 2 ) );
+   TabCtrl_SetToolTips( hbwapi_par_raw_HWND( 1 ), hbwapi_par_raw_HWND( 2 ) );
 #endif
 }
 /*----------------------------------------------------------------------*/
@@ -688,7 +689,7 @@ HB_FUNC( WAPI_TABCTRL_SETTOOLTIPS )
 
 HB_FUNC( WAPI_TABCTRL_GETCURFOCUS )
 {
-   wapi_ret_NI( TabCtrl_GetCurFocus( wapi_par_HWND( 1 ) ) );
+   hbwapi_ret_NI( TabCtrl_GetCurFocus( hbwapi_par_raw_HWND( 1 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /* TabCtrl_SetCurFocus(hwnd, i) */
@@ -696,7 +697,7 @@ HB_FUNC( WAPI_TABCTRL_GETCURFOCUS )
 
 HB_FUNC( WAPI_TABCTRL_SETCURFOCUS )
 {
-   TabCtrl_SetCurFocus( wapi_par_HWND( 1 ), wapi_par_INT( 2 ) );
+   TabCtrl_SetCurFocus( hbwapi_par_raw_HWND( 1 ), hbwapi_par_INT( 2 ) );
 }
 /*----------------------------------------------------------------------*/
 /* TabCtrl_SetMinTabWidth(hwnd, x) */
@@ -704,8 +705,8 @@ HB_FUNC( WAPI_TABCTRL_SETCURFOCUS )
 
 HB_FUNC( WAPI_TABCTRL_SETMINTABWIDTH )
 {
-   /* wapi_ret_NI( TabCtrl_SetMinTabWidth( wapi_par_HWND( 1 ), wapi_par_INT( 2 ) ) ); */
-   wapi_ret_NI( ( int ) SendMessage( wapi_par_HWND( 1 ), TCM_SETMINTABWIDTH, ( WPARAM ) 0, ( LPARAM ) wapi_par_INT( 2 ) ) );
+   /* hbwapi_ret_NI( TabCtrl_SetMinTabWidth( hbwapi_par_raw_HWND( 1 ), hbwapi_par_INT( 2 ) ) ); */
+   hbwapi_ret_NI( ( int ) SendMessage( hbwapi_par_raw_HWND( 1 ), TCM_SETMINTABWIDTH, ( WPARAM ) 0, ( LPARAM ) hbwapi_par_INT( 2 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /* TabCtrl_DeselectAll(hwnd, fExcludeFocus) */
@@ -713,8 +714,8 @@ HB_FUNC( WAPI_TABCTRL_SETMINTABWIDTH )
 
 HB_FUNC( WAPI_TABCTRL_DESELECTALL )
 {
-   /* TabCtrl_DeselectAll( wapi_par_HWND( 1 ), wapi_par_UINT( 2 ) ); */
-   SendMessage( wapi_par_HWND( 1 ), TCM_DESELECTALL, ( WPARAM ) wapi_par_UINT( 2 ), ( LPARAM ) 0 );
+   /* TabCtrl_DeselectAll( hbwapi_par_raw_HWND( 1 ), hbwapi_par_UINT( 2 ) ); */
+   SendMessage( hbwapi_par_raw_HWND( 1 ), TCM_DESELECTALL, ( WPARAM ) hbwapi_par_UINT( 2 ), ( LPARAM ) 0 );
 }
 /*----------------------------------------------------------------------*/
 
@@ -724,9 +725,9 @@ HB_FUNC( WAPI_TABCTRL_DESELECTALL )
 HB_FUNC( WAPI_TABCTRL_HIGHLIGHTITEM )
 {
 #if ( _WIN32_IE >= 0x0400 )
-   wapi_ret_L( TabCtrl_HighlightItem( wapi_par_HWND( 1 ), wapi_par_INT( 2 ), wapi_par_WORD( 3 ) ) );
+   hbwapi_ret_L( TabCtrl_HighlightItem( hbwapi_par_raw_HWND( 1 ), hbwapi_par_INT( 2 ), hbwapi_par_WORD( 3 ) ) );
 #else
-   wapi_ret_L( FALSE );
+   hbwapi_ret_L( FALSE );
 #endif
 }
 /*----------------------------------------------------------------------*/
@@ -736,9 +737,9 @@ HB_FUNC( WAPI_TABCTRL_HIGHLIGHTITEM )
 HB_FUNC( WAPI_TABCTRL_SETEXTENDEDSTYLE )
 {
 #if ( _WIN32_IE >= 0x0400 )
-   wapi_ret_NINT( TabCtrl_SetExtendedStyle( wapi_par_HWND( 1 ), wapi_par_DWORD( 2 ) ) );
+   hbwapi_ret_NINT( TabCtrl_SetExtendedStyle( hbwapi_par_raw_HWND( 1 ), hbwapi_par_DWORD( 2 ) ) );
 #else
-   wapi_ret_NINT( 0 );
+   hbwapi_ret_NINT( 0 );
 #endif
 }
 /*----------------------------------------------------------------------*/
@@ -748,9 +749,9 @@ HB_FUNC( WAPI_TABCTRL_SETEXTENDEDSTYLE )
 HB_FUNC( WAPI_TABCTRL_GETEXTENDEDSTYLE )
 {
 #if ( _WIN32_IE >= 0x0400 )
-   wapi_ret_NINT( TabCtrl_GetExtendedStyle( wapi_par_HWND( 1 ) ) );
+   hbwapi_ret_NINT( TabCtrl_GetExtendedStyle( hbwapi_par_raw_HWND( 1 ) ) );
 #else
-   wapi_ret_NINT( 0 );
+   hbwapi_ret_NINT( 0 );
 #endif
 }
 /*----------------------------------------------------------------------*/
@@ -760,9 +761,9 @@ HB_FUNC( WAPI_TABCTRL_GETEXTENDEDSTYLE )
 HB_FUNC( WAPI_TABCTRL_SETUNICODEFORMAT )
 {
 #if ( _WIN32_IE >= 0x0400 ) && ! defined( HB_OS_WIN_CE )
-   wapi_ret_L( TabCtrl_SetUnicodeFormat( wapi_par_HWND( 1 ), wapi_par_BOOL( 2 ) ) );
+   hbwapi_ret_L( TabCtrl_SetUnicodeFormat( hbwapi_par_raw_HWND( 1 ), hbwapi_par_BOOL( 2 ) ) );
 #else
-   wapi_ret_L( FALSE );
+   hbwapi_ret_L( FALSE );
 #endif
 }
 /*----------------------------------------------------------------------*/
@@ -772,9 +773,9 @@ HB_FUNC( WAPI_TABCTRL_SETUNICODEFORMAT )
 HB_FUNC( WAPI_TABCTRL_GETUNICODEFORMAT )
 {
 #if ( _WIN32_IE >= 0x0400 ) && ! defined( HB_OS_WIN_CE )
-   wapi_ret_L( TabCtrl_GetUnicodeFormat( wapi_par_HWND( 1 ) ) );
+   hbwapi_ret_L( TabCtrl_GetUnicodeFormat( hbwapi_par_raw_HWND( 1 ) ) );
 #else
-   wapi_ret_L( FALSE );
+   hbwapi_ret_L( FALSE );
 #endif
 }
 
@@ -783,10 +784,10 @@ HB_FUNC( WAPI_TABCTRL_GETUNICODEFORMAT )
 
 HB_FUNC( WAPI_TABCTRL_CREATE )
 {
-   HWND hwnd = wapi_par_HWND( 1 );
+   HWND hwnd = hbwapi_par_raw_HWND( 1 );
    HWND hbutton = CreateWindowEx( 0, WC_TABCONTROL, NULL, ( LONG ) hb_parnl( 6 ) /* style */, hb_parni( 2 ), hb_parni( 3 ) , hb_parni( 4 ), hb_parni( 5 ), hwnd, NULL, GetModuleHandle( NULL ), NULL );
    SendMessage( hbutton, ( UINT ) WM_SETFONT, ( WPARAM ) ( HFONT ) SendMessage( hwnd, WM_GETFONT, 0, 0 ), 1 );
-   wapi_ret_HANDLE( hbutton );
+   hbwapi_ret_raw_HANDLE( hbutton );
 }
 
 /*----------------------------------------------------------------------*/
@@ -794,16 +795,16 @@ HB_FUNC( WAPI_TABCTRL_CREATE )
 
 HB_FUNC( WAPI_TABCTRL_ADDITEM )
 {
-   int     iCount = TabCtrl_GetItemCount( wapi_par_HWND( 1 ) );
+   int     iCount = TabCtrl_GetItemCount( hbwapi_par_raw_HWND( 1 ) );
    TC_ITEM item;
 
    void * hText;
 
    item.mask    = TCIF_TEXT | TCIF_IMAGE;
-   item.iImage  = HB_ISNUM( 3 ) ? wapi_par_INT( 3 ) : -1;
+   item.iImage  = HB_ISNUM( 3 ) ? hbwapi_par_INT( 3 ) : -1;
    item.pszText = ( LPTSTR ) HB_PARSTRDEF( 2, &hText, NULL );
 
-   wapi_ret_NI( TabCtrl_InsertItem( wapi_par_HWND( 1 ), iCount, &item ) );
+   hbwapi_ret_NI( TabCtrl_InsertItem( hbwapi_par_raw_HWND( 1 ), iCount, &item ) );
 
    hb_strfree( hText );
 }
@@ -817,7 +818,7 @@ HB_FUNC( WAPI_TABCTRL_ADDITEM )
 */
 HB_FUNC( WAPI_TREEVIEW_CREATEDRAGIMAGE )
 {
-   wapi_ret_HANDLE( TreeView_CreateDragImage( wapi_par_HWND( 1 ), wapi_par_HANDLE( 2 ) ) );
+   hbwapi_ret_raw_HANDLE( TreeView_CreateDragImage( hbwapi_par_raw_HWND( 1 ), hbwapi_par_raw_HANDLE( 2 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /*
@@ -825,7 +826,7 @@ HB_FUNC( WAPI_TREEVIEW_CREATEDRAGIMAGE )
 */
 HB_FUNC( WAPI_TREEVIEW_DELETEALLITEMS )
 {
-   wapi_ret_L( TreeView_DeleteAllItems( wapi_par_HWND( 1 ) ) );
+   hbwapi_ret_L( TreeView_DeleteAllItems( hbwapi_par_raw_HWND( 1 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /*
@@ -833,7 +834,7 @@ HB_FUNC( WAPI_TREEVIEW_DELETEALLITEMS )
 */
 HB_FUNC( WAPI_TREEVIEW_EDITLABEL )
 {
-   wapi_ret_HANDLE( TreeView_EditLabel( wapi_par_HWND( 1 ), wapi_par_HANDLE( 2 ) ) );
+   hbwapi_ret_raw_HANDLE( TreeView_EditLabel( hbwapi_par_raw_HWND( 1 ), hbwapi_par_raw_HANDLE( 2 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /*
@@ -841,7 +842,7 @@ HB_FUNC( WAPI_TREEVIEW_EDITLABEL )
 */
 HB_FUNC( WAPI_TREEVIEW_ENDEDITLABELNOW )
 {
-   wapi_ret_L( TreeView_EndEditLabelNow( wapi_par_HWND( 1 ), wapi_par_BOOL( 2 ) ) );
+   hbwapi_ret_L( TreeView_EndEditLabelNow( hbwapi_par_raw_HWND( 1 ), hbwapi_par_BOOL( 2 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /*
@@ -849,7 +850,7 @@ HB_FUNC( WAPI_TREEVIEW_ENDEDITLABELNOW )
 */
 HB_FUNC( WAPI_TREEVIEW_ENSUREVISIBLE )
 {
-   wapi_ret_L( TreeView_EnsureVisible( wapi_par_HWND( 1 ), wapi_par_HANDLE( 2 ) ) );
+   hbwapi_ret_L( TreeView_EnsureVisible( hbwapi_par_raw_HWND( 1 ), hbwapi_par_raw_HANDLE( 2 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /*
@@ -857,7 +858,7 @@ HB_FUNC( WAPI_TREEVIEW_ENSUREVISIBLE )
 */
 HB_FUNC( WAPI_TREEVIEW_EXPAND )
 {
-   wapi_ret_L( TreeView_Expand( wapi_par_HWND( 1 ), wapi_par_HANDLE( 2 ), wapi_par_UINT( 2 ) ) );
+   hbwapi_ret_L( TreeView_Expand( hbwapi_par_raw_HWND( 1 ), hbwapi_par_raw_HANDLE( 2 ), hbwapi_par_UINT( 2 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /*
@@ -866,9 +867,9 @@ HB_FUNC( WAPI_TREEVIEW_EXPAND )
 HB_FUNC( WAPI_TREEVIEW_GETBKCOLOR )
 {
 #if ! defined( HB_OS_WIN_CE ) && ! defined( __MINGW32__ ) && ! defined( __CYGWIN__ )
-   wapi_ret_COLORREF( TreeView_GetBkColor( wapi_par_HWND( 1 ) ) );
+   hbwapi_ret_COLORREF( TreeView_GetBkColor( hbwapi_par_raw_HWND( 1 ) ) );
 #else
-   wapi_ret_COLORREF( 0 );
+   hbwapi_ret_COLORREF( 0 );
 #endif
 }
 /*----------------------------------------------------------------------*/
@@ -878,9 +879,9 @@ HB_FUNC( WAPI_TREEVIEW_GETBKCOLOR )
 HB_FUNC( WAPI_TREEVIEW_GETCHECKSTATE )
 {
 #if ( _WIN32_IE >= 0x0500 )
-   wapi_ret_UINT( TreeView_GetCheckState( wapi_par_HWND( 1 ), wapi_par_HANDLE( 2 ) ) );
+   hbwapi_ret_UINT( TreeView_GetCheckState( hbwapi_par_raw_HWND( 1 ), hbwapi_par_raw_HANDLE( 2 ) ) );
 #else
-   wapi_ret_UINT( 0 );
+   hbwapi_ret_UINT( 0 );
 #endif
 }
 /*----------------------------------------------------------------------*/
@@ -889,7 +890,7 @@ HB_FUNC( WAPI_TREEVIEW_GETCHECKSTATE )
 */
 HB_FUNC( WAPI_TREEVIEW_GETCHILD )
 {
-   wapi_ret_HANDLE( TreeView_GetChild( wapi_par_HWND( 1 ), wapi_par_HANDLE( 2 ) ) );
+   hbwapi_ret_raw_HANDLE( TreeView_GetChild( hbwapi_par_raw_HWND( 1 ), hbwapi_par_raw_HANDLE( 2 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /*
@@ -897,7 +898,7 @@ HB_FUNC( WAPI_TREEVIEW_GETCHILD )
 */
 HB_FUNC( WAPI_TREEVIEW_GETCOUNT )
 {
-   wapi_ret_UINT( TreeView_GetCount( wapi_par_HWND( 1 ) ) );
+   hbwapi_ret_UINT( TreeView_GetCount( hbwapi_par_raw_HWND( 1 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /*
@@ -905,7 +906,7 @@ HB_FUNC( WAPI_TREEVIEW_GETCOUNT )
 */
 HB_FUNC( WAPI_TREEVIEW_GETDROPHILIGHT )
 {
-   wapi_ret_HANDLE( TreeView_GetDropHilight( wapi_par_HWND( 1 ) ) );
+   hbwapi_ret_raw_HANDLE( TreeView_GetDropHilight( hbwapi_par_raw_HWND( 1 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /*
@@ -913,7 +914,7 @@ HB_FUNC( WAPI_TREEVIEW_GETDROPHILIGHT )
 */
 HB_FUNC( WAPI_TREEVIEW_GETEDITCONTROL )
 {
-   wapi_ret_HANDLE( TreeView_GetEditControl( wapi_par_HWND( 1 ) ) );
+   hbwapi_ret_raw_HANDLE( TreeView_GetEditControl( hbwapi_par_raw_HWND( 1 ) ) );
 }
 /*----------------------------------------------------------------------*/
 #if 0
@@ -922,7 +923,7 @@ HB_FUNC( WAPI_TREEVIEW_GETEDITCONTROL )
 */
 HB_FUNC( WAPI_TREEVIEW_GETEXTENDEDSTYLE )
 {
-   wapi_ret_DWORD( TreeView_GetExtendedStyle( wapi_par_HWND( 1 ) ) );
+   hbwapi_ret_DWORD( TreeView_GetExtendedStyle( hbwapi_par_raw_HWND( 1 ) ) );
 }
 #endif
 /*----------------------------------------------------------------------*/
@@ -931,7 +932,7 @@ HB_FUNC( WAPI_TREEVIEW_GETEXTENDEDSTYLE )
 */
 HB_FUNC( WAPI_TREEVIEW_GETFIRSTVISIBLE )
 {
-   wapi_ret_HANDLE( TreeView_GetFirstVisible( wapi_par_HWND( 1 ) ) );
+   hbwapi_ret_raw_HANDLE( TreeView_GetFirstVisible( hbwapi_par_raw_HWND( 1 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /*
@@ -939,7 +940,7 @@ HB_FUNC( WAPI_TREEVIEW_GETFIRSTVISIBLE )
 */
 HB_FUNC( WAPI_TREEVIEW_GETIMAGELIST )
 {
-   wapi_ret_HANDLE( TreeView_GetImageList( wapi_par_HWND( 1 ), wapi_par_INT( 2 ) ) );
+   hbwapi_ret_raw_HANDLE( TreeView_GetImageList( hbwapi_par_raw_HWND( 1 ), hbwapi_par_INT( 2 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /*
@@ -947,7 +948,7 @@ HB_FUNC( WAPI_TREEVIEW_GETIMAGELIST )
 */
 HB_FUNC( WAPI_TREEVIEW_GETINDENT )
 {
-   wapi_ret_UINT( TreeView_GetIndent( wapi_par_HWND( 1 ) ) );
+   hbwapi_ret_UINT( TreeView_GetIndent( hbwapi_par_raw_HWND( 1 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /* IE 4.0
@@ -956,9 +957,9 @@ HB_FUNC( WAPI_TREEVIEW_GETINDENT )
 HB_FUNC( WAPI_TREEVIEW_GETINSERTMARKCOLOR )
 {
 #if ( _WIN32_IE >= 0x0400 ) && ! defined( HB_OS_WIN_CE )
-   wapi_ret_COLORREF( TreeView_GetInsertMarkColor( wapi_par_HWND( 1 ) ) );
+   hbwapi_ret_COLORREF( TreeView_GetInsertMarkColor( hbwapi_par_raw_HWND( 1 ) ) );
 #else
-   wapi_ret_COLORREF( 0 );
+   hbwapi_ret_COLORREF( 0 );
 #endif
 }
 /*----------------------------------------------------------------------*/
@@ -967,7 +968,7 @@ HB_FUNC( WAPI_TREEVIEW_GETINSERTMARKCOLOR )
 */
 HB_FUNC( WAPI_TREEVIEW_GETISEARCHSTRING )
 {
-   /* wapi_ret_( TreeView_GetISearchString( wapi_par_HWND( 1 ), LPTSTR ) ); */
+   /* hbwapi_ret_( TreeView_GetISearchString( hbwapi_par_raw_HWND( 1 ), LPTSTR ) ); */
 }
 /*----------------------------------------------------------------------*/
 /*
@@ -977,7 +978,7 @@ HB_FUNC( WAPI_TREEVIEW_GETISEARCHSTRING )
 */
 HB_FUNC( WAPI_TREEVIEW_GETITEM )
 {
-   /* wapi_ret_( TreeView_GetItem( wapi_par_HWND( 1 ), LPTVITEM ) ); */
+   /* hbwapi_ret_( TreeView_GetItem( hbwapi_par_raw_HWND( 1 ), LPTVITEM ) ); */
 }
 /*----------------------------------------------------------------------*/
 /* IE 4.0
@@ -986,9 +987,9 @@ HB_FUNC( WAPI_TREEVIEW_GETITEM )
 HB_FUNC( WAPI_TREEVIEW_GETITEMHEIGHT )
 {
 #if ( _WIN32_IE >= 0x0400 ) && ! defined( HB_OS_WIN_CE )
-   wapi_ret_NI( TreeView_GetItemHeight( wapi_par_HWND( 1 ) ) );
+   hbwapi_ret_NI( TreeView_GetItemHeight( hbwapi_par_raw_HWND( 1 ) ) );
 #else
-   wapi_ret_NI( 0 );
+   hbwapi_ret_NI( 0 );
 #endif
 }
 /*----------------------------------------------------------------------*/
@@ -1001,7 +1002,7 @@ HB_FUNC( WAPI_TREEVIEW_GETITEMPARTRECT )
    RECT       rc;
    TVITEMPART partid;
 
-   wapi_ret_L( TreeView_GetItemPartRect( wapi_par_HWND( 1 ),, wapi_par_HANDLE( 2 ), &rc, &partid ) );
+   hbwapi_ret_L( TreeView_GetItemPartRect( hbwapi_par_raw_HWND( 1 ),, hbwapi_par_raw_HANDLE( 2 ), &rc, &partid ) );
 }
 #endif
 /*----------------------------------------------------------------------*/
@@ -1011,7 +1012,7 @@ HB_FUNC( WAPI_TREEVIEW_GETITEMPARTRECT )
 HB_FUNC( WAPI_TREEVIEW_GETITEMRECT )
 {
    LPRECT prc = NULL;
-   wapi_ret_L( TreeView_GetItemRect( wapi_par_HWND( 1 ), ( HTREEITEM ) wapi_par_HANDLE( 2 ), prc, wapi_par_BOOL( 4 ) ) );
+   hbwapi_ret_L( TreeView_GetItemRect( hbwapi_par_raw_HWND( 1 ), ( HTREEITEM ) hbwapi_par_raw_HANDLE( 2 ), prc, hbwapi_par_BOOL( 4 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /* IE 5.0
@@ -1020,9 +1021,9 @@ HB_FUNC( WAPI_TREEVIEW_GETITEMRECT )
 HB_FUNC( WAPI_TREEVIEW_GETITEMSTATE )
 {
 #if ( _WIN32_IE >= 0x0500 )
-   wapi_ret_UINT( TreeView_GetItemState( wapi_par_HWND( 1 ), ( HTREEITEM ) wapi_par_HANDLE( 2 ), wapi_par_UINT( 3 ) ) );
+   hbwapi_ret_UINT( TreeView_GetItemState( hbwapi_par_raw_HWND( 1 ), ( HTREEITEM ) hbwapi_par_raw_HANDLE( 2 ), hbwapi_par_UINT( 3 ) ) );
 #else
-   wapi_ret_UINT( 0 );
+   hbwapi_ret_UINT( 0 );
 #endif
 }
 /*----------------------------------------------------------------------*/
@@ -1032,9 +1033,9 @@ HB_FUNC( WAPI_TREEVIEW_GETITEMSTATE )
 HB_FUNC( WAPI_TREEVIEW_GETLASTVISIBLE )
 {
 #if ( _WIN32_IE >= 0x0400 ) && ! defined( HB_OS_WIN_CE )
-   wapi_ret_HANDLE( TreeView_GetLastVisible( wapi_par_HWND( 1 ) ) );
+   hbwapi_ret_raw_HANDLE( TreeView_GetLastVisible( hbwapi_par_raw_HWND( 1 ) ) );
 #else
-   wapi_ret_HANDLE( NULL );
+   hbwapi_ret_raw_HANDLE( NULL );
 #endif
 }
 /*----------------------------------------------------------------------*/
@@ -1044,9 +1045,9 @@ HB_FUNC( WAPI_TREEVIEW_GETLASTVISIBLE )
 HB_FUNC( WAPI_TREEVIEW_GETLINECOLOR )
 {
 #if ( _WIN32_IE >= 0x0500 )
-   wapi_ret_COLORREF( TreeView_GetLineColor( wapi_par_HWND( 1 ) ) );
+   hbwapi_ret_COLORREF( TreeView_GetLineColor( hbwapi_par_raw_HWND( 1 ) ) );
 #else
-   wapi_ret_COLORREF( 0 );
+   hbwapi_ret_COLORREF( 0 );
 #endif
 }
 /*----------------------------------------------------------------------*/
@@ -1055,7 +1056,7 @@ HB_FUNC( WAPI_TREEVIEW_GETLINECOLOR )
 */
 HB_FUNC( WAPI_TREEVIEW_GETNEXTITEM )
 {
-   wapi_ret_HANDLE( TreeView_GetNextItem( wapi_par_HWND( 1 ), wapi_par_HANDLE( 2 ), wapi_par_UINT( 3 ) ) );
+   hbwapi_ret_raw_HANDLE( TreeView_GetNextItem( hbwapi_par_raw_HWND( 1 ), hbwapi_par_raw_HANDLE( 2 ), hbwapi_par_UINT( 3 ) ) );
 }
 /*----------------------------------------------------------------------*/
 #if 0
@@ -1064,7 +1065,7 @@ HB_FUNC( WAPI_TREEVIEW_GETNEXTITEM )
 */
 HB_FUNC( WAPI_TREEVIEW_GETNEXTSELECTED )
 {
-   wapi_ret_HANDLE( TreeView_GetNextSelected( wapi_par_HWND( 1 ), wapi_par_TREEITEM( 2 ) ) );
+   hbwapi_ret_raw_HANDLE( TreeView_GetNextSelected( hbwapi_par_raw_HWND( 1 ), hbwapi_par_raw_TREEITEM( 2 ) ) );
 }
 #endif
 /*----------------------------------------------------------------------*/
@@ -1073,7 +1074,7 @@ HB_FUNC( WAPI_TREEVIEW_GETNEXTSELECTED )
 */
 HB_FUNC( WAPI_TREEVIEW_GETNEXTSIBLING )
 {
-   wapi_ret_HANDLE( TreeView_GetNextSibling( wapi_par_HWND( 1 ), wapi_par_HANDLE( 2 ) ) );
+   hbwapi_ret_raw_HANDLE( TreeView_GetNextSibling( hbwapi_par_raw_HWND( 1 ), hbwapi_par_raw_HANDLE( 2 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /*
@@ -1082,7 +1083,7 @@ HB_FUNC( WAPI_TREEVIEW_GETNEXTSIBLING )
 */
 HB_FUNC( WAPI_TREEVIEW_GETNEXTVISIBLE )
 {
-   wapi_ret_HANDLE( TreeView_GetNextVisible( wapi_par_HWND( 1 ), wapi_par_HANDLE( 2 ) ) );
+   hbwapi_ret_raw_HANDLE( TreeView_GetNextVisible( hbwapi_par_raw_HWND( 1 ), hbwapi_par_raw_HANDLE( 2 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /*
@@ -1090,7 +1091,7 @@ HB_FUNC( WAPI_TREEVIEW_GETNEXTVISIBLE )
 */
 HB_FUNC( WAPI_TREEVIEW_GETPARENT )
 {
-   wapi_ret_HANDLE( TreeView_GetParent( wapi_par_HWND( 1 ), wapi_par_HANDLE( 2 ) ) );
+   hbwapi_ret_raw_HANDLE( TreeView_GetParent( hbwapi_par_raw_HWND( 1 ), hbwapi_par_raw_HANDLE( 2 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /*
@@ -1098,7 +1099,7 @@ HB_FUNC( WAPI_TREEVIEW_GETPARENT )
 */
 HB_FUNC( WAPI_TREEVIEW_GETPREVSIBLING )
 {
-   wapi_ret_HANDLE( TreeView_GetPrevSibling( wapi_par_HWND( 1 ), wapi_par_HANDLE( 2 ) ) );
+   hbwapi_ret_raw_HANDLE( TreeView_GetPrevSibling( hbwapi_par_raw_HWND( 1 ), hbwapi_par_raw_HANDLE( 2 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /*
@@ -1106,7 +1107,7 @@ HB_FUNC( WAPI_TREEVIEW_GETPREVSIBLING )
 */
 HB_FUNC( WAPI_TREEVIEW_GETPREVVISIBLE )
 {
-   wapi_ret_HANDLE( TreeView_GetPrevVisible( wapi_par_HWND( 1 ), wapi_par_HANDLE( 2 ) ) );
+   hbwapi_ret_raw_HANDLE( TreeView_GetPrevVisible( hbwapi_par_raw_HWND( 1 ), hbwapi_par_raw_HANDLE( 2 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /*
@@ -1114,7 +1115,7 @@ HB_FUNC( WAPI_TREEVIEW_GETPREVVISIBLE )
 */
 HB_FUNC( WAPI_TREEVIEW_GETROOT )
 {
-   wapi_ret_HANDLE( TreeView_GetRoot( wapi_par_HWND( 1 ) ) );
+   hbwapi_ret_raw_HANDLE( TreeView_GetRoot( hbwapi_par_raw_HWND( 1 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /*
@@ -1123,9 +1124,9 @@ HB_FUNC( WAPI_TREEVIEW_GETROOT )
 HB_FUNC( WAPI_TREEVIEW_GETSCROLLTIME )
 {
 #if ! defined( HB_OS_WIN_CE ) && ! defined( __MINGW32__ ) && ! defined( __CYGWIN__ )
-   wapi_ret_UINT( TreeView_GetScrollTime( wapi_par_HWND( 1 ) ) );
+   hbwapi_ret_UINT( TreeView_GetScrollTime( hbwapi_par_raw_HWND( 1 ) ) );
 #else
-   wapi_ret_UINT( 0 );
+   hbwapi_ret_UINT( 0 );
 #endif
 }
 /*----------------------------------------------------------------------*/
@@ -1134,7 +1135,7 @@ HB_FUNC( WAPI_TREEVIEW_GETSCROLLTIME )
 */
 HB_FUNC( WAPI_TREEVIEW_GETSELECTION )
 {
-   wapi_ret_HANDLE( TreeView_GetSelection( wapi_par_HWND( 1 ) ) );
+   hbwapi_ret_raw_HANDLE( TreeView_GetSelection( hbwapi_par_raw_HWND( 1 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /*
@@ -1143,9 +1144,9 @@ HB_FUNC( WAPI_TREEVIEW_GETSELECTION )
 HB_FUNC( WAPI_TREEVIEW_GETTEXTCOLOR )
 {
 #if ( _WIN32_IE >= 0x0400 ) && ! defined( HB_OS_WIN_CE )
-   wapi_ret_COLORREF( TreeView_GetTextColor( wapi_par_HWND( 1 ) ) );
+   hbwapi_ret_COLORREF( TreeView_GetTextColor( hbwapi_par_raw_HWND( 1 ) ) );
 #else
-   wapi_ret_COLORREF( 0 );
+   hbwapi_ret_COLORREF( 0 );
 #endif
 }
 /*----------------------------------------------------------------------*/
@@ -1155,9 +1156,9 @@ HB_FUNC( WAPI_TREEVIEW_GETTEXTCOLOR )
 HB_FUNC( WAPI_TREEVIEW_GETTOOLTIPS )
 {
 #if ( _WIN32_IE >= 0x0300 ) && ! defined( HB_OS_WIN_CE )
-   wapi_ret_HANDLE( TreeView_GetToolTips( wapi_par_HWND( 1 ) ) );
+   hbwapi_ret_raw_HANDLE( TreeView_GetToolTips( hbwapi_par_raw_HWND( 1 ) ) );
 #else
-   wapi_ret_HANDLE( NULL );
+   hbwapi_ret_raw_HANDLE( NULL );
 #endif
 }
 /*----------------------------------------------------------------------*/
@@ -1167,9 +1168,9 @@ HB_FUNC( WAPI_TREEVIEW_GETTOOLTIPS )
 HB_FUNC( WAPI_TREEVIEW_GETUNICODEFORMAT )
 {
 #if ! defined( HB_OS_WIN_CE ) && ! defined( __MINGW32__ ) && ! defined( __CYGWIN__ )
-   wapi_ret_L( TreeView_GetUnicodeFormat( wapi_par_HWND( 1 ) ) );
+   hbwapi_ret_L( TreeView_GetUnicodeFormat( hbwapi_par_raw_HWND( 1 ) ) );
 #else
-   wapi_ret_L( FALSE );
+   hbwapi_ret_L( FALSE );
 #endif
 }
 /*----------------------------------------------------------------------*/
@@ -1178,7 +1179,7 @@ HB_FUNC( WAPI_TREEVIEW_GETUNICODEFORMAT )
 */
 HB_FUNC( WAPI_TREEVIEW_GETVISIBLECOUNT )
 {
-   wapi_ret_UINT( TreeView_GetVisibleCount( wapi_par_HWND( 1 ) ) );
+   hbwapi_ret_UINT( TreeView_GetVisibleCount( hbwapi_par_raw_HWND( 1 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /*
@@ -1186,7 +1187,7 @@ HB_FUNC( WAPI_TREEVIEW_GETVISIBLECOUNT )
 */
 HB_FUNC( WAPI_TREEVIEW_HITTEST )
 {
-   wapi_ret_HANDLE( TreeView_HitTest( wapi_par_HWND( 1 ), wapi_par_TVHITTESTINFO( 2 ) ) );
+   hbwapi_ret_raw_HANDLE( TreeView_HitTest( hbwapi_par_raw_HWND( 1 ), hbwapi_par_raw_TVHITTESTINFO( 2 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /*
@@ -1194,7 +1195,7 @@ HB_FUNC( WAPI_TREEVIEW_HITTEST )
 */
 HB_FUNC( WAPI_TREEVIEW_INSERTITEM )
 {
-   wapi_ret_HANDLE( TreeView_InsertItem( wapi_par_HWND( 1 ), wapi_par_TVINSERTSTRUCT( 2 ) ) );
+   hbwapi_ret_raw_HANDLE( TreeView_InsertItem( hbwapi_par_raw_HWND( 1 ), hbwapi_par_raw_TVINSERTSTRUCT( 2 ) ) );
 }
 /*----------------------------------------------------------------------*/
 #if 0
@@ -1203,7 +1204,7 @@ HB_FUNC( WAPI_TREEVIEW_INSERTITEM )
 */
 HB_FUNC( WAPI_TREEVIEW_MAPACCIDTOHTREEITEM )
 {
-   wapi_ret_HANDLE( TreeView_MapAccIDToHTREEITEM( wapi_par_HWND( 1 ), wapi_par_UINT( 2 ) ) );
+   hbwapi_ret_raw_HANDLE( TreeView_MapAccIDToHTREEITEM( hbwapi_par_raw_HWND( 1 ), hbwapi_par_UINT( 2 ) ) );
 }
 #endif
 /*----------------------------------------------------------------------*/
@@ -1213,7 +1214,7 @@ HB_FUNC( WAPI_TREEVIEW_MAPACCIDTOHTREEITEM )
 */
 HB_FUNC( WAPI_TREEVIEW_MAPHTREEITEMTOACCID )
 {
-   wapi_ret_UINT( TreeView_MapHTREEITEMtoAccID( wapi_par_HWND( 1 ), wapi_par_HANDLE( 2 ) ) );
+   hbwapi_ret_UINT( TreeView_MapHTREEITEMtoAccID( hbwapi_par_raw_HWND( 1 ), hbwapi_par_raw_HANDLE( 2 ) ) );
 }
 #endif
 /*----------------------------------------------------------------------*/
@@ -1222,7 +1223,7 @@ HB_FUNC( WAPI_TREEVIEW_MAPHTREEITEMTOACCID )
 */
 HB_FUNC( WAPI_TREEVIEW_SELECT )
 {
-   wapi_ret_L( TreeView_Select( wapi_par_HWND( 1 ), wapi_par_HANDLE( 2 ), wapi_par_UINT( 3 ) ) );
+   hbwapi_ret_L( TreeView_Select( hbwapi_par_raw_HWND( 1 ), hbwapi_par_raw_HANDLE( 2 ), hbwapi_par_UINT( 3 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /*
@@ -1230,7 +1231,7 @@ HB_FUNC( WAPI_TREEVIEW_SELECT )
 */
 HB_FUNC( WAPI_TREEVIEW_SELECTDROPTARGET )
 {
-   wapi_ret_L( TreeView_SelectDropTarget( wapi_par_HWND( 1 ), wapi_par_HANDLE( 2 ) ) );
+   hbwapi_ret_L( TreeView_SelectDropTarget( hbwapi_par_raw_HWND( 1 ), hbwapi_par_raw_HANDLE( 2 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /*
@@ -1238,7 +1239,7 @@ HB_FUNC( WAPI_TREEVIEW_SELECTDROPTARGET )
 */
 HB_FUNC( WAPI_TREEVIEW_SELECTITEM )
 {
-   wapi_ret_L( TreeView_SelectItem( wapi_par_HWND( 1 ), wapi_par_HANDLE( 2 ) ) );
+   hbwapi_ret_L( TreeView_SelectItem( hbwapi_par_raw_HWND( 1 ), hbwapi_par_raw_HANDLE( 2 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /*
@@ -1246,7 +1247,7 @@ HB_FUNC( WAPI_TREEVIEW_SELECTITEM )
 */
 HB_FUNC( WAPI_TREEVIEW_SELECTSETFIRSTVISIBLE )
 {
-   wapi_ret_L( TreeView_SelectSetFirstVisible( wapi_par_HWND( 1 ), wapi_par_HANDLE( 2 ) ) );
+   hbwapi_ret_L( TreeView_SelectSetFirstVisible( hbwapi_par_raw_HWND( 1 ), hbwapi_par_raw_HANDLE( 2 ) ) );
 }
 /*----------------------------------------------------------------------*/
 #if 0
@@ -1255,7 +1256,7 @@ HB_FUNC( WAPI_TREEVIEW_SELECTSETFIRSTVISIBLE )
 */
 HB_FUNC( WAPI_TREEVIEW_SETAUTOSCROLLINFO )
 {
-   wapi_ret_LRESULT( TreeView_SetAutoScrollInfo( wapi_par_HWND( 1 ), wapi_par_UINT( 2 ), wapi_par_UINT( 2 ) ) );
+   hbwapi_ret_LRESULT( TreeView_SetAutoScrollInfo( hbwapi_par_raw_HWND( 1 ), hbwapi_par_UINT( 2 ), hbwapi_par_UINT( 2 ) ) );
 }
 #endif
 /*----------------------------------------------------------------------*/
@@ -1265,9 +1266,9 @@ HB_FUNC( WAPI_TREEVIEW_SETAUTOSCROLLINFO )
 HB_FUNC( WAPI_TREEVIEW_SETBKCOLOR )
 {
 #if ( _WIN32_IE >= 0x0400 ) && ! defined( HB_OS_WIN_CE )
-   wapi_ret_COLORREF( TreeView_SetBkColor( wapi_par_HWND( 1 ), wapi_par_COLORREF( 2 ) ) );
+   hbwapi_ret_COLORREF( TreeView_SetBkColor( hbwapi_par_raw_HWND( 1 ), hbwapi_par_COLORREF( 2 ) ) );
 #else
-   wapi_ret_COLORREF( 0 );
+   hbwapi_ret_COLORREF( 0 );
 #endif
 }
 /*----------------------------------------------------------------------*/
@@ -1277,9 +1278,9 @@ HB_FUNC( WAPI_TREEVIEW_SETBKCOLOR )
 HB_FUNC( WAPI_TREEVIEW_SETCHECKSTATE )
 {
 #if ( _WIN32_IE >= 0x0500 )
-   /* wapi_ret_UINT( TreeView_SetCheckState( wapi_par_HWND( 1 ), wapi_par_HANDLE( 2 ), wapi_par_BOOL( 3 ) ) ); */
+   /* hbwapi_ret_UINT( TreeView_SetCheckState( hbwapi_par_raw_HWND( 1 ), hbwapi_par_raw_HANDLE( 2 ), hbwapi_par_BOOL( 3 ) ) ); */
 #else
-   wapi_ret_UINT( 0 );
+   hbwapi_ret_UINT( 0 );
 #endif
 }
 /*----------------------------------------------------------------------*/
@@ -1289,7 +1290,7 @@ HB_FUNC( WAPI_TREEVIEW_SETCHECKSTATE )
 */
 HB_FUNC( WAPI_TREEVIEW_SETEXTENDEDSTYLE )
 {
-   wapi_ret_HRESULT( TreeView_SetExtendedStyle( wapi_par_HWND( 1 ), wapi_par_DWORD( 2 ), wapi_par_UINT( 2 ) ) );
+   hbwapi_ret_HRESULT( TreeView_SetExtendedStyle( hbwapi_par_raw_HWND( 1 ), hbwapi_par_DWORD( 2 ), hbwapi_par_UINT( 2 ) ) );
 }
 #endif
 /*----------------------------------------------------------------------*/
@@ -1298,7 +1299,7 @@ HB_FUNC( WAPI_TREEVIEW_SETEXTENDEDSTYLE )
 */
 HB_FUNC( WAPI_TREEVIEW_SETIMAGELIST )
 {
-   wapi_ret_HANDLE( TreeView_SetImageList( wapi_par_HWND( 1 ), wapi_par_HIMAGELIST( 2 ), wapi_par_INT( 3 ) ) );
+   hbwapi_ret_raw_HANDLE( TreeView_SetImageList( hbwapi_par_raw_HWND( 1 ), hbwapi_par_raw_HIMAGELIST( 2 ), hbwapi_par_INT( 3 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /*
@@ -1306,7 +1307,7 @@ HB_FUNC( WAPI_TREEVIEW_SETIMAGELIST )
 */
 HB_FUNC( WAPI_TREEVIEW_SETINDENT )
 {
-   wapi_ret_L( TreeView_SetIndent( wapi_par_HWND( 1 ), wapi_par_INT( 2 ) ) );
+   hbwapi_ret_L( TreeView_SetIndent( hbwapi_par_raw_HWND( 1 ), hbwapi_par_INT( 2 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /*
@@ -1316,9 +1317,9 @@ HB_FUNC( WAPI_TREEVIEW_SETINDENT )
 HB_FUNC( WAPI_TREEVIEW_SETINSERTMARK )
 {
 #if ( _WIN32_IE >= 0x0400 ) && ! defined( HB_OS_WIN_CE )
-   wapi_ret_L( TreeView_SetInsertMark( wapi_par_HWND( 1 ), wapi_par_HANDLE( 2 ), wapi_par_BOOL( 3 ) ) );
+   hbwapi_ret_L( TreeView_SetInsertMark( hbwapi_par_raw_HWND( 1 ), hbwapi_par_raw_HANDLE( 2 ), hbwapi_par_BOOL( 3 ) ) );
 #else
-   wapi_ret_L( FALSE );
+   hbwapi_ret_L( FALSE );
 #endif
 }
 /*----------------------------------------------------------------------*/
@@ -1328,9 +1329,9 @@ HB_FUNC( WAPI_TREEVIEW_SETINSERTMARK )
 HB_FUNC( WAPI_TREEVIEW_SETINSERTMARKCOLOR )
 {
 #if ( _WIN32_IE >= 0x0400 ) && ! defined( HB_OS_WIN_CE )
-   wapi_ret_COLORREF( TreeView_SetInsertMarkColor( wapi_par_HWND( 1 ), wapi_par_COLORREF( 2 ) ) );
+   hbwapi_ret_COLORREF( TreeView_SetInsertMarkColor( hbwapi_par_raw_HWND( 1 ), hbwapi_par_COLORREF( 2 ) ) );
 #else
-   wapi_ret_COLORREF( 0 );
+   hbwapi_ret_COLORREF( 0 );
 #endif
 }
 /*----------------------------------------------------------------------*/
@@ -1341,7 +1342,7 @@ HB_FUNC( WAPI_TREEVIEW_SETINSERTMARKCOLOR )
 */
 HB_FUNC( WAPI_TREEVIEW_SETITEM )
 {
-   wapi_ret_L( TreeView_SetItem( wapi_par_HWND( 1 ), wapi_par_TVITEM( 2 ) ) );
+   hbwapi_ret_L( TreeView_SetItem( hbwapi_par_raw_HWND( 1 ), hbwapi_par_raw_TVITEM( 2 ) ) );
 }
 /*----------------------------------------------------------------------*/
 /*
@@ -1350,9 +1351,9 @@ HB_FUNC( WAPI_TREEVIEW_SETITEM )
 HB_FUNC( WAPI_TREEVIEW_SETITEMHEIGHT )
 {
 #if ( _WIN32_IE >= 0x0400 ) && ! defined( HB_OS_WIN_CE )
-   wapi_ret_NI( TreeView_SetItemHeight( wapi_par_HWND( 1 ), wapi_par_SHORT( 2 ) ) );
+   hbwapi_ret_NI( TreeView_SetItemHeight( hbwapi_par_raw_HWND( 1 ), hbwapi_par_SHORT( 2 ) ) );
 #else
-   wapi_ret_NI( 0 );
+   hbwapi_ret_NI( 0 );
 #endif
 }
 /*----------------------------------------------------------------------*/
@@ -1362,9 +1363,9 @@ HB_FUNC( WAPI_TREEVIEW_SETITEMHEIGHT )
 HB_FUNC( WAPI_TREEVIEW_SETITEMSTATE )
 {
 #if ( _WIN32_IE >= 0x0500 )
-   /* wapi_ret_UINT( TreeView_SetItemState( wapi_par_HWND( 1 ), wapi_par_HANDLE( 2 ), wapi_par_UINT( 3 ), wapi_par_UINT( 4 ) ) ); */
+   /* hbwapi_ret_UINT( TreeView_SetItemState( hbwapi_par_raw_HWND( 1 ), hbwapi_par_raw_HANDLE( 2 ), hbwapi_par_UINT( 3 ), hbwapi_par_UINT( 4 ) ) ); */
 #else
-   wapi_ret_UINT( 0 );
+   hbwapi_ret_UINT( 0 );
 #endif
 }
 /*----------------------------------------------------------------------*/
@@ -1374,9 +1375,9 @@ HB_FUNC( WAPI_TREEVIEW_SETITEMSTATE )
 HB_FUNC( WAPI_TREEVIEW_SETLINECOLOR )
 {
 #if ( _WIN32_IE >= 0x0500 )
-   wapi_ret_COLORREF( TreeView_SetLineColor( wapi_par_HWND( 1 ), wapi_par_COLORREF( 2 ) ) );
+   hbwapi_ret_COLORREF( TreeView_SetLineColor( hbwapi_par_raw_HWND( 1 ), hbwapi_par_COLORREF( 2 ) ) );
 #else
-   wapi_ret_COLORREF( 0 );
+   hbwapi_ret_COLORREF( 0 );
 #endif
 }
 /*----------------------------------------------------------------------*/
@@ -1386,9 +1387,9 @@ HB_FUNC( WAPI_TREEVIEW_SETLINECOLOR )
 HB_FUNC( WAPI_TREEVIEW_SETSCROLLTIME )
 {
 #if ! defined( HB_OS_WIN_CE ) && ! defined( __MINGW32__ ) && ! defined( __CYGWIN__ )
-   wapi_ret_UINT( TreeView_SetScrollTime( wapi_par_HWND( 1 ), wapi_par_UINT( 2 ) ) );
+   hbwapi_ret_UINT( TreeView_SetScrollTime( hbwapi_par_raw_HWND( 1 ), hbwapi_par_UINT( 2 ) ) );
 #else
-   wapi_ret_UINT( 0 );
+   hbwapi_ret_UINT( 0 );
 #endif
 }
 /*----------------------------------------------------------------------*/
@@ -1398,9 +1399,9 @@ HB_FUNC( WAPI_TREEVIEW_SETSCROLLTIME )
 HB_FUNC( WAPI_TREEVIEW_SETTEXTCOLOR )
 {
 #if ( _WIN32_IE >= 0x0400 ) && ! defined( HB_OS_WIN_CE )
-   wapi_ret_COLORREF( TreeView_SetTextColor( wapi_par_HWND( 1 ), wapi_par_COLORREF( 2 ) ) );
+   hbwapi_ret_COLORREF( TreeView_SetTextColor( hbwapi_par_raw_HWND( 1 ), hbwapi_par_COLORREF( 2 ) ) );
 #else
-   wapi_ret_COLORREF( 0 );
+   hbwapi_ret_COLORREF( 0 );
 #endif
 }
 /*----------------------------------------------------------------------*/
@@ -1410,9 +1411,9 @@ HB_FUNC( WAPI_TREEVIEW_SETTEXTCOLOR )
 HB_FUNC( WAPI_TREEVIEW_SETTOOLTIPS )
 {
 #if ( _WIN32_IE >= 0x0300 ) && ! defined( HB_OS_WIN_CE )
-   wapi_ret_HANDLE( TreeView_SetToolTips( wapi_par_HWND( 1 ), wapi_par_HWND( 2 ) ) );
+   hbwapi_ret_raw_HANDLE( TreeView_SetToolTips( hbwapi_par_raw_HWND( 1 ), hbwapi_par_raw_HWND( 2 ) ) );
 #else
-   wapi_ret_HANDLE( NULL );
+   hbwapi_ret_raw_HANDLE( NULL );
 #endif
 }
 /*----------------------------------------------------------------------*/
@@ -1422,9 +1423,9 @@ HB_FUNC( WAPI_TREEVIEW_SETTOOLTIPS )
 HB_FUNC( WAPI_TREEVIEW_SETUNICODEFORMAT )
 {
 #if ! defined( HB_OS_WIN_CE ) && ! defined( __MINGW32__ ) && ! defined( __CYGWIN__ )
-   wapi_ret_L( TreeView_SetUnicodeFormat( wapi_par_HWND( 1 ), wapi_par_BOOL( 2 ) ) );
+   hbwapi_ret_L( TreeView_SetUnicodeFormat( hbwapi_par_raw_HWND( 1 ), hbwapi_par_BOOL( 2 ) ) );
 #else
-   wapi_ret_L( FALSE );
+   hbwapi_ret_L( FALSE );
 #endif
 }
 /*----------------------------------------------------------------------*/
@@ -1434,7 +1435,7 @@ HB_FUNC( WAPI_TREEVIEW_SETUNICODEFORMAT )
 */
 HB_FUNC( WAPI_TREEVIEW_SHOWINFOTIP )
 {
-   wapi_ret_DWORD( TreeView_ShowInfoTip( wapi_par_HWND( 1 ), wapi_par_HITEM( 2 ) ) );
+   hbwapi_ret_DWORD( TreeView_ShowInfoTip( hbwapi_par_raw_HWND( 1 ), hbwapi_par_raw_HITEM( 2 ) ) );
 }
 #endif
 /*----------------------------------------------------------------------*/
@@ -1443,7 +1444,7 @@ HB_FUNC( WAPI_TREEVIEW_SHOWINFOTIP )
 */
 HB_FUNC( WAPI_TREEVIEW_SORTCHILDREN )
 {
-   wapi_ret_L( TreeView_SortChildren( wapi_par_HWND( 1 ), wapi_par_HANDLE( 2 ), wapi_par_BOOL( 3 ) ) );
+   hbwapi_ret_L( TreeView_SortChildren( hbwapi_par_raw_HWND( 1 ), hbwapi_par_raw_HANDLE( 2 ), hbwapi_par_BOOL( 3 ) ) );
 }
 /*----------------------------------------------------------------------*/
 #if 0
@@ -1452,6 +1453,6 @@ HB_FUNC( WAPI_TREEVIEW_SORTCHILDREN )
 */
 HB_FUNC( WAPI_TREEVIEW_SORTCHILDRENCB )
 {
-   wapi_ret_L( TreeView_SortChildrenCB( wapi_par_HWND( 1 ), wapi_par_TVSORTCB( 2 ), wapi_par_BOOL( 3 ) ) );
+   hbwapi_ret_L( TreeView_SortChildrenCB( hbwapi_par_raw_HWND( 1 ), hbwapi_par_raw_TVSORTCB( 2 ), hbwapi_par_BOOL( 3 ) ) );
 }
 #endif

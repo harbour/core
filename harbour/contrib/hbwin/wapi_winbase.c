@@ -65,7 +65,7 @@ HB_FUNC( WAPI_GETCOMMANDLINE )
 
 HB_FUNC( WAPI_GETCURRENTPROCESS )
 {
-   wapi_ret_HANDLE( GetCurrentProcess() );
+   hbwapi_ret_raw_HANDLE( GetCurrentProcess() );
 }
 
 HB_FUNC( WAPI_GETCURRENTPROCESSID )
@@ -75,12 +75,12 @@ HB_FUNC( WAPI_GETCURRENTPROCESSID )
 
 HB_FUNC( WAPI_GETCURRENTTHREAD )
 {
-   wapi_ret_HANDLE( GetCurrentThread() );
+   hbwapi_ret_raw_HANDLE( GetCurrentThread() );
 }
 
 HB_FUNC( WAPI_WAITFORSINGLEOBJECT )
 {
-   DWORD dwResult = WaitForSingleObject( wapi_par_HANDLE( 1 ), ( DWORD ) hb_parnl( 2 ) );
+   DWORD dwResult = WaitForSingleObject( hbwapi_par_raw_HANDLE( 1 ), ( DWORD ) hb_parnl( 2 ) );
    hbwapi_SetLastError( GetLastError() );
    hb_retnl( dwResult );
 }
@@ -98,7 +98,7 @@ HB_FUNC( WAPI_WAITFORSINGLEOBJECTEX )
    dwResult = 0;
    dwLastError = ERROR_INVALID_FUNCTION;
 #else
-   dwResult = WaitForSingleObjectEx( wapi_par_HANDLE( 1 ), ( DWORD ) hb_parnl( 2 ), hb_parl( 3 ) );
+   dwResult = WaitForSingleObjectEx( hbwapi_par_raw_HANDLE( 1 ), ( DWORD ) hb_parnl( 2 ), hb_parl( 3 ) );
    dwLastError = GetLastError();
 #endif
 
@@ -176,14 +176,14 @@ HB_FUNC( WAPI_SETPROCESSWORKINGSETSIZE )
    dwLastError = ERROR_INVALID_FUNCTION;
 #else
    bResult = SetProcessWorkingSetSize(
-      wapi_par_HANDLE( 1 ) /* hProcess */,
+      hbwapi_par_raw_HANDLE( 1 ) /* hProcess */,
       ( SIZE_T ) hb_parnint( 2 ) /* dwMinimumWorkingSetSize */,
       ( SIZE_T ) hb_parnint( 3 ) /* dwMaximumWorkingSetSize */ );
    dwLastError = GetLastError();
 #endif
 
    hbwapi_SetLastError( dwLastError );
-   wapi_ret_L( bResult );
+   hbwapi_ret_L( bResult );
 }
 
 HB_FUNC( WAPI_GETLASTERROR )
@@ -218,7 +218,7 @@ HB_FUNC( WAPI_FREELIBRARY )
 {
    BOOL bResult = FreeLibrary( ( HMODULE ) hb_parptr( 1 ) );
    hbwapi_SetLastError( GetLastError() );
-   wapi_ret_L( bResult );
+   hbwapi_ret_L( bResult );
 }
 
 HB_FUNC( WAPI_GETPROCADDRESS )
@@ -239,7 +239,7 @@ HB_FUNC( WAPI_GETMODULEHANDLE )
    HMODULE hResult = GetModuleHandle( HB_PARSTR( 1, &hModuleName, NULL ) );
 
    hbwapi_SetLastError( GetLastError() );
-   wapi_ret_HANDLE( hResult );
+   hbwapi_ret_raw_HANDLE( hResult );
 
    hb_strfree( hModuleName );
 }

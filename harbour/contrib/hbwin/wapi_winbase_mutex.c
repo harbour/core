@@ -52,7 +52,7 @@
 
 #include "hbwapi.h"
 
-static HB_GARBAGE_FUNC( wapi_mutex_release )
+static HB_GARBAGE_FUNC( hbwapi_mutex_release )
 {
    void ** ph = ( void ** ) Cargo;
 
@@ -63,17 +63,17 @@ static HB_GARBAGE_FUNC( wapi_mutex_release )
    }
 }
 
-static const HB_GC_FUNCS s_gc_wapi_mutex_funcs =
+static const HB_GC_FUNCS s_gc_hbwapi_mutex_funcs =
 {
-   wapi_mutex_release,
+   hbwapi_mutex_release,
    hb_gcDummyMark
 };
 
-static void wapi_mutex_ret( HANDLE hMutex )
+static void hbwapi_mutex_ret( HANDLE hMutex )
 {
    if( hMutex )
    {
-      void ** ph = ( void ** ) hb_gcAllocate( sizeof( HANDLE * ), &s_gc_wapi_mutex_funcs );
+      void ** ph = ( void ** ) hb_gcAllocate( sizeof( HANDLE * ), &s_gc_hbwapi_mutex_funcs );
 
       *ph = hMutex;
       hb_retptrGC( ph );
@@ -82,9 +82,9 @@ static void wapi_mutex_ret( HANDLE hMutex )
       hb_retptr( NULL );
 }
 
-static HANDLE wapi_mutex_par( int iParam )
+static HANDLE hbwapi_mutex_par( int iParam )
 {
-   void ** ph = ( void ** ) hb_parptrGC( &s_gc_wapi_mutex_funcs, iParam );
+   void ** ph = ( void ** ) hb_parptrGC( &s_gc_hbwapi_mutex_funcs, iParam );
 
    return ph ? ( HANDLE ) *ph : NULL;
 }
@@ -96,7 +96,7 @@ HB_FUNC( WAPI_CREATEMUTEX )
    HANDLE hMutex = CreateMutex( ( LPSECURITY_ATTRIBUTES ) hb_parptr( 1 ), hb_parl( 2 ), HB_PARSTR( 3, &hName, NULL ) );
 
    hbwapi_SetLastError( GetLastError() );
-   wapi_mutex_ret( hMutex );
+   hbwapi_mutex_ret( hMutex );
 
    hb_strfree( hName );
 }
@@ -109,7 +109,7 @@ HB_FUNC( WAPI_OPENMUTEX )
    HANDLE hMutex = OpenMutex( hb_parnl( 1 ), hb_parl( 2 ), HB_PARSTR( 3, &hName, NULL ) );
 
    hbwapi_SetLastError( GetLastError() );
-   wapi_mutex_ret( hMutex );
+   hbwapi_mutex_ret( hMutex );
 
    hb_strfree( hName );
 #else
@@ -121,13 +121,13 @@ HB_FUNC( WAPI_OPENMUTEX )
 /* BOOL WINAPI ReleaseMutex( HANDLE hMutex ) */
 HB_FUNC( WAPI_RELEASEMUTEX )
 {
-   HANDLE hMutex = wapi_mutex_par( 1 );
+   HANDLE hMutex = hbwapi_mutex_par( 1 );
 
    if( hMutex )
    {
       BOOL bResult = ReleaseMutex( hMutex );
       hbwapi_SetLastError( GetLastError() );
-      hb_retl( bResult );
+      hbwapi_ret_L( bResult );
    }
    else
       hb_retl( HB_FALSE );
