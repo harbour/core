@@ -179,6 +179,11 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
                   ENDIF
                ENDIF
             NEXT
+         ELSE
+            IF ! hbmk2[ "lIGNOREERROR" ]
+               cRetVal := "error"
+               EXIT
+            ENDIF
          ENDIF
       ENDIF
 
@@ -241,6 +246,11 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
                   FErase( cTmp )
                ENDIF
             NEXT
+         ELSE
+            IF ! hbmk2[ "lIGNOREERROR" ]
+               cRetVal := "error"
+               EXIT
+            ENDIF
          ENDIF
       ENDIF
 
@@ -293,6 +303,11 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
                   ENDIF
                ENDIF
             NEXT
+         ELSE
+            IF ! hbmk2[ "lIGNOREERROR" ]
+               cRetVal := "error"
+               EXIT
+            ENDIF
          ENDIF
       ENDIF
 
@@ -315,6 +330,12 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
 
 STATIC FUNCTION qt_tool_detect( hbmk2, cName, cEnvQT, cEnvHB )
    LOCAL cBIN
+   LOCAL aEnvList
+
+   aEnvList := { "HB_QTPATH", "HB_QTPOSTFIX" }
+   IF ! Empty( cEnvHB )
+      AAdd( aEnvList, cEnvHB )
+   ENDIF
 
    cBIN := GetEnv( cEnvQT )
    IF Empty( cBIN )
@@ -324,21 +345,24 @@ STATIC FUNCTION qt_tool_detect( hbmk2, cName, cEnvQT, cEnvHB )
             ! hb_FileExists( cBIN := GetEnv( "HB_QTPATH" ) + cName )
 
             IF hbmk2[ "cPLAT" ] == "win"
-               IF GetEnv( "HB_WITH_QT" ) == "no"
-                  RETURN NIL
-               ELSE
+
+               hb_AIns( aEnvList, 1, "HB_WITH_QT", .T. )
+
+               IF ! Empty( GetEnv( "HB_WITH_QT" ) ) .AND. ;
+                  !( GetEnv( "HB_WITH_QT" ) == "no" )
+
                   cBIN := GetEnv( "HB_WITH_QT" ) + "\..\bin\" + cName + ".exe"
                   IF ! hb_FileExists( cBIN )
                      hbmk2_OutErr( hbmk2, hb_StrFormat( "HB_WITH_QT points to incomplete QT installation. '%1$s' executable not found.", cName ) )
                      RETURN NIL
                   ENDIF
                ENDIF
-            ELSE
-               cBIN := hbmk2_FindInPath( cName, GetEnv( "PATH" ) + hb_osPathListSeparator() + "/opt/qtsdk/qt/bin" )
-               IF Empty( cBIN )
-                  hbmk2_OutErr( hbmk2, hb_StrFormat( "HB_QTPATH, HB_QTPOSTFIX, %1$s not set, could not autodetect", cEnvHB ) )
-                  RETURN NIL
-               ENDIF
+            ENDIF
+
+            cBIN := hbmk2_FindInPath( cName, GetEnv( "PATH" ) + hb_osPathListSeparator() + "/opt/qtsdk/qt/bin" )
+            IF Empty( cBIN )
+               hbmk2_OutErr( hbmk2, hb_StrFormat( "%1$s not set, could not autodetect '%2$s' executable", hbmk2_ArrayToList( aEnvList, ", " ), cName ) )
+               RETURN NIL
             ENDIF
          ENDIF
          IF hbmk2[ "lINFO" ]

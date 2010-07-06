@@ -6560,6 +6560,21 @@ FUNCTION hbmk2_StrStripQuote( ... )    ; RETURN StrStripQuote( ... )
 FUNCTION hbmk2_OutStdRaw( ... )        ; RETURN ( OutStd( ... ), OutStd( _OUT_EOL ) )
 FUNCTION hbmk2_OutErrRaw( ... )        ; RETURN ( OutErr( ... ), OutErr( _OUT_EOL ) )
 
+FUNCTION hbmk2_ArrayToList( array, cSeparator )
+   LOCAL cString := ""
+   LOCAL tmp
+
+   DEFAULT cSeparator TO " "
+
+   FOR tmp := 1 TO Len( array )
+      cString += array[ tmp ]
+      IF tmp < Len( array )
+         cString += cSeparator
+      ENDIF
+   NEXT
+
+   RETURN cString
+
 STATIC FUNCTION ctx_to_hbmk( ctx )
    LOCAL hbmk
    IF hb_isHash( ctx ) .AND. s_cSecToken $ ctx

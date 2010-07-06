@@ -12,10 +12,7 @@
 
 /* TODO:
      1. error handling / reporting / feedback
-     2. add .dll generation for contrib libs
-     3. avoid long cmdlines to make ms-dos hosts happy
-     4. solve the automatic in-dir make clean/install/rebuild
-        workflow
+     2. solve the automatic in-dir make clean/install/rebuild workflow
  */
 
 /* #pragma warninglevel=3 */
@@ -148,7 +145,9 @@ PROCEDURE Main( ... )
    LOCAL tmp
    LOCAL nAction
 
-   IF "migr" $ hb_cmdLine()
+   s_lMigr := "migr" $ hb_cmdLine()
+
+   IF s_lMigr
       OutStd( "! New contrib make orchestrator test run. |" + hb_cmdLine() + "|" + GetEnv( "HB_MAKECMDGOALS" ) + "|" + hb_dirBase() + "|" + CurDir() + "|", hb_osNewLine() )
 
       /* testing with a limited set of contribs */
@@ -214,7 +213,10 @@ PROCEDURE Main( ... )
 
    /* Converting build options to hbmk2 options */
 
-   cBaseOptions := ""
+   cBaseOptions := "-quiet -lang=en -width=0 -q0"
+   IF s_lMigr
+      cBaseOptions += " -quiet- -info -trace"
+   ENDIF
 
    IF GetEnv( "HB_BUILD_MODE" ) == "cpp"
       cBaseOptions += " -cpp=yes"
@@ -243,6 +245,12 @@ PROCEDURE Main( ... )
    hb_setenv( "HB_LIB_INSTALL", cRoot + "lib/" + GetEnv( "HB_PLATFORM" ) + "/" + GetEnv( "HB_COMPILER" ) + iif( lBuildName, "/" + GetEnv( "HB_BUILD_NAME" ), "" ) )
    hb_setenv( "HB_DYN_INSTALL" )
    hb_setenv( "HB_INC_INSTALL", cRoot + "include" )
+
+   /* Using shorter vars to save on cmdline length */
+   hb_setenv( "__HB_B", GetEnv( "HB_BIN_INSTALL" ) )
+   hb_setenv( "__HB_L", GetEnv( "HB_LIB_INSTALL" ) )
+   hb_setenv( "__HB_D", GetEnv( "HB_DYN_INSTALL" ) )
+   hb_setenv( "__HB_I", GetEnv( "HB_INC_INSTALL" ) )
 
    hb_setenv( "HBMK_OPTIONS" )
 
@@ -292,11 +300,11 @@ PROCEDURE Main( ... )
                SWITCH hItem[ "type" ]
                CASE "lib"
                CASE "implib"
-                  cTargetDir := "${HB_LIB_INSTALL}"
+                  cTargetDir := "${__HB_L}"
                   cInstallDirVar := "_HB_LIB_INSTALL"
                   EXIT
                CASE "bin"
-                  cTargetDir := "${HB_BIN_INSTALL}"
+                  cTargetDir := "${__HB_B}"
                   cInstallDirVar := "_HB_BIN_INSTALL"
                   IF GetEnv( "HB_BUILD_SHARED" ) == "yes"
                      cOptionsPre += " -shared"
@@ -323,7 +331,7 @@ PROCEDURE Main( ... )
                   ENDIF
                ENDIF
 
-               call_hbmk2( cBase + cProject, cTargetDir, cOptionsPre, cOptionsPost )
+               call_hbmk2( cBase + cProject, cTargetDir, cOptionsPre, cOptionsPost, .F. )
 
                /* Highly experimental */
                IF hItem[ "type" ] == "lib" .AND. GetEnv( "HB_BUILD_CONTRIB_DLL" ) == "yes" .AND. ;
@@ -333,7 +341,7 @@ PROCEDURE Main( ... )
 
                   cOptionsPre := cBaseOptions
                   /* TOFIX: Add -implib option. It collides with static lib so needs to be resolved. */
-                  cOptionsPost := " -hbdyn -nohblib- -shared " + FN_ExtSet( cProject, ".hbc" )
+                  cOptionsPost := " -hbdyn -nohblib- " + FN_ExtSet( cProject, ".hbc" )
 
                   IF nAction == _ACT_CLEAN
                      cOptionsPre += " -clean"
@@ -350,7 +358,7 @@ PROCEDURE Main( ... )
                      ENDIF
                   ENDIF
 
-                  call_hbmk2( cBase + cProject, cTargetDir, cOptionsPre, cOptionsPost )
+                  call_hbmk2( cBase + cProject, cTargetDir, cOptionsPre, cOptionsPost, .T. )
                ENDIF
             ELSE
                /* OutStd( hb_StrFormat( "'%s' project skipped", cProject ), hb_osNewLine() ) */
@@ -363,18 +371,20 @@ PROCEDURE Main( ... )
 
    RETURN
 
-STATIC FUNCTION call_hbmk2( cProject, cTargetDir, cOptionsPre, cOptionsPost )
+STATIC FUNCTION call_hbmk2( cProject, cTargetDir, cOptionsPre, cOptionsPost, lDyn )
    LOCAL nErrorLevel
 
    LOCAL cDir, cName
 
    hb_FNameSplit( cProject, @cDir, @cName )
 
+   /* Keeping cmdline as short as possible */
+   hb_setenv( "HBMK_OPTIONS", cOptionsPre )
+
    nErrorLevel := mk_hb_processRun( PathSepToSelf( GetEnv( "HB_HOST_BIN_DIR" ) ) + _PS_ + "hbmk2" +;
-                                    " -quiet -lang=en -width=0 -q0" + cOptionsPre +;
                                     " " + cProject +;
                                     cOptionsPost +;
-                                    " -workdir=" + cTargetDir + "/${hb_work}/" + cName + "${hb_workdynsub}" +;
+                                    " -workdir=" + cTargetDir + "/${hb_work}/" + cName + iif( lDyn, "${hb_workdynsub}", "" ) +;
                                     " -o" + cTargetDir + "/" )
    IF nErrorLevel != 0
       OutStd( hb_StrFormat( "'%s' returned status: %s", cProject, hb_ntos( nErrorLevel ) ), hb_osNewLine() )
