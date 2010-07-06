@@ -156,9 +156,9 @@ typedef struct
    PHB_ITEM * pItems;         /* pointer to the stack items */
    PHB_ITEM * pBase;          /* stack frame position for the current function call */
    HB_ITEM    Return;         /* latest returned value */
-   HB_ISIZ    wItems;         /* total items that may be held on the stack */
-   HB_ISIZ    lWithObject;    /* stack offset to base current WITH OBJECT item */
-   HB_ISIZ    lRecoverBase;   /* current SEQUENCE envelope offset or 0 if no SEQUENCE is active */
+   HB_ISIZ    nItems;         /* total items that may be held on the stack */
+   HB_ISIZ    nWithObject;    /* stack offset to base current WITH OBJECT item */
+   HB_ISIZ    nRecoverBase;   /* current SEQUENCE envelope offset or 0 if no SEQUENCE is active */
    HB_USHORT  uiActionRequest;/* request for some action - stop processing of opcodes */
    HB_USHORT  uiQuitState;    /* HVM is quiting */
    HB_STACK_STATE state;      /* first (default) stack state frame */
@@ -382,7 +382,7 @@ extern void        hb_stackUpdateAllocator( void *, PHB_ALLOCUPDT_FUNC, int );
 #define hb_stackItemFromBase( n )   ( * ( hb_stack.pBase + ( int ) ( n ) + 1 ) )
 #define hb_stackTopOffset( )        ( hb_stack.pPos - hb_stack.pItems )
 #define hb_stackBaseOffset( )       ( hb_stack.pBase - hb_stack.pItems + 1 )
-/* #define hb_stackTotalItems( )       ( hb_stack.wItems ) */
+/* #define hb_stackTotalItems( )       ( hb_stack.nItems ) */
 #define hb_stackBaseItem( )         ( * hb_stack.pBase )
 #define hb_stackSelfItem( )         ( * ( hb_stack.pBase + 1 ) )
 #define hb_stackItem( iItemPos )    ( * ( hb_stack.pItems + ( HB_ISIZ ) ( iItemPos ) ) )
@@ -391,13 +391,13 @@ extern void        hb_stackUpdateAllocator( void *, PHB_ALLOCUPDT_FUNC, int );
 #define hb_stackItemBasePtr( )      ( &hb_stack.pItems )
 #define hb_stackGetStaticsBase( )   ( hb_stack.pStatics )
 #define hb_stackSetStaticsBase( p ) do { hb_stack.pStatics = ( p ); } while ( 0 )
-#define hb_stackGetRecoverBase( )   ( hb_stack.lRecoverBase )
-#define hb_stackSetRecoverBase( n ) do { hb_stack.lRecoverBase = ( n ); } while( 0 )
+#define hb_stackGetRecoverBase( )   ( hb_stack.nRecoverBase )
+#define hb_stackSetRecoverBase( n ) do { hb_stack.nRecoverBase = ( n ); } while( 0 )
 #define hb_stackGetActionRequest( ) ( hb_stack.uiActionRequest )
 #define hb_stackSetActionRequest( n )     do { hb_stack.uiActionRequest = ( n ); } while( 0 )
-#define hb_stackWithObjectItem( )   ( hb_stack.lWithObject ? * ( hb_stack.pItems + hb_stack.lWithObject ) : NULL )
-#define hb_stackWithObjectOffset( ) ( hb_stack.lWithObject )
-#define hb_stackWithObjectSetOffset( n )  do { hb_stack.lWithObject = ( n ); } while( 0 )
+#define hb_stackWithObjectItem( )   ( hb_stack.nWithObject ? * ( hb_stack.pItems + hb_stack.nWithObject ) : NULL )
+#define hb_stackWithObjectOffset( ) ( hb_stack.nWithObject )
+#define hb_stackWithObjectSetOffset( n )  do { hb_stack.nWithObject = ( n ); } while( 0 )
 #define hb_stackGetCDP( )           ( hb_stack.pCDP )
 #define hb_stackSetCDP( p )         do { hb_stack.pCDP = ( p ); } while ( 0 )
 #define hb_stackGetLang( )          ( hb_stack.pLang )

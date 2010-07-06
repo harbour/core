@@ -1484,24 +1484,24 @@ const char * hb_objGetRealClsName( PHB_ITEM pObject, const char * szName )
 #if defined( HB_CLASSY_BLOCK_SCOPE )
 static HB_ISIZ hb_clsSenderOffset( void )
 {
-   HB_ISIZ lOffset = hb_stackBaseProcOffset( 1 );
+   HB_ISIZ nOffset = hb_stackBaseProcOffset( 1 );
 
-   if( lOffset > 0 )
+   if( nOffset > 0 )
    {
       /* Is it inline method? */
-      if( lOffset > 0 && HB_IS_BLOCK( hb_stackItem( lOffset + 1 ) ) &&
-          ( hb_stackItem( lOffset )->item.asSymbol.value == &hb_symEval ||
-            hb_stackItem( lOffset )->item.asSymbol.value->pDynSym ==
+      if( nOffset > 0 && HB_IS_BLOCK( hb_stackItem( nOffset + 1 ) ) &&
+          ( hb_stackItem( nOffset )->item.asSymbol.value == &hb_symEval ||
+            hb_stackItem( nOffset )->item.asSymbol.value->pDynSym ==
             hb_symEval.pDynSym ) )
       {
-         lOffset = hb_stackItem( lOffset )->item.asSymbol.stackstate->lBaseItem;
+         nOffset = hb_stackItem( nOffset )->item.asSymbol.stackstate->nBaseItem;
 
          /* I do not like it but Class(y) makes sth like that. [druzus] */
-         while( lOffset > 0 &&
-                hb_stackItem( lOffset )->item.asSymbol.stackstate->uiClass == 0 )
-            lOffset = hb_stackItem( lOffset )->item.asSymbol.stackstate->lBaseItem;
+         while( nOffset > 0 &&
+                hb_stackItem( nOffset )->item.asSymbol.stackstate->uiClass == 0 )
+            nOffset = hb_stackItem( nOffset )->item.asSymbol.stackstate->nBaseItem;
       }
-      return lOffset;
+      return nOffset;
    }
    return -1;
 }
@@ -1510,10 +1510,10 @@ static HB_ISIZ hb_clsSenderOffset( void )
 #if 0
 static HB_USHORT hb_clsSenderClasss( void )
 {
-   HB_ISIZ lOffset = hb_clsSenderOffset();
+   HB_ISIZ nOffset = hb_clsSenderOffset();
 
-   if( lOffset > 0 )
-      return hb_stackItem( lOffset )->item.asSymbol.stackstate->uiClass;
+   if( nOffset > 0 )
+      return hb_stackItem( nOffset )->item.asSymbol.stackstate->uiClass;
    else
       return 0;
 }
@@ -1521,12 +1521,12 @@ static HB_USHORT hb_clsSenderClasss( void )
 
 static HB_USHORT hb_clsSenderMethodClasss( void )
 {
-   HB_ISIZ lOffset = hb_clsSenderOffset();
+   HB_ISIZ nOffset = hb_clsSenderOffset();
 
-   if( lOffset > 0 )
+   if( nOffset > 0 )
    {
       HB_STACK_TLS_PRELOAD
-      PHB_STACK_STATE pStack = hb_stackItem( lOffset )->item.asSymbol.stackstate;
+      PHB_STACK_STATE pStack = hb_stackItem( nOffset )->item.asSymbol.stackstate;
 
       if( pStack->uiClass )
          return ( s_pClasses[ pStack->uiClass ]->pMethods +
@@ -1538,16 +1538,16 @@ static HB_USHORT hb_clsSenderMethodClasss( void )
 static PHB_SYMB hb_clsSenderSymbol( void )
 {
    PHB_SYMB pSym = NULL;
-   HB_ISIZ lOffset = hb_clsSenderOffset();
+   HB_ISIZ nOffset = hb_clsSenderOffset();
 
-   if( lOffset > 0 )
+   if( nOffset > 0 )
    {
       HB_STACK_TLS_PRELOAD
-      pSym = hb_stackItem( lOffset )->item.asSymbol.value;
+      pSym = hb_stackItem( nOffset )->item.asSymbol.value;
 
       if( pSym == &hb_symEval || pSym->pDynSym == hb_symEval.pDynSym )
       {
-         PHB_ITEM pBlock = hb_stackItem( lOffset + 1 );
+         PHB_ITEM pBlock = hb_stackItem( nOffset + 1 );
 
          if( HB_IS_BLOCK( pBlock ) )
             pSym = pBlock->item.asBlock.value->pDefSymb;
@@ -1559,12 +1559,12 @@ static PHB_SYMB hb_clsSenderSymbol( void )
 
 static HB_USHORT hb_clsSenderObjectClasss( void )
 {
-   HB_ISIZ lOffset = hb_clsSenderOffset();
+   HB_ISIZ nOffset = hb_clsSenderOffset();
 
-   if( lOffset > 0 )
+   if( nOffset > 0 )
    {
       HB_STACK_TLS_PRELOAD
-      PHB_ITEM pSender = hb_stackItem( lOffset + 1 );
+      PHB_ITEM pSender = hb_stackItem( nOffset + 1 );
 
       if( HB_IS_ARRAY( pSender ) )
          return pSender->item.asArray.value->uiClass;
@@ -2421,10 +2421,10 @@ void hb_dbg_objSendMessage( int iProcLevel, PHB_ITEM pObject, PHB_ITEM pMessage,
          int iLevel = hb_stackCallDepth();
          if( iProcLevel < iLevel )
          {
-            HB_ISIZ lOffset = hb_stackBaseProcOffset( iLevel - iProcLevel );
-            if( lOffset > 0 )
+            HB_ISIZ nOffset = hb_stackBaseProcOffset( iLevel - iProcLevel );
+            if( nOffset > 0 )
             {
-               PHB_ITEM pItem = hb_stackItem( lOffset );
+               PHB_ITEM pItem = hb_stackItem( nOffset );
                PHB_ITEM pBase = hb_stackBaseItem();
                pBase->item.asSymbol.stackstate->uiClass =
                                     pItem->item.asSymbol.stackstate->uiClass;
@@ -4041,7 +4041,7 @@ HB_FUNC( __CLASSSEL )
 HB_FUNC( __GETMESSAGE )
 {
    HB_STACK_TLS_PRELOAD
-   hb_retc( hb_stackItem( hb_stackBaseItem()->item.asSymbol.stackstate->lBaseItem )->item.asSymbol.value->szName );
+   hb_retc( hb_stackItem( hb_stackBaseItem()->item.asSymbol.stackstate->nBaseItem )->item.asSymbol.value->szName );
 }
 
 HB_FUNC( __CLSPARENT )
@@ -4053,18 +4053,18 @@ HB_FUNC( __CLSPARENT )
 HB_FUNC( __SENDER )
 {
    HB_STACK_TLS_PRELOAD
-   HB_ISIZ lOffset = hb_stackBaseProcOffset( 2 );
+   HB_ISIZ nOffset = hb_stackBaseProcOffset( 2 );
 
-   if( lOffset > 0 )
+   if( nOffset > 0 )
    {
-      PHB_ITEM pSelf = hb_stackItem( lOffset + 1 );
+      PHB_ITEM pSelf = hb_stackItem( nOffset + 1 );
 
       /* Is it inline method? */
-      if( lOffset > 0 && HB_IS_BLOCK( pSelf ) &&
-          hb_stackItem( lOffset )->item.asSymbol.value == &hb_symEval )
+      if( nOffset > 0 && HB_IS_BLOCK( pSelf ) &&
+          hb_stackItem( nOffset )->item.asSymbol.value == &hb_symEval )
       {
-         pSelf = hb_stackItem( hb_stackItem( lOffset )->
-                               item.asSymbol.stackstate->lBaseItem + 1 );
+         pSelf = hb_stackItem( hb_stackItem( nOffset )->
+                               item.asSymbol.stackstate->nBaseItem + 1 );
       }
 
       if( HB_IS_OBJECT( pSelf ) )
@@ -4087,11 +4087,11 @@ HB_FUNC( __CLSSYNCWAIT )
    HB_STACK_TLS_PRELOAD
    PHB_ITEM pMutex = NULL;
    HB_ULONG ulMilliSec = HB_THREAD_INFINITE_WAIT;
-   HB_ISIZ lOffset = hb_stackBaseProcOffset( 2 );
+   HB_ISIZ nOffset = hb_stackBaseProcOffset( 2 );
 
-   if( lOffset > 0 )
+   if( nOffset > 0 )
    {
-      PHB_ITEM pBase = hb_stackItem( lOffset );
+      PHB_ITEM pBase = hb_stackItem( nOffset );
       PHB_STACK_STATE pStack = pBase->item.asSymbol.stackstate;
       HB_USHORT uiClass = pStack->uiClass;
 
@@ -4102,11 +4102,11 @@ HB_FUNC( __CLSSYNCWAIT )
 
          if( pMethod->pFuncSym == &s___msgSync )
          {
-            PHB_ITEM pSelf = hb_stackItem( lOffset + 1 );
+            PHB_ITEM pSelf = hb_stackItem( nOffset + 1 );
 
             /* Is it inline method? */
             if( HB_IS_BLOCK( pSelf ) && pBase->item.asSymbol.value == &hb_symEval )
-               pSelf = hb_stackItem( pBase->item.asSymbol.stackstate->lBaseItem + 1 );
+               pSelf = hb_stackItem( pBase->item.asSymbol.stackstate->nBaseItem + 1 );
 
             uiClass = hb_objGetClass( pSelf );
             if( uiClass && uiClass <= s_uiClasses )
@@ -5082,12 +5082,12 @@ void hb_clsAssociate( HB_USHORT usClassH )
  */
 const char * hb_clsRealMethodName( void )
 {
-   HB_ISIZ lOffset = hb_stackBaseProcOffset( 1 );
+   HB_ISIZ nOffset = hb_stackBaseProcOffset( 1 );
    const char * szName = NULL;
 
-   if( lOffset > 0 )
+   if( nOffset > 0 )
    {
-      PHB_STACK_STATE pStack = hb_stackItem( lOffset )->item.asSymbol.stackstate;
+      PHB_STACK_STATE pStack = hb_stackItem( nOffset )->item.asSymbol.stackstate;
 
       if( pStack->uiClass && pStack->uiClass <= s_uiClasses )
       {

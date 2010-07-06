@@ -57,12 +57,12 @@
 
 HB_FUNC( HB_PVALUE )
 {
-   HB_ISIZ lOffset = hb_stackBaseItem()->item.asSymbol.stackstate->lBaseItem;
+   HB_ISIZ nOffset = hb_stackBaseItem()->item.asSymbol.stackstate->nBaseItem;
    HB_USHORT uiParam = ( HB_USHORT ) hb_parni( 1 );
 
-   if( uiParam && uiParam <= hb_stackItem( lOffset )->item.asSymbol.paramcnt )
+   if( uiParam && uiParam <= hb_stackItem( nOffset )->item.asSymbol.paramcnt )
    {
-      PHB_ITEM pItem = hb_stackItem( lOffset + 1 + uiParam );
+      PHB_ITEM pItem = hb_stackItem( nOffset + 1 + uiParam );
       if( hb_pcount() > 1 )
          hb_itemCopyToRef( pItem, hb_param( 2, HB_IT_ANY ) );
       hb_itemReturn( HB_IS_BYREF( pItem ) ? hb_itemUnRef( pItem ) : pItem );

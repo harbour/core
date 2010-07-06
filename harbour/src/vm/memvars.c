@@ -351,7 +351,7 @@ static void hb_memvarResetPrivatesBase( void )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_memvarResetPrivatesBase()"));
 
-   hb_stackGetPrivateStack()->base = hb_stackBaseItem()->item.asSymbol.stackstate->ulPrivateBase;
+   hb_stackGetPrivateStack()->base = hb_stackBaseItem()->item.asSymbol.stackstate->nPrivateBase;
 }
 
 /*
@@ -756,7 +756,7 @@ static void hb_memvarReleaseWithMask( const char *szMask, HB_BOOL bInclude )
    HB_TRACE(HB_TR_DEBUG, ("hb_memvarReleaseWithMask(%s, %d)", szMask, (int) bInclude));
 
    nCount = hb_stackGetPrivateStack()->count;
-   nBase = hb_stackBaseItem()->item.asSymbol.stackstate->ulPrivateBase;
+   nBase = hb_stackBaseItem()->item.asSymbol.stackstate->nPrivateBase;
    while( nCount-- > nBase )
    {
       pDynVar = hb_stackGetPrivateStack()->stack[ nCount ].pDynSym;
@@ -874,13 +874,13 @@ static HB_SIZE hb_memvarGetBaseOffset( int iProcLevel )
       int iLevel = hb_stackCallDepth();
       if( iProcLevel < iLevel )
       {
-         HB_ISIZ lOffset = hb_stackBaseProcOffset( iLevel - iProcLevel - 1 );
-         if( lOffset > 0 )
-            return hb_stackItem( lOffset )->item.asSymbol.stackstate->ulPrivateBase;
+         HB_ISIZ nOffset = hb_stackBaseProcOffset( iLevel - iProcLevel - 1 );
+         if( nOffset > 0 )
+            return hb_stackItem( nOffset )->item.asSymbol.stackstate->nPrivateBase;
       }
    }
 
-   return hb_stackBaseItem()->item.asSymbol.stackstate->ulPrivateBase;
+   return hb_stackBaseItem()->item.asSymbol.stackstate->nPrivateBase;
 }
 
 /* Count the number of variables with given scope
@@ -1730,10 +1730,10 @@ HB_FUNC( __MVRESTORE )
 HB_FUNC( __MVSETBASE )
 {
    HB_STACK_TLS_PRELOAD
-   HB_ISIZ lOffset = hb_stackBaseProcOffset( 0 );
+   HB_ISIZ nOffset = hb_stackBaseProcOffset( 0 );
 
-   if( lOffset > 0 )
-      hb_stackItem( lOffset )->item.asSymbol.stackstate->ulPrivateBase =
+   if( nOffset > 0 )
+      hb_stackItem( nOffset )->item.asSymbol.stackstate->nPrivateBase =
                                                 hb_memvarGetPrivatesBase();
 }
 

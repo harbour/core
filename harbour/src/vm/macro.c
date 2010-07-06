@@ -1108,48 +1108,48 @@ HB_BOOL hb_macroIsValidMacroText( const char * szText, HB_SIZE nLen )
    return HB_FALSE;
 }
 
-HB_SIZE hb_macroGenJump( HB_ISIZ lOffset, HB_COMP_DECL )
+HB_SIZE hb_macroGenJump( HB_ISIZ nOffset, HB_COMP_DECL )
 {
-   if( lOffset == 0 )
+   if( nOffset == 0 )
       hb_macroGenPCode4( HB_P_JUMPFAR, 0, 0, 0, HB_COMP_PARAM );
-   else if( HB_LIM_INT8( lOffset ) )
-      hb_macroGenPCode2( HB_P_JUMPNEAR, HB_LOBYTE( lOffset ), HB_COMP_PARAM );
-   else if( HB_LIM_INT16( lOffset ) )
-      hb_macroGenPCode3( HB_P_JUMP, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), HB_COMP_PARAM );
-   else if( HB_LIM_INT24( lOffset ) )
-      hb_macroGenPCode4( HB_P_JUMPFAR, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), HB_ULBYTE( lOffset ), HB_COMP_PARAM );
+   else if( HB_LIM_INT8( nOffset ) )
+      hb_macroGenPCode2( HB_P_JUMPNEAR, HB_LOBYTE( nOffset ), HB_COMP_PARAM );
+   else if( HB_LIM_INT16( nOffset ) )
+      hb_macroGenPCode3( HB_P_JUMP, HB_LOBYTE( nOffset ), HB_HIBYTE( nOffset ), HB_COMP_PARAM );
+   else if( HB_LIM_INT24( nOffset ) )
+      hb_macroGenPCode4( HB_P_JUMPFAR, HB_LOBYTE( nOffset ), HB_HIBYTE( nOffset ), HB_ULBYTE( nOffset ), HB_COMP_PARAM );
    else
       hb_macroError( HB_MACRO_TOO_COMPLEX, HB_COMP_PARAM );
 
    return HB_PCODE_DATA->lPCodePos - 3;
 }
 
-HB_SIZE hb_macroGenJumpFalse( HB_ISIZ lOffset, HB_COMP_DECL )
+HB_SIZE hb_macroGenJumpFalse( HB_ISIZ nOffset, HB_COMP_DECL )
 {
-   if( lOffset == 0 )
+   if( nOffset == 0 )
       hb_macroGenPCode4( HB_P_JUMPFALSEFAR, 0, 0, 0, HB_COMP_PARAM );
-   else if( HB_LIM_INT8( lOffset ) )
-      hb_macroGenPCode2( HB_P_JUMPFALSENEAR, HB_LOBYTE( lOffset ), HB_COMP_PARAM );
-   else if( HB_LIM_INT16( lOffset ) )
-      hb_macroGenPCode3( HB_P_JUMPFALSE, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), HB_COMP_PARAM );
-   else if( HB_LIM_INT24( lOffset ) )
-      hb_macroGenPCode4( HB_P_JUMPFALSEFAR, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), HB_ULBYTE( lOffset ), HB_COMP_PARAM );
+   else if( HB_LIM_INT8( nOffset ) )
+      hb_macroGenPCode2( HB_P_JUMPFALSENEAR, HB_LOBYTE( nOffset ), HB_COMP_PARAM );
+   else if( HB_LIM_INT16( nOffset ) )
+      hb_macroGenPCode3( HB_P_JUMPFALSE, HB_LOBYTE( nOffset ), HB_HIBYTE( nOffset ), HB_COMP_PARAM );
+   else if( HB_LIM_INT24( nOffset ) )
+      hb_macroGenPCode4( HB_P_JUMPFALSEFAR, HB_LOBYTE( nOffset ), HB_HIBYTE( nOffset ), HB_ULBYTE( nOffset ), HB_COMP_PARAM );
    else
       hb_macroError( HB_MACRO_TOO_COMPLEX, HB_COMP_PARAM );
 
    return HB_PCODE_DATA->lPCodePos - 3;
 }
 
-HB_SIZE hb_macroGenJumpTrue( HB_ISIZ lOffset, HB_COMP_DECL )
+HB_SIZE hb_macroGenJumpTrue( HB_ISIZ nOffset, HB_COMP_DECL )
 {
-   if( lOffset == 0 )
+   if( nOffset == 0 )
       hb_macroGenPCode4( HB_P_JUMPTRUEFAR, 0, 0, 0, HB_COMP_PARAM );
-   else if( HB_LIM_INT8( lOffset ) )
-      hb_macroGenPCode2( HB_P_JUMPTRUENEAR, HB_LOBYTE( lOffset ), HB_COMP_PARAM );
-   else if( HB_LIM_INT16( lOffset ) )
-      hb_macroGenPCode3( HB_P_JUMPTRUE, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), HB_COMP_PARAM );
-   else if( HB_LIM_INT24( lOffset ) )
-      hb_macroGenPCode4( HB_P_JUMPTRUEFAR, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), HB_ULBYTE( lOffset ), HB_COMP_PARAM );
+   else if( HB_LIM_INT8( nOffset ) )
+      hb_macroGenPCode2( HB_P_JUMPTRUENEAR, HB_LOBYTE( nOffset ), HB_COMP_PARAM );
+   else if( HB_LIM_INT16( nOffset ) )
+      hb_macroGenPCode3( HB_P_JUMPTRUE, HB_LOBYTE( nOffset ), HB_HIBYTE( nOffset ), HB_COMP_PARAM );
+   else if( HB_LIM_INT24( nOffset ) )
+      hb_macroGenPCode4( HB_P_JUMPTRUEFAR, HB_LOBYTE( nOffset ), HB_HIBYTE( nOffset ), HB_ULBYTE( nOffset ), HB_COMP_PARAM );
    else
       hb_macroError( HB_MACRO_TOO_COMPLEX, HB_COMP_PARAM );
 
@@ -1159,10 +1159,10 @@ HB_SIZE hb_macroGenJumpTrue( HB_ISIZ lOffset, HB_COMP_DECL )
 void hb_macroGenJumpThere( HB_SIZE nFrom, HB_SIZE nTo, HB_COMP_DECL )
 {
    HB_BYTE * pCode = HB_PCODE_DATA->pCode;
-   HB_ISIZ lOffset = nTo - nFrom + 1;
+   HB_ISIZ nOffset = nTo - nFrom + 1;
 
-   if( HB_LIM_INT24( lOffset ) )
-      HB_PUT_LE_UINT24( &pCode[ nFrom ], lOffset );
+   if( HB_LIM_INT24( nOffset ) )
+      HB_PUT_LE_UINT24( &pCode[ nFrom ], nOffset );
    else
       hb_macroError( HB_MACRO_TOO_COMPLEX, HB_COMP_PARAM );
 }

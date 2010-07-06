@@ -4438,8 +4438,8 @@ static void hb_vmSeqBlock( void )
 static HB_GARBAGE_FUNC( hb_withObjectDestructor )
 {
    HB_STACK_TLS_PRELOAD
-   HB_ISIZ * plWithObjectBase = ( HB_ISIZ * ) Cargo;
-   hb_stackWithObjectSetOffset( * plWithObjectBase );
+   HB_ISIZ * pnWithObjectBase = ( HB_ISIZ * ) Cargo;
+   hb_stackWithObjectSetOffset( * pnWithObjectBase );
 }
 
 static const HB_GC_FUNCS s_gcWithObjectFuncs =
@@ -4452,17 +4452,17 @@ static const HB_GC_FUNCS s_gcWithObjectFuncs =
 static void hb_vmWithObjectStart( void )
 {
    HB_STACK_TLS_PRELOAD
-   HB_ISIZ * plWithObjectBase;
+   HB_ISIZ * pnWithObjectBase;
    PHB_ITEM pItem;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmWithObjectStart()"));
 
    pItem = hb_stackAllocItem();
-   plWithObjectBase = ( HB_ISIZ * ) hb_gcAllocRaw( sizeof( HB_ISIZ ),
+   pnWithObjectBase = ( HB_ISIZ * ) hb_gcAllocRaw( sizeof( HB_ISIZ ),
                                                 &s_gcWithObjectFuncs );
-   * plWithObjectBase = hb_stackWithObjectOffset();
+   * pnWithObjectBase = hb_stackWithObjectOffset();
    pItem->type = HB_IT_POINTER;
-   pItem->item.asPointer.value = plWithObjectBase;
+   pItem->item.asPointer.value = pnWithObjectBase;
    pItem->item.asPointer.collect = pItem->item.asPointer.single = HB_TRUE;
    /* The object is pushed directly before this pcode */
    /* store position of current WITH OBJECT frame */
@@ -5503,7 +5503,6 @@ static HB_LONG hb_vmArgsJoin( HB_LONG lLevel, HB_USHORT uiArgSets )
    HB_LONG lArgs, lRestArgs, lOffset;
    PHB_ITEM pArgs = hb_stackItemFromTop( lLevel ) ;
 
-
    lArgs = hb_itemGetNL( pArgs );
    if( HB_IS_COMPLEX( pArgs ) )
       hb_itemClear( pArgs );
@@ -5527,7 +5526,7 @@ static HB_LONG hb_vmArgsJoin( HB_LONG lLevel, HB_USHORT uiArgSets )
 static void hb_vmMacroDo( HB_USHORT uiArgSets )
 {
    HB_STACK_TLS_PRELOAD
-   HB_ISIZ lArgs;
+   HB_LONG lArgs;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmMacroDo(%hu)", uiArgSets));
 
@@ -5539,7 +5538,7 @@ static void hb_vmMacroDo( HB_USHORT uiArgSets )
 static void hb_vmMacroFunc( HB_USHORT uiArgSets )
 {
    HB_STACK_TLS_PRELOAD
-   HB_ISIZ lArgs;
+   HB_LONG lArgs;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmMacroFunc(%hu)", uiArgSets));
 
@@ -5553,7 +5552,7 @@ static void hb_vmMacroFunc( HB_USHORT uiArgSets )
 static void hb_vmMacroSend( HB_USHORT uiArgSets )
 {
    HB_STACK_TLS_PRELOAD
-   HB_ISIZ lArgs;
+   HB_LONG lArgs;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmMacroSend(%hu)", uiArgSets));
 
@@ -5567,7 +5566,7 @@ static void hb_vmMacroSend( HB_USHORT uiArgSets )
 static void hb_vmMacroArrayGen( HB_USHORT uiArgSets )
 {
    HB_STACK_TLS_PRELOAD
-   HB_ISIZ lArgs;
+   HB_LONG lArgs;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmMacroArrayGen(%hu)", uiArgSets));
 
@@ -8546,30 +8545,30 @@ void hb_vmRequestEndProc( void )
 void hb_vmRequestBreak( PHB_ITEM pItem )
 {
    HB_STACK_TLS_PRELOAD
-   HB_ISIZ lRecoverBase;
+   HB_ISIZ nRecoverBase;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmRequestBreak(%p)", pItem));
 
-   lRecoverBase = hb_stackGetRecoverBase();
-   while( lRecoverBase && ( hb_stackItem( lRecoverBase +
+   nRecoverBase = hb_stackGetRecoverBase();
+   while( nRecoverBase && ( hb_stackItem( nRecoverBase +
                HB_RECOVER_STATE )->item.asRecover.flags & HB_SEQ_DOALWAYS ) )
    {
 #if defined( _HB_RECOVER_DEBUG )
-      if( hb_stackItem( lRecoverBase + HB_RECOVER_STATE )->type != HB_IT_RECOVER )
+      if( hb_stackItem( nRecoverBase + HB_RECOVER_STATE )->type != HB_IT_RECOVER )
          hb_errInternal( HB_EI_ERRUNRECOV, "hb_vmRequestBreak", NULL, NULL );
 #endif
-      lRecoverBase = hb_stackItem( lRecoverBase +
+      nRecoverBase = hb_stackItem( nRecoverBase +
                                    HB_RECOVER_STATE )->item.asRecover.base;
    }
 
-   if( lRecoverBase )
+   if( nRecoverBase )
    {
 #if defined( _HB_RECOVER_DEBUG )
-      if( hb_stackItem( lRecoverBase + HB_RECOVER_STATE )->type != HB_IT_RECOVER )
+      if( hb_stackItem( nRecoverBase + HB_RECOVER_STATE )->type != HB_IT_RECOVER )
          hb_errInternal( HB_EI_ERRUNRECOV, "hb_vmRequestBreak2", NULL, NULL );
 #endif
       if( pItem )
-         hb_itemCopy( hb_stackItem( lRecoverBase + HB_RECOVER_VALUE ), pItem );
+         hb_itemCopy( hb_stackItem( nRecoverBase + HB_RECOVER_VALUE ), pItem );
 
       hb_stackSetActionRequest( HB_BREAK_REQUESTED );
    }
@@ -11788,11 +11787,11 @@ HB_FUNC( __QUITCANCEL )
    if( !hb_stackQuitState() )
 #endif
    {
-      HB_ISIZ lRecoverBase = hb_stackGetRecoverBase();
+      HB_ISIZ nRecoverBase = hb_stackGetRecoverBase();
 
-      if( lRecoverBase )
+      if( nRecoverBase )
       {
-         PHB_ITEM pRecover = hb_stackItem( lRecoverBase + HB_RECOVER_STATE );
+         PHB_ITEM pRecover = hb_stackItem( nRecoverBase + HB_RECOVER_STATE );
 
 #if defined( _HB_RECOVER_DEBUG )
          if( pRecover->type != HB_IT_RECOVER )

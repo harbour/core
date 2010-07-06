@@ -139,9 +139,9 @@ HB_FUNC( ASIZE )
 
    if( pArray && HB_ISNUM( 2 ) )
    {
-      HB_ISIZ lSize = hb_parns( 2 );
+      HB_ISIZ nSize = hb_parns( 2 );
 
-      hb_arraySize( pArray, HB_MAX( lSize, 0 ) );
+      hb_arraySize( pArray, HB_MAX( nSize, 0 ) );
 
       hb_itemReturn( pArray ); /* ASize() returns the array itself */
    }

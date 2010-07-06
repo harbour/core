@@ -476,7 +476,7 @@ HB_FUNC( HB_EXECFROMARRAY )
    if( pExecSym )
    {
       pFunc = hb_stackBaseItem();
-      pItem = hb_stackItem( pFunc->item.asSymbol.stackstate->lBaseItem );
+      pItem = hb_stackItem( pFunc->item.asSymbol.stackstate->nBaseItem );
       pFunc->item.asSymbol.stackstate->uiClass =
       pItem->item.asSymbol.stackstate->uiClass;
       pFunc->item.asSymbol.stackstate->uiMethod =

@@ -770,9 +770,9 @@ HB_FUNC( HB_HALLOCATE )
 
    if( pHash && pValue )
    {
-      HB_ISIZ lMem = hb_itemGetNS( pValue );
-      if( lMem >= 0 )
-         hb_hashPreallocate( pHash, lMem );
+      HB_ISIZ nMem = hb_itemGetNS( pValue );
+      if( nMem >= 0 )
+         hb_hashPreallocate( pHash, nMem );
    }
    else
       hb_errRT_BASE( EG_ARG, 2017, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );

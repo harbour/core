@@ -1567,19 +1567,19 @@ PHB_ITEM hb_arrayFromParams( int iLevel )
    HB_STACK_TLS_PRELOAD
    PHB_ITEM pArray;
    HB_USHORT uiPos, uiPCount;
-   HB_ISIZ lBaseOffset;
+   HB_ISIZ nBaseOffset;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_arrayFromParams(%d)", iLevel));
 
-   lBaseOffset = hb_stackBaseProcOffset( iLevel );
-   if( lBaseOffset > 0 )
-      uiPCount = hb_stackItem( lBaseOffset )->item.asSymbol.paramcnt;
+   nBaseOffset = hb_stackBaseProcOffset( iLevel );
+   if( nBaseOffset > 0 )
+      uiPCount = hb_stackItem( nBaseOffset )->item.asSymbol.paramcnt;
    else
       uiPCount = 0;
 
    pArray = hb_itemArrayNew( uiPCount );
    for( uiPos = 1; uiPos <= uiPCount; uiPos++ )
-      hb_arraySet( pArray, uiPos, hb_stackItem( lBaseOffset + uiPos + 1 ) );
+      hb_arraySet( pArray, uiPos, hb_stackItem( nBaseOffset + uiPos + 1 ) );
 
    return pArray;
 }

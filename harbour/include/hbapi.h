@@ -233,16 +233,16 @@ HB_EXTERN_BEGIN
 #define HB_ISNUM( n )         ( hb_param( n, HB_IT_NUMERIC ) != NULL )
 #define HB_ISLOG( n )         ( hb_param( n, HB_IT_LOGICAL ) != NULL )
 #define HB_ISDATE( n )        ( hb_param( n, HB_IT_DATE ) != NULL )
-#define HB_ISTIMESTAMP( n )   ( hb_param( n, HB_IT_TIMESTAMP ) != NULL )   /* Not available in CA-Cl*pper. */
+#define HB_ISTIMESTAMP( n )   ( hb_param( n, HB_IT_TIMESTAMP ) != NULL )
 #define HB_ISMEMO( n )        ( hb_param( n, HB_IT_MEMO ) != NULL )
 #define HB_ISBYREF( n )       ( ( hb_parinfo( n ) & HB_IT_BYREF ) != 0 )   /* NOTE: Intentionally using a different method */
 #define HB_ISARRAY( n )       ( hb_param( n, HB_IT_ARRAY ) != NULL )
 #define HB_ISOBJECT( n )      ( hb_extIsObject( n ) )
-#define HB_ISBLOCK( n )       ( hb_param( n, HB_IT_BLOCK ) != NULL )       /* Not available in CA-Cl*pper. */
-#define HB_ISPOINTER( n )     ( hb_param( n, HB_IT_POINTER ) != NULL )     /* Not available in CA-Cl*pper. */
-#define HB_ISHASH( n )        ( hb_param( n, HB_IT_HASH ) != NULL )        /* Not available in CA-Cl*pper. */
-#define HB_ISSYMBOL( n )      ( hb_param( n, HB_IT_SYMBOL ) != NULL )      /* Not available in CA-Cl*pper. */
-#define HB_ISDATETIME( n )    ( hb_param( n, HB_IT_DATETIME ) != NULL )    /* Not available in CA-Cl*pper. */
+#define HB_ISBLOCK( n )       ( hb_param( n, HB_IT_BLOCK ) != NULL )
+#define HB_ISPOINTER( n )     ( hb_param( n, HB_IT_POINTER ) != NULL )
+#define HB_ISHASH( n )        ( hb_param( n, HB_IT_HASH ) != NULL )
+#define HB_ISSYMBOL( n )      ( hb_param( n, HB_IT_SYMBOL ) != NULL )
+#define HB_ISDATETIME( n )    ( hb_param( n, HB_IT_DATETIME ) != NULL )
 
 /* Compatibility #defines, deprecated */
 #if ! defined( HB_LEGACY_TYPES_OFF ) && defined( HB_LEGACY_LEVEL3 )
@@ -274,8 +274,8 @@ struct _HB_EXTREF;
 
 typedef struct _HB_STACK_STATE
 {
-   HB_ISIZ   lBaseItem;        /* stack base offset of previous func/proc */
-   HB_SIZE   ulPrivateBase;    /* memvars base offset of previous func/proc */
+   HB_ISIZ   nBaseItem;        /* stack base offset of previous func/proc */
+   HB_SIZE   nPrivateBase;     /* memvars base offset of previous func/proc */
    void *    pStatics;         /* statics frame of previous func/proc */
    HB_USHORT uiClass;          /* class when message is sent */
    HB_USHORT uiMethod;         /* number of class method */

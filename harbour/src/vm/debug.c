@@ -164,23 +164,23 @@ HB_FUNC( __DBGVMSTKGLIST )
  * $End$ */
 static HB_ISIZ hb_stackLen( int iLevel )
 {
-   HB_ISIZ lBaseOffset, lPrevOffset, lLen;
+   HB_ISIZ nBaseOffset, nPrevOffset, nLen;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_stackLen()"));
 
-   lBaseOffset = hb_stackBaseOffset();
-   while( --iLevel > 0 && lBaseOffset > 1 )
-      lBaseOffset = hb_stackItem( lBaseOffset - 1 )->item.asSymbol.stackstate->lBaseItem + 1;
+   nBaseOffset = hb_stackBaseOffset();
+   while( --iLevel > 0 && nBaseOffset > 1 )
+      nBaseOffset = hb_stackItem( nBaseOffset - 1 )->item.asSymbol.stackstate->nBaseItem + 1;
 
-   if( lBaseOffset > 1 )
+   if( nBaseOffset > 1 )
    {
-      lPrevOffset = hb_stackItem( lBaseOffset - 1 )->item.asSymbol.stackstate->lBaseItem;
-      lLen = lBaseOffset - lPrevOffset - 3;
+      nPrevOffset = hb_stackItem( nBaseOffset - 1 )->item.asSymbol.stackstate->nBaseItem;
+      nLen = nBaseOffset - nPrevOffset - 3;
    }
    else
-      lLen = 0;
+      nLen = 0;
 
-   return lLen;
+   return nLen;
 }
 
 /* $Doc$
@@ -207,15 +207,15 @@ HB_FUNC( __DBGVMSTKLLIST )
 {
    PHB_ITEM pReturn;
    HB_ISIZ nLen, n;
-   HB_ISIZ lBaseOffset, lPrevOffset;
+   HB_ISIZ nBaseOffset, nPrevOffset;
 
-   lBaseOffset = hb_stackBaseOffset();
-   lPrevOffset = hb_stackItem( lBaseOffset - 1 )->item.asSymbol.stackstate->lBaseItem;
+   nBaseOffset = hb_stackBaseOffset();
+   nPrevOffset = hb_stackItem( nBaseOffset - 1 )->item.asSymbol.stackstate->nBaseItem;
 
-   nLen = lBaseOffset - lPrevOffset - 3;
+   nLen = nBaseOffset - nPrevOffset - 3;
    pReturn = hb_itemArrayNew( nLen );           /* Create a transfer array  */
    for( n = 0; n < nLen; ++n )
-      AddToArray( hb_stackItem( lPrevOffset + n ), pReturn, n + 1 );
+      AddToArray( hb_stackItem( nPrevOffset + n ), pReturn, n + 1 );
 
    hb_itemReturnRelease( pReturn );
 }
@@ -223,30 +223,30 @@ HB_FUNC( __DBGVMSTKLLIST )
 HB_FUNC( __DBGVMLOCALLIST )
 {
    PHB_ITEM pArray;
-   HB_ISIZ lBaseOffset, lPrevOffset, lLen, l;
+   HB_ISIZ nBaseOffset, nPrevOffset, nLen, n;
    int iLevel = hb_parni( 1 ) + 1;
 
-   lBaseOffset = hb_stackBaseOffset();
-   while( --iLevel > 0 && lBaseOffset > 1 )
-      lBaseOffset = hb_stackItem( lBaseOffset - 1 )->item.asSymbol.stackstate->lBaseItem + 1;
+   nBaseOffset = hb_stackBaseOffset();
+   while( --iLevel > 0 && nBaseOffset > 1 )
+      nBaseOffset = hb_stackItem( nBaseOffset - 1 )->item.asSymbol.stackstate->nBaseItem + 1;
 
-   if( lBaseOffset > 1 )
+   if( nBaseOffset > 1 )
    {
       PHB_ITEM pSymItm;
 
-      lPrevOffset = hb_stackItem( lBaseOffset - 1 )->item.asSymbol.stackstate->lBaseItem;
-      pSymItm = hb_stackItem( lPrevOffset );
-      lPrevOffset += HB_MAX( pSymItm->item.asSymbol.paramdeclcnt,
+      nPrevOffset = hb_stackItem( nBaseOffset - 1 )->item.asSymbol.stackstate->nBaseItem;
+      pSymItm = hb_stackItem( nPrevOffset );
+      nPrevOffset += HB_MAX( pSymItm->item.asSymbol.paramdeclcnt,
                              pSymItm->item.asSymbol.paramcnt ) + 1;
-      lLen = lBaseOffset - lPrevOffset - 2;
+      nLen = nBaseOffset - nPrevOffset - 2;
    }
    else
-      lLen = lPrevOffset = 0;
+      nLen = nPrevOffset = 0;
 
-   pArray = hb_itemArrayNew( lLen );
-   for( l = 1; l <= lLen; ++l )
-      hb_itemCopyFromRef( hb_arrayGetItemPtr( pArray, l ),
-                          hb_stackItem( lPrevOffset + l ) );
+   pArray = hb_itemArrayNew( nLen );
+   for( n = 1; n <= nLen; ++n )
+      hb_itemCopyFromRef( hb_arrayGetItemPtr( pArray, n ),
+                          hb_stackItem( nPrevOffset + n ) );
 
    hb_itemReturnRelease( pArray );
 }
@@ -259,11 +259,11 @@ HB_FUNC( __DBGVMPARLLIST )
 PHB_ITEM hb_dbg_vmVarLGet( int iLevel, int iLocal )
 {
    PHB_ITEM pLocal = NULL;
-   HB_ISIZ lBaseOffset;
+   HB_ISIZ nBaseOffset;
 
-   lBaseOffset = hb_stackBaseOffset();
-   while( iLevel-- > 0 && lBaseOffset > 1 )
-      lBaseOffset = hb_stackItem( lBaseOffset - 1 )->item.asSymbol.stackstate->lBaseItem + 1;
+   nBaseOffset = hb_stackBaseOffset();
+   while( iLevel-- > 0 && nBaseOffset > 1 )
+      nBaseOffset = hb_stackItem( nBaseOffset - 1 )->item.asSymbol.stackstate->nBaseItem + 1;
 
    if( iLevel < 0 )
    {
@@ -275,16 +275,16 @@ PHB_ITEM hb_dbg_vmVarLGet( int iLevel, int iLocal )
 
       if( iLocal >= 0 )
       {
-         PHB_ITEM pBase = hb_stackItem( lBaseOffset - 1 );
+         PHB_ITEM pBase = hb_stackItem( nBaseOffset - 1 );
 
          if( pBase->item.asSymbol.paramcnt > pBase->item.asSymbol.paramdeclcnt &&
              iLocal > pBase->item.asSymbol.paramdeclcnt )
             iLocal += pBase->item.asSymbol.paramcnt - pBase->item.asSymbol.paramdeclcnt;
 
-         pLocal = hb_stackItem( lBaseOffset + iLocal );
+         pLocal = hb_stackItem( nBaseOffset + iLocal );
       }
       else
-         pLocal = hb_codeblockGetRef( hb_stackItem( lBaseOffset )->item.asBlock.value, iLocal );
+         pLocal = hb_codeblockGetRef( hb_stackItem( nBaseOffset )->item.asBlock.value, iLocal );
 
       if( HB_IS_BYREF( pLocal ) )
          pLocal = hb_itemUnRef( pLocal );
@@ -309,12 +309,12 @@ HB_FUNC( __DBGVMVARLSET )
 {
    int iLevel = hb_parni( 1 ) + 1;
    int iLocal = hb_parni( 2 );
-   HB_ISIZ lBaseOffset;
+   HB_ISIZ nBaseOffset;
    PHB_ITEM pLocal;
 
-   lBaseOffset = hb_stackBaseOffset();
-   while( iLevel-- > 0 && lBaseOffset > 1 )
-      lBaseOffset = hb_stackItem( lBaseOffset - 1 )->item.asSymbol.stackstate->lBaseItem + 1;
+   nBaseOffset = hb_stackBaseOffset();
+   while( iLevel-- > 0 && nBaseOffset > 1 )
+      nBaseOffset = hb_stackItem( nBaseOffset - 1 )->item.asSymbol.stackstate->nBaseItem + 1;
 
    if( iLevel < 0 )
    {
@@ -326,16 +326,16 @@ HB_FUNC( __DBGVMVARLSET )
 
       if( iLocal >= 0 )
       {
-         PHB_ITEM pBase = hb_stackItem( lBaseOffset - 1 );
+         PHB_ITEM pBase = hb_stackItem( nBaseOffset - 1 );
 
          if( pBase->item.asSymbol.paramcnt > pBase->item.asSymbol.paramdeclcnt &&
              iLocal > pBase->item.asSymbol.paramdeclcnt )
             iLocal += pBase->item.asSymbol.paramcnt - pBase->item.asSymbol.paramdeclcnt;
 
-         pLocal = hb_stackItem( lBaseOffset + iLocal );
+         pLocal = hb_stackItem( nBaseOffset + iLocal );
       }
       else
-         pLocal = hb_codeblockGetRef( hb_stackItem( lBaseOffset )->item.asBlock.value, iLocal );
+         pLocal = hb_codeblockGetRef( hb_stackItem( nBaseOffset )->item.asBlock.value, iLocal );
 
       hb_itemCopyToRef( pLocal, hb_stackItemFromBase( 3 ) );
    }
