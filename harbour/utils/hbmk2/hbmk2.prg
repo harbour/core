@@ -2123,6 +2123,14 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          IF autohbc_split_arg( cParam, @tmp, @cParam )
 
             cParam := PathProc( PathSepToSelf( MacroProc( hbmk, cParam, aParam[ _PAR_cFileName ] ) ), aParam[ _PAR_cFileName ] )
+
+            IF Empty( FN_ExtGet( tmp ) )
+               tmp := FN_ExtSet( tmp, ".ch" )
+            ENDIF
+            IF Empty( FN_ExtGet( cParam ) )
+               cParam := FN_ExtSet( cParam, ".hbc" )
+            ENDIF
+
             IF ! hb_FileExists( cParam )
                FOR EACH tmp IN hbmk[ _HBMK_aLIBPATH ]
                   IF hb_FileExists( DirAddPathSep( PathSepToSelf( MacroProc( hbmk, tmp, cParam, _MACRO_LATE_PREFIX ) ) ) + FN_NameExtGet( cParam ) )
@@ -6088,19 +6096,24 @@ STATIC FUNCTION inst_split_arg( cParam, /* @ */ cName, /* @ */ cData )
 
    RETURN ! Empty( cData )
 
-STATIC FUNCTION autohbc_split_arg( cParam, /* @ */ cName, /* @ */ cData )
+STATIC FUNCTION autohbc_split_arg( cParam, /* @ */ cHeader, /* @ */ cHBC )
    LOCAL nPos
 
-   IF ( nPos := At( ":", cParam ) ) > 1
-      cName := Left( cParam, nPos - 1 )
-      cData := SubStr( cParam, nPos + 1 )
-      RETURN ! Empty( cName ) .AND. ! Empty( cData )
+   IF ( nPos := At( ":", cParam ) ) > 0
+      cHeader := Left( cParam, nPos - 1 )
+      cHBC := SubStr( cParam, nPos + 1 )
+   ELSE
+      cHeader := cParam
+      cHBC := ""
    ENDIF
 
-   cName := NIL
-   cData := NIL
+   IF Empty( cHeader ) .AND. ! Empty( cHBC )
+      cHeader := FN_ExtSet( cHBC )
+   ELSEIF Empty( cHBC ) .AND. ! Empty( cHeader )
+      cHBC := FN_ExtSet( cHeader )
+   ENDIF
 
-   RETURN .F.
+   RETURN ! Empty( cHeader ) .AND. ! Empty( cHBC )
 
 STATIC FUNCTION dep_split_arg( hbmk, cParam, /* @ */ cName, /* @ */ cData )
    LOCAL nPos
@@ -7804,6 +7817,9 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
 
                cItem := PathProc( PathSepToSelf( MacroProc( hbmk, StrStripQuote( cItem ), cFileName ) ), FN_DirGet( cFileName ) )
 
+               IF Empty( FN_ExtGet( cName ) )
+                  cName := FN_ExtSet( cName, ".ch" )
+               ENDIF
                IF Empty( FN_ExtGet( cItem ) )
                   cItem := FN_ExtSet( cItem, ".hbc" )
                ENDIF
