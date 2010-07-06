@@ -1315,8 +1315,8 @@ void HBQPlainTextEdit::keyPressEvent( QKeyEvent * event )
    QRect cr = cursorRect();
 
    cr.setWidth( c->popup()->sizeHintForColumn( 0 ) + c->popup()->verticalScrollBar()->sizeHint().width() );
-   cr.setTop( cr.top() + 25 );
-   cr.setBottom( cr.bottom() + 25 );
+   cr.setTop( cr.top() + horzRulerHeight + 5 );
+   cr.setBottom( cr.bottom() + horzRulerHeight + 5 );
 
    c->complete( cr ); // popup it up!
 }
