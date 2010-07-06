@@ -273,21 +273,21 @@ HB_FUNC( HB_UTF8SUBSTR )
    {
       char * szDest = NULL;
       HB_SIZE nLen = hb_parclen( 1 ), nDest = 0;
-      HB_ISIZ lFrom = hb_parns( 2 );
-      HB_ISIZ lCount = iPCount < 3 ? ( HB_ISIZ ) nLen : hb_parns( 3 );
+      HB_ISIZ nFrom = hb_parns( 2 );
+      HB_ISIZ nCount = iPCount < 3 ? ( HB_ISIZ ) nLen : hb_parns( 3 );
 
-      if( lFrom < 0 )
+      if( nFrom < 0 )
       {
-         lFrom += hb_cdpUTF8StringLength( szString, nLen );
-         if( lFrom < 0 )
-            lFrom = 0;
+         nFrom += hb_cdpUTF8StringLength( szString, nLen );
+         if( nFrom < 0 )
+            nFrom = 0;
       }
-      else if( lFrom )
-         --lFrom;
+      else if( nFrom )
+         --nFrom;
 
-      if( nLen && lCount > 0 )
+      if( nLen && nCount > 0 )
          szDest = hb_cdpUTF8StringSubstr( szString, nLen,
-                                          lFrom, lCount, &nDest );
+                                          nFrom, nCount, &nDest );
       if( szDest )
          hb_retclen_buffer( szDest, nDest );
       else
@@ -303,13 +303,13 @@ HB_FUNC( HB_UTF8LEFT )
 
    if( szString && HB_ISNUM( 2 ) )
    {
-      HB_ISIZ lLenReq = hb_parns( 2 );
+      HB_ISIZ nLenReq = hb_parns( 2 );
       HB_SIZE nDest = 0;
       char * szDest = NULL;
 
-      if( lLenReq > 0 )
+      if( nLenReq > 0 )
          szDest = hb_cdpUTF8StringSubstr( szString, hb_parclen( 1 ),
-                                          0, lLenReq, &nDest );
+                                          0, nLenReq, &nDest );
 
       if( szDest )
          hb_retclen_buffer( szDest, nDest );
@@ -326,17 +326,17 @@ HB_FUNC( HB_UTF8RIGHT )
 
    if( szString && HB_ISNUM( 2 ) )
    {
-      HB_ISIZ lLenReq = hb_parns( 2 ), lFrom;
+      HB_ISIZ nLenReq = hb_parns( 2 ), nFrom;
       HB_SIZE nLen = hb_parclen( 1 ), nDest = 0;
       char * szDest = NULL;
 
-      if( nLen && lLenReq > 0 )
+      if( nLen && nLenReq > 0 )
       {
-         lFrom = hb_cdpUTF8StringLength( szString, nLen ) - lLenReq;
-         if( lFrom < 0 )
-            lFrom = 0;
+         nFrom = hb_cdpUTF8StringLength( szString, nLen ) - nLenReq;
+         if( nFrom < 0 )
+            nFrom = 0;
          szDest = hb_cdpUTF8StringSubstr( szString, nLen,
-                                          lFrom, lLenReq, &nDest );
+                                          nFrom, nLenReq, &nDest );
       }
 
       if( szDest )

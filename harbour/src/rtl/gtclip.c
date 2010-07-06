@@ -77,20 +77,20 @@
 static HB_CRITICAL_NEW( s_clipMtx );
 
 static char *     s_szClipboardData;
-static HB_SIZE      s_ulClipboardLen;
+static HB_SIZE    s_nClipboardLen;
 
-HB_BOOL hb_gt_setClipboard( const char * szClipData, HB_SIZE ulLen )
+HB_BOOL hb_gt_setClipboard( const char * szClipData, HB_SIZE nLen )
 {
    hb_threadEnterCriticalSection( &s_clipMtx );
 
-   if( s_ulClipboardLen )
+   if( s_nClipboardLen )
       hb_xfree( s_szClipboardData );
-   s_ulClipboardLen = ulLen;
-   if( ulLen )
+   s_nClipboardLen = nLen;
+   if( nLen )
    {
-      s_szClipboardData = ( char * ) hb_xgrab( s_ulClipboardLen + 1 );
-      memcpy( s_szClipboardData, szClipData, s_ulClipboardLen );
-      s_szClipboardData[ s_ulClipboardLen ] = '\0';
+      s_szClipboardData = ( char * ) hb_xgrab( s_nClipboardLen + 1 );
+      memcpy( s_szClipboardData, szClipData, s_nClipboardLen );
+      s_szClipboardData[ s_nClipboardLen ] = '\0';
    }
 
    hb_threadLeaveCriticalSection( &s_clipMtx );
@@ -98,22 +98,22 @@ HB_BOOL hb_gt_setClipboard( const char * szClipData, HB_SIZE ulLen )
    return HB_TRUE;
 }
 
-HB_BOOL hb_gt_getClipboard( char ** pszClipData, HB_SIZE *pulLen )
+HB_BOOL hb_gt_getClipboard( char ** pszClipData, HB_SIZE * pnLen )
 {
    hb_threadEnterCriticalSection( &s_clipMtx );
 
    *pszClipData = NULL;
-   *pulLen = s_ulClipboardLen;
-   if( s_ulClipboardLen )
+   *pnLen = s_nClipboardLen;
+   if( s_nClipboardLen )
    {
-      *pszClipData = ( char * ) hb_xgrab( s_ulClipboardLen + 1 );
-      memcpy( *pszClipData, s_szClipboardData, s_ulClipboardLen );
-      ( *pszClipData )[ s_ulClipboardLen ] = '\0';
+      *pszClipData = ( char * ) hb_xgrab( s_nClipboardLen + 1 );
+      memcpy( *pszClipData, s_szClipboardData, s_nClipboardLen );
+      ( *pszClipData )[ s_nClipboardLen ] = '\0';
    }
 
    hb_threadLeaveCriticalSection( &s_clipMtx );
 
-   return s_ulClipboardLen != 0;
+   return s_nClipboardLen != 0;
 }
 
 #if defined( HB_OS_WIN )

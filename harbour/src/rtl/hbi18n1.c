@@ -279,12 +279,12 @@ static void hb_i18n_setitem( PHB_ITEM pHash, const char * szKey, const char * sz
 
 static PHB_ITEM hb_i18n_pluralexp_compile( PHB_ITEM pExp )
 {
-   HB_SIZE ulLen = hb_itemGetCLen( pExp );
+   HB_SIZE nLen = hb_itemGetCLen( pExp );
    PHB_ITEM pBlock = NULL;
 
-   if( ulLen > 0 )
+   if( nLen > 0 )
    {
-      char * szMacro = ( char * ) hb_xgrab( ulLen + 6 );
+      char * szMacro = ( char * ) hb_xgrab( nLen + 6 );
       const char * szType;
       PHB_ITEM pMacro;
 
@@ -292,10 +292,10 @@ static PHB_ITEM hb_i18n_pluralexp_compile( PHB_ITEM pExp )
       szMacro[ 1 ] = '|';
       szMacro[ 2 ] = 'n';
       szMacro[ 3 ] = '|';
-      memcpy( &szMacro[ 4 ], hb_itemGetCPtr( pExp ), ulLen );
-      szMacro[ 4 + ulLen ] = '}';
-      szMacro[ 5 + ulLen ] = '\0';
-      pMacro = hb_itemPutCLPtr( NULL, szMacro, ulLen );
+      memcpy( &szMacro[ 4 ], hb_itemGetCPtr( pExp ), nLen );
+      szMacro[ 4 + nLen ] = '}';
+      szMacro[ 5 + nLen ] = '\0';
+      pMacro = hb_itemPutCLPtr( NULL, szMacro, nLen );
       szType = hb_macroGetType( pMacro );
       if( *szType == 'B' )
       {
@@ -444,20 +444,20 @@ static PHB_ITEM hb_i18n_serialize( PHB_I18N_TRANS pI18N )
 {
    if( pI18N )
    {
-      HB_SIZE ulSize;
+      HB_SIZE nSize;
       HB_U32 ulCRC;
-      char * pBuffer = hb_itemSerialize( pI18N->table, HB_FALSE, &ulSize );
+      char * pBuffer = hb_itemSerialize( pI18N->table, HB_FALSE, &nSize );
       char * pI18Nbuffer;
       PHB_ITEM pKey, pValue;
 
-      ulCRC = hb_crc32( 0, pBuffer, ulSize );
-      pI18Nbuffer = ( char * ) memset( hb_xgrab( ulSize + HB_I18N_HEADER_SIZE + 1 ),
+      ulCRC = hb_crc32( 0, pBuffer, nSize );
+      pI18Nbuffer = ( char * ) memset( hb_xgrab( nSize + HB_I18N_HEADER_SIZE + 1 ),
                                        0, HB_I18N_HEADER_SIZE );
-      memcpy( pI18Nbuffer + HB_I18N_HEADER_SIZE, pBuffer, ulSize );
+      memcpy( pI18Nbuffer + HB_I18N_HEADER_SIZE, pBuffer, nSize );
       hb_xfree( pBuffer );
 
       memcpy( pI18Nbuffer, s_signature, HB_I18N_SIG_SIZE );
-      HB_PUT_LE_UINT32( &pI18Nbuffer[ HB_I18N_SIZE_OFFSET ], ulSize );
+      HB_PUT_LE_UINT32( &pI18Nbuffer[ HB_I18N_SIZE_OFFSET ], nSize );
       HB_PUT_LE_UINT32( &pI18Nbuffer[ HB_I18N_CRC_OFFSET ], ulCRC );
 
       pKey = hb_itemPutCConst( NULL, "DESCRIPTION" );
@@ -466,23 +466,23 @@ static PHB_ITEM hb_i18n_serialize( PHB_I18N_TRANS pI18N )
          hb_strncpy( &pI18Nbuffer[ HB_I18N_TXT_OFFSET ],
                      hb_itemGetCPtr( pValue ), HB_I18N_TXT_SIZE );
 
-      return hb_itemPutCLPtr( pKey, pI18Nbuffer, ulSize + HB_I18N_HEADER_SIZE );
+      return hb_itemPutCLPtr( pKey, pI18Nbuffer, nSize + HB_I18N_HEADER_SIZE );
    }
 
    return NULL;
 }
 
-static HB_BOOL hb_i18n_headercheck( const char * pBuffer, HB_SIZE ulLen )
+static HB_BOOL hb_i18n_headercheck( const char * pBuffer, HB_SIZE nLen )
 {
-   if( ulLen < HB_I18N_HEADER_SIZE )
+   if( nLen < HB_I18N_HEADER_SIZE )
       return HB_FALSE;
 
-   ulLen -= HB_I18N_HEADER_SIZE;
+   nLen -= HB_I18N_HEADER_SIZE;
    return memcmp( pBuffer, s_signature, HB_I18N_SIG_SIZE ) == 0 &&
-          ( ulLen == 0 ||
-            ( HB_GET_LE_UINT32( &pBuffer[ HB_I18N_SIZE_OFFSET ] ) == ulLen &&
+          ( nLen == 0 ||
+            ( HB_GET_LE_UINT32( &pBuffer[ HB_I18N_SIZE_OFFSET ] ) == nLen &&
               HB_GET_LE_UINT32( &pBuffer[ HB_I18N_CRC_OFFSET ] ) ==
-               hb_crc32( 0, pBuffer + HB_I18N_HEADER_SIZE, ulLen ) ) );
+               hb_crc32( 0, pBuffer + HB_I18N_HEADER_SIZE, nLen ) ) );
 }
 
 static PHB_I18N_TRANS hb_i18n_deserialize( PHB_ITEM pItem )
@@ -491,16 +491,16 @@ static PHB_I18N_TRANS hb_i18n_deserialize( PHB_ITEM pItem )
 
    if( pItem && HB_IS_STRING( pItem ) )
    {
-      HB_SIZE ulLen = hb_itemGetCLen( pItem );
+      HB_SIZE nLen = hb_itemGetCLen( pItem );
       const char * pBuffer = hb_itemGetCPtr( pItem );
 
-      if( ulLen > HB_I18N_HEADER_SIZE && hb_i18n_headercheck( pBuffer, ulLen ) )
+      if( nLen > HB_I18N_HEADER_SIZE && hb_i18n_headercheck( pBuffer, nLen ) )
       {
          PHB_ITEM pTable;
 
          pBuffer += HB_I18N_HEADER_SIZE;
-         ulLen -= HB_I18N_HEADER_SIZE;
-         pTable = hb_itemDeserialize( &pBuffer, &ulLen );
+         nLen -= HB_I18N_HEADER_SIZE;
+         pTable = hb_itemDeserialize( &pBuffer, &nLen );
          if( pTable )
          {
             pI18N = hb_i18n_initialize( pTable );
@@ -653,12 +653,12 @@ static HB_BOOL hb_i18n_setpluralform( PHB_I18N_TRANS pI18N, PHB_ITEM pForm,
 
 static void hb_i18n_transitm( PHB_ITEM pText, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut )
 {
-   HB_SIZE ulLen = hb_itemGetCLen( pText );
-   if( ulLen > 0 )
+   HB_SIZE nLen = hb_itemGetCLen( pText );
+   if( nLen > 0 )
    {
-      char * szValue = hb_cdpnDup( hb_itemGetCPtr( pText ), &ulLen,
+      char * szValue = hb_cdpnDup( hb_itemGetCPtr( pText ), &nLen,
                                    cdpIn, cdpOut );
-      hb_itemPutCLPtr( pText, szValue, ulLen );
+      hb_itemPutCLPtr( pText, szValue, nLen );
    }
 }
 
@@ -679,13 +679,13 @@ static const char * hb_i18n_setcodepage( PHB_I18N_TRANS pI18N,
       {
          if( fTranslate && cdpage )
          {
-            HB_SIZE ulHashLen = hb_hashLen( pI18N->context_table ), ul;
-            for( ul = 1; ul <= ulHashLen; ++ul )
+            HB_SIZE nHashLen = hb_hashLen( pI18N->context_table ), ul;
+            for( ul = 1; ul <= nHashLen; ++ul )
             {
                PHB_ITEM pContext = hb_hashGetValueAt( pI18N->context_table, ul );
-               HB_SIZE ulCount = hb_hashLen( pContext ), u;
+               HB_SIZE nCount = hb_hashLen( pContext ), u;
 
-               for( u = 1; u <= ulCount; ++u )
+               for( u = 1; u <= nCount; ++u )
                {
                   if( fBase )
                   {
@@ -701,8 +701,8 @@ static const char * hb_i18n_setcodepage( PHB_I18N_TRANS pI18N,
                      }
                      else if( HB_IS_ARRAY( pResult ) )
                      {
-                        HB_SIZE ulTrans = hb_arrayLen( pResult ), u2;
-                        for( u2 = 1; u2 <= ulTrans; ++u2 )
+                        HB_SIZE nTrans = hb_arrayLen( pResult ), u2;
+                        for( u2 = 1; u2 <= nTrans; ++u2 )
                         {
                            hb_i18n_transitm( hb_arrayGetItemPtr( pResult, u2 ),
                                              cdpage, cdp );
@@ -1049,12 +1049,12 @@ HB_FUNC( HB_I18N_ADDTEXT )
       {
          if( HB_IS_ARRAY( pTrans ) )
          {
-            HB_SIZE ulLen = hb_arrayLen( pTrans ), ul;
-            if( ulLen != 0 )
+            HB_SIZE nLen = hb_arrayLen( pTrans ), n;
+            if( nLen != 0 )
             {
-               for( ul = 1; ul <= ulLen; ++ul )
+               for( n = 1; n <= nLen; ++n )
                {
-                  if( !HB_IS_STRING( hb_arrayGetItemPtr( pTrans, ul ) ) )
+                  if( !HB_IS_STRING( hb_arrayGetItemPtr( pTrans, n ) ) )
                   {
                      pTrans = NULL;
                      break;
@@ -1078,7 +1078,6 @@ HB_FUNC( HB_I18N_ADDTEXT )
 
 HB_FUNC( HB_I18N_SET )
 {
-
    if( hb_pcount() > 0 )
    {
       if( HB_ISNIL( 1 ) )

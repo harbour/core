@@ -361,7 +361,7 @@ HB_EXPR_PTR hb_compExprNewTimeStamp( long lDate, long lTime, HB_COMP_DECL )
    return pExpr;
 }
 
-HB_EXPR_PTR hb_compExprNewString( const char *szValue, HB_SIZE ulLen, HB_BOOL fDealloc, HB_COMP_DECL )
+HB_EXPR_PTR hb_compExprNewString( const char *szValue, HB_SIZE nLen, HB_BOOL fDealloc, HB_COMP_DECL )
 {
    HB_EXPR_PTR pExpr;
 
@@ -371,7 +371,7 @@ HB_EXPR_PTR hb_compExprNewString( const char *szValue, HB_SIZE ulLen, HB_BOOL fD
 
    pExpr->value.asString.string = ( char * ) szValue;
    pExpr->value.asString.dealloc = fDealloc;
-   pExpr->ulLength = ulLen;
+   pExpr->ulLength = nLen;
    pExpr->ValType = HB_EV_STRING;
 
    return pExpr;
@@ -456,11 +456,11 @@ HB_EXPR_PTR hb_compExprNewHash( HB_EXPR_PTR pHashList, HB_COMP_DECL )
    return pHashList;
 }
 
-HB_EXPR_PTR hb_compExprNewCodeBlock( char *string, HB_SIZE ulLen, int iFlags, HB_COMP_DECL )
+HB_EXPR_PTR hb_compExprNewCodeBlock( char *string, HB_SIZE nLen, int iFlags, HB_COMP_DECL )
 {
    HB_EXPR_PTR pExpr;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewCodeBlock(%s,%" HB_PFS "u,%d,%p)",string, ulLen, iFlags, HB_COMP_PARAM));
+   HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewCodeBlock(%s,%" HB_PFS "u,%d,%p)",string, nLen, iFlags, HB_COMP_PARAM));
 
    pExpr = HB_COMP_EXPR_NEW( HB_ET_CODEBLOCK );
 
@@ -469,7 +469,7 @@ HB_EXPR_PTR hb_compExprNewCodeBlock( char *string, HB_SIZE ulLen, int iFlags, HB
    pExpr->ValType = HB_EV_CODEBLOCK;
    pExpr->value.asCodeblock.flags  = ( HB_USHORT ) iFlags;
    pExpr->value.asCodeblock.string = string;
-   pExpr->ulLength = ulLen;
+   pExpr->ulLength = nLen;
    return pExpr;
 }
 
@@ -1266,16 +1266,16 @@ HB_EXPR_PTR hb_compExprMacroAsAlias( HB_EXPR_PTR pExpr )
  */
 HB_ULONG hb_compExprListLen( HB_EXPR_PTR pExpr )
 {
-   HB_ULONG ulLen = 0;
+   HB_ULONG nLen = 0;
 
    pExpr = pExpr->value.asList.pExprList;
    while( pExpr )
    {
       pExpr = pExpr->pNext;
-      ++ulLen;
+      ++nLen;
    }
 
-   return ulLen;
+   return nLen;
 }
 
 HB_BOOL hb_compExprListTypeCheck( HB_EXPR_PTR pExpr, HB_EXPRTYPE ExprType )
@@ -1300,7 +1300,7 @@ HB_BOOL hb_compExprListTypeCheck( HB_EXPR_PTR pExpr, HB_EXPRTYPE ExprType )
  */
 HB_ULONG hb_compExprParamListLen( HB_EXPR_PTR pExpr )
 {
-   HB_ULONG ulLen = 0;
+   HB_ULONG nLen = 0;
 
    if( pExpr )
    {
@@ -1308,22 +1308,22 @@ HB_ULONG hb_compExprParamListLen( HB_EXPR_PTR pExpr )
       while( pParam )
       {
          pParam = pParam->pNext;
-         ++ulLen;
+         ++nLen;
       }
       /* NOTE: if method or function with no parameters is called then the
        * list of parameters contain only one expression of type HB_ET_NONE
        * There is no need to calculate this parameter
        */
-      if( ulLen == 1 && pExpr->value.asList.pExprList->ExprType == HB_ET_NONE )
-         ulLen = 0;
+      if( nLen == 1 && pExpr->value.asList.pExprList->ExprType == HB_ET_NONE )
+         nLen = 0;
    }
 
-   return ulLen;
+   return nLen;
 }
 
 HB_SIZE hb_compExprParamListCheck( HB_COMP_DECL, HB_EXPR_PTR pExpr )
 {
-   HB_SIZE ulLen = 0, ulItems = 0;
+   HB_SIZE nLen = 0, nItems = 0;
    if( pExpr )
    {
       HB_EXPR_PTR pElem;
@@ -1348,22 +1348,22 @@ HB_SIZE hb_compExprParamListCheck( HB_COMP_DECL, HB_EXPR_PTR pExpr )
                - handle it differently then in a normal statement */
             if( pElem->ExprType == HB_ET_MACRO )
                pElem->value.asMacro.SubType |= HB_ET_MACRO_LIST;
-            if( ulItems )
+            if( nItems )
             {
-               ulItems = 0;
-               ++ulLen;
+               nItems = 0;
+               ++nLen;
             }
-            ++ulLen;
+            ++nLen;
          }
          else
-            ++ulItems;
+            ++nItems;
          pElem = pElem->pNext;
       }
 
-      if( ulLen )
+      if( nLen )
       {
-         if( ulItems )
-            ++ulLen;
+         if( nItems )
+            ++nLen;
          /* Note: direct type change */
          pExpr->ExprType = HB_ET_MACROARGLIST;
       }
@@ -1371,14 +1371,14 @@ HB_SIZE hb_compExprParamListCheck( HB_COMP_DECL, HB_EXPR_PTR pExpr )
        * list of parameters contain only one expression of type HB_ET_NONE
        * There is no need to calculate this parameter
        */
-      else if( ulItems == 1 &&
+      else if( nItems == 1 &&
                pExpr->value.asList.pExprList->ExprType == HB_ET_NONE )
-         ulLen = 0;
+         nLen = 0;
       else
-         ulLen = ulItems;
+         nLen = nItems;
    }
 
-   return ulLen;
+   return nLen;
 }
 
 /* Create a new declaration for codeblock local variable

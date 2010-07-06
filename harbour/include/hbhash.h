@@ -74,9 +74,9 @@ typedef struct HB_HASH_ITEM_
 typedef struct HB_HASH_TABLE_
 {
    HB_HASH_ITEM_PTR * pItems;    /* pointer to items */
-   HB_SIZE ulTableSize;          /* the table size - number of slots */
-   HB_SIZE ulCount;              /* number of items stored in the table */
-   HB_SIZE ulUsed;               /* number of used slots */
+   HB_SIZE nTableSize;          /* the table size - number of slots */
+   HB_SIZE nCount;              /* number of items stored in the table */
+   HB_SIZE nUsed;               /* number of used slots */
    HB_HASH_FUNC_PTR pKeyFunc;    /* pointer to func that returns key value */
    HB_HASH_FUNC_PTR pDeleteItemFunc; /* ptr to func that deletes value stored in the table */
    HB_HASH_FUNC_PTR pCompFunc;       /* ptr to func that compares two items */

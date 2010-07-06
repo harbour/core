@@ -67,12 +67,12 @@ static int hb_regcomp( PHB_REGEX pRegEx, const char * szRegEx )
    return -1;
 }
 
-static int hb_regexec( PHB_REGEX pRegEx, const char * szString, HB_SIZE ulLen,
+static int hb_regexec( PHB_REGEX pRegEx, const char * szString, HB_SIZE nLen,
                        int iMatches, HB_REGMATCH * aMatches )
 {
    HB_SYMBOL_UNUSED( pRegEx );
    HB_SYMBOL_UNUSED( szString );
-   HB_SYMBOL_UNUSED( ulLen );
+   HB_SYMBOL_UNUSED( nLen );
    HB_SYMBOL_UNUSED( iMatches );
    HB_SYMBOL_UNUSED( aMatches );
    return -1;
@@ -106,11 +106,11 @@ HB_BOOL hb_regexIs( PHB_ITEM pItem )
    return hb_itemGetPtrGC( pItem, &s_gcRegexFuncs ) != NULL;
 }
 
-PHB_REGEX hb_regexCompile( const char *szRegEx, HB_SIZE ulLen, int iFlags )
+PHB_REGEX hb_regexCompile( const char *szRegEx, HB_SIZE nLen, int iFlags )
 {
    PHB_REGEX pRegEx;
 
-   HB_SYMBOL_UNUSED( ulLen );
+   HB_SYMBOL_UNUSED( nLen );
 
    pRegEx = ( PHB_REGEX ) hb_gcAllocate( sizeof( HB_REGEX ), &s_gcRegexFuncs );
    memset( pRegEx, 0, sizeof( HB_REGEX ) );
@@ -141,12 +141,12 @@ PHB_REGEX hb_regexGet( PHB_ITEM pRegExItm, int iFlags )
       }
       else if( HB_IS_STRING( pRegExItm ) )
       {
-         HB_SIZE ulLen = hb_itemGetCLen( pRegExItm );
+         HB_SIZE nLen = hb_itemGetCLen( pRegExItm );
          const char * szRegEx = hb_itemGetCPtr( pRegExItm );
-         if( ulLen > 0 )
+         if( nLen > 0 )
          {
             fArgError = HB_FALSE;
-            pRegEx = hb_regexCompile( szRegEx, ulLen, iFlags );
+            pRegEx = hb_regexCompile( szRegEx, nLen, iFlags );
          }
       }
    }
@@ -168,13 +168,13 @@ void hb_regexFree( PHB_REGEX pRegEx )
    }
 }
 
-HB_BOOL hb_regexMatch( PHB_REGEX pRegEx, const char *szString, HB_SIZE ulLen, HB_BOOL fFull )
+HB_BOOL hb_regexMatch( PHB_REGEX pRegEx, const char *szString, HB_SIZE nLen, HB_BOOL fFull )
 {
    HB_REGMATCH aMatches[ HB_REGMATCH_SIZE( 1 ) ];
    HB_BOOL fMatch;
 
-   fMatch = ( s_reg_exec )( pRegEx, szString, ulLen, 1, aMatches ) > 0;
+   fMatch = ( s_reg_exec )( pRegEx, szString, nLen, 1, aMatches ) > 0;
    return fMatch && ( !fFull ||
             ( HB_REGMATCH_SO( aMatches, 0 ) == 0 &&
-              HB_REGMATCH_EO( aMatches, 0 ) == ( int ) ulLen ) );
+              HB_REGMATCH_EO( aMatches, 0 ) == ( int ) nLen ) );
 }

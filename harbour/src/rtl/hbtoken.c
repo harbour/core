@@ -59,14 +59,14 @@
 #define _HB_TOK_ISDELIM          4
 #define _HB_TOK_STRIP_QUUTE      8
 
-static HB_SIZE hb_tokenCount( const char * szLine, HB_SIZE ulLen,
-                              const char * szDelim, HB_SIZE ulDelim,
+static HB_SIZE hb_tokenCount( const char * szLine, HB_SIZE nLen,
+                              const char * szDelim, HB_SIZE nDelim,
                               int iFlags )
 {
-   HB_SIZE ul = 0, ulTokens = 1;
+   HB_SIZE ul = 0, nTokens = 1;
    char cQuote = 0;
 
-   while( ul < ulLen )
+   while( ul < nLen )
    {
       if( cQuote )
       {
@@ -77,30 +77,30 @@ static HB_SIZE hb_tokenCount( const char * szLine, HB_SIZE ulLen,
                ( szLine[ ul ] == '\'' && ( iFlags & _HB_TOK_RESPECT_SQUOTE ) ) )
          cQuote = szLine[ ul ];
       else if( szLine[ ul ] == szDelim[ 0 ] &&
-               ( ulDelim == 1 || !memcmp( szLine + ul, szDelim, ulDelim ) ) )
+               ( nDelim == 1 || !memcmp( szLine + ul, szDelim, nDelim ) ) )
       {
-         ++ulTokens;
+         ++nTokens;
          if( ( iFlags & _HB_TOK_ISDELIM ) == 0 )
          {
-            while( ul + 1 < ulLen && szLine[ ul + 1 ] == szDelim[ 0 ] )
+            while( ul + 1 < nLen && szLine[ ul + 1 ] == szDelim[ 0 ] )
                ++ul;
          }
-         ul += ulDelim - 1;
+         ul += nDelim - 1;
       }
       ++ul;
    }
 
-   return ulTokens;
+   return nTokens;
 }
 
-static const char * hb_tokenGet( const char * szLine, HB_SIZE ulLen,
-                                 const char * szDelim, HB_SIZE ulDelim,
-                                 int iFlags, HB_SIZE ulToken, HB_SIZE * pulLen )
+static const char * hb_tokenGet( const char * szLine, HB_SIZE nLen,
+                                 const char * szDelim, HB_SIZE nDelim,
+                                 int iFlags, HB_SIZE nToken, HB_SIZE * pnLen )
 {
-   HB_SIZE ul, ulStart;
+   HB_SIZE ul, nStart;
    char cQuote = 0;
 
-   for( ul = ulStart = 0; ul < ulLen; ++ul )
+   for( ul = nStart = 0; ul < nLen; ++ul )
    {
       if( cQuote )
       {
@@ -111,43 +111,43 @@ static const char * hb_tokenGet( const char * szLine, HB_SIZE ulLen,
                ( szLine[ ul ] == '\'' && ( iFlags & _HB_TOK_RESPECT_SQUOTE ) ) )
          cQuote = szLine[ ul ];
       else if( szLine[ ul ] == szDelim[ 0 ] &&
-               ( ulDelim == 1 || !memcmp( szLine + ul, szDelim, ulDelim ) ) )
+               ( nDelim == 1 || !memcmp( szLine + ul, szDelim, nDelim ) ) )
       {
-         if( --ulToken == 0 )
+         if( --nToken == 0 )
          {
-            * pulLen = ul - ulStart;
-            return szLine + ulStart;
+            * pnLen = ul - nStart;
+            return szLine + nStart;
          }
          if( ( iFlags & _HB_TOK_ISDELIM ) == 0 )
          {
-            while( ul + 1 < ulLen && szLine[ ul + 1 ] == szDelim[ 0 ] )
+            while( ul + 1 < nLen && szLine[ ul + 1 ] == szDelim[ 0 ] )
                ++ul;
          }
-         ulStart = ul + ulDelim;
+         nStart = ul + nDelim;
       }
    }
-   if( --ulToken == 0 )
+   if( --nToken == 0 )
    {
-      * pulLen = ul - ulStart;
-      return szLine + ulStart;
+      * pnLen = ul - nStart;
+      return szLine + nStart;
    }
-   * pulLen = 0;
+   * pnLen = 0;
    return NULL;
 }
 
-static PHB_ITEM hb_tokenArray( const char * szLine, HB_SIZE ulLen,
-                               const char * szDelim, HB_SIZE ulDelim,
+static PHB_ITEM hb_tokenArray( const char * szLine, HB_SIZE nLen,
+                               const char * szDelim, HB_SIZE nDelim,
                                int iFlags )
 {
-   HB_SIZE ulTokens = hb_tokenCount( szLine, ulLen, szDelim, ulDelim, iFlags );
-   PHB_ITEM pArray = hb_itemArrayNew( ulTokens );
+   HB_SIZE nTokens = hb_tokenCount( szLine, nLen, szDelim, nDelim, iFlags );
+   PHB_ITEM pArray = hb_itemArrayNew( nTokens );
 
-   if( ulTokens )
+   if( nTokens )
    {
-      HB_SIZE ul, ulStart, ulToken;
+      HB_SIZE ul, nStart, nToken;
       char cQuote = 0;
 
-      for( ul = ulStart = ulToken = 0; ul < ulLen; ++ul )
+      for( ul = nStart = nToken = 0; ul < nLen; ++ul )
       {
          if( cQuote )
          {
@@ -158,45 +158,45 @@ static PHB_ITEM hb_tokenArray( const char * szLine, HB_SIZE ulLen,
                   ( szLine[ ul ] == '\'' && ( iFlags & _HB_TOK_RESPECT_SQUOTE ) ) )
             cQuote = szLine[ ul ];
          else if( szLine[ ul ] == szDelim[ 0 ] &&
-                  ( ulDelim == 1 || !memcmp( szLine + ul, szDelim, ulDelim ) ) )
+                  ( nDelim == 1 || !memcmp( szLine + ul, szDelim, nDelim ) ) )
          {
-            hb_arraySetCL( pArray, ++ulToken, szLine + ulStart, ul - ulStart );
+            hb_arraySetCL( pArray, ++nToken, szLine + nStart, ul - nStart );
             if( ( iFlags & _HB_TOK_ISDELIM ) == 0 )
             {
-               while( ul + 1 < ulLen && szLine[ ul + 1 ] == szDelim[ 0 ] )
+               while( ul + 1 < nLen && szLine[ ul + 1 ] == szDelim[ 0 ] )
                   ++ul;
             }
-            ulStart = ul + ulDelim;
+            nStart = ul + nDelim;
          }
       }
-      hb_arraySetCL( pArray, ++ulToken, szLine + ulStart, ul - ulStart );
+      hb_arraySetCL( pArray, ++nToken, szLine + nStart, ul - nStart );
    }
 
    return pArray;
 }
 
-static HB_BOOL hb_tokenParam( int iParam, HB_SIZE ulSkip,
-                              const char ** pszLine, HB_SIZE * pulLen,
-                              const char ** pszDelim, HB_SIZE * pulDelim,
+static HB_BOOL hb_tokenParam( int iParam, HB_SIZE nSkip,
+                              const char ** pszLine, HB_SIZE * pnLen,
+                              const char ** pszDelim, HB_SIZE * pnDelim,
                               int * piFlags )
 {
    const char * szLine = hb_parc( 1 ), * szDelim = NULL;
-   HB_SIZE ulLen = hb_parclen( 1 ), ulDelim = 0;
+   HB_SIZE nLen = hb_parclen( 1 ), nDelim = 0;
    int iFlags = 0;
 
-   if( ulLen )
+   if( nLen )
    {
-      if( ulSkip )
+      if( nSkip )
       {
-         szLine += ulSkip;
-         if( ulLen <= ulSkip )
-            ulLen = 0;
+         szLine += nSkip;
+         if( nLen <= nSkip )
+            nLen = 0;
          else
-            ulLen -= ulSkip;
+            nLen -= nSkip;
       }
 
-      ulDelim = hb_parclen( iParam );
-      if( ulDelim )
+      nDelim = hb_parclen( iParam );
+      if( nDelim )
       {
          szDelim = hb_parc( iParam );
          iFlags |= _HB_TOK_ISDELIM;
@@ -204,18 +204,18 @@ static HB_BOOL hb_tokenParam( int iParam, HB_SIZE ulSkip,
       else
       {
          szDelim = " ";
-         ulDelim = 1;
+         nDelim = 1;
       }
 
       if( ( iFlags & _HB_TOK_ISDELIM ) == 0 )
       {
-         while( ulLen && * szLine == szDelim[ 0 ] )
+         while( nLen && * szLine == szDelim[ 0 ] )
          {
             ++szLine;
-            --ulLen;
+            --nLen;
          }
-         while( ulLen && szLine[ ulLen - 1 ] == szDelim[ 0 ] )
-            --ulLen;
+         while( nLen && szLine[ nLen - 1 ] == szDelim[ 0 ] )
+            --nLen;
       }
       if( hb_parl( iParam + 1 ) )
       {
@@ -225,8 +225,8 @@ static HB_BOOL hb_tokenParam( int iParam, HB_SIZE ulSkip,
       }
    }
 
-   *pulLen = ulLen;
-   *pulDelim = ulDelim;
+   *pnLen = nLen;
+   *pnDelim = nDelim;
    *pszLine = szLine;
    *pszDelim = szDelim;
    *piFlags = iFlags;
@@ -237,11 +237,11 @@ static HB_BOOL hb_tokenParam( int iParam, HB_SIZE ulSkip,
 HB_FUNC( HB_TOKENCOUNT )
 {
    const char * szLine, * szDelim;
-   HB_SIZE ulLen, ulDelim;
+   HB_SIZE nLen, nDelim;
    int iFlags;
 
-   if( hb_tokenParam( 2, 0, &szLine, &ulLen, &szDelim, &ulDelim, &iFlags ) )
-      hb_retns( hb_tokenCount( szLine, ulLen, szDelim, ulDelim, iFlags ) );
+   if( hb_tokenParam( 2, 0, &szLine, &nLen, &szDelim, &nDelim, &iFlags ) )
+      hb_retns( hb_tokenCount( szLine, nLen, szDelim, nDelim, iFlags ) );
    else
       hb_retns( 0 );
 }
@@ -249,14 +249,14 @@ HB_FUNC( HB_TOKENCOUNT )
 HB_FUNC( HB_TOKENGET )
 {
    const char * szLine, * szDelim;
-   HB_SIZE ulLen, ulDelim;
+   HB_SIZE nLen, nDelim;
    int iFlags;
 
-   if( hb_tokenParam( 3, 0, &szLine, &ulLen, &szDelim, &ulDelim, &iFlags ) )
+   if( hb_tokenParam( 3, 0, &szLine, &nLen, &szDelim, &nDelim, &iFlags ) )
    {
-      szLine = hb_tokenGet( szLine, ulLen, szDelim, ulDelim, iFlags,
-                            hb_parns( 2 ), &ulLen );
-      hb_retclen( szLine, ulLen );
+      szLine = hb_tokenGet( szLine, nLen, szDelim, nDelim, iFlags,
+                            hb_parns( 2 ), &nLen );
+      hb_retclen( szLine, nLen );
    }
    else
       hb_retc_null();
@@ -269,22 +269,22 @@ HB_FUNC( HB_TOKENGET )
 HB_FUNC( HB_TOKENPTR )
 {
    const char * szLine, * szDelim, * szToken;
-   HB_SIZE ulLen, ulDelim, ulSkip, ulToken;
+   HB_SIZE nLen, nDelim, nSkip, nToken;
    int iFlags;
 
-   if( hb_tokenParam( 3, hb_parns( 2 ), &szLine, &ulLen, &szDelim, &ulDelim, &iFlags ) )
+   if( hb_tokenParam( 3, hb_parns( 2 ), &szLine, &nLen, &szDelim, &nDelim, &iFlags ) )
    {
-      szToken = hb_tokenGet( szLine, ulLen, szDelim, ulDelim, iFlags,
-                             1, &ulToken );
-      if( szToken && ulLen > ulToken )
-         ulSkip = szToken - hb_parc( 1 ) + ulToken + ulDelim;
+      szToken = hb_tokenGet( szLine, nLen, szDelim, nDelim, iFlags,
+                             1, &nToken );
+      if( szToken && nLen > nToken )
+         nSkip = szToken - hb_parc( 1 ) + nToken + nDelim;
       else
-         ulSkip = hb_parclen( 1 ) + 1;
+         nSkip = hb_parclen( 1 ) + 1;
 
       /* return position to start next search from */
-      hb_storns( ulSkip, 2 );
+      hb_storns( nSkip, 2 );
       /* return token */
-      hb_retclen( szToken, ulToken );
+      hb_retclen( szToken, nToken );
    }
    else
    {
@@ -296,11 +296,11 @@ HB_FUNC( HB_TOKENPTR )
 HB_FUNC( HB_ATOKENS )
 {
    const char * szLine, * szDelim;
-   HB_SIZE ulLen, ulDelim;
+   HB_SIZE nLen, nDelim;
    int iFlags;
 
-   if( hb_tokenParam( 2, 0, &szLine, &ulLen, &szDelim, &ulDelim, &iFlags ) )
-      hb_itemReturnRelease( hb_tokenArray( szLine, ulLen, szDelim, ulDelim, iFlags ) );
+   if( hb_tokenParam( 2, 0, &szLine, &nLen, &szDelim, &nDelim, &iFlags ) )
+      hb_itemReturnRelease( hb_tokenArray( szLine, nLen, szDelim, nDelim, iFlags ) );
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1123, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }

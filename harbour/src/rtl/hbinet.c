@@ -659,7 +659,7 @@ static void s_inetRecvInternal( int iMode )
    PHB_SOCKET_STRUCT socket = HB_PARSOCKET( 1 );
    PHB_ITEM pBuffer = hb_param( 2, HB_IT_STRING );
    char * buffer;
-   HB_SIZE ulLen;
+   HB_SIZE nLen;
    int iLen, iMaxLen, iReceived;
    int iTimeElapsed;
 
@@ -669,8 +669,8 @@ static void s_inetRecvInternal( int iMode )
       hb_retni( -1 );
    else
    {
-      if( hb_itemGetWriteCL( pBuffer, &buffer, &ulLen ) )
-         iLen = ( int ) ulLen;
+      if( hb_itemGetWriteCL( pBuffer, &buffer, &nLen ) )
+         iLen = ( int ) nLen;
       else
       {
          iLen = 0;
@@ -1383,7 +1383,7 @@ HB_FUNC( HB_INETDGRAMRECV )
    int iTimeElapsed = 0;
    int iLen = 0, iMax;
    char * buffer = NULL;
-   HB_SIZE ulLen;
+   HB_SIZE nLen;
    HB_BOOL fRepeat;
 
    if( socket == NULL || pBuffer == NULL || ! HB_ISBYREF( 2 ) )
@@ -1396,8 +1396,8 @@ HB_FUNC( HB_INETDGRAMRECV )
    else
    {
       socket->iCount = 0;
-      if( hb_itemGetWriteCL( pBuffer, &buffer, &ulLen ) )
-         iLen = ( int ) ulLen;
+      if( hb_itemGetWriteCL( pBuffer, &buffer, &nLen ) )
+         iLen = ( int ) nLen;
       if( HB_ISNUM( 3 ) )
       {
          iMax = hb_parni( 3 );

@@ -61,57 +61,57 @@
 HB_BOOL hb_strMatchWild( const char *szString, const char *szPattern )
 {
    HB_BOOL fMatch = HB_TRUE, fAny = HB_FALSE;
-   HB_SIZE pulBufPosP[ HB_MAX_WILDPATTERN ], pulBufPosV[ HB_MAX_WILDPATTERN ],
-           ulBufSize = HB_MAX_WILDPATTERN;
-   HB_SIZE * ulAnyPosP = pulBufPosP, * ulAnyPosV = pulBufPosV,
-           ulSize, ulLen, ulAny, i, j;
+   HB_SIZE pnBufPosP[ HB_MAX_WILDPATTERN ], pnBufPosV[ HB_MAX_WILDPATTERN ],
+           nBufSize = HB_MAX_WILDPATTERN;
+   HB_SIZE * nAnyPosP = pnBufPosP, * nAnyPosV = pnBufPosV,
+           nSize, nLen, nAny, i, j;
 
-   i = j = ulAny = 0;
-   ulLen = strlen( szString );
-   ulSize = strlen( szPattern );
-   while( i < ulSize )
+   i = j = nAny = 0;
+   nLen = strlen( szString );
+   nSize = strlen( szPattern );
+   while( i < nSize )
    {
       if( szPattern[i] == '*' )
       {
          fAny = HB_TRUE;
          i++;
       }
-      else if( j < ulLen && ( szPattern[i] == '?' || szPattern[i] == szString[j] ) )
+      else if( j < nLen && ( szPattern[i] == '?' || szPattern[i] == szString[j] ) )
       {
          if( fAny )
          {
-            if( ulAny >= ulBufSize )
+            if( nAny >= nBufSize )
             {
-               if( ( ulBufSize <<= 1 ) == ( HB_MAX_WILDPATTERN << 1 ) )
+               if( ( nBufSize <<= 1 ) == ( HB_MAX_WILDPATTERN << 1 ) )
                {
-                  ulAnyPosP = ( HB_SIZE * ) hb_xgrab( ulBufSize * sizeof( HB_SIZE ) );
-                  ulAnyPosV = ( HB_SIZE * ) hb_xgrab( ulBufSize * sizeof( HB_SIZE ) );
-                  memcpy( ulAnyPosP, pulBufPosP, HB_MAX_WILDPATTERN * sizeof( HB_SIZE ) );
-                  memcpy( ulAnyPosV, pulBufPosV, HB_MAX_WILDPATTERN * sizeof( HB_SIZE ) );
+                  nAnyPosP = ( HB_SIZE * ) hb_xgrab( nBufSize * sizeof( HB_SIZE ) );
+                  nAnyPosV = ( HB_SIZE * ) hb_xgrab( nBufSize * sizeof( HB_SIZE ) );
+                  memcpy( nAnyPosP, pnBufPosP, HB_MAX_WILDPATTERN * sizeof( HB_SIZE ) );
+                  memcpy( nAnyPosV, pnBufPosV, HB_MAX_WILDPATTERN * sizeof( HB_SIZE ) );
                }
                else
                {
-                  ulAnyPosP = ( HB_SIZE * ) hb_xrealloc( ulAnyPosP, ulBufSize * sizeof( HB_SIZE ) );
-                  ulAnyPosV = ( HB_SIZE * ) hb_xrealloc( ulAnyPosV, ulBufSize * sizeof( HB_SIZE ) );
+                  nAnyPosP = ( HB_SIZE * ) hb_xrealloc( nAnyPosP, nBufSize * sizeof( HB_SIZE ) );
+                  nAnyPosV = ( HB_SIZE * ) hb_xrealloc( nAnyPosV, nBufSize * sizeof( HB_SIZE ) );
                }
             }
-            ulAnyPosP[ ulAny ] = i;
-            ulAnyPosV[ ulAny ] = j;
-            ulAny++;
+            nAnyPosP[ nAny ] = i;
+            nAnyPosV[ nAny ] = j;
+            nAny++;
             fAny = HB_FALSE;
          }
          j++;
          i++;
       }
-      else if( fAny && j < ulLen )
+      else if( fAny && j < nLen )
       {
          j++;
       }
-      else if( ulAny > 0 )
+      else if( nAny > 0 )
       {
-         ulAny--;
-         i = ulAnyPosP[ ulAny ];
-         j = ulAnyPosV[ ulAny ] + 1;
+         nAny--;
+         i = nAnyPosP[ nAny ];
+         j = nAnyPosV[ nAny ] + 1;
          fAny = HB_TRUE;
       }
       else
@@ -120,10 +120,10 @@ HB_BOOL hb_strMatchWild( const char *szString, const char *szPattern )
          break;
       }
    }
-   if( ulBufSize > HB_MAX_WILDPATTERN )
+   if( nBufSize > HB_MAX_WILDPATTERN )
    {
-      hb_xfree( ulAnyPosP );
-      hb_xfree( ulAnyPosV );
+      hb_xfree( nAnyPosP );
+      hb_xfree( nAnyPosV );
    }
    return fMatch;
 }
@@ -131,58 +131,58 @@ HB_BOOL hb_strMatchWild( const char *szString, const char *szPattern )
 HB_BOOL hb_strMatchWildExact( const char *szString, const char *szPattern )
 {
    HB_BOOL fMatch = HB_TRUE, fAny = HB_FALSE;
-   HB_SIZE pulBufPosP[ HB_MAX_WILDPATTERN ], pulBufPosV[ HB_MAX_WILDPATTERN ],
-           ulBufSize = HB_MAX_WILDPATTERN;
-   HB_SIZE * ulAnyPosP = pulBufPosP, * ulAnyPosV = pulBufPosV,
-           ulSize, ulLen, ulAny, i, j;
+   HB_SIZE pnBufPosP[ HB_MAX_WILDPATTERN ], pnBufPosV[ HB_MAX_WILDPATTERN ],
+           nBufSize = HB_MAX_WILDPATTERN;
+   HB_SIZE * nAnyPosP = pnBufPosP, * nAnyPosV = pnBufPosV,
+           nSize, nLen, nAny, i, j;
 
-   i = j = ulAny = 0;
-   ulLen = strlen( szString );
-   ulSize = strlen( szPattern );
-   while( i < ulSize || ( j < ulLen && !fAny ) )
+   i = j = nAny = 0;
+   nLen = strlen( szString );
+   nSize = strlen( szPattern );
+   while( i < nSize || ( j < nLen && !fAny ) )
    {
-      if( i < ulSize && szPattern[i] == '*' )
+      if( i < nSize && szPattern[i] == '*' )
       {
          fAny = HB_TRUE;
          i++;
       }
-      else if( j < ulLen && i < ulSize &&
+      else if( j < nLen && i < nSize &&
                ( szPattern[i] == '?' || szPattern[i] == szString[j] ) )
       {
          if( fAny )
          {
-            if( ulAny >= ulBufSize )
+            if( nAny >= nBufSize )
             {
-               if( ( ulBufSize <<= 1 ) == ( HB_MAX_WILDPATTERN << 1 ) )
+               if( ( nBufSize <<= 1 ) == ( HB_MAX_WILDPATTERN << 1 ) )
                {
-                  ulAnyPosP = ( HB_SIZE * ) hb_xgrab( ulBufSize * sizeof( HB_SIZE ) );
-                  ulAnyPosV = ( HB_SIZE * ) hb_xgrab( ulBufSize * sizeof( HB_SIZE ) );
-                  memcpy( ulAnyPosP, pulBufPosP, HB_MAX_WILDPATTERN * sizeof( HB_SIZE ) );
-                  memcpy( ulAnyPosV, pulBufPosV, HB_MAX_WILDPATTERN * sizeof( HB_SIZE ) );
+                  nAnyPosP = ( HB_SIZE * ) hb_xgrab( nBufSize * sizeof( HB_SIZE ) );
+                  nAnyPosV = ( HB_SIZE * ) hb_xgrab( nBufSize * sizeof( HB_SIZE ) );
+                  memcpy( nAnyPosP, pnBufPosP, HB_MAX_WILDPATTERN * sizeof( HB_SIZE ) );
+                  memcpy( nAnyPosV, pnBufPosV, HB_MAX_WILDPATTERN * sizeof( HB_SIZE ) );
                }
                else
                {
-                  ulAnyPosP = ( HB_SIZE * ) hb_xrealloc( ulAnyPosP, ulBufSize * sizeof( HB_SIZE ) );
-                  ulAnyPosV = ( HB_SIZE * ) hb_xrealloc( ulAnyPosV, ulBufSize * sizeof( HB_SIZE ) );
+                  nAnyPosP = ( HB_SIZE * ) hb_xrealloc( nAnyPosP, nBufSize * sizeof( HB_SIZE ) );
+                  nAnyPosV = ( HB_SIZE * ) hb_xrealloc( nAnyPosV, nBufSize * sizeof( HB_SIZE ) );
                }
             }
-            ulAnyPosP[ ulAny ] = i;
-            ulAnyPosV[ ulAny ] = j;
-            ulAny++;
+            nAnyPosP[ nAny ] = i;
+            nAnyPosV[ nAny ] = j;
+            nAny++;
             fAny = HB_FALSE;
          }
          j++;
          i++;
       }
-      else if( fAny && j < ulLen )
+      else if( fAny && j < nLen )
       {
          j++;
       }
-      else if( ulAny > 0 )
+      else if( nAny > 0 )
       {
-         ulAny--;
-         i = ulAnyPosP[ ulAny ];
-         j = ulAnyPosV[ ulAny ] + 1;
+         nAny--;
+         i = nAnyPosP[ nAny ];
+         j = nAnyPosV[ nAny ] + 1;
          fAny = HB_TRUE;
       }
       else
@@ -191,10 +191,10 @@ HB_BOOL hb_strMatchWildExact( const char *szString, const char *szPattern )
          break;
       }
    }
-   if( ulBufSize > HB_MAX_WILDPATTERN )
+   if( nBufSize > HB_MAX_WILDPATTERN )
    {
-      hb_xfree( ulAnyPosP );
-      hb_xfree( ulAnyPosV );
+      hb_xfree( nAnyPosP );
+      hb_xfree( nAnyPosV );
    }
    return fMatch;
 }
@@ -202,59 +202,59 @@ HB_BOOL hb_strMatchWildExact( const char *szString, const char *szPattern )
 HB_BOOL hb_strMatchCaseWildExact( const char *szString, const char *szPattern )
 {
    HB_BOOL fMatch = HB_TRUE, fAny = HB_FALSE;
-   HB_SIZE pulBufPosP[ HB_MAX_WILDPATTERN ], pulBufPosV[ HB_MAX_WILDPATTERN ],
-           ulBufSize = HB_MAX_WILDPATTERN;
-   HB_SIZE * ulAnyPosP = pulBufPosP, * ulAnyPosV = pulBufPosV,
-           ulSize, ulLen, ulAny, i, j;
+   HB_SIZE pnBufPosP[ HB_MAX_WILDPATTERN ], pnBufPosV[ HB_MAX_WILDPATTERN ],
+           nBufSize = HB_MAX_WILDPATTERN;
+   HB_SIZE * nAnyPosP = pnBufPosP, * nAnyPosV = pnBufPosV,
+           nSize, nLen, nAny, i, j;
 
-   i = j = ulAny = 0;
-   ulLen = strlen( szString );
-   ulSize = strlen( szPattern );
-   while ( i < ulSize || ( j < ulLen && !fAny ) )
+   i = j = nAny = 0;
+   nLen = strlen( szString );
+   nSize = strlen( szPattern );
+   while ( i < nSize || ( j < nLen && !fAny ) )
    {
-      if( i < ulSize && szPattern[i] == '*' )
+      if( i < nSize && szPattern[i] == '*' )
       {
          fAny = HB_TRUE;
          i++;
       }
-      else if( j < ulLen && i < ulSize &&
+      else if( j < nLen && i < nSize &&
                ( szPattern[i] == '?' ||
                  hb_charUpper( szPattern[i] ) == hb_charUpper( szString[j] ) ) )
       {
          if( fAny )
          {
-            if( ulAny >= ulBufSize )
+            if( nAny >= nBufSize )
             {
-               if( ( ulBufSize <<= 1 ) == ( HB_MAX_WILDPATTERN << 1 ) )
+               if( ( nBufSize <<= 1 ) == ( HB_MAX_WILDPATTERN << 1 ) )
                {
-                  ulAnyPosP = ( HB_SIZE * ) hb_xgrab( ulBufSize * sizeof( HB_SIZE ) );
-                  ulAnyPosV = ( HB_SIZE * ) hb_xgrab( ulBufSize * sizeof( HB_SIZE ) );
-                  memcpy( ulAnyPosP, pulBufPosP, HB_MAX_WILDPATTERN * sizeof( HB_SIZE ) );
-                  memcpy( ulAnyPosV, pulBufPosV, HB_MAX_WILDPATTERN * sizeof( HB_SIZE ) );
+                  nAnyPosP = ( HB_SIZE * ) hb_xgrab( nBufSize * sizeof( HB_SIZE ) );
+                  nAnyPosV = ( HB_SIZE * ) hb_xgrab( nBufSize * sizeof( HB_SIZE ) );
+                  memcpy( nAnyPosP, pnBufPosP, HB_MAX_WILDPATTERN * sizeof( HB_SIZE ) );
+                  memcpy( nAnyPosV, pnBufPosV, HB_MAX_WILDPATTERN * sizeof( HB_SIZE ) );
                }
                else
                {
-                  ulAnyPosP = ( HB_SIZE * ) hb_xrealloc( ulAnyPosP, ulBufSize * sizeof( HB_SIZE ) );
-                  ulAnyPosV = ( HB_SIZE * ) hb_xrealloc( ulAnyPosV, ulBufSize * sizeof( HB_SIZE ) );
+                  nAnyPosP = ( HB_SIZE * ) hb_xrealloc( nAnyPosP, nBufSize * sizeof( HB_SIZE ) );
+                  nAnyPosV = ( HB_SIZE * ) hb_xrealloc( nAnyPosV, nBufSize * sizeof( HB_SIZE ) );
                }
             }
-            ulAnyPosP[ ulAny ] = i;
-            ulAnyPosV[ ulAny ] = j;
-            ulAny++;
+            nAnyPosP[ nAny ] = i;
+            nAnyPosV[ nAny ] = j;
+            nAny++;
             fAny = HB_FALSE;
          }
          j++;
          i++;
       }
-      else if( fAny && j < ulLen )
+      else if( fAny && j < nLen )
       {
          j++;
       }
-      else if( ulAny > 0 )
+      else if( nAny > 0 )
       {
-         ulAny--;
-         i = ulAnyPosP[ ulAny ];
-         j = ulAnyPosV[ ulAny ] + 1;
+         nAny--;
+         i = nAnyPosP[ nAny ];
+         j = nAnyPosV[ nAny ] + 1;
          fAny = HB_TRUE;
       }
       else
@@ -263,10 +263,10 @@ HB_BOOL hb_strMatchCaseWildExact( const char *szString, const char *szPattern )
          break;
       }
    }
-   if( ulBufSize > HB_MAX_WILDPATTERN )
+   if( nBufSize > HB_MAX_WILDPATTERN )
    {
-      hb_xfree( ulAnyPosP );
-      hb_xfree( ulAnyPosV );
+      hb_xfree( nAnyPosP );
+      hb_xfree( nAnyPosV );
    }
    return fMatch;
 }

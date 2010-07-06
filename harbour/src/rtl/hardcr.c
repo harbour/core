@@ -53,18 +53,18 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 
-static char * hb_strHardCR( char * pszString, HB_SIZE ulStringLen )
+static char * hb_strHardCR( char * pszString, HB_SIZE nStringLen )
 {
-   HB_SIZE ulStringPos;
+   HB_SIZE nStringPos;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_strHardCR(%s, %" HB_PFS "u)", pszString, ulStringLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_strHardCR(%s, %" HB_PFS "u)", pszString, nStringLen));
 
-   for( ulStringPos = 0; ulStringPos < ulStringLen; ulStringPos++ )
+   for( nStringPos = 0; nStringPos < nStringLen; nStringPos++ )
    {
-      if( pszString[ ulStringPos ]     == HB_CHAR_SOFT1 &&
-          pszString[ ulStringPos + 1 ] == HB_CHAR_SOFT2 )
+      if( pszString[ nStringPos ]     == HB_CHAR_SOFT1 &&
+          pszString[ nStringPos + 1 ] == HB_CHAR_SOFT2 )
       {
-         pszString[ ulStringPos ] = HB_CHAR_HARD1;
+         pszString[ nStringPos ] = HB_CHAR_HARD1;
       }
    }
 
@@ -78,9 +78,9 @@ HB_FUNC( HARDCR )
    if( pString )
    {
       char * pszBuffer = hb_itemGetC( pString );
-      HB_SIZE ulStringLen = hb_itemGetCLen( pString );
+      HB_SIZE nStringLen = hb_itemGetCLen( pString );
 
-      hb_retclen_buffer( hb_strHardCR( pszBuffer, ulStringLen ), ulStringLen );
+      hb_retclen_buffer( hb_strHardCR( pszBuffer, nStringLen ), nStringLen );
    }
    else
       hb_retc_null();

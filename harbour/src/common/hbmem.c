@@ -64,31 +64,31 @@
    #if UINT_MAX != ULONG_MAX
 */
 #ifndef hb_xmemcpy
-void * hb_xmemcpy( void * pDestArg, void * pSourceArg, HB_SIZE ulLen )
+void * hb_xmemcpy( void * pDestArg, void * pSourceArg, HB_SIZE nLen )
 {
    HB_BYTE * pDest;
    HB_BYTE * pSource;
-   HB_SIZE   ulRemaining;
+   HB_SIZE   nRemaining;
    int       iCopySize;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_xmemcpy(%p, %p, %" HB_PFS "u)", pDestArg, pSourceArg, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_xmemcpy(%p, %p, %" HB_PFS "u)", pDestArg, pSourceArg, nLen));
 
    pDest = ( HB_BYTE * ) pDestArg;
    pSource = ( HB_BYTE * ) pSourceArg;
-   ulRemaining = ulLen;
+   nRemaining = nLen;
 
-   while( ulRemaining )
+   while( nRemaining )
    {
       /* Overcome the memcpy() size_t limitation */
-      if( ulRemaining > UINT_MAX )
+      if( nRemaining > UINT_MAX )
       {
          iCopySize = UINT_MAX;
-         ulRemaining -= ( HB_SIZE ) iCopySize;
+         nRemaining -= ( HB_SIZE ) iCopySize;
       }
       else
       {
-         iCopySize = ( int ) ulRemaining;
-         ulRemaining = 0;
+         iCopySize = ( int ) nRemaining;
+         nRemaining = 0;
       }
       memcpy( pDest, pSource, iCopySize );
       pDest += iCopySize;
@@ -100,29 +100,29 @@ void * hb_xmemcpy( void * pDestArg, void * pSourceArg, HB_SIZE ulLen )
 #endif
 
 #ifndef hb_xmemset
-void * hb_xmemset( void * pDestArg, int iFill, HB_SIZE ulLen )
+void * hb_xmemset( void * pDestArg, int iFill, HB_SIZE nLen )
 {
    HB_BYTE * pDest;
-   HB_SIZE   ulRemaining;
+   HB_SIZE   nRemaining;
    int       iSetSize;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_xmemset(%p, %d, %" HB_PFS "u)", pDestArg, iFill, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_xmemset(%p, %d, %" HB_PFS "u)", pDestArg, iFill, nLen));
 
    pDest = ( HB_BYTE * ) pDestArg;
-   ulRemaining = ulLen;
+   nRemaining = nLen;
 
-   while( ulRemaining )
+   while( nRemaining )
    {
       /* Overcome the memset() size_t limitation */
-      if( ulRemaining > UINT_MAX )
+      if( nRemaining > UINT_MAX )
       {
          iSetSize = UINT_MAX;
-         ulRemaining -= ( HB_SIZE ) iSetSize;
+         nRemaining -= ( HB_SIZE ) iSetSize;
       }
       else
       {
-         iSetSize = ( int ) ulRemaining;
-         ulRemaining = 0;
+         iSetSize = ( int ) nRemaining;
+         nRemaining = 0;
       }
       memset( pDest, iFill, iSetSize );
       pDest += iSetSize;

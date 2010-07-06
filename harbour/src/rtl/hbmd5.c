@@ -254,7 +254,7 @@ static void hb_md5val( HB_U32 accum[], char * md5val )
    }
 }
 
-void hb_md5( const void * data, HB_SIZE ulLen, char * digest )
+void hb_md5( const void * data, HB_SIZE nLen, char * digest )
 {
    const unsigned char * ucdata = ( const unsigned char * ) data;
    HB_UCHAR buf[ 128 ];
@@ -264,7 +264,7 @@ void hb_md5( const void * data, HB_SIZE ulLen, char * digest )
    /* perform startup procedures */
    hb_md5accinit( md5.accum );
    /* count full 512bit blocks in data*/
-   n = ulLen >> 6;
+   n = nLen >> 6;
    /* process full blocks */
    for( i = 0; i < n; i++, ucdata += 64 )
    {
@@ -273,7 +273,7 @@ void hb_md5( const void * data, HB_SIZE ulLen, char * digest )
    }
    /* prepare additional block(s) */
    memset( buf, 0, sizeof( buf ) );
-   n = ulLen & 63;
+   n = nLen & 63;
    if( n )
       memcpy( buf, ucdata, n );
    buf[ n ] = 0x80;
@@ -285,12 +285,12 @@ void hb_md5( const void * data, HB_SIZE ulLen, char * digest )
       memcpy( md5.buf, buf, 64 );
       hb_md5go( &md5 );
    }
-   buf[ i++ ] = ( HB_UCHAR ) ( ( ulLen << 3 ) & 0xF8 );
-   ulLen >>= 5;
+   buf[ i++ ] = ( HB_UCHAR ) ( ( nLen << 3 ) & 0xF8 );
+   nLen >>= 5;
    for( n = 7; n; --n )
    {
-      buf[ i++ ] = ( HB_UCHAR ) ( ulLen & 0xFF );
-      ulLen >>= 8;
+      buf[ i++ ] = ( HB_UCHAR ) ( nLen & 0xFF );
+      nLen >>= 8;
    }
    memcpy( md5.buf, buf + i - 64, 64 );
    hb_md5go( &md5 );
@@ -359,10 +359,10 @@ HB_FUNC( HB_MD5 )
 
    if( pszStr )
    {
-      HB_SIZE ulLen = hb_parclen( 1 );
+      HB_SIZE nLen = hb_parclen( 1 );
       char dststr[ 16 ];
 
-      hb_md5( pszStr, ulLen, dststr );
+      hb_md5( pszStr, nLen, dststr );
 
       if( ! hb_parl( 2 ) )
       {

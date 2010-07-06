@@ -584,17 +584,17 @@ HB_BOOL hb_gtIsColor( void )
    return fColor;
 }
 
-HB_ERRCODE hb_gtRepChar( int iRow, int iCol, HB_USHORT usChar, HB_SIZE ulCount )
+HB_ERRCODE hb_gtRepChar( int iRow, int iCol, HB_USHORT usChar, HB_SIZE nCount )
 {
    PHB_GT pGT;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gtRepChar(%d, %d, %hu, %" HB_PFS "u)", iRow, iCol, usChar, ulCount));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtRepChar(%d, %d, %hu, %" HB_PFS "u)", iRow, iCol, usChar, nCount));
 
    pGT = hb_gt_Base();
    if( pGT )
    {
       HB_GTSELF_REPLICATE( pGT, iRow, iCol, HB_GTSELF_GETCOLOR( pGT ), 0,
-                           usChar, ulCount );
+                           usChar, nCount );
       HB_GTSELF_FLUSH( pGT );
       hb_gt_BaseFree( pGT );
       return HB_SUCCESS;
@@ -755,11 +755,11 @@ HB_ERRCODE hb_gtSetMode( int iRows, int iCols )
 }
 
 HB_ERRCODE hb_gtPutText( int iRow, int iCol,
-                         const char * szStr, HB_SIZE ulLength, int iColor )
+                         const char * szStr, HB_SIZE nLength, int iColor )
 {
    PHB_GT pGT;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gtPutText(%d, %d, %p, %" HB_PFS "u, %d)", iRow, iCol, szStr, ulLength, iColor));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtPutText(%d, %d, %p, %" HB_PFS "u, %d)", iRow, iCol, szStr, nLength, iColor));
 
    pGT = hb_gt_Base();
    if( pGT )
@@ -767,7 +767,7 @@ HB_ERRCODE hb_gtPutText( int iRow, int iCol,
       if( iColor == -1 )
          iColor = HB_GTSELF_GETCOLOR( pGT );
 
-      HB_GTSELF_PUTTEXT( pGT, iRow, iCol, iColor, szStr, ulLength );
+      HB_GTSELF_PUTTEXT( pGT, iRow, iCol, iColor, szStr, nLength );
       HB_GTSELF_FLUSH( pGT );
 
       hb_gt_BaseFree( pGT );
@@ -776,16 +776,16 @@ HB_ERRCODE hb_gtPutText( int iRow, int iCol,
    return HB_FAILURE;
 }
 
-HB_ERRCODE hb_gtWriteAt( int iRow, int iCol, const char * szStr, HB_SIZE ulLength )
+HB_ERRCODE hb_gtWriteAt( int iRow, int iCol, const char * szStr, HB_SIZE nLength )
 {
    PHB_GT pGT;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gtWriteAt(%d, %d, %p, %" HB_PFS "u)", iRow, iCol, szStr, ulLength));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtWriteAt(%d, %d, %p, %" HB_PFS "u)", iRow, iCol, szStr, nLength));
 
    pGT = hb_gt_Base();
    if( pGT )
    {
-      HB_GTSELF_WRITEAT( pGT, iRow, iCol, szStr, ulLength );
+      HB_GTSELF_WRITEAT( pGT, iRow, iCol, szStr, nLength );
       HB_GTSELF_FLUSH( pGT );
       hb_gt_BaseFree( pGT );
       return HB_SUCCESS;
@@ -793,16 +793,16 @@ HB_ERRCODE hb_gtWriteAt( int iRow, int iCol, const char * szStr, HB_SIZE ulLengt
    return HB_FAILURE;
 }
 
-HB_ERRCODE hb_gtWrite( const char * szStr, HB_SIZE ulLength )
+HB_ERRCODE hb_gtWrite( const char * szStr, HB_SIZE nLength )
 {
    PHB_GT pGT;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gtWrite(%p, %" HB_PFS "u)", szStr, ulLength));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtWrite(%p, %" HB_PFS "u)", szStr, nLength));
 
    pGT = hb_gt_Base();
    if( pGT )
    {
-      HB_GTSELF_WRITE( pGT, szStr, ulLength );
+      HB_GTSELF_WRITE( pGT, szStr, nLength );
       HB_GTSELF_FLUSH( pGT );
       hb_gt_BaseFree( pGT );
       return HB_SUCCESS;
@@ -810,16 +810,16 @@ HB_ERRCODE hb_gtWrite( const char * szStr, HB_SIZE ulLength )
    return HB_FAILURE;
 }
 
-HB_ERRCODE hb_gtWriteCon( const char * szStr, HB_SIZE ulLength )
+HB_ERRCODE hb_gtWriteCon( const char * szStr, HB_SIZE nLength )
 {
    PHB_GT pGT;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gtWriteCon(%p, %" HB_PFS "u)", szStr, ulLength));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtWriteCon(%p, %" HB_PFS "u)", szStr, nLength));
 
    pGT = hb_gt_Base();
    if( pGT )
    {
-      HB_GTSELF_WRITECON( pGT, szStr, ulLength );
+      HB_GTSELF_WRITECON( pGT, szStr, nLength );
       HB_GTSELF_FLUSH( pGT );
       hb_gt_BaseFree( pGT );
       return HB_SUCCESS;
@@ -963,38 +963,38 @@ HB_ERRCODE hb_gtResume( void )
    return errCode;
 }
 
-HB_ERRCODE hb_gtOutStd( const char * szStr, HB_SIZE ulLen )
+HB_ERRCODE hb_gtOutStd( const char * szStr, HB_SIZE nLen )
 {
    PHB_GT pGT;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gtOutStd(%p, %" HB_PFS "u)", szStr, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtOutStd(%p, %" HB_PFS "u)", szStr, nLen));
 
    pGT = hb_gt_Base();
    if( pGT )
    {
-      HB_GTSELF_OUTSTD( pGT, szStr, ulLen );
+      HB_GTSELF_OUTSTD( pGT, szStr, nLen );
       hb_gt_BaseFree( pGT );
    }
    else
-      hb_fsWriteLarge( ( HB_FHANDLE ) HB_STDOUT_HANDLE, szStr, ulLen );
+      hb_fsWriteLarge( ( HB_FHANDLE ) HB_STDOUT_HANDLE, szStr, nLen );
 
    return HB_SUCCESS;
 }
 
-HB_ERRCODE hb_gtOutErr( const char * szStr, HB_SIZE ulLen )
+HB_ERRCODE hb_gtOutErr( const char * szStr, HB_SIZE nLen )
 {
    PHB_GT pGT;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gtOutErr(%p, %" HB_PFS "u)", szStr, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtOutErr(%p, %" HB_PFS "u)", szStr, nLen));
 
    pGT = hb_gt_Base();
    if( pGT )
    {
-      HB_GTSELF_OUTERR( pGT, szStr, ulLen );
+      HB_GTSELF_OUTERR( pGT, szStr, nLen );
       hb_gt_BaseFree( pGT );
    }
    else
-      hb_fsWriteLarge( ( HB_FHANDLE ) HB_STDERR_HANDLE, szStr, ulLen );
+      hb_fsWriteLarge( ( HB_FHANDLE ) HB_STDERR_HANDLE, szStr, nLen );
 
    return HB_SUCCESS;
 }

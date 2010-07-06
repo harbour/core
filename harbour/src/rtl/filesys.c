@@ -600,21 +600,21 @@ HB_FHANDLE hb_fsPOpen( const char * pFilename, const char * pMode )
 
 #if defined( HB_OS_UNIX )
    {
-      HB_FHANDLE hPipeHandle[2], hNullHandle;
+      HB_FHANDLE hPipeHandle[ 2 ], hNullHandle;
       pid_t pid;
       char * pszTmp;
       HB_BOOL fRead;
-      HB_SIZE ulLen;
+      HB_SIZE nLen;
       int iMaxFD;
 
-      ulLen = strlen( pFilename );
+      nLen = strlen( pFilename );
       if( pMode && ( *pMode == 'r' || *pMode == 'w' ) )
          fRead = ( *pMode == 'r' );
       else
       {
          if( pFilename[0] == '|' )
             fRead = HB_FALSE;
-         else if( pFilename[ ulLen - 1 ] == '|' )
+         else if( pFilename[ nLen - 1 ] == '|' )
             fRead = HB_TRUE;
          else
             fRead = HB_FALSE;
@@ -623,12 +623,12 @@ HB_FHANDLE hb_fsPOpen( const char * pFilename, const char * pMode )
       if( pFilename[0] == '|' )
       {
           ++pFilename;
-          --ulLen;
+          --nLen;
       }
-      if( pFilename[ ulLen - 1 ] == '|' )
+      if( pFilename[ nLen - 1 ] == '|' )
       {
           pszTmp = hb_strdup( pFilename );
-          pszTmp[--ulLen] = 0;
+          pszTmp[ --nLen ] = 0;
           pFilename = pszTmp;
       } else
           pszTmp = NULL;
@@ -2097,7 +2097,7 @@ HB_BOOL hb_fsLock( HB_FHANDLE hFileHandle, HB_ULONG ulStart,
          }
          else
          {
-            fResult = LockFile( DosToWinHandle( hFileHandle ), ulStart, 0, ulLength,0 ) != 0;
+            fResult = LockFile( DosToWinHandle( hFileHandle ), ulStart, 0, ulLength, 0 ) != 0;
          }
          break;
       }
@@ -2112,7 +2112,7 @@ HB_BOOL hb_fsLock( HB_FHANDLE hFileHandle, HB_ULONG ulStart,
          }
          else
          {
-            fResult = UnlockFile( DosToWinHandle( hFileHandle ), ulStart, 0, ulLength,0 ) != 0;
+            fResult = UnlockFile( DosToWinHandle( hFileHandle ), ulStart, 0, ulLength, 0 ) != 0;
          }
          break;
 
@@ -2257,19 +2257,19 @@ HB_BOOL hb_fsLock( HB_FHANDLE hFileHandle, HB_ULONG ulStart,
    return fResult;
 }
 
-HB_BOOL hb_fsLockLarge( HB_FHANDLE hFileHandle, HB_FOFFSET ulStart,
-                        HB_FOFFSET ulLength, HB_USHORT uiMode )
+HB_BOOL hb_fsLockLarge( HB_FHANDLE hFileHandle, HB_FOFFSET nStart,
+                        HB_FOFFSET nLength, HB_USHORT uiMode )
 {
    HB_BOOL fResult;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsLockLarge(%p, %" PFHL "u, %" PFHL "i, %hu)", ( void * ) ( HB_PTRDIFF ) hFileHandle, ulStart, ulLength, uiMode));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsLockLarge(%p, %" PFHL "u, %" PFHL "i, %hu)", ( void * ) ( HB_PTRDIFF ) hFileHandle, nStart, nLength, uiMode));
 
 #if defined( HB_OS_WIN )
    {
-      DWORD dwOffsetLo = ( DWORD ) ( ulStart & 0xFFFFFFFF ),
-            dwOffsetHi = ( DWORD ) ( ulStart >> 32 ),
-            dwLengthLo = ( DWORD ) ( ulLength & 0xFFFFFFFF ),
-            dwLengthHi = ( DWORD ) ( ulLength >> 32 );
+      DWORD dwOffsetLo = ( DWORD ) ( nStart & 0xFFFFFFFF ),
+            dwOffsetHi = ( DWORD ) ( nStart >> 32 ),
+            dwLengthLo = ( DWORD ) ( nLength & 0xFFFFFFFF ),
+            dwLengthHi = ( DWORD ) ( nLength >> 32 );
 
       hb_vmUnlock();
       switch( uiMode & FL_MASK )
@@ -2337,8 +2337,8 @@ HB_BOOL hb_fsLockLarge( HB_FHANDLE hFileHandle, HB_FOFFSET ulStart,
          case FL_LOCK:
 
             lock_info.l_type   = ( uiMode & FLX_SHARED ) ? F_RDLCK : F_WRLCK;
-            lock_info.l_start  = ulStart;
-            lock_info.l_len    = ulLength;
+            lock_info.l_start  = nStart;
+            lock_info.l_len    = nLength;
             lock_info.l_whence = SEEK_SET;   /* start from the beginning of the file */
             lock_info.l_pid    = getpid();
 
@@ -2350,8 +2350,8 @@ HB_BOOL hb_fsLockLarge( HB_FHANDLE hFileHandle, HB_FOFFSET ulStart,
          case FL_UNLOCK:
 
             lock_info.l_type   = F_UNLCK;   /* unlock */
-            lock_info.l_start  = ulStart;
-            lock_info.l_len    = ulLength;
+            lock_info.l_start  = nStart;
+            lock_info.l_len    = nLength;
             lock_info.l_whence = SEEK_SET;
             lock_info.l_pid    = getpid();
 
@@ -2365,7 +2365,7 @@ HB_BOOL hb_fsLockLarge( HB_FHANDLE hFileHandle, HB_FOFFSET ulStart,
       hb_vmLock();
    }
 #else
-   fResult = hb_fsLock( hFileHandle, ( HB_SIZE ) ulStart, ( HB_SIZE ) ulLength, uiMode );
+   fResult = hb_fsLock( hFileHandle, ( HB_SIZE ) nStart, ( HB_SIZE ) nLength, uiMode );
 #endif
 
    return fResult;
@@ -2725,12 +2725,12 @@ const char * hb_fsCurDir( int iDrive )
 /* NOTE: Thread safe version of hb_fsCurDir() */
 /* NOTE: 0 = current drive, 1 = A, 2 = B, 3 = C, etc. */
 
-HB_ERRCODE hb_fsCurDirBuff( int iDrive, char * pszBuffer, HB_SIZE ulSize )
+HB_ERRCODE hb_fsCurDirBuff( int iDrive, char * pszBuffer, HB_SIZE nSize )
 {
    int iCurDrv = iDrive;
    HB_ERRCODE nResult;
    char * pszStart;
-   HB_SIZE ulLen;
+   HB_SIZE nLen;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsCurDirBuff(%d)", iDrive));
 
@@ -2754,7 +2754,7 @@ HB_ERRCODE hb_fsCurDirBuff( int iDrive, char * pszBuffer, HB_SIZE ulSize )
 
 #if defined( HB_OS_WIN )
    {
-      DWORD dwSize = ( DWORD ) ulSize;
+      DWORD dwSize = ( DWORD ) nSize;
 #if defined( UNICODE )
       LPTSTR lpBuffer = ( LPTSTR ) hb_xgrab( dwSize * sizeof( TCHAR ) );
       hb_fsSetIOError( ( GetCurrentDirectory( dwSize, lpBuffer ) != 0 ), 0 );
@@ -2769,10 +2769,10 @@ HB_ERRCODE hb_fsCurDirBuff( int iDrive, char * pszBuffer, HB_SIZE ulSize )
 
    if( iDrive >= 0 )
    {
-      ULONG ulLen = ( ULONG ) ulSize;
+      ULONG nLen = ( ULONG ) nSize;
 
       hb_fsSetIOError( DosQueryCurrentDir( iDrive, ( PBYTE ) pszBuffer,
-                                           &ulLen ) == NO_ERROR, 0 );
+                                           &nLen ) == NO_ERROR, 0 );
    }
    else
       hb_fsSetError( ( HB_ERRCODE ) FS_ERROR );
@@ -2780,13 +2780,13 @@ HB_ERRCODE hb_fsCurDirBuff( int iDrive, char * pszBuffer, HB_SIZE ulSize )
 #elif defined( __MINGW32__ )
 
    if( iDrive >= 0 )
-      hb_fsSetIOError( ( _getdcwd( iDrive, pszBuffer, ulSize ) != NULL ), 0 );
+      hb_fsSetIOError( ( _getdcwd( iDrive, pszBuffer, nSize ) != NULL ), 0 );
    else
       hb_fsSetError( ( HB_ERRCODE ) FS_ERROR );
 
 #else
 
-   hb_fsSetIOError( ( getcwd( pszBuffer, ulSize ) != NULL ), 0 );
+   hb_fsSetIOError( ( getcwd( pszBuffer, nSize ) != NULL ), 0 );
 
 #endif
 
@@ -2800,7 +2800,7 @@ HB_ERRCODE hb_fsCurDirBuff( int iDrive, char * pszBuffer, HB_SIZE ulSize )
       hb_fsSetError( nResult );
    }
 
-   pszBuffer[ ulSize - 1 ] = '\0';
+   pszBuffer[ nSize - 1 ] = '\0';
 
    if( nResult == 0 && pszBuffer[ 0 ] )
    {
@@ -2815,40 +2815,40 @@ HB_ERRCODE hb_fsCurDirBuff( int iDrive, char * pszBuffer, HB_SIZE ulSize )
 #endif
 
       pszStart = pszBuffer;
-      ulLen = strlen( pszBuffer );
+      nLen = strlen( pszBuffer );
 
 #if defined( HB_OS_HAS_DRIVE_LETTER )
       if( pszStart[ 1 ] == HB_OS_DRIVE_DELIM_CHR )
       {
          pszStart += 2;
-         ulLen -= 2;
+         nLen -= 2;
       }
 #endif
       if( strchr( HB_OS_PATH_DELIM_CHR_LIST, ( HB_UCHAR ) pszStart[ 0 ] ) )
       {
          pszStart++;
-         ulLen--;
+         nLen--;
       }
 
       /* Strip the trailing (back)slash if there's one */
-      if( ulLen && strchr( HB_OS_PATH_DELIM_CHR_LIST, ( HB_UCHAR ) pszStart[ ulLen - 1 ] ) )
-         ulLen--;
+      if( nLen && strchr( HB_OS_PATH_DELIM_CHR_LIST, ( HB_UCHAR ) pszStart[ nLen - 1 ] ) )
+         nLen--;
 
-      if( ulLen && pszBuffer != pszStart )
-         memmove( pszBuffer, pszStart, ulLen );
+      if( nLen && pszBuffer != pszStart )
+         memmove( pszBuffer, pszStart, nLen );
 
-      pszBuffer[ ulLen ] = '\0';
+      pszBuffer[ nLen ] = '\0';
 
       /* Convert from OS codepage */
       {
          char * pszFree = NULL;
          const char * pszResult;
 
-         ulLen = ulSize;
-         pszResult = hb_osDecodeCP( pszBuffer, &pszFree, &ulLen );
+         nLen = nSize;
+         pszResult = hb_osDecodeCP( pszBuffer, &pszFree, &nLen );
 
          if( pszResult != pszBuffer )
-            hb_strncpy( pszBuffer, pszResult, ulSize - 1 );
+            hb_strncpy( pszBuffer, pszResult, nSize - 1 );
          if( pszFree )
             hb_xfree( pszFree );
       }
@@ -3280,7 +3280,7 @@ const char * hb_fsNameConv( const char * szFileName, char ** pszFree )
        pszCP )
    {
       PHB_FNAME pFileName;
-      HB_SIZE ulLen;
+      HB_SIZE nLen;
 
       if( pszFree )
       {
@@ -3306,17 +3306,17 @@ const char * hb_fsNameConv( const char * szFileName, char ** pszFree )
       {
          if( pFileName->szName )
          {
-            ulLen = strlen( pFileName->szName );
-            ulLen = hb_strRTrimLen( pFileName->szName, ulLen, HB_FALSE );
-            pFileName->szName = hb_strLTrim( pFileName->szName, &ulLen );
-            ( ( char * ) pFileName->szName )[ ulLen ] = '\0';
+            nLen = strlen( pFileName->szName );
+            nLen = hb_strRTrimLen( pFileName->szName, nLen, HB_FALSE );
+            pFileName->szName = hb_strLTrim( pFileName->szName, &nLen );
+            ( ( char * ) pFileName->szName )[ nLen ] = '\0';
          }
          if( pFileName->szExtension )
          {
-            ulLen = strlen( pFileName->szExtension );
-            ulLen = hb_strRTrimLen( pFileName->szExtension, ulLen, HB_FALSE );
-            pFileName->szExtension = hb_strLTrim( pFileName->szExtension, &ulLen );
-            ( ( char * ) pFileName->szExtension )[ ulLen ] = '\0';
+            nLen = strlen( pFileName->szExtension );
+            nLen = hb_strRTrimLen( pFileName->szExtension, nLen, HB_FALSE );
+            pFileName->szExtension = hb_strLTrim( pFileName->szExtension, &nLen );
+            ( ( char * ) pFileName->szExtension )[ nLen ] = '\0';
          }
       }
 
@@ -3351,8 +3351,8 @@ const char * hb_fsNameConv( const char * szFileName, char ** pszFree )
       if( pszCP )
       {
          const char * pszPrev = szFileName;
-         ulLen = HB_PATH_MAX;
-         szFileName = hb_osEncodeCP( szFileName, pszFree, &ulLen );
+         nLen = HB_PATH_MAX;
+         szFileName = hb_osEncodeCP( szFileName, pszFree, &nLen );
          if( pszFree == NULL && szFileName != pszPrev )
          {
             hb_strncpy( ( char * ) pszPrev, szFileName, HB_PATH_MAX - 1 );
@@ -3375,7 +3375,7 @@ void hb_fsBaseDirBuff( char * pszBuffer )
       PHB_FNAME pFName = hb_fsFNameSplit( szBaseName );
       const char * pszResult;
       char * pszFree = NULL;
-      HB_SIZE ulSize = HB_PATH_MAX;
+      HB_SIZE nSize = HB_PATH_MAX;
 
       pFName->szName = NULL;
       pFName->szExtension = NULL;
@@ -3383,7 +3383,7 @@ void hb_fsBaseDirBuff( char * pszBuffer )
       hb_xfree( pFName );
 
       /* Convert from OS codepage */
-      pszResult = hb_osDecodeCP( pszBuffer, &pszFree, &ulSize );
+      pszResult = hb_osDecodeCP( pszBuffer, &pszFree, &nSize );
       if( pszResult != pszBuffer )
          hb_strncpy( pszBuffer, pszResult, HB_PATH_MAX - 1 );
       if( pszFree )

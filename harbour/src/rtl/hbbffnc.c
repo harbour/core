@@ -76,9 +76,9 @@ HB_FUNC( HB_BLOWFISHENCRYPT )
 
       if( pData )
       {
-         HB_SIZE ulLen = hb_itemGetCLen( pData ), ulSize;
+         HB_SIZE nLen = hb_itemGetCLen( pData ), nSize;
 
-         if( ulLen )
+         if( nLen )
          {
             char * pszData;
             HB_BLOWFISH * bf = ( HB_BLOWFISH * ) hb_parc( 1 );
@@ -87,23 +87,23 @@ HB_FUNC( HB_BLOWFISHENCRYPT )
             /* In raw mode passed string is padded to 8 bytes with '\0'
              * otherwise ANSI X.923 padding is using
              */
-            ulSize = ( fRaw ? ( ( ulLen + 7 ) >> 3 ) :
-                              ( ( ulLen >> 3 ) + 1 ) ) << 3;
-            pszData = ( char * ) hb_xgrab( ulSize + 1 );
-            memcpy( pszData, hb_itemGetCPtr( pData ), ulLen );
-            memset( pszData + ulLen, '\0', ulSize - ulLen );
+            nSize = ( fRaw ? ( ( nLen + 7 ) >> 3 ) :
+                             ( ( nLen >> 3 ) + 1 ) ) << 3;
+            pszData = ( char * ) hb_xgrab( nSize + 1 );
+            memcpy( pszData, hb_itemGetCPtr( pData ), nLen );
+            memset( pszData + nLen, '\0', nSize - nLen );
             if( !fRaw )
-               pszData[ ulSize - 1 ] = ( char ) ( ulSize - ulLen );
-            for( ulLen = 0; ulLen < ulSize; ulLen += 8 )
+               pszData[ nSize - 1 ] = ( char ) ( nSize - nLen );
+            for( nLen = 0; nLen < nSize; nLen += 8 )
             {
                HB_U32 xl, xr;
-               xl = HB_GET_BE_UINT32( &pszData[ ulLen ] );
-               xr = HB_GET_BE_UINT32( &pszData[ ulLen + 4 ] );
+               xl = HB_GET_BE_UINT32( &pszData[ nLen ] );
+               xr = HB_GET_BE_UINT32( &pszData[ nLen + 4 ] );
                hb_blowfishEncrypt( bf, &xl, &xr );
-               HB_PUT_BE_UINT32( &pszData[ ulLen ], xl );
-               HB_PUT_BE_UINT32( &pszData[ ulLen + 4 ], xr );
+               HB_PUT_BE_UINT32( &pszData[ nLen ], xl );
+               HB_PUT_BE_UINT32( &pszData[ nLen + 4 ], xr );
             }
-            hb_retclen_buffer( pszData, ulSize );
+            hb_retclen_buffer( pszData, nSize );
          }
          else
             hb_retc_null();
@@ -119,37 +119,37 @@ HB_FUNC( HB_BLOWFISHDECRYPT )
 
       if( pData )
       {
-         HB_SIZE ulSize = hb_itemGetCLen( pData ), ulLen;
+         HB_SIZE nSize = hb_itemGetCLen( pData ), nLen;
 
-         if( ulSize >= 8 && ( ulSize & 0x07 ) == 0 )
+         if( nSize >= 8 && ( nSize & 0x07 ) == 0 )
          {
             const char * pszSource;
             char * pszData;
             HB_BLOWFISH * bf = ( HB_BLOWFISH * ) hb_parc( 1 );
             HB_BOOL fRaw = hb_parl( 3 );
 
-            pszData = ( char * ) hb_xgrab( ulSize + ( fRaw ? 1 : 0 ) );
+            pszData = ( char * ) hb_xgrab( nSize + ( fRaw ? 1 : 0 ) );
             pszSource = hb_itemGetCPtr( pData );
-            for( ulLen = 0; ulLen < ulSize; ulLen += 8 )
+            for( nLen = 0; nLen < nSize; nLen += 8 )
             {
                HB_U32 xl, xr;
-               xl = HB_GET_BE_UINT32( &pszSource[ ulLen ] );
-               xr = HB_GET_BE_UINT32( &pszSource[ ulLen + 4 ] );
+               xl = HB_GET_BE_UINT32( &pszSource[ nLen ] );
+               xr = HB_GET_BE_UINT32( &pszSource[ nLen + 4 ] );
                hb_blowfishDecrypt( bf, &xl, &xr );
-               HB_PUT_BE_UINT32( &pszData[ ulLen ], xl );
-               HB_PUT_BE_UINT32( &pszData[ ulLen + 4 ], xr );
+               HB_PUT_BE_UINT32( &pszData[ nLen ], xl );
+               HB_PUT_BE_UINT32( &pszData[ nLen + 4 ], xr );
             }
             if( !fRaw )
             {
-               ulSize = ( unsigned char ) pszData[ ulSize - 1 ];
-               ulLen -= ( ( ulSize - 1 ) & ~0x07 ) == 0 ? ulSize : ulLen;
+               nSize = ( unsigned char ) pszData[ nSize - 1 ];
+               nLen -= ( ( nSize - 1 ) & ~0x07 ) == 0 ? nSize : nLen;
             }
-            if( ulLen )
-               hb_retclen_buffer( pszData, ulLen );
+            if( nLen )
+               hb_retclen_buffer( pszData, nLen );
             else
                hb_xfree( pszData );
          }
-         else if( ulSize == 0 )
+         else if( nSize == 0 )
             hb_retc_null();
       }
    }

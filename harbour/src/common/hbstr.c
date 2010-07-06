@@ -81,46 +81,46 @@ const char * hb_szAscii[ 256 ] = { "\x00", "\x01", "\x02", "\x03", "\x04", "\x05
                                    "\xE0", "\xE1", "\xE2", "\xE3", "\xE4", "\xE5", "\xE6", "\xE7", "\xE8", "\xE9", "\xEA", "\xEB", "\xEC", "\xED", "\xEE", "\xEF",
                                    "\xF0", "\xF1", "\xF2", "\xF3", "\xF4", "\xF5", "\xF6", "\xF7", "\xF8", "\xF9", "\xFA", "\xFB", "\xFC", "\xFD", "\xFE", "\xFF" };
 
-HB_SIZE hb_strAt( const char * szSub, HB_SIZE ulSubLen, const char * szText, HB_SIZE ulLen )
+HB_SIZE hb_strAt( const char * szSub, HB_SIZE nSubLen, const char * szText, HB_SIZE nLen )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_strAt(%s, %" HB_PFS "u, %s, %" HB_PFS "u)", szSub, ulSubLen, szText, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_strAt(%s, %" HB_PFS "u, %s, %" HB_PFS "u)", szSub, nSubLen, szText, nLen));
 
-   if( ulSubLen > 0 && ulLen >= ulSubLen )
+   if( nSubLen > 0 && nLen >= nSubLen )
    {
-      HB_SIZE ulPos = 0;
-      HB_SIZE ulSubPos = 0;
+      HB_SIZE nPos = 0;
+      HB_SIZE nSubPos = 0;
 
-      while( ulPos < ulLen && ulSubPos < ulSubLen )
+      while( nPos < nLen && nSubPos < nSubLen )
       {
-         if( szText[ ulPos ] == szSub[ ulSubPos ] )
+         if( szText[ nPos ] == szSub[ nSubPos ] )
          {
-            ulSubPos++;
-            ulPos++;
+            nSubPos++;
+            nPos++;
          }
-         else if( ulSubPos )
+         else if( nSubPos )
          {
             /* Go back to the first character after the first match,
                or else tests like "22345" $ "012223456789" will fail. */
-            ulPos -= ( ulSubPos - 1 );
-            ulSubPos = 0;
+            nPos -= ( nSubPos - 1 );
+            nSubPos = 0;
          }
          else
-            ulPos++;
+            nPos++;
       }
 
-      return ( ulSubPos < ulSubLen ) ? 0 : ( ulPos - ulSubLen + 1 );
+      return ( nSubPos < nSubLen ) ? 0 : ( nPos - nSubLen + 1 );
    }
    else
       return 0;
 }
 
-HB_BOOL hb_strEmpty( const char * szText, HB_SIZE ulLen )
+HB_BOOL hb_strEmpty( const char * szText, HB_SIZE nLen )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_strEmpty(%s, %" HB_PFS "u)", szText, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_strEmpty(%s, %" HB_PFS "u)", szText, nLen));
 
-   while( ulLen-- )
+   while( nLen-- )
    {
-      char c = szText[ ulLen ];
+      char c = szText[ nLen ];
 
       if( !HB_ISSPACE( c ) )
          return HB_FALSE;
@@ -156,28 +156,28 @@ char * hb_strlow( char * pszText )
 char * hb_strdup( const char * pszText )
 {
    char * pszDup;
-   HB_SIZE ulLen;
+   HB_SIZE nLen;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_strdup(%s)", pszText));
 
-   ulLen = strlen( pszText ) + 1;
+   nLen = strlen( pszText ) + 1;
 
-   pszDup = ( char * ) hb_xgrab( ulLen );
-   memcpy( pszDup, pszText, ulLen );
+   pszDup = ( char * ) hb_xgrab( nLen );
+   memcpy( pszDup, pszText, nLen );
 
    return pszDup;
 }
 
-char * hb_strndup( const char * pszText, HB_SIZE ulLen )
+char * hb_strndup( const char * pszText, HB_SIZE nLen )
 {
    char * pszDup;
    HB_SIZE ul;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_strndup(%.*s, %" HB_PFS "d)", ( int ) ulLen, pszText, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_strndup(%.*s, %" HB_PFS "d)", ( int ) nLen, pszText, nLen));
 
    ul = 0;
    pszDup = ( char * ) pszText;
-   while( ulLen-- && *pszDup++ )
+   while( nLen-- && *pszDup++ )
       ++ul;
 
    pszDup = ( char * ) hb_xgrab( ul + 1 );
@@ -187,13 +187,13 @@ char * hb_strndup( const char * pszText, HB_SIZE ulLen )
    return pszDup;
 }
 
-HB_SIZE hb_strnlen( const char * pszText, HB_SIZE ulLen )
+HB_SIZE hb_strnlen( const char * pszText, HB_SIZE nLen )
 {
    HB_SIZE ul = 0;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_strnlen(%.*s, %" HB_PFS "d)", ( int ) ulLen, pszText, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_strnlen(%.*s, %" HB_PFS "d)", ( int ) nLen, pszText, nLen));
 
-   while( ulLen-- && *pszText++ )
+   while( nLen-- && *pszText++ )
       ++ul;
 
    return ul;
@@ -202,20 +202,20 @@ HB_SIZE hb_strnlen( const char * pszText, HB_SIZE ulLen )
 char * hb_strduptrim( const char * pszText )
 {
    char * pszDup;
-   HB_SIZE ulLen;
+   HB_SIZE nLen;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_strduptrim(%s)", pszText));
 
    while( pszText[ 0 ] == ' ' )
       ++pszText;
 
-   ulLen = strlen( pszText );
-   while( ulLen && pszText[ ulLen - 1 ] == ' ' )
-      --ulLen;
+   nLen = strlen( pszText );
+   while( nLen && pszText[ nLen - 1 ] == ' ' )
+      --nLen;
 
-   pszDup = ( char * ) hb_xgrab( ulLen + 1 );
-   memcpy( pszDup, pszText, ulLen );
-   pszDup[ ulLen ] = '\0';
+   pszDup = ( char * ) hb_xgrab( nLen + 1 );
+   memcpy( pszDup, pszText, nLen );
+   pszDup[ nLen ] = '\0';
 
    return pszDup;
 }
@@ -266,15 +266,15 @@ int hb_stricmp( const char * s1, const char * s2 )
 /* warning: It is not case sensitive */
 int hb_strnicmp( const char * s1, const char * s2, HB_SIZE count )
 {
-   HB_SIZE ulCount;
+   HB_SIZE nCount;
    int rc = 0;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_strnicmp(%.*s, %s, %" HB_PFS "u)", ( int ) count, s1, s2, count));
 
-   for( ulCount = 0; ulCount < count; ulCount++ )
+   for( nCount = 0; nCount < count; nCount++ )
    {
-      unsigned char c1 = ( char ) HB_TOUPPER( ( unsigned char ) s1[ ulCount ] );
-      unsigned char c2 = ( char ) HB_TOUPPER( ( unsigned char ) s2[ ulCount ] );
+      unsigned char c1 = ( char ) HB_TOUPPER( ( unsigned char ) s1[ nCount ] );
+      unsigned char c2 = ( char ) HB_TOUPPER( ( unsigned char ) s2[ nCount ] );
 
       if( c1 != c2 )
       {
@@ -336,15 +336,15 @@ char * hb_xstrcpy( char * szDest, const char * szSrc, ... )
    if( szDest == NULL )
    {
       const char * szSrcPtr = szSrc;
-      HB_SIZE ulSize = 1;
+      HB_SIZE nSize = 1;
       va_start( va, szSrc );
       while( szSrcPtr )
       {
-         ulSize += strlen( szSrcPtr );
+         nSize += strlen( szSrcPtr );
          szSrcPtr = va_arg( va, char * );
       }
       va_end( va );
-      szDest = ( char * ) hb_xgrab( ulSize );
+      szDest = ( char * ) hb_xgrab( nSize );
    }
    szResult = szDest;
 
@@ -537,15 +537,15 @@ double hb_numDecConv( double dNum, int iDec )
       return hb_numRound( dNum, 0 );
 }
 
-static HB_BOOL hb_str2number( HB_BOOL fPCode, const char * szNum, HB_SIZE ulLen, HB_MAXINT * lVal, double * dVal, int * piDec, int * piWidth )
+static HB_BOOL hb_str2number( HB_BOOL fPCode, const char * szNum, HB_SIZE nLen, HB_MAXINT * lVal, double * dVal, int * piDec, int * piWidth )
 {
    HB_BOOL fDbl = HB_FALSE, fDec = HB_FALSE, fNeg, fHex = HB_FALSE;
    int iLen, iPos = 0;
    int c, iWidth, iDec = 0, iDecR = 0;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_str2number(%d, %p, %" HB_PFS "u, %p, %p, %p, %p)", ( int ) fPCode, szNum, ulLen, lVal, dVal, piDec, piWidth ));
+   HB_TRACE(HB_TR_DEBUG, ("hb_str2number(%d, %p, %" HB_PFS "u, %p, %p, %p, %p)", ( int ) fPCode, szNum, nLen, lVal, dVal, piDec, piWidth ));
 
-   iLen = ( int ) ulLen;
+   iLen = ( int ) nLen;
 
    while( iPos < iLen && HB_ISSPACE( szNum[ iPos ] ) )
       iPos++;
@@ -704,16 +704,16 @@ static HB_BOOL hb_str2number( HB_BOOL fPCode, const char * szNum, HB_SIZE ulLen,
    return fDbl;
 }
 
-HB_BOOL hb_compStrToNum( const char* szNum, HB_SIZE ulLen, HB_MAXINT * plVal, double * pdVal, int * piDec, int * piWidth )
+HB_BOOL hb_compStrToNum( const char* szNum, HB_SIZE nLen, HB_MAXINT * plVal, double * pdVal, int * piDec, int * piWidth )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_compStrToNum( %s, %" HB_PFS "u, %p, %p, %p, %p)", szNum, ulLen, plVal, pdVal, piDec, piWidth ));
-   return hb_str2number( HB_TRUE, szNum, ulLen, plVal, pdVal, piDec, piWidth );
+   HB_TRACE(HB_TR_DEBUG, ("hb_compStrToNum( %s, %" HB_PFS "u, %p, %p, %p, %p)", szNum, nLen, plVal, pdVal, piDec, piWidth ));
+   return hb_str2number( HB_TRUE, szNum, nLen, plVal, pdVal, piDec, piWidth );
 }
 
-HB_BOOL hb_valStrnToNum( const char* szNum, HB_SIZE ulLen, HB_MAXINT * plVal, double * pdVal, int * piDec, int * piWidth )
+HB_BOOL hb_valStrnToNum( const char* szNum, HB_SIZE nLen, HB_MAXINT * plVal, double * pdVal, int * piDec, int * piWidth )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_valStrnToNum( %s, %" HB_PFS "u, %p, %p, %p, %p)", szNum, ulLen, plVal, pdVal, piDec, piWidth ));
-   return hb_str2number( HB_FALSE, szNum, ulLen, plVal, pdVal, piDec, piWidth );
+   HB_TRACE(HB_TR_DEBUG, ("hb_valStrnToNum( %s, %" HB_PFS "u, %p, %p, %p, %p)", szNum, nLen, plVal, pdVal, piDec, piWidth ));
+   return hb_str2number( HB_FALSE, szNum, nLen, plVal, pdVal, piDec, piWidth );
 }
 
 HB_BOOL hb_strToNum( const char* szNum, HB_MAXINT * plVal, double * pdVal )
@@ -722,21 +722,21 @@ HB_BOOL hb_strToNum( const char* szNum, HB_MAXINT * plVal, double * pdVal )
    return hb_str2number( HB_FALSE, szNum, strlen( szNum ), plVal, pdVal, NULL, NULL );
 }
 
-HB_BOOL hb_strnToNum( const char* szNum, HB_SIZE ulLen, HB_MAXINT * plVal, double * pdVal )
+HB_BOOL hb_strnToNum( const char* szNum, HB_SIZE nLen, HB_MAXINT * plVal, double * pdVal )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_strnToNum(%.*s, %" HB_PFS "u, %p, %p)", ( int ) ulLen, szNum, ulLen, plVal, pdVal ));
-   return hb_str2number( HB_FALSE, szNum, ulLen, plVal, pdVal, NULL, NULL );
+   HB_TRACE(HB_TR_DEBUG, ("hb_strnToNum(%.*s, %" HB_PFS "u, %p, %p)", ( int ) nLen, szNum, nLen, plVal, pdVal ));
+   return hb_str2number( HB_FALSE, szNum, nLen, plVal, pdVal, NULL, NULL );
 }
 
 /* returns the numeric value of a character string representation of a number */
-double hb_strVal( const char * szText, HB_SIZE ulLen )
+double hb_strVal( const char * szText, HB_SIZE nLen )
 {
    HB_MAXINT lVal;
    double dVal;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_strVal(%.*s, %" HB_PFS "u)", ( int ) ulLen, szText, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_strVal(%.*s, %" HB_PFS "u)", ( int ) nLen, szText, nLen));
 
-   if( ! hb_str2number( HB_FALSE, szText, ulLen, &lVal, &dVal, NULL, NULL ) )
+   if( ! hb_str2number( HB_FALSE, szText, nLen, &lVal, &dVal, NULL, NULL ) )
       dVal = ( double ) lVal;
    return dVal;
 }
@@ -757,12 +757,12 @@ HB_MAXINT hb_strValInt( const char * szText, int * iOverflow )
    return lVal;
 }
 
-char * hb_numToStr( char * szBuf, HB_SIZE ulSize, HB_MAXINT lNumber )
+char * hb_numToStr( char * szBuf, HB_SIZE nSize, HB_MAXINT lNumber )
 {
-   int iPos = ( int ) ulSize;
+   int iPos = ( int ) nSize;
    HB_BOOL fNeg = HB_FALSE;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_numToStr(%p, %" HB_PFS "u, %" PFHL "i)", szBuf, ulSize, lNumber));
+   HB_TRACE(HB_TR_DEBUG, ("hb_numToStr(%p, %" HB_PFS "u, %" PFHL "i)", szBuf, nSize, lNumber));
 
    szBuf[ --iPos ] = '\0';
    if( lNumber < 0 )
@@ -785,7 +785,7 @@ char * hb_numToStr( char * szBuf, HB_SIZE ulSize, HB_MAXINT lNumber )
       memset( szBuf, ' ', iPos );
    else if( iPos < 0 )
    {
-      memset( szBuf, '*', ulSize - 1 );
+      memset( szBuf, '*', nSize - 1 );
       iPos = 0;
    }
 
@@ -797,16 +797,16 @@ char * hb_numToStr( char * szBuf, HB_SIZE ulSize, HB_MAXINT lNumber )
  * NOTE: Unlike the documentation for strncpy, this routine will always append
  *       a null
  */
-char * hb_strncpy( char * pDest, const char * pSource, HB_SIZE ulLen )
+char * hb_strncpy( char * pDest, const char * pSource, HB_SIZE nLen )
 {
    char * pBuf = pDest;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_strncpy(%p, %.*s, %" HB_PFS "u)", pDest, ( int ) ulLen, pSource, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_strncpy(%p, %.*s, %" HB_PFS "u)", pDest, ( int ) nLen, pSource, nLen));
 
-   pDest[ ulLen ] = '\0';
+   pDest[ nLen ] = '\0';
 
-   while( ulLen && ( *pDest++ = *pSource++ ) != '\0' )
-      ulLen--;
+   while( nLen && ( *pDest++ = *pSource++ ) != '\0' )
+      nLen--;
 
    return pBuf;
 }
@@ -814,24 +814,24 @@ char * hb_strncpy( char * pDest, const char * pSource, HB_SIZE ulLen )
 /*
  * This function copies szText to destination buffer.
  * NOTE: Unlike the documentation for strncat, this routine will always append
- *       a null and the ulLen param is pDest size not pSource limit
+ *       a null and the nLen param is pDest size not pSource limit
  */
-char * hb_strncat( char * pDest, const char * pSource, HB_SIZE ulLen )
+char * hb_strncat( char * pDest, const char * pSource, HB_SIZE nLen )
 {
    char * pBuf = pDest;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_strncat(%p, %.*s, %" HB_PFS "u)", pDest, ( int ) ulLen, pSource, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_strncat(%p, %.*s, %" HB_PFS "u)", pDest, ( int ) nLen, pSource, nLen));
 
-   pDest[ ulLen ] = '\0';
+   pDest[ nLen ] = '\0';
 
-   while( ulLen && *pDest )
+   while( nLen && *pDest )
    {
       pDest++;
-      ulLen--;
+      nLen--;
    }
 
-   while( ulLen && ( *pDest++ = *pSource++ ) != '\0' )
-      ulLen--;
+   while( nLen && ( *pDest++ = *pSource++ ) != '\0' )
+      nLen--;
 
    return pBuf;
 }
@@ -843,17 +843,17 @@ char * hb_strncat( char * pDest, const char * pSource, HB_SIZE ulLen )
  *       a null
  * pt
  */
-char * hb_strncpyLower( char * pDest, const char * pSource, HB_SIZE ulLen )
+char * hb_strncpyLower( char * pDest, const char * pSource, HB_SIZE nLen )
 {
    char * pBuf = pDest;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_strncpyLower(%p, %.*s, %" HB_PFS "u)", pDest, ( int ) ulLen, pSource, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_strncpyLower(%p, %.*s, %" HB_PFS "u)", pDest, ( int ) nLen, pSource, nLen));
 
-   pDest[ ulLen ] = '\0';
+   pDest[ nLen ] = '\0';
 
-   while( ulLen && ( *pDest++ = ( char ) HB_TOLOWER( ( HB_UCHAR ) *pSource ) ) != '\0' )
+   while( nLen && ( *pDest++ = ( char ) HB_TOLOWER( ( HB_UCHAR ) *pSource ) ) != '\0' )
    {
-      ulLen--;
+      nLen--;
       pSource++;
    }
 
@@ -867,17 +867,17 @@ char * hb_strncpyLower( char * pDest, const char * pSource, HB_SIZE ulLen )
  *       a null
  * pt
  */
-char * hb_strncpyUpper( char * pDest, const char * pSource, HB_SIZE ulLen )
+char * hb_strncpyUpper( char * pDest, const char * pSource, HB_SIZE nLen )
 {
    char * pBuf = pDest;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_strncpyUpper(%p, %.*s, %" HB_PFS "u)", pDest, ( int ) ulLen, pSource, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_strncpyUpper(%p, %.*s, %" HB_PFS "u)", pDest, ( int ) nLen, pSource, nLen));
 
-   pDest[ ulLen ] = '\0';
+   pDest[ nLen ] = '\0';
 
-   while( ulLen && ( *pDest++ = ( char ) HB_TOUPPER( ( HB_UCHAR ) *pSource ) ) != '\0' )
+   while( nLen && ( *pDest++ = ( char ) HB_TOUPPER( ( HB_UCHAR ) *pSource ) ) != '\0' )
    {
-      ulLen--;
+      nLen--;
       pSource++;
    }
 
@@ -891,25 +891,25 @@ char * hb_strncpyUpper( char * pDest, const char * pSource, HB_SIZE ulLen )
  *       a null
  * pt
  */
-char * hb_strncpyUpperTrim( char * pDest, const char * pSource, HB_SIZE ulLen )
+char * hb_strncpyUpperTrim( char * pDest, const char * pSource, HB_SIZE nLen )
 {
    char * pBuf = pDest;
-   HB_SIZE ulSLen;
+   HB_SIZE nSLen;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_strncpyUpperTrim(%p, %.*s, %" HB_PFS "u)", pDest, ( int ) ulLen, pSource, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_strncpyUpperTrim(%p, %.*s, %" HB_PFS "u)", pDest, ( int ) nLen, pSource, nLen));
 
-   ulSLen = 0;
-   while( ulSLen < ulLen && pSource[ ulSLen ] )
-      ulSLen++;
+   nSLen = 0;
+   while( nSLen < nLen && pSource[ nSLen ] )
+      nSLen++;
 
-   while( ulSLen && pSource[ ulSLen - 1 ] == ' ')
-      ulSLen--;
+   while( nSLen && pSource[ nSLen - 1 ] == ' ')
+      nSLen--;
 
-   while( ulLen && ulSLen &&
+   while( nLen && nSLen &&
           ( *pDest++ = ( char ) HB_TOUPPER( ( HB_UCHAR ) *pSource ) ) != '\0' )
    {
-      ulSLen--;
-      ulLen--;
+      nSLen--;
+      nLen--;
       pSource++;
    }
 
@@ -923,24 +923,24 @@ char * hb_strncpyUpperTrim( char * pDest, const char * pSource, HB_SIZE ulLen )
  * NOTE: Unlike the documentation for strncpy, this routine will always append
  *       a null
  */
-char * hb_strncpyTrim( char * pDest, const char * pSource, HB_SIZE ulLen )
+char * hb_strncpyTrim( char * pDest, const char * pSource, HB_SIZE nLen )
 {
    char * pBuf = pDest;
-   HB_SIZE ulSLen;
+   HB_SIZE nSLen;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_strncpyTrim(%p, %.*s, %" HB_PFS "u)", pDest, ( int ) ulLen, pSource, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_strncpyTrim(%p, %.*s, %" HB_PFS "u)", pDest, ( int ) nLen, pSource, nLen));
 
-   ulSLen = 0;
-   while( ulSLen < ulLen && pSource[ ulSLen ] )
-      ulSLen++;
+   nSLen = 0;
+   while( nSLen < nLen && pSource[ nSLen ] )
+      nSLen++;
 
-   while( ulSLen && pSource[ ulSLen - 1 ] == ' ' )
-      ulSLen--;
+   while( nSLen && pSource[ nSLen - 1 ] == ' ' )
+      nSLen--;
 
-   while( ulLen && ulSLen && ( *pDest++ = *pSource++ ) != '\0' )
+   while( nLen && nSLen && ( *pDest++ = *pSource++ ) != '\0' )
    {
-      ulSLen--;
-      ulLen--;
+      nSLen--;
+      nLen--;
    }
 
    *pDest = '\0';
@@ -948,9 +948,9 @@ char * hb_strncpyTrim( char * pDest, const char * pSource, HB_SIZE ulLen )
    return pBuf;
 }
 
-char * hb_strRemEscSeq( char * str, HB_SIZE * pLen )
+char * hb_strRemEscSeq( char * str, HB_SIZE * pnLen )
 {
-   HB_SIZE ul = * pLen, ulStripped = 0;
+   HB_SIZE ul = * pnLen, nStripped = 0;
    char * ptr, * dst, ch;
 
    ptr = dst = str;
@@ -967,7 +967,7 @@ char * hb_strRemEscSeq( char * str, HB_SIZE * pLen )
       ch = *ptr++;
       if( ch == '\\' )
       {
-         ++ulStripped;
+         ++nStripped;
          if( ul )
          {
             ul--;
@@ -998,11 +998,11 @@ char * hb_strRemEscSeq( char * str, HB_SIZE * pLen )
                   if( ul && *ptr >= '0' && *ptr <= '7' )
                   {
                      ch = ( ch << 3 ) | ( *ptr++ - '0' );
-                     ++ulStripped;
+                     ++nStripped;
                      if( --ul && *ptr >= '0' && *ptr <= '7' )
                      {
                         ch = ( ch << 3 ) | ( *ptr++ - '0' );
-                        ++ulStripped;
+                        ++nStripped;
                         --ul;
                      }
                   }
@@ -1019,7 +1019,7 @@ char * hb_strRemEscSeq( char * str, HB_SIZE * pLen )
                         ch = ( ch << 4 ) | ( *ptr++ - 'a' + 10 );
                      else
                         break;
-                     ++ulStripped;
+                     ++nStripped;
                      --ul;
                   }
                   break;
@@ -1034,40 +1034,40 @@ char * hb_strRemEscSeq( char * str, HB_SIZE * pLen )
       *dst++ = ch;
    }
 
-   if( ulStripped )
+   if( nStripped )
    {
       *dst = '\0';
-      *pLen -= ulStripped;
+      *pnLen -= nStripped;
    }
 
    return str;
 }
 
-char * hb_compEncodeString( int iMethod, const char * szText, HB_SIZE * pulLen )
+char * hb_compEncodeString( int iMethod, const char * szText, HB_SIZE * pnLen )
 {
-   char * pBuffer = ( char * ) hb_xgrab( *pulLen + 1 );
+   char * pBuffer = ( char * ) hb_xgrab( *pnLen + 1 );
 
-   memcpy( pBuffer, szText, *pulLen );
-   pBuffer[ *pulLen ] = '\0';
+   memcpy( pBuffer, szText, *pnLen );
+   pBuffer[ *pnLen ] = '\0';
    if( iMethod == 1 )
    {
       HB_SIZE ul;
-      for( ul = 0; ul < *pulLen; ul++ )
+      for( ul = 0; ul < *pnLen; ul++ )
          pBuffer[ ul ] ^= 0xF3;
    }
    return pBuffer;
 }
 
-char * hb_compDecodeString( int iMethod, const char * szText, HB_SIZE * pulLen )
+char * hb_compDecodeString( int iMethod, const char * szText, HB_SIZE * pnLen )
 {
-   char * pBuffer = ( char * ) hb_xgrab( *pulLen + 1 );
+   char * pBuffer = ( char * ) hb_xgrab( *pnLen + 1 );
 
-   memcpy( pBuffer, szText, *pulLen );
-   pBuffer[ *pulLen ] = '\0';
+   memcpy( pBuffer, szText, *pnLen );
+   pBuffer[ *pnLen ] = '\0';
    if( iMethod == 1 )
    {
       HB_SIZE ul;
-      for( ul = 0; ul < *pulLen; ul++ )
+      for( ul = 0; ul < *pnLen; ul++ )
          pBuffer[ ul ] ^= 0xF3;
    }
    return pBuffer;

@@ -391,17 +391,17 @@ HB_FUNC( HB_SOCKETRECV )
    {
       PHB_ITEM pItem = hb_param( 2, HB_IT_STRING );
       char * pBuffer;
-      HB_SIZE iLen;
+      HB_SIZE nLen;
 
-      if( pItem && HB_ISBYREF( 2 ) && hb_itemGetWriteCL( pItem, &pBuffer, &iLen ) )
+      if( pItem && HB_ISBYREF( 2 ) && hb_itemGetWriteCL( pItem, &pBuffer, &nLen ) )
       {
          if( HB_ISNUM( 3 ) )
          {
             long lRead = hb_parnl( 3 );
-            if( lRead >= 0 && lRead < ( long ) iLen )
-               iLen = lRead;
+            if( lRead >= 0 && lRead < ( long ) nLen )
+               nLen = lRead;
          }
-         hb_retnl( hb_socketRecv( pSocket->socket, pBuffer, ( long ) iLen,
+         hb_retnl( hb_socketRecv( pSocket->socket, pBuffer, ( long ) nLen,
                                   hb_parni( 4 ), hb_parnintdef( 5, -1 ) ) );
          return;
       }
@@ -416,9 +416,9 @@ HB_FUNC( HB_SOCKETRECVFROM )
    {
       PHB_ITEM pItem = hb_param( 2, HB_IT_STRING );
       char * pBuffer;
-      HB_SIZE iLen;
+      HB_SIZE nLen;
 
-      if( pItem && HB_ISBYREF( 2 ) && hb_itemGetWriteCL( pItem, &pBuffer, &iLen ) )
+      if( pItem && HB_ISBYREF( 2 ) && hb_itemGetWriteCL( pItem, &pBuffer, &nLen ) )
       {
          void * addr = NULL;
          unsigned int len;
@@ -427,10 +427,10 @@ HB_FUNC( HB_SOCKETRECVFROM )
          if( HB_ISNUM( 3 ) )
          {
             long lRead = hb_parnl( 3 );
-            if( lRead >= 0 && lRead < ( long ) iLen )
-               iLen = lRead;
+            if( lRead >= 0 && lRead < ( long ) nLen )
+               nLen = lRead;
          }
-         hb_retnl( lRet = hb_socketRecvFrom( pSocket->socket, pBuffer, ( long ) iLen,
+         hb_retnl( lRet = hb_socketRecvFrom( pSocket->socket, pBuffer, ( long ) nLen,
                                              hb_parni( 4 ), &addr, &len,
                                              hb_parnintdef( 6, -1 ) ) );
          if( HB_ISBYREF( 5 ) )

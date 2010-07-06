@@ -933,22 +933,22 @@ HB_BOOL hb_fsProcessClose( HB_FHANDLE hProcess, HB_BOOL fGentle )
 #define HB_STD_BUFFER_SIZE    4096
 
 int hb_fsProcessRun( const char * pszFilename,
-                     const char * pStdInBuf, HB_SIZE ulStdInLen,
+                     const char * pStdInBuf, HB_SIZE nStdInLen,
                      char ** pStdOutPtr, HB_SIZE * pulStdOut,
                      char ** pStdErrPtr, HB_SIZE * pulStdErr,
                      HB_BOOL fDetach )
 {
    HB_FHANDLE hStdin, hStdout, hStderr, *phStdin, *phStdout, *phStderr;
    char * pOutBuf, *pErrBuf;
-   HB_SIZE ulOutSize, ulErrSize, ulOutBuf, ulErrBuf;
+   HB_SIZE nOutSize, nErrSize, nOutBuf, nErrBuf;
    char * pszFree = NULL;
    int iResult;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsProcessRun(%s, %p, %" HB_PFS "u, %p, %p, %p, %p, %d)", pStdInBuf, pStdInBuf, ulStdInLen, pStdOutPtr, pulStdOut, pStdErrPtr, pulStdErr, fDetach));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsProcessRun(%s, %p, %" HB_PFS "u, %p, %p, %p, %p, %d)", pStdInBuf, pStdInBuf, nStdInLen, pStdOutPtr, pulStdOut, pStdErrPtr, pulStdErr, fDetach));
 
    pszFilename = hb_osEncodeCP( pszFilename, &pszFree, NULL );
 
-   ulOutBuf = ulErrBuf = ulOutSize = ulErrSize = 0;
+   nOutBuf = nErrBuf = nOutSize = nErrSize = 0;
    pOutBuf = pErrBuf = NULL;
    hStdin = hStdout = hStderr = FS_ERROR;
    phStdin = pStdInBuf ? &hStdin : NULL;
@@ -970,16 +970,16 @@ int hb_fsProcessRun( const char * pszFilename,
    char sTmpErr[ HB_PATH_MAX ];
 
    HB_SYMBOL_UNUSED( phStdin );
-   HB_SYMBOL_UNUSED( ulOutSize );
-   HB_SYMBOL_UNUSED( ulErrSize );
+   HB_SYMBOL_UNUSED( nOutSize );
+   HB_SYMBOL_UNUSED( nErrSize );
 
    sTmpIn[ 0 ] = sTmpOut[ 0 ] = sTmpErr[ 0 ] = '\0';
    if( pStdInBuf )
    {
       hStdin = hb_fsCreateTempEx( sTmpIn, NULL, NULL, NULL, FC_NORMAL );
-      if( ulStdInLen )
+      if( nStdInLen )
       {
-         hb_fsWriteLarge( hStdin, pStdInBuf, ulStdInLen );
+         hb_fsWriteLarge( hStdin, pStdInBuf, nStdInLen );
          hb_fsSeek( hStdin, 0, FS_SET );
       }
    }
@@ -1008,12 +1008,12 @@ int hb_fsProcessRun( const char * pszFilename,
    {
       if( pStdOutPtr && pulStdOut )
       {
-         ulOutBuf = hb_fsSeek( hStdout, 0, FS_END );
-         if( ulOutBuf )
+         nOutBuf = hb_fsSeek( hStdout, 0, FS_END );
+         if( nOutBuf )
          {
-            pOutBuf = ( char * ) hb_xgrab( ulOutBuf + 1 );
+            pOutBuf = ( char * ) hb_xgrab( nOutBuf + 1 );
             hb_fsSeek( hStdout, 0, FS_SET );
-            ulOutBuf = hb_fsReadLarge( hStdout, pOutBuf, ulOutBuf );
+            nOutBuf = hb_fsReadLarge( hStdout, pOutBuf, nOutBuf );
          }
       }
       hb_fsClose( hStdout );
@@ -1024,12 +1024,12 @@ int hb_fsProcessRun( const char * pszFilename,
    {
       if( pStdErrPtr && pulStdErr )
       {
-         ulErrBuf = hb_fsSeek( hStderr, 0, FS_END );
-         if( ulErrBuf )
+         nErrBuf = hb_fsSeek( hStderr, 0, FS_END );
+         if( nErrBuf )
          {
-            pErrBuf = ( char * ) hb_xgrab( ulErrBuf + 1 );
+            pErrBuf = ( char * ) hb_xgrab( nErrBuf + 1 );
             hb_fsSeek( hStderr, 0, FS_SET );
-            ulErrBuf = hb_fsReadLarge( hStderr, pErrBuf, ulErrBuf );
+            nErrBuf = hb_fsReadLarge( hStderr, pErrBuf, nErrBuf );
          }
       }
       hb_fsClose( hStderr );
@@ -1053,7 +1053,7 @@ int hb_fsProcessRun( const char * pszFilename,
       HANDLE lpHandles[ 4 ];
       HB_SIZE ul;
 
-      if( ulStdInLen == 0 && hStdin != FS_ERROR )
+      if( nStdInLen == 0 && hStdin != FS_ERROR )
       {
          hb_fsClose( hStdin );
          hStdin = FS_ERROR;
@@ -1062,7 +1062,7 @@ int hb_fsProcessRun( const char * pszFilename,
       for( ;; )
       {
          dwCount = 0;
-         if( ulStdInLen && hStdin != FS_ERROR )
+         if( nStdInLen && hStdin != FS_ERROR )
             lpHandles[ dwCount++ ] = ( HANDLE ) hb_fsGetOsHandle( hStdin );
          if( hStdout != FS_ERROR )
             lpHandles[ dwCount++ ] = ( HANDLE ) hb_fsGetOsHandle( hStdout );
@@ -1075,13 +1075,13 @@ int hb_fsProcessRun( const char * pszFilename,
 
          if( /* dwResult >= WAIT_OBJECT_0 && */ dwResult < WAIT_OBJECT_0 + dwCount )
          {
-            if( ulStdInLen && hStdin != FS_ERROR &&
+            if( nStdInLen && hStdin != FS_ERROR &&
                 lpHandles[ dwResult ] == ( HANDLE ) hb_fsGetOsHandle( hStdin ) )
             {
-               ul = hb_fsWriteLarge( hStdin, pStdInBuf, ulStdInLen );
+               ul = hb_fsWriteLarge( hStdin, pStdInBuf, nStdInLen );
                pStdInBuf += ul;
-               ulStdInLen -= ul;
-               if( ulStdInLen == 0 )
+               nStdInLen -= ul;
+               if( nStdInLen == 0 )
                {
                   hb_fsClose( hStdin );
                   hStdin = FS_ERROR;
@@ -1090,35 +1090,35 @@ int hb_fsProcessRun( const char * pszFilename,
             else if( hStdout != FS_ERROR &&
                      lpHandles[ dwResult ] == ( HANDLE ) hb_fsGetOsHandle( hStdout ) )
             {
-               if( ulOutBuf == ulOutSize )
+               if( nOutBuf == nOutSize )
                {
-                  ulOutSize += HB_STD_BUFFER_SIZE;
-                  pOutBuf = ( char * ) hb_xrealloc( pOutBuf, ulOutSize + 1 );
+                  nOutSize += HB_STD_BUFFER_SIZE;
+                  pOutBuf = ( char * ) hb_xrealloc( pOutBuf, nOutSize + 1 );
                }
-               ul = hb_fsReadLarge( hStdout, pOutBuf + ulOutBuf, ulOutSize - ulOutBuf );
+               ul = hb_fsReadLarge( hStdout, pOutBuf + nOutBuf, nOutSize - nOutBuf );
                if( ul == 0 )
                {
                   hb_fsClose( hStdout );
                   hStdout = FS_ERROR;
                }
                else
-                  ulOutBuf += ul;
+                  nOutBuf += ul;
             }
             else if( hStderr != FS_ERROR && lpHandles[ dwResult ] == ( HANDLE ) hb_fsGetOsHandle( hStderr ) )
             {
-               if( ulErrBuf == ulErrSize )
+               if( nErrBuf == nErrSize )
                {
-                  ulErrSize += HB_STD_BUFFER_SIZE;
-                  pErrBuf = ( char * ) hb_xrealloc( pErrBuf, ulErrSize + 1 );
+                  nErrSize += HB_STD_BUFFER_SIZE;
+                  pErrBuf = ( char * ) hb_xrealloc( pErrBuf, nErrSize + 1 );
                }
-               ul = hb_fsReadLarge( hStderr, pErrBuf + ulErrBuf, ulErrSize - ulErrBuf );
+               ul = hb_fsReadLarge( hStderr, pErrBuf + nErrBuf, nErrSize - nErrBuf );
                if( ul == 0 )
                {
                   hb_fsClose( hStderr );
                   hStderr = FS_ERROR;
                }
                else
-                  ulErrBuf += ul;
+                  nErrBuf += ul;
             }
             else if( lpHandles[ dwResult ] == ( HANDLE ) hb_fsGetOsHandle( hProcess ) )
             {
@@ -1147,7 +1147,7 @@ int hb_fsProcessRun( const char * pszFilename,
       HB_SIZE ul;
       int n;
 
-      if( ulStdInLen == 0 && hStdin != FS_ERROR )
+      if( nStdInLen == 0 && hStdin != FS_ERROR )
       {
          hb_fsClose( hStdin );
          hStdin = FS_ERROR;
@@ -1174,7 +1174,7 @@ int hb_fsProcessRun( const char * pszFilename,
             }
             prfds = &rfds;
          }
-         if( ulStdInLen && hStdin != FS_ERROR )
+         if( nStdInLen && hStdin != FS_ERROR )
          {
             FD_ZERO( &wfds );
             FD_SET( hStdin, &wfds );
@@ -1189,12 +1189,12 @@ int hb_fsProcessRun( const char * pszFilename,
          n = select( fdMax + 1, prfds, pwfds, NULL, NULL );
          if( n > 0 )
          {
-            if( ulStdInLen && hStdin != FS_ERROR && FD_ISSET( hStdin, &wfds ) )
+            if( nStdInLen && hStdin != FS_ERROR && FD_ISSET( hStdin, &wfds ) )
             {
-               ul = hb_fsWriteLarge( hStdin, pStdInBuf, ulStdInLen );
+               ul = hb_fsWriteLarge( hStdin, pStdInBuf, nStdInLen );
                pStdInBuf += ul;
-               ulStdInLen -= ul;
-               if( ulStdInLen == 0 )
+               nStdInLen -= ul;
+               if( nStdInLen == 0 )
                {
                   hb_fsClose( hStdin );
                   hStdin = FS_ERROR;
@@ -1203,12 +1203,12 @@ int hb_fsProcessRun( const char * pszFilename,
 
             if( hStdout != FS_ERROR && FD_ISSET( hStdout, &rfds ) )
             {
-               if( ulOutBuf == ulOutSize )
+               if( nOutBuf == nOutSize )
                {
-                  ulOutSize += HB_STD_BUFFER_SIZE;
-                  pOutBuf = ( char * ) hb_xrealloc( pOutBuf, ulOutSize + 1 );
+                  nOutSize += HB_STD_BUFFER_SIZE;
+                  pOutBuf = ( char * ) hb_xrealloc( pOutBuf, nOutSize + 1 );
                }
-               ul = hb_fsReadLarge( hStdout, pOutBuf + ulOutBuf, ulOutSize - ulOutBuf );
+               ul = hb_fsReadLarge( hStdout, pOutBuf + nOutBuf, nOutSize - nOutBuf );
                if( ul == 0 )
                {
                   /* zero bytes read after positive select()
@@ -1218,17 +1218,17 @@ int hb_fsProcessRun( const char * pszFilename,
                   hStdout = FS_ERROR;
                }
                else
-                  ulOutBuf += ul;
+                  nOutBuf += ul;
             }
 
             if( hStderr != FS_ERROR && FD_ISSET( hStderr, &rfds ) )
             {
-               if( ulErrBuf == ulErrSize )
+               if( nErrBuf == nErrSize )
                {
-                  ulErrSize += HB_STD_BUFFER_SIZE;
-                  pErrBuf = ( char * ) hb_xrealloc( pErrBuf, ulErrSize + 1 );
+                  nErrSize += HB_STD_BUFFER_SIZE;
+                  pErrBuf = ( char * ) hb_xrealloc( pErrBuf, nErrSize + 1 );
                }
-               ul = hb_fsReadLarge( hStderr, pErrBuf + ulErrBuf, ulErrSize - ulErrBuf );
+               ul = hb_fsReadLarge( hStderr, pErrBuf + nErrBuf, nErrSize - nErrBuf );
                if( ul == 0 )
                {
                   /* zero bytes read after positive select()
@@ -1238,7 +1238,7 @@ int hb_fsProcessRun( const char * pszFilename,
                   hStderr = FS_ERROR;
                }
                else
-                  ulErrBuf += ul;
+                  nErrBuf += ul;
             }
          }
          hb_vmLock();
@@ -1257,7 +1257,7 @@ int hb_fsProcessRun( const char * pszFilename,
 
       int iTODO;
 
-      HB_SYMBOL_UNUSED( ulStdInLen );
+      HB_SYMBOL_UNUSED( nStdInLen );
 
 #endif
    }
@@ -1267,12 +1267,12 @@ int hb_fsProcessRun( const char * pszFilename,
    if( phStdout )
    {
       *pStdOutPtr = pOutBuf;
-      *pulStdOut = ulOutBuf;
+      *pulStdOut = nOutBuf;
    }
    if( phStderr )
    {
       *pStdErrPtr = pErrBuf;
-      *pulStdErr = ulErrBuf;
+      *pulStdErr = nErrBuf;
    }
 
    if( pszFree )

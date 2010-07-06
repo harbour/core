@@ -134,23 +134,23 @@ HB_FUNC( HB_PROCESSRUN )
        ( pStdErr || HB_ISNIL( 4 ) ) &&
        ( HB_ISLOG( 5 ) || HB_ISNIL( 5 ) ) )
    {
-      HB_SIZE ulStdOut, ulStdErr;
+      HB_SIZE nStdOut, nStdErr;
       char * pStdOutBuf, * pStdErrBuf;
       char ** pStdOutPtr, ** pStdErrPtr;
       int iResult;
 
-      ulStdOut = ulStdErr = 0;
+      nStdOut = nStdErr = 0;
       pStdOutBuf = pStdErrBuf = NULL;
       pStdOutPtr = pStdOut ? &pStdOutBuf : NULL;
       pStdErrPtr = pStdErr ? &pStdErrBuf : NULL;
 
       iResult = hb_fsProcessRun( szName, szStdIn, hb_parclen( 2 ),
-                                 pStdOutPtr, &ulStdOut, pStdErrPtr, &ulStdErr,
+                                 pStdOutPtr, &nStdOut, pStdErrPtr, &nStdErr,
                                  fDetach );
 
       if( pStdOutBuf )
       {
-         if( ! hb_storclen_buffer( pStdOutBuf, ulStdOut, 3 ) )
+         if( ! hb_storclen_buffer( pStdOutBuf, nStdOut, 3 ) )
             hb_xfree( pStdOutBuf );
       }
       else if( pStdOut )
@@ -158,7 +158,7 @@ HB_FUNC( HB_PROCESSRUN )
 
       if( pStdErrBuf )
       {
-         if( ! hb_storclen_buffer( pStdErrBuf, ulStdErr, 4 ) )
+         if( ! hb_storclen_buffer( pStdErrBuf, nStdErr, 4 ) )
             hb_xfree( pStdErrBuf );
       }
       else if( pStdErr )

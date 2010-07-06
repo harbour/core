@@ -71,16 +71,16 @@ HB_FUNC( GETENV )
    if( pName && hb_pcount() == 1 )
    {
       char * pszName = hb_itemGetC( pName );
-      HB_SIZE ulName = strlen( pszName );
-      HB_SIZE ulPos;
+      HB_SIZE nName = strlen( pszName );
+      HB_SIZE nPos;
 
       /* strip the '=' or else it will clear the variable! */
 
-      for( ulPos = 0; ulPos < ulName; ulPos++ )
+      for( nPos = 0; nPos < nName; nPos++ )
       {
-         if( pszName[ ulPos ] == '=' )
+         if( pszName[ nPos ] == '=' )
          {
-            pszName[ ulPos ] = '\0';
+            pszName[ nPos ] = '\0';
             break;
          }
       }
@@ -140,16 +140,16 @@ HB_FUNC( HB_GETENV )
    if( pName )
    {
       char * pszName = hb_itemGetC( pName );
-      HB_SIZE ulName = strlen( pszName );
-      HB_SIZE ulPos;
+      HB_SIZE nName = strlen( pszName );
+      HB_SIZE nPos;
 
       /* strip the '=' or else it will clear the variable! */
 
-      for( ulPos = 0; ulPos < ulName; ulPos++ )
+      for( nPos = 0; nPos < nName; nPos++ )
       {
-         if( pszName[ ulPos ] == '=' )
+         if( pszName[ nPos ] == '=' )
          {
-            pszName[ ulPos ] = '\0';
+            pszName[ nPos ] = '\0';
             break;
          }
       }

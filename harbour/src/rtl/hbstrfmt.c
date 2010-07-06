@@ -56,20 +56,20 @@
 typedef struct
 {
    char *  pData;
-   HB_SIZE ulLen;
-   HB_SIZE ulMax;
+   HB_SIZE nLen;
+   HB_SIZE nMax;
 } BUFFERTYPE;
 
-static void bufadd( BUFFERTYPE * pBuf, const char * pAdd, HB_SIZE ulLen )
+static void bufadd( BUFFERTYPE * pBuf, const char * pAdd, HB_SIZE nLen )
 {
-   if( pBuf->ulLen + ulLen >= pBuf->ulMax )
+   if( pBuf->nLen + nLen >= pBuf->nMax )
    {
-      pBuf->ulMax += ( pBuf->ulMax >> 1 ) + ulLen;
-      pBuf->pData = ( char * ) hb_xrealloc( pBuf->pData, pBuf->ulMax );
+      pBuf->nMax += ( pBuf->nMax >> 1 ) + nLen;
+      pBuf->pData = ( char * ) hb_xrealloc( pBuf->pData, pBuf->nMax );
    }
-   memcpy( pBuf->pData + pBuf->ulLen, pAdd, ulLen );
-   pBuf->ulLen += ulLen;
-   pBuf->pData[ pBuf->ulLen ] = '\0';
+   memcpy( pBuf->pData + pBuf->nLen, pAdd, nLen );
+   pBuf->nLen += nLen;
+   pBuf->pData[ pBuf->nLen ] = '\0';
 }
 
 PHB_ITEM hb_strFormat( PHB_ITEM pItemReturn, PHB_ITEM pItemFormat, int iCount, PHB_ITEM * pItemArray )
@@ -78,16 +78,16 @@ PHB_ITEM hb_strFormat( PHB_ITEM pItemReturn, PHB_ITEM pItemFormat, int iCount, P
    PHB_ITEM    pItem;
    const char  *pFmt, *pFmtEnd, *pFmtSave;
    int         i, iParam, iParamNo, iWidth, iDec;
-   HB_SIZE     ulSize;
+   HB_SIZE     nSize;
    HB_BOOL     fLeftAlign, fForceSign, fPadZero, fSpaceSign, fSign;
 
    pFmt = hb_itemGetCPtr( pItemFormat );
-   ulSize = hb_itemGetCLen( pItemFormat );
-   pFmtEnd = pFmt + ulSize;
+   nSize = hb_itemGetCLen( pItemFormat );
+   pFmtEnd = pFmt + nSize;
 
-   buffer.ulMax = ulSize + 16;
-   buffer.ulLen = 0;
-   buffer.pData = ( char* ) hb_xgrab( buffer.ulMax );
+   buffer.nMax = nSize + 16;
+   buffer.nLen = 0;
+   buffer.pData = ( char * ) hb_xgrab( buffer.nMax );
    buffer.pData[ 0 ] = '\0';
 
    iParam = 0;
@@ -434,23 +434,23 @@ PHB_ITEM hb_strFormat( PHB_ITEM pItemReturn, PHB_ITEM pItemFormat, int iCount, P
          {
             const char * pStr = hb_itemGetCPtr( pItem );
 
-            ulSize = hb_itemGetCLen( pItem );
+            nSize = hb_itemGetCLen( pItem );
             if( iDec >= 0 )
             {
-               if( ( HB_SIZE ) iDec < ulSize )
-                  ulSize = iDec;
+               if( ( HB_SIZE ) iDec < nSize )
+                  nSize = iDec;
             }
             if( fLeftAlign )
-               bufadd( &buffer, pStr, ulSize );
+               bufadd( &buffer, pStr, nSize );
 
             if( iWidth > 1 )
             {
-               for( i = ( int ) ulSize; i < iWidth; i++ )
+               for( i = ( int ) nSize; i < iWidth; i++ )
                   bufadd( &buffer, " ", 1 );
             }
 
             if( ! fLeftAlign )
-               bufadd( &buffer, pStr, ulSize );
+               bufadd( &buffer, pStr, nSize );
 
             break;
          }
@@ -461,7 +461,7 @@ PHB_ITEM hb_strFormat( PHB_ITEM pItemReturn, PHB_ITEM pItemFormat, int iCount, P
       pFmt++;
    }
 
-   pItemReturn = hb_itemPutCL( pItemReturn, buffer.pData, buffer.ulLen );
+   pItemReturn = hb_itemPutCL( pItemReturn, buffer.pData, buffer.nLen );
    hb_xfree( buffer.pData );
    return pItemReturn;
 }

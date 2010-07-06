@@ -56,26 +56,26 @@
 
 #include <windows.h>
 
-static HB_SIZE hb_wcnlen( const wchar_t * szText, HB_SIZE count )
+static HB_SIZE hb_wcnlen( const wchar_t * szText, HB_SIZE nCount )
 {
-   HB_SIZE ulLen = 0;
+   HB_SIZE nLen = 0;
 
-   while( count-- && szText[ ulLen ] )
-      ++ulLen;
+   while( nCount-- && szText[ nLen ] )
+      ++nLen;
 
-   return ulLen;
+   return nLen;
 }
 
-void hb_wcntombcpy( char * dstA, const wchar_t * srcW, HB_SIZE ulLen )
+void hb_wcntombcpy( char * dstA, const wchar_t * srcW, HB_SIZE nLen )
 {
-   WideCharToMultiByte( CP_ACP, 0, srcW, -1, dstA, ( int ) ulLen, NULL, NULL );
-   dstA[ ( int ) ulLen ] = '\0';
+   WideCharToMultiByte( CP_ACP, 0, srcW, -1, dstA, ( int ) nLen, NULL, NULL );
+   dstA[ ( int ) nLen ] = '\0';
 }
 
-void hb_mbntowccpy( wchar_t * dstW, const char * srcA, HB_SIZE ulLen )
+void hb_mbntowccpy( wchar_t * dstW, const char * srcA, HB_SIZE nLen )
 {
-   MultiByteToWideChar( CP_ACP, 0, srcA, -1, dstW, ( int ) ulLen );
-   dstW[ ( int ) ulLen ] = L'\0';
+   MultiByteToWideChar( CP_ACP, 0, srcA, -1, dstW, ( int ) nLen );
+   dstW[ ( int ) nLen ] = L'\0';
 }
 
 wchar_t * hb_mbtowc( const char * srcA )
@@ -102,29 +102,29 @@ char * hb_wctomb( const wchar_t * srcW )
    return dstA;
 }
 
-wchar_t * hb_mbntowc( const char * srcA, HB_SIZE ulLen )
+wchar_t * hb_mbntowc( const char * srcA, HB_SIZE nLen )
 {
    int length;
    wchar_t *dstW;
 
-   ulLen = hb_strnlen( srcA, ulLen );
-   length = MultiByteToWideChar( CP_ACP, 0, srcA, ( int ) ulLen, NULL, 0 );
+   nLen = hb_strnlen( srcA, nLen );
+   length = MultiByteToWideChar( CP_ACP, 0, srcA, ( int ) nLen, NULL, 0 );
    dstW = ( wchar_t * ) hb_xgrab( ( length + 1 ) * sizeof( wchar_t ) );
-   MultiByteToWideChar( CP_ACP, 0, srcA, ( int ) ulLen, dstW, length );
+   MultiByteToWideChar( CP_ACP, 0, srcA, ( int ) nLen, dstW, length );
    dstW[ length ] = L'\0';
 
    return dstW;
 }
 
-char * hb_wcntomb( const wchar_t * srcW, HB_SIZE ulLen )
+char * hb_wcntomb( const wchar_t * srcW, HB_SIZE nLen )
 {
    int length;
    char *dstA;
 
-   ulLen = hb_wcnlen( srcW, ulLen );
-   length = WideCharToMultiByte( CP_ACP, 0, srcW, ( int ) ulLen, NULL, 0, NULL, NULL );
+   nLen = hb_wcnlen( srcW, nLen );
+   length = WideCharToMultiByte( CP_ACP, 0, srcW, ( int ) nLen, NULL, 0, NULL, NULL );
    dstA = ( char * ) hb_xgrab( length + 1 );
-   WideCharToMultiByte( CP_ACP, 0, srcW, ( int ) ulLen, dstA, length, NULL, NULL );
+   WideCharToMultiByte( CP_ACP, 0, srcW, ( int ) nLen, dstA, length, NULL, NULL );
    dstA[ length ] = '\0';
 
    return dstA;

@@ -62,32 +62,32 @@ HB_FUNC( SUBSTR )
 
    if( pText && HB_ISNUM( 2 ) )
    {
-      HB_ISIZ lPos = hb_parns( 2 );
-      HB_ISIZ lSize = hb_itemGetCLen( pText );
+      HB_ISIZ nPos = hb_parns( 2 );
+      HB_ISIZ nSize = hb_itemGetCLen( pText );
 
-      if( lPos < 0 )
+      if( nPos < 0 )
       {
-         lPos += lSize;
-         if( lPos < 0 )
-            lPos = 0;
+         nPos += nSize;
+         if( nPos < 0 )
+            nPos = 0;
       }
-      else if( lPos )
+      else if( nPos )
       {
-         lPos--;
+         nPos--;
       }
 
-      if( lPos < lSize )
+      if( nPos < nSize )
       {
-         HB_ISIZ lLen;
+         HB_ISIZ nLen;
 
          if( hb_pcount() >= 3 )
          {
             if( HB_ISNUM( 3 ) )
             {
-               lLen = hb_parns( 3 );
+               nLen = hb_parns( 3 );
 
-               if( lLen > lSize - lPos )
-                  lLen = lSize - lPos;
+               if( nLen > nSize - nPos )
+                  nLen = nSize - nPos;
             }
             else
             {
@@ -97,14 +97,14 @@ HB_FUNC( SUBSTR )
             }
          }
          else
-            lLen = lSize - lPos;
+            nLen = nSize - nPos;
 
-         if( lLen > 0 )
+         if( nLen > 0 )
          {
-            if( lLen == lSize )
+            if( nLen == nSize )
                hb_itemReturn( pText );
             else
-               hb_retclen( hb_itemGetCPtr( pText ) + lPos, lLen );
+               hb_retclen( hb_itemGetCPtr( pText ) + nPos, nLen );
          }
          else
             hb_retc_null();

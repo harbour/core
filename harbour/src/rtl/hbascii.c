@@ -61,9 +61,9 @@ HB_FUNC( HB_ASCIIUPPER )
    if( pText )
    {
       const char * pszText = hb_itemGetCPtr( pText );
-      HB_SIZE ulLen = hb_itemGetCLen( pText ), u;
+      HB_SIZE nLen = hb_itemGetCLen( pText ), u;
 
-      for( u = 0; u < ulLen; u++ )
+      for( u = 0; u < nLen; u++ )
       {
          if( HB_ISLOWER( pszText[ u ] ) )
          {
@@ -73,8 +73,8 @@ HB_FUNC( HB_ASCIIUPPER )
             {
                pszBuff[ u ] = HB_TOUPPER( pszBuff[ u ] );
             }
-            while( ++u < ulLen );
-            hb_retclen_buffer( hb_strUpper( pszBuff, ulLen ), ulLen );
+            while( ++u < nLen );
+            hb_retclen_buffer( hb_strUpper( pszBuff, nLen ), nLen );
             return;
          }
       }
@@ -91,9 +91,9 @@ HB_FUNC( HB_ASCIILOWER )
    if( pText )
    {
       const char * pszText = hb_itemGetCPtr( pText );
-      HB_SIZE ulLen = hb_itemGetCLen( pText ), u;
+      HB_SIZE nLen = hb_itemGetCLen( pText ), u;
 
-      for( u = 0; u < ulLen; u++ )
+      for( u = 0; u < nLen; u++ )
       {
          if( HB_ISUPPER( pszText[ u ] ) )
          {
@@ -103,8 +103,8 @@ HB_FUNC( HB_ASCIILOWER )
             {
                pszBuff[ u ] = HB_TOLOWER( pszBuff[ u ] );
             }
-            while( ++u < ulLen );
-            hb_retclen_buffer( hb_strUpper( pszBuff, ulLen ), ulLen );
+            while( ++u < nLen );
+            hb_retclen_buffer( hb_strUpper( pszBuff, nLen ), nLen );
             return;
          }
       }

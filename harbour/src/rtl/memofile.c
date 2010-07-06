@@ -68,9 +68,9 @@ static void hb_memoread( HB_BOOL bHandleEOF )
 
       if( fhnd != FS_ERROR )
       {
-         HB_SIZE ulSize = hb_fsSeek( fhnd, 0, FS_END );
+         HB_SIZE nSize = hb_fsSeek( fhnd, 0, FS_END );
 
-         if( ulSize != 0 )
+         if( nSize != 0 )
          {
             void * pbyBuffer;
 
@@ -85,18 +85,18 @@ static void hb_memoread( HB_BOOL bHandleEOF )
                hb_fsRead( fhnd, &cEOF, sizeof( char ) );
 
                if( cEOF == HB_CHAR_EOF )
-                  ulSize--;
+                  nSize--;
             }
 #else
             HB_SYMBOL_UNUSED( bHandleEOF );
 #endif
 
-            pbyBuffer = hb_xgrab( ulSize + sizeof( char ) );
+            pbyBuffer = hb_xgrab( nSize + sizeof( char ) );
 
             hb_fsSeek( fhnd, 0, FS_SET );
-            hb_fsReadLarge( fhnd, pbyBuffer, ulSize );
+            hb_fsReadLarge( fhnd, pbyBuffer, nSize );
 
-            hb_retclen_buffer( ( char * ) pbyBuffer, ulSize );
+            hb_retclen_buffer( ( char * ) pbyBuffer, nSize );
          }
          else
             hb_retc_null();
@@ -132,9 +132,9 @@ static HB_BOOL hb_memowrit( HB_BOOL bHandleEOF )
 
       if( fhnd != FS_ERROR )
       {
-         HB_SIZE ulSize = hb_itemGetCLen( pString );
+         HB_SIZE nSize = hb_itemGetCLen( pString );
 
-         bRetVal = ( hb_fsWriteLarge( fhnd, hb_itemGetCPtr( pString ), ulSize ) == ulSize );
+         bRetVal = ( hb_fsWriteLarge( fhnd, hb_itemGetCPtr( pString ), nSize ) == nSize );
 
          /* NOTE: CA-Cl*pper will add the EOF even if the write failed. [vszakats] */
          /* NOTE: CA-Cl*pper will not return .F. when the EOF could not be written. [vszakats] */

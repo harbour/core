@@ -130,12 +130,12 @@ HB_FUNC( HB_NUMTOHEX )
 HB_FUNC( HB_STRTOHEX )
 {
    const char * szStr = hb_parc( 1 ), * szSep = "";
-   HB_SIZE ulStr, ulSep = 0;
+   HB_SIZE nStr, nSep = 0;
 
    if( hb_pcount() > 1 )
    {
       szSep = hb_parc( 2 );
-      ulSep = hb_parclen( 2 );
+      nSep = hb_parclen( 2 );
    }
 
    if( !szStr || !szSep )
@@ -144,13 +144,13 @@ HB_FUNC( HB_STRTOHEX )
       return;
    }
 
-   ulStr = hb_parclen( 1 );
-   if( ulStr )
+   nStr = hb_parclen( 1 );
+   if( nStr )
    {
-      HB_SIZE ulDest = ( ulStr << 1 ) + ( ulStr - 1 ) * ulSep;
+      HB_SIZE nDest = ( nStr << 1 ) + ( nStr - 1 ) * nSep;
       char * szDest, * szPtr;
 
-      szPtr = szDest = ( char * ) hb_xgrab( ulDest + 1 );
+      szPtr = szDest = ( char * ) hb_xgrab( nDest + 1 );
       do
       {
          HB_UCHAR uc = ( HB_UCHAR ) *szStr++, ud;
@@ -158,14 +158,14 @@ HB_FUNC( HB_STRTOHEX )
          *szPtr++ = ud + ( ud < 10 ? '0' : 'A' - 10 );
          ud = uc & 0x0F;
          *szPtr++ = ud + ( ud < 10 ? '0' : 'A' - 10 );
-         if( --ulStr && ulSep )
+         if( --nStr && nSep )
          {
-            memcpy( szPtr, szSep, ulSep );
-            szPtr += ulSep;
+            memcpy( szPtr, szSep, nSep );
+            szPtr += nSep;
          }
       }
-      while( ulStr );
-      hb_retclen_buffer( szDest, ulDest );
+      while( nStr );
+      hb_retclen_buffer( szDest, nDest );
    }
    else
       hb_retc_null();
@@ -174,7 +174,7 @@ HB_FUNC( HB_STRTOHEX )
 HB_FUNC( HB_HEXTOSTR )
 {
    const char * szStr = hb_parc( 1 );
-   HB_SIZE ulStr;
+   HB_SIZE nStr;
 
    if( !szStr )
    {
@@ -182,32 +182,32 @@ HB_FUNC( HB_HEXTOSTR )
       return;
    }
 
-   ulStr = hb_parclen( 1 );
-   if( ulStr > 1 )
+   nStr = hb_parclen( 1 );
+   if( nStr > 1 )
    {
-      HB_SIZE ulDest, ul;
+      HB_SIZE nDest, ul;
       const char * szPtr;
       char * szDest;
 
       szPtr = szStr;
-      ul = ulStr;
-      ulDest = 0;
+      ul = nStr;
+      nDest = 0;
       do
       {
          char c = *szPtr++;
          if( ( c >= '0' && c <= '9' ) ||
              ( c >= 'A' && c <= 'F' ) ||
              ( c >= 'a' && c <= 'f' ) )
-            ++ulDest;
+            ++nDest;
       }
       while( --ul );
 
-      ulDest >>= 1;
-      if( ulDest )
+      nDest >>= 1;
+      if( nDest )
       {
          int iVal = 0x10;
 
-         szDest = ( char * ) hb_xgrab( ulDest + 1 );
+         szDest = ( char * ) hb_xgrab( nDest + 1 );
          /* ul = 0; see above stop condition */
          do
          {
@@ -228,9 +228,9 @@ HB_FUNC( HB_HEXTOSTR )
             }
             iVal <<= 4;
          }
-         while( --ulStr );
+         while( --nStr );
 
-         hb_retclen_buffer( szDest, ulDest );
+         hb_retclen_buffer( szDest, nDest );
          return;
       }
    }

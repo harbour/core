@@ -60,13 +60,13 @@
 #include "hbdate.h"
 #include "hbmath.h"
 
-static HB_BOOL hb_compExprHasMacro( const char * szText, HB_SIZE ulLen, HB_COMP_DECL )
+static HB_BOOL hb_compExprHasMacro( const char * szText, HB_SIZE nLen, HB_COMP_DECL )
 {
-   while( ulLen-- )
+   while( nLen-- )
    {
       if( *szText++ == '&' )
       {
-         if( ! HB_SUPPORT_HARBOUR || ( ulLen && ( *szText == '_' ||
+         if( ! HB_SUPPORT_HARBOUR || ( nLen && ( *szText == '_' ||
              ( *szText >= 'A' && *szText <= 'Z' ) ||
              ( *szText >= 'a' && *szText <= 'z' ) ) ) )
          {
@@ -81,7 +81,7 @@ static HB_EXPR_PTR hb_compExprReducePlusStrings( HB_EXPR_PTR pLeft, HB_EXPR_PTR 
 {
    if( pLeft->value.asString.dealloc )
    {
-      pLeft->value.asString.string = (char *) hb_xrealloc( pLeft->value.asString.string, pLeft->ulLength + pRight->ulLength + 1 );
+      pLeft->value.asString.string = ( char * ) hb_xrealloc( pLeft->value.asString.string, pLeft->ulLength + pRight->ulLength + 1 );
       memcpy( pLeft->value.asString.string + pLeft->ulLength,
               pRight->value.asString.string, pRight->ulLength );
       pLeft->ulLength += pRight->ulLength;
@@ -89,8 +89,8 @@ static HB_EXPR_PTR hb_compExprReducePlusStrings( HB_EXPR_PTR pLeft, HB_EXPR_PTR 
    }
    else
    {
-      char *szString;
-      szString = (char *) hb_xgrab( pLeft->ulLength + pRight->ulLength + 1 );
+      char * szString;
+      szString = ( char * ) hb_xgrab( pLeft->ulLength + pRight->ulLength + 1 );
       memcpy( szString, pLeft->value.asString.string, pLeft->ulLength );
       memcpy( szString + pLeft->ulLength, pRight->value.asString.string, pRight->ulLength );
       pLeft->ulLength += pRight->ulLength;
@@ -105,18 +105,18 @@ static HB_EXPR_PTR hb_compExprReducePlusStrings( HB_EXPR_PTR pLeft, HB_EXPR_PTR 
 static HB_EXPR_PTR hb_compExprReduceMinusStrings( HB_EXPR_PTR pLeft, HB_EXPR_PTR pRight, HB_COMP_DECL )
 {
    char * szText = pLeft->value.asString.string;
-   HB_SIZE ulLen = pLeft->ulLength;
+   HB_SIZE nLen = pLeft->ulLength;
 
-   while( ulLen && szText[ ulLen - 1 ] == ' ' )
-      --ulLen;
+   while( nLen && szText[ nLen - 1 ] == ' ' )
+      --nLen;
 
    if( pLeft->value.asString.dealloc )
    {
       pLeft->value.asString.string = (char *) hb_xrealloc( pLeft->value.asString.string, pLeft->ulLength + pRight->ulLength + 1 );
-      memcpy( pLeft->value.asString.string + ulLen,
+      memcpy( pLeft->value.asString.string + nLen,
               pRight->value.asString.string, pRight->ulLength );
-      memset( pLeft->value.asString.string + ulLen + pRight->ulLength, ' ',
-              pLeft->ulLength - ulLen );
+      memset( pLeft->value.asString.string + nLen + pRight->ulLength, ' ',
+              pLeft->ulLength - nLen );
       pLeft->ulLength += pRight->ulLength;
       pLeft->value.asString.string[ pLeft->ulLength ] = '\0';
    }
@@ -124,9 +124,9 @@ static HB_EXPR_PTR hb_compExprReduceMinusStrings( HB_EXPR_PTR pLeft, HB_EXPR_PTR
    {
       char *szString;
       szString = (char *) hb_xgrab( pLeft->ulLength + pRight->ulLength + 1 );
-      memcpy( szString, pLeft->value.asString.string, ulLen );
-      memcpy( szString + ulLen, pRight->value.asString.string, pRight->ulLength );
-      memset( szString + ulLen + pRight->ulLength, ' ', pLeft->ulLength - ulLen );
+      memcpy( szString, pLeft->value.asString.string, nLen );
+      memcpy( szString + nLen, pRight->value.asString.string, pRight->ulLength );
+      memset( szString + nLen + pRight->ulLength, ' ', pLeft->ulLength - nLen );
       pLeft->ulLength += pRight->ulLength;
       szString[ pLeft->ulLength ] = '\0';
       pLeft->value.asString.string = szString;
@@ -598,14 +598,14 @@ HB_EXPR_PTR hb_compExprReduceMinus( HB_EXPR_PTR pSelf, HB_COMP_DECL )
          if( HB_SUPPORT_MACROTEXT )
          {
             char * szText = pLeft->value.asString.string;
-            HB_SIZE ulLen = pLeft->ulLength;
-            while( ulLen && szText[ ulLen - 1 ] == ' ' )
-               --ulLen;
-            while( ulLen-- )
+            HB_SIZE nLen = pLeft->ulLength;
+            while( nLen && szText[ nLen - 1 ] == ' ' )
+               --nLen;
+            while( nLen-- )
             {
                if( *szText++ == '&' )
                {
-                  char ch = ulLen ? *szText : *pRight->value.asString.string;
+                  char ch = nLen ? *szText : *pRight->value.asString.string;
                   if( ( ch >= 'A' && ch <= 'Z' ) ||
                       ( ch >= 'a' && ch <= 'z' ) || ch == '_' ||
                       ! HB_SUPPORT_HARBOUR )
@@ -903,13 +903,13 @@ HB_EXPR_PTR hb_compExprReducePlus( HB_EXPR_PTR pSelf, HB_COMP_DECL )
          if( HB_SUPPORT_MACROTEXT )
          {
             char * szText = pLeft->value.asString.string;
-            HB_SIZE ulLen = pLeft->ulLength;
+            HB_SIZE nLen = pLeft->ulLength;
 
-            while( ulLen-- )
+            while( nLen-- )
             {
                if( *szText++ == '&' )
                {
-                  char ch = ulLen ? *szText : *pRight->value.asString.string;
+                  char ch = nLen ? *szText : *pRight->value.asString.string;
                   if( ( ch >= 'A' && ch <= 'Z' ) ||
                       ( ch >= 'a' && ch <= 'z' ) || ch == '_' ||
                       ! HB_SUPPORT_HARBOUR )
@@ -2264,10 +2264,10 @@ HB_BOOL hb_compExprReduceUPPER( HB_EXPR_PTR pSelf, HB_COMP_DECL )
 
    if( pArg->ExprType == HB_ET_STRING )
    {
-      HB_SIZE ulLen = pArg->ulLength;
+      HB_SIZE nLen = pArg->ulLength;
       HB_BOOL fLower = HB_FALSE;
 
-      if( ulLen )
+      if( nLen )
       {
          const char * szValue = pArg->value.asString.string;
          do
@@ -2279,10 +2279,10 @@ HB_BOOL hb_compExprReduceUPPER( HB_EXPR_PTR pSelf, HB_COMP_DECL )
                         ( c >= '0' && c <= '9' ) || c == ' ' ) )
                break;
          }
-         while( --ulLen );
+         while( --nLen );
       }
 
-      if( ulLen == 0 )
+      if( nLen == 0 )
       {
          HB_EXPR_PTR pExpr;
          char * szValue;
@@ -2311,8 +2311,8 @@ HB_BOOL hb_compExprReduceUPPER( HB_EXPR_PTR pSelf, HB_COMP_DECL )
                   fDealloc = HB_TRUE;
                }
                do
-                  szValue[ ulLen ] = ( char ) HB_TOUPPER( ( unsigned char ) szValue[ ulLen ] );
-               while( ++ulLen < pArg->ulLength );
+                  szValue[ nLen ] = ( char ) HB_TOUPPER( ( unsigned char ) szValue[ nLen ] );
+               while( ++nLen < pArg->ulLength );
             }
          }
          else

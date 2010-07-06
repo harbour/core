@@ -59,16 +59,16 @@ HB_FUNC( HB_STRSHRINK )
 
    if( pText )
    {
-      HB_ISIZ lLen = hb_itemGetCLen( pText );
-      HB_ISIZ lShrinkBy = hb_parnldef( 2, 1 );
+      HB_ISIZ nLen = hb_itemGetCLen( pText );
+      HB_ISIZ nShrinkBy = hb_parnldef( 2, 1 );
 
-      if( lShrinkBy > 0 )
+      if( nShrinkBy > 0 )
       {
-         if( lShrinkBy < lLen )
-            lLen -= lShrinkBy;
+         if( nShrinkBy < nLen )
+            nLen -= nShrinkBy;
          else
-            lLen = 0;
-         hb_retclen( hb_itemGetCPtr( pText ), lLen );
+            nLen = 0;
+         hb_retclen( hb_itemGetCPtr( pText ), nLen );
       }
       else
          hb_itemReturn( pText );

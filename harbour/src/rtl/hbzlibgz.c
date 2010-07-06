@@ -165,20 +165,20 @@ HB_FUNC( HB_GZREAD )
 {
    PHB_ITEM pBuffer = HB_ISBYREF( 2 ) ? hb_param( 2, HB_IT_STRING ) : NULL;
    char * szBuffer;
-   HB_SIZE ulLen;
+   HB_SIZE nLen;
 
-   if( pBuffer && hb_itemGetWriteCL( pBuffer, &szBuffer, &ulLen ) )
+   if( pBuffer && hb_itemGetWriteCL( pBuffer, &szBuffer, &nLen ) )
    {
       gzFile gz = hb_gzParam( 1 );
       if( gz )
       {
          if( HB_ISNUM( 3 ) )
          {
-            HB_SIZE ulLim = hb_parns( 3 );
-            if( ulLim < ulLen )
-               ulLen = ulLim;
+            HB_SIZE nLim = hb_parns( 3 );
+            if( nLim < nLen )
+               nLen = nLim;
          }
-         hb_retni( gzread( gz, szBuffer, ( unsigned ) ulLen ) );
+         hb_retni( gzread( gz, szBuffer, ( unsigned ) nLen ) );
       }
    }
    else

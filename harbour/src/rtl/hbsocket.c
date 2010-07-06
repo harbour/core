@@ -2580,7 +2580,7 @@ int hb_socketSelect( PHB_ITEM pArrayRD, HB_BOOL fSetRD,
 {
    HB_SOCKET maxsd, sd;
    int i, ret;
-   HB_SIZE ulLen, ulPos, ul;
+   HB_SIZE nLen, nPos, ul;
    PHB_ITEM pItemSets[ 3 ];
    HB_BOOL pSet[ 3 ];
    fd_set fds[ 3 ], *pfds[ 3 ];
@@ -2597,11 +2597,11 @@ int hb_socketSelect( PHB_ITEM pArrayRD, HB_BOOL fSetRD,
    for( i = 0; i < 3; i++ )
    {
       ret = 0;
-      ulLen = pItemSets[ i ] ? hb_arrayLen( pItemSets[ i ] ) : 0;
-      if( ulLen > 0 )
+      nLen = pItemSets[ i ] ? hb_arrayLen( pItemSets[ i ] ) : 0;
+      if( nLen > 0 )
       {
          FD_ZERO( &fds[ i ] );
-         for( ul = 1; ul <= ulLen; ul++ )
+         for( ul = 1; ul <= nLen; ul++ )
          {
             if( pFunc )
                sd = pFunc( hb_arrayGetItemPtr( pItemSets[ i ], ul ) );
@@ -2642,11 +2642,11 @@ int hb_socketSelect( PHB_ITEM pArrayRD, HB_BOOL fSetRD,
    {
       if( pfds[ i ] && pSet[ i ] )
       {
-         ulPos = 0;
+         nPos = 0;
          if( ret > 0 )
          {
-            ulLen = hb_arrayLen( pItemSets[ i ] );
-            for( ul = 1; ul <= ulLen; ul++ )
+            nLen = hb_arrayLen( pItemSets[ i ] );
+            for( ul = 1; ul <= nLen; ul++ )
             {
                if( pFunc )
                   sd = pFunc( hb_arrayGetItemPtr( pItemSets[ i ], ul ) );
@@ -2662,15 +2662,15 @@ int hb_socketSelect( PHB_ITEM pArrayRD, HB_BOOL fSetRD,
                }
                if( sd != HB_NO_SOCKET && FD_ISSET( sd, pfds[ i ] ) )
                {
-                  if( ++ulPos != ul )
+                  if( ++nPos != ul )
                   {
-                     hb_itemCopy( hb_arrayGetItemPtr( pItemSets[ i ], ulPos ),
+                     hb_itemCopy( hb_arrayGetItemPtr( pItemSets[ i ], nPos ),
                                   hb_arrayGetItemPtr( pItemSets[ i ], ul ) );
                   }
                }
             }
          }
-         hb_arraySize( pItemSets[ i ], ulPos );
+         hb_arraySize( pItemSets[ i ], nPos );
       }
    }
 

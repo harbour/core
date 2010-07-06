@@ -69,14 +69,14 @@ HB_U32 hb_adler32( HB_U32 adler, const void * buf, HB_SIZE len )
       const unsigned char * ucbuf = ( const unsigned char * ) buf;
       do
       {
-         HB_ISIZ i = len < NMAX ? len : NMAX;
-         len -= i;
+         HB_ISIZ n = len < NMAX ? len : NMAX;
+         len -= n;
          do
          {
             s1 += *ucbuf++;
             s2 += s1;
          }
-         while( --i );
+         while( --n );
          s1 %= BASE;
          s2 %= BASE;
       }

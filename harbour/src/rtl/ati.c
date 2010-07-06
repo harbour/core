@@ -95,23 +95,23 @@ HB_FUNC( HB_ATI )
 
    if( pText && pSub )
    {
-      HB_SIZE ulTextLength = hb_itemGetCLen( pText );
-      HB_SIZE ulStart = hb_parnsdef( 3, 1 );
-      HB_SIZE ulEnd = ( HB_SIZE ) hb_parnsdef( 4, ulTextLength );
+      HB_SIZE nTextLength = hb_itemGetCLen( pText );
+      HB_SIZE nStart = hb_parnsdef( 3, 1 );
+      HB_SIZE nEnd = ( HB_SIZE ) hb_parnsdef( 4, nTextLength );
       HB_SIZE nPos;
 
-      if( ulStart > ulTextLength || ulEnd < ulStart )
+      if( nStart > nTextLength || nEnd < nStart )
          hb_retns( 0 );
       else
       {
-         if( ulEnd > ulTextLength )
-            ulEnd = ulTextLength;
+         if( nEnd > nTextLength )
+            nEnd = nTextLength;
 
          nPos = hb_strAtI( hb_itemGetCPtr( pSub ), hb_itemGetCLen( pSub ),
-                           hb_itemGetCPtr( pText ) + ulStart - 1, ulEnd - ulStart + 1 );
+                           hb_itemGetCPtr( pText ) + nStart - 1, nEnd - nStart + 1 );
 
          if( nPos > 0 )
-            nPos += ( ulStart - 1 );
+            nPos += ( nStart - 1 );
 
          hb_retns( nPos );
       }
