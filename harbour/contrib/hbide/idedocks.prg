@@ -95,7 +95,7 @@ CLASS IdeDocks INHERIT IdeObject
    METHOD new( oIde )
    METHOD create( oIde )
    METHOD destroy()
-   METHOD execEvent( cEvent, p )
+   METHOD execEvent( cEvent, p, p1 )
    METHOD setView( cView )
    METHOD buildToolBarPanels()
    METHOD buildHelpWidget()
@@ -126,7 +126,7 @@ CLASS IdeDocks INHERIT IdeObject
    METHOD dispEnvironment( cEnviron )
    METHOD addPanelButton( cPanel )
    METHOD disblePanelButton( qTBtn )
-   METHOD getADockWidget( nAreas, cObjectName, cWindowTitle, nFlags )
+   METHOD getADockWidget( nAreas, cObjectName, cWindowTitle, nFlags, cEventVisibility )
    METHOD getPanelIcon( cView )
    METHOD animateComponents( nMode )
    METHOD buildSourceThumbnail()
@@ -260,7 +260,7 @@ METHOD IdeDocks:buildDialog()
    ::setView( "Stats" )                  /* Always call with name */
 
    ::oDlg:connectEvent( ::oDlg:oWidget, QEvent_WindowStateChange, {|e| ::execEvent( "QEvent_WindowStateChange", e ) } )
-   ::oDlg:connectEvent( ::oDlg:oWidget, QEvent_Hide             , {|e| ::execEvent( "QEvent_Hide", e ) } )
+   ::oDlg:connectEvent( ::oDlg:oWidget, QEvent_Hide             , {|e| ::execEvent( "QEvent_Hide"             , e ) } )
 
    #if 1
    ::buildSystemTray()
@@ -295,79 +295,90 @@ METHOD IdeDocks:buildSystemTray()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeDocks:execEvent( cEvent, p )
+METHOD IdeDocks:execEvent( cEvent, p, p1 )
    LOCAL qEvent, qMime, qList, qUrl, i
 
    SWITCH cEvent
-
-   CASE "qHelpBrw_contextMenuRequested"
-      hbide_popupBrwContextMenu( ::qHelpBrw, p )
-      EXIT
-   CASE "dockQScintilla_topLevelChanged"
-   CASE "dockQScintilla_dockLocationChanged"
-   CASE "dockQScintilla_allowedAreasChanged"
-   CASE "dockQScintilla_featuresChanged"
-      EXIT
    CASE "dockQScintilla_visibilityChanged"
       IF p; ::oBM:show() ; ENDIF
-      //::oQScintillaDock:oWidget:raise()
+      IF ! p .AND. ! p1:isVisible()
+         p1:raise()
+      ENDIF
       EXIT
    CASE "dockSourceThumbnail_visibilityChanged"
       IF p; ::oEM:showThumbnail(); ENDIF
-      //::oSourceThumbnailDock:oWidget:raise()
+      IF ! p .AND. ! p1:isVisible()
+         p1:raise()
+      ENDIF
       EXIT
    CASE "dockSkltnsTree_visibilityChanged"
       IF p; ::oSK:showTree(); ENDIF
-      //::oSkltnsTreeDock:oWidget:raise()
+      IF ! p .AND. ! p1:isVisible()
+         p1:raise()
+      ENDIF
       EXIT
    CASE "dockHelpDock_visibilityChanged"
-      //::oHelpDock:oWidget:raise()
+      IF ! p .AND. ! p1:isVisible()
+         p1:raise()
+      ENDIF
       EXIT
-
    CASE "dockDocViewer_visibilityChanged"
       IF p; ::oHL:show(); ENDIF
-      //::oDocViewDock:oWidget:raise()
+      IF ! p .AND. ! p1:isVisible()
+         p1:raise()
+      ENDIF
       EXIT
-
    CASE "dockDocWriter_visibilityChanged"
       IF p; ::oDW:show(); ENDIF
-      //::oDocWriteDock:oWidget:raise()
+      IF ! p .AND. ! p1:isVisible()
+         p1:raise()
+      ENDIF
       EXIT
-
    CASE "oFuncDock_visibilityChanged"
-      //::oFuncDock:oWidget:raise()
+      IF ! p .AND. ! p1:isVisible()
+         p1:raise()
+      ENDIF
       EXIT
-
    CASE "docFunctions_visibilityChanged"
       IF p; ::oFN:show(); ENDIF
-      //::oFunctionsDock:oWidget:raise()
+      IF ! p .AND. ! p1:isVisible()
+         p1:raise()
+      ENDIF
       EXIT
-
    CASE "dockProperties_visibilityChanged"
       IF p; ::oPM:fetchProperties(); ENDIF
-      //::oPropertiesDock:oWidget:raise()
+      IF ! p .AND. ! p1:isVisible()
+         p1:raise()
+      ENDIF
       EXIT
-
    CASE "docEnvironments_visibilityChanged"
       IF p; ::oEV:show(); ENDIF
-      //::oEnvironDock:oWidget:raise()
+      IF ! p .AND. ! p1:isVisible()
+         p1:raise()
+      ENDIF
       EXIT
-
    CASE "docSkeletons_visibilityChanged"
       IF p; ::oSK:show(); ENDIF
-      //::oSkeltnDock:oWidget:raise()
+      IF ! p .AND. ! p1:isVisible()
+         p1:raise()
+      ENDIF
       EXIT
-
    CASE "dockThemes_visibilityChanged"
       IF p; ::oTH:show(); ENDIF
-      //::oThemesDock:oWidget:raise()
+      IF ! p .AND. ! p1:isVisible()
+         p1:raise()
+      ENDIF
       EXIT
-
    CASE "dockFindInFiles_visibilityChanged"
       IF p; ::oFF:show(); ENDIF
-      //::oFindDock:oWidget:raise()
+      IF ! p .AND. ! p1:isVisible()
+         p1:raise()
+      ENDIF
       EXIT
-
+   /* Miscellaneous */
+   CASE "qHelpBrw_contextMenuRequested"
+      hbide_popupBrwContextMenu( ::qHelpBrw, p )
+      EXIT
    CASE "QEvent_WindowStateChange"
       qEvent := QWindowStateChangeEvent():from( p )
       ::nPrevWindowState := qEvent:oldState()
@@ -430,6 +441,26 @@ METHOD IdeDocks:execEvent( cEvent, p )
             qUrl := QUrl():new( qList:at( i ) )
             IF hbide_isValidText( qUrl:toLocalFile() )
                ::oSM:editSource( hbide_pathToOSPath( qUrl:toLocalFile() ) )
+            ENDIF
+         NEXT
+      ENDIF
+      EXIT
+
+   CASE "projectTree_dragEnterEvent"
+HB_TRACE( HB_TR_ALWAYS, "projectTree_dragEnterEvent" )
+      QDragEnterEvent():from( p ):acceptProposedAction()
+      EXIT
+
+   CASE "projectTree_dropEvent"
+HB_TRACE( HB_TR_ALWAYS, "projectTree_dropEvent" )
+      qEvent := QDropEvent():from( p )
+      qMime := QMimeData():from( qEvent:mimeData() )
+      IF qMime:hasUrls()
+         qList := QStringList():from( qMime:hbUrlList() )
+         FOR i := 0 TO qList:size() - 1
+            qUrl := QUrl():new( qList:at( i ) )
+            IF hbide_sourceType( qUrl:toLocalFile() ) == ".hbp"
+               ::oPM:loadProperties( qUrl:toLocalFile(), .f., .f., .t. )
             ENDIF
          NEXT
       ENDIF
@@ -508,7 +539,7 @@ METHOD IdeDocks:buildDockWidgets()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeDocks:getADockWidget( nAreas, cObjectName, cWindowTitle, nFlags )
+METHOD IdeDocks:getADockWidget( nAreas, cObjectName, cWindowTitle, nFlags, cEventVisibility )
    LOCAL oDock, nBasic
 
    DEFAULT nFlags TO 0
@@ -525,6 +556,10 @@ METHOD IdeDocks:getADockWidget( nAreas, cObjectName, cWindowTitle, nFlags )
    oDock:oWidget:setFocusPolicy( Qt_NoFocus )
    oDock:oWidget:setStyleSheet( getStyleSheet( "QDockWidget", ::nAnimantionMode ) )
    oDock:hide()
+
+   IF !empty( cEventVisibility )
+      ::connect( oDock:oWidget, cEventVisibility, {|p| ::execEvent( cEventVisibility, p, oDock:oWidget ) } )
+   ENDIF
 
    RETURN oDock
 
@@ -843,7 +878,7 @@ METHOD IdeDocks:addPanelButton( cPanel )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeDocks:buildProjectTree()
-   LOCAL i, oItem
+   LOCAL i, oItem, qDrop
    LOCAL nAreas := Qt_LeftDockWidgetArea + Qt_RightDockWidgetArea + Qt_TopDockWidgetArea + Qt_BottomDockWidgetArea
 
    ::oIde:oDockPT := ::getADockWidget( nAreas, "dockProjectTree", "Projects", QDockWidget_DockWidgetFloatable )
@@ -888,6 +923,13 @@ METHOD IdeDocks:buildProjectTree()
 
    ::oDockPT:hide()
 
+   qDrop := ::oDockPT:oWidget // ::oProjTree:oWidget
+
+   qDrop:setAcceptDrops( .t. )
+   qDrop:installEventFilter( ::pEvents )
+   ::connect( qDrop, QEvent_DragEnter, {|p| ::execEvent( "projectTree_dragEnterEvent", p ) } )
+   ::connect( qDrop, QEvent_Drop     , {|p| ::execEvent( "projectTree_dropEvent"     , p ) } )
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -931,8 +973,7 @@ METHOD IdeDocks:buildSkeletonsTree()
 
    ::oIde:oSkltnsTreeDock := ::getADockWidget( nAreas, "dockSkltnsTree", "Skeletons", QDockWidget_DockWidgetFloatable )
    ::oDlg:oWidget:addDockWidget_1( Qt_LeftDockWidgetArea, ::oSkltnsTreeDock:oWidget, Qt_Vertical )
-
-   ::connect( ::oSkltnsTreeDock:oWidget, "visibilityChanged(bool)", {|p| ::execEvent( "dockSkltnsTree_visibilityChanged", p ) } )
+   ::connect( ::oSkltnsTreeDock:oWidget, "visibilityChanged(bool)", {|p| ::execEvent( "dockSkltnsTree_visibilityChanged", p, ::oSkltnsTreeDock:oWidget ) } )
 
    RETURN Self
 
@@ -943,8 +984,7 @@ METHOD IdeDocks:buildFuncList()
 
    ::oIde:oFuncDock := ::getADockWidget( nAreas, "dockFuncList", "Functions List", QDockWidget_DockWidgetFloatable )
    ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oFuncDock:oWidget, Qt_Vertical )
-
-   ::connect( ::oFuncDock:oWidget, "visibilityChanged(bool)", {|p| ::execEvent( "oFuncDock_visibilityChanged", p ) } )
+   ::connect( ::oFuncDock:oWidget, "visibilityChanged(bool)", {|p| ::execEvent( "oFuncDock_visibilityChanged", p, ::oFuncDock:oWidget ) } )
 
    ::oIde:oFuncList := XbpListBox():new( ::oFuncDock ):create( , , { 0,0 }, { 100,400 }, , .t. )
    ::oFuncList:oWidget:setEditTriggers( QAbstractItemView_NoEditTriggers )
@@ -982,7 +1022,7 @@ METHOD IdeDocks:buildHelpWidget()
 
    ::oHelpDock:connect( ::qHelpBrw, "customContextMenuRequested(QPoint)", {|p| ::execEvent( "qHelpBrw_contextMenuRequested", p ) } )
 
-   ::connect( ::oHelpDock:oWidget, "visibilityChanged(bool)", {|p| ::execEvent( "dockHelpDock_visibilityChanged", p ) } )
+   ::connect( ::oHelpDock:oWidget, "visibilityChanged(bool)", {|p| ::execEvent( "dockHelpDock_visibilityChanged", p, ::oHelpDock:oWidget ) } )
 
    RETURN Self
 
@@ -1094,8 +1134,7 @@ METHOD IdeDocks:buildThemesDock()
 
    ::oIde:oThemesDock := ::getADockWidget( nAreas, "dockThemes", "Theme Manager", QDockWidget_DockWidgetFloatable )
    ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oThemesDock:oWidget, Qt_Horizontal )
-
-   ::connect( ::oThemesDock:oWidget, "visibilityChanged(bool)", {|p| ::execEvent( "dockThemes_visibilityChanged", p ) } )
+   ::connect( ::oThemesDock:oWidget, "visibilityChanged(bool)", {|p| ::execEvent( "dockThemes_visibilityChanged", p, ::oThemesDock:oWidget ) } )
 
    RETURN Self
 
@@ -1106,8 +1145,7 @@ METHOD IdeDocks:buildPropertiesDock()
 
    ::oIde:oPropertiesDock := ::getADockWidget( nAreas, "dockProperties", "Project Properties", QDockWidget_DockWidgetFloatable )
    ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oPropertiesDock:oWidget, Qt_Horizontal )
-
-   ::connect( ::oPropertiesDock:oWidget, "visibilityChanged(bool)", {|p| ::execEvent( "dockProperties_visibilityChanged", p ) } )
+   ::connect( ::oPropertiesDock:oWidget, "visibilityChanged(bool)", {|p| ::execEvent( "dockProperties_visibilityChanged", p, ::oPropertiesDock:oWidget ) } )
 
    RETURN Self
 
@@ -1118,8 +1156,7 @@ METHOD IdeDocks:buildFindInFiles()
 
    ::oIde:oFindDock := ::getADockWidget( nAreas, "dockFindInFiles", "Find in Files", QDockWidget_DockWidgetFloatable )
    ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oFindDock:oWidget, Qt_Horizontal )
-
-   ::connect( ::oFindDock:oWidget, "visibilityChanged(bool)", {|p| ::execEvent( "dockFindInFiles_visibilityChanged", p ) } )
+   ::connect( ::oFindDock:oWidget, "visibilityChanged(bool)", {|p| ::execEvent( "dockFindInFiles_visibilityChanged", p, ::oFindDock:oWidget ) } )
 
    RETURN Self
 
@@ -1130,8 +1167,7 @@ METHOD IdeDocks:buildDocViewer()
 
    ::oIde:oDocViewDock := ::getADockWidget( nAreas, "dockDocViewer", "Harbour Documentation", QDockWidget_DockWidgetFloatable )
    ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oDocViewDock:oWidget, Qt_Horizontal )
-
-   ::connect( ::oDocViewDock:oWidget, "visibilityChanged(bool)", {|p| ::execEvent( "dockDocViewer_visibilityChanged", p ) } )
+   ::connect( ::oDocViewDock:oWidget, "visibilityChanged(bool)", {|p| ::execEvent( "dockDocViewer_visibilityChanged", p, ::oDocViewDock:oWidget ) } )
 
    RETURN Self
 
@@ -1142,8 +1178,7 @@ METHOD IdeDocks:buildDocWriter()
 
    ::oIde:oDocWriteDock := ::getADockWidget( nAreas, "dockDocWriter", "Documentation Writer", QDockWidget_DockWidgetFloatable )
    ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oDocWriteDock:oWidget, Qt_Horizontal )
-
-   ::connect( ::oDocWriteDock:oWidget, "visibilityChanged(bool)", {|p| ::execEvent( "dockDocWriter_visibilityChanged", p ) } )
+   ::connect( ::oDocWriteDock:oWidget, "visibilityChanged(bool)", {|p| ::execEvent( "dockDocWriter_visibilityChanged", p, ::oDocWriteDock:oWidget ) } )
 
    RETURN Self
 
@@ -1154,8 +1189,7 @@ METHOD IdeDocks:buildFunctionsDock()
 
    ::oIde:oFunctionsDock := ::getADockWidget( nAreas, "dockFunctions", "Projects Functions Lookup", QDockWidget_DockWidgetFloatable )
    ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oFunctionsDock:oWidget, Qt_Horizontal )
-
-   ::connect( ::oFunctionsDock:oWidget, "visibilityChanged(bool)", {|p| ::execEvent( "docFunctions_visibilityChanged", p ) } )
+   ::connect( ::oFunctionsDock:oWidget, "visibilityChanged(bool)", {|p| ::execEvent( "docFunctions_visibilityChanged", p, ::oFunctionsDock:oWidget ) } )
 
    RETURN Self
 
@@ -1166,8 +1200,7 @@ METHOD IdeDocks:buildEnvironDock()
 
    ::oIde:oEnvironDock := ::getADockWidget( nAreas, "dockEnvironments", "Compiler Environments", QDockWidget_DockWidgetFloatable )
    ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oEnvironDock:oWidget, Qt_Horizontal )
-
-   ::connect( ::oEnvironDock:oWidget, "visibilityChanged(bool)", {|p| ::execEvent( "docEnvironments_visibilityChanged", p ) } )
+   ::connect( ::oEnvironDock:oWidget, "visibilityChanged(bool)", {|p| ::execEvent( "docEnvironments_visibilityChanged", p, ::oEnvironDock:oWidget ) } )
 
    RETURN Self
 
@@ -1178,20 +1211,20 @@ METHOD IdeDocks:buildSkeletonWidget()
 
    ::oIde:oSkeltnDock := ::getADockWidget( nAreas, "dockSkeleton", "Code Skeletons", QDockWidget_DockWidgetFloatable )
    ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oSkeltnDock:oWidget, Qt_Horizontal )
-
-   ::connect( ::oSkeltnDock:oWidget, "visibilityChanged(bool)", {|p| ::execEvent( "docSkeletons_visibilityChanged", p ) } )
+   ::connect( ::oSkeltnDock:oWidget, "visibilityChanged(bool)", {|p| ::execEvent( "docSkeletons_visibilityChanged", p, ::oSkeltnDock:oWidget ) } )
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeDocks:buildSourceThumbnail()
+   LOCAL oDock
    LOCAL nAreas := Qt_LeftDockWidgetArea + Qt_RightDockWidgetArea + Qt_TopDockWidgetArea + Qt_BottomDockWidgetArea
 
-   ::oIde:oSourceThumbnailDock := ::getADockWidget( nAreas, "dockSourceThumbnail", "Source Thumbnail", QDockWidget_DockWidgetFloatable )
-   ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oSourceThumbnailDock:oWidget, Qt_Horizontal )
-
-   ::connect( ::oSourceThumbnailDock:oWidget, "visibilityChanged(bool)", {|p| ::execEvent( "dockSourceThumbnail_visibilityChanged", p ) } )
+   oDock := ::getADockWidget( nAreas, "dockSourceThumbnail", "Source Thumbnail", QDockWidget_DockWidgetFloatable )
+   ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, oDock:oWidget, Qt_Horizontal )
+   ::connect( oDock:oWidget, "visibilityChanged(bool)", {|p| ::execEvent( "dockSourceThumbnail_visibilityChanged", p, oDock:oWidget ) } )
+   ::oIde:oSourceThumbnailDock := oDock
 
    RETURN Self
 
@@ -1202,12 +1235,7 @@ METHOD IdeDocks:buildQScintilla()
 
    ::oIde:oQScintillaDock := ::getADockWidget( nAreas, "dockQScintilla", "ideDBU", QDockWidget_DockWidgetFloatable )
    ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oQScintillaDock:oWidget, Qt_Horizontal )
-
-   ::connect( ::oQScintillaDock:oWidget, "visibilityChanged(bool)"  , {|p| ::execEvent( "dockQScintilla_visibilityChanged"  , p ) } )
-   ::connect( ::oQScintillaDock:oWidget, "topLevelChanged(bool)"    , {|p| ::execEvent( "dockQScintilla_topLevelChanged"    , p ) } )
-   ::connect( ::oQScintillaDock:oWidget, "dockLocationChanged(int)" , {|p| ::execEvent( "dockQScintilla_dockLocationChanged", p ) } )
-   ::connect( ::oQScintillaDock:oWidget, "allowedAreasChanged(int)" , {|p| ::execEvent( "dockQScintilla_allowedAreasChanged", p ) } )
-   ::connect( ::oQScintillaDock:oWidget, "featuresChanged(int)"     , {|p| ::execEvent( "dockQScintilla_featuresChanged"    , p ) } )
+   ::connect( ::oQScintillaDock:oWidget, "visibilityChanged(bool)"  , {|p| ::execEvent( "dockQScintilla_visibilityChanged", p, ::oQScintillaDock:oWidget ) } )
 
    RETURN Self
 

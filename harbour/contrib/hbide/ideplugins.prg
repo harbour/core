@@ -160,11 +160,8 @@ STATIC FUNCTION hbide_loadAPlugin( cPlugin, oIde, cVer )
 
 FUNCTION hbide_runAScript( cBuffer, cCompFlags, xParam )
    LOCAL cFile, pHrb, oErr
-   LOCAL bError := ErrorBlock( {|o| break( o ) } )
    LOCAL lError := .f.
-
-   HB_SYMBOL_UNUSED( cCompFlags )
-   HB_SYMBOL_UNUSED( xParam )
+   LOCAL bError := ErrorBlock( {|o| break( o ) } )
 
    BEGIN SEQUENCE
       cFile := hb_compileFromBuf( cBuffer, cCompFlags ) //, "-n2", "-w3", "-es2", "-q0" )
@@ -185,7 +182,6 @@ FUNCTION hbide_runAScript( cBuffer, cCompFlags, xParam )
    ENDIF
 
    ErrorBlock( bError )
-
    RETURN NIL
 
 /*----------------------------------------------------------------------*/

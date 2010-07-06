@@ -533,6 +533,10 @@ METHOD IdeBrowseManager:addTable( cFileDBF, cAlias, aInfo )
 
    oBrw:create()
 
+   IF empty( oBrw:oBrw )
+      RETURN Self
+   ENDIF
+
    qSubWindow := ::oCurPanel:addBrowser( oBrw, aInfo )
 
    ::connect( qSubWindow, "aboutToActivate()", {|| ::execEvent( "mdiSubWindow_aboutToActivate", qSubWindow ) } )
@@ -818,8 +822,9 @@ METHOD IdeBrowse:fetchAlias( cTable )
 /*------------------------------------------------------------------------*/
 
 METHOD IdeBrowse:create( oIde )
-   LOCAL xVrb, cT, cAlias
+   LOCAL xVrb, cT, cAlias, bError, oErr
    LOCAL lMissing := .t.
+   LOCAL lErr := .f.
 
    DEFAULT oIde TO ::oIde
    ::oIde := oIde
@@ -842,14 +847,24 @@ METHOD IdeBrowse:create( oIde )
       ENDIF
 
       IF lMissing .AND. !empty( ::cTable )
-         IF empty( ::cAlias )
-            USE ( ::cTable ) SHARED NEW VIA ( ::cDriver )
-         ELSE
-            cAlias := ::cAlias
-            USE ( ::cTable ) ALIAS ( cAlias ) SHARED NEW VIA ( ::cDriver )
-         ENDIF
-         IF NetErr()
-            MsgBox( ::cTable, "Could not been opened!" )
+         bError := ErrorBlock( {|o| break( o ) } )
+         BEGIN SEQUENCE
+            IF empty( ::cAlias )
+               USE ( ::cTable ) SHARED NEW VIA ( ::cDriver )
+            ELSE
+               cAlias := ::cAlias
+               USE ( ::cTable ) ALIAS ( cAlias ) SHARED NEW VIA ( ::cDriver )
+            ENDIF
+            IF NetErr()
+               MsgBox( ::cTable, "Could not been opened!" )
+               lErr := .t.
+            ENDIF
+         RECOVER USING oErr
+            MsgBox( oErr:description, "Error Opening Table" )
+            RETURN Self
+         ENDSEQUENCE
+         ErrorBlock( bError )
+         IF lErr
             RETURN Self
          ENDIF
          IF empty( ::cAlias )

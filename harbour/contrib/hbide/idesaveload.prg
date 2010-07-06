@@ -189,8 +189,6 @@ METHOD IdeINI:save( cHbideIni )
 
    DEFAULT cHbideIni TO ::oIde:cProjIni
 
-   HB_TRACE( HB_TR_ALWAYS, "IdeINI:saveINI( cHbideIni )" )
-
    IF ::oIde:nRunMode != HBIDE_RUN_MODE_INI
       RETURN Nil
    ENDIF
