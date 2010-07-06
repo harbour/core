@@ -480,6 +480,12 @@ HB_FUNC( HB_OSERROR )
    hb_retni( hb_fsOsError() );
 }
 
+HB_FUNC( HB_PS )
+{
+   hb_retc_const( HB_OS_PATH_DELIM_CHR_STRING );
+}
+
+/* Deprecated */
 HB_FUNC( HB_OSPATHSEPARATOR )
 {
    hb_retc_const( HB_OS_PATH_DELIM_CHR_STRING );

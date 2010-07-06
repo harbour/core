@@ -21,13 +21,12 @@
 #define F_NAME                  1       /* File name */
 #define F_ATTR                  5       /* File attribute */
 
-#define _PS_                    hb_osPathSeparator()
-
 #define _ACT_CLEAN              1
 #define _ACT_INC                2
 #define _ACT_INC_INST           3
 #define _ACT_INC_REBUILD_INST   4
 
+STATIC s_lStdAlone
 STATIC s_lTest
 STATIC s_lMigr
 
@@ -145,10 +144,11 @@ PROCEDURE Main( ... )
    LOCAL tmp
    LOCAL nAction
 
+   s_lStdAlone := Empty( "HB_HOST_BIN_DIR" )
    s_lMigr := "migr" $ hb_cmdLine()
 
    IF s_lMigr
-      OutStd( "! New contrib make orchestrator test run. |" + hb_cmdLine() + "|" + GetEnv( "HB_MAKECMDGOALS" ) + "|" + hb_dirBase() + "|" + CurDir() + "|", hb_osNewLine() )
+      OutStd( "! New contrib make orchestrator test run. |" + hb_cmdLine() + "|" + GetEnv( "HB_MAKECMDGOALS" ) + "|" + hb_dirBase() + "|" + CurDir() + "|", hb_eol() )
 
       /* testing with a limited set of contribs */
       aLibsPass1 := {;
@@ -235,11 +235,13 @@ PROCEDURE Main( ... )
 
    /* Clearing envvars that may interact with hbmk2 */
 
+   /* Copy original install dirs to our own variables */
    hb_setenv( "_HB_BIN_INSTALL", GetEnv( "HB_BIN_INSTALL" ) )
    hb_setenv( "_HB_LIB_INSTALL", GetEnv( "HB_LIB_INSTALL" ) )
    hb_setenv( "_HB_DYN_INSTALL", GetEnv( "HB_DYN_INSTALL" ) )
    hb_setenv( "_HB_INC_INSTALL", GetEnv( "HB_INC_INSTALL" ) )
 
+   /* Override hbmk2 autodetection */
    hb_setenv( "HB_INSTALL_PREFIX", cRoot )
    hb_setenv( "HB_BIN_INSTALL", cRoot + "bin/" + GetEnv( "HB_PLATFORM" ) + "/" + GetEnv( "HB_COMPILER" ) + iif( lBuildName, "/" + GetEnv( "HB_BUILD_NAME" ), "" ) )
    hb_setenv( "HB_LIB_INSTALL", cRoot + "lib/" + GetEnv( "HB_PLATFORM" ) + "/" + GetEnv( "HB_COMPILER" ) + iif( lBuildName, "/" + GetEnv( "HB_BUILD_NAME" ), "" ) )
@@ -251,8 +253,6 @@ PROCEDURE Main( ... )
    hb_setenv( "__HB_L", GetEnv( "HB_LIB_INSTALL" ) )
    hb_setenv( "__HB_D", GetEnv( "HB_DYN_INSTALL" ) )
    hb_setenv( "__HB_I", GetEnv( "HB_INC_INSTALL" ) )
-
-   hb_setenv( "HBMK_OPTIONS" )
 
    /* Parse filter */
 
@@ -361,7 +361,7 @@ PROCEDURE Main( ... )
                   call_hbmk2( cBase + cProject, cTargetDir, cOptionsPre, cOptionsPost, .T. )
                ENDIF
             ELSE
-               /* OutStd( hb_StrFormat( "'%s' project skipped", cProject ), hb_osNewLine() ) */
+               /* OutStd( hb_StrFormat( "'%s' project skipped", cProject ), hb_eol() ) */
             ENDIF
          ENDIF
       NEXT
@@ -378,16 +378,17 @@ STATIC FUNCTION call_hbmk2( cProject, cTargetDir, cOptionsPre, cOptionsPost, lDy
 
    hb_FNameSplit( cProject, @cDir, @cName )
 
-   /* Keeping cmdline as short as possible */
+   /* Keeping cmdline as short as possible. Also making sure that user settings
+      do not interfere with the std build process. */
    hb_setenv( "HBMK_OPTIONS", cOptionsPre )
 
-   nErrorLevel := mk_hb_processRun( PathSepToSelf( GetEnv( "HB_HOST_BIN_DIR" ) ) + _PS_ + "hbmk2" +;
+   nErrorLevel := mk_hb_processRun( PathSepToSelf( GetEnv( "HB_HOST_BIN_DIR" ) ) + hb_ps() + "hbmk2" +;
                                     " " + cProject +;
                                     cOptionsPost +;
                                     " -workdir=" + cTargetDir + "/${hb_work}/" + cName + iif( lDyn, "${hb_workdynsub}", "" ) +;
                                     " -o" + cTargetDir + "/" )
    IF nErrorLevel != 0
-      OutStd( hb_StrFormat( "'%s' returned status: %s", cProject, hb_ntos( nErrorLevel ) ), hb_osNewLine() )
+      OutStd( hb_StrFormat( "'%s' returned status: %s", cProject, hb_ntos( nErrorLevel ) ), hb_eol() )
       RETURN .F.
    ENDIF
 
@@ -395,7 +396,7 @@ STATIC FUNCTION call_hbmk2( cProject, cTargetDir, cOptionsPre, cOptionsPost, lDy
 
 STATIC FUNCTION mk_hb_processRun( cCommand )
 
-   OutStd( cCommand, hb_osNewLine() )
+   OutStd( cCommand, hb_eol() )
 
    RETURN iif( s_lTest, 0, hb_processRun( cCommand ) )
 
