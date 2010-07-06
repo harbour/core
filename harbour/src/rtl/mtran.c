@@ -53,36 +53,36 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 
-/* NOTE: pszResult must have an allocated buffer of at least ulStringLen */
+/* NOTE: pszResult must have an allocated buffer of at least nStringLen */
 
-static char * hb_strMemotran( char * pszResult, HB_SIZE * ulResultLen, const char * pszString, HB_SIZE ulStringLen, char cHardcr, char cSoftcr )
+static char * hb_strMemotran( char * pszResult, HB_SIZE * pnResultLen, const char * pszString, HB_SIZE nStringLen, char cHardcr, char cSoftcr )
 {
-   HB_SIZE ulStringPos = 0;
-   HB_SIZE ulResultPos = 0;
+   HB_SIZE nStringPos = 0;
+   HB_SIZE nResultPos = 0;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_strMemotran(%p, %p, %s, %" HB_PFS "u, %x, %x)", pszResult, ulResultLen, pszString, ulStringLen, cHardcr, cSoftcr));
+   HB_TRACE(HB_TR_DEBUG, ("hb_strMemotran(%p, %p, %s, %" HB_PFS "u, %x, %x)", pszResult, pnResultLen, pszString, nStringLen, cHardcr, cSoftcr));
 
-   while( ulStringPos < ulStringLen )
+   while( nStringPos < nStringLen )
    {
-      if(      pszString[ ulStringPos ]     == HB_CHAR_HARD1 &&
-               pszString[ ulStringPos + 1 ] == HB_CHAR_HARD2 )
+      if(      pszString[ nStringPos ]     == HB_CHAR_HARD1 &&
+               pszString[ nStringPos + 1 ] == HB_CHAR_HARD2 )
       {
-         pszResult[ ulResultPos++ ] = cHardcr;
-         ulStringPos += 2;
+         pszResult[ nResultPos++ ] = cHardcr;
+         nStringPos += 2;
       }
-      else if( pszString[ ulStringPos ]     == HB_CHAR_SOFT1 &&
-               pszString[ ulStringPos + 1 ] == HB_CHAR_SOFT2 )
+      else if( pszString[ nStringPos ]     == HB_CHAR_SOFT1 &&
+               pszString[ nStringPos + 1 ] == HB_CHAR_SOFT2 )
       {
-         pszResult[ ulResultPos++ ] = cSoftcr;
-         ulStringPos += 2;
+         pszResult[ nResultPos++ ] = cSoftcr;
+         nStringPos += 2;
       }
       else
-         pszResult[ ulResultPos++ ] = pszString[ ulStringPos++ ];
+         pszResult[ nResultPos++ ] = pszString[ nStringPos++ ];
    }
 
-   pszResult[ ulResultPos ] = '\0';
+   pszResult[ nResultPos ] = '\0';
 
-   *ulResultLen = ulResultPos;
+   *pnResultLen = nResultPos;
 
    return pszResult;
 }
@@ -96,10 +96,10 @@ HB_FUNC( MEMOTRAN )
       char * pszResult = ( char * ) hb_xgrab( hb_itemGetCLen( pString ) + 1 );
       char cHardcr = HB_ISCHAR( 2 ) ? *hb_parc( 2 ) : ';';
       char cSoftcr = HB_ISCHAR( 3 ) ? *hb_parc( 3 ) : ' ';
-      HB_SIZE ulResultLen;
+      HB_SIZE nResultLen;
 
-      hb_strMemotran( pszResult, &ulResultLen, hb_itemGetCPtr( pString ), hb_itemGetCLen( pString ), cHardcr, cSoftcr );
-      hb_retclen_buffer( pszResult, ulResultLen );
+      hb_strMemotran( pszResult, &nResultLen, hb_itemGetCPtr( pString ), hb_itemGetCLen( pString ), cHardcr, cSoftcr );
+      hb_retclen_buffer( pszResult, nResultLen );
    }
    else
       hb_retc_null();

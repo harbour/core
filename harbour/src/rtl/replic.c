@@ -60,26 +60,26 @@ HB_FUNC( REPLICATE )
 {
    if( HB_ISCHAR( 1 ) && HB_ISNUM( 2 ) )
    {
-      HB_ISIZ lTimes = hb_parns( 2 );
+      HB_ISIZ nTimes = hb_parns( 2 );
 
-      if( lTimes > 0 )
+      if( nTimes > 0 )
       {
-         HB_SIZE ulLen = hb_parclen( 1 );
+         HB_SIZE nLen = hb_parclen( 1 );
 
-         if( ( double ) ( ( double ) ulLen * ( double ) lTimes ) < ( double ) ULONG_MAX )
+         if( ( double ) ( ( double ) nLen * ( double ) nTimes ) < ( double ) ULONG_MAX )
          {
             const char * szText = hb_parc( 1 );
-            char * szResult = ( char * ) hb_xgrab( ( ulLen * lTimes ) + 1 );
+            char * szResult = ( char * ) hb_xgrab( ( nLen * nTimes ) + 1 );
             char * szPtr = szResult;
-            HB_ISIZ i;
+            HB_ISIZ n;
 
-            for( i = 0; i < lTimes; i++ )
+            for( n = 0; n < nTimes; ++n )
             {
-               hb_xmemcpy( szPtr, szText, ulLen );
-               szPtr += ulLen;
+               hb_xmemcpy( szPtr, szText, nLen );
+               szPtr += nLen;
             }
 
-            hb_retclen_buffer( szResult, ulLen * lTimes );
+            hb_retclen_buffer( szResult, nLen * nTimes );
          }
          else
             hb_errRT_BASE_SubstR( EG_STROVERFLOW, 1234, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );

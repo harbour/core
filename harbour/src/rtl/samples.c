@@ -78,21 +78,21 @@ static char * hb_SecToTimeStr( char * pszTime, long lTime )
 
 static long hb_TimeStrToSec( const char * pszTime )
 {
-   HB_SIZE ulLen;
+   HB_SIZE nLen;
    long lTime = 0;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_TimeStrToSec(%s)", pszTime));
 
-   ulLen = strlen( pszTime );
+   nLen = strlen( pszTime );
 
-   if( ulLen >= 1 )
-      lTime += ( long ) hb_strVal( pszTime, ulLen ) * 3600;
+   if( nLen >= 1 )
+      lTime += ( long ) hb_strVal( pszTime, nLen ) * 3600;
 
-   if( ulLen >= 4 )
-      lTime += ( long ) hb_strVal( pszTime + 3, ulLen - 3 ) * 60;
+   if( nLen >= 4 )
+      lTime += ( long ) hb_strVal( pszTime + 3, nLen - 3 ) * 60;
 
-   if( ulLen >= 7 )
-      lTime += ( long ) hb_strVal( pszTime + 6, ulLen - 6 );
+   if( nLen >= 7 )
+      lTime += ( long ) hb_strVal( pszTime + 6, nLen - 6 );
 
    return lTime;
 }

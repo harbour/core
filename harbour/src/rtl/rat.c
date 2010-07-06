@@ -54,26 +54,26 @@
 
 HB_FUNC( RAT )
 {
-   HB_SIZE ulSubLen = hb_parclen( 1 );
+   HB_SIZE nSubLen = hb_parclen( 1 );
 
-   if( ulSubLen )
+   if( nSubLen )
    {
-      HB_ISIZ lPos = hb_parclen( 2 ) - ulSubLen;
+      HB_ISIZ nPos = hb_parclen( 2 ) - nSubLen;
 
-      if( lPos >= 0 )
+      if( nPos >= 0 )
       {
          const char * pszSub = hb_parc( 1 );
          const char * pszText = hb_parc( 2 );
          HB_BOOL bFound = HB_FALSE;
 
-         while( lPos >= 0 && !bFound )
+         while( nPos >= 0 && !bFound )
          {
-            if( *( pszText + lPos ) == *pszSub )
-               bFound = ( memcmp( pszSub, pszText + lPos, ulSubLen ) == 0 );
-            lPos--;
+            if( *( pszText + nPos ) == *pszSub )
+               bFound = ( memcmp( pszSub, pszText + nPos, nSubLen ) == 0 );
+            nPos--;
          }
 
-         hb_retns( bFound ? lPos + 2 : 0 );
+         hb_retns( bFound ? nPos + 2 : 0 );
       }
       else
          hb_retns( 0 );
@@ -85,46 +85,46 @@ HB_FUNC( RAT )
 
 HB_FUNC( HB_RAT )
 {
-   HB_SIZE ulSubLen = hb_parclen( 1 );
+   HB_SIZE nSubLen = hb_parclen( 1 );
 
-   if( ulSubLen )
+   if( nSubLen )
    {
-      HB_ISIZ lPos = hb_parclen( 2 ) - ulSubLen;
+      HB_ISIZ nPos = hb_parclen( 2 ) - nSubLen;
 
-      if( lPos >= 0 )
+      if( nPos >= 0 )
       {
          const char * pszSub = hb_parc( 1 );
          const char * pszText = hb_parc( 2 );
          HB_BOOL bFound = HB_FALSE;
-         HB_ISIZ lStart;
+         HB_ISIZ nStart;
 
          if( HB_ISNUM( 3 ) )
          {
-            lStart = hb_parns( 3 );
-            if( lStart >= 1 )
-               --lStart;
+            nStart = hb_parns( 3 );
+            if( nStart >= 1 )
+               --nStart;
             else
-               lStart = 0;
+               nStart = 0;
          }
          else
-            lStart = 0;
+            nStart = 0;
 
          if( HB_ISNUM( 4 ) )
          {
-            HB_ISIZ lEnd = hb_parns( 4 ) - 1;
+            HB_ISIZ nEnd = hb_parns( 4 ) - 1;
 
-            if( lEnd < lPos )
-               lPos = lEnd;
+            if( nEnd < nPos )
+               nPos = nEnd;
          }
 
-         while( lPos >= lStart && !bFound )
+         while( nPos >= nStart && !bFound )
          {
-            if( *( pszText + lPos ) == *pszSub )
-               bFound = ( memcmp( pszSub, pszText + lPos, ulSubLen ) == 0 );
-            lPos--;
+            if( *( pszText + nPos ) == *pszSub )
+               bFound = ( memcmp( pszSub, pszText + nPos, nSubLen ) == 0 );
+            nPos--;
          }
 
-         hb_retns( bFound ? lPos + 2 : 0 );
+         hb_retns( bFound ? nPos + 2 : 0 );
       }
       else
          hb_retns( 0 );

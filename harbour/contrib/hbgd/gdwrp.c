@@ -57,16 +57,16 @@
 
 /* NOTE: Do some initialization required by the GD headers. */
 #if defined( HB_OS_WIN )
-   #if !defined( WIN32 )
-      #define WIN32
-   #endif
-   #if !defined( BGDWIN32 )
-      #define BGDWIN32
-   #endif
+#  if !defined( WIN32 )
+#     define WIN32
+#endif
+#  if !defined( BGDWIN32 )
+#     define BGDWIN32
+#  endif
 #endif
 
 #ifdef HAVE_CONFIG_H
-#include "config.h"
+#  include "config.h"
 #endif
 
 #include "gd.h"

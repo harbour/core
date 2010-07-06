@@ -96,7 +96,7 @@ struct mv_memvarArray_info
 {
    PHB_ITEM pArray;
    PHB_DYNS * pDyns;
-   HB_SIZE ulCount;
+   HB_SIZE nCount;
    int iScope;
 };
 
@@ -238,14 +238,14 @@ static void hb_memvarAddPrivate( PHB_DYNS pDynSym, PHB_ITEM pValue )
     */
    if( pMemvar )
    {
-      HB_SIZE ulCount = pPrivateStack->count;
-      while( ulCount > pPrivateStack->base )
+      HB_SIZE nCount = pPrivateStack->count;
+      while( nCount > pPrivateStack->base )
       {
-         if( pDynSym == pPrivateStack->stack[ ulCount - 1 ].pDynSym )
+         if( pDynSym == pPrivateStack->stack[ nCount - 1 ].pDynSym )
             break;
-         --ulCount;
+         --nCount;
       }
-      if( ulCount <= pPrivateStack->base )
+      if( nCount <= pPrivateStack->base )
          pMemvar = NULL;
    }
 
@@ -294,24 +294,24 @@ static void hb_memvarAddPrivate( PHB_DYNS pDynSym, PHB_ITEM pValue )
 HB_SIZE hb_memvarGetPrivatesBase( void )
 {
    HB_STACK_TLS_PRELOAD
-   HB_SIZE ulBase;
+   HB_SIZE nBase;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_memvarGetPrivatesBase()"));
 
-   ulBase = hb_stackGetPrivateStack()->base;
+   nBase = hb_stackGetPrivateStack()->base;
    hb_stackGetPrivateStack()->base = hb_stackGetPrivateStack()->count;
-   return ulBase;
+   return nBase;
 }
 
 /*
  * This function releases PRIVATE variables created after passed base
  */
-void hb_memvarSetPrivatesBase( HB_SIZE ulBase )
+void hb_memvarSetPrivatesBase( HB_SIZE nBase )
 {
    HB_STACK_TLS_PRELOAD
    PHB_PRIVATE_STACK pPrivateStack;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_memvarSetPrivatesBase(%" HB_PFS "u)", ulBase));
+   HB_TRACE(HB_TR_DEBUG, ("hb_memvarSetPrivatesBase(%" HB_PFS "u)", nBase));
 
    pPrivateStack = hb_stackGetPrivateStack();
 
@@ -326,7 +326,7 @@ void hb_memvarSetPrivatesBase( HB_SIZE ulBase )
          hb_memvarDetachDynSym( pDynSym, pPrivateStack->stack[ pPrivateStack->count ].pPrevMemvar );
       }
    }
-   pPrivateStack->base = ulBase;
+   pPrivateStack->base = nBase;
 }
 
 /*
@@ -542,13 +542,13 @@ void hb_memvarNewParameter( PHB_SYMB pSymbol, PHB_ITEM pValue )
    hb_memvarCreateFromDynSymbol( pSymbol->pDynSym, VS_PRIVATE, pValue );
 }
 
-static HB_DYNS_PTR hb_memvarFindSymbol( const char * szArg, HB_SIZE ulLen )
+static HB_DYNS_PTR hb_memvarFindSymbol( const char * szArg, HB_SIZE nLen )
 {
    HB_DYNS_PTR pDynSym = NULL;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_memvarFindSymbol(%p,%" HB_PFS "u)", szArg, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_memvarFindSymbol(%p,%" HB_PFS "u)", szArg, nLen));
 
-   if( ulLen && szArg && *szArg )
+   if( nLen && szArg && *szArg )
    {
       char szUprName[ HB_SYMBOL_NAME_LEN + 1 ];
       int iSize = 0;
@@ -575,7 +575,7 @@ static HB_DYNS_PTR hb_memvarFindSymbol( const char * szArg, HB_SIZE ulLen )
             szUprName[ iSize++ ] = cChar;
          }
       }
-      while( --ulLen && iSize < HB_SYMBOL_NAME_LEN );
+      while( --nLen && iSize < HB_SYMBOL_NAME_LEN );
 
       if( iSize )
       {
@@ -586,14 +586,14 @@ static HB_DYNS_PTR hb_memvarFindSymbol( const char * szArg, HB_SIZE ulLen )
    return pDynSym;
 }
 
-char * hb_memvarGetStrValuePtr( char * szVarName, HB_SIZE * pulLen )
+char * hb_memvarGetStrValuePtr( char * szVarName, HB_SIZE * pnLen )
 {
    HB_DYNS_PTR pDynVar;
    char * szValue = NULL;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_memvarGetStrValuePtr(%s, %p)", szVarName, pulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_memvarGetStrValuePtr(%s, %p)", szVarName, pnLen));
 
-   pDynVar = hb_memvarFindSymbol( szVarName, *pulLen );
+   pDynVar = hb_memvarFindSymbol( szVarName, *pnLen );
 
    if( pDynVar )
    {
@@ -612,7 +612,7 @@ char * hb_memvarGetStrValuePtr( char * szVarName, HB_SIZE * pulLen )
          if( HB_IS_STRING( pMemvar ) )
          {
             szValue = pMemvar->item.asString.value;
-            *pulLen = pMemvar->item.asString.length;
+            *pnLen = pMemvar->item.asString.length;
          }
       }
    }
@@ -712,14 +712,14 @@ static void hb_memvarRelease( HB_ITEM_PTR pMemvar )
       if( pDynSymbol && hb_dynsymGetMemvar( pDynSymbol ) )
       {
          HB_STACK_TLS_PRELOAD
-         HB_SIZE ulBase = hb_stackGetPrivateStack()->count;
+         HB_SIZE nBase = hb_stackGetPrivateStack()->count;
 
          /* Find the variable with a requested name that is currently visible
           * Start from the top of the stack.
           */
-         while( ulBase > 0 )
+         while( nBase > 0 )
          {
-            if( pDynSymbol == hb_stackGetPrivateStack()->stack[ --ulBase ].pDynSym )
+            if( pDynSymbol == hb_stackGetPrivateStack()->stack[ --nBase ].pDynSym )
             {
                /* reset current value to NIL - the overriden variables will be
                 * visible after exit from current procedure
@@ -749,17 +749,17 @@ static void hb_memvarRelease( HB_ITEM_PTR pMemvar )
 static void hb_memvarReleaseWithMask( const char *szMask, HB_BOOL bInclude )
 {
    HB_STACK_TLS_PRELOAD
-   HB_SIZE ulBase, ulCount;
+   HB_SIZE nBase, nCount;
    PHB_DYNS pDynVar;
    PHB_ITEM pMemvar;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_memvarReleaseWithMask(%s, %d)", szMask, (int) bInclude));
 
-   ulCount = hb_stackGetPrivateStack()->count;
-   ulBase = hb_stackBaseItem()->item.asSymbol.stackstate->ulPrivateBase;
-   while( ulCount-- > ulBase )
+   nCount = hb_stackGetPrivateStack()->count;
+   nBase = hb_stackBaseItem()->item.asSymbol.stackstate->ulPrivateBase;
+   while( nCount-- > nBase )
    {
-      pDynVar = hb_stackGetPrivateStack()->stack[ ulCount ].pDynSym;
+      pDynVar = hb_stackGetPrivateStack()->stack[ nCount ].pDynSym;
       /* reset current value to NIL - the overriden variables will be
        * visible after exit from current procedure
        */
@@ -784,13 +784,13 @@ static int hb_memvarScopeGet( PHB_DYNS pDynVar )
    else
    {
       HB_STACK_TLS_PRELOAD
-      HB_SIZE ulBase = hb_stackGetPrivateStack()->count;    /* start from the top of the stack */
+      HB_SIZE nBase = hb_stackGetPrivateStack()->count;    /* start from the top of the stack */
 
-      while( ulBase )
+      while( nBase )
       {
-         if( pDynVar == hb_stackGetPrivateStack()->stack[ --ulBase ].pDynSym )
+         if( pDynVar == hb_stackGetPrivateStack()->stack[ --nBase ].pDynSym )
          {
-            if( ulBase >= hb_stackGetPrivateStack()->base )
+            if( nBase >= hb_stackGetPrivateStack()->base )
                return HB_MV_PRIVATE_LOCAL;
             else
                return HB_MV_PRIVATE_GLOBAL;
@@ -802,13 +802,13 @@ static int hb_memvarScopeGet( PHB_DYNS pDynVar )
 
 /* This function checks the scope of passed variable name
  */
-int hb_memvarScope( const char * szVarName, HB_SIZE ulLength )
+int hb_memvarScope( const char * szVarName, HB_SIZE nLength )
 {
    PHB_DYNS pDynVar;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_memvarScope(%s, %" HB_PFS "u)", szVarName, ulLength));
+   HB_TRACE(HB_TR_DEBUG, ("hb_memvarScope(%s, %" HB_PFS "u)", szVarName, nLength));
 
-   pDynVar = hb_memvarFindSymbol( szVarName, ulLength );
+   pDynVar = hb_memvarFindSymbol( szVarName, nLength );
 
    if( pDynVar )
       return hb_memvarScopeGet( pDynVar );
@@ -987,7 +987,7 @@ static HB_DYNS_FUNC( hb_memvarCountVisible )
       if( !pMVInfo->iScope ||
           ( hb_memvarScopeGet( pDynSymbol ) & pMVInfo->iScope ) != 0 )
       {
-         pMVInfo->pDyns[ pMVInfo->ulCount++ ] = pDynSymbol;
+         pMVInfo->pDyns[ pMVInfo->nCount++ ] = pDynSymbol;
       }
    }
    return HB_TRUE;
@@ -1013,17 +1013,17 @@ PHB_ITEM hb_memvarSaveInArray( int iScope, HB_BOOL fCopy )
    MVInfo.pDyns = ( PHB_DYNS * ) hb_xgrab( hb_stackDynHandlesCount() *
                                            sizeof( PHB_DYNS ) );
 #endif
-   MVInfo.ulCount = 0;
+   MVInfo.nCount = 0;
    MVInfo.iScope = iScope;
 
    hb_dynsymProtectEval( hb_memvarCountVisible, ( void * ) &MVInfo );
-   if( MVInfo.ulCount > 0 )
+   if( MVInfo.nCount > 0 )
    {
-      pArray = hb_itemArrayNew( MVInfo.ulCount );
+      pArray = hb_itemArrayNew( MVInfo.nCount );
       do
       {
-         pItem = hb_arrayGetItemPtr( pArray, MVInfo.ulCount );
-         pDynSymbol = MVInfo.pDyns[ --MVInfo.ulCount ];
+         pItem = hb_arrayGetItemPtr( pArray, MVInfo.nCount );
+         pDynSymbol = MVInfo.pDyns[ --MVInfo.nCount ];
          pMemvar = hb_dynsymGetMemvar( pDynSymbol ),
 
          hb_arrayNew( pItem, 2 );
@@ -1041,7 +1041,7 @@ PHB_ITEM hb_memvarSaveInArray( int iScope, HB_BOOL fCopy )
             hb_xRefInc( pMemvar );
          }
       }
-      while( MVInfo.ulCount );
+      while( MVInfo.nCount );
    }
    hb_xfree( MVInfo.pDyns );
 
@@ -1050,12 +1050,12 @@ PHB_ITEM hb_memvarSaveInArray( int iScope, HB_BOOL fCopy )
 
 void hb_memvarRestoreFromArray( PHB_ITEM pArray )
 {
-   HB_SIZE ulCount, ulPos;
+   HB_SIZE nCount, nPos;
 
-   ulCount = hb_arrayLen( pArray );
-   for( ulPos = 1; ulPos <= ulCount; ++ulPos )
+   nCount = hb_arrayLen( pArray );
+   for( nPos = 1; nPos <= nCount; ++nPos )
    {
-      PHB_ITEM pItem = hb_arrayGetItemPtr( pArray, ulPos );
+      PHB_ITEM pItem = hb_arrayGetItemPtr( pArray, nPos );
       PHB_DYNS pDynSym = hb_arrayGetSymbol( pItem, 1 )->pDynSym;
       PHB_ITEM pMemvar = hb_arrayGetItemPtr( pItem, 2 )->item.asMemvar.value;
       hb_memvarValueIncRef( pMemvar );
@@ -1095,10 +1095,10 @@ HB_FUNC( __MVPUBLIC )
             {
                /* we are accepting an one-dimensional array of strings only
                 */
-               HB_SIZE j, ulLen = hb_arrayLen( pMemvar );
+               HB_SIZE n, nLen = hb_arrayLen( pMemvar );
 
-               for( j = 1; j <= ulLen; j++ )
-                  hb_memvarCreateFromItem( hb_arrayGetItemPtr( pMemvar, j ), VS_PUBLIC, NULL );
+               for( n = 1; n <= nLen; n++ )
+                  hb_memvarCreateFromItem( hb_arrayGetItemPtr( pMemvar, n ), VS_PUBLIC, NULL );
             }
             else
                hb_memvarCreateFromItem( pMemvar, VS_PUBLIC, NULL );
@@ -1127,10 +1127,10 @@ HB_FUNC( __MVPRIVATE )
             {
                /* we are accepting an one-dimensional array of strings only
                 */
-               HB_SIZE j, ulLen = hb_arrayLen( pMemvar );
+               HB_SIZE n, nLen = hb_arrayLen( pMemvar );
 
-               for( j = 1; j <= ulLen; j++ )
-                  hb_memvarCreateFromItem( hb_arrayGetItemPtr( pMemvar, j ), VS_PRIVATE, NULL );
+               for( n = 1; n <= nLen; n++ )
+                  hb_memvarCreateFromItem( hb_arrayGetItemPtr( pMemvar, n ), VS_PRIVATE, NULL );
             }
             else
                hb_memvarCreateFromItem( pMemvar, VS_PRIVATE, NULL );
@@ -1159,10 +1159,10 @@ HB_FUNC( __MVXRELEASE )
             {
                /* we are accepting an one-dimensional array of strings only
                 */
-               HB_SIZE j, ulLen = hb_arrayLen( pMemvar );
+               HB_SIZE n, nLen = hb_arrayLen( pMemvar );
 
-               for( j = 1; j <= ulLen; j++ )
-                  hb_memvarRelease( hb_arrayGetItemPtr( pMemvar, j ) );
+               for( n = 1; n <= nLen; n++ )
+                  hb_memvarRelease( hb_arrayGetItemPtr( pMemvar, n ) );
             }
             else
                hb_memvarRelease( pMemvar );
@@ -1385,19 +1385,19 @@ static HB_DYNS_FUNC( hb_memvarSave )
          if( HB_IS_STRING( pMemvar ) )
          {
             /* Store the closing zero byte, too */
-            HB_SIZE ulLen = hb_itemGetCLen( pMemvar ) + 1;
+            HB_SIZE nLen = hb_itemGetCLen( pMemvar ) + 1;
             int iOverFlow = 0;
 
             /* Clipper supports only 64KB strings */
-            if( ulLen > USHRT_MAX )
+            if( nLen > USHRT_MAX )
             {
-               ulLen = USHRT_MAX;
+               nLen = USHRT_MAX;
                iOverFlow = 1;
             }
             buffer[ 11 ] = 'C' + 128;
-            HB_PUT_LE_UINT16( &buffer[ 16 ], ulLen );
+            HB_PUT_LE_UINT16( &buffer[ 16 ], nLen );
             hb_fsWrite( fhnd, buffer, HB_MEM_REC_LEN );
-            hb_fsWriteLarge( fhnd, hb_itemGetCPtr( pMemvar ), ulLen - iOverFlow );
+            hb_fsWriteLarge( fhnd, hb_itemGetCPtr( pMemvar ), nLen - iOverFlow );
             if( iOverFlow )
                hb_fsWrite( fhnd, "\0", 1 );
          }

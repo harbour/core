@@ -57,13 +57,13 @@
 
 static int s_traceLogLevel = HB_TR_DEFAULT;
 
-static void hb_trace_message( char * buffer, HB_SIZE ulSize, int iParam, int iCount )
+static void hb_trace_message( char * buffer, HB_SIZE nSize, int iParam, int iCount )
 {
    int iFirst = iParam;
 
    buffer[ 0 ] = '\0';
 
-   while( iParam <= iCount && ulSize > 1 )
+   while( iParam <= iCount && nSize > 1 )
    {
       char * pszString;
       HB_SIZE nLen;
@@ -72,12 +72,12 @@ static void hb_trace_message( char * buffer, HB_SIZE ulSize, int iParam, int iCo
       if( iParam > iFirst )
       {
          *buffer++ = ' ';
-         --ulSize;
+         --nSize;
       }
       pszString = hb_itemString( hb_param( iParam, HB_IT_ANY ), &nLen, &fFree );
-      hb_strncpy( buffer, pszString, ulSize );
+      hb_strncpy( buffer, pszString, nSize );
       nLen = strlen( buffer );
-      ulSize -= nLen;
+      nSize -= nLen;
       buffer += nLen;
       if( fFree )
          hb_xfree( pszString );

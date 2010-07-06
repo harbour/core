@@ -96,18 +96,18 @@ static void hb_getScreenRange( int * piMin, int * piMax,
 HB_FUNC( SAVESCREEN )
 {
    int iTop, iLeft, iBottom, iRight;
-   HB_SIZE ulSize;
+   HB_SIZE nSize;
    void * pBuffer;
    HB_BOOL fNoCheck = HB_FALSE;
 
    hb_getScreenRange( &iTop, &iBottom, fNoCheck, HB_TRUE );
    hb_getScreenRange( &iLeft, &iRight, fNoCheck, HB_FALSE );
 
-   hb_gtRectSize( iTop, iLeft, iBottom, iRight, &ulSize );
-   pBuffer = hb_xgrab( ulSize + 1 );
+   hb_gtRectSize( iTop, iLeft, iBottom, iRight, &nSize );
+   pBuffer = hb_xgrab( nSize + 1 );
 
    hb_gtSave( iTop, iLeft, iBottom, iRight, pBuffer );
-   hb_retclen_buffer( ( char * ) pBuffer, ulSize );
+   hb_retclen_buffer( ( char * ) pBuffer, nSize );
 }
 
 HB_FUNC( RESTSCREEN )

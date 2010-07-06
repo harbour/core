@@ -423,8 +423,8 @@ typedef struct _HB_ITEM
 typedef struct _HB_BASEARRAY
 {
    PHB_ITEM    pItems;       /* pointer to the array items */
-   HB_SIZE     ulLen;        /* number of items in the array */
-   HB_SIZE     ulAllocated;  /* number of allocated items */
+   HB_SIZE     nLen;         /* number of items in the array */
+   HB_SIZE     nAllocated;   /* number of allocated items */
    HB_USHORT   uiClass;      /* offset to the classes base if it is an object */
    HB_USHORT   uiPrevCls;    /* for fixing after access super */
 } HB_BASEARRAY, * PHB_BASEARRAY, * HB_BASEARRAY_PTR;

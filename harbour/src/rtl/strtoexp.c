@@ -58,19 +58,19 @@ HB_FUNC( HB_STRTOEXP )
 
    if( pszString )
    {
-      HB_SIZE ulLen = hb_parclen( 1 ), ulRet, ul, uQ = 0;
+      HB_SIZE nLen = hb_parclen( 1 ), nRet, n, nQ = 0;
       int iType = 0;
       char ch, * pDst, * pszResult;
 
-      for( ul = 0; ul < ulLen; ++ul )
+      for( n = 0; n < nLen; ++n )
       {
-         switch( pszString[ ul ] )
+         switch( pszString[ n ] )
          {
             case '\\':
-               ++uQ;
+               ++nQ;
                break;
             case '"':
-               ++uQ;
+               ++nQ;
                iType |= 1;
                break;
             case '\'':
@@ -82,23 +82,23 @@ HB_FUNC( HB_STRTOEXP )
             case '\r':
             case '\n':
                iType |= 7;
-               ++uQ;
+               ++nQ;
                break;
             case '\0':
                iType |= 7;
-               uQ += 3;
+               nQ += 3;
                break;
          }
       }
       if( iType == 7 || hb_parl( 2 ) )
       {
-         ulRet = ulLen + 3 + uQ;
-         pDst = pszResult = ( char * ) hb_xgrab( ulRet + 1 );
+         nRet = nLen + 3 + nQ;
+         pDst = pszResult = ( char * ) hb_xgrab( nRet + 1 );
          *pDst++ = 'e';
          *pDst++ = '"';
-         for( ul = 0; ul < ulLen; ++ul )
+         for( n = 0; n < nLen; ++n )
          {
-            ch = pszString[ ul ];
+            ch = pszString[ n ];
             switch( ch )
             {
                case '\r':
@@ -127,8 +127,8 @@ HB_FUNC( HB_STRTOEXP )
       }
       else
       {
-         ulRet = ulLen + 2;
-         pDst = pszResult = ( char * ) hb_xgrab( ulRet + 1 );
+         nRet = nLen + 2;
+         pDst = pszResult = ( char * ) hb_xgrab( nRet + 1 );
          if( ( iType & 1 ) == 0 )
             *pDst++ = ch = '"';
          else if( ( iType & 2 ) == 0 )
@@ -138,11 +138,11 @@ HB_FUNC( HB_STRTOEXP )
             *pDst++ = '[';
             ch = ']';
          }
-         memcpy( pDst, pszString, ulLen );
-         pDst += ulLen;
+         memcpy( pDst, pszString, nLen );
+         pDst += nLen;
          *pDst++ = ch;
       }
       *pDst = '\0';
-      hb_retclen_buffer( pszResult, ulRet );
+      hb_retclen_buffer( pszResult, nRet );
    }
 }

@@ -62,16 +62,16 @@ HB_FUNC( RIGHT )
 
    if( pText && HB_ISNUM( 2 ) )
    {
-      HB_ISIZ lLen = hb_parns( 2 );
-      if( lLen <= 0 )
+      HB_ISIZ nLen = hb_parns( 2 );
+      if( nLen <= 0 )
          hb_retc_null();
       else
       {
-         HB_SIZE ulText = hb_itemGetCLen( pText );
-         if( ( HB_SIZE ) lLen >= ulText )
+         HB_SIZE nText = hb_itemGetCLen( pText );
+         if( ( HB_SIZE ) nLen >= nText )
             hb_itemReturn( pText );
          else
-            hb_retclen( hb_itemGetCPtr( pText ) + ulText - lLen, lLen );
+            hb_retclen( hb_itemGetCPtr( pText ) + nText - nLen, nLen );
       }
    }
    else

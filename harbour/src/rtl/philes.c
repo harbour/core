@@ -113,31 +113,31 @@ HB_FUNC( FREAD )
 {
    PHB_ITEM pBuffer = hb_param( 2, HB_IT_STRING );
    HB_ERRCODE uiError = 0;
-   HB_SIZE ulRead = 0;
+   HB_SIZE nRead = 0;
 
    if( HB_ISNUM( 1 ) && pBuffer && HB_ISBYREF( 2 ) && HB_ISNUM( 3 ) )
    {
       char * buffer;
-      HB_SIZE ulSize;
+      HB_SIZE nSize;
 
-      ulRead = hb_parns( 3 );
+      nRead = hb_parns( 3 );
 
       /* NOTE: CA-Cl*pper determines the maximum size by calling _parcsiz()
                instead of _parclen(), this means that the maximum read length
                will be one more than the length of the passed buffer, because
                the terminating zero could be used if needed. [vszakats] */
 
-      if( ulRead <= hb_parcsiz( 2 ) &&
-          hb_itemGetWriteCL( pBuffer, &buffer, &ulSize ) )
+      if( nRead <= hb_parcsiz( 2 ) &&
+          hb_itemGetWriteCL( pBuffer, &buffer, &nSize ) )
       {
-         ulRead = hb_fsReadLarge( hb_numToHandle( hb_parnint( 1 ) ), buffer, ulRead );
+         nRead = hb_fsReadLarge( hb_numToHandle( hb_parnint( 1 ) ), buffer, nRead );
          uiError = hb_fsError();
       }
       else
-         ulRead = 0;
+         nRead = 0;
    }
 
-   hb_retnint( ulRead );
+   hb_retns( nRead );
    hb_fsSetFError( uiError );
 }
 
@@ -160,7 +160,7 @@ HB_FUNC( FWRITE )
       uiError = hb_fsError();
    }
    else
-      hb_retni( 0 );
+      hb_retns( 0 );
    hb_fsSetFError( uiError );
 }
 
@@ -237,17 +237,17 @@ HB_FUNC( FREADSTR )
 
    if( HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
    {
-      HB_SIZE ulToRead = hb_parns( 2 );
+      HB_SIZE nToRead = hb_parns( 2 );
 
-      if( ulToRead > 0 )
+      if( nToRead > 0 )
       {
          HB_FHANDLE fhnd = ( HB_FHANDLE ) hb_parni( 1 );
-         char * buffer = ( char * ) hb_xgrab( ulToRead + 1 );
-         HB_SIZE ulRead;
+         char * buffer = ( char * ) hb_xgrab( nToRead + 1 );
+         HB_SIZE nRead;
 
-         ulRead = hb_fsReadLarge( fhnd, buffer, ulToRead );
+         nRead = hb_fsReadLarge( fhnd, buffer, nToRead );
          uiError = hb_fsError();
-         buffer[ ulRead ] = '\0';
+         buffer[ nRead ] = '\0';
 
          /* NOTE: Clipper will not return zero chars from this functions. */
          hb_retc_buffer( buffer );

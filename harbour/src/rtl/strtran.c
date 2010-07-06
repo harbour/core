@@ -116,28 +116,28 @@ HB_FUNC( STRTRAN )
             if( bAll || nCount > 0 )
             {
                HB_SIZE nFound = 0;
-               HB_ISIZ lReplaced = 0;
-               HB_SIZE i = 0;
+               HB_ISIZ nReplaced = 0;
+               HB_SIZE n = 0;
                HB_SIZE nLength = nText;
                HB_SIZE nStop = nText - nSeek + 1;
 
-               while( i < nStop )
+               while( n < nStop )
                {
-                  if( ( bAll || lReplaced < ( HB_ISIZ ) nCount ) &&
-                      ! memcmp( szText + i, szSeek, nSeek ) )
+                  if( ( bAll || nReplaced < ( HB_ISIZ ) nCount ) &&
+                      ! memcmp( szText + n, szSeek, nSeek ) )
                   {
                      nFound++;
                      if( nFound >= nStart )
                      {
-                        lReplaced++;
+                        nReplaced++;
                         nLength = nLength - nSeek + nReplace;
-                        i += nSeek;
+                        n += nSeek;
                      }
                      else
-                        i++;
+                        n++;
                   }
                   else
-                     i++;
+                     n++;
                }
 
                if( nFound )
@@ -146,31 +146,31 @@ HB_FUNC( STRTRAN )
                   char * szPtr = szResult;
 
                   nFound = 0;
-                  i = 0;
-                  while( i < nText )
+                  n = 0;
+                  while( n < nText )
                   {
-                     if( lReplaced && ! memcmp( szText + i, szSeek, nSeek ) )
+                     if( nReplaced && ! memcmp( szText + n, szSeek, nSeek ) )
                      {
                         nFound++;
                         if( nFound >= nStart )
                         {
-                           lReplaced--;
+                           nReplaced--;
                            memcpy( szPtr, szReplace, nReplace );
                            szPtr += nReplace;
-                           i += nSeek;
+                           n += nSeek;
                         }
                         else
                         {
-                           *szPtr = szText[ i ];
+                           *szPtr = szText[ n ];
                            szPtr++;
-                           i++;
+                           n++;
                         }
                      }
                      else
                      {
-                        *szPtr = szText[ i ];
+                        *szPtr = szText[ n ];
                         szPtr++;
-                        i++;
+                        n++;
                      }
                   }
                   hb_retclen_buffer( szResult, nLength );

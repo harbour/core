@@ -57,43 +57,43 @@
 /* left-pads a date, number, or string with spaces or supplied character */
 HB_FUNC( PADL )
 {
-   HB_SIZE ulSize;
+   HB_SIZE nSize;
    HB_BOOL bFreeReq;
    char * szText;
-   HB_ISIZ lLen = hb_parns( 2 );
+   HB_ISIZ nLen = hb_parns( 2 );
 
-   if( lLen > 0 )
+   if( nLen > 0 )
    {
       PHB_ITEM pItem = hb_param( 1, HB_IT_ANY );
 
-      if( pItem && HB_IS_STRING( pItem ) && ( HB_SIZE ) lLen == hb_itemGetCLen( pItem ) )
+      if( pItem && HB_IS_STRING( pItem ) && ( HB_SIZE ) nLen == hb_itemGetCLen( pItem ) )
       {
          hb_itemReturn( pItem );
       }
       else
       {
-         szText = hb_itemPadConv( pItem, &ulSize, &bFreeReq );
+         szText = hb_itemPadConv( pItem, &nSize, &bFreeReq );
          if( szText )
          {
-            if( ( HB_SIZE ) lLen > ulSize )
+            if( ( HB_SIZE ) nLen > nSize )
             {
-               char * szResult = ( char * ) hb_xgrab( lLen + 1 );
+               char * szResult = ( char * ) hb_xgrab( nLen + 1 );
                char cPad;
 
                cPad = ( HB_ISCHAR( 3 ) ? *( hb_parc( 3 ) ) : ' ' );
-               hb_xmemset( szResult, cPad, ( HB_SIZE ) lLen - ulSize );
-               hb_xmemcpy( szResult + ( HB_SIZE ) lLen - ulSize, szText, ulSize );
+               hb_xmemset( szResult, cPad, ( HB_SIZE ) nLen - nSize );
+               hb_xmemcpy( szResult + ( HB_SIZE ) nLen - nSize, szText, nSize );
 
-               hb_retclen_buffer( szResult, ( HB_SIZE ) lLen );
+               hb_retclen_buffer( szResult, ( HB_SIZE ) nLen );
                if( bFreeReq )
                   hb_xfree( szText );
             }
             else
             {
                if( bFreeReq )
-                  hb_retclen_buffer( szText, ( HB_SIZE ) lLen );
+                  hb_retclen_buffer( szText, ( HB_SIZE ) nLen );
                else
-                  hb_retclen( szText, lLen );
+                  hb_retclen( szText, nLen );
             }
          }
          else

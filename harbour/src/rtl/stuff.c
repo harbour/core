@@ -58,32 +58,32 @@ HB_FUNC( STUFF )
    if( HB_ISCHAR( 1 ) && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) && HB_ISCHAR( 4 ) )
    {
       const char * szText = hb_parc( 1 );
-      HB_SIZE ulText = hb_parclen( 1 );
-      HB_SIZE ulPos = hb_parns( 2 );
-      HB_SIZE ulDel = hb_parns( 3 );
-      HB_SIZE ulInsert = hb_parclen( 4 );
+      HB_SIZE nText = hb_parclen( 1 );
+      HB_SIZE nPos = hb_parns( 2 );
+      HB_SIZE nDel = hb_parns( 3 );
+      HB_SIZE nInsert = hb_parclen( 4 );
 
-      HB_SIZE ulTotalLen;
+      HB_SIZE nTotalLen;
 
-      if( ulPos > 0 )
-         ulPos--;
+      if( nPos > 0 )
+         nPos--;
 
-      if( ulPos > ulText )
-         ulPos = ulText;
+      if( nPos > nText )
+         nPos = nText;
 
-      if( ulDel > ulText - ulPos )
-         ulDel = ulText - ulPos;
+      if( nDel > nText - nPos )
+         nDel = nText - nPos;
 
-      if( ( ulTotalLen = ulText + ulInsert - ulDel ) > 0 )
+      if( ( nTotalLen = nText + nInsert - nDel ) > 0 )
       {
-         char * szResult = ( char * ) hb_xgrab( ulTotalLen + 1 );
+         char * szResult = ( char * ) hb_xgrab( nTotalLen + 1 );
 
-         hb_xmemcpy( szResult, szText, ulPos );
-         hb_xmemcpy( szResult + ulPos, hb_parc( 4 ), ulInsert );
-         hb_xmemcpy( szResult + ulPos + ulInsert, szText + ulPos + ulDel, ulText - ( ulPos + ulDel ) );
+         hb_xmemcpy( szResult, szText, nPos );
+         hb_xmemcpy( szResult + nPos, hb_parc( 4 ), nInsert );
+         hb_xmemcpy( szResult + nPos + nInsert, szText + nPos + nDel, nText - ( nPos + nDel ) );
 
-         szResult[ ulTotalLen ] = '\0';
-         hb_retclen_buffer( szResult, ulTotalLen );
+         szResult[ nTotalLen ] = '\0';
+         hb_retclen_buffer( szResult, nTotalLen );
       }
       else
          hb_retc_null();

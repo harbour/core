@@ -58,7 +58,7 @@
 
 HB_FUNC( HB_QSELF )
 {
-   HB_LONG lOffset = hb_stackBaseProcOffset( 1 );
+   HB_ISIZ lOffset = hb_stackBaseProcOffset( 1 );
 
    if( lOffset > 0 )
    {

@@ -286,29 +286,29 @@ HB_FUNC( HB_SETKEYSAVE )
    PHB_SK_DATA sk_data = ( PHB_SK_DATA ) hb_stackGetTSD( &s_skData );
    PHB_ITEM pKeys, pKeyElements, pParam;
    PHB_SETKEY sk_list_tmp;
-   HB_SIZE itemcount, nitem;
+   HB_SIZE nItemCount, nItem;
 
    /* build an multi-dimensional array from existing hot-keys, and return it */
 
    /* count the number of items in the list */
-   for( itemcount = 0, sk_list_tmp = sk_data->sk_list;
+   for( nItemCount = 0, sk_list_tmp = sk_data->sk_list;
         sk_list_tmp;
-        itemcount++, sk_list_tmp = sk_list_tmp->next )
+        nItemCount++, sk_list_tmp = sk_list_tmp->next )
       ;
 
-   pKeys = hb_itemArrayNew( itemcount );
+   pKeys = hb_itemArrayNew( nItemCount );
    pKeyElements = hb_itemNew( NULL );
 
-   for( nitem = 1, sk_list_tmp = sk_data->sk_list;
-        nitem <= itemcount;
-        nitem++, sk_list_tmp = sk_list_tmp->next )
+   for( nItem = 1, sk_list_tmp = sk_data->sk_list;
+        nItem <= nItemCount;
+        nItem++, sk_list_tmp = sk_list_tmp->next )
    {
       hb_arrayNew( pKeyElements, 3 );
       hb_arraySetNI( pKeyElements, 1, sk_list_tmp->iKeyCode );
       hb_arraySet( pKeyElements, 2, sk_list_tmp->pAction );
       if( sk_list_tmp->pIsActive )
          hb_arraySet( pKeyElements, 3, sk_list_tmp->pIsActive );
-      hb_arraySetForward( pKeys, nitem, pKeyElements );
+      hb_arraySetForward( pKeys, nItem, pKeyElements );
    }
    hb_itemRelease( pKeyElements );
    hb_itemReturnRelease( pKeys );
@@ -320,11 +320,11 @@ HB_FUNC( HB_SETKEYSAVE )
 
       if( HB_IS_ARRAY( pParam ) )
       {
-         itemcount = hb_arrayLen( pParam );
+         nItemCount = hb_arrayLen( pParam );
 
-         for( nitem = 1; nitem <= itemcount; nitem++ )
+         for( nItem = 1; nItem <= nItemCount; nItem++ )
          {
-            PHB_ITEM itmKeyElements = hb_arrayGetItemPtr( pParam, nitem );
+            PHB_ITEM itmKeyElements = hb_arrayGetItemPtr( pParam, nItem );
 
             sk_add( &sk_data->sk_list, HB_FALSE,
                     hb_arrayGetNI( itmKeyElements, 1 ),

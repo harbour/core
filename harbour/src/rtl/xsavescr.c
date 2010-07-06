@@ -87,13 +87,13 @@ static HB_TSD_NEW( s_scrData, sizeof( HB_SCRDATA ), NULL, hb_xSaveRestRelease );
 HB_FUNC( __XSAVESCREEN )
 {
    PHB_SCRDATA pScrData = ( PHB_SCRDATA ) hb_stackGetTSD( &s_scrData );
-   HB_SIZE ulSize;
+   HB_SIZE nSize;
 
    hb_gtGetPos( &pScrData->row, &pScrData->col );
-   hb_gtRectSize( 0, 0, hb_gtMaxRow(), hb_gtMaxCol(), &ulSize );
+   hb_gtRectSize( 0, 0, hb_gtMaxRow(), hb_gtMaxCol(), &nSize );
    if( pScrData->buffer )
       hb_xfree( pScrData->buffer );
-   pScrData->buffer = hb_xgrab( ulSize );
+   pScrData->buffer = hb_xgrab( nSize );
    hb_gtSave( 0, 0, hb_gtMaxRow(), hb_gtMaxCol(), pScrData->buffer );
 }
 

@@ -474,27 +474,30 @@ STATIC FUNCTION hbrun_FindInPath( cFileName )
          RETURN cFileName
       ENDIF
 
-      /* Check in the dir of this executable. */
-      IF ! Empty( hb_DirBase() )
-         IF hb_FileExists( cFileName := hb_FNameMerge( hb_DirBase(), cName, cExt ) )
-            RETURN cFileName
-         ENDIF
-      ENDIF
+      IF Empty( cDir )
 
-      /* Check in the PATH. */
-      #if defined( __PLATFORM__WINDOWS ) .OR. ;
-          defined( __PLATFORM__DOS ) .OR. ;
-          defined( __PLATFORM__OS2 )
-      FOR EACH cDirPATH IN hb_ATokens( GetEnv( "PATH" ), hb_osPathListSeparator(), .T., .T. )
-      #else
-      FOR EACH cDirPATH IN hb_ATokens( GetEnv( "PATH" ), hb_osPathListSeparator() )
-      #endif
-         IF ! Empty( cDirPATH )
-            IF hb_FileExists( cFileName := hb_FNameMerge( hbrun_DirAddPathSep( hbrun_StrStripQuote( cDirPATH ) ), cName, cExt ) )
+         /* Check in the dir of this executable. */
+         IF ! Empty( hb_DirBase() )
+            IF hb_FileExists( cFileName := hb_FNameMerge( hb_DirBase(), cName, cExt ) )
                RETURN cFileName
             ENDIF
          ENDIF
-      NEXT
+
+         /* Check in the PATH. */
+         #if defined( __PLATFORM__WINDOWS ) .OR. ;
+             defined( __PLATFORM__DOS ) .OR. ;
+             defined( __PLATFORM__OS2 )
+         FOR EACH cDirPATH IN hb_ATokens( GetEnv( "PATH" ), hb_osPathListSeparator(), .T., .T. )
+         #else
+         FOR EACH cDirPATH IN hb_ATokens( GetEnv( "PATH" ), hb_osPathListSeparator() )
+         #endif
+            IF ! Empty( cDirPATH )
+               IF hb_FileExists( cFileName := hb_FNameMerge( hbrun_DirAddPathSep( hbrun_StrStripQuote( cDirPATH ) ), cName, cExt ) )
+                  RETURN cFileName
+               ENDIF
+            ENDIF
+         NEXT
+      ENDIF
    NEXT
 
    RETURN NIL

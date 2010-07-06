@@ -112,20 +112,20 @@ HB_FUNC( HB_KEYPUT )
    else if( HB_ISARRAY( 1 ) )
    {
       PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
-      HB_SIZE ulIndex;
-      HB_SIZE ulElements = hb_arrayLen( pArray );
+      HB_SIZE nIndex;
+      HB_SIZE nElements = hb_arrayLen( pArray );
 
-      for( ulIndex = 1; ulIndex <= ulElements; ++ulIndex )
+      for( nIndex = 1; nIndex <= nElements; ++nIndex )
       {
-         HB_TYPE type = hb_arrayGetType( pArray, ulIndex );
+         HB_TYPE type = hb_arrayGetType( pArray, nIndex );
 
          if( type & HB_IT_NUMERIC )
          {
-            hb_inkeyPut( hb_arrayGetNI( pArray, ulIndex ) );
+            hb_inkeyPut( hb_arrayGetNI( pArray, nIndex ) );
          }
          else if( type & HB_IT_STRING )
          {
-            hb_inkeySetText( hb_arrayGetCPtr( pArray, ulIndex ), hb_arrayGetCLen( pArray, ulIndex ) );
+            hb_inkeySetText( hb_arrayGetCPtr( pArray, nIndex ), hb_arrayGetCLen( pArray, nIndex ) );
          }
       }
    }
@@ -144,20 +144,20 @@ HB_FUNC( HB_KEYINS )
    else if( HB_ISARRAY( 1 ) )
    {
       PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
-      HB_SIZE ulIndex;
-      HB_SIZE ulElements = hb_arrayLen( pArray );
+      HB_SIZE nIndex;
+      HB_SIZE nElements = hb_arrayLen( pArray );
 
-      for( ulIndex = 1; ulIndex <= ulElements; ++ulIndex )
+      for( nIndex = 1; nIndex <= nElements; ++nIndex )
       {
-         HB_TYPE type = hb_arrayGetType( pArray, ulIndex );
+         HB_TYPE type = hb_arrayGetType( pArray, nIndex );
 
          if( type & HB_IT_NUMERIC )
          {
-            hb_inkeyIns( hb_arrayGetNI( pArray, ulIndex ) );
+            hb_inkeyIns( hb_arrayGetNI( pArray, nIndex ) );
          }
          else if( type & HB_IT_STRING )
          {
-            hb_inkeySetText( hb_arrayGetCPtr( pArray, ulIndex ), hb_arrayGetCLen( pArray, ulIndex ) );
+            hb_inkeySetText( hb_arrayGetCPtr( pArray, nIndex ), hb_arrayGetCLen( pArray, nIndex ) );
          }
       }
    }
@@ -183,4 +183,3 @@ HB_FUNC( HB_SETLASTKEY )
    if( HB_ISNUM( 1 ) )
       hb_retni( hb_inkeySetLast( hb_parni( 1 ) ) );
 }
-

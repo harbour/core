@@ -57,98 +57,98 @@
 typedef struct
 {
    const char *   szEOL;
-   HB_SIZE        ulLen;
+   HB_SIZE        nLen;
 } HB_EOL_INFO, * PHB_EOL_INFO;
 
-static int hb_mlEol( const char * pszString, HB_SIZE ulLen,
+static int hb_mlEol( const char * pszString, HB_SIZE nLen,
                      PHB_EOL_INFO pEOLs, int iEOLs )
 {
    int i;
    for( i = 0; i < iEOLs; ++i )
    {
-      if( ulLen >= pEOLs[ i ].ulLen &&
-          memcmp( pszString, pEOLs[ i ].szEOL, pEOLs[ i ].ulLen ) == 0 )
+      if( nLen >= pEOLs[ i ].nLen &&
+          memcmp( pszString, pEOLs[ i ].szEOL, pEOLs[ i ].nLen ) == 0 )
          return i;
    }
    return -1;
 }
 
-static HB_SIZE hb_mlGetLine( const char * pszString, HB_SIZE ulLen, HB_SIZE ulOffset,
-                             HB_SIZE ulLineLength, HB_SIZE ulTabSize, HB_SIZE ulMaxPos,
+static HB_SIZE hb_mlGetLine( const char * pszString, HB_SIZE nLen, HB_SIZE nOffset,
+                             HB_SIZE nLineLength, HB_SIZE nTabSize, HB_SIZE nMaxPos,
                              HB_BOOL fWordWrap, PHB_EOL_INFO pEOLs, int iEOLs,
-                             HB_SIZE * pulLen, HB_SIZE * pulEOL )
+                             HB_SIZE * pnLen, HB_SIZE * pnEOL )
 {
-   HB_SIZE ulCol = 0, ulBlankCol = 0, ulBlankPos = 0;
+   HB_SIZE nCol = 0, nBlankCol = 0, nBlankPos = 0;
    int i;
 
-   if( pulEOL )
-      * pulEOL = 0;
+   if( pnEOL )
+      * pnEOL = 0;
 
-   while( ulOffset < ulLen && ( ulMaxPos == 0 || ulOffset < ulMaxPos ) )
+   while( nOffset < nLen && ( nMaxPos == 0 || nOffset < nMaxPos ) )
    {
-      if( pszString[ ulOffset ] == HB_CHAR_SOFT1 &&
-          pszString[ ulOffset + 1 ] == HB_CHAR_SOFT2 )
+      if( pszString[ nOffset ] == HB_CHAR_SOFT1 &&
+          pszString[ nOffset + 1 ] == HB_CHAR_SOFT2 )
       {
-         ulOffset += 2;
+         nOffset += 2;
          if( !fWordWrap )
             break;
          continue;
       }
 
-      i = hb_mlEol( pszString + ulOffset, ulLen - ulOffset, pEOLs, iEOLs );
+      i = hb_mlEol( pszString + nOffset, nLen - nOffset, pEOLs, iEOLs );
       if( i >= 0 )
       {
-         if( ulMaxPos )
-            ulCol += pEOLs[ i ].ulLen;
+         if( nMaxPos )
+            nCol += pEOLs[ i ].nLen;
          else
-            ulOffset += pEOLs[ i ].ulLen;
-         if( pulEOL )
-            * pulEOL = pEOLs[ i ].ulLen;
+            nOffset += pEOLs[ i ].nLen;
+         if( pnEOL )
+            * pnEOL = pEOLs[ i ].nLen;
          break;
       }
 
-      if( pszString[ ulOffset ] == ' ' || pszString[ ulOffset ] == HB_CHAR_HT )
+      if( pszString[ nOffset ] == ' ' || pszString[ nOffset ] == HB_CHAR_HT )
       {
-         ulBlankCol = ulCol;
-         ulBlankPos = ulOffset;
+         nBlankCol = nCol;
+         nBlankPos = nOffset;
       }
 
-      if( ulCol >= ulLineLength )
+      if( nCol >= nLineLength )
       {
          if( fWordWrap )
          {
-            if( ulBlankCol == 0 || pszString[ ulOffset ] == ' ' ||
-                                   pszString[ ulOffset ] == HB_CHAR_HT )
+            if( nBlankCol == 0 || pszString[ nOffset ] == ' ' ||
+                                  pszString[ nOffset ] == HB_CHAR_HT )
             {
-               ulCol = ulLineLength;
-               if( pszString[ ulOffset ] == ' ' )
-                  ++ulOffset;
-               if( pszString[ ulOffset ] == HB_CHAR_SOFT1 &&
-                   pszString[ ulOffset + 1 ] == HB_CHAR_SOFT2 )
-                  ulOffset += 2;
+               nCol = nLineLength;
+               if( pszString[ nOffset ] == ' ' )
+                  ++nOffset;
+               if( pszString[ nOffset ] == HB_CHAR_SOFT1 &&
+                   pszString[ nOffset + 1 ] == HB_CHAR_SOFT2 )
+                  nOffset += 2;
             }
             else
             {
-               ulCol = ulBlankCol;
-               ulOffset = ulBlankPos + 1;
+               nCol = nBlankCol;
+               nOffset = nBlankPos + 1;
             }
          }
          else
          {
-            if( ulCol > ulLineLength )
-               --ulOffset;
-            ulCol = ulLineLength;
+            if( nCol > nLineLength )
+               --nOffset;
+            nCol = nLineLength;
          }
          break;
       }
 
-      ulCol += pszString[ ulOffset ] == HB_CHAR_HT ?
-               ulTabSize - ( ulCol % ulTabSize ) : 1;
-      ulOffset++;
+      nCol += pszString[ nOffset ] == HB_CHAR_HT ?
+              nTabSize - ( nCol % nTabSize ) : 1;
+      nOffset++;
    }
-   * pulLen = ulCol;
+   * pnLen = nCol;
 
-   return ulOffset;
+   return nOffset;
 }
 
 static PHB_EOL_INFO hb_mlGetEOLs( int iParam, int * piEOLs )
@@ -163,35 +163,35 @@ static PHB_EOL_INFO hb_mlGetEOLs( int iParam, int * piEOLs )
          Clipper will ignore these parameters and use CRLF EOL hard
          coded. [vszakats] */
 #ifndef HB_CLP_STRICT /* HB_EXTENSION */
-   HB_SIZE ulLen = hb_parclen( iParam );
-   if( ulLen )
+   HB_SIZE nLen = hb_parclen( iParam );
+   if( nLen )
    {
       pEOLs = ( PHB_EOL_INFO ) hb_xgrab( sizeof( HB_EOL_INFO ) );
       pEOLs->szEOL = hb_parc( iParam );
-      pEOLs->ulLen = ulLen;
+      pEOLs->nLen = nLen;
       iEOLs = 1;
    }
    else if( HB_ISARRAY( iParam ) )
    {
       PHB_ITEM pArray = hb_param( iParam, HB_IT_ARRAY );
-      HB_SIZE ulSize = hb_arrayLen( pArray ), ul;
+      HB_SIZE nSize = hb_arrayLen( pArray ), n;
 
-      for( ul = 1; ul <= ulSize; ++ul )
+      for( n = 1; n <= nSize; ++n )
       {
-         if( hb_arrayGetCLen( pArray, ul ) > 0 )
+         if( hb_arrayGetCLen( pArray, n ) > 0 )
             ++iEOLs;
       }
       if( iEOLs )
       {
          pEOLs = ( PHB_EOL_INFO ) hb_xgrab( sizeof( HB_EOL_INFO ) * iEOLs );
          iEOLs = 0;
-         for( ul = 1; ul <= ulSize; ++ul )
+         for( n = 1; n <= nSize; ++n )
          {
-            ulLen = hb_arrayGetCLen( pArray, ul );
-            if( ulLen > 0 )
+            nLen = hb_arrayGetCLen( pArray, n );
+            if( nLen > 0 )
             {
-               pEOLs[ iEOLs ].szEOL = hb_arrayGetCPtr( pArray, ul );
-               pEOLs[ iEOLs ].ulLen = ulLen;
+               pEOLs[ iEOLs ].szEOL = hb_arrayGetCPtr( pArray, n );
+               pEOLs[ iEOLs ].nLen = nLen;
                ++iEOLs;
             }
          }
@@ -207,17 +207,17 @@ static PHB_EOL_INFO hb_mlGetEOLs( int iParam, int * piEOLs )
       pEOLs->szEOL = hb_setGetEOL();
       if( !pEOLs->szEOL || !pEOLs->szEOL[ 0 ] )
          pEOLs->szEOL = hb_conNewLine();
-      pEOLs->ulLen = strlen( pEOLs->szEOL );
-      iEOLs = pEOLs->ulLen ? 1 : 0;
+      pEOLs->nLen = strlen( pEOLs->szEOL );
+      iEOLs = pEOLs->nLen ? 1 : 0;
    }
 
    * piEOLs = iEOLs;
    return pEOLs;
 }
 
-static const char * hb_mlGetParams( int iParAdd, HB_SIZE * pulLen,
-                                    HB_SIZE * pulLineLength,
-                                    HB_SIZE * pulTabSize, HB_BOOL * pfWordWrap,
+static const char * hb_mlGetParams( int iParAdd, HB_SIZE * pnLen,
+                                    HB_SIZE * pnLineLength,
+                                    HB_SIZE * pnTabSize, HB_BOOL * pfWordWrap,
                                     PHB_EOL_INFO * pEOLs, int * piEOLs )
 {
    const char * pszString = hb_parc( 1 );
@@ -227,39 +227,39 @@ static const char * hb_mlGetParams( int iParAdd, HB_SIZE * pulLen,
       {
          if( hb_parnd( 2 ) <= 0 )
             return NULL;
-         * pulLineLength = hb_parns( 2 );
+         * pnLineLength = hb_parns( 2 );
       }
       else
-         * pulLineLength = 79;
-      * pulLen = hb_parclen( 1 );
-      * pulTabSize = hb_parnldef( 3 + iParAdd, 4 );
+         * pnLineLength = 79;
+      * pnLen = hb_parclen( 1 );
+      * pnTabSize = hb_parnldef( 3 + iParAdd, 4 );
       * pfWordWrap = hb_parldef( 4 + iParAdd, 1 );
       * pEOLs = hb_mlGetEOLs( 5 + iParAdd, piEOLs );
 #ifdef HB_CLP_STRICT
-      if( * pulLineLength > 254 )
-         * pulLineLength = 79;
+      if( * pnLineLength > 254 )
+         * pnLineLength = 79;
 #endif
-      if( * pulTabSize >= * pulLineLength )
-         * pulTabSize = * pulLineLength - 1;
-      else if( * pulTabSize == 0 )
-         * pulTabSize = 1;
+      if( * pnTabSize >= * pnLineLength )
+         * pnTabSize = * pnLineLength - 1;
+      else if( * pnTabSize == 0 )
+         * pnTabSize = 1;
    }
    return pszString;
 }
 
 HB_FUNC( MEMOLINE )
 {
-   HB_SIZE ulLen, ulLineLength, ulTabSize;
+   HB_SIZE nLen, nLineLength, nTabSize;
    HB_BOOL fWordWrap;
    PHB_EOL_INFO pEOLs;
    int     iEOLs;
-   const char * pszString = hb_mlGetParams( 1, &ulLen, &ulLineLength,
-                                            &ulTabSize, &fWordWrap,
+   const char * pszString = hb_mlGetParams( 1, &nLen, &nLineLength,
+                                            &nTabSize, &fWordWrap,
                                             &pEOLs, &iEOLs );
    char * szLine;
-   HB_SIZE ulLine   = hb_parns( 3 );
-   HB_SIZE ulOffset = 0;
-   HB_SIZE ulCols   = 0;
+   HB_SIZE nLine   = hb_parns( 3 );
+   HB_SIZE nOffset = 0;
+   HB_SIZE nCols   = 0;
 
    if( !pszString )
    {
@@ -267,42 +267,42 @@ HB_FUNC( MEMOLINE )
       return;
    }
 
-   if( ulLine == 0 )
-      ulLine = 1;
+   if( nLine == 0 )
+      nLine = 1;
 
-   while( --ulLine && ulOffset < ulLen )
+   while( --nLine && nOffset < nLen )
    {
-      ulOffset = hb_mlGetLine( pszString, ulLen, ulOffset,
-                               ulLineLength, ulTabSize, 0, fWordWrap,
-                               pEOLs, iEOLs, &ulCols, NULL );
+      nOffset = hb_mlGetLine( pszString, nLen, nOffset,
+                              nLineLength, nTabSize, 0, fWordWrap,
+                              pEOLs, iEOLs, &nCols, NULL );
    }
-   if( ulOffset < ulLen )
+   if( nOffset < nLen )
    {
-      HB_SIZE ulCol = 0;
-      hb_mlGetLine( pszString, ulLen, ulOffset,
-                    ulLineLength, ulTabSize, 0, fWordWrap,
-                    pEOLs, iEOLs, &ulCols, NULL );
-      szLine = ( char * ) hb_xgrab( ulLineLength + 1 );
-      while( ulCol < ulCols )
+      HB_SIZE nCol = 0;
+      hb_mlGetLine( pszString, nLen, nOffset,
+                    nLineLength, nTabSize, 0, fWordWrap,
+                    pEOLs, iEOLs, &nCols, NULL );
+      szLine = ( char * ) hb_xgrab( nLineLength + 1 );
+      while( nCol < nCols )
       {
-         if( pszString[ ulOffset ] == HB_CHAR_HT )
+         if( pszString[ nOffset ] == HB_CHAR_HT )
          {
-            HB_SIZE ul = ulTabSize - ( ulCol % ulTabSize );
+            HB_SIZE n = nTabSize - ( nCol % nTabSize );
             do
-               szLine[ ulCol++ ] = ' ';
-            while( --ul && ulCol < ulCols );
+               szLine[ nCol++ ] = ' ';
+            while( --n && nCol < nCols );
          }
-         else if( pszString[ ulOffset ] == HB_CHAR_SOFT1 &&
-                  pszString[ ulOffset + 1 ] == HB_CHAR_SOFT2 )
-            ulOffset++;
+         else if( pszString[ nOffset ] == HB_CHAR_SOFT1 &&
+                  pszString[ nOffset + 1 ] == HB_CHAR_SOFT2 )
+            nOffset++;
          else
-            szLine[ ulCol++ ] = pszString[ ulOffset ];
-         ulOffset++;
+            szLine[ nCol++ ] = pszString[ nOffset ];
+         nOffset++;
       }
-      if( ulCols < ulLineLength )
-         memset( szLine + ulCols, ' ', ulLineLength - ulCols );
-      szLine[ ulLineLength ] = 0;
-      hb_retclen_buffer( szLine, ulLineLength );
+      if( nCols < nLineLength )
+         memset( szLine + nCols, ' ', nLineLength - nCols );
+      szLine[ nLineLength ] = 0;
+      hb_retclen_buffer( szLine, nLineLength );
    }
    else
       hb_retc_null();
@@ -311,151 +311,151 @@ HB_FUNC( MEMOLINE )
 
 HB_FUNC( MLCOUNT )
 {
-   HB_SIZE ulLen, ulLineLength, ulTabSize;
+   HB_SIZE nLen, nLineLength, nTabSize;
    HB_BOOL fWordWrap;
    PHB_EOL_INFO pEOLs;
    int     iEOLs;
-   const char * pszString = hb_mlGetParams( 0, &ulLen, &ulLineLength,
-                                            &ulTabSize, &fWordWrap,
+   const char * pszString = hb_mlGetParams( 0, &nLen, &nLineLength,
+                                            &nTabSize, &fWordWrap,
                                             &pEOLs, &iEOLs );
-   HB_SIZE ulLines  = 0;
-   HB_SIZE ulOffset = 0;
-   HB_SIZE ulCols   = 0;
+   HB_SIZE nLines  = 0;
+   HB_SIZE nOffset = 0;
+   HB_SIZE nCols   = 0;
 
    if( pszString )
    {
-      while( ulOffset < ulLen )
+      while( nOffset < nLen )
       {
-         ++ulLines;
-         ulOffset = hb_mlGetLine( pszString, ulLen, ulOffset,
-                                  ulLineLength, ulTabSize, 0, fWordWrap,
-                                  pEOLs, iEOLs, &ulCols, NULL );
+         ++nLines;
+         nOffset = hb_mlGetLine( pszString, nLen, nOffset,
+                                 nLineLength, nTabSize, 0, fWordWrap,
+                                 pEOLs, iEOLs, &nCols, NULL );
       }
       hb_xfree( pEOLs );
    }
-   hb_retns( ulLines );
+   hb_retns( nLines );
 }
 
 HB_FUNC( MLPOS )
 {
-   HB_SIZE ulLen, ulLineLength, ulTabSize;
+   HB_SIZE nLen, nLineLength, nTabSize;
    HB_BOOL fWordWrap;
    PHB_EOL_INFO pEOLs;
    int     iEOLs;
-   const char * pszString = hb_mlGetParams( 1, &ulLen, &ulLineLength,
-                                            &ulTabSize, &fWordWrap,
+   const char * pszString = hb_mlGetParams( 1, &nLen, &nLineLength,
+                                            &nTabSize, &fWordWrap,
                                             &pEOLs, &iEOLs );
-   HB_SIZE ulLine   = hb_parns( 3 );
-   HB_SIZE ulOffset = 0;
-   HB_SIZE ulCols   = 0;
+   HB_SIZE nLine   = hb_parns( 3 );
+   HB_SIZE nOffset = 0;
+   HB_SIZE nCols   = 0;
 
    if( pszString )
    {
-      if( ulLine == 0 )
-         ulLine = 1;
-      while( --ulLine && ulOffset < ulLen )
-         ulOffset = hb_mlGetLine( pszString, ulLen, ulOffset,
-                                  ulLineLength, ulTabSize, 0, fWordWrap,
-                                  pEOLs, iEOLs, &ulCols, NULL );
-      if( ulOffset < ulLen )
-         ++ulOffset;
+      if( nLine == 0 )
+         nLine = 1;
+      while( --nLine && nOffset < nLen )
+         nOffset = hb_mlGetLine( pszString, nLen, nOffset,
+                                 nLineLength, nTabSize, 0, fWordWrap,
+                                 pEOLs, iEOLs, &nCols, NULL );
+      if( nOffset < nLen )
+         ++nOffset;
       hb_xfree( pEOLs );
    }
-   hb_retns( ulOffset );
+   hb_retns( nOffset );
 }
 
 HB_FUNC( MLCTOPOS )
 {
-   HB_SIZE ulLen, ulLineLength, ulTabSize;
+   HB_SIZE nLen, nLineLength, nTabSize;
    HB_BOOL fWordWrap;
    PHB_EOL_INFO pEOLs;
    int     iEOLs;
-   const char * pszString = hb_mlGetParams( 2, &ulLen, &ulLineLength,
-                                            &ulTabSize, &fWordWrap,
+   const char * pszString = hb_mlGetParams( 2, &nLen, &nLineLength,
+                                            &nTabSize, &fWordWrap,
                                             &pEOLs, &iEOLs );
-   HB_SIZE ulLine   = hb_parns( 3 );
-   HB_SIZE ulCol    = hb_parns( 4 );
-   HB_SIZE ulOffset = 0;
-   HB_SIZE ulCols   = 0;
+   HB_SIZE nLine   = hb_parns( 3 );
+   HB_SIZE nCol    = hb_parns( 4 );
+   HB_SIZE nOffset = 0;
+   HB_SIZE nCols   = 0;
 
    if( pszString )
    {
-      if( ulLineLength > 4 && ulLine && HB_ISNUM( 4 ) )
+      if( nLineLength > 4 && nLine && HB_ISNUM( 4 ) )
       {
-         while( --ulLine && ulOffset < ulLen )
-            ulOffset = hb_mlGetLine( pszString, ulLen, ulOffset,
-                                     ulLineLength, ulTabSize, 0, fWordWrap,
-                                     pEOLs, iEOLs, &ulCols, NULL );
-         if( ulOffset < ulLen && ulCol )
-            ulOffset = hb_mlGetLine( pszString, ulLen, ulOffset,
-                                     ulCol, ulTabSize, ulLen, HB_FALSE,
-                                     pEOLs, iEOLs, &ulCols, NULL );
+         while( --nLine && nOffset < nLen )
+            nOffset = hb_mlGetLine( pszString, nLen, nOffset,
+                                    nLineLength, nTabSize, 0, fWordWrap,
+                                    pEOLs, iEOLs, &nCols, NULL );
+         if( nOffset < nLen && nCol )
+            nOffset = hb_mlGetLine( pszString, nLen, nOffset,
+                                    nCol, nTabSize, nLen, HB_FALSE,
+                                    pEOLs, iEOLs, &nCols, NULL );
       }
       hb_xfree( pEOLs );
    }
-   ++ulOffset;
-   hb_retns( ulOffset );
+   ++nOffset;
+   hb_retns( nOffset );
 }
 
 HB_FUNC( MPOSTOLC )
 {
-   HB_SIZE ulLen, ulLineLength, ulTabSize;
+   HB_SIZE nLen, nLineLength, nTabSize;
    HB_BOOL fWordWrap;
    PHB_EOL_INFO pEOLs;
    int     iEOLs;
-   const char * pszString = hb_mlGetParams( 1, &ulLen, &ulLineLength,
-                                            &ulTabSize, &fWordWrap,
+   const char * pszString = hb_mlGetParams( 1, &nLen, &nLineLength,
+                                            &nTabSize, &fWordWrap,
                                             &pEOLs, &iEOLs );
-   HB_SIZE ulPos    = hb_parns( 3 );
-   HB_SIZE ulOffset = 0;
-   HB_SIZE ulLine   = 0;
-   HB_SIZE ulCol    = 0;
-   HB_SIZE ulEOL    = 0;
+   HB_SIZE nPos    = hb_parns( 3 );
+   HB_SIZE nOffset = 0;
+   HB_SIZE nLine   = 0;
+   HB_SIZE nCol    = 0;
+   HB_SIZE nEOL    = 0;
 
    if( pszString )
    {
-      if( ulPos && ulLen )
+      if( nPos && nLen )
       {
-         if( --ulPos )
+         if( --nPos )
          {
             do
             {
-               ++ulLine;
-               ulOffset = hb_mlGetLine( pszString, ulLen, ulOffset,
-                                        ulLineLength, ulTabSize, ulPos, fWordWrap,
-                                        pEOLs, iEOLs, &ulCol, &ulEOL );
-               if( ulEOL )
+               ++nLine;
+               nOffset = hb_mlGetLine( pszString, nLen, nOffset,
+                                       nLineLength, nTabSize, nPos, fWordWrap,
+                                       pEOLs, iEOLs, &nCol, &nEOL );
+               if( nEOL )
                {
-                  if( ulOffset + ulEOL == ulPos )
+                  if( nOffset + nEOL == nPos )
                   {
-                     ulCol = 0;
-                     ++ulLine;
+                     nCol = 0;
+                     ++nLine;
                      break;
                   }
-                  ulOffset += ulEOL;
+                  nOffset += nEOL;
                }
             }
-            while( ulOffset < ulLen && ulOffset < ulPos );
+            while( nOffset < nLen && nOffset < nPos );
 
-            if( ulLine && ulCol == ulLineLength && ulPos <= ulLen &&
-                ( hb_mlEol( pszString + ulPos, ulLen - ulPos, pEOLs, iEOLs ) >= 0 ||
-                  ( pszString[ ulPos ] == HB_CHAR_SOFT1 &&
-                    pszString[ ulPos + 1 ] == HB_CHAR_SOFT2 ) ||
-                  ( ulPos > 0 && pszString[ ulPos - 1 ] == HB_CHAR_SOFT1 &&
-                                 pszString[ ulPos ] == HB_CHAR_SOFT2 ) ||
-                  ( ulPos > 1 && pszString[ ulPos - 2 ] == HB_CHAR_SOFT1 &&
-                                 pszString[ ulPos - 1 ] == HB_CHAR_SOFT2 ) ) )
+            if( nLine && nCol == nLineLength && nPos <= nLen &&
+                ( hb_mlEol( pszString + nPos, nLen - nPos, pEOLs, iEOLs ) >= 0 ||
+                  ( pszString[ nPos ] == HB_CHAR_SOFT1 &&
+                    pszString[ nPos + 1 ] == HB_CHAR_SOFT2 ) ||
+                  ( nPos > 0 && pszString[ nPos - 1 ] == HB_CHAR_SOFT1 &&
+                                pszString[ nPos ] == HB_CHAR_SOFT2 ) ||
+                  ( nPos > 1 && pszString[ nPos - 2 ] == HB_CHAR_SOFT1 &&
+                                pszString[ nPos - 1 ] == HB_CHAR_SOFT2 ) ) )
             {
-               ulCol = 0;
-               ++ulLine;
+               nCol = 0;
+               ++nLine;
             }
          }
          else
-            ++ulLine;
+            ++nLine;
       }
       hb_xfree( pEOLs );
    }
    hb_reta( 2 );
-   hb_storvns( ulLine, -1, 1 );
-   hb_storvns( ulCol, -1, 2 );
+   hb_storvns( nLine, -1, 1 );
+   hb_storvns( nCol, -1, 2 );
 }

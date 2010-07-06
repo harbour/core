@@ -98,8 +98,8 @@ static char set_char( PHB_ITEM pItem, char oldChar )
    if( HB_IS_STRING( pItem ) )
    {
       /* Only replace if string has at least one character. */
-      HB_SIZE ulLen = hb_itemGetCLen( pItem );
-      if( ulLen > 0 )
+      HB_SIZE nLen = hb_itemGetCLen( pItem );
+      if( nLen > 0 )
       {
          newChar = *hb_itemGetCPtr( pItem );
       }
@@ -124,13 +124,13 @@ static HB_BOOL set_logical( PHB_ITEM pItem, HB_BOOL bDefault )
       else if( HB_IS_STRING( pItem ) )
       {
          const char * szString = hb_itemGetCPtr( pItem );
-         HB_SIZE ulLen = hb_itemGetCLen( pItem );
+         HB_SIZE nLen = hb_itemGetCLen( pItem );
 
-         if( ulLen >= 2
+         if( nLen >= 2
           && ( ( HB_UCHAR ) szString[ 0 ] == 'O' || ( HB_UCHAR ) szString[ 0 ] == 'o' )
           && ( ( HB_UCHAR ) szString[ 1 ] == 'N' || ( HB_UCHAR ) szString[ 1 ] == 'n' ) )
             bLogical = HB_TRUE;
-         else if( ulLen >= 3
+         else if( nLen >= 3
           && ( ( HB_UCHAR ) szString[ 0 ] == 'O' || ( HB_UCHAR ) szString[ 0 ] == 'o' )
           && ( ( HB_UCHAR ) szString[ 1 ] == 'F' || ( HB_UCHAR ) szString[ 1 ] == 'f' )
           && ( ( HB_UCHAR ) szString[ 2 ] == 'F' || ( HB_UCHAR ) szString[ 2 ] == 'f' ) )
@@ -2655,7 +2655,7 @@ const char * hb_setGetDBCODEPAGE( void )
    return hb_stackSetStruct()->HB_SET_DBCODEPAGE;
 }
 
-const char * hb_osEncodeCP( const char * szName, char ** pszFree, HB_SIZE * pulSize )
+const char * hb_osEncodeCP( const char * szName, char ** pszFree, HB_SIZE * pnSize )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -2669,22 +2669,22 @@ const char * hb_osEncodeCP( const char * szName, char ** pszFree, HB_SIZE * pulS
          PHB_CODEPAGE cdpHost = hb_vmCDP();
          if( cdpHost && cdpHost != cdpOS )
          {
-            HB_SIZE ulSize = 0;
+            HB_SIZE nSize = 0;
             char * pszBuf;
 
             if( pszFree == NULL )
             {
                pszFree = ( char ** ) &szName;
-               ulSize = strlen( szName );
+               nSize = strlen( szName );
             }
             pszBuf = *pszFree;
-            if( pulSize == NULL )
-               pulSize = &ulSize;
-            else if( *pulSize > 0 )
-               ulSize = *pulSize - 1;
+            if( pnSize == NULL )
+               pnSize = &nSize;
+            else if( *pnSize > 0 )
+               nSize = *pnSize - 1;
 
             szName = hb_cdpnDup3( szName, strlen( szName ),
-                                  pszBuf, &ulSize, pszFree, pulSize,
+                                  pszBuf, &nSize, pszFree, pnSize,
                                   cdpHost, cdpOS );
          }
       }
@@ -2693,7 +2693,7 @@ const char * hb_osEncodeCP( const char * szName, char ** pszFree, HB_SIZE * pulS
    return szName;
 }
 
-const char * hb_osDecodeCP( const char * szName, char ** pszFree, HB_SIZE * pulSize )
+const char * hb_osDecodeCP( const char * szName, char ** pszFree, HB_SIZE * pnSize )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -2707,22 +2707,22 @@ const char * hb_osDecodeCP( const char * szName, char ** pszFree, HB_SIZE * pulS
          PHB_CODEPAGE cdpHost = hb_vmCDP();
          if( cdpHost && cdpHost != cdpOS )
          {
-            HB_SIZE ulSize = 0;
+            HB_SIZE nSize = 0;
             char * pszBuf;
 
             if( pszFree == NULL )
             {
                pszFree = ( char ** ) &szName;
-               ulSize = strlen( szName );
+               nSize = strlen( szName );
             }
             pszBuf = *pszFree;
-            if( pulSize == NULL )
-               pulSize = &ulSize;
-            else if( *pulSize > 0 )
-               ulSize = *pulSize - 1;
+            if( pnSize == NULL )
+               pnSize = &nSize;
+            else if( *pnSize > 0 )
+               nSize = *pnSize - 1;
 
             szName = hb_cdpnDup3( szName, strlen( szName ),
-                                  pszBuf, &ulSize, pszFree, pulSize,
+                                  pszBuf, &nSize, pszFree, pnSize,
                                   cdpOS, cdpHost );
          }
       }

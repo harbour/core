@@ -21,6 +21,7 @@
 #define F_NAME                  1       /* File name */
 #define F_ATTR                  5       /* File attribute */
 
+#define _ACT_EXIT               0
 #define _ACT_CLEAN              1
 #define _ACT_INC                2
 #define _ACT_INC_INST           3
@@ -141,6 +142,7 @@ PROCEDURE Main( ... )
    LOCAL lFilterNegative
 
    LOCAL aParams
+   LOCAL aGNUMakeParams
    LOCAL tmp
    LOCAL nAction
 
@@ -166,15 +168,15 @@ PROCEDURE Main( ... )
    /*
      Workflow translation from GNU Make to hbmk2:
 
-        GNU Make       parameter  HB_MAKECMDGOALS  nAction        hbmk2 options
-     -- -------------- ---------- ---------------- -------------- -------------------------
-     #1 clean          clean      clean            _ACT_CLEAN     -clean
-     #2 install        install    install          _ACT_INC_INST  -inc -instpath=
-     #3 clean install  clean      clean install    _ACT_CLEAN     -clean
-                       install    clean install    _ACT_INC_INST  -inc -instpath=
-     #4 install clean  install    install clean    _ACT_INC_INST  -inc -instpath=
-                       clean      install clean    _ACT_CLEAN     -clean
-     #5                all                         _ACT_INC       -inc
+        GNU Make       parameter  HB_MAKECMDGOALS  nAction                hbmk2 options
+     -- -------------- ---------- ---------------- ---------------------- -------------------------
+     #1 clean          clean      clean            _ACT_CLEAN             -clean
+     #2 install        install    install          _ACT_INC_INST          -inc -instpath=
+     #3 clean install  clean      clean install    _ACT_CLEAN             -clean
+                       install    clean install    _ACT_INC_REBUILD_INST  -inc -instpath= -rebuild
+     #4 install clean  install    install clean    _ACT_INC_INST          -inc -instpath=
+                       clean      install clean    _ACT_CLEAN             -clean
+     #5                all                         _ACT_INC               -inc
 
    */
 
@@ -183,15 +185,38 @@ PROCEDURE Main( ... )
    s_lTest := "test" $ hb_cmdLine()
 
    aParams := hb_AParams()
+   aGNUMakeParams := hb_ATokens( Lower( GetEnv( "HB_MAKECMDGOALS" ) ) )
 
    DO CASE
    CASE AScan( aParams, "clean" ) > 0
-      nAction := _ACT_CLEAN
+      IF AScan( aGNUMakeParams, "clean" ) > 0 .AND. ;
+         AScan( aGNUMakeParams, "install" ) > 0 .AND. ;
+         AScan( aGNUMakeParams, "install" ) > AScan( aGNUMakeParams, "clean" )
+         nAction := _ACT_CLEAN
+      ELSE
+         nAction := _ACT_CLEAN
+      ENDIF
    CASE AScan( aParams, "install" ) > 0
-      nAction := _ACT_INC_INST
+      IF AScan( aGNUMakeParams, "clean" ) > 0 .AND. ;
+         AScan( aGNUMakeParams, "install" ) > 0 .AND. ;
+         AScan( aGNUMakeParams, "install" ) > AScan( aGNUMakeParams, "clean" )
+         /* Use rebuild mode. This is needed because the clean phase
+            might not have been called previously by GNU Make, f.e.
+            because hbrun or hbmk2 wasn't available. -rebuild is
+            costless, so we do it to make sure to build cleanly.
+            [vszakats] */
+         nAction := _ACT_INC_REBUILD_INST
+      ELSE
+         nAction := _ACT_INC_INST
+      ENDIF
    OTHERWISE
       nAction := _ACT_INC
    ENDCASE
+
+   IF nAction == _ACT_EXIT
+      ErrorLevel( 0 )
+      RETURN
+   ENDIF
 
    /* Check if the requirements are met and if we have anything to do */
 

@@ -56,7 +56,7 @@
 HB_FUNC( LENNUM )
 {
    PHB_ITEM pNumber = hb_param( 1, HB_IT_NUMERIC );
-   HB_SIZE ulLen = 0;
+   HB_SIZE nLen = 0;
 
    if( pNumber )
    {
@@ -64,11 +64,11 @@ HB_FUNC( LENNUM )
 
       if( pszString )
       {
-         ulLen = strlen( pszString );
-         hb_strLTrim( pszString, &ulLen );
+         nLen = strlen( pszString );
+         hb_strLTrim( pszString, &nLen );
          hb_xfree( pszString );
       }
    }
 
-   hb_retns( ulLen );
+   hb_retns( nLen );
 }

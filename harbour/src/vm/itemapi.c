@@ -172,59 +172,59 @@ HB_BOOL hb_itemRelease( PHB_ITEM pItem )
       return HB_FALSE;
 }
 
-PHB_ITEM hb_itemArrayNew( HB_SIZE ulLen )
+PHB_ITEM hb_itemArrayNew( HB_SIZE nLen )
 {
    PHB_ITEM pItem;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_itemArrayNew(%" HB_PFS "u)", ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemArrayNew(%" HB_PFS "u)", nLen));
 
    pItem = hb_itemNew( NULL );
 
-   hb_arrayNew( pItem, ulLen );
+   hb_arrayNew( pItem, nLen );
 
    return pItem;
 }
 
-PHB_ITEM hb_itemArrayGet( PHB_ITEM pArray, HB_SIZE ulIndex )
+PHB_ITEM hb_itemArrayGet( PHB_ITEM pArray, HB_SIZE nIndex )
 {
    PHB_ITEM pItem;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_itemArrayGet(%p, %" HB_PFS "u)", pArray, ulIndex));
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemArrayGet(%p, %" HB_PFS "u)", pArray, nIndex));
 
    pItem = hb_itemNew( NULL );
 
    if( pArray )
-      hb_arrayGet( pArray, ulIndex, pItem );
+      hb_arrayGet( pArray, nIndex, pItem );
 
    return pItem;
 }
 
-PHB_ITEM hb_itemArrayPut( PHB_ITEM pArray, HB_SIZE ulIndex, PHB_ITEM pItem )
+PHB_ITEM hb_itemArrayPut( PHB_ITEM pArray, HB_SIZE nIndex, PHB_ITEM pItem )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_itemArrayPut(%p, %" HB_PFS "u, %p)", pArray, ulIndex, pItem));
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemArrayPut(%p, %" HB_PFS "u, %p)", pArray, nIndex, pItem));
 
    if( pArray )
-      hb_arraySet( pArray, ulIndex, pItem );
+      hb_arraySet( pArray, nIndex, pItem );
 
    return pArray;
 }
 
 PHB_ITEM hb_itemPutC( PHB_ITEM pItem, const char * szText )
 {
-   HB_SIZE ulLen, ulAlloc;
+   HB_SIZE nLen, nAlloc;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_itemPutC(%p, %s)", pItem, szText));
 
-   ulLen = szText ? strlen( szText ) : 0;
-   if( ulLen > 1 )
+   nLen = szText ? strlen( szText ) : 0;
+   if( nLen > 1 )
    {
-      ulAlloc = ulLen + 1;
-      szText = ( char * ) hb_xmemcpy( hb_xgrab( ulAlloc ), szText, ulAlloc );
+      nAlloc = nLen + 1;
+      szText = ( char * ) hb_xmemcpy( hb_xgrab( nAlloc ), szText, nAlloc );
    }
    else
    {
-      ulAlloc = 0;
-      szText = ( char * ) ( ulLen ? hb_szAscii[ ( unsigned char ) ( szText[ 0 ] ) ] : "" );
+      nAlloc = 0;
+      szText = ( char * ) ( nLen ? hb_szAscii[ ( unsigned char ) ( szText[ 0 ] ) ] : "" );
    }
 
    if( pItem )
@@ -237,28 +237,28 @@ PHB_ITEM hb_itemPutC( PHB_ITEM pItem, const char * szText )
 
    pItem->type = HB_IT_STRING;
    pItem->item.asString.value     = ( char * ) szText;
-   pItem->item.asString.length    = ulLen;
-   pItem->item.asString.allocated = ulAlloc;
+   pItem->item.asString.length    = nLen;
+   pItem->item.asString.allocated = nAlloc;
 
    return pItem;
 }
 
-PHB_ITEM hb_itemPutCL( PHB_ITEM pItem, const char * szText, HB_SIZE ulLen )
+PHB_ITEM hb_itemPutCL( PHB_ITEM pItem, const char * szText, HB_SIZE nLen )
 {
-   HB_SIZE ulAlloc;
+   HB_SIZE nAlloc;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_itemPutCL(%p, %.*s, %" HB_PFS "u)", pItem, ( int ) ulLen, szText, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemPutCL(%p, %.*s, %" HB_PFS "u)", pItem, ( int ) nLen, szText, nLen));
 
-   if( ulLen > 1 )
+   if( nLen > 1 )
    {
-      ulAlloc = ulLen + 1;
-      szText = ( char * ) hb_xmemcpy( hb_xgrab( ulAlloc ), szText, ulLen );
-      ( ( char * ) szText )[ ulLen ] = '\0';
+      nAlloc = nLen + 1;
+      szText = ( char * ) hb_xmemcpy( hb_xgrab( nAlloc ), szText, nLen );
+      ( ( char * ) szText )[ nLen ] = '\0';
    }
    else
    {
-      ulAlloc = 0;
-      szText = ( ulLen ? hb_szAscii[ ( unsigned char ) ( szText[ 0 ] ) ] : "" );
+      nAlloc = 0;
+      szText = ( nLen ? hb_szAscii[ ( unsigned char ) ( szText[ 0 ] ) ] : "" );
    }
 
    if( pItem )
@@ -269,14 +269,14 @@ PHB_ITEM hb_itemPutCL( PHB_ITEM pItem, const char * szText, HB_SIZE ulLen )
    else
       pItem = hb_itemNew( NULL );
 
-   /* NOTE: CA-Cl*pper seems to be buggy here, it will return ulLen bytes of
+   /* NOTE: CA-Cl*pper seems to be buggy here, it will return nLen bytes of
             trash if the szText buffer is NULL, at least with hb_retclen().
             [vszakats] */
 
    pItem->type = HB_IT_STRING;
    pItem->item.asString.value     = ( char * ) szText;
-   pItem->item.asString.length    = ulLen;
-   pItem->item.asString.allocated = ulAlloc;
+   pItem->item.asString.length    = nLen;
+   pItem->item.asString.allocated = nAlloc;
 
    return pItem;
 }
@@ -310,9 +310,9 @@ PHB_ITEM hb_itemPutCConst( PHB_ITEM pItem, const char * szText )
    return pItem;
 }
 
-PHB_ITEM hb_itemPutCLConst( PHB_ITEM pItem, const char * szText, HB_SIZE ulLen )
+PHB_ITEM hb_itemPutCLConst( PHB_ITEM pItem, const char * szText, HB_SIZE nLen )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_itemPutCLConst(%p, %.*s, %" HB_PFS "u)", pItem, ( int ) ulLen, szText, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemPutCLConst(%p, %.*s, %" HB_PFS "u)", pItem, ( int ) nLen, szText, nLen));
 
    if( pItem )
    {
@@ -323,12 +323,12 @@ PHB_ITEM hb_itemPutCLConst( PHB_ITEM pItem, const char * szText, HB_SIZE ulLen )
       pItem = hb_itemNew( NULL );
 
    pItem->type = HB_IT_STRING;
-   pItem->item.asString.length = ulLen;
+   pItem->item.asString.length = nLen;
    pItem->item.asString.allocated = 0;
 
-   if( ulLen == 0 )
+   if( nLen == 0 )
       pItem->item.asString.value  = ( char * ) "";
-   else if( szText[ ulLen ] == '\0' )
+   else if( szText[ nLen ] == '\0' )
       pItem->item.asString.value  = ( char * ) szText;
    else
       hb_errInternal( 6003, "Internal error: hb_itemPutCLConst() missing termination character", NULL, NULL );
@@ -338,7 +338,7 @@ PHB_ITEM hb_itemPutCLConst( PHB_ITEM pItem, const char * szText, HB_SIZE ulLen )
 
 PHB_ITEM hb_itemPutCPtr( PHB_ITEM pItem, char * szText )
 {
-   HB_SIZE ulLen;
+   HB_SIZE nLen;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_itemPutCPtr(%p, %s)", pItem, szText));
 
@@ -350,18 +350,18 @@ PHB_ITEM hb_itemPutCPtr( PHB_ITEM pItem, char * szText )
    else
       pItem = hb_itemNew( NULL );
 
-   ulLen = szText ? strlen( szText ) : 0;
+   nLen = szText ? strlen( szText ) : 0;
 
    pItem->type = HB_IT_STRING;
-   pItem->item.asString.length = ulLen;
-   if( ulLen == 0 )
+   pItem->item.asString.length = nLen;
+   if( nLen == 0 )
    {
       pItem->item.asString.allocated = 0;
       pItem->item.asString.value     = ( char * ) "";
       if( szText )
          hb_xfree( szText );
    }
-   else if( ulLen == 1 )
+   else if( nLen == 1 )
    {
       pItem->item.asString.allocated = 0;
       pItem->item.asString.value     = ( char * ) hb_szAscii[ ( unsigned char ) ( szText[ 0 ] ) ];
@@ -369,17 +369,17 @@ PHB_ITEM hb_itemPutCPtr( PHB_ITEM pItem, char * szText )
    }
    else
    {
-      szText[ ulLen ] = '\0';
-      pItem->item.asString.allocated = ulLen + 1;
+      szText[ nLen ] = '\0';
+      pItem->item.asString.allocated = nLen + 1;
       pItem->item.asString.value     = szText;
    }
 
    return pItem;
 }
 
-PHB_ITEM hb_itemPutCLPtr( PHB_ITEM pItem, char * szText, HB_SIZE ulLen )
+PHB_ITEM hb_itemPutCLPtr( PHB_ITEM pItem, char * szText, HB_SIZE nLen )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_itemPutCLPtr(%p, %.*s, %" HB_PFS "u)", pItem, ( int ) ulLen, szText, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemPutCLPtr(%p, %.*s, %" HB_PFS "u)", pItem, ( int ) nLen, szText, nLen));
 
    if( pItem )
    {
@@ -390,14 +390,14 @@ PHB_ITEM hb_itemPutCLPtr( PHB_ITEM pItem, char * szText, HB_SIZE ulLen )
       pItem = hb_itemNew( NULL );
 
    pItem->type = HB_IT_STRING;
-   pItem->item.asString.length = ulLen;
-   if( ulLen == 0 )
+   pItem->item.asString.length = nLen;
+   if( nLen == 0 )
    {
       pItem->item.asString.allocated = 0;
       pItem->item.asString.value     = ( char * ) "";
       hb_xfree( szText );
    }
-   else if( ulLen == 1 )
+   else if( nLen == 1 )
    {
       pItem->item.asString.allocated = 0;
       pItem->item.asString.value     = ( char * ) hb_szAscii[ ( unsigned char ) ( szText[ 0 ] ) ];
@@ -405,8 +405,8 @@ PHB_ITEM hb_itemPutCLPtr( PHB_ITEM pItem, char * szText, HB_SIZE ulLen )
    }
    else
    {
-      szText[ ulLen ] = '\0';
-      pItem->item.asString.allocated = ulLen + 1;
+      szText[ nLen ] = '\0';
+      pItem->item.asString.allocated = nLen + 1;
       pItem->item.asString.value     = szText;
    }
 
@@ -460,18 +460,18 @@ HB_SIZE hb_itemGetCLen( PHB_ITEM pItem )
       return 0;
 }
 
-HB_SIZE hb_itemCopyC( PHB_ITEM pItem, char * szBuffer, HB_SIZE ulLen )
+HB_SIZE hb_itemCopyC( PHB_ITEM pItem, char * szBuffer, HB_SIZE nLen )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_itemCopyC(%p, %s, %" HB_PFS "u)", pItem, szBuffer, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemCopyC(%p, %s, %" HB_PFS "u)", pItem, szBuffer, nLen));
 
    if( pItem && HB_IS_STRING( pItem ) )
    {
-      if( ulLen == 0 || ulLen > pItem->item.asString.length )
-         ulLen = pItem->item.asString.length;
+      if( nLen == 0 || nLen > pItem->item.asString.length )
+         nLen = pItem->item.asString.length;
 
-      hb_xmemcpy( szBuffer, pItem->item.asString.value, ulLen );
+      hb_xmemcpy( szBuffer, pItem->item.asString.value, nLen );
 
-      return ulLen;
+      return nLen;
    }
    else
       return 0;
@@ -1851,7 +1851,7 @@ PHB_ITEM hb_itemUnRefOnce( PHB_ITEM pItem )
             {
                /* a reference to a static variable or array item */
                if( ( HB_SIZE ) pItem->item.asRefer.value <
-                   pItem->item.asRefer.BasePtr.array->ulLen )
+                   pItem->item.asRefer.BasePtr.array->nLen )
                {
                   pItem = pItem->item.asRefer.BasePtr.array->pItems +
                           pItem->item.asRefer.value;
@@ -1868,7 +1868,7 @@ PHB_ITEM hb_itemUnRefOnce( PHB_ITEM pItem )
 
                   /* check it again - user error handler can resize the array */
                   if( ( HB_SIZE ) pItem->item.asRefer.value <
-                      pItem->item.asRefer.BasePtr.array->ulLen )
+                      pItem->item.asRefer.BasePtr.array->nLen )
                   {
                      pItem = pItem->item.asRefer.BasePtr.array->pItems +
                              pItem->item.asRefer.value;
@@ -1981,30 +1981,30 @@ PHB_ITEM hb_itemUnRefRefer( PHB_ITEM pItem )
 /* Internal API, not standard Clipper */
 /* Resize string buffer of given string item */
 
-PHB_ITEM hb_itemReSizeString( PHB_ITEM pItem, HB_SIZE ulSize )
+PHB_ITEM hb_itemReSizeString( PHB_ITEM pItem, HB_SIZE nSize )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_itemReSizeString(%p,%" HB_PFS "u)", pItem, ulSize));
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemReSizeString(%p,%" HB_PFS "u)", pItem, nSize));
 
    if( pItem->item.asString.allocated == 0 )
    {
-      char * szText = ( char * ) hb_xgrab( ulSize + 1 );
+      char * szText = ( char * ) hb_xgrab( nSize + 1 );
       hb_xmemcpy( szText, pItem->item.asString.value,
                   pItem->item.asString.length );
-      szText[ ulSize ] = '\0';
+      szText[ nSize ] = '\0';
       pItem->item.asString.value     = szText;
-      pItem->item.asString.length    = ulSize;
-      pItem->item.asString.allocated = ulSize + 1;
+      pItem->item.asString.length    = nSize;
+      pItem->item.asString.allocated = nSize + 1;
    }
    else
    {
-      HB_SIZE ulAlloc = ulSize + 1 +
-                ( pItem->item.asString.allocated <= ulSize ? ulSize : 0 );
+      HB_SIZE nAlloc = nSize + 1 +
+                ( pItem->item.asString.allocated <= nSize ? nSize : 0 );
       pItem->item.asString.value = ( char* )
                      hb_xRefResize( pItem->item.asString.value,
                                     pItem->item.asString.length,
-                                    ulAlloc, &pItem->item.asString.allocated );
-      pItem->item.asString.length = ulSize;
-      pItem->item.asString.value[ ulSize ] = '\0';
+                                    nAlloc, &pItem->item.asString.allocated );
+      pItem->item.asString.length = nSize;
+      pItem->item.asString.value[ nSize ] = '\0';
    }
    pItem->type &= ~HB_IT_DEFAULT;
 
@@ -2021,9 +2021,9 @@ PHB_ITEM hb_itemUnShareString( PHB_ITEM pItem )
    if( pItem->item.asString.allocated == 0 ||
        hb_xRefCount( pItem->item.asString.value ) > 1 )
    {
-      HB_SIZE ulLen = pItem->item.asString.length + 1;
-      char * szText = ( char * ) hb_xmemcpy( hb_xgrab( ulLen ),
-                                             pItem->item.asString.value, ulLen );
+      HB_SIZE nLen = pItem->item.asString.length + 1;
+      char * szText = ( char * ) hb_xmemcpy( hb_xgrab( nLen ),
+                                             pItem->item.asString.value, nLen );
       if( pItem->item.asString.allocated )
       {
          /* GCLOCK enter */
@@ -2031,7 +2031,7 @@ PHB_ITEM hb_itemUnShareString( PHB_ITEM pItem )
          /* GCLOCK leave */
       }
       pItem->item.asString.value = szText;
-      pItem->item.asString.allocated = ulLen;
+      pItem->item.asString.allocated = nLen;
    }
    pItem->type &= ~HB_IT_DEFAULT;
 
@@ -2051,9 +2051,9 @@ PHB_ITEM hb_itemUnShare( PHB_ITEM pItem )
       return pItem;
 }
 
-HB_BOOL hb_itemGetWriteCL( PHB_ITEM pItem, char ** pszValue, HB_SIZE * pulLen )
+HB_BOOL hb_itemGetWriteCL( PHB_ITEM pItem, char ** pszValue, HB_SIZE * pnLen )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_itemGetWriteCL(%p,%p,%p)", pItem, pszValue, pulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemGetWriteCL(%p,%p,%p)", pItem, pszValue, pnLen));
 
    if( pItem )
    {
@@ -2063,7 +2063,7 @@ HB_BOOL hb_itemGetWriteCL( PHB_ITEM pItem, char ** pszValue, HB_SIZE * pulLen )
       if( HB_IS_STRING( pItem ) )
       {
          hb_itemUnShareString( pItem );
-         *pulLen = pItem->item.asString.length;
+         *pnLen = pItem->item.asString.length;
          *pszValue = pItem->item.asString.value;
          return HB_TRUE;
       }
@@ -2110,37 +2110,37 @@ int hb_itemStrCmp( PHB_ITEM pFirst, PHB_ITEM pSecond, HB_BOOL bForceExact )
    HB_STACK_TLS_PRELOAD
    const char * szFirst;
    const char * szSecond;
-   HB_SIZE ulLenFirst;
-   HB_SIZE ulLenSecond;
-   HB_SIZE ulMinLen;
+   HB_SIZE nLenFirst;
+   HB_SIZE nLenSecond;
+   HB_SIZE nMinLen;
    int iRet = 0; /* Current status */
 
    HB_TRACE(HB_TR_DEBUG, ("hb_itemStrCmp(%p, %p, %d)", pFirst, pSecond, ( int ) bForceExact));
 
    szFirst = pFirst->item.asString.value;
    szSecond = pSecond->item.asString.value;
-   ulLenFirst = pFirst->item.asString.length;
-   ulLenSecond = pSecond->item.asString.length;
+   nLenFirst = pFirst->item.asString.length;
+   nLenSecond = pSecond->item.asString.length;
 
    if( !bForceExact && hb_stackSetStruct()->HB_SET_EXACT )
    {
       /* SET EXACT ON and not using == */
       /* Don't include trailing spaces */
-      while( ulLenFirst > ulLenSecond && szFirst[ ulLenFirst - 1 ] == ' ' )
-         ulLenFirst--;
-      while( ulLenSecond > ulLenFirst && szSecond[ ulLenSecond - 1 ] == ' ' )
-         ulLenSecond--;
+      while( nLenFirst > nLenSecond && szFirst[ nLenFirst - 1 ] == ' ' )
+         nLenFirst--;
+      while( nLenSecond > nLenFirst && szSecond[ nLenSecond - 1 ] == ' ' )
+         nLenSecond--;
       bForceExact = HB_TRUE;
    }
 
-   ulMinLen = ulLenFirst < ulLenSecond ? ulLenFirst : ulLenSecond;
+   nMinLen = nLenFirst < nLenSecond ? nLenFirst : nLenSecond;
 
    /* Both strings not empty */
-   if( ulMinLen )
+   if( nMinLen )
    {
       PHB_CODEPAGE cdp = hb_vmCDP();
       if( cdp && cdp->sort )
-         iRet = hb_cdpcmp( szFirst, ulLenFirst, szSecond, ulLenSecond,
+         iRet = hb_cdpcmp( szFirst, nLenFirst, szSecond, nLenSecond,
                            cdp, bForceExact );
       else
       {
@@ -2154,26 +2154,26 @@ int hb_itemStrCmp( PHB_ITEM pFirst, PHB_ITEM pSecond, HB_BOOL bForceExact )
             szFirst++;
             szSecond++;
          }
-         while( --ulMinLen );
+         while( --nMinLen );
 
          /* If equal and length is different ! */
-         if( !iRet && ulLenFirst != ulLenSecond )
+         if( !iRet && nLenFirst != nLenSecond )
          {
             /* Force an exact comparison? */
-            if( bForceExact || ulLenSecond > ulLenFirst )
-               iRet = ( ulLenFirst < ulLenSecond ) ? -1 : 1;
+            if( bForceExact || nLenSecond > nLenFirst )
+               iRet = ( nLenFirst < nLenSecond ) ? -1 : 1;
          }
       }
    }
    else
    {
       /* Both empty ? */
-      if( ulLenFirst != ulLenSecond )
+      if( nLenFirst != nLenSecond )
       {
          if( bForceExact )
-            iRet = ( ulLenFirst < ulLenSecond ) ? -1 : 1;
+            iRet = ( nLenFirst < nLenSecond ) ? -1 : 1;
          else
-            iRet = ( ulLenSecond == 0 ) ? 0 : -1;
+            iRet = ( nLenSecond == 0 ) ? 0 : -1;
       }
       else
          /* Both empty => Equal ! */
@@ -2189,37 +2189,37 @@ int hb_itemStrICmp( PHB_ITEM pFirst, PHB_ITEM pSecond, HB_BOOL bForceExact )
    HB_STACK_TLS_PRELOAD
    const char * szFirst;
    const char * szSecond;
-   HB_SIZE ulLenFirst;
-   HB_SIZE ulLenSecond;
-   HB_SIZE ulMinLen;
+   HB_SIZE nLenFirst;
+   HB_SIZE nLenSecond;
+   HB_SIZE nMinLen;
    int iRet = 0; /* Current status */
 
    HB_TRACE(HB_TR_DEBUG, ("hb_itemStrICmp(%p, %p, %d)", pFirst, pSecond, ( int ) bForceExact));
 
    szFirst = pFirst->item.asString.value;
    szSecond = pSecond->item.asString.value;
-   ulLenFirst = pFirst->item.asString.length;
-   ulLenSecond = pSecond->item.asString.length;
+   nLenFirst = pFirst->item.asString.length;
+   nLenSecond = pSecond->item.asString.length;
 
    if( !bForceExact && hb_stackSetStruct()->HB_SET_EXACT )
    {
       /* SET EXACT ON and not using == */
       /* Don't include trailing spaces */
-      while( ulLenFirst > ulLenSecond && szFirst[ ulLenFirst - 1 ] == ' ' )
-         ulLenFirst--;
-      while( ulLenSecond > ulLenFirst && szSecond[ ulLenSecond - 1 ] == ' ' )
-         ulLenSecond--;
+      while( nLenFirst > nLenSecond && szFirst[ nLenFirst - 1 ] == ' ' )
+         nLenFirst--;
+      while( nLenSecond > nLenFirst && szSecond[ nLenSecond - 1 ] == ' ' )
+         nLenSecond--;
       bForceExact = HB_TRUE;
    }
 
-   ulMinLen = ulLenFirst < ulLenSecond ? ulLenFirst : ulLenSecond;
+   nMinLen = nLenFirst < nLenSecond ? nLenFirst : nLenSecond;
 
    /* Both strings not empty */
-   if( ulMinLen )
+   if( nMinLen )
    {
       PHB_CODEPAGE cdp = hb_vmCDP();
       if( cdp && cdp->sort )
-         iRet = hb_cdpicmp( szFirst, ulLenFirst, szSecond, ulLenSecond,
+         iRet = hb_cdpicmp( szFirst, nLenFirst, szSecond, nLenSecond,
                             cdp, bForceExact );
       else
       {
@@ -2235,26 +2235,26 @@ int hb_itemStrICmp( PHB_ITEM pFirst, PHB_ITEM pSecond, HB_BOOL bForceExact )
             szFirst++;
             szSecond++;
          }
-         while( --ulMinLen );
+         while( --nMinLen );
 
          /* If equal and length is different ! */
-         if( !iRet && ulLenFirst != ulLenSecond )
+         if( !iRet && nLenFirst != nLenSecond )
          {
             /* Force an exact comparison? */
-            if( bForceExact || ulLenSecond > ulLenFirst )
-               iRet = ( ulLenFirst < ulLenSecond ) ? -1 : 1;
+            if( bForceExact || nLenSecond > nLenFirst )
+               iRet = ( nLenFirst < nLenSecond ) ? -1 : 1;
          }
       }
    }
    else
    {
       /* Both empty ? */
-      if( ulLenFirst != ulLenSecond )
+      if( nLenFirst != nLenSecond )
       {
          if( bForceExact )
-            iRet = ( ulLenFirst < ulLenSecond ) ? -1 : 1;
+            iRet = ( nLenFirst < nLenSecond ) ? -1 : 1;
          else
-            iRet = ( ulLenSecond == 0 ) ? 0 : -1;
+            iRet = ( nLenSecond == 0 ) ? 0 : -1;
       }
       else
          /* Both empty => Equal ! */
@@ -2534,18 +2534,18 @@ char * hb_itemStr( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
          As a side effect the caller should never modify the returned buffer
          since it may point to a constant value. [vszakats] */
 
-char * hb_itemString( PHB_ITEM pItem, HB_SIZE * ulLen, HB_BOOL * bFreeReq )
+char * hb_itemString( PHB_ITEM pItem, HB_SIZE * nLen, HB_BOOL * bFreeReq )
 {
    char * buffer;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_itemString(%p, %p, %p)", pItem, ulLen, bFreeReq));
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemString(%p, %p, %p)", pItem, nLen, bFreeReq));
 
    switch( HB_ITEM_TYPE( pItem ) )
    {
       case HB_IT_STRING:
       case HB_IT_MEMO:
          buffer = ( char * ) hb_itemGetCPtr( pItem );
-         * ulLen = hb_itemGetCLen( pItem );
+         * nLen = hb_itemGetCLen( pItem );
          * bFreeReq = HB_FALSE;
          break;
 
@@ -2558,7 +2558,7 @@ char * hb_itemString( PHB_ITEM pItem, HB_SIZE * ulLen, HB_BOOL * bFreeReq )
 
          buffer = ( char * ) hb_xgrab( 11 );
          hb_dateFormat( szDate, buffer, hb_stackSetStruct()->HB_SET_DATEFORMAT );
-         * ulLen = strlen( buffer );
+         * nLen = strlen( buffer );
          * bFreeReq = HB_TRUE;
          break;
       }
@@ -2575,7 +2575,7 @@ char * hb_itemString( PHB_ITEM pItem, HB_SIZE * ulLen, HB_BOOL * bFreeReq )
                              pItem->item.asDateTime.time );
 
          buffer = hb_strdup( szDateTime );
-         * ulLen = strlen( buffer );
+         * nLen = strlen( buffer );
          * bFreeReq = HB_TRUE;
          break;
       }
@@ -2596,13 +2596,13 @@ char * hb_itemString( PHB_ITEM pItem, HB_SIZE * ulLen, HB_BOOL * bFreeReq )
             buffer = hb_itemStr( pItem, NULL, NULL );
          if( buffer )
          {
-            * ulLen = strlen( buffer );
+            * nLen = strlen( buffer );
             * bFreeReq = HB_TRUE;
          }
          else
          {
             buffer = ( char * ) "";
-            * ulLen = 0;
+            * nLen = 0;
             * bFreeReq = HB_FALSE;
          }
          break;
@@ -2610,13 +2610,13 @@ char * hb_itemString( PHB_ITEM pItem, HB_SIZE * ulLen, HB_BOOL * bFreeReq )
 
       case HB_IT_NIL:
          buffer = ( char * ) "NIL";
-         * ulLen = 3;
+         * nLen = 3;
          * bFreeReq = HB_FALSE;
          break;
 
       case HB_IT_LOGICAL:
          buffer = ( char * ) ( hb_itemGetL( pItem ) ? ".T." : ".F." );
-         * ulLen = 3;
+         * nLen = 3;
          * bFreeReq = HB_FALSE;
          break;
 
@@ -2625,7 +2625,7 @@ char * hb_itemString( PHB_ITEM pItem, HB_SIZE * ulLen, HB_BOOL * bFreeReq )
          int size = ( sizeof( void * ) << 1 ) + 3; /* n bytes for address + 0x + \0 */
          HB_PTRDIFF addr = ( HB_PTRDIFF ) hb_itemGetPtr( pItem );
 
-         * ulLen = size - 1;
+         * nLen = size - 1;
          * bFreeReq = HB_TRUE;
          buffer = ( char * ) hb_xgrab( size );
          buffer[ 0 ] = '0';
@@ -2642,7 +2642,7 @@ char * hb_itemString( PHB_ITEM pItem, HB_SIZE * ulLen, HB_BOOL * bFreeReq )
       }
       default:
          buffer = ( char * ) "";
-         * ulLen = 0;
+         * nLen = 0;
          * bFreeReq = HB_FALSE;
    }
 
@@ -2653,9 +2653,9 @@ char * hb_itemString( PHB_ITEM pItem, HB_SIZE * ulLen, HB_BOOL * bFreeReq )
    being padded. If date, convert to string using hb_dateFormat(). If numeric,
    convert to unpadded string. Return pointer to string and set string length */
 
-char * hb_itemPadConv( PHB_ITEM pItem, HB_SIZE * pulSize, HB_BOOL * bFreeReq )
+char * hb_itemPadConv( PHB_ITEM pItem, HB_SIZE * pnSize, HB_BOOL * bFreeReq )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_itemPadConv(%p, %p, %p)", pItem, pulSize, bFreeReq));
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemPadConv(%p, %p, %p)", pItem, pnSize, bFreeReq));
 
    if( pItem )
    {
@@ -2665,14 +2665,14 @@ char * hb_itemPadConv( PHB_ITEM pItem, HB_SIZE * pulSize, HB_BOOL * bFreeReq )
          case HB_IT_MEMO:
          case HB_IT_DATE:
          case HB_IT_TIMESTAMP:
-            return hb_itemString( pItem, pulSize, bFreeReq );
+            return hb_itemString( pItem, pnSize, bFreeReq );
 
          case HB_IT_DOUBLE:
          case HB_IT_INTEGER:
          case HB_IT_LONG:
          {
             int i;
-            char * buffer = hb_itemString( pItem, pulSize, bFreeReq );
+            char * buffer = hb_itemString( pItem, pnSize, bFreeReq );
 
             /* remove leading spaces if any, a little bit redundant but
              * I don't want to complicate the API interface more. Druzus
@@ -2682,7 +2682,7 @@ char * hb_itemPadConv( PHB_ITEM pItem, HB_SIZE * pulSize, HB_BOOL * bFreeReq )
             if( i > 0 )
             {
                int j = 0;
-               * pulSize -= i;
+               * pnSize -= i;
                do
                {
                   buffer[ j++ ] = buffer[ i ];
@@ -2702,16 +2702,16 @@ PHB_ITEM hb_itemValToStr( PHB_ITEM pItem )
 {
    PHB_ITEM pResult;
    char * buffer;
-   HB_SIZE ulLen;
+   HB_SIZE nLen;
    HB_BOOL bFreeReq;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_itemValToStr(%p)", pItem));
 
-   buffer = hb_itemString( pItem, &ulLen, &bFreeReq );
+   buffer = hb_itemString( pItem, &nLen, &bFreeReq );
    if( bFreeReq )
-      pResult = hb_itemPutCLPtr( NULL, buffer, ulLen );
+      pResult = hb_itemPutCLPtr( NULL, buffer, nLen );
    else
-      pResult = hb_itemPutCL( NULL, buffer, ulLen );
+      pResult = hb_itemPutCL( NULL, buffer, nLen );
 
    return pResult;
 }

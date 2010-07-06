@@ -4636,8 +4636,8 @@ static void hb_vmEnumStart( int nVars, int nDescend )
       {
          /* the index into an array */
          pEnum->item.asEnum.offset = ( nDescend > 0 ) ? 1 :
-                                       pBase->item.asArray.value->ulLen;
-         if( pBase->item.asArray.value->ulLen == 0 )
+                                       pBase->item.asArray.value->nLen;
+         if( pBase->item.asArray.value->nLen == 0 )
             fStart = HB_FALSE;
       }
       else if( HB_IS_HASH( pBase ) )
@@ -4717,7 +4717,7 @@ static void hb_vmEnumNext( void )
                pEnum->item.asEnum.valuePtr = NULL;
             }
             if( ( HB_SIZE ) ++pEnum->item.asEnum.offset >
-                pBase->item.asArray.value->ulLen )
+                pBase->item.asArray.value->nLen )
                break;
          }
       }
@@ -5095,7 +5095,7 @@ static void hb_vmArrayPush( void )
          return;
       }
 
-      if( HB_IS_VALID_INDEX( ulIndex, pArray->item.asArray.value->ulLen ) )
+      if( HB_IS_VALID_INDEX( ulIndex, pArray->item.asArray.value->nLen ) )
       {
          hb_itemCopy( pIndex, pArray->item.asArray.value->pItems + ulIndex - 1 );
          hb_itemMove( pArray, pIndex );
@@ -5187,7 +5187,7 @@ static void hb_vmArrayPushRef( void )
          hb_stackPop();
          return;
       }
-      else if( HB_IS_VALID_INDEX( ulIndex, pArray->item.asArray.value->ulLen ) )
+      else if( HB_IS_VALID_INDEX( ulIndex, pArray->item.asArray.value->nLen ) )
       {
          /* This function is safe for overwriting passed array, [druzus] */
          hb_arrayGetItemRef( pArray, ulIndex, pRefer );
@@ -5286,7 +5286,7 @@ static void hb_vmArrayPop( void )
          return;
       }
 
-      if( HB_IS_VALID_INDEX( ulIndex, pArray->item.asArray.value->ulLen ) )
+      if( HB_IS_VALID_INDEX( ulIndex, pArray->item.asArray.value->nLen ) )
       {
          pValue->type &= ~( HB_IT_MEMOFLAG | HB_IT_DEFAULT );
          hb_itemMoveRef( pArray->item.asArray.value->pItems + ulIndex - 1, pValue );
@@ -5605,7 +5605,7 @@ static void hb_vmPushAParams( void )
    pArray = hb_stackItemFromTop( -1 );
    if( HB_IS_ARRAY( pArray ) )
    {
-      HB_SIZE ulLen = pArray->item.asArray.value->ulLen, ul;
+      HB_SIZE ulLen = pArray->item.asArray.value->nLen, ul;
 
       if( ulLen )
       {
@@ -10979,7 +10979,7 @@ static void hb_vmArrayItemPush( HB_SIZE ulIndex )
          return;
       }
 
-      if( HB_IS_VALID_INDEX( ulIndex, pArray->item.asArray.value->ulLen ) )
+      if( HB_IS_VALID_INDEX( ulIndex, pArray->item.asArray.value->nLen ) )
       {
          PHB_ITEM pItem = hb_stackAllocItem();
 
@@ -11061,7 +11061,7 @@ static void hb_vmArrayItemPop( HB_SIZE ulIndex )
          return;
       }
 
-      if( HB_IS_VALID_INDEX( ulIndex, pArray->item.asArray.value->ulLen ) )
+      if( HB_IS_VALID_INDEX( ulIndex, pArray->item.asArray.value->nLen ) )
       {
          pValue->type &= ~( HB_IT_MEMOFLAG | HB_IT_DEFAULT );
          hb_itemMoveRef( pArray->item.asArray.value->pItems + ulIndex - 1, pValue );

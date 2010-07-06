@@ -73,7 +73,7 @@ static HB_BOOL hb_itemIsLess( PHB_ITEM pItem1, PHB_ITEM pItem2, PHB_ITEM pBlock,
       hb_vmPush( pItem2 );
       hb_vmSend( 2 );
 
-      if( pBaseArray->ulLen <= ulLast )
+      if( pBaseArray->nLen <= ulLast )
          return HB_FALSE;
       else
       {
@@ -172,7 +172,7 @@ static HB_ISIZ hb_arraySortQuickPartition( PHB_BASEARRAY pBaseArray, HB_ISIZ lb,
    }
 
    /* pivot belongs in pBaseArray->pItems[j] */
-   if( j > lb && pBaseArray->ulLen > ( HB_SIZE ) j )
+   if( j > lb && pBaseArray->nLen > ( HB_SIZE ) j )
       hb_itemSwap( pBaseArray->pItems + lb, pBaseArray->pItems + j );
 
    return j;
@@ -186,9 +186,9 @@ static void hb_arraySortQuick( PHB_BASEARRAY pBaseArray, HB_ISIZ lb, HB_ISIZ ub,
 
    while( lb < ub )
    {
-      if( ( HB_SIZE ) ub >= pBaseArray->ulLen )
+      if( ( HB_SIZE ) ub >= pBaseArray->nLen )
       {
-         ub = pBaseArray->ulLen - 1;
+         ub = pBaseArray->nLen - 1;
          if( lb >= ub )
             break;
       }
@@ -217,7 +217,7 @@ HB_BOOL hb_arraySort( PHB_ITEM pArray, HB_SIZE * pulStart, HB_SIZE * pulCount, P
    if( HB_IS_ARRAY( pArray ) )
    {
       PHB_BASEARRAY pBaseArray = pArray->item.asArray.value;
-      HB_SIZE ulLen = pBaseArray->ulLen;
+      HB_SIZE ulLen = pBaseArray->nLen;
       HB_SIZE ulStart;
       HB_SIZE ulCount;
       HB_SIZE ulEnd;

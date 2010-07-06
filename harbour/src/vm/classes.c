@@ -1698,7 +1698,7 @@ PHB_SYMB hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage,
             pStack->uiClass = pObject->item.asArray.value->uiClass;
             if( pObject->item.asArray.value->uiPrevCls )
             {
-               if( pObject->item.asArray.value->ulLen )
+               if( pObject->item.asArray.value->nLen )
                {
                   /*
                    * Copy real object - do not move! the same super casted

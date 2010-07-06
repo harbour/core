@@ -56,13 +56,13 @@
 #include "hbapierr.h"
 #include "hbstack.h"
 
-static PHB_ITEM hb_vmWithObjectItem( HB_LONG lLevel )
+static PHB_ITEM hb_vmWithObjectItem( HB_ISIZ lLevel )
 {
-   HB_LONG lOffset = hb_stackWithObjectOffset();
+   HB_ISIZ lOffset = hb_stackWithObjectOffset();
 
    while( lOffset && lLevel > 0 )
    {
-      HB_LONG * plOffset = ( HB_LONG * ) hb_itemGetPtr( hb_stackItem( lOffset + 1 ) );
+      HB_ISIZ * plOffset = ( HB_ISIZ * ) hb_itemGetPtr( hb_stackItem( lOffset + 1 ) );
       if( !plOffset )
          break;
       --lLevel;
@@ -72,13 +72,13 @@ static PHB_ITEM hb_vmWithObjectItem( HB_LONG lLevel )
    return ( lOffset && !lLevel ) ? hb_stackItem( lOffset ) : NULL;
 }
 
-static HB_LONG hb_vmWithObjectCount( void )
+static HB_ISIZ hb_vmWithObjectCount( void )
 {
-   HB_LONG lOffset = hb_stackWithObjectOffset(), lCount = 0;
+   HB_ISIZ lOffset = hb_stackWithObjectOffset(), lCount = 0;
 
    while( lOffset )
    {
-      HB_LONG * plOffset = ( HB_LONG * ) hb_itemGetPtr( hb_stackItem( lOffset + 1 ) );
+      HB_ISIZ * plOffset = ( HB_ISIZ * ) hb_itemGetPtr( hb_stackItem( lOffset + 1 ) );
       if( !plOffset )
          break;
       ++lCount;
@@ -92,12 +92,12 @@ static HB_LONG hb_vmWithObjectCount( void )
 
 HB_FUNC( HB_QWITH )
 {
-   hb_itemReturn( hb_vmWithObjectItem( hb_parnl( 1 ) ) );
+   hb_itemReturn( hb_vmWithObjectItem( hb_parns( 1 ) ) );
 }
 
 HB_FUNC( HB_WITHOBJECTCOUNTER )
 {
-   hb_retnl( hb_vmWithObjectCount() );
+   hb_retns( hb_vmWithObjectCount() );
 }
 
 HB_FUNC( HB_RESETWITH )
