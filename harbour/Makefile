@@ -57,5 +57,5 @@ else
 endif
 
 install::
-	$(if $(wildcard $(HB_HOST_BIN_DIR)/hbrun$(HB_HOST_BIN_EXT)),+$(HB_HOST_BIN_DIR)/hbrun$(HB_HOST_BIN_EXT) --hb:gtcgi $(TOP)$(ROOT)config/postinst.hbs,@$(ECHO) $(ECHOQUOTE)! Warning: hbrun not found, config/postinst.hbs not run.$(ECHOQUOTE))
+	$(if $(wildcard $(HB_HOST_BIN_DIR)/hbrun$(HB_HOST_BIN_EXT)),+$(HB_HOST_BIN_DIR)/hbrun$(HB_HOST_BIN_EXT) --hb:gtcgi $(TOP)$(ROOT)config/postinst.hbs,@$(ECHO) $(ECHOQUOTE)! Warning: hbrun not found, config/postinst.hbs skipped.$(ECHOQUOTE))
 	$(if $(wildcard $(HB_POSTINST)),+$(HB_POSTINST),)

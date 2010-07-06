@@ -58,17 +58,17 @@
 
 HB_FUNC( HB_QSELF )
 {
-   HB_ISIZ lOffset = hb_stackBaseProcOffset( 1 );
+   HB_ISIZ nOffset = hb_stackBaseProcOffset( 1 );
 
-   if( lOffset > 0 )
+   if( nOffset > 0 )
    {
-      PHB_ITEM pSelf = hb_stackItem( lOffset + 1 );
+      PHB_ITEM pSelf = hb_stackItem( nOffset + 1 );
 
-      if( lOffset > 0 && HB_IS_BLOCK( pSelf ) &&
-         hb_itemGetSymbol( hb_stackItem( lOffset ) ) == &hb_symEval )
+      if( nOffset > 0 && HB_IS_BLOCK( pSelf ) &&
+         hb_itemGetSymbol( hb_stackItem( nOffset ) ) == &hb_symEval )
       {
-         pSelf = hb_stackItem( hb_stackItem( lOffset )->
-                               item.asSymbol.stackstate->lBaseItem + 1 );
+         pSelf = hb_stackItem( hb_stackItem( nOffset )->
+                               item.asSymbol.stackstate->nBaseItem + 1 );
       }
       hb_itemReturn( pSelf );
    }

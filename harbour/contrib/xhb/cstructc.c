@@ -61,9 +61,9 @@
 #include "hbset.h"
 #include "hbctypes.ch"
 
-static PHB_ITEM hb_itemPutCRaw( PHB_ITEM pItem, const char * szText, HB_SIZE ulLen )
+static PHB_ITEM hb_itemPutCRaw( PHB_ITEM pItem, const char * szText, HB_SIZE nLen )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_itemPutCRaw(%p, %s, %" HB_PFS "u)", pItem, szText, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemPutCRaw(%p, %s, %" HB_PFS "u)", pItem, szText, nLen));
 
    if( pItem )
    {
@@ -73,16 +73,16 @@ static PHB_ITEM hb_itemPutCRaw( PHB_ITEM pItem, const char * szText, HB_SIZE ulL
    else
       pItem = hb_itemNew( NULL );
 
-   if( ulLen == 0 )
+   if( nLen == 0 )
    {
       if( szText )
          hb_xfree( ( void * ) szText );
       szText = "";
    }
    pItem->type = HB_IT_STRING;
-   pItem->item.asString.length    = ulLen;
+   pItem->item.asString.length    = nLen;
    pItem->item.asString.value     = ( char * ) szText;
-   pItem->item.asString.allocated = ulLen;
+   pItem->item.asString.allocated = nLen;
 
    return pItem;
 }
@@ -90,9 +90,9 @@ static PHB_ITEM hb_itemPutCRaw( PHB_ITEM pItem, const char * szText, HB_SIZE ulL
 #ifdef hb_itemPutCRawStatic
    #undef hb_itemPutCRawStatic
 #endif
-static PHB_ITEM hb_itemPutCRawStatic( PHB_ITEM pItem, const char * szText, HB_SIZE ulLen )
+static PHB_ITEM hb_itemPutCRawStatic( PHB_ITEM pItem, const char * szText, HB_SIZE nLen )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_itemPutCRawStatic(%p, %s, %" HB_PFS "u)", pItem, szText, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemPutCRawStatic(%p, %s, %" HB_PFS "u)", pItem, szText, nLen));
 
    if( pItem )
    {
@@ -104,7 +104,7 @@ static PHB_ITEM hb_itemPutCRawStatic( PHB_ITEM pItem, const char * szText, HB_SI
 
    pItem->type = HB_IT_STRING;
    pItem->item.asString.allocated = 0;
-   pItem->item.asString.length    = ulLen;
+   pItem->item.asString.length    = nLen;
    pItem->item.asString.value     = ( char * ) szText;
 
    return pItem;
@@ -113,29 +113,29 @@ static PHB_ITEM hb_itemPutCRawStatic( PHB_ITEM pItem, const char * szText, HB_SI
 #ifdef hb_retclenAdoptRaw
    #undef hb_retclenAdoptRaw
 #endif
-void hb_retclenAdoptRaw( const char * szText, HB_SIZE ulLen )
+void hb_retclenAdoptRaw( const char * szText, HB_SIZE nLen )
 {
-   hb_itemPutCRaw( hb_stackReturnItem(), szText, ulLen );
+   hb_itemPutCRaw( hb_stackReturnItem(), szText, nLen );
 }
 
 #ifdef hb_retclenStatic
    #undef hb_retclenStatic
 #endif
-void hb_retclenStatic( const char * szText, HB_SIZE ulLen )
+void hb_retclenStatic( const char * szText, HB_SIZE nLen )
 {
-   hb_itemPutCRawStatic( hb_stackReturnItem(), szText, ulLen );
+   hb_itemPutCRawStatic( hb_stackReturnItem(), szText, nLen );
 }
 
 static unsigned int SizeOfCStructure( PHB_ITEM aDef, unsigned int uiAlign )
 {
    PHB_BASEARRAY pBaseDef = aDef->item.asArray.value;
-   HB_SIZE ulLen = pBaseDef->ulLen;
+   HB_SIZE nLen = pBaseDef->nLen;
    HB_SIZE ulIndex;
    unsigned int uiSize = 0, uiMemberSize;
    HB_BYTE cShift;
    unsigned int uiPad;
 
-   for( ulIndex = 0; ulIndex < ulLen; ulIndex++ )
+   for( ulIndex = 0; ulIndex < nLen; ulIndex++ )
    {
       if( ( pBaseDef->pItems + ulIndex )->type != HB_IT_INTEGER )
       {
@@ -294,7 +294,7 @@ static HB_BYTE * ArrayToStructure( PHB_ITEM aVar, PHB_ITEM aDef, unsigned int ui
 {
    PHB_BASEARRAY pBaseVar = aVar->item.asArray.value;
    PHB_BASEARRAY pBaseDef = aDef->item.asArray.value;
-   HB_SIZE ulLen = pBaseDef->ulLen;
+   HB_SIZE nLen = pBaseDef->nLen;
    HB_SIZE ulIndex;
    HB_BYTE * Buffer;
    unsigned int uiOffset = 0, uiMemberSize;
@@ -306,7 +306,7 @@ static HB_BYTE * ArrayToStructure( PHB_ITEM aVar, PHB_ITEM aDef, unsigned int ui
 
    Buffer = ( HB_BYTE * ) hb_xgrab( *puiSize + 1 );
 
-   for( ulIndex = 0; ulIndex < ulLen; ulIndex++ )
+   for( ulIndex = 0; ulIndex < nLen; ulIndex++ )
    {
       /* printf( "#: %i\n", ulIndex ); */
 
@@ -987,7 +987,7 @@ static HB_BYTE * ArrayToStructure( PHB_ITEM aVar, PHB_ITEM aDef, unsigned int ui
                else if( strncmp( hb_objGetClsName( pStructure ), "C Structure", 11 ) == 0 )
                {
                   PHB_BASEARRAY pBaseStructure = pStructure->item.asArray.value;
-                  PHB_ITEM pInternalBuffer = pBaseStructure->pItems + pBaseStructure->ulLen - 1;
+                  PHB_ITEM pInternalBuffer = pBaseStructure->pItems + pBaseStructure->nLen - 1;
 
                   hb_objSendMsg( pStructure, "VALUE", 0 );
 
@@ -1053,20 +1053,20 @@ HB_FUNC( HB_ARRAYTOSTRUCTURE )
 static PHB_ITEM StructureToArray( HB_BYTE* Buffer, HB_SIZE ulBufferLen, PHB_ITEM aDef, unsigned int uiAlign, HB_BOOL bAdoptNested, PHB_ITEM pRet )
 {
    PHB_BASEARRAY pBaseDef = aDef->item.asArray.value;
-   HB_SIZE ulLen = pBaseDef->ulLen;
+   HB_SIZE nLen = pBaseDef->nLen;
    HB_SIZE ulIndex;
    unsigned int uiOffset, uiMemberSize;
    HB_BYTE cShift;
    /* PHB_ITEM pRet = hb_itemNew( NULL ); */
    PHB_BASEARRAY pBaseVar;
 
-   /* TraceLog( NULL, "StructureToArray(%p, %p, %u, %i) ->%u\n", Buffer, aDef, uiAlign, bAdoptNested, ulLen ); */
+   /* TraceLog( NULL, "StructureToArray(%p, %p, %u, %i) ->%u\n", Buffer, aDef, uiAlign, bAdoptNested, nLen ); */
 
-   /* hb_arrayNew( pRet, ulLen ); */
+   /* hb_arrayNew( pRet, nLen ); */
    pBaseVar = pRet->item.asArray.value;
 
    uiOffset = 0;
-   for( ulIndex = 0; ulIndex < ulLen; ulIndex++ )
+   for( ulIndex = 0; ulIndex < nLen; ulIndex++ )
    {
       switch( ( pBaseDef->pItems + ulIndex )->item.asInteger.value )
       {
@@ -1313,7 +1313,7 @@ static PHB_ITEM StructureToArray( HB_BYTE* Buffer, HB_SIZE ulBufferLen, PHB_ITEM
                if( *( char ** ) ( (long ** )( Buffer + uiOffset ) ) )
                {
                   PHB_BASEARRAY pBaseStructure = pStructure->item.asArray.value;
-                  PHB_ITEM pInternalBuffer = pBaseStructure->pItems + pBaseStructure->ulLen - 1;
+                  PHB_ITEM pInternalBuffer = pBaseStructure->pItems + pBaseStructure->nLen - 1;
 
                   if( !bAdoptNested )
                   {
@@ -1335,7 +1335,7 @@ static PHB_ITEM StructureToArray( HB_BYTE* Buffer, HB_SIZE ulBufferLen, PHB_ITEM
             else
             {
                PHB_BASEARRAY pBaseStructure = pStructure->item.asArray.value;
-               PHB_ITEM pInternalBuffer = pBaseStructure->pItems + pBaseStructure->ulLen - 1;
+               PHB_ITEM pInternalBuffer = pBaseStructure->pItems + pBaseStructure->nLen - 1;
                HB_ITEM Adopt;
 
                Adopt.type = HB_IT_LOGICAL;
