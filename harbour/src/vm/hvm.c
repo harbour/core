@@ -5450,7 +5450,7 @@ static void hb_vmMacroPushIndex( void )
     * Now the top most element on the stack points to number of
     * additional indexes to generated array
     */
-   nIndexes = hb_itemGetNL( hb_stackItemFromTop( -1 ) ); /* TOFIX!!! */
+   nIndexes = hb_itemGetNS( hb_stackItemFromTop( -1 ) );
    hb_stackDec();
 
    if( nIndexes > 1 )
@@ -7828,7 +7828,8 @@ PHB_SYMBOLS hb_vmRegisterSymbols( PHB_SYMB pModuleSymbols, HB_USHORT uiSymbols,
 
       if( fClone )
       {
-         HB_SIZE nSymSize = ( HB_ULONG ) uiSymbols * sizeof( HB_SYMB ), nSize; /* TOFIX !!! */
+         HB_SIZE nSymSize = uiSymbols * sizeof( HB_SYMB );
+         HB_SIZE nSize;
          char * buffer;
 
          nSize = nSymSize;
