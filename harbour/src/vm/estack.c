@@ -290,15 +290,15 @@ void * hb_stackGetTSD( PHB_TSD pTSD )
 #else
    if( pTSD->iHandle == 0 )
    {
-      HB_SIZE ulSize = ( hb_stack.iTSD + 2 ) * sizeof( HB_TSD_HOLDER );
+      HB_SIZE nSize = ( hb_stack.iTSD + 2 ) * sizeof( HB_TSD_HOLDER );
       if( hb_stack.iTSD == 0 )
       {
-         hb_stack.pTSD = ( PHB_TSD_HOLDER ) hb_xgrab( ulSize );
-         memset( hb_stack.pTSD, 0, ulSize );
+         hb_stack.pTSD = ( PHB_TSD_HOLDER ) hb_xgrab( nSize );
+         memset( hb_stack.pTSD, 0, nSize );
       }
       else
       {
-         hb_stack.pTSD = ( PHB_TSD_HOLDER ) hb_xrealloc( hb_stack.pTSD, ulSize );
+         hb_stack.pTSD = ( PHB_TSD_HOLDER ) hb_xrealloc( hb_stack.pTSD, nSize );
       }
       pTSD->iHandle = ++hb_stack.iTSD;
 #endif
@@ -583,13 +583,13 @@ void hb_stackDec( void )
 }
 
 #undef hb_stackDecrease
-void hb_stackDecrease( HB_SIZE ulItems )
+void hb_stackDecrease( HB_SIZE nItems )
 {
    HB_STACK_TLS_PRELOAD
 
    HB_TRACE(HB_TR_DEBUG, ("hb_stackDecrease()"));
 
-   if( ( hb_stack.pPos -= ulItems ) <= hb_stack.pBase )
+   if( ( hb_stack.pPos -= nItems ) <= hb_stack.pBase )
       hb_errInternal( HB_EI_STACKUFLOW, NULL, NULL, NULL );
 }
 
@@ -1255,11 +1255,11 @@ static void hb_stackIsMemvarRef( PHB_STACK pStack )
 {
    /* 1. Mark all hidden memvars (PRIVATEs and PUBLICs) */
    PHB_PRIVATE_STACK pPrivateStack = &pStack->privates;
-   HB_SIZE ulCount = pPrivateStack->count;
+   HB_SIZE nCount = pPrivateStack->count;
 
-   while( ulCount )
+   while( nCount )
    {
-      PHB_ITEM pMemvar = pPrivateStack->stack[ --ulCount ].pPrevMemvar;
+      PHB_ITEM pMemvar = pPrivateStack->stack[ --nCount ].pPrevMemvar;
       if( pMemvar && HB_IS_GCITEM( pMemvar ) )
          hb_gcItemRef( pMemvar );
    }

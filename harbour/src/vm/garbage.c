@@ -121,7 +121,7 @@ typedef struct HB_GARBAGE_
 #define HB_BLOCK_PTR( p )       ( ( void * ) ( ( HB_BYTE * ) ( p ) + HB_GARBAGE_SIZE ) )
 
 /* we may use a cache later */
-#define HB_GARBAGE_NEW( ulSize )    ( ( HB_GARBAGE_PTR ) hb_xgrab( HB_GARBAGE_SIZE + ( ulSize ) ) )
+#define HB_GARBAGE_NEW( nSize )    ( ( HB_GARBAGE_PTR ) hb_xgrab( HB_GARBAGE_SIZE + ( nSize ) ) )
 #define HB_GARBAGE_FREE( pAlloc )   hb_xfree( ( void * ) ( pAlloc ) )
 
 /* status of memory block */
@@ -196,11 +196,11 @@ static void hb_gcUnlink( HB_GARBAGE_PTR *pList, HB_GARBAGE_PTR pAlloc )
 }
 
 /* allocates a memory block */
-void * hb_gcAllocate( HB_SIZE ulSize, const HB_GC_FUNCS * pFuncs )
+void * hb_gcAllocate( HB_SIZE nSize, const HB_GC_FUNCS * pFuncs )
 {
    HB_GARBAGE_PTR pAlloc;
 
-   pAlloc = HB_GARBAGE_NEW( ulSize );
+   pAlloc = HB_GARBAGE_NEW( nSize );
    pAlloc->pFuncs = pFuncs;
    pAlloc->locked = 1;
    pAlloc->used   = s_uUsedFlag;
@@ -212,11 +212,11 @@ void * hb_gcAllocate( HB_SIZE ulSize, const HB_GC_FUNCS * pFuncs )
 }
 
 /* allocates a memory block */
-void * hb_gcAllocRaw( HB_SIZE ulSize, const HB_GC_FUNCS * pFuncs )
+void * hb_gcAllocRaw( HB_SIZE nSize, const HB_GC_FUNCS * pFuncs )
 {
    HB_GARBAGE_PTR pAlloc;
 
-   pAlloc = HB_GARBAGE_NEW( ulSize );
+   pAlloc = HB_GARBAGE_NEW( nSize );
    pAlloc->pFuncs = pFuncs;
    pAlloc->locked = 0;
    pAlloc->used   = s_uUsedFlag;

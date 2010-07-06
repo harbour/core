@@ -282,7 +282,7 @@ static HB_BOOL s_fInitedFM = HB_FALSE;
 typedef struct _HB_MEMINFO
 {
    HB_U32      u32Signature;
-   HB_SIZE     ulSize;
+   HB_SIZE     nSize;
    HB_USHORT   uiProcLine;
    char        szProcName[ HB_SYMBOL_NAME_LEN + 1 ];
    struct _HB_MEMINFO * pPrevBlock;
@@ -306,7 +306,7 @@ typedef struct _HB_MEMINFO
 #define HB_ALLOC_SIZE( n )    ( ( n ) + ( s_fStatistic ? _HB_MEMINFO_SIZE + sizeof( HB_U32 ) : HB_COUNTER_OFFSET ) )
 #define HB_FM_PTR( p )        ( ( PHB_MEMINFO ) ( ( HB_BYTE * ) ( p ) - HB_MEMINFO_SIZE ) )
 
-#define HB_FM_BLOCKSIZE( p )  ( s_fStatistic ? HB_FM_PTR( pMem )->ulSize : 0 )
+#define HB_FM_BLOCKSIZE( p )  ( s_fStatistic ? HB_FM_PTR( pMem )->nSize : 0 )
 
 /* NOTE: we cannot use here HB_TRACE because it will overwrite the
  * function name/line number of code which called hb_xalloc/hb_xgrab
@@ -576,13 +576,13 @@ void hb_xsetinfo( const char * szValue )
 #endif
 }
 
-void * hb_xalloc( HB_SIZE ulSize )         /* allocates fixed memory, returns NULL on failure */
+void * hb_xalloc( HB_SIZE nSize )         /* allocates fixed memory, returns NULL on failure */
 {
    PHB_MEMINFO pMem;
 
-   HB_TRACE_FM(HB_TR_DEBUG, ("hb_xalloc(%" HB_PFS "u)", ulSize));
+   HB_TRACE_FM(HB_TR_DEBUG, ("hb_xalloc(%" HB_PFS "u)", nSize));
 
-   if( ulSize == 0 )
+   if( nSize == 0 )
       hb_errInternal( HB_EI_XALLOCNULLSIZE, NULL, NULL, NULL );
 
 #ifdef HB_FM_NEED_INIT
@@ -590,7 +590,7 @@ void * hb_xalloc( HB_SIZE ulSize )         /* allocates fixed memory, returns NU
       hb_xinit();
 #endif
 
-   pMem = ( PHB_MEMINFO ) malloc( HB_ALLOC_SIZE( ulSize ) );
+   pMem = ( PHB_MEMINFO ) malloc( HB_ALLOC_SIZE( nSize ) );
 
    if( ! pMem )
       return pMem;
@@ -617,8 +617,8 @@ void * hb_xalloc( HB_SIZE ulSize )         /* allocates fixed memory, returns NU
 
       pMem->pNextBlock = NULL;
       pMem->u32Signature = HB_MEMINFO_SIGNATURE;
-      HB_FM_SETSIG( HB_MEM_PTR( pMem ), ulSize );
-      pMem->ulSize = ulSize;  /* size of the memory block */
+      HB_FM_SETSIG( HB_MEM_PTR( pMem ), nSize );
+      pMem->nSize = nSize;  /* size of the memory block */
 
       pTrace = hb_traceinfo();
       if( hb_tr_level() >= HB_TR_DEBUG || pTrace->level == HB_TR_FM )
@@ -640,7 +640,7 @@ void * hb_xalloc( HB_SIZE ulSize )         /* allocates fixed memory, returns NU
          hb_stackBaseProcInfo( pMem->szProcName, &pMem->uiProcLine );
       }
 
-      s_lMemoryConsumed += ulSize + sizeof( HB_COUNTER );
+      s_lMemoryConsumed += nSize + sizeof( HB_COUNTER );
       if( s_lMemoryMaxConsumed < s_lMemoryConsumed )
          s_lMemoryMaxConsumed = s_lMemoryConsumed;
       s_lMemoryBlocks++;
@@ -650,7 +650,7 @@ void * hb_xalloc( HB_SIZE ulSize )         /* allocates fixed memory, returns NU
       HB_FM_UNLOCK
 
 #ifdef HB_PARANOID_MEM_CHECK
-      memset( HB_MEM_PTR( pMem ), HB_MEMFILER, ulSize );
+      memset( HB_MEM_PTR( pMem ), HB_MEMFILER, nSize );
 #endif
 
    }
@@ -662,13 +662,13 @@ void * hb_xalloc( HB_SIZE ulSize )         /* allocates fixed memory, returns NU
    return HB_MEM_PTR( pMem );
 }
 
-void * hb_xgrab( HB_SIZE ulSize )         /* allocates fixed memory, exits on failure */
+void * hb_xgrab( HB_SIZE nSize )         /* allocates fixed memory, exits on failure */
 {
    PHB_MEMINFO pMem;
 
-   HB_TRACE_FM(HB_TR_DEBUG, ("hb_xgrab(%" HB_PFS "u)", ulSize));
+   HB_TRACE_FM(HB_TR_DEBUG, ("hb_xgrab(%" HB_PFS "u)", nSize));
 
-   if( ulSize == 0 )
+   if( nSize == 0 )
       hb_errInternal( HB_EI_XGRABNULLSIZE, NULL, NULL, NULL );
 
 #ifdef HB_FM_NEED_INIT
@@ -676,7 +676,7 @@ void * hb_xgrab( HB_SIZE ulSize )         /* allocates fixed memory, exits on fa
       hb_xinit();
 #endif
 
-   pMem = ( PHB_MEMINFO ) malloc( HB_ALLOC_SIZE( ulSize ) );
+   pMem = ( PHB_MEMINFO ) malloc( HB_ALLOC_SIZE( nSize ) );
 
    if( ! pMem )
       hb_errInternal( HB_EI_XGRABALLOC, NULL, NULL, NULL );
@@ -703,8 +703,8 @@ void * hb_xgrab( HB_SIZE ulSize )         /* allocates fixed memory, exits on fa
 
       pMem->pNextBlock = NULL;
       pMem->u32Signature = HB_MEMINFO_SIGNATURE;
-      HB_FM_SETSIG( HB_MEM_PTR( pMem ), ulSize );
-      pMem->ulSize = ulSize;  /* size of the memory block */
+      HB_FM_SETSIG( HB_MEM_PTR( pMem ), nSize );
+      pMem->nSize = nSize;  /* size of the memory block */
 
       pTrace = hb_traceinfo();
       if( hb_tr_level() >= HB_TR_DEBUG || pTrace->level == HB_TR_FM )
@@ -726,7 +726,7 @@ void * hb_xgrab( HB_SIZE ulSize )         /* allocates fixed memory, exits on fa
          hb_stackBaseProcInfo( pMem->szProcName, &pMem->uiProcLine );
       }
 
-      s_lMemoryConsumed += ulSize + sizeof( HB_COUNTER );
+      s_lMemoryConsumed += nSize + sizeof( HB_COUNTER );
       if( s_lMemoryMaxConsumed < s_lMemoryConsumed )
          s_lMemoryMaxConsumed = s_lMemoryConsumed;
       s_lMemoryBlocks++;
@@ -736,7 +736,7 @@ void * hb_xgrab( HB_SIZE ulSize )         /* allocates fixed memory, exits on fa
       HB_FM_UNLOCK
 
 #ifdef HB_PARANOID_MEM_CHECK
-      memset( HB_MEM_PTR( pMem ), HB_MEMFILER, ulSize );
+      memset( HB_MEM_PTR( pMem ), HB_MEMFILER, nSize );
 #endif
 
    }
@@ -748,27 +748,27 @@ void * hb_xgrab( HB_SIZE ulSize )         /* allocates fixed memory, exits on fa
    return HB_MEM_PTR( pMem );
 }
 
-void * hb_xrealloc( void * pMem, HB_SIZE ulSize )       /* reallocates memory */
+void * hb_xrealloc( void * pMem, HB_SIZE nSize )       /* reallocates memory */
 {
-   HB_TRACE_FM(HB_TR_DEBUG, ("hb_xrealloc(%p, %" HB_PFS "u)", pMem, ulSize));
+   HB_TRACE_FM(HB_TR_DEBUG, ("hb_xrealloc(%p, %" HB_PFS "u)", pMem, nSize));
 
 #if 0
    /* disabled to make hb_xrealloc() ANSI-C realloc() compatible */
    if( ! pMem )
       hb_errInternal( HB_EI_XREALLOCNULL, NULL, NULL, NULL );
 
-   if( ulSize == 0 )
+   if( nSize == 0 )
       hb_errInternal( HB_EI_XREALLOCNULLSIZE, NULL, NULL, NULL );
 #endif
 
 #ifdef HB_FM_STATISTICS
    if( pMem == NULL )
    {
-      if( ulSize == 0 )
+      if( nSize == 0 )
          hb_errInternal( HB_EI_XREALLOCNULLSIZE, NULL, NULL, NULL );
-      return hb_xgrab( ulSize );
+      return hb_xgrab( nSize );
    }
-   else if( ulSize == 0 )
+   else if( nSize == 0 )
    {
       hb_xfree( pMem );
       return NULL;
@@ -776,49 +776,49 @@ void * hb_xrealloc( void * pMem, HB_SIZE ulSize )       /* reallocates memory */
    else if( s_fStatistic )
    {
       PHB_MEMINFO pMemBlock;
-      HB_SIZE ulMemSize;
+      HB_SIZE nMemSize;
 
       pMemBlock = HB_FM_PTR( pMem );
 
       if( pMemBlock->u32Signature != HB_MEMINFO_SIGNATURE )
          hb_errInternal( HB_EI_XREALLOCINV, NULL, NULL, NULL );
 
-      ulMemSize = pMemBlock->ulSize;
+      nMemSize = pMemBlock->nSize;
 
-      if( HB_FM_GETSIG( pMem, ulMemSize ) != HB_MEMINFO_SIGNATURE )
+      if( HB_FM_GETSIG( pMem, nMemSize ) != HB_MEMINFO_SIGNATURE )
          hb_errInternal( HB_EI_XMEMOVERFLOW, NULL, NULL, NULL );
 
-      HB_FM_CLRSIG( pMem, ulMemSize );
+      HB_FM_CLRSIG( pMem, nMemSize );
 
       HB_FM_LOCK
 
 #ifdef HB_PARANOID_MEM_CHECK
-      pMem = malloc( HB_ALLOC_SIZE( ulSize ) );
+      pMem = malloc( HB_ALLOC_SIZE( nSize ) );
       if( pMem )
       {
          HB_ATOM_SET( HB_COUNTER_PTR( HB_MEM_PTR( pMem ) ), 1 );
-         if( ulSize > ulMemSize )
+         if( nSize > nMemSize )
          {
-            memcpy( pMem, pMemBlock, HB_ALLOC_SIZE( ulMemSize ) );
-            memset( ( HB_BYTE * ) pMem + HB_ALLOC_SIZE( ulMemSize ), HB_MEMFILER, ulSize - ulMemSize );
+            memcpy( pMem, pMemBlock, HB_ALLOC_SIZE( nMemSize ) );
+            memset( ( HB_BYTE * ) pMem + HB_ALLOC_SIZE( nMemSize ), HB_MEMFILER, nSize - nMemSize );
          }
          else
-            memcpy( pMem, pMemBlock, HB_ALLOC_SIZE( ulSize ) );
+            memcpy( pMem, pMemBlock, HB_ALLOC_SIZE( nSize ) );
       }
-      memset( pMemBlock, HB_MEMFILER, HB_ALLOC_SIZE( ulMemSize ) );
+      memset( pMemBlock, HB_MEMFILER, HB_ALLOC_SIZE( nMemSize ) );
       free( pMemBlock );
 #else
-      pMem = realloc( pMemBlock, HB_ALLOC_SIZE( ulSize ) );
+      pMem = realloc( pMemBlock, HB_ALLOC_SIZE( nSize ) );
 #endif
 
-      s_lMemoryConsumed += ( ulSize - ulMemSize );
+      s_lMemoryConsumed += ( nSize - nMemSize );
       if( s_lMemoryMaxConsumed < s_lMemoryConsumed )
          s_lMemoryMaxConsumed = s_lMemoryConsumed;
 
       if( pMem )
       {
-         ( ( PHB_MEMINFO ) pMem )->ulSize = ulSize;  /* size of the memory block */
-         HB_FM_SETSIG( HB_MEM_PTR( pMem ), ulSize );
+         ( ( PHB_MEMINFO ) pMem )->nSize = nSize;  /* size of the memory block */
+         HB_FM_SETSIG( HB_MEM_PTR( pMem ), nSize );
          if( ( ( PHB_MEMINFO ) pMem )->pPrevBlock )
             ( ( PHB_MEMINFO ) pMem )->pPrevBlock->pNextBlock = ( PHB_MEMINFO ) pMem;
          if( ( ( PHB_MEMINFO ) pMem )->pNextBlock )
@@ -833,7 +833,7 @@ void * hb_xrealloc( void * pMem, HB_SIZE ulSize )       /* reallocates memory */
       HB_FM_UNLOCK
    }
    else
-      pMem = realloc( HB_FM_PTR( pMem ), HB_ALLOC_SIZE( ulSize ) );
+      pMem = realloc( HB_FM_PTR( pMem ), HB_ALLOC_SIZE( nSize ) );
 
    if( ! pMem )
       hb_errInternal( HB_EI_XREALLOC, NULL, NULL, NULL );
@@ -842,20 +842,20 @@ void * hb_xrealloc( void * pMem, HB_SIZE ulSize )       /* reallocates memory */
 
    if( pMem == NULL )
    {
-      if( ulSize == 0 )
+      if( nSize == 0 )
          hb_errInternal( HB_EI_XREALLOCNULLSIZE, NULL, NULL, NULL );
-      pMem = malloc( HB_ALLOC_SIZE( ulSize ) );
+      pMem = malloc( HB_ALLOC_SIZE( nSize ) );
       if( pMem )
          HB_ATOM_SET( HB_COUNTER_PTR( HB_MEM_PTR( pMem ) ), 1 );
    }
-   else if( ulSize == 0 )
+   else if( nSize == 0 )
    {
       free( HB_FM_PTR( pMem ) );
       return NULL;
    }
    else
    {
-      pMem = realloc( HB_FM_PTR( pMem ), HB_ALLOC_SIZE( ulSize ) );
+      pMem = realloc( HB_FM_PTR( pMem ), HB_ALLOC_SIZE( nSize ) );
    }
 
    if( !pMem )
@@ -881,12 +881,12 @@ void hb_xfree( void * pMem )            /* frees fixed memory */
          if( pMemBlock->u32Signature != HB_MEMINFO_SIGNATURE )
             hb_errInternal( HB_EI_XFREEINV, NULL, NULL, NULL );
 
-         if( HB_FM_GETSIG( pMem, pMemBlock->ulSize ) != HB_MEMINFO_SIGNATURE )
+         if( HB_FM_GETSIG( pMem, pMemBlock->nSize ) != HB_MEMINFO_SIGNATURE )
             hb_errInternal( HB_EI_XMEMOVERFLOW, NULL, NULL, NULL );
 
          HB_FM_LOCK
 
-         s_lMemoryConsumed -= pMemBlock->ulSize + sizeof( HB_COUNTER );
+         s_lMemoryConsumed -= pMemBlock->nSize + sizeof( HB_COUNTER );
          s_lMemoryBlocks--;
 
          if( pMemBlock->pPrevBlock )
@@ -902,9 +902,9 @@ void hb_xfree( void * pMem )            /* frees fixed memory */
          HB_FM_UNLOCK
 
          pMemBlock->u32Signature = 0;
-         HB_FM_CLRSIG( pMem, pMemBlock->ulSize );
+         HB_FM_CLRSIG( pMem, pMemBlock->nSize );
 #ifdef HB_PARANOID_MEM_CHECK
-         memset( pMemBlock, HB_MEMFILER, HB_ALLOC_SIZE( pMemBlock->ulSize ) );
+         memset( pMemBlock, HB_MEMFILER, HB_ALLOC_SIZE( pMemBlock->nSize ) );
 #endif
       }
 
@@ -963,48 +963,48 @@ HB_COUNTER hb_xRefCount( void * pMem )
 
 /* reallocates memory, create copy if reference counter greater then 1 */
 #undef hb_xRefResize
-void * hb_xRefResize( void * pMem, HB_SIZE ulSave, HB_SIZE ulSize, HB_SIZE * pulAllocated )
+void * hb_xRefResize( void * pMem, HB_SIZE nSave, HB_SIZE nSize, HB_SIZE * pnAllocated )
 {
 
 #ifdef HB_FM_STATISTICS
    if( HB_ATOM_GET( HB_COUNTER_PTR( pMem ) ) > 1 )
    {
-      void * pMemNew = memcpy( hb_xgrab( ulSize ), pMem, HB_MIN( ulSave, ulSize ) );
+      void * pMemNew = memcpy( hb_xgrab( nSize ), pMem, HB_MIN( nSave, nSize ) );
 
       if( HB_ATOM_DEC( HB_COUNTER_PTR( pMem ) ) == 0 )
          hb_xfree( pMem );
 
-      *pulAllocated = ulSize;
+      *pnAllocated = nSize;
       return pMemNew;
    }
-   else if( ulSize <= *pulAllocated )
+   else if( nSize <= *pnAllocated )
       return pMem;
 
-   *pulAllocated = ulSize;
-   return hb_xrealloc( pMem, ulSize );
+   *pnAllocated = nSize;
+   return hb_xrealloc( pMem, nSize );
 
 #else
 
    if( HB_ATOM_GET( HB_COUNTER_PTR( pMem ) ) > 1 )
    {
-      void * pMemNew = malloc( HB_ALLOC_SIZE( ulSize ) );
+      void * pMemNew = malloc( HB_ALLOC_SIZE( nSize ) );
 
       if( pMemNew )
       {
          HB_ATOM_SET( HB_COUNTER_PTR( HB_MEM_PTR( pMemNew ) ), 1 );
-         memcpy( HB_MEM_PTR( pMemNew ), pMem, HB_MIN( ulSave, ulSize ) );
+         memcpy( HB_MEM_PTR( pMemNew ), pMem, HB_MIN( nSave, nSize ) );
          if( HB_ATOM_DEC( HB_COUNTER_PTR( pMem ) ) == 0 )
             free( HB_FM_PTR( pMem ) );
-         *pulAllocated = ulSize;
+         *pnAllocated = nSize;
          return HB_MEM_PTR( pMemNew );
       }
    }
-   else if( ulSize <= *pulAllocated )
+   else if( nSize <= *pnAllocated )
       return pMem;
    else
    {
-      *pulAllocated = ulSize;
-      pMem = realloc( HB_FM_PTR( pMem ), HB_ALLOC_SIZE( ulSize ) );
+      *pnAllocated = nSize;
+      pMem = realloc( HB_FM_PTR( pMem ), HB_ALLOC_SIZE( nSize ) );
       if( pMem )
          return HB_MEM_PTR( pMem );
    }
@@ -1067,40 +1067,40 @@ void hb_xinit( void ) /* Initialize fixed memory subsystem */
    of pMem memory block */
 
 #ifdef HB_FM_STATISTICS
-static char * hb_mem2str( char * membuffer, void * pMem, HB_SIZE uiSize )
+static char * hb_mem2str( char * membuffer, void * pMem, HB_SIZE nSize )
 {
    HB_BYTE * cMem = ( HB_BYTE * ) pMem;
-   HB_SIZE uiIndex, uiPrintable;
+   HB_SIZE nIndex, nPrintable;
 
-   uiPrintable = 0;
-   for( uiIndex = 0; uiIndex < uiSize; uiIndex++ )
-      if( ( cMem[ uiIndex ] & 0x60 ) != 0 )
-         uiPrintable++;
+   nPrintable = 0;
+   for( nIndex = 0; nIndex < nSize; nIndex++ )
+      if( ( cMem[ nIndex ] & 0x60 ) != 0 )
+         nPrintable++;
 
-   if( uiPrintable * 100 / uiSize > 70 ) /* more then 70% printable chars */
+   if( nPrintable * 100 / nSize > 70 ) /* more then 70% printable chars */
    {
       /* format as string of original chars */
-      for( uiIndex = 0; uiIndex < uiSize; uiIndex++ )
-         if( cMem[ uiIndex ] >= ' ' )
-            membuffer[ uiIndex ] = cMem[ uiIndex ];
+      for( nIndex = 0; nIndex < nSize; nIndex++ )
+         if( cMem[ nIndex ] >= ' ' )
+            membuffer[ nIndex ] = cMem[ nIndex ];
          else
-            membuffer[ uiIndex ] = '.';
-      membuffer[ uiIndex ] = '\0';
+            membuffer[ nIndex ] = '.';
+      membuffer[ nIndex ] = '\0';
    }
    else
    {
      /* format as hex */
-      for( uiIndex = 0; uiIndex < uiSize; uiIndex++ )
+      for( nIndex = 0; nIndex < nSize; nIndex++ )
       {
          int lownibble, hinibble;
-         hinibble = cMem[ uiIndex ] >> 4;
-         lownibble = cMem[ uiIndex ] & 0x0F;
-         membuffer[ uiIndex * 2 ]     = hinibble <= 9 ?
+         hinibble = cMem[ nIndex ] >> 4;
+         lownibble = cMem[ nIndex ] & 0x0F;
+         membuffer[ nIndex * 2 ]     = hinibble <= 9 ?
                                ( '0' + hinibble ) : ( 'A' + hinibble - 10 );
-         membuffer[ uiIndex * 2 + 1 ] = lownibble <= 9 ?
+         membuffer[ nIndex * 2 + 1 ] = lownibble <= 9 ?
                                ( '0' + lownibble ) : ( 'A' + lownibble - 10 );
       }
-      membuffer[ uiIndex * 2 ] = '\0';
+      membuffer[ nIndex * 2 ] = '\0';
    }
 
    return membuffer;
@@ -1163,17 +1163,17 @@ void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
       for( ui = 1, pMemBlock = s_pFirstBlock; pMemBlock; pMemBlock = pMemBlock->pNextBlock, ++ui )
       {
          HB_TRACE( HB_TR_ERROR, ( "Block %i (size %lu) %s(%i), \"%s\"", ui,
-            pMemBlock->ulSize, pMemBlock->szProcName, pMemBlock->uiProcLine,
+            pMemBlock->nSize, pMemBlock->szProcName, pMemBlock->uiProcLine,
             hb_mem2str( membuffer, ( char * ) HB_MEM_PTR( pMemBlock ),
-                        HB_MIN( pMemBlock->ulSize, HB_MAX_MEM2STR_BLOCK ) ) ) );
+                        HB_MIN( pMemBlock->nSize, HB_MAX_MEM2STR_BLOCK ) ) ) );
 
          if( hLog )
          {
             fprintf( hLog, HB_I_("Block %i %p (size %lu) %s(%i), \"%s\"\n"), ui,
                ( char * ) HB_MEM_PTR( pMemBlock ),
-               pMemBlock->ulSize, pMemBlock->szProcName, pMemBlock->uiProcLine,
+               pMemBlock->nSize, pMemBlock->szProcName, pMemBlock->uiProcLine,
                hb_mem2str( membuffer, ( char * ) HB_MEM_PTR( pMemBlock ),
-                           HB_MIN( pMemBlock->ulSize, HB_MAX_MEM2STR_BLOCK ) ) );
+                           HB_MIN( pMemBlock->nSize, HB_MAX_MEM2STR_BLOCK ) ) );
          }
       }
 
@@ -1216,7 +1216,7 @@ void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
 
 HB_SIZE hb_xquery( int iMode )
 {
-   HB_SIZE ulResult;
+   HB_SIZE nResult;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_xquery(%d)", iMode));
 
@@ -1229,19 +1229,19 @@ HB_SIZE hb_xquery( int iMode )
          {
             MEMORYSTATUS memorystatus;
             GlobalMemoryStatus( &memorystatus );
-            ulResult = memorystatus.dwAvailPhys / 1024;
+            nResult = memorystatus.dwAvailPhys / 1024;
          }
 #elif defined( HB_OS_OS2 )
          {
             ULONG ulSysInfo = 0;
 
             if( DosQuerySysInfo( QSV_TOTAVAILMEM, QSV_TOTAVAILMEM, &ulSysInfo, sizeof( ULONG ) ) != NO_ERROR )
-               ulResult = 0;
+               nResult = 0;
             else
-               ulResult = ulSysInfo / 1024;
+               nResult = ulSysInfo / 1024;
          }
 #else
-         ulResult = 9999;
+         nResult = 9999;
 #endif
          break;
 
@@ -1250,19 +1250,19 @@ HB_SIZE hb_xquery( int iMode )
          {
             MEMORYSTATUS memorystatus;
             GlobalMemoryStatus( &memorystatus );
-            ulResult = HB_MIN( memorystatus.dwAvailPhys, ULONG_MAX ) / 1024;
+            nResult = HB_MIN( memorystatus.dwAvailPhys, ULONG_MAX ) / 1024;
          }
 #elif defined( HB_OS_OS2 )
          {
             ULONG ulSysInfo = 0;
 
             if( DosQuerySysInfo( QSV_TOTAVAILMEM, QSV_TOTAVAILMEM, &ulSysInfo, sizeof( ULONG ) ) != NO_ERROR )
-               ulResult = 0;
+               nResult = 0;
             else
-               ulResult = HB_MIN( ulSysInfo, ULONG_MAX ) / 1024;
+               nResult = HB_MIN( ulSysInfo, ULONG_MAX ) / 1024;
          }
 #else
-         ulResult = 9999;
+         nResult = 9999;
 #endif
          break;
 
@@ -1271,19 +1271,19 @@ HB_SIZE hb_xquery( int iMode )
          {
             MEMORYSTATUS memorystatus;
             GlobalMemoryStatus( &memorystatus );
-            ulResult = memorystatus.dwAvailPhys / 1024;
+            nResult = memorystatus.dwAvailPhys / 1024;
          }
 #elif defined( HB_OS_OS2 )
          {
             ULONG ulSysInfo = 0;
 
             if( DosQuerySysInfo( QSV_TOTAVAILMEM, QSV_TOTAVAILMEM, &ulSysInfo, sizeof( ULONG ) ) != NO_ERROR )
-               ulResult = 0;
+               nResult = 0;
             else
-               ulResult = ulSysInfo / 1024;
+               nResult = ulSysInfo / 1024;
          }
 #else
-         ulResult = 9999;
+         nResult = 9999;
 #endif
          break;
 
@@ -1292,27 +1292,27 @@ HB_SIZE hb_xquery( int iMode )
          {
             MEMORYSTATUS memorystatus;
             GlobalMemoryStatus( &memorystatus );
-            ulResult = memorystatus.dwAvailVirtual / 1024;
+            nResult = memorystatus.dwAvailVirtual / 1024;
          }
 #elif defined( HB_OS_OS2 )
          {
             ULONG ulSysInfo = 0;
 
             if( DosQuerySysInfo( QSV_TOTAVAILMEM, QSV_TOTAVAILMEM, &ulSysInfo, sizeof( ULONG ) ) != NO_ERROR )
-               ulResult = 0;
+               nResult = 0;
             else
-               ulResult = ulSysInfo / 1024;
+               nResult = ulSysInfo / 1024;
          }
 #else
-         ulResult = 9999;
+         nResult = 9999;
 #endif
          break;
 
       case HB_MEM_EMS:        /* UNDOCUMENTED! (Free Expanded Memory [KB]) (?) */
 #if defined( HB_OS_WIN ) || defined( HB_OS_OS2 )
-         ulResult = 0;
+         nResult = 0;
 #else
-         ulResult = 9999;
+         nResult = 9999;
 #endif
          break;
 
@@ -1321,27 +1321,27 @@ HB_SIZE hb_xquery( int iMode )
          {
             MEMORYSTATUS memorystatus;
             GlobalMemoryStatus( &memorystatus );
-            ulResult = memorystatus.dwTotalPhys / 1024;
+            nResult = memorystatus.dwTotalPhys / 1024;
          }
 #elif defined( HB_OS_OS2 )
          {
             ULONG ulSysInfo = 0;
 
             if( DosQuerySysInfo( QSV_MAXPRMEM, QSV_MAXPRMEM, &ulSysInfo, sizeof( ULONG ) ) != NO_ERROR )
-               ulResult = 0;
+               nResult = 0;
             else
-               ulResult = ulSysInfo / 1024;
+               nResult = ulSysInfo / 1024;
          }
 #else
-         ulResult = 9999;
+         nResult = 9999;
 #endif
          break;
 
       case HB_MEM_FMSEGS:     /* UNDOCUMENTED! (Segments in Fixed Memory/Heap) (?) */
 #if defined( HB_OS_WIN ) || defined( HB_OS_OS2 )
-         ulResult = 1;
+         nResult = 1;
 #else
-         ulResult = 9999;
+         nResult = 9999;
 #endif
          break;
 
@@ -1350,75 +1350,75 @@ HB_SIZE hb_xquery( int iMode )
          {
             MEMORYSTATUS memorystatus;
             GlobalMemoryStatus( &memorystatus );
-            ulResult = memorystatus.dwAvailPageFile / 1024;
+            nResult = memorystatus.dwAvailPageFile / 1024;
          }
 #elif defined( HB_OS_OS2 )
          {
             /* NOTE: There is no way to know how much a swap file can grow on an
                      OS/2 system. I think we should return free space on DASD
                      media which contains swap file [maurilio.longo] */
-            ulResult = 9999;
+            nResult = 9999;
          }
 #else
-         ulResult = 9999;
+         nResult = 9999;
 #endif
          break;
 
       case HB_MEM_CONV:       /* UNDOCUMENTED! (Free Conventional [KB]) */
 #if defined( HB_OS_WIN ) || defined( HB_OS_OS2 )
-         ulResult = 0;
+         nResult = 0;
 #else
-         ulResult = 9999;
+         nResult = 9999;
 #endif
          break;
 
       case HB_MEM_EMSUSED:    /* UNDOCUMENTED! (Used Expanded Memory [KB]) (?) */
-         ulResult = 0;
+         nResult = 0;
          break;
 
       case HB_MEM_USED:       /* Harbour extension (Memory used [bytes]) */
 #ifdef HB_FM_STATISTICS
-         ulResult = s_lMemoryConsumed;
+         nResult = s_lMemoryConsumed;
 #else
-         ulResult = 0;
+         nResult = 0;
 #endif
          break;
 
       case HB_MEM_BLOCKS:     /* Harbour extension (Memory blocks used) */
 #ifdef HB_FM_STATISTICS
-         ulResult = s_lMemoryBlocks;
+         nResult = s_lMemoryBlocks;
 #else
-         ulResult = 0;
+         nResult = 0;
 #endif
          break;
 
       case HB_MEM_USEDMAX:    /* Harbour extension (Maximum memory used [bytes]) */
 #ifdef HB_FM_STATISTICS
-         ulResult = s_lMemoryMaxConsumed;
+         nResult = s_lMemoryMaxConsumed;
 #else
-         ulResult = 0;
+         nResult = 0;
 #endif
          break;
 
       case HB_MEM_STACKITEMS: /* Harbour extension (Total items allocated for the stack) */
-         ulResult = hb_stackTotalItems();
+         nResult = hb_stackTotalItems();
          break;
 
       case HB_MEM_STACK:      /* Harbour extension (Total memory size used by the stack [bytes]) */
-         ulResult = hb_stackTotalItems() * sizeof( HB_ITEM );
+         nResult = hb_stackTotalItems() * sizeof( HB_ITEM );
          break;
 
       case HB_MEM_STACK_TOP : /* Harbour extension (Total items currently on the stack) */
       {
          HB_STACK_TLS_PRELOAD
-         ulResult = hb_stackTopOffset( );
+         nResult = hb_stackTopOffset( );
          break;
       }
       default:
-         ulResult = 0;
+         nResult = 0;
    }
 
-   return ulResult;
+   return nResult;
 }
 
 HB_BOOL hb_xtraced( void )

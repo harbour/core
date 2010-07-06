@@ -142,14 +142,14 @@ HB_CODEBLOCK_PTR hb_codeblockNew( const HB_BYTE * pBuffer,
                                   HB_USHORT uiLocals,
                                   const HB_BYTE * pLocalPosTable,
                                   PHB_SYMB pSymbols,
-                                  HB_SIZE ulLen )
+                                  HB_SIZE nLen )
 {
    HB_STACK_TLS_PRELOAD
    HB_CODEBLOCK_PTR pCBlock;
    PHB_ITEM pLocals, pBase;
    HB_BYTE * pCode;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_codeblockNew(%p, %hu, %p, %p, %" HB_PFS "u)", pBuffer, uiLocals, pLocalPosTable, pSymbols, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_codeblockNew(%p, %hu, %p, %p, %" HB_PFS "u)", pBuffer, uiLocals, pLocalPosTable, pSymbols, nLen));
 
    /*
     * allocate memory for code block body and detach items hb_gcAllocRaw()
@@ -157,15 +157,15 @@ HB_CODEBLOCK_PTR hb_codeblockNew( const HB_BYTE * pBuffer,
     * calling hb_gcLock()/hb_gcUnlock(). [druzus]
     */
 
-   if( ulLen )
+   if( nLen )
    {
       /*
        * The codeblock pcode is stored in dynamically allocated memory that
        * can be deallocated after creation of a codeblock. We have to duplicate
        * the passed buffer
        */
-      pCode = ( HB_BYTE * ) hb_xgrab( ulLen );
-      memcpy( pCode, pBuffer, ulLen );
+      pCode = ( HB_BYTE * ) hb_xgrab( nLen );
+      memcpy( pCode, pBuffer, nLen );
    }
    else
    {
@@ -241,7 +241,7 @@ HB_CODEBLOCK_PTR hb_codeblockNew( const HB_BYTE * pBuffer,
    pCBlock = ( HB_CODEBLOCK_PTR ) hb_gcAllocRaw( sizeof( HB_CODEBLOCK ), &s_gcCodeblockFuncs );
 
    pCBlock->pCode     = pCode;
-   pCBlock->dynBuffer = ulLen != 0;
+   pCBlock->dynBuffer = nLen != 0;
    pCBlock->pDefSymb  = pBase->item.asSymbol.stackstate->uiClass ?
                         hb_clsMethodSym( pBase ) : pBase->item.asSymbol.value;
    pCBlock->pSymbols  = pSymbols;
@@ -254,14 +254,14 @@ HB_CODEBLOCK_PTR hb_codeblockNew( const HB_BYTE * pBuffer,
    return pCBlock;
 }
 
-HB_CODEBLOCK_PTR hb_codeblockMacroNew( const HB_BYTE * pBuffer, HB_SIZE ulLen )
+HB_CODEBLOCK_PTR hb_codeblockMacroNew( const HB_BYTE * pBuffer, HB_SIZE nLen )
 {
    HB_STACK_TLS_PRELOAD
    HB_CODEBLOCK_PTR pCBlock;
    PHB_ITEM pBase;
    HB_BYTE * pCode;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_codeblockMacroNew(%p, %" HB_PFS "u)", pBuffer, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_codeblockMacroNew(%p, %" HB_PFS "u)", pBuffer, nLen));
 
    /*
     * The codeblock pcode is stored in dynamically allocated memory that
@@ -273,8 +273,8 @@ HB_CODEBLOCK_PTR hb_codeblockMacroNew( const HB_BYTE * pBuffer, HB_SIZE ulLen )
     * to be safe for automatic GC activation in hb_xgrab() without
     * calling hb_gcLock()/hb_gcUnlock(). [druzus]
     */
-   pCode = ( HB_BYTE * ) hb_xgrab( ulLen );
-   memcpy( pCode, pBuffer, ulLen );
+   pCode = ( HB_BYTE * ) hb_xgrab( nLen );
+   memcpy( pCode, pBuffer, nLen );
 
    pCBlock = ( HB_CODEBLOCK_PTR ) hb_gcAllocRaw( sizeof( HB_CODEBLOCK ), &s_gcCodeblockFuncs );
    pBase = hb_stackBaseItem();

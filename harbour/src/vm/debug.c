@@ -110,25 +110,25 @@
  * $FuncName$     AddToArray( <pItem>, <pReturn>, <uiPos> )
  * $Description$  Add <pItem> to array <pReturn> at pos <uiPos>
  * $End$ */
-static void AddToArray( PHB_ITEM pItem, PHB_ITEM pReturn, HB_SIZE ulPos )
+static void AddToArray( PHB_ITEM pItem, PHB_ITEM pReturn, HB_SIZE nPos )
 {
-   HB_TRACE(HB_TR_DEBUG, ("AddToArray(%p, %p, %" HB_PFS "u)", pItem, pReturn, ulPos));
+   HB_TRACE(HB_TR_DEBUG, ("AddToArray(%p, %p, %" HB_PFS "u)", pItem, pReturn, nPos));
 
    if( HB_IS_SYMBOL( pItem ) )
    {                                            /* Symbol is pushed as text */
-      PHB_ITEM pArrayItem = hb_arrayGetItemPtr( pReturn, ulPos );
+      PHB_ITEM pArrayItem = hb_arrayGetItemPtr( pReturn, nPos );
 
       if( pArrayItem )
       {
-         HB_SIZE ulLen = strlen( pItem->item.asSymbol.value->szName ) + 2;
-         char * szBuff = ( char * ) hb_xgrab( ulLen + 1 );
+         HB_SIZE nLen = strlen( pItem->item.asSymbol.value->szName ) + 2;
+         char * szBuff = ( char * ) hb_xgrab( nLen + 1 );
 
-         hb_snprintf( szBuff, ulLen + 1, "[%s]", pItem->item.asSymbol.value->szName );
-         hb_itemPutCLPtr( pArrayItem, szBuff, ulLen );
+         hb_snprintf( szBuff, nLen + 1, "[%s]", pItem->item.asSymbol.value->szName );
+         hb_itemPutCLPtr( pArrayItem, szBuff, nLen );
       }
    }
    else                                         /* Normal types             */
-      hb_itemArrayPut( pReturn, ulPos, pItem );
+      hb_itemArrayPut( pReturn, nPos, pItem );
 }
 
 /* $Doc$
@@ -147,13 +147,13 @@ HB_FUNC( __DBGVMSTKGCOUNT )
 HB_FUNC( __DBGVMSTKGLIST )
 {
    PHB_ITEM pReturn;
-   HB_ISIZ ulLen = hb_stackTopOffset();
-   HB_ISIZ ulPos;
+   HB_ISIZ nLen = hb_stackTopOffset();
+   HB_ISIZ nPos;
 
-   pReturn = hb_itemArrayNew( ulLen );           /* Create a transfer array  */
+   pReturn = hb_itemArrayNew( nLen );           /* Create a transfer array  */
 
-   for( ulPos = 0; ulPos < ulLen; ++ulPos )
-      AddToArray( hb_stackItem( ulPos ), pReturn, ulPos + 1 );
+   for( nPos = 0; nPos < nLen; ++nPos )
+      AddToArray( hb_stackItem( nPos ), pReturn, nPos + 1 );
 
    hb_itemReturnRelease( pReturn );
 }
@@ -206,16 +206,16 @@ HB_FUNC( __DBGVMSTKLCOUNT )
 HB_FUNC( __DBGVMSTKLLIST )
 {
    PHB_ITEM pReturn;
-   HB_ISIZ ulLen, ul;
+   HB_ISIZ nLen, n;
    HB_ISIZ lBaseOffset, lPrevOffset;
 
    lBaseOffset = hb_stackBaseOffset();
    lPrevOffset = hb_stackItem( lBaseOffset - 1 )->item.asSymbol.stackstate->lBaseItem;
 
-   ulLen = lBaseOffset - lPrevOffset - 3;
-   pReturn = hb_itemArrayNew( ulLen );           /* Create a transfer array  */
-   for( ul = 0; ul < ulLen; ++ul )
-      AddToArray( hb_stackItem( lPrevOffset + ul ), pReturn, ul + 1 );
+   nLen = lBaseOffset - lPrevOffset - 3;
+   pReturn = hb_itemArrayNew( nLen );           /* Create a transfer array  */
+   for( n = 0; n < nLen; ++n )
+      AddToArray( hb_stackItem( lPrevOffset + n ), pReturn, n + 1 );
 
    hb_itemReturnRelease( pReturn );
 }

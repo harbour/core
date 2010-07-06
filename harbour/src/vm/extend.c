@@ -145,20 +145,20 @@ HB_ULONG hb_parinfo( int iParam )
    }
 }
 
-HB_SIZE hb_parinfa( int iParamNum, HB_SIZE uiArrayIndex )
+HB_SIZE hb_parinfa( int iParamNum, HB_SIZE nArrayIndex )
 {
    PHB_ITEM pArray;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_parinfa(%d, %" HB_PFS "u)", iParamNum, uiArrayIndex));
+   HB_TRACE(HB_TR_DEBUG, ("hb_parinfa(%d, %" HB_PFS "u)", iParamNum, nArrayIndex));
 
    pArray = hb_param( iParamNum, HB_IT_ARRAY );
 
    if( pArray )
    {
-      if( uiArrayIndex == 0 )
+      if( nArrayIndex == 0 )
          return hb_arrayLen( pArray );
       else
-         return ( HB_ISIZ ) hb_arrayGetType( pArray, uiArrayIndex );
+         return ( HB_ISIZ ) hb_arrayGetType( pArray, nArrayIndex );
    }
    else
       return 0;
@@ -249,7 +249,7 @@ const char * hb_parcx( int iParam )
    return "";
 }
 
-HB_SIZE  hb_parclen( int iParam )
+HB_SIZE hb_parclen( int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -273,7 +273,7 @@ HB_SIZE  hb_parclen( int iParam )
          terminating zero byte, and it only works for parameters passed by
          reference. [vszakats] */
 
-HB_SIZE  hb_parcsiz( int iParam )
+HB_SIZE hb_parcsiz( int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -783,13 +783,13 @@ const char * hb_parvc( int iParam, ... )
       else if( HB_IS_ARRAY( pItem ) )
       {
          va_list va;
-         HB_SIZE ulArrayIndex;
+         HB_SIZE nArrayIndex;
 
          va_start( va, iParam );
-         ulArrayIndex = va_arg( va, HB_SIZE );
+         nArrayIndex = va_arg( va, HB_SIZE );
          va_end( va );
 
-         pItem = hb_arrayGetItemPtr( pItem, ulArrayIndex );
+         pItem = hb_arrayGetItemPtr( pItem, nArrayIndex );
          return pItem && HB_IS_STRING( pItem ) ? hb_itemGetCPtr( pItem ) : NULL;
       }
    }
@@ -815,20 +815,20 @@ const char * hb_parvcx( int iParam, ... )
       else if( HB_IS_ARRAY( pItem ) )
       {
          va_list va;
-         HB_SIZE ulArrayIndex;
+         HB_SIZE nArrayIndex;
 
          va_start( va, iParam );
-         ulArrayIndex = va_arg( va, HB_SIZE );
+         nArrayIndex = va_arg( va, HB_SIZE );
          va_end( va );
 
-         return hb_arrayGetCPtr( pItem, ulArrayIndex );
+         return hb_arrayGetCPtr( pItem, nArrayIndex );
       }
    }
 
    return "";
 }
 
-HB_SIZE  hb_parvclen( int iParam, ... )
+HB_SIZE hb_parvclen( int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -846,13 +846,13 @@ HB_SIZE  hb_parvclen( int iParam, ... )
       else if( HB_IS_ARRAY( pItem ) )
       {
          va_list va;
-         HB_SIZE ulArrayIndex;
+         HB_SIZE nArrayIndex;
 
          va_start( va, iParam );
-         ulArrayIndex = va_arg( va, HB_SIZE );
+         nArrayIndex = va_arg( va, HB_SIZE );
          va_end( va );
 
-         return hb_arrayGetCLen( pItem, ulArrayIndex );
+         return hb_arrayGetCLen( pItem, nArrayIndex );
       }
    }
 
@@ -863,7 +863,7 @@ HB_SIZE  hb_parvclen( int iParam, ... )
          terminating zero byte, and it only works for parameters passed by
          reference. [vszakats] */
 
-HB_SIZE  hb_parvcsiz( int iParam, ... )
+HB_SIZE hb_parvcsiz( int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -885,13 +885,13 @@ HB_SIZE  hb_parvcsiz( int iParam, ... )
          else if( HB_IS_ARRAY( pItem ) )
          {
             va_list va;
-            HB_SIZE ulArrayIndex;
+            HB_SIZE nArrayIndex;
 
             va_start( va, iParam );
-            ulArrayIndex = va_arg( va, HB_SIZE );
+            nArrayIndex = va_arg( va, HB_SIZE );
             va_end( va );
 
-            return hb_arrayGetCLen( pItem, ulArrayIndex ) + 1;
+            return hb_arrayGetCLen( pItem, nArrayIndex ) + 1;
          }
       }
    }
@@ -920,13 +920,13 @@ const char * hb_parvds( int iParam, ... )
       else if( HB_IS_ARRAY( pItem ) )
       {
          va_list va;
-         HB_SIZE ulArrayIndex;
+         HB_SIZE nArrayIndex;
 
          va_start( va, iParam );
-         ulArrayIndex = va_arg( va, HB_SIZE );
+         nArrayIndex = va_arg( va, HB_SIZE );
          va_end( va );
 
-         return hb_arrayGetDS( pItem, ulArrayIndex, hb_stackDateBuffer() );
+         return hb_arrayGetDS( pItem, nArrayIndex, hb_stackDateBuffer() );
       }
    }
 
@@ -953,13 +953,13 @@ char  * hb_parvdsbuff( char * szDate, int iParam, ... )
       else if( HB_IS_ARRAY( pItem ) )
       {
          va_list va;
-         HB_SIZE ulArrayIndex;
+         HB_SIZE nArrayIndex;
 
          va_start( va, iParam );
-         ulArrayIndex = va_arg( va, HB_SIZE );
+         nArrayIndex = va_arg( va, HB_SIZE );
          va_end( va );
 
-         return hb_arrayGetDS( pItem, ulArrayIndex, szDate );
+         return hb_arrayGetDS( pItem, nArrayIndex, szDate );
       }
    }
 
@@ -986,13 +986,13 @@ long hb_parvdl( int iParam, ... )
       else if( HB_IS_ARRAY( pItem ) )
       {
          va_list va;
-         HB_SIZE ulArrayIndex;
+         HB_SIZE nArrayIndex;
 
          va_start( va, iParam );
-         ulArrayIndex = va_arg( va, HB_SIZE );
+         nArrayIndex = va_arg( va, HB_SIZE );
          va_end( va );
 
-         return hb_arrayGetDL( pItem, ulArrayIndex );
+         return hb_arrayGetDL( pItem, nArrayIndex );
       }
    }
 
@@ -1018,13 +1018,13 @@ double hb_parvtd( int iParam, ... )
       else if( HB_IS_ARRAY( pItem ) )
       {
          va_list va;
-         HB_SIZE ulArrayIndex;
+         HB_SIZE nArrayIndex;
 
          va_start( va, iParam );
-         ulArrayIndex = va_arg( va, HB_SIZE );
+         nArrayIndex = va_arg( va, HB_SIZE );
          va_end( va );
 
-         return hb_arrayGetTD( pItem, ulArrayIndex );
+         return hb_arrayGetTD( pItem, nArrayIndex );
       }
    }
 
@@ -1053,13 +1053,13 @@ HB_BOOL hb_parvtdt( long * plJulian, long * plMilliSec, int iParam, ... )
       else if( HB_IS_ARRAY( pItem ) )
       {
          va_list va;
-         HB_SIZE ulArrayIndex;
+         HB_SIZE nArrayIndex;
 
          va_start( va, iParam );
-         ulArrayIndex = va_arg( va, HB_SIZE );
+         nArrayIndex = va_arg( va, HB_SIZE );
          va_end( va );
 
-         return hb_arrayGetTDT( pItem, ulArrayIndex, plJulian, plMilliSec );
+         return hb_arrayGetTDT( pItem, nArrayIndex, plJulian, plMilliSec );
       }
    }
 
@@ -1091,13 +1091,13 @@ int  hb_parvl( int iParam, ... )
       else if( HB_IS_ARRAY( pItem ) )
       {
          va_list va;
-         HB_SIZE ulArrayIndex;
+         HB_SIZE nArrayIndex;
 
          va_start( va, iParam );
-         ulArrayIndex = va_arg( va, HB_SIZE );
+         nArrayIndex = va_arg( va, HB_SIZE );
          va_end( va );
 
-         return hb_arrayGetL( pItem, ulArrayIndex ) ? 1 : 0;
+         return hb_arrayGetL( pItem, nArrayIndex ) ? 1 : 0;
       }
    }
 
@@ -1126,13 +1126,13 @@ double  hb_parvnd( int iParam, ... )
       else if( HB_IS_ARRAY( pItem ) )
       {
          va_list va;
-         HB_SIZE ulArrayIndex;
+         HB_SIZE nArrayIndex;
 
          va_start( va, iParam );
-         ulArrayIndex = va_arg( va, HB_SIZE );
+         nArrayIndex = va_arg( va, HB_SIZE );
          va_end( va );
 
-         return hb_arrayGetND( pItem, ulArrayIndex );
+         return hb_arrayGetND( pItem, nArrayIndex );
       }
    }
 
@@ -1165,13 +1165,13 @@ int  hb_parvni( int iParam, ... )
       else if( HB_IS_ARRAY( pItem ) )
       {
          va_list va;
-         HB_SIZE ulArrayIndex;
+         HB_SIZE nArrayIndex;
 
          va_start( va, iParam );
-         ulArrayIndex = va_arg( va, HB_SIZE );
+         nArrayIndex = va_arg( va, HB_SIZE );
          va_end( va );
 
-         return hb_arrayGetNI( pItem, ulArrayIndex );
+         return hb_arrayGetNI( pItem, nArrayIndex );
       }
    }
 
@@ -1207,13 +1207,13 @@ long  hb_parvnl( int iParam, ... )
       else if( HB_IS_ARRAY( pItem ) )
       {
          va_list va;
-         HB_SIZE ulArrayIndex;
+         HB_SIZE nArrayIndex;
 
          va_start( va, iParam );
-         ulArrayIndex = va_arg( va, HB_SIZE );
+         nArrayIndex = va_arg( va, HB_SIZE );
          va_end( va );
 
-         return hb_arrayGetNL( pItem, ulArrayIndex );
+         return hb_arrayGetNL( pItem, nArrayIndex );
       }
    }
 
@@ -1242,13 +1242,13 @@ HB_ISIZ hb_parvns( int iParam, ... )
       else if( HB_IS_ARRAY( pItem ) )
       {
          va_list va;
-         HB_SIZE ulArrayIndex;
+         HB_SIZE nArrayIndex;
 
          va_start( va, iParam );
-         ulArrayIndex = va_arg( va, HB_SIZE );
+         nArrayIndex = va_arg( va, HB_SIZE );
          va_end( va );
 
-         return hb_arrayGetNS( pItem, ulArrayIndex );
+         return hb_arrayGetNS( pItem, nArrayIndex );
       }
    }
 
@@ -1282,13 +1282,13 @@ HB_LONGLONG hb_parvnll( int iParam, ... )
       else if( HB_IS_ARRAY( pItem ) )
       {
          va_list va;
-         HB_SIZE ulArrayIndex;
+         HB_SIZE nArrayIndex;
 
          va_start( va, iParam );
-         ulArrayIndex = va_arg( va, HB_SIZE );
+         nArrayIndex = va_arg( va, HB_SIZE );
          va_end( va );
 
-         return hb_arrayGetNLL( pItem, ulArrayIndex );
+         return hb_arrayGetNLL( pItem, nArrayIndex );
       }
    }
 
@@ -1322,13 +1322,13 @@ HB_MAXINT hb_parvnint( int iParam, ... )
       else if( HB_IS_ARRAY( pItem ) )
       {
          va_list va;
-         HB_SIZE ulArrayIndex;
+         HB_SIZE nArrayIndex;
 
          va_start( va, iParam );
-         ulArrayIndex = va_arg( va, HB_SIZE );
+         nArrayIndex = va_arg( va, HB_SIZE );
          va_end( va );
 
-         return hb_arrayGetNInt( pItem, ulArrayIndex );
+         return hb_arrayGetNInt( pItem, nArrayIndex );
       }
    }
 
@@ -1353,13 +1353,13 @@ void * hb_parvptr( int iParam, ... )
       else if( HB_IS_ARRAY( pItem ) )
       {
          va_list va;
-         HB_SIZE ulArrayIndex;
+         HB_SIZE nArrayIndex;
 
          va_start( va, iParam );
-         ulArrayIndex = va_arg( va, HB_SIZE );
+         nArrayIndex = va_arg( va, HB_SIZE );
          va_end( va );
 
-         return hb_arrayGetPtr( pItem, ulArrayIndex );
+         return hb_arrayGetPtr( pItem, nArrayIndex );
       }
    }
 
@@ -1388,13 +1388,13 @@ void * hb_parvptrGC( const HB_GC_FUNCS * pFuncs, int iParam, ... )
       else if( HB_IS_ARRAY( pItem ) )
       {
          va_list va;
-         HB_SIZE ulArrayIndex;
+         HB_SIZE nArrayIndex;
 
          va_start( va, iParam );
-         ulArrayIndex = va_arg( va, HB_SIZE );
+         nArrayIndex = va_arg( va, HB_SIZE );
          va_end( va );
 
-         pItem = hb_arrayGetItemPtr( pItem, ulArrayIndex );
+         pItem = hb_arrayGetItemPtr( pItem, nArrayIndex );
          if( pItem && HB_IS_POINTER( pItem ) &&
              pItem->item.asPointer.collect &&
              hb_gcFuncs( pItem->item.asPointer.value ) == pFuncs )
@@ -1416,13 +1416,13 @@ void hb_ret( void )
 }
 
 #undef hb_reta
-void hb_reta( HB_SIZE ulLen )  /* undocumented hb_reta() */
+void hb_reta( HB_SIZE nLen )  /* undocumented hb_reta() */
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_reta(%" HB_PFS "u)", ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_reta(%" HB_PFS "u)", nLen));
 
-   hb_arrayNew( hb_stackReturnItem(), ulLen );
+   hb_arrayNew( hb_stackReturnItem(), nLen );
 }
 
 #undef hb_retc
@@ -1466,33 +1466,33 @@ void hb_retc_const( const char * szText )
 }
 
 #undef hb_retclen
-void hb_retclen( const char * szText, HB_SIZE ulLen )
+void hb_retclen( const char * szText, HB_SIZE nLen )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_retclen(%.*s, %" HB_PFS "u)", ( int ) ulLen, szText, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_retclen(%.*s, %" HB_PFS "u)", ( int ) nLen, szText, nLen));
 
-   hb_itemPutCL( hb_stackReturnItem(), szText, ulLen );
+   hb_itemPutCL( hb_stackReturnItem(), szText, nLen );
 }
 
 #undef hb_retclen_buffer
-void hb_retclen_buffer( char * szText, HB_SIZE ulLen )
+void hb_retclen_buffer( char * szText, HB_SIZE nLen )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_retclen_buffer(%.*s, %" HB_PFS "u)", ( int ) ulLen, szText, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_retclen_buffer(%.*s, %" HB_PFS "u)", ( int ) nLen, szText, nLen));
 
-   hb_itemPutCLPtr( hb_stackReturnItem(), szText, ulLen );
+   hb_itemPutCLPtr( hb_stackReturnItem(), szText, nLen );
 }
 
 #undef hb_retclen_const
-void hb_retclen_const( const char * szText, HB_SIZE ulLen )
+void hb_retclen_const( const char * szText, HB_SIZE nLen )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_retclen_const(%.*s, %" HB_PFS "u)", ( int ) ulLen, szText, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_retclen_const(%.*s, %" HB_PFS "u)", ( int ) nLen, szText, nLen));
 
-   hb_itemPutCLConst( hb_stackReturnItem(), szText, ulLen );
+   hb_itemPutCLConst( hb_stackReturnItem(), szText, nLen );
 }
 
 /* szDate must have YYYYMMDD format */
@@ -1751,15 +1751,15 @@ int hb_storc( const char * szText, int iParam )
    return 0;
 }
 
-int hb_storclen( const char * szText, HB_SIZE ulLen, int iParam )
+int hb_storclen( const char * szText, HB_SIZE nLen, int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_storclen(%.*s, %" HB_PFS "u, %d)", ( int ) ulLen, szText, ulLen, iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_storclen(%.*s, %" HB_PFS "u, %d)", ( int ) nLen, szText, nLen, iParam));
 
    if( iParam == -1 )
    {
-      hb_itemPutCL( hb_stackReturnItem(), szText, ulLen );
+      hb_itemPutCL( hb_stackReturnItem(), szText, nLen );
       return 1;
    }
    else if( iParam >= 0 && iParam <= hb_pcount() )
@@ -1768,7 +1768,7 @@ int hb_storclen( const char * szText, HB_SIZE ulLen, int iParam )
 
       if( HB_IS_BYREF( pItem ) )
       {
-         hb_itemPutCL( hb_itemUnRef( pItem ), szText, ulLen );
+         hb_itemPutCL( hb_itemUnRef( pItem ), szText, nLen );
          return 1;
       }
    }
@@ -1776,15 +1776,15 @@ int hb_storclen( const char * szText, HB_SIZE ulLen, int iParam )
    return 0;
 }
 
-int hb_storclen_buffer( char * szText, HB_SIZE ulLen, int iParam )
+int hb_storclen_buffer( char * szText, HB_SIZE nLen, int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_storclen_buffer(%.*s, %" HB_PFS "u, %d)", ( int ) ulLen, szText, ulLen, iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_storclen_buffer(%.*s, %" HB_PFS "u, %d)", ( int ) nLen, szText, nLen, iParam));
 
    if( iParam == -1 )
    {
-      hb_itemPutCLPtr( hb_stackReturnItem(), szText, ulLen );
+      hb_itemPutCLPtr( hb_stackReturnItem(), szText, nLen );
       return 1;
    }
    else if( iParam >= 0 && iParam <= hb_pcount() )
@@ -1793,7 +1793,7 @@ int hb_storclen_buffer( char * szText, HB_SIZE ulLen, int iParam )
 
       if( HB_IS_BYREF( pItem ) )
       {
-         hb_itemPutCLPtr( hb_itemUnRef( pItem ), szText, ulLen );
+         hb_itemPutCLPtr( hb_itemUnRef( pItem ), szText, nLen );
          return 1;
       }
    }
@@ -2167,11 +2167,11 @@ int hb_storvc( const char * szText, int iParam, ... )
    return 0;
 }
 
-int hb_storvclen( const char * szText, HB_SIZE ulLen, int iParam, ... )
+int hb_storvclen( const char * szText, HB_SIZE nLen, int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_storvclen(%.*s, %" HB_PFS "u, %d, ...)", ( int ) ulLen, szText, ulLen, iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_storvclen(%.*s, %" HB_PFS "u, %d, ...)", ( int ) nLen, szText, nLen, iParam));
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -2186,13 +2186,13 @@ int hb_storvclen( const char * szText, HB_SIZE ulLen, int iParam, ... )
          int iRetVal;
          va_list va;
          va_start( va, iParam );
-         iRetVal = hb_arraySetCL( pItem, va_arg( va, HB_SIZE ), szText, ulLen ) ? 1 : 0;
+         iRetVal = hb_arraySetCL( pItem, va_arg( va, HB_SIZE ), szText, nLen ) ? 1 : 0;
          va_end( va );
          return iRetVal;
       }
       else if( bByRef || iParam == -1 )
       {
-         hb_itemPutCL( pItem, szText, ulLen );
+         hb_itemPutCL( pItem, szText, nLen );
          return 1;
       }
    }
@@ -2200,11 +2200,11 @@ int hb_storvclen( const char * szText, HB_SIZE ulLen, int iParam, ... )
    return 0;
 }
 
-int hb_storvclen_buffer( char * szText, HB_SIZE ulLen, int iParam, ... )
+int hb_storvclen_buffer( char * szText, HB_SIZE nLen, int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_storvclen_buffer(%.*s, %" HB_PFS "u, %d, ...)", ( int ) ulLen, szText, ulLen, iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_storvclen_buffer(%.*s, %" HB_PFS "u, %d, ...)", ( int ) nLen, szText, nLen, iParam));
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -2219,13 +2219,13 @@ int hb_storvclen_buffer( char * szText, HB_SIZE ulLen, int iParam, ... )
          int iRetVal;
          va_list va;
          va_start( va, iParam );
-         iRetVal = hb_arraySetCLPtr( pItem, va_arg( va, HB_SIZE ), szText, ulLen ) ? 1 : 0;
+         iRetVal = hb_arraySetCLPtr( pItem, va_arg( va, HB_SIZE ), szText, nLen ) ? 1 : 0;
          va_end( va );
          return iRetVal;
       }
       else if( bByRef || iParam == -1 )
       {
-         hb_itemPutCLPtr( pItem, szText, ulLen );
+         hb_itemPutCLPtr( pItem, szText, nLen );
          return 1;
       }
    }

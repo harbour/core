@@ -101,9 +101,9 @@ HB_FUNC( HB_HPOS )
 
    if( pHash && pKey )
    {
-      HB_SIZE ulPos;
-      hb_hashScan( pHash, pKey, &ulPos );
-      hb_retns( ulPos );
+      HB_SIZE nPos;
+      hb_hashScan( pHash, pKey, &nPos );
+      hb_retns( nPos );
    }
    else
       hb_errRT_BASE( EG_ARG, 1123, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -297,9 +297,9 @@ HB_FUNC( HB_HFILL )
    if( pHash && pValue )
    {
       PHB_ITEM pDest;
-      HB_SIZE ulPos = 0;
+      HB_SIZE nPos = 0;
 
-      while( ( pDest = hb_hashGetValueAt( pHash, ++ulPos ) ) != NULL )
+      while( ( pDest = hb_hashGetValueAt( pHash, ++nPos ) ) != NULL )
          hb_itemCopy( pDest, pValue );
 
       hb_itemReturn( pHash );
@@ -325,22 +325,22 @@ HB_FUNC( HB_HCOPY )
 
    if( pSource && pDest )
    {
-      HB_SIZE ulLen = hb_hashLen( pSource ), ulStart, ulCount;
+      HB_SIZE nLen = hb_hashLen( pSource ), nStart, nCount;
 
-      ulStart = hb_parns( 3 );
-      if( !ulStart )
-         ++ulStart;
-      ulCount = HB_ISNUM( 4 ) ? ( HB_SIZE ) hb_parns( 4 ) : ulLen - ulStart + 1;
+      nStart = hb_parns( 3 );
+      if( !nStart )
+         ++nStart;
+      nCount = HB_ISNUM( 4 ) ? ( HB_SIZE ) hb_parns( 4 ) : nLen - nStart + 1;
 
-      while( ulCount-- )
+      while( nCount-- )
       {
-         PHB_ITEM pKey = hb_hashGetKeyAt( pSource, ulStart );
-         PHB_ITEM pValue = hb_hashGetValueAt( pSource, ulStart );
+         PHB_ITEM pKey = hb_hashGetKeyAt( pSource, nStart );
+         PHB_ITEM pValue = hb_hashGetValueAt( pSource, nStart );
          if( pKey && pValue )
             hb_hashAdd( pDest, pKey, pValue );
          else
             break;
-         ++ulStart;
+         ++nStart;
       }
 
       hb_itemReturn( pDest );
@@ -359,18 +359,18 @@ HB_FUNC( HB_HMERGE )
    {
       if( pAction && HB_IS_BLOCK( pAction ) )
       {
-         HB_SIZE ulLen = hb_hashLen( pSource ), ulPos = 0;
-         while( ++ulPos <= ulLen )
+         HB_SIZE nLen = hb_hashLen( pSource ), nPos = 0;
+         while( ++nPos <= nLen )
          {
-            PHB_ITEM pKey = hb_hashGetKeyAt( pSource, ulPos );
-            PHB_ITEM pValue = hb_hashGetValueAt( pSource, ulPos );
+            PHB_ITEM pKey = hb_hashGetKeyAt( pSource, nPos );
+            PHB_ITEM pValue = hb_hashGetValueAt( pSource, nPos );
             if( pKey && pValue )
             {
                hb_vmPushEvalSym();
                hb_vmPush( pAction );
                hb_vmPush( pKey );
                hb_vmPush( pValue );
-               hb_vmPushSize( ulPos );
+               hb_vmPushSize( nPos );
                hb_vmSend( 3 );
                {
                   PHB_ITEM pReturn = hb_stackReturnItem();
@@ -398,29 +398,29 @@ HB_FUNC( HB_HEVAL )
 
    if( pHash && pBlock )
    {
-      HB_SIZE ulLen = hb_hashLen( pHash ), ulStart, ulCount;
+      HB_SIZE nLen = hb_hashLen( pHash ), nStart, nCount;
 
-      ulStart = hb_parns( 3 );
-      if( !ulStart )
-         ++ulStart;
-      ulCount = HB_ISNUM( 4 ) ? ( HB_SIZE ) hb_parns( 4 ) : ulLen - ulStart + 1;
+      nStart = hb_parns( 3 );
+      if( !nStart )
+         ++nStart;
+      nCount = HB_ISNUM( 4 ) ? ( HB_SIZE ) hb_parns( 4 ) : nLen - nStart + 1;
 
-      while( ulCount-- )
+      while( nCount-- )
       {
-         PHB_ITEM pKey = hb_hashGetKeyAt( pHash, ulStart );
-         PHB_ITEM pValue = hb_hashGetValueAt( pHash, ulStart );
+         PHB_ITEM pKey = hb_hashGetKeyAt( pHash, nStart );
+         PHB_ITEM pValue = hb_hashGetValueAt( pHash, nStart );
          if( pKey && pValue )
          {
             hb_vmPushEvalSym();
             hb_vmPush( pBlock );
             hb_vmPush( pKey );
             hb_vmPush( pValue );
-            hb_vmPushSize( ulStart );
+            hb_vmPushSize( nStart );
             hb_vmSend( 3 );
          }
          else
             break;
-         ++ulStart;
+         ++nStart;
       }
 
       hb_itemReturn( pHash );
@@ -437,26 +437,26 @@ HB_FUNC( HB_HSCAN )
    if( pHash && pValue )
    {
       HB_BOOL fExact = hb_parl( 5 ), fFound = HB_FALSE;
-      HB_SIZE ulLen = hb_hashLen( pHash ), ulStart, ulCount;
+      HB_SIZE nLen = hb_hashLen( pHash ), nStart, nCount;
 
-      ulStart = hb_parns( 3 );
-      if( !ulStart )
-         ++ulStart;
-      ulCount = HB_ISNUM( 4 ) ? ( HB_SIZE ) hb_parns( 4 ) : ulLen - ulStart + 1;
+      nStart = hb_parns( 3 );
+      if( !nStart )
+         ++nStart;
+      nCount = HB_ISNUM( 4 ) ? ( HB_SIZE ) hb_parns( 4 ) : nLen - nStart + 1;
 
       if( HB_IS_BLOCK( pValue ) )
       {
-         while( ulCount-- )
+         while( nCount-- )
          {
-            PHB_ITEM pKey = hb_hashGetKeyAt( pHash, ulStart );
-            PHB_ITEM pVal = hb_hashGetValueAt( pHash, ulStart );
+            PHB_ITEM pKey = hb_hashGetKeyAt( pHash, nStart );
+            PHB_ITEM pVal = hb_hashGetValueAt( pHash, nStart );
             if( pKey && pValue )
             {
                hb_vmPushEvalSym();
                hb_vmPush( pValue );
                hb_vmPush( pKey );
                hb_vmPush( pVal );
-               hb_vmPushSize( ulStart );
+               hb_vmPushSize( nStart );
                hb_vmSend( 3 );
                {
                   PHB_ITEM pReturn = hb_stackReturnItem();
@@ -469,14 +469,14 @@ HB_FUNC( HB_HSCAN )
             }
             else
                break;
-            ++ulStart;
+            ++nStart;
          }
       }
       else if( HB_IS_STRING( pValue ) )
       {
-         while( ulCount-- )
+         while( nCount-- )
          {
-            PHB_ITEM pItem = hb_hashGetValueAt( pHash, ulStart );
+            PHB_ITEM pItem = hb_hashGetValueAt( pHash, nStart );
             if( pItem )
             {
                if( HB_IS_STRING( pItem ) && hb_itemStrCmp( pItem, pValue, fExact ) == 0 )
@@ -487,15 +487,15 @@ HB_FUNC( HB_HSCAN )
             }
             else
                break;
-            ++ulStart;
+            ++nStart;
          }
       }
       else if( HB_IS_NUMERIC( pValue ) )
       {
          double dValue = hb_itemGetND( pValue );
-         while( ulCount-- )
+         while( nCount-- )
          {
-            PHB_ITEM pItem = hb_hashGetValueAt( pHash, ulStart );
+            PHB_ITEM pItem = hb_hashGetValueAt( pHash, nStart );
             if( pItem )
             {
                if( HB_IS_NUMERIC( pItem ) && hb_itemGetND( pItem ) == dValue )
@@ -506,14 +506,14 @@ HB_FUNC( HB_HSCAN )
             }
             else
                break;
-            ++ulStart;
+            ++nStart;
          }
       }
       else if( HB_IS_DATETIME( pValue ) )
       {
-         while( ulCount-- )
+         while( nCount-- )
          {
-            PHB_ITEM pItem = hb_hashGetValueAt( pHash, ulStart );
+            PHB_ITEM pItem = hb_hashGetValueAt( pHash, nStart );
             if( pItem )
             {
                if( HB_IS_DATETIME( pItem ) &&
@@ -526,15 +526,15 @@ HB_FUNC( HB_HSCAN )
             }
             else
                break;
-            ++ulStart;
+            ++nStart;
          }
       }
       else if( HB_IS_LOGICAL( pValue ) )
       {
          HB_BOOL fValue = hb_itemGetDL( pValue );
-         while( ulCount-- )
+         while( nCount-- )
          {
-            PHB_ITEM pItem = hb_hashGetValueAt( pHash, ulStart );
+            PHB_ITEM pItem = hb_hashGetValueAt( pHash, nStart );
             if( pItem )
             {
                if( HB_IS_LOGICAL( pItem ) && hb_itemGetL( pItem ) == fValue )
@@ -545,14 +545,14 @@ HB_FUNC( HB_HSCAN )
             }
             else
                break;
-            ++ulStart;
+            ++nStart;
          }
       }
       else if( HB_IS_NIL( pValue ) )
       {
-         while( ulCount-- )
+         while( nCount-- )
          {
-            PHB_ITEM pItem = hb_hashGetValueAt( pHash, ulStart );
+            PHB_ITEM pItem = hb_hashGetValueAt( pHash, nStart );
             if( pItem )
             {
                if( HB_IS_NIL( pItem ) )
@@ -563,14 +563,14 @@ HB_FUNC( HB_HSCAN )
             }
             else
                break;
-            ++ulStart;
+            ++nStart;
          }
       }
       else if( HB_IS_POINTER( pValue ) )
       {
-         while( ulCount-- )
+         while( nCount-- )
          {
-            PHB_ITEM pItem = hb_hashGetValueAt( pHash, ulStart );
+            PHB_ITEM pItem = hb_hashGetValueAt( pHash, nStart );
             if( pItem )
             {
                if( HB_IS_POINTER( pItem ) &&
@@ -582,14 +582,14 @@ HB_FUNC( HB_HSCAN )
             }
             else
                break;
-            ++ulStart;
+            ++nStart;
          }
       }
       else if( fExact && HB_IS_ARRAY( pValue ) )
       {
-         while( ulCount-- )
+         while( nCount-- )
          {
-            PHB_ITEM pItem = hb_hashGetValueAt( pHash, ulStart );
+            PHB_ITEM pItem = hb_hashGetValueAt( pHash, nStart );
             if( pItem )
             {
                if( HB_IS_ARRAY( pItem ) &&
@@ -601,14 +601,14 @@ HB_FUNC( HB_HSCAN )
             }
             else
                break;
-            ++ulStart;
+            ++nStart;
          }
       }
       else if( fExact && HB_IS_HASH( pValue ) )
       {
-         while( ulCount-- )
+         while( nCount-- )
          {
-            PHB_ITEM pItem = hb_hashGetValueAt( pHash, ulStart );
+            PHB_ITEM pItem = hb_hashGetValueAt( pHash, nStart );
             if( pItem )
             {
                if( HB_IS_HASH( pItem ) &&
@@ -620,11 +620,11 @@ HB_FUNC( HB_HSCAN )
             }
             else
                break;
-            ++ulStart;
+            ++nStart;
          }
       }
 
-      hb_retns( fFound ? ulStart : 0 );
+      hb_retns( fFound ? nStart : 0 );
    }
    else
       hb_errRT_BASE( EG_ARG, 1123, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );

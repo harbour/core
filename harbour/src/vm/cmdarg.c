@@ -348,16 +348,16 @@ static char * hb_cmdargGet( const char * pszName, HB_BOOL bRetValue )
          {
             if( bRetValue )
             {
-               HB_SIZE ulLen;
+               HB_SIZE nLen;
                pszNext += i;
 
                /* Skip value separator colon. */
                if( *pszNext == ':' )
                   pszNext++;
 
-               ulLen = pszEnd > pszNext ? pszEnd - pszNext : 0;
-               pszRetVal = ( char * ) hb_xgrab( ulLen + 1 );
-               hb_strncpy( pszRetVal, pszNext, ulLen );
+               nLen = pszEnd > pszNext ? pszEnd - pszNext : 0;
+               pszRetVal = ( char * ) hb_xgrab( nLen + 1 );
+               hb_strncpy( pszRetVal, pszNext, nLen );
             }
             else
                pszRetVal = ( char * ) "";
@@ -483,21 +483,21 @@ HB_FUNC( HB_CMDLINE )
    char** argv = hb_cmdargARGV();
    int argc = hb_cmdargARGC();
    char * pszBuffer, * ptr;
-   HB_SIZE ulLen;
+   HB_SIZE nLen;
    int iArg;
 
-   ulLen = 0;
+   nLen = 0;
    for( iArg = 1; iArg < argc; iArg++ )
-      ulLen += strlen( argv[ iArg ] ) + 1;
+      nLen += strlen( argv[ iArg ] ) + 1;
 
-   if( ulLen )
+   if( nLen )
    {
-      ptr = pszBuffer = ( char * ) hb_xgrab( ulLen );
+      ptr = pszBuffer = ( char * ) hb_xgrab( nLen );
       for( iArg = 1; iArg < argc; iArg++ )
       {
-         ulLen = strlen( argv[ iArg ] );
-         memcpy( ptr, argv[ iArg ], ulLen );
-         ptr += ulLen;
+         nLen = strlen( argv[ iArg ] );
+         memcpy( ptr, argv[ iArg ], nLen );
+         ptr += nLen;
          *ptr++ = ' ';
       }
       *--ptr = '\0';

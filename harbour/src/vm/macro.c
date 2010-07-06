@@ -254,29 +254,29 @@ static void hb_macroSyntaxError( HB_MACRO_PTR pMacro )
  *    PRIVATE &a&b   //this will cause syntax error '&'
  *
  */
-static char * hb_macroTextSubst( const char * szString, HB_SIZE * pulStringLen )
+static char * hb_macroTextSubst( const char * szString, HB_SIZE * pnStringLen )
 {
    char * szResult;
-   HB_SIZE ulResStrLen;
-   HB_SIZE ulResBufLen;
-   HB_SIZE ulCharsLeft;
+   HB_SIZE nResStrLen;
+   HB_SIZE nResBufLen;
+   HB_SIZE nCharsLeft;
    char * pHead;
    char * pTail;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_macroTextSubst(%s, %" HB_PFS "u)", szString, *pulStringLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_macroTextSubst(%s, %" HB_PFS "u)", szString, *pnStringLen));
 
-   pHead = ( char * ) memchr( szString, '&', *pulStringLen );
+   pHead = ( char * ) memchr( szString, '&', *pnStringLen );
    if( pHead == NULL )
       return ( char * ) szString;  /* no more processing is required */
 
    /* initial length of the string and the result buffer (it can contain null bytes) */
-   ulResBufLen = ulResStrLen = *pulStringLen;
+   nResBufLen = nResStrLen = *pnStringLen;
    /* initial buffer for return value */
-   szResult = ( char * ) hb_xgrab( ulResBufLen + 1 );
+   szResult = ( char * ) hb_xgrab( nResBufLen + 1 );
 
    /* copy the input string with trailing zero byte
     */
-   memcpy( szResult, szString, ulResStrLen + 1 );
+   memcpy( szResult, szString, nResStrLen + 1 );
    /* switch the pointer so it will point into the result buffer
     */
    pHead = szResult + ( pHead - szString );
@@ -300,7 +300,7 @@ static char * hb_macroTextSubst( const char * szString, HB_SIZE * pulStringLen )
           * length of identifiers (HB_SYMBOL_NAME_LEN) - only the max allowed
           * are used for name lookup however the whole string is replaced
           */
-         HB_SIZE ulNameLen = 1;
+         HB_SIZE nNameLen = 1;
          char * pName = pHead;
 
          while( *++pHead && ( *pHead == '_' ||
@@ -308,17 +308,17 @@ static char * hb_macroTextSubst( const char * szString, HB_SIZE * pulStringLen )
                               ( *pHead >= 'a' && *pHead <= 'z' ) ||
                               ( *pHead >= '0' && *pHead <= '9' ) ) )
          {
-            ++ulNameLen;
+            ++nNameLen;
          }
          /* pHead points now at the character that terminated a variable name */
 
          /* NOTE: '_' is invalid variable name
           */
-         if( ulNameLen > 1 || *pName != '_' )
+         if( nNameLen > 1 || *pName != '_' )
          {
             /* this is not the "&_" string */
             char * szValPtr;
-            HB_SIZE ulValLen;
+            HB_SIZE nValLen;
 
             /* Get a pointer to the string value stored in this variable
              * or NULL if variable doesn't exist or doesn't contain a string
@@ -326,47 +326,47 @@ static char * hb_macroTextSubst( const char * szString, HB_SIZE * pulStringLen )
              * NOTE: This doesn't create a copy of the value then it
              * shouldn't be released here.
              */
-            ulValLen = ulNameLen;   /* the length of name */
-            szValPtr = hb_memvarGetStrValuePtr( pName, &ulValLen );
+            nValLen = nNameLen;   /* the length of name */
+            szValPtr = hb_memvarGetStrValuePtr( pName, &nValLen );
             if( szValPtr )
             {
                if( *pHead == '.' )
                {
                   /* we have stopped at the macro terminator '.' - skip it */
                   ++pHead;
-                  ++ulNameLen;
+                  ++nNameLen;
                }
-               ++ulNameLen;   /* count also the '&' character */
+               ++nNameLen;   /* count also the '&' character */
 
                /* number of characters left on the right side of a variable name */
-               ulCharsLeft = ulResStrLen - ( pHead - szResult );
+               nCharsLeft = nResStrLen - ( pHead - szResult );
 
                /* NOTE:
                 * if a replacement string is shorter then the variable
                 * name then we don't have to reallocate the result buffer:
-                * 'ulResStrLen' stores the current length of a string in the buffer
-                * 'ulResBufLen' stores the length of the buffer
+                * 'nResStrLen' stores the current length of a string in the buffer
+                * 'nResBufLen' stores the length of the buffer
                 */
-               if( ulValLen > ulNameLen )
+               if( nValLen > nNameLen )
                {
-                  ulResStrLen += ( ulValLen - ulNameLen );
-                  if( ulResStrLen > ulResBufLen )
+                  nResStrLen += ( nValLen - nNameLen );
+                  if( nResStrLen > nResBufLen )
                   {
-                     HB_SIZE ulHead = pHead - szResult;
-                     HB_SIZE ulTail = pTail - szResult;
-                     ulResBufLen = ulResStrLen;
-                     szResult = ( char * ) hb_xrealloc( szResult, ulResBufLen + 1 );
-                     pHead = szResult + ulHead;
-                     pTail = szResult + ulTail;
+                     HB_SIZE nHead = pHead - szResult;
+                     HB_SIZE nTail = pTail - szResult;
+                     nResBufLen = nResStrLen;
+                     szResult = ( char * ) hb_xrealloc( szResult, nResBufLen + 1 );
+                     pHead = szResult + nHead;
+                     pTail = szResult + nTail;
                   }
                }
                else
-                  ulResStrLen -= ( ulNameLen - ulValLen );
+                  nResStrLen -= ( nNameLen - nValLen );
 
                /* move bytes located on the right side of a variable name */
-               memmove( pTail + ulValLen, pHead, ulCharsLeft + 1 );
+               memmove( pTail + nValLen, pHead, nCharsLeft + 1 );
                /* copy substituted value */
-               memcpy( pTail, szValPtr, ulValLen );
+               memcpy( pTail, szValPtr, nValLen );
                /* restart scanning from the beginning of replaced string */
                /* NOTE: This causes that the following code:
                 *    a := '&a'
@@ -378,20 +378,20 @@ static char * hb_macroTextSubst( const char * szString, HB_SIZE * pulStringLen )
             }
          }
       }
-      ulCharsLeft = ulResStrLen - ( pHead - szResult );
+      nCharsLeft = nResStrLen - ( pHead - szResult );
    }
-   while( ulCharsLeft && ( pHead = ( char * ) memchr( pHead, '&', ulCharsLeft ) ) != NULL );
+   while( nCharsLeft && ( pHead = ( char * ) memchr( pHead, '&', nCharsLeft ) ) != NULL );
 
-   if( ulResStrLen < ulResBufLen )
+   if( nResStrLen < nResBufLen )
    {
       /* result string is shorter then allocated buffer -
        * cut it to a required length
        */
-      szResult = ( char * ) hb_xrealloc( szResult, ulResStrLen + 1 );
+      szResult = ( char * ) hb_xrealloc( szResult, nResStrLen + 1 );
    }
-   szResult[ ulResStrLen ] = 0;  /* place terminating null character */
+   szResult[ nResStrLen ] = 0;  /* place terminating null character */
    /* return a length of result string */
-   *pulStringLen = ulResStrLen;
+   *pnStringLen = nResStrLen;
 
    return szResult;   /* a new memory buffer was allocated */
 }
@@ -594,8 +594,8 @@ static void hb_macroUseAliased( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, int iFlag,
    {
       /* grab memory for "alias->var"
       */
-      HB_SIZE ulLen = pAlias->item.asString.length + pVar->item.asString.length + 2;
-      char * szString = ( char * ) hb_xgrab( ulLen + 1 );
+      HB_SIZE nLen = pAlias->item.asString.length + pVar->item.asString.length + 2;
+      char * szString = ( char * ) hb_xgrab( nLen + 1 );
       HB_MACRO struMacro;
       int iStatus;
 
@@ -603,7 +603,7 @@ static void hb_macroUseAliased( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, int iFlag,
       szString[ pAlias->item.asString.length ]     = '-';
       szString[ pAlias->item.asString.length + 1 ] = '>';
       memcpy( szString + pAlias->item.asString.length + 2, pVar->item.asString.value, pVar->item.asString.length );
-      szString[ ulLen ] = '\0';
+      szString[ nLen ] = '\0';
 
       struMacro.mode       = HB_MODE_MACRO;
       struMacro.supported  = (iSupported & HB_SM_RT_MACRO) ? hb_macroFlags() : iSupported;
@@ -611,7 +611,7 @@ static void hb_macroUseAliased( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, int iFlag,
       struMacro.uiNameLen  = HB_SYMBOL_NAME_LEN;
       struMacro.status     = HB_MACRO_CONT;
       struMacro.string     = szString;
-      struMacro.length     = ulLen;
+      struMacro.length     = nLen;
 
       iStatus = hb_macroParse( &struMacro );
 
@@ -624,7 +624,7 @@ static void hb_macroUseAliased( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, int iFlag,
       }
       else
       {
-         hb_vmPushString( szString, ulLen );
+         hb_vmPushString( szString, nLen );
          hb_macroSyntaxError( &struMacro );
       }
 
@@ -690,78 +690,78 @@ void hb_macroPushAliasedValue( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, int flags )
  * new string if a valid macro text substitution was found (and sets
  * pbNewString to TRUE)
 */
-char * hb_macroExpandString( const char *szString, HB_SIZE ulLength, HB_BOOL *pfNewString )
+char * hb_macroExpandString( const char *szString, HB_SIZE nLength, HB_BOOL *pfNewString )
 {
    char *szResultString;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_macroExpandString(%s,%" HB_PFS "u,%p)", szString, ulLength, pfNewString));
+   HB_TRACE(HB_TR_DEBUG, ("hb_macroExpandString(%s,%" HB_PFS "u,%p)", szString, nLength, pfNewString));
 
    if( szString )
-      szResultString = hb_macroTextSubst( szString, &ulLength );
+      szResultString = hb_macroTextSubst( szString, &nLength );
    else
       szResultString = ( char * ) szString;
    *pfNewString = ( szString != szResultString );
    return szResultString;
 }
 
-char * hb_macroTextSymbol( const char *szString, HB_SIZE ulLength, HB_BOOL *pfNewString )
+char * hb_macroTextSymbol( const char *szString, HB_SIZE nLength, HB_BOOL *pfNewString )
 {
    char *szResult = NULL;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_macroTextSymbol(%s,%" HB_PFS "u,%p)", szString, ulLength, pfNewString));
+   HB_TRACE(HB_TR_DEBUG, ("hb_macroTextSymbol(%s,%" HB_PFS "u,%p)", szString, nLength, pfNewString));
 
    if( szString )
    {
-      HB_SIZE ulLen = 0;
+      HB_SIZE nLen = 0;
 
-      szResult = hb_macroTextSubst( szString, &ulLength );
+      szResult = hb_macroTextSubst( szString, &nLength );
 
-      while( ulLength && ( szResult[ 0 ] == ' ' || szResult[ 0 ] == '\t' ) )
+      while( nLength && ( szResult[ 0 ] == ' ' || szResult[ 0 ] == '\t' ) )
       {
          ++szResult;
          ++szString;
-         --ulLength;
+         --nLength;
       }
 
-      while( ulLength && ( szResult[ ulLength - 1 ] == ' ' ||
-                           szResult[ ulLength - 1 ] == '\t' ) )
-         --ulLength;
+      while( nLength && ( szResult[ nLength - 1 ] == ' ' ||
+                          szResult[ nLength - 1 ] == '\t' ) )
+         --nLength;
 
       /* NOTE: This uses _a-zA-Z0-9 pattern to check for a valid name
        * "_" is not valid macro string
        */
-      while( ulLen < ulLength )
+      while( nLen < nLength )
       {
-         char c = szResult[ ulLen ];
+         char c = szResult[ nLen ];
          if( c >= 'a' && c <= 'z' )
          {
             if( szResult == szString )
             {
-               szResult = ( char * ) hb_xgrab( ulLength + 1 );
-               memcpy( szResult, szString, ulLength );
-               szResult[ ulLength ] = '\0';
+               szResult = ( char * ) hb_xgrab( nLength + 1 );
+               memcpy( szResult, szString, nLength );
+               szResult[ nLength ] = '\0';
             }
-            szResult[ ulLen ] = c - ( 'a' - 'A' );
+            szResult[ nLen ] = c - ( 'a' - 'A' );
          }
          else if( ! ( c == '_' || ( c >= 'A' && c <= 'Z' ) ||
-                      ( ulLen && ( c >= '0' && c <= '9' ) ) ) )
+                      ( nLen && ( c >= '0' && c <= '9' ) ) ) )
          {
             break;
          }
-         ++ulLen;
+         ++nLen;
       }
-      if( ulLen == ulLength && ulLen > ( HB_SIZE ) ( szResult[ 0 ] == '_' ? 1 : 0 ) )
+      if( nLen == nLength && nLen > ( HB_SIZE ) ( szResult[ 0 ] == '_' ? 1 : 0 ) )
       {
-         if( ulLen > HB_SYMBOL_NAME_LEN )
-            ulLen = HB_SYMBOL_NAME_LEN;
-         if( szResult[ ulLen ] )
+         if( nLen > HB_SYMBOL_NAME_LEN )
+            nLen = HB_SYMBOL_NAME_LEN;
+         if( szResult[ nLen ] )
          {
             if( szResult == szString )
             {
-               szResult = ( char * ) hb_xgrab( ulLen + 1 );
-               memcpy( szResult, szString, ulLen );
+               szResult = ( char * ) hb_xgrab( nLen + 1 );
+               memcpy( szResult, szString, nLen );
             }
-            szResult[ ulLen ] = '\0';
+            szResult[ nLen ] = '\0';
          }
       }
       else
@@ -897,15 +897,15 @@ void hb_macroTextValue( HB_ITEM_PTR pItem )
    if( hb_macroCheckParam( pItem ) )
    {
       char * szString;
-      HB_SIZE ulLength = pItem->item.asString.length;
+      HB_SIZE nLength = pItem->item.asString.length;
 
-      szString = hb_macroTextSubst( pItem->item.asString.value, &ulLength );
+      szString = hb_macroTextSubst( pItem->item.asString.value, &nLength );
 
       if( szString != pItem->item.asString.value )
       {
          /* replace the old value on the eval stack with the new one
          */
-         hb_itemPutCLPtr( pItem, szString, ulLength );
+         hb_itemPutCLPtr( pItem, szString, nLength );
       }
       /*
        * else
@@ -1089,11 +1089,11 @@ int hb_macroLocalVarGetPos( const char * szVarName, HB_COMP_DECL )
    return 0;
 }
 
-HB_BOOL hb_macroIsValidMacroText( const char * szText, HB_SIZE ulLen )
+HB_BOOL hb_macroIsValidMacroText( const char * szText, HB_SIZE nLen )
 {
-   if( ulLen )
+   if( nLen )
    {
-      while( --ulLen )
+      while( --nLen )
       {
          if( *szText++ == '&' )
          {
@@ -1156,20 +1156,20 @@ HB_SIZE hb_macroGenJumpTrue( HB_ISIZ lOffset, HB_COMP_DECL )
    return HB_PCODE_DATA->lPCodePos - 3;
 }
 
-void hb_macroGenJumpThere( HB_SIZE ulFrom, HB_SIZE ulTo, HB_COMP_DECL )
+void hb_macroGenJumpThere( HB_SIZE nFrom, HB_SIZE nTo, HB_COMP_DECL )
 {
    HB_BYTE * pCode = HB_PCODE_DATA->pCode;
-   HB_ISIZ lOffset = ulTo - ulFrom + 1;
+   HB_ISIZ lOffset = nTo - nFrom + 1;
 
    if( HB_LIM_INT24( lOffset ) )
-      HB_PUT_LE_UINT24( &pCode[ ulFrom ], lOffset );
+      HB_PUT_LE_UINT24( &pCode[ nFrom ], lOffset );
    else
       hb_macroError( HB_MACRO_TOO_COMPLEX, HB_COMP_PARAM );
 }
 
-void hb_macroGenJumpHere( HB_SIZE ulOffset, HB_COMP_DECL )
+void hb_macroGenJumpHere( HB_SIZE nOffset, HB_COMP_DECL )
 {
-   hb_macroGenJumpThere( ulOffset, HB_PCODE_DATA->lPCodePos, HB_COMP_PARAM );
+   hb_macroGenJumpThere( nOffset, HB_PCODE_DATA->lPCodePos, HB_COMP_PARAM );
 }
 
 /*
@@ -1542,15 +1542,15 @@ void hb_macroGenPushFunRef( const char * szFunName, HB_COMP_DECL )
 }
 
 /* generates the pcode to push a string on the virtual machine stack */
-void hb_macroGenPushString( const char * szText, HB_SIZE ulStrLen, HB_COMP_DECL )
+void hb_macroGenPushString( const char * szText, HB_SIZE nStrLen, HB_COMP_DECL )
 {
-   if( ulStrLen <= UINT24_MAX )
+   if( nStrLen <= UINT24_MAX )
    {
-      if( ulStrLen <= USHRT_MAX )
-         hb_macroGenPCode3( HB_P_MPUSHSTR, HB_LOBYTE( ulStrLen ), HB_HIBYTE( ulStrLen ), HB_COMP_PARAM );
+      if( nStrLen <= USHRT_MAX )
+         hb_macroGenPCode3( HB_P_MPUSHSTR, HB_LOBYTE( nStrLen ), HB_HIBYTE( nStrLen ), HB_COMP_PARAM );
       else
-         hb_macroGenPCode4( HB_P_MPUSHSTRLARGE, HB_LOBYTE( ulStrLen ), HB_HIBYTE( ulStrLen ), HB_ULBYTE( ulStrLen ), HB_COMP_PARAM );
-      hb_macroGenPCodeN( ( HB_BYTE * ) szText, ulStrLen, HB_COMP_PARAM );
+         hb_macroGenPCode4( HB_P_MPUSHSTRLARGE, HB_LOBYTE( nStrLen ), HB_HIBYTE( nStrLen ), HB_ULBYTE( nStrLen ), HB_COMP_PARAM );
+      hb_macroGenPCodeN( ( HB_BYTE * ) szText, nStrLen, HB_COMP_PARAM );
    }
    else
       hb_macroError( HB_MACRO_TOO_COMPLEX, HB_COMP_PARAM );
@@ -1602,19 +1602,19 @@ void hb_macroGenPCode4( HB_BYTE byte1, HB_BYTE byte2, HB_BYTE byte3, HB_BYTE byt
    pFunc->pCode[ pFunc->lPCodePos++ ] = byte4;
 }
 
-void hb_macroGenPCodeN( HB_BYTE * pBuffer, HB_SIZE ulSize, HB_COMP_DECL )
+void hb_macroGenPCodeN( HB_BYTE * pBuffer, HB_SIZE nSize, HB_COMP_DECL )
 {
    HB_PCODE_INFO_PTR pFunc = HB_PCODE_DATA;
 
-   if( pFunc->lPCodePos + ulSize > pFunc->lPCodeSize )
+   if( pFunc->lPCodePos + nSize > pFunc->lPCodeSize )
    {
       /* not enough free space in pcode buffer - increase it */
-      pFunc->lPCodeSize += ( ( ( ulSize / HB_PCODE_SIZE ) + 1 ) * HB_PCODE_SIZE );
+      pFunc->lPCodeSize += ( ( ( nSize / HB_PCODE_SIZE ) + 1 ) * HB_PCODE_SIZE );
       pFunc->pCode = ( HB_BYTE * ) hb_xrealloc( pFunc->pCode, pFunc->lPCodeSize );
    }
 
-   memcpy( pFunc->pCode + pFunc->lPCodePos, pBuffer, ulSize );
-   pFunc->lPCodePos += ulSize;
+   memcpy( pFunc->pCode + pFunc->lPCodePos, pBuffer, nSize );
+   pFunc->lPCodePos += nSize;
 }
 
 /* ************************************************************************* */
@@ -1651,8 +1651,8 @@ void hb_macroCodeBlockStart( HB_COMP_DECL )
 void hb_macroCodeBlockEnd( HB_COMP_DECL )
 {
    HB_PCODE_INFO_PTR pCodeblock;   /* pointer to the current codeblock */
-   HB_SIZE ulSize;
-   HB_USHORT wParms = 0;   /* number of codeblock parameters */
+   HB_SIZE nSize;
+   HB_USHORT usParms = 0;   /* number of codeblock parameters */
    HB_CBVAR_PTR pVar;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_macroCodeBlockEnd(%p)", HB_COMP_PARAM));
@@ -1674,26 +1674,26 @@ void hb_macroCodeBlockEnd( HB_COMP_DECL )
    while( pVar )
    {
       pVar = pVar->pNext;
-      ++wParms;
+      ++usParms;
    }
 
    /* NOTE: 6 = HB_P_MPUSHBLOCK + HB_USHORT( size ) + HB_USHORT( wParams ) + _ENDBLOCK
     * runtime compiled codeblock cannot reference local variables defined in a
     * function
     */
-   ulSize = pCodeblock->lPCodePos + 6;
+   nSize = pCodeblock->lPCodePos + 6;
 
    /* NOTE: HB_P_MPUSHBLOCK differs from HB_P_PUSHBLOCK - the pcode
     * is stored in dynamic memory pool instead of static memory
     */
-   if( ulSize <= USHRT_MAX )
-      hb_macroGenPCode3( HB_P_MPUSHBLOCK, HB_LOBYTE( ulSize ), HB_HIBYTE( ulSize ), HB_COMP_PARAM );
+   if( nSize <= USHRT_MAX )
+      hb_macroGenPCode3( HB_P_MPUSHBLOCK, HB_LOBYTE( nSize ), HB_HIBYTE( nSize ), HB_COMP_PARAM );
    else
    {
-      ++ulSize;
-      hb_macroGenPCode4( HB_P_MPUSHBLOCKLARGE, HB_LOBYTE( ulSize ), HB_HIBYTE( ulSize ), HB_ULBYTE( ulSize ), HB_COMP_PARAM );
+      ++nSize;
+      hb_macroGenPCode4( HB_P_MPUSHBLOCKLARGE, HB_LOBYTE( nSize ), HB_HIBYTE( nSize ), HB_ULBYTE( nSize ), HB_COMP_PARAM );
    }
-   hb_macroGenPCode2( HB_LOBYTE( wParms ), HB_HIBYTE( wParms ), HB_COMP_PARAM );
+   hb_macroGenPCode2( HB_LOBYTE( usParms ), HB_HIBYTE( usParms ), HB_COMP_PARAM );
 
    /* copy a codeblock pcode buffer */
    hb_macroGenPCodeN( pCodeblock->pCode, pCodeblock->lPCodePos, HB_COMP_PARAM );

@@ -63,7 +63,7 @@
 #include "hbvm.h"
 #include "hbstack.h"
 
-static HB_BOOL hb_itemIsLess( PHB_ITEM pItem1, PHB_ITEM pItem2, PHB_ITEM pBlock, PHB_BASEARRAY pBaseArray, HB_SIZE ulLast )
+static HB_BOOL hb_itemIsLess( PHB_ITEM pItem1, PHB_ITEM pItem2, PHB_ITEM pBlock, PHB_BASEARRAY pBaseArray, HB_SIZE nLast )
 {
    if( pBlock )
    {
@@ -73,7 +73,7 @@ static HB_BOOL hb_itemIsLess( PHB_ITEM pItem1, PHB_ITEM pItem2, PHB_ITEM pBlock,
       hb_vmPush( pItem2 );
       hb_vmSend( 2 );
 
-      if( pBaseArray->nLen <= ulLast )
+      if( pBaseArray->nLen <= nLast )
          return HB_FALSE;
       else
       {
@@ -210,38 +210,38 @@ static void hb_arraySortQuick( PHB_BASEARRAY pBaseArray, HB_ISIZ lb, HB_ISIZ ub,
    }
 }
 
-HB_BOOL hb_arraySort( PHB_ITEM pArray, HB_SIZE * pulStart, HB_SIZE * pulCount, PHB_ITEM pBlock )
+HB_BOOL hb_arraySort( PHB_ITEM pArray, HB_SIZE * pnStart, HB_SIZE * pnCount, PHB_ITEM pBlock )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_arraySort(%p, %p, %p, %p)", pArray, pulStart, pulCount, pBlock));
+   HB_TRACE(HB_TR_DEBUG, ("hb_arraySort(%p, %p, %p, %p)", pArray, pnStart, pnCount, pBlock));
 
    if( HB_IS_ARRAY( pArray ) )
    {
       PHB_BASEARRAY pBaseArray = pArray->item.asArray.value;
-      HB_SIZE ulLen = pBaseArray->nLen;
-      HB_SIZE ulStart;
-      HB_SIZE ulCount;
-      HB_SIZE ulEnd;
+      HB_SIZE nLen = pBaseArray->nLen;
+      HB_SIZE nStart;
+      HB_SIZE nCount;
+      HB_SIZE nEnd;
 
-      if( pulStart && ( *pulStart >= 1 ) )
-         ulStart = *pulStart;
+      if( pnStart && ( *pnStart >= 1 ) )
+         nStart = *pnStart;
       else
-         ulStart = 1;
+         nStart = 1;
 
-      if( ulStart <= ulLen )
+      if( nStart <= nLen )
       {
-         if( pulCount && *pulCount >= 1 && ( *pulCount <= ulLen - ulStart ) )
-            ulCount = *pulCount;
+         if( pnCount && *pnCount >= 1 && ( *pnCount <= nLen - nStart ) )
+            nCount = *pnCount;
          else
-            ulCount = ulLen - ulStart + 1;
+            nCount = nLen - nStart + 1;
 
-         if( ulStart + ulCount > ulLen )             /* check range */
-            ulCount = ulLen - ulStart + 1;
+         if( nStart + nCount > nLen )             /* check range */
+            nCount = nLen - nStart + 1;
 
-         ulEnd = ulCount + ulStart - 2;
+         nEnd = nCount + nStart - 2;
 
          /* Optimize when only one or no element is to be sorted */
-         if( ulCount > 1 )
-            hb_arraySortQuick( pBaseArray, ulStart - 1, ulEnd, pBlock );
+         if( nCount > 1 )
+            hb_arraySortQuick( pBaseArray, nStart - 1, nEnd, pBlock );
       }
 
       return HB_TRUE;
@@ -256,12 +256,12 @@ HB_FUNC( ASORT )
 
    if( pArray && ! hb_arrayIsObject( pArray ) )
    {
-      HB_SIZE ulStart = hb_parns( 2 );
-      HB_SIZE ulCount = hb_parns( 3 );
+      HB_SIZE nStart = hb_parns( 2 );
+      HB_SIZE nCount = hb_parns( 3 );
 
       hb_arraySort( pArray,
-                    HB_ISNUM( 2 ) ? &ulStart : NULL,
-                    HB_ISNUM( 3 ) ? &ulCount : NULL,
+                    HB_ISNUM( 2 ) ? &nStart : NULL,
+                    HB_ISNUM( 3 ) ? &nCount : NULL,
                     hb_param( 4, HB_IT_BLOCK ) );
 
       hb_itemReturn( pArray ); /* ASort() returns the array itself */
