@@ -6564,7 +6564,9 @@ FUNCTION hbmk2_ArrayToList( array, cSeparator )
    LOCAL cString := ""
    LOCAL tmp
 
-   DEFAULT cSeparator TO " "
+   IF ! ISCHARACTER( cSeparator )
+      cSeparator := " "
+   ENDIF
 
    FOR tmp := 1 TO Len( array )
       cString += array[ tmp ]
@@ -6806,7 +6808,9 @@ STATIC FUNCTION FindInPath( cFileName, cPath )
       ENDIF
    ENDIF
 
-   DEFAULT cPath TO GetEnv( "PATH" )
+   IF ! ISCHARACTER( cPath )
+      cPath := GetEnv( "PATH" )
+   ENDIF
 
    /* Check in the PATH. */
    #if defined( __PLATFORM__WINDOWS ) .OR. ;
@@ -7093,7 +7097,9 @@ STATIC FUNCTION PathNormalize( cPath, lNormalize )
 
    IF ! Empty( cPath )
 
-      DEFAULT lNormalize TO .T.
+      IF ! ISLOGICAL( lNormalize )
+         lNormalize := .T.
+      ENDIF
 
       IF lNormalize
 
@@ -7164,7 +7170,9 @@ STATIC FUNCTION PathMakeRelative( cPathBase, cPathTarget, lForceRelative )
 
    LOCAL cTargetFileName
 
-   DEFAULT lForceRelative TO .F.
+   IF ! ISLOGICAL( lForceRelative )
+      lForceRelative := .F.
+   ENDIF
 
    cPathBase   := PathProc( DirAddPathSep( cPathBase ), hb_dirBase() )
    cPathTarget := PathProc( cPathTarget, hb_dirBase() )
@@ -7262,7 +7270,9 @@ STATIC FUNCTION PathSepToSelf( cFileName, nStart )
 
 STATIC FUNCTION PathSepToTarget( hbmk, cFileName, nStart )
 
-   DEFAULT nStart TO 1
+   IF ! ISNUMBER( nStart )
+      nStart := 1
+   ENDIF
 
    IF hbmk[ _HBMK_cPLAT ] $ "win|wce|dos|os2" .AND. !( hbmk[ _HBMK_cCOMP ] $ "mingw|mingw64|mingwarm|cygwin" )
       RETURN Left( cFileName, nStart - 1 ) + StrTran( SubStr( cFileName, nStart ), "/", "\" )
@@ -7367,14 +7377,18 @@ STATIC FUNCTION DirUnbuild( cDir )
 STATIC FUNCTION FN_Escape( cFileName, nEscapeMode, nFNNotation )
    LOCAL cDir, cName, cExt, cDrive
 
-   DEFAULT nEscapeMode TO _ESC_NONE
+   IF ! ISNUMBER( nEscapeMode )
+      nEscapeMode := _ESC_NONE
+   ENDIF
+   IF ! ISNUMBER( nFNNotation )
 #if defined( __PLATFORM__WINDOWS ) .OR. ;
     defined( __PLATFORM__DOS ) .OR. ;
     defined( __PLATFORM__OS2 )
-   DEFAULT nFNNotation TO _FNF_BCKSLASH
+      nFNNotation := _FNF_BCKSLASH
 #else
-   DEFAULT nFNNotation TO _FNF_FWDSLASH
+      nFNNotation := _FNF_FWDSLASH
 #endif
+   ENDIF
 
    SWITCH nFNNotation
    CASE _FNF_BCKSLASH
