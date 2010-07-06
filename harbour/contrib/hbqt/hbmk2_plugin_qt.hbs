@@ -161,12 +161,12 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
                         ENDIF
                      ELSE
                         /* Create little .prg stub which includes the binary */
-                        cTmp := "/* WARNING: Automatically generated source file. DO NOT EDIT! */" + hb_osNewLine() +;
-                                hb_osNewLine() +;
-                                "#pragma -km+" + hb_osNewLine() +;
-                                hb_osNewLine() +;
-                                "FUNCTION hbqtres_" + hbmk2_FNameToSymbol( hbmk2_FNameNameGet( cSrc ) ) + "()" + hb_osNewLine() +;
-                                "   #pragma __binarystreaminclude " + Chr( 34 ) + hbmk2_FNameNameExtGet( cDst ) + Chr( 34 ) + "|RETURN %s" + hb_osNewLine()
+                        cTmp := "/* WARNING: Automatically generated source file. DO NOT EDIT! */" + hb_eol() +;
+                                hb_eol() +;
+                                "#pragma -km+" + hb_eol() +;
+                                hb_eol() +;
+                                "FUNCTION hbqtres_" + hbmk2_FNameToSymbol( hbmk2_FNameNameGet( cSrc ) ) + "()" + hb_eol() +;
+                                "   #pragma __binarystreaminclude " + Chr( 34 ) + hbmk2_FNameNameExtGet( cDst ) + Chr( 34 ) + "|RETURN %s" + hb_eol()
 
                         IF ! hb_MemoWrit( cPRG, cTmp )
                            hbmk2_OutErr( hbmk2, hb_StrFormat( "Error: Cannot create file: %1$s", cPRG ) )
@@ -410,14 +410,14 @@ PROCEDURE Main( cSrc, cDst )
                nError := 9
             ENDIF
          ELSE
-            OutErr( "Error: Calling 'uic' tool: " + hb_ntos( nError ) + hb_osNewLine() )
+            OutErr( "Error: Calling 'uic' tool: " + hb_ntos( nError ) + hb_eol() )
          ENDIF
          EXIT
       ENDSWITCH
 
       FErase( cTmp )
    ELSE
-      OutErr( "Missing parameter. Call with: <input> <output>" + hb_osNewLine() )
+      OutErr( "Missing parameter. Call with: <input> <output>" + hb_eol() )
       nError := 8
    ENDIF
 
@@ -445,7 +445,7 @@ STATIC FUNCTION uic_to_prg( hbmk2, cFileNameSrc, cFileNameDst, cName )
 
       IF ! Empty( aLinesPRG )
          cFile := ""
-         AEval( aLinesPRG, {| cLine | cFile += cLine + hb_osNewLine() } )
+         AEval( aLinesPRG, {| cLine | cFile += cLine + hb_eol() } )
          IF hb_MemoWrit( cFileNameDst, cFile )
             RETURN .T.
          ELSE

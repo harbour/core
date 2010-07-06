@@ -116,33 +116,36 @@ PROCEDURE _APPMAIN( cFile, ... )
             hbrun_Prompt()
             EXIT
          OTHERWISE
-            hb_FNameSplit( cFile, NIL, NIL, @cExt )
-            cExt := lower( cExt )
-            SWITCH cExt
-               CASE ".prg"
-               CASE ".hbs"
-               CASE ".hrb"
-               CASE ".dbf"
-                  EXIT
-               OTHERWISE
-                  cExt := hbrun_FileSig( cFile )
-            ENDSWITCH
-            SWITCH cExt
-               CASE ".dbf"
-                  hbrun_Prompt( "USE " + cFile )
-                  EXIT
-               CASE ".prg"
-               CASE ".hbs"
-                  cFile := HB_COMPILEBUF( HB_ARGV( 0 ), "-n2", "-w", "-es2", "-q0", ;
-                                          s_aIncDir, "-D" + "__HBSCRIPT__HBRUN", cFile )
-                  IF cFile == NIL
-                     ERRORLEVEL( 1 )
-                  ENDIF
-               OTHERWISE
-                  hb_argShift( .T. )
-                  hb_hrbRun( cFile, ... )
-                  EXIT
-            ENDSWITCH
+            cFile := hbrun_FindInPath( cFile )
+            IF ! Empty( cFile )
+               hb_FNameSplit( cFile, NIL, NIL, @cExt )
+               cExt := lower( cExt )
+               SWITCH cExt
+                  CASE ".prg"
+                  CASE ".hbs"
+                  CASE ".hrb"
+                  CASE ".dbf"
+                     EXIT
+                  OTHERWISE
+                     cExt := hbrun_FileSig( cFile )
+               ENDSWITCH
+               SWITCH cExt
+                  CASE ".dbf"
+                     hbrun_Prompt( "USE " + cFile )
+                     EXIT
+                  CASE ".prg"
+                  CASE ".hbs"
+                     cFile := HB_COMPILEBUF( HB_ARGV( 0 ), "-n2", "-w", "-es2", "-q0", ;
+                                             s_aIncDir, "-D" + "__HBSCRIPT__HBRUN", cFile )
+                     IF cFile == NIL
+                        ERRORLEVEL( 1 )
+                     ENDIF
+                  OTHERWISE
+                     hb_argShift( .T. )
+                     hb_hrbRun( cFile, ... )
+                     EXIT
+               ENDSWITCH
+            ENDIF
       ENDSWITCH
    ELSE
       hbrun_Prompt()
@@ -284,11 +287,11 @@ STATIC PROCEDURE hbrun_Prompt( cCommand )
 
 STATIC PROCEDURE hbrun_Usage()
 
-   OutStd( 'Harbour "DOt Prompt" Console / runner ' + HBRawVersion() + HB_OSNewLine() +;
-           "Copyright (c) 1999-2010, Przemyslaw Czerpak" + HB_OSNewLine() + ;
-           "http://harbour-project.org/" + HB_OSNewLine() +;
-           HB_OSNewLine() +;
-           "Syntax:  hbrun [<file[.prg|.hbs|.hrb]> [<parameters,...>]]" + HB_OSNewLine() )
+   OutStd( 'Harbour "DOt Prompt" Console / runner ' + HBRawVersion() + hb_eol() +;
+           "Copyright (c) 1999-2010, Przemyslaw Czerpak" + hb_eol() + ;
+           "http://harbour-project.org/" + hb_eol() +;
+           hb_eol() +;
+           "Syntax:  hbrun [<file[.prg|.hbs|.hrb]> [<parameters,...>]]" + hb_eol() )
 
    RETURN
 
@@ -352,7 +355,7 @@ STATIC PROCEDURE hbrun_Err( oErr, cCommand )
 STATIC PROCEDURE hbrun_Exec( cCommand )
    LOCAL pHRB, cHRB, cFunc, bBlock, cEol
 
-   cEol := hb_osNewLine()
+   cEol := hb_eol()
    cFunc := "STATIC FUNC __HBDOT()" + cEol + ;
             "RETURN {||" + cEol + ;
             "   " + cCommand + cEol + ;
@@ -418,7 +421,7 @@ STATIC PROCEDURE hbrun_HistorySave()
       cHistory := ""
       FOR EACH cLine IN s_aHistory
          IF !( Lower( AllTrim( cLine ) ) == "quit" )
-            cHistory += AllTrim( cLine ) + hb_osNewLine()
+            cHistory += AllTrim( cLine ) + hb_eol()
          ENDIF
       NEXT
       hb_MemoWrit( hbrun_HistoryFileName(), cHistory )
@@ -444,7 +447,7 @@ STATIC FUNCTION hbrun_HistoryFileName()
 #endif
 
    IF ! Empty( GetEnv( cEnvVar ) )
-      cDir := GetEnv( cEnvVar ) + hb_osPathSeparator() + ".harbour"
+      cDir := GetEnv( cEnvVar ) + hb_ps() + ".harbour"
    ELSE
       cDir := hb_dirBase()
    ENDIF
@@ -453,4 +456,58 @@ STATIC FUNCTION hbrun_HistoryFileName()
       MakeDir( cDir )
    ENDIF
 
-   RETURN cDir + hb_osPathSeparator() + cFileName
+   RETURN cDir + hb_ps() + cFileName
+
+STATIC FUNCTION hbrun_FindInPath( cFileName )
+   LOCAL cDir
+   LOCAL cName
+   LOCAL cExt
+
+   LOCAL cDirPATH
+
+   hb_FNameSplit( cFileName, @cDir, @cName, @cExt )
+
+   FOR EACH cExt IN iif( Empty( cExt ), { ".hbs", ".hrb" }, { cExt } )
+
+      /* Check original filename (in supplied path or current dir) */
+      IF hb_FileExists( cFileName := hb_FNameMerge( cDir, cName, cExt ) )
+         RETURN cFileName
+      ENDIF
+
+      /* Check in the dir of this executable. */
+      IF ! Empty( hb_DirBase() )
+         IF hb_FileExists( cFileName := hb_FNameMerge( hb_DirBase(), cName, cExt ) )
+            RETURN cFileName
+         ENDIF
+      ENDIF
+
+      /* Check in the PATH. */
+      #if defined( __PLATFORM__WINDOWS ) .OR. ;
+          defined( __PLATFORM__DOS ) .OR. ;
+          defined( __PLATFORM__OS2 )
+      FOR EACH cDirPATH IN hb_ATokens( GetEnv( "PATH" ), hb_osPathListSeparator(), .T., .T. )
+      #else
+      FOR EACH cDirPATH IN hb_ATokens( GetEnv( "PATH" ), hb_osPathListSeparator() )
+      #endif
+         IF ! Empty( cDirPATH )
+            IF hb_FileExists( cFileName := hb_FNameMerge( hbrun_DirAddPathSep( hbrun_StrStripQuote( cDirPATH ) ), cName, cExt ) )
+               RETURN cFileName
+            ENDIF
+         ENDIF
+      NEXT
+   NEXT
+
+   RETURN NIL
+
+STATIC FUNCTION hbrun_DirAddPathSep( cDir )
+
+   IF ! Empty( cDir ) .AND. !( Right( cDir, 1 ) == hb_ps() )
+      cDir += hb_ps()
+   ENDIF
+
+   RETURN cDir
+
+STATIC FUNCTION hbrun_StrStripQuote( cString )
+   RETURN iif( Left( cString, 1 ) == '"' .AND. Right( cString, 1 ) == '"',;
+               SubStr( cString, 2, Len( cString ) - 2 ),;
+               cString )
