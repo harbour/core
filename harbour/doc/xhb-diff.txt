@@ -1074,10 +1074,10 @@ goal of DATETIME values and their arithmetic in xHarbour VM for the future.
 Both compilers tries to support VFP like datetime constant values
 in the following format:
       { ^ [ YYYY-MM-DD [,] ] [ HH[:MM[:SS][.FFF]] [AM|PM] ] }
-In Harbour the following characters can be used as date delimiters: "-", "/".
-Dot "." as date delimiter is not supported.
+In Harbour and VFP the following characters can be used as date delimiters:
+"-", "/" and "."
 xHarbour supports only "/" as date delimiter.
-There is no limit on number of characters in YYYY, MM, DD, HH, MM, SS, FFF
+There is no limit on number of digits in YYYY, MM, DD, HH, MM, SS, FFF
 parts. Important is only their value. This is the format in semi PP notation:
       { ^ <YEAR> <sep:/-> <MONTH> <sep:/-> <DAY> [[<sep2:,>]
         [ <HOUR> [ : <MIN> [ : <SEC> [ . <FRAQ> ] ] ] [AM|PP] ] }
@@ -1092,10 +1092,6 @@ only time part.
 Harbour supports VFP syntax only in Compiler. It's not supported in
 macrocompiler and it can be disabled in the future so it's not suggested
 to use with Harbour programs.
-
-Both compilers supports also date constants in the form 0dYYYYMMDD f.e.:
-      0d20090520.
-It's also supported by macrocompilers.
 
 Only Harbour supports date constant (in compiler and macrocompiler) in the
 form d"YYYY-MM-DD" f.e.:
@@ -1115,6 +1111,10 @@ f.e.:
       tValue := t"2009-03-21T17:31:45.437"
 The following characters can be used as date delimiters: "-", "/", "."
 if PM or AM is used HH is in range < 1 : 12 > otherwise in range < 0 : 23 >
+
+Harbour compiler and macrocompiler support also date constants in the
+form 0dYYYYMMDD f.e.:
+      0d20090520.
 
 
 

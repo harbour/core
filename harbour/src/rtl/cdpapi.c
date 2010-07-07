@@ -2087,14 +2087,11 @@ static PHB_CODEPAGE * hb_cdpFindPos( const char * id )
 
    cdp_ptr = &s_cdpList;
 
-   if( id )
+   while( *cdp_ptr )
    {
-      while( *cdp_ptr )
-      {
-         if( strcmp( ( *cdp_ptr )->id, id ) == 0 )
-            break;
-         cdp_ptr = &( *cdp_ptr )->next;
-      }
+      if( strcmp( ( *cdp_ptr )->id, id ) == 0 )
+         break;
+      cdp_ptr = &( *cdp_ptr )->next;
    }
 
    return cdp_ptr;
@@ -2212,10 +2209,8 @@ const char * hb_cdpSelectID( const char * id )
 const char ** hb_cdpList( void )
 {
    PHB_CODEPAGE cdp;
-   int iCount;
+   int iCount, iPos;
    const char ** list;
-
-   HB_CDP_LOCK
 
    cdp = s_cdpList;
    iCount = 0;
@@ -2228,15 +2223,13 @@ const char ** hb_cdpList( void )
    list = ( const char ** ) hb_xgrab( ( iCount + 1 ) * sizeof( char * ) );
 
    cdp = s_cdpList;
-   iCount = 0;
-   while( cdp )
+   iPos = 0;
+   while( cdp && iPos < iCount )
    {
-      list[ iCount++ ] = cdp->id;
+      list[ iPos++ ] = cdp->id;
       cdp = cdp->next;
    }
-   list[ iCount ] = NULL;
-
-   HB_CDP_UNLOCK
+   list[ iPos ] = NULL;
 
    return list;
 }

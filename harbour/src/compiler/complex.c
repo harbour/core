@@ -379,13 +379,10 @@ static int hb_comp_dayTimeDecode( PHB_COMP_LEX pLex, PHB_PP_TOKEN pToken,
     * to follow the hours with a colon.
     *    { ^ <YEAR> <sep:/.-> <MONTH> <sep:/.-> <DAY> [[<sep2:,>]
     *      [ <HOUR> [ : <MIN> [ : <SEC> [ . <FRAQ> ] ] ] [AM|PP] ] }
-    * We will not accept dot as date delimiter to avoid possible
-    * conflicts with PP.
     */
 
-   /* Now support for dates constatns: {^YYYY/MM/DD} or {^YYYY-MM-DD} */
-   PHB_PP_TOKEN pYear, pMonth, pDay;
-   HB_MAXINT lYear, lMonth, lDay;
+   PHB_PP_TOKEN pYear, pMonth, pDay, pTime = NULL;
+   HB_MAXINT lYear = 0, lMonth = 0, lDay = 0;
    long lDate = 0, lTime = 0;
    double dNumber;
    int iDec, iWidth, iType = 0;
@@ -412,18 +409,45 @@ static int hb_comp_dayTimeDecode( PHB_COMP_LEX pLex, PHB_PP_TOKEN pToken,
                 !hb_compStrToNum( pDay->value, pDay->len, &lDay, &dNumber,
                                   &iDec, &iWidth ) )
             {
-               pDay = pDay->pNext;
-               lDate = hb_dateEncode( ( long ) lYear, ( long ) lMonth, ( long ) lDay );
-               if( lDate != 0 || ( lYear == 0 && lMonth == 0 && lDay == 0 ) )
+               pTime = pDay->pNext;
+            }
+         }
+      }
+      else if( HB_PP_TOKEN_TYPE( pYear->pNext->type ) == HB_PP_TOKEN_NUMBER &&
+               pYear->pNext->pNext )
+      {
+         if( hb_compStrToNum( pYear->value, pYear->len, &lYear, &dNumber,
+                              &iDec, &iWidth ) )
+         {
+            if( iDec == 2 )
+            {
+               lYear = ( HB_MAXINT ) dNumber;
+               lMonth = ( HB_MAXINT ) ( dNumber * 100 + 0.1 ) % 100;
+               pDay = pYear->pNext;
+               if( hb_compStrToNum( pDay->value, pDay->len, &lDay, &dNumber,
+                                    &iDec, &iWidth ) )
                {
-                  iType = NUM_DATE;
-                  if( HB_PP_TOKEN_TYPE( pDay->type ) != HB_PP_TOKEN_RIGHT_CB )
+                  if( iDec == 2 )
                   {
-                     if( HB_PP_TOKEN_TYPE( pDay->type ) == HB_PP_TOKEN_COMMA )
-                        pDay = pDay->pNext;
-                     iType = hb_comp_timeDecode( pDay, &lTime ) ? TIMESTAMP : 0;
+                     lDay = ( HB_MAXINT ) ( dNumber * 100 + 0.1 );
+                     pTime = pDay->pNext;
                   }
                }
+            }
+         }
+      }
+
+      if( pTime )
+      {
+         lDate = hb_dateEncode( ( long ) lYear, ( long ) lMonth, ( long ) lDay );
+         if( lDate != 0 || ( lYear == 0 && lMonth == 0 && lDay == 0 ) )
+         {
+            iType = NUM_DATE;
+            if( HB_PP_TOKEN_TYPE( pTime->type ) != HB_PP_TOKEN_RIGHT_CB )
+            {
+               if( HB_PP_TOKEN_TYPE( pTime->type ) == HB_PP_TOKEN_COMMA )
+                  pTime = pTime->pNext;
+               iType = hb_comp_timeDecode( pTime, &lTime ) ? TIMESTAMP : 0;
             }
          }
       }
