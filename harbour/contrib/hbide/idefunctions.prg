@@ -592,6 +592,7 @@ METHOD IdeFunctions:consolidateList()
 
 METHOD IdeFunctions:populateTable()
    LOCAL oTbl, qItm, a_, n, s, k_:={}
+   LOCAL qApp := QApplication():new()
 
    ::clear( .t. )
    ::buildHeader()
@@ -608,39 +609,36 @@ METHOD IdeFunctions:populateTable()
       oTbl:setItem( n, 0, qItm )
       oTbl:setRowHeight( n, 16 )
 
-      QApplication():new():processEvents()
+      qApp:processEvents()
 
       aadd( ::aItems, qItm )
       n++
       ::oUI:q_labelEntries:setText( "Entries: " + hb_ntos( n ) )
    NEXT
 
-   ::qProtoList:clear()
-
    FOR EACH a_ IN ::aList
       s := a_[ 2 ]
-      IF ( n := at( "(", s ) ) == 0
-         IF ( n := at( " ", s ) ) > 0
-            aadd( k_, substr( s, 1, n - 1 ) )
-         ELSE
-            aadd( k_, trim( s ) )
-         ENDIF
+      IF ::oINI:lCompletionWithArgs
+         aadd( k_, trim( s ) )
       ELSE
-         aadd( k_, substr( s, 1, n - 1 ) )
+         IF ( n := at( "(", s ) ) == 0
+            IF ( n := at( " ", s ) ) > 0
+               aadd( k_, substr( s, 1, n - 1 ) )
+            ELSE
+               aadd( k_, trim( s ) )
+            ENDIF
+         ELSE
+            aadd( k_, substr( s, 1, n - 1 ) )
+         ENDIF
       ENDIF
    NEXT
 
    asort( k_, , , {|e,f| lower( e ) < lower( f ) } )
+
+   ::qProtoList:clear()
    aeval( k_, {|e| ::qProtoList:append( e ) } )
 
-   ::qCompModel:setStringList( ::qProtoList )
-   ::qCompleter:setModel( ::qCompModel )
-   ::qCompleter:setModelSorting( QCompleter_CaseInsensitivelySortedModel )
-   ::qCompleter:setCaseSensitivity( Qt_CaseInsensitive )
-   ::qCompleter:setCompletionMode( QCompleter_PopupCompletion )
-   ::qCompleter:setWrapAround( .f. )
-
-   QListView():from( ::qCompleter:popup() ):setAlternatingRowColors( .t. )
+   ::oEM:updateCompleter()
 
    RETURN Self
 

@@ -175,6 +175,7 @@ CLASS IdeEditsManager INHERIT IdeObject
    METHOD spaces2tabs()
    METHOD qscintilla()
    METHOD setStyleSheet( nMode )
+   METHOD updateCompleter()
 
    ENDCLASS
 
@@ -230,9 +231,18 @@ METHOD IdeEditsManager:create( oIde )
    aadd( ::aActions, { ""             , ::qContextSub:addSeparator() } )
    aadd( ::aActions, { "Close Split"  , ::qContextSub:addAction( "Close Split Window" ) } )
 
+   /* Define code completer */
    ::oIde:qProtoList := QStringList():new()
    ::oIde:qCompModel := QStringListModel():new()
    ::oIde:qCompleter := QCompleter():new()
+   ::connect( ::qCompleter, "activated(QString)", {|p| ::execEvent( qcompleter_activated, p ) } )
+   ::updateCompleter()
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:updateCompleter()
 
    ::qCompModel:setStringList( ::qProtoList )
    ::qCompleter:setModel( ::qCompModel )
@@ -241,7 +251,7 @@ METHOD IdeEditsManager:create( oIde )
    ::qCompleter:setCompletionMode( QCompleter_PopupCompletion )
    ::qCompleter:setWrapAround( .f. )
 
-   ::connect( ::qCompleter, "activated(QString)", {|p| ::execEvent( qcompleter_activated, p ) } )
+   QListView():from( ::qCompleter:popup() ):setAlternatingRowColors( .t. )
 
    RETURN Self
 

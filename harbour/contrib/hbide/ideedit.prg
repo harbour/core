@@ -234,6 +234,7 @@ CLASS IdeEdit INHERIT IdeObject
    METHOD findEx( cText, nFlags, nStart )
    METHOD highlightAll( cText )
    METHOD unHighlight()
+   METHOD parseCodeCompletion( cSyntax )
 
    ENDCLASS
 
@@ -2196,6 +2197,23 @@ METHOD IdeEdit:hidePrototype()
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeEdit:parseCodeCompletion( cSyntax )
+   LOCAL cText, n
+
+   IF ::oINI:lCompleteArgumented
+      cText := trim( cSyntax )
+   ELSE
+      IF ( n := at( "(", cSyntax ) ) > 0
+         cText := trim( substr( cSyntax, 1, n - 1 ) )
+      ELSE
+         cText := trim( cSyntax )
+      ENDIF
+   ENDIF
+
+   RETURN cText
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeEdit:completeCode( p )
    LOCAL qCursor := QTextCursor():from( ::qEdit:textCursor() )
 
@@ -2203,7 +2221,7 @@ METHOD IdeEdit:completeCode( p )
 
    qCursor:movePosition( QTextCursor_StartOfWord )
    qCursor:movePosition( QTextCursor_EndOfWord, QTextCursor_KeepAnchor )
-   qCursor:insertText( p )
+   qCursor:insertText( ::parseCodeCompletion( p ) )
    qCursor:movePosition( QTextCursor_Left )
    qCursor:movePosition( QTextCursor_Right )
 

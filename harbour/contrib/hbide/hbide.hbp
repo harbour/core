@@ -43,6 +43,7 @@ idebrowse.prg
 
 docviewgenerator.ui
 docwriter.ui
+editor.ui
 environ.ui
 environments.ui
 finddialog.ui

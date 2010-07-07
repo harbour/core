@@ -510,6 +510,19 @@ METHOD IdeBrowseManager:loadTables()
 
    FOR EACH cInfo IN ::oINI:aDbuPanelsInfo
       aPanel := hb_aTokens( cInfo, "," )
+
+      aSize( aPanel, TBL_VRBLS )
+
+      DEFAULT aPanel[ TBL_PANEL    ] TO ""
+      DEFAULT aPanel[ TBL_NAME     ] TO ""
+      DEFAULT aPanel[ TBL_ALIAS    ] TO ""
+      DEFAULT aPanel[ TBL_DRIVER   ] TO ""
+      DEFAULT aPanel[ TBL_INDEX    ] TO 0
+      DEFAULT aPanel[ TBL_RECORD   ] TO 0
+      DEFAULT aPanel[ TBL_CURSOR   ] TO 0
+      DEFAULT aPanel[ TBL_GEOMETRY ] TO ""
+      DEFAULT aPanel[ TBL_NEXT     ] TO ""
+
       IF ::isPanel( aPanel[ 1 ] )
          IF hb_fileExists( cTable := hbide_pathToOSPath( aPanel[ 2 ] ) )
             ::setPanel( aPanel[ 1 ] )

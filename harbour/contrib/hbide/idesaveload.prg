@@ -162,6 +162,9 @@ CLASS IdeINI INHERIT IdeObject
    DATA   cBkpPath                                INIT  ""
    DATA   cBkpSuffix                              INIT  ".bkp"
 
+   DATA   lCompletionWithArgs                     INIT  .f.
+   DATA   lCompleteArgumented                     INIT  .f.
+
    METHOD new( oIde )
    METHOD create( oIde )
    METHOD load( cHbideIni )
@@ -248,6 +251,8 @@ METHOD IdeINI:save( cHbideIni )
    aadd( txt_, "TmpBkpPrd"                 + "=" +   hb_ntos( ::nTmpBkpPrd )                            )
    aadd( txt_, "BkpPath"                   + "=" +   ::cBkpPath                                         )
    aadd( txt_, "BkpSuffix"                 + "=" +   ::cBkpSuffix                                       )
+   aadd( txt_, "CodeListWithArgs"          + "=" +   iif( ::lCompletionWithArgs     , "YES", "NO" )     )
+   aadd( txt_, "CompletionWithArgs"        + "=" +   iif( ::lCompleteArgumented     , "YES", "NO" )     )
 
    aadd( txt_, "[PROJECTS]" )
    aadd( txt_, " " )
@@ -504,6 +509,8 @@ METHOD IdeINI:load( cHbideIni )
                      CASE "TmpBkpPrd"                   ; ::oINI:nTmpBkpPrd                   := val( cVal )  ; EXIT
                      CASE "BkpPath"                     ; ::oINI:cBkpPath                     := cVal ; EXIT
                      CASE "BkpSuffix"                   ; ::oINI:cBkpSuffix                   := cVal ; EXIT
+                     CASE "CodeListWithArgs"            ; ::oINI:lCompletionWithArgs          := cVal != "NO" ; EXIT
+                     CASE "CompletionWithArgs"          ; ::oINI:lCompleteArgumented          := cVal != "NO" ; EXIT
 
                      ENDSWITCH
                   ENDIF
@@ -795,7 +802,7 @@ CLASS IdeSetup INHERIT IdeObject
    DATA   oINI
    DATA   qOrgPalette
    DATA   aItems                                  INIT {}
-   DATA   aTree                                   INIT { "General", "Selections", "Font", "Paths", "Variables", "Dictionaries" }
+   DATA   aTree                                   INIT { "General", "Selections", "Font", "Paths", "Variables", "Dictionaries", "Themes" }
    DATA   aStyles                                 INIT { "cleanlooks", "windows", "windowsxp", ;
                                                          "windowsvista", "cde", "motif", "plastique", "macintosh" }
    DATA   aKeyItems                               INIT {}
@@ -968,6 +975,8 @@ METHOD IdeSetup:retrieve()
    ::oINI:nTmpBkpPrd := val( ::oUI:q_editTmpBkpPrd : text() )
    ::oINI:cBkpPath   := ::oUI:q_editBkpPath   : text()
    ::oINI:cBkpSuffix := ::oUI:q_editBkpSuffix : text()
+   ::oINI:lCompletionWithArgs := ::oUI:q_checkListlWithArgs : isChecked()
+   ::oINI:lCompleteArgumented := ::oUI:q_checkCmplInclArgs  : isChecked()
 
    RETURN Self
 
@@ -1017,9 +1026,11 @@ METHOD IdeSetup:populate()
    ::oUI:q_listTextExt:setSortingEnabled( .t. )
    ::oUI:q_listTextExt:sortItems()
 
-   ::oUI:q_editTmpBkpPrd : setText( hb_ntos( ::oINI:nTmpBkpPrd ) )
-   ::oUI:q_editBkpPath   : setText( ::oINI:cBkpPath   )
-   ::oUI:q_editBkpSuffix : setText( ::oINI:cBkpSuffix )
+   ::oUI:q_editTmpBkpPrd      : setText( hb_ntos( ::oINI:nTmpBkpPrd ) )
+   ::oUI:q_editBkpPath        : setText( ::oINI:cBkpPath   )
+   ::oUI:q_editBkpSuffix      : setText( ::oINI:cBkpSuffix )
+   ::oUI:q_checkListlWithArgs : setChecked( ::oINI:lCompletionWithArgs )
+   ::oUI:q_checkCmplInclArgs  : setChecked( ::oINI:lCompleteArgumented )
 
    ::connectSlots()
    RETURN Self
