@@ -332,7 +332,7 @@ typedef struct _HSXINFO
    HB_BOOL    fWrLocked;        /* the index is locked for writing */
 
    char *     pSearchVal;       /* current search value for HS_NEXT */
-   HB_SIZE    ulSearch;         /* the length of search value */
+   HB_SIZE    nSearch;          /* the length of search value */
    HB_BYTE *  pSearchKey;       /* current search key val for HS_NEXT */
    HB_ULONG   ulCurrRec;        /* current record for HS_NEXT */
 
@@ -465,7 +465,7 @@ static int hb_hsxHashVal( int c1, int c2, int iKeyBits,
    return iBitNum;
 }
 
-static void hb_hsxHashStr( const char * pStr, HB_SIZE ulLen, HB_BYTE * pKey, int iKeySize,
+static void hb_hsxHashStr( const char * pStr, HB_SIZE nLen, HB_BYTE * pKey, int iKeySize,
                            HB_BOOL fNoCase, int iFilter, HB_BOOL fUseHash )
 {
    int c1, c2, iBitNum, iKeyBits = iKeySize << 3;
@@ -474,16 +474,16 @@ static void hb_hsxHashStr( const char * pStr, HB_SIZE ulLen, HB_BYTE * pKey, int
 #if 0
 /* This code keeps the strict CFTS behavior which stops string
    manipulating at first chr(0) character */
-   if( pStr && ulLen-- && ( c1 = ( HB_UCHAR ) *pStr++ ) != 0 )
+   if( pStr && nLen-- && ( c1 = ( HB_UCHAR ) *pStr++ ) != 0 )
    {
-      while( ulLen-- && ( c2 = ( HB_UCHAR ) *pStr++ ) != 0 )
+      while( nLen-- && ( c2 = ( HB_UCHAR ) *pStr++ ) != 0 )
       {
 #else
    /* This version can work well with embedded 0 characters */
-   if( pStr && ulLen-- )
+   if( pStr && nLen-- )
    {
       c1 = ( HB_UCHAR ) *pStr++;
-      while( ulLen-- )
+      while( nLen-- )
       {
          c2 = ( HB_UCHAR ) *pStr++;
 #endif
@@ -497,20 +497,20 @@ static void hb_hsxHashStr( const char * pStr, HB_SIZE ulLen, HB_BYTE * pKey, int
    }
 }
 
-static int hb_hsxStrCmp( const char * pSub, HB_SIZE ulSub, const char * pStr, HB_SIZE ulLen,
+static int hb_hsxStrCmp( const char * pSub, HB_SIZE nSub, const char * pStr, HB_SIZE nLen,
                          HB_BOOL fNoCase, int iFilter )
 {
    HB_BOOL fResult = HB_FALSE;
    HB_UCHAR c1, c2;
    HB_SIZE ul;
 
-   if( ulSub == 0 )
+   if( nSub == 0 )
       return HSX_SUCCESSFALSE;
 
-   while( !fResult && ulLen >= ulSub )
+   while( !fResult && nLen >= nSub )
    {
       fResult = HB_TRUE;
-      for( ul = 0; fResult && ul < ulSub; ul++ )
+      for( ul = 0; fResult && ul < nSub; ul++ )
       {
          c1 = ( HB_UCHAR ) pSub[ ul ];
          c2 = ( HB_UCHAR ) pStr[ ul ];
@@ -543,7 +543,7 @@ static int hb_hsxStrCmp( const char * pSub, HB_SIZE ulSub, const char * pStr, HB
 #endif
          fResult = ( c1 == c2 );
       }
-      --ulLen;
+      --nLen;
       ++pStr;
    }
 
@@ -592,7 +592,7 @@ static int hb_hsxEval( int iHandle, PHB_ITEM pExpr, HB_BYTE *pKey, HB_BOOL *fDel
    LPHSXINFO pHSX = hb_hsxGetPointer( iHandle );
    int iResult = HSX_SUCCESS;
    const char * pStr;
-   HB_SIZE ulLen;
+   HB_SIZE nLen;
 
    if( ! pHSX )
       return HSX_BADHANDLE;
@@ -606,7 +606,7 @@ static int hb_hsxEval( int iHandle, PHB_ITEM pExpr, HB_BYTE *pKey, HB_BOOL *fDel
    if( hb_itemType( pExpr ) & HB_IT_STRING )
    {
       pStr = hb_itemGetCPtr( pExpr );
-      ulLen = hb_itemGetCLen( pExpr );
+      nLen = hb_itemGetCLen( pExpr );
       if( fDeleted )
          *fDeleted = HB_FALSE;
    }
@@ -625,7 +625,7 @@ static int hb_hsxEval( int iHandle, PHB_ITEM pExpr, HB_BYTE *pKey, HB_BOOL *fDel
       }
       pItem = hb_vmEvalBlockOrMacro( pExpr );
       pStr = hb_itemGetCPtr( pItem );
-      ulLen = hb_itemGetCLen( pItem );
+      nLen = hb_itemGetCLen( pItem );
       if( fDeleted )
       {
          AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
@@ -641,7 +641,7 @@ static int hb_hsxEval( int iHandle, PHB_ITEM pExpr, HB_BYTE *pKey, HB_BOOL *fDel
    }
 
    if( iResult == HSX_SUCCESS )
-      hb_hsxHashStr( pStr, ulLen, pKey, pHSX->uiRecordSize, pHSX->fIgnoreCase,
+      hb_hsxHashStr( pStr, nLen, pKey, pHSX->uiRecordSize, pHSX->fIgnoreCase,
                      pHSX->iFilterType, pHSX->fUseHash );
 
    return iResult;
@@ -698,14 +698,14 @@ static int hb_hsxFlush( int iHandle )
    if( pHSX->fChanged )
    {
       HB_FOFFSET fOffset;
-      HB_SIZE ulSize;
+      HB_SIZE nSize;
 
       fOffset = ( HB_FOFFSET ) HSXHEADER_LEN +
                 ( HB_FOFFSET ) ( pHSX->ulFirstRec - 1 ) *
                 ( HB_FOFFSET ) pHSX->uiRecordSize;
-      ulSize = pHSX->ulBufRec * pHSX->uiRecordSize;
+      nSize = pHSX->ulBufRec * pHSX->uiRecordSize;
 
-      if( hb_fileWriteAt( pHSX->pFile, pHSX->pBuffer, ulSize, fOffset ) != ulSize )
+      if( hb_fileWriteAt( pHSX->pFile, pHSX->pBuffer, nSize, fOffset ) != nSize )
          return HSX_BADWRITE;
 
       pHSX->fChanged = HB_FALSE;
@@ -777,7 +777,7 @@ static int hb_hsxRead( int iHandle, HB_ULONG ulRecord, HB_BYTE ** pRecPtr )
         ulRecord >= pHSX->ulFirstRec + pHSX->ulBufRec )
    {
       HB_FOFFSET fOffset;
-      HB_SIZE ulSize;
+      HB_SIZE nSize;
       HB_ULONG ulFirst;
       int iRetVal;
 
@@ -799,9 +799,9 @@ static int hb_hsxRead( int iHandle, HB_ULONG ulRecord, HB_BYTE ** pRecPtr )
       fOffset = ( HB_FOFFSET ) HSXHEADER_LEN +
                 ( HB_FOFFSET ) ( ulFirst - 1 ) *
                 ( HB_FOFFSET ) pHSX->uiRecordSize;
-      ulSize = pHSX->ulBufRec * pHSX->uiRecordSize;
+      nSize = pHSX->ulBufRec * pHSX->uiRecordSize;
 
-      if( hb_fileReadAt( pHSX->pFile, pHSX->pBuffer, ulSize, fOffset ) != ulSize )
+      if( hb_fileReadAt( pHSX->pFile, pHSX->pBuffer, nSize, fOffset ) != nSize )
       {
          pHSX->ulFirstRec = pHSX->ulBufRec = 0;
          return HSX_BADREAD;
@@ -1140,7 +1140,7 @@ static int hb_hsxAdd( int iHandle, HB_ULONG *pulRecNo, PHB_ITEM pExpr, HB_BOOL f
    return iRetVal;
 }
 
-static int hb_hsxSeekSet( int iHandle, const char * pStr, HB_SIZE ulLen )
+static int hb_hsxSeekSet( int iHandle, const char * pStr, HB_SIZE nLen )
 {
    LPHSXINFO pHSX = hb_hsxGetPointer( iHandle );
    int iRetVal;
@@ -1157,13 +1157,13 @@ static int hb_hsxSeekSet( int iHandle, const char * pStr, HB_SIZE ulLen )
       {
          if( pHSX->pSearchVal )
             hb_xfree( pHSX->pSearchVal );
-         pHSX->pSearchVal = ( char * ) hb_xgrab( ulLen + 1 );
-         memcpy( pHSX->pSearchVal, pStr, ulLen );
-         pHSX->pSearchVal[ ulLen ] = '\0';
-         pHSX->ulSearch = ulLen;
+         pHSX->pSearchVal = ( char * ) hb_xgrab( nLen + 1 );
+         memcpy( pHSX->pSearchVal, pStr, nLen );
+         pHSX->pSearchVal[ nLen ] = '\0';
+         pHSX->nSearch = nLen;
          if( ! pHSX->pSearchKey )
             pHSX->pSearchKey = ( HB_BYTE * ) hb_xgrab( pHSX->uiRecordSize );
-         hb_hsxHashStr( pStr, ulLen, pHSX->pSearchKey,
+         hb_hsxHashStr( pStr, nLen, pHSX->pSearchKey,
                         pHSX->uiRecordSize, pHSX->fIgnoreCase,
                         pHSX->iFilterType, pHSX->fUseHash );
          pHSX->ulCurrRec = 0;
@@ -1264,8 +1264,8 @@ static void hb_hsxExpDestroy( PHB_ITEM pItem )
    hb_itemRelease( pItem );
 }
 
-static int hb_hsxVerify( int iHandle, const char * szText, HB_SIZE ulLen,
-                         const char * szSub, HB_SIZE ulSub, int iType )
+static int hb_hsxVerify( int iHandle, const char * szText, HB_SIZE nLen,
+                         const char * szSub, HB_SIZE nSub, int iType )
 {
    LPHSXINFO pHSX = hb_hsxGetPointer( iHandle );
    int iResult;
@@ -1273,14 +1273,14 @@ static int hb_hsxVerify( int iHandle, const char * szText, HB_SIZE ulLen,
    if( !szSub && pHSX )
    {
       szSub = pHSX->pSearchVal;
-      ulSub = pHSX->ulSearch;
+      nSub = pHSX->nSearch;
    }
    if( !pHSX )
       iResult = HSX_BADHANDLE;
    else if( !szText || !szSub )
       iResult = HSX_BADPARMS;
-   else if( ulSub > ulLen || ulSub == 0 )
-      /* !ulSub -> do not accept empty substrings as $ operator at runtime */
+   else if( nSub > nLen || nSub == 0 )
+      /* !nSub -> do not accept empty substrings as $ operator at runtime */
       iResult = HSX_SUCCESSFALSE;
    else
    {
@@ -1289,23 +1289,23 @@ static int hb_hsxVerify( int iHandle, const char * szText, HB_SIZE ulLen,
       switch( iType )
       {
          case HSX_VERIFY_BEGIN:
-            iResult = hb_hsxStrCmp( szSub, ulSub, szText, ulSub,
+            iResult = hb_hsxStrCmp( szSub, nSub, szText, nSub,
                                     pHSX->fIgnoreCase, pHSX->iFilterType );
             break;
          case HSX_VERIFY_END:
-            iResult = hb_hsxStrCmp( szSub, ulSub, szText + ulLen - ulSub, ulSub,
+            iResult = hb_hsxStrCmp( szSub, nSub, szText + nLen - nSub, nSub,
                                     pHSX->fIgnoreCase, pHSX->iFilterType );
             break;
          case HSX_VERIFY_AND:
             iResult = HSX_SUCCESS;
-            for( ul = 0; ul < ulSub && iResult == HSX_SUCCESS; ul++ )
+            for( ul = 0; ul < nSub && iResult == HSX_SUCCESS; ul++ )
             {
-               while( szSub[ ul ] == ' ' && ul < ulSub )
+               while( szSub[ ul ] == ' ' && ul < nSub )
                   ++ul;
                ull = ul;
-               while( szSub[ ull ] != ' ' && ull < ulSub )
+               while( szSub[ ull ] != ' ' && ull < nSub )
                   ++ull;
-               iResult = hb_hsxStrCmp( &szSub[ ul ], ull - ul, szText, ulLen,
+               iResult = hb_hsxStrCmp( &szSub[ ul ], ull - ul, szText, nLen,
                                        pHSX->fIgnoreCase, pHSX->iFilterType );
                ul = ull;
             }
@@ -1313,14 +1313,14 @@ static int hb_hsxVerify( int iHandle, const char * szText, HB_SIZE ulLen,
 /*
          case HSX_VERIFY_OR:
             iResult = HSX_SUCCESSFALSE;
-            for( ul = 0; ul < ulSub && iResult == HSX_SUCCESSFALSE; ul++ )
+            for( ul = 0; ul < nSub && iResult == HSX_SUCCESSFALSE; ul++ )
             {
-               while( szSub[ ul ] == ' ' && ul < ulSub )
+               while( szSub[ ul ] == ' ' && ul < nSub )
                   ++ul;
                ull = ul;
-               while( szSub[ ull ] != ' ' && ull < ulSub )
+               while( szSub[ ull ] != ' ' && ull < nSub )
                   ++ull;
-               iResult = hb_hsxStrCmp( &szSub[ ul ], ull - ul, szText, ulLen,
+               iResult = hb_hsxStrCmp( &szSub[ ul ], ull - ul, szText, nLen,
                                        pHSX->fIgnoreCase, pHSX->iFilterType );
                ul = ull;
             }
@@ -1328,7 +1328,7 @@ static int hb_hsxVerify( int iHandle, const char * szText, HB_SIZE ulLen,
 */
          case HSX_VERIFY_PHRASE:
          default:
-            iResult = hb_hsxStrCmp( szSub, ulSub, szText, ulLen,
+            iResult = hb_hsxStrCmp( szSub, nSub, szText, nLen,
                                     pHSX->fIgnoreCase, pHSX->iFilterType );
       }
    }
@@ -1601,7 +1601,7 @@ static int hb_hsxIndex( const char * szFile, PHB_ITEM pExpr, int iKeySize,
    return hb_hsxOpen( szFile, iBufSize, iMode );
 }
 
-static int hb_hsxFilter( int iHandle, const char * pSeek, HB_SIZE ulSeek,
+static int hb_hsxFilter( int iHandle, const char * pSeek, HB_SIZE nSeek,
                          PHB_ITEM pVerify, int iVerifyType )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
@@ -1640,7 +1640,7 @@ static int hb_hsxFilter( int iHandle, const char * pSeek, HB_SIZE ulSeek,
 
    errCode = SELF_RECNO( pArea, &ulRecNo );
    if( errCode != HB_FAILURE )
-      iResult = hb_hsxSeekSet( iHandle, pSeek, ulSeek );
+      iResult = hb_hsxSeekSet( iHandle, pSeek, nSeek );
 
    fValid = HB_TRUE;
    pItem = hb_itemNew( NULL );
@@ -1660,7 +1660,7 @@ static int hb_hsxFilter( int iHandle, const char * pSeek, HB_SIZE ulSeek,
          fValid = hb_hsxVerify( iHandle,
                                 hb_itemGetCPtr( pArea->valResult ),
                                 hb_itemGetCLen( pArea->valResult ),
-                                pSeek, ulSeek, iVerifyType ) == HSX_SUCCESS;
+                                pSeek, nSeek, iVerifyType ) == HSX_SUCCESS;
       }
       if( fValid )
       {
@@ -1835,14 +1835,14 @@ HB_FUNC( HS_FILTER )
 {
    const char * szText = hb_parc( 2 );
    char * pBuff = NULL;
-   HB_SIZE ulLen = hb_parclen( 2 ), ull, ul;
+   HB_SIZE nLen = hb_parclen( 2 ), ull, ul;
    HB_ULONG ulRecords = 0;
    int iHandle = -1, iResult = HSX_BADPARMS;
    HB_BOOL fNew = HB_FALSE, fToken = HB_TRUE;
 
    if( hb_parclen( 1 ) > 0 )
    {
-      if( ulLen > 0 )
+      if( nLen > 0 )
       {
          iHandle = hb_hsxOpen( hb_parc( 1 ), hb_parni( 4 ),
                hb_param( 5, HB_IT_NUMERIC ) ? hb_parni( 5 ) : HSXDEFOPENMODE );
@@ -1863,19 +1863,19 @@ HB_FUNC( HS_FILTER )
          iHandle = pHSX->iHandle;
          if( !szText )
          {
-            ulLen = pHSX->ulSearch;
-            if( ulLen && pHSX->pSearchVal )
+            nLen = pHSX->nSearch;
+            if( nLen && pHSX->pSearchVal )
             {
-               pBuff = ( char * ) hb_xgrab( ulLen + 1 );
-               memcpy( pBuff, pHSX->pSearchVal, ulLen );
-               pBuff[ ulLen ] = '\0';
+               pBuff = ( char * ) hb_xgrab( nLen + 1 );
+               memcpy( pBuff, pHSX->pSearchVal, nLen );
+               pBuff[ nLen ] = '\0';
                szText = pBuff;
                fToken = HB_FALSE;
             }
          }
       }
    }
-   if( iHandle >= 0 && ulLen > 0 )
+   if( iHandle >= 0 && nLen > 0 )
    {
       PHB_ITEM pItem = hb_itemNew( NULL );
       AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
@@ -1894,12 +1894,12 @@ HB_FUNC( HS_FILTER )
          if( fToken )
          {
             iResult = HSX_SUCCESS;
-            for( ul = 0; ul < ulLen && iResult == HSX_SUCCESS; ul++ )
+            for( ul = 0; ul < nLen && iResult == HSX_SUCCESS; ul++ )
             {
-               while( szText[ ul ] == ' ' && ul < ulLen )
+               while( szText[ ul ] == ' ' && ul < nLen )
                   ++ul;
                ull = ul;
-               while( szText[ ull ] != ' ' && ull < ulLen )
+               while( szText[ ull ] != ' ' && ull < nLen )
                   ++ull;
                iResult = hb_hsxFilter( iHandle, &szText[ ul ], ull - ul,
                                  hb_param( 3, HB_IT_ANY ), HSX_VERIFY_PHRASE );
@@ -1908,7 +1908,7 @@ HB_FUNC( HS_FILTER )
          }
          else
          {
-            iResult = hb_hsxFilter( iHandle, szText, ulLen,
+            iResult = hb_hsxFilter( iHandle, szText, nLen,
                                     hb_param( 3, HB_IT_ANY ),
                                     HSX_VERIFY_PHRASE );
          }
@@ -1962,7 +1962,7 @@ HB_FUNC( HS_VERIFY )
       int iHandle = hb_parni( 1 );
       PHB_ITEM pExpr = hb_param( 2, HB_IT_BLOCK );
       const char * szText = NULL;
-      HB_SIZE ulLen = 0;
+      HB_SIZE nLen = 0;
       LPHSXINFO pHSX;
 
       pHSX = hb_hsxGetPointer( iHandle );
@@ -1982,10 +1982,10 @@ HB_FUNC( HS_VERIFY )
       if( pExpr )
       {
          szText = hb_itemGetCPtr( pExpr );
-         ulLen = hb_itemGetCLen( pExpr );
+         nLen = hb_itemGetCLen( pExpr );
       }
 
-      hb_retni( hb_hsxVerify( hb_parni( 1 ), szText, ulLen,
+      hb_retni( hb_hsxVerify( hb_parni( 1 ), szText, nLen,
                               hb_parc( 3 ), hb_parclen( 3 ),
                               hb_parni( 4 ) ) );
    }
@@ -1993,21 +1993,21 @@ HB_FUNC( HS_VERIFY )
    {
       PHB_ITEM pExpr = hb_param( 1, HB_IT_BLOCK );
       const char * szSub = hb_parc( 2 ), * szText = NULL;
-      HB_SIZE ulSub = hb_parclen( 2 ), ulLen = 0;
+      HB_SIZE nSub = hb_parclen( 2 ), nLen = 0;
       HB_BOOL fIgnoreCase = hb_parl( 3 );
 
-      if( ulSub )
+      if( nSub )
       {
          pExpr = pExpr ? hb_vmEvalBlockOrMacro( pExpr ) : hb_param( 2, HB_IT_STRING );
 
          if( pExpr )
          {
             szText = hb_itemGetCPtr( pExpr );
-            ulLen = hb_itemGetCLen( pExpr );
+            nLen = hb_itemGetCLen( pExpr );
          }
       }
-      hb_retl( ulLen && ulSub && hb_hsxStrCmp( szSub, ulSub, szText, ulLen,
-                                               fIgnoreCase, 3 ) );
+      hb_retl( nLen && nSub && hb_hsxStrCmp( szSub, nSub, szText, nLen,
+                                             fIgnoreCase, 3 ) );
    }
 }
 

@@ -92,20 +92,20 @@ typedef struct _HB_GTCGI
    int            iLineBufSize;
    char *         sLineBuf;
    char *         szCrLf;
-   HB_SIZE        ulCrLf;
+   HB_SIZE        nCrLf;
    HB_BOOL        fDispTrans;
    PHB_CODEPAGE   cdpTerm;
    PHB_CODEPAGE   cdpHost;
 } HB_GTCGI, * PHB_GTCGI;
 
-static void hb_gt_cgi_termOut( PHB_GTCGI pGTCGI, const char * szStr, HB_SIZE ulLen )
+static void hb_gt_cgi_termOut( PHB_GTCGI pGTCGI, const char * szStr, HB_SIZE nLen )
 {
-   hb_fsWriteLarge( pGTCGI->hStdout, szStr, ulLen );
+   hb_fsWriteLarge( pGTCGI->hStdout, szStr, nLen );
 }
 
 static void hb_gt_cgi_newLine( PHB_GTCGI pGTCGI )
 {
-   hb_gt_cgi_termOut( pGTCGI, pGTCGI->szCrLf, pGTCGI->ulCrLf );
+   hb_gt_cgi_termOut( pGTCGI, pGTCGI->szCrLf, pGTCGI->nCrLf );
 }
 
 static void hb_gt_cgi_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFilenoStdout, HB_FHANDLE hFilenoStderr )
@@ -121,7 +121,7 @@ static void hb_gt_cgi_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    pGTCGI->hStdout = hFilenoStdout;
 
    pGTCGI->szCrLf = hb_strdup( hb_conNewLine() );
-   pGTCGI->ulCrLf = strlen( pGTCGI->szCrLf );
+   pGTCGI->nCrLf = strlen( pGTCGI->szCrLf );
 
    hb_fsSetDevMode( pGTCGI->hStdout, FD_BINARY );
 
@@ -250,22 +250,22 @@ static HB_BOOL hb_gt_cgi_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const ch
 }
 
 #ifdef HB_GT_CGI_RAWOUTPUT
-static void hb_gt_cgi_WriteCon( PHB_GT pGT, const char * szText, HB_SIZE ulLength )
+static void hb_gt_cgi_WriteCon( PHB_GT pGT, const char * szText, HB_SIZE nLength )
 {
    PHB_GTCGI pGTCGI = HB_GTCGI_GET( pGT );
 
    if( pGTCGI->fDispTrans )
    {
-      HB_SIZE ulLen = ulLength;
-      char * buffer = hb_cdpnDup( szText, &ulLen,
+      HB_SIZE nLen = nLength;
+      char * buffer = hb_cdpnDup( szText, &nLen,
                                   pGTCGI->cdpHost, pGTCGI->cdpTerm );
-      hb_gt_cgi_termOut( pGTCGI, buffer, ulLen );
+      hb_gt_cgi_termOut( pGTCGI, buffer, nLen );
       hb_xfree( buffer );
    }
    else
-      hb_gt_cgi_termOut( pGTCGI, szText, ulLength );
+      hb_gt_cgi_termOut( pGTCGI, szText, nLength );
 
-   while( ulLength-- )
+   while( nLength-- )
    {
       switch( *szText++ )
       {
@@ -292,7 +292,7 @@ static void hb_gt_cgi_WriteCon( PHB_GT pGT, const char * szText, HB_SIZE ulLengt
    HB_GTSUPER_SETPOS( pGT, pGTCGI->iRow, pGTCGI->iCol );
 }
 
-static void hb_gt_cgi_WriteAt( PHB_GT pGT, int iRow, int iCol, const char * szText, HB_SIZE ulLength )
+static void hb_gt_cgi_WriteAt( PHB_GT pGT, int iRow, int iCol, const char * szText, HB_SIZE nLength )
 {
    int iLineFeed = 0, iSpace = 0;
    PHB_GTCGI pGTCGI = HB_GTCGI_GET( pGT );
@@ -323,7 +323,7 @@ static void hb_gt_cgi_WriteAt( PHB_GT pGT, int iRow, int iCol, const char * szTe
    pGTCGI->iRow = iRow;
    pGTCGI->iCol = iCol;
 
-   hb_gt_cgi_WriteCon( pGT, szText, ulLength );
+   hb_gt_cgi_WriteCon( pGT, szText, nLength );
 }
 
 #else /* HB_GT_CGI_RAWOUTPUT */
@@ -385,10 +385,10 @@ static void hb_gt_cgi_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
       {
          if( pGTCGI->fDispTrans )
          {
-            HB_SIZE ulLen = iLen;
-            char * buffer = hb_cdpnDup( pGTCGI->sLineBuf, &ulLen,
+            HB_SIZE nLen = iLen;
+            char * buffer = hb_cdpnDup( pGTCGI->sLineBuf, &nLen,
                                         pGTCGI->cdpHost, pGTCGI->cdpTerm );
-            hb_gt_cgi_termOut( pGTCGI, buffer, ulLen );
+            hb_gt_cgi_termOut( pGTCGI, buffer, nLen );
             hb_xfree( buffer );
          }
          else

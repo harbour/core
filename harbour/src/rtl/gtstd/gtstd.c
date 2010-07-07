@@ -104,11 +104,11 @@ typedef struct _HB_GTSTD
 
    int            iLineBufSize;
    char *         sLineBuf;
-   HB_SIZE        ulTransBufSize;
+   HB_SIZE        nTransBufSize;
    char *         sTransBuf;
    HB_BOOL        fFullRedraw;
    char *         szCrLf;
-   HB_SIZE        ulCrLf;
+   HB_SIZE        nCrLf;
 
    HB_BOOL        fDispTrans;
    PHB_CODEPAGE   cdpTerm;
@@ -185,14 +185,14 @@ static void hb_gt_std_setKeyTrans( PHB_GTSTD pGTSTD, PHB_CODEPAGE cdpTerm, PHB_C
                            hb_cdpTranslateChar( i, HB_FALSE, cdpTerm, cdpHost );
 }
 
-static void hb_gt_std_termOut( PHB_GTSTD pGTSTD, const char * szStr, HB_SIZE ulLen )
+static void hb_gt_std_termOut( PHB_GTSTD pGTSTD, const char * szStr, HB_SIZE nLen )
 {
-   hb_fsWriteLarge( pGTSTD->hStdout, szStr, ulLen );
+   hb_fsWriteLarge( pGTSTD->hStdout, szStr, nLen );
 }
 
 static void hb_gt_std_newLine( PHB_GTSTD pGTSTD )
 {
-   hb_gt_std_termOut( pGTSTD, pGTSTD->szCrLf, pGTSTD->ulCrLf );
+   hb_gt_std_termOut( pGTSTD, pGTSTD->szCrLf, pGTSTD->nCrLf );
 }
 
 
@@ -217,7 +217,7 @@ static void hb_gt_std_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    hb_gt_std_setKeyTrans( pGTSTD, NULL, NULL );
 
    pGTSTD->szCrLf = hb_strdup( hb_conNewLine() );
-   pGTSTD->ulCrLf = strlen( pGTSTD->szCrLf );
+   pGTSTD->nCrLf = strlen( pGTSTD->szCrLf );
 
    hb_fsSetDevMode( pGTSTD->hStdout, FD_BINARY );
    HB_GTSUPER_INIT( pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr );
@@ -317,7 +317,7 @@ static void hb_gt_std_Exit( PHB_GT pGT )
 #endif
       if( pGTSTD->iLineBufSize > 0 )
          hb_xfree( pGTSTD->sLineBuf );
-      if( pGTSTD->ulTransBufSize > 0 )
+      if( pGTSTD->nTransBufSize > 0 )
          hb_xfree( pGTSTD->sTransBuf );
       if( pGTSTD->szCrLf )
          hb_xfree( pGTSTD->szCrLf );
@@ -587,12 +587,12 @@ static void hb_gt_std_DispLine( PHB_GT pGT, int iRow )
    hb_gt_std_newLine( pGTSTD );
    if( iMin > 0 )
    {
-      HB_SIZE ulLen = iMin;
-      const char * buffer = hb_cdpnDup3( pGTSTD->sLineBuf, ulLen,
-                                         pGTSTD->sTransBuf, &ulLen,
-                                         &pGTSTD->sTransBuf, &pGTSTD->ulTransBufSize,
+      HB_SIZE nLen = iMin;
+      const char * buffer = hb_cdpnDup3( pGTSTD->sLineBuf, nLen,
+                                         pGTSTD->sTransBuf, &nLen,
+                                         &pGTSTD->sTransBuf, &pGTSTD->nTransBufSize,
                                          pGTSTD->cdpHost, pGTSTD->cdpTerm );
-      hb_gt_std_termOut( pGTSTD, buffer, ulLen );
+      hb_gt_std_termOut( pGTSTD, buffer, nLen );
    }
    pGTSTD->iLastCol = pGTSTD->iCol = iMin;
    pGTSTD->iRow = iRow;
@@ -695,12 +695,12 @@ static void hb_gt_std_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
       {
          if( pGTSTD->fDispTrans )
          {
-            HB_SIZE ulLen = iLen;
-            const char * buffer = hb_cdpnDup3( pGTSTD->sLineBuf, ulLen,
-                                               pGTSTD->sTransBuf, &ulLen,
-                                               &pGTSTD->sTransBuf, &pGTSTD->ulTransBufSize,
+            HB_SIZE nLen = iLen;
+            const char * buffer = hb_cdpnDup3( pGTSTD->sLineBuf, nLen,
+                                               pGTSTD->sTransBuf, &nLen,
+                                               &pGTSTD->sTransBuf, &pGTSTD->nTransBufSize,
                                                pGTSTD->cdpHost, pGTSTD->cdpTerm );
-            hb_gt_std_termOut( pGTSTD, buffer, ulLen );
+            hb_gt_std_termOut( pGTSTD, buffer, nLen );
          }
          else
             hb_gt_std_termOut( pGTSTD, pGTSTD->sLineBuf, iLen );

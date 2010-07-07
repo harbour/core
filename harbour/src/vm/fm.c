@@ -1162,14 +1162,14 @@ void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
 
       for( ui = 1, pMemBlock = s_pFirstBlock; pMemBlock; pMemBlock = pMemBlock->pNextBlock, ++ui )
       {
-         HB_TRACE( HB_TR_ERROR, ( "Block %i (size %lu) %s(%i), \"%s\"", ui,
+         HB_TRACE( HB_TR_ERROR, ( "Block %i (size %" HB_PFS "u) %s(%i), \"%s\"", ui,
             pMemBlock->nSize, pMemBlock->szProcName, pMemBlock->uiProcLine,
             hb_mem2str( membuffer, ( char * ) HB_MEM_PTR( pMemBlock ),
                         HB_MIN( pMemBlock->nSize, HB_MAX_MEM2STR_BLOCK ) ) ) );
 
          if( hLog )
          {
-            fprintf( hLog, HB_I_("Block %i %p (size %lu) %s(%i), \"%s\"\n"), ui,
+            fprintf( hLog, HB_I_("Block %i %p (size %" HB_PFS "u) %s(%i), \"%s\"\n"), ui,
                ( char * ) HB_MEM_PTR( pMemBlock ),
                pMemBlock->nSize, pMemBlock->szProcName, pMemBlock->uiProcLine,
                hb_mem2str( membuffer, ( char * ) HB_MEM_PTR( pMemBlock ),

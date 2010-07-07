@@ -516,10 +516,10 @@ static PHB_ITEM hb_ntxKeyGetItem( PHB_ITEM pItem, LPKEYINFO pKey,
          case 'C':
             if( fTrans )
             {
-               HB_SIZE ulLen = pTag->KeyLength;
-               char * pszVal = hb_cdpnDup( pKey->key, &ulLen,
+               HB_SIZE nLen = pTag->KeyLength;
+               char * pszVal = hb_cdpnDup( pKey->key, &nLen,
                                            pTag->Owner->Owner->dbfarea.area.cdPage, hb_vmCDP() );
-               pItem = hb_itemPutCLPtr( pItem, pszVal, ulLen );
+               pItem = hb_itemPutCLPtr( pItem, pszVal, nLen );
             }
             else
             {
@@ -4337,19 +4337,19 @@ static HB_BOOL hb_ntxOrdSkipWild( LPTAGINFO pTag, HB_BOOL fForward, PHB_ITEM pWi
 
 static HB_BOOL hb_ntxRegexMatch( LPTAGINFO pTag, PHB_REGEX pRegEx, char * szKey )
 {
-   HB_SIZE ulLen = pTag->KeyLength;
+   HB_SIZE nLen = pTag->KeyLength;
    char szBuff[ NTX_MAX_KEY + 1 ];
 
    if( pTag->Owner->Owner->dbfarea.area.cdPage != hb_vmCDP() )
    {
-      ulLen = sizeof( szBuff ) - 1;
-      hb_cdpnDup2( szKey, pTag->KeyLength, szBuff, &ulLen,
+      nLen = sizeof( szBuff ) - 1;
+      hb_cdpnDup2( szKey, pTag->KeyLength, szBuff, &nLen,
                    pTag->Owner->Owner->dbfarea.area.cdPage, hb_vmCDP() );
-      szBuff[ ulLen ] = '\0';
+      szBuff[ nLen ] = '\0';
       szKey = szBuff;
    }
 
-   return hb_regexMatch( pRegEx, szKey, ulLen, HB_FALSE );
+   return hb_regexMatch( pRegEx, szKey, nLen, HB_FALSE );
 }
 
 /*
@@ -4702,13 +4702,13 @@ static void hb_ntxSortSortPage( LPNTXSORTINFO pSort )
 
 static void hb_ntxSortBufferFlush( LPNTXSORTINFO pSort )
 {
-   HB_SIZE ulSize;
+   HB_SIZE nSize;
    if( pSort->ulPagesIO )
    {
       LPNTXINDEX pIndex = pSort->pTag->Owner;
-      ulSize = pSort->ulPagesIO * NTXBLOCKSIZE;
-      if( hb_fileWriteAt( pIndex->DiskFile, pSort->pBuffIO, ulSize,
-                     hb_ntxFileOffset( pIndex, pSort->ulFirstIO ) ) != ulSize )
+      nSize = pSort->ulPagesIO * NTXBLOCKSIZE;
+      if( hb_fileWriteAt( pIndex->DiskFile, pSort->pBuffIO, nSize,
+                     hb_ntxFileOffset( pIndex, pSort->ulFirstIO ) ) != nSize )
       {
          hb_ntxErrorRT( pIndex->Owner, EG_WRITE, EDBF_WRITE,
                         pIndex->IndexName, hb_fsError(), 0, NULL );
@@ -4783,7 +4783,7 @@ static void hb_ntxSortAddNodeKey( LPNTXSORTINFO pSort, HB_BYTE *pKeyVal, HB_ULON
 
 static void hb_ntxSortWritePage( LPNTXSORTINFO pSort )
 {
-   HB_SIZE ulSize = pSort->ulKeys * ( pSort->keyLen + 4 );
+   HB_SIZE nSize = pSort->ulKeys * ( pSort->keyLen + 4 );
 
    hb_ntxSortSortPage( pSort );
 
@@ -4802,7 +4802,7 @@ static void hb_ntxSortWritePage( LPNTXSORTINFO pSort )
    if( pSort->hTempFile != FS_ERROR )
    {
       pSort->pSwapPage[ pSort->ulCurPage ].nOffset = hb_fsSeekLarge( pSort->hTempFile, 0, FS_END );
-      if( hb_fsWriteLarge( pSort->hTempFile, pSort->pStartKey, ulSize ) != ulSize )
+      if( hb_fsWriteLarge( pSort->hTempFile, pSort->pStartKey, nSize ) != nSize )
          hb_ntxErrorRT( pSort->pTag->Owner->Owner, EG_WRITE, EDBF_WRITE_TEMP,
                         pSort->szTempFileName, hb_fsError(), 0, NULL );
    }
@@ -4820,16 +4820,16 @@ static void hb_ntxSortGetPageKey( LPNTXSORTINFO pSort, HB_ULONG ulPage,
    if( pSort->pSwapPage[ ulPage ].ulKeyBuf == 0 )
    {
       HB_ULONG ulKeys = HB_MIN( pSort->ulPgKeys, pSort->pSwapPage[ ulPage ].ulKeys );
-      HB_SIZE ulSize = ulKeys * ( iLen + 4 );
+      HB_SIZE nSize = ulKeys * ( iLen + 4 );
 
       if( pSort->hTempFile != FS_ERROR &&
          ( hb_fsSeekLarge( pSort->hTempFile, pSort->pSwapPage[ ulPage ].nOffset, FS_SET ) != pSort->pSwapPage[ ulPage ].nOffset ||
-           hb_fsReadLarge( pSort->hTempFile, pSort->pSwapPage[ ulPage ].pKeyPool, ulSize ) != ulSize ) )
+           hb_fsReadLarge( pSort->hTempFile, pSort->pSwapPage[ ulPage ].pKeyPool, nSize ) != nSize ) )
       {
          hb_ntxErrorRT( pSort->pTag->Owner->Owner, EG_READ, EDBF_READ_TEMP,
                         pSort->szTempFileName, hb_fsError(), 0, NULL );
       }
-      pSort->pSwapPage[ ulPage ].nOffset += ulSize;
+      pSort->pSwapPage[ ulPage ].nOffset += nSize;
       pSort->pSwapPage[ ulPage ].ulKeyBuf = ulKeys;
       pSort->pSwapPage[ ulPage ].ulCurKey = 0;
    }

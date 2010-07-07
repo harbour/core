@@ -236,9 +236,9 @@ HB_FUNC( SX_RLOCK )
       pRecords = hb_param( 1, HB_IT_ARRAY );
       if( pRecords )
       {
-         HB_SIZE ul, ulLen = hb_arrayLen( pRecords );
-         pResult = hb_itemArrayNew( ulLen );
-         for( ul = 1; ul <= ulLen; ++ul )
+         HB_SIZE ul, nLen = hb_arrayLen( pRecords );
+         pResult = hb_itemArrayNew( nLen );
+         for( ul = 1; ul <= nLen; ++ul )
          {
             dbLockInfo.itmRecID = hb_arrayGetItemPtr( pRecords, ul );
             SELF_LOCK( pArea, &dbLockInfo );
@@ -268,8 +268,8 @@ HB_FUNC( SX_UNLOCK )
       PHB_ITEM pRecords = hb_param( 1, HB_IT_ARRAY );
       if( pRecords )
       {
-         HB_SIZE ul, ulLen = hb_arrayLen( pRecords );
-         for( ul = 1; ul <= ulLen; ++ul )
+         HB_SIZE ul, nLen = hb_arrayLen( pRecords );
+         for( ul = 1; ul <= nLen; ++ul )
          {
             SELF_UNLOCK( pArea, hb_arrayGetItemPtr( pRecords, ul ) );
          }

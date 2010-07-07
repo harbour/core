@@ -157,7 +157,7 @@ static int         s_iUpdtBottom;
 static int         s_iUpdtLeft;
 static int         s_iUpdtRight;
 static CHAR_INFO * s_pCharInfoScreen = NULL;
-static HB_SIZE     s_ulScreenBuffSize = 0;
+static HB_SIZE     s_nScreenBuffSize = 0;
 
 static HB_FHANDLE  s_hStdIn, s_hStdOut, s_hStdErr;
 
@@ -631,17 +631,17 @@ static void hb_gt_win_xInitScreenParam( PHB_GT pGT )
    {
       COORD coDest;
       SMALL_RECT srWin;
-      HB_SIZE ulSize = ( HB_SIZE ) _GetScreenWidth() * _GetScreenHeight() *
-                       sizeof( CHAR_INFO );
+      HB_SIZE nSize = ( HB_SIZE ) _GetScreenWidth() * _GetScreenHeight() *
+                      sizeof( CHAR_INFO );
 
       HB_GTSELF_RESIZE( pGT, _GetScreenHeight(), _GetScreenWidth() );
 
-      if( s_pCharInfoScreen == NULL || ulSize != s_ulScreenBuffSize )
+      if( s_pCharInfoScreen == NULL || nSize != s_nScreenBuffSize )
       {
          if( s_pCharInfoScreen )
             hb_xfree( s_pCharInfoScreen );
-         s_ulScreenBuffSize = ulSize;
-         s_pCharInfoScreen = ( CHAR_INFO * ) hb_xgrab( s_ulScreenBuffSize );
+         s_nScreenBuffSize = nSize;
+         s_pCharInfoScreen = ( CHAR_INFO * ) hb_xgrab( s_nScreenBuffSize );
       }
 
       s_iCurRow = s_csbi.dwCursorPosition.Y;
@@ -685,7 +685,7 @@ static void hb_gt_win_xInitScreenParam( PHB_GT pGT )
    else if( s_pCharInfoScreen )
    {
       hb_xfree( s_pCharInfoScreen );
-      s_ulScreenBuffSize = 0;
+      s_nScreenBuffSize = 0;
    }
 }
 

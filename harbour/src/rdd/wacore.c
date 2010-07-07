@@ -514,7 +514,7 @@ HB_ERRCODE hb_rddDetachArea( AREAP pArea, PHB_ITEM pCargo )
 {
    AREAP * pHolder;
    PHB_ITEM pDetachedArea;
-   HB_SIZE ulPos;
+   HB_SIZE nPos;
    int iArea;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_rddDetachArea(%p,%p)", pArea, pCargo));
@@ -551,14 +551,14 @@ HB_ERRCODE hb_rddDetachArea( AREAP pArea, PHB_ITEM pCargo )
    if( ! s_pDetachedAreas )
    {
       s_pDetachedAreas = hb_itemArrayNew( 1 );
-      ulPos = 1;
+      nPos = 1;
    }
    else
    {
-      ulPos = hb_arrayLen( s_pDetachedAreas ) + 1;
-      hb_arraySize( s_pDetachedAreas, ulPos );
+      nPos = hb_arrayLen( s_pDetachedAreas ) + 1;
+      hb_arraySize( s_pDetachedAreas, nPos );
    }
-   pDetachedArea = hb_arrayGetItemPtr( s_pDetachedAreas, ulPos );
+   pDetachedArea = hb_arrayGetItemPtr( s_pDetachedAreas, nPos );
    hb_arrayNew( pDetachedArea, 2 );
    if( pCargo )
       hb_arraySet( pDetachedArea, 2, pCargo );
@@ -617,21 +617,21 @@ AREAP hb_rddRequestArea( const char * szAlias, PHB_ITEM pCargo,
    {
       if( s_pDetachedAreas )
       {
-         HB_SIZE ulLen = hb_arrayLen( s_pDetachedAreas ), ulPos = 1;
+         HB_SIZE nLen = hb_arrayLen( s_pDetachedAreas ), nPos = 1;
          if( pSymAlias )
          {
-            for( ulPos = 1; ulPos <= ulLen; ++ulPos )
+            for( nPos = 1; nPos <= nLen; ++nPos )
             {
                AREAP * pDetachedArea = ( AREAP * )
-                  hb_arrayGetPtrGC( hb_arrayGetItemPtr( s_pDetachedAreas, ulPos ),
+                  hb_arrayGetPtrGC( hb_arrayGetItemPtr( s_pDetachedAreas, nPos ),
                                     1, &s_gcWAFuncs );
                if( pSymAlias == ( PHB_DYNS ) ( *pDetachedArea )->atomAlias )
                   break;
             }
          }
-         if( ulPos <= ulLen )
+         if( nPos <= nLen )
          {
-            PHB_ITEM pArray = hb_arrayGetItemPtr( s_pDetachedAreas, ulPos );
+            PHB_ITEM pArray = hb_arrayGetItemPtr( s_pDetachedAreas, nPos );
             AREAP * pDetachedArea = ( AREAP * )
                                     hb_arrayGetPtrGC( pArray, 1, &s_gcWAFuncs );
 
@@ -639,8 +639,8 @@ AREAP hb_rddRequestArea( const char * szAlias, PHB_ITEM pCargo,
             *pDetachedArea = NULL;
             if( pCargo )
                hb_arrayGet( pArray, 2, pCargo );
-            hb_arrayDel( s_pDetachedAreas, ulPos );
-            hb_arraySize( s_pDetachedAreas, ulLen - 1 );
+            hb_arrayDel( s_pDetachedAreas, nPos );
+            hb_arraySize( s_pDetachedAreas, nLen - 1 );
          }
       }
 

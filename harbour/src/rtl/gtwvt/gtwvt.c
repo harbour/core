@@ -1009,7 +1009,7 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
             RedrawWindow( pWVT->hWnd, NULL, NULL, RDW_INVALIDATE | RDW_UPDATENOW );
 
             {
-               HB_SIZE ulSize;
+               HB_SIZE nSize;
                int     irow, icol, j, top, left, bottom, right;
                char *  sBuffer;
                RECT    rect = { 0, 0, 0, 0 };
@@ -1027,8 +1027,8 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
                right  = colrowRC.right;
                bottom = colrowRC.bottom;
 
-               ulSize = ( ( bottom - top + 1 ) * ( right - left + 1 + 2 ) );
-               sBuffer = ( char * ) hb_xgrab( ulSize + 1 );
+               nSize = ( ( bottom - top + 1 ) * ( right - left + 1 + 2 ) );
+               sBuffer = ( char * ) hb_xgrab( nSize + 1 );
 
                for( j = 0, irow = top; irow <= bottom; irow++ )
                {

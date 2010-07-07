@@ -68,35 +68,35 @@ typedef struct _HB_FILEBUF
 {
    HB_FHANDLE hFile;
    HB_BYTE *  pBuf;
-   HB_SIZE    ulSize;
-   HB_SIZE    ulPos;
+   HB_SIZE    nSize;
+   HB_SIZE    nPos;
 } HB_FILEBUF;
 typedef HB_FILEBUF * PHB_FILEBUF;
 
 static void hb_flushFBuffer( PHB_FILEBUF pFileBuf )
 {
-   if( pFileBuf->ulPos > 0 )
+   if( pFileBuf->nPos > 0 )
    {
-      hb_fsWriteLarge( pFileBuf->hFile, pFileBuf->pBuf, pFileBuf->ulPos );
-      pFileBuf->ulPos = 0;
+      hb_fsWriteLarge( pFileBuf->hFile, pFileBuf->pBuf, pFileBuf->nPos );
+      pFileBuf->nPos = 0;
    }
 }
 
 static void hb_addToFBuffer( PHB_FILEBUF pFileBuf, char ch )
 {
-   if( pFileBuf->ulPos == pFileBuf->ulSize )
+   if( pFileBuf->nPos == pFileBuf->nSize )
       hb_flushFBuffer( pFileBuf );
-   pFileBuf->pBuf[ pFileBuf->ulPos++ ] = ( HB_BYTE ) ch;
+   pFileBuf->pBuf[ pFileBuf->nPos++ ] = ( HB_BYTE ) ch;
 }
 
-static void hb_addStrnToFBuffer( PHB_FILEBUF pFileBuf, const char * str, HB_SIZE ulSize )
+static void hb_addStrnToFBuffer( PHB_FILEBUF pFileBuf, const char * str, HB_SIZE nSize )
 {
-   HB_SIZE ulPos = 0;
-   while( ulPos < ulSize )
+   HB_SIZE nPos = 0;
+   while( nPos < nSize )
    {
-      if( pFileBuf->ulPos == pFileBuf->ulSize )
+      if( pFileBuf->nPos == pFileBuf->nSize )
          hb_flushFBuffer( pFileBuf );
-      pFileBuf->pBuf[ pFileBuf->ulPos++ ] = ( HB_BYTE ) str[ ulPos++ ];
+      pFileBuf->pBuf[ pFileBuf->nPos++ ] = ( HB_BYTE ) str[ nPos++ ];
    }
 }
 
@@ -104,9 +104,9 @@ static void hb_addStrToFBuffer( PHB_FILEBUF pFileBuf, const char * szStr )
 {
    while( *szStr )
    {
-      if( pFileBuf->ulPos == pFileBuf->ulSize )
+      if( pFileBuf->nPos == pFileBuf->nSize )
          hb_flushFBuffer( pFileBuf );
-      pFileBuf->pBuf[ pFileBuf->ulPos++ ] = ( HB_BYTE ) *szStr++;
+      pFileBuf->pBuf[ pFileBuf->nPos++ ] = ( HB_BYTE ) *szStr++;
    }
 }
 
@@ -118,14 +118,14 @@ static void hb_destroyFBuffer( PHB_FILEBUF pFileBuf )
    hb_xfree( pFileBuf );
 }
 
-static PHB_FILEBUF hb_createFBuffer( HB_FHANDLE hFile, HB_SIZE ulSize )
+static PHB_FILEBUF hb_createFBuffer( HB_FHANDLE hFile, HB_SIZE nSize )
 {
    PHB_FILEBUF pFileBuf = ( PHB_FILEBUF ) hb_xgrab( sizeof( HB_FILEBUF ) );
 
    pFileBuf->hFile = hFile;
-   pFileBuf->pBuf = ( HB_BYTE * ) hb_xgrab( ulSize );
-   pFileBuf->ulSize = ulSize;
-   pFileBuf->ulPos = 0;
+   pFileBuf->pBuf = ( HB_BYTE * ) hb_xgrab( nSize );
+   pFileBuf->nSize = nSize;
+   pFileBuf->nPos = 0;
    return pFileBuf;
 }
 
@@ -138,15 +138,15 @@ static HB_BOOL hb_exportBufSqlVar( PHB_FILEBUF pFileBuf, PHB_ITEM pValue,
    {
       case HB_IT_STRING:
       {
-         HB_SIZE ulLen = hb_itemGetCLen( pValue );
-         HB_SIZE ulCnt = 0;
+         HB_SIZE nLen = hb_itemGetCLen( pValue );
+         HB_SIZE nCnt = 0;
          const char *szVal = hb_itemGetCPtr( pValue );
 
          hb_addStrToFBuffer( pFileBuf, szDelim );
-         while( ulLen && HB_ISSPACE( szVal[ ulLen - 1 ] ) )
-            ulLen--;
+         while( nLen && HB_ISSPACE( szVal[ nLen - 1 ] ) )
+            nLen--;
 
-         while( *szVal && ulCnt++ < ulLen )
+         while( *szVal && nCnt++ < nLen )
          {
             if( *szVal == *szDelim || *szVal == *szEsc )
                hb_addToFBuffer( pFileBuf, *szEsc );

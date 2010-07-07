@@ -103,10 +103,10 @@ static int          s_iRow;
 static int          s_iCol;
 static int          s_iLineBufSize = 0;
 static char *       s_sLineBuf;
-static HB_SIZE      s_ulTransBufSize = 0;
+static HB_SIZE      s_nTransBufSize = 0;
 static char *       s_sTransBuf;
 static const char * s_szCrLf;
-static HB_SIZE      s_ulCrLf;
+static HB_SIZE      s_nCrLf;
 static int          s_iCurrentSGR, s_iFgColor, s_iBgColor, s_iBold, s_iBlink, s_iAM;
 static int          s_iCursorStyle;
 static HB_BOOL      s_bStdinConsole;
@@ -477,7 +477,7 @@ static void hb_gt_pca_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    hb_gt_pca_setKeyTrans( NULL, NULL );
 
    s_szCrLf = hb_conNewLine();
-   s_ulCrLf = strlen( s_szCrLf );
+   s_nCrLf = strlen( s_szCrLf );
 
    hb_fsSetDevMode( s_hFilenoStdout, FD_BINARY );
 
@@ -575,10 +575,10 @@ static void hb_gt_pca_Exit( PHB_GT pGT )
       hb_xfree( s_sLineBuf );
       s_iLineBufSize = 0;
    }
-   if( s_ulTransBufSize > 0 )
+   if( s_nTransBufSize > 0 )
    {
       hb_xfree( s_sTransBuf );
-      s_ulTransBufSize = 0;
+      s_nTransBufSize = 0;
    }
    if( s_iOutBufSize > 0 )
    {
@@ -830,12 +830,12 @@ static void hb_gt_pca_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
       {
          if( s_fDispTrans )
          {
-            HB_SIZE ulLen = iLen;
-            const char * buffer = hb_cdpnDup3( s_sLineBuf, ulLen,
-                                               s_sTransBuf, &ulLen,
-                                               &s_sTransBuf, &s_ulTransBufSize,
+            HB_SIZE nLen = iLen;
+            const char * buffer = hb_cdpnDup3( s_sLineBuf, nLen,
+                                               s_sTransBuf, &nLen,
+                                               &s_sTransBuf, &s_nTransBufSize,
                                                s_cdpHost, s_cdpTerm );
-            hb_gt_pca_AnsiPutStr( iRow, iCol, iColor2, buffer, ( int ) ulLen );
+            hb_gt_pca_AnsiPutStr( iRow, iCol, iColor2, buffer, ( int ) nLen );
          }
          else
             hb_gt_pca_AnsiPutStr( iRow, iCol, iColor2, s_sLineBuf, iLen );
@@ -852,12 +852,12 @@ static void hb_gt_pca_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
    {
       if( s_fDispTrans )
       {
-         HB_SIZE ulLen = iLen;
-         const char * buffer = hb_cdpnDup3( s_sLineBuf, ulLen,
-                                            s_sTransBuf, &ulLen,
-                                            &s_sTransBuf, &s_ulTransBufSize,
+         HB_SIZE nLen = iLen;
+         const char * buffer = hb_cdpnDup3( s_sLineBuf, nLen,
+                                            s_sTransBuf, &nLen,
+                                            &s_sTransBuf, &s_nTransBufSize,
                                             s_cdpHost, s_cdpTerm );
-         hb_gt_pca_AnsiPutStr( iRow, iCol, iColor2, buffer, ( int ) ulLen );
+         hb_gt_pca_AnsiPutStr( iRow, iCol, iColor2, buffer, ( int ) nLen );
       }
       else
          hb_gt_pca_AnsiPutStr( iRow, iCol, iColor2, s_sLineBuf, iLen );

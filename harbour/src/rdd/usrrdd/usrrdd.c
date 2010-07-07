@@ -170,9 +170,9 @@ static AREAP hb_usrGetAreaPointer( int iArea )
  * RDD structures conversions
  */
 
-static PHB_ITEM hb_usrArrayGet( PHB_ITEM pArray, HB_SIZE ulPos, HB_TYPE uiType )
+static PHB_ITEM hb_usrArrayGet( PHB_ITEM pArray, HB_SIZE nPos, HB_TYPE uiType )
 {
-   PHB_ITEM pItem = hb_arrayGetItemPtr( pArray, ulPos );
+   PHB_ITEM pItem = hb_arrayGetItemPtr( pArray, nPos );
 
    if( pItem && ( hb_itemType( pItem ) & uiType ) != 0 )
       return pItem;
@@ -180,9 +180,9 @@ static PHB_ITEM hb_usrArrayGet( PHB_ITEM pArray, HB_SIZE ulPos, HB_TYPE uiType )
       return NULL;
 }
 
-static const char * hb_usrArrayGetC( PHB_ITEM pArray, HB_SIZE ulPos )
+static const char * hb_usrArrayGetC( PHB_ITEM pArray, HB_SIZE nPos )
 {
-   PHB_ITEM pItem = hb_arrayGetItemPtr( pArray, ulPos );
+   PHB_ITEM pItem = hb_arrayGetItemPtr( pArray, nPos );
 
    if( pItem && HB_IS_STRING( pItem ) )
       return hb_itemGetCPtr( pItem );
@@ -797,11 +797,11 @@ static HB_ERRCODE hb_usrInit( LPRDDNODE pRDD )
 
    if( pRDD->rddID >= s_uiUsrNodes )
    {
-      HB_SIZE ulSize = ( pRDD->rddID + 1 ) * sizeof( LPUSRRDDNODE );
+      HB_SIZE nSize = ( pRDD->rddID + 1 ) * sizeof( LPUSRRDDNODE );
       if( s_uiUsrNodes )
-         s_pUsrRddNodes = ( LPUSRRDDNODE * ) hb_xrealloc( s_pUsrRddNodes, ulSize );
+         s_pUsrRddNodes = ( LPUSRRDDNODE * ) hb_xrealloc( s_pUsrRddNodes, nSize );
       else
-         s_pUsrRddNodes = ( LPUSRRDDNODE * ) hb_xgrab( ulSize );
+         s_pUsrRddNodes = ( LPUSRRDDNODE * ) hb_xgrab( nSize );
       do
       {
          s_pUsrRddNodes[ s_uiUsrNodes ] = NULL;

@@ -103,7 +103,7 @@ static void hb_delimClearRecordBuffer( DELIMAREAP pArea )
 
 static HB_SIZE hb_delimEncodeBuffer( DELIMAREAP pArea )
 {
-   HB_SIZE ulSize;
+   HB_SIZE nSize;
    HB_USHORT uiField, uiLen;
    LPFIELD pField;
    HB_BYTE * pBuffer, * pFieldBuf;
@@ -114,13 +114,13 @@ static HB_SIZE hb_delimEncodeBuffer( DELIMAREAP pArea )
    pArea->ulBufferRead = pArea->ulBufferIndex = 0;
 
    pBuffer = pArea->pBuffer;
-   ulSize = 0;
+   nSize = 0;
    for( uiField = 0; uiField < pArea->area.uiFieldCount; ++uiField )
    {
       pField = pArea->area.lpFields + uiField;
       pFieldBuf = pArea->pRecord + pArea->pFieldOffset[ uiField ];
-      if( ulSize )
-         pBuffer[ ulSize++ ] = pArea->cSeparator;
+      if( nSize )
+         pBuffer[ nSize++ ] = pArea->cSeparator;
 
       switch( pField->uiType )
       {
@@ -130,21 +130,21 @@ static HB_SIZE hb_delimEncodeBuffer( DELIMAREAP pArea )
                --uiLen;
             if( pArea->cDelim )
             {
-               pBuffer[ ulSize++ ] = pArea->cDelim;
-               memcpy( pBuffer + ulSize, pFieldBuf, uiLen );
-               ulSize += uiLen;
-               pBuffer[ ulSize++ ] = pArea->cDelim;
+               pBuffer[ nSize++ ] = pArea->cDelim;
+               memcpy( pBuffer + nSize, pFieldBuf, uiLen );
+               nSize += uiLen;
+               pBuffer[ nSize++ ] = pArea->cDelim;
             }
             else
             {
-               memcpy( pBuffer + ulSize, pFieldBuf, uiLen );
-               ulSize += uiLen;
+               memcpy( pBuffer + nSize, pFieldBuf, uiLen );
+               nSize += uiLen;
             }
             break;
 
          case HB_FT_LOGICAL:
-            pBuffer[ ulSize++ ] = ( *pFieldBuf == 'T' || *pFieldBuf == 't' ||
-                                    *pFieldBuf == 'Y' || *pFieldBuf == 'y' ) ?
+            pBuffer[ nSize++ ] = ( *pFieldBuf == 'T' || *pFieldBuf == 't' ||
+                                   *pFieldBuf == 'Y' || *pFieldBuf == 'y' ) ?
                                   'T' : 'F';
             break;
 
@@ -154,8 +154,8 @@ static HB_SIZE hb_delimEncodeBuffer( DELIMAREAP pArea )
                ++uiLen;
             if( uiLen < 8 )
             {
-               memcpy( pBuffer + ulSize, pFieldBuf, 8 );
-               ulSize += 8;
+               memcpy( pBuffer + nSize, pFieldBuf, 8 );
+               nSize += 8;
             }
             break;
 
@@ -165,32 +165,32 @@ static HB_SIZE hb_delimEncodeBuffer( DELIMAREAP pArea )
                ++uiLen;
             if( uiLen < pField->uiLen )
             {
-               memcpy( pBuffer + ulSize, pFieldBuf + uiLen, pField->uiLen - uiLen );
-               ulSize += pField->uiLen - uiLen;
+               memcpy( pBuffer + nSize, pFieldBuf + uiLen, pField->uiLen - uiLen );
+               nSize += pField->uiLen - uiLen;
             }
             else
             {
-               pBuffer[ ulSize++ ] = '0';
+               pBuffer[ nSize++ ] = '0';
                if( pField->uiDec )
                {
-                  pBuffer[ ulSize++ ] = '.';
-                  memset( pBuffer + ulSize, '0', pField->uiDec );
-                  ulSize += pField->uiDec;
+                  pBuffer[ nSize++ ] = '.';
+                  memset( pBuffer + nSize, '0', pField->uiDec );
+                  nSize += pField->uiDec;
                }
             }
             break;
 
          case HB_FT_MEMO:
          default:
-            if( ulSize )
-               --ulSize;
+            if( nSize )
+               --nSize;
             break;
       }
    }
-   memcpy( pBuffer + ulSize, pArea->szEol, pArea->uiEolLen );
-   ulSize += pArea->uiEolLen;
+   memcpy( pBuffer + nSize, pArea->szEol, pArea->uiEolLen );
+   nSize += pArea->uiEolLen;
 
-   return ulSize;
+   return nSize;
 }
 
 static int hb_delimNextChar( DELIMAREAP pArea )
@@ -199,21 +199,21 @@ static int hb_delimNextChar( DELIMAREAP pArea )
        ( pArea->ulBufferRead == 0 ||
          pArea->ulBufferRead >= pArea->ulBufferSize - 1 ) )
    {
-      HB_SIZE ulLeft = pArea->ulBufferRead - pArea->ulBufferIndex;
+      HB_SIZE nLeft = pArea->ulBufferRead - pArea->ulBufferIndex;
 
-      if( ulLeft )
+      if( nLeft )
          memcpy( pArea->pBuffer,
-                 pArea->pBuffer + pArea->ulBufferIndex, ulLeft );
+                 pArea->pBuffer + pArea->ulBufferIndex, nLeft );
       pArea->ulBufferStart += pArea->ulBufferIndex;
       pArea->ulBufferIndex = 0;
       pArea->ulBufferRead = hb_fileReadAt( pArea->pFile,
-                                           pArea->pBuffer + ulLeft,
-                                           pArea->ulBufferSize - ulLeft,
-                                           pArea->ulBufferStart + ulLeft );
+                                           pArea->pBuffer + nLeft,
+                                           pArea->ulBufferSize - nLeft,
+                                           pArea->ulBufferStart + nLeft );
       if( pArea->ulBufferRead > 0 &&
-          pArea->pBuffer[ pArea->ulBufferRead + ulLeft - 1 ] == '\032' )
+          pArea->pBuffer[ pArea->ulBufferRead + nLeft - 1 ] == '\032' )
          pArea->ulBufferRead--;
-      pArea->ulBufferRead += ulLeft;
+      pArea->ulBufferRead += nLeft;
    }
 
    if( pArea->ulBufferIndex + pArea->uiEolLen <= pArea->ulBufferRead &&
@@ -557,10 +557,10 @@ static HB_ERRCODE hb_delimGetValue( DELIMAREAP pArea, HB_USHORT uiIndex, PHB_ITE
       case HB_FT_STRING:
          if( ( pField->uiFlags & HB_FF_BINARY ) == 0 )
          {
-            HB_SIZE ulLen = pField->uiLen;
+            HB_SIZE nLen = pField->uiLen;
             char * pszVal = hb_cdpnDup( ( const char * ) pArea->pRecord + pArea->pFieldOffset[ uiIndex ],
-                                        &ulLen, pArea->area.cdPage, hb_vmCDP() );
-            hb_itemPutCLPtr( pItem, pszVal, ulLen );
+                                        &nLen, pArea->area.cdPage, hb_vmCDP() );
+            hb_itemPutCLPtr( pItem, pszVal, nLen );
          }
          else
          {
@@ -641,7 +641,7 @@ static HB_ERRCODE hb_delimPutValue( DELIMAREAP pArea, HB_USHORT uiIndex, PHB_ITE
    char szBuffer[ 256 ];
    HB_ERRCODE errCode;
    LPFIELD pField;
-   HB_SIZE ulSize;
+   HB_SIZE nSize;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_delimPutValue(%p,%hu,%p)", pArea, uiIndex, pItem));
 
@@ -662,22 +662,22 @@ static HB_ERRCODE hb_delimPutValue( DELIMAREAP pArea, HB_USHORT uiIndex, PHB_ITE
          {
             if( ( pField->uiFlags & HB_FF_BINARY ) == 0 )
             {
-               ulSize = pField->uiLen;
+               nSize = pField->uiLen;
                hb_cdpnDup2( hb_itemGetCPtr( pItem ), hb_itemGetCLen( pItem ),
                             ( char * ) pArea->pRecord + pArea->pFieldOffset[ uiIndex ],
-                            &ulSize, hb_vmCDP(), pArea->area.cdPage );
+                            &nSize, hb_vmCDP(), pArea->area.cdPage );
             }
             else
             {
-               ulSize = hb_itemGetCLen( pItem );
-               if( ulSize > ( HB_SIZE ) pField->uiLen )
-                  ulSize = pField->uiLen;
+               nSize = hb_itemGetCLen( pItem );
+               if( nSize > ( HB_SIZE ) pField->uiLen )
+                  nSize = pField->uiLen;
                memcpy( pArea->pRecord + pArea->pFieldOffset[ uiIndex ],
-                       hb_itemGetCPtr( pItem ), ulSize );
+                       hb_itemGetCPtr( pItem ), nSize );
             }
-            if( ulSize < ( HB_SIZE ) pField->uiLen )
-               memset( pArea->pRecord + pArea->pFieldOffset[ uiIndex ] + ulSize,
-                       ' ', pField->uiLen - ulSize );
+            if( nSize < ( HB_SIZE ) pField->uiLen )
+               memset( pArea->pRecord + pArea->pFieldOffset[ uiIndex ] + nSize,
+                       ' ', pField->uiLen - nSize );
          }
          else
             errCode = EDBF_DATATYPE;
@@ -822,10 +822,10 @@ static HB_ERRCODE hb_delimGoCold( DELIMAREAP pArea )
 
    if( pArea->fRecordChanged )
    {
-      HB_SIZE ulSize = hb_delimEncodeBuffer( pArea );
+      HB_SIZE nSize = hb_delimEncodeBuffer( pArea );
 
-      if( hb_fileWriteAt( pArea->pFile, pArea->pBuffer, ulSize,
-                          pArea->ulRecordOffset ) != ulSize )
+      if( hb_fileWriteAt( pArea->pFile, pArea->pBuffer, nSize,
+                          pArea->ulRecordOffset ) != nSize )
       {
          PHB_ITEM pError = hb_errNew();
 
@@ -838,7 +838,7 @@ static HB_ERRCODE hb_delimGoCold( DELIMAREAP pArea )
          hb_itemRelease( pError );
          return HB_FAILURE;
       }
-      pArea->ulFileSize += ulSize;
+      pArea->ulFileSize += nSize;
       pArea->ulNextOffset = pArea->ulFileSize;
       pArea->fRecordChanged = HB_FALSE;
       pArea->fFlush = HB_TRUE;

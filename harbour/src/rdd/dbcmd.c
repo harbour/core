@@ -1821,7 +1821,7 @@ HB_FUNC( __DBARRANGE )
    if( pArea )
    {
       HB_USHORT uiNewArea, uiCount, uiDest;
-      HB_SIZE ulSize;
+      HB_SIZE nSize;
       char * szFieldLine, * szPos;
       PHB_ITEM pStruct, pFields;
       DBSORTINFO dbSortInfo;
@@ -1885,14 +1885,14 @@ HB_FUNC( __DBARRANGE )
       if( dbSortInfo.uiItemCount > 0 )
       {
          dbSortInfo.lpdbsItem = ( LPDBSORTITEM ) hb_xgrab( dbSortInfo.uiItemCount * sizeof( DBSORTITEM ) );
-         ulSize = 0;
+         nSize = 0;
          for( uiCount = 1; uiCount <= dbSortInfo.uiItemCount; ++uiCount )
          {
-            HB_SIZE ulLine = hb_arrayGetCLen( pFields, uiCount );
-            if( ulLine > ulSize )
-               ulSize = ulLine;
+            HB_SIZE nLine = hb_arrayGetCLen( pFields, uiCount );
+            if( nLine > nSize )
+               nSize = nLine;
          }
-         szFieldLine = ( char * ) hb_xgrab( ulSize + 1 );
+         szFieldLine = ( char * ) hb_xgrab( nSize + 1 );
          for( uiCount = uiDest = 0; uiCount < dbSortInfo.uiItemCount; ++uiCount )
          {
             dbSortInfo.lpdbsItem[ uiDest ].uiFlags = 0;

@@ -63,7 +63,7 @@ HB_FUNC( SX_FNAMEPARSER )
    {
       char szPathBuf[ HB_PATH_MAX ];
       PHB_FNAME pFileName;
-      HB_SIZE ulLen;
+      HB_SIZE nLen;
       char * pszFree;
 
       szFileName = hb_fsNameConv( szFileName, &pszFree );
@@ -80,17 +80,17 @@ HB_FUNC( SX_FNAMEPARSER )
       {
          if( pFileName->szName )
          {
-            ulLen = strlen( pFileName->szName );
-            ulLen = hb_strRTrimLen( pFileName->szName, ulLen, HB_FALSE );
-            pFileName->szName = hb_strLTrim( pFileName->szName, &ulLen );
-            ( ( char * ) pFileName->szName )[ulLen] = '\0';
+            nLen = strlen( pFileName->szName );
+            nLen = hb_strRTrimLen( pFileName->szName, nLen, HB_FALSE );
+            pFileName->szName = hb_strLTrim( pFileName->szName, &nLen );
+            ( ( char * ) pFileName->szName )[ nLen ] = '\0';
          }
          if( pFileName->szExtension )
          {
-            ulLen = strlen( pFileName->szExtension );
-            ulLen = hb_strRTrimLen( pFileName->szExtension, ulLen, HB_FALSE );
-            pFileName->szExtension = hb_strLTrim( pFileName->szExtension, &ulLen );
-            ( ( char * ) pFileName->szExtension )[ulLen] = '\0';
+            nLen = strlen( pFileName->szExtension );
+            nLen = hb_strRTrimLen( pFileName->szExtension, nLen, HB_FALSE );
+            pFileName->szExtension = hb_strLTrim( pFileName->szExtension, &nLen );
+            ( ( char * ) pFileName->szExtension )[ nLen ] = '\0';
          }
       }
 

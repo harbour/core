@@ -63,10 +63,10 @@ HB_FUNC( SX_SLIMFAST )
    if( szExp && *szExp )
    {
       char * szDst, cQuote = 0, c;
-      HB_SIZE ulDst;
+      HB_SIZE nDst;
 
       szDst = ( char * ) hb_xgrab( hb_parclen( 1 ) + 1 );
-      ulDst = 0;
+      nDst = 0;
 
       while( ( c = *szExp++ ) != 0 )
       {
@@ -76,14 +76,14 @@ HB_FUNC( SX_SLIMFAST )
             cQuote = c;
          else if( !cQuote )
          {
-            if( c == ' ' && ulDst && szDst[ulDst - 1] == ' ' )
+            if( c == ' ' && nDst && szDst[nDst - 1] == ' ' )
                continue;
             c = ( char ) hb_charUpper( ( HB_UCHAR ) c );
          }
-         szDst[ulDst++] = c;
+         szDst[nDst++] = c;
       }
 
-      hb_retclen_buffer( szDst, ulDst );
+      hb_retclen_buffer( szDst, nDst );
    }
    else
       hb_retc_null();
