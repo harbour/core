@@ -2030,15 +2030,15 @@ int hb_stornll( HB_LONGLONG llValue, int iParam )
 }
 #endif
 
-int hb_stornint( HB_MAXINT lValue, int iParam )
+int hb_stornint( HB_MAXINT nValue, int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_stornint(%" PFHL "d, %d)", lValue, iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_stornint(%" PFHL "d, %d)", nValue, iParam));
 
    if( iParam == -1 )
    {
-      hb_itemPutNInt( hb_stackReturnItem(), lValue );
+      hb_itemPutNInt( hb_stackReturnItem(), nValue );
       return 1;
    }
    else if( iParam >= 0 && iParam <= hb_pcount() )
@@ -2047,7 +2047,7 @@ int hb_stornint( HB_MAXINT lValue, int iParam )
 
       if( HB_IS_BYREF( pItem ) )
       {
-         hb_itemPutNInt( hb_itemUnRef( pItem ), lValue );
+         hb_itemPutNInt( hb_itemUnRef( pItem ), nValue );
          return 1;
       }
    }
@@ -2534,11 +2534,11 @@ int hb_storvnll( HB_LONGLONG llValue, int iParam, ... )
 }
 #endif
 
-int hb_storvnint( HB_MAXINT lValue, int iParam, ... )
+int hb_storvnint( HB_MAXINT nValue, int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_storvnint(%" PFHL "d, %d, ...)", lValue, iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_storvnint(%" PFHL "d, %d, ...)", nValue, iParam));
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -2553,13 +2553,13 @@ int hb_storvnint( HB_MAXINT lValue, int iParam, ... )
          int iRetVal;
          va_list va;
          va_start( va, iParam );
-         iRetVal = hb_arraySetNInt( pItem, va_arg( va, HB_SIZE ), lValue ) ? 1 : 0;
+         iRetVal = hb_arraySetNInt( pItem, va_arg( va, HB_SIZE ), nValue ) ? 1 : 0;
          va_end( va );
          return iRetVal;
       }
       else if( bByRef || iParam == -1 )
       {
-         hb_itemPutNInt( pItem, lValue );
+         hb_itemPutNInt( pItem, nValue );
          return 1;
       }
    }

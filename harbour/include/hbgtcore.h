@@ -204,7 +204,7 @@ typedef struct
    int       (* InkeyLast) ( HB_GT_PTR, int iEventMask );
    int       (* InkeyNext) ( HB_GT_PTR, int iEventMask );
    void      (* InkeyPoll) ( HB_GT_PTR );
-   void      (* InkeySetText) ( HB_GT_PTR, const char * szText, HB_SIZE ulLen );
+   void      (* InkeySetText) ( HB_GT_PTR, const char * szText, HB_SIZE nLen );
    int       (* InkeySetLast) ( HB_GT_PTR, int iKey );
    void      (* InkeyReset) ( HB_GT_PTR );
    void      (* InkeyExit) ( HB_GT_PTR );
@@ -597,8 +597,8 @@ extern HB_EXPORT PHB_GT  hb_gtLoad( const char * szGtName, PHB_GT pGT, PHB_GT_FU
 
 /* low level GT functions common to different GTs supported by RTL */
 extern int  hb_gt_chrmapinit( int * piTransTbl, const char * pszTerm, HB_BOOL fSetACSC );
-extern HB_BOOL hb_gt_setClipboard( const char * szClipData, HB_SIZE ulLen );
-extern HB_BOOL hb_gt_getClipboard( char ** pszClipData, HB_SIZE * pulLen );
+extern HB_BOOL hb_gt_setClipboard( const char * szClipData, HB_SIZE nLen );
+extern HB_BOOL hb_gt_getClipboard( char ** pszClipData, HB_SIZE * pnLen );
 #if defined( HB_OS_WIN )
 extern HB_BOOL hb_gt_winapi_setClipboard( HB_UINT uFormat, PHB_ITEM pItem );
 extern HB_BOOL hb_gt_winapi_getClipboard( HB_UINT uFormat, PHB_ITEM pItem );

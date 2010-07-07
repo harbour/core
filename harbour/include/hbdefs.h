@@ -1573,10 +1573,10 @@ typedef HB_U32 HB_FATTR;
    HB_EXTERN_BEGIN
       extern HB_EXPORT wchar_t * hb_mbtowc( const char * srcA );
       extern HB_EXPORT char *    hb_wctomb( const wchar_t * srcW );
-      extern HB_EXPORT wchar_t * hb_mbntowc( const char * srcA, HB_SIZE ulLen );
-      extern HB_EXPORT char *    hb_wcntomb( const wchar_t * srcW, HB_SIZE ulLen );
-      extern HB_EXPORT void      hb_wcntombcpy( char * dstA, const wchar_t * srcW, HB_SIZE ulLen );
-      extern HB_EXPORT void      hb_mbntowccpy( wchar_t * dstW, const char * srcA, HB_SIZE ulLen );
+      extern HB_EXPORT wchar_t * hb_mbntowc( const char * srcA, HB_SIZE nLen );
+      extern HB_EXPORT char *    hb_wcntomb( const wchar_t * srcW, HB_SIZE nLen );
+      extern HB_EXPORT void      hb_wcntombcpy( char * dstA, const wchar_t * srcW, HB_SIZE nLen );
+      extern HB_EXPORT void      hb_mbntowccpy( wchar_t * dstW, const char * srcA, HB_SIZE nLen );
    HB_EXTERN_END
 
 #endif

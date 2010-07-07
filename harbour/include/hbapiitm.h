@@ -79,10 +79,10 @@ extern HB_EXPORT HB_BOOL      hb_execFromArray ( PHB_ITEM pParam );
 extern HB_EXPORT PHB_ITEM     hb_itemDo        ( PHB_ITEM pItem, HB_ULONG ulPCount, ... );
 extern HB_EXPORT PHB_ITEM     hb_itemDoC       ( const char * szFunc, HB_ULONG ulPCount, ... );
 
-extern HB_EXPORT PHB_ITEM     hb_itemArrayGet  ( PHB_ITEM pArray, HB_SIZE ulIndex );
-extern HB_EXPORT PHB_ITEM     hb_itemArrayNew  ( HB_SIZE ulLen );
-extern HB_EXPORT PHB_ITEM     hb_itemArrayPut  ( PHB_ITEM pArray, HB_SIZE ulIndex, PHB_ITEM pItem );
-extern HB_EXPORT HB_SIZE      hb_itemCopyC     ( PHB_ITEM pItem, char * szBuffer, HB_SIZE ulLen );
+extern HB_EXPORT PHB_ITEM     hb_itemArrayGet  ( PHB_ITEM pArray, HB_SIZE nIndex );
+extern HB_EXPORT PHB_ITEM     hb_itemArrayNew  ( HB_SIZE nLen );
+extern HB_EXPORT PHB_ITEM     hb_itemArrayPut  ( PHB_ITEM pArray, HB_SIZE nIndex, PHB_ITEM pItem );
+extern HB_EXPORT HB_SIZE      hb_itemCopyC     ( PHB_ITEM pItem, char * szBuffer, HB_SIZE nLen );
 extern HB_EXPORT HB_BOOL      hb_itemFreeC     ( char * szText );
 extern HB_EXPORT char *       hb_itemGetC      ( PHB_ITEM pItem );
 extern HB_EXPORT const char * hb_itemGetCPtr   ( PHB_ITEM pItem );
@@ -108,11 +108,11 @@ extern HB_EXPORT void         hb_itemInit      ( PHB_ITEM pItem );
 extern HB_EXPORT HB_USHORT    hb_itemPCount    ( void );
 extern HB_EXPORT PHB_ITEM     hb_itemParam     ( HB_USHORT uiParam );
 extern HB_EXPORT PHB_ITEM     hb_itemPutC      ( PHB_ITEM pItem, const char * szText );
-extern HB_EXPORT PHB_ITEM     hb_itemPutCL     ( PHB_ITEM pItem, const char * szText, HB_SIZE ulLen );
+extern HB_EXPORT PHB_ITEM     hb_itemPutCL     ( PHB_ITEM pItem, const char * szText, HB_SIZE nLen );
 extern HB_EXPORT PHB_ITEM     hb_itemPutCConst ( PHB_ITEM pItem, const char * szText );
-extern HB_EXPORT PHB_ITEM     hb_itemPutCLConst( PHB_ITEM pItem, const char * szText, HB_SIZE ulLen );
+extern HB_EXPORT PHB_ITEM     hb_itemPutCLConst( PHB_ITEM pItem, const char * szText, HB_SIZE nLen );
 extern HB_EXPORT PHB_ITEM     hb_itemPutCPtr   ( PHB_ITEM pItem, char * szText );
-extern HB_EXPORT PHB_ITEM     hb_itemPutCLPtr  ( PHB_ITEM pItem, char * szText, HB_SIZE ulLen );
+extern HB_EXPORT PHB_ITEM     hb_itemPutCLPtr  ( PHB_ITEM pItem, char * szText, HB_SIZE nLen );
 extern HB_EXPORT void         hb_itemSetCMemo  ( PHB_ITEM pItem );
 extern HB_EXPORT PHB_ITEM     hb_itemPutD      ( PHB_ITEM pItem, int iYear, int iMonth, int iDay );
 extern HB_EXPORT PHB_ITEM     hb_itemPutDS     ( PHB_ITEM pItem, const char * szDate );
@@ -170,19 +170,19 @@ extern HB_EXPORT PHB_ITEM     hb_itemUnRefRefer( PHB_ITEM pItem ); /* de-referen
 extern HB_EXPORT PHB_ITEM     hb_itemUnRefWrite( PHB_ITEM pItem, PHB_ITEM pSource ); /* de-references passed variable for writing */
 extern HB_EXPORT PHB_ITEM     hb_itemUnShare   ( PHB_ITEM pItem ); /* un-share given string item */
 extern HB_EXPORT PHB_ITEM     hb_itemUnShareString( PHB_ITEM pItem ); /* un-share given string item - the pItem have to be valid unrefed string item */
-extern HB_EXPORT PHB_ITEM     hb_itemReSizeString( PHB_ITEM pItem, HB_SIZE ulSize ); /* Resize string buffer of given string item - the pItem have to be valid unrefed string item */
-extern HB_EXPORT HB_BOOL      hb_itemGetWriteCL( PHB_ITEM pItem, char ** pszValue, HB_SIZE * pulLen );
+extern HB_EXPORT PHB_ITEM     hb_itemReSizeString( PHB_ITEM pItem, HB_SIZE nSize ); /* Resize string buffer of given string item - the pItem have to be valid unrefed string item */
+extern HB_EXPORT HB_BOOL      hb_itemGetWriteCL( PHB_ITEM pItem, char ** pszValue, HB_SIZE * pnLen );
 extern HB_EXPORT PHB_ITEM     hb_itemClone     ( PHB_ITEM pItem ); /* clone the given item */
 extern HB_EXPORT PHB_ITEM     hb_itemCloneTo   ( PHB_ITEM pDest, PHB_ITEM pSource ); /* clone the given item */
 extern HB_EXPORT char *       hb_itemStr       ( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec ); /* convert a number to a string */
-extern HB_EXPORT char *       hb_itemString    ( PHB_ITEM pItem, HB_SIZE * ulLen, HB_BOOL * bFreeReq );  /* Convert any scalar to a string */
+extern HB_EXPORT char *       hb_itemString    ( PHB_ITEM pItem, HB_SIZE * nLen, HB_BOOL * bFreeReq );  /* Convert any scalar to a string */
 extern HB_EXPORT HB_BOOL      hb_itemStrBuf    ( char *szResult, PHB_ITEM pNumber, int iSize, int iDec ); /* convert a number to a string */
 extern HB_EXPORT PHB_ITEM     hb_itemValToStr  ( PHB_ITEM pItem ); /* Convert any scalar to a string */
-extern HB_EXPORT char *       hb_itemPadConv   ( PHB_ITEM pItem, HB_SIZE * pulSize, HB_BOOL * bFreeReq );
+extern HB_EXPORT char *       hb_itemPadConv   ( PHB_ITEM pItem, HB_SIZE * pnSize, HB_BOOL * bFreeReq );
 extern HB_EXPORT void         hb_itemSwap      ( PHB_ITEM pItem1, PHB_ITEM pItem2 );
 
-extern HB_EXPORT char *       hb_itemSerialize( PHB_ITEM pItem, HB_BOOL fNumSize, HB_SIZE * pulSize );
-extern HB_EXPORT PHB_ITEM     hb_itemDeserialize( const char ** pBufferPtr, HB_SIZE * pulSize );
+extern HB_EXPORT char *       hb_itemSerialize( PHB_ITEM pItem, HB_BOOL fNumSize, HB_SIZE * pnSize );
+extern HB_EXPORT PHB_ITEM     hb_itemDeserialize( const char ** pBufferPtr, HB_SIZE * pnSize );
 
 #if defined( _HB_API_INTERNAL_ )
 

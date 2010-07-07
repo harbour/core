@@ -135,10 +135,10 @@ typedef void * PHB_REGEX;
 
 HB_EXTERN_BEGIN
 
-extern HB_EXPORT PHB_REGEX hb_regexCompile( const char * szRegEx, HB_SIZE ulLen, int iFlags );
+extern HB_EXPORT PHB_REGEX hb_regexCompile( const char * szRegEx, HB_SIZE nLen, int iFlags );
 extern HB_EXPORT PHB_REGEX hb_regexGet( PHB_ITEM pRegExItm, int iFlags );
 extern HB_EXPORT void      hb_regexFree( PHB_REGEX pRegEx );
-extern HB_EXPORT HB_BOOL   hb_regexMatch( PHB_REGEX pRegEx, const char * szString, HB_SIZE UlLen, HB_BOOL fFull );
+extern HB_EXPORT HB_BOOL   hb_regexMatch( PHB_REGEX pRegEx, const char * szString, HB_SIZE nLen, HB_BOOL fFull );
 
 HB_EXTERN_END
 

@@ -71,7 +71,7 @@ HB_EXTERN_BEGIN
 
 /* definitions for hb_compPCodeEval() support */
 typedef void * HB_VOID_PTR;
-#define HB_PCODE_FUNC( func, type ) HB_SIZE func( PFUNCTION pFunc, HB_SIZE lPCodePos, type cargo )
+#define HB_PCODE_FUNC( func, type ) HB_SIZE func( PFUNCTION pFunc, HB_SIZE nPCodePos, type cargo )
 typedef  HB_PCODE_FUNC( HB_PCODE_FUNC_, HB_VOID_PTR );
 typedef  HB_PCODE_FUNC_ * HB_PCODE_FUNC_PTR;
 
@@ -179,11 +179,11 @@ extern void hb_compLoopKill( PFUNCTION );
 extern void hb_compGenError( HB_COMP_DECL, const char * szErrors[], char cPrefix, int iError, const char * szError1, const char * szError2 ); /* generic parsing error management function */
 extern void hb_compGenWarning( HB_COMP_DECL, const char * szWarnings[], char cPrefix, int iWarning, const char * szWarning1, const char * szWarning2); /* generic parsing warning management function */
 
-extern HB_SIZE hb_compGenJump( HB_ISIZ lOffset, HB_COMP_DECL );             /* generates the pcode to jump to a specific offset */
-extern HB_SIZE hb_compGenJumpFalse( HB_ISIZ lOffset, HB_COMP_DECL );        /* generates the pcode to jump if false */
-extern HB_SIZE hb_compGenJumpTrue( HB_ISIZ lOffset, HB_COMP_DECL );         /* generates the pcode to jump if true */
-extern void    hb_compGenJumpHere( HB_SIZE ulOffset, HB_COMP_DECL );        /* returns the pcode pos where to set a jump offset */
-extern void    hb_compGenJumpThere( HB_SIZE ulFrom, HB_SIZE ulTo, HB_COMP_DECL );   /* sets a jump offset */
+extern HB_SIZE hb_compGenJump( HB_ISIZ nOffset, HB_COMP_DECL );             /* generates the pcode to jump to a specific offset */
+extern HB_SIZE hb_compGenJumpFalse( HB_ISIZ nOffset, HB_COMP_DECL );        /* generates the pcode to jump if false */
+extern HB_SIZE hb_compGenJumpTrue( HB_ISIZ nOffset, HB_COMP_DECL );         /* generates the pcode to jump if true */
+extern void    hb_compGenJumpHere( HB_SIZE nOffset, HB_COMP_DECL );        /* returns the pcode pos where to set a jump offset */
+extern void    hb_compGenJumpThere( HB_SIZE nFrom, HB_SIZE nTo, HB_COMP_DECL );   /* sets a jump offset */
 
 extern void hb_compGenModuleName( HB_COMP_DECL, const char * szFunName );  /* generates the pcode with the currently compiled module and function name */
 extern void hb_compLinePush( HB_COMP_DECL );             /* generates the pcode with the currently compiled source code line */
@@ -208,7 +208,7 @@ extern void hb_compGenPushLong( HB_MAXINT lNumber, HB_COMP_DECL );              
 extern void hb_compGenPushDate( long lDate, HB_COMP_DECL );                                  /* Pushes a date constant on the virtual machine stack */
 extern void hb_compGenPushTimeStamp( long lDate, long lTime, HB_COMP_DECL );                 /* Pushes a timestamp constant on the virtual machine stack */
 extern void hb_compGenPushNil( HB_COMP_DECL );                                               /* Pushes nil on the virtual machine stack */
-extern void hb_compGenPushString( const char * szText, HB_SIZE ulLen, HB_COMP_DECL );        /* Pushes a string on the virtual machine stack */
+extern void hb_compGenPushString( const char * szText, HB_SIZE nLen, HB_COMP_DECL );         /* Pushes a string on the virtual machine stack */
 extern void hb_compGenPushSymbol( const char * szSymbolName, HB_BOOL bFunction, HB_COMP_DECL ); /* Pushes a symbol on to the Virtual machine stack */
 extern void hb_compGenPushAliasedVar( const char *, HB_BOOL, const char *, HB_MAXINT, HB_COMP_DECL );
 extern void hb_compGenPopAliasedVar( const char *, HB_BOOL, const char *, HB_MAXINT, HB_COMP_DECL );
@@ -216,13 +216,13 @@ extern void hb_compGenPCode1( HB_BYTE, HB_COMP_DECL ); /* generates 1 byte of pc
 extern void hb_compGenPCode2( HB_BYTE, HB_BYTE, HB_COMP_DECL ); /* generates 2 bytes of pcode + flag for optional StrongType(). */
 extern void hb_compGenPCode3( HB_BYTE, HB_BYTE, HB_BYTE, HB_COMP_DECL ); /* generates 3 bytes of pcode + flag for optional StrongType() */
 extern void hb_compGenPCode4( HB_BYTE, HB_BYTE, HB_BYTE, HB_BYTE, HB_COMP_DECL ); /* generates 4 bytes of pcode + flag for optional StrongType() */
-extern void hb_compGenPCodeN( const HB_BYTE * pBuffer, HB_SIZE ulSize, HB_COMP_DECL ); /* copy bytes to a pcode buffer + flag for optional StrongType() */
+extern void hb_compGenPCodeN( const HB_BYTE * pBuffer, HB_SIZE nSize, HB_COMP_DECL ); /* copy bytes to a pcode buffer + flag for optional StrongType() */
 
 extern HB_SIZE hb_compSequenceBegin( HB_COMP_DECL );
 extern HB_SIZE hb_compSequenceEnd( HB_COMP_DECL );
 extern HB_SIZE hb_compSequenceAlways( HB_COMP_DECL );
-extern void hb_compSequenceFinish( HB_COMP_DECL, HB_SIZE ulStartPos, HB_SIZE ulEndPos,
-                                   HB_SIZE ulAlways, HB_BOOL fUsualStmts, HB_BOOL fRecover,
+extern void hb_compSequenceFinish( HB_COMP_DECL, HB_SIZE nStartPos, HB_SIZE nEndPos,
+                                   HB_SIZE nAlways, HB_BOOL fUsualStmts, HB_BOOL fRecover,
                                    HB_BOOL fCanMove );
 
 /* support for FIELD declaration */
@@ -289,7 +289,7 @@ extern void        hb_compErrorVParams( HB_COMP_DECL, const char * szFuncOrBlock
 extern HB_EXPR_PTR hb_compErrorStatic( HB_COMP_DECL, const char *, HB_EXPR_PTR );
 extern void        hb_compErrorCodeblock( HB_COMP_DECL, const char * szBlock );
 
-extern HB_BOOL     hb_compIsValidMacroText( HB_COMP_DECL, const char * szText, HB_SIZE ulLen );
+extern HB_BOOL     hb_compIsValidMacroText( HB_COMP_DECL, const char * szText, HB_SIZE nLen );
 
 /* Codeblocks */
 extern void hb_compCodeBlockStart( HB_COMP_DECL, HB_BOOL bLateEval ); /* starts a codeblock creation */
@@ -313,8 +313,8 @@ extern void hb_compPrintLogo( HB_COMP_DECL );
 extern void hb_compPrintModes( HB_COMP_DECL );
 
 /* Misc functions defined in harbour.c */
-extern void hb_compNOOPfill( PFUNCTION pFunc, HB_SIZE ulFrom, HB_ISIZ iCount, HB_BOOL fPop, HB_BOOL fCheck );
-extern HB_BOOL hb_compHasJump( PFUNCTION pFunc, HB_SIZE ulPos );
+extern void hb_compNOOPfill( PFUNCTION pFunc, HB_SIZE nFrom, HB_ISIZ nCount, HB_BOOL fPop, HB_BOOL fCheck );
+extern HB_BOOL hb_compHasJump( PFUNCTION pFunc, HB_SIZE nPos );
 
 /* Misc functions defined in hbfix.c */
 extern void hb_compFixFuncPCode( HB_COMP_DECL, PFUNCTION pFunc );
@@ -337,7 +337,7 @@ extern void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME );       /* generates platfo
 extern void hb_compGenBufPortObj( HB_COMP_DECL, HB_BYTE ** pBufPtr, HB_SIZE * pulSize ); /* generates the portable objects to memory buffer */
 
 extern void hb_compGenCRealCode( HB_COMP_DECL, PFUNCTION pFunc, FILE * yyc );
-extern void hb_compGenCString( FILE * yyc, const HB_BYTE * pText, HB_SIZE ulLen );
+extern void hb_compGenCString( FILE * yyc, const HB_BYTE * pText, HB_SIZE nLen );
 
 /* hbident.c */
 extern const char * hb_compIdentifierNew( HB_COMP_DECL, const char * szName, int iType ); /* create the reusable identifier */

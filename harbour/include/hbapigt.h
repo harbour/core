@@ -190,8 +190,8 @@ extern HB_EXPORT HB_ERRCODE hb_gtPreExt( void );
 extern HB_EXPORT HB_ERRCODE hb_gtSuspend( void ); /* prepare the reminal for shell output */
 extern HB_EXPORT HB_ERRCODE hb_gtResume( void ); /* resume the terminal after the shell output */
 extern HB_EXPORT int        hb_gtReadKey( int iEventMask );
-extern HB_EXPORT HB_ERRCODE hb_gtRectSize( int iTop, int iLeft, int iBottom, int iRight, HB_SIZE * pulBuffSize );
-extern HB_EXPORT HB_ERRCODE hb_gtRepChar( int iRow, int iCol, HB_USHORT usChar, HB_SIZE ulCount );
+extern HB_EXPORT HB_ERRCODE hb_gtRectSize( int iTop, int iLeft, int iBottom, int iRight, HB_SIZE * pnBuffSize );
+extern HB_EXPORT HB_ERRCODE hb_gtRepChar( int iRow, int iCol, HB_USHORT usChar, HB_SIZE nCount );
 extern HB_EXPORT HB_ERRCODE hb_gtSave( int iTop, int iLeft, int iBottom, int iRight, void * pScrBuff );
 extern HB_EXPORT HB_ERRCODE hb_gtRest( int iTop, int iLeft, int iBottom, int iRight, const void * pScrBuff );
 extern HB_EXPORT HB_ERRCODE hb_gtGetChar( int iRow, int iCol, int * piColor, HB_BYTE * pbAttr, HB_USHORT * pusChar );
@@ -209,13 +209,13 @@ extern HB_EXPORT HB_ERRCODE hb_gtSetMode( int iRows, int iCols );
 extern HB_EXPORT HB_ERRCODE hb_gtSetPos( int iRow, int iCol );
 extern HB_EXPORT HB_ERRCODE hb_gtSetSnowFlag( HB_BOOL bNoSnow );
 extern HB_EXPORT HB_ERRCODE hb_gtTone( double dFrequency, double dDuration );
-extern HB_EXPORT HB_ERRCODE hb_gtWrite( const char * szStr, HB_SIZE ulLen );
-extern HB_EXPORT HB_ERRCODE hb_gtWriteAt( int iRow, int iCol, const char * szStr, HB_SIZE ulLen );
-extern HB_EXPORT HB_ERRCODE hb_gtWriteCon( const char * szStr, HB_SIZE ulLen );
-extern HB_EXPORT HB_ERRCODE hb_gtPutText( int iRow, int iCol, const char * szStr, HB_SIZE ulLength, int iColor );
+extern HB_EXPORT HB_ERRCODE hb_gtWrite( const char * szStr, HB_SIZE nLen );
+extern HB_EXPORT HB_ERRCODE hb_gtWriteAt( int iRow, int iCol, const char * szStr, HB_SIZE nLen );
+extern HB_EXPORT HB_ERRCODE hb_gtWriteCon( const char * szStr, HB_SIZE nLen );
+extern HB_EXPORT HB_ERRCODE hb_gtPutText( int iRow, int iCol, const char * szStr, HB_SIZE nLength, int iColor );
 extern HB_EXPORT const char * hb_gtVersion( int iType );
-extern HB_EXPORT HB_ERRCODE hb_gtOutStd( const char * szStr, HB_SIZE ulLen );
-extern HB_EXPORT HB_ERRCODE hb_gtOutErr( const char * szStr, HB_SIZE ulLen );
+extern HB_EXPORT HB_ERRCODE hb_gtOutStd( const char * szStr, HB_SIZE nLen );
+extern HB_EXPORT HB_ERRCODE hb_gtOutErr( const char * szStr, HB_SIZE nLen );
 extern HB_EXPORT HB_ERRCODE hb_gtSetDispCP( const char * pszTermCDP, const char * pszHostCDP, HB_BOOL fBox );
 extern HB_EXPORT HB_ERRCODE hb_gtSetKeyCP( const char * pszTermCDP, const char * pszHostCDP );
 extern HB_EXPORT HB_ERRCODE hb_gtInfo( int iType, PHB_GT_INFO pInfo );
@@ -310,7 +310,7 @@ extern HB_EXPORT int        hb_inkeyNext( int iEvenMask );  /* Return the next k
 extern HB_EXPORT void       hb_inkeyPoll( void );           /* Poll the console keyboard to stuff the Harbour buffer */
 extern HB_EXPORT void       hb_inkeyReset( void );          /* Reset the Harbour keyboard buffer */
 extern HB_EXPORT void       hb_inkeySetCancelKeys( int CancelKey, int CancelKeyEx ); /* Set keycodes for Cancel key (usually K_ALT_C) */
-extern HB_EXPORT void       hb_inkeySetText( const char * szText, HB_SIZE ulLen ); /* Set text into inkey buffer */
+extern HB_EXPORT void       hb_inkeySetText( const char * szText, HB_SIZE nLen ); /* Set text into inkey buffer */
 extern HB_EXPORT int        hb_inkeySetLast( int iKey );    /* Set new LASTKEY() value, return previous one */
 extern HB_EXPORT void       hb_inkeyExit( void );           /* reset inkey pool to default state and free any allocated resources */
 

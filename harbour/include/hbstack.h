@@ -287,12 +287,12 @@ extern HB_EXPORT void        hb_stackPop( void );        /* pops an item from th
 extern void        hb_stackPush( void );                 /* pushes an item on to the stack */
 extern void        hb_stackPushReturn( void );
 extern void        hb_stackPopReturn( void );
-extern void        hb_stackRemove( HB_ISIZ lUntilPos );
+extern void        hb_stackRemove( HB_ISIZ nUntilPos );
 
 extern HB_ISIZ     hb_stackTopOffset( void );
 extern HB_ISIZ     hb_stackBaseOffset( void );
 extern HB_ISIZ     hb_stackTotalItems( void );
-extern HB_ITEM_PTR hb_stackItem( HB_ISIZ iItemPos );
+extern HB_ITEM_PTR hb_stackItem( HB_ISIZ nItemPos );
 extern char *      hb_stackDateBuffer( void );
 
 /* stack management functions */
@@ -319,16 +319,16 @@ extern PHB_STACKRDD hb_stackRDD( void );
 extern void **      hb_stackDebugInfo( void );
 
 #ifdef _HB_API_INTERNAL_
-extern void        hb_stackDecrease( HB_SIZE ulItems );
+extern void        hb_stackDecrease( HB_SIZE nItems );
 extern HB_ITEM_PTR hb_stackNewFrame( PHB_STACK_STATE pFrame, HB_USHORT uiParams );
 extern void        hb_stackOldFrame( PHB_STACK_STATE pFrame );
 extern void        hb_stackClearMemvarsBase( void );
 
-extern HB_ITEM_PTR hb_stackLocalVariable( int *piFromBase );
+extern HB_ITEM_PTR hb_stackLocalVariable( int * piFromBase );
 extern PHB_ITEM ** hb_stackItemBasePtr( void );
 
 extern HB_ISIZ     hb_stackGetRecoverBase( void );
-extern void        hb_stackSetRecoverBase( HB_ISIZ lBase );
+extern void        hb_stackSetRecoverBase( HB_ISIZ nBase );
 extern HB_USHORT   hb_stackGetActionRequest( void );
 extern void        hb_stackSetActionRequest( HB_USHORT uiAction );
 
@@ -337,7 +337,7 @@ extern void *      hb_stackGetStaticsBase( void );
 
 extern PHB_ITEM    hb_stackWithObjectItem( void );
 extern HB_ISIZ     hb_stackWithObjectOffset( void );
-extern void        hb_stackWithObjectSetOffset( HB_ISIZ );
+extern void        hb_stackWithObjectSetOffset( HB_ISIZ nOffset );
 
 extern int *       hb_stackKeyPolls( void );
 extern HB_BOOL *   hb_stackDebugRequest( void );

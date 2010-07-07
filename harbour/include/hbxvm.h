@@ -188,11 +188,11 @@ extern HB_EXPORT HB_BOOL hb_xvmDecEq( void );
 extern HB_EXPORT HB_BOOL hb_xvmDecEqPop( void );
 
 extern HB_EXPORT void    hb_xvmArrayDim( HB_USHORT uiDimensions ); /* generates an uiDimensions Array and initialize those dimensions from the stack values */
-extern HB_EXPORT void    hb_xvmArrayGen( HB_SIZE ulElements );     /* generates an ulElements Array and fills it from the stack values */
+extern HB_EXPORT void    hb_xvmArrayGen( HB_SIZE nElements );      /* generates an nElements Array and fills it from the stack values */
 extern HB_EXPORT HB_BOOL hb_xvmArrayPush( void );                  /* pushes an array element to the stack, removing the array and the index from the stack */
 extern HB_EXPORT HB_BOOL hb_xvmArrayPushRef( void );               /* pushes a reference to an array element to the stack, removing the array and the index from the stack */
 extern HB_EXPORT HB_BOOL hb_xvmArrayPop( void );                   /* pops a value from the stack */
-extern HB_EXPORT void    hb_xvmHashGen( HB_SIZE ulElements );      /* generates an ulElements Hash and fills it from the stack values */
+extern HB_EXPORT void    hb_xvmHashGen( HB_SIZE nElements );       /* generates an nElements Hash and fills it from the stack values */
 
 extern HB_EXPORT void    hb_xvmLocalName( HB_USHORT uiLocal, const char * szLocalName );
 extern HB_EXPORT void    hb_xvmStaticName( HB_BYTE bIsGlobal, HB_USHORT uiStatic, const char * szStaticName );
@@ -214,7 +214,7 @@ extern HB_EXPORT HB_BOOL hb_xvmMacroPopAliased( int bFlags );
 extern HB_EXPORT HB_BOOL hb_xvmMacroSymbol( void );
 extern HB_EXPORT HB_BOOL hb_xvmMacroText( void );
 
-extern HB_EXPORT void    hb_xvmPushStringHidden( int iMethod, const char * szText, HB_SIZE ulSize );
+extern HB_EXPORT void    hb_xvmPushStringHidden( int iMethod, const char * szText, HB_SIZE nSize );
 extern HB_EXPORT void    hb_xvmPushDouble( double dNumber, int iWidth, int iDec );
 #ifdef HB_LONG_LONG_OFF
 extern HB_EXPORT void    hb_xvmPushLongLong( double dNumber );
@@ -235,14 +235,14 @@ extern HB_EXPORT void    hb_xvmPushLongLong( HB_LONGLONG llNumber );
 /*
  * additional multi PCODE operations
  */
-extern HB_EXPORT HB_BOOL hb_xvmArrayItemPush( HB_SIZE ulIndex );
-extern HB_EXPORT HB_BOOL hb_xvmArrayItemPop( HB_SIZE ulIndex );
+extern HB_EXPORT HB_BOOL hb_xvmArrayItemPush( HB_SIZE nIndex );
+extern HB_EXPORT HB_BOOL hb_xvmArrayItemPop( HB_SIZE nIndex );
 extern HB_EXPORT HB_BOOL hb_xvmMultByInt( HB_LONG lValue );
 extern HB_EXPORT HB_BOOL hb_xvmDivideByInt( HB_LONG lValue );
 extern HB_EXPORT HB_BOOL hb_xvmModulusByInt( HB_LONG lValue );
 extern HB_EXPORT HB_BOOL hb_xvmAddInt( HB_LONG lValue );
 extern HB_EXPORT void hb_xvmLocalSetInt( int iLocal, HB_LONG lValue );
-/*extern HB_EXPORT void hb_xvmLocalSetStr( int iLocal, const char * pValue, HB_SIZE ulLen );*/
+/*extern HB_EXPORT void hb_xvmLocalSetStr( int iLocal, const char * pValue, HB_SIZE nLen );*/
 extern HB_EXPORT void hb_xvmPushFuncSymbol( PHB_SYMB pSym );
 
 extern HB_EXPORT HB_BOOL hb_xvmLessThenInt( HB_LONG lValue );
