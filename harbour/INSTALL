@@ -22,7 +22,7 @@ HARBOUR
    For all platforms you'll need:
 
    * Supported ANSI C compiler
-   * GNU Make (3.81 or upper recommended, minimum 3.79 required)
+   * GNU Make (3.81 recommended, minimum 3.79 required)
    * Harbour sources (2.0.0 or upper)
 
    on Windows hosts
@@ -1151,6 +1151,9 @@ HARBOUR
    - Try to do no or only small modifications at once to command examples
      included in this document. If it doesn't work, fall back to documented
      examples as is.
+   - GNU Make 3.81.90 has known bug which prevents autodetection to work
+     in certain situations: http://savannah.gnu.org/bugs/?27591
+     Use 3.81 if in doubt.
 
 
 11. QUICK START TO BUILD YOUR OWN HARBOUR APPLICATIONS

@@ -88,32 +88,11 @@ PROCEDURE Main()
       NEXT
    ENDIF
 
-   /* Creating shared version of Harbour binaries */
+   /* Creating language files */
 
    IF ! Empty( GetEnv( "HB_HOST_BIN_DIR" ) )
 
-#if 0
-      OutStd( "! Making hbmk2 to create .hbl files..." + hb_osNewLine() )
-
-      tmp := ""
-      IF GetEnv( "HB_BUILD_MODE" ) == "cpp"
-         tmp += " -cpp=yes"
-      ELSEIF GetEnv( "HB_BUILD_MODE" ) == "c"
-         tmp += " -cpp=no"
-      ENDIF
-      IF GetEnv( "HB_BUILD_DEBUG" ) == "yes"
-         tmp += " -debug"
-      ENDIF
-      IF GetEnv( "HB_BUILD_SHARED" ) == "yes"
-         tmp += " -shared"
-      ENDIF
-
-      mk_hb_processRun( PathSepToSelf( GetEnv( "HB_HOST_BIN_DIR" ) ) + hb_ps() + "hbmk2" +;
-                        " -quiet -lang=en -q0" + tmp +;
-                        " utils/hbmk2/hbmk2.hbp" +;
-                        " -o${HB_BIN_INSTALL}/hbmk2" )
-#else
-      OutStd( "! Making .hbl files..." + hb_osNewLine() )
+      OutStd( "! Making .hbl files..." + hb_eol() )
 
       FOR EACH tmp IN Directory( "utils" + hb_ps() + hb_osFileMask(), "D" )
          IF "D" $ tmp[ F_ATTR ] .AND. !( tmp[ F_NAME ] == "." ) .AND. !( tmp[ F_NAME ] == ".." )
@@ -124,8 +103,6 @@ PROCEDURE Main()
             NEXT
          ENDIF
       NEXT
-#endif
-
    ENDIF
 
    /* Creating install packages */

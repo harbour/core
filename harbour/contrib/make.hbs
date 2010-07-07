@@ -150,7 +150,7 @@ PROCEDURE Main( ... )
    s_lMigr := "migr" $ hb_cmdLine()
 
    IF s_lMigr
-      OutStd( "! New contrib make orchestrator test run. |" + hb_cmdLine() + "|" + GetEnv( "HB_MAKECMDGOALS" ) + "|" + hb_dirBase() + "|" + CurDir() + "|", hb_eol() )
+      OutStd( "! New contrib make orchestrator test run. |" + hb_cmdLine() + "|" + GetEnv( "HB_MAKECMDGOALS" ) + "|" + hb_dirBase() + "|" + CurDir() + "|" + hb_eol() )
 
       /* testing with a limited set of contribs */
       aLibsPass1 := {;
@@ -274,10 +274,10 @@ PROCEDURE Main( ... )
    hb_setenv( "HB_INC_INSTALL", cRoot + "include" )
 
    /* Using shorter vars to save on cmdline length */
-   hb_setenv( "__HB_B", GetEnv( "HB_BIN_INSTALL" ) )
-   hb_setenv( "__HB_L", GetEnv( "HB_LIB_INSTALL" ) )
-   hb_setenv( "__HB_D", GetEnv( "HB_DYN_INSTALL" ) )
-   hb_setenv( "__HB_I", GetEnv( "HB_INC_INSTALL" ) )
+   hb_setenv( "_HB_B_", GetEnv( "HB_BIN_INSTALL" ) )
+   hb_setenv( "_HB_L_", GetEnv( "HB_LIB_INSTALL" ) )
+   hb_setenv( "_HB_D_", GetEnv( "HB_DYN_INSTALL" ) )
+   hb_setenv( "_HB_I_", GetEnv( "HB_INC_INSTALL" ) )
 
    /* Parse filter */
 
@@ -325,11 +325,11 @@ PROCEDURE Main( ... )
                SWITCH hItem[ "type" ]
                CASE "lib"
                CASE "implib"
-                  cTargetDir := "${__HB_L}"
+                  cTargetDir := "${_HB_L_}"
                   cInstallDirVar := "_HB_LIB_INSTALL"
                   EXIT
                CASE "bin"
-                  cTargetDir := "${__HB_B}"
+                  cTargetDir := "${_HB_B_}"
                   cInstallDirVar := "_HB_BIN_INSTALL"
                   IF GetEnv( "HB_BUILD_SHARED" ) == "yes"
                      cOptionsPre += " -shared"
@@ -386,7 +386,7 @@ PROCEDURE Main( ... )
                   call_hbmk2( cBase + cProject, cTargetDir, cOptionsPre, cOptionsPost, .T. )
                ENDIF
             ELSE
-               /* OutStd( hb_StrFormat( "'%s' project skipped", cProject ), hb_eol() ) */
+               /* OutStd( hb_StrFormat( "! project '%s' skipped", cProject ) + hb_eol() ) */
             ENDIF
          ENDIF
       NEXT
@@ -413,7 +413,7 @@ STATIC FUNCTION call_hbmk2( cProject, cTargetDir, cOptionsPre, cOptionsPost, lDy
                                     " -workdir=" + cTargetDir + "/${hb_work}/" + cName + iif( lDyn, "${hb_workdynsub}", "" ) +;
                                     " -o" + cTargetDir + "/" )
    IF nErrorLevel != 0
-      OutStd( hb_StrFormat( "'%s' returned status: %s", cProject, hb_ntos( nErrorLevel ) ), hb_eol() )
+      OutStd( hb_StrFormat( "! '%s' returned status: %s", cProject, hb_ntos( nErrorLevel ) ) + hb_eol() )
       RETURN .F.
    ENDIF
 
@@ -421,7 +421,7 @@ STATIC FUNCTION call_hbmk2( cProject, cTargetDir, cOptionsPre, cOptionsPost, lDy
 
 STATIC FUNCTION mk_hb_processRun( cCommand )
 
-   OutStd( cCommand, hb_eol() )
+   OutStd( cCommand + hb_eol() )
 
    RETURN iif( s_lTest, 0, hb_processRun( cCommand ) )
 
