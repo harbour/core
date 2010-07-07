@@ -58,7 +58,7 @@
 typedef HB_GENC_FUNC( HB_GENC_FUNC_ );
 typedef HB_GENC_FUNC_ * HB_GENC_FUNC_PTR;
 
-#define HB_GENC_GETLABEL(l)   ( (l) < pFunc->nPCodePos ? cargo->pulLabels[ (l) ] : 0 )
+#define HB_GENC_GETLABEL(l)   ( (l) < pFunc->nPCodePos ? cargo->pnLabels[ (l) ] : 0 )
 
 #define HB_GENC_LABEL()       do { \
                                  HB_SIZE nLab = HB_GENC_GETLABEL( nPCodePos ); \
@@ -2354,11 +2354,11 @@ void hb_compGenCRealCode( HB_COMP_DECL, PFUNCTION pFunc, FILE * yyc )
    label_info.fEndRequest = HB_FALSE;
    label_info.iNestedBlock = 0;
    if( pFunc->nPCodePos == 0 )
-      label_info.pulLabels = NULL;
+      label_info.pnLabels = NULL;
    else
    {
-      label_info.pulLabels = ( HB_SIZE * ) hb_xgrab( pFunc->nPCodePos * sizeof( HB_SIZE ) );
-      memset( label_info.pulLabels, 0, pFunc->nPCodePos * sizeof( HB_SIZE ) );
+      label_info.pnLabels = ( HB_SIZE * ) hb_xgrab( pFunc->nPCodePos * sizeof( HB_SIZE ) );
+      memset( label_info.pnLabels, 0, pFunc->nPCodePos * sizeof( HB_SIZE ) );
       hb_compGenLabelTable( pFunc, &label_info );
    }
 
@@ -2374,6 +2374,6 @@ void hb_compGenCRealCode( HB_COMP_DECL, PFUNCTION pFunc, FILE * yyc )
       fprintf( yyc, "   hb_xvmExitProc();\n" );
    fprintf( yyc, "}\n" );
 
-   if( label_info.pulLabels )
-      hb_xfree( label_info.pulLabels );
+   if( label_info.pnLabels )
+      hb_xfree( label_info.pnLabels );
 }

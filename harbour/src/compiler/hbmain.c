@@ -1550,7 +1550,7 @@ static void hb_compOptimizeJumps( HB_COMP_DECL )
       nOptimized += nBytes2Copy;
 
       HB_COMP_PARAM->functions.pLast->nPCodePos  = nOptimized;
-      HB_COMP_PARAM->functions.pLast->lPCodeSize = nOptimized;
+      HB_COMP_PARAM->functions.pLast->nPCodeSize = nOptimized;
 
       hb_xfree( HB_COMP_PARAM->functions.pLast->pNOOPs );
       HB_COMP_PARAM->functions.pLast->pNOOPs = NULL;
@@ -1816,7 +1816,7 @@ static PINLINE hb_compInlineNew( HB_COMP_DECL, const char * szName, int iLine )
 
    pInline->szName     = szName;
    pInline->pCode      = NULL;
-   pInline->lPCodeSize = 0;
+   pInline->nPCodeSize = 0;
    pInline->pNext      = NULL;
    pInline->szFileName = hb_compIdentifierNew( HB_COMP_PARAM,
                   hb_pp_fileName( HB_COMP_PARAM->pLex->pPP ), HB_IDENT_COPY );

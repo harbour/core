@@ -605,7 +605,7 @@ void hb_compCodeTraceMarkDead( HB_COMP_DECL, PFUNCTION pFunc )
           */
          /*
          pFunc->pCode[ nPos - nCount ] = pFunc->pCode[ nPos - 1 ];
-         pFunc->nPCodePos = pFunc->lPCodeSize = nPos - nCount + 1;
+         pFunc->nPCodePos = pFunc->nPCodeSize = nPos - nCount + 1;
          */
          hb_compNOOPfill( pFunc, nPos - nCount, nCount, HB_FALSE, HB_TRUE );
       }

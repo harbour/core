@@ -610,11 +610,11 @@ void hb_compGenPCode1( HB_BYTE byte, HB_COMP_DECL )
    if( ! pFunc->pCode )   /* has been created the memory block to hold the pcode ? */
    {
       pFunc->pCode      = ( HB_BYTE * ) hb_xgrab( HB_PCODE_CHUNK );
-      pFunc->lPCodeSize = HB_PCODE_CHUNK;
+      pFunc->nPCodeSize = HB_PCODE_CHUNK;
       pFunc->nPCodePos  = 0;
    }
-   else if( ( pFunc->lPCodeSize - pFunc->nPCodePos ) < 1 )
-      pFunc->pCode = ( HB_BYTE * ) hb_xrealloc( pFunc->pCode, pFunc->lPCodeSize += HB_PCODE_CHUNK );
+   else if( ( pFunc->nPCodeSize - pFunc->nPCodePos ) < 1 )
+      pFunc->pCode = ( HB_BYTE * ) hb_xrealloc( pFunc->pCode, pFunc->nPCodeSize += HB_PCODE_CHUNK );
 
    pFunc->pCode[ pFunc->nPCodePos++ ] = byte;
 }
@@ -626,11 +626,11 @@ void hb_compGenPCode2( HB_BYTE byte1, HB_BYTE byte2, HB_COMP_DECL )
    if( ! pFunc->pCode )   /* has been created the memory block to hold the pcode ? */
    {
       pFunc->pCode      = ( HB_BYTE * ) hb_xgrab( HB_PCODE_CHUNK );
-      pFunc->lPCodeSize = HB_PCODE_CHUNK;
+      pFunc->nPCodeSize = HB_PCODE_CHUNK;
       pFunc->nPCodePos  = 0;
    }
-   else if( ( pFunc->lPCodeSize - pFunc->nPCodePos ) < 2 )
-      pFunc->pCode = ( HB_BYTE * ) hb_xrealloc( pFunc->pCode, pFunc->lPCodeSize += HB_PCODE_CHUNK );
+   else if( ( pFunc->nPCodeSize - pFunc->nPCodePos ) < 2 )
+      pFunc->pCode = ( HB_BYTE * ) hb_xrealloc( pFunc->pCode, pFunc->nPCodeSize += HB_PCODE_CHUNK );
 
    pFunc->pCode[ pFunc->nPCodePos++ ] = byte1;
    pFunc->pCode[ pFunc->nPCodePos++ ] = byte2;
@@ -643,11 +643,11 @@ void hb_compGenPCode3( HB_BYTE byte1, HB_BYTE byte2, HB_BYTE byte3, HB_COMP_DECL
    if( ! pFunc->pCode )   /* has been created the memory block to hold the pcode ? */
    {
       pFunc->pCode      = ( HB_BYTE * ) hb_xgrab( HB_PCODE_CHUNK );
-      pFunc->lPCodeSize = HB_PCODE_CHUNK;
+      pFunc->nPCodeSize = HB_PCODE_CHUNK;
       pFunc->nPCodePos  = 0;
    }
-   else if( ( pFunc->lPCodeSize - pFunc->nPCodePos ) < 3 )
-      pFunc->pCode = ( HB_BYTE * ) hb_xrealloc( pFunc->pCode, pFunc->lPCodeSize += HB_PCODE_CHUNK );
+   else if( ( pFunc->nPCodeSize - pFunc->nPCodePos ) < 3 )
+      pFunc->pCode = ( HB_BYTE * ) hb_xrealloc( pFunc->pCode, pFunc->nPCodeSize += HB_PCODE_CHUNK );
 
    pFunc->pCode[ pFunc->nPCodePos++ ] = byte1;
    pFunc->pCode[ pFunc->nPCodePos++ ] = byte2;
@@ -661,11 +661,11 @@ void hb_compGenPCode4( HB_BYTE byte1, HB_BYTE byte2, HB_BYTE byte3, HB_BYTE byte
    if( ! pFunc->pCode )   /* has been created the memory block to hold the pcode ? */
    {
       pFunc->pCode      = ( HB_BYTE * ) hb_xgrab( HB_PCODE_CHUNK );
-      pFunc->lPCodeSize = HB_PCODE_CHUNK;
+      pFunc->nPCodeSize = HB_PCODE_CHUNK;
       pFunc->nPCodePos  = 0;
    }
-   else if( ( pFunc->lPCodeSize - pFunc->nPCodePos ) < 4 )
-      pFunc->pCode = ( HB_BYTE * ) hb_xrealloc( pFunc->pCode, pFunc->lPCodeSize += HB_PCODE_CHUNK );
+   else if( ( pFunc->nPCodeSize - pFunc->nPCodePos ) < 4 )
+      pFunc->pCode = ( HB_BYTE * ) hb_xrealloc( pFunc->pCode, pFunc->nPCodeSize += HB_PCODE_CHUNK );
 
    pFunc->pCode[ pFunc->nPCodePos++ ] = byte1;
    pFunc->pCode[ pFunc->nPCodePos++ ] = byte2;
@@ -679,15 +679,15 @@ void hb_compGenPCodeN( const HB_BYTE * pBuffer, HB_SIZE nSize, HB_COMP_DECL )
 
    if( ! pFunc->pCode )   /* has been created the memory block to hold the pcode ? */
    {
-      pFunc->lPCodeSize = ( ( nSize / HB_PCODE_CHUNK ) + 1 ) * HB_PCODE_CHUNK;
-      pFunc->pCode      = ( HB_BYTE * ) hb_xgrab( pFunc->lPCodeSize );
+      pFunc->nPCodeSize = ( ( nSize / HB_PCODE_CHUNK ) + 1 ) * HB_PCODE_CHUNK;
+      pFunc->pCode      = ( HB_BYTE * ) hb_xgrab( pFunc->nPCodeSize );
       pFunc->nPCodePos  = 0;
    }
-   else if( pFunc->nPCodePos + nSize > pFunc->lPCodeSize )
+   else if( pFunc->nPCodePos + nSize > pFunc->nPCodeSize )
    {
       /* not enough free space in pcode buffer - increase it */
-      pFunc->lPCodeSize += ( ( ( nSize / HB_PCODE_CHUNK ) + 1 ) * HB_PCODE_CHUNK );
-      pFunc->pCode = ( HB_BYTE * ) hb_xrealloc( pFunc->pCode, pFunc->lPCodeSize );
+      pFunc->nPCodeSize += ( ( ( nSize / HB_PCODE_CHUNK ) + 1 ) * HB_PCODE_CHUNK );
+      pFunc->pCode = ( HB_BYTE * ) hb_xrealloc( pFunc->pCode, pFunc->nPCodeSize );
    }
 
    memcpy( pFunc->pCode + pFunc->nPCodePos, pBuffer, nSize );

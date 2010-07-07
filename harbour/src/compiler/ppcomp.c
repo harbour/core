@@ -88,7 +88,7 @@ static void hb_pp_PragmaDump( void * cargo, char * pBuffer, HB_SIZE nSize,
    pInline->pCode = ( HB_BYTE * ) hb_xgrab( nSize + 1 );
    memcpy( pInline->pCode, pBuffer, nSize );
    pInline->pCode[ nSize ] = '\0';
-   pInline->lPCodeSize = nSize;
+   pInline->nPCodeSize = nSize;
 }
 
 static void hb_pp_hb_inLine( void * cargo, char * szFunc,
@@ -111,7 +111,7 @@ static void hb_pp_hb_inLine( void * cargo, char * szFunc,
       pInline->pCode = ( HB_BYTE * ) hb_xgrab( nSize + 1 );
       memcpy( pInline->pCode, pBuffer, nSize );
       pInline->pCode[ nSize ] = '\0';
-      pInline->lPCodeSize = nSize;
+      pInline->nPCodeSize = nSize;
    }
 }
 

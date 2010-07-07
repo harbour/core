@@ -506,7 +506,7 @@ typedef struct __FUNC
    PVAR         pDetached;                /* pointer to detached local variables list */
    PVAR         pPrivates;                /* pointer to private variables list */
    HB_BYTE *    pCode;                    /* pointer to a memory block where pcode is stored */
-   HB_SIZE      lPCodeSize;               /* total memory size for pcode */
+   HB_SIZE      nPCodeSize;               /* total memory size for pcode */
    HB_SIZE      nPCodePos;                /* actual pcode offset */
    int          iStaticsBase;             /* base for this function statics */
    int          iFuncSuffix;              /* function suffix for multiple static functions with the same name */
@@ -540,7 +540,7 @@ typedef struct __INLINE
 {
    const char * szName;                   /* name of a inline function */
    HB_BYTE *    pCode;                    /* pointer to a memory block where pcode is stored */
-   HB_SIZE      lPCodeSize;               /* total memory size for pcode */
+   HB_SIZE      nPCodeSize;               /* total memory size for pcode */
    const char * szFileName;               /* Source file name */
    int          iLine;                    /* Source line number */
    struct __INLINE * pNext;               /* pointer to the next defined inline */
@@ -621,7 +621,7 @@ typedef struct _HB_LABEL_INFO
    HB_BOOL   fCondJump;
    HB_BOOL   fEndRequest;
    int       iNestedBlock;
-   HB_SIZE * pulLabels;
+   HB_SIZE * pnLabels;
 } HB_LABEL_INFO, * PHB_LABEL_INFO;
 
 #define HB_MODE_COMPILER      1
@@ -651,7 +651,7 @@ HB_COMMON, * HB_COMMON_PTR;
 typedef struct HB_PCODE_INFO_ /* compiled pcode container for macro compiler */
 {
    HB_BYTE * pCode;        /* pointer to a memory block where pcode is stored */
-   HB_SIZE lPCodeSize;     /* total memory size for pcode */
+   HB_SIZE nPCodeSize;     /* total memory size for pcode */
    HB_SIZE nPCodePos;      /* actual pcode offset */
    HB_BOOL fVParams;       /* function/codeblock with variable parameters */
    HB_CBVAR_PTR pLocals;
