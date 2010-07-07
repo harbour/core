@@ -58,7 +58,7 @@
 #ifndef HB_MACRO_SUPPORT
 HB_SIZE hb_compExprListEval( HB_COMP_DECL, HB_EXPR_PTR pExpr, HB_CARGO_FUNC_PTR pEval )
 {
-   HB_SIZE ulLen = 0;
+   HB_SIZE nLen = 0;
 
    if( pEval && ( pExpr->ExprType == HB_ET_LIST ||
                   pExpr->ExprType == HB_ET_ARGLIST ) )
@@ -68,18 +68,18 @@ HB_SIZE hb_compExprListEval( HB_COMP_DECL, HB_EXPR_PTR pExpr, HB_CARGO_FUNC_PTR 
       {
          ( pEval )( HB_COMP_PARAM, ( void * ) pExpr );
          pExpr = pExpr->pNext;
-         ++ulLen;
+         ++nLen;
       }
    }
-   return ulLen;
+   return nLen;
 }
 
 HB_SIZE hb_compExprListEval2( HB_COMP_DECL, HB_EXPR_PTR pExpr1, HB_EXPR_PTR pExpr2, HB_CARGO2_FUNC_PTR pEval )
 {
-   HB_SIZE ulLen = 0;
+   HB_SIZE nLen = 0;
 
    if( !pEval )
-      return ulLen;
+      return nLen;
 
    if( ( pExpr1->ExprType == HB_ET_LIST || pExpr1->ExprType == HB_ET_ARGLIST )
        &&
@@ -92,7 +92,7 @@ HB_SIZE hb_compExprListEval2( HB_COMP_DECL, HB_EXPR_PTR pExpr1, HB_EXPR_PTR pExp
          ( pEval )( HB_COMP_PARAM, ( void * ) pExpr1, ( void * ) pExpr2 );
          pExpr1 = pExpr1->pNext;
          pExpr2 = pExpr2->pNext;
-         ++ulLen;
+         ++nLen;
       }
    }
    else if( pExpr1->ExprType == HB_ET_LIST || pExpr1->ExprType == HB_ET_ARGLIST )
@@ -102,10 +102,10 @@ HB_SIZE hb_compExprListEval2( HB_COMP_DECL, HB_EXPR_PTR pExpr1, HB_EXPR_PTR pExp
       {
          ( pEval )( HB_COMP_PARAM, ( void * ) pExpr1, ( void * ) pExpr2 );
          pExpr1 = pExpr1->pNext;
-         ++ulLen;
+         ++nLen;
       }
    }
-   return ulLen;
+   return nLen;
 }
 #endif
 
@@ -331,12 +331,12 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
 
                /* NOTE: Clipper strips a string at the first '[' character too
                 */
-               while( ++i < pVar->ulLength )
+               while( ++i < pVar->nLength )
                {
                   if( szVar[ i ] == '[' )
                   {
                      szVar[ i ] = 0;
-                     pVar->ulLength = i;
+                     pVar->nLength = i;
                      break;
                   }
                }
@@ -628,14 +628,14 @@ HB_EXPR_PTR hb_compExprAssignStatic( HB_EXPR_PTR pLeftExpr, HB_EXPR_PTR pRightEx
    return pExpr;
 }
 
-HB_EXPR_PTR hb_compExprSetCodeblockBody( HB_EXPR_PTR pExpr, HB_BYTE * pCode, HB_SIZE ulLen )
+HB_EXPR_PTR hb_compExprSetCodeblockBody( HB_EXPR_PTR pExpr, HB_BYTE * pCode, HB_SIZE nLen )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_compExprSetCodeblockBody(%p,%p,%" HB_PFS "u)", pExpr, pCode, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_compExprSetCodeblockBody(%p,%p,%" HB_PFS "u)", pExpr, pCode, nLen));
 
-   pExpr->value.asCodeblock.string = ( char * ) hb_xgrab( ulLen + 1 );
-   memcpy( pExpr->value.asCodeblock.string, pCode, ulLen );
-   pExpr->value.asCodeblock.string[ ulLen ] = '\0';
-   pExpr->ulLength = ulLen;
+   pExpr->value.asCodeblock.string = ( char * ) hb_xgrab( nLen + 1 );
+   memcpy( pExpr->value.asCodeblock.string, pCode, nLen );
+   pExpr->value.asCodeblock.string[ nLen ] = '\0';
+   pExpr->nLength = nLen;
 
    return pExpr;
 }

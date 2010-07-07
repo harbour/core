@@ -113,8 +113,8 @@ static int hb_macroParse( HB_MACRO_PTR pMacro )
 
    /* initialize the output (pcode) buffer - it will be filled by yacc */
    pMacro->pCodeInfo = &pMacro->pCodeInfoBuffer;
-   pMacro->pCodeInfo->lPCodeSize = HB_PCODE_SIZE;
-   pMacro->pCodeInfo->lPCodePos  = 0;
+   pMacro->pCodeInfo->nPCodeSize = HB_PCODE_SIZE;
+   pMacro->pCodeInfo->nPCodePos  = 0;
    pMacro->pCodeInfo->fVParams   = HB_FALSE;
    pMacro->pCodeInfo->pLocals    = NULL;
    pMacro->pCodeInfo->pPrev      = NULL;
@@ -812,13 +812,13 @@ static void hb_macroBlock( const char * szString, PHB_ITEM pItem )
 
    if( pMacro )
    {
-      pMacro->pCodeInfo->pCode[ pMacro->pCodeInfo->lPCodePos - 1 ] = HB_P_ENDBLOCK;
+      pMacro->pCodeInfo->pCode[ pMacro->pCodeInfo->nPCodePos - 1 ] = HB_P_ENDBLOCK;
 
       if( HB_IS_COMPLEX( pItem ) )
          hb_itemClear( pItem );
 
       pItem->item.asBlock.value = hb_codeblockMacroNew( pMacro->pCodeInfo->pCode,
-                                                        pMacro->pCodeInfo->lPCodePos );
+                                                        pMacro->pCodeInfo->nPCodePos );
       pItem->type = HB_IT_BLOCK;
       pItem->item.asBlock.paramcnt = 0;
       pItem->item.asBlock.lineno = 0;
@@ -1121,7 +1121,7 @@ HB_SIZE hb_macroGenJump( HB_ISIZ nOffset, HB_COMP_DECL )
    else
       hb_macroError( HB_MACRO_TOO_COMPLEX, HB_COMP_PARAM );
 
-   return HB_PCODE_DATA->lPCodePos - 3;
+   return HB_PCODE_DATA->nPCodePos - 3;
 }
 
 HB_SIZE hb_macroGenJumpFalse( HB_ISIZ nOffset, HB_COMP_DECL )
@@ -1137,7 +1137,7 @@ HB_SIZE hb_macroGenJumpFalse( HB_ISIZ nOffset, HB_COMP_DECL )
    else
       hb_macroError( HB_MACRO_TOO_COMPLEX, HB_COMP_PARAM );
 
-   return HB_PCODE_DATA->lPCodePos - 3;
+   return HB_PCODE_DATA->nPCodePos - 3;
 }
 
 HB_SIZE hb_macroGenJumpTrue( HB_ISIZ nOffset, HB_COMP_DECL )
@@ -1153,7 +1153,7 @@ HB_SIZE hb_macroGenJumpTrue( HB_ISIZ nOffset, HB_COMP_DECL )
    else
       hb_macroError( HB_MACRO_TOO_COMPLEX, HB_COMP_PARAM );
 
-   return HB_PCODE_DATA->lPCodePos - 3;
+   return HB_PCODE_DATA->nPCodePos - 3;
 }
 
 void hb_macroGenJumpThere( HB_SIZE nFrom, HB_SIZE nTo, HB_COMP_DECL )
@@ -1169,7 +1169,7 @@ void hb_macroGenJumpThere( HB_SIZE nFrom, HB_SIZE nTo, HB_COMP_DECL )
 
 void hb_macroGenJumpHere( HB_SIZE nOffset, HB_COMP_DECL )
 {
-   hb_macroGenJumpThere( nOffset, HB_PCODE_DATA->lPCodePos, HB_COMP_PARAM );
+   hb_macroGenJumpThere( nOffset, HB_PCODE_DATA->nPCodePos, HB_COMP_PARAM );
 }
 
 /*
@@ -1560,61 +1560,61 @@ void hb_macroGenPCode1( HB_BYTE byte, HB_COMP_DECL )
 {
    HB_PCODE_INFO_PTR pFunc = HB_PCODE_DATA;
 
-   if( ( pFunc->lPCodeSize - pFunc->lPCodePos ) < 1 )
-      pFunc->pCode = ( HB_BYTE * ) hb_xrealloc( pFunc->pCode, pFunc->lPCodeSize += HB_PCODE_SIZE );
+   if( ( pFunc->nPCodeSize - pFunc->nPCodePos ) < 1 )
+      pFunc->pCode = ( HB_BYTE * ) hb_xrealloc( pFunc->pCode, pFunc->nPCodeSize += HB_PCODE_SIZE );
 
-   pFunc->pCode[ pFunc->lPCodePos++ ] = byte;
+   pFunc->pCode[ pFunc->nPCodePos++ ] = byte;
 }
 
 void hb_macroGenPCode2( HB_BYTE byte1, HB_BYTE byte2, HB_COMP_DECL )
 {
    HB_PCODE_INFO_PTR pFunc = HB_PCODE_DATA;
 
-   if( ( pFunc->lPCodeSize - pFunc->lPCodePos ) < 2 )
-      pFunc->pCode = ( HB_BYTE * ) hb_xrealloc( pFunc->pCode, pFunc->lPCodeSize += HB_PCODE_SIZE );
+   if( ( pFunc->nPCodeSize - pFunc->nPCodePos ) < 2 )
+      pFunc->pCode = ( HB_BYTE * ) hb_xrealloc( pFunc->pCode, pFunc->nPCodeSize += HB_PCODE_SIZE );
 
-   pFunc->pCode[ pFunc->lPCodePos++ ] = byte1;
-   pFunc->pCode[ pFunc->lPCodePos++ ] = byte2;
+   pFunc->pCode[ pFunc->nPCodePos++ ] = byte1;
+   pFunc->pCode[ pFunc->nPCodePos++ ] = byte2;
 }
 
 void hb_macroGenPCode3( HB_BYTE byte1, HB_BYTE byte2, HB_BYTE byte3, HB_COMP_DECL )
 {
    HB_PCODE_INFO_PTR pFunc = HB_PCODE_DATA;
 
-   if( ( pFunc->lPCodeSize - pFunc->lPCodePos ) < 3 )
-      pFunc->pCode = ( HB_BYTE * ) hb_xrealloc( pFunc->pCode, pFunc->lPCodeSize += HB_PCODE_SIZE );
+   if( ( pFunc->nPCodeSize - pFunc->nPCodePos ) < 3 )
+      pFunc->pCode = ( HB_BYTE * ) hb_xrealloc( pFunc->pCode, pFunc->nPCodeSize += HB_PCODE_SIZE );
 
-   pFunc->pCode[ pFunc->lPCodePos++ ] = byte1;
-   pFunc->pCode[ pFunc->lPCodePos++ ] = byte2;
-   pFunc->pCode[ pFunc->lPCodePos++ ] = byte3;
+   pFunc->pCode[ pFunc->nPCodePos++ ] = byte1;
+   pFunc->pCode[ pFunc->nPCodePos++ ] = byte2;
+   pFunc->pCode[ pFunc->nPCodePos++ ] = byte3;
 }
 
 void hb_macroGenPCode4( HB_BYTE byte1, HB_BYTE byte2, HB_BYTE byte3, HB_BYTE byte4, HB_COMP_DECL )
 {
    HB_PCODE_INFO_PTR pFunc = HB_PCODE_DATA;
 
-   if( ( pFunc->lPCodeSize - pFunc->lPCodePos ) < 4 )
-      pFunc->pCode = ( HB_BYTE * ) hb_xrealloc( pFunc->pCode, pFunc->lPCodeSize += HB_PCODE_SIZE );
+   if( ( pFunc->nPCodeSize - pFunc->nPCodePos ) < 4 )
+      pFunc->pCode = ( HB_BYTE * ) hb_xrealloc( pFunc->pCode, pFunc->nPCodeSize += HB_PCODE_SIZE );
 
-   pFunc->pCode[ pFunc->lPCodePos++ ] = byte1;
-   pFunc->pCode[ pFunc->lPCodePos++ ] = byte2;
-   pFunc->pCode[ pFunc->lPCodePos++ ] = byte3;
-   pFunc->pCode[ pFunc->lPCodePos++ ] = byte4;
+   pFunc->pCode[ pFunc->nPCodePos++ ] = byte1;
+   pFunc->pCode[ pFunc->nPCodePos++ ] = byte2;
+   pFunc->pCode[ pFunc->nPCodePos++ ] = byte3;
+   pFunc->pCode[ pFunc->nPCodePos++ ] = byte4;
 }
 
 void hb_macroGenPCodeN( HB_BYTE * pBuffer, HB_SIZE nSize, HB_COMP_DECL )
 {
    HB_PCODE_INFO_PTR pFunc = HB_PCODE_DATA;
 
-   if( pFunc->lPCodePos + nSize > pFunc->lPCodeSize )
+   if( pFunc->nPCodePos + nSize > pFunc->nPCodeSize )
    {
       /* not enough free space in pcode buffer - increase it */
-      pFunc->lPCodeSize += ( ( ( nSize / HB_PCODE_SIZE ) + 1 ) * HB_PCODE_SIZE );
-      pFunc->pCode = ( HB_BYTE * ) hb_xrealloc( pFunc->pCode, pFunc->lPCodeSize );
+      pFunc->nPCodeSize += ( ( ( nSize / HB_PCODE_SIZE ) + 1 ) * HB_PCODE_SIZE );
+      pFunc->pCode = ( HB_BYTE * ) hb_xrealloc( pFunc->pCode, pFunc->nPCodeSize );
    }
 
-   memcpy( pFunc->pCode + pFunc->lPCodePos, pBuffer, nSize );
-   pFunc->lPCodePos += nSize;
+   memcpy( pFunc->pCode + pFunc->nPCodePos, pBuffer, nSize );
+   pFunc->nPCodePos += nSize;
 }
 
 /* ************************************************************************* */
@@ -1637,8 +1637,8 @@ void hb_macroCodeBlockStart( HB_COMP_DECL )
    pCB = ( HB_PCODE_INFO_PTR ) hb_xgrab( sizeof( HB_PCODE_INFO ) );
 
    pCB->pCode = ( HB_BYTE * ) hb_xgrab( HB_PCODE_SIZE );
-   pCB->lPCodeSize = HB_PCODE_SIZE;
-   pCB->lPCodePos  = 0;
+   pCB->nPCodeSize = HB_PCODE_SIZE;
+   pCB->nPCodePos  = 0;
    pCB->fVParams   = HB_FALSE;
    pCB->pLocals    = NULL;
 
@@ -1681,7 +1681,7 @@ void hb_macroCodeBlockEnd( HB_COMP_DECL )
     * runtime compiled codeblock cannot reference local variables defined in a
     * function
     */
-   nSize = pCodeblock->lPCodePos + 6;
+   nSize = pCodeblock->nPCodePos + 6;
 
    /* NOTE: HB_P_MPUSHBLOCK differs from HB_P_PUSHBLOCK - the pcode
     * is stored in dynamic memory pool instead of static memory
@@ -1696,7 +1696,7 @@ void hb_macroCodeBlockEnd( HB_COMP_DECL )
    hb_macroGenPCode2( HB_LOBYTE( usParms ), HB_HIBYTE( usParms ), HB_COMP_PARAM );
 
    /* copy a codeblock pcode buffer */
-   hb_macroGenPCodeN( pCodeblock->pCode, pCodeblock->lPCodePos, HB_COMP_PARAM );
+   hb_macroGenPCodeN( pCodeblock->pCode, pCodeblock->nPCodePos, HB_COMP_PARAM );
    hb_macroGenPCode1( HB_P_ENDBLOCK, HB_COMP_PARAM ); /* finish the codeblock */
 
    /* free memory allocated for a codeblock */

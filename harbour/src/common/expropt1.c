@@ -226,7 +226,7 @@ const char * hb_compExprAsString( HB_EXPR_PTR pExpr )
 HB_SIZE hb_compExprAsStringLen( HB_EXPR_PTR pExpr )
 {
    if( pExpr->ExprType == HB_ET_STRING )
-      return pExpr->ulLength;
+      return pExpr->nLength;
    return 0;
 }
 
@@ -371,7 +371,7 @@ HB_EXPR_PTR hb_compExprNewString( const char *szValue, HB_SIZE nLen, HB_BOOL fDe
 
    pExpr->value.asString.string = ( char * ) szValue;
    pExpr->value.asString.dealloc = fDealloc;
-   pExpr->ulLength = nLen;
+   pExpr->nLength = nLen;
    pExpr->ValType = HB_EV_STRING;
 
    return pExpr;
@@ -388,7 +388,7 @@ HB_EXPR_PTR hb_compExprNewArray( HB_EXPR_PTR pArrList, HB_COMP_DECL )
 
    pArrList->ExprType = HB_ET_ARRAY;   /* change type from ET_LIST */
    pArrList->ValType  = HB_EV_ARRAY;
-   pArrList->ulLength = 0;
+   pArrList->nLength = 0;
    pArrList->value.asList.reference = HB_FALSE;
 
    pExpr = pArrList->value.asList.pExprList;   /* get first element on the list */
@@ -411,7 +411,7 @@ HB_EXPR_PTR hb_compExprNewArray( HB_EXPR_PTR pArrList, HB_COMP_DECL )
          if( pExpr->ExprType == HB_ET_NONE )
             pExpr->ExprType = HB_ET_NIL;
          pExpr = pExpr->pNext;
-         ++pArrList->ulLength;
+         ++pArrList->nLength;
       }
    }
    pArrList->value.asList.pIndex = NULL;
@@ -436,7 +436,7 @@ HB_EXPR_PTR hb_compExprNewHash( HB_EXPR_PTR pHashList, HB_COMP_DECL )
       pHashList->value.asList.pExprList = NULL;
    }
    pHashList->ValType = HB_EV_HASH;
-   pHashList->ulLength = 0;
+   pHashList->nLength = 0;
    pHashList->value.asList.reference = HB_FALSE;
    pHashList->value.asList.pIndex = NULL;
 
@@ -450,7 +450,7 @@ HB_EXPR_PTR hb_compExprNewHash( HB_EXPR_PTR pHashList, HB_COMP_DECL )
       if( pExpr->ExprType == HB_ET_NONE )
          pExpr->ExprType = HB_ET_NIL;
       pExpr = pExpr->pNext;
-      ++pHashList->ulLength;
+      ++pHashList->nLength;
    }
 
    return pHashList;
@@ -469,7 +469,7 @@ HB_EXPR_PTR hb_compExprNewCodeBlock( char *string, HB_SIZE nLen, int iFlags, HB_
    pExpr->ValType = HB_EV_CODEBLOCK;
    pExpr->value.asCodeblock.flags  = ( HB_USHORT ) iFlags;
    pExpr->value.asCodeblock.string = string;
-   pExpr->ulLength = nLen;
+   pExpr->nLength = nLen;
    return pExpr;
 }
 

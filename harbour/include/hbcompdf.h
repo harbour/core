@@ -430,7 +430,7 @@ typedef struct HB_EXPR_
       } asOperator;
       struct HB_EXPR_ * asReference;
    } value;
-   HB_SIZE     ulLength;
+   HB_SIZE     nLength;
    HB_EXPRTYPE ExprType;      /* internal expression type */
    HB_USHORT   ValType;       /* language level value type */
    struct HB_EXPR_ *pNext;    /* next expression in the list of expressions */
@@ -446,7 +446,7 @@ typedef struct HB_ENUMERATOR_
 /* support structure for else if pcode fixups */
 typedef struct HB_ELSEIF_
 {
-   HB_SIZE  ulOffset;
+   HB_SIZE  nOffset;
    struct   HB_ELSEIF_ * pElseif;   /* next ELSEIF in the current IF statement */
    struct   HB_ELSEIF_ * pPrev;     /* previous IF statement */
 } HB_ELSEIF, * HB_ELSEIF_PTR;
@@ -454,7 +454,7 @@ typedef struct HB_ELSEIF_
 /* support structure for EXIT and LOOP statements */
 typedef struct HB_LOOPEXIT_
 {
-   HB_SIZE   ulOffset;
+   HB_SIZE   nOffset;
    HB_BOOL   fCanLoop;
    HB_USHORT wSeqCounter;
    HB_USHORT wAlwaysCounter;
@@ -467,18 +467,18 @@ typedef struct HB_LOOPEXIT_
 /* support structure for SWITCH statement */
 typedef struct HB_SWITCHCASE_
 {
-   HB_SIZE ulOffset;
+   HB_SIZE nOffset;
    HB_EXPR_PTR pExpr;
    struct HB_SWITCHCASE_ * pNext;
 } HB_SWITCHCASE, * HB_SWITCHCASE_PTR;
 
 typedef struct HB_SWITCHCMD_
 {
-   HB_SIZE ulOffset;
+   HB_SIZE nOffset;
    HB_SWITCHCASE_PTR pCases;
    HB_SWITCHCASE_PTR pLast;
    HB_EXPR_PTR pExpr;
-   HB_SIZE ulDefault;
+   HB_SIZE nDefault;
    struct HB_SWITCHCMD_ * pPrev;
 } HB_SWITCHCMD, *HB_SWITCHCMD_PTR;
 
@@ -512,8 +512,8 @@ typedef struct __FUNC
    int          iFuncSuffix;              /* function suffix for multiple static functions with the same name */
    HB_SIZE *    pNOOPs;                   /* pointer to the NOOP array */
    HB_SIZE *    pJumps;                   /* pointer to the Jumps array */
-   HB_SIZE      iNOOPs;                   /* NOOPs Counter */
-   HB_SIZE      iJumps;                   /* Jumps Counter */
+   HB_SIZE      nNOOPs;                   /* NOOPs Counter */
+   HB_SIZE      nJumps;                   /* Jumps Counter */
    HB_BOOL      bLateEval;                /* HB_TRUE if accessing of declared (compile time) variables is allowed */
    HB_BOOL      fVParams;                 /* HB_TRUE if variable number of parameters is used */
    HB_BOOL      bError;                   /* error during function compilation */
@@ -776,7 +776,7 @@ typedef struct _HB_COMP
    void              ( * outErrFunc ) ( void *, const char* );
    void *            cargo;
 
-   HB_SIZE           ulOutBufSize;        /* memory output buffer size */
+   HB_SIZE           nOutBufSize;         /* memory output buffer size */
    HB_BYTE *         pOutBuf;             /* memory output buffer address */
 
    HB_SIZE           lastLinePos;         /* position of last opcode with line number */

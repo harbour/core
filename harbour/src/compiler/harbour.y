@@ -78,7 +78,7 @@ static void hb_compLoopExit( HB_COMP_DECL );
 static void hb_compLoopHere( HB_COMP_DECL );
 static long hb_compLoopCount( HB_COMP_DECL );
 
-static void * hb_compElseIfGen( HB_COMP_DECL, void * pFirstElseIf, HB_SIZE ulOffset ); /* generates a support structure for elseifs pcode fixups */
+static void * hb_compElseIfGen( HB_COMP_DECL, void * pFirstElseIf, HB_SIZE nOffset ); /* generates a support structure for elseifs pcode fixups */
 static void hb_compElseIfFix( HB_COMP_DECL, void * pIfElseIfs ); /* implements the ElseIfs pcode fixups */
 
 static void hb_compRTVariableAdd( HB_COMP_DECL, HB_EXPR_PTR, HB_BOOL );
@@ -1044,7 +1044,7 @@ CodeBlock   : BlockHead
                {
                   hb_xfree( $1->value.asCodeblock.string );
                   $1->value.asCodeblock.string = NULL;
-                  $1->ulLength = 0;
+                  $1->nLength = 0;
                }
 
                HB_COMP_PARAM->iVarScope = VS_PARAMETER;
@@ -1966,7 +1966,7 @@ static void hb_compLoopStart( HB_COMP_DECL, HB_BOOL fCanLoop )
    else
       pFunc->pLoops = pLoop;
 
-   pLoop->ulOffset         = pFunc->nPCodePos;  /* store the start position */
+   pLoop->nOffset          = pFunc->nPCodePos;  /* store the start position */
    pLoop->fCanLoop         = fCanLoop;    /* can we use LOOP inside */
    pLoop->wSeqCounter      = pFunc->wSeqCounter;      /* store current SEQUENCE counter */
    pLoop->wWithObjectCnt   = pFunc->wWithObjectCnt;   /* store current WITH OBJECT counter */
@@ -2068,7 +2068,7 @@ static void hb_compLoopLoop( HB_COMP_DECL )
             wWithObjectCnt++;
          }
          /* store the position to fix */
-         pLoop->ulOffset = pFunc->nPCodePos;
+         pLoop->nOffset = pFunc->nPCodePos;
          hb_compGenJump( 0, HB_COMP_PARAM );
       }
    }
@@ -2124,7 +2124,7 @@ static void hb_compLoopExit( HB_COMP_DECL )
             wWithObjectCnt++;
          }
          /* store the position to fix */
-         pLoop->ulOffset = pFunc->nPCodePos;
+         pLoop->nOffset = pFunc->nPCodePos;
          hb_compGenJump( 0, HB_COMP_PARAM );
       }
    }
@@ -2147,7 +2147,7 @@ static void hb_compLoopHere( HB_COMP_DECL )
       pLoop = pLoop->pLoopList;
       while( pLoop )
       {
-         hb_compGenJumpHere( pLoop->ulOffset + 1, HB_COMP_PARAM );
+         hb_compGenJumpHere( pLoop->nOffset + 1, HB_COMP_PARAM );
          pFree = pLoop;
          pLoop = pLoop->pLoopList;
          hb_xfree( pFree );
@@ -2175,7 +2175,7 @@ static void hb_compLoopEnd( HB_COMP_DECL )
       pExit = pLoop->pExitList;
       while( pExit )
       {
-         hb_compGenJumpHere( pExit->ulOffset + 1, HB_COMP_PARAM );
+         hb_compGenJumpHere( pExit->nOffset + 1, HB_COMP_PARAM );
          pFree = pExit;
          pExit = pExit->pExitList;
          hb_xfree( pFree );
@@ -2212,12 +2212,12 @@ void hb_compLoopKill( PFUNCTION pFunc )
    }
 }
 
-static void * hb_compElseIfGen( HB_COMP_DECL, void * pFirst, HB_SIZE ulOffset )
+static void * hb_compElseIfGen( HB_COMP_DECL, void * pFirst, HB_SIZE nOffset )
 {
    HB_ELSEIF_PTR pElseIf = ( HB_ELSEIF_PTR ) hb_xgrab( sizeof( HB_ELSEIF ) ), pLast;
    PFUNCTION pFunc = HB_COMP_PARAM->functions.pLast;
 
-   pElseIf->ulOffset = ulOffset;
+   pElseIf->nOffset = nOffset;
    pElseIf->pPrev   = NULL;
    pElseIf->pElseif = NULL;
 
@@ -2249,7 +2249,7 @@ static void hb_compElseIfFix( HB_COMP_DECL, void * pFixElseIfs )
    HB_COMP_PARAM->functions.pLast->elseif = pFix->pPrev;
    while( pFix )
    {
-      hb_compGenJumpHere( pFix->ulOffset, HB_COMP_PARAM );
+      hb_compGenJumpHere( pFix->nOffset, HB_COMP_PARAM );
       pDel = pFix;
       pFix = pFix->pElseif;
       hb_xfree( pDel );
@@ -2552,8 +2552,8 @@ static void hb_compSwitchStart( HB_COMP_DECL, HB_EXPR_PTR pExpr )
 
    pSwitch->pCases = NULL;
    pSwitch->pLast  = NULL;
-   pSwitch->ulDefault = 0;
-   pSwitch->ulOffset = pFunc->nPCodePos;
+   pSwitch->nDefault = 0;
+   pSwitch->nOffset = pFunc->nPCodePos;
    pSwitch->pExpr = pExpr;
    pSwitch->pPrev = pFunc->pSwitch;
    pFunc->pSwitch = pSwitch;
@@ -2570,7 +2570,7 @@ static void hb_compSwitchAdd( HB_COMP_DECL, HB_EXPR_PTR pExpr )
    {
       /* normal CASE */
       pCase = (HB_SWITCHCASE_PTR) hb_xgrab( sizeof( HB_SWITCHCASE ) );
-      pCase->ulOffset = pFunc->nPCodePos;
+      pCase->nOffset = pFunc->nPCodePos;
       pCase->pNext = NULL;
       pExpr = hb_compExprReduce( pExpr, HB_COMP_PARAM );
       if( !( hb_compExprIsLong( pExpr ) || hb_compExprIsString( pExpr ) ) )
@@ -2595,14 +2595,14 @@ static void hb_compSwitchAdd( HB_COMP_DECL, HB_EXPR_PTR pExpr )
    else
    {
       /* DEFAULT */
-      if( pFunc->pSwitch->ulDefault )
+      if( pFunc->pSwitch->nDefault )
       {
          /* more than one default clause */
          hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_MAYHEM_IN_CASE, NULL, NULL );
       }
       else
       {
-         pFunc->pSwitch->ulDefault = pFunc->nPCodePos;
+         pFunc->pSwitch->nDefault = pFunc->nPCodePos;
       }
    }
 }
@@ -2620,7 +2620,7 @@ static void hb_compSwitchEnd( HB_COMP_DECL )
     * or in the DEFAULT case
    */
    ulExitPos = hb_compGenJump( 0, HB_COMP_PARAM );
-   hb_compGenJumpHere( pSwitch->ulOffset + 1, HB_COMP_PARAM );
+   hb_compGenJumpHere( pSwitch->nOffset + 1, HB_COMP_PARAM );
 
    pCase = pSwitch->pCases;
    if( hb_compExprIsLong( pExpr ) || hb_compExprIsString( pExpr ) )
@@ -2646,15 +2646,15 @@ static void hb_compSwitchEnd( HB_COMP_DECL )
          if( fGen )
          {
             hb_compGenJumpThere( hb_compGenJump( 0, HB_COMP_PARAM ),
-                                 pCase->ulOffset, HB_COMP_PARAM );
+                                 pCase->nOffset, HB_COMP_PARAM );
             break;
          }
          pCase = pCase->pNext;
       }
-      if( pSwitch->ulDefault && !fGen )
+      if( pSwitch->nDefault && !fGen )
       {
          hb_compGenJumpThere( hb_compGenJump( 0, HB_COMP_PARAM ),
-                              pSwitch->ulDefault, HB_COMP_PARAM );
+                              pSwitch->nDefault, HB_COMP_PARAM );
       }
    }
    else
@@ -2674,16 +2674,16 @@ static void hb_compSwitchEnd( HB_COMP_DECL )
             iCount++;
             pCase->pExpr = hb_compExprGenPush( pCase->pExpr, HB_COMP_PARAM );
             hb_compGenJumpThere( hb_compGenJump( 0, HB_COMP_PARAM ),
-                                 pCase->ulOffset, HB_COMP_PARAM );
+                                 pCase->nOffset, HB_COMP_PARAM );
          }
          pCase = pCase->pNext;
       }
-      if( pSwitch->ulDefault )
+      if( pSwitch->nDefault )
       {
          iCount++;
          hb_compGenPCode1( HB_P_PUSHNIL, HB_COMP_PARAM );
          hb_compGenJumpThere( hb_compGenJump( 0, HB_COMP_PARAM ),
-                              pSwitch->ulDefault, HB_COMP_PARAM );
+                              pSwitch->nDefault, HB_COMP_PARAM );
       }
       HB_PUT_LE_UINT16( pFunc->pCode + ulCountPos, iCount );
 
