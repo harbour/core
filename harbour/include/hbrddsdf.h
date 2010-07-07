@@ -87,9 +87,9 @@ typedef struct _SDFAREA
    HB_USHORT   uiRecordLen;          /* Size of record */
    HB_USHORT * pFieldOffset;         /* Pointer to field offset array */
    HB_BYTE *   pRecord;              /* Buffer of record data */
-   HB_FOFFSET  ulRecordOffset;       /* Current record offest */
-   HB_FOFFSET  ulNextOffset;         /* Next record offest */
-   HB_FOFFSET  ulFileSize;           /* File table size in export mode */
+   HB_FOFFSET  nRecordOffset;        /* Current record offest */
+   HB_FOFFSET  nNextOffset;          /* Next record offest */
+   HB_FOFFSET  nFileSize;            /* File table size in export mode */
    HB_ULONG    ulRecNo;              /* Current record */
    HB_ULONG    ulRecCount;           /* Number of records (in export) */
    HB_BOOL     fTransRec;            /* Can put whole records */

@@ -90,13 +90,13 @@ typedef struct _DELIMAREA
    HB_USHORT * pFieldOffset;           /* Pointer to field offset array */
    HB_BYTE *   pRecord;                /* Buffer of record data */
    HB_BYTE *   pBuffer;                /* Read/Write */
-   HB_SIZE     ulBufferSize;           /* IO buffer size */
-   HB_SIZE     ulBufferRead;           /* Number of bytes in read buffer */
-   HB_SIZE     ulBufferIndex;          /* Index to read read buffer */
-   HB_FOFFSET  ulRecordOffset;         /* Current record offest */
-   HB_FOFFSET  ulNextOffset;           /* Next record offest */
-   HB_FOFFSET  ulFileSize;             /* File table size in export mode */
-   HB_FOFFSET  ulBufferStart;          /* Start offset of read buffer */
+   HB_SIZE     nBufferSize;            /* IO buffer size */
+   HB_SIZE     nBufferRead;            /* Number of bytes in read buffer */
+   HB_SIZE     nBufferIndex;           /* Index to read read buffer */
+   HB_FOFFSET  nRecordOffset;          /* Current record offest */
+   HB_FOFFSET  nNextOffset;            /* Next record offest */
+   HB_FOFFSET  nFileSize;              /* File table size in export mode */
+   HB_FOFFSET  nBufferStart;           /* Start offset of read buffer */
    HB_ULONG    ulRecNo;                /* Current record */
    HB_ULONG    ulRecCount;             /* Number of records (in export) */
    HB_BOOL     fTransRec;              /* Can put whole records */

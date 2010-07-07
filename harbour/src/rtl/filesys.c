@@ -1714,19 +1714,19 @@ HB_SIZE hb_fsWriteLarge( HB_FHANDLE hFileHandle, const void * pBuff, HB_SIZE nCo
    return nWritten;
 }
 
-HB_SIZE hb_fsReadAt( HB_FHANDLE hFileHandle, void * pBuff, HB_SIZE nCount, HB_FOFFSET llOffset )
+HB_SIZE hb_fsReadAt( HB_FHANDLE hFileHandle, void * pBuff, HB_SIZE nCount, HB_FOFFSET nOffset )
 {
    HB_SIZE nRead;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsReadAt(%p, %p, %" HB_PFS "u, %" PFHL "i)", ( void * ) ( HB_PTRDIFF ) hFileHandle, pBuff, nCount, llOffset));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsReadAt(%p, %p, %" HB_PFS "u, %" PFHL "i)", ( void * ) ( HB_PTRDIFF ) hFileHandle, pBuff, nCount, nOffset));
 
    hb_vmUnlock();
 
 #if defined( HB_OS_UNIX ) && !defined( __WATCOMC__ )
 #  if defined( HB_USE_LARGEFILE64 )
-   nRead = pread64( hFileHandle, pBuff, nCount, llOffset );
+   nRead = pread64( hFileHandle, pBuff, nCount, nOffset );
 #  else
-   nRead = pread( hFileHandle, pBuff, nCount, llOffset );
+   nRead = pread( hFileHandle, pBuff, nCount, nOffset );
 #  endif
    hb_fsSetIOError( nRead != ( HB_SIZE ) -1, 0 );
    if( nRead == ( HB_SIZE ) -1 )
@@ -1741,8 +1741,8 @@ HB_SIZE hb_fsReadAt( HB_FHANDLE hFileHandle, void * pBuff, HB_SIZE nCount, HB_FO
       BOOL bResult = TRUE;
 
       memset( &Overlapped, 0, sizeof( Overlapped ) );
-      Overlapped.Offset     = ( DWORD ) ( llOffset & 0xFFFFFFFF );
-      Overlapped.OffsetHigh = ( DWORD ) ( llOffset >> 32 );
+      Overlapped.Offset     = ( DWORD ) ( nOffset & 0xFFFFFFFF );
+      Overlapped.OffsetHigh = ( DWORD ) ( nOffset >> 32 );
 
       while( nCount )
       {
@@ -1778,16 +1778,16 @@ HB_SIZE hb_fsReadAt( HB_FHANDLE hFileHandle, void * pBuff, HB_SIZE nCount, HB_FO
    {
       OVERLAPPED Overlapped;
       memset( &Overlapped, 0, sizeof( Overlapped ) );
-      Overlapped.Offset     = ( DWORD ) ( llOffset & 0xFFFFFFFF );
-      Overlapped.OffsetHigh = ( DWORD ) ( llOffset >> 32 );
+      Overlapped.Offset     = ( DWORD ) ( nOffset & 0xFFFFFFFF );
+      Overlapped.OffsetHigh = ( DWORD ) ( nOffset >> 32 );
       hb_fsSetIOError( ReadFile( DosToWinHandle( hFileHandle ),
                                  pBuff, nCount, &nRead, &Overlapped ) != 0, 0 );
    }
    else
    {
       HB_FOFFSET llPos;
-      ULONG ulOffsetLow  = ( ULONG ) ( llOffset & ULONG_MAX ),
-            ulOffsetHigh = ( ULONG ) ( llOffset >> 32 );
+      ULONG ulOffsetLow  = ( ULONG ) ( nOffset & ULONG_MAX ),
+            ulOffsetHigh = ( ULONG ) ( nOffset >> 32 );
       ulOffsetLow = SetFilePointer( DosToWinHandle( hFileHandle ),
                                     ulOffsetLow, ( PLONG ) &ulOffsetHigh,
                                     SEEK_SET );
@@ -1805,21 +1805,21 @@ HB_SIZE hb_fsReadAt( HB_FHANDLE hFileHandle, void * pBuff, HB_SIZE nCount, HB_FO
     */
 
 #  elif defined( HB_FS_IO_16BIT )
-   if( hb_fsSeekLarge( hFileHandle, llOffset, FS_SET ) == llOffset )
+   if( hb_fsSeekLarge( hFileHandle, nOffset, FS_SET ) == nOffset )
       nRead = hb_fsReadLarge( hFileHandle, pBuff, nCount );
 #  else
    {
       HB_FOFFSET llPos;
 #     if defined( HB_USE_LARGEFILE64 )
-      llPos = lseek64( hFileHandle, llOffset, SEEK_SET );
+      llPos = lseek64( hFileHandle, nOffset, SEEK_SET );
 #     elif defined( HB_OS_OS2 )
       ULONG ulPos;
-      if( DosSetFilePtr( hFileHandle, llOffset, SEEK_SET, &ulPos ) == 0 )
+      if( DosSetFilePtr( hFileHandle, nOffset, SEEK_SET, &ulPos ) == 0 )
          llPos = ( HB_FOFFSET ) ulPos;
       else
          llPos = ( HB_FOFFSET ) -1;
 #     else
-         llPos = lseek( hFileHandle, llOffset, SEEK_SET );
+         llPos = lseek( hFileHandle, nOffset, SEEK_SET );
 #     endif
       if( llPos == ( HB_FOFFSET ) -1 )
          hb_fsSetIOError( HB_FALSE, 0 );
@@ -1839,19 +1839,19 @@ HB_SIZE hb_fsReadAt( HB_FHANDLE hFileHandle, void * pBuff, HB_SIZE nCount, HB_FO
    return nRead;
 }
 
-HB_SIZE hb_fsWriteAt( HB_FHANDLE hFileHandle, const void * pBuff, HB_SIZE nCount, HB_FOFFSET llOffset )
+HB_SIZE hb_fsWriteAt( HB_FHANDLE hFileHandle, const void * pBuff, HB_SIZE nCount, HB_FOFFSET nOffset )
 {
    HB_SIZE nWritten;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsWriteAt(%p, %p, %" HB_PFS "u, %" PFHL "i)", ( void * ) ( HB_PTRDIFF ) hFileHandle, pBuff, nCount, llOffset));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsWriteAt(%p, %p, %" HB_PFS "u, %" PFHL "i)", ( void * ) ( HB_PTRDIFF ) hFileHandle, pBuff, nCount, nOffset));
 
    hb_vmUnlock();
 
 #if defined( HB_OS_UNIX ) && !defined( __WATCOMC__ )
 #  if defined( HB_USE_LARGEFILE64 )
-   nWritten = pwrite64( hFileHandle, pBuff, nCount, llOffset );
+   nWritten = pwrite64( hFileHandle, pBuff, nCount, nOffset );
 #  else
-   nWritten = pwrite( hFileHandle, pBuff, nCount, llOffset );
+   nWritten = pwrite( hFileHandle, pBuff, nCount, nOffset );
 #  endif
    hb_fsSetIOError( nWritten != ( HB_SIZE ) -1, 0 );
    if( nWritten == ( HB_SIZE ) -1 )
@@ -1866,8 +1866,8 @@ HB_SIZE hb_fsWriteAt( HB_FHANDLE hFileHandle, const void * pBuff, HB_SIZE nCount
       BOOL bResult = TRUE;
 
       memset( &Overlapped, 0, sizeof( Overlapped ) );
-      Overlapped.Offset     = ( DWORD ) ( llOffset & 0xFFFFFFFF );
-      Overlapped.OffsetHigh = ( DWORD ) ( llOffset >> 32 );
+      Overlapped.Offset     = ( DWORD ) ( nOffset & 0xFFFFFFFF );
+      Overlapped.OffsetHigh = ( DWORD ) ( nOffset >> 32 );
 
       while( nCount )
       {
@@ -1903,16 +1903,16 @@ HB_SIZE hb_fsWriteAt( HB_FHANDLE hFileHandle, const void * pBuff, HB_SIZE nCount
    {
       OVERLAPPED Overlapped;
       memset( &Overlapped, 0, sizeof( Overlapped ) );
-      Overlapped.Offset     = ( DWORD ) ( llOffset & 0xFFFFFFFF );
-      Overlapped.OffsetHigh = ( DWORD ) ( llOffset >> 32 );
+      Overlapped.Offset     = ( DWORD ) ( nOffset & 0xFFFFFFFF );
+      Overlapped.OffsetHigh = ( DWORD ) ( nOffset >> 32 );
       hb_fsSetIOError( WriteFile( DosToWinHandle( hFileHandle ),
                                   pBuff, nCount, &nWritten, &Overlapped ) != 0, 0 );
    }
    else
    {
       HB_FOFFSET llPos;
-      ULONG ulOffsetLow  = ( ULONG ) ( llOffset & ULONG_MAX ),
-            ulOffsetHigh = ( ULONG ) ( llOffset >> 32 );
+      ULONG ulOffsetLow  = ( ULONG ) ( nOffset & ULONG_MAX ),
+            ulOffsetHigh = ( ULONG ) ( nOffset >> 32 );
       ulOffsetLow = SetFilePointer( DosToWinHandle( hFileHandle ),
                                     ulOffsetLow, ( PLONG ) &ulOffsetHigh,
                                     SEEK_SET );
@@ -1930,21 +1930,21 @@ HB_SIZE hb_fsWriteAt( HB_FHANDLE hFileHandle, const void * pBuff, HB_SIZE nCount
     */
 
 #  elif defined( HB_FS_IO_16BIT )
-   if( hb_fsSeekLarge( hFileHandle, llOffset, FS_SET ) == llOffset )
+   if( hb_fsSeekLarge( hFileHandle, nOffset, FS_SET ) == nOffset )
       nWritten = hb_fsWriteLarge( hFileHandle, pBuff, nCount );
 #  else
    {
       HB_FOFFSET llPos;
 #     if defined( HB_USE_LARGEFILE64 )
-      llPos = lseek64( hFileHandle, llOffset, SEEK_SET );
+      llPos = lseek64( hFileHandle, nOffset, SEEK_SET );
 #     elif defined( HB_OS_OS2 )
       ULONG ulPos;
-      if( DosSetFilePtr( hFileHandle, llOffset, SEEK_SET, &ulPos ) == 0 )
+      if( DosSetFilePtr( hFileHandle, nOffset, SEEK_SET, &ulPos ) == 0 )
          llPos = ( HB_FOFFSET ) ulPos;
       else
          llPos = ( HB_FOFFSET ) -1;
 #     else
-      llPos = lseek( hFileHandle, llOffset, SEEK_SET );
+      llPos = lseek( hFileHandle, nOffset, SEEK_SET );
 #     endif
       if( llPos == ( HB_FOFFSET ) -1 )
          hb_fsSetIOError( HB_FALSE, 0 );
@@ -1964,17 +1964,17 @@ HB_SIZE hb_fsWriteAt( HB_FHANDLE hFileHandle, const void * pBuff, HB_SIZE nCount
    return nWritten;
 }
 
-HB_BOOL hb_fsTruncAt( HB_FHANDLE hFileHandle, HB_FOFFSET llOffset )
+HB_BOOL hb_fsTruncAt( HB_FHANDLE hFileHandle, HB_FOFFSET nOffset )
 {
    HB_BOOL fResult;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsReadAt(%p, %" PFHL "i)", ( void * ) ( HB_PTRDIFF ) hFileHandle, llOffset));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsReadAt(%p, %" PFHL "i)", ( void * ) ( HB_PTRDIFF ) hFileHandle, nOffset));
 
    hb_vmUnlock();
 #if defined( HB_OS_WIN )
    {
-      ULONG ulOffsetLow  = ( ULONG ) ( llOffset & ULONG_MAX ),
-            ulOffsetHigh = ( ULONG ) ( llOffset >> 32 );
+      ULONG ulOffsetLow  = ( ULONG ) ( nOffset & ULONG_MAX ),
+            ulOffsetHigh = ( ULONG ) ( nOffset >> 32 );
 
       /* This is not atom operation anyhow if someone want to truncate
        * file then he has to made necessary synchronizations in upper level
@@ -1984,15 +1984,15 @@ HB_BOOL hb_fsTruncAt( HB_FHANDLE hFileHandle, HB_FOFFSET llOffset )
       ulOffsetLow = SetFilePointer( DosToWinHandle( hFileHandle ),
                                     ulOffsetLow, ( PLONG ) &ulOffsetHigh,
                                     ( DWORD ) SEEK_SET );
-      if( ( ( ( HB_FOFFSET ) ulOffsetHigh << 32 ) | ulOffsetLow ) == llOffset )
+      if( ( ( ( HB_FOFFSET ) ulOffsetHigh << 32 ) | ulOffsetLow ) == nOffset )
          fResult = SetEndOfFile( DosToWinHandle( hFileHandle ) ) != 0;
       else
          fResult = HB_FALSE;
    }
 #elif defined( HB_USE_LARGEFILE64 )
-   fResult = ftruncate64( hFileHandle, llOffset ) != -1;
+   fResult = ftruncate64( hFileHandle, nOffset ) != -1;
 #else
-   fResult = ftruncate( hFileHandle, llOffset ) != -1;
+   fResult = ftruncate( hFileHandle, nOffset ) != -1;
 #endif
 
    hb_fsSetIOError( fResult, 0 );
@@ -2448,21 +2448,21 @@ HB_ULONG hb_fsSeek( HB_FHANDLE hFileHandle, HB_LONG lOffset, HB_USHORT uiFlags )
    return ulPos;
 }
 
-HB_FOFFSET hb_fsSeekLarge( HB_FHANDLE hFileHandle, HB_FOFFSET llOffset, HB_USHORT uiFlags )
+HB_FOFFSET hb_fsSeekLarge( HB_FHANDLE hFileHandle, HB_FOFFSET nOffset, HB_USHORT uiFlags )
 {
    HB_FOFFSET llPos;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsSeekLarge(%p, %" PFHL "i, %hu)", ( void * ) ( HB_PTRDIFF ) hFileHandle, llOffset, uiFlags));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsSeekLarge(%p, %" PFHL "i, %hu)", ( void * ) ( HB_PTRDIFF ) hFileHandle, nOffset, uiFlags));
 
 #if defined( HB_OS_WIN )
    {
       HB_USHORT nFlags = convert_seek_flags( uiFlags );
 
-      ULONG ulOffsetLow  = ( ULONG ) ( llOffset & ULONG_MAX ),
-            ulOffsetHigh = ( ULONG ) ( llOffset >> 32 );
+      ULONG ulOffsetLow  = ( ULONG ) ( nOffset & ULONG_MAX ),
+            ulOffsetHigh = ( ULONG ) ( nOffset >> 32 );
 
       hb_vmUnlock();
-      if( llOffset < 0 && nFlags == SEEK_SET )
+      if( nOffset < 0 && nFlags == SEEK_SET )
       {
          llPos = ( HB_FOFFSET ) INVALID_SET_FILE_POINTER;
          hb_fsSetError( 25 ); /* 'Seek Error' */
@@ -2490,14 +2490,14 @@ HB_FOFFSET hb_fsSeekLarge( HB_FHANDLE hFileHandle, HB_FOFFSET llOffset, HB_USHOR
       HB_USHORT nFlags = convert_seek_flags( uiFlags );
 
       hb_vmUnlock();
-      if( llOffset < 0 && nFlags == SEEK_SET )
+      if( nOffset < 0 && nFlags == SEEK_SET )
       {
          llPos = ( HB_FOFFSET ) -1;
          hb_fsSetError( 25 ); /* 'Seek Error' */
       }
       else
       {
-         llPos = lseek64( hFileHandle, llOffset, nFlags );
+         llPos = lseek64( hFileHandle, nOffset, nFlags );
          hb_fsSetIOError( llPos != ( HB_FOFFSET ) -1, 0 );
       }
 
@@ -2508,7 +2508,7 @@ HB_FOFFSET hb_fsSeekLarge( HB_FHANDLE hFileHandle, HB_FOFFSET llOffset, HB_USHOR
       hb_vmLock();
    }
 #else
-   llPos = ( HB_FOFFSET ) hb_fsSeek( hFileHandle, ( HB_ISIZ ) llOffset, uiFlags );
+   llPos = ( HB_FOFFSET ) hb_fsSeek( hFileHandle, ( HB_ISIZ ) nOffset, uiFlags );
 #endif
 
    return llPos;

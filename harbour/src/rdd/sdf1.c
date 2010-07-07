@@ -87,7 +87,7 @@ static void hb_sdfInitArea( SDFAREAP pArea, char * szFileName )
    /* pseudo deleted flag */
    *pArea->pRecord++ = ' ';
 
-   pArea->ulFileSize = 0;
+   pArea->nFileSize = 0;
    pArea->ulRecCount = 0;
 }
 
@@ -106,7 +106,7 @@ static HB_ERRCODE hb_sdfReadRecord( SDFAREAP pArea )
 
    uiToRead = pArea->uiRecordLen + pArea->uiEolLen + 2;
    uiRead = ( HB_USHORT ) hb_fileReadAt( pArea->pFile, pArea->pRecord, uiToRead,
-                                         pArea->ulRecordOffset );
+                                         pArea->nRecordOffset );
    if( uiRead > 0 && uiRead < uiToRead && pArea->pRecord[ uiRead - 1 ] == '\032' )
       --uiRead;
 
@@ -126,9 +126,9 @@ static HB_ERRCODE hb_sdfReadRecord( SDFAREAP pArea )
       {
          --uiEolPos;
          if( uiRead == pArea->uiRecordLen + pArea->uiEolLen )
-            pArea->ulNextOffset = ( HB_FOFFSET ) -1;
+            pArea->nNextOffset = ( HB_FOFFSET ) -1;
          else
-            pArea->ulNextOffset = pArea->ulRecordOffset + uiEolPos + pArea->uiEolLen;
+            pArea->nNextOffset = pArea->nRecordOffset + uiEolPos + pArea->uiEolLen;
 
          if( uiEolPos < pArea->uiRecordLen )
             memset( pArea->pRecord + uiEolPos, ' ', pArea->uiRecordLen - uiEolPos );
@@ -136,9 +136,9 @@ static HB_ERRCODE hb_sdfReadRecord( SDFAREAP pArea )
       else
       {
          if( uiRead < uiToRead )
-            pArea->ulNextOffset = ( HB_FOFFSET ) -1;
+            pArea->nNextOffset = ( HB_FOFFSET ) -1;
          else
-            pArea->ulNextOffset = 0;
+            pArea->nNextOffset = 0;
 
          if( uiRead < pArea->uiRecordLen )
             memset( pArea->pRecord + uiRead, ' ', pArea->uiRecordLen - uiRead );
@@ -157,13 +157,13 @@ static HB_ERRCODE hb_sdfNextRecord( SDFAREAP pArea )
    HB_TRACE(HB_TR_DEBUG, ("hb_sdfNextRecord(%p)", pArea));
 
    if( !pArea->fPositioned )
-      pArea->ulNextOffset = ( HB_FOFFSET ) -1;
+      pArea->nNextOffset = ( HB_FOFFSET ) -1;
    else
    {
-      if( pArea->ulNextOffset == 0 )
+      if( pArea->nNextOffset == 0 )
       {
          HB_USHORT uiRead, uiToRead, uiEolPos, uiRest = 0;
-         HB_FOFFSET ulOffset = pArea->ulRecordOffset;
+         HB_FOFFSET ulOffset = pArea->nRecordOffset;
 
          uiToRead = pArea->uiRecordLen + pArea->uiEolLen + 2;
 
@@ -181,13 +181,13 @@ static HB_ERRCODE hb_sdfNextRecord( SDFAREAP pArea )
             {
                --uiEolPos;
                if( uiRead == pArea->uiRecordLen + pArea->uiEolLen )
-                  pArea->ulNextOffset = ( HB_FOFFSET ) -1;
+                  pArea->nNextOffset = ( HB_FOFFSET ) -1;
                else
-                  pArea->ulNextOffset = ulOffset + uiEolPos + pArea->uiEolLen;
+                  pArea->nNextOffset = ulOffset + uiEolPos + pArea->uiEolLen;
             }
             else if( uiRead < uiToRead )
             {
-               pArea->ulNextOffset = ( HB_FOFFSET ) -1;
+               pArea->nNextOffset = ( HB_FOFFSET ) -1;
             }
             else
             {
@@ -199,12 +199,12 @@ static HB_ERRCODE hb_sdfNextRecord( SDFAREAP pArea )
                ulOffset += uiRead - uiRest;
             }
          }
-         while( pArea->ulNextOffset == 0 );
+         while( pArea->nNextOffset == 0 );
       }
       pArea->ulRecNo++;
    }
 
-   if( pArea->ulNextOffset == ( HB_FOFFSET ) -1 )
+   if( pArea->nNextOffset == ( HB_FOFFSET ) -1 )
    {
       pArea->area.fEof = HB_TRUE;
       pArea->fPositioned = HB_FALSE;
@@ -212,7 +212,7 @@ static HB_ERRCODE hb_sdfNextRecord( SDFAREAP pArea )
       return HB_SUCCESS;
    }
 
-   pArea->ulRecordOffset = pArea->ulNextOffset;
+   pArea->nRecordOffset = pArea->nNextOffset;
    return hb_sdfReadRecord( pArea );
 }
 
@@ -233,7 +233,7 @@ static HB_ERRCODE hb_sdfGoTop( SDFAREAP pArea )
    pArea->area.fTop = HB_TRUE;
    pArea->area.fBottom = HB_FALSE;
 
-   pArea->ulRecordOffset = 0;
+   pArea->nRecordOffset = 0;
    pArea->ulRecNo = 1;
    if( hb_sdfReadRecord( pArea ) != HB_SUCCESS )
       return HB_FAILURE;
@@ -337,7 +337,7 @@ static HB_ERRCODE hb_sdfAppend( SDFAREAP pArea, HB_BOOL fUnLockAll )
    if( SELF_GOHOT( ( AREAP ) pArea ) != HB_SUCCESS )
       return HB_FAILURE;
 
-   pArea->ulRecordOffset = pArea->ulFileSize;
+   pArea->nRecordOffset = pArea->nFileSize;
    pArea->ulRecNo = ++pArea->ulRecCount;
    pArea->area.fEof = HB_FALSE;
    pArea->fPositioned = HB_TRUE;
@@ -654,7 +654,7 @@ static HB_ERRCODE hb_sdfGoCold( SDFAREAP pArea )
       HB_SIZE nWrite = pArea->uiRecordLen + pArea->uiEolLen;
 
       if( hb_fileWriteAt( pArea->pFile, pArea->pRecord, nWrite,
-                          pArea->ulRecordOffset ) != nWrite )
+                          pArea->nRecordOffset ) != nWrite )
       {
          PHB_ITEM pError = hb_errNew();
 
@@ -667,8 +667,8 @@ static HB_ERRCODE hb_sdfGoCold( SDFAREAP pArea )
          hb_itemRelease( pError );
          return HB_FAILURE;
       }
-      pArea->ulFileSize += nWrite;
-      pArea->ulNextOffset = pArea->ulFileSize;
+      pArea->nFileSize += nWrite;
+      pArea->nNextOffset = pArea->nFileSize;
       pArea->fRecordChanged = HB_FALSE;
       pArea->fFlush = HB_TRUE;
    }
@@ -711,7 +711,7 @@ static HB_ERRCODE hb_sdfFlush( SDFAREAP pArea )
 
    if( pArea->fFlush )
    {
-      hb_fileWriteAt( pArea->pFile, "\032", 1, pArea->ulFileSize );
+      hb_fileWriteAt( pArea->pFile, "\032", 1, pArea->nFileSize );
       if( hb_setGetHardCommit() )
       {
          hb_fileCommit( pArea->pFile );

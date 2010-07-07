@@ -88,12 +88,12 @@ static void hb_delimInitArea( DELIMAREAP pArea, char * szFileName )
    *pArea->pRecord++ = ' ';
 
    /* Allocate IO buffer */
-   pArea->ulBufferSize += pArea->uiEolLen;
-   pArea->pBuffer = ( HB_BYTE * ) hb_xgrab( pArea->ulBufferSize );
+   pArea->nBufferSize += pArea->uiEolLen;
+   pArea->pBuffer = ( HB_BYTE * ) hb_xgrab( pArea->nBufferSize );
 
    pArea->ulRecCount = 0;
-   pArea->ulFileSize = 0;
-   pArea->ulBufferRead = pArea->ulBufferIndex = 0;
+   pArea->nFileSize = 0;
+   pArea->nBufferRead = pArea->nBufferIndex = 0;
 }
 
 static void hb_delimClearRecordBuffer( DELIMAREAP pArea )
@@ -111,7 +111,7 @@ static HB_SIZE hb_delimEncodeBuffer( DELIMAREAP pArea )
    HB_TRACE(HB_TR_DEBUG, ("hb_delimEncodeBuffer(%p)", pArea));
 
    /* mark the read buffer as empty */
-   pArea->ulBufferRead = pArea->ulBufferIndex = 0;
+   pArea->nBufferRead = pArea->nBufferIndex = 0;
 
    pBuffer = pArea->pBuffer;
    nSize = 0;
@@ -195,41 +195,41 @@ static HB_SIZE hb_delimEncodeBuffer( DELIMAREAP pArea )
 
 static int hb_delimNextChar( DELIMAREAP pArea )
 {
-   if( pArea->ulBufferIndex + pArea->uiEolLen >= pArea->ulBufferRead &&
-       ( pArea->ulBufferRead == 0 ||
-         pArea->ulBufferRead >= pArea->ulBufferSize - 1 ) )
+   if( pArea->nBufferIndex + pArea->uiEolLen >= pArea->nBufferRead &&
+       ( pArea->nBufferRead == 0 ||
+         pArea->nBufferRead >= pArea->nBufferSize - 1 ) )
    {
-      HB_SIZE nLeft = pArea->ulBufferRead - pArea->ulBufferIndex;
+      HB_SIZE nLeft = pArea->nBufferRead - pArea->nBufferIndex;
 
       if( nLeft )
          memcpy( pArea->pBuffer,
-                 pArea->pBuffer + pArea->ulBufferIndex, nLeft );
-      pArea->ulBufferStart += pArea->ulBufferIndex;
-      pArea->ulBufferIndex = 0;
-      pArea->ulBufferRead = hb_fileReadAt( pArea->pFile,
-                                           pArea->pBuffer + nLeft,
-                                           pArea->ulBufferSize - nLeft,
-                                           pArea->ulBufferStart + nLeft );
-      if( pArea->ulBufferRead > 0 &&
-          pArea->pBuffer[ pArea->ulBufferRead + nLeft - 1 ] == '\032' )
-         pArea->ulBufferRead--;
-      pArea->ulBufferRead += nLeft;
+                 pArea->pBuffer + pArea->nBufferIndex, nLeft );
+      pArea->nBufferStart += pArea->nBufferIndex;
+      pArea->nBufferIndex = 0;
+      pArea->nBufferRead = hb_fileReadAt( pArea->pFile,
+                                          pArea->pBuffer + nLeft,
+                                          pArea->nBufferSize - nLeft,
+                                          pArea->nBufferStart + nLeft );
+      if( pArea->nBufferRead > 0 &&
+          pArea->pBuffer[ pArea->nBufferRead + nLeft - 1 ] == '\032' )
+         pArea->nBufferRead--;
+      pArea->nBufferRead += nLeft;
    }
 
-   if( pArea->ulBufferIndex + pArea->uiEolLen <= pArea->ulBufferRead &&
-       memcmp( pArea->pBuffer + pArea->ulBufferIndex,
+   if( pArea->nBufferIndex + pArea->uiEolLen <= pArea->nBufferRead &&
+       memcmp( pArea->pBuffer + pArea->nBufferIndex,
                pArea->szEol, pArea->uiEolLen ) == 0 )
    {
-      pArea->ulBufferIndex += pArea->uiEolLen;
-      pArea->ulNextOffset = pArea->ulBufferStart + pArea->ulBufferIndex;
+      pArea->nBufferIndex += pArea->uiEolLen;
+      pArea->nNextOffset = pArea->nBufferStart + pArea->nBufferIndex;
       return -1;
    }
-   else if( pArea->ulBufferIndex < pArea->ulBufferRead )
+   else if( pArea->nBufferIndex < pArea->nBufferRead )
    {
-      return pArea->pBuffer[ pArea->ulBufferIndex++ ];
+      return pArea->pBuffer[ pArea->nBufferIndex++ ];
    }
 
-   pArea->ulNextOffset = ( HB_FOFFSET ) -1;
+   pArea->nNextOffset = ( HB_FOFFSET ) -1;
    return -2;
 }
 
@@ -247,15 +247,15 @@ static HB_ERRCODE hb_delimReadRecord( DELIMAREAP pArea )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_delimReadRecord(%p)", pArea));
 
-   if( pArea->ulBufferStart <= pArea->ulRecordOffset &&
-       pArea->ulBufferStart + ( HB_FOFFSET ) pArea->ulBufferRead > pArea->ulRecordOffset )
+   if( pArea->nBufferStart <= pArea->nRecordOffset &&
+       pArea->nBufferStart + ( HB_FOFFSET ) pArea->nBufferRead > pArea->nRecordOffset )
    {
-      pArea->ulBufferIndex = ( HB_SIZE ) ( pArea->ulRecordOffset - pArea->ulBufferStart );
+      pArea->nBufferIndex = ( HB_SIZE ) ( pArea->nRecordOffset - pArea->nBufferStart );
    }
    else
    {
-      pArea->ulBufferStart = pArea->ulRecordOffset;
-      pArea->ulBufferRead = pArea->ulBufferIndex = 0;
+      pArea->nBufferStart = pArea->nRecordOffset;
+      pArea->nBufferRead = pArea->nBufferIndex = 0;
    }
 
    /* clear the record buffer */
@@ -354,8 +354,8 @@ static HB_ERRCODE hb_delimReadRecord( DELIMAREAP pArea )
       ch = hb_delimNextChar( pArea );
 
    if( ch == -2 &&
-       pArea->ulRecordOffset == ( HB_FOFFSET ) ( pArea->ulBufferStart +
-                                                 pArea->ulBufferIndex ) )
+       pArea->nRecordOffset == ( HB_FOFFSET ) ( pArea->nBufferStart +
+                                                pArea->nBufferIndex ) )
    {
       pArea->area.fEof = HB_TRUE;
       pArea->fPositioned = HB_FALSE;
@@ -375,7 +375,7 @@ static HB_ERRCODE hb_delimNextRecord( DELIMAREAP pArea )
 
    if( pArea->fPositioned )
    {
-      if( pArea->ulNextOffset == ( HB_FOFFSET ) -1 )
+      if( pArea->nNextOffset == ( HB_FOFFSET ) -1 )
       {
          pArea->area.fEof = HB_TRUE;
          pArea->fPositioned = HB_FALSE;
@@ -384,7 +384,7 @@ static HB_ERRCODE hb_delimNextRecord( DELIMAREAP pArea )
       else
       {
          pArea->ulRecNo++;
-         pArea->ulRecordOffset = pArea->ulNextOffset;
+         pArea->nRecordOffset = pArea->nNextOffset;
          return hb_delimReadRecord( pArea );
       }
    }
@@ -408,7 +408,7 @@ static HB_ERRCODE hb_delimGoTop( DELIMAREAP pArea )
    pArea->area.fTop = HB_TRUE;
    pArea->area.fBottom = HB_FALSE;
 
-   pArea->ulRecordOffset = 0;
+   pArea->nRecordOffset = 0;
    pArea->ulRecNo = 1;
    if( hb_delimReadRecord( pArea ) != HB_SUCCESS )
       return HB_FAILURE;
@@ -514,7 +514,7 @@ static HB_ERRCODE hb_delimAppend( DELIMAREAP pArea, HB_BOOL fUnLockAll )
    if( SELF_GOHOT( ( AREAP ) pArea ) != HB_SUCCESS )
       return HB_FAILURE;
 
-   pArea->ulRecordOffset = pArea->ulFileSize;
+   pArea->nRecordOffset = pArea->nFileSize;
    pArea->ulRecNo = ++pArea->ulRecCount;
    pArea->area.fEof = HB_FALSE;
    pArea->fPositioned = HB_TRUE;
@@ -825,7 +825,7 @@ static HB_ERRCODE hb_delimGoCold( DELIMAREAP pArea )
       HB_SIZE nSize = hb_delimEncodeBuffer( pArea );
 
       if( hb_fileWriteAt( pArea->pFile, pArea->pBuffer, nSize,
-                          pArea->ulRecordOffset ) != nSize )
+                          pArea->nRecordOffset ) != nSize )
       {
          PHB_ITEM pError = hb_errNew();
 
@@ -838,8 +838,8 @@ static HB_ERRCODE hb_delimGoCold( DELIMAREAP pArea )
          hb_itemRelease( pError );
          return HB_FAILURE;
       }
-      pArea->ulFileSize += nSize;
-      pArea->ulNextOffset = pArea->ulFileSize;
+      pArea->nFileSize += nSize;
+      pArea->nNextOffset = pArea->nFileSize;
       pArea->fRecordChanged = HB_FALSE;
       pArea->fFlush = HB_TRUE;
    }
@@ -882,7 +882,7 @@ static HB_ERRCODE hb_delimFlush( DELIMAREAP pArea )
 
    if( pArea->fFlush )
    {
-      hb_fileWriteAt( pArea->pFile, "\032", 1, pArea->ulFileSize );
+      hb_fileWriteAt( pArea->pFile, "\032", 1, pArea->nFileSize );
       if( hb_setGetHardCommit() )
       {
          hb_fileCommit( pArea->pFile );
@@ -1135,7 +1135,7 @@ static HB_ERRCODE hb_delimAddField( DELIMAREAP pArea, LPDBFIELDINFO pFieldInfo )
    /* Update field offset */
    pArea->pFieldOffset[ pArea->area.uiFieldCount ] = pArea->uiRecordLen;
    pArea->uiRecordLen += pFieldInfo->uiLen;
-   pArea->ulBufferSize += pFieldInfo->uiLen + uiDelim + 1;
+   pArea->nBufferSize += pFieldInfo->uiLen + uiDelim + 1;
 
    return SUPER_ADDFIELD( ( AREAP ) pArea, pFieldInfo );
 }
@@ -1173,7 +1173,7 @@ static HB_ERRCODE hb_delimNewArea( DELIMAREAP pArea )
    pArea->pFile = NULL;
    pArea->fTransRec = HB_TRUE;
    pArea->uiRecordLen = 0;
-   pArea->ulBufferSize = 0;
+   pArea->nBufferSize = 0;
 
    /* set character field delimiter */
    pArea->cDelim = '"';
