@@ -702,8 +702,8 @@ HARBOUR
    If you leave this value empty, the make system will try to autodetect it,
    so in practice all you have to do is to create a native build first (no
    'install' required), then create the cross-build. If you set this value
-   manually, it may be useful to know that harbour, hbpp, hbmk2, hbrun,
-   hbi18n executables are required for a cross-build process to succeed.
+   manually, it may be useful to know that harbour, hbpp, hbmk2, hbrun
+   executables are required for a cross-build process to succeed.
 
 
 7. DEBUGGING OPTIONS

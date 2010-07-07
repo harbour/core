@@ -57,12 +57,14 @@ PROCEDURE Main( ... )
 
  */
 PROCEDURE StandAlone( ... )
+   LOCAL cBase := ""
+   LOCAL cRoot := "../"
+
    LOCAL aParams
    LOCAL aLibs
 
    LOCAL aFile
    LOCAL cType
-   LOCAL cBase := ""
    LOCAL cProject
 
    LOCAL cBaseOptions
@@ -131,8 +133,6 @@ PROCEDURE StandAlone( ... )
       ENDIF
    NEXT
 
-   hb_setenv( "HB_HOST_BIN_DIR", hb_DirBase() + ".." + hb_ps() + "bin" )
-
    FOR EACH cProject IN aLibs
 
       cType := hbmk2_project_type( cBase + cProject )
@@ -145,16 +145,16 @@ PROCEDURE StandAlone( ... )
       SWITCH cType
       CASE "hblib"
       CASE "hbimplib"
-         cTargetDir := "${HB_LIB}"
+         cTargetDir := cRoot + "lib/${hb_plat}/${hb_comp}${hb_build}"
          EXIT
       CASE "hbdyn"
-         cTargetDir := "${HB_DYN}"
+         cTargetDir := cRoot + "bin/${hb_plat}/${hb_comp}${hb_build}"
          IF GetEnv( "HB_BUILD_SHARED" ) == "yes"
             cOptionsPre += " -shared"
          ENDIF
          EXIT
       CASE "hbexe"
-         cTargetDir := "${HB_BIN}"
+         cTargetDir := cRoot + "bin/${hb_plat}/${hb_comp}${hb_build}"
          IF GetEnv( "HB_BUILD_SHARED" ) == "yes"
             cOptionsPre += " -shared"
          ENDIF
@@ -174,7 +174,7 @@ PROCEDURE StandAlone( ... )
          ENDIF
       ENDIF
 
-      call_hbmk2( cBase + cProject, cTargetDir, cOptionsPre, cOptionsPost, .F. )
+      call_hbmk2( hb_DirBase() + cRoot + "bin" + hb_ps(), cBase + cProject, cTargetDir, cOptionsPre, cOptionsPost, .F. )
    NEXT
 
    ErrorLevel( 0 )
@@ -291,6 +291,7 @@ PROCEDURE GNUMake( ... )
    LOCAL aList
    LOCAL cType
 
+   LOCAL cBinDir
    LOCAL cProject
    LOCAL cProjectDir
    LOCAL cInstallDirVar
@@ -299,7 +300,6 @@ PROCEDURE GNUMake( ... )
    LOCAL cBaseOptions
    LOCAL cOptionsPre
    LOCAL cOptionsPost
-   LOCAL lBuildName
 
    LOCAL cFilter
    LOCAL aFilter
@@ -401,9 +401,6 @@ PROCEDURE GNUMake( ... )
    ENDIF
    IF ! Empty( GetEnv( "HB_BUILD_NAME" ) )
       cBaseOptions += " -build=" + GetEnv( "HB_BUILD_NAME" )
-      lBuildName := .T.
-   ELSE
-      lBuildName := .F.
    ENDIF
 
    /* Clearing envvars that may interact with hbmk2 */
@@ -416,8 +413,8 @@ PROCEDURE GNUMake( ... )
 
    /* Override hbmk2 autodetection */
    hb_setenv( "HB_INSTALL_PREFIX", cRoot )
-   hb_setenv( "HB_BIN_INSTALL", cRoot + "bin/" + GetEnv( "HB_PLATFORM" ) + "/" + GetEnv( "HB_COMPILER" ) + iif( lBuildName, "/" + GetEnv( "HB_BUILD_NAME" ), "" ) )
-   hb_setenv( "HB_LIB_INSTALL", cRoot + "lib/" + GetEnv( "HB_PLATFORM" ) + "/" + GetEnv( "HB_COMPILER" ) + iif( lBuildName, "/" + GetEnv( "HB_BUILD_NAME" ), "" ) )
+   hb_setenv( "HB_BIN_INSTALL", cRoot + "bin/" + GetEnv( "HB_PLATFORM" ) + "/" + GetEnv( "HB_COMPILER" ) + GetEnv( "HB_BUILD_NAME" ) )
+   hb_setenv( "HB_LIB_INSTALL", cRoot + "lib/" + GetEnv( "HB_PLATFORM" ) + "/" + GetEnv( "HB_COMPILER" ) + GetEnv( "HB_BUILD_NAME" ) )
    hb_setenv( "HB_DYN_INSTALL" )
    hb_setenv( "HB_INC_INSTALL", cRoot + "include" )
 
@@ -438,6 +435,8 @@ PROCEDURE GNUMake( ... )
    ENDIF
 
    /* Start building */
+
+   cBinDir := GetEnv( "HB_HOST_BIN_DIR" ) + hb_ps()
 
    aAll := {;
       aImpLibs,;
@@ -516,7 +515,7 @@ PROCEDURE GNUMake( ... )
                   ENDIF
                ENDIF
 
-               call_hbmk2( cBase + cProject, cTargetDir, cOptionsPre, cOptionsPost, .F. )
+               call_hbmk2( cBinDir, cBase + cProject, cTargetDir, cOptionsPre, cOptionsPost, .F. )
 
                /* Highly experimental */
                IF cType == "hblib" .AND. GetEnv( "HB_BUILD_CONTRIB_DLL" ) == "yes" .AND. ;
@@ -543,7 +542,7 @@ PROCEDURE GNUMake( ... )
                      ENDIF
                   ENDIF
 
-                  call_hbmk2( cBase + cProject, cTargetDir, cOptionsPre, cOptionsPost, .T. )
+                  call_hbmk2( cBinDir, cBase + cProject, cTargetDir, cOptionsPre, cOptionsPost, .T. )
                ENDIF
             ELSE
                /* OutStd( hb_StrFormat( "! project '%s' skipped", cProject ) + hb_eol() ) */
@@ -556,12 +555,10 @@ PROCEDURE GNUMake( ... )
 
    RETURN
 
-STATIC FUNCTION call_hbmk2( cProject, cTargetDir, cOptionsPre, cOptionsPost, lDyn )
+STATIC FUNCTION call_hbmk2( cBinDir, cProject, cTargetDir, cOptionsPre, cOptionsPost, lDyn )
    LOCAL nErrorLevel
 
    LOCAL cDir, cName
-
-   hb_FNameSplit( cProject, @cDir, @cName )
 
    /* Keeping cmdline as short as possible. Also making sure that user settings
       do not interfere with the std build process. */
@@ -570,7 +567,9 @@ STATIC FUNCTION call_hbmk2( cProject, cTargetDir, cOptionsPre, cOptionsPost, lDy
       cOptionsPre := ""
    #endif
 
-   nErrorLevel := mk_hb_processRun( PathSepToSelf( GetEnv( "HB_HOST_BIN_DIR" ) ) + hb_ps() + "hbmk2" +;
+   hb_FNameSplit( cProject, @cDir, @cName )
+
+   nErrorLevel := mk_hb_processRun( PathSepToSelf( cBinDir ) + "hbmk2" +;
                                     " " + cOptionsPre +;
                                     " " + cProject +;
                                     cOptionsPost +;

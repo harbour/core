@@ -97,9 +97,8 @@ PROCEDURE Main()
       FOR EACH tmp IN Directory( "utils" + hb_ps() + hb_osFileMask(), "D" )
          IF "D" $ tmp[ F_ATTR ] .AND. !( tmp[ F_NAME ] == "." ) .AND. !( tmp[ F_NAME ] == ".." )
             FOR EACH aFile IN Directory( "utils" + hb_ps() + tmp[ F_NAME ] + hb_ps() + "*.po" )
-               mk_hb_processRun( PathSepToSelf( GetEnv( "HB_HOST_BIN_DIR" ) ) + hb_ps() + "hbi18n" +;
-                                 " -q -g -o" + PathSepToSelf( GetEnv( "HB_BIN_INSTALL" ) ) + hb_ps() + FN_ExtSet( aFile[ F_NAME ], ".hbl" ) +;
-                                 " " + PathSepToSelf( "utils" + hb_ps() + tmp[ F_NAME ] + hb_ps() + aFile[ F_NAME ] ) )
+               mk_hbl( PathSepToSelf( "utils" + hb_ps() + tmp[ F_NAME ] + hb_ps() + aFile[ F_NAME ] ),;
+                       PathSepToSelf( GetEnv( "HB_BIN_INSTALL" ) ) + hb_ps() + FN_ExtSet( aFile[ F_NAME ], ".hbl" ) )
             NEXT
          ENDIF
       NEXT
