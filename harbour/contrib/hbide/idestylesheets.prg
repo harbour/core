@@ -461,12 +461,17 @@ FUNCTION hbide_cssColorString( cPart )
 
 /*----------------------------------------------------------------------*/
 
-STATIC FUNCTION hbide_rgbString( nR, nG, nB )
-   RETURN "rgb(" + hb_ntos( nR ) + "," + hb_ntos( nG ) + "," + hb_ntos( nB ) + ")"
+FUNCTION hbide_rgbString( nR, nG, nB )
+   IF hb_isArray( nR )
+      RETURN "rgb(" + hb_ntos( nR[ 1 ] ) + "," + hb_ntos( nR[ 2 ] ) + "," + hb_ntos( nR[ 3 ] ) + ")"
+   ELSE
+      RETURN "rgb(" + hb_ntos( nR ) + "," + hb_ntos( nG ) + "," + hb_ntos( nB ) + ")"
+   ENDIF
+   RETURN ""
 
 /*----------------------------------------------------------------------*/
 
-STATIC FUNCTION hbide_buildGradientString( aGrands )
+FUNCTION hbide_buildGradientString( aGrands )
    LOCAL a_, s := ""
 
    FOR EACH a_ IN aGrands

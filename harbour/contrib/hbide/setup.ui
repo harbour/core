@@ -1636,33 +1636,17 @@
         <x>10</x>
         <y>8</y>
         <width>99</width>
-        <height>135</height>
+        <height>123</height>
        </rect>
-      </property>
-     </widget>
-     <widget class="QFrame" name="frameVert">
-      <property name="geometry">
-       <rect>
-        <x>118</x>
-        <y>8</y>
-        <width>65</width>
-        <height>135</height>
-       </rect>
-      </property>
-      <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
       </property>
      </widget>
      <widget class="QFrame" name="frameHorz">
       <property name="geometry">
        <rect>
-        <x>193</x>
-        <y>9</y>
-        <width>149</width>
-        <height>133</height>
+        <x>144</x>
+        <y>8</y>
+        <width>53</width>
+        <height>123</height>
        </rect>
       </property>
       <property name="frameShape">
@@ -1672,75 +1656,451 @@
        <enum>QFrame::Raised</enum>
       </property>
      </widget>
-     <widget class="QLineEdit" name="editSec1">
+     <widget class="QFrame" name="frameVert">
       <property name="geometry">
        <rect>
-        <x>12</x>
-        <y>174</y>
-        <width>49</width>
-        <height>20</height>
+        <x>207</x>
+        <y>8</y>
+        <width>135</width>
+        <height>123</height>
        </rect>
       </property>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
      </widget>
-     <widget class="QLabel" name="label_19">
+     <widget class="QGroupBox" name="groupBox_23">
       <property name="geometry">
        <rect>
-        <x>12</x>
-        <y>152</y>
-        <width>53</width>
-        <height>16</height>
+        <x>10</x>
+        <y>138</y>
+        <width>331</width>
+        <height>155</height>
        </rect>
       </property>
-      <property name="text">
-       <string>Sections</string>
+      <property name="title">
+       <string/>
       </property>
+      <widget class="QLineEdit" name="editSec5">
+       <property name="geometry">
+        <rect>
+         <x>50</x>
+         <y>128</y>
+         <width>49</width>
+         <height>20</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="editSec1">
+       <property name="geometry">
+        <rect>
+         <x>50</x>
+         <y>16</y>
+         <width>49</width>
+         <height>20</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="editSec2">
+       <property name="geometry">
+        <rect>
+         <x>50</x>
+         <y>44</y>
+         <width>49</width>
+         <height>20</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="editSec4">
+       <property name="geometry">
+        <rect>
+         <x>50</x>
+         <y>100</y>
+         <width>49</width>
+         <height>20</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="editSec3">
+       <property name="geometry">
+        <rect>
+         <x>50</x>
+         <y>72</y>
+         <width>49</width>
+         <height>20</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_19">
+       <property name="geometry">
+        <rect>
+         <x>8</x>
+         <y>18</y>
+         <width>43</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Sec 0</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_23">
+       <property name="geometry">
+        <rect>
+         <x>8</x>
+         <y>130</y>
+         <width>43</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Sec 1</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_24">
+       <property name="geometry">
+        <rect>
+         <x>8</x>
+         <y>48</y>
+         <width>37</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Sec ?</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_25">
+       <property name="geometry">
+        <rect>
+         <x>8</x>
+         <y>76</y>
+         <width>37</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Sec ?</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_26">
+       <property name="geometry">
+        <rect>
+         <x>8</x>
+         <y>104</y>
+         <width>37</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Sec ?</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="editR1">
+       <property name="geometry">
+        <rect>
+         <x>198</x>
+         <y>16</y>
+         <width>29</width>
+         <height>20</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="editG1">
+       <property name="geometry">
+        <rect>
+         <x>242</x>
+         <y>16</y>
+         <width>29</width>
+         <height>20</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="editB1">
+       <property name="geometry">
+        <rect>
+         <x>284</x>
+         <y>16</y>
+         <width>29</width>
+         <height>20</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="editG2">
+       <property name="geometry">
+        <rect>
+         <x>242</x>
+         <y>44</y>
+         <width>29</width>
+         <height>20</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="editB2">
+       <property name="geometry">
+        <rect>
+         <x>284</x>
+         <y>44</y>
+         <width>29</width>
+         <height>20</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="editR2">
+       <property name="geometry">
+        <rect>
+         <x>198</x>
+         <y>44</y>
+         <width>29</width>
+         <height>20</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="editG3">
+       <property name="geometry">
+        <rect>
+         <x>242</x>
+         <y>72</y>
+         <width>29</width>
+         <height>20</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="editB3">
+       <property name="geometry">
+        <rect>
+         <x>284</x>
+         <y>72</y>
+         <width>29</width>
+         <height>20</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="editR3">
+       <property name="geometry">
+        <rect>
+         <x>198</x>
+         <y>72</y>
+         <width>29</width>
+         <height>20</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="editG4">
+       <property name="geometry">
+        <rect>
+         <x>242</x>
+         <y>100</y>
+         <width>29</width>
+         <height>20</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="editB4">
+       <property name="geometry">
+        <rect>
+         <x>284</x>
+         <y>100</y>
+         <width>29</width>
+         <height>20</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="editR4">
+       <property name="geometry">
+        <rect>
+         <x>198</x>
+         <y>100</y>
+         <width>29</width>
+         <height>20</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="editG5">
+       <property name="geometry">
+        <rect>
+         <x>242</x>
+         <y>128</y>
+         <width>29</width>
+         <height>20</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="editB5">
+       <property name="geometry">
+        <rect>
+         <x>284</x>
+         <y>128</y>
+         <width>29</width>
+         <height>20</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="editR5">
+       <property name="geometry">
+        <rect>
+         <x>196</x>
+         <y>128</y>
+         <width>31</width>
+         <height>20</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="radioSec1">
+       <property name="geometry">
+        <rect>
+         <x>110</x>
+         <y>16</y>
+         <width>19</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="radioSec2">
+       <property name="geometry">
+        <rect>
+         <x>110</x>
+         <y>44</y>
+         <width>19</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="radioSec3">
+       <property name="geometry">
+        <rect>
+         <x>110</x>
+         <y>72</y>
+         <width>19</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="radioSec4">
+       <property name="geometry">
+        <rect>
+         <x>110</x>
+         <y>100</y>
+         <width>19</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="radioSec5">
+       <property name="geometry">
+        <rect>
+         <x>110</x>
+         <y>128</y>
+         <width>19</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+      <widget class="QFrame" name="frameSec1">
+       <property name="geometry">
+        <rect>
+         <x>134</x>
+         <y>16</y>
+         <width>51</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Raised</enum>
+       </property>
+      </widget>
+      <widget class="QFrame" name="frameSec2">
+       <property name="geometry">
+        <rect>
+         <x>134</x>
+         <y>44</y>
+         <width>51</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Raised</enum>
+       </property>
+      </widget>
+      <widget class="QFrame" name="frameSec3">
+       <property name="geometry">
+        <rect>
+         <x>134</x>
+         <y>72</y>
+         <width>51</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Raised</enum>
+       </property>
+      </widget>
+      <widget class="QFrame" name="frameSec4">
+       <property name="geometry">
+        <rect>
+         <x>134</x>
+         <y>100</y>
+         <width>51</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Raised</enum>
+       </property>
+      </widget>
+      <widget class="QFrame" name="frameSec5">
+       <property name="geometry">
+        <rect>
+         <x>134</x>
+         <y>128</y>
+         <width>51</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Raised</enum>
+       </property>
+      </widget>
      </widget>
-     <widget class="QLineEdit" name="editSec2">
+     <widget class="QSlider" name="sliderRed">
       <property name="geometry">
        <rect>
-        <x>12</x>
-        <y>202</y>
-        <width>49</width>
-        <height>20</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="editSec3">
-      <property name="geometry">
-       <rect>
-        <x>12</x>
-        <y>230</y>
-        <width>49</width>
-        <height>20</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="editSec4">
-      <property name="geometry">
-       <rect>
-        <x>12</x>
-        <y>258</y>
-        <width>49</width>
-        <height>20</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="editSec5">
-      <property name="geometry">
-       <rect>
-        <x>12</x>
-        <y>286</y>
-        <width>49</width>
-        <height>20</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QSlider" name="sldrRed1">
-      <property name="geometry">
-       <rect>
-        <x>118</x>
-        <y>176</y>
-        <width>65</width>
+        <x>60</x>
+        <y>300</y>
+        <width>277</width>
         <height>16</height>
        </rect>
       </property>
@@ -1748,12 +2108,12 @@
        <enum>Qt::Horizontal</enum>
       </property>
      </widget>
-     <widget class="QSlider" name="sldrGreen1">
+     <widget class="QSlider" name="sliderGreen">
       <property name="geometry">
        <rect>
-        <x>196</x>
-        <y>176</y>
-        <width>65</width>
+        <x>60</x>
+        <y>322</y>
+        <width>277</width>
         <height>16</height>
        </rect>
       </property>
@@ -1761,168 +2121,12 @@
        <enum>Qt::Horizontal</enum>
       </property>
      </widget>
-     <widget class="QSlider" name="sldrBlue1">
+     <widget class="QSlider" name="sliderBlue">
       <property name="geometry">
        <rect>
-        <x>274</x>
-        <y>176</y>
-        <width>65</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-     </widget>
-     <widget class="QSlider" name="sldrRed2">
-      <property name="geometry">
-       <rect>
-        <x>118</x>
-        <y>204</y>
-        <width>65</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-     </widget>
-     <widget class="QSlider" name="sldrGreen2">
-      <property name="geometry">
-       <rect>
-        <x>196</x>
-        <y>204</y>
-        <width>65</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-     </widget>
-     <widget class="QSlider" name="sldrBlue2">
-      <property name="geometry">
-       <rect>
-        <x>274</x>
-        <y>204</y>
-        <width>65</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-     </widget>
-     <widget class="QSlider" name="sldrRed3">
-      <property name="geometry">
-       <rect>
-        <x>118</x>
-        <y>232</y>
-        <width>65</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-     </widget>
-     <widget class="QSlider" name="sldrGreen3">
-      <property name="geometry">
-       <rect>
-        <x>196</x>
-        <y>232</y>
-        <width>65</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-     </widget>
-     <widget class="QSlider" name="sldrBlue3">
-      <property name="geometry">
-       <rect>
-        <x>274</x>
-        <y>232</y>
-        <width>65</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-     </widget>
-     <widget class="QSlider" name="sldrRed4">
-      <property name="geometry">
-       <rect>
-        <x>118</x>
-        <y>260</y>
-        <width>65</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-     </widget>
-     <widget class="QSlider" name="sldrGreen4">
-      <property name="geometry">
-       <rect>
-        <x>196</x>
-        <y>260</y>
-        <width>65</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-     </widget>
-     <widget class="QSlider" name="sldrBlue4">
-      <property name="geometry">
-       <rect>
-        <x>274</x>
-        <y>260</y>
-        <width>65</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-     </widget>
-     <widget class="QSlider" name="sldrRed5">
-      <property name="geometry">
-       <rect>
-        <x>118</x>
-        <y>288</y>
-        <width>65</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-     </widget>
-     <widget class="QSlider" name="sldrGreen5">
-      <property name="geometry">
-       <rect>
-        <x>196</x>
-        <y>288</y>
-        <width>65</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-     </widget>
-     <widget class="QSlider" name="sldrBlue5">
-      <property name="geometry">
-       <rect>
-        <x>274</x>
-        <y>288</y>
-        <width>65</width>
+        <x>60</x>
+        <y>344</y>
+        <width>277</width>
         <height>16</height>
        </rect>
       </property>
@@ -1933,10 +2137,10 @@
      <widget class="QLabel" name="label_20">
       <property name="geometry">
        <rect>
-        <x>144</x>
-        <y>156</y>
-        <width>27</width>
-        <height>16</height>
+        <x>12</x>
+        <y>302</y>
+        <width>46</width>
+        <height>14</height>
        </rect>
       </property>
       <property name="text">
@@ -1946,10 +2150,10 @@
      <widget class="QLabel" name="label_21">
       <property name="geometry">
        <rect>
-        <x>216</x>
-        <y>156</y>
-        <width>37</width>
-        <height>16</height>
+        <x>12</x>
+        <y>322</y>
+        <width>46</width>
+        <height>14</height>
        </rect>
       </property>
       <property name="text">
@@ -1959,14 +2163,66 @@
      <widget class="QLabel" name="label_22">
       <property name="geometry">
        <rect>
-        <x>298</x>
-        <y>156</y>
-        <width>31</width>
-        <height>16</height>
+        <x>12</x>
+        <y>342</y>
+        <width>46</width>
+        <height>14</height>
        </rect>
       </property>
       <property name="text">
        <string>Blue</string>
+      </property>
+     </widget>
+     <widget class="QToolButton" name="buttonThmAdd">
+      <property name="geometry">
+       <rect>
+        <x>114</x>
+        <y>8</y>
+        <width>25</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>...</string>
+      </property>
+     </widget>
+     <widget class="QToolButton" name="buttonThmDel">
+      <property name="geometry">
+       <rect>
+        <x>114</x>
+        <y>32</y>
+        <width>25</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>...</string>
+      </property>
+     </widget>
+     <widget class="QToolButton" name="buttonThmCpy">
+      <property name="geometry">
+       <rect>
+        <x>114</x>
+        <y>58</y>
+        <width>25</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>...</string>
+      </property>
+     </widget>
+     <widget class="QToolButton" name="buttonThmSav">
+      <property name="geometry">
+       <rect>
+        <x>114</x>
+        <y>110</y>
+        <width>25</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>...</string>
       </property>
      </widget>
     </widget>

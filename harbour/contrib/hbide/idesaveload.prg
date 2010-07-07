@@ -165,6 +165,8 @@ CLASS IdeINI INHERIT IdeObject
    DATA   lCompletionWithArgs                     INIT  .f.
    DATA   lCompleteArgumented                     INIT  .f.
 
+   DATA   aAppThemes                              INIT  {}
+
    METHOD new( oIde )
    METHOD create( oIde )
    METHOD load( cHbideIni )
@@ -377,6 +379,13 @@ METHOD IdeINI:save( cHbideIni )
    NEXT
    aadd( txt_, " " )
 
+   aadd( txt_, "[APPTHEMES]" )
+   aadd( txt_, " " )
+   FOR EACH s IN ::aAppThemes
+      aadd( txt_, "apptheme_" + hb_ntos( s:__enumIndex() ) + "=" + s )
+   NEXT
+   aadd( txt_, " " )
+
    aadd( txt_, "[General]" )
    aadd( txt_, " " )
 
@@ -447,6 +456,9 @@ METHOD IdeINI:load( cHbideIni )
                EXIT
             CASE "[DBUPANELSINFO]"
                nPart := "INI_DBUPANELSINFO"
+               EXIT
+            CASE "[APPTHEMES]"
+               nPart := "INI_APPTHEMES"
                EXIT
             OTHERWISE
                DO CASE
@@ -596,6 +608,11 @@ METHOD IdeINI:load( cHbideIni )
                CASE nPart == "INI_DBUPANELSINFO"
                   IF hbide_parseKeyValPair( s, @cKey, @cVal )
                      aadd( ::aDbuPanelsInfo, cVal )
+                  ENDIF
+
+               CASE nPart == "INI_APPTHEMES"
+                  IF hbide_parseKeyValPair( s, @cKey, @cVal )
+                     aadd( ::aAppThemes, cVal )
                   ENDIF
 
                ENDCASE
@@ -807,11 +824,13 @@ CLASS IdeSetup INHERIT IdeObject
                                                          "windowsvista", "cde", "motif", "plastique", "macintosh" }
    DATA   aKeyItems                               INIT {}
 
+   DATA   nCurThemeSlot                           INIT 0
+
    METHOD new( oIde )
    METHOD create( oIde )
    METHOD destroy()
    METHOD show()
-   METHOD execEvent( cEvent, p )
+   METHOD execEvent( cEvent, p, p1 )
    METHOD buildTree()
    METHOD setSystemStyle( cStyle )
    METHOD setBaseColor()
@@ -823,6 +842,11 @@ CLASS IdeSetup INHERIT IdeObject
    METHOD eol()
    METHOD buildKeywords()
    METHOD populateKeyTableRow( nRow, cTxtCol1, cTxtCol2 )
+   METHOD populateThemeColors( nSlot, aRGB )
+   METHOD pullThemeColors( nSlot )
+   METHOD fetchThemeColorsString( nSlot )
+   METHOD pushThemeColors( nTheme )
+   METHOD pushThemesData()
 
    ENDCLASS
 
@@ -876,6 +900,11 @@ METHOD IdeSetup:setIcons()
    ::oUI:q_buttonPathThemes    : setIcon( hbide_image( "open"      ) )
 
    ::oUI:q_buttonSelFont       : setIcon( hbide_image( "font"      ) )
+
+   ::oUI:q_buttonThmAdd        : setIcon( hbide_image( "dc_plus"   ) )
+   ::oUI:q_buttonThmDel        : setIcon( hbide_image( "dc_delete" ) )
+   ::oUI:q_buttonThmCpy        : setIcon( hbide_image( "copy"      ) )
+   ::oUI:q_buttonThmSav        : setIcon( hbide_image( "save"      ) )
 
    RETURN Self
 
@@ -934,6 +963,23 @@ METHOD IdeSetup:connectSlots()
    ::connect( ::oUI:q_checkHilightLine, "stateChanged(int)"       , {|i| ::execEvent( "checkHilightLine_stateChanged", i  ) } )
    ::connect( ::oUI:q_checkHorzRuler  , "stateChanged(int)"       , {|i| ::execEvent( "checkHorzRuler_stateChanged"  , i  ) } )
    ::connect( ::oUI:q_checkLineNumbers, "stateChanged(int)"       , {|i| ::execEvent( "checkLineNumbers_stateChanged", i  ) } )
+
+   ::connect( ::oUI:q_sliderRed       , "valueChanged(int)"       , {|i| ::execEvent( "sliderValue_changed", i, "R"       ) } )
+   ::connect( ::oUI:q_sliderGreen     , "valueChanged(int)"       , {|i| ::execEvent( "sliderValue_changed", i, "G"       ) } )
+   ::connect( ::oUI:q_sliderBlue      , "valueChanged(int)"       , {|i| ::execEvent( "sliderValue_changed", i, "B"       ) } )
+
+   ::connect( ::oUI:q_radioSec1       , "clicked()"               , {| | ::execEvent( "radioSection_clicked", 1           ) } )
+   ::connect( ::oUI:q_radioSec2       , "clicked()"               , {| | ::execEvent( "radioSection_clicked", 2           ) } )
+   ::connect( ::oUI:q_radioSec3       , "clicked()"               , {| | ::execEvent( "radioSection_clicked", 3           ) } )
+   ::connect( ::oUI:q_radioSec4       , "clicked()"               , {| | ::execEvent( "radioSection_clicked", 4           ) } )
+   ::connect( ::oUI:q_radioSec5       , "clicked()"               , {| | ::execEvent( "radioSection_clicked", 5           ) } )
+
+   ::connect( ::oUI:q_buttonThmAdd    , "clicked()"               , {| | ::execEvent( "buttonThmAdd_clicked"              ) } )
+   ::connect( ::oUI:q_buttonThmDel    , "clicked()"               , {| | ::execEvent( "buttonThmDel_clicked"              ) } )
+   ::connect( ::oUI:q_buttonThmCpy    , "clicked()"               , {| | ::execEvent( "buttonThmCpy_clicked"              ) } )
+   ::connect( ::oUI:q_buttonThmSav    , "clicked()"               , {| | ::execEvent( "buttonThmSav_clicked"              ) } )
+
+   ::connect( ::oUI:q_listThemes      , "currentRowChanged(int)"  , {|i| ::execEvent( "listThemes_currentRowChanged", i   ) } )
 
    RETURN Self
 
@@ -1029,10 +1075,31 @@ METHOD IdeSetup:populate()
    ::oUI:q_editTmpBkpPrd      : setText( hb_ntos( ::oINI:nTmpBkpPrd ) )
    ::oUI:q_editBkpPath        : setText( ::oINI:cBkpPath   )
    ::oUI:q_editBkpSuffix      : setText( ::oINI:cBkpSuffix )
+
+   /* Selections - Code Completion */
    ::oUI:q_checkListlWithArgs : setChecked( ::oINI:lCompletionWithArgs )
    ::oUI:q_checkCmplInclArgs  : setChecked( ::oINI:lCompleteArgumented )
 
+   /* Themes */
+   ::oUI:q_sliderRed:setMinimum( 0 )
+   ::oUI:q_sliderRed:setMaximum( 255 )
+
+   ::oUI:q_sliderGreen:setMinimum( 0 )
+   ::oUI:q_sliderGreen:setMaximum( 255 )
+
+   ::oUI:q_sliderBlue:setMinimum( 0 )
+   ::oUI:q_sliderBlue:setMaximum( 255 )
+
+   ::oUI:q_editSec1:setText( "0" )
+   ::oUI:q_editSec5:setText( "1" )
+
+   ::oUI:q_editSec1:setReadOnly( .t. )
+   ::oUI:q_editSec5:setReadOnly( .t. )
+
+   ::pushThemesData()
+
    ::connectSlots()
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1074,11 +1141,14 @@ METHOD IdeSetup:show()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeSetup:execEvent( cEvent, p )
+METHOD IdeSetup:execEvent( cEvent, p, p1 )
    LOCAL qItem, nIndex, qFontDlg, qFont, nOK, nRow, b_, q0, q1, nCol, w0, w1
-//   LOCAL qEvent
+   LOCAL aRGB, nSlot, qFrame, aGrad, n, cCSS, cTheme
+
+   HB_SYMBOL_UNUSED( p1 )
 
    SWITCH cEvent
+
    CASE "buttonSelFont_clicked"
       qFont := QFont():new( ::oINI:cFontName, ::oINI:nPointSize )
       qFont:setFixedPitch( .t. )
@@ -1227,11 +1297,174 @@ METHOD IdeSetup:execEvent( cEvent, p )
          #endif
       ENDIF
 
+   CASE "radioSection_clicked"
+      ::nCurThemeSlot := p
+      IF empty( aRGB := ::pullThemeColors( p ) )
+         aRGB := { 0,0,0 }
+      ENDIF
+      ::oUI:q_sliderRed   : setValue( aRGB[ 1 ] )
+      ::oUI:q_sliderGreen : setValue( aRGB[ 2 ] )
+      ::oUI:q_sliderBlue  : setValue( aRGB[ 3 ] )
+      EXIT
+
+   CASE "sliderValue_changed"
+      #if 0
+      nSlot := iif( ::oUI:q_radioSec1:isChecked(), 1, ;
+                  iif( ::oUI:q_radioSec2:isChecked(), 2, ;
+                     iif( ::oUI:q_radioSec3:isChecked(), 3, ;
+                        iif( ::oUI:q_radioSec4:isChecked(), 4, ;
+                           iif( ::oUI:q_radioSec5:isChecked(), 5, 0 ) ) ) ) )
+      #endif
+      nSlot := ::nCurThemeSlot
+
+      IF nSlot > 0
+         qFrame := { ::oUI:q_frameSec1, ::oUI:q_frameSec2, ::oUI:q_frameSec3, ::oUI:q_frameSec4, ::oUI:q_frameSec5 }[ nSlot ]
+
+         aRGB := { ::oUI:q_sliderRed:value(), ::oUI:q_sliderGreen:value(), ::oUI:q_sliderBlue:value() }
+
+         ::populateThemeColors( nSlot, aRGB )
+
+         qFrame:setStyleSheet( "background-color: " + hbide_rgbString( aRGB ) + ";" )
+      ENDIF
+
+      aGrad := {}
+      FOR nSlot := 1 TO 5
+         n  := val( { ::oUI:q_editSec1, ::oUI:q_editSec2, ::oUI:q_editSec3, ::oUI:q_editSec4, ::oUI:q_editSec5 }[ nSlot ]:text() )
+
+         IF !empty( aRGB := ::pullThemeColors( nSlot ) )
+            aadd( aGrad, { n, aRGB[ 1 ], aRGB[ 2 ], aRGB[ 3 ] } )
+         ENDIF
+      NEXT
+      IF !empty( aGrad )
+         cCSS := 'background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0, ' + hbide_buildGradientString( aGrad ) + ");"
+         ::oUI:q_frameHorz:setStyleSheet( cCSS )
+         cCSS := 'background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, ' + hbide_buildGradientString( aGrad ) + ");"
+         ::oUI:q_frameVert:setStyleSheet( cCSS )
+      ENDIF
+      EXIT
+
+   CASE "listThemes_currentRowChanged"
+      ::pushThemeColors( p + 1 )
+      EXIT
+   CASE "buttonThmAdd_clicked"
+      IF !empty( cTheme := hbide_fetchAString( ::oDlg:oWidget, cTheme, "Name the Theme", "New Theme" ) )
+         aadd( ::oINI:aAppThemes, cTheme + "," + "," + "," + "," )
+         qItem := QListWidgetItem():new()
+         qItem:setText( cTheme )
+         ::oUI:q_listThemes:addItem_1( qItem )
+         ::oUI:q_listThemes:setCurrentRow( len( ::oINI:aAppThemes ) - 1 )
+      ENDIF
+      EXIT
+   CASE "buttonThmCpy_clicked"
+      EXIT
+   CASE "buttonThmDel_clicked"
+      EXIT
+   CASE "buttonThmSav_clicked"
+      IF ( n := ::oUI:q_listThemes:currentRow() ) > -1
+         ::oINI:aAppThemes[ n + 1 ] := QListWidgetItem():from( ::oUI:q_listThemes:currentItem() ):text() + "," + ;
+                                       ::fetchThemeColorsString()
+      ENDIF
+      EXIT
+
    ENDSWITCH
 
    RETURN nRow //Self
 
 /*----------------------------------------------------------------------*/
+
+METHOD IdeSetup:pushThemesData()
+   LOCAL s, a_, qItem
+
+   FOR EACH s IN ::oINI:aAppThemes
+      a_:= hb_aTokens( s, "," )
+      qItem := QListWidgetItem():new()
+      qItem:setText( a_[ 1 ] )
+      ::oUI:q_listThemes:addItem_1( qItem )
+      ::pushThemeColors( s:__enumIndex() )
+   NEXT
+   IF !empty( ::oINI:aAppThemes )
+      ::oUI:q_listThemes:setCurrentRow( 0 )
+   ENDIF
+   ::oUI:q_radioSec1:click()
+
+   RETURN Self
+
+/*------------------------------------------------------------------------*/
+
+METHOD IdeSetup:pushThemeColors( nTheme )
+   LOCAL n, a_, i, aRGB, nSlot
+
+   IF nTheme >= 1 .AND. nTheme <= len( ::oINI:aAppThemes )
+      a_:= hb_aTokens( ::oINI:aAppThemes[ nTheme ], "," )
+      aSize( a_, 6 )
+      DEFAULT a_[ 1 ] TO ""
+      DEFAULT a_[ 2 ] TO ""
+      DEFAULT a_[ 3 ] TO ""
+      DEFAULT a_[ 4 ] TO ""
+      DEFAULT a_[ 5 ] TO ""
+      DEFAULT a_[ 6 ] TO ""
+
+      FOR i := 2 TO 6
+         nSlot := i - 1
+         IF !empty( a_[ i ] )
+            aRGB := hb_aTokens( a_[ i ], " " )
+            FOR EACH n IN aRGB
+               n := val( n )
+            NEXT
+            { ::oUI:q_editSec1, ::oUI:q_editSec2, ::oUI:q_editSec3, ::oUI:q_editSec4, ::oUI:q_editSec5 }[ nSlot ]:setText( hb_ntos( aRGB[ 1 ] ) )
+            ::populateThemeColors( nSlot, { aRGB[ 2 ], aRGB[ 3 ], aRGB[ 4 ] } )
+         ENDIF
+      NEXT
+      { ::oUI:q_radioSec1, ::oUI:q_radioSec2, ::oUI:q_radioSec3, ::oUI:q_radioSec4, ::oUI:q_radioSec5 }[ nSlot ]:click()
+   ENDIF
+
+   RETURN Self
+
+/*------------------------------------------------------------------------*/
+
+METHOD IdeSetup:populateThemeColors( nSlot, aRGB )
+
+   { ::oUI:q_editR1, ::oUI:q_editR2, ::oUI:q_editR3, ::oUI:q_editR4, ::oUI:q_editR5 }[ nSlot ]:setText( hb_ntos( aRGB[ 1 ] ) )
+   { ::oUI:q_editG1, ::oUI:q_editG2, ::oUI:q_editG3, ::oUI:q_editG4, ::oUI:q_editG5 }[ nSlot ]:setText( hb_ntos( aRGB[ 2 ] ) )
+   { ::oUI:q_editB1, ::oUI:q_editB2, ::oUI:q_editB3, ::oUI:q_editB4, ::oUI:q_editB5 }[ nSlot ]:setText( hb_ntos( aRGB[ 3 ] ) )
+
+   RETURN Self
+
+/*------------------------------------------------------------------------*/
+
+METHOD IdeSetup:fetchThemeColorsString( nSlot )
+   LOCAL s := ""
+
+   IF empty( nSlot )
+      FOR nSlot := 1 TO 5
+         s += { ::oUI:q_editSec1, ::oUI:q_editSec2, ::oUI:q_editSec3, ::oUI:q_editSec4, ::oUI:q_editSec5 }[ nSlot ]:text() + " "
+
+         s += { ::oUI:q_editR1, ::oUI:q_editR2, ::oUI:q_editR3, ::oUI:q_editR4, ::oUI:q_editR5 }[ nSlot ]:text() + " "
+         s += { ::oUI:q_editG1, ::oUI:q_editG2, ::oUI:q_editG3, ::oUI:q_editG4, ::oUI:q_editG5 }[ nSlot ]:text() + " "
+         s += { ::oUI:q_editB1, ::oUI:q_editB2, ::oUI:q_editB3, ::oUI:q_editB4, ::oUI:q_editB5 }[ nSlot ]:text()
+
+         s += ","
+      NEXT
+   ELSE
+
+   ENDIF
+
+   RETURN s
+
+/*------------------------------------------------------------------------*/
+
+METHOD IdeSetup:pullThemeColors( nSlot )
+   LOCAL aRGB := {}
+
+   IF !empty( { ::oUI:q_editSec1, ::oUI:q_editSec2, ::oUI:q_editSec3, ::oUI:q_editSec4, ::oUI:q_editSec5 }[ nSlot ]:text() )
+      aadd( aRGB, val( { ::oUI:q_editR1, ::oUI:q_editR2, ::oUI:q_editR3, ::oUI:q_editR4, ::oUI:q_editR5 }[ nSlot ]:text() ) )
+      aadd( aRGB, val( { ::oUI:q_editG1, ::oUI:q_editG2, ::oUI:q_editG3, ::oUI:q_editG4, ::oUI:q_editG5 }[ nSlot ]:text() ) )
+      aadd( aRGB, val( { ::oUI:q_editB1, ::oUI:q_editB2, ::oUI:q_editB3, ::oUI:q_editB4, ::oUI:q_editB5 }[ nSlot ]:text() ) )
+   ENDIF
+
+   RETURN aRGB
+
+/*------------------------------------------------------------------------*/
 
 METHOD IdeSetup:populateKeyTableRow( nRow, cTxtCol1, cTxtCol2 )
    LOCAL lAppend := len( ::aKeyItems ) < nRow
