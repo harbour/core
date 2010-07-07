@@ -654,10 +654,8 @@ HARBOUR
                                  external libraries.
    - HB_EXTERNALLIBS=[<list>]    Build space separated <list> of external
                                  libraries. Build all if left empty (default).
-   - HB_ADDONS_LIB=<list>        Build space separated <list> of additional
-                                 library .hbp projects.
-   - HB_ADDONS_BIN=<list>        Build space separated <list> of additional
-                                 executable .hbp projects.
+   - HB_BUILD_ADDONS=<list>      Build space separated <list> of additional .hbp
+                                 projects.
    - HB_COMPILER_VER=[<ver>]     Set C compiler version. This is used with msvc
                                  and mingw/cygwin targets currently.
                                  <ver> format:

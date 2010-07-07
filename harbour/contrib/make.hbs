@@ -1,3 +1,4 @@
+#!/usr/bin/hbrun --hb:gtcgi
 /*
  * $Id$
  */
@@ -12,10 +13,15 @@
 
 /* TODO:
      1. error handling / reporting / feedback
-     2. solve the automatic in-dir make clean/install/rebuild workflow
+     2. clean this source to avoid redundancy
+     3. solve stdalone install and HB_BUILD_CONTRIB_DLL support
+     4. hbmk2 location detection in standalone mode
+        (move hbmk2 to core lib?)
+     5. gnumake mode: automatically decide about build order,
+        based on dependencies (implibs -> libs[TODO!] -> exes)
  */
 
-/* #pragma warninglevel=3 */
+#pragma warninglevel=3
 
 /* TOFIX: Ugly hack to avoid #include "directry.ch" */
 #define F_NAME                  1       /* File name */
@@ -27,12 +33,170 @@
 #define _ACT_INC_INST           3
 #define _ACT_INC_REBUILD_INST   4
 
-STATIC s_lStdAlone
 STATIC s_lTest
 STATIC s_lMigr
 
 PROCEDURE Main( ... )
 
+   IF Empty( GetEnv( "HB_HOST_BIN_DIR" ) )
+      StandAlone( ... )
+   ELSE
+      GNUMake( ... )
+   ENDIF
+
+   RETURN
+
+/*
+  Workflow translation for standalone operation:
+
+     GNU Make       parameter      nAction                hbmk2 options
+  -- -------------- -------------- ---------------------- -------------------------
+  #1 clean          clean          _ACT_CLEAN             -clean
+  #2 install        install        _ACT_INC_INST          -inc -instpath=
+  #3 clean install  clean install  _ACT_INC_REBUILD_INST  -inc -instpath= -rebuild
+  #4                               _ACT_INC               -inc
+
+ */
+PROCEDURE StandAlone( ... )
+   LOCAL aParams
+   LOCAL aLibs
+
+   LOCAL aFile
+   LOCAL cType
+   LOCAL cBase := ""
+   LOCAL cProject
+
+   LOCAL cBaseOptions
+   LOCAL cOptionsPre
+   LOCAL cOptionsPost
+   LOCAL cTargetDir
+
+   LOCAL nAction
+   LOCAL tmp
+
+   s_lTest := .F.
+
+   aLibs := {}
+   FOR EACH aFile IN Directory( "*.hbi" )
+      AAdd( aLibs, aFile[ F_NAME ] )
+   NEXT
+   FOR EACH aFile IN Directory( "*.hbp" )
+      AAdd( aLibs, aFile[ F_NAME ] )
+   NEXT
+
+   IF Empty( Len( aLibs ) )
+      RETURN
+   ENDIF
+
+   aParams := hb_AParams()
+
+   DO CASE
+   CASE AScan( aParams, "clean" ) > 0 .AND. ;
+        AScan( aParams, "install" ) > 0 .AND. ;
+        AScan( aParams, "install" ) > AScan( aParams, "clean" )
+      nAction := _ACT_INC_REBUILD_INST
+   CASE AScan( aParams, "clean" ) > 0
+      nAction := _ACT_CLEAN
+   CASE AScan( aParams, "install" ) > 0
+      nAction := _ACT_INC_INST
+   OTHERWISE
+      nAction := _ACT_INC
+   ENDCASE
+
+   IF nAction == _ACT_EXIT
+      ErrorLevel( 0 )
+      RETURN
+   ENDIF
+
+   SetCancel( .F. )
+
+   /* Converting build options to hbmk2 options */
+
+   cBaseOptions := "-quiet -lang=en -width=0 -q0"
+
+   IF GetEnv( "HB_BUILD_MODE" ) == "cpp"
+      cBaseOptions += " -cpp=yes"
+   ELSEIF GetEnv( "HB_BUILD_MODE" ) == "c"
+      cBaseOptions += " -cpp=no"
+   ENDIF
+   IF GetEnv( "HB_BUILD_DEBUG" ) == "yes"
+      cBaseOptions += " -debug"
+   ENDIF
+   IF ! Empty( GetEnv( "HB_BUILD_NAME" ) )
+      cBaseOptions += " -build=" + GetEnv( "HB_BUILD_NAME" )
+   ENDIF
+
+   FOR EACH tmp IN aParams
+      IF !( tmp $ "install|clean" )
+         cBaseOptions += " " + tmp
+      ENDIF
+   NEXT
+
+   hb_setenv( "HB_HOST_BIN_DIR", hb_DirBase() + ".." + hb_ps() + "bin" )
+
+   FOR EACH cProject IN aLibs
+
+      cType := hbmk2_project_type( cBase + cProject )
+
+      cProject := StrTran( cProject, "\", "/" )
+
+      cOptionsPre := cBaseOptions
+      cOptionsPost := ""
+
+      SWITCH cType
+      CASE "hblib"
+      CASE "hbimplib"
+         cTargetDir := "${HB_LIB}"
+         EXIT
+      CASE "hbdyn"
+         cTargetDir := "${HB_DYN}"
+         IF GetEnv( "HB_BUILD_SHARED" ) == "yes"
+            cOptionsPre += " -shared"
+         ENDIF
+         EXIT
+      CASE "hbexe"
+         cTargetDir := "${HB_BIN}"
+         IF GetEnv( "HB_BUILD_SHARED" ) == "yes"
+            cOptionsPre += " -shared"
+         ENDIF
+         EXIT
+      ENDSWITCH
+
+      IF cType == "hrb"
+        LOOP
+      ENDIF
+
+      IF nAction == _ACT_CLEAN
+         cOptionsPre += " -clean"
+      ELSE
+         cOptionsPre += " -inc"
+         IF nAction == _ACT_INC_REBUILD_INST
+            cOptionsPre += " -rebuild"
+         ENDIF
+      ENDIF
+
+      call_hbmk2( cBase + cProject, cTargetDir, cOptionsPre, cOptionsPost, .F. )
+   NEXT
+
+   ErrorLevel( 0 )
+
+   RETURN
+
+/*
+  Workflow translation from GNU Make to hbmk2:
+
+     GNU Make       parameter  HB_MAKECMDGOALS  nAction                hbmk2 options
+  -- -------------- ---------- ---------------- ---------------------- -------------------------
+  #1 clean          clean      clean            _ACT_CLEAN             -clean
+  #2 install        install    install          _ACT_INC_INST          -inc -instpath=
+  #3 clean install  clean      clean install    _ACT_CLEAN             -clean
+                    install    clean install    _ACT_INC_REBUILD_INST  -inc -instpath= -rebuild
+  #4 install clean  install    install clean    _ACT_INC_INST          -inc -instpath=
+                    clean      install clean    _ACT_CLEAN             -clean
+  #5                all                         _ACT_INC               -inc
+ */
+
+PROCEDURE GNUMake( ... )
    LOCAL cBase := ""
    LOCAL cRoot := "../"
 
@@ -125,7 +289,8 @@ PROCEDURE Main( ... )
       "hbide/hbide.hbp"            }  /* uses: hbxbp, hbqt */
 
    LOCAL aAll
-   LOCAL hItem
+   LOCAL aList
+   LOCAL cType
 
    LOCAL cProject
    LOCAL cProjectDir
@@ -146,7 +311,6 @@ PROCEDURE Main( ... )
    LOCAL tmp
    LOCAL nAction
 
-   s_lStdAlone := Empty( "HB_HOST_BIN_DIR" )
    s_lMigr := "migr" $ hb_cmdLine()
 
    IF s_lMigr
@@ -164,21 +328,6 @@ PROCEDURE Main( ... )
       aUtils := {;
          "hbnetio/utils/hbnetio.hbp"  }
    ENDIF
-
-   /*
-     Workflow translation from GNU Make to hbmk2:
-
-        GNU Make       parameter  HB_MAKECMDGOALS  nAction                hbmk2 options
-     -- -------------- ---------- ---------------- ---------------------- -------------------------
-     #1 clean          clean      clean            _ACT_CLEAN             -clean
-     #2 install        install    install          _ACT_INC_INST          -inc -instpath=
-     #3 clean install  clean      clean install    _ACT_CLEAN             -clean
-                       install    clean install    _ACT_INC_REBUILD_INST  -inc -instpath= -rebuild
-     #4 install clean  install    install clean    _ACT_INC_INST          -inc -instpath=
-                       clean      install clean    _ACT_CLEAN             -clean
-     #5                all                         _ACT_INC               -inc
-
-   */
 
    /* Determine the mode of operation */
 
@@ -292,19 +441,20 @@ PROCEDURE Main( ... )
    /* Start building */
 
    aAll := {;
-      { "type" => "implib", "list" => aImpLibs },;
-      { "type" => "lib"   , "list" => aLibsPass0 },;
-      { "type" => "lib"   , "list" => aLibsPass1 },;
-      { "type" => "lib"   , "list" => aLibsPass2 },;
-      { "type" => "lib"   , "list" => aLibsPass3 },;
-      { "type" => "bin"   , "list" => aUtils },;
-      { "type" => "lib"   , "list" => hb_ATokens( GetEnv( "HB_ADDONS_LIB" ),, .T. ) },;
-      { "type" => "bin"   , "list" => hb_ATokens( GetEnv( "HB_ADDONS_BIN" ),, .T. ) } }
+      aImpLibs,;
+      aLibsPass0,;
+      aLibsPass1,;
+      aLibsPass2,;
+      aLibsPass3,;
+      aUtils,;
+      hb_ATokens( GetEnv( "HB_BUILD_ADDONS" ),, .T. ) }
 
-   FOR EACH hItem IN aAll
-      FOR EACH cProject IN hItem[ "list" ]
+   FOR EACH aList IN aAll
+      FOR EACH cProject IN aList
 
          IF ! Empty( cProject )
+
+            cType := hbmk2_project_type( cBase + cProject )
 
             cProject := StrTran( cProject, "\", "/" )
 
@@ -322,13 +472,20 @@ PROCEDURE Main( ... )
                cOptionsPre := cBaseOptions
                cOptionsPost := ""
 
-               SWITCH hItem[ "type" ]
-               CASE "lib"
-               CASE "implib"
+               SWITCH cType
+               CASE "hblib"
+               CASE "hbimplib"
                   cTargetDir := "${_HB_L_}"
                   cInstallDirVar := "_HB_LIB_INSTALL"
                   EXIT
-               CASE "bin"
+               CASE "hbdyn"
+                  cTargetDir := "${_HB_D_}"
+                  cInstallDirVar := "_HB_DYN_INSTALL"
+                  IF GetEnv( "HB_BUILD_SHARED" ) == "yes"
+                     cOptionsPre += " -shared"
+                  ENDIF
+                  EXIT
+               CASE "hbexe"
                   cTargetDir := "${_HB_B_}"
                   cInstallDirVar := "_HB_BIN_INSTALL"
                   IF GetEnv( "HB_BUILD_SHARED" ) == "yes"
@@ -336,6 +493,10 @@ PROCEDURE Main( ... )
                   ENDIF
                   EXIT
                ENDSWITCH
+
+               IF cType == "hrb"
+                  LOOP
+               ENDIF
 
                IF nAction == _ACT_CLEAN
                   cOptionsPre += " -clean"
@@ -347,9 +508,9 @@ PROCEDURE Main( ... )
                   IF nAction == _ACT_INC_INST .OR. ;
                      nAction == _ACT_INC_REBUILD_INST
                      IF ! Empty( GetEnv( cInstallDirVar ) ) .AND. ;
-                        ( ! ( hItem[ "type" ] == "implib" ) .OR. GetEnv( "HB_BUILD_IMPLIB" ) == "yes" )
+                        ( ! ( cType == "hbimplib" ) .OR. GetEnv( "HB_BUILD_IMPLIB" ) == "yes" )
                         cOptionsPre += " -instpath=${" + cInstallDirVar + "}/"
-                        IF hItem[ "type" ] == "lib"
+                        IF cType == "hblib"
                            cOptionsPre += " -instpath=inc:${_HB_INC_INSTALL}/"
                         ENDIF
                      ENDIF
@@ -359,7 +520,7 @@ PROCEDURE Main( ... )
                call_hbmk2( cBase + cProject, cTargetDir, cOptionsPre, cOptionsPost, .F. )
 
                /* Highly experimental */
-               IF hItem[ "type" ] == "lib" .AND. GetEnv( "HB_BUILD_CONTRIB_DLL" ) == "yes" .AND. ;
+               IF cType == "hblib" .AND. GetEnv( "HB_BUILD_CONTRIB_DLL" ) == "yes" .AND. ;
                   hb_FileExists( FN_ExtSet( cBase + cProject, ".hbc" ) )
 
                   cInstallDirVar := "_HB_DYN_INSTALL"
@@ -405,9 +566,13 @@ STATIC FUNCTION call_hbmk2( cProject, cTargetDir, cOptionsPre, cOptionsPost, lDy
 
    /* Keeping cmdline as short as possible. Also making sure that user settings
       do not interfere with the std build process. */
-   hb_setenv( "HBMK_OPTIONS", cOptionsPre )
+   #if defined( __PLATFORM__DOS )
+      hb_setenv( "HBMK_OPTIONS", cOptionsPre )
+      cOptionsPre := ""
+   #endif
 
    nErrorLevel := mk_hb_processRun( PathSepToSelf( GetEnv( "HB_HOST_BIN_DIR" ) ) + hb_ps() + "hbmk2" +;
+                                    " " + cOptionsPre +;
                                     " " + cProject +;
                                     cOptionsPost +;
                                     " -workdir=" + cTargetDir + "/${hb_work}/" + cName + iif( lDyn, "${hb_workdynsub}", "" ) +;
@@ -424,6 +589,17 @@ STATIC FUNCTION mk_hb_processRun( cCommand )
    OutStd( cCommand + hb_eol() )
 
    RETURN iif( s_lTest, 0, hb_processRun( cCommand ) )
+
+STATIC FUNCTION hbmk2_project_type( cFileName )
+   LOCAL cFile := MemoRead( cFileName )
+
+   IF     "-hblib"    $ cFile ; RETURN "hblib"
+   ELSEIF "-hbimplib" $ cFile ; RETURN "hbimplib"
+   ELSEIF "-hbdyn"    $ cFile ; RETURN "hbdyn"
+   ELSEIF "-gh"       $ cFile ; RETURN "hrb"
+   ENDIF
+
+   RETURN "hbexe"
 
 STATIC FUNCTION FN_ExtSet( cFileName, cExt )
    LOCAL cDir, cName
