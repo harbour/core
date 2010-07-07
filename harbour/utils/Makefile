@@ -7,11 +7,11 @@ ROOT := ../
 DIRS := \
    hbrun \
    hbmk2 \
+   hbi18n \
 
 ifneq ($(HB_BUILD_PARTS),compiler)
 
    DIRS += \
-      hbi18n \
       hbtest \
       hbformat \
 

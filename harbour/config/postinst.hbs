@@ -88,6 +88,46 @@ PROCEDURE Main()
       NEXT
    ENDIF
 
+   /* Creating shared version of Harbour binaries */
+
+   IF ! Empty( GetEnv( "HB_HOST_BIN_DIR" ) )
+
+#if 0
+      OutStd( "! Making hbmk2 to create .hbl files..." + hb_osNewLine() )
+
+      tmp := ""
+      IF GetEnv( "HB_BUILD_MODE" ) == "cpp"
+         tmp += " -cpp=yes"
+      ELSEIF GetEnv( "HB_BUILD_MODE" ) == "c"
+         tmp += " -cpp=no"
+      ENDIF
+      IF GetEnv( "HB_BUILD_DEBUG" ) == "yes"
+         tmp += " -debug"
+      ENDIF
+      IF GetEnv( "HB_BUILD_SHARED" ) == "yes"
+         tmp += " -shared"
+      ENDIF
+
+      mk_hb_processRun( PathSepToSelf( GetEnv( "HB_HOST_BIN_DIR" ) ) + hb_ps() + "hbmk2" +;
+                        " -quiet -lang=en -q0" + tmp +;
+                        " utils/hbmk2/hbmk2.hbp" +;
+                        " -o${HB_BIN_INSTALL}/hbmk2" )
+#else
+      OutStd( "! Making .hbl files..." + hb_osNewLine() )
+
+      FOR EACH tmp IN Directory( "utils" + hb_ps() + hb_osFileMask(), "D" )
+         IF "D" $ tmp[ F_ATTR ] .AND. !( tmp[ F_NAME ] == "." ) .AND. !( tmp[ F_NAME ] == ".." )
+            FOR EACH cFile IN Directory( "utils" + hb_ps() + tmp[ F_NAME ] + hb_ps() + "*.po" )
+               mk_hb_processRun( PathSepToSelf( GetEnv( "HB_HOST_BIN_DIR" ) ) + hb_ps() + "hbi18n" +;
+                                 " -q -g -o" + PathSepToSelf( GetEnv( "HB_BIN_INSTALL" ) ) + hb_ps() + FN_ExtSet( cFile[ F_NAME ], ".hbl" ) +;
+                                 " " + PathSepToSelf( "utils" + hb_ps() + tmp[ F_NAME ] + hb_ps() + cFile[ F_NAME ] ) )
+            NEXT
+         ENDIF
+      NEXT
+#endif
+
+   ENDIF
+
    /* Creating install packages */
 
    IF GetEnv( "HB_PLATFORM" ) $ "win|wce|os2|dos" .AND. ;
@@ -141,6 +181,13 @@ STATIC FUNCTION mk_hb_processRun( cCommand )
 
 STATIC FUNCTION FN_Escape( cFN )
    RETURN Chr( 34 ) + cFN + Chr( 34 )
+
+STATIC FUNCTION FN_ExtSet( cFileName, cExt )
+   LOCAL cDir, cName
+
+   hb_FNameSplit( cFileName, @cDir, @cName )
+
+   RETURN hb_FNameMerge( cDir, cName, cExt )
 
 STATIC FUNCTION PathSepToSelf( cFileName )
 #if defined( __PLATFORM__WINDOWS ) .OR. ;
