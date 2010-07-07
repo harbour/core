@@ -60,7 +60,7 @@ static HB_BOOL hb_compRegisterFunc( HB_COMP_DECL, PFUNCTION pFunc, HB_BOOL fErro
 /* ************************************************************************* */
 
 int hb_compMain( int argc, const char * const argv[],
-                 HB_BYTE ** pBufPtr, HB_SIZE * pulSize, const char * szSource )
+                 HB_BYTE ** pBufPtr, HB_SIZE * pnSize, const char * szSource )
 {
    HB_COMP_DECL;
    int iStatus = EXIT_SUCCESS;
@@ -85,7 +85,7 @@ int hb_compMain( int argc, const char * const argv[],
           HB_COMP_PARAM->iSyntaxCheckOnly == 2 )
          HB_COMP_PARAM->iTraceInclude = 1;
 
-      if( pBufPtr && pulSize )
+      if( pBufPtr && pnSize )
       {
          if( HB_COMP_PARAM->iTraceInclude > 0 &&
              HB_COMP_PARAM->iSyntaxCheckOnly > 0 )
@@ -156,19 +156,19 @@ int hb_compMain( int argc, const char * const argv[],
    if( iStatus == EXIT_SUCCESS )
       hb_compI18nSave( HB_COMP_PARAM, HB_TRUE );
 
-   if( pBufPtr && pulSize )
+   if( pBufPtr && pnSize )
    {
       if( iStatus == EXIT_SUCCESS )
       {
          * pBufPtr = HB_COMP_PARAM->pOutBuf;
-         * pulSize = HB_COMP_PARAM->ulOutBufSize;
+         * pnSize = HB_COMP_PARAM->ulOutBufSize;
          HB_COMP_PARAM->pOutBuf = NULL;
          HB_COMP_PARAM->ulOutBufSize = 0;
       }
       else
       {
          * pBufPtr = NULL;
-         * pulSize = 0;
+         * pnSize = 0;
       }
    }
 
@@ -883,14 +883,14 @@ int hb_compVariableScope( HB_COMP_DECL, const char * szVarName )
    return iScope;
 }
 
-HB_BOOL hb_compIsValidMacroText( HB_COMP_DECL, const char * szText, HB_SIZE ulLen )
+HB_BOOL hb_compIsValidMacroText( HB_COMP_DECL, const char * szText, HB_SIZE nLen )
 {
    HB_BOOL fFound = HB_FALSE;
-   HB_SIZE ul = 0;
+   HB_SIZE n = 0;
 
-   while( ul < ulLen )
+   while( n < nLen )
    {
-      if( szText[ ul++ ] == '&' )
+      if( szText[ n++ ] == '&' )
       {
          char szSymName[ HB_SYMBOL_NAME_LEN + 1 ];
          int iSize = 0, iScope;
@@ -904,9 +904,9 @@ HB_BOOL hb_compIsValidMacroText( HB_COMP_DECL, const char * szText, HB_SIZE ulLe
           * beginning of a variable name
           */
 
-         while( ul < ulLen && iSize < HB_SYMBOL_NAME_LEN )
+         while( n < nLen && iSize < HB_SYMBOL_NAME_LEN )
          {
-            char ch = szText[ ul ];
+            char ch = szText[ n ];
             if( ch >= 'a' && ch <= 'z' )
                szSymName[ iSize++ ] = ch - ( 'a' - 'A' );
             else if( ch == '_' || ( ch >= 'A' && ch <= 'Z' ) ||
@@ -914,7 +914,7 @@ HB_BOOL hb_compIsValidMacroText( HB_COMP_DECL, const char * szText, HB_SIZE ulLe
                szSymName[ iSize++ ] = ch;
             else
                break;
-            ++ul;
+            ++n;
          }
 
          if( iSize )
@@ -1227,12 +1227,12 @@ PHB_VARTYPE hb_compVarTypeNew( HB_COMP_DECL, char cVarType, const char* szFromCl
 
 static int hb_compSort_HB_SIZE( const void * pLeft, const void * pRight )
 {
-    HB_SIZE ulLeft  = *( ( HB_SIZE * ) ( pLeft ) );
-    HB_SIZE ulRight = *( ( HB_SIZE * ) ( pRight ) );
+    HB_SIZE nLeft  = *( ( HB_SIZE * ) ( pLeft ) );
+    HB_SIZE nRight = *( ( HB_SIZE * ) ( pRight ) );
 
-    if( ulLeft == ulRight )
+    if( nLeft == nRight )
        return 0 ;
-    else if( ulLeft < ulRight )
+    else if( nLeft < nRight )
        return -1;
     else
        return 1;
@@ -1243,7 +1243,7 @@ static void hb_compOptimizeJumps( HB_COMP_DECL )
 {
    HB_BYTE * pCode = HB_COMP_PARAM->functions.pLast->pCode;
    HB_SIZE * pNOOPs, * pJumps;
-   HB_SIZE ulOptimized, ulNextByte, ulBytes2Copy, ulJumpAddr, iNOOP, iJump;
+   HB_SIZE nOptimized, nNextByte, nBytes2Copy, nJumpAddr, nNOOP, nJump;
    HB_BOOL fLineStrip = !HB_COMP_PARAM->fDebugInfo && HB_COMP_PARAM->fLineNumbers;
    int iPass;
 
@@ -1255,7 +1255,7 @@ static void hb_compOptimizeJumps( HB_COMP_DECL )
 
    for( iPass = 0; iPass < 4 && !HB_COMP_PARAM->fExit; ++iPass )
    {
-      HB_ISIZ lOffset;
+      HB_ISIZ nOffset;
 
       if( iPass == 3 && fLineStrip )
       {
@@ -1266,11 +1266,11 @@ static void hb_compOptimizeJumps( HB_COMP_DECL )
       if( HB_COMP_PARAM->functions.pLast->iJumps > 0 )
       {
          pJumps = HB_COMP_PARAM->functions.pLast->pJumps;
-         iJump = HB_COMP_PARAM->functions.pLast->iJumps - 1;
+         nJump = HB_COMP_PARAM->functions.pLast->iJumps - 1;
 
          do
          {
-            ulJumpAddr = pJumps[ iJump ];
+            nJumpAddr = pJumps[ nJump ];
 
             /*
              * optimize existing jumps, it will be good to also join
@@ -1285,122 +1285,122 @@ static void hb_compOptimizeJumps( HB_COMP_DECL )
              *
              * I'll think about sth like that later, [druzus]
              */
-            switch( pCode[ ulJumpAddr ] )
+            switch( pCode[ nJumpAddr ] )
             {
                case HB_P_JUMPNEAR:
-                  if( ( signed char ) pCode[ ulJumpAddr + 1 ] == 2 )
-                     hb_compNOOPfill( HB_COMP_PARAM->functions.pLast, ulJumpAddr, 2, HB_FALSE, HB_FALSE );
+                  if( ( signed char ) pCode[ nJumpAddr + 1 ] == 2 )
+                     hb_compNOOPfill( HB_COMP_PARAM->functions.pLast, nJumpAddr, 2, HB_FALSE, HB_FALSE );
                   break;
 
                case HB_P_JUMPFALSENEAR:
                case HB_P_JUMPTRUENEAR:
-                  if( ( signed char ) pCode[ ulJumpAddr + 1 ] == 2 )
-                     hb_compNOOPfill( HB_COMP_PARAM->functions.pLast, ulJumpAddr, 2, HB_TRUE, HB_FALSE );
+                  if( ( signed char ) pCode[ nJumpAddr + 1 ] == 2 )
+                     hb_compNOOPfill( HB_COMP_PARAM->functions.pLast, nJumpAddr, 2, HB_TRUE, HB_FALSE );
                   break;
 
                case HB_P_JUMP:
-                  lOffset = HB_PCODE_MKSHORT( &pCode[ ulJumpAddr + 1 ] );
-                  if( lOffset == 3 )
-                     hb_compNOOPfill( HB_COMP_PARAM->functions.pLast, ulJumpAddr, 3, HB_FALSE, HB_FALSE );
-                  else if( HB_LIM_INT8( lOffset ) )
+                  nOffset = HB_PCODE_MKSHORT( &pCode[ nJumpAddr + 1 ] );
+                  if( nOffset == 3 )
+                     hb_compNOOPfill( HB_COMP_PARAM->functions.pLast, nJumpAddr, 3, HB_FALSE, HB_FALSE );
+                  else if( HB_LIM_INT8( nOffset ) )
                   {
-                     pCode[ ulJumpAddr ] = HB_P_JUMPNEAR;
-                     hb_compNOOPfill( HB_COMP_PARAM->functions.pLast, ulJumpAddr + 2, 1, HB_FALSE, HB_FALSE );
+                     pCode[ nJumpAddr ] = HB_P_JUMPNEAR;
+                     hb_compNOOPfill( HB_COMP_PARAM->functions.pLast, nJumpAddr + 2, 1, HB_FALSE, HB_FALSE );
                   }
                   break;
 
                case HB_P_JUMPFALSE:
-                  lOffset = HB_PCODE_MKSHORT( &pCode[ ulJumpAddr + 1 ] );
-                  if( lOffset == 3 )
-                     hb_compNOOPfill( HB_COMP_PARAM->functions.pLast, ulJumpAddr, 3, HB_TRUE, HB_FALSE );
-                  else if( HB_LIM_INT8( lOffset ) )
+                  nOffset = HB_PCODE_MKSHORT( &pCode[ nJumpAddr + 1 ] );
+                  if( nOffset == 3 )
+                     hb_compNOOPfill( HB_COMP_PARAM->functions.pLast, nJumpAddr, 3, HB_TRUE, HB_FALSE );
+                  else if( HB_LIM_INT8( nOffset ) )
                   {
-                     pCode[ ulJumpAddr ] = HB_P_JUMPFALSENEAR;
-                     hb_compNOOPfill( HB_COMP_PARAM->functions.pLast, ulJumpAddr + 2, 1, HB_FALSE, HB_FALSE );
+                     pCode[ nJumpAddr ] = HB_P_JUMPFALSENEAR;
+                     hb_compNOOPfill( HB_COMP_PARAM->functions.pLast, nJumpAddr + 2, 1, HB_FALSE, HB_FALSE );
                   }
                   break;
 
                case HB_P_JUMPTRUE:
-                  lOffset = HB_PCODE_MKSHORT( &pCode[ ulJumpAddr + 1 ] );
-                  if( lOffset == 3 )
-                     hb_compNOOPfill( HB_COMP_PARAM->functions.pLast, ulJumpAddr, 3, HB_TRUE, HB_FALSE );
-                  else if( HB_LIM_INT8( lOffset ) )
+                  nOffset = HB_PCODE_MKSHORT( &pCode[ nJumpAddr + 1 ] );
+                  if( nOffset == 3 )
+                     hb_compNOOPfill( HB_COMP_PARAM->functions.pLast, nJumpAddr, 3, HB_TRUE, HB_FALSE );
+                  else if( HB_LIM_INT8( nOffset ) )
                   {
-                     pCode[ ulJumpAddr ] = HB_P_JUMPTRUENEAR;
-                     hb_compNOOPfill( HB_COMP_PARAM->functions.pLast, ulJumpAddr + 2, 1, HB_FALSE, HB_FALSE );
+                     pCode[ nJumpAddr ] = HB_P_JUMPTRUENEAR;
+                     hb_compNOOPfill( HB_COMP_PARAM->functions.pLast, nJumpAddr + 2, 1, HB_FALSE, HB_FALSE );
                   }
                   break;
 
                case HB_P_JUMPFAR:
-                  lOffset = HB_PCODE_MKINT24( &pCode[ ulJumpAddr + 1 ] );
-                  if( lOffset == 4 )
-                     hb_compNOOPfill( HB_COMP_PARAM->functions.pLast, ulJumpAddr, 4, HB_FALSE, HB_FALSE );
-                  else if( iPass > 0 && HB_LIM_INT16( lOffset ) )
+                  nOffset = HB_PCODE_MKINT24( &pCode[ nJumpAddr + 1 ] );
+                  if( nOffset == 4 )
+                     hb_compNOOPfill( HB_COMP_PARAM->functions.pLast, nJumpAddr, 4, HB_FALSE, HB_FALSE );
+                  else if( iPass > 0 && HB_LIM_INT16( nOffset ) )
                   {
-                     if( HB_LIM_INT8( lOffset ) )
+                     if( HB_LIM_INT8( nOffset ) )
                      {
-                        pCode[ ulJumpAddr ] = HB_P_JUMPNEAR;
-                        hb_compNOOPfill( HB_COMP_PARAM->functions.pLast, ulJumpAddr + 2, 2, HB_FALSE, HB_FALSE );
+                        pCode[ nJumpAddr ] = HB_P_JUMPNEAR;
+                        hb_compNOOPfill( HB_COMP_PARAM->functions.pLast, nJumpAddr + 2, 2, HB_FALSE, HB_FALSE );
                      }
                      else
                      {
-                        pCode[ ulJumpAddr ] = HB_P_JUMP;
-                        hb_compNOOPfill( HB_COMP_PARAM->functions.pLast, ulJumpAddr + 3, 1, HB_FALSE, HB_FALSE );
+                        pCode[ nJumpAddr ] = HB_P_JUMP;
+                        hb_compNOOPfill( HB_COMP_PARAM->functions.pLast, nJumpAddr + 3, 1, HB_FALSE, HB_FALSE );
                      }
                   }
                   break;
 
                case HB_P_JUMPFALSEFAR:
-                  lOffset = HB_PCODE_MKINT24( &pCode[ ulJumpAddr + 1 ] );
-                  if( lOffset == 4 )
-                     hb_compNOOPfill( HB_COMP_PARAM->functions.pLast, ulJumpAddr, 4, HB_TRUE, HB_FALSE );
-                  else if( iPass > 0 && HB_LIM_INT16( lOffset ) )
+                  nOffset = HB_PCODE_MKINT24( &pCode[ nJumpAddr + 1 ] );
+                  if( nOffset == 4 )
+                     hb_compNOOPfill( HB_COMP_PARAM->functions.pLast, nJumpAddr, 4, HB_TRUE, HB_FALSE );
+                  else if( iPass > 0 && HB_LIM_INT16( nOffset ) )
                   {
-                     if( HB_LIM_INT8( lOffset ) )
+                     if( HB_LIM_INT8( nOffset ) )
                      {
-                        pCode[ ulJumpAddr ] = HB_P_JUMPFALSENEAR;
-                        hb_compNOOPfill( HB_COMP_PARAM->functions.pLast, ulJumpAddr + 2, 2, HB_FALSE, HB_FALSE );
+                        pCode[ nJumpAddr ] = HB_P_JUMPFALSENEAR;
+                        hb_compNOOPfill( HB_COMP_PARAM->functions.pLast, nJumpAddr + 2, 2, HB_FALSE, HB_FALSE );
                      }
                      else
                      {
-                        pCode[ ulJumpAddr ] = HB_P_JUMPFALSE;
-                        hb_compNOOPfill( HB_COMP_PARAM->functions.pLast, ulJumpAddr + 3, 1, HB_FALSE, HB_FALSE );
+                        pCode[ nJumpAddr ] = HB_P_JUMPFALSE;
+                        hb_compNOOPfill( HB_COMP_PARAM->functions.pLast, nJumpAddr + 3, 1, HB_FALSE, HB_FALSE );
                      }
                   }
                   break;
 
                case HB_P_JUMPTRUEFAR:
-                  lOffset = HB_PCODE_MKINT24( &pCode[ ulJumpAddr + 1 ] );
-                  if( lOffset == 4 )
-                     hb_compNOOPfill( HB_COMP_PARAM->functions.pLast, ulJumpAddr, 4, HB_TRUE, HB_FALSE );
-                  else if( iPass > 0 && HB_LIM_INT16( lOffset ) )
+                  nOffset = HB_PCODE_MKINT24( &pCode[ nJumpAddr + 1 ] );
+                  if( nOffset == 4 )
+                     hb_compNOOPfill( HB_COMP_PARAM->functions.pLast, nJumpAddr, 4, HB_TRUE, HB_FALSE );
+                  else if( iPass > 0 && HB_LIM_INT16( nOffset ) )
                   {
-                     if( HB_LIM_INT8( lOffset ) )
+                     if( HB_LIM_INT8( nOffset ) )
                      {
-                        pCode[ ulJumpAddr ] = HB_P_JUMPTRUENEAR;
-                        hb_compNOOPfill( HB_COMP_PARAM->functions.pLast, ulJumpAddr + 2, 2, HB_FALSE, HB_FALSE );
+                        pCode[ nJumpAddr ] = HB_P_JUMPTRUENEAR;
+                        hb_compNOOPfill( HB_COMP_PARAM->functions.pLast, nJumpAddr + 2, 2, HB_FALSE, HB_FALSE );
                      }
                      else
                      {
-                        pCode[ ulJumpAddr ] = HB_P_JUMPTRUE;
-                        hb_compNOOPfill( HB_COMP_PARAM->functions.pLast, ulJumpAddr + 3, 1, HB_FALSE, HB_FALSE );
+                        pCode[ nJumpAddr ] = HB_P_JUMPTRUE;
+                        hb_compNOOPfill( HB_COMP_PARAM->functions.pLast, nJumpAddr + 3, 1, HB_FALSE, HB_FALSE );
                      }
                   }
                   break;
             }
 
             /* remove dummy jumps (over dead code) */
-            if( pCode[ ulJumpAddr ] == HB_P_NOOP ||
-                pCode[ ulJumpAddr ] == HB_P_POP )
+            if( pCode[ nJumpAddr ] == HB_P_NOOP ||
+                pCode[ nJumpAddr ] == HB_P_POP )
             {
-               if( HB_COMP_PARAM->functions.pLast->iJumps > iJump + 1 )
-                  memmove( &pJumps[ iJump ], &pJumps[ iJump + 1 ],
-                           ( HB_COMP_PARAM->functions.pLast->iJumps - iJump - 1 ) *
+               if( HB_COMP_PARAM->functions.pLast->iJumps > nJump + 1 )
+                  memmove( &pJumps[ nJump ], &pJumps[ nJump + 1 ],
+                           ( HB_COMP_PARAM->functions.pLast->iJumps - nJump - 1 ) *
                            sizeof( HB_SIZE ) );
                HB_COMP_PARAM->functions.pLast->iJumps--;
             }
          }
-         while( iJump-- );
+         while( nJump-- );
 
          if( HB_COMP_PARAM->functions.pLast->iJumps == 0 )
          {
@@ -1427,36 +1427,36 @@ static void hb_compOptimizeJumps( HB_COMP_DECL )
       if( HB_COMP_PARAM->functions.pLast->iJumps )
       {
          HB_ISIZ * plSizes, * plShifts;
-         HB_SIZE ulSize;
+         HB_SIZE nSize;
 
          pJumps = HB_COMP_PARAM->functions.pLast->pJumps;
-         ulSize = sizeof( HB_ISIZ ) * HB_COMP_PARAM->functions.pLast->iJumps;
-         plSizes = ( HB_ISIZ * ) hb_xgrab( ulSize );
-         plShifts = ( HB_ISIZ * ) hb_xgrab( ulSize );
+         nSize = sizeof( HB_ISIZ ) * HB_COMP_PARAM->functions.pLast->iJumps;
+         plSizes = ( HB_ISIZ * ) hb_xgrab( nSize );
+         plShifts = ( HB_ISIZ * ) hb_xgrab( nSize );
 
-         for( iJump = 0; iJump < HB_COMP_PARAM->functions.pLast->iJumps; iJump++ )
-            plSizes[ iJump ] = plShifts[ iJump ] = 0;
+         for( nJump = 0; nJump < HB_COMP_PARAM->functions.pLast->iJumps; nJump++ )
+            plSizes[ nJump ] = plShifts[ nJump ] = 0;
 
          /* First Scan NOOPS - Adjust Jump addresses. */
-         for( iNOOP = 0; iNOOP < HB_COMP_PARAM->functions.pLast->iNOOPs; iNOOP++ )
+         for( nNOOP = 0; nNOOP < HB_COMP_PARAM->functions.pLast->iNOOPs; nNOOP++ )
          {
             /* Adjusting preceding jumps that pooint to code beyond the current NOOP
                or trailing backward jumps pointing to lower address. */
-            for( iJump = 0; iJump < HB_COMP_PARAM->functions.pLast->iJumps ; iJump++ )
+            for( nJump = 0; nJump < HB_COMP_PARAM->functions.pLast->iJumps ; nJump++ )
             {
-               ulJumpAddr = pJumps[ iJump ];
-               switch( pCode[ ulJumpAddr ] )
+               nJumpAddr = pJumps[ nJump ];
+               switch( pCode[ nJumpAddr ] )
                {
                   case HB_P_JUMPNEAR:
                   case HB_P_JUMPFALSENEAR:
                   case HB_P_JUMPTRUENEAR:
-                     lOffset = ( signed char ) pCode[ ulJumpAddr + 1 ];
+                     nOffset = ( signed char ) pCode[ nJumpAddr + 1 ];
                      break;
 
                   case HB_P_JUMP:
                   case HB_P_JUMPFALSE:
                   case HB_P_JUMPTRUE:
-                     lOffset = HB_PCODE_MKSHORT( &pCode[ ulJumpAddr + 1 ] );
+                     nOffset = HB_PCODE_MKSHORT( &pCode[ nJumpAddr + 1 ] );
                      break;
 
                   case HB_P_JUMPFAR:
@@ -1466,7 +1466,7 @@ static void hb_compOptimizeJumps( HB_COMP_DECL )
                   case HB_P_SEQALWAYS:
                   case HB_P_SEQBEGIN:
                   case HB_P_SEQEND:
-                     lOffset = HB_PCODE_MKINT24( &pCode[ ulJumpAddr + 1 ] );
+                     nOffset = HB_PCODE_MKINT24( &pCode[ nJumpAddr + 1 ] );
                      break;
 
                   default:
@@ -1475,82 +1475,82 @@ static void hb_compOptimizeJumps( HB_COMP_DECL )
                }
 
                /* update jump size */
-               if( lOffset > 0 ) /* forward (positive) jump */
+               if( nOffset > 0 ) /* forward (positive) jump */
                {
                   /* Only if points to code beyond the current fix. */
-                  if( pNOOPs[ iNOOP ] > ulJumpAddr &&
-                      pNOOPs[ iNOOP ] < ( HB_SIZE ) ( ulJumpAddr + lOffset ) )
-                     plSizes[ iJump ]--;
+                  if( pNOOPs[ nNOOP ] > nJumpAddr &&
+                      pNOOPs[ nNOOP ] < ( HB_SIZE ) ( nJumpAddr + nOffset ) )
+                     plSizes[ nJump ]--;
                }
-               else /* if( lOffset < 0 ) - backword (negative) jump */
+               else /* if( nOffset < 0 ) - backword (negative) jump */
                {
                   /* Only if points to code prior the current fix. */
-                  if( pNOOPs[ iNOOP ] < ulJumpAddr &&
-                      pNOOPs[ iNOOP ] >= ( HB_SIZE ) ( ulJumpAddr + lOffset ) )
-                     plSizes[ iJump ]++;
+                  if( pNOOPs[ nNOOP ] < nJumpAddr &&
+                      pNOOPs[ nNOOP ] >= ( HB_SIZE ) ( nJumpAddr + nOffset ) )
+                     plSizes[ nJump ]++;
                }
 
                /* update jump address */
-               if( pNOOPs[ iNOOP ] < ulJumpAddr )
-                  plShifts[ iJump ]++;
+               if( pNOOPs[ nNOOP ] < nJumpAddr )
+                  plShifts[ nJump ]++;
             }
          }
 
-         for( iJump = 0; iJump < HB_COMP_PARAM->functions.pLast->iJumps; iJump++ )
+         for( nJump = 0; nJump < HB_COMP_PARAM->functions.pLast->iJumps; nJump++ )
          {
-            lOffset = plSizes[ iJump ];
-            if( lOffset != 0 )
+            nOffset = plSizes[ nJump ];
+            if( nOffset != 0 )
             {
-               ulJumpAddr = pJumps[ iJump ];
-               switch( pCode[ ulJumpAddr ] )
+               nJumpAddr = pJumps[ nJump ];
+               switch( pCode[ nJumpAddr ] )
                {
                   case HB_P_JUMPNEAR:
                   case HB_P_JUMPFALSENEAR:
                   case HB_P_JUMPTRUENEAR:
-                     lOffset += ( signed char ) pCode[ ulJumpAddr + 1 ];
-                     pCode[ ulJumpAddr + 1 ] = HB_LOBYTE( lOffset );
+                     nOffset += ( signed char ) pCode[ nJumpAddr + 1 ];
+                     pCode[ nJumpAddr + 1 ] = HB_LOBYTE( nOffset );
                      break;
 
                   case HB_P_JUMP:
                   case HB_P_JUMPFALSE:
                   case HB_P_JUMPTRUE:
-                     lOffset += HB_PCODE_MKSHORT( &pCode[ ulJumpAddr + 1 ] );
-                     HB_PUT_LE_UINT16( &pCode[ ulJumpAddr + 1 ], lOffset );
+                     nOffset += HB_PCODE_MKSHORT( &pCode[ nJumpAddr + 1 ] );
+                     HB_PUT_LE_UINT16( &pCode[ nJumpAddr + 1 ], nOffset );
                      break;
 
                   default:
-                     lOffset += HB_PCODE_MKINT24( &pCode[ ulJumpAddr + 1 ] );
-                     HB_PUT_LE_UINT24( &pCode[ ulJumpAddr + 1 ], lOffset );
+                     nOffset += HB_PCODE_MKINT24( &pCode[ nJumpAddr + 1 ] );
+                     HB_PUT_LE_UINT24( &pCode[ nJumpAddr + 1 ], nOffset );
                      break;
                }
             }
-            pJumps[ iJump ] -= plShifts[ iJump ];
+            pJumps[ nJump ] -= plShifts[ nJump ];
          }
          hb_xfree( plSizes );
          hb_xfree( plShifts );
       }
 
-      ulOptimized = ulNextByte = 0;
+      nOptimized = nNextByte = 0;
       /* Second Scan, after all adjustements been made, we can copy the optimized code. */
-      for( iNOOP = 0; iNOOP < HB_COMP_PARAM->functions.pLast->iNOOPs; iNOOP++ )
+      for( nNOOP = 0; nNOOP < HB_COMP_PARAM->functions.pLast->iNOOPs; nNOOP++ )
       {
-         ulBytes2Copy = ( pNOOPs[ iNOOP ] - ulNextByte ) ;
+         nBytes2Copy = ( pNOOPs[ nNOOP ] - nNextByte ) ;
 
-         memmove( pCode + ulOptimized, pCode + ulNextByte, ulBytes2Copy );
+         memmove( pCode + nOptimized, pCode + nNextByte, nBytes2Copy );
 
-         ulOptimized += ulBytes2Copy;
-         ulNextByte  += ulBytes2Copy;
+         nOptimized += nBytes2Copy;
+         nNextByte  += nBytes2Copy;
 
          /* Skip the NOOP and point to next valid byte */
-         ulNextByte++;
+         nNextByte++;
       }
 
-      ulBytes2Copy = ( HB_COMP_PARAM->functions.pLast->lPCodePos - ulNextByte ) ;
-      memmove( pCode + ulOptimized, pCode + ulNextByte, ulBytes2Copy );
-      ulOptimized += ulBytes2Copy;
+      nBytes2Copy = ( HB_COMP_PARAM->functions.pLast->lPCodePos - nNextByte ) ;
+      memmove( pCode + nOptimized, pCode + nNextByte, nBytes2Copy );
+      nOptimized += nBytes2Copy;
 
-      HB_COMP_PARAM->functions.pLast->lPCodePos  = ulOptimized;
-      HB_COMP_PARAM->functions.pLast->lPCodeSize = ulOptimized;
+      HB_COMP_PARAM->functions.pLast->lPCodePos  = nOptimized;
+      HB_COMP_PARAM->functions.pLast->lPCodeSize = nOptimized;
 
       hb_xfree( HB_COMP_PARAM->functions.pLast->pNOOPs );
       HB_COMP_PARAM->functions.pLast->pNOOPs = NULL;
@@ -2231,15 +2231,15 @@ static void hb_compExternGen( HB_COMP_DECL )
    }
 }
 
-static void hb_compNOOPadd( PFUNCTION pFunc, HB_SIZE ulPos )
+static void hb_compNOOPadd( PFUNCTION pFunc, HB_SIZE nPos )
 {
-   pFunc->pCode[ ulPos ] = HB_P_NOOP;
+   pFunc->pCode[ nPos ] = HB_P_NOOP;
 
    if( pFunc->iNOOPs )
       pFunc->pNOOPs = ( HB_SIZE * ) hb_xrealloc( pFunc->pNOOPs, sizeof( HB_SIZE ) * ( pFunc->iNOOPs + 1 ) );
    else
       pFunc->pNOOPs = ( HB_SIZE * ) hb_xgrab( sizeof( HB_SIZE ) );
-   pFunc->pNOOPs[ pFunc->iNOOPs++ ] = ulPos;
+   pFunc->pNOOPs[ pFunc->iNOOPs++ ] = nPos;
 }
 
 static void hb_compPrepareJumps( HB_COMP_DECL )
@@ -2253,55 +2253,55 @@ static void hb_compPrepareJumps( HB_COMP_DECL )
    pFunc->pJumps[ pFunc->iJumps++ ] = ( HB_SIZE ) ( pFunc->lPCodePos - 4 );
 }
 
-HB_SIZE hb_compGenJump( HB_ISIZ lOffset, HB_COMP_DECL )
+HB_SIZE hb_compGenJump( HB_ISIZ nOffset, HB_COMP_DECL )
 {
-   if( !HB_LIM_INT24( lOffset ) )
+   if( !HB_LIM_INT24( nOffset ) )
       hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_JUMP_TOO_LONG, NULL, NULL );
 
-   hb_compGenPCode4( HB_P_JUMPFAR, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), ( HB_BYTE ) ( ( lOffset >> 16 ) & 0xFF ), HB_COMP_PARAM );
+   hb_compGenPCode4( HB_P_JUMPFAR, HB_LOBYTE( nOffset ), HB_HIBYTE( nOffset ), ( HB_BYTE ) ( ( nOffset >> 16 ) & 0xFF ), HB_COMP_PARAM );
    hb_compPrepareJumps( HB_COMP_PARAM );
 
    return HB_COMP_PARAM->functions.pLast->lPCodePos - 3;
 }
 
-HB_SIZE hb_compGenJumpFalse( HB_ISIZ lOffset, HB_COMP_DECL )
+HB_SIZE hb_compGenJumpFalse( HB_ISIZ nOffset, HB_COMP_DECL )
 {
-   if( !HB_LIM_INT24( lOffset ) )
+   if( !HB_LIM_INT24( nOffset ) )
       hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_JUMP_TOO_LONG, NULL, NULL );
 
-   hb_compGenPCode4( HB_P_JUMPFALSEFAR, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), ( HB_BYTE ) ( ( lOffset >> 16 ) & 0xFF ), HB_COMP_PARAM );
+   hb_compGenPCode4( HB_P_JUMPFALSEFAR, HB_LOBYTE( nOffset ), HB_HIBYTE( nOffset ), ( HB_BYTE ) ( ( nOffset >> 16 ) & 0xFF ), HB_COMP_PARAM );
    hb_compPrepareJumps( HB_COMP_PARAM );
 
    return HB_COMP_PARAM->functions.pLast->lPCodePos - 3;
 }
 
-HB_SIZE hb_compGenJumpTrue( HB_ISIZ lOffset, HB_COMP_DECL )
+HB_SIZE hb_compGenJumpTrue( HB_ISIZ nOffset, HB_COMP_DECL )
 {
-   if( !HB_LIM_INT24( lOffset ) )
+   if( !HB_LIM_INT24( nOffset ) )
       hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_JUMP_TOO_LONG, NULL, NULL );
 
-   hb_compGenPCode4( HB_P_JUMPTRUEFAR, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), ( HB_BYTE ) ( ( lOffset >> 16 ) & 0xFF ), HB_COMP_PARAM );
+   hb_compGenPCode4( HB_P_JUMPTRUEFAR, HB_LOBYTE( nOffset ), HB_HIBYTE( nOffset ), ( HB_BYTE ) ( ( nOffset >> 16 ) & 0xFF ), HB_COMP_PARAM );
    hb_compPrepareJumps( HB_COMP_PARAM );
 
    return HB_COMP_PARAM->functions.pLast->lPCodePos - 3;
 }
 
-void hb_compGenJumpThere( HB_SIZE ulFrom, HB_SIZE ulTo, HB_COMP_DECL )
+void hb_compGenJumpThere( HB_SIZE nFrom, HB_SIZE nTo, HB_COMP_DECL )
 {
    HB_BYTE * pCode = HB_COMP_PARAM->functions.pLast->pCode;
-   HB_ISIZ lOffset = ulTo - ulFrom + 1;
+   HB_ISIZ nOffset = nTo - nFrom + 1;
 
-   if( HB_LIM_INT24( lOffset ) )
+   if( HB_LIM_INT24( nOffset ) )
    {
-      HB_PUT_LE_UINT24( &pCode[ ulFrom ], lOffset );
+      HB_PUT_LE_UINT24( &pCode[ nFrom ], nOffset );
    }
    else
       hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_JUMP_TOO_LONG, NULL, NULL );
 }
 
-void hb_compGenJumpHere( HB_SIZE ulOffset, HB_COMP_DECL )
+void hb_compGenJumpHere( HB_SIZE nOffset, HB_COMP_DECL )
 {
-   hb_compGenJumpThere( ulOffset, HB_COMP_PARAM->functions.pLast->lPCodePos, HB_COMP_PARAM );
+   hb_compGenJumpThere( nOffset, HB_COMP_PARAM->functions.pLast->lPCodePos, HB_COMP_PARAM );
 }
 
 void hb_compLinePush( HB_COMP_DECL ) /* generates the pcode with the currently compiled source code line */
@@ -3009,64 +3009,64 @@ void hb_compGenPushTimeStamp( long lDate, long lTime, HB_COMP_DECL )
 }
 
 /* generates the pcode to push a string on the virtual machine stack */
-void hb_compGenPushString( const char * szText, HB_SIZE ulStrLen, HB_COMP_DECL )
+void hb_compGenPushString( const char * szText, HB_SIZE nStrLen, HB_COMP_DECL )
 {
    if( HB_COMP_PARAM->iHidden )
    {
       char * szTemp;
-      --ulStrLen;
-      szTemp = hb_compEncodeString( HB_COMP_PARAM->iHidden, szText, &ulStrLen );
-      if( ulStrLen > UINT16_MAX )
+      --nStrLen;
+      szTemp = hb_compEncodeString( HB_COMP_PARAM->iHidden, szText, &nStrLen );
+      if( nStrLen > UINT16_MAX )
          hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_STRING_TOO_LONG, NULL, NULL );
       else
       {
          hb_compGenPCode4( HB_P_PUSHSTRHIDDEN, ( HB_BYTE ) HB_COMP_PARAM->iHidden,
-                           HB_LOBYTE( ulStrLen ), HB_HIBYTE( ulStrLen ), HB_COMP_PARAM );
-         hb_compGenPCodeN( ( HB_BYTE * ) szTemp, ulStrLen, HB_COMP_PARAM );
+                           HB_LOBYTE( nStrLen ), HB_HIBYTE( nStrLen ), HB_COMP_PARAM );
+         hb_compGenPCodeN( ( HB_BYTE * ) szTemp, nStrLen, HB_COMP_PARAM );
       }
       hb_xfree( szTemp );
    }
    else
    {
-      if( ulStrLen > UINT24_MAX )
+      if( nStrLen > UINT24_MAX )
          hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_STRING_TOO_LONG, NULL, NULL );
       else
       {
-         if( ulStrLen > USHRT_MAX )
-            hb_compGenPCode4( HB_P_PUSHSTRLARGE, HB_LOBYTE( ulStrLen ), HB_HIBYTE( ulStrLen ), HB_ULBYTE( ulStrLen ), HB_COMP_PARAM );
-         else if( ulStrLen > UCHAR_MAX )
-            hb_compGenPCode3( HB_P_PUSHSTR, HB_LOBYTE( ulStrLen ), HB_HIBYTE( ulStrLen ), HB_COMP_PARAM );
+         if( nStrLen > USHRT_MAX )
+            hb_compGenPCode4( HB_P_PUSHSTRLARGE, HB_LOBYTE( nStrLen ), HB_HIBYTE( nStrLen ), HB_ULBYTE( nStrLen ), HB_COMP_PARAM );
+         else if( nStrLen > UCHAR_MAX )
+            hb_compGenPCode3( HB_P_PUSHSTR, HB_LOBYTE( nStrLen ), HB_HIBYTE( nStrLen ), HB_COMP_PARAM );
          else
-            hb_compGenPCode2( HB_P_PUSHSTRSHORT, ( HB_BYTE ) ulStrLen, HB_COMP_PARAM );
-         hb_compGenPCodeN( ( HB_BYTE * ) szText, ulStrLen, HB_COMP_PARAM );
+            hb_compGenPCode2( HB_P_PUSHSTRSHORT, ( HB_BYTE ) nStrLen, HB_COMP_PARAM );
+         hb_compGenPCodeN( ( HB_BYTE * ) szText, nStrLen, HB_COMP_PARAM );
       }
    }
 }
 
-void hb_compNOOPfill( PFUNCTION pFunc, HB_SIZE ulFrom, HB_ISIZ iCount, HB_BOOL fPop, HB_BOOL fCheck )
+void hb_compNOOPfill( PFUNCTION pFunc, HB_SIZE nFrom, HB_ISIZ nCount, HB_BOOL fPop, HB_BOOL fCheck )
 {
-   HB_SIZE ul;
+   HB_SIZE n;
 
-   while( iCount-- )
+   while( nCount-- )
    {
       if( fPop )
       {
-         pFunc->pCode[ ulFrom ] = HB_P_POP;
+         pFunc->pCode[ nFrom ] = HB_P_POP;
          fPop = HB_FALSE;
       }
-      else if( fCheck && pFunc->pCode[ ulFrom ] == HB_P_NOOP && pFunc->iNOOPs )
+      else if( fCheck && pFunc->pCode[ nFrom ] == HB_P_NOOP && pFunc->iNOOPs )
       {
-         for( ul = 0; ul < pFunc->iNOOPs; ++ul )
+         for( n = 0; n < pFunc->iNOOPs; ++n )
          {
-            if( pFunc->pNOOPs[ ul ] == ulFrom )
+            if( pFunc->pNOOPs[ n ] == nFrom )
                break;
          }
-         if( ul == pFunc->iNOOPs )
-            hb_compNOOPadd( pFunc, ulFrom );
+         if( n == pFunc->iNOOPs )
+            hb_compNOOPadd( pFunc, nFrom );
       }
       else
-         hb_compNOOPadd( pFunc, ulFrom );
-      ++ulFrom;
+         hb_compNOOPadd( pFunc, nFrom );
+      ++nFrom;
    }
 }
 
@@ -3075,11 +3075,11 @@ void hb_compNOOPfill( PFUNCTION pFunc, HB_SIZE ulFrom, HB_ISIZ iCount, HB_BOOL f
  * _ONLY_ in very limited situations when there is no jumps over the
  * removed block
  */
-static void hb_compRemovePCODE( HB_COMP_DECL, HB_SIZE ulPos, HB_SIZE ulCount,
+static void hb_compRemovePCODE( HB_COMP_DECL, HB_SIZE nPos, HB_SIZE nCount,
                                 HB_BOOL fCanMove )
 {
    PFUNCTION pFunc = HB_COMP_PARAM->functions.pLast;
-   HB_SIZE ul;
+   HB_SIZE n;
 
    if( HB_COMP_ISSUPPORTED( HB_COMPFLAG_OPTJUMP ) || !fCanMove )
    {
@@ -3088,52 +3088,52 @@ static void hb_compRemovePCODE( HB_COMP_DECL, HB_SIZE ulPos, HB_SIZE ulCount,
        * is enabled by replacing it with HB_P_NOOP opcodes - which
        * will be later eliminated and jump data updated.
        */
-      hb_compNOOPfill( pFunc, ulPos, ulCount, HB_FALSE, HB_TRUE );
+      hb_compNOOPfill( pFunc, nPos, nCount, HB_FALSE, HB_TRUE );
    }
    else
    {
-      memmove( pFunc->pCode + ulPos, pFunc->pCode + ulPos + ulCount,
-               pFunc->lPCodePos - ulPos - ulCount );
-      pFunc->lPCodePos -= ulCount;
+      memmove( pFunc->pCode + nPos, pFunc->pCode + nPos + nCount,
+               pFunc->lPCodePos - nPos - nCount );
+      pFunc->lPCodePos -= nCount;
 
-      for( ul = pFunc->iNOOPs; ul; --ul )
+      for( n = pFunc->iNOOPs; n; --n )
       {
-         if( pFunc->pNOOPs[ ul ] >= ulPos )
+         if( pFunc->pNOOPs[ n ] >= nPos )
          {
-            if( pFunc->pNOOPs[ ul ] < ulPos + ulCount )
+            if( pFunc->pNOOPs[ n ] < nPos + nCount )
             {
-               memmove( &pFunc->pNOOPs[ ul ], &pFunc->pNOOPs[ ul + 1 ],
-                        pFunc->iNOOPs - ul );
+               memmove( &pFunc->pNOOPs[ n ], &pFunc->pNOOPs[ n + 1 ],
+                        pFunc->iNOOPs - n );
                pFunc->iNOOPs--;
             }
             else
             {
-               pFunc->pNOOPs[ ul ] -= ulCount;
+               pFunc->pNOOPs[ n ] -= nCount;
             }
          }
       }
    }
 }
 
-HB_BOOL hb_compHasJump( PFUNCTION pFunc, HB_SIZE ulPos )
+HB_BOOL hb_compHasJump( PFUNCTION pFunc, HB_SIZE nPos )
 {
-   HB_SIZE iJump;
+   HB_SIZE nJump;
 
-   for( iJump = 0; iJump < pFunc->iJumps; iJump++ )
+   for( nJump = 0; nJump < pFunc->iJumps; nJump++ )
    {
-      HB_SIZE ulJumpAddr = pFunc->pJumps[ iJump ];
-      switch( pFunc->pCode[ ulJumpAddr ] )
+      HB_SIZE nJumpAddr = pFunc->pJumps[ nJump ];
+      switch( pFunc->pCode[ nJumpAddr ] )
       {
          case HB_P_JUMPNEAR:
          case HB_P_JUMPFALSENEAR:
          case HB_P_JUMPTRUENEAR:
-            ulJumpAddr += ( signed char ) pFunc->pCode[ ulJumpAddr + 1 ];
+            nJumpAddr += ( signed char ) pFunc->pCode[ nJumpAddr + 1 ];
             break;
 
          case HB_P_JUMP:
          case HB_P_JUMPFALSE:
          case HB_P_JUMPTRUE:
-            ulJumpAddr += HB_PCODE_MKSHORT( &pFunc->pCode[ ulJumpAddr + 1 ] );
+            nJumpAddr += HB_PCODE_MKSHORT( &pFunc->pCode[ nJumpAddr + 1 ] );
             break;
 
          /* Jump can be replaced by series of NOOPs or POP and NOOPs
@@ -3141,14 +3141,14 @@ HB_BOOL hb_compHasJump( PFUNCTION pFunc, HB_SIZE ulPos )
           */
          case HB_P_NOOP:
          case HB_P_POP:
-            ulJumpAddr = ulPos + 1;
+            nJumpAddr = nPos + 1;
             break;
 
          default:
-            ulJumpAddr += HB_PCODE_MKINT24( &pFunc->pCode[ ulJumpAddr + 1 ] );
+            nJumpAddr += HB_PCODE_MKINT24( &pFunc->pCode[ nJumpAddr + 1 ] );
             break;
       }
-      if( ulJumpAddr == ulPos )
+      if( nJumpAddr == nPos )
          return HB_TRUE;
    }
 
@@ -3199,58 +3199,58 @@ HB_SIZE hb_compSequenceAlways( HB_COMP_DECL )
 /* Remove unnecessary opcodes in case there were no executable statements
  * beetwen BEGIN and RECOVER sequence
  */
-void hb_compSequenceFinish( HB_COMP_DECL, HB_SIZE ulStartPos, HB_SIZE ulEndPos,
-                            HB_SIZE ulAlways, HB_BOOL fUsualStmts, HB_BOOL fRecover,
+void hb_compSequenceFinish( HB_COMP_DECL, HB_SIZE nStartPos, HB_SIZE nEndPos,
+                            HB_SIZE nAlways, HB_BOOL fUsualStmts, HB_BOOL fRecover,
                             HB_BOOL fCanMove )
 {
-   --ulStartPos;  /* HB_P_SEQBEGIN address */
+   --nStartPos;  /* HB_P_SEQBEGIN address */
 
    if( !fUsualStmts && fCanMove && !HB_COMP_PARAM->fDebugInfo )
    {
-      ulStartPos -= 4;
-      if( ulAlways )
+      nStartPos -= 4;
+      if( nAlways )
       {
          /* remove HB_P_ALWAYSEND opcode */
          HB_COMP_PARAM->functions.pLast->lPCodePos--;
          /* remove HB_P_SEQALWAYS ... HB_P_ALWAYSBEGIN opcodes */
-         hb_compRemovePCODE( HB_COMP_PARAM, ulStartPos,
-                             ulAlways - ulStartPos + 4, fCanMove );
+         hb_compRemovePCODE( HB_COMP_PARAM, nStartPos,
+                             nAlways - nStartPos + 4, fCanMove );
       }
       else
       {
-         hb_compRemovePCODE( HB_COMP_PARAM, ulStartPos,
+         hb_compRemovePCODE( HB_COMP_PARAM, nStartPos,
                              HB_COMP_PARAM->functions.pLast->lPCodePos -
-                             ulStartPos, fCanMove );
+                             nStartPos, fCanMove );
       }
-      HB_COMP_PARAM->lastLinePos = ulStartPos - 3;
+      HB_COMP_PARAM->lastLinePos = nStartPos - 3;
    }
-   else if( !ulAlways )
+   else if( !nAlways )
    {
       /* remove HB_P_SEQALWAYS opcode */
-      hb_compRemovePCODE( HB_COMP_PARAM, ulStartPos - 4, 4, fCanMove );
+      hb_compRemovePCODE( HB_COMP_PARAM, nStartPos - 4, 4, fCanMove );
    }
    else
    {
       if( !fRecover )
       {
          /* remove HB_P_SEQBEGIN and HB_P_SEQEND */
-         hb_compRemovePCODE( HB_COMP_PARAM, ulEndPos - 1, 4, fCanMove );
-         hb_compRemovePCODE( HB_COMP_PARAM, ulStartPos, 4, fCanMove );
+         hb_compRemovePCODE( HB_COMP_PARAM, nEndPos - 1, 4, fCanMove );
+         hb_compRemovePCODE( HB_COMP_PARAM, nStartPos, 4, fCanMove );
          if( ! HB_COMP_ISSUPPORTED( HB_COMPFLAG_OPTJUMP ) )
          {
             /* Fix ALWAYS address in HB_P_SEQALWAYS opcode */
-            ulAlways -= 8;
-            hb_compGenJumpThere( ulStartPos - 3, ulAlways, HB_COMP_PARAM );
+            nAlways -= 8;
+            hb_compGenJumpThere( nStartPos - 3, nAlways, HB_COMP_PARAM );
          }
       }
       /* empty always block? */
-      if( HB_COMP_PARAM->functions.pLast->lPCodePos - ulAlways == 5 &&
+      if( HB_COMP_PARAM->functions.pLast->lPCodePos - nAlways == 5 &&
           !HB_COMP_PARAM->fDebugInfo )
       {
          /* remove HB_P_ALWAYSBEGIN and HB_P_ALWAYSEND opcodes */
-         hb_compRemovePCODE( HB_COMP_PARAM, ulAlways, 5, HB_TRUE );
+         hb_compRemovePCODE( HB_COMP_PARAM, nAlways, 5, HB_TRUE );
          /* remove HB_P_SEQALWAYS opcode */
-         hb_compRemovePCODE( HB_COMP_PARAM, ulStartPos - 4, 4, fCanMove );
+         hb_compRemovePCODE( HB_COMP_PARAM, nStartPos - 4, 4, fCanMove );
       }
    }
 }
@@ -3358,8 +3358,8 @@ static void hb_compStaticDefThreadSet( HB_COMP_DECL )
       }
       if( uiCount )
       {
-         HB_SIZE ulSize = ( ( HB_SIZE ) uiCount << 1 ) + 3;
-         HB_BYTE * pBuffer = ( HB_BYTE * ) hb_xgrab( ulSize ), *ptr;
+         HB_SIZE nSize = ( ( HB_SIZE ) uiCount << 1 ) + 3;
+         HB_BYTE * pBuffer = ( HB_BYTE * ) hb_xgrab( nSize ), *ptr;
          pBuffer[ 0 ] = HB_P_THREADSTATICS;
          pBuffer[ 1 ] = HB_LOBYTE( uiCount );
          pBuffer[ 2 ] = HB_HIBYTE( uiCount );
@@ -3385,7 +3385,7 @@ static void hb_compStaticDefThreadSet( HB_COMP_DECL )
          HB_COMP_PARAM->pInitFunc->pOwner = HB_COMP_PARAM->functions.pLast;
          HB_COMP_PARAM->functions.pLast = HB_COMP_PARAM->pInitFunc;
 
-         hb_compGenPCodeN( pBuffer, ulSize, HB_COMP_PARAM );
+         hb_compGenPCodeN( pBuffer, nSize, HB_COMP_PARAM );
 
          HB_COMP_PARAM->functions.pLast = HB_COMP_PARAM->pInitFunc->pOwner;
          HB_COMP_PARAM->pInitFunc->pOwner = NULL;
@@ -3451,7 +3451,7 @@ void hb_compCodeBlockEnd( HB_COMP_DECL )
    PFUNCTION pCodeblock;   /* pointer to the current codeblock */
    PFUNCTION pFunc;        /* pointer to a function that owns a codeblock */
    const char * pFuncName;
-   HB_SIZE ulSize;
+   HB_SIZE nSize;
    HB_USHORT wLocals = 0;  /* number of referenced local variables */
    HB_USHORT wLocalsCnt, wLocalsLen;
    HB_USHORT wPos;
@@ -3519,28 +3519,28 @@ void hb_compCodeBlockEnd( HB_COMP_DECL )
    }
    wLocalsCnt = wLocals;
 
-   ulSize = pCodeblock->lPCodePos + 2;
+   nSize = pCodeblock->lPCodePos + 2;
    if( HB_COMP_PARAM->fDebugInfo )
    {
-      ulSize += 3 + strlen( HB_COMP_PARAM->currModule ) + strlen( pFuncName );
-      ulSize += wLocalsLen;
+      nSize += 3 + strlen( HB_COMP_PARAM->currModule ) + strlen( pFuncName );
+      nSize += wLocalsLen;
    }
 
-   if( ulSize <= 255 && pCodeblock->wParamCount == 0 && wLocals == 0 )
+   if( nSize <= 255 && pCodeblock->wParamCount == 0 && wLocals == 0 )
    {
       /* NOTE: 2 = HB_P_PUSHBLOCK + HB_BYTE( size ) */
-      hb_compGenPCode2( HB_P_PUSHBLOCKSHORT, ( HB_BYTE ) ulSize, HB_COMP_PARAM );
+      hb_compGenPCode2( HB_P_PUSHBLOCKSHORT, ( HB_BYTE ) nSize, HB_COMP_PARAM );
    }
    else
    {
       /* NOTE: 8 = HB_P_PUSHBLOCK + HB_USHORT( size ) + HB_USHORT( wParams ) + HB_USHORT( wLocals ) + _ENDBLOCK */
-      ulSize += 5 + wLocals * 2;
-      if( ulSize <= USHRT_MAX )
-         hb_compGenPCode3( HB_P_PUSHBLOCK, HB_LOBYTE( ulSize ), HB_HIBYTE( ulSize ), HB_COMP_PARAM );
-      else if( ulSize < UINT24_MAX )
+      nSize += 5 + wLocals * 2;
+      if( nSize <= USHRT_MAX )
+         hb_compGenPCode3( HB_P_PUSHBLOCK, HB_LOBYTE( nSize ), HB_HIBYTE( nSize ), HB_COMP_PARAM );
+      else if( nSize < UINT24_MAX )
       {
-         ++ulSize;
-         hb_compGenPCode4( HB_P_PUSHBLOCKLARGE, HB_LOBYTE( ulSize ), HB_HIBYTE( ulSize ), HB_ULBYTE( ulSize ), HB_COMP_PARAM );
+         ++nSize;
+         hb_compGenPCode4( HB_P_PUSHBLOCKLARGE, HB_LOBYTE( nSize ), HB_HIBYTE( nSize ), HB_ULBYTE( nSize ), HB_COMP_PARAM );
       }
       else
          hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_BLOCK_TOO_BIG, NULL, NULL );
@@ -3952,22 +3952,22 @@ static void hb_compGenIncluded( HB_COMP_DECL )
 
       if( ( HB_COMP_PARAM->iTraceInclude & 0x100 ) != 0 )
       {
-         HB_SIZE ulLen = 0, u;
+         HB_SIZE nLen = 0, u;
          HB_BYTE * buffer;
 
          while( pIncFile )
          {
-            ulLen += strlen( pIncFile->szFileName ) + 1;
+            nLen += strlen( pIncFile->szFileName ) + 1;
             pIncFile = pIncFile->pNext;
          }
          if( HB_COMP_PARAM->ulOutBufSize != 0 )
-            ++ulLen;
+            ++nLen;
          u = strlen( szDestFile );
          if( u )
-            ulLen += u + 2;
+            nLen += u + 2;
          HB_COMP_PARAM->pOutBuf = ( HB_BYTE * ) hb_xrealloc(
                                        HB_COMP_PARAM->pOutBuf,
-                                       HB_COMP_PARAM->ulOutBufSize + ulLen );
+                                       HB_COMP_PARAM->ulOutBufSize + nLen );
          buffer = HB_COMP_PARAM->pOutBuf + HB_COMP_PARAM->ulOutBufSize;
          if( HB_COMP_PARAM->ulOutBufSize != 0 )
             *buffer++ = '\n';
@@ -3978,7 +3978,7 @@ static void hb_compGenIncluded( HB_COMP_DECL )
             *buffer++ = ':';
             *buffer++ = ' ';
          }
-         HB_COMP_PARAM->ulOutBufSize += ulLen - 1;
+         HB_COMP_PARAM->ulOutBufSize += nLen - 1;
          pIncFile = HB_COMP_PARAM->incfiles;
          while( pIncFile )
          {
@@ -4242,12 +4242,12 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, const char * szBuff
             hb_compLineNumberDefStart( HB_COMP_PARAM );
             do
             {
-               HB_SIZE ulSkip = pInfo->ulFirstLine >> 3;
-               HB_SIZE ulLen = ( ( pInfo->ulLastLine + 7 ) >> 3 ) - ulSkip;
+               HB_SIZE nSkip = pInfo->ulFirstLine >> 3;
+               HB_SIZE nLen = ( ( pInfo->ulLastLine + 7 ) >> 3 ) - nSkip;
 
                hb_compGenPushString( pInfo->pszModuleName, strlen( pInfo->pszModuleName ) + 1, HB_COMP_PARAM );
-               hb_compGenPushLong( ulSkip << 3, HB_COMP_PARAM );
-               hb_compGenPushString( ( char * ) pInfo->pLineMap + ulSkip, ulLen + 1, HB_COMP_PARAM );
+               hb_compGenPushLong( nSkip << 3, HB_COMP_PARAM );
+               hb_compGenPushString( ( char * ) pInfo->pLineMap + nSkip, nLen + 1, HB_COMP_PARAM );
                hb_compGenPCode3( HB_P_ARRAYGEN, 3, 0, HB_COMP_PARAM );
                iModules++;
 

@@ -40,20 +40,20 @@ static HB_SIZE hb_compHrbSize( HB_COMP_DECL, HB_ULONG * pulSymbols, HB_ULONG * p
 {
    PFUNCTION pFunc;
    PCOMSYMBOL pSym;
-   HB_SIZE ulSize;
+   HB_SIZE nSize;
 
    * pulSymbols = * pulFunctions = 0;
 
    /* count total size */
-   ulSize = 10;  /* signature[4] + version[2] + symbols_number[4] */
+   nSize = 10;  /* signature[4] + version[2] + symbols_number[4] */
    pSym = HB_COMP_PARAM->symbols.pFirst;
    while( pSym )
    {
       ( * pulSymbols )++;
-      ulSize += strlen( pSym->szName ) + 3; /* \0 + symscope[1] + symtype[1] */
+      nSize += strlen( pSym->szName ) + 3; /* \0 + symscope[1] + symtype[1] */
       pSym = pSym->pNext;
    }
-   ulSize += 4; /* functions_number[4] */
+   nSize += 4; /* functions_number[4] */
    /* Generate functions data */
    pFunc = HB_COMP_PARAM->functions.pFirst;
    while( pFunc )
@@ -61,25 +61,25 @@ static HB_SIZE hb_compHrbSize( HB_COMP_DECL, HB_ULONG * pulSymbols, HB_ULONG * p
       if( ( pFunc->funFlags & FUN_FILE_DECL ) == 0 )
       {
          ( * pulFunctions )++;
-         ulSize += strlen( pFunc->szName ) + 5 + pFunc->lPCodePos; /* \0 + func_size[4] + function_body */
+         nSize += strlen( pFunc->szName ) + 5 + pFunc->lPCodePos; /* \0 + func_size[4] + function_body */
       }
       pFunc = pFunc->pNext;
    }
 
-   return ulSize;
+   return nSize;
 }
 
-void hb_compGenBufPortObj( HB_COMP_DECL, HB_BYTE ** pBufPtr, HB_SIZE * pulSize )
+void hb_compGenBufPortObj( HB_COMP_DECL, HB_BYTE ** pBufPtr, HB_SIZE * pnSize )
 {
    PFUNCTION pFunc;
    PCOMSYMBOL pSym;
    HB_ULONG ulSymbols, ulFunctions;
-   HB_SIZE ulLen;
+   HB_SIZE nLen;
    HB_BYTE * ptr;
 
-   * pulSize = hb_compHrbSize( HB_COMP_PARAM, &ulSymbols, &ulFunctions );
+   * pnSize = hb_compHrbSize( HB_COMP_PARAM, &ulSymbols, &ulFunctions );
    /* additional 0 byte is for passing buffer directly as string item */
-   ptr = * pBufPtr = ( HB_BYTE * ) hb_xgrab( * pulSize + 1 );
+   ptr = * pBufPtr = ( HB_BYTE * ) hb_xgrab( * pnSize + 1 );
 
    /* signature */
    *ptr++ = 0xC0;
@@ -95,9 +95,9 @@ void hb_compGenBufPortObj( HB_COMP_DECL, HB_BYTE ** pBufPtr, HB_SIZE * pulSize )
    pSym = HB_COMP_PARAM->symbols.pFirst;
    while( pSym )
    {
-      ulLen = strlen( pSym->szName ) + 1;
-      memcpy( ptr, pSym->szName, ulLen );
-      ptr += ulLen;
+      nLen = strlen( pSym->szName ) + 1;
+      memcpy( ptr, pSym->szName, nLen );
+      ptr += nLen;
       /* TOFIX: this conversion strips upper byte from symbol scope
        *        Now we added workaround for it by using some strict
        *        bit order and restoring some others at runtime when
@@ -126,9 +126,9 @@ void hb_compGenBufPortObj( HB_COMP_DECL, HB_BYTE ** pBufPtr, HB_SIZE * pulSize )
    {
       if( ( pFunc->funFlags & FUN_FILE_DECL ) == 0 )
       {
-         ulLen = strlen( pFunc->szName ) + 1;
-         memcpy( ptr, pFunc->szName, ulLen );
-         ptr += ulLen;
+         nLen = strlen( pFunc->szName ) + 1;
+         memcpy( ptr, pFunc->szName, nLen );
+         ptr += nLen;
          HB_PUT_LE_UINT32( ptr, pFunc->lPCodePos );      /* function size */
          ptr += 4;
          memcpy( ptr, pFunc->pCode, pFunc->lPCodePos );  /* function body */
@@ -141,7 +141,7 @@ void hb_compGenBufPortObj( HB_COMP_DECL, HB_BYTE ** pBufPtr, HB_SIZE * pulSize )
 void hb_compGenPortObj( HB_COMP_DECL, PHB_FNAME pFileName )
 {
    char szFileName[ HB_PATH_MAX ];
-   HB_SIZE ulSize;
+   HB_SIZE nSize;
    HB_BYTE * pHrbBody;
    FILE * yyc;
 
@@ -164,9 +164,9 @@ void hb_compGenPortObj( HB_COMP_DECL, PHB_FNAME pFileName )
       hb_compOutStd( HB_COMP_PARAM, buffer );
    }
 
-   hb_compGenBufPortObj( HB_COMP_PARAM, &pHrbBody, &ulSize );
+   hb_compGenBufPortObj( HB_COMP_PARAM, &pHrbBody, &nSize );
 
-   if( fwrite( pHrbBody, ulSize, 1, yyc ) != 1 )
+   if( fwrite( pHrbBody, nSize, 1, yyc ) != 1 )
       hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_FILE_WRITE, szFileName, NULL );
 
    hb_xfree( pHrbBody );

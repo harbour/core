@@ -57,7 +57,7 @@ static void hb_compGenArgList( int iFirst, int iLast,
                                int * pArgC, const char *** pArgV )
 {
    PHB_ITEM pParam;
-   HB_SIZE ul, ulLen;
+   HB_SIZE ul, nLen;
    int argc = 1, i;
    const char ** argv;
 
@@ -90,8 +90,8 @@ static void hb_compGenArgList( int iFirst, int iLast,
       {
          if( HB_IS_ARRAY( pParam ) )
          {
-            ulLen = hb_arrayLen( pParam );
-            for( ul = 1; ul <= ulLen; ++ul )
+            nLen = hb_arrayLen( pParam );
+            for( ul = 1; ul <= nLen; ++ul )
             {
                if( hb_arrayGetType( pParam, ul ) & HB_IT_STRING )
                   argv[ argc++ ] = hb_arrayGetCPtr( pParam, ul );
@@ -123,13 +123,13 @@ HB_FUNC( HB_COMPILEBUF )
    int iResult, argc;
    const char ** argv;
    HB_BYTE * pBuffer;
-   HB_SIZE ulLen;
+   HB_SIZE nLen;
 
    hb_compGenArgList( 1, hb_pcount(), &argc, &argv );
-   iResult = hb_compMain( argc, argv, &pBuffer, &ulLen, NULL );
+   iResult = hb_compMain( argc, argv, &pBuffer, &nLen, NULL );
    hb_xfree( argv );
    if( iResult == EXIT_SUCCESS && pBuffer )
-      hb_retclen_buffer( ( char * ) pBuffer, ulLen );
+      hb_retclen_buffer( ( char * ) pBuffer, nLen );
 }
 
 HB_FUNC( HB_COMPILEFROMBUF )
@@ -138,15 +138,15 @@ HB_FUNC( HB_COMPILEFROMBUF )
    const char ** argv;
    const char * szSource;
    HB_BYTE * pBuffer;
-   HB_SIZE ulLen;
+   HB_SIZE nLen;
 
    szSource = hb_parc( 1 );
    if( szSource )
    {
       hb_compGenArgList( 2, hb_pcount(), &argc, &argv );
-      iResult = hb_compMain( argc, argv, &pBuffer, &ulLen, szSource );
+      iResult = hb_compMain( argc, argv, &pBuffer, &nLen, szSource );
       hb_xfree( argv );
       if( iResult == EXIT_SUCCESS && pBuffer )
-         hb_retclen_buffer( ( char * ) pBuffer, ulLen );
+         hb_retclen_buffer( ( char * ) pBuffer, nLen );
    }
 }

@@ -79,20 +79,20 @@ static void hb_pp_Disp( void * cargo, const char * szMessage )
    hb_compOutStd( HB_COMP_PARAM, szMessage );
 }
 
-static void hb_pp_PragmaDump( void * cargo, char * pBuffer, HB_SIZE ulSize,
+static void hb_pp_PragmaDump( void * cargo, char * pBuffer, HB_SIZE nSize,
                               int iLine )
 {
    PINLINE pInline;
 
    pInline = hb_compInlineAdd( ( HB_COMP_PTR ) cargo, NULL, iLine );
-   pInline->pCode = ( HB_BYTE * ) hb_xgrab( ulSize + 1 );
-   memcpy( pInline->pCode, pBuffer, ulSize );
-   pInline->pCode[ ulSize ] = '\0';
-   pInline->lPCodeSize = ulSize;
+   pInline->pCode = ( HB_BYTE * ) hb_xgrab( nSize + 1 );
+   memcpy( pInline->pCode, pBuffer, nSize );
+   pInline->pCode[ nSize ] = '\0';
+   pInline->lPCodeSize = nSize;
 }
 
 static void hb_pp_hb_inLine( void * cargo, char * szFunc,
-                             char * pBuffer, HB_SIZE ulSize, int iLine )
+                             char * pBuffer, HB_SIZE nSize, int iLine )
 {
    HB_COMP_DECL = ( HB_COMP_PTR ) cargo;
 
@@ -108,10 +108,10 @@ static void hb_pp_hb_inLine( void * cargo, char * szFunc,
    {
       PINLINE pInline = hb_compInlineAdd( HB_COMP_PARAM,
          hb_compIdentifierNew( HB_COMP_PARAM, szFunc, HB_IDENT_COPY ), iLine );
-      pInline->pCode = ( HB_BYTE * ) hb_xgrab( ulSize + 1 );
-      memcpy( pInline->pCode, pBuffer, ulSize );
-      pInline->pCode[ ulSize ] = '\0';
-      pInline->lPCodeSize = ulSize;
+      pInline->pCode = ( HB_BYTE * ) hb_xgrab( nSize + 1 );
+      memcpy( pInline->pCode, pBuffer, nSize );
+      pInline->pCode[ nSize ] = '\0';
+      pInline->lPCodeSize = nSize;
    }
 }
 

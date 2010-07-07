@@ -319,73 +319,73 @@ static HB_OPT_FUNC( hb_p_duplicate )
          if( pFunc->pCode[ lPCodePos + 5 ] == HB_P_POP )
          {
             HB_BYTE * pAddr = &pFunc->pCode[ lPCodePos + 2 ];
-            HB_ISIZ lOffset = HB_PCODE_MKINT24( pAddr ), lLastOffset = 0;
-            HB_SIZE ulNewPos = lPCodePos + 1 + lOffset;
+            HB_ISIZ nOffset = HB_PCODE_MKINT24( pAddr ), nLastOffset = 0;
+            HB_SIZE nNewPos = lPCodePos + 1 + nOffset;
             HB_BOOL fNot = HB_FALSE, fOK = HB_TRUE, fRepeat = HB_TRUE;
 
             do
             {
-               if( pFunc->pCode[ ulNewPos ] == HB_P_DUPLICATE )
+               if( pFunc->pCode[ nNewPos ] == HB_P_DUPLICATE )
                {
-                  if( lOffset > 0 )
-                     hb_p_duplicate( pFunc, ulNewPos, NULL );
+                  if( nOffset > 0 )
+                     hb_p_duplicate( pFunc, nNewPos, NULL );
                }
 
-               if( pFunc->pCode[ ulNewPos ] == HB_P_NOOP )
+               if( pFunc->pCode[ nNewPos ] == HB_P_NOOP )
                {
-                  ulNewPos++;
-                  lOffset++;
+                  nNewPos++;
+                  nOffset++;
                }
-               else if( pFunc->pCode[ ulNewPos ] == HB_P_NOT )
+               else if( pFunc->pCode[ nNewPos ] == HB_P_NOT )
                {
-                  ulNewPos++;
-                  lOffset++;
+                  nNewPos++;
+                  nOffset++;
                   fNot = !fNot;
                   fOK = !fOK;
                }
-               else if( pFunc->pCode[ ulNewPos ] == HB_P_DUPLICATE &&
-                        ( pFunc->pCode[ ulNewPos + 1 ] == HB_P_JUMPTRUEFAR ||
-                          pFunc->pCode[ ulNewPos + 1 ] == HB_P_JUMPFALSEFAR ) )
+               else if( pFunc->pCode[ nNewPos ] == HB_P_DUPLICATE &&
+                        ( pFunc->pCode[ nNewPos + 1 ] == HB_P_JUMPTRUEFAR ||
+                          pFunc->pCode[ nNewPos + 1 ] == HB_P_JUMPFALSEFAR ) )
                {
-                  HB_ISIZ lJump;
-                  if( pFunc->pCode[ ulNewPos + 1 ] != pFunc->pCode[ lPCodePos + 1 ] )
+                  HB_ISIZ nJump;
+                  if( pFunc->pCode[ nNewPos + 1 ] != pFunc->pCode[ lPCodePos + 1 ] )
                      fNot = !fNot;
-                  lJump = fNot ? 4 : HB_PCODE_MKINT24( &pFunc->pCode[ ulNewPos + 2 ] );
-                  lOffset += lJump + 1;
-                  ulNewPos = lPCodePos + 1 + lOffset;
-                  fRepeat = lJump > 0;
+                  nJump = fNot ? 4 : HB_PCODE_MKINT24( &pFunc->pCode[ nNewPos + 2 ] );
+                  nOffset += nJump + 1;
+                  nNewPos = lPCodePos + 1 + nOffset;
+                  fRepeat = nJump > 0;
                }
                else
                {
                   fRepeat = HB_FALSE;
-                  if( pFunc->pCode[ ulNewPos ] == HB_P_POP )
+                  if( pFunc->pCode[ nNewPos ] == HB_P_POP )
                      fOK = HB_TRUE;
                }
 
                if( fOK )
-                  lLastOffset = lOffset;
+                  nLastOffset = nOffset;
             }
             while( fRepeat );
 
-            if( ( pFunc->pCode[ ulNewPos ] == HB_P_JUMPTRUEFAR ||
-                  pFunc->pCode[ ulNewPos ] == HB_P_JUMPFALSEFAR ) &&
+            if( ( pFunc->pCode[ nNewPos ] == HB_P_JUMPTRUEFAR ||
+                  pFunc->pCode[ nNewPos ] == HB_P_JUMPFALSEFAR ) &&
                 !hb_compHasJump( pFunc, lPCodePos + 1 ) &&
                 !hb_compHasJump( pFunc, lPCodePos + 5 ) )
             {
-               if( pFunc->pCode[ ulNewPos ] != pFunc->pCode[ lPCodePos + 1 ] )
+               if( pFunc->pCode[ nNewPos ] != pFunc->pCode[ lPCodePos + 1 ] )
                   fNot = !fNot;
                if( fNot )
-                  lOffset += 4;
+                  nOffset += 4;
                else
-                  lOffset += HB_PCODE_MKINT24( &pFunc->pCode[ ulNewPos + 1 ] );
+                  nOffset += HB_PCODE_MKINT24( &pFunc->pCode[ nNewPos + 1 ] );
 
-               HB_PUT_LE_UINT24( pAddr, lOffset );
+               HB_PUT_LE_UINT24( pAddr, nOffset );
                hb_compNOOPfill( pFunc, lPCodePos, 1, HB_FALSE, HB_FALSE );
                hb_compNOOPfill( pFunc, lPCodePos + 5, 1, HB_FALSE, HB_FALSE );
             }
-            else if( lLastOffset )
+            else if( nLastOffset )
             {
-               HB_PUT_LE_UINT24( pAddr, lLastOffset );
+               HB_PUT_LE_UINT24( pAddr, nLastOffset );
             }
          }
          break;
@@ -430,17 +430,17 @@ static HB_OPT_FUNC( hb_p_not )
              pFunc->pCode[ lPCodePos + 6 ] == HB_P_POP )
          {
             HB_BYTE * pAddr = &pFunc->pCode[ lPCodePos + 3 ];
-            HB_ISIZ lOffset = HB_PCODE_MKINT24( pAddr );
+            HB_ISIZ nOffset = HB_PCODE_MKINT24( pAddr );
 
-            if( lOffset > 0 )
+            if( nOffset > 0 )
             {
                hb_p_duplicate( pFunc, lPCodePos + 1, NULL );
-               lOffset = HB_PCODE_MKINT24( pAddr );
+               nOffset = HB_PCODE_MKINT24( pAddr );
             }
 
             if( ( pFunc->pCode[ lPCodePos + 1 ] == HB_P_NOT ||
                   ( pFunc->pCode[ lPCodePos + 1 ] == HB_P_DUPLICATE &&
-                    pFunc->pCode[ lPCodePos + lOffset + 2 ] == HB_P_NOT ) ) &&
+                    pFunc->pCode[ lPCodePos + nOffset + 2 ] == HB_P_NOT ) ) &&
                 ! hb_compHasJump( pFunc, lPCodePos + 1 ) )
             {
                hb_compNOOPfill( pFunc, lPCodePos, 1, HB_FALSE, HB_FALSE );
@@ -450,8 +450,8 @@ static HB_OPT_FUNC( hb_p_not )
                   pFunc->pCode[ lPCodePos + 2 ] = HB_P_JUMPTRUEFAR;
                if( pFunc->pCode[ lPCodePos + 1 ] == HB_P_DUPLICATE )
                {
-                  ++lOffset;
-                  HB_PUT_LE_UINT24( pAddr, lOffset );
+                  ++nOffset;
+                  HB_PUT_LE_UINT24( pAddr, nOffset );
                }
             }
          }
@@ -477,51 +477,51 @@ static HB_OPT_FUNC( hb_p_not )
 static HB_OPT_FUNC( hb_p_jumpfar )
 {
    HB_BYTE * pAddr = &pFunc->pCode[ lPCodePos + 1 ];
-   HB_ISIZ lOffset = HB_PCODE_MKINT24( pAddr );
-   HB_SIZE ulNewPos = lPCodePos + lOffset;
+   HB_ISIZ nOffset = HB_PCODE_MKINT24( pAddr );
+   HB_SIZE nNewPos = lPCodePos + nOffset;
    HB_BOOL fLine = HB_FALSE;
 
    HB_SYMBOL_UNUSED( cargo );
 
-   if( lOffset == 4 )
+   if( nOffset == 4 )
    {
       hb_compNOOPfill( pFunc, lPCodePos, 4, HB_FALSE, HB_FALSE );
    }
    else
    {
-      if( pFunc->pCode[ ulNewPos ] == HB_P_LINE )
+      if( pFunc->pCode[ nNewPos ] == HB_P_LINE )
       {
          fLine = HB_TRUE;
-         ulNewPos += 3;
-         lOffset += 3;
+         nNewPos += 3;
+         nOffset += 3;
       }
-      switch( pFunc->pCode[ ulNewPos ] )
+      switch( pFunc->pCode[ nNewPos ] )
       {
          case HB_P_JUMPFAR:
-            lOffset += HB_PCODE_MKINT24( &pFunc->pCode[ ulNewPos + 1 ] );
-            if( !fLine || pFunc->pCode[ lPCodePos + lOffset ] == HB_P_LINE )
-               HB_PUT_LE_UINT24( pAddr, lOffset );
+            nOffset += HB_PCODE_MKINT24( &pFunc->pCode[ nNewPos + 1 ] );
+            if( !fLine || pFunc->pCode[ lPCodePos + nOffset ] == HB_P_LINE )
+               HB_PUT_LE_UINT24( pAddr, nOffset );
             break;
 
          case HB_P_JUMPFALSEFAR:
-            ulNewPos += HB_PCODE_MKINT24( &pFunc->pCode[ ulNewPos + 1 ] );
-            if( ulNewPos == lPCodePos + 4 && ( !fLine ||
-                ( pFunc->pCode[ ulNewPos ] == HB_P_LINE &&
-                  pFunc->pCode[ lPCodePos + lOffset + 4 ] == HB_P_LINE ) ) )
+            nNewPos += HB_PCODE_MKINT24( &pFunc->pCode[ nNewPos + 1 ] );
+            if( nNewPos == lPCodePos + 4 && ( !fLine ||
+                ( pFunc->pCode[ nNewPos ] == HB_P_LINE &&
+                  pFunc->pCode[ lPCodePos + nOffset + 4 ] == HB_P_LINE ) ) )
             {
                pFunc->pCode[ lPCodePos ] = HB_P_JUMPTRUEFAR;
-               HB_PUT_LE_UINT24( pAddr, lOffset + 4 );
+               HB_PUT_LE_UINT24( pAddr, nOffset + 4 );
             }
             break;
 
          case HB_P_JUMPTRUEFAR:
-            ulNewPos += HB_PCODE_MKINT24( &pFunc->pCode[ ulNewPos + 1 ] );
-            if( ulNewPos == lPCodePos + 4 && ( !fLine ||
-                ( pFunc->pCode[ ulNewPos ] == HB_P_LINE &&
-                  pFunc->pCode[ lPCodePos + lOffset + 4 ] == HB_P_LINE ) ) )
+            nNewPos += HB_PCODE_MKINT24( &pFunc->pCode[ nNewPos + 1 ] );
+            if( nNewPos == lPCodePos + 4 && ( !fLine ||
+                ( pFunc->pCode[ nNewPos ] == HB_P_LINE &&
+                  pFunc->pCode[ lPCodePos + nOffset + 4 ] == HB_P_LINE ) ) )
             {
                pFunc->pCode[ lPCodePos ] = HB_P_JUMPFALSEFAR;
-               HB_PUT_LE_UINT24( pAddr, lOffset + 4 );
+               HB_PUT_LE_UINT24( pAddr, nOffset + 4 );
             }
             break;
       }
@@ -532,19 +532,19 @@ static HB_OPT_FUNC( hb_p_jumpfar )
 static HB_OPT_FUNC( hb_p_jumpfalsefar )
 {
    HB_BYTE * pAddr = &pFunc->pCode[ lPCodePos + 1 ];
-   HB_ISIZ lOffset = HB_PCODE_MKINT24( pAddr );
-   HB_SIZE ulNewPos = lPCodePos + lOffset;
+   HB_ISIZ nOffset = HB_PCODE_MKINT24( pAddr );
+   HB_SIZE nNewPos = lPCodePos + nOffset;
    HB_BOOL fLine = HB_FALSE;
 
    HB_SYMBOL_UNUSED( cargo );
 
-   if( lOffset == 8 && pFunc->pCode[ lPCodePos + 4 ] == HB_P_JUMPFAR &&
+   if( nOffset == 8 && pFunc->pCode[ lPCodePos + 4 ] == HB_P_JUMPFAR &&
        ! hb_compHasJump( pFunc, lPCodePos + 4 ) )
    {
       hb_compNOOPfill( pFunc, lPCodePos, 4, HB_FALSE, HB_FALSE );
       pFunc->pCode[ lPCodePos + 4 ] = HB_P_JUMPTRUEFAR;
    }
-   else if( lOffset == 11 && pFunc->pCode[ lPCodePos + 4 ] == HB_P_LINE &&
+   else if( nOffset == 11 && pFunc->pCode[ lPCodePos + 4 ] == HB_P_LINE &&
             pFunc->pCode[ lPCodePos + 11 ] == HB_P_LINE &&
             pFunc->pCode[ lPCodePos + 7 ] == HB_P_JUMPFAR &&
             pFunc->pCode[ lPCodePos + 7 +
@@ -557,17 +557,17 @@ static HB_OPT_FUNC( hb_p_jumpfalsefar )
    }
    else
    {
-      if( pFunc->pCode[ ulNewPos ] == HB_P_LINE )
+      if( pFunc->pCode[ nNewPos ] == HB_P_LINE )
       {
          fLine = HB_TRUE;
-         ulNewPos += 3;
-         lOffset += 3;
+         nNewPos += 3;
+         nOffset += 3;
       }
-      if( pFunc->pCode[ ulNewPos ] == HB_P_JUMPFAR )
+      if( pFunc->pCode[ nNewPos ] == HB_P_JUMPFAR )
       {
-         lOffset += HB_PCODE_MKINT24( &pFunc->pCode[ ulNewPos + 1 ] );
-         if( !fLine || pFunc->pCode[ lPCodePos + lOffset ] == HB_P_LINE )
-            HB_PUT_LE_UINT24( pAddr, lOffset );
+         nOffset += HB_PCODE_MKINT24( &pFunc->pCode[ nNewPos + 1 ] );
+         if( !fLine || pFunc->pCode[ lPCodePos + nOffset ] == HB_P_LINE )
+            HB_PUT_LE_UINT24( pAddr, nOffset );
       }
    }
    return 4;
@@ -576,19 +576,19 @@ static HB_OPT_FUNC( hb_p_jumpfalsefar )
 static HB_OPT_FUNC( hb_p_jumptruefar )
 {
    HB_BYTE * pAddr = &pFunc->pCode[ lPCodePos + 1 ];
-   HB_ISIZ lOffset = HB_PCODE_MKINT24( pAddr );
-   HB_SIZE ulNewPos = lPCodePos + lOffset;
+   HB_ISIZ nOffset = HB_PCODE_MKINT24( pAddr );
+   HB_SIZE nNewPos = lPCodePos + nOffset;
    HB_BOOL fLine = HB_FALSE;
 
    HB_SYMBOL_UNUSED( cargo );
 
-   if( lOffset == 8 && pFunc->pCode[ lPCodePos + 4 ] == HB_P_JUMPFAR &&
+   if( nOffset == 8 && pFunc->pCode[ lPCodePos + 4 ] == HB_P_JUMPFAR &&
        ! hb_compHasJump( pFunc, lPCodePos + 4 ) )
    {
       hb_compNOOPfill( pFunc, lPCodePos, 4, HB_FALSE, HB_FALSE );
       pFunc->pCode[ lPCodePos + 4 ] = HB_P_JUMPFALSEFAR;
    }
-   else if( lOffset == 11 && pFunc->pCode[ lPCodePos + 4 ] == HB_P_LINE &&
+   else if( nOffset == 11 && pFunc->pCode[ lPCodePos + 4 ] == HB_P_LINE &&
             pFunc->pCode[ lPCodePos + 11 ] == HB_P_LINE &&
             pFunc->pCode[ lPCodePos + 7 ] == HB_P_JUMPFAR &&
             pFunc->pCode[ lPCodePos + 7 +
@@ -601,17 +601,17 @@ static HB_OPT_FUNC( hb_p_jumptruefar )
    }
    else
    {
-      if( pFunc->pCode[ ulNewPos ] == HB_P_LINE )
+      if( pFunc->pCode[ nNewPos ] == HB_P_LINE )
       {
          fLine = HB_TRUE;
-         ulNewPos += 3;
-         lOffset += 3;
+         nNewPos += 3;
+         nOffset += 3;
       }
-      if( pFunc->pCode[ ulNewPos ] == HB_P_JUMPFAR )
+      if( pFunc->pCode[ nNewPos ] == HB_P_JUMPFAR )
       {
-         lOffset += HB_PCODE_MKINT24( &pFunc->pCode[ ulNewPos + 1 ] );
-         if( !fLine || pFunc->pCode[ lPCodePos + lOffset ] == HB_P_LINE )
-            HB_PUT_LE_UINT24( pAddr, lOffset );
+         nOffset += HB_PCODE_MKINT24( &pFunc->pCode[ nNewPos + 1 ] );
+         if( !fLine || pFunc->pCode[ lPCodePos + nOffset ] == HB_P_LINE )
+            HB_PUT_LE_UINT24( pAddr, nOffset );
       }
    }
    return 4;
@@ -620,7 +620,7 @@ static HB_OPT_FUNC( hb_p_jumptruefar )
 static HB_OPT_FUNC( hb_p_switch )
 {
    HB_USHORT usCases = HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] ), us;
-   HB_SIZE ulStart = lPCodePos;
+   HB_SIZE nStart = lPCodePos;
 
    HB_SYMBOL_UNUSED( cargo );
 
@@ -672,7 +672,7 @@ static HB_OPT_FUNC( hb_p_switch )
       }
    }
 
-   return lPCodePos - ulStart;
+   return lPCodePos - nStart;
 }
 
 static HB_OPT_FUNC( hb_p_function )
@@ -1042,21 +1042,21 @@ static HB_ISIZ hb_compJumpGetOffset( HB_BYTE * pCode )
 
 static void hb_compPCodeEnumScanLocals( PFUNCTION pFunc, PHB_OPT_LOCAL pLocals )
 {
-   HB_SIZE ulPos = 0, ulLastPos = 0;
+   HB_SIZE nPos = 0, nLastPos = 0;
    HB_SHORT isVar = 0;
-   HB_BOOL  fWasJump = 0;
+   HB_BOOL fWasJump = 0;
 
-   while( ulPos < pFunc->lPCodePos )
+   while( nPos < pFunc->lPCodePos )
    {
-      if( hb_compIsJump( pFunc->pCode[ ulPos ] ) )
+      if( hb_compIsJump( pFunc->pCode[ nPos ] ) )
          fWasJump = 1;
 
-      switch( pFunc->pCode[ ulPos ] )
+      switch( pFunc->pCode[ nPos ] )
       {
          case HB_P_POPLOCALNEAR:
          case HB_P_PUSHLOCALNEAR:
          case HB_P_LOCALNEARADDINT:
-            isVar = ( signed char ) pFunc->pCode[ ulPos + 1 ];
+            isVar = ( signed char ) pFunc->pCode[ nPos + 1 ];
             break;
 
          case HB_P_LOCALNAME:
@@ -1067,18 +1067,18 @@ static void hb_compPCodeEnumScanLocals( PFUNCTION pFunc, PHB_OPT_LOCAL pLocals )
          case HB_P_LOCALDEC:
          case HB_P_LOCALINC:
          case HB_P_LOCALINCPUSH:
-            isVar = HB_PCODE_MKSHORT( &pFunc->pCode[ ulPos + 1 ] );
+            isVar = HB_PCODE_MKSHORT( &pFunc->pCode[ nPos + 1 ] );
             break;
       }
 
-      switch( pFunc->pCode[ ulPos ] )
+      switch( pFunc->pCode[ nPos ] )
       {
          case HB_P_POPLOCALNEAR:
          case HB_P_POPLOCAL:
             if( isVar > 0 )
             {
-               if( ulPos > 0 && pFunc->pCode[ ulLastPos ] == HB_P_PUSHSELF &&
-                   ! hb_compHasJump( pFunc, ulPos ) && ! fWasJump )
+               if( nPos > 0 && pFunc->pCode[ nLastPos ] == HB_P_PUSHSELF &&
+                   ! hb_compHasJump( pFunc, nPos ) && ! fWasJump )
                {
                   /* For real POPSELF support we need to do backward tree
                      tracing. This is not implemented, but using fWasJump
@@ -1101,9 +1101,9 @@ static void hb_compPCodeEnumScanLocals( PFUNCTION pFunc, PHB_OPT_LOCAL pLocals )
          case HB_P_PUSHLOCALREF:
             if( isVar > 0 )
             {
-               HB_SIZE ulPosNext = ulPos + hb_compPCodeSize( pFunc, ulPos );
-               HB_BYTE bCodeNext = pFunc->pCode[ ulPosNext ];
-               HB_BYTE bCodeNext2 = pFunc->pCode[ ulPosNext + hb_compPCodeSize( pFunc, ulPosNext ) ];
+               HB_SIZE nPosNext = nPos + hb_compPCodeSize( pFunc, nPos );
+               HB_BYTE bCodeNext = pFunc->pCode[ nPosNext ];
+               HB_BYTE bCodeNext2 = pFunc->pCode[ nPosNext + hb_compPCodeSize( pFunc, nPosNext ) ];
 
                if( ( bCodeNext == HB_P_PUSHBLOCK ||
                      bCodeNext == HB_P_PUSHBLOCKSHORT ||
@@ -1169,10 +1169,10 @@ static void hb_compPCodeEnumScanLocals( PFUNCTION pFunc, PHB_OPT_LOCAL pLocals )
          case HB_P_PUSHBLOCK:
          case HB_P_PUSHBLOCKLARGE:
          {
-            HB_BYTE * pCode = &pFunc->pCode[ ulPos + 5 ];
+            HB_BYTE * pCode = &pFunc->pCode[ nPos + 5 ];
             HB_USHORT usVarCount, usVar;
 
-            if( pFunc->pCode[ ulPos ] == HB_P_PUSHBLOCKLARGE )
+            if( pFunc->pCode[ nPos ] == HB_P_PUSHBLOCKLARGE )
                pCode++;
 
             usVarCount = HB_PCODE_MKUSHORT( pCode );
@@ -1190,89 +1190,89 @@ static void hb_compPCodeEnumScanLocals( PFUNCTION pFunc, PHB_OPT_LOCAL pLocals )
          case HB_P_LOCALNAME:
          */
       }
-      ulLastPos = ulPos;
-      ulPos += hb_compPCodeSize( pFunc, ulPos );
+      nLastPos = nPos;
+      nPos += hb_compPCodeSize( pFunc, nPos );
    }
 }
 
 
 static void hb_compPCodeEnumSelfifyLocal( PFUNCTION pFunc, HB_SHORT isLocal )
 {
-   HB_SIZE ulPos = 0, ulLastPos = 0;
+   HB_SIZE nPos = 0, nLastPos = 0;
 
-   while( ulPos < pFunc->lPCodePos )
+   while( nPos < pFunc->lPCodePos )
    {
-      switch( pFunc->pCode[ ulPos ] )
+      switch( pFunc->pCode[ nPos ] )
       {
          case HB_P_PUSHLOCALNEAR:
-            if( isLocal == ( signed char ) pFunc->pCode[ ulPos + 1 ] )
+            if( isLocal == ( signed char ) pFunc->pCode[ nPos + 1 ] )
             {
-               pFunc->pCode[ ulPos ] = HB_P_PUSHSELF;
-               hb_compNOOPfill( pFunc, ulPos + 1, 1, HB_FALSE, HB_FALSE );
+               pFunc->pCode[ nPos ] = HB_P_PUSHSELF;
+               hb_compNOOPfill( pFunc, nPos + 1, 1, HB_FALSE, HB_FALSE );
             }
             break;
 
          case HB_P_PUSHLOCAL:
-            if( isLocal == HB_PCODE_MKSHORT( &pFunc->pCode[ ulPos + 1 ] ) )
+            if( isLocal == HB_PCODE_MKSHORT( &pFunc->pCode[ nPos + 1 ] ) )
             {
-               pFunc->pCode[ ulPos ] = HB_P_PUSHSELF;
-               hb_compNOOPfill( pFunc, ulPos + 1, 2, HB_FALSE, HB_FALSE );
+               pFunc->pCode[ nPos ] = HB_P_PUSHSELF;
+               hb_compNOOPfill( pFunc, nPos + 1, 2, HB_FALSE, HB_FALSE );
             }
             break;
 
          case HB_P_POPLOCALNEAR:
-            if( isLocal == ( signed char ) pFunc->pCode[ ulPos + 1 ] )
+            if( isLocal == ( signed char ) pFunc->pCode[ nPos + 1 ] )
             {
-               assert( ulPos > 0 && pFunc->pCode[ ulLastPos ] == HB_P_PUSHSELF &&
-                       ! hb_compHasJump( pFunc, ulPos ) );
+               assert( nPos > 0 && pFunc->pCode[ nLastPos ] == HB_P_PUSHSELF &&
+                       ! hb_compHasJump( pFunc, nPos ) );
 
-               hb_compNOOPfill( pFunc, ulLastPos, 1, HB_FALSE, HB_FALSE );
-               hb_compNOOPfill( pFunc, ulPos, 2, HB_FALSE, HB_FALSE );
+               hb_compNOOPfill( pFunc, nLastPos, 1, HB_FALSE, HB_FALSE );
+               hb_compNOOPfill( pFunc, nPos, 2, HB_FALSE, HB_FALSE );
             }
             break;
 
          case HB_P_POPLOCAL:
-            if( isLocal == HB_PCODE_MKSHORT( &pFunc->pCode[ ulPos + 1 ] ) )
+            if( isLocal == HB_PCODE_MKSHORT( &pFunc->pCode[ nPos + 1 ] ) )
             {
-               assert( ulPos > 0 && pFunc->pCode[ ulLastPos ] == HB_P_PUSHSELF &&
-                       ! hb_compHasJump( pFunc, ulPos ) );
+               assert( nPos > 0 && pFunc->pCode[ nLastPos ] == HB_P_PUSHSELF &&
+                       ! hb_compHasJump( pFunc, nPos ) );
 
-               hb_compNOOPfill( pFunc, ulLastPos, 1, HB_FALSE, HB_FALSE );
-               hb_compNOOPfill( pFunc, ulPos, 3, HB_FALSE, HB_FALSE );
+               hb_compNOOPfill( pFunc, nLastPos, 1, HB_FALSE, HB_FALSE );
+               hb_compNOOPfill( pFunc, nPos, 3, HB_FALSE, HB_FALSE );
             }
             break;
       }
-      ulLastPos = ulPos;
-      ulPos += hb_compPCodeSize( pFunc, ulPos );
+      nLastPos = nPos;
+      nPos += hb_compPCodeSize( pFunc, nPos );
    }
 }
 
 
-static int hb_compPCodeTraceAssignedUnused( PFUNCTION pFunc, HB_SIZE ulPos, HB_BYTE * pMap, HB_SHORT isLocal )
+static int hb_compPCodeTraceAssignedUnused( PFUNCTION pFunc, HB_SIZE nPos, HB_BYTE * pMap, HB_SHORT isLocal )
 {
    for( ;; )
    {
-      if( pMap[ ulPos ] )
+      if( pMap[ nPos ] )
          return 0;
 
-      pMap[ ulPos ] = 1;
+      pMap[ nPos ] = 1;
 
-      if( pFunc->pCode[ ulPos ] == HB_P_POPLOCAL ||
-          pFunc->pCode[ ulPos ] == HB_P_POPLOCALNEAR ||
-          pFunc->pCode[ ulPos ] == HB_P_PUSHLOCAL ||
-          pFunc->pCode[ ulPos ] == HB_P_PUSHLOCALNEAR ||
-          pFunc->pCode[ ulPos ] == HB_P_PUSHLOCALREF ||
-          pFunc->pCode[ ulPos ] == HB_P_LOCALINCPUSH ||
-          pFunc->pCode[ ulPos ] == HB_P_LOCALDEC ||
-          pFunc->pCode[ ulPos ] == HB_P_LOCALINC ||
-          pFunc->pCode[ ulPos ] == HB_P_LOCALADDINT ||
-          pFunc->pCode[ ulPos ] == HB_P_LOCALNEARADDINT )
+      if( pFunc->pCode[ nPos ] == HB_P_POPLOCAL ||
+          pFunc->pCode[ nPos ] == HB_P_POPLOCALNEAR ||
+          pFunc->pCode[ nPos ] == HB_P_PUSHLOCAL ||
+          pFunc->pCode[ nPos ] == HB_P_PUSHLOCALNEAR ||
+          pFunc->pCode[ nPos ] == HB_P_PUSHLOCALREF ||
+          pFunc->pCode[ nPos ] == HB_P_LOCALINCPUSH ||
+          pFunc->pCode[ nPos ] == HB_P_LOCALDEC ||
+          pFunc->pCode[ nPos ] == HB_P_LOCALINC ||
+          pFunc->pCode[ nPos ] == HB_P_LOCALADDINT ||
+          pFunc->pCode[ nPos ] == HB_P_LOCALNEARADDINT )
 
       {
-         if( hb_compLocalGetNumber( pFunc->pCode + ulPos ) == isLocal )
+         if( hb_compLocalGetNumber( pFunc->pCode + nPos ) == isLocal )
          {
-            if( pFunc->pCode[ ulPos ] == HB_P_POPLOCAL ||
-                pFunc->pCode[ ulPos ] == HB_P_POPLOCALNEAR )
+            if( pFunc->pCode[ nPos ] == HB_P_POPLOCAL ||
+                pFunc->pCode[ nPos ] == HB_P_POPLOCALNEAR )
                return 0;
             else
                return 1;
@@ -1284,39 +1284,39 @@ static int hb_compPCodeTraceAssignedUnused( PFUNCTION pFunc, HB_SIZE ulPos, HB_B
          universal recursive tracer by putting all parameters into "cargo"
          structure. [Mindaugas] */
 
-      if( hb_compIsJump( pFunc->pCode[ ulPos ] ) )
+      if( hb_compIsJump( pFunc->pCode[ nPos ] ) )
       {
-         HB_SIZE ulPos2 = ulPos + hb_compJumpGetOffset( &pFunc->pCode[ ulPos ] );
+         HB_SIZE nPos2 = nPos + hb_compJumpGetOffset( &pFunc->pCode[ nPos ] );
 
-         if( hb_compIsUncondJump( pFunc->pCode[ ulPos ] ) )
+         if( hb_compIsUncondJump( pFunc->pCode[ nPos ] ) )
          {
-            ulPos = ulPos2;
+            nPos = nPos2;
             continue;
          }
 
-         if( hb_compPCodeTraceAssignedUnused( pFunc, ulPos2, pMap, isLocal ) )
+         if( hb_compPCodeTraceAssignedUnused( pFunc, nPos2, pMap, isLocal ) )
             return 1;
       }
-      else if( pFunc->pCode[ ulPos ] == HB_P_SWITCH ) /* Switch is multiplace jump */
+      else if( pFunc->pCode[ nPos ] == HB_P_SWITCH ) /* Switch is multiplace jump */
       {
-         HB_USHORT us, usCount = HB_PCODE_MKUSHORT( pFunc->pCode + ulPos + 1 );
+         HB_USHORT us, usCount = HB_PCODE_MKUSHORT( pFunc->pCode + nPos + 1 );
 
-         ulPos += 3;
+         nPos += 3;
          for( us = 0; us < usCount; us++ )
          {
-            if( hb_compPCodeTraceAssignedUnused( pFunc, ulPos, pMap, isLocal ) )
+            if( hb_compPCodeTraceAssignedUnused( pFunc, nPos, pMap, isLocal ) )
                return 1;
 
-            ulPos += hb_compPCodeSize( pFunc, ulPos );
-            ulPos += hb_compPCodeSize( pFunc, ulPos );
+            nPos += hb_compPCodeSize( pFunc, nPos );
+            nPos += hb_compPCodeSize( pFunc, nPos );
          }
          continue;
       }
 
-      if( pFunc->pCode[ ulPos ] == HB_P_ENDPROC || pFunc->pCode[ ulPos ] == HB_P_ENDBLOCK )
+      if( pFunc->pCode[ nPos ] == HB_P_ENDPROC || pFunc->pCode[ nPos ] == HB_P_ENDBLOCK )
          break;
 
-      ulPos += hb_compPCodeSize( pFunc, ulPos );
+      nPos += hb_compPCodeSize( pFunc, nPos );
    }
    return 0;
 }
@@ -1325,34 +1325,34 @@ static int hb_compPCodeTraceAssignedUnused( PFUNCTION pFunc, HB_SIZE ulPos, HB_B
 static void hb_compPCodeEnumAssignedUnused( HB_COMP_DECL, PFUNCTION pFunc, PHB_OPT_LOCAL pLocals )
 {
    HB_BYTE * pMap;
-   HB_SIZE ulPos = 0, ulLastPos = 0;
+   HB_SIZE nPos = 0, nLastPos = 0;
    HB_SHORT isLocal;
    HB_USHORT usLine = 0;
 
    pMap = ( HB_BYTE * ) hb_xgrab( pFunc->lPCodePos );
 
-   while( ulPos < pFunc->lPCodePos )
+   while( nPos < pFunc->lPCodePos )
    {
       HB_BOOL  fCheck;
 
       /* skip pop NIL (var := NIL), to allow force garbage collection */
-      fCheck = ( pFunc->pCode[ ulPos ] == HB_P_POPLOCAL ||
-                 pFunc->pCode[ ulPos ] == HB_P_POPLOCALNEAR ) &&
-                 ! ( ulPos > 0 && pFunc->pCode[ ulLastPos ] == HB_P_PUSHNIL );
+      fCheck = ( pFunc->pCode[ nPos ] == HB_P_POPLOCAL ||
+                 pFunc->pCode[ nPos ] == HB_P_POPLOCALNEAR ) &&
+                 ! ( nPos > 0 && pFunc->pCode[ nLastPos ] == HB_P_PUSHNIL );
 
-      if( !fCheck && ( pFunc->pCode[ ulPos ] == HB_P_LOCALDEC ||
-                       pFunc->pCode[ ulPos ] == HB_P_LOCALINC ||
-                       pFunc->pCode[ ulPos ] == HB_P_LOCALADDINT ||
-                       pFunc->pCode[ ulPos ] == HB_P_LOCALNEARADDINT ) )
+      if( !fCheck && ( pFunc->pCode[ nPos ] == HB_P_LOCALDEC ||
+                       pFunc->pCode[ nPos ] == HB_P_LOCALINC ||
+                       pFunc->pCode[ nPos ] == HB_P_LOCALADDINT ||
+                       pFunc->pCode[ nPos ] == HB_P_LOCALNEARADDINT ) )
       {
          fCheck = HB_TRUE;
       }
 
-      if( !fCheck && pFunc->pCode[ ulPos ] == HB_P_PUSHLOCALREF )
+      if( !fCheck && pFunc->pCode[ nPos ] == HB_P_PUSHLOCALREF )
       {
-         HB_SIZE ulPosNext = ulPos + hb_compPCodeSize( pFunc, ulPos );
-         HB_BYTE bCodeNext = pFunc->pCode[ ulPosNext ];
-         HB_BYTE bCodeNext2 = pFunc->pCode[ ulPosNext + hb_compPCodeSize( pFunc, ulPosNext ) ];
+         HB_SIZE nPosNext = nPos + hb_compPCodeSize( pFunc, nPos );
+         HB_BYTE bCodeNext = pFunc->pCode[ nPosNext ];
+         HB_BYTE bCodeNext2 = pFunc->pCode[ nPosNext + hb_compPCodeSize( pFunc, nPosNext ) ];
 
          if( ( bCodeNext == HB_P_PUSHBLOCK ||
                bCodeNext == HB_P_PUSHBLOCKSHORT ||
@@ -1397,7 +1397,7 @@ static void hb_compPCodeEnumAssignedUnused( HB_COMP_DECL, PFUNCTION pFunc, PHB_O
          }
       }
 
-      if( fCheck && ( isLocal = hb_compLocalGetNumber( &pFunc->pCode[ ulPos ] ) ) > ( HB_SHORT ) pFunc->wParamCount )
+      if( fCheck && ( isLocal = hb_compLocalGetNumber( &pFunc->pCode[ nPos ] ) ) > ( HB_SHORT ) pFunc->wParamCount )
       {
          PVAR     pVar = pFunc->pLocals;
          HB_SHORT is;
@@ -1413,9 +1413,9 @@ static void hb_compPCodeEnumAssignedUnused( HB_COMP_DECL, PFUNCTION pFunc, PHB_O
              pLocals[ isLocal - 1 ].bFlags != ( OPT_LOCAL_FLAG_PUSH | OPT_LOCAL_FLAG_POPSELF ) )
          {
             memset( pMap, 0, pFunc->lPCodePos );
-            pMap[ ulPos ] = 1;
+            pMap[ nPos ] = 1;
 
-            if( ! hb_compPCodeTraceAssignedUnused( pFunc, ulPos + hb_compPCodeSize( pFunc, ulPos ),
+            if( ! hb_compPCodeTraceAssignedUnused( pFunc, nPos + hb_compPCodeSize( pFunc, nPos ),
                                                    pMap, isLocal ) )
             {
                char    szFun[ 256 ];
@@ -1433,12 +1433,12 @@ static void hb_compPCodeEnumAssignedUnused( HB_COMP_DECL, PFUNCTION pFunc, PHB_O
             }
          }
       }
-      else if( pFunc->pCode[ ulPos ] == HB_P_LINE )
+      else if( pFunc->pCode[ nPos ] == HB_P_LINE )
       {
-         usLine = HB_PCODE_MKUSHORT( pFunc->pCode + ulPos + 1 );
+         usLine = HB_PCODE_MKUSHORT( pFunc->pCode + nPos + 1 );
       }
-      ulLastPos = ulPos;
-      ulPos += hb_compPCodeSize( pFunc, ulPos );
+      nLastPos = nPos;
+      nPos += hb_compPCodeSize( pFunc, nPos );
    }
    hb_xfree( pMap );
 }
@@ -1446,17 +1446,17 @@ static void hb_compPCodeEnumAssignedUnused( HB_COMP_DECL, PFUNCTION pFunc, PHB_O
 
 static void hb_compPCodeEnumRenumberLocals( PFUNCTION pFunc, PHB_OPT_LOCAL pLocals )
 {
-   HB_SIZE ulPos = 0;
+   HB_SIZE nPos = 0;
 
-   while( ulPos < pFunc->lPCodePos )
+   while( nPos < pFunc->lPCodePos )
    {
-      switch( pFunc->pCode[ ulPos ] )
+      switch( pFunc->pCode[ nPos ] )
       {
          case HB_P_POPLOCALNEAR:
          case HB_P_PUSHLOCALNEAR:
          case HB_P_LOCALNEARADDINT:
          {
-            HB_BYTE * pVar = &pFunc->pCode[ ulPos + 1 ];
+            HB_BYTE * pVar = &pFunc->pCode[ nPos + 1 ];
             HB_SHORT isVar = ( signed char ) pVar[ 0 ];
 
             if( isVar > 0 && pLocals[ isVar - 1 ].isNumber != isVar )
@@ -1469,7 +1469,7 @@ static void hb_compPCodeEnumRenumberLocals( PFUNCTION pFunc, PHB_OPT_LOCAL pLoca
                }
                else
                {
-                  hb_compNOOPfill( pFunc, ulPos, hb_compPCodeSize( pFunc, ulPos ), HB_FALSE, HB_FALSE );
+                  hb_compNOOPfill( pFunc, nPos, hb_compPCodeSize( pFunc, nPos ), HB_FALSE, HB_FALSE );
                }
             }
             break;
@@ -1484,7 +1484,7 @@ static void hb_compPCodeEnumRenumberLocals( PFUNCTION pFunc, PHB_OPT_LOCAL pLoca
          case HB_P_LOCALINC:
          case HB_P_LOCALINCPUSH:
          {
-            HB_BYTE * pVar = &pFunc->pCode[ ulPos + 1 ];
+            HB_BYTE * pVar = &pFunc->pCode[ nPos + 1 ];
             HB_SHORT isVar = HB_PCODE_MKSHORT( pVar );
 
             if( isVar > 0 && pLocals[ isVar - 1 ].isNumber != isVar )
@@ -1497,7 +1497,7 @@ static void hb_compPCodeEnumRenumberLocals( PFUNCTION pFunc, PHB_OPT_LOCAL pLoca
                }
                else
                {
-                  hb_compNOOPfill( pFunc, ulPos, hb_compPCodeSize( pFunc, ulPos ), HB_FALSE, HB_FALSE );
+                  hb_compNOOPfill( pFunc, nPos, hb_compPCodeSize( pFunc, nPos ), HB_FALSE, HB_FALSE );
                }
             }
             break;
@@ -1506,11 +1506,11 @@ static void hb_compPCodeEnumRenumberLocals( PFUNCTION pFunc, PHB_OPT_LOCAL pLoca
          case HB_P_PUSHBLOCK:
          case HB_P_PUSHBLOCKLARGE:
          {
-            HB_BYTE * pVar = &pFunc->pCode[ ulPos + 5 ];
+            HB_BYTE * pVar = &pFunc->pCode[ nPos + 5 ];
             HB_USHORT usVarCount;
             HB_SHORT isVar;
 
-            if( pFunc->pCode[ ulPos ] == HB_P_PUSHBLOCKLARGE )
+            if( pFunc->pCode[ nPos ] == HB_P_PUSHBLOCKLARGE )
                pVar++;
 
             usVarCount = HB_PCODE_MKUSHORT( pVar );
@@ -1532,7 +1532,7 @@ static void hb_compPCodeEnumRenumberLocals( PFUNCTION pFunc, PHB_OPT_LOCAL pLoca
             break;
          }
       }
-      ulPos += hb_compPCodeSize( pFunc, ulPos );
+      nPos += hb_compPCodeSize( pFunc, nPos );
    }
 }
 
@@ -1566,13 +1566,13 @@ void hb_compPCodeTraceOptimizer( HB_COMP_DECL )
    /* TOFIX: Support for PARAMETER sentence is not implemented.
              The temporary solution is to disable optmisation at all if PARAMETER is used.  */
    {
-      HB_SIZE ulPos = 0;
+      HB_SIZE nPos = 0;
 
-      while( ulPos < pFunc->lPCodePos )
+      while( nPos < pFunc->lPCodePos )
       {
-         if( pFunc->pCode[ ulPos ] == HB_P_PARAMETER )
+         if( pFunc->pCode[ nPos ] == HB_P_PARAMETER )
             return;
-         ulPos += hb_compPCodeSize( pFunc, ulPos );
+         nPos += hb_compPCodeSize( pFunc, nPos );
       }
    }
 

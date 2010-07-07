@@ -79,35 +79,35 @@ static HB_PSIZE_FUNC( hb_p_pushblocklarge )
 
 static HB_PSIZE_FUNC( hb_p_localname )
 {
-   HB_SIZE ulStart = lPCodePos;
+   HB_SIZE nStart = lPCodePos;
 
    HB_SYMBOL_UNUSED( cargo );
    lPCodePos += 3;
    while( pFunc->pCode[ lPCodePos++ ] ) {};
 
-   return ( lPCodePos - ulStart );
+   return ( lPCodePos - nStart );
 }
 
 static HB_PSIZE_FUNC( hb_p_modulename )
 {
-   HB_SIZE ulStart = lPCodePos;
+   HB_SIZE nStart = lPCodePos;
 
    HB_SYMBOL_UNUSED( cargo );
    lPCodePos += 3;
    while( pFunc->pCode[ lPCodePos++ ]) {};
 
-   return ( lPCodePos - ulStart );
+   return ( lPCodePos - nStart );
 }
 
 static HB_PSIZE_FUNC( hb_p_staticname )
 {
-   HB_SIZE ulStart = lPCodePos;
+   HB_SIZE nStart = lPCodePos;
 
    HB_SYMBOL_UNUSED( cargo );
    lPCodePos += 4;
    while( pFunc->pCode[ lPCodePos++ ] ) {};
 
-   return ( lPCodePos - ulStart );
+   return ( lPCodePos - nStart );
 }
 
 static HB_PSIZE_FUNC( hb_p_threadstatics )
@@ -495,58 +495,58 @@ static HB_PCODE_FUNC_PTR s_psize_table[] =
    NULL                        /* HB_P_PUSHAPARAMS           */
 };
 
-HB_ISIZ hb_compPCodeSize( PFUNCTION pFunc, HB_SIZE ulOffset )
+HB_ISIZ hb_compPCodeSize( PFUNCTION pFunc, HB_SIZE nOffset )
 {
-   HB_ISIZ lSize = 0;
-   HB_BYTE opcode = pFunc->pCode[ ulOffset ];
+   HB_ISIZ nSize = 0;
+   HB_BYTE opcode = pFunc->pCode[ nOffset ];
 
    if( opcode < HB_P_LAST_PCODE )
    {
-      lSize = hb_comp_pcode_len[ opcode ];
+      nSize = hb_comp_pcode_len[ opcode ];
 
-      if( lSize == 0 )
+      if( nSize == 0 )
       {
          HB_PCODE_FUNC_PTR pCall = s_psize_table[ opcode ];
 
          if( pCall != NULL )
-            lSize = pCall( pFunc, ulOffset, NULL );
+            nSize = pCall( pFunc, nOffset, NULL );
       }
    }
-   return lSize;
+   return nSize;
 }
 
 void hb_compPCodeEval( PFUNCTION pFunc, const HB_PCODE_FUNC_PTR * pFunctions, void * cargo )
 {
-   HB_SIZE ulPos = 0;
-   HB_SIZE ulSkip;
+   HB_SIZE nPos = 0;
+   HB_SIZE nSkip;
    HB_BYTE opcode;
 
    /* Make sure that table is correct */
    assert( sizeof( hb_comp_pcode_len ) == HB_P_LAST_PCODE );
    assert( sizeof( s_psize_table ) / sizeof( HB_PCODE_FUNC_PTR ) == HB_P_LAST_PCODE );
 
-   while( ulPos < pFunc->lPCodePos )
+   while( nPos < pFunc->lPCodePos )
    {
-      opcode = pFunc->pCode[ ulPos ];
+      opcode = pFunc->pCode[ nPos ];
       if( opcode < HB_P_LAST_PCODE )
       {
          HB_PCODE_FUNC_PTR pCall = pFunctions[ opcode ];
-         ulSkip = pCall ? pCall( pFunc, ulPos, cargo ) : 0;
-         if( ulSkip == 0 )
+         nSkip = pCall ? pCall( pFunc, nPos, cargo ) : 0;
+         if( nSkip == 0 )
          {
-            ulSkip = hb_comp_pcode_len[ opcode ];
-            if( ulSkip == 0 )
+            nSkip = hb_comp_pcode_len[ opcode ];
+            if( nSkip == 0 )
             {
                pCall = s_psize_table[ opcode ];
                if( pCall != NULL )
-                  ulSkip = pCall( pFunc, ulPos, NULL );
+                  nSkip = pCall( pFunc, nPos, NULL );
             }
          }
 
-         if( ulSkip == 0 )
+         if( nSkip == 0 )
          {
             char szOpcode[ 16 ];
-            ++ulPos;
+            ++nPos;
             hb_snprintf( szOpcode, sizeof( szOpcode ), "%i", opcode );
             hb_errInternal( HB_EI_COMPBADOPSIZE, "Invalid (zero) opcode %s size in hb_compPCodeEval()", szOpcode, NULL );
          }
@@ -556,19 +556,19 @@ void hb_compPCodeEval( PFUNCTION pFunc, const HB_PCODE_FUNC_PTR * pFunctions, vo
           * in some cases the eval functions can return intentionally differ
           * values so it's not enabled by default. [druzus]
           */
-         if( hb_comp_pcode_len[ opcode ] != 0 && hb_comp_pcode_len[ opcode ] != ulSkip )
+         if( hb_comp_pcode_len[ opcode ] != 0 && hb_comp_pcode_len[ opcode ] != nSkip )
          {
             char szMsg[ 100 ];
-            hb_snprintf( szMsg, sizeof( szMsg ), "Wrong PCODE (%d) size (%ld!=%d)", opcode, ulSkip, hb_comp_pcode_len[ opcode ] );
+            hb_snprintf( szMsg, sizeof( szMsg ), "Wrong PCODE (%d) size (%ld!=%d)", opcode, nSkip, hb_comp_pcode_len[ opcode ] );
             hb_errInternal( HB_EI_COMPBADOPSIZE, szMsg, NULL, NULL );
          }
 #endif
-         ulPos += ulSkip;
+         nPos += nSkip;
       }
       else
       {
          char szOpcode[ 16 ];
-         ++ulPos;
+         ++nPos;
          hb_snprintf( szOpcode, sizeof( szOpcode ), "%i", opcode );
          hb_errInternal( HB_EI_COMPBADOPCODE, "Invalid opcode: %s in hb_compPCodeEval()", szOpcode, NULL );
       }
@@ -577,26 +577,26 @@ void hb_compPCodeEval( PFUNCTION pFunc, const HB_PCODE_FUNC_PTR * pFunctions, vo
 
 void hb_compPCodeTrace( PFUNCTION pFunc, const HB_PCODE_FUNC_PTR * pFunctions, void * cargo )
 {
-   HB_SIZE ulPos = 0;
+   HB_SIZE nPos = 0;
 
    /* Make sure that table is correct */
    assert( sizeof( hb_comp_pcode_len ) == HB_P_LAST_PCODE );
 
-   while( ulPos < pFunc->lPCodePos )
+   while( nPos < pFunc->lPCodePos )
    {
-      HB_BYTE opcode = pFunc->pCode[ ulPos ];
+      HB_BYTE opcode = pFunc->pCode[ nPos ];
       if( opcode < HB_P_LAST_PCODE )
       {
          HB_PCODE_FUNC_PTR pCall = pFunctions[ opcode ];
          if( pCall )
-            ulPos = pCall( pFunc, ulPos, cargo );
+            nPos = pCall( pFunc, nPos, cargo );
          else
-            ulPos += hb_comp_pcode_len[ opcode ];
+            nPos += hb_comp_pcode_len[ opcode ];
       }
       else
       {
          char szOpcode[ 16 ];
-         ++ulPos;
+         ++nPos;
          hb_snprintf( szOpcode, sizeof( szOpcode ), "%i", opcode );
          hb_errInternal( HB_EI_COMPBADOPCODE, "Invalid opcode: %s in hb_compPCodeTrace()", szOpcode, NULL );
       }
@@ -673,23 +673,23 @@ void hb_compGenPCode4( HB_BYTE byte1, HB_BYTE byte2, HB_BYTE byte3, HB_BYTE byte
    pFunc->pCode[ pFunc->lPCodePos++ ] = byte4;
 }
 
-void hb_compGenPCodeN( const HB_BYTE * pBuffer, HB_SIZE ulSize, HB_COMP_DECL )
+void hb_compGenPCodeN( const HB_BYTE * pBuffer, HB_SIZE nSize, HB_COMP_DECL )
 {
    PFUNCTION pFunc = HB_COMP_PARAM->functions.pLast;   /* get the currently defined Clipper function */
 
    if( ! pFunc->pCode )   /* has been created the memory block to hold the pcode ? */
    {
-      pFunc->lPCodeSize = ( ( ulSize / HB_PCODE_CHUNK ) + 1 ) * HB_PCODE_CHUNK;
+      pFunc->lPCodeSize = ( ( nSize / HB_PCODE_CHUNK ) + 1 ) * HB_PCODE_CHUNK;
       pFunc->pCode      = ( HB_BYTE * ) hb_xgrab( pFunc->lPCodeSize );
       pFunc->lPCodePos  = 0;
    }
-   else if( pFunc->lPCodePos + ulSize > pFunc->lPCodeSize )
+   else if( pFunc->lPCodePos + nSize > pFunc->lPCodeSize )
    {
       /* not enough free space in pcode buffer - increase it */
-      pFunc->lPCodeSize += ( ( ( ulSize / HB_PCODE_CHUNK ) + 1 ) * HB_PCODE_CHUNK );
+      pFunc->lPCodeSize += ( ( ( nSize / HB_PCODE_CHUNK ) + 1 ) * HB_PCODE_CHUNK );
       pFunc->pCode = ( HB_BYTE * ) hb_xrealloc( pFunc->pCode, pFunc->lPCodeSize );
    }
 
-   memcpy( pFunc->pCode + pFunc->lPCodePos, pBuffer, ulSize );
-   pFunc->lPCodePos += ulSize;
+   memcpy( pFunc->pCode + pFunc->lPCodePos, pBuffer, nSize );
+   pFunc->lPCodePos += nSize;
 }

@@ -64,16 +64,16 @@ const char * hb_compIdentifierNew( HB_COMP_DECL, const char * szName, int iType 
 /* returns a hash key */
 static HB_HASH_FUNC( hb_comp_IdentKey )    /* HB_SIZE func (void *Value, void *Cargo) */
 {
-   HB_SIZE ulSum = 0;
+   HB_SIZE nSum = 0;
    const char * szName = ( char * )Value;
 
    while( *szName )
-      ulSum += *szName++;
+      nSum += *szName++;
 
    HB_SYMBOL_UNUSED( HashPtr );
    HB_SYMBOL_UNUSED( Cargo );
 
-   return ulSum % HB_IDENT_TABLE_SIZE;
+   return nSum % HB_IDENT_TABLE_SIZE;
 }
 
 /* deletes an identifier */

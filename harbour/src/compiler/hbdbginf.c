@@ -55,7 +55,7 @@
 PHB_DEBUGINFO hb_compGetDebugInfo( HB_COMP_DECL )
 {
    PHB_DEBUGINFO pLineInfo = NULL, pInfo = NULL;
-   HB_SIZE ulPos, ulSkip, ulOffset;
+   HB_SIZE nPos, nSkip, nOffset;
    HB_ULONG ulLine;
    const char * pszModuleName = "", * ptr;
    PFUNCTION pFunc;
@@ -66,18 +66,18 @@ PHB_DEBUGINFO hb_compGetDebugInfo( HB_COMP_DECL )
    {
       if( ( pFunc->funFlags & FUN_FILE_DECL ) == 0 )
       {
-         ulPos = ulLine = 0;
-         while( ulPos < pFunc->lPCodePos )
+         nPos = ulLine = 0;
+         while( nPos < pFunc->lPCodePos )
          {
-            ulSkip = 0;
-            switch( pFunc->pCode[ ulPos ] )
+            nSkip = 0;
+            switch( pFunc->pCode[ nPos ] )
             {
                case HB_P_LINE:
-                  ulLine = HB_PCODE_MKUSHORT( &pFunc->pCode[ ulPos + 1 ] );
+                  ulLine = HB_PCODE_MKUSHORT( &pFunc->pCode[ nPos + 1 ] );
                   break;
 
                case HB_P_MODULENAME:
-                  pszModuleName = ( const char * ) &pFunc->pCode[ ulPos + 1 ];
+                  pszModuleName = ( const char * ) &pFunc->pCode[ nPos + 1 ];
                   pInfo = NULL;
                   break;
 
@@ -87,15 +87,15 @@ PHB_DEBUGINFO hb_compGetDebugInfo( HB_COMP_DECL )
                 * code below. [druzus]
                 */
                case HB_P_PUSHBLOCKLARGE:
-                  ulSkip = 8 + HB_PCODE_MKUSHORT( &pFunc->pCode[ ulPos + 6 ] ) * 2;
+                  nSkip = 8 + HB_PCODE_MKUSHORT( &pFunc->pCode[ nPos + 6 ] ) * 2;
                   break;
 
                case HB_P_PUSHBLOCK:
-                  ulSkip = 7 + HB_PCODE_MKUSHORT( &pFunc->pCode[ ulPos + 5 ] ) * 2;
+                  nSkip = 7 + HB_PCODE_MKUSHORT( &pFunc->pCode[ nPos + 5 ] ) * 2;
                   break;
 
                case HB_P_PUSHBLOCKSHORT:
-                  ulSkip = 2;
+                  nSkip = 2;
                   break;
             }
 
@@ -135,15 +135,15 @@ PHB_DEBUGINFO hb_compGetDebugInfo( HB_COMP_DECL )
                      pLineInfo = pInfo;
                   }
                }
-               ulOffset = ulLine >> 3;
-               if( pInfo->ulAllocated <= ulOffset )
+               nOffset = ulLine >> 3;
+               if( pInfo->ulAllocated <= nOffset )
                {
                   HB_ULONG ulNewSize = ( ( ulLine >> 3 ) + 0x100 ) & 0xFFFFFF00L;
                   pInfo->pLineMap = ( HB_BYTE * ) hb_xrealloc( pInfo->pLineMap, ulNewSize + 1 );
                   memset( pInfo->pLineMap + pInfo->ulAllocated, 0, ulNewSize - pInfo->ulAllocated + 1 );
                   pInfo->ulAllocated = ulNewSize;
                }
-               pInfo->pLineMap[ ulOffset ] |= 1 << ( ulLine & 0x7 );
+               pInfo->pLineMap[ nOffset ] |= 1 << ( ulLine & 0x7 );
                /*
                 * It's possible the the line number will be ascending
                 * if some external file is included more then once. [druzus]
@@ -155,13 +155,13 @@ PHB_DEBUGINFO hb_compGetDebugInfo( HB_COMP_DECL )
                ulLine = 0;
             }
 
-            if( ulSkip == 0 )
+            if( nSkip == 0 )
             {
-               ulSkip = hb_compPCodeSize( pFunc, ulPos );
-               if( ulSkip == 0 )
+               nSkip = hb_compPCodeSize( pFunc, nPos );
+               if( nSkip == 0 )
                   break;
             }
-            ulPos += ulSkip;
+            nPos += nSkip;
          }
       }
       pFunc = pFunc->pNext;
