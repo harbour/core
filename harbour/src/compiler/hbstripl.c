@@ -67,9 +67,9 @@ HB_EXTERN_END
 static HB_STRIP_FUNC( hb_p_line )
 {
    HB_SYMBOL_UNUSED( cargo );
-   if( pFunc->pCode[ lPCodePos + 3 ] == HB_P_LINE )
+   if( pFunc->pCode[ nPCodePos + 3 ] == HB_P_LINE )
    {
-      hb_compNOOPfill( pFunc, lPCodePos, 3, HB_FALSE, HB_FALSE );
+      hb_compNOOPfill( pFunc, nPCodePos, 3, HB_FALSE, HB_FALSE );
    }
 
    return 3;

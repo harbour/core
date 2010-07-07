@@ -71,7 +71,7 @@ HB_EXTERN_BEGIN
 
 /* definitions for hb_compPCodeEval() support */
 typedef void * HB_VOID_PTR;
-#define HB_PCODE_FUNC( func, type ) HB_SIZE func( PFUNCTION pFunc, HB_SIZE lPCodePos, type cargo )
+#define HB_PCODE_FUNC( func, type ) HB_SIZE func( PFUNCTION pFunc, HB_SIZE nPCodePos, type cargo )
 typedef  HB_PCODE_FUNC( HB_PCODE_FUNC_, HB_VOID_PTR );
 typedef  HB_PCODE_FUNC_ * HB_PCODE_FUNC_PTR;
 

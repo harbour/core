@@ -1033,7 +1033,7 @@ CodeBlock   : BlockHead
             | BlockHead Crlf
             {  /* 3 */
                HB_CBVAR_PTR pVar;
-               $<sNumber>$ = HB_COMP_PARAM->functions.pLast->lPCodePos;
+               $<sNumber>$ = HB_COMP_PARAM->functions.pLast->nPCodePos;
                hb_compCodeBlockStart( HB_COMP_PARAM, HB_TRUE );
                HB_COMP_PARAM->functions.pLast->funFlags |= FUN_EXTBLOCK;
                HB_COMP_PARAM->functions.pLast->fVParams =
@@ -1060,8 +1060,8 @@ CodeBlock   : BlockHead
                hb_compCodeBlockEnd( HB_COMP_PARAM );
                $$ = hb_compExprSetCodeblockBody( $1,
                      HB_COMP_PARAM->functions.pLast->pCode + $<sNumber>3,
-                     HB_COMP_PARAM->functions.pLast->lPCodePos - $<sNumber>3 );
-               HB_COMP_PARAM->functions.pLast->lPCodePos = $<sNumber>3;
+                     HB_COMP_PARAM->functions.pLast->nPCodePos - $<sNumber>3 );
+               HB_COMP_PARAM->functions.pLast->nPCodePos = $<sNumber>3;
                HB_COMP_PARAM->lastLinePos = 0;
             }
             ;
@@ -1502,7 +1502,7 @@ DoWhile    : WhileBegin ExpList Crlf
              EmptyStats
                {
                   hb_compLoopHere( HB_COMP_PARAM );
-                  hb_compGenJump( $1 - HB_COMP_PARAM->functions.pLast->lPCodePos, HB_COMP_PARAM );
+                  hb_compGenJump( $1 - HB_COMP_PARAM->functions.pLast->nPCodePos, HB_COMP_PARAM );
                }
              EndWhile
                {
@@ -1516,7 +1516,7 @@ DoWhile    : WhileBegin ExpList Crlf
 
 WhileBegin : WHILE
                {
-                  $$ = HB_COMP_PARAM->functions.pLast->lPCodePos;
+                  $$ = HB_COMP_PARAM->functions.pLast->nPCodePos;
                   hb_compLinePushIfInside( HB_COMP_PARAM );
                   ++HB_COMP_PARAM->functions.pLast->wWhileCounter;
                   hb_compLoopStart( HB_COMP_PARAM, HB_TRUE );
@@ -1551,7 +1551,7 @@ ForNext    : FOR LValue ForAssign Expression          /* 1  2  3  4 */
                }
              Crlf                                     /* 10 */
                {                                      /* 11 */
-                  $<sNumber>$ = HB_COMP_PARAM->functions.pLast->lPCodePos;
+                  $<sNumber>$ = HB_COMP_PARAM->functions.pLast->nPCodePos;
                }
              ForStatements                            /* 12 */
                {
@@ -1589,7 +1589,7 @@ ForNext    : FOR LValue ForAssign Expression          /* 1  2  3  4 */
                      hb_compGenPCode1( HB_P_FORTEST, HB_COMP_PARAM );
                   }
 
-                  hb_compGenJumpFalse( $<sNumber>11 - HB_COMP_PARAM->functions.pLast->lPCodePos, HB_COMP_PARAM );
+                  hb_compGenJumpFalse( $<sNumber>11 - HB_COMP_PARAM->functions.pLast->nPCodePos, HB_COMP_PARAM );
                   hb_compLoopEnd( HB_COMP_PARAM );
                   if( hb_compExprAsSymbol( $<asExpr>2 ) )
                      hb_compForEnd( HB_COMP_PARAM, hb_compExprAsSymbol( $<asExpr>2 ) );
@@ -1651,7 +1651,7 @@ ForEach    : FOREACH ForList IN ForArgs          /* 1  2  3  4 */
                 hb_compEnumStart( HB_COMP_PARAM, $2, $4, $6 );
 
                 hb_compLoopStart( HB_COMP_PARAM, HB_TRUE );
-                $<sNumber>$ = HB_COMP_PARAM->functions.pLast->lPCodePos;
+                $<sNumber>$ = HB_COMP_PARAM->functions.pLast->nPCodePos;
              }
              Crlf                                     /* 8 */
              {
@@ -1662,7 +1662,7 @@ ForEach    : FOREACH ForList IN ForArgs          /* 1  2  3  4 */
              {
                 hb_compLoopHere( HB_COMP_PARAM );
                 hb_compEnumNext( HB_COMP_PARAM, $2, $6 );
-                hb_compGenJump( $<sNumber>7 - HB_COMP_PARAM->functions.pLast->lPCodePos, HB_COMP_PARAM );
+                hb_compGenJump( $<sNumber>7 - HB_COMP_PARAM->functions.pLast->nPCodePos, HB_COMP_PARAM );
 
                 hb_compGenJumpHere( $<sNumber>9, HB_COMP_PARAM );
                 hb_compLoopEnd( HB_COMP_PARAM );
@@ -1816,7 +1816,7 @@ BlockSeq    : /* no always */    { $$ = 0; }
                {
                   HB_COMP_EXPR_FREE( hb_compExprGenPush( $2, HB_COMP_PARAM ) );
                   hb_compGenPCode1( HB_P_SEQBLOCK, HB_COMP_PARAM );
-                  $$ = HB_COMP_PARAM->functions.pLast->lPCodePos;
+                  $$ = HB_COMP_PARAM->functions.pLast->nPCodePos;
                }
             ;
 
@@ -1827,7 +1827,7 @@ AlwaysSeq   : /* no always */    { $$ = 0; }
 Always      : ALWAYS
                {
                   HB_COMP_PARAM->functions.pLast->funFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE );
-                  $$ = HB_COMP_PARAM->functions.pLast->lPCodePos;
+                  $$ = HB_COMP_PARAM->functions.pLast->nPCodePos;
                   ++HB_COMP_PARAM->functions.pLast->wAlwaysCounter;
                   hb_compSequenceAlways( HB_COMP_PARAM );
                }
@@ -1841,7 +1841,7 @@ RecoverSeq  : /* no recover */   { $$ = 0; HB_COMP_PARAM->functions.pLast->funFl
 RecoverEmpty : RECOVER
                {
                   HB_COMP_PARAM->functions.pLast->funFlags &= ~ FUN_BREAK_CODE;
-                  $$ = HB_COMP_PARAM->functions.pLast->lPCodePos;
+                  $$ = HB_COMP_PARAM->functions.pLast->nPCodePos;
                   if( HB_COMP_PARAM->functions.pLast->wSeqCounter )
                      --HB_COMP_PARAM->functions.pLast->wSeqCounter;
                   hb_compLinePushIfInside( HB_COMP_PARAM );
@@ -1852,7 +1852,7 @@ RecoverEmpty : RECOVER
 RecoverUsing : RECOVERUSING IdentName
                {
                   HB_COMP_PARAM->functions.pLast->funFlags &= ~ FUN_BREAK_CODE;
-                  $$ = HB_COMP_PARAM->functions.pLast->lPCodePos;
+                  $$ = HB_COMP_PARAM->functions.pLast->nPCodePos;
                   if( HB_COMP_PARAM->functions.pLast->wSeqCounter )
                      --HB_COMP_PARAM->functions.pLast->wSeqCounter;
                   hb_compLinePushIfInside( HB_COMP_PARAM );
@@ -1901,7 +1901,7 @@ WithObject : WITHOBJECT Expression Crlf
                {
                   hb_compLinePushIfInside( HB_COMP_PARAM );
                   HB_COMP_EXPR_FREE( hb_compExprGenPush( $2, HB_COMP_PARAM ) );
-                  $<sNumber>$ = HB_COMP_PARAM->functions.pLast->lPCodePos;
+                  $<sNumber>$ = HB_COMP_PARAM->functions.pLast->nPCodePos;
                   hb_compGenPCode1( HB_P_WITHOBJECTSTART, HB_COMP_PARAM );
                   HB_COMP_PARAM->functions.pLast->wWithObjectCnt++;
                }
@@ -1966,7 +1966,7 @@ static void hb_compLoopStart( HB_COMP_DECL, HB_BOOL fCanLoop )
    else
       pFunc->pLoops = pLoop;
 
-   pLoop->ulOffset         = pFunc->lPCodePos;  /* store the start position */
+   pLoop->ulOffset         = pFunc->nPCodePos;  /* store the start position */
    pLoop->fCanLoop         = fCanLoop;    /* can we use LOOP inside */
    pLoop->wSeqCounter      = pFunc->wSeqCounter;      /* store current SEQUENCE counter */
    pLoop->wWithObjectCnt   = pFunc->wWithObjectCnt;   /* store current WITH OBJECT counter */
@@ -2068,7 +2068,7 @@ static void hb_compLoopLoop( HB_COMP_DECL )
             wWithObjectCnt++;
          }
          /* store the position to fix */
-         pLoop->ulOffset = pFunc->lPCodePos;
+         pLoop->ulOffset = pFunc->nPCodePos;
          hb_compGenJump( 0, HB_COMP_PARAM );
       }
    }
@@ -2124,7 +2124,7 @@ static void hb_compLoopExit( HB_COMP_DECL )
             wWithObjectCnt++;
          }
          /* store the position to fix */
-         pLoop->ulOffset = pFunc->lPCodePos;
+         pLoop->ulOffset = pFunc->nPCodePos;
          hb_compGenJump( 0, HB_COMP_PARAM );
       }
    }
@@ -2553,7 +2553,7 @@ static void hb_compSwitchStart( HB_COMP_DECL, HB_EXPR_PTR pExpr )
    pSwitch->pCases = NULL;
    pSwitch->pLast  = NULL;
    pSwitch->ulDefault = 0;
-   pSwitch->ulOffset = pFunc->lPCodePos;
+   pSwitch->ulOffset = pFunc->nPCodePos;
    pSwitch->pExpr = pExpr;
    pSwitch->pPrev = pFunc->pSwitch;
    pFunc->pSwitch = pSwitch;
@@ -2570,7 +2570,7 @@ static void hb_compSwitchAdd( HB_COMP_DECL, HB_EXPR_PTR pExpr )
    {
       /* normal CASE */
       pCase = (HB_SWITCHCASE_PTR) hb_xgrab( sizeof( HB_SWITCHCASE ) );
-      pCase->ulOffset = pFunc->lPCodePos;
+      pCase->ulOffset = pFunc->nPCodePos;
       pCase->pNext = NULL;
       pExpr = hb_compExprReduce( pExpr, HB_COMP_PARAM );
       if( !( hb_compExprIsLong( pExpr ) || hb_compExprIsString( pExpr ) ) )
@@ -2602,7 +2602,7 @@ static void hb_compSwitchAdd( HB_COMP_DECL, HB_EXPR_PTR pExpr )
       }
       else
       {
-         pFunc->pSwitch->ulDefault = pFunc->lPCodePos;
+         pFunc->pSwitch->ulDefault = pFunc->nPCodePos;
       }
    }
 }
@@ -2663,7 +2663,7 @@ static void hb_compSwitchEnd( HB_COMP_DECL )
       HB_BOOL fMacroText = ( HB_COMP_PARAM->supported & HB_COMPFLAG_MACROTEXT ) != 0;
 
       pExpr = hb_compExprGenPush( pExpr, HB_COMP_PARAM );
-      ulCountPos = pFunc->lPCodePos + 1;
+      ulCountPos = pFunc->nPCodePos + 1;
       hb_compGenPCode3( HB_P_SWITCH, 0, 0, HB_COMP_PARAM );
       HB_COMP_PARAM->fLongOptimize = HB_FALSE;
       HB_COMP_PARAM->supported &= ~HB_COMPFLAG_MACROTEXT;

@@ -67,7 +67,7 @@ PHB_DEBUGINFO hb_compGetDebugInfo( HB_COMP_DECL )
       if( ( pFunc->funFlags & FUN_FILE_DECL ) == 0 )
       {
          nPos = ulLine = 0;
-         while( nPos < pFunc->lPCodePos )
+         while( nPos < pFunc->nPCodePos )
          {
             nSkip = 0;
             switch( pFunc->pCode[ nPos ] )

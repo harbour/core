@@ -507,7 +507,7 @@ typedef struct __FUNC
    PVAR         pPrivates;                /* pointer to private variables list */
    HB_BYTE *    pCode;                    /* pointer to a memory block where pcode is stored */
    HB_SIZE      lPCodeSize;               /* total memory size for pcode */
-   HB_SIZE      lPCodePos;                /* actual pcode offset */
+   HB_SIZE      nPCodePos;                /* actual pcode offset */
    int          iStaticsBase;             /* base for this function statics */
    int          iFuncSuffix;              /* function suffix for multiple static functions with the same name */
    HB_SIZE *    pNOOPs;                   /* pointer to the NOOP array */
@@ -652,7 +652,7 @@ typedef struct HB_PCODE_INFO_ /* compiled pcode container for macro compiler */
 {
    HB_BYTE * pCode;        /* pointer to a memory block where pcode is stored */
    HB_SIZE lPCodeSize;     /* total memory size for pcode */
-   HB_SIZE lPCodePos;      /* actual pcode offset */
+   HB_SIZE nPCodePos;      /* actual pcode offset */
    HB_BOOL fVParams;       /* function/codeblock with variable parameters */
    HB_CBVAR_PTR pLocals;
    struct HB_PCODE_INFO_ * pPrev;

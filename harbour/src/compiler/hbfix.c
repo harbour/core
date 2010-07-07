@@ -66,13 +66,13 @@ typedef HB_FIX_FUNC_ * HB_FIX_FUNC_PTR;
 
 static HB_FIX_FUNC( hb_p_pushblock )
 {
-   HB_BYTE * pLocal = &pFunc->pCode[ lPCodePos + 7 ];
+   HB_BYTE * pLocal = &pFunc->pCode[ nPCodePos + 7 ];
    HB_USHORT wVar;
 
    HB_SYMBOL_UNUSED( cargo );
 
    /* opcode + codeblock size + number of parameters + number of local variables */
-   wVar = HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 5 ] );
+   wVar = HB_PCODE_MKUSHORT( &pFunc->pCode[ nPCodePos + 5 ] );
 
    /* fix local variable's reference */
    while( wVar-- )
@@ -86,18 +86,18 @@ static HB_FIX_FUNC( hb_p_pushblock )
    /* only local variables used outside of a codeblock need fixing
     * skip the codeblock body
     */
-   return HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] );
+   return HB_PCODE_MKUSHORT( &pFunc->pCode[ nPCodePos + 1 ] );
 }
 
 static HB_FIX_FUNC( hb_p_pushblocklarge )
 {
-   HB_BYTE * pLocal = &pFunc->pCode[ lPCodePos + 8 ];
+   HB_BYTE * pLocal = &pFunc->pCode[ nPCodePos + 8 ];
    HB_USHORT wVar;
 
    HB_SYMBOL_UNUSED( cargo );
 
    /* opcode + codeblock size + number of parameters + number of local variables */
-   wVar = HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 6 ] );
+   wVar = HB_PCODE_MKUSHORT( &pFunc->pCode[ nPCodePos + 6 ] );
 
    /* fix local variable's reference */
    while( wVar-- )
@@ -111,12 +111,12 @@ static HB_FIX_FUNC( hb_p_pushblocklarge )
    /* only local variables used outside of a codeblock need fixing
     * skip the codeblock body
     */
-   return HB_PCODE_MKUINT24( &pFunc->pCode[ lPCodePos + 1 ] );
+   return HB_PCODE_MKUINT24( &pFunc->pCode[ nPCodePos + 1 ] );
 }
 
 static HB_FIX_FUNC( hb_p_localfix )
 {
-   HB_BYTE * pVar = &pFunc->pCode[ lPCodePos + 1 ];
+   HB_BYTE * pVar = &pFunc->pCode[ nPCodePos + 1 ];
    HB_SHORT iVar = HB_PCODE_MKSHORT( pVar );
 
    HB_SYMBOL_UNUSED( cargo );
@@ -131,7 +131,7 @@ static HB_FIX_FUNC( hb_p_localfix )
 static HB_FIX_FUNC( hb_p_localnearerr )
 {
    HB_SYMBOL_UNUSED( pFunc );
-   HB_SYMBOL_UNUSED( lPCodePos );
+   HB_SYMBOL_UNUSED( nPCodePos );
    /*
     * this code should never be executed because compiler should
     * generate only non size optimized HB_P_POPLOCAL pcodes

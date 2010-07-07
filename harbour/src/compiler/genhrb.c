@@ -61,7 +61,7 @@ static HB_SIZE hb_compHrbSize( HB_COMP_DECL, HB_ULONG * pulSymbols, HB_ULONG * p
       if( ( pFunc->funFlags & FUN_FILE_DECL ) == 0 )
       {
          ( * pulFunctions )++;
-         nSize += strlen( pFunc->szName ) + 5 + pFunc->lPCodePos; /* \0 + func_size[4] + function_body */
+         nSize += strlen( pFunc->szName ) + 5 + pFunc->nPCodePos; /* \0 + func_size[4] + function_body */
       }
       pFunc = pFunc->pNext;
    }
@@ -129,10 +129,10 @@ void hb_compGenBufPortObj( HB_COMP_DECL, HB_BYTE ** pBufPtr, HB_SIZE * pnSize )
          nLen = strlen( pFunc->szName ) + 1;
          memcpy( ptr, pFunc->szName, nLen );
          ptr += nLen;
-         HB_PUT_LE_UINT32( ptr, pFunc->lPCodePos );      /* function size */
+         HB_PUT_LE_UINT32( ptr, pFunc->nPCodePos );      /* function size */
          ptr += 4;
-         memcpy( ptr, pFunc->pCode, pFunc->lPCodePos );  /* function body */
-         ptr += pFunc->lPCodePos;
+         memcpy( ptr, pFunc->pCode, pFunc->nPCodePos );  /* function body */
+         ptr += pFunc->nPCodePos;
       }
       pFunc = pFunc->pNext;
    }

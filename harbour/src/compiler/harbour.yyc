@@ -5710,7 +5710,7 @@ yyreduce:
 #line 1034 "harbour.y"
     {  /* 3 */
                HB_CBVAR_PTR pVar;
-               (yyval.sNumber) = HB_COMP_PARAM->functions.pLast->lPCodePos;
+               (yyval.sNumber) = HB_COMP_PARAM->functions.pLast->nPCodePos;
                hb_compCodeBlockStart( HB_COMP_PARAM, HB_TRUE );
                HB_COMP_PARAM->functions.pLast->funFlags |= FUN_EXTBLOCK;
                HB_COMP_PARAM->functions.pLast->fVParams =
@@ -5740,8 +5740,8 @@ yyreduce:
                hb_compCodeBlockEnd( HB_COMP_PARAM );
                (yyval.asExpr) = hb_compExprSetCodeblockBody( (yyvsp[(1) - (5)].asExpr),
                      HB_COMP_PARAM->functions.pLast->pCode + (yyvsp[(3) - (5)].sNumber),
-                     HB_COMP_PARAM->functions.pLast->lPCodePos - (yyvsp[(3) - (5)].sNumber) );
-               HB_COMP_PARAM->functions.pLast->lPCodePos = (yyvsp[(3) - (5)].sNumber);
+                     HB_COMP_PARAM->functions.pLast->nPCodePos - (yyvsp[(3) - (5)].sNumber) );
+               HB_COMP_PARAM->functions.pLast->nPCodePos = (yyvsp[(3) - (5)].sNumber);
                HB_COMP_PARAM->lastLinePos = 0;
             ;}
     break;
@@ -6365,7 +6365,7 @@ yyreduce:
 #line 1503 "harbour.y"
     {
                   hb_compLoopHere( HB_COMP_PARAM );
-                  hb_compGenJump( (yyvsp[(1) - (5)].sNumber) - HB_COMP_PARAM->functions.pLast->lPCodePos, HB_COMP_PARAM );
+                  hb_compGenJump( (yyvsp[(1) - (5)].sNumber) - HB_COMP_PARAM->functions.pLast->nPCodePos, HB_COMP_PARAM );
                ;}
     break;
 
@@ -6383,7 +6383,7 @@ yyreduce:
   case 526:
 #line 1518 "harbour.y"
     {
-                  (yyval.sNumber) = HB_COMP_PARAM->functions.pLast->lPCodePos;
+                  (yyval.sNumber) = HB_COMP_PARAM->functions.pLast->nPCodePos;
                   hb_compLinePushIfInside( HB_COMP_PARAM );
                   ++HB_COMP_PARAM->functions.pLast->wWhileCounter;
                   hb_compLoopStart( HB_COMP_PARAM, HB_TRUE );
@@ -6422,7 +6422,7 @@ yyreduce:
   case 532:
 #line 1553 "harbour.y"
     {                                      /* 11 */
-                  (yyval.sNumber) = HB_COMP_PARAM->functions.pLast->lPCodePos;
+                  (yyval.sNumber) = HB_COMP_PARAM->functions.pLast->nPCodePos;
                ;}
     break;
 
@@ -6463,7 +6463,7 @@ yyreduce:
                      hb_compGenPCode1( HB_P_FORTEST, HB_COMP_PARAM );
                   }
 
-                  hb_compGenJumpFalse( (yyvsp[(11) - (12)].sNumber) - HB_COMP_PARAM->functions.pLast->lPCodePos, HB_COMP_PARAM );
+                  hb_compGenJumpFalse( (yyvsp[(11) - (12)].sNumber) - HB_COMP_PARAM->functions.pLast->nPCodePos, HB_COMP_PARAM );
                   hb_compLoopEnd( HB_COMP_PARAM );
                   if( hb_compExprAsSymbol( (yyvsp[(2) - (12)].asExpr) ) )
                      hb_compForEnd( HB_COMP_PARAM, hb_compExprAsSymbol( (yyvsp[(2) - (12)].asExpr) ) );
@@ -6544,7 +6544,7 @@ yyreduce:
                 hb_compEnumStart( HB_COMP_PARAM, (yyvsp[(2) - (6)].asExpr), (yyvsp[(4) - (6)].asExpr), (yyvsp[(6) - (6)].iNumber) );
 
                 hb_compLoopStart( HB_COMP_PARAM, HB_TRUE );
-                (yyval.sNumber) = HB_COMP_PARAM->functions.pLast->lPCodePos;
+                (yyval.sNumber) = HB_COMP_PARAM->functions.pLast->nPCodePos;
              ;}
     break;
 
@@ -6561,7 +6561,7 @@ yyreduce:
     {
                 hb_compLoopHere( HB_COMP_PARAM );
                 hb_compEnumNext( HB_COMP_PARAM, (yyvsp[(2) - (10)].asExpr), (yyvsp[(6) - (10)].iNumber) );
-                hb_compGenJump( (yyvsp[(7) - (10)].sNumber) - HB_COMP_PARAM->functions.pLast->lPCodePos, HB_COMP_PARAM );
+                hb_compGenJump( (yyvsp[(7) - (10)].sNumber) - HB_COMP_PARAM->functions.pLast->nPCodePos, HB_COMP_PARAM );
 
                 hb_compGenJumpHere( (yyvsp[(9) - (10)].sNumber), HB_COMP_PARAM );
                 hb_compLoopEnd( HB_COMP_PARAM );
@@ -6739,7 +6739,7 @@ yyreduce:
     {
                   HB_COMP_EXPR_FREE( hb_compExprGenPush( (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ) );
                   hb_compGenPCode1( HB_P_SEQBLOCK, HB_COMP_PARAM );
-                  (yyval.sNumber) = HB_COMP_PARAM->functions.pLast->lPCodePos;
+                  (yyval.sNumber) = HB_COMP_PARAM->functions.pLast->nPCodePos;
                ;}
     break;
 
@@ -6752,7 +6752,7 @@ yyreduce:
 #line 1828 "harbour.y"
     {
                   HB_COMP_PARAM->functions.pLast->funFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE );
-                  (yyval.sNumber) = HB_COMP_PARAM->functions.pLast->lPCodePos;
+                  (yyval.sNumber) = HB_COMP_PARAM->functions.pLast->nPCodePos;
                   ++HB_COMP_PARAM->functions.pLast->wAlwaysCounter;
                   hb_compSequenceAlways( HB_COMP_PARAM );
                ;}
@@ -6767,7 +6767,7 @@ yyreduce:
 #line 1842 "harbour.y"
     {
                   HB_COMP_PARAM->functions.pLast->funFlags &= ~ FUN_BREAK_CODE;
-                  (yyval.sNumber) = HB_COMP_PARAM->functions.pLast->lPCodePos;
+                  (yyval.sNumber) = HB_COMP_PARAM->functions.pLast->nPCodePos;
                   if( HB_COMP_PARAM->functions.pLast->wSeqCounter )
                      --HB_COMP_PARAM->functions.pLast->wSeqCounter;
                   hb_compLinePushIfInside( HB_COMP_PARAM );
@@ -6779,7 +6779,7 @@ yyreduce:
 #line 1853 "harbour.y"
     {
                   HB_COMP_PARAM->functions.pLast->funFlags &= ~ FUN_BREAK_CODE;
-                  (yyval.sNumber) = HB_COMP_PARAM->functions.pLast->lPCodePos;
+                  (yyval.sNumber) = HB_COMP_PARAM->functions.pLast->nPCodePos;
                   if( HB_COMP_PARAM->functions.pLast->wSeqCounter )
                      --HB_COMP_PARAM->functions.pLast->wSeqCounter;
                   hb_compLinePushIfInside( HB_COMP_PARAM );
@@ -6849,7 +6849,7 @@ yyreduce:
     {
                   hb_compLinePushIfInside( HB_COMP_PARAM );
                   HB_COMP_EXPR_FREE( hb_compExprGenPush( (yyvsp[(2) - (3)].asExpr), HB_COMP_PARAM ) );
-                  (yyval.sNumber) = HB_COMP_PARAM->functions.pLast->lPCodePos;
+                  (yyval.sNumber) = HB_COMP_PARAM->functions.pLast->nPCodePos;
                   hb_compGenPCode1( HB_P_WITHOBJECTSTART, HB_COMP_PARAM );
                   HB_COMP_PARAM->functions.pLast->wWithObjectCnt++;
                ;}
@@ -7135,7 +7135,7 @@ static void hb_compLoopStart( HB_COMP_DECL, HB_BOOL fCanLoop )
    else
       pFunc->pLoops = pLoop;
 
-   pLoop->ulOffset         = pFunc->lPCodePos;  /* store the start position */
+   pLoop->ulOffset         = pFunc->nPCodePos;  /* store the start position */
    pLoop->fCanLoop         = fCanLoop;    /* can we use LOOP inside */
    pLoop->wSeqCounter      = pFunc->wSeqCounter;      /* store current SEQUENCE counter */
    pLoop->wWithObjectCnt   = pFunc->wWithObjectCnt;   /* store current WITH OBJECT counter */
@@ -7237,7 +7237,7 @@ static void hb_compLoopLoop( HB_COMP_DECL )
             wWithObjectCnt++;
          }
          /* store the position to fix */
-         pLoop->ulOffset = pFunc->lPCodePos;
+         pLoop->ulOffset = pFunc->nPCodePos;
          hb_compGenJump( 0, HB_COMP_PARAM );
       }
    }
@@ -7293,7 +7293,7 @@ static void hb_compLoopExit( HB_COMP_DECL )
             wWithObjectCnt++;
          }
          /* store the position to fix */
-         pLoop->ulOffset = pFunc->lPCodePos;
+         pLoop->ulOffset = pFunc->nPCodePos;
          hb_compGenJump( 0, HB_COMP_PARAM );
       }
    }
@@ -7722,7 +7722,7 @@ static void hb_compSwitchStart( HB_COMP_DECL, HB_EXPR_PTR pExpr )
    pSwitch->pCases = NULL;
    pSwitch->pLast  = NULL;
    pSwitch->ulDefault = 0;
-   pSwitch->ulOffset = pFunc->lPCodePos;
+   pSwitch->ulOffset = pFunc->nPCodePos;
    pSwitch->pExpr = pExpr;
    pSwitch->pPrev = pFunc->pSwitch;
    pFunc->pSwitch = pSwitch;
@@ -7739,7 +7739,7 @@ static void hb_compSwitchAdd( HB_COMP_DECL, HB_EXPR_PTR pExpr )
    {
       /* normal CASE */
       pCase = (HB_SWITCHCASE_PTR) hb_xgrab( sizeof( HB_SWITCHCASE ) );
-      pCase->ulOffset = pFunc->lPCodePos;
+      pCase->ulOffset = pFunc->nPCodePos;
       pCase->pNext = NULL;
       pExpr = hb_compExprReduce( pExpr, HB_COMP_PARAM );
       if( !( hb_compExprIsLong( pExpr ) || hb_compExprIsString( pExpr ) ) )
@@ -7771,7 +7771,7 @@ static void hb_compSwitchAdd( HB_COMP_DECL, HB_EXPR_PTR pExpr )
       }
       else
       {
-         pFunc->pSwitch->ulDefault = pFunc->lPCodePos;
+         pFunc->pSwitch->ulDefault = pFunc->nPCodePos;
       }
    }
 }
@@ -7832,7 +7832,7 @@ static void hb_compSwitchEnd( HB_COMP_DECL )
       HB_BOOL fMacroText = ( HB_COMP_PARAM->supported & HB_COMPFLAG_MACROTEXT ) != 0;
 
       pExpr = hb_compExprGenPush( pExpr, HB_COMP_PARAM );
-      ulCountPos = pFunc->lPCodePos + 1;
+      ulCountPos = pFunc->nPCodePos + 1;
       hb_compGenPCode3( HB_P_SWITCH, 0, 0, HB_COMP_PARAM );
       HB_COMP_PARAM->fLongOptimize = HB_FALSE;
       HB_COMP_PARAM->supported &= ~HB_COMPFLAG_MACROTEXT;
@@ -8021,4 +8021,3 @@ void yyerror( HB_COMP_DECL, const char * s )
    else
       hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_YACC, s, HB_COMP_PARAM->pLex->lasttok );
 }
-

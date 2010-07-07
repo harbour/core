@@ -1545,11 +1545,11 @@ static void hb_compOptimizeJumps( HB_COMP_DECL )
          nNextByte++;
       }
 
-      nBytes2Copy = ( HB_COMP_PARAM->functions.pLast->lPCodePos - nNextByte ) ;
+      nBytes2Copy = ( HB_COMP_PARAM->functions.pLast->nPCodePos - nNextByte ) ;
       memmove( pCode + nOptimized, pCode + nNextByte, nBytes2Copy );
       nOptimized += nBytes2Copy;
 
-      HB_COMP_PARAM->functions.pLast->lPCodePos  = nOptimized;
+      HB_COMP_PARAM->functions.pLast->nPCodePos  = nOptimized;
       HB_COMP_PARAM->functions.pLast->lPCodeSize = nOptimized;
 
       hb_xfree( HB_COMP_PARAM->functions.pLast->pNOOPs );
@@ -1590,8 +1590,8 @@ static void hb_compOptimizeFrames( HB_COMP_DECL, PFUNCTION pFunc )
 /*       if( !( pFunc->funFlags & FUN_USES_STATICS ) ) */
          if( pFunc->pCode[ 8 ] == HB_P_ENDPROC )
          {
-            pFunc->lPCodePos -= 3;
-            memmove( pFunc->pCode + 5, pFunc->pCode + 8, pFunc->lPCodePos - 5 );
+            pFunc->nPCodePos -= 3;
+            memmove( pFunc->pCode + 5, pFunc->pCode + 8, pFunc->nPCodePos - 5 );
          }
          else /* Check Global Statics. */
          {
@@ -1653,7 +1653,7 @@ static void hb_compOptimizeFrames( HB_COMP_DECL, PFUNCTION pFunc )
              * make a room for HB_P_LARGE[V]FRAME
              */
             hb_compGenPCode1( 0, HB_COMP_PARAM );
-            memmove( pFunc->pCode + 4, pFunc->pCode + 3, pFunc->lPCodePos - 4 );
+            memmove( pFunc->pCode + 4, pFunc->pCode + 3, pFunc->nPCodePos - 4 );
             pFunc->pCode[ 0 ] = HB_P_LARGEFRAME;
             pFunc->pCode[ 1 ] = HB_LOBYTE( iLocals );
             pFunc->pCode[ 2 ] = HB_HIBYTE( iLocals );
@@ -1678,13 +1678,13 @@ static void hb_compOptimizeFrames( HB_COMP_DECL, PFUNCTION pFunc )
       {
          if( bSkipSFRAME )
          {
-            pFunc->lPCodePos -= 6;
-            memmove( pFunc->pCode, pFunc->pCode + 6, pFunc->lPCodePos );
+            pFunc->nPCodePos -= 6;
+            memmove( pFunc->pCode, pFunc->pCode + 6, pFunc->nPCodePos );
          }
          else
          {
-            pFunc->lPCodePos -= 3;
-            memmove( pFunc->pCode, pFunc->pCode + 3, pFunc->lPCodePos );
+            pFunc->nPCodePos -= 3;
+            memmove( pFunc->pCode, pFunc->pCode + 3, pFunc->nPCodePos );
          }
       }
       else
@@ -1694,9 +1694,9 @@ static void hb_compOptimizeFrames( HB_COMP_DECL, PFUNCTION pFunc )
 
          if( bSkipSFRAME )
          {
-            pFunc->lPCodePos -= 3;
+            pFunc->nPCodePos -= 3;
             memmove( pFunc->pCode + 3 + iOffset, pFunc->pCode + 6 + iOffset,
-                     pFunc->lPCodePos - 3 - iOffset );
+                     pFunc->nPCodePos - 3 - iOffset );
          }
       }
    }
@@ -2250,7 +2250,7 @@ static void hb_compPrepareJumps( HB_COMP_DECL )
       pFunc->pJumps = ( HB_SIZE * ) hb_xrealloc( pFunc->pJumps, sizeof( HB_SIZE ) * ( pFunc->iJumps + 1 ) );
    else
       pFunc->pJumps = ( HB_SIZE * ) hb_xgrab( sizeof( HB_SIZE ) );
-   pFunc->pJumps[ pFunc->iJumps++ ] = ( HB_SIZE ) ( pFunc->lPCodePos - 4 );
+   pFunc->pJumps[ pFunc->iJumps++ ] = ( HB_SIZE ) ( pFunc->nPCodePos - 4 );
 }
 
 HB_SIZE hb_compGenJump( HB_ISIZ nOffset, HB_COMP_DECL )
@@ -2261,7 +2261,7 @@ HB_SIZE hb_compGenJump( HB_ISIZ nOffset, HB_COMP_DECL )
    hb_compGenPCode4( HB_P_JUMPFAR, HB_LOBYTE( nOffset ), HB_HIBYTE( nOffset ), ( HB_BYTE ) ( ( nOffset >> 16 ) & 0xFF ), HB_COMP_PARAM );
    hb_compPrepareJumps( HB_COMP_PARAM );
 
-   return HB_COMP_PARAM->functions.pLast->lPCodePos - 3;
+   return HB_COMP_PARAM->functions.pLast->nPCodePos - 3;
 }
 
 HB_SIZE hb_compGenJumpFalse( HB_ISIZ nOffset, HB_COMP_DECL )
@@ -2272,7 +2272,7 @@ HB_SIZE hb_compGenJumpFalse( HB_ISIZ nOffset, HB_COMP_DECL )
    hb_compGenPCode4( HB_P_JUMPFALSEFAR, HB_LOBYTE( nOffset ), HB_HIBYTE( nOffset ), ( HB_BYTE ) ( ( nOffset >> 16 ) & 0xFF ), HB_COMP_PARAM );
    hb_compPrepareJumps( HB_COMP_PARAM );
 
-   return HB_COMP_PARAM->functions.pLast->lPCodePos - 3;
+   return HB_COMP_PARAM->functions.pLast->nPCodePos - 3;
 }
 
 HB_SIZE hb_compGenJumpTrue( HB_ISIZ nOffset, HB_COMP_DECL )
@@ -2283,7 +2283,7 @@ HB_SIZE hb_compGenJumpTrue( HB_ISIZ nOffset, HB_COMP_DECL )
    hb_compGenPCode4( HB_P_JUMPTRUEFAR, HB_LOBYTE( nOffset ), HB_HIBYTE( nOffset ), ( HB_BYTE ) ( ( nOffset >> 16 ) & 0xFF ), HB_COMP_PARAM );
    hb_compPrepareJumps( HB_COMP_PARAM );
 
-   return HB_COMP_PARAM->functions.pLast->lPCodePos - 3;
+   return HB_COMP_PARAM->functions.pLast->nPCodePos - 3;
 }
 
 void hb_compGenJumpThere( HB_SIZE nFrom, HB_SIZE nTo, HB_COMP_DECL )
@@ -2301,7 +2301,7 @@ void hb_compGenJumpThere( HB_SIZE nFrom, HB_SIZE nTo, HB_COMP_DECL )
 
 void hb_compGenJumpHere( HB_SIZE nOffset, HB_COMP_DECL )
 {
-   hb_compGenJumpThere( nOffset, HB_COMP_PARAM->functions.pLast->lPCodePos, HB_COMP_PARAM );
+   hb_compGenJumpThere( nOffset, HB_COMP_PARAM->functions.pLast->nPCodePos, HB_COMP_PARAM );
 }
 
 void hb_compLinePush( HB_COMP_DECL ) /* generates the pcode with the currently compiled source code line */
@@ -2311,14 +2311,14 @@ void hb_compLinePush( HB_COMP_DECL ) /* generates the pcode with the currently c
       if( HB_COMP_PARAM->fDebugInfo && HB_COMP_PARAM->lastModule != HB_COMP_PARAM->currModule )
       {
          if( HB_COMP_PARAM->functions.pLast->pCode[ HB_COMP_PARAM->lastLinePos ] == HB_P_LINE &&
-             HB_COMP_PARAM->functions.pLast->lPCodePos - HB_COMP_PARAM->lastLinePos == 3 )
-            HB_COMP_PARAM->functions.pLast->lPCodePos -= 3;
+             HB_COMP_PARAM->functions.pLast->nPCodePos - HB_COMP_PARAM->lastLinePos == 3 )
+            HB_COMP_PARAM->functions.pLast->nPCodePos -= 3;
          hb_compGenModuleName( HB_COMP_PARAM, NULL );
       }
 
       if( HB_COMP_PARAM->currLine != HB_COMP_PARAM->lastLine )
       {
-         if( HB_COMP_PARAM->functions.pLast->lPCodePos - HB_COMP_PARAM->lastLinePos == 3 &&
+         if( HB_COMP_PARAM->functions.pLast->nPCodePos - HB_COMP_PARAM->lastLinePos == 3 &&
              HB_COMP_PARAM->functions.pLast->pCode[ HB_COMP_PARAM->lastLinePos ] == HB_P_LINE )
          {
             HB_COMP_PARAM->functions.pLast->pCode[ HB_COMP_PARAM->lastLinePos + 1 ] = HB_LOBYTE( HB_COMP_PARAM->currLine );
@@ -2326,7 +2326,7 @@ void hb_compLinePush( HB_COMP_DECL ) /* generates the pcode with the currently c
          }
          else
          {
-            HB_COMP_PARAM->lastLinePos = HB_COMP_PARAM->functions.pLast->lPCodePos;
+            HB_COMP_PARAM->lastLinePos = HB_COMP_PARAM->functions.pLast->nPCodePos;
             hb_compGenPCode3( HB_P_LINE, HB_LOBYTE( HB_COMP_PARAM->currLine ),
                                          HB_HIBYTE( HB_COMP_PARAM->currLine ), HB_COMP_PARAM );
          }
@@ -3093,8 +3093,8 @@ static void hb_compRemovePCODE( HB_COMP_DECL, HB_SIZE nPos, HB_SIZE nCount,
    else
    {
       memmove( pFunc->pCode + nPos, pFunc->pCode + nPos + nCount,
-               pFunc->lPCodePos - nPos - nCount );
-      pFunc->lPCodePos -= nCount;
+               pFunc->nPCodePos - nPos - nCount );
+      pFunc->nPCodePos -= nCount;
 
       for( n = pFunc->iNOOPs; n; --n )
       {
@@ -3168,7 +3168,7 @@ HB_SIZE hb_compSequenceBegin( HB_COMP_DECL )
    hb_compGenPCode4( HB_P_SEQBEGIN, 0, 0, 0, HB_COMP_PARAM );
    hb_compPrepareJumps( HB_COMP_PARAM );
 
-   return HB_COMP_PARAM->functions.pLast->lPCodePos - 3;
+   return HB_COMP_PARAM->functions.pLast->nPCodePos - 3;
 }
 
 /* Generate the opcode to close BEGIN/END sequence
@@ -3184,7 +3184,7 @@ HB_SIZE hb_compSequenceEnd( HB_COMP_DECL )
 
    hb_compPrepareJumps( HB_COMP_PARAM );
 
-   return HB_COMP_PARAM->functions.pLast->lPCodePos - 3;
+   return HB_COMP_PARAM->functions.pLast->nPCodePos - 3;
 }
 
 HB_SIZE hb_compSequenceAlways( HB_COMP_DECL )
@@ -3193,7 +3193,7 @@ HB_SIZE hb_compSequenceAlways( HB_COMP_DECL )
 
    hb_compPrepareJumps( HB_COMP_PARAM );
 
-   return HB_COMP_PARAM->functions.pLast->lPCodePos - 3;
+   return HB_COMP_PARAM->functions.pLast->nPCodePos - 3;
 }
 
 /* Remove unnecessary opcodes in case there were no executable statements
@@ -3211,7 +3211,7 @@ void hb_compSequenceFinish( HB_COMP_DECL, HB_SIZE nStartPos, HB_SIZE nEndPos,
       if( nAlways )
       {
          /* remove HB_P_ALWAYSEND opcode */
-         HB_COMP_PARAM->functions.pLast->lPCodePos--;
+         HB_COMP_PARAM->functions.pLast->nPCodePos--;
          /* remove HB_P_SEQALWAYS ... HB_P_ALWAYSBEGIN opcodes */
          hb_compRemovePCODE( HB_COMP_PARAM, nStartPos,
                              nAlways - nStartPos + 4, fCanMove );
@@ -3219,7 +3219,7 @@ void hb_compSequenceFinish( HB_COMP_DECL, HB_SIZE nStartPos, HB_SIZE nEndPos,
       else
       {
          hb_compRemovePCODE( HB_COMP_PARAM, nStartPos,
-                             HB_COMP_PARAM->functions.pLast->lPCodePos -
+                             HB_COMP_PARAM->functions.pLast->nPCodePos -
                              nStartPos, fCanMove );
       }
       HB_COMP_PARAM->lastLinePos = nStartPos - 3;
@@ -3244,7 +3244,7 @@ void hb_compSequenceFinish( HB_COMP_DECL, HB_SIZE nStartPos, HB_SIZE nEndPos,
          }
       }
       /* empty always block? */
-      if( HB_COMP_PARAM->functions.pLast->lPCodePos - nAlways == 5 &&
+      if( HB_COMP_PARAM->functions.pLast->nPCodePos - nAlways == 5 &&
           !HB_COMP_PARAM->fDebugInfo )
       {
          /* remove HB_P_ALWAYSBEGIN and HB_P_ALWAYSEND opcodes */
@@ -3519,7 +3519,7 @@ void hb_compCodeBlockEnd( HB_COMP_DECL )
    }
    wLocalsCnt = wLocals;
 
-   nSize = pCodeblock->lPCodePos + 2;
+   nSize = pCodeblock->nPCodePos + 2;
    if( HB_COMP_PARAM->fDebugInfo )
    {
       nSize += 3 + strlen( HB_COMP_PARAM->currModule ) + strlen( pFuncName );
@@ -3577,7 +3577,7 @@ void hb_compCodeBlockEnd( HB_COMP_DECL )
 
    }
 
-   hb_compGenPCodeN( pCodeblock->pCode, pCodeblock->lPCodePos, HB_COMP_PARAM );
+   hb_compGenPCodeN( pCodeblock->pCode, pCodeblock->nPCodePos, HB_COMP_PARAM );
 
    if( HB_COMP_PARAM->iWarnings )
    {
@@ -3631,7 +3631,7 @@ void hb_compCodeBlockStop( HB_COMP_DECL )
     * codeblock was defined
     */
    HB_COMP_PARAM->functions.pLast = pCodeblock->pOwner;
-   hb_compGenPCodeN( pCodeblock->pCode, pCodeblock->lPCodePos, HB_COMP_PARAM );
+   hb_compGenPCodeN( pCodeblock->pCode, pCodeblock->nPCodePos, HB_COMP_PARAM );
 
    if( HB_COMP_PARAM->iWarnings )
    {
@@ -3656,7 +3656,7 @@ void hb_compCodeBlockRewind( HB_COMP_DECL )
    PFUNCTION pCodeblock;   /* pointer to the current codeblock */
 
    pCodeblock = HB_COMP_PARAM->functions.pLast;
-   pCodeblock->lPCodePos = 0;
+   pCodeblock->nPCodePos = 0;
 
    /* Release the NOOP array. */
    if( pCodeblock->pNOOPs )
