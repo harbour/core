@@ -1510,21 +1510,22 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
 static int hb_pp_tokenStr( PHB_PP_TOKEN pToken, PHB_MEM_BUFFER pBuffer,
                            HB_BOOL fSpaces, HB_BOOL fQuote, HB_USHORT ltype )
 {
-   int iLines = 0, iSpace = fSpaces ? pToken->spaces : 0;
+   int iLines = 0;
+   HB_ISIZ nSpace = fSpaces ? pToken->spaces : 0;
 
    /* This is workaround for stringify token list and later decoding by FLEX
       which breaks Clipper compatible code */
-   if( iSpace == 0 && fQuote && ltype &&
+   if( nSpace == 0 && fQuote && ltype &&
        ltype >= HB_PP_TOKEN_ASSIGN && ltype != HB_PP_TOKEN_EQ &&
        HB_PP_TOKEN_TYPE( pToken->type ) >= HB_PP_TOKEN_ASSIGN &&
        HB_PP_TOKEN_TYPE( pToken->type ) != HB_PP_TOKEN_EQ )
-      iSpace = 1;
+      nSpace = 1;
 
-   if( iSpace > 0 )
+   if( nSpace > 0 )
    {
       do
          hb_membufAddCh( pBuffer, ' ' );
-      while( --iSpace );
+      while( --nSpace );
    }
 
    if( HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_STRING )
