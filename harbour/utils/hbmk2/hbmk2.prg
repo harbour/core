@@ -9724,6 +9724,10 @@ STATIC PROCEDURE convert_hbmake_to_hbp( hbmk, cSrcName, cDstName )
       cDstName := FN_ExtSet( cSrcName, ".hbp" )
    ENDIF
 
+   AAdd( aDst, "# Automatically converted by hbmk2 from hbmake project:" )
+   AAdd( aDst, cSrcName )
+   AAdd( aDst, "" )
+
    cSrc := StrTran( cSrc, Chr( 13 ) + Chr( 10 ), Chr( 10 ) )
    cSrc := StrTran( cSrc, Chr( 9 ), " " )
 
@@ -9851,6 +9855,10 @@ STATIC PROCEDURE convert_xbp_to_hbp( hbmk, cSrcName, cDstName )
       cDstName := FN_ExtSet( cSrcName, ".hbp" )
    ENDIF
 
+   AAdd( aDst, "# Automatically converted by hbmk2 from xbuild project:" )
+   AAdd( aDst, cSrcName )
+   AAdd( aDst, "" )
+
    cSrc := StrTran( cSrc, Chr( 13 ) + Chr( 10 ), Chr( 10 ) )
    cSrc := StrTran( cSrc, Chr( 9 ), " " )
 
@@ -9970,6 +9978,10 @@ STATIC PROCEDURE convert_xhp_to_hbp( hbmk, cSrcName, cDstName )
    IF Empty( cDstName )
       cDstName := FN_ExtSet( cSrcName, ".hbp" )
    ENDIF
+
+   AAdd( aDst, "# Automatically converted by hbmk2 from xMate project:" )
+   AAdd( aDst, cSrcName )
+   AAdd( aDst, "" )
 
    cSrc := StrTran( cSrc, Chr( 13 ) + Chr( 10 ), Chr( 10 ) )
    cSrc := StrTran( cSrc, Chr( 9 ), " " )

@@ -820,24 +820,40 @@ METHOD IdeProjManager:buildInterface()
 
 METHOD IdeProjManager:synchronizeAlienProject( cProjFileName )
    LOCAL cPath, cFile, cExt, cHbp
+   LOCAL cExeHbMk2
 
    hb_fNameSplit( cProjFileName, @cPath, @cFile, @cExt )
    IF lower( cExt ) == ".hbp"              /* Nothing to do */
       RETURN cProjFileName
    ENDIF
 
-   IF !( lower( cExt ) $ ".xhp" )          /* Not a valid alien project file */
+   IF !( lower( cExt ) $ ".xhp|.xbp" )          /* Not a valid alien project file */
       RETURN ""
    ENDIF
 
    cHbp := cPath + cFile + ".hbp"
    IF hb_fileExists( cHbp )
-      IF ! hbide_getYesNo( "A .hbp with convered name already exists, overwrite ?", "", "Project exists" )
+      IF ! hbide_getYesNo( "A .hbp with converted name already exists, overwrite?", "", "Project exists" )
          RETURN ""
       ENDIF
    ENDIF
 
-   convert_xhp_to_hbp( cProjFileName, cHbp )
+   cExeHbMk2 := "hbmk2"
+   IF ! Empty( ::oIDE:oINI:cPathMk2 )
+      cExeHbMk2 := hbide_DirAddPathSep( ::oIDE:oINI:cPathMk2 ) + cExeHbMk2
+   ENDIF
+
+   SWITCH lower( cExt )
+   CASE ".xhp"
+      hb_processRun( cExeHbMk2 + " -xhp=" + cProjFileName )
+      EXIT
+   CASE ".xbp"
+      hb_processRun( cExeHbMk2 + " -xbp=" + cProjFileName )
+      EXIT
+   CASE "???"
+      hb_processRun( cExeHbMk2 + " -hbmake=" + cProjFileName )
+      EXIT
+   ENDSWITCH
 
    RETURN cHbp
 
@@ -1376,7 +1392,6 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
    aadd( aHbp, "-info"       )
    aadd( aHbp, "-lang=en"    )
    aadd( aHbp, "-width=512"  )
-// aadd( aHbp, "-plugin=" + hb_dirBase() + "???/hbmk2_plugin_ui.prg" )
    IF lRebuild
       aadd( aHbp, "-rebuild" )
    ENDIF
