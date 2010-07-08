@@ -387,7 +387,9 @@ REQUEST hbmk_KEYW
 #define _HBMK_hAUTOHBC          109
 #define _HBMK_hAUTOHBCFOUND     110
 
-#define _HBMK_MAX_              110
+#define _HBMK_aDEPTHBC          111
+
+#define _HBMK_MAX_              111
 
 #define _HBMK_DEP_CTRL_MARKER   ".control." /* must be an invalid path */
 
@@ -758,6 +760,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    LOCAL lAcceptLDClipper := .F.
    LOCAL lAcceptIFlag := .F.
    LOCAL lHarbourInfo := .F.
+   LOCAL lDumpReferences := .F.
 
    LOCAL nHarbourPPO := 0
    LOCAL cHarbourOutputExt
@@ -839,6 +842,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    hbmk[ _HBMK_hDEP ] := { => }
    hbmk[ _HBMK_hAUTOHBC ] := { => }
    hbmk[ _HBMK_hAUTOHBCFOUND ] := { => }
+   hbmk[ _HBMK_aDEPTHBC ] := {}
 
    hb_HSetCaseMatch( hbmk[ _HBMK_hDEP ], .F. )
 
@@ -1830,6 +1834,10 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       CASE cParamL == "--hbdirinc"       ; lStopAfterInit := .T.
 
          OutStd( l_cHB_INC_INSTALL )
+
+      CASE cParamL == "--hbrefs"
+
+         lDumpReferences := .T.
 
       CASE Left( cParamL, Len( "-jobs=" ) ) == "-jobs="
 
@@ -4149,6 +4157,17 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          ENDIF
          RETURN 10
       ENDIF
+   ENDIF
+
+   /* Dump hbmk2 dependencies */
+
+   IF lDumpReferences
+      OutStd( "{{" + hb_eol() )
+      FOR EACH tmp IN hbmk[ _HBMK_aDEPTHBC ]
+         OutStd( PathSepToForward( PathNormalize( tmp ) ) + hb_eol() )
+      NEXT
+      OutStd( "}}" + hb_eol() )
+      RETURN 0
    ENDIF
 
    /* Harbour compilation */
@@ -7683,6 +7702,8 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
       RETURN .F.
    ENDIF
 
+   AAddNew( hbmk[ _HBMK_aDEPTHBC ], cFileName )
+
    cFile := MemoRead( cFileName ) /* NOTE: Intentionally using MemoRead() which handles EOF char. */
 
    IF !( hb_eol() == _CHR_EOL )
@@ -10302,6 +10323,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "--hbdirdyn"         , I_( "output Harbour dynamic library directory" ) },;
       { "--hbdirlib"         , I_( "output Harbour static library directory" ) },;
       { "--hbdirinc"         , I_( "output Harbour header directory" ) },;
+      { "--hbref"            , I_( "output Harbour references. The output is preceded by '{{' and closed by '}}' lines. The reference paths always contain forward slashes." ) },;
       NIL,;
       { "-plat[form]=<plat>" , I_( "select target platform." ) },;
       { "-comp[iler]=<comp>" , I_( "select C compiler.\nSpecial value:\n - bld: use original build settings (default on *nix)" ) },;
