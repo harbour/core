@@ -69,6 +69,17 @@
 
 /*----------------------------------------------------------------------*/
 
+FUNCTION hbide_setAppTheme( aTheme )
+   LOCAL oTheme
+   STATIC sTheme
+   oTheme := sTheme
+   IF hb_isArray( aTheme )
+      sTheme := aTheme
+   ENDIF
+   RETURN oTheme
+
+/*----------------------------------------------------------------------*/
+
 FUNCTION GetStyleSheet( cWidget, nMode )
    LOCAL txt_:= {}
    LOCAL s   := ""
@@ -487,7 +498,11 @@ STATIC FUNCTION hbide_loadIdeTheme( nTheme )
    //
    DO CASE
    CASE nTheme == 1
-      RETURN { {0,255,255,255}, {0.25,219,230,244}, {0.5,201,217,237}, {0.75,231,242,255} }
+      IF empty( hbide_setAppTheme() )
+         RETURN { {0,255,255,255}, {0.25,219,230,244}, {0.5,201,217,237}, {0.75,231,242,255} }
+      ELSE
+         RETURN hbide_setAppTheme()
+      ENDIF
    CASE nTheme == 2
       RETURN { {0,173,185,207}, {1,199,212,231} }
    ENDCASE

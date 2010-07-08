@@ -1996,6 +1996,40 @@ FUNCTION hbide_parseKeywordsComponents( cStr )
 
 /*----------------------------------------------------------------------*/
 
+FUNCTION hbide_parseThemeComponent( cComponent )
+   LOCAL i, a_, n
+
+   a_:= hb_aTokens( cComponent, "," )
+
+   aSize( a_, 6 )
+   DEFAULT a_[ 1 ] TO ""
+   DEFAULT a_[ 2 ] TO ""
+   DEFAULT a_[ 3 ] TO ""
+   DEFAULT a_[ 4 ] TO ""
+   DEFAULT a_[ 5 ] TO ""
+   DEFAULT a_[ 6 ] TO ""
+   a_[ 1 ] := alltrim( a_[ 1 ] )
+   a_[ 2 ] := alltrim( a_[ 2 ] )
+   a_[ 3 ] := alltrim( a_[ 3 ] )
+   a_[ 4 ] := alltrim( a_[ 4 ] )
+   a_[ 5 ] := alltrim( a_[ 5 ] )
+   a_[ 6 ] := alltrim( a_[ 6 ] )
+
+   FOR i := 2 TO 6
+      IF !empty( a_[ i ] )
+         a_[ i ] := hb_aTokens( a_[ i ], " " )
+         FOR EACH n IN a_[ i ]
+            n := val( n )
+         NEXT
+      ELSE
+         a_[ i ] := {}
+      ENDIF
+   NEXT
+
+   RETURN a_
+
+/*----------------------------------------------------------------------*/
+
 FUNCTION hbide_SetWrkFolderLast( cPathFile )
    LOCAL cPth, cOldPath
 

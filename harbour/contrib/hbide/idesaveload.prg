@@ -847,6 +847,7 @@ CLASS IdeSetup INHERIT IdeObject
    METHOD fetchThemeColorsString( nSlot )
    METHOD pushThemeColors( nTheme )
    METHOD pushThemesData()
+   METHOD getThemeData( nTheme )
 
    ENDCLASS
 
@@ -903,7 +904,7 @@ METHOD IdeSetup:setIcons()
 
    ::oUI:q_buttonThmAdd        : setIcon( hbide_image( "dc_plus"   ) )
    ::oUI:q_buttonThmDel        : setIcon( hbide_image( "dc_delete" ) )
-   ::oUI:q_buttonThmCpy        : setIcon( hbide_image( "copy"      ) )
+   ::oUI:q_buttonThmApp        : setIcon( hbide_image( "copy"      ) )
    ::oUI:q_buttonThmSav        : setIcon( hbide_image( "save"      ) )
 
    RETURN Self
@@ -934,6 +935,23 @@ METHOD IdeSetup:disConnectSlots()
    ::disconnect( ::oUI:q_checkHilightLine, "stateChanged(int)"        )
    ::disconnect( ::oUI:q_checkHorzRuler  , "stateChanged(int)"        )
    ::disconnect( ::oUI:q_checkLineNumbers, "stateChanged(int)"        )
+
+   ::disconnect( ::oUI:q_sliderRed       , "valueChanged(int)"        )
+   ::disconnect( ::oUI:q_sliderGreen     , "valueChanged(int)"        )
+   ::disconnect( ::oUI:q_sliderBlue      , "valueChanged(int)"        )
+
+   ::disconnect( ::oUI:q_radioSec1       , "clicked()"                )
+   ::disconnect( ::oUI:q_radioSec2       , "clicked()"                )
+   ::disconnect( ::oUI:q_radioSec3       , "clicked()"                )
+   ::disconnect( ::oUI:q_radioSec4       , "clicked()"                )
+   ::disconnect( ::oUI:q_radioSec5       , "clicked()"                )
+
+   ::disconnect( ::oUI:q_buttonThmAdd    , "clicked()"                )
+   ::disconnect( ::oUI:q_buttonThmDel    , "clicked()"                )
+   ::disconnect( ::oUI:q_buttonThmApp    , "clicked()"                )
+   ::disconnect( ::oUI:q_buttonThmSav    , "clicked()"                )
+
+   ::disconnect( ::oUI:q_listThemes      , "currentRowChanged(int)"   )
 
    RETURN Self
 
@@ -976,7 +994,7 @@ METHOD IdeSetup:connectSlots()
 
    ::connect( ::oUI:q_buttonThmAdd    , "clicked()"               , {| | ::execEvent( "buttonThmAdd_clicked"              ) } )
    ::connect( ::oUI:q_buttonThmDel    , "clicked()"               , {| | ::execEvent( "buttonThmDel_clicked"              ) } )
-   ::connect( ::oUI:q_buttonThmCpy    , "clicked()"               , {| | ::execEvent( "buttonThmCpy_clicked"              ) } )
+   ::connect( ::oUI:q_buttonThmApp    , "clicked()"               , {| | ::execEvent( "buttonThmApp_clicked"              ) } )
    ::connect( ::oUI:q_buttonThmSav    , "clicked()"               , {| | ::execEvent( "buttonThmSav_clicked"              ) } )
 
    ::connect( ::oUI:q_listThemes      , "currentRowChanged(int)"  , {|i| ::execEvent( "listThemes_currentRowChanged", i   ) } )
@@ -1018,9 +1036,9 @@ METHOD IdeSetup:retrieve()
    s := substr( s, 1, len( s ) - 1 )
    ::oINI:cTextFileExtensions := s
 
-   ::oINI:nTmpBkpPrd := val( ::oUI:q_editTmpBkpPrd : text() )
-   ::oINI:cBkpPath   := ::oUI:q_editBkpPath   : text()
-   ::oINI:cBkpSuffix := ::oUI:q_editBkpSuffix : text()
+   ::oINI:nTmpBkpPrd          := val( ::oUI:q_editTmpBkpPrd : text() )
+   ::oINI:cBkpPath            := ::oUI:q_editBkpPath        : text()
+   ::oINI:cBkpSuffix          := ::oUI:q_editBkpSuffix      : text()
    ::oINI:lCompletionWithArgs := ::oUI:q_checkListlWithArgs : isChecked()
    ::oINI:lCompleteArgumented := ::oUI:q_checkCmplInclArgs  : isChecked()
 
@@ -1096,9 +1114,9 @@ METHOD IdeSetup:populate()
    ::oUI:q_editSec1:setReadOnly( .t. )
    ::oUI:q_editSec5:setReadOnly( .t. )
 
-   ::pushThemesData()
-
    ::connectSlots()
+
+   ::pushThemesData()
 
    RETURN Self
 
@@ -1355,7 +1373,11 @@ METHOD IdeSetup:execEvent( cEvent, p, p1 )
          ::oUI:q_listThemes:setCurrentRow( len( ::oINI:aAppThemes ) - 1 )
       ENDIF
       EXIT
-   CASE "buttonThmCpy_clicked"
+   CASE "buttonThmApp_clicked"
+      IF ( n := ::oUI:q_listThemes:currentRow() ) > -1
+         hbide_setAppTheme( ::getThemeData( n + 1 ) )
+         ::oDK:animateComponents( HBIDE_ANIMATION_GRADIENT )
+      ENDIF
       EXIT
    CASE "buttonThmDel_clicked"
       EXIT
@@ -1375,14 +1397,18 @@ METHOD IdeSetup:execEvent( cEvent, p, p1 )
 METHOD IdeSetup:pushThemesData()
    LOCAL s, a_, qItem
 
-   FOR EACH s IN ::oINI:aAppThemes
-      a_:= hb_aTokens( s, "," )
-      qItem := QListWidgetItem():new()
-      qItem:setText( a_[ 1 ] )
-      ::oUI:q_listThemes:addItem_1( qItem )
-      ::pushThemeColors( s:__enumIndex() )
-   NEXT
+   IF ::nCurThemeSlot == 0
+      FOR EACH s IN ::oINI:aAppThemes
+         a_:= hb_aTokens( s, "," )
+         qItem := QListWidgetItem():new()
+         qItem:setText( a_[ 1 ] )
+         ::oUI:q_listThemes:addItem_1( qItem )
+         ::pushThemeColors( s:__enumIndex() )
+      NEXT
+   ENDIF
    IF !empty( ::oINI:aAppThemes )
+      ::oUI:q_listThemes:setCurrentRow( -1 )
+      ::oUI:q_listThemes:setCurrentRow( len( ::oINI:aAppThemes ) - 1 )
       ::oUI:q_listThemes:setCurrentRow( 0 )
    ENDIF
    ::oUI:q_radioSec1:click()
@@ -1390,6 +1416,23 @@ METHOD IdeSetup:pushThemesData()
    RETURN Self
 
 /*------------------------------------------------------------------------*/
+
+METHOD IdeSetup:getThemeData( nTheme )
+   LOCAL a_, i, aTheme := {}
+
+   IF nTheme >= 1 .AND. nTheme <= len( ::oINI:aAppThemes )
+      a_:= hbide_parseThemeComponent( ::oINI:aAppThemes[ nTheme ] )
+
+      FOR i := 2 TO 6
+         IF !empty( a_[ i ] )
+            aadd( aTheme, a_[ i ] )
+         ENDIF
+      NEXT
+   ENDIF
+
+   RETURN aTheme
+
+/*----------------------------------------------------------------------*/
 
 METHOD IdeSetup:pushThemeColors( nTheme )
    LOCAL n, a_, i, aRGB, nSlot
@@ -1412,6 +1455,7 @@ METHOD IdeSetup:pushThemeColors( nTheme )
                n := val( n )
             NEXT
             { ::oUI:q_editSec1, ::oUI:q_editSec2, ::oUI:q_editSec3, ::oUI:q_editSec4, ::oUI:q_editSec5 }[ nSlot ]:setText( hb_ntos( aRGB[ 1 ] ) )
+
             ::populateThemeColors( nSlot, { aRGB[ 2 ], aRGB[ 3 ], aRGB[ 4 ] } )
          ENDIF
       NEXT
@@ -1423,10 +1467,14 @@ METHOD IdeSetup:pushThemeColors( nTheme )
 /*------------------------------------------------------------------------*/
 
 METHOD IdeSetup:populateThemeColors( nSlot, aRGB )
+   LOCAL qFrame
 
    { ::oUI:q_editR1, ::oUI:q_editR2, ::oUI:q_editR3, ::oUI:q_editR4, ::oUI:q_editR5 }[ nSlot ]:setText( hb_ntos( aRGB[ 1 ] ) )
    { ::oUI:q_editG1, ::oUI:q_editG2, ::oUI:q_editG3, ::oUI:q_editG4, ::oUI:q_editG5 }[ nSlot ]:setText( hb_ntos( aRGB[ 2 ] ) )
    { ::oUI:q_editB1, ::oUI:q_editB2, ::oUI:q_editB3, ::oUI:q_editB4, ::oUI:q_editB5 }[ nSlot ]:setText( hb_ntos( aRGB[ 3 ] ) )
+
+   qFrame := { ::oUI:q_frameSec1, ::oUI:q_frameSec2, ::oUI:q_frameSec3, ::oUI:q_frameSec4, ::oUI:q_frameSec5 }[ nSlot ]
+   qFrame:setStyleSheet( "background-color: " + hbide_rgbString( aRGB ) + ";" )
 
    RETURN Self
 

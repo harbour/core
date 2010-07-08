@@ -1649,6 +1649,9 @@
         <height>123</height>
        </rect>
       </property>
+      <property name="toolTip">
+       <string>Horizontal Gradient</string>
+      </property>
       <property name="frameShape">
        <enum>QFrame::StyledPanel</enum>
       </property>
@@ -1664,6 +1667,9 @@
         <width>135</width>
         <height>123</height>
        </rect>
+      </property>
+      <property name="toolTip">
+       <string>Vertical Gradient</string>
       </property>
       <property name="frameShape">
        <enum>QFrame::StyledPanel</enum>
@@ -1693,6 +1699,9 @@
          <height>20</height>
         </rect>
        </property>
+       <property name="toolTip">
+        <string>Section at ? ( less than 1 )</string>
+       </property>
       </widget>
       <widget class="QLineEdit" name="editSec1">
        <property name="geometry">
@@ -1702,6 +1711,9 @@
          <width>49</width>
          <height>20</height>
         </rect>
+       </property>
+       <property name="toolTip">
+        <string>Section at 0 edge</string>
        </property>
       </widget>
       <widget class="QLineEdit" name="editSec2">
@@ -1713,6 +1725,9 @@
          <height>20</height>
         </rect>
        </property>
+       <property name="toolTip">
+        <string>Section at ? ( less than 1 )</string>
+       </property>
       </widget>
       <widget class="QLineEdit" name="editSec4">
        <property name="geometry">
@@ -1723,6 +1738,9 @@
          <height>20</height>
         </rect>
        </property>
+       <property name="toolTip">
+        <string>Section at ? ( less than 1 )</string>
+       </property>
       </widget>
       <widget class="QLineEdit" name="editSec3">
        <property name="geometry">
@@ -1732,6 +1750,9 @@
          <width>49</width>
          <height>20</height>
         </rect>
+       </property>
+       <property name="toolTip">
+        <string>Section at ? ( less than 1 )</string>
        </property>
       </widget>
       <widget class="QLabel" name="label_19">
@@ -2023,6 +2044,9 @@
          <height>20</height>
         </rect>
        </property>
+       <property name="toolTip">
+        <string>Color at Section 1</string>
+       </property>
        <property name="frameShape">
         <enum>QFrame::StyledPanel</enum>
        </property>
@@ -2038,6 +2062,9 @@
          <width>51</width>
          <height>20</height>
         </rect>
+       </property>
+       <property name="toolTip">
+        <string>Color at Section 1</string>
        </property>
        <property name="frameShape">
         <enum>QFrame::StyledPanel</enum>
@@ -2055,6 +2082,9 @@
          <height>20</height>
         </rect>
        </property>
+       <property name="toolTip">
+        <string>Color at Section 2</string>
+       </property>
        <property name="frameShape">
         <enum>QFrame::StyledPanel</enum>
        </property>
@@ -2071,6 +2101,9 @@
          <height>20</height>
         </rect>
        </property>
+       <property name="toolTip">
+        <string>Color at Section 4</string>
+       </property>
        <property name="frameShape">
         <enum>QFrame::StyledPanel</enum>
        </property>
@@ -2086,6 +2119,9 @@
          <width>51</width>
          <height>20</height>
         </rect>
+       </property>
+       <property name="toolTip">
+        <string>Color at Section 5</string>
        </property>
        <property name="frameShape">
         <enum>QFrame::StyledPanel</enum>
@@ -2182,6 +2218,9 @@
         <height>20</height>
        </rect>
       </property>
+      <property name="toolTip">
+       <string>Add a new theme</string>
+      </property>
       <property name="text">
        <string>...</string>
       </property>
@@ -2195,18 +2234,24 @@
         <height>20</height>
        </rect>
       </property>
+      <property name="toolTip">
+       <string>Delete current highlighted theme</string>
+      </property>
       <property name="text">
        <string>...</string>
       </property>
      </widget>
-     <widget class="QToolButton" name="buttonThmCpy">
+     <widget class="QToolButton" name="buttonThmApp">
       <property name="geometry">
        <rect>
         <x>114</x>
-        <y>58</y>
+        <y>72</y>
         <width>25</width>
         <height>20</height>
        </rect>
+      </property>
+      <property name="toolTip">
+       <string>Apply theme to application</string>
       </property>
       <property name="text">
        <string>...</string>
@@ -2220,6 +2265,9 @@
         <width>25</width>
         <height>20</height>
        </rect>
+      </property>
+      <property name="toolTip">
+       <string>Save current theme</string>
       </property>
       <property name="text">
        <string>...</string>
