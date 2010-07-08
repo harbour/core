@@ -453,9 +453,8 @@ static HB_EXPR_FUNC( hb_compExprUseCodeblock )
 #else
          if( pSelf->value.asCodeblock.flags & HB_BLOCK_EXT )
             hb_compExprCodeblockExtPush( pSelf, HB_COMP_PARAM );
-         else if( ( pSelf->value.asCodeblock.flags & HB_BLOCK_MACRO ) &&
-                 !( pSelf->value.asCodeblock.flags &
-                                 ( HB_BLOCK_LATEEVAL | HB_BLOCK_VPARAMS ) ) )
+         else if( ( pSelf->value.asCodeblock.flags & HB_BLOCK_MACROVAR ) &&
+                 !( pSelf->value.asCodeblock.flags & HB_BLOCK_VPARAMS ) )
             /* early evaluation of a macro */
             hb_compExprCodeblockEarly( pSelf, HB_COMP_PARAM );
          else
@@ -1590,7 +1589,7 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
                /* simple macro variable expansion: &variable
                 * 'szMacro' is a variable name
                 */
-               HB_GEN_FUNC2( PushVar, pSelf->value.asMacro.szMacro, HB_TRUE );
+               HB_GEN_FUNC1( PushVar, pSelf->value.asMacro.szMacro );
             }
             else
             {
@@ -1675,7 +1674,7 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
                /* simple macro variable expansion: &variable
                 * 'szMacro' is a variable name
                 */
-               HB_GEN_FUNC2( PushVar, pSelf->value.asMacro.szMacro, HB_TRUE );
+               HB_GEN_FUNC1( PushVar, pSelf->value.asMacro.szMacro );
             }
             else
             {
@@ -2507,9 +2506,9 @@ static HB_EXPR_FUNC( hb_compExprUseVariable )
          if( HB_MACRO_DATA->Flags & HB_MACRO_GEN_ALIASED )
             HB_GEN_FUNC4( PushAliasedVar, pSelf->value.asSymbol.name, HB_FALSE, NULL, 0 );
          else
-            HB_GEN_FUNC2( PushVar, pSelf->value.asSymbol.name, HB_FALSE );
+            HB_GEN_FUNC1( PushVar, pSelf->value.asSymbol.name );
 #else
-         HB_GEN_FUNC2( PushVar, pSelf->value.asSymbol.name, HB_FALSE );
+         HB_GEN_FUNC1( PushVar, pSelf->value.asSymbol.name );
 #endif
          break;
 
@@ -2526,7 +2525,7 @@ static HB_EXPR_FUNC( hb_compExprUseVariable )
 
       case HB_EA_PUSH_POP:
       case HB_EA_STATEMENT:
-         HB_GEN_FUNC2( PushVar, pSelf->value.asSymbol.name, HB_FALSE );
+         HB_GEN_FUNC1( PushVar, pSelf->value.asSymbol.name );
          HB_GEN_FUNC1( PCode1, HB_P_POP );
          break;
 

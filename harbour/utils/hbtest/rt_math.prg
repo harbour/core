@@ -505,13 +505,13 @@ PROCEDURE Main_MATH()
    TEST_LINE( &s0                             , 1   )
    &s0++
    TEST_LINE( &s0                             , 2   )
-   TEST_LINE( &s0++                           , 2   )
+   TEST_LINE( &(s0)++                         , 2   )
    ++&s0
    TEST_LINE( &s0                             , 4   )
-   TEST_LINE( ++&s0                           , 5   )
+   TEST_LINE( ++&(s0)                         , 5   )
    &s0+=10
    TEST_LINE( &s0                             , 15  )
-   TEST_LINE( &s0+=200                        , 215 )
+   TEST_LINE( &(s0)+=200                      , 215 )
 
    &s1.2 := 1
    TEST_LINE( &s1.2                           , 1   )

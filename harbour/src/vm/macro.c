@@ -1410,11 +1410,9 @@ void hb_macroGenPopAliasedVar( const char * szVarName,
 /* generates the pcode to push a nonaliased variable value to the virtual
  * machine stack
  */
-void hb_macroGenPushVar( const char * szVarName, HB_BOOL bMacroVar, HB_COMP_DECL )
+void hb_macroGenPushVar( const char * szVarName, HB_COMP_DECL )
 {
    int iVar;
-
-   HB_SYMBOL_UNUSED( bMacroVar );
 
    iVar = hb_macroLocalVarGetPos( szVarName, HB_COMP_PARAM );
    if( iVar )

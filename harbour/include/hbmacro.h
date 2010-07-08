@@ -141,7 +141,7 @@ extern void hb_macroGenPopAliasedVar( const char * szVarName,
                                       HB_BOOL bPushAliasValue,
                                       const char * szAlias,
                                       HB_MAXINT nWorkarea, HB_COMP_DECL );
-extern void hb_macroGenPushVar( const char * szVarName, HB_BOOL bMacroVar, HB_COMP_DECL );
+extern void hb_macroGenPushVar( const char * szVarName, HB_COMP_DECL );
 extern void hb_macroGenPushVarRef( const char * szVarName, HB_COMP_DECL );
 extern void hb_macroGenPushMemvarRef( const char * szVarName, HB_COMP_DECL );
 extern void hb_macroGenPushAliasedVar( const char * szVarName,

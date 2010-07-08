@@ -6160,19 +6160,19 @@ char * hb_pp_tokenBlockString( PHB_PP_STATE pState, PHB_PP_TOKEN pToken,
       {
          hb_pp_tokenStr( pToken, pState->pBuffer, HB_FALSE, HB_TRUE, ltype );
          ltype = HB_PP_TOKEN_TYPE( pToken->type );
-         if( HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_AMPERSAND )
+         switch( ltype )
          {
-            if( pToken->pNext &&
-                HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_LEFT_PB )
-               * piType |= HB_BLOCK_MACRO | HB_BLOCK_LATEEVAL;
+            case HB_PP_TOKEN_MACROVAR:
+            case HB_PP_TOKEN_MACROTEXT:
+               * piType |= HB_BLOCK_MACROVAR;
+               break;
+            case HB_PP_TOKEN_RIGHT_CB:
+               --iBraces;
+               break;
+            case HB_PP_TOKEN_LEFT_CB:
+               ++iBraces;
+               break;
          }
-         else if( HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_MACROVAR ||
-                  HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_MACROTEXT )
-            * piType |= HB_BLOCK_MACRO;
-         else if( HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_RIGHT_CB )
-            --iBraces;
-         else if( HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_LEFT_CB )
-            ++iBraces;
          pToken = pToken->pNext;
       }
       while( iBraces && !HB_PP_TOKEN_ISEOC( pToken ) );

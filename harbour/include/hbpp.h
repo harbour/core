@@ -58,8 +58,8 @@
 
 HB_EXTERN_BEGIN
 
-#define HB_BLOCK_MACRO     1
-#define HB_BLOCK_LATEEVAL  2
+#define HB_BLOCK_MACROVAR  1
+/* #define HB_BLOCK_LATEEVAL  2 */
 #define HB_BLOCK_VPARAMS   4
 #define HB_BLOCK_EXT       8
 #define HB_BLOCK_REDUCE   16

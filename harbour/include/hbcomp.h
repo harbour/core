@@ -199,7 +199,7 @@ extern void hb_compGenPushDouble( double dNumber, HB_BYTE bWidth, HB_BYTE bDec, 
 extern void hb_compGenPushFunCall( const char *, int, HB_COMP_DECL );                             /* generates the pcode to push function's call */
 extern void hb_compGenPushFunSym( const char *, int, HB_COMP_DECL );                              /* generates the pcode to push function's symbol */
 extern void hb_compGenPushFunRef( const char *, HB_COMP_DECL );                              /* generates the pcode to push function's reference symbol */
-extern void hb_compGenPushVar( const char * szVarName, HB_BOOL bMacroVar, HB_COMP_DECL );    /* generates the pcode to push a variable value to the virtual machine stack */
+extern void hb_compGenPushVar( const char * szVarName, HB_COMP_DECL );                       /* generates the pcode to push a variable value to the virtual machine stack */
 extern void hb_compGenPushVarRef( const char * szVarName, HB_COMP_DECL );                    /* generates the pcode to push a variable by reference to the virtual machine stack */
 extern void hb_compGenPushMemvarRef( const char * szVarName, HB_COMP_DECL );                 /* generates the pcode to push memvar variable by reference to the virtual machine stack */
 extern void hb_compGenPushInteger( int iNumber, HB_COMP_DECL );                              /* Pushes a integer number on the virtual machine stack */

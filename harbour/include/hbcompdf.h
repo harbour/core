@@ -403,7 +403,7 @@ typedef struct HB_EXPR_
          struct HB_EXPR_ * pExprList;  /* list elements */
          HB_CBVAR_PTR pLocals;         /* list of local variables */
          char * string;                /* source code of a codeblock */
-         HB_USHORT flags;              /* HB_BLOCK_MACRO, HB_BLOCK_LATEEVAL, HB_BLOCK_VPARAMS */
+         HB_USHORT flags;              /* HB_BLOCK_* */
       } asCodeblock;
       struct
       {

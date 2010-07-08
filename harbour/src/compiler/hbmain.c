@@ -2558,12 +2558,11 @@ static void hb_compCheckEarlyMacroEval( HB_COMP_DECL, const char *szVarName )
    int iScope = hb_compVariableScope( HB_COMP_PARAM, szVarName );
 
    if( iScope == HB_VS_CBLOCAL_VAR ||
+       iScope == HB_VS_LOCAL_VAR ||
        iScope == HB_VS_STATIC_VAR ||
        iScope == HB_VS_GLOBAL_STATIC ||
        iScope == HB_VS_LOCAL_FIELD ||
-       iScope == HB_VS_GLOBAL_FIELD ||
-       iScope == HB_VS_LOCAL_MEMVAR ||
-       iScope == HB_VS_GLOBAL_MEMVAR )
+       iScope == HB_VS_GLOBAL_FIELD )
    {
       hb_compErrorCodeblock( HB_COMP_PARAM, szVarName );
    }
@@ -2663,12 +2662,12 @@ void hb_compGenPopMemvar( const char * szVarName, HB_COMP_DECL )
  * machine stack
  * bMacroVar is HB_TRUE if macro &szVarName context
  */
-void hb_compGenPushVar( const char * szVarName, HB_BOOL bMacroVar, HB_COMP_DECL )
+void hb_compGenPushVar( const char * szVarName, HB_COMP_DECL )
 {
    int iVar, iScope;
    PVAR pVar;
 
-   if( ! HB_COMP_PARAM->functions.pLast->bLateEval && ! bMacroVar )
+   if( ! HB_COMP_PARAM->functions.pLast->bLateEval )
    {
       /* pseudo-generation of pcode for a codeblock with macro symbol */
       hb_compCheckEarlyMacroEval( HB_COMP_PARAM, szVarName );
