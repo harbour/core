@@ -1366,7 +1366,7 @@ METHOD IdeSetup:execEvent( cEvent, p, p1 )
       EXIT
    CASE "buttonThmAdd_clicked"
       IF !empty( cTheme := hbide_fetchAString( ::oDlg:oWidget, cTheme, "Name the Theme", "New Theme" ) )
-         aadd( ::oINI:aAppThemes, cTheme + "," + "," + "," + "," )
+         aadd( ::oINI:aAppThemes, cTheme + "," + ::fetchThemeColorsString() )
          qItem := QListWidgetItem():new()
          qItem:setText( cTheme )
          ::oUI:q_listThemes:addItem_1( qItem )

@@ -510,15 +510,9 @@ METHOD HbIde:create( aParams )
    ::oDK:animateComponents( val( ::oINI:cIdeAnimated ) )
    ::oSetup:setSystemStyle( ::oINI:cIdeTheme )
 
+   ::oDK:setViewInitials( "Main" )
    FOR EACH cV IN ::oINI:aViews
-      ::oDK:setView( cV )
-      IF ::qTabWidget:count() == 1
-         ::oEM:setSourceVisibleByIndex( 0 )
-      ELSE
-         ::qTabWidget:setCurrentIndex( 0 )
-         ::qTabWidget:setCurrentIndex( ::qTabWidget:count() - 1 )
-         ::qTabWidget:setCurrentIndex( 0 )
-      ENDIF
+      ::oDK:setViewInitials( cV )
    NEXT
 
    /* Refresh Stylesheet for all components at once */

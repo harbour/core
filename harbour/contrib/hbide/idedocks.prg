@@ -134,6 +134,7 @@ CLASS IdeDocks INHERIT IdeObject
    METHOD buildUpDownWidget()
    METHOD buildSystemTray()
    METHOD showDlgBySystemTrayIconCommand()
+   METHOD setViewInitials( cView )
 
    ENDCLASS
 
@@ -564,6 +565,24 @@ METHOD IdeDocks:getADockWidget( nAreas, cObjectName, cWindowTitle, nFlags, cEven
    RETURN oDock
 
 /*----------------------------------------------------------------------*/
+
+METHOD IdeDocks:setViewInitials( cView )
+
+   ::setView( cView )
+
+HB_TRACE( HB_TR_ALWAYS, cView, ::qTabWidget:count() )
+
+   IF ::qTabWidget:count() == 1
+      ::oEM:setSourceVisibleByIndex( 0 )
+   ELSE
+      ::qTabWidget:setCurrentIndex( 0 )
+      ::qTabWidget:setCurrentIndex( ::qTabWidget:count() - 1 )
+      ::qTabWidget:setCurrentIndex( 0 )
+   ENDIF
+
+   RETURN Self
+
+/*------------------------------------------------------------------------*/
 
 METHOD IdeDocks:setView( cView )
    LOCAL n, nIndex

@@ -73,13 +73,6 @@
 
 /*----------------------------------------------------------------------*/
 
-#define blockCountChanged                         21
-#define contentsChange                            22
-#define timerTimeout                              23
-
-#define qcompleter_activated                      101
-#define qTab_contextMenu                          111
-
 #define EDT_LINNO_WIDTH                           50
 
 /*----------------------------------------------------------------------*/
@@ -95,7 +88,7 @@ CLASS IdeEditsManager INHERIT IdeObject
    METHOD destroy()
    METHOD removeSourceInTree( cSourceFile )
    METHOD addSourceInTree( cSourceFile, cView )
-   METHOD execEvent( nMode, p )
+   METHOD execEvent( cEvent, p )
    METHOD buildEditor( cSourceFile, nPos, nHPos, nVPos, cTheme, cView, aBookMarks )
    METHOD getTabBySource( cSource )
    METHOD getTabCurrent()
@@ -235,7 +228,7 @@ METHOD IdeEditsManager:create( oIde )
    ::oIde:qProtoList := QStringList():new()
    ::oIde:qCompModel := QStringListModel():new()
    ::oIde:qCompleter := QCompleter():new()
-   ::connect( ::qCompleter, "activated(QString)", {|p| ::execEvent( qcompleter_activated, p ) } )
+   ::connect( ::qCompleter, "activated(QString)", {|p| ::execEvent( "qcompleter_activated", p ) } )
    ::updateCompleter()
 
    RETURN Self
@@ -327,11 +320,11 @@ array2table(
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeEditsManager:execEvent( nMode, p )
+METHOD IdeEditsManager:execEvent( cEvent, p )
    LOCAL oEdit
 
    DO CASE
-   CASE nMode == qcompleter_activated
+   CASE cEvent == "qcompleter_activated"
       IF !empty( oEdit := ::getEditObjectCurrent() )
          oEdit:completeCode( p )
       ENDIF
@@ -1130,7 +1123,7 @@ CLASS IdeEditor INHERIT IdeObject
    METHOD split( nOrient, oEditP )
    METHOD relay( oEdit )
    METHOD destroy()
-   METHOD execEvent( nMode, p )
+   METHOD execEvent( cEvent, p )
    METHOD setDocumentProperties()
    METHOD activateTab( mp1, mp2, oXbp )
    METHOD buildTabPage( cSource )
@@ -1239,6 +1232,8 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView, a
    ::connect( ::oEdit:qEdit, "updateRequest(QRect,int)", {|| ::scrollThumbnail() } )
 
    ::qDocument  := QTextDocument():configure( ::qEdit:document() )
+   ::connect( ::qDocument, "documentLayoutChanged()", {|| ::execEvent( "qDocument_documentLayoutChanged" ) } )
+
    ::qDocLayout := QPlainTextDocumentLayout():new( ::qDocument )
    ::qDocument:setDocumentLayout( ::qDocLayout )
 
@@ -1442,7 +1437,7 @@ METHOD IdeEditor:setDocumentProperties()
       IF ::cType $ "PRG,C,CPP,H,CH"
          ::qTimerSave := QTimer():New()
          ::qTimerSave:setInterval( max( 30000, ::oINI:nTmpBkpPrd * 1000 ) )
-         ::connect( ::qTimerSave, "timeout()", {|| ::execEvent( qTimeSave_timeout ) } )
+         ::connect( ::qTimerSave, "timeout()", {|| ::execEvent( "qTimeSave_timeout" ) } )
          ::qTimerSave:start()
       ENDIF
 
@@ -1465,21 +1460,36 @@ METHOD IdeEditor:setDocumentProperties()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeEditor:execEvent( nMode, p )
+METHOD IdeEditor:execEvent( cEvent, p )
    LOCAL cFileTemp, aPops := {}
+   //LOCAL qRFrame, qFFormat
 
    p := p
 
-   SWITCH nMode
-   CASE qTimeSave_timeout
+   SWITCH cEvent
+   CASE "qDocument_documentLayoutChanged"
+      #if 0
+      HB_TRACE( HB_TR_ALWAYS, "qDocument_documentLayoutChanged" )
+
+      qRFrame  := QTextFrame():from( ::qDocument:rootFrame() )
+//      qFFormat := 0
+      qFFormat := QTextFrameFormat():from( qRFrame )
+//      qFFormat:setMargin( 0 )
+//      qFFormat:setPadding( 0 )
+      qRFrame:setFrameFormat( qFFormat )
+      hbide_justACall( qRFrame, qFFormat )
+      #endif
+      EXIT
+
+   CASE "qTimeSave_timeout"
       IF ::qDocument:isModified()
          cFileTemp := hbide_pathToOSPath( ::cPath + ::cFile + ::cExt + ".tmp" )
          hb_memowrit( cFileTemp, ::qEdit:toPlainText() )
       ENDIF
       EXIT
 
-   CASE qTab_contextMenu
-HB_TRACE( HB_TR_ALWAYS, "IdeEditor:execEvent( nMode, p )" )
+   CASE "qTab_contextMenu"
+HB_TRACE( HB_TR_ALWAYS, "IdeEditor:execEvent( cMode, p )" )
       aadd( aPops, { "Close", {|| MsgBox( "closing" ) } } )
       hbide_ExecPopup( aPops, p, ::oTab:oWidget )
 
@@ -1524,8 +1534,6 @@ METHOD IdeEditor:buildTabPage( cSource )
    ::oTab:create()
 
    ::qTabWidget:setTabTooltip( ::qTabWidget:indexOf( ::oTab:oWidget ), cSource )
-   //::connect( ::oTab:oWidget, "customContextMenuRequested(QPoint)", {|p| ::execEvent( qTab_contextMenu, p ) } )
-   //::oTab:hbContextMenu := {|| ::execEvent( qTab_contextMenu, p ) }
    ::oTab:tabActivate := {|mp1,mp2,oXbp| ::activateTab( mp1, mp2, oXbp ) }
 
    RETURN Self
