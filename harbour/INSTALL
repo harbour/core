@@ -333,9 +333,9 @@ HARBOUR
    locally hosted copy of these packages, where applicable. 'nolocal' will
    explicitly disable using locally hosted copies.
 
-   Some contribs support build mode in which they can be linked _statically_
-   with 3rd party components:
-      HB_QT_STATIC=yes (only meaningful on Windows platform)
+   To enable building libs that build against static version of 3rd party
+   components:
+      HB_QT_BUILD_STATIC=yes (only meaningful on Windows platform)
 
    You can override automatic detection of QT 'moc', 'rcc' and 'uic' tools
    by using HB_QTPATH and optionally HB_QTPOSTFIX envvars, f.e.:

@@ -21,7 +21,7 @@ ifneq ($(HB_HAS_QT),)
    include $(TOP)$(ROOT)config/header.mk
    include $(TOP)$(ROOT)config/lib.mk
 
-   ifneq ($(HB_QT_STATIC),)
+   ifneq ($(HB_QT_BUILD_STATIC),)
       ifneq ($(filter $(HB_PLATFORM),win wce),)
          DIRS += hbqts
       endif

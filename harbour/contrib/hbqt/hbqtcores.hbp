@@ -2,7 +2,7 @@
 # $Id$
 #
 
--stop{!HB_QT_STATIC|!allwin}
+-stop{!HB_QT_BUILD_STATIC|!allwin}
 
 hbqtcore.hbp
 

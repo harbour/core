@@ -8,17 +8,17 @@ plugins=hbmk2_plugin_qt.hbs
 
 {allwin|os2}libpaths=${HB_WITH_QT}\..\lib
 
-{!HB_QT_STATIC}libs=hbqt hbqtcore hbqtgui hbqtnetwork
-{!HB_QT_STATIC&allwin}libs=QtCore4 QtGui4 QtNetwork4 QtUiTools
-{!HB_QT_STATIC&os2}libs=QtCore4 QtGui4 QtNet4 QtUiTools
-{!HB_QT_STATIC&linux}libs=QtCore QtGui QtNetwork QtUiTools
-{!HB_QT_STATIC&darwin}libs=/Library/Frameworks/QtCore.framework/QtCore
-{!HB_QT_STATIC&darwin}libs=/Library/Frameworks/QtGui.framework/QtGui
-{!HB_QT_STATIC&darwin}libs=/Library/Frameworks/QtNetwork.framework/QtNetwork
-{!HB_QT_STATIC&darwin}libs=QtUiTools
-{HB_QT_STATIC&allwin}libs=hbqts hbqtcores hbqtguis hbqtnetworks
-{HB_QT_STATIC&linux}libs=hbqt hbqtcore hbqtgui hbqtnetwork
-{HB_QT_STATIC&(allwin|linux)}libs=QtCore QtGui QtNetwork QtUiTools
+{!HB_STATIC_QT}libs=hbqt hbqtcore hbqtgui hbqtnetwork
+{!HB_STATIC_QT&allwin}libs=QtCore4 QtGui4 QtNetwork4 QtUiTools
+{!HB_STATIC_QT&os2}libs=QtCore4 QtGui4 QtNet4 QtUiTools
+{!HB_STATIC_QT&linux}libs=QtCore QtGui QtNetwork QtUiTools
+{!HB_STATIC_QT&darwin}libs=/Library/Frameworks/QtCore.framework/QtCore
+{!HB_STATIC_QT&darwin}libs=/Library/Frameworks/QtGui.framework/QtGui
+{!HB_STATIC_QT&darwin}libs=/Library/Frameworks/QtNetwork.framework/QtNetwork
+{!HB_STATIC_QT&darwin}libs=QtUiTools
+{HB_STATIC_QT&allwin}libs=hbqts hbqtcores hbqtguis hbqtnetworks
+{HB_STATIC_QT&linux}libs=hbqt hbqtcore hbqtgui hbqtnetwork
+{HB_STATIC_QT&(allwin|linux)}libs=QtCore QtGui QtNetwork QtUiTools
 {allgcc}libs=supc++
 
 {win|os2}hbcppmm=yes
