@@ -341,8 +341,8 @@ PROCEDURE Main( ... )
                aRegexMatch[ TWOARG_ARG1 ] := StrTran( aRegexMatch[ TWOARG_ARG1 ], "/", hb_ps() )
             ENDIF
             /* The destination argument must fit in the 8+3 scheme */
-            IF Len( FN_NameGet( aRegexMatch[ TWOARG_ARG2 ] ) ) > 8 .OR.                   ;
-                  Len( FN_ExtGet( aRegexMatch[ TWOARG_ARG2 ] ) ) > 3
+            IF Len( FNameNameGet( aRegexMatch[ TWOARG_ARG2 ] ) ) > 8 .OR.                 ;
+                  Len( FNameExtGet( aRegexMatch[ TWOARG_ARG2 ] ) ) > 3
                OutStd( hb_strFormat( "E: Destination does not fit 8+3, offending "+       ;
                                      "line %d:%s", nMemoLine, hb_eol() ) )
                OutStd( aRegexMatch[ 1 ] + hb_eol() )
@@ -392,11 +392,11 @@ PROCEDURE Main( ... )
       cRoot := cCWD + hb_ps()
    #endif
 
-   FClose( hb_FTempCreateEx( @s_cTempDir, cRoot, FN_NameGet( hb_ProgName() ) + "_" ) )
+   FClose( hb_FTempCreateEx( @s_cTempDir, cRoot, FNameNameGet( hb_ProgName() ) + "_" ) )
    FErase( s_cTempDir )
    MakeDir( s_cTempDir )
 
-   cThisComponent := FN_NameGet( cCWD )
+   cThisComponent := FNameNameGet( cCWD )
 
    MakeDir( CombinePath( s_cTempDir, cThisComponent ) )
    MakeDir( CombinePath( s_cTempDir, cThisComponent + ".orig" ) )
@@ -678,13 +678,13 @@ STATIC FUNCTION FetchAndExtract( cArchiveURL )
 
    IF cArchiver == NIL
       OutStd( "E: Can not find archiver for `" +                                          ;
-               FN_NameExtGet( cArchiveURL ) + "'" + hb_eol() )
+               FNameNameExtGet( cArchiveURL ) + "'" + hb_eol() )
       RETURN .F.
    ELSE
       /* Fetch */
       cCommand := hb_strFormat( "%s -L -# -o %s %s", s_aTools[ "curl" ],                  ;
                   CombinePath( s_cTempDir, cFileName ),                                   ;
-                  FN_Escape( cArchiveURL ) )
+                  FNameEscape( cArchiveURL ) )
       TRACE( "Running " + cCommand )
       nResult := hb_processRun( cCommand, , , @cStdErr, .F. )
       SaveLog( "fetch", cStdOut, cStdErr )
@@ -725,7 +725,7 @@ STATIC FUNCTION FetchAndExtract( cArchiveURL )
 
    RETURN .T.
 
-PROCEDURE SaveLog( cFNTemplate, cStdOut, cStdErr )
+STATIC PROCEDURE SaveLog( cFNTemplate, cStdOut, cStdErr )
 
    LOCAL nLogFD
 
@@ -743,9 +743,9 @@ PROCEDURE SaveLog( cFNTemplate, cStdOut, cStdErr )
 
    RETURN
 
-PROCEDURE Usage( nExitVal )
+STATIC PROCEDURE Usage( nExitVal )
 
-   OutStd( "Usage: " + FN_NameExtGet( hb_ProgName() ) + " [-h|-help|-rediff]" + hb_eol() )
+   OutStd( "Usage: " + FNameNameExtGet( hb_ProgName() ) + " [-h|-help|-rediff]" + hb_eol() )
    OutStd( "       Documentation is provided in the source code." + hb_eol() )
    ErrorLevel( nExitVal )
    QUIT
@@ -754,7 +754,7 @@ PROCEDURE Usage( nExitVal )
 
 /* from hbmk2 */
 
-STATIC FUNCTION FN_DirGet( cFileName )
+STATIC FUNCTION FNameDirGet( cFileName )
 
    LOCAL cDir
 
@@ -762,7 +762,7 @@ STATIC FUNCTION FN_DirGet( cFileName )
 
    RETURN cDir
 
-STATIC FUNCTION FN_NameGet( cFileName )
+STATIC FUNCTION FNameNameGet( cFileName )
 
    LOCAL cName
 
@@ -770,7 +770,7 @@ STATIC FUNCTION FN_NameGet( cFileName )
 
    RETURN cName
 
-STATIC FUNCTION FN_NameExtGet( cFileName )
+STATIC FUNCTION FNameNameExtGet( cFileName )
 
    LOCAL cName, cExt
 
@@ -778,7 +778,7 @@ STATIC FUNCTION FN_NameExtGet( cFileName )
 
    RETURN hb_FNameMerge( NIL, cName, cExt )
 
-STATIC FUNCTION FN_ExtGet( cFileName )
+STATIC FUNCTION FNameExtGet( cFileName )
 
    LOCAL cExt
 
@@ -831,7 +831,7 @@ STATIC FUNCTION hb_FileTran( cFileName )
 
       /* This is a shot in the dark. Haru works with this transform,
        * but other components may very well need different handling. */
-      cChangeFrom := FN_NameExtGet( aChange[ 1 ] )
+      cChangeFrom := FNameNameExtGet( aChange[ 1 ] )
       cChangeTo := aChange[ 2 ]
 
       /* Local-style includes */
@@ -848,7 +848,7 @@ STATIC FUNCTION hb_FileTran( cFileName )
 
    RETURN hb_MemoWrit( cFileName, cTransformedContent )
 
-STATIC FUNCTION FN_Escape( cFileName )
+STATIC FUNCTION FNameEscape( cFileName )
 #if defined( __PLATFORM__UNIX )
    RETURN cFileName
 #else

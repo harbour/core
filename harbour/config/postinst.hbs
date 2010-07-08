@@ -98,7 +98,7 @@ PROCEDURE Main()
          IF "D" $ tmp[ F_ATTR ] .AND. !( tmp[ F_NAME ] == "." ) .AND. !( tmp[ F_NAME ] == ".." )
             FOR EACH aFile IN Directory( "utils" + hb_ps() + tmp[ F_NAME ] + hb_ps() + "*.po" )
                mk_hbl( PathSepToSelf( "utils" + hb_ps() + tmp[ F_NAME ] + hb_ps() + aFile[ F_NAME ] ),;
-                       PathSepToSelf( GetEnv( "HB_BIN_INSTALL" ) ) + hb_ps() + FN_ExtSet( aFile[ F_NAME ], ".hbl" ) )
+                       PathSepToSelf( GetEnv( "HB_BIN_INSTALL" ) ) + hb_ps() + FNameExtSet( aFile[ F_NAME ], ".hbl" ) )
             NEXT
          ENDIF
       NEXT
@@ -127,8 +127,8 @@ PROCEDURE Main()
 
       mk_hb_processRun( PathSepToSelf( GetEnv( "HB_DIR_ZIP" ) ) + "zip" +;
                         " -q -9 -X -r -o" +;
-                        " " + FN_Escape( tmp ) +;
-                        " . -i " + FN_Escape( GetEnv( "HB_PKGNAME" ) + hb_ps() + "*" ) +;
+                        " " + FNameEscape( tmp ) +;
+                        " . -i " + FNameEscape( GetEnv( "HB_PKGNAME" ) + hb_ps() + "*" ) +;
                         " -x *.tds -x *.exp" )
 
       DirChange( cOldDir )
@@ -141,7 +141,7 @@ PROCEDURE Main()
 
          mk_hb_processRun( PathSepToSelf( GetEnv( "HB_DIR_NSIS" ) ) + "makensis.exe" +;
                            " -V2" +;
-                           " " + FN_Escape( StrTran( "package/mpkg_win.nsi", "/", hb_ps() ) ) )
+                           " " + FNameEscape( StrTran( "package/mpkg_win.nsi", "/", hb_ps() ) ) )
       ENDIF
    ENDIF
 
@@ -173,10 +173,10 @@ STATIC FUNCTION mk_hb_processRun( cCommand )
 
    RETURN hb_processRun( cCommand )
 
-STATIC FUNCTION FN_Escape( cFN )
+STATIC FUNCTION FNameEscape( cFN )
    RETURN Chr( 34 ) + cFN + Chr( 34 )
 
-STATIC FUNCTION FN_ExtSet( cFileName, cExt )
+STATIC FUNCTION FNameExtSet( cFileName, cExt )
    LOCAL cDir, cName
 
    hb_FNameSplit( cFileName, @cDir, @cName )

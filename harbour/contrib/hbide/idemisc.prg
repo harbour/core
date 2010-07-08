@@ -1800,62 +1800,10 @@ FUNCTION hbide_imageForFileType( cType )
 /*----------------------------------------------------------------------*/
 /* Borrowed from hbmk2.prg - thanks Viktor */
 
-FUNCTION FN_DirGet( cFileName )
-   LOCAL cDir
-
-   hb_FNameSplit( cFileName, @cDir )
-
-   RETURN cDir
-
-FUNCTION FN_NameGet( cFileName )
-   LOCAL cName
-
-   hb_FNameSplit( cFileName,, @cName )
-
-   RETURN cName
-
-FUNCTION FN_NameExtGet( cFileName )
-   LOCAL cName, cExt
-
-   hb_FNameSplit( cFileName,, @cName, @cExt )
-
-   RETURN hb_FNameMerge( NIL, cName, cExt )
-
-FUNCTION FN_ExtGet( cFileName )
-   LOCAL cExt
-
-   hb_FNameSplit( cFileName,,, @cExt )
-
-   RETURN cExt
-
-FUNCTION FN_ExtDef( cFileName, cDefExt )
-   LOCAL cDir, cName, cExt
-
-   hb_FNameSplit( cFileName, @cDir, @cName, @cExt )
-   IF Empty( cExt )
-      cExt := cDefExt
-   ENDIF
-
-   RETURN hb_FNameMerge( cDir, cName, cExt )
-
-FUNCTION FN_ExtSet( cFileName, cExt )
+FUNCTION FNameExtSet( cFileName, cExt )
    LOCAL cDir, cName
 
    hb_FNameSplit( cFileName, @cDir, @cName )
-
-   RETURN hb_FNameMerge( cDir, cName, cExt )
-
-FUNCTION FN_DirExtSet( cFileName, cDirNew, cExtNew )
-   LOCAL cDir, cName, cExt
-
-   hb_FNameSplit( cFileName, @cDir, @cName, @cExt )
-
-   IF cDirNew != NIL
-      cDir := cDirNew
-   ENDIF
-   IF cExtNew != NIL
-      cExt := cExtNew
-   ENDIF
 
    RETURN hb_FNameMerge( cDir, cName, cExt )
 

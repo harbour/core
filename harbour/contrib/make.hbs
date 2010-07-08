@@ -18,6 +18,12 @@
         (move hbmk2 to core lib?)
      5. gnumake mode: automatically decide about build order,
         based on dependencies (implibs -> libs[TODO!] -> exes)
+     6. HB_CONTRIBLIBS -> HB_CONTRIBS (not only libs anymore)
+     7. Move in external libs to contrib area? (bz2, minizip, sqlite3)
+     8. Pull the list of .hbp files from an external file
+        (so it can be used in stdalone mode, and the script can be
+        moved to bin and used in more generic way f.e. for examples
+        and local projects)
  */
 
 #pragma warninglevel=3
@@ -135,7 +141,7 @@ PROCEDURE StandAlone( ... )
 
    FOR EACH cProject IN aLibs
 
-      cType := hbmk2_project_type( cBase + cProject )
+      cType := get_hbmk2_project_type( cBase + cProject )
 
       cProject := StrTran( cProject, "\", "/" )
 
@@ -453,7 +459,7 @@ PROCEDURE GNUMake( ... )
 
          IF ! Empty( cProject )
 
-            cType := hbmk2_project_type( cBase + cProject )
+            cType := get_hbmk2_project_type( cBase + cProject )
 
             cProject := StrTran( cProject, "\", "/" )
 
@@ -520,13 +526,13 @@ PROCEDURE GNUMake( ... )
 
                /* Highly experimental */
                IF cType == "hblib" .AND. GetEnv( "HB_BUILD_CONTRIB_DLL" ) == "yes" .AND. ;
-                  hb_FileExists( FN_ExtSet( cBase + cProject, ".hbc" ) )
+                  hb_FileExists( FNameExtSet( cBase + cProject, ".hbc" ) )
 
                   cInstallDirVar := "_HB_DYN_INSTALL"
 
                   cOptionsPre := cBaseOptions
                   /* TOFIX: Add -implib option. It collides with static lib so needs to be resolved. */
-                  cOptionsPost := " -hbdyn -nohblib- " + FN_ExtSet( cProject, ".hbc" )
+                  cOptionsPost := " -hbdyn -nohblib- " + FNameExtSet( cProject, ".hbc" )
 
                   IF nAction == _ACT_CLEAN
                      cOptionsPre += " -clean"
@@ -589,7 +595,7 @@ STATIC FUNCTION mk_hb_processRun( cCommand )
 
    RETURN iif( s_lTest, 0, hb_processRun( cCommand ) )
 
-STATIC FUNCTION hbmk2_project_type( cFileName )
+STATIC FUNCTION get_hbmk2_project_type( cFileName )
    LOCAL cFile := MemoRead( cFileName )
 
    IF     "-hblib"    $ cFile ; RETURN "hblib"
@@ -600,7 +606,7 @@ STATIC FUNCTION hbmk2_project_type( cFileName )
 
    RETURN "hbexe"
 
-STATIC FUNCTION FN_ExtSet( cFileName, cExt )
+STATIC FUNCTION FNameExtSet( cFileName, cExt )
    LOCAL cDir, cName
 
    hb_FNameSplit( cFileName, @cDir, @cName )
