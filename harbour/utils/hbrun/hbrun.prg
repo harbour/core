@@ -131,7 +131,7 @@ PROCEDURE _APPMAIN( cFile, ... )
                ENDSWITCH
                SWITCH cExt
                   CASE ".dbf"
-                     hbrun_Prompt( "USE " + cFile )
+                     hbrun_Prompt( "USE " + cFile + " SHARED" )
                      EXIT
                   CASE ".prg"
                   CASE ".hbs"
