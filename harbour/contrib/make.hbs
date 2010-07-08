@@ -141,6 +141,10 @@ PROCEDURE StandAlone( ... )
 
    FOR EACH cProject IN aLibs
 
+      FOR EACH tmp IN call_hbmk2_dept( cRoot + "bin" + hb_ps(), cBase + cProject )
+         OutStd( cProject + " depends on: " + tmp + hb_eol() )
+      NEXT
+
       cType := get_hbmk2_project_type( cBase + cProject )
 
       cProject := StrTran( cProject, "\", "/" )
@@ -561,6 +565,27 @@ PROCEDURE GNUMake( ... )
    ErrorLevel( 0 )
 
    RETURN
+
+STATIC FUNCTION call_hbmk2_dept( cBinDir, cProject )
+   LOCAL tmp, tmp1
+   LOCAL aList := {}
+
+   hb_processRun( PathSepToSelf( cBinDir ) + "hbmk2" + " -quiet -lang=en -width=0 -q0 --hbrefs " + cProject,, @tmp  )
+
+   IF ( tmp1 := At( "hbrefs{{", tmp ) ) > 0
+      tmp := SubStr( tmp, tmp1 + Len( "hbrefs{{" ) + 1 )
+      IF ( tmp1 := At( "}}", tmp ) ) > 0
+         tmp := StrTran( Left( tmp, tmp1 - 1 ), Chr( 13 ) )
+         FOR EACH tmp IN hb_ATokens( tmp, Chr( 10 ) )
+            IF ! Empty( tmp )
+               hb_FNameSplit( tmp,, @tmp1 )
+               AAdd( aList, tmp1 )
+            ENDIF
+         NEXT
+      ENDIF
+   ENDIF
+
+   RETURN aList
 
 STATIC FUNCTION call_hbmk2( cBinDir, cProject, cTargetDir, cOptionsPre, cOptionsPost, lDyn )
    LOCAL nErrorLevel

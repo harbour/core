@@ -1,9 +1,0 @@
-#
-# $Id$
-#
-
-libs=${hb_name}
-
-{win}libpaths=${HB_WITH_ALLEGRO}/../lib
-{win}libs=alleg_s d3d9 dsound
-{linux}ldflags="`allegro-config --static 2>/dev/null`"

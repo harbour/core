@@ -3997,7 +3997,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
    /* Generate header with repository ID information */
 
-   IF ! lSkipBuild .AND. ! lStopAfterInit .AND. ! lStopAfterHarbour
+   IF ! lSkipBuild .AND. ! lStopAfterInit .AND. ! lStopAfterHarbour .AND. ! lDumpReferences
       IF ! Empty( l_cVCSHEAD )
          tmp1 := VCSID( l_cVCSDIR, l_cVCSHEAD, @tmp2 )
          /* Use the same EOL for all platforms to avoid unnecessary rebuilds. */
@@ -4028,7 +4028,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
    /* Do header detection and create incremental file list for .c files */
 
-   IF ! lSkipBuild .AND. ! lStopAfterInit .AND. ! lStopAfterHarbour
+   IF ! lSkipBuild .AND. ! lStopAfterInit .AND. ! lStopAfterHarbour .AND. ! lDumpReferences
 
       headstate := NIL
 
@@ -4052,7 +4052,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
    /* Do header detection and create incremental file list for .cpp files */
 
-   IF ! lSkipBuild .AND. ! lStopAfterInit .AND. ! lStopAfterHarbour
+   IF ! lSkipBuild .AND. ! lStopAfterInit .AND. ! lStopAfterHarbour .AND. ! lDumpReferences
 
       headstate := NIL
 
@@ -4079,11 +4079,13 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    IF ( ! lSkipBuild .AND. ! lStopAfterInit .AND. ! lStopAfterHarbour .AND. hbmk[ _HBMK_nHBMODE ] != _HBMODE_RAW_C ) .OR. ;
       ( nHarbourPPO >= 2 .AND. lStopAfterHarbour ) /* or in preprocessor mode */
 
-      PlugIn_Execute_All( hbmk, "pre_prg" )
+      IF ! lDumpReferences
+         PlugIn_Execute_All( hbmk, "pre_prg" )
+      ENDIF
 
       /* Incremental */
 
-      IF hbmk[ _HBMK_lINC ] .AND. ! hbmk[ _HBMK_lREBUILD ]
+      IF hbmk[ _HBMK_lINC ] .AND. ! hbmk[ _HBMK_lREBUILD ] .AND. ! lDumpReferences
          IF nHarbourPPO >= 2 .AND. lStopAfterHarbour /* .ppo files are the dependents in preprocessor mode */
             cHarbourOutputExt := ".ppo"
             cHarbourOutputDir := cHarbourPPODir
@@ -4162,7 +4164,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    /* Dump hbmk2 dependencies */
 
    IF lDumpReferences
-      OutStd( "{{" + hb_eol() )
+      OutStd( "hbrefs{{" + hb_eol() )
       FOR EACH tmp IN hbmk[ _HBMK_aDEPTHBC ]
          OutStd( PathSepToForward( PathNormalize( tmp ) ) + hb_eol() )
       NEXT
@@ -10323,7 +10325,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "--hbdirdyn"         , I_( "output Harbour dynamic library directory" ) },;
       { "--hbdirlib"         , I_( "output Harbour static library directory" ) },;
       { "--hbdirinc"         , I_( "output Harbour header directory" ) },;
-      { "--hbref"            , I_( "output Harbour references. The output is preceded by '{{' and closed by '}}' lines. The reference paths always contain forward slashes." ) },;
+      { "--hbref"            , I_( "output Harbour references. The output is preceded by 'hbdept{{' and closed by '}}' lines. The reference paths always contain forward slashes." ) },;
       NIL,;
       { "-plat[form]=<plat>" , I_( "select target platform." ) },;
       { "-comp[iler]=<comp>" , I_( "select C compiler.\nSpecial value:\n - bld: use original build settings (default on *nix)" ) },;

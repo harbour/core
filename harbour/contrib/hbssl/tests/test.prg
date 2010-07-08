@@ -14,7 +14,6 @@
 PROCEDURE Main()
    LOCAL ssl_ctx
    LOCAL ssl
-   LOCAL bio
    LOCAL cipher
 
    LOCAL socket

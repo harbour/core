@@ -4,6 +4,12 @@
 
 incpaths=.
 
-libs=${hb_name}
+{!HB_STATIC_CURL}libs=${hb_name}
+{HB_STATIC_CURL}libs=${hb_name}s
+
 {!mingw}libs=libcurl
-{mingw}libs=curldll
+{!HB_STATIC_CURL&mingw}libs=curldll
+{HB_STATIC_CURL&mingw}libs=curl
+
+# NOTE: Static mode requires additional libs be linked:
+#       libssh2 and OpenSSL

@@ -6,8 +6,11 @@
 
 incpaths=.
 
-libs=${hb_name}
+{!HB_STATIC_OPENSSL}libs=${hb_name}
+{HB_STATIC_OPENSSL}libs=${hb_name}s
 
 {unix}libs=ssl crypto
 {os2}libs=openssl ssl crypto libosslfips
-{win}libs=ssleay32 libeay32
+{!HB_STATIC_OPENSSL&win}libs=ssleay32 libeay32
+{HB_STATIC_OPENSSL&win&!mingw}libs=ssleay32 libeay32
+{HB_STATIC_OPENSSL&mingw}libs=ssl ssl32 crypto eay32
