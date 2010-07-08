@@ -1785,14 +1785,14 @@ HB_SIZE hb_fsReadAt( HB_FHANDLE hFileHandle, void * pBuff, HB_SIZE nCount, HB_FO
    }
    else
    {
-      HB_FOFFSET llPos;
+      HB_FOFFSET nPos;
       ULONG ulOffsetLow  = ( ULONG ) ( nOffset & ULONG_MAX ),
             ulOffsetHigh = ( ULONG ) ( nOffset >> 32 );
       ulOffsetLow = SetFilePointer( DosToWinHandle( hFileHandle ),
                                     ulOffsetLow, ( PLONG ) &ulOffsetHigh,
                                     SEEK_SET );
-      llPos = ( ( HB_FOFFSET ) ulOffsetHigh << 32 ) | ulOffsetLow;
-      if( llPos == ( HB_FOFFSET ) INVALID_SET_FILE_POINTER )
+      nPos = ( ( HB_FOFFSET ) ulOffsetHigh << 32 ) | ulOffsetLow;
+      if( nPos == ( HB_FOFFSET ) INVALID_SET_FILE_POINTER )
          hb_fsSetIOError( HB_FALSE, 0 );
       else
          hb_fsSetIOError( ReadFile( DosToWinHandle( hFileHandle ),
@@ -1809,19 +1809,19 @@ HB_SIZE hb_fsReadAt( HB_FHANDLE hFileHandle, void * pBuff, HB_SIZE nCount, HB_FO
       nRead = hb_fsReadLarge( hFileHandle, pBuff, nCount );
 #  else
    {
-      HB_FOFFSET llPos;
+      HB_FOFFSET nPos;
 #     if defined( HB_USE_LARGEFILE64 )
-      llPos = lseek64( hFileHandle, nOffset, SEEK_SET );
+      nPos = lseek64( hFileHandle, nOffset, SEEK_SET );
 #     elif defined( HB_OS_OS2 )
       ULONG ulPos;
       if( DosSetFilePtr( hFileHandle, nOffset, SEEK_SET, &ulPos ) == 0 )
-         llPos = ( HB_FOFFSET ) ulPos;
+         nPos = ( HB_FOFFSET ) ulPos;
       else
-         llPos = ( HB_FOFFSET ) -1;
+         nPos = ( HB_FOFFSET ) -1;
 #     else
-         llPos = lseek( hFileHandle, nOffset, SEEK_SET );
+         nPos = lseek( hFileHandle, nOffset, SEEK_SET );
 #     endif
-      if( llPos == ( HB_FOFFSET ) -1 )
+      if( nPos == ( HB_FOFFSET ) -1 )
          hb_fsSetIOError( HB_FALSE, 0 );
       else
       {
@@ -1910,14 +1910,14 @@ HB_SIZE hb_fsWriteAt( HB_FHANDLE hFileHandle, const void * pBuff, HB_SIZE nCount
    }
    else
    {
-      HB_FOFFSET llPos;
+      HB_FOFFSET nPos;
       ULONG ulOffsetLow  = ( ULONG ) ( nOffset & ULONG_MAX ),
             ulOffsetHigh = ( ULONG ) ( nOffset >> 32 );
       ulOffsetLow = SetFilePointer( DosToWinHandle( hFileHandle ),
                                     ulOffsetLow, ( PLONG ) &ulOffsetHigh,
                                     SEEK_SET );
-      llPos = ( ( HB_FOFFSET ) ulOffsetHigh << 32 ) | ulOffsetLow;
-      if( llPos == ( HB_FOFFSET ) INVALID_SET_FILE_POINTER )
+      nPos = ( ( HB_FOFFSET ) ulOffsetHigh << 32 ) | ulOffsetLow;
+      if( nPos == ( HB_FOFFSET ) INVALID_SET_FILE_POINTER )
          hb_fsSetIOError( HB_FALSE, 0 );
       else
          hb_fsSetIOError( WriteFile( DosToWinHandle( hFileHandle ),
@@ -1934,19 +1934,19 @@ HB_SIZE hb_fsWriteAt( HB_FHANDLE hFileHandle, const void * pBuff, HB_SIZE nCount
       nWritten = hb_fsWriteLarge( hFileHandle, pBuff, nCount );
 #  else
    {
-      HB_FOFFSET llPos;
+      HB_FOFFSET nPos;
 #     if defined( HB_USE_LARGEFILE64 )
-      llPos = lseek64( hFileHandle, nOffset, SEEK_SET );
+      nPos = lseek64( hFileHandle, nOffset, SEEK_SET );
 #     elif defined( HB_OS_OS2 )
       ULONG ulPos;
       if( DosSetFilePtr( hFileHandle, nOffset, SEEK_SET, &ulPos ) == 0 )
-         llPos = ( HB_FOFFSET ) ulPos;
+         nPos = ( HB_FOFFSET ) ulPos;
       else
-         llPos = ( HB_FOFFSET ) -1;
+         nPos = ( HB_FOFFSET ) -1;
 #     else
-      llPos = lseek( hFileHandle, nOffset, SEEK_SET );
+      nPos = lseek( hFileHandle, nOffset, SEEK_SET );
 #     endif
-      if( llPos == ( HB_FOFFSET ) -1 )
+      if( nPos == ( HB_FOFFSET ) -1 )
          hb_fsSetIOError( HB_FALSE, 0 );
       else
       {
@@ -2450,7 +2450,7 @@ HB_ULONG hb_fsSeek( HB_FHANDLE hFileHandle, HB_LONG lOffset, HB_USHORT uiFlags )
 
 HB_FOFFSET hb_fsSeekLarge( HB_FHANDLE hFileHandle, HB_FOFFSET nOffset, HB_USHORT uiFlags )
 {
-   HB_FOFFSET llPos;
+   HB_FOFFSET nPos;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsSeekLarge(%p, %" PFHL "i, %hu)", ( void * ) ( HB_PTRDIFF ) hFileHandle, nOffset, uiFlags));
 
@@ -2464,7 +2464,7 @@ HB_FOFFSET hb_fsSeekLarge( HB_FHANDLE hFileHandle, HB_FOFFSET nOffset, HB_USHORT
       hb_vmUnlock();
       if( nOffset < 0 && nFlags == SEEK_SET )
       {
-         llPos = ( HB_FOFFSET ) INVALID_SET_FILE_POINTER;
+         nPos = ( HB_FOFFSET ) INVALID_SET_FILE_POINTER;
          hb_fsSetError( 25 ); /* 'Seek Error' */
       }
       else
@@ -2472,16 +2472,16 @@ HB_FOFFSET hb_fsSeekLarge( HB_FHANDLE hFileHandle, HB_FOFFSET nOffset, HB_USHORT
          ulOffsetLow = SetFilePointer( DosToWinHandle( hFileHandle ),
                                        ulOffsetLow, ( PLONG ) &ulOffsetHigh,
                                        ( DWORD ) nFlags );
-         llPos = ( ( HB_FOFFSET ) ulOffsetHigh << 32 ) | ulOffsetLow;
-         hb_fsSetIOError( llPos != ( HB_FOFFSET ) INVALID_SET_FILE_POINTER, 0 );
+         nPos = ( ( HB_FOFFSET ) ulOffsetHigh << 32 ) | ulOffsetLow;
+         hb_fsSetIOError( nPos != ( HB_FOFFSET ) INVALID_SET_FILE_POINTER, 0 );
       }
 
-      if( llPos == ( HB_FOFFSET ) INVALID_SET_FILE_POINTER )
+      if( nPos == ( HB_FOFFSET ) INVALID_SET_FILE_POINTER )
       {
          ulOffsetHigh = 0;
          ulOffsetLow = SetFilePointer( DosToWinHandle( hFileHandle ),
                                        0, ( PLONG ) &ulOffsetHigh, SEEK_CUR );
-         llPos = ( ( HB_FOFFSET ) ulOffsetHigh << 32 ) | ulOffsetLow;
+         nPos = ( ( HB_FOFFSET ) ulOffsetHigh << 32 ) | ulOffsetLow;
       }
       hb_vmLock();
    }
@@ -2492,26 +2492,26 @@ HB_FOFFSET hb_fsSeekLarge( HB_FHANDLE hFileHandle, HB_FOFFSET nOffset, HB_USHORT
       hb_vmUnlock();
       if( nOffset < 0 && nFlags == SEEK_SET )
       {
-         llPos = ( HB_FOFFSET ) -1;
+         nPos = ( HB_FOFFSET ) -1;
          hb_fsSetError( 25 ); /* 'Seek Error' */
       }
       else
       {
-         llPos = lseek64( hFileHandle, nOffset, nFlags );
-         hb_fsSetIOError( llPos != ( HB_FOFFSET ) -1, 0 );
+         nPos = lseek64( hFileHandle, nOffset, nFlags );
+         hb_fsSetIOError( nPos != ( HB_FOFFSET ) -1, 0 );
       }
 
-      if( llPos == ( HB_FOFFSET ) -1 )
+      if( nPos == ( HB_FOFFSET ) -1 )
       {
-         llPos = lseek64( hFileHandle, 0L, SEEK_CUR );
+         nPos = lseek64( hFileHandle, 0L, SEEK_CUR );
       }
       hb_vmLock();
    }
 #else
-   llPos = ( HB_FOFFSET ) hb_fsSeek( hFileHandle, ( HB_ISIZ ) nOffset, uiFlags );
+   nPos = ( HB_FOFFSET ) hb_fsSeek( hFileHandle, ( HB_ISIZ ) nOffset, uiFlags );
 #endif
 
-   return llPos;
+   return nPos;
 }
 
 HB_FOFFSET hb_fsTell( HB_FHANDLE hFileHandle )

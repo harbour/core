@@ -58,7 +58,7 @@ PROCEDURE Main( ... )
  */
 PROCEDURE StandAlone( ... )
    LOCAL cBase := ""
-   LOCAL cRoot := "../"
+   LOCAL cRoot := StrTran( hb_DirBase(), hb_ps(), "/" ) + "../"
 
    LOCAL aParams
    LOCAL aLibs
@@ -174,7 +174,7 @@ PROCEDURE StandAlone( ... )
          ENDIF
       ENDIF
 
-      call_hbmk2( hb_DirBase() + cRoot + "bin" + hb_ps(), cBase + cProject, cTargetDir, cOptionsPre, cOptionsPost, .F. )
+      call_hbmk2( cRoot + "bin" + hb_ps(), cBase + cProject, cTargetDir, cOptionsPre, cOptionsPost, .F. )
    NEXT
 
    ErrorLevel( 0 )
@@ -193,6 +193,7 @@ PROCEDURE StandAlone( ... )
   #4 install clean  install    install clean    _ACT_INC_INST          -inc -instpath=
                     clean      install clean    _ACT_CLEAN             -clean
   #5                all                         _ACT_INC               -inc
+
  */
 
 PROCEDURE GNUMake( ... )

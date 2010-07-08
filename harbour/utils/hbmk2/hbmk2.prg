@@ -758,7 +758,6 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    LOCAL lAcceptLDClipper := .F.
    LOCAL lAcceptIFlag := .F.
    LOCAL lHarbourInfo := .F.
-   LOCAL cMakeImpLibDLL
 
    LOCAL nHarbourPPO := 0
    LOCAL cHarbourOutputExt
@@ -3946,40 +3945,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    /* ; */
 
    IF hbmk[ _HBMK_lCreateImpLib ]
-      IF ISBLOCK( bBlk_ImpLib )
-         IF ! Empty( hbmk[ _HBMK_aIMPLIBSRC ] )
-            FOR EACH cMakeImpLibDLL IN hbmk[ _HBMK_aIMPLIBSRC ]
-
-               cMakeImpLibDLL := FN_ExtDef( cMakeImpLibDLL, ".dll" )
-               tmp1 := hbmk[ _HBMK_cPROGNAME ]
-               DEFAULT tmp1 TO FN_NameGet( cMakeImpLibDLL )
-               tmp := FN_CookLib( hb_FNameMerge( hbmk[ _HBMK_cPROGDIR ], tmp1 ), cLibLibPrefix, cLibLibExt )
-
-               IF hbmk[ _HBMK_lCLEAN ]
-                  FErase( tmp )
-               ELSE
-                  SWITCH Eval( bBlk_ImpLib, cMakeImpLibDLL, tmp, ArrayToList( hbmk[ _HBMK_aOPTI ] ) )
-                  CASE _HBMK_IMPLIB_OK
-                     hbmk_OutStd( hbmk, hb_StrFormat( I_( "Created import library: %1$s <= %2$s" ), tmp, cMakeImpLibDLL ) )
-                     AAddNewINST( hbmk[ _HBMK_aINSTFILE ], { "", tmp }, .T. )
-                     EXIT
-                  CASE _HBMK_IMPLIB_FAILED
-                     hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Failed creating import library %1$s from %2$s." ), tmp, cMakeImpLibDLL ) )
-                     EXIT
-                  ENDSWITCH
-               ENDIF
-            NEXT
-            IF ! hbmk[ _HBMK_lCLEAN ]
-               DoInstCopy( hbmk )
-            ENDIF
-         ELSE
-            IF hbmk[ _HBMK_lInfo ]
-               hbmk_OutErr( hbmk, I_( "Warning: No import library source was specified" ) )
-            ENDIF
-         ENDIF
-      ELSE
-         hbmk_OutErr( hbmk, I_( "Error: Creating import libraries is not supported for this platform or compiler." ) )
-      ENDIF
+      DoIMPLIB( hbmk, bBlk_ImpLib, cLibLibPrefix, cLibLibExt )
    ENDIF
 
    DEFAULT hbmk[ _HBMK_nScr_Esc ] TO hbmk[ _HBMK_nCmd_Esc ]
@@ -5509,6 +5475,62 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    ENDIF
 
    RETURN hbmk[ _HBMK_nErrorLevel ]
+
+STATIC PROCEDURE DoIMPLIB( hbmk, bBlk_ImpLib, cLibLibPrefix, cLibLibExt )
+   LOCAL cMakeImpLibDLL
+   LOCAL tmp, tmp1
+   LOCAL nNotFound
+
+   LOCAL aToDelete
+
+   IF ISBLOCK( bBlk_ImpLib )
+      IF ! Empty( hbmk[ _HBMK_aIMPLIBSRC ] )
+         aToDelete := {}
+         nNotFound := 0
+         FOR EACH cMakeImpLibDLL IN hbmk[ _HBMK_aIMPLIBSRC ]
+
+            cMakeImpLibDLL := FN_ExtDef( cMakeImpLibDLL, ".dll" )
+            tmp1 := hbmk[ _HBMK_cPROGNAME ]
+            DEFAULT tmp1 TO FN_NameGet( cMakeImpLibDLL )
+            tmp := FN_CookLib( hb_FNameMerge( hbmk[ _HBMK_cPROGDIR ], tmp1 ), cLibLibPrefix, cLibLibExt )
+
+            IF hbmk[ _HBMK_lCLEAN ]
+               AAddNew( aToDelete, tmp )
+            ELSE
+               SWITCH Eval( bBlk_ImpLib, cMakeImpLibDLL, tmp, ArrayToList( hbmk[ _HBMK_aOPTI ] ) )
+               CASE _HBMK_IMPLIB_OK
+                  hbmk_OutStd( hbmk, hb_StrFormat( I_( "Created import library: %1$s <= %2$s" ), tmp, cMakeImpLibDLL ) )
+                  AAddNewINST( hbmk[ _HBMK_aINSTFILE ], { "", tmp }, .T. )
+                  EXIT
+               CASE _HBMK_IMPLIB_FAILED
+                  hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Failed creating import library %1$s from %2$s." ), tmp, cMakeImpLibDLL ) )
+                  EXIT
+               CASE _HBMK_IMPLIB_NOTFOUND
+                  ++nNotFound
+                  EXIT
+               ENDSWITCH
+            ENDIF
+         NEXT
+
+         IF nNotFound == Len( hbmk[ _HBMK_aIMPLIBSRC ] )
+            hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: No import library sources were found." ) ) )
+         ELSE
+            IF hbmk[ _HBMK_lCLEAN ]
+               AEval( aToDelete, {| tmp | FErase( tmp ) } )
+            ELSE
+               DoInstCopy( hbmk )
+            ENDIF
+         ENDIF
+      ELSE
+         IF hbmk[ _HBMK_lInfo ]
+            hbmk_OutErr( hbmk, I_( "Warning: No import library source was specified" ) )
+         ENDIF
+      ENDIF
+   ELSE
+      hbmk_OutErr( hbmk, I_( "Error: Creating import libraries is not supported for this platform or compiler." ) )
+   ENDIF
+
+   RETURN
 
 #define _INST_cGroup            1
 #define _INST_cData             2

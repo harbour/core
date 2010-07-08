@@ -100,19 +100,19 @@ HB_FUNC( WIN_LOADBITMAPFILE )
 
    if( fhnd != FS_ERROR )
    {
-      HB_SIZE ulSize = hb_fsSeek( fhnd, 0, FS_END );
+      HB_SIZE nSize = hb_fsSeek( fhnd, 0, FS_END );
 
       /* TOFIX: No check is done on read data from disk which is a large security hole
                 and may cause GPF even in simple error cases, like invalid file content.
                 [vszakats] */
-      if( ulSize > 2 && ulSize <= ( 32 * 1024 * 1024 ) )
+      if( nSize > 2 && nSize <= ( 32 * 1024 * 1024 ) )
       {
-         void * pbmfh = hb_xgrab( ulSize );
+         void * pbmfh = hb_xgrab( nSize );
 
          hb_fsSeek( fhnd, 0, FS_SET );
 
-         if( hb_fsReadLarge( fhnd, pbmfh, ulSize ) == ulSize && hbwin_bitmapType( pbmfh, ulSize ) != HB_WIN_BITMAP_UNKNOWN )
-            hb_retclen_buffer( ( char * ) pbmfh, ulSize );
+         if( hb_fsReadLarge( fhnd, pbmfh, nSize ) == nSize && hbwin_bitmapType( pbmfh, nSize ) != HB_WIN_BITMAP_UNKNOWN )
+            hb_retclen_buffer( ( char * ) pbmfh, nSize );
          else
             hb_xfree( pbmfh );
       }

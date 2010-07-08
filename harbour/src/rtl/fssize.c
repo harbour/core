@@ -132,9 +132,9 @@ HB_FOFFSET hb_fsFSize( const char * pszFileName, HB_BOOL bUseDirEntry )
 
       if( hFileHandle != FS_ERROR )
       {
-         HB_FOFFSET ulPos = hb_fsSeekLarge( hFileHandle, 0, FS_END );
+         HB_FOFFSET nPos = hb_fsSeekLarge( hFileHandle, 0, FS_END );
          hb_fsClose( hFileHandle );
-         return ulPos;
+         return nPos;
       }
    }
    return 0;

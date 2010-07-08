@@ -480,12 +480,12 @@ static void hb_oleItemToVariantRef( VARIANT* pVariant, PHB_ITEM pItem,
          {
             SAFEARRAY*      pSafeArray;
             SAFEARRAYBOUND  sabound[ 1 ];
-            HB_SIZE         ul, ulLen;
+            HB_SIZE         n, nLen;
 
-            ulLen = hb_arrayLen( pItem );
+            nLen = hb_arrayLen( pItem );
 
             sabound[ 0 ].lLbound = 0;
-            sabound[ 0 ].cElements = ( long ) ulLen;
+            sabound[ 0 ].cElements = ( long ) nLen;
 
             pSafeArray = SafeArrayCreate( VT_VARIANT, 1, sabound );
             pVariant->n1.n2.vt = VT_VARIANT | VT_ARRAY;
@@ -496,14 +496,14 @@ static void hb_oleItemToVariantRef( VARIANT* pVariant, PHB_ITEM pItem,
                pVarRef->n1.n2.n3.pparray = &pVariant->n1.n2.n3.parray;
             }
 
-            for( ul = 0; ul < ulLen; ul++ )
+            for( n = 0; n < nLen; n++ )
             {
                VARIANT  vItem;
                long     lIndex[ 1 ];
 
                VariantInit( &vItem );
-               hb_oleItemToVariantRef( &vItem, hb_arrayGetItemPtr( pItem, ul + 1 ), NULL, pObjFunc );
-               lIndex[ 0 ] = ( long ) ul;
+               hb_oleItemToVariantRef( &vItem, hb_arrayGetItemPtr( pItem, n + 1 ), NULL, pObjFunc );
+               lIndex[ 0 ] = ( long ) n;
                SafeArrayPutElement( pSafeArray, lIndex, &vItem );
                VariantClear( &vItem );
             }
