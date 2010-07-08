@@ -314,15 +314,15 @@ HB_EXPR_PTR hb_compExprNewDouble( double dValue, HB_BYTE ucWidth, HB_BYTE ucDec,
    return pExpr;
 }
 
-HB_EXPR_PTR hb_compExprNewLong( HB_MAXINT lValue, HB_COMP_DECL )
+HB_EXPR_PTR hb_compExprNewLong( HB_MAXINT nValue, HB_COMP_DECL )
 {
    HB_EXPR_PTR pExpr;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewLong(%" PFHL "d, %p)", lValue, HB_COMP_PARAM));
+   HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewLong(%" PFHL "d, %p)", nValue, HB_COMP_PARAM));
 
    pExpr = HB_COMP_EXPR_NEW( HB_ET_NUMERIC );
 
-   pExpr->value.asNum.val.l   = lValue;
+   pExpr->value.asNum.val.l   = nValue;
    pExpr->value.asNum.bWidth  = HB_DEFAULT_WIDTH;
    pExpr->value.asNum.bDec    = 0;
    pExpr->value.asNum.NumType = HB_ET_LONG;

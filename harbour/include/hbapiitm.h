@@ -125,8 +125,8 @@ extern HB_EXPORT PHB_ITEM     hb_itemPutND     ( PHB_ITEM pItem, double dNumber 
 extern HB_EXPORT PHB_ITEM     hb_itemPutNI     ( PHB_ITEM pItem, int iNumber );
 extern HB_EXPORT PHB_ITEM     hb_itemPutNL     ( PHB_ITEM pItem, long lNumber );
 extern HB_EXPORT PHB_ITEM     hb_itemPutNS     ( PHB_ITEM pItem, HB_ISIZ nNumber );
-extern HB_EXPORT PHB_ITEM     hb_itemPutNInt   ( PHB_ITEM pItem, HB_MAXINT lNumber );
-extern HB_EXPORT PHB_ITEM     hb_itemPutNIntLen( PHB_ITEM pItem, HB_MAXINT lNumber, int iWidth );
+extern HB_EXPORT PHB_ITEM     hb_itemPutNInt   ( PHB_ITEM pItem, HB_MAXINT nNumber );
+extern HB_EXPORT PHB_ITEM     hb_itemPutNIntLen( PHB_ITEM pItem, HB_MAXINT nNumber, int iWidth );
 extern HB_EXPORT PHB_ITEM     hb_itemPutNLen   ( PHB_ITEM pItem, double dNumber, int iWidth, int iDec );
 extern HB_EXPORT PHB_ITEM     hb_itemPutNDLen  ( PHB_ITEM pItem, double dNumber, int iWidth, int iDec );
 extern HB_EXPORT PHB_ITEM     hb_itemPutNDDec  ( PHB_ITEM pItem, double dNumber, int iDec );

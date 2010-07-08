@@ -826,13 +826,13 @@ HB_BOOL hb_arraySetNLL( PHB_ITEM pArray, HB_SIZE nIndex, HB_LONGLONG llNumber )
 }
 #endif
 
-HB_BOOL hb_arraySetNInt( PHB_ITEM pArray, HB_SIZE nIndex, HB_MAXINT lNumber )
+HB_BOOL hb_arraySetNInt( PHB_ITEM pArray, HB_SIZE nIndex, HB_MAXINT nNumber )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetNInt(%p, %" HB_PFS "u, %" PFHL "d)", pArray, nIndex, lNumber));
+   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetNInt(%p, %" HB_PFS "u, %" PFHL "d)", pArray, nIndex, nNumber));
 
    if( HB_IS_ARRAY( pArray ) && nIndex > 0 && nIndex <= pArray->item.asArray.value->nLen )
    {
-      hb_itemPutNInt( pArray->item.asArray.value->pItems + nIndex - 1, lNumber );
+      hb_itemPutNInt( pArray->item.asArray.value->pItems + nIndex - 1, nNumber );
       return HB_TRUE;
    }
    else

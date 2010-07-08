@@ -1241,36 +1241,36 @@ void hb_macroGenPushSymbol( const char * szSymbolName, HB_BOOL bFunction, HB_COM
 }
 
 /* generates the pcode to push a long number on the virtual machine stack */
-void hb_macroGenPushLong( HB_MAXINT lNumber, HB_COMP_DECL )
+void hb_macroGenPushLong( HB_MAXINT nNumber, HB_COMP_DECL )
 {
-   if( lNumber == 0 )
+   if( nNumber == 0 )
    {
       hb_macroGenPCode1( HB_P_ZERO, HB_COMP_PARAM );
    }
-   else if( lNumber == 1 )
+   else if( nNumber == 1 )
    {
       hb_macroGenPCode1( HB_P_ONE, HB_COMP_PARAM );
    }
-   else if( HB_LIM_INT8( lNumber ) )
+   else if( HB_LIM_INT8( nNumber ) )
    {
-      hb_macroGenPCode2( HB_P_PUSHBYTE, ( HB_BYTE ) lNumber, HB_COMP_PARAM );
+      hb_macroGenPCode2( HB_P_PUSHBYTE, ( HB_BYTE ) nNumber, HB_COMP_PARAM );
    }
-   else if( HB_LIM_INT16( lNumber ) )
+   else if( HB_LIM_INT16( nNumber ) )
    {
-      hb_macroGenPCode3( HB_P_PUSHINT, HB_LOBYTE( lNumber ), HB_HIBYTE( lNumber ), HB_COMP_PARAM );
+      hb_macroGenPCode3( HB_P_PUSHINT, HB_LOBYTE( nNumber ), HB_HIBYTE( nNumber ), HB_COMP_PARAM );
    }
-   else if( HB_LIM_INT32( lNumber ) )
+   else if( HB_LIM_INT32( nNumber ) )
    {
       HB_BYTE pBuffer[ 5 ];
       pBuffer[ 0 ] = HB_P_PUSHLONG;
-      HB_PUT_LE_UINT32( pBuffer + 1, lNumber );
+      HB_PUT_LE_UINT32( pBuffer + 1, nNumber );
       hb_macroGenPCodeN( pBuffer, sizeof( pBuffer ), HB_COMP_PARAM );
    }
    else
    {
       HB_BYTE pBuffer[ 9 ];
       pBuffer[ 0 ] = HB_P_PUSHLONGLONG;
-      HB_PUT_LE_UINT64( pBuffer + 1, lNumber );
+      HB_PUT_LE_UINT64( pBuffer + 1, nNumber );
       hb_macroGenPCodeN( pBuffer, sizeof( pBuffer ), HB_COMP_PARAM );
    }
 }
@@ -1362,7 +1362,7 @@ void hb_macroGenPopMemvar( const char * szVarName, HB_COMP_DECL )
 void hb_macroGenPopAliasedVar( const char * szVarName,
                                HB_BOOL bPushAliasValue,
                                const char * szAlias,
-                               HB_MAXINT lWorkarea, HB_COMP_DECL )
+                               HB_MAXINT nWorkarea, HB_COMP_DECL )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_macroGenPopAliasedVar(%s->%s)",szAlias,szVarName));
 
@@ -1392,7 +1392,7 @@ void hb_macroGenPopAliasedVar( const char * szVarName,
       }
       else
       {
-         hb_macroGenPushLong( lWorkarea, HB_COMP_PARAM );
+         hb_macroGenPushLong( nWorkarea, HB_COMP_PARAM );
          hb_macroMemvarGenPCode( HB_P_MPOPALIASEDFIELD, szVarName, HB_COMP_PARAM );
       }
    }
@@ -1454,7 +1454,7 @@ void hb_macroGenPushMemvarRef( const char * szVarName, HB_COMP_DECL )
 void hb_macroGenPushAliasedVar( const char * szVarName,
                                 HB_BOOL bPushAliasValue,
                                 const char * szAlias,
-                                HB_MAXINT lWorkarea, HB_COMP_DECL )
+                                HB_MAXINT nWorkarea, HB_COMP_DECL )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_macroGenPushAliasedVar(%s->%s)",szAlias,szVarName));
 
@@ -1487,7 +1487,7 @@ void hb_macroGenPushAliasedVar( const char * szVarName,
       }
       else
       {
-         hb_macroGenPushLong( lWorkarea, HB_COMP_PARAM );
+         hb_macroGenPushLong( nWorkarea, HB_COMP_PARAM );
          hb_macroMemvarGenPCode( HB_P_MPUSHALIASEDFIELD, szVarName, HB_COMP_PARAM );
       }
    }

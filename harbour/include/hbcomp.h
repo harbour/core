@@ -204,14 +204,14 @@ extern void hb_compGenPushVarRef( const char * szVarName, HB_COMP_DECL );       
 extern void hb_compGenPushMemvarRef( const char * szVarName, HB_COMP_DECL );                 /* generates the pcode to push memvar variable by reference to the virtual machine stack */
 extern void hb_compGenPushInteger( int iNumber, HB_COMP_DECL );                              /* Pushes a integer number on the virtual machine stack */
 extern void hb_compGenPushLogical( int iTrueFalse, HB_COMP_DECL );                           /* pushes a logical value on the virtual machine stack */
-extern void hb_compGenPushLong( HB_MAXINT lNumber, HB_COMP_DECL );                           /* Pushes a long number on the virtual machine stack */
+extern void hb_compGenPushLong( HB_MAXINT nNumber, HB_COMP_DECL );                           /* Pushes a long number on the virtual machine stack */
 extern void hb_compGenPushDate( long lDate, HB_COMP_DECL );                                  /* Pushes a date constant on the virtual machine stack */
 extern void hb_compGenPushTimeStamp( long lDate, long lTime, HB_COMP_DECL );                 /* Pushes a timestamp constant on the virtual machine stack */
 extern void hb_compGenPushNil( HB_COMP_DECL );                                               /* Pushes nil on the virtual machine stack */
 extern void hb_compGenPushString( const char * szText, HB_SIZE nLen, HB_COMP_DECL );         /* Pushes a string on the virtual machine stack */
 extern void hb_compGenPushSymbol( const char * szSymbolName, HB_BOOL bFunction, HB_COMP_DECL ); /* Pushes a symbol on to the Virtual machine stack */
-extern void hb_compGenPushAliasedVar( const char *, HB_BOOL, const char *, HB_MAXINT, HB_COMP_DECL );
-extern void hb_compGenPopAliasedVar( const char *, HB_BOOL, const char *, HB_MAXINT, HB_COMP_DECL );
+extern void hb_compGenPushAliasedVar( const char * szVarName, HB_BOOL bPushAliasValue, const char * szAlias, HB_MAXINT nWorkarea, HB_COMP_DECL );
+extern void hb_compGenPopAliasedVar( const char * szVarName, HB_BOOL bPushAliasValue, const char * szAlias, HB_MAXINT nWorkarea, HB_COMP_DECL );
 extern void hb_compGenPCode1( HB_BYTE, HB_COMP_DECL ); /* generates 1 byte of pcode */
 extern void hb_compGenPCode2( HB_BYTE, HB_BYTE, HB_COMP_DECL ); /* generates 2 bytes of pcode + flag for optional StrongType(). */
 extern void hb_compGenPCode3( HB_BYTE, HB_BYTE, HB_BYTE, HB_COMP_DECL ); /* generates 3 bytes of pcode + flag for optional StrongType() */

@@ -199,9 +199,9 @@ static int hb_hashItemCmp( PHB_ITEM pKey1, PHB_ITEM pKey2, int iFlags )
    }
    else if( HB_IS_NUMINT( pKey1 ) && HB_IS_NUMINT( pKey2 ) )
    {
-      HB_MAXINT l1 = HB_ITEM_GET_NUMINTRAW( pKey1 ),
-                l2 = HB_ITEM_GET_NUMINTRAW( pKey2 );
-      return l1 < l2 ? -1 : ( l1 > l2 ? 1 : 0 );
+      HB_MAXINT n1 = HB_ITEM_GET_NUMINTRAW( pKey1 ),
+                n2 = HB_ITEM_GET_NUMINTRAW( pKey2 );
+      return n1 < n2 ? -1 : ( n1 > n2 ? 1 : 0 );
    }
    else if( HB_IS_NUMERIC( pKey2 ) )
    {

@@ -642,7 +642,7 @@ extern HB_EXPORT long         hb_parnldef( int iParam, long lDefValue ); /* retr
 extern HB_EXPORT HB_ISIZ      hb_parns( int iParam ); /* retrieve a numeric parameter as a HB_SIZE */
 extern HB_EXPORT HB_ISIZ      hb_parnsdef( int iParam, HB_ISIZ nDefValue ); /* retrieve a numeric parameter as a HB_SIZE, return default value if parameter isn't numeric */
 extern HB_EXPORT HB_MAXINT    hb_parnint( int iParam ); /* retrieve a numeric parameter as a HB_MAXINT */
-extern HB_EXPORT HB_MAXINT    hb_parnintdef( int iParam, HB_MAXINT lDefValue ); /* retrieve a numeric parameter as a HB_MAXINT, return default value if parameter isn't numeric */
+extern HB_EXPORT HB_MAXINT    hb_parnintdef( int iParam, HB_MAXINT nDefValue ); /* retrieve a numeric parameter as a HB_MAXINT, return default value if parameter isn't numeric */
 extern HB_EXPORT void *       hb_parptr( int iParam ); /* retrieve a parameter as a pointer */
 extern HB_EXPORT void *       hb_parptrGC( const HB_GC_FUNCS * pFuncs, int iParam ); /* retrieve a parameter as a pointer if it's a pointer to GC allocated block */
 #ifndef HB_LONG_LONG_OFF
@@ -689,12 +689,12 @@ extern HB_EXPORT void   hb_retnd( double dNumber ); /* returns a double */
 extern HB_EXPORT void   hb_retni( int iNumber );    /* returns a integer number */
 extern HB_EXPORT void   hb_retnl( long lNumber );/* returns a long number */
 extern HB_EXPORT void   hb_retns( HB_ISIZ nNumber );/* returns a size */
-extern HB_EXPORT void   hb_retnint( HB_MAXINT lNumber );/* returns a long number */
+extern HB_EXPORT void   hb_retnint( HB_MAXINT nNumber );/* returns a long number */
 extern HB_EXPORT void   hb_retnlen( double dNumber, int iWidth, int iDec ); /* returns a double, with specific width and decimals */
 extern HB_EXPORT void   hb_retndlen( double dNumber, int iWidth, int iDec ); /* returns a double, with specific width and decimals */
 extern HB_EXPORT void   hb_retnilen( int iNumber, int iWidth ); /* returns a integer number, with specific width */
 extern HB_EXPORT void   hb_retnllen( long lNumber, int iWidth ); /* returns a long number, with specific width */
-extern HB_EXPORT void   hb_retnintlen( HB_MAXINT lNumber, int iWidth ); /* returns a long long number, with specific width */
+extern HB_EXPORT void   hb_retnintlen( HB_MAXINT nNumber, int iWidth ); /* returns a long long number, with specific width */
 extern HB_EXPORT void   hb_reta( HB_SIZE nLen );  /* returns an array with a specific length */
 extern HB_EXPORT void   hb_retptr( void * ptr );  /* returns a pointer */
 extern HB_EXPORT void   hb_retptrGC( void * ptr );  /* returns a pointer to an allocated memory, collected by GC */
@@ -827,7 +827,7 @@ extern HB_EXPORT HB_BOOL      hb_arraySetNS( PHB_ITEM pArray, HB_SIZE nIndex, HB
 #ifndef HB_LONG_LONG_OFF
 extern HB_EXPORT HB_BOOL      hb_arraySetNLL( PHB_ITEM pArray, HB_SIZE nIndex, HB_LONGLONG llNumber );
 #endif
-extern HB_EXPORT HB_BOOL      hb_arraySetNInt( PHB_ITEM pArray, HB_SIZE nIndex, HB_MAXINT lNumber );
+extern HB_EXPORT HB_BOOL      hb_arraySetNInt( PHB_ITEM pArray, HB_SIZE nIndex, HB_MAXINT nNumber );
 extern HB_EXPORT HB_BOOL      hb_arraySetND( PHB_ITEM pArray, HB_SIZE nIndex, double dNumber );
 extern HB_EXPORT HB_BOOL      hb_arraySetC( PHB_ITEM pArray, HB_SIZE nIndex, const char * szText );
 extern HB_EXPORT HB_BOOL      hb_arraySetCL( PHB_ITEM pArray, HB_SIZE nIndex, const char * szText, HB_SIZE nLen );
@@ -965,7 +965,7 @@ extern HB_EXPORT HB_SIZE   hb_strRTrimLen( const char * szText, HB_SIZE nLen, HB
 extern HB_EXPORT double    hb_strVal( const char * szText, HB_SIZE nLen );
 extern HB_EXPORT HB_MAXINT hb_strValInt( const char * szText, int * iOverflow );
 extern HB_EXPORT char *    hb_strRemEscSeq( char * szText, HB_SIZE * nLen ); /* remove C ESC sequences and converts them to Clipper chars */
-extern HB_EXPORT char *    hb_numToStr( char * szBuf, HB_SIZE nSize, HB_MAXINT lNumber );
+extern HB_EXPORT char *    hb_numToStr( char * szBuf, HB_SIZE nSize, HB_MAXINT nNumber );
 extern HB_EXPORT double    hb_numRound( double dResult, int iDec ); /* round a number to a specific number of digits */
 extern HB_EXPORT double    hb_numInt( double dNum ); /* take the integer part of the number */
 extern HB_EXPORT double    hb_random_num( void );

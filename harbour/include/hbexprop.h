@@ -79,7 +79,7 @@ extern const HB_EXPR_FUNC_PTR hb_comp_ExprTable[ HB_EXPR_COUNT ];
 extern HB_EXPR_PTR hb_compExprNewEmpty( HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprNewNil( HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprNewDouble( double, HB_BYTE, HB_BYTE, HB_COMP_DECL );
-extern HB_EXPR_PTR hb_compExprNewLong( HB_MAXINT lValue, HB_COMP_DECL );
+extern HB_EXPR_PTR hb_compExprNewLong( HB_MAXINT nValue, HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprNewDate( long lDate, HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprNewTimeStamp( long lDate, long lTime, HB_COMP_DECL );
 extern HB_EXPR_PTR hb_compExprNewString( const char * szValue, HB_SIZE nLen, HB_BOOL fDealloc, HB_COMP_DECL );
@@ -202,7 +202,7 @@ extern HB_BOOL hb_compExprReduceCTOD( HB_EXPR_PTR, HB_COMP_DECL );
 extern HB_BOOL hb_compExprReduceUPPER( HB_EXPR_PTR, HB_COMP_DECL );
 extern HB_BOOL hb_compExprReduceMIN( HB_EXPR_PTR, HB_COMP_DECL );
 extern HB_BOOL hb_compExprReduceMAX( HB_EXPR_PTR, HB_COMP_DECL );
-extern HB_BOOL hb_compExprReduceBitFunc( HB_EXPR_PTR, HB_MAXINT lResult, HB_BOOL fBool, HB_COMP_DECL );
+extern HB_BOOL hb_compExprReduceBitFunc( HB_EXPR_PTR, HB_MAXINT nResult, HB_BOOL fBool, HB_COMP_DECL );
 
 HB_EXTERN_END
 

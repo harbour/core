@@ -693,11 +693,11 @@ HB_MAXINT hb_parnint( int iParam )
    return 0;
 }
 
-HB_MAXINT hb_parnintdef( int iParam, HB_MAXINT lDefValue )
+HB_MAXINT hb_parnintdef( int iParam, HB_MAXINT nDefValue )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_parnintdef(%d, %" PFHL "d)", iParam, lDefValue));
+   HB_TRACE(HB_TR_DEBUG, ("hb_parnintdef(%d, %" PFHL "d)", iParam, nDefValue));
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -718,7 +718,7 @@ HB_MAXINT hb_parnintdef( int iParam, HB_MAXINT lDefValue )
 #endif
    }
 
-   return lDefValue;
+   return nDefValue;
 }
 
 void * hb_parptr( int iParam )
@@ -1610,13 +1610,13 @@ void hb_retnll( HB_LONGLONG llNumber )
 #endif
 
 #undef hb_retnint
-void hb_retnint( HB_MAXINT lNumber )
+void hb_retnint( HB_MAXINT nNumber )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_retnl(%" PFHL "d )", lNumber));
+   HB_TRACE(HB_TR_DEBUG, ("hb_retnl(%" PFHL "d )", nNumber));
 
-   hb_itemPutNInt( hb_stackReturnItem(), lNumber );
+   hb_itemPutNInt( hb_stackReturnItem(), nNumber );
 }
 
 #undef hb_retnlen
@@ -1672,13 +1672,13 @@ void hb_retnlllen( HB_LONGLONG llNumber, int iWidth )
 #endif
 
 #undef hb_retnintlen
-void hb_retnintlen( HB_MAXINT lNumber, int iWidth )
+void hb_retnintlen( HB_MAXINT nNumber, int iWidth )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_retnintlen(%" PFHL "d, %d)", lNumber, iWidth));
+   HB_TRACE(HB_TR_DEBUG, ("hb_retnintlen(%" PFHL "d, %d)", nNumber, iWidth));
 
-   hb_itemPutNIntLen( hb_stackReturnItem(), lNumber, iWidth );
+   hb_itemPutNIntLen( hb_stackReturnItem(), nNumber, iWidth );
 }
 
 #undef hb_retptr

@@ -2842,11 +2842,11 @@ static int hb_gt_def_MouseReadKey( PHB_GT pGT, int iEventMask )
       if( iEventMask & INKEY_LDOWN && HB_GTSELF_MOUSEBUTTONPRESSED( pGT, 0, &iRow, &iCol ) )
       {
          HB_MAXUINT timer = hb_dateMilliSeconds();
-         if( timer - pGT->iMouseLeftTimer <= ( HB_MAXUINT ) HB_GTSELF_MOUSEGETDOUBLECLICKSPEED( pGT ) )
+         if( timer - pGT->nMouseLeftTimer <= ( HB_MAXUINT ) HB_GTSELF_MOUSEGETDOUBLECLICKSPEED( pGT ) )
             iKey = K_LDBLCLK;
          else
             iKey = K_LBUTTONDOWN;
-         pGT->iMouseLeftTimer = timer;
+         pGT->nMouseLeftTimer = timer;
       }
       else if( iEventMask & INKEY_LUP && HB_GTSELF_MOUSEBUTTONRELEASED( pGT, 0, &iRow, &iCol ) )
       {
@@ -2855,11 +2855,11 @@ static int hb_gt_def_MouseReadKey( PHB_GT pGT, int iEventMask )
       else if( iEventMask & INKEY_RDOWN && HB_GTSELF_MOUSEBUTTONPRESSED( pGT, 1, &iRow, &iCol ) )
       {
          HB_MAXUINT timer = hb_dateMilliSeconds();
-         if( timer - pGT->iMouseRightTimer <= ( HB_MAXUINT ) HB_GTSELF_MOUSEGETDOUBLECLICKSPEED( pGT ) )
+         if( timer - pGT->nMouseRightTimer <= ( HB_MAXUINT ) HB_GTSELF_MOUSEGETDOUBLECLICKSPEED( pGT ) )
             iKey = K_RDBLCLK;
          else
             iKey = K_RBUTTONDOWN;
-         pGT->iMouseRightTimer = timer;
+         pGT->nMouseRightTimer = timer;
       }
       else if( iEventMask & INKEY_RUP && HB_GTSELF_MOUSEBUTTONRELEASED( pGT, 1, &iRow, &iCol ) )
       {
@@ -2868,11 +2868,11 @@ static int hb_gt_def_MouseReadKey( PHB_GT pGT, int iEventMask )
       else if( iEventMask & INKEY_MMIDDLE && HB_GTSELF_MOUSEBUTTONPRESSED( pGT, 2, &iRow, &iCol ) )
       {
          HB_MAXUINT timer = hb_dateMilliSeconds();
-         if( timer - pGT->iMouseMiddleTimer <= ( HB_MAXUINT ) HB_GTSELF_MOUSEGETDOUBLECLICKSPEED( pGT ) )
+         if( timer - pGT->nMouseMiddleTimer <= ( HB_MAXUINT ) HB_GTSELF_MOUSEGETDOUBLECLICKSPEED( pGT ) )
             iKey = K_MDBLCLK;
          else
             iKey = K_MBUTTONDOWN;
-         pGT->iMouseMiddleTimer = timer;
+         pGT->nMouseMiddleTimer = timer;
       }
       else if( iEventMask & INKEY_MMIDDLE && HB_GTSELF_MOUSEBUTTONRELEASED( pGT, 2, &iRow, &iCol ) )
       {

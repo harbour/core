@@ -2792,7 +2792,7 @@ void hb_compGenPushMemvarRef( const char * szVarName, HB_COMP_DECL ) /* generate
 void hb_compGenPopAliasedVar( const char * szVarName,
                               HB_BOOL bPushAliasValue,
                               const char * szAlias,
-                              HB_MAXINT lWorkarea,
+                              HB_MAXINT nWorkarea,
                               HB_COMP_DECL )
 {
    if( bPushAliasValue )
@@ -2819,7 +2819,7 @@ void hb_compGenPopAliasedVar( const char * szVarName,
       }
       else
       {
-         hb_compGenPushLong( lWorkarea, HB_COMP_PARAM );
+         hb_compGenPushLong( nWorkarea, HB_COMP_PARAM );
          hb_compGenVarPCode( HB_P_POPALIASEDFIELD, szVarName, HB_COMP_PARAM );
       }
    }
@@ -2837,7 +2837,7 @@ void hb_compGenPopAliasedVar( const char * szVarName,
 void hb_compGenPushAliasedVar( const char * szVarName,
                                HB_BOOL bPushAliasValue,
                                const char * szAlias,
-                               HB_MAXINT lWorkarea,
+                               HB_MAXINT nWorkarea,
                                HB_COMP_DECL )
 {
    if( bPushAliasValue )
@@ -2868,7 +2868,7 @@ void hb_compGenPushAliasedVar( const char * szVarName,
       }
       else
       {
-         hb_compGenPushLong( lWorkarea, HB_COMP_PARAM );
+         hb_compGenPushLong( nWorkarea, HB_COMP_PARAM );
          hb_compGenVarPCode( HB_P_PUSHALIASEDFIELD, szVarName, HB_COMP_PARAM );
       }
    }
@@ -2943,47 +2943,47 @@ void hb_compGenPushSymbol( const char * szSymbolName, HB_BOOL bFunction, HB_COMP
 }
 
 /* generates the pcode to push a long number on the virtual machine stack */
-void hb_compGenPushLong( HB_MAXINT lNumber, HB_COMP_DECL )
+void hb_compGenPushLong( HB_MAXINT nNumber, HB_COMP_DECL )
 {
    if( HB_COMP_PARAM->fLongOptimize )
    {
-      if( lNumber == 0 )
+      if( nNumber == 0 )
          hb_compGenPCode1( HB_P_ZERO, HB_COMP_PARAM );
-      else if( lNumber == 1 )
+      else if( nNumber == 1 )
          hb_compGenPCode1( HB_P_ONE, HB_COMP_PARAM );
-      else if( HB_LIM_INT8( lNumber ) )
-         hb_compGenPCode2( HB_P_PUSHBYTE, ( HB_BYTE ) lNumber, HB_COMP_PARAM );
-      else if( HB_LIM_INT16( lNumber ) )
-         hb_compGenPCode3( HB_P_PUSHINT, HB_LOBYTE( lNumber ), HB_HIBYTE( lNumber ), HB_COMP_PARAM );
-      else if( HB_LIM_INT32( lNumber ) )
+      else if( HB_LIM_INT8( nNumber ) )
+         hb_compGenPCode2( HB_P_PUSHBYTE, ( HB_BYTE ) nNumber, HB_COMP_PARAM );
+      else if( HB_LIM_INT16( nNumber ) )
+         hb_compGenPCode3( HB_P_PUSHINT, HB_LOBYTE( nNumber ), HB_HIBYTE( nNumber ), HB_COMP_PARAM );
+      else if( HB_LIM_INT32( nNumber ) )
       {
          HB_BYTE pBuffer[ 5 ];
          pBuffer[ 0 ] = HB_P_PUSHLONG;
-         HB_PUT_LE_UINT32( pBuffer + 1, lNumber );
+         HB_PUT_LE_UINT32( pBuffer + 1, nNumber );
          hb_compGenPCodeN( pBuffer, sizeof( pBuffer ), HB_COMP_PARAM );
       }
       else
       {
          HB_BYTE pBuffer[ 9 ];
          pBuffer[ 0 ] = HB_P_PUSHLONGLONG;
-         HB_PUT_LE_UINT64( pBuffer + 1, lNumber );
+         HB_PUT_LE_UINT64( pBuffer + 1, nNumber );
          hb_compGenPCodeN( pBuffer, sizeof( pBuffer ), HB_COMP_PARAM );
       }
    }
    else
    {
-      if( HB_LIM_INT32( lNumber ) )
+      if( HB_LIM_INT32( nNumber ) )
       {
          HB_BYTE pBuffer[ 5 ];
          pBuffer[ 0 ] = HB_P_PUSHLONG;
-         HB_PUT_LE_UINT32( pBuffer + 1, lNumber );
+         HB_PUT_LE_UINT32( pBuffer + 1, nNumber );
          hb_compGenPCodeN( pBuffer, sizeof( pBuffer ), HB_COMP_PARAM );
       }
       else
       {
          HB_BYTE pBuffer[ 9 ];
          pBuffer[ 0 ] = HB_P_PUSHLONGLONG;
-         HB_PUT_LE_UINT64( pBuffer + 1, lNumber );
+         HB_PUT_LE_UINT64( pBuffer + 1, nNumber );
          hb_compGenPCodeN( pBuffer, sizeof( pBuffer ), HB_COMP_PARAM );
       }
    }

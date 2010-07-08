@@ -2513,11 +2513,11 @@ HB_BOOL hb_compExprReduceMAX( HB_EXPR_PTR pSelf, HB_COMP_DECL )
    return HB_FALSE;
 }
 
-HB_BOOL hb_compExprReduceBitFunc( HB_EXPR_PTR pSelf, HB_MAXINT lResult, HB_BOOL fBool, HB_COMP_DECL )
+HB_BOOL hb_compExprReduceBitFunc( HB_EXPR_PTR pSelf, HB_MAXINT nResult, HB_BOOL fBool, HB_COMP_DECL )
 {
    HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;
-   HB_EXPR_PTR pExpr = fBool ? hb_compExprNewLogical( lResult != 0, HB_COMP_PARAM ) :
-                               hb_compExprNewLong( lResult, HB_COMP_PARAM );
+   HB_EXPR_PTR pExpr = fBool ? hb_compExprNewLogical( nResult != 0, HB_COMP_PARAM ) :
+                               hb_compExprNewLong( nResult, HB_COMP_PARAM );
 
    HB_COMP_EXPR_FREE( pParms );
    HB_COMP_EXPR_FREE( pSelf->value.asFunCall.pFunName );
