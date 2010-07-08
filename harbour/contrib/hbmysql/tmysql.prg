@@ -1342,6 +1342,7 @@ CREATE CLASS TMySQLServer
    METHOD NetErr() INLINE ::lError                         // Returns .T. if something went wrong
    METHOD Error()                                          // Returns textual description of last error
    METHOD CreateDatabase( cDataBase )                      // Create an New Mysql Database
+   METHOD DeleteDatabase( cDataBase )                        // Delete database
 
    METHOD sql_Commit()                                     // Commits transaction [mitja]
    METHOD sql_Rollback()                                   // Rollbacks transaction [mitja]
@@ -1560,6 +1561,16 @@ METHOD DeleteTable( cTable ) CLASS TMySQLServer
    ENDIF
 
    RETURN .F.
+
+METHOD DeleteDatabase( cDataBase ) CLASS TMySQLServer
+ 
+    LOCAL cDropQuery := "DROP DATABASE " + Lower( cDBName )
+ 
+    IF mysql_query( ::nSocket, cDropQuery ) == 0
+       RETURN .T.
+    ENDIF
+ 
+RETURN .F.
 
 
 METHOD Query( cQuery ) CLASS TMySQLServer
