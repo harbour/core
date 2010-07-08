@@ -1562,15 +1562,16 @@ METHOD DeleteTable( cTable ) CLASS TMySQLServer
 
    RETURN .F.
 
+
 METHOD DeleteDatabase( cDataBase ) CLASS TMySQLServer
- 
-    LOCAL cDropQuery := "DROP DATABASE " + Lower( cDBName )
- 
-    IF mysql_query( ::nSocket, cDropQuery ) == 0
-       RETURN .T.
-    ENDIF
- 
-RETURN .F.
+
+   LOCAL cDropQuery := "DROP DATABASE " + Lower( cDBName )
+
+   IF mysql_query( ::nSocket, cDropQuery ) == 0
+      RETURN .T.
+   ENDIF
+
+   RETURN .F.
 
 
 METHOD Query( cQuery ) CLASS TMySQLServer
