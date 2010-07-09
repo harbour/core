@@ -4,6 +4,8 @@
 
 -stop{!HB_QT_BUILD_STATIC|!allwin}
 
+-hblib
+
 hbqtgui.hbp
 
 -o${hb_name}

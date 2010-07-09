@@ -6,8 +6,6 @@ ROOT := ../
 
 # contribs _without_ external dependencies
 DIRS := \
-   gtwvg \
-   hbbz2 \
    hbcomm \
    hbct \
    hbfoxpro \
@@ -28,6 +26,8 @@ DIRS := \
    xhb \
 
 # under testing in make.hbs
+#  gtwvg \
+#  hbbz2 \
 #  hbblink \
 #  hbclipsm \
 #  hbnetio \
@@ -35,8 +35,6 @@ DIRS := \
 
 # contribs _with_ external dependencies
 DIRS += \
-   gtalleg \
-   hbblat \
    hbcairo \
    hbcups \
    hbcurl \
@@ -56,6 +54,10 @@ DIRS += \
    sddodbc \
    sddpg \
    sddsqlt3 \
+
+# under testing in make.hbs
+#  hbblat \
+#  gtalleg \
 
 # contribs dependent on above
 DIRS += \

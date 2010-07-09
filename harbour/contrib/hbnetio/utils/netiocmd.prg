@@ -64,7 +64,7 @@ STATIC PROCEDURE cmdHelp( hCommands )
    AAdd( aTexts, PadR( " <Up>", m )    + "  - Move up on historic list." )
    AAdd( aTexts, PadR( " <Down>", m )  + "  - Move down on historic list." )
    AAdd( aTexts, PadR( " <Tab>", m )   + "  - Complete command." )
-   AAdd( aTexts, PadR( " <Alt+V>", m ) + "  - Paste Clipboard contents (if apropriate)." )
+   AAdd( aTexts, PadR( " <Alt+V>", m ) + "  - Paste from clipboard." )
 
    c := 0
    m := MaxRow()

@@ -56,6 +56,7 @@ proc main()
        iif( netio_funcexec( "MakeDir", "./data" ) == -1, "error", "OK" )
    endif
 
+   ? "'" + DBNAME + "'"
    createdb( DBNAME )
    testdb( DBNAME )
    wait

@@ -23,12 +23,13 @@
  *
  */
 
-#include "hbhrb.ch"
-
 #include "color.ch"
-#include "hbgtinfo.ch"
+#include "fileio.ch"
 #include "inkey.ch"
 #include "setcurs.ch"
+
+#include "hbgtinfo.ch"
+#include "hbhrb.ch"
 
 /* netio_mtserver() needs MT HVM version */
 REQUEST HB_MT
@@ -70,6 +71,9 @@ PROCEDURE Main( ... )
    LOCAL nPos
    LOCAL aCmd
 
+   LOCAL cExt
+   LOCAL cFile
+
    LOCAL aHistory, nHistIndex
 
    HB_Logo()
@@ -93,7 +97,29 @@ PROCEDURE Main( ... )
          hb_StrClear( @cParam )
       CASE Lower( Left( cParam, 5 ) ) == "-rpc="
          netiosrv[ _NETIOSRV_cRPCFFileName ] := SubStr( cParam, 6 )
-         netiosrv[ _NETIOSRV_cRPCFHRB ] := hb_hrbLoad( HB_HRB_BIND_FORCELOCAL, netiosrv[ _NETIOSRV_cRPCFFileName ] )
+         hb_FNameSplit( netiosrv[ _NETIOSRV_cRPCFFileName ], NIL, NIL, @cExt )
+         cExt := Lower( cExt )
+         SWITCH cExt
+            CASE ".prg"
+            CASE ".hbs"
+            CASE ".hrb"
+               EXIT
+            OTHERWISE
+               cExt := FileSig( cFile )
+         ENDSWITCH
+         SWITCH cExt
+            CASE ".prg"
+            CASE ".hbs"
+               cFile := HB_COMPILEBUF( HB_ARGV( 0 ), "-n2", "-w", "-es2", "-q0",;
+                                       "-D" + "__HBSCRIPT__HBNETIOSRV", netiosrv[ _NETIOSRV_cRPCFFileName ] )
+               IF cFile != NIL
+                  netiosrv[ _NETIOSRV_cRPCFHRB ] := hb_hrbLoad( HB_HRB_BIND_FORCELOCAL, cFile )
+               ENDIF
+               EXIT
+            OTHERWISE
+               netiosrv[ _NETIOSRV_cRPCFHRB ] := hb_hrbLoad( HB_HRB_BIND_FORCELOCAL, netiosrv[ _NETIOSRV_cRPCFFileName ] )
+               EXIT
+         ENDSWITCH
          netiosrv[ _NETIOSRV_lRPC ] := ! Empty( netiosrv[ _NETIOSRV_cRPCFHRB ] ) .AND. ! Empty( hb_hrbGetFunSym( netiosrv[ _NETIOSRV_cRPCFHRB ], _RPC_FILTER ) )
          IF ! netiosrv[ _NETIOSRV_lRPC ]
             netiosrv[ _NETIOSRV_cRPCFFileName ] := NIL
@@ -212,6 +238,24 @@ PROCEDURE Main( ... )
    ENDIF
 
    RETURN
+
+STATIC FUNCTION FileSig( cFile )
+   LOCAL hFile
+   LOCAL cBuff, cSig, cExt
+
+   cExt := ".prg"
+   hFile := FOpen( cFile, FO_READ )
+   IF hFile != F_ERROR
+      cSig := hb_hrbSignature()
+      cBuff := Space( Len( cSig ) )
+      FRead( hFile, @cBuff, Len( cSig ) )
+      FClose( hFile )
+      IF cBuff == cSig
+         cExt := ".hrb"
+      ENDIF
+   ENDIF
+
+   RETURN cExt
 
 /* Complete the command line, based on the first characters that the user typed. [vailtom] */
 STATIC PROCEDURE CompleteCmd( cCommand, hCommands )

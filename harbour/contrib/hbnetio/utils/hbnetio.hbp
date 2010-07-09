@@ -2,8 +2,10 @@
 # $Id$
 #
 
-# Add it explicitly to allow calling this .hbp from other dirs.
-hbmk.hbm
+../hbnetio.hbc
+-mt
+
+-w3 -es2 -l
 
 -o${hb_name}
 
@@ -13,3 +15,5 @@ netiocmd.prg
 -ldflag={allmsvc}-nxcompat
 -ldflag={allmsvc}-dynamicbase
 -ldflag={allmsvc}-fixed:no
+
+-prgflag=-DHB_EXTERN

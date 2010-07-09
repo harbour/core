@@ -1,0 +1,20 @@
+#
+# $Id$
+#
+
+# These are mandatory in Harbour SVN, they will always
+# override project options.
+
+-w3 -es2 -kmo -i-
+-warn=yes
+-cflag=-DHB_LEGACY_TYPES_OFF
+{allwin&!(HB_BUILD_UNICODE='no')}-cflag=-DUNICODE
+
+{HB_BUILD_DEBUG}-l-
+{HB_BUILD_DEBUG}-debug
+{HB_BUILD_DEBUG}-cflag=-DHB_TR_LEVEL_DEBUG
+
+{hblib|hbimplib}-o../../lib/${hb_plat}/${hb_comp}${hb_build}/
+{hbexe|hbdyn}-o../../bin/${hb_plat}/${hb_comp}${hb_build}/
+
+-workdir=${hb_outputdir}${hb_work}/${hb_outputname}${hb_workdynsub}

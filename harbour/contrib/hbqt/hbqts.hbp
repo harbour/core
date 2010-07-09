@@ -6,6 +6,8 @@
 
 hbqt.hbp
 
+-hblib
+
 -o${hb_name}
 -workdir=${hb_work}/${hb_plat}/${hb_comp}/${hb_name}
 
