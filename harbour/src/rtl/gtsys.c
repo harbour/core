@@ -75,4 +75,9 @@
    HB_GT_REQUEST( STD )
 #endif
 
-HB_FUNC( HB_GTSYS ) {}
+HB_FUNC( HB_GTSYS )
+{
+#if defined( HB_OS_WIN ) && defined( __BORLANDC__ ) && defined( __cplusplus )
+   hb_gt_ForceLink_HB_GT_WIN();
+#endif
+}

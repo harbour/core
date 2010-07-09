@@ -207,7 +207,7 @@ typedef struct _CLIPKEYCODE
 /* Keypad keys */
 
 
-static const CLIPKEYCODE stdKeyTab[ CLIP_STDKEY_COUNT ] = {
+static const CLIPKEYCODE s_stdKeyTab[ CLIP_STDKEY_COUNT ] = {
    { 32,                  0,             0,         0,             0}, /* ' ' */
    { 33,                  0,             0,         0,             0}, /* '!' */
    { 34,                  0,             0,         0,             0}, /* '"' */
@@ -1564,9 +1564,9 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
             else if( wChar >= 112 && wChar <= 123 )   /* F1-F12 VK_F1-VK_F12 */
                extKey = wChar - 112;
             else if( ch >= K_SPACE && ch <= K_CTRL_BS )
-               clipKey = &stdKeyTab[ ch - K_SPACE ];
+               clipKey = &s_stdKeyTab[ ch - K_SPACE ];
             else if( ch > 0 && ch < K_SPACE && ( dwState & ( LEFT_CTRL_PRESSED | RIGHT_CTRL_PRESSED ) ) )
-               clipKey = &stdKeyTab[ ch + '@' ];
+               clipKey = &s_stdKeyTab[ ch + '@' ];
             else if( ch < 0 ) /* international keys */
                ch += 256;
 
