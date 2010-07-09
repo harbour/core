@@ -122,6 +122,8 @@ CLASS IdeDocFunction
    DATA   oTVItem
    DATA   cSourceTxt                              INIT ""
 
+   DATA   lOk                                     INIT .f.
+
    METHOD new()                                   INLINE Self
 
    ENDCLASS
@@ -146,6 +148,10 @@ CLASS IdeHarbourHelp INHERIT IdeObject
    DATA   qHiliter
 
    DATA   hIndex                                  INIT {=>}
+
+   DATA   aProtoTypes                             INIT {}
+   DATA   lLoadedProto                            INIT .f.
+   DATA   aFuncDefs                               INIT {}
 
    METHOD new( oIde )
    METHOD create( oIde )
@@ -175,6 +181,8 @@ CLASS IdeHarbourHelp INHERIT IdeObject
    METHOD parseTextFile( cTextFile, oParent )
    METHOD jumpToFunction( cFunction )
    METHOD getDocFunction( acBuffer )
+   METHOD getFunctionPrototypes()
+   METHOD pullDefinitions( acBuffer )
 
    ENDCLASS
 
@@ -192,6 +200,8 @@ METHOD IdeHarbourHelp:create( oIde )
 
    DEFAULT oIde TO ::oIde
    ::oIde := oIde
+
+   ::cPathInstall := ::cWrkHarbour
 
    RETURN Self
 
@@ -212,6 +222,8 @@ METHOD IdeHarbourHelp:show()
       ::populateRootInfo()
 
       ::refreshDocTree()
+
+      ::oEM:updateCompleter()
    ENDIF
 
    RETURN Self
@@ -487,6 +499,7 @@ METHOD IdeHarbourHelp:execEvent( nMode, p, p1 )
 
    CASE "buttonRefresh_clicked"
       ::refreshDocTree()
+      ::oEM:updateCompleter()
       EXIT
 
    CASE "buttonPrint_clicked"
@@ -756,154 +769,23 @@ METHOD IdeHarbourHelp:populateIndex()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeHarbourHelp:getDocFunction( acBuffer )
-   LOCAL a_, s, oFunc, nPart, lIsFunc
+METHOD IdeHarbourHelp:pullDefinitions( acBuffer )
+   LOCAL a_, s, nPart, oFunc
+   LOCAL lIsFunc := .f.
+   LOCAL aFn     := {}
 
    IF hb_isArray( acBuffer )
       a_:= acBuffer
    ELSE
-      a_:= hbide_memoTOarray( acBuffer )
+      IF hb_fileExists( acBuffer )
+         a_:= hbide_readSource( acBuffer )
+      ELSE
+         a_:= hbide_memoTOarray( acBuffer )
+      ENDIF
    ENDIF
 
-   oFunc := IdeDocFunction():new()
-
-   lIsFunc := .f.
-   FOR EACH s IN a_
-
-      DO CASE
-      CASE "$DOC$"         $ s
-         lIsFunc := .t.
-      CASE "$END$"         $ s
-         EXIT
-      CASE "$TEMPLATE$"    $ s
-         nPart := DOC_FUN_TEMPLATE
-      CASE "$FUNCNAME$"    $ s   .OR.  "$NAME$" $ s
-         nPart := DOC_FUN_FUNCNAME
-      CASE "$CATEGORY$"    $ s
-         nPart := DOC_FUN_CATEGORY
-      CASE "$SUBCATEGORY$" $ s
-         nPart := DOC_FUN_SUBCATEGORY
-      CASE "$ONELINER$"    $ s
-         nPart := DOC_FUN_ONELINER
-      CASE "$SYNTAX$"      $ s
-         nPart := DOC_FUN_SYNTAX
-      CASE "$ARGUMENTS$"   $ s
-         nPart := DOC_FUN_ARGUMENTS
-      CASE "$RETURNS$"     $ s
-         nPart := DOC_FUN_RETURNS
-      CASE "$DESCRIPTION$" $ s
-         nPart := DOC_FUN_DESCRIPTION
-      CASE "$EXAMPLES$"    $ s
-         nPart := DOC_FUN_EXAMPLES
-      CASE "$TESTS$"       $ s
-         nPart := DOC_FUN_TESTS
-      CASE "$FILES$"       $ s
-         nPart := DOC_FUN_FILES
-      CASE "$STATUS$"       $ s
-         nPart := DOC_FUN_STATUS
-      CASE "$PLATFORMS$"   $ s  .OR.  "$COMPLIANCE$" $ s
-         nPart := DOC_FUN_PLATFORMS
-      CASE "$SEEALSO$"     $ s
-         nPart := DOC_FUN_SEEALSO
-      CASE "$VERSION$"     $ s
-         nPart := DOC_FUN_VERSION
-      CASE "$INHERITS"     $ s
-         nPart := DOC_FUN_INHERITS
-      CASE "$METHODS"      $ s
-         nPart := DOC_FUN_METHODS
-      CASE "$EXTERNALLINK" $ s
-         nPart := DOC_FUN_EXTERNALLINK
-      OTHERWISE
-         IF ! lIsFunc
-            LOOP   // It is a fake line not within $DOC$ => $END$ block
-         ENDIF
-         s := substr( s, 9 )
-
-         SWITCH nPart
-         CASE DOC_FUN_BEGINS
-            EXIT
-         CASE DOC_FUN_TEMPLATE
-            oFunc:cTemplate    := s
-            EXIT
-         CASE DOC_FUN_FUNCNAME
-            oFunc:cName        := alltrim( s )
-            EXIT
-         CASE DOC_FUN_CATEGORY
-            oFunc:cCategory    := alltrim( s )
-            EXIT
-         CASE DOC_FUN_SUBCATEGORY
-            oFunc:cSubCategory := alltrim( s )
-            EXIT
-         CASE DOC_FUN_ONELINER
-            oFunc:cOneLiner    := s
-            EXIT
-         CASE DOC_FUN_SYNTAX
-            aadd( oFunc:aSyntax     , s )
-            EXIT
-         CASE DOC_FUN_ARGUMENTS
-            aadd( oFunc:aArguments  , s )
-            EXIT
-         CASE DOC_FUN_RETURNS
-            aadd( oFunc:aReturns    , s )
-            EXIT
-         CASE DOC_FUN_DESCRIPTION
-            aadd( oFunc:aDescription, s )
-            EXIT
-         CASE DOC_FUN_EXAMPLES
-            aadd( oFunc:aExamples   , s )
-            EXIT
-         CASE DOC_FUN_TESTS
-            aadd( oFunc:aTests      , s )
-            EXIT
-         CASE DOC_FUN_FILES
-            aadd( oFunc:aFiles      , s )
-            EXIT
-         CASE DOC_FUN_STATUS
-            oFunc:cStatus    := alltrim( s )
-            EXIT
-         CASE DOC_FUN_PLATFORMS
-            oFunc:cPlatForms := alltrim( s )
-            EXIT
-         CASE DOC_FUN_SEEALSO
-            oFunc:cSeaAlso   := alltrim( s )
-            EXIT
-         CASE DOC_FUN_INHERITS
-            oFunc:cInherits  := alltrim( s )
-            EXIT
-         CASE DOC_FUN_METHODS
-            aadd( oFunc:aMethods    , s )
-            EXIT
-         CASE DOC_FUN_VERSION
-            oFunc:cVersion   := alltrim( s )
-            EXIT
-         CASE DOC_FUN_EXTERNALLINK
-            oFunc:cExternalLink := alltrim( s )
-            EXIT
-         OTHERWISE
-            nPart := DOC_FUN_NONE
-            EXIT
-         ENDSWITCH
-      ENDCASE
-   NEXT
-
-   IF ! lIsFunc
-      oFunc := NIL
-   ENDIF
-   RETURN oFunc
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeHarbourHelp:parseTextFile( cTextFile, oParent )
-   LOCAL a_, s, nPart, oFunc, oTWItem
-   LOCAL lIsFunc := .f.
-   LOCAL cIcon   := hbide_image( "dc_function" )
-   LOCAL aFn     := {}
-   LOCAL nParsed := ascan( ::aFuncByFile, {|e_| e_[ 1 ] == cTextFile } )
-
-   IF nParsed == 0
+   IF .t.
       nPart := DOC_FUN_NONE
-
-      a_:= hbide_readSource( cTextFile )
 
       FOR EACH s IN a_
          DO CASE
@@ -915,15 +797,7 @@ METHOD IdeHarbourHelp:parseTextFile( cTextFile, oParent )
 
          CASE "$END$"         $ s
             IF lIsFunc
-               lIsFunc := .f.
-               nPart   := DOC_FUN_ENDS
-               oTWItem := QTreeWidgetItem():new()
-               oTWItem:setText( 0, oFunc:cName )
-               oTWItem:setIcon( 0, cIcon )
-               oTWItem:setTooltip( 0, oFunc:cName )
-               oParent:addChild( oTWItem )
-               aadd( ::aNodes, { oTWItem, "Function", oParent, cTextFile + "<::>" + oFunc:cName, oFunc:cName } )
-               aadd( ::aFunctions, { cTextFile, oFunc:cName, oFunc, oTWItem, NIL, lower( oFunc:cName ) } )
+               oFunc:lOk := .t.
                aadd( aFn, oFunc )
             ENDIF
 
@@ -1040,11 +914,85 @@ METHOD IdeHarbourHelp:parseTextFile( cTextFile, oParent )
             ENDSWITCH
          ENDCASE
       NEXT
+   ENDIF
 
+   RETURN aFn
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeHarbourHelp:parseTextFile( cTextFile, oParent )
+   LOCAL aFn, oFunc, oTWItem
+   LOCAL cIcon   := hbide_image( "dc_function" )
+   LOCAL nParsed := ascan( ::aFuncByFile, {|e_| e_[ 1 ] == cTextFile } )
+
+   IF nParsed == 0
+      IF !empty( aFn := ::pullDefinitions( cTextFile ) )
+         FOR EACH oFunc IN aFn
+            oTWItem   := QTreeWidgetItem():new()
+            oTWItem:setText( 0, oFunc:cName )
+            oTWItem:setIcon( 0, cIcon )
+            oTWItem:setTooltip( 0, oFunc:cName )
+            oParent:addChild( oTWItem )
+            aadd( ::aNodes, { oTWItem, "Function", oParent, cTextFile + "<::>" + oFunc:cName, oFunc:cName } )
+            aadd( ::aFunctions, { cTextFile, oFunc:cName, oFunc, oTWItem, NIL, lower( oFunc:cName ) } )
+         NEXT
+      ENDIF
       aadd( ::aFuncByFile, { cTextFile, aFn } )
    ENDIF
 
    RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeHarbourHelp:getDocFunction( acBuffer )
+   LOCAL aFn
+
+   IF !empty( aFn := ::pullDefinitions( acBuffer ) )
+      RETURN aFn[ 1 ]
+   ENDIF
+
+   RETURN NIL
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeHarbourHelp:getFunctionPrototypes()
+   LOCAL a_, cFolder, aFN, oFunc, cNFolder
+   LOCAL aPaths := {}
+   LOCAL aDocs  := {}
+   LOCAL aProto := {}
+
+   IF !empty( ::cPathInstall )
+      IF ! ::lLoadedProto
+         hbide_fetchSubPaths( @aPaths, ::cPathInstall, .t. )
+
+         FOR EACH cFolder IN aPaths
+            cNFolder := hbide_pathNormalized( cFolder, .t. )
+            IF ( "/doc" $ cNFolder ) .OR. ( "/doc/en" $ cNFolder )
+               aadd( aDocs, cFolder )
+            ENDIF
+         NEXT
+
+         FOR EACH cFolder IN aDocs
+            FOR EACH a_ IN directory( cFolder + "*.txt" )
+               IF a_[ 5 ] != "D"
+                  aFn := ::pullDefinitions( cFolder + a_[ 1 ] )
+                  FOR EACH oFunc IN aFn
+                     IF hb_isObject( oFunc )
+                        IF !empty( oFunc:aSyntax )
+                           aadd( aProto, oFunc:aSyntax[ 1 ] ) //hbide_arrayToMemoEx( oFunc:aSyntax ) )
+                        ENDIF
+                     ENDIF
+                  NEXT
+               ENDIF
+            NEXT
+         NEXT
+
+         ::aProtoTypes := aProto
+         ::lLoadedProto := .t.
+      ENDIF
+   ENDIF
+
+   RETURN ::aProtoTypes
 
 /*----------------------------------------------------------------------*/
 

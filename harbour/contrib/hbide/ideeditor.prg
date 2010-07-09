@@ -228,14 +228,46 @@ METHOD IdeEditsManager:create( oIde )
    ::oIde:qProtoList := QStringList():new()
    ::oIde:qCompModel := QStringListModel():new()
    ::oIde:qCompleter := QCompleter():new()
+
    ::connect( ::qCompleter, "activated(QString)", {|p| ::execEvent( "qcompleter_activated", p ) } )
-   ::updateCompleter()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEditsManager:updateCompleter()
+   LOCAL aFun := ::oFN:getFunctionPrototypes()
+   LOCAL aHrb := ::oHL:getFunctionPrototypes()
+   LOCAL n, s, a_, k_:={}
+
+   ::disconnect( ::qCompleter, "activated(QString)", {|p| ::execEvent( "qcompleter_activated", p ) } )
+
+   FOR EACH a_ IN { aFun, aHrb }
+      FOR EACH s IN a_
+         s := trim( s )
+         IF ::oINI:lCompletionWithArgs
+            IF ascan( k_, s ) == 0
+               aadd( k_, s )
+            ENDIF
+         ELSE
+            IF ( n := at( "(", s ) ) == 0
+               IF ( n := at( " ", s ) ) > 0
+                  aadd( k_, substr( s, 1, n - 1 ) )
+               ELSE
+                  aadd( k_, trim( s ) )
+               ENDIF
+            ELSE
+               aadd( k_, substr( s, 1, n - 1 ) )
+            ENDIF
+         ENDIF
+      NEXT
+   NEXT
+
+   asort( k_, , , {|e,f| lower( e ) < lower( f ) } )
+
+   ::qProtoList:clear()
+
+   aeval( k_, {|e| ::qProtoList:append( e ) } )
 
    ::qCompModel:setStringList( ::qProtoList )
    ::qCompleter:setModel( ::qCompModel )
@@ -245,6 +277,8 @@ METHOD IdeEditsManager:updateCompleter()
    ::qCompleter:setWrapAround( .f. )
 
    QListView():from( ::qCompleter:popup() ):setAlternatingRowColors( .t. )
+
+   ::connect( ::qCompleter, "activated(QString)", {|p| ::execEvent( "qcompleter_activated", p ) } )
 
    RETURN Self
 

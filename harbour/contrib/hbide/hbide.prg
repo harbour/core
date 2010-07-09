@@ -430,7 +430,7 @@ METHOD HbIde:create( aParams )
    hbide_loadThemes( Self )
 
    /* Harbour Help Object */
-   ::oHL := ideHarbourHelp():new():create( Self )
+//   ::oHL := ideHarbourHelp():new():create( Self )
 
    /* DOCKing windows and ancilliary windows */
    ::oDK := IdeDocks():new():create( Self )
@@ -460,6 +460,9 @@ METHOD HbIde:create( aParams )
 
    /* Edits Manager */
    ::oEM := IdeEditsManager():new( Self ):create()
+
+   /* Harbour Help Object */
+   ::oHL := ideHarbourHelp():new():create( Self )
 
    /* Load Environments */
    ::oEV := IdeEnvironments():new( Self ):create()
@@ -534,6 +537,8 @@ METHOD HbIde:create( aParams )
    ::qTabWidget:setCurrentIndex( 0 )
    ::qTabWidget:setCurrentIndex( ::qTabWidget:count() - 1 )
    ::qTabWidget:setCurrentIndex( val( ::oINI:cRecentTabIndex ) )
+
+   ::oEM:updateCompleter()
 
    ::showApplicationCursor()
    qSplash:close()

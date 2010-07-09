@@ -570,8 +570,6 @@ METHOD IdeDocks:setViewInitials( cView )
 
    ::setView( cView )
 
-HB_TRACE( HB_TR_ALWAYS, cView, ::qTabWidget:count() )
-
    IF ::qTabWidget:count() == 1
       ::oEM:setSourceVisibleByIndex( 0 )
    ELSE

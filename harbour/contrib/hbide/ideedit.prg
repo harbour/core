@@ -2201,10 +2201,14 @@ METHOD IdeEdit:parseCodeCompletion( cSyntax )
    LOCAL cText, n
 
    IF ::oINI:lCompleteArgumented
-      cText := trim( cSyntax )
+      IF ( n := rat( ")", cSyntax ) ) > 0
+         cText := trim( substr( cSyntax, 1, n ) )
+      ELSE
+         cText := trim( cSyntax )
+      ENDIF
    ELSE
       IF ( n := at( "(", cSyntax ) ) > 0
-         cText := trim( substr( cSyntax, 1, n - 1 ) )
+         cText := trim( substr( cSyntax, 1, n ) )
       ELSE
          cText := trim( cSyntax )
       ENDIF

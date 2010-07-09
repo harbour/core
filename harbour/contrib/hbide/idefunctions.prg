@@ -125,6 +125,7 @@ CLASS IdeFunctions INHERIT IdeObject
    METHOD clearProjects()
    METHOD getMarkedProjects()
    METHOD enableControls( lEnable )
+   METHOD getFunctionPrototypes()
 
    ENDCLASS
 
@@ -591,7 +592,7 @@ METHOD IdeFunctions:consolidateList()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeFunctions:populateTable()
-   LOCAL oTbl, qItm, a_, n, s, k_:={}
+   LOCAL oTbl, qItm, a_, n
    LOCAL qApp := QApplication():new()
 
    ::clear( .t. )
@@ -616,31 +617,20 @@ METHOD IdeFunctions:populateTable()
       ::oUI:q_labelEntries:setText( "Entries: " + hb_ntos( n ) )
    NEXT
 
-   FOR EACH a_ IN ::aList
-      s := a_[ 2 ]
-      IF ::oINI:lCompletionWithArgs
-         aadd( k_, trim( s ) )
-      ELSE
-         IF ( n := at( "(", s ) ) == 0
-            IF ( n := at( " ", s ) ) > 0
-               aadd( k_, substr( s, 1, n - 1 ) )
-            ELSE
-               aadd( k_, trim( s ) )
-            ENDIF
-         ELSE
-            aadd( k_, substr( s, 1, n - 1 ) )
-         ENDIF
-      ENDIF
-   NEXT
-
-   asort( k_, , , {|e,f| lower( e ) < lower( f ) } )
-
-   ::qProtoList:clear()
-   aeval( k_, {|e| ::qProtoList:append( e ) } )
-
    ::oEM:updateCompleter()
 
    RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeFunctions:getFunctionPrototypes()
+   LOCAL aProto := {}, a_
+
+   FOR EACH a_ IN ::aList
+      aadd( aProto, alltrim( a_[ 2 ] ) )
+   NEXT
+
+   RETURN aProto
 
 /*----------------------------------------------------------------------*/
 
