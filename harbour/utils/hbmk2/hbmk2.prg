@@ -4166,7 +4166,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    IF lDumpReferences
       OutStd( "hbrefs{{" + hb_eol() )
       FOR EACH tmp IN hbmk[ _HBMK_aDEPTHBC ]
-         OutStd( PathSepToForward( PathNormalize( tmp ) ) + hb_eol() )
+         OutStd( Replicate( Chr( 9 ), tmp[ 2 ] ) + PathSepToForward( PathNormalize( tmp[ 1 ] ) ) + hb_eol() )
       NEXT
       OutStd( "}}" + hb_eol() )
       RETURN 0
@@ -7704,7 +7704,7 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
       RETURN .F.
    ENDIF
 
-   AAddNew( hbmk[ _HBMK_aDEPTHBC ], cFileName )
+   AAddNew( hbmk[ _HBMK_aDEPTHBC ], { cFileName, nNestingLevel - 1 } )
 
    cFile := MemoRead( cFileName ) /* NOTE: Intentionally using MemoRead() which handles EOF char. */
 
