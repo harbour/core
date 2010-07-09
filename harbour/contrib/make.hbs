@@ -507,6 +507,11 @@ PROCEDURE GNUMake( ... )
                   LOOP
                ENDIF
 
+               IF GetEnv( "HB_BUILD_PARTS" ) == "lib" .AND. ;
+                  !( cType $ "hbimplib|hblib" )
+                  LOOP
+               ENDIF
+
                IF nAction == _ACT_CLEAN
                   cOptionsPre += " -clean"
                ELSE
@@ -530,6 +535,7 @@ PROCEDURE GNUMake( ... )
 
                /* Highly experimental */
                IF cType == "hblib" .AND. GetEnv( "HB_BUILD_CONTRIB_DLL" ) == "yes" .AND. ;
+                  !( GetEnv( "HB_BUILD_PARTS" ) == "lib" ) .AND. ;
                   hb_FileExists( FNameExtSet( cBase + cProject, ".hbc" ) )
 
                   cInstallDirVar := "_HB_DYN_INSTALL"
