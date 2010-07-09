@@ -7,6 +7,4 @@ hbqt_common.hbm
 -o${hb_name}
 -workdir=${hb_work}/${hb_plat}/${hb_comp}/${hb_name}
 
-qtcore/*.cpp
-qtcore/*.prg
-qtcore/*.h
+qtcore/filelist.hbm

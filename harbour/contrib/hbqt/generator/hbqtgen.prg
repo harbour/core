@@ -1500,7 +1500,7 @@ STATIC FUNCTION ParseVariables( cProto, cWidget, txt_, doc_, aEnum, func_ )
 STATIC FUNCTION BuildHeader( txt_, nMode )
 
    aadd( txt_, "/*"                                                                            )
-   aadd( txt_, " * $Id$"                     )
+   aadd( txt_, " * $" + "Id" + "$"                                                             )
    aadd( txt_, " */"                                                                           )
    aadd( txt_, ""                                                                              )
    aadd( txt_, "/* -------------------------------------------------------------------- */"    )
@@ -1864,7 +1864,7 @@ STATIC FUNCTION Build_GarbageFile( cpp_, cPathOut )
    LOCAL s
 
    aadd( txt_, "/*"                                                                            )
-   aadd( txt_, " * $Id$"                     )
+   aadd( txt_, " * $" + "Id" + "$"                                                             )
    aadd( txt_, " */"                                                                           )
    aadd( txt_, ""                                                                              )
    aadd( txt_, "/* -------------------------------------------------------------------- */"    )
@@ -1893,12 +1893,13 @@ STATIC FUNCTION Build_GarbageFile( cpp_, cPathOut )
 STATIC FUNCTION Build_MakeFile( cpp_, prg_, cPathOut )
    LOCAL cFile, s, i
    LOCAL txt_ := {}, hdr_:= {}, aSubs := {}
+   LOCAL hbm_ := {}
 
    HB_SYMBOL_UNUSED( cpp_ )
    HB_SYMBOL_UNUSED( prg_ )
 
    aadd( hdr_, "#" )
-   aadd( hdr_, "# $Id$" )
+   aadd( hdr_, "# $" + "Id" + "$" )
    aadd( hdr_, "#" )
    aadd( hdr_, "" )
    aadd( hdr_, "# --------------------------------------------------------------------" )
@@ -1925,24 +1926,30 @@ STATIC FUNCTION Build_MakeFile( cpp_, prg_, cPathOut )
    FOR i := 1 TO len( aSubs )
       txt_:= {}
       aeval( hdr_, {|e| aadd( txt_, e ) } )
+      hbm_ := {}
+      aeval( hdr_, {|e| aadd( hbm_, e ) } )
       aadd( txt_, "CPP_SOURCES := \" )
       //
       FOR EACH s IN aSubs[ i, 2 ]
          aadd( txt_, "   " + s + ".cpp \" )
+         aadd( hbm_, + s + ".cpp" )
       NEXT
+      aadd( hbm_, "" )
       aadd( txt_, "" )
       aadd( txt_, "" )
       aadd( txt_, "" )
       aadd( txt_, "PRG_SOURCES := \" )
       FOR EACH s IN aSubs[ i, 2 ]
          aadd( txt_, "   " + "T" + s + ".prg \" )
+         aadd( hbm_, + "T" + s + ".prg" )
       NEXT
       aadd( txt_, "" )
       aadd( txt_, "# Don't delete this comment, it's here to ensure empty" )
       aadd( txt_, "# line above is kept intact." )
       //
-      cFile := iif( empty( cPathOut ), "", cPathOut + s_PathSep + aSubs[ i, 1 ] + s_PathSep ) + "filelist.mk"
-      CreateTarget( cFile, txt_ )
+      cFile := iif( empty( cPathOut ), "", cPathOut + s_PathSep + aSubs[ i, 1 ] + s_PathSep )
+      CreateTarget( cFile + "filelist.mk", txt_ )
+      CreateTarget( cFile + "filelist.hbm", hbm_ )
    NEXT
 
    RETURN NIL
