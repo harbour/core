@@ -3258,7 +3258,7 @@ PHB_GT hb_gtLoad( const char * szGtName, PHB_GT pGT, PHB_GT_FUNCS pSuperTable )
       if( hb_stricmp( szGtName, "nul" ) == 0 || hb_stricmp( szGtName, "null" ) == 0 )
       {
          if( pGT || pSuperTable )
-            hb_errInternal( 9998, "Harbour terminal (GT) initialization failure", NULL, NULL );
+            hb_errInternal( 9996, "Harbour terminal (GT) initialization failure", NULL, NULL );
 
          pGT = ( PHB_GT_BASE ) hb_xgrab( sizeof( HB_GT_BASE ) );
          memset( pGT, 0, sizeof( HB_GT_BASE ) );

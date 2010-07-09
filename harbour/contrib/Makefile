@@ -16,7 +16,6 @@ DIRS := \
    hbmemio \
    hbmisc \
    hbmzip \
-   hbnetio \
    hbnf \
    hbodbc \
    hbsms \
@@ -31,6 +30,7 @@ DIRS := \
 # under testing in make.hbs
 #  hbblink \
 #  hbclipsm \
+#  hbnetio \
 #  rddbmcdx \
 
 # contribs _with_ external dependencies
