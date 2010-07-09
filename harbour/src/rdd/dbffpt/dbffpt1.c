@@ -3308,7 +3308,6 @@ static HB_ERRCODE hb_fptGetVarField( FPTAREAP pArea, HB_USHORT uiIndex, PHB_ITEM
                   pString = hb_cdpnDup3( pString, ulLen, pAlloc, &nLen,
                                          &pAlloc, &nSize, pArea->area.cdPage, hb_vmCDP() );
                   ulLen = ( HB_ULONG ) nLen;
-                  ulSize = ( HB_ULONG ) nSize;
                }
             }
 

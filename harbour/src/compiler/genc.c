@@ -800,7 +800,7 @@ static HB_GENC_FUNC( hb_p_jumpnear )
    {
       HB_ISIZ nOffset = ( signed char ) ( pFunc->pCode[ nPCodePos + 1 ] );
 
-      fprintf( cargo->yyc, "\t/* %li (abs: %05li) */", nOffset, ( HB_ISIZ ) ( nPCodePos + nOffset ) );
+      fprintf( cargo->yyc, "\t/* %" HB_PFS "i (abs: %05" HB_PFS "i) */", nOffset, ( HB_ISIZ ) ( nPCodePos + nOffset ) );
    }
    fprintf( cargo->yyc, "\n" );
    return 2;
@@ -815,7 +815,7 @@ static HB_GENC_FUNC( hb_p_jump )
    {
       HB_ISIZ nOffset = HB_PCODE_MKSHORT( &pFunc->pCode[ nPCodePos + 1 ] );
 
-      fprintf( cargo->yyc, "\t/* %li (abs: %05li) */", nOffset, ( HB_ISIZ ) ( nPCodePos + nOffset ) );
+      fprintf( cargo->yyc, "\t/* %" HB_PFS "i (abs: %05" HB_PFS "i) */", nOffset, ( HB_ISIZ ) ( nPCodePos + nOffset ) );
    }
    fprintf( cargo->yyc, "\n" );
    return 3;
@@ -830,7 +830,7 @@ static HB_GENC_FUNC( hb_p_jumpfar )
    if( cargo->bVerbose )
    {
       HB_ISIZ nOffset = HB_PCODE_MKINT24( &pFunc->pCode[ nPCodePos + 1 ] );
-      fprintf( cargo->yyc, "\t/* %li (abs: %08li) */", nOffset, ( HB_ISIZ ) ( nPCodePos + nOffset ) );
+      fprintf( cargo->yyc, "\t/* %" HB_PFS "i (abs: %08" HB_PFS "i) */", nOffset, ( HB_ISIZ ) ( nPCodePos + nOffset ) );
    }
    fprintf( cargo->yyc, "\n" );
    return 4;
@@ -843,7 +843,7 @@ static HB_GENC_FUNC( hb_p_jumpfalsenear )
    if( cargo->bVerbose )
    {
       HB_ISIZ nOffset = ( signed char ) ( pFunc->pCode[ nPCodePos + 1 ] );
-      fprintf( cargo->yyc, "\t/* %li (abs: %05li) */", nOffset, ( HB_ISIZ ) ( nPCodePos + nOffset ) );
+      fprintf( cargo->yyc, "\t/* %" HB_PFS "i (abs: %05" HB_PFS "i) */", nOffset, ( HB_ISIZ ) ( nPCodePos + nOffset ) );
    }
    fprintf( cargo->yyc, "\n" );
    return 2;
@@ -857,7 +857,7 @@ static HB_GENC_FUNC( hb_p_jumpfalse )
    if( cargo->bVerbose )
    {
       HB_ISIZ nOffset = HB_PCODE_MKSHORT( &pFunc->pCode[ nPCodePos + 1 ] );
-      fprintf( cargo->yyc, "\t/* %li (abs: %05li) */", nOffset, ( HB_ISIZ ) ( nPCodePos + nOffset ) );
+      fprintf( cargo->yyc, "\t/* %" HB_PFS "i (abs: %05" HB_PFS "i) */", nOffset, ( HB_ISIZ ) ( nPCodePos + nOffset ) );
    }
    fprintf( cargo->yyc, "\n" );
    return 3;
@@ -872,7 +872,7 @@ static HB_GENC_FUNC( hb_p_jumpfalsefar )
    if( cargo->bVerbose )
    {
       HB_ISIZ nOffset = HB_PCODE_MKINT24( &pFunc->pCode[ nPCodePos + 1 ] );
-      fprintf( cargo->yyc, "\t/* %li (abs: %08li) */", nOffset, ( HB_ISIZ ) ( nPCodePos + nOffset ) );
+      fprintf( cargo->yyc, "\t/* %" HB_PFS "i (abs: %08" HB_PFS "i) */", nOffset, ( HB_ISIZ ) ( nPCodePos + nOffset ) );
    }
    fprintf( cargo->yyc, "\n" );
    return 4;
@@ -885,7 +885,7 @@ static HB_GENC_FUNC( hb_p_jumptruenear )
    if( cargo->bVerbose )
    {
       HB_ISIZ nOffset = ( signed char ) ( pFunc->pCode[ nPCodePos + 1 ] );
-      fprintf( cargo->yyc, "\t/* %li (abs: %05li) */", nOffset, ( HB_ISIZ ) ( nPCodePos + nOffset ) );
+      fprintf( cargo->yyc, "\t/* %" HB_PFS "i (abs: %05" HB_PFS "i) */", nOffset, ( HB_ISIZ ) ( nPCodePos + nOffset ) );
    }
    fprintf( cargo->yyc, "\n" );
    return 2;
@@ -899,7 +899,7 @@ static HB_GENC_FUNC( hb_p_jumptrue )
    if( cargo->bVerbose )
    {
       HB_ISIZ nOffset = HB_PCODE_MKSHORT( &pFunc->pCode[ nPCodePos + 1 ] );
-      fprintf( cargo->yyc, "\t/* %li (abs: %05li) */", nOffset, ( HB_ISIZ ) ( nPCodePos + nOffset ) );
+      fprintf( cargo->yyc, "\t/* %" HB_PFS "i (abs: %05" HB_PFS "i) */", nOffset, ( HB_ISIZ ) ( nPCodePos + nOffset ) );
    }
    fprintf( cargo->yyc, "\n" );
    return 3;
@@ -914,7 +914,7 @@ static HB_GENC_FUNC( hb_p_jumptruefar )
    if( cargo->bVerbose )
    {
       HB_ISIZ nOffset = HB_PCODE_MKINT24( &pFunc->pCode[ nPCodePos + 1 ] );
-      fprintf( cargo->yyc, "\t/* %li (abs: %08li) */", nOffset, ( HB_ISIZ ) ( nPCodePos + nOffset ) );
+      fprintf( cargo->yyc, "\t/* %" HB_PFS "i (abs: %08" HB_PFS "i) */", nOffset, ( HB_ISIZ ) ( nPCodePos + nOffset ) );
    }
    fprintf( cargo->yyc, "\n" );
    return 4;
@@ -941,7 +941,7 @@ static HB_GENC_FUNC( hb_p_lessequal )
 static HB_GENC_FUNC( hb_p_line )
 {
    if( cargo->bVerbose )
-      fprintf( cargo->yyc, "/* %05li */ ", nPCodePos );
+      fprintf( cargo->yyc, "/* %05" HB_PFS "i */ ", nPCodePos );
    else
       fprintf( cargo->yyc, "\t" );
    fprintf( cargo->yyc, "HB_P_LINE, %i, %i,",
@@ -1870,7 +1870,7 @@ static HB_GENC_FUNC( hb_p_seqbegin )
    if( cargo->bVerbose )
    {
       HB_ISIZ nOffset = HB_PCODE_MKINT24( &pFunc->pCode[ nPCodePos + 1 ] );
-      fprintf( cargo->yyc, "\t/* %li (abs: %08li) */", nOffset, nPCodePos + nOffset );
+      fprintf( cargo->yyc, "\t/* %" HB_PFS "i (abs: %08" HB_PFS "i) */", nOffset, nPCodePos + nOffset );
    }
    fprintf( cargo->yyc, "\n" );
    return 4;
@@ -1878,7 +1878,7 @@ static HB_GENC_FUNC( hb_p_seqbegin )
 
 static HB_GENC_FUNC( hb_p_seqend )
 {
-   if( cargo->bVerbose ) fprintf( cargo->yyc, "/* %05li */ ", nPCodePos );
+   if( cargo->bVerbose ) fprintf( cargo->yyc, "/* %05" HB_PFS "i */ ", nPCodePos );
    else fprintf( cargo->yyc, "\t" );
    fprintf( cargo->yyc, "HB_P_SEQEND, %i, %i, %i,",
             pFunc->pCode[ nPCodePos + 1 ],
@@ -1887,7 +1887,7 @@ static HB_GENC_FUNC( hb_p_seqend )
    if( cargo->bVerbose )
    {
       HB_ISIZ nOffset = HB_PCODE_MKINT24( &pFunc->pCode[ nPCodePos + 1 ] );
-      fprintf( cargo->yyc, "\t/* %li (abs: %08li) */", nOffset, nPCodePos + nOffset );
+      fprintf( cargo->yyc, "\t/* %" HB_PFS "i (abs: %08" HB_PFS "i) */", nOffset, nPCodePos + nOffset );
    }
    fprintf( cargo->yyc, "\n" );
    return 4;
@@ -1911,7 +1911,7 @@ static HB_GENC_FUNC( hb_p_seqalways )
    if( cargo->bVerbose )
    {
       HB_ISIZ nOffset = HB_PCODE_MKINT24( &pFunc->pCode[ nPCodePos + 1 ] );
-      fprintf( cargo->yyc, "\t/* %li (abs: %08li) */", nOffset, nPCodePos + nOffset );
+      fprintf( cargo->yyc, "\t/* %" HB_PFS "i (abs: %08" HB_PFS "i) */", nOffset, nPCodePos + nOffset );
    }
    fprintf( cargo->yyc, "\n" );
    return 4;
@@ -1921,7 +1921,7 @@ static HB_GENC_FUNC( hb_p_alwaysbegin )
 {
    HB_SYMBOL_UNUSED( pFunc );
 
-   if( cargo->bVerbose ) fprintf( cargo->yyc, "/* %05li */ ", nPCodePos );
+   if( cargo->bVerbose ) fprintf( cargo->yyc, "/* %05" HB_PFS "i */ ", nPCodePos );
    else fprintf( cargo->yyc, "\t" );
 
    fprintf( cargo->yyc, "HB_P_ALWAYSBEGIN, %i, %i, %i,",
@@ -1931,7 +1931,7 @@ static HB_GENC_FUNC( hb_p_alwaysbegin )
    if( cargo->bVerbose )
    {
       HB_ISIZ nOffset = HB_PCODE_MKINT24( &pFunc->pCode[ nPCodePos + 1 ] );
-      fprintf( cargo->yyc, "\t/* %li (abs: %08li) */", nOffset, nPCodePos + nOffset );
+      fprintf( cargo->yyc, "\t/* %" HB_PFS "i (abs: %08" HB_PFS "i) */", nOffset, nPCodePos + nOffset );
    }
    fprintf( cargo->yyc, "\n" );
    return 4;
@@ -1941,7 +1941,7 @@ static HB_GENC_FUNC( hb_p_alwaysend )
 {
    HB_SYMBOL_UNUSED( pFunc );
 
-   if( cargo->bVerbose ) fprintf( cargo->yyc, "/* %05li */ ", nPCodePos );
+   if( cargo->bVerbose ) fprintf( cargo->yyc, "/* %05" HB_PFS "i */ ", nPCodePos );
    else fprintf( cargo->yyc, "\t" );
 
    fprintf( cargo->yyc, "HB_P_ALWAYSEND,\n" );
@@ -2110,7 +2110,7 @@ static HB_GENC_FUNC( hb_p_enumend )
 static HB_GENC_FUNC( hb_p_switch )
 {
    if( cargo->bVerbose )
-      fprintf( cargo->yyc, "/* %05li */ ", nPCodePos );
+      fprintf( cargo->yyc, "/* %05" HB_PFS "i */ ", nPCodePos );
    else
       fprintf( cargo->yyc, "\t" );
 
@@ -2683,7 +2683,7 @@ static void hb_compGenCReadable( HB_COMP_DECL, PFUNCTION pFunc, FILE * yyc )
    hb_compPCodeEval( pFunc, ( HB_PCODE_FUNC_PTR * ) pFuncTable, ( void * ) &genc_info );
 
    if( genc_info.bVerbose )
-      fprintf( yyc, "/* %05li */\n", pFunc->nPCodePos );
+      fprintf( yyc, "/* %05" HB_PFS "i */\n", pFunc->nPCodePos );
    fprintf( yyc, "   };\n\n" );
    fprintf( yyc, "   hb_vmExecute( pcode, symbols );\n}\n" );
 }

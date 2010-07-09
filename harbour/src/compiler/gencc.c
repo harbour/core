@@ -63,7 +63,7 @@ typedef HB_GENC_FUNC_ * HB_GENC_FUNC_PTR;
 #define HB_GENC_LABEL()       do { \
                                  HB_SIZE nLab = HB_GENC_GETLABEL( nPCodePos ); \
                                  if( nLab != 0 ) \
-                                    fprintf( cargo->yyc, "lab%05ld: ;\n", nLab ); \
+                                    fprintf( cargo->yyc, "lab%05" HB_PFS "d: ;\n", nLab ); \
                               } while( 0 )
 
 #define HB_GENC_ERROR(s)       do { \
@@ -155,14 +155,14 @@ static int hb_gencc_checkJumpCondAhead( HB_ISIZ nValue, PFUNCTION pFunc, HB_SIZE
 
       if( iSize )
       {
-         fprintf( cargo->yyc, "\tif( hb_xvm%sIntIs( %ld, &fValue ) ) break;\n",
+         fprintf( cargo->yyc, "\tif( hb_xvm%sIntIs( %" HB_PFS "d, &fValue ) ) break;\n",
                   szFunc, nValue );
-         fprintf( cargo->yyc, "\tif( %sfValue )\n\t\tgoto lab%05ld;\n",
+         fprintf( cargo->yyc, "\tif( %sfValue )\n\t\tgoto lab%05" HB_PFS "d;\n",
                   fNot ? "!" : "", HB_GENC_GETLABEL( nPCodePos + 1 + nOffset ) );
          return iSize;
       }
    }
-   fprintf( cargo->yyc, "\tif( hb_xvm%sInt( %ld ) ) break;\n",
+   fprintf( cargo->yyc, "\tif( hb_xvm%sInt( %" HB_PFS "d ) ) break;\n",
             szFunc, nValue );
    return 1;
 }
@@ -174,13 +174,13 @@ static int hb_gencc_checkNumAhead( HB_ISIZ nValue, PFUNCTION pFunc, HB_SIZE nPCo
       switch( pFunc->pCode[ nPCodePos ] )
       {
          case HB_P_POPLOCAL:
-            fprintf( cargo->yyc, "\thb_xvmLocalSetInt( %d, %ld );\n",
+            fprintf( cargo->yyc, "\thb_xvmLocalSetInt( %d, %" HB_PFS "d );\n",
                      HB_PCODE_MKSHORT( &pFunc->pCode[ nPCodePos + 1 ] ),
                      nValue );
             return 3;
 
          case HB_P_POPLOCALNEAR:
-            fprintf( cargo->yyc, "\thb_xvmLocalSetInt( %d, %ld );\n",
+            fprintf( cargo->yyc, "\thb_xvmLocalSetInt( %d, %" HB_PFS "d );\n",
                      ( signed char ) pFunc->pCode[ nPCodePos + 1 ], nValue );
             return 2;
 
@@ -206,7 +206,7 @@ static int hb_gencc_checkNumAhead( HB_ISIZ nValue, PFUNCTION pFunc, HB_SIZE nPCo
          case HB_P_ARRAYPUSH:
             if( nValue > 0 )
             {
-               fprintf( cargo->yyc, "\tif( hb_xvmArrayItemPush( %ld ) ) break;\n", nValue );
+               fprintf( cargo->yyc, "\tif( hb_xvmArrayItemPush( %" HB_PFS "d ) ) break;\n", nValue );
                return 1;
             }
             break;
@@ -214,27 +214,27 @@ static int hb_gencc_checkNumAhead( HB_ISIZ nValue, PFUNCTION pFunc, HB_SIZE nPCo
          case HB_P_ARRAYPOP:
             if( nValue > 0 )
             {
-               fprintf( cargo->yyc, "\tif( hb_xvmArrayItemPop( %ld ) ) break;\n", nValue );
+               fprintf( cargo->yyc, "\tif( hb_xvmArrayItemPop( %" HB_PFS "d ) ) break;\n", nValue );
                return 1;
             }
             break;
 
          case HB_P_MULT:
-            fprintf( cargo->yyc, "\tif( hb_xvmMultByInt( %ld ) ) break;\n", nValue );
+            fprintf( cargo->yyc, "\tif( hb_xvmMultByInt( %" HB_PFS "d ) ) break;\n", nValue );
             return 1;
 
          case HB_P_DIVIDE:
-            fprintf( cargo->yyc, "\tif( hb_xvmDivideByInt( %ld ) ) break;\n", nValue );
+            fprintf( cargo->yyc, "\tif( hb_xvmDivideByInt( %" HB_PFS "d ) ) break;\n", nValue );
             return 1;
 
          case HB_P_MODULUS:
-            fprintf( cargo->yyc, "\tif( hb_xvmModulusByInt( %ld ) ) break;\n", nValue );
+            fprintf( cargo->yyc, "\tif( hb_xvmModulusByInt( %" HB_PFS "d ) ) break;\n", nValue );
             return 1;
 
          case HB_P_MINUS:
             if( nValue > 0 )
             {
-               fprintf( cargo->yyc, "\tif( hb_xvmAddInt( -%ld ) ) break;\n", nValue );
+               fprintf( cargo->yyc, "\tif( hb_xvmAddInt( -%" HB_PFS "d ) ) break;\n", nValue );
                return 1;
             }
 #if -LONG_MAX > LONG_MIN
@@ -245,11 +245,11 @@ static int hb_gencc_checkNumAhead( HB_ISIZ nValue, PFUNCTION pFunc, HB_SIZE nPCo
             /* no break */
 
          case HB_P_PLUS:
-            fprintf( cargo->yyc, "\tif( hb_xvmAddInt( %ld ) ) break;\n", nValue );
+            fprintf( cargo->yyc, "\tif( hb_xvmAddInt( %" HB_PFS "d ) ) break;\n", nValue );
             return 1;
 
          case HB_P_RETVALUE:
-            fprintf( cargo->yyc, "\thb_xvmRetInt( %ld );\n", nValue );
+            fprintf( cargo->yyc, "\thb_xvmRetInt( %" HB_PFS "d );\n", nValue );
             return 1;
       }
    }
@@ -541,7 +541,7 @@ static HB_GENC_FUNC( hb_p_jumpnear )
 
    HB_GENC_LABEL();
 
-   fprintf( cargo->yyc, "\tgoto lab%05ld;\n",
+   fprintf( cargo->yyc, "\tgoto lab%05" HB_PFS "d;\n",
             HB_GENC_GETLABEL( nPCodePos + nOffset ) );
    return 2;
 }
@@ -552,7 +552,7 @@ static HB_GENC_FUNC( hb_p_jump )
 
    HB_GENC_LABEL();
 
-   fprintf( cargo->yyc, "\tgoto lab%05ld;\n",
+   fprintf( cargo->yyc, "\tgoto lab%05" HB_PFS "d;\n",
             HB_GENC_GETLABEL( nPCodePos + nOffset ) );
    return 3;
 }
@@ -563,7 +563,7 @@ static HB_GENC_FUNC( hb_p_jumpfar )
 
    HB_GENC_LABEL();
 
-   fprintf( cargo->yyc, "\tgoto lab%05ld;\n",
+   fprintf( cargo->yyc, "\tgoto lab%05" HB_PFS "d;\n",
             HB_GENC_GETLABEL( nPCodePos + nOffset ) );
    return 4;
 }
@@ -574,7 +574,7 @@ static HB_GENC_FUNC( hb_p_jumpfalsenear )
 
    HB_GENC_LABEL();
 
-   fprintf( cargo->yyc, "\tif( hb_xvmPopLogical( &fValue ) ) break;\n\tif( !fValue )\n\t\tgoto lab%05ld;\n",
+   fprintf( cargo->yyc, "\tif( hb_xvmPopLogical( &fValue ) ) break;\n\tif( !fValue )\n\t\tgoto lab%05" HB_PFS "d;\n",
             HB_GENC_GETLABEL( nPCodePos + nOffset ) );
    return 2;
 }
@@ -585,7 +585,7 @@ static HB_GENC_FUNC( hb_p_jumpfalse )
 
    HB_GENC_LABEL();
 
-   fprintf( cargo->yyc, "\tif( hb_xvmPopLogical( &fValue ) ) break;\n\tif( !fValue )\n\t\tgoto lab%05ld;\n",
+   fprintf( cargo->yyc, "\tif( hb_xvmPopLogical( &fValue ) ) break;\n\tif( !fValue )\n\t\tgoto lab%05" HB_PFS "d;\n",
             HB_GENC_GETLABEL( nPCodePos + nOffset ) );
    return 3;
 }
@@ -596,7 +596,7 @@ static HB_GENC_FUNC( hb_p_jumpfalsefar )
 
    HB_GENC_LABEL();
 
-   fprintf( cargo->yyc, "\tif( hb_xvmPopLogical( &fValue ) ) break;\n\tif( !fValue )\n\t\tgoto lab%05ld;\n",
+   fprintf( cargo->yyc, "\tif( hb_xvmPopLogical( &fValue ) ) break;\n\tif( !fValue )\n\t\tgoto lab%05" HB_PFS "d;\n",
             HB_GENC_GETLABEL( nPCodePos + nOffset ) );
    return 4;
 }
@@ -607,7 +607,7 @@ static HB_GENC_FUNC( hb_p_jumptruenear )
 
    HB_GENC_LABEL();
 
-   fprintf( cargo->yyc, "\tif( hb_xvmPopLogical( &fValue ) ) break;\n\tif( fValue )\n\t\tgoto lab%05ld;\n",
+   fprintf( cargo->yyc, "\tif( hb_xvmPopLogical( &fValue ) ) break;\n\tif( fValue )\n\t\tgoto lab%05" HB_PFS "d;\n",
             HB_GENC_GETLABEL( nPCodePos + nOffset ) );
    return 2;
 }
@@ -618,7 +618,7 @@ static HB_GENC_FUNC( hb_p_jumptrue )
 
    HB_GENC_LABEL();
 
-   fprintf( cargo->yyc, "\tif( hb_xvmPopLogical( &fValue ) ) break;\n\tif( fValue )\n\t\tgoto lab%05ld;\n",
+   fprintf( cargo->yyc, "\tif( hb_xvmPopLogical( &fValue ) ) break;\n\tif( fValue )\n\t\tgoto lab%05" HB_PFS "d;\n",
             HB_GENC_GETLABEL( nPCodePos + nOffset ) );
    return 3;
 }
@@ -629,7 +629,7 @@ static HB_GENC_FUNC( hb_p_jumptruefar )
 
    HB_GENC_LABEL();
 
-   fprintf( cargo->yyc, "\tif( hb_xvmPopLogical( &fValue ) ) break;\n\tif( fValue )\n\t\tgoto lab%05ld;\n",
+   fprintf( cargo->yyc, "\tif( hb_xvmPopLogical( &fValue ) ) break;\n\tif( fValue )\n\t\tgoto lab%05" HB_PFS "d;\n",
             HB_GENC_GETLABEL( nPCodePos + nOffset ) );
    return 4;
 }
@@ -1589,7 +1589,7 @@ static HB_GENC_FUNC( hb_p_seqend )
    if( nOffset == 4 ) /* no RECOVER clasue */
       fprintf( cargo->yyc, "\t} while( 0 );\n\tif( hb_xvmSeqEnd() ) break;\n" );
    else /* RECOVER exists */
-      fprintf( cargo->yyc, "\tif( hb_xvmSeqEndTest() ) break;\n\tgoto lab%05ld;\n\t} while( 0 );\n",
+      fprintf( cargo->yyc, "\tif( hb_xvmSeqEndTest() ) break;\n\tgoto lab%05" HB_PFS "d;\n\t} while( 0 );\n",
                HB_GENC_GETLABEL( nPCodePos + nOffset ) );
    cargo->iNestedBlock--;
    return 4;
@@ -1853,7 +1853,7 @@ static HB_GENC_FUNC( hb_p_switch )
             nPCodePos += 4;
             break;
       }
-      fprintf( cargo->yyc, "\t\t{\n\t\t\thb_stackPop();\n\t\t\tgoto lab%05ld;\n\t\t}\n",
+      fprintf( cargo->yyc, "\t\t{\n\t\t\thb_stackPop();\n\t\t\tgoto lab%05" HB_PFS "d;\n\t\t}\n",
                HB_GENC_GETLABEL( nNewPos ) );
    }
    if( !fDefault )
