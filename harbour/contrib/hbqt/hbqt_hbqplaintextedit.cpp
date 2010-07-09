@@ -122,6 +122,13 @@ HBQPlainTextEdit::HBQPlainTextEdit( QWidget * parent ) : QPlainTextEdit( parent 
    isSelectionPersistent    = false;
    isShiftPressed           = false;
 
+   #if 0
+   QTextFrameFormat format( this->document()->rootFrame()->frameFormat() );
+   format.setMargin( 0 );
+   format.setPadding( 0 );
+   this->rootFrame().setFrameFormat( format );
+   #endif
+
    connect( this, SIGNAL( blockCountChanged( int ) )           , this, SLOT( hbUpdateLineNumberAreaWidth( int ) ) );
    connect( this, SIGNAL( updateRequest( const QRect &, int ) ), this, SLOT( hbUpdateLineNumberArea( const QRect &, int ) ) );
 
@@ -1300,7 +1307,7 @@ void HBQPlainTextEdit::keyPressEvent( QKeyEvent * event )
 
    if( ( hasModifier ||
          event->text().isEmpty() ||
-         completionPrefix.length() < 3 ||
+         completionPrefix.length() < 1 ||
          eow.contains( event->text().right( 1 ) ) ) )
    {
       c->popup()->hide();

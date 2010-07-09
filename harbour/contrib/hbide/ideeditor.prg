@@ -274,7 +274,7 @@ METHOD IdeEditsManager:updateCompleter()
    ::qCompleter:setModelSorting( QCompleter_CaseInsensitivelySortedModel )
    ::qCompleter:setCaseSensitivity( Qt_CaseInsensitive )
    ::qCompleter:setCompletionMode( QCompleter_PopupCompletion )
-   ::qCompleter:setWrapAround( .f. )
+   ::qCompleter:setWrapAround( .t. )
 
    QListView():from( ::qCompleter:popup() ):setAlternatingRowColors( .t. )
 
@@ -1266,10 +1266,6 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView, a
    ::connect( ::oEdit:qEdit, "updateRequest(QRect,int)", {|| ::scrollThumbnail() } )
 
    ::qDocument  := QTextDocument():configure( ::qEdit:document() )
-   ::connect( ::qDocument, "documentLayoutChanged()", {|| ::execEvent( "qDocument_documentLayoutChanged" ) } )
-
-   ::qDocLayout := QPlainTextDocumentLayout():new( ::qDocument )
-   ::qDocument:setDocumentLayout( ::qDocLayout )
 
    IF ::cType != "U"
       ::qHiliter := ::oTH:SetSyntaxHilighting( ::oEdit:qEdit, @::cTheme )
@@ -1496,24 +1492,10 @@ METHOD IdeEditor:setDocumentProperties()
 
 METHOD IdeEditor:execEvent( cEvent, p )
    LOCAL cFileTemp, aPops := {}
-   //LOCAL qRFrame, qFFormat
 
    p := p
 
    SWITCH cEvent
-   CASE "qDocument_documentLayoutChanged"
-      #if 0
-      HB_TRACE( HB_TR_ALWAYS, "qDocument_documentLayoutChanged" )
-
-      qRFrame  := QTextFrame():from( ::qDocument:rootFrame() )
-//      qFFormat := 0
-      qFFormat := QTextFrameFormat():from( qRFrame )
-//      qFFormat:setMargin( 0 )
-//      qFFormat:setPadding( 0 )
-      qRFrame:setFrameFormat( qFFormat )
-      hbide_justACall( qRFrame, qFFormat )
-      #endif
-      EXIT
 
    CASE "qTimeSave_timeout"
       IF ::qDocument:isModified()

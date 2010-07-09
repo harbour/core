@@ -46,6 +46,7 @@ ideedit.prg
 ideplugins.prg
 idedict.prg
 idebrowse.prg
+idehbprotos.prg
 
 docviewgenerator.ui
 docwriter.ui

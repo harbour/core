@@ -162,7 +162,7 @@ CLASS IdeINI INHERIT IdeObject
    DATA   cBkpPath                                INIT  ""
    DATA   cBkpSuffix                              INIT  ".bkp"
 
-   DATA   lCompletionWithArgs                     INIT  .f.
+   DATA   lCompletionWithArgs                     INIT  .t.
    DATA   lCompleteArgumented                     INIT  .f.
 
    DATA   aAppThemes                              INIT  {}
@@ -807,6 +807,50 @@ FUNCTION hbide_saveShortcuts( oIde, a_, cFileShortcuts )
    hb_memowrit( cFileShortcuts, hb_serialize( a_ ) )
 
    RETURN hb_fileExists( cFileShortcuts )
+
+/*------------------------------------------------------------------------*/
+
+FUNCTION hbide_loadHarbourProtos( oIde )
+
+   HB_SYMBOL_UNUSED( oIde )
+
+   RETURN hbide_harbourProtos()
+
+/*------------------------------------------------------------------------*/
+
+FUNCTION hbide_saveHarbourProtos( oIde, aProto )
+   LOCAL cFile := hb_dirBase() + "idehbprotos.prg"
+   LOCAL txt_  := {}
+   LOCAL cTxt  := ""
+
+   HB_SYMBOL_UNUSED( oIde )
+
+   aadd( txt_, "/*"                                                                            )
+   aadd( txt_, " * $Id$"                 )
+   aadd( txt_, " */"                                                                           )
+   aadd( txt_, ""                                                                              )
+   aadd( txt_, "/* -------------------------------------------------------------------- */"    )
+   aadd( txt_, "/* WARNING: Automatically generated source file. DO NOT EDIT!           */"    )
+   aadd( txt_, "/*          Instead, edit corresponding .qth file,                      */"    )
+   aadd( txt_, "/*          or the generator tool itself, and run regenarate.           */"    )
+   aadd( txt_, "/* -------------------------------------------------------------------- */"    )
+   aadd( txt_, " " )
+
+   aadd( txt_, "" )
+   aadd( txt_, "FUNCTION hbide_harbourProtos()" )
+   aadd( txt_, "   LOCAL aProto := {}" )
+   aadd( txt_, "" )
+   aeval( aProto, {|e| aadd( txt_, '   aadd( aProto, "' + strtran( e, '"', "'" ) + '" )' ) } )
+   aadd( txt_, "" )
+   aadd( txt_, "   RETURN aProto" )
+   aadd( txt_, "" )
+
+
+   aeval( txt_, {|e| cTxt += e + chr( 13 ) + chr( 10 ) } )
+
+   hb_memoWrit( cFile, cTxt )
+
+   RETURN hb_fileExists( cFile )
 
 /*----------------------------------------------------------------------*/
 //

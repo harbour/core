@@ -959,36 +959,44 @@ METHOD IdeHarbourHelp:getFunctionPrototypes()
    LOCAL a_, cFolder, aFN, oFunc, cNFolder
    LOCAL aPaths := {}
    LOCAL aDocs  := {}
-   LOCAL aProto := {}
+   LOCAL aProto
 
-   IF !empty( ::cPathInstall )
-      IF ! ::lLoadedProto
-         hbide_fetchSubPaths( @aPaths, ::cPathInstall, .t. )
+   IF empty( ::aProtoTypes ) .AND. empty( ::aProtoTypes := hbide_loadHarbourProtos( ::oIde ) )
+      IF !empty( ::cPathInstall )
+         IF ! ::lLoadedProto
+            hbide_fetchSubPaths( @aPaths, ::cPathInstall, .t. )
 
-         FOR EACH cFolder IN aPaths
-            cNFolder := hbide_pathNormalized( cFolder, .t. )
-            IF ( "/doc" $ cNFolder ) .OR. ( "/doc/en" $ cNFolder )
-               aadd( aDocs, cFolder )
-            ENDIF
-         NEXT
-
-         FOR EACH cFolder IN aDocs
-            FOR EACH a_ IN directory( cFolder + "*.txt" )
-               IF a_[ 5 ] != "D"
-                  aFn := ::pullDefinitions( cFolder + a_[ 1 ] )
-                  FOR EACH oFunc IN aFn
-                     IF hb_isObject( oFunc )
-                        IF !empty( oFunc:aSyntax )
-                           aadd( aProto, oFunc:aSyntax[ 1 ] ) //hbide_arrayToMemoEx( oFunc:aSyntax ) )
-                        ENDIF
-                     ENDIF
-                  NEXT
+            FOR EACH cFolder IN aPaths
+               cNFolder := hbide_pathNormalized( cFolder, .t. )
+               IF ( "/doc" $ cNFolder ) .OR. ( "/doc/en" $ cNFolder )
+                  aadd( aDocs, cFolder )
                ENDIF
             NEXT
-         NEXT
 
-         ::aProtoTypes := aProto
-         ::lLoadedProto := .t.
+            aProto := {}
+            FOR EACH cFolder IN aDocs
+               FOR EACH a_ IN directory( cFolder + "*.txt" )
+                  IF a_[ 5 ] != "D"
+                     aFn := ::pullDefinitions( cFolder + a_[ 1 ] )
+                     FOR EACH oFunc IN aFn
+                        IF hb_isObject( oFunc )
+                           IF !empty( oFunc:aSyntax )
+                              IF "C Prototype" $ oFunc:aSyntax[ 1 ]
+                                 aadd( aProto, alltrim( oFunc:aSyntax[ len( oFunc:aSyntax ) ] ) )
+                              ELSE
+                                 aadd( aProto, alltrim( oFunc:aSyntax[ 1 ] ) )
+                              ENDIF
+                           ENDIF
+                        ENDIF
+                     NEXT
+                  ENDIF
+               NEXT
+            NEXT
+
+            hbide_saveHarbourProtos( ::oIde, aProto )
+            ::aProtoTypes := aProto
+            ::lLoadedProto := .t.
+         ENDIF
       ENDIF
    ENDIF
 
