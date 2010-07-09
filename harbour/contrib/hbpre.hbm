@@ -9,7 +9,6 @@
 {_HB_BUILD_MIGR}-trace
 
 {!HB_BUILD_DEBUG}-l
-{HB_BUILD_NAME}-build=${HB_BUILD_NAME}
 
 {HB_BUILD_MODE='cpp'}-cpp=yes
 {HB_BUILD_MODE='c'}-cpp=no

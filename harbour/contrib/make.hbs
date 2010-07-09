@@ -549,7 +549,7 @@ STATIC FUNCTION call_hbmk2_dept( cBinDir, cProject, /* @ */ cType )
    LOCAL tmp, tmp1
    LOCAL aList := {}
 
-   hb_processRun( PathSepToSelf( cBinDir ) + "hbmk2" + " -quiet -lang=en -width=0 -q0 --hbinfo " + cProject,, @tmp  )
+   hb_processRun( PathSepToSelf( cBinDir ) + "hbmk2 --hbinfo " + cProject,, @tmp  )
 
    IF ( tmp1 := At( "targettype{{", tmp ) ) > 0
       tmp := SubStr( tmp, tmp1 + Len( "targettype{{" ) )
@@ -575,6 +575,10 @@ STATIC FUNCTION call_hbmk2_dept( cBinDir, cProject, /* @ */ cType )
 
 STATIC FUNCTION call_hbmk2( cBinDir, cProject, cOptionsPre, cOptionsPost )
    LOCAL nErrorLevel
+
+   IF ! Empty( GetEnv( "HB_BUILD_NAME" ) )
+      cOptionsPre += " -build=" + GetEnv( "HB_BUILD_NAME" )
+   ENDIF
 
    nErrorLevel := mk_hb_processRun( PathSepToSelf( cBinDir ) + "hbmk2" +;
                                     " -lang=en -width=0 @" + s_cHome + "hbpre" + cOptionsPre +;
