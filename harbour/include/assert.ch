@@ -56,7 +56,7 @@
 
 #ifdef NDEBUG
 
-/* When NDEBUG is definded, ignore all ASSERT() calls */
+/* When NDEBUG is defined, ignore all ASSERT() calls */
 #command ASSERT( <exp> [, <msg>] )      =>
 
 #else

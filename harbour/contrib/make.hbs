@@ -159,10 +159,6 @@ PROCEDURE StandAlone( ... )
       CASE "hbimplib"
          EXIT
       CASE "hbdyn"
-         IF GetEnv( "HB_BUILD_SHARED" ) == "yes"
-            cOptionsPre += " -shared"
-         ENDIF
-         EXIT
       CASE "hbexe"
          IF GetEnv( "HB_BUILD_SHARED" ) == "yes"
             cOptionsPre += " -shared"
