@@ -170,7 +170,7 @@ PROCEDURE StandAlone( ... )
          EXIT
       ENDSWITCH
 
-      IF cType == "hrb"
+      IF cType $ "hbhrb|hbppo"
         LOOP
       ENDIF
 
@@ -439,8 +439,6 @@ PROCEDURE GNUMake( ... )
 
          IF ! Empty( cProject )
 
-            cType := get_hbmk2_project_type( s_cBase + cProject )
-
             cProject := StrTran( cProject, "\", "/" )
 
             IF ( tmp := At( "/", cProject ) ) > 0
@@ -456,6 +454,8 @@ PROCEDURE GNUMake( ... )
 
                cOptionsPre := cBaseOptions
                cOptionsPost := ""
+
+               cType := get_hbmk2_project_type( s_cBase + cProject )
 
                SWITCH cType
                CASE "hblib"
@@ -476,7 +476,7 @@ PROCEDURE GNUMake( ... )
                   EXIT
                ENDSWITCH
 
-               IF cType == "hrb"
+               IF cType $ "hbhrb|hbppo"
                   LOOP
                ENDIF
 
@@ -600,12 +600,12 @@ STATIC FUNCTION mk_hb_processRun( cCommand )
    RETURN iif( s_lTest, 0, hb_processRun( cCommand ) )
 
 STATIC FUNCTION get_hbmk2_project_type( cFileName )
-   LOCAL cFile := MemoRead( cFileName )
+   LOCAL cFile := MemoRead( PathSepToSelf( cFileName ) )
 
    IF     "-hblib"    $ cFile ; RETURN "hblib"
    ELSEIF "-hbimplib" $ cFile ; RETURN "hbimplib"
    ELSEIF "-hbdyn"    $ cFile ; RETURN "hbdyn"
-   ELSEIF "-gh"       $ cFile ; RETURN "hrb"
+   ELSEIF "-gh"       $ cFile ; RETURN "hbhrb"
    ENDIF
 
    RETURN "hbexe"
