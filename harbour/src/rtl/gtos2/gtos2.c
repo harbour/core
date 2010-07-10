@@ -606,7 +606,7 @@ static int hb_gt_os2_ReadKey( PHB_GT pGT, int iEventMask )
    {
       /* It was an extended function key lead-in code, so read the actual function key and then offset it by 256,
          unless extended keyboard events are allowed, in which case offset it by 512 */
-      if( ( s_key->chChar == 0xE0 ) && ( iEventMask & INKEY_RAW ) )
+      if( ( s_key->chChar == 0xE0 ) && ( iEventMask & HB_INKEY_RAW ) )
          ch = ( int ) s_key->chScan + 512;
       else
          ch = ( int ) s_key->chScan + 256;

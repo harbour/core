@@ -1604,7 +1604,7 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
       }
       else if( s_bMouseEnable &&
                s_irInBuf[ s_cNumIndex ].EventType == MOUSE_EVENT &&
-               iEventMask & ~( INKEY_KEYBOARD | INKEY_RAW ) )
+               iEventMask & ~( INKEY_KEYBOARD | HB_INKEY_RAW ) )
       {
 
          s_mouse_iCol = s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwMousePosition.X;

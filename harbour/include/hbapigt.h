@@ -64,7 +64,7 @@
  *    Undocumented GT API declarations
  *
  * Copyright 2005 Przemyslaw Czerpak < druzus /at/ priv.onet.pl >
- *    Internal GT code reimplemented in differ way
+ *    Internal GT code reimplemented in different way
  *
  * See COPYING for licensing terms.
  *
@@ -299,7 +299,9 @@ extern HB_EXPORT HB_ERRCODE hb_gtSetBorder( HB_GT_RGB * color );
                              Clipper has no key code 256, so it may as well be
                              used for all the Harbour builds that need it */
 
-#define INKEY_RAW 256   /* Minimally Decoded Keyboard Events */
+#if defined( HB_LEGACY_LEVEL3 )
+#  define INKEY_RAW HB_INKEY_RAW
+#endif
 
 /* Harbour keyboard support functions */
 extern HB_EXPORT int        hb_inkey( HB_BOOL bWait, double dSeconds, int iEvenMask ); /* Wait for keyboard input */
