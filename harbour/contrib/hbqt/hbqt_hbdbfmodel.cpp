@@ -117,6 +117,21 @@ static QVariant hbqt_fetchRole( PHB_ITEM block, int what, int par1, int par2 )
          vv = hb_itemGetNI( ret );
          HB_TRACE( HB_TR_DEBUG, ( "   fetchRole[ n = %i ]", hb_itemGetNI( ret ) ) );
       }
+      #if 0
+      else if( hb_itemType( ret ) & HB_IT_OBJECT )
+      {
+         hb_vmPushSymbol( hb_dynsymSymbol( hb_dynsymFindName( "PPTR" ) ) );
+         hb_vmPush( ret );
+         hb_vmSend( 0 );
+         QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), -1 );
+
+         vv = qvariant_cast<QColor *>( * ( ( QColor * ) ( p->ph ) ) );
+      }
+      #endif
+      else
+      {
+         vv = QVariant();
+      }
 
       hb_vmRequestRestore();
    }

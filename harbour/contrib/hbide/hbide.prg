@@ -557,15 +557,13 @@ METHOD HbIde:create( aParams )
       ::nEvent := AppEvent( @::mp1, @::mp2, @::oXbp )
 
       IF ::nEvent == xbeP_Quit
-//         HB_TRACE( HB_TR_ALWAYS, "---------------- xbeP_Quit" )
          ::oINI:save()
          EXIT
       ENDIF
 
       IF ::nEvent == xbeP_Close
-//         HB_TRACE( HB_TR_ALWAYS, "================ xbeP_Close" )
          ::oINI:save()
-         ::oSM:closeAllSources()
+         ::oSM:closeAllSources( .f. /* can not cancel */ )
          EXIT
 
       ELSEIF ::nEvent == xbeP_Keyboard

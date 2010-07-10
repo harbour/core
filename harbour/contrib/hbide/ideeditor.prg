@@ -1486,7 +1486,7 @@ METHOD IdeEditor:setDocumentProperties()
                                 hbide_image( iif( ::lReadOnly, "tabreadonly", "tabunmodified" ) ) )
       ::lLoaded := .T.
 
-      IF ::cType $ "PRG,C,CPP,H,CH"
+      IF ::cType $ "PRG,C,CPP,H,CH,HBS"
          ::qTimerSave := QTimer():New()
          ::qTimerSave:setInterval( max( 30000, ::oINI:nTmpBkpPrd * 1000 ) )
          ::connect( ::qTimerSave, "timeout()", {|| ::execEvent( "qTimeSave_timeout" ) } )

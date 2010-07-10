@@ -80,7 +80,7 @@ CLASS IdeSourcesManager INHERIT IdeObject
    METHOD saveNamedSource( cSource )
    METHOD editSource( cSourceFile, nPos, nHPos, nVPos, cTheme, cView, lAlert, lVisible, aBookMarks )
    METHOD closeSource( nTab, lCanCancel, lCanceled )
-   METHOD closeAllSources()
+   METHOD closeAllSources( lCanCancel )
    METHOD closeAllOthers( nTab )
    METHOD saveAllSources()
    METHOD saveAndExit()
@@ -148,6 +148,56 @@ METHOD IdeSourcesManager:saveNamedSource( cSource )
    NEXT
 
    RETURN lSaved
+
+/*----------------------------------------------------------------------*/
+METHOD IdeSourcesManager:editSource( cSourceFile, nPos, nHPos, nVPos, cTheme, cView, lAlert, lVisible, aBookMarks )
+   LOCAL lNew
+
+   DEFAULT lAlert   TO .T.
+   DEFAULT lVisible TO .T.
+
+   IF ( lNew := empty( cSourceFile ) )
+      cSourceFile := hbide_saveAFile( ::oDlg, "Provide source filename", /*aFltr*/, hbide_SetWrkFolderLast(), /*cDftSuffix*/ )
+      IF empty( cSourceFile )
+         RETURN Self
+      ENDIF
+      hbide_SetWrkFolderLast( cSourceFile )
+   ENDIF
+
+   IF !Empty( cSourceFile )
+      IF !( hbide_isValidText( cSourceFile ) )
+         MsgBox( 'File type unknown or unsupported: ' + cSourceFile )
+         RETURN .f.
+      ELSEIF ! lNew .AND. ! hb_FileExists( cSourceFile )
+         MsgBox( 'File not found: ' + cSourceFile )
+         RETURN .f.
+      ENDIF
+      IF ::oEM:isOpen( cSourceFile )
+         IF lAlert
+            IF hbide_getYesNo( cSourceFile + " is already open.", ;
+                                        "Want to re-load it again ?", "File Open Info!" )
+               ::oEM:reLoad( cSourceFile )
+            ENDIF
+         ENDIF
+         ::oEM:setSourceVisible( cSourceFile )
+         RETURN .t.
+      ENDIF
+   ENDIF
+
+   DEFAULT nPos  TO 0
+   DEFAULT nHPos TO 0
+   DEFAULT nVPos TO 0
+
+   ::oEM:buildEditor( cSourceFile, nPos, nHPos, nVPos, cTheme, cView, aBookMarks )
+   IF lVisible
+      ::oEM:setSourceVisible( cSourceFile )
+   ENDIF
+
+   IF !Empty( cSourceFile ) .AND. !hbide_isSourcePPO( cSourceFile )
+      hbide_mnuAddFileToMRU( Self, cSourceFile, "recent_files" )
+   ENDIF
+
+   RETURN .t.
 
 /*----------------------------------------------------------------------*/
 /*
@@ -235,69 +285,17 @@ METHOD IdeSourcesManager:saveSource( nTab, lCancel, lAs )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeSourcesManager:editSource( cSourceFile, nPos, nHPos, nVPos, cTheme, cView, lAlert, lVisible, aBookMarks )
-   LOCAL lNew
-
-   DEFAULT lAlert   TO .T.
-   DEFAULT lVisible TO .T.
-
-   IF ( lNew := empty( cSourceFile ) )
-      cSourceFile := hbide_saveAFile( ::oDlg, "Provide source filename", /*aFltr*/, hbide_SetWrkFolderLast(), /*cDftSuffix*/ )
-      IF empty( cSourceFile )
-         RETURN Self
-      ENDIF
-      hbide_SetWrkFolderLast( cSourceFile )
-   ENDIF
-
-   IF !Empty( cSourceFile )
-      IF !( hbide_isValidText( cSourceFile ) )
-         MsgBox( 'File type unknown or unsupported: ' + cSourceFile )
-         RETURN .f.
-      ELSEIF ! lNew .AND. ! hb_FileExists( cSourceFile )
-         MsgBox( 'File not found: ' + cSourceFile )
-         RETURN .f.
-      ENDIF
-      IF ::oEM:isOpen( cSourceFile )
-         IF lAlert
-            IF hbide_getYesNo( cSourceFile + " is already open.", ;
-                                        "Want to re-load it again ?", "File Open Info!" )
-               ::oEM:reLoad( cSourceFile )
-            ENDIF
-         ENDIF
-         ::oEM:setSourceVisible( cSourceFile )
-         RETURN .t.
-      ENDIF
-   ENDIF
-
-   DEFAULT nPos  TO 0
-   DEFAULT nHPos TO 0
-   DEFAULT nVPos TO 0
-
-   ::oEM:buildEditor( cSourceFile, nPos, nHPos, nVPos, cTheme, cView, aBookMarks )
-   IF lVisible
-      ::oEM:setSourceVisible( cSourceFile )
-   ENDIF
-
-   IF !Empty( cSourceFile ) .AND. !hbide_isSourcePPO( cSourceFile )
-      hbide_mnuAddFileToMRU( Self, cSourceFile, "recent_files" )
-   ENDIF
-
-   RETURN .t.
-
-/*----------------------------------------------------------------------*/
-
 METHOD IdeSourcesManager:closeSource( nTab, lCanCancel, lCanceled )
    LOCAL lSave, n, oEditor
 
    DEFAULT nTab TO ::oEM:getTabCurrent()
-//HB_TRACE( HB_TR_ALWAYS, "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<", 0 )
+
    IF !empty( oEditor := ::oEM:getEditorByTabPosition( nTab ) )
 
       DEFAULT lCanCancel TO .F.
       lCanceled := .F.
 
-      IF !( oEditor:qDocument:isModified() )
-         * File has not changed, ignore the question to User
+      IF !( oEditor:qDocument:isModified() ) /* File has not changed, ignore the question to User */
          lSave := .F.
 
       ELSEIF lCanCancel
@@ -305,7 +303,7 @@ METHOD IdeSourcesManager:closeSource( nTab, lCanCancel, lCanceled )
          IF ( lCanceled := ( n == QMessageBox_Cancel ) )
             RETURN .F.
          ENDIF
-         lSave := ( n == QMessageBox_Yes    )
+         lSave := ( n == QMessageBox_Yes )
 
       ELSE
          lSave := hbide_getYesNo( oEditor:oTab:Caption, "has been modified, save this source?", 'Save?' )
@@ -317,9 +315,8 @@ METHOD IdeSourcesManager:closeSource( nTab, lCanCancel, lCanceled )
             RETURN .F.
          ENDIF
       ENDIF
-//HB_TRACE( HB_TR_ALWAYS, "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<", 1, "before: oEditor:destroy()" )
+
       oEditor:destroy()
-//HB_TRACE( HB_TR_ALWAYS, "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<", 2, "after:  oEditor:destroy()" )
       ::oIde:updateTitleBar()
    ENDIF
 
@@ -330,15 +327,17 @@ METHOD IdeSourcesManager:closeSource( nTab, lCanCancel, lCanceled )
  * Close all opened files.
  * 02/01/2010 - 15:31:44
  */
-METHOD IdeSourcesManager:closeAllSources()
+METHOD IdeSourcesManager:closeAllSources( lCanCancel )
    LOCAL lCanceled
    LOCAL i := 0
 
+   DEFAULT lCanCancel TO .t.
+
    DO WHILE ( ++i <= Len( ::aTabs ) )
 
-       IF ::closeSource( i, .T., @lCanceled )
+       IF ::closeSource( i, lCanCancel, @lCanceled )
           i --
-          Loop
+          LOOP
        ENDIF
 
        IF lCanceled

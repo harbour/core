@@ -150,6 +150,7 @@ HBQPlainTextEdit::HBQPlainTextEdit( QWidget * parent ) : QPlainTextEdit( parent 
    ttLayout = new QHBoxLayout( ttFrame );
    ttFrame->setLayout( ttLayout );
    ttLabel = new QLabel();
+   //ttLabel->setWordWrap( true );
    ttLabel->setText( "" );
    hbSetProtoStyle();
    ttLayout->addWidget( ttLabel );
@@ -231,17 +232,21 @@ void HBQPlainTextEdit::hbShowPrototype( const QString & tip )
    if( tip == ( QString ) "" )
    {
       isTipActive = false;
+
       ttFrame->hide();
    }
    else
    {
       isTipActive = true;
-      QRect r = HBQPlainTextEdit::cursorRect();
-      ttFrame->setMaximumWidth( viewport()->width() );
-      int w = ttLabel->width();
-      int x = r.x()-r.width();
-      x = x + w > viewport()->width() ? viewport()->width() - w : x;
-      ttFrame->move( x, r.y() + 7 );
+
+      QRect  r = cursorRect();
+      int    w = ttLabel->width();
+      int    x = r.x()-r.width();
+      int nOff = viewport()->width() - ( x + w );
+      if( nOff < 0 )
+         x = qMax( 0, x + nOff );
+      ttFrame->move( qMax( 0, x ), r.y() + 7 + horzRulerHeight );
+
       ttFrame->show();
    }
 }
@@ -1956,9 +1961,10 @@ void HBQPlainTextEdit::hbUpdateHorzRuler( const QRect & rect, int dy )
    setTabStopWidth( spaces * fontMetrics().averageCharWidth() );
 
    if( dy == 0 )
+   {
       horzRuler->update();
-
-   if( dy != 0 )
+   }
+   else
    {
       if( isTipActive )
       {

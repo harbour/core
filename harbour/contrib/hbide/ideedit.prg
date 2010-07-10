@@ -420,7 +420,7 @@ METHOD IdeEdit:connectEditSignals( oEdit )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
-   LOCAL pAct, qAct, n, qEdit, oo, qCursor
+   LOCAL pAct, qAct, n, qEdit, oo, qCursor, cProto
 
    HB_SYMBOL_UNUSED( p1 )
 
@@ -506,29 +506,14 @@ METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
 
       ::markCurrentFunction()
 
-      #if 0
       IF ::nProtoLine != -1
          IF ::getLineNo() == ::nProtoLine .AND. ::getColumnNo() >= ::nProtoCol + 1
-            ::cProto := hbide_formatProto_1( ::cProtoOrg )
-            ::showProtoType()
-         ENDIF
-      ENDIF
-      #endif
-
-      #if 0
-      IF ::nProtoLine != -1
-         nLine := ::getLineNo()
-         IF ! ::isSuspended
-            IF nLine != ::nProtoLine .OR. ::getColumnNo() < ::nProtoCol
-               ::suspendPrototype()
-            ENDIF
-         ELSE
-            IF nLine == ::nProtoLine .AND. ::getColumnNo() >= ::nProtoCol
-               ::resumePrototype()
+            IF !empty( cProto := hbide_formatProto_1( ::cProtoOrg, ::getLine(), ::nProtoCol, ::getColumnNo() ) )
+               ::cProto := cProto
+               ::showProtoType()
             ENDIF
          ENDIF
       ENDIF
-      #endif
       EXIT
 
    CASE copyAvailable
@@ -1985,8 +1970,6 @@ METHOD IdeEdit:insertText( cText )
 METHOD IdeEdit:handlePreviousWord( lUpdatePrevWord )
    LOCAL qCursor, qTextBlock, cText, cWord, nB, nL, qEdit, lPrevOnly, nCol, nSpace, nSpaces, nOff
 
- * HB_TRACE( HB_TR_ALWAYS, "IdeEdit:handlePreviousWord( lUpdatePrevWord )", lUpdatePrevWord )
-
    IF ! lUpdatePrevWord
       RETURN Self
    ENDIF
@@ -2157,11 +2140,11 @@ METHOD IdeEdit:loadFuncHelp()
          ENDIF
          IF !empty( cPro := ::oFN:positionToFunction( cWord, .t. ) )
             IF empty( ::cProto )
-               ::showPrototype( ::cProto := cPro )
+               ::showPrototype( cPro )
             ENDIF
          ENDIF
       ELSE
-         ::showPrototype( ::cProto := cPro )
+         ::showPrototype( cPro )
       ENDIF
    ENDIF
    RETURN Self
@@ -2435,6 +2418,52 @@ FUNCTION hbide_isHarbourKeyword( cWord, oIde )
    RETURN Lower( cWord ) $ s_b_
 
 /*----------------------------------------------------------------------*/
+
+FUNCTION hbide_formatProto_1( cProto, cText, nProtoCol, nCurCol )
+   LOCAL s, nArgs, cArgs, aArgs, cArg, n, n1, i, nnn, cPro
+
+   IF nCurCol > nProtoCol
+      n  := at( "(", cProto ) ; n1 := at( ")", cProto )
+      IF n > 0 .AND. n1 > 0 .AND. "," $ cProto
+         cProto := substr( cProto, 1, n1 )
+
+         s := substr( cText, nProtoCol, nCurCol - nProtoCol )
+         nArgs := 1
+         FOR i := 1 TO len( s )
+            IF substr( s, i, 1 ) == ","
+               nArgs++
+            ENDIF
+         NEXT
+
+         IF nArgs > 0
+            cProto := StrTran( cProto, "<", "&lt;" ) ; cProto := StrTran( cProto, ">", "&gt;" )
+            n := at( "(", cProto ) ; n1 := at( ")", cProto )
+
+            cArgs := substr( cProto, n + 1, n1 - n - 1 )
+            aArgs := hb_aTokens( cArgs, "," )
+            cArgs := ""
+            FOR EACH cArg IN aArgs
+               nnn  := cArg:__enumIndex()
+               IF nnn == nArgs
+                  cArg := "<font color=blue>" + cArg + "</font>"
+               ENDIF
+               IF nnn == len( aArgs )
+                  cArgs += cArg
+               ELSE
+                  cArgs += cArg + "<font color=red><b>" + "," + "</b></font>"
+               ENDIF
+            NEXT
+            cPro  := "<p style='white-space:pre'>" + "<b>" + substr( cProto, 1, n - 1 ) + "</b>" + ;
+                        "<font color=red><b>" + "(" + "</b></font>" + ;
+                           cArgs + ;
+                              "<font color=red><b>" + ")" + "</font>" + "</b></p>"
+         ENDIF
+      ENDIF
+   ENDIF
+
+   RETURN cPro
+
+/*------------------------------------------------------------------------*/
 
 FUNCTION hbide_formatProto( cProto )
    LOCAL n, n1, cArgs
