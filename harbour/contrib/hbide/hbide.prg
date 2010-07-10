@@ -538,8 +538,6 @@ METHOD HbIde:create( aParams )
    ::qTabWidget:setCurrentIndex( ::qTabWidget:count() - 1 )
    ::qTabWidget:setCurrentIndex( val( ::oINI:cRecentTabIndex ) )
 
-   ::oEM:updateCompleter()
-
    ::showApplicationCursor()
    qSplash:close()
 
@@ -551,6 +549,9 @@ METHOD HbIde:create( aParams )
 
    /* Initialize plugins  */
    hbide_loadPlugins( Self, "1.0" )
+
+   /* Fill auto completion lists - it must be the last action and be present here always */
+   ::oEM:updateCompleter()
 
    DO WHILE .t.
       ::nEvent := AppEvent( @::mp1, @::mp2, @::oXbp )

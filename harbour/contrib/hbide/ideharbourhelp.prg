@@ -222,8 +222,6 @@ METHOD IdeHarbourHelp:show()
       ::populateRootInfo()
 
       ::refreshDocTree()
-
-      ::oEM:updateCompleter()
    ENDIF
 
    RETURN Self
@@ -499,6 +497,8 @@ METHOD IdeHarbourHelp:execEvent( nMode, p, p1 )
 
    CASE "buttonRefresh_clicked"
       ::refreshDocTree()
+      ::aProtoTypes := {}
+      ::lLoadedProto := .f.
       ::oEM:updateCompleter()
       EXIT
 

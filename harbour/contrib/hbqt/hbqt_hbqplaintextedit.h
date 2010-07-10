@@ -67,6 +67,8 @@
 #include <QtGui/QAbstractItemView>
 #include <QtGui/QScrollBar>
 #include <QtGui/QToolTip>
+#include <QtGui/QVBoxLayout>
+#include <QtGui/QLabel>
 
 #include "hbqt_hbqsyntaxhighlighter.h"
 
@@ -121,6 +123,9 @@ private:
    QList<int>     bookMarksGoto;
    QWidget      * lineNumberArea;
    QFrame       * horzRuler;
+   QFrame       * ttFrame;
+   QHBoxLayout  * ttLayout;
+   QLabel       * ttLabel;
    int            spaces;
    bool           numberBlock;
    bool           highlightCurLine;
@@ -206,6 +211,7 @@ public slots:
    void           hbHighlightArea( int, int, int, int, int );
    void           hbTogglePersistentSelection();
    void           hbHorzRulerVisible( bool visible ) { hbUpdateHorzRulerHeight( visible ? 20 : 0 ); };
+   void           hbSetProtoStyle( const QString & css = "" );
 
 private slots:
    void           hbSlotCursorPositionChanged();

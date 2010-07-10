@@ -117,6 +117,7 @@ CREATE CLASS HBQPlainTextEdit INHERIT HbQtObjectHandler, QPlainTextEdit
    METHOD  hbHighlightArea( nTop, nLeft, nBottom, nRight, nMode )
    METHOD  hbTogglePersistentSelection()
    METHOD  hbHorzRulerVisible( lVisible )
+   METHOD  hbSetProtoStyle( cCss )
 
    ENDCLASS
 
@@ -328,4 +329,8 @@ METHOD HBQPlainTextEdit:hbTogglePersistentSelection()
 
 METHOD HBQPlainTextEdit:hbHorzRulerVisible( lVisible )
    RETURN Qt_HBQPlainTextEdit_hbHorzRulerVisible( ::pPtr, lVisible )
+
+
+METHOD HBQPlainTextEdit:hbSetProtoStyle( cCss )
+   RETURN Qt_HBQPlainTextEdit_hbSetProtoStyle( ::pPtr, cCss )
 

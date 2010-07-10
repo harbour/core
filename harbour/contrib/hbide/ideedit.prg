@@ -115,6 +115,7 @@ CLASS IdeEdit INHERIT IdeObject
    DATA   cCurLineText                            INIT  ""
 
    DATA   cProto                                  INIT ""
+   DATA   cProtoOrg                               INIT ""
    DATA   qTimer
    DATA   nProtoLine                              INIT -1
    DATA   nProtoCol                               INIT -1
@@ -419,7 +420,7 @@ METHOD IdeEdit:connectEditSignals( oEdit )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
-   LOCAL pAct, qAct, n, qEdit, oo, nLine, qCursor
+   LOCAL pAct, qAct, n, qEdit, oo, qCursor
 
    HB_SYMBOL_UNUSED( p1 )
 
@@ -505,10 +506,20 @@ METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
 
       ::markCurrentFunction()
 
+      #if 0
+      IF ::nProtoLine != -1
+         IF ::getLineNo() == ::nProtoLine .AND. ::getColumnNo() >= ::nProtoCol + 1
+            ::cProto := hbide_formatProto_1( ::cProtoOrg )
+            ::showProtoType()
+         ENDIF
+      ENDIF
+      #endif
+
+      #if 0
       IF ::nProtoLine != -1
          nLine := ::getLineNo()
          IF ! ::isSuspended
-            IF nLine != ::nProtoLine .OR. ::getColumnNo() <= ::nProtoCol
+            IF nLine != ::nProtoLine .OR. ::getColumnNo() < ::nProtoCol
                ::suspendPrototype()
             ENDIF
          ELSE
@@ -517,7 +528,7 @@ METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
             ENDIF
          ENDIF
       ENDIF
-
+      #endif
       EXIT
 
    CASE copyAvailable
@@ -554,21 +565,6 @@ METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeEdit:dispStatusInfo()
-   LOCAL nMode
-
-   ::qEdit:hbGetSelectionInfo()
-   nMode := ::aSelectionInfo[ 5 ]
-
-   ::oAC:getAction( "TB_SelectionMode" ):setIcon( hbide_image( iif( nMode == 3, "selectionline", "stream" ) ) )
-   ::oAC:getAction( "TB_SelectionMode" ):setChecked( nMode > 1 )
-
-   ::oDK:setStatusText( SB_PNL_STREAM, iif( nMode == 2, "Column", iif( nMode == 3, "Line", "Stream" ) ) )
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
 METHOD IdeEdit:execKeyEvent( nMode, nEvent, p, p1 )
    LOCAL key, kbm, qEvent, lAlt, lCtrl, lShift
 
@@ -592,6 +588,13 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p, p1 )
       ENDIF
 
       SWITCH ( key )
+      CASE Qt_Key_Backspace
+         IF ! lCtrl .AND. ! lAlt
+            IF ::getLineNo() == ::nProtoLine .AND. ::getColumnNo() <= ::nProtoCol + 1
+               ::hidePrototype()
+            ENDIF
+         ENDIF
+         EXIT
       CASE Qt_Key_Space
          IF !lAlt .AND. !lShift .AND. !lCtrl
             ::lUpdatePrevWord := .t.
@@ -618,7 +621,6 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p, p1 )
 
    CASE QEvent_Enter
    CASE QEvent_FocusIn
-      ::resumePrototype()
       IF key == QEvent_FocusIn
          ::oUpDn:show()
       ENDIF
@@ -630,7 +632,6 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p, p1 )
 
    CASE QEvent_Leave
    CASE QEvent_FocusOut
-      ::suspendPrototype()
       EXIT
 
    CASE QEvent_Wheel
@@ -654,6 +655,9 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p, p1 )
       ELSEIF p == 21001
          ::handlePreviousWord( .t. )
 
+      ELSEIF p == 21002
+         ::loadFuncHelp()
+
       ELSEIF p == 21011
          ::copyBlockContents( p1 )
 
@@ -675,6 +679,21 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p, p1 )
    ENDSWITCH
 
    RETURN .F.  /* Important */
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:dispStatusInfo()
+   LOCAL nMode
+
+   ::qEdit:hbGetSelectionInfo()
+   nMode := ::aSelectionInfo[ 5 ]
+
+   ::oAC:getAction( "TB_SelectionMode" ):setIcon( hbide_image( iif( nMode == 3, "selectionline", "stream" ) ) )
+   ::oAC:getAction( "TB_SelectionMode" ):setChecked( nMode > 1 )
+
+   ::oDK:setStatusText( SB_PNL_STREAM, iif( nMode == 2, "Column", iif( nMode == 3, "Line", "Stream" ) ) )
+
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
@@ -2132,13 +2151,17 @@ METHOD IdeEdit:loadFuncHelp()
    cWord      := hbide_getPreviousWord( cText, nCol )
 
    IF !empty( cWord )
-      IF ! empty( ::oHL )
-         ::oHL:jumpToFunction( cWord )
-      ENDIF
-      IF !empty( cPro := ::oFN:positionToFunction( cWord, .t. ) )
-         IF empty( ::cProto )
-            ::showPrototype( ::cProto := hbide_formatProto( cPro ) )
+      IF empty( cPro := ::oEM:getProto( cWord ) )
+         IF ! empty( ::oHL )
+            ::oHL:jumpToFunction( cWord )
          ENDIF
+         IF !empty( cPro := ::oFN:positionToFunction( cWord, .t. ) )
+            IF empty( ::cProto )
+               ::showPrototype( ::cProto := cPro )
+            ENDIF
+         ENDIF
+      ELSE
+         ::showPrototype( ::cProto := cPro )
       ENDIF
    ENDIF
    RETURN Self
@@ -2173,10 +2196,10 @@ METHOD IdeEdit:showPrototype( cProto )
 
    IF ! ::isSuspended  .AND. !empty( ::qEdit )
       IF !empty( cProto )
-         ::cProto     := cProto
+         ::cProtoOrg  := cProto
+         ::cProto     := hbide_formatProto( cProto )
          ::nProtoLine := ::getLineNo()
          ::nProtoCol  := ::getColumnNo()
-         ::qTimer:start()
       ENDIF
       ::qEdit:hbShowPrototype( ::cProto )
    ENDIF
@@ -2190,7 +2213,6 @@ METHOD IdeEdit:hidePrototype()
       ::nProtoLine := -1
       ::nProtoCol  := -1
       ::cProto     := ""
-      ::qTimer:stop()
       ::qEdit:hbShowPrototype( "" )
    ENDIF
    RETURN Self
@@ -2208,7 +2230,7 @@ METHOD IdeEdit:parseCodeCompletion( cSyntax )
       ENDIF
    ELSE
       IF ( n := at( "(", cSyntax ) ) > 0
-         cText := trim( substr( cSyntax, 1, n ) )
+         cText := trim( substr( cSyntax, 1, n - 1 ) )
       ELSE
          cText := trim( cSyntax )
       ENDIF
@@ -2417,10 +2439,14 @@ FUNCTION hbide_isHarbourKeyword( cWord, oIde )
 FUNCTION hbide_formatProto( cProto )
    LOCAL n, n1, cArgs
 
+   cProto := StrTran( cProto, "<", "&lt;" )
+   cProto := StrTran( cProto, ">", "&gt;" )
+
    n  := at( "(", cProto )
    n1 := at( ")", cProto )
 
    IF n > 0 .AND. n1 > 0
+
       cArgs  := substr( cProto, n + 1, n1 - n - 1 )
       cArgs  := strtran( cArgs, ",", "<font color=red><b>" + "," + "</b></font>" )
       cProto := "<p style='white-space:pre'>" + "<b>" + substr( cProto, 1, n - 1 ) + "</b>" + ;

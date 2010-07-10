@@ -860,6 +860,20 @@ HB_FUNC( QT_HBQPLAINTEXTEDIT_HBHORZRULERVISIBLE )
    }
 }
 
+/*
+ * void           hbSetProtoStyle( const QString & css )
+ */
+HB_FUNC( QT_HBQPLAINTEXTEDIT_HBSETPROTOSTYLE )
+{
+   HBQPlainTextEdit * p = hbqt_par_HBQPlainTextEdit( 1 );
+   if( p )
+      ( p )->hbSetProtoStyle( HBQPlainTextEdit::tr( hb_parc( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQPLAINTEXTEDIT_HBSETPROTOSTYLE FP=( p )->hbSetProtoStyle( HBQPlainTextEdit::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+   }
+}
+
 
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */

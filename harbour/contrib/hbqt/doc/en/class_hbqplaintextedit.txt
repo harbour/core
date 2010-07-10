@@ -78,6 +78,7 @@
         :hbHighlightArea( nTop, nLeft, nBottom, nRight, nMode )  -> NIL
         :hbTogglePersistentSelection()                      -> NIL
         :hbHorzRulerVisible( lVisible )                     -> NIL
+        :hbSetProtoStyle( cCss )                            -> NIL
 
     $DESCRIPTION$
 

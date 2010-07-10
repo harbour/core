@@ -82,17 +82,6 @@
 
 /*----------------------------------------------------------------------*/
 
-#define editFunc_returnPressed                    101
-#define editFunc_textChanged                      102
-#define tableFuncList_itemSelectionChanged        103
-#define tableFuncList_itemDoubleClicked           104
-#define buttonMark_clicked                        105
-#define buttonLoad_clicked                        106
-#define buttonTag_clicked                         107
-#define buttonClose_clicked                       108
-
-/*----------------------------------------------------------------------*/
-
 CLASS IdeFunctions INHERIT IdeObject
 
    DATA   isNotSetYet                             INIT .t.
@@ -146,16 +135,16 @@ METHOD IdeFunctions:create( oIde )
 
    ::buildHeader()
 
-   ::oUI:signal( "editFunction" , "textChanged(QString)"        , {|p| ::execEvent( editFunc_textChanged, p   ) } )
-   ::oUI:signal( "editFunction" , "returnPressed()"             , {| | ::execEvent( editFunc_returnPressed    ) } )
+   ::oUI:signal( "editFunction" , "textChanged(QString)"        , {|p| ::execEvent( "editFunc_textChanged", p   ) } )
+   ::oUI:signal( "editFunction" , "returnPressed()"             , {| | ::execEvent( "editFunc_returnPressed"    ) } )
    //
-   ::oUI:signal( "buttonMark"   , "clicked()"                   , {| | ::execEvent( buttonMark_clicked        ) } )
-   ::oUI:signal( "buttonLoad"   , "clicked()"                   , {| | ::execEvent( buttonLoad_clicked        ) } )
-   ::oUI:signal( "buttonTag"    , "clicked()"                   , {| | ::execEvent( buttonTag_clicked         ) } )
-   ::oUI:signal( "buttonClose"  , "clicked()"                   , {| | ::execEvent( buttonClose_clicked       ) } )
+   ::oUI:signal( "buttonMark"   , "clicked()"                   , {| | ::execEvent( "buttonMark_clicked"        ) } )
+   ::oUI:signal( "buttonLoad"   , "clicked()"                   , {| | ::execEvent( "buttonLoad_clicked"        ) } )
+   ::oUI:signal( "buttonTag"    , "clicked()"                   , {| | ::execEvent( "buttonTag_clicked"         ) } )
+   ::oUI:signal( "buttonClose"  , "clicked()"                   , {| | ::execEvent( "buttonClose_clicked"       ) } )
    //
-   ::oUI:signal( "tableFuncList", "itemSelectionChanged()"      , {| | ::execEvent( tableFuncList_itemSelectionChanged ) } )
-   ::oUI:signal( "tableFuncList", "itemDoubleClicked(QTblWItem)", {|p| ::execEvent( tableFuncList_itemDoubleClicked, p ) } )
+   ::oUI:signal( "tableFuncList", "itemSelectionChanged()"      , {| | ::execEvent( "tableFuncList_itemSelectionChanged" ) } )
+   ::oUI:signal( "tableFuncList", "itemDoubleClicked(QTblWItem)", {|p| ::execEvent( "tableFuncList_itemDoubleClicked", p ) } )
 
    RETURN Self
 
@@ -165,35 +154,36 @@ METHOD IdeFunctions:execEvent( nMode, p )
    LOCAL n, nLen
 
    DO CASE
-   CASE nMode == editFunc_textChanged
+   CASE nMode == "editFunc_textChanged"
       p    := upper( p )
       nLen := len( p )
       IF ( n := ascan( ::aList, {|e_| left( e_[ 1 ], nLen ) == p } ) ) > 0
          ::oUI:q_tableFuncList:setCurrentItem( ::aItems[ n ] )
       ENDIF
 
-   CASE nMode == editFunc_returnPressed
+   CASE nMode == "editFunc_returnPressed"
       ::openFunction( .f. )
 
-   CASE nMode == tableFuncList_itemDoubleClicked
+   CASE nMode == "tableFuncList_itemDoubleClicked"
       ::openFunction( .f. )
 
-   CASE nMode == buttonMark_clicked
+   CASE nMode == "buttonMark_clicked"
       ::oUI:q_listProjects:show()
       ::listProjects()
 
-   CASE nMode == buttonLoad_clicked
+   CASE nMode == "buttonLoad_clicked"
       ::oUI:q_listProjects:hide()
       ::loadTags()
 
-   CASE nMode == buttonTag_clicked
+   CASE nMode == "buttonTag_clicked"
       ::oUI:q_listProjects:hide()
       ::buildTags()
+      ::oEM:updateCompleter()
 
-   CASE nMode == buttonClose_clicked
+   CASE nMode == "buttonClose_clicked"
       ::oFunctionsDock:hide()
 
-   CASE nMode == tableFuncList_itemSelectionChanged
+   CASE nMode == "tableFuncList_itemSelectionChanged"
       n := ::oUI:q_tableFuncList:currentRow()
       IF n >= 0
          ::oUI:q_editSyntax:setText( ::aList[ n + 1, 2 ] )
@@ -616,8 +606,6 @@ METHOD IdeFunctions:populateTable()
       n++
       ::oUI:q_labelEntries:setText( "Entries: " + hb_ntos( n ) )
    NEXT
-
-   ::oEM:updateCompleter()
 
    RETURN Self
 

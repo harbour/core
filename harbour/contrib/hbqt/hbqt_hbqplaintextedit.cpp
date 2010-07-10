@@ -145,6 +145,17 @@ HBQPlainTextEdit::HBQPlainTextEdit( QWidget * parent ) : QPlainTextEdit( parent 
 
    setContentsMargins( 0,0,0,0 );
 
+   ttFrame = new QFrame( this );
+   ttFrame->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
+   ttLayout = new QHBoxLayout( ttFrame );
+   ttFrame->setLayout( ttLayout );
+   ttLabel = new QLabel();
+   ttLabel->setText( "" );
+   hbSetProtoStyle();
+   ttLayout->addWidget( ttLabel );
+   ttFrame->setFocusPolicy( Qt::NoFocus );
+   ttFrame->hide();
+
    #if 0
    timer                    = new QTimer( this );
    connect( timer, SIGNAL( timeout() ), this, SLOT( hbUpdateCaret() ) );
@@ -203,18 +214,35 @@ void HBQPlainTextEdit::hbRefresh()
 
 /*----------------------------------------------------------------------*/
 
+void HBQPlainTextEdit::hbSetProtoStyle( const QString & css )
+{
+   if( css == ( QString ) "" )
+      ttLabel->setStyleSheet( "background-color: rgb(255,255,174); border: 1px solid black; padding: 3px;" );
+   else
+      ttLabel->setStyleSheet( css );
+}
+
+/*----------------------------------------------------------------------*/
+
 void HBQPlainTextEdit::hbShowPrototype( const QString & tip )
 {
+   ttLabel->setText( tip );
+
    if( tip == ( QString ) "" )
    {
-      QToolTip::hideText();
       isTipActive = false;
+      ttFrame->hide();
    }
    else
    {
-      QRect r = HBQPlainTextEdit::cursorRect();
-      QToolTip::showText( mapToGlobal( QPoint( r.x(), r.y()+20 ) ), tip );
       isTipActive = true;
+      QRect r = HBQPlainTextEdit::cursorRect();
+      ttFrame->setMaximumWidth( viewport()->width() );
+      int w = ttLabel->width();
+      int x = r.x()-r.width();
+      x = x + w > viewport()->width() ? viewport()->width() - w : x;
+      ttFrame->move( x, r.y() + 7 );
+      ttFrame->show();
    }
 }
 
@@ -1255,13 +1283,6 @@ bool HBQPlainTextEdit::hbKeyPressSelection( QKeyEvent * event )
 
 void HBQPlainTextEdit::keyPressEvent( QKeyEvent * event )
 {
-//HB_TRACE( HB_TR_ALWAYS, ( "keyPressEvent %i  000", event->key() ) );
-   if( hbKeyPressSelection( event ) )
-   {
-//      QApplication::processEvents();
-      return;
-   }
-//HB_TRACE( HB_TR_ALWAYS, ( "keyPressEvent %i", event->key() ) );
    if( c && c->popup()->isVisible() )
    {
       // The following keys are forwarded by the completer to the widget
@@ -1281,15 +1302,32 @@ void HBQPlainTextEdit::keyPressEvent( QKeyEvent * event )
             hb_itemRelease( p1 );
          }
          break;
+      case Qt::Key_ParenLeft:
+         if( block ){
+            PHB_ITEM p1 = hb_itemPutNI( NULL, 21002 );
+            hb_vmEvalBlockV( block, 1, p1 );
+            hb_itemRelease( p1 );
+         }
+         break;
       default:
          break;
       }
    }
 
+   if( hbKeyPressSelection( event ) )
+   {
+      return;
+   }
    QPlainTextEdit::keyPressEvent( event );
 
    if( ! c )
       return;
+
+   if( isTipActive )
+   {
+      c->popup()->hide();
+      return;
+   }
 
    if( ( event->modifiers() & ( Qt::ControlModifier | Qt::AltModifier ) ) )
    {
@@ -1320,6 +1358,8 @@ void HBQPlainTextEdit::keyPressEvent( QKeyEvent * event )
       c->popup()->setCurrentIndex( c->completionModel()->index( 0, 0 ) );
    }
    QRect cr = cursorRect();
+
+   c->popup()->setMaximumWidth( viewport()->width() );
 
    cr.setWidth( c->popup()->sizeHintForColumn( 0 ) + c->popup()->verticalScrollBar()->sizeHint().width() );
    cr.setTop( cr.top() + horzRulerHeight + 5 );
@@ -1917,6 +1957,14 @@ void HBQPlainTextEdit::hbUpdateHorzRuler( const QRect & rect, int dy )
 
    if( dy == 0 )
       horzRuler->update();
+
+   if( dy != 0 )
+   {
+      if( isTipActive )
+      {
+         ttFrame->move( ttFrame->x(), ttFrame->y() + dy );
+      }
+   }
 }
 
 /*----------------------------------------------------------------------*/

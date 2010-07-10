@@ -82,6 +82,7 @@ CLASS IdeEditsManager INHERIT IdeObject
    DATA   qContextMenu
    DATA   qContextSub
    DATA   aActions                                INIT  {}
+   DATA   aProtos                                 INIT  {}
 
    METHOD new( oIde )
    METHOD create( oIde )
@@ -169,6 +170,7 @@ CLASS IdeEditsManager INHERIT IdeObject
    METHOD qscintilla()
    METHOD setStyleSheet( nMode )
    METHOD updateCompleter()
+   METHOD getProto( cWord )
 
    ENDCLASS
 
@@ -236,51 +238,71 @@ METHOD IdeEditsManager:create( oIde )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEditsManager:updateCompleter()
-   LOCAL aFun := ::oFN:getFunctionPrototypes()
-   LOCAL aHrb := ::oHL:getFunctionPrototypes()
-   LOCAL n, s, a_, k_:={}
+   LOCAL aFun, aHrb, n, s, k_
+
+   /* Collection of prototypes can be extended to honor plugins and defined in "setup" */
+
+   aFun := ::oFN:getFunctionPrototypes()
+   aHrb := ::oHL:getFunctionPrototypes()
 
    ::disconnect( ::qCompleter, "activated(QString)", {|p| ::execEvent( "qcompleter_activated", p ) } )
 
-   FOR EACH a_ IN { aFun, aHrb }
-      FOR EACH s IN a_
-         s := trim( s )
-         IF ::oINI:lCompletionWithArgs
-            IF ascan( k_, s ) == 0
+   ::aProtos := {}
+   aeval( aHrb, {|e| aadd( ::aProtos, e ) } )
+   aeval( aFun, {|e| aadd( ::aProtos, e ) } )
+
+   k_:= {}
+   FOR EACH s IN ::aProtos
+      s := alltrim( s )
+      IF ::oINI:lCompletionWithArgs
+         IF ascan( k_, s ) == 0
+            aadd( k_, s )
+         ENDIF
+      ELSE
+         IF ( n := at( "(", s ) ) == 0
+            IF ( n := at( " ", s ) ) > 0
+               aadd( k_, substr( s, 1, n - 1 ) )
+            ELSE
                aadd( k_, s )
             ENDIF
          ELSE
-            IF ( n := at( "(", s ) ) == 0
-               IF ( n := at( " ", s ) ) > 0
-                  aadd( k_, substr( s, 1, n - 1 ) )
-               ELSE
-                  aadd( k_, trim( s ) )
-               ENDIF
-            ELSE
-               aadd( k_, substr( s, 1, n - 1 ) )
-            ENDIF
+            aadd( k_, trim( substr( s, 1, n - 1 ) ) )
          ENDIF
-      NEXT
+      ENDIF
    NEXT
-
    asort( k_, , , {|e,f| lower( e ) < lower( f ) } )
 
    ::qProtoList:clear()
 
    aeval( k_, {|e| ::qProtoList:append( e ) } )
 
+   ::qCompleter:setWrapAround( .t. )
+   ::qCompleter:setCaseSensitivity( Qt_CaseInsensitive )
+   ::qCompleter:setModelSorting( QCompleter_CaseInsensitivelySortedModel )
    ::qCompModel:setStringList( ::qProtoList )
    ::qCompleter:setModel( ::qCompModel )
-   ::qCompleter:setModelSorting( QCompleter_CaseInsensitivelySortedModel )
-   ::qCompleter:setCaseSensitivity( Qt_CaseInsensitive )
    ::qCompleter:setCompletionMode( QCompleter_PopupCompletion )
-   ::qCompleter:setWrapAround( .t. )
 
    QListView():from( ::qCompleter:popup() ):setAlternatingRowColors( .t. )
 
    ::connect( ::qCompleter, "activated(QString)", {|p| ::execEvent( "qcompleter_activated", p ) } )
 
    RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:getProto( cWord )
+   LOCAL n, nLen
+
+   cWord := upper( cWord )
+   nLen := len( cWord )
+
+   /* This can be rationalized */
+   IF ( n := ascan( ::aProtos, {|e| upper( left( e, nLen ) ) == cWord } ) ) > 0
+      RETURN ::aProtos[ n ]
+   ENDIF
+
+   RETURN ""
 
 /*----------------------------------------------------------------------*/
 
