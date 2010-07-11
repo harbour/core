@@ -60,7 +60,7 @@
         :hbMoveLine( nIDirection )                          -> NIL
         :hbGetSelectedText()                                -> cQString
         :hbTextUnderCursor()                                -> cQString
-        :hbShowPrototype( cTip )                            -> NIL
+        :hbShowPrototype( cTip, nRows, nCols )              -> NIL
         :hbSetCompleter( pCompleter )                       -> NIL
         :hbSetCurrentLineColor( pColor )                    -> NIL
         :hbSetLineAreaBkColor( pColor )                     -> NIL

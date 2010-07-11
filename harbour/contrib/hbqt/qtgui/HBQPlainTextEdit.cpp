@@ -609,16 +609,16 @@ HB_FUNC( QT_HBQPLAINTEXTEDIT_HBTEXTUNDERCURSOR )
 }
 
 /*
- * void           hbShowPrototype( const QString & tip )
+ * void           hbShowPrototype( const QString & tip, int rows, int cols )
  */
 HB_FUNC( QT_HBQPLAINTEXTEDIT_HBSHOWPROTOTYPE )
 {
    HBQPlainTextEdit * p = hbqt_par_HBQPlainTextEdit( 1 );
    if( p )
-      ( p )->hbShowPrototype( HBQPlainTextEdit::tr( hb_parc( 2 ) ) );
+      ( p )->hbShowPrototype( HBQPlainTextEdit::tr( hb_parc( 2 ) ), hb_parni( 3 ), hb_parni( 4 ) );
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQPLAINTEXTEDIT_HBSHOWPROTOTYPE FP=( p )->hbShowPrototype( HBQPlainTextEdit::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQPLAINTEXTEDIT_HBSHOWPROTOTYPE FP=( p )->hbShowPrototype( HBQPlainTextEdit::tr( hb_parc( 2 ) ), hb_parni( 3 ), hb_parni( 4 ) ); p is NULL" ) );
    }
 }
 

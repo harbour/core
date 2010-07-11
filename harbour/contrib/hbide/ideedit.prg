@@ -121,6 +121,9 @@ CLASS IdeEdit INHERIT IdeObject
    DATA   nProtoCol                               INIT -1
    DATA   isSuspended                             INIT .F.
 
+   DATA   nProtoRows                              INIT 1
+   DATA   nProtoCols                              INIT 10
+
    DATA   fontFamily
    DATA   pointSize
    DATA   currentPointSize
@@ -420,7 +423,7 @@ METHOD IdeEdit:connectEditSignals( oEdit )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
-   LOCAL pAct, qAct, n, qEdit, oo, qCursor, cProto
+   LOCAL pAct, qAct, n, qEdit, oo, qCursor, cProto, nRows, nCols
 
    HB_SYMBOL_UNUSED( p1 )
 
@@ -508,8 +511,10 @@ METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
 
       IF ::nProtoLine != -1
          IF ::getLineNo() == ::nProtoLine .AND. ::getColumnNo() >= ::nProtoCol + 1
-            IF !empty( cProto := hbide_formatProto_1( ::cProtoOrg, ::getLine(), ::nProtoCol, ::getColumnNo() ) )
-               ::cProto := cProto
+            IF !empty( cProto := hbide_formatProto_1( ::cProtoOrg, ::getLine(), ::nProtoCol, ::getColumnNo(), @nRows, @nCols ) )
+               ::cProto     := cProto
+               ::nProtoRows := nRows
+               ::nProtoCols := nCols
                ::showProtoType()
             ENDIF
          ENDIF
@@ -2184,7 +2189,7 @@ METHOD IdeEdit:showPrototype( cProto )
          ::nProtoLine := ::getLineNo()
          ::nProtoCol  := ::getColumnNo()
       ENDIF
-      ::qEdit:hbShowPrototype( ::cProto )
+      ::qEdit:hbShowPrototype( ::cProto, ::nProtoRows, ::nProtoCols )
    ENDIF
    RETURN Self
 
@@ -2196,6 +2201,8 @@ METHOD IdeEdit:hidePrototype()
       ::nProtoLine := -1
       ::nProtoCol  := -1
       ::cProto     := ""
+      ::nProtoCols := 10
+      ::nProtoRows := 1
       ::qEdit:hbShowPrototype( "" )
    ENDIF
    RETURN Self
@@ -2419,8 +2426,8 @@ FUNCTION hbide_isHarbourKeyword( cWord, oIde )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION hbide_formatProto_1( cProto, cText, nProtoCol, nCurCol )
-   LOCAL s, nArgs, cArgs, aArgs, cArg, n, n1, i, nnn, cPro
+FUNCTION hbide_formatProto_1( cProto, cText, nProtoCol, nCurCol, nRows, nCols )
+   LOCAL s, nArgs, cArgs, aArgs, cArg, n, n1, i, nnn, cPro, cFunc
 
    IF nCurCol > nProtoCol
       n  := at( "(", cProto ) ; n1 := at( ")", cProto )
@@ -2435,25 +2442,39 @@ FUNCTION hbide_formatProto_1( cProto, cText, nProtoCol, nCurCol )
             ENDIF
          NEXT
 
+         nRows := 1; nCols := 0
+
          IF nArgs > 0
-            cProto := StrTran( cProto, "<", "&lt;" ) ; cProto := StrTran( cProto, ">", "&gt;" )
             n := at( "(", cProto ) ; n1 := at( ")", cProto )
 
+            cFunc := substr( cProto, 1, n - 1 )
             cArgs := substr( cProto, n + 1, n1 - n - 1 )
             aArgs := hb_aTokens( cArgs, "," )
             cArgs := ""
+            nCols := len( cFunc ) + 1
             FOR EACH cArg IN aArgs
+               cArg := alltrim( cArg )
+
+               nRows++
+               nCols := max( nCols, len( cArg ) + 3 )
+
+               cArg := StrTran( cArg, "<", "&lt;" )
+               cArg := StrTran( cArg, ">", "&gt;" )
+
                nnn  := cArg:__enumIndex()
                IF nnn == nArgs
-                  cArg := "<font color=blue>" + cArg + "</font>"
+                  cArg := "<font color=red><b>" + cArg + "</b></font>"
                ENDIF
                IF nnn == len( aArgs )
-                  cArgs += cArg
+                  cArgs += "<br>" + "   " + cArg
                ELSE
-                  cArgs += cArg + "<font color=red><b>" + "," + "</b></font>"
+                  cArgs += "<br>" + "   " + cArg + "<font color=red><b>" + "," + "</b></font>"
                ENDIF
             NEXT
-            cPro  := "<p style='white-space:pre'>" + "<b>" + substr( cProto, 1, n - 1 ) + "</b>" + ;
+            nCols += iif( nCols <= len( cFunc ), 0, 1 )
+
+            //cPro  := "<p style='white-space:pre'>" + "<font color=darkgreen><b>" + cFunc + "</b></font>" + ;
+            cPro  := "<p style='white-space:pre'>" + "<b>" + cFunc + "</b>" + ;
                         "<font color=red><b>" + "(" + "</b></font>" + ;
                            cArgs + ;
                               "<font color=red><b>" + ")" + "</font>" + "</b></p>"

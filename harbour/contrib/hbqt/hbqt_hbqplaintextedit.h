@@ -124,8 +124,9 @@ private:
    QWidget      * lineNumberArea;
    QFrame       * horzRuler;
    QFrame       * ttFrame;
-   QHBoxLayout  * ttLayout;
+   QVBoxLayout  * ttLayout;
    QLabel       * ttLabel;
+   QTextEdit    * ttTextEdit;
    int            spaces;
    bool           numberBlock;
    bool           highlightCurLine;
@@ -192,7 +193,7 @@ public slots:
    QString        hbTextUnderCursor();
    void           hbNumberBlockVisible( bool b );
    bool           hbNumberBlockVisible();
-   void           hbShowPrototype( const QString & tip );
+   void           hbShowPrototype( const QString & tip, int rows, int cols );
    void           hbSetCompleter( QCompleter * completer ) { c = completer; };
    void           hbSetCurrentLineColor( const QColor & color ) { m_currentLineColor = color; };
    void           hbSetLineAreaBkColor( const QColor & color ) { m_lineAreaBkColor = color; };
