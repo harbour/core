@@ -6,6 +6,7 @@
  * Harbour Project source code:
  *
  *
+ * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
  * Copyright 2010 Carlos Bacco <carlosbacco at gmail.com>
  * www - http://harbour-project.org
  *
@@ -151,12 +152,11 @@ Qt::ItemFlags HBQAbstractItemModel::flags( const QModelIndex & index ) const
    if( ! index.isValid() )
       return 0;
 
-   QVariant ret = hbqt_fetchData( block, QT_QAIM_flags, 0, index.column(), index.row() );
-   if( ret == NULL )
+   QVariant ret = hbqt_fetchData( block, HBQT_QAIM_flags, 0, index.column(), index.row() );
+   if( ! ret.isValid() )
       return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
 
-   return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
-   /* TODO: Fix return ret ; */
+   return ( QFlags<Qt::ItemFlag> ) ret.toInt();
 }
 
 QVariant HBQAbstractItemModel::data( const QModelIndex & index, int role ) const
@@ -164,32 +164,28 @@ QVariant HBQAbstractItemModel::data( const QModelIndex & index, int role ) const
    if( !index.isValid() )
       return QVariant();
 
-   QVariant ret = hbqt_fetchData( block, QT_QAIM_data, role, index.column(), index.row() );
-   if( ret == NULL )
-      return QVariant();
+   QVariant ret = hbqt_fetchData( block, HBQT_QAIM_data, role, index.column(), index.row() );
 
    return ret;
 }
 
 QVariant HBQAbstractItemModel::headerData( int section, Qt::Orientation orientation, int role ) const
 {
-   QVariant ret = hbqt_fetchData( block, QT_QAIM_headerData, role, orientation, section );
-   if( ret == NULL )
-      return QVariant();
+   QVariant ret = hbqt_fetchData( block, HBQT_QAIM_headerData, role, orientation, section );
 
    return ret;
 }
 
 int HBQAbstractItemModel::rowCount( const QModelIndex & /*parent = QModelIndex()*/ ) const
 {
-   QVariant ret = hbqt_fetchData( block, QT_QAIM_rowCount , 0, 0, 0);
+   QVariant ret = hbqt_fetchData( block, HBQT_QAIM_rowCount, 0, 0, 0 );
 
    return ret.toInt() ;
 }
 
 int HBQAbstractItemModel::columnCount( const QModelIndex & /*parent = QModelIndex()*/ ) const
 {
-   QVariant ret = hbqt_fetchData( block, QT_QAIM_columnCount , 0, 0, 0);
+   QVariant ret = hbqt_fetchData( block, HBQT_QAIM_columnCount, 0, 0, 0 );
 
    return ret.toInt() ;
 }

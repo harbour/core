@@ -5,7 +5,7 @@
 /*
  * Harbour Project source code:
  *
- * Copyright 2010 Bacco
+ * Copyright 2010 Carlos Bacco <carlosbacco at gmail.com>
  * www - http://harbour-project.org
  *
  */

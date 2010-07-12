@@ -66,6 +66,7 @@
 /*----------------------------------------------------------------------*/
 
 #ifndef _HBQT_CH
+#define _HBQT_CH
 
 /*----------------------------------------------------------------------*/
 
@@ -2250,12 +2251,10 @@
  *   QT_(Qt class initials)_(Qt overloaded member)
  */
 
-#define QT_QAIM_data         1001
-#define QT_QAIM_flags        1003
-#define QT_QAIM_headerData   2001
-#define QT_QAIM_rowCount     3001
-#define QT_QAIM_columnCount  3002
+#define HBQT_QAIM_data                            1001
+#define HBQT_QAIM_flags                           1003
+#define HBQT_QAIM_headerData                      2001
+#define HBQT_QAIM_rowCount                        3001
+#define HBQT_QAIM_columnCount                     3002
 
-
-#define _HBQT_CH
 #endif

@@ -444,7 +444,7 @@ METHOD new( nTop, nLeft, nBottom, nRight ) CLASS XbpBrowse
    ::nRight  := nRight
 
    ::colorSpec := SetColor()
-   
+
    ::oDefaultCellSize := QSize():New(20,::nCellHeight)
 
    RETURN Self
@@ -1023,100 +1023,100 @@ METHOD navigate( p1, p2 ) CLASS XbpBrowse
 
 METHOD XbpBrowse:supplyInfo( nMode, nCall, nRole, nX, nY )
 
-   IF nCall == QT_QAIM_headerData .and. nX == Qt_Vertical
+   IF nCall == HBQT_QAIM_headerData .and. nX == Qt_Vertical
       RETURN Nil
    End
 
    DO CASE
    CASE nMode == 141       /* Main View Header|Data */
-      IF nCall == QT_QAIM_columnCount
+      IF nCall == HBQT_QAIM_columnCount
          IF ::colCount > 0
             ::forceStable()
             ::setHorzScrollBarRange( .t. )
          ENDIF
          RETURN ::colCount
-      ELSEIF nCall == QT_QAIM_rowCount
+      ELSEIF nCall == HBQT_QAIM_rowCount
          IF ::colCount > 0
             ::forceStable()
             ::setVertScrollBarRange( .f. )
          ENDIF
          RETURN ::rowCount
-      ELSEIF nCall == QT_QAIM_data
+      ELSEIF nCall == HBQT_QAIM_data
          RETURN ::fetchColumnInfo( nCall,nRole, 0, nY+1, nX+1 )
-      ELSEIF nCall == QT_QAIM_headerData
+      ELSEIF nCall == HBQT_QAIM_headerData
          RETURN ::fetchColumnInfo( nCall,nRole, 0, 0 , nY+1 )
       ENDIF
       RETURN nil
 
    CASE nMode == 142       /* Main View Footer */
-      IF nCall == QT_QAIM_columnCount
+      IF nCall == HBQT_QAIM_columnCount
          IF ::colCount > 0
             ::forceStable()
          ENDIF
          RETURN ::colCount
-      ELSEIF nCall == QT_QAIM_data
+      ELSEIF nCall == HBQT_QAIM_data
          RETURN ::fetchColumnInfo( nCall,nRole, 1, nY+1, nX+1 )
-      ELSEIF nCall == QT_QAIM_headerData
+      ELSEIF nCall == HBQT_QAIM_headerData
          RETURN ::fetchColumnInfo( nCall,nRole, 1, 0 , nY+1 )
       ENDIF
       RETURN nil
 
    CASE nMode == 151       /* Left Frozen Header|Data */
-      IF nCall == QT_QAIM_columnCount
+      IF nCall == HBQT_QAIM_columnCount
          IF ::nLeftFrozen > 0
             ::forceStable()
          ENDIF
          RETURN ::nLeftFrozen
-      ELSEIF nCall == QT_QAIM_rowCount
+      ELSEIF nCall == HBQT_QAIM_rowCount
          IF ::nLeftFrozen > 0
             ::forceStable()
          ENDIF
          RETURN ::rowCount
-      ELSEIF nCall == QT_QAIM_data
+      ELSEIF nCall == HBQT_QAIM_data
          RETURN ::fetchColumnInfo( nCall,nRole, 0, nY+1, ::aLeftFrozen[ nX+1 ] )
-      ELSEIF nCall == QT_QAIM_headerData
+      ELSEIF nCall == HBQT_QAIM_headerData
          RETURN ::fetchColumnInfo( nCall,nRole, 0, 0, ::aLeftFrozen[ nY+1 ] )
       ENDIF
       RETURN nil
 
    CASE nMode == 152       /* Left Frozen Footer */
-      IF nCall == QT_QAIM_columnCount
+      IF nCall == HBQT_QAIM_columnCount
          IF ::nLeftFrozen > 0
             ::forceStable()
          ENDIF
          RETURN ::nLeftFrozen
-      ELSEIF nCall == QT_QAIM_data
+      ELSEIF nCall == HBQT_QAIM_data
          RETURN ::fetchColumnInfo( nCall,nRole, 1, nY+1, ::aLeftFrozen[ nX+1 ] )
-      ELSEIF nCall == QT_QAIM_headerData
+      ELSEIF nCall == HBQT_QAIM_headerData
          RETURN ::fetchColumnInfo( nCall,nRole, 1, 0, ::aLeftFrozen[ nY+1 ] )
       ENDIF
 
    CASE nMode == 161       /* Right Frozen Header|Data */
-      IF nCall == QT_QAIM_columnCount
+      IF nCall == HBQT_QAIM_columnCount
          IF ::nRightFrozen > 0
             ::forceStable()
          ENDIF
          RETURN ::nRightFrozen
-      ELSEIF nCall == QT_QAIM_rowCount
+      ELSEIF nCall == HBQT_QAIM_rowCount
          IF ::nRightFrozen > 0
             ::forceStable()
          ENDIF
          RETURN ::rowCount
-      ELSEIF nCall == QT_QAIM_data
+      ELSEIF nCall == HBQT_QAIM_data
          RETURN ::fetchColumnInfo( nCall,nRole, 0, nY+1, ::aRightFrozen[ nX+1 ] )
-      ELSEIF nCall == QT_QAIM_headerData
+      ELSEIF nCall == HBQT_QAIM_headerData
          RETURN ::fetchColumnInfo( nCall,nRole, 0, 0, ::aRightFrozen[ nY+1 ] )
       ENDIF
 
    CASE nMode == 162       /* Right Frozen Footer */
-      IF nCall == QT_QAIM_columnCount
+      IF nCall == HBQT_QAIM_columnCount
          IF ::nRightFrozen > 0
             ::forceStable()
          ENDIF
          RETURN ::nRightFrozen
-      ELSEIF nCall == QT_QAIM_data
+      ELSEIF nCall == HBQT_QAIM_data
          RETURN ::fetchColumnInfo( nCall,nRole, 1, nY+1, ::aRightFrozen[ nX+1 ] )
-      ELSEIF nCall == QT_QAIM_headerData
+      ELSEIF nCall == HBQT_QAIM_headerData
          RETURN ::fetchColumnInfo( nCall,nRole, 1, 0, ::aRightFrozen[ nY+1 ] )
       ENDIF
 
@@ -1131,7 +1131,7 @@ METHOD fetchColumnInfo( nCall, nRole, nArea, nRow, nCol ) CLASS XbpBrowse
    LOCAL oCol := ::columns[ nCol ]
 
    SWITCH nCall
-      CASE QT_QAIM_data
+      CASE HBQT_QAIM_data
 
          SWITCH ( nRole )
             CASE Qt_ForegroundRole
@@ -1145,7 +1145,7 @@ METHOD fetchColumnInfo( nCall, nRole, nArea, nRow, nCol ) CLASS XbpBrowse
                ELSE
                   RETURN ::compatColor( oCol:dFgColor )
                ENDIF
-         
+
             CASE Qt_BackgroundRole
                IF hb_isBlock( oCol:colorBlock )
                   aColor := eval( oCol:colorBlock, ::cellValueA( nRow, nCol ) )
@@ -1157,16 +1157,16 @@ METHOD fetchColumnInfo( nCall, nRole, nArea, nRow, nCol ) CLASS XbpBrowse
                ELSE
                   RETURN ::compatColor( oCol:dBgColor )
                ENDIF
-         
+
             CASE Qt_TextAlignmentRole
                RETURN oCol:dAlignment
-         
+
             CASE Qt_SizeHintRole
                RETURN ::oDefaultCellSize
-         
+
             CASE Qt_DecorationRole
                IF oCol:type == XBPCOL_TYPE_FILEICON
-                  RETURN ::compatIcon( ::cellValue( nRow, nCol ) ) 
+                  RETURN ::compatIcon( ::cellValue( nRow, nCol ) )
                ELSE
                   RETURN nil
                ENDIF
@@ -1178,8 +1178,8 @@ METHOD fetchColumnInfo( nCall, nRole, nArea, nRow, nCol ) CLASS XbpBrowse
                ENDIF
          ENDSWITCH
          RETURN nil
-      
-      CASE QT_QAIM_headerData
+
+      CASE HBQT_QAIM_headerData
          IF nArea == 0                    /* Header Area */
             SWITCH nRole
             CASE Qt_SizeHintRole
@@ -1211,12 +1211,12 @@ METHOD fetchColumnInfo( nCall, nRole, nArea, nRow, nCol ) CLASS XbpBrowse
    ENDSWITCH
 
    RETURN nil
-   
+
    // TODO: Review the color < 25 case when resolved in HBQt, and avoid unnecessary creation of new QColor/Qicon GC objects
-   
+
    //   However, tested with medium data sets, seems not being a big issue by now
    //   Implementation choice will depend on planned HBQt evolution of pseudo casts and bypass functions (non GC QColor, QIcon, etc)
-   
+
 METHOD compatColor(nColor)
    RETURN QColor():new( nColor )
 
