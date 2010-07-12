@@ -81,6 +81,7 @@ typedef struct
    QPointer< QUiLoader > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QUiLoader;
 
 QT_G_FUNC( hbqt_gcRelease_QUiLoader )
@@ -127,6 +128,7 @@ void * hbqt_gcAllocate_QUiLoader( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QUiLoader >( ( QUiLoader * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QUiLoader;
+   p->type = QT_TYPE_QUiLoader;
 
    if( bNew )
    {

@@ -84,6 +84,7 @@ typedef struct
    QContextMenuEvent * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QContextMenuEvent;
 
 QT_G_FUNC( hbqt_gcRelease_QContextMenuEvent )
@@ -119,6 +120,7 @@ void * hbqt_gcAllocate_QContextMenuEvent( void * pObj, bool bNew )
    p->ph = ( QContextMenuEvent * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QContextMenuEvent;
+   p->type = QT_TYPE_QContextMenuEvent;
 
    if( bNew )
    {

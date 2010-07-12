@@ -80,6 +80,7 @@ typedef struct
    HBQTextBlockUserData * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_HBQTextBlockUserData;
 
 QT_G_FUNC( hbqt_gcRelease_HBQTextBlockUserData )
@@ -115,6 +116,7 @@ void * hbqt_gcAllocate_HBQTextBlockUserData( void * pObj, bool bNew )
    p->ph = ( HBQTextBlockUserData * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_HBQTextBlockUserData;
+   p->type = QT_TYPE_HBQTextBlockUserData;
 
    if( bNew )
    {

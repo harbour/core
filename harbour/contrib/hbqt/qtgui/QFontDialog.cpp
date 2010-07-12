@@ -85,6 +85,7 @@ typedef struct
    QPointer< QFontDialog > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QFontDialog;
 
 QT_G_FUNC( hbqt_gcRelease_QFontDialog )
@@ -131,6 +132,7 @@ void * hbqt_gcAllocate_QFontDialog( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QFontDialog >( ( QFontDialog * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QFontDialog;
+   p->type = QT_TYPE_QFontDialog;
 
    if( bNew )
    {

@@ -85,6 +85,7 @@ typedef struct
    QStyleOptionTitleBar * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QStyleOptionTitleBar;
 
 QT_G_FUNC( hbqt_gcRelease_QStyleOptionTitleBar )
@@ -120,6 +121,7 @@ void * hbqt_gcAllocate_QStyleOptionTitleBar( void * pObj, bool bNew )
    p->ph = ( QStyleOptionTitleBar * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyleOptionTitleBar;
+   p->type = QT_TYPE_QStyleOptionTitleBar;
 
    if( bNew )
    {

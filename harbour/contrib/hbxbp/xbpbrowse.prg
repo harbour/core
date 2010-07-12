@@ -83,25 +83,6 @@
 #include "setcurs.ch"
 #include "tbrowse.ch"
 
-/*----------------------------------------------------------------------*/
-
-#define HBQT_BRW_CELLVALUE                        1001
-#define HBQT_BRW_COLCOUNT                         1002
-#define HBQT_BRW_ROWCOUNT                         1003
-#define HBQT_BRW_COLHEADER                        1004
-#define HBQT_BRW_ROWHEADER                        1005
-#define HBQT_BRW_COLALIGN                         1006
-#define HBQT_BRW_COLFGCOLOR                       1007
-#define HBQT_BRW_COLBGCOLOR                       1008
-#define HBQT_BRW_DATFGCOLOR                       1009
-#define HBQT_BRW_DATBGCOLOR                       1010
-#define HBQT_BRW_COLHEIGHT                        1011
-#define HBQT_BRW_DATHEIGHT                        1012
-#define HBQT_BRW_DATALIGN                         1013
-#define HBQT_BRW_CELLDECORATION                   1014
-
-/*----------------------------------------------------------------------*/
-
 #define HB_CLS_NOTOBJECT
 
 #define _TBCI_COLOBJECT       1    // column object
@@ -297,7 +278,7 @@ EXPORTED:
    METHOD new( nTop, nLeft, nBottom, nRight )               // constructor, NOTE: This method is a Harbour extension [vszakats]
    METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )   // constructor, NOTE: This method is a Harbour extension [vszakats]
    METHOD execSlot( nEvent, p1, p2, p3 )                    // executes view events
-   METHOD supplyInfo( nMode, nInfo, p2, p3 )                // supplies cell parameters to Qt engine
+   METHOD supplyInfo( nMode, nCall, nRole, nX, nY )                // supplies cell parameters to Qt engine
    METHOD configure( nMode )                                // mark that the internal settings of the TBrowse object should be reconfigured
    METHOD handleEvent( nEvent, mp1, mp2 )
 
@@ -349,6 +330,9 @@ PROTECTED:
    METHOD cellColor( nRow, nCol )                           // get cell formatted value
    METHOD dispFrames()                                      // display TBrowse border, columns' headings, footings and separators
    METHOD dispRow( nRow )                                   // display TBrowse data
+
+   METHOD compatColor(nColor)
+   METHOD compatIcon(cIcon)
 
    FRIEND FUNCTION _mBrwPos                                 // helper function for mRow() and mCol() methods
 
@@ -425,7 +409,7 @@ EXPORTED:
 
    METHOD   buildLeftFreeze()
    METHOD   buildRightFreeze()
-   METHOD   fetchColumnInfo( nInfo, nArea, nRow, nCol )
+   METHOD   fetchColumnInfo( nCall, nRole, nArea, nRow, nCol )
 
    METHOD   setLeftFrozen( aColFrozens )
    METHOD   setRightFrozen( aColFrozens )
@@ -438,6 +422,7 @@ EXPORTED:
 
    METHOD   destroy()
    DATA     nCellHeight                             INIT   20
+   DATA     oDefaultCellSize
    METHOD   setCellHeight( nCellHeight )
    METHOD   setCurrentIndex( lReset )
 
@@ -459,6 +444,8 @@ METHOD new( nTop, nLeft, nBottom, nRight ) CLASS XbpBrowse
    ::nRight  := nRight
 
    ::colorSpec := SetColor()
+   
+   ::oDefaultCellSize := QSize():New(20,::nCellHeight)
 
    RETURN Self
 
@@ -486,7 +473,8 @@ METHOD XbpBrowse:buildLeftFreeze()
    ::oLeftHeaderView:configure( ::oLeftView:horizontalHeader() )
    ::oLeftHeaderView:setHighlightSections( .F. )
 
-   ::oLeftDbfModel := HBDbfModel():new( {|p1,p2,p3,p4| ::supplyInfo( 151, p1, p2, p3, p4 ) } )
+   ::oLeftDbfModel := HBQAbstractItemModel():new( {|t,role,x,y| ::supplyInfo( 151, t, role, x, y ) } )
+
    ::oLeftView:setModel( ::oLeftDbfModel )
    //
    //::oLeftView:hide()
@@ -500,7 +488,8 @@ METHOD XbpBrowse:buildLeftFreeze()
    ::oLeftFooterView:setResizeMode( QHeaderView_Fixed )
    ::oLeftFooterView:setFocusPolicy( Qt_NoFocus )
    //
-   ::oLeftFooterModel := HBDbfModel():new( {|p1,p2,p3,p4| ::supplyInfo( 152, p1, p2, p3, p4 ) } )
+   ::oLeftFooterModel := HBQAbstractItemModel():new( {|t,role,x,y| ::supplyInfo( 152, t, role, x, y ) } )
+
    ::oLeftFooterView:setModel( ::oLeftFooterModel )
    //
    //::oLeftFooterView:hide()
@@ -536,7 +525,8 @@ METHOD XbpBrowse:buildRightFreeze()
    ::oRightHeaderView:configure( ::oRightView:horizontalHeader() )
    ::oRightHeaderView:setHighlightSections( .F. )
 
-   ::oRightDbfModel := HBDbfModel():new( {|p1,p2,p3,p4| ::supplyInfo( 161, p1, p2, p3, p4 ) } )
+   ::oRightDbfModel := HBQAbstractItemModel():new( {|t,role,x,y| ::supplyInfo( 161, t, role, x, y ) } )
+
    ::oRightView:setModel( ::oRightDbfModel )
 
    /*  Horizontal Footer */
@@ -548,7 +538,8 @@ METHOD XbpBrowse:buildRightFreeze()
    ::oRightFooterView:setResizeMode( QHeaderView_Fixed )
    ::oRightFooterView:setFocusPolicy( Qt_NoFocus )
    //
-   ::oRightFooterModel := HBDbfModel():new( {|p1,p2,p3,p4| ::supplyInfo( 162, p1, p2, p3, p4 ) } )
+   ::oRightFooterModel := HBQAbstractItemModel():new( {|t,role,x,y| ::supplyInfo( 162, t, role, x, y ) } )
+
    ::oRightFooterView:setModel( ::oRightFooterModel )
 
    ::connect( ::oRightView      , "mousePressEvent()"  , {|p| ::execSlot( 31, p ) } )
@@ -617,7 +608,8 @@ METHOD XbpBrowse:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::connect( ::oHeaderView, "sectionResized(int,int,int)", {|i,i1,i2| ::execSlot( 121, i, i1, i2 ) } )
 
    /* .DBF Manipulation Model */
-   ::oDbfModel := HBDbfModel():new( {|p1,p2,p3,p4| ::supplyInfo( 141, p1, p2, p3, p4 ) } )
+   ::oDbfModel := HBQAbstractItemModel():new( {|t,role,x,y| ::supplyInfo( 141, t, role, x, y ) } )
+
    /*  Attach Model with the View */
    ::oTableView:setModel( ::oDbfModel )
 
@@ -631,7 +623,7 @@ METHOD XbpBrowse:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::oFooterView:setResizeMode( QHeaderView_Fixed )
    ::oFooterView:setFocusPolicy( Qt_NoFocus )
    //
-   ::oFooterModel := HBDbfModel():new( {|p1,p2,p3,p4| ::supplyInfo( 142, p1, p2, p3, p4 ) } )
+   ::oFooterModel := HBQAbstractItemModel():new( {|t,role,x,y| ::supplyInfo( 142, t, role, x, y ) } )
 
    ::oFooterView:setModel( ::oFooterModel )
    ::oFooterView:setFocusPolicy( Qt_NoFocus )
@@ -1029,175 +1021,207 @@ METHOD navigate( p1, p2 ) CLASS XbpBrowse
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpBrowse:supplyInfo( nMode, nInfo, p2, p3 )
+METHOD XbpBrowse:supplyInfo( nMode, nCall, nRole, nX, nY )
 
-//HB_TRACE( HB_TR_DEBUG, 0, 'supplyInfo:', nMode, nInfo, memory( 1001 ) )
+   IF nCall == QT_QAIM_headerData .and. nX == Qt_Vertical
+      RETURN Nil
+   End
+
    DO CASE
    CASE nMode == 141       /* Main View Header|Data */
-      IF nInfo == HBQT_BRW_COLCOUNT
+      IF nCall == QT_QAIM_columnCount
          IF ::colCount > 0
             ::forceStable()
             ::setHorzScrollBarRange( .t. )
          ENDIF
          RETURN ::colCount
-      ELSEIF nInfo == HBQT_BRW_ROWCOUNT
+      ELSEIF nCall == QT_QAIM_rowCount
          IF ::colCount > 0
             ::forceStable()
             ::setVertScrollBarRange( .f. )
          ENDIF
          RETURN ::rowCount
-      ELSE
-         RETURN ::fetchColumnInfo( nInfo, 0, p2, p3 )
+      ELSEIF nCall == QT_QAIM_data
+         RETURN ::fetchColumnInfo( nCall,nRole, 0, nY+1, nX+1 )
+      ELSEIF nCall == QT_QAIM_headerData
+         RETURN ::fetchColumnInfo( nCall,nRole, 0, 0 , nY+1 )
       ENDIF
+      RETURN nil
 
    CASE nMode == 142       /* Main View Footer */
-      IF nInfo == HBQT_BRW_COLCOUNT
+      IF nCall == QT_QAIM_columnCount
          IF ::colCount > 0
             ::forceStable()
          ENDIF
          RETURN ::colCount
-      ELSE
-         RETURN ::fetchColumnInfo( nInfo, 1, p2, p3 )
+      ELSEIF nCall == QT_QAIM_data
+         RETURN ::fetchColumnInfo( nCall,nRole, 1, nY+1, nX+1 )
+      ELSEIF nCall == QT_QAIM_headerData
+         RETURN ::fetchColumnInfo( nCall,nRole, 1, 0 , nY+1 )
       ENDIF
+      RETURN nil
 
    CASE nMode == 151       /* Left Frozen Header|Data */
-      IF nInfo == HBQT_BRW_COLCOUNT
+      IF nCall == QT_QAIM_columnCount
          IF ::nLeftFrozen > 0
             ::forceStable()
          ENDIF
          RETURN ::nLeftFrozen
-      ELSEIF nInfo == HBQT_BRW_ROWCOUNT
+      ELSEIF nCall == QT_QAIM_rowCount
          IF ::nLeftFrozen > 0
             ::forceStable()
          ENDIF
          RETURN ::rowCount
-      ELSE
-         RETURN ::fetchColumnInfo( nInfo, 0, p2, ::aLeftFrozen[ p3 ] )
+      ELSEIF nCall == QT_QAIM_data
+         RETURN ::fetchColumnInfo( nCall,nRole, 0, nY+1, ::aLeftFrozen[ nX+1 ] )
+      ELSEIF nCall == QT_QAIM_headerData
+         RETURN ::fetchColumnInfo( nCall,nRole, 0, 0, ::aLeftFrozen[ nY+1 ] )
       ENDIF
+      RETURN nil
 
    CASE nMode == 152       /* Left Frozen Footer */
-      IF nInfo == HBQT_BRW_COLCOUNT
+      IF nCall == QT_QAIM_columnCount
          IF ::nLeftFrozen > 0
             ::forceStable()
          ENDIF
          RETURN ::nLeftFrozen
-      ELSE
-         RETURN ::fetchColumnInfo( nInfo, 1, p2, ::aLeftFrozen[ p3 ] )
+      ELSEIF nCall == QT_QAIM_data
+         RETURN ::fetchColumnInfo( nCall,nRole, 1, nY+1, ::aLeftFrozen[ nX+1 ] )
+      ELSEIF nCall == QT_QAIM_headerData
+         RETURN ::fetchColumnInfo( nCall,nRole, 1, 0, ::aLeftFrozen[ nY+1 ] )
       ENDIF
 
    CASE nMode == 161       /* Right Frozen Header|Data */
-      IF nInfo == HBQT_BRW_COLCOUNT
+      IF nCall == QT_QAIM_columnCount
          IF ::nRightFrozen > 0
             ::forceStable()
          ENDIF
          RETURN ::nRightFrozen
-      ELSEIF nInfo == HBQT_BRW_ROWCOUNT
+      ELSEIF nCall == QT_QAIM_rowCount
          IF ::nRightFrozen > 0
             ::forceStable()
          ENDIF
          RETURN ::rowCount
-      ELSE
-         RETURN ::fetchColumnInfo( nInfo, 0, p2, ::aRightFrozen[ p3 ] )
+      ELSEIF nCall == QT_QAIM_data
+         RETURN ::fetchColumnInfo( nCall,nRole, 0, nY+1, ::aRightFrozen[ nX+1 ] )
+      ELSEIF nCall == QT_QAIM_headerData
+         RETURN ::fetchColumnInfo( nCall,nRole, 0, 0, ::aRightFrozen[ nY+1 ] )
       ENDIF
 
    CASE nMode == 162       /* Right Frozen Footer */
-      IF nInfo == HBQT_BRW_COLCOUNT
+      IF nCall == QT_QAIM_columnCount
          IF ::nRightFrozen > 0
             ::forceStable()
          ENDIF
          RETURN ::nRightFrozen
-      ELSE
-         RETURN ::fetchColumnInfo( nInfo, 1, p2, ::aRightFrozen[ p3 ] )
+      ELSEIF nCall == QT_QAIM_data
+         RETURN ::fetchColumnInfo( nCall,nRole, 1, nY+1, ::aRightFrozen[ nX+1 ] )
+      ELSEIF nCall == QT_QAIM_headerData
+         RETURN ::fetchColumnInfo( nCall,nRole, 1, 0, ::aRightFrozen[ nY+1 ] )
       ENDIF
 
    ENDCASE
 
-   RETURN ""
+   RETURN nil
 
 /*----------------------------------------------------------------------*/
 
-METHOD fetchColumnInfo( nInfo, nArea, nRow, nCol ) CLASS XbpBrowse
+METHOD fetchColumnInfo( nCall, nRole, nArea, nRow, nCol ) CLASS XbpBrowse
    LOCAL aColor
    LOCAL oCol := ::columns[ nCol ]
 
-   SWITCH ( nInfo )
+   SWITCH nCall
+      CASE QT_QAIM_data
 
-   /* Data Area */
-   CASE HBQT_BRW_DATFGCOLOR
-      IF hb_isBlock( oCol:colorBlock )
-         aColor := eval( oCol:colorBlock, ::cellValueA( nRow, nCol ) )
-         IF hb_isArray( aColor ) .and. hb_isNumeric( aColor[ 1 ] )
-            RETURN hbxbp_ConvertAFactFromXBP( "Color", aColor[ 1 ] )
-         ELSE
-            RETURN oCol:dFgColor
-         ENDIF
-      ELSE
-         RETURN oCol:dFgColor
-      ENDIF
-
-   CASE HBQT_BRW_DATBGCOLOR
-      IF hb_isBlock( oCol:colorBlock )
-         aColor := eval( oCol:colorBlock, ::cellValueA( nRow, nCol ) )
-         IF hb_isArray( aColor ) .and. hb_isNumeric( aColor[ 2 ] )
-            RETURN hbxbp_ConvertAFactFromXBP( "Color", aColor[ 2 ] )
-         ELSE
-            RETURN oCol:dBgColor
-         ENDIF
-      ELSE
-         RETURN oCol:dBgColor
-      ENDIF
-
-   CASE HBQT_BRW_DATALIGN
-      RETURN oCol:dAlignment
-
-   CASE HBQT_BRW_DATHEIGHT
-      RETURN ::nCellHeight //oCol:dHeight
-
-   CASE HBQT_BRW_CELLDECORATION
-      IF oCol:type == XBPCOL_TYPE_FILEICON
-         RETURN trim( ::cellValue( nRow, nCol ) )
-      ELSE
-         RETURN ""
-      ENDIF
-
-   CASE HBQT_BRW_CELLVALUE
-      IF oCol:type == XBPCOL_TYPE_FILEICON
-         RETURN ""
-      ELSE
-         RETURN ::cellValue( nRow, nCol )
-      ENDIF
-
-   OTHERWISE
-      IF nArea == 0                    /* Header Area */
-         SWITCH nInfo
-         CASE HBQT_BRW_COLHEIGHT
-            RETURN ::nCellHeight //oCol:hHeight
-         CASE HBQT_BRW_COLHEADER
-            RETURN oCol:heading
-         CASE HBQT_BRW_COLALIGN
-            RETURN oCol:hAlignment
-         CASE HBQT_BRW_COLFGCOLOR
-            RETURN oCol:hFgColor
-         CASE HBQT_BRW_COLBGCOLOR
-            RETURN oCol:hBgColor
+         SWITCH ( nRole )
+            CASE Qt_ForegroundRole
+               IF hb_isBlock( oCol:colorBlock )
+                  aColor := eval( oCol:colorBlock, ::cellValueA( nRow, nCol ) )
+                  IF hb_isArray( aColor ) .and. hb_isNumeric( aColor[ 1 ] )
+                     RETURN ::compatColor( hbxbp_ConvertAFactFromXBP( "Color", aColor[ 1 ] ) )
+                  ELSE
+                     RETURN ::compatColor( oCol:dFgColor )
+                  ENDIF
+               ELSE
+                  RETURN ::compatColor( oCol:dFgColor )
+               ENDIF
+         
+            CASE Qt_BackgroundRole
+               IF hb_isBlock( oCol:colorBlock )
+                  aColor := eval( oCol:colorBlock, ::cellValueA( nRow, nCol ) )
+                  IF hb_isArray( aColor ) .and. hb_isNumeric( aColor[ 2 ] )
+                     RETURN ::compatColor( hbxbp_ConvertAFactFromXBP( "Color", aColor[ 2 ] ) )
+                  ELSE
+                     RETURN ::compatColor( oCol:dBgColor )
+                  ENDIF
+               ELSE
+                  RETURN ::compatColor( oCol:dBgColor )
+               ENDIF
+         
+            CASE Qt_TextAlignmentRole
+               RETURN oCol:dAlignment
+         
+            CASE Qt_SizeHintRole
+               RETURN ::oDefaultCellSize
+         
+            CASE Qt_DecorationRole
+               IF oCol:type == XBPCOL_TYPE_FILEICON
+                  RETURN ::compatIcon( ::cellValue( nRow, nCol ) ) 
+               ELSE
+                  RETURN nil
+               ENDIF
+            CASE Qt_DisplayRole
+               IF oCol:type == XBPCOL_TYPE_FILEICON
+                  RETURN nil
+               ELSE
+                  RETURN ::cellValue( nRow, nCol )
+               ENDIF
          ENDSWITCH
-      ELSE                             /* Footer Area */
-         SWITCH nInfo
-         CASE HBQT_BRW_COLHEIGHT
-            RETURN ::nCellHeight //oCol:fHeight
-         CASE HBQT_BRW_COLHEADER
-            RETURN oCol:footing
-         CASE HBQT_BRW_COLALIGN
-            RETURN oCol:fAlignment
-         CASE HBQT_BRW_COLFGCOLOR
-            RETURN oCol:fFgColor
-         CASE HBQT_BRW_COLBGCOLOR
-            RETURN oCol:fBgColor
-         ENDSWITCH
-      ENDIF
+         RETURN nil
+      
+      CASE QT_QAIM_headerData
+         IF nArea == 0                    /* Header Area */
+            SWITCH nRole
+            CASE Qt_SizeHintRole
+               RETURN ::oDefaultCellSize //oCol:hHeight
+            CASE Qt_DisplayRole
+               RETURN oCol:heading
+            CASE Qt_TextAlignmentRole
+               RETURN oCol:hAlignment
+            CASE Qt_ForegroundRole
+               RETURN ::compatColor( oCol:hFgColor )
+            CASE Qt_BackgroundRole
+               RETURN ::compatColor( oCol:hBgColor )
+            ENDSWITCH
+         ELSE                             /* Footer Area */
+            SWITCH nRole
+            CASE Qt_SizeHintRole
+               RETURN ::oDefaultCellSize //oCol:fHeight
+            CASE Qt_DisplayRole
+               RETURN oCol:footing
+            CASE Qt_TextAlignmentRole
+               RETURN oCol:fAlignment
+            CASE Qt_ForegroundRole
+               RETURN ::compatColor( oCol:fFgColor )
+            CASE Qt_BackgroundRole
+               RETURN ::compatColor( oCol:fBgColor )
+            ENDSWITCH
+         ENDIF
+         RETURN nil
    ENDSWITCH
 
-   RETURN ""
+   RETURN nil
+   
+   // TODO: Review the color < 25 case when resolved in HBQt, and avoid unnecessary creation of new QColor/Qicon GC objects
+   
+   //   However, tested with medium data sets, seems not being a big issue by now
+   //   Implementation choice will depend on planned HBQt evolution of pseudo casts and bypass functions (non GC QColor, QIcon, etc)
+   
+METHOD compatColor(nColor)
+   RETURN QColor():new( nColor )
+
+METHOD compatIcon(cIcon)
+   RETURN QIcon():new( QPixmap():new( Trim(cIcon) ) )
 
 /*----------------------------------------------------------------------*/
 
@@ -1705,16 +1729,16 @@ METHOD doConfigure() CLASS XbpBrowse
    ::setCellHeight( ::nCellHeight )
 
    /* Inform Qt about number of rows and columns browser implements */
-   ::oDbfModel:hbSetRowColumns( ::rowCount - 1, ::colCount - 1 )
+   //::oDbfModel:hbSetRowColumns( ::rowCount - 1, ::colCount - 1 )
    /* Tell Qt to Reload Everything */
    ::oDbfModel:reset()
    //
    IF hb_isObject( ::oLeftDbfModel )
-      ::oLeftDbfModel:hbSetRowColumns( ::rowCount - 1, ::nLeftFrozen - 1 )
+      //::oLeftDbfModel:hbSetRowColumns( ::rowCount - 1, ::nLeftFrozen - 1 ) // Dangling code
       ::oLeftDbfModel:reset()
    ENDIF
    IF hb_isObject( ::oRightDbfModel )
-      ::oRightDbfModel:hbSetRowColumns( ::rowCount - 1, ::nRightFrozen - 1 )
+      //::oRightDbfModel:hbSetRowColumns( ::rowCount - 1, ::nRightFrozen - 1 )
       ::oRightDbfModel:reset()
    ENDIF
 

@@ -80,6 +80,7 @@ typedef struct
    QPointer< QDesktopWidget > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QDesktopWidget;
 
 QT_G_FUNC( hbqt_gcRelease_QDesktopWidget )
@@ -126,6 +127,7 @@ void * hbqt_gcAllocate_QDesktopWidget( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QDesktopWidget >( ( QDesktopWidget * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QDesktopWidget;
+   p->type = QT_TYPE_QDesktopWidget;
 
    if( bNew )
    {

@@ -80,6 +80,7 @@ typedef struct
    QPointer< HBQSyntaxHighlighter > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_HBQSyntaxHighlighter;
 
 QT_G_FUNC( hbqt_gcRelease_HBQSyntaxHighlighter )
@@ -126,6 +127,7 @@ void * hbqt_gcAllocate_HBQSyntaxHighlighter( void * pObj, bool bNew )
    new( & p->ph ) QPointer< HBQSyntaxHighlighter >( ( HBQSyntaxHighlighter * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_HBQSyntaxHighlighter;
+   p->type = QT_TYPE_HBQSyntaxHighlighter;
 
    if( bNew )
    {

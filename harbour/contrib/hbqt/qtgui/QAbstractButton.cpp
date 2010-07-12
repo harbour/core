@@ -80,6 +80,7 @@ typedef struct
    QPointer< QAbstractButton > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QAbstractButton;
 
 QT_G_FUNC( hbqt_gcRelease_QAbstractButton )
@@ -100,6 +101,7 @@ void * hbqt_gcAllocate_QAbstractButton( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QAbstractButton >( ( QAbstractButton * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QAbstractButton;
+   p->type = QT_TYPE_QAbstractButton;
 
    if( bNew )
    {

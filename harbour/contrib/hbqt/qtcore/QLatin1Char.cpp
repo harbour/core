@@ -79,6 +79,7 @@ typedef struct
    QLatin1Char * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QLatin1Char;
 
 QT_G_FUNC( hbqt_gcRelease_QLatin1Char )
@@ -114,6 +115,7 @@ void * hbqt_gcAllocate_QLatin1Char( void * pObj, bool bNew )
    p->ph = ( QLatin1Char * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QLatin1Char;
+   p->type = QT_TYPE_QLatin1Char;
 
    if( bNew )
    {

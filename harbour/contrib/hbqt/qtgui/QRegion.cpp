@@ -102,6 +102,7 @@ typedef struct
    QRegion * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QRegion;
 
 QT_G_FUNC( hbqt_gcRelease_QRegion )
@@ -137,6 +138,7 @@ void * hbqt_gcAllocate_QRegion( void * pObj, bool bNew )
    p->ph = ( QRegion * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QRegion;
+   p->type = QT_TYPE_QRegion;
 
    if( bNew )
    {

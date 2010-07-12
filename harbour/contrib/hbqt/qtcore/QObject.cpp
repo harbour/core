@@ -97,6 +97,7 @@ typedef struct
    QPointer< QObject > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QObject;
 
 QT_G_FUNC( hbqt_gcRelease_QObject )
@@ -143,6 +144,7 @@ void * hbqt_gcAllocate_QObject( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QObject >( ( QObject * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QObject;
+   p->type = QT_TYPE_QObject;
 
    if( bNew )
    {

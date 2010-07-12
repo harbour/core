@@ -79,6 +79,7 @@ typedef struct
    QPointer< QTranslator > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QTranslator;
 
 QT_G_FUNC( hbqt_gcRelease_QTranslator )
@@ -125,6 +126,7 @@ void * hbqt_gcAllocate_QTranslator( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QTranslator >( ( QTranslator * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTranslator;
+   p->type = QT_TYPE_QTranslator;
 
    if( bNew )
    {

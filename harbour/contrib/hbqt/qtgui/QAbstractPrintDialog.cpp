@@ -94,6 +94,7 @@ typedef struct
    QPointer< QAbstractPrintDialog > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QAbstractPrintDialog;
 
 QT_G_FUNC( hbqt_gcRelease_QAbstractPrintDialog )
@@ -114,6 +115,7 @@ void * hbqt_gcAllocate_QAbstractPrintDialog( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QAbstractPrintDialog >( ( QAbstractPrintDialog * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QAbstractPrintDialog;
+   p->type = QT_TYPE_QAbstractPrintDialog;
 
    if( bNew )
    {

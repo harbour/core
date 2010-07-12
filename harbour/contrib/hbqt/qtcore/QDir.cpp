@@ -89,6 +89,7 @@ typedef struct
    QDir * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QDir;
 
 QT_G_FUNC( hbqt_gcRelease_QDir )
@@ -124,6 +125,7 @@ void * hbqt_gcAllocate_QDir( void * pObj, bool bNew )
    p->ph = ( QDir * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QDir;
+   p->type = QT_TYPE_QDir;
 
    if( bNew )
    {

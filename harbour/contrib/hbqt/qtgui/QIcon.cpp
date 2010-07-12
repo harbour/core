@@ -90,6 +90,7 @@ typedef struct
    QIcon * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QIcon;
 
 QT_G_FUNC( hbqt_gcRelease_QIcon )
@@ -125,6 +126,7 @@ void * hbqt_gcAllocate_QIcon( void * pObj, bool bNew )
    p->ph = ( QIcon * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QIcon;
+   p->type = QT_TYPE_QIcon;
 
    if( bNew )
    {

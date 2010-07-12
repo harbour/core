@@ -82,6 +82,7 @@ typedef struct
    QPointer< QLabel > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QLabel;
 
 QT_G_FUNC( hbqt_gcRelease_QLabel )
@@ -128,6 +129,7 @@ void * hbqt_gcAllocate_QLabel( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QLabel >( ( QLabel * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QLabel;
+   p->type = QT_TYPE_QLabel;
 
    if( bNew )
    {

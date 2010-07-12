@@ -93,6 +93,7 @@ typedef struct
    QTextStream * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QTextStream;
 
 QT_G_FUNC( hbqt_gcRelease_QTextStream )
@@ -128,6 +129,7 @@ void * hbqt_gcAllocate_QTextStream( void * pObj, bool bNew )
    p->ph = ( QTextStream * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextStream;
+   p->type = QT_TYPE_QTextStream;
 
    if( bNew )
    {

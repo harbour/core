@@ -83,6 +83,7 @@ typedef struct
    QDate * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QDate;
 
 QT_G_FUNC( hbqt_gcRelease_QDate )
@@ -118,6 +119,7 @@ void * hbqt_gcAllocate_QDate( void * pObj, bool bNew )
    p->ph = ( QDate * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QDate;
+   p->type = QT_TYPE_QDate;
 
    if( bNew )
    {

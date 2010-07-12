@@ -95,6 +95,7 @@ typedef struct
    QPrinter * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QPrinter;
 
 QT_G_FUNC( hbqt_gcRelease_QPrinter )
@@ -130,6 +131,7 @@ void * hbqt_gcAllocate_QPrinter( void * pObj, bool bNew )
    p->ph = ( QPrinter * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QPrinter;
+   p->type = QT_TYPE_QPrinter;
 
    if( bNew )
    {

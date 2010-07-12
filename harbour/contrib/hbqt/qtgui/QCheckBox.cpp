@@ -80,6 +80,7 @@ typedef struct
    QPointer< QCheckBox > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QCheckBox;
 
 QT_G_FUNC( hbqt_gcRelease_QCheckBox )
@@ -126,6 +127,7 @@ void * hbqt_gcAllocate_QCheckBox( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QCheckBox >( ( QCheckBox * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QCheckBox;
+   p->type = QT_TYPE_QCheckBox;
 
    if( bNew )
    {

@@ -80,6 +80,7 @@ typedef struct
    QMoveEvent * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QMoveEvent;
 
 QT_G_FUNC( hbqt_gcRelease_QMoveEvent )
@@ -100,6 +101,7 @@ void * hbqt_gcAllocate_QMoveEvent( void * pObj, bool bNew )
    p->ph = ( QMoveEvent * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QMoveEvent;
+   p->type = QT_TYPE_QMoveEvent;
 
    if( bNew )
    {

@@ -595,6 +595,7 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
       ENDIF
       aadd( cpp_, "   bool bNew;"                    )
       aadd( cpp_, "   QT_G_FUNC_PTR func;"           )
+      aadd( cpp_, "   int type;"           )
       aadd( cpp_, "} QGC_POINTER_" + cWidget + ";"  )
       aadd( cpp_, " "                               )
 
@@ -689,6 +690,7 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
       ENDIF
       aadd( cpp_, "   p->bNew = bNew;" )
       aadd( cpp_, "   p->func = hbqt_gcRelease_" + cWidget + ";" )
+      aadd( cpp_, "   p->type = QT_TYPE_"+cWidget+";" )
       aadd( cpp_, "" )
       aadd( cpp_, "   if( bNew )" )
       aadd( cpp_, "   {" )

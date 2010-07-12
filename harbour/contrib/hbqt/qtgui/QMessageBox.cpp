@@ -88,6 +88,7 @@ typedef struct
    QPointer< QMessageBox > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QMessageBox;
 
 QT_G_FUNC( hbqt_gcRelease_QMessageBox )
@@ -134,6 +135,7 @@ void * hbqt_gcAllocate_QMessageBox( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QMessageBox >( ( QMessageBox * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QMessageBox;
+   p->type = QT_TYPE_QMessageBox;
 
    if( bNew )
    {

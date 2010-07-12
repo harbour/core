@@ -98,6 +98,7 @@ typedef struct
    QTextBlockFormat * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QTextBlockFormat;
 
 QT_G_FUNC( hbqt_gcRelease_QTextBlockFormat )
@@ -133,6 +134,7 @@ void * hbqt_gcAllocate_QTextBlockFormat( void * pObj, bool bNew )
    p->ph = ( QTextBlockFormat * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextBlockFormat;
+   p->type = QT_TYPE_QTextBlockFormat;
 
    if( bNew )
    {

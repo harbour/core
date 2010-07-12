@@ -79,6 +79,7 @@ typedef struct
    QTime * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QTime;
 
 QT_G_FUNC( hbqt_gcRelease_QTime )
@@ -114,6 +115,7 @@ void * hbqt_gcAllocate_QTime( void * pObj, bool bNew )
    p->ph = ( QTime * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTime;
+   p->type = QT_TYPE_QTime;
 
    if( bNew )
    {

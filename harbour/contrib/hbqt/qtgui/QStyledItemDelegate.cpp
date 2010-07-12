@@ -80,6 +80,7 @@ typedef struct
    QPointer< QStyledItemDelegate > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QStyledItemDelegate;
 
 QT_G_FUNC( hbqt_gcRelease_QStyledItemDelegate )
@@ -126,6 +127,7 @@ void * hbqt_gcAllocate_QStyledItemDelegate( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QStyledItemDelegate >( ( QStyledItemDelegate * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyledItemDelegate;
+   p->type = QT_TYPE_QStyledItemDelegate;
 
    if( bNew )
    {

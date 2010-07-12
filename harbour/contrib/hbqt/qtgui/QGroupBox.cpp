@@ -81,6 +81,7 @@ typedef struct
    QPointer< QGroupBox > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QGroupBox;
 
 QT_G_FUNC( hbqt_gcRelease_QGroupBox )
@@ -127,6 +128,7 @@ void * hbqt_gcAllocate_QGroupBox( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QGroupBox >( ( QGroupBox * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QGroupBox;
+   p->type = QT_TYPE_QGroupBox;
 
    if( bNew )
    {

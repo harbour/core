@@ -83,6 +83,7 @@ typedef struct
    QRect * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QRect;
 
 QT_G_FUNC( hbqt_gcRelease_QRect )
@@ -118,6 +119,7 @@ void * hbqt_gcAllocate_QRect( void * pObj, bool bNew )
    p->ph = ( QRect * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QRect;
+   p->type = QT_TYPE_QRect;
 
    if( bNew )
    {

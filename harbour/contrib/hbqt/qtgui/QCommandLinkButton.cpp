@@ -81,6 +81,7 @@ typedef struct
    QPointer< QCommandLinkButton > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QCommandLinkButton;
 
 QT_G_FUNC( hbqt_gcRelease_QCommandLinkButton )
@@ -127,6 +128,7 @@ void * hbqt_gcAllocate_QCommandLinkButton( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QCommandLinkButton >( ( QCommandLinkButton * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QCommandLinkButton;
+   p->type = QT_TYPE_QCommandLinkButton;
 
    if( bNew )
    {

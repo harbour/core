@@ -81,6 +81,7 @@ typedef struct
    QStylePainter * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QStylePainter;
 
 QT_G_FUNC( hbqt_gcRelease_QStylePainter )
@@ -116,6 +117,7 @@ void * hbqt_gcAllocate_QStylePainter( void * pObj, bool bNew )
    p->ph = ( QStylePainter * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStylePainter;
+   p->type = QT_TYPE_QStylePainter;
 
    if( bNew )
    {

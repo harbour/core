@@ -79,6 +79,7 @@ typedef struct
    QPointer< QSpinBox > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QSpinBox;
 
 QT_G_FUNC( hbqt_gcRelease_QSpinBox )
@@ -125,6 +126,7 @@ void * hbqt_gcAllocate_QSpinBox( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QSpinBox >( ( QSpinBox * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QSpinBox;
+   p->type = QT_TYPE_QSpinBox;
 
    if( bNew )
    {

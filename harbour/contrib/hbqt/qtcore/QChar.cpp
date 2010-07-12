@@ -107,6 +107,7 @@ typedef struct
    QChar * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QChar;
 
 QT_G_FUNC( hbqt_gcRelease_QChar )
@@ -127,6 +128,7 @@ void * hbqt_gcAllocate_QChar( void * pObj, bool bNew )
    p->ph = ( QChar * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QChar;
+   p->type = QT_TYPE_QChar;
 
    if( bNew )
    {

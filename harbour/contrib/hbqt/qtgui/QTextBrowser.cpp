@@ -79,6 +79,7 @@ typedef struct
    QPointer< QTextBrowser > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QTextBrowser;
 
 QT_G_FUNC( hbqt_gcRelease_QTextBrowser )
@@ -125,6 +126,7 @@ void * hbqt_gcAllocate_QTextBrowser( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QTextBrowser >( ( QTextBrowser * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextBrowser;
+   p->type = QT_TYPE_QTextBrowser;
 
    if( bNew )
    {

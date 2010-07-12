@@ -80,6 +80,7 @@ typedef struct
    QItemEditorCreatorBase * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QItemEditorCreatorBase;
 
 QT_G_FUNC( hbqt_gcRelease_QItemEditorCreatorBase )
@@ -100,6 +101,7 @@ void * hbqt_gcAllocate_QItemEditorCreatorBase( void * pObj, bool bNew )
    p->ph = ( QItemEditorCreatorBase * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QItemEditorCreatorBase;
+   p->type = QT_TYPE_QItemEditorCreatorBase;
 
    if( bNew )
    {

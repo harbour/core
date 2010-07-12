@@ -8,6 +8,7 @@
 /*          or the generator tool itself, and run regenarate.           */
 /* -------------------------------------------------------------------- */
 
+extern QT_G_FUNC( hbqt_gcRelease_HBQAbstractItemModel );
 extern QT_G_FUNC( hbqt_gcRelease_HBDbfModel );
 extern QT_G_FUNC( hbqt_gcRelease_HBEvents );
 extern QT_G_FUNC( hbqt_gcRelease_HBQMainWindow );
@@ -290,6 +291,7 @@ extern QT_G_FUNC( hbqt_gcRelease_QWindowStateChangeEvent );
 extern QT_G_FUNC( hbqt_gcRelease_QWizard );
 extern QT_G_FUNC( hbqt_gcRelease_QWizardPage );
 
+extern void * hbqt_gcAllocate_HBQAbstractItemModel( void * pObj, bool bNew );
 extern void * hbqt_gcAllocate_HBDbfModel( void * pObj, bool bNew );
 extern void * hbqt_gcAllocate_HBEvents( void * pObj, bool bNew );
 extern void * hbqt_gcAllocate_HBQMainWindow( void * pObj, bool bNew );

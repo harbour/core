@@ -84,6 +84,7 @@ typedef struct
    QPointer< QFileSystemModel > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QFileSystemModel;
 
 QT_G_FUNC( hbqt_gcRelease_QFileSystemModel )
@@ -130,6 +131,7 @@ void * hbqt_gcAllocate_QFileSystemModel( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QFileSystemModel >( ( QFileSystemModel * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QFileSystemModel;
+   p->type = QT_TYPE_QFileSystemModel;
 
    if( bNew )
    {

@@ -85,6 +85,7 @@ typedef struct
    QStyleOptionGroupBox * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QStyleOptionGroupBox;
 
 QT_G_FUNC( hbqt_gcRelease_QStyleOptionGroupBox )
@@ -120,6 +121,7 @@ void * hbqt_gcAllocate_QStyleOptionGroupBox( void * pObj, bool bNew )
    p->ph = ( QStyleOptionGroupBox * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyleOptionGroupBox;
+   p->type = QT_TYPE_QStyleOptionGroupBox;
 
    if( bNew )
    {

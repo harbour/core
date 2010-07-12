@@ -80,6 +80,7 @@ typedef struct
    QPointer< QFocusFrame > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QFocusFrame;
 
 QT_G_FUNC( hbqt_gcRelease_QFocusFrame )
@@ -126,6 +127,7 @@ void * hbqt_gcAllocate_QFocusFrame( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QFocusFrame >( ( QFocusFrame * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QFocusFrame;
+   p->type = QT_TYPE_QFocusFrame;
 
    if( bNew )
    {

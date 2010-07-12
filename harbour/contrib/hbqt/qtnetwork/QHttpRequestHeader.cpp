@@ -81,6 +81,7 @@ typedef struct
    QHttpRequestHeader * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QHttpRequestHeader;
 
 QT_G_FUNC( hbqt_gcRelease_QHttpRequestHeader )
@@ -116,6 +117,7 @@ void * hbqt_gcAllocate_QHttpRequestHeader( void * pObj, bool bNew )
    p->ph = ( QHttpRequestHeader * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QHttpRequestHeader;
+   p->type = QT_TYPE_QHttpRequestHeader;
 
    if( bNew )
    {

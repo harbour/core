@@ -79,6 +79,7 @@ typedef struct
    QPointer< QActionGroup > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QActionGroup;
 
 QT_G_FUNC( hbqt_gcRelease_QActionGroup )
@@ -125,6 +126,7 @@ void * hbqt_gcAllocate_QActionGroup( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QActionGroup >( ( QActionGroup * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QActionGroup;
+   p->type = QT_TYPE_QActionGroup;
 
    if( bNew )
    {

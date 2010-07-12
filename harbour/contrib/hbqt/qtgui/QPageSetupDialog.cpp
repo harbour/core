@@ -85,6 +85,7 @@ typedef struct
    QPointer< QPageSetupDialog > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QPageSetupDialog;
 
 QT_G_FUNC( hbqt_gcRelease_QPageSetupDialog )
@@ -131,6 +132,7 @@ void * hbqt_gcAllocate_QPageSetupDialog( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QPageSetupDialog >( ( QPageSetupDialog * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QPageSetupDialog;
+   p->type = QT_TYPE_QPageSetupDialog;
 
    if( bNew )
    {

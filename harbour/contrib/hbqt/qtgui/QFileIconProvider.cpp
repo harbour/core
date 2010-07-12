@@ -83,6 +83,7 @@ typedef struct
    QFileIconProvider * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QFileIconProvider;
 
 QT_G_FUNC( hbqt_gcRelease_QFileIconProvider )
@@ -118,6 +119,7 @@ void * hbqt_gcAllocate_QFileIconProvider( void * pObj, bool bNew )
    p->ph = ( QFileIconProvider * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QFileIconProvider;
+   p->type = QT_TYPE_QFileIconProvider;
 
    if( bNew )
    {

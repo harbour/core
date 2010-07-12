@@ -81,6 +81,7 @@ typedef struct
    QPointer< QScrollBar > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QScrollBar;
 
 QT_G_FUNC( hbqt_gcRelease_QScrollBar )
@@ -127,6 +128,7 @@ void * hbqt_gcAllocate_QScrollBar( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QScrollBar >( ( QScrollBar * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QScrollBar;
+   p->type = QT_TYPE_QScrollBar;
 
    if( bNew )
    {

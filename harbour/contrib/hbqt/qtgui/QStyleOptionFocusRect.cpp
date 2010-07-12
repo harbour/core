@@ -85,6 +85,7 @@ typedef struct
    QStyleOptionFocusRect * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QStyleOptionFocusRect;
 
 QT_G_FUNC( hbqt_gcRelease_QStyleOptionFocusRect )
@@ -120,6 +121,7 @@ void * hbqt_gcAllocate_QStyleOptionFocusRect( void * pObj, bool bNew )
    p->ph = ( QStyleOptionFocusRect * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyleOptionFocusRect;
+   p->type = QT_TYPE_QStyleOptionFocusRect;
 
    if( bNew )
    {

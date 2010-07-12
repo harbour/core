@@ -84,6 +84,7 @@ typedef struct
    QTextLength * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QTextLength;
 
 QT_G_FUNC( hbqt_gcRelease_QTextLength )
@@ -119,6 +120,7 @@ void * hbqt_gcAllocate_QTextLength( void * pObj, bool bNew )
    p->ph = ( QTextLength * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextLength;
+   p->type = QT_TYPE_QTextLength;
 
    if( bNew )
    {

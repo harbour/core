@@ -93,6 +93,7 @@ typedef struct
    QStyleHintReturnMask * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QStyleHintReturnMask;
 
 QT_G_FUNC( hbqt_gcRelease_QStyleHintReturnMask )
@@ -113,6 +114,7 @@ void * hbqt_gcAllocate_QStyleHintReturnMask( void * pObj, bool bNew )
    p->ph = ( QStyleHintReturnMask * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyleHintReturnMask;
+   p->type = QT_TYPE_QStyleHintReturnMask;
 
    if( bNew )
    {

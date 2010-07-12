@@ -9,6 +9,7 @@
 # --------------------------------------------------------------------
 
 CPP_SOURCES := \
+   HBQAbstractItemModel.cpp \
    HBDbfModel.cpp \
    HBEvents.cpp \
    HBSlots.cpp \
@@ -66,6 +67,7 @@ CPP_SOURCES := \
 
 
 PRG_SOURCES := \
+   THBQAbstractItemModel.prg \
    THBDbfModel.prg \
    THBEvents.prg \
    THBSlots.prg \

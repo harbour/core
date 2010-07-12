@@ -103,6 +103,7 @@ typedef struct
    QTextOption * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QTextOption;
 
 QT_G_FUNC( hbqt_gcRelease_QTextOption )
@@ -138,6 +139,7 @@ void * hbqt_gcAllocate_QTextOption( void * pObj, bool bNew )
    p->ph = ( QTextOption * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextOption;
+   p->type = QT_TYPE_QTextOption;
 
    if( bNew )
    {

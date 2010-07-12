@@ -83,6 +83,7 @@ typedef struct
    QPointer< QSessionManager > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QSessionManager;
 
 QT_G_FUNC( hbqt_gcRelease_QSessionManager )
@@ -103,6 +104,7 @@ void * hbqt_gcAllocate_QSessionManager( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QSessionManager >( ( QSessionManager * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QSessionManager;
+   p->type = QT_TYPE_QSessionManager;
 
    if( bNew )
    {

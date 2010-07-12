@@ -105,6 +105,7 @@ typedef struct
    QTextFormat * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QTextFormat;
 
 QT_G_FUNC( hbqt_gcRelease_QTextFormat )
@@ -140,6 +141,7 @@ void * hbqt_gcAllocate_QTextFormat( void * pObj, bool bNew )
    p->ph = ( QTextFormat * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextFormat;
+   p->type = QT_TYPE_QTextFormat;
 
    if( bNew )
    {

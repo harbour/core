@@ -80,6 +80,7 @@ typedef struct
    QPointer< QButtonGroup > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QButtonGroup;
 
 QT_G_FUNC( hbqt_gcRelease_QButtonGroup )
@@ -126,6 +127,7 @@ void * hbqt_gcAllocate_QButtonGroup( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QButtonGroup >( ( QButtonGroup * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QButtonGroup;
+   p->type = QT_TYPE_QButtonGroup;
 
    if( bNew )
    {

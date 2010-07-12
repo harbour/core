@@ -99,6 +99,7 @@ typedef struct
    QStringList * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QStringList;
 
 QT_G_FUNC( hbqt_gcRelease_QStringList )
@@ -134,6 +135,7 @@ void * hbqt_gcAllocate_QStringList( void * pObj, bool bNew )
    p->ph = ( QStringList * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStringList;
+   p->type = QT_TYPE_QStringList;
 
    if( bNew )
    {

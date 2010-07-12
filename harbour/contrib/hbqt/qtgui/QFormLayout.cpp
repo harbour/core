@@ -86,6 +86,7 @@ typedef struct
    QPointer< QFormLayout > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QFormLayout;
 
 QT_G_FUNC( hbqt_gcRelease_QFormLayout )
@@ -132,6 +133,7 @@ void * hbqt_gcAllocate_QFormLayout( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QFormLayout >( ( QFormLayout * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QFormLayout;
+   p->type = QT_TYPE_QFormLayout;
 
    if( bNew )
    {

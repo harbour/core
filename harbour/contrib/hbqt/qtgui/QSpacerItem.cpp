@@ -79,6 +79,7 @@ typedef struct
    QSpacerItem * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QSpacerItem;
 
 QT_G_FUNC( hbqt_gcRelease_QSpacerItem )
@@ -114,6 +115,7 @@ void * hbqt_gcAllocate_QSpacerItem( void * pObj, bool bNew )
    p->ph = ( QSpacerItem * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QSpacerItem;
+   p->type = QT_TYPE_QSpacerItem;
 
    if( bNew )
    {

@@ -85,6 +85,7 @@ typedef struct
    QStyleOptionTabWidgetFrame * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QStyleOptionTabWidgetFrame;
 
 QT_G_FUNC( hbqt_gcRelease_QStyleOptionTabWidgetFrame )
@@ -120,6 +121,7 @@ void * hbqt_gcAllocate_QStyleOptionTabWidgetFrame( void * pObj, bool bNew )
    p->ph = ( QStyleOptionTabWidgetFrame * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyleOptionTabWidgetFrame;
+   p->type = QT_TYPE_QStyleOptionTabWidgetFrame;
 
    if( bNew )
    {

@@ -80,6 +80,7 @@ typedef struct
    QPointer< QStatusBar > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QStatusBar;
 
 QT_G_FUNC( hbqt_gcRelease_QStatusBar )
@@ -126,6 +127,7 @@ void * hbqt_gcAllocate_QStatusBar( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QStatusBar >( ( QStatusBar * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStatusBar;
+   p->type = QT_TYPE_QStatusBar;
 
    if( bNew )
    {

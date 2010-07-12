@@ -88,6 +88,7 @@ typedef struct
    QStyleOptionHeader * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QStyleOptionHeader;
 
 QT_G_FUNC( hbqt_gcRelease_QStyleOptionHeader )
@@ -123,6 +124,7 @@ void * hbqt_gcAllocate_QStyleOptionHeader( void * pObj, bool bNew )
    p->ph = ( QStyleOptionHeader * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyleOptionHeader;
+   p->type = QT_TYPE_QStyleOptionHeader;
 
    if( bNew )
    {

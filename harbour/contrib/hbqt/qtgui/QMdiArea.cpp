@@ -88,6 +88,7 @@ typedef struct
    QPointer< QMdiArea > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QMdiArea;
 
 QT_G_FUNC( hbqt_gcRelease_QMdiArea )
@@ -134,6 +135,7 @@ void * hbqt_gcAllocate_QMdiArea( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QMdiArea >( ( QMdiArea * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QMdiArea;
+   p->type = QT_TYPE_QMdiArea;
 
    if( bNew )
    {

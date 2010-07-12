@@ -81,6 +81,7 @@ typedef struct
    QPointer< HBSlots > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_HBSlots;
 
 QT_G_FUNC( hbqt_gcRelease_HBSlots )
@@ -127,6 +128,7 @@ void * hbqt_gcAllocate_HBSlots( void * pObj, bool bNew )
    new( & p->ph ) QPointer< HBSlots >( ( HBSlots * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_HBSlots;
+   p->type = QT_TYPE_HBSlots;
 
    if( bNew )
    {

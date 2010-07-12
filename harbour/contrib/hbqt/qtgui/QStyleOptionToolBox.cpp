@@ -85,6 +85,7 @@ typedef struct
    QStyleOptionToolBox * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QStyleOptionToolBox;
 
 QT_G_FUNC( hbqt_gcRelease_QStyleOptionToolBox )
@@ -120,6 +121,7 @@ void * hbqt_gcAllocate_QStyleOptionToolBox( void * pObj, bool bNew )
    p->ph = ( QStyleOptionToolBox * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyleOptionToolBox;
+   p->type = QT_TYPE_QStyleOptionToolBox;
 
    if( bNew )
    {

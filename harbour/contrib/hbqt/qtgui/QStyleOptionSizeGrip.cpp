@@ -85,6 +85,7 @@ typedef struct
    QStyleOptionSizeGrip * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QStyleOptionSizeGrip;
 
 QT_G_FUNC( hbqt_gcRelease_QStyleOptionSizeGrip )
@@ -120,6 +121,7 @@ void * hbqt_gcAllocate_QStyleOptionSizeGrip( void * pObj, bool bNew )
    p->ph = ( QStyleOptionSizeGrip * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyleOptionSizeGrip;
+   p->type = QT_TYPE_QStyleOptionSizeGrip;
 
    if( bNew )
    {

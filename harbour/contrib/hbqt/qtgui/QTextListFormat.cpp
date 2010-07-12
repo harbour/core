@@ -83,6 +83,7 @@ typedef struct
    QTextListFormat * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QTextListFormat;
 
 QT_G_FUNC( hbqt_gcRelease_QTextListFormat )
@@ -118,6 +119,7 @@ void * hbqt_gcAllocate_QTextListFormat( void * pObj, bool bNew )
    p->ph = ( QTextListFormat * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextListFormat;
+   p->type = QT_TYPE_QTextListFormat;
 
    if( bNew )
    {

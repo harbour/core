@@ -89,6 +89,7 @@ typedef struct
    QColor * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QColor;
 
 QT_G_FUNC( hbqt_gcRelease_QColor )
@@ -124,6 +125,7 @@ void * hbqt_gcAllocate_QColor( void * pObj, bool bNew )
    p->ph = ( QColor * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QColor;
+   p->type = QT_TYPE_QColor;
 
    if( bNew )
    {

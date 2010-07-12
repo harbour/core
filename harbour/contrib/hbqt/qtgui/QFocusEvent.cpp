@@ -79,6 +79,7 @@ typedef struct
    QFocusEvent * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QFocusEvent;
 
 QT_G_FUNC( hbqt_gcRelease_QFocusEvent )
@@ -99,6 +100,7 @@ void * hbqt_gcAllocate_QFocusEvent( void * pObj, bool bNew )
    p->ph = ( QFocusEvent * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QFocusEvent;
+   p->type = QT_TYPE_QFocusEvent;
 
    if( bNew )
    {

@@ -94,6 +94,7 @@ typedef struct
    QPen * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QPen;
 
 QT_G_FUNC( hbqt_gcRelease_QPen )
@@ -129,6 +130,7 @@ void * hbqt_gcAllocate_QPen( void * pObj, bool bNew )
    p->ph = ( QPen * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QPen;
+   p->type = QT_TYPE_QPen;
 
    if( bNew )
    {

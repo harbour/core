@@ -8,6 +8,7 @@
 #          or the generator tool itself, and run regenarate.
 # --------------------------------------------------------------------
 
+HBQAbstractItemModel.cpp
 HBDbfModel.cpp
 HBEvents.cpp
 HBSlots.cpp
@@ -62,6 +63,7 @@ QUiLoader.cpp
 QUrl.cpp
 QVariant.cpp
 
+THBQAbstractItemModel.prg
 THBDbfModel.prg
 THBEvents.prg
 THBSlots.prg

@@ -86,6 +86,7 @@ typedef struct
    QPointer< QIODevice > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QIODevice;
 
 QT_G_FUNC( hbqt_gcRelease_QIODevice )
@@ -106,6 +107,7 @@ void * hbqt_gcAllocate_QIODevice( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QIODevice >( ( QIODevice * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QIODevice;
+   p->type = QT_TYPE_QIODevice;
 
    if( bNew )
    {

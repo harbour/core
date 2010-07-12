@@ -85,6 +85,7 @@ typedef struct
    QStyleOptionTabBarBase * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QStyleOptionTabBarBase;
 
 QT_G_FUNC( hbqt_gcRelease_QStyleOptionTabBarBase )
@@ -120,6 +121,7 @@ void * hbqt_gcAllocate_QStyleOptionTabBarBase( void * pObj, bool bNew )
    p->ph = ( QStyleOptionTabBarBase * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyleOptionTabBarBase;
+   p->type = QT_TYPE_QStyleOptionTabBarBase;
 
    if( bNew )
    {

@@ -79,6 +79,7 @@ typedef struct
    QPointer< QAbstractProxyModel > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QAbstractProxyModel;
 
 QT_G_FUNC( hbqt_gcRelease_QAbstractProxyModel )
@@ -99,6 +100,7 @@ void * hbqt_gcAllocate_QAbstractProxyModel( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QAbstractProxyModel >( ( QAbstractProxyModel * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QAbstractProxyModel;
+   p->type = QT_TYPE_QAbstractProxyModel;
 
    if( bNew )
    {

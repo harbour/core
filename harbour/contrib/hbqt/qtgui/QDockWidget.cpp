@@ -86,6 +86,7 @@ typedef struct
    QPointer< QDockWidget > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QDockWidget;
 
 QT_G_FUNC( hbqt_gcRelease_QDockWidget )
@@ -132,6 +133,7 @@ void * hbqt_gcAllocate_QDockWidget( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QDockWidget >( ( QDockWidget * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QDockWidget;
+   p->type = QT_TYPE_QDockWidget;
 
    if( bNew )
    {

@@ -87,6 +87,7 @@ typedef struct
    QStyleOptionButton * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QStyleOptionButton;
 
 QT_G_FUNC( hbqt_gcRelease_QStyleOptionButton )
@@ -122,6 +123,7 @@ void * hbqt_gcAllocate_QStyleOptionButton( void * pObj, bool bNew )
    p->ph = ( QStyleOptionButton * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyleOptionButton;
+   p->type = QT_TYPE_QStyleOptionButton;
 
    if( bNew )
    {

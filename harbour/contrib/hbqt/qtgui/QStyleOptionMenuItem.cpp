@@ -87,6 +87,7 @@ typedef struct
    QStyleOptionMenuItem * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QStyleOptionMenuItem;
 
 QT_G_FUNC( hbqt_gcRelease_QStyleOptionMenuItem )
@@ -122,6 +123,7 @@ void * hbqt_gcAllocate_QStyleOptionMenuItem( void * pObj, bool bNew )
    p->ph = ( QStyleOptionMenuItem * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyleOptionMenuItem;
+   p->type = QT_TYPE_QStyleOptionMenuItem;
 
    if( bNew )
    {

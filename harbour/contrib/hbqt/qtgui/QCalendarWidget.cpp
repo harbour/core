@@ -95,6 +95,7 @@ typedef struct
    QPointer< QCalendarWidget > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QCalendarWidget;
 
 QT_G_FUNC( hbqt_gcRelease_QCalendarWidget )
@@ -141,6 +142,7 @@ void * hbqt_gcAllocate_QCalendarWidget( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QCalendarWidget >( ( QCalendarWidget * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QCalendarWidget;
+   p->type = QT_TYPE_QCalendarWidget;
 
    if( bNew )
    {

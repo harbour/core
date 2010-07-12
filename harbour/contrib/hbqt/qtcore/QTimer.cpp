@@ -80,6 +80,7 @@ typedef struct
    QPointer< QTimer > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QTimer;
 
 QT_G_FUNC( hbqt_gcRelease_QTimer )
@@ -126,6 +127,7 @@ void * hbqt_gcAllocate_QTimer( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QTimer >( ( QTimer * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTimer;
+   p->type = QT_TYPE_QTimer;
 
    if( bNew )
    {

@@ -104,6 +104,7 @@ typedef struct
    QTreeWidgetItem * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QTreeWidgetItem;
 
 QT_G_FUNC( hbqt_gcRelease_QTreeWidgetItem )
@@ -139,6 +140,7 @@ void * hbqt_gcAllocate_QTreeWidgetItem( void * pObj, bool bNew )
    p->ph = ( QTreeWidgetItem * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTreeWidgetItem;
+   p->type = QT_TYPE_QTreeWidgetItem;
 
    if( bNew )
    {

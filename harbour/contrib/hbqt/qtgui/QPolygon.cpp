@@ -83,6 +83,7 @@ typedef struct
    QPolygon * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QPolygon;
 
 QT_G_FUNC( hbqt_gcRelease_QPolygon )
@@ -118,6 +119,7 @@ void * hbqt_gcAllocate_QPolygon( void * pObj, bool bNew )
    p->ph = ( QPolygon * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QPolygon;
+   p->type = QT_TYPE_QPolygon;
 
    if( bNew )
    {

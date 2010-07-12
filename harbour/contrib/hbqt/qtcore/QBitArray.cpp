@@ -80,6 +80,7 @@ typedef struct
    QBitArray * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QBitArray;
 
 QT_G_FUNC( hbqt_gcRelease_QBitArray )
@@ -115,6 +116,7 @@ void * hbqt_gcAllocate_QBitArray( void * pObj, bool bNew )
    p->ph = ( QBitArray * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QBitArray;
+   p->type = QT_TYPE_QBitArray;
 
    if( bNew )
    {

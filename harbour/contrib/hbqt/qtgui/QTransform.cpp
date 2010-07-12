@@ -85,6 +85,7 @@ typedef struct
    QTransform * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QTransform;
 
 QT_G_FUNC( hbqt_gcRelease_QTransform )
@@ -120,6 +121,7 @@ void * hbqt_gcAllocate_QTransform( void * pObj, bool bNew )
    p->ph = ( QTransform * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTransform;
+   p->type = QT_TYPE_QTransform;
 
    if( bNew )
    {

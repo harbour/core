@@ -80,6 +80,7 @@ typedef struct
    QDragMoveEvent * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QDragMoveEvent;
 
 QT_G_FUNC( hbqt_gcRelease_QDragMoveEvent )
@@ -100,6 +101,7 @@ void * hbqt_gcAllocate_QDragMoveEvent( void * pObj, bool bNew )
    p->ph = ( QDragMoveEvent * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QDragMoveEvent;
+   p->type = QT_TYPE_QDragMoveEvent;
 
    if( bNew )
    {

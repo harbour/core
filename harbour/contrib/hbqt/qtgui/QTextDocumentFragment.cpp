@@ -83,6 +83,7 @@ typedef struct
    QTextDocumentFragment * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QTextDocumentFragment;
 
 QT_G_FUNC( hbqt_gcRelease_QTextDocumentFragment )
@@ -118,6 +119,7 @@ void * hbqt_gcAllocate_QTextDocumentFragment( void * pObj, bool bNew )
    p->ph = ( QTextDocumentFragment * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextDocumentFragment;
+   p->type = QT_TYPE_QTextDocumentFragment;
 
    if( bNew )
    {

@@ -87,6 +87,7 @@ typedef struct
    QPointer< QTabBar > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QTabBar;
 
 QT_G_FUNC( hbqt_gcRelease_QTabBar )
@@ -133,6 +134,7 @@ void * hbqt_gcAllocate_QTabBar( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QTabBar >( ( QTabBar * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTabBar;
+   p->type = QT_TYPE_QTabBar;
 
    if( bNew )
    {

@@ -86,6 +86,7 @@ typedef struct
    QPointer< QSystemTrayIcon > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QSystemTrayIcon;
 
 QT_G_FUNC( hbqt_gcRelease_QSystemTrayIcon )
@@ -132,6 +133,7 @@ void * hbqt_gcAllocate_QSystemTrayIcon( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QSystemTrayIcon >( ( QSystemTrayIcon * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QSystemTrayIcon;
+   p->type = QT_TYPE_QSystemTrayIcon;
 
    if( bNew )
    {

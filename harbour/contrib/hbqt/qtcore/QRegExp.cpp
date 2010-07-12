@@ -86,6 +86,7 @@ typedef struct
    QRegExp * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QRegExp;
 
 QT_G_FUNC( hbqt_gcRelease_QRegExp )
@@ -121,6 +122,7 @@ void * hbqt_gcAllocate_QRegExp( void * pObj, bool bNew )
    p->ph = ( QRegExp * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QRegExp;
+   p->type = QT_TYPE_QRegExp;
 
    if( bNew )
    {

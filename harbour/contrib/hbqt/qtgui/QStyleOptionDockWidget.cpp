@@ -85,6 +85,7 @@ typedef struct
    QStyleOptionDockWidget * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QStyleOptionDockWidget;
 
 QT_G_FUNC( hbqt_gcRelease_QStyleOptionDockWidget )
@@ -120,6 +121,7 @@ void * hbqt_gcAllocate_QStyleOptionDockWidget( void * pObj, bool bNew )
    p->ph = ( QStyleOptionDockWidget * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyleOptionDockWidget;
+   p->type = QT_TYPE_QStyleOptionDockWidget;
 
    if( bNew )
    {

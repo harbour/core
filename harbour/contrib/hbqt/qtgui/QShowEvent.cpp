@@ -79,6 +79,7 @@ typedef struct
    QShowEvent * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QShowEvent;
 
 QT_G_FUNC( hbqt_gcRelease_QShowEvent )
@@ -99,6 +100,7 @@ void * hbqt_gcAllocate_QShowEvent( void * pObj, bool bNew )
    p->ph = ( QShowEvent * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QShowEvent;
+   p->type = QT_TYPE_QShowEvent;
 
    if( bNew )
    {

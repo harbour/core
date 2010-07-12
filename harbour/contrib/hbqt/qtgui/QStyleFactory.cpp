@@ -79,6 +79,7 @@ typedef struct
    QStyleFactory * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QStyleFactory;
 
 QT_G_FUNC( hbqt_gcRelease_QStyleFactory )
@@ -114,6 +115,7 @@ void * hbqt_gcAllocate_QStyleFactory( void * pObj, bool bNew )
    p->ph = ( QStyleFactory * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyleFactory;
+   p->type = QT_TYPE_QStyleFactory;
 
    if( bNew )
    {

@@ -103,6 +103,7 @@ typedef struct
    QPointer< QHttp > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QHttp;
 
 QT_G_FUNC( hbqt_gcRelease_QHttp )
@@ -149,6 +150,7 @@ void * hbqt_gcAllocate_QHttp( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QHttp >( ( QHttp * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QHttp;
+   p->type = QT_TYPE_QHttp;
 
    if( bNew )
    {

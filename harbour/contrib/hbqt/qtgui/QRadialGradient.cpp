@@ -89,6 +89,7 @@ typedef struct
    QRadialGradient * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QRadialGradient;
 
 QT_G_FUNC( hbqt_gcRelease_QRadialGradient )
@@ -124,6 +125,7 @@ void * hbqt_gcAllocate_QRadialGradient( void * pObj, bool bNew )
    p->ph = ( QRadialGradient * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QRadialGradient;
+   p->type = QT_TYPE_QRadialGradient;
 
    if( bNew )
    {

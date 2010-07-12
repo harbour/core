@@ -85,6 +85,7 @@ typedef struct
    QStyleOptionSpinBox * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QStyleOptionSpinBox;
 
 QT_G_FUNC( hbqt_gcRelease_QStyleOptionSpinBox )
@@ -120,6 +121,7 @@ void * hbqt_gcAllocate_QStyleOptionSpinBox( void * pObj, bool bNew )
    p->ph = ( QStyleOptionSpinBox * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyleOptionSpinBox;
+   p->type = QT_TYPE_QStyleOptionSpinBox;
 
    if( bNew )
    {

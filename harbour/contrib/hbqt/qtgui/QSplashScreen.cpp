@@ -81,6 +81,7 @@ typedef struct
    QPointer< QSplashScreen > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QSplashScreen;
 
 QT_G_FUNC( hbqt_gcRelease_QSplashScreen )
@@ -127,6 +128,7 @@ void * hbqt_gcAllocate_QSplashScreen( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QSplashScreen >( ( QSplashScreen * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QSplashScreen;
+   p->type = QT_TYPE_QSplashScreen;
 
    if( bNew )
    {

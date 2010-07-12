@@ -109,6 +109,7 @@ typedef struct
    QPointer< QMainWindow > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QMainWindow;
 
 QT_G_FUNC( hbqt_gcRelease_QMainWindow )
@@ -155,6 +156,7 @@ void * hbqt_gcAllocate_QMainWindow( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QMainWindow >( ( QMainWindow * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QMainWindow;
+   p->type = QT_TYPE_QMainWindow;
 
    if( bNew )
    {

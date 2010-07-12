@@ -85,6 +85,7 @@ typedef struct
    QTextCodec * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QTextCodec;
 
 QT_G_FUNC( hbqt_gcRelease_QTextCodec )
@@ -105,6 +106,7 @@ void * hbqt_gcAllocate_QTextCodec( void * pObj, bool bNew )
    p->ph = ( QTextCodec * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextCodec;
+   p->type = QT_TYPE_QTextCodec;
 
    if( bNew )
    {

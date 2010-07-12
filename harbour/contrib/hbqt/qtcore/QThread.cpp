@@ -83,6 +83,7 @@ typedef struct
    QPointer< QThread > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QThread;
 
 QT_G_FUNC( hbqt_gcRelease_QThread )
@@ -129,6 +130,7 @@ void * hbqt_gcAllocate_QThread( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QThread >( ( QThread * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QThread;
+   p->type = QT_TYPE_QThread;
 
    if( bNew )
    {

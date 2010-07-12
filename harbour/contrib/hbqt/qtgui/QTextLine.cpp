@@ -84,6 +84,7 @@ typedef struct
    QTextLine * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QTextLine;
 
 QT_G_FUNC( hbqt_gcRelease_QTextLine )
@@ -119,6 +120,7 @@ void * hbqt_gcAllocate_QTextLine( void * pObj, bool bNew )
    p->ph = ( QTextLine * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextLine;
+   p->type = QT_TYPE_QTextLine;
 
    if( bNew )
    {

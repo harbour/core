@@ -80,6 +80,7 @@ typedef struct
    QTextInlineObject * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QTextInlineObject;
 
 QT_G_FUNC( hbqt_gcRelease_QTextInlineObject )
@@ -100,6 +101,7 @@ void * hbqt_gcAllocate_QTextInlineObject( void * pObj, bool bNew )
    p->ph = ( QTextInlineObject * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextInlineObject;
+   p->type = QT_TYPE_QTextInlineObject;
 
    if( bNew )
    {

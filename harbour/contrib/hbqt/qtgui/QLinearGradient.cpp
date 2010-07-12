@@ -87,6 +87,7 @@ typedef struct
    QLinearGradient * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QLinearGradient;
 
 QT_G_FUNC( hbqt_gcRelease_QLinearGradient )
@@ -122,6 +123,7 @@ void * hbqt_gcAllocate_QLinearGradient( void * pObj, bool bNew )
    p->ph = ( QLinearGradient * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QLinearGradient;
+   p->type = QT_TYPE_QLinearGradient;
 
    if( bNew )
    {

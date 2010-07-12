@@ -87,6 +87,7 @@ typedef struct
    QImageReader * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QImageReader;
 
 QT_G_FUNC( hbqt_gcRelease_QImageReader )
@@ -122,6 +123,7 @@ void * hbqt_gcAllocate_QImageReader( void * pObj, bool bNew )
    p->ph = ( QImageReader * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QImageReader;
+   p->type = QT_TYPE_QImageReader;
 
    if( bNew )
    {

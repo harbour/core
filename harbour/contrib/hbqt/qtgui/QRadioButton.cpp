@@ -80,6 +80,7 @@ typedef struct
    QPointer< QRadioButton > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QRadioButton;
 
 QT_G_FUNC( hbqt_gcRelease_QRadioButton )
@@ -126,6 +127,7 @@ void * hbqt_gcAllocate_QRadioButton( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QRadioButton >( ( QRadioButton * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QRadioButton;
+   p->type = QT_TYPE_QRadioButton;
 
    if( bNew )
    {

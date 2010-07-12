@@ -84,6 +84,7 @@ typedef struct
    QInputMethodEvent * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QInputMethodEvent;
 
 QT_G_FUNC( hbqt_gcRelease_QInputMethodEvent )
@@ -119,6 +120,7 @@ void * hbqt_gcAllocate_QInputMethodEvent( void * pObj, bool bNew )
    p->ph = ( QInputMethodEvent * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QInputMethodEvent;
+   p->type = QT_TYPE_QInputMethodEvent;
 
    if( bNew )
    {

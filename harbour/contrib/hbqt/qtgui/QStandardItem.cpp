@@ -101,6 +101,7 @@ typedef struct
    QStandardItem * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QStandardItem;
 
 QT_G_FUNC( hbqt_gcRelease_QStandardItem )
@@ -136,6 +137,7 @@ void * hbqt_gcAllocate_QStandardItem( void * pObj, bool bNew )
    p->ph = ( QStandardItem * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStandardItem;
+   p->type = QT_TYPE_QStandardItem;
 
    if( bNew )
    {

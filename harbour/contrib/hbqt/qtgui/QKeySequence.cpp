@@ -90,6 +90,7 @@ typedef struct
    QKeySequence * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QKeySequence;
 
 QT_G_FUNC( hbqt_gcRelease_QKeySequence )
@@ -125,6 +126,7 @@ void * hbqt_gcAllocate_QKeySequence( void * pObj, bool bNew )
    p->ph = ( QKeySequence * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QKeySequence;
+   p->type = QT_TYPE_QKeySequence;
 
    if( bNew )
    {

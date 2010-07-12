@@ -80,6 +80,7 @@ typedef struct
    QPointer< QTextList > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QTextList;
 
 QT_G_FUNC( hbqt_gcRelease_QTextList )
@@ -100,6 +101,7 @@ void * hbqt_gcAllocate_QTextList( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QTextList >( ( QTextList * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextList;
+   p->type = QT_TYPE_QTextList;
 
    if( bNew )
    {

@@ -82,6 +82,7 @@ typedef struct
    QTextDocumentWriter * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QTextDocumentWriter;
 
 QT_G_FUNC( hbqt_gcRelease_QTextDocumentWriter )
@@ -117,6 +118,7 @@ void * hbqt_gcAllocate_QTextDocumentWriter( void * pObj, bool bNew )
    p->ph = ( QTextDocumentWriter * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextDocumentWriter;
+   p->type = QT_TYPE_QTextDocumentWriter;
 
    if( bNew )
    {

@@ -85,6 +85,7 @@ typedef struct
    QStyleOptionFrame * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QStyleOptionFrame;
 
 QT_G_FUNC( hbqt_gcRelease_QStyleOptionFrame )
@@ -120,6 +121,7 @@ void * hbqt_gcAllocate_QStyleOptionFrame( void * pObj, bool bNew )
    p->ph = ( QStyleOptionFrame * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyleOptionFrame;
+   p->type = QT_TYPE_QStyleOptionFrame;
 
    if( bNew )
    {

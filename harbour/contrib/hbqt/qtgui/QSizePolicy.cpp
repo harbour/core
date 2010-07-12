@@ -88,6 +88,7 @@ typedef struct
    QSizePolicy * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QSizePolicy;
 
 QT_G_FUNC( hbqt_gcRelease_QSizePolicy )
@@ -123,6 +124,7 @@ void * hbqt_gcAllocate_QSizePolicy( void * pObj, bool bNew )
    p->ph = ( QSizePolicy * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QSizePolicy;
+   p->type = QT_TYPE_QSizePolicy;
 
    if( bNew )
    {

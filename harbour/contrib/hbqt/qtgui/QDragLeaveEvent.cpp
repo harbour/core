@@ -79,6 +79,7 @@ typedef struct
    QDragLeaveEvent * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QDragLeaveEvent;
 
 QT_G_FUNC( hbqt_gcRelease_QDragLeaveEvent )
@@ -99,6 +100,7 @@ void * hbqt_gcAllocate_QDragLeaveEvent( void * pObj, bool bNew )
    p->ph = ( QDragLeaveEvent * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QDragLeaveEvent;
+   p->type = QT_TYPE_QDragLeaveEvent;
 
    if( bNew )
    {

@@ -113,6 +113,7 @@ typedef struct
    QUrl * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QUrl;
 
 QT_G_FUNC( hbqt_gcRelease_QUrl )
@@ -148,6 +149,7 @@ void * hbqt_gcAllocate_QUrl( void * pObj, bool bNew )
    p->ph = ( QUrl * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QUrl;
+   p->type = QT_TYPE_QUrl;
 
    if( bNew )
    {

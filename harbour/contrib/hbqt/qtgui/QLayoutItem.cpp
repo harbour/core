@@ -80,6 +80,7 @@ typedef struct
    QLayoutItem * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QLayoutItem;
 
 QT_G_FUNC( hbqt_gcRelease_QLayoutItem )
@@ -100,6 +101,7 @@ void * hbqt_gcAllocate_QLayoutItem( void * pObj, bool bNew )
    p->ph = ( QLayoutItem * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QLayoutItem;
+   p->type = QT_TYPE_QLayoutItem;
 
    if( bNew )
    {

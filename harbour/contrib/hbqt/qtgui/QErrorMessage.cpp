@@ -80,6 +80,7 @@ typedef struct
    QPointer< QErrorMessage > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QErrorMessage;
 
 QT_G_FUNC( hbqt_gcRelease_QErrorMessage )
@@ -126,6 +127,7 @@ void * hbqt_gcAllocate_QErrorMessage( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QErrorMessage >( ( QErrorMessage * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QErrorMessage;
+   p->type = QT_TYPE_QErrorMessage;
 
    if( bNew )
    {

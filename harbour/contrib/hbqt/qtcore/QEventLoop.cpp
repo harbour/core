@@ -85,6 +85,7 @@ typedef struct
    QPointer< QEventLoop > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QEventLoop;
 
 QT_G_FUNC( hbqt_gcRelease_QEventLoop )
@@ -131,6 +132,7 @@ void * hbqt_gcAllocate_QEventLoop( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QEventLoop >( ( QEventLoop * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QEventLoop;
+   p->type = QT_TYPE_QEventLoop;
 
    if( bNew )
    {

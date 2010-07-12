@@ -85,6 +85,7 @@ typedef struct
    QPointer< QItemSelectionModel > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QItemSelectionModel;
 
 QT_G_FUNC( hbqt_gcRelease_QItemSelectionModel )
@@ -131,6 +132,7 @@ void * hbqt_gcAllocate_QItemSelectionModel( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QItemSelectionModel >( ( QItemSelectionModel * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QItemSelectionModel;
+   p->type = QT_TYPE_QItemSelectionModel;
 
    if( bNew )
    {

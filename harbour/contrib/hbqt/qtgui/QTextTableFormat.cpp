@@ -88,6 +88,7 @@ typedef struct
    QTextTableFormat * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QTextTableFormat;
 
 QT_G_FUNC( hbqt_gcRelease_QTextTableFormat )
@@ -123,6 +124,7 @@ void * hbqt_gcAllocate_QTextTableFormat( void * pObj, bool bNew )
    p->ph = ( QTextTableFormat * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextTableFormat;
+   p->type = QT_TYPE_QTextTableFormat;
 
    if( bNew )
    {

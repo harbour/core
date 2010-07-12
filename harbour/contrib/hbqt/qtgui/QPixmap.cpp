@@ -90,6 +90,7 @@ typedef struct
    QPixmap * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QPixmap;
 
 QT_G_FUNC( hbqt_gcRelease_QPixmap )
@@ -125,6 +126,7 @@ void * hbqt_gcAllocate_QPixmap( void * pObj, bool bNew )
    p->ph = ( QPixmap * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QPixmap;
+   p->type = QT_TYPE_QPixmap;
 
    if( bNew )
    {

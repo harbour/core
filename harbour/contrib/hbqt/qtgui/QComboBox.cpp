@@ -85,6 +85,7 @@ typedef struct
    QPointer< QComboBox > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QComboBox;
 
 QT_G_FUNC( hbqt_gcRelease_QComboBox )
@@ -131,6 +132,7 @@ void * hbqt_gcAllocate_QComboBox( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QComboBox >( ( QComboBox * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QComboBox;
+   p->type = QT_TYPE_QComboBox;
 
    if( bNew )
    {

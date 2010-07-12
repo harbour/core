@@ -81,6 +81,7 @@ typedef struct
    QPointer< QTextFrame > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QTextFrame;
 
 QT_G_FUNC( hbqt_gcRelease_QTextFrame )
@@ -127,6 +128,7 @@ void * hbqt_gcAllocate_QTextFrame( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QTextFrame >( ( QTextFrame * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextFrame;
+   p->type = QT_TYPE_QTextFrame;
 
    if( bNew )
    {

@@ -98,6 +98,7 @@ typedef struct
    QPointer< QWizard > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QWizard;
 
 QT_G_FUNC( hbqt_gcRelease_QWizard )
@@ -144,6 +145,7 @@ void * hbqt_gcAllocate_QWizard( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QWizard >( ( QWizard * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QWizard;
+   p->type = QT_TYPE_QWizard;
 
    if( bNew )
    {

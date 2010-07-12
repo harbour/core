@@ -88,6 +88,7 @@ typedef struct
    QDataStream * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QDataStream;
 
 QT_G_FUNC( hbqt_gcRelease_QDataStream )
@@ -123,6 +124,7 @@ void * hbqt_gcAllocate_QDataStream( void * pObj, bool bNew )
    p->ph = ( QDataStream * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QDataStream;
+   p->type = QT_TYPE_QDataStream;
 
    if( bNew )
    {

@@ -89,6 +89,7 @@ typedef struct
    QFileInfo * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QFileInfo;
 
 QT_G_FUNC( hbqt_gcRelease_QFileInfo )
@@ -124,6 +125,7 @@ void * hbqt_gcAllocate_QFileInfo( void * pObj, bool bNew )
    p->ph = ( QFileInfo * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QFileInfo;
+   p->type = QT_TYPE_QFileInfo;
 
    if( bNew )
    {

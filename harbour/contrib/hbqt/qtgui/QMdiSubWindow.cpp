@@ -86,6 +86,7 @@ typedef struct
    QPointer< QMdiSubWindow > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QMdiSubWindow;
 
 QT_G_FUNC( hbqt_gcRelease_QMdiSubWindow )
@@ -132,6 +133,7 @@ void * hbqt_gcAllocate_QMdiSubWindow( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QMdiSubWindow >( ( QMdiSubWindow * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QMdiSubWindow;
+   p->type = QT_TYPE_QMdiSubWindow;
 
    if( bNew )
    {

@@ -94,6 +94,7 @@ typedef struct
    QPointer< QTableWidget > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QTableWidget;
 
 QT_G_FUNC( hbqt_gcRelease_QTableWidget )
@@ -140,6 +141,7 @@ void * hbqt_gcAllocate_QTableWidget( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QTableWidget >( ( QTableWidget * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTableWidget;
+   p->type = QT_TYPE_QTableWidget;
 
    if( bNew )
    {

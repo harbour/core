@@ -93,6 +93,7 @@ typedef struct
    QFont * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QFont;
 
 QT_G_FUNC( hbqt_gcRelease_QFont )
@@ -128,6 +129,7 @@ void * hbqt_gcAllocate_QFont( void * pObj, bool bNew )
    p->ph = ( QFont * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QFont;
+   p->type = QT_TYPE_QFont;
 
    if( bNew )
    {

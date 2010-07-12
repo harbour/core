@@ -81,6 +81,7 @@ typedef struct
    QPointer< HBQTableView > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_HBQTableView;
 
 QT_G_FUNC( hbqt_gcRelease_HBQTableView )
@@ -127,6 +128,7 @@ void * hbqt_gcAllocate_HBQTableView( void * pObj, bool bNew )
    new( & p->ph ) QPointer< HBQTableView >( ( HBQTableView * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_HBQTableView;
+   p->type = QT_TYPE_HBQTableView;
 
    if( bNew )
    {

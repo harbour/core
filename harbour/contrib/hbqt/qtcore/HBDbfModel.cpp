@@ -81,6 +81,7 @@ typedef struct
    QPointer< HBDbfModel > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_HBDbfModel;
 
 QT_G_FUNC( hbqt_gcRelease_HBDbfModel )
@@ -127,6 +128,7 @@ void * hbqt_gcAllocate_HBDbfModel( void * pObj, bool bNew )
    new( & p->ph ) QPointer< HBDbfModel >( ( HBDbfModel * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_HBDbfModel;
+   p->type = QT_TYPE_HBDbfModel;
 
    if( bNew )
    {

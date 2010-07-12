@@ -86,6 +86,7 @@ typedef struct
    QStyleOptionProgressBar * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QStyleOptionProgressBar;
 
 QT_G_FUNC( hbqt_gcRelease_QStyleOptionProgressBar )
@@ -121,6 +122,7 @@ void * hbqt_gcAllocate_QStyleOptionProgressBar( void * pObj, bool bNew )
    p->ph = ( QStyleOptionProgressBar * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyleOptionProgressBar;
+   p->type = QT_TYPE_QStyleOptionProgressBar;
 
    if( bNew )
    {

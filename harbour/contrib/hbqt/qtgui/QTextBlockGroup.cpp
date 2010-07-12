@@ -79,6 +79,7 @@ typedef struct
    QPointer< QTextBlockGroup > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QTextBlockGroup;
 
 QT_G_FUNC( hbqt_gcRelease_QTextBlockGroup )
@@ -99,6 +100,7 @@ void * hbqt_gcAllocate_QTextBlockGroup( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QTextBlockGroup >( ( QTextBlockGroup * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextBlockGroup;
+   p->type = QT_TYPE_QTextBlockGroup;
 
    if( bNew )
    {

@@ -83,6 +83,7 @@ typedef struct
    QPointer< QValidator > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QValidator;
 
 QT_G_FUNC( hbqt_gcRelease_QValidator )
@@ -103,6 +104,7 @@ void * hbqt_gcAllocate_QValidator( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QValidator >( ( QValidator * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QValidator;
+   p->type = QT_TYPE_QValidator;
 
    if( bNew )
    {

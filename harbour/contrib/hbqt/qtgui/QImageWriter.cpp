@@ -86,6 +86,7 @@ typedef struct
    QImageWriter * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QImageWriter;
 
 QT_G_FUNC( hbqt_gcRelease_QImageWriter )
@@ -121,6 +122,7 @@ void * hbqt_gcAllocate_QImageWriter( void * pObj, bool bNew )
    p->ph = ( QImageWriter * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QImageWriter;
+   p->type = QT_TYPE_QImageWriter;
 
    if( bNew )
    {

@@ -79,6 +79,7 @@ typedef struct
    QItemSelection * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QItemSelection;
 
 QT_G_FUNC( hbqt_gcRelease_QItemSelection )
@@ -114,6 +115,7 @@ void * hbqt_gcAllocate_QItemSelection( void * pObj, bool bNew )
    p->ph = ( QItemSelection * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QItemSelection;
+   p->type = QT_TYPE_QItemSelection;
 
    if( bNew )
    {

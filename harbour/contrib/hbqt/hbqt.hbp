@@ -13,6 +13,7 @@ hbqt_common.hbm
 
 hbqt_base.cpp
 hbqt_destruct.cpp
+hbqt_hbqabstractitemmodel.cpp
 hbqt_hbdbfmodel.cpp
 hbqt_hbevents.cpp
 hbqt_hbqmainwindow.cpp
@@ -25,6 +26,7 @@ hbqt_misc.prg
 hbqt_errorsys.prg
 THbQtUI.prg
 
+hbqt_hbqabstractitemmodel.cpp
 hbqt_hbdbfmodel.h
 hbqt_hbevents.h
 hbqt_hbqmainwindow.h

@@ -107,6 +107,7 @@ typedef struct
    QList< void * > * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QList;
 
 QT_G_FUNC( hbqt_gcRelease_QList )
@@ -142,6 +143,7 @@ void * hbqt_gcAllocate_QList( void * pObj, bool bNew )
    p->ph = ( QList< void * > * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QList;
+   p->type = QT_TYPE_QList;
 
    if( bNew )
    {

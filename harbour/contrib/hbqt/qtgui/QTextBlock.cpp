@@ -80,6 +80,7 @@ typedef struct
    QTextBlock * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QTextBlock;
 
 QT_G_FUNC( hbqt_gcRelease_QTextBlock )
@@ -115,6 +116,7 @@ void * hbqt_gcAllocate_QTextBlock( void * pObj, bool bNew )
    p->ph = ( QTextBlock * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextBlock;
+   p->type = QT_TYPE_QTextBlock;
 
    if( bNew )
    {

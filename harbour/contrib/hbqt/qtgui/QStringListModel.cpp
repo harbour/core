@@ -80,6 +80,7 @@ typedef struct
    QPointer< QStringListModel > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QStringListModel;
 
 QT_G_FUNC( hbqt_gcRelease_QStringListModel )
@@ -126,6 +127,7 @@ void * hbqt_gcAllocate_QStringListModel( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QStringListModel >( ( QStringListModel * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStringListModel;
+   p->type = QT_TYPE_QStringListModel;
 
    if( bNew )
    {

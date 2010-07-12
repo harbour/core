@@ -80,6 +80,7 @@ typedef struct
    QPointer< QAbstractTableModel > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QAbstractTableModel;
 
 QT_G_FUNC( hbqt_gcRelease_QAbstractTableModel )
@@ -100,6 +101,7 @@ void * hbqt_gcAllocate_QAbstractTableModel( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QAbstractTableModel >( ( QAbstractTableModel * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QAbstractTableModel;
+   p->type = QT_TYPE_QAbstractTableModel;
 
    if( bNew )
    {

@@ -81,6 +81,7 @@ typedef struct
    QPointer< QStackedWidget > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QStackedWidget;
 
 QT_G_FUNC( hbqt_gcRelease_QStackedWidget )
@@ -127,6 +128,7 @@ void * hbqt_gcAllocate_QStackedWidget( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QStackedWidget >( ( QStackedWidget * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStackedWidget;
+   p->type = QT_TYPE_QStackedWidget;
 
    if( bNew )
    {

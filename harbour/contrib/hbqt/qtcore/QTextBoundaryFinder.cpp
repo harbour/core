@@ -89,6 +89,7 @@ typedef struct
    QTextBoundaryFinder * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QTextBoundaryFinder;
 
 QT_G_FUNC( hbqt_gcRelease_QTextBoundaryFinder )
@@ -124,6 +125,7 @@ void * hbqt_gcAllocate_QTextBoundaryFinder( void * pObj, bool bNew )
    p->ph = ( QTextBoundaryFinder * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextBoundaryFinder;
+   p->type = QT_TYPE_QTextBoundaryFinder;
 
    if( bNew )
    {

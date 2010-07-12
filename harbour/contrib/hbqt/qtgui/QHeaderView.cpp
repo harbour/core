@@ -84,6 +84,7 @@ typedef struct
    QPointer< QHeaderView > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QHeaderView;
 
 QT_G_FUNC( hbqt_gcRelease_QHeaderView )
@@ -130,6 +131,7 @@ void * hbqt_gcAllocate_QHeaderView( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QHeaderView >( ( QHeaderView * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QHeaderView;
+   p->type = QT_TYPE_QHeaderView;
 
    if( bNew )
    {

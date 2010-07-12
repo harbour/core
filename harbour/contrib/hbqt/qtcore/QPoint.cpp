@@ -81,6 +81,7 @@ typedef struct
    QPoint * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QPoint;
 
 QT_G_FUNC( hbqt_gcRelease_QPoint )
@@ -116,6 +117,7 @@ void * hbqt_gcAllocate_QPoint( void * pObj, bool bNew )
    p->ph = ( QPoint * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QPoint;
+   p->type = QT_TYPE_QPoint;
 
    if( bNew )
    {

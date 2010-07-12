@@ -85,6 +85,7 @@ typedef struct
    QLineF * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QLineF;
 
 QT_G_FUNC( hbqt_gcRelease_QLineF )
@@ -120,6 +121,7 @@ void * hbqt_gcAllocate_QLineF( void * pObj, bool bNew )
    p->ph = ( QLineF * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QLineF;
+   p->type = QT_TYPE_QLineF;
 
    if( bNew )
    {

@@ -85,6 +85,7 @@ typedef struct
    QPainterPath * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QPainterPath;
 
 QT_G_FUNC( hbqt_gcRelease_QPainterPath )
@@ -120,6 +121,7 @@ void * hbqt_gcAllocate_QPainterPath( void * pObj, bool bNew )
    p->ph = ( QPainterPath * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QPainterPath;
+   p->type = QT_TYPE_QPainterPath;
 
    if( bNew )
    {

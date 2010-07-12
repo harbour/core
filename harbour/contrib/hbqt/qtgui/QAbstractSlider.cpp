@@ -84,6 +84,7 @@ typedef struct
    QPointer< QAbstractSlider > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QAbstractSlider;
 
 QT_G_FUNC( hbqt_gcRelease_QAbstractSlider )
@@ -104,6 +105,7 @@ void * hbqt_gcAllocate_QAbstractSlider( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QAbstractSlider >( ( QAbstractSlider * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QAbstractSlider;
+   p->type = QT_TYPE_QAbstractSlider;
 
    if( bNew )
    {

@@ -95,6 +95,7 @@ typedef struct
    QPointer< QStyle > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QStyle;
 
 QT_G_FUNC( hbqt_gcRelease_QStyle )
@@ -115,6 +116,7 @@ void * hbqt_gcAllocate_QStyle( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QStyle >( ( QStyle * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyle;
+   p->type = QT_TYPE_QStyle;
 
    if( bNew )
    {

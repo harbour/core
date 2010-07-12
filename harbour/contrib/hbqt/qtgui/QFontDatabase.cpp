@@ -84,6 +84,7 @@ typedef struct
    QFontDatabase * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QFontDatabase;
 
 QT_G_FUNC( hbqt_gcRelease_QFontDatabase )
@@ -119,6 +120,7 @@ void * hbqt_gcAllocate_QFontDatabase( void * pObj, bool bNew )
    p->ph = ( QFontDatabase * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QFontDatabase;
+   p->type = QT_TYPE_QFontDatabase;
 
    if( bNew )
    {

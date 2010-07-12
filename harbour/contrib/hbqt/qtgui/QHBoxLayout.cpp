@@ -81,6 +81,7 @@ typedef struct
    QPointer< QHBoxLayout > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QHBoxLayout;
 
 QT_G_FUNC( hbqt_gcRelease_QHBoxLayout )
@@ -127,6 +128,7 @@ void * hbqt_gcAllocate_QHBoxLayout( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QHBoxLayout >( ( QHBoxLayout * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QHBoxLayout;
+   p->type = QT_TYPE_QHBoxLayout;
 
    if( bNew )
    {

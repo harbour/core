@@ -81,6 +81,7 @@ typedef struct
    QPointer< QProgressDialog > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QProgressDialog;
 
 QT_G_FUNC( hbqt_gcRelease_QProgressDialog )
@@ -127,6 +128,7 @@ void * hbqt_gcAllocate_QProgressDialog( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QProgressDialog >( ( QProgressDialog * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QProgressDialog;
+   p->type = QT_TYPE_QProgressDialog;
 
    if( bNew )
    {

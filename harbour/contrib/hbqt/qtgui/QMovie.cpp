@@ -88,6 +88,7 @@ typedef struct
    QPointer< QMovie > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QMovie;
 
 QT_G_FUNC( hbqt_gcRelease_QMovie )
@@ -134,6 +135,7 @@ void * hbqt_gcAllocate_QMovie( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QMovie >( ( QMovie * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QMovie;
+   p->type = QT_TYPE_QMovie;
 
    if( bNew )
    {

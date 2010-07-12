@@ -79,6 +79,7 @@ typedef struct
    QHideEvent * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QHideEvent;
 
 QT_G_FUNC( hbqt_gcRelease_QHideEvent )
@@ -99,6 +100,7 @@ void * hbqt_gcAllocate_QHideEvent( void * pObj, bool bNew )
    p->ph = ( QHideEvent * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QHideEvent;
+   p->type = QT_TYPE_QHideEvent;
 
    if( bNew )
    {

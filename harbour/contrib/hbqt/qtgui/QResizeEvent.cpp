@@ -79,6 +79,7 @@ typedef struct
    QResizeEvent * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QResizeEvent;
 
 QT_G_FUNC( hbqt_gcRelease_QResizeEvent )
@@ -99,6 +100,7 @@ void * hbqt_gcAllocate_QResizeEvent( void * pObj, bool bNew )
    p->ph = ( QResizeEvent * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QResizeEvent;
+   p->type = QT_TYPE_QResizeEvent;
 
    if( bNew )
    {

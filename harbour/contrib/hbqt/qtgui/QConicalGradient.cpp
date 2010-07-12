@@ -87,6 +87,7 @@ typedef struct
    QConicalGradient * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QConicalGradient;
 
 QT_G_FUNC( hbqt_gcRelease_QConicalGradient )
@@ -122,6 +123,7 @@ void * hbqt_gcAllocate_QConicalGradient( void * pObj, bool bNew )
    p->ph = ( QConicalGradient * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QConicalGradient;
+   p->type = QT_TYPE_QConicalGradient;
 
    if( bNew )
    {

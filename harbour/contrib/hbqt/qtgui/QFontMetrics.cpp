@@ -82,6 +82,7 @@ typedef struct
    QFontMetrics * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QFontMetrics;
 
 QT_G_FUNC( hbqt_gcRelease_QFontMetrics )
@@ -117,6 +118,7 @@ void * hbqt_gcAllocate_QFontMetrics( void * pObj, bool bNew )
    p->ph = ( QFontMetrics * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QFontMetrics;
+   p->type = QT_TYPE_QFontMetrics;
 
    if( bNew )
    {

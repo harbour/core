@@ -85,6 +85,7 @@ typedef struct
    QStyleOptionComplex * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QStyleOptionComplex;
 
 QT_G_FUNC( hbqt_gcRelease_QStyleOptionComplex )
@@ -120,6 +121,7 @@ void * hbqt_gcAllocate_QStyleOptionComplex( void * pObj, bool bNew )
    p->ph = ( QStyleOptionComplex * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyleOptionComplex;
+   p->type = QT_TYPE_QStyleOptionComplex;
 
    if( bNew )
    {

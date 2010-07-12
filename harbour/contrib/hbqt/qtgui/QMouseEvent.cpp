@@ -81,6 +81,7 @@ typedef struct
    QMouseEvent * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QMouseEvent;
 
 QT_G_FUNC( hbqt_gcRelease_QMouseEvent )
@@ -116,6 +117,7 @@ void * hbqt_gcAllocate_QMouseEvent( void * pObj, bool bNew )
    p->ph = ( QMouseEvent * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QMouseEvent;
+   p->type = QT_TYPE_QMouseEvent;
 
    if( bNew )
    {

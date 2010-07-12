@@ -80,6 +80,7 @@ typedef struct
    QTextEncoder * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QTextEncoder;
 
 QT_G_FUNC( hbqt_gcRelease_QTextEncoder )
@@ -115,6 +116,7 @@ void * hbqt_gcAllocate_QTextEncoder( void * pObj, bool bNew )
    p->ph = ( QTextEncoder * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextEncoder;
+   p->type = QT_TYPE_QTextEncoder;
 
    if( bNew )
    {

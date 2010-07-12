@@ -92,6 +92,7 @@ typedef struct
    QTextCursor * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QTextCursor;
 
 QT_G_FUNC( hbqt_gcRelease_QTextCursor )
@@ -127,6 +128,7 @@ void * hbqt_gcAllocate_QTextCursor( void * pObj, bool bNew )
    p->ph = ( QTextCursor * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextCursor;
+   p->type = QT_TYPE_QTextCursor;
 
    if( bNew )
    {

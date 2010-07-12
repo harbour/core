@@ -85,6 +85,7 @@ typedef struct
    QPointer< QDirModel > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QDirModel;
 
 QT_G_FUNC( hbqt_gcRelease_QDirModel )
@@ -131,6 +132,7 @@ void * hbqt_gcAllocate_QDirModel( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QDirModel >( ( QDirModel * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QDirModel;
+   p->type = QT_TYPE_QDirModel;
 
    if( bNew )
    {

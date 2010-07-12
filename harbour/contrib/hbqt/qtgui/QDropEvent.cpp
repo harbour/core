@@ -88,6 +88,7 @@ typedef struct
    QDropEvent * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QDropEvent;
 
 QT_G_FUNC( hbqt_gcRelease_QDropEvent )
@@ -108,6 +109,7 @@ void * hbqt_gcAllocate_QDropEvent( void * pObj, bool bNew )
    p->ph = ( QDropEvent * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QDropEvent;
+   p->type = QT_TYPE_QDropEvent;
 
    if( bNew )
    {

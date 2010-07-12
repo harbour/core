@@ -85,6 +85,7 @@ typedef struct
    QStyleOptionSlider * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QStyleOptionSlider;
 
 QT_G_FUNC( hbqt_gcRelease_QStyleOptionSlider )
@@ -120,6 +121,7 @@ void * hbqt_gcAllocate_QStyleOptionSlider( void * pObj, bool bNew )
    p->ph = ( QStyleOptionSlider * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyleOptionSlider;
+   p->type = QT_TYPE_QStyleOptionSlider;
 
    if( bNew )
    {

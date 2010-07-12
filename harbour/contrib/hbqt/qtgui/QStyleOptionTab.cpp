@@ -89,6 +89,7 @@ typedef struct
    QStyleOptionTab * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QStyleOptionTab;
 
 QT_G_FUNC( hbqt_gcRelease_QStyleOptionTab )
@@ -124,6 +125,7 @@ void * hbqt_gcAllocate_QStyleOptionTab( void * pObj, bool bNew )
    p->ph = ( QStyleOptionTab * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyleOptionTab;
+   p->type = QT_TYPE_QStyleOptionTab;
 
    if( bNew )
    {

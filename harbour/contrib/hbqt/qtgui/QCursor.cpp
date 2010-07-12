@@ -87,6 +87,7 @@ typedef struct
    QCursor * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QCursor;
 
 QT_G_FUNC( hbqt_gcRelease_QCursor )
@@ -122,6 +123,7 @@ void * hbqt_gcAllocate_QCursor( void * pObj, bool bNew )
    p->ph = ( QCursor * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QCursor;
+   p->type = QT_TYPE_QCursor;
 
    if( bNew )
    {

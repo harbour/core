@@ -106,6 +106,7 @@ typedef struct
    QPointer< QFileDialog > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QFileDialog;
 
 QT_G_FUNC( hbqt_gcRelease_QFileDialog )
@@ -152,6 +153,7 @@ void * hbqt_gcAllocate_QFileDialog( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QFileDialog >( ( QFileDialog * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QFileDialog;
+   p->type = QT_TYPE_QFileDialog;
 
    if( bNew )
    {

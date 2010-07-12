@@ -95,6 +95,7 @@ typedef struct
    QPointer< QMenu > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QMenu;
 
 QT_G_FUNC( hbqt_gcRelease_QMenu )
@@ -141,6 +142,7 @@ void * hbqt_gcAllocate_QMenu( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QMenu >( ( QMenu * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QMenu;
+   p->type = QT_TYPE_QMenu;
 
    if( bNew )
    {

@@ -80,6 +80,7 @@ typedef struct
    QPaintEvent * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QPaintEvent;
 
 QT_G_FUNC( hbqt_gcRelease_QPaintEvent )
@@ -115,6 +116,7 @@ void * hbqt_gcAllocate_QPaintEvent( void * pObj, bool bNew )
    p->ph = ( QPaintEvent * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QPaintEvent;
+   p->type = QT_TYPE_QPaintEvent;
 
    if( bNew )
    {

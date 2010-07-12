@@ -79,6 +79,7 @@ typedef struct
    QWindowStateChangeEvent * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QWindowStateChangeEvent;
 
 QT_G_FUNC( hbqt_gcRelease_QWindowStateChangeEvent )
@@ -99,6 +100,7 @@ void * hbqt_gcAllocate_QWindowStateChangeEvent( void * pObj, bool bNew )
    p->ph = ( QWindowStateChangeEvent * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QWindowStateChangeEvent;
+   p->type = QT_TYPE_QWindowStateChangeEvent;
 
    if( bNew )
    {

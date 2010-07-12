@@ -80,6 +80,7 @@ typedef struct
    QKeyEvent * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QKeyEvent;
 
 QT_G_FUNC( hbqt_gcRelease_QKeyEvent )
@@ -100,6 +101,7 @@ void * hbqt_gcAllocate_QKeyEvent( void * pObj, bool bNew )
    p->ph = ( QKeyEvent * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QKeyEvent;
+   p->type = QT_TYPE_QKeyEvent;
 
    if( bNew )
    {

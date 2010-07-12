@@ -91,6 +91,7 @@ typedef struct
    QPointer< QToolBar > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QToolBar;
 
 QT_G_FUNC( hbqt_gcRelease_QToolBar )
@@ -137,6 +138,7 @@ void * hbqt_gcAllocate_QToolBar( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QToolBar >( ( QToolBar * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QToolBar;
+   p->type = QT_TYPE_QToolBar;
 
    if( bNew )
    {

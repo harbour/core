@@ -83,6 +83,7 @@ typedef struct
    QPointer< QAbstractItemDelegate > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QAbstractItemDelegate;
 
 QT_G_FUNC( hbqt_gcRelease_QAbstractItemDelegate )
@@ -103,6 +104,7 @@ void * hbqt_gcAllocate_QAbstractItemDelegate( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QAbstractItemDelegate >( ( QAbstractItemDelegate * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QAbstractItemDelegate;
+   p->type = QT_TYPE_QAbstractItemDelegate;
 
    if( bNew )
    {

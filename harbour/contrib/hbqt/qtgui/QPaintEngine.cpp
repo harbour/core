@@ -89,6 +89,7 @@ typedef struct
    QPaintEngine * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QPaintEngine;
 
 QT_G_FUNC( hbqt_gcRelease_QPaintEngine )
@@ -109,6 +110,7 @@ void * hbqt_gcAllocate_QPaintEngine( void * pObj, bool bNew )
    p->ph = ( QPaintEngine * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QPaintEngine;
+   p->type = QT_TYPE_QPaintEngine;
 
    if( bNew )
    {

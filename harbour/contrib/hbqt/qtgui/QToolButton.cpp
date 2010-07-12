@@ -84,6 +84,7 @@ typedef struct
    QPointer< QToolButton > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QToolButton;
 
 QT_G_FUNC( hbqt_gcRelease_QToolButton )
@@ -130,6 +131,7 @@ void * hbqt_gcAllocate_QToolButton( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QToolButton >( ( QToolButton * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QToolButton;
+   p->type = QT_TYPE_QToolButton;
 
    if( bNew )
    {

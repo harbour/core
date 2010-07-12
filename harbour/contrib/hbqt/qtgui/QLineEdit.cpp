@@ -86,6 +86,7 @@ typedef struct
    QPointer< QLineEdit > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QLineEdit;
 
 QT_G_FUNC( hbqt_gcRelease_QLineEdit )
@@ -132,6 +133,7 @@ void * hbqt_gcAllocate_QLineEdit( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QLineEdit >( ( QLineEdit * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QLineEdit;
+   p->type = QT_TYPE_QLineEdit;
 
    if( bNew )
    {

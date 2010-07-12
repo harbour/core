@@ -94,6 +94,7 @@ typedef struct
    QPointer< QSplitter > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QSplitter;
 
 QT_G_FUNC( hbqt_gcRelease_QSplitter )
@@ -140,6 +141,7 @@ void * hbqt_gcAllocate_QSplitter( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QSplitter >( ( QSplitter * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QSplitter;
+   p->type = QT_TYPE_QSplitter;
 
    if( bNew )
    {

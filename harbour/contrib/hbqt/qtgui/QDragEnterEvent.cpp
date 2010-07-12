@@ -79,6 +79,7 @@ typedef struct
    QDragEnterEvent * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QDragEnterEvent;
 
 QT_G_FUNC( hbqt_gcRelease_QDragEnterEvent )
@@ -99,6 +100,7 @@ void * hbqt_gcAllocate_QDragEnterEvent( void * pObj, bool bNew )
    p->ph = ( QDragEnterEvent * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QDragEnterEvent;
+   p->type = QT_TYPE_QDragEnterEvent;
 
    if( bNew )
    {

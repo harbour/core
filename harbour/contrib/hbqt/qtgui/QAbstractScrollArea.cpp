@@ -80,6 +80,7 @@ typedef struct
    QPointer< QAbstractScrollArea > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QAbstractScrollArea;
 
 QT_G_FUNC( hbqt_gcRelease_QAbstractScrollArea )
@@ -100,6 +101,7 @@ void * hbqt_gcAllocate_QAbstractScrollArea( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QAbstractScrollArea >( ( QAbstractScrollArea * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QAbstractScrollArea;
+   p->type = QT_TYPE_QAbstractScrollArea;
 
    if( bNew )
    {

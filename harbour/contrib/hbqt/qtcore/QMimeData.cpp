@@ -90,6 +90,7 @@ typedef struct
    QPointer< QMimeData > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QMimeData;
 
 QT_G_FUNC( hbqt_gcRelease_QMimeData )
@@ -136,6 +137,7 @@ void * hbqt_gcAllocate_QMimeData( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QMimeData >( ( QMimeData * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QMimeData;
+   p->type = QT_TYPE_QMimeData;
 
    if( bNew )
    {

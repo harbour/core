@@ -81,6 +81,7 @@ typedef struct
    QMatrix * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QMatrix;
 
 QT_G_FUNC( hbqt_gcRelease_QMatrix )
@@ -116,6 +117,7 @@ void * hbqt_gcAllocate_QMatrix( void * pObj, bool bNew )
    p->ph = ( QMatrix * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QMatrix;
+   p->type = QT_TYPE_QMatrix;
 
    if( bNew )
    {

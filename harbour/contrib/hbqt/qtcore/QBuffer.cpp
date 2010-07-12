@@ -81,6 +81,7 @@ typedef struct
    QPointer< QBuffer > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QBuffer;
 
 QT_G_FUNC( hbqt_gcRelease_QBuffer )
@@ -127,6 +128,7 @@ void * hbqt_gcAllocate_QBuffer( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QBuffer >( ( QBuffer * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QBuffer;
+   p->type = QT_TYPE_QBuffer;
 
    if( bNew )
    {

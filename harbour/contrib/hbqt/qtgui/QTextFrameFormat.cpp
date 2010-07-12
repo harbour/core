@@ -89,6 +89,7 @@ typedef struct
    QTextFrameFormat * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QTextFrameFormat;
 
 QT_G_FUNC( hbqt_gcRelease_QTextFrameFormat )
@@ -124,6 +125,7 @@ void * hbqt_gcAllocate_QTextFrameFormat( void * pObj, bool bNew )
    p->ph = ( QTextFrameFormat * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextFrameFormat;
+   p->type = QT_TYPE_QTextFrameFormat;
 
    if( bNew )
    {

@@ -90,6 +90,7 @@ typedef struct
    QPointer< QFile > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QFile;
 
 QT_G_FUNC( hbqt_gcRelease_QFile )
@@ -136,6 +137,7 @@ void * hbqt_gcAllocate_QFile( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QFile >( ( QFile * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QFile;
+   p->type = QT_TYPE_QFile;
 
    if( bNew )
    {

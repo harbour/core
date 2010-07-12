@@ -90,6 +90,7 @@ typedef struct
    QLocale * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QLocale;
 
 QT_G_FUNC( hbqt_gcRelease_QLocale )
@@ -125,6 +126,7 @@ void * hbqt_gcAllocate_QLocale( void * pObj, bool bNew )
    p->ph = ( QLocale * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QLocale;
+   p->type = QT_TYPE_QLocale;
 
    if( bNew )
    {

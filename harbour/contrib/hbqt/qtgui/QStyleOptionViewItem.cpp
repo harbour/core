@@ -86,6 +86,7 @@ typedef struct
    QStyleOptionViewItem * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QStyleOptionViewItem;
 
 QT_G_FUNC( hbqt_gcRelease_QStyleOptionViewItem )
@@ -121,6 +122,7 @@ void * hbqt_gcAllocate_QStyleOptionViewItem( void * pObj, bool bNew )
    p->ph = ( QStyleOptionViewItem * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyleOptionViewItem;
+   p->type = QT_TYPE_QStyleOptionViewItem;
 
    if( bNew )
    {

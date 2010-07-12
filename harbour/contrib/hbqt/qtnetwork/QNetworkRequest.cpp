@@ -86,6 +86,7 @@ typedef struct
    QNetworkRequest * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QNetworkRequest;
 
 QT_G_FUNC( hbqt_gcRelease_QNetworkRequest )
@@ -121,6 +122,7 @@ void * hbqt_gcAllocate_QNetworkRequest( void * pObj, bool bNew )
    p->ph = ( QNetworkRequest * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QNetworkRequest;
+   p->type = QT_TYPE_QNetworkRequest;
 
    if( bNew )
    {

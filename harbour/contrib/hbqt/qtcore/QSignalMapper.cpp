@@ -80,6 +80,7 @@ typedef struct
    QPointer< QSignalMapper > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QSignalMapper;
 
 QT_G_FUNC( hbqt_gcRelease_QSignalMapper )
@@ -126,6 +127,7 @@ void * hbqt_gcAllocate_QSignalMapper( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QSignalMapper >( ( QSignalMapper * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QSignalMapper;
+   p->type = QT_TYPE_QSignalMapper;
 
    if( bNew )
    {

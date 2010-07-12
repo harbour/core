@@ -14,6 +14,7 @@
 
 -D=../doc
 
+HBQAbstractItemModel.qth
 HBDbfModel.qth
 HBEvents.qth
 HBQMainWindow.qth
@@ -298,4 +299,5 @@ QWindowsStyle.qth
 QWindowStateChangeEvent.qth
 QWizard.qth
 QWizardPage.qth
+
 

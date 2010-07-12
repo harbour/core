@@ -80,6 +80,7 @@ typedef struct
    QTextDecoder * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QTextDecoder;
 
 QT_G_FUNC( hbqt_gcRelease_QTextDecoder )
@@ -115,6 +116,7 @@ void * hbqt_gcAllocate_QTextDecoder( void * pObj, bool bNew )
    p->ph = ( QTextDecoder * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextDecoder;
+   p->type = QT_TYPE_QTextDecoder;
 
    if( bNew )
    {

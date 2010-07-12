@@ -83,6 +83,7 @@ typedef struct
    QPrintEngine * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QPrintEngine;
 
 QT_G_FUNC( hbqt_gcRelease_QPrintEngine )
@@ -103,6 +104,7 @@ void * hbqt_gcAllocate_QPrintEngine( void * pObj, bool bNew )
    p->ph = ( QPrintEngine * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QPrintEngine;
+   p->type = QT_TYPE_QPrintEngine;
 
    if( bNew )
    {

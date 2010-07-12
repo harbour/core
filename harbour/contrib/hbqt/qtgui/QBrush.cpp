@@ -89,6 +89,7 @@ typedef struct
    QBrush * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QBrush;
 
 QT_G_FUNC( hbqt_gcRelease_QBrush )
@@ -124,6 +125,7 @@ void * hbqt_gcAllocate_QBrush( void * pObj, bool bNew )
    p->ph = ( QBrush * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QBrush;
+   p->type = QT_TYPE_QBrush;
 
    if( bNew )
    {

@@ -82,6 +82,7 @@ typedef struct
    QPointer< HBEvents > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_HBEvents;
 
 QT_G_FUNC( hbqt_gcRelease_HBEvents )
@@ -128,6 +129,7 @@ void * hbqt_gcAllocate_HBEvents( void * pObj, bool bNew )
    new( & p->ph ) QPointer< HBEvents >( ( HBEvents * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_HBEvents;
+   p->type = QT_TYPE_HBEvents;
 
    if( bNew )
    {

@@ -80,6 +80,7 @@ typedef struct
    QPointer< QSound > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QSound;
 
 QT_G_FUNC( hbqt_gcRelease_QSound )
@@ -126,6 +127,7 @@ void * hbqt_gcAllocate_QSound( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QSound >( ( QSound * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QSound;
+   p->type = QT_TYPE_QSound;
 
    if( bNew )
    {

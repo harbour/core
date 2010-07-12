@@ -83,6 +83,7 @@ typedef struct
    QPointer< QProgressBar > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QProgressBar;
 
 QT_G_FUNC( hbqt_gcRelease_QProgressBar )
@@ -129,6 +130,7 @@ void * hbqt_gcAllocate_QProgressBar( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QProgressBar >( ( QProgressBar * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QProgressBar;
+   p->type = QT_TYPE_QProgressBar;
 
    if( bNew )
    {

@@ -85,6 +85,7 @@ typedef struct
    QPointer< QCoreApplication > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QCoreApplication;
 
 QT_G_FUNC( hbqt_gcRelease_QCoreApplication )
@@ -105,6 +106,7 @@ void * hbqt_gcAllocate_QCoreApplication( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QCoreApplication >( ( QCoreApplication * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QCoreApplication;
+   p->type = QT_TYPE_QCoreApplication;
 
    if( bNew )
    {

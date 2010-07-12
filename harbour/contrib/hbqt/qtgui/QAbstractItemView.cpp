@@ -90,6 +90,7 @@ typedef struct
    QPointer< QAbstractItemView > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QAbstractItemView;
 
 QT_G_FUNC( hbqt_gcRelease_QAbstractItemView )
@@ -110,6 +111,7 @@ void * hbqt_gcAllocate_QAbstractItemView( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QAbstractItemView >( ( QAbstractItemView * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QAbstractItemView;
+   p->type = QT_TYPE_QAbstractItemView;
 
    if( bNew )
    {

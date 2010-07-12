@@ -82,6 +82,7 @@ typedef struct
    QSizeF * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QSizeF;
 
 QT_G_FUNC( hbqt_gcRelease_QSizeF )
@@ -117,6 +118,7 @@ void * hbqt_gcAllocate_QSizeF( void * pObj, bool bNew )
    p->ph = ( QSizeF * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QSizeF;
+   p->type = QT_TYPE_QSizeF;
 
    if( bNew )
    {

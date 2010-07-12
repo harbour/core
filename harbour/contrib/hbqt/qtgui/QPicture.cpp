@@ -81,6 +81,7 @@ typedef struct
    QPicture * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QPicture;
 
 QT_G_FUNC( hbqt_gcRelease_QPicture )
@@ -116,6 +117,7 @@ void * hbqt_gcAllocate_QPicture( void * pObj, bool bNew )
    p->ph = ( QPicture * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QPicture;
+   p->type = QT_TYPE_QPicture;
 
    if( bNew )
    {

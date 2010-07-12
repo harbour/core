@@ -80,6 +80,7 @@ typedef struct
    QTextImageFormat * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QTextImageFormat;
 
 QT_G_FUNC( hbqt_gcRelease_QTextImageFormat )
@@ -115,6 +116,7 @@ void * hbqt_gcAllocate_QTextImageFormat( void * pObj, bool bNew )
    p->ph = ( QTextImageFormat * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextImageFormat;
+   p->type = QT_TYPE_QTextImageFormat;
 
    if( bNew )
    {

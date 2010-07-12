@@ -90,6 +90,7 @@ typedef struct
    QPalette * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QPalette;
 
 QT_G_FUNC( hbqt_gcRelease_QPalette )
@@ -125,6 +126,7 @@ void * hbqt_gcAllocate_QPalette( void * pObj, bool bNew )
    p->ph = ( QPalette * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QPalette;
+   p->type = QT_TYPE_QPalette;
 
    if( bNew )
    {

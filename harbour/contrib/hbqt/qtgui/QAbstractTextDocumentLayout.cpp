@@ -79,6 +79,7 @@ typedef struct
    QPointer< QAbstractTextDocumentLayout > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QAbstractTextDocumentLayout;
 
 QT_G_FUNC( hbqt_gcRelease_QAbstractTextDocumentLayout )
@@ -99,6 +100,7 @@ void * hbqt_gcAllocate_QAbstractTextDocumentLayout( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QAbstractTextDocumentLayout >( ( QAbstractTextDocumentLayout * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QAbstractTextDocumentLayout;
+   p->type = QT_TYPE_QAbstractTextDocumentLayout;
 
    if( bNew )
    {

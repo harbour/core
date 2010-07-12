@@ -88,6 +88,7 @@ typedef struct
    QStyleOptionToolBar * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QStyleOptionToolBar;
 
 QT_G_FUNC( hbqt_gcRelease_QStyleOptionToolBar )
@@ -123,6 +124,7 @@ void * hbqt_gcAllocate_QStyleOptionToolBar( void * pObj, bool bNew )
    p->ph = ( QStyleOptionToolBar * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyleOptionToolBar;
+   p->type = QT_TYPE_QStyleOptionToolBar;
 
    if( bNew )
    {

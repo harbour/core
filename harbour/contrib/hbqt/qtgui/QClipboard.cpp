@@ -86,6 +86,7 @@ typedef struct
    QPointer< QClipboard > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QClipboard;
 
 QT_G_FUNC( hbqt_gcRelease_QClipboard )
@@ -106,6 +107,7 @@ void * hbqt_gcAllocate_QClipboard( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QClipboard >( ( QClipboard * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QClipboard;
+   p->type = QT_TYPE_QClipboard;
 
    if( bNew )
    {

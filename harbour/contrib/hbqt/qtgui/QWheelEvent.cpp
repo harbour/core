@@ -80,6 +80,7 @@ typedef struct
    QWheelEvent * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QWheelEvent;
 
 QT_G_FUNC( hbqt_gcRelease_QWheelEvent )
@@ -100,6 +101,7 @@ void * hbqt_gcAllocate_QWheelEvent( void * pObj, bool bNew )
    p->ph = ( QWheelEvent * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QWheelEvent;
+   p->type = QT_TYPE_QWheelEvent;
 
    if( bNew )
    {

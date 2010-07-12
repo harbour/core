@@ -86,6 +86,7 @@ typedef struct
    QPointer< QLCDNumber > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QLCDNumber;
 
 QT_G_FUNC( hbqt_gcRelease_QLCDNumber )
@@ -132,6 +133,7 @@ void * hbqt_gcAllocate_QLCDNumber( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QLCDNumber >( ( QLCDNumber * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QLCDNumber;
+   p->type = QT_TYPE_QLCDNumber;
 
    if( bNew )
    {

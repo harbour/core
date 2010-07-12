@@ -80,6 +80,7 @@ typedef struct
    QPointer< QDateEdit > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QDateEdit;
 
 QT_G_FUNC( hbqt_gcRelease_QDateEdit )
@@ -126,6 +127,7 @@ void * hbqt_gcAllocate_QDateEdit( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QDateEdit >( ( QDateEdit * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QDateEdit;
+   p->type = QT_TYPE_QDateEdit;
 
    if( bNew )
    {

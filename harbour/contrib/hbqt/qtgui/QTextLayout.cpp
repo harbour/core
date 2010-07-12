@@ -100,6 +100,7 @@ typedef struct
    QTextLayout * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QTextLayout;
 
 QT_G_FUNC( hbqt_gcRelease_QTextLayout )
@@ -135,6 +136,7 @@ void * hbqt_gcAllocate_QTextLayout( void * pObj, bool bNew )
    p->ph = ( QTextLayout * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextLayout;
+   p->type = QT_TYPE_QTextLayout;
 
    if( bNew )
    {

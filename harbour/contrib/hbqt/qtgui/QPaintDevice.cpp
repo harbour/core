@@ -82,6 +82,7 @@ typedef struct
    QPaintDevice * ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QPaintDevice;
 
 QT_G_FUNC( hbqt_gcRelease_QPaintDevice )
@@ -102,6 +103,7 @@ void * hbqt_gcAllocate_QPaintDevice( void * pObj, bool bNew )
    p->ph = ( QPaintDevice * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QPaintDevice;
+   p->type = QT_TYPE_QPaintDevice;
 
    if( bNew )
    {

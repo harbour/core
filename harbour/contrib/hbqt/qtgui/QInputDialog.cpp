@@ -86,6 +86,7 @@ typedef struct
    QPointer< QInputDialog > ph;
    bool bNew;
    QT_G_FUNC_PTR func;
+   int type;
 } QGC_POINTER_QInputDialog;
 
 QT_G_FUNC( hbqt_gcRelease_QInputDialog )
@@ -132,6 +133,7 @@ void * hbqt_gcAllocate_QInputDialog( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QInputDialog >( ( QInputDialog * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QInputDialog;
+   p->type = QT_TYPE_QInputDialog;
 
    if( bNew )
    {
