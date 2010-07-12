@@ -690,7 +690,7 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
       ENDIF
       aadd( cpp_, "   p->bNew = bNew;" )
       aadd( cpp_, "   p->func = hbqt_gcRelease_" + cWidget + ";" )
-      aadd( cpp_, "   p->type = QT_TYPE_"+cWidget+";" )
+      aadd( cpp_, "   p->type = HBQT_TYPE_" + cWidget + ";" )
       aadd( cpp_, "" )
       aadd( cpp_, "   if( bNew )" )
       aadd( cpp_, "   {" )

@@ -389,7 +389,11 @@ PROCEDURE GNUMake( ... )
       RETURN
    ENDIF
 
-   cFilter := GetEnv( "HB_CONTRIBLIBS" )
+   cFilter := GetEnv( "HB_CONTRIBS" )
+   /* Compatibility */
+   IF Empty( cFilter )
+      cFilter := GetEnv( "HB_CONTRIBLIBS" )
+   ENDIF
 
    IF cFilter == "no"
       ErrorLevel( 0 )

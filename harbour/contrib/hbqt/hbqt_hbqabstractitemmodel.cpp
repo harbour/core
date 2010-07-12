@@ -61,10 +61,10 @@
 #include "hbqt_hbqabstractitemmodel.h"
 
 #include <QtGui/QIcon>
+#include <QtGui/QFont>
+#include <QtGui/QPixmap>
 #include <QtGui/QWidget>
-#include <string>
-
-using namespace std;
+#include <QtCore/QFlags>
 
 QVariant hbqt_fetchData( PHB_ITEM block, int type, int role, int par1, int par2 )
 {
@@ -110,17 +110,17 @@ QVariant hbqt_fetchData( PHB_ITEM block, int type, int role, int par1, int par2 
          hb_vmPush( ret );
          hb_vmSend( 0 );
          QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), -1 );
-         if( p->type == QT_TYPE_QBrush )
+         if( p->type == HBQT_TYPE_QBrush )
             vv = * ( ( QBrush * ) ( p->ph ) );
-         else if( p->type == QT_TYPE_QColor )
+         else if( p->type == HBQT_TYPE_QColor )
             vv = * ( ( QColor * ) ( p->ph ) );
-         else if( p->type == QT_TYPE_QSize )
+         else if( p->type == HBQT_TYPE_QSize )
             vv = * ( ( QSize * ) ( p->ph ) );
-         else if( p->type == QT_TYPE_QIcon )
+         else if( p->type == HBQT_TYPE_QIcon )
             vv = * ( ( QIcon * ) ( p->ph ) );
-         else if( p->type == QT_TYPE_QPixmap )
+         else if( p->type == HBQT_TYPE_QPixmap )
             vv = * ( ( QPixmap * ) ( p->ph ) );
-         else if( p->type == QT_TYPE_QFont )
+         else if( p->type == HBQT_TYPE_QFont )
             vv = * ( ( QFont * ) ( p->ph ) );
       }
 

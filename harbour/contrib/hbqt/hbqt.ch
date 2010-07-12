@@ -2248,7 +2248,7 @@
  *   DEFINES HBQt CODEBLOCKs
  *
  *   Format:
- *   QT_(Qt class initials)_(Qt overloaded member)
+ *   HBQT_(Qt class initials)_(Qt overloaded member)
  */
 
 #define HBQT_QAIM_data                            1001
