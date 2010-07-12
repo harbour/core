@@ -136,8 +136,7 @@ CLASS IdeProject
    DATA   sources                                 INIT {}
    DATA   dotHbp                                  INIT ""
    DATA   compilers                               INIT ""
-   DATA   cPathMk2                                INIT hb_getenv( "HBIDE_DIR_HBMK2" )
-   DATA   cPathEnv                                INIT hb_DirBase()
+   DATA   cPathHbMk2
    DATA   hSources                                INIT {=>}
    DATA   hPaths                                  INIT {=>}
    DATA   lPathAbs                                INIT .F.  // Lets try relative paths first . xhp and hbp will be relative anyway
@@ -182,12 +181,7 @@ METHOD IdeProject:new( oIDE, aProps )
       ::dotHbp         := ""
       ::compilers      := ""
 
-      IF !empty( oIDE:oINI:cPathMk2 )
-         ::cPathMk2 := oIDE:oINI:cPathMk2
-      ENDIF
-      IF !empty( oIDE:oINI:cPathEnv )
-         ::cPathEnv := oIDE:oINI:cPathEnv
-      ENDIF
+      ::cPathHbMk2 := oIde:oINI:getHbmk2File()
 
       FOR EACH cSource IN ::sources
          cSource := hbide_syncProjPath( ::projPath, cSource )
@@ -839,8 +833,8 @@ METHOD IdeProjManager:synchronizeAlienProject( cProjFileName )
    ENDIF
 
    cExeHbMk2 := "hbmk2"
-   IF ! Empty( ::oIDE:oINI:cPathMk2 )
-      cExeHbMk2 := hbide_DirAddPathSep( ::oIDE:oINI:cPathMk2 ) + cExeHbMk2
+   IF ! Empty( ::oIDE:oINI:cPathHbMk2 )
+      cExeHbMk2 := hbide_DirAddPathSep( ::oIDE:oINI:cPathHbMk2 ) + cExeHbMk2
    ENDIF
 
    SWITCH lower( cExt )
@@ -1439,12 +1433,7 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
       ::cBatch   := ::oEV:prepareBatch( ::cWrkEnvironment )
       aeval( ::oEV:getHbmk2Commands( ::cWrkEnvironment ), {|e| aadd( aHbp, e ) } )
 
-      cExeHbMk2  := "hbmk2"
-
-      IF ! Empty( ::oProject:cPathMk2 )
-         cExeHbMk2 := hbide_DirAddPathSep( ::oProject:cPathMk2 ) + cExeHbMk2
-      ENDIF
-
+      cExeHbMk2  := ::oINI:getHbmk2File()
       cCmdParams := hbide_array2cmdParams( aHbp )
 
       ::oProcess := HbpProcess():new()
@@ -1633,3 +1622,4 @@ METHOD IdeProjManager:outputText( cText )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
+

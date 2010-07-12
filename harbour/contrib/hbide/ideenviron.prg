@@ -77,68 +77,45 @@
 
 CLASS IdeEnvironments INHERIT IdeObject
 
-   DATA   cEnvFile
    DATA   aNames                                  INIT {}
    DATA   aEnvrns                                 INIT {}
    DATA   aShellContents                          INIT {}
    DATA   aCommons                                INIT {}
    DATA   oUI_1
 
-   METHOD new( oIDE, cEnvFile )
-   METHOD create( oIDE, cEnvFile )
+   METHOD new( oIDE )
+   METHOD create( oIDE )
    METHOD destroy()
    METHOD parse( cEnvFile )
    METHOD prepareBatch( cEnvName )
    METHOD getNames()                              INLINE ::aNames
    METHOD saveEnv()
    METHOD show()
-   METHOD execEnv( nMode, p )
    METHOD fetchNew()
    METHOD getHbmk2Commands( cEnvName )
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
+/*------------------------------------------------------------------------*/
 
-METHOD IdeEnvironments:new( oIDE, cEnvFile )
-
-   ::oIDE := oIDE
-   ::cEnvFile := cEnvFile
-
+METHOD IdeEnvironments:new( oIde )
+   ::oIde := oIde
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*------------------------------------------------------------------------*/
 
-METHOD IdeEnvironments:create( oIDE, cEnvFile )
-   LOCAL cPath, cFile
+METHOD IdeEnvironments:create( oIde )
 
-   DEFAULT oIDE     TO ::oIDE
-   DEFAULT cEnvFile TO ::cEnvFile
+   DEFAULT oIde     TO ::oIde
+   ::oIde  := oIde
 
-   ::oIDE     := oIDE
-   ::cEnvFile := cEnvFile
-
-   IF empty( ::cEnvFile )
-      cFile := ::oINI:cPathEnv
-      cFile := iif( empty( cFile ), cFile, hbide_pathAppendLastSlash( cFile ) )
-      IF empty( cFile )
-         cFile := oIde:cProjIni
-      ENDIF
-      hb_fNameSplit( cFile, @cPath )
-      ::cEnvFile := cPath + "hbide.env"
-   ENDIF
-
-   hb_fNameSplit( ::cEnvFile, @cPath )
-   ::oIDE:cWrkPathEnv := hbide_pathNormalized( cPath, .f. )
-   ::oIde:oINI:cPathEnv := ::oIDE:cWrkPathEnv
-
-   IF !empty( ::cEnvFile ) .AND. hb_fileExists( ::cEnvFile )
-      ::parse( ::cEnvFile )
+   IF hb_fileExists( ::oINI:getEnvFile() )
+      ::parse( ::oINI:getEnvFile() )
    ENDIF
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*------------------------------------------------------------------------*/
 
 METHOD IdeEnvironments:destroy()
 
@@ -151,7 +128,7 @@ METHOD IdeEnvironments:destroy()
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*------------------------------------------------------------------------*/
 
 METHOD IdeEnvironments:parse( cEnvFile )
    LOCAL s, cPart, cEnv, a_, cKey, cVal
@@ -200,7 +177,7 @@ METHOD IdeEnvironments:parse( cEnvFile )
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*------------------------------------------------------------------------*/
 
 METHOD IdeEnvironments:getHbmk2Commands( cEnvName )
    LOCAL n, s, a_, aCmd := {}
@@ -216,7 +193,7 @@ METHOD IdeEnvironments:getHbmk2Commands( cEnvName )
 
    RETURN aCmd
 
-/*----------------------------------------------------------------------*/
+/*------------------------------------------------------------------------*/
 
 METHOD IdeEnvironments:prepareBatch( cEnvName )
    LOCAL n, s, a_, aCmd := {}
@@ -232,7 +209,7 @@ METHOD IdeEnvironments:prepareBatch( cEnvName )
 
    RETURN hbide_getShellCommandsTempFile( aCmd )
 
-/*----------------------------------------------------------------------*/
+/*------------------------------------------------------------------------*/
 
 METHOD IdeEnvironments:show()
 
@@ -241,87 +218,31 @@ METHOD IdeEnvironments:show()
 
       ::oEnvironDock:oWidget:setWidget( ::oUI )
 
-      ::oUI:q_buttonPathMk2:setIcon( hbide_image( "folder" ) )
-      ::oUI:q_buttonPathEnv:setIcon( hbide_image( "folder" ) )
-
       ::oUI:signal( "buttonCn"      , "clicked()", {|| ::oEnvironDock:hide() } )
       ::oUI:signal( "buttonSave"    , "clicked()", {|| ::saveEnv()    } )
       ::oUI:signal( "buttonSaveExit", "clicked()", {|| ::saveEnv(), ::oEnvironDock:hide() } )
-      ::oUI:signal( "buttonPathMk2" , "clicked()", {|| ::execEnv( 1 ) } )
-      ::oUI:signal( "buttonPathEnv" , "clicked()", {|| ::execEnv( 2 ) } )
 
       ::oUI:q_editCompilers:setFont( ::oFont:oWidget )
-
-      #if 0
-      ::oUI:q_editPathEnv:setFont( ::oFont:oWidget )
-      ::oUI:q_editPathMk2:setFont( ::oFont:oWidget )
-      #endif
    ENDIF
-
-   ::oUI:q_editPathMk2  :setText( ::oINI:cPathMk2 )
-   ::oUI:q_editPathEnv  :setText( ::oINI:cPathEnv )
-   ::oUI:q_editCompilers:setPlainText( hb_memoread( hbide_pathFile( ::oINI:cPathEnv, "hbide.env" ) ) )
+   ::oUI:q_editCompilers:setPlainText( hb_memoread( ::oINI:getEnvFile() ) )
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
-
-METHOD IdeEnvironments:execEnv( nMode, p )
-   LOCAL cPath, cP
-
-   HB_SYMBOL_UNUSED( p )
-
-   DO CASE
-   CASE nMode == 1
-      cPath := hbide_fetchAFile( ::oDlg, "Select location of hbmk2", ;
-                                   { { "Harbour Projects Builder - hbmk2", "*" } }, ::cWrkPathMK2 )
-      IF !empty( cPath )
-         hb_fNameSplit( cPath, @cP )
-         ::oIde:cWrkPathMK2 := cP
-         ::oUI:q_editPathMk2:setText( hbide_pathStripLastSlash( cP ) )
-      ENDIF
-
-   CASE nMode == 2
-      cPath := hbide_fetchAFile( ::oDlg, "Select location of hbide.env", ;
-                                   { { "Harbour Projects", "*.env" } }, ::cWrkPathEnv )
-      IF !empty( cPath )
-         hb_fNameSplit( cPath, @cP )
-         ::oIDE:cWrkPathEnv := cP
-         ::oUI:q_editPathEnv:setText( cP ) // hbide_pathStripLastSlash( cP ) )
-
-         ::oUI:q_editCompilers:setPlainText( ;
-             hb_memoread( hbide_pathFile( ::oUI:q_editPathEnv:text(), "hbide.env" ) ) )
-      ENDIF
-
-   ENDCASE
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
+/*------------------------------------------------------------------------*/
 
 METHOD IdeEnvironments:saveEnv()
-   LOCAL cText, cPathMk2, cPathEnv, cEnvFile
-   LOCAL oUIEnv := ::oUI
+   LOCAL cText
 
-   cPathMk2 := oUIEnv:q_editPathMk2:text()
-   cPathEnv := oUIEnv:q_editPathEnv:text()
-
-   ::oIDE:oINI:cPathMk2 := cPathMk2
-   ::oIDE:oINI:cPathEnv := cPathEnv
-   //
-   ::oIDE:cWrkPathMk2 := cPathMk2
-   ::oIDE:cWrkPathEnv := cPathEnv
-
-   IF !empty( cText := oUIEnv:q_editCompilers:toPlainText() )
-      cEnvFile := hbide_pathFile( cPathEnv, "hbide.env" )
-      hb_MemoWrit( cEnvFile, cText )
-
-      ::parse( cEnvFile )
+   IF !empty( cText := ::oUI:q_editCompilers:toPlainText() )
+      hb_MemoWrit( ::oINI:getEnvFile(), cText )
+      ::parse( ::oINI:getEnvFile() )
    ENDIF
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*------------------------------------------------------------------------*/
+//                 New Interface to Environments : TODO
+/*------------------------------------------------------------------------*/
 
 METHOD IdeEnvironments:fetchNew()
 
@@ -333,4 +254,4 @@ METHOD IdeEnvironments:fetchNew()
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*------------------------------------------------------------------------*/

@@ -865,20 +865,20 @@
       <property name="geometry">
        <rect>
         <x>14</x>
-        <y>72</y>
-        <width>89</width>
+        <y>86</y>
+        <width>259</width>
         <height>16</height>
        </rect>
       </property>
       <property name="text">
-       <string>hbmk2 executable</string>
+       <string>hbmk2 executable ( D: _harbour_root_bin_hbmk2 )</string>
       </property>
      </widget>
      <widget class="QLineEdit" name="editPathHbmk2">
       <property name="geometry">
        <rect>
         <x>14</x>
-        <y>88</y>
+        <y>102</y>
         <width>259</width>
         <height>20</height>
        </rect>
@@ -888,20 +888,20 @@
       <property name="geometry">
        <rect>
         <x>14</x>
-        <y>122</y>
-        <width>139</width>
+        <y>278</y>
+        <width>259</width>
         <height>16</height>
        </rect>
       </property>
       <property name="text">
-       <string>Snippets ( hbide.skl )</string>
+       <string>Snippets ( D: _ini_path_hbide.skl )</string>
       </property>
      </widget>
      <widget class="QLineEdit" name="editPathSnippets">
       <property name="geometry">
        <rect>
         <x>14</x>
-        <y>140</y>
+        <y>296</y>
         <width>259</width>
         <height>20</height>
        </rect>
@@ -911,20 +911,20 @@
       <property name="geometry">
        <rect>
         <x>14</x>
-        <y>176</y>
-        <width>197</width>
+        <y>200</y>
+        <width>261</width>
         <height>16</height>
        </rect>
       </property>
       <property name="text">
-       <string>Environments ( hbide.env )</string>
+       <string>Environments ( D: _ini_path_hbide.env )</string>
       </property>
      </widget>
      <widget class="QLineEdit" name="editPathEnv">
       <property name="geometry">
        <rect>
         <x>14</x>
-        <y>194</y>
+        <y>218</y>
         <width>261</width>
         <height>20</height>
        </rect>
@@ -934,7 +934,7 @@
       <property name="geometry">
        <rect>
         <x>14</x>
-        <y>18</y>
+        <y>12</y>
         <width>99</width>
         <height>16</height>
        </rect>
@@ -947,7 +947,7 @@
       <property name="geometry">
        <rect>
         <x>14</x>
-        <y>34</y>
+        <y>28</y>
         <width>259</width>
         <height>20</height>
        </rect>
@@ -957,20 +957,20 @@
       <property name="geometry">
        <rect>
         <x>14</x>
-        <y>232</y>
-        <width>143</width>
+        <y>238</y>
+        <width>257</width>
         <height>16</height>
        </rect>
       </property>
       <property name="text">
-       <string>Shortcuts ( hbide.scu )</string>
+       <string>Shortcuts ( D: _ini_path_hbide.scu )</string>
       </property>
      </widget>
      <widget class="QLineEdit" name="editPathShortcuts">
       <property name="geometry">
        <rect>
         <x>14</x>
-        <y>250</y>
+        <y>256</y>
         <width>261</width>
         <height>20</height>
        </rect>
@@ -980,45 +980,32 @@
       <property name="geometry">
        <rect>
         <x>14</x>
-        <y>290</y>
-        <width>183</width>
+        <y>318</y>
+        <width>259</width>
         <height>16</height>
        </rect>
       </property>
       <property name="text">
-       <string>Syntax Themes ( hbide.thm )</string>
+       <string>Syntax Themes ( D: _ini_path_hbide.hbt )</string>
       </property>
      </widget>
      <widget class="QLineEdit" name="editPathThemes">
       <property name="geometry">
        <rect>
         <x>14</x>
-        <y>308</y>
+        <y>336</y>
         <width>261</width>
         <height>20</height>
        </rect>
-      </property>
-     </widget>
-     <widget class="QToolButton" name="buttonPathIni">
-      <property name="geometry">
-       <rect>
-        <x>284</x>
-        <y>34</y>
-        <width>25</width>
-        <height>20</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>...</string>
       </property>
      </widget>
      <widget class="QToolButton" name="buttonPathHbmk2">
       <property name="geometry">
        <rect>
         <x>284</x>
-        <y>88</y>
+        <y>102</y>
         <width>25</width>
-        <height>20</height>
+        <height>21</height>
        </rect>
       </property>
       <property name="text">
@@ -1029,7 +1016,7 @@
       <property name="geometry">
        <rect>
         <x>284</x>
-        <y>140</y>
+        <y>296</y>
         <width>25</width>
         <height>20</height>
        </rect>
@@ -1042,7 +1029,7 @@
       <property name="geometry">
        <rect>
         <x>284</x>
-        <y>194</y>
+        <y>218</y>
         <width>25</width>
         <height>20</height>
        </rect>
@@ -1055,7 +1042,7 @@
       <property name="geometry">
        <rect>
         <x>284</x>
-        <y>250</y>
+        <y>256</y>
         <width>25</width>
         <height>20</height>
        </rect>
@@ -1068,7 +1055,7 @@
       <property name="geometry">
        <rect>
         <x>284</x>
-        <y>308</y>
+        <y>336</y>
         <width>25</width>
         <height>20</height>
        </rect>
@@ -1077,11 +1064,11 @@
        <string>...</string>
       </property>
      </widget>
-     <widget class="QToolButton" name="toolButton">
+     <widget class="QToolButton" name="buttonViewIni">
       <property name="geometry">
        <rect>
         <x>314</x>
-        <y>34</y>
+        <y>28</y>
         <width>25</width>
         <height>20</height>
        </rect>
@@ -1094,7 +1081,7 @@
       <property name="geometry">
        <rect>
         <x>314</x>
-        <y>140</y>
+        <y>296</y>
         <width>25</width>
         <height>21</height>
        </rect>
@@ -1107,7 +1094,7 @@
       <property name="geometry">
        <rect>
         <x>314</x>
-        <y>194</y>
+        <y>218</y>
         <width>25</width>
         <height>20</height>
        </rect>
@@ -1120,13 +1107,121 @@
       <property name="geometry">
        <rect>
         <x>314</x>
-        <y>308</y>
+        <y>336</y>
         <width>25</width>
         <height>20</height>
        </rect>
       </property>
       <property name="text">
        <string>...</string>
+      </property>
+     </widget>
+     <widget class="QToolButton" name="buttonPathHrbRoot">
+      <property name="geometry">
+       <rect>
+        <x>284</x>
+        <y>64</y>
+        <width>25</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>...</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="editPathHrbRoot">
+      <property name="geometry">
+       <rect>
+        <x>14</x>
+        <y>64</y>
+        <width>259</width>
+        <height>20</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_27">
+      <property name="geometry">
+       <rect>
+        <x>14</x>
+        <y>48</y>
+        <width>259</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Harbour Root</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="editPathResources">
+      <property name="geometry">
+       <rect>
+        <x>14</x>
+        <y>142</y>
+        <width>259</width>
+        <height>20</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QToolButton" name="buttonPathResources">
+      <property name="geometry">
+       <rect>
+        <x>284</x>
+        <y>142</y>
+        <width>25</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>...</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_28">
+      <property name="geometry">
+       <rect>
+        <x>14</x>
+        <y>126</y>
+        <width>259</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Resources ( Plugins, Images, Dialogs, Scripts, etc. )</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="editPathTemp">
+      <property name="geometry">
+       <rect>
+        <x>14</x>
+        <y>180</y>
+        <width>259</width>
+        <height>20</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QToolButton" name="buttonPathTemp">
+      <property name="geometry">
+       <rect>
+        <x>284</x>
+        <y>180</y>
+        <width>25</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>...</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_29">
+      <property name="geometry">
+       <rect>
+        <x>14</x>
+        <y>164</y>
+        <width>259</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Temporary and Transitory Files Path</string>
       </property>
      </widget>
     </widget>

@@ -70,22 +70,6 @@
 #include "hbqt.ch"
 
 /*----------------------------------------------------------------------*/
-#if 0
-#define INI_HBIDE                                 1
-#define INI_PROJECTS                              2
-#define INI_FILES                                 3
-#define INI_FIND                                  4
-#define INI_REPLACE                               5
-#define INI_RECENTFILES                           6
-#define INI_RECENTPROJECTS                        7
-#define INI_FOLDERS                               8
-#define INI_VIEWS                                 9
-#define INI_TAGGEDPROJECTS                        10
-#define INI_GENERAL                               11
-#define INI_TOOLS                                 12
-#define INI_USERTOOLBARS                          13
-#define INI_KEYWORDS                              14
-#endif
 
 #define INI_SECTIONS_COUNT                        14
 #define INI_HBIDE_VRBLS                           30
@@ -112,9 +96,15 @@ CLASS IdeINI INHERIT IdeObject
    DATA   cIdeTheme                               INIT  ""
    DATA   cIdeAnimated                            INIT  ""
    //
-   DATA   cPathMk2                                INIT  ""
+   DATA   cPathHrbRoot                            INIT  ""
+   DATA   cPathHbmk2                              INIT  ""
+   DATA   cPathResources                          INIT  ""
+   DATA   cPathTemp                               INIT  ""
    DATA   cPathEnv                                INIT  ""
-   // /* Not used yet but planned for future */
+   DATA   cPathShortcuts                          INIT  ""
+   DATA   cPathSnippets                           INIT  ""
+   DATA   cPathThemes                             INIT  ""
+
    DATA   cCurrentProject                         INIT  ""
    DATA   cCurrentTheme                           INIT  ""
    DATA   cCurrentCodec                           INIT  ""
@@ -123,8 +113,6 @@ CLASS IdeINI INHERIT IdeObject
    DATA   cCurrentFolderFind                      INIT  ""
    DATA   cCurrentReplace                         INIT  ""
    DATA   cCurrentView                            INIT  ""
-   DATA   cCurrentHarbour                         INIT  ""
-   DATA   cCurrentShortcuts                       INIT  ""
    //
    DATA   cTextFileExtensions                     INIT  ".c,.cpp,.prg,.h,.ch,.txt,.log,.ini,.env,.ppo,.qtp,.hbs," + ;
                                                         ".cc,.hbc,.hbp,.hbm,.xml,.bat,.sh,.rc,.ui,.uic,.bak,.fmg,.qth"
@@ -172,6 +160,17 @@ CLASS IdeINI INHERIT IdeObject
    METHOD load( cHbideIni )
    METHOD save( cHbideIni )
 
+   METHOD getIniPath()
+   METHOD getResourcesPath()
+   METHOD getTempPath()
+   METHOD getHarbourPath()
+   METHOD getIniFile()
+   METHOD getEnvFile()
+   METHOD getHbmk2File()
+   METHOD getSnippetsFile()
+   METHOD getShortcutsFile()
+   METHOD getThemesFile()
+
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
@@ -188,6 +187,71 @@ METHOD IdeINI:create( oIde )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
+
+METHOD IdeINI:getINIPath()
+   LOCAL cPath
+   hb_fNameSplit( ::oIde:cProjIni, @cPath )
+   RETURN cPath
+
+/*------------------------------------------------------------------------*/
+
+METHOD IdeINI:getResourcesPath()
+   LOCAL cPath := iif( empty( ::cPathResources ), ::getINIPath(), ::cPathResources )
+   RETURN iif( empty( cPath ), cPath, hbide_pathToOSPath( hbide_pathAppendLastSlash( cPath ) ) )
+
+/*------------------------------------------------------------------------*/
+
+METHOD IdeINI:getHarbourPath()
+   RETURN iif( empty( ::cPathHrbRoot ), ::cPathHrbRoot, hbide_pathToOSPath( hbide_pathAppendLastSlash( ::cPathHrbRoot ) ) )
+
+/*------------------------------------------------------------------------*/
+
+METHOD IdeINI:getTempPath()
+   RETURN hbide_pathToOSPath( ::cPathTemp )
+
+/*------------------------------------------------------------------------*/
+
+METHOD IdeINI:getINIFile()
+   RETURN hbide_pathToOSPath( hbide_pathFile( ::getINIPath(), "hbide.ini" ) )
+
+/*------------------------------------------------------------------------*/
+
+METHOD IdeINI:getHbmk2File()
+   LOCAL cFile
+
+   IF empty( ::cPathHbmk2 )
+      IF empty( cFile := hb_getenv( "HBIDE_DIR_HBMK2" ) )
+         cFile := "hbmk2"
+      ELSE
+         cFile := hbide_pathFile( cFile, "hbmk2" )
+      ENDIF
+   ELSE
+      cFile := ::cPathHbmk2
+   ENDIF
+
+   RETURN hbide_pathToOSPath( cFile )
+
+/*------------------------------------------------------------------------*/
+
+METHOD IdeINI:getEnvFile()
+   RETURN hbide_pathToOSPath( iif( empty( ::cPathEnv ), hbide_pathFile( ::getINIPath(), "hbide.skl" ), ::cPathEnv ) )
+
+/*------------------------------------------------------------------------*/
+
+METHOD IdeINI:getSnippetsFile()
+   RETURN hbide_pathToOSPath( iif( empty( ::cPathSnippets ), hbide_pathFile( ::getINIPath(), "hbide.skl" ), ::cPathSnippets ) )
+
+/*------------------------------------------------------------------------*/
+
+METHOD IdeINI:getShortcutsFile()
+   RETURN hbide_pathToOSPath( iif( empty( ::cPathShortcuts ), hbide_pathFile( ::getINIPath(), "hbide.scu" ), ::cPathShortcuts ) )
+
+/*------------------------------------------------------------------------*/
+
+METHOD IdeINI:getThemesFile()
+   RETURN hbide_pathToOSPath( iif( empty( ::cPathThemes ), hbide_pathFile( ::getINIPath(), "hbide.hbt" ), ::cPathThemes ) )
+
+/*------------------------------------------------------------------------*/
 
 METHOD IdeINI:save( cHbideIni )
    LOCAL j, nTab, pTab, n, txt_, oEdit, nTabs, nn, a_, s
@@ -218,9 +282,15 @@ METHOD IdeINI:save( cHbideIni )
    //
    aadd( txt_, "IdeTheme"                  + "=" +   ::cIdeTheme                                        )
    aadd( txt_, "IdeAnimated"               + "=" +   ::cIdeAnimated                                     )
-
-   aadd( txt_, "PathMk2"                   + "=" +   ::cPathMk2                                         )
+   //
+   aadd( txt_, "PathHrbRoot"               + "=" +   ::cPathHrbRoot                                     )
+   aadd( txt_, "PathMk2"                   + "=" +   ::cPathHbMk2                                       )
+   aadd( txt_, "PathResources"             + "=" +   ::cPathResources                                   )
+   aadd( txt_, "PathTemp"                  + "=" +   ::cPathTemp                                        )
    aadd( txt_, "PathEnv"                   + "=" +   ::cPathEnv                                         )
+   aadd( txt_, "PathShortcuts"             + "=" +   ::cPathShortcuts                                   )
+   aadd( txt_, "PathSnippets"              + "=" +   ::cPathSnippets                                    )
+   aadd( txt_, "PathThemes"                + "=" +   ::cPathThemes                                      )
    //
    aadd( txt_, "CurrentProject"            + "=" +   ::oIde:cWrkProject                                 )
    aadd( txt_, "CurrentTheme"              + "=" +   ::oIde:cWrkTheme                                   )
@@ -230,8 +300,6 @@ METHOD IdeINI:save( cHbideIni )
    aadd( txt_, "CurrentFolderFind"         + "=" +   ::oIde:cWrkFolderFind                              )
    aadd( txt_, "CurrentReplace"            + "=" +   ::oIde:cWrkReplace                                 )
    aadd( txt_, "CurrentView"               + "=" +   ::oIde:cWrkView                                    )
-   aadd( txt_, "CurrentHarbour"            + "=" +   ::oIde:cWrkHarbour                                 )
-   aadd( txt_, "CurrentShortcuts"          + "=" +   ::oIde:cPathShortcuts                              )
    aadd( txt_, "TextFileExtensions"        + "=" +   ::oINI:cTextFileExtensions                         )
    //
    aadd( txt_, "FontName"                  + "=" +   ::cFontName                                        )
@@ -488,9 +556,15 @@ METHOD IdeINI:load( cHbideIni )
                      //
                      CASE "IdeTheme"                    ; ::cIdeTheme                         := cVal ; EXIT
                      CASE "IdeAnimated"                 ; ::cIdeAnimated                      := cVal ; EXIT
-                     //          /* Subject to be identified under this object only */
-                     CASE "PathMk2"                     ; ::cPathMk2                          := cVal ; EXIT
+                     //
+                     CASE "PathHrbRoot"                 ; ::cPathHrbRoot                      := cVal ; EXIT
+                     CASE "PathMk2"                     ; ::cPathHbMk2                        := cVal ; EXIT
+                     CASE "PathResources"               ; ::cPathResources                    := cVal ; EXIT
+                     CASE "PathTemp"                    ; ::cPathTemp                         := cVal ; EXIT
                      CASE "PathEnv"                     ; ::cPathEnv                          := cVal ; EXIT
+                     CASE "PathShortcuts"               ; ::cPathShortcuts                    := cVal ; EXIT
+                     CASE "PathSnippets"                ; ::cPathSnippets                     := cVal ; EXIT
+                     CASE "PathThemes"                  ; ::cPathThemes                       := cVal ; EXIT
                      //
                      CASE "CurrentProject"              ; ::oIde:cWrkProject                  := cVal ; EXIT
                      CASE "CurrentTheme"                ; ::oIde:cWrkTheme                    := cVal ; EXIT
@@ -500,8 +574,6 @@ METHOD IdeINI:load( cHbideIni )
                      CASE "CurrentFolderFind"           ; ::oIde:cWrkFolderFind               := cVal ; EXIT
                      CASE "CurrentReplace"              ; ::oIde:cWrkReplace                  := cVal ; EXIT
                      CASE "CurrentView"                 ; ::oIde:cWrkView                     := cVal ; EXIT
-                     CASE "CurrentHarbour"              ; ::oIde:cWrkHarbour                  := cVal ; EXIT
-                     CASE "CurrentShortcuts"            ; ::oIde:cPathShortcuts               := cVal ; EXIT
                      CASE "TextFileExtensions"          ; ::oINI:cTextFileExtensions          := cVal ; EXIT
                      //
                      CASE "FontName"                    ; ::cFontName                         := cVal ; EXIT
@@ -688,19 +760,11 @@ FUNCTION hbide_getIniPath( cHbideIni )
 /*----------------------------------------------------------------------*/
 
 FUNCTION hbide_loadSkltns( oIde, cPathSkltns )
-   LOCAL cPath, s, n, cSkltn, cCode
+   LOCAL s, n, cSkltn, cCode
 
    IF empty( cPathSkltns )
-      hb_fNameSplit( oIde:cProjIni, @cPath )
-      cPath += "hbide.skl"
-
-      IF hb_fileExists( cPath )
-         cPathSkltns := cPath
-      ELSE
-         cPathSkltns := hb_dirBase() + "hbide.skl"
-      ENDIF
+      cPathSkltns := oIde:oINI:getSnippetsFile()
    ENDIF
-   oIde:cPathSkltns := cPathSkltns
 
    IF hb_fileExists( cPathSkltns )
       s := hb_memoread( cPathSkltns )
@@ -753,30 +817,16 @@ FUNCTION hbide_saveSkltns( oIde )
       aadd( txt_, "" )
    NEXT
 
-   RETURN hbide_createTarget( oIde:cPathSkltns, txt_ )
+   RETURN hbide_createTarget( oIde:oINI:getSnippetsFile(), txt_ )
 
 /*----------------------------------------------------------------------*/
 
 FUNCTION hbide_loadShortcuts( oIde, cFileShortcuts )
-   LOCAL cPath, a_:= {}
+   LOCAL a_:= {}
 
    IF empty( cFileShortcuts )
-      cFileShortcuts := oIde:cPathShortcuts
-      IF empty( cFileShortcuts )
-         cFileShortcuts := oIde:cProjIni
-      ENDIF
-
-      hb_fNameSplit( cFileShortcuts, @cPath )
-      cPath += "hbide.scu"
-
-      IF hb_fileExists( cPath )
-         cFileShortcuts := cPath
-      ELSE
-         cFileShortcuts := hb_dirBase() + "hbide.scu"
-      ENDIF
+      cFileShortcuts := oIde:oINI:getShortcutsFile()
    ENDIF
-   oIde:cPathShortcuts := cFileShortcuts
-
    IF hb_fileExists( cFileShortcuts )
       a_:= hb_deSerialize( hb_memoread( cFileShortcuts ) )
    ENDIF
@@ -786,24 +836,10 @@ FUNCTION hbide_loadShortcuts( oIde, cFileShortcuts )
 /*----------------------------------------------------------------------*/
 
 FUNCTION hbide_saveShortcuts( oIde, a_, cFileShortcuts )
-   LOCAL cPath
 
    IF empty( cFileShortcuts )
-      cFileShortcuts := oIde:cPathShortcuts
-      IF empty( cFileShortcuts )
-         cFileShortcuts := oIde:cProjIni
-      ENDIF
-
-      hb_fNameSplit( cFileShortcuts, @cPath )
-      cPath += "hbide.scu"
-
-      IF hb_fileExists( cPath )
-         cFileShortcuts := cPath
-      ELSE
-         cFileShortcuts := hb_dirBase() + "hbide.scu"
-      ENDIF
+      cFileShortcuts := oIde:oINI:getShortcutsFile()
    ENDIF
-
    hb_memowrit( cFileShortcuts, hb_serialize( a_ ) )
 
    RETURN hb_fileExists( cFileShortcuts )
@@ -814,7 +850,7 @@ FUNCTION hbide_loadHarbourProtos( oIde )
 
    HB_SYMBOL_UNUSED( oIde )
 
-   RETURN hbide_harbourProtos()
+   RETURN NIL //hbide_harbourProtos()
 
 /*------------------------------------------------------------------------*/
 
@@ -869,6 +905,7 @@ CLASS IdeSetup INHERIT IdeObject
    DATA   aKeyItems                               INIT {}
 
    DATA   nCurThemeSlot                           INIT 0
+   DATA   aHilighters                             INIT {}
 
    METHOD new( oIde )
    METHOD create( oIde )
@@ -892,6 +929,7 @@ CLASS IdeSetup INHERIT IdeObject
    METHOD pushThemeColors( nTheme )
    METHOD pushThemesData()
    METHOD getThemeData( nTheme )
+   METHOD viewIt( cFileName, lSaveAs, lSave, lReadOnly, lApplyHiliter )
 
    ENDCLASS
 
@@ -937,12 +975,20 @@ METHOD IdeSetup:setIcons()
    ::oUI:q_buttonKeyUp         : setIcon( hbide_image( "dc_up"     ) )
    ::oUI:q_buttonKeyDown       : setIcon( hbide_image( "dc_down"   ) )
 
-   ::oUI:q_buttonPathIni       : setIcon( hbide_image( "open"      ) )
+   /* Paths */
+   ::oUI:q_buttonPathHrbRoot   : setIcon( hbide_image( "open"      ) )
    ::oUI:q_buttonPathHbmk2     : setIcon( hbide_image( "open"      ) )
-   ::oUI:q_buttonPathSnippets  : setIcon( hbide_image( "open"      ) )
    ::oUI:q_buttonPathEnv       : setIcon( hbide_image( "open"      ) )
+   ::oUI:q_buttonPathResources : setIcon( hbide_image( "open"      ) )
+   ::oUI:q_buttonPathTemp      : setIcon( hbide_image( "open"      ) )
    ::oUI:q_buttonPathShortcuts : setIcon( hbide_image( "open"      ) )
+   ::oUI:q_buttonPathSnippets  : setIcon( hbide_image( "open"      ) )
    ::oUI:q_buttonPathThemes    : setIcon( hbide_image( "open"      ) )
+
+   ::oUI:q_buttonViewIni       : setIcon( hbide_image( "file-open" ) )
+   ::oUI:q_buttonViewEnv       : setIcon( hbide_image( "file-open" ) )
+   ::oUI:q_buttonViewSnippets  : setIcon( hbide_image( "file-open" ) )
+   ::oUI:q_buttonViewThemes    : setIcon( hbide_image( "file-open" ) )
 
    ::oUI:q_buttonSelFont       : setIcon( hbide_image( "font"      ) )
 
@@ -957,45 +1003,59 @@ METHOD IdeSetup:setIcons()
 
 METHOD IdeSetup:disConnectSlots()
 
-   ::disconnect( ::oUI:q_buttonAddTextExt, "clicked()"                )
-   ::disconnect( ::oUI:q_buttonDelTextExt, "clicked()"                )
+   ::disconnect( ::oUI:q_buttonAddTextExt    , "clicked()"                )
+   ::disconnect( ::oUI:q_buttonDelTextExt    , "clicked()"                )
 
-   ::disconnect( ::oUI:q_buttonKeyAdd    , "clicked()"                )
-   ::disconnect( ::oUI:q_buttonKeyDel    , "clicked()"                )
-   ::disconnect( ::oUI:q_buttonKeyUp     , "clicked()"                )
-   ::disconnect( ::oUI:q_buttonKeyDown   , "clicked()"                )
+   ::disconnect( ::oUI:q_buttonKeyAdd        , "clicked()"                )
+   ::disconnect( ::oUI:q_buttonKeyDel        , "clicked()"                )
+   ::disconnect( ::oUI:q_buttonKeyUp         , "clicked()"                )
+   ::disconnect( ::oUI:q_buttonKeyDown       , "clicked()"                )
 
-   ::disconnect( ::oUI:q_tableVar        , "itemActivated(QTblWItem)" )
+   ::disconnect( ::oUI:q_tableVar            , "itemActivated(QTblWItem)" )
 
-   ::disconnect( ::oUI:q_buttonSelFont   , "clicked()"                )
-   ::disConnect( ::oUI:q_buttonClose     , "clicked()"                )
-   ::disConnect( ::oUI:q_buttonOK        , "clicked()"                )
-   ::disConnect( ::oUI:q_buttonCancel    , "clicked()"                )
-   ::disConnect( ::oUI:q_treeWidget      , "itemSelectionChanged()"   )
-   ::disconnect( ::oUI:q_comboStyle      , "currentIndexChanged(int)" )
+   ::disconnect( ::oUI:q_buttonSelFont       , "clicked()"                )
+   ::disConnect( ::oUI:q_buttonClose         , "clicked()"                )
+   ::disConnect( ::oUI:q_buttonOK            , "clicked()"                )
+   ::disConnect( ::oUI:q_buttonCancel        , "clicked()"                )
+   ::disConnect( ::oUI:q_treeWidget          , "itemSelectionChanged()"   )
+   ::disconnect( ::oUI:q_comboStyle          , "currentIndexChanged(int)" )
 
-   ::disconnect( ::oUI:q_checkAnimated   , "stateChanged(int)"        )
+   ::disconnect( ::oUI:q_checkAnimated       , "stateChanged(int)"        )
 
-   ::disconnect( ::oUI:q_checkHilightLine, "stateChanged(int)"        )
-   ::disconnect( ::oUI:q_checkHorzRuler  , "stateChanged(int)"        )
-   ::disconnect( ::oUI:q_checkLineNumbers, "stateChanged(int)"        )
+   ::disconnect( ::oUI:q_checkHilightLine    , "stateChanged(int)"        )
+   ::disconnect( ::oUI:q_checkHorzRuler      , "stateChanged(int)"        )
+   ::disconnect( ::oUI:q_checkLineNumbers    , "stateChanged(int)"        )
 
-   ::disconnect( ::oUI:q_sliderRed       , "valueChanged(int)"        )
-   ::disconnect( ::oUI:q_sliderGreen     , "valueChanged(int)"        )
-   ::disconnect( ::oUI:q_sliderBlue      , "valueChanged(int)"        )
+   ::disconnect( ::oUI:q_sliderRed           , "valueChanged(int)"        )
+   ::disconnect( ::oUI:q_sliderGreen         , "valueChanged(int)"        )
+   ::disconnect( ::oUI:q_sliderBlue          , "valueChanged(int)"        )
 
-   ::disconnect( ::oUI:q_radioSec1       , "clicked()"                )
-   ::disconnect( ::oUI:q_radioSec2       , "clicked()"                )
-   ::disconnect( ::oUI:q_radioSec3       , "clicked()"                )
-   ::disconnect( ::oUI:q_radioSec4       , "clicked()"                )
-   ::disconnect( ::oUI:q_radioSec5       , "clicked()"                )
+   ::disconnect( ::oUI:q_radioSec1           , "clicked()"                )
+   ::disconnect( ::oUI:q_radioSec2           , "clicked()"                )
+   ::disconnect( ::oUI:q_radioSec3           , "clicked()"                )
+   ::disconnect( ::oUI:q_radioSec4           , "clicked()"                )
+   ::disconnect( ::oUI:q_radioSec5           , "clicked()"                )
 
-   ::disconnect( ::oUI:q_buttonThmAdd    , "clicked()"                )
-   ::disconnect( ::oUI:q_buttonThmDel    , "clicked()"                )
-   ::disconnect( ::oUI:q_buttonThmApp    , "clicked()"                )
-   ::disconnect( ::oUI:q_buttonThmSav    , "clicked()"                )
+   ::disconnect( ::oUI:q_buttonThmAdd        , "clicked()"                )
+   ::disconnect( ::oUI:q_buttonThmDel        , "clicked()"                )
+   ::disconnect( ::oUI:q_buttonThmApp        , "clicked()"                )
+   ::disconnect( ::oUI:q_buttonThmSav        , "clicked()"                )
 
-   ::disconnect( ::oUI:q_listThemes      , "currentRowChanged(int)"   )
+   ::disconnect( ::oUI:q_listThemes          , "currentRowChanged(int)"   )
+
+   ::disconnect( ::oUI:q_buttonPathHrbRoot   , "clicked()"                )
+   ::disconnect( ::oUI:q_buttonPathHbmk2     , "clicked()"                )
+   ::disconnect( ::oUI:q_buttonPathEnv       , "clicked()"                )
+   ::disconnect( ::oUI:q_buttonPathResources , "clicked()"                )
+   ::disconnect( ::oUI:q_buttonPathTemp      , "clicked()"                )
+   ::disconnect( ::oUI:q_buttonPathShortcuts , "clicked()"                )
+   ::disconnect( ::oUI:q_buttonPathSnippets  , "clicked()"                )
+   ::disconnect( ::oUI:q_buttonPathThemes    , "clicked()"                )
+
+   ::disconnect( ::oUI:q_buttonViewIni       , "clicked()"                )
+   ::disconnect( ::oUI:q_buttonViewEnv       , "clicked()"                )
+   ::disconnect( ::oUI:q_buttonViewSnippets  , "clicked()"                )
+   ::disconnect( ::oUI:q_buttonViewThemes    , "clicked()"                )
 
    RETURN Self
 
@@ -1003,45 +1063,59 @@ METHOD IdeSetup:disConnectSlots()
 
 METHOD IdeSetup:connectSlots()
 
-   ::connect( ::oUI:q_buttonAddTextExt, "clicked()"               , {| | ::execEvent( "buttonAddTextext_clicked"          ) } )
-   ::connect( ::oUI:q_buttonDelTextExt, "clicked()"               , {| | ::execEvent( "buttonDelTextext_clicked"          ) } )
+   ::connect( ::oUI:q_buttonAddTextExt    , "clicked()"               , {| | ::execEvent( "buttonAddTextext_clicked"          ) } )
+   ::connect( ::oUI:q_buttonDelTextExt    , "clicked()"               , {| | ::execEvent( "buttonDelTextext_clicked"          ) } )
 
-   ::connect( ::oUI:q_buttonKeyAdd    , "clicked()"               , {| | ::execEvent( "buttonKeyAdd_clicked"              ) } )
-   ::connect( ::oUI:q_buttonKeyDel    , "clicked()"               , {| | ::execEvent( "buttonKeyDel_clicked"              ) } )
-   ::connect( ::oUI:q_buttonKeyUp     , "clicked()"               , {| | ::execEvent( "buttonKeyUp_clicked"               ) } )
-   ::connect( ::oUI:q_buttonKeyDown   , "clicked()"               , {| | ::execEvent( "buttonKeyDown_clicked"             ) } )
+   ::connect( ::oUI:q_buttonKeyAdd        , "clicked()"               , {| | ::execEvent( "buttonKeyAdd_clicked"              ) } )
+   ::connect( ::oUI:q_buttonKeyDel        , "clicked()"               , {| | ::execEvent( "buttonKeyDel_clicked"              ) } )
+   ::connect( ::oUI:q_buttonKeyUp         , "clicked()"               , {| | ::execEvent( "buttonKeyUp_clicked"               ) } )
+   ::connect( ::oUI:q_buttonKeyDown       , "clicked()"               , {| | ::execEvent( "buttonKeyDown_clicked"             ) } )
 
-   ::connect( ::oUI:q_tableVar        , "itemActivated(QTblWItem)", {|p| ::execEvent( "tableVar_keyPress", p              ) } )
+   ::connect( ::oUI:q_tableVar            , "itemActivated(QTblWItem)", {|p| ::execEvent( "tableVar_keyPress", p              ) } )
 
-   ::connect( ::oUI:q_buttonSelFont   , "clicked()"               , {| | ::execEvent( "buttonSelFont_clicked"             ) } )
-   ::connect( ::oUI:q_buttonClose     , "clicked()"               , {| | ::execEvent( "buttonClose_clicked"               ) } )
-   ::connect( ::oUI:q_buttonOk        , "clicked()"               , {| | ::execEvent( "buttonOk_clicked"                  ) } )
-   ::connect( ::oUI:q_buttonCancel    , "clicked()"               , {| | ::execEvent( "buttonCancel_clicked"              ) } )
-   ::connect( ::oUI:q_treeWidget      , "itemSelectionChanged()"  , {| | ::execEvent( "treeWidget_itemSelectionChanged"   ) } )
-   ::connect( ::oUI:q_comboStyle      , "currentIndexChanged(int)", {|i| ::execEvent( "comboStyle_currentIndexChanged", i ) } )
+   ::connect( ::oUI:q_buttonSelFont       , "clicked()"               , {| | ::execEvent( "buttonSelFont_clicked"             ) } )
+   ::connect( ::oUI:q_buttonClose         , "clicked()"               , {| | ::execEvent( "buttonClose_clicked"               ) } )
+   ::connect( ::oUI:q_buttonOk            , "clicked()"               , {| | ::execEvent( "buttonOk_clicked"                  ) } )
+   ::connect( ::oUI:q_buttonCancel        , "clicked()"               , {| | ::execEvent( "buttonCancel_clicked"              ) } )
+   ::connect( ::oUI:q_treeWidget          , "itemSelectionChanged()"  , {| | ::execEvent( "treeWidget_itemSelectionChanged"   ) } )
+   ::connect( ::oUI:q_comboStyle          , "currentIndexChanged(int)", {|i| ::execEvent( "comboStyle_currentIndexChanged", i ) } )
 
-   ::connect( ::oUI:q_checkAnimated   , "stateChanged(int)"       , {|i| ::execEvent( "checkAnimated_stateChanged", i     ) } )
+   ::connect( ::oUI:q_checkAnimated       , "stateChanged(int)"       , {|i| ::execEvent( "checkAnimated_stateChanged", i     ) } )
 
-   ::connect( ::oUI:q_checkHilightLine, "stateChanged(int)"       , {|i| ::execEvent( "checkHilightLine_stateChanged", i  ) } )
-   ::connect( ::oUI:q_checkHorzRuler  , "stateChanged(int)"       , {|i| ::execEvent( "checkHorzRuler_stateChanged"  , i  ) } )
-   ::connect( ::oUI:q_checkLineNumbers, "stateChanged(int)"       , {|i| ::execEvent( "checkLineNumbers_stateChanged", i  ) } )
+   ::connect( ::oUI:q_checkHilightLine    , "stateChanged(int)"       , {|i| ::execEvent( "checkHilightLine_stateChanged", i  ) } )
+   ::connect( ::oUI:q_checkHorzRuler      , "stateChanged(int)"       , {|i| ::execEvent( "checkHorzRuler_stateChanged"  , i  ) } )
+   ::connect( ::oUI:q_checkLineNumbers    , "stateChanged(int)"       , {|i| ::execEvent( "checkLineNumbers_stateChanged", i  ) } )
 
-   ::connect( ::oUI:q_sliderRed       , "valueChanged(int)"       , {|i| ::execEvent( "sliderValue_changed", i, "R"       ) } )
-   ::connect( ::oUI:q_sliderGreen     , "valueChanged(int)"       , {|i| ::execEvent( "sliderValue_changed", i, "G"       ) } )
-   ::connect( ::oUI:q_sliderBlue      , "valueChanged(int)"       , {|i| ::execEvent( "sliderValue_changed", i, "B"       ) } )
+   ::connect( ::oUI:q_sliderRed           , "valueChanged(int)"       , {|i| ::execEvent( "sliderValue_changed", i, "R"       ) } )
+   ::connect( ::oUI:q_sliderGreen         , "valueChanged(int)"       , {|i| ::execEvent( "sliderValue_changed", i, "G"       ) } )
+   ::connect( ::oUI:q_sliderBlue          , "valueChanged(int)"       , {|i| ::execEvent( "sliderValue_changed", i, "B"       ) } )
 
-   ::connect( ::oUI:q_radioSec1       , "clicked()"               , {| | ::execEvent( "radioSection_clicked", 1           ) } )
-   ::connect( ::oUI:q_radioSec2       , "clicked()"               , {| | ::execEvent( "radioSection_clicked", 2           ) } )
-   ::connect( ::oUI:q_radioSec3       , "clicked()"               , {| | ::execEvent( "radioSection_clicked", 3           ) } )
-   ::connect( ::oUI:q_radioSec4       , "clicked()"               , {| | ::execEvent( "radioSection_clicked", 4           ) } )
-   ::connect( ::oUI:q_radioSec5       , "clicked()"               , {| | ::execEvent( "radioSection_clicked", 5           ) } )
+   ::connect( ::oUI:q_radioSec1           , "clicked()"               , {| | ::execEvent( "radioSection_clicked", 1           ) } )
+   ::connect( ::oUI:q_radioSec2           , "clicked()"               , {| | ::execEvent( "radioSection_clicked", 2           ) } )
+   ::connect( ::oUI:q_radioSec3           , "clicked()"               , {| | ::execEvent( "radioSection_clicked", 3           ) } )
+   ::connect( ::oUI:q_radioSec4           , "clicked()"               , {| | ::execEvent( "radioSection_clicked", 4           ) } )
+   ::connect( ::oUI:q_radioSec5           , "clicked()"               , {| | ::execEvent( "radioSection_clicked", 5           ) } )
 
-   ::connect( ::oUI:q_buttonThmAdd    , "clicked()"               , {| | ::execEvent( "buttonThmAdd_clicked"              ) } )
-   ::connect( ::oUI:q_buttonThmDel    , "clicked()"               , {| | ::execEvent( "buttonThmDel_clicked"              ) } )
-   ::connect( ::oUI:q_buttonThmApp    , "clicked()"               , {| | ::execEvent( "buttonThmApp_clicked"              ) } )
-   ::connect( ::oUI:q_buttonThmSav    , "clicked()"               , {| | ::execEvent( "buttonThmSav_clicked"              ) } )
+   ::connect( ::oUI:q_buttonThmAdd        , "clicked()"               , {| | ::execEvent( "buttonThmAdd_clicked"              ) } )
+   ::connect( ::oUI:q_buttonThmDel        , "clicked()"               , {| | ::execEvent( "buttonThmDel_clicked"              ) } )
+   ::connect( ::oUI:q_buttonThmApp        , "clicked()"               , {| | ::execEvent( "buttonThmApp_clicked"              ) } )
+   ::connect( ::oUI:q_buttonThmSav        , "clicked()"               , {| | ::execEvent( "buttonThmSav_clicked"              ) } )
 
-   ::connect( ::oUI:q_listThemes      , "currentRowChanged(int)"  , {|i| ::execEvent( "listThemes_currentRowChanged", i   ) } )
+   ::connect( ::oUI:q_listThemes          , "currentRowChanged(int)"  , {|i| ::execEvent( "listThemes_currentRowChanged", i   ) } )
+
+   ::connect( ::oUI:q_buttonPathHrbRoot   , "clicked()"               , {| | ::execEvent( "buttonHrbRoot_clicked"             ) } )
+   ::connect( ::oUI:q_buttonPathHbmk2     , "clicked()"               , {| | ::execEvent( "buttonHbmk2_clicked"               ) } )
+   ::connect( ::oUI:q_buttonPathEnv       , "clicked()"               , {| | ::execEvent( "buttonEnv_clicked"                 ) } )
+   ::connect( ::oUI:q_buttonPathResources , "clicked()"               , {| | ::execEvent( "buttonResources_clicked"           ) } )
+   ::connect( ::oUI:q_buttonPathTemp      , "clicked()"               , {| | ::execEvent( "buttonTemp_clicked"                ) } )
+   ::connect( ::oUI:q_buttonPathShortcuts , "clicked()"               , {| | ::execEvent( "buttonShortcuts_clicked"           ) } )
+   ::connect( ::oUI:q_buttonPathSnippets  , "clicked()"               , {| | ::execEvent( "buttonSnippets_clicked"            ) } )
+   ::connect( ::oUI:q_buttonPathThemes    , "clicked()"               , {| | ::execEvent( "buttonThemes_clicked"              ) } )
+
+   ::connect( ::oUI:q_buttonViewIni       , "clicked()"               , {| | ::execEvent( "buttonViewIni_clicked"             ) } )
+   ::connect( ::oUI:q_buttonViewEnv       , "clicked()"               , {| | ::execEvent( "buttonViewEnv_clicked"             ) } )
+   ::connect( ::oUI:q_buttonViewSnippets  , "clicked()"               , {| | ::execEvent( "buttonViewSnippets_clicked"        ) } )
+   ::connect( ::oUI:q_buttonViewThemes    , "clicked()"               , {| | ::execEvent( "buttonViewThemes_clicked"          ) } )
 
    RETURN Self
 
@@ -1050,11 +1124,11 @@ METHOD IdeSetup:connectSlots()
 METHOD IdeSetup:retrieve()
    LOCAL a_, i, s, qItm
 
-   ::oINI:cLineEndingMode := iif( ::oUI:q_radioLineEndCRLF : isChecked(), "CRLF", ;
-                             iif( ::oUI:q_radioLineEndCR   : isChecked(), "CR"  , ;
-                             iif( ::oUI:q_radioLineEndLF   : isChecked(), "LF"  , ;
-                             iif( ::oUI:q_radioLineEndOS   : isChecked(), "OS"  , ;
-                             iif( ::oUI:q_radioLineEndAuto : isChecked(), "AUTO", "CRLF" ) ) ) ) )
+   ::oINI:cLineEndingMode          := iif( ::oUI:q_radioLineEndCRLF : isChecked(), "CRLF", ;
+                                      iif( ::oUI:q_radioLineEndCR   : isChecked(), "CR"  , ;
+                                      iif( ::oUI:q_radioLineEndLF   : isChecked(), "LF"  , ;
+                                      iif( ::oUI:q_radioLineEndOS   : isChecked(), "OS"  , ;
+                                      iif( ::oUI:q_radioLineEndAuto : isChecked(), "AUTO", "CRLF" ) ) ) ) )
 
    ::oINI:lTrimTrailingBlanks      := ::oUI:q_checkTrimTrailingBlanks      : isChecked()
    ::oINI:lSaveSourceWhenComp      := ::oUI:q_checkSaveSourceWhenComp      : isChecked()
@@ -1080,11 +1154,21 @@ METHOD IdeSetup:retrieve()
    s := substr( s, 1, len( s ) - 1 )
    ::oINI:cTextFileExtensions := s
 
-   ::oINI:nTmpBkpPrd          := val( ::oUI:q_editTmpBkpPrd : text() )
-   ::oINI:cBkpPath            := ::oUI:q_editBkpPath        : text()
-   ::oINI:cBkpSuffix          := ::oUI:q_editBkpSuffix      : text()
-   ::oINI:lCompletionWithArgs := ::oUI:q_checkListlWithArgs : isChecked()
-   ::oINI:lCompleteArgumented := ::oUI:q_checkCmplInclArgs  : isChecked()
+   ::oINI:nTmpBkpPrd               := val( ::oUI:q_editTmpBkpPrd : text() )
+   ::oINI:cBkpPath                 := ::oUI:q_editBkpPath        : text()
+   ::oINI:cBkpSuffix               := ::oUI:q_editBkpSuffix      : text()
+   ::oINI:lCompletionWithArgs      := ::oUI:q_checkListlWithArgs : isChecked()
+   ::oINI:lCompleteArgumented      := ::oUI:q_checkCmplInclArgs  : isChecked()
+
+   /* Paths */
+   ::oINI:cPathHrbRoot             := ::oUI:q_editPathHrbRoot    : text()
+   ::oINI:cPathHbMk2               := ::oUI:q_editPathHbMk2      : text()
+   ::oINI:cPathResources           := ::oUI:q_editPathResources  : text()
+   ::oINI:cPathTemp                := ::oUI:q_editPathTemp       : text()
+   ::oINI:cPathEnv                 := ::oUI:q_editPathEnv        : text()
+   ::oINI:cPathShortcuts           := ::oUI:q_editPathShortcuts  : text()
+   ::oINI:cPathSnippets            := ::oUI:q_editPathSnippets   : text()
+   ::oINI:cPathThemes              := ::oUI:q_editPathThemes     : text()
 
    RETURN Self
 
@@ -1121,6 +1205,19 @@ METHOD IdeSetup:populate()
    ::oUI:q_editTabSpaces                : setText( hb_ntos( ::oIde:nTabSpaces    )        )
    ::oUI:q_editIndentSpaces             : setText( hb_ntos( ::oINI:nIndentSpaces )        )
 
+   /* Paths */
+   ::oUI:q_editPathIni                  : setText( ::oIde:cProjIni       )
+   //
+   ::oUI:q_editPathHrbRoot              : setText( ::oINI:cPathHrbRoot   )
+   ::oUI:q_editPathHbMk2                : setText( ::oINI:cPathHbMk2     )
+   ::oUI:q_editPathResources            : setText( ::oINI:cPathResources )
+   ::oUI:q_editPathTemp                 : setText( ::oINI:cPathTemp      )
+   ::oUI:q_editPathEnv                  : setText( ::oINI:cPathEnv       )
+   ::oUI:q_editPathShortcuts            : setText( ::oINI:cPathShortcuts )
+   ::oUI:q_editPathSnippets             : setText( ::oINI:cPathSnippets  )
+   ::oUI:q_editPathThemes               : setText( ::oINI:cPathThemes    )
+
+   /* Variables */
    ::oUI:q_tableVar:clearContents()
    ::aKeyItems := {}
    FOR EACH a_ IN ::oINI:aKeywords
@@ -1173,6 +1270,8 @@ METHOD IdeSetup:show()
 
       ::oUI := hbide_getUI( "setup", ::oDlg:oWidget )
 
+      ::oUI:setWindowFlags( Qt_Sheet )
+
       ::oUI:setMaximumWidth( ::oUI:width() )
       ::oUI:setMinimumWidth( ::oUI:width() )
       ::oUI:setMaximumHeight( ::oUI:height() )
@@ -1197,7 +1296,8 @@ METHOD IdeSetup:show()
 
    ::populate()
    ::oIde:setPosByIniEx( ::oUI:oWidget, ::oINI:cSetupDialogGeometry )
-   ::oUI:exec()
+   //::oUI:exec()
+   ::oUI:show()
 
    RETURN Self
 
@@ -1205,7 +1305,7 @@ METHOD IdeSetup:show()
 
 METHOD IdeSetup:execEvent( cEvent, p, p1 )
    LOCAL qItem, nIndex, qFontDlg, qFont, nOK, nRow, b_, q0, q1, nCol, w0, w1
-   LOCAL aRGB, nSlot, qFrame, aGrad, n, cCSS, cTheme
+   LOCAL aRGB, nSlot, qFrame, aGrad, n, cCSS, cTheme, cPath, cBuffer
 
    HB_SYMBOL_UNUSED( p1 )
 
@@ -1352,6 +1452,7 @@ METHOD IdeSetup:execEvent( cEvent, p, p1 )
       IF ( nRow := ::oUI:q_tableVar:currentRow() ) >= 0
          HB_TRACE( HB_TR_ALWAYS, "RECEIVING ENTER KEY" )
          ::oUI:q_tableVar:editItem( p )
+         hbide_justACall( nRow )
          #if 0
          IF ::oUI:q_tableVar:currentColumn() == 0
             ::oUI:q_tableVar:setCurrentCell( ::oUI:q_tableVar:currentRow(), 1 )
@@ -1370,22 +1471,12 @@ METHOD IdeSetup:execEvent( cEvent, p, p1 )
       EXIT
 
    CASE "sliderValue_changed"
-      #if 0
-      nSlot := iif( ::oUI:q_radioSec1:isChecked(), 1, ;
-                  iif( ::oUI:q_radioSec2:isChecked(), 2, ;
-                     iif( ::oUI:q_radioSec3:isChecked(), 3, ;
-                        iif( ::oUI:q_radioSec4:isChecked(), 4, ;
-                           iif( ::oUI:q_radioSec5:isChecked(), 5, 0 ) ) ) ) )
-      #endif
       nSlot := ::nCurThemeSlot
 
       IF nSlot > 0
          qFrame := { ::oUI:q_frameSec1, ::oUI:q_frameSec2, ::oUI:q_frameSec3, ::oUI:q_frameSec4, ::oUI:q_frameSec5 }[ nSlot ]
-
-         aRGB := { ::oUI:q_sliderRed:value(), ::oUI:q_sliderGreen:value(), ::oUI:q_sliderBlue:value() }
-
+         aRGB   := { ::oUI:q_sliderRed:value(), ::oUI:q_sliderGreen:value(), ::oUI:q_sliderBlue:value() }
          ::populateThemeColors( nSlot, aRGB )
-
          qFrame:setStyleSheet( "background-color: " + hbide_rgbString( aRGB ) + ";" )
       ENDIF
 
@@ -1432,11 +1523,130 @@ METHOD IdeSetup:execEvent( cEvent, p, p1 )
       ENDIF
       EXIT
 
+   CASE "buttonIni_clicked"
+      EXIT
+   CASE "buttonHrbRoot_clicked"
+      IF ! empty( cPath := hbide_fetchADir( ::oDlg, "Harbour's Root Path", ::oINI:cPathHrbRoot ) )
+         ::oINI:cPathHrbRoot := cPath
+         ::oUI:q_editPathHrbRoot:setText( hbide_pathStripLastSlash( cPath ) )
+      ENDIF
+      EXIT
+   CASE "buttonHbmk2_clicked"
+      IF !empty( cPath := hbide_fetchAFile( ::oDlg, "Location of hbmk2", ;
+                                                       { { "Harbour Project Builder - hbmk2", "*" } }, ::oINI:cPathHbMk2 ) )
+         ::oINI:cPathhbMk2 := cPath
+         ::oUI:q_editPathHbMk2:setText( cPath )
+      ENDIF
+      EXIT
+   CASE "buttonEnv_clicked"
+      IF !empty( cPath := hbide_fetchAFile( ::oDlg, "Environment Definitions File ( .env )", ;
+                                                       { { "Environment Files", "*.env" } }, ::oINI:getEnvFile() ) )
+         ::oINI:cPathEnv := cPath
+         ::oUI:q_editPathEnv:setText( cPath )
+      ENDIF
+      EXIT
+   CASE "buttonResources_clicked"
+      IF ! empty( cPath := hbide_fetchADir( ::oDlg, "Location of Resources ( Plugins, Dialogs, Images, Scripts )", ::oINI:getResourcesPath() ) )
+         ::oINI:cPathResources := cPath
+         ::oUI:q_editPathResources:setText( cPath )
+      ENDIF
+      EXIT
+   CASE "buttonTemp_clicked"
+      IF ! empty( cPath := hbide_fetchADir( ::oDlg, "Location for Temporary and Transitory Files", ::oINI:getTempPath() ) )
+         ::oINI:cPathTemp := cPath
+         ::oUI:q_editPathTemp:setText( cPath )
+      ENDIF
+      EXIT
+   CASE "buttonShortcuts_clicked"
+      IF !empty( cPath := hbide_fetchAFile( ::oDlg, "Keyboard Mapping Definitions File ( .scu )", ;
+                                                       { { "Keyboard Mappings", "*.scu" } }, ::oINI:getShortcutsFile() ) )
+         ::oINI:cPathShortcuts := cPath
+         ::oUI:q_editPathShortcuts:setText( cPath )
+      ENDIF
+      EXIT
+   CASE "buttonSnippets_clicked"
+      IF !empty( cPath := hbide_fetchAFile( ::oDlg, "Code Snippets File ( .skl )", ;
+                                                       { { "Code Snippets", "*.skl" } }, ::oINI:getSnippetsFile() ) )
+         ::oINI:cPathSnippets := cPath
+         ::oUI:q_editPathSnippets:setText( cPath )
+      ENDIF
+      EXIT
+   CASE "buttonThemes_clicked"
+      IF !empty( cPath := hbide_fetchAFile( ::oDlg, "Syntax Highlighting Theme File ( .hbt )", ;
+                                                       { { "Syntax Theme", "*.hbt" } }, ::oINI:getThemesFile() ) )
+         ::oINI:cPathThemes := cPath
+         ::oUI:q_editPathThemes:setText( cPath )
+      ENDIF
+      EXIT
+   CASE "buttonViewIni_clicked"
+      ::viewIt( ::oINI:getIniFile(), .t., .f., .f., .f. ) /* FileName, shouldSaveAs, shouldSave, shouldReadOnly, applyHiliter */
+      EXIT
+   CASE "buttonViewEnv_clicked"
+      ::viewIt( ::oINI:getEnvFile(), .t., .t., .f., .f. )
+      EXIT
+   CASE "buttonViewSnippets_clicked"
+      ::viewIt( ::oINI:getSnippetsFile(), .t., .t., .f., .t. )
+      EXIT
+   CASE "buttonViewThemes_clicked"
+      ::viewIt( ::oINI:getThemesFile(), .t., .t., .f., .f. )
+      EXIT
+
+   CASE "buttonEditorSaveAs_clicked"
+      IF ! empty( cBuffer := p:q_plainText:toPlainText() )
+         IF ! empty( cPath := hbide_saveAFile( ::oDlg, "Save: " + p1, NIL, p1 ) )
+            hb_memowrit( cPath, cBuffer )
+         ENDIF
+      ENDIF
+      EXIT
+   CASE "buttonEditorSave_clicked"
+      IF ! empty( cBuffer := p:q_plainText:toPlainText() )
+         hb_memowrit( p1, cBuffer )
+      ENDIF
+      EXIT
+   CASE "buttonEditorClose_clicked"
+   CASE "buttonEditorX_clicked"
+      ::disconnect( p:oWidget       , QEvent_Close )
+      ::disconnect( p:q_buttonSaveAs, "clicked()"  )
+      ::disconnect( p:q_buttonSave  , "clicked()"  )
+      ::disconnect( p:q_buttonClose , "clicked()"  )
+
+      p:close()
+      p := NIL   /* Must Destroy It */
+      EXIT
    ENDSWITCH
 
-   RETURN nRow //Self
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
+
+METHOD IdeSetup:viewIt( cFileName, lSaveAs, lSave, lReadOnly, lApplyHiliter )
+   LOCAL oUI
+
+   oUI := hbide_getUI( "editor", ::oUI:oWidget )
+   oUI:setWindowFlags( Qt_Sheet )
+
+   oUI:q_plainText:setReadOnly( lReadOnly )
+   oUI:q_buttonSaveAs:setEnabled( lSaveAs )
+   oUI:q_buttonSave:setEnabled( lSave )
+
+   oUI:q_plainText:setLineWrapMode( QPlainTextEdit_NoWrap )
+
+   oUI:q_plainText:setPlainText( hb_memoRead( cFileName ) )
+   oUI:q_plainText:setFont( ::oIde:oFont:oWidget )
+   IF lApplyHiliter
+      aadd( ::aHilighters, ::oTH:setSyntaxHilighting( oUI:q_plainText, "Bare Minimum" ) )
+   ENDIF
+
+   ::connect( oUI:oWidget       , QEvent_Close, {|| ::execEvent( "buttonEditorX_clicked"     , oUI            ) } )
+   ::connect( oUI:q_buttonSaveAs, "clicked()" , {|| ::execEvent( "buttonEditorSaveAs_clicked", oUI, cFileName ) } )
+   ::connect( oUI:q_buttonSave  , "clicked()" , {|| ::execEvent( "buttonEditorSave_clicked"  , oUI, cFileName ) } )
+   ::connect( oUI:q_buttonClose , "clicked()" , {|| ::execEvent( "buttonEditorClose_clicked" , oUI            ) } )
+
+   oUI:show()
+
+   RETURN Self
+
+/*------------------------------------------------------------------------*/
 
 METHOD IdeSetup:pushThemesData()
    LOCAL s, a_, qItem

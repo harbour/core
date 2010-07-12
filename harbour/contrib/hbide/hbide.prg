@@ -427,10 +427,7 @@ METHOD HbIde:create( aParams )
    HbXbp_SetCodec( ::cWrkCodec )
 
    /* Load IDE|User defined Themes */
-   hbide_loadThemes( Self )
-
-   /* Harbour Help Object */
-//   ::oHL := ideHarbourHelp():new():create( Self )
+   ::oTH := IdeThemes():new( Self, ::oINI:getThemesFile() ):create()
 
    /* DOCKing windows and ancilliary windows */
    ::oDK := IdeDocks():new():create( Self )

@@ -113,40 +113,43 @@ FUNCTION hbide_execPlugin( cPlugin, oIde, ... )
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION hbide_loadAPlugin( cPlugin, oIde, cVer )
-   LOCAL pHrb, bBlock, lLoaded, cFileName, cFile
+   LOCAL pHrb, bBlock, lLoaded, cFileName, cFile, cPath
 
-   cFileName := hb_dirBase() + hb_osPathSeparator() + "plugins" + hb_osPathSeparator() + cPlugin + ".hrb"
-   IF hb_fileExists( cFileName )
-      pHrb := hb_hrbLoad( HB_HRB_BIND_OVERLOAD, cFileName )
-   ELSE
-      cFileName := hb_dirBase() + hb_osPathSeparator() + "plugins" + hb_osPathSeparator() + cPlugin + ".prg"
+   IF !empty( cPath := oIde:oINI:getResourcesPath() )
+
+      cFileName := cPath + "hbide_plugin_" + cPlugin + ".hrb"
       IF hb_fileExists( cFileName )
-         cFile := hb_memoread( cFileName )
-         cFile := hb_compileFromBuf( cFile, "-n2", "-w3", "-es2", "-q0" )
-         IF ! Empty( cFile )
-            pHrb := hb_hrbLoad( HB_HRB_BIND_OVERLOAD, cFile )
-         ENDIF
+         pHrb := hb_hrbLoad( HB_HRB_BIND_OVERLOAD, cFileName )
       ELSE
-         cFileName := hb_dirBase() + hb_osPathSeparator() + "plugins" + hb_osPathSeparator() + cPlugin + ".hbs"
+         cFileName := cPath + "hbide_plugin_" + cPlugin + ".prg"
          IF hb_fileExists( cFileName )
             cFile := hb_memoread( cFileName )
             cFile := hb_compileFromBuf( cFile, "-n2", "-w3", "-es2", "-q0" )
             IF ! Empty( cFile )
                pHrb := hb_hrbLoad( HB_HRB_BIND_OVERLOAD, cFile )
             ENDIF
+         ELSE
+            cFileName := cPath + "hbide_plugin_" + cPlugin + ".hbs"
+            IF hb_fileExists( cFileName )
+               cFile := hb_memoread( cFileName )
+               cFile := hb_compileFromBuf( cFile, "-n2", "-w3", "-es2", "-q0" )
+               IF ! Empty( cFile )
+                  pHrb := hb_hrbLoad( HB_HRB_BIND_OVERLOAD, cFile )
+               ENDIF
+            ENDIF
          ENDIF
       ENDIF
-   ENDIF
 
-   IF ( lLoaded := ! empty( pHrb ) )
-      IF ! Empty( hb_hrbGetFunSym( pHrb, cPlugin + "_init" ) )
-         bBlock := &( "{|...| " + cPlugin + "_init(...) }" )
+      IF ( lLoaded := ! empty( pHrb ) )
+         IF ! Empty( hb_hrbGetFunSym( pHrb, cPlugin + "_init" ) )
+            bBlock := &( "{|...| " + cPlugin + "_init(...) }" )
 
-         IF eval( bBlock, oIde, cVer )
-            IF ! Empty( hb_hrbGetFunSym( pHrb, cPlugin + "_exec" ) )
-               aadd( s_aPlugins, { cPlugin, &( "{|...| " + cPlugin + "_exec(...) }" ), pHrb } )
-               lLoaded := .t.
+            IF eval( bBlock, oIde, cVer )
+               IF ! Empty( hb_hrbGetFunSym( pHrb, cPlugin + "_exec" ) )
+                  aadd( s_aPlugins, { cPlugin, &( "{|...| " + cPlugin + "_exec(...) }" ), pHrb } )
+                  lLoaded := .t.
 
+               ENDIF
             ENDIF
          ENDIF
       ENDIF
@@ -189,20 +192,76 @@ FUNCTION hbide_runAScript( cBuffer, cCompFlags, xParam )
 FUNCTION hbide_execAutoScripts()
    LOCAL cPath, a_, dir_, cFileName, cBuffer
 
-   cPath := hb_dirBase() + hb_osPathSeparator() + "plugins" + hb_osPathSeparator()
+   IF !empty( cPath := hbide_setIde():oINI:getResourcesPath() )
+      a_:= {}
+      dir_:= directory( cPath + "hbide_auto_*.prg" )
+      aeval( dir_, {|e_| aadd( a_, e_[ 1 ] ) } )
+      dir_:= directory( cPath + "hbide_auto_*.hbs" )
+      aeval( dir_, {|e_| aadd( a_, e_[ 1 ] ) } )
 
-   a_:= {}
-   dir_:= directory( cPath + "auto_*.prg" )
-   aeval( dir_, {|e_| aadd( a_, e_[ 1 ] ) } )
-   dir_:= directory( cPath + "auto_*.hbs" )
-   aeval( dir_, {|e_| aadd( a_, e_[ 1 ] ) } )
+      FOR EACH cFileName IN a_
+         IF !empty( cBuffer := hb_memoRead( cPath + cFileName ) )
+            hbide_runAScript( cBuffer, /* No Compiler Flag */, hbide_setIde() )
+         ENDIF
+      NEXT
+   ENDIF
+   RETURN NIL
 
-   FOR EACH cFileName IN a_
-      IF !empty( cBuffer := hb_memoRead( cPath + cFileName ) )
-         hbide_runAScript( cBuffer, /* No Compiler Flag */, hbide_setIde() )
+/*------------------------------------------------------------------------*/
+
+FUNCTION hbide_getUserPrototypes()
+   LOCAL aProto := {}
+   LOCAL cPath, aDir, cMask, a_, b_
+
+   IF ! empty( cPath := hbide_setIde():oINI:getResourcesPath() )
+      cMask := cPath + "hbide_protos_*"
+      IF ! empty( aDir := directory( cMask ) )
+         FOR EACH a_ IN aDir
+            b_:= hbide_loadProtoTypes( cPath + a_[ 1 ] )
+            aeval( b_, {|e| aadd( aProto, e ) } )
+         NEXT
+      ENDIF
+   ENDIF
+
+   RETURN aProto
+
+/*------------------------------------------------------------------------*/
+
+FUNCTION hbide_loadPrototypes( cPath )
+   LOCAL a_, s, nLen, i
+   LOCAL aProto := {}, b_:={}
+
+   IF hb_fileExists( cPath )
+      a_:= hbide_readSource( cPath )
+
+      FOR EACH s IN a_
+         s := alltrim( s )
+         IF empty( s )
+            LOOP
+         ENDIF
+         aadd( b_, s )
+      NEXT
+   ENDIF
+
+   nLen := len( b_ )
+   FOR EACH s IN b_
+      i := s:__enumIndex()
+      IF right( s, 1 ) == ";"
+         s := substr( s, 1, len( s ) - 1 )
+         IF i < nLen
+            b_[ i + 1 ] := s + " " + b_[ i + 1 ]
+            s := ""
+         ENDIF
       ENDIF
    NEXT
 
-   RETURN NIL
+   FOR EACH s IN b_
+      IF empty( s )
+         LOOP
+      ENDIF
+      aadd( aProto, s )
+   NEXT
+
+   RETURN aProto
 
 /*------------------------------------------------------------------------*/

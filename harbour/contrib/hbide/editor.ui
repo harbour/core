@@ -6,26 +6,19 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>454</width>
-    <height>544</height>
+    <width>413</width>
+    <height>522</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Editor</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0" colspan="6">
-    <widget class="QPlainTextEdit" name="plainEdit"/>
+   <item row="0" column="0" colspan="8">
+    <widget class="QPlainTextEdit" name="plainText"/>
    </item>
    <item row="1" column="0" colspan="4">
     <widget class="QLineEdit" name="ediSearch"/>
-   </item>
-   <item row="1" column="5">
-    <widget class="QPushButton" name="buttonCancel">
-     <property name="text">
-      <string>Cancel</string>
-     </property>
-    </widget>
    </item>
    <item row="2" column="0">
     <widget class="QToolButton" name="buttonNext">
@@ -55,10 +48,10 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="5">
-    <widget class="QPushButton" name="buttonOk">
+   <item row="2" column="7">
+    <widget class="QPushButton" name="buttonClose">
      <property name="text">
-      <string>OK</string>
+      <string>Close</string>
      </property>
     </widget>
    </item>
@@ -74,6 +67,20 @@
       </size>
      </property>
     </spacer>
+   </item>
+   <item row="2" column="6">
+    <widget class="QPushButton" name="buttonSave">
+     <property name="text">
+      <string>Save</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="5">
+    <widget class="QPushButton" name="buttonSaveAs">
+     <property name="text">
+      <string>SaveAs</string>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>

@@ -71,18 +71,6 @@
 
 /*----------------------------------------------------------------------*/
 
-#define buttonNew_clicked                         101
-#define buttonRename_clicked                      102
-#define buttonDelete_clicked                      103
-#define buttonClear_clicked                       104
-#define buttonGetSel_clicked                      105
-#define buttonUpdate_clicked                      106
-#define listNames_itemSelectionChanged            107
-#define oTree_itemSelected                        108
-#define oTree_contextMenu                         109
-
-/*----------------------------------------------------------------------*/
-
 CLASS IdeSkeletons INHERIT IdeObject
 
    DATA   oRoot
@@ -95,7 +83,7 @@ CLASS IdeSkeletons INHERIT IdeObject
    METHOD create( oIde )
    METHOD destroy()
    METHOD show()
-   METHOD execEvent( nMode, p )
+   METHOD execEvent( cEvent, p )
    METHOD postSkeleton( cSkeleton )
    METHOD selectByMenuAndPostText( qEdit )
    METHOD getText( cSkeleton )
@@ -156,40 +144,38 @@ METHOD IdeSkeletons:destroy()
 METHOD IdeSkeletons:show()
 
    IF empty( ::oUI )
-//    ::oUI := HbQtUI():new( hbide_uic( "skeletons" ) ):build()
-      ::oUI := hbqtui_Skeletons()
+      ::oUI := hbide_getUI( "skeletons" )
 
       ::oSkeltnDock:oWidget:setWidget( ::oUI:oWidget )
 
-      ::connect( ::oUI:q_buttonNew   , "clicked()"             , {|| ::execEvent( buttonNew_clicked              ) } )
-      ::connect( ::oUI:q_buttonRename, "clicked()"             , {|| ::execEvent( buttonRename_clicked           ) } )
-      ::connect( ::oUI:q_buttonDelete, "clicked()"             , {|| ::execEvent( buttonDelete_clicked           ) } )
-      ::connect( ::oUI:q_buttonClear , "clicked()"             , {|| ::execEvent( buttonClear_clicked            ) } )
-      ::connect( ::oUI:q_buttonGetSel, "clicked()"             , {|| ::execEvent( buttonGetSel_clicked           ) } )
-      ::connect( ::oUI:q_buttonUpdate, "clicked()"             , {|| ::execEvent( buttonUpdate_clicked           ) } )
-      ::connect( ::oUI:q_listNames   , "itemSelectionChanged()", {|| ::execEvent( listNames_itemSelectionChanged ) } )
+      ::connect( ::oUI:q_buttonNew   , "clicked()"             , {|| ::execEvent( "buttonNew_clicked"              ) } )
+      ::connect( ::oUI:q_buttonRename, "clicked()"             , {|| ::execEvent( "buttonRename_clicked"           ) } )
+      ::connect( ::oUI:q_buttonDelete, "clicked()"             , {|| ::execEvent( "buttonDelete_clicked"           ) } )
+      ::connect( ::oUI:q_buttonClear , "clicked()"             , {|| ::execEvent( "buttonClear_clicked"            ) } )
+      ::connect( ::oUI:q_buttonGetSel, "clicked()"             , {|| ::execEvent( "buttonGetSel_clicked"           ) } )
+      ::connect( ::oUI:q_buttonUpdate, "clicked()"             , {|| ::execEvent( "buttonUpdate_clicked"           ) } )
+      ::connect( ::oUI:q_listNames   , "itemSelectionChanged()", {|| ::execEvent( "listNames_itemSelectionChanged" ) } )
 
       //::oUI:q_editCode:setFontFamily( "Courier New" )
       //::oUI:q_editCode:setFontPointSize( 10 )
 
       ::oUI:q_editCode:setFont( ::oFont:oWidget )
    ENDIF
-
    ::refreshList()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeSkeletons:execEvent( nMode, p )
+METHOD IdeSkeletons:execEvent( cEvent, p )
    LOCAL cName, qItem, cCode, n, cOpt
    LOCAL aPops := {}
 
    HB_SYMBOL_UNUSED( p )
 
-   SWITCH nMode
+   SWITCH cEvent
 
-   CASE buttonNew_clicked
+   CASE "buttonNew_clicked"
       IF !empty( cName := hbide_fetchAString( ::oUI:q_listNames, "", "Name", "New Skeleton" ) )
          ::oUI:q_listNames:addItem( cName )
          aadd( ::oIde:aSkltns, { cName, "" } )
@@ -197,33 +183,33 @@ METHOD IdeSkeletons:execEvent( nMode, p )
       ENDIF
       EXIT
 
-   CASE buttonRename_clicked
+   CASE "buttonRename_clicked"
       qItem := QListWidgetItem():configure( ::oUI:q_listNames:currentItem() )
       qItem:setText( ::rename( qItem:text() ) )
       EXIT
 
-   CASE buttonDelete_clicked
+   CASE "buttonDelete_clicked"
       qItem := QListWidgetItem():from( ::oUI:q_listNames:currentItem() )
       ::delete( qItem:text() )
       EXIT
 
-   CASE buttonClear_clicked
+   CASE "buttonClear_clicked"
       ::oUI:q_editCode:clear()
       EXIT
 
-   CASE buttonGetSel_clicked
+   CASE "buttonGetSel_clicked"
       IF !empty( cCode := ::oEM:getSelectedText() )
          // TODO: Format cCode
          ::oUI:q_editCode:setPlainText( cCode )
       ENDIF
       EXIT
 
-   CASE buttonUpdate_clicked
+   CASE "buttonUpdate_clicked"
       qItem := QListWidgetItem():configure( ::oUI:q_listNames:currentItem() )
       ::save( qItem:text(), ::oUI:q_editCode:toPlainText() )
       EXIT
 
-   CASE listNames_itemSelectionChanged
+   CASE "listNames_itemSelectionChanged"
       qItem := QListWidgetItem():configure( ::oUI:q_listNames:currentItem() )
       cName := qItem:text()
       IF ( n := ascan( ::aSkltns, {|e_| e_[ 1 ] == cName } ) ) > 0
@@ -231,7 +217,7 @@ METHOD IdeSkeletons:execEvent( nMode, p )
       ENDIF
       EXIT
 
-   CASE oTree_contextMenu
+   CASE "oTree_contextMenu"
       IF p[ 3 ]:caption == "Skeletons"
          // Root node - nothing to do.
       ELSE
@@ -249,7 +235,7 @@ METHOD IdeSkeletons:execEvent( nMode, p )
       ENDIF
       EXIT
 
-   CASE oTree_itemSelected
+   CASE "oTree_itemSelected"
       ::oIde:manageFocusInEditor()
       ::postSkeleton( p:caption )
       EXIT
@@ -504,8 +490,8 @@ METHOD IdeSkeletons:showTree()
       ::oTree:oWidget:setIconSize( QSize():new( 12,12 ) )
       ::oTree:oWidget:setIndentation( 12 )
 
-      ::oTree:itemSelected  := {|oItem         | ::execEvent( oTree_itemSelected, oItem ) }
-      ::oTree:hbContextMenu := {|mp1, mp2, oXbp| ::execEvent( oTree_contextMenu , { mp1, mp2, oXbp } ) }
+      ::oTree:itemSelected  := {|oItem         | ::execEvent( "oTree_itemSelected", oItem ) }
+      ::oTree:hbContextMenu := {|mp1, mp2, oXbp| ::execEvent( "oTree_contextMenu" , { mp1, mp2, oXbp } ) }
 
       ::oRoot := ::oTree:rootItem:addItem( "Skeletons" )
 

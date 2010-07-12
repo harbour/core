@@ -80,30 +80,12 @@
 
 #define THM_NUM_ATTRBS                            6
 
-#define applyMenu_triggered_applyToCurrentTab     1
-#define applyMenu_triggered_setAsDefault          2
-#define applyMenu_triggered_applyToAllTabs        3
-#define listThemes_currentRowChanged              4
-#define listItems_currentRowChanged               5
-
-/*----------------------------------------------------------------------*/
-
-FUNCTION hbide_loadThemes( oIde )
-
-   IF empty( oIde:cIniThemes )
-      oIde:cIniThemes := hb_dirBase() + "hbide.hbt"
-   ENDIF
-
-   oIde:oTH := IdeThemes():new( oIde, oIde:cIniThemes ):create()
-
-   RETURN nil
-
 /*----------------------------------------------------------------------*/
 
 CLASS IdeThemes INHERIT IdeObject
 
    VAR    lDefault                                INIT .t.
-   VAR    cIniFile                                INIT ""
+   VAR    cThemesFile                                INIT ""
 
    VAR    aIni                                    INIT {}
    VAR    aThemes                                 INIT {}
@@ -123,14 +105,14 @@ CLASS IdeThemes INHERIT IdeObject
    VAR    oSL
    VAR    cSelTheme
 
-   METHOD new( oIde, cIniFile )
-   METHOD create( oIde, cIniFile )
+   METHOD new( oIde, cThemesFile )
+   METHOD create( oIde, cThemesFile )
    METHOD destroy()
    METHOD setWrkTheme( cTheme )
    METHOD contains( cTheme )
    METHOD load( cFile )
    METHOD save( lAsk )
-   METHOD execEvent( nMode, p )
+   METHOD execEvent( cEvent, p )
    METHOD getThemeAttribute( cAttr, cTheme )
    METHOD buildSyntaxFormat( aAttr )
    METHOD setForeBackGround( qEdit, cTheme )
@@ -158,30 +140,30 @@ CLASS IdeThemes INHERIT IdeObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeThemes:new( oIde, cIniFile )
+METHOD IdeThemes:new( oIde, cThemesFile )
 
    ::oIde  := oIde
-   ::cIniFile := cIniFile
+   ::cThemesFile := cThemesFile
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeThemes:create( oIde, cIniFile )
+METHOD IdeThemes:create( oIde, cThemesFile )
    LOCAL s, b_
 
    DEFAULT oIde     TO ::oIde
-   DEFAULT cIniFile TO ::cIniFile
+   DEFAULT cThemesFile TO ::cThemesFile
 
    ::oIde  := oIde
-   ::cIniFile := cIniFile
+   ::cThemesFile := cThemesFile
 
    /* next always load default themes */
    ::aIni := hbide_loadDefaultThemes()
    ::parseINI()
 
    /* first load user defined themes */
-   ::load( ::cIniFile )
+   ::load( ::cThemesFile )
 
    /* These are the supported patterns - rest will be ignore until implemented */
 
@@ -250,15 +232,14 @@ METHOD IdeThemes:destroy()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeThemes:execEvent( nMode, p )
+METHOD IdeThemes:execEvent( cEvent, p )
    LOCAL oEditor, a_
 
    HB_SYMBOL_UNUSED( p )
 
-   DO CASE
-   CASE nMode == listItems_currentRowChanged
+   SWITCH cEvent
+   CASE "listItems_currentRowChanged"
       ::nCurItem  := p+1
-
       IF ::nCurItem == 13
          ::updateCurrentLineColor()
       ELSEIF ::nCurItem == 16
@@ -266,25 +247,25 @@ METHOD IdeThemes:execEvent( nMode, p )
       ELSE
          ::setAttributes( p )
       ENDIF
-
-   CASE nMode == listThemes_currentRowChanged
+      EXIT
+   CASE "listThemes_currentRowChanged"
       ::nCurTheme := p+1
       ::setTheme( p )
-
-   CASE nMode == applyMenu_triggered_applyToAllTabs
+      EXIT
+   CASE "applyMenu_triggered_applyToAllTabs"
       FOR EACH a_ IN ::aTabs
          a_[ TAB_OEDITOR ]:applyTheme( ::aThemes[ ::nCurTheme, 1 ] )
       NEXT
-
-   CASE nMode == applyMenu_triggered_applyToCurrentTab
+      EXIT
+   CASE "applyMenu_triggered_applyToCurrentTab"
       IF !empty( oEditor := ::oEM:getEditorCurrent() )
          oEditor:applyTheme( ::aThemes[ ::nCurTheme, 1 ] )
       ENDIF
-
-   CASE nMode == applyMenu_triggered_setAsDefault
+      EXIT
+   CASE "applyMenu_triggered_setAsDefault"
       ::setWrkTheme( ::aThemes[ ::nCurTheme, 1 ] )
-
-   ENDCASE
+      EXIT
+   ENDSWITCH
 
    RETURN Self
 
@@ -323,31 +304,20 @@ METHOD IdeThemes:load( cFile )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeThemes:save( lAsk )
-   LOCAL cFile, cINI
+   LOCAL cFile
 
    DEFAULT lAsk TO .f.
-
    IF ::lDefault
       lAsk := .t.
    ENDIF
-
    IF lAsk
-      cFile := hbide_saveAFile( ::oIde:oDlg, ;
-                          "Select a File to Save Themes (.hbt)", ;
-                          { { "Harbour IDE Themes", "*.hbt" } }, ;
-                          ::cIniFile, ;
-                          "hbt"  )
+      cFile := hbide_saveAFile( ::oDlg, "Select a file to Save Theme ( .hbt )", ;
+                                         { { "Syntax Themes", "*.hbt" } }, ::oINI:getThemesFile(), "hbt"  )
    ELSE
-      cFile := ::cIniFile
+      cFile := ::oINI:getThemesFile()
    ENDIF
-
    IF !empty( cFile )
-      cINI := ::buildINI()
-      hb_memowrit( cFile, cINI )
-      IF hb_FileExists( cFile )
-         ::oIde:cIniThemes := cFile
-         ::cIniFile := cFile
-      ENDIF
+      hb_memowrit( cFile, ::buildINI() )
    ENDIF
 
    RETURN Self
@@ -550,16 +520,16 @@ METHOD IdeThemes:show()
 
       ::oThemesDock:oWidget:setWidget( ::oUI )
 
-      ::oUI:signal( "listThemes"   , "currentRowChanged(int)"   , {|i| ::execEvent( listThemes_currentRowChanged, i ) } )
-      ::oUI:signal( "listItems"    , "currentRowChanged(int)"   , {|i| ::execEvent( listItems_currentRowChanged, i )  } )
+      ::oUI:signal( "listThemes"   , "currentRowChanged(int)"   , {|i| ::execEvent( "listThemes_currentRowChanged", i ) } )
+      ::oUI:signal( "listItems"    , "currentRowChanged(int)"   , {|i| ::execEvent( "listItems_currentRowChanged", i )  } )
 
       ::oUI:signal( "buttonColor"   , "clicked()"               , {| | ::updateColor() } )
       ::oUI:signal( "buttonSave"    , "clicked()"               , {| | ::save( .f. )   } )
       ::oUI:signal( "buttonSaveAs"  , "clicked()"               , {| | ::save( .t. )   } )
       ::oUI:signal( "buttonCopy"    , "clicked()"               , {| | ::copy( .t. )   } )
-      ::oUI:signal( "buttonApply"   , "clicked()"               , {| | ::execEvent( applyMenu_triggered_applyToCurrentTab ) } )
-      ::oUI:signal( "buttonApplyAll", "clicked()"               , {| | ::execEvent( applyMenu_triggered_applyToAllTabs    ) } )
-      ::oUI:signal( "buttonDefault" , "clicked()"               , {| | ::execEvent( applyMenu_triggered_setAsDefault      ) } )
+      ::oUI:signal( "buttonApply"   , "clicked()"               , {| | ::execEvent( "applyMenu_triggered_applyToCurrentTab" ) } )
+      ::oUI:signal( "buttonApplyAll", "clicked()"               , {| | ::execEvent( "applyMenu_triggered_applyToAllTabs"    ) } )
+      ::oUI:signal( "buttonDefault" , "clicked()"               , {| | ::execEvent( "applyMenu_triggered_setAsDefault"      ) } )
 
       ::oUI:signal( "checkItalic"   , "stateChanged(int)"       , {|i| ::updateAttribute( THM_ATR_ITALIC, i ) } )
       ::oUI:signal( "checkBold"     , "stateChanged(int)"       , {|i| ::updateAttribute( THM_ATR_BOLD  , i ) } )
@@ -987,10 +957,10 @@ STATIC FUNCTION GetSource()
    aadd( txt_, '   METHOD new()                                                            ' )
    aadd( txt_, '   ENDCLASS                                                                ' )
    aadd( txt_, '/*----------------------------------------------------------------------*/ ' )
-   aadd( txt_, 'METHOD IdeThemes:new( oIde, cIniFile )                                     ' )
+   aadd( txt_, 'METHOD IdeThemes:new( oIde, cThemesFile )                                  ' )
    aadd( txt_, '                                                                           ' )
    aadd( txt_, '   ::oIde  := oIde                                                         ' )
-   aadd( txt_, '   ::cIniFile := cIniFile                                                  ' )
+   aadd( txt_, '   ::cThemesFile := cThemesFile                                            ' )
    aadd( txt_, '                                                                           ' )
    aadd( txt_, '   RETURN Self                                                             ' )
    aadd( txt_, '/*----------------------------------------------------------------------*/ ' )

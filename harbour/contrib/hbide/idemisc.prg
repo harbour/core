@@ -2053,6 +2053,12 @@ FUNCTION hbide_getUI( cUI, qParent )
    CASE "mainwindow"
       oUI := iif( nModeUI == UI_MODE_FUNC, hbqtui_Mainwindow( qParent ), NIL )
       EXIT
+   CASE "skeletons"
+      oUI := iif( nModeUI == UI_MODE_FUNC, hbqtui_Skeletons( qParent ), NIL )
+      EXIT
+   CASE "editor"
+      oUI := iif( nModeUI == UI_MODE_FUNC, hbqtui_Editor( qParent ), NIL )
+      EXIT
    ENDSWITCH
 
    IF empty( oUI )

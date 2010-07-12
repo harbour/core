@@ -221,7 +221,7 @@ METHOD IdeSourcesManager:saveSource( nTab, lCancel, lAs )
          lNew := Empty( cSource ) .OR. lAs
          IF lNew
             cNewFile := ::selectSource( 'save', ;
-                                       iif( !Empty( cSource ), cSource, hb_dirBase() + "projects\" ),;
+                                       iif( !Empty( cSource ), cSource, hb_dirBase() + "projects" + hb_osPathSeparator() ),;
                                               "Save " + oEdit:oTab:caption + " as..." )
             IF empty( cNewFile )
                // will check later what decision to take
@@ -239,7 +239,6 @@ METHOD IdeSourcesManager:saveSource( nTab, lCancel, lAs )
           * If the burn process fails, we should change the name of the previous file.
           * 01/01/2010 - 21:24:41 - vailtom
           */
-         //cBuffer := oEdit:qEdit:toPlainText()
          cBuffer := oEdit:prepareBufferToSave( oEdit:qEdit:toPlainText() )
          //
          IF !hb_memowrit( cFileToSave, cBuffer )

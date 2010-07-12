@@ -238,18 +238,20 @@ METHOD IdeEditsManager:create( oIde )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEditsManager:updateCompleter()
-   LOCAL aFun, aHrb, n, s, k_
+   LOCAL aFun, aHrb, aUsr, n, s, k_
 
    /* Collection of prototypes can be extended to honor plugins and defined in "setup" */
 
    aFun := ::oFN:getFunctionPrototypes()
    aHrb := ::oHL:getFunctionPrototypes()
+   aUsr := hbide_getUserPrototypes()
 
    ::disconnect( ::qCompleter, "activated(QString)", {|p| ::execEvent( "qcompleter_activated", p ) } )
 
    ::aProtos := {}
    aeval( aHrb, {|e| aadd( ::aProtos, e ) } )
    aeval( aFun, {|e| aadd( ::aProtos, e ) } )
+   aeval( aUsr, {|e| aadd( ::aProtos, e ) } )
 
    k_:= {}
    FOR EACH s IN ::aProtos

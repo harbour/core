@@ -201,7 +201,7 @@ METHOD IdeHarbourHelp:create( oIde )
    DEFAULT oIde TO ::oIde
    ::oIde := oIde
 
-   ::cPathInstall := ::cWrkHarbour
+   ::cPathInstall := ::oINI:getHarbourPath()
 
    RETURN Self
 
@@ -463,7 +463,7 @@ METHOD IdeHarbourHelp:execEvent( nMode, p, p1 )
       IF hb_dirExists( p )
          ::oUI:q_editInstall:setStyleSheet( "" )
          ::cPathInstall := hbide_pathStripLastSlash( hbide_pathNormalized( p, .f. ) )
-         ::oIde:cWrkHarbour := ::cPathInstall
+//         ::oIde:cWrkHarbour := ::cPathInstall
       ELSE
          ::oUI:q_editInstall:setStyleSheet( getStyleSheet( "PathIsWrong", ::nAnimantionMode ) )
       ENDIF
@@ -961,7 +961,7 @@ METHOD IdeHarbourHelp:getFunctionPrototypes()
    LOCAL aDocs  := {}
    LOCAL aProto
 
-   IF empty( ::aProtoTypes ) .AND. empty( ::aProtoTypes := hbide_loadHarbourProtos( ::oIde ) )
+   IF empty( ::aProtoTypes ) //.AND. empty( ::aProtoTypes := hbide_loadHarbourProtos( ::oIde ) )
       IF !empty( ::cPathInstall )
          IF ! ::lLoadedProto
             hbide_fetchSubPaths( @aPaths, ::cPathInstall, .t. )
@@ -993,7 +993,7 @@ METHOD IdeHarbourHelp:getFunctionPrototypes()
                NEXT
             NEXT
 
-            hbide_saveHarbourProtos( ::oIde, aProto )
+            /* hbide_saveHarbourProtos( ::oIde, aProto ) */
             ::aProtoTypes := aProto
             ::lLoadedProto := .t.
          ENDIF
