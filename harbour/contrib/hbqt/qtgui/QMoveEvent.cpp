@@ -101,7 +101,7 @@ void * hbqt_gcAllocate_QMoveEvent( void * pObj, bool bNew )
    p->ph = ( QMoveEvent * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QMoveEvent;
-   p->type = QT_TYPE_QMoveEvent;
+   p->type = HBQT_TYPE_QMoveEvent;
 
    if( bNew )
    {

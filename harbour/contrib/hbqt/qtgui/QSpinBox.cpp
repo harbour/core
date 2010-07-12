@@ -126,7 +126,7 @@ void * hbqt_gcAllocate_QSpinBox( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QSpinBox >( ( QSpinBox * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QSpinBox;
-   p->type = QT_TYPE_QSpinBox;
+   p->type = HBQT_TYPE_QSpinBox;
 
    if( bNew )
    {

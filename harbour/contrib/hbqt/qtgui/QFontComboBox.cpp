@@ -132,7 +132,7 @@ void * hbqt_gcAllocate_QFontComboBox( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QFontComboBox >( ( QFontComboBox * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QFontComboBox;
-   p->type = QT_TYPE_QFontComboBox;
+   p->type = HBQT_TYPE_QFontComboBox;
 
    if( bNew )
    {

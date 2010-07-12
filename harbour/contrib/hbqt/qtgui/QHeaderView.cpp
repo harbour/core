@@ -131,7 +131,7 @@ void * hbqt_gcAllocate_QHeaderView( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QHeaderView >( ( QHeaderView * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QHeaderView;
-   p->type = QT_TYPE_QHeaderView;
+   p->type = HBQT_TYPE_QHeaderView;
 
    if( bNew )
    {

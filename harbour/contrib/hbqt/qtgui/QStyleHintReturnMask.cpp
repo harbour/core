@@ -114,7 +114,7 @@ void * hbqt_gcAllocate_QStyleHintReturnMask( void * pObj, bool bNew )
    p->ph = ( QStyleHintReturnMask * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyleHintReturnMask;
-   p->type = QT_TYPE_QStyleHintReturnMask;
+   p->type = HBQT_TYPE_QStyleHintReturnMask;
 
    if( bNew )
    {

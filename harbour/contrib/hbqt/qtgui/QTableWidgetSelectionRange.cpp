@@ -117,7 +117,7 @@ void * hbqt_gcAllocate_QTableWidgetSelectionRange( void * pObj, bool bNew )
    p->ph = ( QTableWidgetSelectionRange * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTableWidgetSelectionRange;
-   p->type = QT_TYPE_QTableWidgetSelectionRange;
+   p->type = HBQT_TYPE_QTableWidgetSelectionRange;
 
    if( bNew )
    {

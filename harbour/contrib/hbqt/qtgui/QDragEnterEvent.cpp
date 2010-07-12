@@ -100,7 +100,7 @@ void * hbqt_gcAllocate_QDragEnterEvent( void * pObj, bool bNew )
    p->ph = ( QDragEnterEvent * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QDragEnterEvent;
-   p->type = QT_TYPE_QDragEnterEvent;
+   p->type = HBQT_TYPE_QDragEnterEvent;
 
    if( bNew )
    {

@@ -123,7 +123,7 @@ void * hbqt_gcAllocate_QLinearGradient( void * pObj, bool bNew )
    p->ph = ( QLinearGradient * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QLinearGradient;
-   p->type = QT_TYPE_QLinearGradient;
+   p->type = HBQT_TYPE_QLinearGradient;
 
    if( bNew )
    {

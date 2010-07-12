@@ -118,7 +118,7 @@ void * hbqt_gcAllocate_QTextDocumentWriter( void * pObj, bool bNew )
    p->ph = ( QTextDocumentWriter * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextDocumentWriter;
-   p->type = QT_TYPE_QTextDocumentWriter;
+   p->type = HBQT_TYPE_QTextDocumentWriter;
 
    if( bNew )
    {

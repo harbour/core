@@ -126,7 +126,7 @@ void * hbqt_gcAllocate_QPixmap( void * pObj, bool bNew )
    p->ph = ( QPixmap * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QPixmap;
-   p->type = QT_TYPE_QPixmap;
+   p->type = HBQT_TYPE_QPixmap;
 
    if( bNew )
    {

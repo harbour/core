@@ -121,7 +121,7 @@ void * hbqt_gcAllocate_QStyleOptionSpinBox( void * pObj, bool bNew )
    p->ph = ( QStyleOptionSpinBox * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyleOptionSpinBox;
-   p->type = QT_TYPE_QStyleOptionSpinBox;
+   p->type = HBQT_TYPE_QStyleOptionSpinBox;
 
    if( bNew )
    {

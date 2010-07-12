@@ -101,7 +101,7 @@ void * hbqt_gcAllocate_QAbstractListModel( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QAbstractListModel >( ( QAbstractListModel * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QAbstractListModel;
-   p->type = QT_TYPE_QAbstractListModel;
+   p->type = HBQT_TYPE_QAbstractListModel;
 
    if( bNew )
    {

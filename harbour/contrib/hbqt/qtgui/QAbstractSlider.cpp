@@ -105,7 +105,7 @@ void * hbqt_gcAllocate_QAbstractSlider( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QAbstractSlider >( ( QAbstractSlider * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QAbstractSlider;
-   p->type = QT_TYPE_QAbstractSlider;
+   p->type = HBQT_TYPE_QAbstractSlider;
 
    if( bNew )
    {

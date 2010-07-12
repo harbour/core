@@ -107,7 +107,7 @@ void * hbqt_gcAllocate_QIODevice( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QIODevice >( ( QIODevice * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QIODevice;
-   p->type = QT_TYPE_QIODevice;
+   p->type = HBQT_TYPE_QIODevice;
 
    if( bNew )
    {

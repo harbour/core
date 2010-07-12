@@ -100,7 +100,7 @@ void * hbqt_gcAllocate_QAbstractTextDocumentLayout( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QAbstractTextDocumentLayout >( ( QAbstractTextDocumentLayout * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QAbstractTextDocumentLayout;
-   p->type = QT_TYPE_QAbstractTextDocumentLayout;
+   p->type = HBQT_TYPE_QAbstractTextDocumentLayout;
 
    if( bNew )
    {

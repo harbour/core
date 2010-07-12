@@ -127,7 +127,7 @@ void * hbqt_gcAllocate_QToolBox( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QToolBox >( ( QToolBox * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QToolBox;
-   p->type = QT_TYPE_QToolBox;
+   p->type = HBQT_TYPE_QToolBox;
 
    if( bNew )
    {

@@ -153,7 +153,7 @@ void * hbqt_gcAllocate_QFileDialog( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QFileDialog >( ( QFileDialog * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QFileDialog;
-   p->type = QT_TYPE_QFileDialog;
+   p->type = HBQT_TYPE_QFileDialog;
 
    if( bNew )
    {

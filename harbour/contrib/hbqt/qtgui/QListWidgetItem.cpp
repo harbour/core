@@ -123,7 +123,7 @@ void * hbqt_gcAllocate_QListWidgetItem( void * pObj, bool bNew )
    p->ph = ( QListWidgetItem * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QListWidgetItem;
-   p->type = QT_TYPE_QListWidgetItem;
+   p->type = HBQT_TYPE_QListWidgetItem;
 
    if( bNew )
    {

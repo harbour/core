@@ -115,7 +115,7 @@ void * hbqt_gcAllocate_QLatin1String( void * pObj, bool bNew )
    p->ph = ( QLatin1String * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QLatin1String;
-   p->type = QT_TYPE_QLatin1String;
+   p->type = HBQT_TYPE_QLatin1String;
 
    if( bNew )
    {

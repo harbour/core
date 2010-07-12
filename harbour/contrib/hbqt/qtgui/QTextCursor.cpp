@@ -128,7 +128,7 @@ void * hbqt_gcAllocate_QTextCursor( void * pObj, bool bNew )
    p->ph = ( QTextCursor * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextCursor;
-   p->type = QT_TYPE_QTextCursor;
+   p->type = HBQT_TYPE_QTextCursor;
 
    if( bNew )
    {

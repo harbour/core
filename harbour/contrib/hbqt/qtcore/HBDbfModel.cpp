@@ -128,7 +128,7 @@ void * hbqt_gcAllocate_HBDbfModel( void * pObj, bool bNew )
    new( & p->ph ) QPointer< HBDbfModel >( ( HBDbfModel * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_HBDbfModel;
-   p->type = QT_TYPE_HBDbfModel;
+   p->type = HBQT_TYPE_HBDbfModel;
 
    if( bNew )
    {

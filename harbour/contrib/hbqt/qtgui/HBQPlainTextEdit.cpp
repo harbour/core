@@ -129,7 +129,7 @@ void * hbqt_gcAllocate_HBQPlainTextEdit( void * pObj, bool bNew )
    new( & p->ph ) QPointer< HBQPlainTextEdit >( ( HBQPlainTextEdit * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_HBQPlainTextEdit;
-   p->type = QT_TYPE_HBQPlainTextEdit;
+   p->type = HBQT_TYPE_HBQPlainTextEdit;
 
    if( bNew )
    {

@@ -120,7 +120,7 @@ void * hbqt_gcAllocate_QPolygonF( void * pObj, bool bNew )
    p->ph = ( QPolygonF * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QPolygonF;
-   p->type = QT_TYPE_QPolygonF;
+   p->type = HBQT_TYPE_QPolygonF;
 
    if( bNew )
    {

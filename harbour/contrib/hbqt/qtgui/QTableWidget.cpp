@@ -141,7 +141,7 @@ void * hbqt_gcAllocate_QTableWidget( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QTableWidget >( ( QTableWidget * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTableWidget;
-   p->type = QT_TYPE_QTableWidget;
+   p->type = HBQT_TYPE_QTableWidget;
 
    if( bNew )
    {

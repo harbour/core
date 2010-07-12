@@ -116,7 +116,7 @@ void * hbqt_gcAllocate_HBQTextBlockUserData( void * pObj, bool bNew )
    p->ph = ( HBQTextBlockUserData * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_HBQTextBlockUserData;
-   p->type = QT_TYPE_HBQTextBlockUserData;
+   p->type = HBQT_TYPE_HBQTextBlockUserData;
 
    if( bNew )
    {

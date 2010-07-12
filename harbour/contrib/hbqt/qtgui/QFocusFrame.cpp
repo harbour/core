@@ -127,7 +127,7 @@ void * hbqt_gcAllocate_QFocusFrame( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QFocusFrame >( ( QFocusFrame * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QFocusFrame;
-   p->type = QT_TYPE_QFocusFrame;
+   p->type = HBQT_TYPE_QFocusFrame;
 
    if( bNew )
    {

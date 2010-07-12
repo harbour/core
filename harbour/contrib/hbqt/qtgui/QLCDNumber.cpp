@@ -133,7 +133,7 @@ void * hbqt_gcAllocate_QLCDNumber( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QLCDNumber >( ( QLCDNumber * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QLCDNumber;
-   p->type = QT_TYPE_QLCDNumber;
+   p->type = HBQT_TYPE_QLCDNumber;
 
    if( bNew )
    {

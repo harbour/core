@@ -146,7 +146,7 @@ void * hbqt_gcAllocate_QTextDocument( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QTextDocument >( ( QTextDocument * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextDocument;
-   p->type = QT_TYPE_QTextDocument;
+   p->type = HBQT_TYPE_QTextDocument;
 
    if( bNew )
    {

@@ -117,7 +117,7 @@ void * hbqt_gcAllocate_QHttpRequestHeader( void * pObj, bool bNew )
    p->ph = ( QHttpRequestHeader * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QHttpRequestHeader;
-   p->type = QT_TYPE_QHttpRequestHeader;
+   p->type = HBQT_TYPE_QHttpRequestHeader;
 
    if( bNew )
    {

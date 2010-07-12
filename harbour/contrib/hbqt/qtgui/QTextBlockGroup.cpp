@@ -100,7 +100,7 @@ void * hbqt_gcAllocate_QTextBlockGroup( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QTextBlockGroup >( ( QTextBlockGroup * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextBlockGroup;
-   p->type = QT_TYPE_QTextBlockGroup;
+   p->type = HBQT_TYPE_QTextBlockGroup;
 
    if( bNew )
    {

@@ -100,7 +100,7 @@ void * hbqt_gcAllocate_QTextObject( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QTextObject >( ( QTextObject * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextObject;
-   p->type = QT_TYPE_QTextObject;
+   p->type = HBQT_TYPE_QTextObject;
 
    if( bNew )
    {

@@ -135,7 +135,7 @@ void * hbqt_gcAllocate_QMdiArea( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QMdiArea >( ( QMdiArea * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QMdiArea;
-   p->type = QT_TYPE_QMdiArea;
+   p->type = HBQT_TYPE_QMdiArea;
 
    if( bNew )
    {

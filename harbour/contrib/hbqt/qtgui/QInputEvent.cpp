@@ -116,7 +116,7 @@ void * hbqt_gcAllocate_QInputEvent( void * pObj, bool bNew )
    p->ph = ( QInputEvent * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QInputEvent;
-   p->type = QT_TYPE_QInputEvent;
+   p->type = HBQT_TYPE_QInputEvent;
 
    if( bNew )
    {

@@ -123,7 +123,7 @@ void * hbqt_gcAllocate_QConicalGradient( void * pObj, bool bNew )
    p->ph = ( QConicalGradient * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QConicalGradient;
-   p->type = QT_TYPE_QConicalGradient;
+   p->type = HBQT_TYPE_QConicalGradient;
 
    if( bNew )
    {

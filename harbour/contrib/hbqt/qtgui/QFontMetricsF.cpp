@@ -119,7 +119,7 @@ void * hbqt_gcAllocate_QFontMetricsF( void * pObj, bool bNew )
    p->ph = ( QFontMetricsF * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QFontMetricsF;
-   p->type = QT_TYPE_QFontMetricsF;
+   p->type = HBQT_TYPE_QFontMetricsF;
 
    if( bNew )
    {

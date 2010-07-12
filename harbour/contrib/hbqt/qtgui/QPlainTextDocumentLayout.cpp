@@ -127,7 +127,7 @@ void * hbqt_gcAllocate_QPlainTextDocumentLayout( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QPlainTextDocumentLayout >( ( QPlainTextDocumentLayout * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QPlainTextDocumentLayout;
-   p->type = QT_TYPE_QPlainTextDocumentLayout;
+   p->type = HBQT_TYPE_QPlainTextDocumentLayout;
 
    if( bNew )
    {

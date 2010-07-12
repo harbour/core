@@ -126,7 +126,7 @@ void * hbqt_gcAllocate_QIcon( void * pObj, bool bNew )
    p->ph = ( QIcon * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QIcon;
-   p->type = QT_TYPE_QIcon;
+   p->type = HBQT_TYPE_QIcon;
 
    if( bNew )
    {

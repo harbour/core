@@ -116,7 +116,7 @@ void * hbqt_gcAllocate_QResource( void * pObj, bool bNew )
    p->ph = ( QResource * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QResource;
-   p->type = QT_TYPE_QResource;
+   p->type = HBQT_TYPE_QResource;
 
    if( bNew )
    {

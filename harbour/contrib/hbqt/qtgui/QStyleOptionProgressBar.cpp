@@ -122,7 +122,7 @@ void * hbqt_gcAllocate_QStyleOptionProgressBar( void * pObj, bool bNew )
    p->ph = ( QStyleOptionProgressBar * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyleOptionProgressBar;
-   p->type = QT_TYPE_QStyleOptionProgressBar;
+   p->type = HBQT_TYPE_QStyleOptionProgressBar;
 
    if( bNew )
    {

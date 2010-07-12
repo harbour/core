@@ -120,7 +120,7 @@ void * hbqt_gcAllocate_QFontDatabase( void * pObj, bool bNew )
    p->ph = ( QFontDatabase * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QFontDatabase;
-   p->type = QT_TYPE_QFontDatabase;
+   p->type = HBQT_TYPE_QFontDatabase;
 
    if( bNew )
    {

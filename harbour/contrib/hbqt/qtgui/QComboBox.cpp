@@ -132,7 +132,7 @@ void * hbqt_gcAllocate_QComboBox( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QComboBox >( ( QComboBox * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QComboBox;
-   p->type = QT_TYPE_QComboBox;
+   p->type = HBQT_TYPE_QComboBox;
 
    if( bNew )
    {

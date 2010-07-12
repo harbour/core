@@ -115,7 +115,7 @@ void * hbqt_gcAllocate_QSpacerItem( void * pObj, bool bNew )
    p->ph = ( QSpacerItem * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QSpacerItem;
-   p->type = QT_TYPE_QSpacerItem;
+   p->type = HBQT_TYPE_QSpacerItem;
 
    if( bNew )
    {

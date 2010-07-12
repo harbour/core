@@ -120,7 +120,7 @@ void * hbqt_gcAllocate_QAbstractItemModel( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QAbstractItemModel >( ( QAbstractItemModel * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QAbstractItemModel;
-   p->type = QT_TYPE_QAbstractItemModel;
+   p->type = HBQT_TYPE_QAbstractItemModel;
 
    if( bNew )
    {

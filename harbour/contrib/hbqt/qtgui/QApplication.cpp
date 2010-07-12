@@ -183,7 +183,7 @@ void * hbqt_gcAllocate_QApplication( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QApplication >( ( QApplication * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QApplication;
-   p->type = QT_TYPE_QApplication;
+   p->type = HBQT_TYPE_QApplication;
 
    if( bNew )
    {

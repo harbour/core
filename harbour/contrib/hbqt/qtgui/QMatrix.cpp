@@ -117,7 +117,7 @@ void * hbqt_gcAllocate_QMatrix( void * pObj, bool bNew )
    p->ph = ( QMatrix * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QMatrix;
-   p->type = QT_TYPE_QMatrix;
+   p->type = HBQT_TYPE_QMatrix;
 
    if( bNew )
    {

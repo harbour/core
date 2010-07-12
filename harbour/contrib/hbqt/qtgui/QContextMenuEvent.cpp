@@ -120,7 +120,7 @@ void * hbqt_gcAllocate_QContextMenuEvent( void * pObj, bool bNew )
    p->ph = ( QContextMenuEvent * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QContextMenuEvent;
-   p->type = QT_TYPE_QContextMenuEvent;
+   p->type = HBQT_TYPE_QContextMenuEvent;
 
    if( bNew )
    {

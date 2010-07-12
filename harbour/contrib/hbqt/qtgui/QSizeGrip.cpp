@@ -127,7 +127,7 @@ void * hbqt_gcAllocate_QSizeGrip( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QSizeGrip >( ( QSizeGrip * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QSizeGrip;
-   p->type = QT_TYPE_QSizeGrip;
+   p->type = HBQT_TYPE_QSizeGrip;
 
    if( bNew )
    {

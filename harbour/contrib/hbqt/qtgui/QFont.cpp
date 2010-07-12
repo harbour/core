@@ -129,7 +129,7 @@ void * hbqt_gcAllocate_QFont( void * pObj, bool bNew )
    p->ph = ( QFont * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QFont;
-   p->type = QT_TYPE_QFont;
+   p->type = HBQT_TYPE_QFont;
 
    if( bNew )
    {

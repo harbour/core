@@ -117,7 +117,7 @@ void * hbqt_gcAllocate_QMouseEvent( void * pObj, bool bNew )
    p->ph = ( QMouseEvent * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QMouseEvent;
-   p->type = QT_TYPE_QMouseEvent;
+   p->type = HBQT_TYPE_QMouseEvent;
 
    if( bNew )
    {

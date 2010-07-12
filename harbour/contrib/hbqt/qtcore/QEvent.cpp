@@ -120,7 +120,7 @@ void * hbqt_gcAllocate_QEvent( void * pObj, bool bNew )
    p->ph = ( QEvent * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QEvent;
-   p->type = QT_TYPE_QEvent;
+   p->type = HBQT_TYPE_QEvent;
 
    if( bNew )
    {

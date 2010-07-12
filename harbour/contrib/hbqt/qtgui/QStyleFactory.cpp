@@ -115,7 +115,7 @@ void * hbqt_gcAllocate_QStyleFactory( void * pObj, bool bNew )
    p->ph = ( QStyleFactory * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyleFactory;
-   p->type = QT_TYPE_QStyleFactory;
+   p->type = HBQT_TYPE_QStyleFactory;
 
    if( bNew )
    {

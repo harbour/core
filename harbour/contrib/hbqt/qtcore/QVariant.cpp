@@ -177,7 +177,7 @@ void * hbqt_gcAllocate_QVariant( void * pObj, bool bNew )
    p->ph = ( QVariant * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QVariant;
-   p->type = QT_TYPE_QVariant;
+   p->type = HBQT_TYPE_QVariant;
 
    if( bNew )
    {

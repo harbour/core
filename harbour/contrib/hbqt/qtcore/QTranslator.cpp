@@ -126,7 +126,7 @@ void * hbqt_gcAllocate_QTranslator( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QTranslator >( ( QTranslator * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTranslator;
-   p->type = QT_TYPE_QTranslator;
+   p->type = HBQT_TYPE_QTranslator;
 
    if( bNew )
    {

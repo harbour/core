@@ -128,7 +128,7 @@ void * hbqt_gcAllocate_HBQMainWindow( void * pObj, bool bNew )
    new( & p->ph ) QPointer< HBQMainWindow >( ( HBQMainWindow * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_HBQMainWindow;
-   p->type = QT_TYPE_HBQMainWindow;
+   p->type = HBQT_TYPE_HBQMainWindow;
 
    if( bNew )
    {

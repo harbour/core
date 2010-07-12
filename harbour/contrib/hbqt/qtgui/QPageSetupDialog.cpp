@@ -132,7 +132,7 @@ void * hbqt_gcAllocate_QPageSetupDialog( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QPageSetupDialog >( ( QPageSetupDialog * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QPageSetupDialog;
-   p->type = QT_TYPE_QPageSetupDialog;
+   p->type = HBQT_TYPE_QPageSetupDialog;
 
    if( bNew )
    {

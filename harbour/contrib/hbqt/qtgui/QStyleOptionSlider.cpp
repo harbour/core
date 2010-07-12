@@ -121,7 +121,7 @@ void * hbqt_gcAllocate_QStyleOptionSlider( void * pObj, bool bNew )
    p->ph = ( QStyleOptionSlider * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyleOptionSlider;
-   p->type = QT_TYPE_QStyleOptionSlider;
+   p->type = HBQT_TYPE_QStyleOptionSlider;
 
    if( bNew )
    {

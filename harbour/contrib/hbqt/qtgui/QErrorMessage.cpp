@@ -127,7 +127,7 @@ void * hbqt_gcAllocate_QErrorMessage( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QErrorMessage >( ( QErrorMessage * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QErrorMessage;
-   p->type = QT_TYPE_QErrorMessage;
+   p->type = HBQT_TYPE_QErrorMessage;
 
    if( bNew )
    {

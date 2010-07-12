@@ -128,7 +128,7 @@ void * hbqt_gcAllocate_QGroupBox( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QGroupBox >( ( QGroupBox * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QGroupBox;
-   p->type = QT_TYPE_QGroupBox;
+   p->type = HBQT_TYPE_QGroupBox;
 
    if( bNew )
    {

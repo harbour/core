@@ -122,7 +122,7 @@ void * hbqt_gcAllocate_QImageWriter( void * pObj, bool bNew )
    p->ph = ( QImageWriter * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QImageWriter;
-   p->type = QT_TYPE_QImageWriter;
+   p->type = HBQT_TYPE_QImageWriter;
 
    if( bNew )
    {

@@ -143,7 +143,7 @@ void * hbqt_gcAllocate_QList( void * pObj, bool bNew )
    p->ph = ( QList< void * > * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QList;
-   p->type = QT_TYPE_QList;
+   p->type = HBQT_TYPE_QList;
 
    if( bNew )
    {

@@ -117,7 +117,7 @@ void * hbqt_gcAllocate_QStylePainter( void * pObj, bool bNew )
    p->ph = ( QStylePainter * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStylePainter;
-   p->type = QT_TYPE_QStylePainter;
+   p->type = HBQT_TYPE_QStylePainter;
 
    if( bNew )
    {

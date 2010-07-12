@@ -139,7 +139,7 @@ void * hbqt_gcAllocate_QTreeView( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QTreeView >( ( QTreeView * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTreeView;
-   p->type = QT_TYPE_QTreeView;
+   p->type = HBQT_TYPE_QTreeView;
 
    if( bNew )
    {

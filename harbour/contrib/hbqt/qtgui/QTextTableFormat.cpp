@@ -124,7 +124,7 @@ void * hbqt_gcAllocate_QTextTableFormat( void * pObj, bool bNew )
    p->ph = ( QTextTableFormat * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextTableFormat;
-   p->type = QT_TYPE_QTextTableFormat;
+   p->type = HBQT_TYPE_QTextTableFormat;
 
    if( bNew )
    {

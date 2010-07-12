@@ -101,7 +101,7 @@ void * hbqt_gcAllocate_QTextList( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QTextList >( ( QTextList * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextList;
-   p->type = QT_TYPE_QTextList;
+   p->type = HBQT_TYPE_QTextList;
 
    if( bNew )
    {

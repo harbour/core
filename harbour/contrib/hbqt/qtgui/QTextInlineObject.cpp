@@ -101,7 +101,7 @@ void * hbqt_gcAllocate_QTextInlineObject( void * pObj, bool bNew )
    p->ph = ( QTextInlineObject * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextInlineObject;
-   p->type = QT_TYPE_QTextInlineObject;
+   p->type = HBQT_TYPE_QTextInlineObject;
 
    if( bNew )
    {

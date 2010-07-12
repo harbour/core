@@ -147,7 +147,7 @@ void * hbqt_gcAllocate_QImage( void * pObj, bool bNew )
    p->ph = ( QImage * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QImage;
-   p->type = QT_TYPE_QImage;
+   p->type = HBQT_TYPE_QImage;
 
    if( bNew )
    {

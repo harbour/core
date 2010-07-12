@@ -119,7 +119,7 @@ void * hbqt_gcAllocate_QTextDocumentFragment( void * pObj, bool bNew )
    p->ph = ( QTextDocumentFragment * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextDocumentFragment;
-   p->type = QT_TYPE_QTextDocumentFragment;
+   p->type = HBQT_TYPE_QTextDocumentFragment;
 
    if( bNew )
    {

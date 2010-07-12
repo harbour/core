@@ -121,7 +121,7 @@ void * hbqt_gcAllocate_QStyleOptionTabBarBase( void * pObj, bool bNew )
    p->ph = ( QStyleOptionTabBarBase * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyleOptionTabBarBase;
-   p->type = QT_TYPE_QStyleOptionTabBarBase;
+   p->type = HBQT_TYPE_QStyleOptionTabBarBase;
 
    if( bNew )
    {

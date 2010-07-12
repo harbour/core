@@ -119,7 +119,7 @@ void * hbqt_gcAllocate_QFileIconProvider( void * pObj, bool bNew )
    p->ph = ( QFileIconProvider * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QFileIconProvider;
-   p->type = QT_TYPE_QFileIconProvider;
+   p->type = HBQT_TYPE_QFileIconProvider;
 
    if( bNew )
    {

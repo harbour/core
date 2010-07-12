@@ -116,7 +116,7 @@ void * hbqt_gcAllocate_QTextBlock( void * pObj, bool bNew )
    p->ph = ( QTextBlock * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextBlock;
-   p->type = QT_TYPE_QTextBlock;
+   p->type = HBQT_TYPE_QTextBlock;
 
    if( bNew )
    {

@@ -116,7 +116,7 @@ void * hbqt_gcAllocate_QTextImageFormat( void * pObj, bool bNew )
    p->ph = ( QTextImageFormat * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextImageFormat;
-   p->type = QT_TYPE_QTextImageFormat;
+   p->type = HBQT_TYPE_QTextImageFormat;
 
    if( bNew )
    {

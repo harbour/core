@@ -123,7 +123,7 @@ void * hbqt_gcAllocate_QStyleOptionButton( void * pObj, bool bNew )
    p->ph = ( QStyleOptionButton * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyleOptionButton;
-   p->type = QT_TYPE_QStyleOptionButton;
+   p->type = HBQT_TYPE_QStyleOptionButton;
 
    if( bNew )
    {

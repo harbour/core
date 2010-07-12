@@ -100,7 +100,7 @@ void * hbqt_gcAllocate_QFocusEvent( void * pObj, bool bNew )
    p->ph = ( QFocusEvent * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QFocusEvent;
-   p->type = QT_TYPE_QFocusEvent;
+   p->type = HBQT_TYPE_QFocusEvent;
 
    if( bNew )
    {

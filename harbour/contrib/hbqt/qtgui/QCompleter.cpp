@@ -133,7 +133,7 @@ void * hbqt_gcAllocate_QCompleter( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QCompleter >( ( QCompleter * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QCompleter;
-   p->type = QT_TYPE_QCompleter;
+   p->type = HBQT_TYPE_QCompleter;
 
    if( bNew )
    {

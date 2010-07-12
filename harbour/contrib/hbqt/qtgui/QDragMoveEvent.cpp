@@ -101,7 +101,7 @@ void * hbqt_gcAllocate_QDragMoveEvent( void * pObj, bool bNew )
    p->ph = ( QDragMoveEvent * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QDragMoveEvent;
-   p->type = QT_TYPE_QDragMoveEvent;
+   p->type = HBQT_TYPE_QDragMoveEvent;
 
    if( bNew )
    {

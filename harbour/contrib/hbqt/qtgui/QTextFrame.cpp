@@ -128,7 +128,7 @@ void * hbqt_gcAllocate_QTextFrame( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QTextFrame >( ( QTextFrame * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextFrame;
-   p->type = QT_TYPE_QTextFrame;
+   p->type = HBQT_TYPE_QTextFrame;
 
    if( bNew )
    {

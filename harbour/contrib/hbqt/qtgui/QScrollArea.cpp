@@ -127,7 +127,7 @@ void * hbqt_gcAllocate_QScrollArea( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QScrollArea >( ( QScrollArea * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QScrollArea;
-   p->type = QT_TYPE_QScrollArea;
+   p->type = HBQT_TYPE_QScrollArea;
 
    if( bNew )
    {

@@ -127,7 +127,7 @@ void * hbqt_gcAllocate_QSignalMapper( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QSignalMapper >( ( QSignalMapper * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QSignalMapper;
-   p->type = QT_TYPE_QSignalMapper;
+   p->type = HBQT_TYPE_QSignalMapper;
 
    if( bNew )
    {

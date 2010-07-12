@@ -116,7 +116,7 @@ void * hbqt_gcAllocate_QTextDecoder( void * pObj, bool bNew )
    p->ph = ( QTextDecoder * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextDecoder;
-   p->type = QT_TYPE_QTextDecoder;
+   p->type = HBQT_TYPE_QTextDecoder;
 
    if( bNew )
    {

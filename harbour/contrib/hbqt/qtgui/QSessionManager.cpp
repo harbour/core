@@ -104,7 +104,7 @@ void * hbqt_gcAllocate_QSessionManager( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QSessionManager >( ( QSessionManager * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QSessionManager;
-   p->type = QT_TYPE_QSessionManager;
+   p->type = HBQT_TYPE_QSessionManager;
 
    if( bNew )
    {

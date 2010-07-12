@@ -121,7 +121,7 @@ void * hbqt_gcAllocate_QStyleOptionToolBox( void * pObj, bool bNew )
    p->ph = ( QStyleOptionToolBox * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyleOptionToolBox;
-   p->type = QT_TYPE_QStyleOptionToolBox;
+   p->type = HBQT_TYPE_QStyleOptionToolBox;
 
    if( bNew )
    {

@@ -103,7 +103,7 @@ void * hbqt_gcAllocate_QPaintDevice( void * pObj, bool bNew )
    p->ph = ( QPaintDevice * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QPaintDevice;
-   p->type = QT_TYPE_QPaintDevice;
+   p->type = HBQT_TYPE_QPaintDevice;
 
    if( bNew )
    {

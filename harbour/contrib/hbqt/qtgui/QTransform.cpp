@@ -121,7 +121,7 @@ void * hbqt_gcAllocate_QTransform( void * pObj, bool bNew )
    p->ph = ( QTransform * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTransform;
-   p->type = QT_TYPE_QTransform;
+   p->type = HBQT_TYPE_QTransform;
 
    if( bNew )
    {

@@ -117,7 +117,7 @@ void * hbqt_gcAllocate_QModelIndex( void * pObj, bool bNew )
    p->ph = ( QModelIndex * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QModelIndex;
-   p->type = QT_TYPE_QModelIndex;
+   p->type = HBQT_TYPE_QModelIndex;
 
    if( bNew )
    {

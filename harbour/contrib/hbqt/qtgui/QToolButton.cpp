@@ -131,7 +131,7 @@ void * hbqt_gcAllocate_QToolButton( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QToolButton >( ( QToolButton * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QToolButton;
-   p->type = QT_TYPE_QToolButton;
+   p->type = HBQT_TYPE_QToolButton;
 
    if( bNew )
    {

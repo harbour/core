@@ -123,7 +123,7 @@ void * hbqt_gcAllocate_QCursor( void * pObj, bool bNew )
    p->ph = ( QCursor * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QCursor;
-   p->type = QT_TYPE_QCursor;
+   p->type = HBQT_TYPE_QCursor;
 
    if( bNew )
    {

@@ -121,7 +121,7 @@ void * hbqt_gcAllocate_QStyleOptionSizeGrip( void * pObj, bool bNew )
    p->ph = ( QStyleOptionSizeGrip * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyleOptionSizeGrip;
-   p->type = QT_TYPE_QStyleOptionSizeGrip;
+   p->type = HBQT_TYPE_QStyleOptionSizeGrip;
 
    if( bNew )
    {

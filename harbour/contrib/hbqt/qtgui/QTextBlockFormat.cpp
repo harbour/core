@@ -134,7 +134,7 @@ void * hbqt_gcAllocate_QTextBlockFormat( void * pObj, bool bNew )
    p->ph = ( QTextBlockFormat * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextBlockFormat;
-   p->type = QT_TYPE_QTextBlockFormat;
+   p->type = HBQT_TYPE_QTextBlockFormat;
 
    if( bNew )
    {

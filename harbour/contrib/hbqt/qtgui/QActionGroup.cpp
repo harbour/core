@@ -126,7 +126,7 @@ void * hbqt_gcAllocate_QActionGroup( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QActionGroup >( ( QActionGroup * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QActionGroup;
-   p->type = QT_TYPE_QActionGroup;
+   p->type = HBQT_TYPE_QActionGroup;
 
    if( bNew )
    {

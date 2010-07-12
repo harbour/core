@@ -127,7 +127,7 @@ void * hbqt_gcAllocate_QMenuBar( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QMenuBar >( ( QMenuBar * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QMenuBar;
-   p->type = QT_TYPE_QMenuBar;
+   p->type = HBQT_TYPE_QMenuBar;
 
    if( bNew )
    {

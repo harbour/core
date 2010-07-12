@@ -115,7 +115,7 @@ void * hbqt_gcAllocate_QStyleHintReturnVariant( void * pObj, bool bNew )
    p->ph = ( QStyleHintReturnVariant * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyleHintReturnVariant;
-   p->type = QT_TYPE_QStyleHintReturnVariant;
+   p->type = HBQT_TYPE_QStyleHintReturnVariant;
 
    if( bNew )
    {

@@ -121,7 +121,7 @@ void * hbqt_gcAllocate_QStyleOptionGroupBox( void * pObj, bool bNew )
    p->ph = ( QStyleOptionGroupBox * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyleOptionGroupBox;
-   p->type = QT_TYPE_QStyleOptionGroupBox;
+   p->type = HBQT_TYPE_QStyleOptionGroupBox;
 
    if( bNew )
    {

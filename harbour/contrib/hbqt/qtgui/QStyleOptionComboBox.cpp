@@ -121,7 +121,7 @@ void * hbqt_gcAllocate_QStyleOptionComboBox( void * pObj, bool bNew )
    p->ph = ( QStyleOptionComboBox * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyleOptionComboBox;
-   p->type = QT_TYPE_QStyleOptionComboBox;
+   p->type = HBQT_TYPE_QStyleOptionComboBox;
 
    if( bNew )
    {

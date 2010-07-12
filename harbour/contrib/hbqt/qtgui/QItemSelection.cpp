@@ -115,7 +115,7 @@ void * hbqt_gcAllocate_QItemSelection( void * pObj, bool bNew )
    p->ph = ( QItemSelection * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QItemSelection;
-   p->type = QT_TYPE_QItemSelection;
+   p->type = HBQT_TYPE_QItemSelection;
 
    if( bNew )
    {

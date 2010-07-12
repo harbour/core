@@ -101,7 +101,7 @@ void * hbqt_gcAllocate_QWheelEvent( void * pObj, bool bNew )
    p->ph = ( QWheelEvent * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QWheelEvent;
-   p->type = QT_TYPE_QWheelEvent;
+   p->type = HBQT_TYPE_QWheelEvent;
 
    if( bNew )
    {

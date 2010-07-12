@@ -140,7 +140,7 @@ void * hbqt_gcAllocate_QTreeWidgetItem( void * pObj, bool bNew )
    p->ph = ( QTreeWidgetItem * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTreeWidgetItem;
-   p->type = QT_TYPE_QTreeWidgetItem;
+   p->type = HBQT_TYPE_QTreeWidgetItem;
 
    if( bNew )
    {

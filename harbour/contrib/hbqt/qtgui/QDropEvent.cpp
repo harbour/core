@@ -109,7 +109,7 @@ void * hbqt_gcAllocate_QDropEvent( void * pObj, bool bNew )
    p->ph = ( QDropEvent * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QDropEvent;
-   p->type = QT_TYPE_QDropEvent;
+   p->type = HBQT_TYPE_QDropEvent;
 
    if( bNew )
    {

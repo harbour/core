@@ -137,7 +137,7 @@ void * hbqt_gcAllocate_QStandardItem( void * pObj, bool bNew )
    p->ph = ( QStandardItem * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStandardItem;
-   p->type = QT_TYPE_QStandardItem;
+   p->type = HBQT_TYPE_QStandardItem;
 
    if( bNew )
    {

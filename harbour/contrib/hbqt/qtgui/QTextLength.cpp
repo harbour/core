@@ -120,7 +120,7 @@ void * hbqt_gcAllocate_QTextLength( void * pObj, bool bNew )
    p->ph = ( QTextLength * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextLength;
-   p->type = QT_TYPE_QTextLength;
+   p->type = HBQT_TYPE_QTextLength;
 
    if( bNew )
    {

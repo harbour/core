@@ -132,7 +132,7 @@ void * hbqt_gcAllocate_QColorDialog( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QColorDialog >( ( QColorDialog * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QColorDialog;
-   p->type = QT_TYPE_QColorDialog;
+   p->type = HBQT_TYPE_QColorDialog;
 
    if( bNew )
    {

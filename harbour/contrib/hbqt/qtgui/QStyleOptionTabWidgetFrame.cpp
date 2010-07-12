@@ -121,7 +121,7 @@ void * hbqt_gcAllocate_QStyleOptionTabWidgetFrame( void * pObj, bool bNew )
    p->ph = ( QStyleOptionTabWidgetFrame * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyleOptionTabWidgetFrame;
-   p->type = QT_TYPE_QStyleOptionTabWidgetFrame;
+   p->type = HBQT_TYPE_QStyleOptionTabWidgetFrame;
 
    if( bNew )
    {

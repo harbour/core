@@ -136,7 +136,7 @@ void * hbqt_gcAllocate_QPainter( void * pObj, bool bNew )
    p->ph = ( QPainter * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QPainter;
-   p->type = QT_TYPE_QPainter;
+   p->type = HBQT_TYPE_QPainter;
 
    if( bNew )
    {

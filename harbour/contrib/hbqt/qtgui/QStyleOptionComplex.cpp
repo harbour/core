@@ -121,7 +121,7 @@ void * hbqt_gcAllocate_QStyleOptionComplex( void * pObj, bool bNew )
    p->ph = ( QStyleOptionComplex * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyleOptionComplex;
-   p->type = QT_TYPE_QStyleOptionComplex;
+   p->type = HBQT_TYPE_QStyleOptionComplex;
 
    if( bNew )
    {

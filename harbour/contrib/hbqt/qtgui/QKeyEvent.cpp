@@ -101,7 +101,7 @@ void * hbqt_gcAllocate_QKeyEvent( void * pObj, bool bNew )
    p->ph = ( QKeyEvent * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QKeyEvent;
-   p->type = QT_TYPE_QKeyEvent;
+   p->type = HBQT_TYPE_QKeyEvent;
 
    if( bNew )
    {

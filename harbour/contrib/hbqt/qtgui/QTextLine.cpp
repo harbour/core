@@ -120,7 +120,7 @@ void * hbqt_gcAllocate_QTextLine( void * pObj, bool bNew )
    p->ph = ( QTextLine * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextLine;
-   p->type = QT_TYPE_QTextLine;
+   p->type = HBQT_TYPE_QTextLine;
 
    if( bNew )
    {

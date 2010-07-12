@@ -133,7 +133,7 @@ void * hbqt_gcAllocate_QFormLayout( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QFormLayout >( ( QFormLayout * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QFormLayout;
-   p->type = QT_TYPE_QFormLayout;
+   p->type = HBQT_TYPE_QFormLayout;
 
    if( bNew )
    {

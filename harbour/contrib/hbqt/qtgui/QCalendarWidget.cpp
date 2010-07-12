@@ -142,7 +142,7 @@ void * hbqt_gcAllocate_QCalendarWidget( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QCalendarWidget >( ( QCalendarWidget * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QCalendarWidget;
-   p->type = QT_TYPE_QCalendarWidget;
+   p->type = HBQT_TYPE_QCalendarWidget;
 
    if( bNew )
    {

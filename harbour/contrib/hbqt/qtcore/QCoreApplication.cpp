@@ -106,7 +106,7 @@ void * hbqt_gcAllocate_QCoreApplication( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QCoreApplication >( ( QCoreApplication * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QCoreApplication;
-   p->type = QT_TYPE_QCoreApplication;
+   p->type = HBQT_TYPE_QCoreApplication;
 
    if( bNew )
    {

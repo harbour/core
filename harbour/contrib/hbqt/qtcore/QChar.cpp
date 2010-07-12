@@ -128,7 +128,7 @@ void * hbqt_gcAllocate_QChar( void * pObj, bool bNew )
    p->ph = ( QChar * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QChar;
-   p->type = QT_TYPE_QChar;
+   p->type = HBQT_TYPE_QChar;
 
    if( bNew )
    {

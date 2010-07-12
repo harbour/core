@@ -124,7 +124,7 @@ void * hbqt_gcAllocate_QSizePolicy( void * pObj, bool bNew )
    p->ph = ( QSizePolicy * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QSizePolicy;
-   p->type = QT_TYPE_QSizePolicy;
+   p->type = HBQT_TYPE_QSizePolicy;
 
    if( bNew )
    {

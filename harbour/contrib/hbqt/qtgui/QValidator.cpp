@@ -104,7 +104,7 @@ void * hbqt_gcAllocate_QValidator( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QValidator >( ( QValidator * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QValidator;
-   p->type = QT_TYPE_QValidator;
+   p->type = HBQT_TYPE_QValidator;
 
    if( bNew )
    {

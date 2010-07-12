@@ -121,7 +121,7 @@ void * hbqt_gcAllocate_QStyleOptionFrame( void * pObj, bool bNew )
    p->ph = ( QStyleOptionFrame * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyleOptionFrame;
-   p->type = QT_TYPE_QStyleOptionFrame;
+   p->type = HBQT_TYPE_QStyleOptionFrame;
 
    if( bNew )
    {

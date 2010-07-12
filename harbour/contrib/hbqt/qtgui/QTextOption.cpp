@@ -139,7 +139,7 @@ void * hbqt_gcAllocate_QTextOption( void * pObj, bool bNew )
    p->ph = ( QTextOption * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextOption;
-   p->type = QT_TYPE_QTextOption;
+   p->type = HBQT_TYPE_QTextOption;
 
    if( bNew )
    {

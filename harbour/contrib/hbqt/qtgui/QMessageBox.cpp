@@ -135,7 +135,7 @@ void * hbqt_gcAllocate_QMessageBox( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QMessageBox >( ( QMessageBox * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QMessageBox;
-   p->type = QT_TYPE_QMessageBox;
+   p->type = HBQT_TYPE_QMessageBox;
 
    if( bNew )
    {

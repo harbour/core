@@ -141,7 +141,7 @@ void * hbqt_gcAllocate_QGridLayout( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QGridLayout >( ( QGridLayout * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QGridLayout;
-   p->type = QT_TYPE_QGridLayout;
+   p->type = HBQT_TYPE_QGridLayout;
 
    if( bNew )
    {

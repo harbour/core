@@ -108,7 +108,7 @@ void * hbqt_gcAllocate_QAbstractSpinBox( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QAbstractSpinBox >( ( QAbstractSpinBox * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QAbstractSpinBox;
-   p->type = QT_TYPE_QAbstractSpinBox;
+   p->type = HBQT_TYPE_QAbstractSpinBox;
 
    if( bNew )
    {

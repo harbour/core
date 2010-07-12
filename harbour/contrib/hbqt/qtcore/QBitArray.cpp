@@ -116,7 +116,7 @@ void * hbqt_gcAllocate_QBitArray( void * pObj, bool bNew )
    p->ph = ( QBitArray * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QBitArray;
-   p->type = QT_TYPE_QBitArray;
+   p->type = HBQT_TYPE_QBitArray;
 
    if( bNew )
    {

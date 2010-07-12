@@ -141,7 +141,7 @@ void * hbqt_gcAllocate_QTreeWidget( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QTreeWidget >( ( QTreeWidget * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTreeWidget;
-   p->type = QT_TYPE_QTreeWidget;
+   p->type = HBQT_TYPE_QTreeWidget;
 
    if( bNew )
    {

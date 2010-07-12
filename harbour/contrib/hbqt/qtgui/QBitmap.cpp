@@ -120,7 +120,7 @@ void * hbqt_gcAllocate_QBitmap( void * pObj, bool bNew )
    p->ph = ( QBitmap * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QBitmap;
-   p->type = QT_TYPE_QBitmap;
+   p->type = HBQT_TYPE_QBitmap;
 
    if( bNew )
    {

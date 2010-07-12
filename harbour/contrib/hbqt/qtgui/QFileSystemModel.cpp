@@ -131,7 +131,7 @@ void * hbqt_gcAllocate_QFileSystemModel( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QFileSystemModel >( ( QFileSystemModel * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QFileSystemModel;
-   p->type = QT_TYPE_QFileSystemModel;
+   p->type = HBQT_TYPE_QFileSystemModel;
 
    if( bNew )
    {

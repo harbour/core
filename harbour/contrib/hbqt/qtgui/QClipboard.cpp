@@ -107,7 +107,7 @@ void * hbqt_gcAllocate_QClipboard( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QClipboard >( ( QClipboard * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QClipboard;
-   p->type = QT_TYPE_QClipboard;
+   p->type = HBQT_TYPE_QClipboard;
 
    if( bNew )
    {

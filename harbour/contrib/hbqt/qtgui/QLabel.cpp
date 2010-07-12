@@ -129,7 +129,7 @@ void * hbqt_gcAllocate_QLabel( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QLabel >( ( QLabel * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QLabel;
-   p->type = QT_TYPE_QLabel;
+   p->type = HBQT_TYPE_QLabel;
 
    if( bNew )
    {

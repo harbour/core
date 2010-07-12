@@ -125,7 +125,7 @@ void * hbqt_gcAllocate_QColor( void * pObj, bool bNew )
    p->ph = ( QColor * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QColor;
-   p->type = QT_TYPE_QColor;
+   p->type = HBQT_TYPE_QColor;
 
    if( bNew )
    {

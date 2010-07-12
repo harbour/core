@@ -122,7 +122,7 @@ void * hbqt_gcAllocate_QStyleOptionViewItem( void * pObj, bool bNew )
    p->ph = ( QStyleOptionViewItem * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyleOptionViewItem;
-   p->type = QT_TYPE_QStyleOptionViewItem;
+   p->type = HBQT_TYPE_QStyleOptionViewItem;
 
    if( bNew )
    {

@@ -130,7 +130,7 @@ void * hbqt_gcAllocate_QProgressBar( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QProgressBar >( ( QProgressBar * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QProgressBar;
-   p->type = QT_TYPE_QProgressBar;
+   p->type = HBQT_TYPE_QProgressBar;
 
    if( bNew )
    {

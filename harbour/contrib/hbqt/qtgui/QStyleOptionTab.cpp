@@ -125,7 +125,7 @@ void * hbqt_gcAllocate_QStyleOptionTab( void * pObj, bool bNew )
    p->ph = ( QStyleOptionTab * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyleOptionTab;
-   p->type = QT_TYPE_QStyleOptionTab;
+   p->type = HBQT_TYPE_QStyleOptionTab;
 
    if( bNew )
    {

@@ -121,7 +121,7 @@ void * hbqt_gcAllocate_QTextItem( void * pObj, bool bNew )
    p->ph = ( QTextItem * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextItem;
-   p->type = QT_TYPE_QTextItem;
+   p->type = HBQT_TYPE_QTextItem;
 
    if( bNew )
    {

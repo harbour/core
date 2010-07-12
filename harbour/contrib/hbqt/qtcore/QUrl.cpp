@@ -149,7 +149,7 @@ void * hbqt_gcAllocate_QUrl( void * pObj, bool bNew )
    p->ph = ( QUrl * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QUrl;
-   p->type = QT_TYPE_QUrl;
+   p->type = HBQT_TYPE_QUrl;
 
    if( bNew )
    {

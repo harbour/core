@@ -150,7 +150,7 @@ void * hbqt_gcAllocate_QHttp( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QHttp >( ( QHttp * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QHttp;
-   p->type = QT_TYPE_QHttp;
+   p->type = HBQT_TYPE_QHttp;
 
    if( bNew )
    {

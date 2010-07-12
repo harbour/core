@@ -127,7 +127,7 @@ void * hbqt_gcAllocate_QStatusBar( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QStatusBar >( ( QStatusBar * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStatusBar;
-   p->type = QT_TYPE_QStatusBar;
+   p->type = HBQT_TYPE_QStatusBar;
 
    if( bNew )
    {

@@ -101,7 +101,7 @@ void * hbqt_gcAllocate_QAbstractButton( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QAbstractButton >( ( QAbstractButton * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QAbstractButton;
-   p->type = QT_TYPE_QAbstractButton;
+   p->type = HBQT_TYPE_QAbstractButton;
 
    if( bNew )
    {

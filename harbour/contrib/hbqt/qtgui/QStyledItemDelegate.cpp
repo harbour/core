@@ -127,7 +127,7 @@ void * hbqt_gcAllocate_QStyledItemDelegate( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QStyledItemDelegate >( ( QStyledItemDelegate * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyledItemDelegate;
-   p->type = QT_TYPE_QStyledItemDelegate;
+   p->type = HBQT_TYPE_QStyledItemDelegate;
 
    if( bNew )
    {

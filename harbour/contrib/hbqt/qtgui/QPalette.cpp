@@ -126,7 +126,7 @@ void * hbqt_gcAllocate_QPalette( void * pObj, bool bNew )
    p->ph = ( QPalette * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QPalette;
-   p->type = QT_TYPE_QPalette;
+   p->type = HBQT_TYPE_QPalette;
 
    if( bNew )
    {

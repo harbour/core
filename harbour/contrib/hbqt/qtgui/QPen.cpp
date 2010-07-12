@@ -130,7 +130,7 @@ void * hbqt_gcAllocate_QPen( void * pObj, bool bNew )
    p->ph = ( QPen * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QPen;
-   p->type = QT_TYPE_QPen;
+   p->type = HBQT_TYPE_QPen;
 
    if( bNew )
    {

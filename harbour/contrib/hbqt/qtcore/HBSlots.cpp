@@ -128,7 +128,7 @@ void * hbqt_gcAllocate_HBSlots( void * pObj, bool bNew )
    new( & p->ph ) QPointer< HBSlots >( ( HBSlots * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_HBSlots;
-   p->type = QT_TYPE_HBSlots;
+   p->type = HBQT_TYPE_HBSlots;
 
    if( bNew )
    {

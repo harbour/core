@@ -125,7 +125,7 @@ void * hbqt_gcAllocate_QRadialGradient( void * pObj, bool bNew )
    p->ph = ( QRadialGradient * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QRadialGradient;
-   p->type = QT_TYPE_QRadialGradient;
+   p->type = HBQT_TYPE_QRadialGradient;
 
    if( bNew )
    {

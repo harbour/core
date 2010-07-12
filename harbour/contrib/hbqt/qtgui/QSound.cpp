@@ -127,7 +127,7 @@ void * hbqt_gcAllocate_QSound( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QSound >( ( QSound * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QSound;
-   p->type = QT_TYPE_QSound;
+   p->type = HBQT_TYPE_QSound;
 
    if( bNew )
    {

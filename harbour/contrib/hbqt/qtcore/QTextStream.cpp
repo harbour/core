@@ -129,7 +129,7 @@ void * hbqt_gcAllocate_QTextStream( void * pObj, bool bNew )
    p->ph = ( QTextStream * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextStream;
-   p->type = QT_TYPE_QTextStream;
+   p->type = HBQT_TYPE_QTextStream;
 
    if( bNew )
    {

@@ -121,7 +121,7 @@ void * hbqt_gcAllocate_QStyleOptionFocusRect( void * pObj, bool bNew )
    p->ph = ( QStyleOptionFocusRect * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyleOptionFocusRect;
-   p->type = QT_TYPE_QStyleOptionFocusRect;
+   p->type = HBQT_TYPE_QStyleOptionFocusRect;
 
    if( bNew )
    {

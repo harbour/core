@@ -111,7 +111,7 @@ void * hbqt_gcAllocate_QAbstractItemView( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QAbstractItemView >( ( QAbstractItemView * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QAbstractItemView;
-   p->type = QT_TYPE_QAbstractItemView;
+   p->type = HBQT_TYPE_QAbstractItemView;
 
    if( bNew )
    {

@@ -123,7 +123,7 @@ void * hbqt_gcAllocate_QStyleOptionMenuItem( void * pObj, bool bNew )
    p->ph = ( QStyleOptionMenuItem * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyleOptionMenuItem;
-   p->type = QT_TYPE_QStyleOptionMenuItem;
+   p->type = HBQT_TYPE_QStyleOptionMenuItem;
 
    if( bNew )
    {

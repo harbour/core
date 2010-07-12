@@ -128,7 +128,7 @@ void * hbqt_gcAllocate_QWindowsStyle( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QWindowsStyle >( ( QWindowsStyle * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QWindowsStyle;
-   p->type = QT_TYPE_QWindowsStyle;
+   p->type = HBQT_TYPE_QWindowsStyle;
 
    if( bNew )
    {

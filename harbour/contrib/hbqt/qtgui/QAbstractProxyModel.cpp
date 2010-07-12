@@ -100,7 +100,7 @@ void * hbqt_gcAllocate_QAbstractProxyModel( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QAbstractProxyModel >( ( QAbstractProxyModel * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QAbstractProxyModel;
-   p->type = QT_TYPE_QAbstractProxyModel;
+   p->type = HBQT_TYPE_QAbstractProxyModel;
 
    if( bNew )
    {

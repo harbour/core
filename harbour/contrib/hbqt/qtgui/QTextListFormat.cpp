@@ -119,7 +119,7 @@ void * hbqt_gcAllocate_QTextListFormat( void * pObj, bool bNew )
    p->ph = ( QTextListFormat * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextListFormat;
-   p->type = QT_TYPE_QTextListFormat;
+   p->type = HBQT_TYPE_QTextListFormat;
 
    if( bNew )
    {

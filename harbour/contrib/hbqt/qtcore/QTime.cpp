@@ -115,7 +115,7 @@ void * hbqt_gcAllocate_QTime( void * pObj, bool bNew )
    p->ph = ( QTime * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTime;
-   p->type = QT_TYPE_QTime;
+   p->type = HBQT_TYPE_QTime;
 
    if( bNew )
    {

@@ -144,7 +144,7 @@ void * hbqt_gcAllocate_QObject( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QObject >( ( QObject * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QObject;
-   p->type = QT_TYPE_QObject;
+   p->type = HBQT_TYPE_QObject;
 
    if( bNew )
    {

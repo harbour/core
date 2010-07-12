@@ -100,7 +100,7 @@ void * hbqt_gcAllocate_QDragLeaveEvent( void * pObj, bool bNew )
    p->ph = ( QDragLeaveEvent * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QDragLeaveEvent;
-   p->type = QT_TYPE_QDragLeaveEvent;
+   p->type = HBQT_TYPE_QDragLeaveEvent;
 
    if( bNew )
    {

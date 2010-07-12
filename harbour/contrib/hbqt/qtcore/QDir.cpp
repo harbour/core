@@ -125,7 +125,7 @@ void * hbqt_gcAllocate_QDir( void * pObj, bool bNew )
    p->ph = ( QDir * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QDir;
-   p->type = QT_TYPE_QDir;
+   p->type = HBQT_TYPE_QDir;
 
    if( bNew )
    {

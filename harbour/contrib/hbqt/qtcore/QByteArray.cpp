@@ -119,7 +119,7 @@ void * hbqt_gcAllocate_QByteArray( void * pObj, bool bNew )
    p->ph = ( QByteArray * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QByteArray;
-   p->type = QT_TYPE_QByteArray;
+   p->type = HBQT_TYPE_QByteArray;
 
    if( bNew )
    {

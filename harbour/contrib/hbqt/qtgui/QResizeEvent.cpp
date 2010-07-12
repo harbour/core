@@ -100,7 +100,7 @@ void * hbqt_gcAllocate_QResizeEvent( void * pObj, bool bNew )
    p->ph = ( QResizeEvent * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QResizeEvent;
-   p->type = QT_TYPE_QResizeEvent;
+   p->type = HBQT_TYPE_QResizeEvent;
 
    if( bNew )
    {

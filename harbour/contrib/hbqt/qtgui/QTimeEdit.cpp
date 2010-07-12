@@ -127,7 +127,7 @@ void * hbqt_gcAllocate_QTimeEdit( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QTimeEdit >( ( QTimeEdit * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTimeEdit;
-   p->type = QT_TYPE_QTimeEdit;
+   p->type = HBQT_TYPE_QTimeEdit;
 
    if( bNew )
    {

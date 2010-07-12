@@ -128,7 +128,7 @@ void * hbqt_gcAllocate_QVBoxLayout( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QVBoxLayout >( ( QVBoxLayout * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QVBoxLayout;
-   p->type = QT_TYPE_QVBoxLayout;
+   p->type = HBQT_TYPE_QVBoxLayout;
 
    if( bNew )
    {

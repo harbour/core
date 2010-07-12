@@ -131,7 +131,7 @@ void * hbqt_gcAllocate_QPrinter( void * pObj, bool bNew )
    p->ph = ( QPrinter * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QPrinter;
-   p->type = QT_TYPE_QPrinter;
+   p->type = HBQT_TYPE_QPrinter;
 
    if( bNew )
    {

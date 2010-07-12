@@ -126,7 +126,7 @@ void * hbqt_gcAllocate_QLocale( void * pObj, bool bNew )
    p->ph = ( QLocale * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QLocale;
-   p->type = QT_TYPE_QLocale;
+   p->type = HBQT_TYPE_QLocale;
 
    if( bNew )
    {

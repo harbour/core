@@ -133,7 +133,7 @@ void * hbqt_gcAllocate_QLineEdit( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QLineEdit >( ( QLineEdit * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QLineEdit;
-   p->type = QT_TYPE_QLineEdit;
+   p->type = HBQT_TYPE_QLineEdit;
 
    if( bNew )
    {

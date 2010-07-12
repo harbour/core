@@ -100,7 +100,7 @@ void * hbqt_gcAllocate_QShowEvent( void * pObj, bool bNew )
    p->ph = ( QShowEvent * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QShowEvent;
-   p->type = QT_TYPE_QShowEvent;
+   p->type = HBQT_TYPE_QShowEvent;
 
    if( bNew )
    {

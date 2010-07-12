@@ -125,7 +125,7 @@ void * hbqt_gcAllocate_QWizardPage( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QWizardPage >( ( QWizardPage * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QWizardPage;
-   p->type = QT_TYPE_QWizardPage;
+   p->type = HBQT_TYPE_QWizardPage;
 
    if( bNew )
    {

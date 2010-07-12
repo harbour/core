@@ -132,7 +132,7 @@ void * hbqt_gcAllocate_QFontDialog( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QFontDialog >( ( QFontDialog * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QFontDialog;
-   p->type = QT_TYPE_QFontDialog;
+   p->type = HBQT_TYPE_QFontDialog;
 
    if( bNew )
    {

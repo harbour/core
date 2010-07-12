@@ -119,7 +119,7 @@ void * hbqt_gcAllocate_QDateTime( void * pObj, bool bNew )
    p->ph = ( QDateTime * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QDateTime;
-   p->type = QT_TYPE_QDateTime;
+   p->type = HBQT_TYPE_QDateTime;
 
    if( bNew )
    {

@@ -136,7 +136,7 @@ void * hbqt_gcAllocate_QTextLayout( void * pObj, bool bNew )
    p->ph = ( QTextLayout * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextLayout;
-   p->type = QT_TYPE_QTextLayout;
+   p->type = HBQT_TYPE_QTextLayout;
 
    if( bNew )
    {

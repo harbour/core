@@ -123,7 +123,7 @@ void * hbqt_gcAllocate_QTableWidgetItem( void * pObj, bool bNew )
    p->ph = ( QTableWidgetItem * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTableWidgetItem;
-   p->type = QT_TYPE_QTableWidgetItem;
+   p->type = HBQT_TYPE_QTableWidgetItem;
 
    if( bNew )
    {

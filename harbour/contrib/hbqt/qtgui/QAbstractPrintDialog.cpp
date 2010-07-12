@@ -115,7 +115,7 @@ void * hbqt_gcAllocate_QAbstractPrintDialog( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QAbstractPrintDialog >( ( QAbstractPrintDialog * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QAbstractPrintDialog;
-   p->type = QT_TYPE_QAbstractPrintDialog;
+   p->type = HBQT_TYPE_QAbstractPrintDialog;
 
    if( bNew )
    {

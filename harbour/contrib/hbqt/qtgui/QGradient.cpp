@@ -106,7 +106,7 @@ void * hbqt_gcAllocate_QGradient( void * pObj, bool bNew )
    p->ph = ( QGradient * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QGradient;
-   p->type = QT_TYPE_QGradient;
+   p->type = HBQT_TYPE_QGradient;
 
    if( bNew )
    {

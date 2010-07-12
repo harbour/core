@@ -128,7 +128,7 @@ void * hbqt_gcAllocate_HBQTableView( void * pObj, bool bNew )
    new( & p->ph ) QPointer< HBQTableView >( ( HBQTableView * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_HBQTableView;
-   p->type = QT_TYPE_HBQTableView;
+   p->type = HBQT_TYPE_HBQTableView;
 
    if( bNew )
    {

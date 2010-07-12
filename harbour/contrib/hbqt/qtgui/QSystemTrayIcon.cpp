@@ -133,7 +133,7 @@ void * hbqt_gcAllocate_QSystemTrayIcon( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QSystemTrayIcon >( ( QSystemTrayIcon * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QSystemTrayIcon;
-   p->type = QT_TYPE_QSystemTrayIcon;
+   p->type = HBQT_TYPE_QSystemTrayIcon;
 
    if( bNew )
    {

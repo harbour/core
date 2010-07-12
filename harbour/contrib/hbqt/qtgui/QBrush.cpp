@@ -125,7 +125,7 @@ void * hbqt_gcAllocate_QBrush( void * pObj, bool bNew )
    p->ph = ( QBrush * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QBrush;
-   p->type = QT_TYPE_QBrush;
+   p->type = HBQT_TYPE_QBrush;
 
    if( bNew )
    {

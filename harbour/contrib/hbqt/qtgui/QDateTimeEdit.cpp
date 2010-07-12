@@ -134,7 +134,7 @@ void * hbqt_gcAllocate_QDateTimeEdit( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QDateTimeEdit >( ( QDateTimeEdit * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QDateTimeEdit;
-   p->type = QT_TYPE_QDateTimeEdit;
+   p->type = HBQT_TYPE_QDateTimeEdit;
 
    if( bNew )
    {

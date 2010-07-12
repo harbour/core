@@ -121,7 +121,7 @@ void * hbqt_gcAllocate_QTextCharFormat( void * pObj, bool bNew )
    p->ph = ( QTextCharFormat * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextCharFormat;
-   p->type = QT_TYPE_QTextCharFormat;
+   p->type = HBQT_TYPE_QTextCharFormat;
 
    if( bNew )
    {

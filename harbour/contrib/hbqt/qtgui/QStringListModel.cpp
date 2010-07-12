@@ -127,7 +127,7 @@ void * hbqt_gcAllocate_QStringListModel( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QStringListModel >( ( QStringListModel * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStringListModel;
-   p->type = QT_TYPE_QStringListModel;
+   p->type = HBQT_TYPE_QStringListModel;
 
    if( bNew )
    {

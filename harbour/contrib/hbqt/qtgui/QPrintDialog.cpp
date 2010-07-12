@@ -133,7 +133,7 @@ void * hbqt_gcAllocate_QPrintDialog( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QPrintDialog >( ( QPrintDialog * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QPrintDialog;
-   p->type = QT_TYPE_QPrintDialog;
+   p->type = HBQT_TYPE_QPrintDialog;
 
    if( bNew )
    {

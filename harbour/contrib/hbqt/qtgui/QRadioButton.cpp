@@ -127,7 +127,7 @@ void * hbqt_gcAllocate_QRadioButton( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QRadioButton >( ( QRadioButton * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QRadioButton;
-   p->type = QT_TYPE_QRadioButton;
+   p->type = HBQT_TYPE_QRadioButton;
 
    if( bNew )
    {

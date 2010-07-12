@@ -104,7 +104,7 @@ void * hbqt_gcAllocate_QAbstractItemDelegate( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QAbstractItemDelegate >( ( QAbstractItemDelegate * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QAbstractItemDelegate;
-   p->type = QT_TYPE_QAbstractItemDelegate;
+   p->type = HBQT_TYPE_QAbstractItemDelegate;
 
    if( bNew )
    {

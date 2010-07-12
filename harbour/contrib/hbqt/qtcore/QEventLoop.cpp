@@ -132,7 +132,7 @@ void * hbqt_gcAllocate_QEventLoop( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QEventLoop >( ( QEventLoop * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QEventLoop;
-   p->type = QT_TYPE_QEventLoop;
+   p->type = HBQT_TYPE_QEventLoop;
 
    if( bNew )
    {

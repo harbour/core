@@ -145,7 +145,7 @@ void * hbqt_gcAllocate_QWizard( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QWizard >( ( QWizard * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QWizard;
-   p->type = QT_TYPE_QWizard;
+   p->type = HBQT_TYPE_QWizard;
 
    if( bNew )
    {

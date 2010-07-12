@@ -137,7 +137,7 @@ void * hbqt_gcAllocate_QSettings( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QSettings >( ( QSettings * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QSettings;
-   p->type = QT_TYPE_QSettings;
+   p->type = HBQT_TYPE_QSettings;
 
    if( bNew )
    {

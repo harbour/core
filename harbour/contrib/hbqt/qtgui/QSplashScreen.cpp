@@ -128,7 +128,7 @@ void * hbqt_gcAllocate_QSplashScreen( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QSplashScreen >( ( QSplashScreen * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QSplashScreen;
-   p->type = QT_TYPE_QSplashScreen;
+   p->type = HBQT_TYPE_QSplashScreen;
 
    if( bNew )
    {

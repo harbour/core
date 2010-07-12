@@ -120,7 +120,7 @@ void * hbqt_gcAllocate_QRectF( void * pObj, bool bNew )
    p->ph = ( QRectF * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QRectF;
-   p->type = QT_TYPE_QRectF;
+   p->type = HBQT_TYPE_QRectF;
 
    if( bNew )
    {

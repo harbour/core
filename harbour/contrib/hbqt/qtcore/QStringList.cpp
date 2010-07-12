@@ -135,7 +135,7 @@ void * hbqt_gcAllocate_QStringList( void * pObj, bool bNew )
    p->ph = ( QStringList * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStringList;
-   p->type = QT_TYPE_QStringList;
+   p->type = HBQT_TYPE_QStringList;
 
    if( bNew )
    {

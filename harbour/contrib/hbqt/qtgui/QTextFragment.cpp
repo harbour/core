@@ -116,7 +116,7 @@ void * hbqt_gcAllocate_QTextFragment( void * pObj, bool bNew )
    p->ph = ( QTextFragment * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextFragment;
-   p->type = QT_TYPE_QTextFragment;
+   p->type = HBQT_TYPE_QTextFragment;
 
    if( bNew )
    {

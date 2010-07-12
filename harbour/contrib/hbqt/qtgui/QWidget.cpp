@@ -171,7 +171,7 @@ void * hbqt_gcAllocate_QWidget( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QWidget >( ( QWidget * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QWidget;
-   p->type = QT_TYPE_QWidget;
+   p->type = HBQT_TYPE_QWidget;
 
    if( bNew )
    {

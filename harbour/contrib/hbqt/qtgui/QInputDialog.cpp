@@ -133,7 +133,7 @@ void * hbqt_gcAllocate_QInputDialog( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QInputDialog >( ( QInputDialog * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QInputDialog;
-   p->type = QT_TYPE_QInputDialog;
+   p->type = HBQT_TYPE_QInputDialog;
 
    if( bNew )
    {

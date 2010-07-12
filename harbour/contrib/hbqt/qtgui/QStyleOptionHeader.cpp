@@ -124,7 +124,7 @@ void * hbqt_gcAllocate_QStyleOptionHeader( void * pObj, bool bNew )
    p->ph = ( QStyleOptionHeader * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyleOptionHeader;
-   p->type = QT_TYPE_QStyleOptionHeader;
+   p->type = HBQT_TYPE_QStyleOptionHeader;
 
    if( bNew )
    {

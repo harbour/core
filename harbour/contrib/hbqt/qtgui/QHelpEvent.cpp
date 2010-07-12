@@ -100,7 +100,7 @@ void * hbqt_gcAllocate_QHelpEvent( void * pObj, bool bNew )
    p->ph = ( QHelpEvent * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QHelpEvent;
-   p->type = QT_TYPE_QHelpEvent;
+   p->type = HBQT_TYPE_QHelpEvent;
 
    if( bNew )
    {

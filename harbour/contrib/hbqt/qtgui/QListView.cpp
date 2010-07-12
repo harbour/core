@@ -135,7 +135,7 @@ void * hbqt_gcAllocate_QListView( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QListView >( ( QListView * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QListView;
-   p->type = QT_TYPE_QListView;
+   p->type = HBQT_TYPE_QListView;
 
    if( bNew )
    {

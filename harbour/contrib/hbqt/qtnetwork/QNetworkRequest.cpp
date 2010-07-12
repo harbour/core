@@ -122,7 +122,7 @@ void * hbqt_gcAllocate_QNetworkRequest( void * pObj, bool bNew )
    p->ph = ( QNetworkRequest * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QNetworkRequest;
-   p->type = QT_TYPE_QNetworkRequest;
+   p->type = HBQT_TYPE_QNetworkRequest;
 
    if( bNew )
    {

@@ -127,7 +127,7 @@ void * hbqt_gcAllocate_QDial( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QDial >( ( QDial * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QDial;
-   p->type = QT_TYPE_QDial;
+   p->type = HBQT_TYPE_QDial;
 
    if( bNew )
    {

@@ -117,7 +117,7 @@ void * hbqt_gcAllocate_QPointF( void * pObj, bool bNew )
    p->ph = ( QPointF * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QPointF;
-   p->type = QT_TYPE_QPointF;
+   p->type = HBQT_TYPE_QPointF;
 
    if( bNew )
    {

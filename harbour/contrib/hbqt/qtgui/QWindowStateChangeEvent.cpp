@@ -100,7 +100,7 @@ void * hbqt_gcAllocate_QWindowStateChangeEvent( void * pObj, bool bNew )
    p->ph = ( QWindowStateChangeEvent * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QWindowStateChangeEvent;
-   p->type = QT_TYPE_QWindowStateChangeEvent;
+   p->type = HBQT_TYPE_QWindowStateChangeEvent;
 
    if( bNew )
    {

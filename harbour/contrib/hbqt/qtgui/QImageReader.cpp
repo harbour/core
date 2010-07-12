@@ -123,7 +123,7 @@ void * hbqt_gcAllocate_QImageReader( void * pObj, bool bNew )
    p->ph = ( QImageReader * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QImageReader;
-   p->type = QT_TYPE_QImageReader;
+   p->type = HBQT_TYPE_QImageReader;
 
    if( bNew )
    {

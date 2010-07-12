@@ -121,7 +121,7 @@ void * hbqt_gcAllocate_QPainterPath( void * pObj, bool bNew )
    p->ph = ( QPainterPath * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QPainterPath;
-   p->type = QT_TYPE_QPainterPath;
+   p->type = HBQT_TYPE_QPainterPath;
 
    if( bNew )
    {

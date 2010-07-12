@@ -101,7 +101,7 @@ void * hbqt_gcAllocate_QAbstractTableModel( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QAbstractTableModel >( ( QAbstractTableModel * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QAbstractTableModel;
-   p->type = QT_TYPE_QAbstractTableModel;
+   p->type = HBQT_TYPE_QAbstractTableModel;
 
    if( bNew )
    {

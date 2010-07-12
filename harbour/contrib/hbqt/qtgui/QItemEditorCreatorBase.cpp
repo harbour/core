@@ -101,7 +101,7 @@ void * hbqt_gcAllocate_QItemEditorCreatorBase( void * pObj, bool bNew )
    p->ph = ( QItemEditorCreatorBase * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QItemEditorCreatorBase;
-   p->type = QT_TYPE_QItemEditorCreatorBase;
+   p->type = HBQT_TYPE_QItemEditorCreatorBase;
 
    if( bNew )
    {

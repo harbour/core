@@ -110,7 +110,7 @@ void * hbqt_gcAllocate_QPaintEngine( void * pObj, bool bNew )
    p->ph = ( QPaintEngine * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QPaintEngine;
-   p->type = QT_TYPE_QPaintEngine;
+   p->type = HBQT_TYPE_QPaintEngine;
 
    if( bNew )
    {

@@ -127,7 +127,7 @@ void * hbqt_gcAllocate_QCheckBox( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QCheckBox >( ( QCheckBox * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QCheckBox;
-   p->type = QT_TYPE_QCheckBox;
+   p->type = HBQT_TYPE_QCheckBox;
 
    if( bNew )
    {

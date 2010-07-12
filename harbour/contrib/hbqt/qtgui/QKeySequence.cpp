@@ -126,7 +126,7 @@ void * hbqt_gcAllocate_QKeySequence( void * pObj, bool bNew )
    p->ph = ( QKeySequence * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QKeySequence;
-   p->type = QT_TYPE_QKeySequence;
+   p->type = HBQT_TYPE_QKeySequence;
 
    if( bNew )
    {

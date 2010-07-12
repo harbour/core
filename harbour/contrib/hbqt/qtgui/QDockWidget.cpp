@@ -133,7 +133,7 @@ void * hbqt_gcAllocate_QDockWidget( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QDockWidget >( ( QDockWidget * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QDockWidget;
-   p->type = QT_TYPE_QDockWidget;
+   p->type = HBQT_TYPE_QDockWidget;
 
    if( bNew )
    {

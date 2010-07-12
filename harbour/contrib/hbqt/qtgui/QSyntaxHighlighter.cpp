@@ -103,7 +103,7 @@ void * hbqt_gcAllocate_QSyntaxHighlighter( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QSyntaxHighlighter >( ( QSyntaxHighlighter * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QSyntaxHighlighter;
-   p->type = QT_TYPE_QSyntaxHighlighter;
+   p->type = HBQT_TYPE_QSyntaxHighlighter;
 
    if( bNew )
    {

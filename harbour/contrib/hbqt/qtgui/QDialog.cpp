@@ -131,7 +131,7 @@ void * hbqt_gcAllocate_QDialog( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QDialog >( ( QDialog * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QDialog;
-   p->type = QT_TYPE_QDialog;
+   p->type = HBQT_TYPE_QDialog;
 
    if( bNew )
    {

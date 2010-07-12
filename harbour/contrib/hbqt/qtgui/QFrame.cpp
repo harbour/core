@@ -133,7 +133,7 @@ void * hbqt_gcAllocate_QFrame( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QFrame >( ( QFrame * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QFrame;
-   p->type = QT_TYPE_QFrame;
+   p->type = HBQT_TYPE_QFrame;
 
    if( bNew )
    {

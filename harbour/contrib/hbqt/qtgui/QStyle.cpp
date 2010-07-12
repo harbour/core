@@ -116,7 +116,7 @@ void * hbqt_gcAllocate_QStyle( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QStyle >( ( QStyle * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyle;
-   p->type = QT_TYPE_QStyle;
+   p->type = HBQT_TYPE_QStyle;
 
    if( bNew )
    {

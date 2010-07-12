@@ -129,7 +129,7 @@ void * hbqt_gcAllocate_QPushButton( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QPushButton >( ( QPushButton * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QPushButton;
-   p->type = QT_TYPE_QPushButton;
+   p->type = HBQT_TYPE_QPushButton;
 
    if( bNew )
    {

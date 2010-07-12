@@ -134,7 +134,7 @@ void * hbqt_gcAllocate_QTabBar( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QTabBar >( ( QTabBar * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTabBar;
-   p->type = QT_TYPE_QTabBar;
+   p->type = HBQT_TYPE_QTabBar;
 
    if( bNew )
    {

@@ -137,7 +137,7 @@ void * hbqt_gcAllocate_QListWidget( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QListWidget >( ( QListWidget * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QListWidget;
-   p->type = QT_TYPE_QListWidget;
+   p->type = HBQT_TYPE_QListWidget;
 
    if( bNew )
    {

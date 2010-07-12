@@ -150,7 +150,7 @@ void * hbqt_gcAllocate_QFtp( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QFtp >( ( QFtp * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QFtp;
-   p->type = QT_TYPE_QFtp;
+   p->type = HBQT_TYPE_QFtp;
 
    if( bNew )
    {

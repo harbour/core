@@ -128,7 +128,7 @@ void * hbqt_gcAllocate_QPrintPreviewDialog( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QPrintPreviewDialog >( ( QPrintPreviewDialog * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QPrintPreviewDialog;
-   p->type = QT_TYPE_QPrintPreviewDialog;
+   p->type = HBQT_TYPE_QPrintPreviewDialog;
 
    if( bNew )
    {

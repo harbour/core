@@ -133,7 +133,7 @@ void * hbqt_gcAllocate_QMdiSubWindow( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QMdiSubWindow >( ( QMdiSubWindow * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QMdiSubWindow;
-   p->type = QT_TYPE_QMdiSubWindow;
+   p->type = HBQT_TYPE_QMdiSubWindow;
 
    if( bNew )
    {

@@ -138,7 +138,7 @@ void * hbqt_gcAllocate_QProcess( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QProcess >( ( QProcess * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QProcess;
-   p->type = QT_TYPE_QProcess;
+   p->type = HBQT_TYPE_QProcess;
 
    if( bNew )
    {

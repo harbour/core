@@ -121,7 +121,7 @@ void * hbqt_gcAllocate_QStyleOptionDockWidget( void * pObj, bool bNew )
    p->ph = ( QStyleOptionDockWidget * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyleOptionDockWidget;
-   p->type = QT_TYPE_QStyleOptionDockWidget;
+   p->type = HBQT_TYPE_QStyleOptionDockWidget;
 
    if( bNew )
    {

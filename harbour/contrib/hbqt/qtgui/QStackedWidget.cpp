@@ -128,7 +128,7 @@ void * hbqt_gcAllocate_QStackedWidget( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QStackedWidget >( ( QStackedWidget * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStackedWidget;
-   p->type = QT_TYPE_QStackedWidget;
+   p->type = HBQT_TYPE_QStackedWidget;
 
    if( bNew )
    {

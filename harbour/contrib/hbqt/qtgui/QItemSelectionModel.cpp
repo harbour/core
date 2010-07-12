@@ -132,7 +132,7 @@ void * hbqt_gcAllocate_QItemSelectionModel( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QItemSelectionModel >( ( QItemSelectionModel * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QItemSelectionModel;
-   p->type = QT_TYPE_QItemSelectionModel;
+   p->type = HBQT_TYPE_QItemSelectionModel;
 
    if( bNew )
    {

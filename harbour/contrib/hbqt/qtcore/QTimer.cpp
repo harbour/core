@@ -127,7 +127,7 @@ void * hbqt_gcAllocate_QTimer( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QTimer >( ( QTimer * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTimer;
-   p->type = QT_TYPE_QTimer;
+   p->type = HBQT_TYPE_QTimer;
 
    if( bNew )
    {

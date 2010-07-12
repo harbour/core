@@ -104,7 +104,7 @@ void * hbqt_gcAllocate_QPrintEngine( void * pObj, bool bNew )
    p->ph = ( QPrintEngine * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QPrintEngine;
-   p->type = QT_TYPE_QPrintEngine;
+   p->type = HBQT_TYPE_QPrintEngine;
 
    if( bNew )
    {

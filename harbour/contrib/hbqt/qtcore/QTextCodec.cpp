@@ -106,7 +106,7 @@ void * hbqt_gcAllocate_QTextCodec( void * pObj, bool bNew )
    p->ph = ( QTextCodec * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextCodec;
-   p->type = QT_TYPE_QTextCodec;
+   p->type = HBQT_TYPE_QTextCodec;
 
    if( bNew )
    {

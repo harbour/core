@@ -129,7 +129,7 @@ void * hbqt_gcAllocate_HBEvents( void * pObj, bool bNew )
    new( & p->ph ) QPointer< HBEvents >( ( HBEvents * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_HBEvents;
-   p->type = QT_TYPE_HBEvents;
+   p->type = HBQT_TYPE_HBEvents;
 
    if( bNew )
    {

@@ -137,7 +137,7 @@ void * hbqt_gcAllocate_QMimeData( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QMimeData >( ( QMimeData * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QMimeData;
-   p->type = QT_TYPE_QMimeData;
+   p->type = HBQT_TYPE_QMimeData;
 
    if( bNew )
    {

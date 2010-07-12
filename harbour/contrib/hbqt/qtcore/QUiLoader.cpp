@@ -128,7 +128,7 @@ void * hbqt_gcAllocate_QUiLoader( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QUiLoader >( ( QUiLoader * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QUiLoader;
-   p->type = QT_TYPE_QUiLoader;
+   p->type = HBQT_TYPE_QUiLoader;
 
    if( bNew )
    {

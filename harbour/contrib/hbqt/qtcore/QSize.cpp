@@ -117,7 +117,7 @@ void * hbqt_gcAllocate_QSize( void * pObj, bool bNew )
    p->ph = ( QSize * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QSize;
-   p->type = QT_TYPE_QSize;
+   p->type = HBQT_TYPE_QSize;
 
    if( bNew )
    {

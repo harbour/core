@@ -116,7 +116,7 @@ void * hbqt_gcAllocate_QPaintEvent( void * pObj, bool bNew )
    p->ph = ( QPaintEvent * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QPaintEvent;
-   p->type = QT_TYPE_QPaintEvent;
+   p->type = HBQT_TYPE_QPaintEvent;
 
    if( bNew )
    {

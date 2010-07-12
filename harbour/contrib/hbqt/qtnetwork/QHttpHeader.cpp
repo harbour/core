@@ -112,7 +112,7 @@ void * hbqt_gcAllocate_QHttpHeader( void * pObj, bool bNew )
    p->ph = ( QHttpHeader * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QHttpHeader;
-   p->type = QT_TYPE_QHttpHeader;
+   p->type = HBQT_TYPE_QHttpHeader;
 
    if( bNew )
    {

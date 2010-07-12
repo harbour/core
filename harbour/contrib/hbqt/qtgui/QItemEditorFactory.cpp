@@ -117,7 +117,7 @@ void * hbqt_gcAllocate_QItemEditorFactory( void * pObj, bool bNew )
    p->ph = ( QItemEditorFactory * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QItemEditorFactory;
-   p->type = QT_TYPE_QItemEditorFactory;
+   p->type = HBQT_TYPE_QItemEditorFactory;
 
    if( bNew )
    {

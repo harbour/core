@@ -127,7 +127,7 @@ void * hbqt_gcAllocate_QDesktopWidget( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QDesktopWidget >( ( QDesktopWidget * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QDesktopWidget;
-   p->type = QT_TYPE_QDesktopWidget;
+   p->type = HBQT_TYPE_QDesktopWidget;
 
    if( bNew )
    {

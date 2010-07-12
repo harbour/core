@@ -115,7 +115,7 @@ void * hbqt_gcAllocate_QWidgetItem( void * pObj, bool bNew )
    p->ph = ( QWidgetItem * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QWidgetItem;
-   p->type = QT_TYPE_QWidgetItem;
+   p->type = HBQT_TYPE_QWidgetItem;
 
    if( bNew )
    {

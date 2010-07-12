@@ -130,7 +130,7 @@ void * hbqt_gcAllocate_QThread( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QThread >( ( QThread * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QThread;
-   p->type = QT_TYPE_QThread;
+   p->type = HBQT_TYPE_QThread;
 
    if( bNew )
    {

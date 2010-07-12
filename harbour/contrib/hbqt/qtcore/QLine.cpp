@@ -117,7 +117,7 @@ void * hbqt_gcAllocate_QLine( void * pObj, bool bNew )
    p->ph = ( QLine * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QLine;
-   p->type = QT_TYPE_QLine;
+   p->type = HBQT_TYPE_QLine;
 
    if( bNew )
    {

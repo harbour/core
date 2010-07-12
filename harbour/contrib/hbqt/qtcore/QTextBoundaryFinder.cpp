@@ -125,7 +125,7 @@ void * hbqt_gcAllocate_QTextBoundaryFinder( void * pObj, bool bNew )
    p->ph = ( QTextBoundaryFinder * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QTextBoundaryFinder;
-   p->type = QT_TYPE_QTextBoundaryFinder;
+   p->type = HBQT_TYPE_QTextBoundaryFinder;
 
    if( bNew )
    {

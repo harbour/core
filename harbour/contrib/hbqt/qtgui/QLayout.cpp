@@ -115,7 +115,7 @@ void * hbqt_gcAllocate_QLayout( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QLayout >( ( QLayout * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QLayout;
-   p->type = QT_TYPE_QLayout;
+   p->type = HBQT_TYPE_QLayout;
 
    if( bNew )
    {

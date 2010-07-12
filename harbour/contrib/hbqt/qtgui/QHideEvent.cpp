@@ -100,7 +100,7 @@ void * hbqt_gcAllocate_QHideEvent( void * pObj, bool bNew )
    p->ph = ( QHideEvent * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QHideEvent;
-   p->type = QT_TYPE_QHideEvent;
+   p->type = HBQT_TYPE_QHideEvent;
 
    if( bNew )
    {

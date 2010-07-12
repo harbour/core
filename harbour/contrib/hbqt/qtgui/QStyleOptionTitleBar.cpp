@@ -121,7 +121,7 @@ void * hbqt_gcAllocate_QStyleOptionTitleBar( void * pObj, bool bNew )
    p->ph = ( QStyleOptionTitleBar * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QStyleOptionTitleBar;
-   p->type = QT_TYPE_QStyleOptionTitleBar;
+   p->type = HBQT_TYPE_QStyleOptionTitleBar;
 
    if( bNew )
    {

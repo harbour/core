@@ -137,7 +137,7 @@ void * hbqt_gcAllocate_QFile( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QFile >( ( QFile * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QFile;
-   p->type = QT_TYPE_QFile;
+   p->type = HBQT_TYPE_QFile;
 
    if( bNew )
    {

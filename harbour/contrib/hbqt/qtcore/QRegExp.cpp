@@ -122,7 +122,7 @@ void * hbqt_gcAllocate_QRegExp( void * pObj, bool bNew )
    p->ph = ( QRegExp * ) pObj;
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QRegExp;
-   p->type = QT_TYPE_QRegExp;
+   p->type = HBQT_TYPE_QRegExp;
 
    if( bNew )
    {

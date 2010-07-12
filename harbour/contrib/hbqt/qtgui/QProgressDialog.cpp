@@ -128,7 +128,7 @@ void * hbqt_gcAllocate_QProgressDialog( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QProgressDialog >( ( QProgressDialog * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QProgressDialog;
-   p->type = QT_TYPE_QProgressDialog;
+   p->type = HBQT_TYPE_QProgressDialog;
 
    if( bNew )
    {

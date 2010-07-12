@@ -138,7 +138,7 @@ void * hbqt_gcAllocate_QToolBar( void * pObj, bool bNew )
    new( & p->ph ) QPointer< QToolBar >( ( QToolBar * ) pObj );
    p->bNew = bNew;
    p->func = hbqt_gcRelease_QToolBar;
-   p->type = QT_TYPE_QToolBar;
+   p->type = HBQT_TYPE_QToolBar;
 
    if( bNew )
    {
