@@ -4,6 +4,8 @@
 
 -hbimplib
 
+-stop{!HB_WITH_OPENSSL}
+
 ${HB_WITH_OPENSSL}/../out32dll/libeay32.dll
 ${HB_WITH_OPENSSL}/../out32dll/ssleay32.dll
 ${HB_WITH_OPENSSL}/../dll/libeay32.dll

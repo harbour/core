@@ -4,4 +4,6 @@
 
 -hbimplib
 
+-stop{!HB_WITH_MYSQL}
+
 ${HB_WITH_MYSQL}/../lib/opt/libmySQL.dll

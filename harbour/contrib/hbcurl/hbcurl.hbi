@@ -4,6 +4,8 @@
 
 -hbimplib
 
+-stop{!HB_WITH_CURL}
+
 ${HB_WITH_CURL}/../libcurl.dll
 ${HB_WITH_CURL}/../bin/libcurl.dll
 

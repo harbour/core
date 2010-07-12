@@ -4,5 +4,7 @@
 
 -hbimplib
 
+-stop{!HB_WITH_LIBHARU}
+
 ${HB_WITH_LIBHARU}/../libhpdf.dll
 ${HB_WITH_LIBHARU}/../lib_dll/libhpdf.dll

@@ -4,6 +4,8 @@
 
 -hbimplib
 
+-stop{!HB_WITH_FIREBIRD}
+
 -ofbclient
 
 {!(allgcc|allmsvc|allpocc)}${HB_WITH_FIREBIRD}/../bin/fbclient.dll

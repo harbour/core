@@ -1697,7 +1697,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       CASE cParamL == "-hblib"           ; hbmk[ _HBMK_lStopAfterHarbour ] := .F. ; lStopAfterCComp := .T. ; hbmk[ _HBMK_lCreateLib ] := .T. ; hbmk[ _HBMK_lCreateDyn ] := .F.
       CASE cParamL == "-hbdyn"           ; hbmk[ _HBMK_lStopAfterHarbour ] := .F. ; lStopAfterCComp := .T. ; hbmk[ _HBMK_lCreateLib ] := .F. ; hbmk[ _HBMK_lCreateDyn ] := .T. ; hbmk[ _HBMK_lDynVM ] := .F. ; l_lNOHBLIB := .T.
       CASE cParamL == "-hbdynvm"         ; hbmk[ _HBMK_lStopAfterHarbour ] := .F. ; lStopAfterCComp := .T. ; hbmk[ _HBMK_lCreateLib ] := .F. ; hbmk[ _HBMK_lCreateDyn ] := .T. ; hbmk[ _HBMK_lDynVM ] := .T. ; l_lNOHBLIB := .F.
-      CASE cParamL == "-hbimplib"        ; lStopAfterInit := .T. ; hbmk[ _HBMK_lCreateImpLib ] := .T. ; lAcceptIFlag := .T.
+      CASE cParamL == "-hbimplib"        ; hbmk[ _HBMK_lCreateImpLib ] := .T. ; lAcceptIFlag := .T.
       CASE cParamL == "-gui" .OR. ;
            cParamL == "-mwindows"        ; hbmk[ _HBMK_lGUI ]       := .T. /* Compatibility */
       CASE cParamL == "-std" .OR. ;
@@ -2430,7 +2430,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    ENDIF
 
    /* Start doing the make process. */
-   IF ! lStopAfterInit .AND. ( Len( hbmk[ _HBMK_aPRG ] ) + Len( hbmk[ _HBMK_aC ] ) + Len( hbmk[ _HBMK_aCPP ] ) + Len( hbmk[ _HBMK_aOBJUSER ] ) + Len( l_aOBJA ) ) == 0
+   IF ! lStopAfterInit .AND. ! hbmk[ _HBMK_lCreateImpLib ] .AND. ( Len( hbmk[ _HBMK_aPRG ] ) + Len( hbmk[ _HBMK_aC ] ) + Len( hbmk[ _HBMK_aCPP ] ) + Len( hbmk[ _HBMK_aOBJUSER ] ) + Len( l_aOBJA ) ) == 0
       hbmk_OutErr( hbmk, I_( "Error: No source files were specified." ) )
       IF hbmk[ _HBMK_lBEEP ]
          DoBeep( .F. )
@@ -2439,7 +2439,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    ENDIF
 
    /* Decide about output name */
-   IF ! lStopAfterInit
+   IF ! lStopAfterInit .AND. ! hbmk[ _HBMK_lCreateImpLib ]
 
       /* If -o with full name wasn't specified, let's
          make it the first source file specified. */
@@ -2453,7 +2453,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    ENDIF
 
    /* Decide about working dir */
-   IF ! lStopAfterInit
+   IF ! lStopAfterInit .AND. ! hbmk[ _HBMK_lCreateImpLib ]
       IF hbmk[ _HBMK_lINC ]
          /* NOTE: We store -hbdyn objects in different dirs by default as - for Windows
                   platforms - they're always built using different compilation options
@@ -2500,7 +2500,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       ENDIF
    ENDIF
 
-   IF ! lStopAfterInit .AND. ! hbmk[ _HBMK_lStopAfterHarbour ]
+   IF ! lStopAfterInit .AND. ! hbmk[ _HBMK_lStopAfterHarbour ] .AND. ! hbmk[ _HBMK_lCreateImpLib ]
 
       /*
          /boot/common/include                        (beos)
@@ -2526,7 +2526,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       NEXT
    ENDIF
 
-   IF ( ! lStopAfterInit .AND. ! hbmk[ _HBMK_lStopAfterHarbour ] ) .OR. hbmk[ _HBMK_lCreateImpLib ]
+   IF ! lStopAfterInit .AND. ! hbmk[ _HBMK_lStopAfterHarbour ]
 
       IF hbmk[ _HBMK_cGT ] != NIL .AND. hbmk[ _HBMK_cGT ] == hbmk[ _HBMK_cGTDEFAULT ]
          hbmk[ _HBMK_cGT ] := NIL
@@ -3965,8 +3965,9 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
    /* ; */
 
-   IF hbmk[ _HBMK_lCreateImpLib ]
+   IF ! lStopAfterInit .AND. hbmk[ _HBMK_lCreateImpLib ]
       DoIMPLIB( hbmk, bBlk_ImpLib, cLibLibPrefix, cLibLibExt )
+      lStopAfterInit := .T.
    ENDIF
 
    DEFAULT hbmk[ _HBMK_nScr_Esc ] TO hbmk[ _HBMK_nCmd_Esc ]
@@ -4163,17 +4164,6 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       NEXT
    ENDIF
 
-   /* Check if we've found all dependencies */
-
-   IF ! lSkipBuild .AND. ! lStopAfterInit .AND. ! hbmk[ _HBMK_lStopAfterHarbour ]
-      IF ! dep_evaluate( hbmk )
-         IF hbmk[ _HBMK_lBEEP ]
-            DoBeep( .F. )
-         ENDIF
-         RETURN 10
-      ENDIF
-   ENDIF
-
    /* Dump hbmk2 build information */
 
    IF lDumpInfo
@@ -4187,6 +4177,17 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       OutStd( "}}" + hb_eol() )
 
       RETURN 0
+   ENDIF
+
+   /* Check if we've found all dependencies */
+
+   IF ! lSkipBuild .AND. ! lStopAfterInit .AND. ! hbmk[ _HBMK_lStopAfterHarbour ]
+      IF ! dep_evaluate( hbmk )
+         IF hbmk[ _HBMK_lBEEP ]
+            DoBeep( .F. )
+         ENDIF
+         RETURN 10
+      ENDIF
    ENDIF
 
    /* Harbour compilation */

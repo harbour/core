@@ -55,18 +55,6 @@
 
 #include "hbdoc2.ch"
 
-/*
-#xcommand TEXT TO VAR <var> => #pragma __stream|<var>:=%s
-#xcommand TEXT INTO <v> => #pragma __text|<v>+=%s+HB_OSNewLine();<v>:=""
-
-text into p_hsTemplates
-this is line 1
-this is line 2
-endtext
-? asc(substr(p_hsTemplates, -2))
-?
-*/
-
 #include "hbclass.ch"
 
 /* a class that will hold one entry */
@@ -190,7 +178,7 @@ METHOD SetTemplate( cTemplate ) CLASS Entry
       IF self:Fields[ idx ][ 1 ] == "TEMPLATE"
          aData[ idx ] := { self:Fields[ idx ][ 1 ], cTemplate }
       ELSE
-         aData[ idx ] := { self:Fields[ idx ][ 1 ], IIf( self:Group[ idx ] == TPL_REQUIRED, NIL, "" ) }
+         aData[ idx ] := { self:Fields[ idx ][ 1 ], iif( self:Group[ idx ] == TPL_REQUIRED, NIL, "" ) }
       ENDIF
    NEXT
    __ObjSetValueList( self, aData )
@@ -250,7 +238,7 @@ METHOD SubcategoryIndex( cCategory, cSubcategory ) CLASS Entry
    RETURN HB_AScan( p_aCategories[ ::CategoryIndex( cCategory ) ][ 2 ], cSubcategory, , , .T. )
    //~ RETURN HB_AScan( p_aCategories[ ::CategoryIndex( cCategory ) ][ 2 ], {|c| c == cSubcategory } )
 
-INIT PROCEDURE Templates()
+PROCEDURE init_Templates()
    LOCAL idx
    LOCAL aSubCategories := { ;
       "Application", ;
@@ -333,7 +321,7 @@ INIT PROCEDURE Templates()
       { "All",       "This is available on all platforms" }, ;
       { "All(64K)",  "This is available on all platforms though some platforms have a string length limit of 64KB" }, ;
       { "All(GT)",   "This part of the GT API and supported only by some platforms." }, ;
-      { "All(LFN)",  "This is available on all platforms." + HB_OSNewLine() + ;
+      { "All(LFN)",  "This is available on all platforms." + hb_eol() + ;
                      "If long file names are available Harbour will use/display the first 15 characters " +;
                      "else Harbour will use/display a 8.3 file name consistent with CA-Cl*pper" }, ;
       { "Linux(GT)", "Under Linux the number of columns avaliable depends of the current Terminal screen size." }, ;
@@ -525,11 +513,11 @@ PROCEDURE ShowTemplatesHelp( cTemplate )
 
          FOR idx := 1 TO Len( o:Fields )
             IF o:Group[ idx ] != 0
-               ShowSubHelp( IIf( idx == 1, "/", " " ) + "*  " + cDelimiter + o:Fields[ idx ][ 1 ] + cDelimiter, 1, 0 )
+               ShowSubHelp( iif( idx == 1, "/", " " ) + "*  " + cDelimiter + o:Fields[ idx ][ 1 ] + cDelimiter, 1, 0 )
                IF o:Fields[ idx ][ 1 ] == "TEMPLATE"
                   ShowSubHelp( " *      " + o:Template, 1, 0 )
                ELSEIF o:Group[ idx ] != TPL_START .AND. o:Group[ idx ] != TPL_END .AND. .T.
-                  ShowSubHelp( " *      " + IIf( o:IsRequired( o:Fields[ idx ][ 1 ] ), "<required>", "<optional>" ), 1, 0 )
+                  ShowSubHelp( " *      " + iif( o:IsRequired( o:Fields[ idx ][ 1 ] ), "<required>", "<optional>" ), 1, 0 )
                ENDIF
             ENDIF
          NEXT

@@ -77,22 +77,22 @@ EXPORTED:
 ENDCLASS
 
 METHOD NewDocument( cFolder, cFilename, cTitle ) CLASS GenerateXML
-   super:NewDocument( cFolder, cFilename, cTitle, "xml" )
-   FWrite( ::nHandle, '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' + HB_OSNewLine() )
-   FWrite( ::nHandle, '<HarbourReference>' + HB_OSNewLine() )
+   super:NewDocument( cFolder, cFilename, cTitle, ".xml" )
+   FWrite( ::nHandle, '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' + hb_eol() )
+   FWrite( ::nHandle, '<HarbourReference>' + hb_eol() )
    RETURN self
 
 METHOD NewIndex( cFolder, cFilename, cTitle ) CLASS GenerateXML
-   super:NewIndex( cFolder, cFilename, cTitle, "xml" )
-   FWrite( ::nHandle, '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' + HB_OSNewLine() )
-   FWrite( ::nHandle, '<HarbourReference>' + HB_OSNewLine() )
+   super:NewIndex( cFolder, cFilename, cTitle, ".xml" )
+   FWrite( ::nHandle, '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' + hb_eol() )
+   FWrite( ::nHandle, '<HarbourReference>' + hb_eol() )
    RETURN self
 
 METHOD BeginSection( cSection, cFilename ) CLASS GenerateXML
    IF ::Depth == 0
-      FWrite( ::nHandle, Replicate( Chr(9), ::Depth ) + [<Section name="] + cSection + [" file="] + cFilename + "." + ::cExtension + [">] + HB_OSNewLine() )
+      FWrite( ::nHandle, Replicate( Chr(9), ::Depth ) + [<Section name="] + cSection + [" file="] + cFilename + "." + ::cExtension + [">] + hb_eol() )
    ELSE
-      FWrite( ::nHandle, Replicate( Chr(9), ::Depth ) + [<Section name="] + cSection + [">] + HB_OSNewLine() )
+      FWrite( ::nHandle, Replicate( Chr(9), ::Depth ) + [<Section name="] + cSection + [">] + hb_eol() )
    ENDIF
    ::Depth++
    RETURN self
@@ -101,7 +101,7 @@ METHOD EndSection( cSection, cFilename ) CLASS GenerateXML
 HB_SYMBOL_UNUSED( cSection )
 HB_SYMBOL_UNUSED( cFilename )
    ::Depth--
-   FWrite( ::nHandle, Replicate( Chr(9), ::Depth ) + [</Section>] + HB_OSNewLine() )
+   FWrite( ::nHandle, Replicate( Chr(9), ::Depth ) + [</Section>] + hb_eol() )
    RETURN self
 
 METHOD AddIndex( oEntry ) CLASS GenerateXML
@@ -114,19 +114,19 @@ METHOD AddEntry( oEntry ) CLASS GenerateXML
    IF self:IsIndex()
       self:AddIndex( oEntry )
    ELSE
-      FWrite( ::nHandle, '<Entry>' + HB_OSNewLine() )
+      FWrite( ::nHandle, '<Entry>' + hb_eol() )
       ::Depth++
       FOR idx := 1 TO Len( oEntry:Fields )
          ::WriteEntry( oEntry:Fields[ idx ][ 1 ], oEntry:&( oEntry:Fields[ idx ][ 1 ] ), oEntry:IsPreformatted( oEntry:Fields[ idx ][ 1 ] ) )
       NEXT
       ::Depth--
-      FWrite( ::nHandle, '</Entry>' + HB_OSNewLine() )
+      FWrite( ::nHandle, '</Entry>' + hb_eol() )
    ENDIF
 
    RETURN self
 
 METHOD Generate() CLASS GenerateXML
-   FWrite( ::nHandle, '</HarbourReference>' + HB_OSNewLine() )
+   FWrite( ::nHandle, '</HarbourReference>' + hb_eol() )
 
    IF ::IsIndex()
    ENDIF
@@ -143,13 +143,15 @@ METHOD PROCEDURE WriteEntry( cCaption, cEntry, lPreformatted ) CLASS GenerateXML
    LOCAL idx
 
    IF ! Empty( cEntry )
-      cResult := IIf( HB_OSNewLine() $ cEntry, HB_OSNewLine() + cEntry, cEntry )
+      cResult := iif( hb_eol() $ cEntry, hb_eol() + cEntry, cEntry )
       FOR idx := 1 TO Len( p_aConversionList ) STEP 2
          cResult := StrTran( cResult, Chr( p_aConversionList[ idx ] ), "&" + p_aConversionList[ idx + 1 ] + ";" )
       NEXT
       cEntry := cResult
 
-      FWrite( ::nHandle, Replicate( Chr(9), ::Depth ) + "<" + cCaption + IIf( lPreformatted, ' preformatted="yes"', "") + ">" )
+      FWrite( ::nHandle, Replicate( Chr(9), ::Depth ) + "<" + cCaption + iif( lPreformatted, ' preformatted="yes"', "") + ">" )
       FWrite( ::nHandle, cEntry )
-      FWrite( ::nHandle, /* Replicate( Chr(9), ::Depth ) + */ "</" + cCaption + ">" + HB_OSNewLine() )
+      FWrite( ::nHandle, /* Replicate( Chr(9), ::Depth ) + */ "</" + cCaption + ">" + hb_eol() )
    ENDIF
+
+   RETURN

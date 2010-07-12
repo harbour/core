@@ -4,6 +4,8 @@
 
 -hbimplib
 
+-stop{!HB_WITH_BLAT}
+
 ${HB_WITH_BLAT}/../blat.dll
 
 -iflag={bcc}-a

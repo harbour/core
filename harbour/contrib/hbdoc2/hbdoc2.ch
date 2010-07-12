@@ -54,14 +54,9 @@
  */
 
 #ifndef HBDOC2_CH_
-
 #define HBDOC2_CH_
 
-#xcommand DEFAULT <p> TO <v> => IF <p> == NIL ; <p> := <v> ; ENDIF
-#xtranslate IfNIL( <v>, <r> ) => IIf( <v> == NIL, <r>, <v> )
-
 MEMVAR p_aCategories
-MEMVAR p_aNonConformingSources
 MEMVAR p_hsSwitches
 MEMVAR p_aCompliance
 MEMVAR p_aPlatforms

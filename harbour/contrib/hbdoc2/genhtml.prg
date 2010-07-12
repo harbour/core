@@ -55,14 +55,15 @@
  */
 
 #include "hbclass.ch"
+#include "common.ch"
 #include "inkey.ch"
 #include "fileio.ch"
 #include "hbdoc2.ch"
 
 #ifdef __PLATFORM__DOS
-   #define EXTENSION "htm"
+   #define EXTENSION ".htm"
 #else
-   #define EXTENSION "html"
+   #define EXTENSION ".html"
 #endif
 
 CLASS GenerateHTML2 FROM GenerateHTML
@@ -71,12 +72,10 @@ CLASS GenerateHTML2 FROM GenerateHTML
 ENDCLASS
 
 METHOD NewDocument( cFolder, cFilename, cTitle ) CLASS GenerateHTML2
-   ::lNewDocumentModel := .T.
    super:NewDocument( cFolder, cFilename, cTitle, EXTENSION )
    RETURN self
 
 METHOD NewIndex( cFolder, cFilename, cTitle ) CLASS GenerateHTML2
-   ::lNewDocumentModel := .T.
    super:NewIndex( cFolder, cFilename, cTitle, EXTENSION )
    RETURN self
 
@@ -87,20 +86,16 @@ HIDDEN:
    METHOD Tagged( cText, cTag, ... )
    METHOD CloseTag( cText )
    METHOD Append( cText, cFormat )
-   METHOD Newline() INLINE FWrite( ::nHandle, "<br />" + HB_OSNewLine() ), self
+   METHOD Newline() INLINE FWrite( ::nHandle, "<br />" + hb_eol() ), self
 
    CLASSDATA lCreateStyleDocument AS LOGICAL INIT .T.
    DATA TargetFilename AS STRING INIT ""
-
-PROTECTED:
-   DATA lNewDocumentModel AS LOGICAL INIT .F.
 
 EXPORTED:
    METHOD NewFile() HIDDEN
    METHOD NewIndex( cFolder, cFilename, cTitle )
    METHOD NewDocument( cFolder, cFilename, cTitle )
    METHOD AddEntry( oEntry )
-   //~ METHOD AddIndex( oEntry ) HIDDEN
    METHOD AddReference( oEntry, cReference, cSubReference )
    METHOD BeginSection( cSection, cFilename )
    METHOD EndSection( cSection, cFilename )
@@ -110,11 +105,7 @@ EXPORTED:
 ENDCLASS
 
 METHOD NewFile() CLASS GenerateHTML
-   IF ::lNewDocumentModel
-      FWrite( ::nHandle, '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">' + HB_OSNewLine() )
-   ELSE
-      FWrite( ::nHandle, '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2//EN">' + HB_OSNewLine() )
-   ENDIF
+   FWrite( ::nHandle, '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">' + hb_eol() )
 
    ::OpenTag( "html" )
    ::OpenTag( "head" )
@@ -123,22 +114,17 @@ METHOD NewFile() CLASS GenerateHTML
    ::OpenTag( "meta", "name", "generator", "content", "Harbour examples/hbdoc2" )
    ::OpenTag( "meta", "name", "keywords", "content", "Harbour project, Clipper, xBase, database, Free Software, GNU, compiler, cross platform, 32-bit, FiveWin" )
 
-   IF ::lNewDocumentModel
-#define STYLEFILE "hrb_doc.css"
-      IF ::lCreateStyleDocument
-         ::lCreateStyleDocument := .F.
-         ::RecreateStyleDocument( STYLEFILE )
-      ENDIF
-      ::OpenTag( "link", "rel", "stylesheet", "type", "text/css", "href", STYLEFILE )
-#undef STYLEFILE
+   #define STYLEFILE "hrb_doc.css"
+   IF ::lCreateStyleDocument
+      ::lCreateStyleDocument := .F.
+      ::RecreateStyleDocument( STYLEFILE )
    ENDIF
+   ::OpenTag( "link", "rel", "stylesheet", "type", "text/css", "href", STYLEFILE )
+   #undef STYLEFILE
 
    ::CloseTag( "head" )
    ::OpenTag( "body" )
    ::Append( ::cTitle, "h1" )
-   /* IF ! Empty( ::cDescription )
-      ::Append( ::cDescription, "h2" )
-   ENDIF */
 
    RETURN self
 
@@ -153,7 +139,6 @@ METHOD NewIndex( cFolder, cFilename, cTitle ) CLASS GenerateHTML
    RETURN self
 
 METHOD BeginSection( cSection, cFilename ) CLASS  GenerateHTML
-//~ HB_SYMBOL_UNUSED( cFilename )
    IF ::IsIndex()
       If cFilename == ::cFilename
          ::OpenTag( "a", "name", cSection ):Append( cSection, "h" + HB_NTOS( ::Depth + 2 ) ):CloseTag( "a" )//:Newline()
@@ -171,7 +156,6 @@ METHOD EndSection( cSection, cFilename ) CLASS  GenerateHTML
 HB_SYMBOL_UNUSED( cSection )
 HB_SYMBOL_UNUSED( cFilename )
    ::Depth--
-   //~ FWrite( ::nHandle, Replicate( Chr(9), ::Depth ) + [</Section>] + HB_OSNewLine() )
    RETURN self
 
 METHOD AddReference( oEntry, cReference, cSubReference ) CLASS GenerateHTML
@@ -185,10 +169,6 @@ METHOD AddReference( oEntry, cReference, cSubReference ) CLASS GenerateHTML
       ENDIF
    ENDIF
    RETURN self
-
-//~ METHOD AddIndex( oEntry ) CLASS GenerateHTML
-   //~ ::OpenTag( "a", "href", ::TargetFilename + "." + ::cExtension + "#" + oEntry:Filename ):Append( oEntry:Name ):CloseTag( "a" ):Append( oEntry:OneLiner ):Newline()
-   //~ RETURN self
 
 METHOD AddEntry( oEntry ) CLASS GenerateHTML
    LOCAL idx
@@ -225,53 +205,24 @@ METHOD PROCEDURE WriteEntry( cField, oEntry, lPreformatted, nIndent ) CLASS Gene
       //~ DEFAULT cTagClass TO "itemtext"
 
       IF Len( cCaption ) > 0 /* .AND. nIndent > 0 */
-         IF ::lNewDocumentModel
-            ::Tagged( cCaption, "div", "class", "itemtitle" )
-         ELSE
-            ::Append( cCaption, "h5" )
-         ENDIF
-      ENDIF
-
-      IF ::lNewDocumentModel
-      ELSE
-         ::OpenTag( "dl" )
+         ::Tagged( cCaption, "div", "class", "itemtitle" )
       ENDIF
 
       IF lPreformatted
-         IF ::lNewDocumentModel
-            ::OpenTag( "pre", IIf( cTagClass != NIL, "class", ), cTagClass )
-         ELSE
-            ::OpenTag( "dd" ):OpenTag( "pre" )
-         ENDIF
+         ::OpenTag( "pre", IIf( cTagClass != NIL, "class", ), cTagClass )
          DO WHILE Len( cEntry ) > 0
-            ::Append( Indent( Parse( @cEntry, HB_OSNewLine() ), 0, , .T. ), "" )
+            ::Append( Indent( Parse( @cEntry, hb_eol() ), 0, , .T. ), "" )
             //~ IF Len( cEntry ) > 0 .AND. ! lPreformatted
-               //~ FWrite( ::nHandle, HB_OSNewLine() )
+               //~ FWrite( ::nHandle, hb_eol() )
             //~ ENDIF
          ENDDO
-         IF ::lNewDocumentModel
-            ::CloseTag( "pre" )
-         ELSE
-            ::CloseTag( "pre" ):CloseTag( "dd" )
-         ENDIF
+         ::CloseTag( "pre" )
       ELSE
          DO WHILE Len( cEntry ) > 0
-            IF ::lNewDocumentModel
-               ::OpenTag( "div", "class", cTagClass )
-            ELSE
-               ::OpenTag( "dd" ):OpenTag( "p" )
-            ENDIF
-            ::Append( Indent( Parse( @cEntry, HB_OSNewLine() ), 0, 70 ), "" ):Newline()
-            IF ::lNewDocumentModel
-               ::CloseTag( "div" )
-            ELSE
-               ::CloseTag( "dd" )
-            ENDIF
+            ::OpenTag( "div", "class", cTagClass )
+            ::Append( Indent( Parse( @cEntry, hb_eol() ), 0, 70 ), "" ):Newline()
+            ::CloseTag( "div" )
          ENDDO
-      ENDIF
-      IF ::lNewDocumentModel
-      ELSE
-         ::CloseTag( "dl" )
       ENDIF
    ENDIF
 
@@ -284,7 +235,7 @@ METHOD OpenTag( cText, ... ) CLASS GenerateHTML
       cTag += " " + aArgs[ idx ] + "=" + Chr(34) + aArgs[ idx + 1 ] + Chr(34)
    NEXT
 
-   FWrite( ::nHandle, "<" + cTag + ">" + HB_OSNewLine() )
+   FWrite( ::nHandle, "<" + cTag + ">" + hb_eol() )
 
    RETURN self
 
@@ -297,12 +248,12 @@ METHOD Tagged( cText, cTag, ... ) CLASS GenerateHTML
       cResult += " " + aArgs[ idx ] + "=" + Chr(34) + aArgs[ idx + 1 ] + Chr(34)
    NEXT
 
-   FWrite( ::nHandle, cResult + ">" + cText + "</" + cTag + ">" + /* "4" + */ HB_OSNewLine() )
+   FWrite( ::nHandle, cResult + ">" + cText + "</" + cTag + ">" + /* "4" + */ hb_eol() )
 
    RETURN self
 
 METHOD CloseTag( cText ) CLASS GenerateHTML
-   FWrite( ::nHandle, "</" + cText + ">" + HB_OSNewLine() )
+   FWrite( ::nHandle, "</" + cText + ">" + hb_eol() )
 
    IF cText == "html"
       FClose( ::nHandle )
@@ -330,35 +281,29 @@ METHOD Append( cText, cFormat ) CLASS GenerateHTML
          cResult := "<" + aFormat[ idx ] + ">" + cResult + "</" + aFormat[ idx ] + ">"
       NEXT
 
-      DO WHILE Right( cResult, Len( HB_OSNewLine() ) ) == HB_OSNewLine()
-         cResult := SubStr( cResult, 1, Len( cResult ) - Len( HB_OSNewLine() ) )
+      DO WHILE Right( cResult, Len( hb_eol() ) ) == hb_eol()
+         cResult := SubStr( cResult, 1, Len( cResult ) - Len( hb_eol() ) )
       ENDDO
 
-      FWrite( ::nHandle, cResult + HB_OSNewLine() )
+      FWrite( ::nHandle, cResult + hb_eol() )
 
    ENDIF
 
    RETURN self
 
 METHOD RecreateStyleDocument( cStyleFile ) CLASS GenerateHTML
-   LOCAL nHandle
 
-   IF ( nHandle := FCreate( ::cFolder + p_hsSwitches[ "PATH_SEPARATOR" ] + cStyleFile ) ) > 0
-      FWrite( nHandle, ;
-         "/* Harbour Documents Stylesheet (" + cStyleFile + ") */" + HB_OSNewLine() + ;
-         "body {font-family:arial;font-size:14px;line-height:18px;}" + HB_OSNewLine() + ;
-         /* ".classtitle {font-weight:bold;font-size:22px;padding-bottom:4px;}" + HB_OSNewLine() + */ ;
-         ".name {font-weight:bold;font-size:18px;margin-left:0px;padding-top:0px;padding-bottom:4px;}" + HB_OSNewLine() + ;
-         ".oneliner {font-style:italic;margin-bottom:12px;}" + HB_OSNewLine() + ;
-         ".itemtitle {font-weight:bold;margin-left:0px;padding-top:0px;padding-bottom:4px;}" + HB_OSNewLine() + ;
-         ".itemtext {margin-left:10px;padding-bottom:4px;}" + HB_OSNewLine() + ;
-         ".examples {margin-left:10px;padding-bottom:4px;}" + HB_OSNewLine() + ;
-         ".tests {margin-left:10px;padding-bottom:4px;}" + HB_OSNewLine() + ;
-         "" ;
-      )
-
-      FClose( nHandle )
-   ELSE
+   IF ! hb_MemoWrit( ::cFolder + p_hsSwitches[ "PATH_SEPARATOR" ] + cStyleFile,;
+         "/* Harbour Documents Stylesheet (" + cStyleFile + ") */" + hb_eol() + ;
+         "body {font-family:arial;font-size:14px;line-height:18px;}" + hb_eol() + ;
+         /* ".classtitle {font-weight:bold;font-size:22px;padding-bottom:4px;}" + hb_eol() + */ ;
+         ".name {font-weight:bold;font-size:18px;margin-left:0px;padding-top:0px;padding-bottom:4px;}" + hb_eol() + ;
+         ".oneliner {font-style:italic;margin-bottom:12px;}" + hb_eol() + ;
+         ".itemtitle {font-weight:bold;margin-left:0px;padding-top:0px;padding-bottom:4px;}" + hb_eol() + ;
+         ".itemtext {margin-left:10px;padding-bottom:4px;}" + hb_eol() + ;
+         ".examples {margin-left:10px;padding-bottom:4px;}" + hb_eol() + ;
+         ".tests {margin-left:10px;padding-bottom:4px;}" + hb_eol() + ;
+         "" )
       // TODO: raise an error, could not create style file
    ENDIF
 

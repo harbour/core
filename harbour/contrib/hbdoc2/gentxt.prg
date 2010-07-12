@@ -93,13 +93,13 @@ EXPORTED:
 ENDCLASS
 
 METHOD NewDocument( cFolder, cFilename, cTitle ) CLASS GenerateText
-   super:NewDocument( cFolder, cFilename, cTitle, "txt" )
-   ::WriteEntry( "", cTitle + HB_OSNewLine(), .F. )
+   super:NewDocument( cFolder, cFilename, cTitle, ".txt" )
+   ::WriteEntry( "", cTitle + hb_eol(), .F. )
    RETURN self
 
 METHOD NewIndex( cFolder, cFilename, cTitle ) CLASS GenerateText
-   super:NewIndex( cFolder, cFilename, cTitle, "txt" )
-   ::WriteEntry( "", cTitle + HB_OSNewLine(), .F. )
+   super:NewIndex( cFolder, cFilename, cTitle, ".txt" )
+   ::WriteEntry( "", cTitle + hb_eol(), .F. )
    RETURN self
 
 METHOD BeginSection( cSection, cFilename ) CLASS GenerateText
@@ -128,7 +128,7 @@ METHOD AddEntry( oEntry ) CLASS GenerateText
       NEXT
 
       IF ! ::lContinuous
-         FWrite( ::nHandle, Chr( K_CTRL_L ) + HB_OSNewLine() )
+         FWrite( ::nHandle, Chr( K_CTRL_L ) + hb_eol() )
       ENDIF
    ENDIF
 
@@ -139,18 +139,18 @@ METHOD PROCEDURE WriteEntry( cCaption, cEntry, lPreformatted ) CLASS GenerateTex
    IF ! Empty( cEntry )
       nIndent := IIf( Len( cCaption ) > 0, 6, 0 )
       IF Len( cCaption ) > 0 .AND. nIndent > 0
-            FWrite( ::nHandle, Space( ::Depth * 6 ) + cCaption + ": " + HB_OSNewLine() )
+            FWrite( ::nHandle, Space( ::Depth * 6 ) + cCaption + ": " + hb_eol() )
       ENDIF
       nIndent += ::Depth * 6
       DO WHILE Len( cEntry ) > 0
-         FWrite( ::nHandle, Indent( Parse( @cEntry, HB_OSNewLine() ), nIndent, 70, lPreformatted ) )
+         FWrite( ::nHandle, Indent( Parse( @cEntry, hb_eol() ), nIndent, 70, lPreformatted ) )
       ENDDO
    ENDIF
 
 METHOD Generate() CLASS GenerateText
    IF ::IsIndex()
       IF ! ::lContinuous
-         FWrite( ::nHandle, Chr( K_CTRL_L ) + HB_OSNewLine() )
+         FWrite( ::nHandle, Chr( K_CTRL_L ) + hb_eol() )
       ENDIF
    ENDIF
 

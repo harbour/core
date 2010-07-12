@@ -555,6 +555,8 @@ STATIC FUNCTION call_hbmk2_dept( cBinDir, cProject, /* @ */ cType )
    LOCAL tmp, tmp1
    LOCAL aList := {}
 
+   cType := ""
+
    hb_processRun( PathSepToSelf( cBinDir ) + "hbmk2 --hbinfo " + cProject,, @tmp  )
 
    IF ( tmp1 := At( "targettype{{", tmp ) ) > 0

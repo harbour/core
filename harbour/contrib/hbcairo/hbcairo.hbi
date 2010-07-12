@@ -4,6 +4,8 @@
 
 -hbimplib
 
+-stop{!HB_WITH_CAIRO}
+
 ${HB_WITH_CAIRO}/../../bin/libcairo-2.dll
 
 -iflag={bcc}-a

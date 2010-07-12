@@ -4,6 +4,8 @@
 
 -hbimplib
 
+-stop{!HB_WITH_PGSQL}
+
 ${HB_WITH_PGSQL}/../lib/libpq.dll
 
 -iflag={bcc}-a
