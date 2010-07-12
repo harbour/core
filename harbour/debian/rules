@@ -67,7 +67,7 @@ binary-arch: build install
 	dh_installdocs
 	dh_installexamples
 #	dh_install
-	dh_installman doc/man/harbour.1 doc/man/hbmk2.1 doc/man/hbpp.1 doc/man/hbrun.1 doc/man/hbtest.1
+	dh_installman src/main/harbour.1 src/pp/hbpp.1 utils/hbmk2/hbmk2.1 utils/hbrun/hbrun.1 utils/hbtest/hbtest.1
 	dh_link
 	dh_strip
 	dh_compress

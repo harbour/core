@@ -283,42 +283,6 @@
  *  $END$
  */
 
-/*  $no-DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      HB_INETSTATUSDESC
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      INET
- *  $ONELINER$
- *      ? (note: this function is not active in hbinet.c)
- *  $SYNTAX$
- *      HB_INETSTATUSDESC(  )
- *  $ARGUMENTS$
- *      <socket> a socket previously created  / opened
- *  $RETURNS$
- *
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
- */
-
 /*  $DOC$
  *  $TEMPLATE$
  *      Function

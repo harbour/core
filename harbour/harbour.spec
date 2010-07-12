@@ -423,7 +423,11 @@ rm -f $HB_INST_PKGPREF$HB_LIB_INSTALL/libpng.a
 rm -f $HB_INST_PKGPREF$HB_LIB_INSTALL/libsqlite3.a
 
 mkdir -p $HB_INST_PKGPREF%{_mandir}/man1
-install -m644 doc/man/*.1* $HB_INST_PKGPREF%{_mandir}/man1/
+install -m644 src/main/*.1* $HB_INST_PKGPREF%{_mandir}/man1/
+install -m644 src/pp/*.1* $HB_INST_PKGPREF%{_mandir}/man1/
+install -m644 utils/hbmk2/*.1* $HB_INST_PKGPREF%{_mandir}/man1/
+install -m644 utils/hbrun/*.1* $HB_INST_PKGPREF%{_mandir}/man1/
+install -m644 utils/hbtest/*.1* $HB_INST_PKGPREF%{_mandir}/man1/
 
 mkdir -p $HB_INST_PKGPREF$HB_ETC_INSTALL
 install -m644 src/rtl/gtcrs/hb-charmap.def $HB_INST_PKGPREF$HB_ETC_INSTALL/hb-charmap.def

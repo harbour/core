@@ -7,10 +7,10 @@ ROOT := ../../
 DOC_SUBDIR := /en
 
 DOC_FILES := \
+   1stread.txt \
    array.txt \
    binnum.txt \
    browse.txt \
-   clipper.txt \
    cmdline.txt \
    command.txt \
    compiler.txt \

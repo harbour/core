@@ -22,7 +22,7 @@
  *      hb_fsChDir()
  *  $CATEGORY$
  *      C level API
- * $SUBCATEGORY$
+ *  $SUBCATEGORY$
  *      FileSys
  *  $ONELINER$
  *      Change working directory

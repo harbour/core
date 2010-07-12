@@ -7,6 +7,7 @@ ROOT := ../
 DOC_FILES := \
    c_std.txt \
    class_tp.txt \
+   clipper.txt \
    cmdline.txt \
    cmpopt.txt \
    codebloc.txt \

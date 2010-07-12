@@ -592,10 +592,10 @@ STATIC FUNCTION WalkAndFind( cTop, cLookFor )
    cTop += iif( Right( cTop, 1 ) $ "/\", "", hb_ps() )
    aDir := Directory( cTop + hb_osFileMask(), "D" )
 
-   ASORT( aDir,,, { |aLeft| !( aLeft[ F_ATTR ] $ "D" ) } )   /* Files first */
+   ASORT( aDir,,, { |aLeft| !( "D" $ aLeft[ F_ATTR ] ) } )   /* Files first */
 
    FOR EACH aDirEntry IN aDir
-      IF !( aDirEntry[ F_ATTR ] == "D" )
+      IF !( "D" $ aDirEntry[ F_ATTR ] )
          IF aDirEntry[ F_NAME ] == cLookFor
             cRetVal := cTop
             EXIT
