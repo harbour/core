@@ -218,9 +218,9 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::connectWindowEvents()
    //
-   ::connectEvent( ::pWidget, QEvent_Close           , {|e| ::execEvent( QEvent_Close           , e ) } )
-   ::connectEvent( ::pWidget, QEvent_WindowActivate  , {|e| ::execEvent( QEvent_WindowActivate  , e ) } )
-   ::connectEvent( ::pWidget, QEvent_WindowDeactivate, {|e| ::execEvent( QEvent_WindowDeactivate, e ) } )
+   ::connectEvent( ::pWidget, QEvent_Close            , {|e| ::execEvent( QEvent_Close            , e ) } )
+   ::connectEvent( ::pWidget, QEvent_WindowActivate   , {|e| ::execEvent( QEvent_WindowActivate   , e ) } )
+   ::connectEvent( ::pWidget, QEvent_WindowDeactivate , {|e| ::execEvent( QEvent_WindowDeactivate , e ) } )
 
    RETURN Self
 
@@ -270,6 +270,7 @@ METHOD XbpDialog:execEvent( nEvent, pEvent )
    HB_SYMBOL_UNUSED( pEvent )
 
    DO CASE
+
    CASE nEvent == QEvent_WindowActivate
       SetAppEvent( xbeP_SetDisplayFocus, NIL, NIL, Self )
 
@@ -378,7 +379,7 @@ METHOD XbpDialog:getFrameState()
 METHOD XbpDialog:menuBar()
 
    IF !( hb_isObject( ::oMenu ) )
-      ::oMenu := XbpMenuBar():New( self ):create()
+      XbpMenuBar():New( self ):create()
    ENDIF
 
    RETURN ::oMenu

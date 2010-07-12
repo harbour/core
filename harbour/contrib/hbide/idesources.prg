@@ -216,7 +216,8 @@ METHOD IdeSourcesManager:saveSource( nTab, lCancel, lAs )
       nIndex  := ::qTabWidget:indexOf( oEdit:oTab:oWidget )
       cSource := oEdit:sourceFile
 
-      IF !Empty( oEdit:sourceFile ) .AND. oEdit:lLoaded .AND. oEdit:qDocument:isModified()
+      // IF !Empty( oEdit:sourceFile ) .AND. oEdit:lLoaded .AND. oEdit:qDocument:isModified()
+      IF lAs .OR. empty( oEdit:sourceFile ) .OR. ( oEdit:lLoaded .AND. oEdit:qDocument:isModified() )
 
          lNew := Empty( cSource ) .OR. lAs
          IF lNew
