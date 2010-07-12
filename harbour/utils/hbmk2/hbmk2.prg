@@ -3965,7 +3965,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
    /* ; */
 
-   IF ! lStopAfterInit .AND. hbmk[ _HBMK_lCreateImpLib ]
+   IF ! lStopAfterInit .AND. hbmk[ _HBMK_lCreateImpLib ] .AND. ! lDumpInfo
       DoIMPLIB( hbmk, bBlk_ImpLib, cLibLibPrefix, cLibLibExt )
       lStopAfterInit := .T.
    ENDIF
