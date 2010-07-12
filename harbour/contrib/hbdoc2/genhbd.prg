@@ -4,14 +4,10 @@
 
 /*
  * Harbour Project source code:
- * Document generator template class
+ * Document generator - HBFDB output
  *
- * Copyright 2009 April White <april users.sourceforge.net>
+ * Copyright 2010 Viktor Szakats (harbour 01 syenar hu)
  * www - http://harbour-project.org
- *
- * Portions of this project are based on hbdoc
- *    Copyright 1999-2003 Luiz Rafael Culik <culikr@uol.com.br>
- *    <TODO: list gen... methods used>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -55,58 +51,78 @@
  */
 
 #include "hbclass.ch"
+#include "inkey.ch"
+#include "fileio.ch"
 #include "hbdoc2.ch"
 
-#define DOCUMENT_ 1
-#define INDEX_ 2
-
-CLASS TPLGenerate
-
-EXPORTED:
-//~ PROTECTED:
-   DATA nHandle AS NUMERIC
-   DATA cFolder AS STRING
-   DATA cFilename AS STRING
-   DATA cTitle AS STRING
-   DATA cExtension AS STRING
-
-   METHOD NewIndex( cFolder, cFilename, cTitle, cExtension )
-   METHOD NewDocument( cFolder, cFilename, cTitle, cExtension )
-   METHOD AddEntry( oEntry ) INLINE HB_SYMBOL_UNUSED( oEntry ), NIL
-   METHOD AddReference( oEntry ) INLINE HB_SYMBOL_UNUSED( oEntry ), NIL
-   METHOD BeginSection( cSection, cFilename ) INLINE HB_SYMBOL_UNUSED( cSection ), HB_SYMBOL_UNUSED( cFilename ), ::Depth++
-   METHOD EndSection( cSection, cFilename ) INLINE  HB_SYMBOL_UNUSED( cSection ), HB_SYMBOL_UNUSED( cFilename ), ::Depth--
-   METHOD Generate() INLINE NIL
-   METHOD IsIndex() INLINE ( ::nType == INDEX_ )
+CLASS GenerateHBFDB FROM TPLGenerate
+HIDDEN:
 
 PROTECTED:
-   METHOD New( cFolder, cFilename, cTitle, cExtension, nType ) HIDDEN
-   DATA nType AS INTEGER
-   DATA Depth AS INTEGER INIT 0
+
+EXPORTED:
+   METHOD NewIndex( cFolder, cFilename, cTitle )
+   METHOD NewDocument( cFolder, cFilename, cTitle )
+   METHOD AddEntry( oEntry )
+   METHOD AddIndex( oEntry ) HIDDEN
+   METHOD BeginSection( cSection, cFilename )
+   METHOD EndSection( cSection, cFilename )
+   METHOD Generate()
+
+   METHOD WriteEntry( cCaption, cEntry, lPreformatted ) HIDDEN
+
+   VAR aProto INIT {}
+
 ENDCLASS
 
-METHOD NewIndex( cFolder, cFilename, cTitle, cExtension ) CLASS TPLGenerate
-   self:New( cFolder, cFilename, cTitle, cExtension, INDEX_ )
+METHOD NewDocument( cFolder, cFilename, cTitle ) CLASS GenerateHBFDB
+   HB_SYMBOL_UNUSED( cFolder )
+   HB_SYMBOL_UNUSED( cFileName )
+   HB_SYMBOL_UNUSED( cTitle )
    RETURN self
 
-METHOD NewDocument( cFolder, cFilename, cTitle, cExtension ) CLASS TPLGenerate
-   self:New( cFolder, cFilename, cTitle, cExtension, DOCUMENT_ )
+METHOD NewIndex( cFolder, cFilename, cTitle ) CLASS GenerateHBFDB
+   HB_SYMBOL_UNUSED( cFolder )
+   HB_SYMBOL_UNUSED( cFileName )
+   HB_SYMBOL_UNUSED( cTitle )
    RETURN self
 
-METHOD New( cFolder, cFilename, cTitle, cExtension, nType ) CLASS TPLGenerate
+METHOD BeginSection( cSection, cFilename ) CLASS GenerateHBFDB
+   HB_SYMBOL_UNUSED( cSection )
+   HB_SYMBOL_UNUSED( cFileName )
+   RETURN self
 
-   ::nHandle := 0
-   ::cFolder := cFolder
-   ::cFilename := cFilename
-   ::cTitle := cTitle
-   ::cExtension := cExtension
-   ::nType := nType
+METHOD EndSection( cSection, cFilename ) CLASS GenerateHBFDB
+   HB_SYMBOL_UNUSED( cSection )
+   HB_SYMBOL_UNUSED( cFilename )
+   RETURN self
 
-   IF EMPTY( DIRECTORY( ::cFolder, "D" ) )
-      ? "Creating folder " + ::cFolder
-      MAKEDIR( ::cFolder )
-   ENDIF
+METHOD AddIndex( oEntry ) CLASS GenerateHBFDB
+   HB_SYMBOL_UNUSED( oEntry )
+   RETURN self
 
-   ::nHandle := FCreate( ::cFolder + p_hsSwitches[ "PATH_SEPARATOR" ] + ::cFilename + "." + ::cExtension )
+METHOD AddEntry( oEntry ) CLASS GenerateHBFDB
+   LOCAL idx
+
+   HB_SYMBOL_UNUSED( oEntry )
+
+   FOR idx := 1 TO Len( oEntry:Fields )
+      IF oEntry:Fields[ idx ][ 1 ] == "SYNTAX"
+         AAdd( ::aProto, oEntry:&( oEntry:Fields[ idx ][ 1 ] ) )
+      ENDIF
+   NEXT
 
    RETURN self
+
+METHOD Generate() CLASS GenerateHBFDB
+
+   hb_MemoWrit( "proto.hbfdb", hb_serialize( ::aProto ) )
+
+   RETURN self
+
+METHOD PROCEDURE WriteEntry( cCaption, cEntry, lPreformatted ) CLASS GenerateHBFDB
+   HB_SYMBOL_UNUSED( cCaption )
+   HB_SYMBOL_UNUSED( cEntry )
+   HB_SYMBOL_UNUSED( lPreformatted )
+
+   RETURN

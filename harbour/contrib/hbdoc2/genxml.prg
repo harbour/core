@@ -2,12 +2,6 @@
  * $Id$
  */
 
-/* note to self (from howtosvn.txt)
-Run these commands and commit:
-svn propset svn:keywords "Author Date Id Revision" "filename"
-svn propset svn:eol-style native "filename"
-*/
-
 /*
  * Harbour Project source code:
  * Document generator - XML output

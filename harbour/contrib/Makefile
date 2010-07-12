@@ -44,7 +44,6 @@ DIRS += \
    hbhpdf \
    hbmysql \
    hbpgsql \
-   hbqt \
    hbssl \
    rddads \
    rddsql \
@@ -57,11 +56,12 @@ DIRS += \
 
 # under testing in make.hbs
 #  hbblat \
+#  hbqt \
 #  gtalleg \
 
 # contribs dependent on above
-DIRS += \
-   hbxbp \
+#DIRS += \
+#   hbxbp \
 
 ifeq ($(HB_CONTRIBLIBS),no)
    DIRS :=

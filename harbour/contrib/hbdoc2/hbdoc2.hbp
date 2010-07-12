@@ -9,6 +9,8 @@
 -gtcgi
 
 hbdoc2.prg
+
+genhbd.prg
 gentpl.prg
 gentxt.prg
 genhtml.prg

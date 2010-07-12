@@ -326,7 +326,16 @@ PROCEDURE GNUMake( ... )
       aLibsPass2 := {;
          "gtalleg/gtalleg.hbp"        ,;
          "gtalleg/gtallegs.hbp"       ,;
-         "hbblat/hbblat.hbp"          }
+         "hbblat/hbblat.hbp"          ,;
+         "hbqt/hbqt.hbp"              ,;
+         "hbqt/hbqtcore.hbp"          ,;
+         "hbqt/hbqtcores.hbp"         ,;
+         "hbqt/hbqtgui.hbp"           ,;
+         "hbqt/hbqtguis.hbp"          ,;
+         "hbqt/hbqtnetwork.hbp"       ,;
+         "hbqt/hbqtnetworks.hbp"      ,;
+         "hbqt/hbqts.hbp"             ,;
+         "hbxbp/hbxbp.hbp"            }  /* uses: hbqt */
       aLibsPass3 := {;
          "gtwvg/gtwvg.hbp"            }  /* uses: hbwin */
       aUtils := {;

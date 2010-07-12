@@ -104,22 +104,13 @@ done - validate sources against these templates
 
 #include "directry.ch"
 #include "fileio.ch"
+
 #include "hbdoc2.ch"
 
 ANNOUNCE HB_GTSYS
 REQUEST HB_GT_CGI_DEFAULT
 
-#ifndef __HARBOUR__
-   #define HB_OSNewLine() ( Chr( 13 ) + Chr( 10 ) )
-#endif
-
-#ifdef __PLATFORM__UNIX
-   #define PATH_SEPARATOR "/"
-   #define BASE_DIR "../../"
-#else
-   #define PATH_SEPARATOR "\"
-   #define BASE_DIR "..\..\"
-#endif
+#define BASE_DIR ".." + hb_ps() + ".." + hb_ps()
 
 STATIC s_aExclusions := { "class_tp.txt", "hdr_tpl.txt" }
 
@@ -141,15 +132,15 @@ PROCEDURE Main( ... )
       "source", .F., ;
       "contribs", .F., ;
       "format", {}, ;
-      "output", "entry", ;
+      "output", "category", ;
       "include-doc-source", .F., ;
       "include-doc-version", .F., ;
       "immediate-errors", .F., ;
       ;
       /* internal settings, values, etc */ ;
-      "PATH_SEPARATOR", PATH_SEPARATOR, ;
+      "PATH_SEPARATOR", hb_ps(), ;
       "DELIMITER", "$", ;
-      "format-list", { "text", "ascii", "html", "html2", "xml", "rtf", "hpc", "ngi", "os2", "chm", "ch2", "pdf", "trf", "doc", "dbf", "all" }, ;
+      "format-list", { "text", "ascii", "html", "html2", "xml", "hdb", "rtf", "hpc", "ngi", "os2", "chm", "ch2", "pdf", "trf", "doc", "dbf", "all" }, ;
       "hbextern.ch", {}, ;
       "in hbextern", {}, ;
       "not in hbextern", {}, ;
@@ -181,7 +172,7 @@ PROCEDURE Main( ... )
          ENDIF
 
          DO CASE
-         CASE cArgName == "-source" ;           p_hsSwitches[ "basedir" ] := arg + IIf(SubStr(arg, -1, 1) == PATH_SEPARATOR, "", PATH_SEPARATOR)
+         CASE cArgName == "-source" ;           p_hsSwitches[ "basedir" ] := arg + IIf(SubStr(arg, -1, 1) == hb_ps(), "", hb_ps())
          CASE cArgName == "-format"
             IF arg == "" .OR. HB_AScan( p_hsSwitches[ "format-list" ], arg, , , .T. ) == 0
                ShowHelp( "Unknown format option '" + arg + "'" )
@@ -198,7 +189,6 @@ PROCEDURE Main( ... )
          CASE cArgName == "-output-entry" ;           p_hsSwitches[ "output" ] := "entry"
          CASE cArgName == "-include-doc-source" ;     p_hsSwitches[ "include-doc-source" ] := .T.
          CASE cArgName == "-include-doc-version" ;    p_hsSwitches[ "include-doc-version" ] := .T.
-         CASE cArgName == "" ;     p_hsSwitches[ "include-doc-version" ] := .T.
          OTHERWISE
             IF HB_AScan( p_hsSwitches[ "format-list" ], SubStr( cArgName, 2 ), , , .T. ) > 0
                IF SubStr( cArgName, 2 ) == "all"
@@ -215,7 +205,7 @@ PROCEDURE Main( ... )
    NEXT
 
    // load hbextern.ch
-   FileEval( p_hsSwitches[ "basedir" ] + "include" + PATH_SEPARATOR + "hbextern.ch", ;
+   FileEval( p_hsSwitches[ "basedir" ] + "include" + hb_ps() + "hbextern.ch", ;
       {|c| IIf( SubStr( c, 1, Len( "EXTERNAL " ) ) == "EXTERNAL ", ;
                 AAdd( p_hsSwitches[ "hbextern.ch" ], SubStr( c, Len( "EXTERNAL " ) + 1 ) ), ;
                 ) } )
@@ -225,7 +215,7 @@ PROCEDURE Main( ... )
    AEval( ;
       {;
          p_hsSwitches[ "basedir" ] + "doc", ;
-         p_hsSwitches[ "basedir" ] + "doc" + PATH_SEPARATOR + "en", ;
+         p_hsSwitches[ "basedir" ] + "doc" + hb_ps() + "en", ;
          IIf( p_hsSwitches[ "source" ], p_hsSwitches[ "basedir" ] + "source", NIL ), ;
          IIf( p_hsSwitches[ "contribs" ], p_hsSwitches[ "basedir" ] + "contrib", NIL ), ;
       }, ;
@@ -300,7 +290,9 @@ PROCEDURE Main( ... )
 
             FOR idx := 1 TO Len( aContent )
                IF SubStr( aContent[ idx ]:sourcefile_, -Len( "1stread.txt" ) ) == "1stread.txt"
-                  oIndex:AddEntry( aContent[ idx ] )
+                  IF oIndex != NIL
+                     oIndex:AddEntry( aContent[ idx ] )
+                  ENDIF
                   idx := Len( aContent )
                ENDIF
             NEXT
@@ -317,35 +309,47 @@ PROCEDURE Main( ... )
                IF .NOT. Empty( p_aCategories[ idx3 ] )
                   oDocument := &("Generate" + cFormat + "()"):NewDocument( cFormat, p_aCategories[ idx3 ][ 4 ], "Harbour Reference Guide - " + p_aCategories[ idx3 ][ 1 ] )
 
-                  oIndex:BeginSection( p_aCategories[ idx3 ][ 1 ], oDocument:cFilename )
+                  IF oIndex != NIL
+                     oIndex:BeginSection( p_aCategories[ idx3 ][ 1 ], oDocument:cFilename )
+                  ENDIF
                   oDocument:BeginSection( p_aCategories[ idx3 ][ 1 ], oDocument:cFilename )
 
                   FOR idx := 1 TO Len( p_aCategories[ idx3 ][ 3 ] )
                      IF .NOT. Empty( p_aCategories[ idx3 ][ 3 ][ idx ] )
                         ASort( p_aCategories[ idx3 ][ 3 ][ idx ], , , {|oL,oR| oL:Name <= oR:Name } )
                         IF Len( p_aCategories[ idx3 ][ 2 ][ idx ] ) > 1 .OR. Len( p_aCategories[ idx3 ][ 2 ][ idx ] ) > 0
-                           oIndex:BeginSection( p_aCategories[ idx3 ][ 2 ][ idx ], oDocument:cFilename )
+                           IF oIndex != NIL
+                              oIndex:BeginSection( p_aCategories[ idx3 ][ 2 ][ idx ], oDocument:cFilename )
+                           ENDIF
                            oDocument:BeginSection( p_aCategories[ idx3 ][ 2 ][ idx ], oDocument:cFilename )
                         ENDIF
                         FOR idx4 := 1 TO Len( p_aCategories[ idx3 ][ 3 ][ idx ] )
                            IF .NOT. Empty( p_aCategories[ idx3 ][ 3 ][ idx ][ idx4 ] )
                               IF SubStr( p_aCategories[ idx3 ][ 3 ][ idx ][ idx4 ]:sourcefile_, -Len( "1stread.txt" ) ) == "1stread.txt"
                               ELSE
-                                 oIndex:AddReference( p_aCategories[ idx3 ][ 3 ][ idx ][ idx4 ] )
+                                 IF oIndex != NIL
+                                    oIndex:AddReference( p_aCategories[ idx3 ][ 3 ][ idx ][ idx4 ] )
+                                 ENDIF
                                  oDocument:AddEntry( p_aCategories[ idx3 ][ 3 ][ idx ][ idx4 ] )
-                                 oDocument:AddReference( "Index", oIndex:cFilename )
+                                 IF oIndex != NIL
+                                    oDocument:AddReference( "Index", oIndex:cFilename )
 // this kind of works; the reference is outputed but it is not what I meant
-                                 oDocument:AddReference( p_aCategories[ idx3 ][ 1 ], oIndex:cFilename, p_aCategories[ idx3 ][ 4 ] )
+                                    oDocument:AddReference( p_aCategories[ idx3 ][ 1 ], oIndex:cFilename, p_aCategories[ idx3 ][ 4 ] )
+                                 ENDIF
                               ENDIF
                            ENDIF
                         NEXT
                         IF Len( p_aCategories[ idx3 ][ 2 ][ idx ] ) > 1 .OR. Len( p_aCategories[ idx3 ][ 2 ][ idx ] ) > 0
-                           oIndex:EndSection( p_aCategories[ idx3 ][ 2 ][ idx ], oDocument:cFilename )
+                           IF oIndex != NIL
+                              oIndex:EndSection( p_aCategories[ idx3 ][ 2 ][ idx ], oDocument:cFilename )
+                           ENDIF
                            oDocument:EndSection( p_aCategories[ idx3 ][ 2 ][ idx ], oDocument:cFilename )
                         ENDIF
                      ENDIF
                   NEXT
-                  oIndex:EndSection( p_aCategories[ idx3 ][ 1 ], oDocument:cFilename )
+                  IF oIndex != NIL
+                     oIndex:EndSection( p_aCategories[ idx3 ][ 1 ], oDocument:cFilename )
+                  ENDIF
                   oDocument:EndSection( p_aCategories[ idx3 ][ 1 ], oDocument:cFilename )
                   oDocument:Generate()
                ENDIF
@@ -355,7 +359,9 @@ PROCEDURE Main( ... )
 
             FOR idx := 1 TO Len( aContent )
                oDocument := &("Generate" + cFormat + "()"):NewDocument( cFormat, aContent[ idx ]:filename, "Harbour Reference Guide" )
-               oIndex:AddEntry( aContent[ idx ] )
+               IF oIndex != NIL
+                  oIndex:AddEntry( aContent[ idx ] )
+               ENDIF
                oDocument:AddEntry( aContent[ idx ] )
                oDocument:Generate()
             NEXT
@@ -388,7 +394,7 @@ STATIC PROCEDURE ProcessFolder( cFolder, aContent ) // this is a recursive proce
 
    //~ ? "> " + cFolder
 
-   cFolder += PATH_SEPARATOR
+   cFolder += hb_ps()
 
    aFiles := Directory( cFolder + "*.*", "D" )
    IF ( nLen := LEN( aFiles ) ) > 0
@@ -464,9 +470,9 @@ STATIC PROCEDURE ProcessBlock( aHandle, aContent, cFile, cType, cVersion, o )
    LOCAL cSourceFile
 
 #ifdef __PLATFORM__UNIX
-      cSourceFile := "../" + cFile /* SubStr( cFile, Len( p_hsSwitches[ "basedir" ] + PATH_SEPARATOR ) ) */
+      cSourceFile := "../" + cFile /* SubStr( cFile, Len( p_hsSwitches[ "basedir" ] + hb_ps() ) ) */
 #else
-      cSourceFile := StrTran( "../" + cFile /* SubStr( cFile, Len( p_hsSwitches[ "basedir" ] + PATH_SEPARATOR ) ) */, "\", "/" )
+      cSourceFile := StrTran( "../" + cFile /* SubStr( cFile, Len( p_hsSwitches[ "basedir" ] + hb_ps() ) ) */, "\", "/" )
 #endif
 
    o:type_ = cType
@@ -550,7 +556,7 @@ STATIC PROCEDURE ProcessBlock( aHandle, aContent, cFile, cType, cVersion, o )
 
             CASE .NOT. o:IsConstraint( cSectionName, cSection )
 
-               cSource := cSectionName + " is '" + IIf( Len( cSection ) <= 20, cSection, SubStr( StrTran( cSection, HB_OSNewLine(), "" ), 1, 20 ) + "..." ) + "', should be one of: "
+               cSource := cSectionName + " is '" + IIf( Len( cSection ) <= 20, cSection, SubStr( StrTran( cSection, HB_OSNewLine() ), 1, 20 ) + "..." ) + "', should be one of: "
                //~ cSource := HB_HKeyAt( hsTemplate, idx ) + " should be one of: "
                AEval( &( "p_a" + cSectionName ), {|c,n| cSource += IIf( n == 1, "", "," ) + c } )
                AddErrorCondition( cFile, cSource, aHandle[ 2 ] - 1 )
@@ -993,8 +999,8 @@ PROCEDURE ShowHelp( cExtraMessage, aArgs )
    CASE Empty( aArgs ) .OR. Len( aArgs ) <= 1 .OR. Empty( aArgs[ 1 ] )
       aHelp = { ;
          cExtraMessage, ;
-         "Harbour Document Extractor (hbdoc2) " + HBRawVersion(), ;
-         "Copyright (c) 1999-2009, http://harbour-project.org/", ;
+         "Harbour Document Compiler (hbdoc2) " + HBRawVersion(), ;
+         "Copyright (c) 1999-2010, http://harbour-project.org/", ;
          "", ;
          "Syntax:", ;
          "", ;
@@ -1014,7 +1020,7 @@ PROCEDURE ShowHelp( cExtraMessage, aArgs )
             "-output-single // output is one file" + IsDefault( p_hsSwitches[ "output" ] == "single" ), ;
             "-output-category // output is one file per category" + IsDefault( p_hsSwitches[ "output" ] == "category" ), ;
             "-output-entry // output is one file per entry (function, command, etc)" + IsDefault( p_hsSwitches[ "output" ] == "entry" ), ;
-            "-source=<folder> // source folder, default is .." + PATH_SEPARATOR + "..", ;
+            "-source=<folder> // source folder, default is .." + hb_ps() + "..", ;
             "-include-doc-source // output is to indicate the document source file name", ;
             "-include-doc-version // output is to indicate the document source file version", ;
          } ;
@@ -1179,7 +1185,7 @@ FUNCTION Indent( cText, nLeftMargin, nWidth, lRaw )
                cResult += Space( nLeftMargin ) + cLine + HB_OSNewLine()
             ENDIF
 
-            cResult += hb_OSNewLine()
+            cResult += HB_OSNewLine()
          ENDIF
       ENDDO
    ENDIF
