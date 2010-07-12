@@ -131,7 +131,7 @@ METHOD Generate() CLASS GenerateXML
    IF ::IsIndex()
    ENDIF
 
-   IF .NOT. Empty( ::nHandle )
+   IF ! Empty( ::nHandle )
       FClose( ::nHandle )
       ::nHandle := 0
    ENDIF
@@ -142,7 +142,7 @@ METHOD PROCEDURE WriteEntry( cCaption, cEntry, lPreformatted ) CLASS GenerateXML
    LOCAL cResult
    LOCAL idx
 
-   IF .NOT. Empty( cEntry )
+   IF ! Empty( cEntry )
       cResult := IIf( HB_OSNewLine() $ cEntry, HB_OSNewLine() + cEntry, cEntry )
       FOR idx := 1 TO Len( p_aConversionList ) STEP 2
          cResult := StrTran( cResult, Chr( p_aConversionList[ idx ] ), "&" + p_aConversionList[ idx + 1 ] + ";" )

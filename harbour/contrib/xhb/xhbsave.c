@@ -53,7 +53,7 @@
 #include "hbapi.h"
 #include "hbapigt.h"
 
-static void hb_getScreenRange( int * pusMin, int * pusMax,
+static void hb_getScreenRange( int * piMin, int * piMax,
                                HB_BOOL fNoCheck, HB_BOOL fVertical )
 {
    int iFrom, iTo, iMax;
@@ -83,43 +83,43 @@ static void hb_getScreenRange( int * pusMin, int * pusMax,
 
    if( iFrom > iTo )
    {
-      *pusMin = iTo;
-      *pusMax = iFrom;
+      *piMin = iTo;
+      *piMax = iFrom;
    }
    else
    {
-      *pusMin = iFrom;
-      *pusMax = iTo;
+      *piMin = iFrom;
+      *piMax = iTo;
    }
 }
 
 HB_FUNC( XHB_SAVESCREEN )
 {
-   int uiTop, uiLeft, uiBottom, uiRight;
-   HB_SIZE ulSize;
+   int iTop, iLeft, iBottom, iRight;
+   HB_SIZE nSize;
    void * pBuffer;
    HB_BOOL fNoCheck = hb_parl( 5 );
 
-   hb_getScreenRange( &uiTop, &uiBottom, fNoCheck, HB_TRUE );
-   hb_getScreenRange( &uiLeft, &uiRight, fNoCheck, HB_FALSE );
+   hb_getScreenRange( &iTop, &iBottom, fNoCheck, HB_TRUE );
+   hb_getScreenRange( &iLeft, &iRight, fNoCheck, HB_FALSE );
 
-   hb_gtRectSize( uiTop, uiLeft, uiBottom, uiRight, &ulSize );
-   pBuffer = hb_xgrab( ulSize + 1 );
+   hb_gtRectSize( iTop, iLeft, iBottom, iRight, &nSize );
+   pBuffer = hb_xgrab( nSize + 1 );
 
-   hb_gtSave( uiTop, uiLeft, uiBottom, uiRight, pBuffer );
-   hb_retclen_buffer( ( char * ) pBuffer, ulSize );
+   hb_gtSave( iTop, iLeft, iBottom, iRight, pBuffer );
+   hb_retclen_buffer( ( char * ) pBuffer, nSize );
 }
 
 HB_FUNC( XHB_RESTSCREEN )
 {
    if( HB_ISCHAR( 5 ) )
    {
-      int uiTop, uiLeft, uiBottom, uiRight;
+      int iTop, iLeft, iBottom, iRight;
       HB_BOOL fNoCheck = hb_parl( 6 );
 
-      hb_getScreenRange( &uiTop, &uiBottom, fNoCheck, HB_TRUE );
-      hb_getScreenRange( &uiLeft, &uiRight, fNoCheck, HB_FALSE );
+      hb_getScreenRange( &iTop, &iBottom, fNoCheck, HB_TRUE );
+      hb_getScreenRange( &iLeft, &iRight, fNoCheck, HB_FALSE );
 
-      hb_gtRest( uiTop, uiLeft, uiBottom, uiRight, ( void * ) hb_parc( 5 ) );
+      hb_gtRest( iTop, iLeft, iBottom, iRight, ( void * ) hb_parc( 5 ) );
    }
 }

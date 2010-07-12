@@ -59,21 +59,21 @@
 #include "hbvm.h"
 
 /* Escaping delimited strings. Need to be cleaned/optimized/improved */
-static char * hb_strescape( const char * szInput, HB_ISIZ lLen, const char * cDelim )
+static char * hb_strescape( const char * szInput, HB_ISIZ nLen, const char * cDelim )
 {
-   HB_ISIZ lCnt = 0;
+   HB_ISIZ nCnt = 0;
    const char * szChr;
    char * szEscape;
    char * szReturn;
 
-   szReturn = szEscape = ( char * ) hb_xgrab( lLen * 2 + 4 );
+   szReturn = szEscape = ( char * ) hb_xgrab( nLen * 2 + 4 );
 
-   while( lLen && HB_ISSPACE( szInput[ lLen - 1 ] ) )
-      lLen--;
+   while( nLen && HB_ISSPACE( szInput[ nLen - 1 ] ) )
+      nLen--;
 
    szChr = szInput;
 
-   while( *szChr && lCnt++ < lLen )
+   while( *szChr && nCnt++ < nLen )
    {
       if( *szChr == *cDelim )
          *szEscape++ = '\\';
@@ -132,12 +132,12 @@ static HB_BOOL hb_ExportVar( HB_FHANDLE handle, PHB_ITEM pValue, const char * cD
       case HB_IT_LONG:
       case HB_IT_DOUBLE:
       {
-         char *szResult = hb_itemStr( pValue, NULL, NULL );
+         char * szResult = hb_itemStr( pValue, NULL, NULL );
 
          if( szResult )
          {
-            HB_SIZE ulLen = strlen( szResult );
-            const char * szTrimmed = hb_strLTrim( szResult, &ulLen );
+            HB_SIZE nLen = strlen( szResult );
+            const char * szTrimmed = hb_strLTrim( szResult, &nLen );
 
             hb_fsWriteLarge( handle, szTrimmed, strlen( szTrimmed ) );
             hb_xfree( szResult );
@@ -168,7 +168,7 @@ HB_FUNC( DBF2TEXT )
 
    /* Export DBF content to text file */
 
-   HB_ISIZ iSepLen;
+   HB_ISIZ nSepLen;
    HB_USHORT uiFields = 0;
    HB_USHORT ui;
    PHB_ITEM pTmp;
@@ -200,11 +200,11 @@ HB_FUNC( DBF2TEXT )
       cDelim = "\"";
 
    if( cSep )
-      iSepLen = hb_parclen( 6 );
+      nSepLen = hb_parclen( 6 );
    else
    {
       cSep = ",";
-      iSepLen = 1;
+      nSepLen = 1;
    }
 
    SELF_FIELDCOUNT( pArea, &uiFields );
@@ -229,7 +229,7 @@ HB_FUNC( DBF2TEXT )
             for( ui = 1; ui <= uiFields; ui ++ )
             {
                if( bWriteSep )
-                  hb_fsWriteLarge( handle, cSep, iSepLen );
+                  hb_fsWriteLarge( handle, cSep, nSepLen );
 
                SELF_GETVALUE( pArea, ui, pTmp );
                bWriteSep = hb_ExportVar( handle, pTmp, cDelim, cdp );
@@ -252,7 +252,7 @@ HB_FUNC( DBF2TEXT )
                   if( iPos )
                   {
                      if( bWriteSep )
-                        hb_fsWriteLarge( handle, cSep, iSepLen );
+                        hb_fsWriteLarge( handle, cSep, nSepLen );
 
                      SELF_GETVALUE( pArea, ( HB_USHORT ) iPos, pTmp );
                      bWriteSep = hb_ExportVar( handle, pTmp, cDelim, cdp );

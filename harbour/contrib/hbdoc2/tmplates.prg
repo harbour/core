@@ -154,8 +154,8 @@ EXPORTED:
 ENDCLASS
 
 METHOD New( cType ) CLASS Entry
-   ::uid_ = HB_NTOS( ++::uid__ )
-   IF .NOT. __ObjHasData( self, self:Fields[ 1 ][ 1 ] )
+   ::uid_ := HB_NTOS( ++::uid__ )
+   IF ! __ObjHasData( self, self:Fields[ 1 ][ 1 ] )
       AEval( self:Fields, {|a| __objAddData( self, a[ 1 ] ) } )
    ENDIF
    IF cType != NIL
@@ -309,7 +309,7 @@ INIT PROCEDURE Templates()
    }
 
    FOR idx := 1 TO Len( p_aCategories )
-      IF .NOT. Empty( p_aCategories[ idx ] )
+      IF ! Empty( p_aCategories[ idx ] )
          AAdd( p_aCategories[ idx ], Array( Len( p_aCategories[ idx ][ 2 ] ) ) ) // holder array of sub-category entries
          AAdd( p_aCategories[ idx ], "" ) // holder for sub-category file name
       ENDIF
@@ -503,7 +503,7 @@ PROCEDURE ShowTemplatesHelp( cTemplate )
    LOCAL cDelimiter := p_hsSwitches[ "DELIMITER" ]
    LOCAL idx
 
-   IF .NOT. Empty( cTemplate ) .AND. cTemplate != "Template"
+   IF ! Empty( cTemplate ) .AND. cTemplate != "Template"
       IF o:IsTemplate( cTemplate )
          nFrom := nTo := HB_AScan( o:Templates, {|a| UPPER( a[ 1 ] ) == UPPER( cTemplate ) } )
       ELSE
@@ -513,8 +513,8 @@ PROCEDURE ShowTemplatesHelp( cTemplate )
    ENDIF
 
    FOR idxTemplates := nFrom TO nTo
-      IF .NOT. Empty( o:Templates[ idxTemplates ] ) .AND. ;
-         .NOT. Empty( o:Templates[ idxTemplates ][ 1 ] ) .AND. ;
+      IF ! Empty( o:Templates[ idxTemplates ] ) .AND. ;
+         ! Empty( o:Templates[ idxTemplates ][ 1 ] ) .AND. ;
          o:Templates[ idxTemplates ][ 1 ] != "Template"
 
          //~ IF nFrom != nTo

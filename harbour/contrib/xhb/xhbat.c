@@ -57,83 +57,81 @@
 
 /* locates a substring in a string */
 
-HB_SIZE hb_AtSkipStrings( const char * szSub, HB_SIZE ulSubLen, const char * szText, HB_SIZE ulLen )
+HB_SIZE hb_AtSkipStrings( const char * szSub, HB_SIZE nSubLen, const char * szText, HB_SIZE nLen )
 {
    char cLastChar = ' ';
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_AtSkipStrings(%s, %" HB_PFS "u, %s, %" HB_PFS "u)", szSub, ulSubLen, szText, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_AtSkipStrings(%s, %" HB_PFS "u, %s, %" HB_PFS "u)", szSub, nSubLen, szText, nLen));
 
-   if( ulSubLen > 0 && ulLen >= ulSubLen )
+   if( nSubLen > 0 && nLen >= nSubLen )
    {
-      HB_SIZE ulPos = 0;
-      HB_SIZE ulSubPos = 0;
+      HB_SIZE nPos = 0;
+      HB_SIZE nSubPos = 0;
 
-      while( ulPos < ulLen && ulSubPos < ulSubLen )
+      while( nPos < nLen && nSubPos < nSubLen )
       {
-         if( szText[ ulPos ] == '"' && szSub[0] != '"' )
+         if( szText[ nPos ] == '"' && szSub[ 0 ] != '"' )
          {
-            while( ++ulPos < ulLen && szText[ ulPos ] != '"' )
+            while( ++nPos < nLen && szText[ nPos ] != '"' )
             {
                /* Skip. */
             }
 
-            ulPos++;
-            ulSubPos = 0;
+            nPos++;
+            nSubPos = 0;
             continue;
          }
 
-         if( szText[ ulPos ] == '\'' && szSub[0] != '\'' )
+         if( szText[ nPos ] == '\'' && szSub[ 0 ] != '\'' )
          {
-            while( ++ulPos < ulLen && szText[ ulPos ] != '\'' )
+            while( ++nPos < nLen && szText[ nPos ] != '\'' )
             {
                /* Skip. */
             }
 
-            ulPos++;
-            ulSubPos = 0;
+            nPos++;
+            nSubPos = 0;
             continue;
          }
 
-         if( szText[ ulPos ] == '[' && szSub[0] != '[' )
+         if( szText[ nPos ] == '[' && szSub[ 0 ] != '[' )
          {
-            if( ! ( HB_ISALPHA( (HB_BYTE) cLastChar ) || HB_ISDIGIT( (HB_BYTE) cLastChar ) || strchr( "])}_.", cLastChar ) ) )
+            if( ! ( HB_ISALPHA( ( HB_BYTE ) cLastChar ) || HB_ISDIGIT( ( HB_BYTE ) cLastChar ) || strchr( "])}_.", cLastChar ) ) )
             {
-               while( ++ulPos < ulLen && szText[ ulPos ] != ']' )
+               while( ++nPos < nLen && szText[ nPos ] != ']' )
                {
                   /* Skip. */
                }
 
-               ulPos++;
-               ulSubPos = 0;
+               nPos++;
+               nSubPos = 0;
                continue;
             }
          }
 
-         if( szText[ ulPos ] == szSub[ ulSubPos ] )
+         if( szText[ nPos ] == szSub[ nSubPos ] )
          {
-            ulSubPos++;
-            ulPos++;
+            nSubPos++;
+            nPos++;
          }
-         else if( ulSubPos )
+         else if( nSubPos )
          {
             /* Go back to the first character after the first match,
                or else tests like "22345" $ "012223456789" will fail. */
-            ulPos -= ( ulSubPos - 1 );
-            ulSubPos = 0;
+            nPos -= ( nSubPos - 1 );
+            nSubPos = 0;
          }
          else
          {
-            cLastChar = szText[ ulPos ];
-            ulPos++;
+            cLastChar = szText[ nPos ];
+            nPos++;
          }
       }
 
-      return ( ulSubPos < ulSubLen ) ? 0 : ( ulPos - ulSubLen + 1 );
+      return ( nSubPos < nSubLen ) ? 0 : ( nPos - nSubLen + 1 );
    }
    else
-   {
       return 0;
-   }
 }
 
 HB_FUNC( ATSKIPSTRINGS ) /* cFind, cWhere, nStart */
@@ -142,21 +140,19 @@ HB_FUNC( ATSKIPSTRINGS ) /* cFind, cWhere, nStart */
 
    if( pFind && pWhere )
    {
-      HB_SIZE ulStart = ( HB_SIZE ) hb_parns( 3 );
+      HB_SIZE nStart = hb_parns( 3 );
 
-      if( ulStart > 0 )
-         ulStart--;
+      if( nStart > 0 )
+         nStart--;
 
-      if( ulStart < hb_itemGetCLen( pWhere ) )
+      if( nStart < hb_itemGetCLen( pWhere ) )
       {
-         HB_SIZE ulRet;
+         HB_SIZE nRet = hb_AtSkipStrings( hb_itemGetCPtr( pFind ), hb_itemGetCLen( pFind ),
+                                          hb_itemGetCPtr( pWhere ) + nStart, hb_itemGetCLen( pWhere ) - nStart );
 
-         ulRet = hb_AtSkipStrings( hb_itemGetCPtr( pFind ), hb_itemGetCLen( pFind ),
-                                   hb_itemGetCPtr( pWhere ) + ulStart, hb_itemGetCLen( pWhere ) - ulStart );
-
-         if( ulRet )
+         if( nRet )
          {
-            hb_retns( ulRet + ulStart );
+            hb_retns( nRet + nStart );
             return;
          }
       }
@@ -166,33 +162,33 @@ HB_FUNC( ATSKIPSTRINGS ) /* cFind, cWhere, nStart */
 }
 
 /* Case insensitive hb_strAt() function */
-static HB_SIZE hb_strAtI( const char * szSub, HB_SIZE ulSubLen, const char * szText, HB_SIZE ulLen )
+static HB_SIZE hb_strAtI( const char * szSub, HB_SIZE nSubLen, const char * szText, HB_SIZE nLen )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_strAtI(%s, %" HB_PFS "u, %s, %" HB_PFS "u)", szSub, ulSubLen, szText, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_strAtI(%s, %" HB_PFS "u, %s, %" HB_PFS "u)", szSub, nSubLen, szText, nLen));
 
-   if( ulSubLen > 0 && ulLen >= ulSubLen )
+   if( nSubLen > 0 && nLen >= nSubLen )
    {
-      HB_SIZE ulPos = 0;
-      HB_SIZE ulSubPos = 0;
+      HB_SIZE nPos = 0;
+      HB_SIZE nSubPos = 0;
 
-      while( ulPos < ulLen && ulSubPos < ulSubLen )
+      while( nPos < nLen && nSubPos < nSubLen )
       {
-         if( HB_TOLOWER( ( HB_BYTE ) szText[ ulPos ] ) == HB_TOLOWER( ( HB_BYTE ) szSub[ ulSubPos ] ) )
+         if( HB_TOLOWER( ( HB_BYTE ) szText[ nPos ] ) == HB_TOLOWER( ( HB_BYTE ) szSub[ nSubPos ] ) )
          {
-            ulSubPos++;
-            ulPos++;
+            nSubPos++;
+            nPos++;
          }
-         else if( ulSubPos )
+         else if( nSubPos )
          {
             /* Go back to the first character after the first match,
                or else tests like "22345" $ "012223456789" will fail. */
-            ulPos -= ( ulSubPos - 1 );
-            ulSubPos = 0;
+            nPos -= ( nSubPos - 1 );
+            nSubPos = 0;
          }
          else
-            ulPos++;
+            nPos++;
       }
-      return ( ulSubPos < ulSubLen ) ? 0 : ( ulPos - ulSubLen + 1 );
+      return ( nSubPos < nSubLen ) ? 0 : ( nPos - nSubLen + 1 );
    }
    else
       return 0;
@@ -208,33 +204,33 @@ HB_FUNC( ATI )
    {
       PHB_ITEM pStart = hb_param( 3, HB_IT_NUMERIC );
       PHB_ITEM pEnd = hb_param( 4, HB_IT_NUMERIC );
-      HB_ISIZ lLen = hb_itemGetCLen( pText );
-      HB_ISIZ lStart = pStart ? hb_itemGetNS( pStart ) : 1;
-      HB_ISIZ lEnd = pEnd ? hb_itemGetNS( pEnd ) : lLen;
-      HB_SIZE ulPos;
+      HB_ISIZ nLen = hb_itemGetCLen( pText );
+      HB_ISIZ nStart = pStart ? hb_itemGetNS( pStart ) : 1;
+      HB_ISIZ nEnd = pEnd ? hb_itemGetNS( pEnd ) : nLen;
+      HB_SIZE nPos;
 
-      if( lStart < 0 )
+      if( nStart < 0 )
       {
-         lStart += lLen;
-         if( lStart < 0 )
-            lStart = 0;
+         nStart += nLen;
+         if( nStart < 0 )
+            nStart = 0;
       }
-      else if( lStart )
-         lStart--;
+      else if( nStart )
+         nStart--;
 
-      if( lEnd < 0 )
-         lEnd += lLen + 1;
-      if( lEnd > lLen )
-         lEnd = lLen;
+      if( nEnd < 0 )
+         nEnd += nLen + 1;
+      if( nEnd > nLen )
+         nEnd = nLen;
 
       /* Stop searching if starting past beyond end. */
-      if( lStart >= lEnd )
+      if( nStart >= nEnd )
          hb_retns( 0 );
       else
       {
-         ulPos = hb_strAtI( hb_itemGetCPtr( pSub ), hb_itemGetCLen( pSub ),
-                            hb_itemGetCPtr( pText ) + lStart, lEnd - lStart );
-         hb_retns( ulPos ? ulPos + lStart : 0 );
+         nPos = hb_strAtI( hb_itemGetCPtr( pSub ), hb_itemGetCLen( pSub ),
+                           hb_itemGetCPtr( pText ) + nStart, nEnd - nStart );
+         hb_retns( nPos ? nPos + nStart : 0 );
       }
    }
    else

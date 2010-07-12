@@ -84,35 +84,35 @@ void hb_ParseLine( PHB_ITEM pReturn, const char * szText, int iDelimiter, int * 
 {
    if( szText )
    {
-      HB_ISIZ iLen = strlen( szText );
+      HB_ISIZ nLen = strlen( szText );
 
-      if( iLen > 0 )
+      if( nLen > 0 )
       {
          PHB_ITEM pTemp = hb_itemNew( NULL );
          HB_ISIZ i = 0;
          int word_count = 0 ;
          /* booked enough memory */
-         char * szResult = ( char * ) hb_xgrab( iLen + 1 );
+         char * szResult = ( char * ) hb_xgrab( nLen + 1 );
 
 #if 0
-         while( iLen )
+         while( nLen )
          {
-            if( szText[ iLen - 1 ] && ! HB_ISSPACE( szText[ iLen - 1 ] ) )
+            if( szText[ nLen - 1 ] && ! HB_ISSPACE( szText[ nLen - 1 ] ) )
                break;
 
-            iLen--;
+            nLen--;
          }
 
-         szText[ iLen ] = 0;
+         szText[ nLen ] = 0;
 
-         iLen = strlen( szText );
+         nLen = strlen( szText );
 #endif
 
-         while( i < iLen )
+         while( i < nLen )
          {
             HB_ISIZ ui = 0;
 
-            hb_xmemset( szResult, ' ', iLen + 1 );
+            hb_xmemset( szResult, ' ', nLen + 1 );
 
             /* an '"' found, loop until the next one is found */
             if( szText[ i ] == '"' )
@@ -129,7 +129,7 @@ void hb_ParseLine( PHB_ITEM pReturn, const char * szText, int iDelimiter, int * 
 
                ++i;
 
-               while( ++i < iLen )
+               while( ++i < nLen )
                {
                   if( szText[ i - 1 ] == '"' )
                   {
@@ -174,7 +174,7 @@ void hb_ParseLine( PHB_ITEM pReturn, const char * szText, int iDelimiter, int * 
                      ++i;
                      szResult[ ui ] = szText[ i ];
 
-                     while( ++i < iLen )
+                     while( ++i < nLen )
                      {
                         if( szText[ i ] == iDelimiter )
                         {
@@ -195,7 +195,7 @@ void hb_ParseLine( PHB_ITEM pReturn, const char * szText, int iDelimiter, int * 
             {
                szResult[ ui ] = szText[ i ];
 
-               while( ++i < iLen )
+               while( ++i < nLen )
                {
                   if( szText[ i ] == iDelimiter )
                   {
@@ -207,7 +207,7 @@ void hb_ParseLine( PHB_ITEM pReturn, const char * szText, int iDelimiter, int * 
                      szResult[ ui ] = szText[ i + 1 ];
                      ++i;
 
-                     while( ++i < iLen )
+                     while( ++i < nLen )
                      {
                         if( szText[ i - 1 ] == '"' )
                         {
@@ -243,7 +243,7 @@ void hb_ParseLine( PHB_ITEM pReturn, const char * szText, int iDelimiter, int * 
 
          /* last character in passed string is a delimiter */
          /* just add an empty string */
-         if( szText[ iLen - 1 ] == iDelimiter )
+         if( szText[ nLen - 1 ] == iDelimiter )
          {
             word_count++;
             hb_arrayAddForward( pReturn, hb_itemPutC( pTemp, NULL ) );
@@ -508,7 +508,7 @@ HB_FUNC( FWORDCOUNT )
    char **tokens;
    int iCharCount = 0;
    HB_BYTE nByte = ' ';
-   HB_SIZE ulWordCount = 0;
+   HB_SIZE nWordCount = 0;
 
    /* file parameter correctly passed */
    if( !pSrc )
@@ -543,7 +543,7 @@ HB_FUNC( FWORDCOUNT )
 
       tokens = hb_tokensplit( string, nByte, iCharCount, &iWord );
 
-      ulWordCount += iWord;
+      nWordCount += iWord;
 
       /* clean up */
       tokens--;
@@ -552,7 +552,7 @@ HB_FUNC( FWORDCOUNT )
    }
 
    /* return number of words */
-   hb_retns( ulWordCount );
+   hb_retns( nWordCount );
 
    /* clean up */
    hb_xfree( string );
@@ -564,7 +564,7 @@ HB_FUNC( FLINECOUNT )
 {
    FILE *inFile ;
    PHB_ITEM pSrc = hb_param( 1, HB_IT_STRING );
-   HB_SIZE ulLineCount = 0;
+   HB_SIZE nLineCount = 0;
    int ch;
 
    /* file parameter correctly passed */
@@ -595,12 +595,12 @@ HB_FUNC( FLINECOUNT )
    {
       if( ch == '\n' )
       {
-         ulLineCount++;
+         nLineCount++;
       }
    }
 
    /* return number of lines */
-   hb_retns( ulLineCount );
+   hb_retns( nLineCount );
 
    /* clean up */
    fclose( inFile );
@@ -609,9 +609,9 @@ HB_FUNC( FLINECOUNT )
 /*----------------------------------------------------------------------------*/
 HB_FUNC( FCHARCOUNT )
 {
-   FILE *inFile ;
+   FILE *inFile;
    PHB_ITEM pSrc = hb_param( 1, HB_IT_STRING );
-   HB_SIZE ulResult = 0;
+   HB_SIZE nResult = 0;
    int ch;
 
    /* file parameter correctly passed */
@@ -648,12 +648,12 @@ HB_FUNC( FCHARCOUNT )
         case '\t':
            break;
         default:
-           ulResult++;
+           nResult++;
       }
    }
 
    /* return number of characters */
-   hb_retns( ulResult );
+   hb_retns( nResult );
 
    /* clean up */
    fclose( inFile );

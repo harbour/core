@@ -165,7 +165,7 @@ static void s_signalHandler( int sig, siginfo_t * info, void * v )
    HB_UINT uiMask;
    HB_UINT uiSig;
    PHB_ITEM pFunction, pExecArray, pRet;
-   HB_SIZE ulPos;
+   HB_SIZE nPos;
    int iRet;
 
    #if !( defined( HB_OS_OS2_GCC ) || defined( __WATCOMC__ ) )
@@ -183,13 +183,13 @@ static void s_signalHandler( int sig, siginfo_t * info, void * v )
    }
 
    bSignalEnabled = HB_FALSE;
-   ulPos = hb_arrayLen( sp_hooks );
+   nPos = hb_arrayLen( sp_hooks );
    /* subsig not necessary */
    uiSig = ( HB_UINT ) s_translateSignal( ( HB_UINT ) sig, 0 );
 
-   while( ulPos > 0 )
+   while( nPos > 0 )
    {
-      pFunction = hb_arrayGetItemPtr( sp_hooks, ulPos );
+      pFunction = hb_arrayGetItemPtr( sp_hooks, nPos );
       uiMask = ( HB_UINT ) hb_arrayGetNI( pFunction, 1 );
       if( uiMask & uiSig )
       {
@@ -252,7 +252,7 @@ static void s_signalHandler( int sig, siginfo_t * info, void * v )
                exit( 0 );
          }
       }
-      ulPos--;
+      nPos--;
    }
 
    bSignalEnabled = HB_TRUE;
@@ -419,7 +419,7 @@ static S_TUPLE s_sigTable[] = {
 static LONG s_signalHandler( int type, int sig, PEXCEPTION_RECORD exc )
 {
    PHB_ITEM pFunction, pExecArray, pRet;
-   HB_SIZE ulPos;
+   HB_SIZE nPos;
    HB_UINT uiSig, uiMask;
    int iRet;
 
@@ -434,13 +434,13 @@ static LONG s_signalHandler( int type, int sig, PEXCEPTION_RECORD exc )
    }
 
    bSignalEnabled = HB_FALSE;
-   ulPos = hb_arrayLen( sp_hooks );
+   nPos = hb_arrayLen( sp_hooks );
    /* subsig not necessary */
    uiSig = ( HB_UINT ) s_translateSignal( ( HB_UINT ) type, ( HB_UINT ) sig );
 
-   while( ulPos > 0 )
+   while( nPos > 0 )
    {
-      pFunction = hb_arrayGetItemPtr( sp_hooks, ulPos );
+      pFunction = hb_arrayGetItemPtr( sp_hooks, nPos );
       uiMask = ( HB_UINT ) hb_arrayGetNI( pFunction, 1 );
       if( ( uiMask & uiSig ) == uiSig )
       {
@@ -506,7 +506,7 @@ static LONG s_signalHandler( int type, int sig, PEXCEPTION_RECORD exc )
 
          }
       }
-      ulPos--;
+      nPos--;
    }
 
    bSignalEnabled = HB_TRUE;

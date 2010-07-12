@@ -172,9 +172,9 @@ HB_FUNC( HAAGETPOS )
       s_errRT_hashAA();
    else
    {
-      HB_SIZE ulPos;
-      hb_hashScan( pHash, pKey, &ulPos );
-      hb_retns( ulPos );
+      HB_SIZE nPos;
+      hb_hashScan( pHash, pKey, &nPos );
+      hb_retns( nPos );
    }
 }
 

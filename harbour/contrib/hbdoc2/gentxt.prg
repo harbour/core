@@ -127,7 +127,7 @@ METHOD AddEntry( oEntry ) CLASS GenerateText
          ENDIF
       NEXT
 
-      IF .NOT. ::lContinuous
+      IF ! ::lContinuous
          FWrite( ::nHandle, Chr( K_CTRL_L ) + HB_OSNewLine() )
       ENDIF
    ENDIF
@@ -136,7 +136,7 @@ METHOD AddEntry( oEntry ) CLASS GenerateText
 
 METHOD PROCEDURE WriteEntry( cCaption, cEntry, lPreformatted ) CLASS GenerateText
    LOCAL nIndent
-   IF .NOT. Empty( cEntry )
+   IF ! Empty( cEntry )
       nIndent := IIf( Len( cCaption ) > 0, 6, 0 )
       IF Len( cCaption ) > 0 .AND. nIndent > 0
             FWrite( ::nHandle, Space( ::Depth * 6 ) + cCaption + ": " + HB_OSNewLine() )
@@ -149,12 +149,12 @@ METHOD PROCEDURE WriteEntry( cCaption, cEntry, lPreformatted ) CLASS GenerateTex
 
 METHOD Generate() CLASS GenerateText
    IF ::IsIndex()
-      IF .NOT. ::lContinuous
+      IF ! ::lContinuous
          FWrite( ::nHandle, Chr( K_CTRL_L ) + HB_OSNewLine() )
       ENDIF
    ENDIF
 
-   IF .NOT. Empty( ::nHandle )
+   IF ! Empty( ::nHandle )
       FClose( ::nHandle )
       ::nHandle := 0
    ENDIF

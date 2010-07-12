@@ -97,7 +97,7 @@ HB_FUNC( HB_ATI )
    {
       HB_SIZE nTextLength = hb_itemGetCLen( pText );
       HB_SIZE nStart = hb_parnsdef( 3, 1 );
-      HB_SIZE nEnd = ( HB_SIZE ) hb_parnsdef( 4, nTextLength );
+      HB_SIZE nEnd = hb_parnsdef( 4, nTextLength );
       HB_SIZE nPos;
 
       if( nStart > nTextLength || nEnd < nStart )

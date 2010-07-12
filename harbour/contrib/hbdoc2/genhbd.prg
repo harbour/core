@@ -55,7 +55,7 @@
 #include "fileio.ch"
 #include "hbdoc2.ch"
 
-CLASS GenerateHBFDB FROM TPLGenerate
+CLASS GenerateHBD FROM TPLGenerate
 HIDDEN:
 
 PROTECTED:
@@ -72,36 +72,39 @@ EXPORTED:
    METHOD WriteEntry( cCaption, cEntry, lPreformatted ) HIDDEN
 
    VAR aProto INIT {}
+   VAR cFileName INIT "out"
 
 ENDCLASS
 
-METHOD NewDocument( cFolder, cFilename, cTitle ) CLASS GenerateHBFDB
+METHOD NewDocument( cFolder, cFilename, cTitle ) CLASS GenerateHBD
+   HB_SYMBOL_UNUSED( cFolder )
+   HB_SYMBOL_UNUSED( cTitle )
+
+   ::cFileName := cFileName
+
+   RETURN self
+
+METHOD NewIndex( cFolder, cFilename, cTitle ) CLASS GenerateHBD
    HB_SYMBOL_UNUSED( cFolder )
    HB_SYMBOL_UNUSED( cFileName )
    HB_SYMBOL_UNUSED( cTitle )
    RETURN self
 
-METHOD NewIndex( cFolder, cFilename, cTitle ) CLASS GenerateHBFDB
-   HB_SYMBOL_UNUSED( cFolder )
-   HB_SYMBOL_UNUSED( cFileName )
-   HB_SYMBOL_UNUSED( cTitle )
-   RETURN self
-
-METHOD BeginSection( cSection, cFilename ) CLASS GenerateHBFDB
+METHOD BeginSection( cSection, cFilename ) CLASS GenerateHBD
    HB_SYMBOL_UNUSED( cSection )
    HB_SYMBOL_UNUSED( cFileName )
    RETURN self
 
-METHOD EndSection( cSection, cFilename ) CLASS GenerateHBFDB
+METHOD EndSection( cSection, cFilename ) CLASS GenerateHBD
    HB_SYMBOL_UNUSED( cSection )
    HB_SYMBOL_UNUSED( cFilename )
    RETURN self
 
-METHOD AddIndex( oEntry ) CLASS GenerateHBFDB
+METHOD AddIndex( oEntry ) CLASS GenerateHBD
    HB_SYMBOL_UNUSED( oEntry )
    RETURN self
 
-METHOD AddEntry( oEntry ) CLASS GenerateHBFDB
+METHOD AddEntry( oEntry ) CLASS GenerateHBD
    LOCAL idx
 
    HB_SYMBOL_UNUSED( oEntry )
@@ -114,13 +117,16 @@ METHOD AddEntry( oEntry ) CLASS GenerateHBFDB
 
    RETURN self
 
-METHOD Generate() CLASS GenerateHBFDB
+METHOD Generate() CLASS GenerateHBD
+   LOCAL cDir, cName
 
-   hb_MemoWrit( "proto.hbfdb", hb_serialize( ::aProto ) )
+   hb_FNameSplit( ::cFileName, @cDir, @cName )
+
+   hb_MemoWrit( hb_FNameMerge( cDir, cName, ".hbd" ), hb_serialize( ::aProto ) )
 
    RETURN self
 
-METHOD PROCEDURE WriteEntry( cCaption, cEntry, lPreformatted ) CLASS GenerateHBFDB
+METHOD PROCEDURE WriteEntry( cCaption, cEntry, lPreformatted ) CLASS GenerateHBD
    HB_SYMBOL_UNUSED( cCaption )
    HB_SYMBOL_UNUSED( cEntry )
    HB_SYMBOL_UNUSED( lPreformatted )

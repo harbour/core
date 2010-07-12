@@ -104,7 +104,7 @@ HB_FUNC( HB_STRING2POINTER )
 
 HB_FUNC( HB_CMDARGARGV )
 {
-   hb_retc( hb_cmdargARGV()[0] );
+   hb_retc( hb_cmdargARGV()[ 0 ] );
 }
 
 HB_FUNC( HB_VMMODE )
@@ -121,10 +121,8 @@ HB_FUNC( HB_VMMODE )
 HB_FUNC( XHB__KEYBOARD )
 {
    /* Clear the typeahead buffer without reallocating the keyboard buffer */
-   if( !hb_parl( 2 ) )
-   {
+   if( ! hb_parl( 2 ) )
       hb_inkeyReset();
-   }
 
    if( HB_ISNUM( 1 ) )
    {
@@ -137,12 +135,12 @@ HB_FUNC( XHB__KEYBOARD )
    else if( HB_ISARRAY( 1 ) )
    {
       PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
-      HB_SIZE ulIndex;
-      HB_SIZE ulElements = hb_arrayLen( pArray );
+      HB_SIZE nIndex;
+      HB_SIZE nElements = hb_arrayLen( pArray );
 
-      for( ulIndex = 1; ulIndex <= ulElements; ulIndex++ )
+      for( nIndex = 1; nIndex <= nElements; nIndex++ )
       {
-         PHB_ITEM pItem = hb_arrayGetItemPtr( pArray, ulIndex );
+         PHB_ITEM pItem = hb_arrayGetItemPtr( pArray, nIndex );
 
          if( HB_IS_NUMBER( pItem ) )
          {
@@ -159,18 +157,18 @@ HB_FUNC( XHB__KEYBOARD )
 HB_FUNC( HB_CREATELEN8 )
 {
    char buffer[ 8 ];
-   HB_MAXINT llValue;
+   HB_MAXINT nValue;
 
    if( HB_ISNUM( 1 ) )
    {
-      llValue = hb_parnint( 1 );
-      HB_PUT_LE_UINT64( buffer, llValue );
+      nValue = hb_parnint( 1 );
+      HB_PUT_LE_UINT64( buffer, nValue );
       hb_retclen( buffer, 8 );
    }
    else if( HB_ISBYREF( 1 ) && HB_ISNUM( 2 ) )
    {
-      llValue = hb_parnint( 2 );
-      HB_PUT_LE_UINT64( buffer, llValue );
+      nValue = hb_parnint( 2 );
+      HB_PUT_LE_UINT64( buffer, nValue );
       hb_storclen( buffer, 8, 1 );
    }
 }

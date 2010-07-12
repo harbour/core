@@ -54,7 +54,10 @@
  *
  */
 
+#include "simpleio.ch"
+
 #include "hbclass.ch"
+
 #include "hbdoc2.ch"
 
 #define DOCUMENT_ 1

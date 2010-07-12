@@ -58,31 +58,31 @@ HB_FUNC( STRDEL )
    if( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) )
    {
       const char * szText = hb_parcx( 1 );
-      HB_SIZE ulText = hb_parclen( 1 );
-      HB_SIZE ulDel = hb_parclen( 2 );
+      HB_SIZE nText = hb_parclen( 1 );
+      HB_SIZE nDel = hb_parclen( 2 );
 
-      if( ulDel > 0 && ulText > 0 )
+      if( nDel > 0 && nText > 0 )
       {
          const char * szDel = hb_parcx( 2 );
-         HB_SIZE ulPosTxt = 0;
-         HB_SIZE ulResult = 0;
-         HB_SIZE ulPosDel = 0;
-         char * szResult = ( char * ) hb_xgrab( ulText + 1 );
+         HB_SIZE nPosTxt = 0;
+         HB_SIZE nResult = 0;
+         HB_SIZE nPosDel = 0;
+         char * szResult = ( char * ) hb_xgrab( nText + 1 );
 
-         for( ; ( ulPosDel < ulText && ulPosDel < ulDel ); ulPosDel++ )
+         for( ; ( nPosDel < nText && nPosDel < nDel ); nPosDel++ )
          {
-            if( szDel[ ulPosDel ] != ' ' )
+            if( szDel[ nPosDel ] != ' ' )
             {
-               hb_xmemcpy( szResult + ulResult, szText + ulPosTxt, ulPosDel - ulPosTxt );
-               ulResult += ulPosDel - ulPosTxt;
-               ulPosTxt = ulPosDel + 1;
+               hb_xmemcpy( szResult + nResult, szText + nPosTxt, nPosDel - nPosTxt );
+               nResult += nPosDel - nPosTxt;
+               nPosTxt = nPosDel + 1;
             }
          }
-         hb_xmemcpy( szResult + ulResult, szText + ulPosTxt, ulText - ulPosTxt );
-         ulResult += ulText - ulPosTxt;
+         hb_xmemcpy( szResult + nResult, szText + nPosTxt, nText - nPosTxt );
+         nResult += nText - nPosTxt;
 
-         szResult[ ulResult ] = '\0';
-         hb_retclen_buffer( szResult, ulResult );
+         szResult[ nResult ] = '\0';
+         hb_retclen_buffer( szResult, nResult );
       }
       else
          hb_retc( szText );

@@ -56,36 +56,36 @@
 #include "hbapierr.h"
 #include "hbstack.h"
 
-static PHB_ITEM hb_vmWithObjectItem( HB_ISIZ lLevel )
+static PHB_ITEM hb_vmWithObjectItem( HB_ISIZ nLevel )
 {
-   HB_ISIZ lOffset = hb_stackWithObjectOffset();
+   HB_ISIZ nOffset = hb_stackWithObjectOffset();
 
-   while( lOffset && lLevel > 0 )
+   while( nOffset && nLevel > 0 )
    {
-      HB_ISIZ * plOffset = ( HB_ISIZ * ) hb_itemGetPtr( hb_stackItem( lOffset + 1 ) );
-      if( !plOffset )
+      HB_ISIZ * pnOffset = ( HB_ISIZ * ) hb_itemGetPtr( hb_stackItem( nOffset + 1 ) );
+      if( !pnOffset )
          break;
-      --lLevel;
-      lOffset = *plOffset;
+      --nLevel;
+      nOffset = *pnOffset;
    }
 
-   return ( lOffset && !lLevel ) ? hb_stackItem( lOffset ) : NULL;
+   return ( nOffset && !nLevel ) ? hb_stackItem( nOffset ) : NULL;
 }
 
 static HB_ISIZ hb_vmWithObjectCount( void )
 {
-   HB_ISIZ lOffset = hb_stackWithObjectOffset(), lCount = 0;
+   HB_ISIZ nOffset = hb_stackWithObjectOffset(), nCount = 0;
 
-   while( lOffset )
+   while( nOffset )
    {
-      HB_ISIZ * plOffset = ( HB_ISIZ * ) hb_itemGetPtr( hb_stackItem( lOffset + 1 ) );
-      if( !plOffset )
+      HB_ISIZ * pnOffset = ( HB_ISIZ * ) hb_itemGetPtr( hb_stackItem( nOffset + 1 ) );
+      if( !pnOffset )
          break;
-      ++lCount;
-      lOffset = *plOffset;
+      ++nCount;
+      nOffset = *pnOffset;
    }
 
-   return lCount;
+   return nCount;
 }
 
 

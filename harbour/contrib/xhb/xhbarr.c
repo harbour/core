@@ -63,93 +63,93 @@ HB_FUNC( ASPLICE )
 
    if( pArray )
    {
-      HB_SIZE ulStart, ulRemove, ulIndex;
-      HB_SIZE ulLen = hb_arrayLen( pArray );
+      HB_SIZE nStart, nRemove, nIndex;
+      HB_SIZE nLen = hb_arrayLen( pArray );
       PHB_ITEM pReturn = hb_stackReturnItem();
 
-      if( ulLen == 0 )
+      if( nLen == 0 )
       {
          hb_arrayNew( pReturn, 0 );
          return;
       }
 
       if( HB_ISNUM( 2 ) )
-         ulStart = hb_parns( 2 );
+         nStart = hb_parns( 2 );
       else
-         ulStart = ulLen + ( hb_pcount() > 3 && !HB_ISNUM( 3 ) ? 1 : 0 );
+         nStart = nLen + ( hb_pcount() > 3 && !HB_ISNUM( 3 ) ? 1 : 0 );
 
       if( HB_ISNUM( 3 ) )
-         ulRemove = hb_parns( 3 );
+         nRemove = hb_parns( 3 );
       else
-         ulRemove = ( hb_pcount() > 3 && ulStart == ulLen + 1 ) ? 0 : 1;
+         nRemove = ( hb_pcount() > 3 && nStart == nLen + 1 ) ? 0 : 1;
 
-      if( ulStart == 0 || ulStart > ulLen )
+      if( nStart == 0 || nStart > nLen )
       {
-         if( ! ( ulStart == ulLen + 1 && hb_pcount() > 3 && ulRemove == 0 ) )
+         if( ! ( nStart == nLen + 1 && hb_pcount() > 3 && nRemove == 0 ) )
          {
             hb_errRT_BASE( EG_ARG, 1003, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
             return;
          }
       }
 
-      if( ulStart + ulRemove - 1 > ulLen )
-         ulRemove = ulLen - ulStart + 1;
+      if( nStart + nRemove - 1 > nLen )
+         nRemove = nLen - nStart + 1;
 
-      hb_arrayNew( pReturn, ulRemove );
+      hb_arrayNew( pReturn, nRemove );
 
       /* 0 Based */
-      ulStart--;
+      nStart--;
 
-      for( ulIndex = ulStart + 1; ( ulIndex - ulStart ) <= ulRemove; ulIndex++ )
-         hb_itemMove( hb_arrayGetItemPtr( pReturn, ulIndex - ulStart ),
-                      hb_arrayGetItemPtr( pArray, ulIndex ) );
+      for( nIndex = nStart + 1; ( nIndex - nStart ) <= nRemove; nIndex++ )
+         hb_itemMove( hb_arrayGetItemPtr( pReturn, nIndex - nStart ),
+                      hb_arrayGetItemPtr( pArray, nIndex ) );
 
       if( hb_pcount() > 3 )
       {
-         int ulNew = 0;
-         int ulAdd = hb_pcount() - 3;
+         int nNew = 0;
+         int nAdd = hb_pcount() - 3;
 
-         if( ( HB_SIZE ) ulAdd > ulRemove )
+         if( ( HB_SIZE ) nAdd > nRemove )
          {
-            HB_SIZE ulMore = ulAdd - ulRemove;
-            HB_SIZE ulShift = ulLen - ( ulStart + ulRemove );
+            HB_SIZE nMore = nAdd - nRemove;
+            HB_SIZE nShift = nLen - ( nStart + nRemove );
 
-            hb_arraySize( pArray, ulLen + ulMore );
+            hb_arraySize( pArray, nLen + nMore );
 
             /* Shift right BEFORE adding, so that new items will not override existing values. */
-            for( ulIndex = ulLen; ulIndex && --ulShift; --ulIndex )
-               hb_itemMove( hb_arrayGetItemPtr( pArray, ulIndex + ulMore ),
-                            hb_arrayGetItemPtr( pArray, ulIndex ) );
+            for( nIndex = nLen; nIndex && --nShift; --nIndex )
+               hb_itemMove( hb_arrayGetItemPtr( pArray, nIndex + nMore ),
+                            hb_arrayGetItemPtr( pArray, nIndex ) );
 
             /* Now insert new values into emptied space. */
-            for( ulIndex = ulStart; ++ulNew <= ulAdd; ulIndex++ )
-               hb_itemMove( hb_arrayGetItemPtr( pArray, ulIndex + 1 ),
-                            hb_param( 3 + ulNew, HB_IT_ANY ) );
+            for( nIndex = nStart; ++nNew <= nAdd; nIndex++ )
+               hb_itemMove( hb_arrayGetItemPtr( pArray, nIndex + 1 ),
+                            hb_param( 3 + nNew, HB_IT_ANY ) );
          }
          else
          {
             /* Insert over the space emptied by removed items */
-            for( ulIndex = ulStart; ++ulNew <= ulAdd; ulIndex++ )
-               hb_itemMove( hb_arrayGetItemPtr( pArray, ulIndex + 1 ), hb_param( 3 + ulNew, HB_IT_ANY ) );
+            for( nIndex = nStart; ++nNew <= nAdd; nIndex++ )
+               hb_itemMove( hb_arrayGetItemPtr( pArray, nIndex + 1 ), hb_param( 3 + nNew, HB_IT_ANY ) );
 
-            if( ulRemove > ( HB_SIZE ) ulAdd )
+            if( nRemove > ( HB_SIZE ) nAdd )
             {
-               ulRemove -= ulAdd;
+               nRemove -= nAdd;
 
                /* Shift left to compact the emptied hole. */
-               for( ulIndex = ulStart + ulAdd + 1; ulIndex + ulRemove <= ulLen; ulIndex++ )
-                  hb_itemMove( hb_arrayGetItemPtr( pArray, ulIndex ),
-                               hb_arrayGetItemPtr( pArray, ulIndex + ulRemove ) );
+               for( nIndex = nStart + nAdd + 1; nIndex + nRemove <= nLen; nIndex++ )
+                  hb_itemMove( hb_arrayGetItemPtr( pArray, nIndex ),
+                               hb_arrayGetItemPtr( pArray, nIndex + nRemove ) );
             }
          }
       }
       else
       {
-         for( ulIndex = ulStart + 1; ulIndex + ulRemove <= ulLen; ulIndex++ )
-            hb_itemMove( hb_arrayGetItemPtr( pArray, ulIndex ),
-                         hb_arrayGetItemPtr( pArray, ulIndex + ulRemove ) );
+         for( nIndex = nStart + 1; nIndex + nRemove <= nLen; nIndex++ )
+            hb_itemMove( hb_arrayGetItemPtr( pArray, nIndex ),
+                         hb_arrayGetItemPtr( pArray, nIndex + nRemove ) );
 
-         hb_arraySize( pArray, ulLen - ulRemove );
+         hb_arraySize( pArray, nLen - nRemove );
       }
    }
 }
@@ -169,32 +169,32 @@ HB_FUNC( AMERGE )
 
    if( pArray1 && pArray2 )
    {
-      HB_SIZE ulLen = hb_arrayLen( pArray1 );
-      HB_SIZE ulAdd = hb_arrayLen( pArray2 );
-      HB_SIZE ulIndex, ulStart;
+      HB_SIZE nLen = hb_arrayLen( pArray1 );
+      HB_SIZE nAdd = hb_arrayLen( pArray2 );
+      HB_SIZE nIndex, nStart;
 
-      hb_arraySize( pArray1, ulLen + ulAdd );
+      hb_arraySize( pArray1, nLen + nAdd );
 
       if( HB_ISNUM( 3 ) )
       {
-         ulStart = hb_parns( 3 ) - 1;
-         if( ulStart > ulLen )
+         nStart = hb_parns( 3 ) - 1;
+         if( nStart > nLen )
          {
             hb_errRT_BASE( EG_ARG, 1003, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
             return;
          }
 
          /* Shift right BEFORE merging, so that merged items will not override existing values. */
-         for( ulIndex = ulLen; ulIndex > ulStart; --ulIndex )
-            hb_itemMove( hb_arrayGetItemPtr( pArray1, ulIndex + ulAdd ),
-                         hb_arrayGetItemPtr( pArray1, ulIndex ) );
+         for( nIndex = nLen; nIndex > nStart; --nIndex )
+            hb_itemMove( hb_arrayGetItemPtr( pArray1, nIndex + nAdd ),
+                         hb_arrayGetItemPtr( pArray1, nIndex ) );
       }
       else
-         ulStart = ulLen;
+         nStart = nLen;
 
-      for( ulIndex = 1; ulIndex <= ulAdd; ulIndex++ )
-         hb_itemCopy( hb_arrayGetItemPtr( pArray1, ulStart + ulIndex ),
-                      hb_arrayGetItemPtr( pArray2, ulIndex ) );
+      for( nIndex = 1; nIndex <= nAdd; nIndex++ )
+         hb_itemCopy( hb_arrayGetItemPtr( pArray1, nStart + nIndex ),
+                      hb_arrayGetItemPtr( pArray2, nIndex ) );
 
       hb_itemCopy( hb_stackReturnItem(), pArray1 );
    }
@@ -208,14 +208,14 @@ HB_FUNC( XHB_ADEL )
 
    if( pArray )
    {
-      HB_ISIZ lPos = hb_parns( 2 );
+      HB_ISIZ nPos = hb_parns( 2 );
 
-      if( lPos == 0 )
-         lPos = 1;
-      else if( lPos < 0 )
-         lPos += hb_arrayLen( pArray ) + 1;
+      if( nPos == 0 )
+         nPos = 1;
+      else if( nPos < 0 )
+         nPos += hb_arrayLen( pArray ) + 1;
 
-      if( hb_arrayDel( pArray, lPos ) )
+      if( hb_arrayDel( pArray, nPos ) )
       {
          if( hb_parl( 3 ) )
             hb_arraySize( pArray, hb_arrayLen( pArray ) - 1 );
@@ -231,27 +231,27 @@ HB_FUNC( XHB_AINS )
 
    if( pArray )
    {
-      HB_ISIZ lPos = hb_parns( 2 );
+      HB_ISIZ nPos = hb_parns( 2 );
 
       if( hb_parl( 4 ) )
       {
-         HB_SIZE ulLen = hb_arrayLen( pArray ) + 1;
-         if( lPos == 0 )
-            lPos = 1;
-         else if( lPos < 0 )
-            lPos += ulLen + 1;
-         if( lPos >= 1 && ( HB_SIZE ) lPos <= ulLen )
-            hb_arraySize( pArray, ulLen );
+         HB_SIZE nLen = hb_arrayLen( pArray ) + 1;
+         if( nPos == 0 )
+            nPos = 1;
+         else if( nPos < 0 )
+            nPos += nLen + 1;
+         if( nPos >= 1 && ( HB_SIZE ) nPos <= nLen )
+            hb_arraySize( pArray, nLen );
       }
-      else if( lPos == 0 )
-         lPos = 1;
-      else if( lPos < 0 )
-         lPos += hb_arrayLen( pArray ) + 1;
+      else if( nPos == 0 )
+         nPos = 1;
+      else if( nPos < 0 )
+         nPos += hb_arrayLen( pArray ) + 1;
 
-      if( hb_arrayIns( pArray, lPos ) )
+      if( hb_arrayIns( pArray, nPos ) )
       {
          if( ! HB_ISNIL( 3 ) )
-            hb_arraySet( pArray, lPos, hb_param( 3, HB_IT_ANY ) );
+            hb_arraySet( pArray, nPos, hb_param( 3, HB_IT_ANY ) );
       }
 
       hb_itemReturn( pArray ); /* AIns() returns the array itself */

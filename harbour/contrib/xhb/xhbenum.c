@@ -57,15 +57,15 @@
 
 HB_FUNC( HB_ENUMINDEX )
 {
-   HB_ISIZ lFuncOffset = hb_stackBaseOffset() - 1, lIndex = 0;
-   while( --lFuncOffset > 0 )
+   HB_ISIZ nFuncOffset = hb_stackBaseOffset() - 1, nIndex = 0;
+   while( --nFuncOffset > 0 )
    {
-      PHB_ITEM pItem = hb_stackItem( lFuncOffset );
+      PHB_ITEM pItem = hb_stackItem( nFuncOffset );
       if( HB_IS_ENUM( pItem ) )
       {
-         lIndex = pItem->item.asEnum.offset;
+         nIndex = pItem->item.asEnum.offset;
          break;
       }
    }
-   hb_retns( lIndex );
+   hb_retns( nIndex );
 }

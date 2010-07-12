@@ -136,7 +136,7 @@ METHOD NewFile() CLASS GenerateHTML
    ::CloseTag( "head" )
    ::OpenTag( "body" )
    ::Append( ::cTitle, "h1" )
-   /* IF .NOT. Empty( ::cDescription )
+   /* IF ! Empty( ::cDescription )
       ::Append( ::cDescription, "h2" )
    ENDIF */
 
@@ -204,7 +204,7 @@ METHOD AddEntry( oEntry ) CLASS GenerateHTML
    RETURN self
 
 METHOD Generate() CLASS GenerateHTML
-   IF .NOT. Empty( ::nHandle )
+   IF ! Empty( ::nHandle )
       ::CloseTag( "body" )
       ::CloseTag( "html" )
       FClose( ::nHandle )
@@ -218,7 +218,7 @@ METHOD PROCEDURE WriteEntry( cField, oEntry, lPreformatted, nIndent ) CLASS Gene
 // TODO: change this to search the CSS document itself
    LOCAL cTagClass := IIf( LOWER( cField ) + "|" $ "name|oneliner|examples|tests|", LOWER( cField ), "itemtext" )
 
-   IF .NOT. Empty( cEntry )
+   IF ! Empty( cEntry )
       DEFAULT cCaption TO ""
       DEFAULT nIndent TO 0
       //~ DEFAULT lPreformatted TO .F.
@@ -245,7 +245,7 @@ METHOD PROCEDURE WriteEntry( cField, oEntry, lPreformatted, nIndent ) CLASS Gene
          ENDIF
          DO WHILE Len( cEntry ) > 0
             ::Append( Indent( Parse( @cEntry, HB_OSNewLine() ), 0, , .T. ), "" )
-            //~ IF Len( cEntry ) > 0 .AND. .NOT. lPreformatted
+            //~ IF Len( cEntry ) > 0 .AND. ! lPreformatted
                //~ FWrite( ::nHandle, HB_OSNewLine() )
             //~ ENDIF
          ENDDO

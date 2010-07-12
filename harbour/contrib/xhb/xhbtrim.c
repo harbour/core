@@ -64,16 +64,16 @@ HB_FUNC( XHB_RTRIM )
 
    if( pText )
    {
-      HB_SIZE ulLen, ulSrc;
+      HB_SIZE nLen, nSrc;
       const char * szText = hb_itemGetCPtr( pText );
 
-      ulSrc = hb_itemGetCLen( pText );
-      ulLen = hb_strRTrimLen( szText, ulSrc, hb_parl( 2 ) );
+      nSrc = hb_itemGetCLen( pText );
+      nLen = hb_strRTrimLen( szText, nSrc, hb_parl( 2 ) );
 
-      if( ulLen == ulSrc )
+      if( nLen == nSrc )
          hb_itemReturn( pText );
       else
-         hb_retclen( szText, ulLen );
+         hb_retclen( szText, nLen );
    }
    else
       /* NOTE: "TRIM" is right here [vszakats] */
@@ -96,17 +96,17 @@ HB_FUNC( XHB_ALLTRIM )
 
    if( pText )
    {
-      HB_SIZE ulLen, ulSrc;
+      HB_SIZE nLen, nSrc;
       const char * szText = hb_itemGetCPtr( pText );
 
-      ulSrc = hb_itemGetCLen( pText );
-      ulLen = hb_strRTrimLen( szText, ulSrc, hb_parl( 2 ) );
-      szText = hb_strLTrim( szText, &ulLen );
+      nSrc = hb_itemGetCLen( pText );
+      nLen = hb_strRTrimLen( szText, nSrc, hb_parl( 2 ) );
+      szText = hb_strLTrim( szText, &nLen );
 
-      if( ulLen == ulSrc )
+      if( nLen == nSrc )
          hb_itemReturn( pText );
       else
-         hb_retclen( szText, ulLen );
+         hb_retclen( szText, nLen );
    }
    else
 #ifdef HB_COMPAT_C53

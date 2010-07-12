@@ -104,6 +104,7 @@ done - validate sources against these templates
 
 #include "directry.ch"
 #include "fileio.ch"
+#include "simpleio.ch"
 
 #include "hbdoc2.ch"
 
@@ -130,7 +131,7 @@ PROCEDURE Main( ... )
       "basedir", BASE_DIR, ;
       "doc", .T., ;
       "source", .F., ;
-      "contribs", .F., ;
+      "contribs", .T., ;
       "format", {}, ;
       "output", "category", ;
       "include-doc-source", .F., ;
@@ -140,7 +141,7 @@ PROCEDURE Main( ... )
       /* internal settings, values, etc */ ;
       "PATH_SEPARATOR", hb_ps(), ;
       "DELIMITER", "$", ;
-      "format-list", { "text", "ascii", "html", "html2", "xml", "hdb", "rtf", "hpc", "ngi", "os2", "chm", "ch2", "pdf", "trf", "doc", "dbf", "all" }, ;
+      "format-list", { "text", "ascii", "html", "html2", "xml", "hbd", "rtf", "hpc", "ngi", "os2", "chm", "ch2", "pdf", "trf", "doc", "dbf", "all" }, ;
       "hbextern.ch", {}, ;
       "in hbextern", {}, ;
       "not in hbextern", {}, ;
@@ -162,13 +163,13 @@ PROCEDURE Main( ... )
    ENDIF
 
    FOR EACH arg IN aArgs
-      IF .NOT. Empty(arg)
+      IF ! Empty(arg)
          IF ( idx := At( "=", arg ) ) == 0
-            cArgName = arg
-            arg = ""
+            cArgName := arg
+            arg := ""
          ELSE
-            cArgName = SubStr(arg, 1, idx - 1)
-            arg = SubStr( arg, idx + 1)
+            cArgName := SubStr(arg, 1, idx - 1)
+            arg := SubStr( arg, idx + 1)
          ENDIF
 
          DO CASE
@@ -200,7 +201,7 @@ PROCEDURE Main( ... )
                ShowHelp( "Unknown option:" + cArgName + IIf( Len(arg) > 0, "=" + arg, "") )
                RETURN
             ENDIF
-         END CASE
+         ENDCASE
       ENDIF
    NEXT
 
@@ -219,7 +220,7 @@ PROCEDURE Main( ... )
          IIf( p_hsSwitches[ "source" ], p_hsSwitches[ "basedir" ] + "source", NIL ), ;
          IIf( p_hsSwitches[ "contribs" ], p_hsSwitches[ "basedir" ] + "contrib", NIL ), ;
       }, ;
-      {|c| IIf( .NOT. Empty( c ), ProcessFolder( c, @aContent ), ) } )
+      {|c| IIf( ! Empty( c ), ProcessFolder( c, @aContent ), ) } )
 
    ? HB_NTOS( Len( aContent ) ) + " items found"
    ?
@@ -232,7 +233,7 @@ PROCEDURE Main( ... )
 
    // TODO: what is this for?  it is sorting the category sub-arrays and removing empty (?) sub-arrays, but why?
    FOR idx := 1 TO Len( p_aCategories )
-      IF .NOT. Empty( p_aCategories[ idx ] )
+      IF ! Empty( p_aCategories[ idx ] )
          IF Len( p_aCategories[ idx ] ) == 4 // category, list of subcategory, list of entries, handle
             FOR idx2 := Len( p_aCategories[ idx ][ 3 ] ) TO 1 STEP -1
                IF ValType( p_aCategories[ idx ][ 3 ][ idx2 ] ) == "A"
@@ -298,7 +299,7 @@ PROCEDURE Main( ... )
             NEXT
 
             FOR idx3 := 1 TO Len( p_aCategories )
-               IF .NOT. Empty( p_aCategories[ idx3 ] )
+               IF ! Empty( p_aCategories[ idx3 ] )
                   p_aCategories[ idx3 ][ 4 ] := Filename( p_aCategories[ idx3 ][ 1 ] )
                   //~ oIndex:BeginSection( p_aCategories[ idx3 ][ 1 ], p_aCategories[ idx3 ][ 4 ] )
                   //~ oIndex:EndSection( p_aCategories[ idx3 ][ 1 ], p_aCategories[ idx3 ][ 4 ] )
@@ -306,7 +307,7 @@ PROCEDURE Main( ... )
             NEXT
 
             FOR idx3 := 1 TO Len( p_aCategories )
-               IF .NOT. Empty( p_aCategories[ idx3 ] )
+               IF ! Empty( p_aCategories[ idx3 ] )
                   oDocument := &("Generate" + cFormat + "()"):NewDocument( cFormat, p_aCategories[ idx3 ][ 4 ], "Harbour Reference Guide - " + p_aCategories[ idx3 ][ 1 ] )
 
                   IF oIndex != NIL
@@ -315,7 +316,7 @@ PROCEDURE Main( ... )
                   oDocument:BeginSection( p_aCategories[ idx3 ][ 1 ], oDocument:cFilename )
 
                   FOR idx := 1 TO Len( p_aCategories[ idx3 ][ 3 ] )
-                     IF .NOT. Empty( p_aCategories[ idx3 ][ 3 ][ idx ] )
+                     IF ! Empty( p_aCategories[ idx3 ][ 3 ][ idx ] )
                         ASort( p_aCategories[ idx3 ][ 3 ][ idx ], , , {|oL,oR| oL:Name <= oR:Name } )
                         IF Len( p_aCategories[ idx3 ][ 2 ][ idx ] ) > 1 .OR. Len( p_aCategories[ idx3 ][ 2 ][ idx ] ) > 0
                            IF oIndex != NIL
@@ -324,7 +325,7 @@ PROCEDURE Main( ... )
                            oDocument:BeginSection( p_aCategories[ idx3 ][ 2 ][ idx ], oDocument:cFilename )
                         ENDIF
                         FOR idx4 := 1 TO Len( p_aCategories[ idx3 ][ 3 ][ idx ] )
-                           IF .NOT. Empty( p_aCategories[ idx3 ][ 3 ][ idx ][ idx4 ] )
+                           IF ! Empty( p_aCategories[ idx3 ][ 3 ][ idx ][ idx4 ] )
                               IF SubStr( p_aCategories[ idx3 ][ 3 ][ idx ][ idx4 ]:sourcefile_, -Len( "1stread.txt" ) ) == "1stread.txt"
                               ELSE
                                  IF oIndex != NIL
@@ -391,22 +392,30 @@ STATIC PROCEDURE ProcessFolder( cFolder, aContent ) // this is a recursive proce
    LOCAL aFiles
    LOCAL nLen
    LOCAL idx
+   LOCAL cExt
 
-   //~ ? "> " + cFolder
+   //~ ? ">>> " + cFolder
 
    cFolder += hb_ps()
 
-   aFiles := Directory( cFolder + "*.*", "D" )
+   aFiles := Directory( cFolder + hb_osFileMask(), "D" )
    IF ( nLen := LEN( aFiles ) ) > 0
       FOR idx := 1 TO nLen
          IF aFiles[ idx ][F_ATTR ] == "D"
-            IF ( p_hsSwitches[ "source" ] .OR. p_hsSwitches[ "contribs" ] ) /*.AND. ;
-               HB_AScan( s_aSkipDirs, {|d| LOWER(d) == LOWER( aFiles[ idx ][ F_NAME ] ) } ) == 0*/
-               ProcessFolder( cFolder + aFiles[ idx ][ F_NAME ], @aContent )
+            IF !( aFiles[ idx ][ F_NAME ] == "." ) .AND. ;
+               !( aFiles[ idx ][ F_NAME ] == ".." )
+
+               IF ( p_hsSwitches[ "source" ] .OR. p_hsSwitches[ "contribs" ] ) /* .AND. ;
+                  HB_AScan( s_aSkipDirs, {|d| LOWER(d) == LOWER( aFiles[ idx ][ F_NAME ] ) } ) == 0 */
+                  ProcessFolder( cFolder + aFiles[ idx ][ F_NAME ], @aContent )
+               ENDIF
             ENDIF
          ELSEIF HB_AScan( s_aExclusions, {|f| LOWER(f) == LOWER( aFiles[ idx ][ F_NAME ] ) } ) == 0
-            IF .NOT. ProcessFile( cFolder + aFiles[ idx ][ F_NAME ], @aContent )
-               EXIT
+            hb_FNameSplit( aFiles[ idx ][ F_NAME ], , , @cExt )
+            IF Lower( cExt ) == ".txt"
+               IF ! ProcessFile( cFolder + aFiles[ idx ][ F_NAME ], @aContent )
+                  EXIT
+               ENDIF
             ENDIF
          ENDIF
       NEXT
@@ -422,26 +431,24 @@ STATIC FUNCTION ProcessFile( cFile, aContent )
    LOCAL nOldContentLen := Len( aContent )
 
 // debug code to keep output small
-//~ if .not. "dir.txt" $ LOWER(cFile)
-//~ if .not. "subcodes.txt" $ LOWER(cFile)
-//~ if .not. "command.txt" $ LOWER(cFile)
-//~ if .not. "rddmisc.txt" $ LOWER(cFile)
+//~ if ! "dir.txt" $ LOWER(cFile)
+//~ if ! "subcodes.txt" $ LOWER(cFile)
+//~ if ! "command.txt" $ LOWER(cFile)
+//~ if ! "rddmisc.txt" $ LOWER(cFile)
 //~ return .t.
 //~ endif
-
-   ? "> " + cFile
 
    IF ( aHandle[ 1 ] := FOpen( cFile ) ) < 0
       ? "error: could not open " + cFile + ", " + HB_NTOS( Abs( aHandle[ 1 ] ) )
       RETURN .F.
    ENDIF
 
-   IF .NOT. FReadLn( @aHandle, "" ) // assume first line is ID comment prefix
+   IF ! FReadLn( @aHandle, "" ) // assume first line is ID comment prefix
       //~ FClose( aHandle[ 1 ] )
       //~ RETURN .F.
    ENDIF
 
-   IF .NOT. FReadLn( @aHandle, @cVersion ) // assume second line is ID
+   IF ! FReadLn( @aHandle, @cVersion ) // assume second line is ID
       //~ FClose( aHandle[ 1 ] )
       //~ RETURN .F.
    ENDIF
@@ -456,7 +463,10 @@ STATIC FUNCTION ProcessFile( cFile, aContent )
    ENDDO
    FClose( aHandle[ 1 ] )
 
-   ?? " (" + HB_NTOS( Len( aContent ) - nOldContentLen ) + " items)"
+   IF ( Len( aContent ) - nOldContentLen ) > 0
+      ? "> " + cFile
+      ?? " (" + HB_NTOS( Len( aContent ) - nOldContentLen ) + " items)"
+   ENDIF
 
    RETURN .T.
 
@@ -475,9 +485,11 @@ STATIC PROCEDURE ProcessBlock( aHandle, aContent, cFile, cType, cVersion, o )
       cSourceFile := StrTran( "../" + cFile /* SubStr( cFile, Len( p_hsSwitches[ "basedir" ] + hb_ps() ) ) */, "\", "/" )
 #endif
 
-   o:type_ = cType
-   o:sourcefile_ = cSourceFile
-   o:sourcefileversion_ = cVersion
+   o:type_ := cType
+   o:sourcefile_ := cSourceFile
+   o:sourcefileversion_ := cVersion
+   o:Template := "?TEMPLATE?"
+   o:Name := "?NAME?"
 
    DO WHILE FReadSection( aHandle, @cSectionName, @cSection, @o )
       //~ idx := HB_HPos( hsTemplate, cSectionName )
@@ -514,14 +526,14 @@ STATIC PROCEDURE ProcessBlock( aHandle, aContent, cFile, cType, cVersion, o )
 
                EXIT
 
-            CASE .NOT. Empty( o:&cSectionName )
+            CASE ! Empty( o:&cSectionName )
 
                AddErrorCondition( cFile, "Duplicate " + cSectionName, aHandle[ 2 ] )
                lAccepted := .F.
 
             CASE cSectionName == "CATEGORY"
 
-               IF ( idxCategory := HB_AScan( p_aCategories, {|c| .NOT. Empty( c ) .AND. ( IIf( ValType( c ) == "C", LOWER( c ) == LOWER( cSection ), LOWER( c[ 1 ] ) == LOWER( cSection ) ) ) } ) ) == 0
+               IF ( idxCategory := HB_AScan( p_aCategories, {|c| ! Empty( c ) .AND. ( IIf( ValType( c ) == "C", LOWER( c ) == LOWER( cSection ), LOWER( c[ 1 ] ) == LOWER( cSection ) ) ) } ) ) == 0
                   AddErrorCondition( cFile, "Unknown CATEGORY '" + cSection + "' for template '" + o:Template, aHandle[ 2 ] )
                   lAccepted := .F.
                ENDIF
@@ -533,14 +545,14 @@ STATIC PROCEDURE ProcessBlock( aHandle, aContent, cFile, cType, cVersion, o )
                   AddErrorCondition( cFile, "SUBCATEGORY '" + cSection + "' defined before CATEGORY", aHandle[ 2 ] )
                   lAccepted := .F.
 
-               ELSEIF ( idxSubCategory := HB_AScan( p_aCategories[ idxCategory ][ 2 ], {|c| .NOT. ( c == NIL ) .AND. ( IIf( ValType( c ) == "C", LOWER( c ) == LOWER( cSection ), LOWER( c[ 1 ] ) == LOWER( cSection ) ) ) } ) ) == 0
+               ELSEIF ( idxSubCategory := HB_AScan( p_aCategories[ idxCategory ][ 2 ], {|c| ! ( c == NIL ) .AND. ( IIf( ValType( c ) == "C", LOWER( c ) == LOWER( cSection ), LOWER( c[ 1 ] ) == LOWER( cSection ) ) ) } ) ) == 0
 
                   AddErrorCondition( cFile, "Unknown SUBCATEGORY '" + p_aCategories[ idxCategory ][ 1 ] + "-" + cSection, aHandle[ 2 ] )
                   lAccepted := .F.
 
                ENDIF
 
-            //~ CASE cSectionName == "RETURNS" .AND. .NOT. o:IsField( "RETURNS" )
+            //~ CASE cSectionName == "RETURNS" .AND. ! o:IsField( "RETURNS" )
 
                //~ AddErrorCondition( cFile, "'" + o:Name + "' is identified as template " + o:Template + " but has no RETURNS field", aHandle[ 2 ] )
                //~ lAccepted := .F.
@@ -554,7 +566,7 @@ STATIC PROCEDURE ProcessBlock( aHandle, aContent, cFile, cType, cVersion, o )
                AddErrorCondition( cFile, "'" + o:Name + "' is identified as template " + o:Template + " but has no RETURNS value (" + cSection + ")", aHandle[ 2 ] - 1 )
                lAccepted := .F.
 
-            CASE .NOT. o:IsConstraint( cSectionName, cSection )
+            CASE ! o:IsConstraint( cSectionName, cSection )
 
                cSource := cSectionName + " is '" + IIf( Len( cSection ) <= 20, cSection, SubStr( StrTran( cSection, HB_OSNewLine() ), 1, 20 ) + "..." ) + "', should be one of: "
                //~ cSource := HB_HKeyAt( hsTemplate, idx ) + " should be one of: "
@@ -575,18 +587,18 @@ STATIC PROCEDURE ProcessBlock( aHandle, aContent, cFile, cType, cVersion, o )
             lAccepted := .F.
 
          ENDIF
-      END CASE
+      ENDCASE
    ENDDO
 
    IF lAccepted
       lAccepted := o:IsComplete( @cSource )
-      IF .NOT. lAccepted
+      IF ! lAccepted
          AddErrorCondition( cFile, "Missing sections: '" + cSource + "'", aHandle[ 2 ] )
          lAccepted := .F.
       ENDIF
    ENDIF
 
-   IF .NOT. lAccepted
+   IF ! lAccepted
 
    ELSEIF o:Template == "Function" .AND. ( ;
                      Empty( o:Returns ) .OR. ;
@@ -599,9 +611,9 @@ STATIC PROCEDURE ProcessBlock( aHandle, aContent, cFile, cType, cVersion, o )
 
    ELSE
 
-      IF .NOT. ( ;
+      IF ! ( ;
          /* LOWER( hsBlock[ "CATEGORY" ] ) == "document" .OR. */ ;
-         /* .NOT. ( hsBlock[ "SUBCODE" ] == "" ) .OR. */ ;
+         /* ! ( hsBlock[ "SUBCODE" ] == "" ) .OR. */ ;
          .F. )
 
          cSectionName := Parse( UPPER( o:Name ), "(" )
@@ -624,7 +636,7 @@ STATIC PROCEDURE ProcessBlock( aHandle, aContent, cFile, cType, cVersion, o )
 
       AAdd( aContent, o )
 
-      IF idxSubCategory == -1 .AND. ( .NOT. o:IsField( "SUBCATEGORY" ) .OR. .NOT. o:IsRequired( "SUBCATEGORY" ) ) //.AND. idxSubCategory == -1
+      IF idxSubCategory == -1 .AND. ( ! o:IsField( "SUBCATEGORY" ) .OR. ! o:IsRequired( "SUBCATEGORY" ) ) //.AND. idxSubCategory == -1
          idxSubCategory := o:SubcategoryIndex( o:Category, "" )
          IF idxSubCategory == -1
             idxSubCategory := 1
@@ -773,12 +785,12 @@ STATIC PROCEDURE FileEval( acFile, bBlock, nMaxLine )
    DO WHILE FReadLn( @aHandle, @cBuffer, nMaxLine )
       //~ IF SubStr( LTrim( cBuffer ), 1, 2 ) == "/*"
          //~ FSeek( nHandle, -( Len( cBuffer ) - 2 ), FS_RELATIVE )
-         //~ IF .NOT. FReadUntil( nHandle, "*/" )
+         //~ IF ! FReadUntil( nHandle, "*/" )
             //~ EXIT
          //~ ENDIF
       //~ ELSE
          xResult := Eval( bBlock, cBuffer )
-         IF xResult != NIL .AND. ValType( xResult ) == "L" .AND. .NOT. xResult
+         IF xResult != NIL .AND. ValType( xResult ) == "L" .AND. ! xResult
             EXIT
          ENDIF
       //~ ENDIF
@@ -923,14 +935,14 @@ FUNCTION Decode( cType, hsBlock, cKey )
    CASE cType == "NAME"
       IF hsBlock == NIL
          RETURN cCode
-      ELSEIF .NOT. HB_HHasKey( hsBlock, "RETURNS" )
+      ELSEIF ! HB_HHasKey( hsBlock, "RETURNS" )
          RETURN hsBlock[ "NAME" ]
       ELSEIF Empty( hsBlock[ "RETURNS" ] ) .OR. ;
          LOWER( hsBlock[ "RETURNS" ] ) == "nil" .OR. ;
          LOWER( hsBlock[ "RETURNS" ] ) == "none" .OR. ;
          LOWER( hsBlock[ "RETURNS" ] ) == "none."
 
-         hsBlock[ "RETURNS" ] = ""
+         hsBlock[ "RETURNS" ] := ""
 
          DO CASE
          CASE LOWER( hsBlock[ "CATEGORY" ] ) == "document"
@@ -944,7 +956,7 @@ FUNCTION Decode( cType, hsBlock, cKey )
          ENDCASE
       ELSE
          DO CASE
-         CASE .NOT. Empty( hsBlock[ "NAME" ] )
+         CASE ! Empty( hsBlock[ "NAME" ] )
             RETURN "Function " + hsBlock[ "NAME" ]
          OTHERWISE
             RETURN "Unknown 'CATEGORY': " + hsBlock[ "CATEGORY" ]
@@ -997,7 +1009,7 @@ PROCEDURE ShowHelp( cExtraMessage, aArgs )
 
    DO CASE
    CASE Empty( aArgs ) .OR. Len( aArgs ) <= 1 .OR. Empty( aArgs[ 1 ] )
-      aHelp = { ;
+      aHelp := { ;
          cExtraMessage, ;
          "Harbour Document Compiler (hbdoc2) " + HBRawVersion(), ;
          "Copyright (c) 1999-2010, http://harbour-project.org/", ;
