@@ -11,6 +11,7 @@
  */
 
 #include "common.ch"
+#include "directry.ch"
 
 #define _HBDOC_HBD_EXT      ".hbd"
 
