@@ -1752,6 +1752,9 @@ STATIC FUNCTION Build_Class( cWidget, cls_, doc_, cPathOut, subCls_ )
 
 /*----------------------------------------------------------------------*/
 
+#define  QT_VER  "4.5"
+#define  QT_WEB  "http://doc.trolltech.com/"
+
 STATIC FUNCTION Build_Document( cWidget, cls_, doc_, cPathDoc, subCls_, docum_ )
    LOCAL cText, n, n1, n2, nLen, pWidget, cRet, cLib, cFile, i, cInherits
    LOCAL txt_:= {}
@@ -1775,7 +1778,7 @@ STATIC FUNCTION Build_Document( cWidget, cls_, doc_, cPathDoc, subCls_, docum_ )
    ENDIF
 
    aadd( txt_, '/* '  )
-   aadd( txt_, ' *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for Qt v4.5.3+' )
+   aadd( txt_, ' *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for Qt v4.5+' )
    aadd( txt_, ' *  Please do not modify this document as it is subject to change in future.' )
    aadd( txt_, ' *  Pritpal Bedi <bedipritpal@hotmail.com>' )
    aadd( txt_, ' */ ' )
@@ -1790,7 +1793,7 @@ STATIC FUNCTION Build_Document( cWidget, cls_, doc_, cPathDoc, subCls_, docum_ )
    aadd( txt_, '    $SUBCATEGORY$ ' )
    aadd( txt_, '        ' + 'GUI'   )
    aadd( txt_, '    $EXTERNALLINK$' )
-   aadd( txt_, '        ' + 'http://doc.trolltech.com/4.5/' + lower( cWidget ) + '.html' )
+   aadd( txt_, '        ' + QT_WEB + QT_VER + '/' + lower( cWidget ) + '.html' )
    aadd( txt_, '    $ONELINER$    ' )
    aadd( txt_, '        ' + 'Creates a new ' + cWidget + ' object.' )
    aadd( txt_, '    $INHERITS$    ' )
@@ -1843,13 +1846,13 @@ STATIC FUNCTION Build_Document( cWidget, cls_, doc_, cPathDoc, subCls_, docum_ )
    aadd( txt_, '    $PLATFORMS$   ' )
    aadd( txt_, '        ' + 'Windows, Linux, MacOS, OS2' )
    aadd( txt_, '    $VERSION$     ' )
-   aadd( txt_, '        ' + '4.5.3' )
+   aadd( txt_, '        ' + '4.5 or upper' )
    aadd( txt_, '    $FILES$       ' )
-   aadd( txt_, '        ' + 'Prg Source   : ' + 'contrib/hbqt' + iif( empty( cLib ), '', '/' + cLib ) + '/T' + cWidget + '.prg' )
-   aadd( txt_, '        ' + 'C++ Wrappers : ' + 'contrib/hbqt' + iif( empty( cLib ), '', '/' + cLib ) + '/'  + cWidget + '.cpp' )
+   aadd( txt_, '        ' + 'Prg source   : ' + 'contrib/hbqt' + iif( empty( cLib ), '', '/' + cLib ) + '/T' + cWidget + '.prg' )
+   aadd( txt_, '        ' + 'C++ wrappers : ' + 'contrib/hbqt' + iif( empty( cLib ), '', '/' + cLib ) + '/'  + cWidget + '.cpp' )
    aadd( txt_, '        ' + 'Library      : ' + 'hb' + cLib )
    aadd( txt_, '    $SEEALSO$     ' )
- * aadd( txt_, '        ' + iif( empty( cInherits ), "", cInherits + ", " ) + 'http://doc.trolltech.com/4.5/' + lower( cWidget ) + '.html' )
+ * aadd( txt_, '        ' + iif( empty( cInherits ), "", cInherits + ", " ) + QT_WEB + QT_VER + '/' + lower( cWidget ) + '.html' )
    aadd( txt_, '        ' + cInherits )
    aadd( txt_, '    $END$         ' )
    aadd( txt_, ' */               ' )
@@ -1959,8 +1962,6 @@ STATIC FUNCTION Build_MakeFile( cpp_, prg_, cPathOut )
 /*----------------------------------------------------------------------*/
 
 #define  CRLF   chr( 13 )+chr( 10 )
-#define  QT_VER  "4.5"
-#define  QT_WEB  "http://doc.trolltech.com/"
 
 FUNCTION Build_HTML( cWidget, aHM_, aHF_, cPathOut, docum_ )
    LOCAL cFile := cPathOut + s_PathSep + 'html' + s_PathSep + cWidget + '.htm'
@@ -1992,7 +1993,7 @@ FUNCTION Build_HTML( cWidget, aHM_, aHF_, cPathOut, docum_ )
    /*       Class Documentation */
    s := "<TR><TD colspan=" + hb_ntos( nCols ) + " align=CENTER bgcolor=#ffff80><B>" + "CLASS REFERENCE" + "</B></TD></TR>"
    aadd( aHtml, s )
-   s := "<TR><TD colspan=" + hb_ntos( nCols ) + " align=CENTER bgcolor=#ffff80><B>" + "Source: /harbour/contrib/hbqt/T" + cWidget + ".prg" + "</B></TD></TR>"
+   s := "<TR><TD colspan=" + hb_ntos( nCols ) + " align=CENTER bgcolor=#ffff80><B>" + "Source: /contrib/hbqt/T" + cWidget + ".prg" + "</B></TD></TR>"
    aadd( aHtml, s )
    s := QT_WEB + QT_VER + "/" + lower( cWidget ) + ".htm"
    s := "<TR><TD colspan=" + hb_ntos( nCols ) + ' align=CENTER bgcolor=#CFBFA1><B><a href="' + s + '">' + s + "</a></B></TD></TR>"
@@ -2036,7 +2037,7 @@ FUNCTION Build_HTML( cWidget, aHM_, aHF_, cPathOut, docum_ )
    /* Function Documentation */
    s := "<TR><TD colspan=" + hb_ntos( nCols ) + " align=CENTER bgcolor=#ffff80><B>" + "FUNCTIONS REFERENCE" + "</B></TD></TR>"
    aadd( aHtml, s )
-   s := "<TR><TD colspan=" + hb_ntos( nCols ) + " align=CENTER bgcolor=#ffff80><B>" + "Source: /harbour/contrib/hbqt/" + cWidget + ".cpp" + "</B></TD></TR>"
+   s := "<TR><TD colspan=" + hb_ntos( nCols ) + " align=CENTER bgcolor=#ffff80><B>" + "Source: /contrib/hbqt/" + cWidget + ".cpp" + "</B></TD></TR>"
    aadd( aHtml, s )
    FOR j := 1 TO len( aHF_ )
       s := "<TR>"

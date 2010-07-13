@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * NFDOC reader
+ * HBDOC reader
  *
  * Copyright 2010 Viktor Szakats (harbour.01 syenar.hu)
  * www - http://harbour-project.org
@@ -207,3 +207,29 @@ STATIC FUNCTION DirAddPathSep( cDir )
    ENDIF
 
    RETURN cDir
+
+FUNCTION __hbdoc_ToSource( aEntry )
+   LOCAL cSource := ""
+   LOCAL hEntry
+   LOCAL item
+   LOCAL cLine
+
+   IF ISARRAY( aEntry )
+      FOR EACH hEntry IN aEntry
+         cSource += "/*  $DOC$" + hb_eol()
+         FOR EACH item IN hEntry
+            IF ISCHARACTER( item ) .AND. ;
+               !( Left( item:__enumKey(), 1 ) == "_" )
+               cSource += " *  $" + item:__enumKey() + "$" + hb_eol()
+               FOR EACH cLine IN hb_ATokens( StrTran( item, Chr( 13 ) ), Chr( 10 ) )
+                  cSource += " * " + cLine + hb_eol()
+               NEXT
+            ENDIF
+         NEXT
+         cSource += " *  $END$" + hb_eol()
+         cSource += " */" + hb_eol()
+         cSource += hb_eol()
+      NEXT
+   ENDIF
+
+   RETURN cSource

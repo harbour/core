@@ -54,32 +54,15 @@
 #undef _WIN32_IE
 #define _WIN32_IE 0x0500 /* request Windows 2000 features for NOTIFYICONDATA */
 
+/* This code uses named union so this declaration is necessary for
+ * compilers where nameless unions are default
+ */
+#if !defined( NONAMELESSUNION )
+   #define NONAMELESSUNION
+#endif
+
 #include "hbwapi.h"
 #include "hbapiitm.h"
-
-#if defined( __BORLANDC__ )
-#  if !defined( NONAMELESSUNION )
-#     define NONAMELESSUNION
-#  endif
-#  if defined( DUMMYUNIONNAME )
-#     undef DUMMYUNIONNAME
-#  endif
-#  if defined( DUMMYUNIONNAME2 )
-#     undef DUMMYUNIONNAME2
-#  endif
-#  if defined( DUMMYUNIONNAME3 )
-#     undef DUMMYUNIONNAME3
-#  endif
-#  if defined( DUMMYUNIONNAME4 )
-#     undef DUMMYUNIONNAME4
-#  endif
-#  if defined( DUMMYUNIONNAME5 )
-#     undef DUMMYUNIONNAME5
-#  endif
-#  define HB_WIN_U( x, y, z )  x ## . ## y ## . ## z
-#else
-#  define HB_WIN_U( x, y, z )  x ## . ## z
-#endif
 
 #include <shellapi.h>
 
@@ -109,7 +92,7 @@ HB_FUNC( WIN_SHELLNOTIFYICON )
    {
       if( HB_ITEMCOPYSTR( hb_param( 7, HB_IT_ANY ), tnid.szInfo, HB_SIZEOFARRAY( tnid.szInfo ) ) > 0 )
          tnid.uFlags |= NIF_INFO;
-      HB_WIN_U( tnid, DUMMYUNIONNAME, uTimeout ) = ( UINT ) hb_parni( 8 );
+      tnid.u.uTimeout = ( UINT ) hb_parni( 8 );
       if( HB_ITEMCOPYSTR( hb_param( 9, HB_IT_ANY ), tnid.szInfoTitle, HB_SIZEOFARRAY( tnid.szInfoTitle ) ) > 0 )
          tnid.uFlags |= NIF_INFO;
       tnid.dwInfoFlags = ( DWORD ) hb_parnl( 10 );

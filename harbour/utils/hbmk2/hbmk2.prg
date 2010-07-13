@@ -727,6 +727,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    LOCAL nOpt_Esc
    LOCAL nOpt_FNF
    LOCAL nCCompVer
+   LOCAL lCHD_Comp := .F.
 
    LOCAL cCommand
    LOCAL aCommand
@@ -2916,7 +2917,12 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          cOpt_CompC += " {FC}"
          cOptIncMask := "-I{DI}"
          IF ! Empty( hbmk[ _HBMK_cWorkDir ] )
-            cOpt_CompC += " {IC} -o {OO}"
+            IF .T. /* EXPERIMENTAL */
+               lCHD_Comp := .T.
+               cOpt_CompC += " {LC}"
+            ELSE
+               cOpt_CompC += " {IC} -o {OO}"
+            ENDIF
             AAdd( hbmk[ _HBMK_aOPTC ], "-pipe" )
          ELSE
             cOpt_CompC += " {LC}"
@@ -4943,7 +4949,16 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                      aThreads := {}
                      FOR EACH aTODO IN ArraySplit( l_aCGEN_TODO, l_nJOBS )
 
-                        cOpt_CompCLoop := AllTrim( StrTran( cOpt_CompC, "{LC}"  , ArrayToList( aTODO,, nOpt_Esc, nOpt_FNF ) ) )
+                        IF lCHD_Comp
+                           /* Convert source filenames relative to the target dir */
+                           tmp := AClone( aTODO )
+                           FOR EACH tmp1 IN tmp
+                              tmp1 := PathMakeAbsolute( tmp1, DirAddPathSep( PathMakeRelative( PathNormalize( PathMakeAbsolute( hbmk[ _HBMK_cWorkDir ], hb_pwd() ) ), hb_pwd(), .T. ) ) )
+                           NEXT
+                           cOpt_CompCLoop := AllTrim( StrTran( cOpt_CompC, "{LC}"  , ArrayToList( tmp,, nOpt_Esc, nOpt_FNF ) ) )
+                        ELSE
+                           cOpt_CompCLoop := AllTrim( StrTran( cOpt_CompC, "{LC}"  , ArrayToList( aTODO,, nOpt_Esc, nOpt_FNF ) ) )
+                        ENDIF
 
                         /* Handle moving the whole command line to a script, if requested. */
                         cScriptFile := NIL
@@ -4977,9 +4992,9 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
                         IF ! hbmk[ _HBMK_lDONTEXEC ]
                            IF hb_mtvm() .AND. Len( aTODO:__enumBase() ) > 1
-                              AAdd( aThreads, { hb_threadStart( @hb_processRun(), cCommand ), cCommand } )
+                              AAdd( aThreads, { hb_threadStart( @hbmk2_hb_processRunInDir(), iif( lCHD_Comp, hbmk[ _HBMK_cWorkDir ], NIL ), cCommand ), cCommand } )
                            ELSE
-                              IF ( tmp := hb_processRun( cCommand ) ) != 0
+                              IF ( tmp := hbmk2_hb_processRunInDir( iif( lCHD_Comp, hbmk[ _HBMK_cWorkDir ], NIL ), cCommand ) ) != 0
                                  hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Running C/C++ compiler. %1$s" ), hb_ntos( tmp ) ) )
                                  IF ! hbmk[ _HBMK_lQuiet ]
                                     OutErr( cCommand + _OUT_EOL )
@@ -5514,6 +5529,21 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    ENDIF
 
    RETURN hbmk[ _HBMK_nErrorLevel ]
+
+STATIC FUNCTION hbmk2_hb_processRunInDir( cNewDir, ... )
+   LOCAL cOldDir
+   LOCAL xRetVal
+
+   IF cNewDir == NIL
+      RETURN hb_processRun( ... )
+   ELSE
+      cOldDir := hb_pwd()
+      DirChange( cNewDir )
+      xRetVal := hb_processRun( ... )
+      DirChange( cOldDir )
+   ENDIF
+
+   RETURN xRetVal
 
 STATIC PROCEDURE DoIMPLIB( hbmk, bBlk_ImpLib, cLibLibPrefix, cLibLibExt )
    LOCAL cMakeImpLibDLL
@@ -7292,8 +7322,6 @@ STATIC FUNCTION PathMakeAbsolute( cPathR, cPathA )
 
    RETURN hb_FNameMerge( cDirA + cDirR, cNameR, cExtR )
 
-/* NOTE: Not used by hbmk2 code, but could be useful for
-         apps creating hbmk2 script/config files. [vszakats] */
 STATIC FUNCTION PathMakeRelative( cPathBase, cPathTarget, lForceRelative )
    LOCAL tmp
 
