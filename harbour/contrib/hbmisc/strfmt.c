@@ -60,7 +60,7 @@ typedef struct
 {
    char *       raw;
    const char * buffer;
-   HB_SIZE      ulLen;
+   HB_SIZE      nLen;
    HB_BOOL      bFreeReq;
 } STRPAR;
 
@@ -105,13 +105,13 @@ HB_FUNC( STRFORMAT )
             {
                nPos = pszMask[ nMaskPos ] - '1';
 
-               strpar[ nPos ].raw = hb_itemString( hb_param( POS_TO_PAR( nPos ), HB_IT_ANY ), &strpar[ nPos ].ulLen, &strpar[ nPos ].bFreeReq );
+               strpar[ nPos ].raw = hb_itemString( hb_param( POS_TO_PAR( nPos ), HB_IT_ANY ), &strpar[ nPos ].nLen, &strpar[ nPos ].bFreeReq );
 
                /* AllTrim() */
-               strpar[ nPos ].ulLen = hb_strRTrimLen( strpar[ nPos ].raw, strpar[ nPos ].ulLen, HB_FALSE );
-               strpar[ nPos ].buffer = hb_strLTrim( strpar[ nPos ].raw, &strpar[ nPos ].ulLen );
+               strpar[ nPos ].nLen = hb_strRTrimLen( strpar[ nPos ].raw, strpar[ nPos ].nLen, HB_FALSE );
+               strpar[ nPos ].buffer = hb_strLTrim( strpar[ nPos ].raw, &strpar[ nPos ].nLen );
 
-               nRetValLen += strpar[ nPos ].ulLen;
+               nRetValLen += strpar[ nPos ].nLen;
             }
          }
          else
@@ -132,8 +132,8 @@ HB_FUNC( STRFORMAT )
             {
                nPos = pszMask[ nMaskPos ] - '1';
 
-               memcpy( pszRetVal, strpar[ nPos ].buffer, strpar[ nPos ].ulLen );
-               pszRetVal += strpar[ nPos ].ulLen;
+               memcpy( pszRetVal, strpar[ nPos ].buffer, strpar[ nPos ].nLen );
+               pszRetVal += strpar[ nPos ].nLen;
             }
          }
          else

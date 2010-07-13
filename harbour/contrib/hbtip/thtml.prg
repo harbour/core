@@ -71,7 +71,7 @@
 
 #xtrans  P_SEEK( <a>, <c> )    =>   (<a>:p_end:=<a>:p_pos, <a>:p_pos:=hb_At(<c>,<a>:p_str,<a>:p_end+1))
 #xtrans  P_SEEKI( <a>, <c> )   =>   (<a>:p_end:=<a>:p_pos, <a>:p_pos:=hb_AtI(<c>,<a>:p_str,<a>:p_end+1))
-#xtrans  P_PEEK( <a>, <c> )    =>   (<a>:p_end:=<a>:p_pos, PStrCompi( <a>:p_str, <a>:p_pos, <c> ))
+#xtrans  P_PEEK( <a>, <c> )    =>   (<a>:p_end:=<a>:p_pos, __tip_PStrCompi( <a>:p_str, <a>:p_pos, <c> ))
 #xtrans  P_NEXT( <a> )         =>   (<a>:p_end:=<a>:p_pos, SubStr(<a>:p_str,++<a>:p_pos,1))
 #xtrans  P_PREV( <a> )         =>   (<a>:p_end:=<a>:p_pos, SubStr(<a>:p_str,--<a>:p_pos,1))
 
@@ -1517,7 +1517,7 @@ METHOD popNode( cName ) CLASS THtmlNode
    IF !( cName == Lower( ::htmlTagName ) )
       RETURN ::error( "Invalid closing HTML tag for: <" + ::htmlTagName + ">", ::className(), "-", EG_ARG, { cName } )
    ENDIF
-   
+
    /* tfonrouge: 2010-05-25
       this allows to properly close the tags "tr,th,td" by simply using:
       node - ["tr","th","td"]

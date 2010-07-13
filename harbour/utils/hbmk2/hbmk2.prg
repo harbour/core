@@ -4163,7 +4163,12 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                AAdd( hbmk[ _HBMK_aOPTPRG ], "-i" + FNameEscape( tmp, hbmk[ _HBMK_nCmd_Esc ] ) )
             ENDIF
             IF ! hbmk[ _HBMK_lStopAfterHarbour ]
-               AAdd( hbmk[ _HBMK_aOPTC ], StrTran( cOptIncMask, "{DI}", FNameEscape( tmp, hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) ) )
+               IF lCHD_Comp
+                  /* Convert source filenames relative to the target dir */
+                  AAdd( hbmk[ _HBMK_aOPTC ], StrTran( cOptIncMask, "{DI}", FNameEscape( PathMakeAbsolute( tmp, DirAddPathSep( PathMakeRelative( PathNormalize( PathMakeAbsolute( hbmk[ _HBMK_cWorkDir ], hb_pwd() ) ), hb_pwd(), .T. ) ) ), hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) ) )
+               ELSE
+                  AAdd( hbmk[ _HBMK_aOPTC ], StrTran( cOptIncMask, "{DI}", FNameEscape( tmp, hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) ) )
+               ENDIF
                AAdd( hbmk[ _HBMK_aOPTRES ], StrTran( cOptIncMask, "{DI}", FNameEscape( tmp, hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) ) )
             ENDIF
          ENDIF
@@ -5532,18 +5537,18 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
 STATIC FUNCTION hbmk2_hb_processRunInDir( cNewDir, ... )
    LOCAL cOldDir
-   LOCAL xRetVal
+   LOCAL nRetVal
 
    IF cNewDir == NIL
       RETURN hb_processRun( ... )
    ELSE
       cOldDir := hb_pwd()
       DirChange( cNewDir )
-      xRetVal := hb_processRun( ... )
+      nRetVal := hb_processRun( ... )
       DirChange( cOldDir )
    ENDIF
 
-   RETURN xRetVal
+   RETURN nRetVal
 
 STATIC PROCEDURE DoIMPLIB( hbmk, bBlk_ImpLib, cLibLibPrefix, cLibLibExt )
    LOCAL cMakeImpLibDLL

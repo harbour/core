@@ -5,52 +5,52 @@
 #include "hbapi.h"
 
 static const char *hb_strtoken(const char *szText,
-                               HB_ISIZ lText,
-                               HB_ISIZ lIndex,
+                               HB_ISIZ nText,
+                               HB_ISIZ nIndex,
                                char cDelimiter,
-                               HB_ISIZ *lLen)
+                               HB_ISIZ *pnLen)
 {
-  HB_ISIZ wStart;
-  HB_ISIZ wEnd = 0;
-  HB_ISIZ wCounter = 0;
+  HB_ISIZ nStart;
+  HB_ISIZ nEnd = 0;
+  HB_ISIZ nCounter = 0;
 
-  HB_TRACE(HB_TR_DEBUG, ("hb_strtoken(%s, %" HB_PFS "d, %" HB_PFS "d, %d, %p)", szText, lText, lIndex, (int) cDelimiter, lLen));
+  HB_TRACE(HB_TR_DEBUG, ("hb_strtoken(%s, %" HB_PFS "d, %" HB_PFS "d, %d, %p)", szText, nText, nIndex, (int) cDelimiter, pnLen));
 
   do
     {
-      wStart = wEnd;
+      nStart = nEnd;
 
       if( cDelimiter != ' ' )
         {
-          if( szText[wStart] == cDelimiter )
-            wStart++;
+          if( szText[nStart] == cDelimiter )
+            nStart++;
         }
       else
         {
-          while( wStart < lText && szText[wStart] == cDelimiter )
-            wStart++;
+          while( nStart < nText && szText[nStart] == cDelimiter )
+            nStart++;
         }
 
-      if( wStart < lText && szText[wStart] != cDelimiter )
+      if( nStart < nText && szText[nStart] != cDelimiter )
         {
-          wEnd = wStart + 1;
+          nEnd = nStart + 1;
 
-          while( wEnd < lText && szText[wEnd] != cDelimiter )
-            wEnd++;
+          while( nEnd < nText && szText[nEnd] != cDelimiter )
+            nEnd++;
         }
       else
-        wEnd = wStart;
-    } while( wCounter++ < lIndex - 1 && wEnd < lText );
+        nEnd = nStart;
+    } while( nCounter++ < nIndex - 1 && nEnd < nText );
 
-  if( wCounter < lIndex )
+  if( nCounter < nIndex )
     {
-      *lLen = 0;
+      *pnLen = 0;
       return "";
     }
   else
     {
-      *lLen = wEnd - wStart;
-      return szText + wStart;
+      *pnLen = nEnd - nStart;
+      return szText + nStart;
     }
 }
 
@@ -58,25 +58,25 @@ static const char *hb_strtoken(const char *szText,
 HB_FUNC( STRTOKEN )
 {
   const char *szText;
-  HB_ISIZ lIndex = hb_parns(2);
+  HB_ISIZ nIndex = hb_parns(2);
   char cDelimiter = *hb_parc(3);
-  HB_ISIZ lLen;
+  HB_ISIZ nLen;
 
   if( !cDelimiter )
     cDelimiter = ' ';
 
-  szText = hb_strtoken(hb_parc(1), hb_parclen(1), lIndex, cDelimiter, &lLen);
+  szText = hb_strtoken(hb_parc(1), hb_parclen(1), nIndex, cDelimiter, &nLen);
 
-  hb_storns(lLen, 4);
-  hb_retclen(szText, lLen);
+  hb_storns(nLen, 4);
+  hb_retclen(szText, nLen);
 }
 
 /* debug function to dump the ASCII values of an entire string */
 HB_FUNC( STRDUMP )
 {
   const char *szText = hb_parc(1);
-  HB_ISIZ i, lLength = hb_parclen(1);
-  for( i = 0; i < lLength; i++ )
+  HB_ISIZ i, nLength = hb_parclen(1);
+  for( i = 0; i < nLength; i++ )
     printf("%d ", szText[i]);
   printf("\n");
 }
@@ -86,10 +86,10 @@ HB_FUNC( ROT13 )
   if( HB_ISCHAR(1) )
     {
       const char *szText = hb_parc( 1 );
-      HB_SIZE i, lLen = hb_parclen( 1 );
-      char *szResult = (char*)hb_xgrab(lLen + 1);
+      HB_SIZE i, nLen = hb_parclen( 1 );
+      char *szResult = (char*)hb_xgrab(nLen + 1);
 
-      for( i = 0; i < lLen; i++ )
+      for( i = 0; i < nLen; i++ )
         {
           char c = szText[i];
           if( (c >= 'A' && c <= 'M') || (c >= 'a' && c <= 'm') )
@@ -99,7 +99,7 @@ HB_FUNC( ROT13 )
 
           szResult[i] = c;
         }
-      hb_retclen(szResult, lLen);
+      hb_retclen(szResult, nLen);
       hb_xfree(szResult);
     }
   else

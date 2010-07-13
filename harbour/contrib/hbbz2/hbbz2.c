@@ -263,40 +263,40 @@ HB_FUNC( HB_BZ2_COMPRESS )
    const char * szData = hb_parc( 1 );
    if( szData )
    {
-      HB_SIZE ulLen = hb_parclen( 1 );
+      HB_SIZE nLen = hb_parclen( 1 );
 
-      if( ulLen )
+      if( nLen )
       {
          PHB_ITEM pBuffer = HB_ISBYREF( 2 ) ? hb_param( 2, HB_IT_STRING ) : NULL;
-         HB_SIZE ulDstLen;
+         HB_SIZE nDstLen;
          char * pDest;
          int iResult;
 
          if( pBuffer )
          {
-            if( !hb_itemGetWriteCL( pBuffer, &pDest, &ulDstLen ) )
+            if( !hb_itemGetWriteCL( pBuffer, &pDest, &nDstLen ) )
                pDest = NULL;
          }
          else
          {
-            ulDstLen = HB_ISNUM( 2 ) ? ( HB_SIZE ) hb_parnint( 2 ) :
-                                       ( HB_SIZE ) hb_bz2CompressBound( ulLen );
-            pDest = ( char * ) hb_xalloc( ulDstLen + 1 );
+            nDstLen = HB_ISNUM( 2 ) ? ( HB_SIZE ) hb_parnint( 2 ) :
+                                      ( HB_SIZE ) hb_bz2CompressBound( nLen );
+            pDest = ( char * ) hb_xalloc( nDstLen + 1 );
          }
 
          if( pDest )
          {
-            iResult = hb_bz2Compress( szData, ulLen, pDest, &ulDstLen,
+            iResult = hb_bz2Compress( szData, nLen, pDest, &nDstLen,
                                       hb_parnidef( 4, HB_BZ_COMPRESSION_DEFAULT ) );
             if( !pBuffer )
             {
                if( iResult == BZ_OK )
-                  hb_retclen_buffer( pDest, ulDstLen );
+                  hb_retclen_buffer( pDest, nDstLen );
                else
                   hb_xfree( pDest );
             }
             else if( iResult == BZ_OK )
-               hb_retclen( pDest, ulDstLen );
+               hb_retclen( pDest, nDstLen );
          }
          else
             iResult = BZ_MEM_ERROR;
@@ -324,26 +324,26 @@ HB_FUNC( HB_BZ2_UNCOMPRESS )
 
    if( szData )
    {
-      HB_SIZE ulLen = hb_parclen( 1 );
+      HB_SIZE nLen = hb_parclen( 1 );
 
-      if( ulLen )
+      if( nLen )
       {
-         HB_SIZE ulDstLen;
+         HB_SIZE nDstLen;
          char * pDest = NULL;
          int iResult = BZ_OK;
 
          if( pBuffer )
          {
-            if( !hb_itemGetWriteCL( pBuffer, &pDest, &ulDstLen ) )
+            if( !hb_itemGetWriteCL( pBuffer, &pDest, &nDstLen ) )
                iResult = BZ_MEM_ERROR;
          }
          else
          {
-            ulDstLen = HB_ISNUM( 2 ) ? ( HB_SIZE ) hb_parnint( 2 ) :
-                           hb_bz2UncompressedSize( szData, ulLen, &iResult );
+            nDstLen = HB_ISNUM( 2 ) ? ( HB_SIZE ) hb_parnint( 2 ) :
+                           hb_bz2UncompressedSize( szData, nLen, &iResult );
             if( iResult == BZ_OK )
             {
-               pDest = ( char * ) hb_xalloc( ulDstLen + 1 );
+               pDest = ( char * ) hb_xalloc( nDstLen + 1 );
                if( !pDest )
                   iResult = BZ_MEM_ERROR;
             }
@@ -351,17 +351,17 @@ HB_FUNC( HB_BZ2_UNCOMPRESS )
 
          if( iResult == BZ_OK )
          {
-            iResult = hb_bz2Uncompress( szData, ulLen, pDest, &ulDstLen );
+            iResult = hb_bz2Uncompress( szData, nLen, pDest, &nDstLen );
 
             if( !pBuffer )
             {
                if( iResult == BZ_OK )
-                  hb_retclen_buffer( pDest, ulDstLen );
+                  hb_retclen_buffer( pDest, nDstLen );
                else
                   hb_xfree( pDest );
             }
             else if( iResult == BZ_OK )
-               hb_retclen( pDest, ulDstLen );
+               hb_retclen( pDest, nDstLen );
          }
          hb_storni( iResult, 3 );
       }

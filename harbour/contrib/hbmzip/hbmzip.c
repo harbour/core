@@ -494,10 +494,10 @@ HB_FUNC( HB_UNZIPFILEREAD )
 {
    PHB_ITEM  pBuffer = hb_param( 2, HB_IT_STRING );
    char *    buffer;
-   HB_SIZE   ulSize;
+   HB_SIZE   nSize;
 
    if( pBuffer && HB_ISBYREF( 2 ) &&
-       hb_itemGetWriteCL( pBuffer, &buffer, &ulSize ) )
+       hb_itemGetWriteCL( pBuffer, &buffer, &nSize ) )
    {
       unzFile hUnzip = hb_unzipfileParam( 1 );
 
@@ -507,12 +507,12 @@ HB_FUNC( HB_UNZIPFILEREAD )
 
          if( HB_ISNUM( 3 ) )
          {
-            HB_SIZE ulRead = hb_parns( 3 );
-            if( ulRead < ulSize )
-               ulSize = ulRead;
+            HB_SIZE nRead = hb_parns( 3 );
+            if( nRead < nSize )
+               nSize = nRead;
          }
 
-         iResult = unzReadCurrentFile( hUnzip, buffer, ( unsigned ) ulSize );
+         iResult = unzReadCurrentFile( hUnzip, buffer, ( unsigned ) nSize );
          hb_retnl( iResult );
       }
    }
@@ -545,17 +545,17 @@ static HB_BOOL hb_zipGetFileInfoFromHandle( HB_FHANDLE hFile, HB_U32 * pulCRC, H
    if( hFile != FS_ERROR )
    {
       unsigned char * pString = ( unsigned char * ) hb_xgrab( HB_Z_IOBUF_SIZE );
-      HB_SIZE ulRead, u;
+      HB_SIZE nRead, u;
 
       do
       {
-         ulRead = hb_fsReadLarge( hFile, pString, HB_Z_IOBUF_SIZE );
-         if( ulRead > 0 )
+         nRead = hb_fsReadLarge( hFile, pString, HB_Z_IOBUF_SIZE );
+         if( nRead > 0 )
          {
-            ulCRC = crc32( ulCRC, pString, ( uInt ) ulRead );
+            ulCRC = crc32( ulCRC, pString, ( uInt ) nRead );
             if( fText )
             {
-               for( u = 0; u < ulRead; ++u )
+               for( u = 0; u < nRead; ++u )
                {
                   if( pString[ u ] < 0x20 ?
                       ( pString[ u ] != HB_CHAR_HT &&
@@ -572,7 +572,7 @@ static HB_BOOL hb_zipGetFileInfoFromHandle( HB_FHANDLE hFile, HB_U32 * pulCRC, H
             }
          }
       }
-      while( ulRead == HB_Z_IOBUF_SIZE );
+      while( nRead == HB_Z_IOBUF_SIZE );
 
       fResult = ( hb_fsError() == 0 );
 
@@ -598,17 +598,17 @@ static HB_BOOL hb_zipGetFileInfo( const char * szFileName, HB_U32 * pulCRC, HB_B
    if( hFile != FS_ERROR )
    {
       unsigned char * pString = ( unsigned char * ) hb_xgrab( HB_Z_IOBUF_SIZE );
-      HB_SIZE ulRead, u;
+      HB_SIZE nRead, u;
 
       do
       {
-         ulRead = hb_fsReadLarge( hFile, pString, HB_Z_IOBUF_SIZE );
-         if( ulRead > 0 )
+         nRead = hb_fsReadLarge( hFile, pString, HB_Z_IOBUF_SIZE );
+         if( nRead > 0 )
          {
-            ulCRC = crc32( ulCRC, pString, ( uInt ) ulRead );
+            ulCRC = crc32( ulCRC, pString, ( uInt ) nRead );
             if( fText )
             {
-               for( u = 0; u < ulRead; ++u )
+               for( u = 0; u < nRead; ++u )
                {
                   if( pString[ u ] < 0x20 ?
                       ( pString[ u ] != HB_CHAR_HT &&
@@ -625,7 +625,7 @@ static HB_BOOL hb_zipGetFileInfo( const char * szFileName, HB_U32 * pulCRC, HB_B
             }
          }
       }
-      while( ulRead == HB_Z_IOBUF_SIZE );
+      while( nRead == HB_Z_IOBUF_SIZE );
 
       fResult = ( hb_fsError() == 0 );
 
@@ -692,7 +692,7 @@ static int hb_zipStoreFile( zipFile hZip, const char* szFileName, const char* sz
 {
    char          * szZipName, * pString;
    HB_FHANDLE    hFile;
-   HB_SIZE       ulLen;
+   HB_SIZE       nLen;
    HB_FATTR      ulExtAttr;
    zip_fileinfo  zfi;
    int           iResult;
@@ -705,12 +705,12 @@ static int hb_zipStoreFile( zipFile hZip, const char* szFileName, const char* sz
       /* change path separators to '/' */
       szZipName = hb_strdup( szName );
 
-      ulLen = strlen( szZipName );
+      nLen = strlen( szZipName );
       pString = szZipName;
-      while( ulLen-- )
+      while( nLen-- )
       {
-         if( pString[ ulLen ] == '\\' )
-            pString[ ulLen ] = '/';
+         if( pString[ nLen ] == '\\' )
+            pString[ nLen ] = '/';
       }
    }
    else
@@ -718,14 +718,14 @@ static int hb_zipStoreFile( zipFile hZip, const char* szFileName, const char* sz
       /* get file name */
       szZipName = hb_strdup( szFileName );
 
-      ulLen = strlen( szZipName );
+      nLen = strlen( szZipName );
       pString = szZipName;
 
-      while( ulLen-- )
+      while( nLen-- )
       {
-         if( pString[ ulLen ] == '/' || pString[ ulLen ] == '\\' )
+         if( pString[ nLen ] == '/' || pString[ nLen ] == '\\' )
          {
-            memmove( szZipName, &pString[ ulLen + 1 ], strlen( szZipName ) - ulLen );
+            memmove( szZipName, &pString[ nLen + 1 ], strlen( szZipName ) - nLen );
             break;
          }
       }
@@ -931,8 +931,8 @@ static int hb_zipStoreFile( zipFile hZip, const char* szFileName, const char* sz
          if( iResult == 0 )
          {
             pString = ( char* ) hb_xgrab( HB_Z_IOBUF_SIZE );
-            while( ( ulLen = hb_fsReadLarge( hFile, pString, HB_Z_IOBUF_SIZE ) ) > 0 )
-               zipWriteInFileInZip( hZip, pString, ( unsigned ) ulLen );
+            while( ( nLen = hb_fsReadLarge( hFile, pString, HB_Z_IOBUF_SIZE ) ) > 0 )
+               zipWriteInFileInZip( hZip, pString, ( unsigned ) nLen );
 
             hb_xfree( pString );
 
@@ -968,7 +968,7 @@ HB_FUNC( HB_ZIPSTOREFILE )
 static int hb_zipStoreFileHandle( zipFile hZip, HB_FHANDLE hFile, const char * szName, const char * szPassword, const char * szComment )
 {
    char *        szZipName;
-   HB_SIZE       ulLen;
+   HB_SIZE       nLen;
    zip_fileinfo  zfi;
    int           iResult;
    HB_BOOL       fText;
@@ -980,11 +980,11 @@ static int hb_zipStoreFileHandle( zipFile hZip, HB_FHANDLE hFile, const char * s
    /* change path separators to '/' */
    szZipName = hb_strdup( szName );
 
-   ulLen = strlen( szZipName );
-   while( ulLen-- )
+   nLen = strlen( szZipName );
+   while( nLen-- )
    {
-      if( szZipName[ ulLen ] == '\\' )
-         szZipName[ ulLen ] = '/';
+      if( szZipName[ nLen ] == '\\' )
+         szZipName[ nLen ] = '/';
    }
 
    memset( &zfi, 0, sizeof( zfi ) );
@@ -1014,8 +1014,8 @@ static int hb_zipStoreFileHandle( zipFile hZip, HB_FHANDLE hFile, const char * s
    {
       char * pString = ( char * ) hb_xgrab( HB_Z_IOBUF_SIZE );
       hb_fsSeek( hFile, 0, FS_SET );
-      while( ( ulLen = hb_fsReadLarge( hFile, pString, HB_Z_IOBUF_SIZE ) ) > 0 )
-         zipWriteInFileInZip( hZip, pString, ( unsigned ) ulLen );
+      while( ( nLen = hb_fsReadLarge( hFile, pString, HB_Z_IOBUF_SIZE ) ) > 0 )
+         zipWriteInFileInZip( hZip, pString, ( unsigned ) nLen );
       hb_xfree( pString );
 
       zipCloseFileInZip( hZip );
@@ -1046,7 +1046,7 @@ HB_FUNC( HB_ZIPSTOREFILEHANDLE )
 static int hb_unzipExtractCurrentFile( unzFile hUnzip, const char* szFileName, const char* szPassword )
 {
    char           szName[ HB_PATH_MAX ];
-   HB_SIZE        ulPos, ulLen;
+   HB_SIZE        nPos, nLen;
    char           cSep, * pString;
    unz_file_info  ufi;
    int            iResult;
@@ -1065,24 +1065,24 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, const char* szFileName, c
    if( szFileName )
       hb_strncpy( szName, szFileName, sizeof( szName ) - 1 );
 
-   ulLen = strlen( szName );
+   nLen = strlen( szName );
 
    /* Test shows that files in subfolders can be stored to zip file without
       explicitly adding folder. So, let's create a required path */
 
-   ulPos = 1;
-   while( ulPos < ulLen )
+   nPos = 1;
+   while( nPos < nLen )
    {
-      cSep = szName[ ulPos ];
+      cSep = szName[ nPos ];
 
       /* allow both path separators, ignore terminating path separator */
-      if( ( cSep == '\\' || cSep == '/' ) && ulPos < ulLen - 1 )
+      if( ( cSep == '\\' || cSep == '/' ) && nPos < nLen - 1 )
       {
-         szName[ ulPos ] = '\0';
+         szName[ nPos ] = '\0';
          hb_fsMkDir( szName );
-         szName[ ulPos ] = cSep;
+         szName[ nPos ] = cSep;
       }
-      ulPos++;
+      nPos++;
    }
 
    if( ufi.external_fa & 0x40000000 ) /* DIRECTORY */
