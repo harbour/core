@@ -94,14 +94,28 @@ FUNCTION GetStyleSheet( cWidget, nMode )
 
    CASE cWidget == "QMenuPop"
       IF nMode == HBIDE_ANIMATION_GRADIENT
-      aadd( txt_, 'QMenu {                                                                   ' )
+      aadd( txt_, 'QMenu {                                                                      ' )
       aadd( txt_,      hbide_ideThemeColorCSS( "MenuPop", 1 ) )
       aadd( txt_, '}                                                                            ' )
       ELSE
-      aadd( txt_, 'QMenu {                                                                   ' )
+      aadd( txt_, 'QMenu {                                                                      ' )
       aadd( txt_,      hbide_cssColorString( "bg-std" ) )
       aadd( txt_, '}                                                                            ' )
       ENDIF
+      aadd( txt_, 'QMenu::item {                                                                ' )
+//      aadd( txt_, '    spacing      : 3px; /* spacing between menu bar items */                 ' )
+      aadd( txt_, '    margin       : 1px;                                                      ' )
+      aadd( txt_, '    padding      : 1px 24px;                                                 ' )
+//      aadd( txt_, '    background   : transparent;                                              ' )
+//      aadd( txt_, '    border-radius: 4px;                                                      ' )
+      aadd( txt_, '    color        : #000000;                                                  ' )
+      aadd( txt_, '}                                                                            ' )
+      aadd( txt_, 'QMenu::item:selected { /* when selected using mouse or keyboard */           ' )
+      aadd( txt_, '    background: #a8a8a8;                                                     ' )
+      aadd( txt_, '}                                                                            ' )
+      aadd( txt_, 'QMenu::item:pressed {                                                        ' )
+      aadd( txt_, '    background: #888888;                                                     ' )
+      aadd( txt_, '}                                                                            ' )
 
    CASE cWidget == "QMenu"
 
