@@ -16,4 +16,4 @@ netiocmd.prg
 -ldflag={allmsvc}-dynamicbase
 -ldflag={allmsvc}-fixed:no
 
--prgflag=-DHB_EXTERN
+#-prgflag=-DHB_EXTERN

@@ -2,7 +2,9 @@
 # $Id$
 #
 
--w3 -es2
+-w3 -es2 -l
+
+-o${hb_name}
 
 -nulrdd
 

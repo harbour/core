@@ -65,7 +65,7 @@ PROCEDURE Main( cRoot )
 
       aEntry := __hbdoc_LoadDir( cDir, cName, aErrMsg )
 
-      /* TODO: apply code formatting, NFDOC section and content validation here.
+      /* TODO: apply code formatting, HBDOC section and content validation here.
                It's also possible to create output generators at this point.
                These generators should simply parse the list of entry hashes
                and spit out output in selected end-user format, like .html
