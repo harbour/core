@@ -123,6 +123,23 @@
 
 /*----------------------------------------------------------------------*/
 
+#define __ev_keypress__                    1                /* Keypress Event */
+#define __ev_mousepress_on_frozen__        31               /* Mousepress on Frozen */
+#define __ev_mousepress__                  2                /* Mousepress */
+#define __ev_xbpBrw_itemSelected__         3                /* xbeBRW_ItemSelected */
+#define __ev_wheel__                       4                /* wheelEvent */
+#define __ev_horzscroll_via_qt__           11               /* Horizontal Scroll Position : sent by Qt */
+#define __ev_vertscroll_via_user__         101              /* Vertical Scrollbar Movements by the User */
+#define __ev_vertscroll_sliderreleased__   102              /* Vertical Scrollbar: Slider Released */
+#define __ev_horzscroll_slidermoved__      103              /* Horizontal Scrollbar: Slider moved */
+#define __ev_horzscroll_sliderreleased__   104              /* Horizontal Scrollbar: Slider Released */
+#define __ev_columnheader_pressed__        111              /* Column Header Pressed */
+#define __ev_headersec_resized__           121              /* Header Section Resized */
+#define __ev_footersec_resized__           122              /* Footer Section Resized */
+#define __ev_frame_resized__               2001
+
+/*----------------------------------------------------------------------*/
+
 CREATE CLASS XbpBrowse INHERIT XbpWindow
 
    VAR cargo                  AS USUAL          EXPORTED    // 01. User-definable variable
@@ -430,248 +447,6 @@ EXPORTED:
 
 /*----------------------------------------------------------------------*/
 
-/* Just to retain TBrowse functionality: in the future */
-METHOD new( nTop, nLeft, nBottom, nRight ) CLASS XbpBrowse
-
-   DEFAULT nTop    TO 0
-   DEFAULT nLeft   TO 0
-   DEFAULT nBottom TO MaxRow()
-   DEFAULT nRight  TO MaxCol()
-
-   ::nTop    := nTop
-   ::nLeft   := nLeft
-   ::nBottom := nBottom
-   ::nRight  := nRight
-
-   ::colorSpec := SetColor()
-
-   ::oDefaultCellSize := QSize():New(20,::nCellHeight)
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD XbpBrowse:buildLeftFreeze()
-
-   /*  Left Freeze */
-   ::oLeftView := HBQTableView():new()
-   //
-   ::oLeftView:setHorizontalScrollBarPolicy( Qt_ScrollBarAlwaysOff )
-   ::oLeftView:setVerticalScrollBarPolicy( Qt_ScrollBarAlwaysOff )
-   ::oLeftView:setTabKeyNavigation( .t. )
-   ::oLeftView:setShowGrid( .t. )
-   ::oLeftView:setGridStyle( ::gridStyle )   /* to be based on column definition */
-   ::oLeftView:setSelectionMode( QAbstractItemView_SingleSelection )
-   ::oLeftView:setSelectionBehavior( IF( ::cursorMode == XBPBRW_CURSOR_ROW, QAbstractItemView_SelectRows, QAbstractItemView_SelectItems ) )
-   //
-   /*  Veritical Header because of Performance boost */
-   ::oLeftVHeaderView := QHeaderView()
-   ::oLeftVHeaderView:configure( ::oLeftView:verticalHeader() )
-   ::oLeftVHeaderView:hide()
-   /*  Horizontal Header Fine Tuning */
-   ::oLeftHeaderView := QHeaderView()
-   ::oLeftHeaderView:configure( ::oLeftView:horizontalHeader() )
-   ::oLeftHeaderView:setHighlightSections( .F. )
-
-   ::oLeftDbfModel := HBQAbstractItemModel():new( {|t,role,x,y| ::supplyInfo( 151, t, role, x, y ) } )
-
-   ::oLeftView:setModel( ::oLeftDbfModel )
-   //
-   //::oLeftView:hide()
-
-   /*  Horizontal Footer */
-   ::oLeftFooterView := QHeaderView():new( Qt_Horizontal )
-   //
-   ::oLeftFooterView:setHighlightSections( .F. )
-   ::oLeftFooterView:setMinimumHeight( 20 )
-   ::oLeftFooterView:setMaximumHeight( 20 )
-   ::oLeftFooterView:setResizeMode( QHeaderView_Fixed )
-   ::oLeftFooterView:setFocusPolicy( Qt_NoFocus )
-   //
-   ::oLeftFooterModel := HBQAbstractItemModel():new( {|t,role,x,y| ::supplyInfo( 152, t, role, x, y ) } )
-
-   ::oLeftFooterView:setModel( ::oLeftFooterModel )
-   //
-   //::oLeftFooterView:hide()
-
-   ::connect( ::oLeftView      , "mousePressEvent()"  , {|p| ::execSlot( 31, p ) } )
-   ::connect( ::oLeftHeaderView, "sectionPressed(int)", {|i| ::execSlot( 31, i ) } )
-   ::connect( ::oLeftFooterView, "sectionPressed(int)", {|i| ::execSlot( 31, i ) } )
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD XbpBrowse:buildRightFreeze()
-   LOCAL oVHdr
-
-   /*  Left Freeze */
-   ::oRightView := HBQTableView():new()
-   //
-   ::oRightView:setHorizontalScrollBarPolicy( Qt_ScrollBarAlwaysOff )
-   ::oRightView:setVerticalScrollBarPolicy( Qt_ScrollBarAlwaysOff )
-   ::oRightView:setTabKeyNavigation( .t. )
-   ::oRightView:setShowGrid( .t. )
-   ::oRightView:setGridStyle( ::gridStyle )   /* to be based on column definition */
-   ::oRightView:setSelectionMode( QAbstractItemView_SingleSelection )
-   ::oRightView:setSelectionBehavior( IF( ::cursorMode == XBPBRW_CURSOR_ROW, QAbstractItemView_SelectRows, QAbstractItemView_SelectItems ) )
-   //
-   /*  Veritical Header because of Performance boost */
-   oVHdr := QHeaderView()
-   oVHdr:configure( ::oRightView:verticalHeader() )
-   oVHdr:hide()
-   /*  Horizontal Header Fine Tuning */
-   ::oRightHeaderView := QHeaderView()
-   ::oRightHeaderView:configure( ::oRightView:horizontalHeader() )
-   ::oRightHeaderView:setHighlightSections( .F. )
-
-   ::oRightDbfModel := HBQAbstractItemModel():new( {|t,role,x,y| ::supplyInfo( 161, t, role, x, y ) } )
-
-   ::oRightView:setModel( ::oRightDbfModel )
-
-   /*  Horizontal Footer */
-   ::oRightFooterView := QHeaderView():new( Qt_Horizontal )
-   //
-   ::oRightFooterView:setHighlightSections( .F. )
-   ::oRightFooterView:setMinimumHeight( 20 )
-   ::oRightFooterView:setMaximumHeight( 20 )
-   ::oRightFooterView:setResizeMode( QHeaderView_Fixed )
-   ::oRightFooterView:setFocusPolicy( Qt_NoFocus )
-   //
-   ::oRightFooterModel := HBQAbstractItemModel():new( {|t,role,x,y| ::supplyInfo( 162, t, role, x, y ) } )
-
-   ::oRightFooterView:setModel( ::oRightFooterModel )
-
-   ::connect( ::oRightView      , "mousePressEvent()"  , {|p| ::execSlot( 31, p ) } )
-   ::connect( ::oRightHeaderView, "sectionPressed(int)", {|i| ::execSlot( 31, i ) } )
-   ::connect( ::oRightFooterView, "sectionPressed(int)", {|i| ::execSlot( 31, i ) } )
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD XbpBrowse:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-   LOCAL qRect
-
-   ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-
-   ::oWidget := QFrame():new( ::pParent )
-   ::oWidget:setFrameStyle( QFrame_Panel + QFrame_Plain )
-
-   /* Important here as other parts will be based on it*/
-   ::setPosAndSize()
-
-   /* Subclass of QTableView */
-   ::oTableView := HBQTableView():new()
-
-   /* Some parameters */
-   ::oTableView:setTabKeyNavigation( .t. )
-   ::oTableView:setShowGrid( .t. )
-   ::oTableView:setGridStyle( ::gridStyle )   /* to be based on column definition */
-   ::oTableView:setSelectionMode( QAbstractItemView_SingleSelection )
-   ::oTableView:setSelectionBehavior( IF( ::cursorMode == XBPBRW_CURSOR_ROW, QAbstractItemView_SelectRows, QAbstractItemView_SelectItems ) )
-
-   /* Connect Keyboard Events */
-   ::connect( ::oTableView, "keyPressEvent()"           , {|p   | ::execSlot( 1, p ) } )
-   ::connect( ::oTableView, "mousePressEvent()"         , {|p   | ::execSlot( 2, p ) } )
-   ::connect( ::oTableView, "mouseDoubleClickEvent()"   , {|p   | ::execSlot( 3, p ) } )
-   ::connect( ::oTableView, "wheelEvent()"              , {|p   | ::execSlot( 4, p ) } )
-   ::connect( ::oTableView, "scrollContentsBy(int,int)" , {|p,p1| ::execSlot(11, p, p1 ) } )
-
-   /* Finetune Horizontal Scrollbar */
-   ::oTableView:setHorizontalScrollBarPolicy( Qt_ScrollBarAlwaysOff )
-   //
-   ::oHScrollBar := QScrollBar():new()
-   ::oHScrollBar:setOrientation( Qt_Horizontal )
-   ::connect( ::oHScrollBar, "actionTriggered(int)"     , {|i| ::execSlot( 103, i ) } )
-   ::connect( ::oHScrollBar, "sliderReleased()"         , {|i| ::execSlot( 104, i ) } )
-
-   /*  Replace Vertical Scrollbar with our own */
-   ::oTableView:setVerticalScrollBarPolicy( Qt_ScrollBarAlwaysOff )
-   //
-   ::oVScrollBar := QScrollBar():new()
-   ::oVScrollBar:setOrientation( Qt_Vertical )
-   ::connect( ::oVScrollBar, "actionTriggered(int)"     , {|i| ::execSlot( 101, i ) } )
-   ::connect( ::oVScrollBar, "sliderReleased()"         , {|i| ::execSlot( 102, i ) } )
-
-   /*  Veritical Header because of Performance boost */
-   ::oVHeaderView := QHeaderView()
-   ::oVHeaderView:configure( ::oTableView:verticalHeader() )
-   ::oVHeaderView:hide()
-
-   /*  Horizontal Header Fine Tuning */
-   ::oHeaderView := QHeaderView()
-   ::oHeaderView:configure( ::oTableView:horizontalHeader() )
-   ::oHeaderView:setHighlightSections( .F. )
-   //
-   ::connect( ::oHeaderView, "sectionPressed(int)"        , {|i      | ::execSlot( 111, i ) } )
-   ::connect( ::oHeaderView, "sectionResized(int,int,int)", {|i,i1,i2| ::execSlot( 121, i, i1, i2 ) } )
-
-   /* .DBF Manipulation Model */
-   ::oDbfModel := HBQAbstractItemModel():new( {|t,role,x,y| ::supplyInfo( 141, t, role, x, y ) } )
-
-   /*  Attach Model with the View */
-   ::oTableView:setModel( ::oDbfModel )
-
-   /*  Horizontal Footer */
-   ::oFooterView := QHeaderView():new( Qt_Horizontal )
-   //
-   ::oFooterView:setHighlightSections( .F. )
-
-   ::oFooterView:setMinimumHeight( 20 )
-   ::oFooterView:setMaximumHeight( 20 )
-   ::oFooterView:setResizeMode( QHeaderView_Fixed )
-   ::oFooterView:setFocusPolicy( Qt_NoFocus )
-   //
-   ::oFooterModel := HBQAbstractItemModel():new( {|t,role,x,y| ::supplyInfo( 142, t, role, x, y ) } )
-
-   ::oFooterView:setModel( ::oFooterModel )
-   ::oFooterView:setFocusPolicy( Qt_NoFocus )
-
-   /*  Widget for ::setLeftFrozen( aColumns )  */
-   ::buildLeftFreeze()
-   /*  Widget for ::setRightFrozen( aColumns )  */
-   ::buildRightFreeze()
-
-   /* Place all widgets in a Grid Layout */
-   ::oGridLayout := QGridLayout():new( ::pWidget )
-   ::oGridLayout:setContentsMargins( 0,0,0,0 )
-   ::oGridLayout:setHorizontalSpacing( 0 )
-   ::oGridLayout:setVerticalSpacing( 0 )
-   /*  Rows */
-   ::oGridLayout:addWidget_1( ::oLeftView       , 0, 0, 1, 1 )
-   ::oGridLayout:addWidget_1( ::oLeftFooterView , 1, 0, 1, 1 )
-   //
-   ::oGridLayout:addWidget_1( ::oTableView      , 0, 1, 1, 1 )
-   ::oGridLayout:addWidget_1( ::oFooterView     , 1, 1, 1, 1 )
-   //
-   ::oGridLayout:addWidget_1( ::oRightView      , 0, 2, 1, 1 )
-   ::oGridLayout:addWidget_1( ::oRightFooterView, 1, 2, 1, 1 )
-   //
-   ::oGridLayout:addWidget_1( ::oHScrollBar     , 2, 0, 1, 3 )
-   /*  Columns */
-   ::oGridLayout:addWidget_1( ::oVScrollBar     , 0, 3, 2, 1 )
-
-   IF ::visible
-      ::show()
-   ENDIF
-   ::oParent:AddChild( SELF )
-
-   ::oFooterView:hide()
-
-   /* Viewport */
-   ::oViewport:configure( ::oTableView:viewport() )
-
-   ::oWidget:installEventFilter( ::pEvents )
-   ::connectEvent( ::oWidget, QEvent_Resize, {|| ::execSlot( 2001 ) } )
-
-   qRect := QRect():from( ::oWidget:geometry() )
-   ::oWidget:setGeometry( qRect )
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
 METHOD XbpBrowse:destroy()
    LOCAL i
 
@@ -742,20 +517,264 @@ METHOD XbpBrowse:destroy()
 
 /*----------------------------------------------------------------------*/
 
+/* Just to retain TBrowse functionality: in the future */
+METHOD new( nTop, nLeft, nBottom, nRight ) CLASS XbpBrowse
+
+   DEFAULT nTop    TO 0
+   DEFAULT nLeft   TO 0
+   DEFAULT nBottom TO MaxRow()
+   DEFAULT nRight  TO MaxCol()
+
+   ::nTop    := nTop
+   ::nLeft   := nLeft
+   ::nBottom := nBottom
+   ::nRight  := nRight
+
+   ::colorSpec := SetColor()
+
+   ::oDefaultCellSize := QSize():New(20,::nCellHeight)
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpBrowse:buildLeftFreeze()
+
+   /*  Left Freeze */
+   ::oLeftView := HBQTableView():new()
+   //
+   ::oLeftView:setHorizontalScrollBarPolicy( Qt_ScrollBarAlwaysOff )
+   ::oLeftView:setVerticalScrollBarPolicy( Qt_ScrollBarAlwaysOff )
+   ::oLeftView:setTabKeyNavigation( .t. )
+   ::oLeftView:setShowGrid( .t. )
+   ::oLeftView:setGridStyle( ::gridStyle )   /* to be based on column definition */
+   ::oLeftView:setSelectionMode( QAbstractItemView_SingleSelection )
+   ::oLeftView:setSelectionBehavior( IF( ::cursorMode == XBPBRW_CURSOR_ROW, QAbstractItemView_SelectRows, QAbstractItemView_SelectItems ) )
+   //
+   /*  Veritical Header because of Performance boost */
+   ::oLeftVHeaderView := QHeaderView()
+   ::oLeftVHeaderView:configure( ::oLeftView:verticalHeader() )
+   ::oLeftVHeaderView:hide()
+   /*  Horizontal Header Fine Tuning */
+   ::oLeftHeaderView := QHeaderView()
+   ::oLeftHeaderView:configure( ::oLeftView:horizontalHeader() )
+   ::oLeftHeaderView:setHighlightSections( .F. )
+
+   ::oLeftDbfModel := HBQAbstractItemModel():new( {|t,role,x,y| ::supplyInfo( 151, t, role, x, y ) } )
+
+   ::oLeftView:setModel( ::oLeftDbfModel )
+   //
+   //::oLeftView:hide()
+
+   /*  Horizontal Footer */
+   ::oLeftFooterView := QHeaderView():new( Qt_Horizontal )
+   //
+   ::oLeftFooterView:setHighlightSections( .F. )
+   ::oLeftFooterView:setMinimumHeight( 20 )
+   ::oLeftFooterView:setMaximumHeight( 20 )
+   ::oLeftFooterView:setResizeMode( QHeaderView_Fixed )
+   ::oLeftFooterView:setFocusPolicy( Qt_NoFocus )
+   //
+   ::oLeftFooterModel := HBQAbstractItemModel():new( {|t,role,x,y| ::supplyInfo( 152, t, role, x, y ) } )
+
+   ::oLeftFooterView:setModel( ::oLeftFooterModel )
+   //
+   //::oLeftFooterView:hide()
+
+   ::connect( ::oLeftView      , "mousePressEvent()"  , {|p| ::execSlot( __ev_mousepress_on_frozen__, p ) } )
+   ::connect( ::oLeftHeaderView, "sectionPressed(int)", {|i| ::execSlot( __ev_mousepress_on_frozen__, i ) } )
+   ::connect( ::oLeftFooterView, "sectionPressed(int)", {|i| ::execSlot( __ev_mousepress_on_frozen__, i ) } )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpBrowse:buildRightFreeze()
+   LOCAL oVHdr
+
+   /*  Left Freeze */
+   ::oRightView := HBQTableView():new()
+   //
+   ::oRightView:setHorizontalScrollBarPolicy( Qt_ScrollBarAlwaysOff )
+   ::oRightView:setVerticalScrollBarPolicy( Qt_ScrollBarAlwaysOff )
+   ::oRightView:setTabKeyNavigation( .t. )
+   ::oRightView:setShowGrid( .t. )
+   ::oRightView:setGridStyle( ::gridStyle )   /* to be based on column definition */
+   ::oRightView:setSelectionMode( QAbstractItemView_SingleSelection )
+   ::oRightView:setSelectionBehavior( IF( ::cursorMode == XBPBRW_CURSOR_ROW, QAbstractItemView_SelectRows, QAbstractItemView_SelectItems ) )
+   //
+   /*  Veritical Header because of Performance boost */
+   oVHdr := QHeaderView()
+   oVHdr:configure( ::oRightView:verticalHeader() )
+   oVHdr:hide()
+   /*  Horizontal Header Fine Tuning */
+   ::oRightHeaderView := QHeaderView()
+   ::oRightHeaderView:configure( ::oRightView:horizontalHeader() )
+   ::oRightHeaderView:setHighlightSections( .F. )
+
+   ::oRightDbfModel := HBQAbstractItemModel():new( {|t,role,x,y| ::supplyInfo( 161, t, role, x, y ) } )
+
+   ::oRightView:setModel( ::oRightDbfModel )
+
+   /*  Horizontal Footer */
+   ::oRightFooterView := QHeaderView():new( Qt_Horizontal )
+   //
+   ::oRightFooterView:setHighlightSections( .F. )
+   ::oRightFooterView:setMinimumHeight( 20 )
+   ::oRightFooterView:setMaximumHeight( 20 )
+   ::oRightFooterView:setResizeMode( QHeaderView_Fixed )
+   ::oRightFooterView:setFocusPolicy( Qt_NoFocus )
+   //
+   ::oRightFooterModel := HBQAbstractItemModel():new( {|t,role,x,y| ::supplyInfo( 162, t, role, x, y ) } )
+
+   ::oRightFooterView:setModel( ::oRightFooterModel )
+
+   ::connect( ::oRightView      , "mousePressEvent()"  , {|p| ::execSlot( __ev_mousepress_on_frozen__, p ) } )
+   ::connect( ::oRightHeaderView, "sectionPressed(int)", {|i| ::execSlot( __ev_mousepress_on_frozen__, i ) } )
+   ::connect( ::oRightFooterView, "sectionPressed(int)", {|i| ::execSlot( __ev_mousepress_on_frozen__, i ) } )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpBrowse:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   LOCAL qRect
+
+   ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+
+   ::oWidget := QFrame():new( ::pParent )
+   ::oWidget:setFrameStyle( QFrame_Panel + QFrame_Plain )
+
+   /* Important here as other parts will be based on it*/
+   ::setPosAndSize()
+
+   /* Subclass of QTableView */
+   ::oTableView := HBQTableView():new()
+
+   /* Some parameters */
+   ::oTableView:setTabKeyNavigation( .t. )
+   ::oTableView:setShowGrid( .t. )
+   ::oTableView:setGridStyle( ::gridStyle )   /* to be based on column definition */
+   ::oTableView:setSelectionMode( QAbstractItemView_SingleSelection )
+   ::oTableView:setSelectionBehavior( IF( ::cursorMode == XBPBRW_CURSOR_ROW, QAbstractItemView_SelectRows, QAbstractItemView_SelectItems ) )
+
+   /* Connect Keyboard Events */
+   ::connect( ::oTableView, "keyPressEvent()"           , {|p   | ::execSlot( __ev_keypress__           , p     ) } )
+   ::connect( ::oTableView, "mousePressEvent()"         , {|p   | ::execSlot( __ev_mousepress__         , p     ) } )
+   ::connect( ::oTableView, "mouseDoubleClickEvent()"   , {|p   | ::execSlot( __ev_xbpBrw_itemSelected__, p     ) } )
+   ::connect( ::oTableView, "wheelEvent()"              , {|p   | ::execSlot( __ev_wheel__              , p     ) } )
+   ::connect( ::oTableView, "scrollContentsBy(int,int)" , {|p,p1| ::execSlot( __ev_horzscroll_via_qt__  , p, p1 ) } )
+
+   /* Finetune Horizontal Scrollbar */
+   ::oTableView:setHorizontalScrollBarPolicy( Qt_ScrollBarAlwaysOff )
+   //
+   ::oHScrollBar := QScrollBar():new()
+   ::oHScrollBar:setOrientation( Qt_Horizontal )
+   ::connect( ::oHScrollBar, "actionTriggered(int)"     , {|i| ::execSlot( __ev_horzscroll_slidermoved__   , i ) } )
+   ::connect( ::oHScrollBar, "sliderReleased()"         , {|i| ::execSlot( __ev_horzscroll_sliderreleased__, i ) } )
+
+   /*  Replace Vertical Scrollbar with our own */
+   ::oTableView:setVerticalScrollBarPolicy( Qt_ScrollBarAlwaysOff )
+   //
+   ::oVScrollBar := QScrollBar():new()
+   ::oVScrollBar:setOrientation( Qt_Vertical )
+   ::connect( ::oVScrollBar, "actionTriggered(int)"     , {|i| ::execSlot( __ev_vertscroll_via_user__      , i ) } )
+   ::connect( ::oVScrollBar, "sliderReleased()"         , {|i| ::execSlot( __ev_vertscroll_sliderreleased__, i ) } )
+
+   /*  Veritical Header because of Performance boost */
+   ::oVHeaderView := QHeaderView()
+   ::oVHeaderView:configure( ::oTableView:verticalHeader() )
+   ::oVHeaderView:hide()
+
+   /*  Horizontal Header Fine Tuning */
+   ::oHeaderView := QHeaderView()
+   ::oHeaderView:configure( ::oTableView:horizontalHeader() )
+   ::oHeaderView:setHighlightSections( .F. )
+   //
+   ::connect( ::oHeaderView, "sectionPressed(int)"        , {|i      | ::execSlot( __ev_columnheader_pressed__, i         ) } )
+   ::connect( ::oHeaderView, "sectionResized(int,int,int)", {|i,i1,i2| ::execSlot( __ev_headersec_resized__   , i, i1, i2 ) } )
+
+   /* .DBF Manipulation Model */
+   ::oDbfModel := HBQAbstractItemModel():new( {|t,role,x,y| ::supplyInfo( 141, t, role, x, y ) } )
+
+   /*  Attach Model with the View */
+   ::oTableView:setModel( ::oDbfModel )
+
+   /*  Horizontal Footer */
+   ::oFooterView := QHeaderView():new( Qt_Horizontal )
+   //
+   ::oFooterView:setHighlightSections( .F. )
+
+   ::oFooterView:setMinimumHeight( 20 )
+   ::oFooterView:setMaximumHeight( 20 )
+   ::oFooterView:setResizeMode( QHeaderView_Fixed )
+   ::oFooterView:setFocusPolicy( Qt_NoFocus )
+   //
+   ::oFooterModel := HBQAbstractItemModel():new( {|t,role,x,y| ::supplyInfo( 142, t, role, x, y ) } )
+
+   ::oFooterView:setModel( ::oFooterModel )
+   ::oFooterView:setFocusPolicy( Qt_NoFocus )
+
+   /*  Widget for ::setLeftFrozen( aColumns )  */
+   ::buildLeftFreeze()
+   /*  Widget for ::setRightFrozen( aColumns )  */
+   ::buildRightFreeze()
+
+   /* Place all widgets in a Grid Layout */
+   ::oGridLayout := QGridLayout():new( ::pWidget )
+   ::oGridLayout:setContentsMargins( 0,0,0,0 )
+   ::oGridLayout:setHorizontalSpacing( 0 )
+   ::oGridLayout:setVerticalSpacing( 0 )
+   /*  Rows */
+   ::oGridLayout:addWidget_1( ::oLeftView       , 0, 0, 1, 1 )
+   ::oGridLayout:addWidget_1( ::oLeftFooterView , 1, 0, 1, 1 )
+   //
+   ::oGridLayout:addWidget_1( ::oTableView      , 0, 1, 1, 1 )
+   ::oGridLayout:addWidget_1( ::oFooterView     , 1, 1, 1, 1 )
+   //
+   ::oGridLayout:addWidget_1( ::oRightView      , 0, 2, 1, 1 )
+   ::oGridLayout:addWidget_1( ::oRightFooterView, 1, 2, 1, 1 )
+   //
+   ::oGridLayout:addWidget_1( ::oHScrollBar     , 2, 0, 1, 3 )
+   /*  Columns */
+   ::oGridLayout:addWidget_1( ::oVScrollBar     , 0, 3, 2, 1 )
+
+   IF ::visible
+      ::show()
+   ENDIF
+   ::oParent:AddChild( SELF )
+
+   ::oFooterView:hide()
+
+   /* Viewport */
+   ::oViewport:configure( ::oTableView:viewport() )
+
+   ::oWidget:installEventFilter( ::pEvents )
+   ::connectEvent( ::oWidget, QEvent_Resize, {|| ::execSlot( __ev_frame_resized__ ) } )
+
+   qRect := QRect():from( ::oWidget:geometry() )
+   ::oWidget:setGeometry( qRect )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD XbpBrowse:execSlot( nEvent, p1, p2, p3 )
-   LOCAL oWheelEvent, oMouseEvent, oPoint // i, nCol, nColPos
+   LOCAL oWheelEvent, oMouseEvent, oPoint, nRowPos, nColPos // i, nCol, nColPos
+   LOCAL nOff
 
    HB_SYMBOL_UNUSED( p2 )
    // HB_TRACE( HB_TR_DEBUG, "   XbpBrowse:execSlot:", nEvent, 0, memory( 1001 ) )
 
    DO CASE
-   CASE nEvent == 1                   /* Keypress Event */
+
+   CASE nEvent == __ev_keypress__
       SetAppEvent( xbeP_Keyboard, XbpQKeyEventToAppEvent( p1 ), NIL, self )
 
-   CASE nEvent == 31                  /* Mousepress on Frozen */
+   CASE nEvent == __ev_mousepress_on_frozen__
       ::oTableView:setFocus()
 
-   CASE nEvent == 2                   /* Mousepress */
+   CASE nEvent == __ev_mousepress__
       oMouseEvent := QMouseEvent():configure( p1 )
 
       oPoint := QPoint():new( oMouseEvent:x(), oMouseEvent:y() )
@@ -774,13 +793,13 @@ METHOD XbpBrowse:execSlot( nEvent, p1, p2, p3 )
 
       ENDIF
 
-   CASE nEvent == 3                   /* xbeBRW_ItemSelected */
+   CASE nEvent == __ev_xbpBrw_itemSelected__
       oMouseEvent := QMouseEvent():configure( p1 )
       IF oMouseEvent:button() == Qt_LeftButton
          SetAppEvent( xbeBRW_ItemSelected, NIL, NIL, Self )
       ENDIF
 
-   CASE nEvent == 4                   /* wheelEvent */
+   CASE nEvent == __ev_wheel__
       oWheelEvent := QWheelEvent():configure( p1 )
       IF oWheelEvent:orientation() == Qt_Vertical
          IF oWheelEvent:delta() > 0
@@ -796,12 +815,12 @@ METHOD XbpBrowse:execSlot( nEvent, p1, p2, p3 )
          ENDIF
       ENDIF
 
-   CASE nEvent == 11                  /* Horizontal Scroll Position : sent by Qt */
+   CASE nEvent == __ev_horzscroll_via_qt__
       IF p1 <> 0
          ::setHorzOffset()
       ENDIF
 
-   CASE nEvent == 101                 /* Vertical Scrollbar Movements by the User */
+   CASE nEvent == __ev_vertscroll_via_user__
       SWITCH p1
       CASE QAbstractSlider_SliderNoAction
          RETURN NIL
@@ -835,33 +854,50 @@ METHOD XbpBrowse:execSlot( nEvent, p1, p2, p3 )
       ENDSWITCH
       ::oTableView:setFocus()
 
-   CASE nEvent == 102                 /* Vertical Scrollbar: Slider Released */
+   CASE nEvent == __ev_vertscroll_sliderreleased__
       ::updatePosition()
       ::oTableView:setFocus()
 
-   CASE nEvent == 103                 /* Horizontal Scrollbar: Slider moved */
+   CASE nEvent == __ev_horzscroll_slidermoved__
       SetAppEvent( xbeBRW_Navigate, XBPBRW_Navigate_SkipCols, ( ::oHScrollBar:value() + 1 ) - ::colPos, Self )
       ::oTableView:setFocus()
 
-   CASE nEvent == 104                 /* Horizontal Scrollbar: Slider Released */
+   CASE nEvent == __ev_horzscroll_sliderreleased__
       SetAppEvent( xbeBRW_Navigate, XBPBRW_Navigate_SkipCols, ( ::oHScrollBar:value() + 1 ) - ::colPos, Self )
       ::oTableView:setFocus()
 
-   CASE nEvent == 111                 /* Column Header Pressed */
+   CASE nEvent == __ev_columnheader_pressed__
       SetAppEvent( xbeBRW_HeaderRbDown, { 0,0 }, p1+1, Self )
 
-   CASE nEvent == 121                 /* Header Section Resized */
+   CASE nEvent == __ev_headersec_resized__
       ::oFooterView:resizeSection( p1, p3 )
 
-   CASE nEvent == 122                 /* Footer Section Resized */
+   CASE nEvent == __ev_footersec_resized__
       ::oHeaderView:resizeSection( p1, p3 )
 
-   CASE nEvent == 2001
+   CASE nEvent == __ev_frame_resized__
       ::oHeaderView:resizeSection( 0, ::oHeaderView:sectionSize( 0 )+1 )
       ::oHeaderView:resizeSection( 0, ::oHeaderView:sectionSize( 0 )-1 )
+
+      nRowPos := ::rowPos()
+      nColPos := ::colPos()
+      //
       ::nConfigure := 9
       ::doConfigure()
-
+      //
+      ::colPos := nColPos
+      IF nRowPos > ::rowCount()
+         nOff := nRowPos - ::rowCount()
+         ::rowPos := ::rowCount()
+      ELSE
+         nOff := 0
+      ENDIF
+      ::refreshAll()
+      ::forceStable()
+      ::setCurrentIndex( nRowPos > ::rowCount() )
+      IF nOff > 0
+         SetAppEvent( xbeBRW_Navigate, XBPBRW_Navigate_Skip, nOff, Self )
+      ENDIF
    ENDCASE
 
    RETURN Self
@@ -1131,97 +1167,101 @@ METHOD fetchColumnInfo( nCall, nRole, nArea, nRow, nCol ) CLASS XbpBrowse
    LOCAL oCol := ::columns[ nCol ]
 
    SWITCH nCall
-      CASE HBQT_QAIM_data
+   CASE HBQT_QAIM_data
 
-         SWITCH ( nRole )
-            CASE Qt_ForegroundRole
-               IF hb_isBlock( oCol:colorBlock )
-                  aColor := eval( oCol:colorBlock, ::cellValueA( nRow, nCol ) )
-                  IF hb_isArray( aColor ) .and. hb_isNumeric( aColor[ 1 ] )
-                     RETURN ::compatColor( hbxbp_ConvertAFactFromXBP( "Color", aColor[ 1 ] ) )
-                  ELSE
-                     RETURN ::compatColor( oCol:dFgColor )
-                  ENDIF
-               ELSE
-                  RETURN ::compatColor( oCol:dFgColor )
-               ENDIF
-
-            CASE Qt_BackgroundRole
-               IF hb_isBlock( oCol:colorBlock )
-                  aColor := eval( oCol:colorBlock, ::cellValueA( nRow, nCol ) )
-                  IF hb_isArray( aColor ) .and. hb_isNumeric( aColor[ 2 ] )
-                     RETURN ::compatColor( hbxbp_ConvertAFactFromXBP( "Color", aColor[ 2 ] ) )
-                  ELSE
-                     RETURN ::compatColor( oCol:dBgColor )
-                  ENDIF
-               ELSE
-                  RETURN ::compatColor( oCol:dBgColor )
-               ENDIF
-
-            CASE Qt_TextAlignmentRole
-               RETURN oCol:dAlignment
-
-            CASE Qt_SizeHintRole
-               RETURN ::oDefaultCellSize
-
-            CASE Qt_DecorationRole
-               IF oCol:type == XBPCOL_TYPE_FILEICON
-                  RETURN ::compatIcon( ::cellValue( nRow, nCol ) )
-               ELSE
-                  RETURN nil
-               ENDIF
-            CASE Qt_DisplayRole
-               IF oCol:type == XBPCOL_TYPE_FILEICON
-                  RETURN nil
-               ELSE
-                  RETURN ::cellValue( nRow, nCol )
-               ENDIF
-         ENDSWITCH
-         RETURN nil
-
-      CASE HBQT_QAIM_headerData
-         IF nArea == 0                    /* Header Area */
-            SWITCH nRole
-            CASE Qt_SizeHintRole
-               RETURN ::oDefaultCellSize //oCol:hHeight
-            CASE Qt_DisplayRole
-               RETURN oCol:heading
-            CASE Qt_TextAlignmentRole
-               RETURN oCol:hAlignment
-            CASE Qt_ForegroundRole
-               RETURN ::compatColor( oCol:hFgColor )
-            CASE Qt_BackgroundRole
-               RETURN ::compatColor( oCol:hBgColor )
-            ENDSWITCH
-         ELSE                             /* Footer Area */
-            SWITCH nRole
-            CASE Qt_SizeHintRole
-               RETURN ::oDefaultCellSize //oCol:fHeight
-            CASE Qt_DisplayRole
-               RETURN oCol:footing
-            CASE Qt_TextAlignmentRole
-               RETURN oCol:fAlignment
-            CASE Qt_ForegroundRole
-               RETURN ::compatColor( oCol:fFgColor )
-            CASE Qt_BackgroundRole
-               RETURN ::compatColor( oCol:fBgColor )
-            ENDSWITCH
+      SWITCH ( nRole )
+      CASE Qt_ForegroundRole
+         IF hb_isBlock( oCol:colorBlock )
+            aColor := eval( oCol:colorBlock, ::cellValueA( nRow, nCol ) )
+            IF hb_isArray( aColor ) .and. hb_isNumeric( aColor[ 1 ] )
+               RETURN ::compatColor( hbxbp_ConvertAFactFromXBP( "Color", aColor[ 1 ] ) )
+            ELSE
+               RETURN ::compatColor( oCol:dFgColor )
+            ENDIF
+         ELSE
+            RETURN ::compatColor( oCol:dFgColor )
          ENDIF
-         RETURN nil
+
+      CASE Qt_BackgroundRole
+         IF hb_isBlock( oCol:colorBlock )
+            aColor := eval( oCol:colorBlock, ::cellValueA( nRow, nCol ) )
+            IF hb_isArray( aColor ) .and. hb_isNumeric( aColor[ 2 ] )
+               RETURN ::compatColor( hbxbp_ConvertAFactFromXBP( "Color", aColor[ 2 ] ) )
+            ELSE
+               RETURN ::compatColor( oCol:dBgColor )
+            ENDIF
+         ELSE
+            RETURN ::compatColor( oCol:dBgColor )
+         ENDIF
+
+      CASE Qt_TextAlignmentRole
+         RETURN oCol:dAlignment
+
+      CASE Qt_SizeHintRole
+         RETURN ::oDefaultCellSize
+
+      CASE Qt_DecorationRole
+         IF oCol:type == XBPCOL_TYPE_FILEICON
+            RETURN ::compatIcon( ::cellValue( nRow, nCol ) )
+         ELSE
+            RETURN nil
+         ENDIF
+      CASE Qt_DisplayRole
+         IF oCol:type == XBPCOL_TYPE_FILEICON
+            RETURN nil
+         ELSE
+            RETURN ::cellValue( nRow, nCol )
+         ENDIF
+      ENDSWITCH
+      RETURN nil
+
+   CASE HBQT_QAIM_headerData
+      IF nArea == 0                    /* Header Area */
+         SWITCH nRole
+         CASE Qt_SizeHintRole
+            RETURN ::oDefaultCellSize //oCol:hHeight
+         CASE Qt_DisplayRole
+            RETURN oCol:heading
+         CASE Qt_TextAlignmentRole
+            RETURN oCol:hAlignment
+         CASE Qt_ForegroundRole
+            RETURN ::compatColor( oCol:hFgColor )
+         CASE Qt_BackgroundRole
+            RETURN ::compatColor( oCol:hBgColor )
+         ENDSWITCH
+      ELSE                             /* Footer Area */
+         SWITCH nRole
+         CASE Qt_SizeHintRole
+            RETURN ::oDefaultCellSize //oCol:fHeight
+         CASE Qt_DisplayRole
+            RETURN oCol:footing
+         CASE Qt_TextAlignmentRole
+            RETURN oCol:fAlignment
+         CASE Qt_ForegroundRole
+            RETURN ::compatColor( oCol:fFgColor )
+         CASE Qt_BackgroundRole
+            RETURN ::compatColor( oCol:fBgColor )
+         ENDSWITCH
+      ENDIF
+      RETURN nil
    ENDSWITCH
 
    RETURN nil
 
-   // TODO: Review the color < 25 case when resolved in HBQt, and avoid unnecessary creation of new QColor/Qicon GC objects
+/*----------------------------------------------------------------------*/
+//
+// TODO: Review the color < 25 case when resolved in HBQt, and avoid unnecessary creation of new QColor/Qicon GC objects
+//
+//   However, tested with medium data sets, seems not being a big issue by now
+//   Implementation choice will depend on planned HBQt evolution of pseudo casts and bypass functions (non GC QColor, QIcon, etc)
 
-   //   However, tested with medium data sets, seems not being a big issue by now
-   //   Implementation choice will depend on planned HBQt evolution of pseudo casts and bypass functions (non GC QColor, QIcon, etc)
-
-METHOD compatColor(nColor)
+METHOD compatColor( nColor )
    RETURN QColor():new( nColor )
 
-METHOD compatIcon(cIcon)
-   RETURN QIcon():new( QPixmap():new( Trim(cIcon) ) )
+/*----------------------------------------------------------------------*/
+
+METHOD compatIcon( cIcon )
+   RETURN QIcon():new( QPixmap():new( Trim( cIcon ) ) )
 
 /*----------------------------------------------------------------------*/
 

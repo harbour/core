@@ -69,6 +69,7 @@
 #include "hbqt.ch"
 #include "hbide.ch"
 #include "xbp.ch"
+#include "appevent.ch"
 
 /*----------------------------------------------------------------------*/
 
@@ -936,19 +937,26 @@ METHOD IdeBrowse:destroy()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeBrowse:configure()
+   LOCAL nOff
    LOCAL nRowPos := ::oBrw:rowPos()
    LOCAL nColPos := ::oBrw:colPos()
 
    ::oBrw:configure()
 
    IF nRowPos > ::oBrw:rowCount()
+      nOff := nRowPos - ::oBrw:rowCount()
       ::oBrw:rowPos := ::oBrw:rowCount()
+   ELSE
+      nOff := 0
    ENDIF
    ::oBrw:colPos := nColPos
 
    ::oBrw:refreshAll()
    ::oBrw:forceStable()
-   ::oBrw:setCurrentIndex( .f. )
+   ::oBrw:setCurrentIndex( nRowPos > ::oBrw:rowCount() )
+   IF nOff > 0
+      SetAppEvent( xbeBRW_Navigate, XBPBRW_Navigate_Skip, nOff, ::oBrw )
+   ENDIF
 
    RETURN Self
 
