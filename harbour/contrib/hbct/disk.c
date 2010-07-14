@@ -77,7 +77,6 @@
    #include <windows.h>
 #endif
 
-
 HB_FUNC( DIRMAKE )
 {
    if( hb_fsMkDir( hb_parcx( 1 ) ) )
@@ -108,7 +107,6 @@ HB_FUNC( DIRNAME )
 
    hb_retc_buffer( pbyBuffer );
 }
-
 
 HB_FUNC( DRIVETYPE )
 {
@@ -157,7 +155,6 @@ HB_FUNC( DRIVETYPE )
 
 }
 
-
 HB_FUNC( NUMDISKL )
 {
 #if defined( HB_OS_DOS )
@@ -179,7 +176,6 @@ HB_FUNC( NUMDISKL )
    hb_retni( 1 );
 #endif
 }
-
 
 /*
  * Volume() depends of the CSETSAFETY() setting and, if is true, does not

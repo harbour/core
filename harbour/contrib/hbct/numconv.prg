@@ -57,32 +57,6 @@
 
 #define WORLD   "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
-/*  $DOC$
- *  $FUNCNAME$
- *      NTOC()
- *  $CATEGORY$
- *      CT3 number and bit manipulation functions
- *  $ONELINER$
- *  $SYNTAX$
- *      NTOC (<xNumber>[, <nBase>][,<nLength>][,<cPadChar>]) -> <cNumber>
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is numconv.prg, library is libct.
- *  $SEEALSO$
- *      CTON()
- *  $END$
- */
-
 FUNCTION NTOC( xNum, nBase, nLenght, cPad )
    LOCAL cNum
 
@@ -116,32 +90,6 @@ FUNCTION NTOC( xNum, nBase, nLenght, cPad )
    ENDIF
 
    RETURN cNum
-
-/*  $DOC$
- *  $FUNCNAME$
- *      CTON()
- *  $CATEGORY$
- *      CT3 number and bit manipulation functions
- *  $ONELINER$
- *  $SYNTAX$
- *      CTON (<xNumber>[, <nBase>][,<lMode>]) -> <nNumber>
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is numconv.prg, library is libct.
- *  $SEEALSO$
- *      NTOC()
- *  $END$
- */
 
 FUNCTION CTON( xNum, nBase, lMode )
    LOCAL i
@@ -189,32 +137,6 @@ STATIC FUNCTION B10TOBN( nNum, nBase )
 
    RETURN ""
 
-/*  $DOC$
- *  $FUNCNAME$
- *      BITTOC()
- *  $CATEGORY$
- *      CT3 number and bit manipulation functions
- *  $ONELINER$
- *  $SYNTAX$
- *      BITTOC (<nInteger>, <cBitPattern>[,<lMode>]) -> <cBitString>
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is numconv.prg, library is libct.
- *  $SEEALSO$
- *      CTOBIT()
- *  $END$
- */
-
 FUNCTION BITTOC( nInteger, cBitPattern, lMode )
    LOCAL cBinary
    LOCAL nI
@@ -236,32 +158,6 @@ FUNCTION BITTOC( nInteger, cBitPattern, lMode )
    NEXT
 
    RETURN Right( cString, Len( cBitPattern ) )
-
-/*  $DOC$
- *  $FUNCNAME$
- *      CTOBIT()
- *  $CATEGORY$
- *      CT3 number and bit manipulation functions
- *  $ONELINER$
- *  $SYNTAX$
- *      CTOBIT (<cBitString>, <cBitPattern>) -> <nWord>
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is numconv.prg, library is libct.
- *  $SEEALSO$
- *      BITTOC()
- *  $END$
- */
 
 FUNCTION CTOBIT( cCharString, cBitPattern )
    LOCAL nI, cString := ""

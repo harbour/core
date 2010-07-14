@@ -54,40 +54,6 @@
 
 STATIC s_bInitialized := .F.
 
-
-/*  $DOC$
- *  $FUNCNAME$
- *      CTINIT()
- *  $CATEGORY$
- *      CT3 general functions
- *  $ONELINER$
- *      Initializes the CT3 library
- *  $SYNTAX$
- *      CTINIT () -> lInitialized
- *  $ARGUMENTS$
- *      None
- *  $RETURNS$
- *      lInitialized     .T. if the function has been correctly initialized
- *  $DESCRIPTION$
- *      The CTINIT() function initializes the CT3 library.
- *      Identical code is declared as INIT FUNCTION, thus should be executed
- *      automatically at the beginning of the application, but it is a good
- *      idea to call it once again explicitly somewhere at the beginning of
- *      your program to check the initialization.
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Ready
- *  $COMPLIANCE$
- *      CTINIT() is a new function in Harbour's CT3 library.
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is ct.prg, library is libct.
- *  $SEEALSO$
- *  $END$
- */
-
 FUNCTION CTINIT()
 
    IF ! s_bInitialized
@@ -103,40 +69,6 @@ INIT PROCEDURE _CTINIT()
    ENDIF
 
    RETURN
-
-
-/*  $DOC$
- *  $FUNCNAME$
- *      CTEXIT()
- *  $CATEGORY$
- *      CT3 general functions
- *  $ONELINER$
- *      Uninitializes the CT3 library
- *  $SYNTAX$
- *      CTEXIT () -> nil
- *  $ARGUMENTS$
- *      none
- *  $RETURNS$
- *      nil
- *  $DESCRIPTION$
- *      The CTEXIT() function uninitializes the CT3 library.
- *      Identical code is declared as EXIT FUNCTION, thus should be executed
- *      automatically at the end of the application, but it is a good idea
- *      to call it explicitly somewhere at the end of your program to make
- *      sure that the deinitialization takes place.
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Ready
- *  $COMPLIANCE$
- *      CTEXIT() is a new function in Harbour's CT3 library.
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is ct.prg, library is libct.
- *  $SEEALSO$
- *  $END$
- */
 
 FUNCTION CTEXIT()
 

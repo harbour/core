@@ -99,7 +99,6 @@ HB_FUNC( COMPLEMENT )
       hb_ret();
 }
 
-
 HB_FUNC( NUL )
 {
    hb_retc_null();

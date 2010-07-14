@@ -52,7 +52,6 @@
  *
  */
 
-
 #include "hbapi.h"
 #include "hbapifs.h"
 
@@ -62,32 +61,6 @@
 #     include <dpmi.h>
 #  endif
 #endif
-
-
-/*  $DOC$
- *  $FUNCNAME$
- *      PRINTSTAT()
- *  $CATEGORY$
- *      CT3 printer functions
- *  $ONELINER$
- *  $SYNTAX$
- *      PRINTSTAT ([<nPrinter>]) -> nState
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *  $PLATFORMS$
- *      DOS
- *  $FILES$
- *      Source is print.c, library is libct.
- *  $SEEALSO$
- *  $END$
- */
 
 HB_FUNC( PRINTSTAT )
 {
@@ -114,32 +87,6 @@ HB_FUNC( PRINTSTAT )
    hb_retni( Status );
 }
 
-
-/*  $DOC$
- *  $FUNCNAME$
- *      PRINTREADY()
- *  $CATEGORY$
- *      CT3 printer functions
- *  $ONELINER$
- *  $SYNTAX$
- *      PRINTREADY ([<nPrinter>]) -> lPrinterReady
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *  $PLATFORMS$
- *      DOS
- *  $FILES$
- *      Library is libct.
- *  $SEEALSO$
- *  $END$
- */
-
 HB_FUNC( PRINTREADY )
 {
    char szLPT[ 8 ];
@@ -148,7 +95,6 @@ HB_FUNC( PRINTREADY )
 
    hb_retl( hb_printerIsReady( szLPT ) );
 }
-
 
 HB_FUNC( PRINTSEND )
 {

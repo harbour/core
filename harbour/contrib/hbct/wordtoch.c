@@ -52,38 +52,7 @@
  *
  */
 
-
 #include "ct.h"
-
-
-/*  $DOC$
- *  $FUNCNAME$
- *      WORDTOCHAR()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Replace double with single characters
- *  $SYNTAX$
- *      WORDTOCHAR (<cDoubleCharacterSearchString>, <cString>,
- *                  <cSingleCharacterReplaceString>) -> cString
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      WORDTOCHAR() is compatible with CT3's WORDTOCHAR().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is wordtoch.c, library is libct.
- *  $SEEALSO$
- *      CSETATMUPA(),CHARREPL(),WORDREPL()
- *  $END$
- */
 
 HB_FUNC( WORDTOCHAR )
 {

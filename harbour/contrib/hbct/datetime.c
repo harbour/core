@@ -53,7 +53,6 @@
  *
  */
 
-
 /*
  * The following parts are Copyright of the individual authors.
  * www - http://harbour-project.org
@@ -65,38 +64,9 @@
  *
  */
 
-
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbdate.h"
-
-/*  $DOC$
- *  $FUNCNAME$
- *      BOM()
- *  $CATEGORY$
- *      CT3 date and time functions
- *  $ONELINER$
- *      _B_egin _O_f _M_onth
- *  $SYNTAX$
- *      BOM ([<dDate>]) -> dDateBeginOfMonth
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      BOM() is compatible with CT3's BOM().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is datetime.prg, library is libct.
- *  $SEEALSO$
- *      EOM(),BOQ(),EOQ(),BOY(),EOY()
- *  $END$
- */
 
 HB_FUNC( BOM )
 {
@@ -123,35 +93,6 @@ HB_FUNC( BOM )
       hb_retdl( 0 );
    }
 }
-
-
-/*  $DOC$
- *  $FUNCNAME$
- *      EOM()
- *  $CATEGORY$
- *      CT3 date and time functions
- *  $ONELINER$
- *      _E_nd _O_f _M_onth
- *  $SYNTAX$
- *      EOM ([<dDate>]) -> dDateEndOfMonth
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      EOM() is compatible with CT3's EOM().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is datetime.prg, library is libct.
- *  $SEEALSO$
- *      BOM(),BOQ(),EOQ(),BOY(),EOY()
- *  $END$
- */
 
 HB_FUNC( EOM )
 {
@@ -185,35 +126,6 @@ HB_FUNC( EOM )
    }
 }
 
-
-/*  $DOC$
- *  $FUNCNAME$
- *      BOQ()
- *  $CATEGORY$
- *      CT3 date and time functions
- *  $ONELINER$
- *      _B_egin _O_f _Q_uarter
- *  $SYNTAX$
- *      BOQ ([<dDate>]) -> dDateBeginOfQuarter
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      BOQ() is compatible with CT3's BOQ().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is datetime.prg, library is libct.
- *  $SEEALSO$
- *      BOM(),EOM(),EOQ(),BOY(),EOY()
- *  $END$
- */
-
 HB_FUNC( BOQ )
 {
    long lDate;
@@ -241,35 +153,6 @@ HB_FUNC( BOQ )
       hb_retdl( 0 );
    }
 }
-
-
-/*  $DOC$
- *  $FUNCNAME$
- *      EOQ()
- *  $CATEGORY$
- *      CT3 date and time functions
- *  $ONELINER$
- *      _E_nd _O_f _Q_uarter
- *  $SYNTAX$
- *      EOQ ([<dDate>]) -> dDateEndOfQuarter
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      EOQ() is compatible with CT3's EOQ().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is datetime.prg, library is libct.
- *  $SEEALSO$
- *      BOM(),EOM(),BOQ(),BOY(),EOY()
- *  $END$
- */
 
 HB_FUNC( EOQ )
 {
@@ -304,35 +187,6 @@ HB_FUNC( EOQ )
    }
 }
 
-
-/*  $DOC$
- *  $FUNCNAME$
- *      BOY()
- *  $CATEGORY$
- *      CT3 date and time functions
- *  $ONELINER$
- *      _B_egin _O_f _Y_ear
- *  $SYNTAX$
- *      BOY ([<dDate>]) -> dDateBeginOfYear
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      BOY() is compatible with CT3's BOY().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is datetime.prg, library is libct.
- *  $SEEALSO$
- *      BOM(),EOM(),BOQ(),EOQ(),EOY()
- *  $END$
- */
-
 HB_FUNC( BOY )
 {
    long lDate;
@@ -359,35 +213,6 @@ HB_FUNC( BOY )
    }
 }
 
-
-/*  $DOC$
- *  $FUNCNAME$
- *      EOY()
- *  $CATEGORY$
- *      CT3 date and time functions
- *  $ONELINER$
- *      _E_nd _O_f _Y_ear
- *  $SYNTAX$
- *      EOY ([<dDate>]) -> dDateEndOfYear
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      EOY() is compatible with CT3's EOY().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is datetime.prg, library is libct.
- *  $SEEALSO$
- *      BOM(),EOM(),BOQ(),EOQ(),BOY()
- *  $END$
- */
-
 HB_FUNC( EOY )
 {
    long lDate;
@@ -413,7 +238,6 @@ HB_FUNC( EOY )
       hb_retdl( 0 );
    }
 }
-
 
 static int hb_wom( int iYear, int iMonth, int iDay )
 {

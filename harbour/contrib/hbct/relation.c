@@ -52,38 +52,7 @@
  *
  */
 
-
 #include "ct.h"
-
-
-/*  $DOC$
- *  $FUNCNAME$
- *      CHARRELA()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Character relation of two strings
- *  $SYNTAX$
- *      CHARRELA (<cStringToMatch1>, <cString1>,
- *                <cStringToMatch2>, <cString2>) -> nPosition
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      CHARRELA() is compatible with CT3's CHARRELA().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is relation.c, library is libct.
- *  $SEEALSO$
- *      CHARRELREP()
- *  $END$
- */
 
 HB_FUNC( CHARRELA )
 {
@@ -163,37 +132,6 @@ HB_FUNC( CHARRELA )
          hb_retns( 0 );
    }
 }
-
-
-/*  $DOC$
- *  $FUNCNAME$
- *      CHARRELREP()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Relation dependant character replacement
- *  $SYNTAX$
- *      CHARRELREP (<cStringToMatch1>, <cString1>,
- *                  <cStringToMatch2>, <[@]cString2>,
- *                  <cReplacement>) -> cString
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      CHARRELREP() is compatible with CT3's CHARRELREP().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is relation.c, library is libct.
- *  $SEEALSO$
- *      CHARRELA(),CSETREF()
- *  $END$
- */
 
 HB_FUNC( CHARRELREP )
 {

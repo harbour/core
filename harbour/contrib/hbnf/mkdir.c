@@ -26,36 +26,36 @@
 */
 
 /*  $DOC$
-*  $FUNCNAME$
-*     FT_MKDIR()
-*  $CATEGORY$
-*     DOS/BIOS
-*  $ONELINER$
-*     Create a subdirectory
-*  $SYNTAX$
-*     FT_MKDIR(  <cDirName> ) -> nResult
-*  $ARGUMENTS$
-*     <cDirName> is the name of the directory to create.
-*  $RETURNS$
-*      0  if successful
-*      3  if Path Not Found
-*      5  if Access Denied or directory already exists
-*     99  if invalid parameters passed
-*  $DESCRIPTION$
-*     Use this function to create the subdirectories needed by your
-*     application.  It might be especially useful in an installation
-*     program.
-*
-*     The source code is written to adhere to Turbo Assembler's IDEAL mode.
-*     To use another assembler, you will need to rearrange the PROC and
-*     SEGMENT directives, and also the ENDP and ENDS directives (a very
-*     minor task).
-*  $EXAMPLES$
-*     FT_MKDIR( "C:\clipper" )
-*     FT_MKDIR( "\example" )
-*     FT_MKDIR( "..\source" )
-*  $END$
-*/
+ *  $FUNCNAME$
+ *     FT_MKDIR()
+ *  $CATEGORY$
+ *     DOS/BIOS
+ *  $ONELINER$
+ *     Create a subdirectory
+ *  $SYNTAX$
+ *     FT_MKDIR(  <cDirName> ) -> nResult
+ *  $ARGUMENTS$
+ *     <cDirName> is the name of the directory to create.
+ *  $RETURNS$
+ *      0  if successful
+ *      3  if Path Not Found
+ *      5  if Access Denied or directory already exists
+ *     99  if invalid parameters passed
+ *  $DESCRIPTION$
+ *     Use this function to create the subdirectories needed by your
+ *     application.  It might be especially useful in an installation
+ *     program.
+ *
+ *     The source code is written to adhere to Turbo Assembler's IDEAL mode.
+ *     To use another assembler, you will need to rearrange the PROC and
+ *     SEGMENT directives, and also the ENDP and ENDS directives (a very
+ *     minor task).
+ *  $EXAMPLES$
+ *     FT_MKDIR( "C:\clipper" )
+ *     FT_MKDIR( "\example" )
+ *     FT_MKDIR( "..\source" )
+ *  $END$
+ */
 
 /*This  is the Original FT_CHDIR() code
 IDEAL

@@ -69,7 +69,6 @@
 #include "hbdate.h"
 #include "hbset.h"
 
-
 static HB_BOOL ct_isleap( int iYear )
 {
    return iYear != 0 && ( ( ( iYear & 3 ) == 0 && iYear % 100 != 0 ) ||
@@ -105,34 +104,6 @@ static int ct_doy( long lDate )
    return ( int ) ( lDate - lFirst + 1 );
 }
 
-
-/*  $DOC$
- *  $FUNCNAME$
- *      CTODOW()
- *  $CATEGORY$
- *      CT3 date and time functions
- *  $ONELINER$
- *      convert name of day of the week to its ordinal number
- *  $SYNTAX$
- *      CTODOW (<cName>) -> nOrdinal
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      CTODOW() is compatible with CT3's CTODOW().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is dattime2.prg, library is libct.
- *  $SEEALSO$
- *      NTOCDOW()
- *  $END$
- */
 HB_FUNC( CTODOW )
 {
    HB_SIZE nLen = hb_parclen( 1 );
@@ -153,34 +124,6 @@ HB_FUNC( CTODOW )
    hb_retnl( iDow );
 }
 
-
-/*  $DOC$
- *  $FUNCNAME$
- *      CTOMONTH()
- *  $CATEGORY$
- *      CT3 date and time functions
- *  $ONELINER$
- *      convert name of month to its ordinal number
- *  $SYNTAX$
- *      CTOMONTH (<cName>) -> nOrdinal
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      CTOMONTH() is compatible with CT3's CTOMONTH().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is dattime2.prg, library is libct.
- *  $SEEALSO$
- *      NTOCMONTH()
- *  $END$
- */
 HB_FUNC( CTOMONTH )
 {
    HB_SIZE nLen = hb_parclen( 1 );
@@ -200,36 +143,6 @@ HB_FUNC( CTOMONTH )
    hb_retnl( iMonth );
 }
 
-
-/*  $DOC$
- *  $FUNCNAME$
- *      DMY()
- *  $CATEGORY$
- *      CT3 date and time functions
- *  $ONELINER$
- *      Returns the date as a string in DD Month YY format
- *  $SYNTAX$
- *      DMY ([<dDate>][, <lMode>]) -> cDateString
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      Returns the date as a string in DD Month YY format. If lmode
- *      is TRUE, a "." is inserted after the DD
- *      TODO: add further documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      DMY() is compatible with CT3's DMY().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is dattime2.prg, library is libct.
- *  $SEEALSO$
- *      MDY()
- *  $END$
- */
 HB_FUNC( DMY )
 {
    int iYear, iMonth, iDay;
@@ -292,36 +205,6 @@ HB_FUNC( DMY )
       hb_retc_null();
 }
 
-
-/*  $DOC$
- *  $FUNCNAME$
- *      MDY()
- *  $CATEGORY$
- *      CT3 date and time functions
- *  $ONELINER$
- *      Returns the date as a string in Month DD, YY or Month DD, YYYY
- *  $SYNTAX$
- *      MDY ([<dDate>]) -> cDateString
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      Returns the date as a string in Month DD, YY or Month DD, YYYY
- *      If dDate is NULL, the system date is used
- *      TODO: add further documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      MDY() is compatible with CT3's MDY().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is dattime2.prg, library is libct.
- *  $SEEALSO$
- *      DMY()
- *  $END$
- */
 HB_FUNC( MDY )
 {
    int iYear, iMonth, iDay;
@@ -369,34 +252,6 @@ HB_FUNC( MDY )
    else
       hb_retc_null();
 }
-
-
-/*  $DOC$
- *  $FUNCNAME$
- *      ADDMONTH()
- *  $CATEGORY$
- *      CT3 date and time functions
- *  $ONELINER$
- *      add months to a date
- *  $SYNTAX$
- *      ADDMONTH ([<dDate>,] <nMonths>) -> dShiftedDate
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      ADDMONTH() is compatible with CT3's ADDMOTH().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is dattime2.prg, library is libct.
- *  $SEEALSO$
- *  $END$
- */
 
 HB_FUNC( ADDMONTH )
 {
@@ -449,35 +304,6 @@ HB_FUNC( ADDMONTH )
       hb_retdl( lJulian );
 }
 
-
-/*  $DOC$
- *  $FUNCNAME$
- *      DOY()
- *  $CATEGORY$
- *      CT3 date and time functions
- *  $ONELINER$
- *      Determines the day of the year for a specific date
- *  $SYNTAX$
- *      DMY ([<dDate>]) -> nDayOfYear
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      Determines the day of the year for a specific date
- *      if dDate is invalid, returns 0
- *      TODO: add further documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      DOY() is compatible with CT3's DOY().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is dattime2.prg, library is libct.
- *  $SEEALSO$
- *  $END$
- */
 HB_FUNC( DOY )
 {
    long lDate;
@@ -495,33 +321,6 @@ HB_FUNC( DOY )
    hb_retni( ct_doy( lDate ) );
 }
 
-
-/*  $DOC$
- *  $FUNCNAME$
- *      ISLEAP()
- *  $CATEGORY$
- *      CT3 date and time functions
- *  $ONELINER$
- *      determines of year of date is a leap year
- *  $SYNTAX$
- *      ISLEAP ([<dDate>]) -> lIsLeap
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      TODO: add further documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      ISLEAP() is compatible with CT3's ISLEAP().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is dattime2.prg, library is libct.
- *  $SEEALSO$
- *  $END$
- */
 HB_FUNC( ISLEAP )
 {
    int iYear, iMonth, iDay;
@@ -534,36 +333,6 @@ HB_FUNC( ISLEAP )
    hb_retl( ct_isleap( iYear ) );
 }
 
-
-/*  $DOC$
- *  $FUNCNAME$
- *      DAYSTOMONTH()
- *  $CATEGORY$
- *      CT3 date and time functions
- *  $ONELINER$
- *      Total number of days from first of Jan to beginning of nMonth.
- *  $SYNTAX$
- *      DAYSTOMONTH (<nMonth>, <lLeapYear>) -> nDaysToMonth
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      lLeap is FALSE for a non-leap year but TRUE if it is. If so and nMonth
- *      is greater than 2, ndays is incremented
- *      TODO: add further documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      DAYSTOMONTH() is a new function in Harbour's CT3 library.
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is dattime2.prg, library is libct.
- *  $SEEALSO$
- *      DAYSINMONTH()
- *  $END$
- */
 HB_FUNC( DAYSTOMONTH )
 {
    int iMonth = hb_parni( 1 );
@@ -572,34 +341,6 @@ HB_FUNC( DAYSTOMONTH )
    hb_retni( ct_daystomonth( iMonth, bLeap ) );
 }
 
-
-/*  $DOC$
- *  $FUNCNAME$
- *      DAYSINMONTH()
- *  $CATEGORY$
- *      CT3 date and time functions
- *  $ONELINER$
- *      Returns the number of days in month
- *  $SYNTAX$
- *      DAYSINMONTH (<nMonth>, <lLeapYear>) -> nDaysInMonth
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      DAYSINMONTH() is a new function in Harbour's CT3 library.
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is dattime2.prg, library is libct.
- *  $SEEALSO$
- *      DAYSTOMONTH()
- *  $END$
- */
 HB_FUNC( DAYSINMONTH )
 {
    int iMonth = hb_parni( 1 );
@@ -609,35 +350,6 @@ HB_FUNC( DAYSINMONTH )
 
 }
 
-
-/*  $DOC$
- *  $FUNCNAME$
- *      QUARTER()
- *  $CATEGORY$
- *      CT3 date and time functions
- *  $ONELINER$
- *      Returns a number equal to the quarter in which a date falls
- *  $SYNTAX$
- *      QUARTER ([<dDate>]) -> nQuarter
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      Returns a number equal to the quarter in which ddate
- *      falls. If ddate  is empty, the system date is employed.
- *      TODO: add further documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      QUARTER() is compatible with CT3's QUARTER().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is dattime2.prg, library is libct.
- *  $SEEALSO$
- *  $END$
- */
 HB_FUNC( QUARTER )
 {
    int iYear, iMonth, iDay;
@@ -650,37 +362,6 @@ HB_FUNC( QUARTER )
    hb_retni( ( iMonth + 2 ) / 3 );
 }
 
-
-/*  $DOC$
- *  $FUNCNAME$
- *      LASTDAYOM()
- *  $CATEGORY$
- *      CT3 date and time functions
- *  $ONELINER$
- *      Returns the the number of days in the month.
- *  $SYNTAX$
- *      LASTDAYOM ([<dDate|nMonth>]) -> nDaysInMonth
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      <dDate|nMonth> can be a date or a month number. If empty uses the
- *      system date.  If nMonth is a 2, lastdayom() will not know if it
- *      is a leap year or not. If dDate is invalid, returns 0
- *      TODO: add further documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      LASTDAYOM() is compatible with CT3's LASTDAYOM().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is dattime2.prg, library is libct.
- *  $SEEALSO$
- *      EOM()
- *  $END$
- */
 HB_FUNC( LASTDAYOM )
 {
    HB_BOOL bLeap = HB_FALSE;
@@ -702,109 +383,16 @@ HB_FUNC( LASTDAYOM )
 
 }
 
-
-/*  $DOC$
- *  $FUNCNAME$
- *      NTOCDOW()
- *  $CATEGORY$
- *      CT3 date and time functions
- *  $ONELINER$
- *      (num of day) -> day name
- *  $SYNTAX$
- *      NTOCDOW (<nDay>) -> cDay
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      NTOCDOW() is compatible with CT3's NTOCDOW().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is dattime2.prg, library is libct.
- *  $SEEALSO$
- *      CTODOW()
- *  $END$
- */
 HB_FUNC( NTOCDOW )
 {
    hb_retc( hb_dateCDOW( hb_parni( 1 ) ) );
 }
 
-
-/*  $DOC$
- *  $FUNCNAME$
- *      NTOCMONTH()
- *  $CATEGORY$
- *      CT3 date and time functions
- *  $ONELINER$
- *      (num of month ) -> Month Name
- *  $SYNTAX$
- *      NTOCMONTH (<nMonth>) -> cMonth
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      NTOCMONTH() is compatible with CT3's NTOCMONTH().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is dattime2.prg, library is libct.
- *  $SEEALSO$
- *      CTOMONTH()
- *  $END$
- */
 HB_FUNC( NTOCMONTH )
 {
    hb_retc( hb_dateCMonth( hb_parni( 1 ) ) );
 }
 
-
-/*  $DOC$
- *  $FUNCNAME$
- *      WEEK()
- *  $CATEGORY$
- *      CT3 date and time functions
- *  $ONELINER$
- *      Returns the calendar week a number
- *  $SYNTAX$
- *      WEEK ([<dDate>][, <lSWN>]) -> nWeek
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      Returns the calendar week a number. If no date is specified,
- *      the system date is used. An empty date viz ctod("  /  /  ")
- *      returns 0.
- *      If <lSWN> is .T., week() will calculate the "simple week number", defined by
- *         - week #1 starts on January, 1st
- *         - week #(n+1) starts seven days after start of week #n
- *      If <lSWN> is .F. (default), the ISO8601 week number, defined by
- *         - weeks start on mondays
- *         - week #1 is the one that includes January, 4
- *      will be calculated
- *      TODO: add further documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      WEEK() is compatible with CT3's WEEK().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is dattime2.prg, library is libct.
- *  $SEEALSO$
- *  $END$
- */
 HB_FUNC( WEEK )
 {
    int iYear, iMonth, iDay, iWeek;

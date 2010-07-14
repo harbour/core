@@ -57,46 +57,6 @@
 /* undefine the following if you want to evaluate the mantissa and exponent from the doubles' bit representation */
 /* #define CT_EXPONENT_MANTISSA_BIT 1 */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      MANTISSA()
- *  $CATEGORY$
- *      CT3 number and bit manipulation functions
- *  $ONELINER$
- *      Evaluate the mantissa of a floating point number
- *  $SYNTAX$
- *      MANTISSA( <nFloatingPointNumber> ) --> nMantissa
- *  $ARGUMENTS$
- *      <nFloatingPointNumber> Designate any Harbour number.
- *  $RETURNS$
- *      MANTISSA() returns the mantissa of the <nFloatingPointNumber> number.
- *  $DESCRIPTION$
- *      This function supplements EXPONENT() to return the mantissa of the
- *      <nFloatingPointNumber> number.
- *
- *      Note:  The mantissa value can be 0 or in the range of 1 to 2.
- *
- *             The following calculation reproduces the original value:
- *
- *      MANTISSA(<nFloatingPointNumber>)* 2^EXPONENT(<nFloatingPointNumber>) =
- *      <nFloatingPointNumber>
- *
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      MANTISSA() is compatible with CT3's MANTISSA().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is exponent.c, library is libct.
- *  $SEEALSO$
- *      EXPONENT()
- *  $END$
- */
-
 HB_FUNC( MANTISSA )
 {
 
@@ -146,52 +106,6 @@ HB_FUNC( MANTISSA )
 #endif
 
 }
-
-
-/*  $DOC$
- *  $FUNCNAME$
- *      EXPONENT()
- *  $CATEGORY$
- *      CT3 number and bit manipulation functions
- *  $ONELINER$
- *      Evaluate the exponent of a floating point number
- *  $SYNTAX$
- *      EXPONENT( <nFloatingPointNumber> ) --> nExponent
- *  $ARGUMENTS$
- *      <nFloatingPointNumber> Designate any Harbour number.
- *  $RETURNS$
- *      EXPONENT() returns the exponent of the <nFloatingPointNumber> number
- *      in base 2.
- *  $DESCRIPTION$
- *      This function supplements MANTISSA() to return the exponent of the
- *      <nFloatingPointNumber> number.
- *
- *      Values > 1 or values < -1 return a positive number 0 to 1023.
- *
- *      Values < 1 or values > -1 return a negative number -1 to -1023.
- *
- *      The EXPONENT( 0 ), return 0.
- *
- *      The following calculation reproduces the original value:
- *
- *      2^EXPONENT(<nFloatingPointNumber>) * MANTISSA(<nFloatingPointNumber>) =
- *      <nFloatingPointNumber>
- *
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      EXPONENT() is compatible with CT3's EXPONENT()
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is exponent.c, library is libct.
- *  $SEEALSO$
- *      MANTISSA()
- *  $END$
- */
 
 HB_FUNC( EXPONENT )
 {

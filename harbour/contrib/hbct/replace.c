@@ -52,9 +52,7 @@
  *
  */
 
-
 #include "ct.h"
-
 
 /* defines */
 #define DO_REPLACE_REPLALL      0
@@ -159,102 +157,15 @@ static void do_replace( int iSwitch )
    }
 }
 
-
-/*  $DOC$
- *  $FUNCNAME$
- *      REPLALL()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Replace certain characters at the left and right of a string
- *  $SYNTAX$
- *      REPLALL (<cString>, <cReplace|nReplace>, [<cSearch|nSearch>]) -> cString
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      REPLALL() is compatible with CT3's REPLALL().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is replace.c, library is libct.
- *  $SEEALSO$
- *      REPLLEFT(),REPLRIGHT()
- *  $END$
- */
-
 HB_FUNC( REPLALL )
 {
    do_replace( DO_REPLACE_REPLALL );
 }
 
-
-/*  $DOC$
- *  $FUNCNAME$
- *      REPLLEFT()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Replace certain characters at the left of a string
- *  $SYNTAX$
- *      REPLLEFT (<cString>, <cReplace|nReplace>, [<cSearch|nSearch>]) -> cString
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      REPLLEFT() is compatible with CT3's REPLLEFT().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is replace.c, library is libct.
- *  $SEEALSO$
- *      REPLALL(),REPLRIGHT()
- *  $END$
- */
-
 HB_FUNC( REPLLEFT )
 {
    do_replace( DO_REPLACE_REPLLEFT );
 }
-
-
-/*  $DOC$
- *  $FUNCNAME$
- *      REPLRIGHT()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Replace certain characters at the right of a string
- *  $SYNTAX$
- *      REPLRIGHT (<cString>, <cReplace|nReplace>, [<cSearch|nSearch>]) -> cString
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      REPLRIGHT() is compatible with CT3's REPLRIGHT().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is replace.c, library is libct.
- *  $SEEALSO$
- *      REPLALL(),REPLLEFT()
- *  $END$
- */
 
 HB_FUNC( REPLRIGHT )
 {

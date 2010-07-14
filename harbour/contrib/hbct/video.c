@@ -70,79 +70,12 @@
 
 #  include "ctvideo.ch"
 
-
-/*  $DOC$
- *  $FUNCNAME$
- *      CHARPIX()
- *  $CATEGORY$
- *      HBCT video functions
- *  $ONELINER$
- *      Gets the number of scan lines per character.
- *  $SYNTAX$
- *      CHARPIX() --> nHeight
- *  $ARGUMENTS$
- *  $RETURNS$
- *      Returns the number of scan lines per character.
- *  $DESCRIPTION$
- *      Returns the number of scan lines per character.
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      This function is xHarbour libct contrib
- *  $PLATFORMS$
- *      DJGPP
- *  $FILES$
- *      Source is video.c, library is libct.
- *  $SEEALSO$
- *  $END$
- */
-
 HB_FUNC( CHARPIX )
 {
 #   ifdef __DJGPP__
    hb_retni( _farpeekw( _dos_ds, 0x485 ) );
 #   endif
 }
-
-
-/*  $DOC$
- *  $FUNCNAME$
- *      VGAPALETTE()
- *  $CATEGORY$
- *      HBCT video functions
- *  $ONELINER$
- *      Changes VGA palette colors
- *  $SYNTAX$
- *      VGAPALETTE([<cColor|nColor>, [<nRedValue>, <nGreenValue>,
- *                                    <nBlueValue]]) --> lValid
- *  $ARGUMENTS$
- *      <cColor|nColor> - the color to change in CA-Cl*pper color notation or
- *              as a number from 0 to 15.
- *      <nRedValue>, <nGreenValue>, and <nBlueValue> specify the palette
- *              settings for the respective portions in the range from 0 to 63.
- *              If no RGB value is specified, the palette register is reset to
- *              its default value (currently unsupported).
- *      If the function is called without parameters, the palette registers for
- *      all colors are reset to their default values (currently unsupported).
- *  $RETURNS$
- *      Returns .T. on success.
- *  $DESCRIPTION$
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      This function is xHarbour libct contrib
- *  $PLATFORMS$
- *      DJGPP
- *  $FILES$
- *      Source is video.c, library is libct.
- *  $SEEALSO$
- *      EGAPALETTE() FONTRESET()
- *  $END$
- */
 
 HB_FUNC( VGAPALETTE )
 {
@@ -207,35 +140,6 @@ HB_FUNC( VGAPALETTE )
 #   endif
 }
 
-
-/*  $DOC$
- *  $FUNCNAME$
- *      VIDEOTYPE()
- *  $CATEGORY$
- *      HBCT video functions
- *  $ONELINER$
- *      Detects supported video adapter modes
- *  $SYNTAX$
- *      VIDEOTYPE() --> nMask
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      TODO: Finish documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      This function is xHarbour libct contrib
- *  $PLATFORMS$
- *      DJGPP
- *  $FILES$
- *      Source is video.c, library is libct.
- *  $SEEALSO$
- *      ISCGA(), ISEGA(), ISHERCULES(), ISMCGA(), ISMONO(), ISPGA(), ISVGA()
- *  $END$
- */
-
 HB_FUNC( VIDEOTYPE )
 {
 #   if defined( __DJGPP__ )
@@ -261,41 +165,6 @@ HB_FUNC( VIDEOTYPE )
    }
 #   endif
 }
-
-
-/*  $DOC$
- *  $FUNCNAME$
- *      SETFONT()
- *  $CATEGORY$
- *      HBCT video functions
- *  $ONELINER$
- *      Loads font from a string.
- *  $SYNTAX$
- *      SETFONT(<cFontString>, [<nFontArea>], [<nOffset>], [<nCounter>]) --> nError
- *          or:
- *      SETFONT(<cFontString>, [<nFontArea>], [<lCompute>]) --> nError
- *  $ARGUMENTS$
- *      <cFontString> Binary string containing a valid font definition.
- *      <nFontArea> Number of a font area where the font must be loaded.
- *      <nOffset> First character code to be loaded.
- *      <nCounter> Number of characters to load.
- *      <lCompute> When .T., the function computes font height automatically.
- *  $RETURNS$
- *  $DESCRIPTION$
- *      TODO: Finish documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      This function is xHarbour libct contrib
- *  $PLATFORMS$
- *      DJGPP
- *  $FILES$
- *      Source is video.c, library is libct.
- *  $SEEALSO$
- *  $END$
- */
 
 HB_FUNC( SETFONT )
 {

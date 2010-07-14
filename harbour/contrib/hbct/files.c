@@ -84,7 +84,6 @@
 #  include <time.h>
 #endif
 
-
 typedef struct
 {
    PHB_FFIND   ffind;
@@ -102,7 +101,6 @@ static void hb_fileFindRelease( void * cargo )
 static HB_TSD_NEW( s_FFData, sizeof( HB_FFDATA ), NULL, hb_fileFindRelease );
 
 #define HB_GET_FFDATA() ( ( PHB_FFDATA ) hb_stackGetTSD( &s_FFData ) )
-
 
 static PHB_FFIND _hb_fileStart( HB_BOOL fNext, HB_FATTR ulAttr )
 {
@@ -191,7 +189,6 @@ HB_FUNC( FILETIME )
    hb_retc( ffind ? ffind->szTime : NULL );
 }
 
-
 HB_FUNC( SETFATTR )
 {
    int iResult;
@@ -203,7 +200,6 @@ HB_FUNC( SETFATTR )
 
    hb_retni( iResult );
 }
-
 
 HB_FUNC( SETFDATI )
 {
@@ -242,7 +238,6 @@ HB_FUNC( SETFDATI )
 
    hb_retl( fResult );
 }
-
 
 HB_FUNC( FILEDELETE )
 {
@@ -288,25 +283,21 @@ HB_FUNC( FILEDELETE )
    hb_retl( bReturn );
 }
 
-
 HB_FUNC( FILEMOVE )
 {
    hb_retnint( hb_fsRename( hb_parcx( 1 ),
                             hb_parcx( 2 ) ) ? 0 : - ( HB_MAXINT ) hb_fsOsError() );
 }
 
-
 HB_FUNC( RENAMEFILE )
 {
    HB_FUNC_EXEC( FILEMOVE );
 }
 
-
 HB_FUNC( DELETEFILE )
 {
    hb_retnint( hb_fsDelete( hb_parcx( 1 ) ) ? 0 : - ( HB_MAXINT ) hb_fsOsError() );
 }
-
 
 HB_FUNC( FILESMAX )
 {

@@ -52,7 +52,6 @@
  *
  */
 
-
 #include "ct.h"
 #include "ctmath.h"
 #include "hbvm.h"
@@ -125,7 +124,6 @@ HB_USHORT ct_error( HB_USHORT uiSeverity, HB_ERRCODE errGenCode, HB_ERRCODE errS
    return uiAction;
 }
 
-
 /* throwing a CT-subsystem error with value substitution
    - function adapted from errorapi.c */
 PHB_ITEM ct_error_subst( HB_USHORT uiSeverity, HB_ERRCODE errGenCode, HB_ERRCODE errSubCode,
@@ -191,7 +189,6 @@ PHB_ITEM ct_error_subst( HB_USHORT uiSeverity, HB_ERRCODE errGenCode, HB_ERRCODE
    return pRetVal;
 }
 
-
 /* argument error behaviour */
 static int s_iArgErrMode = CT_ARGERR_IGNORE;
 
@@ -206,46 +203,6 @@ int ct_getargerrormode( void )
    HB_TRACE( HB_TR_DEBUG, ( "ct_getargerrormode()" ) );
    return s_iArgErrMode;
 }
-
-/*  $DOC$
- *  $FUNCNAME$
- *      CSETARGERR()
- *  $CATEGORY$
- *      CT3 general functions
- *  $ONELINER$
- *      Sets argument error behaviour
- *  $SYNTAX$
- *      CSETARGERR ([<nNewMode>]) -> <nOldMode>
- *  $ARGUMENTS$
- *      [<nNewMode>]   New argument error throwing mode
- *  $RETURNS$
- *      <nOldMode>     The current or old argument error throwing mode.
- *  $DESCRIPTION$
- *      All CT3 functions are very compliant in their reaction to wrong
- *      parameters. By using the CSETARGERR() function, you can make the
- *      library throw an error with the severity <nNewMode>. It is then
- *      up to the error handler to substitute the return value.
- *      <nNewMode> can be one of the severity modes defined in ct.ch:
- *           CT_ARGERR_WHOCARES      corresponds to ES_WHOCARES
- *           CT_ARGERR_WARNING       corresponds to ES_WARNING
- *           CT_ARGERR_ERROR         corresponds to ES_ERROR
- *           CT_ARGERR_CATASTROPHIC  corresponds to ES_CATASTROPHIC
- *           CT_ARGERR_IGNORE
- *      The last is the default behaviour and switches any argument error
- *      throwing off.
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Ready
- *  $COMPLIANCE$
- *      CSETARGERR() is a new function in Harbour's CT3 library.
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is ct.c, library is libct.
- *  $SEEALSO$
- *  $END$
- */
 
 HB_FUNC( CSETARGERR )
 {
@@ -286,40 +243,8 @@ HB_FUNC( CSETARGERR )
    }
 }
 
-
 /* initialization */
 static int s_initialized = 0;   /* TODO: make this thread safe */
-
-/*  $DOC$
- *  $FUNCNAME$
- *      CTCINIT()
- *  $CATEGORY$
- *      CT3 general functions
- *  $ONELINER$
- *      Initializes the CT3 library, C part
- *  $SYNTAX$
- *      CTCINIT () -> lInitialized
- *  $ARGUMENTS$
- *      None
- *  $RETURNS$
- *      lInitialized     .T. if the function has been correctly initialized
- *  $DESCRIPTION$
- *      The CTCINIT() function initializes the C source part of the CT3
- *      library. Do not call this function directly.
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Ready
- *  $COMPLIANCE$
- *      CTCINIT() is a new function in Harbour's CT3 library.
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is ctc.c, library is libct.
- *  $SEEALSO$
- *      CTINIT(),CTEXIT()
- *  $END$
- */
 
 HB_FUNC( CTCINIT )
 {
@@ -333,38 +258,6 @@ HB_FUNC( CTCINIT )
    }
    hb_retl( s_initialized );
 }
-
-
-/*  $DOC$
- *  $FUNCNAME$
- *      CTCEXIT()
- *  $CATEGORY$
- *      CT3 general functions
- *  $ONELINER$
- *      Uninitializes the CT3 library, C part
- *  $SYNTAX$
- *      CTCEXIT () -> nil
- *  $ARGUMENTS$
- *      none
- *  $RETURNS$
- *      nil
- *  $DESCRIPTION$
- *      The CTCEXIT() function uninitializes the C part of the CT3 library.
- *      Do not call this function directly.
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Ready
- *  $COMPLIANCE$
- *      CTCEXIT() is a new function in Harbour's CT3 library.
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is ctc.c, library is libct.
- *  $SEEALSO$
- *      CTINIT(),CTEXIT()
- *  $END$
- */
 
 HB_FUNC( CTCEXIT )
 {

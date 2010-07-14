@@ -52,9 +52,7 @@
  *
  */
 
-
 #include "ct.h"
-
 
 /* defines */
 #define DO_JUSTIFY_JUSTLEFT   0
@@ -163,68 +161,10 @@ static void do_justify( int iSwitch )
    }
 }
 
-
-/*  $DOC$
- *  $FUNCNAME$
- *      JUSTLEFT()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Move characters from the beginning to the end of a string
- *  $SYNTAX$
- *      JUSTLEFT (<[@]cString>, [<cChar>|<nChar>]) -> cJustifiedString
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      JUSTLEFT() is compatible with CT3's JUSTLEFT().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is justify.c, library is libct.
- *  $SEEALSO$
- *      JUSTRIGHT()
- *  $END$
- */
-
 HB_FUNC( JUSTLEFT )
 {
    do_justify( DO_JUSTIFY_JUSTLEFT );
 }
-
-
-/*  $DOC$
- *  $FUNCNAME$
- *      JUSTRIGHT()
- *  $CATEGORY$
- *      Harbour Tools string functions
- *  $ONELINER$
- *      Move characters from the end to the beginning of a string
- *  $SYNTAX$
- *      JUSTRIGHT (<[@]cString>, [<cChar>|<nChar>]) -> cJustifiedString
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      JUSTRIGHT() is compatible with CT3's JUSTRIGHT().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is justify.c, library is libct.
- *  $SEEALSO$
- *      JUSTLEFT()
- *  $END$
- */
 
 HB_FUNC( JUSTRIGHT )
 {

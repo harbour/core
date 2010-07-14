@@ -54,9 +54,7 @@
  *
  */
 
-
 #include "ct.h"
-
 
 /* defines */
 #define DO_ASCPOS_ASCPOS    0
@@ -120,94 +118,10 @@ static void do_ascpos( int iSwitch )
    }
 }
 
-
-/*  $DOC$
- *  $FUNCNAME$
- *      ASCPOS()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      ASCII value of a character at a certain position
- *  $SYNTAX$
- *      ASCPOS (<cString>, [<nPosition>]) --> nAsciiValue
- *  $ARGUMENTS$
- *      <cString>      is the processed string
- *      [<nPosition>]  is an optional position within <cString>
- *                     Default: last position in <cString>
- *  $RETURNS$
- *      <nAsciiValue>  the ASCII value of the character at the specified
- *                     position
- *  $DESCRIPTION$
- *      The ASCPOS() function returns the ASCII value of the character that
- *      can be found at the position <nPosition> in <cString>. If <nPosition>
- *      is larger than the length of <cString>, 0 is returned.
- *  $EXAMPLES$
- *      ? ascpos ("0123456789") --> 57
- *      ? ascpos ("0123456789",1) --> 48
- *  $TESTS$
- *      ascpos ("0123456789") == 57
- *      ascpos ("0123456789",1) == 48
- *      ascpos ("0123456789",11) == 0  // <nPosition> to large !
- *  $STATUS$
- *      Ready
- *  $COMPLIANCE$
- *      ASCPOS() is compatible with CT3's ASCPOS().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is asciisum.c, library is libct.
- *  $SEEALSO$
- *      VALPOS()
- *  $END$
- */
-
 HB_FUNC( ASCPOS )
 {
    do_ascpos( DO_ASCPOS_ASCPOS );
 }
-
-
-/*  $DOC$
- *  $FUNCNAME$
- *      VALPOS()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Numerical value of a character at a certain position
- *  $SYNTAX$
- *      VALPOS (<cString>, [<nPosition>]) --> nDigitValue
- *  $ARGUMENTS$
- *      <cString>      is the processed string
- *      [<nPosition>]  is an optional position within <cString>
- *                     Default: last position in <cString>
- *  $RETURNS$
- *      <nDigitValue>  the numerical value of the character at the specified
- *                     position
- *  $DESCRIPTION$
- *      The VALPOS() function returns the numerical value of the character that
- *      can be found at the position <nPosition> in <cString>. If no digit
- *      can be found at this position or if <nPosition>
- *      is larger than the length of <cString>, 0 is returned.
- *  $EXAMPLES$
- *      ? valpos ("1234x56789") --> 9
- *      ? valpos ("1234x56789",1) --> 1
- *  $TESTS$
- *      valpos ("1234x56789") == 9
- *      valpos ("1234x56789",1) == 1
- *      valpos ("1234x56789",11) == 0  // <nPosition> to large !
- *      valpos ("1234x56789",5) == 0   // "x" is not a digit !
- *  $STATUS$
- *      Ready
- *  $COMPLIANCE$
- *      VALPOS() is compatible with CT3's VALPOS().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is asciisum.c, library is libct.
- *  $SEEALSO$
- *      ASCPOS()
- *  $END$
- */
 
 HB_FUNC( VALPOS )
 {

@@ -52,36 +52,7 @@
  *
  */
 
-
 #include "ct.h"
-
-
-/*  $DOC$
- *  $FUNCNAME$
- *      STRSWAP()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Swap the contents of two strings
- *  $SYNTAX$
- *      STRSWAP (<[@]cString1>, <[@]cString2>) -> cString
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      STRSWAP() is compatible with CT3's STRSWAP().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is strswap.c, library is libct.
- *  $SEEALSO$
- *  $END$
- */
 
 HB_FUNC( STRSWAP )
 {

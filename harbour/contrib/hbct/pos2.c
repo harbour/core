@@ -52,37 +52,7 @@
  *
  */
 
-
 #include "ct.h"
-
-
-/*  $DOC$
- *  $FUNCNAME$
- *      POSCHAR()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Replace character at a certain position within a string
- *  $SYNTAX$
- *      POSCHAR (<[@]cString>, <cCharacter|nCharacter>, [<nPosition>]) -> cString
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      POSCHAR() is compatible with CT3's POSCHAR().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is pos2.c, library is libct.
- *  $SEEALSO$
- *      POSDEL(),POSINS(),POSREPL(),CSETREF()
- *  $END$
- */
 
 HB_FUNC( POSCHAR )
 {
@@ -170,35 +140,6 @@ HB_FUNC( POSCHAR )
    }
 }
 
-
-/*  $DOC$
- *  $FUNCNAME$
- *      POSDEL()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Delete characters at a certain position within a string
- *  $SYNTAX$
- *      POSDEL (<cString>, [<nStartPosition>], <nLength>) -> cString
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      POSDEL() is compatible with CT3's POSDEL().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is pos2.c, library is libct.
- *  $SEEALSO$
- *      POSCHAR(),POSINS(),POSREPL()
- *  $END$
- */
-
 HB_FUNC( POSDEL )
 {
    if( HB_ISCHAR( 1 ) )
@@ -263,35 +204,6 @@ HB_FUNC( POSDEL )
          hb_retc_null();
    }
 }
-
-
-/*  $DOC$
- *  $FUNCNAME$
- *      POSINS()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Insert characters at a certain position within a string
- *  $SYNTAX$
- *      POSINS (<cString>, <cInsert>, [<nPosition>]) -> cString
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      POSINS() is compatible with CT3's POSINS().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is pos2.c, library is libct.
- *  $SEEALSO$
- *      POSCHAR,POSDEL(),POSREPL()
- *  $END$
- */
 
 HB_FUNC( POSINS )
 {
@@ -372,35 +284,6 @@ HB_FUNC( POSINS )
          hb_retc_null();
    }
 }
-
-
-/*  $DOC$
- *  $FUNCNAME$
- *      POSREPL()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Replace characters at a certain position within a string
- *  $SYNTAX$
- *      POSREPL (<[@]cString>, <cReplacement>, [<nStartPosition>]) -> cString
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      POSREPL() is compatible with CT3's POSREPL().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is pos2.c, library is libct.
- *  $SEEALSO$
- *      POSCHAR(),POSDEL(),POSINS(),CSETREF()
- *  $END$
- */
 
 HB_FUNC( POSREPL )
 {

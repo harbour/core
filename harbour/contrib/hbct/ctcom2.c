@@ -56,7 +56,6 @@
 #include "hbapigt.h"
 #include "hbchksum.h"
 
-
 /* COM_DOSCON( <cString>, [<nLine>], [<nColumn>] ) -> <cNull>
  */
 HB_FUNC( COM_DOSCON )

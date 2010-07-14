@@ -87,37 +87,6 @@ int ct_getprecision( void )
    return s_ct_precision;
 }
 
-
-/*  $DOC$
- *  $FUNCNAME$
- *      SETPREC()
- *  $CATEGORY$
- *      CT3 math functions
- *  $ONELINER$
- *      Set precision of math functions
- *  $SYNTAX$
- *      SETPREC (<nPrecision>) -> cEmptyString
- *  $ARGUMENTS$
- *      <nPrecision>    digit count between 1 and 16, defaults to 16
- *  $RETURNS$
- *      cEmptyString    this function always returns an empty string
- *  $DESCRIPTION$
- *      Be aware that calls to this functions do _NOT_ affect the
- *      calculation precision of the math functions at the moment.
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Ready
- *  $COMPLIANCE$
- *      SETPREC() is compatible with CT3's SETPREC.
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is ctmath.c, library is ct3.
- *  $SEEALSO$
- *  $END$
- */
-
 HB_FUNC( SETPREC )
 {
    int iPrec = hb_parni( 1 );
@@ -134,36 +103,6 @@ HB_FUNC( SETPREC )
    }
    hb_retc_null();
 }
-
-
-/*  $DOC$
- *  $FUNCNAME$
- *      GETPREC()
- *  $CATEGORY$
- *      CT3 math functions
- *  $ONELINER$
- *      Get precision of math functions
- *  $SYNTAX$
- *      GETPREC () -> nDigits
- *  $ARGUMENTS$
- *  $RETURNS$
- *      nDigits        digit count between 1 and 16
- *  $DESCRIPTION$
- *      Be aware that calls to this functions do _NOT_ affect the
- *      calculation precision of the math functions at the moment.
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Ready
- *  $COMPLIANCE$
- *      GETPREC() is compatible with CT3's GETPREC.
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is ctmath.c, library is ct3.
- *  $SEEALSO$
- *  $END$
- */
 
 HB_FUNC( GETPREC )
 {

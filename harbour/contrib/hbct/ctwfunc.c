@@ -72,7 +72,6 @@ static int hb_ctColorParam( int iParam, int iDefault )
    return iColor;
 }
 
-
 HB_FUNC( CTWINIT )
 {
    hb_retl( hb_ctwInit() );

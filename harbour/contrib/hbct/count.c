@@ -123,68 +123,10 @@ static void do_count( int iSwitch )
    }
 }
 
-
-/*  $DOC$
- *  $FUNCNAME$
- *      COUNTLEFT()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Count a certain character at the beginning of a string
- *  $SYNTAX$
- *      COUNTLEFT (<cString>, [<cSearch|nSearch>]) -> nCount
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      COUNTLEFT() is compatible with CT3's COUNTLEFT().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is count.c, library is libct.
- *  $SEEALSO$
- *     COUNTRIGHT()
- *  $END$
- */
-
 HB_FUNC( COUNTLEFT )
 {
    do_count( DO_COUNT_COUNTLEFT );
 }
-
-
-/*  $DOC$
- *  $FUNCNAME$
- *      COUNTRIGHT()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Count a certain character at the end of a string
- *  $SYNTAX$
- *      COUNTRIGHT (<cString>, [<cSearch|nSearch>]) -> nCount
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      COUNTRIGHT() is compatible with CT3's COUNTRIGHT().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is count.c, library is libct.
- *  $SEEALSO$
- *     COUNTLEFT()
- *  $END$
- */
 
 HB_FUNC( COUNTRIGHT )
 {

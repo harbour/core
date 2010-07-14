@@ -52,37 +52,7 @@
  *
  */
 
-
 #include "ct.h"
-
-
-/*  $DOC$
- *  $FUNCNAME$
- *      POSDIFF()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      The left-most position there two string differ
- *  $SYNTAX$
- *      POSDIFF (<cString1>, <cString2>, [<nIgnore>]) -> nPosition
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      POSDIFF() is compatible with CT3's POSDIFF().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is posdiff.c, library is libct.
- *  $SEEALSO$
- *      POSEQUAL()
- *  $END$
- */
 
 HB_FUNC( POSDIFF )
 {
@@ -152,35 +122,6 @@ HB_FUNC( POSDIFF )
          hb_retns( 0 );
    }
 }
-
-
-/*  $DOC$
- *  $FUNCNAME$
- *      POSEQUAL()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      The left-most position there two string begin to be equal
- *  $SYNTAX$
- *      POSEQUAL (<cString1>, <cString2>, [<nCompare>], [<nIgnore>]) -> nPosition
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      POSEQUAL() is compatible with CT3's POSEQUAL().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is posdiff.c, library is libct.
- *  $SEEALSO$
- *      POSDIFF()
- *  $END$
- */
 
 HB_FUNC( POSEQUAL )
 {

@@ -52,9 +52,7 @@
  *
  */
 
-
 #include "ct.h"
-
 
 /* defines */
 #define DO_REMOVE_REMALL      0
@@ -134,102 +132,15 @@ static void do_remove( int iSwitch )
    }
 }
 
-
-/*  $DOC$
- *  $FUNCNAME$
- *      REMALL()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Remove certain characters at the left and right of a string
- *  $SYNTAX$
- *      REMALL (<cString>, [<cSearch|nSearch>]) -> cString
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      REMALL() is compatible with CT3's REMALL().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is remove.c, library is libct.
- *  $SEEALSO$
- *      REMLEFT(),REMRIGHT()
- *  $END$
- */
-
 HB_FUNC( REMALL )
 {
    do_remove( DO_REMOVE_REMALL );
 }
 
-
-/*  $DOC$
- *  $FUNCNAME$
- *      REMLEFT()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Remove certain characters at the left of a string
- *  $SYNTAX$
- *      REMLEFT (<cString>, [<cSearch|nSearch>]) -> cString
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      REMLEFT() is compatible with CT3's REMLEFT().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is remove.c, library is libct.
- *  $SEEALSO$
- *      REMALL(),REMRIGHT()
- *  $END$
- */
-
 HB_FUNC( REMLEFT )
 {
    do_remove( DO_REMOVE_REMLEFT );
 }
-
-
-/*  $DOC$
- *  $FUNCNAME$
- *      REMRIGHT()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Remove certain characters at the right of a string
- *  $SYNTAX$
- *      REMRIGHT (<cString>, [<cSearch|nSearch>]) -> cString
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      REMRIGHT() is compatible with CT3's REMRIGHT().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is remove.c, library is libct.
- *  $SEEALSO$
- *      REMALL(),REMLEFT()
- *  $END$
- */
 
 HB_FUNC( REMRIGHT )
 {

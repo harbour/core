@@ -3,90 +3,90 @@
  */
 
 /*
-* File......: floptst.prg
-* Author....: Gary Smith
-* CIS ID....: 70714,3015
-*
-* This work is based on an original work by Joseph LaCour that
-* was placed in the public domain.  This work is placed in the
-* public domain.
-*
-*  ACKNOWLEDGEMENTS:
-*
-*          PAOLO RAMOZZI FOR HIS WORK IN DBDCHECK FOR SHOWING HOW TO
-*          USE INT 13H.
-*
-*
-* Modification history:
-* ---------------------
-*
-*     Rev 1.4   05 May 1995 03:05:00   TED
-* Gary Smith ported ASM source to Clipper.
-*
-*     Rev 1.3   23 Sep 1991 14:56:42   GLENN
-*  Bug reports from Craig Austin, James Finnal, and Ted Means.  Line 128
-*  had MOV FDRIVE,AL which should have been MOV FDRIVE,BL.  This caused the
-*  function to erroneously use the last drive available instead of the one
-*  specified by the calling process.
-*
-*     Rev 1.2   15 Aug 1991 23:07:48   GLENN
-*  Forest Belt proofread/edited/cleaned up doc
-*
-*     Rev 1.1   11 May 1991 00:21:42   GLENN
-*  File header changed to conform to Toolkit standard.
-*
+ * File......: floptst.prg
+ * Author....: Gary Smith
+ * CIS ID....: 70714,3015
+ *
+ * This work is based on an original work by Joseph LaCour that
+ * was placed in the public domain.  This work is placed in the
+ * public domain.
+ *
+ *  ACKNOWLEDGEMENTS:
+ *
+ *          PAOLO RAMOZZI FOR HIS WORK IN DBDCHECK FOR SHOWING HOW TO
+ *          USE INT 13H.
+ *
+ *
+ * Modification history:
+ * ---------------------
+ *
+ *     Rev 1.4   05 May 1995 03:05:00   TED
+ * Gary Smith ported ASM source to Clipper.
+ *
+ *     Rev 1.3   23 Sep 1991 14:56:42   GLENN
+ *  Bug reports from Craig Austin, James Finnal, and Ted Means.  Line 128
+ *  had MOV FDRIVE,AL which should have been MOV FDRIVE,BL.  This caused the
+ *  function to erroneously use the last drive available instead of the one
+ *  specified by the calling process.
+ *
+ *     Rev 1.2   15 Aug 1991 23:07:48   GLENN
+ *  Forest Belt proofread/edited/cleaned up doc
+ *
+ *     Rev 1.1   11 May 1991 00:21:42   GLENN
+ *  File header changed to conform to Toolkit standard.
+ */
 
-*  $DOC$
-*  $FUNCNAME$
-*      FT_FLOPTST()
-*  $CATEGORY$
-*      DOS/BIOS
-*  $ONELINER$
-*      Test diskette drive status
-*  $SYNTAX$
-*      FT_FLOPTST( <nDrive> ) -> nStatus
-*  $ARGUMENTS$
-*      <nDrive> is the diskette drive number, 0 = A:, 1 = B:
-*  $RETURNS$
-*      -1 - Wrong Parameters
-*       0 - Drive Loaded and ready to read or write
-*       1 - Drive Door Open or Diskette inserted upside down
-*       2 - Diskette is unformatted
-*       3 - Write protected
-*       4 - Undetermined
-*  $DESCRIPTION$
-*      FT_FLOPTST() is designed as a full replacement for ISDRIVE().  Where
-*      ISDRIVE() returns just .T. or .F. depending if the diskette drive is
-*      ready or not, FT_FLOPTST() returns a numeric code designating the
-*      diskette drive's status.
-*
-*      FT_FLOPTST() is particularly useful in backup and restore programs
-*      that need to test the floppy drive before writing/reading from a
-*      floppy disk.
-*
-*      No testing has been performed on systems with more than 2 floppy
-*      drives.  If the third drive is "C" and the fourth "D" then there
-*      should be no problems.
-*
-*      This function does not currently check subst'd drives.  So if you
-*      have SUBST E: A:\ then FT_FLOPTST( ASC("E")-ASC("A") ) == 4
-*      Any suggestions to fix this limitation are appreciated.
-*
-*  $EXAMPLES$
-*      iStatus := FT_FLOPTST( 0 )
-*      DO CASE
-*         CASE iStatus == 1
-*            Qout( "The door to drive A is open." )
-*         CASE iStatus == 2
-*            Qout( "The diskette in drive A is not formatted." )
-*         CASE iStatus == 3
-*            Qout( "The diskette in drive A is write-protected." )
-*         CASE iStatus == 4
-*            Qout( "Something is wrong with drive A, but I don't know what." )
-*      ENDCASE
-*  $END$
-*
-*/
+/*  $DOC$
+ *  $FUNCNAME$
+ *      FT_FLOPTST()
+ *  $CATEGORY$
+ *      DOS/BIOS
+ *  $ONELINER$
+ *      Test diskette drive status
+ *  $SYNTAX$
+ *      FT_FLOPTST( <nDrive> ) -> nStatus
+ *  $ARGUMENTS$
+ *      <nDrive> is the diskette drive number, 0 = A:, 1 = B:
+ *  $RETURNS$
+ *      -1 - Wrong Parameters
+ *       0 - Drive Loaded and ready to read or write
+ *       1 - Drive Door Open or Diskette inserted upside down
+ *       2 - Diskette is unformatted
+ *       3 - Write protected
+ *       4 - Undetermined
+ *  $DESCRIPTION$
+ *      FT_FLOPTST() is designed as a full replacement for ISDRIVE().  Where
+ *      ISDRIVE() returns just .T. or .F. depending if the diskette drive is
+ *      ready or not, FT_FLOPTST() returns a numeric code designating the
+ *      diskette drive's status.
+ *
+ *      FT_FLOPTST() is particularly useful in backup and restore programs
+ *      that need to test the floppy drive before writing/reading from a
+ *      floppy disk.
+ *
+ *      No testing has been performed on systems with more than 2 floppy
+ *      drives.  If the third drive is "C" and the fourth "D" then there
+ *      should be no problems.
+ *
+ *      This function does not currently check subst'd drives.  So if you
+ *      have SUBST E: A:\ then FT_FLOPTST( ASC("E")-ASC("A") ) == 4
+ *      Any suggestions to fix this limitation are appreciated.
+ *
+ *  $EXAMPLES$
+ *      iStatus := FT_FLOPTST( 0 )
+ *      DO CASE
+ *         CASE iStatus == 1
+ *            Qout( "The door to drive A is open." )
+ *         CASE iStatus == 2
+ *            Qout( "The diskette in drive A is not formatted." )
+ *         CASE iStatus == 3
+ *            Qout( "The diskette in drive A is write-protected." )
+ *         CASE iStatus == 4
+ *            Qout( "Something is wrong with drive A, but I don't know what." )
+ *      ENDCASE
+ *  $END$
+ *
+ */
 
 #include "ftint86.ch"
 

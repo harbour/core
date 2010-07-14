@@ -58,6 +58,13 @@
 
 #define _HBDOC_ADD_MSG( a, m )  IF ISARRAY( a ); AAdd( a, m ); ENDIF
 
+FUNCTION __hbdoc_FromSource( cFile, aErrMsg )
+   LOCAL aEntry := {}
+
+   __hbdoc__read_stream( aEntry, cFile, "(stream)",, aErrMsg )
+
+   RETURN aEntry
+
 FUNCTION __hbdoc_LoadDir( cDir, cName, aErrMsg )
    LOCAL hMeta
    LOCAL nCount
@@ -114,15 +121,6 @@ STATIC PROCEDURE __hbdoc__read_langdir( aEntry, cDir, hMeta, aErrMsg )
    RETURN
 
 STATIC PROCEDURE __hbdoc__read_file( aEntry, cFileName, hMeta, aErrMsg )
-   LOCAL cFile := MemoRead( cFileName )
-   LOCAL hEntry := NIL
-   LOCAL cLine
-   LOCAL cSection
-   LOCAL tmp
-   LOCAL nLine
-
-   LOCAL cDefTemplate
-
    LOCAL aFilenameTemplateMap := {;
       "FUNCTION"   => "func_"  ,;
       "C FUNCTION" => "cfunc_" ,;
@@ -130,12 +128,31 @@ STATIC PROCEDURE __hbdoc__read_file( aEntry, cFileName, hMeta, aErrMsg )
       "COMMAND"    => "cmd_"   ,;
       "PP"         => "pp_"    }
 
+   LOCAL tmp
+
+   IF "TEMPLATE" $ hMeta
+      hb_HDel( hMeta, "TEMPLATE" )
+   ENDIF
+
    /* Preselect the default template based on source filename */
    FOR EACH tmp IN aFilenameTemplateMap
       IF Lower( Left( cFileName, Len( tmp ) ) ) == tmp
-         cDefTemplate := tmp:__enumKey()
+         hMeta[ "TEMPLATE" ] := tmp:__enumKey()
       ENDIF
    NEXT
+
+   hMeta[ "_DOCSOURCE" ] := cFileName
+
+   __hbdoc__read_stream( aEntry, MemoRead( cFileName ), cFileName, hMeta, aErrMsg )
+
+   RETURN
+
+STATIC PROCEDURE __hbdoc__read_stream( aEntry, cFile, cFileName, hMeta, aErrMsg )
+   LOCAL hEntry := NIL
+   LOCAL cLine
+   LOCAL cSection
+   LOCAL tmp
+   LOCAL nLine
 
    cFile := StrTran( cFile, Chr( 13 ) )
    cFile := StrTran( cFile, Chr( 9 ), " " )
@@ -154,11 +171,8 @@ STATIC PROCEDURE __hbdoc__read_file( aEntry, cFileName, hMeta, aErrMsg )
             AAdd( aEntry, hEntry )
          ENDIF
          hEntry := { => }
+         hb_HKeepOrder( hEntry, .T. )
          IF hb_isHash( hMeta )
-            hMeta[ "_DOCSOURCE" ] := cFileName
-            IF cDefTemplate != NIL
-               hMeta[ "TEMPLATE" ] := cDefTemplate
-            ENDIF
             FOR EACH tmp IN hMeta
                hEntry[ tmp:__enumKey() ] := tmp
             NEXT
@@ -216,6 +230,7 @@ FUNCTION __hbdoc_ToSource( aEntry )
 
    IF ISARRAY( aEntry )
       FOR EACH hEntry IN aEntry
+         cSource += hb_eol()
          cSource += "/*  $DOC$" + hb_eol()
          FOR EACH item IN hEntry
             IF ISCHARACTER( item ) .AND. ;
@@ -228,7 +243,6 @@ FUNCTION __hbdoc_ToSource( aEntry )
          NEXT
          cSource += " *  $END$" + hb_eol()
          cSource += " */" + hb_eol()
-         cSource += hb_eol()
       NEXT
    ENDIF
 

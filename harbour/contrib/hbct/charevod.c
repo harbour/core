@@ -127,83 +127,10 @@ static void do_charevod( int iSwitch )
    }
 }
 
-
-/*  $DOC$
- *  $FUNCNAME$
- *      CHAREVEN()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Returns the characters on the even positions in a string
- *  $SYNTAX$
- *      CHAREVEN (<cString>) --> cEvenString
- *  $ARGUMENTS$
- *      <cString>      processed string
- *  $RETURNS$
- *      <cEvenString>  a string containing all character from even positions
- *                     in <cString>
- *  $DESCRIPTION$
- *      The CHAREVEN() function looks for the characters on the even positions
- *      in a given string, collects them and returns them as a string.
- *  $EXAMPLES$
- *      ? CHAREVEN (" H E L L O !") -> "HELLO!"
- *  $TESTS$
- *      CHAREVEN (" 1 2 3 4 5") == "12345"
- *      CHAREVEN (" 1 2 3 4 ") == "1234"
- *      CHAREVEN (" ") == ""
- *  $STATUS$
- *      Ready
- *  $COMPLIANCE$
- *      CHAREVEN() is compatible with CT3's CHAREVEN().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is charevod.c, library is ct3.
- *  $SEEALSO$
- *      CHARODD()  CHARMIX()
- *  $END$
- */
-
 HB_FUNC( CHAREVEN )
 {
    do_charevod( DO_CHAREVOD_CHAREVEN );
 }
-
-
-/*  $DOC$
- *  $FUNCNAME$
- *      CHARODD()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Returns the characters on the odd positions in a string
- *  $SYNTAX$
- *      CHARODD (<cString>) --> cOddString
- *  $ARGUMENTS$
- *      <cString>      processed string
- *  $RETURNS$
- *      <cOddString>  a string containing all character from odd positions
- *                    in <cString>
- *  $DESCRIPTION$
- *      The CHARODD() function looks for the characters on the odd positions
- *      in a given string, collects them and returns them as a string.
- *  $EXAMPLES$
- *      ? CHARODD ("H E L L O ! ") -> "HELLO!"
- *  $TESTS$
- *      CHARODD ("1A2B3C4D5E") == "12345"
- *      CHARODD ("1A2B3C4D5")  == "12345"
- *  $STATUS$
- *      Ready
- *  $COMPLIANCE$
- *      CHARODD() is compatible with CT3's CHARODD().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is charevod.c, library is ct3.
- *  $SEEALSO$
- *      CHAREVEN()  CHARMIX()
- *  $END$
- */
 
 HB_FUNC( CHARODD )
 {

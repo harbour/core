@@ -53,7 +53,6 @@
  *
  */
 
-
 #include "hbapi.h"
 
 static HB_BOOL __numParam( int iParam, HB_MAXINT * plNum )
@@ -195,7 +194,6 @@ HB_FUNC( NUMROL )
 
    hb_retnint( lValue );
 }
-
 
 HB_FUNC( NUMMIRR )
 {

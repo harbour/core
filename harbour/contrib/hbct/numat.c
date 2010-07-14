@@ -54,35 +54,6 @@
 
 #include "ct.h"
 
-
-/*  $DOC$
- *  $FUNCNAME$
- *      NUMAT()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Number of occurrences of a sequence in a string
- *  $SYNTAX$
- *      NUMAT (<cStringToMatch>, <cString>, [<nIgnore>]) --> nCount
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      NUMAT() is compatible with CT3's NUMAT().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is numat.c, library is libct.
- *  $SEEALSO$
- *      CSETATMUPA(),SETATLIKE()
- *  $END$
- */
-
 HB_FUNC( NUMAT )
 {
    if( ( HB_ISCHAR( 1 ) ) && ( HB_ISCHAR( 2 ) ) )

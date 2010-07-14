@@ -61,47 +61,9 @@
  *
  */
 
-
 #include "ct.h"
 #include "ctmath.h"
 #include <float.h>
-
-/*  $DOC$
- *  $FUNCNAME$
- *      CELSIUS()
- *  $CATEGORY$
- *      CT3 numeric functions
- *  $ONELINER$
- *      Temperature conversion Fahrenheit to Celsius
- *  $SYNTAX$
- *      CELSIUS (nDegreeFahrenheit) --> nDegreeCelsius
- *  $ARGUMENTS$
- *      <nDegreeFahrenheit>     temperature in degree Fahrenheit
- *  $RETURNS$
- *      <nDegreeCelsius>        temperate in degree Celsius
- *  $DESCRIPTION$
- *      CELSIUS() converts temperature values measured in the Fahrenheit scale
- *      to the Celsius scale.
- *  $EXAMPLES$
- *      // melting point of water in standard conditions
- *      ? celsius (32.0)       --> 0.0
- *      // boiling point of water in standard conditions
- *      ? celsius (212.0)      --> 100.0
- *  $TESTS$
- *      celsius (32.0)  == 0.0
- *      celsius (212.0) == 100.0
- *  $STATUS$
- *      Ready
- *  $COMPLIANCE$
- *      CELSIUS() is compatible with CT3's CELSIUS().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is num1.c, library is libct.
- *  $SEEALSO$
- *      FAHRENHEIT()
- *  $END$
- */
 
 HB_FUNC( CELSIUS )
 {
@@ -132,44 +94,6 @@ HB_FUNC( CELSIUS )
    }
 }
 
-
-/*  $DOC$
- *  $FUNCNAME$
- *      FAHRENHEIT()
- *  $CATEGORY$
- *      CT3 numeric functions
- *  $ONELINER$
- *      Temperature conversion Celsius to Fahrenheit
- *  $SYNTAX$
- *      FAHRENHEIT (nDegreeCelsius) --> nDegreeFahrenheit
- *  $ARGUMENTS$
- *      <nDegreeCelsius>        temperate in degree Celsius
- *  $RETURNS$
- *      <nDegreeFahrenheit>     temperature in degree Fahrenheit
- *  $DESCRIPTION$
- *      FAHRENHEIT() converts temperature values measured in the Celsius scale
- *      to the Fahrenheit scale.
- *  $EXAMPLES$
- *      // melting point of water in standard conditions
- *      ? fahrenheit (0.0)       --> 32.0
- *      // boiling point of water in standard conditions
- *      ? fahrenheit (100.0)      --> 212.0
- *  $TESTS$
- *      fahrenheit (0.0) == 32.0
- *      celsius (100.0) == 212.0
- *  $STATUS$
- *      Ready
- *  $COMPLIANCE$
- *      FAHRENHEIT() is compatible with CT3's FAHRENHEIT().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is num1.c, library is libct.
- *  $SEEALSO$
- *      CELSIUS()
- *  $END$
- */
-
 HB_FUNC( FAHRENHEIT )
 {
    if( HB_ISNUM( 1 ) )
@@ -198,42 +122,6 @@ HB_FUNC( FAHRENHEIT )
          hb_retnd( 0.0 );
    }
 }
-
-
-/*  $DOC$
- *  $FUNCNAME$
- *      INFINITY()
- *  $CATEGORY$
- *      CT3 numeric functions
- *  $ONELINER$
- *      Returns the largest floating point number available in the system
- *  $SYNTAX$
- *      INFINITY ([<lPlatformIndependant>]) --> nLargestNumber
- *  $ARGUMENTS$
- *      [<lPlatformIndependant>]   .T., if the function should return
- *                                 the maximum floating point value
- *                                 available (DBL_MAX)
- *                                 .F., function should try to return
- *                                 the same value as the original CT3 lib did
- *                                 Default: .F.
- *  $RETURNS$
- *      <nLargestNumber>     the largest floating point number available in the system
- *  $DESCRIPTION$
- *      INFINITY() returns the largest floating point number available
- *      in the system. For platform independance, this is set to DBL_MAX.
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Ready
- *  $COMPLIANCE$
- *      INFINITY() must not necessarily return the same number as CT3's INFINITY().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is num1.c, library is libct.
- *  $SEEALSO$
- *  $END$
- */
 
 HB_FUNC( INFINITY )
 {

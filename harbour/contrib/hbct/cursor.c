@@ -69,7 +69,6 @@ HB_FUNC( SAVECURSOR )
    hb_retnl( ( long ) iCol | ( iRow << 8 ) | ( iCursor << 16 ) );
 }
 
-
 HB_FUNC( RESTCURSOR )
 {
    long lCursor = hb_parnl( 1 );

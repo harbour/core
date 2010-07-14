@@ -53,43 +53,6 @@
 
 #include "ct.h"
 
-/*  $DOC$
- *  $FUNCNAME$
- *      FTOC()
- *  $CATEGORY$
- *      CT3 number and bit manipulation functions
- *  $ONELINER$
- *  $SYNTAX$
- *      FTOC( <nFloatingPointNumber> ) --> cFloatingPointNumber
- *
- *  $ARGUMENTS$
- *      <nFloatingPointNumber> Designate any Harbour number.
- *
- *  $RETURNS$
- *      FTOC() return a string with the size of DOUBLE.
- *      ATTENTION: different implementations or platforms of Harbour, they
- *      could produce different format in the string returned by FTOC().
- *
- *  $DESCRIPTION$
- *      Harbour internal numbers in Floating Point are stored in data type
- *      DOUBLE. FTOC() returns these bits as an string. In this way,
- *      numbers con be saved more compactly.
- *
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is ftoc.c, library is libct.
- *  $SEEALSO$
- *      CTOF(), XTOC()
- *  $END$
- */
-
 HB_FUNC( FTOC )
 {
    char buf[ sizeof( double ) ];
@@ -98,45 +61,6 @@ HB_FUNC( FTOC )
    HB_PUT_LE_DOUBLE( buf, d );
    hb_retclen( buf, sizeof( buf ) );
 }
-
-
-/*  $DOC$
- *  $FUNCNAME$
- *      CTOF()
- *  $CATEGORY$
- *      CT3 number and bit manipulation functions
- *  $ONELINER$
- *  $SYNTAX$
- *      CTOF( <cFloatingPointNumber> ) --> nFloatingPointNumber
- *
- *  $ARGUMENTS$
- *      <cFloatingPointNumber> Designate a string that contains a Harbour
- *      number in flotaing point format.
- *      ATTENTION: different implementations or platforms of Harbour, they
- *      could produce different format in the string returned by FTOC().
- *
- *  $RETURNS$
- *      CTOF() return the floating point number that corresponds to the
- *      string passed.
- *
- *  $DESCRIPTION$
- *      Character strings created with FTOC() or XTOC() are convert into
- *      Harbour floating point number
- *
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is ftoc.c, library is libct.
- *  $SEEALSO$
- *      FTOC(), XTOC()
- *  $END$
- */
 
 HB_FUNC( CTOF )
 {

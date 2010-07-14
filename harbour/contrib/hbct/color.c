@@ -55,33 +55,6 @@
 #include "hbapi.h"
 #include "hbapigt.h"
 
-/*  $DOC$
- *  $FUNCNAME$
- *      INVERTATTR()
- *  $CATEGORY$
- *      CT3 video functions
- *  $ONELINER$
- *
- *  $SYNTAX$
- *
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      INVERTATTR() is compatible with CT3's INVERTATTR().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is color.c, library is libct.
- *  $SEEALSO$
- *  $END$
- */
-
 HB_FUNC( INVERTATTR )
 {
    int iAttr;
@@ -100,45 +73,6 @@ HB_FUNC( INVERTATTR )
              ( ( iAttr >> 4 ) & 0x07 ) );
 }
 
-
-/*  $DOC$
- *  $FUNCNAME$
- *      COLORTON()
- *  $CATEGORY$
- *      CT3 video functions
- *  $ONELINER$
- *  $SYNTAX$
- *      COLORTON ( <cAttr> ) -> <nAttr>
- *  $ARGUMENTS$
- *      <cAttr>    Designates the alphanumeric color attribute that is
- *                 converted in NN/NN or CC/CC form.
- *
- *  $RETURNS$
- *      COLORTON() returns a number that corresponds to the combined numeric
- *      color attribute.
- *
- *  $DESCRIPTION$
- *      COLOR TO (N)umeric
- *      The function changes an alphanumeric color attribute from NN/NN or
- *      CC/CC into a combined numeric attribute.  These combined attribute
- *      values are useful with the CA-Cl*pper Tools functions STRSCREEN(),
- *      SCREENMIX(), SCREENATTR(), and the CA-Cl*pper commands
- *      SAVE/RESTORE SCREEN.
- *
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is color.c, library is libct.
- *  $SEEALSO$
- *  $END$
- */
-
 HB_FUNC( COLORTON )
 {
    if( HB_ISCHAR( 1 ) )
@@ -149,47 +83,6 @@ HB_FUNC( COLORTON )
    else
       hb_retni( hb_parni( 1 ) );
 }
-
-
-/*  $DOC$
- *  $FUNCNAME$
- *      NTOCOLOR()
- *  $CATEGORY$
- *      HBCT video functions
- *  $ONELINER$
- *  $SYNTAX$
- *      NTOCOLOR ( <nAttr>, [<lColorCode>] ) -> <cAttr>
- *  $ARGUMENTS$
- *      <nAttr>    Designates the value for the combined numeric color
- *                 attributes.
- *
- *   <lColorCode>  If designated as .F. or if the parameter is omitted,
- *                 NTOCOLOR() returns a string with a numeric color code.
- *                 When designated as .T., NTOCOLOR() returns a string with
- *                 the CA-Cl*pper alpha color coding.
- *
- *  $RETURNS$
- *      NTOCOLOR() returns the designated color attribute in the NN/NN
- *      or CC/CC form.
- *
- *  $DESCRIPTION$
- *      NTOCOLOR() converts a color attribute returned from another function
- *      in numeric form, into the alphanumeric data format.  Use this
- *      attribute in conjunction with the CA-Cl*pper SET COLOR TO command.
- *
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is color.c, library is libct.
- *  $SEEALSO$
- *  $END$
- */
 
 HB_FUNC( NTOCOLOR )
 {
@@ -208,104 +101,17 @@ HB_FUNC( NTOCOLOR )
       hb_retc_null();
 }
 
-
-/*  $DOC$
- *  $FUNCNAME$
- *      ENHANCED()
- *  $CATEGORY$
- *      CT3 video functions
- *  $ONELINER$
- *      Select the "ENHANCED" color value for output
- *  $SYNTAX$
- *      ENHANCED () -> <cEmptyString>
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      ENHANCED() is compatible with CT3's ENHANCED()
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is color.c, library is libct.
- *  $SEEALSO$
- *      STANDARD(),UNSELECTED()
- *  $END$
- */
-
 HB_FUNC( ENHANCED )
 {
    hb_gtColorSelect( HB_CLR_ENHANCED );
    hb_retc_null();
 }
 
-
-/*  $DOC$
- *  $FUNCNAME$
- *      STANDARD()
- *  $CATEGORY$
- *      CT3 video functions
- *  $ONELINER$
- *      Select the "STANDARD" color value for output
- *  $SYNTAX$
- *      STANDARD () -> <cEmptyString>
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      STANDARD() is compatible with CT3's STANDARD()
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is color.c, library is libct.
- *  $SEEALSO$
- *      ENHANCED(),UNSELECTED()
- *  $END$
- */
-
 HB_FUNC( STANDARD )
 {
    hb_gtColorSelect( HB_CLR_STANDARD );
    hb_retc_null();
 }
-
-
-/*  $DOC$
- *  $FUNCNAME$
- *      UNSELECTED()
- *  $CATEGORY$
- *      CT3 video functions
- *  $ONELINER$
- *      Select the "UNSELECTED" color value for output
- *  $SYNTAX$
- *      UNSELECTED () -> <cEmptyString>
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      UNSELECTED() is compatible with CT3's UNSELECTED()
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is color.c, library is libct.
- *  $SEEALSO$
- *      ENHANCED(),STANDARD()
- *  $END$
- */
 
 HB_FUNC( UNSELECTED )
 {

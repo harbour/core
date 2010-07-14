@@ -50,7 +50,6 @@
  *
  */
 
-
 #include "hbapigt.h"
 
 HB_FUNC( SETLASTKEY )

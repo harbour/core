@@ -187,137 +187,20 @@ static void do_pos1( int iSwitch )
    }
 }
 
-
-/*  $DOC$
- *  $FUNCNAME$
- *      POSALPHA()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Left-most position of a letter in a string
- *  $SYNTAX$
- *      POSALPHA (<cString>, [<lMode>], [<nIgnore>]) -> nPosition
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      POSALPHA() is compatible with CT3's POSALPHA().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is pos1.c, library is libct.
- *  $SEEALSO$
- *      POSLOWER(),POSUPPER(),POSRANGE()
- *  $END$
- */
-
 HB_FUNC( POSALPHA )
 {
    do_pos1( DO_POS1_POSALPHA );
 }
-
-
-/*  $DOC$
- *  $FUNCNAME$
- *      POSLOWER()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Left-most position of a lowercase letter in a string
- *  $SYNTAX$
- *      POSLOWER (<cString>, [<lMode>], [<nIgnore>]) -> nPosition
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      POSLOWER() is compatible with CT3's POSLOWER().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is pos1.c, library is libct.
- *  $SEEALSO$
- *      POSALPHA(),POSUPPER(),POSRANGE()
- *  $END$
- */
 
 HB_FUNC( POSLOWER )
 {
    do_pos1( DO_POS1_POSLOWER );
 }
 
-
-/*  $DOC$
- *  $FUNCNAME$
- *      POSRANGE()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Left-most position of a character from a set in a string
- *  $SYNTAX$
- *      POSRANGE (<cChar1>, <cChar2>, <cString>, [<lMode>],
- *                [<nIgnore>]) -> nPosition
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      POSRANGE() is compatible with CT3's POSRANGE().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is pos1.c, library is libct.
- *  $SEEALSO$
- *      POSALPHA(),POSLOWER(),POSUPPER()
- *  $END$
- */
-
 HB_FUNC( POSRANGE )
 {
    do_pos1( DO_POS1_POSRANGE );
 }
-
-
-/*  $DOC$
- *  $FUNCNAME$
- *      POSUPPER()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Left-most position of an uppercase letter in a string
- *  $SYNTAX$
- *      POSUPPER (<cString>, [<lMode>], [<nIgnore>]) -> nPosition
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      POSUPPER() is compatible with CT3's POSUPPER().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is pos1.c, library is libct.
- *  $SEEALSO$
- *      POSALPHA(),POSLOWER(),POSRANGE()
- *  $END$
- */
 
 HB_FUNC( POSUPPER )
 {

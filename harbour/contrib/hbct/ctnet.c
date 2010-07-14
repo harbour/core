@@ -129,7 +129,6 @@ HB_FUNC( NETCANCEL )
 #endif
 }
 
-
 HB_FUNC( NETPRINTER )
 {
 #if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
@@ -142,7 +141,6 @@ HB_FUNC( NETPRINTER )
    hb_retl( HB_FALSE );
 #endif
 }
-
 
 HB_FUNC( NETDISK )
 {
@@ -223,7 +221,6 @@ HB_FUNC( NETWORK )
    hb_retl( HB_FALSE );
 #endif
 }
-
 
 HB_FUNC( NNETWORK )
 {

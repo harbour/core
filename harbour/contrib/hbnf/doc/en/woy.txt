@@ -1,0 +1,90 @@
+/*
+ * $Id$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *     FT_WOY()
+ *  $CATEGORY$
+ *     Date/Time
+ *  $ONELINER$
+ *     Find number of week within year
+ *  $SYNTAX$
+ *     FT_WOY( <dDate> ) -> <nResult>
+ *  $ARGUMENTS$
+ *     <dDate> is a date in the form "mm/dd/yy" or "mm/dd/yyyy"
+ *  $RETURNS$
+ *     Return numeric position of week within the year or NIL if
+ *     parameter does not conform.
+ *  $DESCRIPTION$
+ *     Considers a full week as starting on Sunday, ending on Saturday.
+ *     First week of year (week 1) may start on any day, and thus
+ *       contain any number of days.
+ *     Final week of year (week 53) may contain any number of days.
+ *     Handles dates with CENTURY ON|OFF, to allow for 21st century.
+ *     Date validation must be external to this function.
+ *  $EXAMPLES$
+ *     These code fragments find the week number, given a date.
+ * 
+ *     // literal character date
+ *     dDate  := CTOD("01/01/91")
+ *     nWkNum := FT_WOY(dDate)              // result:  1
+ * 
+ *     // presume DOS date to be 01/06/91
+ *     nWkNum := FT_WOY(DATE())             // result:  2
+ * 
+ *     // date input
+ *     cDate  := SPACE(8)
+ *     @ 4,10 get cDate PICT "##/##/##"     // input 07/04/91
+ *     READ
+ *     nWkNum := FT_WOY(CTOD(cDate))        // result: 27
+ * 
+ *     // last day of year
+ *     nWkNum := FT_WOY(CTOD("12/31/91"))    // result: 53
+ * 
+ *     For a demonstration of this function, compile and link the
+ *     program woy.prg in the Nanforum Toolkit source code.
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *     FT_DOY()
+ *  $CATEGORY$
+ *     Date/Time
+ *  $ONELINER$
+ *     Find number of day within year
+ *  $SYNTAX$
+ *     FT_DOY( <dDate> ) -> <nResult>
+ *  $ARGUMENTS$
+ *     <dDate> is a date in the form "mm/dd/yy" or "mm/dd/yyyy"
+ *  $RETURNS$
+ *     Return numeric position of day within the year.
+ *     Return NIL if parameter does not conform.
+ *  $DESCRIPTION$
+ *     Finds the day number, considering 01/01 as day 1
+ *     Handles dates with CENTURY ON|OFF, to allow for 21st century.
+ *     Date validation must be external to this function.
+ *  $EXAMPLES$
+ *     These code fragments find the day number, given a date.
+ * 
+ *     // literal character date
+ *     dDate  := CTOD("01/01/91")
+ *     nDayNum := FT_DOY(dDate)              // result:  1
+ * 
+ *     // presume DOS date to be 01/06/91
+ *     nDayNum := FT_DOY(DATE())             // result:  6
+ * 
+ *     // date input
+ *     cDate  := SPACE(8)
+ *     @ 4,10 get cDate PICT "##/##/##"      // input 07/04/91
+ *     READ
+ *     nDayNum := FT_DOY(CTOD(cDate))        // result: 185
+ * 
+ *     // last day of year
+ *     nDayNum := FT_DOY(CTOD("12/31/91"))    // result: 365
+ * 
+ *     For a demonstration of this function, compile and link the
+ *     program woy.prg in the Nanforum Toolkit source code.
+ *  $END$
+ */

@@ -367,7 +367,6 @@ HB_FUNC( COM_SKEY )
    hb_retl( HB_FALSE );
 }
 
-
 /* COM_INIT( <nComPort>, [<nBaudRate>=300], [<cParity:E,O,M,S,N>=N],
  *           [<nDataLength:7,8>=8], [<nStopBits:1,2>=1] ) -> <lInitialized>
  */
@@ -481,7 +480,6 @@ HB_FUNC( COM_NUM )
 {
    hb_retni( hb_comLastNum() );
 }
-
 
 /* COM_GETIO( <nComPort> ) -> <nIOPort> | -1
  */

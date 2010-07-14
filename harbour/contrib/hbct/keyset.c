@@ -86,124 +86,20 @@ static void SetGet( int iFlag )
    hb_retl( ( iState & iFlag ) != 0 );
 }
 
-
-/*  $DOC$
- *  $FUNCNAME$
- *      KSETINS()
- *  $CATEGORY$
- *      CT3 switch and state functions
- *  $ONELINER$
- *  $SYNTAX$
- *      KSETINS ([<lNewSwitch>]) -> lOldSwitch
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *  $PLATFORMS$
- *      DOS
- *  $FILES$
- *      Source is keyset.c, library is libct.
- *  $SEEALSO$
- *  $END$
- */
-
 HB_FUNC( KSETINS )
 {
    SetGet( HB_GTI_KBD_INSERT );
 }
-
-
-/*  $DOC$
- *  $FUNCNAME$
- *      KSETCAPS()
- *  $CATEGORY$
- *      CT3 switch and state functions
- *  $ONELINER$
- *  $SYNTAX$
- *      KSETCAPS ([<lNewSwitch>]) -> lOldSwitch
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *  $PLATFORMS$
- *      DOS
- *  $FILES$
- *      Source is keyset.c, library is libct.
- *  $SEEALSO$
- *  $END$
- */
 
 HB_FUNC( KSETCAPS )
 {
    SetGet( HB_GTI_KBD_CAPSLOCK );
 }
 
-
-/*  $DOC$
- *  $FUNCNAME$
- *      KSETNUM()
- *  $CATEGORY$
- *      CT3 switch and state functions
- *  $ONELINER$
- *  $SYNTAX$
- *      KSETNUM ([<lNewSwitch>]) -> lOldSwitch
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *  $PLATFORMS$
- *      DOS
- *  $FILES$
- *      Source is keyset.c, library is libct.
- *  $SEEALSO$
- *  $END$
- */
-
 HB_FUNC( KSETNUM )
 {
    SetGet( HB_GTI_KBD_NUMLOCK );
 }
-
-
-/*  $DOC$
- *  $FUNCNAME$
- *      KSETSCROLL()
- *  $CATEGORY$
- *      CT3 switch and state functions
- *  $ONELINER$
- *  $SYNTAX$
- *      KSETSCROLL ([<lNewSwitch>]) -> lOldSwitch
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *  $PLATFORMS$
- *      DOS
- *  $FILES$
- *      Source is keyset.c, library is libct.
- *  $SEEALSO$
- *  $END$
- */
 
 HB_FUNC( KSETSCROLL )
 {

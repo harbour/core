@@ -56,88 +56,10 @@
 
 #include "ct.h"
 
-/*  $DOC$
- *  $FUNCNAME$
- *      CHARSLIST()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Generates a sorted list of all characters in a string
- *  $SYNTAX$
- *      CHARSLIST ([<cString>]) -> cSortedCharacterList
- *  $ARGUMENTS$
- *      [<cString>]       is the string for whom the function generates a
- *                        sorted list of all characters
- *                        Default: "" (empty string)
- *  $RETURNS$
- *      <cSortedCharacterList>  a sorted list of the characters in <cString>
- *  $DESCRIPTION$
- *      The CHARLIST() function generates a sorted list of those characters that
- *      are contained in <cString>. This list can contain each character
- *      only once, so that its maximum length is 256. The function
- *      gives the same result as CHARSORT(CHARLIST(<cString>))
- *  $EXAMPLES$
- *      ? charslist ("Hello World !") --> " !HWdelor"
- *  $TESTS$
- *      charslist ("Hello World !") == " !HWdelor"
- *      charslist ("Hello World !") == charsort (charlist ("Hello World !"))
- *      charslist (nil) == ""
- *  $STATUS$
- *      Ready
- *  $COMPLIANCE$
- *      CHARSLIST() is only available in Harbour's CT3 library.
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is charlist.c, library is libct.
- *  $SEEALSO$
- *      CHARNOLIST(),CHARLIST(),CHARHIST()
- *  $END$
- */
-
 HB_FUNC( CHARSLIST )
 {
    ct_charlist( CT_CHARLIST_CHARSLIST );
 }
-
-/*  $DOC$
- *  $FUNCNAME$
- *      CHARHIST()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Generates a character histogram of a string
- *  $SYNTAX$
- *      CHARHIST ([<cString>]) -> aCharacterCount
- *  $ARGUMENTS$
- *      [<cString>]       is the string for whom the function generates a
- *                        character histogram
- *                        Default: "" (empty string)
- *  $RETURNS$
- *      <aCharacterCount> an array with 256 elements where the nth element
- *                        contains the count of character #(n-1) in cString
- *  $DESCRIPTION$
- *      The CHARHIST() function generates a character histogram of those
- *      characters that are contained in <cString>. This histogram is stored
- *      in an 256-element array where the nth element contains the count
- *      of ASCII character #(n-1) in <cString>.
- *  $EXAMPLES$
- *      ? charhist ("Hello World !")[109] --> 3  // chr(108)=="l"
- *  $TESTS$
- *      charhist ("Hello World !")[109] == 3
- *      eval ({||aeval (charhist ("Hello World !"),{|x|nTotal+=x}),nTotal==len("Hello World !")}
- *  $STATUS$
- *      Ready
- *  $COMPLIANCE$
- *      CHARHIST() is only available in Harbour's CT3 library.
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is charlist.c, library is libct.
- *  $SEEALSO$
- *      CHARLIST(),CHARNOLIST(),CHARSLIST()
- *  $END$
- */
 
 HB_FUNC( CHARHIST )
 {

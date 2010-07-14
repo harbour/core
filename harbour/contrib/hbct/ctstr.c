@@ -52,9 +52,7 @@
  *
  */
 
-
 #include "ct.h"
-
 
 /* -------------- */
 /* initialization */
@@ -70,7 +68,6 @@ int ct_str_exit( void )
    HB_TRACE( HB_TR_DEBUG, ( "ctstr_exit()" ) );
    return 1;
 }
-
 
 /* -------------------------- */
 /* search for exact substring */
@@ -100,7 +97,6 @@ const char *ct_at_exact_forward( const char * pcString, HB_SIZE sStrLen,
    }
 
 }
-
 
 /* ------------------------------------------------ */
 /* search for exact substring in backward direction */
@@ -134,7 +130,6 @@ const char *ct_at_exact_backward( const char * pcString, HB_SIZE sStrLen,
 
    return NULL;
 }
-
 
 /* ----------------------------------- */
 /* search for substring using wildcard */
@@ -174,7 +169,6 @@ const char *ct_at_wildcard_forward( const char * pcString, HB_SIZE sStrLen,
    return NULL;
 }
 
-
 /* --------------------------------------------------------- */
 /* search for substring using wildcard in backward direction */
 /* --------------------------------------------------------- */
@@ -213,7 +207,6 @@ const char *ct_at_wildcard_backward( const char * pcString, HB_SIZE sStrLen,
    return NULL;
 }
 
-
 /* ------------------------------- */
 /* search for character from a set */
 /* ------------------------------- */
@@ -247,7 +240,6 @@ const char *ct_at_charset_forward( const char * pcString, HB_SIZE sStrLen,
    return NULL;
 }
 
-
 /* ----------------------------------------------------- */
 /* search for character from a set in backward direction */
 /* ----------------------------------------------------- */
@@ -280,7 +272,6 @@ const char *ct_at_charset_backward( const char * pcString, HB_SIZE sStrLen,
    return NULL;
 }
 
-
 /*
  *  CSETREF() stuff
  */
@@ -293,73 +284,11 @@ void ct_setref( int iNewSwitch )
    siRefSwitch = iNewSwitch;
 }
 
-
 int ct_getref( void )
 {
    HB_TRACE( HB_TR_DEBUG, ( "ct_getref()" ) );
    return siRefSwitch;
 }
-
-
-/*  $DOC$
- *  $FUNCNAME$
- *      CSETREF()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Determine return value of reference sensitive CT3 string functions
- *  $SYNTAX$
- *      CSETREF ([<lNewSwitch>]) -> lOldSwitch
- *  $ARGUMENTS$
- *      [<lNewSwitch>]  .T. -> suppress return value
- *                      .F. -> do not suppress return value
- *  $RETURNS$
- *      lOldSwitch      old (if lNewSwitch is a logical value) or
- *                      current state of the switch
- *  $DESCRIPTION$
- *      Within the CT3 functions, the following functions do not
- *      change the length of a string passed as parameter while
- *      transforming this string:
- *
- *      ADDASCII()   BLANK()       CHARADD()
- *      CHARAND()    CHARMIRR()    CHARNOT()
- *      CHAROR()     CHARRELREP()  CHARREPL()
- *      CHARSORT()   CHARSWAP()    CHARXOR()
- *      CRYPT()      JUSTLEFT()    JUSTRIGHT()
- *      POSCHAR()    POSREPL()     RANGEREPL()
- *      REPLALL()    REPLLEFT()    REPLRIGHT()
- *      TOKENLOWER() TOKENUPPER()  WORDREPL()
- *      WORDSWAP()
- *
- *      Thus, these functions allow to pass the string by reference [@] to
- *      the function so that it may not be necessary to return the transformed
- *      string. By calling CSETREF (.T.), the above mentioned functions return
- *      the value .F. instead of the transformed string if the string is
- *      passed by reference to the function.
- *      The switch is turned off (.F.) by default.
- *
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Ready
- *  $COMPLIANCE$
- *      This function is fully CT3 compatible.
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is ctstr.c, library is ct3.
- *  $SEEALSO$
- *      ADDASCII()   BLANK()       CHARADD()
- *      CHARAND()    CHARMIRR()    CHARNOT()
- *      CHAROR()     CHARRELREP()  CHARREPL()
- *      CHARSORT()   CHARSWAP()    CHARXOR()
- *      CRYPT()      JUSTLEFT()    JUSTRIGHT()
- *      POSCHAR()    POSREPL()     RANGEREPL()
- *      REPLALL()    REPLLEFT()    REPLRIGHT()
- *      TOKENLOWER() TOKENUPPER()  WORDREPL()
- *      WORDSWAP()
- *  $END$
- */
 
 HB_FUNC( CSETREF )
 {
@@ -381,7 +310,6 @@ HB_FUNC( CSETREF )
    }
 }
 
-
 /*
  * CSETATMUPA() stuff
  */
@@ -394,56 +322,11 @@ void ct_setatmupa( int iNewSwitch )
    siAtMupaSwitch = iNewSwitch;
 }
 
-
 int ct_getatmupa( void )
 {
    HB_TRACE( HB_TR_DEBUG, ( "ct_getatmupa()" ) );
    return siAtMupaSwitch;
 }
-
-
-/*  $DOC$
- *  $FUNCNAME$
- *      CSETATMUPA()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Determine "multi-pass" behaviour in some string functions
- *  $SYNTAX$
- *      CSETATMUPA ([<lNewSwitch>]) -> lOldSwitch
- *  $ARGUMENTS$
- *      [<lNewSwitch>]  .T. -> turn "multi-pass" on
- *                      .F. -> turn "multi-pass" off
- *  $RETURNS$
- *      lOldSwitch      old (if lNewSwitch is a logical value) or
- *                      current state of the switch
- *  $DESCRIPTION$
- *      CSETATMUPA determines how the following CT3 string functions
- *
- *      ATNUM()       AFTERATNUM()  BEFORATNUM()
- *      ATREPL()      NUMAT()       ATADJUST()
- *      WORDTOCHAR()  WORDREPL()
- *
- *      perform their work. See the respective function documentation for a
- *      further description how the switch influences these functions.
- *
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Ready
- *  $COMPLIANCE$
- *      This function is fully CT3 compatible.
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is ctstr.c, library is ct3.
- *  $SEEALSO$
- *      ATNUM()       AFTERATNUM()  BEFORATNUM()
- *      ATREPL()      NUMAT()       ATADJUST()
- *      WORDTOCHAR()  WORDREPL()
- *  $END$
- */
-
 
 HB_FUNC( CSETATMUPA )
 {
@@ -465,7 +348,6 @@ HB_FUNC( CSETATMUPA )
    }
 }
 
-
 /*
  * SETATLIKE() stuff
  */
@@ -479,13 +361,11 @@ void ct_setatlike( int iNewMode )
    siAtLikeMode = iNewMode;
 }
 
-
 int ct_getatlike( void )
 {
    HB_TRACE( HB_TR_DEBUG, ( "ct_getatlike()" ) );
    return siAtLikeMode;
 }
-
 
 void ct_setatlikechar( char cNewChar )
 {
@@ -493,72 +373,11 @@ void ct_setatlikechar( char cNewChar )
    scAtLikeChar = cNewChar;
 }
 
-
 char ct_getatlikechar( void )
 {
    HB_TRACE( HB_TR_DEBUG, ( "ct_getatlikechar()" ) );
    return scAtLikeChar;
 }
-
-
-/*  $DOC$
- *  $FUNCNAME$
- *      SETATLIKE()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Determine scan behaviour in some string functions
- *  $SYNTAX$
- *      SETATLIKE ([<nMode>] [, <[@]cWildcard>]) --> nOldMode
- *  $ARGUMENTS$
- *      [<nMode>]   CT_SETATLIKE_EXACT    -> characters are compared exactly
- *                  CT_SETATLIKE_WILDCARD -> characters are compared using
- *                                           a wildcard character
- *                  The default value is CT_SETATLIKE_EXACT.
- *      [<[@]cWildcard>]  determines the character that is subsequently used
- *                        as a wildcard character for substring scanning.
- *                        The default value is "?".
- *                        NEW: If this parameter is passed by reference [@],
- *                        the current wildcard character is stored in
- *                        <cWildcard>.
- *  $RETURNS$
- *      nOldMode          old (if nMode is a numeric value) or
- *                        current state of the switch
- *  $DESCRIPTION$
- *      In the following CT3 functions, strings are compared on a character
- *      base:
- *
- *      ATADJUST()    ATNUM()    AFTERATNUM()
- *      BEFOREATNUM() ATREPL()   NUMAT()
- *      STRDIFF()
- *
- *      With the SETATLIKE function, one can determine when characters are
- *      considered to match within these functions. If CT_SETATLIKE_WILDCARD
- *      is set (e.g. "?"), then "?" matches every other character.
- *
- *      <nMode> can be one of the following values that are defined
- *      in ct.ch
- *
- *      Definition            | Value
- *      ----------------------|------
- *      CT_SETATLIKE_EXACT    |   0
- *      CT_SETATLIKE_WILDCARD |   1
- *
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Ready
- *  $COMPLIANCE$
- *      This function is fully CT3 compatible, but allows to pass the
- *      second parameter by reference so that the current wildcard character
- *      can be determined.
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is ctstr.c, header is ct.ch, library is ct3.
- *  $SEEALSO$
- *  $END$
- */
 
 HB_FUNC( SETATLIKE )
 {

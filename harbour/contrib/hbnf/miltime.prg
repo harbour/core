@@ -151,7 +151,7 @@ function FT_MIN2MIL(nMIN)
  *     Caution:  leading blanks are irrelevant.
  *  $SEEALSO$
  *     FT_CIV2MIL() FT_SYS2MIL() FT_MIL2MIN() FT_MIN2MIL()
-  *  $END$
+ *  $END$
  */
 
 function FT_MIL2CIV(cMILTIME)

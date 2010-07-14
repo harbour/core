@@ -144,68 +144,10 @@ static void do_pad( int iSwitch )
    }
 }
 
-
-/*  $DOC$
- *  $FUNCNAME$
- *      PADLEFT()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Fills string to a certain length on the left
- *  $SYNTAX$
- *      PADLEFT (<cString>,<nLength>, [<cChar|nChar>]) -> cString
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      PADLEFT() is compatible with CT3's PADLEFT().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is pad.c, library is libct.
- *  $SEEALSO$
- *      PADRIGHT()
- *  $END$
- */
-
 HB_FUNC( PADLEFT )
 {
    do_pad( DO_PAD_PADLEFT );
 }
-
-
-/*  $DOC$
- *  $FUNCNAME$
- *      PADRIGHT()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Fills string to a certain length on the right
- *  $SYNTAX$
- *      PADRIGHT (<cString>,<nLength>, [<cChar|nChar>]) -> cString
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      PADRIGHT() is compatible with CT3's PADRIGHT().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is pad.c, library is libct.
- *  $SEEALSO$
- *      PADLEFT()
- *  $END$
- */
 
 HB_FUNC( PADRIGHT )
 {

@@ -1443,7 +1443,6 @@ static void hb_ctw_gt_WriteCon( PHB_GT pGT, const char * pText, HB_SIZE nLength 
    }
 }
 
-
 static int hb_ctw_gt_GetCursorStyle( PHB_GT pGT )
 {
    PHB_GTCTW pCTW;

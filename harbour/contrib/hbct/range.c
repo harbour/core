@@ -52,44 +52,7 @@
  *
  */
 
-
 #include "ct.h"
-
-
-/*  $DOC$
- *  $FUNCNAME$
- *      RANGEREM()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Remove characters within a certain ASCII range from a string
- *  $SYNTAX$
- *      RANGEREM (<cChar1|nChar1>, <cChar2|nChar2>, <cString>) -> cString
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *      ? rangerem ("0","9","year2002.dbf") // "year.dbf", remove all digits
- *      ? rangerem ("9","0","year2002.dbf") // "22", testing removal from "9" to chr(255)
- *                                          // and from chr(0) to "0"
- *      ? rangerem ("0","9","yearcurr.dbf") // "yearcurr.dbf", test leaving string untouched
- *  $TESTS$
- *      rangerem ("0","9","year2002.dbf") == "year.dbf"
- *      rangerem ("9","0","year2002.dbf") == "22"
- *      rangerem ("0","9","yearcurr.dbf") == "yearcurr.dbf"
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      RANGEREM() is compatible with CT3's RANGEREM().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is range.c, library is libct.
- *  $SEEALSO$
- *      RANGEREPL()
- *  $END$
- */
 
 HB_FUNC( RANGEREM )
 {
@@ -157,43 +120,6 @@ HB_FUNC( RANGEREM )
          hb_retc_null();
    }
 }
-
-
-/*  $DOC$
- *  $FUNCNAME$
- *      RANGEREPL
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Replace characters within a certain ASCII range from a string
- *  $SYNTAX$
- *      RANGEREPL (<cChar1|nChar1>, <cChar2|nChar2>,
- *                 <[@]cString>, <cReplacementChar|nReplacementChar>) -> cString
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *      ? rangerepl ("0","9","year2002.dbf","?") // "year????.dbf", replace all digits
- *      ? rangerepl ("9","0","year2002.dbf","?") // "????2??2????", testing replacement from "9" to chr(255)
- *                                               // and from chr(0) to "0"
- *      ? rangerepl ("0","9","yearcurr.dbf","?") // "yearcurr.dbf", test leaving string untouched
- *  $TESTS$
- *      rangerepl ("0","9","year2002.dbf","?") == "year????.dbf"
- *      rangerepl ("9","0","year2002.dbf","?") == "????2??2????"
- *      rangerepl ("0","9","yearcurr.dbf","?") == "yearcurr.dbf"
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      RANGEREPL() is compatible with CT3's RANGEREPL().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is range.c, library is libct.
- *  $SEEALSO$
- *      RANGEREM()
- *  $END$
- */
 
 HB_FUNC( RANGEREPL )
 {
