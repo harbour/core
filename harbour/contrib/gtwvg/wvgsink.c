@@ -251,7 +251,7 @@ static HRESULT STDMETHODCALLTYPE Invoke( IEventHandler *lpThis, DISPID dispid, R
 
       for( i = iRefs = 0; i < iCount && iRefs < 32; i++ )
       {
-         if( pParams->rgvarg[ i ].n1.n2.vt & VT_BYREF )
+         if( V_VT( &pParams->rgvarg[ i ] ) & VT_BYREF )
             refArray[ iRefs++ ].item = hb_stackAllocItem();
       }
 
@@ -262,7 +262,7 @@ static HRESULT STDMETHODCALLTYPE Invoke( IEventHandler *lpThis, DISPID dispid, R
 
       for( i = 1, ii = 0; i <= iCount; i++ )
       {
-         if( pParams->rgvarg[ iCount - i ].n1.n2.vt & VT_BYREF )
+         if( V_VT( &pParams->rgvarg[ iCount - i ] ) & VT_BYREF )
          {
             refArray[ ii ].variant = &pParams->rgvarg[ iCount - i ];
             hb_oleVariantToItem( refArray[ ii ].item, refArray[ ii ].variant );

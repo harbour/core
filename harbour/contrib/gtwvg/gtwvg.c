@@ -3591,7 +3591,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                      {
                         RECT rect = { 0,0,0,0 };
                         GetWindowRect( pWVT->hWnd, &rect );
-                        hb_retl( SetWindowPos( pWVT->hWnd, ( HWND ) HWND_TOPMOST,
+                        hb_retl( SetWindowPos( pWVT->hWnd, HWND_TOPMOST,
                                                rect.left,
                                                rect.top,
                                                0,
@@ -3603,7 +3603,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                      {
                         RECT rect = { 0,0,0,0 };
                         GetWindowRect( pWVT->hWnd, &rect );
-                        hb_retl( SetWindowPos( pWVT->hWnd, ( HWND ) HWND_NOTOPMOST,
+                        hb_retl( SetWindowPos( pWVT->hWnd, HWND_NOTOPMOST,
                                                rect.left,
                                                rect.top,
                                                0,
@@ -4439,7 +4439,7 @@ static void hb_wvt_gtCreateToolTipWindow( PHB_GTWVT pWVT )
                           pWVT->hInstance,
                           NULL );
    SetWindowPos( hwndTT,
-                 ( HWND ) HWND_TOPMOST,
+                 HWND_TOPMOST,
                  0,
                  0,
                  0,

@@ -1485,6 +1485,8 @@ void HBQPlainTextEdit::paintEvent( QPaintEvent * event )
 
 // this->hbDrawCursor( event );
 
+   painter.end();
+
    QPlainTextEdit::paintEvent( event );
 
    #if 0

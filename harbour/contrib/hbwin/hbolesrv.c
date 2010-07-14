@@ -597,8 +597,8 @@ static HB_BOOL s_objItemToVariant( VARIANT * pVariant, PHB_ITEM pItem )
    if( s_createHbOleObject( HB_ID_REF( IID_IDispatch ), &pvObj,
                             hb_itemNew( pItem ), HB_FALSE ) == S_OK )
    {
-      pVariant->n1.n2.vt = VT_DISPATCH;
-      pVariant->n1.n2.n3.pdispVal = ( IDispatch * ) pvObj;
+      V_VT( pVariant ) = VT_DISPATCH;
+      V_DISPATCH( pVariant ) = ( IDispatch * ) pvObj;
       return HB_TRUE;
    }
    return HB_FALSE;

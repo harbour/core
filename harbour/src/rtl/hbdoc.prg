@@ -61,7 +61,9 @@
 FUNCTION __hbdoc_FromSource( cFile, aErrMsg )
    LOCAL aEntry := {}
 
-   __hbdoc__read_stream( aEntry, cFile, "(stream)",, aErrMsg )
+   IF ISCHARACTER( cFile )
+      __hbdoc__read_stream( aEntry, cFile, "(stream)",, aErrMsg )
+   ENDIF
 
    RETURN aEntry
 

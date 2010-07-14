@@ -336,12 +336,12 @@ static void hb_oleDispatchToVariant( VARIANT* pVariant, IDispatch* pDisp,
    /* pVariant will be freed using VariantClear().
       We increment reference count to keep OLE object alive */
    HB_VTBL( pDisp )->AddRef( HB_THIS( pDisp ) );
-   pVariant->n1.n2.vt = VT_DISPATCH;
-   pVariant->n1.n2.n3.pdispVal = pDisp;
+   V_VT( pVariant ) = VT_DISPATCH;
+   V_DISPATCH( pVariant ) = pDisp;
    if( pVarRef )
    {
-      pVarRef->n1.n2.vt = VT_DISPATCH | VT_BYREF;
-      pVarRef->n1.n2.n3.ppdispVal = &pVariant->n1.n2.n3.pdispVal;
+      V_VT( pVarRef ) = VT_DISPATCH | VT_BYREF;
+      V_DISPATCHREF( pVarRef ) = &V_DISPATCH( pVariant );
    }
 }
 
@@ -351,98 +351,98 @@ static void hb_oleDispatchToVariant( VARIANT* pVariant, IDispatch* pDisp,
 static void hb_oleItemToVariantRef( VARIANT* pVariant, PHB_ITEM pItem,
                                     VARIANT* pVarRef, HB_OLEOBJ_FUNC pObjFunc )
 {
-   VariantClear( pVariant );  /* pVariant->n1.n2.vt = VT_EMPTY; */
+   VariantClear( pVariant );  /* VT_T( pVariant ) = VT_EMPTY; */
 
    switch( hb_itemType( pItem ) )
    {
       case HB_IT_STRING:
       case HB_IT_MEMO:
-         pVariant->n1.n2.vt = VT_BSTR;
-         pVariant->n1.n2.n3.bstrVal = hb_oleItemToString( pItem );
+         V_VT( pVariant ) = VT_BSTR;
+         V_BSTR( pVariant ) = hb_oleItemToString( pItem );
          if( pVarRef )
          {
-            pVarRef->n1.n2.vt = VT_BSTR | VT_BYREF;
-            pVarRef->n1.n2.n3.pbstrVal = &pVariant->n1.n2.n3.bstrVal;
+            V_VT( pVarRef ) = VT_BSTR | VT_BYREF;
+            V_BSTRREF( pVarRef ) = &V_BSTR( pVariant );
          }
          break;
 
       case HB_IT_LOGICAL:
-         pVariant->n1.n2.vt = VT_BOOL;
-         pVariant->n1.n2.n3.boolVal = hb_itemGetL( pItem ) ? VARIANT_TRUE : VARIANT_FALSE;
+         V_VT( pVariant ) = VT_BOOL;
+         V_BOOL( pVariant ) = hb_itemGetL( pItem ) ? VARIANT_TRUE : VARIANT_FALSE;
          if( pVarRef )
          {
-            pVarRef->n1.n2.vt = VT_BOOL | VT_BYREF;
-            pVarRef->n1.n2.n3.pboolVal = &pVariant->n1.n2.n3.boolVal;
+            V_VT( pVarRef ) = VT_BOOL | VT_BYREF;
+            V_BOOLREF( pVarRef ) = &V_BOOL( pVariant );
          }
          break;
 
       case HB_IT_INTEGER:
-         pVariant->n1.n2.vt = VT_I4;
-         pVariant->n1.n2.n3.lVal = hb_itemGetNL( pItem );
+         V_VT( pVariant ) = VT_I4;
+         V_I4( pVariant ) = hb_itemGetNL( pItem );
          if( pVarRef )
          {
-            pVarRef->n1.n2.vt = VT_I4 | VT_BYREF;
-            pVarRef->n1.n2.n3.plVal = &pVariant->n1.n2.n3.lVal;
+            V_VT( pVarRef ) = VT_I4 | VT_BYREF;
+            V_I4REF( pVarRef ) = &V_I4( pVariant );
          }
          break;
 
       case HB_IT_LONG:
 #if HB_VMLONG_MAX == INT32_MAX || defined( HB_LONG_LONG_OFF )
-         pVariant->n1.n2.vt = VT_I4;
-         pVariant->n1.n2.n3.lVal = hb_itemGetNL( pItem );
+         V_VT( pVariant ) = VT_I4;
+         V_I4( pVariant ) = hb_itemGetNL( pItem );
          if( pVarRef )
          {
-            pVarRef->n1.n2.vt = VT_I4 | VT_BYREF;
-            pVarRef->n1.n2.n3.plVal = &pVariant->n1.n2.n3.lVal;
+            V_VT( pVarRef ) = VT_I4 | VT_BYREF;
+            V_I4REF( pVarRef ) = &V_I4( pVariant );
          }
 #else
-         pVariant->n1.n2.vt = VT_I8;
+         V_VT( pVariant ) = VT_I8;
 #  if defined( HB_OLE_NO_LL )
          /* workaround for wrong OLE variant structure definition */
-         * ( ( HB_LONGLONG * ) &pVariant->n1.n2.n3.lVal ) = hb_itemGetNInt( pItem );
+         * ( ( HB_LONGLONG * ) &V_I4( pVariant ) ) = hb_itemGetNInt( pItem );
 #  else
-         pVariant->n1.n2.n3.llVal = hb_itemGetNInt( pItem );
+         V_I8( pVariant ) = hb_itemGetNInt( pItem );
 #  endif
          if( pVarRef )
          {
-            pVarRef->n1.n2.vt = VT_I8 | VT_BYREF;
+            V_VT( pVarRef ) = VT_I8 | VT_BYREF;
 #  if defined( HB_OLE_NO_LLREF ) || defined( HB_OLE_NO_LL )
             /* workaround for wrong OLE variant structure definition */
-            pVarRef->n1.n2.n3.pdblVal = &pVariant->n1.n2.n3.dblVal;
+            V_R8REF( pVarRef ) = &V_R8( pVariant );
 #  else
-            pVarRef->n1.n2.n3.pllVal = &pVariant->n1.n2.n3.llVal;
+            V_I8REF( pVarRef ) = &V_I8( pVariant );
 #  endif
          }
 #endif
          break;
 
       case HB_IT_DOUBLE:
-         pVariant->n1.n2.vt = VT_R8;
-         pVariant->n1.n2.n3.dblVal = hb_itemGetND( pItem );
+         V_VT( pVariant ) = VT_R8;
+         V_R8( pVariant ) = hb_itemGetND( pItem );
          if( pVarRef )
          {
-            pVarRef->n1.n2.vt = VT_R8 | VT_BYREF;
-            pVarRef->n1.n2.n3.pdblVal = &pVariant->n1.n2.n3.dblVal;
+            V_VT( pVarRef ) = VT_R8 | VT_BYREF;
+            V_R8REF( pVarRef ) = &V_R8( pVariant );
          }
          break;
 
       case HB_IT_DATE:
-         pVariant->n1.n2.vt = VT_DATE;
-         pVariant->n1.n2.n3.dblVal = ( double ) ( hb_itemGetDL( pItem ) - HB_OLE_DATE_BASE );
+         V_VT( pVariant ) = VT_DATE;
+         V_R8( pVariant ) = ( double ) ( hb_itemGetDL( pItem ) - HB_OLE_DATE_BASE );
          if( pVarRef )
          {
-            pVarRef->n1.n2.vt = VT_DATE | VT_BYREF;
-            pVarRef->n1.n2.n3.pdblVal = &pVariant->n1.n2.n3.dblVal;
+            V_VT( pVarRef ) = VT_DATE | VT_BYREF;
+            V_R8REF( pVarRef ) = &V_R8( pVariant );
          }
          break;
 
       case HB_IT_TIMESTAMP:
-         pVariant->n1.n2.vt = VT_DATE;
-         pVariant->n1.n2.n3.dblVal = hb_itemGetTD( pItem ) - HB_OLE_DATE_BASE;
+         V_VT( pVariant ) = VT_DATE;
+         V_R8( pVariant ) = hb_itemGetTD( pItem ) - HB_OLE_DATE_BASE;
          if( pVarRef )
          {
-            pVarRef->n1.n2.vt = VT_DATE | VT_BYREF;
-            pVarRef->n1.n2.n3.pdblVal = &pVariant->n1.n2.n3.dblVal;
+            V_VT( pVarRef ) = VT_DATE | VT_BYREF;
+            V_R8REF( pVarRef ) = &V_R8( pVariant );
          }
          break;
 
@@ -455,12 +455,12 @@ static void hb_oleItemToVariantRef( VARIANT* pVariant, PHB_ITEM pItem,
 #ifdef HB_OLE_PASS_POINTERS
          else
          {
-            pVariant->n1.n2.vt = VT_PTR;
-            pVariant->n1.n2.n3.byref = hb_itemGetPtr( pItem );
+            V_VT( pVariant ) = VT_PTR;
+            V_BYREF( pVariant ) = hb_itemGetPtr( pItem );
             if( pVarRef )
             {
-               pVarRef->n1.n2.vt = VT_PTR | VT_BYREF;
-               pVarRef->n1.n2.n3.byref = &pVariant->n1.n2.n3.byref;
+               V_VT( pVarRef ) = VT_PTR | VT_BYREF;
+               V_BYREF( pVarRef ) = &V_BYREF( pVariant );
             }
          }
 #endif
@@ -488,12 +488,12 @@ static void hb_oleItemToVariantRef( VARIANT* pVariant, PHB_ITEM pItem,
             sabound[ 0 ].cElements = ( long ) nLen;
 
             pSafeArray = SafeArrayCreate( VT_VARIANT, 1, sabound );
-            pVariant->n1.n2.vt = VT_VARIANT | VT_ARRAY;
-            pVariant->n1.n2.n3.parray = pSafeArray;
+            V_VT( pVariant ) = VT_VARIANT | VT_ARRAY;
+            V_ARRAY( pVariant ) = pSafeArray;
             if( pVarRef )
             {
-               pVarRef->n1.n2.vt = VT_VARIANT | VT_ARRAY | VT_BYREF;
-               pVarRef->n1.n2.n3.pparray = &pVariant->n1.n2.n3.parray;
+               V_VT( pVarRef ) = VT_VARIANT | VT_ARRAY | VT_BYREF;
+               V_ARRAYREF( pVarRef ) = &V_ARRAY( pVariant );
             }
 
             for( n = 0; n < nLen; n++ )
@@ -513,8 +513,8 @@ static void hb_oleItemToVariantRef( VARIANT* pVariant, PHB_ITEM pItem,
       default:
          if( pVarRef )
          {
-            pVarRef->n1.n2.vt = VT_VARIANT | VT_BYREF;
-            pVarRef->n1.n2.n3.pvarVal = pVariant;
+            V_VT( pVarRef ) = VT_VARIANT | VT_BYREF;
+            V_VARIANTREF( pVarRef ) = pVariant;
          }
    }
 
@@ -525,8 +525,8 @@ static void hb_oleItemToVariantRef( VARIANT* pVariant, PHB_ITEM pItem,
 #if 0
    if( pVarRef )
    {
-      pVarRef->n1.n2.vt = VT_VARIANT | VT_BYREF;
-      pVarRef->n1.n2.n3.pvarVal = pVariant;
+      V_VT( pVarRef ) = VT_VARIANT | VT_BYREF;
+      V_VARIANTREF( pVarRef ) = pVariant;
    }
 #endif
 }
@@ -572,11 +572,11 @@ static void hb_oleSafeArrayToItem( PHB_ITEM pItem, SAFEARRAY * pSafeArray,
              */
             if( SafeArrayGetElement( pSafeArray, plIndex,
                                      vt == VT_VARIANT ? ( void * ) &vItem :
-                                     ( vt == VT_DECIMAL ? ( void * ) &vItem.n1.decVal :
-                                     ( void * ) &vItem.n1.n2.n3 ) ) == S_OK )
+                                     ( vt == VT_DECIMAL ? ( void * ) &HB_WIN_U1( &vItem, decVal ) :
+                                     ( void * ) &HB_WIN_U3( &vItem, ullVal ) ) ) == S_OK )
             {
                if( vt != VT_VARIANT )
-                  vItem.n1.n2.vt = vt; /* it's reserved in VT_DECIMAL structure */
+                  V_VT( &vItem ) = vt; /* it's reserved in VT_DECIMAL structure */
                hb_oleVariantToItem( hb_arrayGetItemPtr( pItem, ++ul ), &vItem );
                VariantClear( &vItem );
             }
@@ -636,18 +636,18 @@ static void hb_oleDispatchToItem( PHB_ITEM pItem, IDispatch* pdispVal )
 
 void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
 {
-   if( pVariant->n1.n2.vt == ( VT_VARIANT | VT_BYREF ) )
-      pVariant = pVariant->n1.n2.n3.pvarVal;
+   if( V_VT( pVariant ) == ( VT_VARIANT | VT_BYREF ) )
+      pVariant = V_VARIANTREF( pVariant );
 
-   switch( pVariant->n1.n2.vt )
+   switch( V_VT( pVariant ) )
    {
       case VT_UNKNOWN:
       case VT_UNKNOWN | VT_BYREF:
       {
          IDispatch* pdispVal = NULL;
-         IUnknown* punkVal = pVariant->n1.n2.vt == VT_UNKNOWN ?
-                             pVariant->n1.n2.n3.punkVal :
-                             *pVariant->n1.n2.n3.ppunkVal;
+         IUnknown* punkVal = V_VT( pVariant ) == VT_UNKNOWN ?
+                             V_UNKNOWN( pVariant ) :
+                             *V_UNKNOWNREF( pVariant );
          hb_itemClear( pItem );
          if( punkVal && HB_VTBL( punkVal )->QueryInterface(
                               HB_THIS_( punkVal ) HB_ID_REF( IID_IDispatch ),
@@ -662,168 +662,168 @@ void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
       case VT_DISPATCH:
       case VT_DISPATCH | VT_BYREF:
          hb_itemClear( pItem );
-         hb_oleDispatchToItem( pItem, pVariant->n1.n2.vt == VT_DISPATCH ?
-                                      pVariant->n1.n2.n3.pdispVal :
-                                      *pVariant->n1.n2.n3.ppdispVal );
+         hb_oleDispatchToItem( pItem, V_VT( pVariant ) == VT_DISPATCH ?
+                                      V_DISPATCH( pVariant ) :
+                                      *V_DISPATCHREF( pVariant ) );
          break;
 
       case VT_BSTR:
-         hb_oleStringToItem( pVariant->n1.n2.n3.bstrVal, pItem );
+         hb_oleStringToItem( V_BSTR( pVariant ), pItem );
          break;
 
       case VT_BSTR | VT_BYREF:
-         hb_oleStringToItem( *pVariant->n1.n2.n3.pbstrVal, pItem );
+         hb_oleStringToItem( *V_BSTRREF( pVariant ), pItem );
          break;
 
       case VT_BOOL:
-         hb_itemPutL( pItem, pVariant->n1.n2.n3.boolVal ? HB_TRUE : HB_FALSE );
+         hb_itemPutL( pItem, V_BOOL( pVariant ) ? HB_TRUE : HB_FALSE );
          break;
 
       case VT_BOOL | VT_BYREF:
-         hb_itemPutL( pItem, *pVariant->n1.n2.n3.pboolVal ? HB_TRUE : HB_FALSE );
+         hb_itemPutL( pItem, *V_BOOLREF( pVariant ) ? HB_TRUE : HB_FALSE );
          break;
 
       case VT_I1:
-         hb_itemPutNI( pItem, ( signed char ) pVariant->n1.n2.n3.cVal );
+         hb_itemPutNI( pItem, ( signed char ) V_I1( pVariant ) );
          break;
 
       case VT_I1 | VT_BYREF:
-         hb_itemPutNI( pItem, ( signed char ) *pVariant->n1.n2.n3.pcVal );
+         hb_itemPutNI( pItem, ( signed char ) * V_I1REF( pVariant ) );
          break;
 
       case VT_I2:
-         hb_itemPutNI( pItem, ( short ) pVariant->n1.n2.n3.iVal );
+         hb_itemPutNI( pItem, ( short ) V_I2( pVariant ) );
          break;
 
       case VT_I2 | VT_BYREF:
-         hb_itemPutNI( pItem, ( short ) *pVariant->n1.n2.n3.piVal );
+         hb_itemPutNI( pItem, ( short ) *V_I2REF( pVariant ) );
          break;
 
       case VT_I4:
-         hb_itemPutNL( pItem, pVariant->n1.n2.n3.lVal );
+         hb_itemPutNL( pItem, V_I4( pVariant ) );
          break;
 
       case VT_I4 | VT_BYREF:
-         hb_itemPutNL( pItem, *pVariant->n1.n2.n3.plVal );
+         hb_itemPutNL( pItem, *V_I4REF( pVariant ) );
          break;
 
       case VT_I8:
 #if HB_VMLONG_MAX == INT32_MAX || defined( HB_LONG_LONG_OFF )
-         hb_itemPutNInt( pItem, ( HB_MAXINT ) pVariant->n1.n2.n3.lVal );
+         hb_itemPutNInt( pItem, ( HB_MAXINT ) V_I4( pVariant ) );
 #elif defined( HB_OLE_NO_LL )
          /* workaround for wrong OLE variant structure definition */
-         hb_itemPutNInt( pItem, * ( ( HB_LONGLONG * ) &pVariant->n1.n2.n3.lVal ) );
+         hb_itemPutNInt( pItem, * ( ( HB_LONGLONG * ) &V_I4( pVariant ) ) );
 #else
-         hb_itemPutNInt( pItem, pVariant->n1.n2.n3.llVal );
+         hb_itemPutNInt( pItem, V_I8( pVariant ) );
 #endif
          break;
 
       case VT_I8 | VT_BYREF:
 #if HB_VMLONG_MAX == INT32_MAX || defined( HB_LONG_LONG_OFF )
-         hb_itemPutNInt( pItem, ( HB_MAXINT ) *pVariant->n1.n2.n3.plVal );
+         hb_itemPutNInt( pItem, ( HB_MAXINT ) *V_I4REF( pVariant ) );
 #elif defined( HB_OLE_NO_LLREF )
          /* workaround for wrong OLE variant structure definition */
-         hb_itemPutNInt( pItem, * ( HB_LONGLONG * ) pVariant->n1.n2.n3.pdblVal );
+         hb_itemPutNInt( pItem, * ( HB_LONGLONG * ) V_R8REF( pVariant ) );
 #else
-         hb_itemPutNInt( pItem, *pVariant->n1.n2.n3.pllVal );
+         hb_itemPutNInt( pItem, *V_I8REF( pVariant ) );
 #endif
          break;
 
       case VT_UI1:
-         hb_itemPutNI( pItem, ( unsigned char ) pVariant->n1.n2.n3.bVal );
+         hb_itemPutNI( pItem, ( unsigned char ) V_UI1( pVariant ) );
          break;
 
       case VT_UI1 | VT_BYREF:
-         hb_itemPutNI( pItem, ( unsigned char ) *pVariant->n1.n2.n3.pbVal );
+         hb_itemPutNI( pItem, ( unsigned char ) *V_UI1REF( pVariant ) );
          break;
 
       case VT_UI2:
-         hb_itemPutNI( pItem, ( unsigned short ) pVariant->n1.n2.n3.uiVal );
+         hb_itemPutNI( pItem, ( unsigned short ) V_UI2( pVariant ) );
          break;
 
       case VT_UI2 | VT_BYREF:
-         hb_itemPutNI( pItem, ( unsigned short ) *pVariant->n1.n2.n3.puiVal );
+         hb_itemPutNI( pItem, ( unsigned short ) *V_UI2REF( pVariant ) );
          break;
 
       case VT_UI4:
-         hb_itemPutNInt( pItem, pVariant->n1.n2.n3.ulVal );
+         hb_itemPutNInt( pItem, V_UI4( pVariant ) );
          break;
 
       case VT_UI4 | VT_BYREF:
-         hb_itemPutNInt( pItem, *pVariant->n1.n2.n3.pulVal );
+         hb_itemPutNInt( pItem, *V_UI4REF( pVariant ) );
          break;
 
       case VT_UI8:
          /* TODO: sign is lost. Convertion to double will lose significant digits. */
 #if HB_VMLONG_MAX == INT32_MAX || defined( HB_LONG_LONG_OFF )
-         hb_itemPutNInt( pItem, ( HB_MAXINT ) pVariant->n1.n2.n3.ulVal );
+         hb_itemPutNInt( pItem, ( HB_MAXINT ) V_UI4( pVariant ) );
 #elif defined( HB_OLE_NO_LL )
          /* workaround for wrong OLE variant structure definition */
-         hb_itemPutNInt( pItem, * ( ( HB_LONGLONG * ) &pVariant->n1.n2.n3.ulVal ) );
+         hb_itemPutNInt( pItem, * ( ( HB_LONGLONG * ) &V_UI4( pVariant ) ) );
 #else
-         hb_itemPutNInt( pItem, ( HB_MAXINT ) pVariant->n1.n2.n3.ullVal );
+         hb_itemPutNInt( pItem, ( HB_MAXINT ) V_UI8( pVariant ) );
 #endif
          break;
 
       case VT_UI8 | VT_BYREF:
          /* TODO: sign is lost. Convertion to double will lose significant digits. */
 #if HB_VMLONG_MAX == INT32_MAX || defined( HB_LONG_LONG_OFF )
-         hb_itemPutNInt( pItem, ( HB_MAXINT ) *pVariant->n1.n2.n3.pulVal );
+         hb_itemPutNInt( pItem, ( HB_MAXINT ) *V_UI4REF( pVariant ) );
 #elif defined( HB_OLE_NO_LLREF )
          /* workaround for wrong OLE variant structure definition */
-         hb_itemPutNInt( pItem, * ( HB_LONGLONG * ) pVariant->n1.n2.n3.pdblVal );
+         hb_itemPutNInt( pItem, * ( HB_LONGLONG * ) V_R8REF( pVariant ) );
 #else
-         hb_itemPutNInt( pItem, ( HB_MAXINT ) *pVariant->n1.n2.n3.pullVal );
+         hb_itemPutNInt( pItem, ( HB_MAXINT ) *V_UI8REF( pVariant ) );
 #endif
          break;
 
       case VT_INT:
-         hb_itemPutNI( pItem, pVariant->n1.n2.n3.intVal );
+         hb_itemPutNI( pItem, V_INT( pVariant ) );
          break;
 
       case VT_INT | VT_BYREF:
-         hb_itemPutNI( pItem, *pVariant->n1.n2.n3.pintVal );
+         hb_itemPutNI( pItem, *V_INTREF( pVariant ) );
          break;
 
       case VT_UINT:
-         hb_itemPutNInt( pItem, pVariant->n1.n2.n3.uintVal );
+         hb_itemPutNInt( pItem, V_UINT( pVariant ) );
          break;
 
       case VT_UINT | VT_BYREF:
-         hb_itemPutNInt( pItem, *pVariant->n1.n2.n3.puintVal );
+         hb_itemPutNInt( pItem, *V_UINTREF( pVariant ) );
          break;
 
       case VT_ERROR:
-         hb_itemPutNInt( pItem, pVariant->n1.n2.n3.scode );
+         hb_itemPutNInt( pItem, V_ERROR( pVariant ) );
          break;
 
       case VT_ERROR | VT_BYREF:
-         hb_itemPutNInt( pItem, *pVariant->n1.n2.n3.pscode );
+         hb_itemPutNInt( pItem, *V_ERRORREF( pVariant ) );
          break;
 
       case VT_R4:
-         hb_itemPutND( pItem, ( double ) pVariant->n1.n2.n3.fltVal );
+         hb_itemPutND( pItem, ( double ) V_R4( pVariant ) );
          break;
 
       case VT_R4 | VT_BYREF:
-         hb_itemPutND( pItem, ( double ) *pVariant->n1.n2.n3.pfltVal );
+         hb_itemPutND( pItem, ( double ) *V_R4REF( pVariant ) );
          break;
 
       case VT_R8:
-         hb_itemPutND( pItem, pVariant->n1.n2.n3.dblVal );
+         hb_itemPutND( pItem, V_R8( pVariant ) );
          break;
 
       case VT_R8 | VT_BYREF:
-         hb_itemPutND( pItem, *pVariant->n1.n2.n3.pdblVal );
+         hb_itemPutND( pItem, *V_R8REF( pVariant ) );
          break;
 
       case VT_CY:
       case VT_CY | VT_BYREF:
       {
          double dblVal;
-         VarR8FromCy( pVariant->n1.n2.vt == VT_CY ?
-                      pVariant->n1.n2.n3.cyVal :
-                      *pVariant->n1.n2.n3.pcyVal, &dblVal );
+         VarR8FromCy( V_VT( pVariant ) == VT_CY ?
+                      V_CY( pVariant ) :
+                      *V_CYREF( pVariant ), &dblVal );
          hb_itemPutND( pItem, dblVal );
          /* hb_itemPutNDLen( pItem, dblVal, 0, 4 ); */
          break;
@@ -833,9 +833,9 @@ void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
       case VT_DECIMAL | VT_BYREF:
       {
          double dblVal;
-         VarR8FromDec( pVariant->n1.n2.vt == VT_DECIMAL ?
-                       &pVariant->n1.decVal :
-                       pVariant->n1.n2.n3.pdecVal, &dblVal );
+         VarR8FromDec( V_VT( pVariant ) == VT_DECIMAL ?
+                       &HB_WIN_U1( pVariant, decVal ) :
+                       V_DECIMALREF( pVariant ), &dblVal );
          hb_itemPutND( pItem, dblVal );
          break;
       }
@@ -844,9 +844,9 @@ void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
       case VT_DATE | VT_BYREF:
       {
          long lJulian, lMilliSec;
-         double dblVal = pVariant->n1.n2.vt == VT_DATE ?
-                         pVariant->n1.n2.n3.dblVal :
-                         *pVariant->n1.n2.n3.pdblVal;
+         double dblVal = V_VT( pVariant ) == VT_DATE ?
+                         V_R8( pVariant ) :
+                         *V_R8REF( pVariant );
 
          hb_timeStampUnpackDT( dblVal + HB_OLE_DATE_BASE, &lJulian, &lMilliSec );
          if( lMilliSec )
@@ -860,7 +860,7 @@ void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
       case VT_PTR:
       case VT_PTR | VT_BYREF:
       case VT_BYREF:
-         hb_itemPutPtr( pItem, pVariant->n1.n2.n3.byref );
+         hb_itemPutPtr( pItem, V_BYREF( pVariant ) );
          break;
 #endif
 
@@ -872,11 +872,11 @@ void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
          break;
 
       default:
-         if( pVariant->n1.n2.vt & VT_ARRAY )
+         if( V_VT( pVariant ) & VT_ARRAY )
          {
-            SAFEARRAY * pSafeArray = pVariant->n1.n2.vt & VT_BYREF ?
-                                     *pVariant->n1.n2.n3.pparray :
-                                     pVariant->n1.n2.n3.parray;
+            SAFEARRAY * pSafeArray = V_VT( pVariant ) & VT_BYREF ?
+                                     *V_ARRAYREF( pVariant ) :
+                                     V_ARRAY( pVariant );
             if( pSafeArray )
             {
                int  iDim;
@@ -886,7 +886,7 @@ void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
                   long * plIndex = ( long * ) hb_xgrab( iDim * sizeof( long ) );
 
                   hb_oleSafeArrayToItem( pItem, pSafeArray, iDim, plIndex,
-                           ( pVariant->n1.n2.vt & ~( VT_ARRAY | VT_BYREF ) ) );
+                           ( V_VT( pVariant ) & ~( VT_ARRAY | VT_BYREF ) ) );
                   hb_xfree( plIndex );
                }
                else
@@ -903,7 +903,7 @@ void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
 void hb_oleVariantUpdate( VARIANT* pVariant, PHB_ITEM pItem,
                           HB_OLEOBJ_FUNC pObjFunc )
 {
-   switch( pVariant->n1.n2.vt )
+   switch( V_VT( pVariant ) )
    {
       case VT_DISPATCH | VT_BYREF:
       {
@@ -911,11 +911,11 @@ void hb_oleVariantUpdate( VARIANT* pVariant, PHB_ITEM pItem,
 
          if( pDisp )
          {
-            IDispatch* pdispVal = *pVariant->n1.n2.n3.ppdispVal;
+            IDispatch* pdispVal = *V_DISPATCHREF( pVariant );
             if( pdispVal != pDisp )
             {
                HB_VTBL( pDisp )->AddRef( HB_THIS( pDisp ) );
-               *pVariant->n1.n2.n3.ppdispVal = pDisp;
+               *V_DISPATCHREF( pVariant ) = pDisp;
                if( pdispVal )
                   HB_VTBL( pdispVal )->Release( HB_THIS( pdispVal ) );
             }
@@ -926,8 +926,8 @@ void hb_oleVariantUpdate( VARIANT* pVariant, PHB_ITEM pItem,
             VariantInit( &variant );
             if( pObjFunc( &variant, pItem ) )
             {
-               IDispatch* pdispVal = *pVariant->n1.n2.n3.ppdispVal;
-               *pVariant->n1.n2.n3.ppdispVal = variant.n1.n2.n3.pdispVal;
+               IDispatch* pdispVal = *V_DISPATCHREF( pVariant );
+               *V_DISPATCHREF( pVariant ) = V_DISPATCH( &variant );
                if( pdispVal )
                   HB_VTBL( pdispVal )->Release( HB_THIS( pdispVal ) );
             }
@@ -947,11 +947,11 @@ void hb_oleVariantUpdate( VARIANT* pVariant, PHB_ITEM pItem,
                                        HB_ID_REF( IID_IEnumVARIANT ),
                                        ( void** ) ( void * ) &pUnk ) == S_OK )
             {
-               IUnknown* punkVal = *pVariant->n1.n2.n3.ppunkVal;
+               IUnknown* punkVal = *V_UNKNOWNREF( pVariant );
                if( punkVal != pUnk )
                {
                   HB_VTBL( pUnk )->AddRef( HB_THIS( pUnk ) );
-                  *pVariant->n1.n2.n3.ppunkVal = pUnk;
+                  *V_UNKNOWNREF( pVariant ) = pUnk;
                   if( punkVal )
                      HB_VTBL( punkVal )->Release( HB_THIS( punkVal ) );
                }
@@ -963,8 +963,8 @@ void hb_oleVariantUpdate( VARIANT* pVariant, PHB_ITEM pItem,
             VariantInit( &variant );
             if( pObjFunc( &variant, pItem ) )
             {
-               IDispatch* pdispVal = *pVariant->n1.n2.n3.ppdispVal;
-               *pVariant->n1.n2.n3.ppdispVal = variant.n1.n2.n3.pdispVal;
+               IDispatch* pdispVal = *V_DISPATCHREF( pVariant );
+               *V_DISPATCHREF( pVariant ) = V_DISPATCH( &variant );
                if( pdispVal )
                   HB_VTBL( pdispVal )->Release( HB_THIS( pdispVal ) );
             }
@@ -973,100 +973,100 @@ void hb_oleVariantUpdate( VARIANT* pVariant, PHB_ITEM pItem,
       }
 
       case VT_BSTR | VT_BYREF:
-         SysFreeString( *pVariant->n1.n2.n3.pbstrVal );
-         *pVariant->n1.n2.n3.pbstrVal = hb_oleItemToString( pItem );
+         SysFreeString( *V_BSTRREF( pVariant ) );
+         *V_BSTRREF( pVariant ) = hb_oleItemToString( pItem );
          break;
 
       case VT_BOOL | VT_BYREF:
-         *pVariant->n1.n2.n3.pboolVal = ( VARIANT_BOOL ) hb_itemGetL( pItem );
+         *V_BOOLREF( pVariant ) = ( VARIANT_BOOL ) hb_itemGetL( pItem );
          break;
 
       case VT_I1 | VT_BYREF:
-         *pVariant->n1.n2.n3.pcVal = ( signed char ) hb_itemGetNI( pItem );
+         *V_I1REF( pVariant ) = ( signed char ) hb_itemGetNI( pItem );
          break;
 
       case VT_I2 | VT_BYREF:
-         *pVariant->n1.n2.n3.piVal = ( short ) hb_itemGetNI( pItem );
+         *V_I2REF( pVariant ) = ( short ) hb_itemGetNI( pItem );
          break;
 
       case VT_I4 | VT_BYREF:
-         *pVariant->n1.n2.n3.plVal = hb_itemGetNL( pItem );
+         *V_I4REF( pVariant ) = hb_itemGetNL( pItem );
          break;
 
       case VT_I8 | VT_BYREF:
 #if HB_VMLONG_MAX == INT32_MAX || defined( HB_LONG_LONG_OFF )
-         *pVariant->n1.n2.n3.plVal = ( long ) hb_itemGetNInt( pItem );
+         *V_I4REF( pVariant ) = ( long ) hb_itemGetNInt( pItem );
 #elif defined( HB_OLE_NO_LLREF )
          /* workaround for wrong OLE variant structure definition */
-         * ( HB_LONGLONG * ) pVariant->n1.n2.n3.pdblVal = ( HB_LONGLONG ) hb_itemGetNInt( pItem );
+         * ( HB_LONGLONG * ) V_R8REF( pVariant ) = ( HB_LONGLONG ) hb_itemGetNInt( pItem );
 #else
-         *pVariant->n1.n2.n3.pllVal = ( HB_LONGLONG ) hb_itemGetNInt( pItem );
+         *V_I8REF( pVariant ) = ( HB_LONGLONG ) hb_itemGetNInt( pItem );
 #endif
          break;
 
       case VT_UI1 | VT_BYREF:
-         *pVariant->n1.n2.n3.pbVal = ( unsigned char ) hb_itemGetNI( pItem );
+         *V_UI1REF( pVariant ) = ( unsigned char ) hb_itemGetNI( pItem );
          break;
 
       case VT_UI2 | VT_BYREF:
-         *pVariant->n1.n2.n3.puiVal = ( unsigned short ) hb_itemGetNI( pItem );
+         *V_UI2REF( pVariant ) = ( unsigned short ) hb_itemGetNI( pItem );
          break;
 
       case VT_UI4 | VT_BYREF:
-         *pVariant->n1.n2.n3.pulVal = ( unsigned long ) hb_itemGetNL( pItem );
+         *V_UI4REF( pVariant ) = ( unsigned long ) hb_itemGetNL( pItem );
          break;
 
       case VT_UI8 | VT_BYREF:
 #if HB_VMLONG_MAX == INT32_MAX || defined( HB_LONG_LONG_OFF )
-         *pVariant->n1.n2.n3.pulVal = ( unsigned long ) hb_itemGetNInt( pItem );
+         *V_UI4REF( pVariant ) = ( unsigned long ) hb_itemGetNInt( pItem );
 #elif defined( HB_OLE_NO_LLREF )
          /* workaround for wrong OLE variant structure definition */
-         * ( HB_ULONGLONG * ) pVariant->n1.n2.n3.pdblVal = ( HB_ULONGLONG ) hb_itemGetNInt( pItem );
+         * ( HB_ULONGLONG * ) V_R8REF( pVariant ) = ( HB_ULONGLONG ) hb_itemGetNInt( pItem );
 #else
-         *pVariant->n1.n2.n3.pullVal = ( HB_ULONGLONG ) hb_itemGetNInt( pItem );
+         *V_UI8REF( pVariant ) = ( HB_ULONGLONG ) hb_itemGetNInt( pItem );
 #endif
          break;
 
       case VT_INT | VT_BYREF:
-         *pVariant->n1.n2.n3.pintVal = hb_itemGetNI( pItem );
+         *V_INTREF( pVariant ) = hb_itemGetNI( pItem );
          break;
 
       case VT_UINT | VT_BYREF:
-         *pVariant->n1.n2.n3.puintVal = ( unsigned int ) hb_itemGetNI( pItem );
+         *V_UINTREF( pVariant ) = ( unsigned int ) hb_itemGetNI( pItem );
          break;
 
       case VT_ERROR | VT_BYREF:
-         *pVariant->n1.n2.n3.pscode = ( SCODE ) hb_itemGetNL( pItem );
+         *V_ERRORREF( pVariant ) = ( SCODE ) hb_itemGetNL( pItem );
          break;
 
       case VT_R4 | VT_BYREF:
-         *pVariant->n1.n2.n3.pfltVal = ( float ) hb_itemGetND( pItem );
+         *V_R4REF( pVariant ) = ( float ) hb_itemGetND( pItem );
          break;
 
       case VT_R8 | VT_BYREF:
-         *pVariant->n1.n2.n3.pdblVal = hb_itemGetND( pItem );
+         *V_R8REF( pVariant ) = hb_itemGetND( pItem );
          break;
 
       case VT_CY | VT_BYREF:
-         VarCyFromR8( hb_itemGetND( pItem ), pVariant->n1.n2.n3.pcyVal );
+         VarCyFromR8( hb_itemGetND( pItem ), V_CYREF( pVariant ) );
          break;
 
       case VT_DECIMAL | VT_BYREF:
-         VarDecFromR8( hb_itemGetND( pItem ), pVariant->n1.n2.n3.pdecVal );
+         VarDecFromR8( hb_itemGetND( pItem ), V_DECIMALREF( pVariant ) );
          break;
 
       case VT_DATE | VT_BYREF:
-         *pVariant->n1.n2.n3.pdblVal = hb_itemGetTD( pItem ) - HB_OLE_DATE_BASE;
+         *V_R8REF( pVariant ) = hb_itemGetTD( pItem ) - HB_OLE_DATE_BASE;
          break;
 
 #ifdef HB_OLE_PASS_POINTERS
       case VT_PTR | VT_BYREF:
-         pVariant->n1.n2.n3.byref = hb_itemGetPtr( pItem );
+         V_BYREF( pVariant ) = hb_itemGetPtr( pItem );
          break;
 #endif
 
       case VT_BYREF | VT_VARIANT:
-         hb_oleItemToVariantRef( pVariant->n1.n2.n3.pvarVal, pItem, NULL, pObjFunc );
+         hb_oleItemToVariantRef( V_VARIANTREF( pVariant ), pItem, NULL, pObjFunc );
          break;
 
       case VT_VARIANT | VT_ARRAY | VT_BYREF:
@@ -1105,7 +1105,7 @@ HB_BOOL hb_oleDispInvoke( PHB_SYMB pSym, PHB_ITEM pObject, PHB_ITEM pParam,
 
       for( i = iRefs = 0; i < iCount && iRefs < ( int ) HB_SIZEOFARRAY( refArray ); i++ )
       {
-         if( pParams->rgvarg[ i ].n1.n2.vt & VT_BYREF )
+         if( V_VT( &pParams->rgvarg[ i ] ) & VT_BYREF )
             refArray[ iRefs++ ].item = hb_stackAllocItem();
       }
 
@@ -1126,7 +1126,7 @@ HB_BOOL hb_oleDispInvoke( PHB_SYMB pSym, PHB_ITEM pObject, PHB_ITEM pParam,
 
       for( i = 1, ii = 0; i <= iCount; i++ )
       {
-         if( ( pParams->rgvarg[ iCount - i ].n1.n2.vt & VT_BYREF ) &&
+         if( ( V_VT( &pParams->rgvarg[ iCount - i ] ) & VT_BYREF ) &&
              ( ii < iRefs ) )
          {
             refArray[ ii ].variant = &pParams->rgvarg[ iCount - i ];
@@ -1369,13 +1369,13 @@ HB_FUNC( __OLEENUMCREATE ) /* ( __hObj ) */
 
    if( lOleError == S_OK )
    {
-      if( variant.n1.n2.vt == VT_UNKNOWN )
-         lOleError = HB_VTBL( variant.n1.n2.n3.punkVal )->QueryInterface(
-                            HB_THIS_( variant.n1.n2.n3.punkVal )
+      if( V_VT( &variant ) == VT_UNKNOWN )
+         lOleError = HB_VTBL( V_UNKNOWN( &variant ) )->QueryInterface(
+                            HB_THIS_( HB_WIN_U3( &variant, punkVal ) )
                             HB_ID_REF( IID_IEnumVARIANT ), ( void** ) ( void * ) &pEnum );
-      else if( variant.n1.n2.vt == VT_DISPATCH )
-         lOleError = HB_VTBL( variant.n1.n2.n3.pdispVal )->QueryInterface(
-                            HB_THIS_( variant.n1.n2.n3.pdispVal )
+      else if( V_VT( &variant ) == VT_DISPATCH )
+         lOleError = HB_VTBL( HB_WIN_U3( &variant, pdispVal ) )->QueryInterface(
+                            HB_THIS_( HB_WIN_U3( &variant, pdispVal ) )
                             HB_ID_REF( IID_IEnumVARIANT ), ( void** ) ( void * ) &pEnum );
       else
       {

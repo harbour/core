@@ -74,13 +74,28 @@
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 
-/* dirty hack for borland C compiler and #define NONAMELESSUNION in oledlg.h */
 #if defined( __BORLANDC__ )
-#  define DUMMYUNIONNAME
-#  define DUMMYUNIONNAME2
-#  define DUMMYUNIONNAME3
-#  define DUMMYUNIONNAME4
-#  define DUMMYUNIONNAME5
+#  if !defined( NONAMELESSUNION )
+#     define NONAMELESSUNION
+#  endif
+#  if defined( DUMMYUNIONNAME )
+#     undef DUMMYUNIONNAME
+#  endif
+#  if defined( DUMMYUNIONNAME2 )
+#     undef DUMMYUNIONNAME2
+#  endif
+#  if defined( DUMMYUNIONNAME3 )
+#     undef DUMMYUNIONNAME3
+#  endif
+#  if defined( DUMMYUNIONNAME4 )
+#     undef DUMMYUNIONNAME4
+#  endif
+#  if defined( DUMMYUNIONNAME5 )
+#     undef DUMMYUNIONNAME5
+#  endif
+#  define HB_WIN_V_UNION( x, y, z )    ((x).y.z)
+#else
+#  define HB_WIN_V_UNION( x, y, z )    ((x).z)
 #endif
 
 #include "gtwvg.h"
@@ -1066,7 +1081,7 @@ HB_FUNC( WVG_ADDTOOLBARBUTTON )
          /* set bitmap */
          tbab.hInst = NULL;
 #if (_WIN32_IE >= 0x0500)
-         tbab.nID   = ( UINT_PTR ) ( HBITMAP ) hb_parnint( 2 );
+         tbab.nID   = ( UINT_PTR ) ( HBITMAP ) ( HB_PTRDIFF ) hb_parnint( 2 );
 #else
          tbab.nID   = ( UINT ) ( HBITMAP ) hb_parnl( 2 );
 #endif

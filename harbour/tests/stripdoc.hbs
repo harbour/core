@@ -15,7 +15,7 @@
 PROCEDURE Main()
    LOCAL aFile
 
-   FOR EACH aFile IN Directory( "*.*" )
+   FOR EACH aFile IN Directory( hb_osFileMask() )
       IF Right( aFile[ F_NAME ], 2 ) == ".c" .OR. ;
          Right( aFile[ F_NAME ], 4 ) == ".prg"
 
@@ -28,7 +28,6 @@ PROCEDURE Main()
 FUNCTION __hbdoc_filter_out( cFile )
    LOCAL lEntry := .F.
    LOCAL cLine
-   LOCAL nLine
    LOCAL cOK := ""
    LOCAL nToSkip := 0
    LOCAL nEmpty := 0
@@ -36,10 +35,7 @@ FUNCTION __hbdoc_filter_out( cFile )
    cFile := StrTran( cFile, Chr( 13 ) )
    cFile := StrTran( cFile, Chr( 9 ), " " )
 
-   nLine := 0
    FOR EACH cLine IN hb_ATokens( cFile, Chr( 10 ) )
-
-      ++nLine
 
       SWITCH AllTrim( SubStr( cLine, 4 ) )
       CASE "$DOC$"
