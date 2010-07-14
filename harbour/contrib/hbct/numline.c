@@ -55,34 +55,34 @@
 
 HB_FUNC( NUMLINE )
 {
-   HB_ISIZ lLines = 0;
+   HB_ISIZ nLines = 0;
 
    if( HB_ISCHAR( 1 ) )
    {
       const char * pcString = hb_parc( 1 );
       const char * pBuffer;
-      HB_ISIZ lStrLen = hb_parclen( 1 );
-      HB_ISIZ lLength = hb_parnsdef( 2, 80 );
+      HB_ISIZ nStrLen = hb_parclen( 1 );
+      HB_ISIZ nLength = hb_parnsdef( 2, 80 );
 
-      while( lStrLen > 0 )
+      while( nStrLen > 0 )
       {
-         pBuffer = ( char * ) memchr( pcString, 13, lStrLen );
+         pBuffer = ( char * ) memchr( pcString, 13, nStrLen );
          if( ! pBuffer )
-            pBuffer = pcString + lStrLen;
+            pBuffer = pcString + nStrLen;
 
-         if( ( pBuffer - pcString ) > lLength )
-            pBuffer = pcString + lLength;
+         if( ( pBuffer - pcString ) > nLength )
+            pBuffer = pcString + nLength;
          else
          {
-            pBuffer++;
+            ++pBuffer;
             if( *pBuffer == 10 )
-               pBuffer++;
+               ++pBuffer;
          }
-         lStrLen -= pBuffer - pcString;
+         nStrLen -= pBuffer - pcString;
          pcString = pBuffer;
-         lLines++;
+         ++nLines;
       }
    }
 
-   hb_retns( lLines );
+   hb_retns( nLines );
 }

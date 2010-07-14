@@ -1619,6 +1619,20 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
    aParams := {}
 
+   /* Process build-time configuration */
+
+   #if defined( HB_HAS_GPM )
+      AAdd( hbmk[ _HBMK_aLIBUSERSYS ], "gpm" )
+   #endif
+
+   #if defined( HB_HAS_WATT )
+      SWITCH hbmk[ _HBMK_cCOMP ]
+      CASE "djgpp"  ; AAdd( hbmk[ _HBMK_aLIBUSERSYS ], "watt" ) ; EXIT
+      CASE "watcom" ; AAdd( hbmk[ _HBMK_aLIBUSERSYS ], "wattcpwf" ) ; EXIT
+      ENDSWITCH
+      AAdd( hbmk[ _HBMK_aLIBPATH ], PathSepToSelf( GetEnv( "WATT_ROOT" ) ) + hb_ps() + "lib" )
+   #endif
+
    /* Process automatic make files in current dir. */
    IF hb_FileExists( _HBMK_AUTOHBM_NAME )
       IF ! hbmk[ _HBMK_lQuiet ]
