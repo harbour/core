@@ -25,30 +25,6 @@
  *
  */
 
-
-/*  $DOC$
- *  $FUNCNAME$
- *     FT_STOD()
- *  $CATEGORY$
- *     Conversion
- *  $ONELINER$
- *     Convert a date string to a Clipper date data type
- *  $SYNTAX$
- *     FT_STOD( <cDateStr> ) -> dDateType
- *  $ARGUMENTS$
- *     <cDateStr> is a Clipper string in the format "CCYYMMDD".
- *  $RETURNS$
- *     A Clipper date type.
- *  $DESCRIPTION$
- *     This function allows the programmer to hard code a date into the
- *     program without knowing what the current date type is.  This
- *     function is the converse of the Clipper DTOS() function.
- *  $EXAMPLES$
- *     LOCAL dMyDate
- *     dMyDate := FT_STOD( "19901127" )
- *  $END$
- */
-
 #include "hbapi.h"
 
 HB_FUNC(FT_STOD)

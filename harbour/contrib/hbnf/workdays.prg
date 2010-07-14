@@ -27,41 +27,10 @@
  *
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *     FT_WORKDAYS()
- *  $CATEGORY$
- *     Date/Time
- *  $ONELINER$
- *     Return number of work days between two dates
- *  $SYNTAX$
- *     FT_WORKDAYS( [ <dStart> ], [ <dStop> ] ) -> nDays
- *  $ARGUMENTS$
- *     <dStart> is the beginning value for the date range.
- *
- *     <dStop> is the ending value for the date range.
- *
- *  $RETURNS$
- *     The number of work days (Monday through Friday) between two dates.
- *
- *  $DESCRIPTION$
- *     FT_WORKDAYS() returns a number indicating the number of work days
- *     between two dates.  Work days are considered Monday through Friday.
- *     (The five day work week none of us Clipper programmers have.)
- *
- *  $EXAMPLES$
- *    ? FT_WorkDays( CTOD("5/16/91"), CTOD("5/20/91") ) // 3  (Th - Mo)
- *    ? FT_WorkDays( CTOD("5/18/91"), CTOD("5/19/91") ) // 0  (Sa - Su)
- *    ? FT_WorkDays( CTOD("5/17/91"), CTOD("5/17/91") ) // 1  (Fr - Fr)
- *  $SEEALSO$
- *  $END$
-*/
-
 #ifdef FT_TEST
   function main( cStart, cStop )
      return qout( ft_workdays( ctod( cStart ), ctod( cStop ) ) )
 #endif
-
 
 FUNCTION FT_WorkDays( dStart, dStop )
    LOCAL nWorkDays := 0, nDays, nAdjust

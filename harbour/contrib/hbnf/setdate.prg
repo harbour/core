@@ -28,54 +28,10 @@
  *
  */
 
-
-/*  $DOC$
- *  $FUNCNAME$
- *     FT_SETDATE()
- *  $CATEGORY$
- *     DOS/BIOS
- *  $ONELINER$
- *     Set the DOS system date
- *  $SYNTAX$
- *     FT_SETDATE( <dDate> ) -> <lResult>
- *  $ARGUMENTS$
- *     <dDate> is a Clipper date variable that you want to set the current
- *     DOS system date to.
- *
- *     It is up to you to send in a valid date.  The
- *     year must be within the range 1980 through 2099.  If DOS
- *     thinks the date is not valid, it won't change the date.
- *
- *  $RETURNS$
- *     <lResult> is simply the result of FT_INT86(), passed back
- *     to your program.
- *
- *  $DESCRIPTION$
- *     FT_SETDATE() uses NANFOR.LIB's FT_INT86() function to invoke
- *     the DOS Set Date service (Interrupt 33, service 43).
- *
- *  $EXAMPLES$
- *
- *  The following program takes a date from the command line and sets
- *  the DOS system date:
- *
- *   FUNCTION main( cDate )
- *
- *      cDate := iif( cDate == nil, dtoc( date() ), cDate )
- *      QOut( "Setting date to: " + cDate  + "... " )
- *      FT_SETDATE( ctod( cDate ) )
- *      Qout( "Today is now: " + dtoc( date() ) )
- *
- *   RETURN NIL
- *
- *  $END$
- */
-
 #include "ftint86.ch"
 
 #define DOS        33
 #define SETDATE    43
-
 
 #ifdef FT_TEST
   FUNCTION MAIN( cDate )

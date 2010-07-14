@@ -27,100 +27,6 @@
  *
  */
 
-
-/*  $DOC$
- *  $FUNCNAME$
- *     FT_DISPMSG()
- *  $CATEGORY$
- *     Menus/Prompts
- *  $ONELINER$
- *     Display a message and optionally waits for a keypress
- *  $SYNTAX$
- *     FT_DISPMSG( <aMessageArray>, [ <cKey2Check> ],
- *                 [ <nTopBoxRow> ], [ <nLeftBoxColumn> ],
- *                 [ <cnBoxType> ], [ <lShadow> ] ) -> lKeyMatch
- *  $ARGUMENTS$
- *     <aMessageArray> is a multidimensional array of messages to be
- *     displayed and the color attributes for each message.
- *
- *     The first dimension of the array contains one or more elements,
- *     each representing one line in the message box, up to the maximum
- *     number of rows on the screen.
- *
- *     Within each line of the message individual characters or groups
- *     of characters may be delimited with braces ([]).  The braces will
- *     be stripped out and the character(s) inside those braces will be
- *     highlighted.
- *
- *     The second dimension of the array contains a color attribute for
- *     the corresponding element in dimension one, plus one additional
- *     element for the color of the box border.  Dimension two will
- *     always contain one more element than dimension one.  If an
- *     attribute is omitted, the last color selected will be used.
- *
- *     <Key2Check> is a character string of one or more keys to check
- *     for.  If omitted, the message is displayed and control is returned
- *     to the calling procedure.  If one character is specified,
- *     FT_DISPMSG() waits for one keypress, restores the screen and
- *     returns.  If multiple characters are specified, FT_DISPMSG()
- *     remains in a loop until one of the specified keys has been
- *     pressed, then restores the screen and returns.
- *
- *     <nTopBoxRow> is the upper row for the message box.  If omitted, the
- *     box is centered vertically.
- *
- *     <nLeftBoxColumn> is the leftmost column for the box.  If omitted, the
- *     box is centered horizontally.
- *
- *     <cnBoxType> is a string of characters or a variable for the box
- *     border.  See the DISPBOX() function.  If omitted, a double box is
- *     drawn.
- *
- *     <lShadow> is a logical variable.  If true (.T.) or omitted, it
- *     uses FT_SHADOW() to add a transparent shadow to the box.  If
- *     false (.F.), the box is drawn without the shadow.
- *  $RETURNS$
- *     If <Key2Check> is not specified, FT_DISPMSG() will return false
- *     (.F.).
- *
- *     If <Key2Check> is a one-character string, FT_DISPMSG() will return
- *     true (.T.) if the user presses that key, or false (.F.) if any
- *     other key is pressed.
- *
- *     If <Key2Check> consists of multiple characters, it will lock the
- *     user in a loop until one of those keys are pressed and return the
- *     INKEY() value of the keypress.
- *  $DESCRIPTION$
- *     FT_DISPMSG() is a multi-purpose pop-up for user messages.
- *     Multiple lines may be displayed, each with a different attribute.
- *     The box will be automatically centered on the screen, or the row
- *     and/or column can be specified by the programmer.  It also centers
- *     each line of the message within the box.
- *  $EXAMPLES$
- *     The following example displays a simple two-line message
- *     and returns immediately to the calling routine.
- *
- *        FT_DISPMSG( { { "Printing Report"                    , ;
- *                        "Press [ESC] To Interrupt" }         , ;
- *                      { "W+/B*", "W/B", "GR+/B" } } )
- *
- *     The next example displays a message and waits for a key press.
- *
- *        FT_DISPMSG( { { "Press [D] To Confirm Deletion"      , ;
- *                        "Or Any Other Key To Abort" }        , ;
- *                      { "W+/B", "W+/B", "GR+/B" } }          , ;
- *                      "D" )
- *
- *     The next example displays a one-line message centered on row 5
- *     and returns to the calling procedure.
- *
- *        FT_DISPMSG( { { "Please Do Not Interrupt" }   , ;
- *                      { "W+/B", "GR+/B" } }          , ;
- *                      , 5, )
- *  $END$
- */
-
-
 #include "inkey.ch"
 #include "setcurs.ch"
 
@@ -139,7 +45,6 @@ PROCEDURE Main( cCmdLine )
          lColor,     ;
          nMaxRow,    ;
          nType
-
 
    // main routine starts here
    SET SCOREBOARD OFF
@@ -189,9 +94,6 @@ PROCEDURE Main( cCmdLine )
 
 #endif
 // end of demo program
-
-
-
 
 FUNCTION FT_DispMsg( aInfo, cKey, nBoxTop, nBoxLeft, cnBoxString, lShadow )
 
@@ -277,7 +179,6 @@ FUNCTION FT_DispMsg( aInfo, cKey, nBoxTop, nBoxLeft, cnBoxString, lShadow )
       FT_Shadow( nBoxTop, nBoxLeft, nBoxBottom, nBoxRight )
    ENDIF
 
-
    /* fill array with left positions for each row */
    aLeft := ARRAY( LEN( aInfo[1] ) )
    FOR i := 1 TO LEN( aInfo[1] )
@@ -295,12 +196,10 @@ FUNCTION FT_DispMsg( aInfo, cKey, nBoxTop, nBoxLeft, cnBoxString, lShadow )
       ENDIF
    NEXT
 
-
    /* display messages */
    FOR i := 1 TO LEN( aInfo[1] )
       @ nBoxTop+i, aLeft[i] SAY aInfo[1,i] COLOR aInfo[2,i]
    NEXT
-
 
    /* highlight characters */
    FOR i := 1 TO LEN( aPos )
@@ -313,7 +212,6 @@ FUNCTION FT_DispMsg( aInfo, cKey, nBoxTop, nBoxLeft, cnBoxString, lShadow )
                      FT_Color2N( aInfo[ 2, LEN( aInfo[2] ) ] ) )
       NEXT
    NEXT
-
 
    IF cKey != NIL
       IF LEN( cKey ) == 1

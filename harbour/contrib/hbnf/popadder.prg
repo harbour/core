@@ -31,86 +31,6 @@
  *
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      FT_Adder()
- *  $CATEGORY$
- *      Menus/Prompts
- *  $ONELINER$
- *      Pop up a simple calculator
- *  $SYNTAX$
- *      FT_Adder()
- *  $ARGUMENTS$
- *      None
- *  $RETURNS$
- *      NIL .... but optionally places Total of calculation in active
- *               Get variable using oGet:VARPUT()
- *  $DESCRIPTION$
- *      PopAdder() gives you an adding machine inside your Clipper 5.2
- *      application. It has the basic functions add, subtract, multiply,
- *      and divide. You may move it from one side of the screen to the
- *      other. It even displays a scrollable tape, if you want it.
- *
- *
- *      There are a few HOT Keys while using the Adder:
- *
- *             <D>ecimals - change # of decimals
- *             <M>ove     - the Adder from right display to left
- *             <T>ape     - turn the Tape Display On or Off
- *             <S>croll   - the tape display
- *             <DEL> ---+-- 1st Clear entry
- *                      +-- 2nd Clear ADDER
- *             <ESC>      - Quit
- *             <F10>      - return a <TOTAL> to the active get
- *
- *
- *      A couple of notes about the adder:
- *
- *
- *      1.) It was designed to be used on an Enhanced keyboard with
- *          separate <DELETE> key. <DELETE> is used to clear the adder.
- *          However, it will still work on a Standard keyboard.
- *
- *      2.) You do not have to display the tape. You may turn it on
- *          at any time by pressing <T>. You may SCROLL back through
- *          the tape once there are more than 16 entries in the
- *          adder, by pressing <S>.
- *
- *      3.) To Quit the Adder just press <ESC>. To return your Total
- *          to the application press <F10>. The adder will place the
- *          Total in the active GET variable using oGet:VarPut(). The
- *          adder will only return a Total to a numerical GET!
- *
- *      4.) There are many support functions that you might find
- *          interesting. They are part of my personal library, but
- *          are necessary to the operation of the adder.
- *          You might want to pull these out to reduce the overall
- *          size of the adder. Many are worth at least a little
- *          time studying.
- *
- *      5.) To make FT_Adder a Hot key from inside your application
- *          at the beginning of your application add the line:
- *
- *                 SET KEY K_ALT_A  TO FT_Adder
- *
- *          This will make <ALT-A> a key "Hot" and permit you to
- *          Pop - Up the adder from anywhere in the application.
- *
- *      6.) If you use FT_INKEY(), you can even have active hotkeys
- *          in an INKEY().
- *
- *
- *
- *
- *  $EXAMPLES$
- *
- *  $SEEALSO$
- *
- *  $INCLUDE$
- *     inkey.ch, setcurs.ch, achoice.ch
- *  $END$
- */
-
 #include "inkey.ch"
 #include "setcurs.ch"
 #include "achoice.ch"
@@ -171,7 +91,6 @@
             END                                                         ;;
          END
 
-
 // Instead of using STATIC variables for these I'm using a LOCAL array
 //   and passing aAdder[] all over the place.... Don't let this confuse
 //   you. I wrote the Adder using the variable names & now let the
@@ -199,7 +118,6 @@
 #define nAddSpace  aAdder[21]
 #define nTapeSpace aAdder[22]
 #define cTapeScr   aAdder[23]
-
 
 // I still use a few of STATICS, but most are set to NIL when quiting...
 STATIC lAdderOpen := .F.,                                                    ;
@@ -247,8 +165,6 @@ STATIC lAdderOpen := .F.,                                                    ;
 
   RETURN NIL
 #endif
-
-
 
 /*+- Function ---------------------------------------------------------------+
   |         Name: FT_Adder()            Docs: Keith A. Wire                  |
@@ -435,8 +351,6 @@ aKeys := aWindow := aWinColor := aStdColor := NIL
 
 RETURN NIL
 
-
-
 /*+- Function ---------------------------------------------------------------+
   |         Name: _ftAddScreen()        Docs: Keith A. Wire                  |
   |  Description: Display the Adder                                          |
@@ -495,8 +409,6 @@ STATIC FUNCTION _ftAddScreen(aAdder)
   @ 3+nTopOS, 6+nAddSpace, 5+nTopOS, 27+nAddSpace BOX B_DOUBLE
 RETURN NIL
 
-
-
 /*+- Function ---------------------------------------------------------------+
   |         Name: _ftChangeDec()        Docs: Keith A. Wire                  |
   |  Description: Change the decimal position in the display                 |
@@ -537,8 +449,6 @@ STATIC FUNCTION _ftChangeDec(aAdder, nNumDec)
 
 RETURN NIL
 
-
-
 /*+- Function ---------------------------------------------------------------+
   |         Name: _ftDispTotal()        Docs: Keith A. Wire                  |
   |  Description: Display total number to Adder Window                       |
@@ -572,9 +482,6 @@ STATIC FUNCTION _ftDispTotal(aAdder)
 
 RETURN NIL
 
-
-
-
 /*+- Function ---------------------------------------------------------------+
   |         Name: _ftDispSubTot()       Docs: Keith A. Wire                  |
   |  Description: Display subtotal number                                    |
@@ -606,8 +513,6 @@ STATIC FUNCTION _ftDispSubTot(aAdder)
     @ 4+nTopOS, 7+nAddSpace SAY nNumTotal PICTURE cTotPict
   ENDIF
 RETURN NIL
-
-
 
 /*+- Function ---------------------------------------------------------------+
   |         Name: _ftProcessNumb()      Docs: Keith A. Wire                  |
@@ -651,10 +556,6 @@ STATIC FUNCTION _ftProcessNumb(aAdder, nKey)
   _ftDispSubTot(aAdder)
 
 RETURN NIL
-
-
-
-
 
 /*+- Function ---------------------------------------------------------------+
   |         Name: _ftAddTotal()         Docs: Keith A. Wire                  |
@@ -739,9 +640,6 @@ STATIC FUNCTION _ftAddTotal(aAdder)
 
 RETURN NIL
 
-
-
-
 /*+- Function ---------------------------------------------------------------+
   |         Name: _ftAddSub()           Docs: Keith A. Wire                  |
   |  Description: Process + or - keypress                                    |
@@ -794,10 +692,6 @@ STATIC FUNCTION _ftAddSub(aAdder, nKey)
   _ftDispTotal(aAdder)
 
 RETURN NIL
-
-
-
-
 
 /*+- Function ---------------------------------------------------------------+
   |         Name: _ftMultDiv()          Docs: Keith A. Wire                  |
@@ -857,9 +751,6 @@ STATIC FUNCTION _ftMultDiv(aAdder, nKey)
 
 RETURN NIL
 
-
-
-
 /*+- Function ---------------------------------------------------------------+
   |         Name: _ftAddHelp            Docs: Keith A. Wire                  |
   |  Description: Help window                                                |
@@ -895,11 +786,7 @@ STATIC FUNCTION _ftAddHelp
    _ftPushMessage(cMess, .T., "ADDER HELP", "press any key to continue...",  ;
                   "QUIET")
 
-
 RETURN NIL
-
-
-
 
 /*+- Function ---------------------------------------------------------------+
   |         Name: _ftClearAdder()       Docs: Keith A. Wire                  |
@@ -930,9 +817,6 @@ STATIC FUNCTION _ftClearAdder(aAdder)
     _ftDispSubTot(aAdder)
   ENDIF
 RETURN NIL
-
-
-
 
 /*+- Function ---------------------------------------------------------------+
   |         Name: _ftUpdateTrans()      Docs: Keith A. Wire                  |
@@ -981,9 +865,6 @@ STATIC FUNCTION _ftUpdateTrans(aAdder, lTypeTotal, nAmount)
 
 RETURN NIL
 
-
-
-
 /*+- Function ---------------------------------------------------------------+
   |         Name: _ftEraseTotSubTot()   Docs: Keith A. Wire                  |
   |  Description: Clear the <TOTAL> & <SUBTOTAL> from Adder                  |
@@ -1001,8 +882,6 @@ STATIC FUNCTION _ftEraseTotSubTot(aAdder)
   @ 6+nTopOS, 18+nAddSpace SAY "          "
   _ftSetWinColor(W_CURR,W_PROMPT)
 RETURN NIL
-
-
 
 /*+- Function ---------------------------------------------------------------+
   |         Name: _ftRoundIt()          Docs: Keith A. Wire                  |
@@ -1022,9 +901,6 @@ STATIC FUNCTION _ftRoundIt(nNumber, nPlaces)
   nPlaces := IIF( nPlaces == NIL, 0, nPlaces )
 RETURN IIF(nNumber < 0.0, -1.0, 1.0) *                                        ;
        INT( ABS(nNumber) * 10 ^ nPlaces + 0.50 + 10 ^ -12 ) / 10 ^ nPlaces
-
-
-
 
 /*+- Function ---------------------------------------------------------------+
   |         Name: _ftDivide()           Docs: Keith A. Wire                  |
@@ -1049,8 +925,6 @@ STATIC FUNCTION _ftDivide(aAdder, nNumerator,nDenominator)
   ENDIF
 RETURN(nNumerator/nDenominator)
 
-
-
 /*+- Function ---------------------------------------------------------------+
   |         Name: _ftValDeci()          Docs: Keith A. Wire                  |
   |  Description: Validate the number of decimals                            |
@@ -1073,8 +947,6 @@ STATIC FUNCTION _ftValDeci(oGet)
   ENDIF
 
 RETURN lRtnValue
-
-
 
 /*+- Function ---------------------------------------------------------------+
   |         Name: _ftDisplayTape()      Docs: Keith A. Wire                  |
@@ -1124,9 +996,6 @@ STATIC FUNCTION _ftDisplayTape(aAdder, nKey)
   _ftSetWinColor(W_CURR,W_PROMPT)
 RETURN NIL
 
-
-
-
 /*+- Function ---------------------------------------------------------------+
   |         Name: _ftSetLastKey()       Docs: Keith A. Wire                  |
   |  Description: Sets the LASTKEY() value to value of nLastKey              |
@@ -1148,10 +1017,6 @@ STATIC FUNCTION _ftSetLastKey(nLastKey)
   _ftPopKeys()
 RETURN NIL
 
-
-
-
-
 /*+- Function ---------------------------------------------------------------+
   |         Name: _ftPushKeys           Docs: Keith A. Wire                  |
   |  Description: Push any keys in the Keyboard buffer on the array aKeys[]  |
@@ -1170,10 +1035,6 @@ STATIC FUNCTION _ftPushKeys
     AADD(aKeys,INKEY())
   ENDDO
 RETURN NIL
-
-
-
-
 
 /*+- Function ---------------------------------------------------------------+
   |         Name: _ftPopKeys            Docs: Keith A. Wire                  |
@@ -1196,7 +1057,6 @@ STATIC FUNCTION _ftPopKeys
   KEYBOARD cKeys
   aKeys := {}
 RETURN NIL
-
 
 /*+- Function ---------------------------------------------------------------+
   |         Name: _ftPushMessage()      Docs: Keith A. Wire                  |
@@ -1259,8 +1119,6 @@ STATIC FUNCTION _ftPushMessage(cMessage,lWait,cTitle,cBotTitle,xQuiet, nTop)
   _ftSetLastKey(nOldLastKey)
 RETURN NIL
 
-
-
 /*+- Function ---------------------------------------------------------------+
   |         Name: _ftPopMessage         Docs: Keith A. Wire                  |
   |  Description: Pop off the Message Box                                    |
@@ -1277,9 +1135,6 @@ RETURN NIL
 STATIC FUNCTION _ftPopMessage
   _ftPopWin()
 RETURN NIL
-
-
-
 
 /*+- Function ---------------------------------------------------------------+
   |         Name: _ftQuest()            Docs: Keith A. Wire                  |
@@ -1384,9 +1239,6 @@ STATIC FUNCTION _ftQuest(cMessage,xVarVal,cPict,bValid,lNoESC,nWinColor,nTop)
   _ftSetLastKey(nOldLastKey)
 RETURN xVarVal
 
-
-
-
 /*+- Function ---------------------------------------------------------------+
   |         Name: _ftAdderTapeUDF()    Docs: Keith A. Wire                   |
   |  Description: User function for ACHOICE() when scrolling tape            |
@@ -1428,9 +1280,6 @@ FUNCTION _ftAdderTapeUDF(mode,cur_elem,rel_pos)
       nRtnVal := AC_CONT
   ENDCASE
 RETURN nRtnVal
-
-
-
 
 /*+- Function ---------------------------------------------------------------+
   |         Name: _ftError()            Docs: Keith A. Wire                  |
@@ -1490,9 +1339,6 @@ STATIC FUNCTION _ftError(cMessage, xDontReset)
 
 RETURN NIL
 
-
-
-
 /*+- Function ---------------------------------------------------------------+
   |         Name: _ftStuffComma()       Docs: Keith A. Wire                  |
   |  Description: Stuff a Comma in a string                                  |
@@ -1540,10 +1386,6 @@ STATIC FUNCTION _ftStuffComma(cStrToStuff,lTrimStuffedStr)
 
 RETURN cStrToStuff
 
-
-
-
-
 /*+- Function ---------------------------------------------------------------+
   |         Name: _ftSetSCRColor()      Docs: Keith A. Wire                  |
   |  Description: Set the standard screen colors to the color requested.     |
@@ -1577,9 +1419,6 @@ STATIC FUNCTION _ftSetSCRColor(nStd,nEnh,nBord,nBack,nUnsel)
 
 RETURN SETCOLOR(aStdColor[nStd]+","+aStdColor[nEnh]+","+aStdColor[nBord]+","+;
   aStdColor[nBack]+","+aStdColor[nUnsel])
-
-
-
 
 /*+- Function ---------------------------------------------------------------+
   |         Name: _ftPushWin()          Docs: Keith A. Wire                  |
@@ -1640,9 +1479,6 @@ STATIC FUNCTION _ftPushWin(t,l,b,r,cTitle,cBotTitle,nWinColor)
 
 RETURN NIL
 
-
-
-
 /*+- Function ---------------------------------------------------------------+
   |         Name: _ftPopWin             Docs: Keith A. Wire                  |
   |  Description: Pop a Window off the screen                                |
@@ -1682,10 +1518,6 @@ STATIC FUNCTION _ftPopWin
 
 RETURN NIL
 
-
-
-
-
 /*+- Function ---------------------------------------------------------------+
   |         Name: _ftSetWinColor()      Docs: Keith A. Wire                  |
   |  Description: Set the Color to the Window Colors requested               |
@@ -1720,11 +1552,6 @@ STATIC FUNCTION _ftSetWinColor(nWin,nStd,nEnh,nBord,nBack,nUnsel)
 RETURN SETCOLOR(aWinColor[nStd,nWin]+","+aWinColor[nEnh,nWin]+","+           ;
   aWinColor[nBord,nWin]+","+aWinColor[nBack,nWin]+","+aWinColor[nUnsel,nWin])
 
-
-
-
-
-
 /*+- Function ---------------------------------------------------------------+
   |         Name: _ftShadow()           Docs: Keith A. Wire                  |
   |  Description: Create a shadow on the screen in the coordinates given     |
@@ -1750,10 +1577,6 @@ STATIC FUNCTION _ftShadow( nTop, nLeft, nBottom, nRight )
 
 RETURN NIL
 
-
-
-
-
 /*+- Function ---------------------------------------------------------------+
   |         Name: _ftLastWinColor       Docs: Keith A. Wire                  |
   |  Description: Decrement the active window color number and return the    |
@@ -1770,11 +1593,6 @@ RETURN NIL
 */
 STATIC FUNCTION _ftLastWinColor
 RETURN nWinColor := IIF(nWinColor==1,4,nWinColor-1)
-
-
-
-
-
 
 /*+- Function ---------------------------------------------------------------+
   |         Name: _ftNextWinColor       Docs: Keith A. Wire                  |
@@ -1796,10 +1614,6 @@ STATIC FUNCTION _ftNextWinColor
   ENDIF
 
 RETURN nWinColor := (IIF(nWinColor<4,nWinColor+1,1))
-
-
-
-
 
 /*+- Function ---------------------------------------------------------------+
   |         Name: _ftWinTitle()         Docs: Keith A. Wire                  |
@@ -1824,9 +1638,6 @@ STATIC FUNCTION _ftWinTitle(cTheTitle,cTopOrBot)
     aWindow[nCurWin,2]-nLenTitle)/2+aWindow[nCurWin,2] SAY " "+cTheTitle+" "
 
 RETURN NIL
-
-
-
 
 /*+- Function ---------------------------------------------------------------+
   |         Name: _ftInitColors         Docs: Keith A. Wire                  |
@@ -1861,9 +1672,6 @@ STATIC FUNCTION _ftInitColors
                     "N/N"    }
 RETURN NIL
 
-
-
-
 /*+- Function ---------------------------------------------------------------+
   |         Name: _ftCharOdd()          Docs: Keith A. Wire                  |
   |  Description: Remove all the even numbered characters in a string.       |
@@ -1882,10 +1690,6 @@ STATIC FUNCTION _ftCharOdd(cString)
   cString := TRANSFORM(cString,REPLICATE("X", LEN(cString)/2 ) )
 RETURN STRTRAN(cString,"")
 
-
-
-
-
 /*+- Function ---------------------------------------------------------------+
   |         Name: _ftPosRepl()          Docs: Keith A. Wire                  |
   |  Description: Replace the Character at nPosit in cString with cChar      |
@@ -1903,10 +1707,6 @@ RETURN STRTRAN(cString,"")
 STATIC FUNCTION _ftPosRepl(cString,cChar,nPosit)
 RETURN STRTRAN(cString,"9",cChar,nPosit,1)+""
 
-
-
-
-
 /*+- Function ---------------------------------------------------------------+
   |         Name: _ftCharRem()          Docs: Keith A. Wire                  |
   |  Description: Removes all occurances of cChar from cString.              |
@@ -1923,13 +1723,6 @@ RETURN STRTRAN(cString,"9",cChar,nPosit,1)+""
 STATIC FUNCTION _ftCharRem(cChar,cString)
 RETURN STRTRAN(cString,cChar)
 
-
-
-
-
-
-
-
 /*+- Function ---------------------------------------------------------------+
   |         Name: _ftCountLeft()        Docs: Keith A. Wire                  |
   |  Description: Returns the number of spaces on the Left side of the String|
@@ -1944,10 +1737,6 @@ RETURN STRTRAN(cString,cChar)
 */
 STATIC FUNCTION _ftCountLeft(cString)
 RETURN LEN(cString)-LEN(LTRIM(cString))
-
-
-
-
 
 /*+- Function ---------------------------------------------------------------+
   |         Name: _ftPosIns()           Docs: Keith A. Wire                  |

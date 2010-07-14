@@ -24,47 +24,6 @@
  *
  */
 
-
-
-/*  $DOC$
- *  $FUNCNAME$
- *     FT_BYTEAND()
- *  $CATEGORY$
- *     String
- *  $ONELINER$
- *     Perform bit-wise AND on two ASCII characters (bytes)
- *  $SYNTAX$
- *     FT_BYTEAND( <cByte1>, <cByte2> ) -> cByte
- *  $ARGUMENTS$
- *     <cByte1> and <cByte2> are characters from CHR(0) TO CHR(255).
- *     May be passed in CHR() form, as character literals, or as expressions
- *     evaluating to CHR() values.
- *  $RETURNS$
- *     Returns resulting byte, in CHR() form.  If parameters are faulty,
- *     returns NIL.
- *  $DESCRIPTION$
- *     Can be used for any bit-wise masking operation.  In effect, this is a
- *     bit-by-bit AND operation.  Equivalent to AND assembler instruction.
- *
- *     This function is presented to illustrate that bit-wise operations
- *     are possible with Clipper code.  For greater speed, write .c or
- *     .asm versions and use the Clipper Extend system.
- *  $EXAMPLES$
- *     This code would mask out the high nibble (four most significant bits)
- *     of the byte represented by chr(123) and leave the low nibble bits as in
- *     the parameter byte.
- *
- *          cNewbyte := FT_BYTEAND( CHR(123), CHR(15) )
- *          ? asc(cNewByte)  // result: 11
- *          ? cNewByte       // result: non-printable character
- *
- *     For a demonstration of Clipper bit manipulations, compile and
- *     link the program bittest.prg in the Nanforum Toolkit source code.
- *  $SEEALSO$
- *     FT_BYTEOR() FT_BYTEXOR() FT_BYTENOT() FT_BYTENEG()
- *  $END$
- */
-
 FUNCTION FT_BYTEAND(cByte1, cByte2)
 
   LOCAL nCounter, cNewByte

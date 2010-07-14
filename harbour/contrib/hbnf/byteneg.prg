@@ -24,44 +24,5 @@
  *
  */
 
-
-/*  $DOC$
- *  $FUNCNAME$
- *     FT_BYTENEG()
- *  $CATEGORY$
- *     String
- *  $ONELINER$
- *     Perform bit-wise negation on an ASCII character
- *  $SYNTAX$
- *     FT_BYTENEG( <cByte> ) -> cNewByte
- *  $ARGUMENTS$
- *     <cByte> is a character from CHR(0) to CHR(255).
- *     May be passed in CHR() form, as character literal, or
- *     as expression evaluating to CHR() value.
- *  $RETURNS$
- *     Returns resulting byte, in CHR() form.  If parameters are faulty,
- *     returns NIL.
- *  $DESCRIPTION$
- *     Can be used for bit-wise byte manipulation.  In effect, this is a
- *     bit-by-bit NEG (two's complement) operation.  Equivalent to NEG
- *     assembler instruction.
- *
- *     This function is presented to illustrate that bit-wise operations
- *     are possible with Clipper code.  For greater speed, write .c or
- *     .asm versions and use the Clipper Extend system.
- *  $EXAMPLES$
- *     This code performs a bit-wise NEG on byte represented by CHR(32):
- *
- *          cNewByte := FT_BYTENOT(CHR(32))
- *          ? asc(cNewByte)                  // result: 224
- *
- *     For a demonstration of Clipper bit manipulations, compile and
- *     link the program bittest.prg in the Nanforum Toolkit source code.
- *  $SEEALSO$
- *     FT_BYTEOR() FT_BYTEXOR() FT_BYTENOT() FT_BYTEAND()
- *  $END$
- */
-
-
 FUNCTION FT_BYTENEG(cByte)
 RETURN   iif(valtype(cByte) != "C", NIL, chr((256 - asc(cByte)) % 256))

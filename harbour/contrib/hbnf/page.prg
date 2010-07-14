@@ -31,35 +31,6 @@
 
 #define VIDEO      16
 
-/*  $DOC$
- *  $FUNCNAME$
- *     FT_SETVPG()
- *  $CATEGORY$
- *     Video
- *  $ONELINER$
- *     Set the current video page
- *  $SYNTAX$
- *     FT_SETVPG( <nPage> ) -> NIL
- *  $ARGUMENTS$
- *     <nMode> is a valid video page.
- *  $RETURNS$
- *     NIL
- *  $DESCRIPTION$
- *     Selects the video page.
- *
- *     For more information on graphics programming and video pages,
- *     consult a reference such as "Programmer's Guide to PC and PS/2
- *     Video Systems" (Microsoft Press).
- *  $EXAMPLES$
- *     // The following sets the current video page to 1
- *
- *     FT_SETVPG( 1 )
- *  $SEEALSO$
- *     FT_GETVPG()
- *  $END$
- */
-
-
 FUNCTION FT_SETVPG( nPage )
 /*
   LOCAL aRegs[ INT86_MAX_REGS ]
@@ -70,37 +41,6 @@ FUNCTION FT_SETVPG( nPage )
   _ft_setvpg(nPage)
 
   RETURN NIL
-
-
-
-/*  $DOC$
- *  $FUNCNAME$
- *     FT_GETVPG()
- *  $CATEGORY$
- *     Video
- *  $ONELINER$
- *     Get the currently selected video page
- *  $SYNTAX$
- *     FT_GETVPG() -> <nPage>
- *  $ARGUMENTS$
- *     None.
- *  $RETURNS$
- *     The video page, as a numeric.
- *  $DESCRIPTION$
- *     Get the currently selected video page
- *
- *     For more information on graphics programming and video pages,
- *     consult a reference such as _Programmer's Guide to PC and PS/2
- *     Video Systems_ (Microsoft Press).
- *
- *  $EXAMPLES$
- *     nPage := FT_GETVPG()
- *  $SEEALSO$
- *     FT_SETVPG()
- *  $END$
- */
-
-
 
 FUNCTION FT_GETVPG()
 /*

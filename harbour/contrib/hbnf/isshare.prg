@@ -28,36 +28,6 @@
  *
  */
 
-
-/*  $DOC$
- *  $FUNCNAME$
- *      FT_ISSHARE()
- *  $CATEGORY$
- *      DOS/BIOS
- *  $ONELINER$
- *      Determine if DOS "Share" is installed
- *  $SYNTAX$
- *      FT_ISSHARE() -> nRetCode
- *  $ARGUMENTS$
- *      None
- *  $RETURNS$
- *      nRetcode will be set as follows on exit:
- *
- *          0 if SHARE not loaded but ok to load
- *          1 if SHARE not loaded and not ok to load
- *        255 if SHARE loaded
- *  $DESCRIPTION$
- *      Uses DOS interrupt 2Fh (MultiPlex interrupt), service 10h
- *      to determine if DOS SHARE.COM is loaded.
- *  $EXAMPLES$
- *     IF FT_ISSHARE() != 255
- *        Qout("SHARE must be loaded!")
- *     ENDIF
- *  $SEEALSO$
- *     FT_INT86()
- *  $END$
- */
-
 #include "ftint86.ch"
 
 #ifdef FT_TEST
@@ -86,7 +56,6 @@ FUNCTION ft_isshare()
   aRegs[ CX ] := 0                       // Specify file attribute
 
   FT_Int86( 47, aRegs)                   // multiplex interrupt
-
 
 RETURN lowbyte( aRegs[AX] )
   */

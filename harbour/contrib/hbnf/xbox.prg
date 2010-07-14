@@ -27,88 +27,6 @@
  *
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *     FT_XBOX()
- *  $CATEGORY$
- *     Menus/Prompts
- *  $ONELINER$
- *     Display a self-sizing message box and message
- *  $SYNTAX$
- *     FT_XBOX( [ <cJustType> ], [ <cRetWait> ], [ <cBorType> ],   ;
- *              [ <cBorColor> ], [ <cBoxColor> ], [ <nStartRow> ], ;
- *              [ <nStartCol> ], <cLine1>,  <cLine2>, <cLine3>,    ;
- *              <cLine4>, <cLine5>, <cLine6>, <cLine7>, <cLine8> ) -> NIL
- *  $ARGUMENTS$
- *     <cJustType> is a character indicating the type of text justification.
- *     "L" or "l" will cause the text to be left-justified in the box.
- *     Centered text is the default.
- *
- *     <cRetWait> is a character which determines if the function will wait
- *     for a keypress after displaying the box.  "W" or "w" will cause the
- *     function to wait for a keypress before returning control to the
- *     calling routine.  Not waiting is the default
- *
- *     <cBorType> is a character which determines whether a single or double
- *     border will be displayed.  "D" or "d" will cause a double border to
- *     be displayed.  A single border is the default.
- *
- *     <cBorColor> is a character string denoting the border color.  'N/W' is
- *     the default if this parameter is not a string.
- *
- *     <cBoxColor> is a character string denoting the text color.  'W/N' is
- *     the default if this parameter is not a string.
- *
- *     <nStartRow> is a number denoting the starting row.  If '99' is passed,
- *     the box is centered vertically.  If necessary, nStartRow is decreased
- *     so the entire box can be displayed.
- *
- *     <nStartCol> is a number denoting the starting column.  If '99' is passed,
- *     the box is centered horizontally.  If necessary, nStartCol is decreased
- *     so the entire box can be displayed.
- *
- *     <cLine1> thru <cLine8> are 1 to 8 character strings to be displayed.
- *     They are truncated to fit on the screen if necessary.
- *  $RETURNS$
- *     NIL
- *  $DESCRIPTION$
- *     FT_XBOX() allows the programmer to display a message box on the screen
- *     without needing to calculate the dimensions of the box.  Only the upper
- *     left corner needs to be defined.  The function will calculate the lower
- *     right corner based on the number and length of strings passed.
- *
- *     A maximum of eight strings can be displayed.  If a string is too long
- *     to fit on the screen it is truncated.
- *
- *     The first seven parameters are optional.  The default settings are:
- *        Lines of text are centered.
- *        Control is returned to the calling routine immediately.
- *        A single line border is painted.
- *        The border is black on white.
- *        The text is white on black.
- *        The box is centered both vertically and horizontally.
- *
- *     WARNING:  Shadowing is achieved by a call to FT_SHADOW(), an assembly
- *               routine not found in this .prg.  In order to use XBOX,
- *               shadow.prg must also be present somewhere (if you are using
- *               NANFOR.LIB, then it is).
- *  $EXAMPLES$
- *     The following displays a two-line box with default settings:
- *
- *       FT_XBOX(,,,,,,,'This is a test','of the XBOX() function')
- *
- *     The following uses all optional parameters and displays a three-line
- *     box.  The box is left-justified with a double border.  It has a yellow
- *     on red border and white on blue text.  The function will wait for a
- *     keypress before returning control to the calling routine.
- *
- *       FT_XBOX('L','W','D','GR+/R','W/B',5,10,'It is so nice',;
- *                       'to not have to do the messy chore',;
- *                       'of calculating the box size!')
- *  $END$
- */
-
-
 #ifdef FT_TEST
    FUNCTION MAIN()
       local i
@@ -129,7 +47,6 @@
 
    RETURN NIL
 #endif
-
 
 FUNCTION FT_XBOX(cJustType,; // "L" = left, otherwise centered
                 cRetWait, ; // "W" = wait for keypress before continuing
@@ -198,7 +115,6 @@ FUNCTION FT_XBOX(cJustType,; // "L" = left, otherwise centered
     @ nTRow,nLCol TO nBRow,nRCol
   ENDIF
 
-
   // write shadow
   FT_SHADOW(nTRow,nLCol,nBRow,nRCol)
 
@@ -220,7 +136,6 @@ FUNCTION FT_XBOX(cJustType,; // "L" = left, otherwise centered
   ENDIF
 
   RETURN NIL
-
 
 STATIC FUNCTION _FTSAY(nSayRow,nSayCol,cSayStr)
     @ nSayRow,nSayCol SAY cSayStr

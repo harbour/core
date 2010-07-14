@@ -101,7 +101,6 @@ char *vseg;                 /* video segment variable              */
 
     /* prototypes */
 
-
 static void          chattr(int x, int y, int len, int attr);
 static HB_FOFFSET    getblock( HB_FOFFSET offset );
 static void          buff_align(void);
@@ -113,8 +112,6 @@ static void          linedown(void);
 static void          lineup(void);
 static void          filetop(void);
 static void          filebot(void);
-
-
 
 /*
  * chattr() replace the color attribute with a new one starting at
@@ -133,9 +130,6 @@ static void chattr(int x, int y, int len, int attr)
     for (i = 0; i <= len; i++, vmem += 2)   /* write the new attribute value */
         *vmem = (char) attr;
 }
-
-
-
 
 /*
  * function getblock() reads the text file and returns the a block.
@@ -182,11 +176,6 @@ static HB_FOFFSET getblock( HB_FOFFSET offset )
 
     return hb_fsSeekLarge( infile, 0, FS_RELATIVE ) - buffbot;
 }
-
-
-
-
-
 
 /*
  * buff_align makes sure the buffer top and bottom variables point
@@ -239,10 +228,6 @@ static void buff_align()
     }
 }
 
-
-
-
-
 /*
  * win_align takes the value for wintop and then figures out where
  * winbot would be.  if winbot would extend past the end of the
@@ -286,10 +271,6 @@ static void win_align()
     }
 }
 
-
-
-
-
 /*
  * this routine displays the actual text in the window.  This is done
  * by taking each line and placing it in a string.  the screen line
@@ -303,7 +284,6 @@ static void disp_update(int offset)
 {
     int line, col, pos, i;
     char *vmem;
-
 
     bRefresh = HB_FALSE;
     line     = 0;
@@ -353,10 +333,6 @@ static void disp_update(int offset)
     hb_gtRest( sline, scol, eline, ecol, vseg );
 }
 
-
-
-
-
 /*
  * move the window pointers so that a new window's worth of information
  * is visible.  it adjusts the pointers within the buffer and if necessary
@@ -403,10 +379,6 @@ static void winup()
             win_align();
         }
 }
-
-
-
-
 
 /*
  * move the window pointers so that a new window's worth of information
@@ -457,10 +429,6 @@ static void windown()
         }
 }
 
-
-
-
-
 /* move the cursor one line down */
 
 static void linedown()
@@ -471,10 +439,6 @@ static void linedown()
         windown();
 }
 
-
-
-
-
 /* move the cursor one line up */
 
 static void lineup()
@@ -484,10 +448,6 @@ static void lineup()
     else
         winup();
 }
-
-
-
-
 
 /* go to the top of the file */
 
@@ -508,10 +468,6 @@ static void filetop()
     win_align();
 }
 
-
-
-
-
 /* goto the bottom of the file */
 
 static void filebot()
@@ -530,7 +486,6 @@ static void filebot()
 
     win_align();
 }
-
 
 HB_FUNC( _FT_DFINIT )
 {
@@ -559,7 +514,6 @@ HB_FUNC( _FT_DFINIT )
 
     buffer = (char *) hb_xalloc(buffsize);    /* allocate memory  */
     lbuff  = (char *) hb_xalloc(maxlin + 1);  /*  for buffers     */
-
 
     bIsAllocated = !(buffer == NULL || lbuff == NULL || vseg == NULL);
                                               /* memory allocated? */
@@ -599,8 +553,6 @@ HB_FUNC( _FT_DFINIT )
 
         colinc = hb_parni(11);                /* column skip value */
 
-
-
         bufftop    = 0;                   /* init buffer top pointer      */
         buffbot    = buffsize;            /* init buffer bottom pointer   */
         buffoffset = 0;                   /* curr line offset into buffer */
@@ -608,8 +560,6 @@ HB_FUNC( _FT_DFINIT )
         wincol     = 0;                   /* init window col              */
         wintop     = 0;                   /* init window top pointer      */
         winbot     = 0;                   /* init window bottom pointer   */
-
-
 
             /* get file size */
 
@@ -655,67 +605,6 @@ HB_FUNC ( _FT_DFCLOS )
     }
 }
 
-/*  $DOC$
- *  $FUNCNAME$
- *     FT_DISPFILE()
- *  $CATEGORY$
- *     File I/O
- *  $ONELINER$
- *     Browse a text file
- *  $SYNTAX$
- *     FT_DISPFILE() -> cExitkey
- *  $ARGUMENTS$
- *     None
- *  $RETURNS$
- *     The ASCII keystroke that terminated FT_DISPFILE()
- *  $DESCRIPTION$
- *     This routine displays a text file within a defined window using as
- *     little memory as possible.  The text file to display has to be
- *     present or an error value of 0 is returned (as a character.)
- *
- *     Assumptions: The routine assumes that all lines are terminated
- *                  with a CR/LF sequence (0x0d and 0x0a).
- *
- *     Note:        Make sure you allocate a buffer large enough to hold
- *                  enough data for the number of lines that you have
- *                  in the window.  Use the following formula as a
- *                  guideline - buffer size = (# of line) + 1 * RMargin
- *                  this is the smallest you should make the buffer and
- *                  for normal use I recommend 4096 bytes.
- *
- *     Cursor Keys: Up, Down    - moves the highlight line
- *                  Left, Right - moves the window over nColSkip col's
- *                  Home        - moves the window to the far left
- *                  End         - moves the window to the nRMargin column
- *                  PgUp, PgDn  - moves the highlight one page
- *                  Ctrl-PgUp   - moves the highlight to the file top
- *                  Ctrl-PgDn   - moves the highlight to the file bottom
- *                  Ctrl-Right  - moves the window 16 col's to the right
- *                  Ctrl-Left   - moves the window 16 col's to the left
- *
- *                  Esc, Return - terminates the function
- *
- *                  All other keys are ignored unless they are specified
- *                  within cExitKeys parameter.  This list will tell the
- *                  routine what keys terminate the function.  Special
- *                  keys must be passed by a unique value and that value
- *                  can be found by looking in the keys.h file.
- *  $EXAMPLES$
- *     @ 4,9 TO 11,71
- *
- *     FT_DFSETUP("test.txt", 5, 10, 10, 70, 1, 7, 15,;
- *                 "AaBb" + Chr(143), .T., 5, 132, 4096)
- *
- *     cKey = FT_DISPFILE()
- *
- *     FT_DFCLOSE()
- *
- *     @ 20,0 SAY "Key that terminated FT_DISPFILE() was: " + '[' + cKey + ']'
- *  $SEEALSO$
- *     FT_DFSETUP() FT_DFCLOSE()
- *  $END$
- */
-
 HB_FUNC( FT_DISPFILE )
 {
     int  i;
@@ -723,7 +612,6 @@ HB_FUNC( FT_DISPFILE )
     HB_BOOL bDone;
 
     int ch;
-
 
     /* make sure buffers were allocated and file was opened */
     if (bIsAllocated && infile > 0)
@@ -869,7 +757,6 @@ HB_FUNC( FT_DISPFILE )
       }
     else
       ch = 0;
-
 
     /* store the key pressed as a character to be returned */
 

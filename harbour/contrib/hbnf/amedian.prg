@@ -24,46 +24,6 @@
  *
  */
 
-
-/*  $DOC$
- *  $FUNCNAME$
- *     FT_AMEDIAN()
- *  $CATEGORY$
- *     Array
- *  $ONELINER$
- *     Find middle value in array, or average of two middle values
- *  $SYNTAX$
- *     FT_AMEDIAN( <aArray> [, <nStart> [, <nEnd> ] ] )
- *                -> nMedian
- *  $ARGUMENTS$
- *     <aArray> is the array containing the elements to be averaged.
- *
- *     <nStart> is the first array element to include,
- *     defaults to first element.
- *
- *     <nEnd> is the last array element to include,
- *     defaults to last element.
- *  $RETURNS$
- *     The median average of the array elements
- *  $DESCRIPTION$
- *     This function sorts the elements of a numeric array and
- *     then returns the value in the middle element of the sorted
- *     array.  If there is no exact middle value, then it returns
- *     the average of the two middle values.  Half of the elements
- *     are > median and half are < median.  A median average may
- *     more reflect a more useful average when there are extreme
- *     values in the set.
- *  $EXAMPLES$
- *     FT_AMEDIAN( aArray )      // Return Median for entire array
- *
- *     FT_AMEDIAN( aArray, 2)    // Return Median for elements from 2 to end
- *
- *     FT_AMEDIAN( aArray, ,9)   // Return Median for 1st 9 elements
- *
- *     FT_AMEDIAN( aArray,8,40 ) // Return Median for elements 8 to 40
- *  $END$
- */
-
 #ifdef FT_TEST
 
 #include "directry.ch"
@@ -94,14 +54,12 @@ FUNCTION MAIN()
 
 #endif
 
-
 #define FORCE_BETWEEN(x,y,z)         (y := MAX(MIN(y,z),x))
 
 #command    DEFAULT <Param1> TO <Def1> [, <ParamN> TO <DefN> ] ;
             => ;
             <Param1> := iif(<Param1> == NIL,<Def1>,<Param1>) ;
          [; <ParamN> := iif(<ParamN> == NIL,<DefN>,<ParamN>)]
-
 
 FUNCTION FT_AMEDIAN( aArray, nStart, nEnd )
 

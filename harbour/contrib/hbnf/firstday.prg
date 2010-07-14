@@ -24,35 +24,6 @@
  *
  */
 
-
-/*  $DOC$
- *  $FUNCNAME$
- *     FT_FDAY()
- *  $CATEGORY$
- *     Date/Time
- *  $ONELINER$
- *     Return first day of the month
- *  $SYNTAX$
- *     FT_FDAY( [ <dDateToChk> ] ) -> dFirstDay
- *  $ARGUMENTS$
- *     <dDateToChk> is a date within a month for which you want to find
- *     the first date of that month.  If not passed or is an incorrect type,
- *     defaults to current system date.
- *  $RETURNS$
- *     A Clipper date value representing the first date of the month.
- *  $DESCRIPTION$
- *     This function will return the first day of the month of the date
- *     passed, or the first day of the current month if no argument is
- *     supplied.
- *  $EXAMPLES$
- *     dDate := CTOD( "09/15/90" )
- *     ? FT_FDAY( dDate )             // 09/01/90
- *     ? FT_FDAY()                    // 03/01/91  (current month)
- *  $SEEALSO$
- *     FT_LDAY()
- *  $END$
- */
-
 FUNCTION FT_FDAY(dDateToChk)
 
    IF Valtype(dDatetoChk) # "D"

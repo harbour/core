@@ -46,8 +46,6 @@
  *
  */
 
-
-
 /* The tricks are:
  *
  * 1. Setting up functions for goTop() and goBottom() so that you can
@@ -57,14 +55,12 @@
  * 2. Passing and evaluating the block for the TbSkipWhil().
  */
 
-
 #command DEFAULT <param> TO <val> [, <paramn> TO <valn> ];
 => ;
          <param> := IIF(<param> = NIL, <val>, <param> ) ;
          [; <paramn> := IIF(<paramn> = NIL, <valn>, <paramn> ) ]
 #include "inkey.ch"
 #include "setcurs.ch"
-
 
 #ifdef FT_TEST
 
@@ -171,94 +167,6 @@
 #endif
 
 /* ------------------------------------------------------------------- */
-
-/*  $DOC$
- *  $FUNCNAME$
- *     FT_BRWSWHL()
- *  $CATEGORY$
- *     Menus/Prompts
- *  $ONELINER$
- *     Browse an indexed database limited to a while condition
- *  $SYNTAX$
- *     FT_BRWSWHL( <aFields>, <bWhileCond>, <cKey>,                  ;
- *                 [ <nFreeze> ], [ <lSaveScrn> ], [ <cColorList> ], ;
- *                 [ <cColorShadow> ], [ <nTop> ], [ <nLeft> ],      ;
- *                 [ <nBottom> ], [ <nRight> ] -> nRecno
- *  $ARGUMENTS$
- *     <aFields> is array of field blocks of fields you want to display.
- *        Example to set up last name and first name in array:
- *        aFields := {}
- *        AADD(aFields, {"Last Name" , {||Names->Last}  } )
- *        AADD(aFields, {"First Name", {||Names->First} } )
- *
- *     <bWhileCond> is the limiting WHILE condition as a block.
- *        Example 1: { ||Names->Last == "JONES" }
- *        Example 2: { ||Names->Last == "JONES" .AND. Names->First == "A"  }
- *
- *     <cKey> is the key to find top condition of WHILE.
- *        cLast  := "JONES     "
- *        cFirst := "A"
- *        Example 1: cKey := cLast
- *        Example 2: cKey := cLast + cFirst
- *
- *     <nFreeze> is number of fields to freeze in TBrowse.  Defaults
- *     to 0 if not passed.
- *
- *     <lSaveScrn> is a logical indicating whether or not you want to
- *     save the screen from the calling program.  Defaults to .T. if
- *     not passed.
- *
- *     <cColorList> is a list of colors for the TBrowse columns.
- *     The 1st color is used as SAY/TBrowse Background and the
- *     3rd and 4th colors are used as part of column:defColor := {3, 4}
-
- *     Thus if you pass a cColorList, you MUST pass at least 4 colors.
- *     Defaults to "N/W, N/BG, B/W, B/BG, B/W, B/BG, R/W, B/R" if not passed.
- *
- *     <cColorShad> is the color of the TBrowse box shadow.  Defaults
- *     to "N/N" if not passed.
- *
- *     <nTop>, <nLeft>, <nBottom>, <nRight> are the coordinates of
- *     the area to display the TBrowse in.  Defaults to 2, 2,
- *     MAXROW() - 2, MAXCOL() - 2 with shadowed box, i.e. full screen.
- *  $RETURNS$
- *     nRecno is the number of the record selected by the <Enter> key.
- *     0 is returned if there are either no records matching the WHILE
- *     condition or an <Esc> is pressed instead of an <Enter>
- *  $DESCRIPTION$
- *     This is a demonstration of TBrowse with a WHILE condition for an
- *     indexed database.
- *  $EXAMPLES$
- *     * This example will only show those people with last name of "JONES"
- *     * in the TBNames.dbf which contains at least the fields:
- *     * Last, First, City AND is indexed on Last + First.
- *     LOCAL nRecSel    := 0
- *     LOCAL aFields    := {}
- *     LOCAL bWhile     := {||TBNames->Last = "JONES"}
- *     LOCAL cKey       := "JONES"
- *     LOCAL nFreeze    := 1
- *     LOCAL lSaveScrn  := .t.
- *     LOCAL cColorList := "N/W, N/BG, B/W, B/BG, B/W, B/BG, R/W, B/R"
- *     LOCAL cColorShad := "N/N"
- *
- *     USE TBNames INDEX TBNames NEW // indexed on Last + First
- *
- *     * Pass Heading as character and Field as Block including Alias
- *     * To eliminate the need to use FIELDWBLOCK() function in FT_BRWSWHL()
- *     AADD(aFields, {"Last Name" , {||TBNames->Last}  } )
- *     AADD(aFields, {"First Name", {||TBNames->First} } )
- *     AADD(aFields, {"City"      , {||TBNames->City}  } )
- *
- *     IF FT_BRWSWHL( aFields, bWhile, cKey, nFreeze, lSaveScrn, ;
- *        cColorList, cColorShad, 3, 6, MaxRow() - 2, MaxCol() - 6) == 0
- *        ? "Sorry, NO Records Were Selected"
- *     ELSE
- *        ? "You Selected: " + TBNames->Last +" "+ ;
- *           TBNames->First +" "+ TBNames->City
- *     ENDIF
- *  $END$
- */
-
 
 FUNCTION FT_BRWSWHL(aFields, bWhileCond, cKey, nFreeze, lSaveScrn, ;
                     cColorList, cColorShad, nTop, nLeft, nBottom, nRight )

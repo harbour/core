@@ -24,42 +24,6 @@
  *
  */
 
-
-/*  $DOC$
- *  $FUNCNAME$
- *     FT_AAVG()
- *  $CATEGORY$
- *     Array
- *  $ONELINER$
- *     Average numeric values in an array
- *  $SYNTAX$
- *     FT_AAVG( <aArray> [, <nStartIndex> [, <nEndIndex> ] ] ) -> nAverage
- *  $ARGUMENTS$
- *     <aArray> is the array containing the elements to be averaged.
- *
- *     <nStartIndex> is the first array item to include,
- *     defaults to first element.
- *
- *     <nEndIndex> is the last array element to include,
- *     defaults to all elements.
- *  $RETURNS$
- *     The average of the specified array elements.
- *  $DESCRIPTION$
- *     This function is used to get a numeric average of selected or all
- *     elements of an array.
- *
- *     This routine requires FT_ASUM().
- *  $EXAMPLES$
- *     FT_AAVG(aSubTotals)          // Get Average of Entire Array
- *
- *     FT_AAVG(aSubTotals, 5)       // Get Average of 5th Element On
- *
- *     FT_AAVG(aSubTotals, , 10)    // Get Average of 1st 10 Elements
- *
- *     FT_AAVG(aSubTotals, 5, 10)   // Get Average of Elements 5-10
- *  $END$
- */
-
 #define FORCE_BETWEEN(x,y,z)         (y := MAX(MIN(y,z),x))
 #define IS_NOT_ARRAY(x)              (VALTYPE(x) != "A")
 
@@ -67,8 +31,6 @@
             => ;
             <Param1> := iif(<Param1> == NIL,<Def1>,<Param1>) ;
          [; <ParamN> := iif(<ParamN> == NIL,<DefN>,<ParamN>)]
-
-
 
 FUNCTION FT_AAVG(aArray, nStartIndex, nEndIndex)
 

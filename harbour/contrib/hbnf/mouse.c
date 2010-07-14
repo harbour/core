@@ -240,7 +240,6 @@ HB_FUNC( _MGET_MICS )
    }
 }
 
-
 HB_FUNC( _M_RESET )
 {
    int iMouse;
@@ -389,7 +388,6 @@ HB_FUNC( _M_MXLIMIT )
    }
 #endif
 }
-
 
 HB_FUNC( _M_MYLIMIT )
 {

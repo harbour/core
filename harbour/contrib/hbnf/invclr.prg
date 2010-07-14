@@ -24,30 +24,6 @@
  *
  */
 
-
-/*  $DOC$
- *  $FUNCNAME$
- *     FT_INVCLR()
- *  $CATEGORY$
- *     Conversion
- *  $ONELINER$
- *     Get the inverse of a color
- *  $SYNTAX$
- *     FT_INVCLR( [ <cDsrdColor> ] ) -> cColor
- *  $ARGUMENTS$
- *     <cDsrdColor> is the color to get the inverse of.  Defaults to
- *     current color.
- *  $RETURNS$
- *     The inverse of the passed color.
- *  $DESCRIPTION$
- *     This function inverts a passed color (in the Clipper format: ??/??),
- *     e.g., "W/N" is converted to "N/W".
- *  $EXAMPLES$
- *     cInverse := FT_INVCLR()            // Get Inverse of Current Color
- *     cInvErr  := FT_INVCLR( cErrColor ) // Get Inverse of cErrorColor
- *  $END$
- */
-
 #Command    DEFAULT <Param1> TO <Def1> [, <ParamN> TO <DefN> ] ;
             => ;
             <Param1> := iif(<Param1> == NIL,<Def1>,<Param1>) ;

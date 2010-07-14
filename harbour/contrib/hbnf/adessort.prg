@@ -24,40 +24,6 @@
  *
  */
 
-
-/*  $DOC$
- *  $FUNCNAME$
- *     FT_ADESSORT()
- *  $CATEGORY$
- *     Array
- *  $ONELINER$
- *     Sort an array in descending order
- *  $SYNTAX$
- *     FT_ADESSORT( <aArray> [, <nStartIndex> [, <nEndIndex> ] ] ) -> aSorted
- *  $ARGUMENTS$
- *     <aArray> is the array to be sorted
- *
- *     <nStartIndex> is the first array item to include in the sort,
- *     defaults to first element
- *
- *     <nEndIndex> is the last array element to include in the sort,
- *     defaults to all elements
- *  $RETURNS$
- *     The array, sorted in descending order.
- *  $DESCRIPTION$
- *     This function is used to sort an array in descending order, i.e., Z-A
- *  $EXAMPLES$
- *     FT_ADESSORT(aNames)               // Sort the Entire Array
- *
- *     FT_ADESSORT(aNames, 5)            // Sort from the 5th Element On
- *
- *     FT_ADESSORT(aNames, , 10)         // Sort the 1st 10 Elements
- *
- *     FT_ADESSORT(aNames, 5, 10)        // Sort Elements 5-10
- *  $END$
- */
-
-
 #command    DEFAULT <Param1> TO <Def1> [, <ParamN> TO <DefN> ] ;
             => ;
             <Param1> := iif(<Param1> == NIL,<Def1>,<Param1>) ;
@@ -68,7 +34,6 @@
             => ;
             <Param1> := iif(VALTYPE(<Param1>) == <Type1>,<Param1>,<Def1>) ;
          [; <ParamN> := iif(VALTYPE(<ParamN>) == <TypeN>,<ParamN>,<DefN>)]
-
 
 #define FORCE_BETWEEN(x,y,z)         (y := MAX(MIN(y,z),x))
 

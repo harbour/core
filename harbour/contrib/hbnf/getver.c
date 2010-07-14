@@ -96,7 +96,6 @@ HB_FUNC( _FT_ISSHARE )
    hb_retni( iShare );
 }
 
-
 HB_FUNC( _FT_NWKSTAT )
 {
    int iConnect;

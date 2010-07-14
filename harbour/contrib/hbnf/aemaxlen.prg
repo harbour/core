@@ -22,52 +22,6 @@
  *
  */
 
-
-/*  $DOC$
- *  $FUNCNAME$
- *     FT_AEMAXLEN()
- *  $CATEGORY$
- *     Array
- *  $ONELINER$
- *     Find longest element within an array
- *  $SYNTAX$
- *     FT_AEMAXLEN( <aArray> [, <nDimension> [, <nStart> [, <nCount> ] ] ] ) ;
- *                -> nMaxlen
- *  $ARGUMENTS$
- *     <aArray> is the array containing the elements to be measured.
- *
- *     <nDimension> is the array dimension to be measured,
- *                defaults to first dimension.
- *
- *     <nStart> is the starting array element to include,
- *                defaults to first array element.
- *
- *     <nCount> is the number of array elements to process from
- *                from <nStart>, defaults to remaining elements
- *                in array.
- *  $RETURNS$
- *     The length of the longest size element of an array.
- *  $DESCRIPTION$
- *     This function will measure each element of an array
- *     dimension and return the longest element.
- *  $EXAMPLES$
- *     FT_AEMAXLEN(aArray)       // Measure the 1st dimension of an Array
- *
- *     FT_AEMAXLEN(aArray,2)     // Measure the 2nd dimension of an Array
- *
- *     FT_AEMAXLEN(aArray,2,,9)  // Measure Elements 1-9 of the
- *                                     2nd dimension or subarray
- *
- *     FT_AEMAXLEN(aArray,3,5,9) // Measure Elements 5-9 of the
- *                                     3rd dimension or subarray
- *
- *     FT_AEMAXLEN(aArray,3,5)   // Measure Elements 5 to last in the
- *                                     3rd dimension or subarray
- *  $SEEALSO$
- *     FT_AEMINLEN()
- *  $END$
- */
-
 #ifdef FT_TEST
 
 FUNCTION MAIN()
@@ -96,7 +50,6 @@ FUNCTION MAIN()
    RETURN NIL
 
 #endif
-
 
 FUNCTION FT_AEmaxlen( aArray, nDimension, nStart, nCount )
 

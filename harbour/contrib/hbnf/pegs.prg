@@ -29,28 +29,6 @@
  *
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *     FT_PEGS()
- *  $CATEGORY$
- *     Game
- *  $ONELINER$
- *     FT_PEGS GAME (all work and no play...)
- *  $SYNTAX$
- *     FT_PEGS() -> NIL
- *  $ARGUMENTS$
- *     None
- *  $RETURNS$
- *     NIL
- *  $DESCRIPTION$
- *     This function can be used to alleviate boredom.  The object is to
- *     remove all pegs except one.  This is done by jumping over adjacent
- *     pegs.
- *  $EXAMPLES$
- *     FT_PEGS()
- *  $END$
- */
-
 #include "inkey.ch"
 #include "common.ch"
 #include "setcurs.ch"
@@ -180,7 +158,6 @@ return NIL
 * end function FT_PEGS()
 *--------------------------------------------------------------------*
 
-
 static function DrawBox(nelement)
 setcolor(iif(board_[nelement][4], '+w/rb', 'w/n'))
 @ board_[nelement][1,1], board_[nelement][1,2], board_[nelement][1,3], ;
@@ -191,7 +168,6 @@ return NIL
 
 * end static function DrawBox()
 *--------------------------------------------------------------------*
-
 
 static function err_msg(msg)
 local buffer := savescreen(23, 33, 23, 47)
@@ -205,7 +181,6 @@ return nil
 
 * end static function Err_Msg()
 *--------------------------------------------------------------------*
-
 
 static function moremoves()
 local xx, yy, canmove := .f., piecesleft := 0, buffer

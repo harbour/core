@@ -31,8 +31,6 @@
  *
  */
 
-
-
 MEMVAR lRet
 
 #ifdef FT_TEST              // test program to demonstrate functions
@@ -69,65 +67,6 @@ MEMVAR lRet
    NEXT
  RETURN Nil
 #endif
-
-
-
-
-/*  $DOC$
- *  $FUNCNAME$
- *     FT_SAVEARR()
- *  $CATEGORY$
- *     Array
- *  $ONELINER$
- *     Save Clipper array to a disc file.
- *  $SYNTAX$
- *     FT_SAVEARR( <aArray>, <cFileName>, <nErrorCode> ) -> lRet
- *  $ARGUMENTS$
- *     <aArray> is any Clipper array except those containing
- *     compiled code blocks.
- *
- *     <cFileName> is a DOS file name.
- *
- *     <nErrorCode> will return any DOS file error.
- *
- *     All arguments are required.
- *
- *  $RETURNS$
- *     .F. if there was a DOS file error or the array contained
- *     code blocks, otherwise returns .T.
- *  $DESCRIPTION$
- *     FT_SAVEARR() saves any Clipper array, except those
- *     containing compiled code blocks, to a disc file.  The
- *     array can be restored from the disc file using
- *     FT_RESTARR().
- *
- *     [10/1/92 Librarian note:
- *
- *     This function does not appear to work with multi-dimensional
- *     arrays.  If you'd care to modify it to support this feature,
- *     please do and send it to Glenn Scott 71620,1521.]
- *
- *
- *  $EXAMPLES$
- *    aArray := { {'Invoice 1',CTOD('04/15/91'),1234.32,.T.},;
- *                {'Invoice 2',DATE(),234.98,.F.},;
- *                {'Invoice 3',DATE() + 1,0,.T.}  }
- *    nErrorCode := 0
- *    FT_SAVEARR(aArray,'invoice.dat',@nErrorCode)
- *    IF nErrorCode = 0
- *      aSave := FT_RESTARR('invoice.dat',@nErrorCode)
- *      IF nErrorCode # 0
- *         ? 'Error restoring array'
- *      ENDIF
- *    ELSE
- *      ? 'Error writing array'
- *    ENDIF
- *
- *  $SEEALSO$
- *     FT_RESTARR()
- *  $END$
- */
-
 
 FUNCTION FT_SAVEARR(aArray, cFileName, nErrorCode)
  LOCAL nHandle, lRet
@@ -186,54 +125,6 @@ STATIC FUNCTION _ftsavesub(xMemVar, nHandle, nErrorCode)
  ENDIF
  nErrorCode = FError()
  RETURN lRet
-
-
-/*  $DOC$
- *  $FUNCNAME$
- *     FT_RESTARR()
- *  $CATEGORY$
- *     Array
- *  $ONELINER$
- *     Restore a Clipper array from a disc file
- *  $SYNTAX$
- *     FT_RESTARR( <cFileName>, <nErrorCode> ) -> aArray
- *  $ARGUMENTS$
- *     <cFileName> is a DOS file name.
- *
- *     <nErrorCode> will return any DOS file error.
- *
- *     All arguments are required.
- *  $RETURNS$
- *     Return an array variable.
- *  $DESCRIPTION$
- *     FT_RESTARR() restores an array which was saved to
- *     a disc file using FT_SAVEARR().
- *
- *     [10/1/92 Librarian note:
- *
- *     This function does not appear to work with multi-dimensional
- *     arrays.  If you'd care to modify it to support this feature,
- *     please do and send it to Glenn Scott 71620,1521.]
- *
- *  $EXAMPLES$
- *    aArray := { {'Invoice 1',CTOD('04/15/91'),1234.32,.T.},;
- *                {'Invoice 2',DATE(),234.98,.F.},;
- *                {'Invoice 3',DATE() + 1,0,.T.}  }
- *    nErrorCode := 0
- *    FT_SAVEARR(aArray,'invoice.dat',@nErrorCode)
- *    IF nErrorCode = 0
- *      aSave := FT_RESTARR('invoice.dat',@nErrorCode)
- *      IF nErrorCode # 0
- *         ? 'Error restoring array'
- *      ENDIF
- *    ELSE
- *      ? 'Error writing array'
- *    ENDIF
- *
- *  $SEEALSO$
- *     FT_SAVEARR()
- *  $END$
- */
 
 FUNCTION FT_RESTARR(cFileName, nErrorCode)
  LOCAL nHandle, aArray

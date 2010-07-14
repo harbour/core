@@ -24,28 +24,6 @@
  *
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *     FT_DEC2BIN()
- *  $CATEGORY$
- *     Conversion
- *  $ONELINER$
- *     Convert decimal to binary
- *  $SYNTAX$
- *     FT_DEC2BIN( <nNum> ) -> cBinaryNumber
- *  $ARGUMENTS$
- *     <nNum> is the numeric expression to be converted.
- *  $RETURNS$
- *     A character string representing <nNum> in binary format.
- *  $DESCRIPTION$
- *     This function can be used in conjunction with any bit-wise
- *     operations.
- *  $EXAMPLES$
- *     QOut( FT_DEC2BIN(255) )        // "11111111"
- *     QOut( FT_DEC2BIN(2) )          // "00000010"
- *  $END$
- */
-
 #ifdef FT_TEST
 
 FUNCTION MAIN

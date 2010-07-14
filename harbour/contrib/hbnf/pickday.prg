@@ -24,26 +24,6 @@
  *
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *     FT_PICKDAY()
- *  $CATEGORY$
- *     Menus/Prompts
- *  $ONELINER$
- *     Picklist of days of week
- *  $SYNTAX$
- *     FT_PICKDAY() -> cDayOfWeek
- *  $ARGUMENTS$
- *     None
- *  $RETURNS$
- *     Character string containing day of week
- *  $DESCRIPTION$
- *     This function is ideal if you need the user to select a day.
- *  $EXAMPLES$
- *     mday := FT_PICKDAY()
- *  $END$
- */
-
 #include "box.ch"
 
 // test code
@@ -54,7 +34,6 @@ QOUT("You selected " + FT_PICKDAY())
 return nil
 
 #endif
-
 
 function FT_PICKDAY
 LOCAL DAYS := { "SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", ;

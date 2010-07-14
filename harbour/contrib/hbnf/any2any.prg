@@ -24,41 +24,6 @@
  *
  */
 
-
-/*  $DOC$
- *  $FUNCNAME$
- *     FT_XTOY()
- *  $CATEGORY$
- *     Conversion
- *  $ONELINER$
- *     Convert from any data type to any other data type
- *  $SYNTAX$
- *     FT_XTOY( <xValueToConvert>, <cTypeToConvertTo> ;
- *              [, <lWantYesNo> ] ) -> xResult
- *  $ARGUMENTS$
- *     <xValueToConvert> is the value to convert.
- *
- *     <cTypeToConvertTo> is the type of value to convert to
- *     ("C","D","L","N","A" or "B").
- *
- *     <lWantYesNo> is a logical to signal if 'Y' or 'N' is to be returned
- *     if Converting a logical, otherwise '.T.' or '.F.' will be returned
- *     for logicals.
- *  $RETURNS$
- *     The original value converted to the new type.
- *  $DESCRIPTION$
- *     This function converts a value of character, date, numeric, logical,
- *     array or code block type to any of the other type.  While it is
- *     guaranteed to return a value of the correct type, that value may not
- *     be meaningful (i.e., converting from a code block returns an EMPTY()
- *     value of the desired type).
- *  $EXAMPLES$
- *     nNumericValue := FT_XTOY(cInputValue, "N")
- *     IF (FT_XTOY(nInputValue, "L"))
- *  $END$
- */
-
-
 #define BLOCKIFY(x)                  { || x }
 #define IS_CHAR(x)                   (VALTYPE(x) == "C")
 #define IS_DATE(x)                   (VALTYPE(x) == "D")
@@ -95,7 +60,6 @@
             <Param1> := iif(<Param1> == NIL,<Def1>,<Param1>) ;
          [; <ParamN> := iif(<ParamN> == NIL,<DefN>,<ParamN>)]
 
-
 FUNCTION FT_XTOY(xValueToConvert, cTypeToConvertTo, lWantYesNo)
 
    DEFAULT lWantYesNo TO FALSE
@@ -109,7 +73,6 @@ FUNCTION FT_XTOY(xValueToConvert, cTypeToConvertTo, lWantYesNo)
 
       CASE cTypeToConvertTo == "D" .AND.; // They Want a Date
            IS_NOT_DATE(xValueToConvert)
-
 
          xValueToConvert := iif(IS_CHAR(xValueToConvert), ;
                                       ; // Convert from a Character
@@ -126,7 +89,6 @@ FUNCTION FT_XTOY(xValueToConvert, cTypeToConvertTo, lWantYesNo)
       CASE cTypeToConvertTo == "N" .AND.; // They Want a Number
            IS_NOT_NUMERIC(xValueToConvert)
 
-
          xValueToConvert := iif(IS_CHAR(xValueToConvert), ;
                                       ; // Convert from a Character
                                VAL(xValueToConvert), ;
@@ -141,7 +103,6 @@ FUNCTION FT_XTOY(xValueToConvert, cTypeToConvertTo, lWantYesNo)
 
       CASE cTypeToConvertTo == "L" .AND.; // They Want a Logical
            IS_NOT_LOGICAL(xValueToConvert)
-
 
          xValueToConvert := iif(IS_CHAR(xValueToConvert), ;
                                       ; // Convert from a Character
@@ -158,12 +119,10 @@ FUNCTION FT_XTOY(xValueToConvert, cTypeToConvertTo, lWantYesNo)
       CASE cTypeToConvertTo == "A" .AND.; // They Want an Array
            IS_NOT_ARRAY(xValueToConvert)
 
-
          xValueToConvert := { xValueToConvert }
 
       CASE cTypeToConvertTo == "B" .AND.; // They Want a Code Block
            IS_NOT_CODE_BLOCK(xValueToConvert)
-
 
          xValueToConvert := BLOCKIFY(xValueToConvert)
 

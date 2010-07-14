@@ -29,50 +29,6 @@
  *
  */
 
-
-
-
-/*  $DOC$
- *  $FUNCNAME$
- *     FT_NUMLOCK()
- *  $CATEGORY$
- *     Keyboard/Mouse
- *  $ONELINER$
- *     Return status of NumLock key
- *  $SYNTAX$
- *     FT_NUMLOCK( [ <lNewSetting> ] ) -> lCurrentSetting
- *  $ARGUMENTS$
- *     <lNewSetting> is optional and if supplied is the new setting
- *     for the CapLock key.  Specify .T. to turn CapLock on, or .F. to
- *     turn it off.
- *  $RETURNS$
- *     lValue is .T. if NumLock is set, .F. if it isn't set.  The value
- *     returned represents the setting in effect prior to any changes that
- *     might by made by <lNewSetting>.
- *  $DESCRIPTION$
- *     This function is useful if you need to know or set the status of the
- *     NumLock key for some reason.
- *  $EXAMPLES$
- *     IF FT_NUMLOCK()
- *        Qout( "NumLock is active" )
- *     ENDIF
- *
- *   Another one, slightly strange, courtesy of Glenn Scott:
- *
- *
- *       function numBlink()
- *          local lOldNum := ft_numlock()
- *
- *          while inkey( .5 ) != 27
- *             ft_numlock( !ft_numlock() )
- *          end
- *
- *          return ft_numlock( lOldNum )
- *  $SEEALSO$
- *     FT_CAPLOCK() FT_CTRL() FT_PRTSCR() FT_SHIFT() FT_ALT()
- *  $END$
- */
-
 #include "hbapigt.h"
 #include "hbapiitm.h"
 

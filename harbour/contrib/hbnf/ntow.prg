@@ -21,57 +21,6 @@
  *
  */
 
-
-
-
-/*  $DOC$
- *  $FUNCNAME$
- *     FT_NTOW()
- *  $CATEGORY$
- *     Conversion
- *  $ONELINER$
- *     Translate numeric value to words
- *  $SYNTAX$
- *     FT_NTOW( <nNumber> ) -> cWords
- *  $ARGUMENTS$
- *     <nNumber>  An integer to translate
- *  $RETURNS$
- *     A text string representing <nNumber>
- *  $DESCRIPTION$
- *      Translates numeric input to a text string.
- *
- *      FT_NTOW is intended to be used with integers only.  Since I don't
- *      know what your application will be, I can't assume the type of
- *      fraction you want returned (ninety nine cents, 99/100, .99, etc).
- *      If you want the fraction in words, just pass it as an integer.
- *
- *      Do not pass a negative number!  Handle negative numbers any way
- *      you need to in your code.  (ie: CR, DB, Negative, Minus, etc.)
- *
- *      Also, numeric 0 is returned as a null string.  You will need to
- *      make a decision how to output it (zero dollars, no dollars, etc).
- *  $EXAMPLES$
- *          ? FT_NTOW( 999 )        -> Nine Hundred Ninety Nine
- *
- *          ? FT_NTOW( 1000 )       -> One Thousand
- *
- *          ? FT_NTOW( 23 ) + " Dollars and " + FT_NTOW( 99 ) + " Cents"
- *                -> Twenty Three Dollars and Ninety Nine Cents
- *
- *          ? FT_NTOW( 23 ) + " Dollars and " + "99/100"
- *                -> Twenty Three Dollars and 99/100
- *
- *          x      := -23.99
- *          cents  := str( (x - int( x )) * 100, 2, 0 ) + "/100"
- *          x      := int( x )
- *          string := iif( x < 0, "Credit of ", "Debit of " )
- *          ? string + FT_NTOW( abs(x) ) + " Dollars and " + "99/100"
- *                -> Credit of Twenty Three Dollars and 99/100
- *  $END$
- */
-
-
-
 static ones  := { "",     " One",   " Two",   " Three", " Four", " Five",  ;
                   " Six", " Seven", " Eight", " Nine"                      ;
                 }
@@ -87,13 +36,10 @@ static tens  :=  { "", "", " Twenty", " Thirty", " Forty", " Fifty", ;
 
 static qualifiers := { "", " Thousand", " Million", " Billion", " Trillion" }
 
-
 #ifdef FT_TEST
   function main( cNum )
      return qout( ft_ntow( val( cNum ) ) )
 #endif
-
-
 
 function ft_ntow(nAmount)
   local nTemp, sResult := " ", nQualNo
@@ -110,7 +56,6 @@ function ft_ntow(nAmount)
      sResult += grp_to_words(nTemp, "")
   endif
   return ltrim(sResult)
-
 
 static function grp_to_words(nGrp, sQual)
   local sResult := "", nTemp
@@ -129,7 +74,6 @@ static function grp_to_words(nGrp, sQual)
          sResult += ones[ int( nTemp) + 1 ]
   endcase
   return sResult + sQual
-
 
 static function sol10( nNumber )
   local sTemp

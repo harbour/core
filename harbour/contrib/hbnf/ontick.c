@@ -17,53 +17,6 @@
  * Initial release
  */
 
-
-/*  $DOC$
- *  $FUNCNAME$
- *     FT_OnTick()
- *  $CATEGORY$
- *     Event
- *  $ONELINER$
- *     Evaluate a designated code block at a designated interval.
- *  $SYNTAX$
- *     FT_OnTick( bCode, nInterval )
- *  $ARGUMENTS$
- *     <bCode> is the code block to evaluate.
- *     <nInterval> is the number of clock ticks to wait between
- *                 evaluations of the code block.
- *  $RETURNS$
- *     NIL
- *  $DESCRIPTION$
- *     This function effectively allows you to run tasks in the background
- *     by transparently and periodically calling a designated routine.
- *
- *     To halt the execution of the background function, call FT_OnTick()
- *     with no arguments.
- *
- *     This function makes heavy use of several undocumented internal
- *     routines.  If this fact makes you uncomfortable then don't use
- *     this function, you quivering sack of cowardly slime.
- *  $EXAMPLES$
- *
- *     // Set up a self-updating on-screen clock
- *
- *     FT_OnTick( "CLOCK", 9 )
- *
- *     procedure Clock
- *
- *     local nRow := Row()
- *     local nCol := Col()
- *
- *     @ 0, 0 say Time()
- *
- *     SetPos( nRow, nCol )
- *
- *     return
- *
- *  $SEEALSO$
- *  $END$
- */
-
 #include "hbapi.h"
 #include "hbapiitm.h"
 
@@ -122,7 +75,6 @@ static void cdecl TickTock( void )
 
    return;
 }
-
 
 CLIPPER FT_OnTick( void )
 {

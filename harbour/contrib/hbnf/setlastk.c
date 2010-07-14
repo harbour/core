@@ -66,43 +66,6 @@
 *
 */
 
-/*  $DOC$
- *  $FUNCNAME$
- *     FT_LASTKEY()
- *  $CATEGORY$
- *     Keyboard/Mouse
- *  $ONELINER$
- *     Force LastKey() to return a programmer-defined value.
- *  $SYNTAX$
- *     FT_LastKey( <nKey> ) -> NIL
- *  $ARGUMENTS$
- *     <nKey> is the Inkey() value of the desired key.
- *  $RETURNS$
- *     NIL
- *  $DESCRIPTION$
- *     It is occasionally useful to force LastKey() to return a known value.
- *     This is easily accomplishing by using the KEYBOARD command, but this
- *     has undesireable side effects (the keyboard buffer is cleared, and
- *     the keystroke is processed whether you needed it to be or not).  This
- *     function accomplishes the same task but without the side effects.  It
- *     does so by directly modifying the memory location where Clipper stores
- *     the LastKey() value.
- *
- *     Some highly unorthodox programming techniques, not to mention rather
- *     strange use of Clipper internals, was necessary to make this function
- *     work.  If this makes you uncomfortable, then don't use this function,
- *     you worthless crybaby.
- *  $EXAMPLES$
- *     keyboard chr( K_ESC )
- *
- *     ? lastkey()  // returns 27
- *
- *     FT_LastKey( K_F1 )
- *
- *     ? lastkey()  // now returns 28
- *  $END$
- */
-
 #include "hbapi.h"
 
 HB_FUNC_EXTERN( HB_SETLASTKEY );
