@@ -52,6 +52,7 @@
 
 #include "common.ch"
 #include "directry.ch"
+#include "fileio.ch"
 
 #define _HBDOC_SRC_SUBDIR       "doc"
 #define _HBDOC_SRC_EXT          ".txt"
@@ -250,26 +251,84 @@ FUNCTION __hbdoc_ToSource( aEntry )
 
    RETURN cSource
 
-FUNCTION __hbdoc_LoadHBD( cFileName )
-   LOCAL aEntry
+/*
+ * 0xC0, 'H', 'B', 'D' followed two-byte version number in Little Endian order.
+ * Corresponding magic(5) rule:
+ *
+ *    0       string          \xc0HBD         Harbour Documentation
+ *    >4      leshort         x               version %d
+ *
+ * Until such time that the serialized format changes, and handling of
+ * previously-saved files is required, only a naive approach of using
+ * version 1 is taken.
+ */
+#define _HBDOC_SIGNATURE e"\xC0HBD" + Chr( 1 ) + Chr( 0 )
 
-   IF ISCHARACTER( cFileName )
-      IF hb_FileExists( cFileName )
-         aEntry := hb_deserialize( hb_MemoRead( cFileName ) )
-         IF ISARRAY( aEntry )
-            RETURN aEntry
-         ENDIF
-      ENDIF
-   ENDIF
-
-   RETURN NIL
+#define _HBDOC_EXT       ".hbd"
 
 FUNCTION __hbdoc_SaveHBD( cFileName, aEntry )
+   LOCAL fhnd
+   LOCAL cExt
 
    IF ISCHARACTER( cFileName ) .AND. ;
       ISARRAY( aEntry )
 
-      RETURN hb_MemoWrit( cFileName, hb_serialize( aEntry ) )
+      IF Set( _SET_DEFEXTENSIONS )
+         hb_FNameSplit( cFileName, NIL, NIL, @cExt )
+         IF Empty( cExt )
+            cFileName += _HBDOC_EXT
+         ENDIF
+      ENDIF
+
+      fhnd := hb_FCreate( cFileName, FC_NORMAL, FO_CREAT + FO_TRUNC + FO_READWRITE + FO_EXCLUSIVE )
+      IF fhnd != F_ERROR
+         FWrite( fhnd, _HBDOC_SIGNATURE )
+         FWrite( fhnd, hb_ZCompress( hb_serialize( aEntry ) ) )
+         FClose( fhnd )
+         RETURN .T.
+      ENDIF
    ENDIF
 
    RETURN .F.
+
+FUNCTION __hbdoc_LoadHBD( cFileName )
+   LOCAL fhnd
+   LOCAL cExt
+   LOCAL aEntry := NIL
+
+   LOCAL cBuffer
+
+   IF ISCHARACTER( cFileName )
+
+      IF Set( _SET_DEFEXTENSIONS )
+         hb_FNameSplit( cFileName, NIL, NIL, @cExt )
+         IF Empty( cExt )
+            cFileName += _HBDOC_EXT
+         ENDIF
+      ENDIF
+
+      fhnd := FOpen( cFileName, FO_READ )
+      IF fhnd != F_ERROR
+
+         cBuffer := Space( Len( _HBDOC_SIGNATURE ) )
+         FRead( fhnd, @cBuffer, Len( cBuffer ) )
+         IF cBuffer == _HBDOC_SIGNATURE
+
+            cBuffer := Space( FSeek( fhnd, 0, FS_END ) - Len( _HBDOC_SIGNATURE ) )
+            FSeek( fhnd, Len( _HBDOC_SIGNATURE ), FS_SET )
+            FRead( fhnd, @cBuffer, Len( cBuffer ) )
+            FClose( fhnd )
+
+            aEntry := hb_deserialize( hb_ZUncompress( cBuffer ) )
+            cBuffer := NIL
+
+            IF ! ISARRAY( aEntry )
+               aEntry := NIL
+            ENDIF
+         ELSE
+            FClose( fhnd )
+         ENDIF
+      ENDIF
+   ENDIF
+
+   RETURN aEntry
