@@ -18,6 +18,7 @@ C_SOURCES := \
    hbmem.c \
    hbprintf.c \
    hbstr.c \
+   hbstrbm.c \
    hbtrace.c \
    hbver.c \
    hbverdsp.c \

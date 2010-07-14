@@ -2,8 +2,6 @@
  * $Id$
  */
 
-/* WARNING: UTF-8 strings */
-
 /* hb_utf8at / hb_utf8rat test
    UTF8 Aware hb_at()/hb_rat() */
 
@@ -14,11 +12,14 @@ REQUEST HB_CODEPAGE_FRISO
 
 PROCEDURE Main()
 
-   LOCAL u := "Une rêve est la moitié d'une réalité."
+   #define _UTF8_E_ACUTE       Chr( 0xC3 ) + Chr( 0xA9 )
+   #define _UTF8_E_CIRCUMFLEX  Chr( 0xC3 ) + Chr( 0xAA )
+
+   LOCAL u := "Une r" + _UTF8_E_CIRCUMFLEX + "ve est la moiti" + _UTF8_E_ACUTE + " d'une r" + _UTF8_E_ACUTE + "alit" + _UTF8_E_ACUTE + "."
    LOCAL i := hb_translate( u, "UTF8", "FRISO" )
    LOCAL d := hb_translate( u, "UTF8", "FR850" )
 
-   LOCAL uu :="é"
+   LOCAL uu := _UTF8_E_ACUTE
    LOCAL ii := hb_translate( uu, "UTF8", "FRISO" )
    LOCAL dd := hb_translate( uu, "UTF8", "FR850" )
 
