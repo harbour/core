@@ -444,6 +444,18 @@ PROCEDURE GNUMake( ... )
       aUtils,;
       hb_ATokens( GetEnv( "HB_BUILD_ADDONS" ),, .T. ) }
 
+   OutStd( "! Calculating sorting order for contribs..." + hb_eol() )
+
+   FOR EACH aList IN aAll
+      FOR EACH cProject IN aList
+         IF ! Empty( cProject )
+            call_hbmk2_dept( s_cRoot + "bin" + hb_ps(), s_cBase + cProject, @cType )
+         ENDIF
+      NEXT
+   NEXT
+
+   OutStd( "! Building contribs..." + hb_eol() )
+
    FOR EACH aList IN aAll
       FOR EACH cProject IN aList
 

@@ -367,6 +367,7 @@ extern HB_EXPORT HB_UCHAR     hb_cdpGetChar( PHB_CODEPAGE cdp, HB_BOOL fCtrl, HB
 extern HB_EXPORT HB_BOOL      hb_cdpGetFromUTF8( PHB_CODEPAGE cdp, HB_BOOL fCtrl, HB_UCHAR ch, int * n, HB_WCHAR * pwc );
 
 extern HB_EXPORT HB_SIZE      hb_cdpUTF8StringLength( const char * pSrc, HB_SIZE nLen );
+extern HB_EXPORT HB_SIZE      hb_cdpUTF8StringAt( const char * szNeedle, HB_SIZE nLenN, const char * szHaystack, HB_SIZE nLenH, HB_SIZE nStart, HB_SIZE nEnd, HB_BOOL fReverse );
 extern HB_EXPORT HB_SIZE      hb_cdpUTF8StringPeek( const char * pSrc, HB_SIZE nLen, HB_SIZE nPos );
 extern HB_EXPORT char *       hb_cdpUTF8StringSubstr( const char * pSrc, HB_SIZE nLen, HB_SIZE nFrom, HB_SIZE nCount, HB_SIZE * pnDest );
 

@@ -264,6 +264,54 @@ HB_FUNC( HB_UTF8TOSTR )
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+HB_FUNC( HB_UTF8AT )
+{
+   PHB_ITEM pSub = hb_param( 1, HB_IT_STRING );
+   PHB_ITEM pText = hb_param( 2, HB_IT_STRING );
+
+   if( pText && pSub )
+   {
+      HB_SIZE nTextLength = hb_itemGetCLen( pText );
+      HB_SIZE nStart = hb_parnsdef( 3, 1 );
+      HB_SIZE nEnd = hb_parnsdef( 4, nTextLength ); /* nTextLength can be > UTF8 len. No problem.*/
+
+      if( nEnd < nStart )
+         hb_retns( 0 );
+      else
+         hb_retns( hb_cdpUTF8StringAt( hb_itemGetCPtr( pSub ), hb_itemGetCLen( pSub ),
+                                       hb_itemGetCPtr( pText ), nTextLength, nStart, nEnd, HB_FALSE ) );
+   }
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+/*
+ * NOTE: In HB_UTF8RAT we are still traversing from
+ *       left to right, as it would be required anyway to
+ *       determine the real string length. [bacco]
+ */
+
+HB_FUNC( HB_UTF8RAT )
+{
+   PHB_ITEM pSub = hb_param( 1, HB_IT_STRING );
+   PHB_ITEM pText = hb_param( 2, HB_IT_STRING );
+
+   if( pText && pSub )
+   {
+      HB_SIZE nTextLength = hb_itemGetCLen( pText );
+      HB_SIZE nStart = hb_parnsdef( 3, 1 );
+      HB_SIZE nEnd = hb_parnsdef( 4, nTextLength ); /* nTextLength can be > UTF8 len. No problem.*/
+
+      if( nEnd < nStart )
+         hb_retns( 0 );
+      else
+         hb_retns( hb_cdpUTF8StringAt( hb_itemGetCPtr( pSub ), hb_itemGetCLen( pSub ),
+                                       hb_itemGetCPtr( pText ), nTextLength, nStart, nEnd, HB_TRUE ) );
+   }
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 HB_FUNC( HB_UTF8SUBSTR )
 {
    const char * szString = hb_parc( 1 );

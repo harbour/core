@@ -708,6 +708,84 @@ HB_SIZE hb_cdpUTF8StringLength( const char * pSrc, HB_SIZE nLen )
    return nDst;
 }
 
+HB_SIZE hb_cdpUTF8StringAt( const char * szNeedle, HB_SIZE nLenN,
+                            const char * szHaystack, HB_SIZE nLenH,
+                            HB_SIZE nStart, HB_SIZE nEnd, HB_BOOL fReverse )
+{
+   HB_SIZE nPosN = 0;
+   HB_SIZE nPosH = 0;
+   HB_SIZE nPosX = 0;
+   HB_SIZE nPos = 0;
+   HB_SIZE nRAt = 0;
+   HB_SIZE nAt = 0;
+
+   HB_WCHAR wcN = 0;
+   HB_WCHAR wcH = 0;
+   int nN = 0;
+   int nH = 0;
+
+   while( nPosH < nLenH && nPosN < nLenN && nPos < nEnd )
+   {
+      do
+      {
+         if( !hb_cdpUTF8ToU16NextChar( ( HB_UCHAR ) szHaystack[ nPosH++ ], &nH, &wcH ) )
+         {
+            --nPosH;
+            nH = 0;
+         }
+      } while( nH );
+
+      if( ++nPos < nStart )
+         continue;
+
+      do
+      {
+         if( !hb_cdpUTF8ToU16NextChar( ( HB_UCHAR ) szNeedle[ nPosN++ ], &nN, &wcN ) )
+         {
+            --nPosN;
+            nN = 0;
+         }
+      } while( nN );
+
+      if( wcH == wcN )
+      {
+         if( nAt == 0 )
+         {
+            nAt = nPos;
+            nPosX = nPosH;
+         }
+
+         if( nPosN == nLenN )
+         {
+            if( fReverse )
+            {
+               nRAt = nAt;
+               nPos = nAt;
+               nAt = 0;
+               nPosH = nPosX;
+               nPosX = 0;
+               nPosN = 0;
+            }
+            else
+               return nAt;
+         }
+      }
+      else
+      {
+         if( nAt )
+         {
+            nPos = nAt;
+            nAt = 0;
+            nPosH = nPosX;
+            nPosX = 0;
+         }
+         nPosN = 0;
+      }
+   }
+
+   return nRAt;
+}
+
 HB_SIZE hb_cdpUTF8StringPeek( const char * pSrc, HB_SIZE nLen, HB_SIZE nPos )
 {
    if( nLen )

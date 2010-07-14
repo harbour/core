@@ -728,6 +728,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    LOCAL nOpt_FNF
    LOCAL nCCompVer
    LOCAL lCHD_Comp := .F.
+   LOCAL cCHD_DirOld
 
    LOCAL cCommand
    LOCAL aCommand
@@ -4151,30 +4152,6 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       l_aPRG_TODO := hbmk[ _HBMK_aPRG ]
    ENDIF
 
-   /* Header paths */
-
-   IF ! lSkipBuild .AND. ! lStopAfterInit
-      FOR EACH tmp IN hbmk[ _HBMK_aINCPATH ]
-         IF ! Empty( tmp )
-            /* Different escaping for internal and external compiler. */
-            IF hbmk[ _HBMK_nHBMODE ] == _HBMODE_NATIVE
-               AAdd( hbmk[ _HBMK_aOPTPRG ], "-i" + tmp )
-            ELSE
-               AAdd( hbmk[ _HBMK_aOPTPRG ], "-i" + FNameEscape( tmp, hbmk[ _HBMK_nCmd_Esc ] ) )
-            ENDIF
-            IF ! hbmk[ _HBMK_lStopAfterHarbour ]
-               IF lCHD_Comp
-                  /* Convert source filenames relative to the target dir */
-                  AAdd( hbmk[ _HBMK_aOPTC ], StrTran( cOptIncMask, "{DI}", FNameEscape( PathMakeAbsolute( tmp, DirAddPathSep( PathMakeRelative( PathNormalize( PathMakeAbsolute( hbmk[ _HBMK_cWorkDir ], hb_pwd() ) ), hb_pwd(), .T. ) ) ), hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) ) )
-               ELSE
-                  AAdd( hbmk[ _HBMK_aOPTC ], StrTran( cOptIncMask, "{DI}", FNameEscape( tmp, hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) ) )
-               ENDIF
-               AAdd( hbmk[ _HBMK_aOPTRES ], StrTran( cOptIncMask, "{DI}", FNameEscape( tmp, hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) ) )
-            ENDIF
-         ENDIF
-      NEXT
-   ENDIF
-
    /* Dump hbmk2 build information */
 
    IF lDumpInfo
@@ -4188,6 +4165,33 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       OutStd( "}}" + hb_eol() )
 
       RETURN 0
+   ENDIF
+
+   /* Header paths */
+
+   IF ! lSkipBuild .AND. ! lStopAfterInit
+      IF lCHD_Comp
+         tmp2 := DirAddPathSep( PathMakeRelative( PathNormalize( PathMakeAbsolute( hbmk[ _HBMK_cWorkDir ], hb_pwd() ) ), hb_pwd(), .T. ) )
+      ENDIF
+      FOR EACH tmp IN hbmk[ _HBMK_aINCPATH ]
+         IF ! Empty( tmp )
+            /* Different escaping for internal and external compiler. */
+            IF hbmk[ _HBMK_nHBMODE ] == _HBMODE_NATIVE
+               AAdd( hbmk[ _HBMK_aOPTPRG ], "-i" + tmp )
+            ELSE
+               AAdd( hbmk[ _HBMK_aOPTPRG ], "-i" + FNameEscape( tmp, hbmk[ _HBMK_nCmd_Esc ] ) )
+            ENDIF
+            IF ! hbmk[ _HBMK_lStopAfterHarbour ]
+               IF lCHD_Comp
+                  /* Rebase source dirs relative to the target dir */
+                  AAdd( hbmk[ _HBMK_aOPTC ], StrTran( cOptIncMask, "{DI}", FNameEscape( PathNormalize( PathMakeAbsolute( tmp, tmp2 ) ), hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) ) )
+               ELSE
+                  AAdd( hbmk[ _HBMK_aOPTC ], StrTran( cOptIncMask, "{DI}", FNameEscape( tmp, hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) ) )
+               ENDIF
+               AAdd( hbmk[ _HBMK_aOPTRES ], StrTran( cOptIncMask, "{DI}", FNameEscape( tmp, hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) ) )
+            ENDIF
+         ENDIF
+      NEXT
    ENDIF
 
    /* Check if we've found all dependencies */
@@ -4951,6 +4955,19 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                      cOpt_CompC := StrTran( cOpt_CompC, "{OO}"  , FNameEscape( FNameExtSet( hbmk[ _HBMK_cPROGNAME ], cObjExt ), nOpt_Esc, nOpt_FNF ) )
                      cOpt_CompC := StrTran( cOpt_CompC, "{OW}"  , FNameEscape( hbmk[ _HBMK_cWorkDir ], nOpt_Esc, nOpt_FNF ) )
 
+                     IF lCHD_Comp
+                        tmp2 := DirAddPathSep( PathMakeRelative( PathNormalize( PathMakeAbsolute( hbmk[ _HBMK_cWorkDir ], hb_pwd() ) ), hb_pwd(), .T. ) )
+                        IF hbmk[ _HBMK_lDONTEXEC ]
+                           cCHD_DirOld := NIL
+                        ELSE
+                           cCHD_DirOld := hb_pwd()
+                           IF hbmk[ _HBMK_lTRACE ] .AND. hbmk[ _HBMK_lInfo ]
+                              hbmk_OutStd( hbmk, hb_StrFormat( I_( "'cd' to: %1$s" ), hbmk[ _HBMK_cWorkDir ] ) )
+                           ENDIF
+                           DirChange( hbmk[ _HBMK_cWorkDir ] )
+                        ENDIF
+                     ENDIF
+
                      aThreads := {}
                      FOR EACH aTODO IN ArraySplit( l_aCGEN_TODO, l_nJOBS )
 
@@ -4958,7 +4975,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                            /* Convert source filenames relative to the target dir */
                            tmp := AClone( aTODO )
                            FOR EACH tmp1 IN tmp
-                              tmp1 := PathMakeAbsolute( tmp1, DirAddPathSep( PathMakeRelative( PathNormalize( PathMakeAbsolute( hbmk[ _HBMK_cWorkDir ], hb_pwd() ) ), hb_pwd(), .T. ) ) )
+                              tmp1 := PathMakeAbsolute( tmp1, tmp2 )
                            NEXT
                            cOpt_CompCLoop := AllTrim( StrTran( cOpt_CompC, "{LC}"  , ArrayToList( tmp,, nOpt_Esc, nOpt_FNF ) ) )
                         ELSE
@@ -4997,9 +5014,9 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
                         IF ! hbmk[ _HBMK_lDONTEXEC ]
                            IF hb_mtvm() .AND. Len( aTODO:__enumBase() ) > 1
-                              AAdd( aThreads, { hb_threadStart( @hbmk2_hb_processRunInDir(), iif( lCHD_Comp, hbmk[ _HBMK_cWorkDir ], NIL ), cCommand ), cCommand } )
+                              AAdd( aThreads, { hb_threadStart( @hb_processRun(), cCommand ), cCommand } )
                            ELSE
-                              IF ( tmp := hbmk2_hb_processRunInDir( iif( lCHD_Comp, hbmk[ _HBMK_cWorkDir ], NIL ), cCommand ) ) != 0
+                              IF ( tmp := hb_processRun( cCommand ) ) != 0
                                  hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Running C/C++ compiler. %1$s" ), hb_ntos( tmp ) ) )
                                  IF ! hbmk[ _HBMK_lQuiet ]
                                     OutErr( cCommand + _OUT_EOL )
@@ -5034,6 +5051,13 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                               ENDIF
                            ENDIF
                         NEXT
+                     ENDIF
+
+                     IF lCHD_Comp .AND. cCHD_DirOld != NIL
+                        DirChange( cCHD_DirOld )
+                        IF hbmk[ _HBMK_lTRACE ] .AND. hbmk[ _HBMK_lInfo ]
+                           hbmk_OutStd( hbmk, I_( "'cd' back." ) )
+                        ENDIF
                      ENDIF
                   ENDIF
                ELSE
@@ -5534,21 +5558,6 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    ENDIF
 
    RETURN hbmk[ _HBMK_nErrorLevel ]
-
-STATIC FUNCTION hbmk2_hb_processRunInDir( cNewDir, ... )
-   LOCAL cOldDir
-   LOCAL nRetVal
-
-   IF cNewDir == NIL
-      RETURN hb_processRun( ... )
-   ELSE
-      cOldDir := hb_pwd()
-      DirChange( cNewDir )
-      nRetVal := hb_processRun( ... )
-      DirChange( cOldDir )
-   ENDIF
-
-   RETURN nRetVal
 
 STATIC PROCEDURE DoIMPLIB( hbmk, bBlk_ImpLib, cLibLibPrefix, cLibLibExt )
    LOCAL cMakeImpLibDLL
@@ -9477,6 +9486,7 @@ STATIC FUNCTION win_implib_command_msvc( hbmk, cCommand, cSourceDLL, cTargetLib,
 #define _VCS_CVS                4
 #define _VCS_BAZAAR             5
 #define _VCS_FOSSIL             6
+#define _VCS_MONOTONE           7
 
 STATIC FUNCTION VCSDetect( cDir )
 
@@ -9492,6 +9502,7 @@ STATIC FUNCTION VCSDetect( cDir )
    CASE hb_DirExists( cDir + ".hg" )       ; RETURN _VCS_MERCURIAL
    CASE hb_DirExists( cDir + ".bzr" )      ; RETURN _VCS_BAZAAR
    CASE hb_FileExists( cDir + "_FOSSIL_" ) ; RETURN _VCS_FOSSIL
+   CASE hb_DirExists( cDir + "_MTN" )      ; RETURN _VCS_MONOTONE
    CASE hb_DirExists( cDir + "CVS" )       ; RETURN _VCS_CVS
    CASE hb_DirExists( cDir + "_svn" )      ; RETURN _VCS_SVN /* NOTE: When SVN_ASP_DOT_NET_HACK envvar is set. [vszakats] */
    ENDCASE
@@ -9529,6 +9540,10 @@ STATIC FUNCTION VCSID( cDir, cVCSHEAD, /* @ */ cType )
    CASE _VCS_FOSSIL
       cType := "fossil"
       cCommand := "fossil info"
+      EXIT
+   CASE _VCS_MONOTONE
+      cType := "monotone"
+      cCommand := "mtn status"
       EXIT
    OTHERWISE
       /* No version control system detected, roll our own. */
@@ -9603,6 +9618,27 @@ STATIC FUNCTION VCSID( cDir, cVCSHEAD, /* @ */ cType )
             IF tmp > 0
                cStdOut := LTrim( SubStr( cStdOut, tmp + Len( "checkout:" ) ) )
                tmp := At( " ", cStdOut )
+               IF tmp > 0
+                  cResult := Left( cStdOut, tmp - 1 )
+               ENDIF
+            ENDIF
+            EXIT
+         CASE _VCS_MONOTONE
+            /* ----------------------------------------------------------------------
+               Revision: c79f2332a1e9036bb52ac1f412b92e6a69fc9071
+               Parent:   bf8b93290ea4e8e946961f51c47f8f4638f65372
+               Author:   ???
+               Date:     2010.07.14. 1:11:47
+               Branch:   free.lp.se:LPlib
+
+               Changes against parent bf8b93290ea4e8e946961f51c47f8f4638f65372
+
+               no changes
+             */
+            tmp := At( "Revision:", cStdOut )
+            IF tmp > 0
+               cStdOut := StrTran( LTrim( SubStr( cStdOut, tmp + Len( "Revision:" ) ) ), Chr( 13 ) )
+               tmp := At( Chr( 10 ), cStdOut )
                IF tmp > 0
                   cResult := Left( cStdOut, tmp - 1 )
                ENDIF
@@ -10306,7 +10342,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-[no]warn[=lev]"    , I_( "set C compiler warning level\n<lev> can be: max, yes, low, no, def (default: yes)" ) },;
       { "-[no]compr[=lev]"   , I_( "compress executable/dynamic lib (needs UPX)\n<lev> can be: min, max, def" ) },;
       { "-[no]run"           , I_( "run/do not run output executable" ) },;
-      { "-vcshead=<file>"    , I_( "generate .ch header file with local repository information. SVN, CVS, Git, Mercurial, Bazaar and Fossil are currently supported. Generated header will define macro _HBMK_VCS_TYPE_ with the name of detected VCS and _HBMK_VCS_ID_ with the unique ID of local repository" ) },;
+      { "-vcshead=<file>"    , I_( "generate .ch header file with local repository information. SVN, CVS, Git, Mercurial, Bazaar, Fossil and Monotone are currently supported. Generated header will define macro _HBMK_VCS_TYPE_ with the name of detected VCS and _HBMK_VCS_ID_ with the unique ID of local repository" ) },;
       { "-tshead=<file>"     , I_( "generate .ch header file with timestamp information. Generated header will define macros _HBMK_BUILD_DATE_, _HBMK_BUILD_TIME_, _HBMK_BUILD_TIMESTAMP_ with the date/time of build" ) },;
       { "-icon=<file>"       , I_( "set <file> as application icon. <file> should be a supported format on the target platform" ) },;
       { "-instfile=<g:file>" , I_( "add <file> in to the list of files to be copied to path specified by -instpath option. <g> is an optional copy group, it must be at least two characters long." ) },;
