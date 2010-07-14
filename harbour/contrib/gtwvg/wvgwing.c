@@ -709,15 +709,15 @@ HB_FUNC( WVG_TREEVIEW_ADDITEM )
    LPTSTR text = HB_TCHAR_CONVTO( hb_parcx( 3 ) );
 
    tvis.hInsertAfter    = TVI_LAST;
-   tvis.item.mask       = TVIF_TEXT | TVIF_IMAGE | TVIF_SELECTEDIMAGE | TVIF_STATE;
-   tvis.item.cchTextMax = MAX_PATH + 1;
-   tvis.item.stateMask  = TVIS_BOLD | TVIS_CUT | TVIS_DROPHILITED |
+   HB_WIN_V_UNION( tvis, u, item.mask ) = TVIF_TEXT | TVIF_IMAGE | TVIF_SELECTEDIMAGE | TVIF_STATE;
+   HB_WIN_V_UNION( tvis, u, item.cchTextMax ) = MAX_PATH + 1;
+   HB_WIN_V_UNION( tvis, u, item.stateMask ) = TVIS_BOLD | TVIS_CUT | TVIS_DROPHILITED |
                           TVIS_EXPANDEDONCE | TVIS_SELECTED | TVIS_EXPANDPARTIAL |
                           TVIS_OVERLAYMASK | TVIS_STATEIMAGEMASK | TVIS_USERMASK;
 
-   tvis.item.state      = 0;        /* TVI_BOLD */
+   HB_WIN_V_UNION( tvis, u, item.state ) = 0;        /* TVI_BOLD */
    tvis.hParent         = HB_ISNUM( 2 ) ? ( HTREEITEM ) wvg_parhandle( 2 ) : NULL;
-   tvis.item.pszText    = text;
+   HB_WIN_V_UNION( tvis, u, item.pszText ) = text;
 
    hb_retnint( ( HB_PTRDIFF ) TreeView_InsertItem( wvg_parhwnd( 1 ), &tvis ) );
 

@@ -32,8 +32,4 @@ DOC_FILES := \
    whatsnew.txt \
    windll.txt \
 
-DIRS := \
-   en \
-
 include $(TOP)$(ROOT)config/doc.mk
-include $(TOP)$(ROOT)config/dir.mk

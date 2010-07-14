@@ -62,7 +62,6 @@ for /F %%a in ( 'dir /b /ad' ) do (
    xcopy /y /s %%a\*.hbc     F:\hb\hb21\contrib\%%a\
    xcopy /y /s %%a\*.hbi     F:\hb\hb21\contrib\%%a\
    xcopy /y /s %%a\*.def     F:\hb\hb21\contrib\%%a\
-   xcopy /y /s %%a\doc\*.*   F:\hb\hb21\contrib\%%a\doc\
    xcopy /y /s %%a\tests\*.* F:\hb\hb21\contrib\%%a\tests\
    xcopy /y /s %%a\utils\*.* F:\hb\hb21\contrib\%%a\utils\
 )

@@ -114,7 +114,7 @@ Section "Main components" hb_main
   File "$%HB_ROOT%hb21\include\*.*"
 
   SetOutPath $INSTDIR\doc
-  File /r "$%HB_ROOT%hb21\doc\*.*"
+  File "$%HB_ROOT%hb21\doc\*.*"
 
   SetOutPath $INSTDIR\addons
   File "$%HB_ROOT%hb21\addons\HARBOUR_README_ADDONS"

@@ -18,6 +18,7 @@
 
 PROCEDURE Main()
    LOCAL nErrorLevel := 0
+   LOCAL aDir
    LOCAL aFile
 
    LOCAL tmp
@@ -57,17 +58,35 @@ PROCEDURE Main()
 
    /* Creating language files */
 
-   IF ! Empty( GetEnv( "HB_HOST_BIN_DIR" ) )
+   OutStd( "! Making translation (.hbl) files..." + hb_eol() )
 
-      OutStd( "! Making .hbl files..." + hb_eol() )
+   FOR EACH tmp IN Directory( "utils" + hb_ps() + hb_osFileMask(), "D" )
+      IF "D" $ tmp[ F_ATTR ] .AND. !( tmp[ F_NAME ] == "." ) .AND. !( tmp[ F_NAME ] == ".." )
+         FOR EACH aFile IN Directory( "utils" + hb_ps() + tmp[ F_NAME ] + hb_ps() + "*.po" )
+            mk_hbl( "utils" + hb_ps() + tmp[ F_NAME ] + hb_ps() + aFile[ F_NAME ],;
+                    PathSepToSelf( GetEnv( "HB_BIN_INSTALL" ) ) + hb_ps() + FNameExtSet( aFile[ F_NAME ], ".hbl" ) )
+         NEXT
+      ENDIF
+   NEXT
 
-      FOR EACH tmp IN Directory( "utils" + hb_ps() + hb_osFileMask(), "D" )
-         IF "D" $ tmp[ F_ATTR ] .AND. !( tmp[ F_NAME ] == "." ) .AND. !( tmp[ F_NAME ] == ".." )
-            FOR EACH aFile IN Directory( "utils" + hb_ps() + tmp[ F_NAME ] + hb_ps() + "*.po" )
-               mk_hbl( "utils" + hb_ps() + tmp[ F_NAME ] + hb_ps() + aFile[ F_NAME ],;
-                       PathSepToSelf( GetEnv( "HB_BIN_INSTALL" ) ) + hb_ps() + FNameExtSet( aFile[ F_NAME ], ".hbl" ) )
-            NEXT
+   /* Creating docs */
+
+   IF ! Empty( GetEnv( "HB_DOC_INSTALL" ) )
+
+      OutStd( "! Making documentation (.hbd) files..." + hb_eol() )
+
+      aDir := { "." + hb_ps() }
+
+      FOR EACH aFile IN Directory( "contrib" + hb_ps() + hb_osFileMask(), "D" )
+         IF "D" $ aFile[ F_ATTR ] .AND. ;
+            !( aFile[ F_NAME ] == "." ) .AND. ;
+            !( aFile[ F_NAME ] == ".." )
+            AAdd( aDir, "contrib" + hb_ps() + aFile[ F_NAME ] )
          ENDIF
+      NEXT
+
+      FOR EACH tmp IN aDir
+         mk_hbd( tmp )
       NEXT
    ENDIF
 
@@ -134,6 +153,37 @@ STATIC FUNCTION mk_hbl( cIn, cOut )
 
    RETURN .F.
 
+STATIC FUNCTION mk_hbd( cDir )
+   LOCAL cName
+   LOCAL tmp
+
+   LOCAL aErrMsg
+   LOCAL aEntry
+
+   cName := DirGetName( cDir )
+   IF Empty( cName )
+      cName := "harbour"
+   ENDIF
+
+   aErrMsg := {}
+   aEntry := __hbdoc_LoadDir( cDir, cName, aErrMsg )
+
+   FOR EACH tmp IN aErrMsg
+      OutErr( hb_StrFormat( "! %1$s", tmp ) + hb_eol() )
+   NEXT
+
+   IF ! Empty( aEntry )
+      cName := PathSepToSelf( GetEnv( "HB_DOC_INSTALL" ) ) + hb_ps() + cName + ".hbd"
+      IF __hbdoc_SaveHBD( cName, aEntry )
+         OutStd( "! Created " + cName + " <= " + cDir + hb_eol() )
+         RETURN .T.
+      ELSE
+         OutErr( hb_StrFormat( "! Error: Saving '%1$s'", cName ) + hb_eol() )
+      ENDIF
+   ENDIF
+
+   RETURN .F.
+
 STATIC FUNCTION mk_hb_processRun( cCommand )
 
    OutStd( cCommand + hb_eol() )
@@ -149,6 +199,34 @@ STATIC FUNCTION FNameExtSet( cFileName, cExt )
    hb_FNameSplit( cFileName, @cDir, @cName )
 
    RETURN hb_FNameMerge( cDir, cName, cExt )
+
+STATIC FUNCTION DirGetName( cDir )
+   LOCAL cName
+
+   cDir := DirDelPathSep( cDir )
+
+   hb_FNameSplit( cDir,, @cName )
+
+   IF Empty( cName ) .OR. cName == "." .OR. cName == ".."
+      RETURN ""
+   ENDIF
+
+   RETURN cName
+
+STATIC FUNCTION DirDelPathSep( cDir )
+
+   IF Empty( hb_osDriveSeparator() )
+      DO WHILE Len( cDir ) > 1 .AND. Right( cDir, 1 ) == hb_ps()
+         cDir := hb_StrShrink( cDir, 1 )
+      ENDDO
+   ELSE
+      DO WHILE Len( cDir ) > 1 .AND. Right( cDir, 1 ) == hb_ps() .AND. ;
+               !( Right( cDir, 2 ) == hb_osDriveSeparator() + hb_ps() )
+         cDir := hb_StrShrink( cDir, 1 )
+      ENDDO
+   ENDIF
+
+   RETURN cDir
 
 STATIC FUNCTION PathSepToSelf( cFileName )
 #if defined( __PLATFORM__WINDOWS ) .OR. ;

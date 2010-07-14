@@ -249,3 +249,27 @@ FUNCTION __hbdoc_ToSource( aEntry )
    ENDIF
 
    RETURN cSource
+
+FUNCTION __hbdoc_LoadHBD( cFileName )
+   LOCAL aEntry
+
+   IF ISCHARACTER( cFileName )
+      IF hb_FileExists( cFileName )
+         aEntry := hb_deserialize( hb_MemoRead( cFileName ) )
+         IF ISARRAY( aEntry )
+            RETURN aEntry
+         ENDIF
+      ENDIF
+   ENDIF
+
+   RETURN NIL
+
+FUNCTION __hbdoc_SaveHBD( cFileName, aEntry )
+
+   IF ISCHARACTER( cFileName ) .AND. ;
+      ISARRAY( aEntry )
+
+      RETURN hb_MemoWrit( cFileName, hb_serialize( aEntry ) )
+   ENDIF
+
+   RETURN .F.

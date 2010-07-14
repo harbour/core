@@ -92,7 +92,7 @@ Section "Main components" hb_main
   File "$%HB_INSTALL_PREFIX%\include\*.*"
 
   SetOutPath $INSTDIR\doc
-  File /r "$%HB_INSTALL_PREFIX%\doc\*.*"
+  File "$%HB_INSTALL_PREFIX%\doc\*.*"
 
   ; Write the installation path into the registry
 ; WriteRegStr HKLM "SOFTWARE\Harbour Project" "InstallDir" "$INSTDIR"
