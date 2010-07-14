@@ -105,6 +105,7 @@ CLASS IdeBrowseManager INHERIT IdeObject
    DATA   qLayout
    DATA   qVSplitter
    DATA   qToolBar
+   DATA   qStruct
 
    DATA   aPanels                                 INIT  {}
    DATA   aToolBtns                               INIT  {}
@@ -114,8 +115,12 @@ CLASS IdeBrowseManager INHERIT IdeObject
    DATA   oCurPanel
 
    DATA   qPanelsMenu
+   DATA   qIndexMenu
    DATA   qPanelsButton
+   DATA   qIndexButton
    DATA   aPanelsAct                              INIT  {}
+
+   DATA   lStructOpen                             INIT  .f.
 
    METHOD new( oIde )
    METHOD create( oIde )
@@ -133,8 +138,14 @@ CLASS IdeBrowseManager INHERIT IdeObject
    METHOD isPanel( cPanel )
    METHOD loadTables()
    METHOD buildPanelsButton()
+   METHOD buildIndexButton()
+   METHOD buildToolButton( aBtn )
    METHOD addPanelsMenu( cPanel )
    METHOD setStyleSheet( nMode )
+   METHOD showStruct()
+   METHOD buildUiStruct()
+   METHOD populateUiStruct()
+   METHOD populateFieldData()
 
    ENDCLASS
 
@@ -203,6 +214,7 @@ METHOD IdeBrowseManager:setStyleSheet( nMode )
 
    ::qToolbar:setStyleSheet( GetStyleSheet( "QToolBar", nMode ) )
    ::qPanelsMenu:setStyleSheet( GetStyleSheet( "QMenuPop", nMode ) )
+   ::qIndexMenu:setStyleSheet( GetStyleSheet( "QMenuPop", nMode ) )
 
    RETURN Self
 
@@ -262,49 +274,6 @@ METHOD IdeBrowseManager:create( oIde )
 
    /* Switch to the default panel */
    ::setPanel( "Main" )
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeBrowseManager:buildToolbar()
-   LOCAL qBtn, aBtn
-
-   ::qToolbar := QToolbar():new()
-   ::qToolbar:setIconSize( QSize():new( 16,16 ) )
-   ::qToolbar:setStyleSheet( GetStyleSheet( "QToolBar", ::nAnimantionMode ) )
-
-   aadd( ::aButtons, { "Open a table"       , "dc_plus"       , "clicked()", {|| ::execEvent( "buttonOpen_clicked"          ) }, .f. } )
-   aadd( ::aButtons, {} )
-   aadd( ::aButtons, { "Show/hide form view", "formview"      , "clicked()", {|| ::execEvent( "buttonShowForm_clicked"      ) }, .t. } )
-   aadd( ::aButtons, {} )
-   aadd( ::aButtons, { "Toggle View"        , "view_tabbed"   , "clicked()", {|| ::execEvent( "buttonViewTabbed_clicked"    ) }, .f. } )
-   aadd( ::aButtons, {} )
-   aadd( ::aButtons, { "View as arranged"   , "view_organized", "clicked()", {|| ::execEvent( "buttonViewOrganized_clicked" ) }, .f. } )
-   aadd( ::aButtons, { "View as cascaded"   , "view_cascaded" , "clicked()", {|| ::execEvent( "buttonViewCascaded_clicked"  ) }, .f. } )
-   aadd( ::aButtons, { "View as tiled"      , "view_tiled"    , "clicked()", {|| ::execEvent( "buttonViewTiled_clicked"     ) }, .f. } )
-   aadd( ::aButtons, {} )
-   aadd( ::aButtons, { "Close current table", "dc_delete"     , "clicked()", {|| ::execEvent( "buttonClose_clicked"         ) }, .f. } )
-   aadd( ::aButtons, {} )
-
-   FOR EACH aBtn IN ::aButtons
-      IF empty( aBtn )
-         ::qToolbar:addSeparator()
-      ELSE
-         qBtn := QToolButton():new()
-         qBtn:setTooltip( aBtn[ 1 ] )
-         qBtn:setAutoRaise( .t. )
-         qBtn:setIcon( hbide_image( aBtn[ 2 ] ) )
-         IF aBtn[ 5 ]
-            qBtn:setCheckable( .t. )
-         ENDIF
-         ::connect( qBtn, aBtn[ 3 ],  aBtn[ 4 ] )
-         ::qToolBar:addWidget( qBtn )
-         aadd( ::aToolBtns, qBtn )
-      ENDIF
-   NEXT
-
-   ::buildPanelsButton()
 
    RETURN Self
 
@@ -490,6 +459,19 @@ METHOD IdeBrowseManager:execEvent( cEvent, p, p1 )
       ::oCurPanel:setViewMode( iif( ::oCurPanel:viewMode() == QMdiArea_TabbedView, QMdiArea_SubWindowView, QMdiArea_TabbedView ) )
       EXIT
 
+   CASE "buttonDbStruct_clicked"
+      IF !empty( ::oCurBrw )
+         ::showStruct()
+      ENDIF
+      EXIT
+
+   CASE "buttonIndex_clicked"
+      EXIT
+
+   CASE "fieldsTable_itemSelectionChanged"
+      ::populateFieldData()
+      EXIT
+
    ENDSWITCH
 
    #if 0
@@ -500,6 +482,140 @@ METHOD IdeBrowseManager:execEvent( cEvent, p, p1 )
    setActiveSubWindow( QMdiSubWindow )
    #endif
 
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeBrowseManager:showStruct()
+
+   IF empty( ::qStruct )
+      ::buildUiStruct()
+   ENDIF
+
+   IF ! ::lStructOpen
+      ::lStructOpen := .t.
+      ::populateUiStruct()
+      ::qStruct:show()
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION hbide_fldType2Desc( cType )
+
+   SWITCH cType
+   CASE "C" ; RETURN "Character"
+   CASE "N" ; RETURN "Numeric"
+   CASE "D" ; RETURN "Date"
+   CASE "L" ; RETURN "Logical"
+   ENDSWITCH
+
+   RETURN ""
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeBrowseManager:populateFieldData()
+   LOCAL nRow, qItm
+
+   IF ( nRow := ::qStruct:q_tableFields:currentRow() ) >= 0
+      qItm := QTableWidgetItem():from( ::qStruct:q_tableFields:item( nRow, 1 ) )
+      ::qStruct:q_editName:setText( qItm:text() )
+      qItm := QTableWidgetItem():from( ::qStruct:q_tableFields:item( nRow, 2 ) )
+      ::qStruct:q_comboType:setCurrentIndex( ascan( {"Character", "Numeric", "Date", "Logical" }, qItm:text() ) - 1 )
+      qItm := QTableWidgetItem():from( ::qStruct:q_tableFields:item( nRow, 3 ) )
+      ::qStruct:q_editSize:setText( qItm:text() )
+      qItm := QTableWidgetItem():from( ::qStruct:q_tableFields:item( nRow, 4 ) )
+      ::qStruct:q_editDec:setText( qItm:text() )
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeBrowseManager:populateUiStruct()
+   LOCAL qItm, fld_, n
+   LOCAL oTbl := ::qStruct:q_tableFields
+   LOCAL aStruct := ::oCurBrw:dbStruct()
+
+   ::qStruct:q_tableFields:clearContents()
+
+   oTbl:setRowCount( len( aStruct ) )
+
+   n := 0
+   FOR EACH fld_ IN aStruct
+      qItm := QTableWidgetItem():new()
+      qItm:setText( hb_ntos( n+1 ) )
+      oTbl:setItem( n, 0, qItm )
+
+      qItm := QTableWidgetItem():new()
+      qItm:setText( fld_[ 1 ] )
+      oTbl:setItem( n, 1, qItm )
+
+      qItm := QTableWidgetItem():new()
+      qItm:setText( hbide_fldType2Desc( fld_[ 2 ] )  )
+      oTbl:setItem( n, 2, qItm )
+
+      qItm := QTableWidgetItem():new()
+      qItm:setText( hb_ntos( fld_[ 3 ] ) )
+      oTbl:setItem( n, 3, qItm )
+
+      qItm := QTableWidgetItem():new()
+      qItm:setText( hb_ntos( fld_[ 4 ] ) )
+      oTbl:setItem( n, 4, qItm )
+
+      oTbl:setRowHeight( n, 20 )
+      n++
+   NEXT
+
+   n := 0
+   aeval( aStruct, {|e_| n += e_[ 3 ] } )
+
+   ::qStruct:q_labelRecSize:setText( hb_ntos( n + 1 ) )
+
+   oTbl:setCurrentCell( 0,0 )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeBrowseManager:buildUiStruct()
+   LOCAL oTbl, n, qItm
+   LOCAL hdr_:= { { "", 50 }, { "Field Name",200 }, { "Type", 100 }, { "Len", 50 }, { "Dec", 70 } }
+
+   //::qStruct := hbide_getUI( "dbstruct", ::oDlg:oWidget )
+   ::qStruct := hbide_getUI( "dbstruct", ::qDbu )
+
+   ::qStruct:setWindowFlags( Qt_Dialog )
+   ::qStruct:setMaximumHeight( ::qStruct:height() )
+   ::qStruct:setMinimumHeight( ::qStruct:height() )
+   ::qStruct:setMinimumWidth( ::qStruct:width() )
+   ::qStruct:setMaximumWidth( ::qStruct:width() )
+
+   ::qStruct:installEventFilter( ::pEvents )
+   ::connect( ::qStruct, QEvent_Close, {|| ::qStruct:close(), ::lStructOpen := .f. } )
+
+   oTbl := ::qStruct:q_tableFields
+   QHeaderView():from( oTbl:verticalHeader() ):hide()
+   QHeaderView():from( oTbl:horizontalHeader() ):stretchLastSection( .t. )
+   oTbl:setAlternatingRowColors( .t. )
+   oTbl:setColumnCount( len( hdr_ ) )
+   oTbl:setShowGrid( .t. )
+   oTbl:setSelectionMode( QAbstractItemView_SingleSelection )
+   oTbl:setSelectionBehavior( QAbstractItemView_SelectRows )
+   FOR n := 1 TO len( hdr_ )
+      qItm := QTableWidgetItem():new()
+      qItm:setText( hdr_[ n,1 ] )
+      oTbl:setHorizontalHeaderItem( n-1, qItm )
+      oTbl:setColumnWidth( n-1, hdr_[ n,2 ] )
+   NEXT
+
+   ::qStruct:q_comboType:addItem( "Character" )
+   ::qStruct:q_comboType:addItem( "Numeric"   )
+   ::qStruct:q_comboType:addItem( "Date"      )
+   ::qStruct:q_comboType:addItem( "Logical"   )
+
+   ::connect( oTbl, "itemSelectionChanged()", {|| ::execEvent( "fieldsTable_itemSelectionChanged" ) } )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -573,6 +689,75 @@ METHOD IdeBrowseManager:addArray( aData, aAttr )
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeBrowseManager:buildToolbar()
+
+
+   ::qToolbar := QToolbar():new()
+   ::qToolbar:setIconSize( QSize():new( 16,16 ) )
+   ::qToolbar:setStyleSheet( GetStyleSheet( "QToolBar", ::nAnimantionMode ) )
+
+   ::buildPanelsButton()
+   ::buildToolButton( {} )
+   ::buildToolButton( { "Open a table"       , "dc_plus"       , "clicked()", {|| ::execEvent( "buttonOpen_clicked"          ) }, .f. } )
+   ::buildToolButton( {} )
+   ::buildToolButton( { "Show/hide form view", "formview"      , "clicked()", {|| ::execEvent( "buttonShowForm_clicked"      ) }, .t. } )
+   ::buildToolButton( {} )
+   ::buildToolButton( { "Toggle View"        , "view_tabbed"   , "clicked()", {|| ::execEvent( "buttonViewTabbed_clicked"    ) }, .f. } )
+   ::buildToolButton( {} )
+   ::buildToolButton( { "View as arranged"   , "view_organized", "clicked()", {|| ::execEvent( "buttonViewOrganized_clicked" ) }, .f. } )
+   ::buildToolButton( { "View as cascaded"   , "view_cascaded" , "clicked()", {|| ::execEvent( "buttonViewCascaded_clicked"  ) }, .f. } )
+   ::buildToolButton( { "View as tiled"      , "view_tiled"    , "clicked()", {|| ::execEvent( "buttonViewTiled_clicked"     ) }, .f. } )
+   ::buildToolButton( {} )
+   ::buildToolButton( { "Close current table", "dc_delete"     , "clicked()", {|| ::execEvent( "buttonClose_clicked"         ) }, .f. } )
+   ::buildToolButton( {} )
+   ::buildToolButton( { "Table Structure"    , "dbstruct"      , "clicked()", {|| ::execEvent( "buttonDbStruct_clicked"      ) }, .f. } )
+   ::buildIndexButton()
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeBrowseManager:buildToolButton( aBtn )
+   LOCAL qBtn
+
+   IF empty( aBtn )
+      ::qToolbar:addSeparator()
+   ELSE
+      qBtn := QToolButton():new()
+      qBtn:setTooltip( aBtn[ 1 ] )
+      qBtn:setAutoRaise( .t. )
+      qBtn:setIcon( hbide_image( aBtn[ 2 ] ) )
+      IF aBtn[ 5 ]
+         qBtn:setCheckable( .t. )
+      ENDIF
+      ::connect( qBtn, aBtn[ 3 ],  aBtn[ 4 ] )
+      ::qToolBar:addWidget( qBtn )
+      aadd( ::aToolBtns, qBtn )
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeBrowseManager:buildIndexButton()
+
+   ::qIndexMenu := QMenu():new()
+   ::qIndexMenu:setStyleSheet( GetStyleSheet( "QMenuPop", ::nAnimantionMode ) )
+
+   ::qIndexButton := QToolButton():new()
+   ::qIndexButton:setTooltip( "Indexes" )
+   ::qIndexButton:setIcon( hbide_image( "sort" ) )
+   ::qIndexButton:setPopupMode( QToolButton_MenuButtonPopup )
+   ::qIndexButton:setMenu( ::qIndexMenu )
+
+   ::connect( ::qIndexButton, "clicked()", {|| ::execEvent( "buttonIndex_clicked" ) } )
+
+   ::qToolbar:addWidget( ::qIndexButton )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeBrowseManager:buildPanelsButton()
 
    ::qPanelsMenu := QMenu():new()
@@ -600,6 +785,7 @@ CLASS IdeBrowsePanel INHERIT IdeObject
 
    DATA   qWidget
    DATA   qMenuWindows
+   DATA   qStruct
 
    DATA   cPanel                                  INIT  ""
    DATA   nViewStyle                              INIT  0    /* 0=asWindows 1=tabbed */
@@ -713,6 +899,7 @@ METHOD IdeBrowsePanel:addBrowser( oBrw, aInfo )
       NEXT
       qRect := QRect():new( qRect[ 1 ], qRect[ 2 ], qRect[ 3 ], qRect[ 4 ] )
       qSubWindow:setGeometry( qRect )
+      qSubWindow:resize( qSubWindow:width()+1, qSubWindow:height()+1 )
    ELSE
       //qSubWindow:resize( 300, 200 )
    ENDIF
@@ -805,6 +992,7 @@ CLASS IdeBrowse INHERIT IdeObject
    METHOD goTo( nRec )
    METHOD recNo()
    METHOD lastRec()
+   ACCESS dbStruct()                              INLINE ::aStruct
    METHOD next()
    METHOD previous()
    METHOD buildForm()

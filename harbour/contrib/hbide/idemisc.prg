@@ -2059,6 +2059,9 @@ FUNCTION hbide_getUI( cUI, qParent )
    CASE "editor"
       oUI := iif( nModeUI == UI_MODE_FUNC, hbqtui_Editor( qParent ), NIL )
       EXIT
+   CASE "dbstruct"
+      oUI := iif( nModeUI == UI_MODE_FUNC, hbqtui_DbStruct( qParent ), NIL )
+      EXIT
    ENDSWITCH
 
    IF empty( oUI )
