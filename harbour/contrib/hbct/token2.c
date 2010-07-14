@@ -375,7 +375,7 @@ HB_FUNC( TOKENINIT )
       HB_SIZE sStrLen = hb_parclen( 1 );
       const char *pcSeparatorStr;
       HB_SIZE sSeparatorStrLen;
-      HB_SIZE ulSkipCnt, ulSkip;
+      HB_SIZE nSkipCnt, nSkip;
       const char *pcSubStr, *pc;
       HB_SIZE sSubStrLen;
       TOKEN_ENVIRONMENT sTokenEnvironment;
@@ -393,11 +393,11 @@ HB_FUNC( TOKENINIT )
 
       /* skip width */
       if( HB_ISNUM( 3 ) )
-         ulSkip = hb_parns( 3 );
+         nSkip = hb_parns( 3 );
       else
-         ulSkip = HB_SIZE_MAX;
-      if( ulSkip == 0 )
-         ulSkip = HB_SIZE_MAX;
+         nSkip = HB_SIZE_MAX;
+      if( nSkip == 0 )
+         nSkip = HB_SIZE_MAX;
 
       /* allocate new token environment */
       if( ( sTokenEnvironment = sTokEnvNew() ) == NULL )
@@ -424,17 +424,17 @@ HB_FUNC( TOKENINIT )
       {
          HB_SIZE sMatchedPos = sSeparatorStrLen;
 
-         /* ulSkip */
-         ulSkipCnt = 0;
+         /* nSkip */
+         nSkipCnt = 0;
          do
          {
             sSubStrLen -= ( pc - pcSubStr ) + 1;
             pcSubStr = pc + 1;
             pc = ct_at_charset_forward( pcSubStr, sSubStrLen, pcSeparatorStr,
                                         sSeparatorStrLen, &sMatchedPos );
-            ulSkipCnt++;
+            nSkipCnt++;
          }
-         while( ulSkipCnt < ulSkip && pc == pcSubStr );
+         while( nSkipCnt < nSkip && pc == pcSubStr );
 
          if( sSubStrLen == 0 )
             break;

@@ -55,12 +55,12 @@
 HB_FUNC( CHECKSUM )
 {
    const HB_UCHAR * pbyString = ( const HB_UCHAR * ) hb_parc( 1 );
-   HB_SIZE ulLen = hb_parclen( 1 );
-   HB_SIZE ulPos;
-   HB_U32 ulResult = 0;
+   HB_SIZE nLen = hb_parclen( 1 );
+   HB_SIZE nPos;
+   HB_U32 u32Result = 0;
 
-   for( ulPos = 0; ulPos < ulLen; ulPos++ )
-      ulResult += pbyString[ ulPos ] | ( pbyString[ ulPos + 1 ] << 8 );
+   for( nPos = 0; nPos < nLen; nPos++ )
+      u32Result += pbyString[ nPos ] | ( pbyString[ nPos + 1 ] << 8 );
 
-   hb_retnint( ( HB_U32 ) ( ( ulResult & 0x00FFFFFF ) | ( ( ulLen & 0xFF ) << 24 ) ) );
+   hb_retnint( ( HB_U32 ) ( ( u32Result & 0x00FFFFFF ) | ( ( nLen & 0xFF ) << 24 ) ) );
 }

@@ -95,7 +95,7 @@ HB_FUNC( NUMAT )
       int iAtLike = ct_getatlike();
       char cAtLike = ct_getatlikechar();
       HB_SIZE sIgnore, sMatchStrLen = 0, sSubStrLen;
-      HB_SIZE ulCounter;
+      HB_SIZE nCounter;
       const char *pc, *pcSubStr;
 
       /* eventually ignore some characters */
@@ -122,7 +122,7 @@ HB_FUNC( NUMAT )
          sStrLen -= sIgnore;
       }
 
-      ulCounter = 0;
+      nCounter = 0;
       pcSubStr = pcString;
       sSubStrLen = sStrLen;
 
@@ -144,7 +144,7 @@ HB_FUNC( NUMAT )
             default:
                pc = NULL;
          }
-         ulCounter++;
+         nCounter++;
          if( iMultiPass )
             pcSubStr = pc + 1;
          else
@@ -153,7 +153,7 @@ HB_FUNC( NUMAT )
       }
       while( pc != NULL );
 
-      hb_retns( ulCounter - 1 );
+      hb_retns( nCounter - 1 );
    }
    else  /* ( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) ) */
    {

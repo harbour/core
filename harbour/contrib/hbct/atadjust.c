@@ -112,7 +112,7 @@ HB_FUNC( ATADJUST )
       int iAtLike = ct_getatlike();
       char cAtLike = ct_getatlikechar();
       HB_SIZE sIgnore, sMatchStrLen = 0;
-      HB_SIZE ulCounter;
+      HB_SIZE nCounter;
       const char *pc = NULL;
 
       char cFillChar;
@@ -161,17 +161,17 @@ HB_FUNC( ATADJUST )
          sAdjustPosition--;     /* makes live easier since C indices start at zero ! */
 
       /* nth match or last match ? */
-      if( HB_ISNUM( 4 ) && ( ulCounter = hb_parns( 4 ) ) != 0 )
+      if( HB_ISNUM( 4 ) && ( nCounter = hb_parns( 4 ) ) != 0 )
       {
-         /* find the <ulCounter>th match */
+         /* find the <nCounter>th match */
          const char *pcSubStr;
          HB_SIZE sSubStrLen;
-         HB_SIZE ulMatchCounter = 0;
+         HB_SIZE nMatchCounter = 0;
 
          pcSubStr = pcString;
          sSubStrLen = sStrLen;
 
-         while( ulMatchCounter < ulCounter )
+         while( nMatchCounter < nCounter )
          {
             switch ( iAtLike )
             {
@@ -192,12 +192,12 @@ HB_FUNC( ATADJUST )
             if( pc == NULL )
             {
                /* no match found; if this happens at this point,
-                  there are no <ulCounter> matches, so return */
+                  there are no <nCounter> matches, so return */
                hb_retclen( pcString, sStrLen );
                return;
             }
 
-            ulMatchCounter++;
+            nMatchCounter++;
             if( iMultiPass )
                pcSubStr = pc + 1;
             else
@@ -205,7 +205,7 @@ HB_FUNC( ATADJUST )
             sSubStrLen = sStrLen - ( pcSubStr - pcString );
          }
       }
-      else /* ( HB_ISNUM( 4 ) && ( (ulCounter = hb_parns( 4 ) ) != 0 ) */
+      else /* ( HB_ISNUM( 4 ) && ( ( nCounter = hb_parns( 4 ) ) != 0 ) */
       {
          /* we have to find the last match */
          switch ( iAtLike )

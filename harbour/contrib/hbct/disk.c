@@ -113,18 +113,18 @@ HB_FUNC( DIRNAME )
 HB_FUNC( DRIVETYPE )
 {
 #if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
-   HB_SIZE ulSize = hb_parclen( 1 ) + 2;  /* allow space for '\0' & ":\" */
-   char * pszDrive = ( char * ) hb_xgrab( ulSize + 1 );
+   HB_SIZE nSize = hb_parclen( 1 ) + 2;  /* allow space for '\0' & ":\" */
+   char * pszDrive = ( char * ) hb_xgrab( nSize + 1 );
    LPTSTR lpDrive;
    int iType;
 
-   hb_strncpy( pszDrive, hb_parcx( 1 ), ulSize );
+   hb_strncpy( pszDrive, hb_parcx( 1 ), nSize );
 
    if( strstr( pszDrive, ":" ) == NULL )
-      hb_strncat( pszDrive, ":", ulSize );
+      hb_strncat( pszDrive, ":", nSize );
 
    if( strstr( pszDrive, "\\" ) == NULL )
-      hb_strncat( pszDrive, "\\", ulSize );
+      hb_strncat( pszDrive, "\\", nSize );
 
    lpDrive = HB_TCHAR_CONVTO( pszDrive );
    switch( GetDriveType( lpDrive ) )

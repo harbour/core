@@ -133,7 +133,7 @@ HB_FUNC( ATREPL )
       int iAtLike = ct_getatlike();
       char cAtLike = ct_getatlikechar();
       HB_SIZE nIgnore, nMatchStrLen = 0;
-      HB_SIZE ulCounter;
+      HB_SIZE nCounter;
       char *pc;
 
       const char *pcReplacement;
@@ -166,13 +166,13 @@ HB_FUNC( ATREPL )
       iReplaceMode = hb_parl( 5 );
 
       /* n-th match or last match ? */
-      ulCounter = hb_parns( 4 );
+      nCounter = hb_parns( 4 );
 
       /* little trick: */
-      if( iReplaceMode == 0 && ulCounter == 0 )
-         ulCounter = HB_SIZE_MAX;
+      if( iReplaceMode == 0 && nCounter == 0 )
+         nCounter = HB_SIZE_MAX;
 
-      if( ulCounter != 0 )
+      if( nCounter != 0 )
       {
          /* depending on iReplaceMode: replace all occurences including the nth one
             or only the nth occurence
@@ -180,7 +180,7 @@ HB_FUNC( ATREPL )
             all occurences are replaced */
          char *pcRetSubStr;
          HB_SIZE sRetSubStrLen;
-         HB_SIZE ulMatchCounter = 0;
+         HB_SIZE nMatchCounter = 0;
 
          nRetStrLen = nStrLen;
          pcRetStr = ( char * ) hb_xgrab( nRetStrLen + 1 );
@@ -189,7 +189,7 @@ HB_FUNC( ATREPL )
          pcRetSubStr = pcRetStr + nIgnore;
          sRetSubStrLen = nRetStrLen - nIgnore;
 
-         while( ulMatchCounter < ulCounter )
+         while( nMatchCounter < nCounter )
          {
             switch ( iAtLike )
             {
@@ -213,10 +213,10 @@ HB_FUNC( ATREPL )
                return;
             }
 
-            ulMatchCounter++;
+            nMatchCounter++;
 
             /* replace match ? */
-            if( ( iReplaceMode == 0 ) || ( ulMatchCounter == ulCounter ) )
+            if( ( iReplaceMode == 0 ) || ( nMatchCounter == nCounter ) )
             {
                if( nMatchStrLen < nReplaceLen )
                {
@@ -252,7 +252,7 @@ HB_FUNC( ATREPL )
             sRetSubStrLen = nRetStrLen - ( pcRetSubStr - pcRetStr );
          }
       }
-      else /* ( ulCounter != 0 ) */
+      else /* ( nCounter != 0 ) */
       {
          /* find and replace last match */
          nRetStrLen = nStrLen;

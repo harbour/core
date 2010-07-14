@@ -177,7 +177,7 @@ static int hb_ctw_CalcShadowWidth( int iRows, int iCols )
 
 static void hb_ctw_SetMap( PHB_GTCTW pCTW, int * piMap, int iWindow, int iTop, int iLeft, int iBottom, int iRight, int iNested )
 {
-   HB_SIZE lIndex;
+   HB_SIZE nIndex;
    int i;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_ctw_SetMap(%p,%p,%d,%d,%d,%d,%d,%d)", pCTW, piMap, iWindow, iTop, iLeft, iBottom, iRight, iNested));
@@ -195,9 +195,9 @@ static void hb_ctw_SetMap( PHB_GTCTW pCTW, int * piMap, int iWindow, int iTop, i
    {
       while( iTop <= iBottom )
       {
-         lIndex = iTop * pCTW->iMapWidth + iLeft;
-         for( i = iLeft; i <= iRight; ++i, ++lIndex )
-            piMap[ lIndex ] = iWindow;
+         nIndex = iTop * pCTW->iMapWidth + iLeft;
+         for( i = iLeft; i <= iRight; ++i, ++nIndex )
+            piMap[ nIndex ] = iWindow;
          ++iTop;
       }
    }
@@ -205,9 +205,9 @@ static void hb_ctw_SetMap( PHB_GTCTW pCTW, int * piMap, int iWindow, int iTop, i
    {
       while( iTop <= iBottom )
       {
-         lIndex = iTop * pCTW->iMapWidth + iLeft;
-         for( i = iLeft; i <= iRight; ++i, ++lIndex )
-            piMap[ lIndex ] = iWindow | ( piMap[ lIndex ] != 0 ? iNested : 0 );
+         nIndex = iTop * pCTW->iMapWidth + iLeft;
+         for( i = iLeft; i <= iRight; ++i, ++nIndex )
+            piMap[ nIndex ] = iWindow | ( piMap[ nIndex ] != 0 ? iNested : 0 );
          ++iTop;
       }
    }
@@ -215,13 +215,13 @@ static void hb_ctw_SetMap( PHB_GTCTW pCTW, int * piMap, int iWindow, int iTop, i
 
 static void hb_ctw_ClearMap( PHB_GTCTW pCTW )
 {
-   HB_SIZE ulSize;
+   HB_SIZE nSize;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_ctw_ClearMap(%p)", pCTW));
 
-   ulSize = ( HB_SIZE ) pCTW->iMapHeight * pCTW->iMapWidth * sizeof( int );
-   memset( pCTW->pWindowMap, 0, ulSize );
-   memset( pCTW->pShadowMap, 0, ulSize );
+   nSize = ( HB_SIZE ) pCTW->iMapHeight * pCTW->iMapWidth * sizeof( int );
+   memset( pCTW->pWindowMap, 0, nSize );
+   memset( pCTW->pShadowMap, 0, nSize );
 }
 
 static void hb_ctw_TouchLines( PHB_GTCTW pCTW, int iFrom, int iTo )
@@ -594,15 +594,15 @@ static int hb_ctw_CreateWindow( PHB_GTCTW pCTW, int iTop, int iLeft, int iBottom
 
       if( pCTW->iMaxWindow == 0 )
       {
-         HB_SIZE ulSize;
+         HB_SIZE nSize;
 
          HB_GTSELF_GETSIZE( pCTW->pGT, &pCTW->iMapHeight, &pCTW->iMapWidth );
          pCTW->iShadowWidth = hb_ctw_CalcShadowWidth( pCTW->iMapHeight, pCTW->iMapWidth );
          if( !pCTW->fBoardSet )
             hb_ctw_SetWindowBoard( pCTW, 0, 0, pCTW->iMapHeight - 1, pCTW->iMapWidth - 1 );
-         ulSize = ( HB_SIZE ) pCTW->iMapHeight * pCTW->iMapWidth * sizeof( int );
-         pCTW->pWindowMap = ( int * ) hb_xgrab( ulSize );
-         pCTW->pShadowMap = ( int * ) hb_xgrab( ulSize );
+         nSize = ( HB_SIZE ) pCTW->iMapHeight * pCTW->iMapWidth * sizeof( int );
+         pCTW->pWindowMap = ( int * ) hb_xgrab( nSize );
+         pCTW->pShadowMap = ( int * ) hb_xgrab( nSize );
          hb_ctw_ClearMap( pCTW );
 
          pCTW->iMaxWindow = HB_CTWIN_ALLOC;
@@ -1318,7 +1318,7 @@ static int hb_ctw_gt_MaxRow( PHB_GT pGT )
  */
 #define WRITECON_BUFFER_SIZE 512
 
-static void hb_ctw_gt_WriteCon( PHB_GT pGT, const char * pText, HB_SIZE ulLength )
+static void hb_ctw_gt_WriteCon( PHB_GT pGT, const char * pText, HB_SIZE nLength )
 {
    int iLen = 0;
    HB_BOOL bDisp = HB_FALSE;
@@ -1326,7 +1326,7 @@ static void hb_ctw_gt_WriteCon( PHB_GT pGT, const char * pText, HB_SIZE ulLength
    int iRow, iCol, iMaxRow, iMaxCol;
    char szString[ WRITECON_BUFFER_SIZE ];
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_ctw_gt_WriteCon(%p,%p,%" HB_PFS "u)", pGT, pText, ulLength));
+   HB_TRACE(HB_TR_DEBUG, ("hb_ctw_gt_WriteCon(%p,%p,%" HB_PFS "u)", pGT, pText, nLength));
 
    iMaxRow = HB_GTSELF_MAXROW( pGT );
    iMaxCol = HB_GTSELF_MAXCOL( pGT );
@@ -1350,7 +1350,7 @@ static void hb_ctw_gt_WriteCon( PHB_GT pGT, const char * pText, HB_SIZE ulLength
       HB_GTSELF_SETPOS( pGT, iRow, iCol );
    }
 
-   while( ulLength-- )
+   while( nLength-- )
    {
       char ch = *pText++;
 
@@ -1396,7 +1396,7 @@ static void hb_ctw_gt_WriteCon( PHB_GT pGT, const char * pText, HB_SIZE ulLength
             {
                ++iRow;
                ++pText;
-               --ulLength;
+               --nLength;
             }
             bDisp = HB_TRUE;
             break;
@@ -1413,7 +1413,7 @@ static void hb_ctw_gt_WriteCon( PHB_GT pGT, const char * pText, HB_SIZE ulLength
                bDisp = HB_TRUE;
       }
 
-      if( bDisp || ulLength == 0 )
+      if( bDisp || nLength == 0 )
       {
          if( iLen )
             HB_GTSELF_WRITE( pGT, szString, iLen );
@@ -1814,14 +1814,14 @@ static HB_BOOL hb_ctw_gt_Resize( PHB_GT pGT, int iRows, int iCols )
 
       if( pCTW->iMaxWindow > 0 )
       {
-         HB_SIZE ulSize;
+         HB_SIZE nSize;
 
          pCTW->iMapHeight = iRows;
          pCTW->iMapWidth  = iCols;
          pCTW->iShadowWidth = hb_ctw_CalcShadowWidth( pCTW->iMapHeight, pCTW->iMapWidth );
-         ulSize = ( HB_SIZE ) pCTW->iMapHeight * pCTW->iMapWidth * sizeof( int );
-         pCTW->pWindowMap = ( int * ) hb_xrealloc( pCTW->pWindowMap, ulSize );
-         pCTW->pShadowMap = ( int * ) hb_xrealloc( pCTW->pShadowMap, ulSize );
+         nSize = ( HB_SIZE ) pCTW->iMapHeight * pCTW->iMapWidth * sizeof( int );
+         pCTW->pWindowMap = ( int * ) hb_xrealloc( pCTW->pWindowMap, nSize );
+         pCTW->pShadowMap = ( int * ) hb_xrealloc( pCTW->pShadowMap, nSize );
       }
       if( pCTW->fBoardSet )
          hb_ctw_SetWindowBoard( pCTW, 0, 0, iRows - 1, iCols - 1 );

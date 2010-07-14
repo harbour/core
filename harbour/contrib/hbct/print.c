@@ -188,33 +188,33 @@ HB_FUNC( PRINTSEND )
    char szChr[ 2 ] = { ' ', '\0' };
    char szPort[ 5 ] = { 'l', 'p', 't', '1', '\0' };
    const char * szStr = NULL;
-   HB_SIZE usLen = 0, usRet = 0;
+   HB_SIZE nLen = 0, nRet = 0;
 
    if( HB_ISNUM( 1 ) )
    {
       szChr[ 0 ] = ( char ) hb_parni( 1 );
       szStr = szChr;
-      usLen = 1;
+      nLen = 1;
    }
    else if( HB_ISCHAR( 1 ) )
    {
       szStr = hb_parc( 1 );
-      usLen = hb_parclen( 1 );
+      nLen = hb_parclen( 1 );
    }
 
    if( HB_ISNUM( 2 ) )
       szPort[ 3 ] = ( char ) hb_parni( 2 ) + '0';
 
-   if( usLen )
+   if( nLen )
    {
       HB_FHANDLE hFile = hb_fsOpen( szPort, FO_WRITE );
       if( hFile != FS_ERROR )
       {
-         usRet = hb_fsWriteLarge( hFile, szStr, usLen );
+         nRet = hb_fsWriteLarge( hFile, szStr, nLen );
          hb_fsClose( hFile );
       }
    }
-   hb_retns( usRet );
+   hb_retns( nRet );
 
 #else
 

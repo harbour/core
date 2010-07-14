@@ -66,12 +66,12 @@ static void do_pad( int iSwitch )
       const char *pcString = hb_parc( 1 );
       HB_SIZE sStrLen = hb_parclen( 1 );
       char *pcRet, *pc;
-      HB_ISIZ lRetLen;
+      HB_ISIZ nRetLen;
       HB_SIZE sRetLen;
       char cFill;
 
-      lRetLen = hb_parns( 2 );
-      if( lRetLen <= 0 )
+      nRetLen = hb_parns( 2 );
+      if( nRetLen <= 0 )
       {
          int iArgErrorMode = ct_getargerrormode();
 
@@ -86,7 +86,7 @@ static void do_pad( int iSwitch )
          hb_retc_null();
          return;
       }
-      sRetLen = ( HB_SIZE ) lRetLen;
+      sRetLen = ( HB_SIZE ) nRetLen;
 
       if( hb_parclen( 3 ) > 0 )
          cFill = *( hb_parc( 3 ) );

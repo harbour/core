@@ -55,12 +55,12 @@
 
 HB_FUNC( EXPAND )
 {
-   HB_SIZE ulLen = hb_parclen( 1 ), ulSize, ul;
+   HB_SIZE nLen = hb_parclen( 1 ), ulSize, ul;
 
-   if( ulLen > 0 )
+   if( nLen > 0 )
    {
       const char * szText = hb_parc( 1 );
-      if( ulLen == 1 )
+      if( nLen == 1 )
          hb_retclen( szText, 1 );
       else
       {
@@ -90,10 +90,10 @@ HB_FUNC( EXPAND )
             else
                cRepl = ' ';
          }
-         ulSize = ( ulLen - 1 ) * ( iRepl + 1 ) + 1;
+         ulSize = ( nLen - 1 ) * ( iRepl + 1 ) + 1;
          szPtr = szDest = ( char * ) hb_xgrab( ulSize + 1 );
          *szPtr++ = szText[0];
-         for( ul = 1; ul < ulLen; ++ul )
+         for( ul = 1; ul < nLen; ++ul )
          {
             for( i = 0; i < iRepl; ++i )
                *szPtr++ = cRepl;

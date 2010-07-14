@@ -104,14 +104,14 @@ static void do_token1( int iSwitch )
       HB_SIZE sStrLen = hb_parclen( 1 );
       const char *pcSeparatorStr;
       HB_SIZE sSeparatorStrLen;
-      HB_SIZE ulTokenCounter = 0;
-      HB_SIZE ulSkip;
+      HB_SIZE nTokenCounter = 0;
+      HB_SIZE nSkip;
       const char *pcSubStr;
       char *pcRet = NULL;
       HB_SIZE sSubStrLen;
       HB_SIZE sRetStrLen = 0;
-      HB_SIZE ulToken = 0;
-      HB_SIZE ulSkipCnt;
+      HB_SIZE nToken = 0;
+      HB_SIZE nSkipCnt;
       const char *pc;
 
       /* separator string */
@@ -126,27 +126,27 @@ static void do_token1( int iSwitch )
 
       /* token counter */
       if( iSwitch != DO_TOKEN1_NUMTOKEN )
-         ulTokenCounter = hb_parns( 3 );
-      if( ulTokenCounter == 0 )
-         ulTokenCounter = HB_SIZE_MAX;
+         nTokenCounter = hb_parns( 3 );
+      if( nTokenCounter == 0 )
+         nTokenCounter = HB_SIZE_MAX;
 
       /* skip width */
       if( iSwitch == DO_TOKEN1_NUMTOKEN )
       {
          if( HB_ISNUM( 3 ) )
-            ulSkip = hb_parns( 3 );
+            nSkip = hb_parns( 3 );
          else
-            ulSkip = HB_SIZE_MAX;
+            nSkip = HB_SIZE_MAX;
       }
       else
       {
          if( HB_ISNUM( 4 ) )
-            ulSkip = hb_parns( 4 );
+            nSkip = hb_parns( 4 );
          else
-            ulSkip = HB_SIZE_MAX;
+            nSkip = HB_SIZE_MAX;
       }
-      if( ulSkip == 0 )
-         ulSkip = HB_SIZE_MAX;
+      if( nSkip == 0 )
+         nSkip = HB_SIZE_MAX;
 
       /* prepare return value for TOKENUPPER/TOKENLOWER */
       if( iSwitch == DO_TOKEN1_TOKENLOWER || iSwitch == DO_TOKEN1_TOKENUPPER )
@@ -164,19 +164,19 @@ static void do_token1( int iSwitch )
          hb_xmemcpy( pcRet, pcString, sRetStrLen );
       }
 
-      /* find the <ulTokenCounter>th token */
+      /* find the <nTokenCounter>th token */
       pcSubStr = pcString;
       sSubStrLen = sStrLen;
 
       /* scan start condition */
       pc = pcSubStr - 1;
 
-      while( ulToken < ulTokenCounter )
+      while( nToken < nTokenCounter )
       {
          HB_SIZE sMatchedPos = sSeparatorStrLen;
 
-         /* Skip the left ulSkip successive separators */
-         ulSkipCnt = 0;
+         /* Skip the left nSkip successive separators */
+         nSkipCnt = 0;
          do
          {
             sSubStrLen -= ( pc - pcSubStr ) + 1;
@@ -191,9 +191,9 @@ static void do_token1( int iSwitch )
                else
                   s_iPostSeparator = -1;
             }
-            ulSkipCnt++;
+            nSkipCnt++;
          }
-         while( ulSkipCnt < ulSkip && pc == pcSubStr );
+         while( nSkipCnt < nSkip && pc == pcSubStr );
 
          if( sSubStrLen == 0 )
          {
@@ -219,7 +219,7 @@ static void do_token1( int iSwitch )
                   break;
                }
                case DO_TOKEN1_NUMTOKEN:
-                  hb_retns( ulToken );
+                  hb_retns( nToken );
                   break;
 
                case DO_TOKEN1_ATTOKEN:
@@ -266,21 +266,21 @@ static void do_token1( int iSwitch )
                break;
          }
 
-         ulToken++;
+         nToken++;
 
          if( pc == NULL )
          {
             pc = pcSubStr + sSubStrLen; /* little trick for return values */
             break;              /* we must leave the while loop even if we have not
-                                   yet found the <ulTokenCounter>th token */
+                                   yet found the <nTokenCounter>th token */
          }
 
          /* should we find the last token, but string ends with tokenizer, i.e.
             pc points to the last character at the moment ?
             -> break here ! */
-         if( ulTokenCounter == 0xFFFFFFFFUL )
+         if( nTokenCounter == HB_SIZE_MAX )
          {
-            if( ulSkip == 0xFFFFFFFFUL )
+            if( nSkip == HB_SIZE_MAX )
             {
                const char *t;
                HB_BOOL bLast = HB_TRUE;
@@ -299,7 +299,7 @@ static void do_token1( int iSwitch )
             else if( pc + 1 == pcString + sStrLen )
                break;
          }
-      }  /* while( ulToken < ulTokenCounter ) */
+      }  /* while( nToken < nTokenCounter ) */
 
       switch ( iSwitch )
       {
@@ -307,8 +307,8 @@ static void do_token1( int iSwitch )
          {
             char cRet;
 
-            if( ( ulTokenCounter == 0xFFFFFFFFUL ) ||
-                ( ulToken == ulTokenCounter ) )
+            if( ( nTokenCounter == HB_SIZE_MAX ) ||
+                ( nToken == nTokenCounter ) )
                hb_retclen( pcSubStr, pc - pcSubStr );
             else
                hb_retc_null();
@@ -326,12 +326,12 @@ static void do_token1( int iSwitch )
             break;
          }
          case DO_TOKEN1_NUMTOKEN:
-            hb_retns( ulToken );
+            hb_retns( nToken );
             break;
 
          case DO_TOKEN1_ATTOKEN:
-            if( ( ulTokenCounter == 0xFFFFFFFFUL ) ||
-                ( ulToken == ulTokenCounter ) )
+            if( ( nTokenCounter == HB_SIZE_MAX ) ||
+                ( nToken == nTokenCounter ) )
                hb_retns( pcSubStr - pcString + 1 );
             else
                hb_retns( 0 );

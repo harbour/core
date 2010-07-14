@@ -146,19 +146,19 @@ HB_FUNC( SCREENATTR )
 
 HB_FUNC( SCREENMIX )
 {
-   HB_SIZE ulLen = hb_parclen( 1 );
+   HB_SIZE nLen = hb_parclen( 1 );
 
-   if( ulLen )
+   if( nLen )
    {
       const char * szText = hb_parc( 1 );
       const char * szAttr;
-      HB_SIZE ulAttr = hb_parclen( 2 ), ul = 0;
+      HB_SIZE nAttr = hb_parclen( 2 ), ul = 0;
       int iRow, iCol, i;
 
-      if( ulAttr == 0 )
+      if( nAttr == 0 )
       {
          szAttr = " ";
-         ulAttr = 1;
+         nAttr = 1;
       }
       else
          szAttr = hb_parc( 2 );
@@ -181,13 +181,13 @@ HB_FUNC( SCREENMIX )
                if( ++iRow > hb_gtMaxRow() )
                   break;
                --szText;
-               ++ulLen;
+               ++nLen;
                i = iCol;
             }
-            else if( ++ul == ulAttr )
+            else if( ++ul == nAttr )
                ul = 0;
          }
-         while( --ulLen );
+         while( --nLen );
          hb_gtEndWrite();
       }
    }
@@ -229,9 +229,9 @@ HB_FUNC( SCREENMIX )
 
 HB_FUNC( SAYSCREEN )
 {
-   HB_SIZE ulLen = hb_parclen( 1 );
+   HB_SIZE nLen = hb_parclen( 1 );
 
-   if( ulLen )
+   if( nLen )
    {
       const char * szText = hb_parc( 1 );
       int iRow, iCol, i;
@@ -256,13 +256,13 @@ HB_FUNC( SAYSCREEN )
             {
                if( ++iRow > hb_gtMaxRow() )
                   break;
-               ++ulLen;
+               ++nLen;
                i = iCol;
             }
             else
                hb_gtPutChar( iRow, i++, iColor, bAttr, ( HB_UCHAR ) *szText++ );
          }
-         while( --ulLen );
+         while( --nLen );
          hb_gtEndWrite();
       }
    }
@@ -702,12 +702,12 @@ HB_FUNC( SCREENTEXT )
 {
    int iTop, iLeft, iBottom, iRight;
    char * pBuffer, * szText;
-   HB_SIZE ulSize;
+   HB_SIZE nSize;
 
    if( hb_ctGetWinCord( &iTop, &iLeft, &iBottom, &iRight ) )
    {
-      ulSize = ( HB_SIZE ) ( iBottom - iTop + 1 ) * ( iRight - iLeft + 1 );
-      szText = pBuffer = ( char * ) hb_xgrab( ulSize + 1 );
+      nSize = ( HB_SIZE ) ( iBottom - iTop + 1 ) * ( iRight - iLeft + 1 );
+      szText = pBuffer = ( char * ) hb_xgrab( nSize + 1 );
       while( iTop <= iBottom )
       {
          int iCol = iLeft;
@@ -722,7 +722,7 @@ HB_FUNC( SCREENTEXT )
          }
          ++iTop;
       }
-      hb_retclen_buffer( pBuffer, ulSize );
+      hb_retclen_buffer( pBuffer, nSize );
    }
    else
       hb_retc_null();

@@ -86,14 +86,14 @@ HB_FUNC( BLANK )
 
       if( pMode && hb_itemGetL( pMode ) )
       {
-         HB_SIZE lLen = hb_itemGetCLen( pItem );
-         char * szResult = ( char * ) hb_xgrab( lLen + 1 );
+         HB_SIZE nLen = hb_itemGetCLen( pItem );
+         char * szResult = ( char * ) hb_xgrab( nLen + 1 );
 
-         hb_xmemset( szResult, ' ', lLen );
+         hb_xmemset( szResult, ' ', nLen );
          if( bRef )
-            hb_storclen( szResult, lLen, 1 );
+            hb_storclen( szResult, nLen, 1 );
          if( bRet )
-            hb_retclen_buffer( szResult, lLen );
+            hb_retclen_buffer( szResult, nLen );
          else
             hb_xfree( szResult );
       }

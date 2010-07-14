@@ -101,13 +101,13 @@ HB_FUNC( CSETSAFETY )
       ct_setsafety( hb_parl( 1 ) );
 }
 
-static HB_SIZE ct_StrFile( const char * pFileName, const char * pcStr, HB_SIZE ulLen, HB_BOOL bOverwrite, HB_FOFFSET lOffset,
+static HB_SIZE ct_StrFile( const char * pFileName, const char * pcStr, HB_SIZE nLen, HB_BOOL bOverwrite, HB_FOFFSET nOffset,
                            HB_BOOL bTrunc )
 {
    HB_FHANDLE hFile;
    HB_BOOL bOpen = HB_FALSE;
    HB_BOOL bFile = hb_fsFile( pFileName );
-   HB_SIZE ulWrite = 0;
+   HB_SIZE nWrite = 0;
 
    if( bFile && bOverwrite )
    {
@@ -121,18 +121,18 @@ static HB_SIZE ct_StrFile( const char * pFileName, const char * pcStr, HB_SIZE u
 
    if( hFile != FS_ERROR )
    {
-      if( lOffset )
-         hb_fsSeekLarge( hFile, lOffset, FS_SET );
+      if( nOffset )
+         hb_fsSeekLarge( hFile, nOffset, FS_SET );
       else if( bOpen )
          hb_fsSeek( hFile, 0, FS_END );
 
-      ulWrite = hb_fsWriteLarge( hFile, pcStr, ulLen );
-      if( ( ulWrite == ulLen ) && bOpen && bTrunc )
+      nWrite = hb_fsWriteLarge( hFile, pcStr, nLen );
+      if( ( nWrite == nLen ) && bOpen && bTrunc )
          hb_fsWrite( hFile, NULL, 0 );
 
       hb_fsClose( hFile );
    }
-   return ulWrite;
+   return nWrite;
 }
 
 HB_FUNC( STRFILE )
@@ -155,34 +155,34 @@ HB_FUNC( FILESTR )
 
       if( hFile != FS_ERROR )
       {
-         HB_FOFFSET lFileSize = hb_fsSeekLarge( hFile, 0, FS_END );
-         HB_FOFFSET lPos = hb_fsSeekLarge( hFile, ( HB_FOFFSET ) hb_parnint( 3 ), FS_SET );
-         HB_ISIZ lLength;
+         HB_FOFFSET nFileSize = hb_fsSeekLarge( hFile, 0, FS_END );
+         HB_FOFFSET nPos = hb_fsSeekLarge( hFile, ( HB_FOFFSET ) hb_parnint( 3 ), FS_SET );
+         HB_ISIZ nLength;
          char * pcResult, * pCtrlZ;
          HB_BOOL bCtrlZ = hb_parl( 4 );
 
          if( HB_ISNUM( 2 ) )
          {
-            lLength = hb_parns( 2 );
-            if( lLength > ( HB_ISIZ ) ( lFileSize - lPos ) )
-               lLength = ( HB_ISIZ ) ( lFileSize - lPos );
+            nLength = hb_parns( 2 );
+            if( nLength > ( HB_ISIZ ) ( nFileSize - nPos ) )
+               nLength = ( HB_ISIZ ) ( nFileSize - nPos );
          }
          else
-            lLength = ( HB_ISIZ ) ( lFileSize - lPos );
+            nLength = ( HB_ISIZ ) ( nFileSize - nPos );
 
-         pcResult = ( char * ) hb_xgrab( lLength + 1 );
-         if( lLength > 0 )
-            lLength = hb_fsReadLarge( hFile, pcResult, ( HB_SIZE ) lLength );
+         pcResult = ( char * ) hb_xgrab( nLength + 1 );
+         if( nLength > 0 )
+            nLength = hb_fsReadLarge( hFile, pcResult, ( HB_SIZE ) nLength );
 
          if( bCtrlZ )
          {
-            pCtrlZ = ( char * ) memchr( pcResult, 26, lLength );
+            pCtrlZ = ( char * ) memchr( pcResult, 26, nLength );
             if( pCtrlZ )
-               lLength = pCtrlZ - pcResult;
+               nLength = pCtrlZ - pcResult;
          }
 
          hb_fsClose( hFile );
-         hb_retclen_buffer( pcResult, lLength );
+         hb_retclen_buffer( pcResult, nLength );
       }
       else
          hb_retc_null();
@@ -196,15 +196,15 @@ HB_FUNC( SCREENFILE )
    if( HB_ISCHAR( 1 ) )
    {
       char * pBuffer;
-      HB_SIZE ulSize;
+      HB_SIZE nSize;
 
-      hb_gtRectSize( 0, 0, hb_gtMaxRow(), hb_gtMaxCol(), &ulSize );
-      pBuffer = ( char * ) hb_xgrab( ulSize );
+      hb_gtRectSize( 0, 0, hb_gtMaxRow(), hb_gtMaxCol(), &nSize );
+      pBuffer = ( char * ) hb_xgrab( nSize );
 
       hb_gtSave( 0, 0, hb_gtMaxRow(), hb_gtMaxCol(), pBuffer );
 
       hb_retns( ct_StrFile( hb_parc( 1 ), pBuffer,
-                            ulSize, hb_parl( 2 ),
+                            nSize, hb_parl( 2 ),
                             ( HB_FOFFSET ) hb_parnint( 3 ), hb_parl( 4 ) ) );
       hb_xfree( pBuffer );
    }
@@ -221,22 +221,22 @@ HB_FUNC( FILESCREEN )
       if( hFile != FS_ERROR )
       {
          char * pBuffer;
-         HB_SIZE ulSize;
-         HB_SIZE lLength;
+         HB_SIZE nSize;
+         HB_SIZE nLength;
 
          if( HB_ISNUM( 2 ) )
             hb_fsSeekLarge( hFile, ( HB_FOFFSET ) hb_parnint( 2 ), FS_SET );
 
-         hb_gtRectSize( 0, 0, hb_gtMaxRow(), hb_gtMaxCol(), &ulSize );
-         pBuffer = ( char * ) hb_xgrab( ulSize );
+         hb_gtRectSize( 0, 0, hb_gtMaxRow(), hb_gtMaxCol(), &nSize );
+         pBuffer = ( char * ) hb_xgrab( nSize );
 
-         lLength = hb_fsReadLarge( hFile, pBuffer, ulSize );
+         nLength = hb_fsReadLarge( hFile, pBuffer, nSize );
          hb_gtRest( 0, 0, hb_gtMaxRow(), hb_gtMaxCol(), pBuffer );
 
          hb_xfree( pBuffer );
 
          hb_fsClose( hFile );
-         hb_retns( lLength );
+         hb_retns( nLength );
       }
       else
          hb_retns( 0 );

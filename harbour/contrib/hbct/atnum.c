@@ -75,7 +75,7 @@ static void do_atnum( int iSwitch )
       int iAtLike = ct_getatlike();
       char cAtLike = ct_getatlikechar();
       HB_SIZE sIgnore, sMatchStrLen = 0;
-      HB_SIZE ulCounter;
+      HB_SIZE nCounter;
       const char *pc = NULL;
 
       /* eventually ignore some characters */
@@ -137,17 +137,17 @@ static void do_atnum( int iSwitch )
       }
 
       /* nth match or last match ? */
-      if( HB_ISNUM( 3 ) && ( ulCounter = hb_parns( 3 ) ) != 0 )
+      if( HB_ISNUM( 3 ) && ( nCounter = hb_parns( 3 ) ) != 0 )
       {
-         /* find the <ulCounter>th match */
+         /* find the <nCounter>th match */
          const char *pcSubStr;
          HB_SIZE sSubStrLen;
-         HB_SIZE ulMatchCounter = 0;
+         HB_SIZE nMatchCounter = 0;
 
          pcSubStr = pcString;
          sSubStrLen = sStrLen;
 
-         while( ulMatchCounter < ulCounter )
+         while( nMatchCounter < nCounter )
          {
             switch ( iAtLike )
             {
@@ -168,7 +168,7 @@ static void do_atnum( int iSwitch )
             if( pc == NULL )
             {
                /* no match found; if this happens at this point,
-                  there are no <ulCounter> matches, so return an empty string */
+                  there are no <nCounter> matches, so return an empty string */
                switch ( iSwitch )
                {
                   case DO_ATNUM_AFTERATNUM:
@@ -185,7 +185,7 @@ static void do_atnum( int iSwitch )
                }
                return;
             }
-            ulMatchCounter++;
+            nMatchCounter++;
 
             if( iMultiPass )
                pcSubStr = pc + 1;
@@ -194,7 +194,7 @@ static void do_atnum( int iSwitch )
             sSubStrLen = sStrLen - ( pcSubStr - pcString );
          }
       }
-      else /* ( HB_ISNUM( 3 ) && ( ulCounter = hb_parns( 3 ) ) != 0 ) */
+      else /* ( HB_ISNUM( 3 ) && ( nCounter = hb_parns( 3 ) ) != 0 ) */
       {
          /* we have to find the last match and return the
             string after that last match */

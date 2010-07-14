@@ -58,9 +58,9 @@
 
 HB_FUNC( SAYDOWN )
 {
-   HB_SIZE ulLen = hb_parclen( 1 );
+   HB_SIZE nLen = hb_parclen( 1 );
 
-   if( ulLen )
+   if( nLen )
    {
       const char * szText = hb_parc( 1 );
       int iRow, iCol, iMaxRow, iMaxCol;
@@ -80,11 +80,11 @@ HB_FUNC( SAYDOWN )
       {
          int iColor = hb_gtGetCurrColor();
 
-         if( ulLen > ( HB_SIZE ) ( iMaxRow - iRow + 1 ) )
-            ulLen = ( HB_SIZE ) ( iMaxRow - iRow + 1 );
+         if( nLen > ( HB_SIZE ) ( iMaxRow - iRow + 1 ) )
+            nLen = ( HB_SIZE ) ( iMaxRow - iRow + 1 );
 
          hb_gtBeginWrite();
-         while( ulLen-- )
+         while( nLen-- )
          {
             hb_gtPutChar( iRow++, iCol, iColor, 0, ( HB_UCHAR ) *szText++ );
             if( lDelay )
@@ -103,12 +103,12 @@ HB_FUNC( SAYDOWN )
 
 HB_FUNC( SAYSPREAD )
 {
-   HB_SIZE ulLen = hb_parclen( 1 );
+   HB_SIZE nLen = hb_parclen( 1 );
 
-   if( ulLen )
+   if( nLen )
    {
       const char * szText = hb_parc( 1 );
-      HB_SIZE ulPos, ul;
+      HB_SIZE nPos, ul;
       int iRow, iCol, iMaxRow, iMaxCol;
       long lDelay;
 
@@ -127,20 +127,20 @@ HB_FUNC( SAYSPREAD )
       {
          int iColor = hb_gtGetCurrColor();
 
-         ulPos = ulLen >> 1;
-         ulLen = ulLen & 1;
-         if( !ulLen )
+         nPos = nLen >> 1;
+         nLen = nLen & 1;
+         if( !nLen )
          {
-            ulLen = 2;
-            --ulPos;
+            nLen = 2;
+            --nPos;
          }
 
          hb_gtBeginWrite();
          do
          {
-            for( ul = 0; ul < ulLen && iCol + ( int ) ul <= iMaxCol; ++ul )
-               hb_gtPutChar( iRow, iCol + ( int ) ul, iColor, 0, ( HB_UCHAR ) szText[ulPos + ul] );
-            ulLen += 2;
+            for( ul = 0; ul < nLen && iCol + ( int ) ul <= iMaxCol; ++ul )
+               hb_gtPutChar( iRow, iCol + ( int ) ul, iColor, 0, ( HB_UCHAR ) szText[nPos + ul] );
+            nLen += 2;
             if( lDelay )
             {
                hb_gtEndWrite();
@@ -148,7 +148,7 @@ HB_FUNC( SAYSPREAD )
                hb_gtBeginWrite();
             }
          }
-         while( ulPos-- && iCol-- );
+         while( nPos-- && iCol-- );
          /* CT3 does not respect iCol in the above condition */
          hb_gtEndWrite();
       }
@@ -164,7 +164,7 @@ HB_FUNC( SAYMOVEIN )
    if( iLen )
    {
       const char * szText = hb_parc( 1 );
-      HB_SIZE ulChars, ul;
+      HB_SIZE nChars, ul;
       int iRow, iCol, iMaxRow, iMaxCol, iNewCol;
       long lDelay;
       HB_BOOL fBack;
@@ -188,7 +188,7 @@ HB_FUNC( SAYMOVEIN )
             iCol += iLen - 1;
          else
             szText += iLen - 1;
-         ulChars = 1;
+         nChars = 1;
 
          hb_gtBeginWrite();
          do
@@ -197,19 +197,19 @@ HB_FUNC( SAYMOVEIN )
             {
                if( iCol <= iMaxCol )
                {
-                  for( ul = 0; ul < ulChars; ++ul )
+                  for( ul = 0; ul < nChars; ++ul )
                      hb_gtPutChar( iRow, iCol + ( int ) ul, iColor, 0, ( HB_UCHAR ) szText[ul] );
                }
                --iCol;
             }
             else
             {
-               for( ul = 0; ul < ulChars; ++ul )
+               for( ul = 0; ul < nChars; ++ul )
                   hb_gtPutChar( iRow, iCol + ( int ) ul, iColor, 0, ( HB_UCHAR ) szText[ul] );
                --szText;
             }
-            if( ( int ) ulChars + iCol <= iMaxCol )
-               ++ulChars;
+            if( ( int ) nChars + iCol <= iMaxCol )
+               ++nChars;
 
             if( lDelay )
             {
@@ -316,7 +316,7 @@ HB_FUNC( SCREENSTR )
 {
    int iRow, iCol, iMaxRow, iMaxCol, iC;
    char * pBuffer, * szText;
-   HB_SIZE ulSize, ulCount = HB_SIZE_MAX;
+   HB_SIZE nSize, ulCount = HB_SIZE_MAX;
 
    hb_gtGetPos( &iRow, &iCol );
    if( HB_ISNUM( 1 ) )
@@ -330,12 +330,12 @@ HB_FUNC( SCREENSTR )
 
    if( iRow >= 0 && iRow <= iMaxRow && iCol >= 0 && iCol <= iMaxCol && ulCount )
    {
-      ulSize = ( HB_SIZE ) ( iMaxRow - iRow + 1 ) * ( iMaxCol - iCol + 1 );
-      if( ulSize > ulCount )
-         ulSize = ulCount;
-      ulCount = ulSize;
-      ulSize <<= 1;
-      szText = pBuffer = ( char * ) hb_xgrab( ulSize + 1 );
+      nSize = ( HB_SIZE ) ( iMaxRow - iRow + 1 ) * ( iMaxCol - iCol + 1 );
+      if( nSize > ulCount )
+         nSize = ulCount;
+      ulCount = nSize;
+      nSize <<= 1;
+      szText = pBuffer = ( char * ) hb_xgrab( nSize + 1 );
       do
       {
          iC = iCol;
@@ -352,7 +352,7 @@ HB_FUNC( SCREENSTR )
       }
       while( ulCount && ++iRow <= iMaxRow );
 
-      hb_retclen_buffer( pBuffer, ulSize );
+      hb_retclen_buffer( pBuffer, nSize );
    }
    else
       hb_retc_null();
@@ -360,12 +360,12 @@ HB_FUNC( SCREENSTR )
 
 HB_FUNC( STRSCREEN )
 {
-   HB_SIZE ulLen = hb_parclen( 1 );
+   HB_SIZE nLen = hb_parclen( 1 );
 
-   if( ulLen & 1 )
-      ulLen--;
+   if( nLen & 1 )
+      nLen--;
 
-   if( ulLen )
+   if( nLen )
    {
       const char * szText = hb_parc( 1 );
       int iRow, iCol, iMaxRow, iMaxCol, iC;
@@ -389,11 +389,11 @@ HB_FUNC( STRSCREEN )
                HB_USHORT usChar = ( HB_UCHAR ) *szText++;
                int iColor = ( HB_UCHAR ) *szText++;
                hb_gtPutChar( iRow, iC, iColor, 0, usChar );
-               ulLen -= 2;
+               nLen -= 2;
             }
-            while( ulLen && ++iC <= iMaxCol );
+            while( nLen && ++iC <= iMaxCol );
          }
-         while( ulLen && ++iRow <= iMaxRow );
+         while( nLen && ++iRow <= iMaxRow );
          hb_gtEndWrite();
       }
    }

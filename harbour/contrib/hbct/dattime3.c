@@ -137,23 +137,23 @@ HB_FUNC( WAITPERIOD )
    hb_retl( d < s_dTimeCounter );
 }
 
-static HB_BOOL _hb_timeValid( const char * szTime, HB_SIZE ulLen, int * piDecode )
+static HB_BOOL _hb_timeValid( const char * szTime, HB_SIZE nLen, int * piDecode )
 {
    HB_BOOL fValid = HB_FALSE;
 
-   if( ulLen == 2 || ulLen == 5 || ulLen == 8 || ulLen == 11 )
+   if( nLen == 2 || nLen == 5 || nLen == 8 || nLen == 11 )
    {
       static const int s_iMax[] = { 23, 59, 59, 99 };
       int i, iVal;
       HB_SIZE ul;
 
       fValid = HB_TRUE;
-      for( ul = 0; fValid && ul < ulLen; ++ul )
+      for( ul = 0; fValid && ul < nLen; ++ul )
       {
          fValid = ul % 3 == 2 ? szTime[ul] == ':' :
                   ( szTime[ul] >= '0' && szTime[ul] <= '9' );
       }
-      for( ul = 0, i = 0; fValid && ul < ulLen; ul += 3, ++i )
+      for( ul = 0, i = 0; fValid && ul < nLen; ul += 3, ++i )
       {
          iVal = 10 * ( szTime[ul] - '0' ) + ( szTime[ul + 1] - '0' );
          fValid = iVal <= s_iMax[i];

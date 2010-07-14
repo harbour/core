@@ -56,70 +56,70 @@
 
 HB_FUNC( CHARSPREAD )
 {
-   HB_SIZE ulLen = hb_parclen( 1 );
+   HB_SIZE nLen = hb_parclen( 1 );
 
-   if( ulLen == 0 )
+   if( nLen == 0 )
       hb_retc_null();
    else
    {
-      HB_ISIZ lSize = hb_parns( 2 );
+      HB_ISIZ nSize = hb_parns( 2 );
 
-      if( lSize < 0 || ( HB_SIZE ) lSize <= ulLen )
+      if( nSize < 0 || ( HB_SIZE ) nSize <= nLen )
          hb_itemReturn( hb_param( 1, HB_IT_ANY ) );
       else
       {
          const char * szText = hb_parc( 1 );
          char * szDest, cDelim = ' ';
-         HB_ISIZ iTokens = 0, iRepl, iRest, iFirst, i;
-         HB_SIZE ul, ulDst, ulRest;
+         HB_ISIZ nTokens = 0, iRepl, iRest, iFirst, i;
+         HB_SIZE ul, nDst, nRest;
 
          if( HB_ISCHAR( 3 ) )
-            cDelim = hb_parc( 3 )[0];
+            cDelim = hb_parc( 3 )[ 0 ];
          else if( HB_ISNUM( 3 ) )
             cDelim = ( char ) hb_parni( 3 );
 
-         for( ul = 0; ul < ulLen; ++ul )
+         for( ul = 0; ul < nLen; ++ul )
          {
-            if( szText[ul] == cDelim )
+            if( szText[ ul ] == cDelim )
             {
-               iTokens++;
-               while( ul + 1 < ulLen && szText[ul + 1] == cDelim )
+               nTokens++;
+               while( ul + 1 < nLen && szText[ ul + 1 ] == cDelim )
                   ++ul;
             }
          }
-         if( iTokens == 0 )
+         if( nTokens == 0 )
          {
             hb_itemReturn( hb_param( 1, HB_IT_ANY ) );
          }
          else
          {
-            ulRest = ( HB_SIZE ) lSize - ulLen;
-            iRepl = ulRest / iTokens;
-            iRest = ulRest % iTokens;
+            nRest = ( HB_SIZE ) nSize - nLen;
+            iRepl = nRest / nTokens;
+            iRest = nRest % nTokens;
             iFirst = ( iRest + 1 ) >> 1;
             iRest >>= 1;
-            szDest = ( char * ) hb_xgrab( lSize + 1 );
-            for( ulDst = ul = 0; ul < ulLen; ++ul )
+            szDest = ( char * ) hb_xgrab( nSize + 1 );
+            for( nDst = ul = 0; ul < nLen; ++ul )
             {
-               szDest[ulDst++] = szText[ul];
-               if( szText[ul] == cDelim )
+               szDest[ nDst++ ] = szText[ul];
+               if( szText[ ul ] == cDelim )
                {
-                  while( ul + 1 < ulLen && szText[ul + 1] == cDelim )
-                     szDest[ulDst++] = szText[++ul];
+                  while( ul + 1 < nLen && szText[ ul + 1 ] == cDelim )
+                     szDest[ nDst++ ] = szText[ ++ul ];
                   i = iRepl;
                   if( iFirst )
                   {
                      --iFirst;
                      ++i;
                   }
-                  else if( iTokens <= iRest )
+                  else if( nTokens <= iRest )
                      ++i;
                   while( --i >= 0 )
-                     szDest[ulDst++] = cDelim;
-                  iTokens--;
+                     szDest[ nDst++ ] = cDelim;
+                  nTokens--;
                }
             }
-            hb_retclen_buffer( szDest, lSize );
+            hb_retclen_buffer( szDest, nSize );
          }
       }
    }

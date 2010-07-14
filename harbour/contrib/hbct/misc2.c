@@ -61,16 +61,16 @@ HB_FUNC( COMPLEMENT )
    {
       if( HB_IS_STRING( pItem ) )
       {
-         HB_SIZE ulLen = hb_itemGetCLen( pItem ), ulPos;
+         HB_SIZE nLen = hb_itemGetCLen( pItem ), ulPos;
 
-         if( ulLen > 0 )
+         if( nLen > 0 )
          {
             const char *szSrc = hb_itemGetCPtr( pItem );
-            char *szBuffer = ( char * ) hb_xgrab( ulLen + 1 );
+            char *szBuffer = ( char * ) hb_xgrab( nLen + 1 );
 
-            for( ulPos = 0; ulPos < ulLen; ulPos++ )
+            for( ulPos = 0; ulPos < nLen; ulPos++ )
                szBuffer[ulPos] = ~szSrc[ulPos];
-            hb_retclen_buffer( szBuffer, ulLen );
+            hb_retclen_buffer( szBuffer, nLen );
          }
          else
             hb_retc_null();
