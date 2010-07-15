@@ -939,6 +939,7 @@ HARBOUR
       wrenv -p vxworks-6.8
       set HB_COMPILER=gcc
       set HB_CPU=arm
+      set HB_BUILD_NAME=arm
       win-make
       ---
 

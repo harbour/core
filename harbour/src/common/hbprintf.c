@@ -113,6 +113,7 @@ optimized.
 #if ( defined( __BORLANDC__ ) && __BORLANDC__ < 1410 ) || \
     ( defined( __WATCOMC__ ) && __WATCOMC__ < 1270 ) || \
     defined( HB_OS_QNX ) || \
+    defined( __DCC__ ) || \
     ( defined( __DJGPP__ ) && \
       ( __DJGPP__ < 2 || ( __DJGPP__ == 2 && __DJGPP_MINOR__ <= 3 ) ) ) || \
     ( defined( _MSC_VER ) && \

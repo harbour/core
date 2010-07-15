@@ -420,6 +420,12 @@
 #if defined( HB_OS_VXWORKS )
    #define HB_NO_FNMATCH
 #endif
+#if defined( __DCC__ )
+   /* NOTE: Without this, the compiler will crash with this error, even with optimizations disabled: [vszakats]
+            "../../../hvm.c", line 9827: internal compiler error (etoa:1000): - Failed allocating register pair
+            please contact support@windriver.com */
+   #define HB_LONG_LONG_OFF
+#endif
 
 /* ***********************************************************************
  * Operating system specific definitions

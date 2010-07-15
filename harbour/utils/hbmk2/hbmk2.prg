@@ -370,31 +370,32 @@ REQUEST hbmk_KEYW
 #define _HBMK_lDEBUGSTUB        95
 #define _HBMK_lDEBUGI18N        96
 #define _HBMK_lDEBUGDEPD        97
+#define _HBMK_lDEBUGPARS        98
 
-#define _HBMK_cCCPATH           98
-#define _HBMK_cCCPREFIX         99
-#define _HBMK_cCCPOSTFIX        100
-#define _HBMK_cCCEXT            101
+#define _HBMK_cCCPATH           99
+#define _HBMK_cCCPREFIX         100
+#define _HBMK_cCCPOSTFIX        101
+#define _HBMK_cCCEXT            102
 
-#define _HBMK_cWorkDir          102
-#define _HBMK_cWorkDirDynSub    103
-#define _HBMK_nCmd_Esc          104
-#define _HBMK_nScr_Esc          105
-#define _HBMK_nCmd_FNF          106
-#define _HBMK_nScr_FNF          107
-#define _HBMK_nErrorLevel       108
+#define _HBMK_cWorkDir          103
+#define _HBMK_cWorkDirDynSub    104
+#define _HBMK_nCmd_Esc          105
+#define _HBMK_nScr_Esc          106
+#define _HBMK_nCmd_FNF          107
+#define _HBMK_nScr_FNF          108
+#define _HBMK_nErrorLevel       109
 
-#define _HBMK_cPROGDIR          109
-#define _HBMK_cPROGNAME         110
+#define _HBMK_cPROGDIR          110
+#define _HBMK_cPROGNAME         111
 
-#define _HBMK_hAUTOHBC          111
-#define _HBMK_hAUTOHBCFOUND     112
+#define _HBMK_hAUTOHBC          112
+#define _HBMK_hAUTOHBCFOUND     113
 
-#define _HBMK_aDEPTHBC          113
+#define _HBMK_aDEPTHBC          114
 
-#define _HBMK_lStopAfterHarbour 114
+#define _HBMK_lStopAfterHarbour 115
 
-#define _HBMK_MAX_              114
+#define _HBMK_MAX_              115
 
 #define _HBMK_DEP_CTRL_MARKER   ".control." /* must be an invalid path */
 
@@ -873,6 +874,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    hbmk[ _HBMK_lDEBUGSTUB ] := .F.
    hbmk[ _HBMK_lDEBUGI18N ] := .F.
    hbmk[ _HBMK_lDEBUGDEPD ] := .F.
+   hbmk[ _HBMK_lDEBUGPARS ] := .F.
 
    hbmk[ _HBMK_nCmd_Esc ] := NIL
    hbmk[ _HBMK_nScr_Esc ] := NIL
@@ -1767,6 +1769,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       CASE cParamL == "-debugstub"       ; hbmk[ _HBMK_lDEBUGSTUB ]   := .T.
       CASE cParamL == "-debugi18n"       ; hbmk[ _HBMK_lDEBUGI18N ]   := .T.
       CASE cParamL == "-debugdepd"       ; hbmk[ _HBMK_lDEBUGDEPD ]   := .T.
+      CASE cParamL == "-debugpars"       ; hbmk[ _HBMK_lDEBUGPARS ]   := .T.
       CASE cParamL == "-nulrdd"          ; hbmk[ _HBMK_lNULRDD ]      := .T.
       CASE cParamL == "-nulrdd-"         ; hbmk[ _HBMK_lNULRDD ]      := .F.
       CASE cParamL == "-map"             ; hbmk[ _HBMK_lMAP ]         := .T.
@@ -2427,6 +2430,12 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       ENDCASE
    NEXT
 
+   IF hbmk[ _HBMK_lDEBUGPARS ]
+      FOR EACH aParam IN aParams
+         hbmk_OutStd( hbmk, hb_StrFormat( "debugpars: %1$s '%2$s' (%3$s:%4$s)", Str( aParam:__enumIndex(), 3 ), aParam[ _PAR_cParam ], aParam[ _PAR_cFileName ], hb_ntos( aParam[ _PAR_nLine ] ) ) )
+      NEXT
+   ENDIF
+
    dep_postprocess( hbmk )
 
    IF ! l_lLIBSYSMISC
@@ -2686,6 +2695,15 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          #endif
          IF hbmk[ _HBMK_lDEBUG ]
             AAdd( hbmk[ _HBMK_aOPTC ], "-g" )
+         ENDIF
+         IF hbmk[ _HBMK_cPLAT ] == "vxworks" .AND. ;
+            Empty( hbmk[ _HBMK_cCCPOSTFIX ] )
+            SWITCH hbmk[ _HBMK_cCPU ]
+            CASE "x86"  ; hbmk[ _HBMK_cCCPOSTFIX ] := "pentium" ; EXIT
+            CASE "arm"  ; hbmk[ _HBMK_cCCPOSTFIX ] := "arm" ; EXIT
+            CASE "mips" ; hbmk[ _HBMK_cCCPOSTFIX ] := "mips" ; EXIT
+            CASE "ppc"  ; hbmk[ _HBMK_cCCPOSTFIX ] := "ppc" ; EXIT
+            ENDSWITCH
          ENDIF
          cLibLibPrefix := "lib"
          cLibPrefix := "-l"

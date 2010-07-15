@@ -516,6 +516,7 @@ char * hb_verCompiler( void )
    int iVerMajor;
    int iVerMinor;
    int iVerPatch;
+   int iVerMicro = 0;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_verCompiler()"));
 
@@ -700,6 +701,15 @@ char * hb_verCompiler( void )
       iVerPatch = 0;
    #endif
 
+#elif defined( __DCC__ )
+
+   pszName = "Wind River Compiler (diab)";
+
+   iVerMajor = ( __VERSION_NUMBER__ / 1000 ) % 10;
+   iVerMinor = ( __VERSION_NUMBER__ / 100 ) % 10;
+   iVerPatch = ( __VERSION_NUMBER__ / 10 ) % 10;
+   iVerMicro = __VERSION_NUMBER__ % 10;
+
 #elif defined( __clang__ ) && defined( __clang_major__ )
 
    pszName = "LLVM/Clang C";
@@ -820,7 +830,9 @@ char * hb_verCompiler( void )
 
    if( pszName )
    {
-      if( iVerPatch != 0 )
+      if( iVerMicro != 0 )
+         hb_snprintf( pszCompiler, COMPILER_BUF_SIZE, "%s%s %d.%d.%d.%d", pszName, szSub, iVerMajor, iVerMinor, iVerPatch, iVerMicro );
+      else if( iVerPatch != 0 )
          hb_snprintf( pszCompiler, COMPILER_BUF_SIZE, "%s%s %d.%d.%d", pszName, szSub, iVerMajor, iVerMinor, iVerPatch );
       else if( iVerMajor != 0 || iVerMinor != 0 )
          hb_snprintf( pszCompiler, COMPILER_BUF_SIZE, "%s%s %d.%d", pszName, szSub, iVerMajor, iVerMinor );
@@ -831,11 +843,11 @@ char * hb_verCompiler( void )
       hb_strncpy( pszCompiler, "(unknown)", COMPILER_BUF_SIZE - 1 );
 
 #if defined( __clang_version__ )
-   if (strstr( __clang_version__, "("))
+   if( strstr( __clang_version__, "(") )
       /* "2.0 (trunk 103176)" -> "(trunk 103176)" */
-      hb_snprintf( szSub, sizeof( szSub ), " %s", strstr( __clang_version__, "("));
+      hb_snprintf( szSub, sizeof( szSub ), " %s", strstr( __clang_version__, "(" ) );
    else
-      hb_snprintf( szSub, sizeof( szSub ), " (%s)", __clang_version__);
+      hb_snprintf( szSub, sizeof( szSub ), " (%s)", __clang_version__ );
    hb_strncat( pszCompiler, szSub, COMPILER_BUF_SIZE - 1 );
 #endif
 

@@ -454,7 +454,9 @@ typedef struct
    union
    {
       HB_U32 n32;
+#if !defined( HB_LONG_LONG_OFF )
       HB_U64 n64;
+#endif
       double nDB;
       float  nFL;
    } t;
@@ -523,6 +525,7 @@ static void hb_u32par( PHB_ITEM pParam, PHB_DYNARG pArg, HB_U32 * r1, HB_U32 * r
          break;
 
       case HB_DYN_CTYPE_LLONG:
+#if !defined( HB_LONG_LONG_OFF )
          pArg->value.t.n64 = hb_itemGetNInt( pParam );
          if( pArg->bByRef )
             *r1 = ( HB_U32 ) &pArg->value.t.n64;
@@ -532,9 +535,11 @@ static void hb_u32par( PHB_ITEM pParam, PHB_DYNARG pArg, HB_U32 * r1, HB_U32 * r
             *r2 = ( pArg->value.t.n64 >> 32 );
             *b64 = HB_TRUE;
          }
+#endif
          break;
 
       case HB_DYN_CTYPE_LLONG_UNSIGNED:
+#if !defined( HB_LONG_LONG_OFF )
          /* TOFIX: Digits are lost. */
 #if HB_VMLONG_MAX == INT32_MAX || defined( HB_LONG_LONG_OFF )
          pArg->value.t.n64 = ( HB_MAXUINT ) hb_itemGetNInt( pParam );
@@ -549,6 +554,7 @@ static void hb_u32par( PHB_ITEM pParam, PHB_DYNARG pArg, HB_U32 * r1, HB_U32 * r
             *r2 = ( pArg->value.t.n64 >> 32 );
             *b64 = HB_TRUE;
          }
+#endif
          break;
 
       case HB_DYN_CTYPE_FLOAT:
@@ -562,9 +568,11 @@ static void hb_u32par( PHB_ITEM pParam, PHB_DYNARG pArg, HB_U32 * r1, HB_U32 * r
             *r1 = ( HB_U32 ) &pArg->value.t.nDB;
          else
          {
+#if !defined( HB_LONG_LONG_OFF )
             *r1 = pArg->value.t.n64 & 0xFFFFFFFF;
             *r2 = ( pArg->value.t.n64 >> 32 );
             *b64 = HB_TRUE;
+#endif
          }
          break;
 
@@ -687,18 +695,22 @@ static PHB_ITEM hb_u32ret( PHB_ITEM pItem, int iRetType, int iEncoding, HB_DYNVA
          break;
 
       case HB_DYN_CTYPE_LLONG:
+#if !defined( HB_LONG_LONG_OFF )
 #if HB_VMLONG_MAX == INT32_MAX || defined( HB_LONG_LONG_OFF )
          hb_itemPutNInt( pItem, ( HB_MAXINT ) value.t.n64 );
 #else
          hb_itemPutNInt( pItem, ( HB_LONGLONG ) value.t.n64 );
 #endif
+#endif
          break;
 
       case HB_DYN_CTYPE_LLONG_UNSIGNED:
+#if !defined( HB_LONG_LONG_OFF )
 #if HB_VMLONG_MAX == INT32_MAX || defined( HB_LONG_LONG_OFF )
          hb_itemPutNInt( pItem, ( HB_MAXUINT ) value.t.n64 );
 #else
          hb_itemPutNInt( pItem, ( HB_ULONGLONG ) value.t.n64 );
+#endif
 #endif
          break;
 
@@ -847,7 +859,9 @@ static PHB_ITEM hb_u32ret( PHB_ITEM pItem, int iRetType, int iEncoding, HB_DYNVA
 #endif
 
 HB_DYN_CTYPE_DECL( HB_U32, HB_CDECL, FX86_C32 );
+#if !defined( HB_LONG_LONG_OFF )
 HB_DYN_CTYPE_DECL( HB_U64, HB_CDECL, FX86_C64 );
+#endif
 HB_DYN_CTYPE_DECL( double, HB_CDECL, FX86_CDB );
 HB_DYN_CTYPE_DECL( float,  HB_CDECL, FX86_CFL );
 
@@ -996,7 +1010,11 @@ void hb_dynCall( int iFuncFlags, void * pFunctionRaw, int iParams, int iFirst, i
          int iParamsRaw = 0;
          HB_U32 rawpar[ _DYNEXEC_MAXPARAM * 2 ];
 
+#if !defined( HB_LONG_LONG_OFF )
          ret.t.n64 = 0;
+#else
+         memset( &ret, 0, sizeof( ret ) );
+#endif
 
          if( iRetType == HB_DYN_CTYPE_DOUBLE )
             iRetTypeRaw = _RETTYPERAW_DOUBLE;
@@ -1096,7 +1114,9 @@ void hb_dynCall( int iFuncFlags, void * pFunctionRaw, int iParams, int iFirst, i
                      HB_DYN_FUN_CALL( iParamsRaw, n32, FX86_C32 );
                      break;
                   case _RETTYPERAW_INT64:
+#if !defined( HB_LONG_LONG_OFF )
                      HB_DYN_FUN_CALL( iParamsRaw, n64, FX86_C64 );
+#endif
                      break;
                   case _RETTYPERAW_DOUBLE:
                      HB_DYN_FUN_CALL( iParamsRaw, nDB, FX86_CDB );
