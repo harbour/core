@@ -65,6 +65,15 @@
       defined( HB_OS_SUNOS ) || defined( HB_OS_HPUX ) || \
       defined( HB_OS_BSD ) || defined( HB_OS_BEOS ) || \
       defined( HB_OS_QNX ) || defined( HB_OS_VXWORKS )
+#  if defined( HB_OS_VXWORKS )
+      /* Hack to avoid this collision between system headers: [vszakats]
+         ...\vxworks-6.8\target\usr\h/pthread.h:78,
+         ...\vxworks-6.8\target\usr\h/unistd.h:439: error: redefinition of typedef 'intptr_t'
+         ...\vxworks-6.8\target\usr\h/stdint.h:76: error: previous declaration of 'intptr_t' was here */
+#     if defined( _INTPTR ) && !defined( _INTPTR_T )
+#        define _INTPTR_T
+#     endif
+#  endif
 #  include <pthread.h>
 #  define HB_PTHREAD_API
 #elif defined( HB_OS_WIN )

@@ -3011,8 +3011,8 @@ PHB_ITEM hb_socketGetIFaces( int af, HB_BOOL fNoAliases )
  *       of 'struct ifreq' and SIOCGIF*
  */
 #if defined( SIOCGIFCONF ) && \
-    !( defined( HB_OS_LINUX ) && defined( __WATCOMC__ ) && \
-    ! defined( HB_OS_VXWORKS ) )
+    !( defined( HB_OS_LINUX ) && defined( __WATCOMC__ ) ) && \
+    ! defined( HB_OS_VXWORKS )
    struct ifconf ifc;
    struct ifreq * pifr;
    char * buf, * ptr;

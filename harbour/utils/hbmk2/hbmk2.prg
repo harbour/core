@@ -2685,11 +2685,14 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             cBin_Lib := "libtool"
             cOpt_Lib := "-static {FA} -o {OL} {LO}"
          ELSE
-            IF hbmk[ _HBMK_cCOMP ] == "icc"
+            DO CASE
+            CASE hbmk[ _HBMK_cCOMP ] == "icc"
                cBin_Lib := "xiar"
-            ELSE
+            CASE hbmk[ _HBMK_cPLAT ] == "vxworks"
+               cBin_Lib := hbmk[ _HBMK_cCCPREFIX ] + "ar" + hbmk[ _HBMK_cCCPOSTFIX ]
+            OTHERWISE
                cBin_Lib := hbmk[ _HBMK_cCCPREFIX ] + "ar"
-            ENDIF
+            ENDCASE
             IF hbmk[ _HBMK_cPLAT ] $ "hpux|sunos"
                cOpt_Lib := "{FA} rc {OL} {LO}"
             ELSE
@@ -2740,8 +2743,13 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             AAdd( hbmk[ _HBMK_aOPTC ], "-fno-strict-aliasing" )
             AAdd( hbmk[ _HBMK_aOPTC ], "-D_C99" )
             AAdd( hbmk[ _HBMK_aOPTC ], "-D_HAS_C9X" )
-            AAdd( hbmk[ _HBMK_aINCPATH ], PathSepToSelf( GetEnv( "WIND_USR" ) ) + hb_ps() + "h" )
-            AAdd( hbmk[ _HBMK_aINCPATH ], PathSepToSelf( GetEnv( "WIND_USR" ) ) + hb_ps() + "h" + hb_ps() + "wrn" + hb_ps() + "coreip" )
+            AAdd( hbmk[ _HBMK_aINCPATH ], PathSepToSelf( GetEnv( "WIND_USR" ) + "/h" ) )
+            AAdd( hbmk[ _HBMK_aINCPATH ], PathSepToSelf( GetEnv( "WIND_USR" ) + "/h/wrn/coreip" ) )
+            IF hbmk[ _HBMK_lCreateDyn ]
+               AAdd( hbmk[ _HBMK_aLIBPATH ], PathSepToSelf( GetEnv( "WIND_BASE" ) + "/target/lib/usr/lib/simpentium/SIMPENTIUM/common/PIC" ) )
+            ELSE
+               AAdd( hbmk[ _HBMK_aLIBPATH ], PathSepToSelf( GetEnv( "WIND_BASE" ) + "/target/lib/usr/lib/simpentium/SIMPENTIUM/common" ) )
+            ENDIF
          ENDIF
          cOpt_CompC += " {FC}"
          IF ! Empty( hbmk[ _HBMK_cWorkDir ] )
@@ -2846,7 +2854,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
          /* Add system libraries */
          IF ! hbmk[ _HBMK_lSHARED ]
-            IF !( hbmk[ _HBMK_cPLAT ] == "beos" )
+            IF !( hbmk[ _HBMK_cPLAT ] $ "beos|vxworks" )
                AAdd( l_aLIBSYS, "m" )
                IF hbmk[ _HBMK_lMT ]
                   IF !( hbmk[ _HBMK_cPLAT ] == "qnx" )
