@@ -48,7 +48,7 @@ ifneq ($(filter $(HB_BUILD_STRIP),all bin),)
    DYSTRIP := -s
 endif
 
-LD := $(HB_CCPATH)$(HB_CCPREFIX)$(HB_CMP)$(HB_CCPOSTFIX)
+LD := $(CC)
 LD_OUT := -o$(subst x,x, )
 
 LIBPATHS := -L$(LIB_DIR)

@@ -37,7 +37,7 @@ ifeq ($(HB_BUILD_DEBUG),yes)
    CFLAGS += -g
 endif
 
-LD := $(HB_CCACHE) $(HB_CMP)
+LD := $(CC)
 LD_OUT := -o
 
 LIBPATHS := $(foreach dir,$(LIB_DIR) $(SYSLIBPATHS),-L$(dir))

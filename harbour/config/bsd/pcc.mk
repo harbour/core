@@ -20,7 +20,7 @@ CFLAGS += -I. -I$(HB_INC_COMPILE) -fpic
 
 # Warning and optimization options are not stable yet
 #ifneq ($(HB_BUILD_WARN),no)
-#   CFLAGS += 
+#   CFLAGS +=
 #else
 #   CFLAGS +=
 #endif
@@ -33,7 +33,7 @@ ifeq ($(HB_BUILD_DEBUG),yes)
    CFLAGS += -g
 endif
 
-LD := $(HB_CCACHE) $(HB_CCPREFIX)$(HB_CMP)$(HB_CCPOSTFIX)
+LD := $(CC)
 LD_OUT := -o$(subst x,x, )
 
 LIBPATHS := $(foreach dir,$(LIB_DIR) $(SYSLIBPATHS),-L$(dir))

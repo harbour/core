@@ -59,7 +59,7 @@ ifneq ($(HB_LINKING_RTL),)
    SYSLIBS += socket
 endif
 
-LD := $(HB_CCPATH)$(HB_CCPREFIX)$(HB_CMP)$(HB_CCPOSTFIX)
+LD := $(CC)
 LD_OUT := -o$(subst x,x, )
 
 LIBPATHS := $(foreach dir,$(LIB_DIR) $(SYSLIBPATHS),-L$(dir))

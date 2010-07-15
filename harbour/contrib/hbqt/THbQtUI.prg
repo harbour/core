@@ -83,7 +83,7 @@ CLASS HbQtUI
 
    DATA     cLoadingMode                          INIT ""
 
-   DATA     qObj                                  INIT hb_hash()
+   DATA     qObj                                  INIT {=>}
    DATA     widgets                               INIT {}
    DATA     aCommands                             INIT {}
 
@@ -624,7 +624,8 @@ METHOD HbQtUI:formatCommand( cCmd, lText )
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION hbq_isObjectNameSet( s )
-   RETURN ( "objectName" $ s .OR. "ObjectName" $ s )
+   RETURN "objectName" $ s .OR. ;
+          "ObjectName" $ s
 
 /*----------------------------------------------------------------------*/
 

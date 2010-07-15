@@ -23,7 +23,7 @@ PROCEDURE Main()
       " * $" + "Id" + "$" + hb_eol() +;
       " */" + hb_eol()
 
-   FOR EACH aFile IN Directory( "*.*" )
+   FOR EACH aFile IN Directory( hb_osFileMask() )
       cFile := __hbdoc_ToSource( __hbdoc_FromSource( MemoRead( aFile[ F_NAME ] ) ) )
       IF ! Empty( cFile )
          cDst := FNameExtSet( aFile[ F_NAME ], ".txt" )
