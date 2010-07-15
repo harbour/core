@@ -556,8 +556,6 @@ ifeq ($(HB_PLATFORM),)
    endif
 endif
 
-HB_CPU :=
-
 HB_COMP_AUTO :=
 HB_COMP_PATH :=
 ifeq ($(HB_COMPILER),)

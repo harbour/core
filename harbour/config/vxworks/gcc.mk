@@ -17,13 +17,11 @@ LIB_EXT := .a
 HB_DYN_COPT := -DHB_DYNLIB -fpic
 
 ifeq ($(HB_CPU),x86)
-   CFLAGS += -D_VX_CPU=_VX_SIMPENTIUM
    ifeq ($(HB_CCPOSTFIX),)
       export HB_CCPOSTFIX := pentium
    endif
 else
 ifeq ($(HB_CPU),arm)
-   CFLAGS += -DARMEL -D_VX_ARMARCH7
    ifeq ($(HB_CCPOSTFIX),)
       export HB_CCPOSTFIX := arm
    endif
@@ -64,7 +62,7 @@ LD_OUT := -o
 LDLIBPATHS := $(foreach dir,$(LIB_DIR) $(SYSLIBPATHS_BIN),-L$(dir))
 DLIBPATHS := $(foreach dir,$(LIB_DIR) $(SYSLIBPATHS_DYN),-L$(dir))
 
-LDLIBS := $(foreach lib,$(HB_USER_LIBS) $(LIBS) $(SYSLIBS),-l$(lib))
+LDLIBS := $(foreach lib,$(HB_USER_LIBS) $(LIBS) $(SYSLIBS_BIN),-l$(lib))
 
 LDFLAGS += $(LDLIBPATHS)
 
@@ -74,7 +72,7 @@ AR_RULE = ( $(AR) $(ARFLAGS) $(HB_AFLAGS) $(HB_USER_AFLAGS) rcs $(LIB_DIR)/$@ $(
 DY := $(CC)
 DFLAGS += -shared $(DLIBPATHS)
 DY_OUT := -o$(subst x,x, )
-DLIBS := $(foreach lib,$(HB_USER_LIBS) $(SYSLIBS),-l$(lib))
+DLIBS := $(foreach lib,$(HB_USER_LIBS) $(SYSLIBS_DYN),-l$(lib))
 
 # NOTE: The empty line directly before 'endef' HAVE TO exist!
 define dynlib_object

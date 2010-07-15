@@ -2755,9 +2755,6 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             AAdd( hbmk[ _HBMK_aOPTC ], "-D_HAS_C9X" )
             AAdd( hbmk[ _HBMK_aINCPATH ], PathSepToSelf( GetEnv( "WIND_USR" ) + "/h" ) )
             AAdd( hbmk[ _HBMK_aINCPATH ], PathSepToSelf( GetEnv( "WIND_USR" ) + "/h/wrn/coreip" ) )
-            IF hbmk[ _HBMK_cCPU ] == "arm"
-               AAdd( hbmk[ _HBMK_aOPTC ], "-DARMEL" )
-            ENDIF
             SWITCH hbmk[ _HBMK_cCPU ]
             CASE "x86" ; tmp := "simpentium/SIMPENTIUM" ; EXIT
             CASE "arm" ; tmp := "arm/ARMARCH7" ; EXIT
