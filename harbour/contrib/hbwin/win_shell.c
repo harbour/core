@@ -76,12 +76,15 @@
 #  if defined( DUMMYUNIONNAME5 )
 #     undef DUMMYUNIONNAME5
 #  endif
-#  define HB_WIN_V_UNION( x, y, z )    ((x).y.z)
-#else
-#  define HB_WIN_V_UNION( x, y, z )    ((x).z)
 #endif
 
 #include <shellapi.h>
+
+#if defined( NONAMELESSUNION )
+#  define HB_WIN_V_UNION( x, z )       ((x).DUMMYUNIONNAME.z)
+#else
+#  define HB_WIN_V_UNION( x, z )       ((x).z)
+#endif
 
 /* WIN_ShellNotifyIcon( [<hWnd>], [<nUID>], [<nMessage>], [<hIcon>],
                         [<cTooltip>], [<lAddDel>],
@@ -109,7 +112,7 @@ HB_FUNC( WIN_SHELLNOTIFYICON )
    {
       if( HB_ITEMCOPYSTR( hb_param( 7, HB_IT_ANY ), tnid.szInfo, HB_SIZEOFARRAY( tnid.szInfo ) ) > 0 )
          tnid.uFlags |= NIF_INFO;
-      HB_WIN_V_UNION( tnid, u, uTimeout ) = ( UINT ) hb_parni( 8 );
+      HB_WIN_V_UNION( tnid, uTimeout ) = ( UINT ) hb_parni( 8 );
       if( HB_ITEMCOPYSTR( hb_param( 9, HB_IT_ANY ), tnid.szInfoTitle, HB_SIZEOFARRAY( tnid.szInfoTitle ) ) > 0 )
          tnid.uFlags |= NIF_INFO;
       tnid.dwInfoFlags = ( DWORD ) hb_parnl( 10 );

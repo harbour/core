@@ -93,15 +93,18 @@
 #  if defined( DUMMYUNIONNAME5 )
 #     undef DUMMYUNIONNAME5
 #  endif
-#  define HB_WIN_V_UNION( x, y, z )    ((x).y.z)
-#else
-#  define HB_WIN_V_UNION( x, y, z )    ((x).z)
 #endif
 
 #include "gtwvg.h"
 #include "hbwapi.h"
 
 #include <windowsx.h>
+
+#if defined( NONAMELESSUNION )
+#  define HB_WIN_V_UNION( x, z )       ((x).DUMMYUNIONNAME.z)
+#else
+#  define HB_WIN_V_UNION( x, z )       ((x).z)
+#endif
 
 #if !defined( GCLP_HBRBACKGROUND )
 #  define GCLP_HBRBACKGROUND   -10
@@ -709,15 +712,15 @@ HB_FUNC( WVG_TREEVIEW_ADDITEM )
    LPTSTR text = HB_TCHAR_CONVTO( hb_parcx( 3 ) );
 
    tvis.hInsertAfter    = TVI_LAST;
-   HB_WIN_V_UNION( tvis, u, item.mask ) = TVIF_TEXT | TVIF_IMAGE | TVIF_SELECTEDIMAGE | TVIF_STATE;
-   HB_WIN_V_UNION( tvis, u, item.cchTextMax ) = MAX_PATH + 1;
-   HB_WIN_V_UNION( tvis, u, item.stateMask ) = TVIS_BOLD | TVIS_CUT | TVIS_DROPHILITED |
+   HB_WIN_V_UNION( tvis, item.mask ) = TVIF_TEXT | TVIF_IMAGE | TVIF_SELECTEDIMAGE | TVIF_STATE;
+   HB_WIN_V_UNION( tvis, item.cchTextMax ) = MAX_PATH + 1;
+   HB_WIN_V_UNION( tvis, item.stateMask ) = TVIS_BOLD | TVIS_CUT | TVIS_DROPHILITED |
                           TVIS_EXPANDEDONCE | TVIS_SELECTED | TVIS_EXPANDPARTIAL |
                           TVIS_OVERLAYMASK | TVIS_STATEIMAGEMASK | TVIS_USERMASK;
 
-   HB_WIN_V_UNION( tvis, u, item.state ) = 0;        /* TVI_BOLD */
+   HB_WIN_V_UNION( tvis, item.state ) = 0;        /* TVI_BOLD */
    tvis.hParent         = HB_ISNUM( 2 ) ? ( HTREEITEM ) wvg_parhandle( 2 ) : NULL;
-   HB_WIN_V_UNION( tvis, u, item.pszText ) = text;
+   HB_WIN_V_UNION( tvis, item.pszText ) = text;
 
    hb_retnint( ( HB_PTRDIFF ) TreeView_InsertItem( wvg_parhwnd( 1 ), &tvis ) );
 

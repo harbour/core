@@ -136,7 +136,7 @@ PROCEDURE Main( ... )
       /* internal settings, values, etc */ ;
       "PATH_SEPARATOR", hb_ps(), ;
       "DELIMITER", "$", ;
-      "format-list", { "text", "ascii", "html", "html2", "xml", "hbd", "rtf", "hpc", "ngi", "os2", "chm", "ch2", "pdf", "trf", "doc", "dbf", "all" }, ;
+      "format-list", { "text", "ascii", "html", "html2", "xml", "rtf", "hpc", "ngi", "os2", "chm", "ch2", "pdf", "trf", "doc", "dbf", "all" }, ;
       "hbextern.ch", {}, ;
       "in hbextern", {}, ;
       "not in hbextern", {}, ;

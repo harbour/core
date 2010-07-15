@@ -124,7 +124,7 @@ static const char * hb_pp_szErrors[] =
    "Empty optional clause in #translate/#command",                      /* C2065 */
    "Unclosed optional clause in #translate/#command",                   /* C2066 */
    "Error in #ifdef",                                                   /* C2068 */
-   "#endif does not match #endif",                                      /* C2069 */
+   "#endif does not match #ifdef",                                      /* C2069 */
    "#else does not match #ifdef",                                       /* C2070 */
    "Error in #undef",                                                   /* C2071 */
    "Ambiguous match pattern in #translate/#command",                    /* C2072 */
