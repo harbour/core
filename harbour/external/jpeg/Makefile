@@ -107,7 +107,7 @@ endif
 # ORIGIN http://www.ijg.org/
 # VER    8b
 # URL    http://www.ijg.org/files/jpegsr8b.zip
-# DIFF
+# DIFF   jpeg.dif
 #
 # MAP    README
 # MAP    cderror.h
