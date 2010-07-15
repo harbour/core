@@ -54,7 +54,9 @@
 #include "hbdate.h"
 
 #if defined( HB_OS_UNIX )
-   #include <sys/times.h>
+   #if ! defined( HB_OS_VXWORKS )
+      #include <sys/times.h>
+   #endif
    #include <unistd.h>
 #endif
 #if defined( HB_OS_OS2 )
@@ -102,7 +104,7 @@ double hb_secondsCPU( int n )
    if( ( n < 1 || n > 3 ) && ( n < 11 || n > 13 ) )
       n = 3;
 
-#if defined( HB_OS_UNIX )
+#if defined( HB_OS_UNIX ) && ! defined( HB_OS_VXWORKS )
    {
       struct tms tm;
 

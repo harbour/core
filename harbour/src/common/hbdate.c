@@ -929,3 +929,32 @@ long hb_timeUTCOffset( void ) /* in seconds */
    }
 #endif
 }
+
+#if defined( HB_OS_VXWORKS )
+
+/* NOTE: This function is declared, but not present in
+         libs in VxWorks 6.8. So here we emulate its
+         base functionality. [vszakats] */
+
+int gettimeofday( struct timeval * tv, void * tz )
+{
+   int ret;
+   struct timespec tp;
+
+   HB_SYMBOL_UNUSED( tz );
+
+   if( ( ret = clock_gettime( CLOCK_REALTIME, &tp ) ) == 0 )
+   {
+      tv->tv_sec  = tp.tv_sec;
+      tv->tv_usec = ( tp.tv_nsec + 500 ) / 1000;
+   }
+   else
+   {
+      tv->tv_sec  = 0;
+      tv->tv_usec = 0;
+   }
+
+   return ret;
+}
+
+#endif

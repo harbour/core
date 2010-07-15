@@ -61,7 +61,7 @@
 #if defined( HB_OS_UNIX )
 #  include <unistd.h>
 #  include <sys/types.h>
-#  if defined( __WATCOMC__ ) || defined( __CEGCC__ )
+#  if defined( __WATCOMC__ ) || defined( __CEGCC__ ) || defined( HB_OS_VXWORKS )
 #     include <sys/stat.h>
 #  elif defined( HB_OS_DARWIN )
 #     include <sys/param.h>
@@ -236,7 +236,7 @@ HB_FUNC( DISKSPACE )
 
          bError = HB_FALSE;
 #else
-#if defined( HB_OS_DARWIN )
+#if defined( HB_OS_DARWIN ) || defined( HB_OS_VXWORKS )
          struct statfs st;
          bError = statfs( szName, &st ) != 0;
 #else
@@ -245,9 +245,11 @@ HB_FUNC( DISKSPACE )
 #endif
          if( !bError )
          {
+#if ! defined( HB_OS_VXWORKS )
             if( getuid() == 0 )
                dSpace = ( double ) st.f_bfree * ( double ) st.f_bsize;
             else
+#endif
                dSpace = ( double ) st.f_bavail * ( double ) st.f_bsize;
          }
 #endif

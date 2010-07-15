@@ -58,7 +58,11 @@
    #include <sys/param.h>
    #include <sys/mount.h>
 #elif defined( HB_OS_UNIX ) && !( defined( __WATCOMC__ ) || defined( __CEGCC__ ) )
-   #include <sys/statvfs.h>
+   #if defined( HB_OS_VXWORKS )
+      #include <sys/stat.h>
+   #else
+      #include <sys/statvfs.h>
+   #endif
 #endif
 #if defined( HB_OS_WIN )
    #include <windows.h>
@@ -355,7 +359,7 @@ HB_FUNC( HB_DISKSPACE )
    }
 #elif defined( HB_OS_UNIX ) && !( defined( __WATCOMC__ ) || defined( __CEGCC__ ) )
    {
-#if defined( HB_OS_DARWIN )
+#if defined( HB_OS_DARWIN ) || defined( HB_OS_VXWORKS )
       struct statfs sf;
 #else
       struct statvfs sf;
@@ -364,7 +368,7 @@ HB_FUNC( HB_DISKSPACE )
 
       szPath = hb_fsNameConv( szPath, &pszFree );
 
-#if defined( HB_OS_DARWIN )
+#if defined( HB_OS_DARWIN ) || defined( HB_OS_VXWORKS )
       if( statfs( szPath, &sf ) == 0 )
 #else
       if( statvfs( szPath, &sf ) == 0 )

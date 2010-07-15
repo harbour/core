@@ -330,7 +330,7 @@ HB_FUNC( HB_HCOPY )
       nStart = hb_parns( 3 );
       if( ! nStart )
          ++nStart;
-      nCount = HB_ISNUM( 4 ) ? hb_parns( 4 ) : nLen - nStart + 1;
+      nCount = HB_ISNUM( 4 ) ? ( HB_SIZE ) hb_parns( 4 ) : nLen - nStart + 1;
 
       while( nCount-- )
       {
@@ -403,7 +403,7 @@ HB_FUNC( HB_HEVAL )
       nStart = hb_parns( 3 );
       if( ! nStart )
          ++nStart;
-      nCount = HB_ISNUM( 4 ) ? hb_parns( 4 ) : nLen - nStart + 1;
+      nCount = HB_ISNUM( 4 ) ? ( HB_SIZE ) hb_parns( 4 ) : nLen - nStart + 1;
 
       while( nCount-- )
       {
@@ -442,7 +442,7 @@ HB_FUNC( HB_HSCAN )
       nStart = hb_parns( 3 );
       if( ! nStart )
          ++nStart;
-      nCount = HB_ISNUM( 4 ) ? hb_parns( 4 ) : nLen - nStart + 1;
+      nCount = HB_ISNUM( 4 ) ? ( HB_SIZE ) hb_parns( 4 ) : nLen - nStart + 1;
 
       if( HB_IS_BLOCK( pValue ) )
       {

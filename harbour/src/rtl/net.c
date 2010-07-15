@@ -92,7 +92,11 @@
 #elif defined( HB_OS_UNIX )
 
    #if !defined( __WATCOMC__ )
-      #include <pwd.h>
+      #if defined( HB_OS_VXWORKS )
+         #include <hostLib.h>
+      #else
+         #include <pwd.h>
+      #endif
       #include <sys/types.h>
    #endif
    #include <unistd.h>
@@ -187,7 +191,7 @@ char * hb_username( void )
 {
 #if defined( HB_OS_UNIX ) || ( defined( HB_OS_OS2 ) && defined( __GNUC__ ) )
 
-#  if defined( __WATCOMC__ )
+#  if defined( __WATCOMC__ ) || defined( HB_OS_VXWORKS )
       return hb_getenv( "USER" );
 #  else
       struct passwd * pwd = getpwuid( getuid() );

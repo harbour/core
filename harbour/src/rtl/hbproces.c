@@ -306,7 +306,7 @@ static int hb_fsProcessExec( const char * pszFilename,
       iStdErr = dup( 2 );
       dup2( hStderr, 2 );
    }
-#if defined( HB_OS_UNIX )
+#if defined( HB_OS_UNIX ) && !defined( HB_OS_VXWORKS )
    {
       pid_t pid = fork();
       if( pid == 0 )
@@ -506,7 +506,7 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFilename,
          CloseHandle( hPipes[ i ] );
    }
 }
-#elif defined( HB_OS_UNIX )
+#elif defined( HB_OS_UNIX ) && !defined( HB_OS_VXWORKS )
 {
    HB_BOOL fError = HB_FALSE;
    HB_FHANDLE hPipeIn [ 2 ] = { FS_ERROR, FS_ERROR },

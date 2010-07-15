@@ -1127,7 +1127,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    cBin_CompPRG := "harbour" + l_cHBPOSTFIX
 
    DO CASE
-   CASE hbmk[ _HBMK_cPLAT ] $ "bsd|hpux|sunos|beos|qnx|linux" .OR. hbmk[ _HBMK_cPLAT ] == "darwin" /* Separated to avoid match with 'win' */
+   CASE hbmk[ _HBMK_cPLAT ] $ "bsd|hpux|sunos|beos|qnx|vxworks|linux" .OR. hbmk[ _HBMK_cPLAT ] == "darwin" /* Separated to avoid match with 'win' */
       DO CASE
       CASE hbmk[ _HBMK_cPLAT ] == "linux"
          aCOMPSUP := { "gcc", "clang", "icc", "watcom", "sunpro", "open64" }
@@ -1137,13 +1137,21 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          aCOMPSUP := { "gcc", "clang" }
       CASE hbmk[ _HBMK_cPLAT ] == "sunos"
          aCOMPSUP := { "gcc", "sunpro" }
+      CASE hbmk[ _HBMK_cPLAT ] == "vxworks"
+         aCOMPSUP := { "gcc", "diab" }
       OTHERWISE
          aCOMPSUP := { "gcc" }
       ENDCASE
-      l_aLIBHBGT := { "gttrm" }
-      hbmk[ _HBMK_cGTDEFAULT ] := "gttrm"
       cDynLibNamePrefix := "lib"
-      cBinExt := ""
+      IF hbmk[ _HBMK_cPLAT ] == "vxworks"
+         l_aLIBHBGT := {}
+         hbmk[ _HBMK_cGTDEFAULT ] := "gtstd"
+         cBinExt := ".vxe"
+      ELSE
+         l_aLIBHBGT := { "gttrm" }
+         hbmk[ _HBMK_cGTDEFAULT ] := "gttrm"
+         cBinExt := ""
+      ENDIF
       cOptPrefix := "-"
       SWITCH hbmk[ _HBMK_cPLAT ]
       CASE "darwin" ; cDynLibExt := ".dylib" ; EXIT
@@ -1399,7 +1407,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       IF Empty( hbmk[ _HBMK_cCOMP ] ) .OR. hbmk[ _HBMK_cCOMP ] == "bld"
          IF Len( aCOMPSUP ) == 1
             hbmk[ _HBMK_cCOMP ] := aCOMPSUP[ 1 ]
-         ELSEIF hbmk[ _HBMK_cPLAT ] $ "bsd|hpux|sunos|beos|qnx|linux" .OR. ;
+         ELSEIF hbmk[ _HBMK_cPLAT ] $ "bsd|hpux|sunos|beos|qnx|vxworks|linux" .OR. ;
                 hbmk[ _HBMK_cPLAT ] == "darwin" .OR. ;
                 hbmk[ _HBMK_cCOMP ] == "bld"
             hbmk[ _HBMK_cCOMP ] := hb_Version( HB_VERSION_BUILD_COMP )
@@ -1571,7 +1579,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
    /* Build with shared libs by default, if we're installed to default system locations. */
 
-   IF lSysLoc .AND. ( hbmk[ _HBMK_cPLAT ] $ "bsd|hpux|sunos|beos|qnx|linux" .OR. hbmk[ _HBMK_cPLAT ] == "darwin" )
+   IF lSysLoc .AND. ( hbmk[ _HBMK_cPLAT ] $ "bsd|hpux|sunos|beos|qnx|vxworks|linux" .OR. hbmk[ _HBMK_cPLAT ] == "darwin" )
       hbmk[ _HBMK_lSHARED ] := .T.
       hbmk[ _HBMK_lSTATICFULL ] := .F.
    ELSE
@@ -2567,7 +2575,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 #endif
 
       DO CASE
-      CASE hbmk[ _HBMK_cPLAT ] $ "bsd|linux|hpux|beos|qnx|sunos" .OR. hbmk[ _HBMK_cPLAT ] == "darwin" /* Separated to avoid match with 'win' */
+      CASE hbmk[ _HBMK_cPLAT ] $ "bsd|linux|hpux|beos|qnx|vxworks|sunos" .OR. hbmk[ _HBMK_cPLAT ] == "darwin" /* Separated to avoid match with 'win' */
          IF Empty( cPrefix )
             l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cPostfix,;
                                                       "harbour"   + cPostfix ) }
@@ -2646,21 +2654,26 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
       DO CASE
       /* GCC family */
-      CASE ( hbmk[ _HBMK_cPLAT ] == "bsd"    .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
-           ( hbmk[ _HBMK_cPLAT ] == "darwin" .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
-           ( hbmk[ _HBMK_cPLAT ] == "hpux"   .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
-           ( hbmk[ _HBMK_cPLAT ] == "sunos"  .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
-           ( hbmk[ _HBMK_cPLAT ] == "linux"  .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
-           ( hbmk[ _HBMK_cPLAT ] == "linux"  .AND. hbmk[ _HBMK_cCOMP ] == "icc" ) .OR. ;
-           ( hbmk[ _HBMK_cPLAT ] == "darwin" .AND. hbmk[ _HBMK_cCOMP ] == "icc" ) .OR. ;
-           ( hbmk[ _HBMK_cPLAT ] == "linux"  .AND. hbmk[ _HBMK_cCOMP ] == "clang" ) .OR. ;
-           ( hbmk[ _HBMK_cPLAT ] == "darwin" .AND. hbmk[ _HBMK_cCOMP ] == "clang" ) .OR. ;
-           ( hbmk[ _HBMK_cPLAT ] == "bsd"    .AND. hbmk[ _HBMK_cCOMP ] == "clang" ) .OR. ;
-           ( hbmk[ _HBMK_cPLAT ] == "beos"   .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
-           ( hbmk[ _HBMK_cPLAT ] == "qnx"    .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
-           ( hbmk[ _HBMK_cPLAT ] == "linux"  .AND. hbmk[ _HBMK_cCOMP ] == "open64" )
+      CASE ( hbmk[ _HBMK_cPLAT ] == "bsd"     .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
+           ( hbmk[ _HBMK_cPLAT ] == "darwin"  .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
+           ( hbmk[ _HBMK_cPLAT ] == "hpux"    .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
+           ( hbmk[ _HBMK_cPLAT ] == "sunos"   .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
+           ( hbmk[ _HBMK_cPLAT ] == "linux"   .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
+           ( hbmk[ _HBMK_cPLAT ] == "linux"   .AND. hbmk[ _HBMK_cCOMP ] == "icc" ) .OR. ;
+           ( hbmk[ _HBMK_cPLAT ] == "darwin"  .AND. hbmk[ _HBMK_cCOMP ] == "icc" ) .OR. ;
+           ( hbmk[ _HBMK_cPLAT ] == "linux"   .AND. hbmk[ _HBMK_cCOMP ] == "clang" ) .OR. ;
+           ( hbmk[ _HBMK_cPLAT ] == "darwin"  .AND. hbmk[ _HBMK_cCOMP ] == "clang" ) .OR. ;
+           ( hbmk[ _HBMK_cPLAT ] == "bsd"     .AND. hbmk[ _HBMK_cCOMP ] == "clang" ) .OR. ;
+           ( hbmk[ _HBMK_cPLAT ] == "beos"    .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
+           ( hbmk[ _HBMK_cPLAT ] == "qnx"     .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
+           ( hbmk[ _HBMK_cPLAT ] == "vxworks" .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
+           ( hbmk[ _HBMK_cPLAT ] == "linux"   .AND. hbmk[ _HBMK_cCOMP ] == "open64" )
 
-         hbmk[ _HBMK_nCmd_Esc ] := _ESC_NIX
+         #if defined( __PLATFORM__UNIX )
+            hbmk[ _HBMK_nCmd_Esc ] := _ESC_NIX
+         #elif defined( __PLATFORM__WINDOWS )
+            hbmk[ _HBMK_nCmd_Esc ] := _ESC_DBLQUOTE
+         #endif
          IF hbmk[ _HBMK_lDEBUG ]
             AAdd( hbmk[ _HBMK_aOPTC ], "-g" )
          ENDIF
@@ -2694,6 +2707,9 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          CASE hbmk[ _HBMK_cCOMP ] == "open64"
             cBin_CompCPP := "openCC"
             cBin_CompC := iif( hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ], cBin_CompCPP, "opencc" )
+         CASE hbmk[ _HBMK_cPLAT ] == "vxworks"
+            cBin_CompCPP := hbmk[ _HBMK_cCCPREFIX ] + "g++" + hbmk[ _HBMK_cCCPOSTFIX ]
+            cBin_CompC := iif( hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ], cBin_CompCPP, hbmk[ _HBMK_cCCPREFIX ] + "cc" + hbmk[ _HBMK_cCCPOSTFIX ] )
          OTHERWISE
             cBin_CompCPP := hbmk[ _HBMK_cCCPREFIX ] + "g++" + hbmk[ _HBMK_cCCPOSTFIX ]
             cBin_CompC := iif( hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ], cBin_CompCPP, hbmk[ _HBMK_cCCPREFIX ] + "gcc" + hbmk[ _HBMK_cCCPOSTFIX ] )
@@ -2716,6 +2732,16 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             CASE _WARN_LOW ; AAdd( hbmk[ _HBMK_aOPTC ], "-W" )                 ; EXIT
             CASE _WARN_NO  ; AAdd( hbmk[ _HBMK_aOPTC ], "-w" )                 ; EXIT
             ENDSWITCH
+         ENDIF
+         IF hbmk[ _HBMK_cPLAT ] == "vxworks"
+            AAdd( hbmk[ _HBMK_aOPTC ], "-mrtp" )
+            AAdd( hbmk[ _HBMK_aOPTL ], "-mrtp" )
+            AAdd( hbmk[ _HBMK_aOPTD ], "-mrtp" )
+            AAdd( hbmk[ _HBMK_aOPTC ], "-fno-strict-aliasing" )
+            AAdd( hbmk[ _HBMK_aOPTC ], "-D_C99" )
+            AAdd( hbmk[ _HBMK_aOPTC ], "-D_HAS_C9X" )
+            AAdd( hbmk[ _HBMK_aINCPATH ], PathSepToSelf( GetEnv( "WIND_USR" ) ) + hb_ps() + "h" )
+            AAdd( hbmk[ _HBMK_aINCPATH ], PathSepToSelf( GetEnv( "WIND_USR" ) ) + hb_ps() + "h" + hb_ps() + "wrn" + hb_ps() + "coreip" )
          ENDIF
          cOpt_CompC += " {FC}"
          IF ! Empty( hbmk[ _HBMK_cWorkDir ] )
@@ -2742,6 +2768,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             ( hbmk[ _HBMK_cPLAT ] == "linux" .OR. ;
               hbmk[ _HBMK_cPLAT ] == "beos" .OR. ;
               hbmk[ _HBMK_cPLAT ] == "qnx" .OR. ;
+              hbmk[ _HBMK_cPLAT ] == "vxworks" .OR. ;
               hbmk[ _HBMK_cPLAT ] == "bsd" )
             AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,--start-group {LL} {LB} -Wl,--end-group" )
             AAdd( hbmk[ _HBMK_aOPTD ], "-Wl,--start-group {LL} {LB} -Wl,--end-group" )
@@ -3964,6 +3991,10 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             cBin_CompC   := FNameEscape( hbmk[ _HBMK_cCCPATH ] + hb_ps() + cBin_CompC, hbmk[ _HBMK_nCmd_Esc ] )
             cBin_Link    := FNameEscape( hbmk[ _HBMK_cCCPATH ] + hb_ps() + cBin_Link, hbmk[ _HBMK_nCmd_Esc ] )
          ENDIF
+
+      CASE hbmk[ _HBMK_cPLAT ] == "vxworks" .AND. hbmk[ _HBMK_cCOMP ] == "diab"
+
+         /* TODO */
 
       ENDCASE
 
@@ -8724,6 +8755,9 @@ STATIC PROCEDURE PlatformPRGFlags( hbmk, aOPTPRG )
       CASE hbmk[ _HBMK_cPLAT ] == "qnx"
          AAdd( aDf, "__PLATFORM__QNX" )
          AAdd( aDf, "__PLATFORM__UNIX" )
+      CASE hbmk[ _HBMK_cPLAT ] == "vxworks"
+         AAdd( aDf, "__PLATFORM__VXWORKS" )
+         AAdd( aDf, "__PLATFORM__UNIX" )
       ENDCASE
 
       /* Setup those CPU flags which we can be sure about.
@@ -9727,7 +9761,7 @@ FUNCTION hbmk_KEYW( hbmk, cKeyword, cValue )
    CASE "static"   ; RETURN ! hbmk[ _HBMK_lSHARED ]
    CASE "unicode"  ; RETURN hbmk[ _HBMK_lUNICODE ]
    CASE "ascii"    ; RETURN ! hbmk[ _HBMK_lUNICODE ]
-   CASE "unix"     ; RETURN "|" + hbmk[ _HBMK_cPLAT ] + "|" $ "|bsd|hpux|sunos|beos|qnx|linux|darwin|"
+   CASE "unix"     ; RETURN "|" + hbmk[ _HBMK_cPLAT ] + "|" $ "|bsd|hpux|sunos|beos|qnx|vxworks|linux|darwin|"
    CASE "allwin"   ; RETURN "|" + hbmk[ _HBMK_cPLAT ] + "|" $ "|win|wce|"
    CASE "allgcc"   ; RETURN "|" + hbmk[ _HBMK_cCOMP ] + "|" $ "|gcc|mingw|mingw64|mingwarm|cygwin|djgpp|gccomf|clang|open64|"
    CASE "allmingw" ; RETURN "|" + hbmk[ _HBMK_cCOMP ] + "|" $ "|mingw|mingw64|mingwarm|"
@@ -9747,7 +9781,7 @@ FUNCTION hbmk_KEYW( hbmk, cKeyword, cValue )
    ENDIF
 
    IF ! ( "|" + cKeyword + "|" $ "|win|wce|dos|os2" + ;
-                                 "|bsd|hpux|sunos|beos|qnx|linux|darwin" + ;
+                                 "|bsd|hpux|sunos|beos|qnx|vxworks|linux|darwin" + ;
                                  "|msvc|msvc64|msvcia64|msvcarm" + ;
                                  "|pocc|pocc64|poccarm|xcc" + ;
                                  "|mingw|mingw64|mingwarm|cygwin|bcc|watcom" + ;
@@ -10302,18 +10336,19 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
    LOCAL aText_Supp := {;
       "",;
       I_( "Supported <comp> values for each supported <plat> value:" ),;
-      "  - linux  : gcc, clang, icc, watcom, sunpro, open64",;
-      "  - darwin : gcc, clang, icc",;
-      "  - win    : mingw, msvc, bcc, watcom, icc, pocc, cygwin, xcc,",;
-      "  -          mingw64, msvc64, msvcia64, iccia64, pocc64",;
-      "  - wce    : mingwarm, mingw, msvcarm, poccarm",;
-      "  - os2    : gcc, gccomf, watcom",;
-      "  - dos    : djgpp, watcom",;
-      "  - bsd    : gcc, clang",;
-      "  - hpux   : gcc",;
-      "  - beos   : gcc",;
-      "  - qnx    : gcc",;
-      "  - sunos  : gcc, sunpro" }
+      "  - linux   : gcc, clang, icc, watcom, sunpro, open64",;
+      "  - darwin  : gcc, clang, icc",;
+      "  - win     : mingw, msvc, bcc, watcom, icc, pocc, cygwin, xcc,",;
+      "  -           mingw64, msvc64, msvcia64, iccia64, pocc64",;
+      "  - wce     : mingwarm, mingw, msvcarm, poccarm",;
+      "  - os2     : gcc, gccomf, watcom",;
+      "  - dos     : djgpp, watcom",;
+      "  - bsd     : gcc, clang",;
+      "  - hpux    : gcc",;
+      "  - beos    : gcc",;
+      "  - qnx     : gcc",;
+      "  - vxworks : gcc, diab",;
+      "  - sunos   : gcc, sunpro" }
 
    LOCAL aOpt_Basic := {;
       { "-o<outname>"        , I_( "output file name" ) },;

@@ -16,7 +16,7 @@
 
 static HANDLE s_RegHandle;
 
-#elif ( defined( HB_OS_UNIX ) || defined( HB_OS_LINUX ) ) && !defined( __WATCOMC__ )
+#elif ( defined( HB_OS_UNIX ) || defined( HB_OS_LINUX ) ) && !defined( __WATCOMC__ ) && !defined( HB_OS_VXWORKS )
 
 #include <syslog.h>
 
@@ -42,7 +42,7 @@ HB_FUNC( HB_SYSLOGOPEN )
          s_RegHandle = NULL;
          hb_retl( HB_FALSE );
       #endif
-   #elif defined( HB_OS_UNIX ) && !defined( __WATCOMC__ )
+   #elif defined( HB_OS_UNIX ) && !defined( __WATCOMC__ ) && !defined( HB_OS_VXWORKS )
       openlog( hb_parcx( 1 ), LOG_NDELAY | LOG_NOWAIT | LOG_PID, LOG_USER );
       hb_retl( HB_TRUE );
    #else
@@ -63,7 +63,7 @@ HB_FUNC( HB_SYSLOGCLOSE )
       else
       #endif
          hb_retl( HB_FALSE );
-   #elif defined( HB_OS_UNIX ) && !defined( __WATCOMC__ )
+   #elif defined( HB_OS_UNIX ) && !defined( __WATCOMC__ ) && !defined( HB_OS_VXWORKS )
       closelog();
       hb_retl( HB_TRUE );
    #else
@@ -105,7 +105,7 @@ HB_FUNC( HB_SYSLOGMESSAGE )
       else
       #endif
          hb_retl( HB_FALSE );
-   #elif defined( HB_OS_UNIX ) && !defined( __WATCOMC__ )
+   #elif defined( HB_OS_UNIX ) && !defined( __WATCOMC__ ) && !defined( HB_OS_VXWORKS )
       int logval;
 
       switch( hb_parni( 2 ) )

@@ -64,7 +64,7 @@
    #include <windows.h>
 #endif
 
-#if defined( HB_OS_UNIX )
+#if defined( HB_OS_UNIX ) && !defined( HB_OS_VXWORKS )
 
 #include <errno.h>
 #include <unistd.h>
@@ -139,7 +139,7 @@ HB_BOOL hb_OutDebugName( PHB_ITEM pName )
 {
    HB_BOOL bRet;
 
-#if defined( HB_OS_UNIX )
+#if defined( HB_OS_UNIX ) && !defined( HB_OS_VXWORKS )
    if( s_iDebugFd == 0 && pName != NULL)
    {
       hb_strncpy( s_szDebugName, hb_itemGetCPtr( pName ), sizeof( s_szDebugName ) - 1 );
@@ -166,7 +166,7 @@ HB_BOOL hb_OutDebugName( PHB_ITEM pName )
 
 void hb_OutDebug( const char * szMsg, HB_SIZE nMsgLen )
 {
-#if defined( HB_OS_UNIX )
+#if defined( HB_OS_UNIX ) && !defined( HB_OS_VXWORKS )
    int iStatus, iPid;
 
    /* Are we under X? */
@@ -192,12 +192,12 @@ void hb_OutDebug( const char * szMsg, HB_SIZE nMsgLen )
          }
       }
 
-      if( s_iDebugFd > 0 && HB_ISCHAR(1) )
+      if( s_iDebugFd > 0 && HB_ISCHAR( 1 ) )
       {
          fd_set wrds;
          struct timeval tv = { 0, 100000 }; /* wait each time a tenth of second */
-         FD_ZERO(&wrds);
-         FD_SET(s_iDebugFd, &wrds);
+         FD_ZERO( &wrds );
+         FD_SET( s_iDebugFd, &wrds );
 
          if( select( s_iDebugFd + 1, NULL, &wrds, NULL, &tv ) > 0 )
          {
@@ -205,8 +205,8 @@ void hb_OutDebug( const char * szMsg, HB_SIZE nMsgLen )
             {
                tv.tv_sec = 0;
                tv.tv_usec = 100000;
-               FD_ZERO(&wrds);
-               FD_SET(s_iDebugFd, &wrds);
+               FD_ZERO( &wrds );
+               FD_SET( s_iDebugFd, &wrds );
                if( select( s_iDebugFd + 1, NULL, &wrds, NULL, &tv ) > 0 )
                {
                   if( write( s_iDebugFd, "\n", 1 ) != 1 ) {}

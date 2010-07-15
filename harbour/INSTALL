@@ -475,6 +475,7 @@ HARBOUR
    hpux     - HP-UX
    sunos    - Sun Solaris / OpenSolaris
    qnx      - QNX
+   vxworks  - VxWorks
    win      - MS Windows (all flavors)
               (see LINKS section for Win9x requirements)
    wce      - MS Windows CE
@@ -515,6 +516,11 @@ HARBOUR
    qnx
    ---
    gcc      - GNU C
+
+   vxworks
+   -------
+   gcc      - GNU C
+   diab     - Wind River Compiler
 
    sunos
    -----
@@ -923,6 +929,13 @@ HARBOUR
       win-make
       ---
 
+      --- VxWorks 6.8 (requires preceding build for Windows target)
+      wrenv -p vxworks-6.8
+      set HB_COMPILER=gcc
+      set HB_CCPOSTFIX=pentium
+      win-make
+      ---
+
       --8<--
       rem ; Add these *before* above sample scripts to configure 3rd party dependencies.
       rem   When using MSYS or Cygwin shell you'll have to use forward slashes and
@@ -1258,6 +1271,8 @@ HARBOUR
    x win    -> dos/watcom    x86
    x win    -> os2/watcom    x86
    x win    -> linux/watcom  x86
+   x win    -> vxworks/gcc   (CPU cross-builds possible: x86, arm, coldfire, mips, ppc)
+   x win    -> vxworks/diab  (CPU cross-builds possible)
      dos    -> dos/djgpp     x86
      dos    -> dos/watcom    x86
    x dos    -> win/watcom    x86
@@ -1282,6 +1297,8 @@ HARBOUR
    x linux  -> os2/watcom    x86
    x linux  -> dos/watcom    x86
    x linux  -> dos/djgpp     x86
+   x linux  -> vxworks/gcc   (CPU cross-builds possible: x86, arm, coldfire, mips, ppc)
+   x linux  -> vxworks/diab  (CPU cross-builds possible)
      bsd    -> bsd/gcc       (CPU cross-builds possible)
      bsd    -> bsd/clang     (CPU cross-builds possible)
    x bsd    -> wce/mingwarm  arm
@@ -1309,6 +1326,8 @@ HARBOUR
    x sunos  -> wce/mingw     x86
    x sunos  -> win/mingw     x86
    x sunos  -> dos/djgpp     x86
+   x sunos  -> vxworks/gcc   (CPU cross-builds possible: x86, arm, coldfire, mips, ppc)
+   x sunos  -> vxworks/diab  (CPU cross-builds possible)
 
      Leading 'x' marks cross-platform scenarios.
 

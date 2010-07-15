@@ -63,8 +63,14 @@
 #include "hbdate.h"
 
 #if defined( HB_OS_UNIX ) && !defined( __WATCOMC__ ) /* || defined( __DJGPP__ ) */
-#  if !defined( HB_HAS_TERMIOS )
-#     define HB_HAS_TERMIOS
+#  if defined( HB_OS_VXWORKS )
+#     if !defined( HB_HAS_SIOLIB )
+#        define HB_HAS_SIOLIB
+#     endif
+#  else
+#     if !defined( HB_HAS_TERMIOS )
+#        define HB_HAS_TERMIOS
+#     endif
 #  endif
 #  if defined( HB_OS_SUNOS )
 #     if !defined( BSD_COMP )
@@ -84,6 +90,8 @@
 #     include <sys/time.h>
 #     include <sys/types.h>
 #  endif
+#elif defined( HB_HAS_SIOLIB )
+#  include <sioLib.h>
 #elif defined( HB_OS_WIN )
 #  include <windows.h>
 #elif defined( HB_OS_OS2 )

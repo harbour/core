@@ -62,15 +62,23 @@
 #include "hbdate.h"
 #include "hb_io.h"
 
+#if ( defined( HB_OS_UNIX ) && !defined( HB_OS_VXWORKS ) ) || defined( __DJGPP__ )
+#  if !defined( HB_HAS_TERMIOS )
+#     define HB_HAS_TERMIOS
+#  endif
+#endif
+
 #if defined( HB_OS_UNIX ) || defined( __DJGPP__ )
-   #include <unistd.h>
-   #include <termios.h>
-   #include <sys/ioctl.h>
-   #include <signal.h>
-   #include <errno.h>
-   #include <sys/time.h>
-   #include <sys/types.h>
-   #include <sys/wait.h>
+#  if defined( HB_HAS_TERMIOS )
+#     include <unistd.h>
+#     include <termios.h>
+#     include <sys/ioctl.h>
+#     include <signal.h>
+#     include <errno.h>
+#     include <sys/time.h>
+#     include <sys/types.h>
+#     include <sys/wait.h>
+#  endif
 #else
 #  if defined( HB_OS_WIN )
 #     include <windows.h>
@@ -115,7 +123,7 @@ typedef struct _HB_GTSTD
    PHB_CODEPAGE   cdpHost;
    HB_BYTE        keyTransTbl[ 256 ];
 
-#if defined( HB_OS_UNIX ) || defined( __DJGPP__ )
+#if defined( HB_HAS_TERMIOS )
    struct termios saved_TIO;
    struct termios curr_TIO;
    HB_BOOL        fRestTTY;
@@ -126,7 +134,7 @@ typedef struct _HB_GTSTD
 } HB_GTSTD, * PHB_GTSTD;
 
 
-#if defined( HB_OS_UNIX ) || defined( __DJGPP__ )
+#if defined( HB_HAS_TERMIOS )
 
 static volatile HB_BOOL s_fRestTTY = HB_FALSE;
 
@@ -223,7 +231,7 @@ static void hb_gt_std_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    HB_GTSUPER_INIT( pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr );
 
 /* SA_NOCLDSTOP in #if is a hack to detect POSIX compatible environment */
-#if ( defined( HB_OS_UNIX ) || defined( __DJGPP__ ) ) && \
+#if defined( HB_HAS_TERMIOS ) && \
     defined( SA_NOCLDSTOP )
 
    if( pGTSTD->fStdinConsole )
@@ -311,7 +319,7 @@ static void hb_gt_std_Exit( PHB_GT pGT )
       while( ++pGTSTD->iRow <= iRow )
          hb_gt_std_newLine( pGTSTD );
 
-#if defined( HB_OS_UNIX ) || defined( __DJGPP__ )
+#if defined( HB_HAS_TERMIOS )
       if( pGTSTD->fRestTTY )
          tcsetattr( pGTSTD->hStdin, TCSANOW, &pGTSTD->saved_TIO );
 #endif
@@ -336,7 +344,7 @@ static int hb_gt_std_ReadKey( PHB_GT pGT, int iEventMask )
 
    pGTSTD = HB_GTSTD_GET( pGT );
 
-#if defined( HB_OS_UNIX ) || defined( __DJGPP__ )
+#if defined( HB_HAS_TERMIOS )
    {
       struct timeval tv;
       fd_set rfds;
@@ -474,7 +482,7 @@ static HB_BOOL hb_gt_std_Suspend( PHB_GT pGT )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_std_Suspend(%p)", pGT ) );
 
-#if defined( HB_OS_UNIX ) || defined( __DJGPP__ )
+#if defined( HB_HAS_TERMIOS )
    {
       PHB_GTSTD pGTSTD = HB_GTSTD_GET( pGT );
       if( pGTSTD->fRestTTY )
@@ -490,7 +498,7 @@ static HB_BOOL hb_gt_std_Resume( PHB_GT pGT )
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_std_Resume(%p)", pGT ) );
 
 
-#if defined( HB_OS_UNIX ) || defined( __DJGPP__ )
+#if defined( HB_HAS_TERMIOS )
    {
       PHB_GTSTD pGTSTD = HB_GTSTD_GET( pGT );
       if( pGTSTD->fRestTTY )

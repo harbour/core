@@ -41,6 +41,10 @@ ifneq ($(HB_HAS_PCRE_LOCAL),)
 
    ifneq ($(filter $(HB_COMPILER),bcc msvc msvc64 msvcia64 icc iccia64 djgpp),)
       HB_CFLAGS += -DHAVE_INTTYPES_H=0
+   else
+   ifneq ($(filter $(HB_PLATFORM),vxworks),)
+      HB_CFLAGS += -DHAVE_INTTYPES_H=0
+   endif
    endif
 
    HB_CFLAGS += -DHAVE_CONFIG_H

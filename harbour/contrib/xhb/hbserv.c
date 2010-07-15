@@ -217,10 +217,12 @@ static void s_signalHandler( int sig, siginfo_t * info, void * v )
          #endif
          {
             hb_arraySetNI( pRet, HB_SERVICE_OSSUBSIG, info->si_code );
+            #if ! defined( HB_OS_VXWORKS )
             hb_arraySetNI( pRet, HB_SERVICE_OSERROR, info->si_errno );
             hb_arraySetPtr( pRet, HB_SERVICE_ADDRESS, ( void * ) info->si_addr );
             hb_arraySetNI( pRet, HB_SERVICE_PROCESS, info->si_pid );
             hb_arraySetNI( pRet, HB_SERVICE_UID, info->si_uid );
+            #endif
          }
          #endif
 
@@ -764,7 +766,7 @@ HB_FUNC( HB_STARTSERVICE )
    }
    #endif
 
-   #ifdef HB_OS_UNIX
+   #if defined( HB_OS_UNIX ) && ! defined( HB_OS_VXWORKS )
    {
       int pid;
 
@@ -985,7 +987,9 @@ HB_FUNC( HB_SIGNALDESC )
          case FPE_FLTOVF: hb_retc_const( "Floating point: floating point overflow"); return;
          case FPE_FLTUND: hb_retc_const( "Floating point: floating point underflow"); return;
          case FPE_FLTRES: hb_retc_const( "Floating point: floating point inexact result"); return;
+         #if ! defined( HB_OS_VXWORKS )
          case FPE_FLTINV: hb_retc_const( "Floating point: floating point invalid operation"); return;
+         #endif
          #if ! defined( HB_OS_DARWIN )
          case FPE_FLTSUB: hb_retc_const( "Floating point: subscript out of range"); return;
          #endif

@@ -52,7 +52,7 @@
 
 #include "hbsocket.h"
 
-#if defined( HB_OS_DOS ) && !defined( HB_HAS_WATT )
+#if ( defined( HB_OS_DOS ) && !defined( HB_HAS_WATT ) )
 #  if !defined( HB_SOCKET_OFF )
 #     define HB_SOCKET_OFF
 #  endif
@@ -125,7 +125,9 @@
 #  endif
 #  if !defined( __WATCOMC__ ) && !defined( HB_OS_BEOS )
 #     define HB_HAS_INET6
-#     define HB_HAS_INET6_ADDR_CONST
+#     if !defined( HB_OS_VXWORKS )
+#        define HB_HAS_INET6_ADDR_CONST
+#     endif
 #  endif
 #  if defined( HB_OS_BEOS )
 #     define HB_SOCKET_TRANSLATE_DOMAIN
@@ -212,6 +214,9 @@
 #  include <sys/ioctl.h>
 #  if defined( HB_OS_BEOS )
 #     include <sys/sockio.h>
+#  endif
+#  if defined( HB_OS_VXWORKS )
+#     include <sockLib.h>
 #  endif
 #  include <netdb.h>
 #  include <netinet/in.h>
@@ -3006,7 +3011,8 @@ PHB_ITEM hb_socketGetIFaces( int af, HB_BOOL fNoAliases )
  *       of 'struct ifreq' and SIOCGIF*
  */
 #if defined( SIOCGIFCONF ) && \
-    !( defined( HB_OS_LINUX ) && defined( __WATCOMC__ ) )
+    !( defined( HB_OS_LINUX ) && defined( __WATCOMC__ ) && \
+    ! defined( HB_OS_VXWORKS ) )
    struct ifconf ifc;
    struct ifreq * pifr;
    char * buf, * ptr;

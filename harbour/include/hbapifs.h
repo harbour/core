@@ -135,6 +135,10 @@ HB_EXTERN_BEGIN
 #define HB_FA_RWXG            ( HB_FA_RGRP | HB_FA_WGRP | HB_FA_XGRP )
 #define HB_FA_RWXO            ( HB_FA_ROTH | HB_FA_WOTH | HB_FA_XOTH )
 
+#if defined( HB_OS_VXWORKS ) && ! defined( S_ISVTX )
+#  define S_ISVTX 0
+#endif
+
 /* macros to convert Harbour attributes to POSIX ones */
 #define HB_FA_POSIX_SID(a)    ( ( ( ( a ) & HB_FA_SVTX ) ? S_ISVTX : 0 ) | \
                                 ( ( ( a ) & HB_FA_SGID ) ? S_ISGID : 0 ) | \

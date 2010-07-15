@@ -545,6 +545,9 @@ ifeq ($(HB_PLATFORM),)
       endif
       endif
    endif
+   ifneq ($(findstring vxworks,$(WIND_PLATFORM)),)
+      HB_PLATFORM := vxworks
+   endif
    ifneq ($(HB_PLATFORM),)
       HB_PLAT_AUTO := (autodetected)
    endif

@@ -111,7 +111,9 @@
 
 #if defined( HB_OS_UNIX )
 #  include <sys/time.h>
-#  include <sys/times.h>
+#  if ! defined( HB_OS_VXWORKS )
+#     include <sys/times.h>
+#  endif
 #  include <unistd.h>
 #endif
 

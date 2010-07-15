@@ -70,15 +70,23 @@
 
 #include <string.h>
 
+#if ( defined( HB_OS_UNIX ) && !defined( HB_OS_VXWORKS ) ) || defined( __DJGPP__ )
+#  if !defined( HB_HAS_TERMIOS )
+#     define HB_HAS_TERMIOS
+#  endif
+#endif
+
 #if defined( HB_OS_UNIX ) || defined( __DJGPP__ )
-   #include <unistd.h>  /* read() function requires it */
-   #include <termios.h>
-   #include <sys/ioctl.h>
-   #include <signal.h>
-   #include <errno.h>
-   #include <sys/time.h>
-   #include <sys/types.h>
-   #include <sys/wait.h>
+#  if defined( HB_HAS_TERMIOS )
+#     include <unistd.h>  /* read() function requires it */
+#     include <termios.h>
+#     include <sys/ioctl.h>
+#     include <signal.h>
+#     include <errno.h>
+#     include <sys/time.h>
+#     include <sys/types.h>
+#     include <sys/wait.h>
+#  endif
 #else
 #  if defined( HB_OS_WIN )
 #     include <windows.h>
@@ -121,7 +129,7 @@ static int          s_iOutBufSize = 0;
 static int          s_iOutBufIndex = 0;
 static char *       s_sOutBuf;
 
-#if defined( HB_OS_UNIX ) || defined( __DJGPP__ )
+#if defined( HB_HAS_TERMIOS )
 
 static volatile HB_BOOL s_fRestTTY = HB_FALSE;
 static struct termios s_saved_TIO, s_curr_TIO;
@@ -282,7 +290,7 @@ static void hb_gt_pca_AnsiGetCurPos( int * iRow, int * iCol )
             break;
          else
          {
-#if defined( HB_OS_UNIX ) || defined( __DJGPP__ )
+#if defined( HB_HAS_TERMIOS )
             struct timeval tv;
             fd_set rdfds;
             int iMilliSec;
@@ -484,7 +492,7 @@ static void hb_gt_pca_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    HB_GTSUPER_INIT( pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr );
 
 /* SA_NOCLDSTOP in #if is a hack to detect POSIX compatible environment */
-#if ( defined( HB_OS_UNIX ) || defined( __DJGPP__ ) ) && \
+#if defined( HB_HAS_TERMIOS ) && \
     defined( SA_NOCLDSTOP )
    s_fRestTTY = HB_FALSE;
    if( s_bStdinConsole )
@@ -566,7 +574,7 @@ static void hb_gt_pca_Exit( PHB_GT pGT )
 
    HB_GTSUPER_EXIT( pGT );
 
-#if defined( HB_OS_UNIX ) || defined( __DJGPP__ )
+#if defined( HB_HAS_TERMIOS )
    if( s_fRestTTY )
       tcsetattr( s_hFilenoStdin, TCSANOW, &s_saved_TIO );
 #endif
@@ -613,7 +621,7 @@ static int hb_gt_pca_ReadKey( PHB_GT pGT, int iEventMask )
    ch = hb_gt_dos_keyCodeTranslate( ch );
    if( ch > 0 && ch <= 255 )
       ch = s_keyTransTbl[ ch ];
-#elif defined( HB_OS_UNIX ) || defined( __DJGPP__ )
+#elif defined( HB_HAS_TERMIOS )
    {
       struct timeval tv;
       fd_set rfds;
@@ -746,7 +754,7 @@ static HB_BOOL hb_gt_pca_Suspend( PHB_GT pGT )
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_pca_Suspend(%p)", pGT ) );
 
    HB_SYMBOL_UNUSED( pGT );
-#if defined( HB_OS_UNIX ) || defined( __DJGPP__ )
+#if defined( HB_HAS_TERMIOS )
    if( s_fRestTTY )
    {
       tcsetattr( s_hFilenoStdin, TCSANOW, &s_saved_TIO );
@@ -762,7 +770,7 @@ static HB_BOOL hb_gt_pca_Resume( PHB_GT pGT )
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_pca_Resume(%p)", pGT ) );
 
    HB_SYMBOL_UNUSED( pGT );
-#if defined( HB_OS_UNIX ) || defined( __DJGPP__ )
+#if defined( HB_HAS_TERMIOS )
    if( s_fRestTTY )
    {
       tcsetattr( s_hFilenoStdin, TCSANOW, &s_curr_TIO );

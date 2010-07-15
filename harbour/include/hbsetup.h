@@ -398,6 +398,12 @@
    #endif
 #endif
 
+#ifndef HB_OS_VXWORKS
+   #if defined( __VXWORKS__ ) || defined( __vxworks )
+      #define HB_OS_VXWORKS
+   #endif
+#endif
+
 #ifndef HB_OS_UNIX
    #if defined( HB_OS_LINUX ) || \
        defined( HB_OS_DARWIN ) || \
@@ -405,9 +411,14 @@
        defined( HB_OS_SUNOS ) || \
        defined( HB_OS_HPUX ) || \
        defined( HB_OS_QNX ) || \
+       defined( HB_OS_VXWORKS ) || \
        defined( HB_OS_BEOS )
       #define HB_OS_UNIX
    #endif
+#endif
+
+#if defined( HB_OS_VXWORKS )
+   #define HB_NO_FNMATCH
 #endif
 
 /* ***********************************************************************

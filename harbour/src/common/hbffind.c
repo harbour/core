@@ -248,7 +248,9 @@ HB_FATTR hb_fsAttrFromRaw( HB_FATTR raw_attr )
    if( S_ISCHR( raw_attr ) )  ulAttr |= HB_FA_CHRDEVICE;
    if( S_ISBLK( raw_attr ) )  ulAttr |= HB_FA_BLKDEVICE;
    if( S_ISFIFO( raw_attr ) ) ulAttr |= HB_FA_FIFO;
+#if ! defined( HB_OS_VXWORKS )
    if( S_ISSOCK( raw_attr ) ) ulAttr |= HB_FA_SOCKET;
+#endif
 
 #else
 

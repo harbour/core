@@ -30,6 +30,9 @@ endif
 ifeq ($(HB_COMPILER),djgpp)
    HB_SUPPORTED := yes
 endif
+ifeq ($(HB_PLATFORM),vxworks)
+   HB_SUPPORTED := no
+endif
 
 ifeq ($(HB_SUPPORTED),yes)
 

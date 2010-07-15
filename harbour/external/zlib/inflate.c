@@ -408,6 +408,7 @@ unsigned out;
 /* Macros for inflate(): */
 
 /* check function to use adler32() for zlib or crc32() for gzip */
+#undef UPDATE /* VxWorks defines it */
 #ifdef GUNZIP
 #  define UPDATE(check, buf, len) \
     (state->flags ? crc32(check, buf, len) : adler32(check, buf, len))

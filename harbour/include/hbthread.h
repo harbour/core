@@ -64,7 +64,7 @@
 #elif defined( HB_OS_LINUX ) || defined( HB_OS_DARWIN ) || \
       defined( HB_OS_SUNOS ) || defined( HB_OS_HPUX ) || \
       defined( HB_OS_BSD ) || defined( HB_OS_BEOS ) || \
-      defined( HB_OS_QNX )
+      defined( HB_OS_QNX ) || defined( HB_OS_VXWORKS )
 #  include <pthread.h>
 #  define HB_PTHREAD_API
 #elif defined( HB_OS_WIN )
