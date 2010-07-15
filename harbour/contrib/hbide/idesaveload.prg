@@ -90,6 +90,7 @@ CLASS IdeINI INHERIT IdeObject
    DATA   cToolsDialogGeometry                    INIT  ""
    DATA   cSetupDialogGeometry                    INIT  ""
    DATA   cShortcutsDialogGeometry                INIT  ""
+   DATA   cDbStructDialogGeometry                 INIT  ""
    //
    DATA   cRecentTabIndex                         INIT  ""
    //
@@ -273,6 +274,7 @@ METHOD IdeINI:save( cHbideIni )
    aadd( txt_, "ToolsDialogGeometry"       + "=" +   ::cToolsDialogGeometry                             )
    aadd( txt_, "ShortcutsDialogGeometry"   + "=" +   ::cShortcutsDialogGeometry                         )
    aadd( txt_, "SetupDialogGeometry"       + "=" +   ::cSetupDialogGeometry                             )
+   aadd( txt_, "DbStructDialogGeometry"    + "=" +   ::cDbStructDialogGeometry                          )
    //
    aadd( txt_, "CurrentLineHighlightMode"  + "=" +   iif( ::lCurrentLineHighlightEnabled, "YES", "NO" ) )
    aadd( txt_, "LineNumbersDisplayMode"    + "=" +   iif( ::lLineNumbersVisible, "YES", "NO" )          )
@@ -547,6 +549,7 @@ METHOD IdeINI:load( cHbideIni )
                      CASE "ToolsDialogGeometry"         ; ::cToolsDialogGeometry              := cVal ; EXIT
                      CASE "SetupDialogGeometry"         ; ::cSetupDialogGeometry              := cVal ; EXIT
                      CASE "ShortcutsDialogGeometry"     ; ::cShortcutsDialogGeometry          := cVal ; EXIT
+                     CASE "DbStructDialogGeometry"      ; ::cDbStructDialogGeometry           := cVal ; EXIT
                      //
                      CASE "CurrentLineHighlightMode"    ; ::oIde:lCurrentLineHighlightEnabled := ( cVal != "NO" ); EXIT
                      CASE "LineNumbersDisplayMode"      ; ::oIde:lLineNumbersVisible          := ( cVal != "NO" ); EXIT
@@ -1224,6 +1227,7 @@ METHOD IdeSetup:populate()
       ::populateKeyTableRow( a_:__enumIndex(), a_[ 1 ], a_[ 2 ] )
    NEXT
 
+   ::oUI:q_listTextExt:clear()
    a_:= hb_atokens( ::oINI:cTextFileExtensions, ",." )
    FOR EACH s IN a_
       ::oUI:q_listTextExt:addItem( strtran( s, "." ) )

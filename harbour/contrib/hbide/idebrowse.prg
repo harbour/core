@@ -86,9 +86,11 @@
 #define  TBL_RECORD                               6
 #define  TBL_CURSOR                               7
 #define  TBL_GEOMETRY                             8
-#define  TBL_NEXT                                 9
+#define  TBL_ROWPOS                               9
+#define  TBL_COLPOS                              10
+#define  TBL_NEXT                                11
 
-#define  TBL_VRBLS                                9
+#define  TBL_VRBLS                               11
 
 #define  SUB_ID                                   1
 #define  SUB_WINDOW                               2
@@ -110,6 +112,7 @@ CLASS IdeBrowseManager INHERIT IdeObject
    DATA   aPanels                                 INIT  {}
    DATA   aToolBtns                               INIT  {}
    DATA   aButtons                                INIT  {}
+   DATA   aIndexAct                               INIT  {}
 
    DATA   oCurBrw
    DATA   oCurPanel
@@ -127,7 +130,7 @@ CLASS IdeBrowseManager INHERIT IdeObject
    METHOD show()
    METHOD destroy()
    METHOD buildToolbar()
-   METHOD execEvent( cEvent, p, p1 )
+   METHOD execEvent( cEvent, p, p1, p2 )
    METHOD addTable( cFileDBF, cAlias, aInfo )
    METHOD addArray( aData, aAttr )
    METHOD getPanelNames()
@@ -146,6 +149,7 @@ CLASS IdeBrowseManager INHERIT IdeObject
    METHOD buildUiStruct()
    METHOD populateUiStruct()
    METHOD populateFieldData()
+   METHOD updateIndexMenu( qSubWindow )
 
    ENDCLASS
 
@@ -195,7 +199,9 @@ METHOD IdeBrowseManager:getPanelsInfo()
                aSub[ 3 ] := QRect():from( aSub[ 2 ]:geometry() )
             ENDIF
             aAttr[ TBL_GEOMETRY ] := hb_ntos( aSub[ 3 ]:x() )     + " " + hb_ntos( aSub[ 3 ]:y() ) + " " + ;
-                                  hb_ntos( aSub[ 3 ]:width() ) + " " + hb_ntos( aSub[ 3 ]:height() )
+                                     hb_ntos( aSub[ 3 ]:width() ) + " " + hb_ntos( aSub[ 3 ]:height() )
+            aAttr[ TBL_ROWPOS ] := hb_ntos( oBrw:oBrw:rowPos() )
+            aAttr[ TBL_COLPOS ] := hb_ntos( oBrw:oBrw:colPos() )
             aAttr[ TBL_NEXT ] := ""
 
          ELSEIF oBrw:nType == BRW_TYPE_ARRAY
@@ -302,7 +308,7 @@ METHOD IdeBrowseManager:addPanels()
 METHOD IdeBrowseManager:addPanel( cPanel )
    LOCAL qPanel
 
-   qPanel := IdeBrowsePanel():new( ::oIde, cPanel )
+   qPanel := IdeBrowsePanel():new( ::oIde, cPanel, self )
 
    ::qStack:addWidget( qPanel:qWidget )
 
@@ -338,6 +344,7 @@ METHOD IdeBrowseManager:setPanel( cPanel )
       ::oCurPanel := ::aPanels[ n ]
 
       ::oCurPanel:prepare()
+      ::oCurPanel:activateBrowser()
 
       #if 0
       ::oCurPanel:nViewStyle  := 0
@@ -357,7 +364,7 @@ METHOD IdeBrowseManager:setPanel( cPanel )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeBrowseManager:execEvent( cEvent, p, p1 )
+METHOD IdeBrowseManager:execEvent( cEvent, p, p1, p2 )
    LOCAL cTable, cPath, cPanel, qEvent, qMime, qList, i, cExt, qUrl
 
    HB_SYMBOL_UNUSED( p )
@@ -432,7 +439,10 @@ METHOD IdeBrowseManager:execEvent( cEvent, p, p1 )
       EXIT
 
    CASE "mdiSubWindow_windowStateChanged"
-//HB_TRACE( HB_TR_ALWAYS, "mdiSubWindow_windowStateChanged", p, p1 )
+      IF p2 == 8
+         ::oCurPanel:setCurrentBrowser( p )
+         ::updateIndexMenu( p )
+      ENDIF
       EXIT
 
    CASE "buttonViewOrganized_clicked"
@@ -468,6 +478,12 @@ METHOD IdeBrowseManager:execEvent( cEvent, p, p1 )
    CASE "buttonIndex_clicked"
       EXIT
 
+   CASE "dbStruct_closeEvent"
+      ::oIde:oINI:cDbStructDialogGeometry := hbide_posAndSize( ::qStruct:oWidget )
+      ::qStruct:close()
+      ::lStructOpen := .f.
+      EXIT
+
    CASE "fieldsTable_itemSelectionChanged"
       ::populateFieldData()
       EXIT
@@ -495,6 +511,7 @@ METHOD IdeBrowseManager:showStruct()
    IF ! ::lStructOpen
       ::lStructOpen := .t.
       ::populateUiStruct()
+      ::oIde:setPosAndSizeByIniEx( ::qStruct:oWidget, ::oINI:cDbStructDialogGeometry )
       ::qStruct:show()
    ENDIF
 
@@ -583,7 +600,6 @@ METHOD IdeBrowseManager:buildUiStruct()
    LOCAL oTbl, n, qItm
    LOCAL hdr_:= { { "", 50 }, { "Field Name",200 }, { "Type", 100 }, { "Len", 50 }, { "Dec", 70 } }
 
-   //::qStruct := hbide_getUI( "dbstruct", ::oDlg:oWidget )
    ::qStruct := hbide_getUI( "dbstruct", ::qDbu )
 
    ::qStruct:setWindowFlags( Qt_Dialog )
@@ -593,7 +609,7 @@ METHOD IdeBrowseManager:buildUiStruct()
    ::qStruct:setMaximumWidth( ::qStruct:width() )
 
    ::qStruct:installEventFilter( ::pEvents )
-   ::connect( ::qStruct, QEvent_Close, {|| ::qStruct:close(), ::lStructOpen := .f. } )
+   ::connect( ::qStruct, QEvent_Close, {|| ::execEvent( "dbStruct_closeEvent" ) } )
 
    oTbl := ::qStruct:q_tableFields
    QHeaderView():from( oTbl:verticalHeader() ):hide()
@@ -634,10 +650,12 @@ METHOD IdeBrowseManager:loadTables()
       DEFAULT aPanel[ TBL_NAME     ] TO ""
       DEFAULT aPanel[ TBL_ALIAS    ] TO ""
       DEFAULT aPanel[ TBL_DRIVER   ] TO ""
-      DEFAULT aPanel[ TBL_INDEX    ] TO 0
-      DEFAULT aPanel[ TBL_RECORD   ] TO 0
-      DEFAULT aPanel[ TBL_CURSOR   ] TO 0
+      DEFAULT aPanel[ TBL_INDEX    ] TO ""
+      DEFAULT aPanel[ TBL_RECORD   ] TO ""
+      DEFAULT aPanel[ TBL_CURSOR   ] TO ""
       DEFAULT aPanel[ TBL_GEOMETRY ] TO ""
+      DEFAULT aPanel[ TBL_ROWPOS   ] TO "1"
+      DEFAULT aPanel[ TBL_COLPOS   ] TO "1"
       DEFAULT aPanel[ TBL_NEXT     ] TO ""
 
       IF ::isPanel( aPanel[ 1 ] )
@@ -656,10 +674,10 @@ METHOD IdeBrowseManager:loadTables()
 METHOD IdeBrowseManager:addTable( cFileDBF, cAlias, aInfo )
    LOCAL oBrw, qSubWindow
 
-   oBrw := IdeBrowse():new()
+   oBrw := IdeBrowse():new( ::oIde, Self, ::oCurPanel )
    oBrw:cTable   := cFileDBF
    oBrw:cAlias   := cAlias
-   oBrw:oManager := Self
+   //oBrw:oManager := Self
 
    oBrw:create()
 
@@ -667,11 +685,21 @@ METHOD IdeBrowseManager:addTable( cFileDBF, cAlias, aInfo )
       RETURN Self
    ENDIF
 
+   IF hb_isArray( aInfo )
+      oBrw:oBrw:rowPos := val( aInfo[ TBL_ROWPOS ] )
+      oBrw:oBrw:colPos := val( aInfo[ TBL_COLPOS ] )
+      oBrw:oBrw:forceStable()
+      oBrw:setOrder( val( aInfo[ TBL_INDEX ] ) )
+      oBrw:goto( val( aInfo[ TBL_RECORD ] ) )
+      oBrw:oBrw:refreshAll()
+      oBrw:oBrw:forceStable()
+   ENDIF
+
    qSubWindow := ::oCurPanel:addBrowser( oBrw, aInfo )
 
    ::connect( qSubWindow, "aboutToActivate()", {|| ::execEvent( "mdiSubWindow_aboutToActivate", qSubWindow ) } )
    ::connect( qSubWindow, "windowStateChanged(Qt::WindowStates,Qt::WindowStates)", ;
-                                 {|p,p1| ::execEvent( "mdiSubWindow_windowStateChanged", p, p1, qSubWindow ) } )
+                                 {|p,p1| ::execEvent( "mdiSubWindow_windowStateChanged", qSubWindow, p, p1 ) } )
 
    qSubWindow:installEventFilter( ::pEvents )
    ::connect( qSubWindow, QEvent_Close, {|| ::execEvent( "buttonCloseX_clicked", qSubWindow ) } )
@@ -758,6 +786,32 @@ METHOD IdeBrowseManager:buildIndexButton()
 
 /*----------------------------------------------------------------------*/
 
+STATIC FUNCTION hbide_getMenuBlock( oPanel, qSubWindow, cIndex )
+   RETURN {|| oPanel:setIndex( qSubWindow, cIndex ) }
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeBrowseManager:updateIndexMenu( qSubWindow )
+   LOCAL qAct, aIndex, cIndex
+
+   FOR EACH qAct IN ::aIndexAct
+      ::disconnect( qAct, "triggered(bool)" )
+      qAct := NIL
+   NEXT
+
+   ::qIndexMenu:clear()
+
+   aIndex := ::oCurPanel:getIndexInfo( qSubWindow )
+   FOR EACH cIndex IN aIndex
+      qAct := QAction():from( ::qIndexMenu:addAction( cIndex ) )
+      ::connect( qAct, "triggered(bool)", hbide_getMenuBlock( ::oCurPanel, qSubWindow, cIndex ) )
+      aadd( ::aIndexAct, qAct )
+   NEXT
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeBrowseManager:buildPanelsButton()
 
    ::qPanelsMenu := QMenu():new()
@@ -783,6 +837,8 @@ METHOD IdeBrowseManager:buildPanelsButton()
 
 CLASS IdeBrowsePanel INHERIT IdeObject
 
+   DATA   oManager
+
    DATA   qWidget
    DATA   qMenuWindows
    DATA   qStruct
@@ -794,14 +850,18 @@ CLASS IdeBrowsePanel INHERIT IdeObject
    DATA   aSubWindows                             INIT  {}
    ACCESS subWindows()                            INLINE ::aSubWindows
 
-   METHOD new( oIde, cPanel )
+   METHOD new( oIde, cPanel, oManager )
    METHOD destroy( oBrw )
    METHOD destroyByX( qSubWindow )
+   METHOD setCurrentBrowser( qSubWindow )
+   METHOD getIndexInfo( qSubWindow )
+   METHOD setIndex( qSubWindow, cIndex )
 
    METHOD addBrowser( oBrw, aInfo )
    METHOD prepare()
    METHOD saveGeometry()
    METHOD restGeometry()
+   METHOD activateBrowser()
 
    METHOD viewMode()                              INLINE ::qWidget:viewMode()
    METHOD setViewMode( nMode )                    INLINE ::qWidget:setViewMode( nMode )
@@ -820,10 +880,11 @@ CLASS IdeBrowsePanel INHERIT IdeObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeBrowsePanel:new( oIde, cPanel )
+METHOD IdeBrowsePanel:new( oIde, cPanel, oManager )
 
    ::oIde  := oIde
    ::cPanel := cPanel
+   ::oManager := oManager
 
    ::qWidget := QMdiArea():new()
    ::qWidget:setObjectName( ::cPanel )
@@ -845,6 +906,39 @@ METHOD IdeBrowsePanel:destroy( oBrw )
       oSub := NIL
 
       hb_adel( ::aSubWindows, n, .t. )
+   ENDIF
+
+   RETURN Self
+
+/*------------------------------------------------------------------------*/
+
+METHOD IdeBrowsePanel:setIndex( qSubWindow, cIndex )
+   LOCAL n
+
+   IF ( n := ascan( ::aSubWindows, {|e_| e_[ 2 ] == qSubWindow } ) )  > 0
+      RETURN ::aSubWindows[ n,4 ]:setIndex( cIndex )
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeBrowsePanel:getIndexInfo( qSubWindow )
+   LOCAL n
+
+   IF ( n := ascan( ::aSubWindows, {|e_| e_[ 2 ] == qSubWindow } ) )  > 0
+      RETURN ::aSubWindows[ n,4 ]:getIndexInfo()
+   ENDIF
+
+   RETURN {}
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeBrowsePanel:setCurrentBrowser( qSubWindow )
+   LOCAL n
+
+   IF ( n := ascan( ::aSubWindows, {|e_| e_[ 2 ] == qSubWindow } ) )  > 0
+      ::oManager:oCurBrw := ::aSubWindows[ n,4 ]
    ENDIF
 
    RETURN Self
@@ -892,6 +986,8 @@ METHOD IdeBrowsePanel:addBrowser( oBrw, aInfo )
    qSubWindow:setWindowTitle( oBrw:cTable )
    qSubWindow:setObjectName( hb_ntos( nID ) )
 
+   oBrw:qMdi := qSubWindow
+
    IF !empty( aInfo ) .AND. !empty( aInfo[ TBL_GEOMETRY ] )
       qRect := hb_aTokens( aInfo[ TBL_GEOMETRY ], " " )
       FOR EACH cR IN qRect
@@ -903,6 +999,7 @@ METHOD IdeBrowsePanel:addBrowser( oBrw, aInfo )
    ELSE
       //qSubWindow:resize( 300, 200 )
    ENDIF
+   oBrw:dispInfo()
 
    ::qWidget:addSubWindow( qSubWindow )
 
@@ -914,6 +1011,14 @@ METHOD IdeBrowsePanel:addBrowser( oBrw, aInfo )
    RETURN qSubWindow
 
 /*------------------------------------------------------------------------*/
+
+METHOD IdeBrowsePanel:activateBrowser()
+   IF len( ::aSubWindows ) > 0
+      ::qWidget:setActiveSubWindow( ::aSubWindows[ 1,2 ] )
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
 
 METHOD IdeBrowsePanel:saveGeometry()
    LOCAL aSubWindow
@@ -956,10 +1061,13 @@ CLASS IdeBrowse INHERIT IdeObject
    DATA   qSplitter
    DATA   aForm                                   INIT  {}
    DATA   oManager
+   DATA   oPanel
+   DATA   qMDI
 
    DATA   nType                                   INIT  BRW_TYPE_DBF
    DATA   cAlias                                  INIT  ""
    DATA   cTable                                  INIT  ""
+   DATA   cTableOnly                              INIT  ""
    DATA   aData                                   INIT  {}
    DATA   aStruct                                 INIT  {}
    DATA   aAttr                                   INIT  {}
@@ -973,11 +1081,10 @@ CLASS IdeBrowse INHERIT IdeObject
 
    DATA   qVerSpl
    DATA   qClose
+   DATA   aIndex                                  INIT  {}
 
-   ACCESS indexOrd()                              INLINE ::nOrder
-
-   METHOD new( oIde )
-   METHOD create( oIde )
+   METHOD new( oIde, oManager, oPanel )
+   METHOD create( oIde, oManager, oPanel )
    METHOD configure()
    METHOD destroy()
    METHOD execEvent( cEvent, p, p1 )
@@ -993,6 +1100,15 @@ CLASS IdeBrowse INHERIT IdeObject
    METHOD recNo()
    METHOD lastRec()
    ACCESS dbStruct()                              INLINE ::aStruct
+   METHOD indexOrd()
+   METHOD setOrder( nOrder )
+   METHOD refreshAll()
+   METHOD getIndexInfo()
+   METHOD setIndex( cIndex )
+
+
+   METHOD dispInfo()
+   METHOD search( cSearch )
    METHOD next()
    METHOD previous()
    METHOD buildForm()
@@ -1003,33 +1119,27 @@ CLASS IdeBrowse INHERIT IdeObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeBrowse:new( oIde )
+METHOD IdeBrowse:new( oIde, oManager, oPanel )
 
-   ::oIde := oIde
+   ::oIde     := oIde
+   ::oManager := oManager
+   ::oPanel   := oPanel
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeBrowse:fetchAlias( cTable )
-   LOCAL cFile
-
-   STATIC n := 0
-   n++
-
-   hb_fNameSplit( cTable, , @cFile )
-
-   RETURN upper( "C" + cFile + hb_ntos( n ) )
-
-/*------------------------------------------------------------------------*/
-
-METHOD IdeBrowse:create( oIde )
-   LOCAL xVrb, cT, cAlias, bError, oErr
+METHOD IdeBrowse:create( oIde, oManager, oPanel )
+   LOCAL xVrb, cT, cAlias, bError, oErr, cName
    LOCAL lMissing := .t.
    LOCAL lErr := .f.
 
-   DEFAULT oIde TO ::oIde
-   ::oIde := oIde
+   DEFAULT oIde     TO ::oIde
+   DEFAULT oManager TO ::oManager
+   DEFAULT oPanel   TO ::oPanel
+   ::oIde     := oIde
+   ::oManager := oManager
+   ::oPanel   := oPanel
 
    IF !empty( ::aData )
       ::nType := BRW_TYPE_ARRAY
@@ -1105,6 +1215,11 @@ METHOD IdeBrowse:create( oIde )
    ::oBrw:forceStable()
 
    ::oBrw:navigate := {|mp1,mp2| ::execEvent( "browse_navigate", mp1, mp2 ) }
+   ::oBrw:keyboard := {|mp1,mp2| ::execEvent( "browse_keyboard", mp1, mp2 ) }
+
+   hb_fNameSplit( ::cTable, , @cName )
+
+   ::cTableOnly := cName
 
    RETURN Self
 
@@ -1214,15 +1329,28 @@ METHOD IdeBrowse:buildBrowser()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeBrowse:execEvent( cEvent, p, p1 )
+   LOCAL cSearch
 
    HB_SYMBOL_UNUSED( p  )
    HB_SYMBOL_UNUSED( p1 )
 
    SWITCH cEvent
    CASE "browse_navigate"
+      ::dispInfo()
       ::populateForm()
       ::oManager:oCurBrw := Self
       ::oManager:aToolBtns[ 3 ]:setChecked( ! ::qForm:isHidden() )
+      EXIT
+
+   CASE "browse_keyboard"
+      IF p == xbeK_CTRL_F
+         IF ! empty( cSearch := hbide_fetchAString( ::oWnd:oWidget, "", "FieldNamr", "Search" ) )
+            ::search( cSearch )
+         ENDIF
+
+      ELSEIF p == xbeK_CTRL_G
+
+      ENDIF
       EXIT
 
    ENDSWITCH
@@ -1230,6 +1358,31 @@ METHOD IdeBrowse:execEvent( cEvent, p, p1 )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
+
+METHOD IdeBrowse:dispInfo()
+
+   IF !empty( ::qMdi )
+      ::qMdi:setTooltip( ::cTable )
+
+      ::qMdi:setWindowTitle( "[" + ::cDriver +"][" + hb_ntos( ::indexOrd() ) + "] " + ;
+                             "[" + hb_ntos( ::recno() ) + "/" + hb_ntos( ::lastRec() ) + "] " + ;
+                             ::cTableOnly )
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeBrowse:fetchAlias( cTable )
+   LOCAL cFile
+
+   STATIC n := 0
+   n++
+
+   hb_fNameSplit( cTable, , @cFile )
+
+   RETURN upper( "C" + cFile + hb_ntos( n ) )
+
+/*------------------------------------------------------------------------*/
 
 STATIC FUNCTION hbide_xtosForForm( xVrb )
    LOCAL cType := valtype( xVrb )
@@ -1249,6 +1402,7 @@ METHOD IdeBrowse:populateForm()
    LOCAL a_, oCol
 
    IF ::nType == BRW_TYPE_DBF
+
       FOR EACH a_ IN ::aForm
          oCol := ::oBrw:getColumn( a_:__enumIndex() )
          ::aForm[ a_:__enumIndex(), 2 ]:setText( hbide_xtosForForm( eval( oCol:block ) ) )
@@ -1378,6 +1532,72 @@ METHOD IdeBrowse:skipBlock( nHowMany )
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeBrowse:next()
+   LOCAL nSaveRecNum := ( ::cAlias )->( recno() )
+   LOCAL lMoved := .T.
+
+   IF ( ::cAlias )->( Eof() )
+      lMoved := .F.
+   ELSE
+      ( ::cAlias )->( DbSkip( 1 ) )
+      IF ( ::cAlias )->( Eof() )
+         lMoved := .F.
+         ( ::cAlias )->( DbGoTo( nSaveRecNum ) )
+      ENDIF
+   ENDIF
+
+   RETURN lMoved
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeBrowse:previous()
+   LOCAL nSaveRecNum := ( ::cAlias )->( recno() )
+   LOCAL lMoved := .T.
+
+   ( ::cAlias )->( DbSkip( -1 ) )
+
+   IF ( ::cAlias )->( Bof() )
+      ( ::cAlias )->( DbGoTo( nSaveRecNum ) )
+      lMoved := .F.
+   ENDIF
+
+   RETURN lMoved
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeBrowse:search( cSearch )
+   LOCAL nRec
+
+   IF ::nType == BRW_TYPE_DBF
+      IF ( ::cAlias )->( IndexOrd() ) > 0
+         nRec := ::recNo()
+         IF ( ::cAlias )->( DbSeek( cSearch ) )
+            ::refreshAll()
+         ELSE
+            ::goto( nRec )
+            MsgBox( "Could not find: " + cSearch )
+         ENDIF
+      ELSE
+         // Sequential search
+      ENDIF
+   ELSE
+      // Ascan
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeBrowse:refreshAll()
+
+   ::oBrw:refreshAll()
+   ::oBrw:forceStable()
+   ::oBrw:setCurrentIndex( .t. )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeBrowse:goTop()
 
    IF ::nType == BRW_TYPE_DBF
@@ -1398,6 +1618,27 @@ METHOD IdeBrowse:goBottom()
    ENDIF
 
    RETURN NIL
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeBrowse:setOrder( nOrder )
+
+   IF ::nType == BRW_TYPE_DBF
+      ( ::cAlias )->( DbSetOrder( nOrder ) )
+      ::dispInfo()
+   ENDIF
+
+   RETURN NIL
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeBrowse:indexOrd()
+
+   IF ::nType == BRW_TYPE_DBF
+      RETURN ( ::cAlias )->( IndexOrd() )
+   ENDIF
+
+   RETURN 0
 
 /*----------------------------------------------------------------------*/
 
@@ -1425,6 +1666,38 @@ METHOD IdeBrowse:lastRec()
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeBrowse:setIndex( cIndex )
+   LOCAL n
+
+   IF ( n := ascan( ::aIndex, cIndex ) ) > 0
+      ( ::cAlias )->( DbSetOrder( n ) )
+      ::oBrw:refreshAll()
+      ::oBrw:forceStable()
+      ::oBrw:setCurrentIndex( .t. )
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeBrowse:getIndexInfo()
+   LOCAL a_:= {}, i, cKey
+
+   IF ::nType == BRW_TYPE_DBF
+      FOR i := 1 to 50
+         IF ( cKey := ( ::cAlias )->( indexkey( i ) ) ) == ''
+            EXIT
+         ENDIF
+         aadd( a_, ( ::cAlias )->( OrdName( i ) ) + ' : ' + cKey )
+      NEXT
+   ENDIF
+
+   ::aIndex := a_
+
+   RETURN ::aIndex
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeBrowse:goTo( nRec )
 
    IF ::nType == BRW_TYPE_DBF
@@ -1434,39 +1707,6 @@ METHOD IdeBrowse:goTo( nRec )
    ENDIF
 
    RETURN NIL
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeBrowse:next()
-   LOCAL nSaveRecNum := ( ::cAlias )->( recno() )
-   LOCAL lMoved := .T.
-
-   IF ( ::cAlias )->( Eof() )
-      lMoved := .F.
-   ELSE
-      ( ::cAlias )->( DBSkip( 1 ) )
-      IF ( ::cAlias )->( Eof() )
-         lMoved := .F.
-         ( ::cAlias )->( DBGoTo( nSaveRecNum ) )
-      ENDIF
-   ENDIF
-
-   RETURN lMoved
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeBrowse:previous()
-   LOCAL nSaveRecNum := ( ::cAlias )->( recno() )
-   LOCAL lMoved := .T.
-
-   ( ::cAlias )->( DBSkip( -1 ) )
-
-   IF ( ::cAlias )->( Bof() )
-      ( ::cAlias )->( DBGoTo( nSaveRecNum ) )
-      lMoved := .F.
-   ENDIF
-
-   RETURN lMoved
 
 /*----------------------------------------------------------------------*/
 

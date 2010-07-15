@@ -1480,71 +1480,16 @@ void HBQPlainTextEdit::paintEvent( QPaintEvent * event )
       bottom = top + height;
       ++blockNumber;
    }
+   painter.end();
+
    this->hbPaintHighlight( event );
    this->hbPaintSelection( event );
 
 // this->hbDrawCursor( event );
 
-   painter.end();
-
    QPlainTextEdit::paintEvent( event );
-
-   #if 0
-   QPainter * painter = new QPainter( viewport() );
-
-   int curBlock      = textCursor().blockNumber();
-
-   QTextBlock tblock = firstVisibleBlock();
-   int blockNumber   = tblock.blockNumber();
-   int height        = ( int ) blockBoundingRect( tblock ).height();
-   int top           = ( int ) blockBoundingGeometry( tblock ).translated( contentOffset() ).top();
-   int bottom        = top + height;
-
-   this->hbPaintSelection( event );
-
-   while( tblock.isValid() && top <= event->rect().bottom() )
-   {
-      if( tblock.isVisible() && bottom >= event->rect().top() )
-      {
-         int index = bookMarksGoto.indexOf( blockNumber + 1 );
-         if( index != -1 )
-         {
-            QRect r( 0, top, viewport()->width(), height );
-            painter->fillRect( r, brushForBookmark( index ) );
-         }
-         else if( curBlock == blockNumber && m_currentLineColor.isValid() )
-         {
-            if( highlightCurLine == true )
-            {
-               QRect r = HBQPlainTextEdit::cursorRect();
-               r.setX( 0 );
-               r.setWidth( viewport()->width() );
-               painter->fillRect( r, QBrush( m_currentLineColor ) );
-            }
-         }
-      }
-      tblock = tblock.next();
-      top    = bottom;
-      bottom = top + height;
-      ++blockNumber;
-   }
-
-   #if 0  /* A day wasted - I could not find how I can execute paiting from within prg code */
-   if( block )
-   {
-      PHB_ITEM p1 = hb_itemPutNI( NULL, QEvent::Paint );
-      PHB_ITEM p2 = hb_itemPutPtr( NULL, painter );
-      hb_vmEvalBlockV( block, 2, p1, p2 );
-      hb_itemRelease( p1 );
-      hb_itemRelease( p2 );
-   }
-   #endif
-
-   painter->end();
-   delete ( ( QPainter * ) painter );
-   QPlainTextEdit::paintEvent( event );
-   #endif
 }
+
 /*----------------------------------------------------------------------*/
 
 void HBQPlainTextEdit::hbDrawCursor( QPaintEvent *event )
@@ -1561,6 +1506,7 @@ void HBQPlainTextEdit::hbDrawCursor( QPaintEvent *event )
 
          QPainter p( viewport() );
          p.fillRect( r, QBrush( QColor( caretState == 1 ? Qt::red : Qt::blue ) ) );
+         p.end();
       }
    }
 }
@@ -1672,6 +1618,7 @@ void HBQPlainTextEdit::hbPaintHighlight( QPaintEvent * event )
       if( re >= t && rb < b )
       {
          QPainter p( viewport() );
+
          int    top = ( ( rb <= t ) ? 0 : ( ( rb - t ) * fontHeight ) );
          int    btm = ( ( re - t + 1 ) * fontHeight ) - top;
 
@@ -1679,6 +1626,8 @@ void HBQPlainTextEdit::hbPaintHighlight( QPaintEvent * event )
 
          QRect r( 0, top, viewport()->width(), btm );
          p.fillRect( r, QBrush( QColor( 255,255,0 ) ) );
+
+         p.end();
       }
    }
 }
@@ -1794,6 +1743,8 @@ void HBQPlainTextEdit::hbPaintSelection( QPaintEvent * event )
             QRect r( 0, top, viewport()->width(), btm );
             p.fillRect( r, QBrush( m_selectionColor ) );
          }
+
+         p.end();
       }
    }
 }

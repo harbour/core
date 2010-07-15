@@ -952,6 +952,8 @@ METHOD handleEvent( nEvent, mp1, mp2 ) CLASS XbpBrowse
 
       IF lNavgt
          ::navigate( mp1, mp2 )
+      ELSE
+         ::keyboard( mp1 )
       ENDIF
 
    CASE nEvent == xbeBRW_ItemSelected
