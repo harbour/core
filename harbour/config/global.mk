@@ -547,6 +547,9 @@ ifeq ($(HB_PLATFORM),)
    endif
    ifneq ($(findstring vxworks,$(WIND_PLATFORM)),)
       HB_PLATFORM := vxworks
+      ifeq ($(HB_CPU),)
+         HB_CPU := x86
+      endif
    endif
    ifneq ($(HB_PLATFORM),)
       HB_PLAT_AUTO := (autodetected)
@@ -1210,6 +1213,8 @@ ifeq ($(HB_INIT_DONE),)
    $(info ! HB_PLATFORM: $(HB_PLATFORM)$(if $(HB_CPU), ($(HB_CPU)),) $(HB_PLAT_AUTO))
    $(info ! HB_COMPILER: $(HB_COMPILER)$(HB_COMP_VER) $(HB_COMP_AUTO))
 endif
+
+export HB_CPU
 
 ifeq ($(HB_HOST_PKGM),)
    ifeq ($(HB_PLATFORM),darwin)

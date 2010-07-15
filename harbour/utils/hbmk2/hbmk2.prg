@@ -145,6 +145,7 @@ REQUEST hbmk_KEYW
 
 #define _TARG_PLAT              1
 #define _TARG_COMP              2
+#define _TARG_CPU               3
 
 #define _PAR_cParam             1
 #define _PAR_cFileName          2
@@ -904,6 +905,9 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    IF ! Empty( GetEnv( "HB_COMPILER" ) )
       cEnv += " -compiler=" + GetEnv( "HB_COMPILER" )
    ENDIF
+   IF ! Empty( GetEnv( "HB_CPU" ) )
+      cEnv += " -cpu=" + GetEnv( "HB_CPU" )
+   ENDIF
    cEnv := AllTrim( cEnv )
 
    IF ! Empty( cEnv )
@@ -921,11 +925,12 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       DO CASE
       CASE cParamL             == "-quiet"     ; hbmk[ _HBMK_lQuiet ] := .T. ; hbmk[ _HBMK_lInfo ] := .F.
       CASE cParamL             == "-quiet-"    ; hbmk[ _HBMK_lQuiet ] := .F.
-      CASE Left( cParamL, 6 )  == "-comp="     ; ParseCOMPPLAT( hbmk, SubStr( cParam, 7 ), _TARG_COMP )
-      CASE Left( cParamL, 10 ) == "-compiler=" ; ParseCOMPPLAT( hbmk, SubStr( cParam, 11 ), _TARG_COMP )
-      CASE Left( cParamL, 6 )  == "-plat="     ; ParseCOMPPLAT( hbmk, SubStr( cParam, 7 ), _TARG_PLAT )
-      CASE Left( cParamL, 10 ) == "-platform=" ; ParseCOMPPLAT( hbmk, SubStr( cParam, 11 ), _TARG_PLAT )
-      CASE Left( cParamL, 6 )  == "-arch="     ; ParseCOMPPLAT( hbmk, SubStr( cParam, 7 ), _TARG_PLAT ) /* Compatibility */
+      CASE Left( cParamL, 6 )  == "-comp="     ; ParseCOMPPLATCPU( hbmk, SubStr( cParam, 7 ), _TARG_COMP )
+      CASE Left( cParamL, 10 ) == "-compiler=" ; ParseCOMPPLATCPU( hbmk, SubStr( cParam, 11 ), _TARG_COMP )
+      CASE Left( cParamL, 6 )  == "-plat="     ; ParseCOMPPLATCPU( hbmk, SubStr( cParam, 7 ), _TARG_PLAT )
+      CASE Left( cParamL, 10 ) == "-platform=" ; ParseCOMPPLATCPU( hbmk, SubStr( cParam, 11 ), _TARG_PLAT )
+      CASE Left( cParamL, 6 )  == "-arch="     ; ParseCOMPPLATCPU( hbmk, SubStr( cParam, 7 ), _TARG_PLAT ) /* Compatibility */
+      CASE Left( cParamL, 5 )  == "-cpu="      ; ParseCOMPPLATCPU( hbmk, SubStr( cParam, 6 ), _TARG_CPU )
       CASE Left( cParamL, 7 )  == "-build="    ; hbmk[ _HBMK_cBUILD ] := SubStr( cParam, 8 )
       CASE Left( cParamL, 6 )  == "-build"     ; hbmk[ _HBMK_lStopAfterHarbour ] := .T.
       CASE Left( cParamL, 6 )  == "-lang="     ; hbmk[ _HBMK_cUILNG ] := SubStr( cParam, 7 ) ; SetUILang( hbmk )
@@ -1494,6 +1499,10 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    hbmk[ _HBMK_aINCPATH ] := {}
    hbmk[ _HBMK_aLIBPATH ] := {}
 
+   IF Empty( hbmk[ _HBMK_cCPU ] )
+      hbmk[ _HBMK_cCPU ] := hbmk_CPU( hbmk )
+   ENDIF
+
    /* Tweaks to compiler environments */
 
    DO CASE
@@ -1693,6 +1702,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
            Left( cParamL, 6 )  == "-plat=" .OR. ;
            Left( cParamL, 10 ) == "-platform=" .OR. ;
            Left( cParamL, 6 )  == "-arch=" .OR. ; /* Compatibility */
+           Left( cParamL, 5 )  == "-cpu=" .OR. ;
            Left( cParamL, 7 )  == "-build=" .OR. ;
            Left( cParamL, 6 )  == "-lang=" .OR. ;
            Left( cParamL, 7 )  == "-width=" .OR. ;
@@ -2745,10 +2755,21 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             AAdd( hbmk[ _HBMK_aOPTC ], "-D_HAS_C9X" )
             AAdd( hbmk[ _HBMK_aINCPATH ], PathSepToSelf( GetEnv( "WIND_USR" ) + "/h" ) )
             AAdd( hbmk[ _HBMK_aINCPATH ], PathSepToSelf( GetEnv( "WIND_USR" ) + "/h/wrn/coreip" ) )
-            IF hbmk[ _HBMK_lCreateDyn ]
-               AAdd( hbmk[ _HBMK_aLIBPATH ], PathSepToSelf( GetEnv( "WIND_BASE" ) + "/target/lib/usr/lib/simpentium/SIMPENTIUM/common/PIC" ) )
-            ELSE
-               AAdd( hbmk[ _HBMK_aLIBPATH ], PathSepToSelf( GetEnv( "WIND_BASE" ) + "/target/lib/usr/lib/simpentium/SIMPENTIUM/common" ) )
+            IF hbmk[ _HBMK_cCPU ] == "arm"
+               AAdd( hbmk[ _HBMK_aOPTC ], "-DARMEL" )
+            ENDIF
+            SWITCH hbmk[ _HBMK_cCPU ]
+            CASE "x86" ; tmp := "simpentium/SIMPENTIUM" ; EXIT
+            CASE "arm" ; tmp := "arm/ARMARCH7" ; EXIT
+            OTHERWISE
+               tmp := NIL
+            ENDSWITCH
+            IF tmp != NIL
+               IF hbmk[ _HBMK_lCreateDyn ]
+                  AAdd( hbmk[ _HBMK_aLIBPATH ], PathSepToSelf( GetEnv( "WIND_BASE" ) + "/target/lib/usr/lib/" + tmp + "/common/PIC" ) )
+               ELSE
+                  AAdd( hbmk[ _HBMK_aLIBPATH ], PathSepToSelf( GetEnv( "WIND_BASE" ) + "/target/lib/usr/lib/" + tmp + "/common" ) )
+               ENDIF
             ENDIF
          ENDIF
          cOpt_CompC += " {FC}"
@@ -8521,7 +8542,7 @@ STATIC FUNCTION MacroProc( hbmk, cString, cFileName, cMacroPrefix )
       CASE "HB_BUILD"
          cMacro := hbmk[ _HBMK_cBUILD ] ; EXIT
       CASE "HB_CPU"
-         cMacro := hbmk_CPU( hbmk ) ; EXIT
+         cMacro := hbmk[ _HBMK_cCPU ] ; EXIT
       CASE "HB_WORK"
          cMacro := _WORKDIR_BASE_ ; EXIT
       CASE "HB_WORKDYNSUB"
@@ -9725,7 +9746,7 @@ STATIC FUNCTION hbmk_CPU( hbmk )
         hbmk[ _HBMK_cCOMP ] $ "mingw|cygwin|msvc|pocc|watcom|bcc|xcc" .OR. ;
         ( hbmk[ _HBMK_cPLAT ] == "win" .AND. hbmk[ _HBMK_cCOMP ] == "icc" )
       RETURN "x86"
-   CASE hbmk[ _HBMK_cCOMP ] $ "gcc|icc|clang|sunpro"
+   CASE hbmk[ _HBMK_cCOMP ] $ "gcc|icc|clang|sunpro|diab"
       /* TOFIX: This isn't necessarily correct, since these inherit the
                 default CPU architecture from OS default, by and large,
                 and targets can be overridden using user options. */
@@ -9795,7 +9816,7 @@ FUNCTION hbmk_KEYW( hbmk, cKeyword, cValue )
                                  "|mingw|mingw64|mingwarm|cygwin|bcc|watcom" + ;
                                  "|gcc|gccomf|djgpp" + ;
                                  "|hblib|hbdyn|hbdynvm|hbimplib|hbexe" + ;
-                                 "|icc|iccia64|clang|open64|sunpro" + ;
+                                 "|icc|iccia64|clang|open64|sunpro|diab" + ;
                                  "|x86|x86_64|ia64|arm|mips|sh" )
       tmp := GetEnv( cKeyword )
       IF cValue != NIL
@@ -9811,7 +9832,7 @@ FUNCTION hbmk_KEYW( hbmk, cKeyword, cValue )
 
    RETURN .F.
 
-STATIC PROCEDURE ParseCOMPPLAT( hbmk, cString, nMainTarget )
+STATIC PROCEDURE ParseCOMPPLATCPU( hbmk, cString, nMainTarget )
    LOCAL aToken := hb_ATokens( Lower( cString ), "/", .T., .T. )
    LOCAL cToken
 
@@ -9820,6 +9841,7 @@ STATIC PROCEDURE ParseCOMPPLAT( hbmk, cString, nMainTarget )
          SWITCH nMainTarget
          CASE _TARG_PLAT ; hbmk[ _HBMK_cPLAT ] := AllTrim( cString ) ; EXIT
          CASE _TARG_COMP ; hbmk[ _HBMK_cCOMP ] := AllTrim( cString ) ; EXIT
+         CASE _TARG_CPU  ; hbmk[ _HBMK_cCPU ]  := AllTrim( cString ) ; EXIT
          ENDSWITCH
       ENDIF
    ELSE
@@ -9828,8 +9850,9 @@ STATIC PROCEDURE ParseCOMPPLAT( hbmk, cString, nMainTarget )
             SWITCH cToken:__enumIndex()
             CASE 1 ; hbmk[ _HBMK_cPLAT ] := AllTrim( cToken ) ; EXIT
             CASE 2 ; hbmk[ _HBMK_cCOMP ] := AllTrim( cToken ) ; EXIT
+            CASE 3 ; hbmk[ _HBMK_cCPU ]  := AllTrim( cToken ) ; EXIT
             ENDSWITCH
-            IF cToken:__enumIndex() > 2
+            IF cToken:__enumIndex() > 3
                EXIT
             ENDIF
          ENDIF
@@ -10479,6 +10502,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       NIL,;
       { "-plat[form]=<plat>" , I_( "select target platform." ) },;
       { "-comp[iler]=<comp>" , I_( "select C compiler.\nSpecial value:\n - bld: use original build settings (default on *nix)" ) },;
+      { "-cpu=<cpu>"         , I_( "select target CPU. (experimental)" ) },;
       { "-build=<name>"      , I_( "use a specific build name" ) },;
       { "-lang=<lang>"       , I_( "override default language. Similar to HB_LANG envvar." ) },;
       { "-width=<n>"         , I_( "set output width to <n> characters (0=unlimited)." ) },;

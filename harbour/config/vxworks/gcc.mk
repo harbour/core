@@ -16,6 +16,20 @@ LIB_EXT := .a
 
 HB_DYN_COPT := -DHB_DYNLIB -fpic
 
+ifeq ($(HB_CPU),x86)
+   CFLAGS += -D_VX_CPU=_VX_SIMPENTIUM
+   ifeq ($(HB_CCPOSTFIX),)
+      export HB_CCPOSTFIX := pentium
+   endif
+else
+ifeq ($(HB_CPU),arm)
+   CFLAGS += -DARMEL -D_VX_ARMARCH7
+   ifeq ($(HB_CCPOSTFIX),)
+      export HB_CCPOSTFIX := arm
+   endif
+endif
+endif
+
 CC := $(HB_CCACHE) $(HB_CCPREFIX)$(HB_CMP)$(HB_CCPOSTFIX)
 CC_IN := -c
 CC_OUT := -o
@@ -28,9 +42,7 @@ CFLAGS += -I. -I$(HB_INC_COMPILE)
 CFLAGS += -I$(WIND_USR)/h -I$(WIND_USR)/h/wrn/coreip
 CFLAGS += -fno-strict-aliasing
 CFLAGS += -D_C99 -D_HAS_C9X
-# ?
 CFLAGS += -D_VX_TOOL_FAMILY=gnu -D_VX_TOOL=gnu
-CFLAGS += -D_VX_CPU=_VX_SIMPENTIUM
 
 ifneq ($(HB_BUILD_WARN),no)
    CFLAGS += -W -Wall
