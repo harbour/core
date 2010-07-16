@@ -22,7 +22,7 @@ HARBOUR
    For all platforms you'll need:
 
    * Supported ANSI C compiler
-   * GNU Make (3.81 recommended, minimum 3.79 required)
+   * GNU Make (3.81 recommended, minimum 3.79 required, see also platform details)
    * Harbour sources (2.0.0 or upper)
 
    on Windows hosts
@@ -40,7 +40,7 @@ HARBOUR
           of the same compiler, or different versions of the same compiler
           in PATH at the same time. For the list of supported compilers,
           please look up the relevant section in this document.
-      3.) You need to get GNU Make. We recommend this link:
+      3.) GNU Make 3.81 or upper is required. We recommend this link:
              http://sourceforge.net/projects/mingw/files/MinGW/make/make-3.81-20090914-mingw32/make-3.81-20090914-mingw32-bin.tar.gz/download
           Unpack it to your PATH or Harbour source root directory.
           If you use MinGW compiler, you already have GNU Make.
@@ -93,7 +93,8 @@ HARBOUR
    -------------
    (possible cross-build targets: MS-DOS, OS/2, Linux)
 
-      1.) You need to get GNU Make. If you use OS/2 host, we recommend this link:
+      1.) You need to get GNU Make. If you use OS/2 host, 3.81r3 or upper
+          version is required. We recommend this link:
              ftp://hobbes.nmsu.edu/pub/os2/dev/util/make-3.81-r3-bin-static.zip
           If you use other host, please refer to other platform instructions
           in this section.
