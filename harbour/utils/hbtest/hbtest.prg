@@ -90,6 +90,7 @@ STATIC s_lShortcut
 STATIC s_aSkipList
 STATIC s_nStartTime
 STATIC s_nEndTime
+STATIC s_lDBFAvail := .F.
 
 #ifdef __HARBOUR__
    REQUEST HB_LANG_EN
@@ -140,7 +141,9 @@ PROCEDURE Main( cPar1, cPar2 )
    Exact_Str()
    New_STRINGS()
 #ifdef __HARBOUR__
+#ifndef __PLATFORM__VXWORKS
    Long_STRINGS()
+#endif
 #endif
 #ifdef __XPP__
    Long_STRINGS()
@@ -267,8 +270,6 @@ STATIC PROCEDURE TEST_BEGIN( cParam )
    PUBLIC mbBlockC  := sbBlockC
    PUBLIC maArray   := { 9898 }
 
-   PUBLIC lDBFAvail := .F.
-
 #ifndef __XPP__
    //rddSetDefault( "DBFCDX" )
 #endif
@@ -306,15 +307,18 @@ STATIC PROCEDURE TEST_BEGIN( cParam )
       w_TEST->TYPE_L    := .T.
       w_TEST->TYPE_L_E  := .F.
 
-      lDBFAvail := .T.
+      s_lDBFAvail := .T.
    END SEQUENCE
    ErrorBlock( bErrorOld )
 
-   IF ! lDBFAvail
+   IF ! s_lDBFAvail
       OutMsg( s_nFhnd, "WARNING ! Test .dbf could not be created. Related tests will be skipped." + HB_OSNewLine() )
    ENDIF
 
    RETURN
+
+FUNCTION TEST_DBFAvail()
+   RETURN s_lDBFAvail
 
 PROCEDURE TEST_CALL( cBlock, bBlock, xResultExpected )
    LOCAL xResult
@@ -402,9 +406,9 @@ FUNCTION TEST_OPT_Z()
 
 STATIC PROCEDURE TEST_END()
 
-   dbSelectArea( "w_TEST" )
-   dbCloseArea()
-   IF lDBFAvail
+   IF s_lDBFAvail
+      dbSelectArea( "w_TEST" )
+      dbCloseArea()
       FErase( "_hbtmp_.dbf" )
       FErase( "_hbtmp_.dbt" )
    ENDIF

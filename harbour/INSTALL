@@ -929,17 +929,23 @@ HARBOUR
       win-make
       ---
 
-      --- VxWorks 6.8 x86 (requires preceding build for Windows target)
+      --- VxWorks GCC x86 (requires preceding build for Windows target)
       wrenv -p vxworks-6.8
       set HB_COMPILER=gcc
       win-make
       ---
 
-      --- VxWorks 6.8 ARM (requires preceding build for Windows target)
+      --- VxWorks GCC ARM (requires preceding build for Windows target)
       wrenv -p vxworks-6.8
       set HB_COMPILER=gcc
       set HB_CPU=arm
       set HB_BUILD_NAME=arm
+      win-make
+      ---
+
+      --- VxWorks Wind River Compiler x86 (requires preceding build for Windows target)
+      wrenv -p vxworks-6.8
+      set HB_COMPILER=diab
       win-make
       ---
 
