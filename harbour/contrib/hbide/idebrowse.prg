@@ -1386,9 +1386,10 @@ METHOD IdeBrowse:execEvent( cEvent, p, p1 )
       ::oBrw:down()
       IF ::oBrw:hitBottom
          ::qTimer:stop()
-      ENDIF
-      IF eval( ::oBrw:getColumn( ::oBrw:colPos ):block ) == ::xSearch
+         ::dispInfo()
+      ELSEIF eval( ::oBrw:getColumn( ::oBrw:colPos ):block ) = ::xSearch
          ::qTimer:stop()
+         ::dispInfo()
       ENDIF
       EXIT
 
