@@ -133,7 +133,7 @@ REQUEST HB_GT_CGI_DEFAULT
    REQUEST HB_GT_DOS
 #elif defined( __PLATFORM__OS2 )
    REQUEST HB_GT_OS2
-#elif defined( __PLATFORM__UNIX )
+#elif defined( __PLATFORM__UNIX ) .AND. ! defined( __PLATFORM__VXWORKS )
    REQUEST HB_GT_TRM
 #endif
 
