@@ -185,6 +185,11 @@ STATIC PROCEDURE hbrun_Prompt( cCommand )
    LOCAL bKeyUP, bKeyDown, bKeyIns, bKeyResize
    LOCAL lResize := .F.
 
+   IF hb_gtVersion( 0 ) == "CGI"
+      OutErr( "hbrun: Error: Interactive session not possible with GTCGI terminal driver" + hb_eol() )
+      RETURN
+   ENDIF
+
    CLEAR SCREEN
    SET SCOREBOARD OFF
    GetList := {}
