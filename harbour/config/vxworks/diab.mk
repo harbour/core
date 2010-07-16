@@ -20,7 +20,7 @@ ifeq ($(HB_CPU),x86)
    _DIAB_CPU := X86LH
 else
 ifeq ($(HB_CPU),arm)
-   _DIAB_CPU :=
+   _DIAB_CPU := ARMV7LS
 else
 ifeq ($(HB_CPU),mips)
    _DIAB_CPU :=
@@ -44,9 +44,9 @@ CC := $(HB_CCACHE) $(HB_CCPREFIX)$(HB_CMP)
 CC_IN := -c
 CC_OUT := -o
 
-CFLAGS += -t$(_DIAB_CPU):rtpsim -WDVSB_DIR=$(WIND_BASE)/target/lib
-LDFLAGS += -t$(_DIAB_CPU):rtpsim -WDVSB_DIR=$(WIND_BASE)/target/lib
-DFLAGS += -t$(_DIAB_CPU):rtpsim -WDVSB_DIR=$(WIND_BASE)/target/lib
+CFLAGS += -t$(_DIAB_CPU):rtp -WDVSB_DIR=$(WIND_BASE)/target/lib
+LDFLAGS += -t$(_DIAB_CPU):rtp -WDVSB_DIR=$(WIND_BASE)/target/lib
+DFLAGS += -t$(_DIAB_CPU):rtp -WDVSB_DIR=$(WIND_BASE)/target/lib
 
 CFLAGS += -I. -I$(HB_INC_COMPILE)
 CFLAGS += -I$(WIND_BASE)/target/usr/h

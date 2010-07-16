@@ -395,8 +395,15 @@ HB_FUNC( HB_FREADANDSKIP )
    offset[area] = offset[area] + x;
    recno[area] += 1;
    /* See if there's more to read */
-   if( !isEof[area] )
-      isEof[area] = (lastbyte[area] <= offset[area] + 1) ;
+   if( !isEof[area ] )
+   {
+#if defined( __DCC__ ) /* NOTE: Workaround for vxworks/diab/x86 5.8.0.0 compiler bug. */
+      HB_BOOL f = (lastbyte[area] <= offset[area] + 1);
+      isEof[area] = f;
+#else
+      isEof[area] = (lastbyte[area] <= offset[area] + 1);
+#endif
+   }
 
    hb_retclen( b, x - (bHasCRLF ? 2 : 0) );
 }
