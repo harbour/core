@@ -23,14 +23,14 @@ REQUEST HB_QT
 
 INIT PROCEDURE Qt_Start()
    qApp := QApplication():new()
-RETURN
+   RETURN
 
 EXIT PROCEDURE Qt_End()
    qApp:quit()
-RETURN
+   RETURN
 
 PROCEDURE Main()
-   LOCAL oDA, tb1, mo1, lay1, lay2, bt1, bt2, bt3
+   LOCAL tb1, mo1, lay1, lay2, bt1, bt2, bt3
 
    oWnd := QMainWindow():new()
    oWnd:resize(600,400 )
@@ -141,7 +141,7 @@ STATIC FUNCTION my_aim( t, role, x, y )
       CASE Qt_SizeHintRole
          RETURN oSize  /* Finally we are sending a QSize */
       ENDSWITCH
-      BREAK
+      RETURN NIL
 
    CASE HBQT_QAIM_rowCount
       RETURN 50000
