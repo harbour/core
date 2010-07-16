@@ -876,6 +876,20 @@ HB_FUNC( QT_HBQPLAINTEXTEDIT_HBSETPROTOSTYLE )
    }
 }
 
+/*
+ * void           hbSelectAll()
+ */
+HB_FUNC( QT_HBQPLAINTEXTEDIT_HBSELECTALL )
+{
+   HBQPlainTextEdit * p = hbqt_par_HBQPlainTextEdit( 1 );
+   if( p )
+      ( p )->hbSelectAll();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQPLAINTEXTEDIT_HBSELECTALL FP=( p )->hbSelectAll(); p is NULL" ) );
+   }
+}
+
 
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */

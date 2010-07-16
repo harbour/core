@@ -1217,12 +1217,49 @@ FUNCTION hbide_getOS()
 
 /*----------------------------------------------------------------------*/
 
+FUNCTION hbide_fetchADate( qParent, cTitle, cPrompt, dDefault )
+   LOCAL qDate, oUI, pSlots, nRet
+
+   DEFAULT cTitle  TO "A Date Value"
+   DEFAULT cPrompt TO "What"
+
+   pSlots := hbxbp_getSlotsPtr()
+
+   oUI := hbide_getUI( "fetchdate", qParent )
+
+   oUI:setWindowTitle( cTitle )
+   oUI:q_labelPrompt:setText( cPrompt )
+   IF dDefault != NIL
+      qDate := QDate():new()
+      qDate:setYear( year( dDefault ) )
+      qDate:setMonth( month( dDefault ) )
+      qDate:setDay( day( dDefault ) )
+      oUI:q_editDate:setDate( qDate )
+   ENDIF
+
+   Qt_Slots_connect( pSlots, oUI:q_buttonOk    , "clicked()", {|| oUI:done( 1 ) } )
+   Qt_Slots_connect( pSlots, oUI:q_buttonCancel, "clicked()", {|| oUI:done( 0 ) } )
+
+   nRet := oUI:exec()
+
+   Qt_Slots_disconnect( pSlots, oUI:q_buttonOk     )
+   Qt_Slots_disconnect( pSlots, oUI:q_buttonCancel )
+
+   IF nRet == 1
+      qDate := QDate():from( oUI:q_editDate:date() )
+      RETURN stod( strzero( qDate:year(), 4 ) + strzero( qDate:month(),2 ) + strzero( qDate:day(), 2 ) )
+   ENDIF
+
+   RETURN NIL
+
+/*------------------------------------------------------------------------*/
+
 FUNCTION hbide_fetchAString( qParent, cDefault, cWhat, cTitle )
    LOCAL qGo
 
    DEFAULT cDefault TO ""
    DEFAULT cWhat    TO ""
-   DEFAULT cTitle   TO "A String Value Please"
+   DEFAULT cTitle   TO "A String Value"
 
    qGo := QInputDialog():new( qParent )
    qGo:setTextValue( cDefault )
@@ -2061,6 +2098,9 @@ FUNCTION hbide_getUI( cUI, qParent )
       EXIT
    CASE "dbstruct"
       oUI := iif( nModeUI == UI_MODE_FUNC, hbqtui_DbStruct( qParent ), NIL )
+      EXIT
+   CASE "fetchdate"
+      oUI := iif( nModeUI == UI_MODE_FUNC, hbqtui_FetchDate( qParent ), NIL )
       EXIT
    ENDSWITCH
 

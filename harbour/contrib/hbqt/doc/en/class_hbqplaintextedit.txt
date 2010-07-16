@@ -79,6 +79,7 @@
         :hbTogglePersistentSelection()                      -> NIL
         :hbHorzRulerVisible( lVisible )                     -> NIL
         :hbSetProtoStyle( cCss )                            -> NIL
+        :hbSelectAll()                                      -> NIL
 
     $DESCRIPTION$
 

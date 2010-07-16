@@ -994,13 +994,14 @@ METHOD IdeEdit:deleteBlockContents( aCord )
 
    nW := nR - nL
    IF nW == 0 .AND. k == Qt_Key_Backspace
-      FOR i := nT TO nB
-         cLine := ::getLine( i + 1 )
-         cLine := pad( substr( cLine, 1, nL - 1 ), nL - 1 ) + substr( cLine, nL + 1 )
-         hbide_qReplaceLine( qCursor, i, cLine )
-      NEXT
-      hbide_qPositionCursor( qCursor, nB, nR - 1 )
-
+      IF nSelMode == selectionMode_column
+         FOR i := nT TO nB
+            cLine := ::getLine( i + 1 )
+            cLine := pad( substr( cLine, 1, nL - 1 ), nL - 1 ) + substr( cLine, nL + 1 )
+            hbide_qReplaceLine( qCursor, i, cLine )
+         NEXT
+         hbide_qPositionCursor( qCursor, nB, nR - 1 )
+      ENDIF
    ELSE
       IF k == Qt_Key_Delete .OR. k == Qt_Key_X
          IF nSelMode == selectionMode_column
@@ -1416,7 +1417,7 @@ METHOD IdeEdit:paste()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:selectAll()
-   ::qEdit:selectAll()
+   ::qEdit:hbSelectAll()
    RETURN Self
 
 /*----------------------------------------------------------------------*/

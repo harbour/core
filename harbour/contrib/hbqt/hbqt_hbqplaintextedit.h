@@ -213,6 +213,7 @@ public slots:
    void           hbTogglePersistentSelection();
    void           hbHorzRulerVisible( bool visible ) { hbUpdateHorzRulerHeight( visible ? 20 : 0 ); };
    void           hbSetProtoStyle( const QString & css = "" );
+   void           hbSelectAll();
 
 private slots:
    void           hbSlotCursorPositionChanged();

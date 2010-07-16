@@ -498,6 +498,18 @@ METHOD IdeBrowseManager:execEvent( cEvent, p, p1, p2 )
       ::populateFieldData()
       EXIT
 
+   CASE "buttonFind_clicked"
+      IF !empty( ::oCurBrw )
+         ::oCurBrw:searchAsk()
+      ENDIF
+      EXIT
+
+   CASE "buttonGoto_clicked"
+      IF !empty( ::oCurBrw )
+         ::oCurBrw:gotoAsk()
+      ENDIF
+      EXIT
+
    ENDSWITCH
 
    #if 0
@@ -718,7 +730,11 @@ METHOD IdeBrowseManager:buildToolbar()
    ::buildToolButton( { "Close current table", "dc_delete"     , "clicked()", {|| ::execEvent( "buttonClose_clicked"         ) }, .f. } )
    ::buildToolButton( {} )
    ::buildToolButton( { "Table Structure"    , "dbstruct"      , "clicked()", {|| ::execEvent( "buttonDbStruct_clicked"      ) }, .f. } )
+   ::buildToolButton( {} )
    ::buildIndexButton()
+   ::buildToolButton( { "Search in table"    , "find"          , "clicked()", {|| ::execEvent( "buttonFind_clicked"          ) }, .f. } )
+   ::buildToolButton( { "Goto record"        , "gotoline"      , "clicked()", {|| ::execEvent( "buttonGoto_clicked"          ) }, .f. } )
+   ::buildToolButton( {} )
 
    RETURN Self
 
@@ -1057,6 +1073,8 @@ CLASS IdeBrowse INHERIT IdeObject
    DATA   qForm
    DATA   qFLayout
    DATA   qSplitter
+   DATA   qTimer
+
    DATA   aForm                                   INIT  {}
    DATA   oManager
    DATA   oPanel
@@ -1082,6 +1100,9 @@ CLASS IdeBrowse INHERIT IdeObject
    DATA   qClose
    DATA   aIndex                                  INIT  {}
 
+   DATA   xSearch
+   DATA   lInSearch                               INIT  .f.
+
    METHOD new( oIde, oManager, oPanel, aInfo )
    METHOD create( oIde, oManager, oPanel, aInfo )
    METHOD configure()
@@ -1106,6 +1127,7 @@ CLASS IdeBrowse INHERIT IdeObject
    METHOD indexOrd()
    METHOD ordName( nOrder )
    METHOD IndexKey( nOrder )
+   METHOD IndexKeyValue( nOrder )
    METHOD setOrder( nOrder )
    METHOD refreshAll()
    METHOD getIndexInfo()
@@ -1151,7 +1173,7 @@ METHOD IdeBrowse:create( oIde, oManager, oPanel, aInfo )
 
    aSize( ::aInfo, TBL_VRBLS )
 
-   DEFAULT ::aInfo[ TBL_PANEL    ] TO ::oPanel:cName
+   DEFAULT ::aInfo[ TBL_PANEL    ] TO ::oPanel:cPanel
    DEFAULT ::aInfo[ TBL_NAME     ] TO ""
    DEFAULT ::aInfo[ TBL_ALIAS    ] TO ""
    DEFAULT ::aInfo[ TBL_DRIVER   ] TO ::oManager:qRddCombo:currentText()
@@ -1219,12 +1241,16 @@ METHOD IdeBrowse:create( oIde, oManager, oPanel, aInfo )
    ::oBrw:colPos := val( aInfo[ TBL_COLPOS ] )
    ::oBrw:forceStable()
    ::setOrder( val( aInfo[ TBL_INDEX ] ) )
-   ::goto( val( aInfo[ TBL_RECORD ] ) )
+   ::goto( max( 1, val( aInfo[ TBL_RECORD ] ) ) )
    ::oBrw:refreshAll()
    ::oBrw:forceStable()
 
    ::oBrw:navigate := {|mp1,mp2| ::execEvent( "browse_navigate", mp1, mp2 ) }
    ::oBrw:keyboard := {|mp1,mp2| ::execEvent( "browse_keyboard", mp1, mp2 ) }
+
+   ::qTimer := QTimer():new()
+   ::qTimer:setInterval( 10 )
+   ::connect( ::qTimer, "timeout()",  {|| ::execEvent( "timer_timeout" ) } )
 
    RETURN Self
 
@@ -1353,6 +1379,16 @@ METHOD IdeBrowse:execEvent( cEvent, p, p1 )
       ELSEIF p == xbeK_CTRL_G
          ::gotoAsk()
 
+      ENDIF
+      EXIT
+
+   CASE "timer_timeout"
+      ::oBrw:down()
+      IF ::oBrw:hitBottom
+         ::qTimer:stop()
+      ENDIF
+      IF eval( ::oBrw:getColumn( ::oBrw:colPos ):block ) == ::xSearch
+         ::qTimer:stop()
       ENDIF
       EXIT
 
@@ -1569,11 +1605,32 @@ METHOD IdeBrowse:previous()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeBrowse:searchAsk()
-   LOCAL cSearch
+   LOCAL xValue, xSearch, nOrd, cFor
 
-   IF !empty( cSearch := hbide_fetchAString( ::oWnd:oWidget, "", ::aStruct[ ::oBrw:colPos, 1 ], "Search" ) )
-      ::search( cSearch )
+   IF ( nOrd := ::indexOrd() ) > 0
+      xValue := ::indexKeyValue()
+   ELSE
+      xValue := eval( ::oBrw:getColumn( ::oBrw:colPos ):block )
    ENDIF
+
+   cFor := iif( nOrd > 0, "Indexed: " + ::indexKey(), ::aStruct[ ::oBrw:colPos, 1 ] )
+
+   SWITCH valtype( xValue )
+   CASE 'C'
+      IF !empty( xSearch := ( QInputDialog():new() ):getText( ::oWnd:oWidget, "Search for?", cFor  ) )
+         ::search( xSearch )
+      ENDIF
+      EXIT
+   CASE 'N'
+      xSearch := ( QInputDialog():new() ):getDouble( ::oWnd:oWidget, "Search for?", cFor, ;
+                                    0, -2147483647, 2147483647, iif( nOrd > 0, 3, ::aStruct[ ::oBrw:colPos, 4 ] ) )
+      ::search( xSearch )
+      EXIT
+   CASE 'D'
+      xSearch := hbide_fetchADate( ::oWnd:oWidget, "Search for?", cFor )
+      ::search( xSearch )
+      EXIT
+   ENDSWITCH
 
    RETURN Self
 
@@ -1594,7 +1651,12 @@ METHOD IdeBrowse:search( cSearch )
                MsgBox( "Could not find: " + cSearch )
             ENDIF
          ELSE
-            // Sequential search
+            IF ::lInSearch
+               ::qTimer:stop()
+            ENDIF
+            ::xSearch   := cSearch
+            ::lInSearch := .t.
+            ::qTimer:start()
          ENDIF
       ENDIF
    ELSE
@@ -1610,6 +1672,7 @@ METHOD IdeBrowse:refreshAll()
    ::oBrw:refreshAll()
    ::oBrw:forceStable()
    ::oBrw:setCurrentIndex( .t. )
+   ::dispInfo()
 
    RETURN Self
 
@@ -1618,7 +1681,7 @@ METHOD IdeBrowse:refreshAll()
 METHOD IdeBrowse:goToAsk()
    LOCAL nRec
 
-   IF ! empty( nRec := ( QInputDialog():new() ):getInt( , "Goto", "Record_# ?", , ::recno() ) )
+   IF ! empty( nRec := ( QInputDialog():new() ):getInt( , "Goto", "Record_# ?", ::recno(), 1, ::lastrec() ) )
       ::goto( nRec )
       ::refreshAll()
    ENDIF
@@ -1749,6 +1812,17 @@ METHOD IdeBrowse:ordName( nOrder )
    RETURN ""
 
 /*----------------------------------------------------------------------*/
+
+METHOD IdeBrowse:indexKeyValue( nOrder )
+   LOCAL xValue
+
+   IF ::nType == BRW_TYPE_DBF
+      xValue := ( ::cAlias )->( &( IndexKey( nOrder ) ) )
+   ENDIF
+
+   RETURN xValue
+
+/*------------------------------------------------------------------------*/
 
 METHOD IdeBrowse:indexKey( nOrder )
    DEFAULT nOrder TO ::indexOrd()

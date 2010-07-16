@@ -392,6 +392,21 @@ void HBQPlainTextEdit::hbClearSelection()
 
 /*----------------------------------------------------------------------*/
 
+void HBQPlainTextEdit::hbSelectAll()
+{
+   setCursorWidth( 1 );
+
+   rowBegins    = 0;
+   rowEnds      = document()->blockCount();
+   columnBegins = 0;
+   columnEnds   = 0;
+
+   emit selectionChanged();
+   repaint();
+}
+
+/*----------------------------------------------------------------------*/
+
 void HBQPlainTextEdit::hbHitTest( const QPoint & pt )
 {
    QTextCursor ct = cursorForPosition( QPoint( 2,2 ) );
@@ -1041,31 +1056,25 @@ bool HBQPlainTextEdit::hbKeyPressSelectionByApplication( QKeyEvent * event )
 
 bool HBQPlainTextEdit::hbKeyPressSelection( QKeyEvent * event )
 {
-   bool ctrl  = event->modifiers() & Qt::ControlModifier;
-   bool shift = event->modifiers() & Qt::ShiftModifier;
-   if( ctrl && shift )
-      return false;
-
    int k = event->key();
 
-   if( ctrl && event->text().isEmpty() )
-   {
-      #if 0
-      event->ignore();
-      return true;
-      #endif
+   bool ctrl  = event->modifiers() & Qt::ControlModifier;
+   bool shift = event->modifiers() & Qt::ShiftModifier;
+   if( ctrl && shift && ! isNavableKey( k ) ) {
+      return false;
+   }
+
+   if( ctrl && event->text().isEmpty() && ! isNavableKey( k ) ) {
       return false;
    }
 
    if( ctrl && ( k == Qt::Key_C || k == Qt::Key_V || k == Qt::Key_X ||
-                 k == Qt::Key_A || k == Qt::Key_Z || k == Qt::Key_Y ) )
-   {
+                 k == Qt::Key_A || k == Qt::Key_Z || k == Qt::Key_Y ) ) {
       event->ignore();
       return true;
    }
 
-   if( isSelectionByApplication )
-   {
+   if( isSelectionByApplication ) {
       return hbKeyPressSelectionByApplication( event );
    }
 
@@ -1104,7 +1113,7 @@ bool HBQPlainTextEdit::hbKeyPressSelection( QKeyEvent * event )
          repaint();
       }
 
-      QKeyEvent * ev = new QKeyEvent( event->type(), event->key(), Qt::NoModifier, event->text() );
+      QKeyEvent * ev = new QKeyEvent( event->type(), event->key(), ctrl ? Qt::ControlModifier : Qt::NoModifier, event->text() );
       keyPressEvent( ev );
       return true;
    }
@@ -1243,13 +1252,15 @@ bool HBQPlainTextEdit::hbKeyPressSelection( QKeyEvent * event )
       event->accept();
       return true;
    }
-   else if( ! ctrl && k == Qt::Key_Delete && columnBegins >= 0 && selectionState > 0 && ( selectionMode == selectionMode_stream || selectionMode == selectionMode_line ) )
+   else if( ! ctrl && ( k == Qt::Key_Backspace || k == Qt::Key_Delete ) && columnBegins >= 0 && selectionState > 0 && ( selectionMode == selectionMode_stream || selectionMode == selectionMode_line ) )
    {
-      hbCut( k );
+      hbCut( Qt::Key_Delete );
       repaint();
       selectionState = 0;
-      event->accept();
-      return true;
+      if( k == Qt::Key_Delete ){
+         event->accept();
+         return true;
+      }
    }
    else if( ! ctrl && k >= ' ' && k < 127 && columnBegins >= 0 && selectionMode == selectionMode_stream ) //selectionState > 0
    {

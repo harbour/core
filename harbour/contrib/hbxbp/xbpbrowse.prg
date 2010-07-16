@@ -657,6 +657,7 @@ METHOD XbpBrowse:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::oTableView:setGridStyle( ::gridStyle )   /* to be based on column definition */
    ::oTableView:setSelectionMode( QAbstractItemView_SingleSelection )
    ::oTableView:setSelectionBehavior( IF( ::cursorMode == XBPBRW_CURSOR_ROW, QAbstractItemView_SelectRows, QAbstractItemView_SelectItems ) )
+   ::oTableView:setAlternatingRowColors( .t. )
 
    /* Connect Keyboard Events */
    ::connect( ::oTableView, "keyPressEvent()"           , {|p   | ::execSlot( __ev_keypress__           , p     ) } )

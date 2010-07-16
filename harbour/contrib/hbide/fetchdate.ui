@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>DialogDate</class>
+ <widget class="QDialog" name="DialogDate">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>194</width>
+    <height>104</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Fetch a date</string>
+  </property>
+  <widget class="QDateEdit" name="editDate">
+   <property name="geometry">
+    <rect>
+     <x>14</x>
+     <y>30</y>
+     <width>161</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="calendarPopup">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="buttonOk">
+   <property name="geometry">
+    <rect>
+     <x>14</x>
+     <y>68</y>
+     <width>75</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>OK</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="buttonCancel">
+   <property name="geometry">
+    <rect>
+     <x>102</x>
+     <y>68</y>
+     <width>75</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Cancel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="labelPrompt">
+   <property name="geometry">
+    <rect>
+     <x>14</x>
+     <y>8</y>
+     <width>159</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Select a date</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
