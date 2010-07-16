@@ -2700,14 +2700,8 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          IF hbmk[ _HBMK_lDEBUG ]
             AAdd( hbmk[ _HBMK_aOPTC ], "-g" )
          ENDIF
-         IF hbmk[ _HBMK_cPLAT ] == "vxworks" .AND. ;
-            Empty( hbmk[ _HBMK_cCCPOSTFIX ] )
-            SWITCH hbmk[ _HBMK_cCPU ]
-            CASE "x86"  ; hbmk[ _HBMK_cCCPOSTFIX ] := "pentium" ; EXIT
-            CASE "arm"  ; hbmk[ _HBMK_cCCPOSTFIX ] := "arm" ; EXIT
-            CASE "mips" ; hbmk[ _HBMK_cCCPOSTFIX ] := "mips" ; EXIT
-            CASE "ppc"  ; hbmk[ _HBMK_cCCPOSTFIX ] := "ppc" ; EXIT
-            ENDSWITCH
+         IF hbmk[ _HBMK_cPLAT ] == "vxworks"
+            vxworks_env_init( hbmk )
          ENDIF
          cLibLibPrefix := "lib"
          cLibPrefix := "-l"
@@ -2775,19 +2769,6 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             AAdd( hbmk[ _HBMK_aOPTC ], "-fno-strict-aliasing" )
             AAdd( hbmk[ _HBMK_aOPTC ], "-D_C99" )
             AAdd( hbmk[ _HBMK_aOPTC ], "-D_HAS_C9X" )
-            SWITCH hbmk[ _HBMK_cCPU ]
-            CASE "x86" ; tmp := "simpentium/SIMPENTIUM" ; EXIT
-            CASE "arm" ; tmp := "arm/ARMARCH7" ; EXIT
-            OTHERWISE
-               tmp := NIL
-            ENDSWITCH
-            IF tmp != NIL
-               IF hbmk[ _HBMK_lCreateDyn ]
-                  AAdd( hbmk[ _HBMK_aLIBPATH ], PathSepToSelf( GetEnv( "WIND_BASE" ) + "/target/lib/usr/lib/" + tmp + "/common/PIC" ) )
-               ELSE
-                  AAdd( hbmk[ _HBMK_aLIBPATH ], PathSepToSelf( GetEnv( "WIND_BASE" ) + "/target/lib/usr/lib/" + tmp + "/common" ) )
-               ENDIF
-            ENDIF
          ENDIF
          cOpt_CompC += " {FC}"
          IF ! Empty( hbmk[ _HBMK_cWorkDir ] )
@@ -2843,9 +2824,18 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                AAdd( hbmk[ _HBMK_aOPTL ], "-bind_at_load" )
             ENDIF
          ENDIF
+         IF hbmk[ _HBMK_cPLAT ] == "vxworks"
+            IF hbmk[ _HBMK_lSHARED ]
+               AAdd( hbmk[ _HBMK_aOPTL ], "-shared" ) /* TOFIX: no entry point */
+            ENDIF
+         ENDIF
          IF hbmk[ _HBMK_lSTRIP ]
             IF hbmk[ _HBMK_lCreateLib ] .OR. hbmk[ _HBMK_cPLAT ] $ "darwin|sunos"
-               cBin_Post := "strip"
+               IF hbmk[ _HBMK_cPLAT ] == "vxworks"
+                  cBin_Post := "strip" + hbmk[ _HBMK_cCCPOSTFIX ]
+               ELSE
+                  cBin_Post := "strip"
+               ENDIF
                IF hbmk[ _HBMK_lCreateDyn ] .OR. hbmk[ _HBMK_lCreateLib ]
                   cOpt_Post := "-S {OB}"
                ELSE
@@ -4040,7 +4030,106 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
       CASE hbmk[ _HBMK_cPLAT ] == "vxworks" .AND. hbmk[ _HBMK_cCOMP ] == "diab"
 
-         /* TODO */
+         #if defined( __PLATFORM__UNIX )
+            hbmk[ _HBMK_nCmd_Esc ] := _ESC_NIX
+         #elif defined( __PLATFORM__WINDOWS )
+            hbmk[ _HBMK_nCmd_Esc ] := _ESC_DBLQUOTE
+         #endif
+         IF hbmk[ _HBMK_lDEBUG ]
+            AAdd( hbmk[ _HBMK_aOPTC ], "-g" )
+         ENDIF
+         vxworks_env_init( hbmk )
+         cLibLibPrefix := "lib"
+         cLibPrefix := "-l"
+         cLibExt := ""
+         cObjExt := ".o"
+         cBin_Lib := hbmk[ _HBMK_cCCPREFIX ] + "dar"
+         cOpt_Lib := "{FA} rcs {OL} {LO}"
+         cBin_CompCPP := hbmk[ _HBMK_cCCPREFIX ] + "dplus"
+         cBin_CompC := iif( hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ], cBin_CompCPP, hbmk[ _HBMK_cCCPREFIX ] + "dcc" )
+         cOpt_CompC := "-c"
+         IF hbmk[ _HBMK_lOPTIM ]
+            cOpt_CompC += " -XO level-3"
+         ENDIF
+         tmp := "-WDVSB_DIR=" + PathSepToSelf( GetEnv( "WIND_BASE" ) + "/target/lib" )
+         AAdd( hbmk[ _HBMK_aOPTC ], tmp )
+         AAdd( hbmk[ _HBMK_aOPTL ], tmp )
+         AAdd( hbmk[ _HBMK_aOPTD ], tmp )
+         SWITCH hbmk[ _HBMK_nWARN ]
+         CASE _WARN_MAX ; AAdd( hbmk[ _HBMK_aOPTC ], "-W -Xlint" ) ; EXIT
+         CASE _WARN_YES ; AAdd( hbmk[ _HBMK_aOPTC ], "-W -Xlint" ) ; EXIT
+         CASE _WARN_LOW ; AAdd( hbmk[ _HBMK_aOPTC ], "-W" )        ; EXIT
+         CASE _WARN_NO  ; AAdd( hbmk[ _HBMK_aOPTC ], "" )          ; EXIT
+         ENDSWITCH
+         cOpt_CompC += " {FC}"
+         IF ! Empty( hbmk[ _HBMK_cWorkDir ] )
+            cOpt_CompC += " {IC} -o {OO}"
+         ELSE
+            cOpt_CompC += " {LC}"
+         ENDIF
+         /* lib path list ({DL}) must precede lib list */
+         cBin_Dyn := cBin_CompC
+         cOpt_Dyn := "-Xpic -Wl, -Xshared -o {OD} {LO} {DL} {FD} {LS}"
+         cBin_Link := cBin_CompC
+         cOpt_Link := "{LO} {LA} {DL} {FL}"
+         cLibPathPrefix := "-L"
+         cLibPathSep := " "
+         cLibLibExt := ".a"
+         AAdd( hbmk[ _HBMK_aOPTL ], "{LL} {LB}" )
+         AAdd( hbmk[ _HBMK_aOPTD ], "{LL} {LB}" )
+         l_aLIBHBBASE_2 := iif( hbmk[ _HBMK_lMT ], aLIB_BASE_2_MT, aLIB_BASE_2 )
+         IF hbmk[ _HBMK_lSTATICFULL ]
+            AAdd( hbmk[ _HBMK_aOPTL ], "-Wl, -Xstatic" ) /* not tested */
+         ELSE
+            AAdd( hbmk[ _HBMK_aOPTD ], "-Wl, -Xdynamic" )
+         ENDIF
+         IF hbmk[ _HBMK_lSHARED ]
+            /* TOFIX: .so is referred by it's full link time search path,
+                      there is even a backslash present in the dir formed by
+                      the linker */
+            AAdd( hbmk[ _HBMK_aOPTL ], "-Wl, -Xdynamic" )
+         ENDIF
+         IF hbmk[ _HBMK_lMAP ]
+            /* TODO: Map goes to stdout, we should ideally catch it to {OM} */
+            AAdd( hbmk[ _HBMK_aOPTL ], "-m16" )
+            AAdd( hbmk[ _HBMK_aOPTD ], "-m16" )
+         ENDIF
+         IF hbmk[ _HBMK_lSTRIP ]
+            IF hbmk[ _HBMK_lCreateLib ]
+               cBin_Post := "strip"
+               IF hbmk[ _HBMK_lCreateDyn ] .OR. hbmk[ _HBMK_lCreateLib ]
+                  cOpt_Post := "-S {OB}"
+               ELSE
+                  cOpt_Post := "{OB}"
+               ENDIF
+            ELSE
+               AAdd( hbmk[ _HBMK_aOPTL ], "-s" )
+               AAdd( hbmk[ _HBMK_aOPTD ], "-s" )
+            ENDIF
+         ENDIF
+         IF lStopAfterCComp
+            IF ! hbmk[ _HBMK_lCreateLib ] .AND. ! hbmk[ _HBMK_lCreateDyn ] .AND. ( Len( hbmk[ _HBMK_aPRG ] ) + Len( hbmk[ _HBMK_aC ] ) + Len( hbmk[ _HBMK_aCPP ] ) ) == 1
+               AAdd( hbmk[ _HBMK_aOPTC ], "-o{OO}" )
+            ENDIF
+         ELSE
+            AAdd( hbmk[ _HBMK_aOPTL ], "-o{OE}" )
+         ENDIF
+
+         IF hbmk[ _HBMK_lCreateDyn ]
+            AAdd( hbmk[ _HBMK_aOPTC ], "-Xpic" )
+         ENDIF
+
+         /* Add system libraries */
+         IF ! hbmk[ _HBMK_lSHARED ]
+            IF ! Empty( cLIB_BASE_PCRE ) .AND. ! hb_FileExists( _HBLIB_FULLPATH( cLIB_BASE_PCRE ) )
+               AAdd( l_aLIBSYS, "pcre" )
+               cLIB_BASE_PCRE := NIL
+            ENDIF
+            IF ! Empty( cLIB_BASE_ZLIB ) .AND. ! hb_FileExists( _HBLIB_FULLPATH( cLIB_BASE_ZLIB ) )
+               AAdd( l_aLIBSYS, "z" )
+               cLIB_BASE_ZLIB := NIL
+            ENDIF
+         ENDIF
 
       ENDCASE
 
@@ -5649,6 +5738,49 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    ENDIF
 
    RETURN hbmk[ _HBMK_nErrorLevel ]
+
+STATIC PROCEDURE vxworks_env_init( hbmk )
+
+   /* Array positions for aTable */
+   #define _VX_CCPOSTFIX        1
+   #define _VX_DIAB_CPU         2
+   #define _VX_CPU              3
+   #define _VX_LIB_SUBDIR       4
+
+   #define _VX_DIAB_ENV         "rtp"
+
+   /* Conversion table between hbmk2 CPU and vxworks values required to target that CPU */
+   LOCAL aTable := {;
+      "x86"  => { "pentium", "X86LH"  , "_VX_SIMPENTIUM", "simpentium/SIMPENTIUM" },;
+      "arm"  => { "arm"    , "ARMV7LS", "_VX_ARMARCH7"  , "arm/ARMARCH7"          },;
+      "mips" => { "mips"   , ""       , ""              , ""                      },;
+      "ppc"  => { "ppc"    , ""       , ""              , ""                      }}
+
+   IF hbmk[ _HBMK_cCPU ] $ aTable
+      IF Empty( hbmk[ _HBMK_cCCPOSTFIX ] )
+         /* Used by gcc, and it's also used for strip even with diab compiler */
+         hbmk[ _HBMK_cCCPOSTFIX ] := aTable[ hbmk[ _HBMK_cCPU ] ][ _VX_CCPOSTFIX ]
+      ENDIF
+      IF hbmk[ _HBMK_cCOMP ] == "diab"
+         IF ! Empty( aTable[ hbmk[ _HBMK_cCPU ] ][ _VX_DIAB_CPU ] )
+            AAdd( hbmk[ _HBMK_aOPTC ], "-t" + aTable[ hbmk[ _HBMK_cCPU ] ][ _VX_DIAB_CPU ] + ":" + _VX_DIAB_ENV )
+            AAdd( hbmk[ _HBMK_aOPTL ], "-t" + aTable[ hbmk[ _HBMK_cCPU ] ][ _VX_DIAB_CPU ] + ":" + _VX_DIAB_ENV )
+            AAdd( hbmk[ _HBMK_aOPTD ], "-t" + aTable[ hbmk[ _HBMK_cCPU ] ][ _VX_DIAB_CPU ] + ":" + _VX_DIAB_ENV )
+         ENDIF
+         IF ! Empty( aTable[ hbmk[ _HBMK_cCPU ] ][ _VX_CPU ] )
+            AAdd( hbmk[ _HBMK_aOPTC ], "-D_VX_CPU=" + aTable[ hbmk[ _HBMK_cCPU ] ][ _VX_CPU ] )
+         ENDIF
+      ENDIF
+      IF ! Empty( aTable[ hbmk[ _HBMK_cCPU ] ][ _VX_LIB_SUBDIR ] )
+         IF hbmk[ _HBMK_lCreateDyn ]
+            AAdd( hbmk[ _HBMK_aLIBPATH ], PathSepToSelf( GetEnv( "WIND_BASE" ) + "/target/lib/usr/lib/" + aTable[ hbmk[ _HBMK_cCPU ] ][ _VX_LIB_SUBDIR ] + "/common/PIC" ) )
+         ELSE
+            AAdd( hbmk[ _HBMK_aLIBPATH ], PathSepToSelf( GetEnv( "WIND_BASE" ) + "/target/lib/usr/lib/" + aTable[ hbmk[ _HBMK_cCPU ] ][ _VX_LIB_SUBDIR ] + "/common" ) )
+         ENDIF
+      ENDIF
+   ENDIF
+
+   RETURN
 
 STATIC PROCEDURE DoIMPLIB( hbmk, bBlk_ImpLib, cLibLibPrefix, cLibLibExt )
    LOCAL cMakeImpLibDLL

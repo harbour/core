@@ -1447,12 +1447,14 @@ else
       ifneq ($(DESTDIR),)
          HB_INSTALL_PREFIX := $(DESTDIR)
       else
+      ifneq ($(HB_HOST_PLAT_UNIX),)
          # Stick to *nix customs. I do not like it, it needs admin.
          HB_INSTALL_PREFIX := /usr/local
          # Add postfix for cross builds
          ifneq ($(HB_HOST_PLAT),$(HB_PLATFORM))
             HB_INSTALL_PREFIX := $(HB_INSTALL_PREFIX)/harbour-$(HB_PLATFORM)-$(HB_COMPILER)
          endif
+      endif
       endif
       endif
       endif
