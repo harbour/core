@@ -1,6 +1,6 @@
 diff -urN minizip.orig/crypt.h minizip/crypt.h
---- minizip.orig/crypt.h	2009-10-25 22:49:58.000000000 +0100
-+++ minizip/crypt.h	2010-06-10 20:03:37.090218606 +0200
+--- minizip.orig/crypt.h	2010-07-16 00:52:06.960236990 +0200
++++ minizip/crypt.h	2010-07-16 00:52:06.970234708 +0200
 @@ -38,6 +38,8 @@
                       * unpredictable manner on 16-bit systems; not a problem
                       * with any known compiler so far, though */
@@ -11,8 +11,8 @@ diff -urN minizip.orig/crypt.h minizip/crypt.h
      return (int)(((temp * (temp ^ 1)) >> 8) & 0xff);
  }
 diff -urN minizip.orig/ioapi.c minizip/ioapi.c
---- minizip.orig/ioapi.c	2010-01-04 10:31:24.000000000 +0100
-+++ minizip/ioapi.c	2010-06-10 20:03:37.090218606 +0200
+--- minizip.orig/ioapi.c	2010-07-16 00:52:06.980235219 +0200
++++ minizip/ioapi.c	2010-07-16 00:52:06.980235219 +0200
 @@ -15,6 +15,7 @@
  #endif
  
@@ -143,9 +143,9 @@ diff -urN minizip.orig/ioapi.c minizip/ioapi.c
      pzlib_filefunc_def->zopen_file = fopen_file_func;
      pzlib_filefunc_def->zread_file = fread_file_func;
 diff -urN minizip.orig/ioapi.h minizip/ioapi.h
---- minizip.orig/ioapi.h	2010-02-15 04:59:40.000000000 +0100
-+++ minizip/ioapi.h	2010-06-14 20:35:11.840218016 +0200
-@@ -21,29 +21,39 @@
+--- minizip.orig/ioapi.h	2010-07-16 00:52:06.980235219 +0200
++++ minizip/ioapi.h	2010-07-16 00:52:06.980235219 +0200
+@@ -21,29 +21,40 @@
  #ifndef _ZLIBIOAPI64_H
  #define _ZLIBIOAPI64_H
  
@@ -192,6 +192,7 @@ diff -urN minizip.orig/ioapi.h minizip/ioapi.h
 +#if defined( __BORLANDC__ ) || \
 +    defined( __WATCOMC__ ) || \
 +    defined( __MINGW32CE__ ) || \
++    defined( __DCC__ ) || \
 +    defined( HB_OS_BSD ) || \
 +    defined( HB_OS_DARWIN ) || \
 +    defined( HB_OS_HAIKU ) || \
@@ -203,8 +204,8 @@ diff -urN minizip.orig/ioapi.h minizip/ioapi.h
  #define fopen64 fopen
  #define ftello64 ftell
 diff -urN minizip.orig/unzip.c minizip/unzip.c
---- minizip.orig/unzip.c	2010-02-15 04:59:40.000000000 +0100
-+++ minizip/unzip.c	2010-06-10 20:04:53.082307519 +0200
+--- minizip.orig/unzip.c	2010-07-16 00:52:07.040236336 +0200
++++ minizip/unzip.c	2010-07-16 00:52:07.040236336 +0200
 @@ -68,13 +68,17 @@
  #include <stdlib.h>
  #include <string.h>
@@ -292,8 +293,8 @@ diff -urN minizip.orig/unzip.c minizip/unzip.c
      pfile_in_zip_read_info->crc32_wait=s->cur_file_info.crc;
      pfile_in_zip_read_info->crc32=0;
 diff -urN minizip.orig/zip.c minizip/zip.c
---- minizip.orig/zip.c	2010-02-15 04:59:40.000000000 +0100
-+++ minizip/zip.c	2010-06-10 20:05:03.170219908 +0200
+--- minizip.orig/zip.c	2010-07-16 00:52:07.100236615 +0200
++++ minizip/zip.c	2010-07-16 00:52:07.100236615 +0200
 @@ -29,16 +29,20 @@
  #include "zlib.h"
  #include "zip.h"

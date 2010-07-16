@@ -843,7 +843,7 @@ char * hb_verCompiler( void )
       hb_strncpy( pszCompiler, "(unknown)", COMPILER_BUF_SIZE - 1 );
 
 #if defined( __clang_version__ )
-   if( strstr( __clang_version__, "(") )
+   if( strstr( __clang_version__, "(" ) )
       /* "2.0 (trunk 103176)" -> "(trunk 103176)" */
       hb_snprintf( szSub, sizeof( szSub ), " %s", strstr( __clang_version__, "(" ) );
    else

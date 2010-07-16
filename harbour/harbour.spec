@@ -58,6 +58,7 @@
 %define hb_cflag  export HB_USER_CFLAGS=
 %define hb_lflag  export HB_USER_LDFLAGS=
 %define hb_dflag  export HB_USER_DFLAGS=
+%define shl_path  export LD_LIBRARY_PATH=${LD_LIBRARY_PATH:+${LD_LIBRARY_PATH}:}`pwd`/lib/${HB_PLATFORM}/${HB_COMPILER}
 %define hb_gpm    export HB_WITH_GPM=%{!?_without_gpm:yes}%{?_without_gpm:no}
 %define hb_crs    export HB_WITH_CURSES=%{!?_without_curses:yes}%{?_without_curses:no}
 %define hb_sln    export HB_WITH_SLANG=%{!?_without_slang:yes}%{?_without_slang:no}
@@ -69,7 +70,7 @@
 %define hb_edir   export HB_ETC_INSTALL=%{hb_etcdir}
 %define hb_cmrc   export HB_BUILD_NOGPLLIB=%{?_without_gpllib:yes}
 %define hb_ctrb   export HB_CONTRIBLIBS="hbblink hbclipsm hbct hbgt hbmisc hbmzip hbnetio hbtip hbtpathy hbhpdf hbziparc hbfoxpro hbsms hbfship hbxpp xhb rddbmcdx rddsql sddsqlt3 hbnf %{?_with_allegro:gtalleg} %{?_with_cairo:hbcairo} %{?_with_cups:hbcups} %{?_with_curl:hbcurl} %{?_with_firebird:hbfbird sddfb} %{?_with_freeimage:hbfimage} %{?_with_gd:hbgd} %{?_with_mysql:hbmysql sddmy} %{?_with_odbc:hbodbc sddodbc} %{?_with_pgsql:hbpgsql sddpg} %{?_with_qt:hbqt hbxbp} %{?_with_ads:rddads}"
-%define hb_env    %{hb_plat} ; %{hb_cc} ; %{hb_cflag} ; %{hb_lflag} ; %{hb_dflag} ; %{hb_gpm} ; %{hb_crs} ; %{hb_sln} ; %{hb_x11} ; %{hb_local} ; %{hb_bdir} ; %{hb_idir} ; %{hb_ldir} ; %{hb_edir} ; %{hb_ctrb} ; %{hb_cmrc}
+%define hb_env    %{hb_plat} ; %{hb_cc} ; %{hb_cflag} ; %{hb_lflag} ; %{hb_dflag} ; %{shl_path} ; %{hb_gpm} ; %{hb_crs} ; %{hb_sln} ; %{hb_x11} ; %{hb_local} ; %{hb_bdir} ; %{hb_idir} ; %{hb_ldir} ; %{hb_edir} ; %{hb_ctrb} ; %{hb_cmrc}
 %define hb_host   harbour-project.org
 %define readme    README.RPM
 ######################################################################
@@ -548,7 +549,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/hbi18n
 %{_bindir}/hbformat
 %{_bindir}/hbmk2
-%verify(not md5 mtime) %config %{_bindir}/hbmk.hbc
 %{_mandir}/man1/*.1*
 %dir %{_includedir}/%{name}
 %attr(644,root,root) %{_includedir}/%{name}/*
@@ -610,6 +610,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/%{name}/librddbmcdx.a
 %{_libdir}/%{name}/librddsql.a
 %{_libdir}/%{name}/libsddsqlt3.a
+%{_libdir}/%{name}/libhbbz2.a
+%{_libdir}/%{name}/libhbsms.a
+%{_libdir}/%{name}/libhbmzip.a
 
 %{?_with_ads:%files ads}
 %{?_with_ads:%defattr(644,root,root,755)}

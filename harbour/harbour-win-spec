@@ -127,7 +127,6 @@ make install %{?_smp_mflags}
 
 # remove unused files
 rm -fR ${HB_BIN_INSTALL}/{harbour,hbpp,hbmk2,hbrun,hbi18n,hbtest}.exe
-rm -fR ${HB_BIN_INSTALL}/hbmk.hbc
 
 # Create a README file for people using this RPM.
 cat > doc/%{readme} <<EOF

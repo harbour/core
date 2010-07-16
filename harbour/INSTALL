@@ -475,7 +475,7 @@ HARBOUR
    hpux     - HP-UX
    sunos    - Sun Solaris / OpenSolaris
    qnx      - QNX
-   vxworks  - vxWorks
+   vxworks  - VxWorks
    win      - MS Windows (all flavors)
               (see LINKS section for Win9x requirements)
    wce      - MS Windows CE
@@ -929,13 +929,13 @@ HARBOUR
       win-make
       ---
 
-      --- vxWorks 6.8 x86 (requires preceding build for Windows target)
+      --- VxWorks 6.8 x86 (requires preceding build for Windows target)
       wrenv -p vxworks-6.8
       set HB_COMPILER=gcc
       win-make
       ---
 
-      --- vxWorks 6.8 ARM (requires preceding build for Windows target)
+      --- VxWorks 6.8 ARM (requires preceding build for Windows target)
       wrenv -p vxworks-6.8
       set HB_COMPILER=gcc
       set HB_CPU=arm

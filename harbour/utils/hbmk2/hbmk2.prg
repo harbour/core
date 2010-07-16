@@ -1505,10 +1505,9 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       hbmk[ _HBMK_cCPU ] := hbmk_CPU( hbmk )
    ENDIF
 
-   /* Tweaks to compiler environments */
+   /* Tweaks to compiler/platform environments */
 
-   DO CASE
-   CASE hbmk[ _HBMK_cCOMP ] == "bcc"
+   IF hbmk[ _HBMK_cCOMP ] == "bcc"
       /* NOTE: Hack to tweak bcc setup by hbmk2 to include one additional
                compiler lib dir to lib search path. */
       IF Empty( cPath_CompC )
@@ -1529,7 +1528,12 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          ENDIF
          AAdd( hbmk[ _HBMK_aLIBPATH ], PathNormalize( FNameDirGet( cPath_CompC ) + ".." + hb_ps() + "Lib" + hb_ps() + "PSDK" ) )
       ENDIF
-   ENDCASE
+   ENDIF
+
+   IF hbmk[ _HBMK_cPLAT ] == "vxworks"
+      AAdd( hbmk[ _HBMK_aINCPATH ], PathSepToSelf( GetEnv( "WIND_BASE" ) + "/target/usr/h" ) )
+      AAdd( hbmk[ _HBMK_aINCPATH ], PathSepToSelf( GetEnv( "WIND_BASE" ) + "/target/usr/h/wrn/coreip" ) )
+   ENDIF
 
    /* Tweaks to compiler setup */
 
@@ -2771,8 +2775,6 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             AAdd( hbmk[ _HBMK_aOPTC ], "-fno-strict-aliasing" )
             AAdd( hbmk[ _HBMK_aOPTC ], "-D_C99" )
             AAdd( hbmk[ _HBMK_aOPTC ], "-D_HAS_C9X" )
-            AAdd( hbmk[ _HBMK_aINCPATH ], PathSepToSelf( GetEnv( "WIND_USR" ) + "/h" ) )
-            AAdd( hbmk[ _HBMK_aINCPATH ], PathSepToSelf( GetEnv( "WIND_USR" ) + "/h/wrn/coreip" ) )
             SWITCH hbmk[ _HBMK_cCPU ]
             CASE "x86" ; tmp := "simpentium/SIMPENTIUM" ; EXIT
             CASE "arm" ; tmp := "arm/ARMARCH7" ; EXIT
