@@ -419,6 +419,8 @@
 
 #if defined( HB_OS_VXWORKS )
    #define HB_NO_FNMATCH
+   /* NOTE: Needed to avoid 'implicit bzero() declaration' warnings */
+   extern void bzero( char * buffer, int nbytes );
 #endif
 #if defined( __DCC__ )
    /* NOTE: Without this, the compiler will crash with this error, even with optimizations disabled: [vszakats]

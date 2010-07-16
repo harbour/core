@@ -417,11 +417,13 @@ typedef HB_UCHAR            HB_U8;
       typedef HB_ULONG ULONG;
 
       #if ! defined( _WINNT_H )
-         #if ! defined( LONGLONG )
-            typedef HB_LONGLONG LONGLONG;
-         #endif
-         #if ! defined( ULONGLONG )
-            typedef HB_ULONGLONG ULONGLONG;
+         #if ! defined( HB_LONG_LONG_OFF )
+            #if ! defined( LONGLONG )
+               typedef HB_LONGLONG LONGLONG;
+            #endif
+            #if ! defined( ULONGLONG )
+               typedef HB_ULONGLONG ULONGLONG;
+            #endif
          #endif
       #endif
 
@@ -452,11 +454,13 @@ typedef HB_UCHAR            HB_U8;
    #if ! defined( INT32 )
        typedef HB_I32        INT32;
    #endif
-   #if ! defined( UINT64 )
-       typedef HB_U64        UINT64;
-   #endif
-   #if ! defined( INT64 )
-       typedef HB_I64        INT64;
+   #if ! defined( HB_LONG_LONG_OFF )
+      #if ! defined( UINT64 )
+          typedef HB_U64        UINT64;
+      #endif
+      #if ! defined( INT64 )
+          typedef HB_I64        INT64;
+      #endif
    #endif
 
 #endif

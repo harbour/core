@@ -50,6 +50,8 @@
  *
  */
 
+MEMVAR lDBFAvail
+
 MEMVAR mxNotHere /* Please don't declare this variable, since it's used to test undeclared MEMVAR situations. */
 MEMVAR mcLongerNameThen10Chars
 MEMVAR mcString

@@ -170,13 +170,23 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, HB_USHORT uiSy
    #define HB_INIT_SYMBOLS_BEGIN( func ) \
       static HB_SYMB symbols_table[] = {
 
-   #define HB_INIT_SYMBOLS_EX_END( func, module, id, vpcode ) \
-      }; \
-      static PHB_SYMB symbols = symbols_table; \
-      static void __attribute__ ((constructor)) func( void ) \
-      { \
-         symbols = hb_vmProcessSymbols( symbols_table, ( HB_USHORT ) ( sizeof( symbols_table ) / sizeof( HB_SYMB ) ), (module), (id), (vpcode) ); \
-      }
+   #if defined( __DCC__ )
+      #define HB_INIT_SYMBOLS_EX_END( func, module, id, vpcode ) \
+         }; \
+         static PHB_SYMB symbols = symbols_table; \
+         void __attribute__ ((constructor)) func( void ) \
+         { \
+            symbols = hb_vmProcessSymbols( symbols_table, ( HB_USHORT ) ( sizeof( symbols_table ) / sizeof( HB_SYMB ) ), (module), (id), (vpcode) ); \
+         }
+   #else
+      #define HB_INIT_SYMBOLS_EX_END( func, module, id, vpcode ) \
+         }; \
+         static PHB_SYMB symbols = symbols_table; \
+         static void __attribute__ ((constructor)) func( void ) \
+         { \
+            symbols = hb_vmProcessSymbols( symbols_table, ( HB_USHORT ) ( sizeof( symbols_table ) / sizeof( HB_SYMB ) ), (module), (id), (vpcode) ); \
+         }
+   #endif
 
    #define HB_CALL_ON_STARTUP_BEGIN( func ) \
       static void __attribute__ ((constructor)) func( void ) \

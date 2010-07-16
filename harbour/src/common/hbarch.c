@@ -310,7 +310,7 @@ double hb_get_le_int64( const HB_BYTE * ptr )
    return ldexp( ( double ) l2, 32 ) + ( double ) l1;
 }
 
-void hb_put_le_uint64( HB_BYTE * ptr, double d )
+void hb_put_le_uint64( const HB_BYTE * ptr, double d )
 {
    HB_U32 l1, l2;
 

@@ -517,6 +517,7 @@ char * hb_verCompiler( void )
    int iVerMinor;
    int iVerPatch;
    int iVerMicro = 0;
+   int iElements = 0;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_verCompiler()"));
 
@@ -709,6 +710,7 @@ char * hb_verCompiler( void )
    iVerMinor = ( __VERSION_NUMBER__ / 100 ) % 10;
    iVerPatch = ( __VERSION_NUMBER__ / 10 ) % 10;
    iVerMicro = __VERSION_NUMBER__ % 10;
+   iElements = 4;
 
 #elif defined( __clang__ ) && defined( __clang_major__ )
 
@@ -830,7 +832,7 @@ char * hb_verCompiler( void )
 
    if( pszName )
    {
-      if( iVerMicro != 0 )
+      if( iElements == 4 )
          hb_snprintf( pszCompiler, COMPILER_BUF_SIZE, "%s%s %d.%d.%d.%d", pszName, szSub, iVerMajor, iVerMinor, iVerPatch, iVerMicro );
       else if( iVerPatch != 0 )
          hb_snprintf( pszCompiler, COMPILER_BUF_SIZE, "%s%s %d.%d.%d", pszName, szSub, iVerMajor, iVerMinor, iVerPatch );

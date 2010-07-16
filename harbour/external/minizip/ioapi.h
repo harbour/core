@@ -44,10 +44,20 @@
 
 #include "hbsetup.h"
 
+#if defined( HB_OS_VXWORKS ) && defined( _STD_USING_INT_TYPES )
+   /* NOTE: Hack to avoid collision between stdint.h and types/vxTypes.h. [vszakats] */
+   #ifndef __BIT_TYPES_DEFINED__
+   #define __BIT_TYPES_DEFINED__
+   #endif
+   #ifndef _SYS_INT_TYPES_H
+   #define _SYS_INT_TYPES_H
+   #endif
+#endif
+
 #if defined( __BORLANDC__ ) || \
     defined( __WATCOMC__ ) || \
     defined( __MINGW32CE__ ) || \
-    defined( __DCC__ ) || \
+    defined( HB_OS_VXWORKS ) || \
     defined( HB_OS_BSD ) || \
     defined( HB_OS_DARWIN ) || \
     defined( HB_OS_HAIKU ) || \

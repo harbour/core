@@ -29,6 +29,7 @@ CFLAGS += -I$(WIND_BASE)/target/usr/h
 CFLAGS += -I$(WIND_BASE)/target/usr/h/wrn/coreip
 CFLAGS += -fno-strict-aliasing
 CFLAGS += -D_C99 -D_HAS_C9X
+#CFLAGS += -D_VX_CPU=$(_HB_VXCPU)
 #CFLAGS += -D_VX_TOOL_FAMILY=gnu -D_VX_TOOL=gnu
 
 ifneq ($(HB_BUILD_WARN),no)

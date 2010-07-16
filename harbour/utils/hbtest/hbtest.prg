@@ -93,6 +93,9 @@ STATIC s_nEndTime
 
 #ifdef __HARBOUR__
    REQUEST HB_LANG_EN
+
+   ANNOUNCE HB_GTSYS
+   REQUEST HB_GT_CGI_DEFAULT
 #endif
 
 PROCEDURE Main( cPar1, cPar2 )
@@ -183,6 +186,7 @@ STATIC PROCEDURE Main_LAST()
    RETURN
 
 STATIC PROCEDURE TEST_BEGIN( cParam )
+   LOCAL bErrorOld
 
    s_nStartTime := Seconds()
 
@@ -263,40 +267,52 @@ STATIC PROCEDURE TEST_BEGIN( cParam )
    PUBLIC mbBlockC  := sbBlockC
    PUBLIC maArray   := { 9898 }
 
+   PUBLIC lDBFAvail := .F.
+
 #ifndef __XPP__
    //rddSetDefault( "DBFCDX" )
 #endif
 
-   dbCreate( "_hbtmp_.dbf",;
-      { { "TYPE_C"   , "C", 15, 0 } ,;
-        { "TYPE_C_E" , "C", 15, 0 } ,;
-        { "TYPE_D"   , "D",  8, 0 } ,;
-        { "TYPE_D_E" , "D",  8, 0 } ,;
-        { "TYPE_M"   , "M", 10, 0 } ,;
-        { "TYPE_M_E" , "M", 10, 0 } ,;
-        { "TYPE_N_I" , "N", 11, 0 } ,;
-        { "TYPE_N_IE", "N", 11, 0 } ,;
-        { "TYPE_N_D" , "N", 11, 3 } ,;
-        { "TYPE_N_DE", "N", 11, 3 } ,;
-        { "TYPE_L"   , "L",  1, 0 } ,;
-        { "TYPE_L_E" , "L",  1, 0 } } )
+   bErrorOld := ErrorBlock( {| oError | Break( oError ) } )
+   BEGIN SEQUENCE
+      dbCreate( "_hbtmp_.dbf",;
+         { { "TYPE_C"   , "C", 15, 0 } ,;
+           { "TYPE_C_E" , "C", 15, 0 } ,;
+           { "TYPE_D"   , "D",  8, 0 } ,;
+           { "TYPE_D_E" , "D",  8, 0 } ,;
+           { "TYPE_M"   , "M", 10, 0 } ,;
+           { "TYPE_M_E" , "M", 10, 0 } ,;
+           { "TYPE_N_I" , "N", 11, 0 } ,;
+           { "TYPE_N_IE", "N", 11, 0 } ,;
+           { "TYPE_N_D" , "N", 11, 3 } ,;
+           { "TYPE_N_DE", "N", 11, 3 } ,;
+           { "TYPE_L"   , "L",  1, 0 } ,;
+           { "TYPE_L_E" , "L",  1, 0 } } )
 
-   USE ( "_hbtmp_.dbf" ) NEW ALIAS w_TEST EXCLUSIVE
+      USE ( "_hbtmp_.dbf" ) NEW ALIAS w_TEST EXCLUSIVE
 
-   dbAppend()
+      dbAppend()
 
-   w_TEST->TYPE_C    := "<FieldValue>"
-   w_TEST->TYPE_C_E  := ""
-   w_TEST->TYPE_D    := sdDate
-   w_TEST->TYPE_D_E  := sdDateE
-   w_TEST->TYPE_M    := "<MemoValue>"
-   w_TEST->TYPE_M_E  := ""
-   w_TEST->TYPE_N_I  := 100
-   w_TEST->TYPE_N_IE := 0
-   w_TEST->TYPE_N_D  := 101.127
-   w_TEST->TYPE_N_DE := 0
-   w_TEST->TYPE_L    := .T.
-   w_TEST->TYPE_L_E  := .F.
+      w_TEST->TYPE_C    := "<FieldValue>"
+      w_TEST->TYPE_C_E  := ""
+      w_TEST->TYPE_D    := sdDate
+      w_TEST->TYPE_D_E  := sdDateE
+      w_TEST->TYPE_M    := "<MemoValue>"
+      w_TEST->TYPE_M_E  := ""
+      w_TEST->TYPE_N_I  := 100
+      w_TEST->TYPE_N_IE := 0
+      w_TEST->TYPE_N_D  := 101.127
+      w_TEST->TYPE_N_DE := 0
+      w_TEST->TYPE_L    := .T.
+      w_TEST->TYPE_L_E  := .F.
+
+      lDBFAvail := .T.
+   END SEQUENCE
+   ErrorBlock( bErrorOld )
+
+   IF ! lDBFAvail
+      OutMsg( s_nFhnd, "WARNING ! Test .dbf could not be created. Related tests will be skipped." + HB_OSNewLine() )
+   ENDIF
 
    RETURN
 
@@ -388,8 +404,10 @@ STATIC PROCEDURE TEST_END()
 
    dbSelectArea( "w_TEST" )
    dbCloseArea()
-   FErase( "_hbtmp_.dbf" )
-   FErase( "_hbtmp_.dbt" )
+   IF lDBFAvail
+      FErase( "_hbtmp_.dbf" )
+      FErase( "_hbtmp_.dbt" )
+   ENDIF
 
    s_nEndTime := Seconds()
 

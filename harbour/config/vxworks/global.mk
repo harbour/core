@@ -8,22 +8,32 @@ BIN_EXT := .vxe
 DYN_EXT := .so
 DYN_PREF := lib
 
-ifeq ($(HB_CCPOSTFIX),)
-   ifeq ($(HB_CPU),x86)
+ifeq ($(HB_CPU),x86)
+   ifeq ($(HB_CCPOSTFIX),)
       export HB_CCPOSTFIX := pentium
-   else
-   ifeq ($(HB_CPU),arm)
+   endif
+   _HB_VXCPU := _VX_SIMPENTIUM
+else
+ifeq ($(HB_CPU),arm)
+   ifeq ($(HB_CCPOSTFIX),)
       export HB_CCPOSTFIX := arm
-   else
-   ifeq ($(HB_CPU),mips)
+   endif
+   _HB_VXCPU := _VX_ARMARCH7
+else
+ifeq ($(HB_CPU),mips)
+   ifeq ($(HB_CCPOSTFIX),)
       export HB_CCPOSTFIX := mips
-   else
-   ifeq ($(HB_CPU),ppc)
+   endif
+   _HB_VXCPU :=
+else
+ifeq ($(HB_CPU),ppc)
+   ifeq ($(HB_CCPOSTFIX),)
       export HB_CCPOSTFIX := ppc
    endif
-   endif
-   endif
-   endif
+   _HB_VXCPU :=
+endif
+endif
+endif
 endif
 
 ifneq ($(filter $(HB_BUILD_STRIP),all lib),)

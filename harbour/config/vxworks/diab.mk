@@ -18,27 +18,21 @@ HB_DYN_COPT := -DHB_DYNLIB -Xpic
 
 ifeq ($(HB_CPU),x86)
    _DIAB_CPU := X86LH
-   _DIAB_VXCPU := _VX_SIMPENTIUM
 else
 ifeq ($(HB_CPU),arm)
    _DIAB_CPU :=
-   _DIAB_VXCPU :=
 else
 ifeq ($(HB_CPU),mips)
    _DIAB_CPU :=
-   _DIAB_VXCPU :=
 else
 ifeq ($(HB_CPU),ppc)
    _DIAB_CPU :=
-   _DIAB_VXCPU :=
 else
 ifeq ($(HB_CPU),sh)
    _DIAB_CPU :=
-   _DIAB_VXCPU :=
 else
 ifeq ($(HB_CPU),m68k)
    _DIAB_CPU :=
-   _DIAB_VXCPU :=
 endif
 endif
 endif
@@ -57,7 +51,7 @@ DFLAGS += -t$(_DIAB_CPU):rtpsim -WDVSB_DIR=$(WIND_BASE)/target/lib
 CFLAGS += -I. -I$(HB_INC_COMPILE)
 CFLAGS += -I$(WIND_BASE)/target/usr/h
 CFLAGS += -I$(WIND_BASE)/target/usr/h/wrn/coreip
-CFLAGS += -D_VX_CPU=$(_DIAB_VXCPU)
+CFLAGS += -D_VX_CPU=$(_HB_VXCPU)
 #CFLAGS += -D_VX_TOOL_FAMILY=diab -D_VX_TOOL=diab
 
 ifneq ($(HB_BUILD_WARN),no)

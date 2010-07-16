@@ -64,10 +64,12 @@ PROCEDURE Main_STRA()
    TEST_LINE( Str(100, 10, "A")               , "E 1 BASE 1099 Argument error (STR) OS:0 #:0 A:3:N:100;N:10;C:A F:S" )
    TEST_LINE( Str(100, 10, NIL)               , "E 1 BASE 1099 Argument error (STR) OS:0 #:0 A:3:N:100;N:10;U:NIL F:S" )
    TEST_LINE( Str(100, NIL, NIL)              , "E 1 BASE 1099 Argument error (STR) OS:0 #:0 A:3:N:100;U:NIL;U:NIL F:S" )
+   IF lDBFAvail
    TEST_LINE( Str( w_TEST->TYPE_N_I )         , "        100"    )
    TEST_LINE( Str( w_TEST->TYPE_N_IE )        , "          0"    )
    TEST_LINE( Str( w_TEST->TYPE_N_D )         , "    101.127"    )
    TEST_LINE( Str( w_TEST->TYPE_N_DE )        , "      0.000"    )
+   ENDIF
    TEST_LINE( Str(5000000000.0)               , "5000000000.0"   )
    TEST_LINE( Str(50000000)                   , "  50000000"     )
    TEST_LINE( Str(500000000)                  , " 500000000"     )

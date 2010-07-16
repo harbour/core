@@ -228,6 +228,10 @@
 #  if !( defined( HB_OS_LINUX ) && defined( __WATCOMC__ ) )
 #     include <net/if.h>
 #  endif
+   /* NOTE: Hack to avoid collision between stdint.h and unistd.h. [vszakats] */
+#  if defined( HB_OS_VXWORKS ) && defined( _INTPTR ) && !defined( _INTPTR_T )
+#     define _INTPTR_T
+#  endif
 #  include <unistd.h>
 #  include <fcntl.h>
 #  if defined( HB_OS_DOS )

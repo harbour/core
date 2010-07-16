@@ -451,10 +451,12 @@ PROCEDURE Main_HVMA()
    TEST_LINE( Len( "" )                       , 0                                      )
    TEST_LINE( Len( "123" )                    , 3                                      )
    TEST_LINE( Len( "123"+Chr(0)+"456 " )      , 8                                      )
+   IF lDBFAvail
    TEST_LINE( Len( w_TEST->TYPE_C )           , 15                                     )
    TEST_LINE( Len( w_TEST->TYPE_C_E )         , 15                                     )
    TEST_LINE( Len( w_TEST->TYPE_M )           , 11                                     )
    TEST_LINE( Len( w_TEST->TYPE_M_E )         , 0                                      )
+   ENDIF
    TEST_LINE( Len( saArray )                  , 1                                      )
 #ifdef __HARBOUR__
    TEST_LINE( Len( ErrorNew() )               , 12                                     )
@@ -481,6 +483,7 @@ PROCEDURE Main_HVMA()
    TEST_LINE( Empty( " x "                  ) , .F.                                    )
    TEST_LINE( Empty( " x"+Chr(0)            ) , .F.                                    )
    TEST_LINE( Empty( " "+Chr(13)+"x"+Chr(9) ) , .F.                                    )
+   IF lDBFAvail
    TEST_LINE( Empty( w_TEST->TYPE_C         ) , .F.                                    )
    TEST_LINE( Empty( w_TEST->TYPE_C_E       ) , .T.                                    )
    TEST_LINE( Empty( w_TEST->TYPE_D         ) , .F.                                    )
@@ -493,6 +496,7 @@ PROCEDURE Main_HVMA()
    TEST_LINE( Empty( w_TEST->TYPE_N_DE      ) , .T.                                    )
    TEST_LINE( Empty( w_TEST->TYPE_L         ) , .F.                                    )
    TEST_LINE( Empty( w_TEST->TYPE_L_E       ) , .T.                                    )
+   ENDIF
    TEST_LINE( Empty( 0                      ) , .T.                                    )
    TEST_LINE( Empty( -0                     ) , .T.                                    )
    TEST_LINE( Empty( 0.0                    ) , .T.                                    )

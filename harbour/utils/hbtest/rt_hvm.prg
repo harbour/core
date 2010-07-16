@@ -79,12 +79,14 @@ PROCEDURE Main_HVM()
    TEST_LINE( ValType(  sbBlock   )           , "B"   )
    TEST_LINE( ValType(  saArray   )           , "A"   )
    TEST_LINE( ValType( { 1, 2, 3 } )          , "A"   )
+   IF lDBFAvail
    TEST_LINE( ValType( w_TEST->TYPE_C )       , "C"   )
    TEST_LINE( ValType( w_TEST->TYPE_D )       , "D"   )
    TEST_LINE( ValType( w_TEST->TYPE_M )       , "M"   )
    TEST_LINE( ValType( w_TEST->TYPE_N_I )     , "N"   )
    TEST_LINE( ValType( w_TEST->TYPE_N_D )     , "N"   )
    TEST_LINE( ValType( w_TEST->TYPE_L )       , "L"   )
+   ENDIF
 #ifdef __HARBOUR__
    TEST_LINE( ValType( @scString  )           , "C"   ) /* Bug in CA-Cl*pper, it will return "U" */
    TEST_LINE( ValType( @scStringE )           , "C"   ) /* Bug in CA-Cl*pper, it will return "U" */
@@ -154,12 +156,14 @@ PROCEDURE Main_HVM()
    TEST_LINE( Type( 100 )                     , "E 1 BASE 1121 Argument error (TYPE) OS:0 #:0 A:1:N:100 F:S"     )
    TEST_LINE( Type( {} )                      , "E 1 BASE 1121 Argument error (TYPE) OS:0 #:0 A:1:A:{.[0].} F:S" )
 #endif
+   IF lDBFAvail
    TEST_LINE( Type( "w_TEST->TYPE_C" )        , "C"   )
    TEST_LINE( Type( "w_TEST->TYPE_D" )        , "D"   )
    TEST_LINE( Type( "w_TEST->TYPE_M" )        , "M"   )
    TEST_LINE( Type( "w_TEST->TYPE_N_I" )      , "N"   )
    TEST_LINE( Type( "w_TEST->TYPE_N_D" )      , "N"   )
    TEST_LINE( Type( "w_TEST->TYPE_L" )        , "L"   )
+   ENDIF
    TEST_LINE( Type( "mxNotHere"  )            , "U"   )
    TEST_LINE( Type( "mcString"  )             , "C"   )
    TEST_LINE( Type( "mcStringE" )             , "C"   )
