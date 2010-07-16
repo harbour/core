@@ -74,6 +74,7 @@
 
 STATIC s_aPlugins := { { "", NIL } }
 STATIC s_aLoaded  := { { "", .f. } }
+STATIC s_aPersist := {}
 
 /*----------------------------------------------------------------------*/
 
@@ -265,3 +266,53 @@ FUNCTION hbide_loadPrototypes( cPath )
    RETURN aProto
 
 /*------------------------------------------------------------------------*/
+/* Silent Mode */
+
+FUNCTION hbide_compileAScript( cBuffer, cCompFlags )
+   LOCAL cFile, pHrb
+   LOCAL bError := ErrorBlock( {|o| break( o ) } )
+
+   BEGIN SEQUENCE
+      cFile := hb_compileFromBuf( cBuffer, cCompFlags )
+      IF ! Empty( cFile )
+         pHrb := hb_hrbLoad( HB_HRB_BIND_OVERLOAD, cFile )
+      ENDIF
+   END SEQUENCE
+
+   ErrorBlock( bError )
+   RETURN pHrb
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION hbide_loadPersistentScripts()
+   LOCAL cPath, a_, dir_, cFileName, cBuffer, pHrb
+
+   IF !empty( cPath := hbide_setIde():oINI:getResourcesPath() )
+      a_:= {}
+      dir_:= directory( cPath + "hbide_persist_*.prg" )
+      aeval( dir_, {|e_| aadd( a_, e_[ 1 ] ) } )
+      dir_:= directory( cPath + "hbide_persist_*.hbs" )
+      aeval( dir_, {|e_| aadd( a_, e_[ 1 ] ) } )
+
+      FOR EACH cFileName IN a_
+         IF !empty( cBuffer := hb_memoRead( cPath + cFileName ) )
+            IF !empty( pHrb := hbide_compileAScript( cBuffer ) )
+               aadd( s_aPersist, pHrb )
+            ENDIF
+         ENDIF
+      NEXT
+   ENDIF
+
+   RETURN NIL
+
+/*------------------------------------------------------------------------*/
+
+FUNCTION hbide_execScriptFunction( cFunc, ... )
+
+   IF type( "script_" + cFunc + "()" ) == "UI"
+      RETURN eval( &( "{|...| " + "script_" + cFunc + "( ... )" + "}" ), ... )
+   ENDIF
+
+   RETURN NIL
+
+/*----------------------------------------------------------------------*/

@@ -108,11 +108,13 @@ CLASS IdeBrowseManager INHERIT IdeObject
    DATA   qVSplitter
    DATA   qToolBar
    DATA   qStruct
+   DATA   qRddCombo
 
    DATA   aPanels                                 INIT  {}
    DATA   aToolBtns                               INIT  {}
    DATA   aButtons                                INIT  {}
    DATA   aIndexAct                               INIT  {}
+   DATA   aRdds                                   INIT  { "DBFCDX", "DBFNTX" }
 
    DATA   oCurBrw
    DATA   oCurPanel
@@ -131,7 +133,7 @@ CLASS IdeBrowseManager INHERIT IdeObject
    METHOD destroy()
    METHOD buildToolbar()
    METHOD execEvent( cEvent, p, p1, p2 )
-   METHOD addTable( cFileDBF, cAlias, aInfo )
+   METHOD addTable( aInfo )
    METHOD addArray( aData, aAttr )
    METHOD getPanelNames()
    METHOD getPanelsInfo()
@@ -150,6 +152,8 @@ CLASS IdeBrowseManager INHERIT IdeObject
    METHOD populateUiStruct()
    METHOD populateFieldData()
    METHOD updateIndexMenu( qSubWindow )
+   METHOD buildRddsCombo()
+   ACCESS currentDriver()                         INLINE ::qRddCombo:currentText()
 
    ENDCLASS
 
@@ -385,9 +389,9 @@ METHOD IdeBrowseManager:execEvent( cEvent, p, p1, p2 )
             qUrl := QUrl():new( qList:at( i ) )
             hb_fNameSplit( qUrl:toLocalFile(), @cPath, @cTable, @cExt )
             IF lower( cExt ) == ".dbf"
-               ::addTable( hbide_pathToOSPath( cPath + cTable + cExt ) )
+               ::addTable( { NIL, hbide_pathToOSPath( cPath + cTable + cExt ), NIL, ;
+                             iif( ! ( ::qRddCombo:currentText() $ "DBFCDX.DBFNTX" ), "DBFCDX", ::qRddCombo:currentText() ) } )
             ENDIF
-            HB_TRACE( HB_TR_ALWAYS, cPath, cTable, cExt )
          NEXT
       ENDIF
       EXIT
@@ -415,10 +419,16 @@ METHOD IdeBrowseManager:execEvent( cEvent, p, p1, p2 )
       EXIT
 
    CASE "buttonOpen_clicked"
-      IF !empty( cTable := hbide_fetchAFile( ::oIde:oDlg, "Select a Table", { { "Database File", "*.dbf" } }, ::oIde:cWrkFolderLast ) )
-         hb_fNameSplit( cTable, @cPath )
-         ::oIde:cWrkFolderLast := cPath
-         ::addTable( cTable )
+      IF ::currentDriver() $ "DBFCDX,DBFNTX"
+         IF !empty( cTable := hbide_fetchAFile( ::oIde:oDlg, "Select a Table", { { "Database File", "*.dbf" } }, ::oIde:cWrkFolderLast ) )
+            hb_fNameSplit( cTable, @cPath )
+            ::oIde:cWrkFolderLast := cPath
+            ::addTable( { NIL, cTable, NIL, ::currentDriver() } )
+         ENDIF
+      ELSE
+         IF !empty( cTable := hbide_execScriptFunction( "tableSelect", ::currentDriver() ) )
+            ::addTable( { NIL, cTable, NIL, ::currentDriver() } )
+         ENDIF
       ENDIF
       EXIT
 
@@ -637,32 +647,15 @@ METHOD IdeBrowseManager:buildUiStruct()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeBrowseManager:loadTables()
-   LOCAL cInfo, aPanel, oCurPanel, cTable
+   LOCAL cInfo, aInfo, oCurPanel
 
    oCurPanel := ::oCurPanel
 
    FOR EACH cInfo IN ::oINI:aDbuPanelsInfo
-      aPanel := hb_aTokens( cInfo, "," )
-
-      aSize( aPanel, TBL_VRBLS )
-
-      DEFAULT aPanel[ TBL_PANEL    ] TO ""
-      DEFAULT aPanel[ TBL_NAME     ] TO ""
-      DEFAULT aPanel[ TBL_ALIAS    ] TO ""
-      DEFAULT aPanel[ TBL_DRIVER   ] TO ""
-      DEFAULT aPanel[ TBL_INDEX    ] TO ""
-      DEFAULT aPanel[ TBL_RECORD   ] TO ""
-      DEFAULT aPanel[ TBL_CURSOR   ] TO ""
-      DEFAULT aPanel[ TBL_GEOMETRY ] TO ""
-      DEFAULT aPanel[ TBL_ROWPOS   ] TO "1"
-      DEFAULT aPanel[ TBL_COLPOS   ] TO "1"
-      DEFAULT aPanel[ TBL_NEXT     ] TO ""
-
-      IF ::isPanel( aPanel[ 1 ] )
-         IF hb_fileExists( cTable := hbide_pathToOSPath( aPanel[ 2 ] ) )
-            ::setPanel( aPanel[ 1 ] )
-            ::addTable( cTable, , aPanel )
-         ENDIF
+      aInfo := hb_aTokens( cInfo, "," )
+      IF ::isPanel( aInfo[ 1 ] )
+         ::setPanel( aInfo[ 1 ] )
+         ::addTable( aInfo )
       ENDIF
    NEXT
 
@@ -671,28 +664,12 @@ METHOD IdeBrowseManager:loadTables()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeBrowseManager:addTable( cFileDBF, cAlias, aInfo )
+METHOD IdeBrowseManager:addTable( aInfo )
    LOCAL oBrw, qSubWindow
 
-   oBrw := IdeBrowse():new( ::oIde, Self, ::oCurPanel )
-   oBrw:cTable   := cFileDBF
-   oBrw:cAlias   := cAlias
-   //oBrw:oManager := Self
-
-   oBrw:create()
-
+   oBrw := IdeBrowse():new( ::oIde, Self, ::oCurPanel, aInfo ):create()
    IF empty( oBrw:oBrw )
       RETURN Self
-   ENDIF
-
-   IF hb_isArray( aInfo )
-      oBrw:oBrw:rowPos := val( aInfo[ TBL_ROWPOS ] )
-      oBrw:oBrw:colPos := val( aInfo[ TBL_COLPOS ] )
-      oBrw:oBrw:forceStable()
-      oBrw:setOrder( val( aInfo[ TBL_INDEX ] ) )
-      oBrw:goto( val( aInfo[ TBL_RECORD ] ) )
-      oBrw:oBrw:refreshAll()
-      oBrw:oBrw:forceStable()
    ENDIF
 
    qSubWindow := ::oCurPanel:addBrowser( oBrw, aInfo )
@@ -726,6 +703,8 @@ METHOD IdeBrowseManager:buildToolbar()
 
    ::buildPanelsButton()
    ::buildToolButton( {} )
+   ::buildRddsCombo()
+   ::buildToolButton( {} )
    ::buildToolButton( { "Open a table"       , "dc_plus"       , "clicked()", {|| ::execEvent( "buttonOpen_clicked"          ) }, .f. } )
    ::buildToolButton( {} )
    ::buildToolButton( { "Show/hide form view", "formview"      , "clicked()", {|| ::execEvent( "buttonShowForm_clicked"      ) }, .t. } )
@@ -740,6 +719,24 @@ METHOD IdeBrowseManager:buildToolbar()
    ::buildToolButton( {} )
    ::buildToolButton( { "Table Structure"    , "dbstruct"      , "clicked()", {|| ::execEvent( "buttonDbStruct_clicked"      ) }, .f. } )
    ::buildIndexButton()
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeBrowseManager:buildRddsCombo()
+   LOCAL aRdds, cRdd
+
+   IF !empty( aRdds := hbide_execScriptFunction( "rdds" ) )
+      aeval( aRdds, {|e| aadd( ::aRdds, e ) } )
+   ENDIF
+
+   ::qRddCombo := QComboBox():new()
+   ::qRddCombo:setToolTip( "Rdd to open next table" )
+   FOR EACH cRdd IN ::aRdds
+      ::qRddCombo:addItem( cRdd )
+   NEXT
+   ::qToolBar:addWidget( ::qRddCombo )
 
    RETURN Self
 
@@ -798,6 +795,7 @@ METHOD IdeBrowseManager:updateIndexMenu( qSubWindow )
       ::disconnect( qAct, "triggered(bool)" )
       qAct := NIL
    NEXT
+   ::aIndexAct := {}
 
    ::qIndexMenu:clear()
 
@@ -1063,6 +1061,7 @@ CLASS IdeBrowse INHERIT IdeObject
    DATA   oManager
    DATA   oPanel
    DATA   qMDI
+   DATA   aInfo                                   INIT  {}
 
    DATA   nType                                   INIT  BRW_TYPE_DBF
    DATA   cAlias                                  INIT  ""
@@ -1083,8 +1082,8 @@ CLASS IdeBrowse INHERIT IdeObject
    DATA   qClose
    DATA   aIndex                                  INIT  {}
 
-   METHOD new( oIde, oManager, oPanel )
-   METHOD create( oIde, oManager, oPanel )
+   METHOD new( oIde, oManager, oPanel, aInfo )
+   METHOD create( oIde, oManager, oPanel, aInfo )
    METHOD configure()
    METHOD destroy()
    METHOD execEvent( cEvent, p, p1 )
@@ -1094,13 +1093,19 @@ CLASS IdeBrowse INHERIT IdeObject
    METHOD getPP( aStruct )
 
    METHOD skipBlock( nHowMany )
+
+   METHOD use()
+   METHOD exists()
    METHOD goTop()
    METHOD goBottom()
    METHOD goTo( nRec )
+   METHOD goToAsk()
    METHOD recNo()
    METHOD lastRec()
    ACCESS dbStruct()                              INLINE ::aStruct
    METHOD indexOrd()
+   METHOD ordName( nOrder )
+   METHOD IndexKey( nOrder )
    METHOD setOrder( nOrder )
    METHOD refreshAll()
    METHOD getIndexInfo()
@@ -1109,6 +1114,7 @@ CLASS IdeBrowse INHERIT IdeObject
 
    METHOD dispInfo()
    METHOD search( cSearch )
+   METHOD searchAsk()
    METHOD next()
    METHOD previous()
    METHOD buildForm()
@@ -1119,37 +1125,53 @@ CLASS IdeBrowse INHERIT IdeObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeBrowse:new( oIde, oManager, oPanel )
+METHOD IdeBrowse:new( oIde, oManager, oPanel, aInfo )
 
    ::oIde     := oIde
    ::oManager := oManager
    ::oPanel   := oPanel
+   ::aInfo    := aInfo
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeBrowse:create( oIde, oManager, oPanel )
-   LOCAL xVrb, cT, cAlias, bError, oErr, cName
+METHOD IdeBrowse:create( oIde, oManager, oPanel, aInfo )
+   LOCAL xVrb, cT, cName
    LOCAL lMissing := .t.
-   LOCAL lErr := .f.
 
    DEFAULT oIde     TO ::oIde
    DEFAULT oManager TO ::oManager
    DEFAULT oPanel   TO ::oPanel
+   DEFAULT aInfo    TO ::aInfo
    ::oIde     := oIde
    ::oManager := oManager
    ::oPanel   := oPanel
+   ::aInfo    := aInfo
 
-   IF !empty( ::aData )
-      ::nType := BRW_TYPE_ARRAY
-   ENDIF
+   aSize( ::aInfo, TBL_VRBLS )
 
-   #if 0
-   IF empty( ::cAlias )
-      ::cAlias := ::fetchAlias( ::cTable )
+   DEFAULT ::aInfo[ TBL_PANEL    ] TO ::oPanel:cName
+   DEFAULT ::aInfo[ TBL_NAME     ] TO ""
+   DEFAULT ::aInfo[ TBL_ALIAS    ] TO ""
+   DEFAULT ::aInfo[ TBL_DRIVER   ] TO ::oManager:qRddCombo:currentText()
+   DEFAULT ::aInfo[ TBL_INDEX    ] TO ""
+   DEFAULT ::aInfo[ TBL_RECORD   ] TO ""
+   DEFAULT ::aInfo[ TBL_CURSOR   ] TO ""
+   DEFAULT ::aInfo[ TBL_GEOMETRY ] TO ""
+   DEFAULT ::aInfo[ TBL_ROWPOS   ] TO "1"
+   DEFAULT ::aInfo[ TBL_COLPOS   ] TO "1"
+   DEFAULT ::aInfo[ TBL_NEXT     ] TO ""
+
+   ::cTable := hbide_pathToOSPath( ::aInfo[ TBL_NAME ] )
+   hb_fNameSplit( ::cTable, , @cName )
+   ::cTableOnly := cName
+   ::cAlias     := ::aInfo[ TBL_ALIAS ]
+   ::cDriver    := upper( ::cDriver )
+
+   IF ! ::exists()
+      RETURN Self
    ENDIF
-   #endif
 
    IF ::nType == BRW_TYPE_DBF
       IF !empty( ::cAlias ) .AND. empty( ::cTable )
@@ -1159,33 +1181,12 @@ METHOD IdeBrowse:create( oIde, oManager, oPanel )
       ENDIF
 
       IF lMissing .AND. !empty( ::cTable )
-         bError := ErrorBlock( {|o| break( o ) } )
-         BEGIN SEQUENCE
-            IF empty( ::cAlias )
-               USE ( ::cTable ) SHARED NEW VIA ( ::cDriver )
-            ELSE
-               cAlias := ::cAlias
-               USE ( ::cTable ) ALIAS ( cAlias ) SHARED NEW VIA ( ::cDriver )
-            ENDIF
-            IF NetErr()
-               MsgBox( ::cTable, "Could not been opened!" )
-               lErr := .t.
-            ENDIF
-         RECOVER USING oErr
-            MsgBox( oErr:description, "Error Opening Table" )
-            RETURN Self
-         ENDSEQUENCE
-         ErrorBlock( bError )
-         IF lErr
+         IF ! ( ::lOpened := ::use() )
             RETURN Self
          ENDIF
-         IF empty( ::cAlias )
-            ::cAlias := alias()
-         ENDIF
-         ::lOpened := .t.
       ENDIF
 
-      ::aStruct := DbStruct()
+      ::aStruct := ( ::cAlias )->( DbStruct() )
    ELSE
       FOR EACH xVrb IN ::aData[ 1 ]
          cT := valtype( xVrb )
@@ -1214,12 +1215,16 @@ METHOD IdeBrowse:create( oIde, oManager, oPanel )
    ::oBrw:configure()
    ::oBrw:forceStable()
 
+   ::oBrw:rowPos := val( aInfo[ TBL_ROWPOS ] )
+   ::oBrw:colPos := val( aInfo[ TBL_COLPOS ] )
+   ::oBrw:forceStable()
+   ::setOrder( val( aInfo[ TBL_INDEX ] ) )
+   ::goto( val( aInfo[ TBL_RECORD ] ) )
+   ::oBrw:refreshAll()
+   ::oBrw:forceStable()
+
    ::oBrw:navigate := {|mp1,mp2| ::execEvent( "browse_navigate", mp1, mp2 ) }
    ::oBrw:keyboard := {|mp1,mp2| ::execEvent( "browse_keyboard", mp1, mp2 ) }
-
-   hb_fNameSplit( ::cTable, , @cName )
-
-   ::cTableOnly := cName
 
    RETURN Self
 
@@ -1329,7 +1334,6 @@ METHOD IdeBrowse:buildBrowser()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeBrowse:execEvent( cEvent, p, p1 )
-   LOCAL cSearch
 
    HB_SYMBOL_UNUSED( p  )
    HB_SYMBOL_UNUSED( p1 )
@@ -1344,11 +1348,10 @@ METHOD IdeBrowse:execEvent( cEvent, p, p1 )
 
    CASE "browse_keyboard"
       IF p == xbeK_CTRL_F
-         IF ! empty( cSearch := hbide_fetchAString( ::oWnd:oWidget, "", "FieldNamr", "Search" ) )
-            ::search( cSearch )
-         ENDIF
+         ::searchAsk()
 
       ELSEIF p == xbeK_CTRL_G
+         ::gotoAsk()
 
       ENDIF
       EXIT
@@ -1364,8 +1367,8 @@ METHOD IdeBrowse:dispInfo()
    IF !empty( ::qMdi )
       ::qMdi:setTooltip( ::cTable )
 
-      ::qMdi:setWindowTitle( "[" + ::cDriver +"][" + hb_ntos( ::indexOrd() ) + "] " + ;
-                             "[" + hb_ntos( ::recno() ) + "/" + hb_ntos( ::lastRec() ) + "] " + ;
+      ::qMdi:setWindowTitle( "[" + ::cDriver +"][" + hb_ntos( ::indexOrd() ) + ":" + ::ordName() + "] " + ;
+                             "[" + hb_ntos( ::recno() ) + "/" + hb_ntos( ::lastRec() ) + "]   " + ;
                              ::cTableOnly )
    ENDIF
    RETURN Self
@@ -1565,20 +1568,34 @@ METHOD IdeBrowse:previous()
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeBrowse:searchAsk()
+   LOCAL cSearch
+
+   IF !empty( cSearch := hbide_fetchAString( ::oWnd:oWidget, "", ::aStruct[ ::oBrw:colPos, 1 ], "Search" ) )
+      ::search( cSearch )
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeBrowse:search( cSearch )
    LOCAL nRec
 
    IF ::nType == BRW_TYPE_DBF
-      IF ( ::cAlias )->( IndexOrd() ) > 0
-         nRec := ::recNo()
-         IF ( ::cAlias )->( DbSeek( cSearch ) )
-            ::refreshAll()
+      IF ! empty( cSearch )
+         IF ( ::cAlias )->( IndexOrd() ) > 0
+            nRec := ::recNo()
+            IF ( ::cAlias )->( DbSeek( cSearch ) )
+               ::refreshAll()
+               ::dispInfo()
+            ELSE
+               ::goto( nRec )
+               MsgBox( "Could not find: " + cSearch )
+            ENDIF
          ELSE
-            ::goto( nRec )
-            MsgBox( "Could not find: " + cSearch )
+            // Sequential search
          ENDIF
-      ELSE
-         // Sequential search
       ENDIF
    ELSE
       // Ascan
@@ -1593,6 +1610,28 @@ METHOD IdeBrowse:refreshAll()
    ::oBrw:refreshAll()
    ::oBrw:forceStable()
    ::oBrw:setCurrentIndex( .t. )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeBrowse:goToAsk()
+   LOCAL nRec
+
+   IF ! empty( nRec := ( QInputDialog():new() ):getInt( , "Goto", "Record_# ?", , ::recno() ) )
+      ::goto( nRec )
+      ::refreshAll()
+   ENDIF
+
+   RETURN NIL
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeBrowse:goto( nRec )
+
+   IF ::nType == BRW_TYPE_DBF
+      RETURN ( ::cAlias )->( DbGoto( nRec ) )
+   ENDIF
 
    RETURN Self
 
@@ -1674,6 +1713,8 @@ METHOD IdeBrowse:setIndex( cIndex )
       ::oBrw:refreshAll()
       ::oBrw:forceStable()
       ::oBrw:setCurrentIndex( .t. )
+
+      ::dispInfo()
    ENDIF
 
    RETURN Self
@@ -1685,7 +1726,7 @@ METHOD IdeBrowse:getIndexInfo()
 
    IF ::nType == BRW_TYPE_DBF
       FOR i := 1 to 50
-         IF ( cKey := ( ::cAlias )->( indexkey( i ) ) ) == ''
+         IF ( cKey := ( ::cAlias )->( IndexKey( i ) ) ) == ''
             EXIT
          ENDIF
          aadd( a_, ( ::cAlias )->( OrdName( i ) ) + ' : ' + cKey )
@@ -1698,15 +1739,81 @@ METHOD IdeBrowse:getIndexInfo()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeBrowse:goTo( nRec )
+METHOD IdeBrowse:ordName( nOrder )
+   DEFAULT nOrder TO ::indexOrd()
 
    IF ::nType == BRW_TYPE_DBF
-      ( ::cAlias )->( DbGoto( nRec ) )
-   ELSE
-      ::nIndex := nRec
+      RETURN ( ::cAlias )->( OrdName( nOrder ) )
    ENDIF
 
-   RETURN NIL
+   RETURN ""
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeBrowse:indexKey( nOrder )
+   DEFAULT nOrder TO ::indexOrd()
+
+   IF ::nType == BRW_TYPE_DBF
+      RETURN ( ::cAlias )->( IndexKey( nOrder ) )
+   ENDIF
+
+   RETURN ""
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeBrowse:use()
+   LOCAL bError, oErr
+   LOCAL lErr := .f.
+
+   SWITCH ::cDriver
+   CASE "DBFCDX"
+   CASE "DBFNTX"
+      bError := ErrorBlock( {|o| break( o ) } )
+      BEGIN SEQUENCE
+         IF empty( ::cAlias )
+            USE ( ::cTable ) SHARED NEW VIA ( ::cDriver )
+         ELSE
+            USE ( ::cTable ) ALIAS ( ::cAlias ) SHARED NEW VIA ( ::cDriver )
+         ENDIF
+         IF NetErr()
+            MsgBox( ::cTable, "Could not been opened!" )
+            lErr := .t.
+         ENDIF
+      RECOVER USING oErr
+         MsgBox( oErr:description, "Error Opening Table" )
+         RETURN Self
+      ENDSEQUENCE
+      ErrorBlock( bError )
+
+      EXIT
+   OTHERWISE
+      lErr := hbide_execScriptFunction( "tableUse", ::cTable, ::cAlias ) /* cTable holds the information about connection */
+      EXIT
+   ENDSWITCH
+
+   IF lErr
+      RETURN .f.
+   ENDIF
+
+   IF empty( ::cAlias )
+      ::cAlias := alias()
+   ENDIF
+
+   RETURN .t.
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeBrowse:exists()
+
+   SWITCH ::cDriver
+   CASE "DBFCDX"
+   CASE "DBFNTX"
+      RETURN hb_fileExists( ::cTable )
+   OTHERWISE
+      RETURN hbide_execScriptFunction( "tableExists", ::cTable )
+   ENDSWITCH
+
+   RETURN .f.
 
 /*----------------------------------------------------------------------*/
 

@@ -597,16 +597,16 @@ HB_FUNC( QT_HBQPLAINTEXTEDIT_HBGETSELECTEDTEXT )
 }
 
 /*
- * QString        hbTextUnderCursor()
+ * QString        hbTextUnderCursor( bool bCodeComplete )
  */
 HB_FUNC( QT_HBQPLAINTEXTEDIT_HBTEXTUNDERCURSOR )
 {
    HBQPlainTextEdit * p = hbqt_par_HBQPlainTextEdit( 1 );
    if( p )
-      hb_retc( ( p )->hbTextUnderCursor().toAscii().data() );
+      hb_retc( ( p )->hbTextUnderCursor( hb_parl( 2 ) ).toAscii().data() );
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQPLAINTEXTEDIT_HBTEXTUNDERCURSOR FP=hb_retc( ( p )->hbTextUnderCursor().toAscii().data() ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQPLAINTEXTEDIT_HBTEXTUNDERCURSOR FP=hb_retc( ( p )->hbTextUnderCursor( hb_parl( 2 ) ).toAscii().data() ); p is NULL" ) );
    }
 }
 

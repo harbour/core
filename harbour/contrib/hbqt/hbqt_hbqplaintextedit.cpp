@@ -1377,9 +1377,10 @@ void HBQPlainTextEdit::keyPressEvent( QKeyEvent * event )
    if( ( ctrlOrShift && event->text().isEmpty() ) )
        return;
 
-   static  QString            eow( " ~!@#$%^&*()+{}|:\"<>?,./;'[]\\-=" );               /* end of word */
+   //static  QString            eow( " ~!@#$%^&*()+{}|:\"<>?,./;'[]\\-=" );               /* end of word */
+   static  QString            eow( "~!@#$%^&*()+{}|:\"<>?,./;'[]\\-=" );               /* end of word */
    bool    hasModifier      = ( event->modifiers() != Qt::NoModifier ) && !ctrlOrShift;
-   QString completionPrefix = hbTextUnderCursor();
+   QString completionPrefix = hbTextUnderCursor( true );
 
    if( ( hasModifier ||
          event->text().isEmpty() ||
@@ -1408,10 +1409,31 @@ void HBQPlainTextEdit::keyPressEvent( QKeyEvent * event )
 
 /*----------------------------------------------------------------------*/
 
-QString HBQPlainTextEdit::hbTextUnderCursor()
+QString HBQPlainTextEdit::hbTextUnderCursor( bool bCodeComplete )
 {
-   QTextCursor tc = textCursor();
-   tc.select( QTextCursor::WordUnderCursor );
+   QTextCursor tc( textCursor() );
+   if( bCodeComplete )
+   {
+      tc.movePosition( QTextCursor::PreviousCharacter, QTextCursor::KeepAnchor, 1 );
+      QString txt = tc.selectedText();
+      tc.clearSelection();
+      if( txt == ( QString ) ' ' )
+      {
+         tc.select( QTextCursor::WordUnderCursor );
+         txt = tc.selectedText() + ' ';
+         return txt;
+      }
+      else
+      {
+         tc = textCursor();
+         tc.select( QTextCursor::WordUnderCursor );
+         return tc.selectedText();
+      }
+   }
+   else
+   {
+      tc.select( QTextCursor::WordUnderCursor );
+   }
    return tc.selectedText();
 }
 

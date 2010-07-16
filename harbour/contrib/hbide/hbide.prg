@@ -402,6 +402,9 @@ METHOD HbIde:create( aParams )
       ::oINI:load( ::cProjIni )
    ENDIF
 
+   /* Load Persistent Scripts - hbide_persist_*.prg | hbs */
+   hbide_loadPersistentScripts()
+
    /* Load User Dictionaries */
    hbide_loadUserDictionaries( Self )
 

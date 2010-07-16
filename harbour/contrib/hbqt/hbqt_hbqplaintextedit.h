@@ -190,7 +190,7 @@ public slots:
    void           hbReplaceSelection( const QString & txt );
    void           hbInsertTab( int mode );
    QString        hbGetSelectedText();
-   QString        hbTextUnderCursor();
+   QString        hbTextUnderCursor( bool bCodeComplete = false );
    void           hbNumberBlockVisible( bool b );
    bool           hbNumberBlockVisible();
    void           hbShowPrototype( const QString & tip, int rows, int cols );
