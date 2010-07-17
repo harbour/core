@@ -393,9 +393,10 @@ REQUEST hbmk_KEYW
 
 #define _HBMK_aDEPTHBC          114
 
-#define _HBMK_lStopAfterHarbour 115
+#define _HBMK_hDEPTSDIR         115
+#define _HBMK_lStopAfterHarbour 116
 
-#define _HBMK_MAX_              115
+#define _HBMK_MAX_              116
 
 #define _HBMK_DEP_CTRL_MARKER   ".control." /* must be an invalid path */
 
@@ -879,6 +880,8 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    hbmk[ _HBMK_nCmd_Esc ] := NIL
    hbmk[ _HBMK_nScr_Esc ] := NIL
    hbmk[ _HBMK_nCmd_FNF ] := NIL
+
+   hbmk[ _HBMK_hDEPTSDIR ] := { => }
 
    GetUILangCDP( @hbmk[ _HBMK_cUILNG ], @hbmk[ _HBMK_cUICDP ] )
    SetUILang( hbmk )
@@ -6153,7 +6156,7 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, lSystemHeader, tT
    ENDIF
 
    IF nNestingLevel > 1
-      cFileName := FindHeader( hbmk, cFileName, cParentDir, lSystemHeader )
+      cFileName := FindHeader( hbmk, cFileName, cParentDir, lSystemHeader, lSystemHeader )
       IF Empty( cFileName )
          RETURN .F.
       ENDIF
@@ -6654,17 +6657,20 @@ STATIC FUNCTION dep_try_pkg_detection( hbmk, dep )
                         cItem := SubStr( cItem, Len( "-L" ) + 1 )
                         AAdd( hbmk[ _HBMK_aLIBPATH ], DirDelPathSep( PathSepToSelf( cItem ) ) )
                      CASE Left( cItem, Len( "-I" ) ) == "-I"
-                        cItem := SubStr( cItem, Len( "-I" ) + 1 )
+                        cItem := DirDelPathSep( PathSepToSelf( SubStr( cItem, Len( "-I" ) + 1 ) ) )
                         IF Empty( cIncludeDir )
                            cIncludeDir := cItem
                         ENDIF
-                        AAdd( hbmk[ _HBMK_aINCPATH ], DirDelPathSep( PathSepToSelf( cItem ) ) )
+                        AAdd( hbmk[ _HBMK_aINCPATH ], cItem )
                      ENDCASE
                   ENDIF
                NEXT
                IF dep[ _HBMKDEP_lFound ]
                   dep[ _HBMKDEP_cVersion ] := cVersion
                   dep[ _HBMKDEP_cFound ] := iif( Empty( cIncludeDir ), "(system)", cIncludeDir )
+                  IF ! Empty( cIncludeDir )
+                     hbmk[ _HBMK_hDEPTSDIR ][ cIncludeDir ] := NIL
+                  ENDIF
                   IF hbmk[ _HBMK_lDEBUGDEPD ]
                      hbmk_OutStd( hbmk, hb_StrFormat( "debugdepd: REQ %1$s: found as pkg at %2$s (%3$s)", dep[ _HBMKDEP_cName ], dep[ _HBMKDEP_cFound ], dep[ _HBMKDEP_cVersion ] ) )
                   ENDIF
@@ -6693,6 +6699,7 @@ STATIC FUNCTION dep_try_header_detection( hbmk, dep )
             FOR EACH cFileName IN dep[ _HBMKDEP_aKeyHeader ]
                IF HeaderExists( cDir, cFileName ) != NIL
                   dep[ _HBMKDEP_cFound ] := DirDelPathSep( PathSepToSelf( cDir ) )
+                  hbmk[ _HBMK_hDEPTSDIR ][ dep[ _HBMKDEP_cFound ] ] := NIL
                   dep[ _HBMKDEP_lFound ] := .T.
                   dep[ _HBMKDEP_lFoundLOCAL ] := ( aINCPATH:__enumIndex() == 2 )
                   IF hbmk[ _HBMK_lDEBUGDEPD ]
@@ -6734,7 +6741,7 @@ STATIC FUNCTION AMerge( aDst, aSrc )
 
    RETURN aDst
 
-STATIC FUNCTION FindHeader( hbmk, cFileName, cParentDir, lSystemHeader )
+STATIC FUNCTION FindHeader( hbmk, cFileName, cParentDir, lSystemHeader, lSkipDept )
    LOCAL cDir
    LOCAL tmp
 
@@ -6753,12 +6760,23 @@ STATIC FUNCTION FindHeader( hbmk, cFileName, cParentDir, lSystemHeader )
    ENDIF
 
    /* Check in include path list specified via -incpath options */
-   FOR EACH cDir IN hbmk[ _HBMK_aINCPATH ]
-      tmp := DirAddPathSep( PathSepToSelf( cDir ) ) + PathSepToSelf( cFileName )
-      IF hb_FileExists( tmp )
-         RETURN tmp
-      ENDIF
-   NEXT
+   IF lSkipDept
+      FOR EACH cDir IN hbmk[ _HBMK_aINCPATH ]
+         IF !( cDir $ hbmk[ _HBMK_hDEPTSDIR ] )
+            tmp := DirAddPathSep( PathSepToSelf( cDir ) ) + PathSepToSelf( cFileName )
+            IF hb_FileExists( tmp )
+               RETURN tmp
+            ENDIF
+         ENDIF
+      NEXT
+   ELSE
+      FOR EACH cDir IN hbmk[ _HBMK_aINCPATH ]
+         tmp := DirAddPathSep( PathSepToSelf( cDir ) ) + PathSepToSelf( cFileName )
+         IF hb_FileExists( tmp )
+            RETURN tmp
+         ENDIF
+      NEXT
+   ENDIF
 
    RETURN NIL
 
