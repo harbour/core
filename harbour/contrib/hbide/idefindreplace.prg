@@ -1269,6 +1269,7 @@ METHOD IdeFindInFiles:showLog( nType, cMsg, aLines )
    qResult := ::oUI:q_editResults
 
    DEFAULT cMsg TO ""
+   cMsg := hbide_convertHtmlDelimiters( cMsg )
 
    qCursor := QTextCursor():configure( ::oUI:q_editResults:textCursor() )
 
@@ -1332,7 +1333,8 @@ METHOD IdeFindInFiles:showLog( nType, cMsg, aLines )
             cPre  := substr( cL, 1, nB - 1 )
             cPost := substr( cL, nB + len( cExp ) )
             cT    := substr( cL, nB, len( cExp ) )
-            cL    := cPre + F_SEARCH + "<b>" + cT + "</b>" + F_END + cPost
+            cL    := hbide_convertHtmlDelimiters( cPre ) + F_SEARCH + "<b>" + hbide_convertHtmlDelimiters( cT ) + ;
+                                                             "</b>" + F_END + hbide_convertHtmlDelimiters( cPost )
 
             qResult:append( F_BLACK + "&nbsp;&nbsp;&nbsp;(" + strzero( nL, nWidth ) + ")&nbsp;&nbsp;" + cL + F_END )
 
@@ -1378,7 +1380,7 @@ STATIC FUNCTION hbide_buildResultLine( cLine, aM )
    NEXT
    FOR i := 1 TO len( aM )
       cR    := replicate( chr( 255 ), len( aM[ i, 1 ] ) )
-      cT    := F_SEARCH + "<b>" + aM[ i, 1 ] + "</b>" + F_END
+      cT    := F_SEARCH + "<b>" + hbide_convertHtmlDelimiters( aM[ i, 1 ] ) + "</b>" + F_END
       cLine := strtran( cLine, cR, cT, 1, 1 )
    NEXT
 

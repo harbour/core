@@ -490,6 +490,15 @@ FUNCTION hbide_arrayToMemoEx2( a_ )
 
 /*----------------------------------------------------------------------*/
 
+FUNCTION hbide_convertHtmlDelimiters( s )
+
+   s := StrTran( s, "<", "&lt;" )
+   s := StrTran( s, ">", "&gt;" )
+
+   RETURN s
+
+/*----------------------------------------------------------------------*/
+
 FUNCTION hbide_arrayToMemoHtml( a_ )
    LOCAL s := hbide_arrayToMemoEx( a_ )
 
