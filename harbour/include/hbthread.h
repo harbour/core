@@ -65,10 +65,6 @@
       defined( HB_OS_SUNOS ) || defined( HB_OS_HPUX ) || \
       defined( HB_OS_BSD ) || defined( HB_OS_BEOS ) || \
       defined( HB_OS_QNX ) || defined( HB_OS_VXWORKS )
-   /* NOTE: Hack to avoid collision between stdint.h and unistd.h. [vszakats] */
-#  if defined( HB_OS_VXWORKS ) && defined( _INTPTR ) && !defined( _INTPTR_T )
-#     define _INTPTR_T
-#  endif
 #  include <pthread.h>
 #  define HB_PTHREAD_API
 #  if defined( HB_OS_VXWORKS )

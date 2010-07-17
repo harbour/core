@@ -76,6 +76,10 @@
         defined( HB_OS_BEOS ) || defined( HB_OS_QNX ) || \
         defined( HB_OS_VXWORKS ) ) )
    #include <stdint.h>
+   /* NOTE: Hack to avoid collision between stdint.h and unistd.h. [vszakats] */
+#  if defined( HB_OS_VXWORKS ) && defined( _INTPTR ) && !defined( _INTPTR_T )
+#     define _INTPTR_T
+#  endif
    /* workaround for BCC 5.8 bug */
    #if ( defined( __BORLANDC__ ) && __BORLANDC__ >= 1410 )
       #undef INT32_MIN

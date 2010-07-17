@@ -215,10 +215,6 @@
 #  if defined( HB_OS_BEOS )
 #     include <sys/sockio.h>
 #  endif
-   /* NOTE: Hack to avoid collision between stdint.h and unistd.h. [vszakats] */
-#  if defined( HB_OS_VXWORKS ) && defined( _INTPTR ) && !defined( _INTPTR_T )
-#     define _INTPTR_T
-#  endif
 #  if defined( HB_OS_VXWORKS )
 #     include <sockLib.h>
 #     include <ioLib.h>
