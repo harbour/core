@@ -95,12 +95,6 @@
 #  if !defined( SQLLEN ) && !defined( SQLTCHAR )
       typedef unsigned char   SQLTCHAR;
 #  endif
-#  if !defined( SQLLEN )
-#     define SQLLEN           SQLINTEGER
-#  endif
-#  if !defined( SQLULEN )
-#     define SQLULEN          SQLUINTEGER
-#  endif
 #endif
 
 #ifndef SQL_NO_DATA

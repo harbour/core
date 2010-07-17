@@ -70,7 +70,7 @@
 #elif defined( HB_OS_OS2 )
    HB_GT_REQUEST( OS2 )
 #elif defined( HB_OS_VXWORKS )
-   HB_GT_REQUEST( STD )
+   HB_GT_REQUEST( CGI )
 #elif defined( HB_OS_UNIX )
    HB_GT_REQUEST( TRM )
 #else
