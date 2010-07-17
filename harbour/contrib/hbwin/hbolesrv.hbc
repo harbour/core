@@ -2,8 +2,7 @@
 # $Id$
 #
 
-echo={!hbdynvm}Warning: Target must be '-hbdynvm' when using '${hb_self}'. Input file ignored.
-skip={!hbdynvm}on
+stop={!hbdynvm}Warning: Target must be '-hbdynvm' when using '${hb_self}'. Process stopped.
 
 libs=hbwin.hbc
 

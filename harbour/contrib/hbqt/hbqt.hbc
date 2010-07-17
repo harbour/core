@@ -2,6 +2,8 @@
 # $Id$
 #
 
+stop={dos|watcom|bcc|pocc|pocc64|poccarm|msvcia64}'hbqt' doesn't support this platform/compiler (${hb_plat}/${hb_comp}).
+
 incpaths=.
 
 plugins=hbmk2_plugin_qt.hbs

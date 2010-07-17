@@ -1913,7 +1913,7 @@ HB_SIZE hb_fsWriteAt( HB_FHANDLE hFileHandle, const void * pBuff, HB_SIZE nCount
       Overlapped.Offset     = ( DWORD ) ( nOffset & 0xFFFFFFFF );
       Overlapped.OffsetHigh = ( DWORD ) ( nOffset >> 32 );
       hb_fsSetIOError( WriteFile( DosToWinHandle( hFileHandle ),
-                                  pBuff, nCount, &dwWritten, &Overlapped ) != 0, 0 );
+                                  pBuff, ( DWORD ) nCount, &dwWritten, &Overlapped ) != 0, 0 );
       nWritten = dwWritten;
    }
    else
@@ -1931,7 +1931,7 @@ HB_SIZE hb_fsWriteAt( HB_FHANDLE hFileHandle, const void * pBuff, HB_SIZE nCount
       {
          DWORD dwWritten = 0;
          hb_fsSetIOError( WriteFile( DosToWinHandle( hFileHandle ),
-                                     pBuff, nCount, &dwWritten, NULL ) != 0, 0 );
+                                     pBuff, ( DWORD ) nCount, &dwWritten, NULL ) != 0, 0 );
          nWritten = dwWritten;
       }
    }

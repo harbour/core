@@ -9,8 +9,7 @@
 
 -w3 -es2
 
-"-echo={dos}This library doesn't build on DOS."
--stop{dos}
+"-stop={dos}'${hb_name}' doesn't support MS-DOS platform."
 
 -depkeyhead=sqlite2:sqlite.h
 -depcontrol=sqlite2:${HB_WITH_SQLITE2}

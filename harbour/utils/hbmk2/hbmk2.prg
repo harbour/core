@@ -394,9 +394,11 @@ REQUEST hbmk_KEYW
 #define _HBMK_aDEPTHBC          114
 
 #define _HBMK_hDEPTSDIR         115
-#define _HBMK_lStopAfterHarbour 116
 
-#define _HBMK_MAX_              116
+#define _HBMK_lStopAfterInit    116
+#define _HBMK_lStopAfterHarbour 117
+
+#define _HBMK_MAX_              117
 
 #define _HBMK_DEP_CTRL_MARKER   ".control." /* must be an invalid path */
 
@@ -761,7 +763,6 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    LOCAL cPostfix
 
    LOCAL lSkipBuild := .F.
-   LOCAL lStopAfterInit := .F.
    LOCAL lStopAfterCComp := .F.
    LOCAL lAcceptCFlag := .F.
    LOCAL lAcceptLDFlag := .F.
@@ -803,6 +804,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       s_cSecToken := StrZero( hb_Random( 1, 4294967294 ), 10, 0 )
    ENDIF
 
+   hbmk[ _HBMK_lStopAfterInit ] := .F.
    hbmk[ _HBMK_lStopAfterHarbour ] := .F.
 
    hbmk[ _HBMK_nErrorLevel ] := 0
@@ -1872,19 +1874,19 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
            cParamL == "-notrace"         ; hbmk[ _HBMK_lTRACE ]     := .F.
       CASE cParamL == "-traceonly"       ; hbmk[ _HBMK_lTRACE ]     := .T. ; hbmk[ _HBMK_lDONTEXEC ] := .T.
 
-      CASE cParamL == "--hbdirbin"       ; lStopAfterInit := .T.
+      CASE cParamL == "--hbdirbin"       ; hbmk[ _HBMK_lStopAfterInit ] := .T.
 
          OutStd( l_cHB_BIN_INSTALL )
 
-      CASE cParamL == "--hbdirdyn"       ; lStopAfterInit := .T.
+      CASE cParamL == "--hbdirdyn"       ; hbmk[ _HBMK_lStopAfterInit ] := .T.
 
          OutStd( l_cHB_DYN_INSTALL )
 
-      CASE cParamL == "--hbdirlib"       ; lStopAfterInit := .T.
+      CASE cParamL == "--hbdirlib"       ; hbmk[ _HBMK_lStopAfterInit ] := .T.
 
          OutStd( l_cHB_LIB_INSTALL )
 
-      CASE cParamL == "--hbdirinc"       ; lStopAfterInit := .T.
+      CASE cParamL == "--hbdirinc"       ; hbmk[ _HBMK_lStopAfterInit ] := .T.
 
          OutStd( l_cHB_INC_INSTALL )
 
@@ -2048,8 +2050,15 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
       CASE Left( cParamL, Len( "-stop" ) ) == "-stop"
 
-         lStopAfterInit := .T.
+         hbmk[ _HBMK_lStopAfterInit ] := .T.
          hbmk[ _HBMK_lRUN ] := .F.
+
+         IF Left( cParamL, Len( "-stop=" ) ) == "-stop="
+            cParam := MacroProc( hbmk, SubStr( cParam, Len( "-stop=" ) + 1 ), aParam[ _PAR_cFileName ] )
+            IF ! Empty( cParam )
+               OutStd( hb_StrFormat( I_( "%1$s" ), cParam ) + _OUT_EOL )
+            ENDIF
+         ENDIF
 
       CASE Left( cParamL, Len( "-echo=" ) ) == "-echo="
 
@@ -2482,7 +2491,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    ENDIF
 
    /* Start doing the make process. */
-   IF ! lStopAfterInit .AND. ! hbmk[ _HBMK_lCreateImpLib ] .AND. ( Len( hbmk[ _HBMK_aPRG ] ) + Len( hbmk[ _HBMK_aC ] ) + Len( hbmk[ _HBMK_aCPP ] ) + Len( hbmk[ _HBMK_aOBJUSER ] ) + Len( l_aOBJA ) ) == 0
+   IF ! hbmk[ _HBMK_lStopAfterInit ] .AND. ! hbmk[ _HBMK_lCreateImpLib ] .AND. ( Len( hbmk[ _HBMK_aPRG ] ) + Len( hbmk[ _HBMK_aC ] ) + Len( hbmk[ _HBMK_aCPP ] ) + Len( hbmk[ _HBMK_aOBJUSER ] ) + Len( l_aOBJA ) ) == 0
       hbmk_OutErr( hbmk, I_( "Error: No source files were specified." ) )
       IF hbmk[ _HBMK_lBEEP ]
          DoBeep( .F. )
@@ -2491,7 +2500,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    ENDIF
 
    /* Decide about output name */
-   IF ! lStopAfterInit .AND. ! hbmk[ _HBMK_lCreateImpLib ]
+   IF ! hbmk[ _HBMK_lStopAfterInit ] .AND. ! hbmk[ _HBMK_lCreateImpLib ]
 
       /* If -o with full name wasn't specified, let's
          make it the first source file specified. */
@@ -2505,7 +2514,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    ENDIF
 
    /* Decide about working dir */
-   IF ! lStopAfterInit .AND. ! hbmk[ _HBMK_lCreateImpLib ]
+   IF ! hbmk[ _HBMK_lStopAfterInit ] .AND. ! hbmk[ _HBMK_lCreateImpLib ]
       IF hbmk[ _HBMK_lINC ]
          /* NOTE: We store -hbdyn objects in different dirs by default as - for Windows
                   platforms - they're always built using different compilation options
@@ -2530,7 +2539,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             ENDIF
          ENDIF
       ELSE
-         IF lStopAfterInit .OR. ;
+         IF hbmk[ _HBMK_lStopAfterInit ] .OR. ;
             hbmk[ _HBMK_lStopAfterHarbour ] .OR. ;
             ( lStopAfterCComp .AND. ! hbmk[ _HBMK_lCreateLib ] .AND. ! hbmk[ _HBMK_lCreateDyn ] )
             /* It's controlled by -o option in these cases */
@@ -2552,7 +2561,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       ENDIF
    ENDIF
 
-   IF ! lStopAfterInit .AND. ! hbmk[ _HBMK_lStopAfterHarbour ] .AND. ! hbmk[ _HBMK_lCreateImpLib ]
+   IF ! hbmk[ _HBMK_lStopAfterInit ] .AND. ! hbmk[ _HBMK_lStopAfterHarbour ] .AND. ! hbmk[ _HBMK_lCreateImpLib ]
 
       /*
          /boot/common/include                        (beos)
@@ -2578,7 +2587,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       NEXT
    ENDIF
 
-   IF ! lStopAfterInit .AND. ! hbmk[ _HBMK_lStopAfterHarbour ]
+   IF ! hbmk[ _HBMK_lStopAfterInit ] .AND. ! hbmk[ _HBMK_lStopAfterHarbour ]
 
       IF hbmk[ _HBMK_cGT ] != NIL .AND. hbmk[ _HBMK_cGT ] == hbmk[ _HBMK_cGTDEFAULT ]
          hbmk[ _HBMK_cGT ] := NIL
@@ -4157,9 +4166,9 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
    /* ; */
 
-   IF ! lStopAfterInit .AND. hbmk[ _HBMK_lCreateImpLib ] .AND. ! lDumpInfo
+   IF ! hbmk[ _HBMK_lStopAfterInit ] .AND. hbmk[ _HBMK_lCreateImpLib ] .AND. ! lDumpInfo
       DoIMPLIB( hbmk, bBlk_ImpLib, cLibLibPrefix, cLibLibExt )
-      lStopAfterInit := .T.
+      hbmk[ _HBMK_lStopAfterInit ] := .T.
    ENDIF
 
    DEFAULT hbmk[ _HBMK_nScr_Esc ] TO hbmk[ _HBMK_nCmd_Esc ]
@@ -4171,7 +4180,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       ENDIF
    NEXT
 
-   IF ! lStopAfterInit
+   IF ! hbmk[ _HBMK_lStopAfterInit ]
       IF ! Empty( hbmk[ _HBMK_cWorkDir ] )
          /* NOTE: Ending path sep is important. */
          /* Different escaping for internal and external compiler. */
@@ -4183,7 +4192,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       ENDIF
    ENDIF
 
-   IF ! lStopAfterInit .AND. ! hbmk[ _HBMK_lStopAfterHarbour ]
+   IF ! hbmk[ _HBMK_lStopAfterInit ] .AND. ! hbmk[ _HBMK_lStopAfterHarbour ]
       hb_FNameSplit( hbmk[ _HBMK_cPROGNAME ], @cDir, @cName, @cExt )
       DO CASE
       CASE ! lStopAfterCComp
@@ -4203,7 +4212,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
    /* Generate header with repository ID information */
 
-   IF ! lSkipBuild .AND. ! lStopAfterInit .AND. ! hbmk[ _HBMK_lStopAfterHarbour ] .AND. ! lDumpInfo
+   IF ! lSkipBuild .AND. ! hbmk[ _HBMK_lStopAfterInit ] .AND. ! hbmk[ _HBMK_lStopAfterHarbour ] .AND. ! lDumpInfo
       IF ! Empty( l_cVCSHEAD )
          tmp1 := VCSID( l_cVCSDIR, l_cVCSHEAD, @tmp2 )
          /* Use the same EOL for all platforms to avoid unnecessary rebuilds. */
@@ -4234,7 +4243,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
    /* Do header detection and create incremental file list for .c files */
 
-   IF ! lSkipBuild .AND. ! lStopAfterInit .AND. ! hbmk[ _HBMK_lStopAfterHarbour ] .AND. ! lDumpInfo
+   IF ! lSkipBuild .AND. ! hbmk[ _HBMK_lStopAfterInit ] .AND. ! hbmk[ _HBMK_lStopAfterHarbour ] .AND. ! lDumpInfo
 
       headstate := NIL
 
@@ -4258,7 +4267,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
    /* Do header detection and create incremental file list for .cpp files */
 
-   IF ! lSkipBuild .AND. ! lStopAfterInit .AND. ! hbmk[ _HBMK_lStopAfterHarbour ] .AND. ! lDumpInfo
+   IF ! lSkipBuild .AND. ! hbmk[ _HBMK_lStopAfterInit ] .AND. ! hbmk[ _HBMK_lStopAfterHarbour ] .AND. ! lDumpInfo
 
       headstate := NIL
 
@@ -4282,7 +4291,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
    /* Create incremental file list for .prg files */
 
-   IF ( ! lSkipBuild .AND. ! lStopAfterInit .AND. ! hbmk[ _HBMK_lStopAfterHarbour ] .AND. hbmk[ _HBMK_nHBMODE ] != _HBMODE_RAW_C ) .OR. ;
+   IF ( ! lSkipBuild .AND. ! hbmk[ _HBMK_lStopAfterInit ] .AND. ! hbmk[ _HBMK_lStopAfterHarbour ] .AND. hbmk[ _HBMK_nHBMODE ] != _HBMODE_RAW_C ) .OR. ;
       ( hbmk[ _HBMK_lCreatePPO ] .AND. hbmk[ _HBMK_lStopAfterHarbour ] ) /* or in preprocessor mode */
 
       IF ! lDumpInfo
@@ -4354,7 +4363,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
    /* Header paths */
 
-   IF ! lSkipBuild .AND. ! lStopAfterInit
+   IF ! lSkipBuild .AND. ! hbmk[ _HBMK_lStopAfterInit ]
       IF lCHD_Comp
          tmp2 := DirAddPathSep( PathMakeRelative( PathNormalize( PathMakeAbsolute( hbmk[ _HBMK_cWorkDir ], hb_pwd() ) ), hb_pwd(), .T. ) )
       ENDIF
@@ -4381,7 +4390,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
    /* Check if we've found all dependencies */
 
-   IF ! lSkipBuild .AND. ! lStopAfterInit .AND. ! hbmk[ _HBMK_lStopAfterHarbour ]
+   IF ! lSkipBuild .AND. ! hbmk[ _HBMK_lStopAfterInit ] .AND. ! hbmk[ _HBMK_lStopAfterHarbour ]
       IF ! dep_evaluate( hbmk )
          IF hbmk[ _HBMK_lBEEP ]
             DoBeep( .F. )
@@ -4392,7 +4401,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
    /* Harbour compilation */
 
-   IF ! lSkipBuild .AND. ! lStopAfterInit .AND. Len( l_aPRG_TODO ) > 0 .AND. ! hbmk[ _HBMK_lCLEAN ] .AND. hbmk[ _HBMK_nHBMODE ] != _HBMODE_RAW_C
+   IF ! lSkipBuild .AND. ! hbmk[ _HBMK_lStopAfterInit ] .AND. Len( l_aPRG_TODO ) > 0 .AND. ! hbmk[ _HBMK_lCLEAN ] .AND. hbmk[ _HBMK_nHBMODE ] != _HBMODE_RAW_C
 
       IF hbmk[ _HBMK_lINC ] .AND. ! hbmk[ _HBMK_lQuiet ]
          hbmk_OutStd( hbmk, I_( "Compiling Harbour sources..." ) )
@@ -4513,7 +4522,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       ENDIF
    ENDIF
 
-   IF ! lSkipBuild .AND. ! lStopAfterInit .AND. ! hbmk[ _HBMK_lStopAfterHarbour ]
+   IF ! lSkipBuild .AND. ! hbmk[ _HBMK_lStopAfterInit ] .AND. ! hbmk[ _HBMK_lStopAfterHarbour ]
 
       IF hbmk[ _HBMK_nHBMODE ] != _HBMODE_RAW_C
 
@@ -8024,13 +8033,16 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
 
       DO CASE
       CASE Lower( Left( cLine, Len( "skip="        ) ) ) == "skip="          ; cLine := SubStr( cLine, Len( "skip="         ) + 1 )
+
          cLine := MacroProc( hbmk, cLine, cFileName )
-         IF ValueIsT( cLine )
-            IF hbmk[ _HBMK_lInfo ]
-               hbmk_OutStd( hbmk, hb_StrFormat( I_( "Skipping from: %1$s" ), cFileName ) )
-            ENDIF
-            EXIT
+         IF ! Empty( cLine )
+            OutStd( hb_StrFormat( I_( "%1$s" ), cLine ) + _OUT_EOL )
          ENDIF
+
+         IF hbmk[ _HBMK_lInfo ]
+            hbmk_OutStd( hbmk, hb_StrFormat( I_( "Skipping from: %1$s" ), cFileName ) )
+         ENDIF
+         EXIT
 
       CASE Lower( Left( cLine, Len( "sources="     ) ) ) == "sources="       ; cLine := SubStr( cLine, Len( "sources="      ) + 1 )
 
@@ -8225,6 +8237,17 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
          IF ! Empty( cLine )
             OutStd( hb_StrFormat( I_( "%1$s" ), cLine ) + _OUT_EOL )
          ENDIF
+
+      CASE Lower( Left( cLine, Len( "stop="        ) ) ) == "stop="          ; cLine := SubStr( cLine, Len( "stop="         ) + 1 )
+
+         cLine := MacroProc( hbmk, cLine, cFileName )
+         IF ! Empty( cLine )
+            OutStd( hb_StrFormat( I_( "%1$s" ), cLine ) + _OUT_EOL )
+         ENDIF
+
+         hbmk[ _HBMK_lStopAfterInit ] := .T.
+         hbmk[ _HBMK_lRUN ] := .F.
+         EXIT
 
       CASE Lower( Left( cLine, Len( "prgflags="     ) ) ) == "prgflags="     ; cLine := SubStr( cLine, Len( "prgflags="     ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
@@ -10596,7 +10619,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-icon=<file>"       , I_( "set <file> as application icon. <file> should be a supported format on the target platform" ) },;
       { "-instfile=<g:file>" , I_( "add <file> in to the list of files to be copied to path specified by -instpath option. <g> is an optional copy group, it must be at least two characters long." ) },;
       { "-instpath=<g:path>" , I_( "copy target to <path>. if <path> is a directory, it should end with path separatorm, in this case files specified by -instfile option will also be copied. can be specified multiple times. <g> is an optional copy group, it must be at least two characters long. Build target will be automatically copied to default (empty) copy group." ) },;
-      { "-stop"              , I_( "stop without doing anything" ) },;
+      { "-stop[=<text>]"     , I_( "stop without doing anything and display <text> if specified" ) },;
       { "-echo=<text>"       , I_( "echo text on screen" ) },;
       { "-pause"             , I_( "force waiting for a key on exit in case of failure (with alternate GTs only)" ) },;
       { "-info"              , I_( "turn on informational messages" ) },;
@@ -10687,7 +10710,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       I_( "Regular Harbour compiler options are also accepted.\n(see them with -harbourhelp option)" ),;
       hb_StrFormat( I_( "%1$s option file in hbmk2 directory is always processed if it exists. On *nix platforms ~/.harbour, /etc/harbour, <base>/etc/harbour, <base>/etc are checked (in that order) before the hbmk2 directory." ), _HBMK_AUTOHBC_NAME ),;
       hb_StrFormat( I_( "%1$s make script in current directory is always processed if it exists." ), _HBMK_AUTOHBM_NAME ),;
-      I_( ".hbc options (they should come in separate lines): libs=[<libname[s]>], hbcs=[<.hbc file[s]>], gt=[gtname], syslibs=[<libname[s]>], prgflags=[Harbour flags], cflags=[C compiler flags], resflags=[resource compiler flags], ldflags=[linker flags], pflags=[flags for plugins], libpaths=[paths], sources=[source files], psources=[source files for plugins], incpaths=[paths], instfiles=[files], instpaths=[paths], autohbcs=[<.ch>:<.hbc>], plugins=[plugins], gui|mt|shared|nulrdd|debug|opt|map|implib|hbcppmm|strip|run|inc=[yes|no], cpp=[yes|no|def], warn=[max|yes|low|no|def], compr=[yes|no|def|min|max], head=[off|partial|full|native], skip=[yes|no], echo=<text>\nLines starting with '#' char are ignored" ),;
+      I_( ".hbc options (they should come in separate lines): libs=[<libname[s]>], hbcs=[<.hbc file[s]>], gt=[gtname], syslibs=[<libname[s]>], prgflags=[Harbour flags], cflags=[C compiler flags], resflags=[resource compiler flags], ldflags=[linker flags], pflags=[flags for plugins], libpaths=[paths], sources=[source files], psources=[source files for plugins], incpaths=[paths], instfiles=[files], instpaths=[paths], autohbcs=[<.ch>:<.hbc>], plugins=[plugins], gui|mt|shared|nulrdd|debug|opt|map|implib|hbcppmm|strip|run|inc=[yes|no], cpp=[yes|no|def], warn=[max|yes|low|no|def], compr=[yes|no|def|min|max], head=[off|partial|full|native], skip=<reason>, stop=<reason>, echo=<text>\nLines starting with '#' char are ignored" ),;
       I_( "Platform filters are accepted in each .hbc line and with several options.\nFilter format: {[!][<plat>|<comp>|<cpu>|<keyword>]}. Filters can be combined using '&', '|' operators and grouped by parantheses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}, {allwin|allmsvc|allgcc|allmingw|allicc|allpocc|unix}, {x86|x86_64|ia64|arm|mips|sh}, {debug|nodebug|gui|std|mt|st|shared|static|unicode|ascii|xhb}" ),;
       I_( "Certain .hbc lines (libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, instfiles=, instpaths=, echo=) and corresponding command line parameters will accept macros: ${hb_root}, ${hb_dir}, ${hb_name}, ${hb_plat}, ${hb_comp}, ${hb_build}, ${hb_cpu}, ${hb_bin}, ${hb_lib}, ${hb_dyn}, ${hb_inc}, ${<envvar>}. libpaths= also accepts %{hb_name} which translates to the name of the .hbc file under search." ),;
       I_( 'Options accepting macros also support command substitution. Enclose command inside ``, and, if the command contains space, also enclose in double quotes. F.e. "-cflag=`wx-config --cflags`", or ldflags={unix&gcc}"`wx-config --libs`".' ),;

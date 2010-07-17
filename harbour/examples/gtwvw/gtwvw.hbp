@@ -9,8 +9,7 @@
 
 -w3 -es2
 
-"-echo={!allwin|!x86}Skipped: Only supported on win x86 platform."
--stop{!allwin|!x86}
+"-stop={!allwin|!x86}Skipped: '${hb_name}' only supported on win x86 platform."
 
 gtwvw.c
 wvwcheck.c
