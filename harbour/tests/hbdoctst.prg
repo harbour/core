@@ -13,8 +13,6 @@
 #include "common.ch"
 #include "directry.ch"
 
-#define _HBDOC_HBD_EXT      ".hbd"
-
 PROCEDURE Main( cRoot )
    LOCAL aEntry
    LOCAL cName
@@ -76,7 +74,7 @@ PROCEDURE Main( cRoot )
       NEXT
 
       IF ! Empty( aEntry )
-         OutStd( hb_MemoWrit( cName + _HBDOC_HBD_EXT, hb_serialize( aEntry ) ), cName, Len( aEntry ), hb_eol() )
+         OutStd( __hbdoc_savehbd( cName, aEntry ), cName, Len( aEntry ), hb_eol() )
       ENDIF
    NEXT
 
