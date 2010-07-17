@@ -55,8 +55,7 @@ DLIBPATHS := $(foreach dir,$(LIB_DIR) $(SYSLIBPATHS_DYN),-L$(dir))
 LDLIBS := $(foreach lib,$(HB_USER_LIBS) $(LIBS) $(SYSLIBS_BIN),-l$(lib))
 
 ifeq ($(HB_BUILD_SHARED),yes)
-   # TOFIX: no entry point
-   LDFLAGS += -shared
+   LDFLAGS += -non-static
 endif
 LDFLAGS += $(LDLIBPATHS)
 

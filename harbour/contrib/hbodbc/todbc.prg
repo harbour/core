@@ -470,7 +470,6 @@ METHOD FieldByName( cField ) CLASS TODBC
 
 METHOD Fetch( nFetchType, nOffset ) CLASS TODBC
 
-   LOCAL nRows
    LOCAL nResult
    LOCAL nPos := NIL
 
@@ -533,9 +532,8 @@ METHOD Fetch( nFetchType, nOffset ) CLASS TODBC
         nResult := SQL_ERROR
      ENDSWITCH
 
-   ELSE           // apearently we don't have
-//    nResult := SQLFetch( ::hStmt /*, nFetchType, nOffSet */)
-      nResult := SQLExtendedFetch( ::hStmt, nFetchType, nOffSet, @nRows, 0 )
+   ELSE
+      nResult := SQLFetchScroll( ::hStmt, nFetchType, nOffSet )
    ENDIF
 
    IF nResult == SQL_SUCCESS .OR. nResult == SQL_SUCCESS_WITH_INFO

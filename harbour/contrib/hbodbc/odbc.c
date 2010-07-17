@@ -58,7 +58,6 @@
  * Copyright 1999 Felipe G. Coury <fcoury@creation.com.br>
  *    SQLNUMRESULTCOLS()
  *    SQLDESCRIBECOL()
- *    SQLEXTENDEDFETCH()
  *
  * Copyright 1996 Marcelo Lombardo <lombardo@uol.com.br>
  *    SQLGETINFO()
@@ -381,34 +380,6 @@ HB_FUNC( SQLCOLATTRIBUTE ) /* hStmt, nCol, nField, @cName, nLen, @nBufferLen, @n
    hb_retni( result );
 }
 
-HB_FUNC( SQLEXTENDEDFETCH ) /* hStmt, nOrientation, nOffset, @nRows, @nRowStatus --> nRetCode */
-{
-   SQLUSMALLINT  siRowStatus   = ( SQLUSMALLINT ) hb_parni( 5 );
-#if defined( __POCC__ ) || defined( __XCC__ )
-   SQLROWSETSIZE uiRowCountPtr = ( SQLROWSETSIZE ) hb_parnl( 4 );
-   SQLRETURN     result        = SQLExtendedFetch( ( SQLHSTMT ) hb_parptr( 1 ),
-                                                   ( SQLUSMALLINT ) hb_parni( 2 ),
-                                                   ( SQLROWOFFSET ) hb_parnl( 3 ),
-                                                   ( SQLROWSETSIZE * ) &uiRowCountPtr,
-                                                   ( SQLUSMALLINT * ) &siRowStatus );
-#else
-   SQLULEN       uiRowCountPtr = ( SQLULEN ) hb_parnint( 4 );
-   SQLRETURN     result        = SQLExtendedFetch( ( SQLHSTMT ) hb_parptr( 1 ),
-                                                   ( SQLUSMALLINT ) hb_parni( 2 ),
-                                                   ( SQLLEN ) hb_parnint( 3 ),
-                                                   ( SQLULEN * ) &uiRowCountPtr,
-                                                   ( SQLUSMALLINT * ) &siRowStatus );
-#endif
-
-   if( result == SQL_SUCCESS || result == SQL_SUCCESS_WITH_INFO )
-   {
-      hb_stornint( uiRowCountPtr, 4 );
-      hb_storni( ( int ) siRowStatus, 5 );
-   }
-
-   hb_retni( result );
-}
-
 HB_FUNC( SQLFETCHSCROLL )
 {
 #if ODBCVER >= 0x0300
@@ -610,7 +581,7 @@ HB_FUNC( SQLMORERESULTS ) /* hEnv, hDbc */
 
 HB_FUNC( SQLBINDPARAMETER ) /* nStatementHandle, nParameterNumber, nParameterType, ColumnSize, DecimalDigits, @ParamValue, @ParamLength --> nRetCode */
 {
-   SQLLEN lLen = hb_parnint( 7 );
+   SQLLEN lLen = ( SQLLEN ) hb_parnint( 7 );
    hb_retni( SQLBindParameter( ( SQLHSTMT ) hb_parptr( 1 ),
                                ( SQLUSMALLINT ) hb_parni( 2 ),
                                ( SQLSMALLINT ) SQL_PARAM_OUTPUT,
