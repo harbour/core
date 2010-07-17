@@ -76,6 +76,8 @@
 #  include <os2.h>
 #endif
 
+/* NOTE: VxWorks supports dlopen() functionality only in shared
+         executables. [vszakats] */
 #if !defined( HB_HAS_DLFCN ) && \
     ( ( defined( HB_OS_LINUX ) && !defined( __WATCOMC__ ) ) || \
       defined( HB_OS_SUNOS ) || defined( HB_OS_DARWIN ) || \
