@@ -1776,12 +1776,14 @@ HB_SIZE hb_fsReadAt( HB_FHANDLE hFileHandle, void * pBuff, HB_SIZE nCount, HB_FO
 #     else
    if( hb_iswinnt() )
    {
+      DWORD dwRead = 0;
       OVERLAPPED Overlapped;
       memset( &Overlapped, 0, sizeof( Overlapped ) );
       Overlapped.Offset     = ( DWORD ) ( nOffset & 0xFFFFFFFF );
       Overlapped.OffsetHigh = ( DWORD ) ( nOffset >> 32 );
       hb_fsSetIOError( ReadFile( DosToWinHandle( hFileHandle ),
-                                 pBuff, nCount, &nRead, &Overlapped ) != 0, 0 );
+                                 pBuff, ( DWORD ) nCount, &dwRead, &Overlapped ) != 0, 0 );
+      nRead = dwRead;
    }
    else
    {
@@ -1795,8 +1797,12 @@ HB_SIZE hb_fsReadAt( HB_FHANDLE hFileHandle, void * pBuff, HB_SIZE nCount, HB_FO
       if( nPos == ( HB_FOFFSET ) INVALID_SET_FILE_POINTER )
          hb_fsSetIOError( HB_FALSE, 0 );
       else
+      {
+         DWORD dwRead = 0;
          hb_fsSetIOError( ReadFile( DosToWinHandle( hFileHandle ),
-                                    pBuff, nCount, &nRead, NULL ) != 0, 0 );
+                                    pBuff, ( DWORD ) nCount, &dwRead, NULL ) != 0, 0 );
+         nRead = dwRead;
+      }
    }
 #     endif
 
@@ -1901,12 +1907,14 @@ HB_SIZE hb_fsWriteAt( HB_FHANDLE hFileHandle, const void * pBuff, HB_SIZE nCount
 #     else
    if( hb_iswinnt() )
    {
+      DWORD dwWritten = 0;
       OVERLAPPED Overlapped;
       memset( &Overlapped, 0, sizeof( Overlapped ) );
       Overlapped.Offset     = ( DWORD ) ( nOffset & 0xFFFFFFFF );
       Overlapped.OffsetHigh = ( DWORD ) ( nOffset >> 32 );
       hb_fsSetIOError( WriteFile( DosToWinHandle( hFileHandle ),
-                                  pBuff, nCount, &nWritten, &Overlapped ) != 0, 0 );
+                                  pBuff, nCount, &dwWritten, &Overlapped ) != 0, 0 );
+      nWritten = dwWritten;
    }
    else
    {
@@ -1920,8 +1928,12 @@ HB_SIZE hb_fsWriteAt( HB_FHANDLE hFileHandle, const void * pBuff, HB_SIZE nCount
       if( nPos == ( HB_FOFFSET ) INVALID_SET_FILE_POINTER )
          hb_fsSetIOError( HB_FALSE, 0 );
       else
+      {
+         DWORD dwWritten = 0;
          hb_fsSetIOError( WriteFile( DosToWinHandle( hFileHandle ),
-                                     pBuff, nCount, &nWritten, NULL ) != 0, 0 );
+                                     pBuff, nCount, &dwWritten, NULL ) != 0, 0 );
+         nWritten = dwWritten;
+      }
    }
 #     endif
 

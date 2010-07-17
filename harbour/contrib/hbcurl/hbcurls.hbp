@@ -2,6 +2,8 @@
 # $Id$
 #
 
+-hblib
+
 -stop{!(win|wce)}
 
 hbcurl.hbp

@@ -1,5 +1,5 @@
 /*
- *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for Qt v4.5.3+
+ *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for Qt v4.5+
  *  Please do not modify this document as it is subject to change in future.
  *  Pritpal Bedi <bedipritpal@hotmail.com>
  */
@@ -48,10 +48,10 @@
     $PLATFORMS$
         Windows, Linux, MacOS, OS2
     $VERSION$
-        4.5.3
+        4.5 or upper
     $FILES$
-        Prg Source   : contrib/hbqt/qtgui/TQHelpEvent.prg
-        C++ Wrappers : contrib/hbqt/qtgui/QHelpEvent.cpp
+        Prg source   : contrib/hbqt/qtgui/TQHelpEvent.prg
+        C++ wrappers : contrib/hbqt/qtgui/QHelpEvent.cpp
         Library      : hbqtgui
     $SEEALSO$
 

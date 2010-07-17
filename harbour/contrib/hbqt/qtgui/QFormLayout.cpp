@@ -274,7 +274,7 @@ HB_FUNC( QT_QFORMLAYOUT_GETITEMPOSITION )
 {
    QFormLayout * p = hbqt_par_QFormLayout( 1 );
    int iRowPtr = 0;
-   QFormLayout::ItemRole iRolePtr;
+   QFormLayout::ItemRole iRolePtr = ( QFormLayout::ItemRole ) 0;
 
    if( p )
       ( p )->getItemPosition( hb_parni( 2 ), &iRowPtr, &iRolePtr );
@@ -294,7 +294,7 @@ HB_FUNC( QT_QFORMLAYOUT_GETLAYOUTPOSITION )
 {
    QFormLayout * p = hbqt_par_QFormLayout( 1 );
    int iRowPtr = 0;
-   QFormLayout::ItemRole iRolePtr;
+   QFormLayout::ItemRole iRolePtr = ( QFormLayout::ItemRole ) 0;
 
    if( p )
       ( p )->getLayoutPosition( hbqt_par_QLayout( 2 ), &iRowPtr, &iRolePtr );
@@ -314,7 +314,7 @@ HB_FUNC( QT_QFORMLAYOUT_GETWIDGETPOSITION )
 {
    QFormLayout * p = hbqt_par_QFormLayout( 1 );
    int iRowPtr = 0;
-   QFormLayout::ItemRole iRolePtr;
+   QFormLayout::ItemRole iRolePtr = ( QFormLayout::ItemRole ) 0;
 
    if( p )
       ( p )->getWidgetPosition( hbqt_par_QWidget( 2 ), &iRowPtr, &iRolePtr );

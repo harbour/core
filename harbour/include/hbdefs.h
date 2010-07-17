@@ -253,11 +253,19 @@ typedef unsigned int        HB_UINT;
 
 /* Harbour size type */
 #if defined( HB_OS_WIN_64 )
-   typedef HB_ULONGLONG        HB_SIZE;           /* TODO: Currently 'unsigned', to be changed 'signed' */
+#  if defined( HB_SIZE_SIGNED )
+      typedef HB_LONGLONG         HB_SIZE;
+#  else
+      typedef HB_ULONGLONG        HB_SIZE;        /* TODO: Currently 'unsigned', to be changed 'signed' */
+#  endif
    typedef HB_LONGLONG         HB_ISIZ;           /* TODO: Change to HB_SIZE, after HB_SIZE has been converted to signed type. TEMPORARY type. */
    typedef HB_ULONGLONG        HB_USIZ;           /* TEMPORARY type. Do not use it. */
 #else
-   typedef HB_ULONG            HB_SIZE;           /* TODO: Currently 'unsigned', to be changed 'signed' */
+#  if defined( HB_SIZE_SIGNED )
+      typedef HB_LONG             HB_SIZE;
+#  else
+      typedef HB_ULONG            HB_SIZE;        /* TODO: Currently 'unsigned', to be changed 'signed' */
+#  endif
    typedef HB_LONG             HB_ISIZ;           /* TODO: Change to HB_SIZE, after HB_SIZE has been converted to signed type. TEMPORARY type. */
    typedef HB_ULONG            HB_USIZ;           /* TEMPORARY type. Do not use it. */
 #endif
@@ -645,9 +653,17 @@ typedef HB_U32 HB_FATTR;
 
 /* maximum index size */
 #if defined( HB_OS_WIN_64 )
-#  define HB_SIZE_MAX    ULONGLONG_MAX
+#  if defined( HB_SIZE_SIGNED )
+#     define HB_SIZE_MAX    LONGLONG_MAX
+#  else
+#     define HB_SIZE_MAX    ULONGLONG_MAX
+#  endif
 #else
-#  define HB_SIZE_MAX    ULONG_MAX
+#  if defined( HB_SIZE_SIGNED )
+#     define HB_SIZE_MAX    LONG_MAX
+#  else
+#     define HB_SIZE_MAX    ULONG_MAX
+#  endif
 #endif
 
 /* maximum length of double number in decimal representation:
@@ -1460,17 +1476,17 @@ typedef HB_U32 HB_FATTR;
    #undef HB_PCODE_MKLONGLONG
    #undef HB_PCODE_MKULONGLONG
    #undef HB_DBL_LIM_INT64
-   #define UINT64_MAXDBL               ( (( double ) UINT32_MAX + 1.0) * \
-                                         (( double ) UINT32_MAX + 1.0) - 1.0 )
+   #define UINT64_MAXDBL               ( ( ( double ) UINT32_MAX + 1.0 ) * \
+                                         ( ( double ) UINT32_MAX + 1.0 ) - 1.0 )
    #define HB_GET_LE_INT64( p )        hb_get_le_int64( ( HB_BYTE * ) ( p ) )
    #define HB_GET_LE_UINT64( p )       hb_get_le_uint64( ( HB_BYTE * ) ( p ) )
    #define HB_PUT_LE_UINT64( p, d )    hb_put_le_uint64( ( HB_BYTE * ) ( p ), \
                                                          ( double ) ( d ) )
-   #define HB_PCODE_MKLONGLONG( p )    (( double ) HB_GET_LE_INT64( p ))
-   #define HB_PCODE_MKULONGLONG( p )   (( double ) HB_GET_LE_UINT64( p ))
-   #define HB_DBL_LIM_INT64(d)         ( (HB_MAXDBL) -UINT64_MAXDBL / 2 - 1 <= \
-                                         (HB_MAXDBL) (d) && (HB_MAXDBL) (d) <= \
-                                         (HB_MAXDBL) UINT64_MAXDBL / 2 )
+   #define HB_PCODE_MKLONGLONG( p )    ( ( double ) HB_GET_LE_INT64( p ) )
+   #define HB_PCODE_MKULONGLONG( p )   ( ( double ) HB_GET_LE_UINT64( p ) )
+   #define HB_DBL_LIM_INT64( d )       ( ( HB_MAXDBL ) -UINT64_MAXDBL / 2 - 1 <= \
+                                         ( HB_MAXDBL ) ( d ) && ( HB_MAXDBL ) ( d ) <= \
+                                         ( HB_MAXDBL ) UINT64_MAXDBL / 2 )
 #endif
 
 #define HB_MACRO2STRING( macro )    HB_MACRO2STRING_( macro )

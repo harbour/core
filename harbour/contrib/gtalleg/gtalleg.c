@@ -1177,4 +1177,7 @@ int _mangled_main( int argc, char * argv[] )
    hb_vmInit( HB_TRUE );
    return hb_vmQuit();
 }
-void * _mangled_main_address = ( void * ) _mangled_main;
+
+typedef int ( * _hballeg_main_t ) ( int argc, char * argv[] );
+
+_hballeg_main_t _mangled_main_address = _mangled_main;
