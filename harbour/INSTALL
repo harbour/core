@@ -505,6 +505,7 @@ HARBOUR
    ---
    gcc      - GNU C
    clang    - Clang compiler frontend
+   pcc      - Portable C Compiler (experimental)
 
    hpux
    ----
@@ -1315,6 +1316,7 @@ HARBOUR
    x linux  -> vxworks/diab  (CPU cross-builds possible: x86, arm, mips, ppc, sparc)
      bsd    -> bsd/gcc       (CPU cross-builds possible)
      bsd    -> bsd/clang     (CPU cross-builds possible)
+     bsd    -> bsd/pcc       (experimental)
    x bsd    -> wce/mingwarm  arm
    x bsd    -> wce/mingw     x86
    x bsd    -> win/mingw     x86

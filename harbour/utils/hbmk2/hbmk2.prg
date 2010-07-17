@@ -1141,7 +1141,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       CASE hbmk[ _HBMK_cPLAT ] == "darwin"
          aCOMPSUP := { "gcc", "clang", "icc" }
       CASE hbmk[ _HBMK_cPLAT ] == "bsd"
-         aCOMPSUP := { "gcc", "clang" }
+         aCOMPSUP := { "gcc", "clang", "pcc" }
       CASE hbmk[ _HBMK_cPLAT ] == "sunos"
          aCOMPSUP := { "gcc", "sunpro" }
       CASE hbmk[ _HBMK_cPLAT ] == "vxworks"
@@ -9895,7 +9895,7 @@ STATIC FUNCTION hbmk_CPU( hbmk )
         hbmk[ _HBMK_cCOMP ] $ "mingw|cygwin|msvc|pocc|watcom|bcc|xcc" .OR. ;
         ( hbmk[ _HBMK_cPLAT ] == "win" .AND. hbmk[ _HBMK_cCOMP ] == "icc" )
       RETURN "x86"
-   CASE hbmk[ _HBMK_cCOMP ] $ "gcc|icc|clang|sunpro|diab"
+   CASE hbmk[ _HBMK_cCOMP ] $ "gcc|icc|clang|sunpro|diab|pcc"
       /* TOFIX: This isn't necessarily correct, since these inherit the
                 default CPU architecture from OS default, by and large,
                 and targets can be overridden using user options. */
@@ -9965,7 +9965,7 @@ FUNCTION hbmk_KEYW( hbmk, cKeyword, cValue )
                                  "|mingw|mingw64|mingwarm|cygwin|bcc|watcom" + ;
                                  "|gcc|gccomf|djgpp" + ;
                                  "|hblib|hbdyn|hbdynvm|hbimplib|hbexe" + ;
-                                 "|icc|iccia64|clang|open64|sunpro|diab" + ;
+                                 "|icc|iccia64|clang|open64|sunpro|diab|pcc" + ;
                                  "|x86|x86_64|ia64|arm|mips|sh" )
       tmp := GetEnv( cKeyword )
       IF cValue != NIL
@@ -10523,7 +10523,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       "  - wce     : mingwarm, mingw, msvcarm, poccarm",;
       "  - os2     : gcc, gccomf, watcom",;
       "  - dos     : djgpp, watcom",;
-      "  - bsd     : gcc, clang",;
+      "  - bsd     : gcc, clang, pcc",;
       "  - hpux    : gcc",;
       "  - beos    : gcc",;
       "  - qnx     : gcc",;
@@ -10606,7 +10606,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-[no]minipo"        , I_( "do (not) add Harbour version number and source file reference to .po (default: add them)" ) },;
       { "-rebuildpo"         , I_( "recreate .po file, thus removing all obsolete entries in it" ) },;
       NIL,;
-      { "-autohbc=<.ch:.hbc>", I_( "<.ch> is a header file name. <.hbc> is a .hbc filename to be automatically included in case the header is found in any of the compiled sources. EXPERIMENTAL." ) },;
+      { "-autohbc=<.ch:.hbc>", I_( "<.ch> is a header file name. <.hbc> is a .hbc filename to be automatically included in case the header is found in any of the compiled sources. (EXPERIMENTAL)" ) },;
       NIL,;
       { "-deppkgname=<d:n>"       , I_( "<d> is the name of the dependency. <n> name of the package depedency. Can be specified multiple times." ) },;
       { "-depkeyhead=<d:h>"       , I_( "<d> is the name of the dependency. <h> is the key header (.h) of the package dependency. Multiple alternative headers can be specified." ) },;
@@ -10651,7 +10651,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       NIL,;
       { "-plat[form]=<plat>" , I_( "select target platform." ) },;
       { "-comp[iler]=<comp>" , I_( "select C compiler.\nSpecial value:\n - bld: use original build settings (default on *nix)" ) },;
-      { "-cpu=<cpu>"         , I_( "select target CPU. (experimental)" ) },;
+      { "-cpu=<cpu>"         , I_( "select target CPU. (EXPERIMENTAL)" ) },;
       { "-build=<name>"      , I_( "use a specific build name" ) },;
       { "-lang=<lang>"       , I_( "override default language. Similar to HB_LANG envvar." ) },;
       { "-width=<n>"         , I_( "set output width to <n> characters (0=unlimited)." ) },;
