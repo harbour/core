@@ -215,8 +215,13 @@
 #  if defined( HB_OS_BEOS )
 #     include <sys/sockio.h>
 #  endif
+   /* NOTE: Hack to avoid collision between stdint.h and unistd.h. [vszakats] */
+#  if defined( HB_OS_VXWORKS ) && defined( _INTPTR ) && !defined( _INTPTR_T )
+#     define _INTPTR_T
+#  endif
 #  if defined( HB_OS_VXWORKS )
 #     include <sockLib.h>
+#     include <ioLib.h>
 #  endif
 #  include <netdb.h>
 #  include <netinet/in.h>
@@ -227,10 +232,6 @@
 #  include <netinet/tcp.h>
 #  if !( defined( HB_OS_LINUX ) && defined( __WATCOMC__ ) )
 #     include <net/if.h>
-#  endif
-   /* NOTE: Hack to avoid collision between stdint.h and unistd.h. [vszakats] */
-#  if defined( HB_OS_VXWORKS ) && defined( _INTPTR ) && !defined( _INTPTR_T )
-#     define _INTPTR_T
 #  endif
 #  include <unistd.h>
 #  include <fcntl.h>
@@ -243,7 +244,8 @@
    #undef HB_OS_WIN
 #endif
 
-#if defined( HB_OS_OS2 ) || defined( HB_OS_WIN ) || defined( HB_OS_DOS )
+#if defined( HB_OS_OS2 ) || defined( HB_OS_WIN ) || defined( HB_OS_DOS ) || \
+    defined( HB_OS_VXWORKS )
 #  define socklen_t int
 #endif
 
@@ -3015,8 +3017,7 @@ PHB_ITEM hb_socketGetIFaces( int af, HB_BOOL fNoAliases )
  *       of 'struct ifreq' and SIOCGIF*
  */
 #if defined( SIOCGIFCONF ) && \
-    !( defined( HB_OS_LINUX ) && defined( __WATCOMC__ ) ) && \
-    ! defined( HB_OS_VXWORKS )
+    !( defined( HB_OS_LINUX ) && defined( __WATCOMC__ ) )
    struct ifconf ifc;
    struct ifreq * pifr;
    char * buf, * ptr;

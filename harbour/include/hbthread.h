@@ -71,6 +71,10 @@
 #  endif
 #  include <pthread.h>
 #  define HB_PTHREAD_API
+#  if defined( HB_OS_VXWORKS )
+#     /* Avoids compiler warnings in mutex initialization. MT still doesn't work though. */
+#     define HB_CRITICAL_NEED_INIT
+#  endif
 #elif defined( HB_OS_WIN )
 #  include <windows.h>
 #  if !defined( HB_OS_WIN_CE )

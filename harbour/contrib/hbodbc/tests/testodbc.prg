@@ -18,6 +18,8 @@ PROCEDURE Main()
    LOCAL nRows      := 0
    LOCAL cCode, cFunc, cState, cComm
 
+   ? "Version: " + hb_NumToHex( hb_odbcVer() )
+
    cConstrin := "DBQ=" + hb_FNameMerge( hb_DirBase(), "test.mdb" ) + ";Driver={Microsoft Access Driver (*.mdb)}"
 
    ? padc( "*** ODBC ACCESS TEST ***", 80 )

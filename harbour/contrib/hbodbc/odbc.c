@@ -656,3 +656,8 @@ HB_FUNC( SQLNUMSETLEN ) /* nValue, nSize, nDecimals --> nValue (nSize, nDec) */
 {
    hb_retnlen( hb_parnd( 1 ), hb_parni( 2 ), hb_parni( 3 ) );
 }
+
+HB_FUNC( HB_ODBCVER )
+{
+   hb_retni( ODBCVER );
+}
