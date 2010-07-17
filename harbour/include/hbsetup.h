@@ -419,6 +419,7 @@
 
 #if defined( HB_OS_VXWORKS )
    #define HB_NO_FNMATCH
+   #define HB_USE_SHARELOCKS_OFF
    /* NOTE: Needed to avoid 'implicit bzero() declaration' warnings */
    extern void bzero( char * buffer, int nbytes );
 #endif

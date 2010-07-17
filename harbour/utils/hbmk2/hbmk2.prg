@@ -1149,6 +1149,8 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          aCOMPSUP := { "gcc", "sunpro" }
       CASE hbmk[ _HBMK_cPLAT ] == "vxworks"
          aCOMPSUP := { "gcc", "diab" }
+      CASE hbmk[ _HBMK_cPLAT ] == "aix"
+         aCOMPSUP := { "gcc", "icc" }
       OTHERWISE
          aCOMPSUP := { "gcc" }
       ENDCASE

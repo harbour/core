@@ -3176,6 +3176,7 @@ static const HB_GT_FUNCS s_gtCoreFunc =
 
 static char s_gtNameBuf[ HB_GT_NAME_MAX_ + 1 ];
 
+/* NOTE: Must be in sync with gtsys.c */
 #if defined( HB_GT_LIB )
    const char * hb_gt_szNameDefault = HB_GT_DRVNAME( HB_GT_LIB );
 #elif defined( HB_OS_WIN_CE )
@@ -3186,6 +3187,8 @@ static char s_gtNameBuf[ HB_GT_NAME_MAX_ + 1 ];
    const char * hb_gt_szNameDefault = "dos";
 #elif defined( HB_OS_OS2 )
    const char * hb_gt_szNameDefault = "os2";
+#elif defined( HB_OS_VXWORKS )
+   const char * hb_gt_szNameDefault = "std";
 #elif defined( HB_OS_UNIX )
    const char * hb_gt_szNameDefault = "trm";
 #else

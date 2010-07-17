@@ -59,6 +59,7 @@
 
 #include "hbgtcore.h"
 
+/* NOTE: Must be in sync with hbgtcore.c */
 #if defined( HB_GT_LIB )
    HB_GT_REQUEST( HB_GT_LIB )
 #elif defined( HB_OS_WIN_CE )
@@ -70,7 +71,7 @@
 #elif defined( HB_OS_OS2 )
    HB_GT_REQUEST( OS2 )
 #elif defined( HB_OS_VXWORKS )
-   HB_GT_REQUEST( CGI )
+   HB_GT_REQUEST( STD )
 #elif defined( HB_OS_UNIX )
    HB_GT_REQUEST( TRM )
 #else
