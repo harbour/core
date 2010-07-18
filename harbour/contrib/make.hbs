@@ -11,11 +11,11 @@
  */
 
 /* TODO:
-     a. autofind .hbi instead of listing them explicitly
-     b. normalize path to hbpre/hbpost to save on cmdline
+     0. normalize path to hbpre/hbpost to save on cmdline
      1. error handling / reporting / feedback
      2. clean this source to avoid redundancy
-     3. solve stdalone install and HB_BUILD_CONTRIB_DLL support
+     3. solve HB_BUILD_CONTRIB_DLL support the .dlls are either
+        huge, or they don't link.
      4. hbmk2 location detection in standalone mode
         (move hbmk2 to core lib?)
      5. gnumake mode: automatically decide about build order,
@@ -33,28 +33,10 @@
 
 /* ----------------------------------------------------------------------- */
 
-STATIC aImpLibs := {;
-   "gtalleg/gtalleg.hbi"        ,;
-   "hbblat/hbblat.hbi"          ,;
-   "hbcairo/hbcairo.hbi"        ,;
-   "hbcurl/hbcurl.hbi"          ,;
-   "hbfbird/hbfbird.hbi"        ,;
-   "hbfimage/hbfimage.hbi"      ,;
-   "hbgd/hbgd.hbi"              ,;
-   "hbhpdf/hbhpdf.hbi"          ,;
-   "hbmysql/hbmysql.hbi"        ,;
-   "hbpgsql/hbpgsql.hbi"        ,;
-   "hbssl/hbssl.hbi"            ,;
-   "rddads/rddads.hbi"          ,;
-   "sddfb/sddfb.hbi"            ,;
-   "sddmy/sddmy.hbi"            ,;
-   "sddoci/sddoci.hbi"          ,;
-   "sddpg/sddpg.hbi"            }
-
  /* external libs hosted locally */
-STATIC aLibsPass0 := {}
+STATIC s_aLibsPass0 := {}
 
-STATIC aLibsPass1 := {;
+STATIC s_aLibsPass1 := {;
    "hbblink/hbblink.hbp"        ,;
    "hbbz2/hbbz2.hbp"            ,; /* uses: bz2 (external) */
    "hbclipsm/hbclipsm.hbp"      ,;
@@ -76,7 +58,7 @@ STATIC aLibsPass1 := {;
    "hbxpp/hbxpp.hbp"            ,;
    "rddbmcdx/hbbmcdx.hbp"       }
 
-STATIC aLibsPass2 := {;
+STATIC s_aLibsPass2 := {;
    "gtalleg/gtalleg.hbp"        ,;
    "gtalleg/gtallegs.hbp"       ,;
    "hbblat/hbblat.hbp"          ,;
@@ -110,19 +92,19 @@ STATIC aLibsPass2 := {;
    "sddpg/sddpg.hbp"            ,; /* uses: rddsql */
    "sddsqlt3/sddsqlt3.hbp"      }  /* uses: rddsql, sqlite3 (external) */
 
-STATIC aLibsPass3 := {;
+STATIC s_aLibsPass3 := {;
    "gtwvg/gtwvg.hbp"            ,; /* uses: hbwin */
    "hbtip/hbtip.hbp"            ,;
    "hbtip/hbtipssl.hbp"         ,; /* uses: hbssl */
    "hbziparc/hbziparc.hbp"      ,; /* uses: hbmzip */
    "xhb/xhb.hbp"                }  /* uses: hbct, hbtip, hbwin */
 
-STATIC aUtils := {;
+STATIC s_aBins := {;
    "hbdoc2/hbdoc2.hbp"          ,;
    "hbnetio/utils/hbnetio.hbp"  ,; /* uses: hbnetio */
    "hbide/hbide.hbp"            }  /* uses: hbxbp, hbqt */
 
-STATIC aAddons := {}
+STATIC s_aAddons := {}
 
 /* ----------------------------------------------------------------------- */
 
@@ -137,10 +119,10 @@ STATIC aAddons := {}
 #define _ACT_INC_REBUILD_INST   4
 
 STATIC hActions := {;
-   _ACT_CLEAN            => "clean",;
-   _ACT_INC_INST         => "build and install",;
-   _ACT_INC_REBUILD_INST => "rebuild and install",;
-   _ACT_INC              => "build" }
+   _ACT_CLEAN            => "clean" ,;
+   _ACT_INC              => "build" ,;
+   _ACT_INC_INST         => "build and install" ,;
+   _ACT_INC_REBUILD_INST => "rebuild and install" }
 
 STATIC s_cBase
 STATIC s_cHome
@@ -154,6 +136,8 @@ PROCEDURE Main( ... )
    s_cHome := StrTran( hb_DirBase(), hb_ps(), "/" )
    s_cRoot := s_cHome + "../"
 
+   s_lTest := "test" $ hb_cmdLine()
+
    IF "migr" $ hb_cmdLine() // .OR. .T.
       hb_setenv( "_HB_BUILD_MIGR", "yes" )
    ENDIF
@@ -161,7 +145,7 @@ PROCEDURE Main( ... )
    /* Making sure that user settings do not interfere with the std build process. */
    hb_setenv( "HBMK_OPTIONS" )
 
-   aAddons := hb_ATokens( GetEnv( "HB_BUILD_ADDONS" ),, .T. )
+   s_aAddons := hb_ATokens( GetEnv( "HB_BUILD_ADDONS" ),, .T. )
 
    IF Empty( GetEnv( "HB_HOST_BIN_DIR" ) )
       StandAlone( ... )
@@ -184,30 +168,16 @@ PROCEDURE Main( ... )
  */
 PROCEDURE StandAlone( ... )
    LOCAL aParams
-   LOCAL aLibs
 
    LOCAL aFile
    LOCAL cType
    LOCAL cProject
 
+   LOCAL cBinDir
    LOCAL cBaseOptions
 
    LOCAL nAction
    LOCAL tmp
-
-   s_lTest := .F.
-
-   aLibs := {}
-   FOR EACH aFile IN Directory( "*.hbi" )
-      AAdd( aLibs, aFile[ F_NAME ] )
-   NEXT
-   FOR EACH aFile IN Directory( "*.hbp" )
-      AAdd( aLibs, aFile[ F_NAME ] )
-   NEXT
-
-   IF Empty( aLibs )
-      RETURN
-   ENDIF
 
    aParams := hb_AParams()
 
@@ -252,12 +222,14 @@ PROCEDURE StandAlone( ... )
       ENDIF
    NEXT
 
-   FOR EACH cProject IN aLibs
+   cBinDir := s_cRoot + "bin" + hb_ps()
+
+   FOR EACH aFile IN Directory( "*.hbp" )
 
       /* TODO: If project not on official project list, pass the raw call to hbmk2 */
       /* TODO: Also rebuild the dependencies (in proper order) */
 
-      cProject := s_cBase + StrTran( cProject, "\", "/" )
+      cProject := s_cBase + StrTran( aFile[ F_NAME ], "\", "/" )
 
       FOR EACH tmp IN call_hbmk2_dept( s_cRoot + "bin" + hb_ps(), cProject, @cType )
          OutStd( cProject + " depends on: " + tmp + hb_eol() )
@@ -268,7 +240,11 @@ PROCEDURE StandAlone( ... )
          LOOP
       ENDIF
 
-      call_hbmk2( s_cRoot + "bin" + hb_ps(), cProject, cBaseOptions, "" )
+      call_hbmk2( cBinDir, cProject, cBaseOptions, "" )
+
+      IF hb_FileExists( PathSepToSelf( FNameExtSet( cProject, ".hbi" ) ) )
+         call_hbmk2( cBinDir, FNameExtSet( cProject, ".hbi" ), cBaseOptions, "" )
+      ENDIF
    NEXT
 
    ErrorLevel( 0 )
@@ -300,8 +276,6 @@ PROCEDURE GNUMake( ... )
    LOCAL cProjectDir
 
    LOCAL cBaseOptions
-   LOCAL cOptionsPre
-   LOCAL cOptionsPost
 
    LOCAL cFilter
    LOCAL aFilter
@@ -310,6 +284,7 @@ PROCEDURE GNUMake( ... )
    LOCAL aParams
    LOCAL aGNUMakeParams
    LOCAL nAction
+   LOCAL tmp
 
    /* Check if the requirements are met and if we have anything to do */
 
@@ -332,8 +307,6 @@ PROCEDURE GNUMake( ... )
    ENDIF
 
    /* Determine the mode of operation */
-
-   s_lTest := "test" $ hb_cmdLine()
 
    aParams := hb_AParams()
    aGNUMakeParams := hb_ATokens( Lower( GetEnv( "HB_MAKECMDGOALS" ) ) )
@@ -401,13 +374,12 @@ PROCEDURE GNUMake( ... )
    cBinDir := GetEnv( "HB_HOST_BIN_DIR" ) + hb_ps()
 
    aAll := {;
-      aImpLibs,;
-      aLibsPass0,;
-      aLibsPass1,;
-      aLibsPass2,;
-      aLibsPass3,;
-      aUtils,;
-      aAddons }
+      s_aLibsPass0,;
+      s_aLibsPass1,;
+      s_aLibsPass2,;
+      s_aLibsPass3,;
+      s_aBins,;
+      s_aAddons }
 
 // OutStd( Len( aAll ) ) ; aAll := { { "rddads/rddads.hbp" } }
 
@@ -416,7 +388,10 @@ PROCEDURE GNUMake( ... )
    FOR EACH aList IN aAll
       FOR EACH cProject IN aList
          IF ! Empty( cProject )
-            call_hbmk2_dept( s_cRoot + "bin" + hb_ps(), s_cBase + StrTran( cProject, "\", "/" ), @cType )
+            FOR EACH tmp IN call_hbmk2_dept( cBinDir, s_cBase + cProject, @cType )
+               OutStd( cProject + " depends on: " + tmp + hb_eol() )
+            NEXT
+            OutStd( cProject + " type: " + cType + hb_eol() )
          ENDIF
       NEXT
    NEXT
@@ -468,22 +443,18 @@ PROCEDURE GNUMake( ... )
                   LOOP
                ENDIF
 
-               cOptionsPre := cBaseOptions
-               IF cType $ "hbdyn|hbexe" .AND. GetEnv( "HB_BUILD_SHARED" ) == "yes"
-                  cOptionsPre += " -shared"
-               ENDIF
+               call_hbmk2( cBinDir, cProject, cBaseOptions, "" )
 
-               call_hbmk2( cBinDir, cProject, cOptionsPre, "" )
+               IF hb_FileExists( PathSepToSelf( FNameExtSet( cProject, ".hbi" ) ) )
+                  call_hbmk2( cBinDir, FNameExtSet( cProject, ".hbi" ), cBaseOptions, "" )
+               ENDIF
 
                /* Highly experimental */
                IF cType == "hblib" .AND. GetEnv( "HB_BUILD_CONTRIB_DLL" ) == "yes" .AND. ;
                   !( GetEnv( "HB_BUILD_PARTS" ) == "lib" ) .AND. ;
                   hb_FileExists( PathSepToSelf( FNameExtSet( cProject, ".hbc" ) ) )
 
-                  cOptionsPre := cBaseOptions
-                  cOptionsPost := " -hbdyn -nohblib- -implib " + FNameExtSet( cProject, ".hbc" )
-
-                  call_hbmk2( cBinDir, cProject, cOptionsPre, cOptionsPost )
+                  call_hbmk2( cBinDir, cProject, cBaseOptions, " -hbdyn -nohblib- -implib " + FNameExtSet( cProject, ".hbc" ) )
                ENDIF
 
                IF nAction == _ACT_INC_INST .OR. ;
