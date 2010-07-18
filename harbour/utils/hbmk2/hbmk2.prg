@@ -915,6 +915,9 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    IF ! Empty( GetEnv( "HB_CPU" ) )
       cEnv += " -cpu=" + GetEnv( "HB_CPU" )
    ENDIF
+   IF ! Empty( GetEnv( "HB_BUILD_NAME" ) )
+      cEnv += " -build=" + PathSepToSelf( GetEnv( "HB_BUILD_NAME" ) )
+   ENDIF
    cEnv := AllTrim( cEnv )
 
    IF ! Empty( cEnv )

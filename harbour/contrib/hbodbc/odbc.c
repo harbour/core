@@ -595,7 +595,7 @@ HB_FUNC( SQLBINDPARAMETER ) /* nStatementHandle, nParameterNumber, nParameterTyp
    hb_stornint( lLen, 7 );
 }
 
-HB_FUNC( SQLSTOD )
+HB_FUNC( HB_ODBCSTOD )
 {
    if( hb_parclen( 1 ) >= 10 )
    {
@@ -617,7 +617,7 @@ HB_FUNC( SQLSTOD )
       hb_retds( NULL );
 }
 
-HB_FUNC( SQLNUMSETLEN ) /* nValue, nSize, nDecimals --> nValue (nSize, nDec) */
+HB_FUNC( HB_ODBCNUMSETLEN ) /* nValue, nSize, nDecimals --> nValue (nSize, nDec) */
 {
    hb_retnlen( hb_parnd( 1 ), hb_parni( 2 ), hb_parni( 3 ) );
 }

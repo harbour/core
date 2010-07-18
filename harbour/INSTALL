@@ -654,15 +654,11 @@ HARBOUR
                                  projects. Default: no
    - HB_BUILD_EXTDEF=no          Enable autodetection of external components
                                  on default systems locations. Default: yes
-   - HB_CONTRIBLIBS=no [<list>]  Don't build any (or space separated <list> of)
+   - HB_BUILD_CONTRIBS=no [<l>]  Don't build any (or space separated <l> list of)
                                  contrib libraries.
-   - HB_CONTRIBLIBS=[<list>]     Build space separated <list> of contrib
+   - HB_BUILD_CONTRIBS=[<l>]     Build space separated <l> list of contrib
                                  libraries. Build all if left empty (default).
-   - HB_EXTERNALLIBS=no <list>   Don't build space separated <list> of
-                                 external libraries.
-   - HB_EXTERNALLIBS=[<list>]    Build space separated <list> of external
-                                 libraries. Build all if left empty (default).
-   - HB_BUILD_ADDONS=<list>      Build space separated <list> of additional .hbp
+   - HB_BUILD_ADDONS=<l>         Build space separated <l> list of additional .hbp
                                  projects.
    - HB_COMPILER_VER=[<ver>]     Set C compiler version. This is used with msvc
                                  and mingw/cygwin targets currently.
@@ -673,6 +669,10 @@ HARBOUR
                                  Lib names should be without extension and path.
                                  You only need this in special cases, like CodeGuard
                                  build with bcc.
+   - HB_EXTERNALLIBS=no <l>      Don't build space separated <l> list of
+                                 external libraries.
+   - HB_EXTERNALLIBS=[<l>]       Build space separated <l> list of external
+                                 libraries. Build all if left empty (default).
    - HB_SRC_ROOTPATH=<dir>       When using GNU Make older than 3.81, you shall set
                                  the root directory of Harbour source tree as an
                                  absolute path. If not set, some build functionality

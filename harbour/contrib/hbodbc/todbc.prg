@@ -755,7 +755,7 @@ METHOD LoadData( nPos ) CLASS TODBC
               uData := StrTran( uData, ",", "." )
               uData := Round( Val( uData ), ::Fields[ i ]:DataDecs )
            ENDIF
-           uData := SQLNumSetLen( uData, ::Fields[ i ]:DataSize, ::Fields[ i ]:DataDecs )
+           uData := hb_odbcNumSetLen( uData, ::Fields[ i ]:DataSize, ::Fields[ i ]:DataDecs )
            EXIT
 
         ENDSWITCH

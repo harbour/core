@@ -11,6 +11,8 @@
  */
 
 /* TODO:
+     a. autofind .hbi instead of listing them explicitly
+     b. normalize path to hbpre/hbpost to save on cmdline
      1. error handling / reporting / feedback
      2. clean this source to avoid redundancy
      3. solve stdalone install and HB_BUILD_CONTRIB_DLL support
@@ -18,15 +20,111 @@
         (move hbmk2 to core lib?)
      5. gnumake mode: automatically decide about build order,
         based on dependencies (implibs -> libs[TODO!] -> exes)
-     6. HB_CONTRIBLIBS -> HB_CONTRIBS (not only libs anymore)
      7. Move in external libs to contrib area? (bz2, minizip, sqlite3)
      8. Pull the list of .hbp files from an external file
         (so it can be used in stdalone mode, and the script can be
         moved to bin and used in more generic way f.e. for examples
         and local projects)
+     9. 'install' is ignored in stdalone mode. It would be needed to
+        replicate the install dir defaulting logic found in global.mk
  */
 
 #pragma warninglevel=3
+
+/* ----------------------------------------------------------------------- */
+
+STATIC aImpLibs := {;
+   "gtalleg/gtalleg.hbi"        ,;
+   "hbblat/hbblat.hbi"          ,;
+   "hbcairo/hbcairo.hbi"        ,;
+   "hbcurl/hbcurl.hbi"          ,;
+   "hbfbird/hbfbird.hbi"        ,;
+   "hbfimage/hbfimage.hbi"      ,;
+   "hbgd/hbgd.hbi"              ,;
+   "hbhpdf/hbhpdf.hbi"          ,;
+   "hbmysql/hbmysql.hbi"        ,;
+   "hbpgsql/hbpgsql.hbi"        ,;
+   "hbssl/hbssl.hbi"            ,;
+   "rddads/rddads.hbi"          ,;
+   "sddfb/sddfb.hbi"            ,;
+   "sddmy/sddmy.hbi"            ,;
+   "sddoci/sddoci.hbi"          ,;
+   "sddpg/sddpg.hbi"            }
+
+ /* external libs hosted locally */
+STATIC aLibsPass0 := {}
+
+STATIC aLibsPass1 := {;
+   "hbblink/hbblink.hbp"        ,;
+   "hbbz2/hbbz2.hbp"            ,; /* uses: bz2 (external) */
+   "hbclipsm/hbclipsm.hbp"      ,;
+   "hbcomm/hbcomm.hbp"          ,;
+   "hbct/hbct.hbp"              ,;
+   "hbfoxpro/hbfoxpro.hbp"      ,;
+   "hbfship/hbfship.hbp"        ,;
+   "hbgt/hbgt.hbp"              ,;
+   "hbmemio/hbmemio.hbp"        ,;
+   "hbmisc/hbmisc.hbp"          ,;
+   "hbmzip/hbmzip.hbp"          ,; /* uses: minizip (external) */
+   "hbnetio/hbnetio.hbp"        ,;
+   "hbnf/hbnf.hbp"              ,;
+   "hbodbc/hbodbc.hbp"          ,;
+   "hbsms/hbsms.hbp"            ,;
+   "hbsqlit3/hbsqlit3.hbp"      ,; /* uses: sqlite3 (external) */
+   "hbtpathy/hbtpathy.hbp"      ,;
+   "hbwin/hbwin.hbp"            ,;
+   "hbxpp/hbxpp.hbp"            ,;
+   "rddbmcdx/hbbmcdx.hbp"       }
+
+STATIC aLibsPass2 := {;
+   "gtalleg/gtalleg.hbp"        ,;
+   "gtalleg/gtallegs.hbp"       ,;
+   "hbblat/hbblat.hbp"          ,;
+   "hbcairo/hbcairo.hbp"        ,;
+   "hbcups/hbcups.hbp"          ,;
+   "hbcurl/hbcurl.hbp"          ,;
+   "hbcurl/hbcurls.hbp"         ,;
+   "hbfbird/hbfbird.hbp"        ,;
+   "hbfimage/hbfimage.hbp"      ,;
+   "hbgd/hbgd.hbp"              ,; /* uses: hbct */
+   "hbhpdf/hbhpdf.hbp"          ,;
+   "hbmysql/hbmysql.hbp"        ,;
+   "hbpgsql/hbpgsql.hbp"        ,;
+   "hbqt/hbqt.hbp"              ,;
+   "hbqt/hbqtcore.hbp"          ,;
+   "hbqt/hbqtcores.hbp"         ,;
+   "hbqt/hbqtgui.hbp"           ,;
+   "hbqt/hbqtguis.hbp"          ,;
+   "hbqt/hbqtnetwork.hbp"       ,;
+   "hbqt/hbqtnetworks.hbp"      ,;
+   "hbqt/hbqts.hbp"             ,;
+   "hbssl/hbssl.hbp"            ,;
+   "hbssl/hbssls.hbp"           ,;
+   "hbxbp/hbxbp.hbp"            ,; /* uses: hbqt */
+   "rddads/rddads.hbp"          ,;
+   "rddsql/rddsql.hbp"          ,;
+   "sddfb/sddfb.hbp"            ,; /* uses: rddsql */
+   "sddmy/sddmy.hbp"            ,; /* uses: rddsql */
+   "sddoci/sddoci.hbp"          ,; /* uses: rddsql */
+   "sddodbc/sddodbc.hbp"        ,; /* uses: rddsql */
+   "sddpg/sddpg.hbp"            ,; /* uses: rddsql */
+   "sddsqlt3/sddsqlt3.hbp"      }  /* uses: rddsql, sqlite3 (external) */
+
+STATIC aLibsPass3 := {;
+   "gtwvg/gtwvg.hbp"            ,; /* uses: hbwin */
+   "hbtip/hbtip.hbp"            ,;
+   "hbtip/hbtipssl.hbp"         ,; /* uses: hbssl */
+   "hbziparc/hbziparc.hbp"      ,; /* uses: hbmzip */
+   "xhb/xhb.hbp"                }  /* uses: hbct, hbtip, hbwin */
+
+STATIC aUtils := {;
+   "hbdoc2/hbdoc2.hbp"          ,;
+   "hbnetio/utils/hbnetio.hbp"  ,; /* uses: hbnetio */
+   "hbide/hbide.hbp"            }  /* uses: hbxbp, hbqt */
+
+STATIC aAddons := {}
+
+/* ----------------------------------------------------------------------- */
 
 /* TOFIX: Ugly hack to avoid #include "directry.ch" */
 #define F_NAME                  1       /* File name */
@@ -38,12 +136,17 @@
 #define _ACT_INC_INST           3
 #define _ACT_INC_REBUILD_INST   4
 
+STATIC hActions := {;
+   _ACT_CLEAN            => "clean",;
+   _ACT_INC_INST         => "build and install",;
+   _ACT_INC_REBUILD_INST => "rebuild and install",;
+   _ACT_INC              => "build" }
+
 STATIC s_cBase
 STATIC s_cHome
 STATIC s_cRoot
 
 STATIC s_lTest
-STATIC s_lMigr
 
 PROCEDURE Main( ... )
 
@@ -51,14 +154,14 @@ PROCEDURE Main( ... )
    s_cHome := StrTran( hb_DirBase(), hb_ps(), "/" )
    s_cRoot := s_cHome + "../"
 
-   s_lMigr := "migr" $ hb_cmdLine()
-
-   IF s_lMigr
+   IF "migr" $ hb_cmdLine() .OR. .T.
       hb_setenv( "_HB_BUILD_MIGR", "yes" )
    ENDIF
 
    /* Making sure that user settings do not interfere with the std build process. */
    hb_setenv( "HBMK_OPTIONS" )
+
+   aAddons := hb_ATokens( GetEnv( "HB_BUILD_ADDONS" ),, .T. )
 
    IF Empty( GetEnv( "HB_HOST_BIN_DIR" ) )
       StandAlone( ... )
@@ -88,8 +191,6 @@ PROCEDURE StandAlone( ... )
    LOCAL cProject
 
    LOCAL cBaseOptions
-   LOCAL cOptionsPre
-   LOCAL cOptionsPost
 
    LOCAL nAction
    LOCAL tmp
@@ -111,13 +212,13 @@ PROCEDURE StandAlone( ... )
    aParams := hb_AParams()
 
    DO CASE
-   CASE AScan( aParams, "clean" ) > 0 .AND. ;
-        AScan( aParams, "install" ) > 0 .AND. ;
-        AScan( aParams, "install" ) > AScan( aParams, "clean" )
+   CASE AScanL( aParams, "clean" ) > 0 .AND. ;
+        AScanL( aParams, "install" ) > 0 .AND. ;
+        AScanL( aParams, "install" ) > AScanL( aParams, "clean" )
       nAction := _ACT_INC_REBUILD_INST
-   CASE AScan( aParams, "clean" ) > 0
+   CASE AScanL( aParams, "clean" ) > 0
       nAction := _ACT_CLEAN
-   CASE AScan( aParams, "install" ) > 0
+   CASE AScanL( aParams, "install" ) > 0
       nAction := _ACT_INC_INST
    OTHERWISE
       nAction := _ACT_INC
@@ -134,52 +235,40 @@ PROCEDURE StandAlone( ... )
 
    cBaseOptions := ""
 
+   IF nAction == _ACT_CLEAN
+      cBaseOptions += " -clean"
+   ELSE
+      cBaseOptions += " -inc"
+      IF nAction == _ACT_INC_REBUILD_INST
+         cBaseOptions += " -rebuild"
+      ENDIF
+   ENDIF
+
    FOR EACH tmp IN aParams
-      IF !( tmp $ "install|clean" )
+      IF !( Lower( tmp ) == "install" ) .AND. ;
+         !( Lower( tmp ) == "clean" ) .AND. ;
+         !( Lower( tmp ) == "all" )
          cBaseOptions += " " + tmp
       ENDIF
    NEXT
 
    FOR EACH cProject IN aLibs
 
-      FOR EACH tmp IN call_hbmk2_dept( s_cRoot + "bin" + hb_ps(), s_cBase + cProject, @cType )
+      /* TODO: If project not on official project list, pass the raw call to hbmk2 */
+      /* TODO: Also rebuild the dependencies (in proper order) */
+
+      cProject := s_cBase + StrTran( cProject, "\", "/" )
+
+      FOR EACH tmp IN call_hbmk2_dept( s_cRoot + "bin" + hb_ps(), cProject, @cType )
          OutStd( cProject + " depends on: " + tmp + hb_eol() )
       NEXT
       OutStd( cProject + " type: " + cType + hb_eol() )
 
-      cType := get_hbmk2_project_type( s_cBase + cProject )
-
-      cProject := StrTran( cProject, "\", "/" )
-
-      cOptionsPre := cBaseOptions
-      cOptionsPost := ""
-
-      SWITCH cType
-      CASE "hblib"
-      CASE "hbimplib"
-         EXIT
-      CASE "hbdyn"
-      CASE "hbexe"
-         IF GetEnv( "HB_BUILD_SHARED" ) == "yes"
-            cOptionsPre += " -shared"
-         ENDIF
-         EXIT
-      ENDSWITCH
-
       IF cType $ "hbhrb|hbppo"
-        LOOP
+         LOOP
       ENDIF
 
-      IF nAction == _ACT_CLEAN
-         cOptionsPre += " -clean"
-      ELSE
-         cOptionsPre += " -inc"
-         IF nAction == _ACT_INC_REBUILD_INST
-            cOptionsPre += " -rebuild"
-         ENDIF
-      ENDIF
-
-      call_hbmk2( s_cRoot + "bin" + hb_ps(), s_cBase + cProject, cOptionsPre, cOptionsPost )
+      call_hbmk2( s_cRoot + "bin" + hb_ps(), cProject, cBaseOptions, "" )
    NEXT
 
    ErrorLevel( 0 )
@@ -202,95 +291,6 @@ PROCEDURE StandAlone( ... )
  */
 
 PROCEDURE GNUMake( ... )
-   LOCAL aImpLibs := {;
-      "gtalleg/gtalleg.hbi"        ,;
-      "hbblat/hbblat.hbi"          ,;
-      "hbcairo/hbcairo.hbi"        ,;
-      "hbcurl/hbcurl.hbi"          ,;
-      "hbfbird/hbfbird.hbi"        ,;
-      "hbfimage/hbfimage.hbi"      ,;
-      "hbgd/hbgd.hbi"              ,;
-      "hbhpdf/hbhpdf.hbi"          ,;
-      "hbmysql/hbmysql.hbi"        ,;
-      "hbpgsql/hbpgsql.hbi"        ,;
-      "hbssl/hbssl.hbi"            ,;
-      "rddads/rddads.hbi"          ,;
-      "sddfb/sddfb.hbi"            ,;
-      "sddmy/sddmy.hbi"            ,;
-      "sddoci/sddoci.hbi"          ,;
-      "sddpg/sddpg.hbi"            }
-
-   /* external libs hosted locally */
-   LOCAL aLibsPass0 := {}
-
-   LOCAL aLibsPass1 := {;
-      "hbblink/hbblink.hbp"        ,;
-      "hbbz2/hbbz2.hbp"            ,; /* uses: bz2 (external) */
-      "hbclipsm/hbclipsm.hbp"      ,;
-      "hbcomm/hbcomm.hbp"          ,;
-      "hbct/hbct.hbp"              ,;
-      "hbfoxpro/hbfoxpro.hbp"      ,;
-      "hbfship/hbfship.hbp"        ,;
-      "hbgt/hbgt.hbp"              ,;
-      "hbmemio/hbmemio.hbp"        ,;
-      "hbmisc/hbmisc.hbp"          ,;
-      "hbmzip/hbmzip.hbp"          ,; /* uses: minizip (external) */
-      "hbnetio/hbnetio.hbp"        ,;
-      "hbnf/hbnf.hbp"              ,;
-      "hbodbc/hbodbc.hbp"          ,;
-      "hbsms/hbsms.hbp"            ,;
-      "hbsqlit3/hbsqlit3.hbp"      ,; /* uses: sqlite3 (external) */
-      "hbtpathy/hbtpathy.hbp"      ,;
-      "hbwin/hbwin.hbp"            ,;
-      "hbxpp/hbxpp.hbp"            ,;
-      "rddbmcdx/hbbmcdx.hbp"       }
-
-   LOCAL aLibsPass2 := {;
-      "gtalleg/gtalleg.hbp"        ,;
-      "gtalleg/gtallegs.hbp"       ,;
-      "hbblat/hbblat.hbp"          ,;
-      "hbcairo/hbcairo.hbp"        ,;
-      "hbcups/hbcups.hbp"          ,;
-      "hbcurl/hbcurl.hbp"          ,;
-      "hbcurl/hbcurls.hbp"         ,;
-      "hbfbird/hbfbird.hbp"        ,;
-      "hbfimage/hbfimage.hbp"      ,;
-      "hbgd/hbgd.hbp"              ,; /* uses: hbct */
-      "hbhpdf/hbhpdf.hbp"          ,;
-      "hbmysql/hbmysql.hbp"        ,;
-      "hbpgsql/hbpgsql.hbp"        ,;
-      "hbqt/hbqt.hbp"              ,;
-      "hbqt/hbqtcore.hbp"          ,;
-      "hbqt/hbqtcores.hbp"         ,;
-      "hbqt/hbqtgui.hbp"           ,;
-      "hbqt/hbqtguis.hbp"          ,;
-      "hbqt/hbqtnetwork.hbp"       ,;
-      "hbqt/hbqtnetworks.hbp"      ,;
-      "hbqt/hbqts.hbp"             ,;
-      "hbssl/hbssl.hbp"            ,;
-      "hbssl/hbssls.hbp"           ,;
-      "hbxbp/hbxbp.hbp"            ,; /* uses: hbqt */
-      "rddads/rddads.hbp"          ,;
-      "rddsql/rddsql.hbp"          ,;
-      "sddfb/sddfb.hbp"            ,; /* uses: rddsql */
-      "sddmy/sddmy.hbp"            ,; /* uses: rddsql */
-      "sddoci/sddoci.hbp"          ,; /* uses: rddsql */
-      "sddodbc/sddodbc.hbp"        ,; /* uses: rddsql */
-      "sddpg/sddpg.hbp"            ,; /* uses: rddsql */
-      "sddsqlt3/sddsqlt3.hbp"      }  /* uses: rddsql, sqlite3 (external) */
-
-   LOCAL aLibsPass3 := {;
-      "gtwvg/gtwvg.hbp"            ,; /* uses: hbwin */
-      "hbtip/hbtip.hbp"            ,;
-      "hbtip/hbtipssl.hbp"         ,; /* uses: hbssl */
-      "hbziparc/hbziparc.hbp"      ,; /* uses: hbmzip */
-      "xhb/xhb.hbp"                }  /* uses: hbct, hbtip, hbwin */
-
-   LOCAL aUtils := {;
-      "hbdoc2/hbdoc2.hbp"          ,;
-      "hbnetio/utils/hbnetio.hbp"  ,; /* uses: hbnetio */
-      "hbide/hbide.hbp"            }  /* uses: hbxbp, hbqt */
-
    LOCAL aAll
    LOCAL aList
    LOCAL cType
@@ -298,7 +298,6 @@ PROCEDURE GNUMake( ... )
    LOCAL cBinDir
    LOCAL cProject
    LOCAL cProjectDir
-   LOCAL cInstallDirVar
 
    LOCAL cBaseOptions
    LOCAL cOptionsPre
@@ -310,36 +309,26 @@ PROCEDURE GNUMake( ... )
 
    LOCAL aParams
    LOCAL aGNUMakeParams
-   LOCAL tmp
    LOCAL nAction
 
-   IF s_lMigr
-      OutStd( "! New contrib make orchestrator test run. |" + hb_cmdLine() + "|" + GetEnv( "HB_MAKECMDGOALS" ) + "|" + hb_dirBase() + "|" + CurDir() + "|" + hb_eol() )
+   /* Check if the requirements are met and if we have anything to do */
 
-      /* testing with a limited set of contribs */
-      aLibsPass1 := {;
-         "hbblink/hbblink.hbp"        ,;
-         "hbbz2/hbbz2.hbp"            ,; /* uses: bz2 (external) */
-         "hbclipsm/hbclipsm.hbp"      ,;
-         "hbnetio/hbnetio.hbp"        ,;
-         "rddbmcdx/hbbmcdx.hbp"       }
-      aLibsPass2 := {;
-         "gtalleg/gtalleg.hbp"        ,;
-         "gtalleg/gtallegs.hbp"       ,;
-         "hbblat/hbblat.hbp"          ,;
-         "hbqt/hbqt.hbp"              ,;
-         "hbqt/hbqtcore.hbp"          ,;
-         "hbqt/hbqtcores.hbp"         ,;
-         "hbqt/hbqtgui.hbp"           ,;
-         "hbqt/hbqtguis.hbp"          ,;
-         "hbqt/hbqtnetwork.hbp"       ,;
-         "hbqt/hbqtnetworks.hbp"      ,;
-         "hbqt/hbqts.hbp"             ,;
-         "hbxbp/hbxbp.hbp"            }  /* uses: hbqt */
-      aLibsPass3 := {;
-         "gtwvg/gtwvg.hbp"            }  /* uses: hbwin */
-      aUtils := {;
-         "hbnetio/utils/hbnetio.hbp"  }
+   IF Empty( GetEnv( "HB_PLATFORM" ) ) .OR. ;
+      Empty( GetEnv( "HB_COMPILER" ) ) .OR. ;
+      Empty( GetEnv( "HB_HOST_BIN_DIR" ) )
+      ErrorLevel( 9 )
+      RETURN
+   ENDIF
+
+   cFilter := GetEnv( "HB_BUILD_CONTRIBS" )
+   /* Compatibility */
+   IF Empty( cFilter )
+      cFilter := GetEnv( "HB_CONTRIBLIBS" )
+   ENDIF
+
+   IF cFilter == "no"
+      ErrorLevel( 0 )
+      RETURN
    ENDIF
 
    /* Determine the mode of operation */
@@ -350,18 +339,18 @@ PROCEDURE GNUMake( ... )
    aGNUMakeParams := hb_ATokens( Lower( GetEnv( "HB_MAKECMDGOALS" ) ) )
 
    DO CASE
-   CASE AScan( aParams, "clean" ) > 0
-      IF AScan( aGNUMakeParams, "clean" ) > 0 .AND. ;
-         AScan( aGNUMakeParams, "install" ) > 0 .AND. ;
-         AScan( aGNUMakeParams, "install" ) > AScan( aGNUMakeParams, "clean" )
+   CASE AScanL( aParams, "clean" ) > 0
+      IF AScanL( aGNUMakeParams, "clean" ) > 0 .AND. ;
+         AScanL( aGNUMakeParams, "install" ) > 0 .AND. ;
+         AScanL( aGNUMakeParams, "install" ) > AScanL( aGNUMakeParams, "clean" )
          nAction := _ACT_CLEAN
       ELSE
          nAction := _ACT_CLEAN
       ENDIF
-   CASE AScan( aParams, "install" ) > 0
-      IF AScan( aGNUMakeParams, "clean" ) > 0 .AND. ;
-         AScan( aGNUMakeParams, "install" ) > 0 .AND. ;
-         AScan( aGNUMakeParams, "install" ) > AScan( aGNUMakeParams, "clean" )
+   CASE AScanL( aParams, "install" ) > 0
+      IF AScanL( aGNUMakeParams, "clean" ) > 0 .AND. ;
+         AScanL( aGNUMakeParams, "install" ) > 0 .AND. ;
+         AScanL( aGNUMakeParams, "install" ) > AScanL( aGNUMakeParams, "clean" )
          /* Use rebuild mode. This is needed because the clean phase
             might not have been called previously by GNU Make, f.e.
             because hbrun or hbmk2 wasn't available. -rebuild is
@@ -380,35 +369,21 @@ PROCEDURE GNUMake( ... )
       RETURN
    ENDIF
 
-   /* Check if the requirements are met and if we have anything to do */
-
-   IF Empty( GetEnv( "HB_PLATFORM" ) ) .OR. ;
-      Empty( GetEnv( "HB_COMPILER" ) ) .OR. ;
-      Empty( GetEnv( "HB_HOST_BIN_DIR" ) )
-      ErrorLevel( 9 )
-      RETURN
-   ENDIF
-
-   cFilter := GetEnv( "HB_CONTRIBS" )
-   /* Compatibility */
-   IF Empty( cFilter )
-      cFilter := GetEnv( "HB_CONTRIBLIBS" )
-   ENDIF
-
-   IF cFilter == "no"
-      ErrorLevel( 0 )
-      RETURN
-   ENDIF
-
    SetCancel( .F. )
 
-   /* Converting build options to hbmk2 options */
+   /* Parse filter */
 
-   cBaseOptions := ""
+   aFilter := iif( Empty( cFilter ), {}, hb_ATokens( cFilter,, .T. ) )
+   IF Len( aFilter ) >= 1 .AND. aFilter[ 1 ] == "no"
+      hb_ADel( aFilter, 1, .T. )
+      lFilterNegative := .T.
+   ELSE
+      lFilterNegative := .F.
+   ENDIF
 
    /* Clearing envvars that may interact with hbmk2 */
 
-   /* Copy original install dirs to our own variables */
+   /* Saving original install dirs to our own variables */
    hb_setenv( "_HB_BIN_INSTALL", GetEnv( "HB_BIN_INSTALL" ) )
    hb_setenv( "_HB_LIB_INSTALL", GetEnv( "HB_LIB_INSTALL" ) )
    hb_setenv( "_HB_DYN_INSTALL", GetEnv( "HB_DYN_INSTALL" ) )
@@ -421,17 +396,7 @@ PROCEDURE GNUMake( ... )
    hb_setenv( "HB_DYN_INSTALL" )
    hb_setenv( "HB_INC_INSTALL", s_cRoot + "include" )
 
-   /* Parse filter */
-
-   aFilter := iif( Empty( cFilter ), {}, hb_ATokens( cFilter,, .T. ) )
-   IF Len( aFilter ) >= 1 .AND. aFilter[ 1 ] == "no"
-      hb_ADel( aFilter, 1, .T. )
-      lFilterNegative := .T.
-   ELSE
-      lFilterNegative := .F.
-   ENDIF
-
-   /* Start building */
+   /* Preprocessing */
 
    cBinDir := GetEnv( "HB_HOST_BIN_DIR" ) + hb_ps()
 
@@ -442,61 +407,57 @@ PROCEDURE GNUMake( ... )
       aLibsPass2,;
       aLibsPass3,;
       aUtils,;
-      hb_ATokens( GetEnv( "HB_BUILD_ADDONS" ),, .T. ) }
+      aAddons }
+
+ OutStd( Len( aAll ) ) ; aAll := { { "rddads/rddads.hbp" } }
 
    OutStd( "! Calculating sorting order for contribs..." + hb_eol() )
 
    FOR EACH aList IN aAll
       FOR EACH cProject IN aList
          IF ! Empty( cProject )
-            call_hbmk2_dept( s_cRoot + "bin" + hb_ps(), s_cBase + cProject, @cType )
+            call_hbmk2_dept( s_cRoot + "bin" + hb_ps(), s_cBase + StrTran( cProject, "\", "/" ), @cType )
          ENDIF
       NEXT
    NEXT
 
-   OutStd( "! Building contribs..." + hb_eol() )
+   /* Converting build options to hbmk2 options */
+
+   hb_setenv( "_HB_BUILD_INSTALL" )
+
+   cBaseOptions := ""
+
+   IF nAction == _ACT_CLEAN
+      cBaseOptions += " -clean"
+   ELSE
+      cBaseOptions += " -inc"
+      IF nAction == _ACT_INC_REBUILD_INST
+         cBaseOptions += " -rebuild"
+      ENDIF
+      IF nAction == _ACT_INC_INST .OR. ;
+         nAction == _ACT_INC_REBUILD_INST
+         hb_setenv( "_HB_BUILD_INSTALL", "yes" )
+      ENDIF
+   ENDIF
+
+   /* Start building */
+
+   OutStd( hb_StrFormat( "! Contribs %1$s...", hActions[ nAction ] ) + hb_eol() )
 
    FOR EACH aList IN aAll
       FOR EACH cProject IN aList
 
          IF ! Empty( cProject )
 
-            cProject := StrTran( cProject, "\", "/" )
-
-            IF ( tmp := At( "/", cProject ) ) > 0
-               cProjectDir := Left( cProject, tmp - 1 )
-            ELSE
-               cProjectDir := ""
-            ENDIF
+            cProjectDir := StrTran( FNameDirGet( PathSepToSelf( cProject ) ), "\", "/" )
+            cProject := s_cBase + StrTran( cProject, "\", "/" )
 
             IF Empty( aFilter ) .OR. ;
                iif( lFilterNegative,;
                   AScan( aFilter, {| tmp | tmp == cProjectDir } ) == 0,;
                   AScan( aFilter, {| tmp | tmp == cProjectDir } ) > 0 )
 
-               cOptionsPre := cBaseOptions
-               cOptionsPost := ""
-
-               cType := get_hbmk2_project_type( s_cBase + cProject )
-
-               SWITCH cType
-               CASE "hblib"
-               CASE "hbimplib"
-                  cInstallDirVar := "_HB_LIB_INSTALL"
-                  EXIT
-               CASE "hbdyn"
-                  cInstallDirVar := "_HB_DYN_INSTALL"
-                  IF GetEnv( "HB_BUILD_SHARED" ) == "yes"
-                     cOptionsPre += " -shared"
-                  ENDIF
-                  EXIT
-               CASE "hbexe"
-                  cInstallDirVar := "_HB_BIN_INSTALL"
-                  IF GetEnv( "HB_BUILD_SHARED" ) == "yes"
-                     cOptionsPre += " -shared"
-                  ENDIF
-                  EXIT
-               ENDSWITCH
+               cType := get_hbmk2_project_type( cProject )
 
                IF cType $ "hbhrb|hbppo"
                   LOOP
@@ -507,54 +468,28 @@ PROCEDURE GNUMake( ... )
                   LOOP
                ENDIF
 
-               IF nAction == _ACT_CLEAN
-                  cOptionsPre += " -clean"
-               ELSE
-                  cOptionsPre += " -inc"
-                  IF nAction == _ACT_INC_REBUILD_INST
-                     cOptionsPre += " -rebuild"
-                  ENDIF
-                  IF nAction == _ACT_INC_INST .OR. ;
-                     nAction == _ACT_INC_REBUILD_INST
-                     IF ! Empty( GetEnv( cInstallDirVar ) ) .AND. ;
-                        ( ! ( cType == "hbimplib" ) .OR. GetEnv( "HB_BUILD_IMPLIB" ) == "yes" )
-                        cOptionsPre += " -instpath=${" + cInstallDirVar + "}/"
-                        IF cType == "hblib"
-                           cOptionsPre += " -instpath=inc:${_HB_INC_INSTALL}/"
-                        ENDIF
-                     ENDIF
-                  ENDIF
+               cOptionsPre := cBaseOptions
+               IF cType $ "hbdyn|hbexe" .AND. GetEnv( "HB_BUILD_SHARED" ) == "yes"
+                  cOptionsPre += " -shared"
                ENDIF
 
-               call_hbmk2( cBinDir, s_cBase + cProject, cOptionsPre, cOptionsPost )
+               call_hbmk2( cBinDir, cProject, cOptionsPre, "" )
 
                /* Highly experimental */
                IF cType == "hblib" .AND. GetEnv( "HB_BUILD_CONTRIB_DLL" ) == "yes" .AND. ;
                   !( GetEnv( "HB_BUILD_PARTS" ) == "lib" ) .AND. ;
-                  hb_FileExists( FNameExtSet( s_cBase + cProject, ".hbc" ) )
-
-                  cInstallDirVar := "_HB_DYN_INSTALL"
+                  hb_FileExists( PathSepToSelf( FNameExtSet( cProject, ".hbc" ) ) )
 
                   cOptionsPre := cBaseOptions
                   /* TOFIX: Add -implib option. It collides with static lib so needs to be resolved. */
                   cOptionsPost := " -hbdyn -nohblib- " + FNameExtSet( cProject, ".hbc" )
 
-                  IF nAction == _ACT_CLEAN
-                     cOptionsPre += " -clean"
-                  ELSE
-                     cOptionsPre += " -inc"
-                     IF nAction == _ACT_INC_REBUILD_INST
-                        cOptionsPre += " -rebuild"
-                     ENDIF
-                     IF nAction == _ACT_INC_INST .OR. ;
-                        nAction == _ACT_INC_REBUILD_INST
-                        IF ! Empty( GetEnv( cInstallDirVar ) )
-                           cOptionsPre += " -instpath=${" + cInstallDirVar + "}/"
-                        ENDIF
-                     ENDIF
-                  ENDIF
+                  call_hbmk2( cBinDir, cProject, cOptionsPre, cOptionsPost )
+               ENDIF
 
-                  call_hbmk2( cBinDir, s_cBase + cProject, cOptionsPre, cOptionsPost )
+               IF nAction == _ACT_INC_INST .OR. ;
+                  nAction == _ACT_INC_REBUILD_INST
+                  mk_hbd( PathSepToSelf( cProjectDir ) )
                ENDIF
             ELSE
                /* OutStd( hb_StrFormat( "! project '%1$s' skipped", cProject ) + hb_eol() ) */
@@ -573,7 +508,7 @@ STATIC FUNCTION call_hbmk2_dept( cBinDir, cProject, /* @ */ cType )
 
    cType := ""
 
-   hb_processRun( PathSepToSelf( cBinDir ) + "hbmk2 --hbinfo " + cProject,, @tmp  )
+   hb_processRun( PathSepToSelf( cBinDir ) + "hbmk2 --hbinfo " + StrTran( cProject, "\", "/" ),, @tmp  )
 
    IF ( tmp1 := At( "targettype{{", tmp ) ) > 0
       tmp := SubStr( tmp, tmp1 + Len( "targettype{{" ) )
@@ -600,14 +535,12 @@ STATIC FUNCTION call_hbmk2_dept( cBinDir, cProject, /* @ */ cType )
 STATIC FUNCTION call_hbmk2( cBinDir, cProject, cOptionsPre, cOptionsPost )
    LOCAL nErrorLevel
 
-   IF ! Empty( GetEnv( "HB_BUILD_NAME" ) )
-      cOptionsPre += " -build=" + GetEnv( "HB_BUILD_NAME" )
-   ENDIF
-
    nErrorLevel := mk_hb_processRun( PathSepToSelf( cBinDir ) + "hbmk2" +;
-                                    " -lang=en -width=0 @" + s_cHome + "hbpre" + cOptionsPre +;
-                                    " " + cProject +;
-                                    " @" + s_cHome + "hbpost" +;
+                                    " -lang=en -width=0" +;
+                                    " @" + StrTran( s_cHome + "hbpre", "\", "/" ) +;
+                                    cOptionsPre +;
+                                    " " + StrTran( cProject, "\", "/" ) +;
+                                    " @" + StrTran( s_cHome, "\", "/" ) + "hbpost" +;
                                     cOptionsPost )
 
    IF nErrorLevel != 0
@@ -623,6 +556,40 @@ STATIC FUNCTION mk_hb_processRun( cCommand )
 
    RETURN iif( s_lTest, 0, hb_processRun( cCommand ) )
 
+STATIC FUNCTION mk_hbd( cDir )
+   LOCAL cName
+   LOCAL tmp
+
+   LOCAL aErrMsg
+   LOCAL aEntry
+
+   IF ! Empty( GetEnv( "HB_DOC_INSTALL" ) )
+
+      cName := DirGetName( cDir )
+      IF Empty( cName )
+         cName := "harbour"
+      ENDIF
+
+      aErrMsg := {}
+      aEntry := __hbdoc_LoadDir( cDir, cName, aErrMsg )
+
+      FOR EACH tmp IN aErrMsg
+         OutErr( hb_StrFormat( "! %1$s", tmp ) + hb_eol() )
+      NEXT
+
+      IF ! Empty( aEntry )
+         cName := PathSepToSelf( GetEnv( "HB_DOC_INSTALL" ) ) + hb_ps() + cName + ".hbd"
+         IF __hbdoc_SaveHBD( cName, aEntry )
+            OutStd( "! Compiled documentation: " + cName + " <= " + cDir + hb_eol() )
+            RETURN .T.
+         ELSE
+            OutErr( hb_StrFormat( "! Error: Saving '%1$s'", cName ) + hb_eol() )
+         ENDIF
+      ENDIF
+   ENDIF
+
+   RETURN .F.
+
 STATIC FUNCTION get_hbmk2_project_type( cFileName )
    LOCAL cFile := MemoRead( PathSepToSelf( cFileName ) )
 
@@ -634,12 +601,50 @@ STATIC FUNCTION get_hbmk2_project_type( cFileName )
 
    RETURN "hbexe"
 
+STATIC FUNCTION AScanL( aArray, cString )
+   RETURN AScan( aArray, {| tmp | Lower( tmp ) == cString } )
+
+STATIC FUNCTION FNameDirGet( cFileName )
+   LOCAL cDir
+
+   hb_FNameSplit( cFileName, @cDir )
+
+   RETURN cDir
+
 STATIC FUNCTION FNameExtSet( cFileName, cExt )
    LOCAL cDir, cName
 
    hb_FNameSplit( cFileName, @cDir, @cName )
 
    RETURN hb_FNameMerge( cDir, cName, cExt )
+
+STATIC FUNCTION DirGetName( cDir )
+   LOCAL cName
+
+   cDir := DirDelPathSep( cDir )
+
+   hb_FNameSplit( cDir,, @cName )
+
+   IF Empty( cName ) .OR. cName == "." .OR. cName == ".."
+      RETURN ""
+   ENDIF
+
+   RETURN cName
+
+STATIC FUNCTION DirDelPathSep( cDir )
+
+   IF Empty( hb_osDriveSeparator() )
+      DO WHILE Len( cDir ) > 1 .AND. Right( cDir, 1 ) == hb_ps()
+         cDir := hb_StrShrink( cDir, 1 )
+      ENDDO
+   ELSE
+      DO WHILE Len( cDir ) > 1 .AND. Right( cDir, 1 ) == hb_ps() .AND. ;
+               !( Right( cDir, 2 ) == hb_osDriveSeparator() + hb_ps() )
+         cDir := hb_StrShrink( cDir, 1 )
+      ENDDO
+   ENDIF
+
+   RETURN cDir
 
 STATIC FUNCTION PathSepToSelf( cFileName )
 #if defined( __PLATFORM__WINDOWS ) .OR. ;

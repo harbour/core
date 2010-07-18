@@ -12,3 +12,5 @@
 
 {HB_BUILD_MODE='cpp'}-cpp=yes
 {HB_BUILD_MODE='c'}-cpp=no
+
+-warn=yes
