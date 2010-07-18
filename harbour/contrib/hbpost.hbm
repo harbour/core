@@ -5,6 +5,8 @@
 # These are mandatory in Harbour SVN, they will always
 # override project options.
 
+"{HB_BUILD_PARTS='lib'&!(hbimplib|hblib)}-stop=! Skipped because HB_BUILD_PARTS=lib"
+
 -prgflag=-w3
 -prgflag=-es2
 -prgflag=-kmo
