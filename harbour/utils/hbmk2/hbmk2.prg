@@ -220,6 +220,9 @@ REQUEST hbmk_KEYW
 #define _HBMK_HAS_PREF          "HBMK_HAS_"
 #define _HBMK_SCRIPT            "__HBSCRIPT__HBMK"
 
+#define _HBMK_IMPLIB_EXE_POST   "_exe"
+#define _HBMK_IMPLIB_DLL_POST   "_dll"
+
 #define _HBMK_NEST_MAX          10
 #define _HBMK_HEAD_NEST_MAX     10
 
@@ -3455,7 +3458,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             AAdd( hbmk[ _HBMK_aOPTL ], "OP map" )
             AAdd( hbmk[ _HBMK_aOPTD ], "OP map" )
          ENDIF
-         IF hbmk[ _HBMK_lIMPLIB ] .AND. hbmk[ _HBMK_cPLAT ] $ "win|os2"
+         IF hbmk[ _HBMK_lIMPLIB ] .AND. hbmk[ _HBMK_cPLAT ] $ "win|os2" /* dos? */
             AAdd( hbmk[ _HBMK_aOPTL ], "OP implib={OI}" )
             AAdd( hbmk[ _HBMK_aOPTD ], "OP implib={OI}" )
          ENDIF
@@ -3571,8 +3574,14 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             AAdd( hbmk[ _HBMK_aOPTD ], "-ap" )
          ENDIF
          IF hbmk[ _HBMK_lIMPLIB ]
-            AAdd( hbmk[ _HBMK_aOPTL ], "-Gi" )
-            AAdd( hbmk[ _HBMK_aOPTD ], "-Gi" )
+            /* NOTE: Borland C doesn't support creating implibs with a specific name,
+                     so it's done using post command. The resulting implib won't be
+                     as optimal as the generated one, but it _should_ be the same.
+                     [vszakats] */
+            /* AAdd( hbmk[ _HBMK_aOPTL ], "-Gi" ) */
+            /* AAdd( hbmk[ _HBMK_aOPTD ], "-Gi" ) */
+            cBin_Post := "implib.exe "
+            cOpt_Post := "{OI} {OB}"
          ENDIF
          IF ! Empty( hbmk[ _HBMK_cWorkDir ] )
             AAdd( hbmk[ _HBMK_aOPTC ], "-n" + FNameEscape( hbmk[ _HBMK_cWorkDir ], hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) )
@@ -4202,12 +4211,12 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          IF Empty( cExt ) .AND. ! Empty( cBinExt )
             hbmk[ _HBMK_cPROGNAME ] := hb_FNameMerge( cDir, cName, cBinExt )
          ENDIF
-         l_cIMPLIBNAME := hb_FNameMerge( cDir, cLibLibPrefix + cName, cLibLibExt )
+         l_cIMPLIBNAME := hb_FNameMerge( cDir, cLibLibPrefix + cName + _HBMK_IMPLIB_EXE_POST, cLibLibExt )
       CASE lStopAfterCComp .AND. hbmk[ _HBMK_lCreateDyn ]
          IF Empty( cExt ) .AND. ! Empty( cDynLibExt )
             hbmk[ _HBMK_cPROGNAME ] := hb_FNameMerge( cDir, cName, cDynLibExt )
          ENDIF
-         l_cIMPLIBNAME := hb_FNameMerge( cDir, cLibLibPrefix + cName, cLibLibExt )
+         l_cIMPLIBNAME := hb_FNameMerge( cDir, cLibLibPrefix + cName + _HBMK_IMPLIB_DLL_POST, cLibLibExt )
       CASE lStopAfterCComp .AND. hbmk[ _HBMK_lCreateLib ]
          hbmk[ _HBMK_cPROGNAME ] := hb_FNameMerge( cDir, cLibLibPrefix + cName, iif( Empty( cLibLibExt ), cExt, cLibLibExt ) )
       ENDCASE
@@ -5394,6 +5403,10 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                   FErase( cScriptFile )
                ENDIF
 
+               IF hbmk[ _HBMK_lIMPLIB ] .AND. hbmk[ _HBMK_nErrorLevel ] == 0 .AND. hbmk[ _HBMK_cPLAT ] $ "win|os2|dos"
+                  hb_AIns( hbmk[ _HBMK_aINSTFILE ], 1, { "", l_cIMPLIBNAME }, .T. )
+               ENDIF
+
                IF hbmk[ _HBMK_nErrorLevel ] == 0 .AND. hbmk[ _HBMK_lGUI ] .AND. hbmk[ _HBMK_cPLAT ] == "darwin"
                   /* Build app bundle for OS X GUI apps. (experimental) */
                   tmp := FNameDirGet( hbmk[ _HBMK_cPROGNAME ] )
@@ -5485,6 +5498,10 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
                IF ! Empty( cScriptFile )
                   FErase( cScriptFile )
+               ENDIF
+
+               IF hbmk[ _HBMK_lIMPLIB ] .AND. hbmk[ _HBMK_nErrorLevel ] == 0 .AND. hbmk[ _HBMK_cPLAT ] $ "win|os2|dos"
+                  hb_AIns( hbmk[ _HBMK_aINSTFILE ], 1, { "", l_cIMPLIBNAME }, .T. )
                ENDIF
 
             CASE lStopAfterCComp .AND. hbmk[ _HBMK_lCreateLib ] .AND. ! Empty( cBin_Lib )
@@ -5604,7 +5621,8 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
          IF ! Empty( cBin_Post )
 
-            cOpt_Post := StrTran( cOpt_Post, "{OB}", hbmk[ _HBMK_cPROGNAME ] )
+            cOpt_Post := StrTran( cOpt_Post, "{OB}", FNameEscape( hbmk[ _HBMK_cPROGNAME ], hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) )
+            cOpt_Post := StrTran( cOpt_Post, "{OI}", FNameEscape( l_cIMPLIBNAME, hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) )
             cOpt_Post := AllTrim( cOpt_Post )
 
             cCommand := cBin_Post + " " + cOpt_Post
@@ -10604,7 +10622,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-[no]optim"         , I_( "toggle C compiler optimizations (default: on)" ) },;
       { "-[no]cpp[=def]"     , I_( "force C/C++ mode or reset to default" ) },;
       { "-[no]map"           , I_( "create (or not) a map file" ) },;
-      { "-[no]implib"        , I_( "create (or not) an import library (in -hbdyn mode)" ) },;
+      { "-[no]implib"        , I_( "create (or not) an import library (in -hbdyn/-hbexe mode). The name will have a postfix added." ) },;
       { "-[no]strip"         , I_( "strip (no strip) binaries" ) },;
       { "-[no]trace"         , I_( "show commands executed" ) },;
       { "-[no]beep"          , I_( "enable (or disable) single beep on successful exit, double beep on failure" ) },;

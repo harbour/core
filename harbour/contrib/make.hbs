@@ -154,7 +154,7 @@ PROCEDURE Main( ... )
    s_cHome := StrTran( hb_DirBase(), hb_ps(), "/" )
    s_cRoot := s_cHome + "../"
 
-   IF "migr" $ hb_cmdLine() .OR. .T.
+   IF "migr" $ hb_cmdLine() // .OR. .T.
       hb_setenv( "_HB_BUILD_MIGR", "yes" )
    ENDIF
 
@@ -409,7 +409,7 @@ PROCEDURE GNUMake( ... )
       aUtils,;
       aAddons }
 
- OutStd( Len( aAll ) ) ; aAll := { { "rddads/rddads.hbp" } }
+// OutStd( Len( aAll ) ) ; aAll := { { "rddads/rddads.hbp" } }
 
    OutStd( "! Calculating sorting order for contribs..." + hb_eol() )
 
@@ -481,8 +481,7 @@ PROCEDURE GNUMake( ... )
                   hb_FileExists( PathSepToSelf( FNameExtSet( cProject, ".hbc" ) ) )
 
                   cOptionsPre := cBaseOptions
-                  /* TOFIX: Add -implib option. It collides with static lib so needs to be resolved. */
-                  cOptionsPost := " -hbdyn -nohblib- " + FNameExtSet( cProject, ".hbc" )
+                  cOptionsPost := " -hbdyn -nohblib- -implib " + FNameExtSet( cProject, ".hbc" )
 
                   call_hbmk2( cBinDir, cProject, cOptionsPre, cOptionsPost )
                ENDIF
