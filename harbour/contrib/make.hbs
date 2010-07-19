@@ -4,98 +4,103 @@
  */
 
 /*
- * Contrib build starter script.
+ * Harbour Project source code:
+ * Contrib build orchestrator script.
  *
  * Copyright 2010 Viktor Szakats (harbour.01 syenar.hu)
- * See COPYING for licensing terms.
+ * www - http://harbour-project.org
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
+ * their web site at http://www.gnu.org/).
+ *
  */
 
 /* TODO:
-     0. normalize path to hbpre/hbpost to save on cmdline
-     1. error handling / reporting / feedback
+     1. normalize path to hbpre/hbpost to save on cmdline
      2. clean this source to avoid redundancy
      3. solve HB_BUILD_CONTRIB_DLL support the .dlls are either
         huge, or they don't link.
      4. hbmk2 location detection in standalone mode
         (move hbmk2 to core lib?)
-     5. gnumake mode: automatically decide about build order,
-        based on dependencies (implibs -> libs[TODO!] -> exes)
-     7. Move in external libs to contrib area? (bz2, minizip, sqlite3)
-     8. Pull the list of .hbp files from an external file
+     5. Move in external libs to contrib area? (bz2, minizip, sqlite3)
+     7. Pull the list of .hbp files from an external file
         (so it can be used in stdalone mode, and the script can be
         moved to bin and used in more generic way f.e. for examples
         and local projects)
-     9. 'install' is ignored in stdalone mode. It would be needed to
+     8. 'install' is ignored in stdalone mode. It would be needed to
         replicate the install dir defaulting logic found in global.mk
+     9. Delete header install related logic from GNU Make system,
+        also delete doc install related logic (easily replacable
+        with postinst.hbs logic)
+    10. Delete Makefiles in contrib area.
  */
 
 #pragma warninglevel=3
 
 /* ----------------------------------------------------------------------- */
 
-STATIC s_aList := {;
-   { 1, "hbblink/hbblink.hbp"        },;
-   { 1, "hbbz2/hbbz2.hbp"            },; /* uses: bz2 (external) */
-   { 1, "hbclipsm/hbclipsm.hbp"      },;
-   { 1, "hbcomm/hbcomm.hbp"          },;
-   { 1, "hbct/hbct.hbp"              },;
-   { 1, "hbfoxpro/hbfoxpro.hbp"      },;
-   { 1, "hbfship/hbfship.hbp"        },;
-   { 1, "hbgt/hbgt.hbp"              },;
-   { 1, "hbmemio/hbmemio.hbp"        },;
-   { 1, "hbmisc/hbmisc.hbp"          },;
-   { 1, "hbmzip/hbmzip.hbp"          },; /* uses: minizip (external) */
-   { 1, "hbnetio/hbnetio.hbp"        },;
-   { 1, "hbnf/hbnf.hbp"              },;
-   { 1, "hbodbc/hbodbc.hbp"          },;
-   { 1, "hbsms/hbsms.hbp"            },;
-   { 1, "hbsqlit3/hbsqlit3.hbp"      },; /* uses: sqlite3 (external) */
-   { 1, "hbtpathy/hbtpathy.hbp"      },;
-   { 1, "hbwin/hbwin.hbp"            },;
-   { 1, "hbxpp/hbxpp.hbp"            },;
-   { 1, "rddbmcdx/hbbmcdx.hbp"       },;
-   { 2, "gtalleg/gtalleg.hbp"        },;
-   { 2, "gtalleg/gtallegs.hbp"       },;
-   { 2, "hbblat/hbblat.hbp"          },;
-   { 2, "hbcairo/hbcairo.hbp"        },;
-   { 2, "hbcups/hbcups.hbp"          },;
-   { 2, "hbcurl/hbcurl.hbp"          },;
-   { 2, "hbcurl/hbcurls.hbp"         },;
-   { 2, "hbfbird/hbfbird.hbp"        },;
-   { 2, "hbfimage/hbfimage.hbp"      },;
-   { 2, "hbgd/hbgd.hbp"              },; /* uses: hbct */
-   { 2, "hbhpdf/hbhpdf.hbp"          },;
-   { 2, "hbmysql/hbmysql.hbp"        },;
-   { 2, "hbpgsql/hbpgsql.hbp"        },;
-   { 2, "hbqt/hbqt.hbp"              },;
-   { 2, "hbqt/hbqtcore.hbp"          },;
-   { 2, "hbqt/hbqtcores.hbp"         },;
-   { 2, "hbqt/hbqtgui.hbp"           },;
-   { 2, "hbqt/hbqtguis.hbp"          },;
-   { 2, "hbqt/hbqtnetwork.hbp"       },;
-   { 2, "hbqt/hbqtnetworks.hbp"      },;
-   { 2, "hbqt/hbqts.hbp"             },;
-   { 2, "hbssl/hbssl.hbp"            },;
-   { 2, "hbssl/hbssls.hbp"           },;
-   { 2, "hbxbp/hbxbp.hbp"            },; /* uses: hbqt */
-   { 2, "rddads/rddads.hbp"          },;
-   { 2, "rddsql/rddsql.hbp"          },;
-   { 2, "sddfb/sddfb.hbp"            },; /* uses: rddsql */
-   { 2, "sddmy/sddmy.hbp"            },; /* uses: rddsql */
-   { 2, "sddoci/sddoci.hbp"          },; /* uses: rddsql */
-   { 2, "sddodbc/sddodbc.hbp"        },; /* uses: rddsql */
-   { 2, "sddpg/sddpg.hbp"            },; /* uses: rddsql */
-   { 2, "sddsqlt3/sddsqlt3.hbp"      },; /* uses: rddsql, sqlite3 (external) */
-   { 3, "gtwvg/gtwvg.hbp"            },; /* uses: hbwin */
-   { 3, "hbtip/hbtip.hbp"            },;
-   { 3, "hbtip/hbtipssl.hbp"         },; /* uses: hbssl */
-   { 3, "hbziparc/hbziparc.hbp"      },; /* uses: hbmzip */
-   { 3, "xhb/xhb.hbp"                },; /* uses: hbct, hbtip, hbwin */
-   { 4, "hbdoc2/hbdoc2.hbp"          },;
-   { 4, "hbnetio/utils/hbnetio.hbp"  },; /* uses: hbnetio */
-   { 4, "hbide/hbide.hbp"            }}  /* uses: hbxbp, hbqt */
-
-STATIC s_aAddons := {}
+STATIC s_hProjectList := {;
+   "hbblink"       => { "hbblink"             },;
+   "hbbz2"         => { "hbbz2"               },; /* uses: bz2 (external) */
+   "hbclipsm"      => { "hbclipsm"            },;
+   "hbcomm"        => { "hbcomm"              },;
+   "hbct"          => { "hbct"                },;
+   "hbfoxpro"      => { "hbfoxpro"            },;
+   "hbfship"       => { "hbfship"             },;
+   "hbgt"          => { "hbgt"                },;
+   "hbmemio"       => { "hbmemio"             },;
+   "hbmisc"        => { "hbmisc"              },;
+   "hbmzip"        => { "hbmzip"              },; /* uses: minizip (external) */
+   "hbnetio"       => { "hbnetio"             },;
+   "hbnf"          => { "hbnf"                },;
+   "hbodbc"        => { "hbodbc"              },;
+   "hbsms"         => { "hbsms"               },;
+   "hbsqlit3"      => { "hbsqlit3"            },; /* uses: sqlite3 (external) */
+   "hbtpathy"      => { "hbtpathy"            },;
+   "hbwin"         => { "hbwin"               },;
+   "hbxpp"         => { "hbxpp"               },;
+   "rddbmcdx"      => { "hbbmcdx"             },;
+   "gtalleg"       => { "gtalleg", "gtallegs" },;
+   "hbblat"        => { "hbblat"              },;
+   "hbcairo"       => { "hbcairo"             },;
+   "hbcups"        => { "hbcups"              },;
+   "hbcurl"        => { "hbcurl", "hbcurls"   },;
+   "hbfbird"       => { "hbfbird"             },;
+   "hbfimage"      => { "hbfimage"            },;
+   "hbgd"          => { "hbgd"                },;
+   "hbhpdf"        => { "hbhpdf"              },;
+   "hbmysql"       => { "hbmysql"             },;
+   "hbpgsql"       => { "hbpgsql"             },;
+   "hbqt"          => { "hbqt", "hbqts", "hbqtcore", "hbqtcores", "hbqtgui", "hbqtguis", "hbqtnetwork", "hbqtnetworks" },;
+   "hbssl"         => { "hbssl", "hbssls"     },;
+   "hbxbp"         => { "hbxbp"               },;
+   "rddads"        => { "rddads"              },;
+   "rddsql"        => { "rddsql"              },;
+   "sddfb"         => { "sddfb"               },;
+   "sddmy"         => { "sddmy"               },;
+   "sddoci"        => { "sddoci"              },;
+   "sddodbc"       => { "sddodbc"             },;
+   "sddpg"         => { "sddpg"               },;
+   "sddsqlt3"      => { "sddsqlt3"            },;
+   "gtwvg"         => { "gtwvg"               },;
+   "hbtip"         => { "hbtip", "hbtipssl"   },;
+   "hbziparc"      => { "hbziparc"            },;
+   "xhb"           => { "xhb"                 },;
+   "hbdoc2"        => { "hbdoc2"              },;
+   "hbnetio/utils" => { "hbnetio"             },;
+   "hbide"         => { "hbide"               }}
 
 /* ----------------------------------------------------------------------- */
 
@@ -103,7 +108,6 @@ STATIC s_aAddons := {}
 #define F_NAME                  1       /* File name */
 #define F_ATTR                  5       /* File attribute */
 
-#define _ACT_EXIT               0
 #define _ACT_CLEAN              1
 #define _ACT_INC                2
 #define _ACT_INC_INST           3
@@ -121,7 +125,10 @@ STATIC s_cRoot
 STATIC s_lTest
 
 PROCEDURE Main( ... )
+   LOCAL aProject
    LOCAL tmp
+
+   SetCancel( .F. )
 
    s_cBase := ""
    s_cHome := StrTran( hb_DirBase(), hb_ps(), "/" )
@@ -133,48 +140,57 @@ PROCEDURE Main( ... )
       hb_setenv( "_HB_BUILD_MIGR", "yes" )
    ENDIF
 
-   /* Making sure that user settings do not interfere with the std build process. */
-   hb_setenv( "HBMK_OPTIONS" )
+   /* Convert list of contribs */
 
-   FOR EACH tmp IN hb_ATokens( GetEnv( "HB_BUILD_ADDONS" ),, .T. )
-      IF ! Empty( tmp )
-         AAdd( s_aAddons, { 9, StrTran( tmp, "\", "/" ) } )
-      ENDIF
+   FOR EACH aProject IN s_hProjectList
+      FOR EACH tmp IN aProject
+         tmp := { "cFileName" => tmp }
+      NEXT
    NEXT
 
+   /* Build */
+
    IF Empty( GetEnv( "HB_HOST_BIN_DIR" ) )
-      StandAlone( ... )
+      Standalone( ... )
    ELSE
       GNUMake( ... )
    ENDIF
 
    RETURN
 
-/*
-  Workflow translation for standalone operation:
+/* Workflow translation for standalone operation:
 
-     GNU Make       parameter      nAction                hbmk2 options
-  -- -------------- -------------- ---------------------- -------------------------
-  #1 clean          clean          _ACT_CLEAN             -clean
-  #2 install        install        _ACT_INC_INST          -inc -instpath=
-  #3 clean install  clean install  _ACT_INC_REBUILD_INST  -inc -instpath= -rebuild
-  #4                               _ACT_INC               -inc
-
+      GNU Make       parameter      nAction                hbmk2 options
+   -- -------------- -------------- ---------------------- -------------------------
+   #1 clean          clean          _ACT_CLEAN             -clean
+   #2 install        install        _ACT_INC_INST          -inc -instpath=
+   #3 clean install  clean install  _ACT_INC_REBUILD_INST  -inc -instpath= -rebuild
+   #4                               _ACT_INC               -inc
  */
-PROCEDURE StandAlone( ... )
+PROCEDURE Standalone( ... )
    LOCAL aParams
 
+   LOCAL aFileList
    LOCAL aFile
-   LOCAL cType
-   LOCAL aDept
+
+   LOCAL aSortedList
 
    LOCAL cBinDir
+   LOCAL hProject
    LOCAL cProject
+   LOCAL cProjectDir
 
-   LOCAL cBaseOptions
+   LOCAL cOptions
+   LOCAL cOptionsUser
 
    LOCAL nAction
    LOCAL tmp
+
+   LOCAL lCustom
+
+   LOCAL aPairList
+
+   /* Processing cmdline options */
 
    aParams := hb_AParams()
 
@@ -191,91 +207,141 @@ PROCEDURE StandAlone( ... )
       nAction := _ACT_INC
    ENDCASE
 
-   IF nAction == _ACT_EXIT
-      ErrorLevel( 0 )
-      RETURN
-   ENDIF
-
-   SetCancel( .F. )
-
-   /* Converting build options to hbmk2 options */
-
-   cBaseOptions := ""
-
-   IF nAction == _ACT_CLEAN
-      cBaseOptions += " -clean"
-   ELSE
-      cBaseOptions += " -inc"
-      IF nAction == _ACT_INC_REBUILD_INST
-         cBaseOptions += " -rebuild"
-      ENDIF
-   ENDIF
-
+   cOptionsUser := ""
+   lCustom := .F.
    FOR EACH tmp IN aParams
       IF !( Lower( tmp ) == "install" ) .AND. ;
          !( Lower( tmp ) == "clean" ) .AND. ;
-         !( Lower( tmp ) == "all" )
-         cBaseOptions += " " + tmp
+         !( Lower( tmp ) == "all" ) .AND. ;
+         !( Lower( tmp ) == "first" )
+
+         cOptionsUser += " " + tmp
+
+         /* If anything else is passed the options or GNU Make keywords,
+            consider it a custom project build, f.e. in tests */
+         IF !( Left( tmp, 1 ) == "-" )
+            lCustom := .T.
+         ENDIF
       ENDIF
    NEXT
 
    cBinDir := s_cRoot + "bin" + hb_ps()
 
-   FOR EACH aFile IN Directory( "*.hbp" )
+   IF lCustom
+      mk_hb_processRun( PathSepToSelf( cBinDir ) + "hbmk2" + cOptionsUser )
+   ELSE
+      /* Converting build options to hbmk2 options */
 
-      /* TODO: If project not on official project list, pass the raw call to hbmk2 */
-      /* TODO: Also rebuild the dependencies (in proper order) */
+      cOptions := ""
 
-      cProject := s_cBase + StrTran( aFile[ F_NAME ], "\", "/" )
-
-      call_hbmk2_dept( s_cRoot + "bin" + hb_ps(), cProject, @cType, @aDept )
-
-      OutStd( cProject + " type: " + cType )
-      IF ! Empty( aDept )
-         OutStd( " depends on: " )
-         AEval( aDept, {| tmp | OutStd( tmp ) } )
-      ENDIF
-      OutStd( hb_eol() )
-
-      IF cType $ "hbhrb|hbppo"
-         LOOP
+      IF nAction == _ACT_CLEAN
+         cOptions += " -clean"
+      ELSE
+         cOptions += " -inc"
+         IF nAction == _ACT_INC_REBUILD_INST
+            cOptions += " -rebuild"
+         ENDIF
       ENDIF
 
-      call_hbmk2( cBinDir, cProject, cBaseOptions, "" )
+      aFileList := Directory( "*.hbp" )
+      IF ! Empty( aFileList )
 
-      IF hb_FileExists( PathSepToSelf( FNameExtSet( cProject, ".hbi" ) ) )
-         call_hbmk2( cBinDir, FNameExtSet( cProject, ".hbi" ), cBaseOptions, "" )
+         s_hProjectList[ "." ] := {}
+         FOR EACH aFile IN aFileList
+            AAdd( s_hProjectList[ "." ], { "cFileName" => aFile[ F_NAME ] } )
+         NEXT
+
+         aPairList := {}
+         FOR EACH hProject IN s_hProjectList[ "." ]
+
+            hProject[ "cType" ] := NIL
+            hProject[ "aDept" ] := NIL
+            hProject[ "lInc" ] := NIL
+
+            call_hbmk2_hbinfo( cBinDir, s_cBase + "." + "/" + FNameExtSet( hProject[ "cFileName" ], ".hbp" ), @hProject[ "cType" ], @hProject[ "aDept" ], @hProject[ "lInc" ] )
+
+            OutStd( "'" + hProject[ "cFileName" ] + "' type: " + hProject[ "cType" ] )
+            IF ! Empty( hProject[ "aDept" ] )
+               OutStd( " depends on:" )
+               AEval( hProject[ "aDept" ], {| tmp | OutStd( " " + tmp ) } )
+            ENDIF
+            OutStd( hb_eol() )
+
+            DeptLinesToDeptList( aPairList, ".", hProject[ "aDept" ] )
+         NEXT
+
+//       _PairsDisp( aPairList )
+         aSortedList := TopoSort( aPairList )
+//       _ArrayDisp( aSortedList )
+
+         FOR EACH cProjectDir IN aSortedList DESCEND
+            FOR EACH hProject IN s_hProjectList[ cProjectDir ]
+               cProject := s_cBase + iif( cProjectDir == ".", "", s_cHome ) + cProjectDir + "/" + hProject[ "cFileName" ]
+               call_hbmk2( cBinDir, FNameExtSet( cProject, ".hbp" ), iif( cProjectDir == ".", cOptions + cOptionsUser, "" ), "" )
+               IF hb_FileExists( PathSepToSelf( FNameExtSet( cProject, ".hbi" ) ) )
+                  call_hbmk2( cBinDir, s_cBase + FNameExtSet( cProject, ".hbi" ), iif( cProjectDir == ".", cOptions + cOptionsUser, "" ), "" )
+               ENDIF
+            NEXT
+         NEXT
       ENDIF
-   NEXT
+   ENDIF
 
    ErrorLevel( 0 )
 
    RETURN
 
-/*
-  Workflow translation from GNU Make to hbmk2:
+STATIC PROCEDURE _PairsDisp( aPairs )
+   LOCAL aPair
 
-     GNU Make       parameter  HB_MAKECMDGOALS  nAction                hbmk2 options
-  -- -------------- ---------- ---------------- ---------------------- -------------------------
-  #1 clean          clean      clean            _ACT_CLEAN             -clean
-  #2 install        install    install          _ACT_INC_INST          -inc -instpath=
-  #3 clean install  clean      clean install    _ACT_CLEAN             -clean
-                    install    clean install    _ACT_INC_REBUILD_INST  -inc -instpath= -rebuild
-  #4 install clean  install    install clean    _ACT_INC_INST          -inc -instpath=
-                    clean      install clean    _ACT_CLEAN             -clean
-  #5                all                         _ACT_INC               -inc
+   OutStd( "PAIRS (EDGES)" + hb_eol() )
+   FOR EACH aPair IN aPairs
+      OutStd( aPair[ 1 ] + " -> " + aPair[ 2 ] + hb_eol() )
+   NEXT
 
+   RETURN
+
+STATIC PROCEDURE _ArrayDisp( aArray )
+   LOCAL item
+
+   OutStd( "REVERSE SORTED LIST: " )
+   FOR EACH item IN aArray
+      OutStd( item, " " )
+   NEXT
+   OutStd( hb_eol() )
+
+   RETURN
+
+STATIC PROCEDURE _HashKeyListDisp( hVar )
+   LOCAL item
+
+   OutStd( "REVERSE SORTED LIST: " )
+   FOR EACH item IN hVar
+      OutStd( item:__enumKey(), " " )
+   NEXT
+   OutStd( hb_eol() )
+
+   RETURN
+
+/* Workflow translation from GNU Make to hbmk2:
+
+      GNU Make       parameter  HB_MAKECMDGOALS  nAction                hbmk2 options
+   -- -------------- ---------- ---------------- ---------------------- -------------------------
+   #1 clean          clean      clean            _ACT_CLEAN             -clean
+   #2 install        install    install          _ACT_INC_INST          -inc -instpath=
+   #3 clean install  clean      clean install    _ACT_CLEAN             -clean
+                     install    clean install    _ACT_INC_REBUILD_INST  -inc -instpath= -rebuild
+   #4 install clean  install    install clean    _ACT_INC_INST          -inc -instpath=
+                     clean      install clean    _ACT_CLEAN             -clean
+   #5                all                         _ACT_INC               -inc
  */
-
 PROCEDURE GNUMake( ... )
-   LOCAL cType
-
    LOCAL cBinDir
+   LOCAL hProject
    LOCAL aProject
    LOCAL cProject
    LOCAL cProjectDir
 
-   LOCAL cBaseOptions
+   LOCAL cOptions
 
    LOCAL cFilter
    LOCAL aFilter
@@ -284,6 +350,15 @@ PROCEDURE GNUMake( ... )
    LOCAL aParams
    LOCAL aGNUMakeParams
    LOCAL nAction
+
+   LOCAL cDir
+   LOCAL cName
+   LOCAL cItem
+
+   LOCAL aPairList
+   LOCAL lAnyAddons
+
+   LOCAL aSortedList
 
    /* Check if the requirements are met and if we have anything to do */
 
@@ -304,6 +379,17 @@ PROCEDURE GNUMake( ... )
       ErrorLevel( 0 )
       RETURN
    ENDIF
+
+   /* Load list of addons. Convert it to our internal format */
+
+   lAnyAddons := .F.
+   FOR EACH cItem IN hb_ATokens( GetEnv( "HB_BUILD_ADDONS" ),, .T. )
+      IF ! Empty( cItem )
+         hb_FNameSplit( PathSepToSelf( cItem ), @cDir, @cName )
+         s_hProjectList[ StrTran( DirDelPathSep( cDir ), "\", "/" ) ] := { "cFileName" => cName }
+         lAnyAddons := .T.
+      ENDIF
+   NEXT
 
    /* Determine the mode of operation */
 
@@ -336,13 +422,6 @@ PROCEDURE GNUMake( ... )
       nAction := _ACT_INC
    ENDCASE
 
-   IF nAction == _ACT_EXIT
-      ErrorLevel( 0 )
-      RETURN
-   ENDIF
-
-   SetCancel( .F. )
-
    /* Parse filter */
 
    aFilter := iif( Empty( cFilter ), {}, hb_ATokens( cFilter,, .T. ) )
@@ -372,37 +451,48 @@ PROCEDURE GNUMake( ... )
 
    cBinDir := GetEnv( "HB_HOST_BIN_DIR" ) + hb_ps()
 
-// OutStd( Len( s_aList ) ) ; s_aList := { { 1, "rddads/rddads.hbp" } }
+// OutStd( Len( s_hProjectList ) ) ; s_hProjectList := { "rddads" => { "cFileName" => "rddads" } }
 
    OutStd( "! Calculating sorting order for contribs..." + hb_eol() )
 
-   FOR EACH aProject IN s_aList
-      cProject := aProject[ 2 ]
-      ASize( aProject, 4 )
-      call_hbmk2_dept( cBinDir, s_cBase + cProject, @aProject[ 3 ], @aProject[ 4 ] )
+   aPairList := {}
 
-//      OutStd( cProject + " type: " + aProject[ 3 ] )
-//      IF ! Empty( aProject[ 4 ] )
-//         OutStd( " depends on: " )
-//         AEval( aProject[ 4 ], {| tmp | OutStd( tmp ) } )
-//      ENDIF
-//      OutStd( hb_eol() )
+   FOR EACH aProject IN s_hProjectList
+      FOR EACH hProject IN aProject
+
+         hProject[ "cType" ] := NIL
+         hProject[ "aDept" ] := NIL
+         hProject[ "lInc" ] := NIL
+
+         call_hbmk2_hbinfo( cBinDir, s_cBase + aProject:__enumKey() + "/" + FNameExtSet( hProject[ "cFileName" ], ".hbp" ), @hProject[ "cType" ], @hProject[ "aDept" ] )
+
+//       OutStd( "'" + hProject[ "cFileName" ] + "' type: " + hProject[ "cType" ] )
+//       IF ! Empty( hProject[ "aDept" ] )
+//          OutStd( " depends on:" )
+//          AEval( hProject[ "aDept" ], {| tmp | OutStd( " " + tmp ) } )
+//       ENDIF
+//       OutStd( hb_eol() )
+
+         DeptLinesToDeptList( aPairList, aProject:__enumKey(), hProject[ "aDept" ] )
+      NEXT
    NEXT
 
-   ASort( s_aList, {| tmp, tmp1 | tmp[ 1 ] > tmp1[ 1 ] } )
+// _PairsDisp( aPairList )
+   aSortedList := TopoSort( aPairList )
+// _ArrayDisp( aSortedList )
 
    /* Converting build options to hbmk2 options */
 
    hb_setenv( "_HB_BUILD_INSTALL" )
 
-   cBaseOptions := ""
+   cOptions := ""
 
    IF nAction == _ACT_CLEAN
-      cBaseOptions += " -clean"
+      cOptions += " -clean"
    ELSE
-      cBaseOptions += " -inc"
+      cOptions += " -inc"
       IF nAction == _ACT_INC_REBUILD_INST
-         cBaseOptions += " -rebuild"
+         cOptions += " -rebuild"
       ENDIF
       IF nAction == _ACT_INC_INST .OR. ;
          nAction == _ACT_INC_REBUILD_INST
@@ -414,89 +504,108 @@ PROCEDURE GNUMake( ... )
 
    OutStd( hb_StrFormat( "! Contribs %1$s...", hActions[ nAction ] ) + hb_eol() )
 
-   FOR EACH aProject IN s_aList
+   FOR EACH cProjectDir IN aSortedList DESCEND
+      FOR EACH hProject IN s_hProjectList[ cProjectDir ]
 
-      cProject := aProject[ 2 ]
+         cProject := s_cBase + cProjectDir + "/" + hProject[ "cFileName" ]
 
-      cProjectDir := StrTran( FNameDirGet( PathSepToSelf( cProject ) ), "\", "/" )
-      cProject := s_cBase + cProject
+         IF Empty( aFilter ) .OR. ;
+            iif( lFilterNegative,;
+               AScan( aFilter, {| tmp | tmp == cProjectDir } ) == 0,;
+               AScan( aFilter, {| tmp | tmp == cProjectDir } ) > 0 )
 
-      IF Empty( aFilter ) .OR. ;
-         iif( lFilterNegative,;
-            AScan( aFilter, {| tmp | tmp == cProjectDir } ) == 0,;
-            AScan( aFilter, {| tmp | tmp == cProjectDir } ) > 0 )
+            IF hProject[ "cType" ] $ "hbhrb|hbppo"
+               LOOP
+            ENDIF
 
-         cType := get_hbmk2_project_type( cProject )
+            call_hbmk2( cBinDir, FNameExtSet( cProject, ".hbp" ), cOptions, "" )
 
-         IF cType $ "hbhrb|hbppo"
-            LOOP
+            IF hb_FileExists( PathSepToSelf( FNameExtSet( cProject, ".hbi" ) ) )
+               call_hbmk2( cBinDir, FNameExtSet( cProject, ".hbi" ), cOptions, "" )
+            ENDIF
+
+            /* Highly experimental */
+            IF hProject[ "cType" ] == "hblib" .AND. ;
+               GetEnv( "HB_BUILD_CONTRIB_DLL" ) == "yes" .AND. ;
+               hb_FileExists( PathSepToSelf( FNameExtSet( cProject, ".hbc" ) ) )
+
+               call_hbmk2( cBinDir, FNameExtSet( cProject, ".hbp" ), cOptions, " -hbdyn -nohblib- -implib " + FNameExtSet( cProject, ".hbc" ) )
+            ENDIF
+
+            /* Compile documentation */
+            IF nAction == _ACT_INC_INST .OR. ;
+               nAction == _ACT_INC_REBUILD_INST
+               mk_hbd( PathSepToSelf( cProjectDir ) )
+            ENDIF
+         ELSE
+            /* OutStd( hb_StrFormat( "! project '%1$s' skipped", cProject ) + hb_eol() ) */
          ENDIF
-
-         call_hbmk2( cBinDir, cProject, cBaseOptions, "" )
-
-         IF hb_FileExists( PathSepToSelf( FNameExtSet( cProject, ".hbi" ) ) )
-            call_hbmk2( cBinDir, FNameExtSet( cProject, ".hbi" ), cBaseOptions, "" )
-         ENDIF
-
-         /* Highly experimental */
-         IF cType == "hblib" .AND. ;
-            GetEnv( "HB_BUILD_CONTRIB_DLL" ) == "yes" .AND. ;
-            hb_FileExists( PathSepToSelf( FNameExtSet( cProject, ".hbc" ) ) )
-
-            call_hbmk2( cBinDir, cProject, cBaseOptions, " -hbdyn -nohblib- -implib " + FNameExtSet( cProject, ".hbc" ) )
-         ENDIF
-
-         IF nAction == _ACT_INC_INST .OR. ;
-            nAction == _ACT_INC_REBUILD_INST
-            mk_hbd( PathSepToSelf( cProjectDir ) )
-         ENDIF
-      ELSE
-         /* OutStd( hb_StrFormat( "! project '%1$s' skipped", cProject ) + hb_eol() ) */
-      ENDIF
+      NEXT
    NEXT
+
+   IF lAnyAddons
+      OutStd( "! Building of contribs and addons finished." + hb_eol() )
+   ELSE
+      OutStd( "! Building of contribs finished." + hb_eol() )
+   ENDIF
 
    ErrorLevel( 0 )
 
    RETURN
 
-STATIC FUNCTION call_hbmk2_dept( cBinDir, cProject, /* @ */ cType, /* @ */ aDept )
-   LOCAL tmp, tmp1
+STATIC FUNCTION call_hbmk2_hbinfo( cBinDir, cProject, /* @ */ cType, /* @ */ aDept, /* @ */ lInc )
+   LOCAL cStdOut
+   LOCAL cName
+   LOCAL tmp
+
+   LOCAL nDepth
 
    cType := ""
    aDept := {}
+   lInc := .F.
 
-   IF hb_processRun( PathSepToSelf( cBinDir ) + "hbmk2 --hbinfo " + StrTran( cProject, "\", "/" ),, @tmp  ) == 0
+   IF hb_processRun( PathSepToSelf( cBinDir ) + "hbmk2 --hbinfo " + StrTran( cProject, "\", "/" ),, @cStdOut  ) == 0
 
-      IF ( tmp1 := At( "targettype{{", tmp ) ) > 0
-         tmp := SubStr( tmp, tmp1 + Len( "targettype{{" ) )
-         IF ( tmp1 := At( "}}", tmp ) ) > 0
-            cType := Left( tmp, tmp1 - 1 )
+      cType := hbmk2_hbinfo_getitem( cStdOut, "targettype" )
+      lInc := ( hbmk2_hbinfo_getitem( cStdOut, "inc" ) == "yes" )
+
+      FOR EACH tmp IN hb_ATokens( hbmk2_hbinfo_getitem( cStdOut, "hbctree" ), Chr( 10 ) )
+         IF ! Empty( tmp )
+            nDepth := Len( tmp ) - Len( LTrim( tmp ) )
+            hb_FNameSplit( tmp,, @cName )
+            AAdd( aDept, Replicate( " ", nDepth ) + cName )
          ENDIF
-      ENDIF
-
-      IF ( tmp1 := At( "hbctree{{", tmp ) ) > 0
-         tmp := SubStr( tmp, tmp1 + Len( "hbctree{{" ) )
-         IF ( tmp1 := At( "}}", tmp ) ) > 0
-            tmp := StrTran( Left( tmp, tmp1 - 1 ), Chr( 13 ) )
-            FOR EACH tmp IN hb_ATokens( tmp, Chr( 10 ) )
-               IF ! Empty( tmp )
-                  hb_FNameSplit( tmp,, @tmp1 )
-                  AAdd( aDept, tmp1 )
-               ENDIF
-            NEXT
-         ENDIF
-      ENDIF
+      NEXT
 
       RETURN .T.
    ENDIF
 
    RETURN .F.
 
+STATIC FUNCTION hbmk2_hbinfo_getitem( cString, cItem )
+   LOCAL nPos
+
+   IF ( nPos := At( cItem + "{{", cString ) ) > 0
+      cString := SubStr( cString, nPos + Len( cItem + "{{" ) )
+      IF ( nPos := At( "}}", cString ) ) > 0
+         RETURN StrTran( Left( cString, nPos - 1 ), Chr( 13 ) )
+      ENDIF
+   ENDIF
+
+   RETURN ""
+
 STATIC FUNCTION call_hbmk2( cBinDir, cProject, cOptionsPre, cOptionsPost )
    LOCAL nErrorLevel
 
+   /* Making sure that user settings do not interfere with the std build process. */
+   hb_setenv( "HBMK_OPTIONS" )
+   hb_setenv( "HARBOUR" )
+   hb_setenv( "HARBOURCMD" )
+   hb_setenv( "CLIPPER" )
+   hb_setenv( "CLIPPERCMD" )
+
    nErrorLevel := mk_hb_processRun( PathSepToSelf( cBinDir ) + "hbmk2" +;
-                                    " -lang=en -width=0" +;
+                                    " -quiet -lang=en -width=0" +;
                                     " @" + StrTran( s_cHome + "hbpre", "\", "/" ) +;
                                     cOptionsPre +;
                                     " " + StrTran( cProject, "\", "/" ) +;
@@ -504,7 +613,7 @@ STATIC FUNCTION call_hbmk2( cBinDir, cProject, cOptionsPre, cOptionsPost )
                                     cOptionsPost )
 
    IF nErrorLevel != 0
-      OutStd( hb_StrFormat( "! '%s' returned status: %s", cProject, hb_ntos( nErrorLevel ) ) + hb_eol() )
+      OutStd( hb_StrFormat( "! '%1$s' returned status: %2$s", cProject, hb_ntos( nErrorLevel ) ) + hb_eol() )
       RETURN .F.
    ENDIF
 
@@ -549,17 +658,6 @@ STATIC FUNCTION mk_hbd( cDir )
    ENDIF
 
    RETURN .F.
-
-STATIC FUNCTION get_hbmk2_project_type( cFileName )
-   LOCAL cFile := MemoRead( PathSepToSelf( cFileName ) )
-
-   IF     "-hblib"    $ cFile ; RETURN "hblib"
-   ELSEIF "-hbimplib" $ cFile ; RETURN "hbimplib"
-   ELSEIF "-hbdyn"    $ cFile ; RETURN "hbdyn"
-   ELSEIF "-gh"       $ cFile ; RETURN "hbhrb"
-   ENDIF
-
-   RETURN "hbexe"
 
 STATIC FUNCTION AScanL( aArray, cString )
    RETURN AScan( aArray, {| tmp | Lower( tmp ) == cString } )
@@ -614,3 +712,86 @@ STATIC FUNCTION PathSepToSelf( cFileName )
 #else
    RETURN StrTran( cFileName, "\", "/" )
 #endif
+
+/* Convert indented list of line to tree / list of parent-child pairs */
+STATIC PROCEDURE DeptLinesToDeptList( aPairList, cParent, aLine )
+   LOCAL cLine
+   LOCAL hNode, hNewNode, tmp
+   LOCAL nLevel, nDepth
+
+   AddDeptPair( aPairList, "", cParent )
+
+   hNode := { "child" => {}, "name" => cParent, "parent" => NIL }
+   nLevel := 0
+   FOR EACH cLine IN aLine
+      IF ! Empty( cLine )
+         /* Min() protects against jumping more than one level down in one step */
+         nDepth := Min( Len( cLine ) - Len( LTrim( cLine ) ), nLevel + 1 )
+         hNewNode := { "child" => {}, "name" => LTrim( cLine ) }
+         IF nDepth > nLevel
+            hNode := ATail( hNode[ "child" ] )
+         ELSEIF nDepth < nLevel
+            FOR tmp := nDepth + 1 TO nLevel
+               hNode := hNode[ "parent" ]
+            NEXT
+         ENDIF
+         hNewNode[ "parent" ] := hNode
+         AAdd( hNode[ "child" ], hNewNode )
+         nLevel := nDepth
+         AddDeptPair( aPairList, hNewNode[ "parent" ][ "name" ], hNewNode[ "name" ] )
+      ENDIF
+   NEXT
+
+   RETURN
+
+/* Add parent-child dependency to the list */
+STATIC PROCEDURE AddDeptPair( aPairList, cParent, cChild )
+
+   IF AScan( aPairList, {| tmp | tmp[ 1 ] == cParent .AND. tmp[ 2 ] == cChild } ) == 0
+      AAdd( aPairList, { cParent, cChild } )
+   ENDIF
+
+   RETURN
+
+/* Topological sort of the dependency graph */
+STATIC FUNCTION TopoSort( aEdgeList )
+   LOCAL aList := {}
+   LOCAL hTopNodes := { => }
+
+   LOCAL n, m
+   LOCAL tmp
+
+   hb_HKeepOrder( hTopNodes, .T. )
+
+   FOR EACH n IN aEdgeList
+      IF AScan( aEdgeList, {| tmp | tmp[ 2 ] == n[ 1 ] } ) == 0
+         hTopNodes[ n[ 1 ] ] := NIL
+      ENDIF
+   NEXT
+
+   DO WHILE ! Empty( hTopNodes )
+      n := hb_HKeyAt( hTopNodes, 1 )
+      hb_HDelAt( hTopNodes, 1 )
+
+      IF ! Empty( n )
+         AAdd( aList, n )
+      ENDIF
+
+      FOR EACH tmp IN aEdgeList
+         IF tmp[ 1 ] == n
+            m := tmp[ 2 ]
+            tmp[ 1 ] := tmp[ 2 ] := NIL /* set to invalid value */
+            IF AScan( aEdgeList, {| tmp | tmp[ 2 ] == m } ) == 0
+               hTopNodes[ m ] := NIL
+            ENDIF
+         ENDIF
+      NEXT
+   ENDDO
+
+   FOR EACH tmp IN aEdgeList
+      IF !( tmp[ 1 ] == NIL .AND. tmp[ 2 ] == NIL )
+         OutStd( hb_StrFormat( "! Warning: Circular reference in dependency tree (%1$s - %2$s)", tmp[ 1 ], tmp[ 2 ] ) + hb_eol() )
+      ENDIF
+   NEXT
+
+   RETURN aList

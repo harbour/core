@@ -721,6 +721,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    LOCAL cLibPathSep
    LOCAL cDynLibNamePrefix
    LOCAL cDynLibExt
+   LOCAL cImpLibExt := ""
    LOCAL cResPrefix
    LOCAL cResExt
    LOCAL cBinExt
@@ -3033,6 +3034,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          cLibPathPrefix := "-L"
          cLibPathSep := " "
          cLibLibExt := ".a"
+         cImpLibExt := cLibLibExt
          cBin_Lib := hbmk[ _HBMK_cCCPREFIX ] + "ar" + hbmk[ _HBMK_cCCEXT ]
 #if defined( __PLATFORM__WINDOWS )
          hbmk[ _HBMK_nCmd_Esc ] := _ESC_DBLQUOTE
@@ -3170,6 +3172,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          cLibPathSep := " "
          IF hbmk[ _HBMK_cCOMP ] == "gccomf"
             cLibLibExt := ".lib"
+            cImpLibExt := cImpLibExt /* ".imp" */
             cBin_Lib := hbmk[ _HBMK_cCCPREFIX ] + "emxomfar" + hbmk[ _HBMK_cCCEXT ]
 
             AAdd( hbmk[ _HBMK_aOPTC ], "-Zomf" )
@@ -3177,6 +3180,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             AAdd( hbmk[ _HBMK_aOPTD ], "-Zomf" )
          ELSE
             cLibLibExt := ".a"
+            cImpLibExt := cLibLibExt
             cBin_Lib := hbmk[ _HBMK_cCCPREFIX ] + "ar" + hbmk[ _HBMK_cCCEXT ]
          ENDIF
          cOpt_Lib := "{FA} rcs {OL} {LO}"
@@ -3184,9 +3188,9 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,-Map,{OM}" )
             AAdd( hbmk[ _HBMK_aOPTD ], "-Wl,-Map,{OM}" )
          ENDIF
-         IF hbmk[ _HBMK_lIMPLIB ]
-            AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,--out-implib,{OI}" )
-            AAdd( hbmk[ _HBMK_aOPTD ], "-Wl,--out-implib,{OI}" )
+         IF ! hbmk[ _HBMK_lCreateLib ] .AND. hbmk[ _HBMK_lIMPLIB ]
+            cBin_Post := "emximp"
+            cOpt_Post := "-o {OI} {OB}"
          ENDIF
          AAdd( hbmk[ _HBMK_aOPTL ], "{LL} {LB}" )
          l_aLIBHBBASE_2 := iif( hbmk[ _HBMK_lMT ], aLIB_BASE_2_MT, aLIB_BASE_2 )
@@ -3433,6 +3437,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             bBlk_ImpLib := {| cSourceDLL, cTargetLib, cFlags | win_implib_command_watcom( hbmk, cBin_Lib + " -q -o={OL} {ID}", cSourceDLL, cTargetLib, cFlags ) }
          ENDIF
          cLibLibExt := cLibExt
+         cImpLibExt := cLibLibExt
          cLibObjPrefix := "-+ "
          IF hbmk[ _HBMK_lMT ] .AND. hbmk[ _HBMK_cPLAT ] $ "win|os2"
             AAdd( hbmk[ _HBMK_aOPTC ], "-bm" )
@@ -3525,6 +3530,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          /* Only forward slash is accepted here as option prefix. */
          cOpt_Lib := "/P128 {FA} {OL} {LO}{SCRIPT}"
          cLibLibExt := cLibExt
+         cImpLibExt := cLibLibExt
          cLibObjPrefix := "-+ "
          cOptIncMask := "-I{DI}"
          cBin_CompC := "bcc32.exe"
@@ -3580,7 +3586,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                      [vszakats] */
             /* AAdd( hbmk[ _HBMK_aOPTL ], "-Gi" ) */
             /* AAdd( hbmk[ _HBMK_aOPTD ], "-Gi" ) */
-            cBin_Post := "implib.exe "
+            cBin_Post := "implib.exe"
             cOpt_Post := "{OI} {OB}"
          ENDIF
          IF ! Empty( hbmk[ _HBMK_cWorkDir ] )
@@ -3663,6 +3669,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          cLibExt := ".lib"
          cObjExt := ".obj"
          cLibLibExt := cLibExt
+         cImpLibExt := cLibLibExt
          IF hbmk[ _HBMK_cCOMP ] $ "icc|iccia64"
             cBin_Lib := "xilib.exe"
             cBin_CompC := "icl.exe"
@@ -3838,6 +3845,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          cLibExt := ".lib"
          cObjExt := ".obj"
          cLibLibExt := cLibExt
+         cImpLibExt := cLibLibExt
          IF hbmk[ _HBMK_cCOMP ] == "xcc"
             cBin_CompC := "xCC.exe"
             cBin_Lib := "xLib.exe"
@@ -4174,7 +4182,12 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
    /* Call plugins */
 
-   PlugIn_Execute_All( hbmk, "pre_all" )
+   IF ! PlugIn_Execute_All( hbmk, "pre_all" )
+      IF hbmk[ _HBMK_lBEEP ]
+         DoBeep( .F. )
+      ENDIF
+      RETURN 20
+   ENDIF
 
    /* ; */
 
@@ -4211,12 +4224,12 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          IF Empty( cExt ) .AND. ! Empty( cBinExt )
             hbmk[ _HBMK_cPROGNAME ] := hb_FNameMerge( cDir, cName, cBinExt )
          ENDIF
-         l_cIMPLIBNAME := hb_FNameMerge( cDir, cLibLibPrefix + cName + _HBMK_IMPLIB_EXE_POST, cLibLibExt )
+         l_cIMPLIBNAME := hb_FNameMerge( cDir, cLibLibPrefix + cName + _HBMK_IMPLIB_EXE_POST, cImpLibExt )
       CASE lStopAfterCComp .AND. hbmk[ _HBMK_lCreateDyn ]
          IF Empty( cExt ) .AND. ! Empty( cDynLibExt )
             hbmk[ _HBMK_cPROGNAME ] := hb_FNameMerge( cDir, cName, cDynLibExt )
          ENDIF
-         l_cIMPLIBNAME := hb_FNameMerge( cDir, cLibLibPrefix + cName + _HBMK_IMPLIB_DLL_POST, cLibLibExt )
+         l_cIMPLIBNAME := hb_FNameMerge( cDir, cLibLibPrefix + cName + _HBMK_IMPLIB_DLL_POST, cImpLibExt )
       CASE lStopAfterCComp .AND. hbmk[ _HBMK_lCreateLib ]
          hbmk[ _HBMK_cPROGNAME ] := hb_FNameMerge( cDir, cLibLibPrefix + cName, iif( Empty( cLibLibExt ), cExt, cLibLibExt ) )
       ENDCASE
@@ -4363,6 +4376,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    IF lDumpInfo
 
       OutStd( "targettype{{" + hbmk_TARGET( hbmk ) + "}}" + hb_eol() )
+      OutStd( "inc{{" + iif( hbmk[ _HBMK_lINC ], "yes", "no" ) + "}}" + hb_eol() )
 
       OutStd( "hbctree{{" + hb_eol() )
       FOR EACH tmp IN hbmk[ _HBMK_aDEPTHBC ]
@@ -6579,6 +6593,7 @@ STATIC FUNCTION dep_evaluate( hbmk )
 
    LOCAL aREQ := {}
    LOCAL aOPT := {}
+   LOCAL aWRN := {}
 
    FOR EACH dep IN hbmk[ _HBMK_hDEP ]
       IF dep[ _HBMKDEP_lFound ]
@@ -6603,7 +6618,18 @@ STATIC FUNCTION dep_evaluate( hbmk )
          IF dep[ _HBMKDEP_lOptional ]
             AAdd( aOPT, dep[ _HBMKDEP_cName ] )
          ELSE
-            AAdd( aREQ, dep[ _HBMKDEP_cName ] )
+            /* Don't issue a missing dependency error (just warning) for non-*nix
+               platforms if no manual dependency location and no local dir were
+               given. This assumes that one these platforms dependencies can never
+               be found on locations known in advance and specified in make
+               files. [vszakats] */
+            IF hbmk[ _HBMK_cPLAT ] $ "win|wce|os2|dos" .AND. ;
+               Empty( dep[ _HBMKDEP_cControl ] ) .AND. ;
+               Empty( dep[ _HBMKDEP_aINCPATHLOCAL ] )
+               AAdd( aWRN, dep[ _HBMKDEP_cName ] )
+            ELSE
+               AAdd( aREQ, dep[ _HBMKDEP_cName ] )
+            ENDIF
          ENDIF
       ENDIF
    NEXT
@@ -6622,10 +6648,17 @@ STATIC FUNCTION dep_evaluate( hbmk )
       ELSE
          hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Missing dependency: %1$s" ), ArrayToList( aREQ, ", " ) ) )
       ENDIF
-      RETURN .F.
    ENDIF
 
-   RETURN .T.
+   IF ! Empty( aWRN )
+      IF Len( aWRN ) > 1
+         hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Missing dependencies: %1$s" ), ArrayToList( aWRN, ", " ) ) )
+      ELSE
+         hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Missing dependency: %1$s" ), ArrayToList( aWRN, ", " ) ) )
+      ENDIF
+   ENDIF
+
+   RETURN Empty( aREQ ) .AND. Empty( aWRN )
 
 /* Try '*-config' and 'pkg-config *' detection */
 STATIC FUNCTION dep_try_pkg_detection( hbmk, dep )
@@ -6974,11 +7007,17 @@ STATIC PROCEDURE PlugIn_Load( hbmk, cFileName )
    IF ! Empty( hrb )
       hbmk[ _HBMK_hPLUGINHRB ][ cFileName ] := hrb
 
-      IF hbmk[ _HBMK_lTRACE ]
-         hbmk_OutStd( hbmk, hb_StrFormat( I_( "Loaded plugin: %1$s %2$s" ), cFileName, cType ) )
+      IF ! PlugIn_call_low( hbmk, cFileName, hrb, PlugIn_make_ctx( hbmk, "init" ) )
+         /* Don't call plugin any further if initialization returned error */
+         hb_HDel( hbmk[ _HBMK_hPLUGINHRB ], cFileName )
+         IF hbmk[ _HBMK_lInfo ]
+            hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Initializing plugin: %1$s" ), cFileName ) )
+         ENDIF
+      ELSE
+         IF hbmk[ _HBMK_lTRACE ]
+            hbmk_OutStd( hbmk, hb_StrFormat( I_( "Loaded plugin: %1$s %2$s" ), cFileName, cType ) )
+         ENDIF
       ENDIF
-
-      PlugIn_call_low( hbmk, cFileName, hrb, PlugIn_make_ctx( hbmk, "init" ) )
    ELSE
       IF hbmk[ _HBMK_lInfo ]
          hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Loading plugin: %1$s" ), cFileName ) )
@@ -7158,15 +7197,22 @@ STATIC FUNCTION PlugIn_make_ctx( hbmk, cState )
          "nErrorLevel"  => hbmk[ _HBMK_nErrorLevel ]  ,;
          s_cSecToken    => hbmk                       }
 
-STATIC PROCEDURE PlugIn_call_low( hbmk, cName, hrb, ctx )
+STATIC FUNCTION PlugIn_ctx_get_state( ctx )
+   RETURN ctx[ "cSTATE" ]
+
+STATIC FUNCTION PlugIn_call_low( hbmk, cName, hrb, ctx )
    LOCAL xResult
    LOCAL oError
+   LOCAL lSuccess := .T.
 
    BEGIN SEQUENCE WITH {| oError | oError:cargo := { ProcName( 1 ), ProcLine( 1 ) }, Break( oError ) }
       xResult := hb_hrbDo( hrb, ctx )
       IF ! Empty( xResult )
          IF hbmk[ _HBMK_lInfo ]
-            hbmk_OutStd( hbmk, hb_StrFormat( I_( "Plugin %1$s returned: '%2$s'" ), cName, hb_cstr( xResult ) ) )
+            hbmk_OutStd( hbmk, hb_StrFormat( I_( "Plugin %1$s returned at '%2$s': '%3$s'" ), cName, PlugIn_ctx_get_state( ctx ), hb_cstr( xResult ) ) )
+         ENDIF
+         IF ! hbmk[ _HBMK_lIGNOREERROR ]
+            lSuccess := .F.
          ENDIF
       ENDIF
    RECOVER USING oError
@@ -7175,20 +7221,23 @@ STATIC PROCEDURE PlugIn_call_low( hbmk, cName, hrb, ctx )
       ENDIF
    END SEQUENCE
 
-   RETURN
+   RETURN lSuccess
 
-STATIC PROCEDURE PlugIn_Execute_All( hbmk, cState )
+STATIC FUNCTION PlugIn_Execute_All( hbmk, cState )
    LOCAL hrb
    LOCAL ctx
+   LOCAL lSuccess := .T.
 
    IF ! Empty( hbmk[ _HBMK_hPLUGINHRB ] )
       ctx := PlugIn_make_ctx( hbmk, cState )
       FOR EACH hrb IN hbmk[ _HBMK_hPLUGINHRB ]
-         PlugIn_call_low( hbmk, hrb:__enumKey(), hrb, ctx )
+         IF ! PlugIn_call_low( hbmk, hrb:__enumKey(), hrb, ctx )
+            lSuccess := .F.
+         ENDIF
       NEXT
    ENDIF
 
-   RETURN
+   RETURN lSuccess
 
 STATIC FUNCTION hbmk_ErrorMessage( oError )
    /* start error message */

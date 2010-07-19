@@ -4,7 +4,7 @@
 
 -q0
 
-{!_HB_BUILD_MIGR}-quiet
+{_HB_BUILD_MIGR}-quiet-
 {_HB_BUILD_MIGR}-info
 {_HB_BUILD_MIGR}-trace
 

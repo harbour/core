@@ -49,11 +49,7 @@ include $(ROOT)config/dir.mk
 ifeq ($(HB_SHELL),sh)
    HB_POSTINST := $(TOP)$(ROOT)bin/postinst.sh
 else
-   ifeq ($(HB_SHELL),os2)
-      HB_POSTINST := $(subst /,\,$(TOP)$(ROOT)bin/postinst.cmd)
-   else
-      HB_POSTINST := $(subst /,\,$(TOP)$(ROOT)bin/postinst.bat)
-   endif
+   HB_POSTINST :=
 endif
 
 install::

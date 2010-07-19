@@ -16,8 +16,11 @@ HARBOUR
 1. HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
 ===============================================
 
-   NOTE: Before reporting a problem on the developers' mailing list, please
-         make sure to read the TROUBLESHOOTING section in this document.
+   ==========================================================================
+   NOTE: Before reporting a problem to developers, please make sure to read
+         the TROUBLESHOOTING section in this document and try the suggestions
+         you find there.
+   ==========================================================================
 
    For all platforms you'll need:
 
@@ -1147,39 +1150,41 @@ HARBOUR
    Please evaluate these points before reporting an issue on the developers'
    mailing list.
 
-   - Make sure to have carefully read this document.
-   - Make sure to do a 'clean' before doing a build after refreshing
-     the sources.
-   - Make sure to install fresh source tree in a new local directory and
-     start over. See HOW TO GET THE HARBOUR SOURCES section for instructions
-     to get the source.
-   - If you are doing a cross-build, make sure to have rebuilt the native
-     Harbour executables for your host platform. See 'HB_BIN_COMPILE'
-     build messages to find their location.
-   - Keep you PATH clean from old, mixed compiler tools or other Harbour
-     versions when building Harbour. The surest way to achieve this is to
-     leave only compiler directory in PATH:
-        set PATH=C:\<compilerdir>
-   - Remove all old, unnecessary environment variables from your environment.
-     Use only those documented in this file.
-     Some environment variable settings which are commonly believed by
-     users to be useful, but which in reality are either not needed or
-     not even used by Harbour build process and hbmk2. You can delete them:
-        set HB_DIR=<Harbour root dir>
-        set HB_PATH=<Harbour root dir>
-        set HRB_DIR=<Some Harbour dir>
-        set INCLUDE=<Harbour include dir>
-        set LIB=<Harbour lib dir>
-        set HB_GT_LIB=
-        set HB_INC_*=
-        set HB_DIR_*=
-        set HB_LEX=
-   - Try to do no or only small modifications at once to command examples
-     included in this document. If it doesn't work, fall back to documented
-     examples as is.
-   - GNU Make 3.81.90 has known bug which prevents autodetection to work
-     in certain situations: http://savannah.gnu.org/bugs/?27591
-     Use 3.81 if in doubt.
+   1. Make sure to have carefully read this document.
+   2. Make sure to do a 'make clean' before doing a build after refreshing
+      the sources.
+   3. If that still fails, make sure to install fresh source tree in a new
+      local directory and start over. See HOW TO GET THE HARBOUR SOURCES
+      section for instructions to get the source.
+   4. If you are doing a cross-build, make sure to have rebuilt the native
+      Harbour executables for your host platform. See 'HB_BIN_COMPILE'
+      build messages to find their location.
+   5. Keep your PATH clean from old, mixed compiler tools or other Harbour
+      versions when building Harbour. The surest way to achieve this is to
+      leave only C compiler directory in PATH:
+         set PATH=C:\<compilerdir>
+   6. Remove all old, unnecessary environment variables from your environment.
+      Use only those documented in this file.
+      Some environment variable settings which are commonly believed by
+      users to be useful, but which in reality are either not needed or
+      not even used by Harbour build process and hbmk2. You can delete them:
+         set HB_DIR=<Harbour root dir>
+         set HB_PATH=<Harbour root dir>
+         set HRB_DIR=<Some Harbour dir>
+         set INCLUDE=<Harbour include dir>
+         set LIB=<Harbour lib dir>
+         set HB_GT_LIB=
+         set HB_INC_*=
+         set HB_DIR_*=
+         set HB_LEX=
+   7. Remove any Harbour build settings documented in OPTIONS AVAILABLE WHEN
+      BUILDING HARBOUR section.
+   8. Try to do no or only small modifications at once to command examples
+      included in this document. If it doesn't work, fall back to documented
+      examples as is.
+   9. GNU Make 3.81.90 has known bug which prevents autodetection to work
+      in certain situations: http://savannah.gnu.org/bugs/?27591
+      Use 3.81 if in doubt.
 
 
 11. QUICK START TO BUILD YOUR OWN HARBOUR APPLICATIONS

@@ -35,10 +35,6 @@
 FUNCTION hbmk2_plugin_qt( hbmk2 )
    LOCAL cRetVal := ""
 
-   LOCAL cRCC_BIN
-   LOCAL cUIC_BIN
-   LOCAL cMOC_BIN
-
    LOCAL cSrc
    LOCAL cDst
    LOCAL tSrc
@@ -111,188 +107,66 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
          hbmk2_AddInput_CPP( hbmk2, cDst )
       NEXT
 
+      /* Detect tool locations */
+
+      IF ! hbmk2[ "lCLEAN" ]
+         IF ! Empty( hbmk2[ "vars" ][ "aQRC_Src" ] )
+            hbmk2[ "vars" ][ "cRCC_BIN" ] := qt_tool_detect( hbmk2, "rcc", "RCC_BIN" )
+            IF Empty( hbmk2[ "vars" ][ "cRCC_BIN" ] )
+               cRetVal := I_( "Required QT tool not found" )
+            ENDIF
+         ENDIF
+         IF ! Empty( hbmk2[ "vars" ][ "aUIC_Src" ] )
+            hbmk2[ "vars" ][ "cUIC_BIN" ] := qt_tool_detect( hbmk2, "uic", "UIC_BIN" )
+            IF Empty( hbmk2[ "vars" ][ "cUIC_BIN" ] )
+               cRetVal := I_( "Required QT tool not found" )
+            ENDIF
+         ENDIF
+         IF ! Empty( hbmk2[ "vars" ][ "aMOC_Src" ] )
+            hbmk2[ "vars" ][ "cMOC_BIN" ] := qt_tool_detect( hbmk2, "moc", "MOC_BIN", "HB_QT_MOC_BIN" )
+            IF Empty( hbmk2[ "vars" ][ "cMOC_BIN" ] )
+               cRetVal := I_( "Required QT tool not found" )
+            ENDIF
+         ENDIF
+      ENDIF
+
       EXIT
 
    CASE "pre_prg"
 
-      IF ! hbmk2[ "lCLEAN" ] .AND. ! Empty( hbmk2[ "vars" ][ "aQRC_Src" ] )
+      IF ! hbmk2[ "lCLEAN" ] .AND. ;
+         ! Empty( hbmk2[ "vars" ][ "aQRC_Src" ] ) .AND. ;
+         ! Empty( hbmk2[ "vars" ][ "cRCC_BIN" ] )
 
-         /* Detect 'rcc' tool location */
+         /* Execute 'rcc' commands on input files */
 
-         cRCC_BIN := qt_tool_detect( hbmk2, "rcc", "RCC_BIN" )
+         FOR EACH cSrc, cDst, cPRG IN hbmk2[ "vars" ][ "aQRC_Src" ], hbmk2[ "vars" ][ "aQRC_Dst" ], hbmk2[ "vars" ][ "aQRC_PRG" ]
 
-         IF ! Empty( cRCC_BIN )
-
-            /* Execute 'rcc' commands on input files */
-
-            FOR EACH cSrc, cDst, cPRG IN hbmk2[ "vars" ][ "aQRC_Src" ], hbmk2[ "vars" ][ "aQRC_Dst" ], hbmk2[ "vars" ][ "aQRC_PRG" ]
-
-               IF hbmk2[ "lINC" ] .AND. ! hbmk2[ "lREBUILD" ]
-                  lBuildIt := ! hb_FGetDateTime( cDst, @tDst ) .OR. ;
-                              ! hb_FGetDateTime( cSrc, @tSrc ) .OR. ;
-                              tSrc > tDst
-               ELSE
-                  lBuildIt := .T.
-               ENDIF
-
-               IF lBuildIt
-
-                  cCommand := cRCC_BIN +;
-                              " -binary" +;
-                              " " + hbmk2_FNameEscape( hbmk2_PathSepToTarget( hbmk2, cSrc ), hbmk2[ "nCmd_Esc" ], hbmk2[ "nCmd_FNF" ] ) +;
-                              " -o " + hbmk2_FNameEscape( hbmk2_PathSepToTarget( hbmk2, cDst ), hbmk2[ "nCmd_Esc" ], hbmk2[ "nCmd_FNF" ] )
-
-                  IF hbmk2[ "lTRACE" ]
-                     IF ! hbmk2[ "lQUIET" ]
-                        hbmk2_OutStd( hbmk2, I_( "'rcc' command:" ) )
-                     ENDIF
-                     hbmk2_OutStdRaw( cCommand )
-                  ENDIF
-
-                  IF ! hbmk2[ "lDONTEXEC" ]
-                     IF ( nError := hb_processRun( cCommand ) ) != 0
-                        hbmk2_OutErr( hbmk2, hb_StrFormat( I_( "Error: Running 'rcc' executable. %1$s" ), hb_ntos( nError ) ) )
-                        IF ! hbmk2[ "lQUIET" ]
-                           hbmk2_OutErrRaw( cCommand )
-                        ENDIF
-                        IF ! hbmk2[ "lIGNOREERROR" ]
-                           cRetVal := "error"
-                           EXIT
-                        ENDIF
-                     ELSE
-                        /* Create little .prg stub which includes the binary */
-                        cTmp := "/* WARNING: Automatically generated source file. DO NOT EDIT! */" + hb_eol() +;
-                                hb_eol() +;
-                                "#pragma -km+" + hb_eol() +;
-                                hb_eol() +;
-                                "FUNCTION hbqtres_" + hbmk2_FNameToSymbol( hbmk2_FNameNameGet( cSrc ) ) + "()" + hb_eol() +;
-                                "   #pragma __binarystreaminclude " + Chr( 34 ) + hbmk2_FNameNameExtGet( cDst ) + Chr( 34 ) + "|RETURN %s" + hb_eol()
-
-                        IF ! hb_MemoWrit( cPRG, cTmp )
-                           hbmk2_OutErr( hbmk2, hb_StrFormat( "Error: Cannot create file: %1$s", cPRG ) )
-                           IF ! hbmk2[ "lIGNOREERROR" ]
-                              cRetVal := "error"
-                              EXIT
-                           ENDIF
-                        ENDIF
-                     ENDIF
-                  ENDIF
-               ENDIF
-            NEXT
-         ELSE
-            IF ! hbmk2[ "lIGNOREERROR" ]
-               cRetVal := "error"
-               EXIT
+            IF hbmk2[ "lINC" ] .AND. ! hbmk2[ "lREBUILD" ]
+               lBuildIt := ! hb_FGetDateTime( cDst, @tDst ) .OR. ;
+                           ! hb_FGetDateTime( cSrc, @tSrc ) .OR. ;
+                           tSrc > tDst
+            ELSE
+               lBuildIt := .T.
             ENDIF
-         ENDIF
-      ENDIF
 
-      IF ! hbmk2[ "lCLEAN" ] .AND. ! Empty( hbmk2[ "vars" ][ "aUIC_Src" ] )
+            IF lBuildIt
 
-         /* Detect 'uic' tool location */
+               cCommand := hbmk2[ "vars" ][ "cRCC_BIN" ] +;
+                           " -binary" +;
+                           " " + hbmk2_FNameEscape( hbmk2_PathSepToTarget( hbmk2, cSrc ), hbmk2[ "nCmd_Esc" ], hbmk2[ "nCmd_FNF" ] ) +;
+                           " -o " + hbmk2_FNameEscape( hbmk2_PathSepToTarget( hbmk2, cDst ), hbmk2[ "nCmd_Esc" ], hbmk2[ "nCmd_FNF" ] )
 
-         cUIC_BIN := qt_tool_detect( hbmk2, "uic", "UIC_BIN" )
-
-         IF ! Empty( cUIC_BIN )
-
-            /* Execute 'uic' commands on input files */
-
-            FOR EACH cSrc, cDst IN hbmk2[ "vars" ][ "aUIC_Src" ], hbmk2[ "vars" ][ "aUIC_Dst" ]
-
-               IF hbmk2[ "lINC" ] .AND. ! hbmk2[ "lREBUILD" ]
-                  lBuildIt := ! hb_FGetDateTime( cDst, @tDst ) .OR. ;
-                              ! hb_FGetDateTime( cSrc, @tSrc ) .OR. ;
-                              tSrc > tDst
-               ELSE
-                  lBuildIt := .T.
+               IF hbmk2[ "lTRACE" ]
+                  IF ! hbmk2[ "lQUIET" ]
+                     hbmk2_OutStd( hbmk2, I_( "'rcc' command:" ) )
+                  ENDIF
+                  hbmk2_OutStdRaw( cCommand )
                ENDIF
 
-               IF lBuildIt
-
-                  FClose( hb_FTempCreateEx( @cTmp ) )
-
-                  cCommand := cUIC_BIN +;
-                              " " + hbmk2_FNameEscape( hbmk2_PathSepToTarget( hbmk2, cSrc ), hbmk2[ "nCmd_Esc" ], hbmk2[ "nCmd_FNF" ] ) +;
-                              " -o " + hbmk2_FNameEscape( cTmp, hbmk2[ "nCmd_Esc" ], hbmk2[ "nCmd_FNF" ] )
-
-                  IF hbmk2[ "lTRACE" ]
-                     IF ! hbmk2[ "lQUIET" ]
-                        hbmk2_OutStd( hbmk2, I_( "'uic' command:" ) )
-                     ENDIF
-                     hbmk2_OutStdRaw( cCommand )
-                  ENDIF
-
-                  IF ! hbmk2[ "lDONTEXEC" ]
-                     IF ( nError := hb_processRun( cCommand ) ) != 0
-                        hbmk2_OutErr( hbmk2, hb_StrFormat( I_( "Error: Running 'uic' executable. %1$s" ), hb_ntos( nError ) ) )
-                        IF ! hbmk2[ "lQUIET" ]
-                           hbmk2_OutErrRaw( cCommand )
-                        ENDIF
-                        IF ! hbmk2[ "lIGNOREERROR" ]
-                           FErase( cTmp )
-                           cRetVal := "error"
-                           EXIT
-                        ENDIF
-                     ELSE
-                        IF ! uic_to_prg( hbmk2, cTmp, cDst, hbmk2_FNameToSymbol( hbmk2_FNameNameGet( cSrc ) ) )
-                           IF ! hbmk2[ "lIGNOREERROR" ]
-                              FErase( cTmp )
-                              cRetVal := "error"
-                              EXIT
-                           ENDIF
-                        ENDIF
-                     ENDIF
-                  ENDIF
-                  FErase( cTmp )
-               ENDIF
-            NEXT
-         ELSE
-            IF ! hbmk2[ "lIGNOREERROR" ]
-               cRetVal := "error"
-               EXIT
-            ENDIF
-         ENDIF
-      ENDIF
-
-      EXIT
-
-   CASE "pre_c"
-
-      IF ! hbmk2[ "lCLEAN" ] .AND. ! Empty( hbmk2[ "vars" ][ "aMOC_Src" ] )
-
-         /* Detect 'moc' tool location */
-
-         cMOC_BIN := qt_tool_detect( hbmk2, "moc", "MOC_BIN", "HB_QT_MOC_BIN" )
-
-         IF ! Empty( cMOC_BIN )
-
-            /* Execute 'moc' commands on input files */
-
-            FOR EACH cSrc, cDst IN hbmk2[ "vars" ][ "aMOC_Src" ], hbmk2[ "vars" ][ "aMOC_Dst" ]
-
-               IF hbmk2[ "lINC" ] .AND. ! hbmk2[ "lREBUILD" ]
-                  lBuildIt := ! hb_FGetDateTime( cDst, @tDst ) .OR. ;
-                              ! hb_FGetDateTime( cSrc, @tSrc ) .OR. ;
-                              tSrc > tDst
-               ELSE
-                  lBuildIt := .T.
-               ENDIF
-
-               IF lBuildIt
-
-                  cCommand := cMOC_BIN +;
-                              " " + hbmk2_FNameEscape( hbmk2_PathSepToTarget( hbmk2, cSrc ), hbmk2[ "nCmd_Esc" ], hbmk2[ "nCmd_FNF" ] ) +;
-                              " -o " + hbmk2_FNameEscape( hbmk2_PathSepToTarget( hbmk2, cDst ), hbmk2[ "nCmd_Esc" ], hbmk2[ "nCmd_FNF" ] )
-
-                  IF hbmk2[ "lTRACE" ]
-                     IF ! hbmk2[ "lQUIET" ]
-                        hbmk2_OutStd( hbmk2, I_( "'moc' command:" ) )
-                     ENDIF
-                     hbmk2_OutStdRaw( cCommand )
-                  ENDIF
-
-                  IF ! hbmk2[ "lDONTEXEC" ] .AND. ( nError := hb_processRun( cCommand ) ) != 0
-                     hbmk2_OutErr( hbmk2, hb_StrFormat( I_( "Error: Running 'moc' executable. %1$s" ), hb_ntos( nError ) ) )
+               IF ! hbmk2[ "lDONTEXEC" ]
+                  IF ( nError := hb_processRun( cCommand ) ) != 0
+                     hbmk2_OutErr( hbmk2, hb_StrFormat( I_( "Error: Running 'rcc' executable. %1$s" ), hb_ntos( nError ) ) )
                      IF ! hbmk2[ "lQUIET" ]
                         hbmk2_OutErrRaw( cCommand )
                      ENDIF
@@ -300,15 +174,130 @@ FUNCTION hbmk2_plugin_qt( hbmk2 )
                         cRetVal := "error"
                         EXIT
                      ENDIF
+                  ELSE
+                     /* Create little .prg stub which includes the binary */
+                     cTmp := "/* WARNING: Automatically generated source file. DO NOT EDIT! */" + hb_eol() +;
+                             hb_eol() +;
+                             "#pragma -km+" + hb_eol() +;
+                             hb_eol() +;
+                             "FUNCTION hbqtres_" + hbmk2_FNameToSymbol( hbmk2_FNameNameGet( cSrc ) ) + "()" + hb_eol() +;
+                             "   #pragma __binarystreaminclude " + Chr( 34 ) + hbmk2_FNameNameExtGet( cDst ) + Chr( 34 ) + "|RETURN %s" + hb_eol()
+
+                     IF ! hb_MemoWrit( cPRG, cTmp )
+                        hbmk2_OutErr( hbmk2, hb_StrFormat( "Error: Cannot create file: %1$s", cPRG ) )
+                        IF ! hbmk2[ "lIGNOREERROR" ]
+                           cRetVal := "error"
+                           EXIT
+                        ENDIF
+                     ENDIF
                   ENDIF
                ENDIF
-            NEXT
-         ELSE
-            IF ! hbmk2[ "lIGNOREERROR" ]
-               cRetVal := "error"
-               EXIT
             ENDIF
-         ENDIF
+         NEXT
+      ENDIF
+
+      IF ! hbmk2[ "lCLEAN" ] .AND. ;
+         ! Empty( hbmk2[ "vars" ][ "aUIC_Src" ] ) .AND. ;
+         ! Empty( hbmk2[ "vars" ][ "cUIC_BIN" ] )
+
+         /* Execute 'uic' commands on input files */
+
+         FOR EACH cSrc, cDst IN hbmk2[ "vars" ][ "aUIC_Src" ], hbmk2[ "vars" ][ "aUIC_Dst" ]
+
+            IF hbmk2[ "lINC" ] .AND. ! hbmk2[ "lREBUILD" ]
+               lBuildIt := ! hb_FGetDateTime( cDst, @tDst ) .OR. ;
+                           ! hb_FGetDateTime( cSrc, @tSrc ) .OR. ;
+                           tSrc > tDst
+            ELSE
+               lBuildIt := .T.
+            ENDIF
+
+            IF lBuildIt
+
+               FClose( hb_FTempCreateEx( @cTmp ) )
+
+               cCommand := hbmk2[ "vars" ][ "cUIC_BIN" ] +;
+                           " " + hbmk2_FNameEscape( hbmk2_PathSepToTarget( hbmk2, cSrc ), hbmk2[ "nCmd_Esc" ], hbmk2[ "nCmd_FNF" ] ) +;
+                           " -o " + hbmk2_FNameEscape( cTmp, hbmk2[ "nCmd_Esc" ], hbmk2[ "nCmd_FNF" ] )
+
+               IF hbmk2[ "lTRACE" ]
+                  IF ! hbmk2[ "lQUIET" ]
+                     hbmk2_OutStd( hbmk2, I_( "'uic' command:" ) )
+                  ENDIF
+                  hbmk2_OutStdRaw( cCommand )
+               ENDIF
+
+               IF ! hbmk2[ "lDONTEXEC" ]
+                  IF ( nError := hb_processRun( cCommand ) ) != 0
+                     hbmk2_OutErr( hbmk2, hb_StrFormat( I_( "Error: Running 'uic' executable. %1$s" ), hb_ntos( nError ) ) )
+                     IF ! hbmk2[ "lQUIET" ]
+                        hbmk2_OutErrRaw( cCommand )
+                     ENDIF
+                     IF ! hbmk2[ "lIGNOREERROR" ]
+                        FErase( cTmp )
+                        cRetVal := "error"
+                        EXIT
+                     ENDIF
+                  ELSE
+                     IF ! uic_to_prg( hbmk2, cTmp, cDst, hbmk2_FNameToSymbol( hbmk2_FNameNameGet( cSrc ) ) )
+                        IF ! hbmk2[ "lIGNOREERROR" ]
+                           FErase( cTmp )
+                           cRetVal := "error"
+                           EXIT
+                        ENDIF
+                     ENDIF
+                  ENDIF
+               ENDIF
+               FErase( cTmp )
+            ENDIF
+         NEXT
+      ENDIF
+
+      EXIT
+
+   CASE "pre_c"
+
+      IF ! hbmk2[ "lCLEAN" ] .AND. ;
+         ! Empty( hbmk2[ "vars" ][ "aMOC_Src" ] ) .AND. ;
+         ! Empty( hbmk2[ "vars" ][ "cMOC_BIN" ] )
+
+         /* Execute 'moc' commands on input files */
+
+         FOR EACH cSrc, cDst IN hbmk2[ "vars" ][ "aMOC_Src" ], hbmk2[ "vars" ][ "aMOC_Dst" ]
+
+            IF hbmk2[ "lINC" ] .AND. ! hbmk2[ "lREBUILD" ]
+               lBuildIt := ! hb_FGetDateTime( cDst, @tDst ) .OR. ;
+                           ! hb_FGetDateTime( cSrc, @tSrc ) .OR. ;
+                           tSrc > tDst
+            ELSE
+               lBuildIt := .T.
+            ENDIF
+
+            IF lBuildIt
+
+               cCommand := hbmk2[ "vars" ][ "cMOC_BIN" ] +;
+                           " " + hbmk2_FNameEscape( hbmk2_PathSepToTarget( hbmk2, cSrc ), hbmk2[ "nCmd_Esc" ], hbmk2[ "nCmd_FNF" ] ) +;
+                           " -o " + hbmk2_FNameEscape( hbmk2_PathSepToTarget( hbmk2, cDst ), hbmk2[ "nCmd_Esc" ], hbmk2[ "nCmd_FNF" ] )
+
+               IF hbmk2[ "lTRACE" ]
+                  IF ! hbmk2[ "lQUIET" ]
+                     hbmk2_OutStd( hbmk2, I_( "'moc' command:" ) )
+                  ENDIF
+                  hbmk2_OutStdRaw( cCommand )
+               ENDIF
+
+               IF ! hbmk2[ "lDONTEXEC" ] .AND. ( nError := hb_processRun( cCommand ) ) != 0
+                  hbmk2_OutErr( hbmk2, hb_StrFormat( I_( "Error: Running 'moc' executable. %1$s" ), hb_ntos( nError ) ) )
+                  IF ! hbmk2[ "lQUIET" ]
+                     hbmk2_OutErrRaw( cCommand )
+                  ENDIF
+                  IF ! hbmk2[ "lIGNOREERROR" ]
+                     cRetVal := "error"
+                     EXIT
+                  ENDIF
+               ENDIF
+            ENDIF
+         NEXT
       ENDIF
 
       EXIT

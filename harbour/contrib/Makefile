@@ -6,16 +6,9 @@ ROOT := ../
 
 include $(ROOT)config/global.mk
 
-all : first
+ifneq ($(HB_NO_CONTRIB),yes)
 
 first clean install::
-	@$(TRUE)
+	$(if $(wildcard $(HB_HOST_BIN_DIR)/hbrun$(HB_HOST_BIN_EXT)),+$(HB_HOST_BIN_DIR)/hbrun$(HB_HOST_BIN_EXT) --hb:gtcgi $(TOP)$(ROOT)contrib/make.hbs $@,@$(ECHO) $(ECHOQUOTE)! Warning: hbrun not found, contrib/make.hbs skipped.$(ECHOQUOTE))
 
-clean::
-	$(if $(wildcard $(HB_HOST_BIN_DIR)/hbrun$(HB_HOST_BIN_EXT)),+$(HB_HOST_BIN_DIR)/hbrun$(HB_HOST_BIN_EXT) --hb:gtcgi $(TOP)$(ROOT)contrib/make.hbs clean,@$(ECHO) $(ECHOQUOTE)! Warning: hbrun not found, contrib/make.hbs skipped.$(ECHOQUOTE))
-
-install::
-	$(if $(wildcard $(HB_HOST_BIN_DIR)/hbrun$(HB_HOST_BIN_EXT)),+$(HB_HOST_BIN_DIR)/hbrun$(HB_HOST_BIN_EXT) --hb:gtcgi $(TOP)$(ROOT)contrib/make.hbs install,@$(ECHO) $(ECHOQUOTE)! Warning: hbrun not found, contrib/make.hbs skipped.$(ECHOQUOTE))
-
-all:
-	$(if $(wildcard $(HB_HOST_BIN_DIR)/hbrun$(HB_HOST_BIN_EXT)),+$(HB_HOST_BIN_DIR)/hbrun$(HB_HOST_BIN_EXT) --hb:gtcgi $(TOP)$(ROOT)contrib/make.hbs all,@$(ECHO) $(ECHOQUOTE)! Warning: hbrun not found, contrib/make.hbs skipped.$(ECHOQUOTE))
+endif
