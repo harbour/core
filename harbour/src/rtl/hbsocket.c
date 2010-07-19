@@ -186,7 +186,7 @@
 #endif
 
 
-#if defined( HB_OS_WIN ) && ! defined( HB_OS_UNIX )
+#if defined( HB_OS_WIN ) && ! defined( __CYGWIN__ )
 #  include <winsock2.h>
 #  include <ws2tcpip.h>
 #else
