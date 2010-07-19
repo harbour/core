@@ -239,6 +239,10 @@ static bool connect_signal( QString signal, QObject * object, HBSlots * t_slots 
    /* QMdiSubWindow */
    if( signal == ( QString ) "aboutToActivate()"                              ) return object->connect( object, SIGNAL( aboutToActivate()                                                 ), t_slots, SLOT( aboutToActivate()                                                  ), Qt::AutoConnection );
    if( signal == ( QString ) "windowStateChanged(Qt::WindowStates,Qt::WindowStates)" ) return object->connect( object, SIGNAL( windowStateChanged( Qt::WindowStates, Qt::WindowStates )   ), t_slots, SLOT( windowStateChanged( Qt::WindowStates, Qt::WindowStates )           ), Qt::AutoConnection );
+   /* QAbstractItemDelegate */
+   if( signal == ( QString ) "closeEditor(QWidget,int)"                       ) return object->connect( object, SIGNAL( closeEditor( QWidget *, QAbstractItemDelegate::EndEditHint )      ), t_slots, SLOT( closeEditor( QWidget *, QAbstractItemDelegate::EndEditHint )       ), Qt::AutoConnection );
+   if( signal == ( QString ) "commitData(QWidget)"                            ) return object->connect( object, SIGNAL( commitData( QWidget * )                                           ), t_slots, SLOT( commitData( QWidget * )                                            ), Qt::AutoConnection );
+   if( signal == ( QString ) "sizeHintChanged(QModelIndex)"                   ) return object->connect( object, SIGNAL( sizeHintChanged( const QModelIndex & )                            ), t_slots, SLOT( sizeHintChanged( const QModelIndex & )                             ), Qt::AutoConnection );
    /* New */
    return false;
 }
@@ -415,6 +419,10 @@ static bool disconnect_signal( QObject * object, const char * signal )
    /* QMdiSubWindow */
    if( signal == ( QString ) "aboutToActivate()"                              ) return object->disconnect( SIGNAL( aboutToActivate()                                                 ) );
    if( signal == ( QString ) "windowStateChanged(Qt::WindowStates,Qt::WindowStates)" ) return object->disconnect( SIGNAL( windowStateChanged( Qt::WindowStates, Qt::WindowStates )   ) );
+   /* QAbstractItemDelegate */
+   if( signal == ( QString ) "closeEditor(QWidget,int)"                       ) return object->disconnect( SIGNAL( closeEditor( QWidget *, QAbstractItemDelegate::EndEditHint )      ) );
+   if( signal == ( QString ) "commitData(QWidget)"                            ) return object->disconnect( SIGNAL( commitData( QWidget * )                                           ) );
+   if( signal == ( QString ) "sizeHintChanged(QModelIndex)"                   ) return object->disconnect( SIGNAL( sizeHintChanged( const QModelIndex & )                            ) );
    /* new */
 
    return false;
@@ -1045,6 +1053,10 @@ void HBSlots::subWindowActivated( QMdiSubWindow * window )                      
 /* QMdiSubWindow */
 void HBSlots::aboutToActivate()                                                                            { hbqt_SlotsExec(               this, qobject_cast<QObject *>( sender() ), "aboutToActivate()"                                               ); }
 void HBSlots::windowStateChanged( Qt::WindowStates oldState, Qt::WindowStates newState )                   { hbqt_SlotsExecIntInt(         this, qobject_cast<QObject *>( sender() ), "windowStateChanged(Qt::WindowStates,Qt::WindowStates)", oldState, newState ); }
+/* QAbstractItemDelegate */
+void HBSlots::closeEditor( QWidget * editor, QAbstractItemDelegate::EndEditHint hint )                     { hbqt_SlotsExecPointerInt(     this, qobject_cast<QObject *>( sender() ), "closeEditor(QWidget,int)", editor, hint                          ); }
+void HBSlots::commitData( QWidget * editor )                                                               { hbqt_SlotsExecPointer(        this, qobject_cast<QObject *>( sender() ), "commitData(QWidget)", editor                                     ); }
+void HBSlots::sizeHintChanged( const QModelIndex & index )                                                 { hbqt_SlotsExecModel(          this, qobject_cast<QObject *>( sender() ), "sizeHintChanged(QModelIndex)", index                             ); }
 /* Latest */
 
 /*----------------------------------------------------------------------*/

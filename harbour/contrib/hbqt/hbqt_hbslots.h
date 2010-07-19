@@ -290,6 +290,10 @@ public slots:
    /* QMdiSubWindow */
    void aboutToActivate();
    void windowStateChanged( Qt::WindowStates oldState, Qt::WindowStates newState );
+   /* QAbstractItemDelegate */
+   void closeEditor( QWidget * editor, QAbstractItemDelegate::EndEditHint hint );
+   void commitData( QWidget * editor );
+   void sizeHintChanged( const QModelIndex & index );
    /* Latest */
 };
 

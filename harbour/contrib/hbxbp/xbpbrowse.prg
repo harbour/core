@@ -442,6 +442,10 @@ EXPORTED:
    DATA     oDefaultCellSize
    METHOD   setCellHeight( nCellHeight )
    METHOD   setCurrentIndex( lReset )
+   METHOD   getCurrentIndex()                       INLINE ::oDbfModel:index( ::rowPos - 1, ::colPos - 1 )
+   METHOD   openPersistentEditor()
+
+   METHOD   setFocus()                              INLINE ::oTableView:setFocus()
 
    ENDCLASS
 
@@ -538,6 +542,14 @@ METHOD new( nTop, nLeft, nBottom, nRight ) CLASS XbpBrowse
 
 /*----------------------------------------------------------------------*/
 
+METHOD XbpBrowse:openPersistentEditor()
+
+   ::oTableView:openPersistentEditor( ::oDbfModel:index( ::rowPos - 1, ::colPos - 1 ) )
+
+   RETURN Self
+
+/*------------------------------------------------------------------------*/
+
 METHOD XbpBrowse:buildLeftFreeze()
 
    /*  Left Freeze */
@@ -549,7 +561,7 @@ METHOD XbpBrowse:buildLeftFreeze()
    ::oLeftView:setShowGrid( .t. )
    ::oLeftView:setGridStyle( ::gridStyle )   /* to be based on column definition */
    ::oLeftView:setSelectionMode( QAbstractItemView_SingleSelection )
-   ::oLeftView:setSelectionBehavior( IF( ::cursorMode == XBPBRW_CURSOR_ROW, QAbstractItemView_SelectRows, QAbstractItemView_SelectItems ) )
+   ::oLeftView:setSelectionBehavior( iif( ::cursorMode == XBPBRW_CURSOR_ROW, QAbstractItemView_SelectRows, QAbstractItemView_SelectItems ) )
    //
    /*  Veritical Header because of Performance boost */
    ::oLeftVHeaderView := QHeaderView()
@@ -601,7 +613,7 @@ METHOD XbpBrowse:buildRightFreeze()
    ::oRightView:setShowGrid( .t. )
    ::oRightView:setGridStyle( ::gridStyle )   /* to be based on column definition */
    ::oRightView:setSelectionMode( QAbstractItemView_SingleSelection )
-   ::oRightView:setSelectionBehavior( IF( ::cursorMode == XBPBRW_CURSOR_ROW, QAbstractItemView_SelectRows, QAbstractItemView_SelectItems ) )
+   ::oRightView:setSelectionBehavior( iif( ::cursorMode == XBPBRW_CURSOR_ROW, QAbstractItemView_SelectRows, QAbstractItemView_SelectItems ) )
    //
    /*  Veritical Header because of Performance boost */
    oVHdr := QHeaderView()
@@ -656,7 +668,7 @@ METHOD XbpBrowse:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::oTableView:setShowGrid( .t. )
    ::oTableView:setGridStyle( ::gridStyle )   /* to be based on column definition */
    ::oTableView:setSelectionMode( QAbstractItemView_SingleSelection )
-   ::oTableView:setSelectionBehavior( IF( ::cursorMode == XBPBRW_CURSOR_ROW, QAbstractItemView_SelectRows, QAbstractItemView_SelectItems ) )
+   ::oTableView:setSelectionBehavior( iif( ::cursorMode == XBPBRW_CURSOR_ROW, QAbstractItemView_SelectRows, QAbstractItemView_SelectItems ) )
    ::oTableView:setAlternatingRowColors( .t. )
 
    /* Connect Keyboard Events */
@@ -1209,6 +1221,7 @@ METHOD fetchColumnInfo( nCall, nRole, nArea, nRow, nCol ) CLASS XbpBrowse
          ELSE
             RETURN nil
          ENDIF
+      CASE Qt_EditRole
       CASE Qt_DisplayRole
          IF oCol:type == XBPCOL_TYPE_FILEICON
             RETURN nil
@@ -1336,11 +1349,8 @@ METHOD setHorzOffset() CLASS XbpBrowse
 /*----------------------------------------------------------------------*/
 
 METHOD setCurrentIndex( lReset ) CLASS XbpBrowse
-   LOCAL pIndex
 
    DEFAULT lReset TO .t.
-
-//HB_TRACE( HB_TR_DEBUG, "   setCurrentIndex ", 0, lReset, memory( 1001 ) )
 
    IF lReset
       ::oDbfModel:reset()                         /* Important */
@@ -1352,11 +1362,8 @@ METHOD setCurrentIndex( lReset ) CLASS XbpBrowse
          ::oRightDbfModel:reset()
       ENDIF
    ENDIF
+   ::oTableView:setCurrentIndex( ::oDbfModel:index( ::rowPos - 1, ::colPos - 1 ) )
 
-   pIndex := ::oDbfModel:index( ::rowPos - 1, ::colPos - 1 )
-   ::oTableView:setCurrentIndex( pIndex )
-
-//HB_TRACE( HB_TR_DEBUG, "   setCurrentIndex ", 1, lReset, memory( 1001 ) )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1485,7 +1492,7 @@ METHOD doConfigure() CLASS XbpBrowse
    FOR EACH oCol, aCol IN ::columns, ::aColData
       xValue   := Eval( oCol:block )
       cType    := ValType( xValue )
-      nWidth   := IIF( cType $ "CMNDTL", Len( Transform( xValue, oCol:picture ) ), 0 )
+      nWidth   := iif( cType $ "CMNDTL", Len( Transform( xValue, oCol:picture ) ), 0 )
 
       /* Control the picture spec of Bitmaps|Icon files */
       IF oCol:type != XBPCOL_TYPE_TEXT
@@ -1601,7 +1608,7 @@ METHOD doConfigure() CLASS XbpBrowse
       ::oVScrollBar:hide()
    ENDIF
 
-   ::oTableView:setSelectionBehavior( IF( ::cursorMode == XBPBRW_CURSOR_ROW, QAbstractItemView_SelectRows, QAbstractItemView_SelectItems ) )
+   ::oTableView:setSelectionBehavior( iif( ::cursorMode == XBPBRW_CURSOR_ROW, QAbstractItemView_SelectRows, QAbstractItemView_SelectItems ) )
 
    /* Calculate how many rows fit in the view */
    IF len( ::columns ) > 0
@@ -1640,7 +1647,7 @@ METHOD doConfigure() CLASS XbpBrowse
       ::setCellHeight( nMaxCellH )
 
       /* Implement Column Resizing Mode */
-      ::oHeaderView:setResizeMode( IF( ::lSizeCols, QHeaderView_Interactive, QHeaderView_Fixed ) )
+      ::oHeaderView:setResizeMode( iif( ::lSizeCols, QHeaderView_Interactive, QHeaderView_Fixed ) )
       ::oFooterView:setResizeMode( QHeaderView_Fixed )
       //
       ::oLeftHeaderView:setResizeMode( QHeaderView_Fixed )
@@ -1881,10 +1888,7 @@ METHOD configure( nMode ) CLASS XbpBrowse
 /*----------------------------------------------------------------------*/
 
 METHOD forceStable() CLASS XbpBrowse
-
-   DO WHILE !::stabilize()
-   ENDDO
-
+   DO WHILE !::stabilize() ; ENDDO
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -2080,12 +2084,6 @@ METHOD scrollBuffer( nRows ) CLASS XbpBrowse
       AFill( ::aCellStatus, .F. )
       ::lReset := .t.
    ELSE
-      #if 0  /* Physical scroll - in GUI not required */
-      hb_scroll( ::n_Top + ::nHeadHeight + iif( ::lHeadSep, 1, 0 ), ::n_Left, ;
-                 ::n_Bottom - ::nFootHeight - iif( ::lFootSep, 1, 0 ), ::n_Right, ;
-                 nRows,, ::colorValue( _TBC_CLR_STANDARD ) )
-      #endif
-
       IF nRows > 0
          DO WHILE --nRows >= 0
             aValues := ::aCellValues[ 1 ]
@@ -2758,78 +2756,9 @@ STATIC FUNCTION _SETCOLUMNS( nFrom, nTo, nStep, aColData, nFirst, nWidth, lFirst
          ENDIF
       NEXT
    ENDIF
-
    RETURN iif( nLast == 0, nFrom - nStep, nLast )
 
-
-STATIC PROCEDURE _SETVISIBLE( aColData, nWidth, nFrozen, nLeft, nRight )
-
-   LOCAL nPos, nFirst
-   LOCAL lLeft, lRight, lFirst
-   LOCAL nColCount := Len( aColData )
-
-   /* Check if frozen columns are still valid, if not reset it to 0
-    * It also calculates the size left for unfrozen columns [druzus]
-    */
-   nFrozen := _MAXFREEZE( nFrozen, aColData, @nWidth )
-
-   /* CA-Cl*pper checks here only for columns number and does not check
-    * if at least one column is visible (oCol:width > 0) and if not then
-    * wrongly calculates visible columns and some internal indexes.
-    * Using linkers like EXOSPACE with memory protection it causes
-    * application crash with GPF. [druzus]
-    */
-   IF nColCount == 0 .OR. _NEXTCOLUMN( aColData, 1 ) == 0
-      nLeft := nRight := 0
-   ELSE
-      /* This algorithms keeps CA-Cl*pper precedence in visible column
-       * updating. It's also important for proper working panLeft and
-       * panRight methods which use leftVisible and rightVisible values
-       * for horizontal scrolling just like in CA-Cl*pper. [druzus]
-       */
-      IF nWidth >= 1
-         lRight := nRight > nFrozen .AND. nRight <= nColCount .AND. ;
-                   aColData[ nRight ][ _TBCI_CELLWIDTH ] > 0
-         lLeft  := nLeft > nFrozen .AND. nLeft <= nColCount .AND. ;
-                   aColData[ nLeft ][ _TBCI_CELLWIDTH ] > 0
-         IF !lLeft
-            IF lRight
-               IF ( nLeft := _PREVCOLUMN( aColData, nRight ) ) < nFrozen
-                  nLeft := nRight
-               ENDIF
-            ELSE
-               nPos := _NEXTCOLUMN( aColData, Max( nLeft + 1, nFrozen + 1 ) )
-               IF nPos == 0
-                  nPos := _PREVCOLUMN( aColData, Min( nColCount, nLeft - 1 ) )
-               ENDIF
-               IF nPos > nFrozen
-                  nLeft := nPos
-                  lLeft := .T.
-               ENDIF
-            ENDIF
-         ENDIF
-         lFirst := .T.
-         nFirst := _PREVCOLUMN( aColData, nFrozen )
-      ELSE
-         lLeft := lRight := .F.
-      ENDIF
-      IF lLeft
-         nRight := _SETCOLUMNS( nLeft, nColCount, 1, aColData, @nFirst, @nWidth, @lFirst )
-         nLeft := _SETCOLUMNS( nLeft - 1, nFrozen + 1, -1, aColData, @nFirst, @nWidth, @lFirst )
-      ELSEIF lRight
-         nLeft := _SETCOLUMNS( nRight, nFrozen + 1, -1, aColData, @nFirst, @nWidth, @lFirst )
-         nRight := _SETCOLUMNS( nRight + 1, nColCount, 1, aColData, @nFirst, @nWidth, @lFirst )
-      ELSE
-         nLeft := nFrozen + 1
-         nRight := nFrozen
-      ENDIF
-   ENDIF
-
-   RETURN
-
-
 METHOD colorValue( nColorIndex ) CLASS XbpBrowse
-
    IF ::nConfigure != 0
       ::doConfigure()
    ENDIF
@@ -2841,21 +2770,16 @@ METHOD colorValue( nColorIndex ) CLASS XbpBrowse
          RETURN "N/N"
       ENDIF
    ENDIF
-
    RETURN ::aColors[ _TBC_CLR_STANDARD ]
 
-
 METHOD cellColor( nRow, nCol ) CLASS XbpBrowse
-
    IF nRow >= 1 .AND. nRow <= ::rowCount .AND. ;
       nCol >= 1 .AND. nCol <= ::colCount .AND. ;
       ::aCellStatus[ nRow ]
 
       RETURN ::aCellColors[ nRow, nCol ]
    ENDIF
-
    RETURN NIL
-
 
 STATIC FUNCTION _DECODECOLORS( cColorSpec )
    LOCAL aColors := {}
@@ -2879,9 +2803,7 @@ STATIC FUNCTION _DECODECOLORS( cColorSpec )
    DO WHILE Len( aColors ) < _TBC_CLR_MAX
       AAdd( aColors, aColors[ _TBC_CLR_STANDARD ] )
    ENDDO
-
    RETURN aColors
-
 
 STATIC FUNCTION _COLDEFCOLORS( aDefColorsIdx, nMaxColorIndex )
    LOCAL aColorsIdx := { _TBC_CLR_STANDARD, _TBC_CLR_SELECTED, ;
@@ -2905,7 +2827,6 @@ STATIC FUNCTION _COLDEFCOLORS( aDefColorsIdx, nMaxColorIndex )
 
    RETURN aColorsIdx
 
-
 STATIC FUNCTION _CELLCOLORS( aCol, xValue, nMaxColorIndex )
    LOCAL aColors := { aCol[ _TBCI_DEFCOLOR ][ _TBC_CLR_STANDARD ], ;
                       aCol[ _TBCI_DEFCOLOR ][ _TBC_CLR_SELECTED ] }
@@ -2925,12 +2846,9 @@ STATIC FUNCTION _CELLCOLORS( aCol, xValue, nMaxColorIndex )
          ENDIF
       NEXT
    ENDIF
-
    RETURN aColors
 
-
 METHOD setCursorPos() CLASS XbpBrowse
-
    LOCAL aCol
    LOCAL nRow, nCol
 
@@ -2959,166 +2877,20 @@ METHOD setCursorPos() CLASS XbpBrowse
       SetPos( ::n_Row, ::n_Col )
       RETURN .T.
    ENDIF
-
    RETURN .F.
 
 /* set visible columns */
 METHOD setVisible() CLASS XbpBrowse
-   #if 0
-   LOCAL nCol, nLeft, nFrozen, nLast, nColumns, nWidth, nColPos
-   LOCAL lFirst, lFrames
-   LOCAL aCol
-
-   nColPos := ::nColPos
-   IF nColPos < 1 .OR. nColPos > ::colCount .OR. ::nLastPos != nColPos .OR. ;
-      ::lFrames .OR. ::nLeftVisible == 0 .OR. ::nRightVisible == 0 .OR. ;
-      ::aColData[ nColPos ][ _TBCI_COLPOS ] == NIL
-
-      lFrames := .F.
-      nWidth := _TBR_COORD( ::n_Right ) - _TBR_COORD( ::n_Left ) + 1
-      nColumns := Len( ::aColData )
-
-      IF nColPos > nColumns
-         ::nColPos := nColumns
-         ::nLeftVisible := nColumns
-         ::nRightVisible := nColumns
-      ELSEIF ::nColPos < 1
-         ::nColPos := 1
-         ::nLeftVisible := 1
-         ::nRightVisible := 1
-      ELSEIF nColPos != ::nLastPos
-         IF nColPos > ::nRightVisible
-            ::nRightVisible := ::nColPos
-            ::nLeftVisible := 0
-         ELSEIF nColPos < ::nLeftVisible
-            ::nLeftVisible := ::nColPos
-            ::nRightVisible := 0
-         ENDIF
-      ELSEIF ::nColPos <= ::nFrozen .AND. ::nLeftVisible == 0
-         nCol := _NEXTCOLUMN( ::aColData, ::nFrozen + 1 )
-         ::nColPos := iif( nCol == 0, nColumns, nCol )
-      ENDIF
-
-      _SETVISIBLE( ::aColData, @nWidth, ;
-                   @::nFrozen, @::nLeftVisible, @::nRightVisible )
-
-      IF ::nColPos > ::nRightVisible
-         ::nColPos := ::nRightVisible
-      ELSEIF ::nColPos > ::nFrozen .AND. ::nColPos < ::nLeftVisible
-         ::nColPos := ::nLeftVisible
-      ENDIF
-
-      /* update column size and positions on the screen */
-      nLeft := _TBR_COORD( ::n_Left )
-      lFirst := .T.
-      FOR nCol := 1 TO ::nRightVisible
-         aCol := ::aColData[ nCol ]
-         IF aCol[ _TBCI_CELLWIDTH ] > 0 .AND. ;
-            ( nCol <= ::nFrozen .OR. nCol >= ::nLeftVisible )
-
-            nFrozen := iif( nCol == ::nLeftVisible, Int( nWidth / 2 ), 0 )
-            nColPos := nLeft += nFrozen
-            nLeft += aCol[ _TBCI_COLWIDTH ]
-            IF lFirst
-               lFirst := .F.
-            ELSE
-               nLeft += aCol[ _TBCI_SEPWIDTH ]
-            ENDIF
-            nLast := iif( nCol == ::nRightVisible, ;
-                          _TBR_COORD( ::n_Right ) - nLeft + 1, 0 )
-
-            IF aCol[ _TBCI_COLPOS      ] != nColPos  .OR. ;
-               aCol[ _TBCI_FROZENSPACE ] != nFrozen  .OR. ;
-               aCol[ _TBCI_LASTSPACE   ] != nLast
-
-               lFrames := .T.
-               aCol[ _TBCI_COLPOS      ] := nColPos
-               aCol[ _TBCI_FROZENSPACE ] := nFrozen
-               aCol[ _TBCI_LASTSPACE   ] := nLast
-            ENDIF
-         ELSE
-            IF aCol[ _TBCI_COLPOS ] != NIL
-               lFrames := .T.
-            ENDIF
-            aCol[ _TBCI_COLPOS ] := NIL
-         ENDIF
-      NEXT
-      FOR nCol := ::nRightVisible + 1 TO nColumns
-         aCol := ::aColData[ nCol ]
-         IF aCol[ _TBCI_COLPOS ] != NIL
-            lFrames := .T.
-         ENDIF
-         aCol[ _TBCI_COLPOS ] := NIL
-      NEXT
-
-      ::nLastPos := ::nColPos
-
-      IF lFrames
-         ::lFrames := .T.
-      ENDIF
-
-   ENDIF
-   #endif
    RETURN Self
-
 
 METHOD hiLite() CLASS XbpBrowse
-#if 0
-   LOCAL cValue, cColor
-
-   IF ::nConfigure != 0
-      ::doConfigure()
-   ENDIF
-
-   DispBegin()
-
-   IF ::setCursorPos()
-      IF ( cValue := ::cellValue( ::nRowPos, ::nColPos ) ) != NIL
-         cColor := ::colorValue( ::cellColor( ::nRowPos, ::nColPos )[ _TBC_CLR_SELECTED ] )
-         IF ::n_Col + Len( cValue ) > _TBR_COORD( ::n_Right )
-            cValue := Left( cValue, _TBR_COORD( ::n_Right ) - ::n_Col + 1 )
-         ENDIF
-         hb_dispOutAt( ::n_Row, ::n_Col, cValue, cColor )
-         SetPos( ::n_Row, ::n_Col )
-         ::lHiLited := .T.
-      ENDIF
-   ENDIF
-
-   DispEnd()
-#endif
    RETURN Self
-
 
 METHOD deHilite() CLASS XbpBrowse
-#if 0
-   LOCAL cValue, cColor
-
-   IF ::nConfigure != 0
-      ::doConfigure()
-   ENDIF
-
-   DispBegin()
-
-   IF ::setCursorPos()
-      IF ( cValue := ::cellValue( ::nRowPos, ::nColPos ) ) != NIL
-         cColor := ::colorValue( ::cellColor( ::nRowPos, ::nColPos )[ _TBC_CLR_STANDARD ] )
-         IF ::n_Col + Len( cValue ) > _TBR_COORD( ::n_Right )
-            cValue := Left( cValue, _TBR_COORD( ::n_Right ) - ::n_Col + 1 )
-         ENDIF
-         hb_dispOutAt( ::n_Row, ::n_Col, cValue, cColor )
-         SetPos( ::n_Row, ::n_Col )
-      ENDIF
-   ENDIF
-   ::lHiLited := .F.
-
-   DispEnd()
-#endif
    RETURN Self
-
 
 /* Returns the display width of a particular column */
 METHOD colWidth( nColumn ) CLASS XbpBrowse
-
    IF ::nConfigure != 0
       ::doConfigure()
    ENDIF
@@ -3126,23 +2898,17 @@ METHOD colWidth( nColumn ) CLASS XbpBrowse
    IF ISNUMBER( nColumn ) .AND. nColumn >= 1 .AND. nColumn <= ::colCount
       RETURN ::aColData[ nColumn ][ _TBCI_COLWIDTH ]
    ENDIF
-
    RETURN 0
-
 
 /* get number of frozen columns */
 METHOD getFrozen() CLASS XbpBrowse
-
    IF ::nConfigure != 0
       ::doConfigure()
    ENDIF
-
    RETURN ::nFrozen
-
 
 /* set number of columns to freeze */
 METHOD freeze( nColumns ) CLASS XbpBrowse
-
    LOCAL nCols
 
    IF ::nConfigure != 0
@@ -3157,52 +2923,31 @@ METHOD freeze( nColumns ) CLASS XbpBrowse
          ::nFrozen := nCols
          ::lFrames := .T.
          ::nLastPos := 0
-         _SETVISIBLE( ::aColData, _TBR_COORD( ::n_Right ) - _TBR_COORD( ::n_Left ) + 1, ;
-                      @::nFrozen, @::nLeftVisible, @::nRightVisible )
       ENDIF
 
       RETURN nCols
    ENDIF
-
    RETURN ::nFrozen
 
-
 METHOD colorSpec( cColorSpec ) CLASS XbpBrowse
-
    IF cColorSpec != NIL
       ::cColorSpec := __eInstVar53( Self, "COLORSPEC", cColorSpec, "C", 1001 )
       ::configure( _TBR_CONF_COLORS )
    ENDIF
-
    RETURN ::cColorSpec
 
-
 METHOD colCount() CLASS XbpBrowse
-
    RETURN Len( ::columns )
 
-
 METHOD rowCount() CLASS XbpBrowse
-//   LOCAL nRows := 6
-
    IF ::nConfigure != 0
       ::doConfigure()
    ENDIF
-
-   #if 0
-   nRows := _TBR_COORD( ::n_Bottom ) - _TBR_COORD( ::n_Top ) + 1 - ;
-            ::nHeadHeight - iif( ::lHeadSep, 1, 0 ) - ;
-            ::nFootHeight - iif( ::lFootSep, 1, 0 )
-
-   RETURN iif( nRows > 0, nRows, 0 )
-   #endif
-
    RETURN ::nRowsInView
 
 METHOD setRowPos( nRowPos ) CLASS XbpBrowse
    LOCAL nRow
    LOCAL nRowCount := ::rowCount
-
    IF ISNUMBER( nRowPos )
       nRow := Int( nRowPos )
       ::nRowPos := iif( nRow > nRowCount, nRowCount, ;
@@ -3212,191 +2957,131 @@ METHOD setRowPos( nRowPos ) CLASS XbpBrowse
       ::nRowPos := Min( nRowCount, 1 )
       RETURN 0
    ENDIF
-
    RETURN ::nRowPos
-
 
 METHOD getRowPos() CLASS XbpBrowse
-
    IF ::nConfigure != 0
       ::doConfigure()
    ENDIF
-
    RETURN ::nRowPos
 
-
 METHOD setColPos( nColPos ) CLASS XbpBrowse
-
    IF ::nConfigure != 0
       ::doConfigure()
    ENDIF
-
    IF ISNUMBER( nColPos )
       ::nColPos := nColPos
    ELSE
       ::nColPos := 0
    ENDIF
-
    RETURN ::nColPos
-
 
 METHOD getColPos() CLASS XbpBrowse
-
    IF ::nConfigure != 0
       ::doConfigure()
    ENDIF
-
    RETURN ::nColPos
 
-
 METHOD getTopFlag() CLASS XbpBrowse
-
    IF ::nConfigure != 0
       ::doConfigure()
    ENDIF
-
    RETURN ::lHitTop
 
-
 METHOD setTopFlag( lTop ) CLASS XbpBrowse
-
    IF ::nConfigure != 0
       ::doConfigure()
    ENDIF
-
    IF !ISLOGICAL( lTop )
       RETURN .T.
    ENDIF
-
    ::lHitTop := lTop
-
    RETURN lTop
 
-
 METHOD getBottomFlag() CLASS XbpBrowse
-
    IF ::nConfigure != 0
       ::doConfigure()
    ENDIF
-
    RETURN ::lHitBottom
 
-
 METHOD setBottomFlag( lBottom ) CLASS XbpBrowse
-
    IF ::nConfigure != 0
       ::doConfigure()
    ENDIF
-
    IF !ISLOGICAL( lBottom )
       RETURN .T.
    ENDIF
-
    ::lHitBottom := lBottom
-
    RETURN lBottom
 
-
 METHOD getAutoLite() CLASS XbpBrowse
-
    IF ::nConfigure != 0
       ::doConfigure()
    ENDIF
-
    RETURN ::lAutoLite
 
-
 METHOD setAutoLite( lAutoLite ) CLASS XbpBrowse
-
    IF ::nConfigure != 0
       ::doConfigure()
    ENDIF
-
    IF !ISLOGICAL( lAutoLite )
       RETURN .T.
    ENDIF
-
    ::lAutoLite := lAutoLite
-
    RETURN lAutoLite
 
-
 METHOD getStableFlag() CLASS XbpBrowse
-
    IF ::nConfigure != 0
       ::doConfigure()
    ENDIF
-
    RETURN ::lStable
 
-
 METHOD setStableFlag( lStable ) CLASS XbpBrowse
-
    IF ::nConfigure != 0
       ::doConfigure()
    ENDIF
-
    IF !ISLOGICAL( lStable )
       RETURN .T.
    ENDIF
-
    ::lStable := lStable
-
    RETURN lStable
 
-
 METHOD leftVisible() CLASS XbpBrowse
-
    IF ::nConfigure != 0
       ::doConfigure()
    ENDIF
-
    RETURN ::nLeftVisible
 
-
 METHOD rightVisible() CLASS XbpBrowse
-
    IF ::nConfigure != 0
       ::doConfigure()
    ENDIF
-
    RETURN ::nRightVisible
-
 
 /* Adds a TBColumn object to the TBrowse object */
 METHOD addColumn( oCol ) CLASS XbpBrowse
-
    AAdd( ::columns, oCol )
    ::doConfigure()  /* QT */
-
    RETURN Self
-
 
 /* Delete a column object from a browse */
 METHOD delColumn( nColumn ) CLASS XbpBrowse
    LOCAL oCol
-
    oCol := ::columns[ nColumn ]
    ADel( ::columns, nColumn )
    ASize( ::columns, Len( ::columns ) - 1 )
    ::doConfigure()
-
    RETURN oCol
-
 
 /* Insert a column object in a browse */
 METHOD insColumn( nColumn, oCol ) CLASS XbpBrowse
-
    HB_AIns( ::columns, nColumn, oCol, .T. )
    ::doConfigure()
-
    RETURN oCol
-
 
 /* Replaces one TBColumn object with another */
 METHOD setColumn( nColumn, oCol ) CLASS XbpBrowse
    LOCAL oPrevCol
-
    IF nColumn != NIL .AND. oCol != NIL
       nColumn := __eInstVar53( Self, "COLUMN", nColumn, "N", 1001 )
       oCol := __eInstVar53( Self, "COLUMN", oCol, "O", 1001 )
@@ -3405,24 +3090,17 @@ METHOD setColumn( nColumn, oCol ) CLASS XbpBrowse
       ::columns[ nColumn ] := oCol
       ::doConfigure()
    ENDIF
-
    RETURN oPrevCol
-
 
 /* Gets a specific TBColumn object */
 METHOD getColumn( nColumn ) CLASS XbpBrowse
-
    RETURN iif( nColumn >= 1 .AND. nColumn <= ::colCount, ::columns[ nColumn ], NIL )
 
-
 METHOD footSep( cFootSep ) CLASS XbpBrowse
-
    IF cFootSep != NIL
       ::cFootSep := __eInstVar53( Self, "FOOTSEP", cFootSep, "C", 1001 )
    ENDIF
-
    RETURN ::cFootSep
-
 
 METHOD colSep( cColSep ) CLASS XbpBrowse
 
@@ -3432,114 +3110,77 @@ METHOD colSep( cColSep ) CLASS XbpBrowse
 
    RETURN ::cColSep
 
-
 METHOD headSep( cHeadSep ) CLASS XbpBrowse
-
    IF cHeadSep != NIL
       ::cHeadSep := __eInstVar53( Self, "HEADSEP", cHeadSep, "C", 1001 )
    ENDIF
-
    RETURN ::cHeadSep
 
-
 METHOD skipBlock( bSkipBlock ) CLASS XbpBrowse
-
    IF bSkipBlock != NIL
       ::bSkipBlock := __eInstVar53( Self, "SKIPBLOCK", bSkipBlock, "B", 1001 )
    ENDIF
-
    RETURN ::bSkipBlock
 
-
 METHOD goTopBlock( bBlock ) CLASS XbpBrowse
-
    IF bBlock != NIL
       ::bGoTopBlock := __eInstVar53( Self, "GOTOPBLOCK", bBlock, "B", 1001 )
    ENDIF
-
    RETURN ::bGoTopBlock
 
-
 METHOD goBottomBlock( bBlock ) CLASS XbpBrowse
-
    IF bBlock != NIL
       ::bGoBottomBlock := __eInstVar53( Self, "GOBOTTOMBLOCK", bBlock, "B", 1001 )
    ENDIF
-
    RETURN ::bGoBottomBlock
 
-
 METHOD firstPosBlock( bBlock ) CLASS XbpBrowse
-
    IF bBlock != NIL
       ::bFirstPosBlock := __eInstVar53( Self, "FIRSTPOSBLOCK", bBlock, "B", 1001 )
    ENDIF
-
    RETURN ::bFirstPosBlock
 
-
 METHOD lastPosBlock( bBlock ) CLASS XbpBrowse
-
    IF bBlock != NIL
       ::bLastPosBlock := __eInstVar53( Self, "LASTPOSBLOCK", bBlock, "B", 1001 )
    ENDIF
-
    RETURN ::bLastPosBlock
 
-
 METHOD phyPosBlock( bBlock ) CLASS XbpBrowse
-
    IF bBlock != NIL
       ::bPhyPosBlock := __eInstVar53( Self, "PHYPOSBLOCK", bBlock, "B", 1001 )
    ENDIF
-
    RETURN ::bPhyPosBlock
 
-
 METHOD posBlock( bBlock ) CLASS XbpBrowse
-
    IF bBlock != NIL
       ::bPosBlock := __eInstVar53( Self, "POSBLOCK", bBlock, "B", 1001 )
    ENDIF
-
    RETURN ::bPosBlock
 
-
 METHOD goPosBlock( bBlock ) CLASS XbpBrowse
-
    IF bBlock != NIL
       ::bGoPosBlock := __eInstVar53( Self, "GOPOSBLOCK", bBlock, "B", 1001 )
    ENDIF
-
    RETURN ::bGoPosBlock
 
-
 METHOD hitBottomBlock( bBlock ) CLASS XbpBrowse
-
    IF bBlock != NIL
       ::bHitBottomBlock := __eInstVar53( Self, "HITBOTTOMBLOCK", bBlock, "B", 1001 )
    ENDIF
-
    RETURN ::bHitBottomBlock
 
-
 METHOD hitTopBlock( bBlock ) CLASS XbpBrowse
-
    IF bBlock != NIL
       ::bHitTopBlock := __eInstVar53( Self, "HITTOPBLOCK", bBlock, "B", 1001 )
    ENDIF
-
    RETURN ::bHitTopBlock
 
-
 METHOD stableBlock( bBlock ) CLASS XbpBrowse
-
    IF bBlock != NIL
       ::bStableBlock := __eInstVar53( Self, "STABLEBLOCK", bBlock, "B", 1001 )
    ENDIF
-
    RETURN ::bStableBlock
-
 
 METHOD nTop( nTop ) CLASS XbpBrowse
 
@@ -3574,7 +3215,6 @@ METHOD nLeft( nLeft ) CLASS XbpBrowse
 
    RETURN ::n_Left
 
-
 METHOD nBottom( nBottom ) CLASS XbpBrowse
 
    IF nBottom != NIL
@@ -3591,7 +3231,6 @@ METHOD nBottom( nBottom ) CLASS XbpBrowse
 
    RETURN ::n_Bottom
 
-
 METHOD nRight( nRight ) CLASS XbpBrowse
 
    IF nRight != NIL
@@ -3607,7 +3246,6 @@ METHOD nRight( nRight ) CLASS XbpBrowse
    ENDIF
 
    RETURN ::n_Right
-
 
 METHOD viewArea() CLASS XbpBrowse
    LOCAL nWidth, nFrozenWidth
@@ -3626,260 +3264,53 @@ METHOD viewArea() CLASS XbpBrowse
             ::n_Right,;
             nFrozenWidth }
 
-
 METHOD firstScrCol() CLASS XbpBrowse
-
    IF ::nConfigure != 0
       ::doConfigure()
    ENDIF
-
    RETURN iif( ::leftVisible == 0, 0, ::aColData[ ::leftVisible ][ _TBCI_COLPOS ] )
 
-
 METHOD nRow() CLASS XbpBrowse
-
    IF ::nConfigure != 0
       ::doConfigure()
    ENDIF
-
    RETURN ::n_Row
 
-
 METHOD nCol() CLASS XbpBrowse
-
    IF ::nConfigure != 0
       ::doConfigure()
    ENDIF
-
    RETURN ::n_Col
-
 
 METHOD hitTest( mRow, mCol ) CLASS XbpBrowse
    HB_SYMBOL_UNUSED( mRow )
    HB_SYMBOL_UNUSED( mCol )
-
-   #if 0
-   LOCAL nTop, nLeft, nBottom, nRight, nRet, nCol
-   LOCAL lFirst
-   LOCAL aCol
-
-   IF ::nConfigure != 0
-      ::doConfigure()
-   ENDIF
-
-   ::mRowPos := ::mColPos := 0
-
-   IF !ISNUMBER( mRow ) .OR. !ISNUMBER( mCol ) .OR. ;
-      mRow < ( nTop    := _TBR_COORD( ::n_Top    ) ) .OR. ;
-      mRow > ( nBottom := _TBR_COORD( ::n_Bottom ) ) .OR. ;
-      mCol < ( nLeft   := _TBR_COORD( ::n_Left   ) ) .OR. ;
-      mCol > ( nRight  := _TBR_COORD( ::n_Right  ) )
-      RETURN HTNOWHERE
-   ENDIF
-
-   nRet := HTNOWHERE
-
-   IF !Empty( ::cBorder )
-      IF mRow == nTop - 1
-         IF mCol == nLeft - 1
-            nRet := HTTOPLEFT
-         ELSEIF mCol == nRight + 1
-            nRet := HTTOPRIGHT
-         ELSE
-            nRet := HTTOP
-         ENDIF
-      ELSEIF mRow == nBottom + 1
-         IF mCol == nLeft - 1
-            nRet := HTBOTTOMLEFT
-         ELSEIF mCol == nRight + 1
-            nRet := HTBOTTOMRIGHT
-         ELSE
-            nRet := HTBOTTOM
-         ENDIF
-      ELSEIF mCol == nLeft - 1
-         nRet := HTLEFT
-      ELSEIF mCol == nRight + 1
-         nRet := HTRIGHT
-      ENDIF
-   ENDIF
-
-   IF nRet == HTNOWHERE
-      IF mRow < nTop + ::nHeadHeight
-         nRet := HTHEADING
-      ELSEIF ::lHeadSep .AND. mRow == nTop + ::nHeadHeight
-         nRet := HTHEADSEP
-      ELSEIF ::lFootSep .AND. mRow == nBottom - ::nFootHeight
-         nRet := HTFOOTSEP
-      ELSEIF mRow > nBottom - ::nFootHeight
-         nRet := HTFOOTING
-      ELSE
-         nRet := HTCELL
-         ::mRowPos := mRow - nTop - ::nHeadHeight - iif( ::lHeadSep, 1, 0 )
-
-         lFirst := .T.
-         nCol := 1
-         DO WHILE nCol <= ::nRightVisible
-            aCol := ::aColData[ nCol ]
-            IF aCol[ _TBCI_COLPOS ] != NIL
-               IF lFirst
-                  lFirst := .F.
-               ELSE
-                  /* NOTE: CA-Cl*pper has bug here, it takes the size of
-                   *       next column separator instead of the current one
-                   */
-                  IF ( nLeft += aCol[ _TBCI_SEPWIDTH ] ) > mCol
-                     nRet := HTCOLSEP
-                     EXIT
-                  ENDIF
-               ENDIF
-
-               ::mColPos := nCol
-
-               IF ( nLeft += aCol[ _TBCI_COLWIDTH ] + ;
-                             aCol[ _TBCI_FROZENSPACE ] + ;
-                             aCol[ _TBCI_LASTSPACE ] ) > mCol
-                  EXIT
-               ENDIF
-            ENDIF
-            IF nCol == ::nFrozen .AND. nCol < ::nLeftVisible
-               nCol := ::nLeftVisible
-            ELSE
-               nCol++
-            ENDIF
-         ENDDO
-      ENDIF
-   ENDIF
-
-   RETURN nRet
-   #endif
    RETURN HTNOWHERE
 
 STATIC PROCEDURE _mBrwPos( oBrw, mRow, mCol )
    HB_SYMBOL_UNUSED( oBrw )
    HB_SYMBOL_UNUSED( mRow )
    HB_SYMBOL_UNUSED( mCol )
-
-   #if 0
-   LOCAL nTop, nLeft, nBottom, nPos, nCol, aCol
-
-   mRow := MRow()
-   mCol := MCol()
-
-   IF mRow >= ( nTop    := _TBR_COORD( oBrw:n_Top    ) ) .AND. ;
-      mRow <= ( nBottom := _TBR_COORD( oBrw:n_Bottom ) ) .AND. ;
-      mCol >= ( nLeft   := _TBR_COORD( oBrw:n_Left   ) ) .AND. ;
-      mCol <= (            _TBR_COORD( oBrw:n_Right  ) )
-
-      IF mRow < nTop + oBrw:nHeadHeight + iif( oBrw:lHeadSep, 1, 0 ) .OR. ;
-         mRow > nBottom - oBrw:nFootHeight - iif( oBrw:lFootSep, 1, 0 )
-         mRow := 0
-      ELSE
-         mRow -= nTop + oBrw:nHeadHeight - iif( oBrw:lHeadSep, 0, 1 )
-      ENDIF
-
-      nPos := 0
-      nCol := 1
-      DO WHILE nCol <= oBrw:nRightVisible
-         aCol := oBrw:aColData[ nCol ]
-         IF aCol[ _TBCI_COLPOS ] != NIL
-            IF nPos != 0
-               IF ( nLeft += aCol[ _TBCI_SEPWIDTH ] ) > mCol
-                  EXIT
-               ENDIF
-            ENDIF
-            nPos := nCol
-            IF ( nLeft += aCol[ _TBCI_COLWIDTH ] + ;
-                          aCol[ _TBCI_FROZENSPACE ] + ;
-                          aCol[ _TBCI_LASTSPACE ] ) > mCol
-               EXIT
-            ENDIF
-         ENDIF
-         IF nCol == oBrw:nFrozen .AND. nCol < oBrw:nLeftVisible
-            nCol := oBrw:nLeftVisible
-         ELSE
-            nCol++
-         ENDIF
-      ENDDO
-      mCol := nPos
-      IF nPos == 0
-         mRow := 0
-      ENDIF
-   ELSE
-      mRow := mCol := 0
-   ENDIF
-   #endif
    RETURN
 
-
 METHOD mRowPos() CLASS XbpBrowse
-   #if 0
-   LOCAL mRow, mCol
-
-   IF ::nConfigure != 0
-      ::doConfigure()
-   ENDIF
-
-   _mBrwPos( self, @mRow, @mCol )
-
-   RETURN mRow
-   #endif
    RETURN 0
 
 METHOD mColPos() CLASS XbpBrowse
-   #if 0
-   LOCAL mRow, mCol
-
-   IF ::nConfigure != 0
-      ::doConfigure()
-   ENDIF
-
-   _mBrwPos( self, @mRow, @mCol )
-
-   RETURN mCol
-   #endif
    RETURN 0
 
 METHOD border( cBorder ) CLASS XbpBrowse
    HB_SYMBOL_UNUSED( cBorder )
-   #if 0
-   IF cBorder != NIL
-
-      cBorder := __eInstVar53( Self, "BORDER", cBorder, "C", 1001 )
-
-      IF Len( cBorder ) == 0 .OR. Len( cBorder ) == 8
-
-         IF Empty( ::cBorder ) .AND. !Empty( cBorder )
-            ::n_Top++
-            ::n_Left++
-            ::n_Bottom--
-            ::n_Right--
-            ::configure( _TBR_CONF_COLUMNS )
-         ELSEIF !Empty( ::cBorder ) .AND. Empty( cBorder )
-            ::n_Top--
-            ::n_Left--
-            ::n_Bottom++
-            ::n_Right++
-            ::configure( _TBR_CONF_COLUMNS )
-         ENDIF
-
-         ::cBorder := cBorder
-      ENDIF
-   ENDIF
-   #endif
    RETURN ::cBorder
 
-
 METHOD message( cMessage ) CLASS XbpBrowse
-
    IF cMessage != NIL
       ::cMessage := __eInstVar53( Self, "MESSAGE", cMessage, "C", 1001 )
    ENDIF
-
    RETURN ::cMessage
 
 
 METHOD applyKey( nKey ) CLASS XbpBrowse
-
    LOCAL bBlock := ::SetKey( nKey )
 
    IF bBlock == NIL
@@ -3896,57 +3327,8 @@ METHOD applyKey( nKey ) CLASS XbpBrowse
 METHOD setKey( nKey, bBlock ) CLASS XbpBrowse
    HB_SYMBOL_UNUSED( nKey )
    HB_SYMBOL_UNUSED( bBlock )
-#if 0
-   LOCAL bReturn
-   LOCAL nPos
-
-   /* NOTE: Assigned codeblock receives two parameters:
-            {| oTBrowse, nKey | <action> } */
-
-   IF ::keys == NIL
-      ::keys := { { K_DOWN       , {| o | o:Down()    , TBR_CONTINUE   } },;
-                  { K_END        , {| o | o:End()     , TBR_CONTINUE   } },;
-                  { K_CTRL_PGDN  , {| o | o:GoBottom(), TBR_CONTINUE   } },;
-                  { K_CTRL_PGUP  , {| o | o:GoTop()   , TBR_CONTINUE   } },;
-                  { K_HOME       , {| o | o:Home()    , TBR_CONTINUE   } },;
-                  { K_LEFT       , {| o | o:Left()    , TBR_CONTINUE   } },;
-                  { K_PGDN       , {| o | o:PageDown(), TBR_CONTINUE   } },;
-                  { K_PGUP       , {| o | o:PageUp()  , TBR_CONTINUE   } },;
-                  { K_CTRL_END   , {| o | o:PanEnd()  , TBR_CONTINUE   } },;
-                  { K_CTRL_HOME  , {| o | o:PanHome() , TBR_CONTINUE   } },;
-                  { K_CTRL_LEFT  , {| o | o:PanLeft() , TBR_CONTINUE   } },;
-                  { K_CTRL_RIGHT , {| o | o:PanRight(), TBR_CONTINUE   } },;
-                  { K_RIGHT      , {| o | o:Right()   , TBR_CONTINUE   } },;
-                  { K_UP         , {| o | o:Up()      , TBR_CONTINUE   } },;
-                  { K_ESC        , {|   |               TBR_EXIT       } },;
-                  { K_LBUTTONDOWN, {| o | TBMouse( o, MRow(), MCol() ) } } }
-
-         AAdd( ::keys, { K_MWFORWARD  , {| o | o:Up()      , TBR_CONTINUE   } } )
-         AAdd( ::keys, { K_MWBACKWARD , {| o | o:Down()    , TBR_CONTINUE   } } )
-   ENDIF
-
-   IF ( nPos := AScan( ::keys, {| x | x[ _TBC_SETKEY_KEY ] == nKey } ) ) == 0
-      IF ISBLOCK( bBlock )
-         AAdd( ::keys, { nKey, bBlock } )
-      ENDIF
-      bReturn := bBlock
-   ELSEIF ISBLOCK( bBlock )
-      ::keys[ nPos ][ _TBC_SETKEY_BLOCK ] := bBlock
-      bReturn := bBlock
-   ELSEIF PCount() == 1
-      bReturn := ::keys[ nPos ][ _TBC_SETKEY_BLOCK ]
-   ELSE
-      bReturn := ::keys[ nPos ][ _TBC_SETKEY_BLOCK ]
-      IF PCount() == 2 .AND. bBlock == NIL .AND. nKey != 0
-         ADel( ::keys, nPos )
-         ASize( ::keys, Len( ::keys ) - 1 )
-      ENDIF
-   ENDIF
-
-   RETURN bReturn
-#else
    RETURN .f.
-#endif
+
 
 METHOD setStyle( nStyle, lNewValue ) CLASS XbpBrowse
 
@@ -3969,38 +3351,6 @@ METHOD setStyle( nStyle, lNewValue ) CLASS XbpBrowse
 
    RETURN ::styles[ nStyle ]
 
-#if 0
-FUNCTION TBMouse( oBrw, nMRow, nMCol )
-
-   LOCAL n
-
-   IF oBrw:hitTest( nMRow, nMCol ) == HTCELL
-
-      IF ( n := oBrw:mRowPos - oBrw:rowPos ) < 0
-         DO WHILE ++n <= 0
-            oBrw:up()
-         ENDDO
-      ELSEIF n > 0
-         DO WHILE --n >= 0
-            oBrw:down()
-         ENDDO
-      ENDIF
-
-      IF ( n := oBrw:mColPos - oBrw:colPos ) < 0
-         DO WHILE ++n <= 0
-            oBrw:left()
-         ENDDO
-      ELSEIF n > 0
-         DO WHILE --n >= 0
-            oBrw:right()
-         ENDDO
-      ENDIF
-
-      RETURN TBR_CONTINUE
-   ENDIF
-
-   RETURN TBR_EXCEPTION
-#endif
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
@@ -4223,7 +3573,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS XbpCo
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::valtype       := valtype( ::setData() )
-   ::blankVariable := IF( ::valtype == "N", 0, IF( ::valtype == "D", ctod( "" ), IF( ::valtype == "L", .f., "" ) ) )
+   ::blankVariable := iif( ::valtype == "N", 0, iif( ::valtype == "D", ctod( "" ), iif( ::valtype == "L", .f., "" ) ) )
 
    ::configure()
 
@@ -4272,7 +3622,7 @@ METHOD configure() CLASS XbpColumn
    IF ( n := ascan( ::aPresParams, {|e_| e_[ 1 ] == XBP_PP_COL_DA_CELLALIGNMENT } ) ) > 0
       ::dAlignment := ::aPresParams[ n,2 ]
    ELSE
-      ::dAlignment := IF( ::valtype == "N", Qt_AlignRight, IF( ::valtype $ "DL", Qt_AlignHCenter, Qt_AlignLeft ) )
+      ::dAlignment := iif( ::valtype == "N", Qt_AlignRight, iif( ::valtype $ "DL", Qt_AlignHCenter, Qt_AlignLeft ) )
       ::dAlignment += Qt_AlignVCenter
    ENDIF
    IF ( n := ascan( ::aPresParams, {|e_| e_[ 1 ] == XBP_PP_COL_DA_FGCLR } ) ) > 0
