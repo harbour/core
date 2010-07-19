@@ -442,7 +442,9 @@ EXPORTED:
    DATA     oDefaultCellSize
    METHOD   setCellHeight( nCellHeight )
    METHOD   setCurrentIndex( lReset )
+   METHOD   setIndex( qModelIndex )                 INLINE ::oTableView:setCurrentIndex( qModelIndex )
    METHOD   getCurrentIndex()                       INLINE ::oDbfModel:index( ::rowPos - 1, ::colPos - 1 )
+   ACCESS   getDbfModel()                           INLINE ::oDbfModel
    METHOD   openPersistentEditor()
 
    METHOD   setFocus()                              INLINE ::oTableView:setFocus()

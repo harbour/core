@@ -2242,6 +2242,18 @@
 #define QMdiSubWindow_RubberBandResize            0x04
 #define QMdiSubWindow_RubberBandMove              0x08
 
+/* QAbstractItemDelegate */
+#define QAbstractItemDelegate_NoHint              0   // There is no recommended action to be performed.
+
+//These hints let the delegate influence the behavior of the view:
+#define QAbstractItemDelegate_EditNextItem        1   // The view should use the delegate to open an editor on the next item in the view.
+#define QAbstractItemDelegate_EditPreviousItem    2   // The view should use the delegate to open an editor on the previous item in the view.
+
+// The following hints are most useful when models are used that cache data, such as those that manipulate data locally in order to increase performance or conserve network bandwidth.
+#define QAbstractItemDelegate_SubmitModelCache    3   // If the model caches data, it should write out cached data to the underlying data store.
+#define QAbstractItemDelegate_RevertModelCache    4   // If the model caches data, it should discard cached data and replace it with data from the underlying data store.
+
+
 /*----------------------------------------------------------------------*/
 
 /*

@@ -100,6 +100,11 @@
 #define  SUB_BROWSER                              4
 #define  SUB_NIL                                  5
 
+#define  PNL_PANELS                               1
+#define  PNL_TABLES                               2
+#define  PNL_MISC                                 3
+#define  PNL_READY                                4
+
 /*----------------------------------------------------------------------*/
 
 CLASS IdeBrowseManager INHERIT IdeObject
@@ -109,10 +114,14 @@ CLASS IdeBrowseManager INHERIT IdeObject
    DATA   qLayout
    DATA   qVSplitter
    DATA   qToolBar
+   DATA   qToolBarL
    DATA   qStruct
    DATA   qRddCombo
    DATA   qConxnCombo
+   DATA   qStatus
+   DATA   qTimer
 
+   DATA   aStatusPnls                             INIT  {}
    DATA   aPanels                                 INIT  {}
    DATA   aToolBtns                               INIT  {}
    DATA   aButtons                                INIT  {}
@@ -125,8 +134,10 @@ CLASS IdeBrowseManager INHERIT IdeObject
 
    DATA   qPanelsMenu
    DATA   qIndexMenu
+   DATA   qTablesMenu
    DATA   qPanelsButton
    DATA   qIndexButton
+   DATA   qTablesButton
    DATA   aPanelsAct                              INIT  {}
 
    DATA   lStructOpen                             INIT  .f.
@@ -136,8 +147,7 @@ CLASS IdeBrowseManager INHERIT IdeObject
    METHOD show()
    METHOD destroy()
    METHOD buildToolbar()
-   METHOD execEvent( cEvent, p, p1, p2 )
-   METHOD addTable( aInfo )
+   METHOD execEvent( cEvent, p, p1 )
    METHOD addArray( aData, aAttr )
    METHOD getPanelNames()
    METHOD getPanelsInfo()
@@ -148,19 +158,24 @@ CLASS IdeBrowseManager INHERIT IdeObject
    METHOD loadTables()
    METHOD buildPanelsButton()
    METHOD buildIndexButton()
-   METHOD buildToolButton( aBtn )
+   METHOD buildToolButton( qToolbar, aBtn )
    METHOD addPanelsMenu( cPanel )
    METHOD setStyleSheet( nMode )
    METHOD showStruct()
    METHOD buildUiStruct()
    METHOD populateUiStruct()
    METHOD populateFieldData()
-   METHOD updateIndexMenu( qSubWindow )
+   METHOD updateIndexMenu( oBrw )
    METHOD buildRddsCombo()
    METHOD buildConxnCombo()
    METHOD loadConxnCombo( cDriver )
    ACCESS currentDriver()                         INLINE ::qRddCombo:currentText()
    ACCESS currentConxn()                          INLINE ::qConxnCombo:currentText()
+   METHOD buildStatusPanels()
+   METHOD dispStatusInfo()
+   METHOD buildLeftToolbar()
+   METHOD buildTablesButton()
+   METHOD showTablesTree()
 
    ENDCLASS
 
@@ -206,11 +221,11 @@ METHOD IdeBrowseManager:getPanelsInfo()
             aAttr[ TBL_INDEX    ] := hb_ntos( oBrw:indexOrd()  )
             aAttr[ TBL_RECORD   ] := hb_ntos( oBrw:recNo()     )
             aAttr[ TBL_CURSOR   ] := hb_ntos( oBrw:nCursorType )
-            IF !hb_isObject( aSub[ 3 ] )
-               aSub[ 3 ] := QRect():from( aSub[ 2 ]:geometry() )
+            IF !hb_isObject( aSub[ SUB_GEOMETRY ] )
+               aSub[ SUB_GEOMETRY ] := QRect():from( aSub[ SUB_WINDOW ]:geometry() )
             ENDIF
-            aAttr[ TBL_GEOMETRY ] := hb_ntos( aSub[ 3 ]:x() )     + " " + hb_ntos( aSub[ 3 ]:y() ) + " " + ;
-                                     hb_ntos( aSub[ 3 ]:width() ) + " " + hb_ntos( aSub[ 3 ]:height() )
+            aAttr[ TBL_GEOMETRY ] := hb_ntos( aSub[ SUB_GEOMETRY ]:x() )     + " " + hb_ntos( aSub[ SUB_GEOMETRY ]:y() ) + " " + ;
+                                     hb_ntos( aSub[ SUB_GEOMETRY ]:width() ) + " " + hb_ntos( aSub[ SUB_GEOMETRY ]:height() )
             aAttr[ TBL_ROWPOS   ] := hb_ntos( oBrw:oBrw:rowPos() )
             aAttr[ TBL_COLPOS   ] := hb_ntos( oBrw:oBrw:colPos() )
             aAttr[ TBL_HZSCROLL ] := "" //hb_ntos( oBrw:
@@ -232,8 +247,11 @@ METHOD IdeBrowseManager:getPanelsInfo()
 METHOD IdeBrowseManager:setStyleSheet( nMode )
 
    ::qToolbar:setStyleSheet( GetStyleSheet( "QToolBar", nMode ) )
+   ::qToolbarL:setStyleSheet( GetStyleSheet( "QToolBarLR5", nMode ) )
+   ::qStatus:setStyleSheet( GetStyleSheet( "QStatusBar", nMode ) )
    ::qPanelsMenu:setStyleSheet( GetStyleSheet( "QMenuPop", nMode ) )
    ::qIndexMenu:setStyleSheet( GetStyleSheet( "QMenuPop", nMode ) )
+   ::qTablesMenu:setStyleSheet( GetStyleSheet( "QMenuPop", nMode ) )
 
    RETURN Self
 
@@ -271,19 +289,31 @@ METHOD IdeBrowseManager:create( oIde )
    ::connect( qDock, QEvent_Drop     , {|p| ::execEvent( "dockDbu_dropEvent"     , p ) } )
 
    /* Layout applied to dbu widget */
-   ::qLayout := QVBoxLayout():new()
+   ::qLayout := QGridLayout():new()
    ::qLayout:setContentsMargins( 0,0,0,0 )
-   ::qLayout:setSpacing( 2 )
+   ::qLayout:setSpacing( 0 )
 
    ::qDbu:setLayout( ::qLayout )
 
    /* Toolbar */
    ::buildToolbar()
-   ::qLayout:addWidget( ::qToolbar )
+   ::qLayout:addWidget_1( ::qToolbar, 0, 0, 1, 2 )
+
+   /* Toolbar left */
+   ::buildLeftToolbar()
+   ::qLayout:addWidget_1( ::qToolbarL, 1, 0, 1, 1 )
 
    /* Stacked widget */
    ::qStack := QStackedWidget():new()
-   ::qLayout:addWidget( ::qStack )
+   ::qLayout:addWidget_1( ::qStack, 1, 1, 1, 1 )
+
+   /* StatusBar */
+   ::qStatus := QStatusBar():new()
+   ::qStatus:setSizeGripEnabled( .f. )
+   ::qLayout:addWidget_1( ::qStatus, 2, 0, 1, 2 )
+
+   /* */
+   ::buildStatusPanels()
 
    /* Panels on the stacked widget */
    ::addPanels()
@@ -294,9 +324,50 @@ METHOD IdeBrowseManager:create( oIde )
    /* Switch to the default panel */
    ::setPanel( "Main" )
 
+   /* Timer to update ststus bar */
+   ::qTimer := QTimer():new()
+   ::qTimer:setInterval( 2000 )
+   ::connect( ::qTimer, "timeout()", {|| ::dispStatusInfo() } )
+   ::qTimer:start()
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
+
+METHOD IdeBrowseManager:dispStatusInfo()
+
+   ::aStatusPnls[ PNL_PANELS ]:setText( "Panels: " + hb_ntos( len( ::aPanels ) ) + ":" + ::oCurPanel:cPanel )
+   ::aStatusPnls[ PNL_TABLES ]:setText( "Tables: " + hb_ntos( len( ::oCurPanel:aBrowsers ) ) )
+
+   ::aStatusPnls[ PNL_MISC   ]:setText( "M:"    )
+   ::aStatusPnls[ PNL_READY  ]:setText( "Ready" )
+
+   RETURN Self
+
+/*------------------------------------------------------------------------*/
+
+METHOD IdeBrowseManager:buildStatusPanels()
+   LOCAL qLabel
+
+   qLabel := QLabel():new(); qLabel:setMinimumWidth( 40 )
+   ::qStatus:addPermanentWidget( qLabel, 0 )
+   aadd( ::aStatusPnls, qLabel )
+
+   qLabel := QLabel():new(); qLabel:setMinimumWidth( 40 )
+   ::qStatus:addPermanentWidget( qLabel, 0 )
+   aadd( ::aStatusPnls, qLabel )
+
+   qLabel := QLabel():new(); qLabel:setMinimumWidth( 40 )
+   ::qStatus:addPermanentWidget( qLabel, 0 )
+   aadd( ::aStatusPnls, qLabel )
+
+   qLabel := QLabel():new(); qLabel:setMinimumWidth( 40 )
+   ::qStatus:addPermanentWidget( qLabel, 1 )
+   aadd( ::aStatusPnls, qLabel )
+
+   RETURN Self
+
+/*------------------------------------------------------------------------*/
 
 METHOD IdeBrowseManager:addPanels()
    LOCAL cPanel, aPnl
@@ -322,11 +393,8 @@ METHOD IdeBrowseManager:addPanel( cPanel )
    LOCAL qPanel
 
    qPanel := IdeBrowsePanel():new( ::oIde, cPanel, self )
-
    ::qStack:addWidget( qPanel:qWidget )
-
    aadd( ::aPanels, qPanel )
-
    ::addPanelsMenu( cPanel )
 
    RETURN Self
@@ -355,29 +423,15 @@ METHOD IdeBrowseManager:setPanel( cPanel )
    IF ( n := ascan( ::aPanels, {|o| o:qWidget:objectName() == cPanel } ) ) > 0
       ::qStack:setCurrentWidget( ::aPanels[ n ]:qWidget )
       ::oCurPanel := ::aPanels[ n ]
-
       ::oCurPanel:prepare()
       ::oCurPanel:activateBrowser()
-
-      #if 0
-      ::oCurPanel:nViewStyle  := 0
-
-      ::oCurPanel:saveGeometry()
-      ::oCurPanel:tileSubWindows()
-      ::oCurPanel:nViewStyle  := 1
-      ::oCurPanel:prepare()
-
-      ::oCurPanel:nViewStyle  := 0
-      ::oCurPanel:restGeometry()
-      ::oCurPanel:prepare()
-      #endif
    ENDIF
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeBrowseManager:execEvent( cEvent, p, p1, p2 )
+METHOD IdeBrowseManager:execEvent( cEvent, p, p1 )
    LOCAL cTable, cPath, cPanel, qEvent, qMime, qList, i, cExt, qUrl
 
    HB_SYMBOL_UNUSED( p )
@@ -398,7 +452,7 @@ METHOD IdeBrowseManager:execEvent( cEvent, p, p1, p2 )
             qUrl := QUrl():new( qList:at( i ) )
             hb_fNameSplit( qUrl:toLocalFile(), @cPath, @cTable, @cExt )
             IF lower( cExt ) == ".dbf"
-               ::addTable( { NIL, hbide_pathToOSPath( cPath + cTable + cExt ), NIL, ;
+               ::oCurPanel:addBrowser( { NIL, hbide_pathToOSPath( cPath + cTable + cExt ), NIL, ;
                              iif( ! ( ::qRddCombo:currentText() $ "DBFCDX.DBFNTX" ), "DBFCDX", ::qRddCombo:currentText() ) } )
             ENDIF
          NEXT
@@ -417,10 +471,6 @@ METHOD IdeBrowseManager:execEvent( cEvent, p, p1, p2 )
       ENDIF
       EXIT
 
-   CASE "buttonCloseX_clicked"
-      ::oCurPanel:destroyByX( p )
-      EXIT
-
    CASE "buttonClose_clicked"
       IF !empty( ::oCurBrw )
          ::oCurPanel:destroy( ::oCurBrw )
@@ -432,11 +482,11 @@ METHOD IdeBrowseManager:execEvent( cEvent, p, p1, p2 )
          IF !empty( cTable := hbide_fetchAFile( ::oIde:oDlg, "Select a Table", { { "Database File", "*.dbf" } }, ::oIde:cWrkFolderLast ) )
             hb_fNameSplit( cTable, @cPath )
             ::oIde:cWrkFolderLast := cPath
-            ::addTable( { NIL, cTable } )
+            ::oCurPanel:addBrowser( { NIL, cTable } )
          ENDIF
       ELSE
          IF ! empty( cTable := hbide_execScriptFunction( "tableSelect", ::currentDriver(), ::currentConxn() ) )
-            ::addTable( { NIL, cTable } )
+            ::oCurPanel:addBrowser( { NIL, cTable } )
          ENDIF
       ENDIF
       EXIT
@@ -453,21 +503,14 @@ METHOD IdeBrowseManager:execEvent( cEvent, p, p1, p2 )
       ENDIF
       EXIT
 
-   CASE "mdiSubWindow_aboutToActivate"
-//      ::oCurPanel:prepare( p )
-      EXIT
-
-   CASE "mdiSubWindow_windowStateChanged"
-      IF p2 == 8
-         ::oCurPanel:setCurrentBrowser( p )
-         ::updateIndexMenu( p )
-      ENDIF
-      EXIT
-
    CASE "buttonViewOrganized_clicked"
       ::oCurPanel:nViewStyle  := 0
       ::oCurPanel:restGeometry()
       ::oCurPanel:prepare()
+      EXIT
+
+   CASE "buttonSaveLayout_clicked"
+      ::oCurPanel:saveGeometry()
       EXIT
 
    CASE "buttonViewTiled_clicked"
@@ -492,6 +535,10 @@ METHOD IdeBrowseManager:execEvent( cEvent, p, p1, p2 )
       IF !empty( ::oCurBrw )
          ::showStruct()
       ENDIF
+      EXIT
+
+   CASE "buttonTables_clicked"
+      ::showTablesTree()
       EXIT
 
    CASE "buttonIndex_clicked"
@@ -521,17 +568,47 @@ METHOD IdeBrowseManager:execEvent( cEvent, p, p1, p2 )
 
    ENDSWITCH
 
-   #if 0
-   activateNextSubWindow()
-   activatePreviousSubWindow()
-   closeActiveSubWindow()
-   closeAllSubWindows()
-   setActiveSubWindow( QMdiSubWindow )
-   #endif
-
    RETURN Self
 
 /*----------------------------------------------------------------------*/
+
+METHOD IdeBrowseManager:showTablesTree()
+   LOCAL oUI, qTree, qParent, oPanel, qItm, aBrowser, q, aFld
+   LOCAL a_:={}
+
+   oUI := hbide_getUI( "tables", ::oCurPanel:qWidget )
+
+   qTree := oUI:q_treeTables
+
+   qParent := QTreeWidgetItem():from( qTree:invisibleRootItem() )
+   FOR EACH oPanel IN ::aPanels
+      qParent := QTreeWidgetItem():new()
+      qParent:setText( 0, oPanel:cPanel )
+      qTree:addTopLevelItem( qParent )
+      aadd( a_, qParent )
+      FOR EACH aBrowser IN oPanel:aBrowsers
+         qItm := QTreeWidgetItem():new() ; qItm:setText( 0, aBrowser[ SUB_BROWSER ]:cTable )
+         qParent:addChild( qItm )
+         FOR EACH aFld IN aBrowser[ SUB_BROWSER ]:aStruct
+            q := QTreeWidgetItem():new()
+            q:setFont( ::oFont:oWidget )
+            q:setText( 0, pad( aFld[ 1 ], 12 ) + aFld[ 2 ] + str( aFld[ 3 ], 4, 0 ) + str( aFld[ 4 ], 4, 0 ) )
+            qItm:addChild( q )
+         NEXT
+      NEXT
+   NEXT
+
+   FOR EACH qParent IN a_
+      qParent:setExpanded( .t. )
+   NEXT
+
+   ::connect( oUI:q_buttonOk, "clicked()", {|| oUI:done( 1 ) } )
+   oUI:exec()
+   ::disconnect( oUI:q_buttonOk, "clicked()" )
+
+   RETURN qParent
+
+/*------------------------------------------------------------------------*/
 
 METHOD IdeBrowseManager:showStruct()
 
@@ -676,32 +753,11 @@ METHOD IdeBrowseManager:loadTables()
       aInfo := hb_aTokens( cInfo, "," )
       IF ::isPanel( aInfo[ 1 ] )
          ::setPanel( aInfo[ 1 ] )
-         ::addTable( aInfo )
+         ::oCurPanel:addBrowser( aInfo )
       ENDIF
    NEXT
 
    ::qStack:setCurrentWidget( oCurPanel )
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeBrowseManager:addTable( aInfo )
-   LOCAL oBrw, qSubWindow
-
-   oBrw := IdeBrowse():new( ::oIde, Self, ::oCurPanel, aInfo ):create()
-   IF empty( oBrw:oBrw )
-      RETURN Self
-   ENDIF
-
-   qSubWindow := ::oCurPanel:addBrowser( oBrw, aInfo )
-
-   ::connect( qSubWindow, "aboutToActivate()", {|| ::execEvent( "mdiSubWindow_aboutToActivate", qSubWindow ) } )
-   ::connect( qSubWindow, "windowStateChanged(Qt::WindowStates,Qt::WindowStates)", ;
-                                 {|p,p1| ::execEvent( "mdiSubWindow_windowStateChanged", qSubWindow, p, p1 ) } )
-
-   qSubWindow:installEventFilter( ::pEvents )
-   ::connect( qSubWindow, QEvent_Close, {|| ::execEvent( "buttonCloseX_clicked", qSubWindow ) } )
-
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -716,34 +772,94 @@ METHOD IdeBrowseManager:addArray( aData, aAttr )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeBrowseManager:buildToolbar()
+   LOCAL nW := 25
 
+   STATIC sp0,sp1,sp2,sp3
+
+   IF empty( sp0 )
+      sp0 := QLabel():new(); sp0:setMinimumWidth( nW )
+      sp1 := QLabel():new(); sp1:setMinimumWidth( nW )
+      sp2 := QLabel():new(); sp2:setMinimumWidth( nW )
+      sp3 := QLabel():new(); sp3:setMinimumWidth( nW )
+   ENDIF
 
    ::qToolbar := QToolbar():new()
    ::qToolbar:setIconSize( QSize():new( 16,16 ) )
    ::qToolbar:setStyleSheet( GetStyleSheet( "QToolBar", ::nAnimantionMode ) )
 
    ::buildPanelsButton()
-   ::buildToolButton( {} )
+   ::qToolbar:addWidget( sp0 )
    ::buildRddsCombo()
    ::buildConxnCombo()
-   ::buildToolButton( { "Open a table"       , "dc_plus"       , "clicked()", {|| ::execEvent( "buttonOpen_clicked"          ) }, .f. } )
-   ::buildToolButton( {} )
-   ::buildToolButton( { "Show/hide form view", "formview"      , "clicked()", {|| ::execEvent( "buttonShowForm_clicked"      ) }, .t. } )
-   ::buildToolButton( {} )
-   ::buildToolButton( { "Toggle View"        , "view_tabbed"   , "clicked()", {|| ::execEvent( "buttonViewTabbed_clicked"    ) }, .f. } )
-   ::buildToolButton( {} )
-   ::buildToolButton( { "View as arranged"   , "view_organized", "clicked()", {|| ::execEvent( "buttonViewOrganized_clicked" ) }, .f. } )
-   ::buildToolButton( { "View as cascaded"   , "view_cascaded" , "clicked()", {|| ::execEvent( "buttonViewCascaded_clicked"  ) }, .f. } )
-   ::buildToolButton( { "View as tiled"      , "view_tiled"    , "clicked()", {|| ::execEvent( "buttonViewTiled_clicked"     ) }, .f. } )
-   ::buildToolButton( {} )
-   ::buildToolButton( { "Close current table", "dc_delete"     , "clicked()", {|| ::execEvent( "buttonClose_clicked"         ) }, .f. } )
-   ::buildToolButton( {} )
-   ::buildToolButton( { "Table Structure"    , "dbstruct"      , "clicked()", {|| ::execEvent( "buttonDbStruct_clicked"      ) }, .f. } )
-   ::buildToolButton( {} )
+   ::buildToolButton( ::qToolbar, { "Open a table"       , "open"          , "clicked()", {|| ::execEvent( "buttonOpen_clicked"          ) }, .f. } )
+   ::qToolbar:addWidget( sp1 )
+   ::buildToolButton( ::qToolbar, { "Toggle tabbed view" , "view_tabbed"   , "clicked()", {|| ::execEvent( "buttonViewTabbed_clicked"    ) }, .f. } )
+   ::buildToolButton( ::qToolbar, {} )
+   ::buildToolButton( ::qToolbar, { "View as arranged"   , "view_organized", "clicked()", {|| ::execEvent( "buttonViewOrganized_clicked" ) }, .f. } )
+   ::buildToolButton( ::qToolbar, { "View as cascaded"   , "view_cascaded" , "clicked()", {|| ::execEvent( "buttonViewCascaded_clicked"  ) }, .f. } )
+   ::buildToolButton( ::qToolbar, { "View as tiled"      , "view_tiled"    , "clicked()", {|| ::execEvent( "buttonViewTiled_clicked"     ) }, .f. } )
+   ::buildToolButton( ::qToolbar, {} )
+   ::buildToolButton( ::qToolbar, { "Save layout"        , "save"          , "clicked()", {|| ::execEvent( "buttonSaveLayout_clicked"    ) }, .f. } )
+   ::qToolbar:addWidget( sp2 )
+   ::buildToolButton( ::qToolbar, { "Show/hide form view", "formview"      , "clicked()", {|| ::execEvent( "buttonShowForm_clicked"      ) }, .t. } )
+   ::buildToolButton( ::qToolbar, {} )
+   ::buildToolButton( ::qToolbar, { "Table Structure"    , "dbstruct"      , "clicked()", {|| ::execEvent( "buttonDbStruct_clicked"      ) }, .f. } )
+   ::buildToolButton( ::qToolbar, {} )
    ::buildIndexButton()
-   ::buildToolButton( { "Search in table"    , "find"          , "clicked()", {|| ::execEvent( "buttonFind_clicked"          ) }, .f. } )
-   ::buildToolButton( { "Goto record"        , "gotoline"      , "clicked()", {|| ::execEvent( "buttonGoto_clicked"          ) }, .f. } )
-   ::buildToolButton( {} )
+   ::buildToolButton( ::qToolbar, { "Search in table"    , "find"          , "clicked()", {|| ::execEvent( "buttonFind_clicked"          ) }, .f. } )
+   ::buildToolButton( ::qToolbar, { "Goto record"        , "gotoline"      , "clicked()", {|| ::execEvent( "buttonGoto_clicked"          ) }, .f. } )
+   ::buildToolButton( ::qToolbar, {} )
+   ::buildToolButton( ::qToolbar, { "Close current table", "dc_delete"     , "clicked()", {|| ::execEvent( "buttonClose_clicked"         ) }, .f. } )
+   ::qToolbar:addWidget( sp3 )
+   ::buildTablesButton()
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeBrowseManager:buildLeftToolbar()
+
+   STATIC qSize
+
+   qSize := QSize():new( 20,20 )
+
+   ::qToolBarL := QToolbar():new()
+   ::qToolBarL:setOrientation( Qt_Vertical )
+   ::qToolbarL:setIconSize( qSize )
+   ::qToolbarL:setMaximumWidth( 24 )
+   ::qToolbarL:setStyleSheet( GetStyleSheet( "QToolBar", ::nAnimantionMode ) )
+
+   ::buildToolButton( ::qToolbarL, { "Append a record", "database_add"     , "clicked()", {|| ::execEvent( "buttonAppend_clicked" ) }, .f. } )
+   ::buildToolButton( ::qToolbarL, { "Append a record", "database_remove"  , "clicked()", {|| ::execEvent( "buttonAppend_clicked" ) }, .f. } )
+   ::buildToolButton( ::qToolbarL, { "Append a record", "database_lock"    , "clicked()", {|| ::execEvent( "buttonAppend_clicked" ) }, .f. } )
+   ::buildToolButton( ::qToolbarL, { "Append a record", "database_up"      , "clicked()", {|| ::execEvent( "buttonAppend_clicked" ) }, .f. } )
+   ::buildToolButton( ::qToolbarL, { "Append a record", "database_down"    , "clicked()", {|| ::execEvent( "buttonAppend_clicked" ) }, .f. } )
+   ::buildToolButton( ::qToolbarL, { "Append a record", "database_previous", "clicked()", {|| ::execEvent( "buttonAppend_clicked" ) }, .f. } )
+   ::buildToolButton( ::qToolbarL, { "Append a record", "database_next"    , "clicked()", {|| ::execEvent( "buttonAppend_clicked" ) }, .f. } )
+   ::buildToolButton( ::qToolbarL, { "Append a record", "database_search"  , "clicked()", {|| ::execEvent( "buttonAppend_clicked" ) }, .f. } )
+   ::buildToolButton( ::qToolbarL, { "Append a record", "database_process" , "clicked()", {|| ::execEvent( "buttonAppend_clicked" ) }, .f. } )
+
+   RETURN Self
+
+/*------------------------------------------------------------------------*/
+
+METHOD IdeBrowseManager:buildToolButton( qToolbar, aBtn )
+   LOCAL qBtn
+
+   IF empty( aBtn )
+      qToolbar:addSeparator()
+   ELSE
+      qBtn := QToolButton():new()
+      qBtn:setTooltip( aBtn[ 1 ] )
+      qBtn:setAutoRaise( .t. )
+      qBtn:setIcon( hbide_image( aBtn[ 2 ] ) )
+      IF aBtn[ 5 ]
+         qBtn:setCheckable( .t. )
+      ENDIF
+      ::connect( qBtn, aBtn[ 3 ],  aBtn[ 4 ] )
+      qToolBar:addWidget( qBtn )
+      aadd( ::aToolBtns, qBtn )
+   ENDIF
 
    RETURN Self
 
@@ -801,23 +917,21 @@ METHOD IdeBrowseManager:buildRddsCombo()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeBrowseManager:buildToolButton( aBtn )
-   LOCAL qBtn
+METHOD IdeBrowseManager:buildTablesButton()
 
-   IF empty( aBtn )
-      ::qToolbar:addSeparator()
-   ELSE
-      qBtn := QToolButton():new()
-      qBtn:setTooltip( aBtn[ 1 ] )
-      qBtn:setAutoRaise( .t. )
-      qBtn:setIcon( hbide_image( aBtn[ 2 ] ) )
-      IF aBtn[ 5 ]
-         qBtn:setCheckable( .t. )
-      ENDIF
-      ::connect( qBtn, aBtn[ 3 ],  aBtn[ 4 ] )
-      ::qToolBar:addWidget( qBtn )
-      aadd( ::aToolBtns, qBtn )
-   ENDIF
+   ::qTablesMenu := QMenu():new()
+   ::qTablesMenu:setStyleSheet( GetStyleSheet( "QMenuPop", ::nAnimantionMode ) )
+
+   ::qTablesButton := QToolButton():new()
+   ::qTablesButton:setTooltip( "Tables" )
+   ::qTablesButton:setIcon( hbide_image( "database" ) )
+   ::qTablesButton:setPopupMode( QToolButton_MenuButtonPopup )
+   ::qTablesButton:setMenu( ::qTablesMenu )
+   //::qTablesButton:setMaximumWidth( 0 )
+
+   ::connect( ::qTablesButton, "clicked()", {|| ::execEvent( "buttonTables_clicked" ) } )
+
+   ::qToolbar:addWidget( ::qTablesButton )
 
    RETURN Self
 
@@ -842,12 +956,12 @@ METHOD IdeBrowseManager:buildIndexButton()
 
 /*----------------------------------------------------------------------*/
 
-STATIC FUNCTION hbide_getMenuBlock( oPanel, qSubWindow, cIndex )
-   RETURN {|| oPanel:setIndex( qSubWindow, cIndex ) }
+STATIC FUNCTION hbide_getMenuBlock( oPanel, oBrw, cIndex )
+   RETURN {|| oPanel:setIndex( oBrw, cIndex ) }
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeBrowseManager:updateIndexMenu( qSubWindow )
+METHOD IdeBrowseManager:updateIndexMenu( oBrw )
    LOCAL qAct, aIndex, cIndex
 
    FOR EACH qAct IN ::aIndexAct
@@ -858,10 +972,10 @@ METHOD IdeBrowseManager:updateIndexMenu( qSubWindow )
 
    ::qIndexMenu:clear()
 
-   aIndex := ::oCurPanel:getIndexInfo( qSubWindow )
+   aIndex := ::oCurPanel:getIndexInfo( oBrw )
    FOR EACH cIndex IN aIndex
       qAct := QAction():from( ::qIndexMenu:addAction( cIndex ) )
-      ::connect( qAct, "triggered(bool)", hbide_getMenuBlock( ::oCurPanel, qSubWindow, cIndex ) )
+      ::connect( qAct, "triggered(bool)", hbide_getMenuBlock( ::oCurPanel, oBrw, cIndex ) )
       aadd( ::aIndexAct, qAct )
    NEXT
 
@@ -904,17 +1018,17 @@ CLASS IdeBrowsePanel INHERIT IdeObject
    DATA   nViewStyle                              INIT  0    /* 0=asWindows 1=tabbed */
    DATA   lLayoutLocked                           INIT  .f.
 
-   DATA   aSubWindows                             INIT  {}
-   ACCESS subWindows()                            INLINE ::aSubWindows
+   DATA   aBrowsers                               INIT  {}
+   ACCESS subWindows()                            INLINE ::aBrowsers
 
    METHOD new( oIde, cPanel, oManager )
    METHOD destroy( oBrw )
-   METHOD destroyByX( qSubWindow )
-   METHOD setCurrentBrowser( qSubWindow )
-   METHOD getIndexInfo( qSubWindow )
-   METHOD setIndex( qSubWindow, cIndex )
+   METHOD execEvent( cEvent, p )
+   METHOD setCurrentBrowser( oBrw )
+   METHOD getIndexInfo( oBrw )
+   METHOD setIndex( oBrw, cIndex )
 
-   METHOD addBrowser( oBrw, aInfo )
+   METHOD addBrowser( aInfo )
    METHOD prepare()
    METHOD saveGeometry()
    METHOD restGeometry()
@@ -948,6 +1062,8 @@ METHOD IdeBrowsePanel:new( oIde, cPanel, oManager )
    ::qWidget:setDocumentMode( .t. )
    ::qWidget:setOption( QMdiArea_DontMaximizeSubWindowOnActivation, .t. )
 
+   ::connect( ::qWidget, "subWindowActivated(QMdiSubWindow)", {|p| ::execEvent( "mdiArea_subWindowActivated", p ) } )
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -955,148 +1071,113 @@ METHOD IdeBrowsePanel:new( oIde, cPanel, oManager )
 METHOD IdeBrowsePanel:destroy( oBrw )
    LOCAL n, oSub
 
-   IF ( n := ascan( ::aSubWindows, {|e_| e_[ 4 ] == oBrw } ) )  > 0
-      oSub := ::aSubWindows[ n, 2 ]
+   IF ( n := ascan( ::aBrowsers, {|e_| e_[ SUB_BROWSER ] == oBrw } ) )  > 0
+      oSub := ::aBrowsers[ n, SUB_WINDOW ]
 
       ::qWidget:removeSubWindow( oSub )
       oBrw:destroy()
       oSub := NIL
 
-      hb_adel( ::aSubWindows, n, .t. )
+      hb_adel( ::aBrowsers, n, .t. )
    ENDIF
 
    RETURN Self
 
 /*------------------------------------------------------------------------*/
 
-METHOD IdeBrowsePanel:setIndex( qSubWindow, cIndex )
-   LOCAL n
+METHOD IdeBrowsePanel:execEvent( cEvent, p )
+   LOCAL n, oBrw
 
-   IF ( n := ascan( ::aSubWindows, {|e_| e_[ 2 ] == qSubWindow } ) )  > 0
-      RETURN ::aSubWindows[ n,4 ]:setIndex( cIndex )
+   SWITCH cEvent
+   CASE "mdiArea_subWindowActivated"
+      IF ! empty( ::aBrowsers )
+         IF ( n := ascan( ::aBrowsers, {|e_| hbqt_IsEqualGcQtPointer( e_[ SUB_WINDOW ]:pPtr, p ) } ) )  > 0
+            oBrw := ::aBrowsers[ n, SUB_BROWSER ]
+
+            oBrw:configure()
+            oBrw:oBrw:setCurrentIndex( .t. )
+            oBrw:oBrw:setFocus()
+
+            ::oManager:updateIndexMenu( oBrw )
+         ENDIF
+      ENDIF
+      EXIT
+   ENDSWITCH
+
+   RETURN Self
+
+/*------------------------------------------------------------------------*/
+
+METHOD IdeBrowsePanel:setIndex( oBrw, cIndex )
+   IF ascan( ::aBrowsers, {|e_| e_[ SUB_BROWSER ] == oBrw } ) > 0
+      RETURN oBrw:setIndex( cIndex )
    ENDIF
-
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeBrowsePanel:getIndexInfo( qSubWindow )
-   LOCAL n
-
-   IF ( n := ascan( ::aSubWindows, {|e_| e_[ 2 ] == qSubWindow } ) )  > 0
-      RETURN ::aSubWindows[ n,4 ]:getIndexInfo()
+METHOD IdeBrowsePanel:getIndexInfo( oBrw )
+   IF ascan( ::aBrowsers, {|e_| e_[ SUB_BROWSER ] == oBrw } )  > 0
+      RETURN oBrw:getIndexInfo()
    ENDIF
-
    RETURN {}
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeBrowsePanel:setCurrentBrowser( qSubWindow )
-   LOCAL n
-
-   IF ( n := ascan( ::aSubWindows, {|e_| e_[ 2 ] == qSubWindow } ) )  > 0
-      ::oManager:oCurBrw := ::aSubWindows[ n,4 ]
+METHOD IdeBrowsePanel:setCurrentBrowser( oBrw )
+   IF ascan( ::aBrowsers, {|e_| e_[ SUB_BROWSER ] == oBrw } )  > 0
+      ::oManager:oCurBrw := oBrw
    ENDIF
-
-   RETURN Self
-
-/*------------------------------------------------------------------------*/
-
-METHOD IdeBrowsePanel:destroyByX( qSubWindow )
-   LOCAL n, oSub
-
-   IF ( n := ascan( ::aSubWindows, {|e_| e_[ 2 ] == qSubWindow } ) )  > 0
-      oSub := ::aSubWindows[ n, 2 ]
-
-      ::qWidget:removeSubWindow( oSub )
-      ::aSubWindows[ n, 4 ]:destroy()
-      oSub := NIL
-
-      hb_adel( ::aSubWindows, n, .t. )
-   ENDIF
-
    RETURN Self
 
 /*------------------------------------------------------------------------*/
 
 METHOD IdeBrowsePanel:prepare()
    LOCAL aSub
-
-   FOR EACH aSub IN ::aSubWindows
+   FOR EACH aSub IN ::aBrowsers
       aSub[ SUB_BROWSER ]:configure()
    NEXT
-
    RETURN Self
 
 /*------------------------------------------------------------------------*/
 
-METHOD IdeBrowsePanel:addBrowser( oBrw, aInfo )
-   LOCAL qSubWindow, qRect, cR
-
-   STATIC nID := 0
-
-   nID++                 /* Unique for current run */
-
-   qSubWindow := QMdiSubWindow():new( ::oDlg:oWidget )
-
-   qSubWindow:setWidget( oBrw:oWnd:oWidget )
-   qSubWindow:setWindowTitle( oBrw:cTable )
-   qSubWindow:setObjectName( hb_ntos( nID ) )
-
-   oBrw:qMdi := qSubWindow
-
-   IF !empty( aInfo ) .AND. !empty( aInfo[ TBL_GEOMETRY ] )
-      qRect := hb_aTokens( aInfo[ TBL_GEOMETRY ], " " )
-      FOR EACH cR IN qRect
-         cR := val( cR )
-      NEXT
-      qRect := QRect():new( qRect[ 1 ], qRect[ 2 ], qRect[ 3 ], qRect[ 4 ] )
-      qSubWindow:setGeometry( qRect )
-      qSubWindow:resize( qSubWindow:width()+1, qSubWindow:height()+1 )
-   ELSE
-      //qSubWindow:resize( 300, 200 )
+METHOD IdeBrowsePanel:addBrowser( aInfo )
+   LOCAL oBrw
+   oBrw := IdeBrowse():new( ::oIde, ::oManager, Self, aInfo ):create()
+   IF empty( oBrw:oBrw )
+      RETURN Self
    ENDIF
-   oBrw:dispInfo()
-
-   ::qWidget:addSubWindow( qSubWindow )
-
-   oBrw:oWnd:oWidget:show()
-   qSubWindow:show()
-
-   aadd( ::aSubWindows, { nId, qSubWindow, qRect, oBrw, NIL } )
-
-   RETURN qSubWindow
+   aadd( ::aBrowsers, { oBrw:nID, oBrw:qMdi, QRect():from( oBrw:qMdi:geometry() ), oBrw, NIL } )
+   ::oManager:updateIndexMenu( oBrw )
+   RETURN Self
 
 /*------------------------------------------------------------------------*/
 
 METHOD IdeBrowsePanel:activateBrowser()
-   IF len( ::aSubWindows ) > 0
-      ::qWidget:setActiveSubWindow( ::aSubWindows[ 1,2 ] )
+   IF len( ::aBrowsers ) > 0
+      ::qWidget:setActiveSubWindow( ::aBrowsers[ 1, SUB_WINDOW ] )
    ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeBrowsePanel:saveGeometry()
-   LOCAL aSubWindow
-
+   LOCAL a_
    IF ::nViewStyle == 0                 /* Only if in self organized mode */
-      FOR EACH aSubWindow IN ::aSubWindows
-         aSubWindow[ 3 ] := QRect():from( aSubWindow[ 2 ]:geometry() )
+      FOR EACH a_ IN ::aBrowsers
+         a_[ SUB_GEOMETRY ] := QRect():from( a_[ SUB_WINDOW ]:geometry() )
       NEXT
    ENDIF
-
    RETURN Self
 
 /*------------------------------------------------------------------------*/
 
 METHOD IdeBrowsePanel:restGeometry()
-   LOCAL aSubWindow
-
+   LOCAL a_
    IF ::nViewStyle == 0
-      FOR EACH aSubWindow IN ::aSubWindows
-         IF hb_isObject( aSubWindow[ 3 ] )
-            aSubWindow[ 2 ]:setGeometry( aSubWindow[ 3 ] )
+      FOR EACH a_ IN ::aBrowsers
+         IF hb_isObject( a_[ SUB_GEOMETRY ] )
+            a_[ SUB_WINDOW ]:setGeometry( a_[ SUB_GEOMETRY ] )
          ENDIF
       NEXT
    ENDIF
@@ -1117,6 +1198,13 @@ CLASS IdeBrowse INHERIT IdeObject
    DATA   qFLayout
    DATA   qSplitter
    DATA   qTimer
+   DATA   qStatus
+   DATA   qDelegate
+   DATA   qStyle
+   DATA   qEdit
+   DATA   qModelIndex
+
+   DATA   nID                                     INIT  0
 
    DATA   aForm                                   INIT  {}
    DATA   oManager
@@ -1155,6 +1243,7 @@ CLASS IdeBrowse INHERIT IdeObject
    METHOD execEvent( cEvent, p, p1 )
    METHOD buildBrowser()
    METHOD buildColumns()
+   METHOD buildMdiWindow()
    METHOD dataLink( nField )
    METHOD getPP( aStruct )
 
@@ -1177,7 +1266,7 @@ CLASS IdeBrowse INHERIT IdeObject
    METHOD refreshAll()
    METHOD getIndexInfo()
    METHOD setIndex( cIndex )
-
+   ACCESS numIndexes()                            INLINE len( ::aIndex )
 
    METHOD dispInfo()
    METHOD search( cSearch )
@@ -1286,17 +1375,18 @@ METHOD IdeBrowse:create( oIde, oManager, oPanel, aInfo )
    ::buildBrowser()
    ::buildColumns()
    ::buildForm()
+   ::buildMdiWindow()
+
+   ::oManager:oCurBrw := Self
 
    ::oBrw:configure()
    ::oBrw:forceStable()
-
-   ::oBrw:rowPos := val( aInfo[ TBL_ROWPOS ] )
-   ::oBrw:colPos := val( aInfo[ TBL_COLPOS ] )
+   ::oBrw:rowPos := max( 1, val( aInfo[ TBL_ROWPOS ] ) )
+   ::oBrw:colPos := max( 1, val( aInfo[ TBL_COLPOS ] ) )
    ::oBrw:forceStable()
    ::setOrder( val( aInfo[ TBL_INDEX ] ) )
    ::goto( max( 1, val( aInfo[ TBL_RECORD ] ) ) )
-   ::oBrw:refreshAll()
-   ::oBrw:forceStable()
+   ::oBrw:setCurrentIndex( .t. )
 
    ::oBrw:navigate := {|mp1,mp2| ::execEvent( "browse_navigate", mp1, mp2 ) }
    ::oBrw:keyboard := {|mp1,mp2| ::execEvent( "browse_keyboard", mp1, mp2 ) }
@@ -1310,7 +1400,14 @@ METHOD IdeBrowse:create( oIde, oManager, oPanel, aInfo )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeBrowse:destroy()
-   IF !empty( ::oWnd )
+
+   IF ! empty( ::qMdi )
+   *  ::disconnect( ::qMdi, "aboutToActivate()" )
+      ::disconnect( ::qMdi, "windowStateChanged(Qt::WindowStates,Qt::WindowStates)" )
+      ::disconnect( ::qMdi, QEvent_Close )
+   ENDIF
+
+   IF ! empty( ::oWnd )
       ::qLayout:removeWidget( ::qSplitter )
       ::oWnd:destroy()
       ::qForm := NIL
@@ -1412,7 +1509,50 @@ METHOD IdeBrowse:buildBrowser()
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeBrowse:buildMdiWindow()
+   LOCAL qRect, cR
+
+   STATIC nID := 0
+
+   ::nID := ++nID
+
+   ::qMdi := QMdiSubWindow():new( ::oDlg:oWidget )
+   //
+   ::qMdi:setWidget( ::oWnd:oWidget )
+   ::oPanel:qWidget:addSubWindow( ::qMdi )
+
+   ::oWnd:oWidget:show()
+   ::qMdi:show()
+
+   ::qMdi:setWindowTitle( ::cTable )
+   ::qMdi:setObjectName( hb_ntos( nID ) )
+
+   IF ! empty( ::aInfo[ TBL_GEOMETRY ] )
+      qRect := hb_aTokens( ::aInfo[ TBL_GEOMETRY ], " " )
+      FOR EACH cR IN qRect
+         cR := val( cR )
+      NEXT
+      qRect := QRect():new( qRect[ 1 ], qRect[ 2 ], qRect[ 3 ], qRect[ 4 ] )
+      ::qMdi:setGeometry( qRect )
+      ::qMdi:resize( ::qMdi:width()+1, ::qMdi:height()+1 )
+      ::qMdi:resize( ::qMdi:width()-1, ::qMdi:height()-1 )
+   ELSE
+      ::qMdi:resize( 300, 200 )
+   ENDIF
+   ::dispInfo()
+
+ * ::connect( ::qMdi, "aboutToActivate()", {|| ::execEvent( "mdiSubWindow_aboutToActivate" ) } )
+   ::connect( ::qMdi, "windowStateChanged(Qt::WindowStates,Qt::WindowStates)", ;
+                                 {|p,p1| ::execEvent( "mdiSubWindow_windowStateChanged", p, p1 ) } )
+   ::qMdi:installEventFilter( ::pEvents )
+   ::connect( ::qMdi, QEvent_Close, {|| ::execEvent( "mdiSubWindow_buttonXclicked" ) } )
+
+   RETURN Self
+
+/*------------------------------------------------------------------------*/
+
 METHOD IdeBrowse:execEvent( cEvent, p, p1 )
+   LOCAL qWidget
 
    HB_SYMBOL_UNUSED( p  )
    HB_SYMBOL_UNUSED( p1 )
@@ -1432,9 +1572,48 @@ METHOD IdeBrowse:execEvent( cEvent, p, p1 )
       ELSEIF p == xbeK_CTRL_G
          ::gotoAsk()
 
+      ELSEIF p == xbeK_CTRL_E
+         IF empty( ::qDelegate ) /* Only one at a time */
+            ::qDelegate := QItemDelegate():new()
+            ::oBrw:oTableView:setItemDelegate( ::qDelegate )
+
+            ::qStyle := QStyleOptionViewItem():new()
+
+            ::connect( ::qDelegate, "closeEditor(QWidget,int)"    , {|p,p1| ::execEvent( "editor_closeEditor"    , p, p1 ) } )
+            ::connect( ::qDelegate, "commitData(QWidget)"         , {|p   | ::execEvent( "editor_commitData"     , p     ) } )
+         *  ::connect( ::qDelegate, "sizeHintChanged(QModelIndex)", {|p   | ::execEvent( "editor_sizeHintChanged", p     ) } )
+         ENDIF
+
+         ::qModelIndex := QModelIndex():from( ::oBrw:getCurrentIndex() )
+         ::qEdit := QLineEdit():from( ::qDelegate:createEditor( ::oBrw:oTableView, ::qStyle, ::qModelIndex ) )
+         ::qEdit:setFocus()
+         ::qEdit:setSelection( 0, 0 )
+         ::qEdit:setInputMask( "XXXXXXXXXXXXXXX>XXX" )
+         ::qDelegate:setEditorData( ::qEdit, ::qModelIndex )
+
+      *  ::qDelegate:setModelData( ::qEdit, ::oBrw:getDbfModel(), ::qModelIndex )
+         ::oBrw:openPersistentEditor()
       ENDIF
       EXIT
 
+   CASE "editor_commitData"
+      qWidget := QLineEdit():from( p )
+HB_TRACE( HB_TR_ALWAYS, "editor_commitData", qWidget:text() )
+      EXIT
+
+   CASE "editor_closeEditor"
+      qWidget := QLineEdit():from( p )
+      IF     p1 == QAbstractItemDelegate_NoHint                 /* Enter is pressed */
+      ELSEIF p1 == QAbstractItemDelegate_EditNextItem           /* Tab key is pressed */
+      ELSEIF p1 == QAbstractItemDelegate_EditPreviousItem       /* Shift_tab key is pressed */
+      ELSEIF p1 == QAbstractItemDelegate_SubmitModelCache       /* Will never be called if ESC is pressed */
+      ENDIF
+HB_TRACE( HB_TR_ALWAYS, "editor_closeEditor", p1, qWidget:text() )
+
+      //::oBrw:oTableView:closePersistentEditor( ::qModelIndex )
+      ::oBrw:setIndex( ::qModelIndex )
+      qWidget:close()
+      EXIT
    CASE "timer_timeout"
       ::oBrw:down()
       IF ::oBrw:hitBottom
@@ -1446,7 +1625,32 @@ METHOD IdeBrowse:execEvent( cEvent, p, p1 )
       ENDIF
       EXIT
 
+   CASE "mdiSubWindow_buttonXclicked"
+      ::oPanel:destroy( Self )
+      EXIT
+
+   CASE "mdiSubWindow_aboutToActivate"
+      #if 0
+      ::oBrw:configure()
+      ::oBrw:setCurrentIndex( .t. )
+      #endif
+      EXIT
+
+   CASE "mdiSubWindow_windowStateChanged"
+      IF p1 == 8
+         ::oPanel:setCurrentBrowser( Self )
+      ENDIF
+      EXIT
+
    ENDSWITCH
+
+   #if 0
+   activateNextSubWindow()
+   activatePreviousSubWindow()
+   closeActiveSubWindow()
+   closeAllSubWindows()
+   setActiveSubWindow( QMdiSubWindow )
+   #endif
 
    RETURN Self
 
@@ -1457,8 +1661,9 @@ METHOD IdeBrowse:dispInfo()
    IF !empty( ::qMdi )
       ::qMdi:setTooltip( ::cTable )
 
-      ::qMdi:setWindowTitle( "[" + ::cDriver +"][" + hb_ntos( ::indexOrd() ) + ":" + ::ordName() + "] " + ;
-                             "[" + hb_ntos( ::recno() ) + "/" + hb_ntos( ::lastRec() ) + "]   " + ;
+      ::qMdi:setWindowTitle( "[ " + ::cDriver + "  " + ;
+                             hb_ntos( ::indexOrd() ) + "/" + hb_ntos( ::numIndexes() ) + iif( ::indexOrd() > 0, ":" + ::ordName(), "" ) + ;
+                             "  " + hb_ntos( ::recno() ) + "/" + hb_ntos( ::lastRec() ) + " ]  " + ;
                              ::cTableOnly )
    ENDIF
    RETURN Self

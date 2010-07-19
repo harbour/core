@@ -2108,6 +2108,9 @@ FUNCTION hbide_getUI( cUI, qParent )
    CASE "fetchdate"
       oUI := iif( nModeUI == UI_MODE_FUNC, hbqtui_FetchDate( qParent ), NIL )
       EXIT
+   CASE "tables"
+      oUI := iif( nModeUI == UI_MODE_FUNC, hbqtui_Tables( qParent ), NIL )
+      EXIT
    ENDSWITCH
 
    IF empty( oUI )

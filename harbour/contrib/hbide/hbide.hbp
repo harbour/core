@@ -72,5 +72,6 @@ toolsutilities.ui
 updown.ui
 dbstruct.ui
 fetchdate.ui
+tables.ui
 
 hbide.qrc
