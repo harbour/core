@@ -1,13 +1,19 @@
+#
+# $Id$
+#
+
 -3rd=hbide_version=1.0
 -3rd=hbide_title=hbide
 
 -inc
--w3
--es2
+-o${hb_name}
+
+-w3 -es2
+
+# It makes final executable 2MBs larger [20100720]
+# Did anyone check if the speedup justifies this cost?
 -gc3
--ohbide
--ldflag={msvc}-nodefaultlib:msvcrt.lib
--ldflag={msvc}-defaultlib:libcmt.lib
+
 -icon={allwin}hbide.ico
 
 -instfile={win}{HB_WITH_QT}/../bin/libgcc_s_dw2-1.dll

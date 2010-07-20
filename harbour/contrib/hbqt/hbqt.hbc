@@ -8,6 +8,8 @@ incpaths=.
 
 plugins=hbmk2_plugin_qt.hbs
 
+{msvc}ldflags=-nodefaultlib:msvcrt.lib -defaultlib:libcmt.lib
+
 {allwin|os2}libpaths=${HB_WITH_QT}\..\lib
 
 {!HB_STATIC_QT}libs=hbqt hbqtcore hbqtgui hbqtnetwork

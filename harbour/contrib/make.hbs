@@ -5,7 +5,7 @@
 
 /*
  * Harbour Project source code:
- * Contrib build orchestrator script.
+ * Contrib build orchestrator script
  *
  * Copyright 2010 Viktor Szakats (harbour.01 syenar.hu)
  * www - http://harbour-project.org
@@ -35,72 +35,75 @@
      4. hbmk2 location detection in standalone mode
         (move hbmk2 to core lib?)
      5. Move in external libs to contrib area? (bz2, minizip, sqlite3)
-     7. Pull the list of .hbp files from an external file
+     6. Pull the list of .hbp files from an external file
         (so it can be used in stdalone mode, and the script can be
         moved to bin and used in more generic way f.e. for examples
         and local projects)
-     8. 'install' is ignored in stdalone mode. It would be needed to
+     7. 'install' is ignored in stdalone mode. It would be needed to
         replicate the install dir defaulting logic found in global.mk
-     9. Delete header install related logic from GNU Make system,
+     8. Delete header install related logic from GNU Make system,
         also delete doc install related logic (easily replacable
         with postinst.hbs logic)
-    10. Delete Makefiles in contrib area.
+     9. Delete Makefiles in contrib area.
+    10. Move some logic to hbmk2.
+    11. Honor paths found in --hbinfo hbctree{{}} section.
+    12. integrate .hbi functionality into .hbp
  */
 
 #pragma warninglevel=3
 
 /* ----------------------------------------------------------------------- */
 
-STATIC s_hProjectList := {;
-   "hbblink"       => { "hbblink"             },;
-   "hbbz2"         => { "hbbz2"               },; /* uses: bz2 (external) */
-   "hbclipsm"      => { "hbclipsm"            },;
-   "hbcomm"        => { "hbcomm"              },;
-   "hbct"          => { "hbct"                },;
-   "hbfoxpro"      => { "hbfoxpro"            },;
-   "hbfship"       => { "hbfship"             },;
-   "hbgt"          => { "hbgt"                },;
-   "hbmemio"       => { "hbmemio"             },;
-   "hbmisc"        => { "hbmisc"              },;
-   "hbmzip"        => { "hbmzip"              },; /* uses: minizip (external) */
-   "hbnetio"       => { "hbnetio"             },;
-   "hbnf"          => { "hbnf"                },;
-   "hbodbc"        => { "hbodbc"              },;
-   "hbsms"         => { "hbsms"               },;
-   "hbsqlit3"      => { "hbsqlit3"            },; /* uses: sqlite3 (external) */
-   "hbtpathy"      => { "hbtpathy"            },;
-   "hbwin"         => { "hbwin"               },;
-   "hbxpp"         => { "hbxpp"               },;
-   "rddbmcdx"      => { "hbbmcdx"             },;
-   "gtalleg"       => { "gtalleg", "gtallegs" },;
-   "hbblat"        => { "hbblat"              },;
-   "hbcairo"       => { "hbcairo"             },;
-   "hbcups"        => { "hbcups"              },;
-   "hbcurl"        => { "hbcurl", "hbcurls"   },;
-   "hbfbird"       => { "hbfbird"             },;
-   "hbfimage"      => { "hbfimage"            },;
-   "hbgd"          => { "hbgd"                },;
-   "hbhpdf"        => { "hbhpdf"              },;
-   "hbmysql"       => { "hbmysql"             },;
-   "hbpgsql"       => { "hbpgsql"             },;
-   "hbqt"          => { "hbqt", "hbqts", "hbqtcore", "hbqtcores", "hbqtgui", "hbqtguis", "hbqtnetwork", "hbqtnetworks" },;
-   "hbssl"         => { "hbssl", "hbssls"     },;
-   "hbxbp"         => { "hbxbp"               },;
-   "rddads"        => { "rddads"              },;
-   "rddsql"        => { "rddsql"              },;
-   "sddfb"         => { "sddfb"               },;
-   "sddmy"         => { "sddmy"               },;
-   "sddoci"        => { "sddoci"              },;
-   "sddodbc"       => { "sddodbc"             },;
-   "sddpg"         => { "sddpg"               },;
-   "sddsqlt3"      => { "sddsqlt3"            },;
-   "gtwvg"         => { "gtwvg"               },;
-   "hbtip"         => { "hbtip", "hbtipssl"   },;
-   "hbziparc"      => { "hbziparc"            },;
-   "xhb"           => { "xhb"                 },;
-   "hbdoc2"        => { "hbdoc2"              },;
-   "hbnetio/utils" => { "hbnetio"             },;
-   "hbide"         => { "hbide"               }}
+STATIC s_hDirList := {;
+   "gtalleg"       => { "gtalleg.hbp", "gtallegs.hbp" },;
+   "gtwvg"         => { "gtwvg.hbp"                   },;
+   "hbblat"        => { "hbblat.hbp"                  },;
+   "hbblink"       => { "hbblink.hbp"                 },;
+   "hbbz2"         => { "hbbz2.hbp"                   },; /* uses: bz2 (external) */
+   "hbcairo"       => { "hbcairo.hbp"                 },;
+   "hbclipsm"      => { "hbclipsm.hbp"                },;
+   "hbcomm"        => { "hbcomm.hbp"                  },;
+   "hbct"          => { "hbct.hbp"                    },;
+   "hbcups"        => { "hbcups.hbp"                  },;
+   "hbcurl"        => { "hbcurl.hbp", "hbcurls.hbp"   },;
+   "hbdoc2"        => { "hbdoc2.hbp"                  },;
+   "hbfbird"       => { "hbfbird.hbp"                 },;
+   "hbfimage"      => { "hbfimage.hbp"                },;
+   "hbfoxpro"      => { "hbfoxpro.hbp"                },;
+   "hbfship"       => { "hbfship.hbp"                 },;
+   "hbgd"          => { "hbgd.hbp"                    },;
+   "hbgt"          => { "hbgt.hbp"                    },;
+   "hbhpdf"        => { "hbhpdf.hbp"                  },;
+   "hbide"         => { "hbide.hbp"                   },;
+   "hbmemio"       => { "hbmemio.hbp"                 },;
+   "hbmisc"        => { "hbmisc.hbp"                  },;
+   "hbmysql"       => { "hbmysql.hbp"                 },;
+   "hbmzip"        => { "hbmzip.hbp"                  },; /* uses: minizip (external) */
+   "hbnetio"       => { "hbnetio.hbp"                 },;
+   "hbnetio/utils" => { "hbnetio.hbp"                 },;
+   "hbnf"          => { "hbnf.hbp"                    },;
+   "hbodbc"        => { "hbodbc.hbp"                  },;
+   "hbpgsql"       => { "hbpgsql.hbp"                 },;
+   "hbqt"          => { "hbqt.hbp", "hbqts.hbp", "hbqtcore.hbp", "hbqtcores.hbp", "hbqtgui.hbp", "hbqtguis.hbp", "hbqtnetwork.hbp", "hbqtnetworks.hbp" },;
+   "hbsms"         => { "hbsms.hbp"                   },;
+   "hbsqlit3"      => { "hbsqlit3.hbp"                },; /* uses: sqlite3 (external) */
+   "hbssl"         => { "hbssl.hbp", "hbssls.hbp"     },;
+   "hbtip"         => { "hbtip.hbp", "hbtipssl.hbp"   },;
+   "hbtpathy"      => { "hbtpathy.hbp"                },;
+   "hbwin"         => { "hbwin.hbp"                   },;
+   "hbxbp"         => { "hbxbp.hbp"                   },;
+   "hbxpp"         => { "hbxpp.hbp"                   },;
+   "hbziparc"      => { "hbziparc.hbp"                },;
+   "rddads"        => { "rddads.hbp"                  },;
+   "rddbmcdx"      => { "rddbmcdx.hbp"                },;
+   "rddsql"        => { "rddsql.hbp"                  },;
+   "sddfb"         => { "sddfb.hbp"                   },;
+   "sddmy"         => { "sddmy.hbp"                   },;
+   "sddoci"        => { "sddoci.hbp"                  },;
+   "sddodbc"       => { "sddodbc.hbp"                 },;
+   "sddpg"         => { "sddpg.hbp"                   },;
+   "sddsqlt3"      => { "sddsqlt3.hbp"                },;
+   "xhb"           => { "xhb.hbp"                     }}
 
 /* ----------------------------------------------------------------------- */
 
@@ -136,13 +139,13 @@ PROCEDURE Main( ... )
 
    s_lTest := "test" $ hb_cmdLine()
 
-   IF "migr" $ hb_cmdLine() // .OR. .T.
+   IF "migr" $ hb_cmdLine()
       hb_setenv( "_HB_BUILD_MIGR", "yes" )
    ENDIF
 
    /* Convert list of contribs */
 
-   FOR EACH aProject IN s_hProjectList
+   FOR EACH aProject IN s_hDirList
       FOR EACH tmp IN aProject
          tmp := { "cFileName" => tmp }
       NEXT
@@ -178,7 +181,7 @@ PROCEDURE Standalone( ... )
    LOCAL cBinDir
    LOCAL hProject
    LOCAL cProject
-   LOCAL cProjectDir
+   LOCAL cDir
 
    LOCAL cOptions
    LOCAL cOptionsUser
@@ -246,40 +249,29 @@ PROCEDURE Standalone( ... )
       aFileList := Directory( "*.hbp" )
       IF ! Empty( aFileList )
 
-         s_hProjectList[ "." ] := {}
+         /* Add the project in current dir */
+         s_hDirList[ "." ] := {}
          FOR EACH aFile IN aFileList
-            AAdd( s_hProjectList[ "." ], { "cFileName" => aFile[ F_NAME ] } )
+            AAdd( s_hDirList[ "." ], { "cFileName" => aFile[ F_NAME ] } )
          NEXT
 
+         /* Query project information and dependencies and calculate build order */
          aPairList := {}
-         FOR EACH hProject IN s_hProjectList[ "." ]
 
-            hProject[ "cType" ] := NIL
-            hProject[ "aDept" ] := NIL
-            hProject[ "lInc" ] := NIL
-
-            call_hbmk2_hbinfo( cBinDir, s_cBase + "." + "/" + FNameExtSet( hProject[ "cFileName" ], ".hbp" ), @hProject[ "cType" ], @hProject[ "aDept" ], @hProject[ "lInc" ] )
-
-            OutStd( "'" + hProject[ "cFileName" ] + "' type: " + hProject[ "cType" ] )
-            IF ! Empty( hProject[ "aDept" ] )
-               OutStd( " depends on:" )
-               AEval( hProject[ "aDept" ], {| tmp | OutStd( " " + tmp ) } )
-            ENDIF
-            OutStd( hb_eol() )
-
-            DeptLinesToDeptList( aPairList, ".", hProject[ "aDept" ] )
+         FOR EACH hProject IN s_hDirList[ "." ]
+            call_hbmk2_hbinfo( cBinDir, s_cBase + "." + "/" + hProject[ "cFileName" ], hProject )
+            DeptLinesToDeptPairList( aPairList, ".", hProject[ "aDept" ] )
          NEXT
 
-//       _PairsDisp( aPairList )
          aSortedList := TopoSort( aPairList )
-//       _ArrayDisp( aSortedList )
 
-         FOR EACH cProjectDir IN aSortedList DESCEND
-            FOR EACH hProject IN s_hProjectList[ cProjectDir ]
-               cProject := s_cBase + iif( cProjectDir == ".", "", s_cHome ) + cProjectDir + "/" + hProject[ "cFileName" ]
-               call_hbmk2( cBinDir, FNameExtSet( cProject, ".hbp" ), iif( cProjectDir == ".", cOptions + cOptionsUser, "" ), "" )
+         /* Build the dependencies and ourselves in in sorted order */
+         FOR EACH cDir IN aSortedList DESCEND
+            FOR EACH hProject IN s_hDirList[ cDir ]
+               cProject := s_cBase + iif( cDir == ".", "", s_cHome ) + cDir + "/" + hProject[ "cFileName" ]
+               call_hbmk2( cBinDir, cProject, iif( cDir == ".", cOptions + cOptionsUser, "" ), "" )
                IF hb_FileExists( PathSepToSelf( FNameExtSet( cProject, ".hbi" ) ) )
-                  call_hbmk2( cBinDir, s_cBase + FNameExtSet( cProject, ".hbi" ), iif( cProjectDir == ".", cOptions + cOptionsUser, "" ), "" )
+                  call_hbmk2( cBinDir, s_cBase + FNameExtSet( cProject, ".hbi" ), iif( cDir == ".", cOptions + cOptionsUser, "" ), "" )
                ENDIF
             NEXT
          NEXT
@@ -287,38 +279,6 @@ PROCEDURE Standalone( ... )
    ENDIF
 
    ErrorLevel( 0 )
-
-   RETURN
-
-STATIC PROCEDURE _PairsDisp( aPairs )
-   LOCAL aPair
-
-   OutStd( "PAIRS (EDGES)" + hb_eol() )
-   FOR EACH aPair IN aPairs
-      OutStd( aPair[ 1 ] + " -> " + aPair[ 2 ] + hb_eol() )
-   NEXT
-
-   RETURN
-
-STATIC PROCEDURE _ArrayDisp( aArray )
-   LOCAL item
-
-   OutStd( "REVERSE SORTED LIST: " )
-   FOR EACH item IN aArray
-      OutStd( item, " " )
-   NEXT
-   OutStd( hb_eol() )
-
-   RETURN
-
-STATIC PROCEDURE _HashKeyListDisp( hVar )
-   LOCAL item
-
-   OutStd( "REVERSE SORTED LIST: " )
-   FOR EACH item IN hVar
-      OutStd( item:__enumKey(), " " )
-   NEXT
-   OutStd( hb_eol() )
 
    RETURN
 
@@ -339,7 +299,7 @@ PROCEDURE GNUMake( ... )
    LOCAL hProject
    LOCAL aProject
    LOCAL cProject
-   LOCAL cProjectDir
+   LOCAL cDir
 
    LOCAL cOptions
 
@@ -351,7 +311,6 @@ PROCEDURE GNUMake( ... )
    LOCAL aGNUMakeParams
    LOCAL nAction
 
-   LOCAL cDir
    LOCAL cName
    LOCAL cItem
 
@@ -386,7 +345,7 @@ PROCEDURE GNUMake( ... )
    FOR EACH cItem IN hb_ATokens( GetEnv( "HB_BUILD_ADDONS" ),, .T. )
       IF ! Empty( cItem )
          hb_FNameSplit( PathSepToSelf( cItem ), @cDir, @cName )
-         s_hProjectList[ StrTran( DirDelPathSep( cDir ), "\", "/" ) ] := { "cFileName" => cName }
+         s_hDirList[ StrTran( DirDelPathSep( cDir ), "\", "/" ) ] := { "cFileName" => cName }
          lAnyAddons := .T.
       ENDIF
    NEXT
@@ -451,35 +410,18 @@ PROCEDURE GNUMake( ... )
 
    cBinDir := GetEnv( "HB_HOST_BIN_DIR" ) + hb_ps()
 
-// OutStd( Len( s_hProjectList ) ) ; s_hProjectList := { "rddads" => { "cFileName" => "rddads" } }
-
    OutStd( "! Calculating sorting order for contribs..." + hb_eol() )
 
    aPairList := {}
 
-   FOR EACH aProject IN s_hProjectList
+   FOR EACH aProject IN s_hDirList
       FOR EACH hProject IN aProject
-
-         hProject[ "cType" ] := NIL
-         hProject[ "aDept" ] := NIL
-         hProject[ "lInc" ] := NIL
-
-         call_hbmk2_hbinfo( cBinDir, s_cBase + aProject:__enumKey() + "/" + FNameExtSet( hProject[ "cFileName" ], ".hbp" ), @hProject[ "cType" ], @hProject[ "aDept" ] )
-
-//       OutStd( "'" + hProject[ "cFileName" ] + "' type: " + hProject[ "cType" ] )
-//       IF ! Empty( hProject[ "aDept" ] )
-//          OutStd( " depends on:" )
-//          AEval( hProject[ "aDept" ], {| tmp | OutStd( " " + tmp ) } )
-//       ENDIF
-//       OutStd( hb_eol() )
-
-         DeptLinesToDeptList( aPairList, aProject:__enumKey(), hProject[ "aDept" ] )
+         call_hbmk2_hbinfo( cBinDir, s_cBase + aProject:__enumKey() + "/" + hProject[ "cFileName" ], hProject )
+         DeptLinesToDeptPairList( aPairList, aProject:__enumKey(), hProject[ "aDept" ] )
       NEXT
    NEXT
 
-// _PairsDisp( aPairList )
    aSortedList := TopoSort( aPairList )
-// _ArrayDisp( aSortedList )
 
    /* Converting build options to hbmk2 options */
 
@@ -504,21 +446,21 @@ PROCEDURE GNUMake( ... )
 
    OutStd( hb_StrFormat( "! Contribs %1$s...", hActions[ nAction ] ) + hb_eol() )
 
-   FOR EACH cProjectDir IN aSortedList DESCEND
-      FOR EACH hProject IN s_hProjectList[ cProjectDir ]
+   FOR EACH cDir IN aSortedList DESCEND
+      FOR EACH hProject IN s_hDirList[ cDir ]
 
-         cProject := s_cBase + cProjectDir + "/" + hProject[ "cFileName" ]
+         cProject := s_cBase + cDir + "/" + hProject[ "cFileName" ]
 
          IF Empty( aFilter ) .OR. ;
             iif( lFilterNegative,;
-               AScan( aFilter, {| tmp | tmp == cProjectDir } ) == 0,;
-               AScan( aFilter, {| tmp | tmp == cProjectDir } ) > 0 )
+               AScan( aFilter, {| tmp | tmp == cDir } ) == 0,;
+               AScan( aFilter, {| tmp | tmp == cDir } ) > 0 )
 
             IF hProject[ "cType" ] $ "hbhrb|hbppo"
                LOOP
             ENDIF
 
-            call_hbmk2( cBinDir, FNameExtSet( cProject, ".hbp" ), cOptions, "" )
+            call_hbmk2( cBinDir, cProject, cOptions, "" )
 
             IF hb_FileExists( PathSepToSelf( FNameExtSet( cProject, ".hbi" ) ) )
                call_hbmk2( cBinDir, FNameExtSet( cProject, ".hbi" ), cOptions, "" )
@@ -529,13 +471,13 @@ PROCEDURE GNUMake( ... )
                GetEnv( "HB_BUILD_CONTRIB_DLL" ) == "yes" .AND. ;
                hb_FileExists( PathSepToSelf( FNameExtSet( cProject, ".hbc" ) ) )
 
-               call_hbmk2( cBinDir, FNameExtSet( cProject, ".hbp" ), cOptions, " -hbdyn -nohblib- -implib " + FNameExtSet( cProject, ".hbc" ) )
+               call_hbmk2( cBinDir, cProject, cOptions, " -hbdyn -nohblib- -implib " + FNameExtSet( cProject, ".hbc" ) )
             ENDIF
 
             /* Compile documentation */
             IF nAction == _ACT_INC_INST .OR. ;
                nAction == _ACT_INC_REBUILD_INST
-               mk_hbd( PathSepToSelf( cProjectDir ) )
+               mk_hbd( PathSepToSelf( cDir ) )
             ENDIF
          ELSE
             /* OutStd( hb_StrFormat( "! project '%1$s' skipped", cProject ) + hb_eol() ) */
@@ -543,6 +485,7 @@ PROCEDURE GNUMake( ... )
       NEXT
    NEXT
 
+   OutStd( hb_eol() )
    IF lAnyAddons
       OutStd( "! Building of contribs and addons finished." + hb_eol() )
    ELSE
@@ -553,27 +496,27 @@ PROCEDURE GNUMake( ... )
 
    RETURN
 
-STATIC FUNCTION call_hbmk2_hbinfo( cBinDir, cProject, /* @ */ cType, /* @ */ aDept, /* @ */ lInc )
+STATIC FUNCTION call_hbmk2_hbinfo( cBinDir, cProject, hProject )
    LOCAL cStdOut
+   LOCAL cDir
    LOCAL cName
    LOCAL tmp
 
-   LOCAL nDepth
-
-   cType := ""
-   aDept := {}
-   lInc := .F.
+   hProject[ "cType" ] := ""
+   hProject[ "aDept" ] := {}
+   hProject[ "lInc" ] := .F.
 
    IF hb_processRun( PathSepToSelf( cBinDir ) + "hbmk2 --hbinfo " + StrTran( cProject, "\", "/" ),, @cStdOut  ) == 0
 
-      cType := hbmk2_hbinfo_getitem( cStdOut, "targettype" )
-      lInc := ( hbmk2_hbinfo_getitem( cStdOut, "inc" ) == "yes" )
+      hProject[ "cType" ] := hbmk2_hbinfo_getitem( cStdOut, "targettype" )
+      hProject[ "lInc" ] := ( hbmk2_hbinfo_getitem( cStdOut, "inc" ) == "yes" )
 
       FOR EACH tmp IN hb_ATokens( hbmk2_hbinfo_getitem( cStdOut, "hbctree" ), Chr( 10 ) )
          IF ! Empty( tmp )
-            nDepth := Len( tmp ) - Len( LTrim( tmp ) )
-            hb_FNameSplit( tmp,, @cName )
-            AAdd( aDept, Replicate( " ", nDepth ) + cName )
+            hb_FNameSplit( LTrim( tmp ), @cDir, @cName )
+            AAdd( hProject[ "aDept" ], { "nDepth" => Len( tmp ) - Len( LTrim( tmp ) ),;
+                                         "cDir" => cDir,;
+                                         "cName" => cName } )
          ENDIF
       NEXT
 
@@ -714,8 +657,8 @@ STATIC FUNCTION PathSepToSelf( cFileName )
 #endif
 
 /* Convert indented list of line to tree / list of parent-child pairs */
-STATIC PROCEDURE DeptLinesToDeptList( aPairList, cParent, aLine )
-   LOCAL cLine
+STATIC PROCEDURE DeptLinesToDeptPairList( aPairList, cParent, aFlatTree )
+   LOCAL hFlatTreeElement
    LOCAL hNode, hNewNode, tmp
    LOCAL nLevel, nDepth
 
@@ -723,23 +666,21 @@ STATIC PROCEDURE DeptLinesToDeptList( aPairList, cParent, aLine )
 
    hNode := { "child" => {}, "name" => cParent, "parent" => NIL }
    nLevel := 0
-   FOR EACH cLine IN aLine
-      IF ! Empty( cLine )
-         /* Min() protects against jumping more than one level down in one step */
-         nDepth := Min( Len( cLine ) - Len( LTrim( cLine ) ), nLevel + 1 )
-         hNewNode := { "child" => {}, "name" => LTrim( cLine ) }
-         IF nDepth > nLevel
-            hNode := ATail( hNode[ "child" ] )
-         ELSEIF nDepth < nLevel
-            FOR tmp := nDepth + 1 TO nLevel
-               hNode := hNode[ "parent" ]
-            NEXT
-         ENDIF
-         hNewNode[ "parent" ] := hNode
-         AAdd( hNode[ "child" ], hNewNode )
-         nLevel := nDepth
-         AddDeptPair( aPairList, hNewNode[ "parent" ][ "name" ], hNewNode[ "name" ] )
+   FOR EACH hFlatTreeElement IN aFlatTree
+      /* Min() protects against jumping more than one level down in one step */
+      nDepth := Min( hFlatTreeElement[ "nDepth" ], nLevel + 1 )
+      hNewNode := { "child" => {}, "name" => hFlatTreeElement[ "cName" ], "cargo" => hFlatTreeElement }
+      IF nDepth > nLevel
+         hNode := ATail( hNode[ "child" ] )
+      ELSEIF nDepth < nLevel
+         FOR tmp := nDepth + 1 TO nLevel
+            hNode := hNode[ "parent" ]
+         NEXT
       ENDIF
+      hNewNode[ "parent" ] := hNode
+      AAdd( hNode[ "child" ], hNewNode )
+      nLevel := nDepth
+      AddDeptPair( aPairList, hNewNode[ "parent" ][ "name" ], hNewNode[ "name" ] )
    NEXT
 
    RETURN
@@ -780,7 +721,7 @@ STATIC FUNCTION TopoSort( aEdgeList )
       FOR EACH tmp IN aEdgeList
          IF tmp[ 1 ] == n
             m := tmp[ 2 ]
-            tmp[ 1 ] := tmp[ 2 ] := NIL /* set to invalid value */
+            tmp[ 1 ] := tmp[ 2 ] := NIL /* set to invalid value. TOOPT: Delete this member from list */
             IF AScan( aEdgeList, {| tmp | tmp[ 2 ] == m } ) == 0
                hTopNodes[ m ] := NIL
             ENDIF
