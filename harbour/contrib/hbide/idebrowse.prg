@@ -573,40 +573,52 @@ METHOD IdeBrowseManager:execEvent( cEvent, p, p1 )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeBrowseManager:showTablesTree()
-   LOCAL oUI, qTree, qParent, oPanel, qItm, aBrowser, q, aFld
+   LOCAL oUI, qTree, qParent, oPanel, qItm, aBrowser, q, aFld, qFont, nMax, nSz, oBrw
    LOCAL a_:={}
 
    oUI := hbide_getUI( "tables", ::oCurPanel:qWidget )
 
+   qFont := QFont():new( "Courier New", 8 )
    qTree := oUI:q_treeTables
+   qTree:setFont( qFont )
 
-   qParent := QTreeWidgetItem():from( qTree:invisibleRootItem() )
    FOR EACH oPanel IN ::aPanels
       qParent := QTreeWidgetItem():new()
       qParent:setText( 0, oPanel:cPanel )
       qTree:addTopLevelItem( qParent )
       aadd( a_, qParent )
       FOR EACH aBrowser IN oPanel:aBrowsers
-         qItm := QTreeWidgetItem():new() ; qItm:setText( 0, aBrowser[ SUB_BROWSER ]:cTable )
+         oBrw := aBrowser[ SUB_BROWSER ]
+
+         qItm := QTreeWidgetItem():new()
+         qItm:setText( 0, oBrw:cTable )
+
+         qItm:setToolTip( 0, oBrw:cTableOnly + " [ " + oBrw:cDriver + "  " + ;
+                          hb_ntos( oBrw:indexOrd() ) + "/" + hb_ntos( oBrw:numIndexes() ) + iif( oBrw:indexOrd() > 0, ":" + oBrw:ordName(), "" ) + ;
+                          "  " + hb_ntos( oBrw:recno() ) + "/" + hb_ntos( oBrw:lastRec() ) + " ]  " )
+
          qParent:addChild( qItm )
+         nSz := 0 ; aeval( aBrowser[ SUB_BROWSER ]:aStruct, {|e_| nSz += e_[ 3 ] } )
+         nMax := 12
          FOR EACH aFld IN aBrowser[ SUB_BROWSER ]:aStruct
             q := QTreeWidgetItem():new()
-            q:setFont( ::oFont:oWidget )
-            q:setText( 0, pad( aFld[ 1 ], 12 ) + aFld[ 2 ] + str( aFld[ 3 ], 4, 0 ) + str( aFld[ 4 ], 4, 0 ) )
+            q:setText( 0, pad( aFld[ 1 ], nMax ) + aFld[ 2 ] + str( aFld[ 3 ], 4, 0 ) + str( aFld[ 4 ], 2, 0 ) )
+            q:setToolTip( 0, "" )
             qItm:addChild( q )
          NEXT
-      NEXT
-   NEXT
-
-   FOR EACH qParent IN a_
+         q := QTreeWidgetItem():new()
+         q:setText( 0, pad( "T", nMax - 2 ) + str( nSz, 7, 0 ) )
+         qItm:addChild( q )
+     NEXT
       qParent:setExpanded( .t. )
    NEXT
-
+   ::oIde:setPosAndSizeByIniEx( oUI:oWidget, ::oINI:cTablesDialogGeometry )
    ::connect( oUI:q_buttonOk, "clicked()", {|| oUI:done( 1 ) } )
    oUI:exec()
    ::disconnect( oUI:q_buttonOk, "clicked()" )
+   ::oIde:oINI:cTablesDialogGeometry := hbide_posAndSize( oUI:oWidget )
 
-   RETURN qParent
+   RETURN Self
 
 /*------------------------------------------------------------------------*/
 
@@ -1199,10 +1211,6 @@ CLASS IdeBrowse INHERIT IdeObject
    DATA   qSplitter
    DATA   qTimer
    DATA   qStatus
-   DATA   qDelegate
-   DATA   qStyle
-   DATA   qEdit
-   DATA   qModelIndex
 
    DATA   nID                                     INIT  0
 
@@ -1276,6 +1284,7 @@ CLASS IdeBrowse INHERIT IdeObject
    METHOD buildForm()
    METHOD populateForm()
    METHOD fetchAlias( cTable )
+   METHOD saveField( nField, x )
 
    ENDCLASS
 
@@ -1552,7 +1561,6 @@ METHOD IdeBrowse:buildMdiWindow()
 /*------------------------------------------------------------------------*/
 
 METHOD IdeBrowse:execEvent( cEvent, p, p1 )
-   LOCAL qWidget
 
    HB_SYMBOL_UNUSED( p  )
    HB_SYMBOL_UNUSED( p1 )
@@ -1573,47 +1581,11 @@ METHOD IdeBrowse:execEvent( cEvent, p, p1 )
          ::gotoAsk()
 
       ELSEIF p == xbeK_CTRL_E
-         IF empty( ::qDelegate ) /* Only one at a time */
-            ::qDelegate := QItemDelegate():new()
-            ::oBrw:oTableView:setItemDelegate( ::qDelegate )
+         ::oBrw:oTableView:edit( ::oBrw:getCurrentIndex() )
 
-            ::qStyle := QStyleOptionViewItem():new()
-
-            ::connect( ::qDelegate, "closeEditor(QWidget,int)"    , {|p,p1| ::execEvent( "editor_closeEditor"    , p, p1 ) } )
-            ::connect( ::qDelegate, "commitData(QWidget)"         , {|p   | ::execEvent( "editor_commitData"     , p     ) } )
-         *  ::connect( ::qDelegate, "sizeHintChanged(QModelIndex)", {|p   | ::execEvent( "editor_sizeHintChanged", p     ) } )
-         ENDIF
-
-         ::qModelIndex := QModelIndex():from( ::oBrw:getCurrentIndex() )
-         ::qEdit := QLineEdit():from( ::qDelegate:createEditor( ::oBrw:oTableView, ::qStyle, ::qModelIndex ) )
-         ::qEdit:setFocus()
-         ::qEdit:setSelection( 0, 0 )
-         ::qEdit:setInputMask( "XXXXXXXXXXXXXXX>XXX" )
-         ::qDelegate:setEditorData( ::qEdit, ::qModelIndex )
-
-      *  ::qDelegate:setModelData( ::qEdit, ::oBrw:getDbfModel(), ::qModelIndex )
-         ::oBrw:openPersistentEditor()
       ENDIF
       EXIT
 
-   CASE "editor_commitData"
-      qWidget := QLineEdit():from( p )
-HB_TRACE( HB_TR_ALWAYS, "editor_commitData", qWidget:text() )
-      EXIT
-
-   CASE "editor_closeEditor"
-      qWidget := QLineEdit():from( p )
-      IF     p1 == QAbstractItemDelegate_NoHint                 /* Enter is pressed */
-      ELSEIF p1 == QAbstractItemDelegate_EditNextItem           /* Tab key is pressed */
-      ELSEIF p1 == QAbstractItemDelegate_EditPreviousItem       /* Shift_tab key is pressed */
-      ELSEIF p1 == QAbstractItemDelegate_SubmitModelCache       /* Will never be called if ESC is pressed */
-      ENDIF
-HB_TRACE( HB_TR_ALWAYS, "editor_closeEditor", p1, qWidget:text() )
-
-      //::oBrw:oTableView:closePersistentEditor( ::qModelIndex )
-      ::oBrw:setIndex( ::qModelIndex )
-      qWidget:close()
-      EXIT
    CASE "timer_timeout"
       ::oBrw:down()
       IF ::oBrw:hitBottom
@@ -1730,11 +1702,24 @@ METHOD IdeBrowse:buildForm()
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeBrowse:saveField( nField, x )
+   IF ( ::cAlias )->( DbrLock() )
+      ( ::cAlias )->( FieldPut( nField, x ) )
+      ( ::cAlias )->( DbCommit() )
+      ( ::cAlias )->( DbrUnlock() )
+      ::oBrw:refreshCurrent()
+      ::oBrw:forceStable()
+      ::oBrw:SetCurrentIndex( .f. )
+   ENDIF
+   RETURN x
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeBrowse:dataLink( nField )
    LOCAL bBlock
 
    IF ::nType == BRW_TYPE_DBF
-      bBlock := {|| ( ::cAlias )->( fieldget( nField ) ) }
+      bBlock := {|x| iif( x == NIL, ( ::cAlias )->( fieldget( nField ) ), ::saveField( nField, x ) ) }
    ELSE
       bBlock := {|| ::aData[ ::nIndex, nField ] }
    ENDIF

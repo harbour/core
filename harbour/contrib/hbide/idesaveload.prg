@@ -91,6 +91,7 @@ CLASS IdeINI INHERIT IdeObject
    DATA   cSetupDialogGeometry                    INIT  ""
    DATA   cShortcutsDialogGeometry                INIT  ""
    DATA   cDbStructDialogGeometry                 INIT  ""
+   DATA   cTablesDialogGeometry                   INIT  ""
    //
    DATA   cRecentTabIndex                         INIT  ""
    //
@@ -275,6 +276,7 @@ METHOD IdeINI:save( cHbideIni )
    aadd( txt_, "ShortcutsDialogGeometry"   + "=" +   ::cShortcutsDialogGeometry                         )
    aadd( txt_, "SetupDialogGeometry"       + "=" +   ::cSetupDialogGeometry                             )
    aadd( txt_, "DbStructDialogGeometry"    + "=" +   ::cDbStructDialogGeometry                          )
+   aadd( txt_, "TablesDialogGeometry"      + "=" +   ::cTablesDialogGeometry                            )
    //
    aadd( txt_, "CurrentLineHighlightMode"  + "=" +   iif( ::lCurrentLineHighlightEnabled, "YES", "NO" ) )
    aadd( txt_, "LineNumbersDisplayMode"    + "=" +   iif( ::lLineNumbersVisible, "YES", "NO" )          )
@@ -550,6 +552,7 @@ METHOD IdeINI:load( cHbideIni )
                      CASE "SetupDialogGeometry"         ; ::cSetupDialogGeometry              := cVal ; EXIT
                      CASE "ShortcutsDialogGeometry"     ; ::cShortcutsDialogGeometry          := cVal ; EXIT
                      CASE "DbStructDialogGeometry"      ; ::cDbStructDialogGeometry           := cVal ; EXIT
+                     CASE "TablesDialogGeometry"        ; ::cTablesDialogGeometry             := cVal ; EXIT
                      //
                      CASE "CurrentLineHighlightMode"    ; ::oIde:lCurrentLineHighlightEnabled := ( cVal != "NO" ); EXIT
                      CASE "LineNumbersDisplayMode"      ; ::oIde:lLineNumbersVisible          := ( cVal != "NO" ); EXIT

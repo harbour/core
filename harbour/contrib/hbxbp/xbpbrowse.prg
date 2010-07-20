@@ -449,6 +449,9 @@ EXPORTED:
 
    METHOD   setFocus()                              INLINE ::oTableView:setFocus()
 
+   DATA     qDelegate
+   METHOD   edit()                                  INLINE ::oTableView:edit( ::getCurrentIndex() )
+
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
@@ -770,18 +773,69 @@ METHOD XbpBrowse:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    qRect := QRect():from( ::oWidget:geometry() )
    ::oWidget:setGeometry( qRect )
 
+   /* Handle the delegate */
+   ::qDelegate := QItemDelegate():new()
+   ::oTableView:setItemDelegate( ::qDelegate )
+
+   ::connect( ::qDelegate, "closeEditor(QWidget,int)", {|p,p1| ::execSlot( 1400 /*"editor_closeEditor"*/, p, p1 ) } )
+   ::connect( ::qDelegate, "commitData(QWidget)"     , {|p   | ::execSlot( 1401 /*"editor_commitData"*/ , p     ) } )
+
+   //::oTableView:setEditTriggers( QAbstractItemView_AllEditTriggers )
+   //::oTableView:setEditTriggers( QAbstractItemView_DoubleClicked )
+   //::oTableView:setEditTriggers( QAbstractItemView_SelectedClicked )
+   ::oTableView:setEditTriggers( QAbstractItemView_AnyKeyPressed )
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD XbpBrowse:execSlot( nEvent, p1, p2, p3 )
    LOCAL oWheelEvent, oMouseEvent, oPoint, nRowPos, nColPos // i, nCol, nColPos
-   LOCAL nOff
+   LOCAL nOff, qWidget, oCol, cTxt, cTyp
 
    HB_SYMBOL_UNUSED( p2 )
-   // HB_TRACE( HB_TR_DEBUG, "   XbpBrowse:execSlot:", nEvent, 0, memory( 1001 ) )
 
    DO CASE
+   CASE nEvent == 1401     // "editor_commitData"
+      qWidget := QLineEdit():from( p1 )
+      cTxt    := qWidget:text()
+
+      oCol    := ::columns[ ::colPos ]
+      cTyp    := valtype( eval( oCol:block ) )
+      DO CASE
+      CASE cTyp == "C"
+         oCol:setData( cTxt )
+      CASE cTyp == "N"
+         oCol:setData( val( cTxt ) )
+      CASE cTyp == "D"
+         oCol:setData( ctod( cTxt ) )
+      CASE cTyp == "L"
+         oCol:setData( cTxt $ "Yy" )
+      ENDCASE
+
+   CASE nEvent == 1400     // "editor_closeEditor"
+      ( QLineEdit():from( p1 ) ):close()
+
+      DO CASE
+      CASE p2 == QAbstractItemDelegate_NoHint                 /* 0 */
+         // RETURN is presses
+      CASE p2 == QAbstractItemDelegate_EditNextItem           /* 1 */
+         SetAppEvent( xbeBRW_Navigate, XBPBRW_Navigate_SkipCols, 1, Self )
+         // TAB is pressed
+      CASE p2 == QAbstractItemDelegate_EditPreviousItem       /* 2 */
+         SetAppEvent( xbeBRW_Navigate, XBPBRW_Navigate_SkipCols, -1, Self )
+         // SHIFT_TAB is pressed
+      CASE p2 == QAbstractItemDelegate_SubmitModelCache       /* 3 */
+         // ENTER is pressed
+         #if 0
+         IF ::colPos < ::colCount
+            SetAppEvent( xbeBRW_Navigate, XBPBRW_Navigate_SkipCols, 1, Self )
+            ::edit()
+         ENDIF
+         #endif
+      CASE p2 == QAbstractItemDelegate_RevertModelCache       /* 4 */
+         // ESC is pressed
+      ENDCASE
 
    CASE nEvent == __ev_keypress__
       SetAppEvent( xbeP_Keyboard, XbpQKeyEventToAppEvent( p1 ), NIL, self )
