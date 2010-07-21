@@ -2054,16 +2054,16 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                   hb_FNameSplit( tmp, @cDir, @cName, @cExt )
                   DO CASE
                   CASE Empty( cDir )
-                     tmp := PathMakeAbsolute( tmp, aParam[ _PAR_cFileName ] )
+                     tmp := PathNormalize( PathMakeAbsolute( tmp, aParam[ _PAR_cFileName ] ) )
                      hb_FNameSplit( tmp, @cDir, @cName, @cExt )
                      IF hbmk[ _HBMK_cPROGDIR ] == NIL
                         hbmk[ _HBMK_cPROGDIR ] := cDir
                      ENDIF
                      hbmk[ _HBMK_cPROGNAME ] := FNameNameExtGet( tmp )
                   CASE ! Empty( cDir ) .AND. Empty( cName ) .AND. Empty( cExt )
-                     hbmk[ _HBMK_cPROGDIR ] := PathMakeAbsolute( cDir, aParam[ _PAR_cFileName ] )
+                     hbmk[ _HBMK_cPROGDIR ] := PathNormalize( PathMakeAbsolute( cDir, aParam[ _PAR_cFileName ] ) )
                   OTHERWISE /* ! Empty( cDir ) .AND. !( Empty( cName ) .AND. Empty( cExt ) ) */
-                     hbmk[ _HBMK_cPROGDIR ] := PathMakeAbsolute( cDir, aParam[ _PAR_cFileName ] )
+                     hbmk[ _HBMK_cPROGDIR ] := PathNormalize( PathMakeAbsolute( cDir, aParam[ _PAR_cFileName ] ) )
                      hbmk[ _HBMK_cPROGNAME ] := FNameNameExtGet( tmp )
                   ENDCASE
                ENDIF
@@ -2224,7 +2224,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
       CASE Left( cParamL, Len( "-workdir=" ) ) == "-workdir="
 
-         hbmk[ _HBMK_cWorkDir ] := PathMakeAbsolute( PathSepToSelf( MacroProc( hbmk, SubStr( cParam, Len( "-workdir=" ) + 1 ), aParam[ _PAR_cFileName ] ) ), aParam[ _PAR_cFileName ] )
+         hbmk[ _HBMK_cWorkDir ] := PathNormalize( PathMakeAbsolute( PathSepToSelf( MacroProc( hbmk, SubStr( cParam, Len( "-workdir=" ) + 1 ), aParam[ _PAR_cFileName ] ) ), aParam[ _PAR_cFileName ] ) )
 
       CASE Left( cParamL, Len( "-vcshead=" ) ) == "-vcshead="
 
@@ -4256,7 +4256,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    /* ; */
 
    IF ! hbmk[ _HBMK_lStopAfterInit ] .AND. hbmk[ _HBMK_lCreateImpLib ] .AND. ! lDumpInfo
-      DoIMPLIB( hbmk, bBlk_ImpLib, cLibLibPrefix, cLibLibExt, hbmk[ _HBMK_aIMPLIBSRC ], hbmk[ _HBMK_cPROGNAME ] )
+      DoIMPLIB( hbmk, bBlk_ImpLib, cLibLibPrefix, cLibLibExt, hbmk[ _HBMK_aIMPLIBSRC ], hbmk[ _HBMK_cPROGNAME ], "" )
       hbmk[ _HBMK_lStopAfterInit ] := .T.
    ENDIF
 
@@ -4494,7 +4494,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    IF ! hbmk[ _HBMK_lStopAfterInit ] .AND. hbmk[ _HBMK_lDEPIMPLIB ] .AND. ISBLOCK( bBlk_ImpLib )
       FOR EACH tmp IN hbmk[ _HBMK_hDEP ]
          IF tmp[ _HBMKDEP_lFound ] .AND. ! Empty( tmp[ _HBMKDEP_aIMPLIBSRC ] )
-            DoIMPLIB( hbmk, bBlk_ImpLib, cLibLibPrefix, cLibLibExt, tmp[ _HBMKDEP_aIMPLIBSRC ], tmp[ _HBMKDEP_cIMPLIBDST ] )
+            DoIMPLIB( hbmk, bBlk_ImpLib, cLibLibPrefix, cLibLibExt, tmp[ _HBMKDEP_aIMPLIBSRC ], tmp[ _HBMKDEP_cIMPLIBDST ], "implib" )
          ENDIF
       NEXT
    ENDIF
@@ -5905,7 +5905,7 @@ STATIC PROCEDURE vxworks_env_init( hbmk )
 
    RETURN
 
-STATIC PROCEDURE DoIMPLIB( hbmk, bBlk_ImpLib, cLibLibPrefix, cLibLibExt, aIMPLIBSRC, cPROGNAME )
+STATIC PROCEDURE DoIMPLIB( hbmk, bBlk_ImpLib, cLibLibPrefix, cLibLibExt, aIMPLIBSRC, cPROGNAME, cInstCat )
    LOCAL cMakeImpLibDLL
    LOCAL tmp, tmp1
    LOCAL nNotFound
@@ -5929,7 +5929,7 @@ STATIC PROCEDURE DoIMPLIB( hbmk, bBlk_ImpLib, cLibLibPrefix, cLibLibExt, aIMPLIB
                SWITCH Eval( bBlk_ImpLib, cMakeImpLibDLL, tmp, ArrayToList( hbmk[ _HBMK_aOPTI ] ) )
                CASE _HBMK_IMPLIB_OK
                   hbmk_OutStd( hbmk, hb_StrFormat( I_( "Created import library: %1$s <= %2$s" ), tmp, cMakeImpLibDLL ) )
-                  AAddNewINST( hbmk[ _HBMK_aINSTFILE ], { "", tmp }, .T. )
+                  AAddNewINST( hbmk[ _HBMK_aINSTFILE ], { cInstCat, tmp }, .T. )
                   EXIT
                CASE _HBMK_IMPLIB_FAILED
                   hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Failed creating import library %1$s from %2$s." ), tmp, cMakeImpLibDLL ) )
@@ -6818,7 +6818,7 @@ STATIC FUNCTION dep_try_pkg_detection( hbmk, dep )
                      hbmk[ _HBMK_hDEPTSDIR ][ cIncludeDir ] := NIL
                      /* Adjust implib source names with component path */
                      FOR EACH tmp IN dep[ _HBMKDEP_aIMPLIBSRC ]
-                        tmp := PathMakeAbsolute( tmp, DirAddPathSep( cIncludeDir ) )
+                        tmp := PathNormalize( PathMakeAbsolute( tmp, DirAddPathSep( cIncludeDir ) ) )
                      NEXT
                   ENDIF
                   IF hbmk[ _HBMK_lDEBUGDEPD ]
@@ -6854,7 +6854,7 @@ STATIC FUNCTION dep_try_header_detection( hbmk, dep )
                   hbmk[ _HBMK_hDEPTSDIR ][ dep[ _HBMKDEP_cFound ] ] := NIL
                   /* Adjust implib source names with component path */
                   FOR EACH tmp IN dep[ _HBMKDEP_aIMPLIBSRC ]
-                     tmp := PathMakeAbsolute( tmp, DirAddPathSep( dep[ _HBMKDEP_cFound ] ) )
+                     tmp := PathNormalize( PathMakeAbsolute( tmp, DirAddPathSep( dep[ _HBMKDEP_cFound ] ) ) )
                   NEXT
                   dep[ _HBMKDEP_lFound ] := .T.
                   dep[ _HBMKDEP_lFoundLOCAL ] := ( aINCPATH:__enumIndex() == 2 )

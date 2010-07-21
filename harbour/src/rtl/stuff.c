@@ -68,10 +68,10 @@ HB_FUNC( STUFF )
       if( nPos > 0 )
          nPos--;
 
-      if( nPos > nText )
+      if( nPos < 0 || nPos > nText )
          nPos = nText;
 
-      if( nDel > nText - nPos )
+      if( nDel < 0 || nDel > nText - nPos )
          nDel = nText - nPos;
 
       if( ( nTotalLen = nText + nInsert - nDel ) > 0 )

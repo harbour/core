@@ -179,7 +179,6 @@ PROCEDURE Standalone( ... )
 
    LOCAL cBinDir
    LOCAL hProject
-   LOCAL cProject
    LOCAL cDir
 
    LOCAL cOptions
@@ -258,7 +257,7 @@ PROCEDURE Standalone( ... )
          aPairList := {}
 
          FOR EACH hProject IN s_hPackageList[ "." ]
-            call_hbmk2_hbinfo( cBinDir, s_cBase + "." + "/" + hProject[ "cFileName" ], hProject )
+            call_hbmk2_hbinfo( cBinDir, s_cBase + hProject[ "cFileName" ], hProject )
             DeptLinesToDeptPairList( aPairList, ".", hProject[ "aDept" ] )
          NEXT
 
@@ -270,8 +269,9 @@ PROCEDURE Standalone( ... )
                IF cDir == "." .AND. hProject[ "cType" ] $ "hbhrb|hbppo"
                   LOOP
                ENDIF
-               cProject := s_cBase + iif( cDir == ".", "", s_cHome ) + cDir + "/" + hProject[ "cFileName" ]
-               call_hbmk2( cBinDir, cProject, iif( cDir == ".", cOptions + cOptionsUser, "" ), "" )
+               call_hbmk2( cBinDir,;
+                  s_cBase + iif( cDir == ".", "", s_cHome + cDir + "/" ) + hProject[ "cFileName" ],;
+                  iif( cDir == ".", cOptions + cOptionsUser, "" ), "" )
             NEXT
          NEXT
       ENDIF
@@ -331,6 +331,10 @@ PROCEDURE GNUMake( ... )
    /* Compatibility */
    IF Empty( cFilter )
       cFilter := GetEnv( "HB_CONTRIBLIBS" )
+   ENDIF
+
+   IF ! Empty( cFilter )
+      OutStd( "! HB_BUILD_CONTRIBS: " + cFilter + hb_eol() )
    ENDIF
 
    IF cFilter == "no"
@@ -446,18 +450,19 @@ PROCEDURE GNUMake( ... )
    OutStd( hb_StrFormat( "! Contribs %1$s...", hActions[ nAction ] ) + hb_eol() )
 
    FOR EACH cDir IN aSortedList DESCEND
-      FOR EACH hProject IN s_hPackageList[ cDir ]
 
-         cProject := s_cBase + cDir + "/" + hProject[ "cFileName" ]
+      IF Empty( aFilter ) .OR. ;
+         iif( lFilterNegative,;
+            AScan( aFilter, {| tmp | tmp == cDir } ) == 0,;
+            AScan( aFilter, {| tmp | tmp == cDir } ) > 0 )
 
-         IF Empty( aFilter ) .OR. ;
-            iif( lFilterNegative,;
-               AScan( aFilter, {| tmp | tmp == cDir } ) == 0,;
-               AScan( aFilter, {| tmp | tmp == cDir } ) > 0 )
+         FOR EACH hProject IN s_hPackageList[ cDir ]
 
             IF hProject[ "cType" ] $ "hbhrb|hbppo"
                LOOP
             ENDIF
+
+            cProject := s_cBase + cDir + "/" + hProject[ "cFileName" ]
 
             call_hbmk2( cBinDir, cProject, cOptions, "" )
 
@@ -468,16 +473,16 @@ PROCEDURE GNUMake( ... )
 
                call_hbmk2( cBinDir, cProject, cOptions, " -hbdyn -nohblib- -implib " + FNameExtSet( cProject, ".hbc" ) )
             ENDIF
+         NEXT
 
-            /* Compile documentation */
-            IF nAction == _ACT_INC_INST .OR. ;
-               nAction == _ACT_INC_REBUILD_INST
-               mk_hbd( PathSepToSelf( cDir ) )
-            ENDIF
-         ELSE
-            /* OutStd( hb_StrFormat( "! project '%1$s' skipped", cProject ) + hb_eol() ) */
+         /* Compile documentation */
+         IF nAction == _ACT_INC_INST .OR. ;
+            nAction == _ACT_INC_REBUILD_INST
+            mk_hbd( PathSepToSelf( cDir ) )
          ENDIF
-      NEXT
+      ELSE
+         /* OutStd( hb_StrFormat( "! package '%1$s' skipped due to custom filter", cDir ) + hb_eol() ) */
+      ENDIF
    NEXT
 
    OutStd( hb_eol() )

@@ -5,7 +5,7 @@
 # These are mandatory in Harbour SVN, they will always
 # override project options.
 
-"{HB_BUILD_PARTS='lib'&!(hbimplib|hblib)}-stop=! Skipped because HB_BUILD_PARTS=lib"
+"{HB_BUILD_PARTS='lib'&!hblib}-stop=! Skipped because HB_BUILD_PARTS=lib"
 
 -prgflag=-w3
 -prgflag=-es2
@@ -36,13 +36,14 @@
 
 {(hbdyn|hbexe)&HB_BUILD_SHARED='yes'}-shared
 
-{hblib|hbimplib}-o../lib/${hb_plat}/${hb_comp}${hb_build}/
+{hblib}-o../lib/${hb_plat}/${hb_comp}${hb_build}/
 {hbexe|hbdyn}-o../bin/${hb_plat}/${hb_comp}${hb_build}/
 
-{hblib|hbimplib}-workdir=../lib/${hb_plat}/${hb_comp}${hb_build}/${hb_work}/${hb_outputname}${hb_workdynsub}
+{hblib}-workdir=../lib/${hb_plat}/${hb_comp}${hb_build}/${hb_work}/${hb_outputname}${hb_workdynsub}
 {hbexe|hbdyn}-workdir=../bin/${hb_plat}/${hb_comp}${hb_build}/${hb_work}/${hb_outputname}${hb_workdynsub}
 
-{_HB_BUILD_INSTALL&(hblib|(hbimplib&HB_BUILD_IMPLIB='yes'))}-instpath=${_HB_LIB_INSTALL}/
+{_HB_BUILD_INSTALL&hblib}-instpath=${_HB_LIB_INSTALL}/
 {_HB_BUILD_INSTALL&hbexe}-instpath=${_HB_BIN_INSTALL}/
 {_HB_BUILD_INSTALL&hbdyn}-instpath=${_HB_DYN_INSTALL}/
 {_HB_BUILD_INSTALL&hblib}-instpath=inc:${_HB_INC_INSTALL}/
+{_HB_BUILD_INSTALL&HB_BUILD_IMPLIB='yes'}-instpath=implib:${_HB_LIB_INSTALL}/

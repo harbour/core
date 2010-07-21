@@ -302,12 +302,6 @@ ifeq ($(HB_INIT_DONE),)
    ifneq ($(HB_BUILD_PARTS),)
       $(info ! HB_BUILD_PARTS: $(HB_BUILD_PARTS))
    endif
-   ifneq ($(HB_CONTRIBLIBS),)
-      $(info ! HB_CONTRIBLIBS: $(HB_CONTRIBLIBS))
-   endif
-   ifneq ($(HB_CONTRIB_ADDONS),)
-      $(info ! HB_CONTRIB_ADDONS: $(HB_CONTRIB_ADDONS))
-   endif
    ifneq ($(HB_EXTERNALLIBS),)
       $(info ! HB_EXTERNALLIBS: $(HB_EXTERNALLIBS))
    endif
