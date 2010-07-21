@@ -1244,6 +1244,10 @@ CLASS IdeBrowse INHERIT IdeObject
    DATA   xSearch
    DATA   lInSearch                               INIT  .f.
 
+   DATA   aMenu                                   INIT  {}
+   DATA   aIdx                                    INIT  {}
+   DATA   aFlds                                   INIT  {}
+
    METHOD new( oIde, oManager, oPanel, aInfo )
    METHOD create( oIde, oManager, oPanel, aInfo )
    METHOD configure()
@@ -1270,10 +1274,10 @@ CLASS IdeBrowse INHERIT IdeObject
    METHOD ordName( nOrder )
    METHOD IndexKey( nOrder )
    METHOD IndexKeyValue( nOrder )
-   METHOD setOrder( nOrder )
    METHOD refreshAll()
    METHOD getIndexInfo()
    METHOD setIndex( cIndex )
+   METHOD setOrder( nOrder )
    ACCESS numIndexes()                            INLINE len( ::aIndex )
 
    METHOD dispInfo()
@@ -1285,6 +1289,7 @@ CLASS IdeBrowse INHERIT IdeObject
    METHOD populateForm()
    METHOD fetchAlias( cTable )
    METHOD saveField( nField, x )
+   METHOD toColumn( nIndex )
 
    ENDCLASS
 
@@ -1490,6 +1495,8 @@ METHOD IdeBrowse:buildBrowser()
    oXbpBrowse:goPosBlock    := {|n| ::goto( n )      }
    oXbpBrowse:phyPosBlock   := {| | ::recNo()        }
 
+   oXbpBrowse:hbContextMenu := {|mp1| ::execEvent( "browser_contextMenu", mp1 ) }
+
    /* Form View */
    ::qForm := QWidget():new()
    ::qFLayout := QFormLayout():new()
@@ -1561,6 +1568,7 @@ METHOD IdeBrowse:buildMdiWindow()
 /*------------------------------------------------------------------------*/
 
 METHOD IdeBrowse:execEvent( cEvent, p, p1 )
+   LOCAL cIndex, a_, cPmt
 
    HB_SYMBOL_UNUSED( p  )
    HB_SYMBOL_UNUSED( p1 )
@@ -1614,6 +1622,35 @@ METHOD IdeBrowse:execEvent( cEvent, p, p1 )
       ENDIF
       EXIT
 
+   CASE "browser_contextMenu"
+      IF empty( ::aMenu )
+
+         ::getIndexInfo()
+         FOR EACH cIndex IN ::aIndex
+            aadd( ::aIdx,  hbide_indexArray( Self, cIndex, cIndex:__enumIndex() ) )
+         NEXT
+
+         aadd( ::aMenu, { "Set to Natural Order", {|| ::setOrder( 0 ) } } )
+         aadd( ::aMenu, { "" } )
+         IF ! empty( ::aIdx )
+            aadd( ::aMenu, { ::aIdx, "Set to Indexed Order" } )
+            aadd( ::aMenu, { "" } )
+         ENDIF
+
+         FOR EACH a_ IN ::aStruct
+            cPmt := a_[ 1 ] + "  " + a_[ 2 ] + "  " + hb_ntos( a_[ 3 ] )
+            aadd( ::aFlds, hbide_fieldsArray( Self, cPmt, a_:__enumIndex() ) )
+         NEXT
+
+         aadd( ::aMenu, { ::aFlds, "Scroll to Column..." } )
+      ENDIF
+
+      hbide_execPopup( ::aMenu, p, ::qMdi )
+      EXIT
+
+   CASE "browser_ScrollToColumn"
+
+      EXIT
    ENDSWITCH
 
    #if 0
@@ -1625,6 +1662,16 @@ METHOD IdeBrowse:execEvent( cEvent, p, p1 )
    #endif
 
    RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION hbide_fieldsArray( obj, cPmt, nIndex )
+   RETURN { cPmt, {|| obj:toColumn( nIndex ) } }
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION hbide_indexArray( obj, cIndex, nOrder )
+   RETURN { cIndex, {|| obj:setOrder( nOrder ) } }
 
 /*----------------------------------------------------------------------*/
 
@@ -1922,6 +1969,17 @@ METHOD IdeBrowse:refreshAll()
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeBrowse:toColumn( nIndex )
+
+   ::oBrw:colPos := nIndex
+   ::oBrw:refreshAll()
+   ::oBrw:forceStable()
+   ::oBrw:setCurrentIndex( .t. )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeBrowse:goToAsk()
    LOCAL nRec
 
@@ -1971,7 +2029,7 @@ METHOD IdeBrowse:setOrder( nOrder )
 
    IF ::nType == BRW_TYPE_DBF
       ( ::cAlias )->( DbSetOrder( nOrder ) )
-      ::dispInfo()
+      ::refreshAll()
    ENDIF
 
    RETURN NIL

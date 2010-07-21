@@ -137,6 +137,7 @@
 #define __ev_headersec_resized__           121              /* Header Section Resized */
 #define __ev_footersec_resized__           122              /* Footer Section Resized */
 #define __ev_frame_resized__               2001
+#define __ev_contextMenuRequested__        2002
 
 /*----------------------------------------------------------------------*/
 
@@ -675,13 +676,15 @@ METHOD XbpBrowse:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::oTableView:setSelectionMode( QAbstractItemView_SingleSelection )
    ::oTableView:setSelectionBehavior( iif( ::cursorMode == XBPBRW_CURSOR_ROW, QAbstractItemView_SelectRows, QAbstractItemView_SelectItems ) )
    ::oTableView:setAlternatingRowColors( .t. )
+   ::oTableView:setContextMenuPolicy( Qt_CustomContextMenu )
 
    /* Connect Keyboard Events */
-   ::connect( ::oTableView, "keyPressEvent()"           , {|p   | ::execSlot( __ev_keypress__           , p     ) } )
-   ::connect( ::oTableView, "mousePressEvent()"         , {|p   | ::execSlot( __ev_mousepress__         , p     ) } )
-   ::connect( ::oTableView, "mouseDoubleClickEvent()"   , {|p   | ::execSlot( __ev_xbpBrw_itemSelected__, p     ) } )
-   ::connect( ::oTableView, "wheelEvent()"              , {|p   | ::execSlot( __ev_wheel__              , p     ) } )
-   ::connect( ::oTableView, "scrollContentsBy(int,int)" , {|p,p1| ::execSlot( __ev_horzscroll_via_qt__  , p, p1 ) } )
+   ::connect( ::oTableView, "keyPressEvent()"                   , {|p   | ::execSlot( __ev_keypress__            , p     ) } )
+   ::connect( ::oTableView, "mousePressEvent()"                 , {|p   | ::execSlot( __ev_mousepress__          , p     ) } )
+   ::connect( ::oTableView, "mouseDoubleClickEvent()"           , {|p   | ::execSlot( __ev_xbpBrw_itemSelected__ , p     ) } )
+   ::connect( ::oTableView, "wheelEvent()"                      , {|p   | ::execSlot( __ev_wheel__               , p     ) } )
+   ::connect( ::oTableView, "scrollContentsBy(int,int)"         , {|p,p1| ::execSlot( __ev_horzscroll_via_qt__   , p, p1 ) } )
+   ::connect( ::oTableView, "customContextMenuRequested(QPoint)", {|p   | ::execSlot( __ev_contextMenuRequested__, p     ) } )
 
    /* Finetune Horizontal Scrollbar */
    ::oTableView:setHorizontalScrollBarPolicy( Qt_ScrollBarAlwaysOff )
@@ -796,6 +799,10 @@ METHOD XbpBrowse:execSlot( nEvent, p1, p2, p3 )
    HB_SYMBOL_UNUSED( p2 )
 
    DO CASE
+   CASE nEvent == __ev_contextMenuRequested__
+      oPoint := QPoint():from( ::oTableView:mapToGlobal( p1 ) )
+      ::hbContextMenu( { oPoint:x(), oPoint:y() } )
+
    CASE nEvent == 1401     // "editor_commitData"
       qWidget := QLineEdit():from( p1 )
       cTxt    := qWidget:text()

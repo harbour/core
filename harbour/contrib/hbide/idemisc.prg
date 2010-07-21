@@ -111,6 +111,7 @@ FUNCTION hbide_setIde( oIde )
 
 FUNCTION hbide_execPopup( aPops, aqPos, qParent )
    LOCAL i, qPop, qPoint, qAct, cAct, xRet, pAct, a_, qSub, b_
+   LOCAL qSub_:={}
 
    qPop := QMenu():new( iif( hb_isObject( qParent ), qParent, NIL ) )
    qPop:setStyleSheet( GetStyleSheet( "QMenuPop", hbide_setIde():nAnimantionMode ) )
@@ -129,6 +130,7 @@ FUNCTION hbide_execPopup( aPops, aqPos, qParent )
             NEXT
             qSub:setTitle( aPops[ i,2 ] )
             qPop:addMenu( qSub )
+            aadd( qSub_, qSub )
          ELSE
             qPop:addAction( aPops[ i, 1 ] )
          ENDIF
