@@ -13,6 +13,10 @@
 -depcontrol=cairo:${HB_WITH_CAIRO}
 -depincpath=cairo:/usr/include/cairo
 -depincpath=cairo:/opt/local/include/cairo
+-depimplibs=cairo:../../bin/libcairo-2.dll
+-depimplibd=cairo:cairo
+
+-iflag={bcc}-a
 
 -instfile=inc:hbcairo.ch
 

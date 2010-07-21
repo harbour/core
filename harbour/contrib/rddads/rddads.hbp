@@ -15,6 +15,9 @@
 -depcontrol=ads:${HB_WITH_ADS}
 -depincpath=ads:/usr/local/ads/acesdk
 -depincpath=ads:${HOME}/ads/acesdk
+-depimplibs=ads:Redistribute/ace32.dll
+-depimplibs=ads:ace32.dll
+-depimplibs=ads:32bit/ace32.dll
 
 -instfile=inc:ads.ch
 -instfile=inc:adsextrn.ch

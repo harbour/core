@@ -14,6 +14,7 @@
 -depcontrol=gd:${HB_WITH_GD}
 -depincpath=gd:/usr/include
 -depincpath=gd:/opt/local/include
+-depimplibs=gd:../bin/bgd.dll
 
 -instfile=inc:gd.ch
 -instfile=inc:gdextern.ch

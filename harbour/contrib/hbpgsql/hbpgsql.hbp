@@ -19,6 +19,9 @@
 -depincpath=pgsql:/postgres/include
 -depincpath=pgsql:/opt/local/include/postgresql84
 -depincpath=pgsql:/opt/local/include/postgresql83
+-depimplibs=pgsql:../lib/libpq.dll
+
+-iflag={bcc}-a
 
 -instfile=inc:postgres.ch
 

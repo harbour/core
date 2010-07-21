@@ -33,7 +33,7 @@
      3. solve HB_BUILD_CONTRIB_DLL support the .dlls are either
         huge, or they don't link.
      4. hbmk2 location detection in standalone mode
-        (move hbmk2 to core lib?)
+        (or move hbmk2 to core lib?)
      5. Move in external libs to contrib area? (bz2, minizip, sqlite3)
      6. Pull the list of .hbp files from an external file
         (so it can be used in stdalone mode, and the script can be
@@ -268,11 +268,14 @@ PROCEDURE Standalone( ... )
          /* Build the dependencies and ourselves in in sorted order */
          FOR EACH cDir IN aSortedList DESCEND
             FOR EACH hProject IN s_hDirList[ cDir ]
+               IF cDir == "." .AND. hProject[ "cType" ] $ "hbhrb|hbppo"
+                  LOOP
+               ENDIF
                cProject := s_cBase + iif( cDir == ".", "", s_cHome ) + cDir + "/" + hProject[ "cFileName" ]
                call_hbmk2( cBinDir, cProject, iif( cDir == ".", cOptions + cOptionsUser, "" ), "" )
-               IF hb_FileExists( PathSepToSelf( FNameExtSet( cProject, ".hbi" ) ) )
-                  call_hbmk2( cBinDir, s_cBase + FNameExtSet( cProject, ".hbi" ), iif( cDir == ".", cOptions + cOptionsUser, "" ), "" )
-               ENDIF
+//             IF hb_FileExists( PathSepToSelf( FNameExtSet( cProject, ".hbi" ) ) )
+//                call_hbmk2( cBinDir, s_cBase + FNameExtSet( cProject, ".hbi" ), iif( cDir == ".", cOptions + cOptionsUser, "" ), "" )
+//             ENDIF
             NEXT
          NEXT
       ENDIF
@@ -462,9 +465,9 @@ PROCEDURE GNUMake( ... )
 
             call_hbmk2( cBinDir, cProject, cOptions, "" )
 
-            IF hb_FileExists( PathSepToSelf( FNameExtSet( cProject, ".hbi" ) ) )
-               call_hbmk2( cBinDir, FNameExtSet( cProject, ".hbi" ), cOptions, "" )
-            ENDIF
+//          IF hb_FileExists( PathSepToSelf( FNameExtSet( cProject, ".hbi" ) ) )
+//             call_hbmk2( cBinDir, FNameExtSet( cProject, ".hbi" ), cOptions, "" )
+//          ENDIF
 
             /* Highly experimental */
             IF hProject[ "cType" ] == "hblib" .AND. ;

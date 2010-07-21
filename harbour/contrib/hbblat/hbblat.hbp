@@ -11,6 +11,11 @@
 
 -stop{!win}
 
+-depoptional=blat:yes
+-depkeyhead=blat:blat.h
+-depcontrol=blat:${HB_WITH_BLAT}
+-depimplibs=blat:../blat.dll
+
 -instfile=inc:hbblat.ch
 
 blatwrp.c

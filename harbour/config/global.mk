@@ -807,11 +807,11 @@ ifeq ($(HB_COMPILER),)
                            # Equation Solution build (requires x86_64 host)
                            HB_COMP_PATH := $(call find_in_path,x86_64-pc-mingw32-gcc)
                            ifneq ($(HB_COMP_PATH),)
+                              HB_COMPILER := mingw64
+                              HB_CPU := x86_64
                               ifneq ($(wildcard $(dir $(HB_COMP_PATH))x86_64-pc-mingw32-gcc-4.5*),)
                                  HB_COMPILER_VER := 45
                               endif
-                              HB_COMPILER := mingw64
-                              HB_CPU := x86_64
                            else
                               HB_COMP_PATH := $(call find_in_path,gcc)
                               ifneq ($(HB_COMP_PATH),)

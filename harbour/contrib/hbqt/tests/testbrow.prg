@@ -10,32 +10,19 @@
  *
  */
 
-/*
- * NOTES:
- *
- * This is only a basic browse test. Production code must check
- * parameters, test if database really opened, and so on.
- *
- * Also, we are using absolute sizes. Proper Qt coding rely on
- * font metrics obtained by QFont and similar techniques. Modern
- * interfaces assume that font size and system colors is user
- * choice.
- *
- * For production code is advised that the user creates a basic
- * data caching system, to avoid unnecessary disk access while
- * browsing large data sets.
- *
- */
-
 #include "hbqt.ch"
 #include "common.ch"
 
 STATIC qApp
 STATIC oWnd
 
+STATIC qSlots
+
 STATIC oDA
 STATIC oSize
 STATIC aStru1
+STATIC nCX1
+STATIC nCY1
 
 STATIC oColorC
 STATIC oColorN
@@ -47,6 +34,7 @@ REQUEST HB_QT
 
 INIT PROCEDURE Qt_Start()
    qApp := QApplication():new()
+   qSlots := QT_SLOTS_NEW()
    RETURN
 
 EXIT PROCEDURE Qt_End()
@@ -71,15 +59,20 @@ PROCEDURE Main()
    oWnd:setCentralWidget( oDA )
    lay1 := QVBoxLayout():new( oDA )
 
-   DBUseArea( .T., NIL, '../../../tests/test.dbf','T1', .F., .T.)
+   DBUseArea( .T., NIL, "../../../tests/test.dbf", "T1", .F., .F. )
    aStru1 := DBStruct()
+   nCX1 := 0
+   nCY1 := 0
    tb1 := QTableView():new()
    mo1 := HBQAbstractItemModel():New( {| t, r, x, y| my_browse( 1, aStru1, t, r, x, y ) } )
    tb1:setModel( mo1 )
 
-   hd1 := QHeaderView():from(tb1:horizontalHeader())
+   QT_SLOTS_CONNECT( qSlots, tb1:itemDelegate(), "commitData(QWidget)", {| w | my_save( w, 1, aStru1, @nCX1, @nCY1 ) } )
+   QT_SLOTS_CONNECT( qslots, tb1:SelectionModel(), "currentChanged(QModelIndex,QModelIndex)", {| n | my_select( n, @nCX1, @nCY1 ) } )
+
+   hd1 := QHeaderView():from( tb1:horizontalHeader() )
    FOR i := 1 To Len( aStru1 )
-      hd1:resizeSection( i-1, aStru1[ i ,3 ] * 6 + 60 )
+      hd1:resizeSection( i - 1, aStru1[ i, 3 ] * 6 + 60 )
    NEXT
    QHeaderView():from( tb1:verticalHeader() ):setDefaultSectionSize( 24 )
 
@@ -104,35 +97,81 @@ PROCEDURE Main()
 
    RETURN
 
+STATIC PROCEDURE my_save( oWidget, nArea, aStru, nCX, nCY )
+   LOCAL cData := QLineEdit():from( oWidget ):text()
+
+   DBSelectArea( nArea )
+   DBGoto( nCY + 1 )
+
+   SWITCH aStru[ nCX + 1, 2 ]
+   CASE "C"
+      FieldPut( nCX + 1, AllTrim( cData ) )
+      BREAK
+   CASE "N"
+      FieldPut( nCX + 1, Val( cData ) )
+      BREAK
+   CASE "L"
+      FieldPut( nCX + 1, Left( cData, 1 ) $ "YyTt" )
+      BREAK
+   CASE "D"
+      FieldPut( nCX + 1, CToD( cData ) )
+      BREAK
+   ENDSWITCH
+   RETURN
+
+STATIC PROCEDURE my_select( n, nCX, nCY  )
+   LOCAL i := QModelIndex():from( n )
+
+   nCX := i:column()
+   nCY := i:row()
+   RETURN
+
 STATIC FUNCTION my_browse( nArea, aStru, t, role, x, y )
-	DBSelectArea( nArea )
+   DBSelectArea( nArea )
 
    SWITCH t
+   CASE HBQT_QAIM_flags
+      RETURN Qt_ItemIsEnabled + Qt_ItemIsSelectable + Qt_ItemIsEditable;
+
    CASE HBQT_QAIM_data
 
       SWITCH role
       CASE Qt_DisplayRole
          DBGoto( y + 1 )
          SWITCH aStru[ x + 1, 2 ]
-         CASE 'C'
+         CASE "C"
             RETURN AllTrim( FieldGet( x + 1 ) )
-         CASE 'N'
+         CASE "N"
             RETURN hb_NToS( FieldGet( x + 1 ) )
-         CASE 'L'
-            RETURN IIf( FieldGet( x + 1 ), 'Yes', 'No' )
-         CASE 'D'
+         CASE "L"
+            RETURN IIf( FieldGet( x + 1 ), "Yes", "No" )
+         CASE "D"
             RETURN DToC( FieldGet( x + 1 ) )
          ENDSWITCH
-         RETURN '?'
+         RETURN "?"
+
+      CASE Qt_EditRole /* Here we can specify different formats for editing*/
+         DBGoto( y + 1 )
+         SWITCH aStru[ x + 1, 2 ]
+         CASE "C"
+            RETURN AllTrim( FieldGet( x + 1 ) )
+         CASE "N"
+            RETURN hb_NToS( FieldGet( x + 1 ) )
+         CASE "L"
+            RETURN IIf( FieldGet( x + 1 ), "Y", "N" )
+         CASE "D"
+            RETURN DToC( FieldGet( x + 1 ) )
+         ENDSWITCH
+         RETURN "?"
 
       CASE Qt_ForegroundRole
          SWITCH aStru[ x + 1, 2 ]
-         CASE 'N'
+         CASE "N"
             RETURN oColorN
-         CASE 'L'
+         CASE "L"
             DBGoto( y + 1 )
-            RETURN IIf( FieldGet( x + 1), oColorLY, oColorLN )
-         CASE 'D'
+            RETURN IIf( FieldGet( x + 1 ), oColorLY, oColorLN )
+         CASE "D"
             RETURN oColorD
          ENDSWITCH
          RETURN NIL
@@ -142,9 +181,9 @@ STATIC FUNCTION my_browse( nArea, aStru, t, role, x, y )
 
       CASE Qt_TextAlignmentRole
          SWITCH aStru[ x + 1, 2 ]
-         CASE 'C'
+         CASE "C"
             RETURN Qt_AlignVCenter + Qt_AlignLeft
-         CASE 'N'
+         CASE "N"
             RETURN Qt_AlignVCenter + Qt_AlignRight
          ENDSWITCH
          RETURN Qt_AlignCenter
@@ -176,7 +215,7 @@ STATIC FUNCTION my_browse( nArea, aStru, t, role, x, y )
       RETURN LastRec()
 
    CASE HBQT_QAIM_columnCount
-      RETURN Len( aStru)
+      RETURN Len( aStru )
    ENDSWITCH
 
    RETURN NIL

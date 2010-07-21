@@ -16,6 +16,7 @@
 -depcontrol=allegro:${HB_WITH_ALLEGRO}
 -depincpath=allegro:/usr/include
 -depincpath=allegro:/opt/local/include
+-depimplibs=allegro:../bin/alleg42.dll
 
 gtalleg.c
 ssf.c

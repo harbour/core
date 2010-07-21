@@ -15,5 +15,6 @@
 -depcontrol=mysql:${HB_WITH_MYSQL}
 -depincpath=mysql:/usr/include/mysql
 -depincpath=mysql:/opt/local/include/mysql5/mysql
+-depimplibs=mysql:../lib/opt/libmySQL.dll
 
 sddmy.c

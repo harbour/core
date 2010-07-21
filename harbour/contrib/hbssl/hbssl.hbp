@@ -18,6 +18,14 @@
 -depincpath=openssl:/usr/local/include
 -depincpath=openssl:/usr/local/ssl/include
 -depincpath=openssl:/boot/common/include
+-depimplibs=openssl:../out32dll/libeay32.dll
+-depimplibs=openssl:../out32dll/ssleay32.dll
+-depimplibs=openssl:../dll/libeay32.dll
+-depimplibs=openssl:../dll/ssleay32.dll
+-depimplibs=openssl:../libeay32.dll
+-depimplibs=openssl:../ssleay32.dll
+
+-iflag={bcc}-a
 
 {darwin}-cflag=-DOPENSSL_NO_SHA256
 {darwin}-cflag=-DOPENSSL_NO_SHA512

@@ -13,6 +13,10 @@
 -depkeyhead=curl:curl/curl.h
 -depcontrol=curl:${HB_WITH_CURL}
 -depincpath=curl:/usr/include
+-depimplibs=curl:../libcurl.dll
+-depimplibs=curl:../bin/libcurl.dll
+
+-iflag={bcc}-a
 
 -instfile=inc:hbcurl.ch
 
