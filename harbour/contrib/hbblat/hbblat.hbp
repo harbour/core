@@ -16,6 +16,8 @@
 -depcontrol=blat:${HB_WITH_BLAT}
 -depimplibs=blat:../blat.dll
 
+-iflag={bcc}-a
+
 -instfile=inc:hbblat.ch
 
 blatwrp.c
