@@ -1458,6 +1458,17 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                         IF Len( aCOMPDET[ tmp ] ) >= _COMPDET_cCCPOSTFIX
                            hbmk[ _HBMK_cCCPOSTFIX ] := aCOMPDET[ tmp ][ _COMPDET_cCCPOSTFIX ]
                         ENDIF
+                        /* Hack autodetect watcom platform by looking at the header path config. TODO: Do it properly */
+                        IF hbmk[ _HBMK_cCOMP ] == "watcom"
+                           DO CASE
+                           CASE FindInPath( "os2.h", GetEnv( "INCLUDE" ) ) != NIL
+                              hbmk[ _HBMK_cPLAT ] := "os2"
+                           CASE FindInPath( "dirent.h", GetEnv( "INCLUDE" ) ) != NIL
+                              hbmk[ _HBMK_cPLAT ] := "linux"
+                           CASE FindInPath( "windows.h", GetEnv( "INCLUDE" ) ) != NIL
+                              hbmk[ _HBMK_cPLAT ] := "dos"
+                           ENDCASE
+                        ENDIF
                         EXIT
                      ELSE
                         IF hbmk[ _HBMK_lInfo ]
@@ -4480,7 +4491,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
    /* Creating implibs requested in dependency specification */
 
-   IF ! hbmk[ _HBMK_lStopAfterInit ] .AND. hbmk[ _HBMK_lDEPIMPLIB ]
+   IF ! hbmk[ _HBMK_lStopAfterInit ] .AND. hbmk[ _HBMK_lDEPIMPLIB ] .AND. ISBLOCK( bBlk_ImpLib )
       FOR EACH tmp IN hbmk[ _HBMK_hDEP ]
          IF tmp[ _HBMKDEP_lFound ] .AND. ! Empty( tmp[ _HBMKDEP_aIMPLIBSRC ] )
             DoIMPLIB( hbmk, bBlk_ImpLib, cLibLibPrefix, cLibLibExt, tmp[ _HBMKDEP_aIMPLIBSRC ], tmp[ _HBMKDEP_cIMPLIBDST ] )
