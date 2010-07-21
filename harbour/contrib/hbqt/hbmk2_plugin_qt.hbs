@@ -338,12 +338,16 @@ STATIC FUNCTION qt_tool_detect( hbmk2, cName, cEnvQT, cEnvHB )
 
                hb_AIns( aEnvList, 1, "HB_WITH_QT", .T. )
 
-               IF ! Empty( GetEnv( "HB_WITH_QT" ) ) .AND. ;
-                  !( GetEnv( "HB_WITH_QT" ) == "no" )
+               IF ! Empty( GetEnv( "HB_WITH_QT" ) )
 
-                  IF ! hb_FileExists( cBIN := hbmk2_PathNormalize( GetEnv( "HB_WITH_QT" ) + "\..\bin\" + cName + ".exe" ) )
-                     hbmk2_OutErr( hbmk2, hb_StrFormat( "Warning: HB_WITH_QT points to incomplete QT installation. '%1$s' executable not found.", cName ) )
-                     cBIN := ""
+                  IF GetEnv( "HB_WITH_QT" ) == "no"
+                     /* Return silently. It shall fail at dependency detection inside hbmk2 */
+                     RETURN ""
+                  ELSE
+                     IF ! hb_FileExists( cBIN := hbmk2_PathNormalize( GetEnv( "HB_WITH_QT" ) + "\..\bin\" + cName + ".exe" ) )
+                        hbmk2_OutErr( hbmk2, hb_StrFormat( "Warning: HB_WITH_QT points to incomplete QT installation. '%1$s' executable not found.", cName ) )
+                        cBIN := ""
+                     ENDIF
                   ENDIF
                ENDIF
             ENDIF

@@ -1572,7 +1572,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
    /* Detect compiler version (where applicable) */
 
-   IF Empty( hbmk[ _HBMK_nCOMPVer ] ) .AND. ! Empty( cPath_CompC )
+   IF hbmk[ _HBMK_nCOMPVer ] == 0 .AND. ! Empty( cPath_CompC )
 
       DO CASE
       CASE ( hbmk[ _HBMK_cPLAT ] == "win" .AND. hbmk[ _HBMK_cCOMP ] == "cygwin" )
@@ -2343,7 +2343,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
          cParam := MacroProc( hbmk, SubStr( cParam, Len( "-depimplibs=" ) + 1 ), aParam[ _PAR_cFileName ] )
          IF dep_split_arg( hbmk, cParam, @cParam, @tmp )
-            AAddNew( hbmk[ _HBMK_hDEP ][ cParam ][ _HBMKDEP_aIMPLIBSRC ], PathNormalize( PathMakeAbsolute( PathSepToSelf( tmp ), aParam[ _PAR_cFileName ] ) ) )
+            AAddNew( hbmk[ _HBMK_hDEP ][ cParam ][ _HBMKDEP_aIMPLIBSRC ], PathSepToSelf( tmp ) )
          ENDIF
 
       CASE Left( cParam, Len( "-depimplibd=" ) ) == "-depimplibd="
@@ -3741,7 +3741,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             cBin_Dyn := cBin_Link
          ELSE
             cBin_Lib := "lib.exe"
-            IF hbmk[ _HBMK_cCOMP ] == "msvcarm" .AND. hbmk[ _HBMK_nCOMPVer ] < 1400
+            IF hbmk[ _HBMK_cCOMP ] == "msvcarm" .AND. ( hbmk[ _HBMK_nCOMPVer ] != 0 .AND. hbmk[ _HBMK_nCOMPVer ] < 1400 )
                cBin_CompC := "clarm.exe"
             ELSE
                cBin_CompC := "cl.exe"
@@ -3755,21 +3755,21 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          cOpt_CompC := "-nologo -c"
          IF hbmk[ _HBMK_lOPTIM ]
             IF hbmk[ _HBMK_cPLAT ] == "wce"
-               IF hbmk[ _HBMK_nCOMPVer ] >= 1400
-                  cOpt_CompC += " -Os -Gy"
-               ELSE
+               IF hbmk[ _HBMK_nCOMPVer ] != 0 .AND. hbmk[ _HBMK_nCOMPVer ] < 1400
                   cOpt_CompC += " -Oxsb1 -GF"
+               ELSE
+                  cOpt_CompC += " -Os -Gy"
                ENDIF
             ELSE
-               IF hbmk[ _HBMK_nCOMPVer ] >= 1400
-                  cOpt_CompC += " -O2"
-               ELSE
+               IF hbmk[ _HBMK_nCOMPVer ] != 0 .AND. hbmk[ _HBMK_nCOMPVer ] < 1400
                   cOpt_CompC += " -Ogt2yb1p -GX- -G6"
+               ELSE
+                  cOpt_CompC += " -O2"
                ENDIF
             ENDIF
          ENDIF
          IF hbmk[ _HBMK_cPLAT ] == "win"
-            IF hbmk[ _HBMK_nCOMPVer ] < 1400
+            IF hbmk[ _HBMK_nCOMPVer ] != 0 .AND. hbmk[ _HBMK_nCOMPVer ] < 1400
                IF hbmk[ _HBMK_lDEBUG ]
                   AAdd( hbmk[ _HBMK_aOPTC ], "-MTd" )
                ELSE
@@ -3788,7 +3788,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
             SWITCH hbmk[ _HBMK_nWARN ]
             CASE _WARN_MAX ; AAdd( hbmk[ _HBMK_aOPTC ], "-W4" ) ; EXIT
             CASE _WARN_YES
-               IF hbmk[ _HBMK_cCOMP ] == "msvcarm" .AND. hbmk[ _HBMK_nCOMPVer ] < 1400
+               IF hbmk[ _HBMK_cCOMP ] == "msvcarm" .AND. hbmk[ _HBMK_nCOMPVer ] != 0 .AND. hbmk[ _HBMK_nCOMPVer ] < 1400
                   /* Lowered warning level to avoid large amount of warnings in system headers.
                      Maybe this is related to the msvc2003 kit I was using. [vszakats] */
                   AAdd( hbmk[ _HBMK_aOPTC ], "-W3" )
@@ -6672,6 +6672,7 @@ STATIC FUNCTION dep_evaluate( hbmk )
    LOCAL aREQ := {}
    LOCAL aOPT := {}
    LOCAL aWRN := {}
+   LOCAL lAnyForcedOut := .F.
 
    FOR EACH dep IN hbmk[ _HBMK_hDEP ]
       IF dep[ _HBMKDEP_lFound ]
@@ -6688,6 +6689,8 @@ STATIC FUNCTION dep_evaluate( hbmk )
             IF hbmk[ _HBMK_lInfo ]
                hbmk_OutStd( hbmk, hb_StrFormat( I_( "Dependency '%1$s' forcefully disabled" ), dep[ _HBMKDEP_cName ] ) )
             ENDIF
+            lAnyForcedOut := .T.
+            LOOP
          ELSE
             IF hbmk[ _HBMK_lDEBUGDEPD ]
                hbmk_OutStd( hbmk, hb_StrFormat( "debugdepd: REQ %1$s: missing", dep[ _HBMKDEP_cName ] ) )
@@ -6736,7 +6739,7 @@ STATIC FUNCTION dep_evaluate( hbmk )
       ENDIF
    ENDIF
 
-   RETURN Empty( aREQ ) .AND. Empty( aWRN )
+   RETURN Empty( aREQ ) .AND. Empty( aWRN ) .AND. ! lAnyForcedOut
 
 /* Try '*-config' and 'pkg-config *' detection */
 STATIC FUNCTION dep_try_pkg_detection( hbmk, dep )
@@ -8655,7 +8658,7 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
 
          IF dep_split_arg( hbmk, cLine, @cName, @cLine )
             FOR EACH cItem IN hb_ATokens( cLine,, .T. )
-               AAddNewNotEmpty( hbmk[ _HBMK_hDEP ][ cName ][ _HBMKDEP_aIMPLIBSRC ], PathNormalize( PathMakeAbsolute( PathSepToSelf( MacroProc( hbmk, cItem, cFileName ) ), FNameDirGet( cFileName ) ) ) )
+               AAddNewNotEmpty( hbmk[ _HBMK_hDEP ][ cName ][ _HBMKDEP_aIMPLIBSRC ], PathSepToSelf( MacroProc( hbmk, cItem, cFileName ) ) )
             NEXT
          ENDIF
 

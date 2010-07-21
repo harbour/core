@@ -57,7 +57,7 @@ PROCEDURE Main()
 
    /* Creating language files */
 
-   OutStd( "! Making translation (.hbl) files..." + hb_eol() )
+   OutStd( "! Making core translation (.hbl) files..." + hb_eol() )
 
    FOR EACH tmp IN Directory( "utils" + hb_ps() + hb_osFileMask(), "D" )
       IF "D" $ tmp[ F_ATTR ] .AND. !( tmp[ F_NAME ] == "." ) .AND. !( tmp[ F_NAME ] == ".." )

@@ -508,7 +508,7 @@ HB_FUNC( PQEXECPARAMS )
 
       hb_PGresult_ret( PQexecParams( conn, hb_parcx( 2 ), n, NULL, paramvalues, NULL, NULL, 1 ) );
 
-      hb_xfree( paramvalues );
+      hb_xfree( ( void * ) paramvalues );
    }
    else
       hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );

@@ -862,11 +862,33 @@ ifeq ($(HB_COMPILER),)
                                                 ifneq ($(HB_COMP_PATH),)
                                                    HB_COMPILER := msvc64
                                                    HB_CPU := x86_64
+                                                   ifneq ($(findstring 8/,$(HB_COMP_PATH)),)
+                                                      HB_COMPILER_VER := 1400
+                                                   else
+                                                   ifneq ($(findstring 9.0,$(HB_COMP_PATH)),)
+                                                      HB_COMPILER_VER := 1500
+                                                   else
+                                                   ifneq ($(findstring 10.0,$(HB_COMP_PATH)),)
+                                                      HB_COMPILER_VER := 1600
+                                                   endif
+                                                   endif
+                                                   endif
                                                 else
                                                    HB_COMP_PATH := $(call find_in_path_raw,ias.exe)
                                                    ifneq ($(HB_COMP_PATH),)
                                                       HB_COMPILER := msvcia64
                                                       HB_CPU := ia64
+                                                      ifneq ($(findstring 8/,$(HB_COMP_PATH)),)
+                                                         HB_COMPILER_VER := 1400
+                                                      else
+                                                      ifneq ($(findstring 9.0,$(HB_COMP_PATH)),)
+                                                         HB_COMPILER_VER := 1500
+                                                      else
+                                                      ifneq ($(findstring 10.0,$(HB_COMP_PATH)),)
+                                                         HB_COMPILER_VER := 1600
+                                                      endif
+                                                      endif
+                                                      endif
                                                    else
                                                       HB_COMP_PATH := $(call find_in_path_raw,cl.exe)
                                                       ifneq ($(HB_COMP_PATH),)
@@ -1064,7 +1086,7 @@ ifeq ($(HB_COMPILER),)
    ifneq ($(HB_COMPILER),)
       HB_COMP_PATH := $(subst $(substpat), ,$(dir $(firstword $(subst $(subst x, ,x),$(substpat),$(HB_COMP_PATH)))))
       HB_COMP_AUTO := (autodetected$(if $(HB_COMP_PATH),: $(HB_COMP_PATH),))
-      HB_COMP_VER := $(if $(HB_COMPILER_VER), (v$(HB_COMPILER_VER)),)
+      HB_COMP_VERD := $(if $(HB_COMPILER_VER), (v$(HB_COMPILER_VER)),)
    endif
    export HB_CCPATH
    export HB_CCPREFIX
@@ -1209,7 +1231,7 @@ ifeq ($(HB_INIT_DONE),)
       endif
    endif
    $(info ! HB_PLATFORM: $(HB_PLATFORM)$(if $(HB_CPU), ($(HB_CPU)),) $(HB_PLAT_AUTO))
-   $(info ! HB_COMPILER: $(HB_COMPILER)$(HB_COMP_VER) $(HB_COMP_AUTO))
+   $(info ! HB_COMPILER: $(HB_COMPILER)$(HB_COMP_VERD) $(HB_COMP_AUTO))
 endif
 
 export HB_CPU

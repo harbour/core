@@ -10,7 +10,7 @@
 
 {!HB_BUILD_DEBUG}-l
 
-{HB_BUILD_MODE='cpp'}-cpp=yes
+{(HB_BUILD_MODE='cpp')|(!HB_BUILD_MODE&allmsvc)}-cpp=yes
 {HB_BUILD_MODE='c'}-cpp=no
 
 -warn=yes
