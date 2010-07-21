@@ -2609,7 +2609,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    ENDIF
 
    /* Decide about working dir */
-   IF ! hbmk[ _HBMK_lStopAfterInit ] .AND. ! hbmk[ _HBMK_lCreateImpLib ]
+   IF ! hbmk[ _HBMK_lStopAfterInit ] .AND. ! hbmk[ _HBMK_lCreateImpLib ] .AND. ! lDumpInfo
       IF hbmk[ _HBMK_lINC ]
          /* NOTE: We store -hbdyn objects in different dirs by default as - for Windows
                   platforms - they're always built using different compilation options
@@ -4256,7 +4256,9 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    /* ; */
 
    IF ! hbmk[ _HBMK_lStopAfterInit ] .AND. hbmk[ _HBMK_lCreateImpLib ] .AND. ! lDumpInfo
-      DoIMPLIB( hbmk, bBlk_ImpLib, cLibLibPrefix, cLibLibExt, hbmk[ _HBMK_aIMPLIBSRC ], hbmk[ _HBMK_cPROGNAME ], "" )
+      IF DoIMPLIB( hbmk, bBlk_ImpLib, cLibLibPrefix, cLibLibExt, hbmk[ _HBMK_aIMPLIBSRC ], hbmk[ _HBMK_cPROGNAME ], "" )
+         DoInstCopy( hbmk )
+      ENDIF
       hbmk[ _HBMK_lStopAfterInit ] := .T.
    ENDIF
 
@@ -5905,12 +5907,13 @@ STATIC PROCEDURE vxworks_env_init( hbmk )
 
    RETURN
 
-STATIC PROCEDURE DoIMPLIB( hbmk, bBlk_ImpLib, cLibLibPrefix, cLibLibExt, aIMPLIBSRC, cPROGNAME, cInstCat )
+STATIC FUNCTION DoIMPLIB( hbmk, bBlk_ImpLib, cLibLibPrefix, cLibLibExt, aIMPLIBSRC, cPROGNAME, cInstCat )
    LOCAL cMakeImpLibDLL
    LOCAL tmp, tmp1
    LOCAL nNotFound
 
    LOCAL aToDelete
+   LOCAL lRetVal := .F.
 
    IF ISBLOCK( bBlk_ImpLib )
       IF ! Empty( aIMPLIBSRC )
@@ -5947,7 +5950,7 @@ STATIC PROCEDURE DoIMPLIB( hbmk, bBlk_ImpLib, cLibLibPrefix, cLibLibExt, aIMPLIB
             IF hbmk[ _HBMK_lCLEAN ]
                AEval( aToDelete, {| tmp | FErase( tmp ) } )
             ELSE
-               DoInstCopy( hbmk )
+               lRetVal := .T.
             ENDIF
          ENDIF
       ELSE
@@ -5959,7 +5962,7 @@ STATIC PROCEDURE DoIMPLIB( hbmk, bBlk_ImpLib, cLibLibPrefix, cLibLibExt, aIMPLIB
       hbmk_OutErr( hbmk, I_( "Error: Creating import libraries is not supported for this platform or compiler." ) )
    ENDIF
 
-   RETURN
+   RETURN lRetVal
 
 #define _INST_cGroup            1
 #define _INST_cData             2
@@ -7510,7 +7513,7 @@ STATIC FUNCTION AAddNew( array, xItem )
 
 STATIC FUNCTION AAddNewINST( array, xItem, lToTop )
 
-   IF AScan( array, {| tmp | tmp[ 2 ] == xItem[ 2 ] } ) == 0
+   IF AScan( array, {| tmp | tmp[ 1 ] == xItem[ 1 ] .AND. tmp[ 2 ] == xItem[ 2 ] } ) == 0
       IF lToTop != NIL .AND. lToTop
          hb_AIns( array, 1, xItem, .T. )
       ELSE

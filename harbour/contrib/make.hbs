@@ -496,6 +496,17 @@ PROCEDURE GNUMake( ... )
 
    RETURN
 
+STATIC PROCEDURE clear_hbmk2_envvars()
+
+   /* Making sure that user settings do not interfere with the std build process. */
+   hb_setenv( "HBMK_OPTIONS" )
+   hb_setenv( "HARBOUR" )
+   hb_setenv( "HARBOURCMD" )
+   hb_setenv( "CLIPPER" )
+   hb_setenv( "CLIPPERCMD" )
+
+   RETURN
+
 STATIC FUNCTION call_hbmk2_hbinfo( cBinDir, cProject, hProject )
    LOCAL cStdOut
    LOCAL cDir
@@ -505,6 +516,8 @@ STATIC FUNCTION call_hbmk2_hbinfo( cBinDir, cProject, hProject )
    hProject[ "cType" ] := ""
    hProject[ "aDept" ] := {}
    hProject[ "lInc" ] := .F.
+
+   clear_hbmk2_envvars()
 
    IF hb_processRun( PathSepToSelf( cBinDir ) + "hbmk2 --hbinfo " + StrTran( cProject, "\", "/" ),, @cStdOut  ) == 0
 
@@ -540,12 +553,7 @@ STATIC FUNCTION hbmk2_hbinfo_getitem( cString, cItem )
 STATIC FUNCTION call_hbmk2( cBinDir, cProject, cOptionsPre, cOptionsPost )
    LOCAL nErrorLevel
 
-   /* Making sure that user settings do not interfere with the std build process. */
-   hb_setenv( "HBMK_OPTIONS" )
-   hb_setenv( "HARBOUR" )
-   hb_setenv( "HARBOURCMD" )
-   hb_setenv( "CLIPPER" )
-   hb_setenv( "CLIPPERCMD" )
+   clear_hbmk2_envvars()
 
    nErrorLevel := mk_hb_processRun( PathSepToSelf( cBinDir ) + "hbmk2" +;
                                     " -quiet -lang=en -width=0" +;
