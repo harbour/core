@@ -141,6 +141,7 @@ CLASS IdeBrowseManager INHERIT IdeObject
    DATA   aPanelsAct                              INIT  {}
 
    DATA   lStructOpen                             INIT  .f.
+   DATA   lDeletedOn                              INIT  .t.
 
    METHOD new( oIde )
    METHOD create( oIde )
@@ -273,6 +274,8 @@ METHOD IdeBrowseManager:show()
 
 METHOD IdeBrowseManager:create( oIde )
    LOCAL qDock
+
+   SET DELETED ( ::lDeletedOn )
 
    DEFAULT oIde TO ::oIde
    ::oIde := oIde
@@ -1247,6 +1250,7 @@ CLASS IdeBrowse INHERIT IdeObject
    DATA   aMenu                                   INIT  {}
    DATA   aIdx                                    INIT  {}
    DATA   aFlds                                   INIT  {}
+   DATA   aSeek                                   INIT  {}
 
    METHOD new( oIde, oManager, oPanel, aInfo )
    METHOD create( oIde, oManager, oPanel, aInfo )
@@ -1267,6 +1271,9 @@ CLASS IdeBrowse INHERIT IdeObject
    METHOD goBottom()
    METHOD goTo( nRec )
    METHOD goToAsk()
+   METHOD append()
+   METHOD delete()
+   METHOD recall()
    METHOD recNo()
    METHOD lastRec()
    ACCESS dbStruct()                              INLINE ::aStruct
@@ -1281,8 +1288,9 @@ CLASS IdeBrowse INHERIT IdeObject
    ACCESS numIndexes()                            INLINE len( ::aIndex )
 
    METHOD dispInfo()
-   METHOD search( cSearch )
+   METHOD search( cSearch, lSoft, lLast )
    METHOD searchAsk()
+   METHOD seekAsk( nMode )
    METHOD next()
    METHOD previous()
    METHOD buildForm()
@@ -1290,6 +1298,7 @@ CLASS IdeBrowse INHERIT IdeObject
    METHOD fetchAlias( cTable )
    METHOD saveField( nField, x )
    METHOD toColumn( nIndex )
+   METHOD getSome( cType, cFor )
 
    ENDCLASS
 
@@ -1568,7 +1577,7 @@ METHOD IdeBrowse:buildMdiWindow()
 /*------------------------------------------------------------------------*/
 
 METHOD IdeBrowse:execEvent( cEvent, p, p1 )
-   LOCAL cIndex, a_, cPmt
+   LOCAL cIndex, a_, cPmt, nZeros
 
    HB_SYMBOL_UNUSED( p  )
    HB_SYMBOL_UNUSED( p1 )
@@ -1624,25 +1633,48 @@ METHOD IdeBrowse:execEvent( cEvent, p, p1 )
 
    CASE "browser_contextMenu"
       IF empty( ::aMenu )
+         IF len( ::aIndex ) > 0
+            aadd( ::aMenu, { "Set to Natural Order", {|| ::setOrder( 0 ) } } )
+            aadd( ::aMenu, { "" } )
+         ENDIF
 
+         /* Indexed Order */
          ::getIndexInfo()
          FOR EACH cIndex IN ::aIndex
             aadd( ::aIdx,  hbide_indexArray( Self, cIndex, cIndex:__enumIndex() ) )
          NEXT
-
-         aadd( ::aMenu, { "Set to Natural Order", {|| ::setOrder( 0 ) } } )
-         aadd( ::aMenu, { "" } )
          IF ! empty( ::aIdx )
             aadd( ::aMenu, { ::aIdx, "Set to Indexed Order" } )
             aadd( ::aMenu, { "" } )
          ENDIF
 
+         /* Column Scrolling */
+         nZeros := iif( len( ::aStruct ) < 10, 1, iif( len( ::aStruct ) < 100, 2, 3 ) )
          FOR EACH a_ IN ::aStruct
-            cPmt := a_[ 1 ] + "  " + a_[ 2 ] + "  " + hb_ntos( a_[ 3 ] )
+            cPmt := strzero( a_:__enumIndex(), nZeros ) + " " + a_[ 2 ] + " . " + a_[ 1 ]
             aadd( ::aFlds, hbide_fieldsArray( Self, cPmt, a_:__enumIndex() ) )
          NEXT
+         aadd( ::aMenu, { ::aFlds, "Scroll to Column" } )
+         aadd( ::aMenu, { "" } )
 
-         aadd( ::aMenu, { ::aFlds, "Scroll to Column..." } )
+         /* Seeks */
+         aadd( ::aSeek, { "Seek"       , {|| ::seekAsk( 0 ) } } )
+         aadd( ::aSeek, { "Seek Soft"  , {|| ::seekAsk( 1 ) } } )
+         aadd( ::aSeek, { "Seek Last"  , {|| ::seekAsk( 2 ) } } )
+         aadd( ::aMenu, { ::aSeek, "Seek..." } )
+         aadd( ::aMenu, { "" } )
+
+         /* Navigation */
+         aadd( ::aMenu, { "Go Top"     , {|| ::goTop()      } } )
+         aadd( ::aMenu, { "Go Bottom"  , {|| ::goBottom()   } } )
+         aadd( ::aMenu, { "Goto Record", {|| ::gotoAsk()    } } )
+         aadd( ::aMenu, { "" } )
+
+         /* Manipulation */
+         aadd( ::aMenu, { "Append Blank"  , {|| ::append()  } } )
+         aadd( ::aMenu, { "Delete Record" , {|| ::delete()  } } )
+         aadd( ::aMenu, { "Recall Deleted", {|| ::recall()  } } )
+
       ENDIF
 
       hbide_execPopup( ::aMenu, p, ::qMdi )
@@ -1895,49 +1927,62 @@ METHOD IdeBrowse:previous()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeBrowse:searchAsk()
-   LOCAL xValue, xSearch, nOrd, cFor
+METHOD IdeBrowse:getSome( cType, cFor )
+   LOCAL nOrd := ::indexOrd()
 
-   IF ( nOrd := ::indexOrd() ) > 0
-      xValue := ::indexKeyValue()
-   ELSE
-      xValue := eval( ::oBrw:getColumn( ::oBrw:colPos ):block )
+   SWITCH cType
+   CASE "N"
+      RETURN ( QInputDialog():new() ):getDouble( ::oWnd:oWidget, "Search for?", cFor, ;
+                         0, -2147483647, 2147483647, iif( nOrd > 0, 3, ::aStruct[ ::oBrw:colPos, 4 ] ) )
+   CASE "D"
+      RETURN hbide_fetchADate( ::oWnd:oWidget, "Search for?", cFor )
+   CASE "C"
+      RETURN ( QInputDialog():new() ):getText( ::oWnd:oWidget, "Search for?", cFor )
+   ENDSWITCH
+
+   RETURN ""
+
+/*------------------------------------------------------------------------*/
+
+METHOD IdeBrowse:seekAsk( nMode )
+
+   IF ::indexOrd() == 0
+      RETURN Self
    ENDIF
 
-   cFor := iif( nOrd > 0, "Indexed: " + ::indexKey(), ::aStruct[ ::oBrw:colPos, 1 ] )
+   ::search( ::getSome( valtype( ::indexKeyValue() ) ), nMode == 1, nMode == 2 )
 
-   SWITCH valtype( xValue )
-   CASE 'C'
-      IF !empty( xSearch := ( QInputDialog():new() ):getText( ::oWnd:oWidget, "Search for?", cFor  ) )
-         ::search( xSearch )
-      ENDIF
-      EXIT
-   CASE 'N'
-      xSearch := ( QInputDialog():new() ):getDouble( ::oWnd:oWidget, "Search for?", cFor, ;
-                                    0, -2147483647, 2147483647, iif( nOrd > 0, 3, ::aStruct[ ::oBrw:colPos, 4 ] ) )
-      ::search( xSearch )
-      EXIT
-   CASE 'D'
-      xSearch := hbide_fetchADate( ::oWnd:oWidget, "Search for?", cFor )
-      ::search( xSearch )
-      EXIT
-   ENDSWITCH
+   RETURN Self
+
+/*------------------------------------------------------------------------*/
+
+METHOD IdeBrowse:searchAsk()
+   LOCAL xValue, cFor
+
+   xValue := iif( ::indexOrd() > 0, ::indexKeyValue(), eval( ::oBrw:getColumn( ::oBrw:colPos ):block ) )
+   cFor   := iif( ::indexOrd() > 0, "Indexed: " + ::indexKey(), ::aStruct[ ::oBrw:colPos, 1 ] )
+
+   ::search( ::getSome( valtype( xValue ), cFor ), .f., .f. )
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeBrowse:search( cSearch )
+METHOD IdeBrowse:search( cSearch, lSoft, lLast )
    LOCAL nRec
 
    IF ::nType == BRW_TYPE_DBF
       IF ! empty( cSearch )
          IF ( ::cAlias )->( IndexOrd() ) > 0
+
+            DEFAULT lLast TO .f.
+            DEFAULT lSoft TO .f.
+
             nRec := ::recNo()
-            IF ( ::cAlias )->( DbSeek( cSearch ) )
+            IF ( ::cAlias )->( DbSeek( cSearch, lSoft, lLast ) )
                ::refreshAll()
                ::dispInfo()
-            ELSE
+            ELSEIF ! lSoft
                ::goto( nRec )
                MsgBox( "Could not find: " + cSearch )
             ENDIF
@@ -1995,7 +2040,12 @@ METHOD IdeBrowse:goToAsk()
 METHOD IdeBrowse:goto( nRec )
 
    IF ::nType == BRW_TYPE_DBF
-      RETURN ( ::cAlias )->( DbGoto( nRec ) )
+      ( ::cAlias )->( DbGoto( nRec ) )
+      ::refreshAll()
+   ELSE
+      IF nRec > 0 .AND. nRec <= len( ::aData )
+         ::nIndex := nRec
+      ENDIF
    ENDIF
 
    RETURN Self
@@ -2006,6 +2056,7 @@ METHOD IdeBrowse:goTop()
 
    IF ::nType == BRW_TYPE_DBF
       ( ::cAlias )->( DbGotop() )
+      ::refreshAll()
    ELSE
       ::nIndex := 1
    ENDIF
@@ -2017,6 +2068,7 @@ METHOD IdeBrowse:goBottom()
 
    IF ::nType == BRW_TYPE_DBF
       ( ::cAlias )->( DbGoBottom() )
+      ::refreshAll()
    ELSE
       ::nIndex := len( ::aData )
    ENDIF
@@ -2136,6 +2188,56 @@ METHOD IdeBrowse:indexKey( nOrder )
    RETURN ""
 
 /*----------------------------------------------------------------------*/
+
+METHOD IdeBrowse:append()
+
+   IF ::nType == BRW_TYPE_DBF
+      ( ::cAlias )->( DbAppend() )
+      IF ! NetErr()
+         ( ::cAlias )->( DbCommit() )
+         ( ::cAlias )->( DbrUnlock() )
+         ::refreshAll()
+      ENDIF
+   ELSE
+
+   ENDIF
+   RETURN Self
+
+/*------------------------------------------------------------------------*/
+
+METHOD IdeBrowse:delete()
+
+   IF ::nType == BRW_TYPE_DBF
+      IF ( ::cAlias )->( DbRLock() )
+         ( ::cAlias )->( DbDelete() )
+         ( ::cAlias )->( DbCommit() )
+         ( ::cAlias )->( DbRUnlock() )
+         ::refreshAll()
+      ENDIF
+   ELSE
+
+   ENDIF
+   RETURN Self
+
+/*------------------------------------------------------------------------*/
+
+METHOD IdeBrowse:recall()
+
+   IF ::nType == BRW_TYPE_DBF
+      IF ( ::cAlias )->( Deleted() )
+         IF ( ::cAlias )->( DbRLock() )
+            ( ::cAlias )->( DbRecall() )
+            ( ::cAlias )->( DbCommit() )
+            ( ::cAlias )->( DbRUnlock() )
+            ::refreshAll()
+         ENDIF
+      ENDIF
+   ELSE
+
+   ENDIF
+   RETURN Self
+
+/*------------------------------------------------------------------------*/
 
 METHOD IdeBrowse:use()
    LOCAL bError, oErr
