@@ -1,9 +1,0 @@
-#
-# $Id$
-#
-
--hbimplib
-
--stop{!HB_WITH_ALLEGRO}
-
-${HB_WITH_ALLEGRO}/../bin/alleg42.dll

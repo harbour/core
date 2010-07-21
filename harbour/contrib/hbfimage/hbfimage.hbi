@@ -1,9 +1,0 @@
-#
-# $Id$
-#
-
--hbimplib
-
--stop{!HB_WITH_FREEIMAGE}
-
-${HB_WITH_FREEIMAGE}/../Dist/FreeImage.dll

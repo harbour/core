@@ -41,19 +41,19 @@
         and local projects)
      7. 'install' is ignored in stdalone mode. It would be needed to
         replicate the install dir defaulting logic found in global.mk
+        to implement it.
      8. Delete header install related logic from GNU Make system,
-        also delete doc install related logic (easily replacable
+        also delete doc/*.txt install related logic (easily replacable
         with postinst.hbs logic)
-     9. Delete Makefiles in contrib area.
-    10. Move some logic to hbmk2.
-    11. Honor paths found in --hbinfo hbctree{{}} section.
+     9. Move some logic to hbmk2.
+    10. Honor paths found in --hbinfo hbctree{{}} section.
  */
 
 #pragma warninglevel=3
 
 /* ----------------------------------------------------------------------- */
 
-STATIC s_hDirList := {;
+STATIC s_hPackageList := {;
    "gtalleg"       => { "gtalleg.hbp", "gtallegs.hbp" },;
    "gtwvg"         => { "gtwvg.hbp"                   },;
    "hbblat"        => { "hbblat.hbp"                  },;
@@ -101,7 +101,7 @@ STATIC s_hDirList := {;
    "sddoci"        => { "sddoci.hbp"                  },;
    "sddodbc"       => { "sddodbc.hbp"                 },;
    "sddpg"         => { "sddpg.hbp"                   },;
-   "sddsqlt3"      => { "sddsqlt3.hbp"                },;
+   "sddsqlt3"      => { "sddsqlt3.hbp"                },; /* uses: sqlite3 (external) */
    "xhb"           => { "xhb.hbp"                     }}
 
 /* ----------------------------------------------------------------------- */
@@ -144,7 +144,7 @@ PROCEDURE Main( ... )
 
    /* Convert list of contribs */
 
-   FOR EACH aProject IN s_hDirList
+   FOR EACH aProject IN s_hPackageList
       FOR EACH tmp IN aProject
          tmp := { "cFileName" => tmp }
       NEXT
@@ -249,15 +249,15 @@ PROCEDURE Standalone( ... )
       IF ! Empty( aFileList )
 
          /* Add the project in current dir */
-         s_hDirList[ "." ] := {}
+         s_hPackageList[ "." ] := {}
          FOR EACH aFile IN aFileList
-            AAdd( s_hDirList[ "." ], { "cFileName" => aFile[ F_NAME ] } )
+            AAdd( s_hPackageList[ "." ], { "cFileName" => aFile[ F_NAME ] } )
          NEXT
 
          /* Query project information and dependencies and calculate build order */
          aPairList := {}
 
-         FOR EACH hProject IN s_hDirList[ "." ]
+         FOR EACH hProject IN s_hPackageList[ "." ]
             call_hbmk2_hbinfo( cBinDir, s_cBase + "." + "/" + hProject[ "cFileName" ], hProject )
             DeptLinesToDeptPairList( aPairList, ".", hProject[ "aDept" ] )
          NEXT
@@ -266,15 +266,12 @@ PROCEDURE Standalone( ... )
 
          /* Build the dependencies and ourselves in in sorted order */
          FOR EACH cDir IN aSortedList DESCEND
-            FOR EACH hProject IN s_hDirList[ cDir ]
+            FOR EACH hProject IN s_hPackageList[ cDir ]
                IF cDir == "." .AND. hProject[ "cType" ] $ "hbhrb|hbppo"
                   LOOP
                ENDIF
                cProject := s_cBase + iif( cDir == ".", "", s_cHome ) + cDir + "/" + hProject[ "cFileName" ]
                call_hbmk2( cBinDir, cProject, iif( cDir == ".", cOptions + cOptionsUser, "" ), "" )
-//             IF hb_FileExists( PathSepToSelf( FNameExtSet( cProject, ".hbi" ) ) )
-//                call_hbmk2( cBinDir, s_cBase + FNameExtSet( cProject, ".hbi" ), iif( cDir == ".", cOptions + cOptionsUser, "" ), "" )
-//             ENDIF
             NEXT
          NEXT
       ENDIF
@@ -347,7 +344,7 @@ PROCEDURE GNUMake( ... )
    FOR EACH cItem IN hb_ATokens( GetEnv( "HB_BUILD_ADDONS" ),, .T. )
       IF ! Empty( cItem )
          hb_FNameSplit( PathSepToSelf( cItem ), @cDir, @cName )
-         s_hDirList[ StrTran( DirDelPathSep( cDir ), "\", "/" ) ] := { "cFileName" => cName }
+         s_hPackageList[ StrTran( DirDelPathSep( cDir ), "\", "/" ) ] := { "cFileName" => cName }
          lAnyAddons := .T.
       ENDIF
    NEXT
@@ -412,11 +409,11 @@ PROCEDURE GNUMake( ... )
 
    cBinDir := GetEnv( "HB_HOST_BIN_DIR" ) + hb_ps()
 
-   OutStd( "! Calculating sorting order for contribs..." + hb_eol() )
+   OutStd( "! Calculating sorting order for contrib packages..." + hb_eol() )
 
    aPairList := {}
 
-   FOR EACH aProject IN s_hDirList
+   FOR EACH aProject IN s_hPackageList
       FOR EACH hProject IN aProject
          call_hbmk2_hbinfo( cBinDir, s_cBase + aProject:__enumKey() + "/" + hProject[ "cFileName" ], hProject )
          DeptLinesToDeptPairList( aPairList, aProject:__enumKey(), hProject[ "aDept" ] )
@@ -449,7 +446,7 @@ PROCEDURE GNUMake( ... )
    OutStd( hb_StrFormat( "! Contribs %1$s...", hActions[ nAction ] ) + hb_eol() )
 
    FOR EACH cDir IN aSortedList DESCEND
-      FOR EACH hProject IN s_hDirList[ cDir ]
+      FOR EACH hProject IN s_hPackageList[ cDir ]
 
          cProject := s_cBase + cDir + "/" + hProject[ "cFileName" ]
 
@@ -463,10 +460,6 @@ PROCEDURE GNUMake( ... )
             ENDIF
 
             call_hbmk2( cBinDir, cProject, cOptions, "" )
-
-//          IF hb_FileExists( PathSepToSelf( FNameExtSet( cProject, ".hbi" ) ) )
-//             call_hbmk2( cBinDir, FNameExtSet( cProject, ".hbi" ), cOptions, "" )
-//          ENDIF
 
             /* Highly experimental */
             IF hProject[ "cType" ] == "hblib" .AND. ;
@@ -489,9 +482,9 @@ PROCEDURE GNUMake( ... )
 
    OutStd( hb_eol() )
    IF lAnyAddons
-      OutStd( "! Building of contribs and addons finished." + hb_eol() )
+      OutStd( "! Building of contrib and addon packages finished." + hb_eol() )
    ELSE
-      OutStd( "! Building of contribs finished." + hb_eol() )
+      OutStd( "! Building of contrib packages finished." + hb_eol() )
    ENDIF
 
    ErrorLevel( 0 )

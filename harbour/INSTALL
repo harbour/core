@@ -191,14 +191,20 @@ HARBOUR
 ================================
 
    If you want to [re]build only a specific part of Harbour, like
-   one library, all contrib libs or core libs, you have to do
-   everything the same way as for a full build, the only difference
-   is that you first have to go into the specific source directory
-   you want to [re]build. When starting GNU Make, all components
-   under that dir will be built:
+   one core library or all core libraries, or all contrib packages,
+   you have to do everything the same way as for a full build, the
+   only difference is that you first have to go into the specific
+   source directory you want to [re]build. When starting GNU Make,
+   all components under that dir will be [re]built:
 
       cd src/rtl
       <make> [clean] [install]
+
+   If you want to rebuild one specific contrib packages, use this:
+
+      cd contrib/<name>
+      hbrun ..\make.hbs [clean] [install] [custom hbmk2 options]
+
 
 
 3. HOW TO CREATE DISTRIBUTABLE PACKAGES
@@ -283,7 +289,7 @@ HARBOUR
 4. HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
 =================================================
 
-   Certain Harbour parts (typically contrib libraries) depend on 3rd
+   Certain Harbour parts (typically contrib packages) depend on 3rd
    party components. To make these Harbour parts built, you need
    to tell Harbour where to find the required 3rd party components
    (typically headers).
@@ -658,7 +664,7 @@ HARBOUR
    - HB_BUILD_EXTDEF=no          Enable autodetection of external components
                                  on default systems locations. Default: yes
    - HB_BUILD_CONTRIBS=no [<l>]  Don't build any (or space separated <l> list of)
-                                 contrib libraries.
+                                 contrib packages.
    - HB_BUILD_CONTRIBS=[<l>]     Build space separated <l> list of contrib
                                  libraries. Build all if left empty (default).
    - HB_BUILD_ADDONS=<l>         Build space separated <l> list of additional .hbp

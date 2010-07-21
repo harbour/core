@@ -1,9 +1,0 @@
-#
-# $Id$
-#
-
--hbimplib
-
--stop{!HB_WITH_GD}
-
-${HB_WITH_GD}/../bin/bgd.dll
