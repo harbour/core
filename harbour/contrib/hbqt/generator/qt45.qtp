@@ -15,7 +15,6 @@
 -D=../doc
 
 HBQAbstractItemModel.qth
-HBDbfModel.qth
 HBEvents.qth
 HBQMainWindow.qth
 HBQPlainTextEdit.qth
@@ -299,5 +298,3 @@ QWindowsStyle.qth
 QWindowStateChangeEvent.qth
 QWizard.qth
 QWizardPage.qth
-
-

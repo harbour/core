@@ -103,7 +103,7 @@ _DET_VAR_INC_ := HB_INC_CURSES
 _DET_VAR_HAS_ := HB_HAS_CURSES
 _DET_FLT_PLAT := !os2
 _DET_FLT_COMP :=
-_DET_INC_DEFP := /usr/include /usr/local/include /sw/include /opt/local/include /boot/develop/headers/3rdparty
+_DET_INC_DEFP := /usr/include /usr/include/ncurses /usr/local/include /sw/include /opt/local/include /boot/develop/headers/3rdparty
 _DET_INC_HEAD := /curses.h
 
 ifeq ($(HB_COMPILER),djgpp)

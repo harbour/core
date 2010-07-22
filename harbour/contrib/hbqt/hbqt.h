@@ -393,7 +393,6 @@ extern void * hbqt_pPtrFromItem( PHB_ITEM pObj );
 #define hbqt_par_QWizardPage( n )                   ( ( QWizardPage                 * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QWSEvent( n )                      ( ( QWSEvent                    * ) hbqt_gcpointer( n ) )
 
-#define hbqt_par_HBDbfModel( n )                    ( ( HBDbfModel                  * ) hbqt_gcpointer( n ) )
 #define hbqt_par_HBQAbstractItemModel( n )          ( ( HBQAbstractItemModel        * ) hbqt_gcpointer( n ) )
 #define hbqt_par_HBEvents( n )                      ( ( HBEvents                    * ) hbqt_gcpointer( n ) )
 #define hbqt_par_HBQMainWindow( n )                 ( ( HBQMainWindow               * ) hbqt_gcpointer( n ) )
@@ -709,7 +708,6 @@ extern void * hbqt_pPtrFromItem( PHB_ITEM pObj );
 #define HBQT_TYPE_QWizardPage                       1295
 #define HBQT_TYPE_QWSEvent                          1296
 
-#define HBQT_TYPE_HBDbfModel                        1401
 #define HBQT_TYPE_HBQAbstractItemModel              1402
 #define HBQT_TYPE_HBEvents                          1403
 #define HBQT_TYPE_HBQMainWindow                     1404

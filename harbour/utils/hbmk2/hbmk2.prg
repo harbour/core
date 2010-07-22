@@ -10879,9 +10879,9 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-blinker"           , "" },;
       { "-exospace"          , I_( "emulate Clipper compatible linker behavior\ncreate link/copy hbmk2 to rtlink/blinker/exospace for the same effect" ) },;
       NIL,;
-      { "-hbmake=<file>"     , I_( "convert hbmake project file to .hbp file" ) },;
-      { "-xbp=<file>"        , I_( "convert .xbp (xbuild) project file to .hbp file" ) },;
-      { "-xhp=<file>"        , I_( "convert .xhp (xMate) project file to .hbp file" ) },;
+      { "-hbmake=<file>"     , I_( "convert hbmake project <file> to .hbp file" ) },;
+      { "-xbp=<file>"        , I_( "convert .xbp (xbuild) project <file> to .hbp file" ) },;
+      { "-xhp=<file>"        , I_( "convert .xhp (xMate) project <file> to .hbp file" ) },;
       NIL,;
       { "--hbdirbin"         , I_( "output Harbour binary directory" ) },;
       { "--hbdirdyn"         , I_( "output Harbour dynamic library directory" ) },;

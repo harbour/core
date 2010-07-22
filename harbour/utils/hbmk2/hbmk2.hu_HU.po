@@ -224,12 +224,12 @@ msgstr "Generálja újra a .po fájlt, törölve ezáltal minden szükségtelen bejegyzé
 
 #: hbmk2.prg:7941
 #, c-format
-msgid "convert .xbp (xbuild) project file to .hbp file"
+msgid "convert .xbp (xbuild) project <file> to .hbp file"
 msgstr ".xbp (xbuild) project állomány konvertálása .hbp állományba"
 
 #: hbmk2.prg:7941
 #, c-format
-msgid "convert .xhp (xMate) project file to .hbp file"
+msgid "convert .xhp (xMate) project <file> to .hbp file"
 msgstr ".xhp (xMate) project állomány konvertálása .hbp állományba"
 
 #: hbmk2.prg:7959
@@ -484,7 +484,7 @@ msgstr ""
 
 #: hbmk2.prg:7941
 #, c-format
-msgid "convert hbmake project file to .hbp file"
+msgid "convert hbmake project <file> to .hbp file"
 msgstr ""
 
 #: hbmk2.prg:7941

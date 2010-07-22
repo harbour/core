@@ -97,7 +97,7 @@
 #     if defined( __NetBSD__ )
 #        include <termcap.h>
 #        define tigetnum(id)       tgetnum(id)
-#        define tigetstr(id)       tgetstr(id,NULL)
+#        define tigetstr(id)       tgetstr(id, NULL)
 #     endif
 #  elif defined( HB_OS_BSD )
 #     include <libutil.h> /* for openpty and forkpty */
