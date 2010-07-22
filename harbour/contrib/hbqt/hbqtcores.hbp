@@ -2,13 +2,13 @@
 # $Id$
 #
 
--stop{!HB_QT_BUILD_STATIC|!allwin}
-
-hbqtcore.hbp
-
--hblib
+hbqt_common.hbm
 
 -o${hb_name}
 -workdir=${hb_work}/${hb_plat}/${hb_comp}/${hb_name}
+
+qtcore/filelist.hbm
+
+-stop{!HB_QT_BUILD_STATIC|!allwin}
 
 -cflag=-DQT_NODLL

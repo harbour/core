@@ -2,12 +2,7 @@
 # $Id$
 #
 
-../hbqt_common.hbm
+gtqtc.hbm
 
 -o${hb_name}
 -workdir=${hb_work}/${hb_plat}/${hb_comp}/${hb_name}
-
--instfile=inc:hbgtqtc.ch
-
-gtqtc.cpp
-gtqtc.h

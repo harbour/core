@@ -2,6 +2,9 @@
 # $Id$
 #
 
+# Common settings for all hbqt subcomponents
+
+-hblib
 -inc
 
 -w3 -es2

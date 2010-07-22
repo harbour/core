@@ -2,22 +2,12 @@
 # $Id$
 #
 
--hblib
--inc
+hbcurl.hbm
 
 -o${hb_name}
 -workdir=${hb_work}/${hb_plat}/${hb_comp}/${hb_name}
 
--w3 -es2
-
--depkeyhead=curl:curl/curl.h
--depcontrol=curl:${HB_WITH_CURL}
--depincpath=curl:/usr/include
 -depimplibs=curl:../libcurl.dll
 -depimplibs=curl:../bin/libcurl.dll
 
 -iflag={bcc}-a
-
--instfile=inc:hbcurl.ch
-
-hbcurl.c

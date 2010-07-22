@@ -2,35 +2,7 @@
 # $Id$
 #
 
--hblib
--inc
+hbtip.hbm
 
 -o${hb_name}
 -workdir=${hb_work}/${hb_plat}/${hb_comp}/${hb_name}
-
--w3 -es2
-
--instfile=inc:tip.ch
--instfile=inc:thtml.ch
-
-encb64c.c
-encurlc.c
-utils.c
-
-cgi.prg
-client.prg
-credent.prg
-encb64.prg
-encoder.prg
-encqp.prg
-encurl.prg
-ftpcli.prg
-httpcli.prg
-log.prg
-mail.prg
-popcli.prg
-sendmail.prg
-sessid.prg
-smtpcli.prg
-thtml.prg
-url.prg

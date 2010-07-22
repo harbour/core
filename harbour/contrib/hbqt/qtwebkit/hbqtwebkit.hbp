@@ -2,31 +2,9 @@
 # $Id$
 #
 
--hblib
-
 ../hbqt_common.hbm
 
 -o${hb_name}
 -workdir=${hb_work}/${hb_plat}/${hb_comp}/${hb_name}
 
-QWebFrame.cpp
-QWebHistory.cpp
-QWebHistoryInterface.cpp
-QWebHistoryItem.cpp
-QWebHitTestResult.cpp
-QWebPage.cpp
-QWebPluginFactory.cpp
-QWebSecurityOrigin.cpp
-QWebSettings.cpp
-QWebView.cpp
-
-TQWebFrame.prg
-TQWebHistory.prg
-TQWebHistoryInterface.prg
-TQWebHistoryItem.prg
-TQWebHitTestResult.prg
-TQWebPage.prg
-TQWebPluginFactory.prg
-TQWebSecurityOrigin.prg
-TQWebSettings.prg
-TQWebView.prg
+filelist.hbm

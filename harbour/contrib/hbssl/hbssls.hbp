@@ -2,13 +2,11 @@
 # $Id$
 #
 
--hblib
-
--stop{!(win|wce)}
-
-hbssl.hbp
+hbssl.hbm
 
 -o${hb_name}
 -workdir=${hb_work}/${hb_plat}/${hb_comp}/${hb_name}
+
+-stop{!(win|wce)}
 
 {win|wce}-cflag=-DHB_OPENSSL_STATIC

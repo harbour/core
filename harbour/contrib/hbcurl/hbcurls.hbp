@@ -2,13 +2,11 @@
 # $Id$
 #
 
--hblib
-
--stop{!(win|wce)}
-
-hbcurl.hbp
+hbcurl.hbm
 
 -o${hb_name}
 -workdir=${hb_work}/${hb_plat}/${hb_comp}/${hb_name}
+
+-stop{!(win|wce)}
 
 -cflag=-DCURL_STATICLIB

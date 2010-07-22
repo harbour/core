@@ -2,11 +2,11 @@
 # $Id$
 #
 
--stop{!HB_QT_STATIC}
-
-gtqtc.hbp
+gtqtc.hbm
 
 -o${hb_name}
 -workdir=${hb_work}/${hb_plat}/${hb_comp}/${hb_name}
+
+-stop{!HB_QT_BUILD_STATIC|!allwin}
 
 -cflag=-DQT_NODLL

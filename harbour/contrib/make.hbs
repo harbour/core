@@ -29,82 +29,24 @@
 
 /* TODO:
      1. normalize path to hbpre/hbpost to save on cmdline
-     2. clean this source to avoid redundancy
-     3. solve HB_BUILD_CONTRIB_DLL support the .dlls are either
+     2. solve HB_BUILD_CONTRIB_DLL support the .dlls are either
         huge, or they don't link.
-     4. hbmk2 location detection in standalone mode
+     3. hbmk2 location detection in standalone mode
         (or move hbmk2 to core lib?)
-     5. Move in external libs to contrib area? (bz2, minizip, sqlite3)
-     6. Pull the list of .hbp files from an external file
-        (so it can be used in stdalone mode, and the script can be
-        moved to bin and used in more generic way f.e. for examples
-        and local projects)
-     7. 'install' is ignored in stdalone mode. It would be needed to
+     4. Move in external libs to contrib area? (bz2, minizip, sqlite3)
+     5. 'install' is ignored in stdalone mode. It would be needed to
         replicate the install dir defaulting logic found in global.mk
         to implement it.
-     8. Delete header install related logic from GNU Make system,
+     6. Delete header install related logic from GNU Make system,
         also delete doc/*.txt install related logic (easily replacable
         with postinst.hbs logic)
-     9. Move some logic to hbmk2.
-    10. Honor paths found in --hbinfo hbctree{{}} section.
+     7. Move some logic to hbmk2.
+     8. Honor paths found in --hbinfo hbctree{{}} section.
+     9. pkglist should not contain information about package layout.
+        This should rather be somehow embedded into .hbp files.
  */
 
 #pragma warninglevel=3
-
-/* ----------------------------------------------------------------------- */
-
-STATIC s_hPackageList := {;
-   "gtalleg"       => { "gtalleg.hbp", "gtallegs.hbp" },;
-   "gtwvg"         => { "gtwvg.hbp"                   },;
-   "hbblat"        => { "hbblat.hbp"                  },;
-   "hbblink"       => { "hbblink.hbp"                 },;
-   "hbbz2"         => { "hbbz2.hbp"                   },; /* uses: bz2 (external) */
-   "hbcairo"       => { "hbcairo.hbp"                 },;
-   "hbclipsm"      => { "hbclipsm.hbp"                },;
-   "hbcomm"        => { "hbcomm.hbp"                  },;
-   "hbct"          => { "hbct.hbp"                    },;
-   "hbcups"        => { "hbcups.hbp"                  },;
-   "hbcurl"        => { "hbcurl.hbp", "hbcurls.hbp"   },;
-   "hbdoc2"        => { "hbdoc2.hbp"                  },;
-   "hbfbird"       => { "hbfbird.hbp"                 },;
-   "hbfimage"      => { "hbfimage.hbp"                },;
-   "hbfoxpro"      => { "hbfoxpro.hbp"                },;
-   "hbfship"       => { "hbfship.hbp"                 },;
-   "hbgd"          => { "hbgd.hbp"                    },;
-   "hbgt"          => { "hbgt.hbp"                    },;
-   "hbhpdf"        => { "hbhpdf.hbp"                  },;
-   "hbide"         => { "hbide.hbp"                   },;
-   "hbmemio"       => { "hbmemio.hbp"                 },;
-   "hbmisc"        => { "hbmisc.hbp"                  },;
-   "hbmysql"       => { "hbmysql.hbp"                 },;
-   "hbmzip"        => { "hbmzip.hbp"                  },; /* uses: minizip (external) */
-   "hbnetio"       => { "hbnetio.hbp"                 },;
-   "hbnetio/utils" => { "hbnetio.hbp"                 },;
-   "hbnf"          => { "hbnf.hbp"                    },;
-   "hbodbc"        => { "hbodbc.hbp"                  },;
-   "hbpgsql"       => { "hbpgsql.hbp"                 },;
-   "hbqt"          => { "hbqt.hbp", "hbqts.hbp", "hbqtcore.hbp", "hbqtcores.hbp", "hbqtgui.hbp", "hbqtguis.hbp", "hbqtnetwork.hbp", "hbqtnetworks.hbp" },;
-   "hbsms"         => { "hbsms.hbp"                   },;
-   "hbsqlit3"      => { "hbsqlit3.hbp"                },; /* uses: sqlite3 (external) */
-   "hbssl"         => { "hbssl.hbp", "hbssls.hbp"     },;
-   "hbtip"         => { "hbtip.hbp", "hbtipssl.hbp"   },;
-   "hbtpathy"      => { "hbtpathy.hbp"                },;
-   "hbwin"         => { "hbwin.hbp"                   },;
-   "hbxbp"         => { "hbxbp.hbp"                   },;
-   "hbxpp"         => { "hbxpp.hbp"                   },;
-   "hbziparc"      => { "hbziparc.hbp"                },;
-   "rddads"        => { "rddads.hbp"                  },;
-   "rddbmcdx"      => { "rddbmcdx.hbp"                },;
-   "rddsql"        => { "rddsql.hbp"                  },;
-   "sddfb"         => { "sddfb.hbp"                   },;
-   "sddmy"         => { "sddmy.hbp"                   },;
-   "sddoci"        => { "sddoci.hbp"                  },;
-   "sddodbc"       => { "sddodbc.hbp"                 },;
-   "sddpg"         => { "sddpg.hbp"                   },;
-   "sddsqlt3"      => { "sddsqlt3.hbp"                },; /* uses: sqlite3 (external) */
-   "xhb"           => { "xhb.hbp"                     }}
-
-/* ----------------------------------------------------------------------- */
 
 /* TOFIX: Ugly hack to avoid #include "directry.ch" */
 #define F_NAME                  1       /* File name */
@@ -126,9 +68,9 @@ STATIC s_cHome
 STATIC s_cRoot
 STATIC s_lTest
 
+STATIC s_hPackageList
+
 PROCEDURE Main( ... )
-   LOCAL aProject
-   LOCAL tmp
 
    SetCancel( .F. )
 
@@ -142,13 +84,9 @@ PROCEDURE Main( ... )
       hb_setenv( "_HB_BUILD_MIGR", "yes" )
    ENDIF
 
-   /* Convert list of contribs */
+   /* Load list of packages */
 
-   FOR EACH aProject IN s_hPackageList
-      FOR EACH tmp IN aProject
-         tmp := { "cFileName" => tmp }
-      NEXT
-   NEXT
+   s_hPackageList := LoadPkgList( s_cHome + "pkglist" )
 
    /* Build */
 
@@ -348,7 +286,7 @@ PROCEDURE GNUMake( ... )
    FOR EACH cItem IN hb_ATokens( GetEnv( "HB_BUILD_ADDONS" ),, .T. )
       IF ! Empty( cItem )
          hb_FNameSplit( PathSepToSelf( cItem ), @cDir, @cName )
-         s_hPackageList[ StrTran( DirDelPathSep( cDir ), "\", "/" ) ] := { "cFileName" => cName }
+         s_hPackageList[ StrTran( DirDelPathSep( cDir ), "\", "/" ) ] := { "cFileName" => StrTran( cName, "\", "/" ) }
          lAnyAddons := .T.
       ENDIF
    NEXT
@@ -627,6 +565,16 @@ STATIC FUNCTION FNameExtSet( cFileName, cExt )
 
    RETURN hb_FNameMerge( cDir, cName, cExt )
 
+STATIC FUNCTION FNameExtDef( cFileName, cDefExt )
+   LOCAL cDir, cName, cExt
+
+   hb_FNameSplit( cFileName, @cDir, @cName, @cExt )
+   IF Empty( cExt )
+      cExt := cDefExt
+   ENDIF
+
+   RETURN hb_FNameMerge( cDir, cName, cExt )
+
 STATIC FUNCTION DirGetName( cDir )
    LOCAL cName
 
@@ -744,3 +692,36 @@ STATIC FUNCTION TopoSort( aEdgeList )
    NEXT
 
    RETURN aList
+
+FUNCTION LoadPkgList( cFileName )
+
+   LOCAL cFile := MemoRead( cFileName )
+   LOCAL cLine
+   LOCAL aItem
+   LOCAL xItem
+
+   LOCAL cPackageName
+   LOCAL hPackageList := { => }
+
+   hb_HKeepOrder( hPackageList, .T. )
+
+   cFile := StrTran( cFile, Chr( 13 ) )
+
+   FOR EACH cLine IN hb_ATokens( cFile, Chr( 10 ) )
+      IF "#" $ cLine
+         cLine := Left( cLine, At( "#", cLine ) - 1 )
+      ENDIF
+      IF ! Empty( cLine )
+         aItem := hb_ATokens( AllTrim( cLine ) )
+         IF Len( aItem ) >= 2
+            cPackageName := aItem[ 1 ]
+            hb_ADel( aItem, 1, .T. )
+            FOR EACH xItem IN aItem
+               xItem := { "cFileName" => FNameExtDef( StrTran( xItem, "\", "/" ), ".hbp" ) }
+            NEXT
+            hPackageList[ cPackageName ] := AClone( aItem )
+         ENDIF
+      ENDIF
+   NEXT
+
+   RETURN hPackageList

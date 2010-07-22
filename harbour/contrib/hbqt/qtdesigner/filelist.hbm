@@ -1,0 +1,21 @@
+#
+# $Id$
+#
+
+QDesignerActionEditorInterface.cpp
+QDesignerFormEditorInterface.cpp
+QDesignerFormWindowCursorInterface.cpp
+QDesignerFormWindowInterface.cpp
+QDesignerFormWindowManagerInterface.cpp
+QDesignerObjectInspectorInterface.cpp
+QDesignerPropertyEditorInterface.cpp
+QDesignerWidgetBoxInterface.cpp
+
+TQDesignerActionEditorInterface.prg
+TQDesignerFormEditorInterface.prg
+TQDesignerFormWindowCursorInterface.prg
+TQDesignerFormWindowInterface.prg
+TQDesignerFormWindowManagerInterface.prg
+TQDesignerObjectInspectorInterface.prg
+TQDesignerPropertyEditorInterface.prg
+TQDesignerWidgetBoxInterface.prg

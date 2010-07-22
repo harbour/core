@@ -2,27 +2,9 @@
 # $Id$
 #
 
--hblib
-
 ../hbqt_common.hbm
 
 -o${hb_name}
 -workdir=${hb_work}/${hb_plat}/${hb_comp}/${hb_name}
 
-QDesignerActionEditorInterface.cpp
-QDesignerFormEditorInterface.cpp
-QDesignerFormWindowCursorInterface.cpp
-QDesignerFormWindowInterface.cpp
-QDesignerFormWindowManagerInterface.cpp
-QDesignerObjectInspectorInterface.cpp
-QDesignerPropertyEditorInterface.cpp
-QDesignerWidgetBoxInterface.cpp
-
-TQDesignerActionEditorInterface.prg
-TQDesignerFormEditorInterface.prg
-TQDesignerFormWindowCursorInterface.prg
-TQDesignerFormWindowInterface.prg
-TQDesignerFormWindowManagerInterface.prg
-TQDesignerObjectInspectorInterface.prg
-TQDesignerPropertyEditorInterface.prg
-TQDesignerWidgetBoxInterface.prg
+filelist.hbm

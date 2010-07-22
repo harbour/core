@@ -1,0 +1,53 @@
+#
+# $Id$
+#
+
+gtalleg       gtalleg.hbp gtallegs.hbp
+gtwvg         gtwvg.hbp
+hbblat        hbblat.hbp
+hbblink       hbblink.hbp
+hbbz2         hbbz2.hbp               # uses: bz2 (external)
+hbcairo       hbcairo.hbp
+hbclipsm      hbclipsm.hbp
+hbcomm        hbcomm.hbp
+hbct          hbct.hbp
+hbcups        hbcups.hbp
+hbcurl        hbcurl.hbp hbcurls.hbp
+hbdoc2        hbdoc2.hbp
+hbfbird       hbfbird.hbp
+hbfimage      hbfimage.hbp
+hbfoxpro      hbfoxpro.hbp
+hbfship       hbfship.hbp
+hbgd          hbgd.hbp
+hbgt          hbgt.hbp
+hbhpdf        hbhpdf.hbp
+hbide         hbide.hbp
+hbmemio       hbmemio.hbp
+hbmisc        hbmisc.hbp
+hbmysql       hbmysql.hbp
+hbmzip        hbmzip.hbp              # uses: minizip (external)
+hbnetio       hbnetio.hbp
+hbnetio/utils hbnetio.hbp
+hbnf          hbnf.hbp
+hbodbc        hbodbc.hbp
+hbpgsql       hbpgsql.hbp
+hbqt          hbqt.hbp hbqts.hbp hbqtcore.hbp hbqtcores.hbp hbqtgui.hbp hbqtguis.hbp hbqtnetwork.hbp hbqtnetworks.hbp
+hbsms         hbsms.hbp
+hbsqlit3      hbsqlit3.hbp            # uses: sqlite3 (external)
+hbssl         hbssl.hbp hbssls.hbp
+hbtip         hbtip.hbp hbtipssl.hbp
+hbtpathy      hbtpathy.hbp
+hbwin         hbwin.hbp
+hbxbp         hbxbp.hbp
+hbxpp         hbxpp.hbp
+hbziparc      hbziparc.hbp
+rddads        rddads.hbp
+rddbmcdx      rddbmcdx.hbp
+rddsql        rddsql.hbp
+sddfb         sddfb.hbp
+sddmy         sddmy.hbp
+sddoci        sddoci.hbp
+sddodbc       sddodbc.hbp
+sddpg         sddpg.hbp
+sddsqlt3      sddsqlt3.hbp            # uses: sqlite3 (external)
+xhb           xhb.hbp

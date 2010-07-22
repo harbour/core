@@ -2,11 +2,13 @@
 # $Id$
 #
 
--stop{!HB_QT_STATIC|!allwin}
-
-hbqtwebkit.hbp
+../hbqt_common.hbm
 
 -o${hb_name}
 -workdir=${hb_work}/${hb_plat}/${hb_comp}/${hb_name}
+
+filelist.hbm
+
+-stop{!HB_QT_STATIC|!allwin}
 
 -cflag=-DQT_NODLL

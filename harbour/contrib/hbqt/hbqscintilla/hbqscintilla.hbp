@@ -2,8 +2,6 @@
 # $Id$
 #
 
--hblib
-
 ../hbqt_common.hbm
 
 -o${hb_name}
