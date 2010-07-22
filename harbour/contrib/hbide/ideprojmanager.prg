@@ -342,7 +342,8 @@ METHOD IdeProjManager:loadProperties( cProjFileName, lNew, lFetch, lUpdateTree )
    ELSE
       IF empty( cProjFileName )
          cProjFileName := hbide_fetchAFile( ::oDlg, "Open Project...", { { "Harbour Projects", "*.hbp" } , ;
-                                                                         { "xMate Projects"  , "*.xhp" } } )
+                                                                         { "xMate Projects"  , "*.xhp" } , ;
+                                                                         { "xBuild Projects" , "*.xbp" } } )
          cProjFileName := ::synchronizeAlienProject( cProjFileName )
 
          ::oDockPT:show()
@@ -814,7 +815,7 @@ METHOD IdeProjManager:buildInterface()
 
 METHOD IdeProjManager:synchronizeAlienProject( cProjFileName )
    LOCAL cPath, cFile, cExt, cHbp
-   LOCAL cExeHbMk2
+   LOCAL cExeHbMk2, oProcess, cCmd
 
    hb_fNameSplit( cProjFileName, @cPath, @cFile, @cExt )
    IF lower( cExt ) == ".hbp"              /* Nothing to do */
@@ -832,22 +833,23 @@ METHOD IdeProjManager:synchronizeAlienProject( cProjFileName )
       ENDIF
    ENDIF
 
-   cExeHbMk2 := "hbmk2"
-   IF ! Empty( ::oIDE:oINI:cPathHbMk2 )
-      cExeHbMk2 := hbide_DirAddPathSep( ::oIDE:oINI:cPathHbMk2 ) + cExeHbMk2
-   ENDIF
+   cExeHbMk2 := ::oINI:getHbmk2File()
 
    SWITCH lower( cExt )
    CASE ".xhp"
-      hb_processRun( cExeHbMk2 + " -xhp=" + cProjFileName )
+      cCmd := cExeHbMk2 + " -xhp=" + cProjFileName
       EXIT
    CASE ".xbp"
-      hb_processRun( cExeHbMk2 + " -xbp=" + cProjFileName )
+      cCmd := cExeHbMk2 + " -xbp=" + cProjFileName
       EXIT
    CASE "???"
-      hb_processRun( cExeHbMk2 + " -hbmake=" + cProjFileName )
+      cCmd := cExeHbMk2 + " -hbmake=" + cProjFileName
       EXIT
    ENDSWITCH
+
+   oProcess := QProcess():new()
+   oProcess:start_1( cCmd )
+   oProcess:waitForFinished()
 
    RETURN cHbp
 

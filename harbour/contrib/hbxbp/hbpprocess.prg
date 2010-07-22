@@ -99,6 +99,7 @@ CLASS HbpProcess
    METHOD addArg( cArg )
    METHOD start( cShellCmd )
 
+   METHOD waitForFinished()                       INLINE ::qProcess:waitForFinished()
    METHOD finished( bBlock )                      SETGET                 // Slot
    METHOD output( bBlock )                        SETGET                 // Slot
    METHOD workingPath( cPath )                    SETGET                 // Slot

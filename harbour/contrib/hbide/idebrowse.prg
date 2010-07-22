@@ -471,11 +471,11 @@ METHOD IdeBrowseManager:execEvent( cEvent, p, p1 )
 
    CASE "buttonShowForm_clicked"
       IF !empty( ::oCurBrw )
-         IF ::oCurBrw:qForm:isHidden()
-            ::oCurBrw:qForm:show()
+         IF ::oCurBrw:qScrollArea:isHidden()
+            ::oCurBrw:qScrollArea:show()
             ::aToolBtns[ 3 ]:setChecked( .t. )
          ELSE
-            ::oCurBrw:qForm:hide()
+            ::oCurBrw:qScrollArea:hide()
             ::aToolBtns[ 3 ]:setChecked( .f. )
          ENDIF
       ENDIF
@@ -1236,6 +1236,7 @@ CLASS IdeBrowse INHERIT IdeObject
    DATA   qSplitter
    DATA   qTimer
    DATA   qStatus
+   DATA   qScrollArea
 
    DATA   nID                                     INIT  0
 
@@ -1465,32 +1466,6 @@ METHOD IdeBrowse:destroy()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeBrowse:configure()
-   LOCAL nOff
-   LOCAL nRowPos := ::oBrw:rowPos()
-   LOCAL nColPos := ::oBrw:colPos()
-
-   ::oBrw:configure()
-
-   IF nRowPos > ::oBrw:rowCount()
-      nOff := nRowPos - ::oBrw:rowCount()
-      ::oBrw:rowPos := ::oBrw:rowCount()
-   ELSE
-      nOff := 0
-   ENDIF
-   ::oBrw:colPos := nColPos
-
-   ::oBrw:refreshAll()
-   ::oBrw:forceStable()
-   ::oBrw:setCurrentIndex( nRowPos > ::oBrw:rowCount() )
-   IF nOff > 0
-      SetAppEvent( xbeBRW_Navigate, XBPBRW_Navigate_Skip, nOff, ::oBrw )
-   ENDIF
-
-   RETURN Self
-
-/*------------------------------------------------------------------------*/
-
 METHOD IdeBrowse:buildBrowser()
    LOCAL qLayout, oWnd, oXbpBrowse
 
@@ -1530,17 +1505,23 @@ METHOD IdeBrowse:buildBrowser()
 
    /* Form View */
    ::qForm := QWidget():new()
+   ::qForm:setMinimumSize( QSize():new( 300  , len( ::aStruct ) * 34 ) )
+   ::qForm:setMaximumSize( QSize():new( 12000, 48000 ) )
+
    ::qFLayout := QFormLayout():new()
    ::qForm:setLayout( ::qFLayout )
 
-   //::qSplitter:addWidget( ::qForm )
+   ::qScrollArea := QScrollArea():new()
+   ::qScrollArea:setWidget( ::qForm )
+   ::qScrollArea:hide()
 
-   ::qForm:hide()  /* Form view defaults to hidden */
+   ::qSplitter:addWidget( ::qScrollArea )
 
    ::qLayout := qLayout
    ::oWnd    := oWnd
    ::oBrw    := oXbpBrowse
 
+#if 0
    ::qVerSpl := QSplitter():new( Qt_Vertical )
    ::qSplitter:addWidget( ::qVerSpl )
 
@@ -1551,7 +1532,52 @@ METHOD IdeBrowse:buildBrowser()
    ::qClose:hide()
 
    ::qVerSpl:addWidget( ::qClose )
+#endif
+   RETURN Self
 
+/*----------------------------------------------------------------------*/
+
+METHOD IdeBrowse:buildColumns()
+   LOCAL oXbpColumn, aPresParam, a_
+
+   IF ::nType == BRW_TYPE_DBF
+      FOR EACH a_ IN ::aStruct
+         aPresParam := ::getPP( a_ )
+
+         oXbpColumn          := XbpColumn():new()
+         oXbpColumn:dataLink := ::dataLink( a_:__enumIndex() )
+         oXbpColumn:create( , , , , aPresParam )
+
+         ::oBrw:addColumn( oXbpColumn )
+      NEXT
+   ELSE
+      FOR EACH a_ IN ::aStruct
+         ::getPP( a_, a_:__enumIndex() )
+
+         oXbpColumn          := XbpColumn():new()
+         oXbpColumn:dataLink := ::dataLink( a_:__enumIndex() )
+         oXbpColumn:create( , , , , aPresParam )
+
+         ::oBrw:addColumn( oXbpColumn )
+      NEXT
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeBrowse:buildForm()
+   LOCAL a_, qLbl, qEdit
+
+   IF ::nType == BRW_TYPE_DBF
+      FOR EACH a_ IN ::aStruct
+         qLbl := QLabel():new(); qLbl:setText( a_[ 1 ] )
+         qEdit := QLineEdit():new()
+         ::qFLayout:addRow( qLbl, qEdit )
+         aadd( ::aForm, { qLbl, qEdit } )
+      NEXT
+   ELSE
+   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1593,6 +1619,32 @@ METHOD IdeBrowse:buildMdiWindow()
                                  {|p,p1| ::execEvent( "mdiSubWindow_windowStateChanged", p, p1 ) } )
    ::qMdi:installEventFilter( ::pEvents )
    ::connect( ::qMdi, QEvent_Close, {|| ::execEvent( "mdiSubWindow_buttonXclicked" ) } )
+
+   RETURN Self
+
+/*------------------------------------------------------------------------*/
+
+METHOD IdeBrowse:configure()
+   LOCAL nOff
+   LOCAL nRowPos := ::oBrw:rowPos()
+   LOCAL nColPos := ::oBrw:colPos()
+
+   ::oBrw:configure()
+
+   IF nRowPos > ::oBrw:rowCount()
+      nOff := nRowPos - ::oBrw:rowCount()
+      ::oBrw:rowPos := ::oBrw:rowCount()
+   ELSE
+      nOff := 0
+   ENDIF
+   ::oBrw:colPos := nColPos
+
+   ::oBrw:refreshAll()
+   ::oBrw:forceStable()
+   ::oBrw:setCurrentIndex( nRowPos > ::oBrw:rowCount() )
+   IF nOff > 0
+      SetAppEvent( xbeBRW_Navigate, XBPBRW_Navigate_Skip, nOff, ::oBrw )
+   ENDIF
 
    RETURN Self
 
@@ -1785,24 +1837,6 @@ METHOD IdeBrowse:populateForm()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeBrowse:buildForm()
-   LOCAL a_, qLbl, qEdit
-
-   IF ::nType == BRW_TYPE_DBF
-      FOR EACH a_ IN ::aStruct
-         qLbl := QLabel():new(); qLbl:setText( a_[ 1 ] )
-         qEdit := QLineEdit():new()
-         ::qFLayout:addRow( qLbl, qEdit )
-         aadd( ::aForm, { qLbl, qEdit } )
-      NEXT
-   ELSE
-
-   ENDIF
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
 METHOD IdeBrowse:saveField( nField, x )
    IF ( ::cAlias )->( DbrLock() )
       ( ::cAlias )->( FieldPut( nField, x ) )
@@ -1826,35 +1860,6 @@ METHOD IdeBrowse:dataLink( nField )
    ENDIF
 
    RETURN bBlock
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeBrowse:buildColumns()
-   LOCAL oXbpColumn, aPresParam, a_
-
-   IF ::nType == BRW_TYPE_DBF
-      FOR EACH a_ IN ::aStruct
-         aPresParam := ::getPP( a_ )
-
-         oXbpColumn          := XbpColumn():new()
-         oXbpColumn:dataLink := ::dataLink( a_:__enumIndex() )
-         oXbpColumn:create( , , , , aPresParam )
-
-         ::oBrw:addColumn( oXbpColumn )
-      NEXT
-   ELSE
-      FOR EACH a_ IN ::aStruct
-         ::getPP( a_, a_:__enumIndex() )
-
-         oXbpColumn          := XbpColumn():new()
-         oXbpColumn:dataLink := ::dataLink( a_:__enumIndex() )
-         oXbpColumn:create( , , , , aPresParam )
-
-         ::oBrw:addColumn( oXbpColumn )
-      NEXT
-   ENDIF
-
-   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
