@@ -153,7 +153,7 @@ typedef struct InOutBase {
 
    /* curses data */
    SCREEN *basescr;
-   WINDOW *stdscr;
+   WINDOW *hb_stdscr;
    FILE *basein;
    FILE *baseout;
    chtype std_chmap[ 256 ];
@@ -1375,13 +1375,13 @@ static void gt_refresh( InOutBase * ioBase )
    {
 /*
    if(ioBase->cursor == SC_NONE)
-       leaveok( ioBase->stdscr, HB_TRUE );
+       leaveok( ioBase->hb_stdscr, HB_TRUE );
    else
-       leaveok( ioBase->stdscr, HB_FALSE );
+       leaveok( ioBase->hb_stdscr, HB_FALSE );
 */
 /* if(ioBase->cursor != SC_NONE) */
-      wmove( ioBase->stdscr, ioBase->row, ioBase->col );
-      wrefresh( ioBase->stdscr );
+      wmove( ioBase->hb_stdscr, ioBase->row, ioBase->col );
+      wrefresh( ioBase->hb_stdscr );
       disp_cursor( ioBase );
       disp_mousecursor( ioBase );
    }
@@ -1788,7 +1788,7 @@ static int gt_resize( InOutBase * ioBase )
    {
 /*
 #if defined( NCURSES_VERSION )
-   wresize( ioBase->stdscr, rows, cols );
+   wresize( ioBase->hb_stdscr, rows, cols );
 #endif
 */
       endwin();
@@ -1802,7 +1802,7 @@ static int gt_resize( InOutBase * ioBase )
    }
 #endif
 */
-      getmaxyx( ioBase->stdscr, ioBase->maxrow, ioBase->maxcol );
+      getmaxyx( ioBase->hb_stdscr, ioBase->maxrow, ioBase->maxcol );
    }
    return ret;
 }
@@ -2035,7 +2035,7 @@ static InOutBase *create_ioBase( char *term, int infd, int outfd, int errfd,
       return NULL;
    }
 
-   ioBase->stdscr = stdscr;
+   ioBase->hb_stdscr = stdscr;
 
    ioBase->flash = tiGetS( "flash" );
    ioBase->beep = tiGetS( "bel" );
@@ -2136,12 +2136,12 @@ static InOutBase *create_ioBase( char *term, int infd, int outfd, int errfd,
       }
    }
 
-   getmaxyx( ioBase->stdscr, ioBase->maxrow, ioBase->maxcol );
-   scrollok( ioBase->stdscr, HB_FALSE );
+   getmaxyx( ioBase->hb_stdscr, ioBase->maxrow, ioBase->maxcol );
+   scrollok( ioBase->hb_stdscr, HB_FALSE );
 /*
-    idlok( ioBase->stdscr, HB_FALSE );
-    idcok( ioBase->stdscr, HB_FALSE );
-    leaveok( ioBase->stdscr, HB_FALSE );
+    idlok( ioBase->hb_stdscr, HB_FALSE );
+    idcok( ioBase->hb_stdscr, HB_FALSE );
+    leaveok( ioBase->hb_stdscr, HB_FALSE );
 */
    /*
     * curses keyboard initialization
@@ -2151,19 +2151,19 @@ static InOutBase *create_ioBase( char *term, int infd, int outfd, int errfd,
     */
    raw();
 
-   leaveok( ioBase->stdscr, HB_FALSE );
+   leaveok( ioBase->hb_stdscr, HB_FALSE );
    curs_set( 0 );
 
 /*
     nonl();
-    nodelay( ioBase->stdscr, HB_TRUE);
-    keypad( ioBase->stdscr, HB_FALSE);
+    nodelay( ioBase->hb_stdscr, HB_TRUE);
+    keypad( ioBase->hb_stdscr, HB_FALSE);
     timeout( 0 );
     noecho();
     curs_set( 0 );
 */
-   wclear( ioBase->stdscr );
-   wrefresh( ioBase->stdscr );
+   wclear( ioBase->hb_stdscr );
+   wrefresh( ioBase->hb_stdscr );
 
    gt_ttyset( ioBase );
    add_efds( ioBase, ioBase->base_infd, O_RDONLY, NULL, NULL );
@@ -2186,7 +2186,7 @@ static void destroy_ioBase( InOutBase * ioBase )
    }
 
    /* curses SCREEN delete */
-   if( ioBase->stdscr != NULL )
+   if( ioBase->hb_stdscr != NULL )
    {
       ioBase->disp_count = 0;
       /* on exit restore a cursor share and leave it visible
@@ -2649,9 +2649,9 @@ static HB_BOOL hb_gt_crs_Resume( PHB_GT pGT )
    if( s_ioBase )
    {
       s_ioBase->lcursor = SC_UNDEF;
-      wrefresh( s_ioBase->stdscr );
+      wrefresh( s_ioBase->hb_stdscr );
       gt_ttyset( s_ioBase );
-      /* redrawwin( s_ioBase->stdscr ); */
+      /* redrawwin( s_ioBase->hb_stdscr ); */
       gt_refresh( s_ioBase );
    }
    return HB_TRUE;
@@ -2900,7 +2900,7 @@ static void hb_gt_crs_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
       HB_USHORT usChar;
       chtype ch;
 
-      wmove( s_ioBase->stdscr, iRow, iCol );
+      wmove( s_ioBase->hb_stdscr, iRow, iCol );
       while( iSize-- > 0 )
       {
          if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol++, &iColor, &bAttr, &usChar ) )
@@ -2908,7 +2908,7 @@ static void hb_gt_crs_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
          ch = ( s_ioBase->attr_map[ iColor ] & s_ioBase->attr_mask ) |
               ( bAttr & HB_GT_ATTR_BOX ? s_ioBase->box_chmap[ usChar & 0xff ] :
                                          s_ioBase->std_chmap[ usChar & 0xff ] );
-         waddch( s_ioBase->stdscr, ch );
+         waddch( s_ioBase->hb_stdscr, ch );
       }
    }
 }
