@@ -126,7 +126,7 @@ CLASS IdeBrowseManager INHERIT IdeObject
    DATA   aToolBtns                               INIT  {}
    DATA   aButtons                                INIT  {}
    DATA   aIndexAct                               INIT  {}
-   DATA   aRdds                                   INIT  { "DBFCDX", "DBFNTX" }
+   DATA   aRdds                                   INIT  { "DBFCDX", "DBFNTX", "DBFNSX" }
    DATA   aConxns                                 INIT  {}
 
    DATA   oCurBrw
@@ -259,6 +259,13 @@ METHOD IdeBrowseManager:setStyleSheet( nMode )
 /*------------------------------------------------------------------------*/
 
 METHOD IdeBrowseManager:destroy()
+   LOCAL oPanel
+
+   FOR EACH oPanel IN ::aPanels
+      oPanel:destroy()
+   NEXT
+   ::aPanels := {}
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -456,7 +463,7 @@ METHOD IdeBrowseManager:execEvent( cEvent, p, p1 )
             hb_fNameSplit( qUrl:toLocalFile(), @cPath, @cTable, @cExt )
             IF lower( cExt ) == ".dbf"
                ::oCurPanel:addBrowser( { NIL, hbide_pathToOSPath( cPath + cTable + cExt ), NIL, ;
-                             iif( ! ( ::qRddCombo:currentText() $ "DBFCDX.DBFNTX" ), "DBFCDX", ::qRddCombo:currentText() ) } )
+                             iif( ! ( ::qRddCombo:currentText() $ "DBFCDX.DBFNTX,DBFNSX" ), "DBFCDX", ::qRddCombo:currentText() ) } )
             ENDIF
          NEXT
       ENDIF
@@ -476,12 +483,12 @@ METHOD IdeBrowseManager:execEvent( cEvent, p, p1 )
 
    CASE "buttonClose_clicked"
       IF !empty( ::oCurBrw )
-         ::oCurPanel:destroy( ::oCurBrw )
+         ::oCurPanel:destroyBrw( ::oCurBrw )
       ENDIF
       EXIT
 
    CASE "buttonOpen_clicked"
-      IF ::currentDriver() $ "DBFCDX,DBFNTX"
+      IF ::currentDriver() $ "DBFCDX,DBFNTX,DBFNSX"
          IF !empty( cTable := hbide_fetchAFile( ::oIde:oDlg, "Select a Table", { { "Database File", "*.dbf" } }, ::oIde:cWrkFolderLast ) )
             hb_fNameSplit( cTable, @cPath )
             ::oIde:cWrkFolderLast := cPath
@@ -1037,7 +1044,8 @@ CLASS IdeBrowsePanel INHERIT IdeObject
    ACCESS subWindows()                            INLINE ::aBrowsers
 
    METHOD new( oIde, cPanel, oManager )
-   METHOD destroy( oBrw )
+   METHOD destroy()
+   METHOD destroyBrw( oBrw )
    METHOD execEvent( cEvent, p )
    METHOD setCurrentBrowser( oBrw )
    METHOD getIndexInfo( oBrw )
@@ -1083,7 +1091,21 @@ METHOD IdeBrowsePanel:new( oIde, cPanel, oManager )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeBrowsePanel:destroy( oBrw )
+METHOD IdeBrowsePanel:destroy()
+   LOCAL aBrw, oSub
+
+   FOR EACH aBrw IN ::aBrowsers
+      oSub := aBrw[ SUB_WINDOW ]
+      ::qWidget:removeSubWindow( oSub )
+      aBrw[ SUB_BROWSER ]:destroy()
+      oSub := NIL
+   NEXT
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeBrowsePanel:destroyBrw( oBrw )
    LOCAL n, oSub
 
    IF ( n := ascan( ::aBrowsers, {|e_| e_[ SUB_BROWSER ] == oBrw } ) )  > 0
@@ -1615,7 +1637,7 @@ METHOD IdeBrowse:execEvent( cEvent, p, p1 )
       EXIT
 
    CASE "mdiSubWindow_buttonXclicked"
-      ::oPanel:destroy( Self )
+      ::oPanel:destroyBrw( Self )
       EXIT
 
    CASE "mdiSubWindow_aboutToActivate"
@@ -2246,6 +2268,7 @@ METHOD IdeBrowse:use()
    SWITCH ::cDriver
    CASE "DBFCDX"
    CASE "DBFNTX"
+   CASE "DBFNSX"
       bError := ErrorBlock( {|o| break( o ) } )
       BEGIN SEQUENCE
          IF empty( ::cAlias )
@@ -2285,6 +2308,7 @@ METHOD IdeBrowse:exists()
 
    SWITCH ::cDriver
    CASE "DBFCDX"
+   CASE "DBFNSX"
    CASE "DBFNTX"
       RETURN hb_fileExists( ::cTable )
    OTHERWISE

@@ -74,7 +74,18 @@ HB_FUNC( QT_QTREEWIDGET )
 </CODE>
 
 <PROTOS>
-void addTopLevelItem ( QTreeWidgetItem * item )
+void addTopLevelItem ( QTreeWidgetItem * item ){
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   QGC_POINTER * q = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+   HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QTREEWIDGET_ADDTOPLEVELITEM()" ) );
+   if( p && p->ph && q && q->ph )
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "QT_QTREEWIDGET_ADDTOPLEVELITEM() Qt object: %p is attached to: %p", p->ph, q->ph ) );
+      q->bNew = HB_FALSE;
+      hbqt_par_QTreeWidget( 1 )->addTopLevelItem( hbqt_par_QTreeWidgetItem( 2 ) );
+   }
+}
+
 void addTopLevelItems ( const QList<QTreeWidgetItem *> & items )
 void closePersistentEditor ( QTreeWidgetItem * item, int column = 0 )
 int columnCount () const

@@ -66,11 +66,12 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 39/45 [ 86.67% ] ]
+ *  Constructed[ 39/46 [ 84.78% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
  *
+ *  }
  *  void addTopLevelItems ( const QList<QTreeWidgetItem *> & items )
  *  void insertTopLevelItems ( int index, const QList<QTreeWidgetItem *> & items )
  *  }
@@ -168,12 +169,14 @@ HB_FUNC( QT_QTREEWIDGET )
  */
 HB_FUNC( QT_QTREEWIDGET_ADDTOPLEVELITEM )
 {
-   QTreeWidget * p = hbqt_par_QTreeWidget( 1 );
-   if( p )
-      ( p )->addTopLevelItem( hbqt_par_QTreeWidgetItem( 2 ) );
-   else
+   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   QGC_POINTER * q = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+   HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QTREEWIDGET_ADDTOPLEVELITEM()" ) );
+   if( p && p->ph && q && q->ph )
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGET_ADDTOPLEVELITEM FP=( p )->addTopLevelItem( hbqt_par_QTreeWidgetItem( 2 ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "QT_QTREEWIDGET_ADDTOPLEVELITEM() Qt object: %p is attached to: %p", p->ph, q->ph ) );
+      q->bNew = HB_FALSE;
+      hbqt_par_QTreeWidget( 1 )->addTopLevelItem( hbqt_par_QTreeWidgetItem( 2 ) );
    }
 }
 

@@ -87,6 +87,7 @@ REQUEST HB_QT
 
 REQUEST DBFCDX
 REQUEST DBFNTX
+REQUEST DBFNSX
 
 /*----------------------------------------------------------------------*/
 
@@ -580,6 +581,8 @@ METHOD HbIde:create( aParams )
 
       ::oXbp:handleEvent( ::nEvent, ::mp1, ::mp2 )
    ENDDO
+
+   ::oBM:destroy()
 
 #if 0
 
