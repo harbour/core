@@ -48,6 +48,15 @@ endif
 LD := $(CC)
 LD_OUT := -o
 
+ifneq ($(HB_HAS_PCRE),)
+   ifeq ($(HB_HAS_PCRE_LOCAL),)
+      SYSLIBS += pcre
+   endif
+endif
+ifeq ($(HB_HAS_ZLIB_LOCAL),)
+   SYSLIBS += z
+endif
+
 LIBPATHS := -L$(LIB_DIR)
 LDLIBS := $(foreach lib,$(HB_USER_LIBS) $(LIBS) $(SYSLIBS),-l$(lib))
 

@@ -4,10 +4,9 @@
 
 hbcurl.hbm
 
--o${hb_name}
--workdir=${hb_work}/${hb_plat}/${hb_comp}/${hb_name}
-
 -depimplibs=curl:../libcurl.dll
 -depimplibs=curl:../bin/libcurl.dll
 
 -iflag={bcc}-a
+
+hbcurls.hbp

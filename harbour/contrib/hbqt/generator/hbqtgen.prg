@@ -100,33 +100,33 @@ FUNCTION Main( ... )
       cLParam := lower( cParam )
 
       DO CASE
-      CASE left( cParam,1 ) == '@'
+      CASE left( cParam,1 ) == "@"
          x := substr( cParam,2 )
          hb_fNameSplit( x, @cPath, @cFile, @cExt )
-         IF empty( cExt ) .or. lower( cExt ) != 'qtp'
-            cExt := 'qtp'
+         IF empty( cExt ) .or. !( lower( cExt ) == ".qtp" )
+            cExt := ".qtp"
          ENDIF
-         x := iif( empty( cPath ), "", cPath + s_PathSep )+ cFile + "." + cExt
+         x := iif( empty( cPath ), "", cPath + s_PathSep )+ cFile + cExt
          aadd( aPrjFiles, x )
 
-      CASE right( cLParam,4 ) == '.qtp'
+      CASE right( cLParam,4 ) == ".qtp"
          aadd( aPrjFiles, cParam )
 
-      CASE right( cLParam,4 ) == '.qth'
+      CASE right( cLParam,4 ) == ".qth"
          aadd( aProFiles, cParam )
 
-      CASE lower( left( cParam,2 ) ) == '-o'
+      CASE lower( left( cParam,2 ) ) == "-o"
          cPathOut := substr( cParam, 3 )
 
-      CASE lower( left( cParam,2 ) ) == '-i'
+      CASE lower( left( cParam,2 ) ) == "-i"
          cPathIn := substr( cParam, 3 )
 
-      CASE lower( left( cParam,2 ) ) == '-d'
+      CASE lower( left( cParam,2 ) ) == "-d"
          cPathDoc := substr( cParam, 3 )
 
-      CASE cParam == '-c'
+      CASE cParam == "-c"
 
-      CASE cLParam == '-help'
+      CASE cLParam == "-help"
          DispHelp()
          RETURN nil
 
@@ -214,13 +214,13 @@ STATIC FUNCTION ManageProject( cProFile, cPathIn, cPathOut, cPathDoc )
 
    /* Pullout all ANSI C style comments */
    DO WHILE .t.
-      IF ( n := at( '/*', cPrj ) ) == 0
+      IF ( n := at( "/*", cPrj ) ) == 0
          EXIT
       ENDIF
       /* We must have a matching pair */
-      nn := at( '*/', cPrj )
+      nn := at( "*/", cPrj )
       IF nn == 0
-         OutStd( 'Project file has unbalanced comment section...' + s_NewLine )
+         OutStd( "Project file has unbalanced comment section..." + s_NewLine )
          RETURN nil
       ENDIF
       cPrj := substr( cPrj, 1, n-1 ) + substr( cPrj, nn+2 )
@@ -236,29 +236,29 @@ STATIC FUNCTION ManageProject( cProFile, cPathIn, cPathOut, cPathDoc )
    FOR EACH cPrj IN prj_
       cPrj := alltrim( cPrj )
 
-      IF left( cPrj,1 ) $ ':#;/*'
+      IF left( cPrj,1 ) $ ":#;/*"
          LOOP
       ENDIF
 
-      IF ( n := at( '=', cPrj ) ) > 0
+      IF ( n := at( "=", cPrj ) ) > 0
          cTkn := alltrim( substr( cPrj,1,n-1 ) )
          cVal := alltrim( substr( cPrj,n+1   ) )
 
          //IF !empty( cVal )
             DO CASE
-            CASE cTkn == '-I'
+            CASE cTkn == "-I"
                cPIn := cVal
 
-            CASE cTkn == '-O'
+            CASE cTkn == "-O"
                cPOut := cVal
 
-            CASE cTkn == '-D'
+            CASE cTkn == "-D"
                cPDoc := cVal
 
             ENDCASE
          //ENDIF
 
-      ELSEIF lower( right( cPrj,4 ) ) == '.qth'
+      ELSEIF lower( right( cPrj,4 ) ) == ".qth"
          a_:= GenSource( cPrj, cPIn, cPOut, cPDoc )
          IF !empty( a_[ 1 ] )
             aadd( cpp_, a_[ 1 ] )
@@ -283,8 +283,8 @@ STATIC FUNCTION PullOutSection( cQth, cSec )
    LOCAL cTxt, n, nn, cTknB, cTknE
    LOCAL a_:={}
 
-   cTknB := '<' + cSec + '>'
-   cTknE := '</' + cSec + '>'
+   cTknB := "<" + cSec + ">"
+   cTknE := "</" + cSec + ">"
 
    IF ( n := at( cTknB, cQth ) ) > 0
       IF( nn := at( cTknE, cQth ) ) > 0
@@ -361,22 +361,22 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
    ENDIF
 
    cls_:={}
-   IF !empty( class_:= PullOutSection( @cQth, 'CLASS' ) )
+   IF !empty( class_:= PullOutSection( @cQth, "CLASS" ) )
       FOR EACH s IN class_
-         IF ( n := at( '=', s ) ) > 0
+         IF ( n := at( "=", s ) ) > 0
             aadd( cls_, { alltrim( substr( s, 1, n-1 ) ), alltrim( substr( s, n+1 ) ) } )
          ENDIF
       NEXT
    ENDIF
 
    /* Pull out SUBCLASS section */
-   subCls_ := PullOutSection( @cQth, 'SUBCLASS' )
+   subCls_ := PullOutSection( @cQth, "SUBCLASS" )
 
    /* Pull out Doc Section */
-   docum_  := PullOutSection( @cQth, 'DOC'   )
+   docum_  := PullOutSection( @cQth, "DOC"   )
 
    /* Pull out Code Section */
-   code_   := PullOutSection( @cQth, 'CODE'   )
+   code_   := PullOutSection( @cQth, "CODE"   )
 
    /* Separate constructor function */
    new_:={}
@@ -410,23 +410,23 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
 
 
    /* Pull out Enumerators  */
-   enums_  := PullOutSection( @cQth, 'ENUMS'  )
+   enums_  := PullOutSection( @cQth, "ENUMS"  )
    enum_:={}
    FOR EACH s IN enums_
-      IF ( 'enum ' $ s .or. 'flags ' $ s )
-         b_:= hb_ATokens( alltrim( s ),' ' )
+      IF ( "enum " $ s .or. "flags " $ s )
+         b_:= hb_ATokens( alltrim( s ), " " )
          aadd( enum_, b_[ 2 ] )
       ENDIF
    NEXT
 
    /* Pull out Prototypes   */
-   protos_ := PullOutSection( @cQth, 'PROTOS' )
+   protos_ := PullOutSection( @cQth, "PROTOS" )
 
    /* Pull out Variables */
-   varbls_ := PullOutSection( @cQth, 'VARIABLES' )
+   varbls_ := PullOutSection( @cQth, "VARIABLES" )
 
    /* Pull Out Signals      */
-   slots_  := PullOutSection( @cQth, 'SLOTS'  )
+   slots_  := PullOutSection( @cQth, "SLOTS"  )
 
    /* Combine signals and protos : same nature */
    aeval( slots_, {|e| aadd( protos_, e ) } )
@@ -453,18 +453,18 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
       ENDIF
 
       /* Check if proto is commented out */
-      IF left( s,2 ) == '//'
+      IF left( s,2 ) == "//"
          aadd( cmntd_, cOrg )
          nFuncs++
          LOOP
       ENDIF
 
       /* Check if it is not ANSI C Comment */
-      IF left( alltrim( cOrg ),1 ) $ '/*'
+      IF left( alltrim( cOrg ),1 ) $ "/*"
          LOOP
       ENDIF
       /* Another comment tokens */
-      IF empty( s ) .or. left( s,1 ) $ '#;'
+      IF empty( s ) .or. left( s,1 ) $ "#;"
          LOOP
       ENDIF
 
@@ -472,7 +472,7 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
 
       /* Lists - Later */
       #if 0
-      IF '<' $ s
+      IF "<" $ s
          aadd( dummy_, cOrg )
          LOOP
       ENDIF
@@ -497,24 +497,24 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
          LOOP
       ENDIF
       /* Check if proto is commented out */
-      IF left( s,2 ) == '//'
+      IF left( s,2 ) == "//"
          aadd( cmntd_, cOrg )
          nFuncs++
          LOOP
       ENDIF
       /* Check if it is not ANSI C Comment */
-      IF left( alltrim( cOrg ),1 ) $ '/*'
+      IF left( alltrim( cOrg ),1 ) $ "/*"
          LOOP
       ENDIF
       /* Another comment tokens */
-      IF empty( s ) .or. left( s,1 ) $ '#;'
+      IF empty( s ) .or. left( s,1 ) $ "#;"
          LOOP
       ENDIF
 
       nFuncs++
 
       /* Lists - Later */
-      IF '<' $ s
+      IF "<" $ s
          aadd( dummy_, cOrg )
          LOOP
       ENDIF
@@ -535,36 +535,36 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
       /* Place ENUM definitions into the source */
       #if 1
       IF !empty( enums_ )
-         aadd( cpp_, '/*' )
-         aeval( enums_, {|e| iif( !empty( e ), aadd( cpp_, ' *  ' + e ), NIL ) } )
-         aadd( cpp_, ' */ ' )
-         aadd( cpp_, '' )
+         aadd( cpp_, "/*" )
+         aeval( enums_, {|e| iif( !empty( e ), aadd( cpp_, " *  " + e ), NIL ) } )
+         aadd( cpp_, " */ " )
+         aadd( cpp_, "" )
       ENDIF
       #endif
 
       /* Insert information about prototypes not converted to functions */
       IF !empty( dummy_ )
-         aadd( cpp_, '/*' )
-         aadd( cpp_, ' *  Constructed[ ' + hb_ntos( nCnvrtd ) + '/' + hb_ntos( nFuncs ) + ' [ ' + hb_ntos( nCnvrtd / nFuncs * 100 ) + '% ] ]' )
-         aadd( cpp_, ' *  ' )
-         aadd( cpp_, ' *  *** Unconvered Prototypes ***' )
-         aadd( cpp_, ' *  -----------------------------' )
-         aadd( cpp_, ' *  ' )
-         aeval( dummy_, {|e| aadd( cpp_, ' *  ' + e ) } )
+         aadd( cpp_, "/*" )
+         aadd( cpp_, " *  Constructed[ " + hb_ntos( nCnvrtd ) + "/" + hb_ntos( nFuncs ) + " [ " + hb_ntos( nCnvrtd / nFuncs * 100 ) + "% ] ]" )
+         aadd( cpp_, " *  " )
+         aadd( cpp_, " *  *** Unconvered Prototypes ***" )
+         aadd( cpp_, " *  -----------------------------" )
+         aadd( cpp_, " *  " )
+         aeval( dummy_, {|e| aadd( cpp_, " *  " + e ) } )
          IF !empty( cmntd_ )
-            aadd( cpp_, ' *  ' )
-            aadd( cpp_, ' *  ' + '*** Commented out protos which construct fine but do not compile ***' )
-            aadd( cpp_, ' *  ' )
-            aeval( cmntd_, {|e| aadd( cpp_, ' *  ' + e ) } )
+            aadd( cpp_, " *  " )
+            aadd( cpp_, " *  " + "*** Commented out protos which construct fine but do not compile ***" )
+            aadd( cpp_, " *  " )
+            aeval( cmntd_, {|e| aadd( cpp_, " *  " + e ) } )
          ENDIF
-         aadd( cpp_, ' */ ' )
-         aadd( cpp_, '' )
+         aadd( cpp_, " */ " )
+         aadd( cpp_, "" )
       ENDIF
 
       /* Insert user defined code - INCLUDEs */
       aadd( cpp_, "#include <QtCore/QPointer>" )
       IF !empty( code_ )
-         aeval( code_, {|e| aadd( cpp_, strtran( e, chr( 13 ), '' ) ) } )
+         aeval( code_, {|e| aadd( cpp_, strtran( e, chr( 13 ), "" ) ) } )
          aadd( cpp_, "" )
       ENDIF
 
@@ -737,7 +737,7 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
       aadd( cpp_, "" )
 
       /* Insert Functions */
-      aeval( txt_, {|e| aadd( cpp_, strtran( e, chr( 13 ), '' ) ) } )
+      aeval( txt_, {|e| aadd( cpp_, strtran( e, chr( 13 ), "" ) ) } )
 
       /* Footer */
       BuildFooter( @cpp_ )
@@ -749,7 +749,7 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
 
       /* Build Class PRG Source */
       /* Distribute in specific lib subfolder */
-      cFileCpp := GetSourcePathByLib( cWidget, cPathOut, '.cpp', NIL, cls_ )
+      cFileCpp := GetSourcePathByLib( cWidget, cPathOut, ".cpp", NIL, cls_ )
       CreateTarget( cFileCpp, cpp_ )
 
       /* Build CLASS */
@@ -757,7 +757,7 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
          Build_Class( cWidget, cls_, doc_, cPathOut, subCls_ )
          cPRG := cWidget
       ELSE
-         cPRG := ''
+         cPRG := ""
       ENDIF
       cCPP := cWidget
    ENDIF
@@ -815,18 +815,18 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_, lList, fB
    LOCAL cPre, cPar, cRet, cFun, cParas, cDocs, cCmd, cPas, s, ss, cFirstParamCast
    LOCAL cWdg, cCmn, cPrgRet, cHBFunc, cHBIdx, cDocNM
    LOCAL lSuccess, FP
-   LOCAL cInt         := 'int,qint16,quint16,short,ushort,unsigned'
-   LOCAL cIntLong     := 'qint32,quint32,QRgb'
-   LOCAL cIntLongLong := 'qint64,quint64,qlonglong,qulonglong,ulong'
+   LOCAL cInt         := "int,qint16,quint16,short,ushort,unsigned"
+   LOCAL cIntLong     := "qint32,quint32,QRgb"
+   LOCAL cIntLongLong := "qint64,quint64,qlonglong,qulonglong,ulong"
    LOCAL lRetIsList
 
-   cParas := ''
-   cDocs  := ''
+   cParas := ""
+   cDocs  := ""
 
    aRet := {}; aArgus := {}
-   n := at( '(', cProto )
+   n := at( "(", cProto )
    IF n > 0
-      nn := rat( ')', cProto )
+      nn := rat( ")", cProto )
       IF nn > 0
          /* Pull out pre-mid-post components */
          cPre := alltrim( substr( cProto,   1, n-1    ) )
@@ -836,30 +836,30 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_, lList, fB
          lRetIsList := "<" $ cPre
 
          /* parse cPre, it has two components */
-         n := rat( ' ', cPre )
+         n := rat( " ", cPre )
          IF n > 0   /* And it must be, otherwise it is constructor function which we write in <CODE>section */
             cFun := alltrim( substr( cPre, n + 1    ) )
             cRet := alltrim( substr( cPre, 1, n - 1 ) )
          ELSE
             cFun := cPre
-            cRet := ''
+            cRet := ""
          ENDIF
 
          aRet := array( PRT_ATTRB_MAX )
          JustACall( cPas )  ////////////////////////////////////////////////////////
-         aRet[ PRT_L_CONST      ] := 'const'   $ cRet  //.or. 'const'   $ cPas
-         aRet[ PRT_L_AND        ] := '&'       $ cRet
-         aRet[ PRT_L_FAR        ] := '*'       $ cRet
-         aRet[ PRT_L_VIRT       ] := 'virtual' $ cRet
-         aRet[ PRT_L_CONST_LAST ] := 'const'   $ cPas
+         aRet[ PRT_L_CONST      ] := "const"   $ cRet  //.or. "const"   $ cPas
+         aRet[ PRT_L_AND        ] := "&"       $ cRet
+         aRet[ PRT_L_FAR        ] := "*"       $ cRet
+         aRet[ PRT_L_VIRT       ] := "virtual" $ cRet
+         aRet[ PRT_L_CONST_LAST ] := "const"   $ cPas
 
-         cRet := strtran( cRet, 'virtual ', '' )
-         cRet := strtran( cRet, 'const '  , '' )
+         cRet := strtran( cRet, "virtual ", "" )
+         cRet := strtran( cRet, "const "  , "" )
          IF ! lRetIsList
-            cRet := strtran( cRet, '& '      , '' )
-            cRet := strtran( cRet, '&'       , '' )
-            cRet := strtran( cRet, '* '      , '' )
-            cRet := strtran( cRet, '*'       , '' )
+            cRet := strtran( cRet, "& "      , "" )
+            cRet := strtran( cRet, "&"       , "" )
+            cRet := strtran( cRet, "* "      , "" )
+            cRet := strtran( cRet, "*"       , "" )
          ENDIF
 
          /* Normalize */
@@ -867,7 +867,7 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_, lList, fB
          IF lRetIsList
             aRet[ PRT_CAST ] := cRet
          ELSE
-            n := at( ' ', cRet )
+            n := at( " ", cRet )
             IF n > 0
                aRet[ PRT_CAST ] := substr( cRet, 1, n-1 )
             ELSE
@@ -877,16 +877,16 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_, lList, fB
          aRet[ PRT_NAME ] := aRet[ PRT_CAST ]
 
          IF ascan( aEnum, {|e| iif( empty( e ), .f., e == aRet[ PRT_CAST ] ) } ) > 0
-            aRet[ PRT_CAST ] := cWidget + '::' + aRet[ PRT_CAST ]
+            aRet[ PRT_CAST ] := cWidget + "::" + aRet[ PRT_CAST ]
          ENDIF
 
          /* Parse arguments */
-         aArg := hb_ATokens( cPar, ',' )
+         aArg := hb_ATokens( cPar, "," )
          /* Normalize */
          aeval( aArg, {|e,i| aArg[ i ] := alltrim( e ) } )
 
-         cParas := ''
-         cDocs  := ''
+         cParas := ""
+         cDocs  := ""
 
          /* TO hold arguments by reference */
          aPre := {}
@@ -897,30 +897,30 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_, lList, fB
 
             aA[ PRT_RAW     ] := cPre
 
-            aA[ PRT_L_CONST ] := 'const'   $ cPre
-            aA[ PRT_L_AND   ] := '&'       $ cPre
-            aA[ PRT_L_FAR   ] := '*'       $ cPre
-            aA[ PRT_L_VIRT  ] := 'virtual' $ cPre
+            aA[ PRT_L_CONST ] := "const"   $ cPre
+            aA[ PRT_L_AND   ] := "&"       $ cPre
+            aA[ PRT_L_FAR   ] := "*"       $ cPre
+            aA[ PRT_L_VIRT  ] := "virtual" $ cPre
             /* Check if default value is defined */
-            n := at( '=', cPre )
+            n := at( "=", cPre )
             IF n > 0
                aA[ PRT_DEFAULT ] := alltrim( substr( cPre, n+1 ) )
                cPre := substr( cPre, 1, n-1 )
             ENDIF
             /* Normalize */
-            cPre := strtran( cPre, 'const '  , ''  )
-            cPre := strtran( cPre, '& '      , ''  )
-            cPre := strtran( cPre, '&'       , ''  )
-            cPre := strtran( cPre, '* '      , ''  )
-            cPre := strtran( cPre, '*'       , ''  )
-            cPre := strtran( cPre, 'virtual ', ''  )
-            cPre := strtran( cPre, '   '     , ' ' )
-            cPre := strtran( cPre, '  '      , ' ' )
+            cPre := strtran( cPre, "const "  , ""  )
+            cPre := strtran( cPre, "& "      , ""  )
+            cPre := strtran( cPre, "&"       , ""  )
+            cPre := strtran( cPre, "* "      , ""  )
+            cPre := strtran( cPre, "*"       , ""  )
+            cPre := strtran( cPre, "virtual ", ""  )
+            cPre := strtran( cPre, "   "     , " " )
+            cPre := strtran( cPre, "  "      , " " )
 
             cPre := alltrim( cPre )
 
             /* left may be two elements, name and cast */
-            n := at( ' ', cPre )
+            n := at( " ", cPre )
             IF n > 0
                aA[ PRT_CAST ] := substr( cPre, 1, n-1 )
                aA[ PRT_NAME ] := substr( cPre, n+1 )
@@ -930,7 +930,7 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_, lList, fB
             ENDIF
 
             IF ascan( aEnum, {|e| iif( empty( e ), .f., e == aA[ PRT_CAST ] ) } ) > 0
-               aA[ PRT_CAST ] := cWidget + '::' + aA[ PRT_CAST ]
+               aA[ PRT_CAST ] := cWidget + "::" + aA[ PRT_CAST ]
             ENDIF
 
             /* Add to main array */
@@ -942,171 +942,171 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_, lList, fB
 
             IF empty( cFirstParamCast )
                cFirstParamCast := aA[ PRT_CAST ]
-               IF '::' $ cFirstParamCast
-                  cFirstParamCast := substr( cFirstParamCast, at( '::', cFirstParamCast ) + 2 )
+               IF "::" $ cFirstParamCast
+                  cFirstParamCast := substr( cFirstParamCast, at( "::", cFirstParamCast ) + 2 )
                ENDIF
             ENDIF
 
             DO CASE
-            CASE aA[ PRT_CAST ] == 'PHB_ITEM'
-               aA[ PRT_BODY ] := 'hb_param( ' + cHBIdx + ', HB_IT_ANY )'
-               aA[ PRT_DOC  ] := 'x' + cDocNM
+            CASE aA[ PRT_CAST ] == "PHB_ITEM"
+               aA[ PRT_BODY ] := "hb_param( " + cHBIdx + ", HB_IT_ANY )"
+               aA[ PRT_DOC  ] := "x" + cDocNM
 
-            CASE aA[ PRT_CAST ] == 'T'
-               aA[ PRT_BODY ] := 'hb_param( ' + cHBIdx + ', HB_IT_ANY )'
-               aA[ PRT_DOC  ] := 'x' + cDocNM
+            CASE aA[ PRT_CAST ] == "T"
+               aA[ PRT_BODY ] := "hb_param( " + cHBIdx + ", HB_IT_ANY )"
+               aA[ PRT_DOC  ] := "x" + cDocNM
 
             /* Values by reference */
             CASE aA[ PRT_CAST ] $ cInt .and. aA[ PRT_L_FAR ]
-               aadd( aPre, { aA[ PRT_CAST ] + ' i' + cDocNM + ' = 0;', nHBIdx, 'i' + cDocNM, 'hb_storni' } )
-               aA[ PRT_BODY ] := '&i' + cDocNM
-               aA[ PRT_DOC  ] := '@n' + cDocNM
+               aadd( aPre, { aA[ PRT_CAST ] + " i" + cDocNM + " = 0;", nHBIdx, "i" + cDocNM, "hb_storni" } )
+               aA[ PRT_BODY ] := "&i" + cDocNM
+               aA[ PRT_DOC  ] := "@n" + cDocNM
 
             CASE aA[ PRT_CAST ] $ cIntLong .and. aA[ PRT_L_FAR ]
-               aadd( aPre, { aA[ PRT_CAST ] + ' i' + cDocNM + ' = 0;', nHBIdx, 'i' + cDocNM, 'hb_stornl' } )
-               aA[ PRT_BODY ] := '&i' + cDocNM
-               aA[ PRT_DOC  ] := '@n' + cDocNM
+               aadd( aPre, { aA[ PRT_CAST ] + " i" + cDocNM + " = 0;", nHBIdx, "i" + cDocNM, "hb_stornl" } )
+               aA[ PRT_BODY ] := "&i" + cDocNM
+               aA[ PRT_DOC  ] := "@n" + cDocNM
 
             CASE aA[ PRT_CAST ] $ cIntLongLong .and. aA[ PRT_L_FAR ]
-               aadd( aPre, { aA[ PRT_CAST ] + ' i' + cDocNM + ' = 0;', nHBIdx, 'i' + cDocNM, 'hb_stornint' } )
-               aA[ PRT_BODY ] := '&i' + cDocNM
-               aA[ PRT_DOC  ] := '@n' + cDocNM
+               aadd( aPre, { aA[ PRT_CAST ] + " i" + cDocNM + " = 0;", nHBIdx, "i" + cDocNM, "hb_stornint" } )
+               aA[ PRT_BODY ] := "&i" + cDocNM
+               aA[ PRT_DOC  ] := "@n" + cDocNM
 
             CASE aA[ PRT_CAST ] $ cInt
                IF !empty( aA[ PRT_DEFAULT ] ) .AND. !( aA[ PRT_DEFAULT ] == "0" )
-                  aA[ PRT_BODY ] := 'hb_parnidef( ' + cHBIdx + ", " + aA[ PRT_DEFAULT ] + ' )'
+                  aA[ PRT_BODY ] := "hb_parnidef( " + cHBIdx + ", " + aA[ PRT_DEFAULT ] + " )"
                ELSE
-                  aA[ PRT_BODY ] := 'hb_parni( ' + cHBIdx + ' )'
+                  aA[ PRT_BODY ] := "hb_parni( " + cHBIdx + " )"
                ENDIF
-               aA[ PRT_DOC  ] := 'n' + cDocNM
+               aA[ PRT_DOC  ] := "n" + cDocNM
 
             CASE aA[ PRT_CAST ] $ cIntLong
                IF !empty( aA[ PRT_DEFAULT ] ) .AND. !( aA[ PRT_DEFAULT ] == "0" )
-                  aA[ PRT_BODY ] := 'hb_parnldef( ' + cHBIdx + ", " + aA[ PRT_DEFAULT ] + ' )'
+                  aA[ PRT_BODY ] := "hb_parnldef( " + cHBIdx + ", " + aA[ PRT_DEFAULT ] + " )"
                ELSE
-                  aA[ PRT_BODY ] := 'hb_parnl( ' + cHBIdx + ' )'
+                  aA[ PRT_BODY ] := "hb_parnl( " + cHBIdx + " )"
                ENDIF
-               aA[ PRT_DOC  ] := 'n' + cDocNM
+               aA[ PRT_DOC  ] := "n" + cDocNM
 
             CASE aA[ PRT_CAST ] $ "qlonglong,qulonglong"
                IF !empty( aA[ PRT_DEFAULT ] ) .AND. !( aA[ PRT_DEFAULT ] == "0" )
-                  aA[ PRT_BODY ] := '( ' + aA[ PRT_CAST ] + ' ) hb_parnintdef( ' + cHBIdx + ", " + aA[ PRT_DEFAULT ] + ' )'
+                  aA[ PRT_BODY ] := "( " + aA[ PRT_CAST ] + " ) hb_parnintdef( " + cHBIdx + ", " + aA[ PRT_DEFAULT ] + " )"
                ELSE
-                  aA[ PRT_BODY ] := '( ' + aA[ PRT_CAST ] + ' ) hb_parnint( ' + cHBIdx + ' )'
+                  aA[ PRT_BODY ] := "( " + aA[ PRT_CAST ] + " ) hb_parnint( " + cHBIdx + " )"
                ENDIF
-               aA[ PRT_DOC  ] := 'n' + cDocNM
+               aA[ PRT_DOC  ] := "n" + cDocNM
 
             CASE aA[ PRT_CAST ] $ cIntLongLong
                IF !empty( aA[ PRT_DEFAULT ] ) .AND. !( aA[ PRT_DEFAULT ] == "0" )
-                  aA[ PRT_BODY ] := 'hb_parnintdef( ' + cHBIdx + ", " + aA[ PRT_DEFAULT ] + ' )'
+                  aA[ PRT_BODY ] := "hb_parnintdef( " + cHBIdx + ", " + aA[ PRT_DEFAULT ] + " )"
                ELSE
-                  aA[ PRT_BODY ] := 'hb_parnint( ' + cHBIdx + ' )'
+                  aA[ PRT_BODY ] := "hb_parnint( " + cHBIdx + " )"
                ENDIF
-               aA[ PRT_DOC  ] := 'n' + cDocNM
+               aA[ PRT_DOC  ] := "n" + cDocNM
 
-            CASE aA[ PRT_CAST ] $ 'double,qreal' .and. aA[ PRT_L_FAR ]
-               aadd( aPre, { 'qreal qr' + cDocNM + ' = 0;', nHBIdx, 'qr' + cDocNM, 'hb_stornd'  } )
-               aA[ PRT_BODY ] := '&qr' + cDocNM
-               aA[ PRT_DOC  ] := '@n' + cDocNM
+            CASE aA[ PRT_CAST ] $ "double,qreal" .and. aA[ PRT_L_FAR ]
+               aadd( aPre, { "qreal qr" + cDocNM + " = 0;", nHBIdx, "qr" + cDocNM, "hb_stornd"  } )
+               aA[ PRT_BODY ] := "&qr" + cDocNM
+               aA[ PRT_DOC  ] := "@n" + cDocNM
 
-            CASE aA[ PRT_CAST ] $ 'double,qreal,float'
-               aA[ PRT_BODY ] := 'hb_parnd( ' + cHBIdx + ' )'
-               aA[ PRT_DOC  ] := 'n' + cDocNM
+            CASE aA[ PRT_CAST ] $ "double,qreal,float"
+               aA[ PRT_BODY ] := "hb_parnd( " + cHBIdx + " )"
+               aA[ PRT_DOC  ] := "n" + cDocNM
 
-            CASE aA[ PRT_CAST ] == 'uchar' .and. aA[ PRT_L_FAR ] .and. !( aA[ PRT_L_CONST ] )
-               aA[ PRT_BODY ] := '( char * ) hb_parc( ' + cHBIdx + ' )'
-               aA[ PRT_DOC  ] := 'c' + cDocNM
+            CASE aA[ PRT_CAST ] == "uchar" .and. aA[ PRT_L_FAR ] .and. !( aA[ PRT_L_CONST ] )
+               aA[ PRT_BODY ] := "( char * ) hb_parc( " + cHBIdx + " )"
+               aA[ PRT_DOC  ] := "c" + cDocNM
 
-            CASE aA[ PRT_CAST ] == 'uchar' .and. !( aA[ PRT_L_FAR ] ) .and. !( aA[ PRT_L_CONST ] )
-               aA[ PRT_BODY ] := '( char ) hb_parni( ' + cHBIdx + ' )'
-               aA[ PRT_DOC  ] := 'n' + cDocNM
+            CASE aA[ PRT_CAST ] == "uchar" .and. !( aA[ PRT_L_FAR ] ) .and. !( aA[ PRT_L_CONST ] )
+               aA[ PRT_BODY ] := "( char ) hb_parni( " + cHBIdx + " )"
+               aA[ PRT_DOC  ] := "n" + cDocNM
 
-            CASE aA[ PRT_CAST ] == 'char' .and. aA[ PRT_L_FAR ] .and. !( aA[ PRT_L_CONST ] )
-               aA[ PRT_BODY ] := '( char * ) hb_parc( ' + cHBIdx + ' )'
-               aA[ PRT_DOC  ] := 'c' + cDocNM
+            CASE aA[ PRT_CAST ] == "char" .and. aA[ PRT_L_FAR ] .and. !( aA[ PRT_L_CONST ] )
+               aA[ PRT_BODY ] := "( char * ) hb_parc( " + cHBIdx + " )"
+               aA[ PRT_DOC  ] := "c" + cDocNM
 
-            CASE aA[ PRT_CAST ] == 'char' .and. !( aA[ PRT_L_FAR ] ) .and. !( aA[ PRT_L_CONST ] )
-               aA[ PRT_BODY ] := '( char ) hb_parni( ' + cHBIdx + ' )'
-               aA[ PRT_DOC  ] := 'c' + cDocNM
+            CASE aA[ PRT_CAST ] == "char" .and. !( aA[ PRT_L_FAR ] ) .and. !( aA[ PRT_L_CONST ] )
+               aA[ PRT_BODY ] := "( char ) hb_parni( " + cHBIdx + " )"
+               aA[ PRT_DOC  ] := "c" + cDocNM
 
-            CASE ( '::' $ aA[ PRT_CAST ] ) .and. aA[ PRT_L_FAR ]
-               aadd( aPre, { aA[ PRT_CAST ] + ' i' + cDocNM + ' = ( ' + aA[ PRT_CAST ] + ' ) 0;', nHBIdx, 'i' + cDocNM, 'hb_storni' } )
-               aA[ PRT_BODY ] := '&i' + cDocNM
-               aA[ PRT_DOC  ] := '@n' + cDocNM
+            CASE ( "::" $ aA[ PRT_CAST ] ) .and. aA[ PRT_L_FAR ]
+               aadd( aPre, { aA[ PRT_CAST ] + " i" + cDocNM + " = ( " + aA[ PRT_CAST ] + " ) 0;", nHBIdx, "i" + cDocNM, "hb_storni" } )
+               aA[ PRT_BODY ] := "&i" + cDocNM
+               aA[ PRT_DOC  ] := "@n" + cDocNM
 
-            CASE ( '::' $ aA[ PRT_CAST ] )
-               s := '( ' + aA[ PRT_CAST ] + ' ) hb_parni( ' + cHBIdx + ' )'
+            CASE ( "::" $ aA[ PRT_CAST ] )
+               s := "( " + aA[ PRT_CAST ] + " ) hb_parni( " + cHBIdx + " )"
                IF !empty( aA[ PRT_DEFAULT ] ) .AND. !( aA[ PRT_DEFAULT ] == "0" )
                   IF ascan( aEnum, aA[ PRT_DEFAULT ] ) > 0
-                     ss := cWidget + '::' + aA[ PRT_DEFAULT ]
+                     ss := cWidget + "::" + aA[ PRT_DEFAULT ]
                   ELSE
-                     ss := iif( '::' $ aA[ PRT_DEFAULT ], aA[ PRT_DEFAULT ], ;
-                        iif( isDigit( left( aA[ PRT_DEFAULT ], 1 ) ), aA[ PRT_DEFAULT ], cWidget + '::' + aA[ PRT_DEFAULT ] ) )
+                     ss := iif( "::" $ aA[ PRT_DEFAULT ], aA[ PRT_DEFAULT ], ;
+                        iif( isDigit( left( aA[ PRT_DEFAULT ], 1 ) ), aA[ PRT_DEFAULT ], cWidget + "::" + aA[ PRT_DEFAULT ] ) )
                   ENDIF
-                  ss := '( ' + aA[ PRT_CAST ] + ' ) ' + ss
-                  aA[ PRT_BODY ] := '( HB_ISNUM( ' + cHBIdx + ' ) ? ' + s + ' : ' + ss + ' )'
+                  ss := "( " + aA[ PRT_CAST ] + " ) " + ss
+                  aA[ PRT_BODY ] := "( HB_ISNUM( " + cHBIdx + " ) ? " + s + " : " + ss + " )"
                ELSE
                   aA[ PRT_BODY ] := s
                ENDIF
-               aA[ PRT_DOC  ] := 'n' + cDocNM
+               aA[ PRT_DOC  ] := "n" + cDocNM
 
-            CASE aA[ PRT_CAST ] == 'bool' .and. aA[ PRT_L_FAR ]
-               aadd( aPre, { 'bool i' + cDocNM + ' = 0;', nHBIdx, 'i' + cDocNM, 'hb_stornl' } )
-               aA[ PRT_BODY ] := '&i' + cDocNM
-               aA[ PRT_DOC  ] := '@l' + cDocNM
+            CASE aA[ PRT_CAST ] == "bool" .and. aA[ PRT_L_FAR ]
+               aadd( aPre, { "bool i" + cDocNM + " = 0;", nHBIdx, "i" + cDocNM, "hb_stornl" } )
+               aA[ PRT_BODY ] := "&i" + cDocNM
+               aA[ PRT_DOC  ] := "@l" + cDocNM
 
-            CASE aA[ PRT_CAST ] == 'bool'
-               aA[ PRT_BODY ] := 'hb_parl( ' + cHBIdx + ' )'
-               aA[ PRT_DOC  ] := 'l' + cDocNM
+            CASE aA[ PRT_CAST ] == "bool"
+               aA[ PRT_BODY ] := "hb_parl( " + cHBIdx + " )"
+               aA[ PRT_DOC  ] := "l" + cDocNM
 
-            CASE aA[ PRT_CAST ] == 'QString'
+            CASE aA[ PRT_CAST ] == "QString"
                IF !( s_isObject )
-                  aA[ PRT_BODY ] := 'hbqt_par_QString( ' + cHBIdx + ' )'
+                  aA[ PRT_BODY ] := "hbqt_par_QString( " + cHBIdx + " )"
                ELSE
-                  aA[ PRT_BODY ] := cWidget+'::tr( hb_parc( ' + cHBIdx + ' ) )'
+                  aA[ PRT_BODY ] := cWidget+"::tr( hb_parc( " + cHBIdx + " ) )"
                ENDIF
-               aA[ PRT_DOC  ] := 'c' + cDocNM
+               aA[ PRT_DOC  ] := "c" + cDocNM
 
-            CASE aA[ PRT_CAST ] == 'FT_Face'
-               aA[ PRT_BODY ] := 'hbqt_par_FT_Face( ' + cHBIdx + ' )'
-               aA[ PRT_DOC  ] := 'c' + cDocNM
+            CASE aA[ PRT_CAST ] == "FT_Face"
+               aA[ PRT_BODY ] := "hbqt_par_FT_Face( " + cHBIdx + " )"
+               aA[ PRT_DOC  ] := "c" + cDocNM
 
-            CASE aA[ PRT_CAST ] == 'QIcon'
-               aA[ PRT_BODY ] := 'QIcon( hbqt_par_QString( ' + cHBIdx + ' ) )'
-               aA[ PRT_DOC  ] := 'c' + cDocNM
+            CASE aA[ PRT_CAST ] == "QIcon"
+               aA[ PRT_BODY ] := "QIcon( hbqt_par_QString( " + cHBIdx + " ) )"
+               aA[ PRT_DOC  ] := "c" + cDocNM
 
             CASE aA[ PRT_L_FAR ]
-               aA[ PRT_BODY ] := 'hbqt_par_' + aA[ PRT_CAST ] + '( ' + cHBIdx + ' )'
-               aA[ PRT_DOC  ] := 'p' + cDocNM
+               aA[ PRT_BODY ] := "hbqt_par_" + aA[ PRT_CAST ] + "( " + cHBIdx + " )"
+               aA[ PRT_DOC  ] := "p" + cDocNM
 
             CASE aA[ PRT_L_AND ] .and. aA[ PRT_L_CONST ]
-               s := '*hbqt_par_' + aA[ PRT_CAST ] + '( ' + cHBIdx + ' )'
-               IF !empty( aA[ PRT_DEFAULT ] ) .and. ( '(' $ aA[ PRT_DEFAULT ] )
-                  aA[ PRT_BODY ] := '( HB_ISPOINTER( ' + cHBIdx + ' ) ? ' + s + ' : ' + aA[ PRT_DEFAULT ] + ' )'
+               s := "*hbqt_par_" + aA[ PRT_CAST ] + "( " + cHBIdx + " )"
+               IF !empty( aA[ PRT_DEFAULT ] ) .and. ( "(" $ aA[ PRT_DEFAULT ] )
+                  aA[ PRT_BODY ] := "( HB_ISPOINTER( " + cHBIdx + " ) ? " + s + " : " + aA[ PRT_DEFAULT ] + " )"
                ELSE
                   aA[ PRT_BODY ] := s
                ENDIF
-               aA[ PRT_DOC  ] := 'p' + cDocNM
+               aA[ PRT_DOC  ] := "p" + cDocNM
 
             CASE aA[ PRT_L_AND ]
-               aA[ PRT_BODY ] := '*hbqt_par_' + aA[ PRT_CAST ] + '( ' + cHBIdx + ' )'
-               aA[ PRT_DOC  ] := 'p' + cDocNM
+               aA[ PRT_BODY ] := "*hbqt_par_" + aA[ PRT_CAST ] + "( " + cHBIdx + " )"
+               aA[ PRT_DOC  ] := "p" + cDocNM
 
-            CASE aA[ PRT_CAST ] == 'QChar'
-               aA[ PRT_BODY ] := '*hbqt_par_' + aA[ PRT_CAST ] + '( ' + cHBIdx + ' )'
-               aA[ PRT_DOC  ] := 'p' + cDocNM
+            CASE aA[ PRT_CAST ] == "QChar"
+               aA[ PRT_BODY ] := "*hbqt_par_" + aA[ PRT_CAST ] + "( " + cHBIdx + " )"
+               aA[ PRT_DOC  ] := "p" + cDocNM
 
             OTHERWISE
-               aA[ PRT_BODY ] := ''
-               aA[ PRT_DOC  ] := ''
+               aA[ PRT_BODY ] := ""
+               aA[ PRT_DOC  ] := ""
 
             ENDCASE
 
-            cParas += aA[ PRT_BODY ] + ', '
-            cDocs  += aA[ PRT_DOC  ] + ', '
+            cParas += aA[ PRT_BODY ] + ", "
+            cDocs  += aA[ PRT_DOC  ] + ", "
          NEXT
 
-         IF right( cParas, 2 ) == ', '
+         IF right( cParas, 2 ) == ", "
             cParas := substr( cParas, 1, len( cParas ) - 2 )
             cDocs  := substr( cDocs , 1, len( cDocs  ) - 2 )
          ENDIF
@@ -1115,8 +1115,8 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_, lList, fB
          IF .t.
             aA     := aRet       /*     T A K E   C A R E    */
             //
-            cWdg   := 'hbqt_par_' + cWidget + '( 1 )->'
-            cParas := '( ' + cParas + ' )'
+            cWdg   := "hbqt_par_" + cWidget + "( 1 )->"
+            cParas := "( " + cParas + " )"
             cCmn   := cWdg + cFun + cParas
             cDocNM := THIS_PROPER( aA[ PRT_NAME ] )
 
@@ -1143,119 +1143,119 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_, lList, fB
                   cPrgRet := ""
 
                OTHERWISE
-                  cCmd := 'hb_retptrGC( hbqt_gcAllocate_QList( new ' + aA[ PRT_CAST ] + '( ' + cCmn + ' ), true ) )'
-                  cPrgRet := 'p' + cDocNM
+                  cCmd := "hb_retptrGC( hbqt_gcAllocate_QList( new " + aA[ PRT_CAST ] + "( " + cCmn + " ), true ) )"
+                  cPrgRet := "p" + cDocNM
 
                ENDCASE
 
-            CASE aA[ PRT_CAST ] == 'T'
-               cCmd := 'hb_retptr( ' + cCmn + ' )'
-               cPrgRet := 'p' + cDocNM
+            CASE aA[ PRT_CAST ] == "T"
+               cCmd := "hb_retptr( " + cCmn + " )"
+               cPrgRet := "p" + cDocNM
 
-            CASE aA[ PRT_CAST ] == 'void'
+            CASE aA[ PRT_CAST ] == "void"
                cCmd := cCmn
-               cPrgRet := 'NIL'
+               cPrgRet := "NIL"
 
             CASE aA[ PRT_CAST ] $ cInt
-               cCmd := 'hb_retni( ' + cCmn + ' )'
-               cPrgRet := 'n' + cDocNM
+               cCmd := "hb_retni( " + cCmn + " )"
+               cPrgRet := "n" + cDocNM
 
             CASE aA[ PRT_CAST ] $ cIntLong
-               cCmd := 'hb_retnl( ' + cCmn + ' )'
-               cPrgRet := 'n' + cDocNM
+               cCmd := "hb_retnl( " + cCmn + " )"
+               cPrgRet := "n" + cDocNM
 
             CASE aA[ PRT_CAST ] $ cIntLongLong
-               cCmd := 'hb_retnint( ' + cCmn + ' )'
-               cPrgRet := 'n' + cDocNM
+               cCmd := "hb_retnint( " + cCmn + " )"
+               cPrgRet := "n" + cDocNM
 
-            CASE aA[ PRT_CAST ] $ 'double,qreal,float'
-               cCmd := 'hb_retnd( ' + cCmn + ' )'
-               cPrgRet := 'n' + cDocNM
+            CASE aA[ PRT_CAST ] $ "double,qreal,float"
+               cCmd := "hb_retnd( " + cCmn + " )"
+               cPrgRet := "n" + cDocNM
 
-            CASE ( '::' $ aA[ PRT_CAST ] )
-               cCmd := 'hb_retni( ( ' + aA[ PRT_CAST ] + ' ) ' + cCmn + ' )'
-               cPrgRet := 'n' + cDocNM
+            CASE ( "::" $ aA[ PRT_CAST ] )
+               cCmd := "hb_retni( ( " + aA[ PRT_CAST ] + " ) " + cCmn + " )"
+               cPrgRet := "n" + cDocNM
 
-            CASE aA[ PRT_CAST ] == 'bool'
-               cCmd := 'hb_retl( ' + cCmn + ' )'
-               cPrgRet := 'l' + cDocNM
+            CASE aA[ PRT_CAST ] == "bool"
+               cCmd := "hb_retl( " + cCmn + " )"
+               cPrgRet := "l" + cDocNM
 
-            CASE aA[ PRT_CAST ] == 'char' .AND. aA[ PRT_L_FAR ]
-               cCmd := 'hb_retc( ' + cCmn + ' )'
-               cPrgRet := 'c' + cDocNM
+            CASE aA[ PRT_CAST ] == "char" .AND. aA[ PRT_L_FAR ]
+               cCmd := "hb_retc( " + cCmn + " )"
+               cPrgRet := "c" + cDocNM
 
-            CASE aA[ PRT_CAST ] == 'char'
-               cCmd := 'hb_retni( ' + cCmn + ' )'
-               cPrgRet := 'c' + cDocNM
+            CASE aA[ PRT_CAST ] == "char"
+               cCmd := "hb_retni( " + cCmn + " )"
+               cPrgRet := "c" + cDocNM
 
-            CASE aA[ PRT_CAST ] == 'QString'
-               cCmd := 'hb_retc( ' + cCmn + '.toAscii().data()' + ' )'
-               cPrgRet := 'c' + cDocNM
+            CASE aA[ PRT_CAST ] == "QString"
+               cCmd := "hb_retc( " + cCmn + ".toAscii().data()" + " )"
+               cPrgRet := "c" + cDocNM
 
-            CASE aA[ PRT_CAST ] == 'FT_Face'
-               cCmd := 'hb_retc( ' + cCmn + ' )'
-               cPrgRet := 'c' + cDocNM
+            CASE aA[ PRT_CAST ] == "FT_Face"
+               cCmd := "hb_retc( " + cCmn + " )"
+               cPrgRet := "c" + cDocNM
 
             CASE aA[ PRT_L_FAR ] .AND. ( aA[ PRT_CAST ] $ "uchar" )
-               //cCmd := 'hb_retptr( ( ' + aA[ PRT_CAST ] + '* ) ' + cCmn + ' )'
-               cCmd := 'hb_retc( ( const char * ) ' + cCmn + ' )'
-               cPrgRet := 'p' + cDocNM
+               //cCmd := "hb_retptr( ( " + aA[ PRT_CAST ] + "* ) " + cCmn + " )"
+               cCmd := "hb_retc( ( const char * ) " + cCmn + " )"
+               cPrgRet := "p" + cDocNM
 
 //            CASE aA[ PRT_L_FAR ]
             CASE aA[ PRT_L_FAR ] .AND. !( aA[ PRT_L_CONST ] )
-               //cCmd := 'hb_retptr( ( ' + aA[ PRT_CAST ] + '* ) ' + cCmn + ' )'
+               //cCmd := "hb_retptr( ( " + aA[ PRT_CAST ] + "* ) " + cCmn + " )"
                IF ( isAqtObject( aA[ PRT_CAST ] ) )
                   cCmd := Get_Command( aA[ PRT_CAST ], cCmn, .F. )
                ELSE
-                  cCmd := 'hb_retptr( ( ' + aA[ PRT_CAST ] + '* ) ' + cCmn + ' )'
+                  cCmd := "hb_retptr( ( " + aA[ PRT_CAST ] + "* ) " + cCmn + " )"
                ENDIF
-               cPrgRet := 'p' + cDocNM
+               cPrgRet := "p" + cDocNM
 
             CASE ( isAqtObject( aA[ PRT_CAST ] ) )        .AND. ;
                                       aA[ PRT_L_FAR ]   .AND. ;
                                       aA[ PRT_L_CONST ] .AND. ;
                                       ( "Abstract" $ aA[ PRT_CAST ] )
-               //cCmd := 'hb_retptr( ( ' + aA[ PRT_CAST ] + '* ) ' + cCmn + ' )'
-               cCmd := 'hb_retptrGC( hbqt_gcAllocate_' + aA[ PRT_CAST ] + '( ( void * ) ' + cCmn + ', false ) )'
-               cPrgRet := 'p' + cDocNM
+               //cCmd := "hb_retptr( ( " + aA[ PRT_CAST ] + "* ) " + cCmn + " )"
+               cCmd := "hb_retptrGC( hbqt_gcAllocate_" + aA[ PRT_CAST ] + "( ( void * ) " + cCmn + ", false ) )"
+               cPrgRet := "p" + cDocNM
 
             CASE ( isAqtObject( aA[ PRT_CAST ] ) )        .AND. ;
                                       aA[ PRT_L_FAR   ] .AND. ;
                                       aA[ PRT_L_CONST ] .AND. ;
                                       aA[ PRT_L_VIRT  ]
-               //cCmd := 'hb_retptr( ( ' + aA[ PRT_CAST ] + '* ) ' + cCmn + ' )'
-               cCmd := 'hb_retptrGC( hbqt_gcAllocate_' + aA[ PRT_CAST ] + '( ( void * ) ' + cCmn + ', false ) )'
-               cPrgRet := 'p' + cDocNM
+               //cCmd := "hb_retptr( ( " + aA[ PRT_CAST ] + "* ) " + cCmn + " )"
+               cCmd := "hb_retptrGC( hbqt_gcAllocate_" + aA[ PRT_CAST ] + "( ( void * ) " + cCmn + ", false ) )"
+               cPrgRet := "p" + cDocNM
 
             CASE ( isAqtObject( aA[ PRT_CAST ] ) )        .AND. ;
                                       aA[ PRT_L_FAR   ] .AND. ;
                                       aA[ PRT_L_CONST ] .AND. ;
                                       aA[ PRT_L_CONST_LAST ]
                cCmd := Get_Command_1( aA[ PRT_CAST ], cCmn )
-               cPrgRet := 'p' + cDocNM
+               cPrgRet := "p" + cDocNM
 
             CASE aA[ PRT_L_AND ] .AND. aA[ PRT_L_CONST ]
                cCmd := Get_Command( aA[ PRT_CAST ], cCmn )
-               cPrgRet := 'p' + cDocNM
+               cPrgRet := "p" + cDocNM
 
             CASE aA[ PRT_L_CONST ]
                cCmd := Get_Command( aA[ PRT_CAST ], cCmn )
-               cPrgRet := 'p' + cDocNM
+               cPrgRet := "p" + cDocNM
 
             CASE aA[ PRT_L_AND ]
                cCmd := Get_Command( aA[ PRT_CAST ], cCmn )
-               cPrgRet := 'p' + cDocNM
+               cPrgRet := "p" + cDocNM
 
             OTHERWISE
                /* No attribute is attached to return value */
                IF ( isAqtObject( aA[ PRT_CAST ] ) )
                   cCmd := Get_Command( aA[ PRT_CAST ], cCmn )
-                  cPrgRet := 'p' + cDocNM
+                  cPrgRet := "p" + cDocNM
 
                ELSE
-                  OutStd( '<<< ' + cProto + ' | ' + aA[ PRT_CAST ] + ' >>>' + s_NewLine )
-                  cCmd := ''
-                  cPrgRet := ''
+                  OutStd( "<<< " + cProto + " | " + aA[ PRT_CAST ] + " >>>" + s_NewLine )
+                  cCmd := ""
+                  cPrgRet := ""
 
                ENDIF
 
@@ -1267,7 +1267,7 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_, lList, fB
             ENDIF
 
             IF ! Empty( cCmd )
-               cCmd := StrTran( cCmd, '(  )', '()' ) + ';'
+               cCmd := StrTran( cCmd, "(  )", "()" ) + ";"
             ENDIF
          ENDIF
       ENDIF
@@ -1276,15 +1276,15 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_, lList, fB
    IF ( lSuccess := ! Empty( cCmd ) )
       IF ( n := ascan( func_, {|e_| e_[ 1 ] == cFun } ) ) > 0
          func_[ n,2 ]++
-         cHBFunc := cFun + '_' + hb_ntos( func_[ n, 2 ] )
+         cHBFunc := cFun + "_" + hb_ntos( func_[ n, 2 ] )
          #if 0        /* TODO: Refine to get duplicate name resolution - this mechanism has problems */
          IF empty( cFirstParamCast )
-            cHBFunc := cFun + '_' + hb_ntos( func_[ n, 2 ] )
+            cHBFunc := cFun + "_" + hb_ntos( func_[ n, 2 ] )
          ELSE
             IF cFirstParamCast == func_[ n,3 ]
-               cHBFunc := cFun + '_' + cFirstParamCast + "_" + hb_ntos( func_[ n, 2 ] )
+               cHBFunc := cFun + "_" + cFirstParamCast + "_" + hb_ntos( func_[ n, 2 ] )
             ELSE
-               cHBFunc := cFun + '_' + cFirstParamCast
+               cHBFunc := cFun + "_" + cFirstParamCast
             ENDIF
          ENDIF
          func_[ n,3 ] := cFirstParamCast
@@ -1295,7 +1295,7 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_, lList, fB
       ENDIF
 
       aadd( txt_, "/*" )
-      aadd( txt_, " * " + strtran( cProto, chr(13), '' ) )
+      aadd( txt_, " * " + strtran( cProto, chr(13), "" ) )
       aadd( txt_, " */" )
       aadd( txt_, "HB_FUNC( QT_" + upper( cWidget ) + "_" + upper( cHBFunc ) + " )" )
       aadd( txt_, "{" )
@@ -1333,9 +1333,9 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_, lList, fB
       aadd( txt_, "}" )
       aadd( txt_, ""  )
 
-      aadd( doc_, 'Qt_' + cWidget + '_' + cHBFunc + '( p' + cWidget + ;
-                        iif( empty( cDocs ), '', ', ' + cDocs ) + ' ) -> ' + cPrgRet )
-      aadd( doc_, '' )
+      aadd( doc_, "Qt_" + cWidget + "_" + cHBFunc + "( p" + cWidget + ;
+                        iif( empty( cDocs ), "", ", " + cDocs ) + " ) -> " + cPrgRet )
+      aadd( doc_, "" )
    ENDIF
 
    RETURN lSuccess
@@ -1343,7 +1343,7 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_, lList, fB
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION isAqtObject( cCast )
-   RETURN left( cCast, 1 ) == 'Q' .OR. left( cCast, 3 ) == "HBQ"
+   RETURN left( cCast, 1 ) == "Q" .OR. left( cCast, 3 ) == "HBQ"
 
 /*----------------------------------------------------------------------*/
 
@@ -1353,16 +1353,16 @@ STATIC FUNCTION ParseVariables( cProto, cWidget, txt_, doc_, aEnum, func_ )
    LOCAL cRet, cFun, cDocs, cCmd
    LOCAL cWdg, cCmn, cPrgRet, cHBFunc, cDocNM
    LOCAL lSuccess
- * LOCAL cInt         := 'int,qint16,quint16,QChar,short,ushort'
-   LOCAL cInt         := 'int,qint16,quint16,short,ushort'
-   LOCAL cIntLong     := 'qint32,quint32,QRgb'
-   LOCAL cIntLongLong := 'qint64,quint64,qlonglong,qulonglong'
+ * LOCAL cInt         := "int,qint16,quint16,QChar,short,ushort"
+   LOCAL cInt         := "int,qint16,quint16,short,ushort"
+   LOCAL cIntLong     := "qint32,quint32,QRgb"
+   LOCAL cIntLongLong := "qint64,quint64,qlonglong,qulonglong"
 
    aPre   := {}
-   cDocs  := ''
+   cDocs  := ""
 
    aRet := {}
-   n := at( ' ', cProto )
+   n := at( " ", cProto )
    IF n > 0
       IF .t.
          cRet := alltrim( substr( cProto, 1, n - 1 ) )
@@ -1375,78 +1375,78 @@ STATIC FUNCTION ParseVariables( cProto, cWidget, txt_, doc_, aEnum, func_ )
          aRet[ PRT_NAME ] := aRet[ PRT_CAST ]
 
          IF ascan( aEnum, {|e| iif( empty( e ), .f., e == aRet[ PRT_CAST ] ) } ) > 0
-            aRet[ PRT_CAST ] := cWidget + '::' + aRet[ PRT_CAST ]
+            aRet[ PRT_CAST ] := cWidget + "::" + aRet[ PRT_CAST ]
          ENDIF
 
          /* Build complete code line */
          IF .t.
             aA     := aRet
-            cWdg   := 'hbqt_par_' + cWidget + '( 1 )->'
+            cWdg   := "hbqt_par_" + cWidget + "( 1 )->"
             cCmn   := cWdg + cFun
             cDocNM := THIS_PROPER( aA[ PRT_NAME ] )
 
             DO CASE
-            CASE aA[ PRT_CAST ] == 'T'
-               cCmd := 'hb_ret( ' + cCmn + ' )'
-               cPrgRet := 'x' + cDocNM
+            CASE aA[ PRT_CAST ] == "T"
+               cCmd := "hb_ret( " + cCmn + " )"
+               cPrgRet := "x" + cDocNM
 
             CASE aA[ PRT_CAST ] $ cInt
-               cCmd := 'hb_retni( ' + cCmn + ' )'
-               cPrgRet := 'n' + cDocNM
+               cCmd := "hb_retni( " + cCmn + " )"
+               cPrgRet := "n" + cDocNM
 
             CASE aA[ PRT_CAST ] $ cIntLong
-               cCmd := 'hb_retnl( ' + cCmn + ' )'
-               cPrgRet := 'n' + cDocNM
+               cCmd := "hb_retnl( " + cCmn + " )"
+               cPrgRet := "n" + cDocNM
 
             CASE aA[ PRT_CAST ] $ cIntLongLong
-               cCmd := 'hb_retnint( ' + cCmn + ' )'
-               cPrgRet := 'n' + cDocNM
+               cCmd := "hb_retnint( " + cCmn + " )"
+               cPrgRet := "n" + cDocNM
 
-            CASE aA[ PRT_CAST ] $ 'double,qreal,float'
-               cCmd := 'hb_retnd( ' + cCmn + ' )'
-               cPrgRet := 'n' + cDocNM
+            CASE aA[ PRT_CAST ] $ "double,qreal,float"
+               cCmd := "hb_retnd( " + cCmn + " )"
+               cPrgRet := "n" + cDocNM
 
-            CASE ( '::' $ aA[ PRT_CAST ] )
-               cCmd := 'hb_retni( ( ' + aA[ PRT_CAST ] + ' ) ' + cCmn + ' )'
-               cPrgRet := 'n' + cDocNM
+            CASE ( "::" $ aA[ PRT_CAST ] )
+               cCmd := "hb_retni( ( " + aA[ PRT_CAST ] + " ) " + cCmn + " )"
+               cPrgRet := "n" + cDocNM
 
-            CASE aA[ PRT_CAST ] == 'bool'
-               cCmd := 'hb_retl( ' + cCmn + ' )'
-               cPrgRet := 'l' + cDocNM
+            CASE aA[ PRT_CAST ] == "bool"
+               cCmd := "hb_retl( " + cCmn + " )"
+               cPrgRet := "l" + cDocNM
 
-            CASE aA[ PRT_CAST ] == 'char*'
-               cCmd := 'hb_retc( ' + cCmn + ' )'
-               cPrgRet := 'c' + cDocNM
+            CASE aA[ PRT_CAST ] == "char*"
+               cCmd := "hb_retc( " + cCmn + " )"
+               cPrgRet := "c" + cDocNM
 
-            CASE aA[ PRT_CAST ] == 'char'
-               cCmd := 'hb_retni( ' + cCmn + ' )'
-               cPrgRet := 'c' + cDocNM
+            CASE aA[ PRT_CAST ] == "char"
+               cCmd := "hb_retni( " + cCmn + " )"
+               cPrgRet := "c" + cDocNM
 
-            CASE aA[ PRT_CAST ] == 'QString'
-               cCmd := 'hb_retc( ' + cCmn + '.toLatin1().data()' + ' )'
-               cPrgRet := 'c' + cDocNM
+            CASE aA[ PRT_CAST ] == "QString"
+               cCmd := "hb_retc( " + cCmn + ".toLatin1().data()" + " )"
+               cPrgRet := "c" + cDocNM
 
-            CASE aA[ PRT_CAST ] == 'FT_Face'
-               cCmd := 'hb_retc( ' + cCmn + ' )'
-               cPrgRet := 'c' + cDocNM
+            CASE aA[ PRT_CAST ] == "FT_Face"
+               cCmd := "hb_retc( " + cCmn + " )"
+               cPrgRet := "c" + cDocNM
 
             OTHERWISE
                /* No attribute is attached to return value */
-               IF (left( aA[ PRT_CAST ], 1 ) == 'Q')
+               IF (left( aA[ PRT_CAST ], 1 ) == "Q")
                   cCmd := Get_Command( aA[ PRT_CAST ], cCmn )
-                  cPrgRet := 'p' + cDocNM
+                  cPrgRet := "p" + cDocNM
 
                ELSE
-                  OutStd( '<<< ' + cProto + ' | ' + aA[ PRT_CAST ] + ' >>>'  + s_NewLine )
-                  cCmd := ''
-                  cPrgRet := ''
+                  OutStd( "<<< " + cProto + " | " + aA[ PRT_CAST ] + " >>>"  + s_NewLine )
+                  cCmd := ""
+                  cPrgRet := ""
 
                ENDIF
 
             ENDCASE
 
             IF !empty( cCmd )
-               cCmd := strtran( cCmd, '(  )', '()' ) + ';'
+               cCmd := strtran( cCmd, "(  )", "()" ) + ";"
             ENDIF
          ENDIF
       ENDIF
@@ -1455,14 +1455,14 @@ STATIC FUNCTION ParseVariables( cProto, cWidget, txt_, doc_, aEnum, func_ )
    IF ( lSuccess := !empty( cCmd ) )
       IF ( n := ascan( func_, {|e_| e_[ 1 ] == cFun } ) ) > 0
          func_[ n, 2 ]++
-         cHBFunc := cFun + '_' + hb_ntos( func_[ n, 2 ] )
+         cHBFunc := cFun + "_" + hb_ntos( func_[ n, 2 ] )
       ELSE
          cHBFunc := cFun
          aadd( func_, { cFun, 0 } )
       ENDIF
 
       aadd( txt_, "/*" )
-      aadd( txt_, " * " + strtran( cProto, chr( 13 ), '' ) )
+      aadd( txt_, " * " + strtran( cProto, chr( 13 ), "" ) )
       aadd( txt_, " */" )
 
       aadd( txt_, "HB_FUNC( QT_" + upper( cWidget ) + "_" + upper( cHBFunc ) + " )" )
@@ -1490,9 +1490,9 @@ STATIC FUNCTION ParseVariables( cProto, cWidget, txt_, doc_, aEnum, func_ )
       aadd( txt_, "}" )
       aadd( txt_, "" )
 
-      aadd( doc_, 'Qt_' + cWidget + '_' + cHBFunc + '( p' + cWidget + ;
-                        iif( empty( cDocs ), '', ', ' + cDocs ) + ' ) -> ' + cPrgRet )
-      aadd( doc_, '' )
+      aadd( doc_, "Qt_" + cWidget + "_" + cHBFunc + "( p" + cWidget + ;
+                        iif( empty( cDocs ), "", ", " + cDocs ) + " ) -> " + cPrgRet )
+      aadd( doc_, "" )
    ENDIF
 
    RETURN lSuccess
@@ -1593,21 +1593,21 @@ STATIC FUNCTION BuildFooter( txt_ )
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION DispHelp()
-   LOCAL cHlp := ''
+   LOCAL cHlp := ""
 
-   cHlp += ''                                                                               + s_NewLine
-   cHlp += 'Syntax:'                                                                        + s_NewLine
-   cHlp += '   hbqtgen.exe [Options] [[@]<QtProjectFile.qtp>] [<QtHeaderFile.qth, ...>]'    + s_NewLine
-   cHlp += ''                                                                               + s_NewLine
-   cHlp += 'Options:'                                                                       + s_NewLine
-   cHlp += '   -O<OutputPath>   [ e.g. c:\harbour\contrib\hbqt ]        [D] Current folder' + s_NewLine
-   cHlp += '   -I<InputPath>    [ e.g. c:\harbour\contrib\hbqt\protos ] [D] Current folder' + s_NewLine
-   cHlp += '   -D<DocFilesPath> [ e.g. c:\harbour\contrib\hbqt\doc    ] [D] Current folder' + s_NewLine
-   cHlp += ' '                                                                              + s_NewLine
-   cHlp += '   -c<compile>      If QT env is set, attempts to compile resulting .cpp'       + s_NewLine
-   cHlp += ''                                                                               + s_NewLine
-   cHlp += '   -noretobject     Skip object returning methods'                              + s_NewLine
-   cHlp += ''                                                                               + s_NewLine
+   cHlp += ""                                                                               + s_NewLine
+   cHlp += "Syntax:"                                                                        + s_NewLine
+   cHlp += "   hbqtgen.exe [Options] [[@]<QtProjectFile.qtp>] [<QtHeaderFile.qth, ...>]"    + s_NewLine
+   cHlp += ""                                                                               + s_NewLine
+   cHlp += "Options:"                                                                       + s_NewLine
+   cHlp += "   -O<OutputPath>   [ e.g. c:\harbour\contrib\hbqt ]        [D] Current folder" + s_NewLine
+   cHlp += "   -I<InputPath>    [ e.g. c:\harbour\contrib\hbqt\protos ] [D] Current folder" + s_NewLine
+   cHlp += "   -D<DocFilesPath> [ e.g. c:\harbour\contrib\hbqt\doc    ] [D] Current folder" + s_NewLine
+   cHlp += " "                                                                              + s_NewLine
+   cHlp += "   -c<compile>      If QT env is set, attempts to compile resulting .cpp"       + s_NewLine
+   cHlp += ""                                                                               + s_NewLine
+   cHlp += "   -noretobject     Skip object returning methods"                              + s_NewLine
+   cHlp += ""                                                                               + s_NewLine
 
    OutStd( cHlp )
 
@@ -1616,13 +1616,13 @@ STATIC FUNCTION DispHelp()
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION DispLogo()
-   LOCAL cHlp := ''
+   LOCAL cHlp := ""
 
-   cHlp += ''                                                        + s_NewLine
+   cHlp += ""                                                        + s_NewLine
    cHlp += "Harbour Source Generator for QT " + HBRawVersion()       + s_NewLine
    cHlp += "Copyright (c) 2009, Pritpal Bedi <pritpal@vouchcac.com>" + s_NewLine
    cHlp += "http://harbour-project.org/"                             + s_NewLine
-   cHlp += ''                                                        + s_NewLine
+   cHlp += ""                                                        + s_NewLine
 
    OutStd( cHlp )
 
@@ -1659,93 +1659,93 @@ STATIC FUNCTION Build_Class( cWidget, cls_, doc_, cPathOut, subCls_ )
 
    BuildHeader( @txt_, 1 )
 
-   aadd( txt_, '' )
+   aadd( txt_, "" )
 
-   n := ascan( cls_, {|e_| left( lower( e_[ 1 ] ), 7 ) == 'inherit' .and. !empty( e_[ 2 ] ) } )
-   //s := 'CREATE CLASS ' + cWidget + iif( n > 0, ' INHERIT HbQtObjectHandler' + iif( empty( cls_[ n, 2 ] ), "" , ", " + cls_[ n, 2 ] ), '' )
-   s := 'CREATE CLASS ' + cWidget + ' INHERIT HbQtObjectHandler' + iif( n > 0, ", " + cls_[ n, 2 ], '' )
+   n := ascan( cls_, {|e_| left( lower( e_[ 1 ] ), 7 ) == "inherit" .and. !empty( e_[ 2 ] ) } )
+   //s := "CREATE CLASS " + cWidget + iif( n > 0, " INHERIT HbQtObjectHandler" + iif( empty( cls_[ n, 2 ] ), "" , ", " + cls_[ n, 2 ] ), "" )
+   s := "CREATE CLASS " + cWidget + " INHERIT HbQtObjectHandler" + iif( n > 0, ", " + cls_[ n, 2 ], "" )
 
    aadd( txt_, s                                 )
-   aadd( txt_, '   '                             )
+   aadd( txt_, "   "                             )
    #if 0
-   aadd( txt_, '   VAR     pPtr'                 )
-   aadd( txt_, '   '                             )
-   aadd( txt_, '   ERROR HANDLER onError()'      )
-   aadd( txt_, '   '                             )
+   aadd( txt_, "   VAR     pPtr"                 )
+   aadd( txt_, "   "                             )
+   aadd( txt_, "   ERROR HANDLER onError()"      )
+   aadd( txt_, "   "                             )
    #endif
-   aadd( txt_, '   METHOD  new( ... )'           )
-   //aadd( txt_, '   METHOD  configure( xObject )' )
-   aadd( txt_, '   '                             )
+   aadd( txt_, "   METHOD  new( ... )"           )
+   //aadd( txt_, "   METHOD  configure( xObject )" )
+   aadd( txt_, "   "                             )
 
    /* Populate METHODS */
    FOR EACH s IN doc_
-      n := at( '-> ', s )
+      n := at( "-> ", s )
       IF n > 0
          s     := substr( s, 1, n-1 )
-         s     := strtran( s, '@', '' )    /* Just in Case */
-         s     := strtran( s, '::', '_' )  /* Just in Case */
+         s     := strtran( s, "@", "" )    /* Just in Case */
+         s     := strtran( s, "::", "_" )  /* Just in Case */
 
          n     := at( cWidget, s )
          sm    := substr( s, n+nLen+1 )
 
-         ss    := 'p' + cWidget + ','
-         cM    := strtran( sm, ss, '' )
-         ss    := 'p' + cWidget
-         cM    := strtran( cM, ss, '' )
-         cM    := strtran( cM, '(  )', '()' )
-         cM    := strtran( cM, '(  ', '( ' )
+         ss    := "p" + cWidget + ","
+         cM    := strtran( sm, ss, "" )
+         ss    := "p" + cWidget
+         cM    := strtran( cM, ss, "" )
+         cM    := strtran( cM, "(  )", "()" )
+         cM    := strtran( cM, "(  ", "( " )
          cM    := iif( len( cM ) > 35, cM, pad( cM,35 ) )
 
-         ss    := 'p' + cWidget
-         cCall := strtran( s, ss, '::pPtr' )
+         ss    := "p" + cWidget
+         cCall := strtran( s, ss, "::pPtr" )
 
          aadd( mth_, { cM, cCall } )
-         aadd( txt_, '   METHOD  ' + cM  )
+         aadd( txt_, "   METHOD  " + cM  )
       ENDIF
    NEXT
-   aadd( txt_, '   '                                               )
-   aadd( txt_, '   ENDCLASS'                                       )
-   aadd( txt_, '   '                                               )
-   aadd( txt_, '   '                                               )
-   aadd( txt_, 'METHOD ' + cWidget + ':new( ... )'                 )
-   aadd( txt_, '   LOCAL p'                                        )
-   aadd( txt_, '   FOR EACH p IN { ... }'                          )
-   aadd( txt_, '      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )' )
-   aadd( txt_, '   NEXT'                                           )
-   aadd( txt_, '   ::pPtr := Qt_' + cWidget + '( ... )'            )
-   aadd( txt_, '   RETURN Self'                                    )
-   aadd( txt_, '   '                                               )
+   aadd( txt_, "   "                                               )
+   aadd( txt_, "   ENDCLASS"                                       )
+   aadd( txt_, "   "                                               )
+   aadd( txt_, "   "                                               )
+   aadd( txt_, "METHOD " + cWidget + ":new( ... )"                 )
+   aadd( txt_, "   LOCAL p"                                        )
+   aadd( txt_, "   FOR EACH p IN { ... }"                          )
+   aadd( txt_, "      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )" )
+   aadd( txt_, "   NEXT"                                           )
+   aadd( txt_, "   ::pPtr := Qt_" + cWidget + "( ... )"            )
+   aadd( txt_, "   RETURN Self"                                    )
+   aadd( txt_, "   "                                               )
    #if 0
-   aadd( txt_, '   '                                               )
-   aadd( txt_, 'METHOD ' + cWidget + ':configure( xObject )'       )
-   aadd( txt_, '   IF hb_isObject( xObject )'                      )
-   aadd( txt_, '      ::pPtr := xObject:pPtr'                      )
-   aadd( txt_, '   ELSEIF hb_isPointer( xObject )'                 )
-   aadd( txt_, '      ::pPtr := xObject'                           )
-   aadd( txt_, '   ENDIF'                                          )
-   aadd( txt_, '   RETURN Self'                                    )
-   aadd( txt_, '   '                                               )
-   aadd( txt_, '   '                                               )
-   aadd( txt_, 'METHOD ' + cWidget + ':onError()'                  )
-   aadd( txt_, '   RETURN hbqt_showError( __GetMessage() )'        )
-   aadd( txt_, '   '                                               )
+   aadd( txt_, "   "                                               )
+   aadd( txt_, "METHOD " + cWidget + ":configure( xObject )"       )
+   aadd( txt_, "   IF hb_isObject( xObject )"                      )
+   aadd( txt_, "      ::pPtr := xObject:pPtr"                      )
+   aadd( txt_, "   ELSEIF hb_isPointer( xObject )"                 )
+   aadd( txt_, "      ::pPtr := xObject"                           )
+   aadd( txt_, "   ENDIF"                                          )
+   aadd( txt_, "   RETURN Self"                                    )
+   aadd( txt_, "   "                                               )
+   aadd( txt_, "   "                                               )
+   aadd( txt_, "METHOD " + cWidget + ":onError()"                  )
+   aadd( txt_, "   RETURN hbqt_showError( __GetMessage() )"        )
+   aadd( txt_, "   "                                               )
    #endif
    /* Define methods */
    FOR i := 1 TO len( mth_ )
-      aadd( txt_, ''                                               )
-      aadd( txt_, 'METHOD ' + cWidget + ':' + mth_[ i, 1 ]         )
-      aadd( txt_, '   RETURN ' + ParsePtr( mth_[ i, 2 ] )          )
-      aadd( txt_, ''                                               )
+      aadd( txt_, ""                                               )
+      aadd( txt_, "METHOD " + cWidget + ":" + mth_[ i, 1 ]         )
+      aadd( txt_, "   RETURN " + ParsePtr( mth_[ i, 2 ] )          )
+      aadd( txt_, ""                                               )
    NEXT
 
    IF !empty( subCls_ )
-      aadd( txt_, ''                                               )
+      aadd( txt_, ""                                               )
       aeval( subCls_, {|e| aadd( txt_, e ) } )
-      aadd( txt_, ''                                               )
+      aadd( txt_, ""                                               )
    ENDIF
 
    /* Generate .prg */
-   cFile := GetSourcePathByLib( cWidget, cPathOut, '.prg', 'T', cls_ )
+   cFile := GetSourcePathByLib( cWidget, cPathOut, ".prg", "T", cls_ )
    CreateTarget( cFile, txt_ )
 
    RETURN nil
@@ -1762,8 +1762,8 @@ STATIC FUNCTION Build_Document( cWidget, cls_, doc_, cPathDoc, subCls_, docum_ )
    HB_SYMBOL_UNUSED( cls_    )
    HB_SYMBOL_UNUSED( subCls_ )
 
-   n := ascan( cls_, {|e_| left( lower( e_[ 1 ] ), 7 ) == 'inherit' .and. !empty( e_[ 2 ] ) } )
-   cInherits := iif( n > 0, cls_[ n, 2 ], '' )
+   n := ascan( cls_, {|e_| left( lower( e_[ 1 ] ), 7 ) == "inherit" .and. !empty( e_[ 2 ] ) } )
+   cInherits := iif( n > 0, cls_[ n, 2 ], "" )
 
    IF ascan( aGui, cWidget ) > 0
       cLib := "qtgui"
@@ -1777,87 +1777,87 @@ STATIC FUNCTION Build_Document( cWidget, cls_, doc_, cPathDoc, subCls_, docum_ )
       cLib := ""
    ENDIF
 
-   aadd( txt_, '/* '  )
-   aadd( txt_, ' *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for Qt v4.5+' )
-   aadd( txt_, ' *  Please do not modify this document as it is subject to change in future.' )
-   aadd( txt_, ' *  Pritpal Bedi <bedipritpal@hotmail.com>' )
-   aadd( txt_, ' */ ' )
-   aadd( txt_, '    '  )
-   aadd( txt_, '/*  $DOC$         ' )
-   aadd( txt_, '    $TEMPLATE$    ' )
-   aadd( txt_, '        Class' )
-   aadd( txt_, '    $NAME$        ' )
-   aadd( txt_, '        ' + cWidget + '()' )
-   aadd( txt_, '    $CATEGORY$    ' )
-   aadd( txt_, '        ' + 'Harbour Bindings for Qt' )
-   aadd( txt_, '    $SUBCATEGORY$ ' )
-   aadd( txt_, '        ' + 'GUI'   )
-   aadd( txt_, '    $EXTERNALLINK$' )
-   aadd( txt_, '        ' + QT_WEB + QT_VER + '/' + lower( cWidget ) + '.html' )
-   aadd( txt_, '    $ONELINER$    ' )
-   aadd( txt_, '        ' + 'Creates a new ' + cWidget + ' object.' )
-   aadd( txt_, '    $INHERITS$    ' )
-   aadd( txt_, '        ' + cInherits )
-   aadd( txt_, '    $SYNTAX$      ' )
-   aadd( txt_, '        ' + cWidget + '():new( ... )' )
-   aadd( txt_, '        ' + cWidget + '():from( pPtr_OR_oObj_of_type_' + cWidget +' )' )
-   aadd( txt_, '        ' + cWidget + '():configure( pPtr_OR_oObj_of_type_' + cWidget +' )' )
-   aadd( txt_, '    $ARGUMENTS$   ' )
-   aadd( txt_, '        ' )
-   aadd( txt_, '    $RETURNS$     ' )
-   aadd( txt_, '        ' + 'An instance of the object of type ' + cWidget )
-   aadd( txt_, '    $METHODS$     ' )
+   aadd( txt_, "/* "  )
+   aadd( txt_, " *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for Qt v4.5+" )
+   aadd( txt_, " *  Please do not modify this document as it is subject to change in future." )
+   aadd( txt_, " *  Pritpal Bedi <bedipritpal@hotmail.com>" )
+   aadd( txt_, " */ " )
+   aadd( txt_, "    "  )
+   aadd( txt_, "/*  $DOC$         " )
+   aadd( txt_, "    $TEMPLATE$    " )
+   aadd( txt_, "        Class" )
+   aadd( txt_, "    $NAME$        " )
+   aadd( txt_, "        " + cWidget + "()" )
+   aadd( txt_, "    $CATEGORY$    " )
+   aadd( txt_, "        " + "Harbour Bindings for Qt" )
+   aadd( txt_, "    $SUBCATEGORY$ " )
+   aadd( txt_, "        " + "GUI"   )
+   aadd( txt_, "    $EXTERNALLINK$" )
+   aadd( txt_, "        " + QT_WEB + QT_VER + "/" + lower( cWidget ) + ".html" )
+   aadd( txt_, "    $ONELINER$    " )
+   aadd( txt_, "        " + "Creates a new " + cWidget + " object." )
+   aadd( txt_, "    $INHERITS$    " )
+   aadd( txt_, "        " + cInherits )
+   aadd( txt_, "    $SYNTAX$      " )
+   aadd( txt_, "        " + cWidget + "():new( ... )" )
+   aadd( txt_, "        " + cWidget + "():from( pPtr_OR_oObj_of_type_" + cWidget +" )" )
+   aadd( txt_, "        " + cWidget + "():configure( pPtr_OR_oObj_of_type_" + cWidget +" )" )
+   aadd( txt_, "    $ARGUMENTS$   " )
+   aadd( txt_, "        " )
+   aadd( txt_, "    $RETURNS$     " )
+   aadd( txt_, "        " + "An instance of the object of type " + cWidget )
+   aadd( txt_, "    $METHODS$     " )
    nLen    := len( cWidget )
    n       := at( cWidget, doc_[ 1 ] )
-   pWidget := 'p' + cWidget
+   pWidget := "p" + cWidget
    FOR i := 1 TO len( doc_ )
       cText := doc_[ i ]
       IF !empty( cText )
          cText := substr( cText, n+nLen+1 )
-         cText := strtran( cText, pWidget + ', ', '' )
-         cText := strtran( cText, pWidget, '' )
-         cText := strtran( cText, '(  )', '()' )
-         n1    := at( '->', cText )
+         cText := strtran( cText, pWidget + ", ", "" )
+         cText := strtran( cText, pWidget, "" )
+         cText := strtran( cText, "(  )", "()" )
+         n1    := at( "->", cText )
          cRet  := alltrim( substr( cText, n1+2 ) )
          cText := substr( cText, 1, n1-1 )
          n2    := max( 50, len( cText ) )
          cText := padR( cText, n2 )
          IF !empty( cRet )
-            aadd( txt_, '        :' + cText + ' -> ' + cRet )
+            aadd( txt_, "        :" + cText + " -> " + cRet )
          ENDIF
       ENDIF
    NEXT
-   aadd( txt_, '        ' )
-   aadd( txt_, '    $DESCRIPTION$ ' )
-   aadd( txt_, '        ' )
-   aadd( txt_, '    $EXAMPLES$    ' )
+   aadd( txt_, "        " )
+   aadd( txt_, "    $DESCRIPTION$ " )
+   aadd( txt_, "        " )
+   aadd( txt_, "    $EXAMPLES$    " )
    FOR EACH cText IN docum_
       IF !empty( cText )
-         aadd( txt_, '        ' + cText )
+         aadd( txt_, "        " + cText )
       ENDIF
    NEXT
-   aadd( txt_, '        ' )
-   aadd( txt_, '    $TESTS$       ' )
-   aadd( txt_, '        ' )
-   aadd( txt_, '    $STATUS$      ' )
-   aadd( txt_, '        ' + 'R' )
-   aadd( txt_, '    $COMPLIANCE$  ' )
-   aadd( txt_, '        ' + 'Not Clipper Compatible' )
-   aadd( txt_, '    $PLATFORMS$   ' )
-   aadd( txt_, '        ' + 'Windows, Linux, MacOS, OS2' )
-   aadd( txt_, '    $VERSION$     ' )
-   aadd( txt_, '        ' + '4.5 or upper' )
-   aadd( txt_, '    $FILES$       ' )
-   aadd( txt_, '        ' + 'Prg source   : ' + 'contrib/hbqt' + iif( empty( cLib ), '', '/' + cLib ) + '/T' + cWidget + '.prg' )
-   aadd( txt_, '        ' + 'C++ wrappers : ' + 'contrib/hbqt' + iif( empty( cLib ), '', '/' + cLib ) + '/'  + cWidget + '.cpp' )
-   aadd( txt_, '        ' + 'Library      : ' + 'hb' + cLib )
-   aadd( txt_, '    $SEEALSO$     ' )
- * aadd( txt_, '        ' + iif( empty( cInherits ), "", cInherits + ", " ) + QT_WEB + QT_VER + '/' + lower( cWidget ) + '.html' )
-   aadd( txt_, '        ' + cInherits )
-   aadd( txt_, '    $END$         ' )
-   aadd( txt_, ' */               ' )
+   aadd( txt_, "        " )
+   aadd( txt_, "    $TESTS$       " )
+   aadd( txt_, "        " )
+   aadd( txt_, "    $STATUS$      " )
+   aadd( txt_, "        " + "R" )
+   aadd( txt_, "    $COMPLIANCE$  " )
+   aadd( txt_, "        " + "Not Clipper compatible" )
+   aadd( txt_, "    $PLATFORMS$   " )
+   aadd( txt_, "        " + "Windows, Linux, Mac OS X, OS/2" )
+   aadd( txt_, "    $VERSION$     " )
+   aadd( txt_, "        " + "4.5 or upper" )
+   aadd( txt_, "    $FILES$       " )
+   aadd( txt_, "        " + "Harbour source: " + "contrib/hbqt" + iif( Empty( cLib ), "", "/" + cLib ) + "/T" + cWidget + ".prg" )
+   aadd( txt_, "        " + "C++ wrappers  : " + "contrib/hbqt" + iif( Empty( cLib ), "", "/" + cLib ) + "/"  + cWidget + ".cpp" )
+   aadd( txt_, "        " + "Library       : " + "hb" + cLib )
+   aadd( txt_, "    $SEEALSO$     " )
+ * aadd( txt_, "        " + iif( Empty( cInherits ), "", cInherits + ", " ) + QT_WEB + QT_VER + "/" + lower( cWidget ) + ".html" )
+   aadd( txt_, "        " + cInherits )
+   aadd( txt_, "    $END$         " )
+   aadd( txt_, " */               " )
 
-   cFile := cPathDoc + s_PathSep + 'en' + s_PathSep + 'class_' + lower( cWidget ) + ".txt"
+   cFile := cPathDoc + s_PathSep + "en" + s_PathSep + "class_" + lower( cWidget ) + ".txt"
 
    RETURN CreateTarget( cFile, txt_ )
 
@@ -1951,7 +1951,7 @@ STATIC FUNCTION Build_MakeFile( cpp_, prg_, cPathOut )
 #define  CRLF   chr( 13 )+chr( 10 )
 
 FUNCTION Build_HTML( cWidget, aHM_, aHF_, cPathOut, docum_ )
-   LOCAL cFile := cPathOut + s_PathSep + 'html' + s_PathSep + cWidget + '.htm'
+   LOCAL cFile := cPathOut + s_PathSep + "html" + s_PathSep + cWidget + ".htm"
    LOCAL i, j, s, nCounter := 0, cPara
    LOCAL nCols, aHTML
    LOCAL setColorBG, setColorText, setColorTable
@@ -1959,11 +1959,11 @@ FUNCTION Build_HTML( cWidget, aHM_, aHF_, cPathOut, docum_ )
 
    HB_SYMBOL_UNUSED( aHM_ )
 
-   setColorText  := '#000000'
-   SetColorBG    := '#FFFFFF'
-   SetColorTable := '#D0D0D0'
-   aColumns      := { { 1,'Function', 'C', 100 },;
-                      { 2,'Returns' , 'C',  20 } }
+   setColorText  := "#000000"
+   SetColorBG    := "#FFFFFF"
+   SetColorTable := "#D0D0D0"
+   aColumns      := { { 1,"Function", "C", 100 },;
+                      { 2,"Returns" , "C",  20 } }
 
    aHTML  := {}
    nCols  := len( aColumns )
@@ -1975,7 +1975,7 @@ FUNCTION Build_HTML( cWidget, aHM_, aHF_, cPathOut, docum_ )
    aadd( aHtml, s )
 
    Build_HtmlTable( @aHTML, , SetColorTable )
-   aadd( aHtml, '<TBODY>' )
+   aadd( aHtml, "<TBODY>" )
 
    /*       Class Documentation */
    s := "<TR><TD colspan=" + hb_ntos( nCols ) + " align=CENTER bgcolor=#ffff80><B>" + "CLASS REFERENCE" + "</B></TD></TR>"
@@ -1989,7 +1989,7 @@ FUNCTION Build_HTML( cWidget, aHM_, aHF_, cPathOut, docum_ )
    IF !empty( docum_ )
       s := "<TR>"
 
-      cPara := 'pr' + hb_ntos( ++nCounter )
+      cPara := "pr" + hb_ntos( ++nCounter )
 
       s += '<TD  class="only" ' + 'colspan=' + hb_ntos( nCols ) + '>'
       s += '<PRE id="' + cPara + '">'
@@ -2000,7 +2000,7 @@ FUNCTION Build_HTML( cWidget, aHM_, aHF_, cPathOut, docum_ )
       for i := 1 to len( docum_ )
          s += docum_[ i ] + CRLF
       next
-      s += '</PRE>'
+      s += "</PRE>"
 
       aadd( aHtml, s + "</TR>" )
    ENDIF
@@ -2015,7 +2015,7 @@ FUNCTION Build_HTML( cWidget, aHM_, aHF_, cPathOut, docum_ )
          else
             cCell := uColData
          endif
-         s += '<TD>' + cCell
+         s += "<TD>" + cCell
       next
 
       aadd( aHtml, s + "</TR>" )
@@ -2036,7 +2036,7 @@ FUNCTION Build_HTML( cWidget, aHM_, aHF_, cPathOut, docum_ )
          else
             cCell := uColData
          endif
-         s += '<TD>' + cCell
+         s += "<TD>" + cCell
       next
 
       aadd( aHtml, s + "</TR>" )
@@ -2058,21 +2058,21 @@ FUNCTION Build_HtmlTable( aHTML, cTitle, SetColorTable )
    LOCAL nCellPadding  := 4
    LOCAL nCols         := 2
 
-   aadd( aHtml, '<CENTER>' )
+   aadd( aHtml, "<CENTER>" )
 
-   s := '<TABLE ' +;
+   s := "<TABLE " +;
         'BGCOLOR="'    + SetColorTable + '" ' +;
-        'BORDER='      + hb_ntos( nBorder ) + ' ' +;
-        'FRAME=ALL '   +;
-        'CellPadding=' + hb_ntos( nCellPadding ) + ' ' +;
-        'CellSpacing=' + hb_ntos( nCellSpacing ) + ' ' +;
-        'COLS='        + hb_ntos( nCols ) + ' ' +;
-        'WIDTH=90% '   +;
-        '>'
+        "BORDER="      + hb_ntos( nBorder ) + " " +;
+        "FRAME=ALL "   +;
+        "CellPadding=" + hb_ntos( nCellPadding ) + " " +;
+        "CellSpacing=" + hb_ntos( nCellSpacing ) + " " +;
+        "COLS="        + hb_ntos( nCols ) + " " +;
+        "WIDTH=90% "   +;
+        ">"
    aadd( aHtml, s )
 
    if !Empty( cTitle )
-      aadd( aHtml, '<CAPTION ALIGN=top><B>' + cTitle + '</B></CAPTION>' )
+      aadd( aHtml, "<CAPTION ALIGN=top><B>" + cTitle + "</B></CAPTION>" )
    endif
 
    Return NIL
@@ -2081,40 +2081,40 @@ FUNCTION Build_HtmlTable( aHTML, cTitle, SetColorTable )
 
 FUNCTION Build_HtmlHeader( aHTML )
 
-   aadd( aHtml, '<head>                                                              ' )
+   aadd( aHtml, "<head>                                                              " )
    aadd( aHtml, '  <meta name="Author" CONTENT="Pritpal Bedi [pritpal@vouchcac.com]">' )
    aadd( aHtml, '  <meta http-equiv="content-style-type" content="text/css" >        ' )
    aadd( aHtml, '  <meta http-equiv="content-script-type" content="text/javascript"> ' )
-   aadd( aHtml, '                                                                    ' )
+   aadd( aHtml, "                                                                    " )
    aadd( aHtml, '  <style type="text/css">                                           ' )
-   aadd( aHtml, '    th                                                              ' )
-   aadd( aHtml, '    {                                                               ' )
-   aadd( aHtml, '      colspan          : 1;                                         ' )
-   aadd( aHtml, '      text-align       : center;                                    ' )
-   aadd( aHtml, '      vertical-align   : baseline;                                  ' )
-   aadd( aHtml, '      horizontal-align : left;                                      ' )
-   aadd( aHtml, '    }                                                               ' )
-   aadd( aHtml, '    td                                                              ' )
-   aadd( aHtml, '    {                                                               ' )
-   aadd( aHtml, '      vertical-align   : top;                                       ' )
-   aadd( aHtml, '      horizontal-align : left;                                      ' )
-   aadd( aHtml, '    }                                                               ' )
-   aadd( aHtml, '    td.only                                                         ' )
-   aadd( aHtml, '    {                                                               ' )
-   aadd( aHtml, '      cursor           : hand;                                      ' )
-   aadd( aHtml, '      vertical-align   : top;                                       ' )
-   aadd( aHtml, '      horizontal-align : left;                                      ' )
-   aadd( aHtml, '    }                                                               ' )
-   aadd( aHtml, '    pre                                                             ' )
-   aadd( aHtml, '    {                                                               ' )
-   aadd( aHtml, '      font-family      : Courier New;                               ' )
-   aadd( aHtml, '      font-size        : .7em;                                      ' )
-   aadd( aHtml, '      color            : black;                                     ' )
-   aadd( aHtml, '      cursor           : text;                                      ' )
-   aadd( aHtml, '    }                                                               ' )
-   aadd( aHtml, '  </style>                                                          ' )
-   aadd( aHtml, '                                                                    ' )
-   aadd( aHtml, '</head>                                                             ' )
+   aadd( aHtml, "    th                                                              " )
+   aadd( aHtml, "    {                                                               " )
+   aadd( aHtml, "      colspan          : 1;                                         " )
+   aadd( aHtml, "      text-align       : center;                                    " )
+   aadd( aHtml, "      vertical-align   : baseline;                                  " )
+   aadd( aHtml, "      horizontal-align : left;                                      " )
+   aadd( aHtml, "    }                                                               " )
+   aadd( aHtml, "    td                                                              " )
+   aadd( aHtml, "    {                                                               " )
+   aadd( aHtml, "      vertical-align   : top;                                       " )
+   aadd( aHtml, "      horizontal-align : left;                                      " )
+   aadd( aHtml, "    }                                                               " )
+   aadd( aHtml, "    td.only                                                         " )
+   aadd( aHtml, "    {                                                               " )
+   aadd( aHtml, "      cursor           : hand;                                      " )
+   aadd( aHtml, "      vertical-align   : top;                                       " )
+   aadd( aHtml, "      horizontal-align : left;                                      " )
+   aadd( aHtml, "    }                                                               " )
+   aadd( aHtml, "    pre                                                             " )
+   aadd( aHtml, "    {                                                               " )
+   aadd( aHtml, "      font-family      : Courier New;                               " )
+   aadd( aHtml, "      font-size        : .7em;                                      " )
+   aadd( aHtml, "      color            : black;                                     " )
+   aadd( aHtml, "      cursor           : text;                                      " )
+   aadd( aHtml, "    }                                                               " )
+   aadd( aHtml, "  </style>                                                          " )
+   aadd( aHtml, "                                                                    " )
+   aadd( aHtml, "</head>                                                             " )
 
    RETURN Nil
 
@@ -2451,7 +2451,7 @@ FUNCTION IsMemObject( cWidget )
 
 FUNCTION Get_Command_1( cWgt, cCmn )
 
-   RETURN 'hb_retptrGC( hbqt_gcAllocate_' + cWgt + '( new ' + cWgt + '( *( ' + cCmn + ' ) ), true ) )'
+   RETURN "hb_retptrGC( hbqt_gcAllocate_" + cWgt + "( new " + cWgt + "( *( " + cCmn + " ) ), true ) )"
 
 /*----------------------------------------------------------------------*/
 
@@ -2462,12 +2462,12 @@ FUNCTION Get_Command( cWgt, cCmn, lNew )
 
    IF ( lNewGCtoQT )
       IF lNew
-         cRet := 'hb_retptrGC( hbqt_gcAllocate_' + cWgt + '( new ' + cWgt + '( ' + cCmn + ' ), true ) )'
+         cRet := "hb_retptrGC( hbqt_gcAllocate_" + cWgt + "( new " + cWgt + "( " + cCmn + " ), true ) )"
       ELSE
-         cRet := 'hb_retptrGC( hbqt_gcAllocate_' + cWgt + '( ' + cCmn + ', false ) )'
+         cRet := "hb_retptrGC( hbqt_gcAllocate_" + cWgt + "( " + cCmn + ", false ) )"
       ENDIF
    ELSE
-      cRet := 'hb_retptrGC( hbqt_ptrTOgcpointer( new ' + cWgt + '( ' + cCmn + ' ), hbqt_gcRelease_' + cWgt +' ) )'
+      cRet := "hb_retptrGC( hbqt_ptrTOgcpointer( new " + cWgt + "( " + cCmn + " ), hbqt_gcRelease_" + cWgt +" ) )"
    ENDIF
 
    RETURN cRet

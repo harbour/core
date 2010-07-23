@@ -4,7 +4,6 @@
 
 hbqt_common.hbm
 
--o${hb_name}
--workdir=${hb_work}/${hb_plat}/${hb_comp}/${hb_name}
-
 qtnetwork/filelist.hbm
+
+hbqtnetworks.hbp

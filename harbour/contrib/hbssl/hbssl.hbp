@@ -4,9 +4,6 @@
 
 hbssl.hbm
 
--o${hb_name}
--workdir=${hb_work}/${hb_plat}/${hb_comp}/${hb_name}
-
 -depimplibs=openssl:../out32dll/libeay32.dll
 -depimplibs=openssl:../out32dll/ssleay32.dll
 -depimplibs=openssl:../dll/libeay32.dll
@@ -15,3 +12,5 @@ hbssl.hbm
 -depimplibs=openssl:../ssleay32.dll
 
 -iflag={bcc}-a
+
+hbssls.hbp

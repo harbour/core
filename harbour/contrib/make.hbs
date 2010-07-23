@@ -5,7 +5,7 @@
 
 /*
  * Harbour Project source code:
- * Contrib build orchestrator script
+ * Package build orchestrator script
  *
  * Copyright 2010 Viktor Szakats (harbour.01 syenar.hu)
  * www - http://harbour-project.org
@@ -42,8 +42,6 @@
         with postinst.hbs logic)
      7. Move some logic to hbmk2.
      8. Honor paths found in --hbinfo hbctree{{}} section.
-     9. pkglist should not contain information about package layout.
-        This should rather be somehow embedded into .hbp files.
  */
 
 #pragma warninglevel=3
@@ -86,10 +84,13 @@ PROCEDURE Main( ... )
 
    /* Load list of packages */
 
-   s_hPackageList := LoadPkgList( s_cHome + "pkglist" )
+   s_hPackageList := { => }
+   hb_HKeepOrder( s_hPackageList, .T. )
+
+   LoadPkgListFromFile( s_hPackageList, s_cHome + "pkglist" )
+   LoadPkgListFromString( s_hPackageList, GetEnv( "HB_BUILD_ADDONS" ) )
 
    /* Build */
-
    IF Empty( GetEnv( "HB_HOST_BIN_DIR" ) )
       Standalone( ... )
    ELSE
@@ -110,20 +111,19 @@ PROCEDURE Main( ... )
 PROCEDURE Standalone( ... )
    LOCAL aParams
 
-   LOCAL aFileList
-   LOCAL aFile
-
    LOCAL aSortedList
 
+   LOCAL cPWD
    LOCAL cBinDir
-   LOCAL hProject
-   LOCAL cDir
+   LOCAL cPackage
+   LOCAL cMyPackage
 
    LOCAL cOptions
    LOCAL cOptionsUser
 
    LOCAL nAction
    LOCAL tmp
+   LOCAL tmp1
 
    LOCAL lCustom
 
@@ -164,6 +164,23 @@ PROCEDURE Standalone( ... )
       ENDIF
    NEXT
 
+   IF ! lCustom
+      cPWD := hb_pwd()
+      /* Find out which package are we */
+      FOR EACH tmp IN s_hPackageList
+         tmp1 := hb_ps() + PathSepToSelf( tmp:__enumKey() ) + hb_ps()
+         IF tmp1 == Right( cPWD, Len( tmp1 ) )
+            cMyPackage := StrTran( tmp:__enumKey(), "\", "/" )
+            EXIT
+         ENDIF
+      NEXT
+      IF Empty( cMyPackage )
+         lCustom := .T.
+      ELSE
+         OutStd( hb_StrFormat( "! Package '%1$s' %2$s...", cMyPackage, hActions[ nAction ] ) + hb_eol() )
+      ENDIF
+   ENDIF
+
    cBinDir := s_cRoot + "bin" + hb_ps()
 
    IF lCustom
@@ -182,37 +199,20 @@ PROCEDURE Standalone( ... )
          ENDIF
       ENDIF
 
-      aFileList := Directory( "*.hbp" )
-      IF ! Empty( aFileList )
+      /* Query project information and dependencies and calculate build order */
+      aPairList := {}
 
-         /* Add the project in current dir */
-         s_hPackageList[ "." ] := {}
-         FOR EACH aFile IN aFileList
-            AAdd( s_hPackageList[ "." ], { "cFileName" => aFile[ F_NAME ] } )
-         NEXT
+      call_hbmk2_hbinfo( cBinDir, s_cBase + s_hPackageList[ cMyPackage ][ "cFileName" ], s_hPackageList[ cMyPackage ] )
+      DeptLinesToDeptPairList( aPairList, cMyPackage, s_hPackageList[ cMyPackage ][ "aDept" ] )
 
-         /* Query project information and dependencies and calculate build order */
-         aPairList := {}
+      aSortedList := TopoSort( aPairList )
 
-         FOR EACH hProject IN s_hPackageList[ "." ]
-            call_hbmk2_hbinfo( cBinDir, s_cBase + hProject[ "cFileName" ], hProject )
-            DeptLinesToDeptPairList( aPairList, ".", hProject[ "aDept" ] )
-         NEXT
-
-         aSortedList := TopoSort( aPairList )
-
-         /* Build the dependencies and ourselves in in sorted order */
-         FOR EACH cDir IN aSortedList DESCEND
-            FOR EACH hProject IN s_hPackageList[ cDir ]
-               IF cDir == "." .AND. hProject[ "cType" ] $ "hbhrb|hbppo"
-                  LOOP
-               ENDIF
-               call_hbmk2( cBinDir,;
-                  s_cBase + iif( cDir == ".", "", s_cHome + cDir + "/" ) + hProject[ "cFileName" ],;
-                  iif( cDir == ".", cOptions + cOptionsUser, "" ), "" )
-            NEXT
-         NEXT
-      ENDIF
+      /* Build the dependencies and ourselves in in sorted order */
+      FOR EACH cPackage IN aSortedList DESCEND
+         call_hbmk2( cBinDir,;
+            s_cBase + iif( cPackage == cMyPackage, "", s_cHome + cPackage + "/" ) + s_hPackageList[ cPackage ][ "cFileName" ],;
+            iif( cPackage == cMyPackage, cOptions + cOptionsUser, " -inc" ), "" )
+      NEXT
    ENDIF
 
    ErrorLevel( 0 )
@@ -234,9 +234,8 @@ PROCEDURE Standalone( ... )
 PROCEDURE GNUMake( ... )
    LOCAL cBinDir
    LOCAL hProject
-   LOCAL aProject
    LOCAL cProject
-   LOCAL cDir
+   LOCAL cPackage
 
    LOCAL cOptions
 
@@ -248,11 +247,7 @@ PROCEDURE GNUMake( ... )
    LOCAL aGNUMakeParams
    LOCAL nAction
 
-   LOCAL cName
-   LOCAL cItem
-
    LOCAL aPairList
-   LOCAL lAnyAddons
 
    LOCAL aSortedList
 
@@ -279,17 +274,6 @@ PROCEDURE GNUMake( ... )
       ErrorLevel( 0 )
       RETURN
    ENDIF
-
-   /* Load list of addons. Convert it to our internal format */
-
-   lAnyAddons := .F.
-   FOR EACH cItem IN hb_ATokens( GetEnv( "HB_BUILD_ADDONS" ),, .T. )
-      IF ! Empty( cItem )
-         hb_FNameSplit( PathSepToSelf( cItem ), @cDir, @cName )
-         s_hPackageList[ StrTran( DirDelPathSep( cDir ), "\", "/" ) ] := { "cFileName" => StrTran( cName, "\", "/" ) }
-         lAnyAddons := .T.
-      ENDIF
-   NEXT
 
    /* Determine the mode of operation */
 
@@ -351,15 +335,13 @@ PROCEDURE GNUMake( ... )
 
    cBinDir := GetEnv( "HB_HOST_BIN_DIR" ) + hb_ps()
 
-   OutStd( "! Calculating sorting order for contrib packages..." + hb_eol() )
+   OutStd( "! Calculating build order for packages..." + hb_eol() )
 
    aPairList := {}
 
-   FOR EACH aProject IN s_hPackageList
-      FOR EACH hProject IN aProject
-         call_hbmk2_hbinfo( cBinDir, s_cBase + aProject:__enumKey() + "/" + hProject[ "cFileName" ], hProject )
-         DeptLinesToDeptPairList( aPairList, aProject:__enumKey(), hProject[ "aDept" ] )
-      NEXT
+   FOR EACH hProject IN s_hPackageList
+      call_hbmk2_hbinfo( cBinDir, s_cBase + hProject:__enumKey() + "/" + hProject[ "cFileName" ], hProject )
+      DeptLinesToDeptPairList( aPairList, hProject:__enumKey(), hProject[ "aDept" ] )
    NEXT
 
    aSortedList := TopoSort( aPairList )
@@ -385,50 +367,39 @@ PROCEDURE GNUMake( ... )
 
    /* Start building */
 
-   OutStd( hb_StrFormat( "! Contribs %1$s...", hActions[ nAction ] ) + hb_eol() )
+   OutStd( hb_StrFormat( "! Package %1$s...", hActions[ nAction ] ) + hb_eol() )
 
-   FOR EACH cDir IN aSortedList DESCEND
+   FOR EACH cPackage IN aSortedList DESCEND
 
       IF Empty( aFilter ) .OR. ;
          iif( lFilterNegative,;
-            AScan( aFilter, {| tmp | tmp == cDir } ) == 0,;
-            AScan( aFilter, {| tmp | tmp == cDir } ) > 0 )
+            AScan( aFilter, {| tmp | tmp == cPackage } ) == 0,;
+            AScan( aFilter, {| tmp | tmp == cPackage } ) > 0 )
 
-         FOR EACH hProject IN s_hPackageList[ cDir ]
+         cProject := s_cBase + cPackage + "/" + s_hPackageList[ cPackage ][ "cFileName" ]
 
-            IF hProject[ "cType" ] $ "hbhrb|hbppo"
-               LOOP
-            ENDIF
+         call_hbmk2( cBinDir, cProject, cOptions, "" )
 
-            cProject := s_cBase + cDir + "/" + hProject[ "cFileName" ]
+         /* Highly experimental */
+         IF s_hPackageList[ cPackage ][ "cType" ] == "hblib" .AND. ;
+            GetEnv( "HB_BUILD_CONTRIB_DLL" ) == "yes" .AND. ;
+            hb_FileExists( PathSepToSelf( FNameExtSet( cProject, ".hbc" ) ) )
 
-            call_hbmk2( cBinDir, cProject, cOptions, "" )
-
-            /* Highly experimental */
-            IF hProject[ "cType" ] == "hblib" .AND. ;
-               GetEnv( "HB_BUILD_CONTRIB_DLL" ) == "yes" .AND. ;
-               hb_FileExists( PathSepToSelf( FNameExtSet( cProject, ".hbc" ) ) )
-
-               call_hbmk2( cBinDir, cProject, cOptions, " -hbdyn -nohblib- -implib " + FNameExtSet( cProject, ".hbc" ) )
-            ENDIF
-         NEXT
+            call_hbmk2( cBinDir, cProject, cOptions, " -hbdyn -nohblib- -implib " + FNameExtSet( cProject, ".hbc" ) )
+         ENDIF
 
          /* Compile documentation */
          IF nAction == _ACT_INC_INST .OR. ;
             nAction == _ACT_INC_REBUILD_INST
-            mk_hbd( PathSepToSelf( cDir ) )
+            mk_hbd( PathSepToSelf( cPackage ) )
          ENDIF
       ELSE
-         /* OutStd( hb_StrFormat( "! package '%1$s' skipped due to custom filter", cDir ) + hb_eol() ) */
+         /* OutStd( hb_StrFormat( "! package '%1$s' skipped due to custom filter", cPackage ) + hb_eol() ) */
       ENDIF
    NEXT
 
    OutStd( hb_eol() )
-   IF lAnyAddons
-      OutStd( "! Building of contrib and addon packages finished." + hb_eol() )
-   ELSE
-      OutStd( "! Building of contrib packages finished." + hb_eol() )
-   ENDIF
+   OutStd( "! Building of packages finished." + hb_eol() )
 
    ErrorLevel( 0 )
 
@@ -453,16 +424,14 @@ STATIC FUNCTION call_hbmk2_hbinfo( cBinDir, cProject, hProject )
 
    hProject[ "cType" ] := ""
    hProject[ "aDept" ] := {}
-   hProject[ "lInc" ] := .F.
 
    clear_hbmk2_envvars()
 
    IF hb_processRun( PathSepToSelf( cBinDir ) + "hbmk2 --hbinfo " + StrTran( cProject, "\", "/" ),, @cStdOut  ) == 0
 
       hProject[ "cType" ] := hbmk2_hbinfo_getitem( cStdOut, "targettype" )
-      hProject[ "lInc" ] := ( hbmk2_hbinfo_getitem( cStdOut, "inc" ) == "yes" )
 
-      FOR EACH tmp IN hb_ATokens( hbmk2_hbinfo_getitem( cStdOut, "hbctree" ), Chr( 10 ) )
+      FOR EACH tmp IN hb_ATokens( hbmk2_hbinfo_getitem( cStdOut, "hbctree", .T. ), Chr( 10 ) )
          IF ! Empty( tmp )
             hb_FNameSplit( LTrim( tmp ), @cDir, @cName )
             AAdd( hProject[ "aDept" ], { "nDepth" => Len( tmp ) - Len( LTrim( tmp ) ),;
@@ -476,17 +445,25 @@ STATIC FUNCTION call_hbmk2_hbinfo( cBinDir, cProject, hProject )
 
    RETURN .F.
 
-STATIC FUNCTION hbmk2_hbinfo_getitem( cString, cItem )
-   LOCAL nPos
+STATIC FUNCTION hbmk2_hbinfo_getitem( cString, cItem, lAll )
+   LOCAL cRetVal := ""
+   LOCAL nPos := 1
+   LOCAL tmp
 
-   IF ( nPos := At( cItem + "{{", cString ) ) > 0
-      cString := SubStr( cString, nPos + Len( cItem + "{{" ) )
-      IF ( nPos := At( "}}", cString ) ) > 0
-         RETURN StrTran( Left( cString, nPos - 1 ), Chr( 13 ) )
+   DO WHILE ( tmp := hb_At( cItem + "{{", cString, nPos ) ) > 0
+      nPos := tmp + Len( cItem + "{{" )
+      IF ( tmp := hb_At( "}}", cString, nPos ) ) > 0
+         tmp := StrTran( SubStr( cString, nPos, tmp - nPos ), Chr( 13 ) )
+         IF lAll != NIL .AND. lAll
+            cRetVal += tmp
+         ELSE
+            /* Find the last occurrence, which is the root project */
+            cRetVal := tmp
+         ENDIF
       ENDIF
-   ENDIF
+   ENDDO
 
-   RETURN ""
+   RETURN cRetVal
 
 STATIC FUNCTION call_hbmk2( cBinDir, cProject, cOptionsPre, cOptionsPost )
    LOCAL nErrorLevel
@@ -588,6 +565,14 @@ STATIC FUNCTION DirGetName( cDir )
 
    RETURN cName
 
+STATIC FUNCTION DirAddPathSep( cDir )
+
+   IF ! Empty( cDir ) .AND. !( Right( cDir, 1 ) == hb_ps() )
+      cDir += hb_ps()
+   ENDIF
+
+   RETURN cDir
+
 STATIC FUNCTION DirDelPathSep( cDir )
 
    IF Empty( hb_osDriveSeparator() )
@@ -604,13 +589,10 @@ STATIC FUNCTION DirDelPathSep( cDir )
    RETURN cDir
 
 STATIC FUNCTION PathSepToSelf( cFileName )
-#if defined( __PLATFORM__WINDOWS ) .OR. ;
-    defined( __PLATFORM__DOS ) .OR. ;
-    defined( __PLATFORM__OS2 )
-   RETURN StrTran( cFileName, "/", "\" )
-#else
-   RETURN StrTran( cFileName, "\", "/" )
-#endif
+   RETURN StrTran( cFileName, iif( hb_ps() == "\", "/", "\" ), hb_ps() )
+
+STATIC FUNCTION hb_pwd()
+   RETURN DirAddPathSep( hb_CurDrive() + hb_osDriveSeparator() + hb_ps() + CurDir() )
 
 /* Convert indented list of line to tree / list of parent-child pairs */
 STATIC PROCEDURE DeptLinesToDeptPairList( aPairList, cParent, aFlatTree )
@@ -693,35 +675,41 @@ STATIC FUNCTION TopoSort( aEdgeList )
 
    RETURN aList
 
-FUNCTION LoadPkgList( cFileName )
+PROCEDURE AddPkg( hPackageList, cFileName )
+   LOCAL cDir
+   LOCAL cName
+   LOCAL cExt
 
-   LOCAL cFile := MemoRead( cFileName )
-   LOCAL cLine
-   LOCAL aItem
-   LOCAL xItem
+   IF ! Empty( cFileName )
 
-   LOCAL cPackageName
-   LOCAL hPackageList := { => }
-
-   hb_HKeepOrder( hPackageList, .T. )
-
-   cFile := StrTran( cFile, Chr( 13 ) )
-
-   FOR EACH cLine IN hb_ATokens( cFile, Chr( 10 ) )
-      IF "#" $ cLine
-         cLine := Left( cLine, At( "#", cLine ) - 1 )
+      hb_FNameSplit( PathSepToSelf( AllTrim( cFileName ) ), @cDir, @cName, @cExt )
+      IF Empty( cExt )
+         cExt := ".hbp"
       ENDIF
-      IF ! Empty( cLine )
-         aItem := hb_ATokens( AllTrim( cLine ) )
-         IF Len( aItem ) >= 2
-            cPackageName := aItem[ 1 ]
-            hb_ADel( aItem, 1, .T. )
-            FOR EACH xItem IN aItem
-               xItem := { "cFileName" => FNameExtDef( StrTran( xItem, "\", "/" ), ".hbp" ) }
-            NEXT
-            hPackageList[ cPackageName ] := AClone( aItem )
-         ENDIF
+
+      hPackageList[ StrTran( DirDelPathSep( cDir ), "\", "/" ) ] := { "cFileName" => hb_FNameMerge(, cName, cExt ) }
+   ENDIF
+
+   RETURN
+
+PROCEDURE LoadPkgListFromFile( hPackageList, cFileName )
+   LOCAL cFile := StrTran( MemoRead( cFileName ), Chr( 13 ) )
+   LOCAL cItem
+
+   FOR EACH cItem IN hb_ATokens( cFile, Chr( 10 ) )
+      IF "#" $ cItem
+         cItem := Left( cItem, At( "#", cItem ) - 1 )
       ENDIF
+      AddPkg( hPackageList, cItem )
    NEXT
 
-   RETURN hPackageList
+   RETURN
+
+PROCEDURE LoadPkgListFromString( hPackageList, cString )
+   LOCAL cItem
+
+   FOR EACH cItem IN hb_ATokens( cString,, .T. )
+      AddPkg( hPackageList, cItem )
+   NEXT
+
+   RETURN

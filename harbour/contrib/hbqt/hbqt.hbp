@@ -2,7 +2,14 @@
 # $Id$
 #
 
-hbqt.hbm
+hbqt_common.hbm
 
--o${hb_name}
--workdir=${hb_work}/${hb_plat}/${hb_comp}/${hb_name}
+filelist.hbm
+
+-instfile=inc:hbqt.ch
+
+hbqts.hbp
+
+hbqtcore.hbp
+hbqtgui.hbp
+hbqtnetwork.hbp

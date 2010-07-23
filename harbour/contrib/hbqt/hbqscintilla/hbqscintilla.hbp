@@ -4,9 +4,6 @@
 
 ../hbqt_common.hbm
 
--o${hb_name}
--workdir=${hb_work}/${hb_plat}/${hb_comp}/${hb_name}
-
 -incpath=${HB_WITH_QSCINTILLA}/qt
 
 hbqt_hbqsciscintilla.h

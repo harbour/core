@@ -187,10 +187,4 @@ STATIC FUNCTION FNameExtSet( cFileName, cExt )
    RETURN hb_FNameMerge( cDir, cName, cExt )
 
 STATIC FUNCTION PathSepToSelf( cFileName )
-#if defined( __PLATFORM__WINDOWS ) .OR. ;
-    defined( __PLATFORM__DOS ) .OR. ;
-    defined( __PLATFORM__OS2 )
-   RETURN StrTran( cFileName, "/", "\" )
-#else
-   RETURN StrTran( cFileName, "\", "/" )
-#endif
+   RETURN StrTran( cFileName, iif( hb_ps() == "\", "/", "\" ), hb_ps() )

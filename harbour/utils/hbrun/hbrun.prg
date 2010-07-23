@@ -79,6 +79,7 @@ STATIC s_nCol := 0
 STATIC s_aIncDir := {}
 STATIC s_aHistory := {}
 STATIC s_lPreserveHistory := .T.
+STATIC s_lWasLoad := .F.
 
 /* ********************************************************************** */
 
@@ -403,6 +404,8 @@ STATIC PROCEDURE hbrun_HistoryLoad()
    LOCAL cHistory
    LOCAL cLine
 
+   s_lWasLoad := .T.
+
    IF s_lPreserveHistory
       cHistory := StrTran( MemoRead( hbrun_HistoryFileName() ), Chr( 13 ) )
       IF Left( cHistory, Len( _HISTORY_DISABLE_LINE + Chr( 10 ) ) ) == _HISTORY_DISABLE_LINE + Chr( 10 )
@@ -422,7 +425,7 @@ STATIC PROCEDURE hbrun_HistorySave()
    LOCAL cHistory
    LOCAL cLine
 
-   IF s_lPreserveHistory
+   IF s_lWasLoad .AND. s_lPreserveHistory
       cHistory := ""
       FOR EACH cLine IN s_aHistory
          IF !( Lower( AllTrim( cLine ) ) == "quit" )

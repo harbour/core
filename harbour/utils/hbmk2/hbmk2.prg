@@ -223,6 +223,8 @@ REQUEST hbmk_KEYW
 #define _HBMK_IMPLIB_EXE_POST   "_exe"
 #define _HBMK_IMPLIB_DLL_POST   "_dll"
 
+#define _HBMK_TARGENAME_ADHOC   ".adhoc."
+
 #define _HBMK_NEST_MAX          10
 #define _HBMK_HEAD_NEST_MAX     10
 
@@ -403,7 +405,12 @@ REQUEST hbmk_KEYW
 #define _HBMK_nCOMPVer          118
 #define _HBMK_lDEPIMPLIB        119 /* Generate import libs configured in dependecy specification */
 
-#define _HBMK_MAX_              119
+#define _HBMK_aArgs             120
+#define _HBMK_nArgTarget        121
+#define _HBMK_lPause            122
+#define _HBMK_nLevel            123
+
+#define _HBMK_MAX_              123
 
 #define _HBMK_DEP_CTRL_MARKER   ".control." /* must be an invalid path */
 
@@ -436,10 +443,8 @@ REQUEST HB_REGEX
 STATIC s_cSecToken := NIL
 
 PROCEDURE Main( ... )
-   LOCAL aArgsIn := hb_AParams()
-   LOCAL aArgsProc := {}
+   LOCAL aArgsProc
    LOCAL nResult
-   LOCAL cName
    LOCAL tmp, tmp1
 
    LOCAL lPause := hb_gtInfo( HB_GTI_ISGRAPHIC )
@@ -447,6 +452,7 @@ PROCEDURE Main( ... )
    LOCAL aArgsTarget
    LOCAL nTarget
    LOCAL nTargetTODO
+   LOCAL nTargetPos
    LOCAL lHadTarget
 
    LOCAL lOldExact := Set( _SET_EXACT, .F. )
@@ -454,48 +460,12 @@ PROCEDURE Main( ... )
    hb_FSetDevMode( hb_gtInfo( HB_GTI_OUTPUTFD ), FD_TEXT )
    hb_FSetDevMode( hb_gtInfo( HB_GTI_ERRORFD ), FD_TEXT )
 
-   /* Emulate -hbcmp, -hbcc, -hblnk switches when certain
-      self names are detected.
-      For compatibility with hbmk script aliases. */
-
-   IF ! Empty( aArgsIn )
-
-      hb_FNameSplit( hb_argv( 0 ),, @cName )
-
-      tmp := Lower( cName )
-
-      IF Left( tmp, 1 ) == "x"
-         tmp := SubStr( tmp, 2 )
-         AAdd( aArgsProc, "-xhb" )
-      ELSEIF Right( tmp, 2 ) == "10"
-         AAdd( aArgsProc, "-hb10" )
-      ENDIF
-
-      DO CASE
-      CASE Right( tmp, 5 ) == "hbcmp" .OR. ;
-           Left(  tmp, 5 ) == "hbcmp" .OR. ;
-           tmp == "clipper"                ; AAdd( aArgsProc, "-hbcmp" )
-      CASE Right( tmp, 4 ) == "hbcc" .OR. ;
-           Left(  tmp, 4 ) == "hbcc"       ; AAdd( aArgsProc, "-hbcc" )
-      CASE Right( tmp, 5 ) == "hblnk" .OR. ;
-           Left(  tmp, 5 ) == "hblnk"      ; AAdd( aArgsProc, "-hblnk" )
-      CASE tmp == "rtlink" .OR. ;
-           tmp == "exospace" .OR. ;
-           tmp == "blinker"                ; AAdd( aArgsProc, "-rtlink" )
-      CASE Right( tmp, 5 ) == "hbexe" .OR. ;
-           Left(  tmp, 5 ) == "hbexe"      ; AAdd( aArgsProc, "-hbexe" )
-      CASE Right( tmp, 5 ) == "hblib" .OR. ;
-           Left(  tmp, 5 ) == "hblib"      ; AAdd( aArgsProc, "-hblib" )
-      CASE Right( tmp, 5 ) == "hbdyn" .OR. ;
-           Left(  tmp, 5 ) == "hbdyn"      ; AAdd( aArgsProc, "-hbdyn" )
-      ENDCASE
-   ENDIF
-
    /* Expand wildcard project specs */
 
-   FOR EACH tmp IN aArgsIn
+   aArgsProc := {}
+   FOR EACH tmp IN hb_AParams()
       DO CASE
-      CASE !( Left( tmp, 1 ) == "-" ) .AND. ( Lower( FNameExtGet( tmp ) ) == ".hbp" .OR. Lower( FNameExtGet( tmp ) ) == ".hbi" )
+      CASE !( Left( tmp, 1 ) $ "-@" ) .AND. Lower( FNameExtGet( tmp ) ) == ".hbp"
          FOR EACH tmp1 IN FN_Expand( tmp, .T. )
             AAdd( aArgsProc, tmp1 )
          NEXT
@@ -508,6 +478,43 @@ PROCEDURE Main( ... )
       ENDCASE
    NEXT
 
+   /* Emulate -hbcmp, -hbcc, -hblnk switches when certain
+      self names are detected.
+      For compatibility with hbmk script aliases. */
+
+   IF ! Empty( aArgsProc )
+
+      hb_FNameSplit( hb_argv( 0 ),, @tmp )
+
+      tmp := Lower( tmp )
+
+      IF Left( tmp, 1 ) == "x"
+         tmp := SubStr( tmp, 2 )
+         hb_AIns( aArgsProc, 1, "-xhb", .T. )
+      ELSEIF Right( tmp, 2 ) == "10"
+         hb_AIns( aArgsProc, 1, "-hb10", .T. )
+      ENDIF
+
+      DO CASE
+      CASE Right( tmp, 5 ) == "hbcmp" .OR. ;
+           Left(  tmp, 5 ) == "hbcmp" .OR. ;
+           tmp == "clipper"                ; hb_AIns( aArgsProc, 1, "-hbcmp", .T. )
+      CASE Right( tmp, 4 ) == "hbcc" .OR. ;
+           Left(  tmp, 4 ) == "hbcc"       ; hb_AIns( aArgsProc, 1, "-hbcc", .T. )
+      CASE Right( tmp, 5 ) == "hblnk" .OR. ;
+           Left(  tmp, 5 ) == "hblnk"      ; hb_AIns( aArgsProc, 1, "-hblnk", .T. )
+      CASE tmp == "rtlink" .OR. ;
+           tmp == "exospace" .OR. ;
+           tmp == "blinker"                ; hb_AIns( aArgsProc, 1, "-rtlink", .T. )
+      CASE Right( tmp, 5 ) == "hbexe" .OR. ;
+           Left(  tmp, 5 ) == "hbexe"      ; AAdd( aArgsProc, "-hbexe" )
+      CASE Right( tmp, 5 ) == "hblib" .OR. ;
+           Left(  tmp, 5 ) == "hblib"      ; AAdd( aArgsProc, "-hblib" )
+      CASE Right( tmp, 5 ) == "hbdyn" .OR. ;
+           Left(  tmp, 5 ) == "hbdyn"      ; AAdd( aArgsProc, "-hbdyn" )
+      ENDCASE
+   ENDIF
+
    /* Handle multitarget command lines */
 
    nTargetTODO := 1
@@ -515,25 +522,25 @@ PROCEDURE Main( ... )
 
       aArgsTarget := {}
       nTarget := 0
+      nTargetPos := 0
       lHadTarget := .F.
 
       FOR EACH tmp IN aArgsProc
          DO CASE
-         CASE !( Left( tmp, 1 ) == "-" ) .AND. ( Lower( FNameExtGet( tmp ) ) == ".hbp" .OR. Lower( FNameExtGet( tmp ) ) == ".hbi" ) .AND. ! lHadTarget
+         CASE !( Left( tmp, 1 ) $ "-@" ) .AND. ;
+              Lower( FNameExtGet( tmp ) ) == ".hbp" .AND. ;
+              ! lHadTarget
             ++nTarget
             IF nTarget == nTargetTODO
                AAdd( aArgsTarget, tmp )
+               nTargetPos := Len( aArgsTarget )
             ENDIF
          CASE Lower( Left( tmp, Len( "-target=" ) ) ) == "-target="
             ++nTarget
             IF nTarget == nTargetTODO
                AAdd( aArgsTarget, SubStr( tmp, Len( "-target=" ) + 1 ) )
+               nTargetPos := Len( aArgsTarget )
             ENDIF
-         CASE Lower( tmp ) == "-target"
-            ++nTarget
-            lHadTarget := .T.
-         CASE Lower( tmp ) == "-alltarget"
-            lHadTarget := .F.
          OTHERWISE
             IF ! lHadTarget .OR. nTarget == nTargetTODO
                AAdd( aArgsTarget, tmp )
@@ -547,7 +554,7 @@ PROCEDURE Main( ... )
       ENDIF
 
       /* Build one target */
-      nResult := hbmk2( aArgsTarget, @lPause )
+      nResult := hbmk2( aArgsTarget, nTargetPos, @lPause, 1 )
 
       /* Exit on first failure */
       IF nResult != 0
@@ -634,7 +641,7 @@ STATIC PROCEDURE hbmk_COMP_Setup( cARCH, cCOMP, cBasePath )
 
    RETURN
 
-FUNCTION hbmk2( aArgs, /* @ */ lPause )
+FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
    LOCAL hbmk[ _HBMK_MAX_ ]
 
@@ -893,6 +900,11 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
    hbmk[ _HBMK_hDEPTSDIR ] := { => }
 
+   hbmk[ _HBMK_aArgs ]      := aArgs
+   hbmk[ _HBMK_nArgTarget ] := nArgTarget
+   hbmk[ _HBMK_lPause ]     := lPause
+   hbmk[ _HBMK_nLevel ]     := nLevel
+
    GetUILangCDP( @hbmk[ _HBMK_cUILNG ], @hbmk[ _HBMK_cUICDP ] )
    SetUILang( hbmk )
 
@@ -1022,6 +1034,17 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
       ENDCASE
    NEXT
+
+   IF nLevel > _HBMK_NEST_MAX
+      hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Cannot nest projects deeper than %1$s levels" ), hb_ntos( _HBMK_NEST_MAX ) ) )
+      RETURN 30
+   ENDIF
+
+   IF nLevel > 1
+      IF ! hbmk[ _HBMK_lQuiet ]
+         hbmk_OutStd( hbmk, hb_StrFormat( I_( "Building sub-project: %1$s (level %2$s)" ), hbmk[ _HBMK_aArgs ][ hbmk[ _HBMK_nArgTarget ] ], hb_ntos( nLevel ) ) )
+      ENDIF
+   ENDIF
 
    IF ! Empty( cEnv )
       IF ! hbmk[ _HBMK_lQuiet ]
@@ -1748,34 +1771,42 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       IF ! hbmk[ _HBMK_lQuiet ]
          hbmk_OutStd( hbmk, hb_StrFormat( I_( "Processing local make script: %1$s" ), _HBMK_AUTOHBM_NAME ) )
       ENDIF
-      HBM_Load( hbmk, aParams, _HBMK_AUTOHBM_NAME, 1 )
+      HBM_Load( hbmk, aParams, _HBMK_AUTOHBM_NAME, 1, .F. ) /* Do not allow subprojects in automatic make file */
    ENDIF
 
    /* Collect all command line parameters */
    FOR EACH cParam IN aArgs
-      DO CASE
-      CASE !( Left( cParam, 1 ) == "-" ) .AND. Len( cParam ) >= 1 .AND. Left( cParam, 1 ) == "@" .AND. ;
-         !( Lower( FNameExtGet( cParam ) ) == ".clp" )
-         cParam := SubStr( cParam, 2 )
-         IF Empty( FNameExtGet( cParam ) )
-            cParam := FNameExtSet( cParam, ".hbm" )
-         ENDIF
-         IF !( Lower( FNameExtGet( cParam ) ) == ".hbm" ) .AND. lAcceptLDClipper
-            rtlnk_process( hbmk, MemoRead( PathSepToSelf( cParam ) ), @hbmk[ _HBMK_cPROGNAME ], @hbmk[ _HBMK_aOBJUSER ], @hbmk[ _HBMK_aLIBUSER ] )
-            IF ! Empty( hbmk[ _HBMK_aOBJUSER ] )
-               DEFAULT hbmk[ _HBMK_cFIRST ] TO hbmk[ _HBMK_aOBJUSER ][ 1 ]
+      cParam := ArchCompFilter( hbmk, cParam )
+      IF ! Empty( cParam )
+         DO CASE
+         CASE !( Left( cParam, 1 ) == "-" ) .AND. Len( cParam ) >= 1 .AND. Left( cParam, 1 ) == "@" .AND. ;
+            !( Lower( FNameExtGet( cParam ) ) == ".clp" )
+            cParam := SubStr( cParam, 2 )
+            IF Empty( FNameExtGet( cParam ) )
+               cParam := FNameExtSet( cParam, ".hbm" )
             ENDIF
-         ELSE
-            HBM_Load( hbmk, aParams, PathSepToSelf( cParam ), 1 ) /* Load parameters from script file */
-         ENDIF
-      CASE !( Left( cParam, 1 ) == "-" ) .AND. ;
-           ( Lower( FNameExtGet( cParam ) ) == ".hbm" .OR. ;
-             Lower( FNameExtGet( cParam ) ) == ".hbp" .OR. ;
-             Lower( FNameExtGet( cParam ) ) == ".hbi" )
-         HBM_Load( hbmk, aParams, PathSepToSelf( cParam ), 1 ) /* Load parameters from script file */
-      OTHERWISE
-         AAdd( aParams, { cParam, "", 0 } )
-      ENDCASE
+            IF !( Lower( FNameExtGet( cParam ) ) == ".hbm" ) .AND. lAcceptLDClipper
+               rtlnk_process( hbmk, MemoRead( PathSepToSelf( cParam ) ), @hbmk[ _HBMK_cPROGNAME ], @hbmk[ _HBMK_aOBJUSER ], @hbmk[ _HBMK_aLIBUSER ] )
+               IF ! Empty( hbmk[ _HBMK_aOBJUSER ] )
+                  DEFAULT hbmk[ _HBMK_cFIRST ] TO hbmk[ _HBMK_aOBJUSER ][ 1 ]
+               ENDIF
+            ELSE
+               tmp := HBM_Load( hbmk, aParams, PathSepToSelf( cParam ), 1, .T. ) /* Load parameters from script file */
+               IF tmp != 0
+                  RETURN tmp
+               ENDIF
+            ENDIF
+         CASE !( Left( cParam, 1 ) == "-" ) .AND. ;
+              ( Lower( FNameExtGet( cParam ) ) == ".hbm" .OR. ;
+                Lower( FNameExtGet( cParam ) ) == ".hbp" )
+            tmp := HBM_Load( hbmk, aParams, PathSepToSelf( cParam ), 1, .T. ) /* Load parameters from script file */
+            IF tmp != 0
+               RETURN tmp
+            ENDIF
+         OTHERWISE
+            AAdd( aParams, { cParam, "", 0 } )
+         ENDCASE
+      ENDIF
    NEXT
 
    /* Process automatic control files. */
@@ -1784,7 +1815,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
    /* Process command line (2nd pass) */
    FOR EACH aParam IN aParams
 
-      cParam := ArchCompFilter( hbmk, aParam[ _PAR_cParam ] )
+      cParam := aParam[ _PAR_cParam ]
       cParamL := Lower( cParam )
 
       DO CASE
@@ -1946,7 +1977,12 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
       CASE cParamL == "-cpp-" .OR. ;
            cParamL == "-nocpp"           ; hbmk[ _HBMK_lCPP ]       := .F.
 
-      CASE cParamL == "-run"             ; hbmk[ _HBMK_lRUN ]       := .T.
+      CASE cParamL == "-run"
+
+         IF hbmk[ _HBMK_nLevel ] == 1
+            hbmk[ _HBMK_lRUN ] := .T.
+         ENDIF
+
       CASE cParamL == "-run-" .OR. ;
            cParamL == "-norun"           ; hbmk[ _HBMK_lRUN ]       := .F.
       CASE cParamL == "-trace"           ; hbmk[ _HBMK_lTRACE ]     := .T.
@@ -4441,7 +4477,9 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
    IF lDumpInfo
 
-      OutStd( "targettype{{" + hbmk_TARGET( hbmk ) + "}}" + hb_eol() )
+      OutStd( "{{{" + hb_eol() )
+      OutStd( "targetname{{" + hbmk_TARGETNAME( hbmk ) + "}}" + hb_eol() )
+      OutStd( "targettype{{" + hbmk_TARGETTYPE( hbmk ) + "}}" + hb_eol() )
       OutStd( "inc{{" + iif( hbmk[ _HBMK_lINC ], "yes", "no" ) + "}}" + hb_eol() )
 
       OutStd( "hbctree{{" + hb_eol() )
@@ -4449,6 +4487,7 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
          OutStd( Replicate( Chr( 9 ), tmp[ 2 ] ) + PathSepToForward( PathNormalize( tmp[ 1 ] ) ) + hb_eol() )
       NEXT
       OutStd( "}}" + hb_eol() )
+      OutStd( "}}}" + hb_eol() )
 
       RETURN 0
    ENDIF
@@ -5734,15 +5773,8 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
 
          /* Setup compressor for host platform */
 
-         #if defined( __PLATFORM__UNIX )
-
-            cBin_Cprs := "upx"
-            cOpt_Cprs := "{OB}"
-            cOpt_CprsMin := "-1"
-            cOpt_CprsMax := "-9"
-
-         #elif defined( __PLATFORM__WINDOWS ) .OR. ;
-               defined( __PLATFORM__DOS )
+         #if defined( __PLATFORM__WINDOWS ) .OR. ;
+             defined( __PLATFORM__DOS )
 
             cBin_Cprs := "upx.exe"
             cOpt_Cprs := "{OB}"
@@ -5754,6 +5786,13 @@ FUNCTION hbmk2( aArgs, /* @ */ lPause )
                   [vszakats] */
                cOpt_Cprs += " --force-execve"
             ENDIF
+
+         #elif defined( __PLATFORM__UNIX )
+
+            cBin_Cprs := "upx"
+            cOpt_Cprs := "{OB}"
+            cOpt_CprsMin := "-1"
+            cOpt_CprsMax := "-9"
 
          #else
 
@@ -7264,8 +7303,8 @@ STATIC FUNCTION PlugIn_make_ctx( hbmk, cState )
          "cCOMP"        => hbmk[ _HBMK_cCOMP ]        ,;
          "cCPU"         => hbmk[ _HBMK_cCPU ]         ,;
          "cBUILD"       => hbmk[ _HBMK_cBUILD ]       ,;
-         "cTARGETTYPE"  => hbmk_TARGET( hbmk )        ,;
          "cTARGETNAME"  => hbmk[ _HBMK_cPROGNAME ]    ,;
+         "cTARGETTYPE"  => hbmk_TARGETTYPE( hbmk )    ,;
          "lREBUILD"     => hbmk[ _HBMK_lREBUILD ]     ,;
          "lCLEAN"       => hbmk[ _HBMK_lCLEAN ]       ,;
          "lDEBUG"       => hbmk[ _HBMK_lDEBUG ]       ,;
@@ -7853,13 +7892,8 @@ STATIC FUNCTION PathSepToForward( cFileName )
    RETURN StrTran( cFileName, "\", "/" )
 
 STATIC FUNCTION PathSepToSelf( cFileName, nStart )
-#if defined( __PLATFORM__WINDOWS ) .OR. ;
-    defined( __PLATFORM__DOS ) .OR. ;
-    defined( __PLATFORM__OS2 )
-   RETURN iif( nStart == NIL, StrTran( cFileName, "/", "\" ), Left( cFileName, nStart - 1 ) + StrTran( SubStr( cFileName, nStart ), "/", "\" ) )
-#else
-   RETURN iif( nStart == NIL, StrTran( cFileName, "\", "/" ), Left( cFileName, nStart - 1 ) + StrTran( SubStr( cFileName, nStart ), "\", "/" ) )
-#endif
+   RETURN iif( nStart == NIL, StrTran( cFileName, iif( hb_ps() == "\", "/", "\" ), hb_ps() ),;
+                              Left( cFileName, nStart - 1 ) + StrTran( SubStr( cFileName, nStart ), iif( hb_ps() == "\", "/", "\" ), hb_ps() ) )
 
 STATIC FUNCTION PathSepToTarget( hbmk, cFileName, nStart )
 
@@ -8709,10 +8743,13 @@ STATIC FUNCTION ValueIsF( cString )
    RETURN cString == "no" .OR. ;
           cString == "0" /* Compatibility */
 
-STATIC PROCEDURE HBM_Load( hbmk, aParams, cFileName, nNestingLevel )
+STATIC FUNCTION HBM_Load( hbmk, aParams, cFileName, nNestingLevel, lProcHBP )
    LOCAL cFile
    LOCAL cLine
    LOCAL cParam
+   LOCAL aArgs
+   LOCAL nResult
+   LOCAL cHBP
 
    IF hb_FileExists( cFileName )
 
@@ -8728,11 +8765,11 @@ STATIC PROCEDURE HBM_Load( hbmk, aParams, cFileName, nNestingLevel )
       FOR EACH cLine IN hb_ATokens( cFile, _CHR_EOL )
          IF !( Left( cLine, 1 ) == "#" )
             FOR EACH cParam IN hb_ATokens( cLine,, .T. )
-               cParam := StrStripQuote( cParam )
+               cParam := ArchCompFilter( hbmk, StrStripQuote( cParam ) )
                IF ! Empty( cParam )
                   DO CASE
                   CASE Lower( cParam ) == "-skip"
-                     RETURN
+                     RETURN 0
                   CASE !( Left( cParam, 1 ) == "-" ) .AND. Len( cParam ) >= 1 .AND. Left( cParam, 1 ) == "@" .AND. ;
                        !( Lower( FNameExtGet( cParam ) ) == ".clp" )
                      IF nNestingLevel < _HBMK_NEST_MAX
@@ -8740,18 +8777,44 @@ STATIC PROCEDURE HBM_Load( hbmk, aParams, cFileName, nNestingLevel )
                         IF Empty( FNameExtGet( cParam ) )
                            cParam := FNameExtSet( cParam, ".hbm" )
                         ENDIF
-                        HBM_Load( hbmk, aParams, PathMakeAbsolute( PathSepToSelf( cParam ), cFileName ), nNestingLevel + 1 ) /* Load parameters from script file */
+                        /* TODO: Modify '@script.ext' (@ prefixes) inclusion to not inherit path from parent */
+                        nResult := HBM_Load( hbmk, aParams, PathMakeAbsolute( PathSepToSelf( cParam ), cFileName ), nNestingLevel + 1, .T. ) /* Load parameters from script file */
+                        IF nResult != 0
+                           RETURN nResult
+                        ENDIF
                      ELSE
                         hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Cannot nest deeper in %1$s" ), cFileName ) )
                      ENDIF
                   CASE !( Left( cParam, 1 ) == "-" ) .AND. ;
-                       ( Lower( FNameExtGet( cParam ) ) == ".hbm" .OR. ;
-                         Lower( FNameExtGet( cParam ) ) == ".hbp" .OR. ;
-                         Lower( FNameExtGet( cParam ) ) == ".hbi" )
+                       Lower( FNameExtGet( cParam ) ) == ".hbm"
                      IF nNestingLevel < _HBMK_NEST_MAX
-                        HBM_Load( hbmk, aParams, PathMakeAbsolute( PathSepToSelf( cParam ), cFileName ), nNestingLevel + 1 ) /* Load parameters from script file */
+                        nResult := HBM_Load( hbmk, aParams, PathMakeAbsolute( PathSepToSelf( cParam ), cFileName ), nNestingLevel + 1, .T. ) /* Load parameters from script file */
+                        IF nResult != 0
+                           RETURN nResult
+                        ENDIF
                      ELSE
                         hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Cannot nest deeper in %1$s" ), cFileName ) )
+                     ENDIF
+                  CASE !( Left( cParam, 1 ) == "-" ) .AND. ;
+                       Lower( FNameExtGet( cParam ) ) == ".hbp"
+                     cHBP := PathMakeAbsolute( PathSepToSelf( cParam ), cFileName )
+                     IF lProcHBP
+                        IF hbmk[ _HBMK_nArgTarget ] > 0
+                           IF hb_FileExists( cHBP )
+                              aArgs := AClone( hbmk[ _HBMK_aArgs ] )
+                              aArgs[ hbmk[ _HBMK_nArgTarget ] ] := cHBP
+                              nResult := hbmk2( aArgs, hbmk[ _HBMK_nArgTarget ], @hbmk[ _HBMK_lPause ], hbmk[ _HBMK_nLevel ] + 1 )
+                              IF nResult != 0
+                                 RETURN nResult
+                              ENDIF
+                           ELSE
+                              hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Project reference (%1$s) ignored. File not found." ), cHBP ) )
+                           ENDIF
+                        ELSE
+                           hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Project reference (%1$s) ignored. Project references require hbmk2 to be invoced with a main project." ), cHBP ) )
+                        ENDIF
+                     ELSE
+                        hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Project reference (%1$s) ignored in automatic make file: %2$s" ), cHBP, cFileName ) )
                      ENDIF
                   OTHERWISE
                      AAdd( aParams, { cParam, cFileName, cLine:__enumIndex() } )
@@ -8764,7 +8827,7 @@ STATIC PROCEDURE HBM_Load( hbmk, aParams, cFileName, nNestingLevel )
       hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: File cannot be found: %1$s" ), cFileName ) )
    ENDIF
 
-   RETURN
+   RETURN 0
 
 /* Filter microformat:
    {[!][<plat|comp>]['&'|'|'][...]}
@@ -8925,6 +8988,10 @@ STATIC FUNCTION MacroGet( hbmk, cMacro, cFileName )
       cMacro := hb_pwd() ; EXIT
    CASE "HB_TEMPDIR"
       cMacro := hb_DirTemp() ; EXIT
+   CASE "HB_TARGETNAME"
+      cMacro := FNameNameGet( PathSepToSelf( hbmk_TARGETNAME( hbmk ) ) ) ; EXIT
+   CASE "HB_TARGETTYPE"
+      cMacro := hbmk_TARGETTYPE( hbmk ) ; EXIT
    CASE "HB_PLAT"
    CASE "HB_PLATFORM"
    CASE "HB_ARCH" /* Compatibility */
@@ -10109,7 +10176,10 @@ STATIC FUNCTION VCSID( cDir, cVCSHEAD, /* @ */ cType )
 
    RETURN cResult
 
-STATIC FUNCTION hbmk_TARGET( hbmk )
+STATIC FUNCTION hbmk_TARGETNAME( hbmk )
+   RETURN iif( hbmk[ _HBMK_nArgTarget ] == 0, _HBMK_TARGENAME_ADHOC, PathSepToForward( hbmk[ _HBMK_aArgs ][ hbmk[ _HBMK_nArgTarget ] ] ) )
+
+STATIC FUNCTION hbmk_TARGETTYPE( hbmk )
 
    IF hbmk[ _HBMK_lCreateLib ]                                           ; RETURN "hblib"
    ELSEIF hbmk[ _HBMK_lCreateDyn ] .AND. ! hbmk[ _HBMK_lDynVM ]          ; RETURN "hbdyn"
@@ -10187,7 +10257,7 @@ FUNCTION hbmk_KEYW( hbmk, cKeyword, cValue, cOperator )
       RETURN .T.
    ENDIF
 
-   IF cKeyword == hbmk_TARGET( hbmk )
+   IF cKeyword == hbmk_TARGETTYPE( hbmk )
       RETURN .T.
    ENDIF
 
@@ -10861,9 +10931,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       NIL,;
       { "Options below are available on command line only:" },;
       NIL,;
-      { "-target=<script>"   , I_( "specify a new build target. <script> can be .prg (or no extension) or .hbm/.hbp/.hbi file" ) },;
-      { "-target"            , I_( "marks beginning of options belonging to a new build target" ) },;
-      { "-alltarget"         , I_( "marks beginning of common options belonging to all targets" ) },;
+      { "-target=<script>"   , I_( "specify a new build target. <script> can be .prg (or no extension) or .hbp file. Please note that .hbp files are automatically considered as separate targets." ) },;
       NIL,;
       { "-env:<e>[<o>[<v>]]" , I_( "alter local environment. <e> is the name of the environment variable to alter. <o> can be '=' to set/override, '-' to delete, '+' to append to the end of existing value, '#' to insert to the beginning of existing value. <v> is the value to set/append/insert. If multiple options are passed, they are processed from left to right." ) },;
       NIL,;
@@ -10902,7 +10970,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       I_( "Notes:" ) }
 
    LOCAL aNotes := {;
-      I_( "<script> can be:\n  <@script> or <script.hbm>: command line options in file\n  <script.hbp>: command line options in file, it also marks a new target if specified on the command line\n  <script.hbi>: command line options in file (used to create import libraries), it also marks a new target if specified on the command line\n  <script.hbc>: package configuration file" ),;
+      I_( "<script> can be:\n  <@script> or <script.hbm>: command line options in file\n  <script.hbp>: command line options in file, it also marks a new target if specified on the command line\n  <script.hbc>: package configuration file" ),;
       I_( "Multiple -l, -L and <script> parameters are accepted." ),;
       I_( "Regular Harbour compiler options are also accepted.\n(see them with -harbourhelp option)" ),;
       hb_StrFormat( I_( "%1$s option file in hbmk2 directory is always processed if it exists. On *nix platforms ~/.harbour, /etc/harbour, <base>/etc/harbour, <base>/etc are checked (in that order) before the hbmk2 directory." ), _HBMK_AUTOHBC_NAME ),;
