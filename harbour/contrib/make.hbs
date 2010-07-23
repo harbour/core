@@ -156,7 +156,7 @@ PROCEDURE Standalone( ... )
 
          cOptionsUser += " " + tmp
 
-         /* If anything else is passed the options or GNU Make keywords,
+         /* If anything else is passed than options or GNU Make keywords,
             consider it a custom project build, f.e. in tests */
          IF !( Left( tmp, 1 ) == "-" )
             lCustom := .T.
@@ -683,6 +683,12 @@ PROCEDURE AddPkg( hPackageList, cFileName )
    IF ! Empty( cFileName )
 
       hb_FNameSplit( PathSepToSelf( AllTrim( cFileName ) ), @cDir, @cName, @cExt )
+      IF ! Empty( cName ) .AND. Empty( cDir )
+         cDir := cName
+      ENDIF
+      IF Empty( cName )
+         cName := DirGetName( cDir )
+      ENDIF
       IF Empty( cExt )
          cExt := ".hbp"
       ENDIF
