@@ -639,6 +639,20 @@ HB_FUNC( QT_HBQPLAINTEXTEDIT_HBSETCOMPLETER )
 }
 
 /*
+ * void           hbSetFldsCompleter( QCompleter * completer )
+ */
+HB_FUNC( QT_HBQPLAINTEXTEDIT_HBSETFLDSCOMPLETER )
+{
+   HBQPlainTextEdit * p = hbqt_par_HBQPlainTextEdit( 1 );
+   if( p )
+      ( p )->hbSetFldsCompleter( hbqt_par_QCompleter( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQPLAINTEXTEDIT_HBSETFLDSCOMPLETER FP=( p )->hbSetFldsCompleter( hbqt_par_QCompleter( 2 ) ); p is NULL" ) );
+   }
+}
+
+/*
  * void           hbSetCurrentLineColor( const QColor & color )
  */
 HB_FUNC( QT_HBQPLAINTEXTEDIT_HBSETCURRENTLINECOLOR )

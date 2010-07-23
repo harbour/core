@@ -199,6 +199,8 @@ CLASS IdeEdit INHERIT IdeObject
    METHOD showPrototype( cProto )
    METHOD hidePrototype()
    METHOD completeCode( p )
+   METHOD completeFieldName( p )
+   METHOD updateFieldsList( cAlias )
 
    METHOD setLineNumbersBkColor( nR, nG, nB )
    METHOD setCurrentLineColor( nR, nG, nB )
@@ -282,6 +284,7 @@ METHOD IdeEdit:create( oIde, oEditor, nMode )
    ::qEdit:hbSetSpaces( ::nTabSpaces )
 
    ::qEdit:hbSetCompleter( ::qCompleter )
+   ::qEdit:hbSetFldsCompleter( ::oEM:qFldsCompleter )
 
    ::toggleCurrentLineHighlightMode()
    ::toggleLineNumbers()
@@ -662,6 +665,9 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p, p1 )
 
       ELSEIF p == 21017                     /* Sends Block Info { t,l,b,r,mode,state } hbGetBlockInfo() */
          ::aViewportInfo := p1
+
+      ELSEIF p == 21041
+         ::updateFieldsList( p1 )
 
       ENDIF
       EXIT
@@ -2244,6 +2250,48 @@ METHOD IdeEdit:completeCode( p )
 
    ::qEdit:setTextCursor( qCursor )
 
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:completeFieldName( p )
+   LOCAL qCursor := QTextCursor():from( ::qEdit:textCursor() )
+
+   qCursor:movePosition( QTextCursor_Left )
+
+   qCursor:movePosition( QTextCursor_StartOfWord )
+   qCursor:movePosition( QTextCursor_EndOfWord, QTextCursor_KeepAnchor )
+   qCursor:insertText( ::parseCodeCompletion( p ) )
+   qCursor:movePosition( QTextCursor_Left )
+   qCursor:movePosition( QTextCursor_Right )
+
+   ::qEdit:setTextCursor( qCursor )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:updateFieldsList( cAlias )
+   LOCAL aFlds
+HB_TRACE( HB_TR_ALWAYS, cAlias )
+   //::disconnect( ::qCompleter, "activated(QString)", {|p| ::execEvent( "qcompleter_activated", p ) } )
+
+   aFlds := ::oBM:fetchFldsList( cAlias )
+   asort( aFlds, , , {|e,f| lower( e ) < lower( f ) } )
+
+   ::oEM:qFldsStrList:clear()
+   aeval( aFlds, {|e| ::oEM:qFldsStrList:append( e ) } )
+
+   ::oEM:qFldsModel:setStringList( ::oEM:qFldsStrList )
+   ::oEM:qFldsCompleter:setModel( ::oEM:qFldsModel )
+
+   ::oEM:qFldsCompleter:setWrapAround( .t. )
+   ::oEM:qFldsCompleter:setCaseSensitivity( Qt_CaseInsensitive )
+   ::oEM:qFldsCompleter:setModelSorting( QCompleter_CaseInsensitivelySortedModel )
+   ::oEM:qFldsCompleter:setCompletionMode( QCompleter_PopupCompletion )
+   QListView():from( ::oEM:qFldsCompleter:popup() ):setAlternatingRowColors( .t. )
+
+   //::connect( ::qCompleter, "activated(QString)", {|p| ::execEvent( "qcompleter_activated", p ) } )
    RETURN Self
 
 /*----------------------------------------------------------------------*/

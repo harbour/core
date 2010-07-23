@@ -62,6 +62,7 @@
         :hbTextUnderCursor( lBCodeComplete )                -> cQString
         :hbShowPrototype( cTip, nRows, nCols )              -> NIL
         :hbSetCompleter( pCompleter )                       -> NIL
+        :hbSetFldsCompleter( pCompleter )                   -> NIL
         :hbSetCurrentLineColor( pColor )                    -> NIL
         :hbSetLineAreaBkColor( pColor )                     -> NIL
         :hbRefresh()                                        -> NIL

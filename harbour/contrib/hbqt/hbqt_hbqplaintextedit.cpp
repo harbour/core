@@ -1363,59 +1363,83 @@ void HBQPlainTextEdit::keyPressEvent( QKeyEvent * event )
       }
    }
 
-   if( hbKeyPressSelection( event ) )
-   {
+   if( hbKeyPressSelection( event ) ) {
       return;
    }
    QPlainTextEdit::keyPressEvent( event );
-
-   if( ! c )
-      return;
-
-   if( isTipActive )
+#if 0
+   QString alias = hbTextAlias();
+   if( ! alias.isEmpty() )
    {
-      c->popup()->hide();
-      return;
-   }
+      if( block ){
+         PHB_ITEM p1 = hb_itemPutNI( NULL, 21041 );
+         PHB_ITEM p2 = hb_itemPutCPtr( NULL, alias.toLatin1().data() );
+         hb_vmEvalBlockV( block, 2, p1, p2 );
+         hb_itemRelease( p1 );
+         hb_itemRelease( p2 );
+      }
+      cFlds->setCompletionPrefix( ( QString ) 'L' );
+      cFlds->popup()->setCurrentIndex( cFlds->completionModel()->index( 0, 0 ) );
 
-   if( ( event->modifiers() & ( Qt::ControlModifier | Qt::AltModifier ) ) )
+      QRect cr = cursorRect();
+      cFlds->popup()->setMaximumWidth( viewport()->width() );
+
+      cr.setWidth( cFlds->popup()->sizeHintForColumn( 0 ) + cFlds->popup()->verticalScrollBar()->sizeHint().width() );
+      cr.setTop( cr.top() + horzRulerHeight + 5 );
+      cr.setBottom( cr.bottom() + horzRulerHeight + 5 );
+HB_TRACE( HB_TR_ALWAYS, ( "1004" ) );
+      cFlds->complete( cr ); // popup it up!
+HB_TRACE( HB_TR_ALWAYS, ( "1005" ) );
+   }
+   else
+#endif
    {
-      c->popup()->hide();
-      return;
+      if( ! c ) {
+         return;
+      }
+
+      if( isTipActive ) {
+         c->popup()->hide();
+         return;
+      }
+
+      if( ( event->modifiers() & ( Qt::ControlModifier | Qt::AltModifier ) ) ) {
+         c->popup()->hide();
+         return;
+      }
+
+      const bool ctrlOrShift = event->modifiers() & ( Qt::ControlModifier | Qt::ShiftModifier );
+      if( ( ctrlOrShift && event->text().isEmpty() ) ) {
+         return;
+      }
+
+      static  QString            eow( " ~!@#$%^&*()+{}|:\"<>?,./;'[]\\-=" );               /* end of word */
+      bool    hasModifier      = ( event->modifiers() != Qt::NoModifier ) && !ctrlOrShift;
+      QString completionPrefix = hbTextUnderCursor( true );
+
+      if( ( hasModifier ||
+            event->text().isEmpty() ||
+            completionPrefix.length() < 1 ||
+            eow.contains( event->text().right( 1 ) ) ) )
+      {
+         c->popup()->hide();
+         return;
+      }
+
+      if( completionPrefix != c->completionPrefix() ) {
+         c->setCompletionPrefix( completionPrefix );
+         c->popup()->setCurrentIndex( c->completionModel()->index( 0, 0 ) );
+      }
+      QRect cr = cursorRect();
+
+      c->popup()->setMaximumWidth( viewport()->width() );
+
+      cr.setWidth( c->popup()->sizeHintForColumn( 0 ) + c->popup()->verticalScrollBar()->sizeHint().width() );
+      cr.setTop( cr.top() + horzRulerHeight + 5 );
+      cr.setBottom( cr.bottom() + horzRulerHeight + 5 );
+
+      c->complete( cr ); // popup it up!
    }
-
-   const bool ctrlOrShift = event->modifiers() & ( Qt::ControlModifier | Qt::ShiftModifier );
-   if( ( ctrlOrShift && event->text().isEmpty() ) )
-       return;
-
-   //static  QString            eow( " ~!@#$%^&*()+{}|:\"<>?,./;'[]\\-=" );               /* end of word */
-   static  QString            eow( "~!@#$%^&*()+{}|:\"<>?,./;'[]\\-=" );               /* end of word */
-   bool    hasModifier      = ( event->modifiers() != Qt::NoModifier ) && !ctrlOrShift;
-   QString completionPrefix = hbTextUnderCursor( true );
-
-   if( ( hasModifier ||
-         event->text().isEmpty() ||
-         completionPrefix.length() < 1 ||
-         eow.contains( event->text().right( 1 ) ) ) )
-   {
-      c->popup()->hide();
-      return;
-   }
-
-   if( completionPrefix != c->completionPrefix() )
-   {
-      c->setCompletionPrefix( completionPrefix );
-      c->popup()->setCurrentIndex( c->completionModel()->index( 0, 0 ) );
-   }
-   QRect cr = cursorRect();
-
-   c->popup()->setMaximumWidth( viewport()->width() );
-
-   cr.setWidth( c->popup()->sizeHintForColumn( 0 ) + c->popup()->verticalScrollBar()->sizeHint().width() );
-   cr.setTop( cr.top() + horzRulerHeight + 5 );
-   cr.setBottom( cr.bottom() + horzRulerHeight + 5 );
-
-   c->complete( cr ); // popup it up!
 }
 
 /*----------------------------------------------------------------------*/
@@ -1446,6 +1470,25 @@ QString HBQPlainTextEdit::hbTextUnderCursor( bool bCodeComplete )
       tc.select( QTextCursor::WordUnderCursor );
    }
    return tc.selectedText();
+}
+
+/*----------------------------------------------------------------------*/
+
+QString HBQPlainTextEdit::hbTextAlias()
+{
+   QTextCursor tc( textCursor() );
+
+   tc.movePosition( QTextCursor::PreviousCharacter, QTextCursor::KeepAnchor, 2 );
+   QString txt = tc.selectedText();
+   tc.clearSelection();
+   if( txt == ( QString ) "->" )
+   {
+      tc.movePosition( QTextCursor::PreviousCharacter, QTextCursor::KeepAnchor, 1 );
+      tc.select( QTextCursor::WordUnderCursor );
+      txt = tc.selectedText();
+      return txt;
+   }
+   return "";
 }
 
 /*----------------------------------------------------------------------*/

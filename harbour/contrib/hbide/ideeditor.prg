@@ -84,6 +84,10 @@ CLASS IdeEditsManager INHERIT IdeObject
    DATA   aActions                                INIT  {}
    DATA   aProtos                                 INIT  {}
 
+   DATA   qFldsCompleter
+   DATA   qFldsStrList
+   DATA   qFldsModel
+
    METHOD new( oIde )
    METHOD create( oIde )
    METHOD destroy()
@@ -230,8 +234,21 @@ METHOD IdeEditsManager:create( oIde )
    ::oIde:qProtoList := QStringList():new()
    ::oIde:qCompModel := QStringListModel():new()
    ::oIde:qCompleter := QCompleter():new()
-
+   //
    ::connect( ::qCompleter, "activated(QString)", {|p| ::execEvent( "qcompleter_activated", p ) } )
+
+   /* Define fields completer */
+   ::qFldsStrList   := QStringList():new()
+   ::qFldsModel     := QStringListModel():new()
+   ::qFldsCompleter := QCompleter():new()
+   //
+   ::qFldsCompleter:setWrapAround( .t. )
+   ::qFldsCompleter:setCaseSensitivity( Qt_CaseInsensitive )
+   ::qFldsCompleter:setModelSorting( QCompleter_CaseInsensitivelySortedModel )
+   ::qFldsCompleter:setCompletionMode( QCompleter_PopupCompletion )
+   QListView():from( ::qFldsCompleter:popup() ):setAlternatingRowColors( .t. )
+   //
+   ::connect( ::qFldsCompleter, "activated(QString)", {|p| ::execEvent( "qFldsCompleter_activated", p ) } )
 
    RETURN Self
 
@@ -382,6 +399,11 @@ METHOD IdeEditsManager:execEvent( cEvent, p )
    LOCAL oEdit
 
    DO CASE
+   CASE cEvent == "qFldsCompleter_activated"
+      IF !empty( oEdit := ::getEditObjectCurrent() )
+         oEdit:completeFieldName( p )
+      ENDIF
+
    CASE cEvent == "qcompleter_activated"
       IF !empty( oEdit := ::getEditObjectCurrent() )
          oEdit:completeCode( p )

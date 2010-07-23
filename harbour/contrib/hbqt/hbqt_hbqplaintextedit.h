@@ -149,6 +149,7 @@ private:
    bool           isColumnSelectionON;
    bool           isTipActive;
    QCompleter   * c;
+   QCompleter   * cFlds;
    QBrush         brushForBookmark( int index );
    bool           isCursorInSelection();
    QTimer       * timer;
@@ -172,6 +173,7 @@ protected:
    void           keyReleaseEvent( QKeyEvent * event );
 
 public slots:
+   QString        hbTextAlias();
    void           hbUpdateLineNumberAreaWidth( int newBlockCount );
    void           hbCaseUpper();
    void           hbCaseLower();
@@ -195,6 +197,7 @@ public slots:
    bool           hbNumberBlockVisible();
    void           hbShowPrototype( const QString & tip, int rows, int cols );
    void           hbSetCompleter( QCompleter * completer ) { c = completer; };
+   void           hbSetFldsCompleter( QCompleter * completer ) { cFlds = completer; };
    void           hbSetCurrentLineColor( const QColor & color ) { m_currentLineColor = color; };
    void           hbSetLineAreaBkColor( const QColor & color ) { m_lineAreaBkColor = color; };
    void           hbRefresh();

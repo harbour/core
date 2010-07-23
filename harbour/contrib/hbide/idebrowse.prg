@@ -177,6 +177,7 @@ CLASS IdeBrowseManager INHERIT IdeObject
    METHOD buildLeftToolbar()
    METHOD buildTablesButton()
    METHOD showTablesTree()
+   METHOD fetchFldsList( cAlias )
 
    ENDCLASS
 
@@ -343,6 +344,15 @@ METHOD IdeBrowseManager:create( oIde )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
+
+METHOD IdeBrowseManager:fetchFldsList( cAlias )
+   LOCAL aFlds := { "System","Latin" }
+
+   HB_SYMBOL_UNUSED( cAlias )
+
+   RETURN aFlds
+
+/*------------------------------------------------------------------------*/
 
 METHOD IdeBrowseManager:dispStatusInfo()
 

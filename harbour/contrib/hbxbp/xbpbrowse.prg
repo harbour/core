@@ -138,6 +138,8 @@
 #define __ev_footersec_resized__           122              /* Footer Section Resized */
 #define __ev_frame_resized__               2001
 #define __ev_contextMenuRequested__        2002
+#define __editor_closeEditor__             1400
+#define __editor_commitData__              1401
 
 /*----------------------------------------------------------------------*/
 
@@ -780,8 +782,8 @@ METHOD XbpBrowse:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::qDelegate := QItemDelegate():new()
    ::oTableView:setItemDelegate( ::qDelegate )
 
-   ::connect( ::qDelegate, "closeEditor(QWidget,int)", {|p,p1| ::execSlot( 1400 /*"editor_closeEditor"*/, p, p1 ) } )
-   ::connect( ::qDelegate, "commitData(QWidget)"     , {|p   | ::execSlot( 1401 /*"editor_commitData"*/ , p     ) } )
+   ::connect( ::qDelegate, "closeEditor(QWidget,int)", {|p,p1| ::execSlot( __editor_closeEditor__, p, p1 ) } )
+   ::connect( ::qDelegate, "commitData(QWidget)"     , {|p   | ::execSlot( __editor_commitData__ , p     ) } )
 
    //::oTableView:setEditTriggers( QAbstractItemView_AllEditTriggers )
    //::oTableView:setEditTriggers( QAbstractItemView_DoubleClicked )
@@ -803,7 +805,7 @@ METHOD XbpBrowse:execSlot( nEvent, p1, p2, p3 )
       oPoint := QPoint():from( ::oTableView:mapToGlobal( p1 ) )
       ::hbContextMenu( { oPoint:x(), oPoint:y() } )
 
-   CASE nEvent == 1401     // "editor_commitData"
+   CASE nEvent == __editor_commitData__
       qWidget := QLineEdit():from( p1 )
       cTxt    := qWidget:text()
 

@@ -101,6 +101,7 @@ CREATE CLASS HBQPlainTextEdit INHERIT HbQtObjectHandler, QPlainTextEdit
    METHOD  hbTextUnderCursor( lBCodeComplete )
    METHOD  hbShowPrototype( cTip, nRows, nCols )
    METHOD  hbSetCompleter( pCompleter )
+   METHOD  hbSetFldsCompleter( pCompleter )
    METHOD  hbSetCurrentLineColor( pColor )
    METHOD  hbSetLineAreaBkColor( pColor )
    METHOD  hbRefresh()
@@ -266,6 +267,10 @@ METHOD HBQPlainTextEdit:hbShowPrototype( cTip, nRows, nCols )
 
 METHOD HBQPlainTextEdit:hbSetCompleter( pCompleter )
    RETURN Qt_HBQPlainTextEdit_hbSetCompleter( ::pPtr, hbqt_ptr( pCompleter ) )
+
+
+METHOD HBQPlainTextEdit:hbSetFldsCompleter( pCompleter )
+   RETURN Qt_HBQPlainTextEdit_hbSetFldsCompleter( ::pPtr, hbqt_ptr( pCompleter ) )
 
 
 METHOD HBQPlainTextEdit:hbSetCurrentLineColor( pColor )
