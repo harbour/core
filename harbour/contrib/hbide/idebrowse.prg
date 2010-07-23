@@ -576,6 +576,49 @@ METHOD IdeBrowseManager:execEvent( cEvent, p, p1 )
       ENDIF
       EXIT
 
+   CASE "buttonAppendRecord_clicked"
+      IF !empty( ::oCurBrw )
+         ::oCurBrw:append()
+      ENDIF
+      EXIT
+   CASE "buttonDelRecord_clicked"
+      IF !empty( ::oCurBrw )
+         ::oCurBrw:delete( .t. )
+      ENDIF
+      EXIT
+   CASE "buttonLockRecord_clicked"
+      IF !empty( ::oCurBrw )
+         ::oCurBrw:lock()
+      ENDIF
+      EXIT
+   CASE "buttonGoTop_clicked"
+      IF !empty( ::oCurBrw )
+         ::oCurBrw:goTop()
+      ENDIF
+      EXIT
+   CASE "buttonGoBottom_clicked"
+      IF !empty( ::oCurBrw )
+         ::oCurBrw:goBottom()
+      ENDIF
+      EXIT
+   CASE "buttonScrollToFirst_clicked"
+      IF !empty( ::oCurBrw )
+         ::oCurBrw:toColumn( 1 )
+      ENDIF
+      EXIT
+   CASE "buttonScrollToLast_clicked"
+      IF !empty( ::oCurBrw )
+         ::oCurBrw:toColumn( len( ::oCurBrw:aStruct ) )
+      ENDIF
+      EXIT
+   CASE "buttonSearchInTable_clicked"
+      IF !empty( ::oCurBrw )
+         ::oCurBrw:searchAsk()
+      ENDIF
+      EXIT
+   CASE "buttonZaptable_clicked"
+      EXIT
+
    ENDSWITCH
 
    RETURN Self
@@ -843,7 +886,8 @@ METHOD IdeBrowseManager:buildLeftToolbar()
 
    STATIC qSize
 
-   qSize := QSize():new( 20,20 )
+   //qSize := QSize():new( 20,20 )
+   qSize := QSize():new( 16,16 )
 
    ::qToolBarL := QToolbar():new()
    ::qToolBarL:setOrientation( Qt_Vertical )
@@ -851,15 +895,18 @@ METHOD IdeBrowseManager:buildLeftToolbar()
    ::qToolbarL:setMaximumWidth( 24 )
    ::qToolbarL:setStyleSheet( GetStyleSheet( "QToolBar", ::nAnimantionMode ) )
 
-   ::buildToolButton( ::qToolbarL, { "Append a record", "database_add"     , "clicked()", {|| ::execEvent( "buttonAppend_clicked" ) }, .f. } )
-   ::buildToolButton( ::qToolbarL, { "Append a record", "database_remove"  , "clicked()", {|| ::execEvent( "buttonAppend_clicked" ) }, .f. } )
-   ::buildToolButton( ::qToolbarL, { "Append a record", "database_lock"    , "clicked()", {|| ::execEvent( "buttonAppend_clicked" ) }, .f. } )
-   ::buildToolButton( ::qToolbarL, { "Append a record", "database_up"      , "clicked()", {|| ::execEvent( "buttonAppend_clicked" ) }, .f. } )
-   ::buildToolButton( ::qToolbarL, { "Append a record", "database_down"    , "clicked()", {|| ::execEvent( "buttonAppend_clicked" ) }, .f. } )
-   ::buildToolButton( ::qToolbarL, { "Append a record", "database_previous", "clicked()", {|| ::execEvent( "buttonAppend_clicked" ) }, .f. } )
-   ::buildToolButton( ::qToolbarL, { "Append a record", "database_next"    , "clicked()", {|| ::execEvent( "buttonAppend_clicked" ) }, .f. } )
-   ::buildToolButton( ::qToolbarL, { "Append a record", "database_search"  , "clicked()", {|| ::execEvent( "buttonAppend_clicked" ) }, .f. } )
-   ::buildToolButton( ::qToolbarL, { "Append a record", "database_process" , "clicked()", {|| ::execEvent( "buttonAppend_clicked" ) }, .f. } )
+   ::buildToolButton( ::qToolbarL, { "Append a record"       , "database_add"     , "clicked()", {|| ::execEvent( "buttonAppendRecord_clicked"  ) }, .f. } )
+   ::buildToolButton( ::qToolbarL, { "Delete a record"       , "database_remove"  , "clicked()", {|| ::execEvent( "buttonDelRecord_clicked"     ) }, .f. } )
+   ::buildToolButton( ::qToolbarL, { "Lock/Unlock Record"    , "database_lock"    , "clicked()", {|| ::execEvent( "buttonLockRecord_clicked"    ) }, .f. } )
+   ::buildToolButton( ::qToolbarL, {} )
+   ::buildToolButton( ::qToolbarL, { "Goto Top"              , "database_up"      , "clicked()", {|| ::execEvent( "buttonGoTop_clicked"         ) }, .f. } )
+   ::buildToolButton( ::qToolbarL, { "Goto Bottom"           , "database_down"    , "clicked()", {|| ::execEvent( "buttonGoBottom_clicked"      ) }, .f. } )
+   ::buildToolButton( ::qToolbarL, { "Scroll to First Column", "database_previous", "clicked()", {|| ::execEvent( "buttonScrollToFirst_clicked" ) }, .f. } )
+   ::buildToolButton( ::qToolbarL, { "Scroll to Last Column" , "database_next"    , "clicked()", {|| ::execEvent( "buttonScrollToLast_clicked"  ) }, .f. } )
+   ::buildToolButton( ::qToolbarL, {} )
+   ::buildToolButton( ::qToolbarL, { "Search in Table"       , "database_search"  , "clicked()", {|| ::execEvent( "buttonSearchInTable_clicked" ) }, .f. } )
+   ::buildToolButton( ::qToolbarL, {} )
+   ::buildToolButton( ::qToolbarL, { "Zap Table"             , "database_process" , "clicked()", {|| ::execEvent( "buttonZaptable_clicked"      ) }, .f. } )
 
    RETURN Self
 
@@ -1274,6 +1321,7 @@ CLASS IdeBrowse INHERIT IdeObject
    DATA   aIdx                                    INIT  {}
    DATA   aFlds                                   INIT  {}
    DATA   aSeek                                   INIT  {}
+   DATA   aToFld                                  INIT  {}
 
    METHOD new( oIde, oManager, oPanel, aInfo )
    METHOD create( oIde, oManager, oPanel, aInfo )
@@ -1293,9 +1341,10 @@ CLASS IdeBrowse INHERIT IdeObject
    METHOD goTop()
    METHOD goBottom()
    METHOD goTo( nRec )
+   METHOD lock()
    METHOD goToAsk()
    METHOD append()
-   METHOD delete()
+   METHOD delete( lAsk )
    METHOD recall()
    METHOD recNo()
    METHOD lastRec()
@@ -1311,8 +1360,8 @@ CLASS IdeBrowse INHERIT IdeObject
    ACCESS numIndexes()                            INLINE len( ::aIndex )
 
    METHOD dispInfo()
-   METHOD search( cSearch, lSoft, lLast )
-   METHOD searchAsk()
+   METHOD search( cSearch, lSoft, lLast, nMode )
+   METHOD searchAsk( nMode )
    METHOD seekAsk( nMode )
    METHOD next()
    METHOD previous()
@@ -1320,8 +1369,9 @@ CLASS IdeBrowse INHERIT IdeObject
    METHOD populateForm()
    METHOD fetchAlias( cTable )
    METHOD saveField( nField, x )
-   METHOD toColumn( nIndex )
+   METHOD toColumn( ncIndex )
    METHOD getSome( cType, cFor )
+   METHOD buildContextMenu()
 
    ENDCLASS
 
@@ -1438,7 +1488,7 @@ METHOD IdeBrowse:create( oIde, oManager, oPanel, aInfo )
    ::oBrw:keyboard := {|mp1,mp2| ::execEvent( "browse_keyboard", mp1, mp2 ) }
 
    ::qTimer := QTimer():new()
-   ::qTimer:setInterval( 10 )
+   ::qTimer:setInterval( 5 )
    ::connect( ::qTimer, "timeout()",  {|| ::execEvent( "timer_timeout" ) } )
 
    RETURN Self
@@ -1651,7 +1701,6 @@ METHOD IdeBrowse:configure()
 /*------------------------------------------------------------------------*/
 
 METHOD IdeBrowse:execEvent( cEvent, p, p1 )
-   LOCAL cIndex, a_, cPmt, nZeros
 
    HB_SYMBOL_UNUSED( p  )
    HB_SYMBOL_UNUSED( p1 )
@@ -1707,50 +1756,8 @@ METHOD IdeBrowse:execEvent( cEvent, p, p1 )
 
    CASE "browser_contextMenu"
       IF empty( ::aMenu )
-         IF len( ::aIndex ) > 0
-            aadd( ::aMenu, { "Set to Natural Order", {|| ::setOrder( 0 ) } } )
-            aadd( ::aMenu, { "" } )
-         ENDIF
-
-         /* Indexed Order */
-         ::getIndexInfo()
-         FOR EACH cIndex IN ::aIndex
-            aadd( ::aIdx,  hbide_indexArray( Self, cIndex, cIndex:__enumIndex() ) )
-         NEXT
-         IF ! empty( ::aIdx )
-            aadd( ::aMenu, { ::aIdx, "Set to Indexed Order" } )
-            aadd( ::aMenu, { "" } )
-         ENDIF
-
-         /* Column Scrolling */
-         nZeros := iif( len( ::aStruct ) < 10, 1, iif( len( ::aStruct ) < 100, 2, 3 ) )
-         FOR EACH a_ IN ::aStruct
-            cPmt := strzero( a_:__enumIndex(), nZeros ) + " " + a_[ 2 ] + " . " + a_[ 1 ]
-            aadd( ::aFlds, hbide_fieldsArray( Self, cPmt, a_:__enumIndex() ) )
-         NEXT
-         aadd( ::aMenu, { ::aFlds, "Scroll to Column" } )
-         aadd( ::aMenu, { "" } )
-
-         /* Seeks */
-         aadd( ::aSeek, { "Seek"       , {|| ::seekAsk( 0 ) } } )
-         aadd( ::aSeek, { "Seek Soft"  , {|| ::seekAsk( 1 ) } } )
-         aadd( ::aSeek, { "Seek Last"  , {|| ::seekAsk( 2 ) } } )
-         aadd( ::aMenu, { ::aSeek, "Seek..." } )
-         aadd( ::aMenu, { "" } )
-
-         /* Navigation */
-         aadd( ::aMenu, { "Go Top"     , {|| ::goTop()      } } )
-         aadd( ::aMenu, { "Go Bottom"  , {|| ::goBottom()   } } )
-         aadd( ::aMenu, { "Goto Record", {|| ::gotoAsk()    } } )
-         aadd( ::aMenu, { "" } )
-
-         /* Manipulation */
-         aadd( ::aMenu, { "Append Blank"  , {|| ::append()  } } )
-         aadd( ::aMenu, { "Delete Record" , {|| ::delete()  } } )
-         aadd( ::aMenu, { "Recall Deleted", {|| ::recall()  } } )
-
+         ::buildContextMenu()
       ENDIF
-
       hbide_execPopup( ::aMenu, p, ::qMdi )
       EXIT
 
@@ -1766,6 +1773,62 @@ METHOD IdeBrowse:execEvent( cEvent, p, p1 )
    closeAllSubWindows()
    setActiveSubWindow( QMdiSubWindow )
    #endif
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeBrowse:buildContextMenu()
+   LOCAL a_, cPmt, nZeros, cIndex
+
+   IF len( ::aIndex ) > 0
+      aadd( ::aMenu, { "Set to Natural Order", {|| ::setOrder( 0 ) } } )
+      aadd( ::aMenu, { "" } )
+   ENDIF
+
+   /* Indexed Order */
+   ::getIndexInfo()
+   FOR EACH cIndex IN ::aIndex
+      aadd( ::aIdx,  hbide_indexArray( Self, cIndex, cIndex:__enumIndex() ) )
+   NEXT
+   IF ! empty( ::aIdx )
+      aadd( ::aMenu, { ::aIdx, "Set to Indexed Order" } )
+      aadd( ::aMenu, { "" } )
+   ENDIF
+
+   /* Column Scrolling */
+   nZeros := iif( len( ::aStruct ) < 10, 1, iif( len( ::aStruct ) < 100, 2, 3 ) )
+   FOR EACH a_ IN ::aStruct
+      cPmt := strzero( a_:__enumIndex(), nZeros ) + " " + a_[ 2 ] + " . " + a_[ 1 ]
+      aadd( ::aFlds, hbide_fieldsArray( Self, cPmt, a_:__enumIndex() ) )
+   NEXT
+   aadd( ::aMenu, { ::aFlds, "Scroll to Column" } )
+   aadd( ::aMenu, { "Scroll to ...", {|v| v := ( QInputDialog():new() ):getText( , "Field Name" ), ::toColumn( v ) } } )
+   aadd( ::aMenu, { "" } )
+
+   /* Seeks */
+   aadd( ::aSeek, { "Seek"       , {|| ::seekAsk( 0 ) } } )
+   aadd( ::aSeek, { "Seek Soft"  , {|| ::seekAsk( 1 ) } } )
+   aadd( ::aSeek, { "Seek Last"  , {|| ::seekAsk( 2 ) } } )
+   aadd( ::aMenu, { ::aSeek, "Seek..." } )
+   aadd( ::aMenu, { "Search in Field", {|| ::searchAsk( 1 ) } } )
+   aadd( ::aMenu, { "" } )
+
+   /* Navigation */
+   aadd( ::aMenu, { "Go Top"     , {|| ::goTop()      } } )
+   aadd( ::aMenu, { "Go Bottom"  , {|| ::goBottom()   } } )
+   aadd( ::aMenu, { "Goto Record", {|| ::gotoAsk()    } } )
+   aadd( ::aMenu, { "" } )
+
+   /* Manipulation */
+   aadd( ::aMenu, { "Append Blank"  , {|| ::append()  } } )
+   aadd( ::aMenu, { "Delete Record" , {|| ::delete( .t. ) } } )
+   aadd( ::aMenu, { "Recall Deleted", {|| ::recall()  } } )
+   aadd( ::aMenu, { "" } )
+
+   /* Miscellaneous */
+   aadd( ::aMenu, { "Form View", {|| ::oManager:execEvent( "buttonShowForm_clicked"  ) } } )
+
 
    RETURN Self
 
@@ -1983,23 +2046,37 @@ METHOD IdeBrowse:seekAsk( nMode )
 
 /*------------------------------------------------------------------------*/
 
-METHOD IdeBrowse:searchAsk()
+METHOD IdeBrowse:searchAsk( nMode )
    LOCAL xValue, cFor
 
-   xValue := iif( ::indexOrd() > 0, ::indexKeyValue(), eval( ::oBrw:getColumn( ::oBrw:colPos ):block ) )
-   cFor   := iif( ::indexOrd() > 0, "Indexed: " + ::indexKey(), ::aStruct[ ::oBrw:colPos, 1 ] )
+   DEFAULT nMode TO 0
 
-   ::search( ::getSome( valtype( xValue ), cFor ), .f., .f. )
+   IF nMode == 0
+      xValue := iif( ::indexOrd() > 0, ::indexKeyValue(), eval( ::oBrw:getColumn( ::oBrw:colPos ):block ) )
+      cFor   := iif( ::indexOrd() > 0, "Indexed: " + ::indexKey(), ::aStruct[ ::oBrw:colPos, 1 ] )
+   ELSEIF nMode == 1
+      xValue := eval( ::oBrw:getColumn( ::oBrw:colPos ):block )
+      cFor   := ::aStruct[ ::oBrw:colPos, 1 ]
+   ENDIF
+
+   ::search( ::getSome( valtype( xValue ), cFor ), .f., .f., nMode )
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeBrowse:search( cSearch, lSoft, lLast )
+METHOD IdeBrowse:search( cSearch, lSoft, lLast, nMode )
    LOCAL nRec
 
+   DEFAULT nMode TO 0
+
+   IF ::lInSearch
+      ::qTimer:stop()
+      ::lInSearch := .f.
+   ENDIF
+
    IF ::nType == BRW_TYPE_DBF
-      IF ! empty( cSearch )
+      IF nMode == 0
          IF ( ::cAlias )->( IndexOrd() ) > 0
 
             DEFAULT lLast TO .f.
@@ -2014,13 +2091,14 @@ METHOD IdeBrowse:search( cSearch, lSoft, lLast )
                MsgBox( "Could not find: " + cSearch )
             ENDIF
          ELSE
-            IF ::lInSearch
-               ::qTimer:stop()
-            ENDIF
             ::xSearch   := cSearch
             ::lInSearch := .t.
             ::qTimer:start()
          ENDIF
+      ELSE
+         ::xSearch   := cSearch
+         ::lInSearch := .t.
+         ::qTimer:start()
       ENDIF
    ELSE
       // Ascan
@@ -2041,12 +2119,38 @@ METHOD IdeBrowse:refreshAll()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeBrowse:toColumn( nIndex )
+METHOD IdeBrowse:toColumn( ncIndex )
+   LOCAL nIndex
+
+   IF valtype( ncIndex ) == "C"
+      ncIndex := upper( ncIndex )
+      nIndex := ascan( ::aStruct, {|e_|  e_[ 1 ] = ncIndex } )
+   ELSE
+      nIndex := ncIndex
+   ENDIF
+
+   IF empty( nIndex )
+      RETURN Self
+   ENDIF
 
    ::oBrw:colPos := nIndex
    ::oBrw:refreshAll()
    ::oBrw:forceStable()
    ::oBrw:setCurrentIndex( .t. )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeBrowse:lock()
+
+   IF ::nType == BRW_TYPE_DBF
+      IF ! ( ::cAlias )->( DbrLock() )
+         MsgBox( "Record could not been locked" )
+      ENDIF
+   ELSE
+      MsgBox( "Record can not be locked" )
+   ENDIF
 
    RETURN Self
 
@@ -2232,7 +2336,15 @@ METHOD IdeBrowse:append()
 
 /*------------------------------------------------------------------------*/
 
-METHOD IdeBrowse:delete()
+METHOD IdeBrowse:delete( lAsk )
+
+   DEFAULT lAsk TO .t.
+
+   IF lAsk
+      IF ! hbide_getYesNo( "Delete Record ?", , "Deletion Process" )
+         RETURN Self
+      ENDIF
+   ENDIF
 
    IF ::nType == BRW_TYPE_DBF
       IF ( ::cAlias )->( DbRLock() )

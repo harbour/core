@@ -1539,6 +1539,7 @@ METHOD doConfigure() CLASS XbpBrowse
    LOCAL lHeadSep, lFootSep
    LOCAL nMaxCellH := 0
    LOCAL nViewH, i, xVal, oFontMetrics, n, nLeftWidth
+   LOCAL nwVal, nwHead
 
    ::nConfigure := 0
 
@@ -1728,8 +1729,14 @@ METHOD doConfigure() CLASS XbpBrowse
             ::oFooterView:resizeSection( i-1, ::columns[ i ]:nColWidth )
          ELSE
             xVal := transform( eval( ::columns[ i ]:block ), ::columns[ i ]:picture )
-            ::oHeaderView:resizeSection( i-1, oFontMetrics:width( xVal, -1 ) + 8 )
-            ::oFooterView:resizeSection( i-1, oFontMetrics:width( xVal, -1 ) + 8 )
+
+            nwVal := oFontMetrics:width( xVal, -1 )
+            nwHead := oFontMetrics:width( ::columns[ i ]:heading(), -1 )
+
+            ::oHeaderView:resizeSection( i-1, max( nwVal, nwHead ) + 8 )
+            ::oFooterView:resizeSection( i-1, max( nwVal, nwHead ) + 8 )
+         *  ::oHeaderView:resizeSection( i-1, oFontMetrics:width( xVal, -1 ) + 8 )
+         *  ::oFooterView:resizeSection( i-1, oFontMetrics:width( xVal, -1 ) + 8 )
          ENDIF
       NEXT
 
@@ -1741,8 +1748,12 @@ METHOD doConfigure() CLASS XbpBrowse
             ::oLeftFooterView:resizeSection( n-1, ::columns[ i ]:nColWidth )
          ELSE
             xVal := transform( eval( ::columns[ i ]:block ), ::columns[ i ]:picture )
-            ::oLeftHeaderView:resizeSection( n-1, oFontMetrics:width( xVal, -1 ) + 8 )
-            ::oLeftFooterView:resizeSection( n-1, oFontMetrics:width( xVal, -1 ) + 8 )
+            nwVal := oFontMetrics:width( xVal, -1 )
+            nwHead := oFontMetrics:width( ::columns[ i ]:heading(), -1 )
+            ::oLeftHeaderView:resizeSection( n-1, max( nwVal, nwHead ) + 8 )
+            ::oLeftFooterView:resizeSection( n-1, max( nwVal, nwHead ) + 8 )
+         *  ::oLeftHeaderView:resizeSection( n-1, oFontMetrics:width( xVal, -1 ) + 8 )
+         *  ::oLeftFooterView:resizeSection( n-1, oFontMetrics:width( xVal, -1 ) + 8 )
          ENDIF
          nLeftWidth += ::oLeftHeaderView:sectionSize( n-1 )
       NEXT
@@ -1758,8 +1769,12 @@ METHOD doConfigure() CLASS XbpBrowse
             ::oRightFooterView:resizeSection( n-1, ::columns[ i ]:nColWidth )
          ELSE
             xVal := transform( eval( ::columns[ i ]:block ), ::columns[ i ]:picture )
-            ::oRightHeaderView:resizeSection( n-1, oFontMetrics:width( xVal, -1 ) + 8 )
-            ::oRightFooterView:resizeSection( n-1, oFontMetrics:width( xVal, -1 ) + 8 )
+            nwVal := oFontMetrics:width( xVal, -1 )
+            nwHead := oFontMetrics:width( ::columns[ i ]:heading(), -1 )
+            ::oRightHeaderView:resizeSection( n-1, max( nwVal, nwHead ) + 8 )
+            ::oRightFooterView:resizeSection( n-1, max( nwVal, nwHead ) + 8 )
+         *  ::oRightHeaderView:resizeSection( n-1, oFontMetrics:width( xVal, -1 ) + 8 )
+         *  ::oRightFooterView:resizeSection( n-1, oFontMetrics:width( xVal, -1 ) + 8 )
          ENDIF
          nLeftWidth += ::oRightHeaderView:sectionSize( n-1 )
       NEXT

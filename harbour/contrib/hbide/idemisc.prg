@@ -2129,7 +2129,7 @@ FUNCTION hbide_getUI( cUI, qParent )
 
 FUNCTION hbide_request()
 
-   REQUEST HBDbfModel
+   REQUEST HBQAbstractItemModel
    REQUEST HBEvents
    REQUEST HBQMainWindow
    REQUEST HBQPlainTextEdit
