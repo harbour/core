@@ -1776,37 +1776,34 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
    /* Collect all command line parameters */
    FOR EACH cParam IN aArgs
-      cParam := ArchCompFilter( hbmk, cParam )
-      IF ! Empty( cParam )
-         DO CASE
-         CASE !( Left( cParam, 1 ) == "-" ) .AND. Len( cParam ) >= 1 .AND. Left( cParam, 1 ) == "@" .AND. ;
-            !( Lower( FNameExtGet( cParam ) ) == ".clp" )
-            cParam := SubStr( cParam, 2 )
-            IF Empty( FNameExtGet( cParam ) )
-               cParam := FNameExtSet( cParam, ".hbm" )
+      DO CASE
+      CASE !( Left( cParam, 1 ) == "-" ) .AND. Len( cParam ) >= 1 .AND. Left( cParam, 1 ) == "@" .AND. ;
+         !( Lower( FNameExtGet( cParam ) ) == ".clp" )
+         cParam := SubStr( cParam, 2 )
+         IF Empty( FNameExtGet( cParam ) )
+            cParam := FNameExtSet( cParam, ".hbm" )
+         ENDIF
+         IF !( Lower( FNameExtGet( cParam ) ) == ".hbm" ) .AND. lAcceptLDClipper
+            rtlnk_process( hbmk, MemoRead( PathSepToSelf( cParam ) ), @hbmk[ _HBMK_cPROGNAME ], @hbmk[ _HBMK_aOBJUSER ], @hbmk[ _HBMK_aLIBUSER ] )
+            IF ! Empty( hbmk[ _HBMK_aOBJUSER ] )
+               DEFAULT hbmk[ _HBMK_cFIRST ] TO hbmk[ _HBMK_aOBJUSER ][ 1 ]
             ENDIF
-            IF !( Lower( FNameExtGet( cParam ) ) == ".hbm" ) .AND. lAcceptLDClipper
-               rtlnk_process( hbmk, MemoRead( PathSepToSelf( cParam ) ), @hbmk[ _HBMK_cPROGNAME ], @hbmk[ _HBMK_aOBJUSER ], @hbmk[ _HBMK_aLIBUSER ] )
-               IF ! Empty( hbmk[ _HBMK_aOBJUSER ] )
-                  DEFAULT hbmk[ _HBMK_cFIRST ] TO hbmk[ _HBMK_aOBJUSER ][ 1 ]
-               ENDIF
-            ELSE
-               tmp := HBM_Load( hbmk, aParams, PathSepToSelf( cParam ), 1, .T. ) /* Load parameters from script file */
-               IF tmp != 0
-                  RETURN tmp
-               ENDIF
-            ENDIF
-         CASE !( Left( cParam, 1 ) == "-" ) .AND. ;
-              ( Lower( FNameExtGet( cParam ) ) == ".hbm" .OR. ;
-                Lower( FNameExtGet( cParam ) ) == ".hbp" )
+         ELSE
             tmp := HBM_Load( hbmk, aParams, PathSepToSelf( cParam ), 1, .T. ) /* Load parameters from script file */
             IF tmp != 0
                RETURN tmp
             ENDIF
-         OTHERWISE
-            AAdd( aParams, { cParam, "", 0 } )
-         ENDCASE
-      ENDIF
+         ENDIF
+      CASE !( Left( cParam, 1 ) == "-" ) .AND. ;
+           ( Lower( FNameExtGet( cParam ) ) == ".hbm" .OR. ;
+             Lower( FNameExtGet( cParam ) ) == ".hbp" )
+         tmp := HBM_Load( hbmk, aParams, PathSepToSelf( cParam ), 1, .T. ) /* Load parameters from script file */
+         IF tmp != 0
+            RETURN tmp
+         ENDIF
+      OTHERWISE
+         AAdd( aParams, { cParam, "", 0 } )
+      ENDCASE
    NEXT
 
    /* Process automatic control files. */
@@ -1815,7 +1812,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    /* Process command line (2nd pass) */
    FOR EACH aParam IN aParams
 
-      cParam := aParam[ _PAR_cParam ]
+      cParam := ArchCompFilter( hbmk, aParam[ _PAR_cParam ] )
       cParamL := Lower( cParam )
 
       DO CASE
@@ -7303,7 +7300,8 @@ STATIC FUNCTION PlugIn_make_ctx( hbmk, cState )
          "cCOMP"        => hbmk[ _HBMK_cCOMP ]        ,;
          "cCPU"         => hbmk[ _HBMK_cCPU ]         ,;
          "cBUILD"       => hbmk[ _HBMK_cBUILD ]       ,;
-         "cTARGETNAME"  => hbmk[ _HBMK_cPROGNAME ]    ,;
+         "cOUTPUTNAME"  => hbmk[ _HBMK_cPROGNAME ]    ,;
+         "cTARGETNAME"  => hbmk_TARGETNAME( hbmk )    ,;
          "cTARGETTYPE"  => hbmk_TARGETTYPE( hbmk )    ,;
          "lREBUILD"     => hbmk[ _HBMK_lREBUILD ]     ,;
          "lCLEAN"       => hbmk[ _HBMK_lCLEAN ]       ,;
@@ -8765,7 +8763,7 @@ STATIC FUNCTION HBM_Load( hbmk, aParams, cFileName, nNestingLevel, lProcHBP )
       FOR EACH cLine IN hb_ATokens( cFile, _CHR_EOL )
          IF !( Left( cLine, 1 ) == "#" )
             FOR EACH cParam IN hb_ATokens( cLine,, .T. )
-               cParam := ArchCompFilter( hbmk, StrStripQuote( cParam ) )
+               cParam := StrStripQuote( cParam )
                IF ! Empty( cParam )
                   DO CASE
                   CASE Lower( cParam ) == "-skip"

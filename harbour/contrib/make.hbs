@@ -367,7 +367,7 @@ PROCEDURE GNUMake( ... )
 
    /* Start building */
 
-   OutStd( hb_StrFormat( "! Package %1$s...", hActions[ nAction ] ) + hb_eol() )
+   OutStd( hb_StrFormat( "! Started package %1$s...", hActions[ nAction ] ) + hb_eol() )
 
    FOR EACH cPackage IN aSortedList DESCEND
 
@@ -399,7 +399,7 @@ PROCEDURE GNUMake( ... )
    NEXT
 
    OutStd( hb_eol() )
-   OutStd( "! Building of packages finished." + hb_eol() )
+   OutStd( hb_StrFormat( "! Finished package %1$s...", hActions[ nAction ] ) + hb_eol() )
 
    ErrorLevel( 0 )
 

@@ -25,6 +25,10 @@
  *
  */
 
+/* NOTE: Code must be written in reentrant way. IOW do not use
+         PUBLIC, PRIVATE and STATIC variables. Also do not use
+         temporary disk files with non-random names. [vszakats] */
+
 #pragma warninglevel=3
 
 FUNCTION hbmk2_plugin_tpl( hbmk2 )

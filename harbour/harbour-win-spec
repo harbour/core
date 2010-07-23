@@ -76,12 +76,12 @@ rm -fR $RPM_BUILD_ROOT
 %build
 
 #export HB_BUILD_PARTS=compiler
-export HB_CONTRIBLIBS=no
+export HB_BUILD_CONTRIBS=no
 export HB_PLATFORM=linux
 export HB_COMPILER=gcc
 make %{?_smp_mflags}
 unset HB_COMPILER
-unset HB_CONTRIBLIBS
+unset HB_BUILD_CONTRIBS
 
 export HB_BUILD_PARTS=lib
 export HB_PLATFORM=win
