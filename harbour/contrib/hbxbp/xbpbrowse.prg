@@ -1140,8 +1140,12 @@ METHOD navigate( p1, p2 ) CLASS XbpBrowse
 METHOD XbpBrowse:supplyInfo( nMode, nCall, nRole, nX, nY )
 
    IF nCall == HBQT_QAIM_headerData .and. nX == Qt_Vertical
-      RETURN Nil
-   End
+      RETURN NIL
+   ENDIF
+
+   IF nCall == HBQT_QAIM_flags
+      RETURN Qt_ItemIsEnabled + Qt_ItemIsSelectable + Qt_ItemIsEditable
+   ENDIF
 
    DO CASE
    CASE nMode == 141       /* Main View Header|Data */

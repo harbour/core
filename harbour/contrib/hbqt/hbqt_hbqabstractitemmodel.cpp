@@ -154,7 +154,7 @@ Qt::ItemFlags HBQAbstractItemModel::flags( const QModelIndex & index ) const
 
    QVariant ret = hbqt_fetchData( block, HBQT_QAIM_flags, 0, index.column(), index.row() );
    if( ! ret.isValid() )
-      return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
+      return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
 
    return ( QFlags<Qt::ItemFlag> ) ret.toInt();
 }
