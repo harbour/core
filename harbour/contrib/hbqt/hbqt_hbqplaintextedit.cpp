@@ -1350,6 +1350,8 @@ void HBQPlainTextEdit::keyPressEvent( QKeyEvent * event )
             PHB_ITEM p1 = hb_itemPutNI( NULL, 21001 );
             hb_vmEvalBlockV( block, 1, p1 );
             hb_itemRelease( p1 );
+
+            hbRefreshCompleter();
          }
          break;
       case Qt::Key_ParenLeft:
@@ -1378,16 +1380,7 @@ void HBQPlainTextEdit::keyPressEvent( QKeyEvent * event )
    }
 
    if( ! isAliasCompleter ){
-      QString alias = hbTextAlias();
-      if( ! alias.isEmpty() ){
-         if( block ){
-            PHB_ITEM p1 = hb_itemPutNI( NULL, 21041 );
-            PHB_ITEM p2 = hb_itemPutC( NULL, alias.toLatin1().data() );
-            hb_vmEvalBlockV( block, 2, p1, p2 );
-            hb_itemRelease( p1 );
-            hb_itemRelease( p2 );
-         }
-      }
+      hbRefreshCompleter( hbTextAlias() );
    }
 
    if( ( event->modifiers() & ( Qt::ControlModifier | Qt::AltModifier ) ) ){
@@ -1401,6 +1394,7 @@ void HBQPlainTextEdit::keyPressEvent( QKeyEvent * event )
    static  QString            eow( " ~!@#$%^&*()+{}|:\"<>?,./;'[]\\-=" );               /* end of word */
    bool    hasModifier      = ( event->modifiers() != Qt::NoModifier ) && !ctrlOrShift;
    QString completionPrefix = hbTextUnderCursor( true );
+   //QString completionPrefix = hbTextUnderCursor( false );
 
    if( hasModifier ||
          event->text().isEmpty() ||
@@ -1408,6 +1402,10 @@ void HBQPlainTextEdit::keyPressEvent( QKeyEvent * event )
                 eow.contains( event->text().right( 1 ) ) )
    {
       c->popup()->hide();
+      #if 0
+      if( isAliasCompleter )
+         hbRefreshCompleter( "" );
+      #endif
       return;
    }
 
@@ -1424,16 +1422,30 @@ void HBQPlainTextEdit::keyPressEvent( QKeyEvent * event )
 
    c->complete( cr ); // pop it up!
    if( c->popup()->isHidden() && isAliasCompleter ){
+      #if 0
       if( block ){
-         PHB_ITEM p1 = hb_itemPutNI( NULL, 21042 );
+         PHB_ITEM p1 = hb_itemPutNI( NULL, 21041 );
          hb_vmEvalBlockV( block, 1, p1 );
          hb_itemRelease( p1 );
-         isAliasCompleter = false;
       }
+      #endif
    }
 }
 
 /*----------------------------------------------------------------------*/
+
+void HBQPlainTextEdit::hbRefreshCompleter( const QString & alias )
+{
+   if( block ){
+      PHB_ITEM p1 = hb_itemPutNI( NULL, 21041 );
+      PHB_ITEM p2 = hb_itemPutC( NULL, alias.toLatin1().data() );
+      hb_vmEvalBlockV( block, 2, p1, p2 );
+      hb_itemRelease( p1 );
+      hb_itemRelease( p2 );
+   }
+}
+
+/*------------------------------------------------------------------------*/
 
 QString HBQPlainTextEdit::hbTextUnderCursor( bool bCodeComplete )
 {

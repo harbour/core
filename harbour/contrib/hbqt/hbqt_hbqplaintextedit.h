@@ -219,6 +219,7 @@ public slots:
    void           hbSetProtoStyle( const QString & css = "" );
    void           hbSelectAll();
    void           hbSetFieldsListActive( bool active ) { isAliasCompleter = active; };
+   void           hbRefreshCompleter( const QString & alias = "" );
 
 private slots:
    void           hbSlotCursorPositionChanged();

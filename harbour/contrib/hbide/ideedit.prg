@@ -199,8 +199,6 @@ CLASS IdeEdit INHERIT IdeObject
    METHOD showPrototype( cProto )
    METHOD hidePrototype()
    METHOD completeCode( p )
-   METHOD completeFieldName( p )
-//   METHOD updateFieldsList( cAlias )
 
    METHOD setLineNumbersBkColor( nR, nG, nB )
    METHOD setCurrentLineColor( nR, nG, nB )
@@ -2219,19 +2217,28 @@ METHOD IdeEdit:hidePrototype()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:parseCodeCompletion( cSyntax )
-   LOCAL cText, n
+   LOCAL cText, n, nFun, nAbr, nSpc
 
-   IF ::oINI:lCompleteArgumented
-      IF ( n := rat( ")", cSyntax ) ) > 0
-         cText := trim( substr( cSyntax, 1, n ) )
-      ELSE
-         cText := trim( cSyntax )
-      ENDIF
+   nAbr := at( "-", cSyntax )
+   nSpc := at( " ", cSyntax )
+   nFun := at( "(", cSyntax )
+
+   IF nAbr > 0 .AND. iif( nSpc == 0, .t., nAbr < nSpc ).AND. iif( nFun == 0, .t., nAbr < nFun )
+      cText := alltrim( substr( cSyntax, nAbr + 1 ) )
+
    ELSE
-      IF ( n := at( "(", cSyntax ) ) > 0
-         cText := trim( substr( cSyntax, 1, n - 1 ) )
+      IF ::oINI:lCompleteArgumented
+         IF ( n := rat( ")", cSyntax ) ) > 0
+            cText := trim( substr( cSyntax, 1, n ) )
+         ELSE
+            cText := trim( cSyntax )
+         ENDIF
       ELSE
-         cText := trim( cSyntax )
+         IF nFun > 0 .AND. nFun < nSpc
+            cText := trim( substr( cSyntax, 1, nFun - 1 ) )
+         ELSE
+            cText := trim( cSyntax )
+         ENDIF
       ENDIF
    ENDIF
 
@@ -2241,33 +2248,25 @@ METHOD IdeEdit:parseCodeCompletion( cSyntax )
 
 METHOD IdeEdit:completeCode( p )
    LOCAL qCursor := QTextCursor():from( ::qEdit:textCursor() )
+   LOCAL cWord
 
    qCursor:movePosition( QTextCursor_Left )
 
    qCursor:movePosition( QTextCursor_StartOfWord )
    qCursor:movePosition( QTextCursor_EndOfWord, QTextCursor_KeepAnchor )
+
+   cWord := qCursor:selectedText()
+   IF cWord == "->"
+      qCursor:clearSelection()
+   ENDIF
+
    qCursor:insertText( ::parseCodeCompletion( p ) )
    qCursor:movePosition( QTextCursor_Left )
    qCursor:movePosition( QTextCursor_Right )
 
    ::qEdit:setTextCursor( qCursor )
 
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeEdit:completeFieldName( p )
-   LOCAL qCursor := QTextCursor():from( ::qEdit:textCursor() )
-
-   qCursor:movePosition( QTextCursor_Left )
-
-   qCursor:movePosition( QTextCursor_StartOfWord )
-   qCursor:movePosition( QTextCursor_EndOfWord, QTextCursor_KeepAnchor )
-   qCursor:insertText( ::parseCodeCompletion( p ) )
-   qCursor:movePosition( QTextCursor_Left )
-   qCursor:movePosition( QTextCursor_Right )
-
-   ::qEdit:setTextCursor( qCursor )
+   ::qEdit:hbSetFieldsListActive( ::oEM:updateFieldsList() )
 
    RETURN Self
 
