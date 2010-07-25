@@ -121,6 +121,7 @@ HBQPlainTextEdit::HBQPlainTextEdit( QWidget * parent ) : QPlainTextEdit( parent 
    highlight                = QRect( -1, -1, -1, -1 );
    isSelectionPersistent    = false;
    isShiftPressed           = false;
+   isAliasCompleter         = false;
 
    #if 0
    QTextFrameFormat format( this->document()->rootFrame()->frameFormat() );
@@ -1363,82 +1364,72 @@ void HBQPlainTextEdit::keyPressEvent( QKeyEvent * event )
       }
    }
 
-   if( hbKeyPressSelection( event ) ) {
+   if( hbKeyPressSelection( event ) ){
       return;
    }
    QPlainTextEdit::keyPressEvent( event );
-#if 0
-   QString alias = hbTextAlias();
-   if( ! alias.isEmpty() )
-   {
-      if( block ){
-         PHB_ITEM p1 = hb_itemPutNI( NULL, 21041 );
-         PHB_ITEM p2 = hb_itemPutCPtr( NULL, alias.toLatin1().data() );
-         hb_vmEvalBlockV( block, 2, p1, p2 );
-         hb_itemRelease( p1 );
-         hb_itemRelease( p2 );
-      }
-      cFlds->setCompletionPrefix( ( QString ) 'L' );
-      cFlds->popup()->setCurrentIndex( cFlds->completionModel()->index( 0, 0 ) );
 
-      QRect cr = cursorRect();
-      cFlds->popup()->setMaximumWidth( viewport()->width() );
-
-      cr.setWidth( cFlds->popup()->sizeHintForColumn( 0 ) + cFlds->popup()->verticalScrollBar()->sizeHint().width() );
-      cr.setTop( cr.top() + horzRulerHeight + 5 );
-      cr.setBottom( cr.bottom() + horzRulerHeight + 5 );
-HB_TRACE( HB_TR_ALWAYS, ( "1004" ) );
-      cFlds->complete( cr ); // popup it up!
-HB_TRACE( HB_TR_ALWAYS, ( "1005" ) );
+   if( ! c ){
+      return;
    }
-   else
-#endif
+   if( isTipActive ){
+      c->popup()->hide();
+      return;
+   }
+
+   if( ! isAliasCompleter ){
+      QString alias = hbTextAlias();
+      if( ! alias.isEmpty() ){
+         if( block ){
+            PHB_ITEM p1 = hb_itemPutNI( NULL, 21041 );
+            PHB_ITEM p2 = hb_itemPutC( NULL, alias.toLatin1().data() );
+            hb_vmEvalBlockV( block, 2, p1, p2 );
+            hb_itemRelease( p1 );
+            hb_itemRelease( p2 );
+         }
+      }
+   }
+
+   if( ( event->modifiers() & ( Qt::ControlModifier | Qt::AltModifier ) ) ){
+      c->popup()->hide();
+      return;
+   }
+   const bool ctrlOrShift = event->modifiers() & ( Qt::ControlModifier | Qt::ShiftModifier );
+   if( ctrlOrShift && event->text().isEmpty() ){
+      return;
+   }
+   static  QString            eow( " ~!@#$%^&*()+{}|:\"<>?,./;'[]\\-=" );               /* end of word */
+   bool    hasModifier      = ( event->modifiers() != Qt::NoModifier ) && !ctrlOrShift;
+   QString completionPrefix = hbTextUnderCursor( true );
+
+   if( hasModifier ||
+         event->text().isEmpty() ||
+            completionPrefix.length() < ( isAliasCompleter ? 0 : 1 ) ||
+                eow.contains( event->text().right( 1 ) ) )
    {
-      if( ! c ) {
-         return;
+      c->popup()->hide();
+      return;
+   }
+
+   if( completionPrefix != c->completionPrefix() ) {
+      c->setCompletionPrefix( completionPrefix );
+      c->popup()->setCurrentIndex( c->completionModel()->index( 0, 0 ) );
+   }
+   QRect cr = cursorRect();
+
+   c->popup()->setMaximumWidth( viewport()->width() );
+   cr.setWidth( c->popup()->sizeHintForColumn( 0 ) + c->popup()->verticalScrollBar()->sizeHint().width() );
+   cr.setTop( cr.top() + horzRulerHeight + 5 );
+   cr.setBottom( cr.bottom() + horzRulerHeight + 5 );
+
+   c->complete( cr ); // pop it up!
+   if( c->popup()->isHidden() && isAliasCompleter ){
+      if( block ){
+         PHB_ITEM p1 = hb_itemPutNI( NULL, 21042 );
+         hb_vmEvalBlockV( block, 1, p1 );
+         hb_itemRelease( p1 );
+         isAliasCompleter = false;
       }
-
-      if( isTipActive ) {
-         c->popup()->hide();
-         return;
-      }
-
-      if( ( event->modifiers() & ( Qt::ControlModifier | Qt::AltModifier ) ) ) {
-         c->popup()->hide();
-         return;
-      }
-
-      const bool ctrlOrShift = event->modifiers() & ( Qt::ControlModifier | Qt::ShiftModifier );
-      if( ( ctrlOrShift && event->text().isEmpty() ) ) {
-         return;
-      }
-
-      static  QString            eow( " ~!@#$%^&*()+{}|:\"<>?,./;'[]\\-=" );               /* end of word */
-      bool    hasModifier      = ( event->modifiers() != Qt::NoModifier ) && !ctrlOrShift;
-      QString completionPrefix = hbTextUnderCursor( true );
-
-      if( ( hasModifier ||
-            event->text().isEmpty() ||
-            completionPrefix.length() < 1 ||
-            eow.contains( event->text().right( 1 ) ) ) )
-      {
-         c->popup()->hide();
-         return;
-      }
-
-      if( completionPrefix != c->completionPrefix() ) {
-         c->setCompletionPrefix( completionPrefix );
-         c->popup()->setCurrentIndex( c->completionModel()->index( 0, 0 ) );
-      }
-      QRect cr = cursorRect();
-
-      c->popup()->setMaximumWidth( viewport()->width() );
-
-      cr.setWidth( c->popup()->sizeHintForColumn( 0 ) + c->popup()->verticalScrollBar()->sizeHint().width() );
-      cr.setTop( cr.top() + horzRulerHeight + 5 );
-      cr.setBottom( cr.bottom() + horzRulerHeight + 5 );
-
-      c->complete( cr ); // popup it up!
    }
 }
 

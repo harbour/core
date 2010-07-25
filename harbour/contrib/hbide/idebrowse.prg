@@ -178,6 +178,7 @@ CLASS IdeBrowseManager INHERIT IdeObject
    METHOD buildTablesButton()
    METHOD showTablesTree()
    METHOD fetchFldsList( cAlias )
+   METHOD getBrowserByAlias( cAlias )
 
    ENDCLASS
 
@@ -346,11 +347,45 @@ METHOD IdeBrowseManager:create( oIde )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeBrowseManager:fetchFldsList( cAlias )
-   LOCAL aFlds := { "System","Latin" }
+   LOCAL aFlds := {}, cA, oBrw, a_, oPanel, aBrw
 
-   HB_SYMBOL_UNUSED( cAlias )
+   cA := upper( cAlias )
+
+   SWITCH cA
+   CASE "FIELD"
+      FOR EACH oPanel IN ::aPanels
+         FOR EACH aBrw IN oPanel:aBrowsers
+            oBrw := aBrw[ SUB_BROWSER ]
+            FOR EACH a_ IN oBrw:aStruct
+               aadd( aFlds, pad( a_[ 1 ], 10 ) + " (" + padc( oBrw:cTableOnly, 12 ) + ")" + str( a_:__enumIndex(),3,0 ) + ", " + a_[ 2 ] + ", " + str( a_[ 3 ],3,0 ) + ", " + hb_ntos( a_[ 4 ] ) )
+            NEXT
+         NEXT
+      NEXT
+      EXIT
+   OTHERWISE
+      IF ! empty( oBrw := ::getBrowserByAlias( cA ) )
+         FOR EACH a_ IN oBrw:aStruct
+            aadd( aFlds, pad( a_[ 1 ], 10 ) + " ( " + str( a_:__enumIndex(),3,0 ) + ", " + a_[ 2 ] + ", " + str( a_[ 3 ],3,0 ) + ", " + hb_ntos( a_[ 4 ] ) + " )" )
+         NEXT
+      ENDIF
+      EXIT
+   ENDSWITCH
 
    RETURN aFlds
+
+/*------------------------------------------------------------------------*/
+
+METHOD IdeBrowseManager:getBrowserByAlias( cAlias )
+   LOCAL oPanel, aBrw
+
+   FOR EACH oPanel IN ::aPanels
+      FOR EACH aBrw IN oPanel:aBrowsers
+         IF aBrw[ SUB_BROWSER ]:cAlias == cAlias
+            RETURN aBrw[ SUB_BROWSER ]
+         ENDIF
+      NEXT
+   NEXT
+   RETURN NIL
 
 /*------------------------------------------------------------------------*/
 

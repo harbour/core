@@ -160,6 +160,7 @@ private:
    QRect          highlight;
    bool           isSelectionPersistent;
    bool           isShiftPressed;
+   bool           isAliasCompleter;
 
 protected:
    bool           event( QEvent * event );
@@ -217,6 +218,7 @@ public slots:
    void           hbHorzRulerVisible( bool visible ) { hbUpdateHorzRulerHeight( visible ? 20 : 0 ); };
    void           hbSetProtoStyle( const QString & css = "" );
    void           hbSelectAll();
+   void           hbSetFieldsListActive( bool active ) { isAliasCompleter = active; };
 
 private slots:
    void           hbSlotCursorPositionChanged();

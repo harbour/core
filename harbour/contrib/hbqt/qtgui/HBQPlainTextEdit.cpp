@@ -904,6 +904,20 @@ HB_FUNC( QT_HBQPLAINTEXTEDIT_HBSELECTALL )
    }
 }
 
+/*
+ * void           hbSetFieldsListActive( bool active )
+ */
+HB_FUNC( QT_HBQPLAINTEXTEDIT_HBSETFIELDSLISTACTIVE )
+{
+   HBQPlainTextEdit * p = hbqt_par_HBQPlainTextEdit( 1 );
+   if( p )
+      ( p )->hbSetFieldsListActive( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQPLAINTEXTEDIT_HBSETFIELDSLISTACTIVE FP=( p )->hbSetFieldsListActive( hb_parl( 2 ) ); p is NULL" ) );
+   }
+}
+
 
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */

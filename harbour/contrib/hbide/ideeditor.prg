@@ -84,7 +84,6 @@ CLASS IdeEditsManager INHERIT IdeObject
    DATA   aActions                                INIT  {}
    DATA   aProtos                                 INIT  {}
 
-   DATA   qFldsCompleter
    DATA   qFldsStrList
    DATA   qFldsModel
 
@@ -174,6 +173,7 @@ CLASS IdeEditsManager INHERIT IdeObject
    METHOD qscintilla()
    METHOD setStyleSheet( nMode )
    METHOD updateCompleter()
+   METHOD updateFieldsList( cAlias )
    METHOD getProto( cWord )
 
    ENDCLASS
@@ -240,17 +240,30 @@ METHOD IdeEditsManager:create( oIde )
    /* Define fields completer */
    ::qFldsStrList   := QStringList():new()
    ::qFldsModel     := QStringListModel():new()
-   ::qFldsCompleter := QCompleter():new()
-   //
-   ::qFldsCompleter:setWrapAround( .t. )
-   ::qFldsCompleter:setCaseSensitivity( Qt_CaseInsensitive )
-   ::qFldsCompleter:setModelSorting( QCompleter_CaseInsensitivelySortedModel )
-   ::qFldsCompleter:setCompletionMode( QCompleter_PopupCompletion )
-   QListView():from( ::qFldsCompleter:popup() ):setAlternatingRowColors( .t. )
-   //
-   ::connect( ::qFldsCompleter, "activated(QString)", {|p| ::execEvent( "qFldsCompleter_activated", p ) } )
 
    RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:updateFieldsList( cAlias )
+   LOCAL aFlds
+
+   IF ! empty( cAlias ) .AND. ! empty( aFlds := ::oBM:fetchFldsList( cAlias ) )
+      asort( aFlds, , , {|e,f| lower( e ) < lower( f ) } )
+
+      ::qFldsStrList:clear()
+      aeval( aFlds, {|e| ::qFldsStrList:append( e ) } )
+      ::qFldsModel:setStringList( ::qFldsStrList )
+
+      ::qCompleter:setModel( ::qFldsModel )
+      RETURN .t.
+
+   ELSE
+      ::qCompleter:setModel( ::qCompModel )
+
+   ENDIF
+
+   RETURN .f.
 
 /*----------------------------------------------------------------------*/
 
@@ -301,8 +314,8 @@ METHOD IdeEditsManager:updateCompleter()
    ::qCompModel:setStringList( ::qProtoList )
    ::qCompleter:setModel( ::qCompModel )
    ::qCompleter:setCompletionMode( QCompleter_PopupCompletion )
-
-   QListView():from( ::qCompleter:popup() ):setAlternatingRowColors( .t. )
+   ( QListView():from( ::qCompleter:popup() ) ):setAlternatingRowColors( .t. )
+   ( QListView():from( ::qCompleter:popup() ) ):setFont( QFont():new( "Courier New", 8 ) )
 
    ::connect( ::qCompleter, "activated(QString)", {|p| ::execEvent( "qcompleter_activated", p ) } )
 

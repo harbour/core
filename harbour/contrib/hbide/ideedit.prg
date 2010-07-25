@@ -200,7 +200,7 @@ CLASS IdeEdit INHERIT IdeObject
    METHOD hidePrototype()
    METHOD completeCode( p )
    METHOD completeFieldName( p )
-   METHOD updateFieldsList( cAlias )
+//   METHOD updateFieldsList( cAlias )
 
    METHOD setLineNumbersBkColor( nR, nG, nB )
    METHOD setCurrentLineColor( nR, nG, nB )
@@ -284,7 +284,6 @@ METHOD IdeEdit:create( oIde, oEditor, nMode )
    ::qEdit:hbSetSpaces( ::nTabSpaces )
 
    ::qEdit:hbSetCompleter( ::qCompleter )
-   ::qEdit:hbSetFldsCompleter( ::oEM:qFldsCompleter )
 
    ::toggleCurrentLineHighlightMode()
    ::toggleLineNumbers()
@@ -667,7 +666,10 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p, p1 )
          ::aViewportInfo := p1
 
       ELSEIF p == 21041
-         ::updateFieldsList( p1 )
+         ::qEdit:hbSetFieldsListActive( ::oEM:updateFieldsList( p1 ) )
+
+      ELSEIF p == 21042
+         ::qEdit:hbSetFieldsListActive( ::oEM:updateFieldsList() )
 
       ENDIF
       EXIT
@@ -2267,31 +2269,6 @@ METHOD IdeEdit:completeFieldName( p )
 
    ::qEdit:setTextCursor( qCursor )
 
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeEdit:updateFieldsList( cAlias )
-   LOCAL aFlds
-HB_TRACE( HB_TR_ALWAYS, cAlias )
-   //::disconnect( ::qCompleter, "activated(QString)", {|p| ::execEvent( "qcompleter_activated", p ) } )
-
-   aFlds := ::oBM:fetchFldsList( cAlias )
-   asort( aFlds, , , {|e,f| lower( e ) < lower( f ) } )
-
-   ::oEM:qFldsStrList:clear()
-   aeval( aFlds, {|e| ::oEM:qFldsStrList:append( e ) } )
-
-   ::oEM:qFldsModel:setStringList( ::oEM:qFldsStrList )
-   ::oEM:qFldsCompleter:setModel( ::oEM:qFldsModel )
-
-   ::oEM:qFldsCompleter:setWrapAround( .t. )
-   ::oEM:qFldsCompleter:setCaseSensitivity( Qt_CaseInsensitive )
-   ::oEM:qFldsCompleter:setModelSorting( QCompleter_CaseInsensitivelySortedModel )
-   ::oEM:qFldsCompleter:setCompletionMode( QCompleter_PopupCompletion )
-   QListView():from( ::oEM:qFldsCompleter:popup() ):setAlternatingRowColors( .t. )
-
-   //::connect( ::qCompleter, "activated(QString)", {|p| ::execEvent( "qcompleter_activated", p ) } )
    RETURN Self
 
 /*----------------------------------------------------------------------*/

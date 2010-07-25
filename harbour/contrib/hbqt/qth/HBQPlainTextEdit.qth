@@ -151,7 +151,8 @@ HB_FUNC( QT_HBQPLAINTEXTEDIT )
    void           hbHorzRulerVisible( bool visible )
    void           hbSetProtoStyle( const QString & css )
    void           hbSelectAll()
-
+   void           hbSetFieldsListActive( bool active )
+ 
 </SLOTS>
 
 <SIGNALS>

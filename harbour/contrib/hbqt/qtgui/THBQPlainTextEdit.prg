@@ -120,6 +120,7 @@ CREATE CLASS HBQPlainTextEdit INHERIT HbQtObjectHandler, QPlainTextEdit
    METHOD  hbHorzRulerVisible( lVisible )
    METHOD  hbSetProtoStyle( cCss )
    METHOD  hbSelectAll()
+   METHOD  hbSetFieldsListActive( lActive )
 
    ENDCLASS
 
@@ -343,4 +344,8 @@ METHOD HBQPlainTextEdit:hbSetProtoStyle( cCss )
 
 METHOD HBQPlainTextEdit:hbSelectAll()
    RETURN Qt_HBQPlainTextEdit_hbSelectAll( ::pPtr )
+
+
+METHOD HBQPlainTextEdit:hbSetFieldsListActive( lActive )
+   RETURN Qt_HBQPlainTextEdit_hbSetFieldsListActive( ::pPtr, lActive )
 

@@ -81,6 +81,7 @@
         :hbHorzRulerVisible( lVisible )                     -> NIL
         :hbSetProtoStyle( cCss )                            -> NIL
         :hbSelectAll()                                      -> NIL
+        :hbSetFieldsListActive( lActive )                   -> NIL
 
     $DESCRIPTION$
 
@@ -91,15 +92,15 @@
     $STATUS$
         R
     $COMPLIANCE$
-        Not Clipper Compatible
+        Not Clipper compatible
     $PLATFORMS$
-        Windows, Linux, MacOS, OS2
+        Windows, Linux, Mac OS X, OS/2
     $VERSION$
         4.5 or upper
     $FILES$
-        Prg source   : contrib/hbqt/qtgui/THBQPlainTextEdit.prg
-        C++ wrappers : contrib/hbqt/qtgui/HBQPlainTextEdit.cpp
-        Library      : hbqtgui
+        Harbour source: contrib/hbqt/qtgui/THBQPlainTextEdit.prg
+        C++ wrappers  : contrib/hbqt/qtgui/HBQPlainTextEdit.cpp
+        Library       : hbqtgui
     $SEEALSO$
         QPlainTextEdit
     $END$
