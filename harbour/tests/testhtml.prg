@@ -15,13 +15,9 @@
 *
 **/
 
-STATIC s_cNewLine
-
 FUNCTION Main()
 
    LOCAL oHTML := THTML():New()
-
-   s_cNewLine := HB_OSNewLine()
 
    oHTML:SetTitle( "Harbour Power Demonstration" )
    oHTML:AddHead( "Harbour Project" )
@@ -122,8 +118,8 @@ STATIC FUNCTION AddPara( cPara, cAlign )
    cAlign:=iif(cAlign==NIL,"Left",cAlign) //Added Patrick Mast 2000-06-17
 
    ::cBody := ::cBody + ;
-      "<P ALIGN='" + cAlign + "'>" + s_cNewLine + ;
-      cPara + s_cNewLine + ;
+      "<P ALIGN='" + cAlign + "'>" + hb_eol() + ;
+      cPara + hb_eol() + ;
       "</P>"
 
    RETURN Self
@@ -133,11 +129,11 @@ STATIC FUNCTION Generate()
    LOCAL Self := QSelf()
 
    ::cContent :=                                                           ;
-      "<HTML><HEAD>"                                           + s_cNewLine + ;
-      "<TITLE>" + ::cTitle + "</TITLE>"                        + s_cNewLine + ;
+      "<HTML><HEAD>"                                          + hb_eol() + ;
+      "<TITLE>" + ::cTitle + "</TITLE>"                       + hb_eol() + ;
       "<BODY link='" + ::cLinkColor + "' " +                               ;
-      "vlink='" + ::cvLinkColor + "'>" +                       + s_cNewLine + ;
-      ::cBody                                                  + s_cNewLine + ;
+      "vlink='" + ::cvLinkColor + "'>" +                      + hb_eol() + ;
+      ::cBody                                                 + hb_eol() + ;
       "</BODY></HTML>"
 
    RETURN Self
@@ -147,8 +143,8 @@ STATIC FUNCTION ShowResult()
    LOCAL Self := QSelf()
 
    OutStd(                                                                  ;
-;//      "HTTP/1.0 200 OK"                                        + s_cNewLine + ;
-      "CONTENT-TYPE: TEXT/HTML"                      + s_cNewLine + s_cNewLine + ;
+;//      "HTTP/1.0 200 OK"                                     + hb_eol() + ;
+      "CONTENT-TYPE: TEXT/HTML"                     + hb_eol() + hb_eol() + ;
       ::cContent )
 
    RETURN Self

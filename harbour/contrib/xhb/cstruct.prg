@@ -482,18 +482,18 @@ STATIC FUNCTION SayMembers( cPad, lShowMembers, lReturnString )
    //QOut( cPad + Replicate( "-", Len( SubStr( QSelf():ClassName, 13 ) ) ) )
 
    cOut += cPad + SubStr( QSelf():ClassName, 13 )
-   cOut += hb_OSNewLine() + cPad + Replicate( "-", Len( SubStr( QSelf():ClassName, 13 ) ) )
+   cOut += hb_eol() + cPad + Replicate( "-", Len( SubStr( QSelf():ClassName, 13 ) ) )
 
    FOR EACH xProperty IN QSelf():Array
       IF HB_IS_CStructure( xProperty )
          IF lReturnString
-            cOut += hb_OSNewLine() + hb_OSNewLine() + xProperty:SayMembers( cPad + cPad, lShowMembers, lReturnString )
+            cOut += hb_eol() + hb_eol() + xProperty:SayMembers( cPad + cPad, lShowMembers, lReturnString )
          ELSE
             xProperty:SayMembers( cPad + cPad, lShowMembers )
          ENDIF
       ELSE
          //QOut( cPad + IIF( lShowMembers, acMembers[ xProperty:__enumIndex() ], "" ) + ":", xProperty )
-         cOut += hb_OSNewLine() + cPad + IIF( lShowMembers, QSelf():acMembers[ xProperty:__enumIndex() ], "" ) + ":" + hb_cStr( xProperty )
+         cOut += hb_eol() + cPad + IIF( lShowMembers, QSelf():acMembers[ xProperty:__enumIndex() ], "" ) + ":" + hb_cStr( xProperty )
       ENDIF
    NEXT
 

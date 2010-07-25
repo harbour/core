@@ -55,7 +55,7 @@
 CREATE CLASS HBTextLine
 
    VAR cText       /* A line of text */
-   VAR lSoftCR     /* true if line doesn't end with a hb_OSNewLine() char (word wrapping) */
+   VAR lSoftCR     /* true if line doesn't end with a hb_eol() char (word wrapping) */
 
    METHOD New( cLine, lSoftCR )
 

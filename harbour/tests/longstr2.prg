@@ -9,8 +9,6 @@ function Main()
    local short := "1234567890"
    local i, long, very_long, cNewLine
 
-   cNewLine := HB_OSNewLine()
-
    long := short
    for i := 1 TO 12
       long += long
@@ -24,19 +22,19 @@ function Main()
    OutErr (len(short), len(long), len(very_long))
    Qout   (len(short), len(long), len(very_long))
 
-   OutStd (cNewLine)
+   OutStd (hb_eol())
    OutStd (len(short), len(long), len(very_long))
 
-   OutStd (cNewLine)
-   OutStd (cNewLine)
+   OutStd (hb_eol())
+   OutStd (hb_eol())
    OutStd (short)
 
-   OutStd (cNewLine)
-   OutStd (cNewLine)
+   OutStd (hb_eol())
+   OutStd (hb_eol())
    OutStd (long)
 
-   OutStd (cNewLine)
-   OutStd (cNewLine)
+   OutStd (hb_eol())
+   OutStd (hb_eol())
    OutStd (very_long)
 
 return nil

@@ -1,29 +1,29 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
 // directory test
-function main(filespec,attribs,cshort)
+PROCEDURE Main( filespec, attribs, cshort )
 
-local adir := {}
-local x := 0, lShort := .f., cNewLine := HB_OSNewLine()
+   LOCAL adir := {}
+   LOCAL x := 0, lShort := .f.
 
    IF !cshort == NIL .and. (Upper( cShort ) == "TRUE" .or. Upper( cShort ) == ".T.")
       lShort := .t.
    ENDIF
 
-//adir := asort( directory(filespec,attribs,lShort),,, {|x,y|upper(x[1]) < upper(y[1])} )
- adir := directory(filespec,attribs,lShort)
+// adir := asort( directory(filespec,attribs,lShort),,, {|x,y|upper(x[1]) < upper(y[1])} )
+   adir := directory(filespec,attribs,lShort)
 
-SET CENTURY ON
+   SET CENTURY ON
 
-for x := 1 to len(adir)
-   outstd(cNewLine)
-   outstd(padr(adir[x,1], 20), "|", ;
-          transform(adir[x,2], "9,999,999,999"), "|", ;
-          adir[x,3], "|", ;
-          adir[x,4], "|", ;
-          adir[x,5])
-next x
+   FOR x := 1 TO len( adir )
+      outstd(hb_eol())
+      outstd(padr(adir[x,1], 20), "|", ;
+             transform(adir[x,2], "9,999,999,999"), "|", ;
+             adir[x,3], "|", ;
+             adir[x,4], "|", ;
+             adir[x,5])
+   NEXT
 
-return nil
+   RETURN

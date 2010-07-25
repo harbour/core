@@ -1,6 +1,6 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
 /*
 test program for hb_f*()
@@ -17,39 +17,41 @@ inplementation of :
   * hb_fgobottom()
 */
 
-function main()
-// open a text file here
-if hb_fuse( "testhbf.prg", 0 ) > 1
-   while !hb_feof()
-      qout( "line " + str(hb_frecno(),2) + " " + hb_freadln() )
-      hb_fskip(1)
-   end
-   qout("")
-   my_goto(18)
-   my_goto(2)
+PROCEDURE Main()
 
-   hb_fgobottom()
-   qout("")
-   qout( "after hb_fgobottom() now in line # " + ltrim(str(hb_frecno())) )
+   // open a text file here
+   IF hb_fuse( "testhbf.prg", 0 ) > 1
 
-   hb_fgotop()
-   qout("")
-   qout( "after hb_fgotop() now in line # " + ltrim(str(hb_frecno())) )
+      DO WHILE ! hb_feof()
+         qout( "line " + str( hb_frecno(), 2 ) + " " + hb_freadln() )
+         hb_fskip( 1 )
+      ENDDO
+      qout( "" )
+      my_goto( 18 )
+      my_goto( 2 )
 
-   qout("")
-   qout( "hb_flastrec() = " + ltrim(str(hb_flastrec())) )
+      hb_fgobottom()
+      qout( "" )
+      qout( "after hb_fgobottom() now in line # " + hb_ntos( hb_frecno() ) )
 
-   // close the file
-   hb_fuse()
+      hb_fgotop()
+      qout( "" )
+      qout( "after hb_fgotop() now in line # " + hb_ntos( hb_frecno() ) )
 
-end
-return nil
+      qout( "" )
+      qout( "hb_flastrec() = " + hb_ntos( hb_flastrec() ) )
 
-static function my_goto( n_go )
+      // close the file
+      hb_fuse()
+   ENDIF
 
-hb_fgoto( n_go )
-qout("")
-qout( "after hb_fgoto("+ltrim(str(n_go))+")" )
-qout( "line "+ ltrim(str(hb_frecno())) + " is " + ltrim( hb_freadln() ) )
+   RETURN
 
-return nil
+STATIC PROCEDURE my_goto( n_go )
+
+   hb_fgoto( n_go )
+   qout( "" )
+   qout( "after hb_fgoto("+ hb_ntos( n_go ) + ")" )
+   qout( "line "+ hb_ntos( hb_frecno() ) + " is " + ltrim( hb_freadln() ) )
+
+   RETURN

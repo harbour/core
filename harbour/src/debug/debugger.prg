@@ -2269,7 +2269,7 @@ METHOD SaveSettings() CLASS HBDebugger
    IF LastKey() != K_ESC
 
       IF ! Empty( ::cPathForFiles )
-         cInfo += "Options Path " + ::cPathForFiles + hb_OSNewLine()
+         cInfo += "Options Path " + ::cPathForFiles + hb_eol()
       ENDIF
 
       cInfo += "Options Colors {"
@@ -2279,60 +2279,60 @@ METHOD SaveSettings() CLASS HBDebugger
             cInfo += ","
          ENDIF
       NEXT
-      cInfo += "}" + hb_OSNewLine()
+      cInfo += "}" + hb_eol()
 
       IF ::lMonoDisplay
-         cInfo += "Options mono " + hb_OSNewLine()
+         cInfo += "Options mono " + hb_eol()
       ENDIF
 
       IF !::lRunAtStartup
-         cInfo += "Options NoRunAtStartup " + hb_OSNewLine()
+         cInfo += "Options NoRunAtStartup " + hb_eol()
       ENDIF
 
       IF ::nSpeed != 0
-         cInfo += "Run Speed " + hb_NToS( ::nSpeed ) + hb_OSNewLine()
+         cInfo += "Run Speed " + hb_NToS( ::nSpeed ) + hb_eol()
       ENDIF
 
       IF ::nTabWidth != 4
-         cInfo += "Options Tab " + hb_NToS( ::nTabWidth ) + hb_OSNewLine()
+         cInfo += "Options Tab " + hb_NToS( ::nTabWidth ) + hb_eol()
       ENDIF
 
       IF ::lShowStatics
-         cInfo += "Monitor Static" + hb_OSNewLine()
+         cInfo += "Monitor Static" + hb_eol()
       ENDIF
 
       IF ::lShowPublics
-         cInfo += "Monitor Public" + hb_OSNewLine()
+         cInfo += "Monitor Public" + hb_eol()
       ENDIF
 
       IF ::lShowLocals
-         cInfo += "Monitor Local" + hb_OSNewLine()
+         cInfo += "Monitor Local" + hb_eol()
       ENDIF
 
       IF ::lShowPrivates
-         cInfo += "Monitor Private" + hb_OSNewLine()
+         cInfo += "Monitor Private" + hb_eol()
       ENDIF
 
       IF ::lShowGlobals
-         cInfo += "Monitor Global" + hb_OSNewLine()
+         cInfo += "Monitor Global" + hb_eol()
       ENDIF
 
       IF ::lSortVars
-         cInfo += "Monitor Sort" + hb_OSNewLine()
+         cInfo += "Monitor Sort" + hb_eol()
       ENDIF
 
       IF ::lShowCallStack
-         cInfo += "View CallStack" + hb_OSNewLine()
+         cInfo += "View CallStack" + hb_eol()
       ENDIF
 
       IF ! ::lLineNumbers
-         cInfo += "Num Off" + hb_OSNewLine()
+         cInfo += "Num Off" + hb_eol()
       ENDIF
 
       IF ! Empty( ::aBreakPoints )
          FOR n := 1 TO Len( ::aBreakPoints )
             cInfo += "BP " + hb_NToS( ::aBreakPoints[ n ][ 1 ] ) + " " + ;
-                     AllTrim( ::aBreakPoints[ n ][ 2 ] ) + hb_OSNewLine()
+                     AllTrim( ::aBreakPoints[ n ][ 2 ] ) + hb_eol()
          NEXT
       ENDIF
 
@@ -2340,10 +2340,10 @@ METHOD SaveSettings() CLASS HBDebugger
       FOR n := 1 TO Len( ::aWindows )
          oWnd := ::aWindows[ n ]
          cInfo += "Window Size " + hb_NToS( oWnd:nBottom - oWnd:nTop + 1 ) + " "
-         cInfo += hb_NToS( oWnd:nRight - oWnd:nLeft + 1 ) + hb_OSNewLine()
+         cInfo += hb_NToS( oWnd:nRight - oWnd:nLeft + 1 ) + hb_eol()
          cInfo += "Window Move " + hb_NToS( oWnd:nTop ) + " "
-         cInfo += hb_NToS( oWnd:nLeft ) + hb_OSNewLine()
-         cInfo += "Window Next" + hb_OSNewLine()
+         cInfo += hb_NToS( oWnd:nLeft ) + hb_eol()
+         cInfo += "Window Next" + hb_eol()
       NEXT
 
       hb_MemoWrit( ::cSettingsFileName, cInfo )

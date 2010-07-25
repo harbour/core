@@ -1260,7 +1260,7 @@ METHOD IdeShortcuts:loadMethods()
                        'Executes a Tool defined and visible under tools menu.' } )
    aadd( ::aMethods, { 'execTool( cCmd, cParams, cStartIn, lCapture, lShowOutput )' , ;
                        'execTool( "", "", "", .f., .f. )', ;
-                       'Executes a program or file with parameters and other attributes.' + CRLF + ;
+                       'Executes a program or file with parameters and other attributes.' + hb_eol() + ;
                        'http://hbide.vouch.info/ ( Topic: Tools and Utilities )' } )
    aadd( ::aMethods, { 'execPlugin( cPlugin )', ;
                        'execPlugin( "" )', ;
@@ -1673,4 +1673,3 @@ METHOD IdeShortcuts:mergeMacros( a_ )
    ENDSWITCH
    #endif
 /*----------------------------------------------------------------------*/
-

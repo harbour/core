@@ -163,7 +163,7 @@ STATIC PROCEDURE Exm_MSWord()
 
       oText := oWord:Selection()
 
-      oText:Text := "OLE from Harbour" + hb_OSNewLine()
+      oText:Text := "OLE from Harbour" + hb_eol()
       oText:Font:Name := "Arial"
       oText:Font:Size := 48
       oText:Font:Bold := .T.
@@ -437,7 +437,7 @@ STATIC PROCEDURE Exm_ADODB()
 
 STATIC PROCEDURE Exm_SOAP()
    LOCAL oSoapClient
-   
+
    IF ! Empty( oSoapClient := win_oleCreateObject( "MSSOAP.SoapClient30" ) )
 
       oSoapClient:msSoapInit( "http://www.dataaccess.com/webservicesserver/textcasing.wso?WSDL" )
@@ -461,7 +461,7 @@ STATIC PROCEDURE Exm_PocketSOAP()
       oEnvelope:Parameters:Create( "sAString", "lower UPPER" )
       oHttp:Send( "http://www.dataaccess.com/webservicesserver/textcasing.wso?WSDL", oEnvelope:Serialize() )
       oEnvelope:Parse( oHttp )
-      
+
       ? oEnvelope:Parameters:Item( 0 ):Value
    ELSE
       ? "Error: PocketSOAP not available.", win_oleErrorText()

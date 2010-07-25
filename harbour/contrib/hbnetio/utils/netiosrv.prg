@@ -134,7 +134,7 @@ PROCEDURE Main( ... )
          HB_Usage()
          RETURN
       OTHERWISE
-         OutStd( "Warning: Unkown parameter ignored: " + cParam + hb_osNewLine() )
+         OutStd( "Warning: Unkown parameter ignored: " + cParam + hb_eol() )
       ENDCASE
    NEXT
 
@@ -151,12 +151,12 @@ PROCEDURE Main( ... )
    cPassword := NIL
 
    IF Empty( netiosrv[ _NETIOSRV_pListenSocket ] )
-      OutStd( "Cannot start server." + hb_osNewLine() )
+      OutStd( "Cannot start server." + hb_eol() )
    ELSE
       ShowConfig( netiosrv )
 
-      OutStd( hb_osNewLine() )
-      OutStd( "Type a command or '?' for help.", hb_osNewLine() )
+      OutStd( hb_eol() )
+      OutStd( "Type a command or '?' for help.", hb_eol() )
 
       lQuit      := .F.
       aHistory   := { "quit" }
@@ -203,7 +203,7 @@ PROCEDURE Main( ... )
          SetKey( K_INS,   bKeyIns   )
          SetKey( K_TAB,   bKeyTab   )
 
-         QQOut( hb_osNewLine() )
+         QQOut( hb_eol() )
 
          cCommand := AllTrim( cCommand )
 
@@ -226,15 +226,15 @@ PROCEDURE Main( ... )
             aCmd := hb_HValueAt( hCommands, nPos )
             Eval( aCmd[ 2 ], cCommand, netiosrv )
          ELSE
-            QQOut( "Error: Unknown command '" + cCommand + "'.", hb_osNewLine() )
+            QQOut( "Error: Unknown command '" + cCommand + "'.", hb_eol() )
          ENDIF
       ENDDO
 
       netio_serverstop( netiosrv[ _NETIOSRV_pListenSocket ] )
       netiosrv[ _NETIOSRV_pListenSocket ] := NIL
 
-      OutStd( hb_osNewLine() )
-      OutStd( "Server stopped.", hb_osNewLine() )
+      OutStd( hb_eol() )
+      OutStd( "Server stopped.", hb_eol() )
    ENDIF
 
    RETURN
@@ -281,41 +281,41 @@ STATIC PROCEDURE ManageCursor( cCommand )
 
 STATIC PROCEDURE ShowConfig( netiosrv )
 
-   QQOut( "Listening on: "      + netiosrv[ _NETIOSRV_cIFAddr ] + ":" + hb_ntos( netiosrv[ _NETIOSRV_nPort ] ), hb_osNewLine() )
-   QQOut( "Root filesystem: "   + netiosrv[ _NETIOSRV_cRootDir ], hb_osNewLine() )
-   QQOut( "RPC support: "       + iif( netiosrv[ _NETIOSRV_lRPC ], "enabled", "disabled" ), hb_osNewLine() )
-   QQOut( "Encryption: "        + iif( netiosrv[ _NETIOSRV_lEncryption ], "enabled", "disabled" ), hb_osNewLine() )
-   QQOut( "RPC filter module: " + iif( Empty( netiosrv[ _NETIOSRV_cRPCFHRB ] ), iif( netiosrv[ _NETIOSRV_lRPC ], "not set (WARNING: unsafe open server)", "not set" ), netiosrv[ _NETIOSRV_cRPCFFileName ] ), hb_osNewLine() )
+   QQOut( "Listening on: "      + netiosrv[ _NETIOSRV_cIFAddr ] + ":" + hb_ntos( netiosrv[ _NETIOSRV_nPort ] ), hb_eol() )
+   QQOut( "Root filesystem: "   + netiosrv[ _NETIOSRV_cRootDir ], hb_eol() )
+   QQOut( "RPC support: "       + iif( netiosrv[ _NETIOSRV_lRPC ], "enabled", "disabled" ), hb_eol() )
+   QQOut( "Encryption: "        + iif( netiosrv[ _NETIOSRV_lEncryption ], "enabled", "disabled" ), hb_eol() )
+   QQOut( "RPC filter module: " + iif( Empty( netiosrv[ _NETIOSRV_cRPCFHRB ] ), iif( netiosrv[ _NETIOSRV_lRPC ], "not set (WARNING: unsafe open server)", "not set" ), netiosrv[ _NETIOSRV_cRPCFFileName ] ), hb_eol() )
 
    RETURN
 
 STATIC PROCEDURE HB_Logo()
 
-   OutStd( "Harbour NETIO Server " + HBRawVersion() + hb_osNewLine() +;
-           "Copyright (c) 2009, Przemyslaw Czerpak" + hb_osNewLine() + ;
-           "http://harbour-project.org/" + hb_osNewLine() +;
-           hb_osNewLine() )
+   OutStd( "Harbour NETIO Server " + HBRawVersion() + hb_eol() +;
+           "Copyright (c) 2009, Przemyslaw Czerpak" + hb_eol() + ;
+           "http://harbour-project.org/" + hb_eol() +;
+           hb_eol() )
 
    RETURN
 
 STATIC PROCEDURE HB_Usage()
 
-   OutStd(               "Syntax:"                                                                                   , hb_osNewLine() )
-   OutStd(                                                                                                             hb_osNewLine() )
-   OutStd(               "  netiosrv [options]"                                                                      , hb_osNewLine() )
-   OutStd(                                                                                                             hb_osNewLine() )
-   OutStd(               "Options:"                                                                                  , hb_osNewLine() )
-   OutStd(                                                                                                             hb_osNewLine() )
-   OutStd(               "  -port=<port>        accept incoming connections on IP port <port>"                       , hb_osNewLine() )
-   OutStd(               "  -iface=<ipaddr>     accept incoming connections on IPv4 interface <ipaddress>"           , hb_osNewLine() )
-   OutStd(               "  -rootdir=<rootdir>  use <rootdir> as root directory for served file system"              , hb_osNewLine() )
-   OutStd(               "  -rpc                accept RPC requests"                                                 , hb_osNewLine() )
-   OutStd(               "  -rpc=<file.hrb>     set RPC processor .hrb module to <file.hrb>"                         , hb_osNewLine() )
-   OutStd( hb_StrFormat( "                      file.hrb needs to have an entry function named %1$s()", _RPC_FILTER ), hb_osNewLine() )
-   OutStd(               "  -pass=<passwd>      set server password"                                                 , hb_osNewLine() )
-   OutStd(                                                                                                             hb_osNewLine() )
-   OutStd(               "  --version           display version header only"                                         , hb_osNewLine() )
-   OutStd(               "  -help|--help        this help"                                                           , hb_osNewLine() )
+   OutStd(               "Syntax:"                                                                                   , hb_eol() )
+   OutStd(                                                                                                             hb_eol() )
+   OutStd(               "  netiosrv [options]"                                                                      , hb_eol() )
+   OutStd(                                                                                                             hb_eol() )
+   OutStd(               "Options:"                                                                                  , hb_eol() )
+   OutStd(                                                                                                             hb_eol() )
+   OutStd(               "  -port=<port>        accept incoming connections on IP port <port>"                       , hb_eol() )
+   OutStd(               "  -iface=<ipaddr>     accept incoming connections on IPv4 interface <ipaddress>"           , hb_eol() )
+   OutStd(               "  -rootdir=<rootdir>  use <rootdir> as root directory for served file system"              , hb_eol() )
+   OutStd(               "  -rpc                accept RPC requests"                                                 , hb_eol() )
+   OutStd(               "  -rpc=<file.hrb>     set RPC processor .hrb module to <file.hrb>"                         , hb_eol() )
+   OutStd( hb_StrFormat( "                      file.hrb needs to have an entry function named %1$s()", _RPC_FILTER ), hb_eol() )
+   OutStd(               "  -pass=<passwd>      set server password"                                                 , hb_eol() )
+   OutStd(                                                                                                             hb_eol() )
+   OutStd(               "  --version           display version header only"                                         , hb_eol() )
+   OutStd(               "  -help|--help        this help"                                                           , hb_eol() )
 
    RETURN
 

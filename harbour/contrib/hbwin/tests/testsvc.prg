@@ -99,18 +99,18 @@ PROCEDURE SrvMain()
    LOCAL fhnd := hb_FCreate( hb_dirBase() + "testsvc.out", FC_NORMAL, FO_DENYNONE + FO_WRITE )
    LOCAL cParam
 
-   FWrite( fhnd, "Startup" + hb_osNewLine() )
+   FWrite( fhnd, "Startup" + hb_eol() )
 
    FOR EACH cParam IN hb_AParams()
-      FWrite( fhnd, "Parameter " + hb_ntos( cParam:__enumIndex() ) + " >" + cParam + "<" + hb_osNewLine() )
+      FWrite( fhnd, "Parameter " + hb_ntos( cParam:__enumIndex() ) + " >" + cParam + "<" + hb_eol() )
    NEXT
 
    DO WHILE win_serviceGetStatus() == WIN_SERVICE_RUNNING
-      FWrite( fhnd, "Work in progress " + hb_ntos( ++n ) + hb_osNewLine() )
+      FWrite( fhnd, "Work in progress " + hb_ntos( ++n ) + hb_eol() )
       hb_idleSleep( 0.5 )
    ENDDO
 
-   FWrite( fhnd, "Exiting..." + hb_osNewLine() )
+   FWrite( fhnd, "Exiting..." + hb_eol() )
    FClose( fhnd )
 
    win_serviceSetExitCode( 0 )

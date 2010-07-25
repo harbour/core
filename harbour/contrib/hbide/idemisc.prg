@@ -184,7 +184,7 @@ FUNCTION hbide_menuAddSep( oMenu )
 
 FUNCTION hbide_createTarget( cFile, txt_ )
    LOCAL hHandle := fcreate( cFile )
-   LOCAL cNewLine := hb_OsNewLine()
+   LOCAL cNewLine := hb_eol()
 
    IF hHandle != F_ERROR
       aeval( txt_, { |e| fWrite( hHandle, e + cNewLine ) } )
@@ -443,9 +443,9 @@ FUNCTION hbide_ar2delString( a_, cDlm )
 FUNCTION hbide_arrayToMemo( a_ )
    LOCAL s := ""
 
-   aeval( a_, {|e| s += e + CRLF } )
+   aeval( a_, {|e| s += e + hb_eol() } )
 
-   s += CRLF
+   s += hb_eol()
 
    RETURN s
 
@@ -454,7 +454,7 @@ FUNCTION hbide_arrayToMemo( a_ )
 FUNCTION hbide_arrayToMemoEx( a_ )
    LOCAL s := ""
 
-   aeval( a_, {|e| s += e + CRLF } )
+   aeval( a_, {|e| s += e + hb_eol() } )
 
    s := substr( s, 1, len( s ) - 2 )
 
@@ -471,7 +471,7 @@ FUNCTION hbide_arrayToMemoEx2( a_ )
 
    FOR EACH k IN a_
       IF empty( k )
-         s += CRLF + CRLF
+         s += hb_eol() + hb_eol()
          lNewPara := .t.
       ELSE
          s += iif( lNewPara, "", " " ) + k
@@ -480,7 +480,7 @@ FUNCTION hbide_arrayToMemoEx2( a_ )
    NEXT
 
    DO WHILE .t.
-      IF right( s, 2 ) == CRLF
+      IF right( s, 2 ) == hb_eol()
          s := substr( s, 1, len( s ) - 2 )
       ELSE
          EXIT
@@ -979,7 +979,7 @@ function hbide_toString( x, lLineFeed, lInherited, lType, cFile, lForceLineFeed 
       IF len( x ) = 0
          s += " "
       ELSE
-         s += iif( valtype( x[1] ) = "A" .or. lForceLineFeed, CRLF, "" )
+         s += iif( valtype( x[1] ) = "A" .or. lForceLineFeed, hb_eol(), "" )
          j := len( x )
 
          FOR i := 1 TO j
@@ -987,7 +987,7 @@ function hbide_toString( x, lLineFeed, lInherited, lType, cFile, lForceLineFeed 
              s += iif( i <> j, ",", "" )
              IF lLineFeed
                 IF !lInherited .and. ( valtype( x[i] ) == "A" .or. lForceLineFeed )
-                   s += CRLF
+                   s += hb_eol()
                 ENDIF
              ENDIF
          NEXT
@@ -997,10 +997,10 @@ function hbide_toString( x, lLineFeed, lInherited, lType, cFile, lForceLineFeed 
    CASE ( t == "O" )
       IF lInherited
          // É necessário linkar \harbour\lib\xhb.lib
-         // s := iif( lType, "[O]=", "" ) + hb_dumpvar( x ) + iif( lLineFeed, CRLF, "" )
-         s := '' + iif( lLineFeed, CRLF, "" )
+         // s := iif( lType, "[O]=", "" ) + hb_dumpvar( x ) + iif( lLineFeed, hb_eol(), "" )
+         s := '' + iif( lLineFeed, hb_eol(), "" )
       ELSE
-         s := iif( lType, "[O]=", "" ) + x:ClassName()+'():New()' + iif( lLineFeed, CRLF, "" )
+         s := iif( lType, "[O]=", "" ) + x:ClassName()+'():New()' + iif( lLineFeed, hb_eol(), "" )
       ENDIF
    ENDCASE
 
@@ -1156,7 +1156,7 @@ FUNCTION hbide_buildLinesLabel( nFrom, nTo, nW, nMax )
       IF ( ( nFrom + i ) % 10 ) == 0
          s += "<font color = red>" + padl( hb_ntos( nFrom + i ), nW ) + "</font><br />"
       ELSE
-         //s += padl( hb_ntos( nFrom + i ), nW ) + CRLF
+         //s += padl( hb_ntos( nFrom + i ), nW ) + hb_eol()
          s += padl( hb_ntos( nFrom + i ), nW ) + "<br />"
       ENDIF
    NEXT
@@ -1184,7 +1184,7 @@ FUNCTION hbide_getShellCommandsTempFile( aCmd )
 
       cCmdFile := ""
       FOR EACH tmp IN aCmd
-         cCmdFile += tmp + hb_osNewLine()
+         cCmdFile += tmp + hb_eol()
       NEXT
 
       IF ( fhnd := hb_FTempCreateEx( @cCmdFileName, NIL, NIL, cExt ) ) != F_ERROR
@@ -1364,10 +1364,10 @@ STATIC PROCEDURE hbide_HBPLoad( aParams, cFileName )
 
       cFile := MemoRead( cFileName ) /* NOTE: Intentionally using MemoRead() which handles EOF char. */
 
-      IF ! hb_osNewLine() == HBIDE_HBP_EOL
-         cFile := StrTran( cFile, hb_osNewLine(), HBIDE_HBP_EOL )
+      IF ! hb_eol() == HBIDE_HBP_EOL
+         cFile := StrTran( cFile, hb_eol(), HBIDE_HBP_EOL )
       ENDIF
-      IF ! hb_osNewLine() == Chr( 13 ) + Chr( 10 )
+      IF ! hb_eol() == Chr( 13 ) + Chr( 10 )
          cFile := StrTran( cFile, Chr( 13 ) + Chr( 10 ), HBIDE_HBP_EOL )
       ENDIF
 

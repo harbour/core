@@ -166,33 +166,37 @@ PROCEDURE CallMe500Times()
 
 STATIC PROCEDURE Browser( oBrowse )
    LOCAL lBrowsing := .T.
-   LOCAL nKey
 
    DO WHILE lBrowsing
 
       oBrowse:forceStable()
 
-      nKey := Inkey( 0 )
-
-      DO CASE
-      CASE nKey == K_ESC
+      SWITCH Inkey( 0 )
+      CASE K_ESC
          lBrowsing := .F.
-      CASE nKey == K_DOWN
+         EXIT
+      CASE K_DOWN
          oBrowse:down()
-      CASE nKey == K_UP
+         EXIT
+      CASE K_UP
          oBrowse:up()
-      CASE nKey == K_LEFT
+         EXIT
+      CASE K_LEFT
          oBrowse:left()
-      CASE nKey == K_RIGHT
+         EXIT
+      CASE K_RIGHT
          oBrowse:right()
-      CASE nKey == K_PGDN
+         EXIT
+      CASE K_PGDN
          oBrowse:pageDown()
-      CASE nKey == K_PGUP
+         EXIT
+      CASE K_PGUP
          oBrowse:pageUp()
+         EXIT
 
       // And so on.... (not really necessary for this test)
 
-      ENDCASE
+      ENDSWITCH
 
    ENDDO
 
@@ -639,7 +643,7 @@ ENDCLASS
 METHOD writeLines( aLines ) CLASS HBProfileReportToFile
 
    IF ::hFile != F_ERROR
-      AEval( aLines, {| c | FWrite( ::hFile, c + HB_OSNewLine() ) } )
+      AEval( aLines, {| c | FWrite( ::hFile, c + hb_eol() ) } )
    ENDIF
 
    RETURN Self
@@ -710,7 +714,7 @@ ENDCLASS
 METHOD generate( bFilter ) CLASS HBProfileReportToString
    LOCAL cReport := ""
 
-   AEval( ::super:generate( bFilter ), {| c | cReport += c + HB_OSNewLine() } )
+   AEval( ::super:generate( bFilter ), {| c | cReport += c + hb_eol() } )
 
    RETURN cReport
 

@@ -777,7 +777,7 @@ METHOD ExecuteReport() CLASS HBReportForm
                          ::aReportData[RPT_COLUMNS,nCol,RCT_WIDTH]), nMaxLines)
          ELSEIF ::aReportData[RPT_COLUMNS,nCol,RCT_TYPE] $ "C"
             nMaxLines := Max( XMLCOUNT( StrTran( Eval( ::aReportData[RPT_COLUMNS,nCol,RCT_EXP]),;
-                         ";", hb_osNewLine() ),;
+                         ";", hb_eol() ),;
                          ::aReportData[RPT_COLUMNS,nCol,RCT_WIDTH]), nMaxLines)
          ENDIF
       NEXT
@@ -796,7 +796,7 @@ METHOD ExecuteReport() CLASS HBReportForm
                //  with multi-lines per record ";"- method
                IF ::aReportData[RPT_COLUMNS,nCol,RCT_TYPE] $ "C"
                   cLine := XMEMOLINE( RTrim( StrTran( Eval(::aReportData[RPT_COLUMNS,nCol,RCT_EXP]),;
-                             ";", hb_osNewLine() ) ),;
+                             ";", hb_eol() ) ),;
                              ::aReportData[ RPT_COLUMNS, nCol, RCT_WIDTH ], nLine )
                ELSE
                   cLine := XMEMOLINE( RTrim( Eval( ::aReportData[ RPT_COLUMNS, nCol, RCT_EXP ] ) ),;
@@ -1320,23 +1320,29 @@ METHOD GetColumn( cFieldsBuffer AS STRING, nOffset AS NUMERIC ) CLASS HBReportFo
    IF Used()
       cType := ValType( Eval( aColumn[ RCT_EXP ] ) )
       aColumn[ RCT_TYPE ] := cType
-      DO CASE
-      CASE cType == "C" .OR. cType == "M"
+      SWITCH cType
+      CASE "C"
+      CASE "M"
          aColumn[ RCT_PICT ] := Replicate("X", aColumn[ RCT_WIDTH ])
-      CASE cType == "D"
+         EXIT
+      CASE "D"
          aColumn[ RCT_PICT ] := "@D"
-      CASE cType == "T"
+         EXIT
+      CASE "T"
          aColumn[ RCT_PICT ] := "@T"
-      CASE cType == "N"
+         EXIT
+      CASE "N"
          IF aColumn[ RCT_DECIMALS ] != 0
             aColumn[ RCT_PICT ] := Replicate("9", aColumn[ RCT_WIDTH ] - aColumn[ RCT_DECIMALS ] -1) + "." + ;
                                    Replicate("9", aColumn[ RCT_DECIMALS ])
          ELSE
             aColumn[ RCT_PICT ] := Replicate("9", aColumn[ RCT_WIDTH ])
          ENDIF
-      CASE cType == "L"
+         EXIT
+      CASE "L"
          aColumn[ RCT_PICT ] := "@L" + Replicate("X",aColumn[ RCT_WIDTH ]-1)
-      ENDCASE
+         EXIT
+      ENDSWITCH
    ENDIF
 
    // Update offset into ?_buffer

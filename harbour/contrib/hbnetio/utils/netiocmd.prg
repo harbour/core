@@ -37,10 +37,10 @@ FUNCTION hbnetiosrv_LoadCmds( bQuit, bShowInfo )
          - pausing server */
 
 STATIC PROCEDURE cmdSysInfo()
-   QQOut( "OS: "         + OS(), hb_osNewLine() )
-   QQOut( "Harbour: "    + Version(), hb_osNewLine() )
-   QQOut( "C Compiler: " + hb_Compiler(), hb_osNewLine() )
-   QQOut( "Memory: "     + hb_ntos( Memory( 0 ) ) + "KB", hb_osNewLine() )
+   QQOut( "OS: "         + OS(), hb_eol() )
+   QQOut( "Harbour: "    + Version(), hb_eol() )
+   QQOut( "C Compiler: " + hb_Compiler(), hb_eol() )
+   QQOut( "Memory: "     + hb_ntos( Memory( 0 ) ) + "KB", hb_eol() )
    RETURN
 
 STATIC PROCEDURE cmdHelp( hCommands )
@@ -70,7 +70,7 @@ STATIC PROCEDURE cmdHelp( hCommands )
    m := MaxRow()
 
    FOR EACH n IN aTexts
-      QQOut( n, hb_osNewLine() )
+      QQOut( n, hb_eol() )
 
       IF ++c == m
          c := 0

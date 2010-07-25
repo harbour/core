@@ -58,7 +58,7 @@
 #include "inkey.ch"
 
 #ifndef __HARBOUR__
-   #define hb_OSNewLine() ( Chr( 13 ) + Chr( 10 ) )
+   #xtranslate hb_eol() => ( Chr( 13 ) + Chr( 10 ) )
 #endif
 
 #translate TEST_LINE( <x> ) => TEST_CALL( o, #<x>, {|| <x> } )
@@ -120,7 +120,7 @@ FUNCTION Main( cArg01, cArg02, cArg03, cArg04 )
       RETURN 1
    ENDIF
 
-   FWrite( s_fhnd, Set( _SET_DATEFORMAT ) + hb_OSNewLine() )
+   FWrite( s_fhnd, Set( _SET_DATEFORMAT ) + hb_eol() )
 
    // ; Delimiter handling.
 
@@ -1485,9 +1485,9 @@ PROCEDURE LogMe( nPCount, data, desc )
    ENDIF
 
    IF nPCount == 0
-      FWrite( s_fhnd, cStack + "BLOCK_GET  " + desc + hb_OSNewLine() )
+      FWrite( s_fhnd, cStack + "BLOCK_GET  " + desc + hb_eol() )
    ELSE
-      FWrite( s_fhnd, cStack + "BLOCK_SET  " + XToStr( data ) + "  " + desc + hb_OSNewLine() )
+      FWrite( s_fhnd, cStack + "BLOCK_SET  " + XToStr( data ) + "  " + desc + hb_eol() )
    ENDIF
 
    RETURN
@@ -1511,37 +1511,37 @@ PROCEDURE LogGETVars( o, desc, xResult )
    ENDIF
    desc := s_cTest + " " + XToStr( desc )
 
-   FWrite( s_fhnd, cStack + "  " + desc + hb_OSNewLine() )
-   FWrite( s_fhnd, "---------------------" + hb_OSNewLine() )
-   FWrite( s_fhnd, "   s_xVar        " + XToStr( s_xVar      ) + hb_OSNewLine() )
-   FWrite( s_fhnd, "   xResult       " + XToStr( xResult     ) + hb_OSNewLine() )
-   FWrite( s_fhnd, "   Row()         " + XToStr( Row()       ) + hb_OSNewLine() )
-   FWrite( s_fhnd, "   Col()         " + XToStr( Col()       ) + hb_OSNewLine() )
-   FWrite( s_fhnd, "   UnTransform() " + XToStr( o:UnTransform() ) + hb_OSNewLine() )
-   FWrite( s_fhnd, "   BadDate       " + XToStr( o:BadDate   ) + hb_OSNewLine() )
-   FWrite( s_fhnd, "   Block         " + XToStr( o:Block     ) + hb_OSNewLine() )
-   FWrite( s_fhnd, "   Buffer        " + XToStr( o:Buffer    ) + hb_OSNewLine() )
-   FWrite( s_fhnd, "   Cargo         " + XToStr( o:Cargo     ) + hb_OSNewLine() )
-   FWrite( s_fhnd, "   Changed       " + XToStr( o:Changed   ) + hb_OSNewLine() )
-   FWrite( s_fhnd, "   Clear         " + XToStr( o:Clear     ) + hb_OSNewLine() )
-   FWrite( s_fhnd, "   Col           " + XToStr( o:Col       ) + hb_OSNewLine() )
-   FWrite( s_fhnd, "   ColorSpec     " + XToStr( o:ColorSpec ) + hb_OSNewLine() )
-   FWrite( s_fhnd, "   DecPos        " + XToStr( o:DecPos    ) + hb_OSNewLine() )
-   FWrite( s_fhnd, "   ExitState     " + XToStr( o:ExitState ) + hb_OSNewLine() )
-   FWrite( s_fhnd, "   HasFocus      " + XToStr( o:HasFocus  ) + hb_OSNewLine() )
-   FWrite( s_fhnd, "   Minus         " + XToStr( o:Minus     ) + hb_OSNewLine() )
-   FWrite( s_fhnd, "   Name          " + XToStr( o:Name      ) + hb_OSNewLine() )
-   FWrite( s_fhnd, "   Original      " + XToStr( o:Original  ) + hb_OSNewLine() )
-   FWrite( s_fhnd, "   Picture       " + XToStr( o:Picture   ) + hb_OSNewLine() )
-   FWrite( s_fhnd, "   Pos           " + XToStr( o:Pos       ) + hb_OSNewLine() )
-   FWrite( s_fhnd, "   PostBlock     " + XToStr( o:PostBlock ) + hb_OSNewLine() )
-   FWrite( s_fhnd, "   PreBlock      " + XToStr( o:PreBlock  ) + hb_OSNewLine() )
-   FWrite( s_fhnd, "   Reader        " + XToStr( o:Reader    ) + hb_OSNewLine() )
-   FWrite( s_fhnd, "   Rejected      " + XToStr( o:Rejected  ) + hb_OSNewLine() )
-   FWrite( s_fhnd, "   Row           " + XToStr( o:Row       ) + hb_OSNewLine() )
-   FWrite( s_fhnd, "   SubScript     " + XToStr( o:SubScript ) + hb_OSNewLine() )
-   FWrite( s_fhnd, "   Type          " + XToStr( o:Type      ) + hb_OSNewLine() )
-   FWrite( s_fhnd, "   TypeOut       " + XToStr( o:TypeOut   ) + hb_OSNewLine() )
+   FWrite( s_fhnd, cStack + "  " + desc + hb_eol() )
+   FWrite( s_fhnd, "---------------------" + hb_eol() )
+   FWrite( s_fhnd, "   s_xVar        " + XToStr( s_xVar      ) + hb_eol() )
+   FWrite( s_fhnd, "   xResult       " + XToStr( xResult     ) + hb_eol() )
+   FWrite( s_fhnd, "   Row()         " + XToStr( Row()       ) + hb_eol() )
+   FWrite( s_fhnd, "   Col()         " + XToStr( Col()       ) + hb_eol() )
+   FWrite( s_fhnd, "   UnTransform() " + XToStr( o:UnTransform() ) + hb_eol() )
+   FWrite( s_fhnd, "   BadDate       " + XToStr( o:BadDate   ) + hb_eol() )
+   FWrite( s_fhnd, "   Block         " + XToStr( o:Block     ) + hb_eol() )
+   FWrite( s_fhnd, "   Buffer        " + XToStr( o:Buffer    ) + hb_eol() )
+   FWrite( s_fhnd, "   Cargo         " + XToStr( o:Cargo     ) + hb_eol() )
+   FWrite( s_fhnd, "   Changed       " + XToStr( o:Changed   ) + hb_eol() )
+   FWrite( s_fhnd, "   Clear         " + XToStr( o:Clear     ) + hb_eol() )
+   FWrite( s_fhnd, "   Col           " + XToStr( o:Col       ) + hb_eol() )
+   FWrite( s_fhnd, "   ColorSpec     " + XToStr( o:ColorSpec ) + hb_eol() )
+   FWrite( s_fhnd, "   DecPos        " + XToStr( o:DecPos    ) + hb_eol() )
+   FWrite( s_fhnd, "   ExitState     " + XToStr( o:ExitState ) + hb_eol() )
+   FWrite( s_fhnd, "   HasFocus      " + XToStr( o:HasFocus  ) + hb_eol() )
+   FWrite( s_fhnd, "   Minus         " + XToStr( o:Minus     ) + hb_eol() )
+   FWrite( s_fhnd, "   Name          " + XToStr( o:Name      ) + hb_eol() )
+   FWrite( s_fhnd, "   Original      " + XToStr( o:Original  ) + hb_eol() )
+   FWrite( s_fhnd, "   Picture       " + XToStr( o:Picture   ) + hb_eol() )
+   FWrite( s_fhnd, "   Pos           " + XToStr( o:Pos       ) + hb_eol() )
+   FWrite( s_fhnd, "   PostBlock     " + XToStr( o:PostBlock ) + hb_eol() )
+   FWrite( s_fhnd, "   PreBlock      " + XToStr( o:PreBlock  ) + hb_eol() )
+   FWrite( s_fhnd, "   Reader        " + XToStr( o:Reader    ) + hb_eol() )
+   FWrite( s_fhnd, "   Rejected      " + XToStr( o:Rejected  ) + hb_eol() )
+   FWrite( s_fhnd, "   Row           " + XToStr( o:Row       ) + hb_eol() )
+   FWrite( s_fhnd, "   SubScript     " + XToStr( o:SubScript ) + hb_eol() )
+   FWrite( s_fhnd, "   Type          " + XToStr( o:Type      ) + hb_eol() )
+   FWrite( s_fhnd, "   TypeOut       " + XToStr( o:TypeOut   ) + hb_eol() )
    IF s_lObjectDump
 #ifdef __HARBOUR__
 #ifdef HB_COMPAT_C53
@@ -1559,11 +1559,11 @@ PROCEDURE LogGETVars( o, desc, xResult )
 #else
          IF tmp != 8 .AND. tmp != 11
 #endif
-            FWrite( s_fhnd, "   [ " + Str( tmp, 3 ) + " ]       " + XToStrX( o[ tmp ] ) + hb_OSNewLine() )
+            FWrite( s_fhnd, "   [ " + Str( tmp, 3 ) + " ]       " + XToStrX( o[ tmp ] ) + hb_eol() )
          ENDIF
       NEXT
    ENDIF
-   FWrite( s_fhnd, "---------------------" + hb_OSNewLine() )
+   FWrite( s_fhnd, "---------------------" + hb_eol() )
 
    RETURN
 

@@ -1566,8 +1566,11 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          cPath_CompC := _BCC_BIN_DETECT()
       ENDIF
       IF ! Empty( cPath_CompC )
-         /* NOTE: Automatically configure bcc installation with missing configuration. [vszakats] */
-         IF ! hb_FileExists( FNameDirGet( cPath_CompC ) + ".." + hb_ps() + "Bin" + hb_ps() + "bcc32.cfg" ) .OR. ;
+         /* NOTE: Automatically configure bcc installation with missing configuration. [vszakats]
+                  Permanently enabled. Apparently this is still top problem for bcc users. It's
+                  also in sync this way with Harbour core build system. */
+         IF .T. .OR. ;
+            ! hb_FileExists( FNameDirGet( cPath_CompC ) + ".." + hb_ps() + "Bin" + hb_ps() + "bcc32.cfg" ) .OR. ;
             ! hb_FileExists( FNameDirGet( cPath_CompC ) + ".." + hb_ps() + "Bin" + hb_ps() + "ilink32.cfg" )
             /* NOTE: BCC 5.8 has different casing: 'include', 'lib', 'psdk' respectively. */
             AAdd( hbmk[ _HBMK_aINCPATH ], PathNormalize( FNameDirGet( cPath_CompC ) + ".." + hb_ps() + "Include" ) )

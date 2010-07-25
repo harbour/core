@@ -553,9 +553,9 @@ STATIC FUNCTION hbide_getFaqs()
 
    aadd( a_, 'Does hbIDE provides "intellisense" ? If yes, in what aspects ?' )
    aadd( b_, 'Yes. Not so powerful yet, but "yes". hbIDE embeds two components as the basis of this intellisense, ' + ;
-             CRLF + ;
-             '   1. Harbour Documentation, and ' + CRLF + ;
-             '   2. Project(s) Prototype Tagging. ' + CRLF + ;
+             hb_eol() + ;
+             '   1. Harbour Documentation, and ' + hb_eol() + ;
+             '   2. Project(s) Prototype Tagging. ' + hb_eol() + ;
              'Both these components can be pressed in servive simultaneously and as per need. Both are loaded ' + ;
              'only when requested. Prototype Tagging extends one step forward as to offer to load only those ' + ;
              'projects which a developer will be working on during that session. Both components can be aligned ' + ;
@@ -563,8 +563,8 @@ STATIC FUNCTION hbide_getFaqs()
              'hbIDE examines the contents of these components, if the function is available in Harbour Docs, ' + ;
              'its details are dumped into the viewer, otherwise if the function is contained in the tagged ' + ;
              'prototypes, it is made current in the list, and a html formatted prototype is displayed as tooltip ' + ;
-             'beneth the current caret position. ' + CRLF + ;
-             CRLF + ;
+             'beneth the current caret position. ' + hb_eol() + ;
+             hb_eol() + ;
              'Code completion tool is almost done with, and probably will make up its presence in the hbIDE soon. ' )
 
    RETURN { a_, b_ }

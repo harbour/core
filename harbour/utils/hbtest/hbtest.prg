@@ -78,7 +78,7 @@
 #include "rt_vars.ch"
 
 #ifndef __HARBOUR__
-   #xtranslate HB_OSNewLine() => ( Chr( 13 ) + Chr( 10 ) )
+   #xtranslate hb_eol() => ( Chr( 13 ) + Chr( 10 ) )
 #endif
 
 STATIC s_nPass
@@ -101,9 +101,9 @@ STATIC s_lDBFAvail := .F.
 
 PROCEDURE Main( cPar1, cPar2 )
 
-   OutStd( "Harbour Regression Test Suite" + HB_OSNewLine() +;
-           "Copyright (c) 1999-2010, Viktor Szakats" + HB_OSNewLine() +;
-           "http://harbour-project.org/" + HB_OSNewLine() )
+   OutStd( "Harbour Regression Test Suite" + hb_eol() +;
+           "Copyright (c) 1999-2010, Viktor Szakats" + hb_eol() +;
+           "http://harbour-project.org/" + hb_eol() )
 
    IF cPar1 == NIL
       cPar1 := ""
@@ -117,12 +117,12 @@ PROCEDURE Main( cPar1, cPar2 )
       "-?" $ Upper( cPar1 ) .OR. ;
       "-H" $ Upper( cPar1 )
 
-      OutStd( HB_OSNewLine() +;
-              "Syntax:  hbtest [options]" + HB_OSNewLine() +;
-              HB_OSNewLine() +;
-              "Options:  -h, -?        Display this help." + HB_OSNewLine() +;
-              "          -all          Display all tests, not only the failures." + HB_OSNewLine() +;
-              "          -skip:<list>  Skip the listed test numbers." + HB_OSNewLine() )
+      OutStd( hb_eol() +;
+              "Syntax:  hbtest [options]" + hb_eol() +;
+              hb_eol() +;
+              "Options:  -h, -?        Display this help." + hb_eol() +;
+              "          -all          Display all tests, not only the failures." + hb_eol() +;
+              "          -skip:<list>  Skip the listed test numbers." + hb_eol() )
 
       RETURN
    ENDIF
@@ -228,23 +228,23 @@ STATIC PROCEDURE TEST_BEGIN( cParam )
 
    /* Feedback */
 
-   OutMsg( s_nFhnd, "---------------------------------------------------------------------------" + HB_OSNewLine() +;
-                    "      Version: " + Version() + HB_OSNewLine() )
+   OutMsg( s_nFhnd, "---------------------------------------------------------------------------" + hb_eol() +;
+                    "      Version: " + Version() + hb_eol() )
 #ifdef __HARBOUR__
-   OutMsg( s_nFhnd, "     Compiler: " + HB_Compiler() + HB_OSNewLine() )
+   OutMsg( s_nFhnd, "     Compiler: " + HB_Compiler() + hb_eol() )
 #endif
-   OutMsg( s_nFhnd, "           OS: " + OS() + HB_OSNewLine() +;
-                    "   Date, Time: " + DToC( Date() ) + " " + Time() + HB_OSNewLine() +;
-                    "Shortcut opt.: " + iif( s_lShortcut, "ON", "OFF" ) + HB_OSNewLine() +;
-                    "     Switches: " + cParam + HB_OSNewLine() +;
-                    "===========================================================================" + HB_OSNewLine() )
+   OutMsg( s_nFhnd, "           OS: " + OS() + hb_eol() +;
+                    "   Date, Time: " + DToC( Date() ) + " " + Time() + hb_eol() +;
+                    "Shortcut opt.: " + iif( s_lShortcut, "ON", "OFF" ) + hb_eol() +;
+                    "     Switches: " + cParam + hb_eol() +;
+                    "===========================================================================" + hb_eol() )
 
    OutMsg( s_nFhnd, PadR( "R", TEST_RESULT_COL1_WIDTH ) + " " +;
                     PadR( "No.  Line", TEST_RESULT_COL2_WIDTH ) + " " +;
                     PadR( "TestCall()", TEST_RESULT_COL3_WIDTH ) + " -> " +;
                     PadR( "Result", TEST_RESULT_COL4_WIDTH ) + " | " +;
-                    PadR( "Expected", TEST_RESULT_COL5_WIDTH ) + HB_OSNewLine() +;
-                    "---------------------------------------------------------------------------" + HB_OSNewLine() )
+                    PadR( "Expected", TEST_RESULT_COL5_WIDTH ) + hb_eol() +;
+                    "---------------------------------------------------------------------------" + hb_eol() )
 
    /* NOTE: mxNotHere intentionally not declared */
    PUBLIC mcLongerNameThen10Chars := "Long String Name!"
@@ -313,7 +313,7 @@ STATIC PROCEDURE TEST_BEGIN( cParam )
    ErrorBlock( bErrorOld )
 
    IF ! s_lDBFAvail
-      OutMsg( s_nFhnd, "WARNING ! Test .dbf could not be created. Related tests will be skipped." + HB_OSNewLine() )
+      OutMsg( s_nFhnd, "WARNING ! Test .dbf could not be created. Related tests will be skipped." + hb_eol() )
    ENDIF
 
    RETURN
@@ -376,11 +376,11 @@ PROCEDURE TEST_CALL( cBlock, bBlock, xResultExpected )
          OutMsg( s_nFhnd, PadR( iif( lFailed, "!", iif( lSkipped, "S", " " ) ), TEST_RESULT_COL1_WIDTH ) + " " +;
                           PadR( Str( s_nCount, 4 ) + " " + ProcName( 1 ) + "(" + LTrim( Str( ProcLine( 1 ), 5 ) ) + ")", TEST_RESULT_COL2_WIDTH ) + " " +;
                           PadR( cBlock, TEST_RESULT_COL3_WIDTH ) +;
-                          HB_OSNewLine() +;
+                          hb_eol() +;
                           Space( 5 ) + "  Result: " + XToStr( xResult ) +;
-                          HB_OSNewLine() +;
+                          hb_eol() +;
                           Space( 5 ) + "Expected: " + XToStr( xResultExpected ) +;
-                          HB_OSNewLine() )
+                          hb_eol() )
 
       ELSE
 
@@ -389,7 +389,7 @@ PROCEDURE TEST_CALL( cBlock, bBlock, xResultExpected )
                           PadR( cBlock, TEST_RESULT_COL3_WIDTH ) + " -> " +;
                           PadR( XToStr( xResult ), TEST_RESULT_COL4_WIDTH ) + " | " +;
                           PadR( XToStr( xResultExpected ), TEST_RESULT_COL5_WIDTH ) +;
-                          HB_OSNewLine() )
+                          hb_eol() )
 
       ENDIF
    ENDIF
@@ -416,20 +416,20 @@ STATIC PROCEDURE TEST_END()
 
    s_nEndTime := Seconds()
 
-   OutMsg( s_nFhnd, "===========================================================================" + HB_OSNewLine() +;
-                    "Test calls passed: " + Str( s_nPass ) + " ( " + LTrim( Str( ( 1 - ( s_nFail / s_nPass ) ) * 100, 6, 2 ) ) + " % )" + HB_OSNewLine() +;
-                    "Test calls failed: " + Str( s_nFail ) + " ( " + LTrim( Str( ( s_nFail / s_nPass ) * 100, 6, 2 ) ) + " % )" + HB_OSNewLine() +;
-                    "                   ----------" + HB_OSNewLine() +;
+   OutMsg( s_nFhnd, "===========================================================================" + hb_eol() +;
+                    "Test calls passed: " + Str( s_nPass ) + " ( " + LTrim( Str( ( 1 - ( s_nFail / s_nPass ) ) * 100, 6, 2 ) ) + " % )" + hb_eol() +;
+                    "Test calls failed: " + Str( s_nFail ) + " ( " + LTrim( Str( ( s_nFail / s_nPass ) * 100, 6, 2 ) ) + " % )" + hb_eol() +;
+                    "                   ----------" + hb_eol() +;
                     "            Total: " + Str( s_nPass + s_nFail ) +;
-                    " ( Time elapsed: " + LTrim( Str( s_nEndTime - s_nStartTime ) ) + " seconds )" + HB_OSNewLine() +;
-                    HB_OSNewLine() )
+                    " ( Time elapsed: " + LTrim( Str( s_nEndTime - s_nStartTime ) ) + " seconds )" + hb_eol() +;
+                    hb_eol() )
 
    IF s_nFail != 0
       IF "CLIPPER (R)" $ Upper( Version() )
-         OutMsg( s_nFhnd, "WARNING ! Failures detected using CA-Cl*pper." + HB_OSNewLine() +;
-                          "Please fix those expected results which are not bugs in CA-Cl*pper itself." + HB_OSNewLine() )
+         OutMsg( s_nFhnd, "WARNING ! Failures detected using CA-Cl*pper." + hb_eol() +;
+                          "Please fix those expected results which are not bugs in CA-Cl*pper itself." + hb_eol() )
       ELSE
-         OutMsg( s_nFhnd, "WARNING ! Failures detected" + HB_OSNewLine() )
+         OutMsg( s_nFhnd, "WARNING ! Failures detected" + hb_eol() )
       ENDIF
    ENDIF
 

@@ -626,8 +626,8 @@ STATIC FUNCTION strvalue( c, l )
 
 STATIC PROCEDURE FWriteLine( nh, c )
 
-   Fwrite( nh, c + HB_OsNewLine() )
-   //HB_OutDebug( c + HB_OsNewLine() )
+   Fwrite( nh, c + hb_eol() )
+   //HB_OutDebug( c + hb_eol() )
    RETURN
 
 STATIC FUNCTION Arguments( oErr )
@@ -654,22 +654,22 @@ FUNCTION __ErrorBlock( )
 
 PROCEDURE __MinimalErrorHandler( oError )
 
-   LOCAL cError := "Error!" + hb_osNewLine()
+   LOCAL cError := "Error!" + hb_eol()
 
    IF ISCHARACTER( oError:Operation )
-      cError += "Operation: " + oError:Operation + hb_osNewLine()
+      cError += "Operation: " + oError:Operation + hb_eol()
    ENDIF
    IF ISCHARACTER( oError:Description )
-      cError += "Description: " + oError:Description + hb_osNewLine()
+      cError += "Description: " + oError:Description + hb_eol()
    ENDIF
    IF ISCHARACTER( oError:ModuleName )
-      cError += "Source: " + oError:ModuleName + hb_osNewLine()
+      cError += "Source: " + oError:ModuleName + hb_eol()
    ENDIF
    IF ISCHARACTER( oError:ProcName )
-      cError += "Procedure: " + oError:ProcName + hb_osNewLine()
+      cError += "Procedure: " + oError:ProcName + hb_eol()
    ENDIF
    IF ISNUMBER( oError:ProcLine )
-      cError += "Line: " + hb_ntos( oError:ProcLine ) + hb_osNewLine()
+      cError += "Line: " + hb_ntos( oError:ProcLine ) + hb_eol()
    ENDIF
 
    OutStd( cError )

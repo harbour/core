@@ -4,8 +4,6 @@
 
 #include "common.ch"
 
-#define CRLF hb_osNewLine()
-
 function TIniFile()
    static oClass
 
@@ -176,7 +174,7 @@ static procedure WriteString(cSection, cIdent, cString)
          AAdd( ::Contents, {cSection, {{cIdent, cString}}} )
       endif
    endif
-return 
+return
 
 static function ReadNumber(cSection, cIdent, nDefault)
    local Self := QSelf()
@@ -216,7 +214,7 @@ static procedure DeleteKey(cSection, cIdent)
 
    cSection := lower(cSection)
    i := AScan( ::Contents, {|x| ISCHARACTER(x[1]) .and. lower(x[1]) == cSection} )
-   
+
    if i > 0
       cIdent := lower(cIdent)
       j := AScan( ::Contents[i][2], {|x| ISCHARACTER(x[1]) .and. lower(x[1]) == cIdent} )

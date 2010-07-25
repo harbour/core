@@ -48,7 +48,9 @@ FUNCTION Alert( cMessage, aOptions, cColorNorm )
 
 #ifdef HB_CLP_UNDOC
 
-   DEFAULT s_lNoAlert TO hb_argCheck( "NOALERT" )
+   IF s_lNoAlert == NIL
+      s_lNoAlert := hb_argCheck( "NOALERT" )
+   ENDIF
 
    IF s_lNoAlert
       RETURN NIL
@@ -103,7 +105,9 @@ FUNCTION hb_Alert( xMessage, aOptions, cColorNorm, nDelay )
 
 #ifdef HB_CLP_UNDOC
 
-   DEFAULT s_lNoAlert TO hb_argCheck( "NOALERT" )
+   IF s_lNoAlert == NIL
+      s_lNoAlert := hb_argCheck( "NOALERT" )
+   ENDIF
 
    IF s_lNoAlert
       RETURN NIL

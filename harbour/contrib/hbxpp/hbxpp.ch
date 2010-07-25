@@ -91,10 +91,10 @@
 /* TEXT INTO <varname> [WRAP [<cEOL>]] [TRIMMED]  */
 #xcommand TEXT INTO <v> [<wrp:WRAP>] [<trm:TRIMMED>] => ;
             #pragma __text|<v>+=iif(<.trm.>,ltrim(%s),%s)+;
-                                iif(<.wrp.>,HB_OSNEWLINE(),"");<v>:=""
+                                iif(<.wrp.>,hb_eol(),"");<v>:=""
 #xcommand TEXT INTO <v> WRAP [<EOL>] [<trm:TRIMMED>] => ;
             #pragma __text|<v>+=iif(<.trm.>,ltrim(%s),%s)+;
-                                iif(<.EOL.>,<EOL>,HB_OSNEWLINE());<v>:=""
+                                iif(<.EOL.>,<EOL>,hb_eol());<v>:=""
 
 #endif
 #endif

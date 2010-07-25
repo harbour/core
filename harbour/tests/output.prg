@@ -11,9 +11,8 @@
 #include "set.ch"
 
 function Main()
-local cNewLine := HB_OSNewLine()
 
-   OUTSTD (cNewLine,  "Testing Harbour device management on", DATE())
+   OUTSTD (hb_eol(),  "Testing Harbour device management on", DATE())
    SET ALTERNATE TO OUTPUT_A ADDITIVE
    SET (_SET_EXTRAFILE, "output_e.ext", .F.)
    SET PRINTER TO OUTPUT_P

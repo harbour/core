@@ -324,7 +324,7 @@ FUNCTION hb_IniWrite( xFileName, hIni, cCommentBegin, cCommentEnd, lAutoMain )
    RETURN .T.
 
 FUNCTION hb_IniWriteStr( hIni, cCommentBegin, cCommentEnd, lAutoMain )
-   LOCAL cNewLine := hb_OSNewLine()
+   LOCAL cNewLine := hb_eol()
    LOCAL cSection
    LOCAL cBuffer := ""
 

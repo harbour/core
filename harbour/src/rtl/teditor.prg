@@ -286,7 +286,7 @@ METHOD LineLen( nRow ) CLASS HBEditor
 METHOD GetText() CLASS HBEditor
 
    LOCAL cString := ""
-   LOCAL cEOL := HB_OSNewLine()
+   LOCAL cEOL := hb_eol()
 
    IF ::lWordWrap
       AEval( ::aText, {| cItem | cString += cItem:cText + iif( cItem:lSoftCR, "", cEOL ) },, ::naTextLen - 1 )
@@ -470,8 +470,8 @@ METHOD MoveCursor( nKey ) CLASS HBEditor
 
    LOCAL lMoveKey := .T.
 
-   DO CASE
-   CASE nKey == K_DOWN
+   SWITCH nKey
+   CASE K_DOWN
       IF !::lEditAllow
          DO WHILE ::Row() < ::nBottom .AND. ::nRow < ::naTextLen
             ::nRow++
@@ -491,8 +491,9 @@ METHOD MoveCursor( nKey ) CLASS HBEditor
             ::SetPos( ::Row() + 1, ::Col() )
          ENDIF
       ENDIF
+      EXIT
 
-   CASE nKey == K_PGDN
+   CASE K_PGDN
       IF ::nRow + ::nNumRows < ::naTextLen
          ::nRow += ::nNumRows
          IF ::nFirstRow + ::nNumRows > ::naTextLen
@@ -506,16 +507,18 @@ METHOD MoveCursor( nKey ) CLASS HBEditor
          ::SetPos( Min( ::nTop + ::naTextLen - 1, ::nBottom ), ::Col() )
       ENDIF
       ::display()
+      EXIT
 
-   CASE nKey == K_CTRL_PGDN
+   CASE K_CTRL_PGDN
       ::nRow := ::naTextLen
       ::nCol := Max( ::LineLen( ::nRow ) + 1, 1 )
       ::nFirstRow := Max( ::naTextLen - ::nNumRows + 1, 1 )
       ::nFirstCol := Max( ::nCol - ::nNumCols + 1, 1 )
       ::SetPos( Min( ::nTop + ::naTextLen - 1, ::nBottom ), Min( ::nLeft + ::nCol - 1, ::nRight ) )
       ::display()
+      EXIT
 
-   CASE nKey == K_UP
+   CASE K_UP
       IF ! ::lEditAllow
          DO WHILE ::Row() > ::nTop .AND. ::nRow > 1
             ::nRow--
@@ -533,8 +536,9 @@ METHOD MoveCursor( nKey ) CLASS HBEditor
          ::nRow--
          ::SetPos( ::Row() - 1, ::Col() )
       ENDIF
+      EXIT
 
-   CASE nKey == K_PGUP
+   CASE K_PGUP
       IF ( ::nRow - ::nNumRows ) > 1
          ::nRow -= ::nNumRows
          ::nFirstRow -= ::nNumRows
@@ -549,16 +553,18 @@ METHOD MoveCursor( nKey ) CLASS HBEditor
          ::SetPos( ::nTop, ::Col() )
       ENDIF
       ::display()
+      EXIT
 
-   CASE nKey == K_CTRL_PGUP
+   CASE K_CTRL_PGUP
       ::nRow := 1
       ::nCol := 1
       ::nFirstCol := 1
       ::nFirstRow := 1
       ::SetPos( ::nTop, ::nLeft )
       ::display()
+      EXIT
 
-   CASE nKey == K_RIGHT
+   CASE K_RIGHT
       IF ::Col() == ::nRight
          IF ::nCol <= iif( ::lWordWrap, ::nWordWrapCol, ::LineLen( ::nRow ) )
             hb_scroll( ::nTop, ::nLeft, ::nBottom, ::nRight,, 1 )
@@ -570,8 +576,9 @@ METHOD MoveCursor( nKey ) CLASS HBEditor
          ::nCol++
          ::SetPos( ::Row(), ::Col() + 1 )
       ENDIF
+      EXIT
 
-   CASE nKey == K_CTRL_RIGHT
+   CASE K_CTRL_RIGHT
       // NOTE: should be faster without call to ::GetLine()
       DO WHILE ::nCol <= iif( ::lWordWrap, Min( ::nWordWrapCol, ::LineLen( ::nRow ) ), ::LineLen( ::nRow ) ) .AND. !( SubStr( ::aText[ ::nRow ]:cText, ::nCol, 1 ) == " " )
          ::MoveCursor( K_RIGHT )
@@ -579,8 +586,9 @@ METHOD MoveCursor( nKey ) CLASS HBEditor
       DO WHILE ::nCol <= iif( ::lWordWrap, Min( ::nWordWrapCol, ::LineLen( ::nRow ) ), ::LineLen( ::nRow ) ) .AND. SubStr( ::aText[ ::nRow ]:cText, ::nCol, 1 ) == " "
          ::MoveCursor( K_RIGHT )
       ENDDO
+      EXIT
 
-   CASE nKey == K_LEFT
+   CASE K_LEFT
       IF ::Col() == ::nLeft
          IF ::nCol > 1
             hb_scroll( ::nTop, ::nLeft, ::nBottom, ::nRight,, -1 )
@@ -592,36 +600,41 @@ METHOD MoveCursor( nKey ) CLASS HBEditor
          ::nCol--
          ::SetPos( ::Row(), ::Col() - 1 )
       ENDIF
+      EXIT
 
-   CASE nKey == K_CTRL_LEFT
+   CASE K_CTRL_LEFT
       DO WHILE ::nCol > 1 .AND. !( SubStr( ::aText[ ::nRow ]:cText, ::nCol, 1 ) == " " )
          ::MoveCursor( K_LEFT )
       ENDDO
       DO WHILE ::nCol > 1 .AND. SubStr( ::aText[ ::nRow ]:cText, ::nCol, 1 ) == " "
          ::MoveCursor( K_LEFT )
       ENDDO
+      EXIT
 
-   CASE nKey == K_HOME
+   CASE K_HOME
       ::nCol := 1
       ::nFirstCol := 1
       ::SetPos( ::Row(), ::nLeft )
       ::display()
+      EXIT
 
-   CASE nKey == K_CTRL_HOME
+   CASE K_CTRL_HOME
       ::nCol := 1
       ::nFirstCol := 1
       ::nRow -= ( ::Row() - ::nTop )
       ::SetPos( ::nTop, ::nLeft )
       ::display()
+      EXIT
 
-   CASE nKey == K_END
+   CASE K_END
       // Empty lines have 0 len
       ::nCol := Max( ::LineLen( ::nRow ) + 1, 1 )
       ::nFirstCol := Max( ::nCol - ::nNumCols + 1, 1 )
       ::SetPos( ::Row(), Min( ::nLeft + ::nCol - 1, ::nRight ) )
       ::display()
+      EXIT
 
-   CASE nKey == K_CTRL_END
+   CASE K_CTRL_END
       ::nRow += ::nBottom - ::Row()
       IF ::nRow > ::naTextLen
          ::nRow := ::naTextLen
@@ -630,11 +643,12 @@ METHOD MoveCursor( nKey ) CLASS HBEditor
       ::nFirstCol := Max( ::nCol - ::nNumCols + 1, 1 )
       ::SetPos( Min( ::nTop + ::naTextLen - 1, ::nBottom ), Min( ::nLeft + ::nCol - 1, ::nRight ) )
       ::display()
+      EXIT
 
    OTHERWISE
       lMoveKey := .F.
 
-   ENDCASE
+   ENDSWITCH
 
    RETURN lMoveKey
 
@@ -1081,7 +1095,7 @@ STATIC FUNCTION WhichEOL( cString )
       RETURN Chr( 13 ) + Chr( 10 )
    ENDIF
 
-   RETURN HB_OSNewLine()
+   RETURN hb_eol()
 
 // Converts a string to an array of strings splitting input string at EOL boundaries
 STATIC FUNCTION Text2Array( cString, nWordWrapCol )

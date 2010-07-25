@@ -467,7 +467,7 @@ METHOD PROCEDURE Out( ... ) CLASS HB_LogConsole
        ENDIF
    NEXT
    IF ::lRealConsole
-      OutStd( cMsg, HB_OSnewLine() )
+      OutStd( cMsg, hb_eol() )
    ELSE
       QOut( cMsg )
    ENDIF
@@ -528,7 +528,7 @@ METHOD Open( cProgName ) CLASS HB_LogFile
       RETURN .F.
    ENDIF
 
-   Fwrite( ::nFileHandle, HB_BldLogMsg( HB_LogDateStamp(), Time(), "--", cProgName, "start --", HB_OsNewLine() ) )
+   Fwrite( ::nFileHandle, HB_BldLogMsg( HB_LogDateStamp(), Time(), "--", cProgName, "start --", hb_eol() ) )
 
    HB_Fcommit( ::nFileHandle )
    ::lOpened := .T.
@@ -541,7 +541,7 @@ METHOD Close( cProgName ) CLASS HB_LogFile
       RETURN .F.
    ENDIF
 
-   Fwrite( ::nFileHandle, HB_BldLogMsg( HB_LogDateStamp(), Time(), "--", cProgName, "end --", HB_OsNewLine() ) )
+   Fwrite( ::nFileHandle, HB_BldLogMsg( HB_LogDateStamp(), Time(), "--", cProgName, "end --", hb_eol() ) )
 
    FClose( ::nFileHandle )
    ::nFileHandle := -1
@@ -554,13 +554,13 @@ METHOD Send( nStyle, cMessage, cProgName, nPriority ) CLASS HB_LogFile
 
    LOCAL nCount
 
-   FWrite( ::nFileHandle, ::Format( nStyle, cMessage, cProgName, nPriority ) + HB_OsNewLine() )
+   FWrite( ::nFileHandle, ::Format( nStyle, cMessage, cProgName, nPriority ) + hb_eol() )
    HB_FCommit( ::nFileHandle );
 
    // see file limit and eventually swap file.
    IF ::nFileLimit > 0
       IF FSeek( ::nFileHandle, 0, FS_RELATIVE ) > ::nFileLimit * 1024
-         Fwrite( ::nFileHandle, HB_BldLogMsg( HB_LogDateStamp(), Time(), "LogFile: Closing file due to size limit breaking", HB_OsNewLine() ) )
+         Fwrite( ::nFileHandle, HB_BldLogMsg( HB_LogDateStamp(), Time(), "LogFile: Closing file due to size limit breaking", hb_eol() ) )
          FClose( ::nFileHandle )
 
          IF ::nBackup > 1
@@ -574,7 +574,7 @@ METHOD Send( nStyle, cMessage, cProgName, nPriority ) CLASS HB_LogFile
 
          IF FRename( ::cFileName, ::cFileName + ".000" ) == 0
             ::nFileHandle := hb_FCreate( ::cFileName, FC_NORMAL, FO_READWRITE )
-            Fwrite( ::nFileHandle, HB_BldLogMsg( HB_LogDateStamp(), Time(), "LogFile: Reopening file due to size limit breaking", HB_OsNewLine() ) )
+            Fwrite( ::nFileHandle, HB_BldLogMsg( HB_LogDateStamp(), Time(), "LogFile: Reopening file due to size limit breaking", hb_eol() ) )
          ENDIF
       ENDIF
    ENDIF

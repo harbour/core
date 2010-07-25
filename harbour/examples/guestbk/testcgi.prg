@@ -179,8 +179,8 @@ STATIC FUNCTION AddPara( cPara, cAlign )
    LOCAL Self := QSelf()
 
    ::cBody := ::cBody + ;
-      "<P ALIGN='" + cAlign + "'>" + hb_OSNewLine() + ;
-      cPara + hb_OSNewLine() + ;
+      "<P ALIGN='" + cAlign + "'>" + hb_eol() + ;
+      cPara + hb_eol() + ;
       "</P>"
 
    RETURN Self
@@ -194,11 +194,11 @@ STATIC FUNCTION Generate()
    // Is this a meta file or hand generated script?
    IF empty( ::cHTMLFile )
       ::cContent :=                                                        ;
-         "<HTML><HEAD>"                                        + hb_OSNewLine() + ;
-         "<TITLE>" + ::cTitle + "</TITLE>"                     + hb_OSNewLine() + ;
+         "<HTML><HEAD>"                                        + hb_eol() + ;
+         "<TITLE>" + ::cTitle + "</TITLE>"                     + hb_eol() + ;
          "<BODY link='" + ::cLinkColor + "' " +                            ;
-         "vlink='" + ::cvLinkColor + "'>" +                    + hb_OSNewLine() + ;
-         ::cBody                                               + hb_OSNewLine() + ;
+         "vlink='" + ::cvLinkColor + "'>" +                    + hb_eol() + ;
+         ::cBody                                               + hb_eol() + ;
          "</BODY></HTML>"
    ELSE
       ::cContent := ""
@@ -257,9 +257,9 @@ STATIC FUNCTION ShowResult()
 
    LOCAL Self := QSelf()
 
-   OutStd(                                                                 ;
-      "HTTP/1.0 200 OK"                                        + hb_OSNewLine() + ;
-      "CONTENT-TYPE: TEXT/HTML"                      + hb_OSNewLine() + hb_OSNewLine() + ;
+   OutStd(                                                                   ;
+      "HTTP/1.0 200 OK"                                         + hb_eol() + ;
+      "CONTENT-TYPE: TEXT/HTML"                      + hb_eol() + hb_eol() + ;
       ::cContent )
 
    RETURN Self

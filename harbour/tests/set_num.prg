@@ -1,16 +1,16 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
 // Testing SET
 
 #include "set.ch"
 
 function Main()
-local n, cNewLine := HB_OSNewLine()
+local n
 
    for n := 1 to _SET_COUNT
-      outstd (cNewLine)
+      outstd (hb_eol())
       outstd (set (n))
    next
 

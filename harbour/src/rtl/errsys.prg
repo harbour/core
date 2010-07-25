@@ -120,7 +120,7 @@ STATIC FUNCTION DefError( oError )
    nChoice := 0
    DO WHILE nChoice == 0
 
-      IF ISNIL( cDOSError )
+      IF cDOSError == NIL
          nChoice := Alert( cMessage, aOptions )
       ELSE
          nChoice := Alert( cMessage + ";" + cDOSError, aOptions )
@@ -129,29 +129,29 @@ STATIC FUNCTION DefError( oError )
    ENDDO
 
    IF ! Empty( nChoice )
-      DO CASE
-      CASE aOptions[ nChoice ] == "Break"
+      SWITCH aOptions[ nChoice ]
+      CASE "Break"
          Break( oError )
-      CASE aOptions[ nChoice ] == "Retry"
+      CASE "Retry"
          RETURN .T.
-      CASE aOptions[ nChoice ] == "Default"
+      CASE "Default"
          RETURN .F.
-      ENDCASE
+      ENDSWITCH
    ENDIF
 
    // "Quit" selected
 
-   IF ! ISNIL( cDOSError )
+   IF cDOSError != NIL
       cMessage += " " + cDOSError
    ENDIF
 
-   OutErr( hb_OSNewLine() )
+   OutErr( hb_eol() )
    OutErr( cMessage )
 
    n := 1
    DO WHILE ! Empty( ProcName( ++n ) )
 
-      OutErr( hb_OSNewLine() )
+      OutErr( hb_eol() )
       OutErr( "Called from " + ProcName( n ) + ;
                "(" + hb_NToS( ProcLine( n ) ) + ")  " )
 

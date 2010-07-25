@@ -1,6 +1,6 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
 /* Test SECONDS() */
 /* Harbour Project source code
@@ -10,20 +10,19 @@
 
 function Main( cParam )
 local n, limit := 10
-local cNewLine := HB_OSNewLine()
 
    IF ! EMPTY( cParam )
       limit := VAL( cParam )
    ENDIF
-   OUTSTD( cNewLine )
+   OUTSTD( hb_eol() )
    OUTSTD( SECONDS() )
    FOR n := 1 TO limit
       IF EMPTY( cParam )
-         OUTSTD( cNewLine )
+         OUTSTD( hb_eol() )
          OUTSTD( "Pause: " )
          INKEY(0)
       ENDIF
-      OUTSTD( cNewLine )
+      OUTSTD( hb_eol() )
       OUTSTD( SECONDS() )
    NEXT
 

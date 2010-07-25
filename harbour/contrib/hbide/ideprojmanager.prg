@@ -1314,7 +1314,7 @@ METHOD IdeProjManager:buildSource( lExecutable )
 
    IF hb_fileExists( ::cBatch )
       cBuf := memoread( ::cBatch )
-      cBuf += hb_osNewLine() + cExeHbMk2 + " " + cCmdParams + hb_osNewLine()
+      cBuf += hb_eol() + cExeHbMk2 + " " + cCmdParams + hb_eol()
       hb_memowrit( ::cBatch, cBuf )
    ENDIF
    //
@@ -1449,7 +1449,7 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
 
       IF hb_fileExists( ::cBatch )
          cBuf := memoread( ::cBatch )
-         cBuf += hb_osNewLine() + cExeHbMk2 + " " + cHbpPath + cCmdParams + hb_osNewLine()
+         cBuf += hb_eol() + cExeHbMk2 + " " + cHbpPath + cCmdParams + hb_eol()
          hb_memowrit( ::cBatch, cBuf )
       ENDIF
       //
@@ -1624,4 +1624,3 @@ METHOD IdeProjManager:outputText( cText )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

@@ -21,30 +21,30 @@
 #define REAL_TIME
 
 #ifdef __CLIP__
-    #define ASSOC_ARRAY map()
-    #undef REAL_TIME
+   #define ASSOC_ARRAY map()
+   #undef REAL_TIME
 #endif
 #ifdef FlagShip
-    #undef REAL_TIME
-    #xtranslate seconds() => fs_seconds()
+   #undef REAL_TIME
+   #xtranslate seconds() => fs_seconds()
 #endif
 #ifdef __HARBOUR__
-    #include "hbmemory.ch"
-    #define ASSOC_ARRAY { => }
-    #undef REAL_TIME
+   #include "hbmemory.ch"
+   #define ASSOC_ARRAY { => }
+   #undef REAL_TIME
 #endif
 
 #ifdef REAL_TIME
-    #xtranslate hb_secondsCPU([<x>]) => seconds()
+   #xtranslate hb_secondsCPU([<x>]) => seconds()
 #endif
 #ifndef EOL
-    #define EOL hb_OSNewLine()
+   #define EOL hb_eol()
 #endif
 #command ? => outstd(EOL)
 #command ? <xx,...> => outstd(<xx>, EOL)
 
 #ifdef NO_ASSOC_TEST
-    #undef ASSOC_ARRAY
+   #undef ASSOC_ARRAY
 #endif
 
 function main()
@@ -56,7 +56,7 @@ local L_C, L_N, L_D
 local i, j, t, c, c2, n, d, o, bc, tn, total, totalr, aa,;
       a[ARR_LEN], a2[ARR_LEN], a3[ARR_LEN], aDb, cFi1, cFi2
 #ifdef ASSOC_ARRAY
-    local aAssoc := ASSOC_ARRAY
+   local aAssoc := ASSOC_ARRAY
 #endif
 private M_C := dtos(date()),;
         M_N := 112345.67,;
@@ -64,25 +64,25 @@ private M_C := dtos(date()),;
 
 #ifndef __CLIP__
 //#ifdef __HARBOUR__
-//  setcancel(.f.)
-//  altd(0)
+//   setcancel(.f.)
+//   altd(0)
 //#endif
 #endif
 #ifdef __CLIP__
-  SET MACRO_IN_STRING OFF
-  //CLEAR SCREEN
+   SET MACRO_IN_STRING OFF
+   //CLEAR SCREEN
 #endif
 #ifdef FlagShip
-    FS_SET( "zerobyte", .t. )
-    FS_SET( "devel", .f. )
-//    FS_SET( "break", 0 )
-//    FS_SET( "debug", 0 )
+   FS_SET( "zerobyte", .t. )
+   FS_SET( "devel", .f. )
+//   FS_SET( "break", 0 )
+//   FS_SET( "debug", 0 )
 #endif
 
 for i:=1 to len(a)
-    a[i]:=i
-    a2[i]:=dtos(date())+chr(i%64+32)+chr(i%64+64)+str(i,10)
-    a3[i]:=stuff(dtos(date()),7,0,".")
+   a[i]:=i
+   a2[i]:=dtos(date())+chr(i%64+32)+chr(i%64+64)+str(i,10)
+   a3[i]:=stuff(dtos(date()),7,0,".")
 next
 
 #ifdef __HARBOUR__
@@ -106,9 +106,9 @@ next
 tn:=hb_secondsCPU()-t
 ? "empty loops overhead =", tn
 #ifdef REAL_TIME
-    ? "real time -> seconds()"
+   ? "real time -> seconds()"
 #else
-    ? "CPU usage -> hb_secondsCPU()"
+   ? "CPU usage -> hb_secondsCPU()"
 #endif
 ? ""
 
@@ -120,7 +120,7 @@ aDb:={ {"F_C", "C", 10, 0},;
 
 cFi1:="tst_tmp.dbf"
 if file(cFi1)
-    ferase(cFi1)
+   ferase(cFi1)
 endif
 dbcreate(cFi1, aDb)
 select(1)
@@ -134,7 +134,7 @@ dbunlock()
 
 cFi2:="tst_tmp2.dbf"
 if file(cFi2)
-    ferase(cFi2)
+   ferase(cFi2)
 endif
 dbcreate(cFi2, aDb)
 select(2)
@@ -157,37 +157,37 @@ total:=hb_secondsCPU()
 totalr:=seconds()
 t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
-    c:=L_C
+   c:=L_C
 next
 dsp_time( "c:=L_C -> ", t, tn)
 
 t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
-    n:=L_N
+   n:=L_N
 next
 dsp_time( "n:=L_N -> ", t, tn)
 
 t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
-    d:=L_D
+   d:=L_D
 next
 dsp_time( "d:=L_D -> ", t, tn)
 
 t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
-    c:=M_C
+   c:=M_C
 next
 dsp_time( "c:=M_C -> ", t, tn)
 
 t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
-    n:=M_N
+   n:=M_N
 next
 dsp_time( "n:=M_N -> ", t, tn)
 
 t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
-    d:=M_D
+   d:=M_D
 next
 dsp_time( "d:=M_D -> ", t, tn)
 
@@ -195,38 +195,38 @@ dsp_time( "d:=M_D -> ", t, tn)
 select(1)
 t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
-    c:=F_C
+   c:=F_C
 next
 dsp_time( "(sh) c:=F_C -> ", t, tn)
 
 t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
-    n:=F_N
+   n:=F_N
 next
 dsp_time( "(sh) n:=F_N -> ", t, tn)
 
 t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
-    d:=F_D
+   d:=F_D
 next
 dsp_time( "(sh) d:=F_D -> ", t, tn)
 
 select(2)
 t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
-    c:=F_C
+   c:=F_C
 next
 dsp_time( "(ex) c:=F_C -> ", t, tn)
 
 t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
-    n:=F_N
+   n:=F_N
 next
 dsp_time( "(ex) n:=F_N -> ", t, tn)
 
 t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
-    d:=F_D
+   d:=F_D
 next
 dsp_time( "(ex) d:=F_D -> ", t, tn)
 #endif
@@ -234,14 +234,14 @@ dsp_time( "(ex) d:=F_D -> ", t, tn)
 o:=errorNew()
 t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
-    n:=o:GenCode
+   n:=o:GenCode
 next
 dsp_time( "n:=o:GenCode -> ", t, tn)
 
 #ifdef __HARBOUR__
 t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
-    n:=o[8]
+   n:=o[8]
 next
 dsp_time( "n:=o[8] -> ", t, tn)
 #endif
@@ -249,13 +249,13 @@ dsp_time( "n:=o[8] -> ", t, tn)
 #ifdef ASSOC_ARRAY
 t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
-    aAssoc[a2[i%ARR_LEN+1]+ltrim(str(i%100))]:=i
+   aAssoc[a2[i%ARR_LEN+1]+ltrim(str(i%100))]:=i
 next
 dsp_time( "aAssoc[a2[i%ARR_LEN+1]+ltrim(str(i%100)]:=i -> ", t, tn)
 
 t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
-    c:=aAssoc[a2[i%ARR_LEN+1]+ltrim(str(i%100))]
+   c:=aAssoc[a2[i%ARR_LEN+1]+ltrim(str(i%100))]
 next
 dsp_time( "c:=aAssoc[a2[i%ARR_LEN+1]+ltrim(str(i%100)] -> ", t, tn)
 #endif
@@ -263,219 +263,219 @@ dsp_time( "c:=aAssoc[a2[i%ARR_LEN+1]+ltrim(str(i%100)] -> ", t, tn)
 #ifndef NO_KEYBOARD_TEST
 t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
-    inkey()
+   inkey()
 next
 dsp_time( "inkey() -> ", t, tn)
 
 t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
-    nextkey()
+   nextkey()
 next
 dsp_time( "nextkey() -> ", t, tn)
 #endif
 
 t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
-    round(i/1000,2)
+   round(i/1000,2)
 next
 dsp_time( "round(i/1000,2) -> ", t, tn)
 
 t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
-    str(i/1000)
+   str(i/1000)
 next
 dsp_time( "str(i/1000) -> ", t, tn)
 
 t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
-    val(a3[i%ARR_LEN+1])
+   val(a3[i%ARR_LEN+1])
 next
 dsp_time( "val(a3[i%ARR_LEN+1]) -> ", t, tn)
 
 t:=hb_secondsCPU()
 j:=date()
 for i:=1 to N_LOOPS
-    dtos(j+i%10000-5000)
+   dtos(j+i%10000-5000)
 next
 dsp_time( "dtos(j+i%10000-5000) -> ", t, tn)
 
 bc:={||i%ARR_LEN}
 t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
-    eval(bc)
+   eval(bc)
 next
 dsp_time( "eval({||i%ARR_LEN}) -> ", t, tn)
 
 bc:={|x|x%ARR_LEN}
 t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
-    eval(bc,i)
+   eval(bc,i)
 next
 dsp_time( "eval({|x|x%ARR_LEN},i) -> ", t, tn)
 
 bc:={|x|f1(x)}
 t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
-    eval(bc,i)
+   eval(bc,i)
 next
 dsp_time( "eval({|x|f1(x)},i) -> ", t, tn)
 
 t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
-    n:=&("f1("+str(i)+")")
+   n:=&("f1("+str(i)+")")
 next
 dsp_time( "&('f1('+str(i)+')') -> ", t, tn)
 
 bc:=&("{|x|f1(x)}")
 t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
-    eval(bc,i)
+   eval(bc,i)
 next
 dsp_time( "eval([&('{|x|f1(x)}')]) -> ", t, tn)
 
 t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
-    j:=valtype(a)+valtype(i)
+   j:=valtype(a)+valtype(i)
 next
 dsp_time( "j := valtype(a)+valtype(i) -> ", t, tn)
 
 t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
-    j := str(i%100,2) $ a2[i%ARR_LEN+1]
+   j := str(i%100,2) $ a2[i%ARR_LEN+1]
 next
 dsp_time( "j := str(i%100,2) $ a2[i%ARR_LEN+1] -> ", t, tn)
 
 t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
-    j := val(a2[i%ARR_LEN+1])
+   j := val(a2[i%ARR_LEN+1])
 next
 dsp_time( "j := val(a2[i%ARR_LEN+1]) -> ", t, tn)
 
 c:=dtos(date())
 t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
-    j := a2[i%ARR_LEN+1] == c
+   j := a2[i%ARR_LEN+1] == c
 next
 dsp_time( "j := a2[i%ARR_LEN+1] == s -> ", t, tn)
 
 c:=dtos(date())
 t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
-    j := a2[i%ARR_LEN+1] = c
+   j := a2[i%ARR_LEN+1] = c
 next
 dsp_time( "j := a2[i%ARR_LEN+1] = s -> ", t, tn)
 
 c:=dtos(date())
 t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
-    j := a2[i%ARR_LEN+1] >= c
+   j := a2[i%ARR_LEN+1] >= c
 next
 dsp_time( "j := a2[i%ARR_LEN+1] >= s -> ", t, tn)
 
 c:=dtos(date())
 t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
-    j := a2[i%ARR_LEN+1] < c
+   j := a2[i%ARR_LEN+1] < c
 next
 dsp_time( "j := a2[i%ARR_LEN+1] < s -> ", t, tn)
 
 aa:={}
 t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
-    if i%1000 == 0
-        aa:={}
-    endif
-    aadd(aa,{i,j,c,a,a2,t,bc})
+   if i%1000 == 0
+      aa:={}
+   endif
+   aadd(aa,{i,j,c,a,a2,t,bc})
 next
 dsp_time( "aadd(aa,{i,j,s,a,a2,t,bc}) -> ", t, tn)
 
 t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
-    f0()
+   f0()
 next
 dsp_time( "f0() -> ", t, tn)
 
 t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
-    f1(i)
+   f1(i)
 next
 dsp_time( "f1(i) -> ", t, tn)
 
 c:=dtos(date())
 t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
-    f2(c)
+   f2(c)
 next
 dsp_time( "f2(c["+ltrim(str(len(c)))+"]) -> ", t, tn)
 
 c:=replicate(c,5000)
 t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
-    f2(c)
+   f2(c)
 next
 dsp_time( "f2(c["+ltrim(str(len(c)))+"]) -> ", t, tn)
 
 t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
-    f2(@c)
+   f2(@c)
 next
 dsp_time( "f2(@c["+ltrim(str(len(c)))+"]) -> ", t, tn)
 
 t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
-    f2(c)
-    c2:=c
+   f2(c)
+   c2:=c
 next
 dsp_time( "f2(c["+ltrim(str(len(c)))+"]); c2:=c -> ", t, tn)
 
 t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
-    f2(@c)
-    c2:=c
+   f2(@c)
+   c2:=c
 next
 dsp_time( "f2(@c["+ltrim(str(len(c)))+"]); c2:=c -> ", t, tn)
 
 c:=dtos(date())
 t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
-    f3(a,a2,c,i,j,t,bc)
+   f3(a,a2,c,i,j,t,bc)
 next
 dsp_time( "f3(a,a2,c,i,j,t,bc) -> ", t, tn)
 
 t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
-    f2(a2)
+   f2(a2)
 next
 dsp_time( "f2(a2) -> ", t, tn)
 
 t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
-    c:=f4()
+   c:=f4()
 next
 dsp_time( "s:=f4() -> ", t, tn)
 
 t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
-    c:=f5()
+   c:=f5()
 next
 dsp_time( "s:=f5() -> ", t, tn)
 
 t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
-    ascan(a,i%ARR_LEN)
+   ascan(a,i%ARR_LEN)
 next
 dsp_time( "ascan(a,i%ARR_LEN) -> ", t, tn)
 
 c:=dtos(date())
 t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
-    ascan(a2,c+chr(i%64+64))
+   ascan(a2,c+chr(i%64+64))
 next
 dsp_time( "ascan(a2,c+chr(i%64+64)) -> ", t, tn)
 
 t:=hb_secondsCPU()
 for i:=1 to N_LOOPS
-    ascan(a,{|x|x==i%ARR_LEN})
+   ascan(a,{|x|x==i%ARR_LEN})
 next
 dsp_time( "ascan(a,{|x|x==i%ARR_LEN}) -> ", t, tn)
 
@@ -487,10 +487,10 @@ dsp_time( "total application time:", total, 0)
 #ifndef NO_DBF_TEST
 
 if file(cFi1)
-    ferase(cFi1)
+   ferase(cFi1)
 endif
 if file(cFi2)
-    ferase(cFi2)
+   ferase(cFi2)
 endif
 
 #endif
@@ -521,55 +521,55 @@ return space(5)
 
 function build_mode()
 #ifdef __CLIP__
-    return " (MT)"
+   return " (MT)"
 #else
-    #ifdef __XHARBOUR__
-        return iif( HB_MULTITHREAD(), " (MT)", "" ) + ;
-               iif( MEMORY( HB_MEM_USEDMAX ) != 0, " (FMSTAT)", "" )
-    #else
-        #ifdef __HARBOUR__
-            return iif( HB_MTVM(), " (MT)", "" ) + ;
-                   iif( MEMORY( HB_MEM_USEDMAX ) != 0, " (FMSTAT)", "" )
-        #else
-            #ifdef __XPP__
-                return " (MT)"
-            #endif
-        #endif
-    #endif
+   #ifdef __XHARBOUR__
+      return iif( HB_MULTITHREAD(), " (MT)", "" ) + ;
+             iif( MEMORY( HB_MEM_USEDMAX ) != 0, " (FMSTAT)", "" )
+   #else
+      #ifdef __HARBOUR__
+         return iif( HB_MTVM(), " (MT)", "" ) + ;
+                iif( MEMORY( HB_MEM_USEDMAX ) != 0, " (FMSTAT)", "" )
+      #else
+         #ifdef __XPP__
+            return " (MT)"
+         #endif
+      #endif
+   #endif
 #endif
 return ""
 
 #ifdef FlagShip
-    function fs_seconds()
-    LOCAL_DOUBLE nret := 0
-    #Cinline
-    {
-        #include <sys/time.h>
-        struct timeval tv;
-        struct timezone tz;
-        if( !gettimeofday(&tv, NULL) )
-            nret = (double) tv.tv_sec + (double) (tv.tv_usec) / 1000000;
+   function fs_seconds()
+   LOCAL_DOUBLE nret := 0
+   #Cinline
+   {
+      #include <sys/time.h>
+      struct timeval tv;
+      struct timezone tz;
+      if( !gettimeofday(&tv, NULL) )
+         nret = (double) tv.tv_sec + (double) (tv.tv_usec) / 1000000;
 /*
-            nret = (double) (tv.tv_sec - tz.tz_minuteswest * 60 ) % 86400 +
-                   (double) tv.tv_usec / 1000000;
+         nret = (double) (tv.tv_sec - tz.tz_minuteswest * 60 ) % 86400 +
+                (double) tv.tv_usec / 1000000;
 */
-    }
-    #endCinline
-    return nret
+   }
+   #endCinline
+   return nret
 
-    #ifndef FlagShip5
-        FUNCTION cursesinit()
-        CALL fgsIoctl2
-        #Cinline
-        {
-            #include <fcntl.h>
-            int arg;
-            if ((arg = fcntl(0, F_GETFL, 0)) != -1)
-                fcntl(0, F_SETFL, arg | O_NONBLOCK);
-        }
-        #endCinline
-        return nil
-    #endif
+   #ifndef FlagShip5
+      FUNCTION cursesinit()
+      CALL fgsIoctl2
+      #Cinline
+      {
+         #include <fcntl.h>
+         int arg;
+         if ((arg = fcntl(0, F_GETFL, 0)) != -1)
+            fcntl(0, F_SETFL, arg | O_NONBLOCK);
+      }
+      #endCinline
+      return nil
+   #endif
 #endif
 
 #if __HARBOUR__ < 0x010100
@@ -578,7 +578,7 @@ STATIC FUNCTION HB_MTVM()
 #endif
 
 #ifndef __HARBOUR__
-STATIC FUNCTION hb_OSNewLine()
+STATIC FUNCTION hb_eol()
 #ifdef FlagShip
    RETURN Chr( 10 )
 #elif __CLIP__

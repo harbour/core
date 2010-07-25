@@ -336,7 +336,7 @@ METHOD New( aParams ) CLASS CODEFORMAT
    ELSEIF ::nEol == 1
       ::cEol := Chr( 13 ) + Chr( 10 )
    ELSEIF ::nEol == 0
-      ::cEol := hb_osNewLine()
+      ::cEol := hb_eol()
    ENDIF
    IF ::lIndent
       ::lNoTabs := .T.

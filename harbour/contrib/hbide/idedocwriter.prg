@@ -112,7 +112,7 @@
 
 FUNCTION hbide_getSVNHeader()
 
-   RETURN "/* " + CRLF + " * $Id:" + CRLF + " */" + CRLF + CRLF
+   RETURN "/* " + hb_eol() + " * $Id:" + hb_eol() + " */" + hb_eol() + hb_eol()
 
 /*----------------------------------------------------------------------*/
 
@@ -141,7 +141,7 @@ FUNCTION hbide_arg2memo( aArg )
    LOCAL s, cMemo := ""
 
    FOR EACH s IN aArg
-      cMemo += "<" + s + ">" + iif( s:__enumIndex() < len( aArg ), CRLF, "" )
+      cMemo += "<" + s + ">" + iif( s:__enumIndex() < len( aArg ), hb_eol(), "" )
    NEXT
 
    RETURN cMemo
@@ -622,7 +622,7 @@ METHOD IdeDocWriter:saveInFile()
    IF !empty( cFile )
       cBuffer := hb_memoread( cFile )
       cBuffer := iif( "$Id:" $ cBuffer, cBuffer, hbide_getSVNHeader() + cBuffer )
-      cBuffer += CRLF
+      cBuffer += hb_eol()
       cBuffer += hbide_arrayToMemo( txt_ )
 
       hb_memowrit( cFile, cBuffer )
@@ -749,5 +749,3 @@ METHOD IdeDocWriter:buildDocument()
    RETURN txt_
 
 /*----------------------------------------------------------------------*/
-
-

@@ -967,8 +967,8 @@ METHOD IdeSetup:destroy()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeSetup:eol()
-   RETURN iif( ::oINI:cLineEndingMode == "CRLF", CRLF, iif( ::oINI:cLineEndingMode == "CR", chr( 13 ), ;
-                                                         iif( ::oINI:cLineEndingMode == "LF", chr( 10 ), CRLF ) ) )
+   RETURN iif( ::oINI:cLineEndingMode == "CRLF", hb_eol(), iif( ::oINI:cLineEndingMode == "CR", chr( 13 ), ;
+                                                         iif( ::oINI:cLineEndingMode == "LF", chr( 10 ), hb_eol() ) ) )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeSetup:setIcons()

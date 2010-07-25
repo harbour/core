@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   CT3 function test for 
+ *   CT3 function test for
  *     - EXPONENT
  *     - MANTISSA
  *
@@ -55,24 +55,24 @@
 
 PROCEDURE MAIN
 
-local n
+   local n
 
- CTINIT()
+   CTINIT()
 
- SET DECIMALS TO 15
+   SET DECIMALS TO 15
 
- for n := 1 to 1000
-   outstd (str(n,20,15)+": "+str(mantissa(n),20,15)+" "+str(exponent(n),4) + hb_osnewline())
-   outstd (str(sqrt(n),20,15)+": "+str(mantissa(sqrt(n)),20,15)+" "+str(exponent(sqrt(n)),4) + hb_osnewline())
- next n
+   for n := 1 to 1000
+      outstd (str(n,20,15)+": "+str(mantissa(n),20,15)+" "+str(exponent(n),4) + hb_eol())
+      outstd (str(sqrt(n),20,15)+": "+str(mantissa(sqrt(n)),20,15)+" "+str(exponent(sqrt(n)),4) + hb_eol())
+   next n
 
 // The call to str( infinity(.t.) ), generate a GPF.
 // outstd (str(infinity(.t.))+str(mantissa( infinity(.t.) ))+str(exponent( infinity(.t.) )))
 // outstd (str(infinity(.t.)) )
 
- outstd ("       infinity(.t.): "+str(mantissa(infinity(.t.)),20,15)+" ")
- outstd (str(exponent(infinity(.t.)),4)+hb_osnewline())
+   outstd ("       infinity(.t.): "+str(mantissa(infinity(.t.)),20,15)+" ")
+   outstd (str(exponent(infinity(.t.)),4)+hb_eol())
 
- CTEXIT() 
+   CTEXIT()
 
 RETURN

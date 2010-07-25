@@ -849,7 +849,7 @@ METHOD IdeEdit:copyBlockContents( aCord )
       ENDIF
 
       aadd( ::aBlockCopyContents, cLine )
-      cClip += cLine + iif( i < nB, hb_osNewLine(), iif( cLine == oLine, hb_osNewLine(), "" ) )
+      cClip += cLine + iif( i < nB, hb_eol(), iif( cLine == oLine, hb_eol(), "" ) )
    NEXT
 
  * HB_TRACE( HB_TR_ALWAYS, "copyBlockContents", cClip )
@@ -918,7 +918,7 @@ METHOD IdeEdit:pasteBlockContents( nMode )
       FOR i := 1 TO len( aCopy )
          qCursor:insertText( aCopy[ i ] )
          IF i < len( aCopy )
-            qCursor:insertText( hb_osNewLine() )
+            qCursor:insertText( hb_eol() )
          ENDIF
       NEXT
 
@@ -1271,7 +1271,7 @@ METHOD IdeEdit:getSelectedText()
 
       ENDIF
 
-      cClip += cLine + iif( i < nB, hb_osNewLine(), "" )
+      cClip += cLine + iif( i < nB, hb_eol(), "" )
    NEXT
 
    RETURN cClip
@@ -2542,4 +2542,3 @@ STATIC FUNCTION hbide_normalizeRect( aCord, nT, nL, nB, nR )
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
-

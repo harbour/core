@@ -1429,7 +1429,7 @@ STATIC PROCEDURE WriteToLog( cRequest )
                        LEFT( cRequest, AT( CR_LF, cRequest ) - 1 ) + '" ' + ;
                        LTRIM( STR( t_nStatusCode ) ) + " " + IIF( nSize == 0, "-", LTRIM( STR( nSize ) ) ) + ;
                        ' "' + IIF( Empty( cReferer ), "-", cReferer ) + '" "' + _SERVER[ "HTTP_USER_AGENT" ] + ;
-                       '"' + HB_OSNewLine()
+                       '"' + hb_eol()
 
       //hb_ToOutDebug( "AccessLog = %s \n\r", cAccess )
 
@@ -1445,7 +1445,7 @@ STATIC PROCEDURE WriteToLog( cRequest )
 
          cError := "[" + Left( aDays[ nDoW ], 3 ) + " " + aMonths[ nMonth ] + " " + StrZero( nDay, 2 ) + " " + ;
                    PadL( LTrim( cTime ), 8, "0" ) + " " + StrZero( nYear, 4 ) + "] [error] [client " + _SERVER[ "REMOTE_ADDR" ] + "] " + ;
-                   cErrorMsg + HB_OSNewLine()
+                   cErrorMsg + hb_eol()
 
          //hb_ToOutDebug( "ErrorLog = %s \n\r", cError )
 
@@ -2416,7 +2416,7 @@ STATIC FUNCTION uhttpd_DefError( oError )
 
    LOCAL n
    LOCAL cDateTime, cString
-   LOCAL cNewLine := hb_OSNewLine()
+   LOCAL cNewLine := hb_eol()
 
    // By default, division by zero results in zero
    IF oError:genCode == EG_ZERODIV .AND. ;

@@ -802,9 +802,9 @@ METHOD Log( ... ) CLASS tIPClient
          cMsg += iif( xVar:__enumIndex() < PCount() - 1, ", ", "" )
 
          IF xVar:__enumIndex() == PCount() - 1
-            cMsg += " )" + hb_osNewLine() + ">> "
+            cMsg += " )" + hb_eol() + ">> "
          ELSEIF xVar:__enumIndex() == PCount()
-            cMsg += " <<" + hb_osNewLine() + hb_osNewLine()
+            cMsg += " <<" + hb_eol() + hb_eol()
          ENDIF
       NEXT
 

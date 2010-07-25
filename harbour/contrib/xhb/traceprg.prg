@@ -56,8 +56,6 @@
 #define HB_SET_TRACESTACK_CURRENT 1
 #define HB_SET_TRACESTACK_ALL     2
 
-#define CRLF HB_OsNewLine()
-
 #xtranslate Write( <cString> ) => FWrite( FileHandle, <cString> ) //;HB_OutDebug( <cString> )
 
 STATIC s_lSET_TRACE      := .T.
@@ -150,20 +148,20 @@ FUNCTION TraceLog( ... )
    ENDIF
 
    IF nLevel > 1 .AND. ! ( ProcName( 2 ) == '' )
-      Write( ' Called from: '  + CRLF )
+      Write( ' Called from: '  + hb_eol() )
       nLevel := 1
       DO WHILE ! ( ( ProcName := ProcName( ++nLevel ) ) == '' )
-         Write( space(30) + ProcFile( nLevel ) + "->" + ProcName + '(' + LTrim( Str( Procline( nLevel ) ) ) + ')' + CRLF )
+         Write( space(30) + ProcFile( nLevel ) + "->" + ProcName + '(' + LTrim( Str( Procline( nLevel ) ) ) + ')' + hb_eol() )
       ENDDO
    ELSE
-      Write( CRLF )
+      Write( hb_eol() )
    ENDIF
 
    FOR EACH xParam IN HB_aParams()
-      Write( 'Type: ' + ValType( xParam ) + ' >>>' + hb_CStr( xParam ) + '<<<' + CRLF )
+      Write( 'Type: ' + ValType( xParam ) + ' >>>' + hb_CStr( xParam ) + '<<<' + hb_eol() )
    NEXT
 
-   Write( CRLF )
+   Write( hb_eol() )
 
    FClose( FileHandle )
 

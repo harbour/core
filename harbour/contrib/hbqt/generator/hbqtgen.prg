@@ -56,8 +56,6 @@
 
 #define _EOL   chr( 10 )
 
-STATIC s_NewLine
-STATIC s_PathSep
 STATIC isClassObject
 STATIC zWidget
 STATIC aCore    := {}
@@ -89,9 +87,6 @@ FUNCTION Main( ... )
       ENDIF
    ENDIF
 
-   s_NewLine := hb_OsNewLine()
-   s_PathSep := hb_OsPathSeparator()
-
    DispLogo()
 
    aParam := hb_AParams()
@@ -106,7 +101,7 @@ FUNCTION Main( ... )
          IF empty( cExt ) .or. !( lower( cExt ) == ".qtp" )
             cExt := ".qtp"
          ENDIF
-         x := iif( empty( cPath ), "", cPath + s_PathSep )+ cFile + cExt
+         x := iif( empty( cPath ), "", cPath + hb_ps() )+ cFile + cExt
          aadd( aPrjFiles, x )
 
       CASE right( cLParam,4 ) == ".qtp"
@@ -157,13 +152,13 @@ FUNCTION Main( ... )
    IF empty( cPathDoc )
       cPathDoc := hb_dirBase()
    ENDIF
-   IF Right( cPathOut, 1 ) == s_PathSep
+   IF Right( cPathOut, 1 ) == hb_ps()
       cPathOut := hb_StrShrink( cPathOut, 1 )
    ENDIF
-   IF Right( cPathIn, 1 ) == s_PathSep
+   IF Right( cPathIn, 1 ) == hb_ps()
       cPathIn := hb_StrShrink( cPathIn, 1 )
    ENDIF
-   IF Right( cPathDoc, 1 ) == s_PathSep
+   IF Right( cPathDoc, 1 ) == hb_ps()
       cPathDoc := hb_StrShrink( cPathDoc, 1 )
    ENDIF
 
@@ -191,7 +186,7 @@ STATIC FUNCTION ManageProject( cProFile, cPathIn, cPathOut, cPathDoc )
    hb_fNameSplit( cProFile, @cPath, @cFile, @cExt )
 
    IF empty( cPath )
-      cFile := cPathIn + s_PathSep + cProFile
+      cFile := cPathIn + hb_ps() + cProFile
    ELSE
       cFile := cProFile
    ENDIF
@@ -208,7 +203,7 @@ STATIC FUNCTION ManageProject( cProFile, cPathIn, cPathOut, cPathDoc )
    cpp_:={}
    prg_:={}
 
-   OutStd( "Processing: " + cFile + s_NewLine )
+   OutStd( "Processing: " + cFile + hb_eol() )
 
    cPrj  := memoread( cFile )
 
@@ -220,14 +215,14 @@ STATIC FUNCTION ManageProject( cProFile, cPathIn, cPathOut, cPathDoc )
       /* We must have a matching pair */
       nn := at( "*/", cPrj )
       IF nn == 0
-         OutStd( "Project file has unbalanced comment section..." + s_NewLine )
+         OutStd( "Project file has unbalanced comment section..." + hb_eol() )
          RETURN nil
       ENDIF
       cPrj := substr( cPrj, 1, n-1 ) + substr( cPrj, nn+2 )
    ENDDO
 
    /* Prepare to be parsed properly */
-   cPrj := strtran( cPrj, s_NewLine, _EOL )
+   cPrj := strtran( cPrj, hb_eol(), _EOL )
    cPrj := strtran( cPrj, chr( 13 )+chr( 10 ), _EOL )
    cPrj := strtran( cPrj, chr( 13 ), _EOL )
 
@@ -335,28 +330,28 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc )
    zWidget := cWidget
 
    IF empty( cPath )
-      cFile := cPathIn + s_PathSep + cProFile
+      cFile := cPathIn + hb_ps() + cProFile
    ELSE
       cFile := cProFile
    ENDIF
    IF ! hb_fileExists( cFile )
-      OutStd( "Cannot find: " + cFile + s_NewLine )
+      OutStd( "Cannot find: " + cFile + hb_eol() )
       RETURN { nil }
    ENDIF
 
    cQth := memoread( cFile )
    IF empty( cQth )
-      OutStd( "Cannot read: " + cFile + s_NewLine )
+      OutStd( "Cannot read: " + cFile + hb_eol() )
       RETURN { nil }
    ENDIF
 
-   OutStd( "Processing: " + cFile + s_NewLine )
+   OutStd( "Processing: " + cFile + hb_eol() )
 
    /* Prepare to be parsed properly */
-   IF ! hb_osNewLine() == _EOL
-      cQth := StrTran( cQth, hb_osNewLine(), _EOL )
+   IF ! hb_eol() == _EOL
+      cQth := StrTran( cQth, hb_eol(), _EOL )
    ENDIF
-   IF ! hb_osNewLine() == Chr( 13 ) + Chr( 10 )
+   IF ! hb_eol() == Chr( 13 ) + Chr( 10 )
       cQth := StrTran( cQth, Chr( 13 ) + Chr( 10 ), _EOL )
    ENDIF
 
@@ -774,18 +769,18 @@ FUNCTION GetSourcePathByLib( cWidget, cPathOut, cExt, cPre, cls_ )
    DEFAULT cPre TO ""
 
    IF ( n := ascan( cls_, {|e_| lower( e_[ 1 ] ) == "folder" .AND. !empty( e_[ 2 ] ) } ) ) > 0
-      cFileOut := iif( empty( cPathOut ), "", cPathOut + s_PathSep + cls_[ n,2 ] + s_pathSep ) + cPre + cWidget + cExt
+      cFileOut := iif( empty( cPathOut ), "", cPathOut + hb_ps() + cls_[ n,2 ] + hb_ps() ) + cPre + cWidget + cExt
    ELSE
       IF ascan( aGui, cWidget ) > 0
-         cFileOut := cPathOut + s_PathSep + "qtgui" + s_pathSep + cPre + cWidget + cExt
+         cFileOut := cPathOut + hb_ps() + "qtgui" + hb_ps() + cPre + cWidget + cExt
       ELSEIF ascan( aCore, cWidget ) > 0
-         cFileOut := cPathOut + s_PathSep + "qtcore" + s_pathSep + cPre + cWidget + cExt
+         cFileOut := cPathOut + hb_ps() + "qtcore" + hb_ps() + cPre + cWidget + cExt
       ELSEIF ascan( aWebkit, cWidget ) > 0
-         cFileOut := cPathOut + s_PathSep + "qtwebkit" + s_pathSep + cPre + cWidget + cExt
+         cFileOut := cPathOut + hb_ps() + "qtwebkit" + hb_ps() + cPre + cWidget + cExt
       ELSEIF ascan( aNetwork, cWidget ) > 0
-         cFileOut := cPathOut + s_PathSep + "qtnetwork" + s_pathSep + cPre + cWidget + cExt
+         cFileOut := cPathOut + hb_ps() + "qtnetwork" + hb_ps() + cPre + cWidget + cExt
       ELSE
-         cFileOut := cPathOut + s_PathSep + cPre + cWidget + cExt
+         cFileOut := cPathOut + hb_ps() + cPre + cWidget + cExt
       ENDIF
    ENDIF
 
@@ -1253,7 +1248,7 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_, lList, fB
                   cPrgRet := "p" + cDocNM
 
                ELSE
-                  OutStd( "<<< " + cProto + " | " + aA[ PRT_CAST ] + " >>>" + s_NewLine )
+                  OutStd( "<<< " + cProto + " | " + aA[ PRT_CAST ] + " >>>" + hb_eol() )
                   cCmd := ""
                   cPrgRet := ""
 
@@ -1437,7 +1432,7 @@ STATIC FUNCTION ParseVariables( cProto, cWidget, txt_, doc_, aEnum, func_ )
                   cPrgRet := "p" + cDocNM
 
                ELSE
-                  OutStd( "<<< " + cProto + " | " + aA[ PRT_CAST ] + " >>>"  + s_NewLine )
+                  OutStd( "<<< " + cProto + " | " + aA[ PRT_CAST ] + " >>>" + hb_eol() )
                   cCmd := ""
                   cPrgRet := ""
 
@@ -1595,19 +1590,19 @@ STATIC FUNCTION BuildFooter( txt_ )
 STATIC FUNCTION DispHelp()
    LOCAL cHlp := ""
 
-   cHlp += ""                                                                               + s_NewLine
-   cHlp += "Syntax:"                                                                        + s_NewLine
-   cHlp += "   hbqtgen.exe [Options] [[@]<QtProjectFile.qtp>] [<QtHeaderFile.qth, ...>]"    + s_NewLine
-   cHlp += ""                                                                               + s_NewLine
-   cHlp += "Options:"                                                                       + s_NewLine
-   cHlp += "   -O<OutputPath>   [ e.g. c:\harbour\contrib\hbqt ]        [D] Current folder" + s_NewLine
-   cHlp += "   -I<InputPath>    [ e.g. c:\harbour\contrib\hbqt\protos ] [D] Current folder" + s_NewLine
-   cHlp += "   -D<DocFilesPath> [ e.g. c:\harbour\contrib\hbqt\doc    ] [D] Current folder" + s_NewLine
-   cHlp += " "                                                                              + s_NewLine
-   cHlp += "   -c<compile>      If QT env is set, attempts to compile resulting .cpp"       + s_NewLine
-   cHlp += ""                                                                               + s_NewLine
-   cHlp += "   -noretobject     Skip object returning methods"                              + s_NewLine
-   cHlp += ""                                                                               + s_NewLine
+   cHlp += ""                                                                               + hb_eol()
+   cHlp += "Syntax:"                                                                        + hb_eol()
+   cHlp += "   hbqtgen.exe [Options] [[@]<QtProjectFile.qtp>] [<QtHeaderFile.qth, ...>]"    + hb_eol()
+   cHlp += ""                                                                               + hb_eol()
+   cHlp += "Options:"                                                                       + hb_eol()
+   cHlp += "   -O<OutputPath>   [ e.g. c:\harbour\contrib\hbqt ]        [D] Current folder" + hb_eol()
+   cHlp += "   -I<InputPath>    [ e.g. c:\harbour\contrib\hbqt\protos ] [D] Current folder" + hb_eol()
+   cHlp += "   -D<DocFilesPath> [ e.g. c:\harbour\contrib\hbqt\doc    ] [D] Current folder" + hb_eol()
+   cHlp += " "                                                                              + hb_eol()
+   cHlp += "   -c<compile>      If QT env is set, attempts to compile resulting .cpp"       + hb_eol()
+   cHlp += ""                                                                               + hb_eol()
+   cHlp += "   -noretobject     Skip object returning methods"                              + hb_eol()
+   cHlp += ""                                                                               + hb_eol()
 
    OutStd( cHlp )
 
@@ -1618,11 +1613,11 @@ STATIC FUNCTION DispHelp()
 STATIC FUNCTION DispLogo()
    LOCAL cHlp := ""
 
-   cHlp += ""                                                        + s_NewLine
-   cHlp += "Harbour Source Generator for QT " + HBRawVersion()       + s_NewLine
-   cHlp += "Copyright (c) 2009, Pritpal Bedi <pritpal@vouchcac.com>" + s_NewLine
-   cHlp += "http://harbour-project.org/"                             + s_NewLine
-   cHlp += ""                                                        + s_NewLine
+   cHlp += ""                                                        + hb_eol()
+   cHlp += "Harbour Source Generator for QT " + HBRawVersion()       + hb_eol()
+   cHlp += "Copyright (c) 2009, Pritpal Bedi <pritpal@vouchcac.com>" + hb_eol()
+   cHlp += "http://harbour-project.org/"                             + hb_eol()
+   cHlp += ""                                                        + hb_eol()
 
    OutStd( cHlp )
 
@@ -1638,12 +1633,12 @@ STATIC FUNCTION HBRawVersion()
 STATIC FUNCTION CreateTarget( cFile, txt_ )
    LOCAL cContent := ""
 
-   AEval( txt_, { |e| cContent += RTrim( e ) + hb_osNewLine() } )
+   AEval( txt_, { |e| cContent += RTrim( e ) + hb_eol() } )
 
    /* Save it only if it has changed. */
    IF !( hb_MemoRead( cFile ) == cContent )
 
-      OutStd( "Creating: " + cFile + hb_osNewLine() )
+      OutStd( "Creating: " + cFile + hb_eol() )
 
       hb_MemoWrit( cFile, cContent )
    ENDIF
@@ -1857,14 +1852,14 @@ STATIC FUNCTION Build_Document( cWidget, cls_, doc_, cPathDoc, subCls_, docum_ )
    aadd( txt_, "    $END$         " )
    aadd( txt_, " */               " )
 
-   cFile := cPathDoc + s_PathSep + "en" + s_PathSep + "class_" + lower( cWidget ) + ".txt"
+   cFile := cPathDoc + hb_ps() + "en" + hb_ps() + "class_" + lower( cWidget ) + ".txt"
 
    RETURN CreateTarget( cFile, txt_ )
 
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION Build_GarbageFile( cpp_, cPathOut )
-   LOCAL cFile := iif( empty( cPathOut ), "", cPathOut + s_PathSep ) + "hbqt_garbage.h"
+   LOCAL cFile := iif( empty( cPathOut ), "", cPathOut + hb_ps() ) + "hbqt_garbage.h"
    LOCAL txt_ := {}
    LOCAL s
 
@@ -1940,7 +1935,7 @@ STATIC FUNCTION Build_MakeFile( cpp_, prg_, cPathOut )
          aadd( hbm_, + "T" + s + ".prg" )
       NEXT
       //
-      cFile := iif( empty( cPathOut ), "", cPathOut + s_PathSep + aSubs[ i, 1 ] + s_PathSep )
+      cFile := iif( empty( cPathOut ), "", cPathOut + hb_ps() + aSubs[ i, 1 ] + hb_ps() )
       CreateTarget( cFile + "filelist.hbm", hbm_ )
    NEXT
 
@@ -1951,7 +1946,7 @@ STATIC FUNCTION Build_MakeFile( cpp_, prg_, cPathOut )
 #define  CRLF   chr( 13 )+chr( 10 )
 
 FUNCTION Build_HTML( cWidget, aHM_, aHF_, cPathOut, docum_ )
-   LOCAL cFile := cPathOut + s_PathSep + "html" + s_PathSep + cWidget + ".htm"
+   LOCAL cFile := cPathOut + hb_ps() + "html" + hb_ps() + cWidget + ".htm"
    LOCAL i, j, s, nCounter := 0, cPara
    LOCAL nCols, aHTML
    LOCAL setColorBG, setColorText, setColorTable

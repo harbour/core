@@ -36,17 +36,17 @@ PROCEDURE Main()
             ProcessHeader( aStuff, cHeaderDir + hb_osPathSeparator() + tmp1, cName, tmp1 )
 //          ASort( aStuff[ 2 ],,, {| x, y | x[ 1 ] < y[ 1 ] } )
 //          FOR EACH tmp2 IN aStuff[ 2 ]
-//             OutStd( aType[ tmp2[ 1 ] ], tmp2[ 2 ], hb_osNewLine() )
+//             OutStd( aType[ tmp2[ 1 ] ], tmp2[ 2 ], hb_eol() )
 //          NEXT
             IF Len( aStuff[ 1 ] ) >= 2
                cFile := ""
-               cFile += hb_osNewLine()
-               cFile += "<CLASS>" + hb_osNewLine()
-               cFile += "QObject = " + iif( aStuff[ 1 ][ 1 ], "yes", "no" ) + hb_osNewLine()
-               cFile += "Inherit = " + aStuff[ 1 ][ 2 ] + hb_osNewLine()
-               cFile += "Type = " + cName + hb_osNewLine()
-               cFile += "New = " + "" + hb_osNewLine()
-               cFile += "</CLASS>" + hb_osNewLine()
+               cFile += hb_eol()
+               cFile += "<CLASS>" + hb_eol()
+               cFile += "QObject = " + iif( aStuff[ 1 ][ 1 ], "yes", "no" ) + hb_eol()
+               cFile += "Inherit = " + aStuff[ 1 ][ 2 ] + hb_eol()
+               cFile += "Type = " + cName + hb_eol()
+               cFile += "New = " + "" + hb_eol()
+               cFile += "</CLASS>" + hb_eol()
                DumpToQTH( @cFile, aStuff, QM_ENUM   )
                DumpToQTH( @cFile, aStuff, QM_METHOD )
                DumpToQTH( @cFile, aStuff, QM_SLOT   )
@@ -68,14 +68,14 @@ STATIC PROCEDURE DumpToQTH( cFile, aStuff, nType )
       "SLOT"   ,;
       "SIGNAL" }
 
-   cFile += hb_osNewLine()
-   cFile += "<" + aType[ nType ] + ">" + hb_osNewLine()
+   cFile += hb_eol()
+   cFile += "<" + aType[ nType ] + ">" + hb_eol()
    FOR EACH tmp IN aStuff[ 2 ]
       IF tmp[ 1 ] == nType
-         cFile += tmp[ 2 ] + hb_osNewLine()
+         cFile += tmp[ 2 ] + hb_eol()
       ENDIF
    NEXT
-   cFile += "</" + aType[ nType ] + ">" + hb_osNewLine()
+   cFile += "</" + aType[ nType ] + ">" + hb_eol()
 
    RETURN
 
@@ -87,7 +87,7 @@ STATIC PROCEDURE ProcessHeader( aStuff, cFileName, cLib, cOriFileName )
    LOCAL cHeader
    LOCAL cDir
 
-   OutStd( "Loading:", cFileName, hb_osNewLine() )
+   OutStd( "Loading:", cFileName, hb_eol() )
 
    nPos := 1
    IF ( tmp := hb_At( '#include "', cFile, nPos ) ) > 0

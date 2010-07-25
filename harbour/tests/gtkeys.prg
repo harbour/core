@@ -11,7 +11,6 @@
  *
  */
 
-
 #include "inkey.ch"
 #ifdef __HARBOUR__
 #include "hbgtinfo.ch"
@@ -216,43 +215,43 @@ setcancel(.f.)
 //altd(0)
 
 #ifdef __HARBOUR__
-  set(_SET_EVENTMASK,INKEY_ALL)
-  hb_gtInfo(HB_GTI_ESCDELAY,50)
-  hb_cdpSelect( "PLMAZ" )
-  hb_setTermCP( "PLISO" )
-  ? hb_gtVersion(1), hb_gtVersion()
+   set(_SET_EVENTMASK,INKEY_ALL)
+   hb_gtInfo(HB_GTI_ESCDELAY,50)
+   hb_cdpSelect( "PLMAZ" )
+   hb_setTermCP( "PLISO" )
+   ? hb_gtVersion(1), hb_gtVersion()
 #endif
 
 ? "@ - interrupt, keycodes checking: "
 ?
 while (.t.)
-  k:=inkey(0,INKEY_ALL)
-  if (i:=ascan(aKeys, { |x| x[2]==k }))!=0
-    ? " key:"+str(aKeys[i,2],7)+"  "+padr(aKeys[i,1],18)+aKeys[i,3]
-  elseif k>=32 .and. k<=126 .or. (k>=160 .and. k<=255) .or. IsAlpha(chr(k))
-    ? "char:"+str(k,7)+"  "+chr(k)
-  else
-    ? " key:"+str(k,7)
-  endif
-//  ?? "  ("+ltrim(str(maxrow()))+":"+ltrim(str(maxcol()))+")"
+   k:=inkey(0,INKEY_ALL)
+   if (i:=ascan(aKeys, { |x| x[2]==k }))!=0
+      ? " key:"+str(aKeys[i,2],7)+"  "+padr(aKeys[i,1],18)+aKeys[i,3]
+   elseif k>=32 .and. k<=126 .or. (k>=160 .and. k<=255) .or. IsAlpha(chr(k))
+      ? "char:"+str(k,7)+"  "+chr(k)
+   else
+      ? " key:"+str(k,7)
+   endif
+//    ?? "  ("+ltrim(str(maxrow()))+":"+ltrim(str(maxcol()))+")"
 
-  if k==asc("@") .and. nextkey()==0
-    exit
+   if k==asc("@") .and. nextkey()==0
+      exit
 #ifdef __HARBOUR__
-  elseif k==K_CTRL_INS
-    if alert( "Would you like to show clipboard text?", { "YES", "NO" } ) == 1
-      s := hb_gtInfo( HB_GTI_CLIPBOARDDATA )
-      ? "Clipboard text: [" + s + "]"
-    endif
-  elseif k==K_CTRL_END
-    if alert( "Would you like to set clipboard text?", { "YES", "NO" } ) == 1
-      s := hb_tstostr( hb_datetime() ) + hb_osNewLine() + ;
-           "Harbour " + hb_gtVersion() + " clipboard test" + hb_osNewLine()
-      ? "New clipboard text: [" + s + "]"
-      hb_gtInfo( HB_GTI_CLIPBOARDDATA, s )
-    endif
+   elseif k==K_CTRL_INS
+      if alert( "Would you like to show clipboard text?", { "YES", "NO" } ) == 1
+         s := hb_gtInfo( HB_GTI_CLIPBOARDDATA )
+         ? "Clipboard text: [" + s + "]"
+      endif
+   elseif k==K_CTRL_END
+      if alert( "Would you like to set clipboard text?", { "YES", "NO" } ) == 1
+         s := hb_tstostr( hb_datetime() ) + hb_eol() + ;
+              "Harbour " + hb_gtVersion() + " clipboard test" + hb_eol()
+         ? "New clipboard text: [" + s + "]"
+         hb_gtInfo( HB_GTI_CLIPBOARDDATA, s )
+      endif
 #endif
-  endif
+   endif
 enddo
 ?
 return nil

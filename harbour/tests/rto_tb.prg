@@ -68,7 +68,7 @@
 #include "fileio.ch"
 
 #ifndef __HARBOUR__
-   #define hb_OSNewLine() ( Chr( 13 ) + Chr( 10 ) )
+   #xtranslate hb_eol() => ( Chr( 13 ) + Chr( 10 ) )
 #endif
 
 #ifdef __XHARBOUR__
@@ -422,9 +422,9 @@ PROCEDURE LogMe( data, desc )
    ENDIF
 
    IF PCount() > 2
-      FWrite( s_fhnd, cStack + "BLOCK_SET  " + iif( data == NIL, "NIL", data ) + "  " + desc + hb_OSNewLine() )
+      FWrite( s_fhnd, cStack + "BLOCK_SET  " + iif( data == NIL, "NIL", data ) + "  " + desc + hb_eol() )
    ELSE
-      FWrite( s_fhnd, cStack + "BLOCK_GET  " + desc + hb_OSNewLine() )
+      FWrite( s_fhnd, cStack + "BLOCK_GET  " + desc + hb_eol() )
    ENDIF
 
    RETURN
@@ -449,38 +449,38 @@ PROCEDURE LogTBRVars( o, desc, xResult )
    ENDIF
    desc := s_cTest + " " + XToStr( desc )
 
-   FWrite( s_fhnd, cStack + "  " + desc + hb_OSNewLine() )
-   FWrite( s_fhnd, "---------------------" + hb_OSNewLine() )
-   FWrite( s_fhnd, "   s_xVar        " + XToStr( s_xVar          ) + hb_OSNewLine() )
-   FWrite( s_fhnd, "   xResult       " + XToStr( xResult         ) + hb_OSNewLine() )
-   FWrite( s_fhnd, "   Row()         " + XToStr( Row()           ) + hb_OSNewLine() )
-   FWrite( s_fhnd, "   Col()         " + XToStr( Col()           ) + hb_OSNewLine() )
-   FWrite( s_fhnd, "   AutoLite      " + XToStr( o:AutoLite      ) + hb_OSNewLine() )
-   FWrite( s_fhnd, "   Cargo         " + XToStr( o:Cargo         ) + hb_OSNewLine() )
-   FWrite( s_fhnd, "   ColCount      " + XToStr( o:ColCount      ) + hb_OSNewLine() )
-   FWrite( s_fhnd, "   ColorSpec     " + XToStr( o:ColorSpec     ) + hb_OSNewLine() )
-   FWrite( s_fhnd, "   ColPos        " + XToStr( o:ColPos        ) + hb_OSNewLine() )
-   FWrite( s_fhnd, "   ColSep        " + XToStr( o:ColSep        ) + hb_OSNewLine() )
-   FWrite( s_fhnd, "   FootSep       " + XToStr( o:FootSep       ) + hb_OSNewLine() )
-   FWrite( s_fhnd, "   Freeze        " + XToStr( o:Freeze        ) + hb_OSNewLine() )
-   FWrite( s_fhnd, "   GoBottomBlock " + XToStr( o:GoBottomBlock ) + hb_OSNewLine() )
-   FWrite( s_fhnd, "   GoTopBlock    " + XToStr( o:GoTopBlock    ) + hb_OSNewLine() )
-   FWrite( s_fhnd, "   HeadSep       " + XToStr( o:HeadSep       ) + hb_OSNewLine() )
-   FWrite( s_fhnd, "   HitBottom     " + XToStr( o:HitBottom     ) + hb_OSNewLine() )
-   FWrite( s_fhnd, "   HitTop        " + XToStr( o:HitTop        ) + hb_OSNewLine() )
-   FWrite( s_fhnd, "   LeftVisible   " + XToStr( o:LeftVisible   ) + hb_OSNewLine() )
-   FWrite( s_fhnd, "   nBottom       " + XToStr( o:nBottom       ) + hb_OSNewLine() )
-   FWrite( s_fhnd, "   nLeft         " + XToStr( o:nLeft         ) + hb_OSNewLine() )
-   FWrite( s_fhnd, "   nRight        " + XToStr( o:nRight        ) + hb_OSNewLine() )
-   FWrite( s_fhnd, "   nTop          " + XToStr( o:nTop          ) + hb_OSNewLine() )
-   FWrite( s_fhnd, "   RightVisible  " + XToStr( o:RightVisible  ) + hb_OSNewLine() )
-   FWrite( s_fhnd, "   RowCount      " + XToStr( o:RowCount      ) + hb_OSNewLine() )
-   FWrite( s_fhnd, "   RowPos        " + XToStr( o:RowPos        ) + hb_OSNewLine() )
-   FWrite( s_fhnd, "   SkipBlock     " + XToStr( o:SkipBlock     ) + hb_OSNewLine() )
-   FWrite( s_fhnd, "   Stable        " + XToStr( o:Stable        ) + hb_OSNewLine() )
+   FWrite( s_fhnd, cStack + "  " + desc + hb_eol() )
+   FWrite( s_fhnd, "---------------------" + hb_eol() )
+   FWrite( s_fhnd, "   s_xVar        " + XToStr( s_xVar          ) + hb_eol() )
+   FWrite( s_fhnd, "   xResult       " + XToStr( xResult         ) + hb_eol() )
+   FWrite( s_fhnd, "   Row()         " + XToStr( Row()           ) + hb_eol() )
+   FWrite( s_fhnd, "   Col()         " + XToStr( Col()           ) + hb_eol() )
+   FWrite( s_fhnd, "   AutoLite      " + XToStr( o:AutoLite      ) + hb_eol() )
+   FWrite( s_fhnd, "   Cargo         " + XToStr( o:Cargo         ) + hb_eol() )
+   FWrite( s_fhnd, "   ColCount      " + XToStr( o:ColCount      ) + hb_eol() )
+   FWrite( s_fhnd, "   ColorSpec     " + XToStr( o:ColorSpec     ) + hb_eol() )
+   FWrite( s_fhnd, "   ColPos        " + XToStr( o:ColPos        ) + hb_eol() )
+   FWrite( s_fhnd, "   ColSep        " + XToStr( o:ColSep        ) + hb_eol() )
+   FWrite( s_fhnd, "   FootSep       " + XToStr( o:FootSep       ) + hb_eol() )
+   FWrite( s_fhnd, "   Freeze        " + XToStr( o:Freeze        ) + hb_eol() )
+   FWrite( s_fhnd, "   GoBottomBlock " + XToStr( o:GoBottomBlock ) + hb_eol() )
+   FWrite( s_fhnd, "   GoTopBlock    " + XToStr( o:GoTopBlock    ) + hb_eol() )
+   FWrite( s_fhnd, "   HeadSep       " + XToStr( o:HeadSep       ) + hb_eol() )
+   FWrite( s_fhnd, "   HitBottom     " + XToStr( o:HitBottom     ) + hb_eol() )
+   FWrite( s_fhnd, "   HitTop        " + XToStr( o:HitTop        ) + hb_eol() )
+   FWrite( s_fhnd, "   LeftVisible   " + XToStr( o:LeftVisible   ) + hb_eol() )
+   FWrite( s_fhnd, "   nBottom       " + XToStr( o:nBottom       ) + hb_eol() )
+   FWrite( s_fhnd, "   nLeft         " + XToStr( o:nLeft         ) + hb_eol() )
+   FWrite( s_fhnd, "   nRight        " + XToStr( o:nRight        ) + hb_eol() )
+   FWrite( s_fhnd, "   nTop          " + XToStr( o:nTop          ) + hb_eol() )
+   FWrite( s_fhnd, "   RightVisible  " + XToStr( o:RightVisible  ) + hb_eol() )
+   FWrite( s_fhnd, "   RowCount      " + XToStr( o:RowCount      ) + hb_eol() )
+   FWrite( s_fhnd, "   RowPos        " + XToStr( o:RowPos        ) + hb_eol() )
+   FWrite( s_fhnd, "   SkipBlock     " + XToStr( o:SkipBlock     ) + hb_eol() )
+   FWrite( s_fhnd, "   Stable        " + XToStr( o:Stable        ) + hb_eol() )
 #ifdef HB_COMPAT_C53
-   FWrite( s_fhnd, "   border       " + XToStr( o:border        ) + hb_OSNewLine() )
-   FWrite( s_fhnd, "   message      " + XToStr( o:message       ) + hb_OSNewLine() )
+   FWrite( s_fhnd, "   border       " + XToStr( o:border        ) + hb_eol() )
+   FWrite( s_fhnd, "   message      " + XToStr( o:message       ) + hb_eol() )
 #endif
    IF s_lObjectDump
 #ifdef __HARBOUR__
@@ -494,34 +494,34 @@ PROCEDURE LogTBRVars( o, desc, xResult )
 #endif
          /* [14] is binary data, not replicated in Harbour. */
          IF tmp != 14
-            FWrite( s_fhnd, "   [ " + Str( tmp, 3 ) + " ]       " + XToStrX( o[ tmp ] ) + hb_OSNewLine() )
+            FWrite( s_fhnd, "   [ " + Str( tmp, 3 ) + " ]       " + XToStrX( o[ tmp ] ) + hb_eol() )
          ENDIF
       NEXT
    ENDIF
    FOR tmp := 1 TO o:colCount
-      FWrite( s_fhnd, "   Column: " + StrZero( tmp, 3 ) + hb_OSNewLine() )
+      FWrite( s_fhnd, "   Column: " + StrZero( tmp, 3 ) + hb_eol() )
       col := o:GetColumn( tmp )
       IF ISOBJECT( col )
-         FWrite( s_fhnd, "      Block         " + XToStr( col:Block       ) + hb_OSNewLine() )
-         FWrite( s_fhnd, "      Cargo         " + XToStr( col:Cargo       ) + hb_OSNewLine() )
-         FWrite( s_fhnd, "      ColorBlock    " + XToStr( col:ColorBlock  ) + hb_OSNewLine() )
-         FWrite( s_fhnd, "      ColSep        " + XToStr( col:ColSep      ) + hb_OSNewLine() )
-         FWrite( s_fhnd, "      DefColor      " + XToStr( col:DefColor    ) + hb_OSNewLine() )
-         FWrite( s_fhnd, "      Footing       " + XToStr( col:Footing     ) + hb_OSNewLine() )
-         FWrite( s_fhnd, "      FootSep       " + XToStr( col:FootSep     ) + hb_OSNewLine() )
-         FWrite( s_fhnd, "      Heading       " + XToStr( col:Heading     ) + hb_OSNewLine() )
-         FWrite( s_fhnd, "      HeadSep       " + XToStr( col:HeadSep     ) + hb_OSNewLine() )
-         FWrite( s_fhnd, "      Picture       " + XToStr( col:Picture     ) + hb_OSNewLine() )
-         FWrite( s_fhnd, "      Width         " + XToStr( col:Width       ) + hb_OSNewLine() )
+         FWrite( s_fhnd, "      Block         " + XToStr( col:Block       ) + hb_eol() )
+         FWrite( s_fhnd, "      Cargo         " + XToStr( col:Cargo       ) + hb_eol() )
+         FWrite( s_fhnd, "      ColorBlock    " + XToStr( col:ColorBlock  ) + hb_eol() )
+         FWrite( s_fhnd, "      ColSep        " + XToStr( col:ColSep      ) + hb_eol() )
+         FWrite( s_fhnd, "      DefColor      " + XToStr( col:DefColor    ) + hb_eol() )
+         FWrite( s_fhnd, "      Footing       " + XToStr( col:Footing     ) + hb_eol() )
+         FWrite( s_fhnd, "      FootSep       " + XToStr( col:FootSep     ) + hb_eol() )
+         FWrite( s_fhnd, "      Heading       " + XToStr( col:Heading     ) + hb_eol() )
+         FWrite( s_fhnd, "      HeadSep       " + XToStr( col:HeadSep     ) + hb_eol() )
+         FWrite( s_fhnd, "      Picture       " + XToStr( col:Picture     ) + hb_eol() )
+         FWrite( s_fhnd, "      Width         " + XToStr( col:Width       ) + hb_eol() )
 #ifdef HB_COMPAT_C53
-         FWrite( s_fhnd, "      preBlock      " + XToStr( col:preBlock    ) + hb_OSNewLine() )
-         FWrite( s_fhnd, "      postBlock     " + XToStr( col:postBlock   ) + hb_OSNewLine() )
+         FWrite( s_fhnd, "      preBlock      " + XToStr( col:preBlock    ) + hb_eol() )
+         FWrite( s_fhnd, "      postBlock     " + XToStr( col:postBlock   ) + hb_eol() )
 #endif
       ELSE
-         FWrite( s_fhnd, "      Col:          " + XToStr( col             ) + hb_OSNewLine() )
+         FWrite( s_fhnd, "      Col:          " + XToStr( col             ) + hb_eol() )
       ENDIF
    NEXT
-   FWrite( s_fhnd, "---------------------" + hb_OSNewLine() )
+   FWrite( s_fhnd, "---------------------" + hb_eol() )
 
    RETURN
 
@@ -544,25 +544,25 @@ PROCEDURE LogTBCVars( o, desc, xResult )
    ENDIF
    desc := s_cTest + " " + XToStr( desc )
 
-   FWrite( s_fhnd, cStack + "  " + desc + hb_OSNewLine() )
-   FWrite( s_fhnd, "---------------------" + hb_OSNewLine() )
-   FWrite( s_fhnd, "   s_xVar        " + XToStr( s_xVar        ) + hb_OSNewLine() )
-   FWrite( s_fhnd, "   xResult       " + XToStr( xResult       ) + hb_OSNewLine() )
+   FWrite( s_fhnd, cStack + "  " + desc + hb_eol() )
+   FWrite( s_fhnd, "---------------------" + hb_eol() )
+   FWrite( s_fhnd, "   s_xVar        " + XToStr( s_xVar        ) + hb_eol() )
+   FWrite( s_fhnd, "   xResult       " + XToStr( xResult       ) + hb_eol() )
    IF ISOBJECT( o )
-      FWrite( s_fhnd, "   Block         " + XToStr( o:Block       ) + hb_OSNewLine() )
-      FWrite( s_fhnd, "   Cargo         " + XToStr( o:Cargo       ) + hb_OSNewLine() )
-      FWrite( s_fhnd, "   ColorBlock    " + XToStr( o:ColorBlock  ) + hb_OSNewLine() )
-      FWrite( s_fhnd, "   ColSep        " + XToStr( o:ColSep      ) + hb_OSNewLine() )
-      FWrite( s_fhnd, "   DefColor      " + XToStr( o:DefColor    ) + hb_OSNewLine() )
-      FWrite( s_fhnd, "   Footing       " + XToStr( o:Footing     ) + hb_OSNewLine() )
-      FWrite( s_fhnd, "   FootSep       " + XToStr( o:FootSep     ) + hb_OSNewLine() )
-      FWrite( s_fhnd, "   Heading       " + XToStr( o:Heading     ) + hb_OSNewLine() )
-      FWrite( s_fhnd, "   HeadSep       " + XToStr( o:HeadSep     ) + hb_OSNewLine() )
-      FWrite( s_fhnd, "   Picture       " + XToStr( o:Picture     ) + hb_OSNewLine() )
-      FWrite( s_fhnd, "   Width         " + XToStr( o:Width       ) + hb_OSNewLine() )
+      FWrite( s_fhnd, "   Block         " + XToStr( o:Block       ) + hb_eol() )
+      FWrite( s_fhnd, "   Cargo         " + XToStr( o:Cargo       ) + hb_eol() )
+      FWrite( s_fhnd, "   ColorBlock    " + XToStr( o:ColorBlock  ) + hb_eol() )
+      FWrite( s_fhnd, "   ColSep        " + XToStr( o:ColSep      ) + hb_eol() )
+      FWrite( s_fhnd, "   DefColor      " + XToStr( o:DefColor    ) + hb_eol() )
+      FWrite( s_fhnd, "   Footing       " + XToStr( o:Footing     ) + hb_eol() )
+      FWrite( s_fhnd, "   FootSep       " + XToStr( o:FootSep     ) + hb_eol() )
+      FWrite( s_fhnd, "   Heading       " + XToStr( o:Heading     ) + hb_eol() )
+      FWrite( s_fhnd, "   HeadSep       " + XToStr( o:HeadSep     ) + hb_eol() )
+      FWrite( s_fhnd, "   Picture       " + XToStr( o:Picture     ) + hb_eol() )
+      FWrite( s_fhnd, "   Width         " + XToStr( o:Width       ) + hb_eol() )
 #ifdef HB_COMPAT_C53
-      FWrite( s_fhnd, "   preBlock      " + XToStr( o:preBlock    ) + hb_OSNewLine() )
-      FWrite( s_fhnd, "   postBlock     " + XToStr( o:postBlock   ) + hb_OSNewLine() )
+      FWrite( s_fhnd, "   preBlock      " + XToStr( o:preBlock    ) + hb_eol() )
+      FWrite( s_fhnd, "   postBlock     " + XToStr( o:postBlock   ) + hb_eol() )
 #endif
       IF s_lObjectDump
 #ifdef __HARBOUR__
@@ -574,13 +574,13 @@ PROCEDURE LogTBCVars( o, desc, xResult )
 #else
          FOR tmp := 1 TO Len( o )
 #endif
-            FWrite( s_fhnd, "   [ " + Str( tmp, 3 ) + " ]       " + XToStrX( o[ tmp ] ) + hb_OSNewLine() )
+            FWrite( s_fhnd, "   [ " + Str( tmp, 3 ) + " ]       " + XToStrX( o[ tmp ] ) + hb_eol() )
          NEXT
       ENDIF
    ELSE
-      FWrite( s_fhnd, "   o             " + XToStr( o ) + hb_OSNewLine() )
+      FWrite( s_fhnd, "   o             " + XToStr( o ) + hb_eol() )
    ENDIF
-   FWrite( s_fhnd, "---------------------" + hb_OSNewLine() )
+   FWrite( s_fhnd, "---------------------" + hb_eol() )
 
    RETURN
 

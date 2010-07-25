@@ -86,13 +86,13 @@ PROCEDURE Main( cScript )
 
       IF Empty( cScriptName )
          IF !Empty( GetEnv( "SERVER_NAME" ) )
-            OutStd( "content-type: text/html" + hb_OSNewLine() )
-            OutStd( hb_OSNewLine() )
-            OutStd( "<HTML><BODY><H1>Server Error</H1><P>" + hb_OSNewLine() )
-            OutStd( "Must specify scriptname using hscript.exe?script=<scriptname>" + hb_OSNewLine() )
-            OutStd( "</BODY></HTML>" + hb_OSNewLine() )
+            OutStd( "content-type: text/html" + hb_eol() )
+            OutStd( hb_eol() )
+            OutStd( "<HTML><BODY><H1>Server Error</H1><P>" + hb_eol() )
+            OutStd( "Must specify scriptname using hscript.exe?script=<scriptname>" + hb_eol() )
+            OutStd( "</BODY></HTML>" + hb_eol() )
          ELSE
-            OutStd( "Please give .hs name" + hb_OSNewLine() )
+            OutStd( "Please give .hs name" + hb_eol() )
          ENDIF
          EXIT
       ENDIF
@@ -100,9 +100,9 @@ PROCEDURE Main( cScript )
       // Script not found
       IF !File( cScriptName )
          IF !Empty( GetEnv( "SERVER_NAME" ) )
-            OutStd( "CONTENT-TYPE: text/html" + hb_OSNewLine() )
+            OutStd( "CONTENT-TYPE: text/html" + hb_eol() )
          ENDIF
-         OutStd( "<H1>Server Error</H1><P>Script not found: " + cScriptName + hb_OSNewLine() )
+         OutStd( "<H1>Server Error</H1><P>Script not found: " + cScriptName + hb_eol() )
          EXIT
       ENDIF
 
@@ -129,7 +129,7 @@ PROCEDURE Main( cScript )
                   // Abre script
                   IF i > 1
                      //cTrans += " ; "
-                     cTrans += hb_OSNewLine()
+                     cTrans += hb_eol()
                   ENDIF
                   IF i + 1 < nLen
                      cTrans += "OutStd( '"
@@ -148,7 +148,7 @@ PROCEDURE Main( cScript )
                   lOpen  := .f.
                   IF i < nLen
                      // cTrans += " ; "
-                     cTrans += hb_OSNewLine()
+                     cTrans += hb_eol()
                   ENDIF
 
                ENDIF
@@ -173,7 +173,7 @@ PROCEDURE Main( cScript )
       cFile := cLocation + cHost + ".prg"                 // Output file name
       hFile := FCreate( cFile )
       FOR i := 1 TO Len( aResult )
-         FWrite( hFile, aResult[i] + hb_OSNewLine() )
+         FWrite( hFile, aResult[i] + hb_eol() )
       NEXT
       FClose( hFile )
 

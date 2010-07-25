@@ -64,7 +64,7 @@
 #command ASSERT( <exp> [, <msg>] )      =>                              ;
          IF !( <exp> )                                                  ;
        ;    OutStd(                                                     ;
-                    hb_OSNewLine() + ProcName( 0 ) +                    ;
+                    hb_eol() + ProcName( 0 ) +                          ;
                     "(" + hb_NToS( ProcLine() ) + ")" +                 ;
                     "  Assertion failed: " +                            ;
                     iif( <.msg.>, <msg>, <"exp"> )                      ;

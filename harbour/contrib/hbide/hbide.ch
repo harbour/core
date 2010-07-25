@@ -63,7 +63,6 @@
 #define UI_MODE_FUNC                              1
 #define UI_MODE_UI                                2
 
-#define CRLF                                      hb_osNewLine()
 #define _EOL                                      Chr( 10 )
 
 #define HBIDE_USE_UIC

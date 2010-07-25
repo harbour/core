@@ -178,7 +178,7 @@ RETURN NIL
 
 METHOD LogError(cError) CLASS UHttpd
   hb_mutexLock(Self:hmtxLog)
-  FWRITE(Self:hErrorLog, DTOS(DATE()) + " " + TIME() + " " + cError + " " + HB_OSNewLine())
+  FWRITE(Self:hErrorLog, DTOS(DATE()) + " " + TIME() + " " + cError + " " + hb_eol())
   hb_mutexUnlock(Self:hmtxLog)
 RETURN NIL
 
@@ -192,7 +192,7 @@ LOCAL cDate := DTOS(DATE()), cTime := TIME()
          "/" + LEFT(cDate, 4) + ":" + cTime + ' +0000] "' + server["REQUEST_ALL"] + '" ' + ;
          LTRIM(STR(s_nStatusCode)) + " " + LTRIM(STR(LEN(s_cResult))) + ;
          ' "' + server["HTTP_REFERER"] + '" "' + server["HTTP_USER_AGENT"] + ;
-         '"' + HB_OSNewLine())
+         '"' + hb_eol())
   hb_mutexUnlock(Self:hmtxLog)
 RETURN NIL
 
@@ -679,57 +679,57 @@ RETURN NIL
 
 STATIC FUNC GetErrorDesc(oErr)
 LOCAL cRet, nI
-  cRet := "ERRORLOG ============================================================" + HB_OSNewLine() + ;
+  cRet := "ERRORLOG ============================================================" + hb_eol() + ;
           "Error: " + oErr:subsystem + "/" + ErrDescCode(oErr:genCode) + "(" + LTRIM(STR(oErr:genCode)) + ") " + ;
-                      LTRIM(STR(oErr:subcode)) + HB_OSNewLine()
-  IF !EMPTY(oErr:filename);      cRet += "File: " + oErr:filename + HB_OSNewLine()
+                      LTRIM(STR(oErr:subcode)) + hb_eol()
+  IF !EMPTY(oErr:filename);      cRet += "File: " + oErr:filename + hb_eol()
   ENDIF
-  IF !EMPTY(oErr:description);   cRet += "Description: " + oErr:description + HB_OSNewLine()
+  IF !EMPTY(oErr:description);   cRet += "Description: " + oErr:description + hb_eol()
   ENDIF
-  IF !EMPTY(oErr:operation);     cRet += "Operacija: " + oErr:operation + HB_OSNewLine()
+  IF !EMPTY(oErr:operation);     cRet += "Operacija: " + oErr:operation + hb_eol()
   ENDIF
-  IF !EMPTY(oErr:osCode);        cRet += "OS error: " + LTRIM(STR(oErr:osCode)) + HB_OSNewLine()
+  IF !EMPTY(oErr:osCode);        cRet += "OS error: " + LTRIM(STR(oErr:osCode)) + hb_eol()
   ENDIF
   IF VALTYPE(oErr:args) == "A"
-    cRet += "Arguments:" + HB_OSNewLine()
-    AEVAL(oErr:args, {|X, Y| cRet += STR(Y, 5) + ": " + HB_CStr(X) + HB_OSNewLine()})
+    cRet += "Arguments:" + hb_eol()
+    AEVAL(oErr:args, {|X, Y| cRet += STR(Y, 5) + ": " + HB_CStr(X) + hb_eol()})
   ENDIF
-  cRet += HB_OSNewLine()
+  cRet += hb_eol()
 
-  cRet += "Stack:" + HB_OSNewLine()
+  cRet += "Stack:" + hb_eol()
   nI := 2
   DO WHILE ! EMPTY(PROCNAME(++nI))
-    cRet += "    " + PROCNAME(nI) + "(" + LTRIM(STR(PROCLINE(nI))) + ")" + HB_OSNewLine()
+    cRet += "    " + PROCNAME(nI) + "(" + LTRIM(STR(PROCLINE(nI))) + ")" + hb_eol()
   ENDDO
-  cRet += HB_OSNewLine()
+  cRet += hb_eol()
 
-  cRet += "Executable:  " + HB_PROGNAME() + HB_OSNewLine()
-  cRet += "Versions:" + HB_OSNewLine()
-  cRet += "  OS: " + OS() + HB_OSNewLine()
-  cRet += "  Harbour: " + VERSION() + ", " + HB_BUILDDATE() + HB_OSNewLine()
-  cRet += HB_OSNewLine()
+  cRet += "Executable:  " + HB_PROGNAME() + hb_eol()
+  cRet += "Versions:" + hb_eol()
+  cRet += "  OS: " + OS() + hb_eol()
+  cRet += "  Harbour: " + VERSION() + ", " + HB_BUILDDATE() + hb_eol()
+  cRet += hb_eol()
 
   IF oErr:genCode != EG_MEM
-    cRet += "Database areas:" + HB_OSNewLine()
-    cRet += "    Current: " + LTRIM(STR(SELECT())) + "  " + ALIAS() + HB_OSNewLine()
+    cRet += "Database areas:" + hb_eol()
+    cRet += "    Current: " + LTRIM(STR(SELECT())) + "  " + ALIAS() + hb_eol()
 
     BEGIN SEQUENCE WITH {|o| BREAK(o)}
       IF !EMPTY(ALIAS())
-        cRet += "    Filter: " + DBFILTER() + HB_OSNewLine()
-        cRet += "    Relation: " + DBRELATION() + HB_OSNewLine()
-        cRet += "    Index expression: " + ORDKEY(ORDSETFOCUS()) + HB_OSNewLine()
-        cRet += HB_OSNewLine()
+        cRet += "    Filter: " + DBFILTER() + hb_eol()
+        cRet += "    Relation: " + DBRELATION() + hb_eol()
+        cRet += "    Index expression: " + ORDKEY(ORDSETFOCUS()) + hb_eol()
+        cRet += hb_eol()
         BEGIN SEQUENCE WITH {|o| BREAK(o)}
           FOR nI := 1 to FCOUNT()
-            cRet += STR(nI, 6) + " " + PADR(FIELDNAME(nI), 14) + ": " + HB_VALTOEXP(FIELDGET(nI)) + HB_OSNewLine()
+            cRet += STR(nI, 6) + " " + PADR(FIELDNAME(nI), 14) + ": " + HB_VALTOEXP(FIELDGET(nI)) + hb_eol()
           NEXT
         RECOVER
-          cRet += "!!! Error reading database fields !!!" + HB_OSNewLine()
+          cRet += "!!! Error reading database fields !!!" + hb_eol()
         END SEQUENCE
-        cRet += HB_OSNewLine()
+        cRet += hb_eol()
       ENDIF
     RECOVER
-      cRet += "!!! Error accessing current workarea !!!" + HB_OSNewLine()
+      cRet += "!!! Error accessing current workarea !!!" + hb_eol()
     END SEQUENCE
 
     FOR nI := 1 to 250
@@ -738,14 +738,14 @@ LOCAL cRet, nI
           DBSELECTAREA(nI)
           cRet += STR(nI, 6) + " " + RDDNAME() + " " + PADR(ALIAS(), 15) + ;
                   STR(RECNO()) + "/" + STR(LASTREC()) + ;
-                  IIF(EMPTY(ORDSETFOCUS()), "", " Index " + ORDSETFOCUS() + "(" + LTRIM(STR(ORDNUMBER())) + ")") + HB_OSNewLine()
+                  IIF(EMPTY(ORDSETFOCUS()), "", " Index " + ORDSETFOCUS() + "(" + LTRIM(STR(ORDNUMBER())) + ")") + hb_eol()
           DBCLOSEAREA()
         ENDIF
       RECOVER
-        cRet += "!!! Error accessing workarea number: " + STR(nI, 4) + "!!!" + HB_OSNewLine()
+        cRet += "!!! Error accessing workarea number: " + STR(nI, 4) + "!!!" + hb_eol()
       END SEQUENCE
     NEXT
-    cRet += HB_OSNewLine()
+    cRet += hb_eol()
   ENDIF
 RETURN cRet
 

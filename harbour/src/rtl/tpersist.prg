@@ -128,9 +128,9 @@ METHOD SaveToText( cObjectName, nIndent ) CLASS HBPersistent
       nIndent := 0
    ENDIF
 
-   cObject := iif( nIndent > 0, hb_OSNewLine(), "" ) + Space( nIndent ) + ;
+   cObject := iif( nIndent > 0, hb_eol(), "" ) + Space( nIndent ) + ;
               "OBJECT " + iif( nIndent != 0, "::", "" ) + cObjectName + " AS " + ;
-              ::ClassName() + hb_OSNewLine()
+              ::ClassName() + hb_eol()
 
    aProperties := __ClsGetProperties( ::ClassH )
 
@@ -147,7 +147,7 @@ METHOD SaveToText( cObjectName, nIndent ) CLASS HBPersistent
             cObject += ArrayToText( uValue, aProperties[ n ], nIndent )
             nIndent -= 3
             IF n < Len( aProperties )
-               cObject += hb_OSNewLine()
+               cObject += hb_eol()
             ENDIF
 
          CASE cType == "O"
@@ -155,89 +155,79 @@ METHOD SaveToText( cObjectName, nIndent ) CLASS HBPersistent
                cObject += uValue:SaveToText( aProperties[ n ], nIndent )
             ENDIF
             IF n < Len( aProperties )
-               cObject += hb_OSNewLine()
+               cObject += hb_eol()
             ENDIF
 
          OTHERWISE
             IF n == 1
-               cObject += hb_OSNewLine()
+               cObject += hb_eol()
             ENDIF
             cObject += Space( nIndent ) + "   ::" + ;
                        aProperties[ n ] + " = " + ValToText( uValue ) + ;
-                       hb_OSNewLine()
+                       hb_eol()
          ENDCASE
 
       ENDIF
 
    NEXT
 
-   cObject += hb_OSNewLine() + Space( nIndent ) + "ENDOBJECT" + hb_OSNewLine()
+   cObject += hb_eol() + Space( nIndent ) + "ENDOBJECT" + hb_eol()
 
    RETURN cObject
 
 STATIC FUNCTION ArrayToText( aArray, cName, nIndent )
 
-   LOCAL cArray := hb_OSNewLine() + Space( nIndent ) + "ARRAY ::" + cName + ;
-                   " LEN " + hb_NToS( Len( aArray ) ) + hb_OSNewLine()
+   LOCAL cArray := hb_eol() + Space( nIndent ) + "ARRAY ::" + cName + ;
+                   " LEN " + hb_NToS( Len( aArray ) ) + hb_eol()
    LOCAL n
    LOCAL uValue
-   LOCAL cType
 
    FOR n := 1 TO Len( aArray )
       uValue := aArray[ n ]
-      cType  := ValType( uValue )
 
-      DO CASE
-      CASE cType == "A"
+      SWITCH ValType( uValue )
+      CASE "A"
          nIndent += 3
          cArray += ArrayToText( uValue, cName + "[ " + ;
-                   hb_NToS( n ) + " ]", nIndent ) + hb_OSNewLine()
+                   hb_NToS( n ) + " ]", nIndent ) + hb_eol()
          nIndent -= 3
+         EXIT
 
-      CASE cType == "O"
+      CASE "O"
          IF __objDerivedFrom( uValue, "HBPERSISTENT" )
             cArray += uValue:SaveToText( cName + "[ " + hb_NToS( n ) + ;
                                          " ]", nIndent )
          ENDIF
+         EXIT
 
       OTHERWISE
          IF n == 1
-            cArray += hb_OSNewLine()
+            cArray += hb_eol()
          ENDIF
          cArray += Space( nIndent ) + "   ::" + cName + ;
                    + "[ " + hb_NToS( n ) + " ]" + " = " + ;
-                   ValToText( uValue ) + hb_OSNewLine()
-      ENDCASE
+                   ValToText( uValue ) + hb_eol()
+      ENDSWITCH
    NEXT
 
-   cArray += hb_OSNewLine() + Space( nIndent ) + "ENDARRAY" + hb_OSNewLine()
+   cArray += hb_eol() + Space( nIndent ) + "ENDARRAY" + hb_eol()
 
    RETURN cArray
 
 STATIC FUNCTION ValToText( uValue )
 
-   LOCAL cType := ValType( uValue )
-   LOCAL cText
+   SWITCH ValType( uValue )
+   CASE "C"
+      RETURN hb_StrToExp( uValue )
+   CASE "N"
+      RETURN hb_NToS( uValue )
+   CASE "D"
+      RETURN "0d" + iif( Empty( DToS( uValue ) ), "00000000", DToS( uValue ) )
+   CASE "T"
+      RETURN 't"' + hb_TSToStr( uValue, .T. ) + '"'
+   ENDSWITCH
 
-   DO CASE
-   CASE cType == "C"
-      cText := hb_StrToExp( uValue )
-
-   CASE cType == "N"
-      cText := hb_NToS( uValue )
-
-   CASE cType == "D"
-      cText := DToS( uValue )
-      cText := "0d" + iif( Empty( cText ), "00000000", cText )
-
-   CASE cType == "T"
-      cText := 't"' + hb_TSToStr( uValue, .T. ) + '"'
-
-   OTHERWISE
-      cText := hb_ValToStr( uValue )
-   ENDCASE
-
-   RETURN cText
+   RETURN hb_ValToStr( uValue )
 
 /* Notice: nFrom must be supplied by reference */
 

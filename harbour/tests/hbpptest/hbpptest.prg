@@ -5,13 +5,13 @@
 #include "common.ch"
 
 #ifndef __HARBOUR__
-   #xtranslate HB_OSNewLine() => ( Chr( 13 ) + Chr( 10 ) )
+   #xtranslate hb_eol() => ( Chr( 13 ) + Chr( 10 ) )
 #endif
 
 /* #command TEXT TO VAR <v> => #pragma __stream|<v>:=%s */
 #command TEXT TO VAR <v> => #pragma __text|<v>+=%s;<v>:=""
 #command CTEXT TO VAR <v> => #pragma __cstream|<v>:=%s
-#command XTEXT TO VAR <v> => #pragma __text|<v>+=%s+HB_OSNEWLINE();<v>:=""
+#command XTEXT TO VAR <v> => #pragma __text|<v>+=%s+hb_eol();<v>:=""
 
 /* Testing preprocessor */
 
@@ -21,7 +21,7 @@ LOCAL nCnt:=0
 LOCAL nRes:=0
 
 /* ---------------------------------------------------------------------*/
-  in := "#xtranslate CCC <v> => QOUT( <v>[2] [, <v>\[<v>\]\[3\]] )"+HB_OSNewLine()+;
+  in := "#xtranslate CCC <v> => QOUT( <v>[2] [, <v>\[<v>\]\[3\]] )"+hb_eol()+;
         "CCC b"
   pre := "QOUT(b[2] ,bb[3] )"
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
@@ -49,7 +49,7 @@ XTEXT TO VAR in
 #xcommand SET TOOLTIP TO <color> OF <form> => SM( TTH (<"form">), 1, RGB(<color>\[1], <color>\[2\], <color>[, <color>\[ 3 \] ]), 0)
 SET TOOLTIP TO RED OF form1
 ENDTEXT
-TEXT TO VAR pre    
+TEXT TO VAR pre
 SM(TTH ("form1"),1,RGB({255,0,0}[1],{255,0,0}[2],{255,0,0},{255,0,0}[ 3 ] ),0)
 ENDTEXT
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
@@ -108,7 +108,7 @@ ENDTEXT
   in := "_REGULAR_(a)"
   pre :="rm(a )"
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
-  
+
   in := '_REGULAR_("a")'
   pre :='rm("a" )'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
@@ -161,7 +161,7 @@ ENDTEXT
       //NORMAL
   in := '#command _NORMAL_M(<z>) => nm( <"z"> )'
   __PreProcess( in )
-  
+
   in := "_NORMAL_M(a)"
   pre :='nm("a" )'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
@@ -218,7 +218,7 @@ ENDTEXT
       //SMART
   in := '#command _SMART_M(<z>) => sm( <(z)> )'
   __PreProcess( in )
-  
+
   in := "_SMART_M(a)"
   pre :='sm("a" )'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
@@ -377,7 +377,7 @@ ENDTEXT
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
 TEXT TO VAR in
-#xcommand SET <var1> [, <varN>] WITH <val> => 
+#xcommand SET <var1> [, <varN>] WITH <val> =>
 <var1>:=<val>[; <varN>:=<val>]
 ENDTEXT
   __PreProcess( in )
@@ -387,7 +387,7 @@ ENDTEXT
 
 TEXT TO VAR in
 #xcommand INSERT INTO <table> ( <uField1> [, <uFieldN> ] ) VALUES ( <uVal1> [, <uValN> ] ) => if <table>->( dbappend() ) <table>-><uField1> := <uVal1> [ <table>-><uFieldN> := <uValN> ] <table>->( dbunlock() ) endif
-ENDTEXT  
+ENDTEXT
   __PreProcess( in )
 TEXT TO VAR in
 insert into test ( FIRST, LAST, STREET ) values ( "first", "last", "street" )
@@ -398,13 +398,13 @@ ENDTEXT
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
 TEXT TO VAR in
-#xcommand INSERT2 INTO <table> ( <uField1> [, <uFieldN> ] ) VALUES ( <uVal1> [, <uValN> ] ) => 
+#xcommand INSERT2 INTO <table> ( <uField1> [, <uFieldN> ] ) VALUES ( <uVal1> [, <uValN> ] ) =>
 if <table>->( dbappend() ) ;
  <table>-><uField1> := <uVal1> ;
- [ <table>-><uFieldN> := <uValN> ; ] 
+ [ <table>-><uFieldN> := <uValN> ; ]
  <table>->( dbunlock() ) ;
 endif
-ENDTEXT  
+ENDTEXT
   __PreProcess( in )
 TEXT TO VAR in
 insert2 into test ( FIRST, LAST, STREET )
@@ -428,14 +428,14 @@ ENDTEXT
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
 TEXT TO VAR in
-#command MYCOMMAND [<mylist,...>] [MYCLAUSE <myval>] => 
+#command MYCOMMAND [<mylist,...>] [MYCLAUSE <myval>] =>
    MyFunction( {<mylist>} [, <myval>] )
 ENDTEXT
   __PreProcess( in )
   in := 'MYCOMMAND MYCLAUSE 321 "HELLO"'
   pre := 'MyFunction({"HELLO"} ,321  )'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
-   
+
   in := 'MYCOMMAND MYCLAUSE 321 "HELLO","all"'
   pre := 'MyFunction({"HELLO","all"} ,321  )'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
@@ -445,7 +445,7 @@ ENDTEXT
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
 TEXT TO VAR in
-#command MYCOMMAND2 [<mylist,...>] [MYCLAUSE <myval>] [ALL] => 
+#command MYCOMMAND2 [<mylist,...>] [MYCLAUSE <myval>] [ALL] =>
    MyFunction( {<mylist>} [, <myval>] )
 ENDTEXT
   __PreProcess( in )
@@ -458,7 +458,7 @@ ENDTEXT
   in := 'MYCOMMAND2 ALL MYCLAUSE 321 "HELLO"'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
-  in := 'MYCOMMAND2 MYCLAUSE 321 "HELLO" ALL' 
+  in := 'MYCOMMAND2 MYCLAUSE 321 "HELLO" ALL'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
   in := 'MYCOMMAND2 MYCLAUSE 321 ALL "HELLO"'
@@ -466,7 +466,7 @@ ENDTEXT
 
 
 TEXT TO VAR in
-#command MYCOMMAND3 [<mylist,...>] [MYCLAUSE <myval>] [<all:ALL>] => 
+#command MYCOMMAND3 [<mylist,...>] [MYCLAUSE <myval>] [<all:ALL>] =>
    MyFunction( {<mylist>} [, <myval>] [,<.all.>] )
 ENDTEXT
   __PreProcess( in )
@@ -487,7 +487,7 @@ ENDTEXT
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
 TEXT TO VAR in
-#command MYCOMMAND2 [<myList,...>] 
+#command MYCOMMAND2 [<myList,...>]
    [MYCLAUSE <myVal>] [MYOTHER <myOther>] => MyFunction( {<myList>}, <myVal>, <myOther> )
 ENDTEXT
   __PreProcess( in )
@@ -588,19 +588,19 @@ ENDTEXT
   pre := '&cVar+1(&cVar,"mzcall" )'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
-  in := "MXCALL &cVar" 
+  in := "MXCALL &cVar"
   pre := '(&cVar)'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
-  in := "MXCALL &cVar." 
+  in := "MXCALL &cVar."
   pre := '(&cVar.)'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
-  in := "MXCALL &cVar.1" 
+  in := "MXCALL &cVar.1"
   pre := '(&cVar.1)'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
-  in := "MXCALL &cVar + 1" 
+  in := "MXCALL &cVar + 1"
   pre := '(&cVar) + 1'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
@@ -660,7 +660,7 @@ ENDTEXT
   pre := '&cVar.(+1,"mycall" )'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
-  in := "MYCALL &cVar.1 +1" 
+  in := "MYCALL &cVar.1 +1"
   pre := '&cVar.1(+1,"mycall" )'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
@@ -680,39 +680,39 @@ ENDTEXT
   pre := 'cVar+var+1'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
-  in := "MXCALL &cVar()" 
+  in := "MXCALL &cVar()"
   pre := '(&cVar)()'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
-  in := "MXCALL &cVar++" 
+  in := "MXCALL &cVar++"
   pre := '(&cVar)++'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
-  in := "(MXCALL &cVar)++" 
+  in := "(MXCALL &cVar)++"
   pre := '((&cVar))++'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
-  in := "MXCALL &cVar.()" 
+  in := "MXCALL &cVar.()"
   pre := '(&cVar.)()'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
-  in := "MXCALL &cVar.++" 
+  in := "MXCALL &cVar.++"
   pre := '(&cVar.)++'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
-  in := "(MXCALL &cVar.)++" 
+  in := "(MXCALL &cVar.)++"
   pre := '((&cVar.))++'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
-  in := "MXCALL &cVar.1 ()" 
+  in := "MXCALL &cVar.1 ()"
   pre := '(&cVar.1) ()'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
-  in := "MXCALL &cVar.1 ++" 
+  in := "MXCALL &cVar.1 ++"
   pre := '(&cVar.1) ++'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
-  in := "(MXCALL &cVar.1) ++" 
+  in := "(MXCALL &cVar.1) ++"
   pre := '((&cVar.1)) ++'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
@@ -760,7 +760,7 @@ ENDTEXT
   pre :='macro_t(cVar)++'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
-  in := "MTRANSLATE &cVar.++" 
+  in := "MTRANSLATE &cVar.++"
   pre :='macro_t(cVar)++'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
@@ -768,7 +768,7 @@ ENDTEXT
   pre :='macro_t(cVar)+=1'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
-  in := "MTRANSLATE &cVar.-=2" 
+  in := "MTRANSLATE &cVar.-=2"
   pre :='macro_t(cVar)-=2'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
@@ -788,7 +788,7 @@ ENDTEXT
   pre :='macro_t(cVar)^=2'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
-  in := "MTRANSLATE &cVar:=1" 
+  in := "MTRANSLATE &cVar:=1"
   pre :='macro_t(cVar):=1'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
@@ -858,7 +858,7 @@ ENDTEXT
   pre :='normal_c("&cVar++")'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
-  in := "MCOMMAND &cVar.++" 
+  in := "MCOMMAND &cVar.++"
   pre :='normal_c("&cVar.++")'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
@@ -866,7 +866,7 @@ ENDTEXT
   pre :='normal_c("&cVar+=1")'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
-  in := "MCOMMAND &cVar.-=2" 
+  in := "MCOMMAND &cVar.-=2"
   pre :='normal_c("&cVar.-=2")'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
@@ -874,7 +874,7 @@ ENDTEXT
   pre :='normal_c("&cVar*=1")'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
-  in := "MCOMMAND &cVar/=2" 
+  in := "MCOMMAND &cVar/=2"
   pre :='normal_c("&cVar/=2")'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
@@ -885,7 +885,7 @@ ENDTEXT
   in := "MCOMMAND &cVar^=2"
   pre :='normal_c("&cVar^=2")'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
-  
+
   in := "MCOMMAND &cVar:=1"
   pre :='normal_c("&cVar:=1")'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
@@ -920,7 +920,7 @@ ENDTEXT
 
    /* repeated optional clauses */
 TEXT TO VAR in
-#xcommand SET <var1> [, <varN>] WITH <val> => 
+#xcommand SET <var1> [, <varN>] WITH <val> =>
 <var1>:=<val> [; <varN>:=<val>]
 ENDTEXT
   __PreProcess( in )
@@ -948,7 +948,7 @@ ENDTEXT
   in := "AVG f1 TO s1"
   pre := "AVERAGE({||s1:=s1+f1}  )"
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
-  
+
   in := "AVG f1, f2 TO s1, s2"
   pre := "AVERAGE({||s1:=s1+f1} ,{||s2:=s2+f2}   )"
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
@@ -964,23 +964,23 @@ ENDTEXT
 
 /* ---------------------------------------------------------------------*/
 TEXT TO VAR in
-#command @ <row>, <col> GET <var>                                       
-                        [PICTURE <pic>]                                 
-                        [VALID <valid>]                                 
-                        [WHEN <when>]                                   
-                        [CAPTION <caption>]                             
-                        [MESSAGE <message>]                             
-                        [SEND <msg>]                                    
-                                                                        
-      => SetPos( <row>, <col> )                                         
-       ; AAdd( GetList,                                                 
-              _GET_( <var>, <"var">, <pic>, <{valid}>, <{when}> ) )     
-      [; ATail(GetList):Caption := <caption>]                           
-      [; ATail(GetList):CapRow  := ATail(Getlist):row                   
-       ; ATail(GetList):CapCol  := ATail(Getlist):col -                 
-                              __CapLength(<caption>) - 1]               
-      [; ATail(GetList):message := <message>]                           
-      [; ATail(GetList):<msg>]                                          
+#command @ <row>, <col> GET <var>
+                        [PICTURE <pic>]
+                        [VALID <valid>]
+                        [WHEN <when>]
+                        [CAPTION <caption>]
+                        [MESSAGE <message>]
+                        [SEND <msg>]
+
+      => SetPos( <row>, <col> )
+       ; AAdd( GetList,
+              _GET_( <var>, <"var">, <pic>, <{valid}>, <{when}> ) )
+      [; ATail(GetList):Caption := <caption>]
+      [; ATail(GetList):CapRow  := ATail(Getlist):row
+       ; ATail(GetList):CapCol  := ATail(Getlist):col -
+                              __CapLength(<caption>) - 1]
+      [; ATail(GetList):message := <message>]
+      [; ATail(GetList):<msg>]
        ; ATail(GetList):Display()
 ENDTEXT
   __PreProcess( in )
@@ -1014,32 +1014,32 @@ ENDTEXT
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
 /* ---------------------------------------------------------------------*/
-  in :='@ 1,1 GET a RANGE 0,100'   
+  in :='@ 1,1 GET a RANGE 0,100'
   pre := 'SetPos(1,1 ) ; AAdd(GetList,_GET_(a,"a",,{|_1| RangeCheck(_1,, 0, 100)}, ) )     ; ATail(GetList):Display()'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
-  in :='@ 1,2 GET a PICTURE "X" RANGE 0,100'   
+  in :='@ 1,2 GET a PICTURE "X" RANGE 0,100'
   pre := 'SetPos(1,2 ) ; AAdd(GetList,_GET_(a,"a","X",{|_1| RangeCheck(_1,, 0, 100)}, ) )     ; ATail(GetList):Display()'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
    /* NOTE: Clipper fails here */
-  in :='@ 1,3 GET a PICTURE "X" VALID .T. RANGE 0,100'   
+  in :='@ 1,3 GET a PICTURE "X" VALID .T. RANGE 0,100'
   pre := 'SetPos(1,3 ) ; AAdd(GetList,_GET_(a,"a","X",{|| .T.}, ) )     ; ATail(GetList):Display()'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
-  in :='@ 1,4 GET a PICTURE "X" WHEN .T. RANGE 0,100'   
+  in :='@ 1,4 GET a PICTURE "X" WHEN .T. RANGE 0,100'
   pre := 'SetPos(1,4 ) ; AAdd(GetList,_GET_(a,"a","X",{|_1| RangeCheck(_1,, 0, 100)},{|| .T.} ) )     ; ATail(GetList):Display()'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
-  in :='@ 1,5 GET a PICTURE "X" WHEN .T. CAPTION "myget" RANGE 0,100'   
+  in :='@ 1,5 GET a PICTURE "X" WHEN .T. CAPTION "myget" RANGE 0,100'
   pre := 'SetPos(1,5 ) ; AAdd(GetList,_GET_(a,"a","X",{|_1| RangeCheck(_1,, 0, 100)},{|| .T.} ) ) ; ATail(GetList):Caption := "myget"  ; ATail(GetList):CapRow := ATail(Getlist):row ; ATail(GetList):CapCol := ATail(Getlist):col - __CapLength("myget") - 1    ; ATail(GetList):Display()'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
-  in :='@ 1,6 GET a PICTURE "X" WHEN .T. CAPTION "myget" MESSAGE "mymess" RANGE 0,100'   
+  in :='@ 1,6 GET a PICTURE "X" WHEN .T. CAPTION "myget" MESSAGE "mymess" RANGE 0,100'
   pre := 'SetPos(1,6 ) ; AAdd(GetList,_GET_(a,"a","X",{|_1| RangeCheck(_1,, 0, 100)},{|| .T.} ) ) ; ATail(GetList):Caption := "myget"  ; ATail(GetList):CapRow := ATail(Getlist):row ; ATail(GetList):CapCol := ATail(Getlist):col - __CapLength("myget") - 1  ; ATail(GetList):message := "mymess"   ; ATail(GetList):Display()'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
-  in :='@ 1,7 GET a PICTURE "X" WHEN .T. CAPTION "myget" MESSAGE "mymess" SEND send() RANGE 0,100'   
+  in :='@ 1,7 GET a PICTURE "X" WHEN .T. CAPTION "myget" MESSAGE "mymess" SEND send() RANGE 0,100'
   pre := 'SetPos(1,7 ) ; AAdd(GetList,_GET_(a,"a","X",{|_1| RangeCheck(_1,, 0, 100)},{|| .T.} ) ) ; ATail(GetList):Caption := "myget"  ; ATail(GetList):CapRow := ATail(Getlist):row ; ATail(GetList):CapCol := ATail(Getlist):col - __CapLength("myget") - 1  ; ATail(GetList):message := "mymess"  ; ATail(GetList):send()  ; ATail(GetList):Display()'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
@@ -1051,7 +1051,7 @@ ENDTEXT
   pre := 'SetPos(2,2 ) ; AAdd(GetList,_GET_(a,"a","X",{|_1| RangeCheck(_1,, 0, 100)}, ) )     ; ATail(GetList):Display()'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
-  in :='@ 2,3 GET a PICTURE "X" RANGE 0,100' 
+  in :='@ 2,3 GET a PICTURE "X" RANGE 0,100'
   pre := 'SetPos(2,3 ) ; AAdd(GetList,_GET_(a,"a","X",{|_1| RangeCheck(_1,, 0, 100)}, ) )     ; ATail(GetList):Display()'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
@@ -1074,43 +1074,43 @@ ENDTEXT
 
 /* ---------------------------------------------------------------------*/
 TEXT TO VAR in
-#command @ <row>, <col> GET <var>                                           
-                        PUSHBUTTON                                          
-                        [VALID <valid>]                                     
-                        [WHEN <when>]                                       
-                        [CAPTION <caption>]                                 
-                        [MESSAGE <message>]                                 
-                        [COLOR <color>]                                     
-                        [FOCUS <fblock>]                                    
-                        [STATE <sblock>]                                    
-                        [STYLE <style>]                                     
-                        [SEND <msg>]                                        
-                        [GUISEND <guimsg>]                                  
-                        [SIZE X <sizex> Y <sizey>]                          
-                        [CAPOFF X <capxoff> Y <capyoff>]                    
-                        [BITMAP <bitmap>]                                   
-                        [BMPOFF X <bmpxoff> Y <bmpyoff>]                    
-                                                                            
-      => SetPos( <row>, <col> )                                             
-       ; AAdd( GetList,                                                     
-              _GET_( <var>, <(var)>, NIL, <{valid}>, <{when}> ) )           
-       ; ATail(GetList):Control := _PushButt_( <caption>, <message>,        
-                       <color>, <{fblock}>, <{sblock}>, <style>,            
-                       <sizex>, <sizey>, <capxoff>, <capyoff>,              
-                       <bitmap>, <bmpxoff>, <bmpyoff> )                     
-       ; ATail(GetList):reader  := { | a, b, c, d |                         
-                                    GuiReader( a, b, c, d ) }               
-      [; ATail(GetList):<msg>]                                              
-      [; ATail(GetList):Control:<guimsg>]                                   
+#command @ <row>, <col> GET <var>
+                        PUSHBUTTON
+                        [VALID <valid>]
+                        [WHEN <when>]
+                        [CAPTION <caption>]
+                        [MESSAGE <message>]
+                        [COLOR <color>]
+                        [FOCUS <fblock>]
+                        [STATE <sblock>]
+                        [STYLE <style>]
+                        [SEND <msg>]
+                        [GUISEND <guimsg>]
+                        [SIZE X <sizex> Y <sizey>]
+                        [CAPOFF X <capxoff> Y <capyoff>]
+                        [BITMAP <bitmap>]
+                        [BMPOFF X <bmpxoff> Y <bmpyoff>]
+
+      => SetPos( <row>, <col> )
+       ; AAdd( GetList,
+              _GET_( <var>, <(var)>, NIL, <{valid}>, <{when}> ) )
+       ; ATail(GetList):Control := _PushButt_( <caption>, <message>,
+                       <color>, <{fblock}>, <{sblock}>, <style>,
+                       <sizex>, <sizey>, <capxoff>, <capyoff>,
+                       <bitmap>, <bmpxoff>, <bmpyoff> )
+       ; ATail(GetList):reader  := { | a, b, c, d |
+                                    GuiReader( a, b, c, d ) }
+      [; ATail(GetList):<msg>]
+      [; ATail(GetList):Control:<guimsg>]
        ; ATail(GetList):Control:Display()
 ENDTEXT
   __PreProcess( in )
 
-  in :='@ 4,1 GET a PUSHBUTTON'  
+  in :='@ 4,1 GET a PUSHBUTTON'
   pre := 'SetPos(4,1 ) ; AAdd(GetList,_GET_(a,"a",NIL,, ) ) ; ATail(GetList):Control := _PushButt_(,,,,,,,,,,,, ) ; ATail(GetList):reader := { | a,b,c,d | GuiReader(a,b,c,d ) }   ; ATail(GetList):Control:Display()'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
-  in :='@ 4,1 GET a PUSHBUTTON VALID valid()' 
+  in :='@ 4,1 GET a PUSHBUTTON VALID valid()'
   pre := 'SetPos(4,1 ) ; AAdd(GetList,_GET_(a,"a",NIL,{|| valid()}, ) ) ; ATail(GetList):Control := _PushButt_(,,,,,,,,,,,, ) ; ATail(GetList):reader := { | a,b,c,d | GuiReader(a,b,c,d ) }   ; ATail(GetList):Control:Display()'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
@@ -1142,7 +1142,7 @@ ENDTEXT
   pre := 'SetPos(4,1 ) ; AAdd(GetList,_GET_(a,"a",NIL,{|| valid()},{|| when()} ) ) ; ATail(GetList):Control := _PushButt_("cap","mes",color(),{|| focus()},{|| state()},style(),,,,,,, ) ; ATail(GetList):reader := { | a,b,c,d | GuiReader(a,b,c,d ) }   ; ATail(GetList):Control:Display()'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
-  in :='@ 4,1 GET a PUSHBUTTON VALID valid() WHEN when() CAPTION "cap" MESSAGE "mes" COLOR color() FOCUS focus() STATE state() STYLE style() SEND send()'  
+  in :='@ 4,1 GET a PUSHBUTTON VALID valid() WHEN when() CAPTION "cap" MESSAGE "mes" COLOR color() FOCUS focus() STATE state() STYLE style() SEND send()'
   pre := 'SetPos(4,1 ) ; AAdd(GetList,_GET_(a,"a",NIL,{|| valid()},{|| when()} ) ) ; ATail(GetList):Control := _PushButt_("cap","mes",color(),{|| focus()},{|| state()},style(),,,,,,, ) ; ATail(GetList):reader := { | a,b,c,d | GuiReader(a,b,c,d ) } ; ATail(GetList):send()   ; ATail(GetList):Control:Display()'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
@@ -1186,23 +1186,23 @@ TEXT TO VAR in
 #command DEFINE CLIPBOARD <oClp>
    [ FORMAT <format:TEXT,OEMTEXT,BITMAP,DIF> ]
    [ OF <oWnd> ]
-   => 
+   =>
    <oClp> := TClipboard():New( [UPPER(<(format)>)], <oWnd> )
 ENDTEXT
   __PreProcess( in )
   in:= "DEFINE CLIPBOARD oC OF oD FORMAT TEXT"
-  pre :='oC := TClipboard():New(UPPER("TEXT") ,oD )'   
+  pre :='oC := TClipboard():New(UPPER("TEXT") ,oD )'
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
 
-    
+
 /* ---------------------------------------------------------------------*/
   __PP_FREE()
-  
-  OutStd( "Total count   =", nCnt, hb_OSNewLine() )
-  OutStd( "Valid results =", nRes, hb_OSNewLine() )
-  OutStd( "Failed results=", nCnt - nRes, hb_OSNewLine() )
-  
+
+  OutStd( "Total count   =", nCnt, hb_eol() )
+  OutStd( "Valid results =", nRes, hb_eol() )
+  OutStd( "Failed results=", nCnt - nRes, hb_eol() )
+
   RETURN
 
 PROCEDURE PrePrepare( in )
@@ -1231,7 +1231,7 @@ LOCAL out:=''
   NEXT
 
 RETURN out
-  
+
 FUNCTION PreResult( pre, out, pCnt )
 LOCAL i
 
@@ -1240,15 +1240,15 @@ LOCAL i
   IF pre == out
     RETURN 1
   ELSE
-    OutStd( pre, hb_OSNewLine() )
-    OutStd( out, hb_OSNewLine() )
-    OutStd( " => FAILED in LINE: ", PROCLINE(1), hb_OSNewLine() )
+    OutStd( pre, hb_eol() )
+    OutStd( out, hb_eol() )
+    OutStd( " => FAILED in LINE: ", PROCLINE(1), hb_eol() )
     i := 1
     WHILE SUBSTR(pre,i,1) == SUBSTR(out,i,1)
       i++
     ENDDO
-    OutStd( SUBSTR( pre, i ), hb_OSNewLine() )
-    OutStd( SUBSTR( out, i ), hb_OSNewLine() )
+    OutStd( SUBSTR( pre, i ), hb_eol() )
+    OutStd( SUBSTR( out, i ), hb_eol() )
   ENDIF
-  
+
 RETURN 0

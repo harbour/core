@@ -806,7 +806,7 @@ METHOD IdeThemes:buildINI()
    NEXT
    aadd( txt_, "   " )
 
-   aeval( txt_, {|e| cINI += e + CRLF } )
+   aeval( txt_, {|e| cINI += e + hb_eol() } )
 
    RETURN cINI
 
@@ -978,7 +978,7 @@ STATIC FUNCTION GetSource()
    aadd( txt_, '   RETURN xVal                                                             ' )
    aadd( txt_, '/*----------------------------------------------------------------------*/ ' )
 
-   aeval( txt_, {|e| s += trim( e ) + CRLF } )
+   aeval( txt_, {|e| s += trim( e ) + hb_eol() } )
 
    RETURN s
 

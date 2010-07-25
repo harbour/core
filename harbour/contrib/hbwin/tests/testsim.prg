@@ -39,20 +39,20 @@ PROCEDURE Main()
    ENDIF
 
    a := o:aGetAllPhoneBookEntries()
-   Aeval(a, {| n, m | Alert("Phone: "+n[1]+hb_osNewLine()+"Name: "+n[2]+hb_osNewLine()+"Adr. Type: "+STR( n[3])+hb_osNewLine()+"Plan Type: "+STR( n[4])) })
+   Aeval(a, {| n, m | Alert("Phone: "+n[1]+hb_eol()+"Name: "+n[2]+hb_eol()+"Adr. Type: "+STR( n[3])+hb_eol()+"Plan Type: "+STR( n[4])) })
 */
 
    IF !o:lGetSimPhoneEntry( 1, SIM_PBSTORAGE_SIM, @a )
       Alert("Pos 1 error")
    ELSE
       Alert("VALTYPE-> "+VALTYPE(a)+" LEN -> "+STR(LEN(a)),a[1][1])
-      Aeval(a, {| n, m | Alert("Phone: "+n[1]+hb_osNewLine()+"Name: "+n[2]+hb_osNewLine()+"Adr. Type: "+STR( n[3])+hb_osNewLine()+"Plan Type: "+STR( n[4]),"pos 1") })
+      Aeval(a, {| n, m | Alert("Phone: "+n[1]+hb_eol()+"Name: "+n[2]+hb_eol()+"Adr. Type: "+STR( n[3])+hb_eol()+"Plan Type: "+STR( n[4]),"pos 1") })
    ENDIF
 
    IF !o:lGetSimPhoneEntry( 110, SIM_PBSTORAGE_SIM, @a )
       Alert("Pos 123 error")
    ELSE
-      Aeval(a, {| n, m | Alert("Phone: "+n[1]+hb_osNewLine()+"Name: "+n[2]+hb_osNewLine()+"Adr. Type: "+STR( n[3])+hb_osNewLine()+"Plan Type: "+STR( n[4]),"pos 110") })
+      Aeval(a, {| n, m | Alert("Phone: "+n[1]+hb_eol()+"Name: "+n[2]+hb_eol()+"Adr. Type: "+STR( n[3])+hb_eol()+"Plan Type: "+STR( n[4]),"pos 110") })
    ENDIF
 
    IF !o:lSetSimPhoneEntry( 80, SIM_PBSTORAGE_SIM, "660099696", "pepeluis", SIM_NUMPLAN_UNKNOWN, SIM_ADDRTYPE_NATIONAL )

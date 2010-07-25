@@ -312,7 +312,7 @@ return cInfo
 
 #ifdef __HARBOUR__
    #include "hbextcdp.ch"
-   #define EOL    hb_osNewLine()
+   #define EOL    hb_eol()
 #else
    #define EOL    chr( 13 ) + chr( 10 )
 #endif

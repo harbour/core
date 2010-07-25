@@ -159,7 +159,7 @@ PROCEDURE Main( ... )
          oServer:DeleteTable( cTable )
          IF oServer:NetErr()
             ? oServer:ErrorMsg()
-            FWrite( nHandle, "Error: " + oServer:ErrorMsg() + hb_osNewLine() )
+            FWrite( nHandle, "Error: " + oServer:ErrorMsg() + hb_eol() )
             FClose( nHandle )
             QUIT
          ENDIF
@@ -168,7 +168,7 @@ PROCEDURE Main( ... )
 
       IF oServer:NetErr()
          ? oServer:ErrorMsg()
-         FWrite( nHandle, "Error: " + oServer:ErrorMsg() + hb_osNewLine() )
+         FWrite( nHandle, "Error: " + oServer:ErrorMsg() + hb_eol() )
          FClose( nHandle )
          QUIT
       ENDIF
@@ -178,7 +178,7 @@ PROCEDURE Main( ... )
       oServer:Execute( "truncate table " + cTable )
       IF oServer:NetErr()
          ? oServer:ErrorMsg()
-         FWrite( nHandle, "Error: " + oServer:ErrorMsg() + hb_osNewLine() )
+         FWrite( nHandle, "Error: " + oServer:ErrorMsg() + hb_eol() )
          FClose( nHandle )
          QUIT
       ENDIF
@@ -187,7 +187,7 @@ PROCEDURE Main( ... )
    oTable := oServer:Query( "SELECT * FROM " + cTable + " LIMIT 1" )
    IF oTable:NetErr()
       Alert( oTable:ErrorMsg() )
-      FWrite( nHandle, "Error: " + oTable:ErrorMsg() + hb_osNewLine() )
+      FWrite( nHandle, "Error: " + oTable:ErrorMsg() + hb_eol() )
       FClose( nHandle )
       QUIT
    ENDIF
@@ -196,7 +196,7 @@ PROCEDURE Main( ... )
       oServer:StartTransaction()
    ENDIF
 
-   FWrite( nHandle, "Start: " + Time() + hb_osNewLine() )
+   FWrite( nHandle, "Start: " + Time() + hb_eol() )
 
    ? "Start: ", Time()
    ?
@@ -265,7 +265,7 @@ PROCEDURE Main( ... )
          ?
          ? "Error Record: ", RecNo(), Left( oTable:ErrorMsg(), 70 )
          ?
-         FWrite( nHandle, "Error at record: " + Str( RecNo() ) + " Description: " + oTable:ErrorMsg() + hb_osNewLine() )
+         FWrite( nHandle, "Error at record: " + Str( RecNo() ) + " Description: " + oTable:ErrorMsg() + hb_eol() )
       ELSE
          nCount++
       ENDIF
@@ -289,7 +289,7 @@ PROCEDURE Main( ... )
       ENDIF
    ENDIF
 
-   FWrite( nHandle, "End: " + Time() + ", records in dbf: " + hb_ntos( RecNo() ) + ", imported recs: " + hb_ntos( nCount ) + hb_osNewLine() )
+   FWrite( nHandle, "End: " + Time() + ", records in dbf: " + hb_ntos( RecNo() ) + ", imported recs: " + hb_ntos( nCount ) + hb_eol() )
 
    ? "End: ", Time()
    ?

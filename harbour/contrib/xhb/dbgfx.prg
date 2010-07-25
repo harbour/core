@@ -111,7 +111,7 @@ PROCEDURE HB_ToLogFile( cLogFile, ... )
       IF nHandle != F_ERROR
          FSeek( nHandle, 0, FS_END )
          FWrite( nHandle, sprintf( ... ) )
-         FWrite( nHandle, HB_OSNewLine() )
+         FWrite( nHandle, hb_eol() )
          FClose( nHandle )
       ENDIF
    ENDIF

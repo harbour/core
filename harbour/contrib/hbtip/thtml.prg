@@ -134,12 +134,12 @@ ENDCLASS
 METHOD new( cHtmlString ) CLASS THtmlDocument
    LOCAL cEmptyHtmlDoc, oNode, oSubNode, oErrNode, aHead, aBody, nMode := 0
 
-   cEmptyHtmlDoc := '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">' + hb_osNewLine() +;
-                    '<html>' + hb_osNewLine() +;
-                    ' <head>' + hb_osNewLine() +;
-                    ' </head>' + hb_osNewLine() +;
-                    ' <body>' + hb_osNewLine() +;
-                    ' </body>' + hb_osNewLine() +;
+   cEmptyHtmlDoc := '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">' + hb_eol() +;
+                    '<html>' + hb_eol() +;
+                    ' <head>' + hb_eol() +;
+                    ' </head>' + hb_eol() +;
+                    ' <body>' + hb_eol() +;
+                    ' </body>' + hb_eol() +;
                     '</html>'
 
    IF ! ISCHARACTER( cHtmlString )
@@ -1034,7 +1034,7 @@ METHOD toString( nIndent ) CLASS THtmlNode
       IF ! ::isInline() .OR. ::htmlTagName == "!--"
          cHtml += cIndent
       ELSEIF ::keepFormatting()
-         cHtml += hb_osNewLine()
+         cHtml += hb_eol()
       ENDIF
       cHtml += "<" + ::htmlTagName + ::attrToString()
 
@@ -1047,7 +1047,7 @@ METHOD toString( nIndent ) CLASS THtmlNode
 
       FOR EACH oNode IN ::htmlContent
           IF ! oNode:isInline() .OR. oNode:htmlTagName == "!--"
-             cHtml += hb_osNewLine()
+             cHtml += hb_eol()
           ENDIF
          cHtml += oNode:toString( nIndent + 1 )
       NEXT
@@ -1060,12 +1060,12 @@ METHOD toString( nIndent ) CLASS THtmlNode
       IF ::isInline() .OR. ::keepFormatting() .OR. ::isType( CM_HEADING ) .OR. ::isType( CM_HEAD )
          RETURN cHtml += iif( ::htmlEndTagName == "/", " />", "<" + ::htmlEndTagName + ">" )
       ENDIF
-      IF !( Right( cHtml, Len( hb_osNewLine() ) ) == hb_osNewLine() )
-         cHtml += hb_osNewLine()
+      IF !( Right( cHtml, Len( hb_eol() ) ) == hb_eol() )
+         cHtml += hb_eol()
       ENDIF
       RETURN cHtml += cIndent + iif( ::htmlEndTagName == "/", " />", "<" + ::htmlEndTagName + ">" )
    ELSEIF ::htmlTagName $ "!--,br"
-      RETURN cHtml += hb_osNewLine() + cIndent
+      RETURN cHtml += hb_eol() + cIndent
    ENDIF
 
    RETURN cHtml
@@ -1144,8 +1144,8 @@ METHOD getText( cEOL ) CLASS THtmlNode
    LOCAL cText := ""
    LOCAL oNode
 
-   IF cEOL == NIL
-      cEOL := hb_osNewLine()
+   IF ! ISCHARACTER( cEOL )
+      cEOL := hb_eol()
    ENDIF
 
    IF ::htmlTagName == "_text_"

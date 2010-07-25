@@ -599,8 +599,8 @@ METHOD scroll( nMethod ) CLASS LISTBOX
    LOCAL nKey
    LOCAL nCount
 
-   DO CASE
-   CASE nMethod == HTSCROLLTHUMBDRAG
+   SWITCH nMethod
+   CASE HTSCROLLTHUMBDRAG
 
       nPrevMRow := MRow()
 
@@ -637,24 +637,27 @@ METHOD scroll( nMethod ) CLASS LISTBOX
             ENDIF
          ENDIF
       ENDDO
+      EXIT
 
-   CASE nMethod == HTSCROLLUNITDEC
+   CASE HTSCROLLUNITDEC
 
       IF ::nTopItem > 1
          ::nTopItem--
          ::oVScroll:current := ::scrollbarPos()
          ::display()
       ENDIF
+      EXIT
 
-   CASE nMethod == HTSCROLLUNITINC
+   CASE HTSCROLLUNITINC
 
       IF ( ::nTopItem + ::nBottom - ::nTop ) <= ::nItemCount + 1
          ::nTopItem++
          ::oVScroll:current := ::scrollbarPos()
          ::display()
       ENDIF
+      EXIT
 
-   CASE nMethod == HTSCROLLBLOCKDEC
+   CASE HTSCROLLBLOCKDEC
 
       nPos     := ::nBottom - ::nTop - iif( ::lDropDown, 2, 1 )
       nTopItem := ::nTopItem - nPos
@@ -663,8 +666,9 @@ METHOD scroll( nMethod ) CLASS LISTBOX
          ::oVScroll:current := ::scrollbarPos()
          ::display()
       ENDIF
+      EXIT
 
-   CASE nMethod == HTSCROLLBLOCKINC
+   CASE HTSCROLLBLOCKINC
 
       nPos       := ::nBottom - ::nTop - 1
       nItemCount := ::nItemCount
@@ -677,8 +681,9 @@ METHOD scroll( nMethod ) CLASS LISTBOX
          ::oVScroll:current := ::scrollbarPos()
          ::display()
       ENDIF
+      EXIT
 
-   ENDCASE
+   ENDSWITCH
 
    RETURN Self
 

@@ -453,7 +453,7 @@ STATIC PROCEDURE ToLog( cCmd, nWA, xPar1, xPar2, xPar3 )
             ENDIF
             // Log to file only if cLog is a valid string
             IF HB_ISSTRING( cLog )
-               FWrite( nHandle, cLog + hb_OSNewLine() )
+               FWrite( nHandle, cLog + hb_eol() )
             ENDIF
          ENDIF
 

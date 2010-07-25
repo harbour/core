@@ -53,10 +53,10 @@
 #ifndef _SIMPLEIO_CH
 #define _SIMPLEIO_CH
 
-#command ?  [ <xList,...> ] => ( OutStd( hb_OSNewLine() ) [, OutStd( <xList> ) ] )
+#command ?  [ <xList,...> ] => ( OutStd( hb_eol() ) [, OutStd( <xList> ) ] )
 #command ?? [ <xList,...> ] => OutStd( <xList> )
 
-#command ACCEPT TO <idVar> => <idVar> := StrTran( FReadStr( 0, 256 ), hb_OSNewLine() )
+#command ACCEPT TO <idVar> => <idVar> := StrTran( FReadStr( 0, 256 ), hb_eol() )
 #command ACCEPT <cPrompt> TO <idVar> => ? <cPrompt> ; ACCEPT TO <idVar>
 
 #endif /* _SIMPLEIO_CH */

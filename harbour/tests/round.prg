@@ -10,10 +10,9 @@
 
 function main()
 local n, value := -5
-local cNewLine := HB_OSNewLine()
 
    for n := 1 to 100
-      OUTSTD(cNewLine)
+      OUTSTD(hb_eol())
       OUTSTD(value)
       OUTSTD(round(value, 3))
       OUTSTD(round(value, 2))

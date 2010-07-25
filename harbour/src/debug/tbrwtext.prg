@@ -353,7 +353,7 @@ STATIC FUNCTION WhichEOL( cString )
       RETURN Chr( 13 ) + Chr( 10 )
    ENDIF
 
-   RETURN HB_OSNewLine()
+   RETURN hb_eol()
 
 STATIC FUNCTION Text2Array( cString )
 

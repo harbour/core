@@ -63,19 +63,7 @@ REQUEST HB_GT_CGI_DEFAULT
 // are not used anymore in Harbour core and RTL .prg files:
 // #define PRG_CAN_HAVE_HB_FUNC
 
-#ifdef __HARBOUR__
-   #define EOL  hb_OSNewLine()
-#else
-   #define EOL  ( Chr( 13 ) + Chr( 10 ) )
-#endif
-
-#ifdef __PLATFORM__UNIX
-   #define PATH_SEPARATOR "/"
-   #define BASE_DIR "../../"
-#else
-   #define PATH_SEPARATOR "\"
-   #define BASE_DIR "..\..\"
-#endif
+#define BASE_DIR ".." + hb_ps() + ".." + hb_ps()
 
 // List of known files which does not contain any real public function.
 STATIC s_aSkipFiles := { "profiler.prg", "msg_tpl.c" }
@@ -139,7 +127,7 @@ PROCEDURE MAIN( ... )
          CASE cArgName == "-?" .OR. cArgName == "--help"
             ShowHelp()
             RETURN
-         CASE cArgName == "-source" ;           s_aSwitches[ sw_BaseDir ] := arg + IIf(SubStr(arg, -1, 1) == PATH_SEPARATOR, "", PATH_SEPARATOR)
+         CASE cArgName == "-source" ;           s_aSwitches[ sw_BaseDir ] := arg + IIf(SubStr(arg, -1, 1) == hb_ps(), "", hb_ps())
          CASE cArgName == "-skipdirs"
             s_aSkipDirs := FileToArray( arg )
          CASE cArgName == "-skipfiles";      s_aSkipFiles := FileToArray( arg )
@@ -206,7 +194,7 @@ PROCEDURE MAIN( ... )
 #define ca53X52         "/* CA-Cl*pper 5.3 compatible, CA-Cl*pper 5.2 undocumented, functions */"
 #define harb            "/* Harbour extensions */"
 #define harbXcp         "/* Harbour extensions, codepage support */"
-#define harbXns         "/* Harbour extensions violating extension namespace rules." + EOL + "   See reasons in source. */"
+#define harbXns         "/* Harbour extensions violating extension namespace rules." + hb_eol() + "   See reasons in source. */"
 #define dbgr            "/* The debugger interface */"
 #define rdd             "/* RDD related symbols */"
 #define rddSx           "/* RDD SX related symbols */"
@@ -232,8 +220,8 @@ PROCEDURE MAIN( ... )
       Capture( ca51int, {|a,b,c,f| a,b,f, SubStr(c, 1, Len( "__") ) == "__" } ), ;
       Capture( harb   , {|a,b,c,f| a,b,f, SubStr(c, 1, Len( "HB_") ) == "HB_" } ), ;
       Capture( dbgr   , {|a,b,c,f| a,b,f, SubStr(c, 1, Len( "__DBG") ) == "__DBG" } ), ;
-      Capture( rdd    , {|a,b,c,f| a,b,c, AT( PATH_SEPARATOR + "rdd" + PATH_SEPARATOR, f) > 0 } ), ;
-      Capture( rddSx  , {|a,b,c,f| a,b, (SubStr(c, 1, 2) == "SX" .OR. SubStr(c, 1, 3) == "_SX" .OR. .F.) .AND. AT( PATH_SEPARATOR + "rdd" + PATH_SEPARATOR, f) > 0 } ), ;
+      Capture( rdd    , {|a,b,c,f| a,b,c, AT( hb_ps() + "rdd" + hb_ps(), f) > 0 } ), ;
+      Capture( rddSx  , {|a,b,c,f| a,b, (SubStr(c, 1, 2) == "SX" .OR. SubStr(c, 1, 3) == "_SX" .OR. .F.) .AND. AT( hb_ps() + "rdd" + hb_ps(), f) > 0 } ), ;
       Capture( hiper  , {|a,b,c,f| a,b,f, SubStr(c, 1, Len( "HS_") ) == "HS_" } ), ;
       Capture( cfts   , {|a,b,c,f| a,b,f, SubStr(c, 1, Len( "CFTS") ) == "CFTS" } ), ;
       Capture( i18n   , {|a,b,c,f| a,b,f, SubStr(c, 1, Len( "HB_I18N") ) == "HB_I18N" } ), ;
@@ -256,18 +244,18 @@ PROCEDURE MAIN( ... )
 
    // action codepage first so the folder will be ignored when actioning source
    aActions := {;
-      { "hbextcdp.ch_", "HB_EXTCDP_CH_", "source" + PATH_SEPARATOR + "codepage", CDPACTIONS }, ;
-      { "hbextlng.ch_", "HB_EXTLNG_CH_", "source" + PATH_SEPARATOR + "lang", LNGACTIONS }, ;
+      { "hbextcdp.ch_", "HB_EXTCDP_CH_", "source" + hb_ps() + "codepage", CDPACTIONS }, ;
+      { "hbextlng.ch_", "HB_EXTLNG_CH_", "source" + hb_ps() + "lang", LNGACTIONS }, ;
       { "hbextern.ch_", "HB_EXTERN_CH_", "source", STDACTIONS }, ;
    }
 
    AEval( ;
-      Directory( s_aSwitches[ sw_BaseDir ] + "contrib" + PATH_SEPARATOR + "*", "D" ), ;
+      Directory( s_aSwitches[ sw_BaseDir ] + "contrib" + hb_ps() + "*", "D" ), ;
       {|ad| IIf( HB_AScan( s_aSkipDirs, ad[ F_NAME ] ) == 0 .AND. ad[ F_ATTR ] == "D", ;
               AAdd( aActions, ;
                { ad[ F_NAME ] + ".ch_", ;
                  "HB_CONTRIB_EXTERN_" + Upper( ad[ F_NAME ] ) + "_CH_", ;
-                 "contrib" + PATH_SEPARATOR + ad[ F_NAME ], ;
+                 "contrib" + hb_ps() + ad[ F_NAME ], ;
                  { Capture( "", {|a_,b_,c_,f_| a_,b_,c_,f_, .T. } ) } } ), ;
                ) ;
       } ;
@@ -294,12 +282,12 @@ PROCEDURE MAIN( ... )
             ENDIF
 
             FWrite( nOutput, ;
-               "// NOTE: Machine generated on: " + DTOC( DATE() ) + EOL + ;
-               "//       This output should be edited by hand after extraction." + EOL + ;
-               EOL + ;
-               "#ifndef " + aa[ ACN_HEADER ] + EOL + ;
-               "#define " + aa [ ACN_HEADER ] + EOL + ;
-               EOL ;
+               "// NOTE: Machine generated on: " + DTOC( DATE() ) + hb_eol() + ;
+               "//       This output should be edited by hand after extraction." + hb_eol() + ;
+               hb_eol() + ;
+               "#ifndef " + aa[ ACN_HEADER ] + hb_eol() + ;
+               "#define " + aa [ ACN_HEADER ] + hb_eol() + ;
+               hb_eol() ;
             )
 
             s_aMethodAsProcedure := {}
@@ -307,47 +295,47 @@ PROCEDURE MAIN( ... )
             ProcessDir( s_aSwitches[ sw_BaseDir ] + aa[ ACN_FOLDER ], aa[ ACN_ACTIONS ] )
 
             IF Len(s_aMethodAsProcedure) > 0
-               FWrite( nOutput, "/*" + EOL + "Class methods defined as 'procedure':" + EOL )
-               AEval(s_aMethodAsProcedure, {|ac| FWrite( nOutput, "  " + ac[1] + " " + ac[2] + EOL ) } )
-               FWrite( nOutput, "*/" + EOL + EOL )
+               FWrite( nOutput, "/*" + hb_eol() + "Class methods defined as 'procedure':" + hb_eol() )
+               AEval(s_aMethodAsProcedure, {|ac| FWrite( nOutput, "  " + ac[1] + " " + ac[2] + hb_eol() ) } )
+               FWrite( nOutput, "*/" + hb_eol() + hb_eol() )
             ENDIF
 
             FOR EACH ao IN aa[ 4 ]
                IF ao != NIL
                   IF Len( ao[ capt_Desc ] ) > 0
-                     FWrite( nOutput, ao[ capt_Desc ] + EOL )
+                     FWrite( nOutput, ao[ capt_Desc ] + hb_eol() )
                   ENDIF
                   IF LEn( ao[ capt_Repository ] ) == 0
-                     FWrite( nOutput, "/* empty */" + EOL )
+                     FWrite( nOutput, "/* empty */" + hb_eol() )
                   ELSE
-                     FWrite( nOutput, EOL )
+                     FWrite( nOutput, hb_eol() )
                      FOR EACH ar in ao[ capt_Repository ]
-                        IF ar[ capt_Cond ] != NIL .AND. Len( ar[ capt_Cond ] ) > 0 ; FWrite( nOutput, ar[ capt_Cond ] + EOL ); ENDIF
+                        IF ar[ capt_Cond ] != NIL .AND. Len( ar[ capt_Cond ] ) > 0 ; FWrite( nOutput, ar[ capt_Cond ] + hb_eol() ); ENDIF
 
                         ASort( ar[ capt_Repository ] )
-                        AEval( ar[ capt_Repository ], {|a| FWrite( nOutput, "EXTERNAL " + a + EOL ) } )
+                        AEval( ar[ capt_Repository ], {|a| FWrite( nOutput, "EXTERNAL " + a + hb_eol() ) } )
 
                         IF ar[ capt_Cond ] != NIL .AND. Len( ar[ capt_Cond ] ) > 0
                            cDescription := ""
                            DO WHILE Len( ar[ capt_Cond ] ) > 0
-                              cDescription := "#endif /* " + Parse( @ar[ capt_Cond ], EOL ) + " */" + EOL + cDescription
+                              cDescription := "#endif /* " + Parse( @ar[ capt_Cond ], hb_eol() ) + " */" + hb_eol() + cDescription
                            ENDDO
                            FWrite( nOutput, cDescription )
                         ENDIF
 
-                        FWrite( nOutput, EOL )
+                        FWrite( nOutput, hb_eol() )
                      NEXT
                   ENDIF
                   IF Len( ao[ capt_Desc ] ) > 0
-                     FWrite( nOutput, Stuff( ao[ capt_Desc ], 4, 0, "End of ") + EOL + EOL )
+                     FWrite( nOutput, Stuff( ao[ capt_Desc ], 4, 0, "End of ") + hb_eol() + hb_eol() )
                   ELSE
-                     FWrite( nOutput, EOL )
+                     FWrite( nOutput, hb_eol() )
                   ENDIF
                ENDIF
             NEXT
 
             FWrite( nOutput, ;
-               "#endif /* " + aa [ ACN_HEADER ] + " */" + EOL ;
+               "#endif /* " + aa [ ACN_HEADER ] + " */" + hb_eol() ;
             )
 
             FClose( nOutput )
@@ -369,11 +357,11 @@ STATIC PROCEDURE ShowHelp()
       "Syntax: ", ;
       "  hbextern [options]", ;
       "options:", ;
-      "  -source=<folder> // source folder, default is .." + PATH_SEPARATOR + "..", ;
+      "  -source=<folder> // source folder, default is .." + hb_ps() + "..", ;
       "  -skipdirs=<filename> // configuration file of folders to bypass, default:", ;
-      {|| AEval( s_aSkipDirs, {|c| OutStd( IIf( Empty(c), "", "    " + c ) + EOL ) } ) }, ;
+      {|| AEval( s_aSkipDirs, {|c| OutStd( IIf( Empty(c), "", "    " + c ) + hb_eol() ) } ) }, ;
       "  -skipfiles=<filename> // configuration file of files to bypass, default:", ;
-      {|| AEval( s_aSkipFiles, {|c| OutStd( IIf( Empty(c), "", "    " + c ) + EOL ) } ) }, ;
+      {|| AEval( s_aSkipFiles, {|c| OutStd( IIf( Empty(c), "", "    " + c ) + hb_eol() ) } ) }, ;
       "  -verbose=[silent|minimum|maximum] // verbose operation, default is maximum", ;
       "  -silent // synonym for verbose=silent", ;
       "  -case=[upper|lower|unchanged] // output case, default is upper", ;
@@ -392,7 +380,7 @@ STATIC PROCEDURE ShowHelp()
 #undef OnOrOff
 
    // using hbmk2 style
-   AEval( aHelp, {|x| IIf( ValType( x ) == "B", Eval( x ), OutStd( IIf( Empty(x), "", x ) + EOL ) ) } )
+   AEval( aHelp, {|x| IIf( ValType( x ) == "B", Eval( x ), OutStd( IIf( Empty(x), "", x ) + hb_eol() ) ) } )
 
    RETURN
 
@@ -407,7 +395,7 @@ STATIC PROCEDURE ProcessDir( cDir, aOutput )
 
    IF s_aSwitches[ sw_Verbose ] > 0 ; ? cDir ; ENDIF
 
-   cDir += PATH_SEPARATOR
+   cDir += hb_ps()
 
    aFiles := Directory( cDir + "*.*", "D" )
    IF ( nLen := LEN( aFiles ) ) > 0
@@ -455,7 +443,7 @@ STATIC PROCEDURE ProcessFile( cFile, lPRG, aOutput )
 
    IF s_aSwitches[ sw_Verbose ] > 1 ; ? cFile ; ENDIF
 
-   cHeader := "//" + EOL + "// symbols from file: " + cFile + EOL + "//" + EOL
+   cHeader := "//" + hb_eol() + "// symbols from file: " + cFile + hb_eol() + "//" + hb_eol()
 
    IF .NOT. s_aSwitches[ sw_ExcludeEmptyFiles ]
       bOutputHeader := .F.
@@ -801,7 +789,7 @@ STATIC PROCEDURE WriteSymbol( cFile, cLine, cMethodType, bOutputHeader, cHeader,
          ENDIF
 
          IF s_aSwitches[ sw_ConditionalDepth ] == 0
-            AEval( s_aConditions, {|/* c */| s_aSwitches[ sw_ConditionalDepth ]++/* , FWrite( nOutput, c + EOL ) */ } )
+            AEval( s_aConditions, {|/* c */| s_aSwitches[ sw_ConditionalDepth ]++/* , FWrite( nOutput, c + hb_eol() ) */ } )
          ENDIF
 
          IF s_aSwitches[ sw_MimicHBExtern ].OR. Empty(cMethodType) .OR. s_aSwitches[ sw_ExcludeClassMethods ]
@@ -811,8 +799,8 @@ STATIC PROCEDURE WriteSymbol( cFile, cLine, cMethodType, bOutputHeader, cHeader,
          ENDIF
 
          cConditions := ""
-         AEval( s_aConditions, {|c| cConditions += c + EOL } )
-         IF Len( cConditions ) > Len( EOL ) ; cConditions := SubStr( cConditions, 1, Len( cConditions ) - Len( EOL ) ) ; ENDIF
+         AEval( s_aConditions, {|c| cConditions += c + hb_eol() } )
+         IF Len( cConditions ) > Len( hb_eol() ) ; cConditions := SubStr( cConditions, 1, Len( cConditions ) - Len( hb_eol() ) ) ; ENDIF
 
          // the first entry has a hard-coded TRUE value so one will always be found
          idxOutput := HB_RAScan( aOutput, {|ao| ;
@@ -828,22 +816,22 @@ STATIC PROCEDURE WriteSymbol( cFile, cLine, cMethodType, bOutputHeader, cHeader,
          ENDIF
          AAdd( aOutput[ idxOutput ][ capt_Repository ][ idxRepository ][ capt_Repository ], cLine /* + cHeader */ )
 
-         //~ FWrite( nOutput, "EXTERNAL " + cLine + cMethodType + EOL )
+         //~ FWrite( nOutput, "EXTERNAL " + cLine + cMethodType + hb_eol() )
       ENDIF
    ENDIF
 
    RETURN
 
 STATIC PROCEDURE CopyGenericCopyrightToTarget( cSource, nOutput )
-   LOCAL cFile := s_aSwitches[ sw_BaseDir ] + "doc" + PATH_SEPARATOR + "hdr_tpl.txt"
+   LOCAL cFile := s_aSwitches[ sw_BaseDir ] + "doc" + hb_ps() + "hdr_tpl.txt"
    LOCAL nInput
    LOCAL cBuffer2
 
    FWrite( nOutput, ;
-            "/*" + EOL + ;
-            " * $" + "Id" + "$" + EOL + ;
-            "*/" + EOL + ;
-            EOL )
+            "/*" + hb_eol() + ;
+            " * $" + "Id" + "$" + hb_eol() + ;
+            "*/" + hb_eol() + ;
+            hb_eol() )
 
    IF ( nInput := FOpen( cFile ) ) > 0
       // assume there are two comment blocks seperated by a blank line (svn header and copyright)
@@ -854,7 +842,7 @@ STATIC PROCEDURE CopyGenericCopyrightToTarget( cSource, nOutput )
          cBuffer2 := StrTran( cBuffer2, " 2001", "" )
          cBuffer2 := StrTran( cBuffer2, "{list of individual authors and e-mail addresses}", "- automaticallyt generated by hbextern; do not edit" )
          cBuffer2 := StrTran( cBuffer2, "{one-liner description about the purpose of this source file}", "Harbour " + cSource + " contrib external header" )
-         FWrite( nOutput, "/*" + cBuffer2 + EOL + EOL )
+         FWrite( nOutput, "/*" + cBuffer2 + hb_eol() + hb_eol() )
       ENDIF
       FClose( nInput )
    ELSE
@@ -863,18 +851,18 @@ STATIC PROCEDURE CopyGenericCopyrightToTarget( cSource, nOutput )
    ENDIF
 
 STATIC PROCEDURE CopyExistingSourceToTarget( cSource, nOutput )
-   LOCAL cFile := s_aSwitches[ sw_BaseDir ] + "include" + PATH_SEPARATOR + cSource
+   LOCAL cFile := s_aSwitches[ sw_BaseDir ] + "include" + hb_ps() + cSource
    LOCAL nInput
    LOCAL cBuffer1, cBuffer2
 
    IF Empty( Directory( cFile ) )
 #if 0
       FWrite( nOutput, ;
-               "/*" + EOL + ;
-               " * $" + "Id" + "$" + EOL + ;
-               "*/" + EOL + ;
-               EOL )
-      cFile := s_aSwitches[ sw_BaseDir ] + "doc" + PATH_SEPARATOR + "hdr_tpl.txt"
+               "/*" + hb_eol() + ;
+               " * $" + "Id" + "$" + hb_eol() + ;
+               "*/" + hb_eol() + ;
+               hb_eol() )
+      cFile := s_aSwitches[ sw_BaseDir ] + "doc" + hb_ps() + "hdr_tpl.txt"
       IF ( nInput := FOpen( cFile ) ) > 0
          // assume there are two comment blocks seperated by a blank line (svn header and copyright)
          IF FReadUntil( nInput, "*/", "" /* discard ID comment */ ) .AND. ;
@@ -884,7 +872,7 @@ STATIC PROCEDURE CopyExistingSourceToTarget( cSource, nOutput )
             cBuffer2 := StrTran( cBuffer2, " 2001", "" )
             cBuffer2 := StrTran( cBuffer2, "{list of individual authors and e-mail addresses}", "- automaticallyt generated by hbextern; do not edit" )
             cBuffer2 := StrTran( cBuffer2, "{one-liner description about the purpose of this source file}", "Harbour " + cSource + " contrib external header" )
-            FWrite( nOutput, "/*" + cBuffer2 + EOL + EOL )
+            FWrite( nOutput, "/*" + cBuffer2 + hb_eol() + hb_eol() )
          ENDIF
          FClose( nInput )
       ENDIF
@@ -892,7 +880,7 @@ STATIC PROCEDURE CopyExistingSourceToTarget( cSource, nOutput )
    ELSEIF ( nInput := FOpen( cFile ) ) > 0
       // assume there are two comment blocks seperated by a blank line (svn header and copyright)
       IF FReadUntil( nInput, "*/", @cBuffer1 ) .AND. FReadUntil( nInput, "*/", @cBuffer2 )
-         FWrite( nOutput, cBuffer1 + cBuffer2 + EOL + EOL )
+         FWrite( nOutput, cBuffer1 + cBuffer2 + hb_eol() + hb_eol() )
       ENDIF
       FClose( nInput )
    ELSE

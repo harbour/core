@@ -157,28 +157,28 @@ STATIC FUNCTION HBRawVersion()
 
 STATIC PROCEDURE Logo()
 
-   OutStd( "Harbour i18n .pot/.hbl file manager " + HBRawVersion() + HB_OSNewLine() +;
-           "Copyright (c) 2009-2010, Przemyslaw Czerpak" + HB_OSNewLine() + ;
-           "http://harbour-project.org/" + HB_OSNewLine() +;
-           HB_OSNewLine() )
+   OutStd( "Harbour i18n .pot/.hbl file manager " + HBRawVersion() + hb_eol() +;
+           "Copyright (c) 2009-2010, Przemyslaw Czerpak" + hb_eol() + ;
+           "http://harbour-project.org/" + hb_eol() +;
+           hb_eol() )
    RETURN
 
 
 STATIC PROCEDURE Syntax()
 
    Logo()
-   OutStd( "Syntax: hbi18n -m | -g | -a [-o<outfile>] [-e] [-q] <files1[.pot] ...>" + HB_OSNewLine() + ;
-           HB_OSNewLine() + ;
-           "    -m          merge given .pot files" + HB_OSNewLine() + ;
-           "    -g          generate .hbl file from given .pot files" + HB_OSNewLine() + ;
-           "    -a          add automatic translations to 1-st .pot file using" + HB_OSNewLine() + ;
-           "                translations from other .pot or .hbl files" + HB_OSNewLine() + ;
-           "    -o<outfile> output file name" + HB_OSNewLine() + ;
-           "                default is first .pot file name with" + HB_OSNewLine() + ;
-           "                .po (merge) or .hbl extension" + HB_OSNewLine() + ;
-           "    -e          do not strip empty translation rules from .hbl files" + HB_OSNewLine() + ;
-           "    -q          quiet mode" + HB_OSNewLine() + ;
-           HB_OSNewLine() )
+   OutStd( "Syntax: hbi18n -m | -g | -a [-o<outfile>] [-e] [-q] <files1[.pot] ...>" + hb_eol() + ;
+           hb_eol() + ;
+           "    -m          merge given .pot files" + hb_eol() + ;
+           "    -g          generate .hbl file from given .pot files" + hb_eol() + ;
+           "    -a          add automatic translations to 1-st .pot file using" + hb_eol() + ;
+           "                translations from other .pot or .hbl files" + hb_eol() + ;
+           "    -o<outfile> output file name" + hb_eol() + ;
+           "                default is first .pot file name with" + hb_eol() + ;
+           "                .po (merge) or .hbl extension" + hb_eol() + ;
+           "    -e          do not strip empty translation rules from .hbl files" + hb_eol() + ;
+           "    -q          quiet mode" + hb_eol() + ;
+           hb_eol() )
 
    IF hb_gtInfo( HB_GTI_ISGRAPHIC )
       OutStd( "Press any key to continue..." )
@@ -190,7 +190,7 @@ STATIC PROCEDURE Syntax()
 
 STATIC PROCEDURE ErrorMsg( cErrorMsg )
 
-   OutStd( "error: " + StrTran( cErrorMsg, ";", hb_osNewLine() ) + HB_OSNewLine() )
+   OutStd( "error: " + StrTran( cErrorMsg, ";", hb_eol() ) + hb_eol() )
 
    IF hb_gtInfo( HB_GTI_ISGRAPHIC )
       OutStd( "Press any key to continue..." )

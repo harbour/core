@@ -1,18 +1,14 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
 // Testing SET
-
-STATIC s_cNewLine
 
 #include "set.ch"
 request dbfntx
 function Main()
 // for Clipper, this drags in the terminal driver
 @ Row(), col() say ""
-
-   s_cNewLine := HB_OSNewLine()
 
    TestLine( "_SET_EXACT",        1)
    TestLine( "_SET_FIXED",        2)
@@ -86,7 +82,7 @@ function Main()
 return nil
 
 proc testline( c, n )
-   outstd( s_cNewLine )
+   outstd( hb_eol() )
    outstd( str( n, 3 ) )
    outstd( " " )
    outstd( Padr( c, 20 ) )
