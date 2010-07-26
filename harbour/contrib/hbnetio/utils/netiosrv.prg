@@ -145,7 +145,7 @@ PROCEDURE Main( ... )
                       netiosrv[ _NETIOSRV_cIFAddr ],;
                       netiosrv[ _NETIOSRV_cRootDir ],;
                       iif( Empty( netiosrv[ _NETIOSRV_cRPCFHRB ] ), netiosrv[ _NETIOSRV_lRPC ], hb_hrbGetFunSym( netiosrv[ _NETIOSRV_cRPCFHRB ], _RPC_FILTER ) ),;
-                      @cPassword )
+                      cPassword )
 
    netiosrv[ _NETIOSRV_lEncryption ] := ! Empty( cPassword )
    cPassword := NIL

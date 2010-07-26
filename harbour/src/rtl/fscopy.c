@@ -62,6 +62,7 @@
 
 HB_BOOL hb_fsCopy( const char * pszSource, const char * pszDest )
 {
+   HB_ERRCODE errCode = 0;
    HB_BOOL bRetVal = HB_TRUE;
    HB_FHANDLE fhndSource;
    HB_FHANDLE fhndDest;
@@ -81,6 +82,7 @@ HB_BOOL hb_fsCopy( const char * pszSource, const char * pszDest )
          {
             if( nBytesRead != hb_fsWrite( fhndDest, pbyBuffer, nBytesRead ) )
             {
+               errCode = hb_fsError();
                bRetVal = HB_FALSE;
                break;
             }
@@ -96,28 +98,33 @@ HB_BOOL hb_fsCopy( const char * pszSource, const char * pszDest )
          hb_fsClose( fhndDest );
       }
       else
+      {
+         errCode = hb_fsError();
          bRetVal = HB_FALSE;
+      }
 
       hb_fsClose( fhndSource );
    }
    else
+   {
+      errCode = hb_fsError();
       bRetVal = HB_FALSE;
+   }
+
+   hb_fsSetFError( errCode );
 
    return bRetVal;
 }
 
 HB_FUNC( HB_FCOPY )
 {
-   HB_ERRCODE uiError = 2;
    const char * pszSource = hb_parc( 1 ), * pszDest = hb_parc( 2 );
 
    if( pszSource && pszDest )
-   {
       hb_retni( hb_fsCopy( pszSource, pszDest ) ? 0 : F_ERROR );
-      uiError = hb_fsError();
-   }
    else
+   {
+      hb_fsSetFError( 2 );
       hb_retni( F_ERROR );
-
-   hb_fsSetFError( uiError );
+   }
 }
