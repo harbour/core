@@ -1050,7 +1050,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
    IF nLevel > 1
       IF ! hbmk[ _HBMK_lQuiet ]
-         hbmk_OutStd( hbmk, hb_StrFormat( I_( "Building sub-project: %1$s (level %2$s)" ), hbmk[ _HBMK_aArgs ][ hbmk[ _HBMK_nArgTarget ] ], hb_ntos( nLevel ) ) )
+         hbmk_OutStd( hbmk, hb_StrFormat( I_( "Building sub-project (level %1$s): %2$s" ), hb_ntos( nLevel ), hbmk[ _HBMK_aArgs ][ hbmk[ _HBMK_nArgTarget ] ] ) )
       ENDIF
    ENDIF
 
