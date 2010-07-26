@@ -2,7 +2,7 @@
 # $Id$
 #
 
-{!allwin}skip=yes
+skip={!allwin}
 
 incpaths=.
 

@@ -2,7 +2,7 @@
 # $Id$
 #
 
-{dos}skip=yes
+skip={dos}
 
 incpaths=.
 
