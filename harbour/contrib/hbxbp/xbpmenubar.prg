@@ -535,22 +535,22 @@ METHOD xbpMenuBar:selectItem( nItemIndex )
 METHOD xbpMenuBar:execSlot( cSlot, p )
    LOCAL nIndex
 
-   IF cSlot == "triggered(bool)"
-      if ( nIndex := ascan( ::aMenuItems, {|e_| e_[ 2 ] == p } ) ) > 0
+   IF ! empty( p ) .AND. ( nIndex := ascan( ::aMenuItems, {|e_| iif( hb_isNumeric( e_[ 2 ] ), e_[ 2 ] == p, .f. ) } ) ) > 0
+      IF cSlot == "triggered(bool)"
          IF hb_isBlock( ::aMenuItems[ nIndex,4 ] )
             eval( ::aMenuItems[ nIndex,4 ] )
+
          ELSE
             ::itemSelected( nIndex )
-         ENDIF
-      ENDIF
 
-   ELSEIF cSlot == "hovered()"
-      IF !empty( p )
-         IF ( nIndex := ascan( ::aMenuItems, {|e_| iif( hb_isNumeric( e_[ 2 ] ), e_[ 2 ] == p, .f. ) } ) ) > 0
+         ENDIF
+
+      ELSEIF cSlot == "hovered()"
+         IF !empty( p )
             ::itemMarked( nIndex )
+
          ENDIF
       ENDIF
-
    ENDIF
 
    RETURN nil
