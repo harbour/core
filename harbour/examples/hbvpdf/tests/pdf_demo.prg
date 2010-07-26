@@ -28,12 +28,12 @@ procedure main()
                { "Helvetica", .t., .t., .t., .t. },;
                { "Courier",   .t., .t., .t., .t. } }
 
-   pdfOpen('test.pdf', 200, .t.)
+   pdfOpen("test.pdf", 200, .t.)
 
    pdfEditOnHeader()
-   pdfImage( 'files' + HB_OSPATHSEPARATOR() + 'color.tif', 0, 0, "M" ) // file, row, col, units, height, width
+   pdfImage( "files" + hb_ps() + "color.tif", 0, 0, "M" ) // file, row, col, units, height, width
    pdfEditOffHeader()
-   pdfSaveHeader('test.hea')
+   pdfSaveHeader("test.hea")
    pdfCloseHeader()
 
    pdfBookOpen()
@@ -96,17 +96,17 @@ procedure main()
    nWidth := 90
    nTab := 0
 
-   cTestFile := memoread('files' + HB_OSPATHSEPARATOR() + 'test.txt')
+   cTestFile := memoread("files" + hb_ps() + "test.txt")
 
-   pdfText( cTestFile,  28, 107.95, nWidth, nTab, 3, 'M', chr(253) + chr(0) + chr(0) + chr(255) )//,              pdfTextCount( memoread('test.txt'),  28, 107.95, nWidth, nTab, 3, 'M' )
-   pdfText( cTestFile,  58, 107.95, nWidth, nTab, 2, 'M', chr(253) + chr(0) + chr(255) + chr(0) )//,              pdfTextCount( memoread('test.txt'),  58, 107.95, nWidth, nTab, 2, 'M' )
-   pdfText( cTestFile,  88, 107.95, nWidth, nTab, 1, 'M', chr(253) + chr(255) + chr(0) + chr(0) )//,              pdfTextCount( memoread('test.txt'),  88, 107.95, nWidth, nTab, 1, 'M' )
-   pdfText( cTestFile, 118, 107.95 - nWidth / 2, nWidth, nTab, 4, 'M', chr(253) + chr(255) + chr(255) + chr(0) )//, pdfTextCount( memoread('test.txt'), 118, 107.95 - nWidth / 2, nWidth, nTab, 4, 'M' )
+   pdfText( cTestFile,  28, 107.95, nWidth, nTab, 3, "M", chr(253) + chr(0) + chr(0) + chr(255) )//,              pdfTextCount( memoread("test.txt"),  28, 107.95, nWidth, nTab, 3, "M" )
+   pdfText( cTestFile,  58, 107.95, nWidth, nTab, 2, "M", chr(253) + chr(0) + chr(255) + chr(0) )//,              pdfTextCount( memoread("test.txt"),  58, 107.95, nWidth, nTab, 2, "M" )
+   pdfText( cTestFile,  88, 107.95, nWidth, nTab, 1, "M", chr(253) + chr(255) + chr(0) + chr(0) )//,              pdfTextCount( memoread("test.txt"),  88, 107.95, nWidth, nTab, 1, "M" )
+   pdfText( cTestFile, 118, 107.95 - nWidth / 2, nWidth, nTab, 4, "M", chr(253) + chr(255) + chr(255) + chr(0) )//, pdfTextCount( memoread("test.txt"), 118, 107.95 - nWidth / 2, nWidth, nTab, 4, "M" )
 
-   pdfText( cTestFile,  34, 100,    nWidth, nTab, 3, 'R', chr(253) + chr(0) + chr(128) + chr(128) )//, pdfTextCount( memoread('test.txt'),  33, 100,    nWidth, nTab, 3, 'R' )
-   pdfText( cTestFile,  41, 100,    nWidth, nTab, 2, 'R', chr(253) + chr(0) + chr(191) + chr(255) )//, pdfTextCount( memoread('test.txt'),  40, 100,    nWidth, nTab, 2, 'R' )
-   pdfText( cTestFile,  48, 100,    nWidth, nTab, 1, 'R', chr(253) + chr(244) + chr(164) + chr(96) )//, pdfTextCount( memoread('test.txt'),  47, 100,    nWidth, nTab, 1, 'R' )
-   pdfText( cTestFile,  55,  35,    nWidth, nTab, 4, 'R', chr(253) + chr(0) + chr(0) + chr(0) )//, pdfTextCount( memoread('test.txt'),  54,  35,    nWidth, nTab, 4, 'R' )
+   pdfText( cTestFile,  34, 100,    nWidth, nTab, 3, "R", chr(253) + chr(0) + chr(128) + chr(128) )//, pdfTextCount( memoread("test.txt"),  33, 100,    nWidth, nTab, 3, "R" )
+   pdfText( cTestFile,  41, 100,    nWidth, nTab, 2, "R", chr(253) + chr(0) + chr(191) + chr(255) )//, pdfTextCount( memoread("test.txt"),  40, 100,    nWidth, nTab, 2, "R" )
+   pdfText( cTestFile,  48, 100,    nWidth, nTab, 1, "R", chr(253) + chr(244) + chr(164) + chr(96) )//, pdfTextCount( memoread("test.txt"),  47, 100,    nWidth, nTab, 1, "R" )
+   pdfText( cTestFile,  55,  35,    nWidth, nTab, 4, "R", chr(253) + chr(0) + chr(0) + chr(0) )//, pdfTextCount( memoread("test.txt"),  54,  35,    nWidth, nTab, 4, "R" )
 
    pdfNewPage( "LETTER", "P", 6 )
    pdfBookAdd( "Fonts", 1, aReport[ REPORTPAGE ], 0 )
@@ -128,34 +128,34 @@ procedure main()
    pdfNewPage( "LETTER", "P", 6 )
    pdfBookAdd( "Pictures", 1, aReport[ REPORTPAGE ], 0 )
    pdfBookAdd( "TIFF", 2, aReport[ REPORTPAGE ], 0 )
-   pdfImage( 'files' + HB_OSPATHSEPARATOR() + 'color.tif', 0, 0, "M" ) // file, row, col, units, height, width
+   pdfImage( "files" + hb_ps() + "color.tif", 0, 0, "M" ) // file, row, col, units, height, width
    pdfRJust(pdfUnderline("TIFF"), nK++, aReport[ REPORTWIDTH ], "R")
 
    pdfNewPage( "LETTER", "P", 6 )
    pdfBookAdd( "JPEG", 2, aReport[ REPORTPAGE ], 0 )
-   pdfImage( 'files' + HB_OSPATHSEPARATOR() + 'color.jpg', 0, 0, "M" ) // file, row, col, units, height, width
+   pdfImage( "files" + hb_ps() + "color.jpg", 0, 0, "M" ) // file, row, col, units, height, width
    pdfRJust(pdfUnderline("JPEG"), nK, aReport[ REPORTWIDTH ], "R")
 
-   pdfOpenHeader('test.hea')
+   pdfOpenHeader("test.hea")
 
    pdfNewPage( "LETTER", "P", 6 )
    pdfBookAdd( "Headers", 1, aReport[ REPORTPAGE ], 0 )
    pdfBookAdd( "Picture Header Page 8", 2, aReport[ REPORTPAGE ], 0 )
 
    // version 0.01
-   pdfAtSay( chr(253) + chr(255) + chr(0) + chr(0) + 'Red Sample of header repeating on pages 8-10', 1, 20, "R" )
+   pdfAtSay( chr(253) + chr(255) + chr(0) + chr(0) + "Red Sample of header repeating on pages 8-10", 1, 20, "R" )
 
    pdfNewPage( "LETTER", "P", 6 )
    pdfBookAdd( "Picture Header Page 9", 2, aReport[ REPORTPAGE ], 0 )
 
    // version 0.01
-   pdfAtSay( chr(253) + chr(0) + chr(255) + chr(0) + 'Green Sample of header repeating on pages  8-10', 1, 20, "R" )
+   pdfAtSay( chr(253) + chr(0) + chr(255) + chr(0) + "Green Sample of header repeating on pages  8-10", 1, 20, "R" )
 
    pdfNewPage( "LETTER", "P", 6 )
    pdfBookAdd( "Picture Header Page 10", 2, aReport[ REPORTPAGE ], 0 )
 
    // version 0.01
-   pdfAtSay( chr(253) + chr(0) + chr(0) + chr(255) + 'Blue Sample of header repeating on pages  8-10', 1, 20, "R" )
+   pdfAtSay( chr(253) + chr(0) + chr(0) + chr(255) + "Blue Sample of header repeating on pages  8-10", 1, 20, "R" )
 
    pdfClose()
 

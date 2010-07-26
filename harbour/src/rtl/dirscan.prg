@@ -77,18 +77,17 @@ STATIC FUNCTION hb_doScan( cPath, cMask, cAttr, cPathSep )
 FUNCTION hb_DirScan( cPath, cFileMask, cAttr )
 
    LOCAL cFilePath
-   LOCAL cPathSep := hb_osPathSeparator()
 
    IF Empty( cPath )
       cFilePath := ""
    ELSE
       cFilePath := cPath
       IF !Right( cPath, 1 ) $ hb_osPathDelimiters()
-         cFilePath += cPathSep
+         cFilePath += hb_ps()
       ENDIF
    ENDIF
 
    RETURN HB_DoScan( cFilePath, ;
                      iif( Empty( cFileMask ), hb_osFileMask(), cFileMask ), ;
                      iif( ValType( cAttr ) $ "CM", cAttr, "" ), ;
-                     cPathSep )
+                     hb_ps() )

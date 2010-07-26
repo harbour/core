@@ -632,7 +632,7 @@ METHOD IdeToolsManager:populatePlugins( lClear )
    ENDIF
    ::aPlugins := {}
 
-   cDir := hb_dirBase() + "plugins" + hb_osPathSeparator()
+   cDir := hb_dirBase() + "plugins" + hb_ps()
    aDir := directory( cDir + "*" )
    IF !empty( aDir )
       FOR EACH aFile IN aDir
@@ -874,4 +874,3 @@ METHOD IdeToolsManager:macro2value( cMacro )
    RETURN cVal
 
 /*----------------------------------------------------------------------*/
-

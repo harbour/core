@@ -1,12 +1,12 @@
 /*
  * $Id$
  */
- 
-/*    
- *    Wvt*Classes Demonstration 
+
+/*
+ *    Wvt*Classes Demonstration
  *
  *    This protocol can be clubbed with pure console implementation
- *    AND can be called IN a separate thread as well as modal TO 
+ *    AND can be called IN a separate thread as well as modal TO
  *    current window.
  *
  *    Pritpal Bedi <bedipritpal@hotmail.com>
@@ -18,7 +18,7 @@
 #include "wvtwin.ch"
 #include "hbgtinfo.ch"
 #include "hbgtwvg.ch"
-#include "wvgparts.ch" 
+#include "wvgparts.ch"
 
 /*----------------------------------------------------------------------*/
 
@@ -48,7 +48,7 @@ FUNCTION DialogWvgClassesOne( nMode )
       MyDialogOne()
    endif
    RETURN NIL
-   
+
 //----------------------------------------------------------------------//
 
 STATIC FUNCTION MyDialogOne( oCrt )
@@ -294,7 +294,7 @@ STATIC FUNCTION MyDialogOne( oCrt )
 
    lOpen := .f.
    cUseAlias := "TEST"
-   USE ( hb_DirBase() + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + "tests" + hb_osPathSeparator() + "test.dbf" ) NEW ALIAS ( cUseAlias ) SHARED
+   USE ( hb_DirBase() + ".." + hb_ps() + ".." + hb_ps() + ".." + hb_ps() + "tests" + hb_ps() + "test.dbf" ) NEW ALIAS ( cUseAlias ) SHARED
    if !NetErr()
       lOpen := .t.
       oWvtBrw := ConfigBrowser( { 1,7,9,10,8 }, cUseAlias, { 6,67,36,120 }, "test.dbf - 1,7,9,10,8", oDlg, "N/W*,N/GR*",1001 )
@@ -303,7 +303,7 @@ STATIC FUNCTION MyDialogOne( oCrt )
 
    lOpen1 := .f.
    cUseAlias1 := "TEST1"
-   USE ( hb_DirBase() + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + "tests" + hb_osPathSeparator() + "test.dbf" ) NEW ALIAS ( cUseAlias1 ) SHARED
+   USE ( hb_DirBase() + ".." + hb_ps() + ".." + hb_ps() + ".." + hb_ps() + "tests" + hb_ps() + "test.dbf" ) NEW ALIAS ( cUseAlias1 ) SHARED
    if !NetErr()
       lOpen1 := .t.
       oWvtBrw1 := ConfigBrowser( { 1,2,3,4,5,6 }, cUseAlias1, { 43,4,51,120 }, "test.dbf - 1,2,3,4,5,6",oDlg, "N/BG*,N/W*",1002 )

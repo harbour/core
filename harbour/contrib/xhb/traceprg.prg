@@ -75,7 +75,7 @@ FUNCTION xhb_setTrace( xTrace )
       ENDIF
    ENDIF
 
-RETURN lTrace
+   RETURN lTrace
 
 FUNCTION xhb_setTraceFile( xFile, lAppend )
    LOCAL cTraceFile := s_cSET_TRACEFILE
@@ -87,7 +87,7 @@ FUNCTION xhb_setTraceFile( xFile, lAppend )
       ENDIF
    ENDIF
 
-RETURN cTraceFile
+   RETURN cTraceFile
 
 FUNCTION xhb_setTraceStack( xLevel )
    LOCAL nTraceLevel := s_nSET_TRACESTACK
@@ -106,7 +106,7 @@ FUNCTION xhb_setTraceStack( xLevel )
       ENDIF
    ENDIF
 
-RETURN nTraceLevel
+   RETURN nTraceLevel
 
 //--------------------------------------------------------------//
 
@@ -165,12 +165,12 @@ FUNCTION TraceLog( ... )
 
    FClose( FileHandle )
 
-RETURN .T.
+   RETURN .T.
+
 //--------------------------------------------------------------//
 
-
-static function cWithPath(cFilename)
+STATIC FUNCTION cWithPath( cFilename )
 /* Ensure cFilename contains path. If it doesn't, add current directory to the front of it */
-   local cPath
-   hb_fnamesplit(cFilename, @cPath)
-return iif(empty(cPath), "." + hb_ospathseparator(), "") + cFilename
+   LOCAL cPath
+   hb_fnamesplit( cFilename, @cPath )
+   RETURN iif( Empty( cPath ), "." + hb_ps(), "" ) + cFilename

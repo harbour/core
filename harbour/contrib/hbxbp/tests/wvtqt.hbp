@@ -1,11 +1,11 @@
+#
+# $Id$
+#
 
-
--inc
 -es2
 -w3
 
 -gtwvt
--gui
 -mt
 
 -d__WITH_WVT__
@@ -14,5 +14,3 @@
 
 wvtqt.prg
 dialogqt.prg
-
-

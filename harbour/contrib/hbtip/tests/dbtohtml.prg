@@ -12,7 +12,7 @@ PROCEDURE Main
    CLS
 
    BEGIN SEQUENCE
-      USE ( hb_DirBase() + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + "tests" + hb_osPathSeparator() +;
+      USE ( hb_DirBase() + ".." + hb_ps() + ".." + hb_ps() + ".." + hb_ps() + "tests" + hb_ps() +;
             "test.dbf" )
    RECOVER
       ? "Error: Database not found test.dbf"

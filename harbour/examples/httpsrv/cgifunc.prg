@@ -707,7 +707,7 @@ RETURN aRetVal
 PROCEDURE uhttpd_WriteToLogFile( cString, cLog, lCreate )
   LOCAL nHandle, cSep
 
-  cSep := HB_OsPathSeparator()
+  cSep := hb_ps()
 
   //DEFAULT cLog    TO AppFullPath() + cSep + "logfile.log"
   DEFAULT cLog    TO cSep + "tmp" + cSep + "logfile.log"
@@ -751,7 +751,7 @@ FUNCTION uhttpd_SplitFileName( cFile )
                 "UNC"      => NIL                    ;
               }
 
-   cSep := HB_OsPathSeparator()
+   cSep := hb_ps()
 
    WITH OBJECT hFile
         :FULLPATH := IIF( !Empty( :PATH ), IIF( !( Right( :PATH, Len( cSep ) ) == cSep ), :PATH + cSep, :PATH ), "" )
@@ -765,7 +765,7 @@ FUNCTION uhttpd_AppFullPath()
    LOCAL cPrgFullPath := hExeFile:FULLPATH
    LOCAL cPath, cSep
 
-   cSep := HB_OsPathSeparator()
+   cSep := hb_ps()
 
    IF Right( cPrgFullPath, Len( cSep ) ) == cSep
       cPath := SubStr( cPrgFullPath, 1, Len( cPrgFullPath ) - Len( cSep ) )

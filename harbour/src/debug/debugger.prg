@@ -1823,12 +1823,11 @@ METHOD LocatePrgPath( cPrgName ) CLASS HBDebugger
 
    LOCAL aPaths := ::aPathDirs
    LOCAL iMax := Len( aPaths )
-   LOCAL cSep := hb_OSPathSeparator()
    LOCAL cRetPrgName
    LOCAL i
 
    FOR i := 1 TO iMax
-      cRetPrgName := aPaths[ i ] + cSep + cPrgName
+      cRetPrgName := aPaths[ i ] + hb_ps() + cPrgName
       IF File( cRetPrgName )
          RETURN cRetPrgName
       ENDIF

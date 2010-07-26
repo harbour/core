@@ -810,8 +810,8 @@ RETURN
 
 
 FUNC UOsFileName(cFileName)
-  IF HB_OSPathSeparator() != "/"
-    RETURN STRTRAN(cFileName, "/", HB_OSPathSeparator())
+  IF hb_ps() != "/"
+    RETURN STRTRAN(cFileName, "/", hb_ps())
   ENDIF
 RETURN cFileName
 

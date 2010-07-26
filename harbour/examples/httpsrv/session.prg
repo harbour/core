@@ -594,7 +594,7 @@ METHOD SessionRead( cID ) CLASS uhttpd_Session
   LOCAL nRetry  := 0
 
   DEFAULT cID TO ::cSID
-  cFile := ::cSavePath + HB_OSPathSeparator() + ::cName + "_" + cID
+  cFile := ::cSavePath + hb_ps() + ::cName + "_" + cID
   //TraceLog( "SessionRead: cFile", cFile )
   IF File( cFile )
      DO WHILE nRetry++ <= ::nFileRetry
@@ -638,7 +638,7 @@ METHOD SessionWrite( cID, cData ) CLASS uhttpd_Session
 
   nFileSize := Len( cData )
 
-  cFile := ::cSavePath + HB_OSPathSeparator() + ::cName + "_" + cID
+  cFile := ::cSavePath + hb_ps() + ::cName + "_" + cID
   //TraceLog( "SessionWrite() - cFile", cFile )
   IF nFileSize > 0
      DO WHILE nRetry++ <= ::nFileRetry
@@ -678,7 +678,7 @@ METHOD SessionDestroy( cID ) CLASS uhttpd_Session
   ::oCookie:DeleteCookie( ::cName )
 
   //TraceLog( "SessionDestroy() - cID, oCGI:h_Session", cID, DumpValue( oCGI:h_Session ) )
-  cFile := ::cSavePath + HB_OSPathSeparator() + ::cName + "_" + cID
+  cFile := ::cSavePath + hb_ps() + ::cName + "_" + cID
 
   lOk := FALSE
   DO WHILE nRetry++ <= ::nFileRetry
@@ -708,7 +708,7 @@ METHOD SessionGC( nMaxLifeTime ) CLASS uhttpd_Session
   LOCAL aDir, aFile
 
   DEFAULT nMaxLifeTime TO ::nGc_MaxLifeTime
-  aDir := Directory( ::cSavePath + HB_OSPathSeparator() + ::cName + "_*.*" )
+  aDir := Directory( ::cSavePath + hb_ps() + ::cName + "_*.*" )
 
   FOR EACH aFile IN aDir
       nSecs := TimeDiffAsSeconds( aFile[ F_DATE ], Date(), aFile[ F_TIME ], Time() )
@@ -716,7 +716,7 @@ METHOD SessionGC( nMaxLifeTime ) CLASS uhttpd_Session
       //               aFile[ F_NAME ], aFile[ F_DATE ], Date(), aFile[ F_TIME ], Time(), nSecs, nMaxLifeTime )
       IF nSecs > nMaxLifeTime
          // No error checking here, because if I cannot delete file now I will find it again on next loop
-         FErase( ::cSavePath + HB_OSPathSeparator() + aFile[ F_NAME ] )
+         FErase( ::cSavePath + hb_ps() + aFile[ F_NAME ] )
       ENDIF
   NEXT
 

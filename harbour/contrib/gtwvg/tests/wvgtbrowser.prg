@@ -1,12 +1,12 @@
 /*
  * $Id$
  */
- 
-/*    
+
+/*
  *    TBrowse Demonstration with GUI Elements
  *
  *    This protocol can be clubbed with pure console implementation
- *    AND can be called IN a separate thread as well as modal TO 
+ *    AND can be called IN a separate thread as well as modal TO
  *    current window.
  *
  *    Pritpal Bedi <bedipritpal@hotmail.com>
@@ -18,7 +18,7 @@
 #include "wvtwin.ch"
 #include "hbgtinfo.ch"
 #include "hbgtwvg.ch"
-#include "wvgparts.ch" 
+#include "wvgparts.ch"
 
 /*----------------------------------------------------------------------*/
 
@@ -86,7 +86,7 @@ FUNCTION ExecBrowser( oCrt )
    pGT := SetGT( 2, hb_gtSelect() )
 
    cRDD       := "DBFCDX"
-   cFileDbf   := hb_DirBase() + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + "tests" + hb_osPathSeparator() + "test.dbf"
+   cFileDbf   := hb_DirBase() + ".." + hb_ps() + ".." + hb_ps() + ".." + hb_ps() + "tests" + hb_ps() + "test.dbf"
    cFileIndex := "test.z01"
 
    USE ( cFileDbf ) NEW SHARED VIA ( cRDD )
@@ -213,7 +213,7 @@ FUNCTION ExecBrowser( oCrt )
    SetGT( 2, pGT )
 
    RETURN NIL
-   
+
 //-------------------------------------------------------------------//
 
 STATIC FUNCTION DbSkipBlock( n )
@@ -234,7 +234,7 @@ STATIC FUNCTION DbSkipBlock( n )
    endif
 
    RETURN  nSkipped
-   
+
 //-------------------------------------------------------------------//
 
 STATIC FUNCTION TBNext()
@@ -253,7 +253,7 @@ STATIC FUNCTION TBNext()
    endif
 
    RETURN lMoved
-   
+
 //-------------------------------------------------------------------//
 
 STATIC FUNCTION TBPrev()
@@ -268,13 +268,13 @@ STATIC FUNCTION TBPrev()
    endif
 
    RETURN lMoved
-   
+
 //-------------------------------------------------------------------//
 
 STATIC FUNCTION VouBlockField( i )
 
    RETURN  {|| fieldget( i ) }
-   
+
 //-------------------------------------------------------------------//
 
 STATIC FUNCTION BrwHandleKey( oBrowse, nKey, lEnd )
@@ -341,7 +341,7 @@ STATIC FUNCTION BrwHandleKey( oBrowse, nKey, lEnd )
    endcase
 
    RETURN lRet
-   
+
 //-------------------------------------------------------------------//
 
 STATIC FUNCTION BrwOnEvent( oWvtBrw, cPaintID, oBrowse, nKey )
@@ -500,7 +500,7 @@ FUNCTION ConfigBrowser( aFields, cUseAlias, aTLBR, cDesc, oParent, cColorSpec, n
    oWvtBrw:bHandleEvent := {|oWvtBrw,cPaintID,oBrowse,nKey| BrwOnEvent( oWvtBrw,cPaintID,oBrowse,nKey ) }
 
    RETURN oWvtBrw
-   
+
 //-------------------------------------------------------------------//
 
 STATIC FUNCTION BrwBuildMenu( oCrt )
@@ -532,5 +532,5 @@ STATIC FUNCTION BrwBuildMenu( oCrt )
    oMenu:addItem( { oSMenu, NIL } )
 
    Return oMenu
-   
+
 //----------------------------------------------------------------------//

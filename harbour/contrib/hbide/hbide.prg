@@ -98,11 +98,10 @@ PROCEDURE Main( ... )
    hbide_request()
 
    #ifdef HB_IDE_DISTRO
-      LOCAL cSep := hb_osPathSeparator()
       LOCAL cBse := hb_dirBase() + ".."
 
       /* Set the path env variable to Qt's run-time which is used to compile Harbour binaries */
-      hb_setEnv( "PATH", cBse + cSep + "qt" + cSep + "lib" + ;
+      hb_setEnv( "PATH", cBse + hb_ps() + "qt" + hb_ps() + "lib" + ;
                                       hb_osPathListSeparator() + hb_getEnv( "PATH" ) )
 
       /* Variable is used in hbide.env */
@@ -271,8 +270,8 @@ CLASS HbIde
    DATA   cPathSkltns                             INIT   ""
    DATA   cSaveTo                                 INIT   ""
    DATA   oOpenedSources
-   DATA   resPath                                 INIT   ":/resources" + hb_OsPathSeparator()
-   DATA   pathSep                                 INIT   hb_OsPathSeparator()
+   DATA   resPath                                 INIT   ":/resources" + hb_ps()
+   DATA   pathSep                                 INIT   hb_ps()
    DATA   cLastFileOpenPath                       INIT   hb_DirBase() + "projects"
    DATA   cProcessInfo
    DATA   cIniThemes
@@ -365,7 +364,7 @@ METHOD HbIde:create( aParams )
    ::nModeUI := UI_MODE_UI
    #endif
 
-   qPixmap := QPixmap():new( ":/resources" + hb_osPathSeparator() + "hbidesplash.png" )
+   qPixmap := QPixmap():new( ":/resources" + hb_ps() + "hbidesplash.png" )
    qSplash := QSplashScreen():new()
  * qSplash:setWindowFlags( hb_bitOr( Qt_WindowStaysOnTopHint, qSplash:windowFlags() ) )
    qSplash:setPixmap( qPixmap )
@@ -503,7 +502,7 @@ METHOD HbIde:create( aParams )
    #endif
 
    IF empty( ::cWrkFolderLast )
-      ::cWrkFolderLast := hb_dirBase() + "projects" + hb_osPathSeparator()
+      ::cWrkFolderLast := hb_dirBase() + "projects" + hb_ps()
    ENDIF
 
    ::oDockB2:hide() /* This widget never contains anything so must be forced to hide */

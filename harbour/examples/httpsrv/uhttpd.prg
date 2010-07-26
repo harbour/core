@@ -128,8 +128,8 @@
 #define LISTEN_PORT             8082          // differs from standard 80 port for tests in case
                                               // anyone has a apache/IIS installed
 #define FILE_STOP               ".uhttpd.stop"
-#define FILE_ACCESS_LOG         "logs" + HB_OSPathSeparator() + "access.log"
-#define FILE_ERROR_LOG          "logs" + HB_OSPathSeparator() + "error.log"
+#define FILE_ACCESS_LOG         "logs" + hb_ps() + "access.log"
+#define FILE_ERROR_LOG          "logs" + hb_ps() + "error.log"
 #define DIRECTORYINDEX_ARRAY    { "index.html", "index.htm" }
 
 #define PAGE_STATUS_REFRESH   5
@@ -235,7 +235,7 @@ FUNCTION MAIN( ... )
 
    // defaults not changeble via ini file
    lStop                := FALSE
-   cConfig              := EXE_Path() + hb_OSPathSeparator() + APP_NAME + ".ini"
+   cConfig              := EXE_Path() + hb_ps() + APP_NAME + ".ini"
    lConsole             := TRUE
    nStartServiceThreads := START_SERVICE_THREADS
 
@@ -1474,21 +1474,21 @@ STATIC FUNCTION CGIExec( cProc, /*@*/ cOutPut )
       // No hIn, hErr == hOut
 
       // save current directory
-      cCurPath := hb_CurDrive() + hb_osDriveSeparator() + HB_OSPathSeparator() + CurDir()
+      cCurPath := hb_CurDrive() + hb_osDriveSeparator() + hb_ps() + CurDir()
 
       //hb_toOutDebug( "cCurPath: %s\n\r", cCurPath )
 
       // Change dir to document root
       DirChange( s_cDocumentRoot )
 
-      //hb_toOutDebug( "New Path: %s\n\r", hb_CurDrive() + hb_osDriveSeparator() + HB_OSPathSeparator() + CurDir() )
+      //hb_toOutDebug( "New Path: %s\n\r", hb_CurDrive() + hb_osDriveSeparator() + hb_ps() + CurDir() )
 
       hProc := hb_processOpen( cProc, @hIn, @hOut, @hOut, .T. ) // .T. = Detached Process (Hide Window)
 
       // return to original folder
       DirChange( cCurPath )
 
-      //hb_toOutDebug( "New 2 Path: %s\n\r", hb_CurDrive() + hb_osDriveSeparator() + HB_OSPathSeparator() + CurDir() )
+      //hb_toOutDebug( "New 2 Path: %s\n\r", hb_CurDrive() + hb_osDriveSeparator() + hb_ps() + CurDir() )
 
       IF hProc > -1
          //hb_toOutDebug( "Process handler: %s\n\r", hProc )
@@ -1619,8 +1619,8 @@ STATIC FUNCTION CGIKill( hProc, hmtxCGIKill )
 ********************************************************************/
 
 FUNCTION uhttpd_OSFileName( cFileName )
-   IF HB_OSPathSeparator() != "/"
-      RETURN STRTRAN( cFileName, "/", HB_OSPathSeparator() )
+   IF hb_ps() != "/"
+      RETURN STRTRAN( cFileName, "/", hb_ps() )
    ENDIF
    RETURN cFileName
 
@@ -2164,7 +2164,7 @@ STATIC PROCEDURE SysSettings()
 
 STATIC FUNCTION Exe_Path()
    LOCAL cPath := hb_argv( 0 )
-   LOCAL nPos  := RAt( HB_OSPathSeparator(), cPath )
+   LOCAL nPos  := RAt( hb_ps(), cPath )
    IF nPos == 0
       cPath := ""
    ELSE
@@ -2174,7 +2174,7 @@ STATIC FUNCTION Exe_Path()
 
 STATIC FUNCTION Exe_Name()
    LOCAL cPrg := hb_argv( 0 )
-   LOCAL nPos := RAt( HB_OSPathSeparator(), cPrg )
+   LOCAL nPos := RAt( hb_ps(), cPrg )
    IF nPos > 0
       cPrg := SubStr( cPrg, nPos+1 )
    ENDIF
@@ -2248,10 +2248,10 @@ STATIC FUNCTION ParseIni( cConfig )
      "MAIN"     => { ;
                      "PORT"                 => LISTEN_PORT              ,;
                      "APPLICATION_ROOT"     => EXE_Path()               ,;
-                     "DOCUMENT_ROOT"        => EXE_Path() + HB_OSPathSeparator() + "home"     ,;
+                     "DOCUMENT_ROOT"        => EXE_Path() + hb_ps() + "home"     ,;
                      "SHOW_INDEXES"         => FALSE                    ,;
                      "SCRIPTALIASMIXEDCASE" => TRUE                     ,;
-                     "SESSIONPATH"          => EXE_Path() + HB_OSPathSeparator() + "sessions" ,;
+                     "SESSIONPATH"          => EXE_Path() + hb_ps() + "sessions" ,;
                      "DIRECTORYINDEX"       => DIRECTORYINDEX_ARRAY     ,;
                      "CONSOLE-ROWS"         => MaxRow() + 1             ,;
                      "CONSOLE-COLS"         => MaxCol() + 1              ;
@@ -2673,7 +2673,7 @@ STATIC FUNCTION Handler_HrbScript( cFileName )
             IF !EMPTY( pHRB := HB_HRBLOAD( cHRBBody ) )
 
                 // save current directory
-                cCurPath := hb_CurDrive() + hb_osDriveSeparator() + HB_OSPathSeparator() + CurDir()
+                cCurPath := hb_CurDrive() + hb_osDriveSeparator() + hb_ps() + CurDir()
                 // Change dir to document root
                 DirChange( s_cDocumentRoot )
 

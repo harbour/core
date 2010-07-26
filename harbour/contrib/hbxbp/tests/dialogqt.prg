@@ -1587,7 +1587,7 @@ STATIC FUNCTION RtfApplyFont( oRTF )
 
 STATIC FUNCTION Build_Browse( oWnd )
    LOCAL aPresParam, oXbpBrowse, oXbpColumn, s
-   LOCAL cPath := hb_DirBase() + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + ".." + hb_osPathSeparator() + "tests" + hb_osPathSeparator()
+   LOCAL cPath := hb_DirBase() + ".." + hb_ps() + ".." + hb_ps() + ".." + hb_ps() + "tests" + hb_ps()
 
    Set( _SET_DATEFORMAT, "yyyy.mm.dd" ) /* ANSI */
 
@@ -1648,7 +1648,7 @@ STATIC FUNCTION Build_Browse( oWnd )
    //
    oXbpColumn          := XbpColumn():new()
    oXbpColumn:type     := XBPCOL_TYPE_FILEICON
-   cPath := hb_DirBase() + hb_osPathSeparator()
+   cPath := hb_DirBase() + hb_ps()
    oXbpColumn:dataLink := {|n| n := recno(), IF( n%3 == 0, cPath + "abs3.png", IF( n%5 == 0, cPath + "copy.png", cPath + "vr.png" ) ) }
    oXbpColumn:create( , , , , aPresParam )
    //

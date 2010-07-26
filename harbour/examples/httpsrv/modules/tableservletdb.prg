@@ -157,7 +157,7 @@ RETURN Self
 METHOD Open() CLASS TableManager
    LOCAL cDBF := ::cTable
 
-   //hb_ToOutDebug( "CurPath = %s", hb_CurDrive() + hb_osDriveSeparator() + HB_OSPathSeparator() + CurDir() )
+   //hb_ToOutDebug( "CurPath = %s", hb_CurDrive() + hb_osDriveSeparator() + hb_ps() + CurDir() )
 
    //hb_ToOutDebug( "before: cDBF = %s, Used() = %s\n", cDBF, Used() )
 

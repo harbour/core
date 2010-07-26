@@ -321,7 +321,7 @@ FUNCTION hbide_fetchADir( oWnd, cTitle, cDftDir )
    cFile := oDlg:open( cDftDir, , .f. )
 
    IF hb_isChar( cFile )
-      //cFile := strtran( cFile, "/", HB_OSPATHSEPARATOR() )
+      //cFile := strtran( cFile, "/", hb_ps() )
       RETURN cFile
    ENDIF
 
@@ -612,17 +612,17 @@ FUNCTION hbide_pathStripLastSlash( cPath )
 /*----------------------------------------------------------------------*/
 
 FUNCTION hbide_pathAppendLastSlash( cPath )
-   RETURN iif( right( cPath, 1 ) $ "\/", cPath, cPath + hb_osPathSeparator() )
+   RETURN iif( right( cPath, 1 ) $ "\/", cPath, cPath + hb_ps() )
 
 /*----------------------------------------------------------------------*/
 
 FUNCTION hbide_pathToOSPath( cPath )
    LOCAL n
 
-   cPath := strtran( cPath, "//" , hb_osPathSeparator() )
-   cPath := strtran( cPath, "/"  , hb_osPathSeparator() )
-   cPath := strtran( cPath, "\\" , hb_osPathSeparator() )
-   cPath := strtran( cPath, "\"  , hb_osPathSeparator() )
+   cPath := strtran( cPath, "//" , hb_ps() )
+   cPath := strtran( cPath, "/"  , hb_ps() )
+   cPath := strtran( cPath, "\\" , hb_ps() )
+   cPath := strtran( cPath, "\"  , hb_ps() )
 
    IF ( n := at( ":", cPath ) ) > 0
       cPath := upper( substr( cPath, 1, n - 1 ) ) + substr( cPath, n )
@@ -916,7 +916,7 @@ FUNCTION hbide_checkDefaultExtension( cFileName, cDefaultExt )
    IF Empty( cExt )
       cExt := cDefaultExt
    ENDIF
-   RETURN cPath + HB_OSPATHSEPARATOR() + cFile + HB_OSPATHSEPARATOR() + cExt
+   RETURN cPath + hb_ps() + cFile + hb_ps() + cExt
 
 /*----------------------------------------------------------------------*/
 
@@ -944,7 +944,7 @@ FUNCTION hbide_pathProc( cPathR, cPathA )
 /*----------------------------------------------------------------------*/
 
 FUNCTION hbide_pwd()
-   RETURN hbide_DirAddPathSep( hb_CurDrive() + hb_osDriveSeparator() + hb_osPathSeparator() + CurDir() )
+   RETURN hbide_DirAddPathSep( hb_CurDrive() + hb_osDriveSeparator() + hb_ps() + CurDir() )
 
 /*----------------------------------------------------------------------*/
 
@@ -1497,7 +1497,7 @@ FUNCTION hbmk2_PathMakeRelative( cPathBase, cPathTarget, lForceRelative )
 
    /* Force to return relative paths even when base is different. */
    IF lForceRelative
-      RETURN FN_FromArray( aPathTarget, tmp, NIL, cTargetFileName, Replicate( ".." + hb_osPathSeparator(), Len( aPathBase ) - tmp ) )
+      RETURN FN_FromArray( aPathTarget, tmp, NIL, cTargetFileName, Replicate( ".." + hb_ps(), Len( aPathBase ) - tmp ) )
    ENDIF
 
    RETURN cPathTarget
@@ -1512,7 +1512,7 @@ STATIC FUNCTION FN_ToArray( cPath, /* @ */ cFileName  )
       cFileName := cName + cExt
    ENDIF
 
-   RETURN hb_ATokens( cDir, hb_osPathSeparator() )
+   RETURN hb_ATokens( cDir, hb_ps() )
 
 
 STATIC FUNCTION FN_FromArray( aPath, nFrom, nTo, cFileName, cDirPrefix )
@@ -1538,7 +1538,7 @@ STATIC FUNCTION FN_FromArray( aPath, nFrom, nTo, cFileName, cDirPrefix )
 
    cDir := ""
    FOR tmp := nFrom TO nTo
-      cDir += aPath[ tmp ] + hb_osPathSeparator()
+      cDir += aPath[ tmp ] + hb_ps()
    NEXT
 
    RETURN hb_FNameMerge( DirDelPathSep( hbide_DirAddPathSep( cDirPrefix ) + cDir ), cFileName )
@@ -1569,8 +1569,8 @@ STATIC FUNCTION PathProc( cPathR, cPathA )
 
 FUNCTION hbide_DirAddPathSep( cDir )
 
-   IF ! Empty( cDir ) .AND. !( Right( cDir, 1 ) == hb_osPathSeparator() )
-      cDir += hb_osPathSeparator()
+   IF ! Empty( cDir ) .AND. !( Right( cDir, 1 ) == hb_ps() )
+      cDir += hb_ps()
    ENDIF
 
    RETURN cDir
@@ -1579,12 +1579,12 @@ FUNCTION hbide_DirAddPathSep( cDir )
 STATIC FUNCTION DirDelPathSep( cDir )
 
    IF Empty( hb_osDriveSeparator() )
-      DO WHILE Len( cDir ) > 1 .AND. Right( cDir, 1 ) == hb_osPathSeparator()
+      DO WHILE Len( cDir ) > 1 .AND. Right( cDir, 1 ) == hb_ps()
          cDir := hb_StrShrink( cDir, 1 )
       ENDDO
    ELSE
-      DO WHILE Len( cDir ) > 1 .AND. Right( cDir, 1 ) == hb_osPathSeparator() .AND. ;
-               !( Right( cDir, 2 ) == hb_osDriveSeparator() + hb_osPathSeparator() )
+      DO WHILE Len( cDir ) > 1 .AND. Right( cDir, 1 ) == hb_ps() .AND. ;
+               !( Right( cDir, 2 ) == hb_osDriveSeparator() + hb_ps() )
          cDir := hb_StrShrink( cDir, 1 )
       ENDDO
    ENDIF
@@ -1598,8 +1598,8 @@ FUNCTION hbide_fetchSubPaths( aPaths, cRootPath, lSubs )
 
    DEFAULT lSubs TO .t.
 
-   IF right( cRootPath, 1 ) != hb_osPathSeparator()
-      cRootPath += hb_osPathSeparator()
+   IF right( cRootPath, 1 ) != hb_ps()
+      cRootPath += hb_ps()
    ENDIF
    cRootPath := hbide_pathToOSPath( cRootPath )
 

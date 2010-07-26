@@ -1,6 +1,7 @@
 /*
  * $Id$
  */
+
 #include "simpleio.ch"
 
 /*
@@ -29,11 +30,11 @@ PROCEDURE Main()
 
    FOR EACH tmp IN Directory( "*.txt" )
       hb_FNameSplit( tmp[ F_NAME ],, @cName )
-      cHeaderDir := GetEnv( "HB_WITH_QT" ) + hb_osPathSeparator() + cName
+      cHeaderDir := GetEnv( "HB_WITH_QT" ) + hb_ps() + cName
       FOR EACH tmp1 IN hb_ATokens( StrTran( hb_MemoRead( tmp[ F_NAME ] ), Chr( 13 ) ), Chr( 10 ) )
          IF ! Empty( tmp1 ) .AND. ! ( Left( tmp1, 1 ) == "#" )
             aStuff := { { .F., "" }, {} }
-            ProcessHeader( aStuff, cHeaderDir + hb_osPathSeparator() + tmp1, cName, tmp1 )
+            ProcessHeader( aStuff, cHeaderDir + hb_ps() + tmp1, cName, tmp1 )
 //          ASort( aStuff[ 2 ],,, {| x, y | x[ 1 ] < y[ 1 ] } )
 //          FOR EACH tmp2 IN aStuff[ 2 ]
 //             OutStd( aType[ tmp2[ 1 ] ], tmp2[ 2 ], hb_eol() )
@@ -108,8 +109,8 @@ STATIC PROCEDURE ProcessHeader( aStuff, cFileName, cLib, cOriFileName )
 
 STATIC FUNCTION DirAddPathSep( cDir )
 
-   IF ! Empty( cDir ) .AND. !( Right( cDir, 1 ) == hb_osPathSeparator() )
-      cDir += hb_osPathSeparator()
+   IF ! Empty( cDir ) .AND. !( Right( cDir, 1 ) == hb_ps() )
+      cDir += hb_ps()
    ENDIF
 
    RETURN cDir

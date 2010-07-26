@@ -53,7 +53,7 @@ proc main()
 
    /* database test */
    hb_FNameSplit( hb_argv( 0 ), @cPath, @cName, @cExt, @cDrive )
-   cPath += "data" + hb_osPathSeparator()
+   cPath += "data" + hb_ps()
 
    Alert( "Database path:;;" + cPath )
 

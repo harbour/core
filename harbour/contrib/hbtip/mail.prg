@@ -609,7 +609,7 @@ METHOD setHeader( cSubject, cFrom, xTo, xCC, xBCC ) CLASS TipMail
 METHOD attachFile( cFileName ) CLASS TipMail
    LOCAL cContent := hb_MemoRead( cFileName )
    LOCAL cMimeType := TIP_FileMimetype( cFileName )
-   LOCAL cDelim := hb_osPathSeparator()
+   LOCAL cDelim := hb_ps()
 
    LOCAL oAttach
 
@@ -631,7 +631,7 @@ METHOD attachFile( cFileName ) CLASS TipMail
 METHOD detachFile( cPath ) CLASS TipMail
    LOCAL cContent := ::getBody()
    LOCAL cFileName := ::getFileName()
-   LOCAL cDelim := hb_osPathSeparator()
+   LOCAL cDelim := hb_ps()
    LOCAL nFileHandle
 
    IF Empty( cFileName )

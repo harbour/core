@@ -180,9 +180,14 @@ REQUEST hbmk_KEYW
 #define _COMPDETE_bSetup        6
 
 #define _HBMODE_NATIVE          0
-#define _HBMODE_HB10            1
-#define _HBMODE_XHB             2
-#define _HBMODE_RAW_C           3
+#define _HBMODE_HB10            0x010000
+#define _HBMODE_HB20            0x020000
+#define _HBMODE_XHB            -0x010200
+#define _HBMODE_RAW_C          -1
+
+#define _HBMODE_IS_HB( n )      ( n == 0 .OR. n >= _HBMODE_HB10 )
+#define _HBMODE_IS_OLDHB( n )   ( n >= _HBMODE_HB10 )
+#define _HBMODE_IS_XHB( n )     ( n <= _HBMODE_XHB )
 
 /* Not implemented yet */
 #define _CONF_RELEASE           0 /* No debug */
@@ -493,6 +498,8 @@ PROCEDURE Main( ... )
          hb_AIns( aArgsProc, 1, "-xhb", .T. )
       ELSEIF Right( tmp, 2 ) == "10"
          hb_AIns( aArgsProc, 1, "-hb10", .T. )
+      ELSEIF Right( tmp, 2 ) == "20"
+         hb_AIns( aArgsProc, 1, "-hb20", .T. )
       ENDIF
 
       DO CASE
@@ -985,6 +992,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       CASE cParamL             == "-info"      ; hbmk[ _HBMK_lInfo ] := .T.
       CASE cParamL             == "-xhb"       ; hbmk[ _HBMK_nHBMODE ] := _HBMODE_XHB
       CASE cParamL             == "-hb10"      ; hbmk[ _HBMK_nHBMODE ] := _HBMODE_HB10
+      CASE cParamL             == "-hb20"      ; hbmk[ _HBMK_nHBMODE ] := _HBMODE_HB20
       CASE cParamL             == "-hbc"       ; hbmk[ _HBMK_nHBMODE ] := _HBMODE_RAW_C ; lAcceptCFlag := .T.
       CASE Left( cParamL, 5 )  == "-env:"
 
@@ -1063,15 +1071,25 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
    /* Initialize Harbour libs */
 
-   IF ! ( hbmk[ _HBMK_nHBMODE ] == _HBMODE_XHB )
+   IF ! _HBMODE_IS_XHB( hbmk[ _HBMK_nHBMODE ] )
 
-      cDL_Version_Alter := "-" +;
-                           hb_ntos( hb_Version( HB_VERSION_MAJOR ) ) +;
-                           hb_ntos( hb_Version( HB_VERSION_MINOR ) )
-      cDL_Version       := "." +;
-                           hb_ntos( hb_Version( HB_VERSION_MAJOR ) ) + "." +;
-                           hb_ntos( hb_Version( HB_VERSION_MINOR ) ) + "." +;
-                           hb_ntos( hb_Version( HB_VERSION_RELEASE ) )
+      IF hbmk[ _HBMK_nHBMODE ] == _HBMODE_NATIVE
+         cDL_Version_Alter := "-" +;
+                              hb_ntos( hb_Version( HB_VERSION_MAJOR ) ) +;
+                              hb_ntos( hb_Version( HB_VERSION_MINOR ) )
+         cDL_Version       := "." +;
+                              hb_ntos( hb_Version( HB_VERSION_MAJOR ) ) + "." +;
+                              hb_ntos( hb_Version( HB_VERSION_MINOR ) ) + "." +;
+                              hb_ntos( hb_Version( HB_VERSION_RELEASE ) )
+      ELSE
+         cDL_Version_Alter := "-" +;
+                              hb_ntos( hb_bitAnd( hb_bitShift( hbmk[ _HBMK_nHBMODE ], -16 ), 0xFF ) ) +;
+                              hb_ntos( hb_bitAnd( hb_bitShift( hbmk[ _HBMK_nHBMODE ],  -8 ), 0xFF ) )
+         cDL_Version       := "." +;
+                              hb_ntos( hb_bitAnd( hb_bitShift( hbmk[ _HBMK_nHBMODE ], -16 ), 0xFF ) ) + "." +;
+                              hb_ntos( hb_bitAnd( hb_bitShift( hbmk[ _HBMK_nHBMODE ],  -8 ), 0xFF ) ) + "." +;
+                              hb_ntos( hb_bitAnd( hb_bitShift( hbmk[ _HBMK_nHBMODE ],   0 ), 0xFF ) )
+      ENDIF
 
       aLIB_BASE_EXTERN  := { "hbextern" }
       aLIB_BASE_DEBUG   := { "hbdebug" }
@@ -1334,20 +1352,20 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
       /* Detect special *nix dir layout (/bin, /lib/harbour, /lib64/harbour, /include/harbour) */
       IF hb_FileExists( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + "include" +;
-                                       hb_ps() + iif( hbmk[ _HBMK_nHBMODE ] == _HBMODE_XHB, "xharbour", "harbour" ) +;
+                                       hb_ps() + iif( _HBMODE_IS_XHB( hbmk[ _HBMK_nHBMODE ] ), "xharbour", "harbour" ) +;
                                        hb_ps() + "hbvm.h" )
          IF Empty( l_cHB_BIN_INSTALL )
             l_cHB_BIN_INSTALL := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + "bin" )
          ENDIF
          IF Empty( l_cHB_LIB_INSTALL )
-            IF hb_DirExists( tmp := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + "lib64" + hb_ps() + iif( hbmk[ _HBMK_nHBMODE ] == _HBMODE_XHB, "xharbour", "harbour" ) ) )
+            IF hb_DirExists( tmp := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + "lib64" + hb_ps() + iif( _HBMODE_IS_XHB( hbmk[ _HBMK_nHBMODE ] ), "xharbour", "harbour" ) ) )
                l_cHB_LIB_INSTALL := tmp
             ELSE
-               l_cHB_LIB_INSTALL := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + "lib" + hb_ps() + iif( hbmk[ _HBMK_nHBMODE ] == _HBMODE_XHB, "xharbour", "harbour" ) )
+               l_cHB_LIB_INSTALL := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + "lib" + hb_ps() + iif( _HBMODE_IS_XHB( hbmk[ _HBMK_nHBMODE ] ), "xharbour", "harbour" ) )
             ENDIF
          ENDIF
          IF Empty( l_cHB_INC_INSTALL )
-            l_cHB_INC_INSTALL := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + "include" + hb_ps() + iif( hbmk[ _HBMK_nHBMODE ] == _HBMODE_XHB, "xharbour", "harbour" ) )
+            l_cHB_INC_INSTALL := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + "include" + hb_ps() + iif( _HBMODE_IS_XHB( hbmk[ _HBMK_nHBMODE ] ), "xharbour", "harbour" ) )
          ENDIF
       ENDIF
 
@@ -1839,6 +1857,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
            cParamL             == "-nohbc" .OR. ; /* Ignore it for compatibility */
            cParamL             == "-xhb" .OR. ;
            cParamL             == "-hb10" .OR. ;
+           cParamL             == "-hb20" .OR. ;
            cParamL             == "-hbc" .OR. ;
            cParamL             == "-clipper" .OR. ;
            cParamL             == "-rtlink" .OR. ;
@@ -2617,7 +2636,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
    /* Force MT mode off in 1.0.x and xhb/dos compatibility modes. */
    IF hbmk[ _HBMK_nHBMODE ] == _HBMODE_HB10 .OR. ;
-      ( hbmk[ _HBMK_nHBMODE ] == _HBMODE_XHB .AND. hbmk[ _HBMK_cPLAT ] == "dos" )
+      ( _HBMODE_IS_XHB( hbmk[ _HBMK_nHBMODE ] ) .AND. hbmk[ _HBMK_cPLAT ] == "dos" )
       hbmk[ _HBMK_lMT ] := .F.
    ENDIF
 
@@ -3218,7 +3237,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             AAdd( hbmk[ _HBMK_aOPTRES ], "-DUNDER_CE" )
          ENDIF
          DO CASE
-         CASE hbmk[ _HBMK_nHBMODE ] == _HBMODE_XHB
+         CASE _HBMODE_IS_XHB( hbmk[ _HBMK_nHBMODE ] )
             /* NOTE: Newer xhb version use "-x.y.z" version numbers. */
             l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "xharbourmt",;
                                                       "xharbour" ) }
@@ -3236,7 +3255,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                                                       "harbour" + cDL_Version_Alter ) }
          ENDCASE
 
-         IF hbmk[ _HBMK_nHBMODE ] == _HBMODE_XHB
+         IF _HBMODE_IS_XHB( hbmk[ _HBMK_nHBMODE ] )
             IF ! hbmk[ _HBMK_lGUI ]
                l_aLIBSHAREDPOST := { "mainstd" }
             ENDIF
@@ -3664,7 +3683,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             cOpt_CompC += " -d -6 -O2 -OS -Ov -Oi -Oc"
          ENDIF
          cLibBCC_CRTL := "cw32mt.lib"
-         IF hbmk[ _HBMK_nHBMODE ] == _HBMODE_XHB
+         IF _HBMODE_IS_XHB( hbmk[ _HBMK_nHBMODE ] )
             /* Adding weird hack for xhb to make it possible to force ST C mode. */
             IF AScan( hbmk[ _HBMK_aOPTC ], {| tmp | tmp == "-tW" } ) == 0
                AAdd( hbmk[ _HBMK_aOPTC ], "-tWM" )
@@ -4271,7 +4290,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                "( win || wce ) & !( allmingw | cygwin )". This may change in the future.
                IMPORTANT: Keep this condition in sync with workdir default settings */
       IF hbmk[ _HBMK_lCreateDyn ] .AND. !( hbmk[ _HBMK_cCOMP ] $ "mingw|mingw64|mingwarm|cygwin" )
-         IF hbmk[ _HBMK_nHBMODE ] == _HBMODE_XHB .OR. ;
+         IF _HBMODE_IS_XHB( hbmk[ _HBMK_nHBMODE ] ) .OR. ;
             hbmk[ _HBMK_nHBMODE ] == _HBMODE_HB10
             AAdd( hbmk[ _HBMK_aOPTC ], "-D__EXPORT__" )
          ELSE
@@ -4755,7 +4774,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                IF hbmk[ _HBMK_cGT ] != NIL .OR. ;
                   l_cMAIN != NIL
                   IF hbmk[ _HBMK_nHBMODE ] == _HBMODE_HB10 .OR. ;
-                     hbmk[ _HBMK_nHBMODE ] == _HBMODE_XHB
+                     _HBMODE_IS_XHB( hbmk[ _HBMK_nHBMODE ] )
                      cFile += '#include "hbinit.h"'                                                  + Chr( 10 ) +;
                               ''                                                                     + Chr( 10 ) +;
                               'HB_EXTERN_BEGIN'                                                      + Chr( 10 ) +;
@@ -4771,7 +4790,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                   ENDIF
                   IF hbmk[ _HBMK_cGT ] != NIL
                      IF hbmk[ _HBMK_nHBMODE ] == _HBMODE_HB10 .OR. ;
-                        hbmk[ _HBMK_nHBMODE ] == _HBMODE_XHB
+                        _HBMODE_IS_XHB( hbmk[ _HBMK_nHBMODE ] )
                         cFile += '   s_defaultGT = "' + Upper( SubStr( hbmk[ _HBMK_cGT ], 3 ) ) + '";'           + Chr( 10 )
                      ELSE
                         cFile += '   hb_vmSetDefaultGT( "' + Upper( SubStr( hbmk[ _HBMK_cGT ], 3 ) ) + '" );'    + Chr( 10 )
@@ -4779,7 +4798,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                   ENDIF
                   IF l_cMAIN != NIL
                      IF hbmk[ _HBMK_nHBMODE ] == _HBMODE_HB10 .OR. ;
-                        hbmk[ _HBMK_nHBMODE ] == _HBMODE_XHB
+                        _HBMODE_IS_XHB( hbmk[ _HBMK_nHBMODE ] )
                         cFile += '   s_pszLinkedMain = "' + Upper( l_cMAIN ) + '";'                  + Chr( 10 )
                      ELSE
                         cFile += '   hb_vmSetLinkedMain( "' + Upper( l_cMAIN ) + '" );'              + Chr( 10 )
@@ -9146,7 +9165,7 @@ STATIC PROCEDURE PlatformPRGFlags( hbmk, aOPTPRG )
 
       AAdd( aUn, ".ARCH." )
 
-      IF hbmk[ _HBMK_nHBMODE ] == _HBMODE_XHB
+      IF _HBMODE_IS_XHB( hbmk[ _HBMK_nHBMODE ] )
       #if   defined( __PLATFORM__WINDOWS )
          AAdd( aUn, "__PLATFORM__Windows" )
          #if defined( __PLATFORM__WINCE )
@@ -9198,12 +9217,12 @@ STATIC PROCEDURE PlatformPRGFlags( hbmk, aOPTPRG )
       CASE hbmk[ _HBMK_cPLAT ] == "wce"
          AAdd( aDf, "__PLATFORM__WINDOWS" )
          AAdd( aDf, "__PLATFORM__WINCE" )
-         IF hbmk[ _HBMK_nHBMODE ] == _HBMODE_XHB
+         IF _HBMODE_IS_XHB( hbmk[ _HBMK_nHBMODE ] )
             AAdd( aDf, "__PLATFORM__Windows" )
          ENDIF
       CASE hbmk[ _HBMK_cPLAT ] == "win"
          AAdd( aDf, "__PLATFORM__WINDOWS" )
-         IF hbmk[ _HBMK_nHBMODE ] == _HBMODE_XHB
+         IF _HBMODE_IS_XHB( hbmk[ _HBMK_nHBMODE ] )
             AAdd( aDf, "__PLATFORM__Windows" )
          ENDIF
       CASE hbmk[ _HBMK_cPLAT ] == "dos"
@@ -9213,7 +9232,7 @@ STATIC PROCEDURE PlatformPRGFlags( hbmk, aOPTPRG )
       CASE hbmk[ _HBMK_cPLAT ] == "linux"
          AAdd( aDf, "__PLATFORM__LINUX" )
          AAdd( aDf, "__PLATFORM__UNIX" )
-         IF hbmk[ _HBMK_nHBMODE ] == _HBMODE_XHB
+         IF _HBMODE_IS_XHB( hbmk[ _HBMK_nHBMODE ] )
             AAdd( aDf, "__PLATFORM__Linux" )
          ENDIF
       CASE hbmk[ _HBMK_cPLAT ] == "darwin"
@@ -10250,8 +10269,9 @@ FUNCTION hbmk_KEYW( hbmk, cKeyword, cValue, cOperator )
    CASE "allmsvc"  ; RETURN "|" + hbmk[ _HBMK_cCOMP ] + "|" $ "|msvc|msvc64|msvcia64|msvcarm|"
    CASE "allpocc"  ; RETURN "|" + hbmk[ _HBMK_cCOMP ] + "|" $ "|pocc|pocc64|poccarm|"
    CASE "allicc"   ; RETURN "|" + hbmk[ _HBMK_cCOMP ] + "|" $ "|icc|iccia64|"
-   CASE "xhb"      ; RETURN hbmk[ _HBMK_nHBMODE ] == _HBMODE_XHB
+   CASE "xhb"      ; RETURN _HBMODE_IS_XHB( hbmk[ _HBMK_nHBMODE ] )
    CASE "hb10"     ; RETURN hbmk[ _HBMK_nHBMODE ] == _HBMODE_HB10
+   CASE "hb20"     ; RETURN hbmk[ _HBMK_nHBMODE ] == _HBMODE_HB20
    ENDSWITCH
 
    IF cKeyword == hbmk_CPU( hbmk )
@@ -10942,6 +10962,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-hbcc"              , I_( "stop after creating the object files and accept raw C flags\ncreate link/copy hbmk2 to hbcc for the same effect" ) },;
       { "-hblnk"             , I_( "accept raw linker flags" ) },;
       { "-hb10"              , I_( "enable Harbour 1.0.x compatibility mode" ) },;
+      { "-hb20"              , I_( "enable Harbour 2.0.x compatibility mode" ) },;
       { "-xhb"               , I_( "enable xhb mode" ) },;
       { "-hbc"               , I_( "enable pure C mode" ) },;
       { "-rtlink"            , "" },;

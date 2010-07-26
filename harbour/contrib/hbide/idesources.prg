@@ -222,7 +222,7 @@ METHOD IdeSourcesManager:saveSource( nTab, lCancel, lAs )
          lNew := Empty( cSource ) .OR. lAs
          IF lNew
             cNewFile := ::selectSource( 'save', ;
-                                       iif( !Empty( cSource ), cSource, hb_dirBase() + "projects" + hb_osPathSeparator() ),;
+                                       iif( !Empty( cSource ), cSource, hb_dirBase() + "projects" + hb_ps() ),;
                                               "Save " + oEdit:oTab:caption + " as..." )
             IF empty( cNewFile )
                // will check later what decision to take

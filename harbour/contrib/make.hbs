@@ -34,14 +34,15 @@
      3. hbmk2 location detection in standalone mode
         (or move hbmk2 to core lib?)
      4. Move in external libs to contrib area? (bz2, minizip, sqlite3)
+        (the only downside is that irrelevant hits will be spilling
+        'grep -R' results)
      5. 'install' is ignored in stdalone mode. It would be needed to
         replicate the install dir defaulting logic found in global.mk
         to implement it.
      6. Delete header install related logic from GNU Make system,
         also delete doc/*.txt install related logic (easily replacable
         with postinst.hbs logic)
-     7. Move some logic to hbmk2.
-     8. Honor paths found in --hbinfo hbctree{{}} section.
+     7. Honor paths found in --hbinfo hbctree{{}} section.
  */
 
 #pragma warninglevel=3

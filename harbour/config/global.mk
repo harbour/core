@@ -177,10 +177,10 @@ ifeq ($(HB_INIT_DONE),)
 
       # Enforce some basic settings for release packages
       export HB_BUILD_DLL := yes
-      export HB_BUILD_IMPLIB := no
       export HB_BUILD_OPTIM := yes
       export HB_BUILD_DEBUG := no
       export HB_BUILD_SHARED := no
+      export HB_INSTALL_IMPLIB := no
    endif
 
    # Can't build shared tools if we don't create dlls
@@ -188,11 +188,11 @@ ifeq ($(HB_INIT_DONE),)
       export HB_BUILD_SHARED := no
    endif
 
-   ifeq ($(HB_BUILD_IMPLIB),yes)
+   ifeq ($(HB_INSTALL_IMPLIB),yes)
       # 'install' is required to create import libraries
       ifeq ($(filter install,$(HB_MAKECMDGOALS)),)
-         export HB_BUILD_IMPLIB := no
-         $(warning ! Warning: HB_BUILD_IMPLIB option works only when 'install' is requested.)
+         export HB_INSTALL_IMPLIB := no
+         $(warning ! Warning: HB_INSTALL_IMPLIB option works only when 'install' is requested.)
       endif
    endif
 endif
@@ -275,9 +275,6 @@ ifeq ($(HB_INIT_DONE),)
    ifneq ($(HB_BUILD_DLL),)
       $(info ! HB_BUILD_DLL: $(HB_BUILD_DLL))
    endif
-   ifneq ($(HB_BUILD_IMPLIB),)
-      $(info ! HB_BUILD_IMPLIB: $(HB_BUILD_IMPLIB))
-   endif
    ifneq ($(HB_BUILD_SHARED),)
       $(info ! HB_BUILD_SHARED: $(HB_BUILD_SHARED))
    endif
@@ -310,6 +307,9 @@ ifeq ($(HB_INIT_DONE),)
    endif
    ifneq ($(HB_REBUILD_PARSER),)
       $(info ! HB_REBUILD_PARSER: $(HB_REBUILD_PARSER))
+   endif
+   ifneq ($(HB_INSTALL_IMPLIB),)
+      $(info ! HB_INSTALL_IMPLIB: $(HB_INSTALL_IMPLIB))
    endif
 endif
 
