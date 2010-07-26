@@ -84,15 +84,23 @@ STATIC s_lWasLoad := .F.
 /* ********************************************************************** */
 
 PROCEDURE _APPMAIN( cFile, ... )
-   LOCAL cPath, cExt
+   LOCAL cPath, cDir, cExt
 
-#ifdef _DEFAULT_INC_DIR
-   AADD( s_aIncDir, "-I" + _DEFAULT_INC_DIR )
+#ifdef _HBRUN_HB_INC_INSTALL
+   cPath := _HBRUN_HB_INC_INSTALL
+   hb_FNameSplit( cPath, @cDir )
+   IF ! Empty( cDir ) .AND. Left( cDir, 1 ) $ hb_osPathDelimiters()
+      AADD( s_aIncDir, "-I" + cPath )
+   ENDIF
+#else
+   HB_SYMBOL_UNUSED( cExt )
 #endif
+
    cPath := getenv( "HB_INC_INSTALL" )
    IF !EMPTY( cPath )
       AADD( s_aIncDir, "-I" + cPath )
    ENDIF
+
 #ifdef __PLATFORM__UNIX
    AADD( s_aIncDir, "-I/usr/include/harbour" )
    AADD( s_aIncDir, "-I/usr/local/include/harbour" )

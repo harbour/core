@@ -26,10 +26,10 @@ ifeq ($(_SAME_DIR),yes)
 else
 
 ifneq ($(HB_SHELL),sh)
-   INSTALL_DIR_OS := $(subst /,\,$(HB_INST_PKGPREF)$(INSTALL_DIR))
+   INSTALL_DIR_OS := $(subst /,\,$(INSTALL_DIR))
    INSTALL_FILES_OS := $(subst /,\,$(INSTALL_FILES))
 else
-   INSTALL_DIR_OS := $(subst \,/,$(HB_INST_PKGPREF)$(INSTALL_DIR))
+   INSTALL_DIR_OS := $(subst \,/,$(INSTALL_DIR))
 endif
 
 ifeq ($(HB_SHELL),sh)

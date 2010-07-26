@@ -6,15 +6,14 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE := 1
 
-export HB_BIN_INSTALL := /usr/bin
-export HB_LIB_INSTALL := /usr/lib/harbour
-export HB_INC_INSTALL := /usr/include/harbour
-export HB_DOC_INSTALL := /usr/share/doc/harbour
-export HB_ETC_INSTALL := /etc/harbour
-export HB_INST_PKGPREF := $(CURDIR)/debian/harbour
+export HB_BIN_INSTALL := $(CURDIR)/debian/harbour/usr/bin
+export HB_LIB_INSTALL := $(CURDIR)/debian/harbour/usr/lib/harbour
+export HB_INC_INSTALL := $(CURDIR)/debian/harbour/usr/include/harbour
+export HB_DOC_INSTALL := $(CURDIR)/debian/harbour/usr/share/doc/harbour
+export HB_ETC_INSTALL := $(CURDIR)/debian/harbour/etc/harbour
 
 # is INSTDIR necessary for dpkg? If not then please remove it.
-export INSTDIR := $(HB_INST_PKGPREF)
+export INSTDIR := $(CURDIR)/debian/harbour
 
 ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
    HB_USER_CFLAGS += -O0
@@ -52,7 +51,7 @@ install: build
 	dh_installdirs
 
 	make install
-	install -m644 src/rtl/gtcrs/hb-charmap.def $(HB_INST_PKGPREF)$(HB_ETC_INSTALL)/hb-charmap.def
+	install -m644 src/rtl/gtcrs/hb-charmap.def $(HB_ETC_INSTALL)/hb-charmap.def
 
 
 # Build architecture-independent files here.

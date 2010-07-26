@@ -13,8 +13,22 @@
 #pragma warninglevel=3
 
 /* TOFIX: Ugly hack to avoid #include "directry.ch" */
-#define F_NAME          1       /* File name */
-#define F_ATTR          5       /* File attribute */
+#define F_NAME                1              /* File name */
+#define F_ATTR                5              /* File attribute */
+
+/* POSIX file permission */
+#define HB_FA_SUID            0x08000000     /* 4000 set user ID on execution */
+#define HB_FA_SGID            0x04000000     /* 2000 set group ID on execution */
+#define HB_FA_SVTX            0x02000000     /* 1000 sticky bit */
+#define HB_FA_RUSR            0x01000000     /* 0400 read by owner */
+#define HB_FA_WUSR            0x00800000     /* 0200 write by owner */
+#define HB_FA_XUSR            0x00400000     /* 0100 execute/search by owner */
+#define HB_FA_RGRP            0x00200000     /* 0040 read by group */
+#define HB_FA_WGRP            0x00100000     /* 0020 write by group */
+#define HB_FA_XGRP            0x00080000     /* 0010 execute/search by group */
+#define HB_FA_ROTH            0x00040000     /* 0004 read by others */
+#define HB_FA_WOTH            0x00020000     /* 0002 write by others */
+#define HB_FA_XOTH            0x00010000     /* 0001 execute/search by others */
 
 PROCEDURE Main()
    LOCAL nErrorLevel := 0
@@ -22,6 +36,15 @@ PROCEDURE Main()
 
    LOCAL tmp
    LOCAL cOldDir
+
+   LOCAL cTar_Name
+   LOCAL cTar_Path
+   LOCAL cBin_Tar
+   LOCAL lGNU_Tar
+   LOCAL cOwner
+   LOCAL cGroup
+   LOCAL cSH_Script
+   LOCAL nAttr
 
    IF Empty( GetEnv( "HB_PLATFORM" ) ) .OR. ;
       Empty( GetEnv( "HB_COMPILER" ) ) .OR. ;
@@ -55,6 +78,29 @@ PROCEDURE Main()
       NEXT
    ENDIF
 
+   IF !( GetEnv( "HB_PLATFORM" ) $ "win|wce|os2|dos" ) .AND. ;
+      ! Empty( GetEnv( "HB_ETC_INSTALL" ) ) .AND. ;
+      GetEnv( "HB_SYSLOC" ) == "yes"
+
+      OutStd( "! Copying *nix config files..." + hb_eol() )
+
+      DirBuild( GetEnv( "HB_ETC_INSTALL" ) )
+      mk_FCopyToDir( "src/rtl/gtcrs/hb-charmap.def", GetEnv( "HB_ETC_INSTALL" ) + hb_ps(), .T. )
+   ENDIF
+
+   IF ! Empty( GetEnv( "HB_MAN_INSTALL" ) )
+
+      OutStd( "! Copying *nix man files..." + hb_eol() )
+
+      FOR EACH tmp IN { "src/main/harbour.1"    ,;
+                        "src/pp/hbpp.1"         ,;
+                        "utils/hbmk2/hbmk2.1"   ,;
+                        "utils/hbrun/hbrun.1"   ,;
+                        "utils/hbtest/hbtest.1" }
+         mk_FCopyToDir( tmp, GetEnv( "HB_ETC_INSTALL" ) + hb_ps() + "man1" + hb_ps(), .T. )
+      NEXT
+   ENDIF
+
    /* Creating language files */
 
    OutStd( "! Making core translation (.hbl) files..." + hb_eol() )
@@ -76,42 +122,122 @@ PROCEDURE Main()
 
    /* Creating install packages */
 
-   IF GetEnv( "HB_PLATFORM" ) $ "win|wce|os2|dos" .AND. ;
-      GetEnv( "HB_BUILD_PKG" ) == "yes" .AND. ;
+   IF GetEnv( "HB_BUILD_PKG" ) == "yes" .AND. ;
       ! Empty( GetEnv( "HB_TOP" ) )
 
-      tmp := GetEnv( "HB_TOP" ) + hb_ps() + GetEnv( "HB_PKGNAME" ) + ".zip"
+      IF GetEnv( "HB_PLATFORM" ) $ "win|wce|os2|dos"
 
-      OutStd( "! Making Harbour .zip install package: '" + tmp + "'" + hb_eol() )
+         tmp := GetEnv( "HB_TOP" ) + hb_ps() + GetEnv( "HB_PKGNAME" ) + ".zip"
 
-      FErase( tmp )
+         OutStd( "! Making Harbour .zip install package: '" + tmp + "'" + hb_eol() )
 
-      /* NOTE: Believe it or not this is the official method to zip a different dir with subdirs
-               without including the whole root path in filenames; you have to 'cd' into it.
-               Even with zip 3.0. For this reason we need absolute path in HB_TOP. There is also
-               no zip 2.x compatible way to force creation of a new .zip, so we have to delete it
-               first to avoid mixing in an existing .zip file. [vszakats] */
+         FErase( tmp )
 
-      cOldDir := hb_ps() + CurDir()
-      DirChange( GetEnv( "HB_INSTALL_PREFIX" ) + hb_ps() + ".." )
+         /* NOTE: Believe it or not this is the official method to zip a different dir with subdirs
+                  without including the whole root path in filenames; you have to 'cd' into it.
+                  Even with zip 3.0. For this reason we need absolute path in HB_TOP. There is also
+                  no zip 2.x compatible way to force creation of a new .zip, so we have to delete it
+                  first to avoid mixing in an existing .zip file. [vszakats] */
 
-      mk_hb_processRun( PathSepToSelf( GetEnv( "HB_DIR_ZIP" ) ) + "zip" +;
-                        " -q -9 -X -r -o" +;
-                        " " + FNameEscape( tmp ) +;
-                        " . -i " + FNameEscape( GetEnv( "HB_PKGNAME" ) + hb_ps() + "*" ) +;
-                        " -x *.tds -x *.exp" )
+         cOldDir := hb_ps() + CurDir()
+         DirChange( GetEnv( "HB_INSTALL_PREFIX" ) + hb_ps() + ".." )
 
-      DirChange( cOldDir )
+         mk_hb_processRun( PathSepToSelf( GetEnv( "HB_DIR_ZIP" ) ) + "zip" +;
+                           " -q -9 -X -r -o" +;
+                           " " + FNameEscape( tmp ) +;
+                           " . -i " + FNameEscape( GetEnv( "HB_PKGNAME" ) + hb_ps() + "*" ) +;
+                           " -x *.tds -x *.exp" )
 
-      IF GetEnv( "HB_PLATFORM" ) $ "win|wce"
+         DirChange( cOldDir )
 
-         tmp := GetEnv( "HB_TOP" ) + hb_ps() + GetEnv( "HB_PKGNAME" ) + ".exe"
+         IF GetEnv( "HB_PLATFORM" ) $ "win|wce"
 
-         OutStd( "! Making Harbour .exe install package: '" + tmp + "'" + hb_eol() )
+            tmp := GetEnv( "HB_TOP" ) + hb_ps() + GetEnv( "HB_PKGNAME" ) + ".exe"
 
-         mk_hb_processRun( PathSepToSelf( GetEnv( "HB_DIR_NSIS" ) ) + "makensis.exe" +;
-                           " -V2" +;
-                           " " + FNameEscape( StrTran( "package/mpkg_win.nsi", "/", hb_ps() ) ) )
+            OutStd( "! Making Harbour .exe install package: '" + tmp + "'" + hb_eol() )
+
+            mk_hb_processRun( PathSepToSelf( GetEnv( "HB_DIR_NSIS" ) ) + "makensis.exe" +;
+                              " -V2" +;
+                              " " + FNameEscape( StrTran( "package/mpkg_win.nsi", "/", hb_ps() ) ) )
+         ENDIF
+      ELSE
+         cBin_Tar := "tar"
+         lGNU_Tar := .T.
+         IF ! Empty( query_stdout( "gtar --version" ) )
+            cBin_Tar := "gtar"
+         ELSEIF ! Empty( query_stdout( "tar --version" ) )
+            cBin_Tar := ""
+         ELSEIF "bsdtar" $ query_stdout( "tar --version" )
+            /* tar is mapped to bsdtar starting OS X 10.6 */
+            lGNU_Tar := .F.
+         ENDIF
+
+         IF ! Empty( cBin_Tar )
+
+
+            cTar_Name := GetEnv( "HB_PKGNAME" )
+            IF ! Empty( tmp := unix_name() )
+               cTar_Name += tmp
+            ENDIF
+            cTar_Name += iif( GetEnv( "HB_PLATFORM" ) == "dos", ".tgz", ".bin.tar.gz" )
+            cTar_Path := GetEnv( "HB_TOP" ) + hb_ps() + cTar_Name
+
+            OutStd( "! Making Harbour tar install package: '" + cTar_Path + "'" + hb_eol() )
+
+            FErase( cTar_Path )
+
+            cOwner := "root"
+            cGroup := iif( GetEnv( "HB_PLATFORM" ) == "darwin" .OR. ;
+                           GetEnv( "HB_PLATFORM" ) == "bsd", "wheel", "root" )
+
+            cOldDir := hb_ps() + CurDir()
+            DirChange( GetEnv( "HB_INSTALL_PREFIX" ) )
+
+            /* TODO: Add support for non-GNU non-BSD tar (which gets the data from stdio) */
+
+            mk_hb_processRun( cBin_Tar +;
+                              " czvf" +;
+                              " " + FNameEscape( cTar_Path ) +;
+                              iif( lGNU_Tar, " --owner=" + cOwner, "" ) +;
+                              iif( lGNU_Tar, " --group=" + cGroup, "" ) +;
+                              " ." )
+
+            DirChange( cOldDir )
+
+            IF !( GetEnv( "HB_PLATFORM" ) == "dos" )
+
+               tmp := GetEnv( "HB_TOP" ) + hb_ps() + GetEnv( "HB_PKGNAME" ) + ".inst.sh"
+
+               OutStd( "! Making Harbour tar installer package: '" + tmp + "'" + hb_eol() )
+
+               /* In the generated script always use tar because we can't be sure
+                  if cBin_Tar exists in the installation environment */
+               cSH_Script := '#!/bin/sh'
+               cSH_Script += 'if [ "\$1" = "--extract" ]; then'
+               cSH_Script += '   tail -c ' + hb_ntos( hb_FSize( cTar_Path ) ) + ' "\$0" > "' + cTar_Name + '"'
+               cSH_Script += '   exit'
+               cSH_Script += 'fi'
+               cSH_Script += 'if [ \`id -u\` != 0 ]; then'
+               cSH_Script += '   echo "This package has to be installed from root account."'
+               cSH_Script += '   exit 1'
+               cSH_Script += 'fi'
+               cSH_Script += 'echo "Do you want to install Harbour (y/n)"'
+               cSH_Script += 'read ASK'
+               cSH_Script += 'if [ "\${ASK}" != "y" ] && [ "\${ASK}" != "Y" ]; then'
+               cSH_Script += '   exit 1'
+               cSH_Script += 'fi'
+               cSH_Script += '(tail -c ' + hb_ntos( hb_FSize( cTar_Path ) ) + ' "\$0" | gzip -cd | (cd /;tar xvpf -)) ' + iif( GetEnv( "HB_PLATFORM" ) == "linux", "&& ldconfig", "" )
+               cSH_Script += 'exit \$?'
+               cSH_Script += 'HB_INST_EOF'
+
+               hb_MemoWrite( tmp, cSH_Script )
+
+               hb_FGetAttr( tmp, @nAttr )
+               hb_FSetAttr( tmp, hb_bitOr( nAttr, HB_FA_XOTH ) )
+            ENDIF
+         ELSE
+            OutStd( "! Error: Cannot find 'tar'" + hb_eol() )
+         ENDIF
       ENDIF
    ENDIF
 
@@ -188,3 +314,99 @@ STATIC FUNCTION FNameExtSet( cFileName, cExt )
 
 STATIC FUNCTION PathSepToSelf( cFileName )
    RETURN StrTran( cFileName, iif( hb_ps() == "\", "/", "\" ), hb_ps() )
+
+STATIC FUNCTION DirBuild( cDir )
+   LOCAL cDirTemp
+   LOCAL cDirItem
+   LOCAL tmp
+
+   IF ! hb_DirExists( cDir )
+
+      cDir := DirAddPathSep( cDir )
+
+      IF ! Empty( hb_osDriveSeparator() ) .AND. ;
+         ( tmp := At( hb_osDriveSeparator(), cDir ) ) > 0
+         cDirTemp := Left( cDir, tmp )
+         cDir := SubStr( cDir, tmp + 1 )
+      ELSE
+         cDirTemp := ""
+      ENDIF
+
+      FOR EACH cDirItem IN hb_ATokens( cDir, hb_ps() )
+         IF !( Right( cDirTemp, 1 ) == hb_ps() ) .AND. ! Empty( cDirTemp )
+            cDirTemp += hb_ps()
+         ENDIF
+         IF ! Empty( cDirItem )  /* Skip root path, if any */
+            cDirTemp += cDirItem
+            IF hb_FileExists( cDirTemp )
+               RETURN .F.
+            ELSEIF ! hb_DirExists( cDirTemp )
+               IF MakeDir( cDirTemp ) != 0
+                  RETURN .F.
+               ENDIF
+            ENDIF
+         ENDIF
+      NEXT
+   ENDIF
+
+   RETURN .T.
+
+STATIC FUNCTION DirAddPathSep( cDir )
+
+   IF ! Empty( cDir ) .AND. !( Right( cDir, 1 ) == hb_ps() )
+      cDir += hb_ps()
+   ENDIF
+
+   RETURN cDir
+
+STATIC PROCEDURE mk_FCopyToDir( cSrc, cDstDir, l644 )
+   LOCAL cDir, cName, cExt
+   LOCAL cDst
+
+   hb_FNameSplit( cSrc,, @cName, @cExt )
+   hb_FNameSplit( cDstDir, @cDir )
+   cDst := hb_FNameMerge( cDir, cName, cExt )
+
+   IF hb_FCopy( cSrc, cDst ) == 0
+      IF l644
+         hb_FSetAttr( cDst, hb_bitOr( HB_FA_RUSR, HB_FA_WUSR, HB_FA_RGRP, HB_FA_ROTH ) )
+      ENDIF
+   ENDIF
+
+   RETURN
+
+STATIC FUNCTION query_stdout( cName )
+   LOCAL cStdOut
+
+   hb_processRun( cName,, @cStdOut  )
+
+   RETURN cStdOut
+
+STATIC FUNCTION query_rpm( cName, cID )
+   LOCAL cResult := query_stdout( "rpm -q --queryformat='.%{VERSION}' " + cName )
+
+   RETURN iif( Empty( cResult ), "", cID + StrTran( cResult, "." ) )
+
+/* Please add your distro suffix if it not belong to the one recognized below
+   and remember that order checking can be important */
+STATIC FUNCTION unix_name()
+   LOCAL tmp
+
+   DO CASE
+   CASE GetEnv( "HB_PLATFORM" ) == "dos" ; RETURN "djgpp"
+   CASE GetEnv( "HB_PLATFORM" ) == "win" ; RETURN GetEnv( "HB_COMPILER" )
+   CASE ! Empty( tmp := query_rpm( "mandriva-release-One", "mdk" ) ) ; RETURN tmp
+   CASE ! Empty( tmp := query_rpm( "mandriva-release"    , "mdk" ) ) ; RETURN tmp
+   CASE ! Empty( tmp := query_rpm( "mandrake-release"    , "mdk" ) ) ; RETURN tmp
+   CASE ! Empty( tmp := query_rpm( "redhat-release"      , "rh"  ) ) ; RETURN tmp
+   CASE ! Empty( tmp := query_rpm( "fedora-release"      , "fc"  ) ) ; RETURN tmp
+   CASE ! Empty( tmp := query_rpm( "suse-release"        , "sus" ) ) ; RETURN tmp
+   CASE ! Empty( tmp := query_rpm( "openSUSE-release"    , "sus" ) ) ; RETURN tmp
+   CASE ! Empty( tmp := query_rpm( "conectiva-release"   , "cl"  ) ) ; RETURN tmp
+   CASE ! Empty( tmp := query_rpm( "aurox-release"       , "cl"  ) ) ; RETURN tmp
+   /* TODO: Rewrite this in Harbour */
+   CASE hb_FileExists( "/etc/pld-release" )
+      RETURN "" /* cat /etc/pld-release|sed -e '/1/ !d' -e 's/[^0-9]//g' -e 's/^/pld/'` */
+   ENDCASE
+
+   RETURN Lower( query_stdout( "uname -s" ) )

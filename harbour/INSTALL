@@ -218,7 +218,8 @@ HARBOUR
    Binary .tgz on *nixes
    ---------------------
 
-      $ ./mpkg_tgz.sh
+      $ export HB_BUILD_PKG=yes
+      $ make
 
    Binary .deb on Linux
    --------------------
@@ -629,6 +630,8 @@ HARBOUR
    - HB_DYN_INSTALL              Override directory to install dynamic libraries
    - HB_INC_INSTALL              Override directory to install language headers
    - HB_DOC_INSTALL              Override directory to install documentation
+   - HB_MAN_INSTALL              Override directory to install *nix man files
+   - HB_ETC_INSTALL              Override directory to install *nix config files
 
    Special
    -------
@@ -641,7 +644,6 @@ HARBOUR
                                  apply. It's valid to use (back)slashes though.
    - HB_BUILD_PKG=yes            Create release package. Default: no
                                  Requires 'clean install' in root source dir.
-                                 (currently on Windows/Windows CE/MS-DOS)
    - HB_BUILD_DLL=no             Create Harbour dynamic libraries. Default: yes
    - HB_BUILD_SHARED=yes         Create Harbour executables in shared mode.
                                  Default: yes when HB_INSTALL_PREFIX points

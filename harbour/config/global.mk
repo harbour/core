@@ -266,6 +266,12 @@ ifeq ($(HB_INIT_DONE),)
    ifneq ($(HB_DOC_INSTALL),)
       $(info ! HB_DOC_INSTALL: $(HB_DOC_INSTALL))
    endif
+   ifneq ($(HB_MAN_INSTALL),)
+      $(info ! HB_MAN_INSTALL: $(HB_MAN_INSTALL))
+   endif
+   ifneq ($(HB_ETC_INSTALL),)
+      $(info ! HB_ETC_INSTALL: $(HB_ETC_INSTALL))
+   endif
    ifneq ($(HB_BUILD_NAME),)
       $(info ! HB_BUILD_NAME: $(HB_BUILD_NAME))
    endif
@@ -1404,8 +1410,16 @@ ifneq ($(HB_HAS_X11),)
 endif
 
 ifneq ($(HB_PLATFORM),dos)
-   HB_VERSION := $(HB_VER_MAJOR).$(HB_VER_MINOR).$(HB_VER_RELEASE)$(HB_VER_STATUS)
-   HB_PKGNAME := harbour-$(HB_VERSION)-$(HB_PLATFORM)-$(HB_COMPILER)
+   ifneq ($(HB_PLATFORM_UNIX),)
+      HB_VERSION := $(HB_VER_MAJOR).$(HB_VER_MINOR).$(HB_VER_RELEASE)
+      ifneq ($(HB_VER_STATUS),)
+         HB_VERSION := $(HB_VERSION)-$(HB_VER_STATUS)
+      endif
+      HB_PKGNAME := harbour-$(HB_VERSION)
+   else
+      HB_VERSION := $(HB_VER_MAJOR).$(HB_VER_MINOR).$(HB_VER_RELEASE)$(HB_VER_STATUS)
+      HB_PKGNAME := harbour-$(HB_VERSION)-$(HB_PLATFORM)-$(HB_COMPILER)
+   endif
    HB_PKGNAMI := $(HB_PKGNAME)
 else
    # Use short names in MS-DOS
@@ -1442,6 +1456,8 @@ ifeq ($(HB_BUILD_PKG),yes)
       HB_LIB_INSTALL :=
       HB_DYN_INSTALL :=
       HB_DOC_INSTALL :=
+      HB_MAN_INSTALL :=
+      HB_ETC_INSTALL :=
    endif
 else
    # Fill it automatically if not specified
@@ -1590,6 +1606,24 @@ ifneq ($(HB_INSTALL_PREFIX),)
       # Do not set doc dir for *nix targets
       ifeq ($(HB_PLATFORM_UNIX),)
          export HB_DOC_INSTALL := $(HB_INSTALL_PREFIX)$(DIRSEP)doc
+      endif
+   endif
+   # Standard name: MANDIR
+   ifeq ($(HB_MAN_INSTALL),)
+      # Do not set doc dir for non-*nix targets
+      ifneq ($(HB_PLATFORM_UNIX),)
+         export HB_MAN_INSTALL := $(HB_INSTALL_PREFIX)$(DIRSEP)man$(INCPOSTFIX)
+      endif
+   endif
+   # Standard name: ETCDIR
+   ifeq ($(HB_ETC_INSTALL),)
+      # Do not set doc dir for non-*nix targets
+      ifneq ($(HB_PLATFORM_UNIX),)
+         ifeq ($(HB_PLATFORM),darwin)
+            export HB_ETC_INSTALL := $(HB_INSTALL_PREFIX)$(DIRSEP)private/etc$(INCPOSTFIX)
+         else
+            export HB_ETC_INSTALL := $(HB_INSTALL_PREFIX)$(DIRSEP)etc$(INCPOSTFIX)
+         endif
       endif
    endif
 endif
