@@ -2223,7 +2223,10 @@ METHOD IdeEdit:parseCodeCompletion( cSyntax )
    nSpc := at( " ", cSyntax )
    nFun := at( "(", cSyntax )
 
-   IF nAbr > 0 .AND. iif( nSpc == 0, .t., nAbr < nSpc ).AND. iif( nFun == 0, .t., nAbr < nFun )
+   IF "[f]" $ cSyntax
+      cText := alltrim( substr( cSyntax, 1, nSpc ) )
+
+   ELSEIF nAbr > 0 .AND. iif( nSpc == 0, .t., nAbr < nSpc ).AND. iif( nFun == 0, .t., nAbr < nFun )
       cText := alltrim( substr( cSyntax, nAbr + 1 ) )
 
    ELSE
@@ -2234,7 +2237,7 @@ METHOD IdeEdit:parseCodeCompletion( cSyntax )
             cText := trim( cSyntax )
          ENDIF
       ELSE
-         IF nFun > 0 .AND. nFun < nSpc
+         IF nFun > 0 .AND. iif( nSpc == 0, .t., nFun < nSpc )
             cText := trim( substr( cSyntax, 1, nFun - 1 ) )
          ELSE
             cText := trim( cSyntax )

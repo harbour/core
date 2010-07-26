@@ -581,7 +581,7 @@ METHOD HbIde:create( aParams )
       ::oXbp:handleEvent( ::nEvent, ::mp1, ::mp2 )
    ENDDO
 
-   ::oBM:destroy()
+   DbCloseAll()
 
 #if 0
 

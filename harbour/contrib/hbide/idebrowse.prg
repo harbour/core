@@ -357,7 +357,7 @@ METHOD IdeBrowseManager:fetchFldsList( cAlias )
          FOR EACH aBrw IN oPanel:aBrowsers
             oBrw := aBrw[ SUB_BROWSER ]
             FOR EACH a_ IN oBrw:aStruct
-               aadd( aFlds, pad( a_[ 1 ], 10 ) + " (" + padc( oBrw:cTableOnly, 12 ) + ")" + str( a_:__enumIndex(),3,0 ) + ", " + a_[ 2 ] + ", " + str( a_[ 3 ],3,0 ) + ", " + hb_ntos( a_[ 4 ] ) )
+               aadd( aFlds, pad( a_[ 1 ], 10 ) + " (" + padc( oBrw:cTableOnly, 12 ) + ")" + str( a_:__enumIndex(),3,0 ) + ", " + a_[ 2 ] + ", " + str( a_[ 3 ],3,0 ) + ", " + hb_ntos( a_[ 4 ] ) + " [f]" )
             NEXT
          NEXT
       NEXT
@@ -365,7 +365,7 @@ METHOD IdeBrowseManager:fetchFldsList( cAlias )
    OTHERWISE
       IF ! empty( oBrw := ::getBrowserByAlias( cA ) )
          FOR EACH a_ IN oBrw:aStruct
-            aadd( aFlds, pad( a_[ 1 ], 10 ) + " ( " + str( a_:__enumIndex(),3,0 ) + ", " + a_[ 2 ] + ", " + str( a_[ 3 ],3,0 ) + ", " + hb_ntos( a_[ 4 ] ) + " )" )
+            aadd( aFlds, pad( a_[ 1 ], 10 ) + " ( " + str( a_:__enumIndex(),3,0 ) + ", " + a_[ 2 ] + ", " + str( a_[ 3 ],3,0 ) + ", " + hb_ntos( a_[ 4 ] ) + " )"  + " [f]" )
          NEXT
       ENDIF
       EXIT
