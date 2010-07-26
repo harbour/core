@@ -117,6 +117,7 @@ PROCEDURE ExecOneMore()
    s_slots  := QT_SLOTS_NEW()
 
    oWnd := QMainWindow():new()
+   QT_EVENTS_CONNECT( s_events,  oWnd, QEvent_Close, {|| lExit := .t. } )
 
    oWnd:setMouseTracking( .t. )
    oWnd:setWindowTitle( "Harbour-Qt Implementation Test Dialog" )
@@ -149,6 +150,7 @@ PROCEDURE ExecOneMore()
          EXIT
       ENDIF
    ENDDO
+   QT_EVENTS_DISCONNECT( s_events,  oWnd, QEvent_Close )
    oEventLoop:exit( 0 )
    oEventLoop := 0
 
