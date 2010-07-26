@@ -230,7 +230,7 @@ PROCEDURE Main()
                cSH_Script += 'exit \$?'
                cSH_Script += 'HB_INST_EOF'
 
-               hb_MemoWrite( tmp, cSH_Script + hb_MemoRead( cTar_Path ) )
+               hb_MemoWrit( tmp, cSH_Script + hb_MemoRead( cTar_Path ) )
 
                hb_FGetAttr( tmp, @nAttr )
                hb_FSetAttr( tmp, hb_bitOr( nAttr, HB_FA_XOTH ) )
