@@ -38,6 +38,7 @@ PROCEDURE Main()
    LOCAL cOldDir
 
    LOCAL cTar_Name
+   LOCAL cTar_NameExt
    LOCAL cTar_Path
    LOCAL cBin_Tar
    LOCAL lGNU_Tar
@@ -75,7 +76,7 @@ PROCEDURE Main()
 
    IF ! Empty( GetEnv( "HB_BIN_INSTALL" ) )
 
-      OutStd( "! Copying Harbour scrip (.hbs) files..." + hb_eol() )
+      OutStd( "! Copying Harbour script (.hbs) files..." + hb_eol() )
 
       /* public Harbour scripts */
       FOR EACH tmp IN { "hbmk2l2d.hbs" ,;
@@ -121,7 +122,7 @@ PROCEDURE Main()
 
    /* Creating docs for core */
 
-   OutStd( "! Compiling core documentation..." + hb_eol() )
+   OutStd( "! Compiling core documentation (.hbd)..." + hb_eol() )
 
    mk_hbd_core( "." + hb_ps() )
 
@@ -181,10 +182,10 @@ PROCEDURE Main()
 
             cTar_Name := GetEnv( "HB_PKGNAME" )
             IF ! Empty( tmp := unix_name() )
-               cTar_Name += tmp
+               cTar_Name += "-" + tmp
             ENDIF
-            cTar_Name += iif( GetEnv( "HB_PLATFORM" ) == "dos", ".tgz", ".bin.tar.gz" )
-            cTar_Path := GetEnv( "HB_TOP" ) + hb_ps() + cTar_Name
+            cTar_NameExt := cTar_Name + iif( GetEnv( "HB_PLATFORM" ) == "dos", ".tgz", ".bin.tar.gz" )
+            cTar_Path := GetEnv( "HB_TOP" ) + hb_ps() + cTar_NameExt
 
             OutStd( "! Making Harbour tar install package: '" + cTar_Path + "'" + hb_eol() )
 
@@ -210,7 +211,7 @@ PROCEDURE Main()
 
             IF !( GetEnv( "HB_PLATFORM" ) == "dos" )
 
-               tmp := GetEnv( "HB_TOP" ) + hb_ps() + GetEnv( "HB_PKGNAME" ) + ".inst.sh"
+               tmp := GetEnv( "HB_TOP" ) + hb_ps() + cTar_Name + ".inst.sh"
 
                OutStd( "! Making Harbour tar installer package: '" + tmp + "'" + hb_eol() )
 
@@ -218,7 +219,7 @@ PROCEDURE Main()
                   if cBin_Tar exists in the installation environment */
                cSH_Script := '#!/bin/sh'
                cSH_Script += 'if [ "\$1" = "--extract" ]; then'
-               cSH_Script += '   tail -c ' + hb_ntos( hb_FSize( cTar_Path ) ) + ' "\$0" > "' + cTar_Name + '"'
+               cSH_Script += '   tail -c ' + hb_ntos( hb_FSize( cTar_Path ) ) + ' "\$0" > "' + cTar_NameExt + '"'
                cSH_Script += '   exit'
                cSH_Script += 'fi'
                cSH_Script += 'if [ \`id -u\` != 0 ]; then'
@@ -381,15 +382,17 @@ STATIC PROCEDURE mk_FCopyToDir( cSrc, cDstDir, l644 )
 
 STATIC FUNCTION query_stdout( cName )
    LOCAL cStdOut
+   LOCAL cStdErr
+   LOCAL nRetVal
 
-   hb_processRun( cName,, @cStdOut  )
+   nRetVal := hb_processRun( cName,, @cStdOut, @cStdErr )
 
-   RETURN cStdOut
+   RETURN iif( nRetVal == 0, AllTrim( StrTran( cStdOut, Chr( 10 ), " " ) ), "" )
 
 STATIC FUNCTION query_rpm( cName, cID )
    LOCAL cResult := query_stdout( "rpm -q --queryformat='.%{VERSION}' " + cName )
 
-   RETURN iif( Empty( cResult ), "", cID + StrTran( cResult, "." ) )
+   RETURN iif( Empty( cResult ), "", cID + AllTrim( StrTran( StrTran( cResult, Chr( 10 ), " " ), "." ) ) )
 
 /* Please add your distro suffix if it not belong to the one recognized below
    and remember that order checking can be important */
