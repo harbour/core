@@ -7980,6 +7980,9 @@ STATIC FUNCTION DirBuild( cDir )
          ( tmp := At( hb_osDriveSeparator(), cDir ) ) > 0
          cDirTemp := Left( cDir, tmp )
          cDir := SubStr( cDir, tmp + 1 )
+      ELSEIF Left( cDir, 1 ) == hb_ps()
+         cDirTemp := Left( cDir, 1 )
+         cDir := SubStr( cDir, 2 )
       ELSE
          cDirTemp := ""
       ENDIF

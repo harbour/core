@@ -67,12 +67,12 @@ PROCEDURE Main()
       OutStd( "! Copying root documents..." + hb_eol() )
 
       FOR EACH aFile IN Directory( "Change*" )
-         hb_FCopy( aFile[ F_NAME ], GetEnv( "HB_INSTALL_PREFIX" ) + hb_ps() + iif( GetEnv( "HB_PLATFORM" ) == "dos", "CHANGES", aFile[ F_NAME ] ) )
+         mk_hb_FCopy( aFile[ F_NAME ], GetEnv( "HB_INSTALL_PREFIX" ) + hb_ps() + iif( GetEnv( "HB_PLATFORM" ) == "dos", "CHANGES", "" ) )
       NEXT
 
-      hb_FCopy( "COPYING", GetEnv( "HB_INSTALL_PREFIX" ) + hb_ps() + "COPYING" )
-      hb_FCopy( "INSTALL", GetEnv( "HB_INSTALL_PREFIX" ) + hb_ps() + "INSTALL" )
-      hb_FCopy( "TODO"   , GetEnv( "HB_INSTALL_PREFIX" ) + hb_ps() + "TODO" )
+      mk_hb_FCopy( "COPYING", GetEnv( "HB_INSTALL_PREFIX" ) + hb_ps() )
+      mk_hb_FCopy( "INSTALL", GetEnv( "HB_INSTALL_PREFIX" ) + hb_ps() )
+      mk_hb_FCopy( "TODO"   , GetEnv( "HB_INSTALL_PREFIX" ) + hb_ps() )
    ENDIF
 
    IF ! Empty( GetEnv( "HB_BIN_INSTALL" ) )
@@ -80,19 +80,21 @@ PROCEDURE Main()
       OutStd( "! Copying Harbour script (.hbs) files..." + hb_eol() )
 
       /* public Harbour scripts */
-      FOR EACH tmp IN { "hbmk2l2d.hbs" ,;
-                        "hbxpatch.hbs" }
-         hb_FCopy( "bin" + hb_ps() + tmp, GetEnv( "HB_BIN_INSTALL" ) + hb_ps() + tmp )
+      FOR EACH tmp IN { "bin/hbmk2l2d.hbs" ,;
+                        "bin/hbxpatch.hbs" }
+         mk_hb_FCopy( tmp, GetEnv( "HB_BIN_INSTALL" ) + hb_ps() )
       NEXT
    ENDIF
 
-   IF ! Empty( GetEnv( "HB_ETC_INSTALL" ) ) .AND. ;
-      GetEnv( "HB_SYSLOC" ) == "yes"
+   IF ! Empty( GetEnv( "HB_ETC_INSTALL" ) )
 
       OutStd( "! Copying *nix config files..." + hb_eol() )
 
-      DirBuild( GetEnv( "HB_ETC_INSTALL" ) )
-      mk_FCopyToDir( "src/rtl/gtcrs/hb-charmap.def", GetEnv( "HB_ETC_INSTALL" ) + hb_ps(), .T. )
+      IF DirBuild( GetEnv( "HB_ETC_INSTALL" ) )
+         mk_hb_FCopy( "src/rtl/gtcrs/hb-charmap.def", GetEnv( "HB_ETC_INSTALL" ) + hb_ps(), .T. )
+      ELSE
+         OutStd( hb_StrFormat( "! Error: Cannot create directory '%1$s'", GetEnv( "HB_ETC_INSTALL" ) ) + hb_eol() )
+      ENDIF
    ENDIF
 
    IF ! Empty( GetEnv( "HB_MAN_INSTALL" ) )
@@ -104,7 +106,7 @@ PROCEDURE Main()
                         "utils/hbmk2/hbmk2.1"   ,;
                         "utils/hbrun/hbrun.1"   ,;
                         "utils/hbtest/hbtest.1" }
-         mk_FCopyToDir( tmp, GetEnv( "HB_ETC_INSTALL" ) + hb_ps() + "man1" + hb_ps(), .T. )
+         mk_hb_FCopy( tmp, GetEnv( "HB_MAN_INSTALL" ) + hb_ps() + "man1" + hb_ps(), .T. )
       NEXT
    ENDIF
 
@@ -147,7 +149,7 @@ PROCEDURE Main()
                   first to avoid mixing in an existing .zip file. [vszakats] */
 
          cOldDir := hb_ps() + CurDir()
-         DirChange( GetEnv( "HB_INSTALL_PREFIX" ) + hb_ps() + ".." )
+         DirChange( GetEnv( "HB_INSTALL_PKG_TOP" ) )
 
          mk_hb_processRun( PathSepToSelf( GetEnv( "HB_DIR_ZIP" ) ) + "zip" +;
                            " -q -9 -X -r -o" +;
@@ -197,7 +199,7 @@ PROCEDURE Main()
                            GetEnv( "HB_PLATFORM" ) == "bsd", "wheel", "root" )
 
             cOldDir := hb_ps() + CurDir()
-            DirChange( GetEnv( "HB_INSTALL_PREFIX" ) )
+            DirChange( GetEnv( "HB_INSTALL_PKG_TOP" ) )
 
             /* TODO: Add support for non-GNU non-BSD tar (which gets the data from stdio) */
 
@@ -241,7 +243,7 @@ PROCEDURE Main()
                hb_FSetAttr( tmp, hb_bitOr( nAttr, HB_FA_XOTH ) )
             ENDIF
          ELSE
-            OutStd( "! Error: Cannot find 'tar'" + hb_eol() )
+            OutStd( "! Error: Cannot find 'tar' tool" + hb_eol() )
          ENDIF
       ENDIF
    ENDIF
@@ -325,6 +327,8 @@ STATIC FUNCTION DirBuild( cDir )
    LOCAL cDirItem
    LOCAL tmp
 
+   cDir := PathSepToSelf( cDir )
+
    IF ! hb_DirExists( cDir )
 
       cDir := DirAddPathSep( cDir )
@@ -333,6 +337,9 @@ STATIC FUNCTION DirBuild( cDir )
          ( tmp := At( hb_osDriveSeparator(), cDir ) ) > 0
          cDirTemp := Left( cDir, tmp )
          cDir := SubStr( cDir, tmp + 1 )
+      ELSEIF Left( cDir, 1 ) == hb_ps()
+         cDirTemp := Left( cDir, 1 )
+         cDir := SubStr( cDir, 2 )
       ELSE
          cDirTemp := ""
       ENDIF
@@ -364,18 +371,34 @@ STATIC FUNCTION DirAddPathSep( cDir )
 
    RETURN cDir
 
-STATIC PROCEDURE mk_FCopyToDir( cSrc, cDstDir, l644 )
+/* Like hb_FCopy(), but accepts dir as target and can set attributes */
+STATIC PROCEDURE mk_hb_FCopy( cSrc, cDst, l644 )
    LOCAL cDir, cName, cExt
-   LOCAL cDst
 
-   hb_FNameSplit( cSrc,, @cName, @cExt )
-   hb_FNameSplit( cDstDir, @cDir )
+   IF ! hb_isLogical( l644 )
+      l644 := .F.
+   ENDIF
+
+   cSrc := PathSepToSelf( cSrc )
+   cDst := PathSepToSelf( cDst )
+
+   hb_FNameSplit( cDst, @cDir, @cName, @cExt )
+   IF Empty( cName ) .AND. Empty( cExt )
+      hb_FNameSplit( cSrc,, @cName, @cExt )
+   ENDIF
    cDst := hb_FNameMerge( cDir, cName, cExt )
 
    IF hb_FCopy( cSrc, cDst ) == 0
+#if 0
+      OutStd( hb_StrFormat( "! Copied: %1$s <= %2$s", cDst, cSrc ) + hb_eol() )
+#endif
       IF l644
          hb_FSetAttr( cDst, hb_bitOr( HB_FA_RUSR, HB_FA_WUSR, HB_FA_RGRP, HB_FA_ROTH ) )
       ENDIF
+#if 0
+   ELSE
+      OutStd( hb_StrFormat( "! Error: Copying %1$s <= %2$s", cDst, cSrc ) + hb_eol() )
+#endif
    ENDIF
 
    RETURN

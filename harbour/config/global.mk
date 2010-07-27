@@ -1443,13 +1443,46 @@ export HB_PKGNAMI
 HB_INSTALL_PREFIX_ORI := $(HB_INSTALL_PREFIX)
 ifeq ($(HB_BUILD_PKG),yes)
    ifeq ($(HB_INIT_DONE),)
+
+      ifeq ($(HB_PLATFORM),darwin)
+         HB_BUILD_PKG_PREFIX := /usr/local
+      else
+      ifeq ($(HB_PLATFORM),sunos)
+         HB_BUILD_PKG_PREFIX := /opt
+      else
+      ifeq ($(HB_PLATFORM),beos)
+         HB_BUILD_PKG_PREFIX := /boot/common
+      else
+      ifneq ($(HB_PLATFORM_UNIX),)
+         HB_BUILD_PKG_PREFIX := /usr/local
+      else
+         HB_BUILD_PKG_PREFIX := /$(HB_PKGNAME)
+      endif
+      endif
+      endif
+      endif
+
+      # HB_TOP             - dir where packages will be created (root of Harbour source tree)
+      # HB_INSTALL_PKG_TOP - dir which has to be packed
+      # HB_PKGNAME         - name of the install package on non-*nix
+      # HB_INSTALL_PREFIX  - dir where Harbour dirs will be created
+      #
+      #   <HB_TOP><plat/comp ><HB_PKGNAME>
+      #   <HB_INSTALL_PKG_TOP>
+      #   <HB_INSTALL_PREFIX             >
+      #
+
       ifneq ($(HB_SRC_ROOTPATH),)
          export HB_TOP := $(subst /,$(DIRSEP),$(HB_SRC_ROOTPATH))
-         HB_INSTALL_PREFIX := $(subst /,$(DIRSEP),$(PKG_DIR)/$(HB_PKGNAME))
+         HB_INSTALL_PREFIX := $(PKG_DIR)
       else
          export HB_TOP := $(subst /,$(DIRSEP),$(realpath $(TOP)$(ROOT)))
-         HB_INSTALL_PREFIX := $(subst /,$(DIRSEP),$(abspath $(PKG_DIR)/$(HB_PKGNAME)))
+         HB_INSTALL_PREFIX := $(abspath $(PKG_DIR))
       endif
+
+      HB_INSTALL_PREFIX := $(subst /,$(DIRSEP),$(HB_INSTALL_PREFIX))
+
+      export HB_INSTALL_PKG_TOP := $(HB_INSTALL_PREFIX)
 
       HB_BIN_INSTALL :=
       HB_INC_INSTALL :=
@@ -1457,7 +1490,13 @@ ifeq ($(HB_BUILD_PKG),yes)
       HB_DYN_INSTALL :=
       HB_DOC_INSTALL :=
       HB_MAN_INSTALL :=
-      HB_ETC_INSTALL :=
+      ifeq ($(HB_PLATFORM),darwin)
+         export HB_ETC_INSTALL := $(HB_INSTALL_PREFIX)$(DIRSEP)private$(DIRSEP)etc
+      else
+         HB_ETC_INSTALL :=
+      endif
+
+      HB_INSTALL_PREFIX := $(HB_INSTALL_PREFIX)$(subst /,$(DIRSEP),$(HB_BUILD_PKG_PREFIX))
    endif
 else
    # Fill it automatically if not specified
@@ -1612,7 +1651,9 @@ ifneq ($(HB_INSTALL_PREFIX),)
    ifeq ($(HB_MAN_INSTALL),)
       # Do not set doc dir for non-*nix targets
       ifneq ($(HB_PLATFORM_UNIX),)
-         export HB_MAN_INSTALL := $(HB_INSTALL_PREFIX)$(DIRSEP)man$(INCPOSTFIX)
+         ifeq ($(HB_SYSLOC),yes)
+            export HB_MAN_INSTALL := $(HB_INSTALL_PREFIX)$(DIRSEP)man$(INCPOSTFIX)
+         endif
       endif
    endif
    # Standard name: ETCDIR
@@ -1620,7 +1661,7 @@ ifneq ($(HB_INSTALL_PREFIX),)
       # Do not set doc dir for non-*nix targets
       ifneq ($(HB_PLATFORM_UNIX),)
          ifeq ($(HB_PLATFORM),darwin)
-            export HB_ETC_INSTALL := $(HB_INSTALL_PREFIX)$(DIRSEP)private/etc$(INCPOSTFIX)
+            export HB_ETC_INSTALL := $(HB_INSTALL_PREFIX)$(DIRSEP)private$(DIRSEP)etc$(INCPOSTFIX)
          else
             export HB_ETC_INSTALL := $(HB_INSTALL_PREFIX)$(DIRSEP)etc$(INCPOSTFIX)
          endif
