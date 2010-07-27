@@ -73,7 +73,7 @@ PROCEDURE Main()
       hb_FCopy( "TODO"   , GetEnv( "HB_INSTALL_PREFIX" ) + hb_ps() + "TODO" )
 
       /* public Harbour scripts */
-      FOR EACH tmp IN { "hbmk_l2d.hbs" ,;
+      FOR EACH tmp IN { "hbmk2l2d.hbs" ,;
                         "hbxpatch.hbs" }
          hb_FCopy( "bin" + hb_ps() + tmp, GetEnv( "HB_BIN_INSTALL" ) + hb_ps() + tmp )
       NEXT

@@ -46,12 +46,12 @@ echo Starting Harbour Project nightly source package creation...
 
 rm -f harbour-nightly-src.zip harbour-nightly.tar.bz2 harbour-nightly.tar.gz
 
-rm -f -r _mk_nightly
-mkdir _mk_nightly || {
-   echo "Failed to create directory _mk_nightly"
+rm -f -r _hb_mpkg_src
+mkdir _hb_mpkg_src || {
+   echo "Failed to create directory _hb_mpkg_src"
    exit 1
 }
-cd _mk_nightly
+cd _hb_mpkg_src
 
 echo Downloading sources with LF line ending...
 
@@ -74,7 +74,7 @@ echo Creating zip package...
 zip -q -X -r -o ../harbour-nightly-src.zip harbour/*
 
 cd ..
-rm -f -r _mk_nightly
+rm -f -r _hb_mpkg_src
 
 destdir="/home/frs/project/h/ha/harbour-project/source/nightly/"
 

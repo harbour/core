@@ -24,12 +24,12 @@ hb_currdir=`pwd`
 
 hb_archopt="-czf"
 [ -n "${hb_ext}" ] || hb_ext=".tar.gz"
-if [ -f bin/hb-func.sh ]; then
+if [ -f package/mpkg_ver.sh ]; then
    hb_rootdir="."
 else
    hb_rootdir=`dirname $0`
 fi
-. ${hb_rootdir}/bin/hb-func.sh
+. ${hb_rootdir}/package/mpkg_ver.sh
 
 hb_ver=`get_hbver ${hb_rootdir}`
 hb_filename="${hb_currdir}/harbour-${hb_ver}.src${hb_ext}"

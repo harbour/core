@@ -36,7 +36,7 @@ get_rpmmacro()
 }
 
 cd `dirname $0`
-. bin/hb-func.sh
+. package/mpkg_ver.sh
 hb_ver=`get_hbver`
 hb_verstat=`get_hbverstat`
 [ -n "${hb_verstat}" ] || hb_verstat="0"
