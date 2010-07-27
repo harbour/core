@@ -4908,7 +4908,7 @@ static void hb_pp_condCompileElif( PHB_PP_STATE pState, PHB_PP_TOKEN pToken )
 }
 
 #if !defined( HB_PP_NO_LINEINFO_TOKEN )
-static void hb_pp_lineTokens( PHB_PP_TOKEN ** pTokenPtr, char * szFileName, int iLine )
+static void hb_pp_lineTokens( PHB_PP_TOKEN ** pTokenPtr, const char * szFileName, int iLine )
 {
    char szLine[ 12 ];
 
