@@ -402,8 +402,6 @@ STATIC FUNCTION unix_name()
    CASE ! Empty( tmp := query_rpm( "fedora-release"      , "fc"  ) ) ; RETURN tmp
    CASE ! Empty( tmp := query_rpm( "suse-release"        , "sus" ) ) ; RETURN tmp
    CASE ! Empty( tmp := query_rpm( "openSUSE-release"    , "sus" ) ) ; RETURN tmp
-   CASE ! Empty( tmp := query_rpm( "conectiva-release"   , "cl"  ) ) ; RETURN tmp
-   CASE ! Empty( tmp := query_rpm( "aurox-release"       , "cl"  ) ) ; RETURN tmp
    /* TODO: Rewrite this in Harbour */
    CASE hb_FileExists( "/etc/pld-release" )
       RETURN "" /* cat /etc/pld-release|sed -e '/1/ !d' -e 's/[^0-9]//g' -e 's/^/pld/'` */
