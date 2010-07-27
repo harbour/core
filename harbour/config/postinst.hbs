@@ -170,7 +170,7 @@ PROCEDURE Main()
          lGNU_Tar := .T.
          IF ! Empty( query_stdout( "gtar --version" ) )
             cBin_Tar := "gtar"
-         ELSEIF ! Empty( query_stdout( "tar --version" ) )
+         ELSEIF Empty( query_stdout( "tar --version" ) )
             cBin_Tar := ""
          ELSEIF "bsdtar" $ query_stdout( "tar --version" )
             /* tar is mapped to bsdtar starting OS X 10.6 */
