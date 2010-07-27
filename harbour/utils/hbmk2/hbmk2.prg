@@ -2641,7 +2641,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    ENDIF
 
    /* Start doing the make process. */
-   IF ! hbmk[ _HBMK_lStopAfterInit ] .AND. ! hbmk[ _HBMK_lCreateImpLib ] .AND. ( Len( hbmk[ _HBMK_aPRG ] ) + Len( hbmk[ _HBMK_aC ] ) + Len( hbmk[ _HBMK_aCPP ] ) + Len( hbmk[ _HBMK_aOBJUSER ] ) + Len( l_aOBJA ) ) == 0
+   IF ! hbmk[ _HBMK_lStopAfterInit ] .AND. ! hbmk[ _HBMK_lCreateImpLib ] .AND. ( Len( hbmk[ _HBMK_aPLUGINPars ] ) + Len( hbmk[ _HBMK_aPRG ] ) + Len( hbmk[ _HBMK_aC ] ) + Len( hbmk[ _HBMK_aCPP ] ) + Len( hbmk[ _HBMK_aOBJUSER ] ) + Len( l_aOBJA ) ) == 0
       hbmk_OutErr( hbmk, I_( "Error: No source files were specified." ) )
       IF hbmk[ _HBMK_lBEEP ]
          DoBeep( .F. )
@@ -7180,6 +7180,7 @@ STATIC PROCEDURE PlugIn_Load( hbmk, cFileName )
 
 /* Public functions accessible for plugins */
 
+FUNCTION hbmk2_CWD()                   ; RETURN hb_pwd()
 FUNCTION hbmk2_FindInPath( ... )       ; RETURN FindInPath( ... )
 FUNCTION hbmk2_PathNormalize( ... )    ; RETURN PathNormalize( ... )
 FUNCTION hbmk2_PathMakeAbsolute( ... ) ; RETURN PathMakeAbsolute( ... )
@@ -7229,6 +7230,13 @@ STATIC FUNCTION ctx_to_hbmk( ctx )
       ENDIF
    ENDIF
    RETURN NIL
+
+FUNCTION hbmk2_PathFromWorkdirToCWD( ctx )
+   LOCAL hbmk := ctx_to_hbmk( ctx )
+   IF hbmk != NIL
+      RETURN DirAddPathSep( PathMakeRelative( PathNormalize( PathMakeAbsolute( hbmk[ _HBMK_cWorkDir ], hb_pwd() ) ), hb_pwd(), .T. ) )
+   ENDIF
+   RETURN ""
 
 FUNCTION hbmk2_Macro( ctx, cString )
    LOCAL hbmk := ctx_to_hbmk( ctx )
@@ -7286,6 +7294,13 @@ FUNCTION hbmk2_AddInput_RC( ctx, cFileName )
    LOCAL hbmk := ctx_to_hbmk( ctx )
    IF hbmk != NIL .AND. ISCHARACTER( cFileName )
       AAdd( hbmk[ _HBMK_aRESSRC ], PathSepToSelf( cFileName ) )
+   ENDIF
+   RETURN NIL
+
+FUNCTION hbmk2_AddInput_OBJ( ctx, cFileName )
+   LOCAL hbmk := ctx_to_hbmk( ctx )
+   IF hbmk != NIL .AND. ISCHARACTER( cFileName )
+      AAdd( hbmk[ _HBMK_aOBJUSER ], PathSepToSelf( cFileName ) )
    ENDIF
    RETURN NIL
 
