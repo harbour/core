@@ -224,7 +224,7 @@ HARBOUR
    Binary .deb on Linux
    --------------------
 
-      $ fakeroot debian/rules binary
+      $ fakeroot package/debian/rules binary
 
    Binary .rpm on Linux
    --------------------
