@@ -93,7 +93,7 @@ PROCEDURE _APPMAIN( cFile, ... )
       AADD( s_aIncDir, "-I" + cPath )
    ENDIF
 #else
-   HB_SYMBOL_UNUSED( cExt )
+   HB_SYMBOL_UNUSED( cDir )
 #endif
 
    cPath := getenv( "HB_INC_INSTALL" )
