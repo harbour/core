@@ -52,15 +52,17 @@
 #define F_NAME                  1       /* File name */
 #define F_ATTR                  5       /* File attribute */
 
-#define _ACT_CLEAN              1
+#define _ACT_INC_CLEAN          1
 #define _ACT_INC                2
 #define _ACT_INC_INST           3
-#define _ACT_INC_REBUILD_INST   4
+#define _ACT_INC_REBUILD        4
+#define _ACT_INC_REBUILD_INST   5
 
 STATIC hActions := {;
-   _ACT_CLEAN            => "clean" ,;
+   _ACT_INC_CLEAN        => "clean" ,;
    _ACT_INC              => "build" ,;
    _ACT_INC_INST         => "build and install" ,;
+   _ACT_INC_REBUILD      => "rebuild" ,;
    _ACT_INC_REBUILD_INST => "rebuild and install" }
 
 STATIC s_cBase
@@ -103,10 +105,11 @@ PROCEDURE Main( ... )
 
       GNU Make       parameter      nAction                hbmk2 options
    -- -------------- -------------- ---------------------- -------------------------
-   #1 clean          clean          _ACT_CLEAN             -clean
-   #2 install        install        _ACT_INC_INST          -inc -instpath=
-   #3 clean install  clean install  _ACT_INC_REBUILD_INST  -inc -instpath= -rebuild
-   #4                               _ACT_INC               -inc
+   #1 clean          clean          _ACT_INC_CLEAN         -inc -clean
+   #2                               _ACT_INC               -inc
+   #3 clean all      clean all      _ACT_INC_REBUILD       -inc -rebuild
+   #4 install        install        _ACT_INC_INST          -inc -instpath=
+   #5 clean install  clean install  _ACT_INC_REBUILD_INST  -inc -rebuild -instpath=
  */
 PROCEDURE Standalone( ... )
    LOCAL aParams
@@ -135,11 +138,15 @@ PROCEDURE Standalone( ... )
 
    DO CASE
    CASE AScanL( aParams, "clean" ) > 0 .AND. ;
+        AScanL( aParams, "all" ) > 0 .AND. ;
+        AScanL( aParams, "all" ) > AScanL( aParams, "clean" )
+      nAction := _ACT_INC_REBUILD
+   CASE AScanL( aParams, "clean" ) > 0 .AND. ;
         AScanL( aParams, "install" ) > 0 .AND. ;
         AScanL( aParams, "install" ) > AScanL( aParams, "clean" )
       nAction := _ACT_INC_REBUILD_INST
    CASE AScanL( aParams, "clean" ) > 0
-      nAction := _ACT_CLEAN
+      nAction := _ACT_INC_CLEAN
    CASE AScanL( aParams, "install" ) > 0
       nAction := _ACT_INC_INST
    OTHERWISE
@@ -188,13 +195,12 @@ PROCEDURE Standalone( ... )
    ELSE
       /* Converting build options to hbmk2 options */
 
-      cOptions := ""
-
-      IF nAction == _ACT_CLEAN
+      cOptions := " -inc"
+      IF nAction == _ACT_INC_CLEAN
          cOptions += " -clean"
       ELSE
-         cOptions += " -inc"
-         IF nAction == _ACT_INC_REBUILD_INST
+         IF nAction == _ACT_INC_REBUILD .OR. ;
+            nAction == _ACT_INC_REBUILD_INST
             cOptions += " -rebuild"
          ENDIF
       ENDIF
@@ -223,13 +229,15 @@ PROCEDURE Standalone( ... )
 
       GNU Make       parameter  HB_MAKECMDGOALS  nAction                hbmk2 options
    -- -------------- ---------- ---------------- ---------------------- -------------------------
-   #1 clean          clean      clean            _ACT_CLEAN             -clean
-   #2 install        install    install          _ACT_INC_INST          -inc -instpath=
-   #3 clean install  clean      clean install    _ACT_CLEAN             -clean
-                     install    clean install    _ACT_INC_REBUILD_INST  -inc -instpath= -rebuild
-   #4 install clean  install    install clean    _ACT_INC_INST          -inc -instpath=
-                     clean      install clean    _ACT_CLEAN             -clean
-   #5                all                         _ACT_INC               -inc
+   #1 clean          clean      clean            _ACT_INC_CLEAN         -inc -clean
+   #2                all                         _ACT_INC               -inc
+   #3 install        install    install          _ACT_INC_INST          -inc -instpath=
+   #4 clean all      clean      clean all        _ACT_INC_CLEAN         -inc -clean
+                     first      clean all        _ACT_INC_REBUILD       -inc -rebuild
+   #5 clean install  clean      clean install    _ACT_INC_CLEAN         -inc -clean
+                     install    clean install    _ACT_INC_REBUILD_INST  -inc -rebuild -instpath=
+   #6 install clean  install    install clean    _ACT_INC_INST          -inc -instpath=
+                     clean      install clean    _ACT_INC_CLEAN         -inc -clean
  */
 PROCEDURE GNUMake( ... )
    LOCAL cBinDir
@@ -285,9 +293,9 @@ PROCEDURE GNUMake( ... )
       IF AScanL( aGNUMakeParams, "clean" ) > 0 .AND. ;
          AScanL( aGNUMakeParams, "install" ) > 0 .AND. ;
          AScanL( aGNUMakeParams, "install" ) > AScanL( aGNUMakeParams, "clean" )
-         nAction := _ACT_CLEAN
+         nAction := _ACT_INC_CLEAN
       ELSE
-         nAction := _ACT_CLEAN
+         nAction := _ACT_INC_CLEAN
       ENDIF
    CASE AScanL( aParams, "install" ) > 0
       IF AScanL( aGNUMakeParams, "clean" ) > 0 .AND. ;
@@ -301,6 +309,14 @@ PROCEDURE GNUMake( ... )
          nAction := _ACT_INC_REBUILD_INST
       ELSE
          nAction := _ACT_INC_INST
+      ENDIF
+   CASE AScanL( aParams, "first" ) > 0
+      IF AScanL( aGNUMakeParams, "clean" ) > 0 .AND. ;
+         AScanL( aGNUMakeParams, "all" ) > 0 .AND. ;
+         AScanL( aGNUMakeParams, "all" ) > AScanL( aGNUMakeParams, "clean" )
+         nAction := _ACT_INC_REBUILD
+      ELSE
+         nAction := _ACT_INC
       ENDIF
    OTHERWISE
       nAction := _ACT_INC
@@ -350,13 +366,12 @@ PROCEDURE GNUMake( ... )
 
    hb_setenv( "_HB_BUILD_INSTALL" )
 
-   cOptions := ""
-
-   IF nAction == _ACT_CLEAN
+   cOptions := " -inc"
+   IF nAction == _ACT_INC_CLEAN
       cOptions += " -clean"
    ELSE
-      cOptions += " -inc"
-      IF nAction == _ACT_INC_REBUILD_INST
+      IF nAction == _ACT_INC_REBUILD .OR. ;
+         nAction == _ACT_INC_REBUILD_INST
          cOptions += " -rebuild"
       ENDIF
       IF nAction == _ACT_INC_INST .OR. ;

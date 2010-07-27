@@ -209,7 +209,7 @@ METHOD IdeActions:loadActions()
    aadd( aAct, { "TB_ToLower"           , "To Lower"                     , "tolower"        , ""     , "No", "Yes" } )
    aadd( aAct, { "TB_Invert"            , "Invert"                       , "invertcase"     , ""     , "No", "Yes" } )
  * aadd( aAct, { "TB_MatchPairs"        , "Match Pairs"                  , "matchobj"       , ""     , "No", "Yes" } )
-   aadd( aAct, { "TB_Tools"             , "Tools & Utilities"            , "tools"          , ""     , "No", "Yes" } )
+   aadd( aAct, { "TB_Tools"             , "Tools and Utilities"          , "tools"          , ""     , "No", "Yes" } )
    aadd( aAct, { "TB_ZoomIn"            , "ZoomIn"                       , "zoomin"         , ""     , "No", "Yes" } )
    aadd( aAct, { "TB_ZoomOut"           , "ZoomOut"                      , "zoomout"        , ""     , "No", "Yes" } )
    //
@@ -312,7 +312,7 @@ METHOD IdeActions:loadActions()
    aadd( aAct, { "GotoFunc"             , "Goto Function"                , "dc_function"    , ""     , "No", "Yes" } )
    aadd( aAct, { "Shortcuts"            , "Keyboard Mappings"            , "keyboardmappings",""     , "No", "Yes" } )
    aadd( aAct, { "Setup"                , "hbIDE Setup"                  , "idepreferences" , ""     , "No", "Yes" } )
- * aadd( aAct, { "Tools"                , "Tools & Utilities"            , "tools"          , ""     , "No", "Yes" } )
+ * aadd( aAct, { "Tools"                , "Tools and Utilities"          , "tools"          , ""     , "No", "Yes" } )
 
    RETURN aAct
 
