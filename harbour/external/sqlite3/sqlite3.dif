@@ -1,7 +1,6 @@
-diff -u ori\sqlite3.c .\sqlite3.c
---- ori\sqlite3.c	Fri Sep 11 11:35:44 2009
-+++ .\sqlite3.c	Sat Sep 19 10:22:29 2009
-@@ -25671,7 +25671,7 @@
+--- ori/sqlite3.c	Wed Jul 21 20:54:06 2010
++++ sqlite3.c	Tue Jul 27 10:45:27 2010
+@@ -27225,7 +27225,7 @@
  ** error message.
  */
  static void unixDlError(sqlite3_vfs *NotUsed, int nBuf, char *zBufOut){

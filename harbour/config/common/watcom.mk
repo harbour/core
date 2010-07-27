@@ -74,7 +74,7 @@ ifeq ($(HB_SHELL),dos)
    AR_RULE = $(create_library)
 endif
 
-ifeq ($(CC),wcc386)
+ifneq ($(findstring wcc386,$(CC)),)
    ifneq ($(HB_HOST_PLAT),linux)
       CC_DIRSEPFROM := /
       CC_DIRSEPTO   := $(subst /,\,\)
@@ -99,7 +99,7 @@ ifeq ($(ANYDOS),yes)
    export DOS32A := /NOC
 
    # work arround to DOS command line size limit
-   ifeq ($(CC),wcc386)
+   ifneq ($(findstring wcc386,$(CC)),)
       export WCC386 := $(strip $(subst $(CC_DIRSEPFROM),$(CC_DIRSEPTO),$(CC_FLAGS)))
    else
       export WPP386 := $(strip $(subst $(CC_DIRSEPFROM),$(CC_DIRSEPTO),$(CC_FLAGS)))

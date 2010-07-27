@@ -75,8 +75,8 @@ else
 endif
 
 # ORIGIN http://www.sqlite.org/
-# VER    3.6.23.1
-# URL    http://www.sqlite.org/sqlite-amalgamation-3_6_23_1.zip
+# VER    3.7.0
+# URL    http://www.sqlite.org/sqlite-amalgamation-3_7_0.zip
 # DIFF   sqlite3.dif
 #
 # MAP    sqlite3.c
