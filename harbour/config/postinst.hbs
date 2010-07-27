@@ -71,6 +71,11 @@ PROCEDURE Main()
       hb_FCopy( "COPYING", GetEnv( "HB_INSTALL_PREFIX" ) + hb_ps() + "COPYING" )
       hb_FCopy( "INSTALL", GetEnv( "HB_INSTALL_PREFIX" ) + hb_ps() + "INSTALL" )
       hb_FCopy( "TODO"   , GetEnv( "HB_INSTALL_PREFIX" ) + hb_ps() + "TODO" )
+   ENDIF
+
+   IF ! Empty( GetEnv( "HB_BIN_INSTALL" ) )
+
+      OutStd( "! Copying Harbour scrip (.hbs) files..." + hb_eol() )
 
       /* public Harbour scripts */
       FOR EACH tmp IN { "hbmk2l2d.hbs" ,;
@@ -79,8 +84,7 @@ PROCEDURE Main()
       NEXT
    ENDIF
 
-   IF !( GetEnv( "HB_PLATFORM" ) $ "win|wce|os2|dos" ) .AND. ;
-      ! Empty( GetEnv( "HB_ETC_INSTALL" ) ) .AND. ;
+   IF ! Empty( GetEnv( "HB_ETC_INSTALL" ) ) .AND. ;
       GetEnv( "HB_SYSLOC" ) == "yes"
 
       OutStd( "! Copying *nix config files..." + hb_eol() )
