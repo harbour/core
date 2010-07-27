@@ -7,6 +7,7 @@
  * WARNING: Running it separately is not supported.
  *
  * Copyright 2009-2010 Viktor Szakats (harbour.01 syenar.hu)
+ * Copyright 2003 Przemyslaw Czerpak (druzus/at/priv.onet.pl) (embedded autoinstall bash script)
  * See COPYING for licensing terms.
  */
 
@@ -203,8 +204,7 @@ PROCEDURE Main()
             mk_hb_processRun( cBin_Tar +;
                               " czvf" +;
                               " " + FNameEscape( cTar_Path ) +;
-                              iif( lGNU_Tar, " --owner=" + cOwner, "" ) +;
-                              iif( lGNU_Tar, " --group=" + cGroup, "" ) +;
+                              iif( lGNU_Tar, " --owner=" + cOwner + " --group=" + cGroup, "" ) +;
                               " ." )
 
             DirChange( cOldDir )
@@ -217,23 +217,23 @@ PROCEDURE Main()
 
                /* In the generated script always use tar because we can't be sure
                   if cBin_Tar exists in the installation environment */
-               cSH_Script := '#!/bin/sh'
-               cSH_Script += 'if [ "\$1" = "--extract" ]; then'
-               cSH_Script += '   tail -c ' + hb_ntos( hb_FSize( cTar_Path ) ) + ' "\$0" > "' + cTar_NameExt + '"'
-               cSH_Script += '   exit'
-               cSH_Script += 'fi'
-               cSH_Script += 'if [ \`id -u\` != 0 ]; then'
-               cSH_Script += '   echo "This package has to be installed from root account."'
-               cSH_Script += '   exit 1'
-               cSH_Script += 'fi'
-               cSH_Script += 'echo "Do you want to install Harbour (y/n)"'
-               cSH_Script += 'read ASK'
-               cSH_Script += 'if [ "\${ASK}" != "y" ] && [ "\${ASK}" != "Y" ]; then'
-               cSH_Script += '   exit 1'
-               cSH_Script += 'fi'
-               cSH_Script += '(tail -c ' + hb_ntos( hb_FSize( cTar_Path ) ) + ' "\$0" | gzip -cd | (cd /;tar xvpf -)) ' + iif( GetEnv( "HB_PLATFORM" ) == "linux", "&& ldconfig", "" )
-               cSH_Script += 'exit \$?'
-               cSH_Script += 'HB_INST_EOF'
+               cSH_Script := '#!/bin/sh' + Chr( 10 )
+               cSH_Script += 'if [ "\$1" = "--extract" ]; then' + Chr( 10 )
+               cSH_Script += '   tail -c ' + hb_ntos( hb_FSize( cTar_Path ) ) + ' "\$0" > "' + cTar_NameExt + '"' + Chr( 10 )
+               cSH_Script += '   exit' + Chr( 10 )
+               cSH_Script += 'fi' + Chr( 10 )
+               cSH_Script += 'if [ \`id -u\` != 0 ]; then' + Chr( 10 )
+               cSH_Script += '   echo "This package has to be installed from root account."' + Chr( 10 )
+               cSH_Script += '   exit 1' + Chr( 10 )
+               cSH_Script += 'fi' + Chr( 10 )
+               cSH_Script += 'echo "Do you want to install Harbour (y/n)"' + Chr( 10 )
+               cSH_Script += 'read ASK' + Chr( 10 )
+               cSH_Script += 'if [ "\${ASK}" != "y" ] && [ "\${ASK}" != "Y" ]; then' + Chr( 10 )
+               cSH_Script += '   exit 1' + Chr( 10 )
+               cSH_Script += 'fi' + Chr( 10 )
+               cSH_Script += '(tail -c ' + hb_ntos( hb_FSize( cTar_Path ) ) + ' "\$0" | gzip -cd | (cd /;tar xvpf -)) ' + iif( GetEnv( "HB_PLATFORM" ) == "linux", "&& ldconfig", "" ) + Chr( 10 )
+               cSH_Script += 'exit \$?' + Chr( 10 )
+               cSH_Script += 'HB_INST_EOF' + Chr( 10 )
 
                hb_MemoWrit( tmp, cSH_Script + hb_MemoRead( cTar_Path ) )
 
@@ -414,4 +414,4 @@ STATIC FUNCTION unix_name()
       RETURN "" /* cat /etc/pld-release|sed -e '/1/ !d' -e 's/[^0-9]//g' -e 's/^/pld/'` */
    ENDCASE
 
-   RETURN Lower( query_stdout( "uname -s" ) )
+   RETURN StrTran( Lower( query_stdout( "uname -s" ) ), " ", "_" )
