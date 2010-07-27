@@ -11,19 +11,9 @@ export HB_LIB_INSTALL := $(CURDIR)/debian/harbour/usr/lib/harbour
 export HB_INC_INSTALL := $(CURDIR)/debian/harbour/usr/include/harbour
 export HB_DOC_INSTALL := $(CURDIR)/debian/harbour/usr/share/doc/harbour
 export HB_ETC_INSTALL := $(CURDIR)/debian/harbour/etc/harbour
-
-# is INSTDIR necessary for dpkg? If not then please remove it.
-export INSTDIR := $(CURDIR)/debian/harbour
-
+export HB_BUILD_PKG := no
 ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
-   HB_USER_CFLAGS += -O0
-else
-   HB_USER_CFLAGS += -O3
-endif
-ifeq (,$(findstring nostrip,$(DEB_BUILD_OPTIONS)))
-   INSTALL_PROGRAM += -s
-else
-   HB_USER_CFLAGS := -g
+   export HB_BUILD_OPTIM := no
 endif
 
 build: build-stamp
@@ -51,7 +41,6 @@ install: build
 	dh_installdirs
 
 	make install
-	install -m644 src/rtl/gtcrs/hb-charmap.def $(HB_ETC_INSTALL)/hb-charmap.def
 
 
 # Build architecture-independent files here.

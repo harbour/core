@@ -1464,12 +1464,12 @@ ifeq ($(HB_BUILD_PKG),yes)
 
       # HB_TOP             - dir where packages will be created (root of Harbour source tree)
       # HB_INSTALL_PKG_TOP - dir which has to be packed
-      # HB_PKGNAME         - name of the install package on non-*nix
+      # HB_PKGNAME         - name of the install package
       # HB_INSTALL_PREFIX  - dir where Harbour dirs will be created
       #
-      #   <HB_TOP><plat/comp ><HB_PKGNAME>
+      #   <HB_TOP><plat/comp ><HB_BUILD_PKG_PREFIX>
       #   <HB_INSTALL_PKG_TOP>
-      #   <HB_INSTALL_PREFIX             >
+      #   <HB_INSTALL_PREFIX                      >
       #
 
       ifneq ($(HB_SRC_ROOTPATH),)
