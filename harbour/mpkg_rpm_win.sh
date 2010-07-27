@@ -114,7 +114,7 @@ then
           -e "s|^%define releasen .*$|%define releasen  ${hb_verstat}|g" \
           -e "s|^%define hb_ccpath .*$|%define hb_ccpath ${HB_CCPATH}|g" \
           -e "s|^%define hb_ccpref .*$|%define hb_ccpref ${HB_CCPREFIX}|g" \
-         harbour-win.spec > ${RPMDIR}/SPECS/harbour-win.spec
+         package/harbour-win.spec > ${RPMDIR}/SPECS/harbour-win.spec
       if which rpmbuild >/dev/null 2>&1
       then
          RPMBLD="rpmbuild"

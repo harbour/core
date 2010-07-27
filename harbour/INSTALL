@@ -219,7 +219,7 @@ HARBOUR
    ---------------------
 
       $ export HB_BUILD_PKG=yes
-      $ make
+      $ make clean install
 
    Binary .deb on Linux
    --------------------

@@ -185,7 +185,7 @@ then
       if [ "${BUGGY_RPM}" = "yes" ]
       then
          cp ${hb_filename} ${RPMDIR}/SOURCES
-         cp harbour.spec ${RPMDIR}/SPECS
+         cp package/harbour.spec ${RPMDIR}/SPECS
       fi
       if which rpmbuild >/dev/null 2>&1
       then
