@@ -10,8 +10,11 @@ export HB_BIN_INSTALL := $(CURDIR)/debian/harbour/usr/bin
 export HB_LIB_INSTALL := $(CURDIR)/debian/harbour/usr/lib/harbour
 export HB_INC_INSTALL := $(CURDIR)/debian/harbour/usr/include/harbour
 export HB_DOC_INSTALL := $(CURDIR)/debian/harbour/usr/share/doc/harbour
+export HB_MAN_INSTALL := $(CURDIR)/debian/harbour/usr/share/man
 export HB_ETC_INSTALL := $(CURDIR)/debian/harbour/etc/harbour
+
 export HB_BUILD_PKG := no
+export HB_BUILD_SHARED := yes
 ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
    export HB_BUILD_OPTIM := no
 endif
@@ -51,11 +54,11 @@ binary-indep: build install
 binary-arch: build install
 	dh_testdir
 	dh_testroot
-	dh_installchangelogs ChangeLog
+	dh_installchangelogs
 	dh_installdocs
 	dh_installexamples
 #	dh_install
-	dh_installman src/main/harbour.1 src/pp/hbpp.1 utils/hbmk2/hbmk2.1 utils/hbrun/hbrun.1 utils/hbtest/hbtest.1
+	dh_installman
 	dh_link
 	dh_strip
 	dh_compress
