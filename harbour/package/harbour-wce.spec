@@ -18,7 +18,6 @@
 %define releasen  beta2
 %define hb_pref   hbce
 %define hb_host   harbour-project.org
-%define readme    README.RPM
 
 # Workaround for the problem of /usr/bin/strip not handling PE binaries.
 %define hb_ccpath /opt/mingw32ce/bin
@@ -128,57 +127,6 @@ make install %{?_smp_mflags}
 # remove unused files
 rm -fR ${HB_BIN_INSTALL}/{harbour,hbpp,hbmk2,hbrun,hbi18n,hbtest}.exe
 
-# Create a README file for people using this RPM.
-cat > doc/%{readme} <<EOF
-This RPM distribution of Harbour includes extra commands to make compiling
-and linking with Harbour a little easier.It includes hbmk2 to build
-projects easily.
-
-hbmk2 tries to produce an executable from your .prg file. It's similar
-to cl.bat from the CA-Cl*pper distribution.
-
-All these scripts accept command line switches:
--o<outputfilename>      # output file name
--static                 # link with static Harbour libs
--fullstatic             # link with all static libs
--shared                 # link with shared libs (default)
--mt                     # link with multi-thread libs
--gt<hbgt>               # link with <hbgt> GT driver, can be repeated to
-                        # link with more GTs. The first one will be
-                        #      the default at runtime
--xbgtk                  # link with xbgtk library (xBase GTK+ interface)
--hwgui                  # link with HWGUI library (GTK+ interface)
--l<libname>             # link with <libname> library
--L<libpath>             # additional path to search for libraries
--[no]strip              # strip (no strip) binaries
--main=<main_func>       # set the name of main program function/procedure.
-                        # if not set then 'MAIN' is used or if it doesn't
-                        # exist the name of first public function/procedure
-                        # in first linked object module (link)
-
-An example compile/link session looks like:
-----------------------------------------------------------------------
-druzus@uran:~/tmp$ cat foo.prg
-function main()
-? "Hello, World!"
-return nil
-
-druzus@uran:~/tmp$ hbmk2 foo
-Harbour 2.1.0beta1 (Rev. 14701)
-Copyright (c) 1999-2010, http://harbour-project.org/
-Compiling 'foo.prg'...
-Lines 5, Functions/Procedures 2
-Generating C source output to 'foo.c'... Done.
-
-druzus@uran:~/tmp$ ls -l foo
--rwxrwxr-x    1 druzus   druzus       3824 maj 17 02:46 foo
-----------------------------------------------------------------------
-
-I hope this RPM is useful. Have fun with Harbour.
-
-Przemyslaw Czerpak (druzus/at/priv.onet.pl)
-EOF
-
 ######################################################################
 ## Post install
 ######################################################################
@@ -204,9 +152,7 @@ rm -fR $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,755)
-%doc doc/%{readme}
 
-%{_bindir}/%{hb_pref}-mkdyn
 %{_bindir}/hbmk2
 
 %defattr(644,root,root,755)

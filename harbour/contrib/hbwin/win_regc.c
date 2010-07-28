@@ -136,18 +136,21 @@ HB_FUNC( WIN_REGQUERYVALUEEX )
          {
             LPBYTE lpValue = ( LPBYTE ) hb_xgrab( ( dwSize + 1 ) * sizeof( TCHAR ) );
 
-            RegQueryValueEx( ( HKEY ) hb_parptr( 1 ),
-                             lpKey,
-                             NULL,
-                             &dwType,
-                             lpValue,
-                             &dwSize );
+            if( RegQueryValueEx( ( HKEY ) hb_parptr( 1 ),
+                                 lpKey,
+                                 NULL,
+                                 &dwType,
+                                 lpValue,
+                                 &dwSize ) == ERROR_SUCCESS )
+            {
+               #if defined( UNICODE )
+                  dwSize >>= 1;
+               #endif
 
-            #if defined( UNICODE )
-                dwSize >>= 1;
-            #endif
-
-            HB_STORSTRLEN( ( LPTSTR ) lpValue, dwSize, 5 );
+               HB_STORSTRLEN( ( LPTSTR ) lpValue, dwSize, 5 );
+            }
+            else
+               hb_stor( 5 );
 
             hb_xfree( lpValue );
          }
@@ -155,15 +158,21 @@ HB_FUNC( WIN_REGQUERYVALUEEX )
          {
             LPBYTE lpValue = ( LPBYTE ) hb_xgrab( dwSize + 1 );
 
-            RegQueryValueEx( ( HKEY ) hb_parptr( 1 ),
-                             lpKey,
-                             NULL,
-                             &dwType,
-                             lpValue,
-                             &dwSize );
-
-            if( ! hb_storclen_buffer( ( char * ) lpValue, dwSize, 5 ) )
+            if( RegQueryValueEx( ( HKEY ) hb_parptr( 1 ),
+                                 lpKey,
+                                 NULL,
+                                 &dwType,
+                                 lpValue,
+                                 &dwSize ) == ERROR_SUCCESS )
+            {
+               if( ! hb_storclen_buffer( ( char * ) lpValue, dwSize, 5 ) )
+                  hb_xfree( lpValue );
+            }
+            else
+            {
+               hb_stor( 5 );
                hb_xfree( lpValue );
+            }
          }
       }
       else

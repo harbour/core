@@ -73,7 +73,6 @@
 %define hb_ctrb   export HB_BUILD_CONTRIBS="hbblink hbclipsm hbct hbgt hbmisc hbmzip hbnetio hbtip hbtpathy hbhpdf hbziparc hbfoxpro hbsms hbfship hbxpp xhb rddbmcdx rddsql sddsqlt3 hbnf %{?_with_allegro:gtalleg} %{?_with_cairo:hbcairo} %{?_with_cups:hbcups} %{?_with_curl:hbcurl} %{?_with_firebird:hbfbird sddfb} %{?_with_freeimage:hbfimage} %{?_with_gd:hbgd} %{?_with_mysql:hbmysql sddmy} %{?_with_odbc:hbodbc sddodbc} %{?_with_pgsql:hbpgsql sddpg} %{?_with_qt:hbqt hbxbp} %{?_with_ads:rddads}"
 %define hb_env    %{hb_plat} ; %{hb_cc} ; %{hb_cflag} ; %{hb_lflag} ; %{hb_dflag} ; %{shl_path} ; %{hb_gpm} ; %{hb_crs} ; %{hb_sln} ; %{hb_x11} ; %{hb_local} ; %{hb_bdir} ; %{hb_idir} ; %{hb_ldir} ; %{hb_edir} ; %{hb_ctrb} ; %{hb_cmrc}
 %define hb_host   harbour-project.org
-%define readme    README.RPM
 ######################################################################
 ## Preamble.
 ######################################################################
@@ -102,9 +101,6 @@ BuildRoot:      /tmp/%{name}-%{version}-root
 %{dname} is a CA-Cl*pper compatible compiler for multiple platforms. This
 package includes a compiler, pre-processor, header files, virtual machine
 and documentation.
-
-See README.RPM in the documentation directory for information specific to
-this RPM distribution.
 
 %description -l pl
 %{dname} to kompatybilny z jêzykiem CA-Cl*pper kompilator rozwijany na
@@ -436,79 +432,6 @@ install -m644 src/rtl/gtcrs/hb-charmap.def $HB_ETC_INSTALL/hb-charmap.def
 # remove unused files
 rm -f $HB_BIN_INSTALL/hbtest
 
-# Create a README file for people using this RPM.
-cat > doc/%{readme} <<EOF
-This RPM distribution of %{dname} includes extra commands to make compiling
-and linking with %{dname} a little easier. It includes hbmk2 to build
-projects easily.
-
-hbmk2 tries to produce an executable from your .prg file. It's similar
-to cl.bat from the CA-Cl*pper distribution.
-
-All these scripts accept command line switches:
--o<outputfilename>      # output file name
--static                 # link with static %{dname} libs
--fullstatic             # link with all static libs
--shared                 # link with shared libs (default)
--mt                     # link with multi-thread libs
--gt<hbgt>               # link with <hbgt> GT driver, can be repeated to
-                        # link with more GTs. The first one will be
-                        #      the default at runtime
--xbgtk                  # link with xbgtk library (xBase GTK+ interface)
--hwgui                  # link with HWGUI library (GTK+ interface)
--l<libname>             # link with <libname> library
--L<libpath>             # additional path to search for libraries
--[no]strip              # strip (no strip) binaries
--main=<main_func>       # set the name of main program function/procedure.
-                        # if not set then 'MAIN' is used or if it doesn't
-                        # exist the name of first public function/procedure
-                        # in first linked object module (link)
-
-An example compile/link session looks like:
-----------------------------------------------------------------------
-druzus@uran:~/tmp$ cat foo.prg
-function main()
-? "Hello, World!"
-return nil
-
-druzus@uran:~/tmp$ hbmk2 foo
-Harbour 2.1.0beta1 (Rev. 14701)
-Copyright (c) 1999-2010, http://harbour-project.org/
-Compiling 'foo.prg'...
-Lines 5, Functions/Procedures 2
-Generating C source output to 'foo.c'... Done.
-
-druzus@uran:~/tmp$ ls -l foo
--rwxrwxr-x    1 druzus   druzus       3824 maj 17 02:46 foo
-----------------------------------------------------------------------
-
-In this RPM you will find additional wonderful tools: /usr/bin/hbrun
-You can run clipper/xbase compatible source files with it if you only
-put in their first line:
-#!/usr/bin/hbrun
-
-For example:
-----------------------------------------------------------------------
-druzus@uran:~/tmp$ cat foo.prg
-#!/usr/bin/hbrun
-function main()
-? "Hello, World!, This is a script !!! :-)"
-?
-return nil
-
-druzus@uran:~/tmp$ chmod +x foo.prg
-
-druzus@uran:~/tmp$ ./foo.prg
-
-Hello, World!, This is a script !!! :-)
-
-I hope this RPM is useful. Have fun with %{dname}.
-
-Many thanks to Dave Pearson <davep@davep.org>
-
-Przemyslaw Czerpak <druzus@polbox.com>
-EOF
-
 ######################################################################
 ## Post install
 ######################################################################
@@ -536,14 +459,11 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,755)
 %doc ChangeLog*
 %doc doc/*.txt
-%doc doc/%{readme}
-%doc doc/en/
 
 %dir %{hb_etcdir}
 %verify(not md5 mtime) %config %{hb_etcdir}/hb-charmap.def
 %{_bindir}/harbour
 %{_bindir}/hbpp
-%{_bindir}/hb-mkdyn
 #%{_bindir}/hbtest
 %{_bindir}/hbrun
 %{_bindir}/hbi18n

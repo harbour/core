@@ -182,11 +182,10 @@ then
       else
          RPMDIR=`get_rpmmacro "_topdir"`
       fi
-      if [ "${BUGGY_RPM}" = "yes" ]
-      then
-         cp ${hb_filename} ${RPMDIR}/SOURCES
-         cp package/harbour.spec ${RPMDIR}/SPECS
-      fi
+
+      cp ${hb_filename} ${RPMDIR}/SOURCES
+      cp package/harbour.spec ${RPMDIR}/SPECS
+
       if which rpmbuild >/dev/null 2>&1
       then
          RPMBLD="rpmbuild"
