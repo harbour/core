@@ -30,15 +30,7 @@
 %if "%{platform}" == ""
 %define platform %(release=$(rpm -q --queryformat='%{VERSION}' openSUSE-release 2>/dev/null) && echo "sus$release"|tr -d ".")
 %if "%{platform}" == ""
-# DISCONTINUED
-%define platform %(release=$(rpm -q --queryformat='%{VERSION}' conectiva-release 2>/dev/null) && echo "cl$release"|tr -d ".")
-%if "%{platform}" == ""
-# DISCONTINUED
-%define platform %(release=$(rpm -q --queryformat='%{VERSION}' aurox-release 2>/dev/null) && echo "aur$release"|tr -d ".")
-%if "%{platform}" == ""
 %define platform %([ -f /etc/pld-release ] && cat /etc/pld-release|sed -e '/1/ !d' -e 's/[^0-9]//g' -e 's/^/pld/')
-%endif
-%endif
 %endif
 %endif
 %endif
@@ -71,7 +63,7 @@
 %define hb_mdir   export HB_MAN_INSTALL=${RPM_BUILD_ROOT}%{_mandir}
 %define hb_cmrc   export HB_BUILD_NOGPLLIB=%{?_without_gpllib:yes}
 %define hb_ctrb   export HB_BUILD_CONTRIBS="hbblink hbclipsm hbct hbgt hbmisc hbmzip hbnetio hbtip hbtpathy hbhpdf hbziparc hbfoxpro hbsms hbfship hbxpp xhb rddbmcdx rddsql sddsqlt3 hbnf %{?_with_allegro:gtalleg} %{?_with_cairo:hbcairo} %{?_with_cups:hbcups} %{?_with_curl:hbcurl} %{?_with_firebird:hbfbird sddfb} %{?_with_freeimage:hbfimage} %{?_with_gd:hbgd} %{?_with_mysql:hbmysql sddmy} %{?_with_odbc:hbodbc sddodbc} %{?_with_pgsql:hbpgsql sddpg} %{?_with_qt:hbqt hbxbp} %{?_with_ads:rddads}"
-%define hb_env    %{hb_plat} ; %{hb_cc} ; %{hb_cflag} ; %{hb_lflag} ; %{hb_dflag} ; %{shl_path} ; %{hb_gpm} ; %{hb_crs} ; %{hb_sln} ; %{hb_x11} ; %{hb_local} ; %{hb_bdir} ; %{hb_idir} ; %{hb_ldir} ; %{hb_edir} ; %{hb_ctrb} ; %{hb_cmrc}
+%define hb_env    %{hb_plat} ; %{hb_cc} ; %{hb_cflag} ; %{hb_lflag} ; %{hb_dflag} ; %{shl_path} ; %{hb_gpm} ; %{hb_crs} ; %{hb_sln} ; %{hb_x11} ; %{hb_local} ; %{hb_bdir} ; %{hb_idir} ; %{hb_ldir} ; %{hb_edir} ; %{hb_mdir} ; %{hb_ctrb} ; %{hb_cmrc}
 %define hb_host   harbour-project.org
 ######################################################################
 ## Preamble.
@@ -414,20 +406,11 @@ make install %{?_smp_mflags}
 
 [ "%{?_without_curses:1}" ] && rm -f $HB_LIB_INSTALL/libgtcrs.a
 [ "%{?_without_slang:1}" ] && rm -f $HB_LIB_INSTALL/libgtsln.a
+rm -f $HB_LIB_INSTALL/libbz2.a
 rm -f $HB_LIB_INSTALL/libjpeg.a
 rm -f $HB_LIB_INSTALL/liblibhpdf.a
 rm -f $HB_LIB_INSTALL/libpng.a
 rm -f $HB_LIB_INSTALL/libsqlite3.a
-
-mkdir -p $HB_MAN_INSTALL/man1
-install -m644 src/main/*.1* $HB_MAN_INSTALL/man1/
-install -m644 src/pp/*.1* $HB_MAN_INSTALL/man1/
-install -m644 utils/hbmk2/*.1* $HB_MAN_INSTALL/man1/
-install -m644 utils/hbrun/*.1* $HB_MAN_INSTALL/man1/
-install -m644 utils/hbtest/*.1* $HB_MAN_INSTALL/man1/
-
-mkdir -p $HB_ETC_INSTALL
-install -m644 src/rtl/gtcrs/hb-charmap.def $HB_ETC_INSTALL/hb-charmap.def
 
 # remove unused files
 rm -f $HB_BIN_INSTALL/hbtest

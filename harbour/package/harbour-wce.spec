@@ -86,7 +86,6 @@ export HB_BUILD_PARTS=lib
 export HB_PLATFORM=wce
 
 export HB_BIN_COMPILE="$(pwd)/bin/linux/gcc"
-export CC_HB_USER_PRGFLAGS="-undef:.ARCH. -D__PLATFORM__WINDOWS -D__PLATFORM__WINCE"
 
 make %{?_smp_mflags}
 
@@ -103,8 +102,6 @@ export HB_PLATFORM=wce
 unset HB_COMPILER
 
 export HB_BIN_COMPILE="$(pwd)/bin/linux/gcc"
-
-export CC_HB_USER_PRGFLAGS="-undef:.ARCH. -D__PLATFORM__WINDOWS -D__PLATFORM__WINCE"
 
 export HB_BIN_INSTALL=%{_bindir}
 export HB_INC_INSTALL=%{_includedir}/%{name}
