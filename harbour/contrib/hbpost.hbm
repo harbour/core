@@ -46,4 +46,6 @@
 {_HB_BUILD_INSTALL&hbexe}-instpath=${_HB_BIN_INSTALL}/
 {_HB_BUILD_INSTALL&hbdyn}-instpath=${_HB_DYN_INSTALL}/
 {_HB_BUILD_INSTALL&hblib}-instpath=inc:${_HB_INC_INSTALL}/
+{_HB_BUILD_INSTALL}-instpath=etc:${_HB_ETC_INSTALL}/
+{_HB_BUILD_INSTALL}-instpath=man:${_HB_MAN_INSTALL}/
 {_HB_BUILD_INSTALL&HB_INSTALL_IMPLIB='yes'}-instpath=implib:${_HB_LIB_INSTALL}/

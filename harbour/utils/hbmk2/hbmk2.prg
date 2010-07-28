@@ -2936,14 +2936,19 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          ENDIF
          cOpt_CompC += " {FC}"
          IF ! Empty( hbmk[ _HBMK_cWorkDir ] )
-            IF hbmk[ _HBMK_cPLAT ] $ "linux|bsd" .AND. hbmk[ _HBMK_cCOMP ] == "clang"
-               /* NOTE: It's also accepted by darwin/clang */
-               cOpt_CompC += " {IC} -o{OO}"
+            IF .T. /* EXPERIMENTAL */
+               lCHD_Comp := .T.
+               cOpt_CompC += " {LC}"
             ELSE
-               cOpt_CompC += " {IC} -o {OO}"
-               IF hbmk[ _HBMK_cCOMP ] $ "icc|gcc"
-                  AAdd( hbmk[ _HBMK_aOPTC ], "-pipe" )
+               IF hbmk[ _HBMK_cPLAT ] $ "linux|bsd" .AND. hbmk[ _HBMK_cCOMP ] == "clang"
+                  /* NOTE: It's also accepted by darwin/clang */
+                  cOpt_CompC += " {IC} -o{OO}"
+               ELSE
+                  cOpt_CompC += " {IC} -o {OO}"
                ENDIF
+            ENDIF
+            IF hbmk[ _HBMK_cCOMP ] $ "icc|gcc"
+               AAdd( hbmk[ _HBMK_aOPTC ], "-pipe" )
             ENDIF
          ELSE
             cOpt_CompC += " {LC}"
@@ -7755,50 +7760,41 @@ STATIC FUNCTION ListToArray( cList, cSep )
 
    RETURN array
 
-STATIC FUNCTION IsDriveSpec( cDir )
-   RETURN ! Empty( hb_osDriveSeparator() ) .AND. ;
-          Right( cDir, Len( hb_osDriveSeparator() ) ) == hb_osDriveSeparator()
+#define _ISDRIVESPEC( cDir ) ( ! Empty( hb_osDriveSeparator() ) .AND. Right( cDir, Len( hb_osDriveSeparator() ) ) == hb_osDriveSeparator() )
 
 /* NOTE: Can hurt if there are symlinks on the way. */
-STATIC FUNCTION PathNormalize( cPath, lNormalize )
+STATIC FUNCTION PathNormalize( cPath )
    LOCAL aDir
    LOCAL cDir
 
    IF ! Empty( cPath )
 
-      IF ! ISLOGICAL( lNormalize )
-         lNormalize := .T.
-      ENDIF
+      aDir := hb_ATokens( cPath, hb_ps() )
 
-      IF lNormalize
-
-         aDir := hb_ATokens( cPath, hb_ps() )
-
-         FOR EACH cDir IN aDir DESCEND
-            IF cDir == "."
+      FOR EACH cDir IN aDir DESCEND
+         IF cDir == "."
+            hb_ADel( aDir, cDir:__enumIndex(), .T. )
+         ELSEIF !( cDir == ".." ) .AND. ;
+            ! Empty( cDir ) .AND. ;
+            ! _ISDRIVESPEC( cDir )
+            IF cDir:__enumIndex() < Len( cDir:__enumBase() ) .AND. ;
+               aDir[ cDir:__enumIndex() + 1 ] == ".."
+               hb_ADel( aDir, cDir:__enumIndex() + 1, .T. )
                hb_ADel( aDir, cDir:__enumIndex(), .T. )
-            ELSEIF !( cDir == ".." ) .AND. ;
-               ! Empty( cDir ) .AND. ;
-               ! IsDriveSpec( cDir )
-               IF cDir:__enumIndex() < Len( cDir:__enumBase() ) .AND. ;
-                  aDir[ cDir:__enumIndex() + 1 ] == ".."
-                  hb_ADel( aDir, cDir:__enumIndex() + 1, .T. )
-                  hb_ADel( aDir, cDir:__enumIndex(), .T. )
-               ENDIF
             ENDIF
-         NEXT
-
-         cPath := ""
-         FOR EACH cDir IN aDir
-            cPath += cDir
-            IF cDir:__enumIndex() < Len( cDir:__enumBase() )
-               cPath += hb_ps()
-            ENDIF
-         NEXT
-
-         IF Empty( cPath )
-            cPath := "." + hb_ps()
          ENDIF
+      NEXT
+
+      cPath := ""
+      FOR EACH cDir IN aDir
+         cPath += cDir
+         IF cDir:__enumIndex() < Len( cDir:__enumBase() )
+            cPath += hb_ps()
+         ENDIF
+      NEXT
+
+      IF Empty( cPath )
+         cPath := "." + hb_ps()
       ENDIF
    ENDIF
 

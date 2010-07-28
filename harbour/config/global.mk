@@ -1491,7 +1491,7 @@ ifeq ($(HB_BUILD_PKG),yes)
       HB_DOC_INSTALL :=
       HB_MAN_INSTALL :=
       ifeq ($(HB_PLATFORM),darwin)
-         export HB_ETC_INSTALL := $(HB_INSTALL_PREFIX)$(DIRSEP)private$(DIRSEP)etc
+         export HB_ETC_INSTALL := $(HB_INSTALL_PREFIX)$(DIRSEP)private$(DIRSEP)etc$(DIRSEP)harbour
       else
          HB_ETC_INSTALL :=
       endif
@@ -1661,9 +1661,9 @@ ifneq ($(HB_INSTALL_PREFIX),)
       # Do not set doc dir for non-*nix targets
       ifneq ($(HB_PLATFORM_UNIX),)
          ifeq ($(HB_PLATFORM),darwin)
-            export HB_ETC_INSTALL := $(HB_INSTALL_PREFIX)$(DIRSEP)private$(DIRSEP)etc$(INCPOSTFIX)
+            export HB_ETC_INSTALL := $(HB_INSTALL_PREFIX)$(DIRSEP)private$(DIRSEP)etc$(DIRSEP)harbour
          else
-            export HB_ETC_INSTALL := $(HB_INSTALL_PREFIX)$(DIRSEP)etc$(INCPOSTFIX)
+            export HB_ETC_INSTALL := $(HB_INSTALL_PREFIX)$(DIRSEP)etc$(DIRSEP)harbour
          endif
       endif
    endif

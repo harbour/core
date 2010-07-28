@@ -99,6 +99,15 @@ PROCEDURE Main()
       ELSE
          OutStd( hb_StrFormat( "! Error: Cannot create directory '%1$s'", GetEnv( "HB_ETC_INSTALL" ) ) + hb_eol() )
       ENDIF
+
+      OutStd( "! Creating *nix ld config file..." + hb_eol() )
+
+      tmp := GetEnv( "HB_ETC_INSTALL" ) + hb_ps() + ".." + hb_ps() + "ld.so.conf.d"
+      IF DirBuild( tmp )
+         hb_MemoWrit( tmp + hb_ps() + "harbour.conf", GetEnv( "HB_LIB_INSTALL" ) + hb_eol() )
+      ELSE
+         OutStd( hb_StrFormat( "! Error: Cannot create directory '%1$s'", tmp ) + hb_eol() )
+      ENDIF
    ENDIF
 
    IF ! Empty( GetEnv( "HB_MAN_INSTALL" ) )
@@ -117,6 +126,44 @@ PROCEDURE Main()
          OutStd( hb_StrFormat( "! Error: Cannot create directory '%1$s'", GetEnv( "HB_MAN_INSTALL" ) ) + hb_eol() )
       ENDIF
    ENDIF
+
+#if 0
+   for l in ${full_lib_name} ${full_lib_name_mt}
+   do
+      if [ -f $l ]
+      then
+
+         ll="` echo $l | sed 's!'${lib_suff}'$!!' `${lib_ext}"
+         ln -sf $l $ll
+
+         IF !( GetEnv( "HB_PLATFORM" ) $ "win|wce" )
+            case $HB_LIB_INSTALL in
+               /usr/lib/harbour|/usr/lib64/harbour|/usr/local/lib/harbour|/usr/local/lib64/harbour)
+                  ln -sf harbour/$l ../$ll
+                  ln -sf harbour/$l ../$l
+                  ;;
+               /usr/local/harbour/lib)
+                  ld="/usr/lib"
+                  if [ -n "${HB_INST_PKGPREF}" ] || [ -w $ld ]
+                  then
+                     mkdir -p ${HB_INST_PKGPREF}$ld
+                     ln -sf ../local/harbour/lib/$l ${HB_INST_PKGPREF}$ld/$ll
+                     ln -sf ../local/harbour/lib/$l ${HB_INST_PKGPREF}$ld/$l
+                  fi
+                  ;;
+               *)
+                  ;;
+            esac
+            ld := "/etc/ld.so.conf.d"
+            if [ -d $ld ] && ( [ -n "${HB_INST_PKGPREF}" ] || [ -w $ld ] )
+            then
+               mkdir -p ${HB_INST_PKGPREF}$ld
+               echo "$HB_LIB_INSTALL" > ${HB_INST_PKGPREF}/$ld/harbour.conf
+            fi
+         ENDIF
+      fi
+   done
+#endif
 
    /* Creating language files */
 
@@ -335,7 +382,7 @@ STATIC FUNCTION DirBuild( cDir )
    LOCAL cDirItem
    LOCAL tmp
 
-   cDir := PathSepToSelf( cDir )
+   cDir := PathNormalize( PathSepToSelf( cDir ) )
 
    IF ! hb_DirExists( cDir )
 
@@ -370,6 +417,46 @@ STATIC FUNCTION DirBuild( cDir )
    ENDIF
 
    RETURN .T.
+
+#define _ISDRIVESPEC( cDir ) ( ! Empty( hb_osDriveSeparator() ) .AND. Right( cDir, Len( hb_osDriveSeparator() ) ) == hb_osDriveSeparator() )
+
+/* NOTE: Can hurt if there are symlinks on the way. */
+STATIC FUNCTION PathNormalize( cPath )
+   LOCAL aDir
+   LOCAL cDir
+
+   IF ! Empty( cPath )
+
+      aDir := hb_ATokens( cPath, hb_ps() )
+
+      FOR EACH cDir IN aDir DESCEND
+         IF cDir == "."
+            hb_ADel( aDir, cDir:__enumIndex(), .T. )
+         ELSEIF !( cDir == ".." ) .AND. ;
+            ! Empty( cDir ) .AND. ;
+            ! _ISDRIVESPEC( cDir )
+            IF cDir:__enumIndex() < Len( cDir:__enumBase() ) .AND. ;
+               aDir[ cDir:__enumIndex() + 1 ] == ".."
+               hb_ADel( aDir, cDir:__enumIndex() + 1, .T. )
+               hb_ADel( aDir, cDir:__enumIndex(), .T. )
+            ENDIF
+         ENDIF
+      NEXT
+
+      cPath := ""
+      FOR EACH cDir IN aDir
+         cPath += cDir
+         IF cDir:__enumIndex() < Len( cDir:__enumBase() )
+            cPath += hb_ps()
+         ENDIF
+      NEXT
+
+      IF Empty( cPath )
+         cPath := "." + hb_ps()
+      ENDIF
+   ENDIF
+
+   RETURN cPath
 
 STATIC FUNCTION DirAddPathSep( cDir )
 

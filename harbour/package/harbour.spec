@@ -399,7 +399,7 @@ make %{?_smp_mflags}
 export HB_BUILD_STRIP=all
 export HB_BUILD_SHARED=%{!?_with_static:yes}
 
-# necessary for shared linked hbrun used to execute postinst.prg
+# necessary for shared linked hbrun used to execute postinst.hbs
 export LD_LIBRARY_PATH=$HB_LIB_INSTALL
 
 make install %{?_smp_mflags}
@@ -488,7 +488,8 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(755,root,root,755)
 %dir %{_libdir}/%{name}
 %{_libdir}/%{name}/*.so
-%{_libdir}/*.so
+# Temporarily commented
+#%{_libdir}/*.so
 %{?hb_ldconf:%{hb_ldconf}/%{name}.conf}
 
 %files contrib

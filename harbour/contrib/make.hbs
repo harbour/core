@@ -325,6 +325,8 @@ PROCEDURE GNUMake( aParams, hPackageList )
    hb_setenv( "_HB_LIB_INSTALL", GetEnv( "HB_LIB_INSTALL" ) )
    hb_setenv( "_HB_DYN_INSTALL", GetEnv( "HB_DYN_INSTALL" ) )
    hb_setenv( "_HB_INC_INSTALL", GetEnv( "HB_INC_INSTALL" ) )
+   hb_setenv( "_HB_MAN_INSTALL", GetEnv( "HB_MAN_INSTALL" ) )
+   hb_setenv( "_HB_ETC_INSTALL", GetEnv( "HB_ETC_INSTALL" ) )
 
    /* Override hbmk2 autodetection */
    hb_setenv( "HB_INSTALL_PREFIX", s_cRoot )
