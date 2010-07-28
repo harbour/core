@@ -4,9 +4,9 @@
 
 -q0
 
-{_HB_BUILD_MIGR}-quiet-
-{_HB_BUILD_MIGR}-info
-{_HB_BUILD_MIGR}-trace
+{HB_BUILD_VERBOSE}-quiet-
+{HB_BUILD_VERBOSE}-info
+{HB_BUILD_VERBOSE}-trace
 
 {!HB_BUILD_DEBUG}-l
 

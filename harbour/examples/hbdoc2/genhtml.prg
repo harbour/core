@@ -293,7 +293,7 @@ METHOD Append( cText, cFormat ) CLASS GenerateHTML
 
 METHOD RecreateStyleDocument( cStyleFile ) CLASS GenerateHTML
 
-   IF ! hb_MemoWrit( ::cFolder + p_hsSwitches[ "PATH_SEPARATOR" ] + cStyleFile,;
+   IF ! hb_MemoWrit( ::cFolder + hb_ps() + cStyleFile,;
          "/* Harbour Documents Stylesheet (" + cStyleFile + ") */" + hb_eol() + ;
          "body {font-family:arial;font-size:14px;line-height:18px;}" + hb_eol() + ;
          /* ".classtitle {font-weight:bold;font-size:22px;padding-bottom:4px;}" + hb_eol() + */ ;

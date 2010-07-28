@@ -110,6 +110,6 @@ METHOD New( cFolder, cFilename, cTitle, cExtension, nType ) CLASS TPLGenerate
       MAKEDIR( ::cFolder )
    ENDIF
 
-   ::nHandle := FCreate( ::cFolder + p_hsSwitches[ "PATH_SEPARATOR" ] + ::cFilename + ::cExtension )
+   ::nHandle := FCreate( ::cFolder + hb_ps() + ::cFilename + ::cExtension )
 
    RETURN self

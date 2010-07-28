@@ -134,7 +134,6 @@ PROCEDURE Main( ... )
       "immediate-errors", .F., ;
       ;
       /* internal settings, values, etc */ ;
-      "PATH_SEPARATOR", hb_ps(), ;
       "DELIMITER", "$", ;
       "format-list", { "text", "ascii", "html", "html2", "xml", "rtf", "hpc", "ngi", "os2", "chm", "ch2", "pdf", "trf", "doc", "dbf", "all" }, ;
       "hbextern.ch", {}, ;

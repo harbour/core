@@ -68,35 +68,27 @@ STATIC hActions := {;
 STATIC s_cBase
 STATIC s_cHome
 STATIC s_cRoot
-STATIC s_lTest
-
-STATIC s_hPackageList
 
 PROCEDURE Main( ... )
+   LOCAL hPackageList
 
    s_cBase := ""
    s_cHome := StrTran( hb_DirBase(), hb_ps(), "/" )
    s_cRoot := s_cHome + "../"
 
-   s_lTest := "test" $ hb_cmdLine()
-
-   IF "migr" $ hb_cmdLine()
-      hb_setenv( "_HB_BUILD_MIGR", "yes" )
-   ENDIF
-
    /* Load list of packages */
 
-   s_hPackageList := { => }
-   hb_HKeepOrder( s_hPackageList, .T. )
+   hPackageList := { => }
+   hb_HKeepOrder( hPackageList, .T. )
 
-   LoadPkgListFromFile( s_hPackageList, s_cHome + "pkglist" )
-   LoadPkgListFromString( s_hPackageList, GetEnv( "HB_BUILD_ADDONS" ) )
+   LoadPkgListFromFile( hPackageList, s_cHome + "pkglist" )
+   LoadPkgListFromString( hPackageList, GetEnv( "HB_BUILD_ADDONS" ) )
 
    /* Build */
    IF Empty( GetEnv( "HB_HOST_BIN_DIR" ) )
-      Standalone( ... )
+      Standalone( hb_AParams(), hPackageList )
    ELSE
-      GNUMake( ... )
+      GNUMake( hb_AParams(), hPackageList )
    ENDIF
 
    RETURN
@@ -111,9 +103,7 @@ PROCEDURE Main( ... )
    #4 install        install        _ACT_INC_INST          -inc -instpath=
    #5 clean install  clean install  _ACT_INC_REBUILD_INST  -inc -rebuild -instpath=
  */
-PROCEDURE Standalone( ... )
-   LOCAL aParams
-
+PROCEDURE Standalone( aParams, hPackageList )
    LOCAL aSortedList
 
    LOCAL cPWD
@@ -133,8 +123,6 @@ PROCEDURE Standalone( ... )
    LOCAL aPairList
 
    /* Processing cmdline options */
-
-   aParams := hb_AParams()
 
    DO CASE
    CASE AScanL( aParams, "clean" ) > 0 .AND. ;
@@ -174,7 +162,7 @@ PROCEDURE Standalone( ... )
    IF ! lCustom
       cPWD := hb_pwd()
       /* Find out which package are we */
-      FOR EACH tmp IN s_hPackageList
+      FOR EACH tmp IN hPackageList
          tmp1 := hb_ps() + PathSepToSelf( tmp:__enumKey() ) + hb_ps()
          IF tmp1 == Right( cPWD, Len( tmp1 ) )
             cMyPackage := StrTran( tmp:__enumKey(), "\", "/" )
@@ -208,15 +196,15 @@ PROCEDURE Standalone( ... )
       /* Query project information and dependencies and calculate build order */
       aPairList := {}
 
-      call_hbmk2_hbinfo( cBinDir, s_cBase + s_hPackageList[ cMyPackage ][ "cFileName" ], s_hPackageList[ cMyPackage ] )
-      DeptLinesToDeptPairList( aPairList, cMyPackage, s_hPackageList[ cMyPackage ][ "aDept" ] )
+      call_hbmk2_hbinfo( cBinDir, s_cBase + hPackageList[ cMyPackage ][ "cFileName" ], hPackageList[ cMyPackage ] )
+      DeptLinesToDeptPairList( aPairList, cMyPackage, hPackageList[ cMyPackage ][ "aDept" ] )
 
       aSortedList := TopoSort( aPairList )
 
       /* Build the dependencies and ourselves in in sorted order */
       FOR EACH cPackage IN aSortedList DESCEND
          call_hbmk2( cBinDir,;
-            s_cBase + iif( cPackage == cMyPackage, "", s_cHome + cPackage + "/" ) + s_hPackageList[ cPackage ][ "cFileName" ],;
+            s_cBase + iif( cPackage == cMyPackage, "", s_cHome + cPackage + "/" ) + hPackageList[ cPackage ][ "cFileName" ],;
             iif( cPackage == cMyPackage, cOptions + cOptionsUser, " -inc" ), "" )
       NEXT
    ENDIF
@@ -239,7 +227,7 @@ PROCEDURE Standalone( ... )
    #6 install clean  install    install clean    _ACT_INC_INST          -inc -instpath=
                      clean      install clean    _ACT_INC_CLEAN         -inc -clean
  */
-PROCEDURE GNUMake( ... )
+PROCEDURE GNUMake( aParams, hPackageList )
    LOCAL cBinDir
    LOCAL hProject
    LOCAL cProject
@@ -251,7 +239,6 @@ PROCEDURE GNUMake( ... )
    LOCAL aFilter
    LOCAL lFilterNegative
 
-   LOCAL aParams
    LOCAL aGNUMakeParams
    LOCAL nAction
 
@@ -285,7 +272,6 @@ PROCEDURE GNUMake( ... )
 
    /* Determine the mode of operation */
 
-   aParams := hb_AParams()
    aGNUMakeParams := hb_ATokens( Lower( GetEnv( "HB_MAKECMDGOALS" ) ) )
 
    DO CASE
@@ -355,7 +341,7 @@ PROCEDURE GNUMake( ... )
 
    aPairList := {}
 
-   FOR EACH hProject IN s_hPackageList
+   FOR EACH hProject IN hPackageList
       call_hbmk2_hbinfo( cBinDir, s_cBase + hProject:__enumKey() + "/" + hProject[ "cFileName" ], hProject )
       DeptLinesToDeptPairList( aPairList, hProject:__enumKey(), hProject[ "aDept" ] )
    NEXT
@@ -391,12 +377,12 @@ PROCEDURE GNUMake( ... )
             AScan( aFilter, {| tmp | tmp == cPackage } ) == 0,;
             AScan( aFilter, {| tmp | tmp == cPackage } ) > 0 )
 
-         cProject := s_cBase + cPackage + "/" + s_hPackageList[ cPackage ][ "cFileName" ]
+         cProject := s_cBase + cPackage + "/" + hPackageList[ cPackage ][ "cFileName" ]
 
          call_hbmk2( cBinDir, cProject, cOptions, "" )
 
          /* Highly experimental */
-         IF s_hPackageList[ cPackage ][ "cType" ] == "hblib" .AND. ;
+         IF hPackageList[ cPackage ][ "cType" ] == "hblib" .AND. ;
             GetEnv( "HB_BUILD_CONTRIB_DLL" ) == "yes" .AND. ;
             hb_FileExists( PathSepToSelf( FNameExtSet( cProject, ".hbc" ) ) )
 
@@ -504,7 +490,7 @@ STATIC FUNCTION mk_hb_processRun( cCommand )
 
    OutStd( cCommand + hb_eol() )
 
-   RETURN iif( s_lTest, 0, hb_processRun( cCommand ) )
+   RETURN hb_processRun( cCommand )
 
 STATIC FUNCTION mk_hbd( cDir )
    LOCAL cName
