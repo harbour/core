@@ -38,11 +38,6 @@ get_rpmmacro()
 NEED_RPM="make gcc binutils bash"
 
 FORCE=""
-BUGGY_RPM=""
-if [ -f /etc/conectiva-release ]
-then
-   BUGGY_RPM="yes"
-fi
 
 LAST=""
 while [ $# -gt 0 ]
@@ -192,13 +187,8 @@ then
       else
          RPMBLD="rpm"
       fi
-
-      if [ "${BUGGY_RPM}" = "yes" ]
-      then
-         ${RPMBLD} -ba harbour.spec ${INST_PARAM}
-      else
-         ${RPMBLD} -ta ${hb_filename} --rmsource ${INST_PARAM}
-      fi
+      cd ${RPMDIR}/SPECS
+      ${RPMBLD} -ba harbour.spec ${INST_PARAM}
    else
       echo "Cannot find archive file: ${hb_filename}"
       exit 1
