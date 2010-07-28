@@ -178,8 +178,8 @@ then
          RPMDIR=`get_rpmmacro "_topdir"`
       fi
 
-      cp ${hb_filename} ${RPMDIR}/SOURCES
-      cp package/harbour.spec ${RPMDIR}/SPECS
+      cp ${hb_filename} ${RPMDIR}/SOURCES/
+      cp package/harbour.spec ${RPMDIR}/SPECS/
 
       if which rpmbuild >/dev/null 2>&1
       then
