@@ -126,18 +126,18 @@ static HB_ERRCODE hb_errnoToDosError( int ErrCode )
 
 static HB_ERRCODE hb_WinToDosError( DWORD dwError )
 {
+   #ifndef ERROR_PRIVILEGE_NOT_HELD
+   #define ERROR_PRIVILEGE_NOT_HELD 1314L
+   #endif
+
    switch( dwError )
    {
-      case ERROR_ALREADY_EXISTS:
-         return 5;
-      case ERROR_FILE_NOT_FOUND:
-         return 2;
-      case ERROR_PATH_NOT_FOUND:
-         return 3;
-      case ERROR_TOO_MANY_OPEN_FILES:
-         return 4;
-      case ERROR_INVALID_HANDLE:
-         return 6;
+      case ERROR_PRIVILEGE_NOT_HELD:
+      case ERROR_ALREADY_EXISTS:          return 5;
+      case ERROR_FILE_NOT_FOUND:          return 2;
+      case ERROR_PATH_NOT_FOUND:          return 3;
+      case ERROR_TOO_MANY_OPEN_FILES:     return 4;
+      case ERROR_INVALID_HANDLE:          return 6;
    }
 
    return ( HB_ERRCODE ) dwError;

@@ -215,7 +215,9 @@ extern HB_EXPORT void       hb_fsSetFError   ( HB_ERRCODE uiError ); /* set FERR
 extern HB_EXPORT HB_BOOL    hb_fsNameExists  ( const char * pszFileName ); /* check if a name exists in the filesystem (wildcard chars not accepted). */
 extern HB_EXPORT HB_BOOL    hb_fsFileExists  ( const char * pszFileName ); /* check if a file exists (wildcard chars not accepted). */
 extern HB_EXPORT HB_BOOL    hb_fsDirExists   ( const char * pszDirName ); /* check if a directory exists (wildcard chars not accepted). */
-extern HB_EXPORT HB_BOOL    hb_fsCopy        ( const char * pSource, const char * pDest );
+extern HB_EXPORT HB_BOOL    hb_fsCopy        ( const char * pszSource, const char * pszDest ); /* copy file */
+extern HB_EXPORT HB_BOOL    hb_fsLink        ( const char * pszExisting, const char * pszNewFile ); /* create hard link */
+extern HB_EXPORT HB_BOOL    hb_fsLinkSym     ( const char * pszTarget, const char * pszNewFile ); /* create symbolic (soft) link */
 
 #define hb_fsFLock( h, s, l )   hb_fsLock( h, s, l, FL_LOCK )
 #define hb_fsFUnlock( h, s, l ) hb_fsLock( h, s, l, FL_UNLOCK )

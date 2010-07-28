@@ -54,6 +54,7 @@ C_SOURCES := \
    fnsplit.c \
    fscopy.c \
    fserr.c \
+   fslink.c \
    fssize.c \
    fstemp.c \
    gete.c \
