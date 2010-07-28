@@ -311,7 +311,7 @@ CLASS HbIde
    METHOD updateProjectTree( aPrj )
    METHOD manageItemSelected( oXbpTreeItem )
    METHOD manageProjectContext( mp1, mp2, oXbpTreeItem )
-   METHOD updateFuncList()
+   METHOD updateFuncList( lSorted )
    METHOD gotoFunction( mp1, mp2, oListBox )
    METHOD manageFuncContext( mp1 )
    METHOD createTags()
@@ -1271,12 +1271,20 @@ METHOD HbIde:manageProjectContext( mp1, mp2, oXbpTreeItem )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbIde:updateFuncList()
-   LOCAL o
+METHOD HbIde:updateFuncList( lSorted )
+   LOCAL a_:={}
+
+   DEFAULT lSorted TO .t.
 
    ::oFuncList:clear()
    IF !empty( ::aTags )
-      aeval( ::aTags, {|e_| o := ::oFuncList:addItem( e_[ 7 ] ) } )
+      IF lSorted
+         aeval( ::aTags, {|e_| aadd( a_, e_[ 7 ] ) } )
+         asort( a_, , , {|e,f| lower( e ) < lower( f ) } )
+         aeval( a_, {|e| ::oFuncList:addItem( e ) } )
+      ELSE
+         aeval( ::aTags, {|e_| ::oFuncList:addItem( e_[ 7 ] ) } )
+      ENDIF
    ENDIF
 
    RETURN Self
@@ -1310,6 +1318,9 @@ METHOD HbIde:manageFuncContext( mp1 )
    LOCAL aPops := {}
 
    IF ::oFuncList:numItems() > 0
+      aadd( aPops, { 'Show Sorted'           , {|| ::updateFuncList( .t. ) } } )
+      aadd( aPops, { 'Show in Natural Order' , {|| ::updateFuncList( .f. ) } } )
+      aadd( aPops, { "" } )
       aadd( aPops, { 'Comment out'           , {|| NIL } } )
       aadd( aPops, { 'Reformat'              , {|| NIL } } )
       aadd( aPops, { 'Print'                 , {|| NIL } } )

@@ -1317,7 +1317,8 @@ METHOD IdeEdit:markCurrentFunction()
             n--
          ENDIF
          IF n > 0
-            ::oIde:oFuncList:setItemColorFG( n, { 255,0,0 } )
+            ::oIde:oFuncList:setItemColorFG( ::aTags[ n,7 ], { 255,0,0 } )
+            ::oIde:oFuncList:setVisible( ::aTags[ n,7 ] )
          ENDIF
       ENDIF
    ENDIF

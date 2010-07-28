@@ -132,6 +132,7 @@ CLASS IdeINI INHERIT IdeObject
    DATA   aKeywords                               INIT  {}
    DATA   aDbuPanelNames                          INIT  {}
    DATA   aDbuPanelsInfo                          INIT  {}
+   DATA   aDictionaries                           INIT  {}
 
    DATA   cFontName                               INIT  "Courier New"
    DATA   nPointSize                              INIT  10
@@ -458,6 +459,13 @@ METHOD IdeINI:save( cHbideIni )
    NEXT
    aadd( txt_, " " )
 
+   aadd( txt_, "[DICTIONARIES]" )
+   aadd( txt_, " " )
+   FOR EACH s IN ::aDictionaries
+      aadd( txt_, "dictionary_" + hb_ntos( s:__enumIndex() ) + "=" + s )
+   NEXT
+   aadd( txt_, " " )
+
    aadd( txt_, "[General]" )
    aadd( txt_, " " )
 
@@ -531,6 +539,9 @@ METHOD IdeINI:load( cHbideIni )
                EXIT
             CASE "[APPTHEMES]"
                nPart := "INI_APPTHEMES"
+               EXIT
+            CASE "[DICTIONARIES]"
+               nPart := "INI_DICTIONARIES"
                EXIT
             OTHERWISE
                DO CASE
@@ -691,6 +702,11 @@ METHOD IdeINI:load( cHbideIni )
                CASE nPart == "INI_APPTHEMES"
                   IF hbide_parseKeyValPair( s, @cKey, @cVal )
                      aadd( ::aAppThemes, cVal )
+                  ENDIF
+
+               CASE nPart == "INI_DICTIONARIES"
+                  IF hbide_parseKeyValPair( s, @cKey, @cVal )
+                     aadd( ::aDictioaries, cVal )
                   ENDIF
 
                ENDCASE
@@ -909,6 +925,7 @@ CLASS IdeSetup INHERIT IdeObject
    DATA   aStyles                                 INIT { "cleanlooks", "windows", "windowsxp", ;
                                                          "windowsvista", "cde", "motif", "plastique", "macintosh" }
    DATA   aKeyItems                               INIT {}
+   DATA   aDictionaries                           INIT {}
 
    DATA   nCurThemeSlot                           INIT 0
    DATA   aHilighters                             INIT {}
@@ -1003,6 +1020,9 @@ METHOD IdeSetup:setIcons()
    ::oUI:q_buttonThmApp        : setIcon( hbide_image( "copy"      ) )
    ::oUI:q_buttonThmSav        : setIcon( hbide_image( "save"      ) )
 
+   /* Dictionaries */
+   ::oUI:q_buttonDictPath      : setIcon( hbide_image( "open"      ) )
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1063,6 +1083,9 @@ METHOD IdeSetup:disConnectSlots()
    ::disconnect( ::oUI:q_buttonViewSnippets  , "clicked()"                )
    ::disconnect( ::oUI:q_buttonViewThemes    , "clicked()"                )
 
+   /* Dictionaries */
+   ::disconnect( ::oUI:q_buttonDictPath      , "clicked()"                )
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1122,6 +1145,9 @@ METHOD IdeSetup:connectSlots()
    ::connect( ::oUI:q_buttonViewEnv       , "clicked()"               , {| | ::execEvent( "buttonViewEnv_clicked"             ) } )
    ::connect( ::oUI:q_buttonViewSnippets  , "clicked()"               , {| | ::execEvent( "buttonViewSnippets_clicked"        ) } )
    ::connect( ::oUI:q_buttonViewThemes    , "clicked()"               , {| | ::execEvent( "buttonViewThemes_clicked"          ) } )
+
+   /* Dictionaries */
+   ::connect( ::oUI:q_buttonDictPath      , "clicked()"               , {| | ::execEvent( "buttonDictPath_clicked"            ) } )
 
    RETURN Self
 

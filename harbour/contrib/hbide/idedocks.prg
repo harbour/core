@@ -86,7 +86,7 @@ CLASS IdeDocks INHERIT IdeObject
    DATA   lChanging                               INIT   .f.
 
    DATA   qTimer
-   DATA   nPrevWindowState
+   DATA   nPrevWindowState                        INIT   Qt_WindowNoState
    DATA   lSystemTrayAvailable                    INIT   .f.
    DATA   lMinimizeInSystemTray                   INIT   .t.  // .f.
    DATA   qAct1
