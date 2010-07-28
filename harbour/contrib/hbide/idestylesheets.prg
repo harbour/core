@@ -81,17 +81,18 @@ FUNCTION hbide_setAppTheme( aTheme )
 /*----------------------------------------------------------------------*/
 
 FUNCTION GetStyleSheet( cWidget, nMode )
-   LOCAL txt_:= {}
-   LOCAL s   := ""
-   #if 0
-   IF .t.
-      RETURN ""
-   ENDIF
-   #endif
+   LOCAL txt_
+   LOCAL s
+
    DEFAULT nMode TO HBIDE_ANIMATION_NONE
 
-   DO CASE
+   IF nMode == HBIDE_ANIMATION_NONE
+      RETURN ""
+   ENDIF
 
+   txt_:= {}
+
+   DO CASE
    CASE cWidget == "QMenuPop"
       IF nMode == HBIDE_ANIMATION_GRADIENT
       aadd( txt_, 'QMenu {                                                                      ' )
@@ -462,6 +463,8 @@ FUNCTION GetStyleSheet( cWidget, nMode )
       aadd( txt_, "background-color: rgba( 240,120,120,255 );"                                    )
 
    ENDCASE
+
+   s := ""
 
    aeval( txt_, {|e| s += trim( e ) + chr( 13 ) + chr( 10 ) } )
 

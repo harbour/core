@@ -524,7 +524,6 @@ STATIC FUNCTION unix_name()
    CASE GetEnv( "HB_PLATFORM" ) == "win" ; RETURN GetEnv( "HB_COMPILER" )
    CASE ! Empty( tmp := query_rpm( "mandriva-release-One", "mdv" ) ) ; RETURN tmp
    CASE ! Empty( tmp := query_rpm( "mandriva-release"    , "mdv" ) ) ; RETURN tmp
-   CASE ! Empty( tmp := query_rpm( "mandrake-release"    , "mdk" ) ) ; RETURN tmp
    CASE ! Empty( tmp := query_rpm( "redhat-release"      , "rh"  ) ) ; RETURN tmp
    CASE ! Empty( tmp := query_rpm( "fedora-release"      , "fc"  ) ) ; RETURN tmp
    CASE ! Empty( tmp := query_rpm( "suse-release"        , "sus" ) ) ; RETURN tmp

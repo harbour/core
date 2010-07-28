@@ -107,6 +107,7 @@ Section "Main components" hb_main
   File "$%HB_ROOT%hb21\bin\hbtest.exe"
   File "$%HB_ROOT%hb21\bin\hbformat.exe"
   File "$%HB_ROOT%hb21\bin\hbnetio.exe"
+  File "$%HB_ROOT%hb21\bin\*.hbs"
   File /nonfatal "$%HB_ROOT%hb21\bin\hbmk.hbc"
   File "$%HB_ROOT%hb21\bin\upx*.*"
 

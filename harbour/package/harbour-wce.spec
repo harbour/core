@@ -17,7 +17,6 @@
 %define version   2.1.0
 %define releasen  beta2
 %define hb_pref   hbce
-%define hb_host   harbour-project.org
 
 # Workaround for the problem of /usr/bin/strip not handling PE binaries.
 %define hb_ccpath /opt/mingw32ce/bin
@@ -36,10 +35,8 @@ Version:        %{version}
 Release:        %{releasen}
 License:        GPL (plus exception)
 Group:          Development/Languages
-Vendor:         %{hb_host}
-URL:            http://%{hb_host}/
+URL:            http://harbour-project.org/
 Source:         harbour-%{version}.src.tar.gz
-Packager:       Przemys³aw Czerpak (druzus/at/priv.onet.pl)
 BuildPrereq:    gcc binutils bash
 Requires:       gcc binutils bash sh-utils cegcc-mingw32ce harbour = %{?epoch:%{epoch}:}%{version}-%{release}
 Provides:       %{name}
@@ -74,17 +71,17 @@ rm -fR $RPM_BUILD_ROOT
 
 %build
 
-#export HB_BUILD_PARTS=compiler
 export HB_BUILD_CONTRIBS=no
 export HB_PLATFORM=linux
 export HB_COMPILER=gcc
+
 make %{?_smp_mflags}
+
 unset HB_COMPILER
 unset HB_BUILD_CONTRIBS
 
 export HB_BUILD_PARTS=lib
 export HB_PLATFORM=wce
-
 export HB_BIN_COMPILE="$(pwd)/bin/linux/gcc"
 
 make %{?_smp_mflags}
@@ -97,23 +94,15 @@ make %{?_smp_mflags}
 
 # Install harbour itself.
 
-export HB_BUILD_PARTS=lib
-export HB_PLATFORM=wce
 unset HB_COMPILER
 
+export HB_BUILD_PARTS=lib
+export HB_PLATFORM=wce
 export HB_BIN_COMPILE="$(pwd)/bin/linux/gcc"
 
-export HB_BIN_INSTALL=%{_bindir}
-export HB_INC_INSTALL=%{_includedir}/%{name}
-export HB_LIB_INSTALL=%{_libdir}/%{name}
-export HB_DYN_INSTALL=${HB_LIB_INSTALL}
-
-export _DEFAULT_BIN_DIR=$HB_BIN_INSTALL
-export _DEFAULT_INC_DIR=$HB_INC_INSTALL
-export _DEFAULT_LIB_DIR=$HB_LIB_INSTALL
-export HB_BIN_INSTALL=$RPM_BUILD_ROOT/$HB_BIN_INSTALL
-export HB_INC_INSTALL=$RPM_BUILD_ROOT/$HB_INC_INSTALL
-export HB_LIB_INSTALL=$RPM_BUILD_ROOT/$HB_LIB_INSTALL
+export HB_BIN_INSTALL=$RPM_BUILD_ROOT/%{_bindir}
+export HB_INC_INSTALL=$RPM_BUILD_ROOT/%{_includedir}/%{name}
+export HB_LIB_INSTALL=$RPM_BUILD_ROOT/%{_libdir}/%{name}
 export HB_DYN_INSTALL=${HB_LIB_INSTALL}
 export HB_BUILD_STRIP=lib
 

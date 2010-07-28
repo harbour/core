@@ -10,6 +10,18 @@
 # See COPYING for licensing terms.
 # ---------------------------------------------------------------
 
+# ---------------------------------------------------------------
+# HOWTO .rpm docs:
+#    http://fedoraproject.org/wiki/PackageMaintainers/CreatingPackageHowTo
+#    http://www.gurulabs.com/downloads/GURULABS-RPM-LAB/GURULABS-RPM-GUIDE-v1.0.PDF
+# ---------------------------------------------------------------
+
+# TOFIX: Contrib packages with dependencies will be packaged
+#        into separate .rpms, but their headers will be packaged
+#        into the core Harbour package. This f.e. makes it impossible
+#        to detect a Harbour contrib package by checking the existence
+#        of the header. [vszakats]
+
 ######################################################################
 ## Definitions.
 ######################################################################
@@ -18,9 +30,6 @@
 # and remember that order checking can be important
 
 %define platform %(release=$(rpm -q --queryformat='%{VERSION}' mandriva-release-common 2>/dev/null) && echo "mdv$release"|tr -d ".")
-%if "%{platform}" == ""
-# DISCONTINUED
-%define platform %(release=$(rpm -q --queryformat='%{VERSION}' mandrake-release 2>/dev/null) && echo "mdk$release"|tr -d ".")
 %if "%{platform}" == ""
 %define platform %(release=$(rpm -q --queryformat='%{VERSION}' redhat-release 2>/dev/null) && echo "rh$release"|tr -d ".")
 %if "%{platform}" == ""
@@ -31,7 +40,6 @@
 %define platform %(release=$(rpm -q --queryformat='%{VERSION}' openSUSE-release 2>/dev/null) && echo "sus$release"|tr -d ".")
 %if "%{platform}" == ""
 %define platform %([ -f /etc/pld-release ] && cat /etc/pld-release|sed -e '/1/ !d' -e 's/[^0-9]//g' -e 's/^/pld/')
-%endif
 %endif
 %endif
 %endif
@@ -61,10 +69,11 @@
 %define hb_ldir   export HB_LIB_INSTALL=${RPM_BUILD_ROOT}%{_libdir}/%{name}
 %define hb_edir   export HB_ETC_INSTALL=${RPM_BUILD_ROOT}%{hb_etcdir}
 %define hb_mdir   export HB_MAN_INSTALL=${RPM_BUILD_ROOT}%{_mandir}
+%define hb_blds   export HB_BUILD_STRIP=all
+%define hb_bldsh  export HB_BUILD_SHARED=%{!?_with_static:yes}
 %define hb_cmrc   export HB_BUILD_NOGPLLIB=%{?_without_gpllib:yes}
 %define hb_ctrb   export HB_BUILD_CONTRIBS="hbblink hbclipsm hbct hbgt hbmisc hbmzip hbnetio hbtip hbtpathy hbhpdf hbziparc hbfoxpro hbsms hbfship hbxpp xhb rddbmcdx rddsql sddsqlt3 hbnf %{?_with_allegro:gtalleg} %{?_with_cairo:hbcairo} %{?_with_cups:hbcups} %{?_with_curl:hbcurl} %{?_with_firebird:hbfbird sddfb} %{?_with_freeimage:hbfimage} %{?_with_gd:hbgd} %{?_with_mysql:hbmysql sddmy} %{?_with_odbc:hbodbc sddodbc} %{?_with_pgsql:hbpgsql sddpg} %{?_with_qt:hbqt hbxbp} %{?_with_ads:rddads}"
-%define hb_env    %{hb_plat} ; %{hb_cc} ; %{hb_cflag} ; %{hb_lflag} ; %{hb_dflag} ; %{shl_path} ; %{hb_gpm} ; %{hb_crs} ; %{hb_sln} ; %{hb_x11} ; %{hb_local} ; %{hb_bdir} ; %{hb_idir} ; %{hb_ldir} ; %{hb_edir} ; %{hb_mdir} ; %{hb_ctrb} ; %{hb_cmrc}
-%define hb_host   harbour-project.org
+%define hb_env    %{hb_plat} ; %{hb_cc} ; %{hb_cflag} ; %{hb_lflag} ; %{hb_dflag} ; %{shl_path} ; %{hb_gpm} ; %{hb_crs} ; %{hb_sln} ; %{hb_x11} ; %{hb_local} ; %{hb_bdir} ; %{hb_idir} ; %{hb_ldir} ; %{hb_edir} ; %{hb_mdir} ; %{hb_ctrb} ; %{hb_cmrc} ; %{hb_blds} ; %{hb_bldsh}
 ######################################################################
 ## Preamble.
 ######################################################################
@@ -78,10 +87,8 @@ Version:        %{version}
 Release:        %{releasen}%{platform}
 License:        GPL (plus exception)
 Group:          Development/Languages
-Vendor:         %{hb_host}
-URL:            http://%{hb_host}/
+URL:            http://harbour-project.org/
 Source:         %{name}-%{version}.src.tar.gz
-Packager:       Przemys³aw Czerpak <druzus@polbox.com> Luiz Rafael Culik Guimaraes <culikr@uol.com.br>
 BuildPrereq:    gcc binutils bash %{!?_without_curses: ncurses-devel} %{!?_without_gpm: gpm-devel}
 Requires:       gcc binutils bash sh-utils %{name}-lib = %{?epoch:%{epoch}:}%{version}-%{release}
 Provides:       %{name} harbour lib%{name}.so lib%{name}mt.so
@@ -381,8 +388,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %build
 %{hb_env}
-export HB_BUILD_STRIP=all
-export HB_BUILD_SHARED=%{!?_with_static:yes}
 
 make %{?_smp_mflags}
 
@@ -390,14 +395,10 @@ make %{?_smp_mflags}
 ## Install.
 ######################################################################
 
-%install
-
 # Install harbour itself.
 
+%install
 %{hb_env}
-
-export HB_BUILD_STRIP=all
-export HB_BUILD_SHARED=%{!?_with_static:yes}
 
 # necessary for shared linked hbrun used to execute postinst.hbs
 export LD_LIBRARY_PATH=$HB_LIB_INSTALL
@@ -411,9 +412,6 @@ rm -f $HB_LIB_INSTALL/libjpeg.a
 rm -f $HB_LIB_INSTALL/liblibhpdf.a
 rm -f $HB_LIB_INSTALL/libpng.a
 rm -f $HB_LIB_INSTALL/libsqlite3.a
-
-# remove unused files
-rm -f $HB_BIN_INSTALL/hbtest
 
 ######################################################################
 ## Post install
@@ -447,7 +445,7 @@ rm -rf $RPM_BUILD_ROOT
 %verify(not md5 mtime) %config %{hb_etcdir}/hb-charmap.def
 %{_bindir}/harbour
 %{_bindir}/hbpp
-#%{_bindir}/hbtest
+%{_bindir}/hbtest
 %{_bindir}/hbrun
 %{_bindir}/hbi18n
 %{_bindir}/hbformat
