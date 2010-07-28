@@ -1,5 +1,15 @@
---- ori/sqlite3.c	Wed Jul 21 20:54:06 2010
-+++ sqlite3.c	Tue Jul 27 10:45:27 2010
+diff -urN sqlite3.orig/sqlite3.c sqlite3/sqlite3.c
+--- sqlite3.orig/sqlite3.c	2010-07-28 22:33:32.000000000 +0200
++++ sqlite3/sqlite3.c	2010-07-28 22:33:32.000000000 +0200
+@@ -21893,7 +21893,7 @@
+ 
+   memset( pFile, 0, sizeof(*pFile) );
+ 
+-  OSTRACE( "OPEN want %d\n", flags ));
++  OSTRACE(( "OPEN want %d\n", flags ));
+ 
+   if( flags & SQLITE_OPEN_READWRITE ){
+     ulOpenMode |= OPEN_ACCESS_READWRITE;
 @@ -27225,7 +27225,7 @@
  ** error message.
  */
