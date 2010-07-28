@@ -409,13 +409,14 @@ REQUEST hbmk_KEYW
 
 #define _HBMK_nCOMPVer          118
 #define _HBMK_lDEPIMPLIB        119 /* Generate import libs configured in dependecy specification */
+#define _HBMK_lInstForce        120 /* Force to install target even if was up to date */
 
-#define _HBMK_aArgs             120
-#define _HBMK_nArgTarget        121
-#define _HBMK_lPause            122
-#define _HBMK_nLevel            123
+#define _HBMK_aArgs             121
+#define _HBMK_nArgTarget        122
+#define _HBMK_lPause            123
+#define _HBMK_nLevel            124
 
-#define _HBMK_MAX_              123
+#define _HBMK_MAX_              124
 
 #define _HBMK_DEP_CTRL_MARKER   ".control." /* must be an invalid path */
 
@@ -907,10 +908,12 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
    hbmk[ _HBMK_hDEPTSDIR ] := { => }
 
-   hbmk[ _HBMK_aArgs ]      := aArgs
+   hbmk[ _HBMK_lInstForce ] := .F.
+
+   hbmk[ _HBMK_aArgs ] := aArgs
    hbmk[ _HBMK_nArgTarget ] := nArgTarget
-   hbmk[ _HBMK_lPause ]     := lPause
-   hbmk[ _HBMK_nLevel ]     := nLevel
+   hbmk[ _HBMK_lPause ] := lPause
+   hbmk[ _HBMK_nLevel ] := nLevel
 
    GetUILangCDP( @hbmk[ _HBMK_cUILNG ], @hbmk[ _HBMK_cUICDP ] )
    SetUILang( hbmk )
@@ -1940,6 +1943,8 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       CASE cParamL == "-strip"           ; hbmk[ _HBMK_lSTRIP ]       := .T.
       CASE cParamL == "-strip-" .OR. ;
            cParamL == "-nostrip"         ; hbmk[ _HBMK_lSTRIP ]       := .F.
+      CASE cParamL == "-instforce"       ; hbmk[ _HBMK_lInstForce ]   := .T.
+      CASE cParamL == "-instforce-"      ; hbmk[ _HBMK_lInstForce ]   := .F.
 
       CASE cParamL == "--harbourhelp"    ; AAdd( hbmk[ _HBMK_aOPTPRG ], "--help" ) ; lHarbourInfo := .T.
       CASE cParamL == "-harbourhelp"     ; AAdd( hbmk[ _HBMK_aOPTPRG ], "--help" ) ; lHarbourInfo := .T.
@@ -5722,7 +5727,9 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                ENDIF
 
             ENDCASE
+         ENDIF
 
+         IF ! lTargetUpToDate .OR. hbmk[ _HBMK_lInstForce ]
             hb_AIns( hbmk[ _HBMK_aINSTFILE ], 1, { "", hbmk[ _HBMK_cPROGNAME ] }, .T. )
          ENDIF
       ENDIF
@@ -10919,6 +10926,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-icon=<file>"       , I_( "set <file> as application icon. <file> should be a supported format on the target platform" ) },;
       { "-instfile=<g:file>" , I_( "add <file> in to the list of files to be copied to path specified by -instpath option. <g> is an optional copy group, it must be at least two characters long." ) },;
       { "-instpath=<g:path>" , I_( "copy target to <path>. if <path> is a directory, it should end with path separatorm, in this case files specified by -instfile option will also be copied. can be specified multiple times. <g> is an optional copy group, it must be at least two characters long. Build target will be automatically copied to default (empty) copy group." ) },;
+      { "-instforce[-]"      , I_( "copy target to install path even if it is up to date" ) },;
       { "-stop[=<text>]"     , I_( "stop without doing anything and display <text> if specified" ) },;
       { "-echo=<text>"       , I_( "echo text on screen" ) },;
       { "-pause"             , I_( "force waiting for a key on exit in case of failure (with alternate GTs only)" ) },;

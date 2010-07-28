@@ -79,7 +79,7 @@ hb_collect_all_tree()
    done
 }
 
-hb_rmflst="no"
+hb_rmflst="yes"
 hb_flst="bin/hb_flst.tmp"
 #if [ -d "$hb_rootdir/.svn" ] || [ ! -r "$hb_rootdir/$hb_flst" ]; then
 if [ -d "$hb_rootdir/.svn" ] ; then

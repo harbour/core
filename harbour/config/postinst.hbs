@@ -104,6 +104,7 @@ PROCEDURE Main()
 
       tmp := GetEnv( "HB_ETC_INSTALL" ) + hb_ps() + ".." + hb_ps() + "ld.so.conf.d"
       IF DirBuild( tmp )
+         /* TOFIX: Put HB_LIB_INSTALL without build sandbox prefix */
          hb_MemoWrit( tmp + hb_ps() + "harbour.conf", GetEnv( "HB_LIB_INSTALL" ) + hb_eol() )
       ELSE
          OutStd( hb_StrFormat( "! Error: Cannot create directory '%1$s'", tmp ) + hb_eol() )
@@ -127,6 +128,7 @@ PROCEDURE Main()
       ENDIF
    ENDIF
 
+   /* TOFIX: Rewrite this in .prg */
 #if 0
    for l in ${full_lib_name} ${full_lib_name_mt}
    do

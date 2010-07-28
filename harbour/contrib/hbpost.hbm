@@ -49,3 +49,4 @@
 {_HB_BUILD_INSTALL}-instpath=etc:${_HB_ETC_INSTALL}/
 {_HB_BUILD_INSTALL}-instpath=man:${_HB_MAN_INSTALL}/
 {_HB_BUILD_INSTALL&HB_INSTALL_IMPLIB='yes'}-instpath=implib:${_HB_LIB_INSTALL}/
+{_HB_BUILD_INSTALL}-instforce
