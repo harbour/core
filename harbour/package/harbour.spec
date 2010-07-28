@@ -452,6 +452,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/hbi18n
 %{_bindir}/hbformat
 %{_bindir}/hbmk2
+%{_bindir}/hbmk2.hu_HU.hbl
+%{_bindir}/hbmk2.pt_BR.hbl
+%{_bindir}/hbxpatch.hbs
+%{_bindir}/hbmk2l2d.hbs
 %{_mandir}/man1/*.1*
 %dir %{_includedir}/%{name}
 %attr(644,root,root) %{_includedir}/%{name}/*
@@ -498,6 +502,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/%{name}/libhbnf.a
 %{_libdir}/%{name}/libhbblink.a
 %{_libdir}/%{name}/libhbmisc.a
+%{_libdir}/%{name}/libminizip.a
 %{_libdir}/%{name}/libhbmzip.a
 %{_libdir}/%{name}/libhbnetio.a
 %{_libdir}/%{name}/libhbct.a
@@ -514,9 +519,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/%{name}/librddbmcdx.a
 %{_libdir}/%{name}/librddsql.a
 %{_libdir}/%{name}/libsddsqlt3.a
-%{_libdir}/%{name}/libhbbz2.a
 %{_libdir}/%{name}/libhbsms.a
-%{_libdir}/%{name}/libhbmzip.a
 
 %{?_with_ads:%files ads}
 %{?_with_ads:%defattr(644,root,root,755)}
