@@ -19,5 +19,3 @@ hbrun.prg
 
 -icon={allwin}../../package/harb_win.ico
 -icon={os2}../../package/harb_os2.ico
-
-{HB_INSTALL_INC}"-prgflag=-D_HBRUN_HB_INSTALL_INC=${HB_INSTALL_INC}"
