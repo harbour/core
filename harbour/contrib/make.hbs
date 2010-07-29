@@ -31,19 +31,17 @@
      1. normalize path to hbpre/hbpost to save on cmdline
      2. solve HB_BUILD_CONTRIB_DLL support the .dlls are either
         huge, or they don't link.
-     3. hbmk2 location detection in standalone mode
-        (or move hbmk2 to core lib?)
-     4. Move in external libs to contrib area? (bz2, minizip, sqlite3)
+     3. Move in external libs to contrib area? (bz2, minizip, sqlite3)
         (the only downside is that irrelevant hits will be spilling
         'grep -R' results)
-     5. 'install' is ignored in stdalone mode. It would be needed to
+     4. 'install' is ignored in stdalone mode. It would be needed to
         replicate the install dir defaulting logic found in global.mk
         to implement it.
-     6. Delete header install related logic from GNU Make system,
+     5. Delete header install related logic from GNU Make system,
         also delete doc/*.txt install related logic (easily replacable
         with postinst.hbs logic)
-     7. Honor paths found in --hbinfo hbctree{{}} section.
-     8. Move lib output dir and workdirs inside contrib dirs.
+     6. Honor paths found in --hbinfo hbctree{{}} section.
+     7. Move lib output dir and workdirs inside contrib dirs.
  */
 
 #pragma warninglevel=3
@@ -323,12 +321,12 @@ PROCEDURE GNUMake( aParams, hPackageList )
    /* Clearing envvars that may interact with hbmk2 */
 
    /* Saving original install dirs to our own variables */
-   hb_setenv( "_HB_BIN_INSTALL", GetEnv( "HB_BIN_INSTALL" ) )
-   hb_setenv( "_HB_LIB_INSTALL", GetEnv( "HB_LIB_INSTALL" ) )
-   hb_setenv( "_HB_DYN_INSTALL", GetEnv( "HB_DYN_INSTALL" ) )
-   hb_setenv( "_HB_INC_INSTALL", GetEnv( "HB_INC_INSTALL" ) )
-   hb_setenv( "_HB_MAN_INSTALL", GetEnv( "HB_MAN_INSTALL" ) )
-   hb_setenv( "_HB_ETC_INSTALL", GetEnv( "HB_ETC_INSTALL" ) )
+   hb_setenv( "_HB_INSTALL_BIN", GetEnv( "HB_BIN_INSTALL" ) )
+   hb_setenv( "_HB_INSTALL_LIB", GetEnv( "HB_LIB_INSTALL" ) )
+   hb_setenv( "_HB_INSTALL_DYN", GetEnv( "HB_DYN_INSTALL" ) )
+   hb_setenv( "_HB_INSTALL_INC", GetEnv( "HB_INC_INSTALL" ) )
+   hb_setenv( "_HB_INSTALL_MAN", GetEnv( "HB_MAN_INSTALL" ) )
+   hb_setenv( "_HB_INSTALL_ETC", GetEnv( "HB_ETC_INSTALL" ) )
 
    /* Override hbmk2 autodetection */
    hb_setenv( "HB_INSTALL_PREFIX", s_cRoot )

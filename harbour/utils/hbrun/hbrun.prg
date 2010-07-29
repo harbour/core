@@ -81,6 +81,8 @@ STATIC s_aHistory := {}
 STATIC s_lPreserveHistory := .T.
 STATIC s_lWasLoad := .F.
 
+STATIC s_cDirBase
+
 /* ********************************************************************** */
 
 PROCEDURE _APPMAIN( cFile, ... )
@@ -150,7 +152,8 @@ PROCEDURE _APPMAIN( cFile, ... )
                         ERRORLEVEL( 1 )
                      ENDIF
                   OTHERWISE
-                     hb_setenv( "__HBRUN__DIRBASE", hb_DirBase() )
+                     s_cDirBase := hb_DirBase()
+                     hb_setenv( "__HBRUN__DIRBASE", s_cDirBase )
                      hb_argShift( .T. )
                      hb_hrbRun( cFile, ... )
                      EXIT
@@ -162,6 +165,9 @@ PROCEDURE _APPMAIN( cFile, ... )
    ENDIF
 
    RETURN
+
+FUNCTION hbrun_DirBase()
+   RETURN s_cDirBase
 
 EXIT PROCEDURE hbrun_exit()
 
