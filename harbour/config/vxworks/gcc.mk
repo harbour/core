@@ -24,7 +24,7 @@ CFLAGS += -mrtp
 LDFLAGS += -mrtp
 DFLAGS += -mrtp
 
-CFLAGS += -I. -I$(HB_INC_COMPILE)
+CFLAGS += -I. -I$(HB_HOST_INC)
 CFLAGS += -I$(WIND_BASE)/target/usr/h
 CFLAGS += -I$(WIND_BASE)/target/usr/h/wrn/coreip
 CFLAGS += -fno-strict-aliasing

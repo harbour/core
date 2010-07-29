@@ -220,14 +220,6 @@ ifeq ($(HB_INIT_DONE),)
       endif
    endif
 
-   # Some additional ones to be given a standard name:
-   #   HB_BIN_COMPILE              -> HB_BUILD_BIN_DIR
-   #   HB_INC_COMPILE              -> - (HB_BUILD_INC_DIR)
-   #   HB_DLLIBS                   -> (only used in one location, so it's a local matter)
-   #   HB_TOOLS_PREF               -> ?
-   # Macros:
-   #   -DHB_GT_LIB=
-
    $(info ! Building Harbour $(HB_VER_MAJOR).$(HB_VER_MINOR).$(HB_VER_RELEASE)$(HB_VER_STATUS) from source - http://harbour-project.org)
    $(info ! MAKE: $(MAKE) $(MAKE_VERSION) $(SHELL) $(HB_MAKECMDGOALS) $(MAKEFLAGS) $(if $(MAKESHELL),MAKESHELL: $(MAKESHELL),))
    ifneq ($(HB_USER_PRGFLAGS),)
@@ -418,7 +410,7 @@ ifeq ($(HB_HOST_PLAT),)
       HB_HOST_PLAT := win
       ifeq ($(OS),)
          HB_HOST_PLAT_WIN9X := yes
-         ifeq ($(HB_BIN_COMPILE),)
+         ifeq ($(HB_HOST_BIN),)
             ifneq ($(HB_BUILD_UNICODE),no)
                export HB_BUILD_UNICODE := no
                $(info ! Win9x/ME host detected: HB_BUILD_UNICODE forced to 'no')
@@ -633,8 +625,8 @@ ifeq ($(HB_COMPILER),)
                HB_COMP_PATH := $(dir $(HB_CCPATH))
                HB_COMPILER := mingw
                HB_PLATFORM := win
-               ifeq ($(HB_TOOLS_PREF),)
-                  export HB_TOOLS_PREF := hbw
+               ifeq ($(HB_HBPREFIX),)
+                  export HB_HBPREFIX := win-
                endif
                export HB_BUILD_EXTDEF := no
                ifneq ($(HB_BUILD_PARTS),all)
@@ -698,8 +690,8 @@ ifeq ($(HB_COMPILER),)
             ifneq ($(HB_CCPATH)$(HB_CCPREFIX),)
                HB_COMP_PATH := $(dir $(HB_CCPATH))
                HB_PLATFORM := wce
-               ifeq ($(HB_TOOLS_PREF),)
-                  export HB_TOOLS_PREF := hbce
+               ifeq ($(HB_HBPREFIX),)
+                  export HB_HBPREFIX := wce-
                endif
                export HB_BUILD_EXTDEF := no
                ifneq ($(HB_BUILD_PARTS),all)
@@ -740,8 +732,8 @@ ifeq ($(HB_COMPILER),)
             ifneq ($(HB_CCPATH)$(HB_CCPREFIX),)
                HB_COMP_PATH := $(dir $(HB_CCPATH))
                HB_PLATFORM := dos
-               ifeq ($(HB_TOOLS_PREF),)
-                  export HB_TOOLS_PREF := hbdos
+               ifeq ($(HB_HBPREFIX),)
+                  export HB_HBPREFIX := dos-
                endif
                export HB_BUILD_EXTDEF := no
                ifneq ($(HB_BUILD_PARTS),all)
@@ -1290,7 +1282,7 @@ DFLAGS :=
 
 HB_CROSS_BUILD :=
 ifneq ($(HB_HOST_PLAT)$(HB_HOST_CPU),$(HB_PLATFORM)$(HB_CPU))
-   ifeq ($(HB_BIN_COMPILE),)
+   ifeq ($(HB_HOST_BIN),)
       # Not required in these combinations: [vszakats]
       # 'Same platform, x86_64 host, x86 target'
       ifneq ($(HB_HOST_PLAT)-$(HB_HOST_CPU)-$(HB_CPU),$(HB_PLATFORM)-x86_64-x86)
@@ -1303,26 +1295,26 @@ ifneq ($(HB_HOST_PLAT)$(HB_HOST_CPU),$(HB_PLATFORM)$(HB_CPU))
             else
                _HB_ROOT_BIN := $(TOP)$(ROOT)
             endif
-            HB_BIN_COMPILE := $(dir $(firstword $(wildcard $(_HB_ROOT_BIN)bin/$(HB_HOST_PLAT)/*/harbour$(HB_HOST_BIN_EXT))))
-            ifneq ($(HB_BIN_COMPILE),)
+            HB_HOST_BIN := $(dir $(firstword $(wildcard $(_HB_ROOT_BIN)bin/$(HB_HOST_PLAT)/*/harbour$(HB_HOST_BIN_EXT))))
+            ifneq ($(HB_HOST_BIN),)
                ifeq ($(HB_SRC_ROOTPATH),)
-                  HB_BIN_COMPILE := $(realpath $(HB_BIN_COMPILE))
+                  HB_HOST_BIN := $(realpath $(HB_HOST_BIN))
                endif
             else
                # Look in PATH
-               HB_BIN_COMPILE := $(dir $(call find_in_path,harbour))
+               HB_HOST_BIN := $(dir $(call find_in_path,harbour))
             endif
-            ifeq ($(HB_BIN_COMPILE),)
-               $(warning ! Warning: HB_BIN_COMPILE not specified. Could not find native build.)
+            ifeq ($(HB_HOST_BIN),)
+               $(warning ! Warning: HB_HOST_BIN not specified. Could not find host native build.)
             else
-               $(info ! HB_BIN_COMPILE not specified. Automatically set to: $(HB_BIN_COMPILE))
+               $(info ! HB_HOST_BIN not specified. Automatically set to: $(HB_HOST_BIN))
             endif
          endif
       endif
-      export HB_BIN_COMPILE
+      export HB_HOST_BIN
    else
       ifeq ($(HB_INIT_DONE),)
-         $(info ! HB_BIN_COMPILE: $(HB_BIN_COMPILE))
+         $(info ! HB_HOST_BIN: $(HB_HOST_BIN))
       endif
       HB_CROSS_BUILD := yes
    endif
@@ -1671,14 +1663,14 @@ endif
 
 export HB_OBJ_DIR := $(subst /,$(DIRSEP),$(OBJ_DIR))
 
-ifeq ($(HB_BIN_COMPILE),)
+ifeq ($(HB_HOST_BIN),)
    HB_HOST_BIN_DIR := $(BIN_DIR)
 else
-   HB_HOST_BIN_DIR := $(HB_BIN_COMPILE)
+   HB_HOST_BIN_DIR := $(HB_HOST_BIN)
 endif
 
-ifeq ($(HB_INC_COMPILE),)
-   HB_INC_COMPILE := $(TOP)$(ROOT)include
+ifeq ($(HB_HOST_INC),)
+   HB_HOST_INC := $(TOP)$(ROOT)include
 endif
 
 ifeq ($(HB_INIT_DONE),)

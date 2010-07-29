@@ -82,7 +82,7 @@ unset HB_BUILD_CONTRIBS
 
 export HB_BUILD_PARTS=lib
 export HB_PLATFORM=wce
-export HB_BIN_COMPILE="$(pwd)/bin/linux/gcc"
+export HB_HOST_BIN="$(pwd)/bin/linux/gcc"
 
 make %{?_smp_mflags}
 
@@ -98,7 +98,7 @@ unset HB_COMPILER
 
 export HB_BUILD_PARTS=lib
 export HB_PLATFORM=wce
-export HB_BIN_COMPILE="$(pwd)/bin/linux/gcc"
+export HB_HOST_BIN="$(pwd)/bin/linux/gcc"
 
 export HB_INSTALL_BIN=$RPM_BUILD_ROOT/%{_bindir}
 export HB_INSTALL_INC=$RPM_BUILD_ROOT/%{_includedir}/%{name}

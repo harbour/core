@@ -48,7 +48,7 @@ CFLAGS += -t$(_DIAB_CPU):rtp -WDVSB_DIR=$(WIND_BASE)/target/lib
 LDFLAGS += -t$(_DIAB_CPU):rtp -WDVSB_DIR=$(WIND_BASE)/target/lib
 DFLAGS += -t$(_DIAB_CPU):rtp -WDVSB_DIR=$(WIND_BASE)/target/lib
 
-CFLAGS += -I. -I$(HB_INC_COMPILE)
+CFLAGS += -I. -I$(HB_HOST_INC)
 CFLAGS += -I$(WIND_BASE)/target/usr/h
 CFLAGS += -I$(WIND_BASE)/target/usr/h/wrn/coreip
 CFLAGS += -D_VX_CPU=$(_HB_VXCPU)

@@ -20,7 +20,7 @@ CC_IN := -c
 #       Now solved with '$(subst x,x, )' expression.
 CC_OUT := -o$(subst x,x, )
 
-CFLAGS += -I. -I$(HB_INC_COMPILE)
+CFLAGS += -I. -I$(HB_HOST_INC)
 
 # -no-cpp-precomp prevents from using buggy precompiled headers
 # CFLAGS += -no-cpp-precomp

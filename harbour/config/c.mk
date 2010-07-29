@@ -13,7 +13,7 @@ ifdef YACC_SOURCE
    YACC_H := y_tab.h
    YACC_OUTPUT := $(YACC_C:.c=.out)
    YACC_OBJ := $(YACC_C:.c=$(OBJ_EXT))
-   YACC_HB_H := $(foreach h, $(YACC_HEADERS), $(HB_INC_COMPILE)/$(h))
+   YACC_HB_H := $(foreach h, $(YACC_HEADERS), $(HB_HOST_INC)/$(h))
    ifneq ($(YACC_DEPEND),)
       $(foreach f, $(YACC_DEPEND), $(f:.c=$(OBJ_EXT))) : $(YACC_C)
    endif

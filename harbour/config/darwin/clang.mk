@@ -22,7 +22,7 @@ endif
 # NOTE: Works also without the ending space after -o.
 CC_OUT := -o$(subst x,x, )
 
-CFLAGS += -I. -I$(HB_INC_COMPILE)
+CFLAGS += -I. -I$(HB_HOST_INC)
 
 # -fno-common enables building .dylib files
 CFLAGS += -fno-common

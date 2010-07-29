@@ -733,7 +733,7 @@ HARBOUR
 
    Point this envvar to the directory where native Harbour executables
    for your host platform can be found:
-      HB_BIN_COMPILE=<HARBOUR_NATIVE_BUILD_DIR>\bin
+      HB_HOST_BIN=<HARBOUR_NATIVE_BUILD_DIR>\bin
 
    If you leave this value empty, the make system will try to autodetect it,
    so in practice all you have to do is to create a native build first (no
@@ -1182,7 +1182,7 @@ HARBOUR
       local directory and start over. See HOW TO GET THE HARBOUR SOURCES
       section for instructions to get the source.
    4. If you are doing a cross-build, make sure to have rebuilt the native
-      Harbour executables for your host platform. See 'HB_BIN_COMPILE'
+      Harbour executables for your host platform. See 'HB_HOST_BIN'
       build messages to find their location.
    5. Keep your PATH clean from old, mixed compiler tools or other Harbour
       versions when building Harbour. The surest way to achieve this is to

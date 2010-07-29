@@ -28,7 +28,7 @@ else
 endif
 CC_OUT := -o
 
-CFLAGS += -I. -I$(HB_INC_COMPILE)
+CFLAGS += -I. -I$(HB_HOST_INC)
 
 ifneq ($(HB_BUILD_WARN),no)
    CFLAGS += -W -Wall

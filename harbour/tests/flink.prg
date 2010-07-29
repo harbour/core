@@ -14,20 +14,28 @@
 
 PROCEDURE Main()
 
-   hb_MemoWrit( "_hb_h.txt", ">h.txt<" )
+   hb_MemoWrit( "_hb_h.tmp", ">h.tmp<" )
 
    ? HB_FLINK()
-   ? FERROR(), DOSERROR()
+   ? FERROR()
 
-   ? HB_FLINK( "_hb_h.txt", "_hb_hlnk.txt" )
-   ? FERROR(), DOSERROR()
+   ? HB_FLINK( "_hb_h.tmp", "_hb_hlnk.tmp" )
+   ? FERROR()
 
-   hb_MemoWrit( "_hb_s.txt", ">s.txt<" )
+   hb_MemoWrit( "_hb_s.tmp", ">s.tmp<" )
+
+   /* Requires special rights on Windows system,
+      by default Administrators are allowed. */
 
    ? HB_FLINKSYM()
-   ? FERROR(), DOSERROR()
+   ? FERROR()
 
-   ? HB_FLINKSYM( "_hb_s.txt", "_hb_slnk.txt" )
-   ? FERROR(), DOSERROR()
+   ? HB_FLINKSYM( "_hb_s.tmp", "_hb_slnk.tmp" )
+   ? FERROR()
+
+   MakeDir( "_hb_d" )
+
+   ? HB_FLINKSYM( "_hb_d.tmp", "_hb_dlnk.tmp" )
+   ? FERROR()
 
    RETURN

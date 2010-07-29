@@ -14,7 +14,7 @@ CC := bcc32.exe
 CC_IN := -c
 CC_OUT := -o
 
-CFLAGS += -I. -I$(HB_INC_COMPILE)
+CFLAGS += -I. -I$(HB_HOST_INC)
 
 CFLAGS += -q -tWM -CP437
 

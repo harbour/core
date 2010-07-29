@@ -14,7 +14,7 @@ CC := pocc.exe
 CC_IN := -c
 CC_OUT := -Fo
 
-CFLAGS += -I. -I$(HB_INC_COMPILE)
+CFLAGS += -I. -I$(HB_HOST_INC)
 # Required by pocc Windows headers
 CFLAGS += -D_WINCE
 

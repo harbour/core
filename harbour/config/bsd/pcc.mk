@@ -16,7 +16,7 @@ CC := $(HB_CCACHE) $(HB_CCPREFIX)$(HB_CMP)$(HB_CCPOSTFIX)
 CC_IN := -c
 CC_OUT := -o$(subst x,x, )
 
-CFLAGS += -I. -I$(HB_INC_COMPILE) -fpic
+CFLAGS += -I. -I$(HB_HOST_INC) -fpic
 
 # Warning and optimization options are not stable yet
 #ifneq ($(HB_BUILD_WARN),no)

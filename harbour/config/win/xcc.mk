@@ -14,7 +14,7 @@ CC := xCC.exe
 CC_IN := -c
 CC_OUT := -Fo
 
-CFLAGS += -I. -I$(HB_INC_COMPILE) -I$(TOP). -I$(TOP)..
+CFLAGS += -I. -I$(HB_HOST_INC) -I$(TOP). -I$(TOP)..
 ifeq ($(HB_SHELL),sh)
    CFLAGS := $(subst /,\\,$(CFLAGS))
 else

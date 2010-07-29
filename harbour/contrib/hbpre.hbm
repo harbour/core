@@ -2,6 +2,8 @@
 # $Id$
 #
 
+# These may be overridden by local project options.
+
 -q0
 
 {HB_BUILD_VERBOSE}-quiet-

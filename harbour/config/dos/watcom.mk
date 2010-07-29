@@ -42,7 +42,7 @@ ifneq ($(HB_BUILD_OPTIM),no)
    endif
 endif
 
-CFLAGS += -i. -i$(HB_INC_COMPILE)
+CFLAGS += -i. -i$(HB_HOST_INC)
 
 ifeq ($(HB_BUILD_DEBUG),yes)
    CFLAGS += -d2
