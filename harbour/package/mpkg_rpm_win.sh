@@ -56,9 +56,8 @@ fi
 HB_CCPREFIX="$TARGET-"
 HB_CCPATH="$MINGW_DIR/bin"
 
-
 cd `dirname $0`
-. package/mpkg_ver.sh
+. ./mpkg_ver.sh
 hb_ver=`get_hbver`
 hb_verstat=`get_hbverstat`
 [ -n "${hb_verstat}" ] || hb_verstat="0"
@@ -114,7 +113,7 @@ then
           -e "s|^%define releasen .*$|%define releasen  ${hb_verstat}|g" \
           -e "s|^%define hb_ccpath .*$|%define hb_ccpath ${HB_CCPATH}|g" \
           -e "s|^%define hb_ccpref .*$|%define hb_ccpref ${HB_CCPREFIX}|g" \
-         package/harbour-win.spec > ${RPMDIR}/SPECS/harbour-win.spec
+         harbour-win.spec > ${RPMDIR}/SPECS/harbour-win.spec
       if which rpmbuild >/dev/null 2>&1
       then
          RPMBLD="rpmbuild"

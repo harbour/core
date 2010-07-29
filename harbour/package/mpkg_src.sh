@@ -24,8 +24,9 @@ hb_currdir=`pwd`
 
 hb_archopt="-czf"
 [ -n "${hb_ext}" ] || hb_ext=".tar.gz"
-if [ -f package/mpkg_ver.sh ]; then
-   hb_rootdir="."
+
+if [ -f mpkg_ver.sh ]; then
+   hb_rootdir=".."
 else
    hb_rootdir=`dirname $0`
 fi
@@ -102,3 +103,5 @@ else
    (cd "$hb_rootdir";$hb_archbin $hb_archopt $hb_filename --files-from "$hb_flst")
 fi
 [ "$hb_rmflst" != "yes" ] || rm -fR "$hb_rootdir/$hb_flst"
+
+cd "$hb_currdir"

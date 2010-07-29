@@ -238,7 +238,7 @@ HARBOUR
    Binary .rpm on Linux
    --------------------
 
-      $ ./mpkg_rpm.sh
+      $ package/mpkg_rpm.sh
 
       You can fine-tune the build with these options:
          --with static      - link all binaries with static libs
@@ -266,9 +266,9 @@ HARBOUR
    -----------------------------------
 
       for Windows:
-         $ ./mpkg_rpm_win.sh
+         $ package/mpkg_rpm_win.sh
       for Windows CE:
-         $ ./mpkg_rpm_wce.sh
+         $ package/mpkg_rpm_wce.sh
 
    Binary .zip + .exe on Windows for all targets (except Linux)
    ------------------------------------------------------------

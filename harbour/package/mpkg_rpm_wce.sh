@@ -36,7 +36,7 @@ get_rpmmacro()
 }
 
 cd `dirname $0`
-. package/mpkg_ver.sh
+. ./mpkg_ver.sh
 hb_ver=`get_hbver`
 hb_verstat=`get_hbverstat`
 [ -n "${hb_verstat}" ] || hb_verstat="0"
@@ -90,7 +90,7 @@ then
       mv ${hb_filename} ${RPMDIR}/SOURCES/
       sed -e "s/^%define version .*$/%define version   ${hb_ver}/g" \
           -e "s/^%define releasen .*$/%define releasen  ${hb_verstat}/g" \
-         package/harbour-wce.spec > ${RPMDIR}/SPECS/harbour-wce.spec
+         harbour-wce.spec > ${RPMDIR}/SPECS/harbour-wce.spec
       if which rpmbuild >/dev/null 2>&1
       then
          RPMBLD="rpmbuild"

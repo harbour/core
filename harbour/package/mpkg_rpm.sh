@@ -150,6 +150,7 @@ done
 
 if [ -z "${TOINST_LST}" ] || [ "${FORCE}" = "yes" ]
 then
+   cd `dirname $0`
    . ./mpkg_src.sh
    stat="$?"
    if [ -z "${hb_filename}" ]
@@ -173,7 +174,7 @@ then
       fi
 
       cp ${hb_filename} ${RPMDIR}/SOURCES/
-      cp package/harbour.spec ${RPMDIR}/SPECS/
+      cp harbour.spec ${RPMDIR}/SPECS/
 
       if which rpmbuild >/dev/null 2>&1
       then
