@@ -70,6 +70,20 @@ HB_SIZE hb_AtSkipStrings( const char * szSub, HB_SIZE nSubLen, const char * szTe
 
       while( nPos < nLen && nSubPos < nSubLen )
       {
+         if( szText[ nPos + 1 ] == '"' && ( szText[ nPos ] == 'e' || szText[ nPos ] == 'E' ) )
+         {
+            nPos++;
+
+            while( ++nPos < nLen && ( szText[ nPos ] != '"' || szText[ nPos - 1 ] == '\\' ) )
+            {
+               /* Skip. */
+            }
+
+            nPos++;
+            nSubPos = 0;
+            continue;
+         }
+
          if( szText[ nPos ] == '"' && szSub[ 0 ] != '"' )
          {
             while( ++nPos < nLen && szText[ nPos ] != '"' )

@@ -17,6 +17,7 @@ echo.> _hbfiles
 echo "hb21\RELNOTES"                              >> _hbfiles
 echo "hb21\INSTALL"                               >> _hbfiles
 echo "hb21\COPYING"                               >> _hbfiles
+echo "hb21\NEWS"                                  >> _hbfiles
 echo "hb21\TODO"                                  >> _hbfiles
 echo "hb21\ChangeLog*"                            >> _hbfiles
 echo "hb21\bin\harbour-20.dll"                    >> _hbfiles

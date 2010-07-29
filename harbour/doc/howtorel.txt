@@ -17,7 +17,7 @@ By Przemyslaw Czerpak (druzus/at/priv.onet.pl)
 2. Update files which contain harbour release number. Now these are:
     harbour.spec
     include/hbver.h
-3. Set proper release date in whatsnew.txt and if necessary update
+3. Set proper release date in NEWS and if necessary update
    release informations. Also add the exact tag name to this file,
    for example "tag: build46".
 4. Update ChangeLog file and commit your modifications.
@@ -40,4 +40,3 @@ tagged as new release. The first commit after cvs tagging should also
 change the version number and ChangeLog IDs in harbour.spec and
 include/hbver.h for easier locating possible mistakes when release
 binaries are created.
-

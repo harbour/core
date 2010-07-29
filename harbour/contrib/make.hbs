@@ -76,7 +76,7 @@ PROCEDURE Main( ... )
    s_cRoot := s_cHome + "../"
 
    #if defined( __HBSCRIPT__HBRUN )
-      s_cBinDir := PathSepToSelf( GetEnv( "__HBRUN__DIRBASE" ) )
+      s_cBinDir := hbrun_DirBase()
    #else
       s_cBinDir := hb_DirBase()
    #endif

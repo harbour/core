@@ -443,7 +443,7 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root,755)
 %doc ChangeLog*
-%doc doc/*.txt
+%doc doc/*
 
 %dir %{hb_etcdir}
 %verify(not md5 mtime) %config %{hb_etcdir}/hb-charmap.def

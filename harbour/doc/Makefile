@@ -29,7 +29,6 @@ DOC_FILES := \
    tracing.txt \
    transfrm.txt \
    vm.txt \
-   whatsnew.txt \
    windll.txt \
 
 include $(TOP)$(ROOT)config/doc.mk

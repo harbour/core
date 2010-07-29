@@ -1498,11 +1498,13 @@ else
          HB_INSTALL_PREFIX := /boot/common
       else
       ifeq ($(HB_PLATFORM_UNIX),)
-         ifneq ($(HB_SRC_ROOTPATH),)
-            HB_INSTALL_PREFIX := $(HB_SRC_ROOTPATH)
-         else
-            HB_INSTALL_PREFIX := $(realpath $(TOP)$(ROOT))
-         endif
+         # Do nothing. There was logic which set the install dir to
+         # the root of the source tree, but in practice it often caused
+         # build breakage because of old contrib headers being installed
+         # into central header dir and picked up instead of current ones
+         # inside contrib directories. Anyways with recent Harbour there
+         # no pressing need to use 'install', so I've removed this
+         # defaulting logic. [vszakats]
       else
       ifneq ($(PREFIX),)
          HB_INSTALL_PREFIX := $(PREFIX)

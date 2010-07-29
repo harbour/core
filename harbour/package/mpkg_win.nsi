@@ -78,6 +78,7 @@ Section "Main components" hb_main
 
   File /nonfatal "$%HB_INSTALL_PREFIX%\COPYING"
   File /nonfatal "$%HB_INSTALL_PREFIX%\INSTALL"
+  File /nonfatal "$%HB_INSTALL_PREFIX%\NEWS"
   File /nonfatal "$%HB_INSTALL_PREFIX%\TODO"
   ; Let it work also for DOS packages where short filename is used here
   File /nonfatal "$%HB_INSTALL_PREFIX%\Change*"

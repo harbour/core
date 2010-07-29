@@ -18,7 +18,7 @@ harbour (2.0.0beta1-1) unstable; urgency=low
 
 harbour (1.0.1-1) unstable; urgency=low
 
-  * Please see doc/whatsnew.txt
+  * Please see NEWS
 
  -- Viktor Szakats <harbour___@syenar.hu>  Tue, 16 Sep 2008 14:54:38 +0200
 

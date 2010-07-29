@@ -143,7 +143,6 @@ PROCEDURE _APPMAIN( cFile, ... )
                      ENDIF
                   OTHERWISE
                      s_cDirBase := hb_DirBase()
-                     hb_setenv( "__HBRUN__DIRBASE", s_cDirBase )
                      hb_argShift( .T. )
                      hb_hrbRun( cFile, ... )
                      EXIT
@@ -156,6 +155,7 @@ PROCEDURE _APPMAIN( cFile, ... )
 
    RETURN
 
+/* Public hbrun API */
 FUNCTION hbrun_DirBase()
    RETURN s_cDirBase
 

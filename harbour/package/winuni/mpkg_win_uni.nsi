@@ -92,6 +92,7 @@ Section "Main components" hb_main
 
   File /nonfatal "$%HB_ROOT%hb21\INSTALL"
   File /nonfatal "$%HB_ROOT%hb21\COPYING"
+  File /nonfatal "$%HB_ROOT%hb21\NEWS"
   File /nonfatal "$%HB_ROOT%hb21\TODO"
   File /nonfatal "$%HB_ROOT%hb21\ChangeLog*"
 
