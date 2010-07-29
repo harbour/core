@@ -332,19 +332,30 @@ METHOD IdeSkeletons:selectByMenuAndPostText( qEdit )
 
    IF !empty( ::aSkltns )
       qCursor := QTextCursor():from( qEdit:textCursor() )
-      qRect   := QRect():from( qEdit:cursorRect( qCursor ) )
 
-      qMenu := QMenu():new( qEdit )
-      FOR EACH a_ IN ::aSkltns
-         qMenu:addAction( a_[ 1 ] )
-      NEXT
+      /* Look for if a macro is executed */
+      qCursor:select( QTextCursor_WordUnderCursor )
+      cText := qCursor:selectedText()
+      IF !empty( cText ) .AND. ascan( ::aSkltns, {|e_| e_[ 1 ] == cText } ) > 0
+         qCursor:insertText( "" )
+         qEdit:setTextCursor( qCursor )
+         ::postText( qEdit, ::getText( cText  ) )
 
-      pAct := qMenu:exec_1( qEdit:mapToGlobal( QPoint():new( qRect:x(), qRect:y() ) ) )
-      IF !hbqt_isEmptyQtPointer( pAct )
-         qAct  := QAction():from( pAct )
+      ELSE
+         qRect := QRect():from( qEdit:cursorRect( qCursor ) )
 
-         IF !empty( cText := ::getText( qAct:text() ) )
-            ::postText( qEdit, cText )
+         qMenu := QMenu():new( qEdit )
+         FOR EACH a_ IN ::aSkltns
+            qMenu:addAction( a_[ 1 ] )
+         NEXT
+
+         pAct := qMenu:exec_1( qEdit:mapToGlobal( QPoint():new( qRect:x(), qRect:y() ) ) )
+         IF !hbqt_isEmptyQtPointer( pAct )
+            qAct  := QAction():from( pAct )
+
+            IF !empty( cText := ::getText( qAct:text() ) )
+               ::postText( qEdit, cText )
+            ENDIF
          ENDIF
       ENDIF
    ENDIF

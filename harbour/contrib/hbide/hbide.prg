@@ -426,7 +426,7 @@ METHOD HbIde:create( aParams )
    /* Load Code Skeletons */
    hbide_loadSkltns( Self )
 
-   /* Set Codec at the Begining */
+   /* Set Codec at the Begining - no interface display */
    HbXbp_SetCodec( ::cWrkCodec )
 
    /* Load IDE|User defined Themes */
@@ -484,8 +484,9 @@ METHOD HbIde:create( aParams )
    /* Restore Settings */
    hbide_restSettings( Self )
    /* Again to be displayed in Statusbar */
-   HbXbp_SetCodec( ::cWrkCodec )
-   ::oDK:setStatusText( SB_PNL_CODEC, ::cWrkCodec )
+   //HbXbp_SetCodec( ::cWrkCodec )
+   //::oDK:setStatusText( SB_PNL_CODEC, ::cWrkCodec )
+   ::setCodec( ::cWrkCodec )
    ::oDK:setStatusText( SB_PNL_THEME, ::cWrkTheme )
 
    /* Display cWrkEnvironment in StatusBar */

@@ -2394,6 +2394,8 @@ FUNCTION hbide_isIndentableKeyword( cWord, oIde )
 FUNCTION hbide_isHarbourKeyword( cWord, oIde )
    STATIC s_b_ := { ;
                     'function' => NIL,;
+                    'procedure' => NIL,;
+                    'thread' => NIL,;
                     'return' => NIL,;
                     'request' => NIL,;
                     'static' => NIL,;

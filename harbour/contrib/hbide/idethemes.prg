@@ -173,7 +173,7 @@ METHOD IdeThemes:create( oIde, cThemesFile )
    aadd( ::aPatterns, { "PreprocessorDirectives", s, .f. } )
 
    /* Harbour Keywords */
-   b_:= { 'function','return','static','local','default', ;
+   b_:= { 'function','procedure','thread','return','static','local','default', ;
           'if','else','elseif','endif','end', ;
           'docase','case','endcase','otherwise', ;
           'switch','endswitch', ;
