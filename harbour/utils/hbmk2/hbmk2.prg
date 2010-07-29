@@ -6817,7 +6817,7 @@ STATIC FUNCTION dep_evaluate( hbmk )
 /* Try '*-config' and 'pkg-config *' detection */
 STATIC FUNCTION dep_try_pkg_detection( hbmk, dep )
    LOCAL cStdOut
-   LOCAL cErrOut
+   LOCAL cStdErr
    LOCAL cItem
 
    LOCAL tmp
@@ -6833,20 +6833,20 @@ STATIC FUNCTION dep_try_pkg_detection( hbmk, dep )
             cName := AllTrim( cName )
 
             cStdOut := ""
-            hb_processRun( "pkg-config --modversion --libs --cflags " + cName,, @cStdOut, @cErrOut )
+            hb_processRun( "pkg-config --modversion --libs --cflags " + cName,, @cStdOut, @cStdErr )
             IF Empty( cStdOut )
-               hb_processRun( cName + "-config --version --libs --cflags",, @cStdOut, @cErrOut )
+               hb_processRun( cName + "-config --version --libs --cflags",, @cStdOut, @cStdErr )
             ENDIF
 #if defined( __PLATFORM__DARWIN )
             /* DarwinPorts */
             IF Empty( cStdOut )
                IF hb_FileExists( "/opt/local/bin/pkg-config" )
-                  hb_processRun( "/opt/local/bin/pkg-config --modversion --libs --cflags " + cName,, @cStdOut, @cErrOut )
+                  hb_processRun( "/opt/local/bin/pkg-config --modversion --libs --cflags " + cName,, @cStdOut, @cStdErr )
                ENDIF
             ENDIF
             IF Empty( cStdOut )
                IF hb_FileExists( "/opt/local/bin/" + cName + "-config" )
-                  hb_processRun( "/opt/local/bin/" + cName + "-config --version --libs --cflags",, @cStdOut, @cErrOut )
+                  hb_processRun( "/opt/local/bin/" + cName + "-config --version --libs --cflags",, @cStdOut, @cStdErr )
                ENDIF
             ENDIF
 #endif
@@ -6862,8 +6862,15 @@ STATIC FUNCTION dep_try_pkg_detection( hbmk, dep )
                ENDIF
 
                FOR EACH cItem IN hb_ATokens( cStdOut,, .T. )
-                  IF ! Empty( cItem )
+                  IF Left( cItem, Len( "-I" ) ) == "-I"
                      dep[ _HBMKDEP_lFound ] := .T.
+                     EXIT
+                  ENDIF
+               NEXT
+
+               IF dep[ _HBMKDEP_lFound ]
+
+                  FOR EACH cItem IN hb_ATokens( cStdOut,, .T. )
                      DO CASE
                      CASE Left( cItem, Len( "-l" ) ) == "-l"
                         cItem := SubStr( cItem, Len( "-l" ) + 1 )
@@ -6882,9 +6889,8 @@ STATIC FUNCTION dep_try_pkg_detection( hbmk, dep )
                         ENDIF
                         AAdd( hbmk[ _HBMK_aINCPATH ], cItem )
                      ENDCASE
-                  ENDIF
-               NEXT
-               IF dep[ _HBMKDEP_lFound ]
+                  NEXT
+
                   dep[ _HBMKDEP_cVersion ] := cVersion
                   dep[ _HBMKDEP_cFound ] := iif( Empty( cIncludeDir ), "(system)", cIncludeDir )
                   IF ! Empty( cIncludeDir )
