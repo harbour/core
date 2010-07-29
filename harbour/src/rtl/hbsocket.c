@@ -2117,11 +2117,6 @@ int hb_socketBind( HB_SOCKET sd, const void * pSockAddr, unsigned uiLen )
 {
    int ret;
 
-   /* it allows to reuse port immediately without timeout used to
-    * clean all pending connections addressed to previous port owner
-    */
-   hb_socketSetReuseAddr( sd, HB_TRUE );
-
    ret = bind( sd, ( struct sockaddr * ) pSockAddr, ( socklen_t ) uiLen );
    hb_socketSetOsError( ret == 0 ? 0 : HB_SOCK_GETERROR() );
 
