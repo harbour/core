@@ -120,6 +120,9 @@ typedef struct _ADSXAREA_
 static HB_USHORT s_uiRddIdADSX    = ( HB_USHORT ) -1;
 static HB_USHORT s_uiRddIdADSNTXX = ( HB_USHORT ) -1;
 static HB_USHORT s_uiRddIdADSCDXX = ( HB_USHORT ) -1;
+#if ADS_LIB_VERSION >= 900
+static HB_USHORT s_uiRddIdADSVFPX = ( HB_USHORT ) -1;
+#endif
 static HB_USHORT s_uiRddIdADSADTX = ( HB_USHORT ) -1;
 static RDDFUNCS adsxSuper;
 
@@ -812,6 +815,30 @@ static HB_ERRCODE adsxCreate( ADSXAREAP pArea, LPDBOPENINFO pCreateInfo )
 }
 
 
+static HB_ERRCODE adsxNewArea( ADSXAREAP pArea )
+{
+   HB_ERRCODE errCode;
+
+   errCode = SUPER_NEW( ( AREAP ) pArea );
+   if( errCode == HB_SUCCESS )
+   {
+      if( pArea->adsarea.area.rddID == s_uiRddIdADSADTX )
+         pArea->adsarea.iFileType = ADS_ADT;
+      else if( pArea->adsarea.area.rddID == s_uiRddIdADSNTXX )
+         pArea->adsarea.iFileType = ADS_NTX;
+      else if( pArea->adsarea.area.rddID == s_uiRddIdADSCDXX )
+         pArea->adsarea.iFileType = ADS_CDX;
+#if ADS_LIB_VERSION >= 900
+      else if( pArea->adsarea.area.rddID == s_uiRddIdADSVFPX )
+         pArea->adsarea.iFileType = ADS_VFP;
+#endif
+      pArea->adsarea.area.uiMaxFieldNameLength = ( pArea->adsarea.iFileType == ADS_ADT ) ?
+                                                 ADS_MAX_FIELD_NAME : ADS_MAX_DBF_FIELD_NAME;
+   }
+   return errCode;
+}
+
+
 static HB_ERRCODE adsxOpen( ADSXAREAP pArea, LPDBOPENINFO pOpenInfo )
 {
    if( SUPER_OPEN( ( AREAP ) pArea, pOpenInfo ) == HB_SUCCESS )
@@ -835,6 +862,45 @@ static HB_ERRCODE adsxStructSize( ADSXAREAP pArea, HB_USHORT* StructSize )
    HB_SYMBOL_UNUSED( pArea );
 
    * StructSize = sizeof( ADSXAREA );
+   return HB_SUCCESS;
+}
+
+
+static HB_ERRCODE adsxSysName( ADSXAREAP pArea, HB_BYTE * pBuffer )
+{
+   UNSIGNED16 u16TableType;
+   UNSIGNED32 u32RetVal;
+
+   if( pArea->adsarea.hTable )
+   {
+      u32RetVal = AdsGetTableType( pArea->adsarea.hTable, &u16TableType );
+      if( u32RetVal != AE_SUCCESS )
+      {
+         HB_TRACE(HB_TR_DEBUG, ("Error in adsxSysName: %lu  pArea->hTable %p\n", ( HB_ULONG ) u32RetVal, ( void * ) ( HB_PTRDIFF ) pArea->hTable));
+         u16TableType = ( UNSIGNED16 ) pArea->adsarea.iFileType;
+      }
+   }
+   else
+      u16TableType = ( UNSIGNED16 ) pArea->adsarea.iFileType;
+
+   switch( u16TableType )
+   {
+      case ADS_NTX:
+         hb_strncpy( ( char * ) pBuffer, "ADSNTXX", HB_RDD_MAX_DRIVERNAME_LEN );
+         break;
+      case ADS_CDX:
+         hb_strncpy( ( char * ) pBuffer, "ADSCDXX", HB_RDD_MAX_DRIVERNAME_LEN );
+         break;
+#if ADS_LIB_VERSION >= 900
+      case ADS_VFP:
+         hb_strncpy( ( char * ) pBuffer, "ADSVFPX", HB_RDD_MAX_DRIVERNAME_LEN );
+         break;
+#endif
+      case ADS_ADT:
+         hb_strncpy( ( char * ) pBuffer, "ADSADTX", HB_RDD_MAX_DRIVERNAME_LEN );
+         break;
+   }
+
    return HB_SUCCESS;
 }
 
@@ -1342,11 +1408,11 @@ static RDDFUNCS adsxTable = { NULL,
                               ( DBENTRYP_V ) adsxClose,
                               ( DBENTRYP_VO ) adsxCreate,
                               NULL,
-                              NULL,
+                              ( DBENTRYP_V ) adsxNewArea,
                               ( DBENTRYP_VO ) adsxOpen,
                               NULL,
                               ( DBENTRYP_SP ) adsxStructSize,
-                              NULL,
+                              ( DBENTRYP_CP ) adsxSysName,
                               NULL,
                               NULL,
                               NULL,
@@ -1452,6 +1518,13 @@ HB_FUNC( ADSCDXX_GETFUNCTABLE )
 }
 
 
+#if ADS_LIB_VERSION >= 900
+HB_FUNC( ADSVFPX_GETFUNCTABLE )
+{
+   adsxRegisterRDD( &s_uiRddIdADSVFPX, "ADSVFP" );
+}
+#endif
+
 HB_FUNC( ADSADTX_GETFUNCTABLE )
 {
    adsxRegisterRDD( &s_uiRddIdADSADTX, "ADSADT" );
@@ -1461,6 +1534,9 @@ HB_FUNC( ADSADTX_GETFUNCTABLE )
 HB_FUNC( ADSX ) { ; }
 HB_FUNC( ADSNTXX ) { ; }
 HB_FUNC( ADSCDXX ) { ; }
+#if ADS_LIB_VERSION >= 900
+HB_FUNC( ADSVFPX ) { ; }
+#endif
 HB_FUNC( ADSADTX ) { ; }
 
 HB_FUNC_EXTERN( ADSCDX );
@@ -1472,17 +1548,26 @@ static void hb_adsxRddInit( void * cargo )
    if( hb_rddRegister( "ADSX",    RDT_FULL ) > 1 ||
        hb_rddRegister( "ADSNTXX", RDT_FULL ) > 1 ||
        hb_rddRegister( "ADSCDXX", RDT_FULL ) > 1 ||
+#if ADS_LIB_VERSION >= 900
+       hb_rddRegister( "ADSVFPX", RDT_FULL ) > 1 ||
+#endif
        hb_rddRegister( "ADSADTX", RDT_FULL ) > 1 )
    {
       /* try different RDD register order */
       hb_rddRegister( "ADS",    RDT_FULL );
       hb_rddRegister( "ADSNTX", RDT_FULL );
       hb_rddRegister( "ADSCDX", RDT_FULL );
+#if ADS_LIB_VERSION >= 900
+      hb_rddRegister( "ADSVFP", RDT_FULL );
+#endif
       hb_rddRegister( "ADSADT", RDT_FULL );
 
       if( hb_rddRegister( "ADSX",    RDT_FULL ) > 1 ||
           hb_rddRegister( "ADSNTXX", RDT_FULL ) > 1 ||
           hb_rddRegister( "ADSCDXX", RDT_FULL ) > 1 ||
+#if ADS_LIB_VERSION >= 900
+          hb_rddRegister( "ADSVFPX", RDT_FULL ) > 1 ||
+#endif
           hb_rddRegister( "ADSADTX", RDT_FULL ) > 1 )
       {
          hb_errInternal( HB_EI_RDDINVALID, NULL, NULL, NULL );
@@ -1499,6 +1584,10 @@ HB_INIT_SYMBOLS_BEGIN( adsx1__InitSymbols )
 { "ADSNTXX_GETFUNCTABLE", {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( ADSNTXX_GETFUNCTABLE )}, NULL },
 { "ADSCDXX",              {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( ADSCDXX )}, NULL },
 { "ADSCDXX_GETFUNCTABLE", {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( ADSCDXX_GETFUNCTABLE )}, NULL },
+#if ADS_LIB_VERSION >= 900
+{ "ADSVFPX",              {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( ADSVFPX )}, NULL },
+{ "ADSVFPX_GETFUNCTABLE", {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( ADSVFPX_GETFUNCTABLE )}, NULL },
+#endif
 { "ADSADTX",              {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( ADSADTX )}, NULL },
 { "ADSADTX_GETFUNCTABLE", {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( ADSADTX_GETFUNCTABLE )}, NULL }
 HB_INIT_SYMBOLS_END( adsx1__InitSymbols )

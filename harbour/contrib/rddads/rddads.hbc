@@ -7,4 +7,5 @@ skip={!(linux|win)}
 incpaths=.
 
 libs=${hb_name}
-libs=ace32
+{win}libs=ace32
+{linux}libs=ace
