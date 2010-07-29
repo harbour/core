@@ -108,7 +108,7 @@ static void hb_gencc_copyLocals( FILE * yyc, int iLocal1, int iLocal2 )
       fprintf( yyc, "\thb_xvmCopyLocals( %d, %d );\n", iLocal1, iLocal2 );
 }
 
-static int hb_gencc_checkJumpCondAhead( HB_ISIZ nValue, PFUNCTION pFunc, HB_SIZE nPCodePos, PHB_LABEL_INFO cargo,
+static int hb_gencc_checkJumpCondAhead( HB_LONG lValue, PFUNCTION pFunc, HB_SIZE nPCodePos, PHB_LABEL_INFO cargo,
                                         const char * szFunc )
 {
    if( HB_GENC_GETLABEL( nPCodePos + 1 ) == 0 )
@@ -155,101 +155,101 @@ static int hb_gencc_checkJumpCondAhead( HB_ISIZ nValue, PFUNCTION pFunc, HB_SIZE
 
       if( iSize )
       {
-         fprintf( cargo->yyc, "\tif( hb_xvm%sIntIs( %" HB_PFS "d, &fValue ) ) break;\n",
-                  szFunc, nValue );
+         fprintf( cargo->yyc, "\tif( hb_xvm%sIntIs( %ld, &fValue ) ) break;\n",
+                  szFunc, lValue );
          fprintf( cargo->yyc, "\tif( %sfValue )\n\t\tgoto lab%05" HB_PFS "d;\n",
                   fNot ? "!" : "", HB_GENC_GETLABEL( nPCodePos + 1 + nOffset ) );
          return iSize;
       }
    }
-   fprintf( cargo->yyc, "\tif( hb_xvm%sInt( %" HB_PFS "d ) ) break;\n",
-            szFunc, nValue );
+   fprintf( cargo->yyc, "\tif( hb_xvm%sInt( %ld ) ) break;\n",
+            szFunc, lValue );
    return 1;
 }
 
-static int hb_gencc_checkNumAhead( HB_ISIZ nValue, PFUNCTION pFunc, HB_SIZE nPCodePos, PHB_LABEL_INFO cargo )
+static int hb_gencc_checkNumAhead( HB_LONG lValue, PFUNCTION pFunc, HB_SIZE nPCodePos, PHB_LABEL_INFO cargo )
 {
    if( HB_GENC_GETLABEL( nPCodePos ) == 0 )
    {
       switch( pFunc->pCode[ nPCodePos ] )
       {
          case HB_P_POPLOCAL:
-            fprintf( cargo->yyc, "\thb_xvmLocalSetInt( %d, %" HB_PFS "d );\n",
+            fprintf( cargo->yyc, "\thb_xvmLocalSetInt( %d, %ld );\n",
                      HB_PCODE_MKSHORT( &pFunc->pCode[ nPCodePos + 1 ] ),
-                     nValue );
+                     lValue );
             return 3;
 
          case HB_P_POPLOCALNEAR:
-            fprintf( cargo->yyc, "\thb_xvmLocalSetInt( %d, %" HB_PFS "d );\n",
-                     ( signed char ) pFunc->pCode[ nPCodePos + 1 ], nValue );
+            fprintf( cargo->yyc, "\thb_xvmLocalSetInt( %d, %ld );\n",
+                     ( signed char ) pFunc->pCode[ nPCodePos + 1 ], lValue );
             return 2;
 
          case HB_P_EQUAL:
          case HB_P_EXACTLYEQUAL:
-            return hb_gencc_checkJumpCondAhead( nValue, pFunc, nPCodePos, cargo, "Equal" );
+            return hb_gencc_checkJumpCondAhead( lValue, pFunc, nPCodePos, cargo, "Equal" );
 
          case HB_P_NOTEQUAL:
-            return hb_gencc_checkJumpCondAhead( nValue, pFunc, nPCodePos, cargo, "NotEqual" );
+            return hb_gencc_checkJumpCondAhead( lValue, pFunc, nPCodePos, cargo, "NotEqual" );
 
          case HB_P_GREATER:
-            return hb_gencc_checkJumpCondAhead( nValue, pFunc, nPCodePos, cargo, "GreaterThen" );
+            return hb_gencc_checkJumpCondAhead( lValue, pFunc, nPCodePos, cargo, "GreaterThen" );
 
          case HB_P_GREATEREQUAL:
-            return hb_gencc_checkJumpCondAhead( nValue, pFunc, nPCodePos, cargo, "GreaterEqualThen" );
+            return hb_gencc_checkJumpCondAhead( lValue, pFunc, nPCodePos, cargo, "GreaterEqualThen" );
 
          case HB_P_LESS:
-            return hb_gencc_checkJumpCondAhead( nValue, pFunc, nPCodePos, cargo, "LessThen" );
+            return hb_gencc_checkJumpCondAhead( lValue, pFunc, nPCodePos, cargo, "LessThen" );
 
          case HB_P_LESSEQUAL:
-            return hb_gencc_checkJumpCondAhead( nValue, pFunc, nPCodePos, cargo, "LessEqualThen" );
+            return hb_gencc_checkJumpCondAhead( lValue, pFunc, nPCodePos, cargo, "LessEqualThen" );
 
          case HB_P_ARRAYPUSH:
-            if( nValue > 0 )
+            if( lValue > 0 )
             {
-               fprintf( cargo->yyc, "\tif( hb_xvmArrayItemPush( %" HB_PFS "d ) ) break;\n", nValue );
+               fprintf( cargo->yyc, "\tif( hb_xvmArrayItemPush( %ld ) ) break;\n", lValue );
                return 1;
             }
             break;
 
          case HB_P_ARRAYPOP:
-            if( nValue > 0 )
+            if( lValue > 0 )
             {
-               fprintf( cargo->yyc, "\tif( hb_xvmArrayItemPop( %" HB_PFS "d ) ) break;\n", nValue );
+               fprintf( cargo->yyc, "\tif( hb_xvmArrayItemPop( %ld ) ) break;\n", lValue );
                return 1;
             }
             break;
 
          case HB_P_MULT:
-            fprintf( cargo->yyc, "\tif( hb_xvmMultByInt( %" HB_PFS "d ) ) break;\n", nValue );
+            fprintf( cargo->yyc, "\tif( hb_xvmMultByInt( %ld ) ) break;\n", lValue );
             return 1;
 
          case HB_P_DIVIDE:
-            fprintf( cargo->yyc, "\tif( hb_xvmDivideByInt( %" HB_PFS "d ) ) break;\n", nValue );
+            fprintf( cargo->yyc, "\tif( hb_xvmDivideByInt( %ld ) ) break;\n", lValue );
             return 1;
 
          case HB_P_MODULUS:
-            fprintf( cargo->yyc, "\tif( hb_xvmModulusByInt( %" HB_PFS "d ) ) break;\n", nValue );
+            fprintf( cargo->yyc, "\tif( hb_xvmModulusByInt( %ld ) ) break;\n", lValue );
             return 1;
 
          case HB_P_MINUS:
-            if( nValue > 0 )
+            if( lValue > 0 )
             {
-               fprintf( cargo->yyc, "\tif( hb_xvmAddInt( -%" HB_PFS "d ) ) break;\n", nValue );
+               fprintf( cargo->yyc, "\tif( hb_xvmAddInt( -%ld ) ) break;\n", lValue );
                return 1;
             }
 #if -LONG_MAX > LONG_MIN
-            else if( nValue < -LONG_MAX )
+            else if( lValue < -LONG_MAX )
                break;
 #endif
-            nValue = -nValue;
+            lValue = -lValue;
             /* no break */
 
          case HB_P_PLUS:
-            fprintf( cargo->yyc, "\tif( hb_xvmAddInt( %" HB_PFS "d ) ) break;\n", nValue );
+            fprintf( cargo->yyc, "\tif( hb_xvmAddInt( %ld ) ) break;\n", lValue );
             return 1;
 
          case HB_P_RETVALUE:
-            fprintf( cargo->yyc, "\thb_xvmRetInt( %" HB_PFS "d );\n", nValue );
+            fprintf( cargo->yyc, "\thb_xvmRetInt( %ld );\n", lValue );
             return 1;
       }
    }
@@ -1238,18 +1238,18 @@ static HB_GENC_FUNC( hb_p_pushlocalref )
 
 static HB_GENC_FUNC( hb_p_pushlong )
 {
-   HB_ISIZ nVal = HB_PCODE_MKLONG( &pFunc->pCode[ nPCodePos + 1 ] ), iSkip;
+   HB_LONG lVal = HB_PCODE_MKLONG( &pFunc->pCode[ nPCodePos + 1 ] ), iSkip;
 
    HB_GENC_LABEL();
 
-   iSkip = hb_gencc_checkNumAhead( nVal, pFunc, nPCodePos + 5, cargo );
+   iSkip = hb_gencc_checkNumAhead( lVal, pFunc, nPCodePos + 5, cargo );
 
    if( iSkip == 0 )
    {
 #if INT_MAX >= INT32_MAX
-      fprintf( cargo->yyc, "\thb_xvmPushInteger( %d );\n", ( int ) nVal );
+      fprintf( cargo->yyc, "\thb_xvmPushInteger( %d );\n", ( int ) lVal );
 #else
-      fprintf( cargo->yyc, "\thb_xvmPushLong( %ldL );\n", ( long ) nVal );
+      fprintf( cargo->yyc, "\thb_xvmPushLong( %ldL );\n", lVal );
 #endif
    }
    return 5 + iSkip;

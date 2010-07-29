@@ -47,6 +47,9 @@
 %endif
 
 %define hb_ldconf %([ -d /etc/ld.so.conf.d ] && echo /etc/ld.so.conf.d)
+%if "%{hb_ldconf}" == ""
+%undefine hb_ldconf
+%endif
 
 %define name      harbour
 %define dname     Harbour
@@ -405,13 +408,14 @@ export LD_LIBRARY_PATH=$HB_INSTALL_LIB
 
 make install %{?_smp_mflags}
 
-[ "%{?_without_curses:1}" ] && rm -f $HB_INSTALL_LIB/libgtcrs.a
-[ "%{?_without_slang:1}" ] && rm -f $HB_INSTALL_LIB/libgtsln.a
-rm -f $HB_INSTALL_LIB/libbz2.a
-rm -f $HB_INSTALL_LIB/libjpeg.a
-rm -f $HB_INSTALL_LIB/liblibhpdf.a
-rm -f $HB_INSTALL_LIB/libpng.a
-rm -f $HB_INSTALL_LIB/libsqlite3.a
+%{?_without_curses:rm -f $HB_INSTALL_LIB/libgtcrs.a}
+%{?_without_slang:rm -f $HB_INSTALL_LIB/libgtsln.a}
+%{!?hb_ldconf:rm -fR $RPM_BUILD_ROOT/etc/ld.so.conf.d}
+rm -f $HB_INSTALL_LIB/libbz2.a \
+      $HB_INSTALL_LIB/libjpeg.a \
+      $HB_INSTALL_LIB/liblibhpdf.a \
+      $HB_INSTALL_LIB/libpng.a \
+      $HB_INSTALL_LIB/libsqlite3.a
 
 ######################################################################
 ## Post install
