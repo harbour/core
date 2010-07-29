@@ -285,10 +285,10 @@ REQUEST hbmk_KEYW
 #define _HBMK_aLIBCOREGT        9
 #define _HBMK_cGT               10
 
-#define _HBMK_cHB_BIN_INSTALL   11
-#define _HBMK_cHB_LIB_INSTALL   12
-#define _HBMK_cHB_DYN_INSTALL   13
-#define _HBMK_cHB_INC_INSTALL   14
+#define _HBMK_cHB_INSTALL_BIN   11
+#define _HBMK_cHB_INSTALL_LIB   12
+#define _HBMK_cHB_INSTALL_DYN   13
+#define _HBMK_cHB_INSTALL_INC   14
 
 #define _HBMK_lGUI              15
 #define _HBMK_lMT               16
@@ -674,11 +674,11 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    LOCAL l_cRESSTUB
 
    LOCAL l_cHB_INSTALL_PREFIX
-   LOCAL l_cHB_BIN_INSTALL
-   LOCAL l_cHB_LIB_INSTALL
-   LOCAL l_cHB_DYN_INSTALL
-   LOCAL l_cHB_INC_INSTALL
-   LOCAL l_cHB_ADD_INSTALL
+   LOCAL l_cHB_INSTALL_BIN
+   LOCAL l_cHB_INSTALL_LIB
+   LOCAL l_cHB_INSTALL_DYN
+   LOCAL l_cHB_INSTALL_INC
+   LOCAL l_cHB_INSTALL_ADD
 
    LOCAL l_aPRG_TODO
    LOCAL l_aC_TODO
@@ -1322,9 +1322,9 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
    IF hbmk[ _HBMK_nHBMODE ] != _HBMODE_RAW_C
 
-      l_cHB_BIN_INSTALL := PathSepToSelf( GetEnv( "HB_BIN_INSTALL" ) )
-      l_cHB_LIB_INSTALL := PathSepToSelf( GetEnv( "HB_LIB_INSTALL" ) )
-      l_cHB_INC_INSTALL := PathSepToSelf( GetEnv( "HB_INC_INSTALL" ) )
+      l_cHB_INSTALL_BIN := PathSepToSelf( GetEnv( "HB_INSTALL_BIN" ) )
+      l_cHB_INSTALL_LIB := PathSepToSelf( GetEnv( "HB_INSTALL_LIB" ) )
+      l_cHB_INSTALL_INC := PathSepToSelf( GetEnv( "HB_INSTALL_INC" ) )
 
       l_cHB_INSTALL_PREFIX := MacroProc( hbmk, PathSepToSelf( GetEnv( "HB_INSTALL_PREFIX" ) ), NIL, _MACRO_NO_PREFIX )
       IF Empty( l_cHB_INSTALL_PREFIX )
@@ -1357,32 +1357,32 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       IF hb_FileExists( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + "include" +;
                                        hb_ps() + iif( _HBMODE_IS_XHB( hbmk[ _HBMK_nHBMODE ] ), "xharbour", "harbour" ) +;
                                        hb_ps() + "hbvm.h" )
-         IF Empty( l_cHB_BIN_INSTALL )
-            l_cHB_BIN_INSTALL := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + "bin" )
+         IF Empty( l_cHB_INSTALL_BIN )
+            l_cHB_INSTALL_BIN := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + "bin" )
          ENDIF
-         IF Empty( l_cHB_LIB_INSTALL )
+         IF Empty( l_cHB_INSTALL_LIB )
             IF hb_DirExists( tmp := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + "lib64" + hb_ps() + iif( _HBMODE_IS_XHB( hbmk[ _HBMK_nHBMODE ] ), "xharbour", "harbour" ) ) )
-               l_cHB_LIB_INSTALL := tmp
+               l_cHB_INSTALL_LIB := tmp
             ELSE
-               l_cHB_LIB_INSTALL := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + "lib" + hb_ps() + iif( _HBMODE_IS_XHB( hbmk[ _HBMK_nHBMODE ] ), "xharbour", "harbour" ) )
+               l_cHB_INSTALL_LIB := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + "lib" + hb_ps() + iif( _HBMODE_IS_XHB( hbmk[ _HBMK_nHBMODE ] ), "xharbour", "harbour" ) )
             ENDIF
          ENDIF
-         IF Empty( l_cHB_INC_INSTALL )
-            l_cHB_INC_INSTALL := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + "include" + hb_ps() + iif( _HBMODE_IS_XHB( hbmk[ _HBMK_nHBMODE ] ), "xharbour", "harbour" ) )
+         IF Empty( l_cHB_INSTALL_INC )
+            l_cHB_INSTALL_INC := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + "include" + hb_ps() + iif( _HBMODE_IS_XHB( hbmk[ _HBMK_nHBMODE ] ), "xharbour", "harbour" ) )
          ENDIF
       ENDIF
 
       #if defined( __PLATFORM__UNIX )
          /* Detect system locations to enable shared library option by default */
          IF hbmk[ _HBMK_cPLAT ] == "beos"
-            lSysLoc := LEFTEQUAL( l_cHB_BIN_INSTALL, "/boot/common"      ) .OR. ;
-                       LEFTEQUAL( l_cHB_BIN_INSTALL, "/boot/system"      ) .OR. ;
-                       LEFTEQUAL( l_cHB_BIN_INSTALL, "/boot/home/config" ) .OR. ;
-                       AScan( ListToArray( GetEnv( "LIBRARY_PATH" ), ":" ), {| tmp | LEFTEQUAL( l_cHB_LIB_INSTALL, tmp ) } ) > 0
+            lSysLoc := LEFTEQUAL( l_cHB_INSTALL_BIN, "/boot/common"      ) .OR. ;
+                       LEFTEQUAL( l_cHB_INSTALL_BIN, "/boot/system"      ) .OR. ;
+                       LEFTEQUAL( l_cHB_INSTALL_BIN, "/boot/home/config" ) .OR. ;
+                       AScan( ListToArray( GetEnv( "LIBRARY_PATH" ), ":" ), {| tmp | LEFTEQUAL( l_cHB_INSTALL_LIB, tmp ) } ) > 0
          ELSE
-            lSysLoc := LEFTEQUAL( l_cHB_BIN_INSTALL, "/usr/local/bin" ) .OR. ;
-                       LEFTEQUAL( l_cHB_BIN_INSTALL, "/usr/bin"       ) .OR. ;
-                       AScan( ListToArray( GetEnv( "LD_LIBRARY_PATH" ), ":" ), {| tmp | LEFTEQUAL( l_cHB_LIB_INSTALL, tmp ) } ) > 0
+            lSysLoc := LEFTEQUAL( l_cHB_INSTALL_BIN, "/usr/local/bin" ) .OR. ;
+                       LEFTEQUAL( l_cHB_INSTALL_BIN, "/usr/bin"       ) .OR. ;
+                       AScan( ListToArray( GetEnv( "LD_LIBRARY_PATH" ), ":" ), {| tmp | LEFTEQUAL( l_cHB_INSTALL_LIB, tmp ) } ) > 0
          ENDIF
       #else
          lSysLoc := .F.
@@ -1390,9 +1390,9 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    ELSE
       lSysLoc := .F.
 
-      l_cHB_BIN_INSTALL := ""
-      l_cHB_LIB_INSTALL := ""
-      l_cHB_INC_INSTALL := ""
+      l_cHB_INSTALL_BIN := ""
+      l_cHB_INSTALL_LIB := ""
+      l_cHB_INSTALL_INC := ""
       l_cHB_INSTALL_PREFIX := ""
    ENDIF
 
@@ -1485,7 +1485,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             ENDIF
          ELSE
             IF Empty( hbmk[ _HBMK_cCOMP ] ) .AND. ! Empty( aCOMPDET )
-               lDoSupportDetection := Empty( l_cHB_LIB_INSTALL ) .AND. ;
+               lDoSupportDetection := Empty( l_cHB_INSTALL_LIB ) .AND. ;
                                       hb_DirExists( PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) ) + "lib" + hb_ps() + hbmk[ _HBMK_cPLAT ] )
                /* Check compilers */
                FOR tmp := 1 TO Len( aCOMPDET )
@@ -1677,28 +1677,28 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
    /* Finish detecting bin/lib/include dirs */
 
-   IF Empty( l_cHB_BIN_INSTALL )
-      l_cHB_BIN_INSTALL := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + "bin" )
+   IF Empty( l_cHB_INSTALL_BIN )
+      l_cHB_INSTALL_BIN := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + "bin" )
    ENDIF
-   IF Empty( l_cHB_LIB_INSTALL )
+   IF Empty( l_cHB_INSTALL_LIB )
       /* Autodetect multi-compiler/platform lib structure */
       IF hb_DirExists( tmp := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) ) + "lib" +;
                                              hb_ps() + hbmk[ _HBMK_cPLAT ] +;
                                              hb_ps() + hbmk[ _HBMK_cCOMP ] +;
                                              iif( Empty( hbmk[ _HBMK_cBUILD ] ), "", PathSepToSelf( hbmk[ _HBMK_cBUILD ] ) ) )
-         l_cHB_LIB_INSTALL := tmp
+         l_cHB_INSTALL_LIB := tmp
       ELSE
-         l_cHB_LIB_INSTALL := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + "lib" )
+         l_cHB_INSTALL_LIB := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + "lib" )
       ENDIF
    ENDIF
-   IF Empty( l_cHB_INC_INSTALL )
-      l_cHB_INC_INSTALL := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + "include" )
+   IF Empty( l_cHB_INSTALL_INC )
+      l_cHB_INSTALL_INC := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + "include" )
    ENDIF
 
-   DEFAULT l_cHB_DYN_INSTALL TO l_cHB_LIB_INSTALL
+   DEFAULT l_cHB_INSTALL_DYN TO l_cHB_INSTALL_LIB
 
    IF hbmk[ _HBMK_lInfo ]
-      hbmk_OutStd( hbmk, hb_StrFormat( I_( "Using Harbour: %1$s %2$s %3$s %4$s" ), l_cHB_BIN_INSTALL, l_cHB_INC_INSTALL, l_cHB_LIB_INSTALL, l_cHB_DYN_INSTALL ) )
+      hbmk_OutStd( hbmk, hb_StrFormat( I_( "Using Harbour: %1$s %2$s %3$s %4$s" ), l_cHB_INSTALL_BIN, l_cHB_INSTALL_INC, l_cHB_INSTALL_LIB, l_cHB_INSTALL_DYN ) )
       IF ! Empty( cPath_CompC )
          hbmk_OutStd( hbmk, hb_StrFormat( I_( "Using C compiler: %1$s" ), cPath_CompC ) )
       ENDIF
@@ -1707,24 +1707,24 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    /* Make a copy to hbmk structure so that we can use it in deeper
       functions. The only reason I kept the local version is to
       keep above code parts easier to read. [vszakats] */
-   hbmk[ _HBMK_cHB_BIN_INSTALL ] := l_cHB_BIN_INSTALL := DirDelPathSep( PathSepToSelf( l_cHB_BIN_INSTALL ) )
-   hbmk[ _HBMK_cHB_LIB_INSTALL ] := l_cHB_LIB_INSTALL := DirDelPathSep( PathSepToSelf( l_cHB_LIB_INSTALL ) )
-   hbmk[ _HBMK_cHB_DYN_INSTALL ] := l_cHB_DYN_INSTALL := DirDelPathSep( PathSepToSelf( l_cHB_DYN_INSTALL ) )
-   hbmk[ _HBMK_cHB_INC_INSTALL ] := l_cHB_INC_INSTALL := DirDelPathSep( PathSepToSelf( l_cHB_INC_INSTALL ) )
+   hbmk[ _HBMK_cHB_INSTALL_BIN ] := l_cHB_INSTALL_BIN := DirDelPathSep( PathSepToSelf( l_cHB_INSTALL_BIN ) )
+   hbmk[ _HBMK_cHB_INSTALL_LIB ] := l_cHB_INSTALL_LIB := DirDelPathSep( PathSepToSelf( l_cHB_INSTALL_LIB ) )
+   hbmk[ _HBMK_cHB_INSTALL_DYN ] := l_cHB_INSTALL_DYN := DirDelPathSep( PathSepToSelf( l_cHB_INSTALL_DYN ) )
+   hbmk[ _HBMK_cHB_INSTALL_INC ] := l_cHB_INSTALL_INC := DirDelPathSep( PathSepToSelf( l_cHB_INSTALL_INC ) )
 
    /* Add main Harbour library dir to lib path list */
-   AAddNotEmpty( hbmk[ _HBMK_aLIBPATH ], l_cHB_LIB_INSTALL )
-   IF ! Empty( l_cHB_DYN_INSTALL ) .AND. !( l_cHB_DYN_INSTALL == l_cHB_LIB_INSTALL )
-      AAddNotEmpty( hbmk[ _HBMK_aLIBPATH ], l_cHB_DYN_INSTALL )
+   AAddNotEmpty( hbmk[ _HBMK_aLIBPATH ], l_cHB_INSTALL_LIB )
+   IF ! Empty( l_cHB_INSTALL_DYN ) .AND. !( l_cHB_INSTALL_DYN == l_cHB_INSTALL_LIB )
+      AAddNotEmpty( hbmk[ _HBMK_aLIBPATH ], l_cHB_INSTALL_DYN )
    ENDIF
 
    /* Add main Harbour header dir to header path list */
-   AAddNotEmpty( hbmk[ _HBMK_aINCPATH ], l_cHB_INC_INSTALL )
+   AAddNotEmpty( hbmk[ _HBMK_aINCPATH ], l_cHB_INSTALL_INC )
 
    /* Add default search paths for .hbc files */
-   l_cHB_ADD_INSTALL := PathNormalize( l_cHB_BIN_INSTALL + hb_ps() + ".." )
-   AAdd( hbmk[ _HBMK_aLIBPATH ], l_cHB_ADD_INSTALL + hb_ps() + "contrib" + hb_ps() + "%{hb_name}" )
-   AAdd( hbmk[ _HBMK_aLIBPATH ], l_cHB_ADD_INSTALL + hb_ps() + "addons" + hb_ps() + "%{hb_name}" )
+   l_cHB_INSTALL_ADD := PathNormalize( l_cHB_INSTALL_BIN + hb_ps() + ".." )
+   AAdd( hbmk[ _HBMK_aLIBPATH ], l_cHB_INSTALL_ADD + hb_ps() + "contrib" + hb_ps() + "%{hb_name}" )
+   AAdd( hbmk[ _HBMK_aLIBPATH ], l_cHB_INSTALL_ADD + hb_ps() + "addons" + hb_ps() + "%{hb_name}" )
 
    /* Build with shared libs by default, if we're installed to default system locations. */
 
@@ -2016,19 +2016,19 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
       CASE cParamL == "--hbdirbin"       ; hbmk[ _HBMK_lStopAfterInit ] := .T.
 
-         OutStd( l_cHB_BIN_INSTALL )
+         OutStd( l_cHB_INSTALL_BIN )
 
       CASE cParamL == "--hbdirdyn"       ; hbmk[ _HBMK_lStopAfterInit ] := .T.
 
-         OutStd( l_cHB_DYN_INSTALL )
+         OutStd( l_cHB_INSTALL_DYN )
 
       CASE cParamL == "--hbdirlib"       ; hbmk[ _HBMK_lStopAfterInit ] := .T.
 
-         OutStd( l_cHB_LIB_INSTALL )
+         OutStd( l_cHB_INSTALL_LIB )
 
       CASE cParamL == "--hbdirinc"       ; hbmk[ _HBMK_lStopAfterInit ] := .T.
 
-         OutStd( l_cHB_INC_INSTALL )
+         OutStd( l_cHB_INSTALL_INC )
 
       CASE cParamL == "--hbinfo"
 
@@ -2621,7 +2621,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          hb_compile( "harbour", hbmk[ _HBMK_aOPTPRG ] )
       ELSE
          /* Use external compiler */
-         cCommand := FNameEscape( DirAddPathSep( PathSepToSelf( l_cHB_BIN_INSTALL ) ) + cBin_CompPRG + cBinExt, hbmk[ _HBMK_nCmd_Esc ] ) +;
+         cCommand := FNameEscape( DirAddPathSep( PathSepToSelf( l_cHB_INSTALL_BIN ) ) + cBin_CompPRG + cBinExt, hbmk[ _HBMK_nCmd_Esc ] ) +;
                      iif( ! Empty( hbmk[ _HBMK_aOPTPRG ] ), " " + ArrayToList( hbmk[ _HBMK_aOPTPRG ] ), "" )
          hb_processRun( AllTrim( cCommand ) )
       ENDIF
@@ -2757,7 +2757,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          cPrefix := ""
       ELSE
          /* Only supported by gcc, clang, open64 compilers. */
-         cPrefix := DirAddPathSep( l_cHB_DYN_INSTALL )
+         cPrefix := DirAddPathSep( l_cHB_INSTALL_DYN )
       ENDIF
 #if 1
       cPostfix := ""
@@ -2842,7 +2842,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          hbmk[ _HBMK_aLIBCOREGT ] := {}
       ENDIF
 
-      #define _HBLIB_FULLPATH( cName ) ( DirAddPathSep( l_cHB_LIB_INSTALL ) + hb_ps() + cLibLibPrefix + cName + cLibLibExt )
+      #define _HBLIB_FULLPATH( cName ) ( DirAddPathSep( l_cHB_INSTALL_LIB ) + hb_ps() + cLibLibPrefix + cName + cLibLibExt )
 
       DO CASE
       /* GCC family */
@@ -3630,7 +3630,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                                                       "harbour" + cDL_Version_Alter + cLibExt ) }
 
             IF hbmk[ _HBMK_lSHARED ]
-               AAdd( hbmk[ _HBMK_aOPTL ], "FILE " + FNameExtSet( l_cHB_LIB_INSTALL + hb_ps() + iif( hbmk[ _HBMK_lGUI ], "hbmainwin", "hbmainstd" ), cLibExt ) )
+               AAdd( hbmk[ _HBMK_aOPTL ], "FILE " + FNameExtSet( l_cHB_INSTALL_LIB + hb_ps() + iif( hbmk[ _HBMK_lGUI ], "hbmainwin", "hbmainstd" ), cLibExt ) )
             ENDIF
          CASE hbmk[ _HBMK_cPLAT ] == "os2"
             l_aLIBSYS := ArrayAJoin( { l_aLIBSYS, l_aLIBSYSCORE, l_aLIBSYSMISC } )
@@ -3639,7 +3639,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
             IF hbmk[ _HBMK_lSHARED ]
                /* TOFIX: This line is plain guessing. */
-               AAdd( hbmk[ _HBMK_aOPTL ], "FILE " + FNameExtSet( l_cHB_LIB_INSTALL + hb_ps() + iif( hbmk[ _HBMK_lGUI ], "hbmainstd", "hbmainstd" ), cLibExt ) )
+               AAdd( hbmk[ _HBMK_aOPTL ], "FILE " + FNameExtSet( l_cHB_INSTALL_LIB + hb_ps() + iif( hbmk[ _HBMK_lGUI ], "hbmainstd", "hbmainstd" ), cLibExt ) )
             ENDIF
          CASE hbmk[ _HBMK_cPLAT ] == "linux"
             l_aLIBSYS := ArrayAJoin( { l_aLIBSYS, l_aLIBSYSCORE, l_aLIBSYSMISC } )
@@ -4658,7 +4658,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       ELSE
          /* Use external compiler */
 
-         cCommand := FNameEscape( DirAddPathSep( PathSepToSelf( l_cHB_BIN_INSTALL ) ) + cBin_CompPRG + cBinExt, hbmk[ _HBMK_nCmd_Esc ] ) +;
+         cCommand := FNameEscape( DirAddPathSep( PathSepToSelf( l_cHB_INSTALL_BIN ) ) + cBin_CompPRG + cBinExt, hbmk[ _HBMK_nCmd_Esc ] ) +;
                      " " + iif( hbmk[ _HBMK_lCreateLib ] .OR. hbmk[ _HBMK_lCreateDyn ], "-n1", iif( hbmk[ _HBMK_nHBMODE ] != _HBMODE_NATIVE, "-n", "-n2" ) ) +;
                      " " + ArrayToList( l_aPRG_TODO,, hbmk[ _HBMK_nCmd_Esc ] ) +;
                      iif( hbmk[ _HBMK_lBLDFLGP ], " " + hb_Version( HB_VERSION_FLAG_PRG ), "" ) +;
@@ -5148,7 +5148,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          nOpt_FNF := iif( "{SCRIPT}" $ cOpt_Res, hbmk[ _HBMK_nScr_FNF ], hbmk[ _HBMK_nCmd_FNF ] )
 
          cOpt_Res := StrTran( cOpt_Res, "{FR}"  , GetEnv( "HB_USER_RESFLAGS" ) + " " + ArrayToList( hbmk[ _HBMK_aOPTRES ] ) )
-         cOpt_Res := StrTran( cOpt_Res, "{DI}"  , FNameEscape( l_cHB_INC_INSTALL, nOpt_Esc, nOpt_FNF ) )
+         cOpt_Res := StrTran( cOpt_Res, "{DI}"  , FNameEscape( l_cHB_INSTALL_INC, nOpt_Esc, nOpt_FNF ) )
 
          IF "{IR}" $ cOpt_Res
 
@@ -5287,7 +5287,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                   cOpt_CompC := StrTran( cOpt_CompC, "{FC}"  , iif( hbmk[ _HBMK_lBLDFLGC ], hb_Version( HB_VERSION_FLAG_C ) + " ", "" ) +;
                                                                GetEnv( "HB_USER_CFLAGS" ) + " " + ArrayToList( hbmk[ _HBMK_aOPTC ] ) )
                   cOpt_CompC := StrTran( cOpt_CompC, "{OD}"  , FNameEscape( FNameDirGet( hbmk[ _HBMK_cPROGNAME ] ), nOpt_Esc, nOpt_FNF ) )
-                  cOpt_CompC := StrTran( cOpt_CompC, "{DI}"  , FNameEscape( l_cHB_INC_INSTALL, nOpt_Esc, nOpt_FNF ) )
+                  cOpt_CompC := StrTran( cOpt_CompC, "{DI}"  , FNameEscape( l_cHB_INSTALL_INC, nOpt_Esc, nOpt_FNF ) )
 
                   IF "{IC}" $ cOpt_CompC
 
@@ -5517,7 +5517,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                cOpt_Link := StrTran( cOpt_Link, "{OM}"  , FNameEscape( FNameExtSet( hbmk[ _HBMK_cPROGNAME ], ".map" ), nOpt_Esc, nOpt_FNF ) )
                cOpt_Link := StrTran( cOpt_Link, "{OI}"  , FNameEscape( l_cIMPLIBNAME, nOpt_Esc, nOpt_FNF ) )
                cOpt_Link := StrTran( cOpt_Link, "{DL}"  , ArrayToList( hbmk[ _HBMK_aLIBPATH ], cLibPathSep, nOpt_Esc, nOpt_FNF, cLibPathPrefix ) )
-               cOpt_Link := StrTran( cOpt_Link, "{DB}"  , l_cHB_BIN_INSTALL )
+               cOpt_Link := StrTran( cOpt_Link, "{DB}"  , l_cHB_INSTALL_BIN )
 
                cOpt_Link := AllTrim( cOpt_Link )
 
@@ -5614,7 +5614,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                cOpt_Dyn := StrTran( cOpt_Dyn, "{OM}"  , FNameEscape( FNameExtSet( hbmk[ _HBMK_cPROGNAME ], ".map" ), nOpt_Esc, nOpt_FNF ) )
                cOpt_Dyn := StrTran( cOpt_Dyn, "{OI}"  , FNameEscape( l_cIMPLIBNAME, nOpt_Esc, nOpt_FNF ) )
                cOpt_Dyn := StrTran( cOpt_Dyn, "{DL}"  , ArrayToList( hbmk[ _HBMK_aLIBPATH ], cLibPathSep, nOpt_Esc, nOpt_FNF, cLibPathPrefix ) )
-               cOpt_Dyn := StrTran( cOpt_Dyn, "{DB}"  , l_cHB_BIN_INSTALL )
+               cOpt_Dyn := StrTran( cOpt_Dyn, "{DB}"  , l_cHB_INSTALL_BIN )
 
                cOpt_Dyn := AllTrim( cOpt_Dyn )
 
@@ -5682,7 +5682,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                cOpt_Lib := StrTran( cOpt_Lib, "{LB}"  , ArrayToList( l_aLIBA,, nOpt_Esc, nOpt_FNF ) )
                cOpt_Lib := StrTran( cOpt_Lib, "{OL}"  , FNameEscape( hbmk[ _HBMK_cPROGNAME ], nOpt_Esc, nOpt_FNF ) )
                cOpt_Lib := StrTran( cOpt_Lib, "{DL}"  , ArrayToList( hbmk[ _HBMK_aLIBPATH ], cLibPathSep, nOpt_Esc, nOpt_FNF, cLibPathPrefix ) )
-               cOpt_Lib := StrTran( cOpt_Lib, "{DB}"  , l_cHB_BIN_INSTALL )
+               cOpt_Lib := StrTran( cOpt_Lib, "{DB}"  , l_cHB_INSTALL_BIN )
 
                cOpt_Lib := AllTrim( cOpt_Lib )
 
@@ -6454,7 +6454,7 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, lSystemHeader, tT
       hb_processRun( cBin_CompC + " -MM" +;
                      " " + iif( hbmk[ _HBMK_lBLDFLGC ], hb_Version( HB_VERSION_FLAG_C ) + " ", "" ) +;
                            GetEnv( "HB_USER_CFLAGS" ) + " " + ArrayToList( hbmk[ _HBMK_aOPTC ] ) +;
-                     " " + FNameEscape( hbmk[ _HBMK_cHB_INC_INSTALL ], hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) +;
+                     " " + FNameEscape( hbmk[ _HBMK_cHB_INSTALL_INC ], hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) +;
                      " " + cFileName,, @tmp )
 
       tmp := StrTran( tmp, Chr( 13 ) )
@@ -9067,13 +9067,13 @@ STATIC FUNCTION MacroGet( hbmk, cMacro, cFileName )
    CASE "HB_REVISION"
       cMacro := hb_ntos( hb_Version( HB_VERSION_REVISION ) ) ; EXIT
    CASE "HB_BIN"
-      cMacro := hbmk[ _HBMK_cHB_BIN_INSTALL ] ; EXIT
+      cMacro := hbmk[ _HBMK_cHB_INSTALL_BIN ] ; EXIT
    CASE "HB_LIB"
-      cMacro := hbmk[ _HBMK_cHB_LIB_INSTALL ] ; EXIT
+      cMacro := hbmk[ _HBMK_cHB_INSTALL_LIB ] ; EXIT
    CASE "HB_DYN"
-      cMacro := hbmk[ _HBMK_cHB_DYN_INSTALL ] ; EXIT
+      cMacro := hbmk[ _HBMK_cHB_INSTALL_DYN ] ; EXIT
    CASE "HB_INC"
-      cMacro := hbmk[ _HBMK_cHB_INC_INSTALL ] ; EXIT
+      cMacro := hbmk[ _HBMK_cHB_INSTALL_INC ] ; EXIT
    CASE "HB_FIRST"
       cMacro := FNameNameGet( hbmk[ _HBMK_cFIRST ] ) ; EXIT
    CASE "HB_OUTPUTDIR"

@@ -64,11 +64,11 @@
 %define hb_sln    export HB_WITH_SLANG=%{!?_without_slang:yes}%{?_without_slang:no}
 %define hb_x11    export HB_WITH_X11=%{!?_without_x11:yes}%{?_without_x11:no}
 %define hb_local  export HB_WITH_ZLIB=%{?_with_localzlib:local} ; export HB_WITH_PCRE=%{?_with_localpcre:local}
-%define hb_bdir   export HB_BIN_INSTALL=${RPM_BUILD_ROOT}%{_bindir}
-%define hb_idir   export HB_INC_INSTALL=${RPM_BUILD_ROOT}%{_includedir}/%{name}
-%define hb_ldir   export HB_LIB_INSTALL=${RPM_BUILD_ROOT}%{_libdir}/%{name}
-%define hb_edir   export HB_ETC_INSTALL=${RPM_BUILD_ROOT}%{hb_etcdir}
-%define hb_mdir   export HB_MAN_INSTALL=${RPM_BUILD_ROOT}%{_mandir}
+%define hb_bdir   export HB_INSTALL_BIN=${RPM_BUILD_ROOT}%{_bindir}
+%define hb_idir   export HB_INSTALL_INC=${RPM_BUILD_ROOT}%{_includedir}/%{name}
+%define hb_ldir   export HB_INSTALL_LIB=${RPM_BUILD_ROOT}%{_libdir}/%{name}
+%define hb_edir   export HB_INSTALL_ETC=${RPM_BUILD_ROOT}%{hb_etcdir}
+%define hb_mdir   export HB_INSTALL_MAN=${RPM_BUILD_ROOT}%{_mandir}
 %define hb_blds   export HB_BUILD_STRIP=all
 %define hb_bldsh  export HB_BUILD_SHARED=%{!?_with_static:yes}
 %define hb_cmrc   export HB_BUILD_NOGPLLIB=%{?_without_gpllib:yes}
@@ -401,17 +401,17 @@ make %{?_smp_mflags}
 %{hb_env}
 
 # necessary for shared linked hbrun used to execute postinst.hbs
-export LD_LIBRARY_PATH=$HB_LIB_INSTALL
+export LD_LIBRARY_PATH=$HB_INSTALL_LIB
 
 make install %{?_smp_mflags}
 
-[ "%{?_without_curses:1}" ] && rm -f $HB_LIB_INSTALL/libgtcrs.a
-[ "%{?_without_slang:1}" ] && rm -f $HB_LIB_INSTALL/libgtsln.a
-rm -f $HB_LIB_INSTALL/libbz2.a
-rm -f $HB_LIB_INSTALL/libjpeg.a
-rm -f $HB_LIB_INSTALL/liblibhpdf.a
-rm -f $HB_LIB_INSTALL/libpng.a
-rm -f $HB_LIB_INSTALL/libsqlite3.a
+[ "%{?_without_curses:1}" ] && rm -f $HB_INSTALL_LIB/libgtcrs.a
+[ "%{?_without_slang:1}" ] && rm -f $HB_INSTALL_LIB/libgtsln.a
+rm -f $HB_INSTALL_LIB/libbz2.a
+rm -f $HB_INSTALL_LIB/libjpeg.a
+rm -f $HB_INSTALL_LIB/liblibhpdf.a
+rm -f $HB_INSTALL_LIB/libpng.a
+rm -f $HB_INSTALL_LIB/libsqlite3.a
 
 ######################################################################
 ## Post install

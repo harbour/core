@@ -251,26 +251,26 @@ ifeq ($(HB_INIT_DONE),)
    ifneq ($(HB_INSTALL_PREFIX),)
       $(info ! HB_INSTALL_PREFIX: $(HB_INSTALL_PREFIX))
    endif
-   ifneq ($(HB_BIN_INSTALL),)
-      $(info ! HB_BIN_INSTALL: $(HB_BIN_INSTALL))
+   ifneq ($(HB_INSTALL_BIN),)
+      $(info ! HB_INSTALL_BIN: $(HB_INSTALL_BIN))
    endif
-   ifneq ($(HB_LIB_INSTALL),)
-      $(info ! HB_LIB_INSTALL: $(HB_LIB_INSTALL))
+   ifneq ($(HB_INSTALL_LIB),)
+      $(info ! HB_INSTALL_LIB: $(HB_INSTALL_LIB))
    endif
-   ifneq ($(HB_DYN_INSTALL),)
-      $(info ! HB_DYN_INSTALL: $(HB_DYN_INSTALL))
+   ifneq ($(HB_INSTALL_DYN),)
+      $(info ! HB_INSTALL_DYN: $(HB_INSTALL_DYN))
    endif
-   ifneq ($(HB_INC_INSTALL),)
-      $(info ! HB_INC_INSTALL: $(HB_INC_INSTALL))
+   ifneq ($(HB_INSTALL_INC),)
+      $(info ! HB_INSTALL_INC: $(HB_INSTALL_INC))
    endif
-   ifneq ($(HB_DOC_INSTALL),)
-      $(info ! HB_DOC_INSTALL: $(HB_DOC_INSTALL))
+   ifneq ($(HB_INSTALL_DOC),)
+      $(info ! HB_INSTALL_DOC: $(HB_INSTALL_DOC))
    endif
-   ifneq ($(HB_MAN_INSTALL),)
-      $(info ! HB_MAN_INSTALL: $(HB_MAN_INSTALL))
+   ifneq ($(HB_INSTALL_MAN),)
+      $(info ! HB_INSTALL_MAN: $(HB_INSTALL_MAN))
    endif
-   ifneq ($(HB_ETC_INSTALL),)
-      $(info ! HB_ETC_INSTALL: $(HB_ETC_INSTALL))
+   ifneq ($(HB_INSTALL_ETC),)
+      $(info ! HB_INSTALL_ETC: $(HB_INSTALL_ETC))
    endif
    ifneq ($(HB_BUILD_NAME),)
       $(info ! HB_BUILD_NAME: $(HB_BUILD_NAME))
@@ -1484,16 +1484,16 @@ ifeq ($(HB_BUILD_PKG),yes)
 
       export HB_INSTALL_PKG_TOP := $(HB_INSTALL_PREFIX)
 
-      HB_BIN_INSTALL :=
-      HB_INC_INSTALL :=
-      HB_LIB_INSTALL :=
-      HB_DYN_INSTALL :=
-      HB_DOC_INSTALL :=
-      HB_MAN_INSTALL :=
+      HB_INSTALL_BIN :=
+      HB_INSTALL_INC :=
+      HB_INSTALL_LIB :=
+      HB_INSTALL_DYN :=
+      HB_INSTALL_DOC :=
+      HB_INSTALL_MAN :=
       ifeq ($(HB_PLATFORM),darwin)
-         export HB_ETC_INSTALL := $(HB_INSTALL_PREFIX)$(DIRSEP)private$(DIRSEP)etc$(DIRSEP)harbour
+         export HB_INSTALL_ETC := $(HB_INSTALL_PREFIX)$(DIRSEP)private$(DIRSEP)etc$(DIRSEP)harbour
       else
-         HB_ETC_INSTALL :=
+         HB_INSTALL_ETC :=
       endif
 
       HB_INSTALL_PREFIX := $(HB_INSTALL_PREFIX)$(subst /,$(DIRSEP),$(HB_BUILD_PKG_PREFIX))
@@ -1622,48 +1622,48 @@ ifneq ($(HB_INSTALL_PREFIX),)
    endif
 
    # Standard name: BINDIR
-   ifeq ($(HB_BIN_INSTALL),)
-      export HB_BIN_INSTALL := $(HB_INSTALL_PREFIX)$(DIRSEP)bin
+   ifeq ($(HB_INSTALL_BIN),)
+      export HB_INSTALL_BIN := $(HB_INSTALL_PREFIX)$(DIRSEP)bin
    endif
    # Standard name: LIBDIR
-   ifeq ($(HB_LIB_INSTALL),)
-      export HB_LIB_INSTALL := $(HB_INSTALL_PREFIX)$(DIRSEP)lib$(LIBPOSTFIX)
+   ifeq ($(HB_INSTALL_LIB),)
+      export HB_INSTALL_LIB := $(HB_INSTALL_PREFIX)$(DIRSEP)lib$(LIBPOSTFIX)
    endif
-   ifeq ($(HB_DYN_INSTALL),)
+   ifeq ($(HB_INSTALL_DYN),)
       ifeq ($(HB_PLATFORM_UNIX),)
-         export HB_DYN_INSTALL := $(HB_BIN_INSTALL)
+         export HB_INSTALL_DYN := $(HB_INSTALL_BIN)
       else
-         export HB_DYN_INSTALL := $(HB_LIB_INSTALL)
+         export HB_INSTALL_DYN := $(HB_INSTALL_LIB)
       endif
    endif
    # Standard name: INCLUDEDIR
-   ifeq ($(HB_INC_INSTALL),)
-      export HB_INC_INSTALL := $(HB_INSTALL_PREFIX)$(DIRSEP)include$(INCPOSTFIX)
+   ifeq ($(HB_INSTALL_INC),)
+      export HB_INSTALL_INC := $(HB_INSTALL_PREFIX)$(DIRSEP)include$(INCPOSTFIX)
    endif
    # Standard name: DOCDIR
-   ifeq ($(HB_DOC_INSTALL),)
+   ifeq ($(HB_INSTALL_DOC),)
       # Do not set doc dir for *nix targets
       ifeq ($(HB_PLATFORM_UNIX),)
-         export HB_DOC_INSTALL := $(HB_INSTALL_PREFIX)$(DIRSEP)doc
+         export HB_INSTALL_DOC := $(HB_INSTALL_PREFIX)$(DIRSEP)doc
       endif
    endif
    # Standard name: MANDIR
-   ifeq ($(HB_MAN_INSTALL),)
+   ifeq ($(HB_INSTALL_MAN),)
       # Do not set doc dir for non-*nix targets
       ifneq ($(HB_PLATFORM_UNIX),)
          ifeq ($(HB_SYSLOC),yes)
-            export HB_MAN_INSTALL := $(HB_INSTALL_PREFIX)$(DIRSEP)man$(INCPOSTFIX)
+            export HB_INSTALL_MAN := $(HB_INSTALL_PREFIX)$(DIRSEP)man$(INCPOSTFIX)
          endif
       endif
    endif
    # Standard name: ETCDIR
-   ifeq ($(HB_ETC_INSTALL),)
+   ifeq ($(HB_INSTALL_ETC),)
       # Do not set doc dir for non-*nix targets
       ifneq ($(HB_PLATFORM_UNIX),)
          ifeq ($(HB_PLATFORM),darwin)
-            export HB_ETC_INSTALL := $(HB_INSTALL_PREFIX)$(DIRSEP)private$(DIRSEP)etc$(DIRSEP)harbour
+            export HB_INSTALL_ETC := $(HB_INSTALL_PREFIX)$(DIRSEP)private$(DIRSEP)etc$(DIRSEP)harbour
          else
-            export HB_ETC_INSTALL := $(HB_INSTALL_PREFIX)$(DIRSEP)etc$(DIRSEP)harbour
+            export HB_INSTALL_ETC := $(HB_INSTALL_PREFIX)$(DIRSEP)etc$(DIRSEP)harbour
          endif
       endif
    endif

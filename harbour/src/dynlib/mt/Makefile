@@ -15,10 +15,10 @@ ifneq ($(DYNDIRLIST_BASE),)
    include $(TOP)$(ROOT)config/dyn.mk
 
    ifneq ($(INSTALL_RULE_DYN),)
-      ifneq ($(HB_LIB_INSTALL),)
+      ifneq ($(HB_INSTALL_LIB),)
          ifneq ($(IMP_FILE),)
             INSTALL_FILES := $(IMP_FILE)
-            INSTALL_DIR := $(HB_LIB_INSTALL)
+            INSTALL_DIR := $(HB_INSTALL_LIB)
             include $(TOP)$(ROOT)config/install.mk
          endif
       endif

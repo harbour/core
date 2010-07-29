@@ -228,13 +228,13 @@ For Watcom C/C++ 10.x (default Makefile creates DOS4G extender executables)
 If you issue a "make install", it will try to install your doc, header,
 executable and library files into directories given by
 
-  HB_BIN_INSTALL
-  HB_DOC_INSTALL
-  HB_LIB_INSTALL
-  HB_INC_INSTALL
+  HB_INSTALL_BIN
+  HB_INSTALL_DOC
+  HB_INSTALL_LIB
+  HB_INSTALL_INC
 
 You can set those as environment variables too. There is no default for
-HB_DOC_INSTALL, so if you don't define it, then the doc files will not be
+HB_INSTALL_DOC, so if you don't define it, then the doc files will not be
 installed.
 
 The most used targets are these:

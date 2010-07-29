@@ -847,43 +847,6 @@ FUNCTION hbide_parseFilter( s, cKey, cVal )
    RETURN lYes
 
 /*----------------------------------------------------------------------*/
-
-FUNCTION hbide_xmateMetaToHbMeta( cText )
-   LOCAL n, n1, cKey
-
-   IF ( n := at( "%", cText ) ) > 0
-      IF ( n1 := hb_at( "%", cText, n+1 ) ) > 0
-         cKey  := substr( cText, n, n1-n+1 )
-         cText := substr( cText, 1, n-1 ) + hbide_exchangeMeta( cKey ) + substr( cText, n1+1 )
-      ENDIF
-   ENDIF
-
-   RETURN cText
-
-/*----------------------------------------------------------------------*/
-
-FUNCTION hbide_exchangeMeta( cKey )
-   SWITCH cKey
-   CASE "%HB_INC_INSTALL%"
-      RETURN "{hb_inc_install}"
-   CASE "%HB_LIB_INSTALL%"
-      EXIT
-   CASE "%HB_BIN_INSTALL%"
-      EXIT
-   CASE "%C_INC_INSTALL%"
-      EXIT
-   CASE "%C_LIB_INSTALL%"
-      EXIT
-   CASE "%C_BIN_INSTALL%"
-      EXIT
-   CASE "%HB_%"
-      EXIT
-   CASE "%HOME%"
-      EXIT
-   ENDSWITCH
-   RETURN cKey
-
-/*----------------------------------------------------------------------*/
 /*
  * Return the next untitled filename available.
  * 01/01/2010 - 19:40:17 - vailtom

@@ -9,12 +9,12 @@ ifneq ($(HB_COMPILER),)
 
 first::
 
-ifeq ($(HB_INC_INSTALL),)
+ifeq ($(HB_INSTALL_INC),)
 install::
 
 else
 INSTALL_FILES := $(C_HEADERS) $(PRG_HEADERS) $(API_HEADERS)
-INSTALL_DIR := $(HB_INC_INSTALL)
+INSTALL_DIR := $(HB_INSTALL_INC)
 include $(TOP)$(ROOT)config/instsh.mk
 INSTALL_RULE_HEADERS := $(INSTALL_RULE)
 ifneq ($(INSTALL_RULE_HEADERS),)

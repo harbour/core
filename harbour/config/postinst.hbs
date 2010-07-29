@@ -50,9 +50,9 @@ PROCEDURE Main()
 
    IF Empty( GetEnv( "HB_PLATFORM" ) ) .OR. ;
       Empty( GetEnv( "HB_COMPILER" ) ) .OR. ;
-      Empty( GetEnv( "HB_BIN_INSTALL" ) ) .OR. ;
-      Empty( GetEnv( "HB_LIB_INSTALL" ) ) .OR. ;
-      Empty( GetEnv( "HB_INC_INSTALL" ) )
+      Empty( GetEnv( "HB_INSTALL_BIN" ) ) .OR. ;
+      Empty( GetEnv( "HB_INSTALL_LIB" ) ) .OR. ;
+      Empty( GetEnv( "HB_INSTALL_INC" ) )
 
       OutStd( "! Error: This program has to be called from the GNU Make process." + hb_eol() )
       ErrorLevel( 1 )
@@ -64,7 +64,7 @@ PROCEDURE Main()
    IF GetEnv( "HB_PLATFORM" ) $ "win|wce|os2|dos"
       tmp := GetEnv( "HB_INSTALL_PREFIX" )
    ELSE
-      tmp := GetEnv( "HB_DOC_INSTALL" )
+      tmp := GetEnv( "HB_INSTALL_DOC" )
    ENDIF
    IF ! Empty( tmp )
 
@@ -79,52 +79,52 @@ PROCEDURE Main()
       mk_hb_FCopy( "TODO"   , tmp + hb_ps() )
    ENDIF
 
-   IF ! Empty( GetEnv( "HB_BIN_INSTALL" ) )
+   IF ! Empty( GetEnv( "HB_INSTALL_BIN" ) )
 
       OutStd( "! Copying Harbour script (.hbs) files..." + hb_eol() )
 
       /* public Harbour scripts */
       FOR EACH tmp IN { "bin/hbmk2l2d.hbs" ,;
                         "bin/hbxpatch.hbs" }
-         mk_hb_FCopy( tmp, GetEnv( "HB_BIN_INSTALL" ) + hb_ps() )
+         mk_hb_FCopy( tmp, GetEnv( "HB_INSTALL_BIN" ) + hb_ps() )
       NEXT
    ENDIF
 
-   IF ! Empty( GetEnv( "HB_ETC_INSTALL" ) )
+   IF ! Empty( GetEnv( "HB_INSTALL_ETC" ) )
 
       OutStd( "! Copying *nix config files..." + hb_eol() )
 
-      IF DirBuild( GetEnv( "HB_ETC_INSTALL" ) )
-         mk_hb_FCopy( "src/rtl/gtcrs/hb-charmap.def", GetEnv( "HB_ETC_INSTALL" ) + hb_ps(), .T. )
+      IF DirBuild( GetEnv( "HB_INSTALL_ETC" ) )
+         mk_hb_FCopy( "src/rtl/gtcrs/hb-charmap.def", GetEnv( "HB_INSTALL_ETC" ) + hb_ps(), .T. )
       ELSE
-         OutStd( hb_StrFormat( "! Error: Cannot create directory '%1$s'", GetEnv( "HB_ETC_INSTALL" ) ) + hb_eol() )
+         OutStd( hb_StrFormat( "! Error: Cannot create directory '%1$s'", GetEnv( "HB_INSTALL_ETC" ) ) + hb_eol() )
       ENDIF
 
       OutStd( "! Creating *nix ld config file..." + hb_eol() )
 
-      tmp := GetEnv( "HB_ETC_INSTALL" ) + hb_ps() + ".." + hb_ps() + "ld.so.conf.d"
+      tmp := GetEnv( "HB_INSTALL_ETC" ) + hb_ps() + ".." + hb_ps() + "ld.so.conf.d"
       IF DirBuild( tmp )
-         /* TOFIX: Put HB_LIB_INSTALL without build sandbox prefix */
-         hb_MemoWrit( tmp + hb_ps() + "harbour.conf", GetEnv( "HB_LIB_INSTALL" ) + hb_eol() )
+         /* TOFIX: Put HB_INSTALL_LIB without build sandbox prefix */
+         hb_MemoWrit( tmp + hb_ps() + "harbour.conf", GetEnv( "HB_INSTALL_LIB" ) + hb_eol() )
       ELSE
          OutStd( hb_StrFormat( "! Error: Cannot create directory '%1$s'", tmp ) + hb_eol() )
       ENDIF
    ENDIF
 
-   IF ! Empty( GetEnv( "HB_MAN_INSTALL" ) )
+   IF ! Empty( GetEnv( "HB_INSTALL_MAN" ) )
 
       OutStd( "! Copying *nix man files..." + hb_eol() )
 
-      IF DirBuild( GetEnv( "HB_MAN_INSTALL" ) + hb_ps() + "man1" )
+      IF DirBuild( GetEnv( "HB_INSTALL_MAN" ) + hb_ps() + "man1" )
          FOR EACH tmp IN { "src/main/harbour.1"    ,;
                            "src/pp/hbpp.1"         ,;
                            "utils/hbmk2/hbmk2.1"   ,;
                            "utils/hbrun/hbrun.1"   ,;
                            "utils/hbtest/hbtest.1" }
-            mk_hb_FCopy( tmp, GetEnv( "HB_MAN_INSTALL" ) + hb_ps() + "man1" + hb_ps(), .T. )
+            mk_hb_FCopy( tmp, GetEnv( "HB_INSTALL_MAN" ) + hb_ps() + "man1" + hb_ps(), .T. )
          NEXT
       ELSE
-         OutStd( hb_StrFormat( "! Error: Cannot create directory '%1$s'", GetEnv( "HB_MAN_INSTALL" ) ) + hb_eol() )
+         OutStd( hb_StrFormat( "! Error: Cannot create directory '%1$s'", GetEnv( "HB_INSTALL_MAN" ) ) + hb_eol() )
       ENDIF
    ENDIF
 
@@ -132,18 +132,18 @@ PROCEDURE Main()
 #if 0
    FOR EACH tmp IN { GetEnv( "HB_DYNLIB_ST" ), GetEnv( "HB_DYNLIB_MT" ) }
 
-      OutStd( GetEnv( "HB_DYN_INSTALL" + hb_ps() + tmp + hb_eol() )
+      OutStd( GetEnv( "HB_INSTALL_DYN" + hb_ps() + tmp + hb_eol() )
 
          ll="` echo $l | sed 's!'${lib_suff}'$!!' `${lib_ext}"
          ln -sf $l $ll
 
          IF !( GetEnv( "HB_PLATFORM" ) $ "win|wce" )
             DO CASE
-            CASE GetEnv( "HB_LIB_INSTALL" ) $ "/usr/lib/harbour|/usr/lib64/harbour|/usr/local/lib/harbour|/usr/local/lib64/harbour"
+            CASE GetEnv( "HB_INSTALL_LIB" ) $ "/usr/lib/harbour|/usr/lib64/harbour|/usr/local/lib/harbour|/usr/local/lib64/harbour"
                   ln -sf harbour/$l ../$ll
                   ln -sf harbour/$l ../$l
                   ;;
-            CASE GetEnv( "HB_LIB_INSTALL" ) $ "/usr/local/harbour/lib"
+            CASE GetEnv( "HB_INSTALL_LIB" ) $ "/usr/local/harbour/lib"
                   ld="/usr/lib"
                   if [ -n "${HB_INST_PKGPREF}" ] || [ -w $ld ]
                   then
@@ -168,7 +168,7 @@ PROCEDURE Main()
       IF "D" $ tmp[ F_ATTR ] .AND. !( tmp[ F_NAME ] == "." ) .AND. !( tmp[ F_NAME ] == ".." )
          FOR EACH aFile IN Directory( "utils" + hb_ps() + tmp[ F_NAME ] + hb_ps() + "*.po" )
             mk_hbl( "utils" + hb_ps() + tmp[ F_NAME ] + hb_ps() + aFile[ F_NAME ],;
-                    PathSepToSelf( GetEnv( "HB_BIN_INSTALL" ) ) + hb_ps() + FNameExtSet( aFile[ F_NAME ], ".hbl" ) )
+                    PathSepToSelf( GetEnv( "HB_INSTALL_BIN" ) ) + hb_ps() + FNameExtSet( aFile[ F_NAME ], ".hbl" ) )
          NEXT
       ENDIF
    NEXT
@@ -327,7 +327,7 @@ STATIC FUNCTION mk_hbd_core( cDir )
    LOCAL aErrMsg
    LOCAL aEntry
 
-   IF ! Empty( GetEnv( "HB_DOC_INSTALL" ) )
+   IF ! Empty( GetEnv( "HB_INSTALL_DOC" ) )
 
       cName := "harbour"
 
@@ -339,7 +339,7 @@ STATIC FUNCTION mk_hbd_core( cDir )
       NEXT
 
       IF ! Empty( aEntry )
-         cName := PathSepToSelf( GetEnv( "HB_DOC_INSTALL" ) ) + hb_ps() + cName + ".hbd"
+         cName := PathSepToSelf( GetEnv( "HB_INSTALL_DOC" ) ) + hb_ps() + cName + ".hbd"
          IF __hbdoc_SaveHBD( cName, aEntry )
             OutStd( "! Created " + cName + " <= " + cDir + hb_eol() )
             RETURN .T.
@@ -348,7 +348,7 @@ STATIC FUNCTION mk_hbd_core( cDir )
          ENDIF
       ENDIF
    ELSE
-      OutErr( "! Warning: HB_DOC_INSTALL not set, core documentation not compiled." + hb_eol() )
+      OutErr( "! Warning: HB_INSTALL_DOC not set, core documentation not compiled." + hb_eol() )
    ENDIF
 
    RETURN .F.

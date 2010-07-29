@@ -634,13 +634,13 @@ HARBOUR
                                     {hb_comp} - Target compiler
                                     {hb_cpu}  - Target CPU
 
-   - HB_BIN_INSTALL              Override directory to install executables
-   - HB_LIB_INSTALL              Override directory to install libraries
-   - HB_DYN_INSTALL              Override directory to install dynamic libraries
-   - HB_INC_INSTALL              Override directory to install language headers
-   - HB_DOC_INSTALL              Override directory to install documentation
-   - HB_MAN_INSTALL              Override directory to install *nix man files
-   - HB_ETC_INSTALL              Override directory to install *nix config files
+   - HB_INSTALL_BIN              Override directory to install executables
+   - HB_INSTALL_LIB              Override directory to install libraries
+   - HB_INSTALL_DYN              Override directory to install dynamic libraries
+   - HB_INSTALL_INC              Override directory to install language headers
+   - HB_INSTALL_DOC              Override directory to install documentation
+   - HB_INSTALL_MAN              Override directory to install *nix man files
+   - HB_INSTALL_ETC              Override directory to install *nix config files
 
    Special
    -------
@@ -1199,6 +1199,7 @@ HARBOUR
          set INCLUDE=<Harbour include dir>
          set LIB=<Harbour lib dir>
          set HB_GT_LIB=
+         set HB_*_INSTALL=
          set HB_INC_*=
          set HB_DIR_*=
          set HB_LEX=

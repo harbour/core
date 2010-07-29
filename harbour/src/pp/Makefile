@@ -33,9 +33,9 @@ pptable.c : hbpp$(BIN_EXT)
 	-@$(RM) hbpp$(OBJ_EXT) $(if $(OBJ_DYN_POSTFIX),hbpp$(OBJ_DYN_POSTFIX)$(OBJ_EXT),)
 
 ifneq ($(HB_BUILD_PARTS),lib)
-   ifneq ($(HB_BIN_INSTALL),)
+   ifneq ($(HB_INSTALL_BIN),)
       INSTALL_FILES := $(BIN_DIR)/hbpp$(BIN_EXT)
-      INSTALL_DIR := $(HB_BIN_INSTALL)
+      INSTALL_DIR := $(HB_INSTALL_BIN)
       include $(TOP)$(ROOT)config/install.mk
    endif
 endif

@@ -88,8 +88,8 @@ STATIC s_cDirBase
 PROCEDURE _APPMAIN( cFile, ... )
    LOCAL cPath, cDir, cExt
 
-#ifdef _HBRUN_HB_INC_INSTALL
-   cPath := _HBRUN_HB_INC_INSTALL
+#ifdef _HBRUN_HB_INSTALL_INC
+   cPath := _HBRUN_HB_INSTALL_INC
    hb_FNameSplit( cPath, @cDir )
    IF ! Empty( cDir ) .AND. Left( cDir, 1 ) $ hb_osPathDelimiters()
       AADD( s_aIncDir, "-I" + cPath )
@@ -98,7 +98,7 @@ PROCEDURE _APPMAIN( cFile, ... )
    HB_SYMBOL_UNUSED( cDir )
 #endif
 
-   cPath := getenv( "HB_INC_INSTALL" )
+   cPath := getenv( "HB_INSTALL_INC" )
    IF !EMPTY( cPath )
       AADD( s_aIncDir, "-I" + cPath )
    ENDIF

@@ -321,19 +321,19 @@ PROCEDURE GNUMake( aParams, hPackageList )
    /* Clearing envvars that may interact with hbmk2 */
 
    /* Saving original install dirs to our own variables */
-   hb_setenv( "_HB_INSTALL_BIN", GetEnv( "HB_BIN_INSTALL" ) )
-   hb_setenv( "_HB_INSTALL_LIB", GetEnv( "HB_LIB_INSTALL" ) )
-   hb_setenv( "_HB_INSTALL_DYN", GetEnv( "HB_DYN_INSTALL" ) )
-   hb_setenv( "_HB_INSTALL_INC", GetEnv( "HB_INC_INSTALL" ) )
-   hb_setenv( "_HB_INSTALL_MAN", GetEnv( "HB_MAN_INSTALL" ) )
-   hb_setenv( "_HB_INSTALL_ETC", GetEnv( "HB_ETC_INSTALL" ) )
+   hb_setenv( "_HB_INSTALL_BIN", GetEnv( "HB_INSTALL_BIN" ) )
+   hb_setenv( "_HB_INSTALL_LIB", GetEnv( "HB_INSTALL_LIB" ) )
+   hb_setenv( "_HB_INSTALL_DYN", GetEnv( "HB_INSTALL_DYN" ) )
+   hb_setenv( "_HB_INSTALL_INC", GetEnv( "HB_INSTALL_INC" ) )
+   hb_setenv( "_HB_INSTALL_MAN", GetEnv( "HB_INSTALL_MAN" ) )
+   hb_setenv( "_HB_INSTALL_ETC", GetEnv( "HB_INSTALL_ETC" ) )
 
    /* Override hbmk2 autodetection */
    hb_setenv( "HB_INSTALL_PREFIX", s_cRoot )
-   hb_setenv( "HB_BIN_INSTALL", s_cRoot + "bin/" + GetEnv( "HB_PLATFORM" ) + "/" + GetEnv( "HB_COMPILER" ) + GetEnv( "HB_BUILD_NAME" ) )
-   hb_setenv( "HB_LIB_INSTALL", s_cRoot + "lib/" + GetEnv( "HB_PLATFORM" ) + "/" + GetEnv( "HB_COMPILER" ) + GetEnv( "HB_BUILD_NAME" ) )
-   hb_setenv( "HB_DYN_INSTALL" )
-   hb_setenv( "HB_INC_INSTALL", s_cRoot + "include" )
+   hb_setenv( "HB_INSTALL_BIN", s_cRoot + "bin/" + GetEnv( "HB_PLATFORM" ) + "/" + GetEnv( "HB_COMPILER" ) + GetEnv( "HB_BUILD_NAME" ) )
+   hb_setenv( "HB_INSTALL_LIB", s_cRoot + "lib/" + GetEnv( "HB_PLATFORM" ) + "/" + GetEnv( "HB_COMPILER" ) + GetEnv( "HB_BUILD_NAME" ) )
+   hb_setenv( "HB_INSTALL_DYN" )
+   hb_setenv( "HB_INSTALL_INC", s_cRoot + "include" )
 
    /* Preprocessing */
 
@@ -499,7 +499,7 @@ STATIC FUNCTION mk_hbd( cDir )
    LOCAL aErrMsg
    LOCAL aEntry
 
-   IF ! Empty( GetEnv( "HB_DOC_INSTALL" ) )
+   IF ! Empty( GetEnv( "HB_INSTALL_DOC" ) )
 
       cName := DirGetName( cDir )
       IF Empty( cName )
@@ -514,7 +514,7 @@ STATIC FUNCTION mk_hbd( cDir )
       NEXT
 
       IF ! Empty( aEntry )
-         cName := PathSepToSelf( GetEnv( "HB_DOC_INSTALL" ) ) + hb_ps() + cName + ".hbd"
+         cName := PathSepToSelf( GetEnv( "HB_INSTALL_DOC" ) ) + hb_ps() + cName + ".hbd"
          IF __hbdoc_SaveHBD( cName, aEntry )
             OutStd( "! Compiled documentation: " + cName + " <= " + cDir + hb_eol() )
             RETURN .T.

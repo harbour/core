@@ -100,18 +100,18 @@ export HB_BUILD_PARTS=lib
 export HB_PLATFORM=win
 export HB_BIN_COMPILE="$(pwd)/bin/linux/gcc"
 
-export HB_BIN_INSTALL=$RPM_BUILD_ROOT/%{_bindir}
-export HB_INC_INSTALL=$RPM_BUILD_ROOT/%{_includedir}/%{name}
-export HB_LIB_INSTALL=$RPM_BUILD_ROOT/%{_libdir}/%{name}
-export HB_DYN_INSTALL=${HB_LIB_INSTALL}
+export HB_INSTALL_BIN=$RPM_BUILD_ROOT/%{_bindir}
+export HB_INSTALL_INC=$RPM_BUILD_ROOT/%{_includedir}/%{name}
+export HB_INSTALL_LIB=$RPM_BUILD_ROOT/%{_libdir}/%{name}
+export HB_INSTALL_DYN=${HB_INSTALL_LIB}
 export HB_BUILD_STRIP=lib
 
-mkdir -p $HB_BIN_INSTALL
+mkdir -p $HB_INSTALL_BIN
 
 make install %{?_smp_mflags}
 
 # remove unused files
-rm -fR ${HB_BIN_INSTALL}/{harbour,hbpp,hbmk2,hbrun,hbi18n,hbtest}.exe
+rm -fR ${HB_INSTALL_BIN}/{harbour,hbpp,hbmk2,hbrun,hbi18n,hbtest}.exe
 
 ######################################################################
 ## Post install
