@@ -130,21 +130,20 @@ PROCEDURE Main()
 
    /* TOFIX: Rewrite this in .prg */
 #if 0
-   for l in ${full_lib_name} ${full_lib_name_mt}
-   do
-      if [ -f $l ]
-      then
+   FOR EACH tmp IN { GetEnv( "HB_DYNLIB_ST" ), GetEnv( "HB_DYNLIB_MT" ) }
+
+      OutStd( GetEnv( "HB_DYN_INSTALL" + hb_ps() + tmp + hb_eol() )
 
          ll="` echo $l | sed 's!'${lib_suff}'$!!' `${lib_ext}"
          ln -sf $l $ll
 
          IF !( GetEnv( "HB_PLATFORM" ) $ "win|wce" )
-            case $HB_LIB_INSTALL in
-               /usr/lib/harbour|/usr/lib64/harbour|/usr/local/lib/harbour|/usr/local/lib64/harbour)
+            DO CASE
+            CASE GetEnv( "HB_LIB_INSTALL" ) $ "/usr/lib/harbour|/usr/lib64/harbour|/usr/local/lib/harbour|/usr/local/lib64/harbour"
                   ln -sf harbour/$l ../$ll
                   ln -sf harbour/$l ../$l
                   ;;
-               /usr/local/harbour/lib)
+            CASE GetEnv( "HB_LIB_INSTALL" ) $ "/usr/local/harbour/lib"
                   ld="/usr/lib"
                   if [ -n "${HB_INST_PKGPREF}" ] || [ -w $ld ]
                   then
@@ -155,13 +154,7 @@ PROCEDURE Main()
                   ;;
                *)
                   ;;
-            esac
-            ld := "/etc/ld.so.conf.d"
-            if [ -d $ld ] && ( [ -n "${HB_INST_PKGPREF}" ] || [ -w $ld ] )
-            then
-               mkdir -p ${HB_INST_PKGPREF}$ld
-               echo "$HB_LIB_INSTALL" > ${HB_INST_PKGPREF}/$ld/harbour.conf
-            fi
+            ENDCASE
          ENDIF
       fi
    done

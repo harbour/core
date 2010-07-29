@@ -68,6 +68,7 @@ STATIC hActions := {;
 STATIC s_cBase
 STATIC s_cHome
 STATIC s_cRoot
+STATIC s_cBinDir
 
 PROCEDURE Main( ... )
    LOCAL hPackageList
@@ -75,6 +76,12 @@ PROCEDURE Main( ... )
    s_cBase := ""
    s_cHome := StrTran( hb_DirBase(), hb_ps(), "/" )
    s_cRoot := s_cHome + "../"
+
+   #if defined( __HBSCRIPT__HBRUN )
+      s_cBinDir := PathSepToSelf( GetEnv( "__HBRUN__DIRBASE" ) )
+   #else
+      s_cBinDir := hb_DirBase()
+   #endif
 
    /* Load list of packages */
 
@@ -107,7 +114,6 @@ PROCEDURE Standalone( aParams, hPackageList )
    LOCAL aSortedList
 
    LOCAL cPWD
-   LOCAL cBinDir
    LOCAL cPackage
    LOCAL cMyPackage
 
@@ -176,10 +182,8 @@ PROCEDURE Standalone( aParams, hPackageList )
       ENDIF
    ENDIF
 
-   cBinDir := s_cRoot + "bin" + hb_ps()
-
    IF lCustom
-      mk_hb_processRun( PathSepToSelf( cBinDir ) + "hbmk2" + cOptionsUser )
+      mk_hb_processRun( s_cBinDir + "hbmk2" + cOptionsUser )
    ELSE
       /* Converting build options to hbmk2 options */
 
@@ -196,15 +200,14 @@ PROCEDURE Standalone( aParams, hPackageList )
       /* Query project information and dependencies and calculate build order */
       aPairList := {}
 
-      call_hbmk2_hbinfo( cBinDir, s_cBase + hPackageList[ cMyPackage ][ "cFileName" ], hPackageList[ cMyPackage ] )
+      call_hbmk2_hbinfo( s_cBase + hPackageList[ cMyPackage ][ "cFileName" ], hPackageList[ cMyPackage ] )
       DeptLinesToDeptPairList( aPairList, cMyPackage, hPackageList[ cMyPackage ][ "aDept" ] )
 
       aSortedList := TopoSort( aPairList )
 
       /* Build the dependencies and ourselves in in sorted order */
       FOR EACH cPackage IN aSortedList DESCEND
-         call_hbmk2( cBinDir,;
-            s_cBase + iif( cPackage == cMyPackage, "", s_cHome + cPackage + "/" ) + hPackageList[ cPackage ][ "cFileName" ],;
+         call_hbmk2( s_cBase + iif( cPackage == cMyPackage, "", s_cHome + cPackage + "/" ) + hPackageList[ cPackage ][ "cFileName" ],;
             iif( cPackage == cMyPackage, cOptions + cOptionsUser, " -inc" ), "" )
       NEXT
    ENDIF
@@ -228,7 +231,6 @@ PROCEDURE Standalone( aParams, hPackageList )
                      clean      install clean    _ACT_INC_CLEAN         -inc -clean
  */
 PROCEDURE GNUMake( aParams, hPackageList )
-   LOCAL cBinDir
    LOCAL hProject
    LOCAL cProject
    LOCAL cPackage
@@ -337,14 +339,12 @@ PROCEDURE GNUMake( aParams, hPackageList )
 
    /* Preprocessing */
 
-   cBinDir := GetEnv( "HB_HOST_BIN_DIR" ) + hb_ps()
-
    OutStd( "! Calculating build order for packages..." + hb_eol() )
 
    aPairList := {}
 
    FOR EACH hProject IN hPackageList
-      call_hbmk2_hbinfo( cBinDir, s_cBase + hProject:__enumKey() + "/" + hProject[ "cFileName" ], hProject )
+      call_hbmk2_hbinfo( s_cBase + hProject:__enumKey() + "/" + hProject[ "cFileName" ], hProject )
       DeptLinesToDeptPairList( aPairList, hProject:__enumKey(), hProject[ "aDept" ] )
    NEXT
 
@@ -381,14 +381,14 @@ PROCEDURE GNUMake( aParams, hPackageList )
 
          cProject := s_cBase + cPackage + "/" + hPackageList[ cPackage ][ "cFileName" ]
 
-         call_hbmk2( cBinDir, cProject, cOptions, "" )
+         call_hbmk2( cProject, cOptions, "" )
 
          /* Highly experimental */
          IF hPackageList[ cPackage ][ "cType" ] == "hblib" .AND. ;
             GetEnv( "HB_BUILD_CONTRIB_DLL" ) == "yes" .AND. ;
             hb_FileExists( PathSepToSelf( FNameExtSet( cProject, ".hbc" ) ) )
 
-            call_hbmk2( cBinDir, cProject, cOptions, " -hbdyn -nohblib- -implib " + FNameExtSet( cProject, ".hbc" ) )
+            call_hbmk2( cProject, cOptions, " -hbdyn -nohblib- -implib " + FNameExtSet( cProject, ".hbc" ) )
          ENDIF
 
          /* Compile documentation */
@@ -419,7 +419,7 @@ STATIC PROCEDURE clear_hbmk2_envvars()
 
    RETURN
 
-STATIC FUNCTION call_hbmk2_hbinfo( cBinDir, cProject, hProject )
+STATIC FUNCTION call_hbmk2_hbinfo( cProject, hProject )
    LOCAL cStdOut
    LOCAL cDir
    LOCAL cName
@@ -430,7 +430,7 @@ STATIC FUNCTION call_hbmk2_hbinfo( cBinDir, cProject, hProject )
 
    clear_hbmk2_envvars()
 
-   IF hb_processRun( PathSepToSelf( cBinDir ) + "hbmk2 --hbinfo " + StrTran( cProject, "\", "/" ),, @cStdOut  ) == 0
+   IF hb_processRun( s_cBinDir + "hbmk2 --hbinfo " + StrTran( cProject, "\", "/" ),, @cStdOut  ) == 0
 
       hProject[ "cType" ] := hbmk2_hbinfo_getitem( cStdOut, "targettype" )
 
@@ -468,12 +468,12 @@ STATIC FUNCTION hbmk2_hbinfo_getitem( cString, cItem, lAll )
 
    RETURN cRetVal
 
-STATIC FUNCTION call_hbmk2( cBinDir, cProject, cOptionsPre, cOptionsPost )
+STATIC FUNCTION call_hbmk2( cProject, cOptionsPre, cOptionsPost )
    LOCAL nErrorLevel
 
    clear_hbmk2_envvars()
 
-   nErrorLevel := mk_hb_processRun( PathSepToSelf( cBinDir ) + "hbmk2" +;
+   nErrorLevel := mk_hb_processRun( s_cBinDir + "hbmk2" +;
                                     " -quiet -lang=en -width=0" +;
                                     " @" + StrTran( s_cHome + "hbpre", "\", "/" ) +;
                                     cOptionsPre +;

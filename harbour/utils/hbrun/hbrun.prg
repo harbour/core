@@ -150,6 +150,7 @@ PROCEDURE _APPMAIN( cFile, ... )
                         ERRORLEVEL( 1 )
                      ENDIF
                   OTHERWISE
+                     hb_setenv( "__HBRUN__DIRBASE", hb_DirBase() )
                      hb_argShift( .T. )
                      hb_hrbRun( cFile, ... )
                      EXIT

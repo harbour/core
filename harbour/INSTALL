@@ -137,6 +137,15 @@ HARBOUR
       $ ./hello
       You should see 'Hello world!' on screen.
 
+      NOTE: You can override default (host) architecture by adding
+            values below to HB_USER_CFLAGS, HB_USER_LDFLAGS, HB_USER_DFLAGS
+            envvars, you can use multiple values:
+
+            Intel 32-bit: "-arch i386"
+            Intel 64-bit: "-arch ppc"
+            PPC 32-bit:   "-arch x86_64"
+            PPC 64-bit:   "-arch ppc64"
+
    on BSD/HP-UX/Solaris/BeOS/Haiku/QNX/*nix hosts
    ----------------------------------------------
    (possible cross-build targets: Windows, Windows CE, MS-DOS)
