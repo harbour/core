@@ -699,7 +699,9 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    LOCAL l_aLIBSYSMISC := {}
    LOCAL l_aLIBSTATICPOST := {}
    LOCAL l_aOPTRUN
+   LOCAL l_cIMPLIBDIR
    LOCAL l_cIMPLIBNAME
+   LOCAL l_lIMPLIBToProcess := .F.
    LOCAL l_aOBJ
    LOCAL l_aOBJA
    LOCAL l_aCLEAN
@@ -822,6 +824,8 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    LOCAL lDoSupportDetection
    LOCAL lDeleteWorkDir := .F.
 
+   LOCAL lHBMAINDLLP
+
    IF s_cSecToken == NIL
       s_cSecToken := StrZero( hb_Random( 1, 4294967294 ), 10, 0 )
    ENDIF
@@ -834,7 +838,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    hbmk[ _HBMK_cWorkDir ] := NIL
 
    hbmk[ _HBMK_lCreateLib ] := .F.
-   hbmk[ _HBMK_lCreateDyn ] := .F.
+   Set_lCreateDyn( hbmk, .F. )
    hbmk[ _HBMK_lCreateImpLib ] := .F.
    hbmk[ _HBMK_lCreatePPO ] := .F.
    hbmk[ _HBMK_lCreateHRB ] := .F.
@@ -984,9 +988,9 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          ENDIF
 
       CASE cParamL             == "-hbrun"     ; lSkipBuild := .T. ; hbmk[ _HBMK_lRUN ] := .T.
-      CASE cParamL             == "-hbraw"     ; hbmk[ _HBMK_lInfo ] := .F. ; hbmk[ _HBMK_lStopAfterHarbour ] := .T. ; lStopAfterCComp := .T. ; hbmk[ _HBMK_lCreateLib ] := .F. ; hbmk[ _HBMK_lCreateDyn ] := .F. ; lAcceptCFlag := .F. ; lAcceptLDFlag := .F.
+      CASE cParamL             == "-hbraw"     ; hbmk[ _HBMK_lInfo ] := .F. ; hbmk[ _HBMK_lStopAfterHarbour ] := .T. ; lStopAfterCComp := .T. ; hbmk[ _HBMK_lCreateLib ] := .F. ; Set_lCreateDyn( hbmk, .F. ) ; lAcceptCFlag := .F. ; lAcceptLDFlag := .F.
       CASE cParamL             == "-hbcmp" .OR. ;
-           cParamL             == "-clipper"   ; hbmk[ _HBMK_lInfo ] := .F. ; hbmk[ _HBMK_lStopAfterHarbour ] := .F. ; lStopAfterCComp := .T. ; hbmk[ _HBMK_lCreateLib ] := .F. ; hbmk[ _HBMK_lCreateDyn ] := .F. ; lAcceptCFlag := .F. ; lAcceptLDFlag := .F.
+           cParamL             == "-clipper"   ; hbmk[ _HBMK_lInfo ] := .F. ; hbmk[ _HBMK_lStopAfterHarbour ] := .F. ; lStopAfterCComp := .T. ; hbmk[ _HBMK_lCreateLib ] := .F. ; Set_lCreateDyn( hbmk, .F. ) ; lAcceptCFlag := .F. ; lAcceptLDFlag := .F.
       CASE cParamL             == "-hbcc"      ; hbmk[ _HBMK_lInfo ] := .F. ; hbmk[ _HBMK_lStopAfterHarbour ] := .F. ; lStopAfterCComp := .F. ; lAcceptCFlag := .T.
       CASE cParamL             == "-hblnk"     ; hbmk[ _HBMK_lInfo ] := .F. ; hbmk[ _HBMK_lStopAfterHarbour ] := .F. ; lStopAfterCComp := .F. ; lAcceptLDFlag := .T.
       CASE cParamL             == "-rtlink" .OR. ;
@@ -1764,6 +1768,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    l_aOBJA := {}
    hbmk[ _HBMK_cPROGDIR ] := NIL
    hbmk[ _HBMK_cPROGNAME ] := NIL
+   l_cIMPLIBDIR := NIL
    l_cIMPLIBNAME := NIL
    hbmk[ _HBMK_cFIRST ] := NIL
    hbmk[ _HBMK_aPO ] := {}
@@ -1873,10 +1878,10 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       CASE cParamL == "-quiet-"          ; hbmk[ _HBMK_lQuiet ] := .F.
       CASE cParamL == "-info"            ; hbmk[ _HBMK_lInfo ] := .T.
       CASE cParamL == "-pause"           ; lPause := .T.
-      CASE cParamL == "-hbexe"           ; hbmk[ _HBMK_lStopAfterHarbour ] := .F. ; lStopAfterCComp := .F. ; hbmk[ _HBMK_lCreateLib ] := .F. ; hbmk[ _HBMK_lCreateDyn ] := .F.
-      CASE cParamL == "-hblib"           ; hbmk[ _HBMK_lStopAfterHarbour ] := .F. ; lStopAfterCComp := .T. ; hbmk[ _HBMK_lCreateLib ] := .T. ; hbmk[ _HBMK_lCreateDyn ] := .F.
-      CASE cParamL == "-hbdyn"           ; hbmk[ _HBMK_lStopAfterHarbour ] := .F. ; lStopAfterCComp := .T. ; hbmk[ _HBMK_lCreateLib ] := .F. ; hbmk[ _HBMK_lCreateDyn ] := .T. ; hbmk[ _HBMK_lDynVM ] := .F. ; l_lNOHBLIB := .T.
-      CASE cParamL == "-hbdynvm"         ; hbmk[ _HBMK_lStopAfterHarbour ] := .F. ; lStopAfterCComp := .T. ; hbmk[ _HBMK_lCreateLib ] := .F. ; hbmk[ _HBMK_lCreateDyn ] := .T. ; hbmk[ _HBMK_lDynVM ] := .T. ; l_lNOHBLIB := .F.
+      CASE cParamL == "-hbexe"           ; hbmk[ _HBMK_lStopAfterHarbour ] := .F. ; lStopAfterCComp := .F. ; hbmk[ _HBMK_lCreateLib ] := .F. ; Set_lCreateDyn( hbmk, .F. )
+      CASE cParamL == "-hblib"           ; hbmk[ _HBMK_lStopAfterHarbour ] := .F. ; lStopAfterCComp := .T. ; hbmk[ _HBMK_lCreateLib ] := .T. ; Set_lCreateDyn( hbmk, .F. )
+      CASE cParamL == "-hbdyn"           ; hbmk[ _HBMK_lStopAfterHarbour ] := .F. ; lStopAfterCComp := .T. ; hbmk[ _HBMK_lCreateLib ] := .F. ; Set_lCreateDyn( hbmk, .T. ) ; hbmk[ _HBMK_lDynVM ] := .F. ; l_lNOHBLIB := .T.
+      CASE cParamL == "-hbdynvm"         ; hbmk[ _HBMK_lStopAfterHarbour ] := .F. ; lStopAfterCComp := .T. ; hbmk[ _HBMK_lCreateLib ] := .F. ; Set_lCreateDyn( hbmk, .T. ) ; hbmk[ _HBMK_lDynVM ] := .T. ; l_lNOHBLIB := .F.
       CASE cParamL == "-hbimplib"        ; hbmk[ _HBMK_lCreateImpLib ] := .T. ; lAcceptIFlag := .T.
       CASE cParamL == "-gui" .OR. ;
            cParamL == "-mwindows"        ; hbmk[ _HBMK_lGUI ]       := .T. /* Compatibility */
@@ -2131,6 +2136,31 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                hbmk[ _HBMK_cPROGDIR ] := NIL
                hbmk[ _HBMK_cPROGNAME ] := NIL
             ENDIF
+         ENDIF
+
+      CASE Left( cParamL, Len( "-implib=" ) ) == "-implib="
+
+         hbmk[ _HBMK_lIMPLIB ] := .T.
+
+         tmp := SubStr( cParam, Len( "-implib=" ) + 1 )
+
+         IF ! Empty( tmp )
+            tmp := MacroProc( hbmk, tmp, aParam[ _PAR_cFileName ] )
+            IF ! Empty( tmp )
+               tmp := PathSepToSelf( tmp )
+               hb_FNameSplit( tmp, @cDir, @cName, @cExt )
+               IF Empty( cDir )
+                  tmp := PathNormalize( PathMakeAbsolute( tmp, aParam[ _PAR_cFileName ] ) )
+                  hb_FNameSplit( tmp, @cDir, @cName, @cExt )
+                  IF l_cIMPLIBDIR == NIL
+                     l_cIMPLIBDIR := cDir
+                  ENDIF
+               ELSE
+                  l_cIMPLIBDIR := PathNormalize( PathMakeAbsolute( cDir, aParam[ _PAR_cFileName ] ) )
+               ENDIF
+            ENDIF
+         ELSE
+            l_cIMPLIBDIR := NIL
          ENDIF
 
       CASE Left( cParam, 2 ) == "-L" .AND. ;
@@ -2671,19 +2701,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    /* Decide about working dir */
    IF ! hbmk[ _HBMK_lStopAfterInit ] .AND. ! hbmk[ _HBMK_lCreateImpLib ] .AND. ! lDumpInfo
       IF hbmk[ _HBMK_lINC ]
-         /* NOTE: We store -hbdyn objects in different dirs by default as - for Windows
-                  platforms - they're always built using different compilation options
-                  than normal targets. [vszakats] */
-         /* NOTE: We only use different shared object flags when compiling for
-                  "( win || wce ) & !( allmingw | cygwin )". This may change in the future.
-                  IMPORTANT: Keep this condition in sync with setting -DHB_DYNLIB C compiler flag */
-         IF hbmk[ _HBMK_lCreateDyn ] .AND. !( hbmk[ _HBMK_cCOMP ] $ "mingw|mingw64|mingwarm|cygwin" )
-            DEFAULT hbmk[ _HBMK_cWorkDir ] TO FNameDirGet( hbmk[ _HBMK_cPROGNAME ] ) + _WORKDIR_DEF_ + hb_ps() + "hbdyn"
-            hbmk[ _HBMK_cWorkDirDynSub ] := "/hbdyn"
-         ELSE
-            DEFAULT hbmk[ _HBMK_cWorkDir ] TO FNameDirGet( hbmk[ _HBMK_cPROGNAME ] ) + _WORKDIR_DEF_
-            hbmk[ _HBMK_cWorkDirDynSub ] := ""
-         ENDIF
+         DEFAULT hbmk[ _HBMK_cWorkDir ] TO FNameDirGet( hbmk[ _HBMK_cPROGNAME ] ) + _WORKDIR_DEF_ + hbmk[ _HBMK_cWorkDirDynSub ]
          IF ! Empty( hbmk[ _HBMK_cWorkDir ] )
             IF ! DirBuild( hbmk[ _HBMK_cWorkDir ] )
                hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Working directory cannot be created: %1$s" ), hbmk[ _HBMK_cWorkDir ] ) )
@@ -4350,17 +4368,20 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
    IF ! hbmk[ _HBMK_lStopAfterInit ] .AND. ! hbmk[ _HBMK_lStopAfterHarbour ]
       hb_FNameSplit( hbmk[ _HBMK_cPROGNAME ], @cDir, @cName, @cExt )
+      IF l_cIMPLIBDIR == NIL
+         l_cIMPLIBDIR := cDir
+      ENDIF
       DO CASE
       CASE ! lStopAfterCComp
          IF Empty( cExt ) .AND. ! Empty( cBinExt )
             hbmk[ _HBMK_cPROGNAME ] := hb_FNameMerge( cDir, cName, cBinExt )
          ENDIF
-         l_cIMPLIBNAME := hb_FNameMerge( cDir, cLibLibPrefix + cName + _HBMK_IMPLIB_EXE_POST, cImpLibExt )
+         l_cIMPLIBNAME := hb_FNameMerge( l_cIMPLIBDIR, cLibLibPrefix + cName + _HBMK_IMPLIB_EXE_POST, cImpLibExt )
       CASE lStopAfterCComp .AND. hbmk[ _HBMK_lCreateDyn ]
          IF Empty( cExt ) .AND. ! Empty( cDynLibExt )
             hbmk[ _HBMK_cPROGNAME ] := hb_FNameMerge( cDir, cName, cDynLibExt )
          ENDIF
-         l_cIMPLIBNAME := hb_FNameMerge( cDir, cLibLibPrefix + cName + _HBMK_IMPLIB_DLL_POST, cImpLibExt )
+         l_cIMPLIBNAME := hb_FNameMerge( l_cIMPLIBDIR, cLibLibPrefix + cName + _HBMK_IMPLIB_DLL_POST, cImpLibExt )
       CASE lStopAfterCComp .AND. hbmk[ _HBMK_lCreateLib ]
          hbmk[ _HBMK_cPROGNAME ] := hb_FNameMerge( cDir, cLibLibPrefix + cName, iif( Empty( cLibLibExt ), cExt, cLibLibExt ) )
       ENDCASE
@@ -4564,7 +4585,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    IF ! hbmk[ _HBMK_lStopAfterInit ] .AND. hbmk[ _HBMK_lDEPIMPLIB ] .AND. ISBLOCK( bBlk_ImpLib )
       FOR EACH tmp IN hbmk[ _HBMK_hDEP ]
          IF tmp[ _HBMKDEP_lFound ] .AND. ! Empty( tmp[ _HBMKDEP_aIMPLIBSRC ] )
-            DoIMPLIB( hbmk, bBlk_ImpLib, cLibLibPrefix, cLibLibExt, tmp[ _HBMKDEP_aIMPLIBSRC ], tmp[ _HBMKDEP_cIMPLIBDST ], "implib" )
+            DoIMPLIB( hbmk, bBlk_ImpLib, cLibLibPrefix, cLibLibExt, tmp[ _HBMKDEP_aIMPLIBSRC ], tmp[ _HBMKDEP_cIMPLIBDST ], "depimplib" )
          ENDIF
       NEXT
    ENDIF
@@ -4704,13 +4725,16 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             ENDIF
          ENDIF
 
+         lHBMAINDLLP := AScan( hbmk[ _HBMK_aLIBUSER ], {| tmp | hb_FileMatch( tmp, "hbmaindllp" ) } ) > 0
+
          /* HACK: Override entry point requested by user or detected by us,
                   and override the GT if requested by user. */
          IF ( ! lStopAfterCComp .OR. hbmk[ _HBMK_lDynVM ] ) .AND. ;
             ( l_cMAIN != NIL .OR. ;
               ! Empty( hbmk[ _HBMK_aLIBUSERGT ] ) .OR. ;
               hbmk[ _HBMK_cGT ] != NIL .OR. ;
-              l_cCMAIN != NIL )
+              l_cCMAIN != NIL .OR. ;
+              lHBMAINDLLP )
 
             l_cCSTUB := DirAddPathSep( hbmk[ _HBMK_cWorkDir ] ) + "_hbmkaut.c"
 
@@ -4779,6 +4803,14 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                   ENDIF
                   cFile += '}'                                                                    + Chr( 10 )
                   cFile += ''                                                                     + Chr( 10 )
+               ENDIF
+
+               IF lHBMAINDLLP
+                  cFile += 'HB_EXPORT_ATTR PHB_FUNC dll_hb_vmProcAddress( const char * szFuncName )' + Chr( 10 )
+                  cFile += '{'                                                                       + Chr( 10 )
+                  cFile += '   return hb_vmProcAddress( szFuncName );'                               + Chr( 10 )
+                  cFile += '}'                                                                       + Chr( 10 )
+                  cFile += ''                                                                        + Chr( 10 )
                ENDIF
 
                IF hbmk[ _HBMK_cGT ] != NIL .OR. ;
@@ -5007,6 +5039,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                                       l_aLIBSTATICPOST } )
          ENDIF
       ELSE
+         lHBMAINDLLP := .F.
          l_aLIBHB := {}
          l_aLIBSHARED := {}
          hbmk[ _HBMK_aPRG ] := {}
@@ -5020,7 +5053,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       ListCookLib( hbmk, l_aLIB, l_aLIBA, l_aLIBRAW, NIL, cLibExt )
       IF hbmk[ _HBMK_lSHARED ] .AND. ! Empty( l_aLIBSHARED )
          /* Don't link Harbour dynamic/static libs when in '-hbdyn -shared' mode */
-         IF !( hbmk[ _HBMK_lCreateDyn ] .AND. ! hbmk[ _HBMK_lDynVM ] )
+         IF !( hbmk[ _HBMK_lCreateDyn ] .AND. ! hbmk[ _HBMK_lDynVM ] ) .OR. lHBMAINDLLP
             l_aLIBRAW := ArrayJoin( l_aLIBSHARED, l_aLIBRAW )
             ListCookLib( hbmk, l_aLIB, l_aLIBA, l_aLIBSHARED, NIL )
          ENDIF
@@ -5478,6 +5511,13 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
          IF lTargetUpToDate
             hbmk_OutStd( hbmk, hb_StrFormat( I_( "Target up to date: %1$s" ), hbmk[ _HBMK_cPROGNAME ] ) )
+
+            DO CASE
+            CASE ! lStopAfterCComp .AND. ! Empty( cBin_Link )
+               l_lIMPLIBToProcess := .T.
+            CASE lStopAfterCComp .AND. hbmk[ _HBMK_lCreateDyn ] .AND. ! Empty( cBin_Dyn )
+               l_lIMPLIBToProcess := .T.
+            ENDCASE
          ELSE
             IF ! DirBuild( FNameDirGet( hbmk[ _HBMK_cPROGNAME ] ) )
                hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Cannot create directory for target '%1$s'." ), hbmk[ _HBMK_cPROGNAME ] ) )
@@ -5561,8 +5601,8 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                   FErase( cScriptFile )
                ENDIF
 
-               IF hbmk[ _HBMK_lIMPLIB ] .AND. hbmk[ _HBMK_nErrorLevel ] == 0 .AND. hbmk[ _HBMK_cPLAT ] $ "win|os2|dos"
-                  hb_AIns( hbmk[ _HBMK_aINSTFILE ], 1, { "", l_cIMPLIBNAME }, .T. )
+               IF hbmk[ _HBMK_nErrorLevel ] == 0
+                  l_lIMPLIBToProcess := .T.
                ENDIF
 
                IF hbmk[ _HBMK_nErrorLevel ] == 0 .AND. hbmk[ _HBMK_lGUI ] .AND. hbmk[ _HBMK_cPLAT ] == "darwin"
@@ -5658,8 +5698,8 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                   FErase( cScriptFile )
                ENDIF
 
-               IF hbmk[ _HBMK_lIMPLIB ] .AND. hbmk[ _HBMK_nErrorLevel ] == 0 .AND. hbmk[ _HBMK_cPLAT ] $ "win|os2|dos"
-                  hb_AIns( hbmk[ _HBMK_aINSTFILE ], 1, { "", l_cIMPLIBNAME }, .T. )
+               IF hbmk[ _HBMK_nErrorLevel ] == 0
+                  l_lIMPLIBToProcess := .T.
                ENDIF
 
             CASE lStopAfterCComp .AND. hbmk[ _HBMK_lCreateLib ] .AND. ! Empty( cBin_Lib )
@@ -5730,6 +5770,13 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          ENDIF
 
          IF ! lTargetUpToDate .OR. hbmk[ _HBMK_lInstForce ]
+            /* For win/bcc and os2/gcc the implib is not created at this point yet,
+               so there will be a copy failure in case the implib generation
+               fails at the post-processing phase. */
+            IF hbmk[ _HBMK_lIMPLIB ] .AND. hbmk[ _HBMK_cPLAT ] $ "win|os2|dos" .AND. ;
+               l_lIMPLIBToProcess
+               hb_AIns( hbmk[ _HBMK_aINSTFILE ], 1, { "implib", l_cIMPLIBNAME }, .T. )
+            ENDIF
             hb_AIns( hbmk[ _HBMK_aINSTFILE ], 1, { "", hbmk[ _HBMK_cPROGNAME ] }, .T. )
          ENDIF
       ENDIF
@@ -5933,6 +5980,24 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    ENDIF
 
    RETURN hbmk[ _HBMK_nErrorLevel ]
+
+/* NOTE: We store -hbdyn objects in different dirs by default as - for Windows
+         platforms - they're always built using different compilation options
+         than normal targets. [vszakats] */
+/* NOTE: We only use different shared object flags when compiling for
+         "( win || wce ) & !( allmingw | cygwin )". This may change in the future.
+         IMPORTANT: Keep this condition in sync with setting -DHB_DYNLIB C compiler flag logic */
+STATIC PROCEDURE Set_lCreateDyn( hbmk, lValue )
+
+   hbmk[ _HBMK_lCreateDyn ] := lValue
+
+   IF hbmk[ _HBMK_lCreateDyn ] .AND. ! Empty( hbmk[ _HBMK_cCOMP ] ) .AND. !( hbmk[ _HBMK_cCOMP ] $ "mingw|mingw64|mingwarm|cygwin" )
+      hbmk[ _HBMK_cWorkDirDynSub ] := hb_ps() + "hbdyn"
+   ELSE
+      hbmk[ _HBMK_cWorkDirDynSub ] := ""
+   ENDIF
+
+   RETURN
 
 STATIC PROCEDURE vxworks_env_init( hbmk )
 
@@ -10915,6 +10980,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-[no]cpp[=def]"     , I_( "force C/C++ mode or reset to default" ) },;
       { "-[no]map"           , I_( "create (or not) a map file" ) },;
       { "-[no]implib"        , I_( "create (or not) an import library (in -hbdyn/-hbexe mode). The name will have a postfix added." ) },;
+      { "-implib=<dir>"      , I_( "create import library (in -hbdyn/-hbexe mode) in <dir> (default: same as output dir)" ) },;
       { "-[no]strip"         , I_( "strip (no strip) binaries" ) },;
       { "-[no]trace"         , I_( "show commands executed" ) },;
       { "-[no]beep"          , I_( "enable (or disable) single beep on successful exit, double beep on failure" ) },;

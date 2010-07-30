@@ -29,19 +29,18 @@
 
 /* TODO:
      1. normalize path to hbpre/hbpost to save on cmdline
-     2. solve HB_BUILD_CONTRIB_DLL support the .dlls are either
-        huge, or they don't link.
+        (after normalizer function has been moved to core)
+     2. finalize HB_BUILD_CONTRIB_DYN support.
      3. Move in external libs to contrib area? (bz2, minizip, sqlite3)
         (the only downside is that irrelevant hits will be spilling
-        'grep -R' results)
-     4. 'install' is ignored in stdalone mode. It would be needed to
-        replicate the install dir defaulting logic found in global.mk
-        to implement it.
-     5. Delete header install related logic from GNU Make system,
-        also delete doc/*.txt install related logic (easily replacable
-        with postinst.hbs logic)
-     6. Honor paths found in --hbinfo hbctree{{}} section.
-     7. Move lib output dir and workdirs inside contrib dirs.
+        into 'grep -R' results)
+     4. Honor paths found in --hbinfo hbctree{{}} section.
+     5. Move lib output dir and workdirs inside contrib dirs.
+
+  NOTE:
+     - 'install' is ignored in stdalone mode. It would be needed to
+       replicate the install dir defaulting logic found in global.mk
+       to implement it.
  */
 
 #pragma warninglevel=3
@@ -114,6 +113,7 @@ PROCEDURE Standalone( aParams, hPackageList )
    LOCAL cPWD
    LOCAL cPackage
    LOCAL cMyPackage
+   LOCAL cProject
 
    LOCAL cOptions
    LOCAL cOptionsUser
@@ -205,8 +205,19 @@ PROCEDURE Standalone( aParams, hPackageList )
 
       /* Build the dependencies and ourselves in in sorted order */
       FOR EACH cPackage IN aSortedList DESCEND
-         call_hbmk2( s_cBase + iif( cPackage == cMyPackage, "", s_cHome + cPackage + "/" ) + hPackageList[ cPackage ][ "cFileName" ],;
+
+         cProject := s_cBase + iif( cPackage == cMyPackage, "", s_cHome + cPackage + "/" ) + hPackageList[ cPackage ][ "cFileName" ]
+
+         call_hbmk2( cProject,;
             iif( cPackage == cMyPackage, cOptions + cOptionsUser, " -inc" ), "" )
+
+         /* Highly experimental */
+         IF hPackageList[ cPackage ][ "cType" ] == "hblib" .AND. ;
+            GetEnv( "HB_BUILD_CONTRIB_DYN" ) == "yes" .AND. ;
+            hb_FileExists( PathSepToSelf( FNameExtSet( cProject, ".hbc" ) ) )
+
+            call_hbmk2( cProject, cOptions, " " + FNameExtSet( cProject, ".hbc" ) )
+         ENDIF
       NEXT
    ENDIF
 
@@ -383,10 +394,10 @@ PROCEDURE GNUMake( aParams, hPackageList )
 
          /* Highly experimental */
          IF hPackageList[ cPackage ][ "cType" ] == "hblib" .AND. ;
-            GetEnv( "HB_BUILD_CONTRIB_DLL" ) == "yes" .AND. ;
+            GetEnv( "HB_BUILD_CONTRIB_DYN" ) == "yes" .AND. ;
             hb_FileExists( PathSepToSelf( FNameExtSet( cProject, ".hbc" ) ) )
 
-            call_hbmk2( cProject, cOptions, " -hbdyn -nohblib- -implib " + FNameExtSet( cProject, ".hbc" ) )
+            call_hbmk2( cProject, cOptions, " " + FNameExtSet( cProject, ".hbc" ) )
          ENDIF
 
          /* Compile documentation */
@@ -466,10 +477,12 @@ STATIC FUNCTION hbmk2_hbinfo_getitem( cString, cItem, lAll )
 
    RETURN cRetVal
 
-STATIC FUNCTION call_hbmk2( cProject, cOptionsPre, cOptionsPost )
+STATIC FUNCTION call_hbmk2( cProject, cOptionsPre, cOptionsLibDyn )
    LOCAL nErrorLevel
 
    clear_hbmk2_envvars()
+
+   hb_setenv( "_HB_BUILD_LIBDYN", iif( Empty( cOptionsLibDyn ), NIL, "yes" ) )
 
    nErrorLevel := mk_hb_processRun( s_cBinDir + "hbmk2" +;
                                     " -quiet -lang=en -width=0" +;
@@ -477,7 +490,7 @@ STATIC FUNCTION call_hbmk2( cProject, cOptionsPre, cOptionsPost )
                                     cOptionsPre +;
                                     " " + StrTran( cProject, "\", "/" ) +;
                                     " @" + StrTran( s_cHome, "\", "/" ) + "hbpost" +;
-                                    cOptionsPost )
+                                    cOptionsLibDyn )
 
    IF nErrorLevel != 0
       OutStd( hb_StrFormat( "! '%1$s' returned status: %2$s", cProject, hb_ntos( nErrorLevel ) ) + hb_eol() )

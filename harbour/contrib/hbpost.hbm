@@ -36,6 +36,12 @@
 
 {(hbdyn|hbexe)&HB_BUILD_SHARED='yes'}-shared
 
+# Experimental
+{_HB_BUILD_LIBDYN}-hbdyn
+{_HB_BUILD_LIBDYN}-shared
+{_HB_BUILD_LIBDYN}-implib=../lib/${hb_plat}/${hb_comp}${hb_build}/
+{_HB_BUILD_LIBDYN&allwin}-lhbmaindllp
+
 {hblib}-o../lib/${hb_plat}/${hb_comp}${hb_build}/
 {hbexe|hbdyn}-o../bin/${hb_plat}/${hb_comp}${hb_build}/
 
@@ -46,7 +52,8 @@
 {_HB_BUILD_INSTALL&_HB_INSTALL_BIN&hbexe}-instpath=${_HB_INSTALL_BIN}/
 {_HB_BUILD_INSTALL&_HB_INSTALL_DYN&hbdyn}-instpath=${_HB_INSTALL_DYN}/
 {_HB_BUILD_INSTALL&_HB_INSTALL_INC&hblib}-instpath=inc:${_HB_INSTALL_INC}/
+{_HB_BUILD_INSTALL&_HB_INSTALL_LIB}-instpath=implib:${_HB_INSTALL_LIB}/
 {_HB_BUILD_INSTALL&_HB_INSTALL_ETC}-instpath=etc:${_HB_INSTALL_ETC}/
 {_HB_BUILD_INSTALL&_HB_INSTALL_MAN}-instpath=man:${_HB_INSTALL_MAN}/
-{_HB_BUILD_INSTALL&_HB_INSTALL_LIB&HB_INSTALL_IMPLIB='yes'}-instpath=implib:${_HB_INSTALL_LIB}/
+{_HB_BUILD_INSTALL&_HB_INSTALL_LIB&HB_INSTALL_IMPLIB='yes'}-instpath=depimplib:${_HB_INSTALL_LIB}/
 {_HB_BUILD_INSTALL}-instforce
