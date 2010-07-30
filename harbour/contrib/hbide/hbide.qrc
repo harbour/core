@@ -102,12 +102,14 @@
 <file>resources/hbidesplash.png</file>
 <file>resources/hbidesplashwatermark.png</file>
 <file>resources/help.png</file>
+<file>resources/help1.png</file>
 <file>resources/helpdoc.png</file>
 <file>resources/hilight-all.png</file>
 <file>resources/horzruler.png</file>
 <file>resources/idepreferences.png</file>
 <file>resources/increaseindent.png</file>
 <file>resources/info.png</file>
+<file>resources/infotips.png</file>
 <file>resources/insert-datetime.png</file>
 <file>resources/insert-external-file.png</file>
 <file>resources/insert-procname.png</file>

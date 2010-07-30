@@ -743,13 +743,12 @@ METHOD IdeDocks:buildToolBarPanels()
    aadd( aBtns, { "deleteline"      , "Delete Current Line"        , {|| ::oEM:deleteLine()                     } } )
    aadd( aBtns, { "duplicateline"   , "Duplicate Current Line"     , {|| ::oEM:duplicateLine()                  } } )
    aadd( aBtns, {} )
-   #if 0
-   aadd( aBtns, { "togglelinenumber", "Toggle Line Numbers"        , {|| ::oEM:toggleLineNumbers()              } } )
-   aadd( aBtns, { "curlinehilight"  , "Toggle Current Line Hilight", {|| ::oEM:toggleCurrentLineHighlightMode() } } )
-   #endif
    aadd( aBtns, { "togglelinenumber", "Toggle Line Numbers"        , {|| ::oEM:toggleLineNumbers()              } } )
    aadd( aBtns, { "horzruler"       , "Toggle Horizontal Ruler"    , {|| ::oEM:toggleHorzRuler()                } } )
    aadd( aBtns, { "curlinehilight"  , "Toggle Current Line Hilight", {|| ::oEM:toggleCurrentLineHighlightMode() } } )
+   aadd( aBtns, {} )
+   aadd( aBtns, { "help1"           , "Toggle Code Completion"     , {|| ::oEM:toggleCodeCompetion()            } } )
+   aadd( aBtns, { "infotips"        , "Toggle Completion Tips"     , {|| ::oEM:toggleCompetionTips()            } } )
    FOR EACH a_ IN aBtns
       IF empty( a_ )
          ::qTBarLines:addSeparator()

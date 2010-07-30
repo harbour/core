@@ -145,6 +145,8 @@ CLASS IdeEditsManager INHERIT IdeObject
    METHOD toggleLineNumbers()
    METHOD toggleHorzRuler()
    METHOD toggleCurrentLineHighlightMode()
+   METHOD toggleCodeCompetion()
+   METHOD toggleCompetionTips()
 
    METHOD getText()
    METHOD getWord( lSelect )
@@ -742,6 +744,26 @@ METHOD IdeEditsManager:toggleHorzRuler()
    ::oIde:lHorzRulerVisible := ! ::lHorzRulerVisible
    IF !empty( oEdit := ::getEditObjectCurrent() )
       oEdit:toggleHorzRuler()
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:toggleCodeCompetion()
+   LOCAL oEdit
+   ::oIde:lHorzRulerVisible := ! ::lHorzRulerVisible
+   IF !empty( oEdit := ::getEditObjectCurrent() )
+      oEdit:toggleCodeCompetion()
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:toggleCompetionTips()
+   LOCAL oEdit
+   ::oIde:lHorzRulerVisible := ! ::lHorzRulerVisible
+   IF !empty( oEdit := ::getEditObjectCurrent() )
+      oEdit:toggleCompetionTips()
    ENDIF
    RETURN Self
 

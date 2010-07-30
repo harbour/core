@@ -152,6 +152,8 @@ HB_FUNC( QT_HBQPLAINTEXTEDIT )
    void           hbSetProtoStyle( const QString & css )
    void           hbSelectAll()
    void           hbSetFieldsListActive( bool active )
+   void           hbToggleCodeCompetion()
+   void           hbToggleCompetionTips()
  
 </SLOTS>
 

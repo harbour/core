@@ -918,6 +918,34 @@ HB_FUNC( QT_HBQPLAINTEXTEDIT_HBSETFIELDSLISTACTIVE )
    }
 }
 
+/*
+ * void           hbToggleCodeCompetion()
+ */
+HB_FUNC( QT_HBQPLAINTEXTEDIT_HBTOGGLECODECOMPETION )
+{
+   HBQPlainTextEdit * p = hbqt_par_HBQPlainTextEdit( 1 );
+   if( p )
+      ( p )->hbToggleCodeCompetion();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQPLAINTEXTEDIT_HBTOGGLECODECOMPETION FP=( p )->hbToggleCodeCompetion(); p is NULL" ) );
+   }
+}
+
+/*
+ * void           hbToggleCompetionTips()
+ */
+HB_FUNC( QT_HBQPLAINTEXTEDIT_HBTOGGLECOMPETIONTIPS )
+{
+   HBQPlainTextEdit * p = hbqt_par_HBQPlainTextEdit( 1 );
+   if( p )
+      ( p )->hbToggleCompetionTips();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQPLAINTEXTEDIT_HBTOGGLECOMPETIONTIPS FP=( p )->hbToggleCompetionTips(); p is NULL" ) );
+   }
+}
+
 
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */

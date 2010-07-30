@@ -82,6 +82,8 @@
         :hbSetProtoStyle( cCss )                            -> NIL
         :hbSelectAll()                                      -> NIL
         :hbSetFieldsListActive( lActive )                   -> NIL
+        :hbToggleCodeCompetion()                            -> NIL
+        :hbToggleCompetionTips()                            -> NIL
 
     $DESCRIPTION$
 

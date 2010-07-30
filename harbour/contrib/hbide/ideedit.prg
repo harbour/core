@@ -184,6 +184,8 @@ CLASS IdeEdit INHERIT IdeObject
    METHOD toggleLineSelectionMode()
    METHOD clearSelection()
    METHOD togglePersistentSelection()
+   METHOD toggleCodeCompetion()
+   METHOD toggleCompetionTips()
 
    METHOD getWord( lSelect )
    METHOD getLine( nLine, lSelect )
@@ -1387,6 +1389,18 @@ METHOD IdeEdit:togglePersistentSelection()
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeEdit:toggleCodeCompetion()
+   ::qEdit:hbToggleCodeCompetion()
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:toggleCompetionTips()
+   ::qEdit:hbToggleCompetionTips()
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeEdit:redo()
    ::qEdit:redo()
    RETURN Self
@@ -1529,7 +1543,7 @@ METHOD IdeEdit:find( cText, nPosFrom )
 /*  nFlags will decide the position, case sensitivity and direction
  */
 METHOD IdeEdit:findEx( cText, nFlags, nStart )
-   LOCAL qCursor, lFound, cT, nPos
+   LOCAL qCursor, lFound, nPos
 
    DEFAULT nStart TO 0
 
@@ -1546,12 +1560,11 @@ METHOD IdeEdit:findEx( cText, nFlags, nStart )
 
    IF ( lFound := ::qEdit:find( cText, nFlags ) )
       ::qEdit:centerCursor()
-      qCursor := ::getCursor()
-      cT      := qCursor:selectedText()
-      //qCursor:clearSelection()
-      ::qEdit:hbSetSelectionInfo( { qCursor:blockNumber(), qCursor:columnNumber() - len( cT ), ;
-                                    qCursor:blockNumber(), qCursor:columnNumber(), 1 } )
-      //::qEdit:setTextCursor( qCursor )
+      qCursor := QTextCursor():from( ::qEdit:textCursor() ) //::getCursor()
+
+      ::qEdit:hbSetSelectionInfo( { qCursor:blockNumber(), qCursor:columnNumber() - len( cText ), ;
+                                    qCursor:blockNumber(), qCursor:columnNumber(), 1, .t., .f. } )
+      qCursor:clearSelection()
    ELSE
       qCursor:setPosition( nPos )
       ::qEdit:setTextCursor( qCursor )

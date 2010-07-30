@@ -161,6 +161,8 @@ private:
    bool           isSelectionPersistent;
    bool           isShiftPressed;
    bool           isAliasCompleter;
+   bool           isCodeCompletionActive;
+   bool           isCompletionTipsActive;
 
 protected:
    bool           event( QEvent * event );
@@ -220,6 +222,8 @@ public slots:
    void           hbSelectAll();
    void           hbSetFieldsListActive( bool active ) { isAliasCompleter = active; };
    void           hbRefreshCompleter( const QString & alias = "" );
+   void           hbToggleCodeCompetion() { isCodeCompletionActive = ! isCodeCompletionActive; };
+   void           hbToggleCompetionTips() { isCompletionTipsActive = ! isCompletionTipsActive; };
 
 private slots:
    void           hbSlotCursorPositionChanged();

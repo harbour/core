@@ -122,6 +122,8 @@ HBQPlainTextEdit::HBQPlainTextEdit( QWidget * parent ) : QPlainTextEdit( parent 
    isSelectionPersistent    = false;
    isShiftPressed           = false;
    isAliasCompleter         = false;
+   isCodeCompletionActive   = true;
+   isCompletionTipsActive   = true;
 
    #if 0
    QTextFrameFormat format( this->document()->rootFrame()->frameFormat() );
@@ -178,6 +180,12 @@ HBQPlainTextEdit::HBQPlainTextEdit( QWidget * parent ) : QPlainTextEdit( parent 
 
 void HBQPlainTextEdit::hbShowPrototype( const QString & tip, int rows, int cols )
 {
+   if( ! isCompletionTipsActive ){
+      ttTextEdit->hide();
+      ttLabel->hide();
+      return;
+   }
+
    if( rows <= 1 )
    {
       ttLabel->setText( tip );
@@ -464,9 +472,23 @@ void HBQPlainTextEdit::hbSetSelectionInfo( PHB_ITEM selectionInfo )
    columnEnds    = hb_arrayGetNI( selectionInfo, 4 );
    selectionMode = hb_arrayGetNI( selectionInfo, 5 );
 
-   emit selectionChanged();
-
-   update();
+   PHB_ITEM pSome = hb_arrayGetItemPtr( selectionInfo, 6 );
+   if( hb_itemType( pSome ) & HB_IT_LOGICAL ){
+      if( hb_itemGetL( pSome ) ){
+         QTextCursor c( textCursor() );
+         c.clearSelection();
+      }
+   }
+   pSome = hb_arrayGetItemPtr( selectionInfo, 7 );
+   if( hb_itemType( pSome ) & HB_IT_LOGICAL ){
+      if( hb_itemGetL( pSome ) ){
+         emit selectionChanged();
+      }
+   }
+   else {
+      emit selectionChanged();
+   }
+   repaint();
 }
 
 /*----------------------------------------------------------------------*/
@@ -771,6 +793,8 @@ void HBQPlainTextEdit::mouseDoubleClickEvent( QMouseEvent *event )
       columnEnds    = c.columnNumber();
       columnBegins  = columnEnds - ( c.selectionEnd() - c.selectionStart() );
       selectionMode = selectionMode_stream;
+      c.clearSelection();
+      setTextCursor( c );
       emit selectionChanged();
       repaint();
    }
@@ -1371,6 +1395,13 @@ void HBQPlainTextEdit::keyPressEvent( QKeyEvent * event )
    }
    QPlainTextEdit::keyPressEvent( event );
 
+   if( ! isCodeCompletionActive ){
+      if( c ){
+         c->popup()->hide();
+      }
+      return;
+   }
+
    if( ! c ){
       return;
    }
@@ -1402,10 +1433,6 @@ void HBQPlainTextEdit::keyPressEvent( QKeyEvent * event )
                 eow.contains( event->text().right( 1 ) ) )
    {
       c->popup()->hide();
-      #if 0
-      if( isAliasCompleter )
-         hbRefreshCompleter( "" );
-      #endif
       return;
    }
 
@@ -1421,15 +1448,6 @@ void HBQPlainTextEdit::keyPressEvent( QKeyEvent * event )
    cr.setBottom( cr.bottom() + horzRulerHeight + 5 );
 
    c->complete( cr ); // pop it up!
-   if( c->popup()->isHidden() && isAliasCompleter ){
-      #if 0
-      if( block ){
-         PHB_ITEM p1 = hb_itemPutNI( NULL, 21041 );
-         hb_vmEvalBlockV( block, 1, p1 );
-         hb_itemRelease( p1 );
-      }
-      #endif
-   }
 }
 
 /*----------------------------------------------------------------------*/

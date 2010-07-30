@@ -121,6 +121,8 @@ CREATE CLASS HBQPlainTextEdit INHERIT HbQtObjectHandler, QPlainTextEdit
    METHOD  hbSetProtoStyle( cCss )
    METHOD  hbSelectAll()
    METHOD  hbSetFieldsListActive( lActive )
+   METHOD  hbToggleCodeCompetion()
+   METHOD  hbToggleCompetionTips()
 
    ENDCLASS
 
@@ -348,4 +350,12 @@ METHOD HBQPlainTextEdit:hbSelectAll()
 
 METHOD HBQPlainTextEdit:hbSetFieldsListActive( lActive )
    RETURN Qt_HBQPlainTextEdit_hbSetFieldsListActive( ::pPtr, lActive )
+
+
+METHOD HBQPlainTextEdit:hbToggleCodeCompetion()
+   RETURN Qt_HBQPlainTextEdit_hbToggleCodeCompetion( ::pPtr )
+
+
+METHOD HBQPlainTextEdit:hbToggleCompetionTips()
+   RETURN Qt_HBQPlainTextEdit_hbToggleCompetionTips( ::pPtr )
 
