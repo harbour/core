@@ -209,14 +209,14 @@ PROCEDURE Standalone( aParams, hPackageList )
          cProject := s_cBase + iif( cPackage == cMyPackage, "", s_cHome + cPackage + "/" ) + hPackageList[ cPackage ][ "cFileName" ]
 
          call_hbmk2( cProject,;
-            iif( cPackage == cMyPackage, cOptions + cOptionsUser, " -inc" ), "" )
+            iif( cPackage == cMyPackage, cOptions + cOptionsUser, " -inc" ) )
 
          /* Highly experimental */
-         IF hPackageList[ cPackage ][ "cType" ] == "hblib" .AND. ;
-            GetEnv( "HB_BUILD_CONTRIB_DYN" ) == "yes" .AND. ;
-            hb_FileExists( PathSepToSelf( FNameExtSet( cProject, ".hbc" ) ) )
+         IF cPackage == cMyPackage .AND. ;
+            hPackageList[ cPackage ][ "cType" ] == "hblib" .AND. ;
+            GetEnv( "HB_BUILD_CONTRIB_DYN" ) == "yes"
 
-            call_hbmk2( cProject, cOptions + cOptionsUser, " " + FNameExtSet( cProject, ".hbc" ) )
+            call_hbmk2( cProject, cOptions + cOptionsUser, hPackageList[ cPackage ][ "aDept" ] )
          ENDIF
       NEXT
    ENDIF
@@ -390,14 +390,13 @@ PROCEDURE GNUMake( aParams, hPackageList )
 
          cProject := s_cBase + cPackage + "/" + hPackageList[ cPackage ][ "cFileName" ]
 
-         call_hbmk2( cProject, cOptions, "" )
+         call_hbmk2( cProject, cOptions )
 
          /* Highly experimental */
          IF hPackageList[ cPackage ][ "cType" ] == "hblib" .AND. ;
-            GetEnv( "HB_BUILD_CONTRIB_DYN" ) == "yes" .AND. ;
-            hb_FileExists( PathSepToSelf( FNameExtSet( cProject, ".hbc" ) ) )
+            GetEnv( "HB_BUILD_CONTRIB_DYN" ) == "yes"
 
-            call_hbmk2( cProject, cOptions, " " + FNameExtSet( cProject, ".hbc" ) )
+            call_hbmk2( cProject, cOptions, hPackageList[ cPackage ][ "aDept" ] )
          ENDIF
 
          /* Compile documentation */
@@ -448,7 +447,8 @@ STATIC FUNCTION call_hbmk2_hbinfo( cProject, hProject )
             hb_FNameSplit( LTrim( tmp ), @cDir, @cName )
             AAdd( hProject[ "aDept" ], { "nDepth" => Len( tmp ) - Len( LTrim( tmp ) ),;
                                          "cDir" => cDir,;
-                                         "cName" => cName } )
+                                         "cName" => cName,;
+                                         "cFileName" => LTrim( tmp ) } )
          ENDIF
       NEXT
 
@@ -477,12 +477,24 @@ STATIC FUNCTION hbmk2_hbinfo_getitem( cString, cItem, lAll )
 
    RETURN cRetVal
 
-STATIC FUNCTION call_hbmk2( cProject, cOptionsPre, cOptionsLibDyn )
+STATIC FUNCTION call_hbmk2( cProject, cOptionsPre, aDeptHBC )
    LOCAL nErrorLevel
+
+   LOCAL cOptionsLibDyn := ""
+   LOCAL hDept
 
    clear_hbmk2_envvars()
 
-   hb_setenv( "_HB_BUILD_LIBDYN", iif( Empty( cOptionsLibDyn ), NIL, "yes" ) )
+   IF aDeptHBC == NIL
+      hb_setenv( "__HB_DYN__" )
+      hb_setenv( "_HB_BUILD_LIBDYN" )
+   ELSE
+      FOR EACH hDept IN aDeptHBC
+         cOptionsLibDyn += " " + hDept[ "cFileName" ]
+      NEXT
+      hb_setenv( "__HB_DYN__", "_dll" ) /* Request dll version of Harbour contrib dependencies (the implibs) to be linked (experimental) */
+      hb_setenv( "_HB_BUILD_LIBDYN", "yes" )
+   ENDIF
 
    nErrorLevel := mk_hb_processRun( s_cBinDir + "hbmk2" +;
                                     " -quiet -lang=en -width=0" +;

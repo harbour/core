@@ -35,6 +35,7 @@ hbsms/hbsms.hbp
 hbsqlit3/hbsqlit3.hbp            # uses: sqlite3 (external)
 hbssl/hbssl.hbp
 hbtip/hbtip.hbp
+hbtip/hbtipssl.hbp
 hbtpathy/hbtpathy.hbp
 hbwin/hbwin.hbp
 hbxbp/hbxbp.hbp

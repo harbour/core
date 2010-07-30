@@ -1397,7 +1397,7 @@ HARBOUR
       MinGW/MinGW-64 [win, *nix, free, open-soource]
          http://www.mingw.org/, http://sourceforge.net/projects/mingw/ (official 32-bit, MSYS home)
          http://mingw-w64.sourceforge.net/, http://sourceforge.net/projects/mingw-w64/ (official 64-bit, MSYS home)
-         http://tdm-gcc.tdragon.net/, http://sourceforge.net/projects/tdm-gcc/ (unofficial)
+         http://tdm-gcc.tdragon.net/, http://sourceforge.net/projects/tdm-gcc/ (unofficial, not recommended for now)
       MinGW CEGCC [win, *nix, free, open-source]
          http://cegcc.sourceforge.net/
       Cygwin [win, free, open-source]
