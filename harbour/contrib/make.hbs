@@ -216,7 +216,7 @@ PROCEDURE Standalone( aParams, hPackageList )
             GetEnv( "HB_BUILD_CONTRIB_DYN" ) == "yes" .AND. ;
             hb_FileExists( PathSepToSelf( FNameExtSet( cProject, ".hbc" ) ) )
 
-            call_hbmk2( cProject, cOptions, " " + FNameExtSet( cProject, ".hbc" ) )
+            call_hbmk2( cProject, cOptions + cOptionsUser, " " + FNameExtSet( cProject, ".hbc" ) )
          ENDIF
       NEXT
    ENDIF
