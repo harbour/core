@@ -804,18 +804,17 @@ HB_ERRCODE hb_rddCreateTableTemp( const char * szDriver,
 static void hb_fldStructure( AREAP pArea, HB_USHORT uiField, HB_USHORT uiSize,
                              PHB_ITEM pField )
 {
-#define HB_DBS_ALEN ( sizeof( s_uiActions ) / sizeof( int ) )
 #ifdef DBS_FLAG
-   static const int s_uiActions[] =
+   static const HB_USHORT s_uiActions[] =
             { DBS_NAME, DBS_TYPE, DBS_LEN, DBS_DEC, DBS_FLAG };
 #else
-   static const int s_uiActions[] =
+   static const HB_USHORT s_uiActions[] =
             { DBS_NAME, DBS_TYPE, DBS_LEN, DBS_DEC };
 #endif
    HB_USHORT uiCount;
 
-   if( uiSize == 0 || uiSize > HB_DBS_ALEN )
-      uiSize = HB_DBS_ALEN;
+   if( uiSize == 0 || uiSize > HB_SIZEOFARRAY( s_uiActions ) )
+      uiSize = HB_SIZEOFARRAY( s_uiActions );
 
    hb_arrayNew( pField, uiSize );
    for( uiCount = 0; uiCount < uiSize; ++uiCount )

@@ -210,10 +210,10 @@ static HB_BOOL hb_usrItemToFieldInfo( PHB_ITEM pItem, LPDBFIELDINFO pFieldInfo )
    if( pItem && hb_arrayLen( pItem ) == UR_FI_SIZE )
    {
       pFieldInfo->atomName       = hb_usrArrayGetC( pItem, UR_FI_NAME );
-      pFieldInfo->uiType         = hb_arrayGetNI( pItem, UR_FI_TYPE );
-      pFieldInfo->uiTypeExtended = hb_arrayGetNI( pItem, UR_FI_TYPEEXT );
-      pFieldInfo->uiLen          = hb_arrayGetNI( pItem, UR_FI_LEN );
-      pFieldInfo->uiDec          = hb_arrayGetNI( pItem, UR_FI_DEC );
+      pFieldInfo->uiType         = ( HB_USHORT ) hb_arrayGetNI( pItem, UR_FI_TYPE );
+      pFieldInfo->uiTypeExtended = ( HB_USHORT ) hb_arrayGetNI( pItem, UR_FI_TYPEEXT );
+      pFieldInfo->uiLen          = ( HB_USHORT ) hb_arrayGetNI( pItem, UR_FI_LEN );
+      pFieldInfo->uiDec          = ( HB_USHORT ) hb_arrayGetNI( pItem, UR_FI_DEC );
       return HB_TRUE;
    }
    return HB_FALSE;
@@ -244,7 +244,7 @@ static HB_BOOL hb_usrItemToOpenInfo( PHB_ITEM pItem, LPDBOPENINFO pOpenInfo )
 {
    if( pItem && hb_arrayLen( pItem ) == UR_OI_SIZE )
    {
-      pOpenInfo->uiArea       = hb_arrayGetNI( pItem, UR_OI_AREA );
+      pOpenInfo->uiArea       = ( HB_USHORT ) hb_arrayGetNI( pItem, UR_OI_AREA );
       pOpenInfo->abName       = hb_usrArrayGetC( pItem, UR_OI_NAME );
       pOpenInfo->atomAlias    = hb_usrArrayGetC( pItem, UR_OI_ALIAS );
       pOpenInfo->fShared      = hb_arrayGetL( pItem, UR_OI_SHARED );
@@ -339,8 +339,8 @@ static HB_BOOL hb_usrItemToLockInfo( PHB_ITEM pItem, LPDBLOCKINFO pLockInfo )
    if( pItem && hb_arrayLen( pItem ) == UR_LI_SIZE )
    {
       pLockInfo->itmRecID = hb_usrArrayGet( pItem, UR_LI_RECORD, HB_IT_ANY );
-      pLockInfo->uiMethod = hb_arrayGetNI( pItem, UR_LI_METHOD );
-      pLockInfo->fResult  = hb_arrayGetL( pItem, UR_LI_RESULT );
+      pLockInfo->uiMethod = ( HB_USHORT ) hb_arrayGetNI( pItem, UR_LI_METHOD );
+      pLockInfo->fResult  = ( HB_USHORT ) hb_arrayGetL( pItem, UR_LI_RESULT );
       return HB_TRUE;
    }
    return HB_FALSE;
@@ -460,7 +460,7 @@ static HB_BOOL hb_usrItemToTransInfo( PHB_ITEM pItem, LPDBTRANSINFO pTransInfo )
 {
    if( pItem && hb_arrayLen( pItem ) == UR_TI_SIZE )
    {
-      HB_USHORT uiItemCount = hb_arrayGetNI( pItem, UR_TI_ITEMCOUNT ), uiCount;
+      HB_USHORT uiItemCount = ( HB_USHORT ) hb_arrayGetNI( pItem, UR_TI_ITEMCOUNT ), uiCount;
       PHB_ITEM pItems = hb_arrayGetItemPtr( pItem, UR_TI_ITEMS ), pItm;
 
       if( hb_arrayLen( pItems ) == ( HB_SIZE ) uiItemCount &&
@@ -469,7 +469,7 @@ static HB_BOOL hb_usrItemToTransInfo( PHB_ITEM pItem, LPDBTRANSINFO pTransInfo )
       {
          pTransInfo->lpaSource   = hb_usrGetAreaPointer( hb_arrayGetNI( pItem, UR_TI_SRCAREA ) );
          pTransInfo->lpaDest     = hb_usrGetAreaPointer( hb_arrayGetNI( pItem, UR_TI_DSTAREA ) );
-         pTransInfo->uiFlags     = hb_arrayGetNI( pItem, UR_TI_FLAGS );
+         pTransInfo->uiFlags     = ( HB_USHORT ) hb_arrayGetNI( pItem, UR_TI_FLAGS );
          pTransInfo->uiItemCount = uiItemCount;
          if( uiItemCount )
          {
@@ -481,8 +481,8 @@ static HB_BOOL hb_usrItemToTransInfo( PHB_ITEM pItem, LPDBTRANSINFO pTransInfo )
             for( uiCount = 1; uiCount <= uiItemCount; ++uiCount, ++pTransItem )
             {
                pItm = hb_arrayGetItemPtr( pItems, uiCount );
-               pTransItem->uiSource = hb_arrayGetNI( pItm, UR_TITEM_SOURCE );
-               pTransItem->uiDest   = hb_arrayGetNI( pItm, UR_TITEM_DESTIN );
+               pTransItem->uiSource = ( HB_USHORT ) hb_arrayGetNI( pItm, UR_TITEM_SOURCE );
+               pTransItem->uiDest   = ( HB_USHORT ) hb_arrayGetNI( pItm, UR_TITEM_DESTIN );
             }
          }
          else
@@ -533,7 +533,7 @@ static HB_BOOL hb_usrItemToSortInfo( PHB_ITEM pItem, LPDBSORTINFO pSortInfo )
 {
    if( pItem && hb_arrayLen( pItem ) == UR_SRI_SIZE )
    {
-      HB_USHORT uiItemCount = hb_arrayGetNI( pItem, UR_SRI_ITEMCOUNT ), uiCount;
+      HB_USHORT uiItemCount = ( HB_USHORT ) hb_arrayGetNI( pItem, UR_SRI_ITEMCOUNT ), uiCount;
       PHB_ITEM pItems = hb_arrayGetItemPtr( pItem, UR_SRI_ITEMS ), pItm;
 
       if( hb_arrayLen( pItems ) == ( HB_SIZE ) uiItemCount &&
@@ -551,8 +551,8 @@ static HB_BOOL hb_usrItemToSortInfo( PHB_ITEM pItem, LPDBSORTINFO pSortInfo )
             for( uiCount = 1; uiCount <= uiItemCount; ++uiCount, ++pSortItem )
             {
                pItm = hb_arrayGetItemPtr( pItems, uiCount );
-               pSortItem->uiField = hb_arrayGetNI( pItm, UR_SITEM_FIELD );
-               pSortItem->uiFlags = hb_arrayGetNI( pItm, UR_SITEM_FLAGS );
+               pSortItem->uiField = ( HB_USHORT ) hb_arrayGetNI( pItm, UR_SITEM_FIELD );
+               pSortItem->uiFlags = ( HB_USHORT ) hb_arrayGetNI( pItm, UR_SITEM_FLAGS );
             }
          }
          else
@@ -1297,7 +1297,7 @@ static HB_ERRCODE hb_usrFieldCount( AREAP pArea, HB_USHORT * puiFields )
    hb_xvmPushLocalByRef( ( HB_SHORT ) lOffset );
    hb_vmDo( 2 );
 
-   * puiFields = hb_itemGetNI( hb_stackItemFromBase( lOffset ) );
+   * puiFields = ( HB_USHORT ) hb_itemGetNI( hb_stackItemFromBase( lOffset ) );
    hb_stackPop();
 
    return hb_usrReturn();
@@ -1907,7 +1907,7 @@ static HB_ERRCODE hb_usrRelArea( AREAP pArea, HB_USHORT uiRelNo, HB_USHORT * pui
    hb_xvmPushLocalByRef( ( HB_SHORT ) lOffset );
    hb_vmDo( 3 );
 
-   * puiRelArea = hb_itemGetNI( hb_stackItemFromBase( lOffset ) );
+   * puiRelArea = ( HB_USHORT ) hb_itemGetNI( hb_stackItemFromBase( lOffset ) );
    hb_stackPop();
 
    return hb_usrReturn();
@@ -2381,7 +2381,7 @@ static HB_ERRCODE hb_usrLock( AREAP pArea, LPDBLOCKINFO pLockInfo )
    hb_vmPush( pItem );
    hb_vmDo( 2 );
 
-   pLockInfo->fResult = hb_arrayGetL( pItem, UR_LI_RESULT );
+   pLockInfo->fResult = ( HB_USHORT ) hb_arrayGetL( pItem, UR_LI_RESULT );
    hb_itemRelease( pItem );
 
    return hb_usrReturn();
@@ -2909,7 +2909,7 @@ HB_FUNC( USRRDD_GETFUNCTABLE )
 
 HB_FUNC( USRRDD_RDDDATA )
 {
-   HB_USHORT uiRddID = hb_parni( 1 );
+   HB_USHORT uiRddID = ( HB_USHORT ) hb_parni( 1 );
 
    if( uiRddID < s_uiUsrNodes && s_pUsrRddNodes[ uiRddID ] )
    {
@@ -3111,7 +3111,7 @@ static LPRDDNODE hb_usrGetNodeParam( int iParams )
 
    if( iParams <= hb_pcount() )
    {
-      uiNode = hb_parni( 1 );
+      uiNode = ( HB_USHORT ) hb_parni( 1 );
       pRDD = hb_rddGetNode( uiNode );
       if( pRDD && uiNode < s_uiUsrNodes && s_pUsrRddNodes[ uiNode ] )
          return pRDD;
@@ -3298,7 +3298,8 @@ HB_FUNC_UR_SUPER( FIELDNAME )
    {
       char * szName = ( char * ) hb_xgrab( pArea->uiMaxFieldNameLength + 1 );
 
-      hb_retni( SUPER_FIELDNAME( pArea, hb_parni( 2 ), szName ) );
+      hb_retni( SUPER_FIELDNAME( pArea, ( HB_USHORT ) hb_parni( 2 ),
+                                        szName ) );
       hb_storc( szName, 3 );
       hb_xfree( szName );
    }
@@ -3405,7 +3406,8 @@ HB_FUNC_UR_SUPER( GETVALUE )
    AREAP pArea = hb_usrGetAreaParam( 3 );
 
    if( pArea )
-      hb_retni( SUPER_GETVALUE( pArea, hb_parni( 2 ), hb_param( 3, HB_IT_ANY ) ) );
+      hb_retni( SUPER_GETVALUE( pArea, ( HB_USHORT ) hb_parni( 2 ),
+                                       hb_param( 3, HB_IT_ANY ) ) );
 }
 
 HB_FUNC_UR_SUPER( PUTVALUE )
@@ -3413,7 +3415,8 @@ HB_FUNC_UR_SUPER( PUTVALUE )
    AREAP pArea = hb_usrGetAreaParam( 3 );
 
    if( pArea )
-      hb_retni( SUPER_PUTVALUE( pArea, hb_parni( 2 ), hb_param( 3, HB_IT_ANY ) ) );
+      hb_retni( SUPER_PUTVALUE( pArea, ( HB_USHORT ) hb_parni( 2 ),
+                                       hb_param( 3, HB_IT_ANY ) ) );
 }
 
 HB_FUNC_UR_SUPER( GETVARLEN )
@@ -3424,7 +3427,8 @@ HB_FUNC_UR_SUPER( GETVARLEN )
    {
       HB_ULONG ulLength;
 
-      hb_retni( SUPER_GETVARLEN( pArea, hb_parni( 2 ), &ulLength ) );
+      hb_retni( SUPER_GETVARLEN( pArea, ( HB_USHORT ) hb_parni( 2 ),
+                                        &ulLength ) );
       hb_stornl( ulLength, 3 );
    }
 }
@@ -3447,7 +3451,8 @@ HB_FUNC_UR_SUPER( RECINFO )
    AREAP pArea = hb_usrGetAreaParam( 4 );
 
    if( pArea )
-      hb_retni( SUPER_RECINFO( pArea, hb_param( 2, HB_IT_ANY ), hb_parni( 3 ),
+      hb_retni( SUPER_RECINFO( pArea, hb_param( 2, HB_IT_ANY ),
+                                      ( HB_USHORT ) hb_parni( 3 ),
                                       hb_param( 4, HB_IT_ANY ) ) );
 }
 
@@ -3477,7 +3482,8 @@ HB_FUNC_UR_SUPER( FIELDINFO )
    AREAP pArea = hb_usrGetAreaParam( 4 );
 
    if( pArea )
-      hb_retni( SUPER_FIELDINFO( pArea, hb_parni( 2 ), hb_parni( 3 ),
+      hb_retni( SUPER_FIELDINFO( pArea, ( HB_USHORT ) hb_parni( 2 ),
+                                        ( HB_USHORT ) hb_parni( 3 ),
                                         hb_param( 4, HB_IT_ANY ) ) );
 }
 
@@ -3494,7 +3500,7 @@ HB_FUNC_UR_SUPER( SETFIELDEXTENT )
    AREAP pArea = hb_usrGetAreaParam( 2 );
 
    if( pArea )
-      hb_retni( SUPER_SETFIELDEXTENT( pArea, hb_parni( 2 ) ) );
+      hb_retni( SUPER_SETFIELDEXTENT( pArea, ( HB_USHORT ) hb_parni( 2 ) ) );
 }
 
 HB_FUNC_UR_SUPER( ALIAS )
@@ -3563,7 +3569,8 @@ HB_FUNC_UR_SUPER( INFO )
    AREAP pArea = hb_usrGetAreaParam( 3 );
 
    if( pArea )
-      hb_retni( SUPER_INFO( pArea, hb_parni( 2 ), hb_param( 3, HB_IT_ANY ) ) );
+      hb_retni( SUPER_INFO( pArea, ( HB_USHORT ) hb_parni( 2 ),
+                                   hb_param( 3, HB_IT_ANY ) ) );
 }
 
 HB_FUNC_UR_SUPER( DBEVAL )
@@ -3770,7 +3777,8 @@ HB_FUNC_UR_SUPER( RELAREA )
    {
       HB_USHORT uiRelArea;
 
-      hb_retni( SUPER_RELAREA( pArea, hb_parni( 2 ), &uiRelArea ) );
+      hb_retni( SUPER_RELAREA( pArea, ( HB_USHORT ) hb_parni( 2 ),
+                                      &uiRelArea ) );
       hb_storni( uiRelArea, 3 );
    }
 }
@@ -3800,7 +3808,8 @@ HB_FUNC_UR_SUPER( RELTEXT )
    AREAP pArea = hb_usrGetAreaParam( 3 );
 
    if( pArea )
-      hb_retni( SUPER_RELTEXT( pArea, hb_parni( 2 ), hb_param( 3, HB_IT_ANY ) ) );
+      hb_retni( SUPER_RELTEXT( pArea, ( HB_USHORT ) hb_parni( 2 ),
+                                      hb_param( 3, HB_IT_ANY ) ) );
 }
 
 HB_FUNC_UR_SUPER( SETREL )
@@ -3991,7 +4000,8 @@ HB_FUNC_UR_SUPER( ORDINFO )
 
       if( hb_usrItemToOrderInfo( pItem, &dbOrderInfo ) )
       {
-         hb_retni( SUPER_ORDINFO( pArea, hb_parni( 2 ), &dbOrderInfo ) );
+         hb_retni( SUPER_ORDINFO( pArea, ( HB_USHORT ) hb_parni( 2 ),
+                                         &dbOrderInfo ) );
          hb_arraySet( pItem, UR_ORI_RESULT, dbOrderInfo.itmResult );
       }
       else
@@ -4147,7 +4157,8 @@ HB_FUNC_UR_SUPER( RAWLOCK )
    AREAP pArea = hb_usrGetAreaParam( 3 );
 
    if( pArea )
-      hb_retni( SUPER_RAWLOCK( pArea, hb_parni( 2 ), hb_parnl( 3 ) ) );
+      hb_retni( SUPER_RAWLOCK( pArea, ( HB_USHORT ) hb_parni( 2 ),
+                                      hb_parnl( 3 ) ) );
 }
 
 HB_FUNC_UR_SUPER( LOCK )
@@ -4234,8 +4245,9 @@ HB_FUNC_UR_SUPER( GETVALUEFILE )
    AREAP pArea = hb_usrGetAreaParam( 4 );
 
    if( pArea )
-      hb_retni( SUPER_GETVALUEFILE( pArea, hb_parni( 2 ), hb_parc( 3 ),
-                                           hb_parni( 4 ) ) );
+      hb_retni( SUPER_GETVALUEFILE( pArea, ( HB_USHORT ) hb_parni( 2 ),
+                                           hb_parc( 3 ),
+                                           ( HB_USHORT ) hb_parni( 4 ) ) );
 }
 
 HB_FUNC_UR_SUPER( PUTVALUEFILE )
@@ -4243,8 +4255,9 @@ HB_FUNC_UR_SUPER( PUTVALUEFILE )
    AREAP pArea = hb_usrGetAreaParam( 4 );
 
    if( pArea )
-      hb_retni( SUPER_PUTVALUEFILE( pArea, hb_parni( 2 ), hb_parc( 3 ),
-                                           hb_parni( 4 ) ) );
+      hb_retni( SUPER_PUTVALUEFILE( pArea, ( HB_USHORT ) hb_parni( 2 ),
+                                           hb_parc( 3 ),
+                                           ( HB_USHORT ) hb_parni( 4 ) ) );
 }
 
 HB_FUNC_UR_SUPER( READDBHEADER )
@@ -4299,6 +4312,7 @@ HB_FUNC_UR_SUPER( RDDINFO )
    LPRDDNODE pRDD = hb_usrGetNodeParam( 4 );
 
    if( pRDD )
-      hb_retni( SUPER_RDDINFO( pRDD, hb_parni( 2 ), hb_parnl( 3 ),
+      hb_retni( SUPER_RDDINFO( pRDD, ( HB_USHORT ) hb_parni( 2 ),
+                                     hb_parnl( 3 ),
                                      hb_param( 4, HB_IT_ANY ) ) );
 }

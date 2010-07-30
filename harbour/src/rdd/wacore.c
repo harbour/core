@@ -92,7 +92,7 @@ static void hb_waNodeInsert( PHB_STACKRDD pRddInfo, AREAP pArea )
          pRddInfo->waNums = ( HB_USHORT * ) hb_xrealloc( pRddInfo->waNums, iSize * sizeof( HB_USHORT ) );
       }
       memset( &pRddInfo->waNums[ pRddInfo->uiWaNumMax ], 0, ( iSize - pRddInfo->uiWaNumMax ) * sizeof( HB_USHORT ) );
-      pRddInfo->uiWaNumMax = iSize;
+      pRddInfo->uiWaNumMax = ( HB_USHORT ) iSize;
    }
 
    if( pRddInfo->uiWaSpace == 0 )

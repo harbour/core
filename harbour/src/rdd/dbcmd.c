@@ -1747,7 +1747,7 @@ HB_FUNC( DBRSELECT )  /* (<nRelation>) --> nWorkArea */
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
 
    if( pArea )
-      SELF_RELAREA( pArea, hb_parni( 1 ), &uiWorkArea );
+      SELF_RELAREA( pArea, ( HB_USHORT ) hb_parni( 1 ), &uiWorkArea );
 
    hb_retni( uiWorkArea );
 }
@@ -2076,7 +2076,7 @@ HB_FUNC( HB_RDDINFO )
    if( pRDDNode && pIndex )
    {
       PHB_ITEM pInfo = hb_itemNew( pParam );
-      SELF_RDDINFO( pRDDNode, hb_itemGetNI( pIndex ), ulConnection, pInfo );
+      SELF_RDDINFO( pRDDNode, ( HB_USHORT ) hb_itemGetNI( pIndex ), ulConnection, pInfo );
       hb_itemReturnRelease( pInfo );
    }
    else

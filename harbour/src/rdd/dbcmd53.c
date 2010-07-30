@@ -333,7 +333,7 @@ HB_FUNC( DBINFO )
       {
          PHB_ITEM pInfo = hb_itemNew( hb_param( 2, HB_IT_ANY ) );
 
-         SELF_INFO( pArea, hb_itemGetNI( pIndex ), pInfo );
+         SELF_INFO( pArea, ( HB_USHORT ) hb_itemGetNI( pIndex ), pInfo );
          hb_itemReturnRelease( pInfo );
       }
       else
@@ -367,7 +367,7 @@ HB_FUNC( DBORDERINFO )
          pOrderInfo.itmResult = hb_itemNew( NULL );
          pOrderInfo.itmCobExpr = NULL;
          pOrderInfo.fAllTags = HB_FALSE;
-         SELF_ORDINFO( pArea, hb_itemGetNI( pType ), &pOrderInfo );
+         SELF_ORDINFO( pArea, ( HB_USHORT ) hb_itemGetNI( pType ), &pOrderInfo );
          hb_itemReturnRelease( pOrderInfo.itmResult );
       }
       else
@@ -393,7 +393,7 @@ HB_FUNC( DBFIELDINFO )
       {
          PHB_ITEM pInfo = hb_itemNew( hb_param( 3, HB_IT_ANY ) );
 
-         SELF_FIELDINFO( pArea, uiIndex, hb_itemGetNI( pType ), pInfo );
+         SELF_FIELDINFO( pArea, ( HB_USHORT ) uiIndex, hb_itemGetNI( pType ), pInfo );
          hb_itemReturnRelease( pInfo );
       }
       else
@@ -417,7 +417,7 @@ HB_FUNC( DBRECORDINFO )
       {
          PHB_ITEM pInfo = hb_itemNew( hb_param( 3, HB_IT_ANY ) );
 
-         SELF_RECINFO( pArea, pRecNo, hb_itemGetNI( pType ), pInfo );
+         SELF_RECINFO( pArea, pRecNo, ( HB_USHORT ) hb_itemGetNI( pType ), pInfo );
          hb_itemReturnRelease( pInfo );
       }
       else
@@ -451,7 +451,7 @@ HB_FUNC( DBFILEGET )
           uiIndex <= uiFields )
       {
          hb_retl( SELF_GETVALUEFILE( pArea, uiIndex, hb_parc( 2 ),
-                                     hb_itemGetNI( pMode ) ) == HB_SUCCESS );
+                                     ( HB_USHORT ) hb_itemGetNI( pMode ) ) == HB_SUCCESS );
       }
       else
          hb_errRT_DBCMD( EG_ARG, EDBCMD_DBFILEGETBADPARAMETER, NULL, HB_ERR_FUNCNAME );
@@ -481,7 +481,7 @@ HB_FUNC( DBFILEPUT )
           uiIndex <= uiFields )
       {
          hb_retl( SELF_PUTVALUEFILE( pArea, uiIndex, hb_parc( 2 ),
-                                     hb_parni( 3 ) ) == HB_SUCCESS );
+                                     ( HB_USHORT ) hb_parni( 3 ) ) == HB_SUCCESS );
       }
       else
          hb_errRT_DBCMD( EG_ARG, EDBCMD_DBFILEPUTBADPARAMETER, NULL, HB_ERR_FUNCNAME );

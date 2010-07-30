@@ -351,7 +351,7 @@ static HB_ERRCODE hb_waCreateFields( AREAP pArea, PHB_ITEM pStruct )
          case '2':
          case '4':
             pFieldInfo.uiType = HB_FT_INTEGER;
-            pFieldInfo.uiLen = iData - '0';
+            pFieldInfo.uiLen = ( HB_USHORT ) ( iData - '0' );
             break;
 
          case 'B':

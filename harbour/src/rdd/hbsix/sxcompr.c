@@ -318,7 +318,7 @@ static HB_BOOL hb_LZSSxDecode( PHB_LZSSX_COMPR pCompr )
          if( ( c = hb_LZSSxRead( pCompr ) ) == -1 )
             break;
          /* simple trick to reduce number of shift operations */
-         itemMask = c | 0xff00;
+         itemMask = ( HB_USHORT ) ( c | 0xff00 );
       }
       if( ( c = hb_LZSSxRead( pCompr ) ) == -1 )
          break;
@@ -385,8 +385,8 @@ static void hb_LZSSxNodeInsert( PHB_LZSSX_COMPR pCompr, int r )
             p = pCompr->right[ p ];
          else
          {
-            pCompr->right[ p ] = r;
-            pCompr->parent[ r ] = p;
+            pCompr->right[ p ] = ( HB_SHORT ) r;
+            pCompr->parent[ r ] = ( HB_SHORT ) p;
             return;
          }
       }
@@ -396,8 +396,8 @@ static void hb_LZSSxNodeInsert( PHB_LZSSX_COMPR pCompr, int r )
             p = pCompr->left[ p ];
          else
          {
-            pCompr->left[ p ] = r;
-            pCompr->parent[ r ] = p;
+            pCompr->left[ p ] = ( HB_SHORT ) r;
+            pCompr->parent[ r ] = ( HB_SHORT ) p;
             return;
          }
       }
@@ -408,8 +408,8 @@ static void hb_LZSSxNodeInsert( PHB_LZSSX_COMPR pCompr, int r )
       }
       if( i > pCompr->match_length )
       {
-         pCompr->match_offset = p;
-         pCompr->match_length = i;
+         pCompr->match_offset = ( HB_SHORT ) p;
+         pCompr->match_length = ( HB_SHORT ) i;
          if( i >= MAXLENGTH )
              break;
       }
@@ -417,12 +417,12 @@ static void hb_LZSSxNodeInsert( PHB_LZSSX_COMPR pCompr, int r )
    pCompr->parent[ r ] = pCompr->parent[ p ];
    pCompr->left[ r ]   = pCompr->left[ p ];
    pCompr->right[ r ]  = pCompr->right[ p ];
-   pCompr->parent[ pCompr->left[ p ] ]  = r;
-   pCompr->parent[ pCompr->right[ p ] ] = r;
+   pCompr->parent[ pCompr->left[ p ] ]  = ( HB_SHORT ) r;
+   pCompr->parent[ pCompr->right[ p ] ] = ( HB_SHORT ) r;
    if( pCompr->right[ pCompr->parent[ p ] ] == p )
-      pCompr->right[ pCompr->parent[ p ] ] = r;
+      pCompr->right[ pCompr->parent[ p ] ] = ( HB_SHORT ) r;
    else
-      pCompr->left[ pCompr->parent[ p ] ] = r;
+      pCompr->left[ pCompr->parent[ p ] ] = ( HB_SHORT ) r;
    pCompr->parent[ p ] = DUMMYNODE;
 }
 
@@ -448,16 +448,16 @@ static void hb_LZSSxNodeDelete( PHB_LZSSX_COMPR pCompr, int p )
             pCompr->right[ pCompr->parent[ q ] ] = pCompr->left[ q ];
             pCompr->parent[ pCompr->left[ q ] ] = pCompr->parent[ q ];
             pCompr->left[ q ] = pCompr->left[ p ];
-            pCompr->parent[ pCompr->left[ p ] ] = q;
+            pCompr->parent[ pCompr->left[ p ] ] = ( HB_SHORT ) q;
          }
          pCompr->right[ q ] = pCompr->right[ p ];
-         pCompr->parent[ pCompr->right[ p ] ] = q;
+         pCompr->parent[ pCompr->right[ p ] ] = ( HB_SHORT ) q;
       }
       pCompr->parent[ q ] = pCompr->parent[ p ];
       if( pCompr->right[ pCompr->parent[ p ] ] == p )
-         pCompr->right[ pCompr->parent[ p ] ] = q;
+         pCompr->right[ pCompr->parent[ p ] ] = ( HB_SHORT ) q;
       else
-         pCompr->left[ pCompr->parent[ p ] ] = q;
+         pCompr->left[ pCompr->parent[ p ] ] = ( HB_SHORT ) q;
       pCompr->parent[ p ] = DUMMYNODE;
    }
 }
@@ -467,8 +467,7 @@ static HB_SIZE hb_LZSSxEncode( PHB_LZSSX_COMPR pCompr )
    HB_UCHAR itemSet[ ITEMSETSIZE ];
    HB_UCHAR itemMask;
    HB_SIZE nSize = 0;
-   int iItem;
-   short int  i, c, len, r, s, last_match_length;
+   HB_SHORT i, c, len, r, s, last_match_length, item;
 
    for( i = RBUFLENGTH + 1; i < RBUFLENGTH + 257; i++ )
       pCompr->right[i] = DUMMYNODE;
@@ -476,13 +475,13 @@ static HB_SIZE hb_LZSSxEncode( PHB_LZSSX_COMPR pCompr )
       pCompr->parent[ i ] = DUMMYNODE;
 
    itemSet[ 0 ] = 0;
-   iItem = itemMask = 1;
+   item = itemMask = 1;
    s = 0;
    r = RBUFLENGTH - MAXLENGTH;
 
    for( len = 0; len < MAXLENGTH; len++ )
    {
-      if( ( c = hb_LZSSxRead( pCompr ) ) == -1 )
+      if( ( c = ( HB_SHORT ) hb_LZSSxRead( pCompr ) ) == -1 )
          break;
       pCompr->ring_buffer[ r + len ] = ( HB_UCHAR ) c;
    }
@@ -501,56 +500,56 @@ static HB_SIZE hb_LZSSxEncode( PHB_LZSSX_COMPR pCompr )
       {
          pCompr->match_length = 1;
          itemSet[ 0 ] |= itemMask;
-         itemSet[ iItem++ ] = pCompr->ring_buffer[ r ];
+         itemSet[ item++ ] = pCompr->ring_buffer[ r ];
       }
       else
       {
-         itemSet[iItem++] = LZSS_ITMLO( pCompr->match_offset,
-                                        pCompr->match_length );
-         itemSet[iItem++] = LZSS_ITMHI( pCompr->match_offset,
-                                        pCompr->match_length );
+         itemSet[ item++ ] = LZSS_ITMLO( pCompr->match_offset,
+                                         pCompr->match_length );
+         itemSet[ item++ ] = LZSS_ITMHI( pCompr->match_offset,
+                                         pCompr->match_length );
       }
       if( ( itemMask <<= 1 ) == 0 )
       {
-         for( i = 0; i < iItem; i++ )
+         for( i = 0; i < item; i++ )
          {
             if( !hb_LZSSxWrite( pCompr, itemSet[ i ] ) )
                return ( HB_SIZE ) -1;
          }
-         nSize += iItem;
+         nSize += item;
          itemSet[ 0 ] = 0;
-         iItem = itemMask = 1;
+         item = itemMask = 1;
       }
       last_match_length = pCompr->match_length;
       for( i = 0; i < last_match_length &&
-                        ( c = hb_LZSSxRead( pCompr ) ) != -1; i++ )
+                  ( c = ( HB_SHORT ) hb_LZSSxRead( pCompr ) ) != -1; i++ )
       {
          hb_LZSSxNodeDelete( pCompr, s );
          pCompr->ring_buffer[ s ] = ( HB_UCHAR ) c;
          if( s < MAXLENGTH - 1 )
             pCompr->ring_buffer[ s + RBUFLENGTH ] = ( HB_UCHAR ) c;
-         s = ( short int ) RBUFINDEX( s + 1 );
-         r = ( short int ) RBUFINDEX( r + 1 );
+         s = ( HB_SHORT ) RBUFINDEX( s + 1 );
+         r = ( HB_SHORT ) RBUFINDEX( r + 1 );
          hb_LZSSxNodeInsert( pCompr, r );
       }
       while( i++ < last_match_length )
       {
          hb_LZSSxNodeDelete( pCompr, s );
-         s = ( short int ) RBUFINDEX( s + 1 );
-         r = ( short int ) RBUFINDEX( r + 1 );
+         s = ( HB_SHORT ) RBUFINDEX( s + 1 );
+         r = ( HB_SHORT ) RBUFINDEX( r + 1 );
          if( --len )
             hb_LZSSxNodeInsert( pCompr, r );
       }
    } while( len > 0 );
 
-   if( iItem > 1 )
+   if( item > 1 )
    {
-      for( i = 0; i < iItem; i++ )
+      for( i = 0; i < item; i++ )
       {
          if( !hb_LZSSxWrite( pCompr, itemSet[ i ] ) )
             return ( HB_SIZE ) -1;
       }
-      nSize += iItem;
+      nSize += item;
    }
 
    if( !hb_LZSSxFlush( pCompr ) )

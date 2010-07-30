@@ -2154,7 +2154,7 @@ static HB_ERRCODE hb_dbfPutRec( DBFAREAP pArea, const HB_BYTE * pBuffer )
    else /* if( pArea->fRecordChanged ) */
    {
       HB_BYTE * pRecord = pArea->pRecord;
-      HB_USHORT uiWritten;
+      HB_SIZE nWritten;
 
       if( pArea->pCryptKey )
       {
@@ -2173,14 +2173,14 @@ static HB_ERRCODE hb_dbfPutRec( DBFAREAP pArea, const HB_BYTE * pBuffer )
       }
 
       /* Write data to file */
-      uiWritten = hb_fileWriteAt( pArea->pDataFile, pRecord, pArea->uiRecordLen,
+      nWritten = hb_fileWriteAt( pArea->pDataFile, pRecord, pArea->uiRecordLen,
                                   ( HB_FOFFSET ) pArea->uiHeaderLen +
                                   ( HB_FOFFSET ) ( pArea->ulRecNo - 1 ) *
                                   ( HB_FOFFSET ) pArea->uiRecordLen );
       if( pRecord != pArea->pRecord )
          hb_xfree( pRecord );
 
-      if( uiWritten != pArea->uiRecordLen )
+      if( nWritten != ( HB_SIZE ) pArea->uiRecordLen )
       {
          hb_dbfErrorRT( pArea, EG_WRITE, EDBF_WRITE, pArea->szDataFileName,
                         hb_fsError(), 0, NULL );
@@ -2779,7 +2779,7 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
          pArea->lpdbOpenInfo = NULL;
          return HB_FAILURE;
       }
-      pArea->bLockType = hb_itemGetNI( pItem );
+      pArea->bLockType = ( HB_BYTE ) hb_itemGetNI( pItem );
       if( pArea->bLockType == 0 )
       {
          pArea->bLockType = DB_DBFLOCK_CLIP;
@@ -3595,7 +3595,7 @@ static HB_ERRCODE hb_dbfNewArea( DBFAREAP pArea )
    {
       PHB_ITEM pItem = hb_itemPutNI( NULL, 0 );
       if( SELF_RDDINFO( SELF_RDDNODE( &pArea->area ), RDDI_TABLETYPE, 0, pItem ) == HB_SUCCESS )
-         pArea->bTableType = hb_itemGetNI( pItem );
+         pArea->bTableType = ( HB_BYTE ) hb_itemGetNI( pItem );
       hb_itemRelease( pItem );
    }
 
@@ -3665,7 +3665,7 @@ static HB_ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
          pArea->lpdbOpenInfo = NULL;
          return HB_FAILURE;
       }
-      pArea->bLockType = hb_itemGetNI( pItem );
+      pArea->bLockType = ( HB_BYTE ) hb_itemGetNI( pItem );
       if( !pArea->bLockType )
          pArea->bLockType = DB_DBFLOCK_CLIP;
    }
@@ -4950,7 +4950,6 @@ static HB_ERRCODE hb_dbfOpenMemFile( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
 static HB_ERRCODE hb_dbfPutValueFile( DBFAREAP pArea, HB_USHORT uiIndex, const char * szFile, HB_USHORT uiMode )
 {
    HB_ERRCODE errCode = HB_SUCCESS;
-   HB_USHORT uiRead;
    LPFIELD pField;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_dbfPutValueFile(%p, %hu, %s, %hu)", pArea, uiIndex, szFile, uiMode));
@@ -4990,11 +4989,13 @@ static HB_ERRCODE hb_dbfPutValueFile( DBFAREAP pArea, HB_USHORT uiIndex, const c
       }
       else
       {
-         uiRead = hb_fileReadAt( pFile, pArea->pRecord + pArea->pFieldOffset[ uiIndex ],
-                                 pField->uiLen, 0 );
-         if( uiRead != ( HB_USHORT ) FS_ERROR && uiRead < pField->uiLen )
-            memset( pArea->pRecord + pArea->pFieldOffset[ uiIndex ] + uiRead,
-                    ' ', pField->uiLen - uiRead );
+         HB_SIZE nRead = hb_fileReadAt( pFile, pArea->pRecord +
+                                               pArea->pFieldOffset[ uiIndex ],
+                                        pField->uiLen, 0 );
+         if( nRead != ( HB_SIZE ) FS_ERROR &&
+             nRead < ( HB_SIZE ) pField->uiLen )
+            memset( pArea->pRecord + pArea->pFieldOffset[ uiIndex ] + nRead,
+                    ' ', pField->uiLen - nRead );
          hb_fileClose( pFile );
       }
    }
@@ -5539,7 +5540,7 @@ static HB_ERRCODE hb_dbfRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ulC
          {
             case DB_DBF_STD:        /* standard dBase/Clipper DBF file */
             case DB_DBF_VFP:        /* VFP DBF file */
-               pData->bTableType = iType;
+               pData->bTableType = ( HB_BYTE ) iType;
          }
          break;
       }
@@ -5558,7 +5559,7 @@ static HB_ERRCODE hb_dbfRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ulC
 #ifndef HB_LONG_LONG_OFF
             case DB_DBFLOCK_HB64:
 #endif
-               pData->bLockType = ( int ) iScheme;
+               pData->bLockType = ( HB_BYTE ) iScheme;
          }
          break;
       }
@@ -5779,7 +5780,7 @@ HB_FUNC( DBF_GETFUNCTABLE )
 
    uiCount = ( HB_USHORT * ) hb_parptr( 1 );
    pTable = ( RDDFUNCS * ) hb_parptr( 2 );
-   uiRddId = hb_parni( 4 );
+   uiRddId = ( HB_USHORT ) hb_parni( 4 );
 
    HB_TRACE(HB_TR_DEBUG, ("DBF_GETFUNCTABLE(%p, %p)", uiCount, pTable));
 
