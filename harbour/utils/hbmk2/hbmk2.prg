@@ -5829,7 +5829,9 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          IF ! Empty( cBin_Post )
 
             cOpt_Post := StrTran( cOpt_Post, "{OB}", FNameEscape( hbmk[ _HBMK_cPROGNAME ], hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) )
-            cOpt_Post := StrTran( cOpt_Post, "{OI}", FNameEscape( l_cIMPLIBNAME, hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) )
+            IF l_cIMPLIBNAME != NIL
+               cOpt_Post := StrTran( cOpt_Post, "{OI}", FNameEscape( l_cIMPLIBNAME, hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) )
+            ENDIF
             cOpt_Post := AllTrim( cOpt_Post )
 
             cCommand := cBin_Post + " " + cOpt_Post
@@ -6557,7 +6559,8 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, lSystemHeader, tT
          IF ( fhnd := FOpen( cFileName, FO_READ + FO_SHARED ) ) == F_ERROR
             RETURN .F.
          ENDIF
-         cFile := Space( 16384 )
+         cFile := Space( Min( 16384, FSeek( fhnd, 0, FS_END ) ) )
+         FSeek( fhnd, 0, FS_SET )
          FRead( fhnd, @cFile, Len( cFile ) )
          FClose( fhnd )
       ENDIF

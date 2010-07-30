@@ -1081,8 +1081,8 @@ extern char *       hb_compEncodeString( int iMethod, const char * szText, HB_SI
 extern char *       hb_compDecodeString( int iMethod, const char * szText, HB_SIZE * pnLen );
 
 /* misc */
-extern char *   hb_procname( int iLevel, char * szName, HB_BOOL bskipBlock ); /* retrieve a procedure name into a buffer */
-extern HB_BOOL  hb_procinfo( int iLevel, char * szName, HB_USHORT * puiLine, char * szFile );
+extern HB_EXPORT char *   hb_procname( int iLevel, char * szName, HB_BOOL bskipBlock ); /* retrieve a procedure name into a buffer */
+extern HB_EXPORT HB_BOOL  hb_procinfo( int iLevel, char * szName, HB_USHORT * puiLine, char * szFile );
 
 /* macro compiler */
 #if defined( HB_MACRO_SUPPORT )
@@ -1166,12 +1166,12 @@ extern HB_EXPORT const char * hb_osEncodeCP( const char * szName, char ** pszFre
 extern HB_EXPORT const char * hb_osDecodeCP( const char * szName, char ** pszFree, HB_SIZE * pnSize ); /* Convert a string received from a system call, to Harbour codepage. */
 
 /* environment variables access */
-extern HB_BOOL hb_getenv_buffer( const char * szName, char * szBuffer, int nSize );
+extern HB_EXPORT HB_BOOL hb_getenv_buffer( const char * szName, char * szBuffer, int nSize );
 /* WARNING: This returned pointer must be freed if not NULL using hb_xfree( ptr ); */
-extern char *  hb_getenv( const char * name );
-extern HB_BOOL hb_setenv( const char * szName, const char * szValue ); /* set or delete (szValue==NULL) environment variable */
-extern char *  hb_netname( void );
-extern char *  hb_username( void );
+extern HB_EXPORT char *  hb_getenv( const char * name );
+extern HB_EXPORT HB_BOOL hb_setenv( const char * szName, const char * szValue ); /* set or delete (szValue==NULL) environment variable */
+extern HB_EXPORT char *  hb_netname( void );
+extern HB_EXPORT char *  hb_username( void );
 
 /* Translation related things */
 

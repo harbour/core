@@ -251,9 +251,9 @@ typedef enum
 } HB_set_listener_enum;
 typedef void HB_SET_LISTENER_CALLBACK( HB_set_enum, HB_set_listener_enum );
 
-extern int  hb_setListenerAdd( HB_SET_LISTENER_CALLBACK * );
-extern void hb_setListenerNotify( HB_set_enum, HB_set_listener_enum );
-extern int  hb_setListenerRemove( int );
+extern HB_EXPORT int          hb_setListenerAdd( HB_SET_LISTENER_CALLBACK * );
+extern HB_EXPORT void         hb_setListenerNotify( HB_set_enum, HB_set_listener_enum );
+extern HB_EXPORT int          hb_setListenerRemove( int );
 
 extern HB_EXPORT HB_BOOL      hb_setGetL( HB_set_enum set_specifier );
 extern HB_EXPORT const char * hb_setGetCPtr( HB_set_enum set_specifier );

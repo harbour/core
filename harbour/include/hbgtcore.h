@@ -341,8 +341,8 @@ typedef struct _HB_GT_BASE
 
 } HB_GT_BASE, * PHB_GT_BASE, * PHB_GT;
 
-extern PHB_GT hb_gt_Base( void );
-extern void hb_gt_BaseFree( PHB_GT pGT );
+extern HB_EXPORT PHB_GT hb_gt_Base( void );
+extern HB_EXPORT void hb_gt_BaseFree( PHB_GT pGT );
 extern PHB_GT hb_gt_ItemBase( PHB_ITEM pItemGT );
 extern void hb_gt_gcMark( void );
 
