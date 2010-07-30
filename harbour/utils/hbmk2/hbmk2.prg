@@ -410,13 +410,14 @@ REQUEST hbmk_KEYW
 #define _HBMK_nCOMPVer          118
 #define _HBMK_lDEPIMPLIB        119 /* Generate import libs configured in dependecy specification */
 #define _HBMK_lInstForce        120 /* Force to install target even if was up to date */
+#define _HBMK_lAutoHBM          121 /* Toggles processing of hbmk.hbm file in current directory */
 
-#define _HBMK_aArgs             121
-#define _HBMK_nArgTarget        122
-#define _HBMK_lPause            123
-#define _HBMK_nLevel            124
+#define _HBMK_aArgs             122
+#define _HBMK_nArgTarget        123
+#define _HBMK_lPause            124
+#define _HBMK_nLevel            125
 
-#define _HBMK_MAX_              124
+#define _HBMK_MAX_              125
 
 #define _HBMK_DEP_CTRL_MARKER   ".control." /* must be an invalid path */
 
@@ -913,6 +914,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    hbmk[ _HBMK_hDEPTSDIR ] := { => }
 
    hbmk[ _HBMK_lInstForce ] := .F.
+   hbmk[ _HBMK_lAutoHBM ] := .T.
 
    hbmk[ _HBMK_aArgs ] := aArgs
    hbmk[ _HBMK_nArgTarget ] := nArgTarget
@@ -997,6 +999,8 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
            cParamL             == "-exospace" .OR. ;
            cParamL             == "-blinker"   ; hbmk[ _HBMK_lInfo ] := .F. ; hbmk[ _HBMK_lStopAfterHarbour ] := .F. ; lStopAfterCComp := .F. ; lAcceptLDClipper := .T.
       CASE cParamL             == "-info"      ; hbmk[ _HBMK_lInfo ] := .T.
+      CASE cParamL             == "-autohbm"   ; hbmk[ _HBMK_lAutoHBM ] := .T.
+      CASE cParamL             == "-autohbm-"  ; hbmk[ _HBMK_lAutoHBM ] := .F.
       CASE cParamL             == "-xhb"       ; hbmk[ _HBMK_nHBMODE ] := _HBMODE_XHB
       CASE cParamL             == "-hb10"      ; hbmk[ _HBMK_nHBMODE ] := _HBMODE_HB10
       CASE cParamL             == "-hb20"      ; hbmk[ _HBMK_nHBMODE ] := _HBMODE_HB20
@@ -1796,7 +1800,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    #endif
 
    /* Process automatic make files in current dir. */
-   IF hb_FileExists( _HBMK_AUTOHBM_NAME )
+   IF hbmk[ _HBMK_lAutoHBM ] .AND. hb_FileExists( _HBMK_AUTOHBM_NAME )
       IF ! hbmk[ _HBMK_lQuiet ]
          hbmk_OutStd( hbmk, hb_StrFormat( I_( "Processing local make script: %1$s" ), _HBMK_AUTOHBM_NAME ) )
       ENDIF
@@ -1857,6 +1861,8 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
            Left( cParamL, 6 )  == "-lang=" .OR. ;
            Left( cParamL, 7 )  == "-width=" .OR. ;
            Left( cParamL, 5 )  == "-env:" .OR. ;
+           cParamL             == "-autohbm" .OR. ;
+           cParamL             == "-autohbm-" .OR. ;
            cParamL             == "-hbrun" .OR. ;
            cParamL             == "-hbraw" .OR. ;
            cParamL             == "-hbcmp" .OR. ;
@@ -1948,6 +1954,8 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       CASE cParamL == "-strip"           ; hbmk[ _HBMK_lSTRIP ]       := .T.
       CASE cParamL == "-strip-" .OR. ;
            cParamL == "-nostrip"         ; hbmk[ _HBMK_lSTRIP ]       := .F.
+      CASE cParamL == "-depimplib"       ; hbmk[ _HBMK_lDEPIMPLIB ]   := .T.
+      CASE cParamL == "-depimplib-"      ; hbmk[ _HBMK_lDEPIMPLIB ]   := .F.
       CASE cParamL == "-instforce"       ; hbmk[ _HBMK_lInstForce ]   := .T.
       CASE cParamL == "-instforce-"      ; hbmk[ _HBMK_lInstForce ]   := .F.
 
@@ -11002,6 +11010,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-instfile=<g:file>" , I_( "add <file> in to the list of files to be copied to path specified by -instpath option. <g> is an optional copy group, it must be at least two characters long." ) },;
       { "-instpath=<g:path>" , I_( "copy target to <path>. if <path> is a directory, it should end with path separatorm, in this case files specified by -instfile option will also be copied. can be specified multiple times. <g> is an optional copy group, it must be at least two characters long. Build target will be automatically copied to default (empty) copy group." ) },;
       { "-instforce[-]"      , I_( "copy target to install path even if it is up to date" ) },;
+      { "-depimplib[-]"      , I_( "enable (or disable) import library generation for import library sources specified in -depimplibs= options (default: yes)" ) },;
       { "-stop[=<text>]"     , I_( "stop without doing anything and display <text> if specified" ) },;
       { "-echo=<text>"       , I_( "echo text on screen" ) },;
       { "-pause"             , I_( "force waiting for a key on exit in case of failure (with alternate GTs only)" ) },;
@@ -11058,6 +11067,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-hbcmp|-clipper"    , I_( "stop after creating the object files\ncreate link/copy hbmk2 to hbcmp/clipper for the same effect" ) },;
       { "-hbcc"              , I_( "stop after creating the object files and accept raw C flags\ncreate link/copy hbmk2 to hbcc for the same effect" ) },;
       { "-hblnk"             , I_( "accept raw linker flags" ) },;
+      { "-autohbm[-]"        , hb_StrFormat( I_( "enable (or disable) processing of %1$s in current directory (default: yes)" ), _HBMK_AUTOHBM_NAME ) },;
       { "-hb10"              , I_( "enable Harbour 1.0.x compatibility mode" ) },;
       { "-hb20"              , I_( "enable Harbour 2.0.x compatibility mode" ) },;
       { "-xhb"               , I_( "enable xhb mode" ) },;

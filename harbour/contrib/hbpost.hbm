@@ -41,6 +41,7 @@
 {_HB_BUILD_LIBDYN}-shared
 {_HB_BUILD_LIBDYN}-implib=../lib/${hb_plat}/${hb_comp}${hb_build}/
 {_HB_BUILD_LIBDYN&allwin}-lhbmaindllp
+{_HB_BUILD_LIBDYN}-depimplib-
 
 {hblib}-o../lib/${hb_plat}/${hb_comp}${hb_build}/
 {hbexe|hbdyn}-o../bin/${hb_plat}/${hb_comp}${hb_build}/
