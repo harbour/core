@@ -282,7 +282,7 @@ METHOD SendMail( oTIpMail ) CLASS TIpClientSmtp
    ::mail( oTIpMail:getFieldPart( "From" ) )
 
    cTo := oTIpMail:getFieldPart( "To" )
-   cTo := StrTran( cTo, hb_inetCRLF() )
+   cTo := StrTran( cTo, tip_CRLF() )
    cTo := StrTran( cTo, Chr( 9 ) )
    cTo := StrTran( cTo, Chr( 32 ) )
 

@@ -91,7 +91,7 @@
 CREATE CLASS tIPClient
 
    CLASSDATA bInitSocks  INIT .F.
-   CLASSDATA cCRLF       INIT hb_inetCRLF()
+   CLASSDATA cCRLF       INIT tip_CRLF()
 
    VAR oUrl                      /* url to wich to connect */
    VAR oCredentials              /* credential needed to access the service */

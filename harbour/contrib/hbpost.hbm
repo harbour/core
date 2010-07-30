@@ -42,11 +42,11 @@
 {hblib}-workdir=../lib/${hb_plat}/${hb_comp}${hb_build}/${hb_work}/${hb_outputname}${hb_workdynsub}
 {hbexe|hbdyn}-workdir=../bin/${hb_plat}/${hb_comp}${hb_build}/${hb_work}/${hb_outputname}${hb_workdynsub}
 
-{_HB_BUILD_INSTALL&hblib}-instpath=${_HB_INSTALL_LIB}/
-{_HB_BUILD_INSTALL&hbexe}-instpath=${_HB_INSTALL_BIN}/
-{_HB_BUILD_INSTALL&hbdyn}-instpath=${_HB_INSTALL_DYN}/
-{_HB_BUILD_INSTALL&hblib}-instpath=inc:${_HB_INSTALL_INC}/
-{_HB_BUILD_INSTALL}-instpath=etc:${_HB_INSTALL_ETC}/
-{_HB_BUILD_INSTALL}-instpath=man:${_HB_INSTALL_MAN}/
-{_HB_BUILD_INSTALL&HB_INSTALL_IMPLIB='yes'}-instpath=implib:${_HB_INSTALL_LIB}/
+{_HB_BUILD_INSTALL&_HB_INSTALL_LIB&hblib}-instpath=${_HB_INSTALL_LIB}/
+{_HB_BUILD_INSTALL&_HB_INSTALL_BIN&hbexe}-instpath=${_HB_INSTALL_BIN}/
+{_HB_BUILD_INSTALL&_HB_INSTALL_DYN&hbdyn}-instpath=${_HB_INSTALL_DYN}/
+{_HB_BUILD_INSTALL&_HB_INSTALL_INC&hblib}-instpath=inc:${_HB_INSTALL_INC}/
+{_HB_BUILD_INSTALL&_HB_INSTALL_ETC}-instpath=etc:${_HB_INSTALL_ETC}/
+{_HB_BUILD_INSTALL&_HB_INSTALL_MAN}-instpath=man:${_HB_INSTALL_MAN}/
+{_HB_BUILD_INSTALL&_HB_INSTALL_LIB&HB_INSTALL_IMPLIB='yes'}-instpath=implib:${_HB_INSTALL_LIB}/
 {_HB_BUILD_INSTALL}-instforce

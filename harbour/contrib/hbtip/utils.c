@@ -667,9 +667,18 @@ HB_FUNC( TIP_HTMLSPECIALCHARS )
       hb_errRT_BASE( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
 }
 
+#if defined( HB_LEGACY_LEVEL3 )
+
 HB_FUNC_EXTERN( HB_BASE64ENCODE );
 
 HB_FUNC( HB_BASE64 )
 {
    HB_FUNC_EXEC( HB_BASE64ENCODE );
+}
+
+#endif
+
+HB_FUNC( TIP_CRLF )
+{
+   hb_retc_const( "\r\n" );
 }

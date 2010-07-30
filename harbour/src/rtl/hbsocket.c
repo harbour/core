@@ -389,7 +389,7 @@ int hb_socketInit( void ) { return -1; }
 
 void hb_socketCleanup( void ) { ; }
 
-int hb_socketGetAddrFamilly( const void * pSockAddr, unsigned len )
+int hb_socketGetAddrFamily( const void * pSockAddr, unsigned len )
 {
    HB_SYMBOL_UNUSED( pSockAddr );
    HB_SYMBOL_UNUSED( len );
@@ -1599,7 +1599,7 @@ static int hb_socketSelectWRE( HB_SOCKET sd, HB_MAXINT timeout )
           ( iResult > 0 && FD_ISSET( sd, &wfds ) ? 1 : 0 );
 }
 
-int hb_socketGetAddrFamilly( const void * pSockAddr, unsigned len )
+int hb_socketGetAddrFamily( const void * pSockAddr, unsigned len )
 {
    return pSockAddr && len ? ( ( struct sockaddr * ) pSockAddr )->sa_family : -1;
 }
@@ -1728,7 +1728,7 @@ char * hb_socketAddrGetName( const void * pSockAddr, unsigned len )
 {
    char * szName = NULL;
 
-   switch( hb_socketGetAddrFamilly( pSockAddr, len ) )
+   switch( hb_socketGetAddrFamily( pSockAddr, len ) )
    {
 #if defined( AF_INET )
       case AF_INET:
@@ -1800,7 +1800,7 @@ int hb_socketAddrGetPort( const void * pSockAddr, unsigned len )
 {
    int iPort = -1;
 
-   switch( hb_socketGetAddrFamilly( pSockAddr, len ) )
+   switch( hb_socketGetAddrFamily( pSockAddr, len ) )
    {
 #if defined( AF_INET )
       case AF_INET:
@@ -1877,7 +1877,7 @@ PHB_ITEM hb_socketAddrToItem( const void * pSockAddr, unsigned len )
 {
    PHB_ITEM pAddrItm = NULL;
 
-   switch( hb_socketGetAddrFamilly( pSockAddr, len ) )
+   switch( hb_socketGetAddrFamily( pSockAddr, len ) )
    {
 #if defined( AF_INET )
       case AF_INET:
@@ -2718,7 +2718,7 @@ HB_BOOL hb_socketResolveInetAddr( void ** pSockAddr, unsigned * puiLen, const ch
       if( getaddrinfo( szAddr, NULL, &hints, &res ) == 0 )
       {
          if( ( int ) res->ai_addrlen >= ( int ) sizeof( struct sockaddr_in ) &&
-             hb_socketGetAddrFamilly( res->ai_addr, res->ai_addrlen ) == AF_INET )
+             hb_socketGetAddrFamily( res->ai_addr, res->ai_addrlen ) == AF_INET )
          {
             sa.sin_addr.s_addr = ( ( struct sockaddr_in * ) res->ai_addr )->sin_addr.s_addr;
             fTrans = HB_TRUE;
@@ -3212,7 +3212,7 @@ PHB_ITEM hb_socketGetIFaces( int af, HB_BOOL fNoAliases )
 #elif defined( HB_OS_WIN )
    HB_SOCKET sd;
 
-   /* TODO: add suport for IP6 */
+   /* TODO: add support for IP6 */
 
    /* TODO: implement it */
    HB_SYMBOL_UNUSED( fNoAliases );

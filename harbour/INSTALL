@@ -49,7 +49,7 @@ HARBOUR
           If you use MinGW compiler, you already have GNU Make.
           You can also use included copy named win-make.exe instead.
 
-      > mingw32-make install
+      > mingw32-make [install]
 
       To test it, type:
       > cd tests
@@ -62,7 +62,7 @@ HARBOUR
       You can also use these shells to build Harbour on Windows.
       Generally it's recommended to use native shell though.
 
-      > sh -c make install
+      > sh -c make [install]
 
       To test it, type:
       > cd tests
@@ -84,7 +84,7 @@ HARBOUR
           Unpack it to your PATH or Harbour source root directory.
           You can also use included copy named dos-make.exe instead.
 
-      > make install
+      > make [install]
 
       To test it, type:
       > cd tests
@@ -103,7 +103,7 @@ HARBOUR
           in this section.
           You can also use included copy named os2-make.exe instead.
 
-      > make install
+      > make [install]
 
       To test it, type:
       > cd tests
@@ -115,7 +115,7 @@ HARBOUR
    --------------
    (possible cross-build targets: Windows, Windows CE, MS-DOS, OS/2)
 
-      $ make install [HB_PLATFORM=<...>]
+      $ make [install] [HB_PLATFORM=<...>]
 
       To test it, type:
       $ cd tests
@@ -129,7 +129,7 @@ HARBOUR
 
       Platform specific prerequisite: XCode installed
 
-      $ make install [HB_PLATFORM=<...>]
+      $ make [install] [HB_PLATFORM=<...>]
 
       To test it, type:
       $ cd tests
@@ -150,9 +150,9 @@ HARBOUR
    ----------------------------------------------
    (possible cross-build targets: Windows, Windows CE, MS-DOS)
 
-      $ gmake install [HB_PLATFORM=<...>]
+      $ gmake [install] [HB_PLATFORM=<...>]
       OR
-      $ make install [HB_PLATFORM=<...>]
+      $ make [install] [HB_PLATFORM=<...>]
 
       To test it, type:
       $ cd tests
@@ -617,19 +617,18 @@ HARBOUR
    - HB_USER_DFLAGS              User linker options for dynamic libraries
 
    - HB_INSTALL_PREFIX           Target root directory to install Harbour files.
-                                 This will default to Harbour source tree on
-                                 non-*nix systems. On *nix systems the default
-                                 is set to /usr/local/ or $(PREFIX) if specified,
-                                 and /usr/local/harbour-<arch>-<comp> for
-                                 cross-builds. It's always set to ./pkg/<arch>/<comp>
-                                 when HB_BUILD_PKG is set to 'yes'.
-                                 Use absolute paths only. For a peace of mind,
-                                 avoid using spaces and quotes in the name.
+                                 On *nix systems the default is set to /usr/local/
+                                 or $(PREFIX) if specified, and
+                                 /usr/local/harbour-<arch>-<comp> for cross-builds.
+                                 It's always set to ./pkg/<arch>/<comp> when
+                                 HB_BUILD_PKG is set to 'yes'. On non-*nix systems,
+                                 you must set it to a valid directory when using
+                                 'install'. Use absolute paths only. For a peace of
+                                 mind, avoid using spaces and quotes in the name.
                                  You have to use path format native to your shell.
                                  F.e. to specify C:\dir on Windows, with Cygwin
                                  you should use /cygdrive/c/dir, with MSYS /c/dir.
                                  It's also possible to use following macros:
-                                    {hb_top}  - Source tree root dir
                                     {hb_plat} - Target platform
                                     {hb_comp} - Target compiler
                                     {hb_cpu}  - Target CPU

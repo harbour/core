@@ -202,7 +202,7 @@ STATIC PROCEDURE __hbdoc__read_stream( aEntry, cFile, cFileName, hMeta, aErrMsg 
             ENDIF
          ELSEIF ! Empty( cSection )
             IF ! Empty( hEntry[ cSection ] )
-              hEntry[ cSection ] += hb_eol()
+              hEntry[ cSection ] += Chr( 13 ) + Chr( 10 )
             ENDIF
             hEntry[ cSection ] += cLine
          ELSEIF ! Empty( cLine )

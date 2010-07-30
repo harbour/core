@@ -50,9 +50,7 @@ PROCEDURE Main()
 
    IF Empty( GetEnv( "HB_PLATFORM" ) ) .OR. ;
       Empty( GetEnv( "HB_COMPILER" ) ) .OR. ;
-      Empty( GetEnv( "HB_INSTALL_BIN" ) ) .OR. ;
-      Empty( GetEnv( "HB_INSTALL_LIB" ) ) .OR. ;
-      Empty( GetEnv( "HB_INSTALL_INC" ) )
+      Empty( GetEnv( "HB_HOST_BIN_DIR" ) )
 
       OutStd( "! Error: This program has to be called from the GNU Make process." + hb_eol() )
       ErrorLevel( 1 )
@@ -101,14 +99,17 @@ PROCEDURE Main()
          OutStd( hb_StrFormat( "! Error: Cannot create directory '%1$s'", GetEnv( "HB_INSTALL_ETC" ) ) + hb_eol() )
       ENDIF
 
-      OutStd( "! Creating *nix ld config file..." + hb_eol() )
+      IF ! Empty( GetEnv( "HB_INSTALL_LIB" ) )
 
-      tmp := GetEnv( "HB_INSTALL_ETC" ) + hb_ps() + ".." + hb_ps() + "ld.so.conf.d"
-      IF DirBuild( tmp )
-         /* TOFIX: Put HB_INSTALL_LIB without build sandbox prefix */
-         hb_MemoWrit( tmp + hb_ps() + "harbour.conf", GetEnv( "HB_INSTALL_LIB" ) + hb_eol() )
-      ELSE
-         OutStd( hb_StrFormat( "! Error: Cannot create directory '%1$s'", tmp ) + hb_eol() )
+         OutStd( "! Creating *nix ld config file..." + hb_eol() )
+
+         tmp := GetEnv( "HB_INSTALL_ETC" ) + hb_ps() + ".." + hb_ps() + "ld.so.conf.d"
+         IF DirBuild( tmp )
+            /* TOFIX: Put HB_INSTALL_LIB without build sandbox prefix */
+            hb_MemoWrit( tmp + hb_ps() + "harbour.conf", GetEnv( "HB_INSTALL_LIB" ) + hb_eol() )
+         ELSE
+            OutStd( hb_StrFormat( "! Error: Cannot create directory '%1$s'", tmp ) + hb_eol() )
+         ENDIF
       ENDIF
    ENDIF
 
@@ -163,16 +164,19 @@ PROCEDURE Main()
 
    /* Creating language files */
 
-   OutStd( "! Making core translation (.hbl) files..." + hb_eol() )
+   IF ! Empty( GetEnv( "HB_INSTALL_BIN" ) )
 
-   FOR EACH tmp IN Directory( "utils" + hb_ps() + hb_osFileMask(), "D" )
-      IF "D" $ tmp[ F_ATTR ] .AND. !( tmp[ F_NAME ] == "." ) .AND. !( tmp[ F_NAME ] == ".." )
-         FOR EACH aFile IN Directory( "utils" + hb_ps() + tmp[ F_NAME ] + hb_ps() + "*.po" )
-            mk_hbl( "utils" + hb_ps() + tmp[ F_NAME ] + hb_ps() + aFile[ F_NAME ],;
-                    PathSepToSelf( GetEnv( "HB_INSTALL_BIN" ) ) + hb_ps() + FNameExtSet( aFile[ F_NAME ], ".hbl" ) )
-         NEXT
-      ENDIF
-   NEXT
+      OutStd( "! Making core translation (.hbl) files..." + hb_eol() )
+
+      FOR EACH tmp IN Directory( "utils" + hb_ps() + hb_osFileMask(), "D" )
+         IF "D" $ tmp[ F_ATTR ] .AND. !( tmp[ F_NAME ] == "." ) .AND. !( tmp[ F_NAME ] == ".." )
+            FOR EACH aFile IN Directory( "utils" + hb_ps() + tmp[ F_NAME ] + hb_ps() + "*.po" )
+               mk_hbl( "utils" + hb_ps() + tmp[ F_NAME ] + hb_ps() + aFile[ F_NAME ],;
+                       PathSepToSelf( GetEnv( "HB_INSTALL_BIN" ) ) + hb_ps() + FNameExtSet( aFile[ F_NAME ], ".hbl" ) )
+            NEXT
+         ENDIF
+      NEXT
+   ENDIF
 
    /* Creating docs for core */
 

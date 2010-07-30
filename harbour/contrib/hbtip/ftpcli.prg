@@ -618,11 +618,11 @@ METHOD MPUT( cFileSpec, cAttr ) CLASS tIPClientFTP
 
    FOR EACH aFile IN Directory( cPath + cFile + cExt, cAttr )
       IF ::uploadFile( cPath + aFile[ F_NAME ], aFile[ F_NAME ] )
-         cStr += hb_inetCrlf() + aFile[ F_NAME ]
+         cStr += tip_CRLF() + aFile[ F_NAME ]
       ENDIF
    NEXT
 
-   RETURN SubStr( cStr, Len( hb_inetCrlf() ) + 1 )
+   RETURN SubStr( cStr, Len( tip_CRLF() ) + 1 )
 
 
 METHOD UpLoadFile( cLocalFile, cRemoteFile ) CLASS tIPClientFTP

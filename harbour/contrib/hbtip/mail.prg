@@ -561,7 +561,7 @@ METHOD setHeader( cSubject, cFrom, xTo, xCC, xBCC ) CLASS TipMail
    imax := Len( aTO )
    FOR i := 1 TO imax
       IF i > 1
-         cTo += "," + hb_inetCrlf() + " "
+         cTo += "," + tip_CRLF() + " "
       ENDIF
       cTo += LTrim( WordEncodeQ( tip_GetNameEMail( AllTrim( aTo[ i ] ) ), ::cCharset ) + " <" + tip_GetRawEMail( AllTrim( aTo[ i ] ) ) + ">" )
    NEXT
@@ -579,7 +579,7 @@ METHOD setHeader( cSubject, cFrom, xTo, xCC, xBCC ) CLASS TipMail
       imax := Len( aCC )
       FOR i := 2 TO imax
          IF i > 1
-            cCC += "," + hb_inetCrlf() + " "
+            cCC += "," + tip_CRLF() + " "
          ENDIF
          cCC += LTrim( WordEncodeQ( tip_GetNameEMail( AllTrim( aCC[ i ] ) ), ::cCharset ) + " <" + tip_GetRawEMail( AllTrim( aCC[ i ] ) ) + ">" )
       NEXT
@@ -594,7 +594,7 @@ METHOD setHeader( cSubject, cFrom, xTo, xCC, xBCC ) CLASS TipMail
       imax := Len( aBCC )
       FOR i := 2 TO imax
          IF i > 1
-            cBCC += "," + hb_inetCrlf() + " "
+            cBCC += "," + tip_CRLF() + " "
          ENDIF
          cBCC += LTrim( WordEncodeQ( tip_GetNameEMail( AllTrim( aBCC[ i ] ) ), ::cCharset ) + " <" + tip_GetRawEMail( AllTrim( aBCC[ i ] ) ) + ">" )
       NEXT
