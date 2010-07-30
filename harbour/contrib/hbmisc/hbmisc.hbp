@@ -9,6 +9,7 @@
 
 -w3 -es2
 
+bbabble.c
 dates2.c
 ffind.c
 hb_f.c
