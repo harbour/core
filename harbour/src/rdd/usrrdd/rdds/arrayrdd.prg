@@ -1139,7 +1139,7 @@ FUNCTION hb_FileArrayRdd( cFullName )
    ENDIF
    RETURN ( nReturn == HB_SUCCESS )
 
-FUNCTION hb_setArryRdd( aArray )
+FUNCTION hb_setArrayRdd( aArray )
    LOCAL aRecInfo
    LOCAL nWA      := Select()
    LOCAL aDBFData := USRRDD_AREADATA( nWA )[ WADATA_DATABASE ]
