@@ -27,15 +27,14 @@
  *
  */
 
-/* TODO:
+/* TODO (long term, low priority):
      1. normalize path to hbpre/hbpost to save on cmdline
         (after normalizer function has been moved to core)
-     2. finalize HB_BUILD_CONTRIB_DYN support.
-     3. Move in external libs to contrib area? (bz2, minizip, sqlite3)
+     2. Move in external libs to contrib area? (bz2, minizip, sqlite3)
         (the only downside is that irrelevant hits will be spilling
         into 'grep -R' results)
-     4. Honor paths found in --hbinfo hbctree{{}} section.
-     5. Move lib output dir and workdirs inside contrib dirs.
+     3. Move lib output dir and workdirs inside contrib dirs.
+     4. Make home project detection more robust in stdalone mode.
 
   NOTE:
      - 'install' is ignored in stdalone mode. It would be needed to
@@ -66,6 +65,7 @@ STATIC s_cBase
 STATIC s_cHome
 STATIC s_cRoot
 STATIC s_cBinDir
+STATIC s_cReBase
 
 PROCEDURE Main( ... )
    LOCAL hPackageList
@@ -73,6 +73,7 @@ PROCEDURE Main( ... )
    s_cBase := ""
    s_cHome := StrTran( hb_DirBase(), hb_ps(), "/" )
    s_cRoot := s_cHome + "../"
+   s_cReBase := ""
 
    #if defined( __HBSCRIPT__HBRUN )
       s_cBinDir := hbrun_DirBase()
@@ -112,7 +113,7 @@ PROCEDURE Standalone( aParams, hPackageList )
 
    LOCAL cPWD
    LOCAL cPackage
-   LOCAL cMyPackage
+   LOCAL hHomePackage := { => }
    LOCAL cProject
 
    LOCAL cOptions
@@ -165,18 +166,18 @@ PROCEDURE Standalone( aParams, hPackageList )
 
    IF ! lCustom
       cPWD := hb_pwd()
-      /* Find out which package are we */
+      /* Find out which package are in current dir, these will be our primary targets */
       FOR EACH tmp IN hPackageList
-         tmp1 := hb_ps() + PathSepToSelf( tmp:__enumKey() ) + hb_ps()
-         IF tmp1 == Right( cPWD, Len( tmp1 ) )
-            cMyPackage := StrTran( tmp:__enumKey(), "\", "/" )
-            EXIT
+         tmp1 := hb_ps() + FNameDirGet( PathSepToSelf( tmp:__enumKey() ) )
+         IF tmp1 == Right( cPWD, Len( tmp1 ) ) /* Not ultimate solution */
+            hHomePackage[ tmp:__enumKey() ] := tmp:__enumKey()
+            s_cReBase := SubStr( tmp1, 2 )
          ENDIF
       NEXT
-      IF Empty( cMyPackage )
+      IF Empty( hHomePackage )
          lCustom := .T.
       ELSE
-         OutStd( hb_StrFormat( "! Package '%1$s' %2$s...", cMyPackage, hActions[ nAction ] ) + hb_eol() )
+         OutStd( hb_StrFormat( "! Package %1$s... (%2$s project(s))", hActions[ nAction ], hb_ntos( Len( hHomePackage ) ) ) + hb_eol() )
       ENDIF
    ENDIF
 
@@ -198,25 +199,26 @@ PROCEDURE Standalone( aParams, hPackageList )
       /* Query project information and dependencies and calculate build order */
       aPairList := {}
 
-      call_hbmk2_hbinfo( s_cBase + hPackageList[ cMyPackage ][ "cFileName" ], hPackageList[ cMyPackage ] )
-      DeptLinesToDeptPairList( aPairList, cMyPackage, hPackageList[ cMyPackage ][ "aDept" ] )
+      FOR EACH cPackage IN hHomePackage
+         call_hbmk2_hbinfo( s_cBase + s_cHome + cPackage, hPackageList[ cPackage ] )
+         DeptLinesToDeptPairList( aPairList, cPackage, hPackageList[ cPackage ][ "aDept" ] )
+      NEXT
 
       aSortedList := TopoSort( aPairList )
 
       /* Build the dependencies and ourselves in in sorted order */
       FOR EACH cPackage IN aSortedList DESCEND
 
-         cProject := s_cBase + iif( cPackage == cMyPackage, "", s_cHome + cPackage + "/" ) + hPackageList[ cPackage ][ "cFileName" ]
+         cProject := s_cBase + s_cHome + cPackage
 
-         call_hbmk2( cProject,;
-            iif( cPackage == cMyPackage, cOptions + cOptionsUser, " -inc" ) )
+         IF cPackage $ hHomePackage /* Primary target */
+            call_hbmk2( cProject, cOptions + cOptionsUser )
 
-         /* Highly experimental */
-         IF cPackage == cMyPackage .AND. ;
-            hPackageList[ cPackage ][ "cType" ] == "hblib" .AND. ;
-            GetEnv( "HB_BUILD_CONTRIB_DYN" ) == "yes"
-
-            call_hbmk2( cProject, cOptions + cOptionsUser, hPackageList[ cPackage ][ "aDept" ] )
+            IF hPackageList[ cPackage ][ "cType" ] == "hblib" .AND. GetEnv( "HB_BUILD_CONTRIB_DYN" ) == "yes"
+               call_hbmk2( cProject, cOptions + cOptionsUser, hPackageList[ cPackage ][ "aDept" ] )
+            ENDIF
+         ELSE
+            call_hbmk2( cProject, " -inc" )
          ENDIF
       NEXT
    ENDIF
@@ -353,7 +355,7 @@ PROCEDURE GNUMake( aParams, hPackageList )
    aPairList := {}
 
    FOR EACH hProject IN hPackageList
-      call_hbmk2_hbinfo( s_cBase + hProject:__enumKey() + "/" + hProject[ "cFileName" ], hProject )
+      call_hbmk2_hbinfo( s_cBase + hProject:__enumKey(), hProject )
       DeptLinesToDeptPairList( aPairList, hProject:__enumKey(), hProject[ "aDept" ] )
    NEXT
 
@@ -388,11 +390,10 @@ PROCEDURE GNUMake( aParams, hPackageList )
             AScan( aFilter, {| tmp | tmp == cPackage } ) == 0,;
             AScan( aFilter, {| tmp | tmp == cPackage } ) > 0 )
 
-         cProject := s_cBase + cPackage + "/" + hPackageList[ cPackage ][ "cFileName" ]
+         cProject := s_cBase + cPackage
 
          call_hbmk2( cProject, cOptions )
 
-         /* Highly experimental */
          IF hPackageList[ cPackage ][ "cType" ] == "hblib" .AND. ;
             GetEnv( "HB_BUILD_CONTRIB_DYN" ) == "yes"
 
@@ -446,9 +447,8 @@ STATIC FUNCTION call_hbmk2_hbinfo( cProject, hProject )
          IF ! Empty( tmp )
             hb_FNameSplit( LTrim( tmp ), @cDir, @cName )
             AAdd( hProject[ "aDept" ], { "nDepth" => Len( tmp ) - Len( LTrim( tmp ) ),;
-                                         "cDir" => cDir,;
-                                         "cName" => cName,;
-                                         "cFileName" => LTrim( tmp ) } )
+                                         "cFileName_HBC" => LTrim( tmp ),;
+                                         "cFileName_HBP" => StrTran( PathNormalize( PathMakeAbsolute( FNameExtSet( PathSepToSelf( LTrim( tmp ) ), ".hbp" ), s_cRebase ) ), "\", "/" ) } )
          ENDIF
       NEXT
 
@@ -490,7 +490,7 @@ STATIC FUNCTION call_hbmk2( cProject, cOptionsPre, aDeptHBC )
       hb_setenv( "_HB_BUILD_LIBDYN" )
    ELSE
       FOR EACH hDept IN aDeptHBC
-         cOptionsLibDyn += " " + hDept[ "cFileName" ]
+         cOptionsLibDyn += " " + hDept[ "cFileName_HBC" ]
       NEXT
       hb_setenv( "__HB_DYN__", "_dll" ) /* Request dll version of Harbour contrib dependencies (the implibs) to be linked (experimental) */
       hb_setenv( "_HB_BUILD_LIBDYN", "yes" )
@@ -620,6 +620,68 @@ STATIC FUNCTION PathSepToSelf( cFileName )
 STATIC FUNCTION hb_pwd()
    RETURN DirAddPathSep( hb_CurDrive() + hb_osDriveSeparator() + hb_ps() + CurDir() )
 
+STATIC FUNCTION PathMakeAbsolute( cPathR, cPathA )
+   LOCAL cDirA
+   LOCAL cDirR, cDriveR, cNameR, cExtR
+
+   IF Empty( cPathA )
+      RETURN cPathR
+   ENDIF
+
+   hb_FNameSplit( cPathR, @cDirR, @cNameR, @cExtR, @cDriveR )
+
+   IF ! Empty( cDriveR ) .OR. ( ! Empty( cDirR ) .AND. Left( cDirR, 1 ) $ hb_osPathDelimiters() )
+      RETURN cPathR
+   ENDIF
+
+   hb_FNameSplit( cPathA, @cDirA )
+
+   IF Empty( cDirA )
+      RETURN cPathR
+   ENDIF
+
+   RETURN hb_FNameMerge( cDirA + cDirR, cNameR, cExtR )
+
+#define _ISDRIVESPEC( cDir ) ( ! Empty( hb_osDriveSeparator() ) .AND. Right( cDir, Len( hb_osDriveSeparator() ) ) == hb_osDriveSeparator() )
+
+/* NOTE: Can hurt if there are symlinks on the way. */
+STATIC FUNCTION PathNormalize( cPath )
+   LOCAL aDir
+   LOCAL cDir
+
+   IF ! Empty( cPath )
+
+      aDir := hb_ATokens( cPath, hb_ps() )
+
+      FOR EACH cDir IN aDir DESCEND
+         IF cDir == "."
+            hb_ADel( aDir, cDir:__enumIndex(), .T. )
+         ELSEIF !( cDir == ".." ) .AND. ;
+            ! Empty( cDir ) .AND. ;
+            ! _ISDRIVESPEC( cDir )
+            IF cDir:__enumIndex() < Len( cDir:__enumBase() ) .AND. ;
+               aDir[ cDir:__enumIndex() + 1 ] == ".."
+               hb_ADel( aDir, cDir:__enumIndex() + 1, .T. )
+               hb_ADel( aDir, cDir:__enumIndex(), .T. )
+            ENDIF
+         ENDIF
+      NEXT
+
+      cPath := ""
+      FOR EACH cDir IN aDir
+         cPath += cDir
+         IF cDir:__enumIndex() < Len( cDir:__enumBase() )
+            cPath += hb_ps()
+         ENDIF
+      NEXT
+
+      IF Empty( cPath )
+         cPath := "." + hb_ps()
+      ENDIF
+   ENDIF
+
+   RETURN cPath
+
 /* Convert indented list of line to tree / list of parent-child pairs */
 STATIC PROCEDURE DeptLinesToDeptPairList( aPairList, cParent, aFlatTree )
    LOCAL hFlatTreeElement
@@ -633,7 +695,7 @@ STATIC PROCEDURE DeptLinesToDeptPairList( aPairList, cParent, aFlatTree )
    FOR EACH hFlatTreeElement IN aFlatTree
       /* Min() protects against jumping more than one level down in one step */
       nDepth := Min( hFlatTreeElement[ "nDepth" ], nLevel + 1 )
-      hNewNode := { "child" => {}, "name" => hFlatTreeElement[ "cName" ], "cargo" => hFlatTreeElement }
+      hNewNode := { "child" => {}, "name" => hFlatTreeElement[ "cFileName_HBP" ], "cargo" => hFlatTreeElement }
       IF nDepth > nLevel
          hNode := ATail( hNode[ "child" ] )
       ELSEIF nDepth < nLevel
@@ -708,7 +770,10 @@ PROCEDURE AddPkg( hPackageList, cFileName )
 
    IF ! Empty( cFileName )
 
-      hb_FNameSplit( PathSepToSelf( AllTrim( cFileName ) ), @cDir, @cName, @cExt )
+      cFileName := PathSepToSelf( AllTrim( cFileName ) )
+
+      hb_FNameSplit( cFileName, @cDir, @cName, @cExt )
+
       IF ! Empty( cName ) .AND. Empty( cDir )
          cDir := cName
       ENDIF
@@ -719,7 +784,9 @@ PROCEDURE AddPkg( hPackageList, cFileName )
          cExt := ".hbp"
       ENDIF
 
-      hPackageList[ StrTran( DirDelPathSep( cDir ), "\", "/" ) ] := { "cFileName" => hb_FNameMerge(, cName, cExt ) }
+      cFileName := hb_FNameMerge( cDir, cName, cExt )
+
+      hPackageList[ StrTran( cFileName, "\", "/" ) ] := { => }
    ENDIF
 
    RETURN
