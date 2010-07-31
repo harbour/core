@@ -6,5 +6,5 @@ incpaths=.
 
 libs=${hb_name}
 
-{!unix}libs=cairo
+{!unix}libs=cairo${__HB_DYN__}
 {unix}ldflags="`pkg-config --libs cairo`"

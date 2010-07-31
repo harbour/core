@@ -2,7 +2,7 @@
 # $Id$
 #
 
-libs=${hb_name}
+libs=${hb_name}${__HB_DYN__}
 libs=fbclient
 
 libs=../rddsql/rddsql.hbc

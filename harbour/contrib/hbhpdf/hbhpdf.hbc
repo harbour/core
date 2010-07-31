@@ -4,6 +4,6 @@
 
 incpaths=.
 
-libs=${hb_name}
+libs=${hb_name}${__HB_DYN__}
 libs=libhpdf
 libs=png
