@@ -12,15 +12,15 @@ plugins=hbmk2_plugin_qt.hbs
 
 {allwin|os2}libpaths=${HB_WITH_QT}\..\lib
 
-{!HB_STATIC_QT}libs=hbqt${__HB_DYN__} hbqtcore${__HB_DYN__} hbqtgui${__HB_DYN__} hbqtnetwork${__HB_DYN__}
+{!HB_STATIC_QT}libs=hbqtmain${__HB_DYN__} hbqtcore${__HB_DYN__} hbqtgui${__HB_DYN__} hbqtnetwork${__HB_DYN__}
 {!HB_STATIC_QT&(allwin|os2)}libs=QtCore4 QtGui4 QtNetwork4
 {!HB_STATIC_QT&linux}libs=QtCore QtGui QtNetwork
 {!HB_STATIC_QT&darwin}libs=/Library/Frameworks/QtCore.framework/QtCore
 {!HB_STATIC_QT&darwin}libs=/Library/Frameworks/QtGui.framework/QtGui
 {!HB_STATIC_QT&darwin}libs=/Library/Frameworks/QtNetwork.framework/QtNetwork
 {!HB_STATIC_QT&!hbdyn}libs=QtUiTools
-{HB_STATIC_QT&allwin}libs=hbqts${__HB_DYN__} hbqtcores${__HB_DYN__} hbqtguis${__HB_DYN__} hbqtnetworks${__HB_DYN__}
-{HB_STATIC_QT&linux}libs=hbqt hbqtcore hbqtgui hbqtnetwork
+{HB_STATIC_QT&allwin}libs=hbqtmains${__HB_DYN__} hbqtcores${__HB_DYN__} hbqtguis${__HB_DYN__} hbqtnetworks${__HB_DYN__}
+{HB_STATIC_QT&linux}libs=hbqtmain hbqtcore hbqtgui hbqtnetwork
 {HB_STATIC_QT&(allwin|linux)}libs=QtCore QtGui QtNetwork QtUiTools
 {allgcc}libs=supc++
 

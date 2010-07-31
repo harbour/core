@@ -1,0 +1,11 @@
+#
+# $Id$
+#
+
+hbqt_common.hbm
+
+filelist.hbm
+
+-instfile=inc:hbqt.ch
+
+hbqtmains.hbp
