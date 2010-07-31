@@ -2705,11 +2705,8 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
    /* Start doing the make process. */
    IF ! hbmk[ _HBMK_lStopAfterInit ] .AND. ! hbmk[ _HBMK_lCreateImpLib ] .AND. ( Len( hbmk[ _HBMK_aPLUGINPars ] ) + Len( hbmk[ _HBMK_aPRG ] ) + Len( hbmk[ _HBMK_aC ] ) + Len( hbmk[ _HBMK_aCPP ] ) + Len( hbmk[ _HBMK_aOBJUSER ] ) + Len( l_aOBJA ) ) == 0
-      hbmk_OutErr( hbmk, I_( "Error: No source files were specified." ) )
-      IF hbmk[ _HBMK_lBEEP ]
-         DoBeep( .F. )
-      ENDIF
-      RETURN 4
+      hbmk_OutErr( hbmk, I_( "Warning: No source files were specified." ) )
+      RETURN 0
    ENDIF
 
    /* Decide about output name */
