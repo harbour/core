@@ -2171,18 +2171,24 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             IF ! Empty( tmp )
                tmp := PathSepToSelf( tmp )
                hb_FNameSplit( tmp, @cDir, @cName, @cExt )
-               IF Empty( cDir )
+               DO CASE
+               CASE Empty( cDir )
                   tmp := PathNormalize( PathMakeAbsolute( tmp, aParam[ _PAR_cFileName ] ) )
                   hb_FNameSplit( tmp, @cDir, @cName, @cExt )
                   IF l_cIMPLIBDIR == NIL
                      l_cIMPLIBDIR := cDir
                   ENDIF
-               ELSE
+                  l_cIMPLIBNAME := FNameNameExtGet( tmp )
+               CASE ! Empty( cDir ) .AND. Empty( cName ) .AND. Empty( cExt )
                   l_cIMPLIBDIR := PathNormalize( PathMakeAbsolute( cDir, aParam[ _PAR_cFileName ] ) )
-               ENDIF
+               OTHERWISE /* ! Empty( cDir ) .AND. !( Empty( cName ) .AND. Empty( cExt ) ) */
+                  l_cIMPLIBDIR := PathNormalize( PathMakeAbsolute( cDir, aParam[ _PAR_cFileName ] ) )
+                  l_cIMPLIBNAME := FNameNameExtGet( tmp )
+               ENDCASE
             ENDIF
          ELSE
             l_cIMPLIBDIR := NIL
+            l_cIMPLIBNAME := NIL
          ENDIF
 
       CASE Left( cParam, 2 ) == "-L" .AND. ;
@@ -4407,12 +4413,20 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          IF Empty( cExt ) .AND. ! Empty( cBinExt )
             hbmk[ _HBMK_cPROGNAME ] := hb_FNameMerge( cDir, cName, cBinExt )
          ENDIF
-         l_cIMPLIBNAME := hb_FNameMerge( l_cIMPLIBDIR, cLibLibPrefix + cName + _HBMK_IMPLIB_EXE_POST, cImpLibExt )
+         IF l_cIMPLIBNAME == NIL
+            l_cIMPLIBNAME := cName + _HBMK_IMPLIB_EXE_POST
+         ENDIF
+         l_cIMPLIBNAME := hb_FNameMerge( l_cIMPLIBDIR, cLibLibPrefix + l_cIMPLIBNAME, cImpLibExt )
       CASE lStopAfterCComp .AND. hbmk[ _HBMK_lCreateDyn ]
          IF Empty( cExt ) .AND. ! Empty( cDynLibExt )
             hbmk[ _HBMK_cPROGNAME ] := hb_FNameMerge( cDir, cName, cDynLibExt )
          ENDIF
-         l_cIMPLIBNAME := hb_FNameMerge( l_cIMPLIBDIR, cLibLibPrefix + cName + _HBMK_IMPLIB_DLL_POST, cImpLibExt )
+         IF l_cIMPLIBNAME == NIL
+            /* By default add default postfix to avoid collision with static lib
+               with the same name. */
+            l_cIMPLIBNAME := cName + _HBMK_IMPLIB_DLL_POST
+         ENDIF
+         l_cIMPLIBNAME := hb_FNameMerge( l_cIMPLIBDIR, cLibLibPrefix + l_cIMPLIBNAME, cImpLibExt )
       CASE lStopAfterCComp .AND. hbmk[ _HBMK_lCreateLib ]
          hbmk[ _HBMK_cPROGNAME ] := hb_FNameMerge( cDir, cLibLibPrefix + cName, iif( Empty( cLibLibExt ), cExt, cLibLibExt ) )
       ENDCASE
@@ -11015,7 +11029,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-[no]cpp[=def]"     , I_( "force C/C++ mode or reset to default" ) },;
       { "-[no]map"           , I_( "create (or not) a map file" ) },;
       { "-[no]implib"        , I_( "create (or not) an import library (in -hbdyn/-hbexe mode). The name will have a postfix added." ) },;
-      { "-implib=<dir>"      , I_( "create import library (in -hbdyn/-hbexe mode) in <dir> (default: same as output dir)" ) },;
+      { "-implib=<output>"   , I_( "create import library (in -hbdyn/-hbexe mode) name to <output> (default: same as output)" ) },;
       { "-[no]strip"         , I_( "strip (no strip) binaries" ) },;
       { "-[no]trace"         , I_( "show commands executed" ) },;
       { "-[no]beep"          , I_( "enable (or disable) single beep on successful exit, double beep on failure" ) },;

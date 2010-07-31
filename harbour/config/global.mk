@@ -1551,7 +1551,11 @@ ifeq ($(HB_INIT_DONE),)
    endif
    ifeq ($(ROOT),./)
       ifneq ($(call find_in_path,svnversion),)
-         $(info ! REVISION: $(shell svnversion .))
+         _tmp := $(shell svnversion .)
+         ifneq ($(findstring M,$(_tmp)),)
+            $(info ! === WARNING: Locally modified source code ===)
+         endif
+         $(info ! REVISION: $(_tmp))
       endif
    endif
 endif
