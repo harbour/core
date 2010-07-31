@@ -86,11 +86,11 @@ typedef struct
 
 HB_GARBAGE_FUNC( Q_release );
 
-extern void * hbqt_gcpointer( int iParam );
-extern const HB_GC_FUNCS * hbqt_gcFuncs( void );
+extern HB_EXPORT void * hbqt_gcpointer( int iParam );
+extern HB_EXPORT const HB_GC_FUNCS * hbqt_gcFuncs( void );
 
-extern void * hbqt_pPtrFromObj( int iParam );
-extern void * hbqt_pPtrFromItem( PHB_ITEM pObj );
+extern HB_EXPORT void * hbqt_pPtrFromObj( int iParam );
+extern HB_EXPORT void * hbqt_pPtrFromItem( PHB_ITEM pObj );
 
 #include "hbqt_garbage.h"
 

@@ -68,31 +68,31 @@
 
 HB_EXTERN_BEGIN
 
-extern HB_BOOL hb_ctwInit( void );
-extern int     hb_ctwSetShadowAttr( int iAttr );
-extern int     hb_ctwSetMoveMode( int iMode );
-extern int     hb_ctwSetMoveStep( int iVertical, int iHorizontal );
-extern int     hb_ctwSetWindowBoard( int iTop, int iLeft, int iBottom, int iRight );
-extern int     hb_ctwSetBorderMode( int iTop, int iLeft, int iBottom, int iRight );
-extern int     hb_ctwCreateWindow( int iTop, int iLeft, int iBottom, int iRight, HB_BOOL fClear, int iColor, HB_BOOL fVisible );
-extern int     hb_ctwCloseAllWindows( void );
-extern int     hb_ctwCloseWindow( int iWindow );
-extern int     hb_ctwCurrentWindow( void );
-extern int     hb_ctwSelectWindow( int iWindow, HB_BOOL fToTop );
-extern int     hb_ctwVisible( int iWindow, int iVisible );
-extern int     hb_ctwSetWindowShadow( int iWindow, int iAttr );
-extern int     hb_ctwSetWindowLevel( int iWindow, int iLevel );
-extern int     hb_ctwMaxWindow( void );
-extern int     hb_ctwChangeMargins( int iWindow, int iTop, int iLeft, int iBottom, int iRight );
-extern int     hb_ctwSetWindowClip( int iWindow, int iTop, int iLeft, int iBottom, int iRight );
-extern int     hb_ctwGetWindowCords( int iWindow, HB_BOOL fCenter, int * piTop, int * piLeft, int * piBottom, int * piRight );
-extern int     hb_ctwGetFormatCords( int iWindow, HB_BOOL fRelative, int * piTop, int * piLeft, int * piBottom, int * piRight );
-extern int     hb_ctwMoveWindow( int iWindow, int iRow, int iCol );
-extern int     hb_ctwCenterWindow( int iWindow, HB_BOOL fCenter );
-extern int     hb_ctwAddWindowBox( int iWindow, const char * szBox, int iColor );
-extern int     hb_ctwSwapWindows( int iWindow1, int iWindow2 );
-extern int     hb_ctwGetPosWindow( int iRow, int iCol );
-extern int     hb_ctwLastKey( void );
+extern HB_EXPORT HB_BOOL hb_ctwInit( void );
+extern HB_EXPORT int     hb_ctwSetShadowAttr( int iAttr );
+extern HB_EXPORT int     hb_ctwSetMoveMode( int iMode );
+extern HB_EXPORT int     hb_ctwSetMoveStep( int iVertical, int iHorizontal );
+extern HB_EXPORT int     hb_ctwSetWindowBoard( int iTop, int iLeft, int iBottom, int iRight );
+extern HB_EXPORT int     hb_ctwSetBorderMode( int iTop, int iLeft, int iBottom, int iRight );
+extern HB_EXPORT int     hb_ctwCreateWindow( int iTop, int iLeft, int iBottom, int iRight, HB_BOOL fClear, int iColor, HB_BOOL fVisible );
+extern HB_EXPORT int     hb_ctwCloseAllWindows( void );
+extern HB_EXPORT int     hb_ctwCloseWindow( int iWindow );
+extern HB_EXPORT int     hb_ctwCurrentWindow( void );
+extern HB_EXPORT int     hb_ctwSelectWindow( int iWindow, HB_BOOL fToTop );
+extern HB_EXPORT int     hb_ctwVisible( int iWindow, int iVisible );
+extern HB_EXPORT int     hb_ctwSetWindowShadow( int iWindow, int iAttr );
+extern HB_EXPORT int     hb_ctwSetWindowLevel( int iWindow, int iLevel );
+extern HB_EXPORT int     hb_ctwMaxWindow( void );
+extern HB_EXPORT int     hb_ctwChangeMargins( int iWindow, int iTop, int iLeft, int iBottom, int iRight );
+extern HB_EXPORT int     hb_ctwSetWindowClip( int iWindow, int iTop, int iLeft, int iBottom, int iRight );
+extern HB_EXPORT int     hb_ctwGetWindowCords( int iWindow, HB_BOOL fCenter, int * piTop, int * piLeft, int * piBottom, int * piRight );
+extern HB_EXPORT int     hb_ctwGetFormatCords( int iWindow, HB_BOOL fRelative, int * piTop, int * piLeft, int * piBottom, int * piRight );
+extern HB_EXPORT int     hb_ctwMoveWindow( int iWindow, int iRow, int iCol );
+extern HB_EXPORT int     hb_ctwCenterWindow( int iWindow, HB_BOOL fCenter );
+extern HB_EXPORT int     hb_ctwAddWindowBox( int iWindow, const char * szBox, int iColor );
+extern HB_EXPORT int     hb_ctwSwapWindows( int iWindow1, int iWindow2 );
+extern HB_EXPORT int     hb_ctwGetPosWindow( int iRow, int iCol );
+extern HB_EXPORT int     hb_ctwLastKey( void );
 
 HB_EXTERN_END
 

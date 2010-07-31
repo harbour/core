@@ -47,15 +47,15 @@
     $STATUS$
         R
     $COMPLIANCE$
-        Not Clipper Compatible
+        Not Clipper compatible
     $PLATFORMS$
-        Windows, Linux, MacOS, OS2
+        Windows, Linux, Mac OS X, OS/2
     $VERSION$
         4.5 or upper
     $FILES$
-        Prg source   : contrib/hbqt/qtgui/TQPushButton.prg
-        C++ wrappers : contrib/hbqt/qtgui/QPushButton.cpp
-        Library      : hbqtgui
+        Harbour source: contrib/hbqt/qtgui/TQPushButton.prg
+        C++ wrappers  : contrib/hbqt/qtgui/QPushButton.cpp
+        Library       : hbqtgui
     $SEEALSO$
         QAbstractButton
     $END$

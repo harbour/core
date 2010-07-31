@@ -71,6 +71,7 @@ C_SOURCES += \
    pcount.c \
    pvalue.c \
    proc.c \
+   procaddr.c \
    runner.c \
    vm.c \
    $(C_MAIN) \

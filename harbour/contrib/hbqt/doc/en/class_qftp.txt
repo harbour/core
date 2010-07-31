@@ -64,15 +64,15 @@
     $STATUS$
         R
     $COMPLIANCE$
-        Not Clipper Compatible
+        Not Clipper compatible
     $PLATFORMS$
-        Windows, Linux, MacOS, OS2
+        Windows, Linux, Mac OS X, OS/2
     $VERSION$
         4.5 or upper
     $FILES$
-        Prg source   : contrib/hbqt/qtnetwork/TQFtp.prg
-        C++ wrappers : contrib/hbqt/qtnetwork/QFtp.cpp
-        Library      : hbqtnetwork
+        Harbour source: contrib/hbqt/qtnetwork/TQFtp.prg
+        C++ wrappers  : contrib/hbqt/qtnetwork/QFtp.cpp
+        Library       : hbqtnetwork
     $SEEALSO$
         QObject
     $END$

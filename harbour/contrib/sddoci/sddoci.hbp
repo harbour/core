@@ -21,4 +21,9 @@
 -depimplibs=ocilib:../lib32/ocilibm.dll
 -depimplibs=ocilib:../lib32/ocilibw.dll
 
+# Using prebuilt static libs with MinGW
+-cflag=-DOCI_API=_stdcall{mingw}
+# Required to link against generated implib
+-cflag=-DOCI_API=_stdcall{bcc}
+
 sddoci.c

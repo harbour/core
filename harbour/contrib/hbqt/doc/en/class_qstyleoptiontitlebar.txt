@@ -42,15 +42,15 @@
     $STATUS$
         R
     $COMPLIANCE$
-        Not Clipper Compatible
+        Not Clipper compatible
     $PLATFORMS$
-        Windows, Linux, MacOS, OS2
+        Windows, Linux, Mac OS X, OS/2
     $VERSION$
         4.5 or upper
     $FILES$
-        Prg source   : contrib/hbqt/qtgui/TQStyleOptionTitleBar.prg
-        C++ wrappers : contrib/hbqt/qtgui/QStyleOptionTitleBar.cpp
-        Library      : hbqtgui
+        Harbour source: contrib/hbqt/qtgui/TQStyleOptionTitleBar.prg
+        C++ wrappers  : contrib/hbqt/qtgui/QStyleOptionTitleBar.cpp
+        Library       : hbqtgui
     $SEEALSO$
         QStyleOptionComplex
     $END$

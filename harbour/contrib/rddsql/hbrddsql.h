@@ -250,8 +250,11 @@ typedef struct _SDDNODE
 #define ESQLDD_CONNALLOC           1912
 #define ESQLDD_ENVALLOC            1913
 
+HB_EXTERN_BEGIN
 
-int hb_sddRegister( PSDDNODE pSdd );
-void hb_rddsqlSetError( HB_ERRCODE errCode, const char * szError, const char * szQuery, PHB_ITEM pItem, unsigned long ulAffectedRows );
+extern HB_EXPORT int hb_sddRegister( PSDDNODE pSdd );
+extern HB_EXPORT void hb_rddsqlSetError( HB_ERRCODE errCode, const char * szError, const char * szQuery, PHB_ITEM pItem, unsigned long ulAffectedRows );
+
+HB_EXTERN_END
 
 #endif

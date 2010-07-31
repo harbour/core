@@ -4342,10 +4342,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
       ENDCASE
 
-      /* NOTE: We only use different shared object flags when compiling for
-               "( win || wce ) & !( allmingw | cygwin )". This may change in the future.
-               IMPORTANT: Keep this condition in sync with workdir default settings */
-      IF hbmk[ _HBMK_lCreateDyn ] .AND. !( hbmk[ _HBMK_cCOMP ] $ "mingw|mingw64|mingwarm|cygwin" )
+      IF hbmk[ _HBMK_lCreateDyn ]
          IF _HBMODE_IS_XHB( hbmk[ _HBMK_nHBMODE ] ) .OR. ;
             hbmk[ _HBMK_nHBMODE ] == _HBMODE_HB10
             AAdd( hbmk[ _HBMK_aOPTC ], "-D__EXPORT__" )
@@ -4826,7 +4823,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                         '#include "hbapi.h"'                                                      + Chr( 10 ) +;
                         ''                                                                        + Chr( 10 )
 
-               IF ! Empty( array ) .OR. l_cCMAIN != NIL
+               IF ( ! Empty( array ) .OR. l_cCMAIN != NIL ) .AND. ! lHBMAINDLLP
                   AEval( array, {| tmp, i | array[ i ] := FuncNameEncode( tmp ) } )
                   AEval( array, {| tmp | cFile += 'HB_FUNC_EXTERN( ' + tmp + ' );'                + Chr( 10 ) } )
                   IF l_cCMAIN != NIL
@@ -6032,14 +6029,11 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 /* NOTE: We store -hbdyn objects in different dirs by default as - for Windows
          platforms - they're always built using different compilation options
          than normal targets. [vszakats] */
-/* NOTE: We only use different shared object flags when compiling for
-         "( win || wce ) & !( allmingw | cygwin )". This may change in the future.
-         IMPORTANT: Keep this condition in sync with setting -DHB_DYNLIB C compiler flag logic */
 STATIC PROCEDURE Set_lCreateDyn( hbmk, lValue )
 
    hbmk[ _HBMK_lCreateDyn ] := lValue
 
-   IF hbmk[ _HBMK_lCreateDyn ] .AND. ! Empty( hbmk[ _HBMK_cCOMP ] ) .AND. !( hbmk[ _HBMK_cCOMP ] $ "mingw|mingw64|mingwarm|cygwin" )
+   IF hbmk[ _HBMK_lCreateDyn ]
       hbmk[ _HBMK_cWorkDirDynSub ] := hb_ps() + "hbdyn"
    ELSE
       hbmk[ _HBMK_cWorkDirDynSub ] := ""

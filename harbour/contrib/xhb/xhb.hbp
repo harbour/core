@@ -14,6 +14,10 @@
 -instfile=inc:hbcompat.ch
 -instfile=inc:xhb.ch
 
+../hbct/hbct.hbc
+../hbtip/hbtip.hbc
+../hbwin/hbwin.hbc
+
 bkgtsks.c
 cstructc.c
 datesxhb.c

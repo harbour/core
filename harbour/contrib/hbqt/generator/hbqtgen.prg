@@ -1875,13 +1875,13 @@ STATIC FUNCTION Build_GarbageFile( cpp_, cPathOut )
    aadd( txt_, " " )
 
    FOR EACH s IN cpp_
-      aadd( txt_, "extern QT_G_FUNC( hbqt_gcRelease_" + s + " );" )
+      aadd( txt_, "extern HB_EXPORT QT_G_FUNC( hbqt_gcRelease_" + s + " );" )
    NEXT
    aadd( txt_, "" )
 
    IF ( lNewGCtoQT )
       FOR EACH s IN cpp_
-         aadd( txt_, "extern void * hbqt_gcAllocate_" + s + "( void * pObj, bool bNew );" )
+         aadd( txt_, "extern HB_EXPORT void * hbqt_gcAllocate_" + s + "( void * pObj, bool bNew );" )
       NEXT
       aadd( txt_, "" )
    ENDIF

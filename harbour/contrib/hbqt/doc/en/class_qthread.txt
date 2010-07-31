@@ -51,15 +51,15 @@
     $STATUS$
         R
     $COMPLIANCE$
-        Not Clipper Compatible
+        Not Clipper compatible
     $PLATFORMS$
-        Windows, Linux, MacOS, OS2
+        Windows, Linux, Mac OS X, OS/2
     $VERSION$
         4.5 or upper
     $FILES$
-        Prg source   : contrib/hbqt/qtcore/TQThread.prg
-        C++ wrappers : contrib/hbqt/qtcore/QThread.cpp
-        Library      : hbqtcore
+        Harbour source: contrib/hbqt/qtcore/TQThread.prg
+        C++ wrappers  : contrib/hbqt/qtcore/QThread.cpp
+        Library       : hbqtcore
     $SEEALSO$
         QObject
     $END$

@@ -56,15 +56,15 @@
     $STATUS$
         R
     $COMPLIANCE$
-        Not Clipper Compatible
+        Not Clipper compatible
     $PLATFORMS$
-        Windows, Linux, MacOS, OS2
+        Windows, Linux, Mac OS X, OS/2
     $VERSION$
         4.5 or upper
     $FILES$
-        Prg source   : contrib/hbqt/qtnetwork/TQHttpHeader.prg
-        C++ wrappers : contrib/hbqt/qtnetwork/QHttpHeader.cpp
-        Library      : hbqtnetwork
+        Harbour source: contrib/hbqt/qtnetwork/TQHttpHeader.prg
+        C++ wrappers  : contrib/hbqt/qtnetwork/QHttpHeader.cpp
+        Library       : hbqtnetwork
     $SEEALSO$
 
     $END$

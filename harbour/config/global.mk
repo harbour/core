@@ -1136,6 +1136,14 @@ ifeq ($(HB_PLATFORM_UNIX),)
 else
    DYN_DIR := $(LIB_DIR)
    IMP_DIR :=
+   ifeq ($(HB_LD_PATH_SET),)
+      ifneq ($(HB_SRC_ROOTPATH),)
+         export LD_LIBRARY_PATH := $(HB_SRC_ROOTPATH)$(PLAT_COMP):$(LD_LIBRARY_PATH)
+      else
+         export LD_LIBRARY_PATH := $(realpath $(DYN_DIR)):$(LD_LIBRARY_PATH)
+      endif
+      export HB_LD_PATH_SET := yes
+   endif
 endif
 DYN_PREF :=
 # define PKG_DIR only if run from root Makefile

@@ -234,15 +234,15 @@
     $STATUS$
         R
     $COMPLIANCE$
-        Not Clipper Compatible
+        Not Clipper compatible
     $PLATFORMS$
-        Windows, Linux, MacOS, OS2
+        Windows, Linux, Mac OS X, OS/2
     $VERSION$
         4.5 or upper
     $FILES$
-        Prg source   : contrib/hbqt/qtgui/TQWidget.prg
-        C++ wrappers : contrib/hbqt/qtgui/QWidget.cpp
-        Library      : hbqtgui
+        Harbour source: contrib/hbqt/qtgui/TQWidget.prg
+        C++ wrappers  : contrib/hbqt/qtgui/QWidget.cpp
+        Library       : hbqtgui
     $SEEALSO$
         QObject, QPaintDevice
     $END$

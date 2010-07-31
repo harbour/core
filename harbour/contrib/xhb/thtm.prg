@@ -2280,7 +2280,7 @@ FUNCTION HTMLANY2STR( xVal )
       xRet := Dtoc( xVal )
 
    ELSEIF ISLOGICAL( xVal )
-      xRet := LTOC( xVal )
+      xRet := iif( xVal, "T", "F" )
 
    ELSEIF ISBLOCK( xVal )
       xRet := "{||...}"
