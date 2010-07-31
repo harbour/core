@@ -76,9 +76,9 @@ C_HEADERS := \
 PRG_HEADERS := \
    achoice.ch \
    assert.ch \
+   blob.ch \
    box.ch \
    button.ch \
-   blob.ch \
    color.ch \
    common.ch \
    dbedit.ch \
@@ -90,11 +90,13 @@ PRG_HEADERS := \
    getexit.ch \
    hb.ch \
    hbclass.ch \
+   hbcom.ch \
    hbdebug.ch \
    hbdyn.ch \
    hbextcdp.ch \
-   hbextlng.ch \
    hbextern.ch \
+   hbextlng.ch \
+   hbexturs.ch \
    hbgfx.ch \
    hbgfxdef.ch \
    hbgtinfo.ch \
@@ -111,6 +113,7 @@ PRG_HEADERS := \
    hbsix.ch \
    hbsocket.ch \
    hbstdgen.ch \
+   hbsxdef.ch \
    hbthread.ch \
    hbtrace.ch \
    hbusrrdd.ch \
@@ -125,7 +128,6 @@ PRG_HEADERS := \
    setcurs.ch \
    simpleio.ch \
    std.ch \
-   hbsxdef.ch \
    tbrowse.ch \
 
 API_HEADERS := \
