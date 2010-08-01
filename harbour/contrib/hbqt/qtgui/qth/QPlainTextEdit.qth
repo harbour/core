@@ -1,0 +1,176 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Harbour Project source code:
+ * QT Source Generator for Harbour
+ *
+ * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * www - http://www.harbour-project.org
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this software; see the file COPYING.  If not, write to
+ * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
+ * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ *
+ * As a special exception, the Harbour Project gives permission for
+ * additional uses of the text contained in its release of Harbour.
+ *
+ * The exception is that, if you link the Harbour libraries with other
+ * files to produce an executable, this does not by itself cause the
+ * resulting executable to be covered by the GNU General Public License.
+ * Your use of that executable is in no way restricted on account of
+ * linking the Harbour library code into it.
+ *
+ * This exception does not however invalidate any other reasons why
+ * the executable file might be covered by the GNU General Public License.
+ *
+ * This exception applies only to the code released by the Harbour
+ * Project under the name Harbour.  If you copy code from other
+ * Harbour Project or Free Software Foundation releases into a copy of
+ * Harbour, as the General Public License permits, the exception does
+ * not apply to the code that you add in this way.  To avoid misleading
+ * anyone as to the status of such modified files, you must delete
+ * this exception notice from them.
+ *
+ * If you write modifications of your own for Harbour, it is your choice
+ * whether to permit this exception to apply to your modifications.
+ * If you do not wish that, delete this exception notice.
+ *
+ */
+/*----------------------------------------------------------------------*/
+;
+;              Header File to Generate QT Wrapper Sources
+;
+
+<CLASS>
+QObject  = 
+Inherits = QAbstractScrollArea
+Type     = 
+New      =
+</CLASS>
+
+<DOC>
+</DOC>
+
+<CODE>
+#include <QtGui/QPlainTextEdit>
+
+
+/*
+ * QPlainTextEdit ( QWidget * parent = 0 )
+ * QPlainTextEdit ( const QString & text, QWidget * parent = 0 )
+ * virtual ~QPlainTextEdit ()
+ */
+HB_FUNC( QT_QPLAINTEXTEDIT )
+{
+   if( hb_pcount() == 1 && HB_ISCHAR( 1 ) )
+   {
+      hb_retptr( new QPlainTextEdit() );
+   }
+   else if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
+   {
+      hb_retptr( new QPlainTextEdit( hbqt_par_QWidget( 1 ) ) );
+   }
+   else if( hb_pcount() == 2 && HB_ISCHAR( 1 ) && HB_ISPOINTER( 2 ) )
+   {
+      hb_retptr( new QPlainTextEdit( hbqt_par_QString( 1 ), hbqt_par_QWidget( 2 ) ) );
+   }
+   else
+   {
+      hb_retptr( new QPlainTextEdit() );
+   }
+}
+</CODE>
+
+<ENUMS>
+enum LineWrapMode { NoWrap, WidgetWidth }
+</ENUMS>
+
+<PROTOS>
+bool backgroundVisible () const
+int blockCount () const
+bool canPaste () const
+bool centerOnScroll () const
+QMenu * createStandardContextMenu ()
+QTextCharFormat currentCharFormat () const
+QTextCursor cursorForPosition ( const QPoint & pos ) const
+QRect cursorRect ( const QTextCursor & cursor ) const
+QRect cursorRect () const
+int cursorWidth () const
+QTextDocument * document () const
+QString documentTitle () const
+void ensureCursorVisible ()
+QList<QTextEdit::ExtraSelection> extraSelections () const
+bool find ( const QString & exp, QTextDocument::FindFlags options = 0 )
+bool isReadOnly () const
+bool isUndoRedoEnabled () const
+LineWrapMode lineWrapMode () const
+virtual QVariant loadResource ( int type, const QUrl & name )
+int maximumBlockCount () const
+void mergeCurrentCharFormat ( const QTextCharFormat & modifier )
+void moveCursor ( QTextCursor::MoveOperation operation, QTextCursor::MoveMode mode = QTextCursor::MoveAnchor )
+bool overwriteMode () const
+void print ( QPrinter * printer ) const
+void setBackgroundVisible ( bool visible )
+void setCenterOnScroll ( bool enabled )
+void setCurrentCharFormat ( const QTextCharFormat & format )
+void setCursorWidth ( int width )
+void setDocument ( QTextDocument * document )
+void setDocumentTitle ( const QString & title )
+void setExtraSelections ( const QList<QTextEdit::ExtraSelection> & selections )
+void setLineWrapMode ( LineWrapMode mode )
+void setMaximumBlockCount ( int maximum )
+void setOverwriteMode ( bool overwrite )
+void setReadOnly ( bool ro )
+void setTabChangesFocus ( bool b )
+void setTabStopWidth ( int width )
+void setTextCursor ( const QTextCursor & cursor )
+void setTextInteractionFlags ( Qt::TextInteractionFlags flags )
+void setUndoRedoEnabled ( bool enable )
+void setWordWrapMode ( QTextOption::WrapMode policy )
+bool tabChangesFocus () const
+int tabStopWidth () const
+QTextCursor textCursor () const
+Qt::TextInteractionFlags textInteractionFlags () const
+QString toPlainText () const
+QTextOption::WrapMode wordWrapMode () const
+</PROTOS>
+
+<SLOTS>
+void appendHtml ( const QString & html )
+void appendPlainText ( const QString & text )
+void centerCursor ()
+void clear ()
+void copy ()
+void cut ()
+void insertPlainText ( const QString & text )
+void paste ()
+void redo ()
+void selectAll ()
+void setPlainText ( const QString & text )
+void undo ()
+</SLOTS>
+
+<SIGNALS>
+void blockCountChanged ( int newBlockCount )
+void copyAvailable ( bool yes )
+void cursorPositionChanged ()
+void modificationChanged ( bool changed )
+void redoAvailable ( bool available )
+void selectionChanged ()
+void textChanged ()
+void undoAvailable ( bool available )
+void updateRequest ( const QRect & rect, int dy )
+</SIGNALS>

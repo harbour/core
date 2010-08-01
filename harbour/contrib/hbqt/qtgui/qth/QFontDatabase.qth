@@ -1,0 +1,119 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Harbour Project source code:
+ * QT Source Generator for Harbour
+ *
+ * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * www - http://www.harbour-project.org
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this software; see the file COPYING.  If not, write to
+ * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
+ * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ *
+ * As a special exception, the Harbour Project gives permission for
+ * additional uses of the text contained in its release of Harbour.
+ *
+ * The exception is that, if you link the Harbour libraries with other
+ * files to produce an executable, this does not by itself cause the
+ * resulting executable to be covered by the GNU General Public License.
+ * Your use of that executable is in no way restricted on account of
+ * linking the Harbour library code into it.
+ *
+ * This exception does not however invalidate any other reasons why
+ * the executable file might be covered by the GNU General Public License.
+ *
+ * This exception applies only to the code released by the Harbour
+ * Project under the name Harbour.  If you copy code from other
+ * Harbour Project or Free Software Foundation releases into a copy of
+ * Harbour, as the General Public License permits, the exception does
+ * not apply to the code that you add in this way.  To avoid misleading
+ * anyone as to the status of such modified files, you must delete
+ * this exception notice from them.
+ *
+ * If you write modifications of your own for Harbour, it is your choice
+ * whether to permit this exception to apply to your modifications.
+ * If you do not wish that, delete this exception notice.
+ *
+ */
+/*----------------------------------------------------------------------*/
+;
+;              Header File to Generate QT Wrapper Sources
+;
+
+<CLASS>
+QObject  = no
+Inherits =
+Type     = Core
+New      =
+</CLASS>
+
+<CODE>
+#include <QtCore/QStringList>
+#include <QtGui/QFontDatabase>
+
+
+/*
+ * QFontDatabase ()
+ */
+HB_FUNC( QT_QFONTDATABASE )
+{
+   hb_retptr( new QFontDatabase() );
+}
+</CODE>
+
+<ENUMS>
+enum WritingSystem { Any, Latin, Greek, Cyrillic, ..., Runic }
+</ENUMS>
+
+<PROTOS>
+bool bold ( const QString & family, const QString & style ) const
+QStringList families ( WritingSystem writingSystem = Any ) const
+QFont font ( const QString & family, const QString & style, int pointSize ) const
+bool isBitmapScalable ( const QString & family, const QString & style = QString() ) const
+bool isFixedPitch ( const QString & family, const QString & style = QString() ) const
+bool isScalable ( const QString & family, const QString & style = QString() ) const
+bool isSmoothlyScalable ( const QString & family, const QString & style = QString() ) const
+bool italic ( const QString & family, const QString & style ) const
+QList<int> pointSizes ( const QString & family, const QString & style = QString() )
+QList<int> smoothSizes ( const QString & family, const QString & style )
+QString styleString ( const QFont & font )
+QString styleString ( const QFontInfo & fontInfo )
+QStringList styles ( const QString & family ) const
+int weight ( const QString & family, const QString & style ) const
+//QList<WritingSystem> writingSystems () const
+//QList<WritingSystem> writingSystems ( const QString & family ) const
+
+
+int addApplicationFont ( const QString & fileName )
+int addApplicationFontFromData ( const QByteArray & fontData )
+QStringList applicationFontFamilies ( int id )
+bool removeAllApplicationFonts ()
+bool removeApplicationFont ( int id )
+QList<int> standardSizes ()
+bool supportsThreadedFontRendering ()
+QString writingSystemName ( WritingSystem writingSystem )
+QString writingSystemSample ( WritingSystem writingSystem )
+</PROTOS>
+
+<SLOTS>
+</SLOTS>
+
+<SIGNALS>
+</SIGNALS>
+
+<VARIABLES>
+</VARIABLES>

@@ -1,0 +1,100 @@
+/*
+ * $Id$
+ */
+
+/*  $DOC$
+ *  $TEMPLATE$
+ *     Class
+ *  $NAME$
+ *     QDir()
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qdir.html
+ *  $ONELINER$
+ *     Creates a new QDir object.
+ *  $INHERITS$
+ *     
+ *  $SYNTAX$
+ *     QDir():new( ... )
+ *     QDir():from( pPtr_OR_oObj_of_type_QDir )
+ *     QDir():configure( pPtr_OR_oObj_of_type_QDir )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QDir
+ *  $METHODS$
+ *     :absoluteFilePath( cFileName )                      -> cQString
+ *     :absolutePath()                                     -> cQString
+ *     :canonicalPath()                                    -> cQString
+ *     :cd( cDirName )                                     -> lBool
+ *     :cdUp()                                             -> lBool
+ *     :count()                                            -> nUint
+ *     :dirName()                                          -> cQString
+ *     :entryList( pNameFilters, nFilters, nSort )         -> pQStringList
+ *     :entryList_1( nFilters, nSort )                     -> pQStringList
+ *     :exists( cName )                                    -> lBool
+ *     :exists_1()                                         -> lBool
+ *     :filePath( cFileName )                              -> cQString
+ *     :filter()                                           -> nFilters
+ *     :isAbsolute()                                       -> lBool
+ *     :isReadable()                                       -> lBool
+ *     :isRelative()                                       -> lBool
+ *     :isRoot()                                           -> lBool
+ *     :makeAbsolute()                                     -> lBool
+ *     :mkdir( cDirName )                                  -> lBool
+ *     :mkpath( cDirPath )                                 -> lBool
+ *     :nameFilters()                                      -> pQStringList
+ *     :path()                                             -> cQString
+ *     :refresh()                                          -> NIL
+ *     :relativeFilePath( cFileName )                      -> cQString
+ *     :remove( cFileName )                                -> lBool
+ *     :rename( cOldName, cNewName )                       -> lBool
+ *     :rmdir( cDirName )                                  -> lBool
+ *     :rmpath( cDirPath )                                 -> lBool
+ *     :setFilter( nFilters )                              -> NIL
+ *     :setNameFilters( pNameFilters )                     -> NIL
+ *     :setPath( cPath )                                   -> NIL
+ *     :setSorting( nSort )                                -> NIL
+ *     :sorting()                                          -> nSortFlags
+ *     :addSearchPath( cPrefix, cPath )                    -> NIL
+ *     :cleanPath( cPath )                                 -> cQString
+ *     :currentPath()                                      -> cQString
+ *     :fromNativeSeparators( cPathName )                  -> cQString
+ *     :homePath()                                         -> cQString
+ *     :isAbsolutePath( cPath )                            -> lBool
+ *     :isRelativePath( cPath )                            -> lBool
+ *     :match( cFilter, cFileName )                        -> lBool
+ *     :match_1( pFilters, cFileName )                     -> lBool
+ *     :rootPath()                                         -> cQString
+ *     :searchPaths( cPrefix )                             -> pQStringList
+ *     :separator()                                        -> pQChar
+ *     :setCurrent( cPath )                                -> lBool
+ *     :setSearchPaths( cPrefix, pSearchPaths )            -> NIL
+ *     :tempPath()                                         -> cQString
+ *     :toNativeSeparators( cPathName )                    -> cQString
+ * 
+ *  $DESCRIPTION$
+ * 
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtcore/TQDir.prg
+ *     C++ wrappers  : contrib/hbqt/qtcore/QDir.cpp
+ *     Library       : hbqtcore
+ *  $SEEALSO$
+ *     
+ *  $END$
+ */

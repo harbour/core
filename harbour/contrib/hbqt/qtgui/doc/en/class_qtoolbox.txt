@@ -1,0 +1,71 @@
+/*
+ * $Id$
+ */
+
+/*  $DOC$
+ *  $TEMPLATE$
+ *     Class
+ *  $NAME$
+ *     QToolBox()
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qtoolbox.html
+ *  $ONELINER$
+ *     Creates a new QToolBox object.
+ *  $INHERITS$
+ *     QFrame
+ *  $SYNTAX$
+ *     QToolBox():new( ... )
+ *     QToolBox():from( pPtr_OR_oObj_of_type_QToolBox )
+ *     QToolBox():configure( pPtr_OR_oObj_of_type_QToolBox )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QToolBox
+ *  $METHODS$
+ *     :addItem( pWidget, cIconSet, cText )                -> nInt
+ *     :addItem_1( pW, cText )                             -> nInt
+ *     :count()                                            -> nInt
+ *     :currentIndex()                                     -> nInt
+ *     :currentWidget()                                    -> pQWidget
+ *     :indexOf( pWidget )                                 -> nInt
+ *     :insertItem( nIndex, pWidget, cIcon, cText )        -> nInt
+ *     :insertItem_1( nIndex, pWidget, cText )             -> nInt
+ *     :isItemEnabled( nIndex )                            -> lBool
+ *     :itemIcon( nIndex )                                 -> pQIcon
+ *     :itemText( nIndex )                                 -> cQString
+ *     :itemToolTip( nIndex )                              -> cQString
+ *     :removeItem( nIndex )                               -> NIL
+ *     :setItemEnabled( nIndex, lEnabled )                 -> NIL
+ *     :setItemIcon( nIndex, cIcon )                       -> NIL
+ *     :setItemText( nIndex, cText )                       -> NIL
+ *     :setItemToolTip( nIndex, cToolTip )                 -> NIL
+ *     :widget( nIndex )                                   -> pQWidget
+ *     :setCurrentIndex( nIndex )                          -> NIL
+ *     :setCurrentWidget( pWidget )                        -> NIL
+ * 
+ *  $DESCRIPTION$
+ * 
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQToolBox.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QToolBox.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     QFrame
+ *  $END$
+ */

@@ -1,0 +1,85 @@
+/*
+ * $Id$
+ */
+
+/*  $DOC$
+ *  $TEMPLATE$
+ *     Class
+ *  $NAME$
+ *     QTableWidgetItem()
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qtablewidgetitem.html
+ *  $ONELINER$
+ *     Creates a new QTableWidgetItem object.
+ *  $INHERITS$
+ *     
+ *  $SYNTAX$
+ *     QTableWidgetItem():new( ... )
+ *     QTableWidgetItem():from( pPtr_OR_oObj_of_type_QTableWidgetItem )
+ *     QTableWidgetItem():configure( pPtr_OR_oObj_of_type_QTableWidgetItem )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QTableWidgetItem
+ *  $METHODS$
+ *     :background()                                       -> pQBrush
+ *     :checkState()                                       -> nQt::CheckState
+ *     :column()                                           -> nInt
+ *     :data( nRole )                                      -> pQVariant
+ *     :flags()                                            -> nQt::ItemFlags
+ *     :font()                                             -> pQFont
+ *     :foreground()                                       -> pQBrush
+ *     :icon()                                             -> pQIcon
+ *     :isSelected()                                       -> lBool
+ *     :read( pIn )                                        -> NIL
+ *     :row()                                              -> nInt
+ *     :setBackground( pBrush )                            -> NIL
+ *     :setCheckState( nState )                            -> NIL
+ *     :setData( nRole, pValue )                           -> NIL
+ *     :setFlags( nFlags )                                 -> NIL
+ *     :setFont( pFont )                                   -> NIL
+ *     :setForeground( pBrush )                            -> NIL
+ *     :setIcon( cIcon )                                   -> NIL
+ *     :setSelected( lSelect )                             -> NIL
+ *     :setSizeHint( pSize )                               -> NIL
+ *     :setStatusTip( cStatusTip )                         -> NIL
+ *     :setText( cText )                                   -> NIL
+ *     :setTextAlignment( nAlignment )                     -> NIL
+ *     :setToolTip( cToolTip )                             -> NIL
+ *     :setWhatsThis( cWhatsThis )                         -> NIL
+ *     :sizeHint()                                         -> pQSize
+ *     :statusTip()                                        -> cQString
+ *     :tableWidget()                                      -> pQTableWidget
+ *     :text()                                             -> cQString
+ *     :textAlignment()                                    -> nInt
+ *     :toolTip()                                          -> cQString
+ *     :type()                                             -> nInt
+ *     :whatsThis()                                        -> cQString
+ *     :write( pOut )                                      -> NIL
+ * 
+ *  $DESCRIPTION$
+ * 
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQTableWidgetItem.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QTableWidgetItem.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     
+ *  $END$
+ */

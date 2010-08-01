@@ -2,13 +2,14 @@
 ; $Id$
 ;
 
--I=../qth
+-I=../qtcore/qth
 -O=../qtcore
--D=../doc
+-D=../qtcore/doc
 
 HBEvents.qth
 HBSlots.qth
 
+; QAbstractEventDispatcher.qth
 QAbstractItemModel.qth
 QAbstractListModel.qth
 QAbstractTableModel.qth

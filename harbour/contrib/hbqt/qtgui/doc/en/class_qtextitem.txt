@@ -1,0 +1,57 @@
+/*
+ * $Id$
+ */
+
+/*  $DOC$
+ *  $TEMPLATE$
+ *     Class
+ *  $NAME$
+ *     QTextItem()
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qtextitem.html
+ *  $ONELINER$
+ *     Creates a new QTextItem object.
+ *  $INHERITS$
+ *     
+ *  $SYNTAX$
+ *     QTextItem():new( ... )
+ *     QTextItem():from( pPtr_OR_oObj_of_type_QTextItem )
+ *     QTextItem():configure( pPtr_OR_oObj_of_type_QTextItem )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QTextItem
+ *  $METHODS$
+ *     :ascent()                                           -> nQreal
+ *     :descent()                                          -> nQreal
+ *     :font()                                             -> pQFont
+ *     :renderFlags()                                      -> nRenderFlags
+ *     :text()                                             -> cQString
+ *     :width()                                            -> nQreal
+ * 
+ *  $DESCRIPTION$
+ * 
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQTextItem.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QTextItem.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     
+ *  $END$
+ */

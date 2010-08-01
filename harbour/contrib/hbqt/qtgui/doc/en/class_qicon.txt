@@ -1,0 +1,65 @@
+/*
+ * $Id$
+ */
+
+/*  $DOC$
+ *  $TEMPLATE$
+ *     Class
+ *  $NAME$
+ *     QIcon()
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qicon.html
+ *  $ONELINER$
+ *     Creates a new QIcon object.
+ *  $INHERITS$
+ *     
+ *  $SYNTAX$
+ *     QIcon():new( ... )
+ *     QIcon():from( pPtr_OR_oObj_of_type_QIcon )
+ *     QIcon():configure( pPtr_OR_oObj_of_type_QIcon )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QIcon
+ *  $METHODS$
+ *     :actualSize( pSize, nMode, nState )                 -> pQSize
+ *     :addFile( cFileName, pSize, nMode, nState )         -> NIL
+ *     :addPixmap( pPixmap, nMode, nState )                -> NIL
+ *     :availableSizes( nMode, nState )                    -> pQList<QSize>
+ *     :cacheKey()                                         -> nQint64
+ *     :isNull()                                           -> lBool
+ *     :paint( pPainter, pRect, nAlignment, nMode, nState )  -> NIL
+ *     :paint_1( pPainter, nX, nY, nW, nH, nAlignment, nMode, nState )  -> NIL
+ *     :pixmap( pSize, nMode, nState )                     -> pQPixmap
+ *     :pixmap_1( nW, nH, nMode, nState )                  -> pQPixmap
+ *     :pixmap_2( nExtent, nMode, nState )                 -> pQPixmap
+ * 
+ *  $DESCRIPTION$
+ * 
+ *  $EXAMPLES$
+ *     oIcon := QIcon():new()
+ *     oIcon := QIcon():new( cFileName )
+ *     oIcon := QIcon():new( pQPixmap )
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQIcon.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QIcon.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     
+ *  $END$
+ */

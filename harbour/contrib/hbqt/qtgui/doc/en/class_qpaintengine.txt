@@ -1,0 +1,75 @@
+/*
+ * $Id$
+ */
+
+/*  $DOC$
+ *  $TEMPLATE$
+ *     Class
+ *  $NAME$
+ *     QPaintEngine()
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qpaintengine.html
+ *  $ONELINER$
+ *     Creates a new QPaintEngine object.
+ *  $INHERITS$
+ *     
+ *  $SYNTAX$
+ *     QPaintEngine():new( ... )
+ *     QPaintEngine():from( pPtr_OR_oObj_of_type_QPaintEngine )
+ *     QPaintEngine():configure( pPtr_OR_oObj_of_type_QPaintEngine )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QPaintEngine
+ *  $METHODS$
+ *     :begin( pPdev )                                     -> lBool
+ *     :drawEllipse( pRect )                               -> NIL
+ *     :drawEllipse_1( pRect )                             -> NIL
+ *     :drawImage( pRectangle, pImage, pSr, nFlags )       -> NIL
+ *     :drawLines( pLines, nLineCount )                    -> NIL
+ *     :drawLines_1( pLines, nLineCount )                  -> NIL
+ *     :drawPath( pPath )                                  -> NIL
+ *     :drawPixmap( pR, pPm, pSr )                         -> NIL
+ *     :drawPoints( pPoints, nPointCount )                 -> NIL
+ *     :drawPoints_1( pPoints, nPointCount )               -> NIL
+ *     :drawPolygon( pPoints, nPointCount, nMode )         -> NIL
+ *     :drawPolygon_1( pPoints, nPointCount, nMode )       -> NIL
+ *     :drawRects( pRects, nRectCount )                    -> NIL
+ *     :drawRects_1( pRects, nRectCount )                  -> NIL
+ *     :drawTextItem( pP, pTextItem )                      -> NIL
+ *     :drawTiledPixmap( pRect, pPixmap, pP )              -> NIL
+ *     :end()                                              -> lBool
+ *     :hasFeature( nFeature )                             -> lBool
+ *     :isActive()                                         -> lBool
+ *     :paintDevice()                                      -> pQPaintDevice
+ *     :painter()                                          -> pQPainter
+ *     :setActive( lState )                                -> NIL
+ *     :type()                                             -> nType
+ *     :updateState( pState )                              -> NIL
+ * 
+ *  $DESCRIPTION$
+ * 
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQPaintEngine.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QPaintEngine.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     
+ *  $END$
+ */

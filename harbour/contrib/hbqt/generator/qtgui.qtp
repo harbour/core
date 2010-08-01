@@ -2,9 +2,9 @@
 ; $Id$
 ;
 
--I=../qth
+-I=../qtgui/qth
 -O=../qtgui
--D=../doc
+-D=../qtgui/doc
 
 HBQAbstractItemModel.qth
 HBQMainWindow.qth

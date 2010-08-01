@@ -1,0 +1,125 @@
+/*
+ * $Id$
+ */
+
+/*  $DOC$
+ *  $TEMPLATE$
+ *     Class
+ *  $NAME$
+ *     QApplication()
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qapplication.html
+ *  $ONELINER$
+ *     Creates a new QApplication object.
+ *  $INHERITS$
+ *     QCoreApplication
+ *  $SYNTAX$
+ *     QApplication():new( ... )
+ *     QApplication():from( pPtr_OR_oObj_of_type_QApplication )
+ *     QApplication():configure( pPtr_OR_oObj_of_type_QApplication )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QApplication
+ *  $METHODS$
+ *     :commitData( pManager )                             -> NIL
+ *     :isSessionRestored()                                -> lBool
+ *     :saveState( pManager )                              -> NIL
+ *     :sessionId()                                        -> cQString
+ *     :sessionKey()                                       -> cQString
+ *     :styleSheet()                                       -> cQString
+ *     :activeModalWidget()                                -> pQWidget
+ *     :activePopupWidget()                                -> pQWidget
+ *     :activeWindow()                                     -> pQWidget
+ *     :alert( pWidget, nMsec )                            -> NIL
+ *     :beep()                                             -> NIL
+ *     :changeOverrideCursor( pCursor )                    -> NIL
+ *     :clipboard()                                        -> pQClipboard
+ *     :colorSpec()                                        -> nInt
+ *     :cursorFlashTime()                                  -> nInt
+ *     :desktop()                                          -> pQDesktopWidget
+ *     :desktopSettingsAware()                             -> lBool
+ *     :doubleClickInterval()                              -> nInt
+ *     :exec()                                             -> nInt
+ *     :focusWidget()                                      -> pQWidget
+ *     :font()                                             -> pQFont
+ *     :font_1( pWidget )                                  -> pQFont
+ *     :font_2( pClassName )                               -> pQFont
+ *     :fontMetrics()                                      -> pQFontMetrics
+ *     :globalStrut()                                      -> pQSize
+ *     :isEffectEnabled( nEffect )                         -> lBool
+ *     :isLeftToRight()                                    -> lBool
+ *     :isRightToLeft()                                    -> lBool
+ *     :keyboardInputDirection()                           -> nQt::LayoutDirection
+ *     :keyboardInputInterval()                            -> nInt
+ *     :keyboardInputLocale()                              -> pQLocale
+ *     :keyboardModifiers()                                -> nQt::KeyboardModifiers
+ *     :layoutDirection()                                  -> nQt::LayoutDirection
+ *     :mouseButtons()                                     -> nQt::MouseButtons
+ *     :overrideCursor()                                   -> pQCursor
+ *     :palette()                                          -> pQPalette
+ *     :palette_1( pWidget )                               -> pQPalette
+ *     :palette_2( pClassName )                            -> pQPalette
+ *     :quitOnLastWindowClosed()                           -> lBool
+ *     :restoreOverrideCursor()                            -> NIL
+ *     :setActiveWindow( pActive )                         -> NIL
+ *     :setColorSpec( nSpec )                              -> NIL
+ *     :setCursorFlashTime( nInt )                         -> NIL
+ *     :setDesktopSettingsAware( lOn )                     -> NIL
+ *     :setDoubleClickInterval( nInt )                     -> NIL
+ *     :setEffectEnabled( nEffect, lEnable )               -> NIL
+ *     :setFont( pFont, pClassName )                       -> NIL
+ *     :setGlobalStrut( pQSize )                           -> NIL
+ *     :setGraphicsSystem( cSystem )                       -> NIL
+ *     :setKeyboardInputInterval( nInt )                   -> NIL
+ *     :setLayoutDirection( nDirection )                   -> NIL
+ *     :setOverrideCursor( pCursor )                       -> NIL
+ *     :setPalette( pPalette, pClassName )                 -> NIL
+ *     :setQuitOnLastWindowClosed( lQuit )                 -> NIL
+ *     :setStartDragDistance( nL )                         -> NIL
+ *     :setStartDragTime( nMs )                            -> NIL
+ *     :setStyle( pStyle )                                 -> NIL
+ *     :setStyle_1( cStyle )                               -> pQStyle
+ *     :setWheelScrollLines( nInt )                        -> NIL
+ *     :setWindowIcon( cIcon )                             -> NIL
+ *     :startDragDistance()                                -> nInt
+ *     :startDragTime()                                    -> nInt
+ *     :style()                                            -> pQStyle
+ *     :syncX()                                            -> NIL
+ *     :topLevelAt( pPoint )                               -> pQWidget
+ *     :topLevelAt_1( nX, nY )                             -> pQWidget
+ *     :type()                                             -> nType
+ *     :wheelScrollLines()                                 -> nInt
+ *     :widgetAt( pPoint )                                 -> pQWidget
+ *     :widgetAt_1( nX, nY )                               -> pQWidget
+ *     :windowIcon()                                       -> pQIcon
+ *     :aboutQt()                                          -> NIL
+ *     :closeAllWindows()                                  -> NIL
+ *     :setStyleSheet( cSheet )                            -> NIL
+ * 
+ *  $DESCRIPTION$
+ * 
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQApplication.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QApplication.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     QCoreApplication
+ *  $END$
+ */

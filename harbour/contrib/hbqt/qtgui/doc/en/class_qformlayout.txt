@@ -1,0 +1,87 @@
+/*
+ * $Id$
+ */
+
+/*  $DOC$
+ *  $TEMPLATE$
+ *     Class
+ *  $NAME$
+ *     QFormLayout()
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qformlayout.html
+ *  $ONELINER$
+ *     Creates a new QFormLayout object.
+ *  $INHERITS$
+ *     QLayout
+ *  $SYNTAX$
+ *     QFormLayout():new( ... )
+ *     QFormLayout():from( pPtr_OR_oObj_of_type_QFormLayout )
+ *     QFormLayout():configure( pPtr_OR_oObj_of_type_QFormLayout )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QFormLayout
+ *  $METHODS$
+ *     :addRow( pLabel, pField )                           -> NIL
+ *     :addRow_1( pLabel, pField )                         -> NIL
+ *     :addRow_2( pWidget )                                -> NIL
+ *     :addRow_3( cLabelText, pField )                     -> NIL
+ *     :addRow_4( cLabelText, pField )                     -> NIL
+ *     :addRow_5( pLayout )                                -> NIL
+ *     :fieldGrowthPolicy()                                -> nFieldGrowthPolicy
+ *     :formAlignment()                                    -> nQt::Alignment
+ *     :getItemPosition( nIndex, @nRowPtr, @nRolePtr )     -> NIL
+ *     :getLayoutPosition( pLayout, @nRowPtr, @nRolePtr )  -> NIL
+ *     :getWidgetPosition( pWidget, @nRowPtr, @nRolePtr )  -> NIL
+ *     :horizontalSpacing()                                -> nInt
+ *     :insertRow( nRow, pLabel, pField )                  -> NIL
+ *     :insertRow_1( nRow, pLabel, pField )                -> NIL
+ *     :insertRow_2( nRow, pWidget )                       -> NIL
+ *     :insertRow_3( nRow, cLabelText, pField )            -> NIL
+ *     :insertRow_4( nRow, cLabelText, pField )            -> NIL
+ *     :insertRow_5( nRow, pLayout )                       -> NIL
+ *     :itemAt( nRow, nRole )                              -> pQLayoutItem
+ *     :labelAlignment()                                   -> nQt::Alignment
+ *     :labelForField( pField )                            -> pQWidget
+ *     :labelForField_1( pField )                          -> pQWidget
+ *     :rowCount()                                         -> nInt
+ *     :rowWrapPolicy()                                    -> nRowWrapPolicy
+ *     :setFieldGrowthPolicy( nPolicy )                    -> NIL
+ *     :setFormAlignment( nAlignment )                     -> NIL
+ *     :setHorizontalSpacing( nSpacing )                   -> NIL
+ *     :setItem( nRow, nRole, pItem )                      -> NIL
+ *     :setLabelAlignment( nAlignment )                    -> NIL
+ *     :setLayout( nRow, nRole, pLayout )                  -> NIL
+ *     :setRowWrapPolicy( nPolicy )                        -> NIL
+ *     :setSpacing( nSpacing )                             -> NIL
+ *     :setVerticalSpacing( nSpacing )                     -> NIL
+ *     :setWidget( nRow, nRole, pWidget )                  -> NIL
+ *     :spacing()                                          -> nInt
+ *     :verticalSpacing()                                  -> nInt
+ * 
+ *  $DESCRIPTION$
+ * 
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQFormLayout.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QFormLayout.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     QLayout
+ *  $END$
+ */

@@ -1,0 +1,72 @@
+/*
+ * $Id$
+ */
+
+/*  $DOC$
+ *  $TEMPLATE$
+ *     Class
+ *  $NAME$
+ *     QSplitter()
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qsplitter.html
+ *  $ONELINER$
+ *     Creates a new QSplitter object.
+ *  $INHERITS$
+ *     QFrame
+ *  $SYNTAX$
+ *     QSplitter():new( ... )
+ *     QSplitter():from( pPtr_OR_oObj_of_type_QSplitter )
+ *     QSplitter():configure( pPtr_OR_oObj_of_type_QSplitter )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QSplitter
+ *  $METHODS$
+ *     :addWidget( pWidget )                               -> NIL
+ *     :childrenCollapsible()                              -> lBool
+ *     :count()                                            -> nInt
+ *     :getRange( nIndex, @nMin, @nMax )                   -> NIL
+ *     :handleWidth()                                      -> nInt
+ *     :indexOf( pWidget )                                 -> nInt
+ *     :insertWidget( nIndex, pWidget )                    -> NIL
+ *     :isCollapsible( nIndex )                            -> lBool
+ *     :opaqueResize()                                     -> lBool
+ *     :orientation()                                      -> nQt::Orientation
+ *     :refresh()                                          -> NIL
+ *     :restoreState( pState )                             -> lBool
+ *     :saveState()                                        -> pQByteArray
+ *     :setChildrenCollapsible( lBool )                    -> NIL
+ *     :setCollapsible( nIndex, lCollapse )                -> NIL
+ *     :setHandleWidth( nInt )                             -> NIL
+ *     :setOpaqueResize( lOpaque )                         -> NIL
+ *     :setOrientation( nQt::Orientation )                 -> NIL
+ *     :setStretchFactor( nIndex, nStretch )               -> NIL
+ *     :sizes()                                            -> pQList<int>
+ *     :widget( nIndex )                                   -> pQWidget
+ * 
+ *  $DESCRIPTION$
+ * 
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQSplitter.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QSplitter.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     QFrame
+ *  $END$
+ */

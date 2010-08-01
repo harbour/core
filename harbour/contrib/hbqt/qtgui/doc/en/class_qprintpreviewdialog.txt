@@ -1,0 +1,53 @@
+/*
+ * $Id$
+ */
+
+/*  $DOC$
+ *  $TEMPLATE$
+ *     Class
+ *  $NAME$
+ *     QPrintPreviewDialog()
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qprintpreviewdialog.html
+ *  $ONELINER$
+ *     Creates a new QPrintPreviewDialog object.
+ *  $INHERITS$
+ *     QDialog
+ *  $SYNTAX$
+ *     QPrintPreviewDialog():new( ... )
+ *     QPrintPreviewDialog():from( pPtr_OR_oObj_of_type_QPrintPreviewDialog )
+ *     QPrintPreviewDialog():configure( pPtr_OR_oObj_of_type_QPrintPreviewDialog )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QPrintPreviewDialog
+ *  $METHODS$
+ *     :open( pReceiver, pMember )                         -> NIL
+ *     :printer()                                          -> pQPrinter
+ * 
+ *  $DESCRIPTION$
+ * 
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQPrintPreviewDialog.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QPrintPreviewDialog.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     QDialog
+ *  $END$
+ */

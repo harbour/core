@@ -1,0 +1,145 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Harbour Project source code:
+ * QT Source Generator for Harbour
+ *
+ * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * www - http://www.harbour-project.org
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this software; see the file COPYING.  If not, write to
+ * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
+ * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ *
+ * As a special exception, the Harbour Project gives permission for
+ * additional uses of the text contained in its release of Harbour.
+ *
+ * The exception is that, if you link the Harbour libraries with other
+ * files to produce an executable, this does not by itself cause the
+ * resulting executable to be covered by the GNU General Public License.
+ * Your use of that executable is in no way restricted on account of
+ * linking the Harbour library code into it.
+ *
+ * This exception does not however invalidate any other reasons why
+ * the executable file might be covered by the GNU General Public License.
+ *
+ * This exception applies only to the code released by the Harbour
+ * Project under the name Harbour.  If you copy code from other
+ * Harbour Project or Free Software Foundation releases into a copy of
+ * Harbour, as the General Public License permits, the exception does
+ * not apply to the code that you add in this way.  To avoid misleading
+ * anyone as to the status of such modified files, you must delete
+ * this exception notice from them.
+ *
+ * If you write modifications of your own for Harbour, it is your choice
+ * whether to permit this exception to apply to your modifications.
+ * If you do not wish that, delete this exception notice.
+ *
+ */
+/*----------------------------------------------------------------------*/
+;
+;              Header File to Generate QT Wrapper Sources
+;
+
+<CLASS>
+QObject    = no
+Inherits   = 
+Type       = Core
+New        =
+Destructor = 
+</CLASS>
+
+<CODE>
+#include <QtGui/QTransform>
+
+
+/* QTransform ()
+ * QTransform ( qreal m11, qreal m12, qreal m13, qreal m21, qreal m22, qreal m23, qreal m31, qreal m32, qreal m33 = 1.0 )
+ * QTransform ( qreal m11, qreal m12, qreal m21, qreal m22, qreal dx, qreal dy )
+ * QTransform ( const QMatrix & matrix )
+ */
+HB_FUNC( QT_QTRANSFORM )
+{
+   hb_retptr( new QTransform() );
+}
+</CODE>
+
+<ENUMS>
+enum TransformationType { TxNone, TxTranslate, TxScale, TxRotate, TxShear, TxProject }
+</ENUMS>
+
+<PROTOS>
+qreal m11 () const
+qreal m12 () const
+qreal m13 () const
+qreal m21 () const
+qreal m22 () const
+qreal m23 () const
+qreal m31 () const
+qreal m32 () const
+qreal m33 () const
+QTransform adjoint () const
+qreal det () const
+qreal determinant () const
+qreal dx () const
+qreal dy () const
+QTransform inverted ( bool * invertible = 0 ) const
+bool isAffine () const
+bool isIdentity () const
+bool isInvertible () const
+bool isRotating () const
+bool isScaling () const
+bool isTranslating () const
+void map ( qreal x, qreal y, qreal * tx, qreal * ty ) const
+QPointF map ( const QPointF & p ) const
+QPoint map ( const QPoint & point ) const
+QLine map ( const QLine & l ) const
+QLineF map ( const QLineF & line ) const
+QPolygonF map ( const QPolygonF & polygon ) const
+QPolygon map ( const QPolygon & polygon ) const
+QRegion map ( const QRegion & region ) const
+QPainterPath map ( const QPainterPath & path ) const
+void map ( int x, int y, int * tx, int * ty ) const
+QRectF mapRect ( const QRectF & rectangle ) const
+QRect mapRect ( const QRect & rectangle ) const
+QPolygon mapToPolygon ( const QRect & rectangle ) const
+void reset ()
+QTransform & rotate ( qreal angle, Qt::Axis axis = Qt::ZAxis )
+QTransform & rotateRadians ( qreal angle, Qt::Axis axis = Qt::ZAxis )
+QTransform & scale ( qreal sx, qreal sy )
+void setMatrix ( qreal m11, qreal m12, qreal m13, qreal m21, qreal m22, qreal m23, qreal m31, qreal m32, qreal m33 )
+QTransform & shear ( qreal sh, qreal sv )
+const QMatrix & toAffine () const
+QTransform & translate ( qreal dx, qreal dy )
+QTransform transposed () const
+TransformationType type () const
+
+QTransform fromScale ( qreal sx, qreal sy )
+QTransform fromTranslate ( qreal dx, qreal dy )
+bool quadToQuad ( const QPolygonF & one, const QPolygonF & two, QTransform & trans )
+bool quadToSquare ( const QPolygonF & quad, QTransform & trans )
+bool squareToQuad ( const QPolygonF & quad, QTransform & trans )
+</PROTOS>
+
+<SLOTS>
+</SLOTS>
+
+<SIGNALS>
+</SIGNALS>
+
+
+
+

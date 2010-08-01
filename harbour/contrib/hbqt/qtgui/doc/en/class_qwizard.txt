@@ -1,0 +1,86 @@
+/*
+ * $Id$
+ */
+
+/*  $DOC$
+ *  $TEMPLATE$
+ *     Class
+ *  $NAME$
+ *     QWizard()
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qwizard.html
+ *  $ONELINER$
+ *     Creates a new QWizard object.
+ *  $INHERITS$
+ *     QDialog
+ *  $SYNTAX$
+ *     QWizard():new( ... )
+ *     QWizard():from( pPtr_OR_oObj_of_type_QWizard )
+ *     QWizard():configure( pPtr_OR_oObj_of_type_QWizard )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QWizard
+ *  $METHODS$
+ *     :addPage( pPage )                                   -> nInt
+ *     :button( nWhich )                                   -> pQAbstractButton
+ *     :buttonText( nWhich )                               -> cQString
+ *     :currentId()                                        -> nInt
+ *     :currentPage()                                      -> Page
+ *     :field( cName )                                     -> pQVariant
+ *     :hasVisitedPage( nId )                              -> lBool
+ *     :nextId()                                           -> nInt
+ *     :options()                                          -> nWizardOptions
+ *     :page( nId )                                        -> Page
+ *     :pageIds()                                          -> pQList<int>
+ *     :pixmap( nWhich )                                   -> pQPixmap
+ *     :removePage( nId )                                  -> NIL
+ *     :setButton( nWhich, pButton )                       -> NIL
+ *     :setButtonText( nWhich, cText )                     -> NIL
+ *     :setDefaultProperty( pClassName, pProperty, pChangedSignal )  -> NIL
+ *     :setField( cName, pValue )                          -> NIL
+ *     :setOption( nOption, lOn )                          -> NIL
+ *     :setOptions( nOptions )                             -> NIL
+ *     :setPage( nId, pPage )                              -> NIL
+ *     :setPixmap( nWhich, pPixmap )                       -> NIL
+ *     :setStartId( nId )                                  -> NIL
+ *     :setSubTitleFormat( nFormat )                       -> NIL
+ *     :setTitleFormat( nFormat )                          -> NIL
+ *     :setWizardStyle( nStyle )                           -> NIL
+ *     :startId()                                          -> nInt
+ *     :subTitleFormat()                                   -> nQt::TextFormat
+ *     :testOption( nOption )                              -> lBool
+ *     :titleFormat()                                      -> nQt::TextFormat
+ *     :validateCurrentPage()                              -> lBool
+ *     :visitedPages()                                     -> pQList<int>
+ *     :wizardStyle()                                      -> nWizardStyle
+ *     :back()                                             -> NIL
+ *     :next()                                             -> NIL
+ *     :restart()                                          -> NIL
+ * 
+ *  $DESCRIPTION$
+ * 
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQWizard.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QWizard.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     QDialog
+ *  $END$
+ */

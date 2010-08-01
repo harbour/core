@@ -1,0 +1,61 @@
+/*
+ * $Id$
+ */
+
+/*  $DOC$
+ *  $TEMPLATE$
+ *     Class
+ *  $NAME$
+ *     QStackedWidget()
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qstackedwidget.html
+ *  $ONELINER$
+ *     Creates a new QStackedWidget object.
+ *  $INHERITS$
+ *     QFrame
+ *  $SYNTAX$
+ *     QStackedWidget():new( ... )
+ *     QStackedWidget():from( pPtr_OR_oObj_of_type_QStackedWidget )
+ *     QStackedWidget():configure( pPtr_OR_oObj_of_type_QStackedWidget )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QStackedWidget
+ *  $METHODS$
+ *     :addWidget( pWidget )                               -> nInt
+ *     :count()                                            -> nInt
+ *     :currentIndex()                                     -> nInt
+ *     :currentWidget()                                    -> pQWidget
+ *     :indexOf( pWidget )                                 -> nInt
+ *     :insertWidget( nIndex, pWidget )                    -> nInt
+ *     :removeWidget( pWidget )                            -> NIL
+ *     :widget( nIndex )                                   -> pQWidget
+ *     :setCurrentIndex( nIndex )                          -> NIL
+ *     :setCurrentWidget( pWidget )                        -> NIL
+ * 
+ *  $DESCRIPTION$
+ * 
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQStackedWidget.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QStackedWidget.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     QFrame
+ *  $END$
+ */

@@ -1,0 +1,147 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Harbour Project source code:
+ * QT Source Generator for Harbour
+ *
+ * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * www - http://www.harbour-project.org
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this software; see the file COPYING.  If not, write to
+ * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
+ * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ *
+ * As a special exception, the Harbour Project gives permission for
+ * additional uses of the text contained in its release of Harbour.
+ *
+ * The exception is that, if you link the Harbour libraries with other
+ * files to produce an executable, this does not by itself cause the
+ * resulting executable to be covered by the GNU General Public License.
+ * Your use of that executable is in no way restricted on account of
+ * linking the Harbour library code into it.
+ *
+ * This exception does not however invalidate any other reasons why
+ * the executable file might be covered by the GNU General Public License.
+ *
+ * This exception applies only to the code released by the Harbour
+ * Project under the name Harbour.  If you copy code from other
+ * Harbour Project or Free Software Foundation releases into a copy of
+ * Harbour, as the General Public License permits, the exception does
+ * not apply to the code that you add in this way.  To avoid misleading
+ * anyone as to the status of such modified files, you must delete
+ * this exception notice from them.
+ *
+ * If you write modifications of your own for Harbour, it is your choice
+ * whether to permit this exception to apply to your modifications.
+ * If you do not wish that, delete this exception notice.
+ *
+ */
+/*----------------------------------------------------------------------*/
+;
+;              Header File to Generate QT Wrapper Sources
+;
+
+<CLASS>
+QObject  = no
+Inherits = 
+Type     = PlainObject
+New      = 
+</CLASS>
+
+<DOC>
+oFontMetricsF := QFontMetricsF():new( pQFontMetricsF )
+oFontMetricsF := QFontMetricsF():new( "QFontMetrics", pQFontMetrics )
+oFontMetricsF := QFontMetricsF():new( "QFont", pQFont )
+oFontMetricsF := QFontMetricsF():new( pQFont, pQPaintDevice )
+</DOC>
+
+<CODE>
+#include <QtGui/QFontMetricsF>
+
+
+/*
+ * QFontMetricsF ( const QFont & font )
+ * QFontMetricsF ( const QFont & font, QPaintDevice * paintdevice )
+ * QFontMetricsF ( const QFontMetrics & fontMetrics )
+ * QFontMetricsF ( const QFontMetricsF & fm )
+ * ~QFontMetricsF ()
+ */
+HB_FUNC( QT_QFONTMETRICSF )
+{
+   if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
+   {
+      hb_retptr( ( QFontMetricsF* ) new QFontMetricsF( *hbqt_par_QFontMetricsF( 1 ) ) );
+   }
+   else if( hb_pcount() == 2 && HB_ISCHAR( 1 ) && HB_ISPOINTER( 2 ) )
+   {
+      if( hbqt_par_QString( 1 ) == ( QString ) "QFont" )
+      {
+         hb_retptr( ( QFontMetricsF* ) new QFontMetricsF( *hbqt_par_QFont( 2 ) ) );
+      }
+      else if( hbqt_par_QString( 1 ) == ( QString ) "QFontMetrics" )
+      {
+         hb_retptr( ( QFontMetricsF* ) new QFontMetricsF( *hbqt_par_QFontMetrics( 2 ) ) );
+      }
+   }
+   else if( hb_pcount() == 2 && HB_ISPOINTER( 1 ) && HB_ISPOINTER( 2 ) )
+   {
+      hb_retptr( ( QFontMetricsF* ) new QFontMetricsF( *hbqt_par_QFont( 1 ), hbqt_par_QPaintDevice( 2 ) ) );
+   }
+}
+</CODE>
+
+<ENUMS>
+</ENUMS>
+
+<PROTOS>
+qreal ascent () const
+qreal averageCharWidth () const
+QRectF boundingRect ( const QString & text ) const
+QRectF boundingRect ( QChar ch ) const
+QRectF boundingRect ( const QRectF & rect, int flags, const QString & text, int tabStops = 0, int * tabArray = 0 ) const
+qreal descent () const
+QString elidedText ( const QString & text, Qt::TextElideMode mode, qreal width, int flags = 0 ) const
+qreal height () const
+bool inFont ( QChar ch ) const
+qreal leading () const
+qreal leftBearing ( QChar ch ) const
+qreal lineSpacing () const
+qreal lineWidth () const
+qreal maxWidth () const
+qreal minLeftBearing () const
+qreal minRightBearing () const
+qreal overlinePos () const
+qreal rightBearing ( QChar ch ) const
+QSizeF size ( int flags, const QString & text, int tabStops = 0, int * tabArray = 0 ) const
+qreal strikeOutPos () const
+QRectF tightBoundingRect ( const QString & text ) const
+qreal underlinePos () const
+qreal width ( const QString & text ) const
+qreal width ( QChar ch ) const
+qreal xHeight () const
+</PROTOS>
+
+<SLOTS>
+</SLOTS>
+
+<SIGNALS>
+</SIGNALS>
+
+<VARIABLES>
+</VARIABLES>
+
+
+

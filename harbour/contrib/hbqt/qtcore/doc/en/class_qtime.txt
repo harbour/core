@@ -1,0 +1,66 @@
+/*
+ * $Id$
+ */
+
+/*  $DOC$
+ *  $TEMPLATE$
+ *     Class
+ *  $NAME$
+ *     QTime()
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qtime.html
+ *  $ONELINER$
+ *     Creates a new QTime object.
+ *  $INHERITS$
+ *     
+ *  $SYNTAX$
+ *     QTime():new( ... )
+ *     QTime():from( pPtr_OR_oObj_of_type_QTime )
+ *     QTime():configure( pPtr_OR_oObj_of_type_QTime )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QTime
+ *  $METHODS$
+ *     :elapsed()                                          -> nInt
+ *     :hour()                                             -> nInt
+ *     :isNull()                                           -> lBool
+ *     :isValid()                                          -> lBool
+ *     :minute()                                           -> nInt
+ *     :msec()                                             -> nInt
+ *     :msecsTo( pT )                                      -> nInt
+ *     :restart()                                          -> nInt
+ *     :second()                                           -> nInt
+ *     :secsTo( pT )                                       -> nInt
+ *     :setHMS( nH, nM, nS, nMs )                          -> lBool
+ *     :start()                                            -> NIL
+ *     :toString( cFormat )                                -> cQString
+ *     :toString_1( nFormat )                              -> cQString
+ *     :isValid_1( nH, nM, nS, nMs )                       -> lBool
+ * 
+ *  $DESCRIPTION$
+ * 
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtcore/TQTime.prg
+ *     C++ wrappers  : contrib/hbqt/qtcore/QTime.cpp
+ *     Library       : hbqtcore
+ *  $SEEALSO$
+ *     
+ *  $END$
+ */

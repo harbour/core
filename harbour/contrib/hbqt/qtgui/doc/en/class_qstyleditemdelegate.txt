@@ -1,0 +1,58 @@
+/*
+ * $Id$
+ */
+
+/*  $DOC$
+ *  $TEMPLATE$
+ *     Class
+ *  $NAME$
+ *     QStyledItemDelegate()
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qstyleditemdelegate.html
+ *  $ONELINER$
+ *     Creates a new QStyledItemDelegate object.
+ *  $INHERITS$
+ *     
+ *  $SYNTAX$
+ *     QStyledItemDelegate():new( ... )
+ *     QStyledItemDelegate():from( pPtr_OR_oObj_of_type_QStyledItemDelegate )
+ *     QStyledItemDelegate():configure( pPtr_OR_oObj_of_type_QStyledItemDelegate )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QStyledItemDelegate
+ *  $METHODS$
+ *     :createEditor( pParent, pOption, pIndex )           -> pQWidget
+ *     :displayText( pValue, pLocale )                     -> cQString
+ *     :paint( pPainter, pOption, pIndex )                 -> NIL
+ *     :setEditorData( pEditor, pIndex )                   -> NIL
+ *     :setModelData( pEditor, pModel, pIndex )            -> NIL
+ *     :sizeHint( pOption, pIndex )                        -> pQSize
+ *     :updateEditorGeometry( pEditor, pOption, pIndex )   -> NIL
+ * 
+ *  $DESCRIPTION$
+ * 
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQStyledItemDelegate.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QStyledItemDelegate.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     
+ *  $END$
+ */

@@ -1,0 +1,94 @@
+/*
+ * $Id$
+ */
+
+/*  $DOC$
+ *  $TEMPLATE$
+ *     Class
+ *  $NAME$
+ *     QPalette()
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qpalette.html
+ *  $ONELINER$
+ *     Creates a new QPalette object.
+ *  $INHERITS$
+ *     
+ *  $SYNTAX$
+ *     QPalette():new( ... )
+ *     QPalette():from( pPtr_OR_oObj_of_type_QPalette )
+ *     QPalette():configure( pPtr_OR_oObj_of_type_QPalette )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QPalette
+ *  $METHODS$
+ *     :alternateBase()                                    -> pQBrush
+ *     :base()                                             -> pQBrush
+ *     :brightText()                                       -> pQBrush
+ *     :brush( nGroup, nRole )                             -> pQBrush
+ *     :brush_1( nRole )                                   -> pQBrush
+ *     :button()                                           -> pQBrush
+ *     :buttonText()                                       -> pQBrush
+ *     :cacheKey()                                         -> nQint64
+ *     :color( nGroup, nRole )                             -> pQColor
+ *     :color_1( nRole )                                   -> pQColor
+ *     :currentColorGroup()                                -> nColorGroup
+ *     :dark()                                             -> pQBrush
+ *     :highlight()                                        -> pQBrush
+ *     :highlightedText()                                  -> pQBrush
+ *     :isBrushSet( nCg, nCr )                             -> lBool
+ *     :isCopyOf( pP )                                     -> lBool
+ *     :isEqual( nCg1, nCg2 )                              -> lBool
+ *     :light()                                            -> pQBrush
+ *     :link()                                             -> pQBrush
+ *     :linkVisited()                                      -> pQBrush
+ *     :mid()                                              -> pQBrush
+ *     :midlight()                                         -> pQBrush
+ *     :setBrush( nRole, pBrush )                          -> NIL
+ *     :setBrush_1( nGroup, nRole, pBrush )                -> NIL
+ *     :setColor( nRole, pColor )                          -> NIL
+ *     :setColor_1( nGroup, nRole, pColor )                -> NIL
+ *     :setColorGroup( nCg, pWindowText, pButton, pLight, pDark, pMid, pText, pBright_text, pBase, pWindow )  -> NIL
+ *     :setCurrentColorGroup( nCg )                        -> NIL
+ *     :shadow()                                           -> pQBrush
+ *     :text()                                             -> pQBrush
+ *     :toolTipBase()                                      -> pQBrush
+ *     :toolTipText()                                      -> pQBrush
+ *     :window()                                           -> pQBrush
+ *     :windowText()                                       -> pQBrush
+ * 
+ *  $DESCRIPTION$
+ * 
+ *  $EXAMPLES$
+ *     oPalette := QPalette():new()
+ *     oPalette := QPalette():new( nQt_color )
+ *     oPalette := QPalette():new( pQPalette )
+ *     oPalette := QPalette():new( pQColorButton, pQColorWindow )
+ *     /* TODO
+ *      * oPalette := QPalette():new( pQBrush_windowText, pQBrush_button, pQBrush_light, pQBrush_dark, ;
+ *      *                             pQBrush_mid, pQBrush_text, pQBrush_bright_text, pQBrush_base, ;
+ *      *                             pQBrush_window )
+ *      */
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQPalette.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QPalette.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     
+ *  $END$
+ */

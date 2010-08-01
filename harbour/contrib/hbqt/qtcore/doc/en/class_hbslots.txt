@@ -1,0 +1,55 @@
+/*
+ * $Id$
+ */
+
+/*  $DOC$
+ *  $TEMPLATE$
+ *     Class
+ *  $NAME$
+ *     HBSlots()
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/hbslots.html
+ *  $ONELINER$
+ *     Creates a new HBSlots object.
+ *  $INHERITS$
+ *     QObject
+ *  $SYNTAX$
+ *     HBSlots():new( ... )
+ *     HBSlots():from( pPtr_OR_oObj_of_type_HBSlots )
+ *     HBSlots():configure( pPtr_OR_oObj_of_type_HBSlots )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type HBSlots
+ *  $METHODS$
+ *     :hbConnect( xPObj, pSlot, xBBlock )                 -> lBool
+ *     :hbDisconnect( xObj, pSlot )                        -> lBool
+ *     :hbIsConnected( xObj, pSlot )                       -> lBool
+ *     :hbClear()                                          -> lBool
+ * 
+ *  $DESCRIPTION$
+ * 
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtcore/THBSlots.prg
+ *     C++ wrappers  : contrib/hbqt/qtcore/HBSlots.cpp
+ *     Library       : hbqtcore
+ *  $SEEALSO$
+ *     QObject
+ *  $END$
+ */

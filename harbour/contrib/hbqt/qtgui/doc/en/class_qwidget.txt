@@ -1,0 +1,247 @@
+/*
+ * $Id$
+ */
+
+/*  $DOC$
+ *  $TEMPLATE$
+ *     Class
+ *  $NAME$
+ *     QWidget()
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qwidget.html
+ *  $ONELINER$
+ *     Creates a new QWidget object.
+ *  $INHERITS$
+ *     QObject, QPaintDevice
+ *  $SYNTAX$
+ *     QWidget():new( ... )
+ *     QWidget():from( pPtr_OR_oObj_of_type_QWidget )
+ *     QWidget():configure( pPtr_OR_oObj_of_type_QWidget )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QWidget
+ *  $METHODS$
+ *     :acceptDrops()                                      -> lBool
+ *     :actions()                                          -> pQList<QAction *>
+ *     :activateWindow()                                   -> NIL
+ *     :addAction( pAction )                               -> NIL
+ *     :adjustSize()                                       -> NIL
+ *     :autoFillBackground()                               -> lBool
+ *     :backgroundRole()                                   -> nQPalette::ColorRole
+ *     :baseSize()                                         -> pQSize
+ *     :childrenRect()                                     -> pQRect
+ *     :childrenRegion()                                   -> pQRegion
+ *     :clearFocus()                                       -> NIL
+ *     :clearMask()                                        -> NIL
+ *     :contentsRect()                                     -> pQRect
+ *     :contextMenuPolicy()                                -> nQt::ContextMenuPolicy
+ *     :cursor()                                           -> pQCursor
+ *     :ensurePolished()                                   -> NIL
+ *     :focusPolicy()                                      -> nQt::FocusPolicy
+ *     :font()                                             -> pQFont
+ *     :fontInfo()                                         -> pQFontInfo
+ *     :fontMetrics()                                      -> pQFontMetrics
+ *     :foregroundRole()                                   -> nQPalette::ColorRole
+ *     :frameGeometry()                                    -> pQRect
+ *     :frameSize()                                        -> pQSize
+ *     :geometry()                                         -> pQRect
+ *     :getContentsMargins( @nLeft, @nTop, @nRight, @nBottom )  -> NIL
+ *     :grabKeyboard()                                     -> NIL
+ *     :grabMouse()                                        -> NIL
+ *     :grabMouse_1( pCursor )                             -> NIL
+ *     :grabShortcut( pKey, nContext )                     -> nInt
+ *     :hasFocus()                                         -> lBool
+ *     :hasMouseTracking()                                 -> lBool
+ *     :height()                                           -> nInt
+ *     :heightForWidth( nW )                               -> nInt
+ *     :inputMethodQuery( nQuery )                         -> pQVariant
+ *     :insertAction( pBefore, pAction )                   -> NIL
+ *     :isActiveWindow()                                   -> lBool
+ *     :isAncestorOf( pChild )                             -> lBool
+ *     :isEnabled()                                        -> lBool
+ *     :isEnabledTo( pAncestor )                           -> lBool
+ *     :isFullScreen()                                     -> lBool
+ *     :isHidden()                                         -> lBool
+ *     :isMaximized()                                      -> lBool
+ *     :isMinimized()                                      -> lBool
+ *     :isModal()                                          -> lBool
+ *     :isVisible()                                        -> lBool
+ *     :isVisibleTo( pAncestor )                           -> lBool
+ *     :isWindow()                                         -> lBool
+ *     :isWindowModified()                                 -> lBool
+ *     :layout()                                           -> pQLayout
+ *     :layoutDirection()                                  -> nQt::LayoutDirection
+ *     :locale()                                           -> pQLocale
+ *     :mapFrom( pParent, pPos )                           -> pQPoint
+ *     :mapFromGlobal( pPos )                              -> pQPoint
+ *     :mapFromParent( pPos )                              -> pQPoint
+ *     :mapTo( pParent, pPos )                             -> pQPoint
+ *     :mapToGlobal( pPos )                                -> pQPoint
+ *     :mapToParent( pPos )                                -> pQPoint
+ *     :mask()                                             -> pQRegion
+ *     :maximumHeight()                                    -> nInt
+ *     :maximumSize()                                      -> pQSize
+ *     :maximumWidth()                                     -> nInt
+ *     :minimumHeight()                                    -> nInt
+ *     :minimumSize()                                      -> pQSize
+ *     :minimumSizeHint()                                  -> pQSize
+ *     :minimumWidth()                                     -> nInt
+ *     :move( nX, nY )                                     -> NIL
+ *     :move_1( pQPoint )                                  -> NIL
+ *     :normalGeometry()                                   -> pQRect
+ *     :overrideWindowFlags( nFlags )                      -> NIL
+ *     :paintEngine()                                      -> pQPaintEngine
+ *     :palette()                                          -> pQPalette
+ *     :pos()                                              -> pQPoint
+ *     :rect()                                             -> pQRect
+ *     :releaseKeyboard()                                  -> NIL
+ *     :releaseMouse()                                     -> NIL
+ *     :releaseShortcut( nId )                             -> NIL
+ *     :removeAction( pAction )                            -> NIL
+ *     :repaint( nX, nY, nW, nH )                          -> NIL
+ *     :repaint_1( pRect )                                 -> NIL
+ *     :repaint_2( pRgn )                                  -> NIL
+ *     :resize( nW, nH )                                   -> NIL
+ *     :resize_1( pQSize )                                 -> NIL
+ *     :restoreGeometry( pGeometry )                       -> lBool
+ *     :saveGeometry()                                     -> pQByteArray
+ *     :scroll( nDx, nDy )                                 -> NIL
+ *     :scroll_1( nDx, nDy, pR )                           -> NIL
+ *     :setAcceptDrops( lOn )                              -> NIL
+ *     :setAttribute( nAttribute, lOn )                    -> NIL
+ *     :setAutoFillBackground( lEnabled )                  -> NIL
+ *     :setBackgroundRole( nRole )                         -> NIL
+ *     :setBaseSize( pQSize )                              -> NIL
+ *     :setBaseSize_1( nBasew, nBaseh )                    -> NIL
+ *     :setContentsMargins( nLeft, nTop, nRight, nBottom )  -> NIL
+ *     :setContextMenuPolicy( nPolicy )                    -> NIL
+ *     :setCursor( pQCursor )                              -> NIL
+ *     :setFixedHeight( nH )                               -> NIL
+ *     :setFixedSize( pS )                                 -> NIL
+ *     :setFixedSize_1( nW, nH )                           -> NIL
+ *     :setFixedWidth( nW )                                -> NIL
+ *     :setFocus( nReason )                                -> NIL
+ *     :setFocusPolicy( nPolicy )                          -> NIL
+ *     :setFocusProxy( pW )                                -> NIL
+ *     :setFont( pQFont )                                  -> NIL
+ *     :setForegroundRole( nRole )                         -> NIL
+ *     :setGeometry( pQRect )                              -> NIL
+ *     :setGeometry_1( nX, nY, nW, nH )                    -> NIL
+ *     :setLayout( pLayout )                               -> NIL
+ *     :setLayoutDirection( nDirection )                   -> NIL
+ *     :setLocale( pLocale )                               -> NIL
+ *     :setMask( pBitmap )                                 -> NIL
+ *     :setMask_1( pRegion )                               -> NIL
+ *     :setMaximumHeight( nMaxh )                          -> NIL
+ *     :setMaximumSize( pQSize )                           -> NIL
+ *     :setMaximumSize_1( nMaxw, nMaxh )                   -> NIL
+ *     :setMaximumWidth( nMaxw )                           -> NIL
+ *     :setMinimumHeight( nMinh )                          -> NIL
+ *     :setMinimumSize( pQSize )                           -> NIL
+ *     :setMinimumSize_1( nMinw, nMinh )                   -> NIL
+ *     :setMinimumWidth( nMinw )                           -> NIL
+ *     :setMouseTracking( lEnable )                        -> NIL
+ *     :setPalette( pQPalette )                            -> NIL
+ *     :setParent( pParent )                               -> NIL
+ *     :setParent_1( pParent, nF )                         -> NIL
+ *     :setShortcutAutoRepeat( nId, lEnable )              -> NIL
+ *     :setShortcutEnabled( nId, lEnable )                 -> NIL
+ *     :setSizeIncrement( pQSize )                         -> NIL
+ *     :setSizeIncrement_1( nW, nH )                       -> NIL
+ *     :setSizePolicy( pPolicy )                           -> NIL
+ *     :setSizePolicy_1( nHorizontal, nVertical )          -> NIL
+ *     :setStatusTip( cQString )                           -> NIL
+ *     :setStyle( pStyle )                                 -> NIL
+ *     :setToolTip( cQString )                             -> NIL
+ *     :setUpdatesEnabled( lEnable )                       -> NIL
+ *     :setWhatsThis( cQString )                           -> NIL
+ *     :setWindowFilePath( cFilePath )                     -> NIL
+ *     :setWindowFlags( nType )                            -> NIL
+ *     :setWindowIcon( cIcon )                             -> NIL
+ *     :setWindowIconText( cQString )                      -> NIL
+ *     :setWindowModality( nWindowModality )               -> NIL
+ *     :setWindowOpacity( nLevel )                         -> NIL
+ *     :setWindowRole( cRole )                             -> NIL
+ *     :setWindowState( nWindowState )                     -> NIL
+ *     :size()                                             -> pQSize
+ *     :sizeHint()                                         -> pQSize
+ *     :sizeIncrement()                                    -> pQSize
+ *     :sizePolicy()                                       -> pQSizePolicy
+ *     :stackUnder( pW )                                   -> NIL
+ *     :statusTip()                                        -> cQString
+ *     :style()                                            -> pQStyle
+ *     :styleSheet()                                       -> cQString
+ *     :testAttribute( nAttribute )                        -> lBool
+ *     :toolTip()                                          -> cQString
+ *     :underMouse()                                       -> lBool
+ *     :unsetCursor()                                      -> NIL
+ *     :unsetLayoutDirection()                             -> NIL
+ *     :unsetLocale()                                      -> NIL
+ *     :update( nX, nY, nW, nH )                           -> NIL
+ *     :update_1( pRect )                                  -> NIL
+ *     :update_2( pRgn )                                   -> NIL
+ *     :updateGeometry()                                   -> NIL
+ *     :updatesEnabled()                                   -> lBool
+ *     :visibleRegion()                                    -> pQRegion
+ *     :whatsThis()                                        -> cQString
+ *     :width()                                            -> nInt
+ *     :windowFilePath()                                   -> cQString
+ *     :windowFlags()                                      -> nQt::WindowFlags
+ *     :windowIcon()                                       -> pQIcon
+ *     :windowIconText()                                   -> cQString
+ *     :windowModality()                                   -> nQt::WindowModality
+ *     :windowOpacity()                                    -> nQreal
+ *     :windowRole()                                       -> cQString
+ *     :windowState()                                      -> nQt::WindowStates
+ *     :windowTitle()                                      -> cQString
+ *     :windowType()                                       -> nQt::WindowType
+ *     :x()                                                -> nInt
+ *     :y()                                                -> nInt
+ *     :setTabOrder( pFirst, pSecond )                     -> NIL
+ *     :close()                                            -> lBool
+ *     :hide()                                             -> NIL
+ *     :lower()                                            -> NIL
+ *     :raise()                                            -> NIL
+ *     :repaint_3()                                        -> NIL
+ *     :setDisabled( lDisable )                            -> NIL
+ *     :setEnabled( lEnable )                              -> NIL
+ *     :setFocus_1()                                       -> NIL
+ *     :setHidden( lHidden )                               -> NIL
+ *     :setStyleSheet( cStyleSheet )                       -> NIL
+ *     :setVisible( lVisible )                             -> NIL
+ *     :setWindowModified( lModified )                     -> NIL
+ *     :setWindowTitle( cTitle )                           -> NIL
+ *     :show()                                             -> NIL
+ *     :showFullScreen()                                   -> NIL
+ *     :showMaximized()                                    -> NIL
+ *     :showMinimized()                                    -> NIL
+ *     :showNormal()                                       -> NIL
+ *     :update_3()                                         -> NIL
+ * 
+ *  $DESCRIPTION$
+ * 
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQWidget.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QWidget.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     QObject, QPaintDevice
+ *  $END$
+ */

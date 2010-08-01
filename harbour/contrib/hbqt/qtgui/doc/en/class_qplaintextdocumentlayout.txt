@@ -1,0 +1,55 @@
+/*
+ * $Id$
+ */
+
+/*  $DOC$
+ *  $TEMPLATE$
+ *     Class
+ *  $NAME$
+ *     QPlainTextDocumentLayout()
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qplaintextdocumentlayout.html
+ *  $ONELINER$
+ *     Creates a new QPlainTextDocumentLayout object.
+ *  $INHERITS$
+ *     QAbstractTextDocumentLayout
+ *  $SYNTAX$
+ *     QPlainTextDocumentLayout():new( ... )
+ *     QPlainTextDocumentLayout():from( pPtr_OR_oObj_of_type_QPlainTextDocumentLayout )
+ *     QPlainTextDocumentLayout():configure( pPtr_OR_oObj_of_type_QPlainTextDocumentLayout )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QPlainTextDocumentLayout
+ *  $METHODS$
+ *     :cursorWidth()                                      -> nInt
+ *     :ensureBlockLayout( pBlock )                        -> NIL
+ *     :requestUpdate()                                    -> NIL
+ *     :setCursorWidth( nWidth )                           -> NIL
+ * 
+ *  $DESCRIPTION$
+ * 
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQPlainTextDocumentLayout.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QPlainTextDocumentLayout.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     QAbstractTextDocumentLayout
+ *  $END$
+ */

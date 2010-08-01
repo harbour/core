@@ -2,9 +2,9 @@
 ; $Id$
 ;
 
--I=../qth
+-I=../qtnetwork/qth
 -O=../qtnetwork
--D=../doc
+-D=../qtnetwork/doc
 
 QFtp.qth
 QHttp.qth

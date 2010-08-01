@@ -1,0 +1,92 @@
+/*
+ * $Id$
+ */
+
+/*  $DOC$
+ *  $TEMPLATE$
+ *     Class
+ *  $NAME$
+ *     QTabWidget()
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qtabwidget.html
+ *  $ONELINER$
+ *     Creates a new QTabWidget object.
+ *  $INHERITS$
+ *     QWidget
+ *  $SYNTAX$
+ *     QTabWidget():new( ... )
+ *     QTabWidget():from( pPtr_OR_oObj_of_type_QTabWidget )
+ *     QTabWidget():configure( pPtr_OR_oObj_of_type_QTabWidget )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QTabWidget
+ *  $METHODS$
+ *     :addTab( pPage, cLabel )                            -> nInt
+ *     :addTab_1( pPage, cIcon, cLabel )                   -> nInt
+ *     :clear()                                            -> NIL
+ *     :cornerWidget( nCorner )                            -> pQWidget
+ *     :count()                                            -> nInt
+ *     :currentIndex()                                     -> nInt
+ *     :currentWidget()                                    -> pQWidget
+ *     :documentMode()                                     -> lBool
+ *     :elideMode()                                        -> nQt::TextElideMode
+ *     :iconSize()                                         -> pQSize
+ *     :indexOf( pW )                                      -> nInt
+ *     :insertTab( nIndex, pPage, cLabel )                 -> nInt
+ *     :insertTab_1( nIndex, pPage, cIcon, cLabel )        -> nInt
+ *     :isMovable()                                        -> lBool
+ *     :isTabEnabled( nIndex )                             -> lBool
+ *     :removeTab( nIndex )                                -> NIL
+ *     :setCornerWidget( pWidget, nCorner )                -> NIL
+ *     :setDocumentMode( lSet )                            -> NIL
+ *     :setElideMode( nQt::TextElideMode )                 -> NIL
+ *     :setIconSize( pSize )                               -> NIL
+ *     :setMovable( lMovable )                             -> NIL
+ *     :setTabEnabled( nIndex, lEnable )                   -> NIL
+ *     :setTabIcon( nIndex, cIcon )                        -> NIL
+ *     :setTabPosition( nTabPosition )                     -> NIL
+ *     :setTabShape( nS )                                  -> NIL
+ *     :setTabText( nIndex, cLabel )                       -> NIL
+ *     :setTabToolTip( nIndex, cTip )                      -> NIL
+ *     :setTabWhatsThis( nIndex, cText )                   -> NIL
+ *     :setTabsClosable( lCloseable )                      -> NIL
+ *     :setUsesScrollButtons( lUseButtons )                -> NIL
+ *     :tabIcon( nIndex )                                  -> pQIcon
+ *     :tabPosition()                                      -> nTabPosition
+ *     :tabShape()                                         -> nTabShape
+ *     :tabText( nIndex )                                  -> cQString
+ *     :tabToolTip( nIndex )                               -> cQString
+ *     :tabWhatsThis( nIndex )                             -> cQString
+ *     :tabsClosable()                                     -> lBool
+ *     :usesScrollButtons()                                -> lBool
+ *     :widget( nIndex )                                   -> pQWidget
+ *     :setCurrentIndex( nIndex )                          -> NIL
+ *     :setCurrentWidget( pWidget )                        -> NIL
+ * 
+ *  $DESCRIPTION$
+ * 
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQTabWidget.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QTabWidget.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     QWidget
+ *  $END$
+ */

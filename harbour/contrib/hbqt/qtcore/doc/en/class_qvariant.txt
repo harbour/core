@@ -1,0 +1,88 @@
+/*
+ * $Id$
+ */
+
+/*  $DOC$
+ *  $TEMPLATE$
+ *     Class
+ *  $NAME$
+ *     QVariant()
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qvariant.html
+ *  $ONELINER$
+ *     Creates a new QVariant object.
+ *  $INHERITS$
+ *     
+ *  $SYNTAX$
+ *     QVariant():new( ... )
+ *     QVariant():from( pPtr_OR_oObj_of_type_QVariant )
+ *     QVariant():configure( pPtr_OR_oObj_of_type_QVariant )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QVariant
+ *  $METHODS$
+ *     :canConvert( nT )                                   -> lBool
+ *     :canConvert_1( nT )                                 -> lBool
+ *     :clear()                                            -> NIL
+ *     :convert( nT )                                      -> lBool
+ *     :isNull()                                           -> lBool
+ *     :isValid()                                          -> lBool
+ *     :setValue( xValue )                                 -> NIL
+ *     :toBitArray()                                       -> pQBitArray
+ *     :toBool()                                           -> lBool
+ *     :toByteArray()                                      -> pQByteArray
+ *     :toChar()                                           -> pQChar
+ *     :toDate()                                           -> pQDate
+ *     :toDateTime()                                       -> pQDateTime
+ *     :toDouble( @lOk )                                   -> nDouble
+ *     :toInt( @lOk )                                      -> nInt
+ *     :toLine()                                           -> pQLine
+ *     :toLineF()                                          -> pQLineF
+ *     :toList()                                           -> pQList<QVariant>
+ *     :toLocale()                                         -> pQLocale
+ *     :toLongLong( @lOk )                                 -> nQlonglong
+ *     :toPoint()                                          -> pQPoint
+ *     :toPointF()                                         -> pQPointF
+ *     :toRect()                                           -> pQRect
+ *     :toRectF()                                          -> pQRectF
+ *     :toRegExp()                                         -> pQRegExp
+ *     :toSize()                                           -> pQSize
+ *     :toSizeF()                                          -> pQSizeF
+ *     :toString()                                         -> cQString
+ *     :toStringList()                                     -> pQStringList
+ *     :toTime()                                           -> pQTime
+ *     :toUInt( @lOk )                                     -> nUint
+ *     :toULongLong( @lOk )                                -> nQulonglong
+ *     :toUrl()                                            -> pQUrl
+ *     :type()                                             -> nType
+ *     :userType()                                         -> nInt
+ *     :nameToType( pName )                                -> nType
+ *     :typeToName( nTyp )                                 -> cChar
+ * 
+ *  $DESCRIPTION$
+ * 
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtcore/TQVariant.prg
+ *     C++ wrappers  : contrib/hbqt/qtcore/QVariant.cpp
+ *     Library       : hbqtcore
+ *  $SEEALSO$
+ *     
+ *  $END$
+ */

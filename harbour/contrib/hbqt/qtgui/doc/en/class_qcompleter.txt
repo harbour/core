@@ -1,0 +1,80 @@
+/*
+ * $Id$
+ */
+
+/*  $DOC$
+ *  $TEMPLATE$
+ *     Class
+ *  $NAME$
+ *     QCompleter()
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qcompleter.html
+ *  $ONELINER$
+ *     Creates a new QCompleter object.
+ *  $INHERITS$
+ *     QObject
+ *  $SYNTAX$
+ *     QCompleter():new( ... )
+ *     QCompleter():from( pPtr_OR_oObj_of_type_QCompleter )
+ *     QCompleter():configure( pPtr_OR_oObj_of_type_QCompleter )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QCompleter
+ *  $METHODS$
+ *     :caseSensitivity()                                  -> nQt::CaseSensitivity
+ *     :completionColumn()                                 -> nInt
+ *     :completionCount()                                  -> nInt
+ *     :completionMode()                                   -> nCompletionMode
+ *     :completionModel()                                  -> pQAbstractItemModel
+ *     :completionPrefix()                                 -> cQString
+ *     :completionRole()                                   -> nInt
+ *     :currentCompletion()                                -> cQString
+ *     :currentIndex()                                     -> pQModelIndex
+ *     :currentRow()                                       -> nInt
+ *     :model()                                            -> pQAbstractItemModel
+ *     :modelSorting()                                     -> nModelSorting
+ *     :pathFromIndex( pIndex )                            -> cQString
+ *     :popup()                                            -> pQAbstractItemView
+ *     :setCaseSensitivity( nCaseSensitivity )             -> NIL
+ *     :setCompletionColumn( nColumn )                     -> NIL
+ *     :setCompletionMode( nMode )                         -> NIL
+ *     :setCompletionRole( nRole )                         -> NIL
+ *     :setCurrentRow( nRow )                              -> lBool
+ *     :setModel( pModel )                                 -> NIL
+ *     :setModelSorting( nSorting )                        -> NIL
+ *     :setPopup( pPopup )                                 -> NIL
+ *     :setWidget( pWidget )                               -> NIL
+ *     :splitPath( cPath )                                 -> pQStringList
+ *     :widget()                                           -> pQWidget
+ *     :wrapAround()                                       -> lBool
+ *     :complete( pRect )                                  -> NIL
+ *     :setCompletionPrefix( cPrefix )                     -> NIL
+ *     :setWrapAround( lWrap )                             -> NIL
+ * 
+ *  $DESCRIPTION$
+ * 
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQCompleter.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QCompleter.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     QObject
+ *  $END$
+ */

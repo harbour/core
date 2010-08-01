@@ -1,0 +1,124 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Harbour Project source code:
+ * QT Source Generator for Harbour
+ *
+ * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * www - http://www.harbour-project.org
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this software; see the file COPYING.  If not, write to
+ * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
+ * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ *
+ * As a special exception, the Harbour Project gives permission for
+ * additional uses of the text contained in its release of Harbour.
+ *
+ * The exception is that, if you link the Harbour libraries with other
+ * files to produce an executable, this does not by itself cause the
+ * resulting executable to be covered by the GNU General Public License.
+ * Your use of that executable is in no way restricted on account of
+ * linking the Harbour library code into it.
+ *
+ * This exception does not however invalidate any other reasons why
+ * the executable file might be covered by the GNU General Public License.
+ *
+ * This exception applies only to the code released by the Harbour
+ * Project under the name Harbour.  If you copy code from other
+ * Harbour Project or Free Software Foundation releases into a copy of
+ * Harbour, as the General Public License permits, the exception does
+ * not apply to the code that you add in this way.  To avoid misleading
+ * anyone as to the status of such modified files, you must delete
+ * this exception notice from them.
+ *
+ * If you write modifications of your own for Harbour, it is your choice
+ * whether to permit this exception to apply to your modifications.
+ * If you do not wish that, delete this exception notice.
+ *
+ */
+/*----------------------------------------------------------------------*/
+;
+;              Header File to Generate QT Wrapper Sources
+;
+
+<CLASS>
+QObject  = no
+Inherits =
+Type     = 
+New      =
+</CLASS>
+
+<SUBCLASS>
+</SUBCLASS>
+
+<DOC>
+</DOC>
+
+<CODE>
+#include <QtGui/QPaintEngine>
+
+
+/*
+ * QPaintEngine ( PaintEngineFeatures caps = 0 )
+ * virtual ~QPaintEngine ()
+ */
+HB_FUNC( QT_QPAINTENGINE )
+{
+
+}
+</CODE>
+
+<ENUMS>
+enum DirtyFlag { DirtyPen, DirtyBrush, DirtyBrushOrigin, DirtyFont, ..., AllDirty }
+flags DirtyFlags
+enum PaintEngineFeature { AlphaBlend, Antialiasing, BlendModes, BrushStroke, ..., AllFeatures }
+flags PaintEngineFeatures
+enum PolygonDrawMode { OddEvenMode, WindingMode, ConvexMode, PolylineMode }
+enum Type { X11, Windows, MacPrinter, CoreGraphics, ..., MaxUser }
+</ENUMS>
+
+<PROTOS>
+virtual bool begin ( QPaintDevice * pdev ) = 0
+virtual void drawEllipse ( const QRectF & rect )
+virtual void drawEllipse ( const QRect & rect )
+virtual void drawImage ( const QRectF & rectangle, const QImage & image, const QRectF & sr, Qt::ImageConversionFlags flags = Qt::AutoColor )
+virtual void drawLines ( const QLineF * lines, int lineCount )
+virtual void drawLines ( const QLine * lines, int lineCount )
+virtual void drawPath ( const QPainterPath & path )
+virtual void drawPixmap ( const QRectF & r, const QPixmap & pm, const QRectF & sr ) = 0
+virtual void drawPoints ( const QPointF * points, int pointCount )
+virtual void drawPoints ( const QPoint * points, int pointCount )
+virtual void drawPolygon ( const QPointF * points, int pointCount, PolygonDrawMode mode )
+virtual void drawPolygon ( const QPoint * points, int pointCount, PolygonDrawMode mode )
+virtual void drawRects ( const QRectF * rects, int rectCount )
+virtual void drawRects ( const QRect * rects, int rectCount )
+virtual void drawTextItem ( const QPointF & p, const QTextItem & textItem )
+virtual void drawTiledPixmap ( const QRectF & rect, const QPixmap & pixmap, const QPointF & p )
+virtual bool end () = 0
+bool hasFeature ( PaintEngineFeatures feature ) const
+bool isActive () const
+QPaintDevice * paintDevice () const
+QPainter * painter () const
+void setActive ( bool state )
+virtual Type type () const = 0
+virtual void updateState ( const QPaintEngineState & state ) = 0
+</PROTOS>
+
+<SLOTS>
+</SLOTS>
+
+<SIGNALS>
+</SIGNALS>
