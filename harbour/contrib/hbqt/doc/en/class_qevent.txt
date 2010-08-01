@@ -1,60 +1,58 @@
 /*
- *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for Qt v4.5+
- *  Please do not modify this document as it is subject to change in future.
- *  Pritpal Bedi <bedipritpal@hotmail.com>
+ * $Id$
  */
 
 /*  $DOC$
-    $TEMPLATE$
-        Class
-    $NAME$
-        QEvent()
-    $CATEGORY$
-        Harbour Bindings for Qt
-    $SUBCATEGORY$
-        GUI
-    $EXTERNALLINK$
-        http://doc.trolltech.com/4.5/qevent.html
-    $ONELINER$
-        Creates a new QEvent object.
-    $INHERITS$
-
-    $SYNTAX$
-        QEvent():new( ... )
-        QEvent():from( pPtr_OR_oObj_of_type_QEvent )
-        QEvent():configure( pPtr_OR_oObj_of_type_QEvent )
-    $ARGUMENTS$
-
-    $RETURNS$
-        An instance of the object of type QEvent
-    $METHODS$
-        :accept()                                           -> NIL
-        :ignore()                                           -> NIL
-        :isAccepted()                                       -> lBool
-        :setAccepted( lAccepted )                           -> NIL
-        :spontaneous()                                      -> lBool
-        :type()                                             -> nType
-        :registerEventType( nHint )                         -> nInt
-
-    $DESCRIPTION$
-
-    $EXAMPLES$
-
-    $TESTS$
-
-    $STATUS$
-        R
-    $COMPLIANCE$
-        Not Clipper compatible
-    $PLATFORMS$
-        Windows, Linux, Mac OS X, OS/2
-    $VERSION$
-        4.5 or upper
-    $FILES$
-        Harbour source: contrib/hbqt/qtcore/TQEvent.prg
-        C++ wrappers  : contrib/hbqt/qtcore/QEvent.cpp
-        Library       : hbqtcore
-    $SEEALSO$
-
-    $END$
+ *  $NAME$
+ *     QEvent()
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtcore/TQEvent.prg
+ *     C++ wrappers  : contrib/hbqt/qtcore/QEvent.cpp
+ *     Library       : hbqtcore
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $SYNTAX$
+ *     QEvent():new( ... )
+ *     QEvent():from( pPtr_OR_oObj_of_type_QEvent )
+ *     QEvent():configure( pPtr_OR_oObj_of_type_QEvent )
+ *  $METHODS$
+ *     :accept()                                           -> NIL
+ *     :ignore()                                           -> NIL
+ *     :isAccepted()                                       -> lBool
+ *     :setAccepted( lAccepted )                           -> NIL
+ *     :spontaneous()                                      -> lBool
+ *     :type()                                             -> nType
+ *     :registerEventType( nHint )                         -> nInt
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QEvent
+ *  $SEEALSO$
+ *     
+ *  $VERSION$
+ *     4.5 or upper
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $EXAMPLES$
+ * 
+ *  $INHERITS$
+ *     
+ *  $ONELINER$
+ *     Creates a new QEvent object.
+ *  $TEMPLATE$
+ *     Class
+ *  $ARGUMENTS$
+ * 
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $DESCRIPTION$
+ * 
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qevent.html
+ *  $END$
  */

@@ -8,8 +8,8 @@
 #          or the generator tool itself, and run regenarate.
 # --------------------------------------------------------------------
 
-HBQAbstractItemModel.cpp
 HBEvents.cpp
+HBQAbstractItemModel.cpp
 HBSlots.cpp
 QAbstractItemModel.cpp
 QAbstractListModel.cpp
@@ -58,12 +58,11 @@ QThread.cpp
 QTime.cpp
 QTimer.cpp
 QTranslator.cpp
-QUiLoader.cpp
 QUrl.cpp
 QVariant.cpp
 
-THBQAbstractItemModel.prg
 THBEvents.prg
+THBQAbstractItemModel.prg
 THBSlots.prg
 TQAbstractItemModel.prg
 TQAbstractListModel.prg
@@ -112,6 +111,5 @@ TQThread.prg
 TQTime.prg
 TQTimer.prg
 TQTranslator.prg
-TQUiLoader.prg
 TQUrl.prg
 TQVariant.prg

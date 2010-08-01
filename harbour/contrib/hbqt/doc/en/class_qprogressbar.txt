@@ -1,74 +1,72 @@
 /*
- *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for Qt v4.5+
- *  Please do not modify this document as it is subject to change in future.
- *  Pritpal Bedi <bedipritpal@hotmail.com>
+ * $Id$
  */
 
 /*  $DOC$
-    $TEMPLATE$
-        Class
-    $NAME$
-        QProgressBar()
-    $CATEGORY$
-        Harbour Bindings for Qt
-    $SUBCATEGORY$
-        GUI
-    $EXTERNALLINK$
-        http://doc.trolltech.com/4.5/qprogressbar.html
-    $ONELINER$
-        Creates a new QProgressBar object.
-    $INHERITS$
-        QWidget
-    $SYNTAX$
-        QProgressBar():new( ... )
-        QProgressBar():from( pPtr_OR_oObj_of_type_QProgressBar )
-        QProgressBar():configure( pPtr_OR_oObj_of_type_QProgressBar )
-    $ARGUMENTS$
-
-    $RETURNS$
-        An instance of the object of type QProgressBar
-    $METHODS$
-        :alignment()                                        -> nQt::Alignment
-        :format()                                           -> cQString
-        :invertedAppearance()                               -> lBool
-        :isTextVisible()                                    -> lBool
-        :maximum()                                          -> nInt
-        :minimum()                                          -> nInt
-        :orientation()                                      -> nQt::Orientation
-        :setAlignment( nAlignment )                         -> NIL
-        :setFormat( cFormat )                               -> NIL
-        :setInvertedAppearance( lInvert )                   -> NIL
-        :setTextDirection( nTextDirection )                 -> NIL
-        :setTextVisible( lVisible )                         -> NIL
-        :text()                                             -> cQString
-        :textDirection()                                    -> nQProgressBar::Direction
-        :value()                                            -> nInt
-        :reset()                                            -> NIL
-        :setMaximum( nMaximum )                             -> NIL
-        :setMinimum( nMinimum )                             -> NIL
-        :setOrientation( nQt::Orientation )                 -> NIL
-        :setRange( nMinimum, nMaximum )                     -> NIL
-        :setValue( nValue )                                 -> NIL
-
-    $DESCRIPTION$
-
-    $EXAMPLES$
-
-    $TESTS$
-
-    $STATUS$
-        R
-    $COMPLIANCE$
-        Not Clipper compatible
-    $PLATFORMS$
-        Windows, Linux, Mac OS X, OS/2
-    $VERSION$
-        4.5 or upper
-    $FILES$
-        Harbour source: contrib/hbqt/qtgui/TQProgressBar.prg
-        C++ wrappers  : contrib/hbqt/qtgui/QProgressBar.cpp
-        Library       : hbqtgui
-    $SEEALSO$
-        QWidget
-    $END$
+ *  $NAME$
+ *     QProgressBar()
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQProgressBar.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QProgressBar.cpp
+ *     Library       : hbqtgui
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $SYNTAX$
+ *     QProgressBar():new( ... )
+ *     QProgressBar():from( pPtr_OR_oObj_of_type_QProgressBar )
+ *     QProgressBar():configure( pPtr_OR_oObj_of_type_QProgressBar )
+ *  $METHODS$
+ *     :alignment()                                        -> nQt::Alignment
+ *     :format()                                           -> cQString
+ *     :invertedAppearance()                               -> lBool
+ *     :isTextVisible()                                    -> lBool
+ *     :maximum()                                          -> nInt
+ *     :minimum()                                          -> nInt
+ *     :orientation()                                      -> nQt::Orientation
+ *     :setAlignment( nAlignment )                         -> NIL
+ *     :setFormat( cFormat )                               -> NIL
+ *     :setInvertedAppearance( lInvert )                   -> NIL
+ *     :setTextDirection( nTextDirection )                 -> NIL
+ *     :setTextVisible( lVisible )                         -> NIL
+ *     :text()                                             -> cQString
+ *     :textDirection()                                    -> nQProgressBar::Direction
+ *     :value()                                            -> nInt
+ *     :reset()                                            -> NIL
+ *     :setMaximum( nMaximum )                             -> NIL
+ *     :setMinimum( nMinimum )                             -> NIL
+ *     :setOrientation( nQt::Orientation )                 -> NIL
+ *     :setRange( nMinimum, nMaximum )                     -> NIL
+ *     :setValue( nValue )                                 -> NIL
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QProgressBar
+ *  $SEEALSO$
+ *     QWidget
+ *  $VERSION$
+ *     4.5 or upper
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $EXAMPLES$
+ * 
+ *  $INHERITS$
+ *     QWidget
+ *  $ONELINER$
+ *     Creates a new QProgressBar object.
+ *  $TEMPLATE$
+ *     Class
+ *  $ARGUMENTS$
+ * 
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $DESCRIPTION$
+ * 
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qprogressbar.html
+ *  $END$
  */

@@ -1,0 +1,28 @@
+#
+# $Id$
+#
+
+stop={dos|watcom|bcc|pocc|pocc64|poccarm|msvcia64}'hbqt' doesn't support this platform/compiler (${hb_plat}/${hb_comp}).
+
+incpaths=.
+
+plugins=hbmk2_plugin_qt.hbs
+
+{msvc}ldflags=-nodefaultlib:msvcrt.lib -defaultlib:libcmt.lib
+
+{allwin|os2}libpaths=${HB_WITH_QT}\..\lib
+
+{!HB_STATIC_QT}libs=hbqtcore${__HB_DYN__}
+{!HB_STATIC_QT&(allwin|os2)}libs=QtCore4 QtGui4
+{!HB_STATIC_QT&linux}libs=QtCore QtGui
+{!HB_STATIC_QT&darwin}libs=/Library/Frameworks/QtCore.framework/QtCore /Library/Frameworks/QtGui.framework/QtGui
+{HB_STATIC_QT&allwin}libs=hbqtcores${__HB_DYN__}
+{HB_STATIC_QT&linux}libs=hbqtcore
+{HB_STATIC_QT&(allwin|linux)}libs=QtCore QtGui
+
+{allgcc}libs=supc++
+
+{win|os2}hbcppmm=yes
+
+gui=yes
+gt=gtnul

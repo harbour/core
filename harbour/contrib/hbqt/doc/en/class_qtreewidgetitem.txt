@@ -1,102 +1,100 @@
 /*
- *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for Qt v4.5+
- *  Please do not modify this document as it is subject to change in future.
- *  Pritpal Bedi <bedipritpal@hotmail.com>
+ * $Id$
  */
 
 /*  $DOC$
-    $TEMPLATE$
-        Class
-    $NAME$
-        QTreeWidgetItem()
-    $CATEGORY$
-        Harbour Bindings for Qt
-    $SUBCATEGORY$
-        GUI
-    $EXTERNALLINK$
-        http://doc.trolltech.com/4.5/qtreewidgetitem.html
-    $ONELINER$
-        Creates a new QTreeWidgetItem object.
-    $INHERITS$
-
-    $SYNTAX$
-        QTreeWidgetItem():new( ... )
-        QTreeWidgetItem():from( pPtr_OR_oObj_of_type_QTreeWidgetItem )
-        QTreeWidgetItem():configure( pPtr_OR_oObj_of_type_QTreeWidgetItem )
-    $ARGUMENTS$
-
-    $RETURNS$
-        An instance of the object of type QTreeWidgetItem
-    $METHODS$
-        :addChild( pChild )                                 -> NIL
-        :background( nColumn )                              -> pQBrush
-        :checkState( nColumn )                              -> nQt::CheckState
-        :childCount()                                       -> nInt
-        :childIndicatorPolicy()                             -> nQTreeWidgetItem::ChildIndicatorPolicy
-        :columnCount()                                      -> nInt
-        :data( nColumn, nRole )                             -> pQVariant
-        :flags()                                            -> nQt::ItemFlags
-        :font( nColumn )                                    -> pQFont
-        :foreground( nColumn )                              -> pQBrush
-        :icon( nColumn )                                    -> pQIcon
-        :indexOfChild( pChild )                             -> nInt
-        :insertChild( nIndex, pChild )                      -> NIL
-        :isDisabled()                                       -> lBool
-        :isExpanded()                                       -> lBool
-        :isFirstColumnSpanned()                             -> lBool
-        :isHidden()                                         -> lBool
-        :isSelected()                                       -> lBool
-        :read( pIn )                                        -> NIL
-        :removeChild( pChild )                              -> NIL
-        :setBackground( nColumn, pBrush )                   -> NIL
-        :setCheckState( nColumn, nState )                   -> NIL
-        :setChildIndicatorPolicy( nPolicy )                 -> NIL
-        :setData( nColumn, nRole, pValue )                  -> NIL
-        :setDisabled( lDisabled )                           -> NIL
-        :setExpanded( lExpand )                             -> NIL
-        :setFirstColumnSpanned( lSpan )                     -> NIL
-        :setFlags( nFlags )                                 -> NIL
-        :setFont( nColumn, pFont )                          -> NIL
-        :setForeground( nColumn, pBrush )                   -> NIL
-        :setHidden( lHide )                                 -> NIL
-        :setIcon( nColumn, cIcon )                          -> NIL
-        :setSelected( lSelect )                             -> NIL
-        :setSizeHint( nColumn, pSize )                      -> NIL
-        :setStatusTip( nColumn, cStatusTip )                -> NIL
-        :setText( nColumn, cText )                          -> NIL
-        :setTextAlignment( nColumn, nAlignment )            -> NIL
-        :setToolTip( nColumn, cToolTip )                    -> NIL
-        :setWhatsThis( nColumn, cWhatsThis )                -> NIL
-        :sizeHint( nColumn )                                -> pQSize
-        :sortChildren( nColumn, nOrder )                    -> NIL
-        :statusTip( nColumn )                               -> cQString
-        :takeChildren()                                     -> pQList<QTreeWidgetItem *>
-        :text( nColumn )                                    -> cQString
-        :textAlignment( nColumn )                           -> nInt
-        :toolTip( nColumn )                                 -> cQString
-        :treeWidget()                                       -> pQTreeWidget
-        :type()                                             -> nInt
-        :whatsThis( nColumn )                               -> cQString
-
-    $DESCRIPTION$
-
-    $EXAMPLES$
-
-    $TESTS$
-
-    $STATUS$
-        R
-    $COMPLIANCE$
-        Not Clipper compatible
-    $PLATFORMS$
-        Windows, Linux, Mac OS X, OS/2
-    $VERSION$
-        4.5 or upper
-    $FILES$
-        Harbour source: contrib/hbqt/qtgui/TQTreeWidgetItem.prg
-        C++ wrappers  : contrib/hbqt/qtgui/QTreeWidgetItem.cpp
-        Library       : hbqtgui
-    $SEEALSO$
-
-    $END$
+ *  $NAME$
+ *     QTreeWidgetItem()
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQTreeWidgetItem.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QTreeWidgetItem.cpp
+ *     Library       : hbqtgui
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $SYNTAX$
+ *     QTreeWidgetItem():new( ... )
+ *     QTreeWidgetItem():from( pPtr_OR_oObj_of_type_QTreeWidgetItem )
+ *     QTreeWidgetItem():configure( pPtr_OR_oObj_of_type_QTreeWidgetItem )
+ *  $METHODS$
+ *     :addChild( pChild )                                 -> NIL
+ *     :background( nColumn )                              -> pQBrush
+ *     :checkState( nColumn )                              -> nQt::CheckState
+ *     :childCount()                                       -> nInt
+ *     :childIndicatorPolicy()                             -> nQTreeWidgetItem::ChildIndicatorPolicy
+ *     :columnCount()                                      -> nInt
+ *     :data( nColumn, nRole )                             -> pQVariant
+ *     :flags()                                            -> nQt::ItemFlags
+ *     :font( nColumn )                                    -> pQFont
+ *     :foreground( nColumn )                              -> pQBrush
+ *     :icon( nColumn )                                    -> pQIcon
+ *     :indexOfChild( pChild )                             -> nInt
+ *     :insertChild( nIndex, pChild )                      -> NIL
+ *     :isDisabled()                                       -> lBool
+ *     :isExpanded()                                       -> lBool
+ *     :isFirstColumnSpanned()                             -> lBool
+ *     :isHidden()                                         -> lBool
+ *     :isSelected()                                       -> lBool
+ *     :read( pIn )                                        -> NIL
+ *     :removeChild( pChild )                              -> NIL
+ *     :setBackground( nColumn, pBrush )                   -> NIL
+ *     :setCheckState( nColumn, nState )                   -> NIL
+ *     :setChildIndicatorPolicy( nPolicy )                 -> NIL
+ *     :setData( nColumn, nRole, pValue )                  -> NIL
+ *     :setDisabled( lDisabled )                           -> NIL
+ *     :setExpanded( lExpand )                             -> NIL
+ *     :setFirstColumnSpanned( lSpan )                     -> NIL
+ *     :setFlags( nFlags )                                 -> NIL
+ *     :setFont( nColumn, pFont )                          -> NIL
+ *     :setForeground( nColumn, pBrush )                   -> NIL
+ *     :setHidden( lHide )                                 -> NIL
+ *     :setIcon( nColumn, cIcon )                          -> NIL
+ *     :setSelected( lSelect )                             -> NIL
+ *     :setSizeHint( nColumn, pSize )                      -> NIL
+ *     :setStatusTip( nColumn, cStatusTip )                -> NIL
+ *     :setText( nColumn, cText )                          -> NIL
+ *     :setTextAlignment( nColumn, nAlignment )            -> NIL
+ *     :setToolTip( nColumn, cToolTip )                    -> NIL
+ *     :setWhatsThis( nColumn, cWhatsThis )                -> NIL
+ *     :sizeHint( nColumn )                                -> pQSize
+ *     :sortChildren( nColumn, nOrder )                    -> NIL
+ *     :statusTip( nColumn )                               -> cQString
+ *     :takeChildren()                                     -> pQList<QTreeWidgetItem *>
+ *     :text( nColumn )                                    -> cQString
+ *     :textAlignment( nColumn )                           -> nInt
+ *     :toolTip( nColumn )                                 -> cQString
+ *     :treeWidget()                                       -> pQTreeWidget
+ *     :type()                                             -> nInt
+ *     :whatsThis( nColumn )                               -> cQString
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QTreeWidgetItem
+ *  $SEEALSO$
+ *     
+ *  $VERSION$
+ *     4.5 or upper
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $EXAMPLES$
+ * 
+ *  $INHERITS$
+ *     
+ *  $ONELINER$
+ *     Creates a new QTreeWidgetItem object.
+ *  $TEMPLATE$
+ *     Class
+ *  $ARGUMENTS$
+ * 
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $DESCRIPTION$
+ * 
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qtreewidgetitem.html
+ *  $END$
  */

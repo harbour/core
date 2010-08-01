@@ -5,5 +5,8 @@
 hbqt_common.hbm
 
 qtgui/filelist.hbm
+hbqtgui_filelist.hbm
+
+hbqtcore.hbc
 
 hbqtguis.hbp

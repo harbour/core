@@ -12,6 +12,8 @@
 
 -w3 -es2
 
+-iqtcore
+
 -stop{dos|watcom|bcc|pocc|pocc64|poccarm|msvcia64}
 
 -plugin=hbmk2_plugin_qt.hbs

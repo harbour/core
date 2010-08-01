@@ -1,92 +1,90 @@
 /*
- *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for Qt v4.5+
- *  Please do not modify this document as it is subject to change in future.
- *  Pritpal Bedi <bedipritpal@hotmail.com>
+ * $Id$
  */
 
 /*  $DOC$
-    $TEMPLATE$
-        Class
-    $NAME$
-        QCoreApplication()
-    $CATEGORY$
-        Harbour Bindings for Qt
-    $SUBCATEGORY$
-        GUI
-    $EXTERNALLINK$
-        http://doc.trolltech.com/4.5/qcoreapplication.html
-    $ONELINER$
-        Creates a new QCoreApplication object.
-    $INHERITS$
-        QObject
-    $SYNTAX$
-        QCoreApplication():new( ... )
-        QCoreApplication():from( pPtr_OR_oObj_of_type_QCoreApplication )
-        QCoreApplication():configure( pPtr_OR_oObj_of_type_QCoreApplication )
-    $ARGUMENTS$
-
-    $RETURNS$
-        An instance of the object of type QCoreApplication
-    $METHODS$
-        :notify( pReceiver, pEvent )                        -> lBool
-        :addLibraryPath( cPath )                            -> NIL
-        :applicationDirPath()                               -> cQString
-        :applicationFilePath()                              -> cQString
-        :applicationName()                                  -> cQString
-        :applicationPid()                                   -> nQint64
-        :applicationVersion()                               -> cQString
-        :arguments()                                        -> pQStringList
-        :closingDown()                                      -> lBool
-        :exec()                                             -> nInt
-        :exit( nReturnCode )                                -> NIL
-        :flush()                                            -> NIL
-        :hasPendingEvents()                                 -> lBool
-        :installTranslator( pTranslationFile )              -> NIL
-        :libraryPaths()                                     -> pQStringList
-        :organizationDomain()                               -> cQString
-        :organizationName()                                 -> cQString
-        :postEvent( pReceiver, pEvent )                     -> NIL
-        :postEvent_1( pReceiver, pEvent, nPriority )        -> NIL
-        :processEvents( nFlags )                            -> NIL
-        :processEvents_1( nFlags, nMaxtime )                -> NIL
-        :removeLibraryPath( cPath )                         -> NIL
-        :removePostedEvents( pReceiver )                    -> NIL
-        :removePostedEvents_1( pReceiver, nEventType )      -> NIL
-        :removeTranslator( pTranslationFile )               -> NIL
-        :sendEvent( pReceiver, pEvent )                     -> lBool
-        :sendPostedEvents( pReceiver, nEvent_type )         -> NIL
-        :sendPostedEvents_1()                               -> NIL
-        :setApplicationName( cApplication )                 -> NIL
-        :setApplicationVersion( cVersion )                  -> NIL
-        :setAttribute( nAttribute, lOn )                    -> NIL
-        :setLibraryPaths( pPaths )                          -> NIL
-        :setOrganizationDomain( cOrgDomain )                -> NIL
-        :setOrganizationName( cOrgName )                    -> NIL
-        :startingUp()                                       -> lBool
-        :testAttribute( nAttribute )                        -> lBool
-        :translate( pContext, pSourceText, pDisambiguation, nEncoding, nN )  -> cQString
-        :translate_1( pContext, pSourceText, pDisambiguation, nEncoding )  -> cQString
-        :quit()                                             -> NIL
-
-    $DESCRIPTION$
-
-    $EXAMPLES$
-
-    $TESTS$
-
-    $STATUS$
-        R
-    $COMPLIANCE$
-        Not Clipper compatible
-    $PLATFORMS$
-        Windows, Linux, Mac OS X, OS/2
-    $VERSION$
-        4.5 or upper
-    $FILES$
-        Harbour source: contrib/hbqt/qtcore/TQCoreApplication.prg
-        C++ wrappers  : contrib/hbqt/qtcore/QCoreApplication.cpp
-        Library       : hbqtcore
-    $SEEALSO$
-        QObject
-    $END$
+ *  $NAME$
+ *     QCoreApplication()
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtcore/TQCoreApplication.prg
+ *     C++ wrappers  : contrib/hbqt/qtcore/QCoreApplication.cpp
+ *     Library       : hbqtcore
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $SYNTAX$
+ *     QCoreApplication():new( ... )
+ *     QCoreApplication():from( pPtr_OR_oObj_of_type_QCoreApplication )
+ *     QCoreApplication():configure( pPtr_OR_oObj_of_type_QCoreApplication )
+ *  $METHODS$
+ *     :notify( pReceiver, pEvent )                        -> lBool
+ *     :addLibraryPath( cPath )                            -> NIL
+ *     :applicationDirPath()                               -> cQString
+ *     :applicationFilePath()                              -> cQString
+ *     :applicationName()                                  -> cQString
+ *     :applicationPid()                                   -> nQint64
+ *     :applicationVersion()                               -> cQString
+ *     :arguments()                                        -> pQStringList
+ *     :closingDown()                                      -> lBool
+ *     :exec()                                             -> nInt
+ *     :exit( nReturnCode )                                -> NIL
+ *     :flush()                                            -> NIL
+ *     :hasPendingEvents()                                 -> lBool
+ *     :installTranslator( pTranslationFile )              -> NIL
+ *     :libraryPaths()                                     -> pQStringList
+ *     :organizationDomain()                               -> cQString
+ *     :organizationName()                                 -> cQString
+ *     :postEvent( pReceiver, pEvent )                     -> NIL
+ *     :postEvent_1( pReceiver, pEvent, nPriority )        -> NIL
+ *     :processEvents( nFlags )                            -> NIL
+ *     :processEvents_1( nFlags, nMaxtime )                -> NIL
+ *     :removeLibraryPath( cPath )                         -> NIL
+ *     :removePostedEvents( pReceiver )                    -> NIL
+ *     :removePostedEvents_1( pReceiver, nEventType )      -> NIL
+ *     :removeTranslator( pTranslationFile )               -> NIL
+ *     :sendEvent( pReceiver, pEvent )                     -> lBool
+ *     :sendPostedEvents( pReceiver, nEvent_type )         -> NIL
+ *     :sendPostedEvents_1()                               -> NIL
+ *     :setApplicationName( cApplication )                 -> NIL
+ *     :setApplicationVersion( cVersion )                  -> NIL
+ *     :setAttribute( nAttribute, lOn )                    -> NIL
+ *     :setLibraryPaths( pPaths )                          -> NIL
+ *     :setOrganizationDomain( cOrgDomain )                -> NIL
+ *     :setOrganizationName( cOrgName )                    -> NIL
+ *     :startingUp()                                       -> lBool
+ *     :testAttribute( nAttribute )                        -> lBool
+ *     :translate( pContext, pSourceText, pDisambiguation, nEncoding, nN )  -> cQString
+ *     :translate_1( pContext, pSourceText, pDisambiguation, nEncoding )  -> cQString
+ *     :quit()                                             -> NIL
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QCoreApplication
+ *  $SEEALSO$
+ *     QObject
+ *  $VERSION$
+ *     4.5 or upper
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $EXAMPLES$
+ * 
+ *  $INHERITS$
+ *     QObject
+ *  $ONELINER$
+ *     Creates a new QCoreApplication object.
+ *  $TEMPLATE$
+ *     Class
+ *  $ARGUMENTS$
+ * 
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $DESCRIPTION$
+ * 
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qcoreapplication.html
+ *  $END$
  */

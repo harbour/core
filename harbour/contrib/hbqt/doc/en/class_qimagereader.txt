@@ -1,92 +1,90 @@
 /*
- *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for Qt v4.5+
- *  Please do not modify this document as it is subject to change in future.
- *  Pritpal Bedi <bedipritpal@hotmail.com>
+ * $Id$
  */
 
 /*  $DOC$
-    $TEMPLATE$
-        Class
-    $NAME$
-        QImageReader()
-    $CATEGORY$
-        Harbour Bindings for Qt
-    $SUBCATEGORY$
-        GUI
-    $EXTERNALLINK$
-        http://doc.trolltech.com/4.5/qimagereader.html
-    $ONELINER$
-        Creates a new QImageReader object.
-    $INHERITS$
-
-    $SYNTAX$
-        QImageReader():new( ... )
-        QImageReader():from( pPtr_OR_oObj_of_type_QImageReader )
-        QImageReader():configure( pPtr_OR_oObj_of_type_QImageReader )
-    $ARGUMENTS$
-
-    $RETURNS$
-        An instance of the object of type QImageReader
-    $METHODS$
-        :autoDetectImageFormat()                            -> lBool
-        :backgroundColor()                                  -> pQColor
-        :canRead()                                          -> lBool
-        :clipRect()                                         -> pQRect
-        :currentImageNumber()                               -> nInt
-        :currentImageRect()                                 -> pQRect
-        :device()                                           -> pQIODevice
-        :error()                                            -> nImageReaderError
-        :errorString()                                      -> cQString
-        :fileName()                                         -> cQString
-        :format()                                           -> pQByteArray
-        :imageCount()                                       -> nInt
-        :imageFormat()                                      -> nQImage::Format
-        :jumpToImage( nImageNumber )                        -> lBool
-        :jumpToNextImage()                                  -> lBool
-        :loopCount()                                        -> nInt
-        :nextImageDelay()                                   -> nInt
-        :quality()                                          -> nInt
-        :read()                                             -> pQImage
-        :read_1( pImage )                                   -> lBool
-        :scaledClipRect()                                   -> pQRect
-        :scaledSize()                                       -> pQSize
-        :setAutoDetectImageFormat( lEnabled )               -> NIL
-        :setBackgroundColor( pColor )                       -> NIL
-        :setClipRect( pRect )                               -> NIL
-        :setDevice( pDevice )                               -> NIL
-        :setFileName( cFileName )                           -> NIL
-        :setFormat( pFormat )                               -> NIL
-        :setQuality( nQuality )                             -> NIL
-        :setScaledClipRect( pRect )                         -> NIL
-        :setScaledSize( pSize )                             -> NIL
-        :size()                                             -> pQSize
-        :supportsAnimation()                                -> lBool
-        :supportsOption( nOption )                          -> lBool
-        :text( cKey )                                       -> cQString
-        :textKeys()                                         -> pQStringList
-        :imageFormat_1( cFileName )                         -> pQByteArray
-        :imageFormat_2( pDevice )                           -> pQByteArray
-        :supportedImageFormats()                            -> pQList<QByteArray>
-
-    $DESCRIPTION$
-
-    $EXAMPLES$
-
-    $TESTS$
-
-    $STATUS$
-        R
-    $COMPLIANCE$
-        Not Clipper compatible
-    $PLATFORMS$
-        Windows, Linux, Mac OS X, OS/2
-    $VERSION$
-        4.5 or upper
-    $FILES$
-        Harbour source: contrib/hbqt/qtgui/TQImageReader.prg
-        C++ wrappers  : contrib/hbqt/qtgui/QImageReader.cpp
-        Library       : hbqtgui
-    $SEEALSO$
-
-    $END$
+ *  $NAME$
+ *     QImageReader()
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQImageReader.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QImageReader.cpp
+ *     Library       : hbqtgui
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $SYNTAX$
+ *     QImageReader():new( ... )
+ *     QImageReader():from( pPtr_OR_oObj_of_type_QImageReader )
+ *     QImageReader():configure( pPtr_OR_oObj_of_type_QImageReader )
+ *  $METHODS$
+ *     :autoDetectImageFormat()                            -> lBool
+ *     :backgroundColor()                                  -> pQColor
+ *     :canRead()                                          -> lBool
+ *     :clipRect()                                         -> pQRect
+ *     :currentImageNumber()                               -> nInt
+ *     :currentImageRect()                                 -> pQRect
+ *     :device()                                           -> pQIODevice
+ *     :error()                                            -> nImageReaderError
+ *     :errorString()                                      -> cQString
+ *     :fileName()                                         -> cQString
+ *     :format()                                           -> pQByteArray
+ *     :imageCount()                                       -> nInt
+ *     :imageFormat()                                      -> nQImage::Format
+ *     :jumpToImage( nImageNumber )                        -> lBool
+ *     :jumpToNextImage()                                  -> lBool
+ *     :loopCount()                                        -> nInt
+ *     :nextImageDelay()                                   -> nInt
+ *     :quality()                                          -> nInt
+ *     :read()                                             -> pQImage
+ *     :read_1( pImage )                                   -> lBool
+ *     :scaledClipRect()                                   -> pQRect
+ *     :scaledSize()                                       -> pQSize
+ *     :setAutoDetectImageFormat( lEnabled )               -> NIL
+ *     :setBackgroundColor( pColor )                       -> NIL
+ *     :setClipRect( pRect )                               -> NIL
+ *     :setDevice( pDevice )                               -> NIL
+ *     :setFileName( cFileName )                           -> NIL
+ *     :setFormat( pFormat )                               -> NIL
+ *     :setQuality( nQuality )                             -> NIL
+ *     :setScaledClipRect( pRect )                         -> NIL
+ *     :setScaledSize( pSize )                             -> NIL
+ *     :size()                                             -> pQSize
+ *     :supportsAnimation()                                -> lBool
+ *     :supportsOption( nOption )                          -> lBool
+ *     :text( cKey )                                       -> cQString
+ *     :textKeys()                                         -> pQStringList
+ *     :imageFormat_1( cFileName )                         -> pQByteArray
+ *     :imageFormat_2( pDevice )                           -> pQByteArray
+ *     :supportedImageFormats()                            -> pQList<QByteArray>
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QImageReader
+ *  $SEEALSO$
+ *     
+ *  $VERSION$
+ *     4.5 or upper
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $EXAMPLES$
+ * 
+ *  $INHERITS$
+ *     
+ *  $ONELINER$
+ *     Creates a new QImageReader object.
+ *  $TEMPLATE$
+ *     Class
+ *  $ARGUMENTS$
+ * 
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $DESCRIPTION$
+ * 
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qimagereader.html
+ *  $END$
  */

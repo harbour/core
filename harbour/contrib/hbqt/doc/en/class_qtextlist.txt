@@ -1,62 +1,60 @@
 /*
- *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for Qt v4.5+
- *  Please do not modify this document as it is subject to change in future.
- *  Pritpal Bedi <bedipritpal@hotmail.com>
+ * $Id$
  */
 
 /*  $DOC$
-    $TEMPLATE$
-        Class
-    $NAME$
-        QTextList()
-    $CATEGORY$
-        Harbour Bindings for Qt
-    $SUBCATEGORY$
-        GUI
-    $EXTERNALLINK$
-        http://doc.trolltech.com/4.5/qtextlist.html
-    $ONELINER$
-        Creates a new QTextList object.
-    $INHERITS$
-        QTextBlockGroup
-    $SYNTAX$
-        QTextList():new( ... )
-        QTextList():from( pPtr_OR_oObj_of_type_QTextList )
-        QTextList():configure( pPtr_OR_oObj_of_type_QTextList )
-    $ARGUMENTS$
-
-    $RETURNS$
-        An instance of the object of type QTextList
-    $METHODS$
-        :add( pBlock )                                      -> NIL
-        :count()                                            -> nInt
-        :format()                                           -> Format
-        :item( nI )                                         -> pQTextBlock
-        :itemNumber( pBlock )                               -> nInt
-        :itemText( pBlock )                                 -> cQString
-        :remove( pBlock )                                   -> NIL
-        :removeItem( nI )                                   -> NIL
-        :setFormat( pFormat )                               -> NIL
-
-    $DESCRIPTION$
-
-    $EXAMPLES$
-
-    $TESTS$
-
-    $STATUS$
-        R
-    $COMPLIANCE$
-        Not Clipper compatible
-    $PLATFORMS$
-        Windows, Linux, Mac OS X, OS/2
-    $VERSION$
-        4.5 or upper
-    $FILES$
-        Harbour source: contrib/hbqt/qtgui/TQTextList.prg
-        C++ wrappers  : contrib/hbqt/qtgui/QTextList.cpp
-        Library       : hbqtgui
-    $SEEALSO$
-        QTextBlockGroup
-    $END$
+ *  $NAME$
+ *     QTextList()
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQTextList.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QTextList.cpp
+ *     Library       : hbqtgui
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $SYNTAX$
+ *     QTextList():new( ... )
+ *     QTextList():from( pPtr_OR_oObj_of_type_QTextList )
+ *     QTextList():configure( pPtr_OR_oObj_of_type_QTextList )
+ *  $METHODS$
+ *     :add( pBlock )                                      -> NIL
+ *     :count()                                            -> nInt
+ *     :format()                                           -> Format
+ *     :item( nI )                                         -> pQTextBlock
+ *     :itemNumber( pBlock )                               -> nInt
+ *     :itemText( pBlock )                                 -> cQString
+ *     :remove( pBlock )                                   -> NIL
+ *     :removeItem( nI )                                   -> NIL
+ *     :setFormat( pFormat )                               -> NIL
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QTextList
+ *  $SEEALSO$
+ *     QTextBlockGroup
+ *  $VERSION$
+ *     4.5 or upper
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $EXAMPLES$
+ * 
+ *  $INHERITS$
+ *     QTextBlockGroup
+ *  $ONELINER$
+ *     Creates a new QTextList object.
+ *  $TEMPLATE$
+ *     Class
+ *  $ARGUMENTS$
+ * 
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $DESCRIPTION$
+ * 
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qtextlist.html
+ *  $END$
  */

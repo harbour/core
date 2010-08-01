@@ -1,70 +1,68 @@
 /*
- *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for Qt v4.5+
- *  Please do not modify this document as it is subject to change in future.
- *  Pritpal Bedi <bedipritpal@hotmail.com>
+ * $Id$
  */
 
 /*  $DOC$
-    $TEMPLATE$
-        Class
-    $NAME$
-        QLayoutItem()
-    $CATEGORY$
-        Harbour Bindings for Qt
-    $SUBCATEGORY$
-        GUI
-    $EXTERNALLINK$
-        http://doc.trolltech.com/4.5/qlayoutitem.html
-    $ONELINER$
-        Creates a new QLayoutItem object.
-    $INHERITS$
-
-    $SYNTAX$
-        QLayoutItem():new( ... )
-        QLayoutItem():from( pPtr_OR_oObj_of_type_QLayoutItem )
-        QLayoutItem():configure( pPtr_OR_oObj_of_type_QLayoutItem )
-    $ARGUMENTS$
-
-    $RETURNS$
-        An instance of the object of type QLayoutItem
-    $METHODS$
-        :alignment()                                        -> nQt::Alignment
-        :controlTypes()                                     -> nQSizePolicy::ControlTypes
-        :expandingDirections()                              -> nQt::Orientations
-        :geometry()                                         -> pQRect
-        :hasHeightForWidth()                                -> lBool
-        :heightForWidth( nW )                               -> nInt
-        :invalidate()                                       -> NIL
-        :isEmpty()                                          -> lBool
-        :layout()                                           -> pQLayout
-        :maximumSize()                                      -> pQSize
-        :minimumHeightForWidth( nW )                        -> nInt
-        :minimumSize()                                      -> pQSize
-        :setAlignment( nAlignment )                         -> NIL
-        :setGeometry( pR )                                  -> NIL
-        :sizeHint()                                         -> pQSize
-        :spacerItem()                                       -> pQSpacerItem
-        :widget()                                           -> pQWidget
-
-    $DESCRIPTION$
-
-    $EXAMPLES$
-
-    $TESTS$
-
-    $STATUS$
-        R
-    $COMPLIANCE$
-        Not Clipper compatible
-    $PLATFORMS$
-        Windows, Linux, Mac OS X, OS/2
-    $VERSION$
-        4.5 or upper
-    $FILES$
-        Harbour source: contrib/hbqt/qtgui/TQLayoutItem.prg
-        C++ wrappers  : contrib/hbqt/qtgui/QLayoutItem.cpp
-        Library       : hbqtgui
-    $SEEALSO$
-
-    $END$
+ *  $NAME$
+ *     QLayoutItem()
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQLayoutItem.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QLayoutItem.cpp
+ *     Library       : hbqtgui
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $SYNTAX$
+ *     QLayoutItem():new( ... )
+ *     QLayoutItem():from( pPtr_OR_oObj_of_type_QLayoutItem )
+ *     QLayoutItem():configure( pPtr_OR_oObj_of_type_QLayoutItem )
+ *  $METHODS$
+ *     :alignment()                                        -> nQt::Alignment
+ *     :controlTypes()                                     -> nQSizePolicy::ControlTypes
+ *     :expandingDirections()                              -> nQt::Orientations
+ *     :geometry()                                         -> pQRect
+ *     :hasHeightForWidth()                                -> lBool
+ *     :heightForWidth( nW )                               -> nInt
+ *     :invalidate()                                       -> NIL
+ *     :isEmpty()                                          -> lBool
+ *     :layout()                                           -> pQLayout
+ *     :maximumSize()                                      -> pQSize
+ *     :minimumHeightForWidth( nW )                        -> nInt
+ *     :minimumSize()                                      -> pQSize
+ *     :setAlignment( nAlignment )                         -> NIL
+ *     :setGeometry( pR )                                  -> NIL
+ *     :sizeHint()                                         -> pQSize
+ *     :spacerItem()                                       -> pQSpacerItem
+ *     :widget()                                           -> pQWidget
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QLayoutItem
+ *  $SEEALSO$
+ *     
+ *  $VERSION$
+ *     4.5 or upper
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $EXAMPLES$
+ * 
+ *  $INHERITS$
+ *     
+ *  $ONELINER$
+ *     Creates a new QLayoutItem object.
+ *  $TEMPLATE$
+ *     Class
+ *  $ARGUMENTS$
+ * 
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $DESCRIPTION$
+ * 
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qlayoutitem.html
+ *  $END$
  */

@@ -1,66 +1,64 @@
 /*
- *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for Qt v4.5+
- *  Please do not modify this document as it is subject to change in future.
- *  Pritpal Bedi <bedipritpal@hotmail.com>
+ * $Id$
  */
 
 /*  $DOC$
-    $TEMPLATE$
-        Class
-    $NAME$
-        QToolButton()
-    $CATEGORY$
-        Harbour Bindings for Qt
-    $SUBCATEGORY$
-        GUI
-    $EXTERNALLINK$
-        http://doc.trolltech.com/4.5/qtoolbutton.html
-    $ONELINER$
-        Creates a new QToolButton object.
-    $INHERITS$
-        QAbstractButton
-    $SYNTAX$
-        QToolButton():new( ... )
-        QToolButton():from( pPtr_OR_oObj_of_type_QToolButton )
-        QToolButton():configure( pPtr_OR_oObj_of_type_QToolButton )
-    $ARGUMENTS$
-
-    $RETURNS$
-        An instance of the object of type QToolButton
-    $METHODS$
-        :arrowType()                                        -> nQt::ArrowType
-        :autoRaise()                                        -> lBool
-        :defaultAction()                                    -> pQAction
-        :menu()                                             -> pQMenu
-        :popupMode()                                        -> nToolButtonPopupMode
-        :setArrowType( nType )                              -> NIL
-        :setAutoRaise( lEnable )                            -> NIL
-        :setMenu( pMenu )                                   -> NIL
-        :setPopupMode( nMode )                              -> NIL
-        :toolButtonStyle()                                  -> nQt::ToolButtonStyle
-        :setDefaultAction( pAction )                        -> NIL
-        :setToolButtonStyle( nStyle )                       -> NIL
-        :showMenu()                                         -> NIL
-
-    $DESCRIPTION$
-
-    $EXAMPLES$
-
-    $TESTS$
-
-    $STATUS$
-        R
-    $COMPLIANCE$
-        Not Clipper compatible
-    $PLATFORMS$
-        Windows, Linux, Mac OS X, OS/2
-    $VERSION$
-        4.5 or upper
-    $FILES$
-        Harbour source: contrib/hbqt/qtgui/TQToolButton.prg
-        C++ wrappers  : contrib/hbqt/qtgui/QToolButton.cpp
-        Library       : hbqtgui
-    $SEEALSO$
-        QAbstractButton
-    $END$
+ *  $NAME$
+ *     QToolButton()
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQToolButton.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QToolButton.cpp
+ *     Library       : hbqtgui
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $SYNTAX$
+ *     QToolButton():new( ... )
+ *     QToolButton():from( pPtr_OR_oObj_of_type_QToolButton )
+ *     QToolButton():configure( pPtr_OR_oObj_of_type_QToolButton )
+ *  $METHODS$
+ *     :arrowType()                                        -> nQt::ArrowType
+ *     :autoRaise()                                        -> lBool
+ *     :defaultAction()                                    -> pQAction
+ *     :menu()                                             -> pQMenu
+ *     :popupMode()                                        -> nToolButtonPopupMode
+ *     :setArrowType( nType )                              -> NIL
+ *     :setAutoRaise( lEnable )                            -> NIL
+ *     :setMenu( pMenu )                                   -> NIL
+ *     :setPopupMode( nMode )                              -> NIL
+ *     :toolButtonStyle()                                  -> nQt::ToolButtonStyle
+ *     :setDefaultAction( pAction )                        -> NIL
+ *     :setToolButtonStyle( nStyle )                       -> NIL
+ *     :showMenu()                                         -> NIL
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QToolButton
+ *  $SEEALSO$
+ *     QAbstractButton
+ *  $VERSION$
+ *     4.5 or upper
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $EXAMPLES$
+ * 
+ *  $INHERITS$
+ *     QAbstractButton
+ *  $ONELINER$
+ *     Creates a new QToolButton object.
+ *  $TEMPLATE$
+ *     Class
+ *  $ARGUMENTS$
+ * 
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $DESCRIPTION$
+ * 
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qtoolbutton.html
+ *  $END$
  */

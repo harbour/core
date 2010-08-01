@@ -59,6 +59,8 @@
 
 /*----------------------------------------------------------------------*/
 
+#include "hbqtcore_garbage.h"
+
 #include <QtCore/QObject>
 #include <QtCore/QEvent>
 #include <QtCore/QList>

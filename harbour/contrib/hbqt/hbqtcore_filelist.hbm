@@ -6,20 +6,11 @@ hbqt_base.cpp
 hbqt_destruct.cpp
 hbqt_hbqabstractitemmodel.cpp
 hbqt_hbevents.cpp
-hbqt_hbqmainwindow.cpp
-hbqt_hbqplaintextedit.cpp
-hbqt_hbqsyntaxhighlighter.cpp
-hbqt_hbqtableview.cpp
 hbqt_hbslots.cpp
 hbqt_utils.cpp
 hbqt_misc.prg
 hbqt_errorsys.prg
-THbQtUI.prg
 
 hbqt_hbqabstractitemmodel.h
 hbqt_hbevents.h
-hbqt_hbqmainwindow.h
-hbqt_hbqplaintextedit.h
-hbqt_hbqsyntaxhighlighter.h
-hbqt_hbqtableview.h
 hbqt_hbslots.h

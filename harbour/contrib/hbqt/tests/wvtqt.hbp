@@ -10,7 +10,9 @@
 
 -d__WITH_WVT__
 
-../hbqt.hbc
+../hbqtcore.hbc
+../hbqtgui.hbc
+../hbqtnetwork.hbc
 
 wvtqt.prg
 dialogqt.prg

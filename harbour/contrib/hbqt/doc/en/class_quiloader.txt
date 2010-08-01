@@ -1,67 +1,65 @@
 /*
- *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for Qt v4.5+
- *  Please do not modify this document as it is subject to change in future.
- *  Pritpal Bedi <bedipritpal@hotmail.com>
+ * $Id$
  */
 
 /*  $DOC$
-    $TEMPLATE$
-        Class
-    $NAME$
-        QUiLoader()
-    $CATEGORY$
-        Harbour Bindings for Qt
-    $SUBCATEGORY$
-        GUI
-    $EXTERNALLINK$
-        http://doc.trolltech.com/4.5/quiloader.html
-    $ONELINER$
-        Creates a new QUiLoader object.
-    $INHERITS$
-        QObject
-    $SYNTAX$
-        QUiLoader():new( ... )
-        QUiLoader():from( pPtr_OR_oObj_of_type_QUiLoader )
-        QUiLoader():configure( pPtr_OR_oObj_of_type_QUiLoader )
-    $ARGUMENTS$
-
-    $RETURNS$
-        An instance of the object of type QUiLoader
-    $METHODS$
-        :addPluginPath( cPath )                             -> NIL
-        :availableLayouts()                                 -> pQStringList
-        :availableWidgets()                                 -> pQStringList
-        :clearPluginPaths()                                 -> NIL
-        :createAction( pParent, cName )                     -> pQAction
-        :createActionGroup( pParent, cName )                -> pQActionGroup
-        :createLayout( cClassName, pParent, cName )         -> pQLayout
-        :createWidget( cClassName, pParent, cName )         -> pQWidget
-        :isLanguageChangeEnabled()                          -> lBool
-        :load( pDevice, pParentWidget )                     -> pQWidget
-        :pluginPaths()                                      -> pQStringList
-        :setLanguageChangeEnabled( lEnabled )               -> NIL
-        :setWorkingDirectory( pDir )                        -> NIL
-        :workingDirectory()                                 -> pQDir
-
-    $DESCRIPTION$
-
-    $EXAMPLES$
-
-    $TESTS$
-
-    $STATUS$
-        R
-    $COMPLIANCE$
-        Not Clipper compatible
-    $PLATFORMS$
-        Windows, Linux, Mac OS X, OS/2
-    $VERSION$
-        4.5 or upper
-    $FILES$
-        Harbour source: contrib/hbqt/qtcore/TQUiLoader.prg
-        C++ wrappers  : contrib/hbqt/qtcore/QUiLoader.cpp
-        Library       : hbqtcore
-    $SEEALSO$
-        QObject
-    $END$
+ *  $NAME$
+ *     QUiLoader()
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQUiLoader.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QUiLoader.cpp
+ *     Library       : hbqtgui
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $SYNTAX$
+ *     QUiLoader():new( ... )
+ *     QUiLoader():from( pPtr_OR_oObj_of_type_QUiLoader )
+ *     QUiLoader():configure( pPtr_OR_oObj_of_type_QUiLoader )
+ *  $METHODS$
+ *     :addPluginPath( cPath )                             -> NIL
+ *     :availableLayouts()                                 -> pQStringList
+ *     :availableWidgets()                                 -> pQStringList
+ *     :clearPluginPaths()                                 -> NIL
+ *     :createAction( pParent, cName )                     -> pQAction
+ *     :createActionGroup( pParent, cName )                -> pQActionGroup
+ *     :createLayout( cClassName, pParent, cName )         -> pQLayout
+ *     :createWidget( cClassName, pParent, cName )         -> pQWidget
+ *     :isLanguageChangeEnabled()                          -> lBool
+ *     :load( pDevice, pParentWidget )                     -> pQWidget
+ *     :pluginPaths()                                      -> pQStringList
+ *     :setLanguageChangeEnabled( lEnabled )               -> NIL
+ *     :setWorkingDirectory( pDir )                        -> NIL
+ *     :workingDirectory()                                 -> pQDir
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QUiLoader
+ *  $SEEALSO$
+ *     QObject
+ *  $VERSION$
+ *     4.5 or upper
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $EXAMPLES$
+ * 
+ *  $INHERITS$
+ *     QObject
+ *  $ONELINER$
+ *     Creates a new QUiLoader object.
+ *  $TEMPLATE$
+ *     Class
+ *  $ARGUMENTS$
+ * 
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $DESCRIPTION$
+ * 
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/quiloader.html
+ *  $END$
  */

@@ -1,0 +1,14 @@
+;
+; $Id$
+;
+
+-I=../qth
+-O=../qtnetwork
+-D=../doc
+
+QFtp.qth
+QHttp.qth
+QHttpHeader.qth
+QHttpRequestHeader.qth
+QHttpResponseHeader.qth
+QNetworkRequest.qth

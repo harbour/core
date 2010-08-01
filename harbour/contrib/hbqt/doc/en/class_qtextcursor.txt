@@ -1,116 +1,114 @@
 /*
- *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for Qt v4.5+
- *  Please do not modify this document as it is subject to change in future.
- *  Pritpal Bedi <bedipritpal@hotmail.com>
+ * $Id$
  */
 
 /*  $DOC$
-    $TEMPLATE$
-        Class
-    $NAME$
-        QTextCursor()
-    $CATEGORY$
-        Harbour Bindings for Qt
-    $SUBCATEGORY$
-        GUI
-    $EXTERNALLINK$
-        http://doc.trolltech.com/4.5/qtextcursor.html
-    $ONELINER$
-        Creates a new QTextCursor object.
-    $INHERITS$
-
-    $SYNTAX$
-        QTextCursor():new( ... )
-        QTextCursor():from( pPtr_OR_oObj_of_type_QTextCursor )
-        QTextCursor():configure( pPtr_OR_oObj_of_type_QTextCursor )
-    $ARGUMENTS$
-
-    $RETURNS$
-        An instance of the object of type QTextCursor
-    $METHODS$
-        :anchor()                                           -> nInt
-        :atBlockEnd()                                       -> lBool
-        :atBlockStart()                                     -> lBool
-        :atEnd()                                            -> lBool
-        :atStart()                                          -> lBool
-        :beginEditBlock()                                   -> NIL
-        :block()                                            -> pQTextBlock
-        :blockCharFormat()                                  -> pQTextCharFormat
-        :blockFormat()                                      -> pQTextBlockFormat
-        :blockNumber()                                      -> nInt
-        :charFormat()                                       -> pQTextCharFormat
-        :clearSelection()                                   -> NIL
-        :columnNumber()                                     -> nInt
-        :createList( pFormat )                              -> pQTextList
-        :createList_1( nStyle )                             -> pQTextList
-        :currentFrame()                                     -> pQTextFrame
-        :currentList()                                      -> pQTextList
-        :deleteChar()                                       -> NIL
-        :deletePreviousChar()                               -> NIL
-        :document()                                         -> pQTextDocument
-        :endEditBlock()                                     -> NIL
-        :hasComplexSelection()                              -> lBool
-        :hasSelection()                                     -> lBool
-        :insertBlock()                                      -> NIL
-        :insertBlock_1( pFormat )                           -> NIL
-        :insertBlock_2( pFormat, pCharFormat )              -> NIL
-        :insertFragment( pFragment )                        -> NIL
-        :insertFrame( pFormat )                             -> pQTextFrame
-        :insertHtml( cHtml )                                -> NIL
-        :insertImage( cName )                               -> NIL
-        :insertImage_1( pFormat )                           -> NIL
-        :insertImage_2( pFormat, nAlignment )               -> NIL
-        :insertImage_3( pImage, cName )                     -> NIL
-        :insertList( pFormat )                              -> pQTextList
-        :insertList_1( nStyle )                             -> pQTextList
-        :insertText( cText )                                -> NIL
-        :insertText_1( cText, pFormat )                     -> NIL
-        :isCopyOf( pOther )                                 -> lBool
-        :isNull()                                           -> lBool
-        :joinPreviousEditBlock()                            -> NIL
-        :mergeBlockCharFormat( pModifier )                  -> NIL
-        :mergeBlockFormat( pModifier )                      -> NIL
-        :mergeCharFormat( pModifier )                       -> NIL
-        :movePosition( nOperation, nMode, nN )              -> lBool
-        :position()                                         -> nInt
-        :removeSelectedText()                               -> NIL
-        :select( nSelection )                               -> NIL
-        :selectedTableCells( @nFirstRow, @nNumRows, @nFirstColumn, @nNumColumns )  -> NIL
-        :selectedText()                                     -> cQString
-        :selection()                                        -> pQTextDocumentFragment
-        :selectionEnd()                                     -> nInt
-        :selectionStart()                                   -> nInt
-        :setBlockCharFormat( pFormat )                      -> NIL
-        :setBlockFormat( pFormat )                          -> NIL
-        :setCharFormat( pFormat )                           -> NIL
-        :setPosition( nPos, nM )                            -> NIL
-        :setVisualNavigation( lB )                          -> NIL
-        :visualNavigation()                                 -> lBool
-
-    $DESCRIPTION$
-
-    $EXAMPLES$
-        oTextCursor := QTextCursor():new()
-        oTextCursor := QTextCursor():new( pQTextCursor )
-        oTextCursor := QTextCursor():new( "QTextDocument", pQTextDocument )
-        oTextCursor := QTextCursor():new( "QTextBlock"   , pQTextBlock    )
-        oTextCursor := QTextCursor():new( "QTextFrame"   , pQTextFrame    )
-
-    $TESTS$
-
-    $STATUS$
-        R
-    $COMPLIANCE$
-        Not Clipper compatible
-    $PLATFORMS$
-        Windows, Linux, Mac OS X, OS/2
-    $VERSION$
-        4.5 or upper
-    $FILES$
-        Harbour source: contrib/hbqt/qtgui/TQTextCursor.prg
-        C++ wrappers  : contrib/hbqt/qtgui/QTextCursor.cpp
-        Library       : hbqtgui
-    $SEEALSO$
-
-    $END$
+ *  $NAME$
+ *     QTextCursor()
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQTextCursor.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QTextCursor.cpp
+ *     Library       : hbqtgui
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $SYNTAX$
+ *     QTextCursor():new( ... )
+ *     QTextCursor():from( pPtr_OR_oObj_of_type_QTextCursor )
+ *     QTextCursor():configure( pPtr_OR_oObj_of_type_QTextCursor )
+ *  $METHODS$
+ *     :anchor()                                           -> nInt
+ *     :atBlockEnd()                                       -> lBool
+ *     :atBlockStart()                                     -> lBool
+ *     :atEnd()                                            -> lBool
+ *     :atStart()                                          -> lBool
+ *     :beginEditBlock()                                   -> NIL
+ *     :block()                                            -> pQTextBlock
+ *     :blockCharFormat()                                  -> pQTextCharFormat
+ *     :blockFormat()                                      -> pQTextBlockFormat
+ *     :blockNumber()                                      -> nInt
+ *     :charFormat()                                       -> pQTextCharFormat
+ *     :clearSelection()                                   -> NIL
+ *     :columnNumber()                                     -> nInt
+ *     :createList( pFormat )                              -> pQTextList
+ *     :createList_1( nStyle )                             -> pQTextList
+ *     :currentFrame()                                     -> pQTextFrame
+ *     :currentList()                                      -> pQTextList
+ *     :deleteChar()                                       -> NIL
+ *     :deletePreviousChar()                               -> NIL
+ *     :document()                                         -> pQTextDocument
+ *     :endEditBlock()                                     -> NIL
+ *     :hasComplexSelection()                              -> lBool
+ *     :hasSelection()                                     -> lBool
+ *     :insertBlock()                                      -> NIL
+ *     :insertBlock_1( pFormat )                           -> NIL
+ *     :insertBlock_2( pFormat, pCharFormat )              -> NIL
+ *     :insertFragment( pFragment )                        -> NIL
+ *     :insertFrame( pFormat )                             -> pQTextFrame
+ *     :insertHtml( cHtml )                                -> NIL
+ *     :insertImage( cName )                               -> NIL
+ *     :insertImage_1( pFormat )                           -> NIL
+ *     :insertImage_2( pFormat, nAlignment )               -> NIL
+ *     :insertImage_3( pImage, cName )                     -> NIL
+ *     :insertList( pFormat )                              -> pQTextList
+ *     :insertList_1( nStyle )                             -> pQTextList
+ *     :insertText( cText )                                -> NIL
+ *     :insertText_1( cText, pFormat )                     -> NIL
+ *     :isCopyOf( pOther )                                 -> lBool
+ *     :isNull()                                           -> lBool
+ *     :joinPreviousEditBlock()                            -> NIL
+ *     :mergeBlockCharFormat( pModifier )                  -> NIL
+ *     :mergeBlockFormat( pModifier )                      -> NIL
+ *     :mergeCharFormat( pModifier )                       -> NIL
+ *     :movePosition( nOperation, nMode, nN )              -> lBool
+ *     :position()                                         -> nInt
+ *     :removeSelectedText()                               -> NIL
+ *     :select( nSelection )                               -> NIL
+ *     :selectedTableCells( @nFirstRow, @nNumRows, @nFirstColumn, @nNumColumns )  -> NIL
+ *     :selectedText()                                     -> cQString
+ *     :selection()                                        -> pQTextDocumentFragment
+ *     :selectionEnd()                                     -> nInt
+ *     :selectionStart()                                   -> nInt
+ *     :setBlockCharFormat( pFormat )                      -> NIL
+ *     :setBlockFormat( pFormat )                          -> NIL
+ *     :setCharFormat( pFormat )                           -> NIL
+ *     :setPosition( nPos, nM )                            -> NIL
+ *     :setVisualNavigation( lB )                          -> NIL
+ *     :visualNavigation()                                 -> lBool
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QTextCursor
+ *  $SEEALSO$
+ *     
+ *  $VERSION$
+ *     4.5 or upper
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $EXAMPLES$
+ *     oTextCursor := QTextCursor():new()
+ *     oTextCursor := QTextCursor():new( pQTextCursor )
+ *     oTextCursor := QTextCursor():new( "QTextDocument", pQTextDocument )
+ *     oTextCursor := QTextCursor():new( "QTextBlock"   , pQTextBlock    )
+ *     oTextCursor := QTextCursor():new( "QTextFrame"   , pQTextFrame    )
+ * 
+ *  $INHERITS$
+ *     
+ *  $ONELINER$
+ *     Creates a new QTextCursor object.
+ *  $TEMPLATE$
+ *     Class
+ *  $ARGUMENTS$
+ * 
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $DESCRIPTION$
+ * 
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qtextcursor.html
+ *  $END$
  */

@@ -1,0 +1,15 @@
+#
+# $Id$
+#
+
+hbqt_hbqmainwindow.cpp
+hbqt_hbqplaintextedit.cpp
+hbqt_hbqsyntaxhighlighter.cpp
+hbqt_hbqtableview.cpp
+
+hbqt_hbqmainwindow.h
+hbqt_hbqplaintextedit.h
+hbqt_hbqsyntaxhighlighter.h
+hbqt_hbqtableview.h
+
+THbQtUI.prg

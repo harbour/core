@@ -1,73 +1,71 @@
 /*
- *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for Qt v4.5+
- *  Please do not modify this document as it is subject to change in future.
- *  Pritpal Bedi <bedipritpal@hotmail.com>
+ * $Id$
  */
 
 /*  $DOC$
-    $TEMPLATE$
-        Class
-    $NAME$
-        QBoxLayout()
-    $CATEGORY$
-        Harbour Bindings for Qt
-    $SUBCATEGORY$
-        GUI
-    $EXTERNALLINK$
-        http://doc.trolltech.com/4.5/qboxlayout.html
-    $ONELINER$
-        Creates a new QBoxLayout object.
-    $INHERITS$
-        QLayout
-    $SYNTAX$
-        QBoxLayout():new( ... )
-        QBoxLayout():from( pPtr_OR_oObj_of_type_QBoxLayout )
-        QBoxLayout():configure( pPtr_OR_oObj_of_type_QBoxLayout )
-    $ARGUMENTS$
-
-    $RETURNS$
-        An instance of the object of type QBoxLayout
-    $METHODS$
-        :addLayout( pLayout, nStretch )                     -> NIL
-        :addSpacerItem( pSpacerItem )                       -> NIL
-        :addSpacing( nSize )                                -> NIL
-        :addStretch( nStretch )                             -> NIL
-        :addStrut( nSize )                                  -> NIL
-        :addWidget( pWidget, nStretch, nAlignment )         -> NIL
-        :direction()                                        -> nDirection
-        :insertLayout( nIndex, pLayout, nStretch )          -> NIL
-        :insertSpacerItem( nIndex, pSpacerItem )            -> NIL
-        :insertSpacing( nIndex, nSize )                     -> NIL
-        :insertStretch( nIndex, nStretch )                  -> NIL
-        :insertWidget( nIndex, pWidget, nStretch, nAlignment )  -> NIL
-        :invalidate()                                       -> NIL
-        :setDirection( nDirection )                         -> NIL
-        :setSpacing( nSpacing )                             -> NIL
-        :setStretch( nIndex, nStretch )                     -> NIL
-        :setStretchFactor( pWidget, nStretch )              -> lBool
-        :setStretchFactor_1( pLayout, nStretch )            -> lBool
-        :spacing()                                          -> nInt
-        :stretch( nIndex )                                  -> nInt
-
-    $DESCRIPTION$
-
-    $EXAMPLES$
-
-    $TESTS$
-
-    $STATUS$
-        R
-    $COMPLIANCE$
-        Not Clipper compatible
-    $PLATFORMS$
-        Windows, Linux, Mac OS X, OS/2
-    $VERSION$
-        4.5 or upper
-    $FILES$
-        Harbour source: contrib/hbqt/qtgui/TQBoxLayout.prg
-        C++ wrappers  : contrib/hbqt/qtgui/QBoxLayout.cpp
-        Library       : hbqtgui
-    $SEEALSO$
-        QLayout
-    $END$
+ *  $NAME$
+ *     QBoxLayout()
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQBoxLayout.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QBoxLayout.cpp
+ *     Library       : hbqtgui
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $SYNTAX$
+ *     QBoxLayout():new( ... )
+ *     QBoxLayout():from( pPtr_OR_oObj_of_type_QBoxLayout )
+ *     QBoxLayout():configure( pPtr_OR_oObj_of_type_QBoxLayout )
+ *  $METHODS$
+ *     :addLayout( pLayout, nStretch )                     -> NIL
+ *     :addSpacerItem( pSpacerItem )                       -> NIL
+ *     :addSpacing( nSize )                                -> NIL
+ *     :addStretch( nStretch )                             -> NIL
+ *     :addStrut( nSize )                                  -> NIL
+ *     :addWidget( pWidget, nStretch, nAlignment )         -> NIL
+ *     :direction()                                        -> nDirection
+ *     :insertLayout( nIndex, pLayout, nStretch )          -> NIL
+ *     :insertSpacerItem( nIndex, pSpacerItem )            -> NIL
+ *     :insertSpacing( nIndex, nSize )                     -> NIL
+ *     :insertStretch( nIndex, nStretch )                  -> NIL
+ *     :insertWidget( nIndex, pWidget, nStretch, nAlignment )  -> NIL
+ *     :invalidate()                                       -> NIL
+ *     :setDirection( nDirection )                         -> NIL
+ *     :setSpacing( nSpacing )                             -> NIL
+ *     :setStretch( nIndex, nStretch )                     -> NIL
+ *     :setStretchFactor( pWidget, nStretch )              -> lBool
+ *     :setStretchFactor_1( pLayout, nStretch )            -> lBool
+ *     :spacing()                                          -> nInt
+ *     :stretch( nIndex )                                  -> nInt
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QBoxLayout
+ *  $SEEALSO$
+ *     QLayout
+ *  $VERSION$
+ *     4.5 or upper
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $EXAMPLES$
+ * 
+ *  $INHERITS$
+ *     QLayout
+ *  $ONELINER$
+ *     Creates a new QBoxLayout object.
+ *  $TEMPLATE$
+ *     Class
+ *  $ARGUMENTS$
+ * 
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $DESCRIPTION$
+ * 
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qboxlayout.html
+ *  $END$
  */

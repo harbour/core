@@ -56,7 +56,7 @@
 
 <CLASS>
 QObject  = no
-Inherit  = QWidget
+Inherits = QObject
 New      = pParent
 </CLASS>
 

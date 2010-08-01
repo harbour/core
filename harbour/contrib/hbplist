@@ -30,7 +30,9 @@ hbnetio/utils/hbnetio.hbp
 hbnf/hbnf.hbp
 hbodbc/hbodbc.hbp
 hbpgsql/hbpgsql.hbp
-hbqt/hbqt.hbp
+hbqt/hbqtcore.hbp
+hbqt/hbqtgui.hbp
+hbqt/hbqtnetwork.hbp
 hbsms/hbsms.hbp
 hbsqlit3/hbsqlit3.hbp            # uses: sqlite3 (external)
 hbssl/hbssl.hbp

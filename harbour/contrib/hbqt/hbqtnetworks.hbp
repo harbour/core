@@ -6,6 +6,8 @@ hbqt_common.hbm
 
 qtnetwork/filelist.hbm
 
+hbqtcore.hbc
+
 -stop{!HB_QT_BUILD_STATIC|!allwin}
 
 -cflag=-DQT_NODLL

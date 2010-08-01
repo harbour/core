@@ -1,78 +1,76 @@
 /*
- *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for Qt v4.5+
- *  Please do not modify this document as it is subject to change in future.
- *  Pritpal Bedi <bedipritpal@hotmail.com>
+ * $Id$
  */
 
 /*  $DOC$
-    $TEMPLATE$
-        Class
-    $NAME$
-        QBrush()
-    $CATEGORY$
-        Harbour Bindings for Qt
-    $SUBCATEGORY$
-        GUI
-    $EXTERNALLINK$
-        http://doc.trolltech.com/4.5/qbrush.html
-    $ONELINER$
-        Creates a new QBrush object.
-    $INHERITS$
-
-    $SYNTAX$
-        QBrush():new( ... )
-        QBrush():from( pPtr_OR_oObj_of_type_QBrush )
-        QBrush():configure( pPtr_OR_oObj_of_type_QBrush )
-    $ARGUMENTS$
-
-    $RETURNS$
-        An instance of the object of type QBrush
-    $METHODS$
-        :color()                                            -> pQColor
-        :isOpaque()                                         -> lBool
-        :matrix()                                           -> pQMatrix
-        :setColor( pColor )                                 -> NIL
-        :setColor_1( nColor )                               -> NIL
-        :setMatrix( pMatrix )                               -> NIL
-        :setStyle( nStyle )                                 -> NIL
-        :setTexture( pPixmap )                              -> NIL
-        :setTextureImage( pImage )                          -> NIL
-        :setTransform( pMatrix )                            -> NIL
-        :style()                                            -> nQt::BrushStyle
-        :texture()                                          -> pQPixmap
-        :textureImage()                                     -> pQImage
-        :transform()                                        -> pQTransform
-
-    $DESCRIPTION$
-
-    $EXAMPLES$
-        oBrush := QBrush():new()
-        oBrush := QBrush():new( pQBrush )
-        oBrush := QBrush():new( nQt_GlobalColor )
-        oBrush := QBrush():new( nQt_GlobalColor, nQt_BrushStyle )
-        oBrush := QBrush():new( pQColor, nQt_BrushStyle )
-        oBrush := QBrush():new( pQColor, pQPixmap )
-        oBrush := QBrush():new( nQt_GlobalColor, pQPixmap )
-        oBrush := QBrush():new( "QPixmap"  , pQPixmap )
-        oBrush := QBrush():new( "QImage"   , pQImage )
-        oBrush := QBrush():new( "QGradient", pQGradient )
-        oBrush := QBrush():new( "QColor"   , pQColor, [ nQt_BrushStyle = Qt_SolidPattern ] )
-
-    $TESTS$
-
-    $STATUS$
-        R
-    $COMPLIANCE$
-        Not Clipper compatible
-    $PLATFORMS$
-        Windows, Linux, Mac OS X, OS/2
-    $VERSION$
-        4.5 or upper
-    $FILES$
-        Harbour source: contrib/hbqt/qtgui/TQBrush.prg
-        C++ wrappers  : contrib/hbqt/qtgui/QBrush.cpp
-        Library       : hbqtgui
-    $SEEALSO$
-
-    $END$
+ *  $NAME$
+ *     QBrush()
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQBrush.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QBrush.cpp
+ *     Library       : hbqtgui
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $SYNTAX$
+ *     QBrush():new( ... )
+ *     QBrush():from( pPtr_OR_oObj_of_type_QBrush )
+ *     QBrush():configure( pPtr_OR_oObj_of_type_QBrush )
+ *  $METHODS$
+ *     :color()                                            -> pQColor
+ *     :isOpaque()                                         -> lBool
+ *     :matrix()                                           -> pQMatrix
+ *     :setColor( pColor )                                 -> NIL
+ *     :setColor_1( nColor )                               -> NIL
+ *     :setMatrix( pMatrix )                               -> NIL
+ *     :setStyle( nStyle )                                 -> NIL
+ *     :setTexture( pPixmap )                              -> NIL
+ *     :setTextureImage( pImage )                          -> NIL
+ *     :setTransform( pMatrix )                            -> NIL
+ *     :style()                                            -> nQt::BrushStyle
+ *     :texture()                                          -> pQPixmap
+ *     :textureImage()                                     -> pQImage
+ *     :transform()                                        -> pQTransform
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QBrush
+ *  $SEEALSO$
+ *     
+ *  $VERSION$
+ *     4.5 or upper
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $EXAMPLES$
+ *     oBrush := QBrush():new()
+ *     oBrush := QBrush():new( pQBrush )
+ *     oBrush := QBrush():new( nQt_GlobalColor )
+ *     oBrush := QBrush():new( nQt_GlobalColor, nQt_BrushStyle ) 
+ *     oBrush := QBrush():new( pQColor, nQt_BrushStyle )         
+ *     oBrush := QBrush():new( pQColor, pQPixmap )
+ *     oBrush := QBrush():new( nQt_GlobalColor, pQPixmap )
+ *     oBrush := QBrush():new( "QPixmap"  , pQPixmap )
+ *     oBrush := QBrush():new( "QImage"   , pQImage )
+ *     oBrush := QBrush():new( "QGradient", pQGradient )
+ *     oBrush := QBrush():new( "QColor"   , pQColor, [ nQt_BrushStyle = Qt_SolidPattern ] )
+ * 
+ *  $INHERITS$
+ *     
+ *  $ONELINER$
+ *     Creates a new QBrush object.
+ *  $TEMPLATE$
+ *     Class
+ *  $ARGUMENTS$
+ * 
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $DESCRIPTION$
+ * 
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qbrush.html
+ *  $END$
  */

@@ -92,8 +92,6 @@ extern HB_EXPORT const HB_GC_FUNCS * hbqt_gcFuncs( void );
 extern HB_EXPORT void * hbqt_pPtrFromObj( int iParam );
 extern HB_EXPORT void * hbqt_pPtrFromItem( PHB_ITEM pObj );
 
-#include "hbqt_garbage.h"
-
 /* TOFIX: Here basically we're using GC pointers without pointer type identification,
           which means that it's very easy to cause a GPF by passing wrong type. */
 #define hbqt_par_ExtensionOption( n )               ( ( ExtensionOption             * ) hbqt_gcpointer( n ) )

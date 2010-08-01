@@ -1,86 +1,84 @@
 /*
- *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for Qt v4.5+
- *  Please do not modify this document as it is subject to change in future.
- *  Pritpal Bedi <bedipritpal@hotmail.com>
+ * $Id$
  */
 
 /*  $DOC$
-    $TEMPLATE$
-        Class
-    $NAME$
-        QProcess()
-    $CATEGORY$
-        Harbour Bindings for Qt
-    $SUBCATEGORY$
-        GUI
-    $EXTERNALLINK$
-        http://doc.trolltech.com/4.5/qprocess.html
-    $ONELINER$
-        Creates a new QProcess object.
-    $INHERITS$
-        QIODevice
-    $SYNTAX$
-        QProcess():new( ... )
-        QProcess():from( pPtr_OR_oObj_of_type_QProcess )
-        QProcess():configure( pPtr_OR_oObj_of_type_QProcess )
-    $ARGUMENTS$
-
-    $RETURNS$
-        An instance of the object of type QProcess
-    $METHODS$
-        :close()                                            -> NIL
-        :closeReadChannel( nChannel )                       -> NIL
-        :closeWriteChannel()                                -> NIL
-        :environment()                                      -> pQStringList
-        :error()                                            -> nQProcess::ProcessError
-        :exitCode()                                         -> nInt
-        :exitStatus()                                       -> nQProcess::ExitStatus
-        :processChannelMode()                               -> nProcessChannelMode
-        :readAllStandardError()                             -> pQByteArray
-        :readAllStandardOutput()                            -> pQByteArray
-        :readChannel()                                      -> nProcessChannel
-        :setEnvironment( pEnvironment )                     -> NIL
-        :setProcessChannelMode( nMode )                     -> NIL
-        :setReadChannel( nChannel )                         -> NIL
-        :setStandardErrorFile( cFileName, nMode )           -> NIL
-        :setStandardInputFile( cFileName )                  -> NIL
-        :setStandardOutputFile( cFileName, nMode )          -> NIL
-        :setStandardOutputProcess( pDestination )           -> NIL
-        :setWorkingDirectory( cDir )                        -> NIL
-        :start( cProgram, pArguments, nMode )               -> NIL
-        :start_1( cProgram, nMode )                         -> NIL
-        :state()                                            -> nQProcess::ProcessState
-        :waitForFinished( nMsecs )                          -> lBool
-        :waitForStarted( nMsecs )                           -> lBool
-        :workingDirectory()                                 -> cQString
-        :execute( cProgram, pArguments )                    -> nInt
-        :execute_1( cProgram )                              -> nInt
-        :startDetached( cProgram, pArguments, cWorkingDirectory, @nPid )  -> lBool
-        :startDetached_1( cProgram, pArguments )            -> lBool
-        :startDetached_2( cProgram )                        -> lBool
-        :systemEnvironment()                                -> pQStringList
-        :kill()                                             -> NIL
-        :terminate()                                        -> NIL
-
-    $DESCRIPTION$
-
-    $EXAMPLES$
-
-    $TESTS$
-
-    $STATUS$
-        R
-    $COMPLIANCE$
-        Not Clipper compatible
-    $PLATFORMS$
-        Windows, Linux, Mac OS X, OS/2
-    $VERSION$
-        4.5 or upper
-    $FILES$
-        Harbour source: contrib/hbqt/qtcore/TQProcess.prg
-        C++ wrappers  : contrib/hbqt/qtcore/QProcess.cpp
-        Library       : hbqtcore
-    $SEEALSO$
-        QIODevice
-    $END$
+ *  $NAME$
+ *     QProcess()
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtcore/TQProcess.prg
+ *     C++ wrappers  : contrib/hbqt/qtcore/QProcess.cpp
+ *     Library       : hbqtcore
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $SYNTAX$
+ *     QProcess():new( ... )
+ *     QProcess():from( pPtr_OR_oObj_of_type_QProcess )
+ *     QProcess():configure( pPtr_OR_oObj_of_type_QProcess )
+ *  $METHODS$
+ *     :close()                                            -> NIL
+ *     :closeReadChannel( nChannel )                       -> NIL
+ *     :closeWriteChannel()                                -> NIL
+ *     :environment()                                      -> pQStringList
+ *     :error()                                            -> nQProcess::ProcessError
+ *     :exitCode()                                         -> nInt
+ *     :exitStatus()                                       -> nQProcess::ExitStatus
+ *     :processChannelMode()                               -> nProcessChannelMode
+ *     :readAllStandardError()                             -> pQByteArray
+ *     :readAllStandardOutput()                            -> pQByteArray
+ *     :readChannel()                                      -> nProcessChannel
+ *     :setEnvironment( pEnvironment )                     -> NIL
+ *     :setProcessChannelMode( nMode )                     -> NIL
+ *     :setReadChannel( nChannel )                         -> NIL
+ *     :setStandardErrorFile( cFileName, nMode )           -> NIL
+ *     :setStandardInputFile( cFileName )                  -> NIL
+ *     :setStandardOutputFile( cFileName, nMode )          -> NIL
+ *     :setStandardOutputProcess( pDestination )           -> NIL
+ *     :setWorkingDirectory( cDir )                        -> NIL
+ *     :start( cProgram, pArguments, nMode )               -> NIL
+ *     :start_1( cProgram, nMode )                         -> NIL
+ *     :state()                                            -> nQProcess::ProcessState
+ *     :waitForFinished( nMsecs )                          -> lBool
+ *     :waitForStarted( nMsecs )                           -> lBool
+ *     :workingDirectory()                                 -> cQString
+ *     :execute( cProgram, pArguments )                    -> nInt
+ *     :execute_1( cProgram )                              -> nInt
+ *     :startDetached( cProgram, pArguments, cWorkingDirectory, @nPid )  -> lBool
+ *     :startDetached_1( cProgram, pArguments )            -> lBool
+ *     :startDetached_2( cProgram )                        -> lBool
+ *     :systemEnvironment()                                -> pQStringList
+ *     :kill()                                             -> NIL
+ *     :terminate()                                        -> NIL
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QProcess
+ *  $SEEALSO$
+ *     QIODevice
+ *  $VERSION$
+ *     4.5 or upper
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $EXAMPLES$
+ * 
+ *  $INHERITS$
+ *     QIODevice
+ *  $ONELINER$
+ *     Creates a new QProcess object.
+ *  $TEMPLATE$
+ *     Class
+ *  $ARGUMENTS$
+ * 
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $DESCRIPTION$
+ * 
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qprocess.html
+ *  $END$
  */

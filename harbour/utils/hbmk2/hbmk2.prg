@@ -5412,7 +5412,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                            /* Convert source filenames relative to the target dir */
                            tmp := AClone( aTODO )
                            FOR EACH tmp1 IN tmp
-                              tmp1 := PathMakeAbsolute( tmp1, tmp2 )
+                              tmp1 := PathNormalize( PathMakeAbsolute( tmp1, tmp2 ) )
                            NEXT
                            cOpt_CompCLoop := AllTrim( StrTran( cOpt_CompC, "{LC}"  , ArrayToList( tmp,, nOpt_Esc, nOpt_FNF ) ) )
                         ELSE

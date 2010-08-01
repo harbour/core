@@ -1,84 +1,82 @@
 /*
- *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for Qt v4.5+
- *  Please do not modify this document as it is subject to change in future.
- *  Pritpal Bedi <bedipritpal@hotmail.com>
+ * $Id$
  */
 
 /*  $DOC$
-    $TEMPLATE$
-        Class
-    $NAME$
-        QMenu()
-    $CATEGORY$
-        Harbour Bindings for Qt
-    $SUBCATEGORY$
-        GUI
-    $EXTERNALLINK$
-        http://doc.trolltech.com/4.5/qmenu.html
-    $ONELINER$
-        Creates a new QMenu object.
-    $INHERITS$
-        QWidget
-    $SYNTAX$
-        QMenu():new( ... )
-        QMenu():from( pPtr_OR_oObj_of_type_QMenu )
-        QMenu():configure( pPtr_OR_oObj_of_type_QMenu )
-    $ARGUMENTS$
-
-    $RETURNS$
-        An instance of the object of type QMenu
-    $METHODS$
-        :actionAt( pPt )                                    -> pQAction
-        :actionGeometry( pAct )                             -> pQRect
-        :activeAction()                                     -> pQAction
-        :addAction( cText )                                 -> pQAction
-        :addAction_1( cIcon, cText )                        -> pQAction
-        :addAction_2( cText, pReceiver, pMember, pShortcut )  -> pQAction
-        :addAction_3( cIcon, cText, pReceiver, pMember, pShortcut )  -> pQAction
-        :addAction_4( pAction )                             -> NIL
-        :addMenu( pMenu )                                   -> pQAction
-        :addSeparator()                                     -> pQAction
-        :clear()                                            -> NIL
-        :defaultAction()                                    -> pQAction
-        :exec()                                             -> pQAction
-        :exec_1( pP, pAction )                              -> pQAction
-        :hideTearOffMenu()                                  -> NIL
-        :icon()                                             -> pQIcon
-        :insertMenu( pBefore, pMenu )                       -> pQAction
-        :insertSeparator( pBefore )                         -> pQAction
-        :isEmpty()                                          -> lBool
-        :isTearOffEnabled()                                 -> lBool
-        :isTearOffMenuVisible()                             -> lBool
-        :menuAction()                                       -> pQAction
-        :popup( pP, pAtAction )                             -> NIL
-        :separatorsCollapsible()                            -> lBool
-        :setActiveAction( pAct )                            -> NIL
-        :setDefaultAction( pAct )                           -> NIL
-        :setIcon( cIcon )                                   -> NIL
-        :setSeparatorsCollapsible( lCollapse )              -> NIL
-        :setTearOffEnabled( lBool )                         -> NIL
-        :setTitle( cTitle )                                 -> NIL
-        :title()                                            -> cQString
-
-    $DESCRIPTION$
-
-    $EXAMPLES$
-
-    $TESTS$
-
-    $STATUS$
-        R
-    $COMPLIANCE$
-        Not Clipper compatible
-    $PLATFORMS$
-        Windows, Linux, Mac OS X, OS/2
-    $VERSION$
-        4.5 or upper
-    $FILES$
-        Harbour source: contrib/hbqt/qtgui/TQMenu.prg
-        C++ wrappers  : contrib/hbqt/qtgui/QMenu.cpp
-        Library       : hbqtgui
-    $SEEALSO$
-        QWidget
-    $END$
+ *  $NAME$
+ *     QMenu()
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQMenu.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QMenu.cpp
+ *     Library       : hbqtgui
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $SYNTAX$
+ *     QMenu():new( ... )
+ *     QMenu():from( pPtr_OR_oObj_of_type_QMenu )
+ *     QMenu():configure( pPtr_OR_oObj_of_type_QMenu )
+ *  $METHODS$
+ *     :actionAt( pPt )                                    -> pQAction
+ *     :actionGeometry( pAct )                             -> pQRect
+ *     :activeAction()                                     -> pQAction
+ *     :addAction( cText )                                 -> pQAction
+ *     :addAction_1( cIcon, cText )                        -> pQAction
+ *     :addAction_2( cText, pReceiver, pMember, pShortcut )  -> pQAction
+ *     :addAction_3( cIcon, cText, pReceiver, pMember, pShortcut )  -> pQAction
+ *     :addAction_4( pAction )                             -> NIL
+ *     :addMenu( pMenu )                                   -> pQAction
+ *     :addSeparator()                                     -> pQAction
+ *     :clear()                                            -> NIL
+ *     :defaultAction()                                    -> pQAction
+ *     :exec()                                             -> pQAction
+ *     :exec_1( pP, pAction )                              -> pQAction
+ *     :hideTearOffMenu()                                  -> NIL
+ *     :icon()                                             -> pQIcon
+ *     :insertMenu( pBefore, pMenu )                       -> pQAction
+ *     :insertSeparator( pBefore )                         -> pQAction
+ *     :isEmpty()                                          -> lBool
+ *     :isTearOffEnabled()                                 -> lBool
+ *     :isTearOffMenuVisible()                             -> lBool
+ *     :menuAction()                                       -> pQAction
+ *     :popup( pP, pAtAction )                             -> NIL
+ *     :separatorsCollapsible()                            -> lBool
+ *     :setActiveAction( pAct )                            -> NIL
+ *     :setDefaultAction( pAct )                           -> NIL
+ *     :setIcon( cIcon )                                   -> NIL
+ *     :setSeparatorsCollapsible( lCollapse )              -> NIL
+ *     :setTearOffEnabled( lBool )                         -> NIL
+ *     :setTitle( cTitle )                                 -> NIL
+ *     :title()                                            -> cQString
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QMenu
+ *  $SEEALSO$
+ *     QWidget
+ *  $VERSION$
+ *     4.5 or upper
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $EXAMPLES$
+ * 
+ *  $INHERITS$
+ *     QWidget
+ *  $ONELINER$
+ *     Creates a new QMenu object.
+ *  $TEMPLATE$
+ *     Class
+ *  $ARGUMENTS$
+ * 
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $DESCRIPTION$
+ * 
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qmenu.html
+ *  $END$
  */

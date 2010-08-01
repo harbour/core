@@ -1,59 +1,57 @@
 /*
- *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for Qt v4.5+
- *  Please do not modify this document as it is subject to change in future.
- *  Pritpal Bedi <bedipritpal@hotmail.com>
+ * $Id$
  */
 
 /*  $DOC$
-    $TEMPLATE$
-        Class
-    $NAME$
-        QStyleOptionGroupBox()
-    $CATEGORY$
-        Harbour Bindings for Qt
-    $SUBCATEGORY$
-        GUI
-    $EXTERNALLINK$
-        http://doc.trolltech.com/4.5/qstyleoptiongroupbox.html
-    $ONELINER$
-        Creates a new QStyleOptionGroupBox object.
-    $INHERITS$
-        QStyleOptionComplex
-    $SYNTAX$
-        QStyleOptionGroupBox():new( ... )
-        QStyleOptionGroupBox():from( pPtr_OR_oObj_of_type_QStyleOptionGroupBox )
-        QStyleOptionGroupBox():configure( pPtr_OR_oObj_of_type_QStyleOptionGroupBox )
-    $ARGUMENTS$
-
-    $RETURNS$
-        An instance of the object of type QStyleOptionGroupBox
-    $METHODS$
-        :features()                                         -> nQStyleOptionFrameV2::FrameFeatures
-        :lineWidth()                                        -> nInt
-        :midLineWidth()                                     -> nInt
-        :text()                                             -> cQString
-        :textAlignment()                                    -> nQt::Alignment
-        :textColor()                                        -> pQColor
-
-    $DESCRIPTION$
-
-    $EXAMPLES$
-
-    $TESTS$
-
-    $STATUS$
-        R
-    $COMPLIANCE$
-        Not Clipper compatible
-    $PLATFORMS$
-        Windows, Linux, Mac OS X, OS/2
-    $VERSION$
-        4.5 or upper
-    $FILES$
-        Harbour source: contrib/hbqt/qtgui/TQStyleOptionGroupBox.prg
-        C++ wrappers  : contrib/hbqt/qtgui/QStyleOptionGroupBox.cpp
-        Library       : hbqtgui
-    $SEEALSO$
-        QStyleOptionComplex
-    $END$
+ *  $NAME$
+ *     QStyleOptionGroupBox()
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQStyleOptionGroupBox.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QStyleOptionGroupBox.cpp
+ *     Library       : hbqtgui
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $SYNTAX$
+ *     QStyleOptionGroupBox():new( ... )
+ *     QStyleOptionGroupBox():from( pPtr_OR_oObj_of_type_QStyleOptionGroupBox )
+ *     QStyleOptionGroupBox():configure( pPtr_OR_oObj_of_type_QStyleOptionGroupBox )
+ *  $METHODS$
+ *     :features()                                         -> nQStyleOptionFrameV2::FrameFeatures
+ *     :lineWidth()                                        -> nInt
+ *     :midLineWidth()                                     -> nInt
+ *     :text()                                             -> cQString
+ *     :textAlignment()                                    -> nQt::Alignment
+ *     :textColor()                                        -> pQColor
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QStyleOptionGroupBox
+ *  $SEEALSO$
+ *     QStyleOptionComplex
+ *  $VERSION$
+ *     4.5 or upper
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $EXAMPLES$
+ * 
+ *  $INHERITS$
+ *     QStyleOptionComplex
+ *  $ONELINER$
+ *     Creates a new QStyleOptionGroupBox object.
+ *  $TEMPLATE$
+ *     Class
+ *  $ARGUMENTS$
+ * 
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $DESCRIPTION$
+ * 
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qstyleoptiongroupbox.html
+ *  $END$
  */

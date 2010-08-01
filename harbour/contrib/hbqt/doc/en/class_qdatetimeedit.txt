@@ -1,97 +1,95 @@
 /*
- *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for Qt v4.5+
- *  Please do not modify this document as it is subject to change in future.
- *  Pritpal Bedi <bedipritpal@hotmail.com>
+ * $Id$
  */
 
 /*  $DOC$
-    $TEMPLATE$
-        Class
-    $NAME$
-        QDateTimeEdit()
-    $CATEGORY$
-        Harbour Bindings for Qt
-    $SUBCATEGORY$
-        GUI
-    $EXTERNALLINK$
-        http://doc.trolltech.com/4.5/qdatetimeedit.html
-    $ONELINER$
-        Creates a new QDateTimeEdit object.
-    $INHERITS$
-        QAbstractSpinBox
-    $SYNTAX$
-        QDateTimeEdit():new( ... )
-        QDateTimeEdit():from( pPtr_OR_oObj_of_type_QDateTimeEdit )
-        QDateTimeEdit():configure( pPtr_OR_oObj_of_type_QDateTimeEdit )
-    $ARGUMENTS$
-
-    $RETURNS$
-        An instance of the object of type QDateTimeEdit
-    $METHODS$
-        :calendarPopup()                                    -> lBool
-        :calendarWidget()                                   -> pQCalendarWidget
-        :clearMaximumDate()                                 -> NIL
-        :clearMaximumDateTime()                             -> NIL
-        :clearMaximumTime()                                 -> NIL
-        :clearMinimumDate()                                 -> NIL
-        :clearMinimumDateTime()                             -> NIL
-        :clearMinimumTime()                                 -> NIL
-        :currentSection()                                   -> nSection
-        :currentSectionIndex()                              -> nInt
-        :date()                                             -> pQDate
-        :dateTime()                                         -> pQDateTime
-        :displayFormat()                                    -> cQString
-        :displayedSections()                                -> nSections
-        :maximumDate()                                      -> pQDate
-        :maximumDateTime()                                  -> pQDateTime
-        :maximumTime()                                      -> pQTime
-        :minimumDate()                                      -> pQDate
-        :minimumDateTime()                                  -> pQDateTime
-        :minimumTime()                                      -> pQTime
-        :sectionAt( nIndex )                                -> nSection
-        :sectionCount()                                     -> nInt
-        :sectionText( nSection )                            -> cQString
-        :setCalendarPopup( lEnable )                        -> NIL
-        :setCalendarWidget( pCalendarWidget )               -> NIL
-        :setCurrentSection( nSection )                      -> NIL
-        :setCurrentSectionIndex( nIndex )                   -> NIL
-        :setDateRange( pMin, pMax )                         -> NIL
-        :setDateTimeRange( pMin, pMax )                     -> NIL
-        :setDisplayFormat( cFormat )                        -> NIL
-        :setMaximumDate( pMax )                             -> NIL
-        :setMaximumDateTime( pDt )                          -> NIL
-        :setMaximumTime( pMax )                             -> NIL
-        :setMinimumDate( pMin )                             -> NIL
-        :setMinimumDateTime( pDt )                          -> NIL
-        :setMinimumTime( pMin )                             -> NIL
-        :setSelectedSection( nSection )                     -> NIL
-        :setTimeRange( pMin, pMax )                         -> NIL
-        :setTimeSpec( nSpec )                               -> NIL
-        :time()                                             -> pQTime
-        :timeSpec()                                         -> nQt::TimeSpec
-        :setDate( pDate )                                   -> NIL
-        :setDateTime( pDateTime )                           -> NIL
-        :setTime( pTime )                                   -> NIL
-
-    $DESCRIPTION$
-
-    $EXAMPLES$
-
-    $TESTS$
-
-    $STATUS$
-        R
-    $COMPLIANCE$
-        Not Clipper compatible
-    $PLATFORMS$
-        Windows, Linux, Mac OS X, OS/2
-    $VERSION$
-        4.5 or upper
-    $FILES$
-        Harbour source: contrib/hbqt/qtgui/TQDateTimeEdit.prg
-        C++ wrappers  : contrib/hbqt/qtgui/QDateTimeEdit.cpp
-        Library       : hbqtgui
-    $SEEALSO$
-        QAbstractSpinBox
-    $END$
+ *  $NAME$
+ *     QDateTimeEdit()
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQDateTimeEdit.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QDateTimeEdit.cpp
+ *     Library       : hbqtgui
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $SYNTAX$
+ *     QDateTimeEdit():new( ... )
+ *     QDateTimeEdit():from( pPtr_OR_oObj_of_type_QDateTimeEdit )
+ *     QDateTimeEdit():configure( pPtr_OR_oObj_of_type_QDateTimeEdit )
+ *  $METHODS$
+ *     :calendarPopup()                                    -> lBool
+ *     :calendarWidget()                                   -> pQCalendarWidget
+ *     :clearMaximumDate()                                 -> NIL
+ *     :clearMaximumDateTime()                             -> NIL
+ *     :clearMaximumTime()                                 -> NIL
+ *     :clearMinimumDate()                                 -> NIL
+ *     :clearMinimumDateTime()                             -> NIL
+ *     :clearMinimumTime()                                 -> NIL
+ *     :currentSection()                                   -> nSection
+ *     :currentSectionIndex()                              -> nInt
+ *     :date()                                             -> pQDate
+ *     :dateTime()                                         -> pQDateTime
+ *     :displayFormat()                                    -> cQString
+ *     :displayedSections()                                -> nSections
+ *     :maximumDate()                                      -> pQDate
+ *     :maximumDateTime()                                  -> pQDateTime
+ *     :maximumTime()                                      -> pQTime
+ *     :minimumDate()                                      -> pQDate
+ *     :minimumDateTime()                                  -> pQDateTime
+ *     :minimumTime()                                      -> pQTime
+ *     :sectionAt( nIndex )                                -> nSection
+ *     :sectionCount()                                     -> nInt
+ *     :sectionText( nSection )                            -> cQString
+ *     :setCalendarPopup( lEnable )                        -> NIL
+ *     :setCalendarWidget( pCalendarWidget )               -> NIL
+ *     :setCurrentSection( nSection )                      -> NIL
+ *     :setCurrentSectionIndex( nIndex )                   -> NIL
+ *     :setDateRange( pMin, pMax )                         -> NIL
+ *     :setDateTimeRange( pMin, pMax )                     -> NIL
+ *     :setDisplayFormat( cFormat )                        -> NIL
+ *     :setMaximumDate( pMax )                             -> NIL
+ *     :setMaximumDateTime( pDt )                          -> NIL
+ *     :setMaximumTime( pMax )                             -> NIL
+ *     :setMinimumDate( pMin )                             -> NIL
+ *     :setMinimumDateTime( pDt )                          -> NIL
+ *     :setMinimumTime( pMin )                             -> NIL
+ *     :setSelectedSection( nSection )                     -> NIL
+ *     :setTimeRange( pMin, pMax )                         -> NIL
+ *     :setTimeSpec( nSpec )                               -> NIL
+ *     :time()                                             -> pQTime
+ *     :timeSpec()                                         -> nQt::TimeSpec
+ *     :setDate( pDate )                                   -> NIL
+ *     :setDateTime( pDateTime )                           -> NIL
+ *     :setTime( pTime )                                   -> NIL
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QDateTimeEdit
+ *  $SEEALSO$
+ *     QAbstractSpinBox
+ *  $VERSION$
+ *     4.5 or upper
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $EXAMPLES$
+ * 
+ *  $INHERITS$
+ *     QAbstractSpinBox
+ *  $ONELINER$
+ *     Creates a new QDateTimeEdit object.
+ *  $TEMPLATE$
+ *     Class
+ *  $ARGUMENTS$
+ * 
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $DESCRIPTION$
+ * 
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qdatetimeedit.html
+ *  $END$
  */

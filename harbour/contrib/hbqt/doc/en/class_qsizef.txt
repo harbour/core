@@ -1,68 +1,66 @@
 /*
- *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for Qt v4.5+
- *  Please do not modify this document as it is subject to change in future.
- *  Pritpal Bedi <bedipritpal@hotmail.com>
+ * $Id$
  */
 
 /*  $DOC$
-    $TEMPLATE$
-        Class
-    $NAME$
-        QSizeF()
-    $CATEGORY$
-        Harbour Bindings for Qt
-    $SUBCATEGORY$
-        GUI
-    $EXTERNALLINK$
-        http://doc.trolltech.com/4.5/qsizef.html
-    $ONELINER$
-        Creates a new QSizeF object.
-    $INHERITS$
-
-    $SYNTAX$
-        QSizeF():new( ... )
-        QSizeF():from( pPtr_OR_oObj_of_type_QSizeF )
-        QSizeF():configure( pPtr_OR_oObj_of_type_QSizeF )
-    $ARGUMENTS$
-
-    $RETURNS$
-        An instance of the object of type QSizeF
-    $METHODS$
-        :height()                                           -> nQreal
-        :isEmpty()                                          -> lBool
-        :isNull()                                           -> lBool
-        :isValid()                                          -> lBool
-        :rheight()                                          -> nQreal
-        :rwidth()                                           -> nQreal
-        :scale( nWidth, nHeight, nMode )                    -> NIL
-        :scale_1( pSize, nMode )                            -> NIL
-        :setHeight( nHeight )                               -> NIL
-        :setWidth( nWidth )                                 -> NIL
-        :toSize()                                           -> pQSize
-        :transpose()                                        -> NIL
-        :width()                                            -> nQreal
-
-    $DESCRIPTION$
-
-    $EXAMPLES$
-        oSizeF := QSizeF():new()
-        oSizeF := QSizeF():new( nWidth, nHeight )
-
-    $TESTS$
-
-    $STATUS$
-        R
-    $COMPLIANCE$
-        Not Clipper compatible
-    $PLATFORMS$
-        Windows, Linux, Mac OS X, OS/2
-    $VERSION$
-        4.5 or upper
-    $FILES$
-        Harbour source: contrib/hbqt/qtcore/TQSizeF.prg
-        C++ wrappers  : contrib/hbqt/qtcore/QSizeF.cpp
-        Library       : hbqtcore
-    $SEEALSO$
-
-    $END$
+ *  $NAME$
+ *     QSizeF()
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtcore/TQSizeF.prg
+ *     C++ wrappers  : contrib/hbqt/qtcore/QSizeF.cpp
+ *     Library       : hbqtcore
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $SYNTAX$
+ *     QSizeF():new( ... )
+ *     QSizeF():from( pPtr_OR_oObj_of_type_QSizeF )
+ *     QSizeF():configure( pPtr_OR_oObj_of_type_QSizeF )
+ *  $METHODS$
+ *     :height()                                           -> nQreal
+ *     :isEmpty()                                          -> lBool
+ *     :isNull()                                           -> lBool
+ *     :isValid()                                          -> lBool
+ *     :rheight()                                          -> nQreal
+ *     :rwidth()                                           -> nQreal
+ *     :scale( nWidth, nHeight, nMode )                    -> NIL
+ *     :scale_1( pSize, nMode )                            -> NIL
+ *     :setHeight( nHeight )                               -> NIL
+ *     :setWidth( nWidth )                                 -> NIL
+ *     :toSize()                                           -> pQSize
+ *     :transpose()                                        -> NIL
+ *     :width()                                            -> nQreal
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QSizeF
+ *  $SEEALSO$
+ *     
+ *  $VERSION$
+ *     4.5 or upper
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $EXAMPLES$
+ *     oSizeF := QSizeF():new()
+ *     oSizeF := QSizeF():new( nWidth, nHeight )
+ * 
+ *  $INHERITS$
+ *     
+ *  $ONELINER$
+ *     Creates a new QSizeF object.
+ *  $TEMPLATE$
+ *     Class
+ *  $ARGUMENTS$
+ * 
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $DESCRIPTION$
+ * 
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qsizef.html
+ *  $END$
  */

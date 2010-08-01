@@ -1,72 +1,70 @@
 /*
- *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for Qt v4.5+
- *  Please do not modify this document as it is subject to change in future.
- *  Pritpal Bedi <bedipritpal@hotmail.com>
+ * $Id$
  */
 
 /*  $DOC$
-    $TEMPLATE$
-        Class
-    $NAME$
-        QLine()
-    $CATEGORY$
-        Harbour Bindings for Qt
-    $SUBCATEGORY$
-        GUI
-    $EXTERNALLINK$
-        http://doc.trolltech.com/4.5/qline.html
-    $ONELINER$
-        Creates a new QLine object.
-    $INHERITS$
-
-    $SYNTAX$
-        QLine():new( ... )
-        QLine():from( pPtr_OR_oObj_of_type_QLine )
-        QLine():configure( pPtr_OR_oObj_of_type_QLine )
-    $ARGUMENTS$
-
-    $RETURNS$
-        An instance of the object of type QLine
-    $METHODS$
-        :p1()                                               -> pQPoint
-        :p2()                                               -> pQPoint
-        :x1()                                               -> nInt
-        :x2()                                               -> nInt
-        :y1()                                               -> nInt
-        :y2()                                               -> nInt
-        :dx()                                               -> nInt
-        :dy()                                               -> nInt
-        :isNull()                                           -> lBool
-        :setP1( pP1 )                                       -> NIL
-        :setP2( pP2 )                                       -> NIL
-        :setLine( nX1, nY1, nX2, nY2 )                      -> NIL
-        :setPoints( pP1, pP2 )                              -> NIL
-        :translate( pOffset )                               -> NIL
-        :translate_1( nDx, nDy )                            -> NIL
-
-    $DESCRIPTION$
-
-    $EXAMPLES$
-        oLine := QLine():new()
-        oLine := QLine():new( pQLine )
-        oLine := QLine():new( pQPoint_p1, pQPoint_p2 )
-        oLine := QLine():new( nX1, nY1, nX2, nY2 )
-
-    $TESTS$
-
-    $STATUS$
-        R
-    $COMPLIANCE$
-        Not Clipper compatible
-    $PLATFORMS$
-        Windows, Linux, Mac OS X, OS/2
-    $VERSION$
-        4.5 or upper
-    $FILES$
-        Harbour source: contrib/hbqt/qtcore/TQLine.prg
-        C++ wrappers  : contrib/hbqt/qtcore/QLine.cpp
-        Library       : hbqtcore
-    $SEEALSO$
-
-    $END$
+ *  $NAME$
+ *     QLine()
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtcore/TQLine.prg
+ *     C++ wrappers  : contrib/hbqt/qtcore/QLine.cpp
+ *     Library       : hbqtcore
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $SYNTAX$
+ *     QLine():new( ... )
+ *     QLine():from( pPtr_OR_oObj_of_type_QLine )
+ *     QLine():configure( pPtr_OR_oObj_of_type_QLine )
+ *  $METHODS$
+ *     :p1()                                               -> pQPoint
+ *     :p2()                                               -> pQPoint
+ *     :x1()                                               -> nInt
+ *     :x2()                                               -> nInt
+ *     :y1()                                               -> nInt
+ *     :y2()                                               -> nInt
+ *     :dx()                                               -> nInt
+ *     :dy()                                               -> nInt
+ *     :isNull()                                           -> lBool
+ *     :setP1( pP1 )                                       -> NIL
+ *     :setP2( pP2 )                                       -> NIL
+ *     :setLine( nX1, nY1, nX2, nY2 )                      -> NIL
+ *     :setPoints( pP1, pP2 )                              -> NIL
+ *     :translate( pOffset )                               -> NIL
+ *     :translate_1( nDx, nDy )                            -> NIL
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QLine
+ *  $SEEALSO$
+ *     
+ *  $VERSION$
+ *     4.5 or upper
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $EXAMPLES$
+ *     oLine := QLine():new()
+ *     oLine := QLine():new( pQLine )
+ *     oLine := QLine():new( pQPoint_p1, pQPoint_p2 )
+ *     oLine := QLine():new( nX1, nY1, nX2, nY2 )
+ * 
+ *  $INHERITS$
+ *     
+ *  $ONELINER$
+ *     Creates a new QLine object.
+ *  $TEMPLATE$
+ *     Class
+ *  $ARGUMENTS$
+ * 
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $DESCRIPTION$
+ * 
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qline.html
+ *  $END$
  */

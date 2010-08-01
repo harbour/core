@@ -1,56 +1,54 @@
 /*
- *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for Qt v4.5+
- *  Please do not modify this document as it is subject to change in future.
- *  Pritpal Bedi <bedipritpal@hotmail.com>
+ * $Id$
  */
 
 /*  $DOC$
-    $TEMPLATE$
-        Class
-    $NAME$
-        HBEvents()
-    $CATEGORY$
-        Harbour Bindings for Qt
-    $SUBCATEGORY$
-        GUI
-    $EXTERNALLINK$
-        http://doc.trolltech.com/4.5/hbevents.html
-    $ONELINER$
-        Creates a new HBEvents object.
-    $INHERITS$
-        QObject
-    $SYNTAX$
-        HBEvents():new( ... )
-        HBEvents():from( pPtr_OR_oObj_of_type_HBEvents )
-        HBEvents():configure( pPtr_OR_oObj_of_type_HBEvents )
-    $ARGUMENTS$
-
-    $RETURNS$
-        An instance of the object of type HBEvents
-    $METHODS$
-        :hbConnect( xObj, nEvent, xBlock )                  -> lBool
-        :hbDisconnect( xObj, nEvent )                       -> lBool
-        :hbClear()                                          -> lBool
-
-    $DESCRIPTION$
-
-    $EXAMPLES$
-
-    $TESTS$
-
-    $STATUS$
-        R
-    $COMPLIANCE$
-        Not Clipper compatible
-    $PLATFORMS$
-        Windows, Linux, Mac OS X, OS/2
-    $VERSION$
-        4.5 or upper
-    $FILES$
-        Harbour source: contrib/hbqt/qtcore/THBEvents.prg
-        C++ wrappers  : contrib/hbqt/qtcore/HBEvents.cpp
-        Library       : hbqtcore
-    $SEEALSO$
-        QObject
-    $END$
+ *  $NAME$
+ *     HBEvents()
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtcore/THBEvents.prg
+ *     C++ wrappers  : contrib/hbqt/qtcore/HBEvents.cpp
+ *     Library       : hbqtcore
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $SYNTAX$
+ *     HBEvents():new( ... )
+ *     HBEvents():from( pPtr_OR_oObj_of_type_HBEvents )
+ *     HBEvents():configure( pPtr_OR_oObj_of_type_HBEvents )
+ *  $METHODS$
+ *     :hbConnect( xObj, nEvent, xBlock )                  -> lBool
+ *     :hbDisconnect( xObj, nEvent )                       -> lBool
+ *     :hbClear()                                          -> lBool
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type HBEvents
+ *  $SEEALSO$
+ *     QObject
+ *  $VERSION$
+ *     4.5 or upper
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $EXAMPLES$
+ * 
+ *  $INHERITS$
+ *     QObject
+ *  $ONELINER$
+ *     Creates a new HBEvents object.
+ *  $TEMPLATE$
+ *     Class
+ *  $ARGUMENTS$
+ * 
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $DESCRIPTION$
+ * 
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/hbevents.html
+ *  $END$
  */

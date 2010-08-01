@@ -1,81 +1,79 @@
 /*
- *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for Qt v4.5+
- *  Please do not modify this document as it is subject to change in future.
- *  Pritpal Bedi <bedipritpal@hotmail.com>
+ * $Id$
  */
 
 /*  $DOC$
-    $TEMPLATE$
-        Class
-    $NAME$
-        QObject()
-    $CATEGORY$
-        Harbour Bindings for Qt
-    $SUBCATEGORY$
-        GUI
-    $EXTERNALLINK$
-        http://doc.trolltech.com/4.5/qobject.html
-    $ONELINER$
-        Creates a new QObject object.
-    $INHERITS$
-
-    $SYNTAX$
-        QObject():new( ... )
-        QObject():from( pPtr_OR_oObj_of_type_QObject )
-        QObject():configure( pPtr_OR_oObj_of_type_QObject )
-    $ARGUMENTS$
-
-    $RETURNS$
-        An instance of the object of type QObject
-    $METHODS$
-        :blockSignals( lBlock )                             -> lBool
-        :connect( pSender, pSignal, pMethod, nType )        -> lBool
-        :disconnect( pSignal, pReceiver, pMethod )          -> lBool
-        :disconnect_1( pReceiver, pMethod )                 -> lBool
-        :dumpObjectInfo()                                   -> NIL
-        :dumpObjectTree()                                   -> NIL
-        :dynamicPropertyNames()                             -> pQList<QByteArray>
-        :event( pE )                                        -> lBool
-        :eventFilter( pWatched, pEvent )                    -> lBool
-        :inherits( pClassName )                             -> lBool
-        :installEventFilter( pFilterObj )                   -> NIL
-        :isWidgetType()                                     -> lBool
-        :killTimer( nId )                                   -> NIL
-        :moveToThread( pTargetThread )                      -> NIL
-        :objectName()                                       -> cQString
-        :property( pName )                                  -> pQVariant
-        :removeEventFilter( pObj )                          -> NIL
-        :setObjectName( cName )                             -> NIL
-        :setParent( pParent )                               -> NIL
-        :setProperty( pName, pValue )                       -> lBool
-        :signalsBlocked()                                   -> lBool
-        :startTimer( nInterval )                            -> nInt
-        :thread()                                           -> pQThread
-        :connect_1( pSender, pSignal, pReceiver, pMethod, nType )  -> lBool
-        :disconnect_2( pSender, pSignal, pReceiver, pMethod )  -> lBool
-        :tr( pSourceText, pDisambiguation, nN )             -> cQString
-        :trUtf8( pSourceText, pDisambiguation, nN )         -> cQString
-        :deleteLater()                                      -> NIL
-
-    $DESCRIPTION$
-
-    $EXAMPLES$
-
-    $TESTS$
-
-    $STATUS$
-        R
-    $COMPLIANCE$
-        Not Clipper compatible
-    $PLATFORMS$
-        Windows, Linux, Mac OS X, OS/2
-    $VERSION$
-        4.5 or upper
-    $FILES$
-        Harbour source: contrib/hbqt/qtcore/TQObject.prg
-        C++ wrappers  : contrib/hbqt/qtcore/QObject.cpp
-        Library       : hbqtcore
-    $SEEALSO$
-
-    $END$
+ *  $NAME$
+ *     QObject()
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtcore/TQObject.prg
+ *     C++ wrappers  : contrib/hbqt/qtcore/QObject.cpp
+ *     Library       : hbqtcore
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $SYNTAX$
+ *     QObject():new( ... )
+ *     QObject():from( pPtr_OR_oObj_of_type_QObject )
+ *     QObject():configure( pPtr_OR_oObj_of_type_QObject )
+ *  $METHODS$
+ *     :blockSignals( lBlock )                             -> lBool
+ *     :connect( pSender, pSignal, pMethod, nType )        -> lBool
+ *     :disconnect( pSignal, pReceiver, pMethod )          -> lBool
+ *     :disconnect_1( pReceiver, pMethod )                 -> lBool
+ *     :dumpObjectInfo()                                   -> NIL
+ *     :dumpObjectTree()                                   -> NIL
+ *     :dynamicPropertyNames()                             -> pQList<QByteArray>
+ *     :event( pE )                                        -> lBool
+ *     :eventFilter( pWatched, pEvent )                    -> lBool
+ *     :inherits( pClassName )                             -> lBool
+ *     :installEventFilter( pFilterObj )                   -> NIL
+ *     :isWidgetType()                                     -> lBool
+ *     :killTimer( nId )                                   -> NIL
+ *     :moveToThread( pTargetThread )                      -> NIL
+ *     :objectName()                                       -> cQString
+ *     :property( pName )                                  -> pQVariant
+ *     :removeEventFilter( pObj )                          -> NIL
+ *     :setObjectName( cName )                             -> NIL
+ *     :setParent( pParent )                               -> NIL
+ *     :setProperty( pName, pValue )                       -> lBool
+ *     :signalsBlocked()                                   -> lBool
+ *     :startTimer( nInterval )                            -> nInt
+ *     :thread()                                           -> pQThread
+ *     :connect_1( pSender, pSignal, pReceiver, pMethod, nType )  -> lBool
+ *     :disconnect_2( pSender, pSignal, pReceiver, pMethod )  -> lBool
+ *     :tr( pSourceText, pDisambiguation, nN )             -> cQString
+ *     :trUtf8( pSourceText, pDisambiguation, nN )         -> cQString
+ *     :deleteLater()                                      -> NIL
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QObject
+ *  $SEEALSO$
+ *     
+ *  $VERSION$
+ *     4.5 or upper
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $EXAMPLES$
+ * 
+ *  $INHERITS$
+ *     
+ *  $ONELINER$
+ *     Creates a new QObject object.
+ *  $TEMPLATE$
+ *     Class
+ *  $ARGUMENTS$
+ * 
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $DESCRIPTION$
+ * 
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qobject.html
+ *  $END$
  */

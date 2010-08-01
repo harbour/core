@@ -1,55 +1,53 @@
 /*
- *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for Qt v4.5+
- *  Please do not modify this document as it is subject to change in future.
- *  Pritpal Bedi <bedipritpal@hotmail.com>
+ * $Id$
  */
 
 /*  $DOC$
-    $TEMPLATE$
-        Class
-    $NAME$
-        QResizeEvent()
-    $CATEGORY$
-        Harbour Bindings for Qt
-    $SUBCATEGORY$
-        GUI
-    $EXTERNALLINK$
-        http://doc.trolltech.com/4.5/qresizeevent.html
-    $ONELINER$
-        Creates a new QResizeEvent object.
-    $INHERITS$
-        QEvent
-    $SYNTAX$
-        QResizeEvent():new( ... )
-        QResizeEvent():from( pPtr_OR_oObj_of_type_QResizeEvent )
-        QResizeEvent():configure( pPtr_OR_oObj_of_type_QResizeEvent )
-    $ARGUMENTS$
-
-    $RETURNS$
-        An instance of the object of type QResizeEvent
-    $METHODS$
-        :oldSize()                                          -> pQSize
-        :size()                                             -> pQSize
-
-    $DESCRIPTION$
-
-    $EXAMPLES$
-
-    $TESTS$
-
-    $STATUS$
-        R
-    $COMPLIANCE$
-        Not Clipper compatible
-    $PLATFORMS$
-        Windows, Linux, Mac OS X, OS/2
-    $VERSION$
-        4.5 or upper
-    $FILES$
-        Harbour source: contrib/hbqt/qtgui/TQResizeEvent.prg
-        C++ wrappers  : contrib/hbqt/qtgui/QResizeEvent.cpp
-        Library       : hbqtgui
-    $SEEALSO$
-        QEvent
-    $END$
+ *  $NAME$
+ *     QResizeEvent()
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQResizeEvent.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QResizeEvent.cpp
+ *     Library       : hbqtgui
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $SYNTAX$
+ *     QResizeEvent():new( ... )
+ *     QResizeEvent():from( pPtr_OR_oObj_of_type_QResizeEvent )
+ *     QResizeEvent():configure( pPtr_OR_oObj_of_type_QResizeEvent )
+ *  $METHODS$
+ *     :oldSize()                                          -> pQSize
+ *     :size()                                             -> pQSize
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QResizeEvent
+ *  $SEEALSO$
+ *     QEvent
+ *  $VERSION$
+ *     4.5 or upper
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $EXAMPLES$
+ * 
+ *  $INHERITS$
+ *     QEvent
+ *  $ONELINER$
+ *     Creates a new QResizeEvent object.
+ *  $TEMPLATE$
+ *     Class
+ *  $ARGUMENTS$
+ * 
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $DESCRIPTION$
+ * 
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qresizeevent.html
+ *  $END$
  */

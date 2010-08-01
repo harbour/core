@@ -1,103 +1,101 @@
 /*
- *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for Qt v4.5+
- *  Please do not modify this document as it is subject to change in future.
- *  Pritpal Bedi <bedipritpal@hotmail.com>
+ * $Id$
  */
 
 /*  $DOC$
-    $TEMPLATE$
-        Class
-    $NAME$
-        QAction()
-    $CATEGORY$
-        Harbour Bindings for Qt
-    $SUBCATEGORY$
-        GUI
-    $EXTERNALLINK$
-        http://doc.trolltech.com/4.5/qaction.html
-    $ONELINER$
-        Creates a new QAction object.
-    $INHERITS$
-        QObject
-    $SYNTAX$
-        QAction():new( ... )
-        QAction():from( pPtr_OR_oObj_of_type_QAction )
-        QAction():configure( pPtr_OR_oObj_of_type_QAction )
-    $ARGUMENTS$
-
-    $RETURNS$
-        An instance of the object of type QAction
-    $METHODS$
-        :actionGroup()                                      -> Group
-        :activate( nEvent )                                 -> NIL
-        :associatedWidgets()                                -> pQList<QWidget *>
-        :autoRepeat()                                       -> lBool
-        :data()                                             -> pQVariant
-        :font()                                             -> pQFont
-        :icon()                                             -> pQIcon
-        :iconText()                                         -> cQString
-        :isCheckable()                                      -> lBool
-        :isChecked()                                        -> lBool
-        :isEnabled()                                        -> lBool
-        :isIconVisibleInMenu()                              -> lBool
-        :isSeparator()                                      -> lBool
-        :isVisible()                                        -> lBool
-        :menu()                                             -> pQMenu
-        :menuRole()                                         -> nMenuRole
-        :parentWidget()                                     -> pQWidget
-        :setActionGroup( pGroup )                           -> NIL
-        :setAutoRepeat( lBool )                             -> NIL
-        :setCheckable( lBool )                              -> NIL
-        :setData( pUserData )                               -> NIL
-        :setFont( pFont )                                   -> NIL
-        :setIcon( cIcon )                                   -> NIL
-        :setIconText( cText )                               -> NIL
-        :setIconVisibleInMenu( lVisible )                   -> NIL
-        :setMenu( pMenu )                                   -> NIL
-        :setMenuRole( nMenuRole )                           -> NIL
-        :setSeparator( lB )                                 -> NIL
-        :setShortcut( pShortcut )                           -> NIL
-        :setShortcutContext( nContext )                     -> NIL
-        :setShortcuts( nKey )                               -> NIL
-        :setStatusTip( cStatusTip )                         -> NIL
-        :setText( cText )                                   -> NIL
-        :setToolTip( cTip )                                 -> NIL
-        :setWhatsThis( cWhat )                              -> NIL
-        :shortcut()                                         -> pQKeySequence
-        :shortcutContext()                                  -> nQt::ShortcutContext
-        :shortcuts()                                        -> pQList<QKeySequence>
-        :showStatusText( pWidget )                          -> lBool
-        :statusTip()                                        -> cQString
-        :text()                                             -> cQString
-        :toolTip()                                          -> cQString
-        :whatsThis()                                        -> cQString
-        :hover()                                            -> NIL
-        :setChecked( lBool )                                -> NIL
-        :setDisabled( lB )                                  -> NIL
-        :setEnabled( lBool )                                -> NIL
-        :setVisible( lBool )                                -> NIL
-        :toggle()                                           -> NIL
-        :trigger()                                          -> NIL
-
-    $DESCRIPTION$
-
-    $EXAMPLES$
-
-    $TESTS$
-
-    $STATUS$
-        R
-    $COMPLIANCE$
-        Not Clipper compatible
-    $PLATFORMS$
-        Windows, Linux, Mac OS X, OS/2
-    $VERSION$
-        4.5 or upper
-    $FILES$
-        Harbour source: contrib/hbqt/qtgui/TQAction.prg
-        C++ wrappers  : contrib/hbqt/qtgui/QAction.cpp
-        Library       : hbqtgui
-    $SEEALSO$
-        QObject
-    $END$
+ *  $NAME$
+ *     QAction()
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQAction.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QAction.cpp
+ *     Library       : hbqtgui
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $SYNTAX$
+ *     QAction():new( ... )
+ *     QAction():from( pPtr_OR_oObj_of_type_QAction )
+ *     QAction():configure( pPtr_OR_oObj_of_type_QAction )
+ *  $METHODS$
+ *     :actionGroup()                                      -> Group
+ *     :activate( nEvent )                                 -> NIL
+ *     :associatedWidgets()                                -> pQList<QWidget *>
+ *     :autoRepeat()                                       -> lBool
+ *     :data()                                             -> pQVariant
+ *     :font()                                             -> pQFont
+ *     :icon()                                             -> pQIcon
+ *     :iconText()                                         -> cQString
+ *     :isCheckable()                                      -> lBool
+ *     :isChecked()                                        -> lBool
+ *     :isEnabled()                                        -> lBool
+ *     :isIconVisibleInMenu()                              -> lBool
+ *     :isSeparator()                                      -> lBool
+ *     :isVisible()                                        -> lBool
+ *     :menu()                                             -> pQMenu
+ *     :menuRole()                                         -> nMenuRole
+ *     :parentWidget()                                     -> pQWidget
+ *     :setActionGroup( pGroup )                           -> NIL
+ *     :setAutoRepeat( lBool )                             -> NIL
+ *     :setCheckable( lBool )                              -> NIL
+ *     :setData( pUserData )                               -> NIL
+ *     :setFont( pFont )                                   -> NIL
+ *     :setIcon( cIcon )                                   -> NIL
+ *     :setIconText( cText )                               -> NIL
+ *     :setIconVisibleInMenu( lVisible )                   -> NIL
+ *     :setMenu( pMenu )                                   -> NIL
+ *     :setMenuRole( nMenuRole )                           -> NIL
+ *     :setSeparator( lB )                                 -> NIL
+ *     :setShortcut( pShortcut )                           -> NIL
+ *     :setShortcutContext( nContext )                     -> NIL
+ *     :setShortcuts( nKey )                               -> NIL
+ *     :setStatusTip( cStatusTip )                         -> NIL
+ *     :setText( cText )                                   -> NIL
+ *     :setToolTip( cTip )                                 -> NIL
+ *     :setWhatsThis( cWhat )                              -> NIL
+ *     :shortcut()                                         -> pQKeySequence
+ *     :shortcutContext()                                  -> nQt::ShortcutContext
+ *     :shortcuts()                                        -> pQList<QKeySequence>
+ *     :showStatusText( pWidget )                          -> lBool
+ *     :statusTip()                                        -> cQString
+ *     :text()                                             -> cQString
+ *     :toolTip()                                          -> cQString
+ *     :whatsThis()                                        -> cQString
+ *     :hover()                                            -> NIL
+ *     :setChecked( lBool )                                -> NIL
+ *     :setDisabled( lB )                                  -> NIL
+ *     :setEnabled( lBool )                                -> NIL
+ *     :setVisible( lBool )                                -> NIL
+ *     :toggle()                                           -> NIL
+ *     :trigger()                                          -> NIL
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QAction
+ *  $SEEALSO$
+ *     QObject
+ *  $VERSION$
+ *     4.5 or upper
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $EXAMPLES$
+ * 
+ *  $INHERITS$
+ *     QObject
+ *  $ONELINER$
+ *     Creates a new QAction object.
+ *  $TEMPLATE$
+ *     Class
+ *  $ARGUMENTS$
+ * 
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $DESCRIPTION$
+ * 
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qaction.html
+ *  $END$
  */

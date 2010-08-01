@@ -1,67 +1,65 @@
 /*
- *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for Qt v4.5+
- *  Please do not modify this document as it is subject to change in future.
- *  Pritpal Bedi <bedipritpal@hotmail.com>
+ * $Id$
  */
 
 /*  $DOC$
-    $TEMPLATE$
-        Class
-    $NAME$
-        QMenuBar()
-    $CATEGORY$
-        Harbour Bindings for Qt
-    $SUBCATEGORY$
-        GUI
-    $EXTERNALLINK$
-        http://doc.trolltech.com/4.5/qmenubar.html
-    $ONELINER$
-        Creates a new QMenuBar object.
-    $INHERITS$
-        QWidget
-    $SYNTAX$
-        QMenuBar():new( ... )
-        QMenuBar():from( pPtr_OR_oObj_of_type_QMenuBar )
-        QMenuBar():configure( pPtr_OR_oObj_of_type_QMenuBar )
-    $ARGUMENTS$
-
-    $RETURNS$
-        An instance of the object of type QMenuBar
-    $METHODS$
-        :activeAction()                                     -> pQAction
-        :addAction( cText )                                 -> pQAction
-        :addAction_1( cText, pReceiver, pMember )           -> pQAction
-        :addAction_2( pAction )                             -> NIL
-        :addMenu( pMenu )                                   -> pQAction
-        :addMenu_1( cTitle )                                -> pQMenu
-        :addMenu_2( cIcon, cTitle )                         -> pQMenu
-        :addSeparator()                                     -> pQAction
-        :clear()                                            -> NIL
-        :insertMenu( pBefore, pMenu )                       -> pQAction
-        :insertSeparator( pBefore )                         -> pQAction
-        :isDefaultUp()                                      -> lBool
-        :setActiveAction( pAct )                            -> NIL
-        :setDefaultUp( lBool )                              -> NIL
-
-    $DESCRIPTION$
-
-    $EXAMPLES$
-
-    $TESTS$
-
-    $STATUS$
-        R
-    $COMPLIANCE$
-        Not Clipper compatible
-    $PLATFORMS$
-        Windows, Linux, Mac OS X, OS/2
-    $VERSION$
-        4.5 or upper
-    $FILES$
-        Harbour source: contrib/hbqt/qtgui/TQMenuBar.prg
-        C++ wrappers  : contrib/hbqt/qtgui/QMenuBar.cpp
-        Library       : hbqtgui
-    $SEEALSO$
-        QWidget
-    $END$
+ *  $NAME$
+ *     QMenuBar()
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQMenuBar.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QMenuBar.cpp
+ *     Library       : hbqtgui
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $SYNTAX$
+ *     QMenuBar():new( ... )
+ *     QMenuBar():from( pPtr_OR_oObj_of_type_QMenuBar )
+ *     QMenuBar():configure( pPtr_OR_oObj_of_type_QMenuBar )
+ *  $METHODS$
+ *     :activeAction()                                     -> pQAction
+ *     :addAction( cText )                                 -> pQAction
+ *     :addAction_1( cText, pReceiver, pMember )           -> pQAction
+ *     :addAction_2( pAction )                             -> NIL
+ *     :addMenu( pMenu )                                   -> pQAction
+ *     :addMenu_1( cTitle )                                -> pQMenu
+ *     :addMenu_2( cIcon, cTitle )                         -> pQMenu
+ *     :addSeparator()                                     -> pQAction
+ *     :clear()                                            -> NIL
+ *     :insertMenu( pBefore, pMenu )                       -> pQAction
+ *     :insertSeparator( pBefore )                         -> pQAction
+ *     :isDefaultUp()                                      -> lBool
+ *     :setActiveAction( pAct )                            -> NIL
+ *     :setDefaultUp( lBool )                              -> NIL
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QMenuBar
+ *  $SEEALSO$
+ *     QWidget
+ *  $VERSION$
+ *     4.5 or upper
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $EXAMPLES$
+ * 
+ *  $INHERITS$
+ *     QWidget
+ *  $ONELINER$
+ *     Creates a new QMenuBar object.
+ *  $TEMPLATE$
+ *     Class
+ *  $ARGUMENTS$
+ * 
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $DESCRIPTION$
+ * 
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qmenubar.html
+ *  $END$
  */

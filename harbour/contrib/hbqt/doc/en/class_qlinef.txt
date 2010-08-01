@@ -1,76 +1,74 @@
 /*
- *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for Qt v4.5+
- *  Please do not modify this document as it is subject to change in future.
- *  Pritpal Bedi <bedipritpal@hotmail.com>
+ * $Id$
  */
 
 /*  $DOC$
-    $TEMPLATE$
-        Class
-    $NAME$
-        QLineF()
-    $CATEGORY$
-        Harbour Bindings for Qt
-    $SUBCATEGORY$
-        GUI
-    $EXTERNALLINK$
-        http://doc.trolltech.com/4.5/qlinef.html
-    $ONELINER$
-        Creates a new QLineF object.
-    $INHERITS$
-
-    $SYNTAX$
-        QLineF():new( ... )
-        QLineF():from( pPtr_OR_oObj_of_type_QLineF )
-        QLineF():configure( pPtr_OR_oObj_of_type_QLineF )
-    $ARGUMENTS$
-
-    $RETURNS$
-        An instance of the object of type QLineF
-    $METHODS$
-        :p1()                                               -> pQPointF
-        :p2()                                               -> pQPointF
-        :x1()                                               -> nQreal
-        :x2()                                               -> nQreal
-        :y1()                                               -> nQreal
-        :y2()                                               -> nQreal
-        :angle()                                            -> nQreal
-        :angleTo( pLine )                                   -> nQreal
-        :dx()                                               -> nQreal
-        :dy()                                               -> nQreal
-        :intersect( pLine, pIntersectionPoint )             -> nIntersectType
-        :isNull()                                           -> lBool
-        :length()                                           -> nQreal
-        :pointAt( nT )                                      -> pQPointF
-        :setP1( pP1 )                                       -> NIL
-        :setP2( pP2 )                                       -> NIL
-        :setAngle( nAngle )                                 -> NIL
-        :setLength( nLength )                               -> NIL
-        :setLine( nX1, nY1, nX2, nY2 )                      -> NIL
-        :setPoints( pP1, pP2 )                              -> NIL
-        :toLine()                                           -> pQLine
-        :translate( pOffset )                               -> NIL
-        :translate_1( nDx, nDy )                            -> NIL
-
-    $DESCRIPTION$
-
-    $EXAMPLES$
-
-    $TESTS$
-
-    $STATUS$
-        R
-    $COMPLIANCE$
-        Not Clipper compatible
-    $PLATFORMS$
-        Windows, Linux, Mac OS X, OS/2
-    $VERSION$
-        4.5 or upper
-    $FILES$
-        Harbour source: contrib/hbqt/qtcore/TQLineF.prg
-        C++ wrappers  : contrib/hbqt/qtcore/QLineF.cpp
-        Library       : hbqtcore
-    $SEEALSO$
-
-    $END$
+ *  $NAME$
+ *     QLineF()
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtcore/TQLineF.prg
+ *     C++ wrappers  : contrib/hbqt/qtcore/QLineF.cpp
+ *     Library       : hbqtcore
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $SYNTAX$
+ *     QLineF():new( ... )
+ *     QLineF():from( pPtr_OR_oObj_of_type_QLineF )
+ *     QLineF():configure( pPtr_OR_oObj_of_type_QLineF )
+ *  $METHODS$
+ *     :p1()                                               -> pQPointF
+ *     :p2()                                               -> pQPointF
+ *     :x1()                                               -> nQreal
+ *     :x2()                                               -> nQreal
+ *     :y1()                                               -> nQreal
+ *     :y2()                                               -> nQreal
+ *     :angle()                                            -> nQreal
+ *     :angleTo( pLine )                                   -> nQreal
+ *     :dx()                                               -> nQreal
+ *     :dy()                                               -> nQreal
+ *     :intersect( pLine, pIntersectionPoint )             -> nIntersectType
+ *     :isNull()                                           -> lBool
+ *     :length()                                           -> nQreal
+ *     :pointAt( nT )                                      -> pQPointF
+ *     :setP1( pP1 )                                       -> NIL
+ *     :setP2( pP2 )                                       -> NIL
+ *     :setAngle( nAngle )                                 -> NIL
+ *     :setLength( nLength )                               -> NIL
+ *     :setLine( nX1, nY1, nX2, nY2 )                      -> NIL
+ *     :setPoints( pP1, pP2 )                              -> NIL
+ *     :toLine()                                           -> pQLine
+ *     :translate( pOffset )                               -> NIL
+ *     :translate_1( nDx, nDy )                            -> NIL
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QLineF
+ *  $SEEALSO$
+ *     
+ *  $VERSION$
+ *     4.5 or upper
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $EXAMPLES$
+ * 
+ *  $INHERITS$
+ *     
+ *  $ONELINER$
+ *     Creates a new QLineF object.
+ *  $TEMPLATE$
+ *     Class
+ *  $ARGUMENTS$
+ * 
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $DESCRIPTION$
+ * 
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qlinef.html
+ *  $END$
  */

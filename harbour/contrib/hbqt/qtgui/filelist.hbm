@@ -16,8 +16,8 @@ HBQTextBlockUserData.cpp
 QAbstractButton.cpp
 QAbstractItemDelegate.cpp
 QAbstractItemView.cpp
-QAbstractProxyModel.cpp
 QAbstractPrintDialog.cpp
+QAbstractProxyModel.cpp
 QAbstractScrollArea.cpp
 QAbstractSlider.cpp
 QAbstractSpinBox.cpp
@@ -49,10 +49,10 @@ QDialog.cpp
 QDirModel.cpp
 QDockWidget.cpp
 QDoubleSpinBox.cpp
-QDropEvent.cpp
-QDragMoveEvent.cpp
 QDragEnterEvent.cpp
 QDragLeaveEvent.cpp
+QDragMoveEvent.cpp
+QDropEvent.cpp
 QErrorMessage.cpp
 QFileDialog.cpp
 QFileIconProvider.cpp
@@ -76,12 +76,12 @@ QHeaderView.cpp
 QHelpEvent.cpp
 QHideEvent.cpp
 QIcon.cpp
-QInputMethodEvent.cpp
 QImage.cpp
 QImageReader.cpp
 QImageWriter.cpp
 QInputDialog.cpp
 QInputEvent.cpp
+QInputMethodEvent.cpp
 QItemDelegate.cpp
 QItemEditorCreatorBase.cpp
 QItemEditorFactory.cpp
@@ -185,8 +185,8 @@ QTabBar.cpp
 QTableView.cpp
 QTableWidget.cpp
 QTableWidgetItem.cpp
-QTabWidget.cpp
 QTableWidgetSelectionRange.cpp
+QTabWidget.cpp
 QTextBlock.cpp
 QTextBlockFormat.cpp
 QTextBlockGroup.cpp
@@ -230,6 +230,7 @@ QWindowsStyle.cpp
 QWindowStateChangeEvent.cpp
 QWizard.cpp
 QWizardPage.cpp
+QUiLoader.cpp
 
 THBQMainWindow.prg
 THBQPlainTextEdit.prg
@@ -239,8 +240,8 @@ THBQTextBlockUserData.prg
 TQAbstractButton.prg
 TQAbstractItemDelegate.prg
 TQAbstractItemView.prg
-TQAbstractProxyModel.prg
 TQAbstractPrintDialog.prg
+TQAbstractProxyModel.prg
 TQAbstractScrollArea.prg
 TQAbstractSlider.prg
 TQAbstractSpinBox.prg
@@ -272,10 +273,10 @@ TQDialog.prg
 TQDirModel.prg
 TQDockWidget.prg
 TQDoubleSpinBox.prg
-TQDropEvent.prg
-TQDragMoveEvent.prg
 TQDragEnterEvent.prg
 TQDragLeaveEvent.prg
+TQDragMoveEvent.prg
+TQDropEvent.prg
 TQErrorMessage.prg
 TQFileDialog.prg
 TQFileIconProvider.prg
@@ -299,12 +300,12 @@ TQHeaderView.prg
 TQHelpEvent.prg
 TQHideEvent.prg
 TQIcon.prg
-TQInputMethodEvent.prg
 TQImage.prg
 TQImageReader.prg
 TQImageWriter.prg
 TQInputDialog.prg
 TQInputEvent.prg
+TQInputMethodEvent.prg
 TQItemDelegate.prg
 TQItemEditorCreatorBase.prg
 TQItemEditorFactory.prg
@@ -408,8 +409,8 @@ TQTabBar.prg
 TQTableView.prg
 TQTableWidget.prg
 TQTableWidgetItem.prg
-TQTabWidget.prg
 TQTableWidgetSelectionRange.prg
+TQTabWidget.prg
 TQTextBlock.prg
 TQTextBlockFormat.prg
 TQTextBlockGroup.prg
@@ -453,3 +454,4 @@ TQWindowsStyle.prg
 TQWindowStateChangeEvent.prg
 TQWizard.prg
 TQWizardPage.prg
+TQUiLoader.prg

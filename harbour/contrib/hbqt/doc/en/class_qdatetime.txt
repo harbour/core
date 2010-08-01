@@ -1,67 +1,65 @@
 /*
- *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for Qt v4.5+
- *  Please do not modify this document as it is subject to change in future.
- *  Pritpal Bedi <bedipritpal@hotmail.com>
+ * $Id$
  */
 
 /*  $DOC$
-    $TEMPLATE$
-        Class
-    $NAME$
-        QDateTime()
-    $CATEGORY$
-        Harbour Bindings for Qt
-    $SUBCATEGORY$
-        GUI
-    $EXTERNALLINK$
-        http://doc.trolltech.com/4.5/qdatetime.html
-    $ONELINER$
-        Creates a new QDateTime object.
-    $INHERITS$
-
-    $SYNTAX$
-        QDateTime():new( ... )
-        QDateTime():from( pPtr_OR_oObj_of_type_QDateTime )
-        QDateTime():configure( pPtr_OR_oObj_of_type_QDateTime )
-    $ARGUMENTS$
-
-    $RETURNS$
-        An instance of the object of type QDateTime
-    $METHODS$
-        :date()                                             -> pQDate
-        :daysTo( pOther )                                   -> nInt
-        :isNull()                                           -> lBool
-        :isValid()                                          -> lBool
-        :secsTo( pOther )                                   -> nInt
-        :setDate( pDate )                                   -> NIL
-        :setTime( pTime )                                   -> NIL
-        :setTimeSpec( nSpec )                               -> NIL
-        :setTime_t( nSeconds )                              -> NIL
-        :time()                                             -> pQTime
-        :timeSpec()                                         -> nQt::TimeSpec
-        :toString( cFormat )                                -> cQString
-        :toString_1( nFormat )                              -> cQString
-        :toTime_t()                                         -> nUint
-
-    $DESCRIPTION$
-
-    $EXAMPLES$
-
-    $TESTS$
-
-    $STATUS$
-        R
-    $COMPLIANCE$
-        Not Clipper compatible
-    $PLATFORMS$
-        Windows, Linux, Mac OS X, OS/2
-    $VERSION$
-        4.5 or upper
-    $FILES$
-        Harbour source: contrib/hbqt/qtcore/TQDateTime.prg
-        C++ wrappers  : contrib/hbqt/qtcore/QDateTime.cpp
-        Library       : hbqtcore
-    $SEEALSO$
-
-    $END$
+ *  $NAME$
+ *     QDateTime()
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtcore/TQDateTime.prg
+ *     C++ wrappers  : contrib/hbqt/qtcore/QDateTime.cpp
+ *     Library       : hbqtcore
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $SYNTAX$
+ *     QDateTime():new( ... )
+ *     QDateTime():from( pPtr_OR_oObj_of_type_QDateTime )
+ *     QDateTime():configure( pPtr_OR_oObj_of_type_QDateTime )
+ *  $METHODS$
+ *     :date()                                             -> pQDate
+ *     :daysTo( pOther )                                   -> nInt
+ *     :isNull()                                           -> lBool
+ *     :isValid()                                          -> lBool
+ *     :secsTo( pOther )                                   -> nInt
+ *     :setDate( pDate )                                   -> NIL
+ *     :setTime( pTime )                                   -> NIL
+ *     :setTimeSpec( nSpec )                               -> NIL
+ *     :setTime_t( nSeconds )                              -> NIL
+ *     :time()                                             -> pQTime
+ *     :timeSpec()                                         -> nQt::TimeSpec
+ *     :toString( cFormat )                                -> cQString
+ *     :toString_1( nFormat )                              -> cQString
+ *     :toTime_t()                                         -> nUint
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QDateTime
+ *  $SEEALSO$
+ *     
+ *  $VERSION$
+ *     4.5 or upper
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $EXAMPLES$
+ * 
+ *  $INHERITS$
+ *     
+ *  $ONELINER$
+ *     Creates a new QDateTime object.
+ *  $TEMPLATE$
+ *     Class
+ *  $ARGUMENTS$
+ * 
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $DESCRIPTION$
+ * 
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qdatetime.html
+ *  $END$
  */

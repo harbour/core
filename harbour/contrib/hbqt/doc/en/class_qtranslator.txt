@@ -1,57 +1,55 @@
 /*
- *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for Qt v4.5+
- *  Please do not modify this document as it is subject to change in future.
- *  Pritpal Bedi <bedipritpal@hotmail.com>
+ * $Id$
  */
 
 /*  $DOC$
-    $TEMPLATE$
-        Class
-    $NAME$
-        QTranslator()
-    $CATEGORY$
-        Harbour Bindings for Qt
-    $SUBCATEGORY$
-        GUI
-    $EXTERNALLINK$
-        http://doc.trolltech.com/4.5/qtranslator.html
-    $ONELINER$
-        Creates a new QTranslator object.
-    $INHERITS$
-        QObject
-    $SYNTAX$
-        QTranslator():new( ... )
-        QTranslator():from( pPtr_OR_oObj_of_type_QTranslator )
-        QTranslator():configure( pPtr_OR_oObj_of_type_QTranslator )
-    $ARGUMENTS$
-
-    $RETURNS$
-        An instance of the object of type QTranslator
-    $METHODS$
-        :isEmpty()                                          -> lBool
-        :load( cFilename, cDirectory, cSearch_delimiters, cSuffix )  -> lBool
-        :translate( pContext, pSourceText, pDisambiguation )  -> cQString
-        :translate_1( pContext, pSourceText, pDisambiguation, nN )  -> cQString
-
-    $DESCRIPTION$
-
-    $EXAMPLES$
-
-    $TESTS$
-
-    $STATUS$
-        R
-    $COMPLIANCE$
-        Not Clipper compatible
-    $PLATFORMS$
-        Windows, Linux, Mac OS X, OS/2
-    $VERSION$
-        4.5 or upper
-    $FILES$
-        Harbour source: contrib/hbqt/qtcore/TQTranslator.prg
-        C++ wrappers  : contrib/hbqt/qtcore/QTranslator.cpp
-        Library       : hbqtcore
-    $SEEALSO$
-        QObject
-    $END$
+ *  $NAME$
+ *     QTranslator()
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtcore/TQTranslator.prg
+ *     C++ wrappers  : contrib/hbqt/qtcore/QTranslator.cpp
+ *     Library       : hbqtcore
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $SYNTAX$
+ *     QTranslator():new( ... )
+ *     QTranslator():from( pPtr_OR_oObj_of_type_QTranslator )
+ *     QTranslator():configure( pPtr_OR_oObj_of_type_QTranslator )
+ *  $METHODS$
+ *     :isEmpty()                                          -> lBool
+ *     :load( cFilename, cDirectory, cSearch_delimiters, cSuffix )  -> lBool
+ *     :translate( pContext, pSourceText, pDisambiguation )  -> cQString
+ *     :translate_1( pContext, pSourceText, pDisambiguation, nN )  -> cQString
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QTranslator
+ *  $SEEALSO$
+ *     QObject
+ *  $VERSION$
+ *     4.5 or upper
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $EXAMPLES$
+ * 
+ *  $INHERITS$
+ *     QObject
+ *  $ONELINER$
+ *     Creates a new QTranslator object.
+ *  $TEMPLATE$
+ *     Class
+ *  $ARGUMENTS$
+ * 
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $DESCRIPTION$
+ * 
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qtranslator.html
+ *  $END$
  */

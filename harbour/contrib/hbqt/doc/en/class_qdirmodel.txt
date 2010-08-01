@@ -1,90 +1,88 @@
 /*
- *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for Qt v4.5+
- *  Please do not modify this document as it is subject to change in future.
- *  Pritpal Bedi <bedipritpal@hotmail.com>
+ * $Id$
  */
 
 /*  $DOC$
-    $TEMPLATE$
-        Class
-    $NAME$
-        QDirModel()
-    $CATEGORY$
-        Harbour Bindings for Qt
-    $SUBCATEGORY$
-        GUI
-    $EXTERNALLINK$
-        http://doc.trolltech.com/4.5/qdirmodel.html
-    $ONELINER$
-        Creates a new QDirModel object.
-    $INHERITS$
-        QAbstractItemModel
-    $SYNTAX$
-        QDirModel():new( ... )
-        QDirModel():from( pPtr_OR_oObj_of_type_QDirModel )
-        QDirModel():configure( pPtr_OR_oObj_of_type_QDirModel )
-    $ARGUMENTS$
-
-    $RETURNS$
-        An instance of the object of type QDirModel
-    $METHODS$
-        :columnCount( pParent )                             -> nInt
-        :data( pIndex, nRole )                              -> pQVariant
-        :dropMimeData( pData, nAction, nRow, nColumn, pParent )  -> lBool
-        :fileIcon( pIndex )                                 -> pQIcon
-        :fileInfo( pIndex )                                 -> pQFileInfo
-        :fileName( pIndex )                                 -> cQString
-        :filePath( pIndex )                                 -> cQString
-        :filter()                                           -> nQDir::Filters
-        :flags( pIndex )                                    -> nQt::ItemFlags
-        :hasChildren( pParent )                             -> lBool
-        :headerData( nSection, nOrientation, nRole )        -> pQVariant
-        :iconProvider()                                     -> pQFileIconProvider
-        :index( nRow, nColumn, pParent )                    -> pQModelIndex
-        :index_1( cPath, nColumn )                          -> pQModelIndex
-        :isDir( pIndex )                                    -> lBool
-        :isReadOnly()                                       -> lBool
-        :lazyChildCount()                                   -> lBool
-        :mimeTypes()                                        -> pQStringList
-        :mkdir( pParent, cName )                            -> pQModelIndex
-        :nameFilters()                                      -> pQStringList
-        :parent( pChild )                                   -> pQModelIndex
-        :remove( pIndex )                                   -> lBool
-        :resolveSymlinks()                                  -> lBool
-        :rmdir( pIndex )                                    -> lBool
-        :rowCount( pParent )                                -> nInt
-        :setData( pIndex, pValue, nRole )                   -> lBool
-        :setFilter( nFilters )                              -> NIL
-        :setIconProvider( pProvider )                       -> NIL
-        :setLazyChildCount( lEnable )                       -> NIL
-        :setNameFilters( pFilters )                         -> NIL
-        :setReadOnly( lEnable )                             -> NIL
-        :setResolveSymlinks( lEnable )                      -> NIL
-        :setSorting( nSort )                                -> NIL
-        :sort( nColumn, nOrder )                            -> NIL
-        :sorting()                                          -> nQDir::SortFlags
-        :supportedDropActions()                             -> nQt::DropActions
-        :refresh( pParent )                                 -> NIL
-
-    $DESCRIPTION$
-
-    $EXAMPLES$
-
-    $TESTS$
-
-    $STATUS$
-        R
-    $COMPLIANCE$
-        Not Clipper compatible
-    $PLATFORMS$
-        Windows, Linux, Mac OS X, OS/2
-    $VERSION$
-        4.5 or upper
-    $FILES$
-        Harbour source: contrib/hbqt/qtgui/TQDirModel.prg
-        C++ wrappers  : contrib/hbqt/qtgui/QDirModel.cpp
-        Library       : hbqtgui
-    $SEEALSO$
-        QAbstractItemModel
-    $END$
+ *  $NAME$
+ *     QDirModel()
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQDirModel.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QDirModel.cpp
+ *     Library       : hbqtgui
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $SYNTAX$
+ *     QDirModel():new( ... )
+ *     QDirModel():from( pPtr_OR_oObj_of_type_QDirModel )
+ *     QDirModel():configure( pPtr_OR_oObj_of_type_QDirModel )
+ *  $METHODS$
+ *     :columnCount( pParent )                             -> nInt
+ *     :data( pIndex, nRole )                              -> pQVariant
+ *     :dropMimeData( pData, nAction, nRow, nColumn, pParent )  -> lBool
+ *     :fileIcon( pIndex )                                 -> pQIcon
+ *     :fileInfo( pIndex )                                 -> pQFileInfo
+ *     :fileName( pIndex )                                 -> cQString
+ *     :filePath( pIndex )                                 -> cQString
+ *     :filter()                                           -> nQDir::Filters
+ *     :flags( pIndex )                                    -> nQt::ItemFlags
+ *     :hasChildren( pParent )                             -> lBool
+ *     :headerData( nSection, nOrientation, nRole )        -> pQVariant
+ *     :iconProvider()                                     -> pQFileIconProvider
+ *     :index( nRow, nColumn, pParent )                    -> pQModelIndex
+ *     :index_1( cPath, nColumn )                          -> pQModelIndex
+ *     :isDir( pIndex )                                    -> lBool
+ *     :isReadOnly()                                       -> lBool
+ *     :lazyChildCount()                                   -> lBool
+ *     :mimeTypes()                                        -> pQStringList
+ *     :mkdir( pParent, cName )                            -> pQModelIndex
+ *     :nameFilters()                                      -> pQStringList
+ *     :parent( pChild )                                   -> pQModelIndex
+ *     :remove( pIndex )                                   -> lBool
+ *     :resolveSymlinks()                                  -> lBool
+ *     :rmdir( pIndex )                                    -> lBool
+ *     :rowCount( pParent )                                -> nInt
+ *     :setData( pIndex, pValue, nRole )                   -> lBool
+ *     :setFilter( nFilters )                              -> NIL
+ *     :setIconProvider( pProvider )                       -> NIL
+ *     :setLazyChildCount( lEnable )                       -> NIL
+ *     :setNameFilters( pFilters )                         -> NIL
+ *     :setReadOnly( lEnable )                             -> NIL
+ *     :setResolveSymlinks( lEnable )                      -> NIL
+ *     :setSorting( nSort )                                -> NIL
+ *     :sort( nColumn, nOrder )                            -> NIL
+ *     :sorting()                                          -> nQDir::SortFlags
+ *     :supportedDropActions()                             -> nQt::DropActions
+ *     :refresh( pParent )                                 -> NIL
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QDirModel
+ *  $SEEALSO$
+ *     QAbstractItemModel
+ *  $VERSION$
+ *     4.5 or upper
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $EXAMPLES$
+ * 
+ *  $INHERITS$
+ *     QAbstractItemModel
+ *  $ONELINER$
+ *     Creates a new QDirModel object.
+ *  $TEMPLATE$
+ *     Class
+ *  $ARGUMENTS$
+ * 
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $DESCRIPTION$
+ * 
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qdirmodel.html
+ *  $END$
  */

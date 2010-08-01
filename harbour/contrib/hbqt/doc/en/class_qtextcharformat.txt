@@ -1,100 +1,98 @@
 /*
- *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for Qt v4.5+
- *  Please do not modify this document as it is subject to change in future.
- *  Pritpal Bedi <bedipritpal@hotmail.com>
+ * $Id$
  */
 
 /*  $DOC$
-    $TEMPLATE$
-        Class
-    $NAME$
-        QTextCharFormat()
-    $CATEGORY$
-        Harbour Bindings for Qt
-    $SUBCATEGORY$
-        GUI
-    $EXTERNALLINK$
-        http://doc.trolltech.com/4.5/qtextcharformat.html
-    $ONELINER$
-        Creates a new QTextCharFormat object.
-    $INHERITS$
-        QTextFormat
-    $SYNTAX$
-        QTextCharFormat():new( ... )
-        QTextCharFormat():from( pPtr_OR_oObj_of_type_QTextCharFormat )
-        QTextCharFormat():configure( pPtr_OR_oObj_of_type_QTextCharFormat )
-    $ARGUMENTS$
-
-    $RETURNS$
-        An instance of the object of type QTextCharFormat
-    $METHODS$
-        :anchorHref()                                       -> cQString
-        :anchorNames()                                      -> pQStringList
-        :font()                                             -> pQFont
-        :fontCapitalization()                               -> nQFont::Capitalization
-        :fontFamily()                                       -> cQString
-        :fontFixedPitch()                                   -> lBool
-        :fontItalic()                                       -> lBool
-        :fontKerning()                                      -> lBool
-        :fontLetterSpacing()                                -> nQreal
-        :fontOverline()                                     -> lBool
-        :fontPointSize()                                    -> nQreal
-        :fontStrikeOut()                                    -> lBool
-        :fontStyleHint()                                    -> nQFont::StyleHint
-        :fontStyleStrategy()                                -> nQFont::StyleStrategy
-        :fontUnderline()                                    -> lBool
-        :fontWeight()                                       -> nInt
-        :fontWordSpacing()                                  -> nQreal
-        :isAnchor()                                         -> lBool
-        :isValid()                                          -> lBool
-        :setAnchor( lAnchor )                               -> NIL
-        :setAnchorHref( cValue )                            -> NIL
-        :setAnchorNames( pNames )                           -> NIL
-        :setFont( pFont )                                   -> NIL
-        :setFontCapitalization( nCapitalization )           -> NIL
-        :setFontFamily( cFamily )                           -> NIL
-        :setFontFixedPitch( lFixedPitch )                   -> NIL
-        :setFontItalic( lItalic )                           -> NIL
-        :setFontKerning( lEnable )                          -> NIL
-        :setFontLetterSpacing( nSpacing )                   -> NIL
-        :setFontOverline( lOverline )                       -> NIL
-        :setFontPointSize( nSize )                          -> NIL
-        :setFontStrikeOut( lStrikeOut )                     -> NIL
-        :setFontStyleHint( nHint, nStrategy )               -> NIL
-        :setFontStyleStrategy( nStrategy )                  -> NIL
-        :setFontUnderline( lUnderline )                     -> NIL
-        :setFontWeight( nWeight )                           -> NIL
-        :setFontWordSpacing( nSpacing )                     -> NIL
-        :setTextOutline( pPen )                             -> NIL
-        :setToolTip( cText )                                -> NIL
-        :setUnderlineColor( pColor )                        -> NIL
-        :setUnderlineStyle( nStyle )                        -> NIL
-        :setVerticalAlignment( nAlignment )                 -> NIL
-        :textOutline()                                      -> pQPen
-        :toolTip()                                          -> cQString
-        :underlineColor()                                   -> pQColor
-        :underlineStyle()                                   -> nUnderlineStyle
-        :verticalAlignment()                                -> nVerticalAlignment
-
-    $DESCRIPTION$
-
-    $EXAMPLES$
-
-    $TESTS$
-
-    $STATUS$
-        R
-    $COMPLIANCE$
-        Not Clipper compatible
-    $PLATFORMS$
-        Windows, Linux, Mac OS X, OS/2
-    $VERSION$
-        4.5 or upper
-    $FILES$
-        Harbour source: contrib/hbqt/qtgui/TQTextCharFormat.prg
-        C++ wrappers  : contrib/hbqt/qtgui/QTextCharFormat.cpp
-        Library       : hbqtgui
-    $SEEALSO$
-        QTextFormat
-    $END$
+ *  $NAME$
+ *     QTextCharFormat()
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQTextCharFormat.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QTextCharFormat.cpp
+ *     Library       : hbqtgui
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $SYNTAX$
+ *     QTextCharFormat():new( ... )
+ *     QTextCharFormat():from( pPtr_OR_oObj_of_type_QTextCharFormat )
+ *     QTextCharFormat():configure( pPtr_OR_oObj_of_type_QTextCharFormat )
+ *  $METHODS$
+ *     :anchorHref()                                       -> cQString
+ *     :anchorNames()                                      -> pQStringList
+ *     :font()                                             -> pQFont
+ *     :fontCapitalization()                               -> nQFont::Capitalization
+ *     :fontFamily()                                       -> cQString
+ *     :fontFixedPitch()                                   -> lBool
+ *     :fontItalic()                                       -> lBool
+ *     :fontKerning()                                      -> lBool
+ *     :fontLetterSpacing()                                -> nQreal
+ *     :fontOverline()                                     -> lBool
+ *     :fontPointSize()                                    -> nQreal
+ *     :fontStrikeOut()                                    -> lBool
+ *     :fontStyleHint()                                    -> nQFont::StyleHint
+ *     :fontStyleStrategy()                                -> nQFont::StyleStrategy
+ *     :fontUnderline()                                    -> lBool
+ *     :fontWeight()                                       -> nInt
+ *     :fontWordSpacing()                                  -> nQreal
+ *     :isAnchor()                                         -> lBool
+ *     :isValid()                                          -> lBool
+ *     :setAnchor( lAnchor )                               -> NIL
+ *     :setAnchorHref( cValue )                            -> NIL
+ *     :setAnchorNames( pNames )                           -> NIL
+ *     :setFont( pFont )                                   -> NIL
+ *     :setFontCapitalization( nCapitalization )           -> NIL
+ *     :setFontFamily( cFamily )                           -> NIL
+ *     :setFontFixedPitch( lFixedPitch )                   -> NIL
+ *     :setFontItalic( lItalic )                           -> NIL
+ *     :setFontKerning( lEnable )                          -> NIL
+ *     :setFontLetterSpacing( nSpacing )                   -> NIL
+ *     :setFontOverline( lOverline )                       -> NIL
+ *     :setFontPointSize( nSize )                          -> NIL
+ *     :setFontStrikeOut( lStrikeOut )                     -> NIL
+ *     :setFontStyleHint( nHint, nStrategy )               -> NIL
+ *     :setFontStyleStrategy( nStrategy )                  -> NIL
+ *     :setFontUnderline( lUnderline )                     -> NIL
+ *     :setFontWeight( nWeight )                           -> NIL
+ *     :setFontWordSpacing( nSpacing )                     -> NIL
+ *     :setTextOutline( pPen )                             -> NIL
+ *     :setToolTip( cText )                                -> NIL
+ *     :setUnderlineColor( pColor )                        -> NIL
+ *     :setUnderlineStyle( nStyle )                        -> NIL
+ *     :setVerticalAlignment( nAlignment )                 -> NIL
+ *     :textOutline()                                      -> pQPen
+ *     :toolTip()                                          -> cQString
+ *     :underlineColor()                                   -> pQColor
+ *     :underlineStyle()                                   -> nUnderlineStyle
+ *     :verticalAlignment()                                -> nVerticalAlignment
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QTextCharFormat
+ *  $SEEALSO$
+ *     QTextFormat
+ *  $VERSION$
+ *     4.5 or upper
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $EXAMPLES$
+ * 
+ *  $INHERITS$
+ *     QTextFormat
+ *  $ONELINER$
+ *     Creates a new QTextCharFormat object.
+ *  $TEMPLATE$
+ *     Class
+ *  $ARGUMENTS$
+ * 
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $DESCRIPTION$
+ * 
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qtextcharformat.html
+ *  $END$
  */

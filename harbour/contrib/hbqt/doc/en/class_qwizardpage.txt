@@ -1,70 +1,68 @@
 /*
- *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for Qt v4.5+
- *  Please do not modify this document as it is subject to change in future.
- *  Pritpal Bedi <bedipritpal@hotmail.com>
+ * $Id$
  */
 
 /*  $DOC$
-    $TEMPLATE$
-        Class
-    $NAME$
-        QWizardPage()
-    $CATEGORY$
-        Harbour Bindings for Qt
-    $SUBCATEGORY$
-        GUI
-    $EXTERNALLINK$
-        http://doc.trolltech.com/4.5/qwizardpage.html
-    $ONELINER$
-        Creates a new QWizardPage object.
-    $INHERITS$
-        QWidget
-    $SYNTAX$
-        QWizardPage():new( ... )
-        QWizardPage():from( pPtr_OR_oObj_of_type_QWizardPage )
-        QWizardPage():configure( pPtr_OR_oObj_of_type_QWizardPage )
-    $ARGUMENTS$
-
-    $RETURNS$
-        An instance of the object of type QWizardPage
-    $METHODS$
-        :buttonText( nWhich )                               -> cQString
-        :cleanupPage()                                      -> NIL
-        :initializePage()                                   -> NIL
-        :isCommitPage()                                     -> lBool
-        :isComplete()                                       -> lBool
-        :isFinalPage()                                      -> lBool
-        :nextId()                                           -> nInt
-        :pixmap( nWhich )                                   -> pQPixmap
-        :setButtonText( nWhich, cText )                     -> NIL
-        :setCommitPage( lCommitPage )                       -> NIL
-        :setFinalPage( lFinalPage )                         -> NIL
-        :setPixmap( nWhich, pPixmap )                       -> NIL
-        :setSubTitle( cSubTitle )                           -> NIL
-        :setTitle( cTitle )                                 -> NIL
-        :subTitle()                                         -> cQString
-        :title()                                            -> cQString
-        :validatePage()                                     -> lBool
-
-    $DESCRIPTION$
-
-    $EXAMPLES$
-
-    $TESTS$
-
-    $STATUS$
-        R
-    $COMPLIANCE$
-        Not Clipper compatible
-    $PLATFORMS$
-        Windows, Linux, Mac OS X, OS/2
-    $VERSION$
-        4.5 or upper
-    $FILES$
-        Harbour source: contrib/hbqt/qtgui/TQWizardPage.prg
-        C++ wrappers  : contrib/hbqt/qtgui/QWizardPage.cpp
-        Library       : hbqtgui
-    $SEEALSO$
-        QWidget
-    $END$
+ *  $NAME$
+ *     QWizardPage()
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQWizardPage.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QWizardPage.cpp
+ *     Library       : hbqtgui
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $SYNTAX$
+ *     QWizardPage():new( ... )
+ *     QWizardPage():from( pPtr_OR_oObj_of_type_QWizardPage )
+ *     QWizardPage():configure( pPtr_OR_oObj_of_type_QWizardPage )
+ *  $METHODS$
+ *     :buttonText( nWhich )                               -> cQString
+ *     :cleanupPage()                                      -> NIL
+ *     :initializePage()                                   -> NIL
+ *     :isCommitPage()                                     -> lBool
+ *     :isComplete()                                       -> lBool
+ *     :isFinalPage()                                      -> lBool
+ *     :nextId()                                           -> nInt
+ *     :pixmap( nWhich )                                   -> pQPixmap
+ *     :setButtonText( nWhich, cText )                     -> NIL
+ *     :setCommitPage( lCommitPage )                       -> NIL
+ *     :setFinalPage( lFinalPage )                         -> NIL
+ *     :setPixmap( nWhich, pPixmap )                       -> NIL
+ *     :setSubTitle( cSubTitle )                           -> NIL
+ *     :setTitle( cTitle )                                 -> NIL
+ *     :subTitle()                                         -> cQString
+ *     :title()                                            -> cQString
+ *     :validatePage()                                     -> lBool
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QWizardPage
+ *  $SEEALSO$
+ *     QWidget
+ *  $VERSION$
+ *     4.5 or upper
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $EXAMPLES$
+ * 
+ *  $INHERITS$
+ *     QWidget
+ *  $ONELINER$
+ *     Creates a new QWizardPage object.
+ *  $TEMPLATE$
+ *     Class
+ *  $ARGUMENTS$
+ * 
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $DESCRIPTION$
+ * 
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qwizardpage.html
+ *  $END$
  */

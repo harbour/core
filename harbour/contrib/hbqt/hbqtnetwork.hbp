@@ -6,4 +6,6 @@ hbqt_common.hbm
 
 qtnetwork/filelist.hbm
 
+hbqtcore.hbc
+
 hbqtnetworks.hbp

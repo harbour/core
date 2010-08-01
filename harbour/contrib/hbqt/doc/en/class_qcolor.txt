@@ -1,111 +1,109 @@
 /*
- *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for Qt v4.5+
- *  Please do not modify this document as it is subject to change in future.
- *  Pritpal Bedi <bedipritpal@hotmail.com>
+ * $Id$
  */
 
 /*  $DOC$
-    $TEMPLATE$
-        Class
-    $NAME$
-        QColor()
-    $CATEGORY$
-        Harbour Bindings for Qt
-    $SUBCATEGORY$
-        GUI
-    $EXTERNALLINK$
-        http://doc.trolltech.com/4.5/qcolor.html
-    $ONELINER$
-        Creates a new QColor object.
-    $INHERITS$
-
-    $SYNTAX$
-        QColor():new( ... )
-        QColor():from( pPtr_OR_oObj_of_type_QColor )
-        QColor():configure( pPtr_OR_oObj_of_type_QColor )
-    $ARGUMENTS$
-
-    $RETURNS$
-        An instance of the object of type QColor
-    $METHODS$
-        :alpha()                                            -> nInt
-        :alphaF()                                           -> nQreal
-        :black()                                            -> nInt
-        :blackF()                                           -> nQreal
-        :blue()                                             -> nInt
-        :blueF()                                            -> nQreal
-        :cyan()                                             -> nInt
-        :cyanF()                                            -> nQreal
-        :getCmyk( @nC, @nM, @nY, @nK, @nA )                 -> NIL
-        :getCmykF( @nC, @nM, @nY, @nK, @nA )                -> NIL
-        :getHsv( @nH, @nS, @nV, @nA )                       -> NIL
-        :getHsvF( @nH, @nS, @nV, @nA )                      -> NIL
-        :getRgb( @nR, @nG, @nB, @nA )                       -> NIL
-        :getRgbF( @nR, @nG, @nB, @nA )                      -> NIL
-        :green()                                            -> nInt
-        :greenF()                                           -> nQreal
-        :hue()                                              -> nInt
-        :hueF()                                             -> nQreal
-        :isValid()                                          -> lBool
-        :magenta()                                          -> nInt
-        :magentaF()                                         -> nQreal
-        :name()                                             -> cQString
-        :red()                                              -> nInt
-        :redF()                                             -> nQreal
-        :rgb()                                              -> nQRgb
-        :rgba()                                             -> nQRgb
-        :saturation()                                       -> nInt
-        :saturationF()                                      -> nQreal
-        :setAlpha( nAlpha )                                 -> NIL
-        :setAlphaF( nAlpha )                                -> NIL
-        :setBlue( nBlue )                                   -> NIL
-        :setBlueF( nBlue )                                  -> NIL
-        :setCmyk( nC, nM, nY, nK, nA )                      -> NIL
-        :setCmykF( nC, nM, nY, nK, nA )                     -> NIL
-        :setGreen( nGreen )                                 -> NIL
-        :setGreenF( nGreen )                                -> NIL
-        :setHsv( nH, nS, nV, nA )                           -> NIL
-        :setHsvF( nH, nS, nV, nA )                          -> NIL
-        :setNamedColor( cName )                             -> NIL
-        :setRed( nRed )                                     -> NIL
-        :setRedF( nRed )                                    -> NIL
-        :setRgb( nRgb )                                     -> NIL
-        :setRgb_1( nR, nG, nB, nA )                         -> NIL
-        :setRgba( nRgba )                                   -> NIL
-        :setRgbF( nR, nG, nB, nA )                          -> NIL
-        :spec()                                             -> nSpec
-        :value()                                            -> nInt
-        :valueF()                                           -> nQreal
-        :yellow()                                           -> nInt
-        :yellowF()                                          -> nQreal
-        :colorNames()                                       -> pQStringList
-
-    $DESCRIPTION$
-
-    $EXAMPLES$
-        oColor := QColor():new()                       // You will supply other parameter later
-        oColor := QColor():new( nQt_Color )            // R: hbqt.ch
-        oColor := QColor():new( nRGB )                 // ( nR + ( nG * 256 ) + ( nB * 256 * 256 ) )
-        oColor := QColor():new( cColorName )           // #RRGGBB
-        oColor := QColor():new( pQColor )              // Pointer to previously obtained QColor
-        oColor := QColor():new( nR, nG, nB )           // Red Green Blue values
-        oColor := QColor():new( nR, nG, nB, nAlpha )   // Red Green Blue values with Alpha Channel
-
-    $TESTS$
-
-    $STATUS$
-        R
-    $COMPLIANCE$
-        Not Clipper compatible
-    $PLATFORMS$
-        Windows, Linux, Mac OS X, OS/2
-    $VERSION$
-        4.5 or upper
-    $FILES$
-        Harbour source: contrib/hbqt/qtgui/TQColor.prg
-        C++ wrappers  : contrib/hbqt/qtgui/QColor.cpp
-        Library       : hbqtgui
-    $SEEALSO$
-
-    $END$
+ *  $NAME$
+ *     QColor()
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQColor.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QColor.cpp
+ *     Library       : hbqtgui
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $SYNTAX$
+ *     QColor():new( ... )
+ *     QColor():from( pPtr_OR_oObj_of_type_QColor )
+ *     QColor():configure( pPtr_OR_oObj_of_type_QColor )
+ *  $METHODS$
+ *     :alpha()                                            -> nInt
+ *     :alphaF()                                           -> nQreal
+ *     :black()                                            -> nInt
+ *     :blackF()                                           -> nQreal
+ *     :blue()                                             -> nInt
+ *     :blueF()                                            -> nQreal
+ *     :cyan()                                             -> nInt
+ *     :cyanF()                                            -> nQreal
+ *     :getCmyk( @nC, @nM, @nY, @nK, @nA )                 -> NIL
+ *     :getCmykF( @nC, @nM, @nY, @nK, @nA )                -> NIL
+ *     :getHsv( @nH, @nS, @nV, @nA )                       -> NIL
+ *     :getHsvF( @nH, @nS, @nV, @nA )                      -> NIL
+ *     :getRgb( @nR, @nG, @nB, @nA )                       -> NIL
+ *     :getRgbF( @nR, @nG, @nB, @nA )                      -> NIL
+ *     :green()                                            -> nInt
+ *     :greenF()                                           -> nQreal
+ *     :hue()                                              -> nInt
+ *     :hueF()                                             -> nQreal
+ *     :isValid()                                          -> lBool
+ *     :magenta()                                          -> nInt
+ *     :magentaF()                                         -> nQreal
+ *     :name()                                             -> cQString
+ *     :red()                                              -> nInt
+ *     :redF()                                             -> nQreal
+ *     :rgb()                                              -> nQRgb
+ *     :rgba()                                             -> nQRgb
+ *     :saturation()                                       -> nInt
+ *     :saturationF()                                      -> nQreal
+ *     :setAlpha( nAlpha )                                 -> NIL
+ *     :setAlphaF( nAlpha )                                -> NIL
+ *     :setBlue( nBlue )                                   -> NIL
+ *     :setBlueF( nBlue )                                  -> NIL
+ *     :setCmyk( nC, nM, nY, nK, nA )                      -> NIL
+ *     :setCmykF( nC, nM, nY, nK, nA )                     -> NIL
+ *     :setGreen( nGreen )                                 -> NIL
+ *     :setGreenF( nGreen )                                -> NIL
+ *     :setHsv( nH, nS, nV, nA )                           -> NIL
+ *     :setHsvF( nH, nS, nV, nA )                          -> NIL
+ *     :setNamedColor( cName )                             -> NIL
+ *     :setRed( nRed )                                     -> NIL
+ *     :setRedF( nRed )                                    -> NIL
+ *     :setRgb( nRgb )                                     -> NIL
+ *     :setRgb_1( nR, nG, nB, nA )                         -> NIL
+ *     :setRgba( nRgba )                                   -> NIL
+ *     :setRgbF( nR, nG, nB, nA )                          -> NIL
+ *     :spec()                                             -> nSpec
+ *     :value()                                            -> nInt
+ *     :valueF()                                           -> nQreal
+ *     :yellow()                                           -> nInt
+ *     :yellowF()                                          -> nQreal
+ *     :colorNames()                                       -> pQStringList
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QColor
+ *  $SEEALSO$
+ *     
+ *  $VERSION$
+ *     4.5 or upper
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $EXAMPLES$
+ *     oColor := QColor():new()                       // You will supply other parameter later
+ *     oColor := QColor():new( nQt_Color )            // R: hbqt.ch
+ *     oColor := QColor():new( nRGB )                 // ( nR + ( nG * 256 ) + ( nB * 256 * 256 ) )
+ *     oColor := QColor():new( cColorName )           // #RRGGBB
+ *     oColor := QColor():new( pQColor )              // Pointer to previously obtained QColor
+ *     oColor := QColor():new( nR, nG, nB )           // Red Green Blue values
+ *     oColor := QColor():new( nR, nG, nB, nAlpha )   // Red Green Blue values with Alpha Channel
+ * 
+ *  $INHERITS$
+ *     
+ *  $ONELINER$
+ *     Creates a new QColor object.
+ *  $TEMPLATE$
+ *     Class
+ *  $ARGUMENTS$
+ * 
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $DESCRIPTION$
+ * 
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qcolor.html
+ *  $END$
  */

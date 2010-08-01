@@ -57,6 +57,8 @@
 
 #include "hbapiitm.h"
 
+#include "hbqtcore_garbage.h"
+
 #include <QtCore/QProcess>
 #include <QtCore/QUrl>
 #include <QtGui/QTextCursor>

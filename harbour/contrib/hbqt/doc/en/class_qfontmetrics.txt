@@ -1,82 +1,80 @@
 /*
- *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for Qt v4.5+
- *  Please do not modify this document as it is subject to change in future.
- *  Pritpal Bedi <bedipritpal@hotmail.com>
+ * $Id$
  */
 
 /*  $DOC$
-    $TEMPLATE$
-        Class
-    $NAME$
-        QFontMetrics()
-    $CATEGORY$
-        Harbour Bindings for Qt
-    $SUBCATEGORY$
-        GUI
-    $EXTERNALLINK$
-        http://doc.trolltech.com/4.5/qfontmetrics.html
-    $ONELINER$
-        Creates a new QFontMetrics object.
-    $INHERITS$
-
-    $SYNTAX$
-        QFontMetrics():new( ... )
-        QFontMetrics():from( pPtr_OR_oObj_of_type_QFontMetrics )
-        QFontMetrics():configure( pPtr_OR_oObj_of_type_QFontMetrics )
-    $ARGUMENTS$
-
-    $RETURNS$
-        An instance of the object of type QFontMetrics
-    $METHODS$
-        :ascent()                                           -> nInt
-        :averageCharWidth()                                 -> nInt
-        :boundingRect( pCh )                                -> pQRect
-        :boundingRect_1( cText )                            -> pQRect
-        :boundingRect_2( nX, nY, nWidth, nHeight, nFlags, cText, nTabStops, @nTabArray )  -> pQRect
-        :boundingRect_3( pRect, nFlags, cText, nTabStops, @nTabArray )  -> pQRect
-        :descent()                                          -> nInt
-        :elidedText( cText, nMode, nWidth, nFlags )         -> cQString
-        :height()                                           -> nInt
-        :inFont( pCh )                                      -> lBool
-        :leading()                                          -> nInt
-        :leftBearing( pCh )                                 -> nInt
-        :lineSpacing()                                      -> nInt
-        :lineWidth()                                        -> nInt
-        :maxWidth()                                         -> nInt
-        :minLeftBearing()                                   -> nInt
-        :minRightBearing()                                  -> nInt
-        :overlinePos()                                      -> nInt
-        :rightBearing( pCh )                                -> nInt
-        :size( nFlags, cText, nTabStops, @nTabArray )       -> pQSize
-        :strikeOutPos()                                     -> nInt
-        :tightBoundingRect( cText )                         -> pQRect
-        :underlinePos()                                     -> nInt
-        :width( cText, nLen )                               -> nInt
-        :width_1( pCh )                                     -> nInt
-        :xHeight()                                          -> nInt
-
-    $DESCRIPTION$
-
-    $EXAMPLES$
-        oFontMetrics := QFontMetrics():new( pQFontMetrics )
-        oFontMetrics := QFontMetrics():new( "QFont", pQFont )
-        oFontMetrics := QFontMetrics():new( pQFont, pQPaintDevice )
-
-    $TESTS$
-
-    $STATUS$
-        R
-    $COMPLIANCE$
-        Not Clipper compatible
-    $PLATFORMS$
-        Windows, Linux, Mac OS X, OS/2
-    $VERSION$
-        4.5 or upper
-    $FILES$
-        Harbour source: contrib/hbqt/qtgui/TQFontMetrics.prg
-        C++ wrappers  : contrib/hbqt/qtgui/QFontMetrics.cpp
-        Library       : hbqtgui
-    $SEEALSO$
-
-    $END$
+ *  $NAME$
+ *     QFontMetrics()
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQFontMetrics.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QFontMetrics.cpp
+ *     Library       : hbqtgui
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $SYNTAX$
+ *     QFontMetrics():new( ... )
+ *     QFontMetrics():from( pPtr_OR_oObj_of_type_QFontMetrics )
+ *     QFontMetrics():configure( pPtr_OR_oObj_of_type_QFontMetrics )
+ *  $METHODS$
+ *     :ascent()                                           -> nInt
+ *     :averageCharWidth()                                 -> nInt
+ *     :boundingRect( pCh )                                -> pQRect
+ *     :boundingRect_1( cText )                            -> pQRect
+ *     :boundingRect_2( nX, nY, nWidth, nHeight, nFlags, cText, nTabStops, @nTabArray )  -> pQRect
+ *     :boundingRect_3( pRect, nFlags, cText, nTabStops, @nTabArray )  -> pQRect
+ *     :descent()                                          -> nInt
+ *     :elidedText( cText, nMode, nWidth, nFlags )         -> cQString
+ *     :height()                                           -> nInt
+ *     :inFont( pCh )                                      -> lBool
+ *     :leading()                                          -> nInt
+ *     :leftBearing( pCh )                                 -> nInt
+ *     :lineSpacing()                                      -> nInt
+ *     :lineWidth()                                        -> nInt
+ *     :maxWidth()                                         -> nInt
+ *     :minLeftBearing()                                   -> nInt
+ *     :minRightBearing()                                  -> nInt
+ *     :overlinePos()                                      -> nInt
+ *     :rightBearing( pCh )                                -> nInt
+ *     :size( nFlags, cText, nTabStops, @nTabArray )       -> pQSize
+ *     :strikeOutPos()                                     -> nInt
+ *     :tightBoundingRect( cText )                         -> pQRect
+ *     :underlinePos()                                     -> nInt
+ *     :width( cText, nLen )                               -> nInt
+ *     :width_1( pCh )                                     -> nInt
+ *     :xHeight()                                          -> nInt
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QFontMetrics
+ *  $SEEALSO$
+ *     
+ *  $VERSION$
+ *     4.5 or upper
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $EXAMPLES$
+ *     oFontMetrics := QFontMetrics():new( pQFontMetrics )
+ *     oFontMetrics := QFontMetrics():new( "QFont", pQFont )
+ *     oFontMetrics := QFontMetrics():new( pQFont, pQPaintDevice )
+ * 
+ *  $INHERITS$
+ *     
+ *  $ONELINER$
+ *     Creates a new QFontMetrics object.
+ *  $TEMPLATE$
+ *     Class
+ *  $ARGUMENTS$
+ * 
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $DESCRIPTION$
+ * 
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qfontmetrics.html
+ *  $END$
  */

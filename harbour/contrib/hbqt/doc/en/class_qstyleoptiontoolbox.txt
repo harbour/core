@@ -1,55 +1,53 @@
 /*
- *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for Qt v4.5+
- *  Please do not modify this document as it is subject to change in future.
- *  Pritpal Bedi <bedipritpal@hotmail.com>
+ * $Id$
  */
 
 /*  $DOC$
-    $TEMPLATE$
-        Class
-    $NAME$
-        QStyleOptionToolBox()
-    $CATEGORY$
-        Harbour Bindings for Qt
-    $SUBCATEGORY$
-        GUI
-    $EXTERNALLINK$
-        http://doc.trolltech.com/4.5/qstyleoptiontoolbox.html
-    $ONELINER$
-        Creates a new QStyleOptionToolBox object.
-    $INHERITS$
-        QStyleOption
-    $SYNTAX$
-        QStyleOptionToolBox():new( ... )
-        QStyleOptionToolBox():from( pPtr_OR_oObj_of_type_QStyleOptionToolBox )
-        QStyleOptionToolBox():configure( pPtr_OR_oObj_of_type_QStyleOptionToolBox )
-    $ARGUMENTS$
-
-    $RETURNS$
-        An instance of the object of type QStyleOptionToolBox
-    $METHODS$
-        :icon()                                             -> pQIcon
-        :text()                                             -> cQString
-
-    $DESCRIPTION$
-
-    $EXAMPLES$
-
-    $TESTS$
-
-    $STATUS$
-        R
-    $COMPLIANCE$
-        Not Clipper compatible
-    $PLATFORMS$
-        Windows, Linux, Mac OS X, OS/2
-    $VERSION$
-        4.5 or upper
-    $FILES$
-        Harbour source: contrib/hbqt/qtgui/TQStyleOptionToolBox.prg
-        C++ wrappers  : contrib/hbqt/qtgui/QStyleOptionToolBox.cpp
-        Library       : hbqtgui
-    $SEEALSO$
-        QStyleOption
-    $END$
+ *  $NAME$
+ *     QStyleOptionToolBox()
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQStyleOptionToolBox.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QStyleOptionToolBox.cpp
+ *     Library       : hbqtgui
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $SYNTAX$
+ *     QStyleOptionToolBox():new( ... )
+ *     QStyleOptionToolBox():from( pPtr_OR_oObj_of_type_QStyleOptionToolBox )
+ *     QStyleOptionToolBox():configure( pPtr_OR_oObj_of_type_QStyleOptionToolBox )
+ *  $METHODS$
+ *     :icon()                                             -> pQIcon
+ *     :text()                                             -> cQString
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QStyleOptionToolBox
+ *  $SEEALSO$
+ *     QStyleOption
+ *  $VERSION$
+ *     4.5 or upper
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $EXAMPLES$
+ * 
+ *  $INHERITS$
+ *     QStyleOption
+ *  $ONELINER$
+ *     Creates a new QStyleOptionToolBox object.
+ *  $TEMPLATE$
+ *     Class
+ *  $ARGUMENTS$
+ * 
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $DESCRIPTION$
+ * 
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qstyleoptiontoolbox.html
+ *  $END$
  */

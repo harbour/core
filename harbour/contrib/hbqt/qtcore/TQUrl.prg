@@ -63,7 +63,7 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QUrl INHERIT HbQtObjectHandler, QWidget
+CREATE CLASS QUrl INHERIT HbQtObjectHandler, QObject
 
    METHOD  new( ... )
 

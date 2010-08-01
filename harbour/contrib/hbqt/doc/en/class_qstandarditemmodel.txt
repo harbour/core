@@ -1,81 +1,79 @@
 /*
- *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for Qt v4.5+
- *  Please do not modify this document as it is subject to change in future.
- *  Pritpal Bedi <bedipritpal@hotmail.com>
+ * $Id$
  */
 
 /*  $DOC$
-    $TEMPLATE$
-        Class
-    $NAME$
-        QStandardItemModel()
-    $CATEGORY$
-        Harbour Bindings for Qt
-    $SUBCATEGORY$
-        GUI
-    $EXTERNALLINK$
-        http://doc.trolltech.com/4.5/qstandarditemmodel.html
-    $ONELINER$
-        Creates a new QStandardItemModel object.
-    $INHERITS$
-        QAbstractItemModeL
-    $SYNTAX$
-        QStandardItemModel():new( ... )
-        QStandardItemModel():from( pPtr_OR_oObj_of_type_QStandardItemModel )
-        QStandardItemModel():configure( pPtr_OR_oObj_of_type_QStandardItemModel )
-    $ARGUMENTS$
-
-    $RETURNS$
-        An instance of the object of type QStandardItemModel
-    $METHODS$
-        :appendRow( pItem )                                 -> NIL
-        :clear()                                            -> NIL
-        :findItems( cText, nFlags, nColumn )                -> pQList<QStandardItem *>
-        :horizontalHeaderItem( nColumn )                    -> pQStandardItem
-        :indexFromItem( pItem )                             -> pQModelIndex
-        :insertColumn( nColumn, pParent )                   -> lBool
-        :insertRow( nRow, pParent )                         -> lBool
-        :insertRow_1( nRow, pItem )                         -> NIL
-        :invisibleRootItem()                                -> pQStandardItem
-        :item( nRow, nColumn )                              -> pQStandardItem
-        :itemFromIndex( pIndex )                            -> pQStandardItem
-        :setColumnCount( nColumns )                         -> NIL
-        :setHorizontalHeaderItem( nColumn, pItem )          -> NIL
-        :setHorizontalHeaderLabels( pLabels )               -> NIL
-        :setItem( nRow, nColumn, pItem )                    -> NIL
-        :setItem_1( nRow, pItem )                           -> NIL
-        :setItemPrototype( pItem )                          -> NIL
-        :setRowCount( nRows )                               -> NIL
-        :setSortRole( nRole )                               -> NIL
-        :setVerticalHeaderItem( nRow, pItem )               -> NIL
-        :setVerticalHeaderLabels( pLabels )                 -> NIL
-        :sortRole()                                         -> nInt
-        :takeColumn( nColumn )                              -> pQList<QStandardItem *>
-        :takeHorizontalHeaderItem( nColumn )                -> pQStandardItem
-        :takeItem( nRow, nColumn )                          -> pQStandardItem
-        :takeRow( nRow )                                    -> pQList<QStandardItem *>
-        :takeVerticalHeaderItem( nRow )                     -> pQStandardItem
-        :verticalHeaderItem( nRow )                         -> pQStandardItem
-
-    $DESCRIPTION$
-
-    $EXAMPLES$
-
-    $TESTS$
-
-    $STATUS$
-        R
-    $COMPLIANCE$
-        Not Clipper compatible
-    $PLATFORMS$
-        Windows, Linux, Mac OS X, OS/2
-    $VERSION$
-        4.5 or upper
-    $FILES$
-        Harbour source: contrib/hbqt/qtgui/TQStandardItemModel.prg
-        C++ wrappers  : contrib/hbqt/qtgui/QStandardItemModel.cpp
-        Library       : hbqtgui
-    $SEEALSO$
-        QAbstractItemModeL
-    $END$
+ *  $NAME$
+ *     QStandardItemModel()
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQStandardItemModel.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QStandardItemModel.cpp
+ *     Library       : hbqtgui
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $SYNTAX$
+ *     QStandardItemModel():new( ... )
+ *     QStandardItemModel():from( pPtr_OR_oObj_of_type_QStandardItemModel )
+ *     QStandardItemModel():configure( pPtr_OR_oObj_of_type_QStandardItemModel )
+ *  $METHODS$
+ *     :appendRow( pItem )                                 -> NIL
+ *     :clear()                                            -> NIL
+ *     :findItems( cText, nFlags, nColumn )                -> pQList<QStandardItem *>
+ *     :horizontalHeaderItem( nColumn )                    -> pQStandardItem
+ *     :indexFromItem( pItem )                             -> pQModelIndex
+ *     :insertColumn( nColumn, pParent )                   -> lBool
+ *     :insertRow( nRow, pParent )                         -> lBool
+ *     :insertRow_1( nRow, pItem )                         -> NIL
+ *     :invisibleRootItem()                                -> pQStandardItem
+ *     :item( nRow, nColumn )                              -> pQStandardItem
+ *     :itemFromIndex( pIndex )                            -> pQStandardItem
+ *     :setColumnCount( nColumns )                         -> NIL
+ *     :setHorizontalHeaderItem( nColumn, pItem )          -> NIL
+ *     :setHorizontalHeaderLabels( pLabels )               -> NIL
+ *     :setItem( nRow, nColumn, pItem )                    -> NIL
+ *     :setItem_1( nRow, pItem )                           -> NIL
+ *     :setItemPrototype( pItem )                          -> NIL
+ *     :setRowCount( nRows )                               -> NIL
+ *     :setSortRole( nRole )                               -> NIL
+ *     :setVerticalHeaderItem( nRow, pItem )               -> NIL
+ *     :setVerticalHeaderLabels( pLabels )                 -> NIL
+ *     :sortRole()                                         -> nInt
+ *     :takeColumn( nColumn )                              -> pQList<QStandardItem *>
+ *     :takeHorizontalHeaderItem( nColumn )                -> pQStandardItem
+ *     :takeItem( nRow, nColumn )                          -> pQStandardItem
+ *     :takeRow( nRow )                                    -> pQList<QStandardItem *>
+ *     :takeVerticalHeaderItem( nRow )                     -> pQStandardItem
+ *     :verticalHeaderItem( nRow )                         -> pQStandardItem
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QStandardItemModel
+ *  $SEEALSO$
+ *     QAbstractItemModeL
+ *  $VERSION$
+ *     4.5 or upper
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $EXAMPLES$
+ * 
+ *  $INHERITS$
+ *     QAbstractItemModeL
+ *  $ONELINER$
+ *     Creates a new QStandardItemModel object.
+ *  $TEMPLATE$
+ *     Class
+ *  $ARGUMENTS$
+ * 
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $DESCRIPTION$
+ * 
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qstandarditemmodel.html
+ *  $END$
  */
